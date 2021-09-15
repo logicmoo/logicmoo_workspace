@@ -60,7 +60,7 @@ find_reference_for(LId,Module,Functor,Arity):-
     			;	true			%TODO: here is a possible place to create a warning as soon as it's reduced to "real" problems...
     			),
     			_Error,
-    			%(	foRmat('Problem with crossref -> Module: ~w, Functor: ~w, Arity: ~w, LId: ~w, Error: ~n',[Module,Functor,Arity,LId, Error]),
+    			%(	format('Problem with crossref -> Module: ~w, Functor: ~w, Arity: ~w, LId: ~w, Error: ~n',[Module,Functor,Arity,LId, Error]),
     				true 
     			%)
    			)

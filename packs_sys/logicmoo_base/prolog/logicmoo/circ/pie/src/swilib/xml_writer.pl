@@ -145,7 +145,7 @@ write_item(X, _, _, Opts) :-
 	write_converted_text(X, Opts).
 write_item(entity(No), _, _, _) :-
 	!,
-	foRmat('&#~d;', [No]).
+	format('&#~d;', [No]).
 write_item(Item, _, _, _) :-
 	err('Malformed or unsupported content item: ~q.', [Item]).
 

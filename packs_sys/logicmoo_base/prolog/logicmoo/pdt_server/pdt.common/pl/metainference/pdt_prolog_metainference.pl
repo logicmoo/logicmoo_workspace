@@ -33,7 +33,7 @@ run :-
 
 run(Run) :-
 	statistics(cputime, CPU0),
-	foRmat('Starting meta inference iteration ~w~n', [Run]),
+	format('Starting meta inference iteration ~w~n', [Run]),
 	findall(Module:MetaSpec, (
 		declared_in_module(Module, Name, Arity, Module),
 		functor(Head, Name, Arity),
@@ -50,11 +50,11 @@ run(Run) :-
 		;	assertz(inferred_meta_pred(Head, Module, MetaSpec))
 		)
 	), NewOrModifiedMetaSpecs),
-	forall(member(Module:MetaSpec, NewOrModifiedMetaSpecs), foRmat('% :- meta_predicate ~w:~w.~n', [Module, MetaSpec])),
+	forall(member(Module:MetaSpec, NewOrModifiedMetaSpecs), format('% :- meta_predicate ~w:~w.~n', [Module, MetaSpec])),
 	statistics(cputime, CPU1),
 	CPU is CPU1 - CPU0,
 	length(NewOrModifiedMetaSpecs, NewOrModified),
-	foRmat('Finished meta inference iteration ~w: ~w meta predicates found or modified in ~f sec.~n', [Run, NewOrModified, CPU]),
+	format('Finished meta inference iteration ~w: ~w meta predicates found or modified in ~f sec.~n', [Run, NewOrModified, CPU]),
 	(	NewOrModified > 0
 	->	NextRun is Run + 1,
 		run(NextRun)

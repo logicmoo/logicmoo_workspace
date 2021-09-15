@@ -40,7 +40,7 @@ from_file(Goal, File) :-
 	( sub_atom(File, _, 3, 0, '.gz') ->
 	  %%
 	  %% in SWI 10.2, gzopen seemed bugged for larger files 
-	  %% foRmat(atom(UnzipCall), 'gunzip < \'~w\'', File),
+	  %% format(atom(UnzipCall), 'gunzip < \'~w\'', File),
 	  %% open(pipe(UnzipCall), read, Stream)
 	  %%
 	  gzopen(File, read, Stream)

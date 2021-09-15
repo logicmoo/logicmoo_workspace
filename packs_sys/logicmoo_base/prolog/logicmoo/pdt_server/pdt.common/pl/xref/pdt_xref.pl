@@ -129,7 +129,7 @@ find_reference_to(Term, ExactMatch, Root, RefModule, RefName, RefArity, RefFile,
 	(	(	Termposition = term_position(Start, End, _, _, _)
 		;	Termposition = Start-End
 		)
-	->	foRmat(atom(Position), '~w-~w', [Start, End])
+	->	format(atom(Position), '~w-~w', [Start, End])
 	;	Position = Line
 	),
 	functor(ReferencingGoal, N, A),
@@ -151,21 +151,21 @@ find_reference_to(Term, ExactMatch, Root, RefModule, RefName, RefArity, RefFile,
 			Ms
 		),
 		atomic_list_concat(Ms, ', ', ModuleList),
-		foRmat(atom(TransparentTargetsAtom), ' in execution context ~w (context dependend)', [ModuleList])
+		format(atom(TransparentTargetsAtom), ' in execution context ~w (context dependend)', [ModuleList])
 	),
 	(	Separator == (//)
-	->	foRmat(atom(Label), '~w//~w', [N, Arity0])
-	;	foRmat(atom(Label), '~w/~w', [N, A])
+	->	format(atom(Label), '~w//~w', [N, Arity0])
+	;	format(atom(Label), '~w/~w', [N, A])
 	),
 	PropertyList1 = [label(Label),line(Line)|PropertyList0],
 	(	nonvar(M),
 		M \== RefModule
-	->	foRmat(atom(Prefix), '~w:', [M]),
+	->	format(atom(Prefix), '~w:', [M]),
 		PropertyList2 = [prefix(Prefix)|PropertyList1]
 	;	PropertyList2 = PropertyList1
 	),
 	(	nonvar(Alias)
-	->	foRmat(atom(AliasAtom), ' [alias for ~w]', [Alias]),
+	->	format(atom(AliasAtom), ' [alias for ~w]', [Alias]),
 		(	nonvar(TransparentTargetsAtom)
 		->	atom_concat(TransparentTargetsAtom, AliasAtom, Suffix)
 		;	Suffix = AliasAtom
@@ -307,7 +307,7 @@ collect_candidates(SearchModule, SearchFunctor, SearchArity, Candidates) :-
 %go :- % To list all results quickly call 
 %      % ?- pdt_xref:go, fail.
 %    find_reference_to(defined_in_file,6,__DefFile, __DefModule,RefModule,RefName,RefArity,RefFile,RefLine,Nth,Kind,_PropertyList),
-%    foRmat( '~a reference from ~a:~w clause ~a, line ~a, file ~n~a~n~n',
+%    format( '~a reference from ~a:~w clause ~a, line ~a, file ~n~a~n~n',
 %            [Kind, RefModule,RefName,RefArity, Nth, RefLine, RefFile]
 %    ).
 %	

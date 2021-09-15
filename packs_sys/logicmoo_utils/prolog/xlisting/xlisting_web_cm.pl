@@ -4,7 +4,7 @@ once_per_request(G):- must_run_html(G),!.
 
 
 ensure_swish_app_html:-
-  once_per_request(foRmat('\n<div id="hidden_swish_app" style="display:none; visibility:hidden">
+  once_per_request(format('\n<div id="hidden_swish_app" style="display:none; visibility:hidden">
 		<header class="navbar navbar-default">
 			<div class="container pull-left">
 				<div class="navbar-header">

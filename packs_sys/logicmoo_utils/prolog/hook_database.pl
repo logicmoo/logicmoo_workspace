@@ -864,7 +864,7 @@ safe_univ0(Call,[M:L|List]):- nonvar(M),!,safe_univ(Call,[L|List]).
 safe_univ0(M:Call,[L|List]):- nonvar(M),!,safe_univ(Call,[L|List]).
 safe_univ0(Call,[L|List]):- not(is_list(Call)),sanity(atom(L);compound(Call)), Call =..[L|List],!,warn_bad_functor(L).
 safe_univ0([L|List],[L|List]):- var(List),\+ atom(L),!,rtrace,_ =.. [L|List],warn_bad_functor(L).
-safe_univ0(Call,[L|List]):- sanity(atom(L);compound(Call)),catchv(Call =.. [L|List],E,(dumpST,'foRmat'('~q~n',[E=safe_univ(Call,List)]))),warn_bad_functor(L).
+safe_univ0(Call,[L|List]):- sanity(atom(L);compound(Call)),catchv(Call =.. [L|List],E,(dumpST,'format'('~q~n',[E=safe_univ(Call,List)]))),warn_bad_functor(L).
 
 
 /*

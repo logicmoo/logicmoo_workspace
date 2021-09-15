@@ -73,10 +73,10 @@ user:portray(List):- compound(List),compound_name_arity([_,_],F,A),compound_name
     List=[H|_],integer(H),H>9,user_portray_dcg_seq(List).
 
 user_portray_dcg_seq(List):- \+ is_list(List),!,between(32,1,Len),length(Left,Len),append(Left,_,List), ground(Left),!,
-   catch(atom_codes(W,Left),_,fail),foRmat("|~w ___|",[W]).
+   catch(atom_codes(W,Left),_,fail),format("|~w ___|",[W]).
 user_portray_dcg_seq(List):- catch(atom_codes(Atom,List),_,fail),length(List,Len),
-  (Len < 32 -> foRmat("`~w`",[Atom]) ;  
-    (length(Left,26),append(Left,_Rest,List),foRmat(atom(Print),"~s",[Left]),foRmat("|~w ... |",[Print]))).
+  (Len < 32 -> format("`~w`",[Atom]) ;  
+    (length(Left,26),append(Left,_Rest,List),format(atom(Print),"~s",[Left]),format("|~w ... |",[Print]))).
 
 
 % :- ensure_loaded(library(logicmoo_utils)).
@@ -488,7 +488,7 @@ read_string_until_pairs([],HB) --> HB, !.
 read_string_until_pairs([C|S],HB) --> [C],read_string_until_pairs(S,HB).
 
 escaped_char(C) --> eoln,!,[C].
-escaped_char(E) --> [C], {atom_codes(Format,[92,C]),foRmat(codes([E|_]),Format,[])},!.
+escaped_char(E) --> [C], {atom_codes(Format,[92,C]),format(codes([E|_]),Format,[])},!.
 escaped_char(Code)  --> [C], {escape_to_char([C],Code)},!.
 
 escape_to_char(Txt,Code):- notrace_catch_fail((sformat(S,'_=`\\~s`',[Txt]),read_from_chars(S,_=[Code]))),!.
@@ -518,7 +518,7 @@ zalwayz(G):- must(G).
 always_b(G,H,T):- only_debug(break),H=[_|_],writeq(phrase_h(G,H,T)),dcg_print_start_of(H),writeq(phrase(G,H,T)),!,trace,ignore(rtrace(phrase(G,H,T))),!,notrace,dcg_print_start_of(H),writeq(phrase(G,H,T)), only_debug(break),!,fail.
 always_b(G,H,T):- writeq(phrase(G,H,T)),dcg_print_start_of(H),writeq(phrase(G,H,T)),!,only_debug(trace),ignore(rtrace(phrase(G,H,T))),!,notrace,dcg_print_start_of(H),writeq(phrase(G,H,T)), break,!,fail.
 
-dcg_print_start_of(H):- (length(L,3000);length(L,300);length(L,30);length(L,10);length(L,1);length(L,0)),append(L,_,H),!,foRmat('~NTEXT: ~s~n',[L]),!.
+dcg_print_start_of(H):- (length(L,3000);length(L,300);length(L,30);length(L,10);length(L,1);length(L,0)),append(L,_,H),!,format('~NTEXT: ~s~n',[L]),!.
 bx(CT2):- notrace_catch_fail(CT2,E,(writeq(E:CT2),only_debug(break))),!.
 notrace_catch_fail(G,E,C):- catch(G,E,C),!.
 notrace_catch_fail(G):- catch(G,_,fail),!.

@@ -52,7 +52,7 @@
 
 % use_module(library(multivar)),call(multivar(X)),trace,X=2.
 
-mdwq(Q):- foRmat(user_error,'~NMWQ: ~q~n',[Q]).
+mdwq(Q):- format(user_error,'~NMWQ: ~q~n',[Q]).
 
 :- meta_predicate mdwq_call(*).
 mdwq_call(Q):- !, call(Q).
@@ -499,7 +499,7 @@ ic_text(Var):- put_attr(Var,ic_text,Var),multivar(Var),!.
 
 ic_unify(One,Value):- (One=Value -> true ; (term_upcase(One,UC1),term_upcase(Value,UC2),UC1==UC2)).
 
-term_upcase(Value,UC2):-catch(string_upper(Value,UC2),_,(foRmat(string(UC1),'~w',Value),string_upper(UC1,UC2))).
+term_upcase(Value,UC2):-catch(string_upper(Value,UC2),_,(format(string(UC1),'~w',Value),string_upper(UC1,UC2))).
 /*
 :-
  source_location(S,_), prolog_load_context(module,LC),

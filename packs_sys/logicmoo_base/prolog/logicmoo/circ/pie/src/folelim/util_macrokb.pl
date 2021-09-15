@@ -100,7 +100,7 @@ ppl(Options) :-
 	),
 	tmp_dir(Outdir),
 	tmp_latex_file(Outfile),
-	foRmat(atom(Out), '~w/~w', [Outdir, Outfile]),
+	format(atom(Out), '~w/~w', [Outdir, Outfile]),
 	get_info_verbosity(V),
 	ppl_verbosity(V1),
 	catch(( set_info_verbosity(V1),
@@ -126,7 +126,7 @@ process_latex(P) :-
 process_latex([pdflatex|Ps], Outdir, Outfile, Document, Options) :-
 	!,
 	info(10, 'Invoking pdflatex ~w', [Outfile]),
-	foRmat(atom(Cmd),
+	format(atom(Cmd),
 	       'cd ~w ; pdflatex -interaction=batchmode ~w',
 	       [Outdir, Outfile]),
 	( shell(Cmd) ->
@@ -140,7 +140,7 @@ process_latex([bibtex|Ps], Outdir, Outfile, Document, Options) :-
 	; Outfile1 = Outfile
 	),
 	info(10, 'Invoking bibtex ~w', [Outfile1]),
-	foRmat(atom(Cmd),
+	format(atom(Cmd),
 	       'cd ~w ; bibtex ~w',
 	       [Outdir, Outfile1]),
 	( shell(Cmd) ->
@@ -241,9 +241,9 @@ ppl_validity_status(Status, F, Options) :-
 	  vs_fmt_latex(Status, Fmt),
 	  inner_write_form_options(Options, Options1),
 	  mark_installed_macros(F, F1),
-	  foRmat(Fmt, [write_form(F1, Options1)])
+	  format(Fmt, [write_form(F1, Options1)])
 	; vs_fmt_prolog(Status, Fmt),
-	  foRmat(Fmt)
+	  format(Fmt)
 	).
 
 vs_fmt_latex(valid, '\\pplIsValid{~@}~n').
@@ -277,25 +277,25 @@ ppl_form_1(F, Options) :-
 	  inner_write_form_options(Options, Options1),
 	  ( memberchk(input=Input, Options1) ->
 	    mark_installed_macros(Input, Input1),
-	    foRmat('~n\\noindent Input: $~@$\\\\',
+	    format('~n\\noindent Input: $~@$\\\\',
 		   [write_form(Input1, Options1)])
 	  ; true
 	  ),
 	  ( memberchk(opstring=OpString, Options1), OpString \= none ->
-	    foRmat('~n\\noindent Result of ~w:', [OpString])
+	    format('~n\\noindent Result of ~w:', [OpString])
 	  ; true
 	  ),
-          foRmat('~N\\['),
+          format('~N\\['),
           mark_installed_macros(F1, F2),				
 	  pp_form(F2, Options1),
-	  foRmat('\\]~n')
-	; append(Options, [foRmat=prolog, style=brief], Options1),
+	  format('\\]~n')
+	; append(Options, [format=prolog, style=brief], Options1),
 	  pp_form(F1, Options1)
 	).
 
 inner_write_form_options(Options, Options1) :-
 	 append(Options,
-		[foRmat=latex,
+		[format=latex,
 		 style=brief,
 		 rightcols=4,
 		 maxpos=50,
@@ -484,7 +484,7 @@ tptp_export(Label, File, Options) :-
 	mac_to_tptp(Label, Stmts),
 	onto_file(( member(Stmt, Stmts),
 		    pp_tptp(Stmt),
-		    foRmat('.~n~n'),
+		    format('.~n~n'),
 		    fail
 		  ; true
 		  ),

@@ -158,9 +158,9 @@ reset_logging_all_modules:-
 disable_showLoggingContextModules:-retractall(showContextModules_enabled).
 enable_showLoggingContextModules:-
 	assertz(showContextModules_enabled),
-	foRmat('WARNING: === ShowContextModules enabled =========================~n'),
-    foRmat('WARNING: This function will double your output and will slow down your console~n'),
-    foRmat('WARNING: ==============================================~n').
+	format('WARNING: === ShowContextModules enabled =========================~n'),
+    format('WARNING: This function will double your output and will slow down your console~n'),
+    format('WARNING: ==============================================~n').
 	
 
 /*
@@ -207,7 +207,7 @@ showContextModules:-
     clause(showContextModules_enabled,true)->
     (
     	getContextModules(Modules),
-    	foRmat('INFO: context-modules are ~w~n',[Modules]))
+    	format('INFO: context-modules are ~w~n',[Modules]))
     	;
     true. 
      
@@ -249,7 +249,7 @@ write_on_stdout(Formatterm) :-
     
 write_on_stdout(Formatterm,Atomlist) :-
     current_output(Stream),
-    foRmat(Stream,Formatterm,Atomlist). 
+    format(Stream,Formatterm,Atomlist). 
 
 log_on_stdout(Formatterm) :-
     log_on_stdout(Formatterm,[]).
@@ -260,7 +260,7 @@ log_on_stdout(Formatterm,Atomlist) :-
 
 log(Stream,Formatterm,Atomlist) :-
     (loggingEnabled,(check_logging_module;is_ignore_logging_in_module)) 
-      -> (showContextModules,foRmat(Stream,Formatterm,Atomlist))
+      -> (showContextModules,format(Stream,Formatterm,Atomlist))
        ; true.  
     
      

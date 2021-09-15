@@ -32,7 +32,7 @@
        prolog_load_context(directory, Dir),
        concat_atom([PIE, 'folelim'], Dir) ) ->
      PROVERS=PIE,
-     foRmat(user_error, 'Loading from source directory ~q~n', [PROVERS]),
+     format(user_error, 'Loading from source directory ~q~n', [PROVERS]),
      concat_atom([PROVERS, 'swilib'], Swilib),
      concat_atom([PROVERS, 'nf'], Nf),
      concat_atom([PROVERS, 'pplatex'], PPLatex),
@@ -49,7 +49,7 @@
      asserta(user:file_search_path(cmprover, CMProver)),
      asserta(user:file_search_path(lp, Lp)),
      asserta(user:file_search_path(kbset, KBSet))
-   ; foRmat(user_error, 'Source directory not found - exiting~n', []),
+   ; format(user_error, 'Source directory not found - exiting~n', []),
      halt
    ).
 

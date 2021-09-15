@@ -64,7 +64,7 @@ call_prover9(F, Options, Status) :-
 	),
 	PT=prooftrans,
 	write_prover9_input(F, prover9, Options) onto_file In,
-	foRmat(atom(Cmd), '~w <~w >~w 2>>~w', [Prover9, In, Out, Err]),
+	format(atom(Cmd), '~w <~w >~w 2>>~w', [Prover9, In, Out, Err]),
 	info(10, 'Calling ~w', [Cmd]),
 	catch(( shell(Cmd, Status),
 		(( Status=0, memberchk( process_output=Post, Options ) ->
@@ -73,7 +73,7 @@ call_prover9(F, Options, Status) :-
 		 ; true
 		 ),
 		 ( Status=0, memberchk(proof=Proof, Options) ->
-		   foRmat(atom(PTCmd), '~w xml ~w <~w >~w 2>>~w',
+		   format(atom(PTCmd), '~w xml ~w <~w >~w 2>>~w',
 			  [PT, PTOptions, Out, PTFile, Err]),
 		   info(10, 'Calling ~w', [PTCmd]),
 		   shell(PTCmd, PTStatus),
@@ -94,11 +94,11 @@ call_mace4(F, Options, Status) :-
 	tempfile(mace4, cmodel, MFile),
 	get_conf(mace4_cmd, Mace4),
 	write_prover9_input(F, mace4, Options) onto_file In,
-	foRmat(atom(Cmd), '~w -c <~w >~w 2>>~w', [Mace4, In, Out, Err]),
+	format(atom(Cmd), '~w -c <~w >~w 2>>~w', [Mace4, In, Out, Err]),
 	info(10, 'Calling ~w', [Cmd]),
 	catch((shell(Cmd, Status),
 	       ( Status = 0, member(cmodel=Model, Options) ->
-		 foRmat(atom(MCmd), 'interpformat standard <~w >~w 2>>~w',
+		 format(atom(MCmd), 'interpformat standard <~w >~w 2>>~w',
 			[Out, MFile, Err]),
 		 info(10, 'Calling ~w', [MCmd]),
 		 shell(MCmd, MStatus),
@@ -120,13 +120,13 @@ cleanup(_) :-
 	delete_tempfiles(mace4).
 
 write_prover9_input(F, Mode, Options) :-
-	foRmat('set(prolog_style_variables).~n', []),
+	format('set(prolog_style_variables).~n', []),
 	( Mode = mace4 ->
 	  ( memberchk(mace4_settings=Settings, Options) -> true
 	  ; Settings = [assign(iterate_up_to, 5)]
 	  ),
 	  ( member(Setting, Settings),
-	    foRmat('~w.~n', [Setting]),
+	    format('~w.~n', [Setting]),
 	    fail
 	  ; true
 	  ),
@@ -138,7 +138,7 @@ write_prover9_input(F, Mode, Options) :-
 	  ; Settings = [clear(auto_denials)]
 	  ),
 	  ( member(Setting, Settings),
-	    foRmat('~w.~n', [Setting]),
+	    format('~w.~n', [Setting]),
 	    fail
 	  ; true
 	  ),
@@ -147,8 +147,8 @@ write_prover9_input(F, Mode, Options) :-
 	  ; get_conf(prover9_timeout, Seconds)
 	  )
 	),
-	foRmat('assign(max_seconds, ~w).~n', [Seconds]),
-	foRmat('formulas(sos).~n'),
+	format('assign(max_seconds, ~w).~n', [Seconds]),
+	format('formulas(sos).~n'),
 	( memberchk(left_right=(Left-Right), Options) ->
 	  ( F = ~(A->B) -> true
 	  ; err('left_right option not compatible with formula shape: ~q', [F])
@@ -157,9 +157,9 @@ write_prover9_input(F, Mode, Options) :-
 	  %% an implication, for application in interpolation
 	  findall(A1, enum_toplevel_conjuncts(A, A1), Left),
 	  findall(B1, enum_toplevel_conjuncts(~B, B1), Right),
-	  foRmat('% Left assumptions~n'),
+	  format('% Left assumptions~n'),
 	  ( member(G, Left), formott(G), fail ; true ),
-	  foRmat('% Right assumptions~n'),
+	  format('% Right assumptions~n'),
 	  ( member(G, Right), formott(G), fail ; true )
 	; ( enum_toplevel_conjuncts(F, G),
 	    formott(G),
@@ -167,7 +167,7 @@ write_prover9_input(F, Mode, Options) :-
 	  ; true
 	  )
 	),
-	foRmat('end_of_list.~n').
+	format('end_of_list.~n').
 
 enum_toplevel_conjuncts((F,G), H) :-
 	!,

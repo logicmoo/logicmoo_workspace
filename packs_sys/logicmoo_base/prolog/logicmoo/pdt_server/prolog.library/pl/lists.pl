@@ -355,7 +355,7 @@ pp_list_element(A,Current,Indent,X) :-
 
 write_line_indented(Indent,What,Separator) :- 
 	atomic_list_concat(['~t~',Indent,'|~q~a~n'],Formatstring), 
-	foRmat(Formatstring,[What,Separator]).
+	format(Formatstring,[What,Separator]).
 
 
 
@@ -370,11 +370,11 @@ list_2_separated_list([],_,'') :- !.
 list_2_separated_list([Element],_,Element) :- !.
 list_2_separated_list([Element|Rest],Separator,ElementSeparated) :-
 	list_2_separated_list(Rest,Separator,RestAtom),
-	foRmat(atom(ElementSeparated),'~w~w~w',[Element,Separator,RestAtom]).
+	format(atom(ElementSeparated),'~w~w~w',[Element,Separator,RestAtom]).
 	
 
 aformat(Atom,FormatString,List):-
-	foRmat(atom(Atom),FormatString,List).
+	format(atom(Atom),FormatString,List).
 
 test_PPL :- pretty_print_list([1,2,3,a,b,c,X,Y,Z,f(a),g(b,c),h(X,Y,Z)]) .  
 test_PPL :- pretty_print_list([1,2,3,a,b,c,X,Y,Z,f(a),g(b,c),h(X,Y,Z)], 8) . 

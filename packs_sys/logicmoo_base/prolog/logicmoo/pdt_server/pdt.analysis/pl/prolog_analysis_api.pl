@@ -31,6 +31,6 @@ analysis_marker(Name, Severity, File, Location, Description) :-
 	analysis_definition(Name, Severity, _Category, _Description),
 	analysis_result(Name, File, Location0, Description),
 	(	Location0 = Start-End
-	->	foRmat(atom(Location), '~w-~w', [Start, End])
+	->	format(atom(Location), '~w-~w', [Start, End])
 	;	Location = Location0
 	).

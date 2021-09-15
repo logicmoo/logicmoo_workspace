@@ -267,7 +267,7 @@ prolog_clause:open_source(PfcInclFile, Stream) :-
 
 pfc_incl_module_source(Module, Source):-
   pfc_lib_name(LibName),
-  foRmat(string(Source),":- module(~q,[]). :- include(~q).",[Module, LibName]).
+  format(string(Source),":- module(~q,[]). :- include(~q).",[Module, LibName]).
 
 :- meta_predicate(include_module_file(:,+)).
 

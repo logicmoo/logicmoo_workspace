@@ -81,7 +81,7 @@ mp_printAll(S,+(O)):- subst(O,v,V,CALL), CALL\==O,!,
   doall(((flush_output,call_u(CALL),flush_output)*->fmt9(F=V);(fmt9(fail=NAME)))),fresh_line,fmt("==================\n"),flush_output.
 
 mp_printAll(S,(O)):- subst(O,v,V,CALL),CALL\==O,!, subst(O,S,s,NAME),safe_functor(O,F,_),
-  foRmat('~N',[]),flush_output, fmt("==================\n"),
+  format('~N',[]),flush_output, fmt("==================\n"),
   doall(((flush_output,call_u(CALL),flush_output)*->fmt9(F=V);fmt9(fail=NAME))),nl.
 
 mp_printAll(S,(O)):-  !,  safe_functor(O,F,A),mp_nnvv(S,O,F,A),flush_output.
@@ -373,7 +373,7 @@ pp_why(A):-mpred_why_1(A).
 
 clear_proofs:- retractall(t_l:whybuffer(_P,_Js)),color_line_t(cyan,1).
 
-color_line_t(_,_):- keep_going,!,foRmat('~N').
+color_line_t(_,_):- keep_going,!,format('~N').
 color_line_t(C,L):- color_line(C,L).
 
 :- thread_local(t_l:shown_why/1).
@@ -407,7 +407,7 @@ mpred_why_justs_1a(P) :-
   findall(Js,((no_repeats(P-Js,(justifications(P,Js))),
     must((color_line_t(yellow,1),
       ignore(pfcShowJustifications(P,Js)))))),Count),
-  (Count==[]-> foRmat("~N No justifications for ~p. ~n~n",[P]) ; true),
+  (Count==[]-> format("~N No justifications for ~p. ~n~n",[P]) ; true),
   color_line_t(green,2).
 */
 mpred_why_justs_1a(\+ P) :- !, mpred_why_justs_1a(\+ P, ~(P)),!.
@@ -420,7 +420,7 @@ mpred_why_justs_1a(DP,P) :-
     (color_line_t(yellow,1),
      nb_setarg(1,Found,1),
      pfcShowJustifications(P,Js))),
-  (Found==fnd(0)-> foRmat("~N~p.~n~n",[no_proof_for(DP)]) ; true),
+  (Found==fnd(0)-> format("~N~p.~n~n",[no_proof_for(DP)]) ; true),
   color_line_t(green,2),!,
   Found\==fnd(0).
 
@@ -435,7 +435,7 @@ mpred_why_justs_2(P) :-
   findall(Js,((no_repeats(P-Js,deterministically_must(justifications(P,Js))),
     must((color_line_t(yellow,1),
       ignore(pfcShowJustifications(P,Js)))))),Count),
-  (Count==[]-> foRmat("~N No justifications for ~p. ~n~n",[P]) ; true),
+  (Count==[]-> format("~N No justifications for ~p. ~n~n",[P]) ; true),
   color_line_t(green,2).
 */
 /*
@@ -456,7 +456,7 @@ mpred_why_try_each(clause_u(H,B)):-!,mpred_why_try_each(H:-B).
 mpred_why_try_each(clause_u(H,B,_)):-!,mpred_why_try_each(H:-B).
 
 mpred_why_try_each(P):- once((retractall(t_l:whybuffer(P,_)),color_line_t(green,2),
-    show_current_source_location,foRmat("~NJustifications for ~p:",[P]))),
+    show_current_source_location,format("~NJustifications for ~p:",[P]))),
     fail.
 
 mpred_why_try_each(P):- mpred_why_try_each_0(P),!.
@@ -465,7 +465,7 @@ mpred_why_try_each(M:P :- B):- atom(M),call_from_module(M,mpred_why_try_each_0(P
 mpred_why_try_each(M:P):- atom(M),call_from_module(M,mpred_why_try_each_0(P)),!.
 mpred_why_try_each(P :- B):- is_src_true(B),!,mpred_why_try_each(P ).
 mpred_why_try_each(M:H):- strip_module(H,Ctx,P),P==H,Ctx==M,!,mpred_why_try_each(H).
-mpred_why_try_each(_):- foRmat("~N No justifications. ~n").
+mpred_why_try_each(_):- format("~N No justifications. ~n").
 
 mpred_why_try_each_0(P):- findall(Js,mpred_why_try_each_1(P,Js),Count),Count\==[],!.
 mpred_why_try_each_0(\+ P):- mpred_why_try_each_0(~P)*->true;(call_u(\+ P),wdmsgl(why:- \+ P)),!.
@@ -502,13 +502,13 @@ pfcWhyBrouse(P,Js) :-
   ttyflush,
   % pfcAsk(' >> ',Answer),
   % read_pending_chars(current_input,[Answer|_],[]),!,  
-  foRmat('~N',[]),write('proof [q/h/u/?.?]: '),get_char(Answer),
+  format('~N',[]),write('proof [q/h/u/?.?]: '),get_char(Answer),
   pfcWhyCommand0(Answer,P,Js).
 
 pfcWhyCommand0(q,_,_) :- !.
 pfcWhyCommand0(h,_,_) :- 
   !,
-  foRmat("~n
+  format("~n
 Justification Brouser Commands:
  q   quit.
  N   focus on Nth justification.
@@ -530,11 +530,11 @@ pfcWhyCommand0(u,_,_) :-
 pfcWhyCommand0(N,_,_) :-
   integer(N),
   !,
-  foRmat("~n~w is a yet unimplemented command.",[N]),
+  format("~n~w is a yet unimplemented command.",[N]),
   fail.
 
 pfcWhyCommand0(X,_,_) :-
- foRmat("~n~w is an unrecognized command, enter h. for help.",[X]),
+ format("~n~w is an unrecognized command, enter h. for help.",[X]),
  fail.
 
 reset_shown_justs:- retractall(t_l:shown_why(_)),color_line_t(red,1).
@@ -543,7 +543,7 @@ pfcShowJustifications(P,Js) :-
   show_current_source_location,
   reset_shown_justs,
   color_line_t(yellow,1),
-  foRmat("~N~nJustifications for ~p:~n",[P]),  
+  format("~N~nJustifications for ~p:~n",[P]),  
 
   pfcShowJustification1(Js,1),!.
 
@@ -572,14 +572,14 @@ pfcShowSingleJust(JustNo,StepNo,(P,F,T)):-!,
   pfcShowSingleJust(JustNo,StepNo,F),
   pfcShowSingleJust1(JustNo,StepNo,T).
 pfcShowSingleJust(JustNo,StepNo,(P*->T)):-!, 
-  pfcShowSingleJust1(JustNo,StepNo,P),foRmat('      *-> ',[]),
+  pfcShowSingleJust1(JustNo,StepNo,P),format('      *-> ',[]),
   pfcShowSingleJust1(JustNo,StepNo,T).
 
 pfcShowSingleJust(JustNo,StepNo,(P:-T)):-!, 
-  pfcShowSingleJust1(JustNo,StepNo,P),foRmat(':- ~p.',[T]).
+  pfcShowSingleJust1(JustNo,StepNo,P),format(':- ~p.',[T]).
  
 pfcShowSingleJust(JustNo,StepNo,(P : -T)):-!, 
-  pfcShowSingleJust1(JustNo,StepNo,P),foRmat('      :- ',[]),
+  pfcShowSingleJust1(JustNo,StepNo,P),format('      :- ',[]),
   pfcShowSingleJust(JustNo,StepNo,T).
 
 pfcShowSingleJust(JustNo,StepNo,(P :- T) ):- !, 
@@ -630,7 +630,7 @@ pfcShowSingleJust_MFL(MFL):-
   public_file_link(MFL,FNL),color_format([hfg(black)]," % [~w] ",[FNL]),!.
 
 pfcAsk(Msg,Ans) :-
-  foRmat("~n~w",[Msg]),
+  format("~n~w",[Msg]),
   read(Ans).
 
 pfcSelectJustificationNode(Js,Index,Step) :-
@@ -692,7 +692,7 @@ mpred_whyBrouse(P,Js):-
 mpred_handle_why_command(q,_,_):- !.
 mpred_handle_why_command(h,_,_):-
   !,
-  foRmat("~N
+  format("~N
 Justification Brouser Commands:
  q   quit.
  N   focus on Nth justification.
@@ -713,16 +713,16 @@ mpred_handle_why_command(u,_,_):-
 mpred_unhandled_command(N,_,_):-
   integer(N),
   !,
-  foRmat("~N~p is a yet unimplemented command.",[N]),
+  format("~N~p is a yet unimplemented command.",[N]),
   fail.
 
 mpred_unhandled_command(X,_,_):-
- foRmat("~N~p is an unrecognized command, enter h. for help.",[X]),
+ format("~N~p is an unrecognized command, enter h. for help.",[X]),
  fail.
 
 mpred_pp_db_justifications(P,Js):-
  show_current_source_location, 
- must_ex(quietly(( foRmat("~NJustifications for ~p:",[P]),
+ must_ex(quietly(( format("~NJustifications for ~p:",[P]),
   mpred_pp_db_justification1('',Js,1)))).
 
 mpred_pp_db_justification1(_Prefix,[],_).
@@ -741,15 +741,15 @@ mpred_pp_db_justifications2(Prefix,[C|Rest],JustNo,StepNo):-
 (nb_hasval('$last_printed',C)-> dmsg_pretty(chasVal(C)) ;
 (
  (StepNo==1->fmt('~N~n',[]);true),
-  foRmat(string(LP),' ~w.~p.~p',[Prefix,JustNo,StepNo]),
+  format(string(LP),' ~w.~p.~p',[Prefix,JustNo,StepNo]),
   nb_pushval('$last_printed',LP),
-  foRmat("~N  ~w ~p",[LP,C]),
+  format("~N  ~w ~p",[LP,C]),
   ignore(loop_check(mpred_why_sub_sub(C))),
   StepNext is 1+StepNo,
   mpred_pp_db_justifications2(Prefix,Rest,JustNo,StepNext))).
 
 mpred_prompt_ask(Info,Ans):-
-  foRmat("~N~p",[Info]),
+  format("~N~p",[Info]),
   read(Ans).
 
 mpred_select_justification_node(Js,Index,Step):-

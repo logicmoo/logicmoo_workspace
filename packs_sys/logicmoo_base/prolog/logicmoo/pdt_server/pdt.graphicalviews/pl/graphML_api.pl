@@ -331,21 +331,21 @@ close_graph_element(OutStream):-
     
     
 open_node(Stream,Id):-
-    foRmat(Stream, '<node id="~w">~n', [Id]).
+    format(Stream, '<node id="~w">~n', [Id]).
 
 close_node(Stream):-
     write(Stream, '</node>'),
     nl(Stream).
    
 open_edge(Stream,Source,Target):-
-    foRmat(Stream, '<edge source="~w" target="~w">~n', [Source, Target]). 
+    format(Stream, '<edge source="~w" target="~w">~n', [Source, Target]). 
 	
 close_edge(Stream):-
     write(Stream, '</edge>'),
     nl(Stream).
 
 write_data(Stream,Key,Value):-
-	foRmat(Stream, '   <data key="~w">~w</data>~n', [Key,Value]).	
+	format(Stream, '   <data key="~w">~w</data>~n', [Key,Value]).	
 	
 :- dynamic(pred_to_id/5).
 :- dynamic(atom_to_id/2).

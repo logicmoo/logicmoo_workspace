@@ -25,10 +25,10 @@
 :- system:import(baseKB:'$pt'/3).
 :- system:export(baseKB:'$pt'/3).
 
-wdmsg_pfc(X):- foRmat('~N'),in_cmt((print_tree_with_final(X,'.'))),foRmat('~N'),!.
+wdmsg_pfc(X):- format('~N'),in_cmt((print_tree_with_final(X,'.'))),format('~N'),!.
 %wdmsg_pfc((X:-Y)):- !, pprint_ecp_cmt(yellow,(X:-Y)),!.
 %wdmsg_pfc(X):- with_output_to(string(S),print_tree(X)), pprint_ecp_cmt(yellow,S),!.
-wdmsg_pfc(X,Y):- foRmat('~N'),notrace(in_cmt((wdmsg_pretty(X,Y)))),foRmat('~N'),!.
+wdmsg_pfc(X,Y):- format('~N'),notrace(in_cmt((wdmsg_pretty(X,Y)))),format('~N'),!.
 %:- if(( (current_prolog_flag(pfc_version, v(2,0,_))))).
 
 :- multifile(user:prolog_load_file/2).
@@ -395,7 +395,7 @@ lmbase:skip_module_decl:-
    (current_prolog_flag(xref,true)-> false ;
     (current_prolog_flag(logicmoo_autoload,true)-> false ;
       ((prolog_load_context(file,F),  prolog_load_context(source,F))
-             -> throw(error(foRmat(":- include(~w).",[F]),reexport(F))) ; true))). 
+             -> throw(error(format(":- include(~w).",[F]),reexport(F))) ; true))). 
 
 %%% TODO one day :- set_prolog_flag(logicmoo_include,fail).
 

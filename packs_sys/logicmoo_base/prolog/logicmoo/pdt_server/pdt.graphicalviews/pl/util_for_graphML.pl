@@ -119,4 +119,4 @@ call_term_position(SourceModule, SourceFunctor, SourceArity, TargetModule, Targe
 	(	TermPosition = term_position(Start, End, _, _, _)
 	;	TermPosition = Start-End
 	),
-	foRmat(atom(Position), '~w-~w', [Start, End]).
+	format(atom(Position), '~w-~w', [Start, End]).

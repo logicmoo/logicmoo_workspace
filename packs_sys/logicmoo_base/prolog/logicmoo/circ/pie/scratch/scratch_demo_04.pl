@@ -79,7 +79,7 @@ $\mathit{ex}_1$:
 :- ppl_printtime(ppl_valid(ex_1)).
 
 /*
-  An external prover that supports the TPTP foRmat such as E can be
+  An external prover that supports the TPTP format such as E can be
   invoked as follows (requires that TPTP2X is properly installed):
 
 :- ppl_printtime(ppl_valid(ex_1, [prover=tptp(eprover)])).  

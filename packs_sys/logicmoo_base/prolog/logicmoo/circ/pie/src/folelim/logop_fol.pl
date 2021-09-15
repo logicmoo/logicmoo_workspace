@@ -621,7 +621,7 @@ logform_is_skolem_functor(F) :-
 %%%%
 %%%% Can be used to convert between Prolog variables and
 %%%% symbols (i.e. Prolog atoms) as variables. If second-order variables
-%%%% should be Prolog variables, a suitable formula foRmat must be used,
+%%%% should be Prolog variables, a suitable formula format must be used,
 %%%% e.g. tform.
 %%%%
 %%%% Does not instantiate Prolog variables in the input. Note that
@@ -707,7 +707,7 @@ logform_rename_free_functions(F, FromToMap, F1) :-
  	logform_process_subforms_with_bindings(F, mrft(FromToMap), F1).
 
 mrft(FromToMap, F, B, F1) :-
-	%% "patch" for the t-foRmat, to permit t as variable symbol
+	%% "patch" for the t-format, to permit t as variable symbol
 	\+ var(F),
 	F = P/T,
 	functor(T, t, _),

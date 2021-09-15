@@ -216,7 +216,7 @@ hyper_craigproof((F -> G), Options) :-
 %%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%
-%%%% - Intermediate foRmat CTabx: like Tabx but formulas are clauses or
+%%%% - Intermediate format CTabx: like Tabx but formulas are clauses or
 %%%%   literals with free variables.
 %%%%
 %%%% - Note: Variables between nodes are not shared. This should be fine for

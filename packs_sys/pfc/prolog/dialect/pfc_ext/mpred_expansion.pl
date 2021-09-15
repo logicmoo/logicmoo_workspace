@@ -2368,7 +2368,7 @@ exact_args_f(mpred_ain).
 exact_args_f(meta_argtypes_guessed).
 exact_args_f(meta_argtypes).
 exact_args_f(ignore).
-exact_args_f(foRmat).
+exact_args_f(format).
 exact_args_f(dynamic).
 exact_args_f(dmsg_pretty).
 exact_args_f(call_u).

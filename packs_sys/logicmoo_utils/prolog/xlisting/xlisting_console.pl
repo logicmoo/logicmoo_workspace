@@ -348,11 +348,11 @@ blob_count(L,NA):-findall(W,(new_atoms(X,Type),once(blob_info(X,Type,W))),LL),li
 % Print Record Properties.
 %
 print_record_properties(Record, Out) :-
-	foRmat(Out, 'Record reference ~w~n', [Record]),
+	format(Out, 'Record reference ~w~n', [Record]),
 	(   recorded(Key, Value, Record)
-	->  foRmat(Out, ' Key:   ~p~n', [Key]),
-	    foRmat(Out, ' Value: ~p~n', [Value])
-	;   foRmat(Out, ' <erased>~n', [])
+	->  format(Out, ' Key:   ~p~n', [Key]),
+	    format(Out, ' Value: ~p~n', [Value])
+	;   format(Out, ' <erased>~n', [])
 	).
 
 
@@ -363,11 +363,11 @@ print_record_properties(Record, Out) :-
 % Print Clause Properties.
 %
 print_clause_properties(REF, Out) :-
-	foRmat(Out, 'Clause reference ~w~n', [REF]),
+	format(Out, 'Clause reference ~w~n', [REF]),
 	(   m_clause(_,Head, Body, REF)
 	->  nl(Out),
 	    portray_clause(Out, (Head:-Body))
-	;   foRmat(Out, '\t<erased>~n', [])
+	;   format(Out, '\t<erased>~n', [])
 	).
 
 
@@ -746,15 +746,15 @@ unify_listing_header(Pred):-functor_safe(Pred,F,A),unify_listing_header(Pred,F,A
 %
 % Unify Listing Header.
 %
-unify_listing_header(M:_,F,A):- (foRmat('~n% -=<[ ~q ]>=-~n%~n%',[M:F/A])),fail.
-unify_listing_header(MP,_F,_A):- forall((system:predicate_property(MP,PP),\+ unify_listing_header_item(PP)),foRmat(' ~w',[PP])),foRmat('~n%~n~n',[]),fail.
-unify_listing_header(M:_P,F,A):- module_property(M,exports(List)),member(F/A,List),foRmat(':- ~q:export(~q).~n',[M,M:F/A]),fail.
-unify_listing_header(M:P,F,A):- predicate_property(system:P,imported_from(M)),foRmat(':- system:import(~q).~n',[M:F/A]),fail.
-unify_listing_header(M:P,F,A):- predicate_property(M:P,transparent),foRmat(':- ~q:module_transparent(~q).~n',[M,F/A]),fail.
-unify_listing_header(M:P,_,_):- predicate_property(M:P,meta_predicate(P)),foRmat(':- ~q:meta_predicate(~q).~n',[M,P]),fail.
+unify_listing_header(M:_,F,A):- (format('~n% -=<[ ~q ]>=-~n%~n%',[M:F/A])),fail.
+unify_listing_header(MP,_F,_A):- forall((system:predicate_property(MP,PP),\+ unify_listing_header_item(PP)),format(' ~w',[PP])),format('~n%~n~n',[]),fail.
+unify_listing_header(M:_P,F,A):- module_property(M,exports(List)),member(F/A,List),format(':- ~q:export(~q).~n',[M,M:F/A]),fail.
+unify_listing_header(M:P,F,A):- predicate_property(system:P,imported_from(M)),format(':- system:import(~q).~n',[M:F/A]),fail.
+unify_listing_header(M:P,F,A):- predicate_property(M:P,transparent),format(':- ~q:module_transparent(~q).~n',[M,F/A]),fail.
+unify_listing_header(M:P,_,_):- predicate_property(M:P,meta_predicate(P)),format(':- ~q:meta_predicate(~q).~n',[M,P]),fail.
 unify_listing_header(M:P,F,A):- unify_listing_header_item(Dynamic), 
-  predicate_property(M:P,Dynamic),foRmat(':- ~q:~q(~q).~n',[M,Dynamic,F/A]),fail.
-unify_listing_header(_M_FileMatch,_F,_A):- foRmat('~n',[]).
+  predicate_property(M:P,Dynamic),format(':- ~q:~q(~q).~n',[M,Dynamic,F/A]),fail.
+unify_listing_header(_M_FileMatch,_F,_A):- format('~n',[]).
 
 unify_listing_header_item(Dynamic):- arg(_,v(public,dynamic, multifile,discontiguous,volatile,thread_local,nodebug),Dynamic).
 :- meta_predicate unify_listing(:,?,?).
@@ -783,7 +783,7 @@ printAll(Call):-printAll(Call,Call).
 % Print All.
 %
 printAll(Call,Print):- flag(printAll,_,0), forall((Call,flag(printAll,N,N+1)),portray_clause_w_vars(Print)),fail.
-printAll(_Call,Print):- flag(printAll,PA,0),foRmat('~n /* found ~q for ~q. ~n */ ~n',[PA,Print]).
+printAll(_Call,Print):- flag(printAll,PA,0),format('~n /* found ~q for ~q. ~n */ ~n',[PA,Print]).
 
 
 /*
@@ -892,9 +892,9 @@ mpred_match_listing(Match):- mpred_match_listing_skip_pi(portray_hbr,Match,[]).
 mpred_match_listing_skip_pi(How,Match,SkipPI):- 
   locally(t_l:no_xlisting(Match),
  (
-  % foRmat('~N/* mpred_matches(~q) => ~n',[Match]),
+  % format('~N/* mpred_matches(~q) => ~n',[Match]),
    xlisting_inner(How,Match,SkipPI),
-  % foRmat(' <= mpred_matches(~q) */ ~n',[Match]).
+  % format(' <= mpred_matches(~q) */ ~n',[Match]).
   !)).
 
 
@@ -1069,7 +1069,7 @@ synth_clause_for_l2(M:H,B,Ref,Size,SYNTH):-
 synth_clause_for_large(_,_,_,[   ],0,(!,fail)):-!.
 synth_clause_for_large(_,_,_,[_|_],0,(!,fail)):- is_listing_hidden(skipLarge),!.
 synth_clause_for_large(M:H,B,Ref,KeySorted,Size,m_clause(M,H,B,Ref)):-   
-    %  foRmat('~N% Synthesizing the larger preds now ~q .~n',[KeySorted]),!,
+    %  format('~N% Synthesizing the larger preds now ~q .~n',[KeySorted]),!,
       member( (Size- (M:H)) , KeySorted) *-> \+ is_listing_hidden(M:H).
 
 :- export((synth_clause_ref/5)).
@@ -1489,8 +1489,8 @@ print_tree_stop(H):- print_tree_stop_1(H),!.
 print_tree_stop_1(H):- \+ in_pp(ansi), !, print_tree_with_final(H,'.').
 print_tree_stop_1(H):-  pprint_ecp(yellow,H).
 
-portray_phbr(_PW,M: P, M:pp(PPL),_):- (atom(P);compound(P)),foRmat('~N~n'),
-       in_cmt(print(P=PPL)),!,foRmat('~N~n').
+portray_phbr(_PW,M: P, M:pp(PPL),_):- (atom(P);compound(P)),format('~N~n'),
+       in_cmt(print(P=PPL)),!,format('~N~n').
 
 portray_phbr(PW,M:P,'$info'(M:'$predicate_property'(P,Props)),_):- (atom(P);compound(P)),
        % functor(P,F,A), NEWH = pp(M:F/A,Props),
@@ -1510,10 +1510,10 @@ portray_phbr(PW,H,B,Ref):-
 clause_u_here(H,B,Ref):- catch(call(call,clause_u(H,B,Ref)),_,clause(H,B,Ref)).
 
 portray_refinfo(R):- (var(R) ; R == 0),!.
-portray_refinfo(R):- \+ catch(clause_property(R,module(_)),_,fail), in_cmt(foRmat('Ref: ~p',[R])),!.
-portray_refinfo(R):- clause_property(R,erased), in_cmt(foRmat('Warn: ~p is erased!',[R])),fail.
-portray_refinfo(R):- source_file_info(R,Info), ignore((Info\=unk:_, in_cmt(foRmat('Fileinfo: ~w',[Info])),!,foRmat('~N',[]))).
-portray_refinfo(R):- in_cmt(foRmat('Ref: ~q',[R])),!,foRmat('~N',[]).
+portray_refinfo(R):- \+ catch(clause_property(R,module(_)),_,fail), in_cmt(format('Ref: ~p',[R])),!.
+portray_refinfo(R):- clause_property(R,erased), in_cmt(format('Warn: ~p is erased!',[R])),fail.
+portray_refinfo(R):- source_file_info(R,Info), ignore((Info\=unk:_, in_cmt(format('Fileinfo: ~w',[Info])),!,format('~N',[]))).
+portray_refinfo(R):- in_cmt(format('Ref: ~q',[R])),!,format('~N',[]).
 
 source_file_info(R,F:L):- (clause_property(R,line_count(L));L= (-1)), (clause_property(R,file(F));clause_property(R,source(F));F=unk).
 %= 	 	 
@@ -1527,8 +1527,8 @@ portray_hb(H,B):- portray_hb1(print_tree,H,B),!.
 portray_hb(H,B):- portray_hb1(print_ecp(white),H,B).
 
 
-portray_hb1(PW,H,B):- B==true, !, portray_one_line(PW,H),foRmat('~N').
-portray_hb1(PW,H,B):-  portray_one_line(PW,(H:-B)), foRmat('~N').
+portray_hb1(PW,H,B):- B==true, !, portray_one_line(PW,H),format('~N').
+portray_hb1(PW,H,B):-  portray_one_line(PW,(H:-B)), format('~N').
 
 
 
@@ -1552,7 +1552,7 @@ portray_one_line(_,H):- nquietly((tlbugger:no_slow_io,!, writeq(H),write('.'),nl
 portray_one_line(PW,H):-  nquietly((catch_each(portray_one_line0(PW,H),_,(writeq(H),write('.'),nl)))),!.
 
 portray_one_line0(_,H):- baseKB:portray_one_line_hook(H),!.
-portray_one_line0(_,H):- maybe_separate(H,(foRmat('~N~n'))),fail.
+portray_one_line0(_,H):- maybe_separate(H,(format('~N~n'))),fail.
 portray_one_line0(PW,H):- \+ \+ ((logicmoo_varnames:get_clause_vars(H), portray_one_line1(PW,H))),!.
 portray_one_line0(PW,H):- portray_one_line1(PW,H),!.
 

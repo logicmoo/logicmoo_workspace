@@ -48,16 +48,16 @@ m_print_stats(M) :-
 	percent(NP, L, P_NP),
 	percent(NS, L, P_NS),	
 	percent(NN, L, P_NN),
-	foRmat('Clauses:~t ~w ~40|~n', [L]),
-	foRmat('Not Horn:~t ~w ~40|~t(~w%)~6+~n', [N_NH,P_NH]),
-	foRmat('Not ground:~t ~w ~40|~t(~w%)~6+~n', [N_NG,P_NG]),
-	foRmat('Not range restricted:~t ~w ~40|~t(~w%)~6+~n', [N_NR,P_NR]),
-	foRmat('Not range restricted non Horn:~t ~w ~40|~t(~w%)~6+~n',
+	format('Clauses:~t ~w ~40|~n', [L]),
+	format('Not Horn:~t ~w ~40|~t(~w%)~6+~n', [N_NH,P_NH]),
+	format('Not ground:~t ~w ~40|~t(~w%)~6+~n', [N_NG,P_NG]),
+	format('Not range restricted:~t ~w ~40|~t(~w%)~6+~n', [N_NR,P_NR]),
+	format('Not range restricted non Horn:~t ~w ~40|~t(~w%)~6+~n',
 	       [NS,P_NS]),
-	foRmat('Depth increasing:~t ~w ~40|~t(~w%)~6+~n', [ND,P_ND]),	
-	foRmat('Units:~t ~w ~40|~t(~w%)~6+~n', [NU,P_NU]),
-	foRmat('Positive Non-Units:~t ~w ~40|~t(~w%)~6+~n', [NP,P_NP]),
-	foRmat('Negative:~t ~w ~40|~t(~w%)~6+~n', [NN,P_NN]),
+	format('Depth increasing:~t ~w ~40|~t(~w%)~6+~n', [ND,P_ND]),	
+	format('Units:~t ~w ~40|~t(~w%)~6+~n', [NU,P_NU]),
+	format('Positive Non-Units:~t ~w ~40|~t(~w%)~6+~n', [NP,P_NP]),
+	format('Negative:~t ~w ~40|~t(~w%)~6+~n', [NN,P_NN]),
 	print_signature_info(Ps, Fs).
 
 
@@ -69,13 +69,13 @@ print_signature_info(Ps, Fs) :-
 
 print_sig_info(Fs, Info) :-
 	( Fs = [] ->
-  	  foRmat('~w:~t ~w ~40|~n', [Info, none])
+  	  format('~w:~t ~w ~40|~n', [Info, none])
 	; setof(S-Fs1, setof(F, member(F/S, Fs), Fs1), Ss),
 	  length(Fs, L),
-  	  foRmat('~w:~t ~w ~40|~n', [Info, L]),
+  	  format('~w:~t ~w ~40|~n', [Info, L]),
 	  ( member(A-S, Ss),
 	    length(S, LS),
-	    foRmat('        with arity~t ~w: ~33|~t ~w ~7+~n', [A, LS]),
+	    format('        with arity~t ~w: ~33|~t ~w ~7+~n', [A, LS]),
 	    fail
 	  ; true
 	  )
@@ -90,11 +90,11 @@ m_print_sig(M) :-
 
 print_sig(Fs, Info) :-
 	( Fs = [] ->
-	  foRmat('Empty signature for type: ~w~n', [Info])
+	  format('Empty signature for type: ~w~n', [Info])
 	; setof(S-Fs1, setof(F, member(F/S, Fs), Fs1), Ss),
 	  ( member(A-S, Ss),
 	    ( member(Symbol, S),
-              foRmat('~q~t ~60|/ ~w ~w~n', [Symbol, A, Info]),
+              format('~q~t ~60|/ ~w ~w~n', [Symbol, A, Info]),
               fail
 	    ; true
 	    ),

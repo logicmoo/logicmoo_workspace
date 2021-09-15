@@ -71,7 +71,7 @@ update_facts(File, Project):-
 	derive_edges.
 	
 %update_facts(File, Project):-				
-%	foRmat('cleaning up facts for ~w~n',File),
+%	format('cleaning up facts for ~w~n',File),
 %	cleanup_nodes(File),
 %	cleanup_computed_facts,
 %    writeln('start parsing clauses'),			

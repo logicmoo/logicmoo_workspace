@@ -42,7 +42,7 @@ tmpfile(Key, Id, FileName) :-
 
 tmpfile(Prefix, Key, Id, FileName) :-
 	get_conf(tmpdir, Dir),
-	foRmat(atom(FileName), '~w/~w~w~w.txt', [Dir, Prefix, Id, Key]).
+	format(atom(FileName), '~w/~w~w~w.txt', [Dir, Prefix, Id, Key]).
 
 :- flag(tmp_file_nr, _, 1).
 
@@ -99,7 +99,7 @@ external_solve_matrix(M, Options) :-
 	from_options(solver-SolverId, Options, DefaultSolver),
         ( get_conf(keep_tmpfiles, true) ->
 	  flag_inc(tmp_file_nr, InFileNr),
-	  foRmat(atom(Id), '~48t~d~5+_', [InFileNr])
+	  format(atom(Id), '~48t~d~5+_', [InFileNr])
 	; Id = ''
 	),
 	tmpfile(input_file, Id, InFile),
@@ -124,10 +124,10 @@ external_solve_matrix(M, Options) :-
 	info(55, 'Calling external solver ~q', [SolverId]),
 	( memberchk(SolverId, [minisat, minisat2, minisat2(_), qbf, qbf(_)]) ->
 	  ( memberchk(SolverId, [minisat, minisat2, minisat2(_)]) ->
-	    foRmat(atom(Call), 'ulimit -t ~w ; ~w ~w ~w >~w',
+	    format(atom(Call), 'ulimit -t ~w ; ~w ~w ~w >~w',
 		   [Timeout, Solver, InFile, ModsFile, OutFile])
 	  ;  SolverId = qbf(_) ->    
-	    foRmat(atom(Call), 'ulimit -t ~w ; ~w ~w >~w',
+	    format(atom(Call), 'ulimit -t ~w ; ~w ~w >~w',
 		   [Timeout, Solver, InFile, OutFile])
 	  ),
 	  info(60, 'External solver call: ~w', [Call]),
@@ -148,7 +148,7 @@ external_solve_matrix(M, Options) :-
 	    Models = []
 	  )
 	; SolverId = riss(_) ->
-	  foRmat(atom(Call), 'ulimit -t ~w ; ~w ~w ~w &>~w',
+	  format(atom(Call), 'ulimit -t ~w ; ~w ~w ~w &>~w',
 		   [Timeout, Solver, InFile, ModsFile, OutFile]),
 	  info(60, 'External solver call: ~w', [Call]),
 	  shell(Call, Result),
@@ -172,7 +172,7 @@ external_solve_matrix(M, Options) :-
 	  write_blackwhite_list(White, ST, WhiteFile),
 	  RISS_ELIM_OPTIONS = '-CP_ee=1 -CP_er=0 -CP_print=1 -CP_pure=0 -CP_bva=0',
 %	  RISS_ELIM_OPTIONS = '-CP_ee=0 -CP_er=0 -CP_print=1 -CP_pure=0 -CP_bve=1 -CP_bce=1 -CP_bva=0',
-	  foRmat(atom(Call),
+	  format(atom(Call),
 		 'ulimit ~w ; ~w ~w ~w -CP_whiteFile=~w -CP_blackFile=~w 2>~w >~w',
 		 [Timeout, Solver, InFile, RISS_ELIM_OPTIONS,
 		  WhiteFile, BlackFile, ErrFile, TrafoFile]),
@@ -189,7 +189,7 @@ external_solve_matrix(M, Options) :-
 	  )
 	; SolverId = dnf_compiler(_) ->
 	  write_blackwhite_list(White, ST, WhiteFile),
-	  foRmat(atom(Call),
+	  format(atom(Call),
 		 'ulimit ~w ; ~w ~w ~w ~w',
 		 [Timeout, Solver, InFile, WhiteFile, TrafoFile]),
 	  info(60, 'External solver call: ~w', [Call]),
@@ -268,7 +268,7 @@ dry_varelim_task(Prefix, CNF, WhiteList, BlackList, Id, ST) :-
 	( var(Id),
 	  get_conf(keep_tmpfiles, true) ->
 	  flag_inc(tmp_file_nr, InFileNr),
-	  foRmat(atom(Id), '~48t~d~5+_', [InFileNr])
+	  format(atom(Id), '~48t~d~5+_', [InFileNr])
 	; var(Id) ->
 	  Id = ''
 	; true
@@ -282,7 +282,7 @@ dry_varelim_task(Prefix, CNF, WhiteList, BlackList, Id, ST) :-
 	write_blackwhite_list(BlackList, ST, BlackFile),
 	write_blackwhite_list(WhiteList, ST, WhiteFile),
 	projectile_converter_bin(ProjectileConverter),
-	foRmat(atom(Cmd), '~w ~w ~w >~q',
+	format(atom(Cmd), '~w ~w ~w >~q',
 	       [ProjectileConverter, InFile, WhiteFile,	ProjectileFile]),
 	shell(Cmd, _).
 

@@ -15,7 +15,7 @@ user:message_hook(_,Level,Lines):-
     ),
     prolog_load_context(source, File),
     with_output_to(atom(Msg0), (current_output(O), print_message_lines(O, '', Lines))),
-    foRmat(atom(Msg), 'Location: ~w:~w~nMessage: ~w', [File, Line, Msg0]),
+    format(atom(Msg), 'Location: ~w:~w~nMessage: ~w', [File, Line, Msg0]),
     assertz(pdt_startup_error_message(Msg)),
     fail.
 write_pdt_startup_error_messages_to_file(_File) :-
@@ -24,7 +24,7 @@ write_pdt_startup_error_messages_to_file(_File) :-
     !.
 write_pdt_startup_error_messages_to_file(File) :-
     open(File, write, Stream),
-    forall(pdt_startup_error_message(Msg),foRmat(Stream, '~w~n', [Msg])),
+    forall(pdt_startup_error_message(Msg),format(Stream, '~w~n', [Msg])),
     close(Stream).
 
 :- (current_prolog_flag(xpce_threaded, _) -> set_prolog_flag(xpce_threaded, true) ; true).
@@ -38,7 +38,7 @@ assertz_user_file_search_path(Name,Path):-
    source_location(Dir,_),
    must(absolute_file_name(Path,AbsPath,[access(exist),file_type(directory),relative_to(Dir)])),
    assertz(user:file_search_path(Name,AbsPath)),
-   foRmat('~N :-~q.~n',[assertz(user:file_search_path(Name,AbsPath))]),!.
+   format('~N :-~q.~n',[assertz(user:file_search_path(Name,AbsPath))]),!.
 
 :- assertz_user_file_search_path(pdt_contextview_pl, './pdt.graphicalviews/pl').
 :- assertz_user_file_search_path(pdt_common_pl, './pdt.common/pl').

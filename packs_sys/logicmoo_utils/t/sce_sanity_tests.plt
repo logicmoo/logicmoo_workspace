@@ -435,7 +435,7 @@ scce(S,G,C):-
      setup_call_cleanup_each(key_call(Key,1),key_call(Key,2),key_call(Key,3)).
 
 key_call(Key,Arg):- nb_current(Key,In),arg(Arg,In,Goal),Goal,nb_setval(Key,In).
-scce_key(In,Key):- foRmat(atom(Key),'~q',[In]),nb_setval(Key,In).
+scce_key(In,Key):- format(atom(Key),'~q',[In]),nb_setval(Key,In).
 
 % :- '$set_source_module'(system_scce).
 

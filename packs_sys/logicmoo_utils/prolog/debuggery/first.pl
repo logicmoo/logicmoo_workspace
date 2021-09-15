@@ -70,9 +70,6 @@
 
           ]).
 
-foRmat(X,Y,Z):- catch(format(X,Y,Z),E,(dumpST,writeln(E),break)).
-foRmat(X,Y):- catch(format(X,Y),E,(dumpST,writeln(E),break)).
-foRmat(Y):- catch(format(Y),E,(dumpST,writeln(E),break)).
 
 :- set_module(class(library)).
 old_set_predicate_attribute(M:F/A, Name, Val):- functor(P,F,A), !, old_set_predicate_attribute(M:P, Name, Val).
@@ -584,7 +581,7 @@ oc_sub_term(X, Term) :-
  
 
 maybe_fix_varnumbering(MTP,_NewMTP):- term_attvars(MTP,Vs),Vs\==[],!,fail.
-maybe_fix_varnumbering(MTP,NewMTP):- ground(MTP), oc_sub_term(E,MTP),compound(E), E = '$VAR'(N),atomic(N),!, foRmat(string(S),' ~q .',[(MTP)]),
+maybe_fix_varnumbering(MTP,NewMTP):- ground(MTP), oc_sub_term(E,MTP),compound(E), E = '$VAR'(N),atomic(N),!, format(string(S),' ~q .',[(MTP)]),
  notrace(catch( atom_to_term(S,(NewMTP),Vs),E,((ignore(source_location(F,L)),writeq(S->E=F:L),fail)))), \+ ground(NewMTP),
   (prolog_load_context(variable_names,SVs);SVs=[]),!,
    align_variables(Vs,SVs,ExtraVs),
@@ -636,11 +633,11 @@ lbl_vars(N,NN,X,YY,Vs):-!,lbl_vars(N,NN,X,[],YY,Vs).
 lbl_vars(S1,S1,A,OVs,A,OVs):- atomic(A),!.
 lbl_vars(S1,S1,Var,IVs,Var,OVs):- attvar(Var),get_attr(Var,logicmoo_varnames,Nm), (memberchk(Nm=PreV,IVs)->(OVs=IVs,mustvv(PreV==Var));OVs=[Nm=Var|IVs]).
 lbl_vars(S1,S2,Var,IVs,Var,OVs):- var(Var),!,(\+number(S1)->true;(((member(Nm=PreV,IVs),Var==PreV)->(OVs=IVs,put_attr(Var,logicmoo_varnames,Nm));
-  (foRmat(atom(Nm),'~q',['$VAR'(S1)]),S2 is S1+1,(memberchk(Nm=Var,IVs)->OVs=IVs;OVs=[Nm=Var|IVs]))))).
+  (format(atom(Nm),'~q',['$VAR'(S1)]),S2 is S1+1,(memberchk(Nm=Var,IVs)->OVs=IVs;OVs=[Nm=Var|IVs]))))).
 
 lbl_vars(S1,S1,NC,OVs,NC,OVs):- ( \+ compound(NC)),!.
 lbl_vars(S1,S1,'$VAR'(Nm),IVs,PreV,OVs):-  atom(Nm), !, must(memberchk(Nm=PreV,IVs)->OVs=IVs;OVs=[Nm=PreV|IVs]).
-lbl_vars(S1,S1,'$VAR'(N0),IVs,PreV,OVs):- (number(N0)->foRmat(atom(Nm),'~q',['$VAR'(N0)]);Nm=N0), (memberchk(Nm=PreV,IVs)->OVs=IVs;OVs=[Nm=PreV|IVs]).
+lbl_vars(S1,S1,'$VAR'(N0),IVs,PreV,OVs):- (number(N0)->format(atom(Nm),'~q',['$VAR'(N0)]);Nm=N0), (memberchk(Nm=PreV,IVs)->OVs=IVs;OVs=[Nm=PreV|IVs]).
 lbl_vars(S1,S3,[X|XM],IVs,[Y|YM],OVs):-!,lbl_vars(S1,S2,X,IVs,Y,VsM),lbl_vars(S2,S3,XM,VsM,YM,OVs).
 lbl_vars(S1,S2,XXM,VsM,YYM,OVs):- XXM=..[F|XM],lbl_vars(S1,S2,XM,VsM,YM,OVs),!,YYM=..[F|YM].
 

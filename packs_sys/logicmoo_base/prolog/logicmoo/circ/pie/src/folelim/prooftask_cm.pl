@@ -77,7 +77,7 @@ cmprove :-
 
 cmprove_process :-
         current_prolog_flag(argv, Args),
-	foRmat(user_error, '% Argument vector passed to Prolog: ~q~n', [Args]),
+	format(user_error, '% Argument vector passed to Prolog: ~q~n', [Args]),
         ( select(OptionArg, Args, Files),
           sub_atom(OptionArg, 0, B, _, '--options='),
           sub_atom(OptionArg, B, _, 0, OptionsAtom),
@@ -103,7 +103,7 @@ info_time(V, _, _, _) :-
 	!.
 info_time(V, Info, T1, T2) :-
 	T is T1 - T2,
-	foRmat(atom(Fmt), 'CPUTIME: ~w ~t~3f sec.~76|', [Info, T]),
+	format(atom(Fmt), 'CPUTIME: ~w ~t~3f sec.~76|', [Info, T]),
 	info(V, Fmt).
 
 get_cputime(T) :-
@@ -150,7 +150,7 @@ cmpr(F, Options) :-
 	  get_cputime(T2),
 	  cmpr2(MT, MA, Options1),
 	  info_time(20, 'Normalization', T2, T1)
-	; err('Unrecognized cmpr input foRmat: ~q', [F])
+	; err('Unrecognized cmpr input format: ~q', [F])
 	),
 	cmpr_conclude(F, Options1, T1).
 
@@ -187,34 +187,34 @@ cmpr_conclude(ProblemSpec, Options, T1) :-
 	  memberchk(proof=ProofSpec, Options),
 	  memberchk(result_proof=Proof, Options) ->
 	  ( ProofSpec == writeq ->
-	    foRmat('% Proof:~n'),
+	    format('% Proof:~n'),
 	    writeq(proof(Proof)),
 	    writeln('.'),
-	    foRmat('% Proof printed~n'),
+	    format('% Proof printed~n'),
 	    get_cputime(T4),
 	    info_time(20, 'Proof printing', T4, T2)
 	  ; ProofSpec == write_canonical ->
-	    foRmat('% Proof:~n'),
+	    format('% Proof:~n'),
 	    write_canonical(proof(Proof)),
 	    writeln('.'),
-	    foRmat('% Proof printed~n'),
+	    format('% Proof printed~n'),
 	    get_cputime(T4),
 	    info_time(20, 'Proof printing', T4, T2)
 	  ; %% writeq and write_canonical cause a segmentation failure for
 	    %% large proof terms, writex is an implementation that seems
 	    %% to work for these
 	    ProofSpec == writex ->
-	    foRmat('% Proof:~n'),
+	    format('% Proof:~n'),
 	    writex(proof(Proof)),
 	    writeln('.'),
-	    foRmat('% Proof printed~n'),
+	    format('% Proof printed~n'),
 	    get_cputime(T4),
 	    info_time(20, 'Proof printing', T4, T2)
 	  ; ProofSpec == pp ->
-	    foRmat('% Proof:~n'),
+	    format('% Proof:~n'),
 	    pp(proof(Proof)),
 	    writeln('.'),
-	    foRmat('% Proof printed~n'),
+	    format('% Proof printed~n'),
 	    get_cputime(T4),
 	    info_time(20, 'Proof printing', T4, T2)
 	  ; true
@@ -231,7 +231,7 @@ cmpr_conclude(ProblemSpec, Options, T1) :-
 
 date_atom(A) :-
 	date(date(Y,M,D)),
-	foRmat(atom(A), '~|~`?t~d~4+-~|~`0t~d~2+-~|~`0t~d~2+', [Y,M,D]).
+	format(atom(A), '~|~`?t~d~4+-~|~`0t~d~2+-~|~`0t~d~2+', [Y,M,D]).
 
 cmpr2(MT, MA, Options) :-
 	get_cputime(T1),
@@ -959,7 +959,7 @@ mk_pre_code(Call, Depth, Os, '$prolog'(Call, I)) :-
 %	mk_post_code( !, _Depth, Os, Call ).
 %	mk_post_code( ( Depth > 5 -> ! ; true ), Depth, Os, Call ).
 %	mk_post_code( ( Depth < 5 -> ! ; true ), Depth, Os, Call ).
-%	mk_post_code( foRmat('At dept ~q~n', [Depth]), Depth, Os, Call ).
+%	mk_post_code( format('At dept ~q~n', [Depth]), Depth, Os, Call ).
 
 
 % add_cutcode(C, Os, [~Pre,~Post|C]) :-

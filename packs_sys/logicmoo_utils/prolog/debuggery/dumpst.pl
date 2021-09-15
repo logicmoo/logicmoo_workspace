@@ -131,7 +131,7 @@ dumpST0(_,_):- tlbugger:ifHideTrace,!.
 dumpST0(Frame,MaxDepth):-  prolog_current_frame(Current),(number(Frame);get_dump_frame(Current,Frame)),!,
    ignore(MaxDepth=5000),Term = dumpST(MaxDepth),!,
    ignore(( get_prolog_backtrace(MaxDepth, Trace,[frame(Frame),goal_depth(13)]),
-    foRmat(user_error, '% dumpST ~p', [Term]), nl(user_error),
+    format(user_error, '% dumpST ~p', [Term]), nl(user_error),
     attach_console,dtrace,
     dbreak,
 
@@ -334,16 +334,16 @@ if_defined_mesg_color(G,C):- current_predicate(mesg_color/2),mesg_color(G,C).
 %
 % Fdmsg Secondary Helper.
 %
-fdmsg1(txt(S)):-'foRmat'(S,[]),!.
-fdmsg1(level=L):-'foRmat'('(~q)',[L]),!.
-fdmsg1(context_module=G):- simplify_m(G,M),!,if_defined_mesg_color(G,Ctrl),ansicall(Ctrl,foRmat('[~w]',[M])),!.
-fdmsg1(has_alternatives=G):- (G==(false)->true;'foRmat'('<*>',[])),!.
-fdmsg1(hidden=G):- (G==(false)->true;'foRmat'('$',[])),!.
+fdmsg1(txt(S)):-'format'(S,[]),!.
+fdmsg1(level=L):-'format'('(~q)',[L]),!.
+fdmsg1(context_module=G):- simplify_m(G,M),!,if_defined_mesg_color(G,Ctrl),ansicall(Ctrl,format('[~w]',[M])),!.
+fdmsg1(has_alternatives=G):- (G==(false)->true;'format'('<*>',[])),!.
+fdmsg1(hidden=G):- (G==(false)->true;'format'('$',[])),!.
 fdmsg1(goal=G):- do_fdmsg1(G).
-fdmsg1(clause=[F,L]):- directory_file_path(_,FF,F),'foRmat'('  %  ~w:~w: ',[FF,L]),!.
-fdmsg1(clause=[F,L]):- fresh_line,'foRmat'('%  ~w:~w: ',[F,L]),!.
-fdmsg1(clause=[]):-'foRmat'(' /*DYN*/ ',[]),!.
-fdmsg1(G):- if_defined_mesg_color(G,Ctrl),ansicall(Ctrl,foRmat(' ~q ',[G])),!.
+fdmsg1(clause=[F,L]):- directory_file_path(_,FF,F),'format'('  %  ~w:~w: ',[FF,L]),!.
+fdmsg1(clause=[F,L]):- fresh_line,'format'('%  ~w:~w: ',[F,L]),!.
+fdmsg1(clause=[]):-'format'(' /*DYN*/ ',[]),!.
+fdmsg1(G):- if_defined_mesg_color(G,Ctrl),ansicall(Ctrl,format(' ~q ',[G])),!.
 fdmsg1(M):-dmsg(failed_fdmsg1(M)).
 
 do_fdmsg1(G):- 
@@ -352,7 +352,7 @@ do_fdmsg1(G):-
   term_variables(GG,_Vars),
   copy_term_nat(GG,GGG), =(GG,GGG),
   numbervars(GGG,0,_,[attvar(skip)]),
-  if_defined_mesg_color(GGG,Ctrl),ansicall(Ctrl,foRmat(' ~q. ',[GGG])),!.
+  if_defined_mesg_color(GGG,Ctrl),ansicall(Ctrl,format(' ~q. ',[GGG])),!.
 
 
 %= 	 	 
@@ -380,21 +380,21 @@ fdmsg(M):- logicmoo_util_catch:ddmsg(failed_fdmsg(M)).
 
 
 printable_variable_name(Var, Name) :- nonvar(Name),!,must(printable_variable_name(Var, NameO)),!,Name=NameO.
-printable_variable_name(Var, Name) :- nonvar(Var),Var='$VAR'(Named), (nonvar(Named)-> Name=Named ; foRmat(atom(Name),"~w_",[Var])).
-printable_variable_name(Var, Name) :- nonvar(Var),foRmat(atom(Name),"(_~q_)",[Var]).
+printable_variable_name(Var, Name) :- nonvar(Var),Var='$VAR'(Named), (nonvar(Named)-> Name=Named ; format(atom(Name),"~w_",[Var])).
+printable_variable_name(Var, Name) :- nonvar(Var),format(atom(Name),"(_~q_)",[Var]).
 printable_variable_name(Var,Name):- (get_attr(Var, vn, Name1);
   get_attr(Var, varnames, Name1)),
  (var_property(Var,name(Name2))-> 
    (Name1==Name2-> atom_concat(Name1,'_VN',Name) ; Name=(Name1:Name2)); 
     (atom(Name1)->atom_concat('?',Name1,Name);
-   foRmat(atom(Name),"'$VaR'(~q)",[Var]))),!.
+   format(atom(Name),"'$VaR'(~q)",[Var]))),!.
 printable_variable_name(Var,Name):- v_name1(Var,Name),!.
 printable_variable_name(Var,Name):- v_name2(Var,Name),!. % ,atom_concat(Name1,'_TL',Name).
 
 v_name1(Var,Name):- var_property(Var,name(Name)),!.
 v_name1(Var,Name):- get_varname_list(Vs),member(Name=V,Vs),atomic(Name),V==Var,!.
 v_name1(Var,Name):- nb_current('$old_variable_names', Vs),member(Name=V,Vs),atomic(Name),V==Var,!.
-v_name2(Var,Name):- get_varname_list(Vs),foRmat(atom(Name),'~W',[Var, [variable_names(Vs)]]).
+v_name2(Var,Name):- get_varname_list(Vs),format(atom(Name),'~W',[Var, [variable_names(Vs)]]).
  
 
 %attrs_to_list(att(sk,_,ATTRS),[sk|List]):-!,attrs_to_list(ATTRS,List).
@@ -752,7 +752,7 @@ user:message_hook(Term, Kind, Lines):- current_prolog_flag(runtime_message_hook,
  stop_rtrace,1trace,
   dmsg(message_hook(Term, Kind, Lines)),quietly(dumpST(10)),dmsg(message_hook(Term, Kind, Lines)),
    !,fail,
-   (sleep(1.0),read_pending_codes(user_input, Chars, []), foRmat(error_error, '~s', [Chars]),flush_output(error_error),!,Chars=[C],
+   (sleep(1.0),read_pending_codes(user_input, Chars, []), format(error_error, '~s', [Chars]),flush_output(error_error),!,Chars=[C],
                 dtrace(true,C),!),
 
    fail)),_,true))),fail)))))).

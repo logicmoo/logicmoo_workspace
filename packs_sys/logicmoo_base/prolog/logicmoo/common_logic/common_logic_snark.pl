@@ -938,9 +938,9 @@ no_kb_why_flags_assert(X,X).
 write_eng(X):- in_cmt(in_box((wots(S,write_eng(0,X)),write(S)))).
 
 in_box(G):-
-  foRmat("~N~n%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%~n"),ttyflush,
+  format("~N~n%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%~n"),ttyflush,
   ignore(G),ttyflush,
-  foRmat("~N~n%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%~n"),ttyflush,
+  format("~N~n%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%~n"),ttyflush,
   !.
 
 is_lit_fact(P):- contains_modal(P),!,fail.
@@ -989,7 +989,7 @@ write_eng(L,A & B):- write_eng(L,[paren(A),' and ~n   ',paren(B)]).
 write_eng(L,A v B):- write_eng(L,[paren(A),' or ',paren(B)]).
 
 
-write_eng(_,X):- atom(X), atom_contains(X,' '), foRmat(X),!.
+write_eng(_,X):- atom(X), atom_contains(X,' '), format(X),!.
 
 % fact/1 is 9
 write_eng(_,fact(P)):- !, write_eng(9,P).
@@ -1043,16 +1043,16 @@ entails_to_boxlog(_,KB,Why,Flags,A,[RealOUT]):-
   RealOUT = A, nop(kb_why_flags_assert(KB,Why,Flags,A)).
 
 show_boxlog(O):- is_ftVar(O), !, show_boxlog(ftVar(O)).
-show_boxlog([X|Y]):- show_boxlog(X), ignore((Y \==[], foRmat('~N%  AND~n'),show_boxlog(Y))).
+show_boxlog([X|Y]):- show_boxlog(X), ignore((Y \==[], format('~N%  AND~n'),show_boxlog(Y))).
 show_boxlog(O):- is_list(O),!,maplist(show_boxlog,O).
-show_boxlog(and(X,Y)):- show_boxlog(X),foRmat('~N%  AND~n'),show_boxlog(Y).
-show_boxlog('&'(X,Y)):- show_boxlog(X),foRmat('~N%  AND~n'),show_boxlog(Y).
+show_boxlog(and(X,Y)):- show_boxlog(X),format('~N%  AND~n'),show_boxlog(Y).
+show_boxlog('&'(X,Y)):- show_boxlog(X),format('~N%  AND~n'),show_boxlog(Y).
 show_boxlog(kb_why_flags_assert(KB,Why,_Flags,O)):-
    nop(wdmsg(kb_y_________________________________________________________f(KB,Why))),!,
    %show_boxlog(O).
    setup_call_cleanup(system:push_operators(baseKB:[op(1000,yfx,'&')],Undo),show_boxlog(O),system:pop_operators(Undo)).
   
-show_boxlog(O):- write_eng(O), subst_each(O,['& '='/\\','v '='\\/'],OO), foRmat('~N~n'), print_tree(OO),foRmat('.~N~n').
+show_boxlog(O):- write_eng(O), subst_each(O,['& '='/\\','v '='\\/'],OO), format('~N~n'), print_tree(OO),format('.~N~n').
 
 show_boxlog:- forall(call_u(boxlog(O)),show_boxlog(O)).
 
@@ -1063,13 +1063,13 @@ show_boxlog:- forall(call_u(boxlog(O)),show_boxlog(O)).
 kif_to_boxlog(P):-
   update_changed_files,
   local_pretty_numbervars_ground(P,X),
-  foRmat('~N~n~n~n~n=======================================================~n'),  
+  format('~N~n~n~n~n=======================================================~n'),  
   display(X),
-  foRmat("~N============================================~n"),
-  foRmat('~n~n?- kif_to_boxlog( ~q ).\n\n',[(X)]),ttyflush,
+  format("~N============================================~n"),
+  format('~n~n?- kif_to_boxlog( ~q ).\n\n',[(X)]),ttyflush,
   
    
-   foRmat('~n~n% In English: ',[]),
+   format('~n~n% In English: ',[]),
    write_eng(X),
 
    %with_no_output
@@ -1077,11 +1077,11 @@ kif_to_boxlog(P):-
    maplist(no_kb_why_flags_assert,EF,S),sort(S,O),
 
    length(O,L),
-   in_box((foRmat('% Results in the following ~w entailment(s): ~n',[L]),
+   in_box((format('% Results in the following ~w entailment(s): ~n',[L]),
            call(maplist,writeqln1,O))),
 
    show_boxlog(O),
-   foRmat("============================================"),!.
+   format("============================================"),!.
 
 writeqln1(O):- writeq(O),writeln('.').
 

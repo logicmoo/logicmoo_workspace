@@ -36,7 +36,7 @@
  op(600,yfx,('&')), op(600,yfx,('v')),op(350,xfx,('xor')), op(300,fx,('-')),
  op(300,fx,('~'))))))).   :- endif.
 
-:- if((prolog_load_context(source,S),foRmat(user_error,'~N~q,~n',[running(S)]))). :- endif.
+:- if((prolog_load_context(source,S),format(user_error,'~N~q,~n',[running(S)]))). :- endif.
 :- if(( \+ current_prolog_flag(test_module,_),set_prolog_flag(test_module,baseKB),assert(baseKB:this_is_baseKB))). :- endif.
 :- if(( \+ current_prolog_flag(test_typein_module,_), set_prolog_flag(test_typein_module,baseKB))). :- endif.
 
@@ -50,7 +50,7 @@
 :- if(( \+ current_prolog_flag(test_module,user), \+ current_prolog_flag(test_module,baseKB))).
 % writes a temp header file and include/1s it
 :- if(( tmp_file(swi, Dir), make_directory(Dir),working_directory(OLD,Dir),asserta(t_l:old_pwd(OLD,Dir)),current_prolog_flag(test_module,Module),open('module_header.pl',write,OS),
-  foRmat(OS,'\n:- module(~q,[test_header_include/0]).\n test_header_include. ',[Module]),close(OS))). :- endif.
+  format(OS,'\n:- module(~q,[test_header_include/0]).\n test_header_include. ',[Module]),close(OS))). :- endif.
 :- include('module_header.pl').
 :- retract(t_l:old_pwd(OLD,Delete)),working_directory(_,OLD),delete_directory_and_contents(Delete).
 :- endif.

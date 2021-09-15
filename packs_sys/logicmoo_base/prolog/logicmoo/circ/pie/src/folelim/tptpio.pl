@@ -29,7 +29,7 @@
 %%%% otherwise uses tptp_directory and extension ".p" to determine
 %%%% a tptp file name.
 %%%%
-%%%% Reads in the file (TPTP CNF foRmat) and includes specified in the
+%%%% Reads in the file (TPTP CNF format) and includes specified in the
 %%%% file. Returns the corresponding matrix with extra information
 %%%% in ~'$options'(ListOfOptions) literals.
 %%%%
@@ -476,7 +476,7 @@ tptp_problem(FileSpec, Options, Format, MTheorem, MAxioms) :-
 	  split_tptp_fol_problem(X, Conjectures, Axioms),
 	  list_to_conjunction_1(Conjectures, MTheorem),
 	  list_to_conjunction_1(Axioms, MAxioms)
-	; err('Unsupported TPTP foRmat: ~w', [Format])
+	; err('Unsupported TPTP format: ~w', [Format])
 	).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -544,7 +544,7 @@ validate_tptp_problem(X, Kind) :-
 		[Format, Info1])
 	  ; true
 	  )
-	; err('Unsupported TPTP foRmat: ~w', [Format])
+	; err('Unsupported TPTP format: ~w', [Format])
 	).
 
 list_to_conjunction_1([F], F) :-

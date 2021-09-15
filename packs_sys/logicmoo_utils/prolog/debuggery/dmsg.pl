@@ -228,7 +228,7 @@ cnvt_in_out(sgr, Out,_Ctrl,true,OffCode):- into_oncode_call(Out,[default],OffCod
 
 cnvt_in_out(html,_Out,C,I,O):- html_on_off(C,I,O),!.
 cnvt_in_out(_, _Out,_Ctrl,true,true):-!.
-cnvt_in_out(Mode, _Out, Ctrl,true,true):- foRmat(user_error,'~N% ~q.~n', [mising_ctrl(Mode, Ctrl)]).
+cnvt_in_out(Mode, _Out, Ctrl,true,true):- format(user_error,'~N% ~q.~n', [mising_ctrl(Mode, Ctrl)]).
 
 enter_recording_stream(_Out,_Ctrl,H,S):- new_memory_file(H),open_memory_file(H,write,S),set_output(S).
 exit_recording_stream(Out,Ctrl,H,S):- set_output(Out),close(S),memory_file_to_string(H,Str),terminal_ansi_format([Ctrl],'~s',[Str]).
@@ -543,10 +543,10 @@ pretty_and_hide(In, Info):- dzotrace((portray_vars:pretty_numbervars(In,M),hide_
 
 dmsg_pretty(In):- dzotrace( ignore( \+ \+   ( pretty_and_hide(In, Info),dmsg(Info)))).
 
-wdmsg_pretty(In):- !,notrace(in_cmt(foRmat('~q',In))).
+wdmsg_pretty(In):- !,notrace(in_cmt(format('~q',In))).
 wdmsg_pretty(In):- \+ \+ dzotrace((pretty_and_hide(In, Info),wdmsg(Info))).
 
-wdmsg_pretty(F,In):- !,notrace(in_cmt(foRmat(F,In))).
+wdmsg_pretty(F,In):- !,notrace(in_cmt(format(F,In))).
 wdmsg_pretty(F,In):- \+ \+ dzotrace((pretty_and_hide(In, Info),wdmsg(F,Info))).
 
 %= 	 	 
@@ -630,12 +630,12 @@ is_regular_format_args(X,_):- \+ atomic(X),!,fail.
 is_regular_format_args(X,Y):- (string(X);atom(Y)), atom_contains(X,'~').
 is_regular_format_args(_,Y):- is_list(Y),!.
 
-smart_format(X,Y,Z):- foRmat(X,Y,Z).
+smart_format(X,Y,Z):- format(X,Y,Z).
 smart_format(X,Y):- smart_format([X,Y]).
 
-smart_format(DDD):- \+ is_list(DDD),!, foRmat('~q',[DDD]).
+smart_format(DDD):- \+ is_list(DDD),!, format('~q',[DDD]).
 
-smart_format([X,Y]):- is_regular_format_args(X,Y),!,catch(foRmat(X,Y),error(smart_format(A),B),writeq(smart_format(X,Y)=error(smart_format(A),B))),!.
+smart_format([X,Y]):- is_regular_format_args(X,Y),!,catch(format(X,Y),error(smart_format(A),B),writeq(smart_format(X,Y)=error(smart_format(A),B))),!.
 smart_format([X|More]):- (compound(X);is_stream(X)),!,with_output_to(X,smart_format(More)),!.
 smart_format([X,Y]):- smart_format(X-Y),!.
 
@@ -647,7 +647,7 @@ fmt0(X,Y):-catchvvnt((smart_format(X,Y),flush_output_safe),E,dfmt(E:smart_format
 %
 % Format Primary Helper.
 %
-fmt0(X):- (atomic(X);is_list(X)), dmsg_text_to_string_safe(X,S),!,foRmat('~w',[S]),!.
+fmt0(X):- (atomic(X);is_list(X)), dmsg_text_to_string_safe(X,S),!,format('~w',[S]),!.
 fmt0(X):- (atom(X) -> catchvvnt((smart_format(X,[]),flush_output_safe),E,dmsg(E)) ; 
   (lmconf:term_to_message_string(X,M) -> 'smart_format'('~q~N',[M]);fmt_or_pp(X))).
 
@@ -685,7 +685,7 @@ format_to_message(Format,Args,Info):-
      (smart_format(string(Info),'~N~n~p +++++++++++++++++ ~p~n',[Format,Args])))))).
 
 new_line_if_needed:- tracing,!.
-new_line_if_needed:- ttyflush,foRmat('~N',[]),flush_output.
+new_line_if_needed:- ttyflush,format('~N',[]),flush_output.
 
 %= 	 	 
 
@@ -701,9 +701,9 @@ fmt90(Msg):- on_x_fail(print_tree_maybe(Msg)),!.
 %fmt90(Msg):- on_x_fail(print(Msg)),!.
 fmt90(Msg):- dzotrace(on_x_fail(((string(Msg)),smart_format(Msg,[])))),!.
 
-fmt90(V):- on_x_fail(notrace(mesg_color(V,C))), catch(pprint_ecp(C, V),_,fail),!. % (dumpST,foRmat('~N~q. % ~q. ~n',[fmt90(V),E]),fail)
-fmt90(Msg):- on_x_fail((with_output_to(string(S),portray_clause_w_vars(Msg)))),foRmat('~s',[S]),!.
-fmt90(Msg):- dzotrace(on_x_fail(foRmat('~p',[Msg]))),!.
+fmt90(V):- on_x_fail(notrace(mesg_color(V,C))), catch(pprint_ecp(C, V),_,fail),!. % (dumpST,format('~N~q. % ~q. ~n',[fmt90(V),E]),fail)
+fmt90(Msg):- on_x_fail((with_output_to(string(S),portray_clause_w_vars(Msg)))),format('~s',[S]),!.
+fmt90(Msg):- dzotrace(on_x_fail(format('~p',[Msg]))),!.
 fmt90(Msg):- dzotrace(writeq(fmt9(Msg))).
 
 print_tree_maybe(G):- compound(G),compound_name_arity(G,F,_), \+ current_op(_,_,F),!,
@@ -735,9 +735,9 @@ tst_fmt0(PP):-
         % random_member(R1,List),
     C=[reset,R,FG,BG],
   fresh_line,
-  P = with_pp(PP,ansicall(C,foRmat('~N% HTML: ~q~n',[C]))),
-  with_pp(PP,ansicall(C,foRmat('~N% ?- ~q. ~n',[P]))),
-  % ansicall(C,foRmat('~N% ansicall: ~q~n',[C])),
+  P = with_pp(PP,ansicall(C,format('~N% HTML: ~q~n',[C]))),
+  with_pp(PP,ansicall(C,format('~N% ?- ~q. ~n',[P]))),
+  % ansicall(C,format('~N% ansicall: ~q~n',[C])),
   \+ in_pp(http), terminal_ansi_format(C,'~N% ansi_term: ~q~n',[C]),
   fail)).
 
@@ -768,7 +768,7 @@ fmt_portray_clause(X):- renumbervars_prev(X,Y),!, portray_clause(Y).
 %
 fmt_or_pp(portray((X:-Y))):-!,fmt_portray_clause((X:-Y)),!.
 fmt_or_pp(portray(X)):- !,cfunctor(X,F,A),fmt_portray_clause((pp(F,A):-X)),!.
-fmt_or_pp(X):-foRmat('~q~N',[X]).
+fmt_or_pp(X):-format('~q~N',[X]).
 
 
 %= 	 	 
@@ -1039,7 +1039,7 @@ print_prepended_lines0(Pre,[H|T]):- print_prepended_line(Pre,H),
 print_prepended_line(Pre,S):- prepend_trim(S,H),
   ignore((H\=="",
   line_pos(current_output,LPos1),new_line_if_needed,line_pos(current_output,LPos2),
-  (LPos1\==LPos2->foRmat('~w~w',[Pre,H]); foRmat('~w~w',[Pre,H])))).
+  (LPos1\==LPos2->format('~w~w',[Pre,H]); format('~w~w',[Pre,H])))).
 
 
 %= 	 	 
@@ -1049,7 +1049,7 @@ print_prepended_line(Pre,S):- prepend_trim(S,H),
 % In Comment.
 %
 
-% in_cmt(Goal):- tlbugger:no_slow_io,!,foRmat('~N/*~n',[]),call_cleanup(Goal,foRmat('~N*/~n',[])).
+% in_cmt(Goal):- tlbugger:no_slow_io,!,format('~N/*~n',[]),call_cleanup(Goal,format('~N*/~n',[])).
 % in_cmt(Goal):- use_html_styles,!, Goal.
 in_cmt(Goal):- maybe_bfly_html(prepend_each_line('%~ ',Goal)),!.
 
@@ -1686,16 +1686,16 @@ color_format2(C,F,A):-
   (stream_property(current_output, tty(TTY)); TTY=u),
   color_format3(TTY,Was,C,F,A).
 
-color_format3(_,true,_,F,A):- !, foRmat(F,A).
+color_format3(_,true,_,F,A):- !, format(F,A).
 color_format3(_,false,C,F,A):- !, terminal_ansi_format(C,F,A).
 color_format3(_,_,C,F,A):- !, terminal_ansi_format(C,F,A).
 
 
 :- export(terminal_ansi_format/3).
-%terminal_ansi_format(C,F,A):- ansicall_6(current_output,C,foRmat(F,A)),!.
+%terminal_ansi_format(C,F,A):- ansicall_6(current_output,C,format(F,A)),!.
 terminal_ansi_format(Attr, Format, Args) :- terminal_ansi_format(current_output, Attr, Format, Args).
 
-terminal_ansi_format(Stream, Class, Format, Args):- terminal_ansi_goal(Stream, Class, foRmat(Format, Args)),!.
+terminal_ansi_format(Stream, Class, Format, Args):- terminal_ansi_goal(Stream, Class, format(Format, Args)),!.
 terminal_ansi_format(Stream, Class, Format, Args):- ansi_term:ansi_format(Stream, Class, Format, Args),!.
 
 terminal_ansi_goal(Stream, Class, Goal):- 
@@ -1706,9 +1706,9 @@ terminal_ansi_goal(Stream, Class, Goal):-
     with_output_to(
         Stream,
         setup_call_cleanup(   
-            keep_line_pos(current_output, foRmat('\e[~wm', [Code])),
+            keep_line_pos(current_output, format('\e[~wm', [Code])),
             Goal,
-            keep_line_pos(current_output, foRmat('\e[0m'))
+            keep_line_pos(current_output, format('\e[0m'))
         )
     ),
     flush_output).
@@ -2002,14 +2002,14 @@ style_style(reset,"all: initial;").
 style_style(font(2),"filter: brightness(60%);").
 style_style(font(3),"font-style: italic;").
 style_style(font(7),"filter: invert(100%);").
-html_on_off(CC,foRmat('<~w>',[C]),foRmat('</~w>',[C])):- style_tag(CC,C).
-html_on_off(CC,foRmat('<div style="~w">',[C]),write('</div>')):- style_style(CC,C).
-html_on_off(fg(CC),foRmat('<font color="~w">',[C]),write('</font>')):- into_color_name(CC,C).
-html_on_off(hfg(CC),foRmat('<font color="~w" style="filter: brightness(85%);">',[C]),write('</font>')):- into_color_name(CC,C).
-html_on_off(hbg(CC),foRmat('<div style="background-color: ~w; filter: brightness(85%);">',[C]),write('</div>')):- into_color_name(CC,C).
-html_on_off(bg(CC),foRmat('<div style="background-color: ~w;">',[C]),write('</div>')):- into_color_name(CC,C).
-html_on_off(CC,foRmat('<font color="~w">',[C]),write('</font>')):- into_color_name(CC,C).
-html_on_off(C,foRmat('<div class="~w">',[C]),write('</div>')).
+html_on_off(CC,format('<~w>',[C]),format('</~w>',[C])):- style_tag(CC,C).
+html_on_off(CC,format('<div style="~w">',[C]),write('</div>')):- style_style(CC,C).
+html_on_off(fg(CC),format('<font color="~w">',[C]),write('</font>')):- into_color_name(CC,C).
+html_on_off(hfg(CC),format('<font color="~w" style="filter: brightness(85%);">',[C]),write('</font>')):- into_color_name(CC,C).
+html_on_off(hbg(CC),format('<div style="background-color: ~w; filter: brightness(85%);">',[C]),write('</div>')):- into_color_name(CC,C).
+html_on_off(bg(CC),format('<div style="background-color: ~w;">',[C]),write('</div>')):- into_color_name(CC,C).
+html_on_off(CC,format('<font color="~w">',[C]),write('</font>')):- into_color_name(CC,C).
+html_on_off(C,format('<div class="~w">',[C]),write('</div>')).
 
 into_color_name(Default,initial):- Default==default,!.
 into_color_name(C,C):- atom(C), ansi_term:ansi_color(C,_).

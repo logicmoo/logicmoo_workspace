@@ -549,7 +549,7 @@ thread_call_blocking_one(Thread,G):- thread_self(Self),
 %
 format_to_error(F,A):-F==error,!,format_to_error('~q',A).
 format_to_error(F,A):-\+ is_list(A),!,format_to_error(F,[A]).
-format_to_error(F,A):-get_thread_current_error(Err),!,foRmat(Err,F,A).
+format_to_error(F,A):-get_thread_current_error(Err),!,format(Err,F,A).
 
 %=
 
@@ -557,7 +557,7 @@ format_to_error(F,A):-get_thread_current_error(Err),!,foRmat(Err,F,A).
 %
 % Fresh Line Converted To Err.
 %
-fresh_line_to_err:- zotrace((flush_output_safe,get_thread_current_error(Err),foRmat(Err,'~N',[]),flush_output_safe(Err))).
+fresh_line_to_err:- zotrace((flush_output_safe,get_thread_current_error(Err),format(Err,'~N',[]),flush_output_safe(Err))).
 
 :- dynamic(lmcache:thread_current_input/2).
 :- volatile(lmcache:thread_current_input/2).
@@ -1048,13 +1048,13 @@ ensure_compute_file_link(S,URL):- \+ ( nb_current('$inprint_message', Messages),
 ensure_compute_file_link(S,S).
 
 maybe_compute_file_link(S,O):- atom(S),!, lmconf:http_file_stem(F,R),atomic_list_concat([_,A],F,S),!,atom_concat(R,A,O).
-maybe_compute_file_link(S:L,O):- integer(L),!,maybe_compute_file_link(S,F),foRmat(atom(O),'~w#L~w',[F,L]).
+maybe_compute_file_link(S:L,O):- integer(L),!,maybe_compute_file_link(S,F),format(atom(O),'~w#L~w',[F,L]).
 
 public_file_link(S,O):-   \+ ( nb_current('$inprint_message', Messages), Messages\==[] ), maybe_compute_file_link(S,M),into_link(S,M,O).
 public_file_link(MG,MG).
 
-into_link(_,M,O):- foRmat(atom(O),'* ~w ',[M]),!.
-into_link(S,M,O):- foRmat(atom(O),'<pre><a href="~w">~q</a></pre>',[M,S]).
+into_link(_,M,O):- format(atom(O),'* ~w ',[M]),!.
+into_link(S,M,O):- format(atom(O),'<pre><a href="~w">~q</a></pre>',[M,S]).
 
 :-export( as_clause_no_m/3).
 
@@ -1510,7 +1510,7 @@ strip_arity(PredImpl,Pred,Arity):-functor_safe(PredImpl,Pred,Arity).
 /*
 
 debug(+Topic, +Format, +Arguments)
-Prints a message using foRmat(Format, Arguments) if Topic unies with a topic
+Prints a message using format(Format, Arguments) if Topic unies with a topic
 enabled with debug/1.
 debug/nodebug(+Topic [>le])
 Enables/disables messages for which Topic unies. If >le is added, the debug

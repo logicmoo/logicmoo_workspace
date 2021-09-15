@@ -53,7 +53,7 @@
 %%%%
 %%%%      version=VERSION (an atom)
 %%%%             - specifies whether the old krhyper or the new hyper
-%%%%               is used (they differ in input syntax and proof foRmat)
+%%%%               is used (they differ in input syntax and proof format)
 %%%%               default: new_hyper, other possibility: old_krh
 %%%%
 %%%%      status=STATUS

@@ -517,7 +517,7 @@ http:http_connection_over_proxy(proxy(ProxyHost, ProxyPort), Parts,
 % Negotiate Http Connect.
 %
 negotiate_http_connect(StreamPair, Address):-
-        foRmat(StreamPair, 'CONNECT ~w HTTP/1.1\r\n\r\n', [Address]),
+        format(StreamPair, 'CONNECT ~w HTTP/1.1\r\n\r\n', [Address]),
         flush_output(StreamPair),
         http_read_reply_header(StreamPair, Header),
         memberchk(status(_, Status, Message), Header),

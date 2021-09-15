@@ -77,27 +77,27 @@ file_information(TestName,File,Line):-
 	clause_property(Ref,line_count(Line)).
 
 file_information(TestName,__File,__Line):-
-    foRmat(string(Msg), ' no test case ''~w'' defined in the factbase.',[TestName]),
+    format(string(Msg), ' no test case ''~w'' defined in the factbase.',[TestName]),
     throw(Msg). 
 
 
 test_failure(assertion,A,  Line):-
   plunit:failed_assertion(_Unit, _Test, _Line, _File:Line, _STO, Reason,Module:Goal),
-  foRmat(atom(A),'Failed assertion in line ~w,~n ~w of goal ~w in module ~w.',[Line,Reason,Goal,Module]).
+  format(atom(A),'Failed assertion in line ~w,~n ~w of goal ~w in module ~w.',[Line,Reason,Goal,Module]).
 
 
 test_failure(assertion,A,Line):-
   plunit:failed_assertion(_Unit, _Test, Line, _, _STO, Reason,Module:Goal),
-  foRmat(atom(A),'Failed assertion in line ~w, ~w of goal ~w in module ~w.',[Line,Reason,Goal,Module]).
+  format(atom(A),'Failed assertion in line ~w, ~w of goal ~w in module ~w.',[Line,Reason,Goal,Module]).
   
 
 test_failure(failed,A, Line):-
   plunit:failed(_,_,Line,Reason),
-  foRmat(atom(A),'Failed test in line ~w, ~w.',[Line,Reason]).
+  format(atom(A),'Failed test in line ~w, ~w.',[Line,Reason]).
 
 test_failure(blocked,A, Line):-
    plunit:blocked(_,_,Line,Reason),
-  foRmat(atom(A),'Blocked Assertion in line ~w, ~w.',[Line,Reason]).
+  format(atom(A),'Blocked Assertion in line ~w, ~w.',[Line,Reason]).
 
 	 
 

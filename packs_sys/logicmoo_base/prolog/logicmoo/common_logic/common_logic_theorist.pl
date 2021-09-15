@@ -1607,7 +1607,7 @@ an appropriate state at the end of the computation.
     expl(G,[],D,A),
     statistics(runtime,[_,Time]),
     writeans(G,D,A),
-    foRmat('took ~3d sec.~n~n',[Time]),
+    format('took ~3d sec.~n~n',[Time]),
     fail
   ;
     expl(G,[],D,A),
@@ -1622,15 +1622,15 @@ an appropriate state at the end of the computation.
 
 
 writeans(G,D,A) :-
-   foRmat('~nAnswer is ~p', [G]),
+   format('~nAnswer is ~p', [G]),
    writedisj(A),
-   foRmat('~nTheory is ~p~n', [D]),
+   format('~nTheory is ~p~n', [D]),
    !.
 
 writedisj([]).
 writedisj([H|T]) :-
    writedisj(T),
-   foRmat(' or ~p',[H]).
+   format(' or ~p',[H]).
 
 
 /* \end{verbatim}
@@ -1679,8 +1679,8 @@ predct(G,Es) :-
   simplify_expls(Es,SEs),
     ( find_counter(SEs,[],S),
       !,
-      foRmat('No, ~q is not explainable from ~q.~n',[G,S])
-    ; foRmat('Yes, ~q is in all extensions.~nExplanations are:~n',[G]),
+      format('No, ~q is not explainable from ~q.~n',[G,S])
+    ; format('Yes, ~q is in all extensions.~nExplanations are:~n',[G]),
       list_scens(1,SEs)).
 
 
@@ -1705,7 +1705,7 @@ find_counter([E|R],S0,S2) :-
 
 list_scens(_,[]).
 list_scens(N,[H|T]) :-
-   foRmat('~q: ~q.~n',[N,H]),
+   format('~q: ~q.~n',[N,H]),
    N1 is N+1,
    list_scens(N1,T).
 
@@ -1807,8 +1807,8 @@ th_call(T):- call(T).
 :- meta_predicate(read_all(*)).
 read_all(end_of_file) :- !.
 read_all(T) :-
-   ((th_flag(( asserting,on))),!; foRmat('~n% ~p.~n',[T])),
-   (th_call(T) *-> true ; foRmat('% Warning: ~p failed~n',[T])),
+   ((th_flag(( asserting,on))),!; format('~n% ~p.~n',[T])),
+   (th_call(T) *-> true ; format('% Warning: ~p failed~n',[T])),
    th_read(T2),
    read_all(T2).
                  
@@ -1837,9 +1837,9 @@ thtrans2out(File):-
    current_input(Oldinput),
    open(File,read,Input),
    set_input(Input),
-   foRmat(':- dynamic contrapos_recorded/1.~n',[]),
-   foRmat(':- style_check(- singleton).~n',[]),
-   foRmat(':- style_check(- discontiguous).~n',[]),
+   format(':- dynamic contrapos_recorded/1.~n',[]),
+   format(':- style_check(- singleton).~n',[]),
+   format(':- style_check(- discontiguous).~n',[]),
    (th_set((asserting,off))),
    th_read(T),
    read_all(T),
@@ -1925,7 +1925,7 @@ flags :- list_flags([asserting,ancestor_search,loop_check,
 list_flags([]).
 list_flags([H|T]) :-
    (th_flag((H,V))),
-   foRmat('th_flag((~w,~w)).~n',[H,V]),
+   format('th_flag((~w,~w)).~n',[H,V]),
    list_flags(T).
                           
 
@@ -1963,13 +1963,13 @@ dyn(G):-
    add_prefix("ex_",R,ExR),
    length(Args,NA),
    ExL is NA + 3,
-   foRmat(':- dynamic ~a/~d.~n',[ExNR,ExL]),
-   foRmat(':- dynamic ~a/~d.~n',[ExR,ExL]),
+   format(':- dynamic ~a/~d.~n',[ExNR,ExL]),
+   format(':- dynamic ~a/~d.~n',[ExR,ExL]),
    add_prefix("prove_not_",R,PrNR),
    add_prefix("prove_",R,PrR),
    PrL is NA + 2,
-   foRmat(':- dynamic ~a/~d.~n',[PrNR,PrL]),
-   foRmat(':- dynamic ~a/~d.~n',[PrR,PrL]).
+   format(':- dynamic ~a/~d.~n',[PrNR,PrL]),
+   format(':- dynamic ~a/~d.~n',[PrR,PrL]).
 
                           
 /* \end{verbatim}
@@ -2051,7 +2051,7 @@ file.
 
 save :-
    call(call,quintus:save_program(th,
-   foRmat('~nWelcome to THEORIST 1.1.1  (4 December 89 version)
+   format('~nWelcome to THEORIST 1.1.1  (4 December 89 version)
 For help type ``h.''.
 Any Problems see David Poole (poole@cs.ubc.ca)~n',
   []))).
@@ -2184,7 +2184,7 @@ reverse([H|T],A,B) :-
 \begin{verbatim} */
 
 
-(h) :- foRmat('This is Theorist 1.1 (all complaints to David Poole)
+(h) :- format('This is Theorist 1.1 (all complaints to David Poole)
 For more details issue the command:
    h H.
 where H is one of:~n',

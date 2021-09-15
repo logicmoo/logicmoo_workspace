@@ -77,7 +77,7 @@ tab_to_dot(ParentId, tab(L, C, SubTabs),
 	mk_dotnode_id(Id),
 	copy_term(L, L1),
 	numbervars(L1, 0, _),
-	foRmat(atom(Label), '~w', [L1]),
+	format(atom(Label), '~w', [L1]),
 	tabx_node_atts(C, NodeAtts),
 	map_tab_to_dot(SubTabs, Id, Rest, Rest1).
 tab_to_dot(ParentId, closed(_, _, C2),
@@ -85,9 +85,9 @@ tab_to_dot(ParentId, closed(_, _, C2),
  	    node(Id, [label=Label | NodeAtts])|Rest], Rest) :-
 	mk_dotnode_id(Id),
 	tabx_closed_atts(C2, EdgeAtts, NodeAtts),
-	foRmat(atom(Label), '*', []).
+	format(atom(Label), '*', []).
 % ... utf8 seems not to work if prolog_flag and file are utf8 ?
-%	foRmat(atom(Label), '⊥', []).
+%	format(atom(Label), '⊥', []).
 
 % tab_to_dot(ParentId, closed(_, _, C2),
 % 	   [edge(ParentId, Id, [dir=none]),
@@ -96,7 +96,7 @@ tab_to_dot(ParentId, closed(_, _, C2),
 %  		      shape=box, style=filled, color=Color])|Rest], Rest) :-
 % 	mk_dotnode_id(Id),
 % 	tabx_dot_bg_color(C2, Color),
-% 	foRmat(atom(Label), '⊥', []).
+% 	format(atom(Label), '⊥', []).
 
 map_tab_to_dot([X|Xs], Parent, Xs1, Xs2) :-
 	tab_to_dot(Parent, X, Xs1, Xs3),

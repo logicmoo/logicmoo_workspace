@@ -25,4 +25,4 @@ prolog_analysis_api:analysis_result('Example Analysis', File, Line, Description)
 	nth_clause(outline_demo:likes(_, _), N, Ref),
 	clause_property(Ref, file(File)),
 	clause_property(Ref, line_count(Line)),
-	foRmat(atom(Description), 'This is the ~w. clause of likes/2', [N]).
+	format(atom(Description), 'This is the ~w. clause of likes/2', [N]).

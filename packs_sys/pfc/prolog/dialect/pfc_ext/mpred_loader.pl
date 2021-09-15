@@ -612,7 +612,7 @@ make_db_listing:-
 % Hdr Debug.
 %
 hdr_debug(_,_):-!.
-hdr_debug(F,A):-'foRmat'(F,A).
+hdr_debug(F,A):-'format'(F,A).
 :- meta_predicate module_typed_term_expand(?,?).
 
 
@@ -673,7 +673,7 @@ include_prolog_files(Mask):-
 
 /*
 module(M,Preds):-
-    'foRmat'(user_output /*e*/,'% visting module ~w.~n',[M]),
+    'format'(user_output /*e*/,'% visting module ~w.~n',[M]),
     forall(member(P,Preds),export(P)).
 */
 
@@ -721,7 +721,7 @@ check_term_expansions:- not(do_term_expansions).
 
 % :-autoload.
 
-% https://docs.google.com/document/u/0/export?foRmat=txt&id=1yyGne4g8vXKxNPKIKVLOtt0OxIM2kxyfmvjqR1lgbcY
+% https://docs.google.com/document/u/0/export?format=txt&id=1yyGne4g8vXKxNPKIKVLOtt0OxIM2kxyfmvjqR1lgbcY
 % http_get
 :- asserta_if_new(t_l:infForward).
 
@@ -1013,8 +1013,8 @@ expanded_already_functor(_:NV):-nonvar(NV),!,expanded_already_functor(NV).
 
 %:- kb_local(user:term_expansion/2).
 %:- kb_local(system:goal_expansion/2).
-% system:goal_expansion(A,_B):-fail,quietly((source_module(M),(M=mpred_sanity;M=user;M=system),if_defined(pmsg(M:goal_expansion(A)),foRmat(user_output /*e*/,'~N% ~q~n',M:goal_expansion(A))))),fail.
-% user:term_expansion(A,_B):-fail,quietly((source_module(M),(M=mpred_sanity;M=user;M=system),if_defined(pmsg(M:term_expansion(A)),foRmat(user_output /*e*/,'~N% ~q~n',M:term_expansion(A))))),fail.
+% system:goal_expansion(A,_B):-fail,quietly((source_module(M),(M=mpred_sanity;M=user;M=system),if_defined(pmsg(M:goal_expansion(A)),format(user_output /*e*/,'~N% ~q~n',M:goal_expansion(A))))),fail.
+% user:term_expansion(A,_B):-fail,quietly((source_module(M),(M=mpred_sanity;M=user;M=system),if_defined(pmsg(M:term_expansion(A)),format(user_output /*e*/,'~N% ~q~n',M:term_expansion(A))))),fail.
 
 % system:goal_expansion(N,mpred_prove_neg(P)):-fail,mpred_from_negation_plus_holder(N,P),show_failure(why,mpred_isa(P,pfcControlled)).
 
@@ -1973,12 +1973,12 @@ load_init_world(World,File):-
 
 ensure_mpred_file_loaded(M:F0,List):-!,
   must_locate_file(M:F0,F),  % scope_settings  expand(true),register(false),
-  % 'foRmat'(user_error ,'%  ~q + ~q -> ~q.~n',[M,F0,F]),
+  % 'format'(user_error ,'%  ~q + ~q -> ~q.~n',[M,F0,F]),
   load_files([F],[if(not_loaded), must_be_module(true)|List]).
    %load_files(F,[redefine_module(false),if(not_loaded),silent(false),exported(true),must_be_module(true)|List]).
 ensure_mpred_file_loaded(M:F0,List):-
   must_locate_file(M:F0,F),  % scope_settings
-  'foRmat'(user_error ,'% load_mpred_file_M ~q.~n',[M=must_locate_file(F0,F)]),
+  'format'(user_error ,'% load_mpred_file_M ~q.~n',[M=must_locate_file(F0,F)]),
    load_files([F],[redefine_module(false),module(M),expand(true),if(not_loaded),exported(true),register(false),silent(false),must_be_module(true)|List]).
 
 ******/

@@ -25,7 +25,7 @@
 %   				)
 %			->	inc_call_edges_for_predicates(SourceId,TargetId)
 %			;	(	predicateT(TargetId,_,TFunctor,TArity,TModule),
-%					foRmat('Problem with call-edge: ~w -> ~w (~w:~w/~w)~n',[SourceLiteralId, TargetId, TModule, TFunctor, TArity])
+%					format('Problem with call-edge: ~w -> ~w (~w:~w/~w)~n',[SourceLiteralId, TargetId, TModule, TFunctor, TArity])
 %				)
 %			)
 %		).	

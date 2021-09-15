@@ -365,7 +365,7 @@ def(xdomcirc2(V, F)) :: (sim('Dom1', F), ~ex2(Args, (A, ~all(x, ('Dom1'(x) -> 'D
 	mac_expand(genCircAxiom('Dom1', 'Dom2', [],V,F), ~ex2(Args, A)).
 
 :- assert(ppl_pl(mac_expand(A, B), Options) :-
-	foRmat('~@ = ~@ ',
+	format('~@ = ~@ ',
 	       [write_form(A, Options), write_form(B, Options)])).
 
 /**

@@ -151,7 +151,7 @@ pp_item(MM,'$pt'(MZ,F0,Body)):- F = (MZ:F0),             !,fmt('~w p-trigger:~n'
 pp_item(MM,'$bt'(F0,Body)):- F = (F0),             !,fmt('~w b-trigger:~n', [MM]), pp_item('',(F:-Body)).
 
 
-pp_item(MM,U:W):- !,foRmat(string(S),'~w  ~w:',[MM,U]),!, pp_item(S,W).
+pp_item(MM,U:W):- !,format(string(S),'~w  ~w:',[MM,U]),!, pp_item(S,W).
 pp_item(MM,H):- \+ \+ (( get_clause_vars_for_print(H,HH),fmt("~w ~p~N",[MM,HH]))).
 
 
@@ -336,7 +336,7 @@ print_db_items(Title,Mask,What):-print_db_items(Title,Mask,Mask,What).
 %
 print_db_items(Title,Mask,SHOW,What0):-
      get_pi(Mask,H),get_pi(What0,What),
-     foRmat(atom(Showing),'~p for ~p...',[Title,What]),
+     format(atom(Showing),'~p for ~p...',[Title,What]),
      statistics(cputime,Now),Max is Now + 2,!,
        gripe_time(1.0,
          doall((once(statistics(cputime,NewNow)),NewNow<Max,clause_or_call(H,B),
@@ -528,25 +528,25 @@ pp_db_facts(MM,P,C):-
   mpred_facts_in_kb(MM,P,C,L),
   mpred_classifyFacts(L,User,Pfc,_ZRule),
   length(User,UserSize),length(Pfc,PfcSize),
-  foRmat("~N~nUser added facts in [~w]: ~w",[MM,UserSize]),
+  format("~N~nUser added facts in [~w]: ~w",[MM,UserSize]),
   pp_db_items(User),
-  foRmat("~N~nSystem added facts in [~w]: ~w",[MM,PfcSize]),
+  format("~N~nSystem added facts in [~w]: ~w",[MM,PfcSize]),
   pp_db_items(Pfc).
 
 %  printitems clobbers it''s arguments - beware!
 
 
-pp_db_items(Var):-var(Var),!,foRmat("~N  ~p",[Var]).
+pp_db_items(Var):-var(Var),!,format("~N  ~p",[Var]).
 pp_db_items([]):-!.
 pp_db_items([H|T]):- !,
   % numbervars(H,0,_),
-  foRmat("~N  ~p",[H]),
+  format("~N  ~p",[H]),
   nonvar(T),pp_db_items(T).
 
 pp_db_items((P >= FT)):- is_hidden_pft(P,FT),!.
   
 pp_db_items(Var):-
-  foRmat("~N  ~p",[Var]).
+  format("~N  ~p",[Var]).
 
 
 is_hidden_pft(_,(mfl4(_VarNameZ,baseKB,_,_),ax)).
@@ -559,9 +559,9 @@ pp_mask(Type,MM,Mask):-
   pp_mask_list(Type,MM,NtsSet).
 
 pp_mask_list(Type,MM,[]):- !,
-  foRmat("~N~nNo ~ws in [~w]...~n",[Type,MM]).
+  format("~N~nNo ~ws in [~w]...~n",[Type,MM]).
 pp_mask_list(Type,MM,NtsSet):- length(NtsSet,Size), !,
-  foRmat("~N~n~ws (~w) in [~w]...~n",[Type,Size,MM]),
+  format("~N~n~ws (~w) in [~w]...~n",[Type,Size,MM]),
   pp_db_items(NtsSet).
 
 mpred_classifyFacts([],[],[],[]).
@@ -596,7 +596,7 @@ pp_db_triggers(MM):-
 
 pp_db_supports(MM):-
   % temporary hack.
-  foRmat("~N~nSupports in [~w]...~n",[MM]),
+  format("~N~nSupports in [~w]...~n",[MM]),
   with_exact_kb(MM, bagof_or_nil((P >= S), mpred_get_support(P,S),L)),
   list_to_set_variant(L,LS),
   pp_db_items(LS),!.

@@ -68,7 +68,7 @@ pfc_debug(_):-!.
 pfc_debug(I):- ignore(notrace(pfc_debug0(I))).
 
 pfc_debug0(state):- !, pfc_state.
-pfc_debug0(X):- foRmat(user_error,'~N% PFC_DEBUG: ~p.~n',[X]),flush_output(user_error).
+pfc_debug0(X):- format(user_error,'~N% PFC_DEBUG: ~p.~n',[X]),flush_output(user_error).
 
 show_all_debug_pfc(G):- ignore(((G *-> pfc_debug0(G);pfc_debug0(failed(G))),fail)).
 
@@ -285,13 +285,13 @@ dialect_input_stream_pfc(Source):- prolog_load_context(source,Source)->true; Sou
 :- system:import(pfc_dia:pfc_pop_dialect/2).
 pfc_pop_dialect(Source,M):-
     retract(pfctmp:module_dialect_pfc(pfc,Source,Was,M,Undo)),!,
-    %print_message(warning, foRmat('~q', [warn_pop_pfc_dialect_fallback(Source,M->Was)])),
+    %print_message(warning, format('~q', [warn_pop_pfc_dialect_fallback(Source,M->Was)])),
     pfc_debug(pop_pfc_dialect2(Source,M->Was)),
     pop_operators(Undo),    
     %nop('$set_source_module'(Was)),!,
     pfc_debug(state).
 pfc_pop_dialect(Source,M):- 
-   pfc_debug(print_message(warning, foRmat('~q', [missing_pop_pfc_dialect_fallback(Source,M)]))),
+   pfc_debug(print_message(warning, format('~q', [missing_pop_pfc_dialect_fallback(Source,M)]))),
    pfc_debug(state).
 
 

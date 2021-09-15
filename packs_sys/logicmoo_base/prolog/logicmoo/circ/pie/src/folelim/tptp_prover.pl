@@ -35,12 +35,12 @@ tptpstmts_to_format(Stmts, Format, Extra, OutFile) :-
 	tempfile(tptp_prover, '1', TmpFile),
 	onto_file(( member(Stmt, Stmts),
 		    pp_tptp(Stmt),
-		    foRmat('.~n~n'),
+		    format('.~n~n'),
 		    fail
 		  ; true
 		  ),
 		  TmpFile),
-	foRmat(atom(ConvertCall),
+	format(atom(ConvertCall),
 	       'tptp2X -q2 -d - ~w -f ~w ~w >~w',
 	       [Extra, Format, TmpFile, OutFile]),
 	info(40, 'Calling ~w', [ConvertCall]),
@@ -83,8 +83,8 @@ tptp_prover_call(eprover, Options, InFile, TimeOut, tptp, '', shell(Call,0)) :-
 	  true
 	; ProverOptions='' ),
 	tempfile(tptp_prover, '3', OutFile),
-	foRmat(atom(Call),
-	       'eprover --tstp-foRmat --soft-cpu-limit=~w ~w ~w -o ~w',
+	format(atom(Call),
+	       'eprover --tstp-format --soft-cpu-limit=~w ~w ~w -o ~w',
 	       [TimeOut, ProverOptions, InFile, OutFile]).
 tptp_prover_call(vampire, Options, InFile, TimeOut, tptp, '', shell(Call,0)) :-
 	!,
@@ -92,7 +92,7 @@ tptp_prover_call(vampire, Options, InFile, TimeOut, tptp, '', shell(Call,0)) :-
 	  true
 	; ProverOptions='' ),
 	tempfile(tptp_prover, '3', OutFile),
-	foRmat(atom(Call),
+	format(atom(Call),
 	       'vampire --input_syntax tptp --time_limit ~w \c
 	        ~w ~w > ~w ; grep -q "^% SZS status Theorem" ~w',
 	       [TimeOut, ProverOptions, InFile, OutFile, OutFile]).

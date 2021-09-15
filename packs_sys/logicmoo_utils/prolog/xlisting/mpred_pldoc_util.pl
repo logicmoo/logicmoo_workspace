@@ -52,9 +52,9 @@ end_of_file.
 
 prolog:doc_object_page_footer(Obj,_) --> { not(baseKB:html_listed(Obj)) },!,pldoc_html:html_listing('Footer',Obj).
 
-%prolog:doc_page_header(A,B) --> {foRmat(user_error,'~n~q~n',[doc_page_header(A, B)]),fail}.
-%prolog:doc_object_summary(A,B,C,D) :- foRmat(user_error,'~n~q~n',[doc_object_summary(A, B,C,D)]),dumpST(10),fail.
-%prolog:doc_object_href(A,B) :- foRmat(user_error,'~n+++++++++++++++======================== ~q~n',[doc_object_href(A, B)]),dumpST(10),fail.
+%prolog:doc_page_header(A,B) --> {format(user_error,'~n~q~n',[doc_page_header(A, B)]),fail}.
+%prolog:doc_object_summary(A,B,C,D) :- format(user_error,'~n~q~n',[doc_object_summary(A, B,C,D)]),dumpST(10),fail.
+%prolog:doc_object_href(A,B) :- format(user_error,'~n+++++++++++++++======================== ~q~n',[doc_object_href(A, B)]),dumpST(10),fail.
 
 :- kb_shared prolog:doc_is_public_object/1.
 
@@ -62,8 +62,8 @@ prolog:doc_object_page_footer(Obj,_) --> { not(baseKB:html_listed(Obj)) },!,pldo
 /*
 :- abolish(prolog:doc_object_page/4).
 :- kb_shared prolog:doc_object_page//2.
-% prolog:doc_object_page(Obj, Options,A,B) :-  foRmat(user_error,'~n~q~n',[mpred_object_page(Obj, Options)]), mpred_object_page(Obj, Options,A,B),!.
-prolog:doc_object_page(Obj, Options,A,B) :-  foRmat(user_error,'~n~q~n',[pldoc_man:man_page(Obj, Options)]), pldoc_man:man_page(Obj, [no_manual(fail), footer(false)|Options],A,B).
+% prolog:doc_object_page(Obj, Options,A,B) :-  format(user_error,'~n~q~n',[mpred_object_page(Obj, Options)]), mpred_object_page(Obj, Options,A,B),!.
+prolog:doc_object_page(Obj, Options,A,B) :-  format(user_error,'~n~q~n',[pldoc_man:man_page(Obj, Options)]), pldoc_man:man_page(Obj, [no_manual(fail), footer(false)|Options],A,B).
 */
 
 :- nb_setval(pldoc_object,pldoc_object_missing).
@@ -354,7 +354,7 @@ is_meta(tSkin).
 %		Reference to the CSS style-sheets.
 %
 %		* format_comments(Bool)
-%		If =true= (default), foRmat structured comments.
+%		If =true= (default), format structured comments.
 %
 %		* skin(Closure)
 %		Called using call(Closure, Where, Out), where Where
@@ -367,14 +367,14 @@ print_html_head(Out, Options) :-
 	http_absolute_location(pldoc_resource('pldoc.css'), PlDocCSS, []),
 	http_absolute_location(pldoc_resource('pllisting.css'), PlListingCSS, []),
 	option(stylesheets(Sheets), Options, [PlListingCSS, PlDocCSS]),
-	foRmat(Out, '<!DOCTYPE html', []),
-	foRmat(Out, '<html>~n', []),
-	foRmat(Out, '  <head>~n', []),
-	foRmat(Out, '    <title>~w</title>~n', [Title]),
+	format(Out, '<!DOCTYPE html', []),
+	format(Out, '<html>~n', []),
+	format(Out, '  <head>~n', []),
+	format(Out, '    <title>~w</title>~n', [Title]),
 	forall(member(Sheet, Sheets),
-	       foRmat(Out, '    <link rel="stylesheet" type="text/css" href="~w">~n', [Sheet])),
-	foRmat(Out, '  </head>~n', []),
-	foRmat(Out, '<body>~n', []),
+	       format(Out, '    <link rel="stylesheet" type="text/css" href="~w">~n', [Sheet])),
+	format(Out, '  </head>~n', []),
+	format(Out, '<body>~n', []),
 	skin_hook(Out, header, Options).
 print_html_head(Out, Options) :-
 	skin_hook(Out, header, Options).
@@ -382,8 +382,8 @@ print_html_head(Out, Options) :-
 print_html_footer(Out, Options) :-
 	option(header(true), Options, true), !,
 	skin_hook(Out, footer, Options),
-	foRmat(Out, '~N</body>~n', []),
-	foRmat(Out, '</html>', []).
+	format(Out, '~N</body>~n', []),
+	format(Out, '</html>', []).
 print_html_footer(Out, Options) :-
 	skin_hook(Out, footer, Options).
 
@@ -393,7 +393,7 @@ skin_hook(Out, Where, Options) :-
 skin_hook(_, _, _).
 
 noformat(_,_,_):-t_l:nohtml,!.
-noformat(O,F,A):-foRmat(O,F,A).
+noformat(O,F,A):-format(O,F,A).
 
 %%	html_fragments(+Fragments, +In, +Out, +State, +Options) is det.
 %
@@ -507,7 +507,7 @@ end_fragment(_, _, [nop|State], State) :- !.
 end_fragment(Out, In, [span(class(directive))|State], State) :- !,
 	copy_full_stop(In, Out),
 	noformat(Out, '</span>', []),
-	(   (peek_code(In, 10),foRmat(Out,'\n',[])),
+	(   (peek_code(In, 10),format(Out,'\n',[])),
 	    \+ nonl
 	->  assert(nonl)
 	;   true
@@ -532,7 +532,7 @@ pop_state(State, Out, In) :-
 anchor(head(_, Head), Id) :-
 	callable(Head),
 	functor(Head, Name, Arity),
-	foRmat(atom(Id), '~w/~w', [Name, Arity]),
+	format(atom(Id), '~w/~w', [Name, Arity]),
 	(   id(Id)
 	->  fail
 	;   assertz(id(Id))
@@ -710,11 +710,11 @@ content_escape(C, Out, L, L) :- t_l:nohtml,!,
 	put_code(Out, C).
 
 content_escape(0'<, Out, L, L) :- !,
-	foRmat(Out, '&lt;', []).
+	format(Out, '&lt;', []).
 content_escape(0'>, Out, L, L) :- !,
-	foRmat(Out, '&gt;', []).
+	format(Out, '&gt;', []).
 content_escape(0'&, Out, L, L) :- !,
-	foRmat(Out, '&amp;', []).
+	format(Out, '&amp;', []).
 content_escape(C, Out, L, L) :-
 	put_code(Out, C).
 

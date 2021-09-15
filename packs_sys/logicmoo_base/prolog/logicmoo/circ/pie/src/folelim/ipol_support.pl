@@ -78,7 +78,7 @@ ip_prep_singleside(M, Side, OtherSideM, Options, M1) :-
 	  Features2 = [equality|Features1]
 	; Features2 = Features
 	),
-	foRmat(atom(Info), 'Side ~w', [Side]),
+	format(atom(Info), 'Side ~w', [Side]),
 	m_info_features(20, Features2, Info),
 	m_set_equality(M, Features2, Options, M1, _).
 	

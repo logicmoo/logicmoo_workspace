@@ -1,6 +1,6 @@
 
 % ===================================================
-fixundef_call(G):- foRmat(string(Out),'% Need   ~q.~n',[:- G]), wdmsg(Out), (ground(G)->call(G) ; true).
+fixundef_call(G):- format(string(Out),'% Need   ~q.~n',[:- G]), wdmsg(Out), (ground(G)->call(G) ; true).
 
 module_of_pred(F/A,M,File):-
  with_no_retry_undefined(( current_module(M),
@@ -16,7 +16,7 @@ fixundef(Info):-
    Info = undef(M1:P2,_Refs),                        
    (module_of_pred(P2,M2,File2) ->
      maplist(fixundef_call,[M2:export(M2:P2),M1:import(M2:P2),M1:autoload(File2,[P2])]);
-     (foRmat(string(Out),'% ~q~n',[undef(M1:P2)]),dmsg(Out),assert_if_new(fixundef_later(Info)))).
+     (format(string(Out),'% ~q~n',[undef(M1:P2)]),dmsg(Out),assert_if_new(fixundef_later(Info)))).
 
 fixundef_later:- with_no_retry_undefined((forall(retract(fixundef_later(M1P2)),fixundef(M1P2)),check:list_undefined)).
 

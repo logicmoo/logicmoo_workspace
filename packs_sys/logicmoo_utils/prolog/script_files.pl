@@ -229,16 +229,16 @@ process_stream_peeked213(S,"%"):- !,till_eol(S).
 
 
 echo_format(_Fmt,_Args):- flush_output, t_l:block_comment_mode(Was),Was==invisible,!.
-echo_format(Fmt,Args):- t_l:block_comment_mode(_),is_echo_mode(echo_file),!,foRmat(Fmt,Args),flush_output.
-echo_format(Fmt,Args):- is_echo_mode(echo_file),!,foRmat(Fmt,Args),flush_output.
+echo_format(Fmt,Args):- t_l:block_comment_mode(_),is_echo_mode(echo_file),!,format(Fmt,Args),flush_output.
+echo_format(Fmt,Args):- is_echo_mode(echo_file),!,format(Fmt,Args),flush_output.
 echo_format(_Fmt,_Args).
 
 
 write_stream_item(Out,T):- 
   flush_output,
-  foRmat(Out,'~N~n',[]),
+  format(Out,'~N~n',[]),
   must(with_output_to(Out,portray_clause_w_vars(T))),
-  foRmat(Out,'~N~n',[]),!,flush_output(Out).
+  format(Out,'~N~n',[]),!,flush_output(Out).
 
 
 process_script_file(File):- process_script_file(File,visit_script_term).

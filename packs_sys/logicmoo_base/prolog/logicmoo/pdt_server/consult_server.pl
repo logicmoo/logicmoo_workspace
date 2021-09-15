@@ -631,10 +631,10 @@ my_write(OutStream,Term):-
 	write(OutStream,Term).	
 	
 my_format(OutStream,Format,Args):-
-	atom_concat('(Down:~w, foRmat) >>>',Format,Format2),
+	atom_concat('(Down:~w, format) >>>',Format,Format2),
 	atom_concat(Format2,'~n',Format3),
 	debug(consult_server(traffic),Format3,[OutStream|Args]),
-	foRmat(OutStream,Format,Args),
+	format(OutStream,Format,Args),
 	flush_output(OutStream).
 
 my_format(Format,Args):-
@@ -753,7 +753,7 @@ with_interrupts(_,Goal):-Goal.
 /*
 user:prolog_exception_hook(In,_Out,_Frame,CFrame):-
 	(	CFrame == none
-	->	foRmat("uncaught exception: ~w~n",[In]),
+	->	format("uncaught exception: ~w~n",[In]),
 		backtrace(50),
 		fail
 	;		
@@ -768,7 +768,7 @@ get_var_names(Goal, _) :-
     throw('first argument has to be atomic').
     
 get_var_names(Goal, VarNames) :-
-    foRmat(atom(Query), '~w.', [Goal]),
+    format(atom(Query), '~w.', [Goal]),
     open_chars_stream(Query,Stream),
     read_term(Stream,_,[variable_names(VarNameList)]),
     maplist(extract_var_name, VarNameList, ExtractedList),
@@ -781,7 +781,7 @@ list_2_comma_separated_list([],'') :- !.
 list_2_comma_separated_list([Element],Element) :- !.
 list_2_comma_separated_list([Element|[H|T]],ElementComma) :-
 	list_2_comma_separated_list([H|T],RestAtom),
-	foRmat(atom(ElementComma),'~w,~w',[Element,RestAtom]).
+	format(atom(ElementComma),'~w,~w',[Element,RestAtom]).
 
 %:- endif.
 

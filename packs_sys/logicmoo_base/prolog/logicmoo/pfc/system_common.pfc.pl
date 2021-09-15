@@ -849,7 +849,7 @@ prologHybrid(isEach(argIsa/3, formatted_resultIsa/2, localityOfObject/2, subForm
 :- discontiguous(subFormat/2).
 :- kb_shared(tChannel/1).
 
-% ain((I/(mpred_literal(I),fully_expand(_,I,O),I \=@=O )==> ({foRmat('~q~n',[fully_expand(I->O)])},O))).
+% ain((I/(mpred_literal(I),fully_expand(_,I,O),I \=@=O )==> ({format('~q~n',[fully_expand(I->O)])},O))).
 
 /* subFormat(ftDeplictsFn(tCol),ftSpec). */
 /* subFormat(ftDeplictsFn(meta_argtypes),ftSpec). */

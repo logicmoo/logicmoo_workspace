@@ -26,11 +26,11 @@ latex_header_hook :-
 %%%% 
 prf(F) :-
 	mark_installed_macros(F, F1),
-	pp_form(F1, [foRmat=latex,style=full,qstyle=quant]).
+	pp_form(F1, [format=latex,style=full,qstyle=quant]).
 prm(X) :-
-	pp_form('$macro'(X), [foRmat=latex,style=full]).
+	pp_form('$macro'(X), [format=latex,style=full]).
 prc(X) :-
-	pp_form(X, [foRmat=latex,style=full,qstyle=quant,qstyle=quant]).
+	pp_form(X, [format=latex,style=full,qstyle=quant,qstyle=quant]).
 
 /** \section{Abduction with the Weakest Sufficient Condition}
 */

@@ -78,7 +78,7 @@ register_pplatex_functor(Name, LatexName, PrintLength) :-
 
 
 binary_logop_priority(Op, Options, P, M) :-
-	from_options(foRmat=prolog, Options),
+	from_options(format=prolog, Options),
 	!,
 	current_op(P, M, Op),
 	(M = xfx ; M = xfy),
@@ -87,7 +87,7 @@ binary_logop_priority(Op, _, P, M) :-
 	binary_logop(Op, _, P, M).
 
 unary_logop_priority(Op, Options, P, M) :-
-	from_options(foRmat=prolog, Options),
+	from_options(format=prolog, Options),
 	!,
 	current_op(P, M, Op),
 	(M = fx ; M = fy),
@@ -108,13 +108,13 @@ set_default_pp_form_options(Options) :-
 
 basic_default_pp_form_options(Options) :-
 	Options =
-	[foRmat=prolog,	  %% prolog | latex
+	[format=prolog,	  %% prolog | latex
 	 style=full,	  %% full | brief
 	 qstyle=comma,    %% comma | nocomma | quant
 	 maxpos=60,	  %% approx. max allowed width
 	 aoparen=false,   %% parens around "and" within "or" (deprecated)
 	 %%
-	 %% The following take effects only in latex foRmat:
+	 %% The following take effects only in latex format:
 	 %%
 	 finally='',      %% insert at end of last array row
 	 rightcols=0,     %% top binops up to given depth shown in right cols
@@ -151,7 +151,7 @@ pp_form(F, Options) :-
 	  underscore_to_camel(F1, F2)
 	; F2 = F1
 	),
-	from_options(foRmat=Format, Options1),
+	from_options(format=Format, Options1),
 	( Format = latex ->
 	  retractall(latex(_,_)),
 	  from_options(rightcols=RCB, Options1),	  
@@ -319,7 +319,7 @@ ppl(F, OuterPri, _OuterOp, BinopDepth, OuterBreak, Bound, Options) :-
 	F =.. [Op,Vs,F1],
 	quantifier_logop_priority(Op, Options, Pri, OpMode),
 	!,
-	from_options(foRmat=Format, Options),
+	from_options(format=Format, Options),
 	( Format = prolog ->
 	  NeedsParen = false,
 	  binary_logop_priority(',', Options, PriToPass, _)
@@ -346,7 +346,7 @@ ppl(F, OuterPri, _OuterOp, BinopDepth, OuterBreak, Bound, Options) :-
 	( Format = prolog -> write(')') ; true ),
 	( NeedsParen == true -> pp_paren_close(Options) ; true ).
 ppl(~(X=Y), OuterPri, OuterOp, BinopDepth, OuterBreak, Bound, Options) :-
-	from_options(foRmat=Format, Options),
+	from_options(format=Format, Options),
 	from_options(style=Style, Options),
 	( Format \= prolog ; Style = brief), 
 	!,
@@ -362,7 +362,7 @@ ppl(F, OuterPri, _OuterOp, BinopDepth, OuterBreak, Bound, Options) :-
 	),
 	( NeedsParen == true -> pp_paren_open(Options) ; true ),
 	pp_unary_op(Op, Options),
-	from_options(foRmat=Format, Options),
+	from_options(format=Format, Options),
 	( Format = prolog,
 	  F1 =.. [SubOp,_,_], binary_logop(SubOp, _, _, _) ->
 	  write(' ')
@@ -373,7 +373,7 @@ ppl(F, OuterPri, _OuterOp, BinopDepth, OuterBreak, Bound, Options) :-
 	( NeedsParen == true -> pp_paren_close(Options) ; true ).
 ppl('$macro'(T), _, _, BinopDepth, _, Bound, Options) :-
 	!,
-	from_options(foRmat=Format, Options),
+	from_options(format=Format, Options),
 	fits_in_line(T, false, Options, Break),
 	( (Break = false ; atomic(T)) ->
 	  pp_logatom('$macro'(T), Bound, Options)
@@ -468,11 +468,11 @@ latex_op(Op, LatexOp, 1) :-
 latex_op(X, X, 1).
 
 fits_in_line(F, NeedsParen, Options, Break) :-
-	from_options(foRmat=Format, Options),
+	from_options(format=Format, Options),
 	from_options(maxpos=MaxPos, Options),
 	%% use write length as approximate indicator
 	rm_macro_wrapper(F, F1),
-	foRmat(atom(A), '~w', [F1]),
+	format(atom(A), '~w', [F1]),
 	atom_length(A, L),
 	( NeedsParen = true ->
 	  L1 is L+2
@@ -505,21 +505,21 @@ map_rm_macro_wrapper([X|Xs], [X1|Xs1]) :-
 map_rm_macro_wrapper([], []).
 
 prelease_position(Options) :-
-	from_options(foRmat=Format, Options),
+	from_options(format=Format, Options),
 	( Format = latex ->
 	  retract_latex_to_mark
 	; true
 	).
 
 hard_save_full_position(Options, Pos) :-
-	from_options(foRmat=Format, Options),
+	from_options(format=Format, Options),
 	( Format = latex ->
 	  findall(latex(A,B), latex(A,B), Pos)
 	; true
 	).
 
 hard_restore_full_position(Options, Pos) :-
-	from_options(foRmat=Format, Options),
+	from_options(format=Format, Options),
 	( Format = latex ->
 	  retractall(latex(_,_)),
 	  ( member(P, Pos),
@@ -531,7 +531,7 @@ hard_restore_full_position(Options, Pos) :-
 	).
 
 ppsave_position(Options, Pos) :-
-	from_options(foRmat=Format, Options),
+	from_options(format=Format, Options),
 	( Format = latex ->
 	  findall(S, (latex(S,_), S \= mark(_)), Pos1),
 	  asserta(latex(mark(k), 0)),
@@ -540,7 +540,7 @@ ppsave_position(Options, Pos) :-
 	).
 
 pp_indent(Options, Pos) :-
-	from_options(foRmat=Format, Options),
+	from_options(format=Format, Options),
 	( Format = latex ->
 	  ( Pos = [] ->
 	    true
@@ -563,7 +563,7 @@ sum([N|Ns], S) :-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 pp_comma(Options) :-
-	from_options(foRmat=Format, Options),
+	from_options(format=Format, Options),
 	( Format = prolog ->
 	  write(',')
 	; Format = latex ->
@@ -572,7 +572,7 @@ pp_comma(Options) :-
 	).
 
 pp_sep(Options) :-
-	from_options(foRmat=Format, Options),
+	from_options(format=Format, Options),
 	( Format = prolog ->
 	  true
 	; Format = latex ->
@@ -581,7 +581,7 @@ pp_sep(Options) :-
 	).
 
 pp_varform_sep(Options) :-
-	from_options(foRmat=Format, Options),
+	from_options(format=Format, Options),
 	( Format = prolog ->
 	  write(' ')
 	; Format = latex ->
@@ -590,7 +590,7 @@ pp_varform_sep(Options) :-
 	).
 
 pp_paren_open(Options) :-
-	from_options(foRmat=Format, Options),
+	from_options(format=Format, Options),
 	( Format = prolog ->
 	  write('(')
 	; Format = latex ->
@@ -599,7 +599,7 @@ pp_paren_open(Options) :-
 	).
 
 pp_paren_close(Options) :-
-	from_options(foRmat=Format, Options),
+	from_options(format=Format, Options),
 	( Format = prolog ->
 	  write(')')
 	; Format = latex ->
@@ -608,7 +608,7 @@ pp_paren_close(Options) :-
 	).
 
 pp_unary_op(Op, Options) :-
-	from_options(foRmat=Format, Options),
+	from_options(format=Format, Options),
 	( Format = prolog ->
 	  write(Op)
 	; Format = latex ->
@@ -618,7 +618,7 @@ pp_unary_op(Op, Options) :-
 	).
 
 dry_pp_unary_op(Op, Options) :-
-	from_options(foRmat=Format, Options),
+	from_options(format=Format, Options),
 	( Format = prolog ->
 	  write(Op)
 	; Format = latex ->
@@ -627,7 +627,7 @@ dry_pp_unary_op(Op, Options) :-
 	).
 
 pp_binary_op(Op, BinopDepth, BeforeBreak, Options) :-
-	from_options(foRmat=Format, Options),
+	from_options(format=Format, Options),
 	( Format = prolog ->
 	  write(Op)
 	; Format = latex ->
@@ -646,7 +646,7 @@ pp_binary_op(Op, BinopDepth, BeforeBreak, Options) :-
 	).
 
 pp_nl(Options) :-
-	from_options(foRmat=Format, Options),
+	from_options(format=Format, Options),
 	( Format = prolog ->
 	  nl
 	; Format = latex ->
@@ -665,7 +665,7 @@ retract_latex_to_mark.
 
 
 pp_nullary(F, Options) :-
-	from_options(foRmat=Format, Options),
+	from_options(format=Format, Options),
 	( Format = prolog ->
 	  writeq1(F)
 	; Format = latex ->
@@ -674,7 +674,7 @@ pp_nullary(F, Options) :-
 	).
 
 pp_logatom(F, Bound, Options) :-
-	from_options(foRmat=Format, Options),
+	from_options(format=Format, Options),
 	from_options(style=Style, Options),
 	( Format = prolog ->
 	  ( Style = brief ->
@@ -768,31 +768,31 @@ write_semibrief_latex('$VAR'(F), _, _) :-
 	!,
 	( number(F) ->
 	  N1 is F+1,
-	  foRmat('\\pplparamnum{~w}', [N1])
+	  format('\\pplparamnum{~w}', [N1])
 	; current_pretty_functor(F, C, _) ->
 	  ( is_multiletter(C) ->
-	    foRmat('\\pplparam{~w}', [C])
-	  ; foRmat('\\pplparamplain{~w}', [C])
+	    format('\\pplparam{~w}', [C])
+	  ; format('\\pplparamplain{~w}', [C])
 	  )
 	; atom_primes_postfix(F, C1, P) ->
 	  ( atom_subscript_postfix(C1, C2, N) ->
 	    ( is_multiletter(C2) ->
-	      foRmat('\\pplparamsupidx{~w}{~w}{~w}', [C2,P,N])
-	    ; foRmat('\\pplparamplainsupidx{~w}{~w}{~w}', [C2,P,N])
+	      format('\\pplparamsupidx{~w}{~w}{~w}', [C2,P,N])
+	    ; format('\\pplparamplainsupidx{~w}{~w}{~w}', [C2,P,N])
 	    )
 	  ; ( is_multiletter(C1) ->
-	      foRmat('\\pplparamsup{~w}{~w}', [C1, P])
-	    ; foRmat('\\pplparamplainsup{~w}{~w}', [C1, P])
+	      format('\\pplparamsup{~w}{~w}', [C1, P])
+	    ; format('\\pplparamplainsup{~w}{~w}', [C1, P])
 	    )
 	  )
 	; atom_subscript_postfix(F, C, N) ->
 	  ( is_multiletter(C) ->
-	    foRmat('\\pplparamidx{~w}{~w}', [C,N])
-	  ; foRmat('\\pplparamplainidx{~w}{~w}', [C,N])
+	    format('\\pplparamidx{~w}{~w}', [C,N])
+	  ; format('\\pplparamplainidx{~w}{~w}', [C,N])
 	  )
 	; ( is_multiletter(F) ->
-	    foRmat('\\pplparam{~w}', [F])
-	  ; foRmat('\\pplparamplain{~w}', [F])
+	    format('\\pplparam{~w}', [F])
+	  ; format('\\pplparamplain{~w}', [F])
 	  )
 	).  
 write_semibrief_latex('#'(X,Y), _, B) :-
@@ -1049,19 +1049,19 @@ write_list_latex_brief([T|Ts], B) :-
 
 write_functor_brief_latex_1(Wrapper, F) :-
 	( current_pretty_functor(F, C, _) ->
-	  foRmat(atom(S), '\\~w{~w}', [Wrapper, C])
+	  format(atom(S), '\\~w{~w}', [Wrapper, C])
 	; atom_primes_postfix(F, C, P) ->
 	  ( atom_subscript_postfix(C, C1, N) ->
 	    latex_escape(C1, C2),
-	    foRmat(atom(S), '\\~w{~w^{~w}_{~w}}', [Wrapper, C2, P, N])
+	    format(atom(S), '\\~w{~w^{~w}_{~w}}', [Wrapper, C2, P, N])
 	  ; latex_escape(C, C1),
-	    foRmat(atom(S), '\\~w{~w^{~w}}', [Wrapper, C1, P])
+	    format(atom(S), '\\~w{~w^{~w}}', [Wrapper, C1, P])
 	  )
 	; atom_subscript_postfix(F, C, N) ->
 	  latex_escape(C, C1),
-	  foRmat(atom(S), '\\~w{~w_{~w}}', [Wrapper, C1, N])
+	  format(atom(S), '\\~w{~w_{~w}}', [Wrapper, C1, N])
 	; latex_escape(F, F1),	  
-	  foRmat(atom(S), '\\~w{~w}', [Wrapper, F1])
+	  format(atom(S), '\\~w{~w}', [Wrapper, F1])
         ),
 	write(S).
 

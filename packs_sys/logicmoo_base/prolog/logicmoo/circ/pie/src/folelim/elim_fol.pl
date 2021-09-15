@@ -41,7 +41,7 @@ dbg(X) :-
 	(N >= 50 -> writex(X) ; true ).
 
 writex(X) :-
-	\+ \+ ( numbervars(X, 0, _), foRmat('% ~q~n', [X])).
+	\+ \+ ( numbervars(X, 0, _), format('% ~q~n', [X])).
 
 
 elim_fol(F, F1) :-
@@ -647,21 +647,21 @@ info_ppcg(Verbosity, X, Y) :-
 % ppcg([cg(PP,PN,PZ,PB)|Tuples], P) :-
 % 	fail,
 % 	!,
-% 	foRmat('--- cg ---~n'),
+% 	format('--- cg ---~n'),
 % 	map_logform_gather_quantifiers([PP,PN,PZ,PB], [PP1,PN1,PZ1,PB1]),
 %  	\+ \+ ( numbervars([P,PP1,PN1,PZ1,PB1], 0, _),
-%  		foRmat('p: ~q~n+: ~q~n-: ~q~n0: ~q~nx: ~q~n',
+%  		format('p: ~q~n+: ~q~n-: ~q~n0: ~q~nx: ~q~n',
 %  		       [P,PP1,PN1,PZ1,PB1])),
 % 	ppcg(Tuples, P).
 ppcg([cg(PP,PN,PZ,PB)|Tuples], P) :-
-	foRmat('--- cg ---~n'),
+	format('--- cg ---~n'),
 	map_logform_gather_quantifiers([PP,PN,PZ,PB], [PP1,PN1,PZ1,PB1]),
 	map_tnnfpl_to_so([PP1,PN1,PZ1,PB1], [PP2,PN2,PZ2,PB2]),
 	logform_vars_to_pretty_symbols(PP2, PP3),
 	logform_vars_to_pretty_symbols(PN2, PN3),
 	logform_vars_to_pretty_symbols(PZ2, PZ3),
 	logform_vars_to_pretty_symbols(PB2, PB3),
-	foRmat('+: ~q~n-: ~q~n0: ~q~nx: ~q~n',
+	format('+: ~q~n-: ~q~n0: ~q~nx: ~q~n',
 	       [PP3,PN3,PZ3,PB3]),
 	ppcg(Tuples, P).
 ppcg([], _).

@@ -45,7 +45,7 @@ brief_to_form(F, F1) :-
 brief_to_form(F, Options, F1) :-
 	brief_to_form_1(F, Options, F1),
 	( from_options(prt=true, Options) ->
-	  \+ \+ ( numbervars(F1,1,_), foRmat('% Expanded form: ~q~n', [F1]) )
+	  \+ \+ ( numbervars(F1,1,_), format('% Expanded form: ~q~n', [F1]) )
 	; true
 	).
 

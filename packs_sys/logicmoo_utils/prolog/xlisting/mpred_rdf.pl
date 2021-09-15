@@ -331,13 +331,13 @@ any_to_rdf(_,Var,V):-var(Var),!,must(copy_term(Var,V)),!.
 
 :- export(any_to_rdf/3).
 any_to_rdf(_,U,U):-is_url(U),!.
-any_to_rdf(_,A,Sx):-var(A),foRmat(atom(S),'~w',[(A)]),atom_concat('__bnode',S,Sx),!.
+any_to_rdf(_,A,Sx):-var(A),format(atom(S),'~w',[(A)]),atom_concat('__bnode',S,Sx),!.
 any_to_rdf(DB,User:B,URL):-not(rdf_current_prefix(User,_)),!,any_to_rdf(DB,prefix_concat(User,B),URL),!.
 any_to_rdf(DB,A:B,URL):-is_ftVar(A),!,any_to_rdf(DB,prefix_concat(A,B),URL),!.
 any_to_rdf(DB,baseKB:B,URL):-!,any_to_rdf(DB,prefix_concat(user,B),URL),!.
 any_to_rdf(DB,A / B,URL):-any_to_rdf(DB,f_a(A,B),URL),!.
-any_to_rdf(_,'$VAR'('_'),Sx):-foRmat(atom(S),'~w',[_]),atom_concat('__bnode',S,Sx),!.
-any_to_rdf(_,'$VAR'(A),Sx):-foRmat(atom(S),'~w',['$VAR'(A)]),atom_concat('__bnode',S,Sx),!.
+any_to_rdf(_,'$VAR'('_'),Sx):-format(atom(S),'~w',[_]),atom_concat('__bnode',S,Sx),!.
+any_to_rdf(_,'$VAR'(A),Sx):-format(atom(S),'~w',['$VAR'(A)]),atom_concat('__bnode',S,Sx),!.
 any_to_rdf(DB,S,URL):- ground(S),lmcache:rdf_alias(DB,S,URL),!.
 any_to_rdf(_,NS:N,URL):-rdf_current_qname(NS,N),rdf_global_mpred_object(NS:N,URL),!.
 any_to_rdf(DB,From,URL):-p2q(From,DB,N),!,rdf_global_mpred_object(DB:N,URL),!.
@@ -389,7 +389,7 @@ rdf_literal_value_safe(Sx,S):-rdf_literal_value(Sx,S),!.
 
 onLoadTTL([],_File):-!.
 onLoadTTL(List,DB):-is_list(List),!,forall(member(X,List),onLoadTTL(X,DB)).
-onLoadTTL(X,DB):-foRmat('~q.~n',[X-DB]),fail.
+onLoadTTL(X,DB):-format('~q.~n',[X-DB]),fail.
 onLoadTTL(rdf(S,P,O),DB):- must(rdf_assert_x(S,P,O,DB)).
 
 rdf_to_graph(DB,Go):-var(DB),!,rdf_to_graph(user,Go),!.

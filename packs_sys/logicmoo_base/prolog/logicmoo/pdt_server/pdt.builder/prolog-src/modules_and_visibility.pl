@@ -79,12 +79,12 @@ build_export_edge(Functor/Arity,FileId):-	% this has to be a predicate imported 
     ). 
 
 %build_export_edge(Functor/Arity,FileId):-
-%    foRmat('Warning for ~w/~w -> ~w: ',[Functor,Arity,FileId]),
+%    format('Warning for ~w/~w -> ~w: ',[Functor,Arity,FileId]),
 %    fileT(FileId,_,Module),
-%    foRmat('~w fails to create export-edge ',[Module]),!,
+%    format('~w fails to create export-edge ',[Module]),!,
 %    (	parse_util:predicateT_ri(Functor,Arity,AModule,Id)
-%    -> foRmat('to Module: ~w, Id: ~w~n',[AModule, Id]) 
-%    ; foRmat('~n',[])
+%    -> format('to Module: ~w, Id: ~w~n',[AModule, Id]) 
+%    ; format('~n',[])
 %    ). 
 %build_export_edge(_,_):-!.
 

@@ -1,5 +1,5 @@
 resolveConflict(C) :-
-  foRmat("~NHalting with conflict ~w", [C]),
+  format("~NHalting with conflict ~w", [C]),
   pfcHalt.
 
 %defeat(+Proposition,-Asumptions)

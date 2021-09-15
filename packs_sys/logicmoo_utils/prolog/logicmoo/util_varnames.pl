@@ -256,7 +256,7 @@ name_variable(_, _).
 
 
 variable_name_or_ref(Var, Name) :- get_var_name(Var, Name),!.
-variable_name_or_ref(Var, Name) :- foRmat(atom(Name),'~q',[Var]).
+variable_name_or_ref(Var, Name) :- format(atom(Name),'~q',[Var]).
 
 
 %% project_attributes( ?QueryVars, ?ResidualVars) is semidet.
@@ -318,14 +318,14 @@ get_var_name0(Var,Name):- nb_current('$old_variable_names', Vs),varname_of(Vs,Va
 get_var_name0(Var,Name):- get_varname_list(Vs),varname_of(Vs,Var,Name),!.
 get_var_name0(Var,Name):- execute_goal_vs(Vs),varname_of(Vs,Var,Name).
 
-% get_var_name0(Var,Name):- attvar(Var),get_varname_list(Vs),foRmat(atom(Name),'~W',[Var, [variable_names(Vs)]]).
+% get_var_name0(Var,Name):- attvar(Var),get_varname_list(Vs),format(atom(Name),'~W',[Var, [variable_names(Vs)]]).
 
 varname_of(Vs,Var,Name):- compound(Vs), Vs=[NV|VsL],  ((compound(NV) , (NV=(N=V)),atomic(N), V==Var,!,N=Name) ; varname_of(VsL,Var,Name)).
 
 get_var_name1(Var,Name):- var(Var),!,get_var_name0(Var,Name).
 get_var_name1(Var,Name):- nonvar(Name),!,must(get_var_name1(Var, NameO)),!,Name=NameO.
 get_var_name1('$VAR'(Name),Name):- atom(Name),!.
-get_var_name1('$VAR'(Int),Name):- integer(Int),foRmat(atom(A),"~w",['$VAR'(Int)]),!,A=Name.
+get_var_name1('$VAR'(Int),Name):- integer(Int),format(atom(A),"~w",['$VAR'(Int)]),!,A=Name.
 get_var_name1('$VAR'(Var),Name):- (var(Var)->get_var_name0(Var,Name);Name=Var),!.
 get_var_name1('$VAR'(Att3),Name):- !, get_var_name1(Att3,Name).
 get_var_name1('aVar'(Att3),Name):- !, get_var_name1(Att3,Name).
@@ -924,7 +924,7 @@ set_varname(_,_,V):-atom(V),!.
 set_varname(How,'$VAR'(Name),V):- !, set_varname(How,Name,V).
 set_varname(_:[How],N,V):- !, set_varname(How,N,V).
 set_varname(_:[How|List],N,V):- !, set_varname(How,N,V),set_varname(List,N,V).
-set_varname(How,N,V):- number(N),!,foRmat(atom(VN),'~w',[N]),set_varname(How,VN,V).
+set_varname(How,N,V):- number(N),!,format(atom(VN),'~w',[N]),set_varname(How,VN,V).
 set_varname(How,N,V):- atom(N),atom_concat('"?',LS,N),atom_concat(NN,'"',LS),fix_varcase_name(NN,VN),!,set_varname(How,VN,V).
 set_varname(_M:write_functor,N,V):- !,ignore('$VAR'(N)=V),!.
 set_varname(_M:write_attribute,N,V):-!,put_attr(V,vn,N).
@@ -1188,7 +1188,7 @@ bad_varnamez(Sub):- var(Sub),!.
 bad_varnamez(Sub):- integer(Sub),!, (Sub < 0 ; Sub > 991000).
 bad_varnamez(Sub):- number(Sub).
 bad_varnamez(Sub):- string(Sub),!.
-bad_varnamez(Sub):- foRmat(atom(A),'~w',['$VAR'(Sub)]),sub_string(A,_,_,_,'$').
+bad_varnamez(Sub):- format(atom(A),'~w',['$VAR'(Sub)]),sub_string(A,_,_,_,'$').
 
 
 %=
@@ -1509,7 +1509,7 @@ print_numbervars_maybe(H):-(compound(H);var(H)), copy_term(H,HC), \+ \+ ((get_cl
 %
 % print numbervars  Secondary Helper.
 %
-print_numbervars_1(H):- loop_check(print_numbervars_2(H),foRmat('~N~q.~n',[H])).
+print_numbervars_1(H):- loop_check(print_numbervars_2(H),format('~N~q.~n',[H])).
 
 % print_numbervars_2(H):- dtrace,baseKB:portray_one_line_hook(H),!.
 

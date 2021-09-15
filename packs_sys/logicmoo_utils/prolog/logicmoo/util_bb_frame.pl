@@ -187,21 +187,21 @@ frame_var(Name, Frame, Var):- arg(_, Frame, E), frame_var(Name, E, Var), !.
 
 asCol(A, A):- var(A), !.
 asCol(A, 'TypeFn'(A)):- \+ callable(A), !.
-asCol(A, S):- foRmat(atom(S), '~w', [A]).
+asCol(A, S):- format(atom(S), '~w', [A]).
 
 to_upcase_name(V, V):- var(V), !.
 to_upcase_name('$VAR'(T), N):- !, to_upcase_name(T, N).
 to_upcase_name('?'(T), N):- !, to_upcase_name(T, N).
 to_upcase_name('*'(T), N):- !, to_upcase_name(T, N).
 to_upcase_name(T, N):- compound(T), !, compound_name_arity(T, A, _), !, to_upcase_name(A, N).
-to_upcase_name(T, N):- foRmat(atom(A), '~w', [T]), upcase_atom(A, N).
+to_upcase_name(T, N):- format(atom(A), '~w', [T]), upcase_atom(A, N).
 
 to_downcase_name(V, N):- var(V), !, N = V.
 to_downcase_name('$VAR'(T), N):- !, to_downcase_name(T, N).
 to_downcase_name('?'(T), N):- !, to_downcase_name(T, N).
 to_downcase_name('*'(T), N):- !, to_downcase_name(T, N).
 to_downcase_name(T, N):- compound(T), !, compound_name_arity(T, A, _), !, to_downcase_name(A, N).
-to_downcase_name(T, N):- foRmat(atom(A), '~w', [T]), downcase_atom(A, N).
+to_downcase_name(T, N):- format(atom(A), '~w', [T]), downcase_atom(A, N).
 
 same_name(T1, T2):- var(T1),!,ground(T2), to_downcase_name(T1,T2).
 same_name(T1, T2):- T1 = T2,!.
@@ -257,7 +257,7 @@ frmprint0(Frame) :-
     predsort(frcmp, Frame, FrameA),
     reverse(FrameA, FrameO),
     frmprint_e(FrameO).
-frmprint_e(Frame) :- with_output_to(atom(A),print_tree(Frame)), foRmat('~N~w~n', [A]).
+frmprint_e(Frame) :- with_output_to(atom(A),print_tree(Frame)), format('~N~w~n', [A]).
 
 sortDeref(P, PP):- \+ compound(P), !, P=PP.
 %sortDeref(isa(X, Y), visa(X, Y)):-!.

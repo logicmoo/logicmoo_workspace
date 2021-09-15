@@ -58,7 +58,7 @@ latex_header_hook :-
 :- set_prolog_flag(allow_variable_name_as_functor, true).
 
 :- register_ppl_pl_method(quote(A,B), Options,
-			  foRmat('~@\\; \\assign\\; \\ulcorner ~@\\urcorner',
+			  format('~@\\; \\assign\\; \\ulcorner ~@\\urcorner',
 				 [write_form(B, Options),
 				  write_form(A, Options)])).
 
@@ -89,11 +89,11 @@ latex_header_hook :-
 %%%% 
 prf(F) :-
 	mark_installed_macros(F, F1),
-	pp_form(F1, [foRmat=latex,style=full,qstyle=quant]).
+	pp_form(F1, [format=latex,style=full,qstyle=quant]).
 prm(X) :-
-	pp_form('$macro'(X), [foRmat=latex,style=full]).
+	pp_form('$macro'(X), [format=latex,style=full]).
 prc(X) :-
-	pp_form(X, [foRmat=latex,style=full,qstyle=quant,qstyle=quant]).
+	pp_form(X, [format=latex,style=full,qstyle=quant,qstyle=quant]).
 
 /**
   \tableofcontents
@@ -280,7 +280,7 @@ prc(X) :-
   resolution/paramodulation (\name{Prover9}) and clausal tableaux (\name{CM}),
   as well as finding finite first-order ``countermodels''
   (\name{Mace4}).\footnote{Other first-order systems that support the TPTP
-  foRmat as well as propositional systems that support the DIMACS foRmat could
+  format as well as propositional systems that support the DIMACS format could
   also be integrated.} The clausal tableau prover is weak with equality, as it
   operates in a goal-oriented way, sometimes quite sensitive to settings like
   the particular division of a problem into axiom and theorem part, and has no
@@ -346,10 +346,10 @@ all([v,w], (r(v,w) -> world(w))).
 
 quote(~P, P1) :-
 	!,
-	foRmat(atom(P1), 'not_~w_q', [P]).
+	format(atom(P1), 'not_~w_q', [P]).
 quote(P, P1) :-
 	!,
-	foRmat(atom(P1), '~w_q', [P]).
+	format(atom(P1), '~w_q', [P]).
 
 /**
 

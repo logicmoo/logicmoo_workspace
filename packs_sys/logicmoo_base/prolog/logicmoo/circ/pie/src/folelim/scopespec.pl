@@ -32,7 +32,7 @@
 /*
 
 There are various types to represent scopes internally.  All of them are
-sorted lists whose member foRmat depends on the type:
+sorted lists whose member format depends on the type:
 
 Type     Member Format
 

@@ -1993,10 +1993,10 @@ remove_selection(P):-
   mpred_remove_supports_quietly(que(P,_)),
   !.
 remove_selection(P):-
-  foRmat("~Nmpred_:get_next_fact - selected fact not on Queue: ~p", [P]),fail.
+  format("~Nmpred_:get_next_fact - selected fact not on Queue: ~p", [P]),fail.
 remove_selection(P):- !,throw(remove_selection(P)).
 remove_selection(P):-
-  brake(foRmat("~Nmpred_:get_next_fact - selected fact not on Queue: ~p",
+  brake(format("~Nmpred_:get_next_fact - selected fact not on Queue: ~p",
                [P])).
 
 
@@ -2208,7 +2208,7 @@ maybe_user_support(P,S,SS):-
 mpred_withdraw(P,S) :-
   maybe_user_support(P,S,SS),
   (SS \== unKnown_suppoRt ->
-  % pfcDebug(foRmat("~Nremoving support ~p from ~p",[SS,P])),
+  % pfcDebug(format("~Nremoving support ~p from ~p",[SS,P])),
   (mpred_trace_msg('\n    Removing support: ~p~n',[SS]),
   mpred_trace_msg('     Which was for: ~p~n',[P])); 
     nop(dmsg_pretty(mpred_withdraw(P,S)))),

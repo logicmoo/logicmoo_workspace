@@ -209,8 +209,8 @@ save_mfa_ain(M,F,A):- asserta(tmp:saved_mfa_ain(M,F,A)),
     ((Body==true-> 
       save_p_ain(M,P); save_p_ain(M,P:-Body))))).
       
-%save_p_ain(M,(H:-B)):-!, foRmat(':- assert_if_new(~q:',[M]), display(H), write(' :- '), display(B),writeln(').').
-%save_p_ain(M,P):- foRmat(':- assert_if_new(~q:',[M]), display(P),writeln(').').
+%save_p_ain(M,(H:-B)):-!, format(':- assert_if_new(~q:',[M]), display(H), write(' :- '), display(B),writeln(').').
+%save_p_ain(M,P):- format(':- assert_if_new(~q:',[M]), display(P),writeln(').').
 save_p_ain(M,P):- display(:- call(assert_if_new(M:P))),writeln('.').
 
 :- if(exists_file(bkb_neever)).

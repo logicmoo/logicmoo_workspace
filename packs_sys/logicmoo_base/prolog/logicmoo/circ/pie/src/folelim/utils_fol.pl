@@ -53,14 +53,14 @@
 
 check_form(F) :-
 	f_signature(F, Ps, Fs),
-	foRmat(user_error, 'Predicates: ~q~n', [Ps]),
-	foRmat(user_error, 'Functions: ~q~n', [Fs]),
+	format(user_error, 'Predicates: ~q~n', [Ps]),
+	format(user_error, 'Functions: ~q~n', [Fs]),
 	( member(X/_, Ps), memberchk(X/_, Fs) ->
-	  foRmat(user_error, 'WARNING: Symbol used as predicate and function: ~q~n', [X])
+	  format(user_error, 'WARNING: Symbol used as predicate and function: ~q~n', [X])
 	; true
 	),
 	( member(X/N, Ps), member(X/M, Ps), N \= M ->
-	  foRmat(user_error, 'WARNING: Predicate used with different arities: ~q/~q and /~q~n',
+	  format(user_error, 'WARNING: Predicate used with different arities: ~q/~q and /~q~n',
 		 [X, N, M])
 	; true
 	),
@@ -68,7 +68,7 @@ check_form(F) :-
 			   ; logop_unary(X)
 			   ; logop_binary(X)
 			   ; logop_quantifier(X)) ->
-	  foRmat(user_error, 'WARNING: Predicate with symbol of logic operator: ~q', [X/N])
+	  format(user_error, 'WARNING: Predicate with symbol of logic operator: ~q', [X/N])
 	; true
 	).
 

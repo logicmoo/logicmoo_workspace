@@ -64,7 +64,7 @@ initialize_meta_pred_search:-
     	(   find_predefined_metas(Spec, Module)
     	),
     	assert(new_meta_pred(Spec, Module))
-    		%foRmat('Initial: ~w:~w~n', [Module, Spec])
+    		%format('Initial: ~w:~w~n', [Module, Spec])
     ).
     
   
@@ -95,7 +95,7 @@ collect_candidates(Candidates):-
 			parse_util:clauseT(ClauseId,_,CandModule,CandFunctor,CandArity),
 			functor(Candidate, CandFunctor, CandArity),
 			\+ (predicate_property(CandModule:Candidate, built-in))%,
-			%foRmat('Candidate: ~w:~w~n', [CandModule, Candidate])
+			%format('Candidate: ~w:~w~n', [CandModule, Candidate])
         ),
         CandidateList
 	), 

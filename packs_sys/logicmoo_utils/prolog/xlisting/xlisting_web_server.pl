@@ -79,7 +79,7 @@ cp_menu:cp_menu(X,X).
 %
 % Ensure Webserver.
 %
-ensure_sigma(Port) :- foRmat(atom(A),'httpd@~w_1',[Port]),thread_property(_,alias(A)),!.
+ensure_sigma(Port) :- format(atom(A),'httpd@~w_1',[Port]),thread_property(_,alias(A)),!.
 ensure_sigma(Port) :- on_x_debug(catch((http_server(http_dispatch,[ port(Port), workers(16) ])),E,wdmsg(E))).
 
 

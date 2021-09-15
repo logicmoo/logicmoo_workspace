@@ -18,18 +18,18 @@
 find_loading_roots:-
     fileT(FileId,FileName,_),
     	not(load_edge(_,FileId,_,_)),
-    	foRmat('Loading root: ~w~n',[FileName]).
+    	format('Loading root: ~w~n',[FileName]).
     
 find_standalone_files:-
     fileT(FileId,FileName,_),
     	not(load_edge(FileId,_,_,_)),
     	not(load_edge(_,FileId,_,_)),
-    	foRmat('Standalone File: ~w~n',[FileName]).
+    	format('Standalone File: ~w~n',[FileName]).
     
 find_loading_leafs:-
     fileT(FileId,FileName,_),
     	not(load_edge(FileId,_,_,_)),
-    	foRmat('Loading root: ~w~n',[FileName]).
+    	format('Loading root: ~w~n',[FileName]).
     
 :- dynamic load_level/2. %load_level(FileId,Level).
 :- dynamic load_level_ri/2. %load_level_ri(Level,FileId).    
@@ -70,7 +70,7 @@ compute_further_levels:-
 
 compute_next_loading_level:-
     next_level(CurrentLevel),
-    foRmat('currentLevel: ~w~n',[CurrentLevel]),
+    format('currentLevel: ~w~n',[CurrentLevel]),
     LastLevel is CurrentLevel - 1,
     load_level_ri(LastLevel,LoadedFileId),
     	load_edge(FileId,LoadedFileId,_,_),

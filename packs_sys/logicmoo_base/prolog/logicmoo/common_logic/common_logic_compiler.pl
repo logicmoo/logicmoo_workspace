@@ -1662,7 +1662,7 @@ has_modals(P):- quietly((sub_term(A,P),compound(A),(functor(A,poss,_);functor(A,
 % Atom Compat.
 %
  /* disabled */
-atom_compat(F,HF,HHF):- fail,F\=HF, is_sent_op_modality(F),is_sent_op_modality(HF), foRmat(atom(HHF),'~w_~w',[F,HF]).
+atom_compat(F,HF,HHF):- fail,F\=HF, is_sent_op_modality(F),is_sent_op_modality(HF), format(atom(HHF),'~w_~w',[F,HF]).
 
 remove_unused_clauses([],[]):- !.
 remove_unused_clauses([Unused|FlattenedO4],FlattenedO):- 

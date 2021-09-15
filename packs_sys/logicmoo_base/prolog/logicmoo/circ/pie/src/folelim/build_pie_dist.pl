@@ -78,7 +78,7 @@ build_dist(TgtDir) :-
 % 	source_path(Source),
 % 	concat_atom([Source, '/doc/'], DocPath),
 % 	File = 'user_manual.tex',
-% 	foRmat(atom(PDFLatex), 'cd ~w ; pdflatex ~w ; pdflatex ~w',
+% 	format(atom(PDFLatex), 'cd ~w ; pdflatex ~w ; pdflatex ~w',
 % 	       [DocPath, File, File]),
 % 	shell(PDFLatex).
 % 	

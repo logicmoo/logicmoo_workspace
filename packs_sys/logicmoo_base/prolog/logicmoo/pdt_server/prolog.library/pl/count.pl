@@ -59,7 +59,7 @@ count_and_print(Goal, N) :-
   			nb_getval(successcounter,N),
     		N2 is N + 1,
     		nb_setval(successcounter,N2),
-    		foRmat('~w.~n', [Goal]),
+    		format('~w.~n', [Goal]),
 		fail
     ; 	nb_getval(successcounter,N)
     ).

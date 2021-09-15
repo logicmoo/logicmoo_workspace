@@ -372,7 +372,7 @@ local_server(URL) :-
     ;   http_server(http_dispatch, [port(Port)]),
         asserta(pengine_server_port(Port))
     ),
-    foRmat(atom(URL), 'http://localhost:~d', [Port]).
+    format(atom(URL), 'http://localhost:~d', [Port]).
 
 stop_pengine_server :-
     pengine_server_pid(PID),
@@ -408,14 +408,14 @@ start_external_server(URL) :-
     on_signal(hup, _, hangup).
 
 hangup(_Signal) :-
-    foRmat(user_error, 'Got hangup~n', []),
+    format(user_error, 'Got hangup~n', []),
     thread_send_message(main, done).
 
 pengine_server :-
     local_server(URL),
     writeln(URL),
     thread_get_message(Done),
-    foRmat(user_error, 'Got ~p', [Done]).
+    format(user_error, 'Got ~p', [Done]).
 
 %:- discontiguous(logicmoo_utils:'$exported_op'/3).
 %:- logicmoo_utils:use_module(library(logicmoo_common)).

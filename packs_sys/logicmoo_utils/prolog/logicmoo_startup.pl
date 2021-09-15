@@ -58,7 +58,7 @@ name_to_files(Spec, Files) :-
 name_to_files(Spec, Files, Exists) :-
     name_to_files_(Spec, Files, Exists),
     (   Files==[]
-    ->  print_message(warning, foRmat('No match: ~w', [Spec])),
+    ->  print_message(warning, format('No match: ~w', [Spec])),
         fail
     ;   true
     ).
@@ -108,7 +108,7 @@ name_to_files_(Spec, Files, Exists) :-
     (   Exists==true,
         Files0==[S1],
         \+ access_file(S1, exist)
-    ->  print_message(warning,foRmat('"~w" does not exist', [S1])),
+    ->  print_message(warning,format('"~w" does not exist', [S1])),
         fail
     ;   Files=Files0
     ).
@@ -326,7 +326,7 @@ setup_hist0:-  '$toplevel':setup_history.
 :- system:use_module(library(dialect/commons)).
 :- system:use_module(library(dialect/eclipse/test_util_iso)).
 :- system:use_module(library(dialect/hprolog)).
-:- system:use_module(library(dialect/hprolog/foRmat)).
+:- system:use_module(library(dialect/hprolog/format)).
 :- system:use_module(library(dialect/ifprolog)).
 :- system:use_module(library(dialect/iso/iso_predicates)).
 :- system:use_module(library(dialect/sicstus)).
@@ -417,7 +417,7 @@ setup_hist0:-  '$toplevel':setup_history.
 :- system:use_module(library(lazy_lists)).
 :- system:use_module(library(listing)).
 :- system:use_module(library(lists)).
-:- system:use_module(library(lynx/foRmat)).
+:- system:use_module(library(lynx/format)).
 :- system:use_module(library(lynx/html_style)).
 :- system:use_module(library(lynx/html_text)).
 :- system:use_module(library(lynx/pldoc_style)).
@@ -675,7 +675,7 @@ current_app_argv(List):- lmconf:saved_app_argv(List).
 current_app_argv(List):- current_prolog_flag(argv,List),List\==[].
 current_app_argv(List):- current_prolog_flag(os_argv,List).
 
-shell_format(Fmt,Args):-foRmat(string(S),Fmt,Args),shell(S),!.
+shell_format(Fmt,Args):-format(string(S),Fmt,Args),shell(S),!.
 start_tty_redirect(PORT):-
   PORT100 is PORT + 100,  
   shell_format('lsof -t -i:~w | xargs --no-run-if-empty kill -9',[PORT100]),
@@ -1295,10 +1295,10 @@ make_historial(M:O,A):- (M==user),!, make_historial(O,A).
 make_historial(whenever_flag_permits(_,O),A):-!,make_historial(O,A).
 make_historial(add_history(O),A):-!,make_historial(O,A).
 make_historial(O,A):-ground(O),
-  without_color(foRmat(string(A), '~W', [O, [fullstop(true),portrayed(true),quoted(true),numbervars(true)]])),!.
+  without_color(format(string(A), '~W', [O, [fullstop(true),portrayed(true),quoted(true),numbervars(true)]])),!.
 make_historial(O,A):-
     prolog_load_context(variable_names, Bindings),
-    without_color(foRmat(string(A), '~W', [O, [fullstop(true),portray(true),quoted(true),variable_names(Bindings)]])).
+    without_color(format(string(A), '~W', [O, [fullstop(true),portray(true),quoted(true),variable_names(Bindings)]])).
 
 %:- multifile prolog:history/2.
 :- nb_setval('$without_color',[]).
@@ -1359,7 +1359,7 @@ user:expand_query(Goal, _Expanded, Bindings, _ExpandedBindings):-        fail,
    ignore_not_not((once(( nb_linkval_current('$expand_query',Goal-Bindings),
     append(Bindings,[],Bindings),
     % ignore_not_not(nortrace),ignore_not_not(notrace),
-    foRmat(atom(A), '~W', [Goal, [fullstop(true),portray(true),quoted(true),variable_names(Bindings)]]),
+    format(atom(A), '~W', [Goal, [fullstop(true),portray(true),quoted(true),variable_names(Bindings)]]),
     add_history0(A))))),
    fail.
 :- endif.

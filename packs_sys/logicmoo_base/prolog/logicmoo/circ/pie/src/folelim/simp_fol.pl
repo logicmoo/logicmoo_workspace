@@ -786,7 +786,7 @@ disjoin_topex(F, G, (F;G)).
 %%%% 
 %%%% A fast simplification of first-order formulas
 %%%%
-%%%% - also applicable to the tform foRmat
+%%%% - also applicable to the tform format
 %%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

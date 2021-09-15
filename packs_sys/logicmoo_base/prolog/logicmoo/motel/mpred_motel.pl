@@ -648,11 +648,11 @@ printTime(G,T0) :-
 	call(G),
 	getRuntime(T1),
 	T is T1 - T0,
-	foRmat('Total runtime ~3d sec.~n', [T]).
+	format('Total runtime ~3d sec.~n', [T]).
 printTime(_,T0) :-
 	getRuntime(T1),
 	T is T1 - T0,
-	foRmat('Total runtime ~3d sec.~n', [T]),
+	format('Total runtime ~3d sec.~n', [T]),
 	!,
 	fail.
 
@@ -3125,11 +3125,11 @@ getStat(CN,CST,RN,RST,T) :-
 printStat :-
 	!,
 	getStat(CN,CST,RN,RST,T),
-	foRmat('Concepts classified:         ~d~n',CN),
-	foRmat('Subsumption tests performed: ~d~n',CST),
-	foRmat('Roles    classified:         ~d~n',RN),
-	foRmat('Subsumption tests performed: ~d~n',RST),
-	foRmat('Total runtime:               ~3d sec.~2n',T),
+	format('Concepts classified:         ~d~n',CN),
+	format('Subsumption tests performed: ~d~n',CST),
+	format('Roles    classified:         ~d~n',RN),
+	format('Subsumption tests performed: ~d~n',RST),
+	format('Total runtime:               ~3d sec.~2n',T),
 	!.
 
 buildOrdering(Env,MS,CTree,RTree) :- 
@@ -3978,7 +3978,7 @@ solveConstraint(Env,MS,(card,app((FF:R),X),Rel,N),(M,S),hyp(HYPS),ab(D),call(CAL
 %	cCS(CALLS,SolveHead),
 %	CALLS1 = [SolveHead|CALLS],
 	length(CALLS,XXX),
-%	foRmat('trying ~d  solve(~w(~w)) ~w ~w~n',[XXX,R,X,Rel,N]),
+%	format('trying ~d  solve(~w(~w)) ~w ~w~n',[XXX,R,X,Rel,N]),
 	collectAllFillers(Env,MS,R,X,HYPS,D,CALLS,S),
 	computeNumber(S,Rel,(M,PTAbox)),
 	continueSolve(Env,MS,(card,app((FF:R),X),Rel,N),hyp(HYPS),ab(D),call(CALLS),(M,PTAbox),PT),
@@ -5228,9 +5228,9 @@ skipped	metaReasoning,
 
 assertInRules(Env) :-
 	assertz_logged((in(Env,Name,modal(MS),CN,CON,hyp(HYP),ab(D),call(CALL),PT) :-
-		 ifOption(traceOutput,yes,(length(CALL,Depth), foRmat('trying ~d  in(~w,~w)~n',[Depth,CN,CON]))),
+		 ifOption(traceOutput,yes,(length(CALL,Depth), format('trying ~d  in(~w,~w)~n',[Depth,CN,CON]))),
 	kb_in(Env,pr(5),Name,modal(MS),CN,CON,hyp(HYP),ab(D),call(CALL),PT),
-		 ifOption(traceOutput,yes,(length(CALL,Depth), foRmat('succeeded ~d  in(~w,~w)~n',[Depth,CN,CON]))))),
+		 ifOption(traceOutput,yes,(length(CALL,Depth), format('succeeded ~d  in(~w,~w)~n',[Depth,CN,CON]))))),
 % There are no kb_in clauses with priority 4 at the moment (07.10.92)
 skipped	assertz_logged((in(Env,Name,modal(MS),CN,CON,hyp(HYP),ab(D),call(CALL),PT) :-
 skipped	kb_in(Env,pr(4),Name,modal(MS),CN,CON,hyp(HYP),ab(D),call(CALL),PT))),

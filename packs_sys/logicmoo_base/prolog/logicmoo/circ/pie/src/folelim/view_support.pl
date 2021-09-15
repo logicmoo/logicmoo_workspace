@@ -200,11 +200,11 @@ accessor_predicate(P, BP, AP) :- !, accessor_predicate_1(P, BP, AP).
 
 accessor_predicate_1(P, BP, AP) :-
 	bp_onum(BP, BP1),
-	foRmat(atom(AP), '~w_~|~`0t~d~4+', [P, BP1]).		
+	format(atom(AP), '~w_~|~`0t~d~4+', [P, BP1]).		
 accessor_predicate_2(P, BP, V, AP) :-
 	bp_onum(BP, BP1),
 	V1 is min(truncate(V*10000), 9999),
-	foRmat(atom(AP), '~|~`0t~d~4+_~w_~|~`0t~d~4+', [V1, P, BP1]).
+	format(atom(AP), '~|~`0t~d~4+_~w_~|~`0t~d~4+', [V1, P, BP1]).
 
 %%%% 
 %%%% A number, if BP1 is "more instantiated" than BP2 then

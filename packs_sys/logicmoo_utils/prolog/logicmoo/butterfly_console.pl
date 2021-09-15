@@ -64,14 +64,14 @@ block_format(G):- t_l:in_block_format,!,call(G).
 block_format(G):- wots((S),locally(t_l:in_block_format,G)),bformat(S),!.
 
 
-%bfly_write_html(S):- !, foRmat("(HTML ~w)",[S]),!.
-%bfly_write_html(P):- foRmat("\x90;HTML|~w\x93",[P]).
-%bfly_write_html(P):- foRmat("P;HTML|~wP",[P]),!. %'
-%bfly_write_html(S):- foRmat("\x1bP;HTML|~w\x1bP",[S]),end_escape.
+%bfly_write_html(S):- !, format("(HTML ~w)",[S]),!.
+%bfly_write_html(P):- format("\x90;HTML|~w\x93",[P]).
+%bfly_write_html(P):- format("P;HTML|~wP",[P]),!. %'
+%bfly_write_html(S):- format("\x1bP;HTML|~w\x1bP",[S]),end_escape.
 
 %bfly_write_html(S):- rich_output(Out),!,with_output_to(Out,bfly_write_html(S)).
 
-%bformat(P):- is_visible_output,is_butterfly_console,foRmat(string(S),'~w',[P]),atom_contains(S,'<'),!,bformat(S).
+%bformat(P):- is_visible_output,is_butterfly_console,format(string(S),'~w',[P]),atom_contains(S,'<'),!,bformat(S).
 %
 
 
@@ -212,7 +212,7 @@ send_tokens_1([nl(1)|Tokens]):-!,remove_if_last(Tokens,[nl(1)],TokensLeft),send_
 send_tokens_1(Tokens):- with_output_to(string(HTMLString), html_write:print_html(Tokens)),write_html(HTMLString).
 
 %write_html(HTMLString):- ((pengines:pengine_self(_) -> pengines:pengine_output(HTMLString) ;write(HTMLString))),!.
-write_html(HTMLString):- bfly_html_goal(foRmat(HTMLString)).
+write_html(HTMLString):- bfly_html_goal(format(HTMLString)).
 
 bfly_portray(X):- 
   \+ tracing, ground(X),
@@ -391,9 +391,9 @@ write_direct(S):- pformat(S).
 
 %bformat(P):- atom(P),sformat(S,P,[]),!,bformat(S).
 %bformat(S):- string(S),atom_concat(PL,'\n',S),!,bformat(PL).
-%bformat(S):- t_l:in_block_format,!,foRmat("~w",[S]),!.
+%bformat(S):- t_l:in_block_format,!,format("~w",[S]),!.
 bformat(Stream,Fmt,Args):- atomic(Stream),is_stream(Stream),!, with_output_to(Stream,bformat(Fmt,Args)).
-bformat(Stream,Fmt,Args):- foRmat(Stream,Fmt,Args).
+bformat(Stream,Fmt,Args):- format(Stream,Fmt,Args).
 bformat(Fmt,Args):- sformat(P,Fmt,Args),bformat(P).
 bformat(S):- use_pts_files,!,bfly_to_all_pts(S).
 bformat(S):- bfly_write(S).
@@ -424,7 +424,7 @@ bfly_write(Style,escape_from_screen('$end')):- !, only_bfly(bfly_write(Style,[wh
 bfly_write(Style,escape_from_screen(X)):-!, bfly_write(Style,[when_in_screen(esc(80)),X,when_in_screen(esc(92))]).
 bfly_write(Style,when_in_screen(X)):- !, only_bfly(ignore((getenv('TERM',screen),bfly_write(Style,X)))).
 
-bfly_write(Style,S):- (string(S);is_codelist(S);is_charlist(S)), foRmat(atom(T),'~s',[S]), !, bfly_write(Style,T).
+bfly_write(Style,S):- (string(S);is_codelist(S);is_charlist(S)), format(atom(T),'~s',[S]), !, bfly_write(Style,T).
 bfly_write(_Styl,S):- atom(S),(atom_contains(S,'<'),atom_contains(S,'>')),!,write_direct(S).
 bfly_write(_Styl,ansi(X)):-!, bfly_write_plain(X).
 

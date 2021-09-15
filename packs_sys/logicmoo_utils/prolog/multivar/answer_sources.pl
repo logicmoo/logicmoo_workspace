@@ -714,7 +714,7 @@ source_log_(Sid, Act, Fmt1, Args1) :-
 source_log__do(Sid, Act, Fmt1, Args1) :-
 	get_time(Tm),
 	Tm1 is floor(float_fractional_part(Tm / 100) * 100_000),
-	foRmat(atom(TM), '~3d', [Tm1]),
+	format(atom(TM), '~3d', [Tm1]),
 	Term = nan_kernel__source(Sid, Act, TM, Fmt1, Args1),
 	print_message(informational, Term).
 
@@ -723,7 +723,7 @@ source_log__do(Sid, Act, Fmt1, Args1) :-
 
 prolog:message(nan_kernel__source(Sid, Act, TM, Fmt1, Args1)) -->
 	{	source_sid_sel_(_, TNum, Id, Sid),
-		foRmat(atom(Msg1), Fmt1, Args1),
+		format(atom(Msg1), Fmt1, Args1),
 		Args = [TM, TNum, Id, Act, Msg1]
 	},	['~a : source(t~d, ~d) : ~|~w~6+ : ~a'-Args].
 
@@ -836,7 +836,7 @@ source_new_sid_(Type, Sid) :-
 :- use_module(library(heaps)).
 
 nop(_).
-wdbg(P):-foRmat(user_error,'~NWDBG: ~q.~n',[P]),
+wdbg(P):-format(user_error,'~NWDBG: ~q.~n',[P]),
 	flush_output(user_error).
 
 e_call(E,Goal) :-
