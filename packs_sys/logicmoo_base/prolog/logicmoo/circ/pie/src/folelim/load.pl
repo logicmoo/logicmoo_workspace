@@ -30,7 +30,7 @@
        concat_atom([PIE, '/folelim'], Dir) ) ->
      PROVERS=PIE,
 
-     format(user_error, 'Loading from source directory ~q~n', [PROVERS]),
+     foRmat(user_error, 'Loading from source directory ~q~n', [PROVERS]),
      concat_atom([PROVERS, '/swilib'], Swilib),
      concat_atom([PROVERS, '/nf'], Nf),
      concat_atom([PROVERS, '/pplatex'], PPLatex),
@@ -47,7 +47,7 @@
      asserta(user:file_search_path(cmprover, CMProver)),
      asserta(user:file_search_path(lp, Lp)),
      asserta(user:file_search_path(kbset, KBSet))
-   ; format(user_error, 'Source directory not found - exiting~n', []),
+   ; foRmat(user_error, 'Source directory not found - exiting~n', []),
      halt
    ).
 
@@ -128,7 +128,7 @@
 	  %%%% declared as default_external_... should be specified here.
 	  %%%% List entries are pairs SolverId-CommandLinePrefix.
 	  %%%%
-	  %%%% The SolverId is used to choose the input format (see
+	  %%%% The SolverId is used to choose the input foRmat (see
 	  %%%% external.pl).
 	  %%%%
 	  external_solvers =

@@ -113,7 +113,7 @@ prtg_test(ProofTerm) :-
 	prtg(ProofTerm, T),
 	prtg_to_dot(T, G),
 	write_gif_dotgraph(G, File),
-	format('Written ~w~n', [File]).
+	foRmat('Written ~w~n', [File]).
 
 prtg_to_dot(T, G) :-
 	t_graph(T, Graph),
@@ -129,7 +129,7 @@ prtg_to_dot(T, G) :-
 	findall(node(Node, [label=Label]),
 		( member(Node, AllNodes),
 		  dot_pretty_goal(Node, T, Goal),
-		  format(atom(Label), '~w: ~w', [Node, Goal])
+		  foRmat(atom(Label), '~w: ~w', [Node, Goal])
 		),
 		Nodes),
 	append(Nodes, Edges, DGraph),
@@ -143,13 +143,13 @@ dot_pretty_goal(Node, T, Goal) :-
 
 dot_pretty_goal_1(c(L,_,_), A) :-
 	!,
-	format(atom(A), 'CLOSED: ~q', [L]).
+	foRmat(atom(A), 'CLOSED: ~q', [L]).
 dot_pretty_goal_1(g(L,_), A) :-
 	!,
-	format(atom(A), 'ON_BRANCH ~q', [L]).
+	foRmat(atom(A), 'ON_BRANCH ~q', [L]).
 dot_pretty_goal_1(h(L, _), A) :-
 	!,
-	format(atom(A), 'LINKED ~q', [L]).
+	foRmat(atom(A), 'LINKED ~q', [L]).
 dot_pretty_goal_1(X, X).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

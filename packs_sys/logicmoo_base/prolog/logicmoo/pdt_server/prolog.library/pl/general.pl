@@ -115,7 +115,7 @@ has_property(_Pred,_Prop,0).
 %    throw('first argument has to be atomic').
 %    
 %get_var_names(Goal, VarNames) :-
-%    format(atom(Query), '~w.', [Goal]),
+%    foRmat(atom(Query), '~w.', [Goal]),
 %    open_chars_stream(Query,Stream),
 %    read_term(Stream,_,[variable_names(VarNameList)]),
 %    maplist(extract_var_name, VarNameList, ExtractedList),

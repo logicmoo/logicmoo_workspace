@@ -26,7 +26,7 @@ prolog_edit:edit_source(Location) :-
     ->	true
     ;	Line = 1
     ),
-    format(atom(A), '~w ~w', [File, Line]),
+    foRmat(atom(A), '~w ~w', [File, Line]),
     catch(process_observe:process_notify(pdt_edit_hook,A),_,true).
 
 

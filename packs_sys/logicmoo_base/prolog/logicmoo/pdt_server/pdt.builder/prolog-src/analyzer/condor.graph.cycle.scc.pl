@@ -324,13 +324,13 @@ reset_scc_counter :-
 set_scc_counter(New) :- 
    retractall(scc_counter(_)),
    assert(scc_counter(New)).
-   % format('asserted scc_counter(~a).~n',[New]).  
+   % foRmat('asserted scc_counter(~a).~n',[New]).  
    
 increment_scc_counter :- 
    retract(scc_counter(Old)),
    New is Old+1,
    assert(scc_counter(New)).
-   % format('asserted scc_counter(~a).~n',[New]).  
+   % foRmat('asserted scc_counter(~a).~n',[New]).  
 
 
 

@@ -565,7 +565,7 @@ xaction_menu_item('NonMonotonic',"Treat $item NonMonotonic").
 print_request([]).
 print_request([H|T]) :-
         H =.. [Name, Value],
-        format(user_error,'<tr><td>~w<td>~w~n', [Name, Value]),
+        foRmat(user_error,'<tr><td>~w<td>~w~n', [Name, Value]),
         print_request(T).
 
 
@@ -587,9 +587,9 @@ escape_quoting(SUnq0,SObj):-
 %
 % Make Quotable.
 %
-make_quotable(String,SObj):-string(String),format(string(SUnq),'\"~s\"',[String]),into_attribute(SUnq,SObj),!.
-make_quotable(String,SObj):-atomic(String),format(string(SUnq),'~w',[String]),into_attribute(SUnq,SObj),!.
-make_quotable(String,SObj):-format(string(SUnq),'~q',[String]),into_attribute(SUnq,SObj),!.
+make_quotable(String,SObj):-string(String),foRmat(string(SUnq),'\"~s\"',[String]),into_attribute(SUnq,SObj),!.
+make_quotable(String,SObj):-atomic(String),foRmat(string(SUnq),'~w',[String]),into_attribute(SUnq,SObj),!.
+make_quotable(String,SObj):-foRmat(string(SUnq),'~q',[String]),into_attribute(SUnq,SObj),!.
 
 % 
 
@@ -791,7 +791,7 @@ save_request_in_session(Request):-
         save_in_session(Request).
         % http_session:http_session_id(F),forall(http_session:session_data(F,D),wdmsg(D)).
 
-nop_format(G):- nop(format(G)).
+nop_format(G):- nop(foRmat(G)).
 
 
 :- dynamic(lmcache:current_ioet/4).
@@ -829,7 +829,7 @@ write_begin_html(Title):-
   (get_param_req(lean,'1') -> write("</div>") ;
    (write("</div>"),
     output_html(div([id('cp-menu'), class(menu)], \ cp_menu)),
-   format('<br/>'),
+   foRmat('<br/>'),
    write_expandable(false,(offer_testcases,show_http_session)))),  
   % ensure_colapsable_script,
    call(ensure_colapsable_styles),
@@ -839,7 +839,7 @@ write_begin_html(Title):-
 offer_testcases :- forall(offer_testcase(X),write_cmd_link(X)).
 
 write_cmd_link(X):- nonvar(X),with_output_to(string(S),writeq(X)),
-  www_form_encode(S,A), format('<a href="?cmd=~w">?- ~q. </a>\n',[A,X]).
+  www_form_encode(S,A), foRmat('<a href="?cmd=~w">?- ~q. </a>\n',[A,X]).
 
 :- dynamic(offer_testcase/1).
 offer_testcase(run_pipeline('Every man likes at least 3 things.')).
@@ -864,8 +864,8 @@ handler_logicmoo_cyclone1(A):- handler_logicmoo_cyclone_call(A).
 handler_logicmoo_cyclone0(A):- handler_logicmoo_cyclone_call(A).
 
 handler_logicmoo_cyclone_call(_):- quietly(is_goog_bot),!,
-  ((format('Content-type: text/html~n~n',[]),
-  format('<!DOCTYPE html><html><head></head><body><pre></pre></body></html>~n~n',[]),
+  ((foRmat('Content-type: text/html~n~n',[]),
+  foRmat('<!DOCTYPE html><html><head></head><body><pre></pre></body></html>~n~n',[]),
   flush_output_safe)),!.
 
 handler_logicmoo_cyclone_call(Request):-     
@@ -875,8 +875,8 @@ handler_logicmoo_cyclone_call(Request):-
 on_xf_ignore_flush(G):- flush_output_safe,on_xf_ignore(G),flush_output_safe.
 
 handler_logicmoo_cyclone(Request):- 
-  html_write:html_current_option(content_type(D)),format('Content-type: ~w~n~n', [D]),
-  %format('<!DOCTYPE html>',[]),flush_output_safe,
+  html_write:html_current_option(content_type(D)),foRmat('Content-type: ~w~n~n', [D]),
+  %foRmat('<!DOCTYPE html>',[]),flush_output_safe,
   must_run_html(handler_logicmoo_cyclone000(Request)),!.
 
 
@@ -926,7 +926,7 @@ get_webproc(PageName):- get_param_req(path,PATH),directory_file_path(_,PageName,
 %
 write_end_html:- flush_output_safe,
   % add_context_menu,
-  format('</body></html>~n~n',[]),flush_output_safe,!.
+  foRmat('</body></html>~n~n',[]),flush_output_safe,!.
 
 
 
@@ -957,7 +957,7 @@ test_rok(W) :-
   In = user_input,
   Out = user_output,
   into_attribute_q(W,TextBoxObj),
-  format(atom(S4T),'/swish/lm_xref/?fa=~w',[TextBoxObj]),
+  foRmat(atom(S4T),'/swish/lm_xref/?fa=~w',[TextBoxObj]),
   test_rok_cyclone([path_info('/'), protocol(http), peer(ip(127, 0, 0, 1)), 
      pool(client('httpd@3020', http_dispatch, In, Out)),
      input(In), method(get), request_uri(S4T),
@@ -982,7 +982,7 @@ add_context_menu:-!.
 
 
 write_script(X):-
-  format(X).
+  foRmat(X).
 
 %% add_form_script is det.
 %
@@ -1061,7 +1061,7 @@ else
 %
 % Show Pcall Footer.
 %
-show_pcall_footer:- format('<hr><a href="https://logicmoo.org/swish/lm_xref/">LogicMOO/PrologMUD</a>',[]),!.
+show_pcall_footer:- foRmat('<hr><a href="https://logicmoo.org/swish/lm_xref/">LogicMOO/PrologMUD</a>',[]),!.
 
 
 
@@ -1089,7 +1089,7 @@ rok_linkable(A):- string(A),!.
 % Write Atom Link.
 %
 :- export(write_atom_link/2).
-write_atom_link(L,N):- write_atom_link(atom(W),L,N),format('~w',[W]),!.
+write_atom_link(L,N):- write_atom_link(atom(W),L,N),foRmat('~w',[W]),!.
 
 % pred_href(Name/Arity, Module, HREF) :-
 
@@ -1104,10 +1104,10 @@ write_atom_link(W,A/_,N):-atom(A),!,write_atom_link(W,A,N).
 write_atom_link(W,C,N):- sanity(nonvar(W)),compound(C),get_functor(C,F,A),!,write_atom_link(W,F/A,N).
 %write_atom_link(W,_,N):- thread_self_main,!,write_plain_atom(W,N),!.
 write_atom_link(W,_,N):- \+ is_html_mode, write_plain_atom(W,N),!.
-write_atom_link(W,_,N):- nb_current('$no_hrefs',t), !, format(W,'<a>~q</a>',[N]),!.
+write_atom_link(W,_,N):- nb_current('$no_hrefs',t), !, foRmat(W,'<a>~q</a>',[N]),!.
 write_atom_link(W,A,N):-  
  catch((into_attribute_q(A,TextBoxObj),
-   format(W,'<a href="?fa=~w">~q</a>',[TextBoxObj,N])),E,(dsmg(E),write_plain_atom(W,N))).
+   foRmat(W,'<a href="?fa=~w">~q</a>',[TextBoxObj,N])),E,(dsmg(E),write_plain_atom(W,N))).
 
 
 
@@ -1116,7 +1116,7 @@ write_atom_link(W,A,N):-
 %
 % Write Term Converted To Atom One.
 %
-write_plain_atom(S,Term):-format(S,'~q',[Term]).
+write_plain_atom(S,Term):-foRmat(S,'~q',[Term]).
 
 /*
 
@@ -1630,7 +1630,7 @@ write_tail(Other, Style) :-		%  |junk]
 
 
 /*  The listing/0 and listing/1 commands are based on the Dec-10
-    commands, but the format they generate is based on the "pp" command.
+    commands, but the foRmat they generate is based on the "pp" command.
     The idea of rok_portray_clause/1 came from PDP-11 Prolog.
 
     BUG: the arguments of goals are not separated by comma-space but by
@@ -1931,12 +1931,12 @@ show_select22(Name,Pred,Options):-
     append_termlist(Pred,[ID,Value],Call),
     must_run(baseKB:param_default_value(Name,D); baseKB:param_default_value(Pred,D)),!,
     get_param_sess(Name,UValue,D),
-    must_run_html((format('<select name="~w">',[Name]),
+    must_run_html((foRmat('<select name="~w">',[Name]),
     forall(no_repeats(Call),
        (((member(atom_subst(Item,ItemName),Options) -> (any_to_string(Value,ValueS),atom_subst(ValueS,Item,ItemName,NValue)); NValue=Value),
-        (((param_matches(UValue,ID);param_matches(UValue,NValue)) -> format('<option value="~w" selected="yes">~w</option>',[ID,NValue]);
-                   format('<option value="~w">~w</option>',[ID,Value])))))),
-    format('</select>',[]))),!.
+        (((param_matches(UValue,ID);param_matches(UValue,NValue)) -> foRmat('<option value="~w" selected="yes">~w</option>',[ID,NValue]);
+                   foRmat('<option value="~w">~w</option>',[ID,Value])))))),
+    foRmat('</select>',[]))),!.
 
 
 
@@ -1950,11 +1950,11 @@ show_select1(Name,Pred):-
 show_select11(Name,Pred):-
  Call=..[Pred,Value],
  ( baseKB:param_default_value(Name,D); baseKB:param_default_value(Pred,D)),!,
- format('<select name="~w">',[Name]),
+ foRmat('<select name="~w">',[Name]),
  forall(Call,
-    (get_param_sess(Name,Value,D)->format('<option value="~w" selected="yes">~w</option>',[Value,Value]);
-                format('<option value="~w">~w</option>',[Value,Value]))),
- format('</select>',[]),!.
+    (get_param_sess(Name,Value,D)->foRmat('<option value="~w" selected="yes">~w</option>',[Value,Value]);
+                foRmat('<option value="~w">~w</option>',[Value,Value]))),
+ foRmat('</select>',[]),!.
 
 
 
@@ -2122,14 +2122,14 @@ show_select1('humanLang',human_language),
 %
 % Show Iframe.
 %
-show_iframe(URL):- must_run_html(format('<iframe width="100%" height="800" frameborder="0" scrolling="yes" marginheight="0" marginwidth="0" allowtransparency=true id="main" name="main" style="width:100%;height:800" src="search4term?fa= ~w"></iframe>',[URL])).
+show_iframe(URL):- must_run_html(foRmat('<iframe width="100%" height="800" frameborder="0" scrolling="yes" marginheight="0" marginwidth="0" allowtransparency=true id="main" name="main" style="width:100%;height:800" src="search4term?fa= ~w"></iframe>',[URL])).
 
 show_iframe(URL,Name,Value):- sformat(FullURL,'~w?~w=~w',[URL,Name,Value]),embed_test(FullURL,'100%','40%'),!.
-%show_iframe(URL,Name,Value):- format('<iframe width="100%" height="800" frameborder="0" scrolling="yes" marginheight="0" marginwidth="0" allowtransparency=true id="main" name="main" style="width:100%;height:800" src="~w?~w= ~w"></iframe>',[URL,Name,Value]).
+%show_iframe(URL,Name,Value):- foRmat('<iframe width="100%" height="800" frameborder="0" scrolling="yes" marginheight="0" marginwidth="0" allowtransparency=true id="main" name="main" style="width:100%;height:800" src="~w?~w= ~w"></iframe>',[URL,Name,Value]).
 
 
 embed_test(URL,Width,Height):- 
-  format( '<div width="~w" height="~w" ><object data="~w"  width="100%" height="~w" type="text/html"><embed src="~w" width="100%" height="100%" onerror="alert(`URL invalid ~w !!`);"/></object></div>',
+  foRmat( '<div width="~w" height="~w" ><object data="~w"  width="100%" height="~w" type="text/html"><embed src="~w" width="100%" height="100%" onerror="alert(`URL invalid ~w !!`);"/></object></div>',
                 [     Width,     Height,              URL,                      Height,                        URL,        URL                  ]).
 
 slow_frame(Goal):- slow_frame('300',Goal).
@@ -2151,7 +2151,7 @@ slow_iframe(Height,Goal):- url_encode(Goal,GoalE),
 
 handler_logicmoo_slowcode(Request):- 
  must_or_rtrace(save_request_in_session(Request)),!,
-  format('Content-type: text/html~n~n'),
+  foRmat('Content-type: text/html~n~n'),
   must_run_html(handler_logicmoo_slowcode_m(Request)).
 
 handler_logicmoo_slowcode_m(Request):-
@@ -2165,11 +2165,11 @@ handler_logicmoo_slowcode_call(Request):-
   select(search(List),Request,Request0), nonvar(List),
   select(into=Where,List,List0),!,
   must_run((
-  format('<html><head>'),
-  format('<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script></head><body><pre>'),
+  foRmat('<html><head>'),
+  foRmat('<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script></head><body><pre>'),
   locally_tl(where_to(Where),handler_logicmoo_slowcode_call([search(List0)|Request0])),  
   goal_attach_to(Where,write('<hr/>Complete!')),  
-  format('</pre></body></html>'))).
+  foRmat('</pre></body></html>'))).
 
 
 handler_logicmoo_slowcode_call(Request):- 
@@ -2185,7 +2185,7 @@ handler_logicmoo_slowcode_call(Request):-
 goal_attach_to(Where,Goal):- 
   with_output_to(string(String),Goal),
   %write(String),
-  format('~n<script type="text/JavaScript" language="JavaScript">$(\'#~w\', window.parent.document).append($(`~w`)); </script>',
+  foRmat('~n<script type="text/JavaScript" language="JavaScript">$(\'#~w\', window.parent.document).append($(`~w`)); </script>',
    [Where,String]),!.
   
 
@@ -2355,7 +2355,7 @@ pp_i2tml_save_seen(HB):- assertz_if_new(sortme_buffer(_Obj,HB)),!.
 %
 % Section Open.
 %
-section_open(Type):-  once(shown_subtype(Type)->true;((is_html_mode->format('~n</pre><hr>~w<hr><pre>~n<font face="verdana,arial,sans-serif">',[Type]);(draw_line,format('% ~w~n~n',[Type]))),asserta(shown_subtype(Type)))),!.
+section_open(Type):-  once(shown_subtype(Type)->true;((is_html_mode->foRmat('~n</pre><hr>~w<hr><pre>~n<font face="verdana,arial,sans-serif">',[Type]);(draw_line,foRmat('% ~w~n~n',[Type]))),asserta(shown_subtype(Type)))),!.
 
 
 
@@ -2363,7 +2363,7 @@ section_open(Type):-  once(shown_subtype(Type)->true;((is_html_mode->format('~n<
 %
 % Section Close.
 %
-section_close(Type):- shown_subtype(Type)->(retractall(shown_subtype(Type)),(is_html_mode->format('</font>\n</pre><hr/><pre>',[]);draw_line));true.
+section_close(Type):- shown_subtype(Type)->(retractall(shown_subtype(Type)),(is_html_mode->foRmat('</font>\n</pre><hr/><pre>',[]);draw_line));true.
 
 
 %% pp_item_html( ?ARG1, ?ARG2) is det.
@@ -2432,19 +2432,19 @@ show_clause_ref_now(_Ref):- is_listing_hidden(hideClauseRef),!.
 show_clause_ref_now(V):-var(V),!.
 show_clause_ref_now(0):-!.
 show_clause_ref_now(none):-!.
-show_clause_ref_now(Ref):- is_listing_hidden(showFilenames), \+ clause_property(Ref,predicate(_)),format('~N~p~N',[clref(Ref)]),!.
+show_clause_ref_now(Ref):- is_listing_hidden(showFilenames), \+ clause_property(Ref,predicate(_)),foRmat('~N~p~N',[clref(Ref)]),!.
 % write_html(div(class(src_formats),a(href(EditLink), edit)])).
 show_clause_ref_now(Ref):- is_listing_hidden(showFilenames),clause_property(Ref,file(File)),ignore(clause_property(Ref,line_count(Line))),
   ignore(clause_property(Ref,module(Module))),
-    format('<a href="/swish/filesystem/~w#L~w">@file:~w:~w</a>(~w)~N',[File,Line,File,Line,Module]),
+    foRmat('<a href="/swish/filesystem/~w#L~w">@file:~w:~w</a>(~w)~N',[File,Line,File,Line,Module]),
     fail. 
 show_clause_ref_now(Ref):- clause_property(Ref,erased),
   ignore(clause_property(Ref,module(Module))),
-    format('erased(~w) (~w)~N',[Ref,Module]),!.
+    foRmat('erased(~w) (~w)~N',[Ref,Module]),!.
 show_clause_ref_now(Ref):- nop(writeq(Ref)).
 
-xbformat(X,Y):- format(X,Y).
-xbformat(X):- format(X).
+xbformat(X,Y):- foRmat(X,Y).
+xbformat(X):- foRmat(X).
 
 %% pp_i2tml( :TermARG1) is det.
 %
@@ -2458,9 +2458,9 @@ pp_i2tml(Done):- pp_i2tml1(Done).
 
 pp_i2tml1(Done):- once(pp_i2tml0(Done)).
 
-pp_i2tml0(Done):-Done==done,!,format('<p>Complete</p>',[]),!.
-pp_i2tml0(T):-var(T),!,format('~w~n',[T]),!.
-pp_i2tml0(T):-string(T),!,format('"~w"~n',[T]).
+pp_i2tml0(Done):-Done==done,!,foRmat('<p>Complete</p>',[]),!.
+pp_i2tml0(T):-var(T),!,foRmat('~w~n',[T]),!.
+pp_i2tml0(T):-string(T),!,foRmat('"~w"~n',[T]).
 pp_i2tml0(clause(H,B,Ref)):- !, locally_tl(current_clause_ref(Ref),pp_i2tml_v((H:-B))).
 pp_i2tml0(HB):- find_ref(HB,Ref),!, locally_tl(current_clause_ref(Ref),pp_i2tml_v(HB)).
 pp_i2tml0(HB):- locally_tl(current_clause_ref(none),pp_i2tml_v((HB))).
@@ -2519,7 +2519,7 @@ pp_i2tml_0('$spft'(MZ,P,F,T)):- atom(F),atom(T),!, pp_i2tml_1(MZ:P:-asserted_in(
 pp_i2tml_0('$spft'(MZ,P,F,T)):- atom(T),!,  pp_i2tml_1(((MZ:P):-  T:'t-deduced',F)). 
 pp_i2tml_0('$spft'(MZ,P,F,T)):- atom(F),!,  pp_i2tml_1(((MZ:P):-  F:'f-deduced',T)). 
 pp_i2tml_0('$spft'(MZ,P,F,T)):- !, pp_i2tml_1((MZ:P:- ( 'deduced-from'=F,  (rule_why = T)))).
-pp_i2tml_0('$nt'(Trigger,Test,Body)) :- !, pp_i2tml_1(proplst(['n-trigger'=Trigger , format=Test  ,  (body = (Body))])).
+pp_i2tml_0('$nt'(Trigger,Test,Body)) :- !, pp_i2tml_1(proplst(['n-trigger'=Trigger , foRmat=Test  ,  (body = (Body))])).
 pp_i2tml_0('$pt'(_MZ,Trigger,Body)):-      pp_i2tml_1(proplst(['p-trigger'=Trigger , ( body = Body)])).
 pp_i2tml_0('$bt'(Trigger,Body)):-      pp_i2tml_1(proplst(['b-trigger'=Trigger ,  ( body = Body)])).
 
@@ -2538,7 +2538,7 @@ pp_i2tml_0(HB):-pp_i2tml_1(HB).
 %
 % If HTML.
 %
-if_html(F,A):-is_html_mode,!,format(F,[A]).
+if_html(F,A):-is_html_mode,!,foRmat(F,[A]).
 if_html(_,A):-A.
 
 
@@ -2564,7 +2564,7 @@ pp_i2tml_1(H):- is_html_mode,
   url_encode_term(H,Vs,URL),
   term_to_pretty_string(H,Vs,Title), into_attribute(Title,TitleQ),
   ignore(fmtimg(FC,Title,URL)),
-  format('<input type="checkbox" name="assertion[]" value="~w" title="~w">',[URL,TitleQ]))),
+  foRmat('<input type="checkbox" name="assertion[]" value="~w" title="~w">',[URL,TitleQ]))),
   fail.
 
 pp_i2tml_1(H):- locally_tl(print_mode(html), \+ \+ must_run_html(pp_i2tml_now(H))).
@@ -2656,8 +2656,8 @@ session_checked(Name):- (get_param_sess(Name,V);baseKB:param_default_value(Name,
 %
 session_checkbox(Name,Caption,BR):-
  (session_checked(Name)-> CHECKED='CHECKED';CHECKED=''),
- format('<input type="checkbox" name="~w" value="1" ~w />~w~w',[Name,CHECKED,Caption,BR]).
- % format('<font size="-3"><label><input type="checkbox" name="~w" value="1" ~w/>~w</label></font>~w',[Name,CHECKED,Caption,BR]).
+ foRmat('<input type="checkbox" name="~w" value="1" ~w />~w~w',[Name,CHECKED,Caption,BR]).
+ % foRmat('<font size="-3"><label><input type="checkbox" name="~w" value="1" ~w/>~w</label></font>~w',[Name,CHECKED,Caption,BR]).
 
 
 
@@ -2701,7 +2701,7 @@ is_context0('BaseKB').
 %
 get_request_vars(Format):- ignore(Exclude=[term,fa,session_data,webproc,user_agent,referer,session,request_uri,accept]),
    findall(N=V,(current_form_var(N),\+ member(N,Exclude),once(get_param_sess(N,V))),NVs),
-   forall(member(N=V,NVs),format(Format,[N,V])).
+   forall(member(N=V,NVs),foRmat(Format,[N,V])).
 
 
 %% must_run( :GoalARG1) is det.
@@ -2733,9 +2733,9 @@ must_run0(Goal):- flush_output_safe,
 %
 call_for_terms(Call):- 
    must_run_html((
-        setup_call_cleanup(format('<pre>',[]),        
+        setup_call_cleanup(foRmat('<pre>',[]),        
         ignore((locally_tl(print_mode(html),with_search_filters(catch(ignore((Call)),E,dmsg(E)))))),
-        format('</pre>',[])),
+        foRmat('</pre>',[])),
         show_pcall_footer)),!.
 
 :- thread_local(t_l:tl_hide_data/1).
@@ -2780,7 +2780,7 @@ xlisting_html_c(T,Obj):-
   catch(
     call_with_time_limit_notrace(T,xlisting_html_c(0,Obj)),
      TimeOut,
-     format('~q.',timeout_xlisting_html_obj(Obj,TimeOut))),
+     foRmat('~q.',timeout_xlisting_html_obj(Obj,TimeOut))),
      pp_i2tml_saved_done(Obj),
      write('complete...\n').
 
@@ -3148,7 +3148,7 @@ into_textarea(G):- with_pp(ansi,locally_tl(print_mode(plain),G)).
 %
 fmtimg(N,Title,TermE):- is_html_mode,!,
  into_attribute(Title,TitleQ),
- format('~N<a href="?webproc=edit1term&term=~w" target="lm_xref"><img src="/swish/lm_xref/pixmapx/~w.gif" alt="~w" title="~w"><a>',[TermE,N,TitleQ,TitleQ]).
+ foRmat('~N<a href="?webproc=edit1term&term=~w" target="lm_xref"><img src="/swish/lm_xref/pixmapx/~w.gif" alt="~w" title="~w"><a>',[TermE,N,TitleQ,TitleQ]).
 fmtimg(_,_,_).
 
 
@@ -3159,8 +3159,8 @@ fmtimg(_,_,_).
 %
 % Indent Nbsp.
 %
-indent_nbsp(X):-is_html_mode,forall(between(0,X,_),format('&nbsp;')),!.
-indent_nbsp(X):-forall(between(0,X,_),format(' ')),!.
+indent_nbsp(X):-is_html_mode,forall(between(0,X,_),foRmat('&nbsp;')),!.
+indent_nbsp(X):-forall(between(0,X,_),foRmat(' ')),!.
 
 
 
@@ -3276,7 +3276,7 @@ rok_portray(A) :-
         sub_atom(B, _, C, 0, G),
         sub_atom(B, 0, D, _, E),
         file_base_name(E, F),
-        format('__~w#~w', [F, G]).
+        foRmat('__~w#~w', [F, G]).
 */
 rok_portray(A) :- rok_linkable(A),!,write_atom_link(A,A).
 rok_portray(A) :- \+compound(A),fail.

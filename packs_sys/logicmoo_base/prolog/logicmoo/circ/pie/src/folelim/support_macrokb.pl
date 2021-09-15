@@ -171,7 +171,7 @@ mk_rename_map([], [], []).
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%% 
-%%%% If the scsap format is used, no transfer clauses for pn are created.
+%%%% If the scsap foRmat is used, no transfer clauses for pn are created.
 %%%% 
 complement_pol(p, n).
 complement_pol(n, p).
@@ -281,97 +281,97 @@ ppl_pl(Pattern, Options) :-
 
 
 ppl_pl_1(mac_get_arity(P,F,N), Options) :-
-	format('~@ \\assign \\mathrm{arity\\ of }\\; ~@\\; \\mathrm{ in }\\; ~@',
+	foRmat('~@ \\assign \\mathrm{arity\\ of }\\; ~@\\; \\mathrm{ in }\\; ~@',
 	       [write_form(N, Options),
 		write_form(P, Options),
 		write_form(F, Options)]).
 ppl_pl_1(A is B, Options) :-
-	format('~@ \\assign ~@',
+	foRmat('~@ \\assign ~@',
  	       [write_form(A, Options), write_form(B, Options)]).
 ppl_pl_1(mac_concat(A,B,C), Options) :-
-	format('~@ \\assign ~@\\concat ~@',
+	foRmat('~@ \\assign ~@\\concat ~@',
 	       [write_form(C, Options), write_form(A, Options),
 		write_form(B, Options)]).
 
 ppl_pl_1(sc_to_scse(A,B), Options) :-
-	format('~@ \\assign ~@\\; \\mathrm{(in\\ different\\ representation)}',
+	foRmat('~@ \\assign ~@\\; \\mathrm{(in\\ different\\ representation)}',
 	       [write_form(B, Options), write_form(A, Options)]).
 
 ppl_pl_1(sc_to_scsae(A,F,B), Options) :-
-	format('~@ \\assign ~@\\; \\mathrm{with\\ arities\\ from}\\; ~@',
+	foRmat('~@ \\assign ~@\\; \\mathrm{with\\ arities\\ from}\\; ~@',
 	       [write_form(B, Options), write_form(A, Options), write_form(F, Options)]).
 
 ppl_pl_1(sc_to_scsap(A,F,B), Options) :-
-	format('~@ \\assign ~@\\; \\mathrm{with\\ arities\\ from}\\; ~@',
+	foRmat('~@ \\assign ~@\\; \\mathrm{with\\ arities\\ from}\\; ~@',
 	       [write_form(B, Options), write_form(A, Options), write_form(F, Options)]).
 
 ppl_pl_1(scsae_to_scsp(A,B), Options) :-
-	format('~@ \\assign ~@\\; \\mathrm{(in\\ different\\ representation)}',
+	foRmat('~@ \\assign ~@\\; \\mathrm{(in\\ different\\ representation)}',
 	       [write_form(B, Options), write_form(A, Options)]).
 
 ppl_pl_1(scse_add_duals(A,B), Options) :-
-	format('~@ \\assign ~@\\; \\mathrm{closed\\ under\\ duals}',
+	foRmat('~@ \\assign ~@\\; \\mathrm{closed\\ under\\ duals}',
 	       [write_form(B, Options), write_form(A, Options)]).
 
 ppl_pl_1(sc_duals(A,B), Options) :-
-	format('~@ \\assign \\mathrm{duals\\ of}\\; ~@',
+	foRmat('~@ \\assign \\mathrm{duals\\ of}\\; ~@',
 	       [write_form(B, Options), write_form(A, Options)]).
 
 ppl_pl_1(scsae_add_duals(A,B), Options) :-
-	format('~@ \\assign ~@\\; \\mathrm{closed\\ under\\ duals}',
+	foRmat('~@ \\assign ~@\\; \\mathrm{closed\\ under\\ duals}',
 	       [write_form(B, Options), write_form(A, Options)]).
 
 ppl_pl_1(mac_union(A,B,C), Options) :-
-	format('~@ \\assign ~@ \\cup ~@',
+	foRmat('~@ \\assign ~@ \\cup ~@',
 	       [write_form(C, Options), write_form(A, Options),
 		write_form(B, Options)]).
 ppl_pl_1(mac_subtract(A,B,C), Options) :-
-	format('~@ \\assign ~@ \\setminus ~@',
+	foRmat('~@ \\assign ~@ \\setminus ~@',
 	       [write_form(C, Options), write_form(A, Options),
 		write_form(B, Options)]).
 ppl_pl_1(mac_intersection(A,B,C), Options) :-
-	format('~@ \\assign ~@ \\cap ~@',
+	foRmat('~@ \\assign ~@ \\cap ~@',
 	       [write_form(C, Options), write_form(A, Options),
 		write_form(B, Options)]).
 
 ppl_pl_1(mac_make_args(N, X), Options) :-
-	format('~@ \\assign x_1,\\ldots,x_{~@}',
+	foRmat('~@ \\assign x_1,\\ldots,x_{~@}',
 	       [write_form(X, Options), write_form(N, Options)]).
 
 ppl_pl_1(mac_make_fresh_args(N, X), Options) :-
-	format('~@ \\assign \\mathrm{a\\ sequence\\ of\\ ~@\\ fresh\\ symbols}',
+	foRmat('~@ \\assign \\mathrm{a\\ sequence\\ of\\ ~@\\ fresh\\ symbols}',
 	      [write_form(X, Options), write_form(N, Options)]).
 
 ppl_pl_1(mac_make_fresh_arg(X), Options) :-
-	format('~@ \\assign \\mathrm{a\\ fresh\\ symbol}',
+	foRmat('~@ \\assign \\mathrm{a\\ fresh\\ symbol}',
 	      [write_form(X, Options)]).
 
 ppl_pl_1(mac_free_predicates(F, S), Options) :-
-	format('~@ \\assign \\pplkbFreePredicates{~@}',
+	foRmat('~@ \\assign \\pplkbFreePredicates{~@}',
 	       [write_form(S, Options), write_form(F, Options)]).
 
 ppl_pl_1(mac_free_predicates_as_scse(F, S), Options) :-
-	format('~@ \\assign \\pplkbFreePredicates{~@}\\; \\mathrm{in\\ scope\\ representation} ',
+	foRmat('~@ \\assign \\pplkbFreePredicates{~@}\\; \\mathrm{in\\ scope\\ representation} ',
 	       [write_form(S, Options), write_form(F, Options)]).
 
 
 ppl_pl_1(mac_transfer_clauses(S1,POL,S2,T), Options) :-
 	( POL = p -> S3 = S1, S4 = S2 ; S3 = S2 , S4 = S1 ),
-	format('~@ \\assign \\mathrm{transfer\\ clauses}\\; ~@ \\rightarrow ~@',
+	foRmat('~@ \\assign \\mathrm{transfer\\ clauses}\\; ~@ \\rightarrow ~@',
 	       [write_form(T, Options), write_form(S3, Options), write_form(S4, Options)]).
 
 ppl_pl_1(mac_rename_free_predicate(F, P, POL, F1, P1), Options) :-
 	( POL = pn -> POL1 = ''
-	; format(atom(POL1), '\\textrm{-}\\f{~w}', [POL])
+	; foRmat(atom(POL1), '\\textrm{-}\\f{~w}', [POL])
 	),
-	format('~@ \\assign ~@[~@~w \\mapsto ~@]',
+	foRmat('~@ \\assign ~@[~@~w \\mapsto ~@]',
 	       [write_form(F1, Options),
 		write_form(F, Options),
 		write_form(P, Options),
 		POL1,
 		write_form(P1, Options)]).
 
-% 	format('\\langle ~@,~@ \\rangle \\assign \\pplkbRenameFreeOccurrences{~@}{~@}{\\f{~w}}',
+% 	foRmat('\\langle ~@,~@ \\rangle \\assign \\pplkbRenameFreeOccurrences{~@}{~@}{\\f{~w}}',
 % 	       [write_form(F1, Options),
 % 		write_form(P1, Options),
 % 		write_form(F, Options),
@@ -379,14 +379,14 @@ ppl_pl_1(mac_rename_free_predicate(F, P, POL, F1, P1), Options) :-
 % 		POL]).
 
 ppl_pl_1(mac_sc_rename_free_predicates(P, F, P1, F1), Options) :-
-	format('~@ \\assign ~@[~@ \\mapsto ~@]',
+	foRmat('~@ \\assign ~@[~@ \\mapsto ~@]',
 	       [write_form(F1, Options),
 		write_form(F, Options),
 		write_form(P, Options),
 		write_form(P1, Options)]).
 
 ppl_pl_1(mac_rename_free_functions(F, X, X1, F1), Options) :-
-	format('~@ \\assign ~@[~@ \\mapsto ~@]',
+	foRmat('~@ \\assign ~@[~@ \\mapsto ~@]',
 	       [write_form(F1, Options),
 		write_form(F, Options),
 		write_form(X, Options),
@@ -394,13 +394,13 @@ ppl_pl_1(mac_rename_free_functions(F, X, X1, F1), Options) :-
 
 ppl_pl_1(mac_make_atom(F, Ts, X), Options) :-
 	A = '$varfunctor'(F, Ts),
-	format('~@ \\assign ~@(~@)',
+	foRmat('~@ \\assign ~@(~@)',
 	      [write_form(X, Options),
 	       write_form(A, Options),
 	       write_form(Ts, Options)]).
 
 ppl_pl_1(mac_like(F, Modifiers, F1), Options) :-
-	format('~@ \\textrm{ is like } ~@ \\textrm{ except }',
+	foRmat('~@ \\textrm{ is like } ~@ \\textrm{ except }',
 	       [write_form(F1, Options),
 		write_form(F, Options)]),
 	( member(M, Modifiers),
@@ -411,7 +411,7 @@ ppl_pl_1(mac_like(F, Modifiers, F1), Options) :-
 	).
 
 ppl_pl_1(logform_negate(F1, F2), Options) :-
-	format('~@ \\assign \\mathrm{negate\\ } ~@',
+	foRmat('~@ \\assign \\mathrm{negate\\ } ~@',
 	      [write_form(F2, Options),
 	       write_form(F1, Options)]).
 
@@ -420,19 +420,19 @@ ppl_pl_1(logform_negate(F1, F2), Options) :-
 
 ppl_pl_modifier(replace(F, F1), Options) :-
 	!,
-	format('\\hspace*{2em} ~@ \\textrm{ instead of } ~@',
+	foRmat('\\hspace*{2em} ~@ \\textrm{ instead of } ~@',
 	       [write_form(F1, Options),
 		write_form(F, Options)]).
 ppl_pl_modifier(conjoin(F), Options) :-
 	!,
-	format('\\hspace*{2em} ~@ \\textrm{is conjoined}',
+	foRmat('\\hspace*{2em} ~@ \\textrm{is conjoined}',
 	       [write_form(F, Options)]).
 ppl_pl_modifier(add_precondition(F), Options) :-
 	!,
-	format('\\hspace*{2em} ~@ \\textrm{as precondition }',
+	foRmat('\\hspace*{2em} ~@ \\textrm{as precondition }',
 	       [write_form(F, Options)]).
 ppl_pl_modifier(_, _) :-
-	format('Unprintable like-modifier').
+	foRmat('Unprintable like-modifier').
 
 ppl_pl_newline :-
 	writeln('\\\\').

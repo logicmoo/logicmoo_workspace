@@ -98,7 +98,7 @@ test_print_tree:-
   predicate_property(test_print_tree1(_),number_of_clauses(N)),
   forall((between(1,N,X),
      nth_clause(test_print_tree1(_),N,Ref),clause(_,Body,Ref),
-      format('~N%=% ?- ~q.~n',[test_pp(Body)])),
+      foRmat('~N%=% ?- ~q.~n',[test_pp(Body)])),
      test_pp(on_xf_ignore(test_print_tree(X)))).
 %  forall(clause(test_print_tree1(N),_Body),call((nop(test_print_tree1(N)),call_test_print_tree(N)))).
 
@@ -114,10 +114,10 @@ on_xf_ignore(G):- dmsg(failed(G)),!.
 
 test_pp(PP,Goal):- 
   write('%====================================================\n'),
-  format('% ?- ~p. ~n',[test_pp(PP,Goal)]),
-  format('% ?- ~@. ~n',[print_tree_no_nl(test_pp(PP,Goal))]),
-  format('% ?- ~@. ~n',[print_tree(test_pp(PP,Goal))]),
-  format('% ?- ~@ ~n', [print_tree_with_final(test_pp(PP,Goal),'.')]),
+  foRmat('% ?- ~p. ~n',[test_pp(PP,Goal)]),
+  foRmat('% ?- ~@. ~n',[print_tree_no_nl(test_pp(PP,Goal))]),
+  foRmat('% ?- ~@. ~n',[print_tree(test_pp(PP,Goal))]),
+  foRmat('% ?- ~@ ~n', [print_tree_with_final(test_pp(PP,Goal),'.')]),
   write('%==================START====================\n==>\n'),
   with_pp(PP,\+ \+ Goal),
   write('<==\n%==================END========================\n'),
@@ -585,14 +585,14 @@ ec_portray_hook(Term):-
   ec_portray(N, Term),
   flag('$ec_portray',_, N)).
 
-color_format_maybe(_,F,A):- format(F,A),!.
+color_format_maybe(_,F,A):- foRmat(F,A),!.
 
 ec_portray(_,X):- as_is_cmpd(X),!,writeq(X).
 ec_portray(_,X):- atom(X),ansi_ansi,!,writeq(X).
 ec_portray(N,_):- N > 3,!,fail.
 ec_portray(_,Term):- (\+ compound(Term);Term='$VAR'(_)),!, ec_portray_now(Term).
 ec_portray(N,List):- N<2, is_list(List),!,print_tree(List).
-%ec_portray(_,Term):- notrace(is_list(Term)),!,Term\==[], fail, notrace(catch(text_to_string(Term,Str),_,fail)),!,format('"~s"',[Str]).
+%ec_portray(_,Term):- notrace(is_list(Term)),!,Term\==[], fail, notrace(catch(text_to_string(Term,Str),_,fail)),!,foRmat('"~s"',[Str]).
 ec_portray(_,Term):- compound(Term), compound_name_arity(Term,F,A), uses_op(F,A), !, fail.
 %ec_portray(_,Term):- compound(Term),compound_name_arity(Term, F, 0), !,color_format([bold,hfg(red)],'~q()',[F]),!.
 ec_portray(N,Term):- N > -1, N < 3, \+ is_dict(Term), ec_portray_now(Term).
@@ -619,7 +619,7 @@ uses_op(F,A):- current_op(_,XFY,F),once((name(XFY,[_|Len]),length(Len,L))),L=A.
 
 /*pprint_ec_no_newline(_C, P):-
   print_e_to_string(P, S),
-  format('~s', [S]),!.
+  foRmat('~s', [S]),!.
 */
 pprint_ec_no_newline(C, P):-
   print_e_to_string(P, S),
@@ -708,7 +708,7 @@ real_format(Fmt, Args):- listify(Args,ArgsL), real_ansi_format([hfg(magenta)], F
 real_ansi_format(Ansi, Fmt, Args):- listify(Args,ArgsL), real_ansi_format0(Ansi, Fmt, ArgsL).
 real_ansi_format0(Ansi, Fmt, Args) :-  \+ is_outputing_to_file, !, maybe_bfly_html(color_format_maybe(Ansi, Fmt, Args)).
 real_ansi_format0(Ansi, Fmt, Args) :-  
-     format(Fmt, Args), with_output_to_ansi_dest(color_format_maybe(Ansi, Fmt, Args)).
+     foRmat(Fmt, Args), with_output_to_ansi_dest(color_format_maybe(Ansi, Fmt, Args)).
 
 
 
@@ -777,7 +777,7 @@ out_o_s_l_2(F,L):-
       output_line_count(OLC),
       asserta(ec_reader:last_output_lc(OLC,F,L)),
       (is_outputing_to_file -> 
-        (format('~N~q.~n', [:- was_s_l(F,L)]), 
+        (foRmat('~N~q.~n', [:- was_s_l(F,L)]), 
            with_output_to(user_error,(public_file_link(F:L,FL),color_format_maybe([fg(green)], '~N% FRom ~w~n', [FL]),ttyflush)))
          ; nop((public_file_link(F:L,FL),color_format_maybe([fg(green)], '~N% FroM ~w~n', [FL]),ttyflush))),!.
 
@@ -851,7 +851,7 @@ print_tree_cmt(Mesg,C,P):-
  quietly((echo_newline_if_needed,  
   in_cmt(
     in_color(C,
-    (format('~N~w: \n\n',[Mesg]),
+    (foRmat('~N~w: \n\n',[Mesg]),
      print_tree(P),
      echo_newline_if_needed))))))).
 
@@ -1086,17 +1086,17 @@ with_real_pp(ansi,ansi,Goal):- in_bfly(f,Goal).
 with_real_pp(ansi,bfly,Goal):- in_bfly(t,Goal).
 with_real_pp(ansi,http,Goal):- in_bfly(f,Goal).
 with_real_pp(ansi,swish,Goal):- wots(S,Goal), sformat(SO,'<pre class="swish">~w</pre>',[S]),our_pengine_output(SO).
-%wots(S,in_bfly(t,bfly_html_goal(Goal))), ttyflush, format('~s',[S]).
+%wots(S,in_bfly(t,bfly_html_goal(Goal))), ttyflush, foRmat('~s',[S]).
 
 with_real_pp(bfly,ansi,Goal):- bfly_out_in(in_bfly(f,Goal)).
 
 with_real_pp(bfly,http,Goal):- in_pp(http),!,call(Goal).
 
-with_real_pp(bfly,http,Goal):- ttyflush,format('<http>'),ttyflush, actually_bfly(Goal), ttyflush, format('</http>',[]).
+with_real_pp(bfly,http,Goal):- ttyflush,foRmat('<http>'),ttyflush, actually_bfly(Goal), ttyflush, foRmat('</http>',[]).
 with_real_pp(bfly,bfly,Goal):- bfly_html_goal(in_bfly(t,Goal)).
-with_real_pp(bfly,swish,Goal):- ttyflush,format('<swish>'),ttyflush, actually_bfly(Goal), ttyflush, format('</swish>',[]).
+with_real_pp(bfly,swish,Goal):- ttyflush,foRmat('<swish>'),ttyflush, actually_bfly(Goal), ttyflush, foRmat('</swish>',[]).
 
-with_real_pp(http,ansi,Goal):- wots(SO,in_bfly(f,Goal)),format('<pre>~s</pre>',[SO]).
+with_real_pp(http,ansi,Goal):- wots(SO,in_bfly(f,Goal)),foRmat('<pre>~s</pre>',[SO]).
 with_real_pp(http,bfly,Goal):- in_bfly(t,Goal).
 with_real_pp(http,http,Goal):- in_bfly(t,Goal).
 with_real_pp(http,swish,Goal):- wots(SO,in_bfly(t,Goal)),our_pengine_output(SO).
@@ -1107,9 +1107,9 @@ with_real_pp(swish,http,Goal):- wots(SO,in_bfly(t,Goal)),our_pengine_output(SO).
 with_real_pp(swish,swish,Goal):-wots(SO,in_bfly(t,Goal)),our_pengine_output(SO).
 
 our_pengine_output(SO):- toplevel_pp(swish),!,pengines:pengine_output(SO),!.
-our_pengine_output(SO):- toplevel_pp(http),!,format('<pre>~w</pre>',[SO]).
-our_pengine_output(SO):- toplevel_pp(bfly),!,bfly_html_goal(format('<pre>~w </pre>',[SO])).
-our_pengine_output(SO):- ttyflush,format('our_pengine_output\n{~w}',[SO]),nl.
+our_pengine_output(SO):- toplevel_pp(http),!,foRmat('<pre>~w</pre>',[SO]).
+our_pengine_output(SO):- toplevel_pp(bfly),!,bfly_html_goal(foRmat('<pre>~w </pre>',[SO])).
+our_pengine_output(SO):- ttyflush,foRmat('our_pengine_output\n{~w}',[SO]),nl.
 
 
 is_webui:- once(toplevel_pp(http);toplevel_pp(swish);in_pp(http);in_pp(swish);get_print_mode(html)).
@@ -1141,7 +1141,7 @@ display_length(X,L):- wots(S,display(X)),atom_length(S,L),!.
 
 
 %pformat(S,Fmt,Args):- with_output_to(S,pformat(Fmt,Args)).
-%pformat(Fmt,Args):-  format(Fmt,Args).
+%pformat(Fmt,Args):-  foRmat(Fmt,Args).
 :- export(pformat/1).
 
 
@@ -1174,7 +1174,7 @@ pformat_std(P,Fmt):- (var(Fmt);Fmt=='.'),!,term_to_atom(Fmt,T),call(P,T).
 pformat_std(_,w(Fmt)):- !, pformat_write(Fmt).
 pformat_std(_,html(Fmt)):- !, pformat_html(Fmt).
 pformat_std(_,pformat(Fmt)):- !, pformat(Fmt).
-pformat_std(P,format(Fmt,Args)):- !, sformat(S,Fmt,Args),!,call(P,S).
+pformat_std(P,foRmat(Fmt,Args)):- !, sformat(S,Fmt,Args),!,call(P,S).
 pformat_std(P,'-'(Fmt,Args)):- !, sformat(S,Fmt,Args),!,call(P,S).
 pformat_std(_,html(Fmt,Args)):- sformat(S,Fmt,Args), !, pformat_html(w(S)).
 pformat_std(_,call(Goal)):- !, ignore(call(Goal)).
@@ -1442,7 +1442,7 @@ pt1(_FS,_Tab,(NPV)) :- NPV=..[OP,N,V], is_colon_mark(OP), atomic(N),
 pt1(FS,Tab,(NPV)) :- NPV=..[OP,N,V], is_colon_mark(OP), current_op(_,yfx,OP),
 !,
     print_tab_term(Tab,[OP|FS], N),
-    format(' '), pformat(OP), pformat(' '),
+    foRmat(' '), pformat(OP), pformat(' '),
     print_tab_term(Tab+2,V).
     
 pt1(FS,Tab,(NPV)) :- NPV=..[OP,N,V], is_colon_mark(OP),
@@ -1518,7 +1518,7 @@ pt1(FS,Tab,Term) :-
 pt1(FS,Tab,Term) :- 
    compound_name_arguments(Term,F,[Arg]), nonvar(Arg), Arg = [A|Args],
    is_arity_lt1(A),
-   prefix_spaces(Tab), print_atomf(F), pformat_functor(format('([ ~p, ',[A])),
+   prefix_spaces(Tab), print_atomf(F), pformat_functor(foRmat('([ ~p, ',[A])),
    pt_args_arglist([F|FS],Tab+3,'','|','])',Args), !.
 
 pt1(FS,Tab,Term) :- 
@@ -1865,7 +1865,7 @@ pprint_tree_2(Term, Options0) :-
 print_extra([], _, _, _) :- !.
 print_extra(List, Context, Comment, Options) :-
     option(output(Out), Options),
-    format(Out, ', % ~w', [Comment]),
+    foRmat(Out, ', % ~w', [Comment]),
     modify_context(Context, [indent=4], Context1),
     print_extra_2(List, Context1, Options).
 
@@ -1876,7 +1876,7 @@ print_extra_2([H|T], Context, Options) :-
     pp(H, Context, Options),
     (   T == []
     ->  true
-    ;   format(Out, ',', []),
+    ;   foRmat(Out, ',', []),
         print_extra_2(T, Context, Options)
     ).
 
@@ -1984,7 +1984,7 @@ pp(Dict, Ctx, Options) :-
         option(right_margin(RM), Options),
         Indent + Width < RM         % fits on a line, simply write
     ->  pprint(Dict, Ctx, Options)
-    ;   format(atom(Buf2), '~q{ ', [Tag]),
+    ;   foRmat(atom(Buf2), '~q{ ', [Tag]),
         write(Out, Buf2),
         atom_length(Buf2, FunctorIndent),
         (   integer(IndentStyle)
@@ -2028,13 +2028,13 @@ pp(List, Ctx, Options) :-
             Indent + Width < RM
         )
     ->  pprint(List, Ctx, Options)
-    ;   format(Out, '[ ', []),
+    ;   foRmat(Out, '[ ', []),
         Nindent is Indent + 2,
         NDepth is Depth + 1,
         modify_context(Ctx, [indent=Nindent, depth=NDepth], NCtx),
         pp_list_elements(List, NCtx, Options),
         indent(Out, Indent, Options),
-        format(Out, ']', [])
+        foRmat(Out, ']', [])
     ).
 
 pp(Term, Ctx, Options) :-               % handle operators
@@ -2064,19 +2064,19 @@ pp(Term, Ctx, Options) :-               % handle operators
         ;   Space = ''
         ),
         (   CPrec >= Prec
-        ->  format(atom(Buf), '~w~w', [QName, Space]),
+        ->  foRmat(atom(Buf), '~w~w', [QName, Space]),
             atom_length(Buf, AL),
             NIndent is Indent + AL,
             write(Out, Buf),
             modify_context(Ctx2, [indent=NIndent, priority=Right], Ctx3),
             pp(Arg, Ctx3, Options)
-        ;   format(atom(Buf), '(~w~w', [QName,Space]),
+        ;   foRmat(atom(Buf), '(~w~w', [QName,Space]),
             atom_length(Buf, AL),
             NIndent is Indent + AL,
             write(Out, Buf),
             modify_context(Ctx2, [indent=NIndent, priority=Right], Ctx3),
             pp(Arg, Ctx3, Options),
-            format(Out, ')', [])
+            foRmat(Out, ')', [])
         )
     ;   Kind == postfix
     ->  arg(1, Term, Arg),
@@ -2089,12 +2089,12 @@ pp(Term, Ctx, Options) :-               % handle operators
         (   CPrec >= Prec
         ->  modify_context(Ctx2, [priority=Left], Ctx3),
             pp(Arg, Ctx3, Options),
-            format(Out, '~w~w', [Space,QName])
-        ;   format(Out, '(', []),
+            foRmat(Out, '~w~w', [Space,QName])
+        ;   foRmat(Out, '(', []),
             NIndent is Indent + 1,
             modify_context(Ctx2, [indent=NIndent, priority=Left], Ctx3),
             pp(Arg, Ctx3, Options),
-            format(Out, '~w~w)', [Space,QName])
+            foRmat(Out, '~w~w)', [Space,QName])
         )
     ;   arg(1, Term, Arg1),
         arg(2, Term, Arg2),
@@ -2108,17 +2108,17 @@ pp(Term, Ctx, Options) :-               % handle operators
         (   CPrec >= Prec
         ->  modify_context(Ctx2, [priority=Left], Ctx3),
             pp(Arg1, Ctx3, Options),
-            format(Out, '~w~w~w', [Space,QName,Space]),
+            foRmat(Out, '~w~w~w', [Space,QName,Space]),
             modify_context(Ctx2, [priority=Right], Ctx4),
             pp(Arg2, Ctx4, Options)
-        ;   format(Out, '(', []),
+        ;   foRmat(Out, '(', []),
             NIndent is Indent + 1,
             modify_context(Ctx2, [indent=NIndent, priority=Left], Ctx3),
             pp(Arg1, Ctx3, Options),
-            format(Out, '~w~w~w', [Space,QName,Space]),
+            foRmat(Out, '~w~w~w', [Space,QName,Space]),
             modify_context(Ctx2, [priority=Right], Ctx4),
             pp(Arg2, Ctx4, Options),
-            format(Out, ')', [])
+            foRmat(Out, ')', [])
         )
     ).
 pp(Term, Ctx, Options) :-               % compound
@@ -2133,7 +2133,7 @@ pp(Term, Ctx, Options) :-               % compound
         Indent + Width < RM         % fits on a line, simply write
     ->  pprint(Term, Ctx, Options)
     ;   compound_name_arguments(Term, Name, Args),
-        format(atom(Buf2), '~q(', [Name]),
+        foRmat(atom(Buf2), '~q(', [Name]),
         write(Out, Buf2),
         atom_length(Buf2, FunctorIndent),
         (   integer(IndentStyle)
@@ -2158,7 +2158,7 @@ quoted_op(Op, Atom) :-
     !,
     Atom = Op.
 quoted_op(Op, Q) :-
-    format(atom(Q), '~q', [Op]).
+    foRmat(atom(Q), '~q', [Op]).
 
 pp_list_elements(_, Ctx, Options) :-
     context(Ctx, max_depth, 0),
@@ -2277,7 +2277,7 @@ pprint(Out, Term, Ctx, Options) :-
     (   MaxDepth == infinite
     ->  write_term(Out, Term, WriteOptions)
     ;   MaxDepth =< 0
-    ->  format(Out, '...', [])
+    ->  foRmat(Out, '...', [])
     ;   write_term(Out, Term, [max_depth(MaxDepth)|WriteOptions])
     ).
 
@@ -2297,12 +2297,12 @@ space_op(':-').
 %   passed to write_term/3. In addition,   the following options are
 %   processed:
 %
-%     - format(+Format)
+%     - foRmat(+Format)
 %     Used for atomic values.  Typically this is used to
 %     render a single value.
 %     - float_format(+Format)
 %     If a float is rendered, it is rendered using
-%     `format(string(S), Format, [Float])`
+%     `foRmat(string(S), Format, [Float])`
 %
 %   @tbd    Cyclic terms.
 %   @tbd    Attributed terms.
@@ -2359,7 +2359,7 @@ html_any(Term, Options) -->
 html_compound('$VAR'(Var), Options) -->
     { nop((Options.get(numbervars) == true)),
       !,
-      format(string(S), '~W', ['$VAR'(Var), [numbervars(true)]]),
+      foRmat(string(S), '~W', ['$VAR'(Var), [numbervars(true)]]),
       (   S == "_"
       ->  Class = 'pl-anon'
       ;   Class = 'pl-var'
@@ -2673,7 +2673,7 @@ end_code_type(Dict, Type, Options) :-
 end_code_type('$VAR'(Var), Type, Options) :-
     Options.get(numbervars) == true,
     !,
-    format(string(S), '~W', ['$VAR'(Var), [numbervars(true)]]),
+    foRmat(string(S), '~W', ['$VAR'(Var), [numbervars(true)]]),
     end_type(S, Type, Options).
 end_code_type(List, Type, _) :-
     (   List == []
@@ -2788,18 +2788,18 @@ quote_atomic(Float, String, Options) :-
     float(Float),
     Format = Options.get(float_format),
     !,
-    format(string(String), Format, [Float]).
+    foRmat(string(String), Format, [Float]).
 quote_atomic(Plain, String, Options) :-
     atomic(Plain),
-    Format = Options.get(format),
+    Format = Options.get(foRmat),
     !,
-    format(string(String), Format, [Plain]).
+    foRmat(string(String), Format, [Plain]).
 quote_atomic(Plain, String, Options) :-
     rational(Plain),
     \+ integer(Plain),
     !,
     operator_module(Module, Options),
-    format(string(String), '~W', [Plain, [module(Module)]]).
+    foRmat(string(String), '~W', [Plain, [module(Module)]]).
 quote_atomic(Plain, Plain, _) :-
     number(Plain),
     !.
@@ -2807,13 +2807,13 @@ quote_atomic(Plain, String, Options) :-
     Options.get(quoted) == true,
     !,
     (   Options.get(embrace) == never
-    ->  format(string(String), '~q', [Plain])
-    ;   format(string(String), '~W', [Plain, Options])
+    ->  foRmat(string(String), '~q', [Plain])
+    ;   foRmat(string(String), '~W', [Plain, Options])
     ).
 quote_atomic(Var, String, Options) :-
     var(Var),
     !,
-    format(string(String), '~W', [Var, Options]).
+    foRmat(string(String), '~W', [Var, Options]).
 quote_atomic(Plain, Plain, _).
 
 quote_op(Op, S, _Options) :-

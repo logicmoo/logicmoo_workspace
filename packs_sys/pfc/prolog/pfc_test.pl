@@ -39,7 +39,7 @@ must_ex(G):- !, must_or_rtrace(G).
 %:- dumpST.
 
 test_red_lined(Failed):- notrace((
-  format('~N'),
+  foRmat('~N'),
   quietly((doall((between(1,3,_),
   ansifmt(red,"%%%%%%%%%%%%%%%%%%%%%%%%%%% find ~q in srcs %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n",[Failed]),
   ansifmt(yellow,"%%%%%%%%%%%%%%%%%%%%%%%%%%% find test_red_lined in srcs %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n"))))))).
@@ -281,7 +281,7 @@ inform_message_hook(T,Type,Term):- atom(Type),
   ignore((source_location(File,Line),dmsg_pretty(source_location(File,Line)))),
   with_output_to(string(Text),
    ignore((set_stream(current_output,tty(true)),
-    % format('~q~n',message{type:Type,info:T,src:(File:Line)}),
+    % foRmat('~q~n',message{type:Type,info:T,src:(File:Line)}),
      inform_message_to_string(Term,Str),write(Str)))),
   add_test_info(Type,Text),
   write(Text),
@@ -302,8 +302,8 @@ inform_message_hook(_,warning,_):- current_prolog_flag(runtime_debug, N),N>2,bre
 inform_message_to_string(Term,Str):- catch(message_to_string(Term,Str),_,fail),string(Str),\+ atom_contains(Str,"Unknown message"),!.
 inform_message_to_string(Term,Str):-
     catch('$messages':actions_to_format(Term, Fmt, Args),_,fail),
-    catch(format(string(Str), Fmt, Args),_,fail),!.
-inform_message_to_string(Term,Str):- format(string(Str), '~q', [Term]),!.
+    catch(foRmat(string(Str), Fmt, Args),_,fail),!.
+inform_message_to_string(Term,Str):- foRmat(string(Str), '~q', [Term]),!.
 
 %list_test_results:- !.
 list_test_results:-
@@ -397,7 +397,7 @@ system:test_retake:- system:halt_junit,test_completed_exit_maybe(3).
 
 /* 
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- a description of the JUnit XML format and how Jenkins parses it. See also junit.xsd -->
+<!-- a description of the JUnit XML foRmat and how Jenkins parses it. See also junit.xsd -->
 
 <!-- if only a single testsuite element is present, the testsuites
      element can be omitted. All attributes are optional. -->
@@ -424,7 +424,7 @@ system:test_retake:- system:halt_junit,test_completed_exit_maybe(3).
          package=""   <!-- Derived from testsuite/@name in the non-aggregated documents. optional -->
          skipped=""   <!-- The total number of skipped tests. optional -->
          time=""      <!-- Time taken (in seconds) to execute the tests in the suite. optional -->
-         timestamp="" <!-- when the test was executed in ISO 8601 format (2014-01-21T16:17:18). Timezone may not be specified. optional -->
+         timestamp="" <!-- when the test was executed in ISO 8601 foRmat (2014-01-21T16:17:18). Timezone may not be specified. optional -->
          >
 
     <!-- Properties (e.g., environment settings) set during test
@@ -506,14 +506,14 @@ clear_suite_attribs:- forall(junit_count(F),flag(F,_,0)),
 
 get_suite_attribs(SuiteAttribs):-    
   with_output_to(string(SuiteAttribs),
-(( ignore((getenv('JUNIT_PACKAGE',Package), format(' package="~w"', [Package]))),
-   ignore((j_u:junit_prop(testsuite,start,Start),get_time(End),Elapsed is End - Start,format(' time="~3f"',[Elapsed]))),
-   forall((junit_count(F),flag(F,C,C)),format(' ~w="~w"',[F,C]))))).
+(( ignore((getenv('JUNIT_PACKAGE',Package), foRmat(' package="~w"', [Package]))),
+   ignore((j_u:junit_prop(testsuite,start,Start),get_time(End),Elapsed is End - Start,foRmat(' time="~3f"',[Elapsed]))),
+   forall((junit_count(F),flag(F,C,C)),foRmat(' ~w="~w"',[F,C]))))).
 
 show_junit_suite(File):- 
    (getenv('JUNIT_SUITE',SuiteName);SuiteName=File),!,
   get_suite_attribs(SuiteAttribs),
-  format("  <testsuite name=\"~w\" ~w>\n", [SuiteName, SuiteAttribs]),
+  foRmat("  <testsuite name=\"~w\" ~w>\n", [SuiteName, SuiteAttribs]),
    findall(Name,j_u:junit_prop(testsuite,testcase,Name),L),list_to_set(L,S),
     maplist(show_junit_testcase(File),S),
    writeln("  </testsuite>"),
@@ -526,7 +526,7 @@ save_single_testcase(Name):-
    writeln("  <testsuites>"),
    (getenv('JUNIT_SUITE',SuiteName);SuiteName=File),!,
   get_suite_attribs(SuiteAttribs),
-  format("  <testsuite name=\"~w\" ~w>\n", [SuiteName, SuiteAttribs]),
+  foRmat("  <testsuite name=\"~w\" ~w>\n", [SuiteName, SuiteAttribs]),
    show_junit_testcase(File,Name),
    writeln("  </testsuite>"),
    writeln(" </testsuites>"))),
@@ -573,12 +573,12 @@ clean_away_ansi(DirtyText,DirtyText).
 save_to_junit_file_text(Full,Text):- j_u:last_saved_junit(Full),!,
     flag(Full,X,X+1),
     atomic_list_concat([Full,'_',X,'-junit.xml'],FullF),
-    format('~N% saving_junit: ~w~n',[FullF]),
+    foRmat('~N% saving_junit: ~w~n',[FullF]),
   setup_call_cleanup(open(FullF, write, Out),writeln(Out,Text), close(Out)),!.
 save_to_junit_file_text(Full,Text):- 
     asserta(j_u:last_saved_junit(Full)),
     atomic_list_concat([Full,'-junit.xml'],FullF),
-    format('~N% saving_junit: ~w~n',[FullF]),    
+    foRmat('~N% saving_junit: ~w~n',[FullF]),    
   setup_call_cleanup(open(FullF, write, Out),writeln(Out,Text), close(Out)),!.
 
 save_to_junit_file(Name,DirtyText):-
@@ -592,9 +592,9 @@ save_to_junit_file(Name,DirtyText):-
 
 save_to_junit_file(Name,DirtyText):- 
   clean_away_ansi(DirtyText,Text),
-   format('<Test name="~w">',[Name]),
+   foRmat('<Test name="~w">',[Name]),
    writeln(Text),!,
-   format('<!-- ~w--></Test>',[Name]).
+   foRmat('<!-- ~w--></Test>',[Name]).
 
 save_junit_results_single:-
   % $TESTING_TEMP
@@ -627,10 +627,10 @@ show_junit_testcase(Suite,Testcase):-
  sformat(DisplayName,'~w@~w: ~p',[Classname,Testcase,Goal]),
  escape_attribute(DisplayName,EDisplayName),
  ignore((
- format('\n     <testcase name=~q ', [EDisplayName]),
-  % format('package="~w" ', [Package]),
-  format('classname="~w" ', [Classname]),
- ignore((j_u:junit_prop(Testcase,time,Time),format('time="~3f"', [Time]))),
+ foRmat('\n     <testcase name=~q ', [EDisplayName]),
+  % foRmat('package="~w" ', [Package]),
+  foRmat('classname="~w" ', [Classname]),
+ ignore((j_u:junit_prop(Testcase,time,Time),foRmat('time="~3f"', [Time]))),
  writeln('>'),
  ignore((write_testcase_info(Testcase))),
  writeln("\n    </testcase>"))),!.
@@ -648,16 +648,16 @@ junit_env_var('JUNIT_CMD').
 write_testcase_std_info(Testcase):-
  writeln("\n    <system-err><![CDATA["),
  write_testcase_env(Testcase),
- ignore((j_u:junit_prop(Testcase,out,Str),format('~w',[Str]))),
+ ignore((j_u:junit_prop(Testcase,out,Str),foRmat('~w',[Str]))),
   forall(j_u:junit_prop(Testcase,Type,Term), write_testcase_prop(Type,Term)),
  writeln("\n    ]]></system-err>").
 
 write_testcase_prop(_Type,[]):-!.
-write_testcase_prop(info,S):- !, format('~N~w~n',[S]).
+write_testcase_prop(info,S):- !, foRmat('~N~w~n',[S]).
 write_testcase_prop(out,_).
-write_testcase_prop(url,Term):- !, format('~N\t~w \t= <pre>~w</pre>~n',[url,Term]).
-write_testcase_prop(Type,Term):- string(Term),!,format('~N\t~w \t=~w~n',[Type,Term]).
-write_testcase_prop(Type,Term):- format('~N\t~w \t= ~q.~n',[Type,Term]).
+write_testcase_prop(url,Term):- !, foRmat('~N\t~w \t= <pre>~w</pre>~n',[url,Term]).
+write_testcase_prop(Type,Term):- string(Term),!,foRmat('~N\t~w \t=~w~n',[Type,Term]).
+write_testcase_prop(Type,Term):- foRmat('~N\t~w \t= ~q.~n',[Type,Term]).
 
 :- use_module(library(sgml)).
 escape_attribute(I,O):-xml_quote_attribute(I,O).
@@ -666,7 +666,7 @@ escape_attribute(I,O):-xml_quote_attribute(I,O).
 get_nongood_strings(Testcase,NonGood):- 
   with_output_to(string(NonGood), 
     forall((j_u:junit_prop(Testcase,Type,Term), nongood_type(Type)), 
-      format('~N~w = ~q.~n',[Type,Term]))).
+      foRmat('~N~w = ~q.~n',[Type,Term]))).
 
 write_testcase_info(Testcase):- j_u:junit_prop(Testcase,result,failure),!,
   get_nongood_strings(Testcase,NonGood),
@@ -684,11 +684,11 @@ write_message_ele(Ele,NonGood):-
   text_to_string(NonGood,SNonGood), 
   shrink_to(SNonGood,250,NonGoodTrimmed),
   ignore((SNonGood\== NonGoodTrimmed, 
-   format(user_error,"~N~n<~w message=\"~w\" />\n", [Ele,NonGoodTrimmed]))),
+   foRmat(user_error,"~N~n<~w message=\"~w\" />\n", [Ele,NonGoodTrimmed]))),
   escape_attribute(NonGoodTrimmed,ENonGood),  
-  format("      <~w message=\"~w\" />\n", [Ele,ENonGood]).
+  foRmat("      <~w message=\"~w\" />\n", [Ele,ENonGood]).
 
-shrink_to(I,Max,O):- \+ shrink_to(I,0,Max,_,_),!,I=O.
+shrink_to(I,Max,O):- \+ sub_string(I,0,Max,_,_),!,I=O.
 shrink_to(I,Mx,O):- replace_in_string(['%%'='%','==='='=','\\x1B'=' ','\\[32m'=' ','\\[0m'=' ','  '=' '],I,M),I\==M,!,shrink_to(M,Mx,O).
 shrink_to(SNonGood,Max,NonGoodTrimmed):- sub_string(SNonGood,_,Max,0,NonGoodTrimmed),!.
 

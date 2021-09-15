@@ -1766,7 +1766,7 @@ intrinsicPred(argQuotedIsa).
 intrinsicPred(argIsa).
 intrinsicPred(argGenl).
 intrinsicPred(argFormat).
-intrinsicPred(format).
+intrinsicPred(foRmat).
 intrinsicPred(sformat).
 % intrinsicPred(F):-exact_args_f(F).
 
@@ -1817,7 +1817,7 @@ makeCycRenames1:-
    (ret (quote (cyc-merge a b))))))
  '
            ), 
-    forall(builtin_rn_or_rn_new(C,P),format('(safely-rename-or-merge "~w" "~w")~n',[C,P])),
+    forall(builtin_rn_or_rn_new(C,P),foRmat('(safely-rename-or-merge "~w" "~w")~n',[C,P])),
     told.
 
 add_rename(_KB,M:(:-Goal)):- !, M:call(Goal).

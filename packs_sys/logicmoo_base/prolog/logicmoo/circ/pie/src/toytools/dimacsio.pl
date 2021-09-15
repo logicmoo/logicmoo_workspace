@@ -167,18 +167,18 @@ write_qdimacs_file(Filename, QPrefix, Matrix, SymbolTable) :-
 	  mk_symbol_table(Capacity, SymbolTable1),
 	  fill_symbol_table(SymbolTable1, Matrix, NVars)
 	),
-	onto_file(( format('p cnf ~d ~d~n', [NVars, NClauses]),
+	onto_file(( foRmat('p cnf ~d ~d~n', [NVars, NClauses]),
 		    ( member(Q, QPrefix),
 	              ( Q = all(QVs) ->
-		        format('a ', [])
+		        foRmat('a ', [])
 		      ; Q = ex(QVs) ->
-			format('e ', [])
+			foRmat('e ', [])
 		      ),
 	              ( member(QV, QVs),
 			lit_to_dimacs(SymbolTable, QV, QV1),
-		        format('~d ', [QV1]),
+		        foRmat('~d ', [QV1]),
 			fail
-		      ; format('0~n', [])
+		      ; foRmat('0~n', [])
 		      ),
 	              fail		
 		    ; true
@@ -186,9 +186,9 @@ write_qdimacs_file(Filename, QPrefix, Matrix, SymbolTable) :-
 		    ( member(C, Matrix),
 	              ( member(L, C),
 			lit_to_dimacs(SymbolTable, L, L1),
-		        format('~d ', [L1]),
+		        foRmat('~d ', [L1]),
 			fail
-		      ; format('0~n', [])
+		      ; foRmat('0~n', [])
 		      ),
 		      fail
 		    ; true
@@ -214,7 +214,7 @@ convert_cnf(In, SymbolTable, Cs) :-
 %	  atom_codes(ALine, Line),
 %	  writeln(line(ALine)),
 	  ( Line = [] ->
-	    print_message(warning, format('Skipping empty line', [])),
+	    print_message(warning, foRmat('Skipping empty line', [])),
 	    Cs = Cs1
 	  ;
 	    ( Line = [0' |Line1] ->
@@ -401,7 +401,7 @@ apply_append([], []).
 % main :-
 %         catch(convert_argv,
 % 	      E,
-% 	      (print_message(error, format('~q', [E])),
+% 	      (print_message(error, foRmat('~q', [E])),
 % 	       fail)),
 %         halt.                                           
 % main :-

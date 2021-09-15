@@ -645,9 +645,9 @@ system:'$enter_dra':-true.
 
 
 std_trace_stream(user_error).
-dra_w(M):-std_trace_stream(S),format(S,'~q',[M]),flush_output(S).
+dra_w(M):-std_trace_stream(S),foRmat(S,'~q',[M]),flush_output(S).
 dra_wln(M):-call(notrace,((current_predicate(logicmoo_util_dmsg:dmsg/1),!,logicmoo_util_dmsg:dmsg(M)))),!.
-dra_wln(M):-std_trace_stream(S),format(S,'~q.~n',[M]),flush_output(S).
+dra_wln(M):-std_trace_stream(S),foRmat(S,'~q.~n',[M]),flush_output(S).
 dra_retract_all(R):-ignore((retract(R),fail)).
 % dra_asserta_new(G):-catch(G,_,fail),!.
 dra_asserta_new(G):-dra_retract_all(G),asserta(G).
@@ -996,7 +996,7 @@ dra_incval_flag( Name ) :-flag( Name, Value, Value+1 ).
 
 
 %
-%  The format of a node is:
+%  The foRmat of a node is:
 %       t( key, information, left subtree, right subtree )
 %  or
 %       empty.
@@ -2197,8 +2197,8 @@ optional_trace( _, _, _, _ ).
 
 
 % :-repeat,logOnErrorIgnore(prolog),fail.
-% user:term_expansion((?- G),_):-nonvar(G), format(atom(H),'~q .',[G]),user:rl_add_history(H),fail.
-% user:goal_expansion(G,_):-G\=(_,_),G\=(_;_),\+ predicate_property(G,_),format(atom(H),'~q .',[G]),user:rl_add_history(H),fail.
+% user:term_expansion((?- G),_):-nonvar(G), foRmat(atom(H),'~q .',[G]),user:rl_add_history(H),fail.
+% user:goal_expansion(G,_):-G\=(_,_),G\=(_;_),\+ predicate_property(G,_),foRmat(atom(H),'~q .',[G]),user:rl_add_history(H),fail.
 
 
 

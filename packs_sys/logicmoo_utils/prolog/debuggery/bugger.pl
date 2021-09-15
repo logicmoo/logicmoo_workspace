@@ -764,7 +764,7 @@ test_for_release_problems(File):-
 if_interactive(Goal):-if_interactive(Goal,true),!.
 
 if_interactive(_Goal,Else):- keep_going, !,
-   terminal_ansi_goal(current_output,[fg(red)],(format("~n(NOT INTERACTIVE (~q))~n",[Else]))),!,
+   terminal_ansi_goal(current_output,[fg(red)],(foRmat("~n(NOT INTERACTIVE (~q))~n",[Else]))),!,
    terminal_ansi_goal(current_output,[fg(yellow)],(call(Else))).
 
 if_interactive(Goal,Else):- 
@@ -957,7 +957,7 @@ bugger_t_expansion(_,T,T):-not(compound(T)),!.
 % bugger_t_expansion(_,C =.. List,compound_name_arguments(C,F,ARGS)):-List =@= [F|ARGS],!.
 bugger_t_expansion(_,prolog_call(T),T):-!.
 bugger_t_expansion(_,dynamic(T),dynamic(T)):-!.
-bugger_t_expansion(_,format(F,A),format_safe(F,A)):-!.
+bugger_t_expansion(_,foRmat(F,A),format_safe(F,A)):-!.
 bugger_t_expansion(CM,zotrace(T),quietly(TT)):-!,bugger_t_expansion(CM,(T),(TT)).
 bugger_t_expansion(_,F/A,F/A):-!.
 bugger_t_expansion(_,M:F/A,M:F/A):-!.
@@ -1074,7 +1074,7 @@ bugger_expand_term(T,_):- fail, dmsg(bugger_expand_term(T)),fail.
 %
 % Format Safely Paying Attention To Corner Cases.
 %
-format_safe(A,B):-catchv(format(A,B),E,(dumpST,dtrace_msg(E:format(A,B)))).
+format_safe(A,B):-catchv(foRmat(A,B),E,(dumpST,dtrace_msg(E:foRmat(A,B)))).
 
 % = %= :- meta_predicate (bugger_term_expansion(:,-)).
 
@@ -1935,8 +1935,8 @@ fresh_line:-current_output(Strm),fresh_line(Strm),!.
 %
 % Fresh Line.
 %
-%fresh_line(Strm):-lmcache:is_prolog_stream(Strm),on_x_fail(format(Strm,'~n',[])),!.
-fresh_line(Strm):-on_x_fail(format(Strm,'~N',[])),!.
+%fresh_line(Strm):-lmcache:is_prolog_stream(Strm),on_x_fail(foRmat(Strm,'~n',[])),!.
+fresh_line(Strm):-on_x_fail(foRmat(Strm,'~N',[])),!.
 fresh_line(Strm):-on_x_fail((stream_property(Strm,position('$stream_position'(_,_,POS,_))),(POS>0->nl(Strm);true))),!.
 fresh_line(Strm):-on_x_fail(nl(Strm)),!.
 fresh_line(_).
@@ -3143,12 +3143,12 @@ disabled_this:- asserta((user:prolog_exception_hook(Exception, Exception, Frame,
     Term \= existence_error(procedure,iCrackers1),
     prolog_frame_attribute(Frame,parent,PFrame),
     prolog_frame_attribute(PFrame,goal,Goal),
-    format(ERR, 'Error ST-Begin: ~p', [Term]), nl(ERR),
+    foRmat(ERR, 'Error ST-Begin: ~p', [Term]), nl(ERR),
     ignore((lmcache:thread_current_input(main,In),see(In))),
     dumpST,
 
     dtrace(Goal),
-    format(ERR, 'Error ST-End: ~p', [Term]), nl(ERR),
+    foRmat(ERR, 'Error ST-End: ~p', [Term]), nl(ERR),
     nl(ERR), fail)),
     set_prolog_flag(no_debug_ST,false).
 

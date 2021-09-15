@@ -22,7 +22,7 @@ msg(Format) :-
 	msg(Format , []).
 msg(Format, Args) :-
 	\+ \+ ( numbervars(Args, 0, _),
-	        format(user_error, Format, Args) ),
+	        foRmat(user_error, Format, Args) ),
 	nl(user_error),
 	flush_output(user_error).
 

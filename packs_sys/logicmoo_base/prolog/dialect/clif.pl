@@ -60,7 +60,7 @@ clif_debug(_):-!.
 clif_debug(I):- ignore(notrace(clif_debug0(I))).
 
 clif_debug0(state):- !, clif_state.
-clif_debug0(X):- format(user_error,'~N% CLIF_DEBUG: ~p.~n',[X]),flush_output(user_error).
+clif_debug0(X):- foRmat(user_error,'~N% CLIF_DEBUG: ~p.~n',[X]),flush_output(user_error).
 
 show_all_debug_clif(G):- ignore(((G *-> clif_debug0(G);clif_debug0(failed(G))),fail)).
 
@@ -293,13 +293,13 @@ dialect_input_name_clif(SourceFile):-
 :- system:import(clif_dialect:clif_pop_dialect/2).
 clif_pop_dialect(SourceFile,M):-
     retract(cliftmp:module_dialect_clif(clif,SourceFile,Was,M,Undo)),!,
-    %print_message(warning, format('~q', [warn_pop_clif_dialect_fallback(SourceFile,M->Was)])),
+    %print_message(warning, foRmat('~q', [warn_pop_clif_dialect_fallback(SourceFile,M->Was)])),
     clif_debug(pop_clif_dialect2(SourceFile,M->Was)),
     pop_operators(Undo),    
     %nop('$set_source_module'(Was)),!,
     clif_debug(state).
 clif_pop_dialect(SourceFile,M):- 
-   clif_debug(print_message(warning, format('~q', [missing_pop_clif_dialect_fallback(SourceFile,M)]))),
+   clif_debug(print_message(warning, foRmat('~q', [missing_pop_clif_dialect_fallback(SourceFile,M)]))),
    clif_debug(state).
 
 

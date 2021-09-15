@@ -34,7 +34,7 @@
 date_atom(Date) :-
 	get_time(T),
 	convert_time(T, S),
-	format(atom(Date), '~w', S).
+	foRmat(atom(Date), '~w', S).
 	
 current_cpu_time(Milliseconds) :-
 	prolog_flag(dialect, yap),
@@ -61,7 +61,7 @@ write_number(Stream, Number, HSpaceUsed) :-
 	; Fill is HSpaceUsed - (max(floor(log10(Number)),0) + 1)
 	),
 	n_spaces(Stream, Fill),
-	format(Stream, '~3f', [Number]).
+	foRmat(Stream, '~3f', [Number]).
 
 write_number(Number, HSpaceUsed) :-
 	current_output(Stream),
@@ -73,7 +73,7 @@ write_natnum(Stream, Natnum, HSpaceUsed) :-
 	; Fill is HSpaceUsed - (max(floor(log10(Natnum)),0) + 1)
 	),
 	n_spaces(Stream, Fill),
-	format(Stream, '~d', [Natnum]).
+	foRmat(Stream, '~d', [Natnum]).
 
 write_natnum(Natnum, HSpaceUsed) :-
 	current_output(Stream),

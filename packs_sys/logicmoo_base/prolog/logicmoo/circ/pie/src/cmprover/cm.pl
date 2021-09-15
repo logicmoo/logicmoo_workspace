@@ -5118,10 +5118,10 @@ disable_unknowns(scp(H,P,B,V), Ps, SCP1) :-
 	cp_calls_undefined(scp(H,P,B,V), Ps, Reason),
 	!,
 	( select(comment(Comment), V, V1) ->
-	  format(atom(Comment1),
+	  foRmat(atom(Comment1),
 		 '~w (disabled because undefined ~w)',
 		 [Comment, Reason])
-	; format(atom(Comment1),
+	; foRmat(atom(Comment1),
 		 '%% Disabled because undefined: ~w.', [Reason])
 	),
 	SCP1 = scp(H, [fail], [], [comment(Comment1)|V1]).

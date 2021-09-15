@@ -215,7 +215,7 @@ A4 = 224- (_G3315, _G3316),
 A5 = 167- (system:assert(_G23337)),
 A6 = 165-prolog,
 A7 = 148-false,
-A8 = 144-format(_G30500, _G30501),
+A8 = 144-foRmat(_G30500, _G30501),
 A9 = 135- (system: (_G24473=.._G24474)),
 A10 = 131- (system:catch(_G25939, _G25940, _G25941)).
 
@@ -234,7 +234,7 @@ Max = [6398-type(_G51254, _G51255, _G51256),
        167- (system:assert(_G32441)), 
        165-prolog, 
        148-false, 
-       144-format(..., ...), ... - ...|...].
+       144-foRmat(..., ...), ... - ...|...].
      ************************** */
 
 average_refs_per_term(NrOfSets, Sum, Average) :-

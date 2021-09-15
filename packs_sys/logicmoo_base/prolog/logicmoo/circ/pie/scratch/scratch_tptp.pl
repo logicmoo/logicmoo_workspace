@@ -4,7 +4,7 @@
 \maketitle
 
 \noindent Macros that make problems and axiom sets from the TPTP or in TPTP
-FOF or CNF format conveniently available as subformulas.  Formalized with the
+FOF or CNF foRmat conveniently available as subformulas.  Formalized with the
 \href{http://cs.christophwernhard.com/pie/}{\textit{PIE}} system.
 */
 
@@ -19,7 +19,7 @@ def(tptp(ProblemSpec)) :: F ::-
 	  matrix_to_form(T, T1),
 	  matrix_to_form(A, A1),
 	  F = (~T1 <- A1)
-	; err('Unsupported TPTP format: ~q', [Format])
+	; err('Unsupported TPTP foRmat: ~q', [Format])
 	).
 /**
 $F$ represents the TPTP problem as reverse implication $\mathit{Theorem}

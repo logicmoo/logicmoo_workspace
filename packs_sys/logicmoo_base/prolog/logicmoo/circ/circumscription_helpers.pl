@@ -69,7 +69,7 @@ add_relat([X|Xs], P, PXs) :-
 	).
 
 :- assert(ppl_pl(relativize(P, F, F1), Options) :-
-	format('~@ \\assign ~@^~@',
+	foRmat('~@ \\assign ~@^~@',
 	       [write_form(F1, Options), write_form(F, Options), write_form(P, Options)])).
 
 
@@ -89,7 +89,7 @@ mac_transfer_clauses_strict_subset(Dom1, Dom2, S, S1, Cs) :-
 	Cs = (Cs1Rel, ~Cs2Rel).
 
 :- assert(ppl_pl(mac_transfer_clauses_strict_subset(D1, D2, S1,S2,T), Options) :-
-	format('~@ \\assign (~@ \\subset ~@)^{~@, ~@}',
+	foRmat('~@ \\assign (~@ \\subset ~@)^{~@, ~@}',
 	       [write_form(T, Options), write_form(S1, Options), write_form(S2, Options), write_form(D1, Options), write_form(D2, Options)])).
 
 %def(fun_closure(P, F)) :: F1 ::-

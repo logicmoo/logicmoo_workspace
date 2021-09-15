@@ -39,23 +39,23 @@ This module includes utilities for visualizing prolog data.
 root(Handle) :-
 	get_struct(visualization(tree_stream:Stream), Handle),
         set_node_cnt(0), % we are in tree search
-        format(Stream,'<root id=\"~d\"/>\n',[0]),
+        foRmat(Stream,'<root id=\"~d\"/>\n',[0]),
         draw_visualization(Handle).
 
 solution(Handle) :-
         draw_visualization(Handle),
 	get_struct(visualization(tree_stream:Stream), Handle),
         current_node_cnt(Id),
-        format(Stream,'<succ id=\"~d\"/>\n',[Id]).
+        foRmat(Stream,'<succ id=\"~d\"/>\n',[Id]).
 
 try(Handle,Name,Size,Value) :-
         new_node_cnt(Handle,Id,Parent,Stream),
-        format(Stream,'<try id=\"~d\" parent=\"~d\" name=\"~w\" size=\"~d\" value=\"~d\" />\n',
+        foRmat(Stream,'<try id=\"~d\" parent=\"~d\" name=\"~w\" size=\"~d\" value=\"~d\" />\n',
                [Id,Parent,Name,Size,Value]).
 
 failure(Handle,Name,Size,Value) :-
         new_node_cnt(Handle,Id,Parent,Stream),
-        format(Stream,'<fail id=\"~d\" parent=\"~d\" name=\"~w\" size=\"~d\" value=\"~d\" />\n',
+        foRmat(Stream,'<fail id=\"~d\" parent=\"~d\" name=\"~w\" size=\"~d\" value=\"~d\" />\n',
                [Id,Parent,Name,Size,Value]).
 
 number_variables(Handle,L,Pairs) :-

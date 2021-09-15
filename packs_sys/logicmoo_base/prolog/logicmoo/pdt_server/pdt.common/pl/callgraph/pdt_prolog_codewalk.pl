@@ -87,7 +87,7 @@ source file is passed into _Where.
 			     source(false)
 			   ]),
 	  predicate_property(calls(_,_), number_of_clauses(N)),
-	  format('Got ~D edges~n', [N]).
+	  foRmat('Got ~D edges~n', [N]).
 
   assert_edge(Callee, Caller, _Where) :-
 	  calls(Caller, Callee), !.
@@ -397,7 +397,7 @@ walk_called_by_body(Body, Module, OTerm) :-
 	      missing(Missing),
 	      walk_called_by_body(Missing, Body, Module, OTerm)), !.
 walk_called_by_body(Body, Module, OTerm) :-
-	format(user_error, 'Failed to analyse:~n', []),
+	foRmat(user_error, 'Failed to analyse:~n', []),
 	portray_clause(('<head>' :- Body)),
 	(   debugging(autoload(trace))
 	->  trace, %gtrace,
@@ -412,7 +412,7 @@ walk_called_by_body(Body, Module, OTerm) :-
 
 walk_called_by_body(Missing, Body, _, OTerm) :-
 	debugging(autoload),
-	format(user_error, 'Retrying due to ~w (~p)~n', [Missing, OTerm]),
+	foRmat(user_error, 'Retrying due to ~w (~p)~n', [Missing, OTerm]),
 	portray_clause(('<head>' :- Body)), fail.
 walk_called_by_body(undecided_call, Body, Module, OTerm) :-
 	catch(forall(walk_called(Body, Module, _TermPos, OTerm),

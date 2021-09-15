@@ -48,7 +48,7 @@ consult_if_not_yet(File,_) :-
     consult(File),
     !.
 consult_if_not_yet(File,_) :-
-    format(' *** ERROR loading ~k. ~n', [File]).   
+    foRmat(' *** ERROR loading ~k. ~n', [File]).   
 
 
 /*
@@ -74,7 +74,7 @@ predicate_loaded_from(Head,File) :- predicate_property(Head,_),
  */
 report_already_loaded(Head,F1,F2) :-
     functor(Head,Fkt,N),
-    format(' *** Definition of ~a/~a  *not* loaded from ~k~n        because it is already loaded from ~k~n', [Fkt,N,F2,F1]).
+    foRmat(' *** Definition of ~a/~a  *not* loaded from ~k~n        because it is already loaded from ~k~n', [Fkt,N,F2,F1]).
 
 /*
  * ctc_home_dir(CTCHomeOrPWD)
@@ -192,7 +192,7 @@ report_to_file(Folder,Call) :- with_output_to_folder(Folder,Call).
 export_all_results(File, Goal) :-
    with_output_to_file(File, 
        ( count(Goal,N),  % enforces calculating all results
-         format('Found ~a results.~n',[N]),
+         foRmat('Found ~a results.~n',[N]),
          forall(Goal, writeln(Goal)),
          nl
        )
@@ -268,7 +268,7 @@ create_timestamp_2(TimeStampAtom) :-
     stamp_date_time(TimeStamp, DateTimeTerm1, local),
     DateTimeTerm1 = date(Y,M,D,H,Mn,S,_,_,_),
     Seconds is truncate(S), 
-    format(atom(TimeStampAtom), '~a.~a.~a ~a:~a:~d', [D,M,Y,H,Mn,Seconds]).
+    foRmat(atom(TimeStampAtom), '~a.~a.~a ~a:~a:~d', [D,M,Y,H,Mn,Seconds]).
     
 /*
  * Determine the absolute path to the root directory of the current 

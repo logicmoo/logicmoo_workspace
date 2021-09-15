@@ -355,13 +355,13 @@ any_to_string1(txtFormatFn(Fmt,Args),String):-!,must(sformat(String,Fmt,Args)).
 any_to_string1(List,String):- text_to_string_safe(List,String),!.
 any_to_string1(List,String):- is_list(List),!,must_maplist(any_to_string1,List,StringList), 
     must(atomics_to_string(StringList, ' ', String)),!.
-any_to_string1(List,String):- on_x_debug(format(string(String),'~w',[List])).
+any_to_string1(List,String):- on_x_debug(foRmat(string(String),'~w',[List])).
 
 
 /*
 any_to_string1(Term,String):- show_call(on_x_debug(term_string(Term,String))).
-any_to_string1(List,String):- on_x_debug(format(string(String),'~p',[List])).
-any_to_string1(List,String):- format(string(String),'~q',[List]).
+any_to_string1(List,String):- on_x_debug(foRmat(string(String),'~p',[List])).
+any_to_string1(List,String):- foRmat(string(String),'~q',[List]).
 */
 /*
 list_to_atomics_list0(Var,A):-var(Var),!,any_to_string(Var,A),!.
@@ -635,8 +635,8 @@ atom_contains(F,X):- atomic(F),F\==[],on_x_debug(sub_string(F,_,_,_,X)).
 %
 % Any Converted To Atom.
 %
-any_to_atom(Any,A):- any_to_string(Any,T), format(atom(A),'~w',[T]).
-% any_to_atom(A,A):- any_to_string(A,T), format(atom(A),'~w',[T]).
+any_to_atom(Any,A):- any_to_string(Any,T), foRmat(atom(A),'~w',[T]).
+% any_to_atom(A,A):- any_to_string(A,T), foRmat(atom(A),'~w',[T]).
 
 
 %= 	 	 

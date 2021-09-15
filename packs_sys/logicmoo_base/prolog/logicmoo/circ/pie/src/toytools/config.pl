@@ -195,9 +195,9 @@ print_toyelim_configuration_doc :-
 	write('===================='),
 	writeln('=========================================================='),
 	( conf(Opt, Default, DocLines),
-	  format('~q, default: ~q~n', [Opt, Default]),
+	  foRmat('~q, default: ~q~n', [Opt, Default]),
 	  ( member(Line, DocLines),
-	    format('  ~w~n', [Line]),
+	    foRmat('  ~w~n', [Line]),
 	    fail
 	  ; true
 	  ),

@@ -43,8 +43,8 @@
 %%%%                     LIST OF <FORMULA> | LIST OF <LITERAL>,
 %%%%                     LIST OF <ID>)   % parents
 %%%% <ID>      := <NUMBER>
-%%%% <FORMULA> := NF format, quantified, with atoms as variables
-%%%% <LITERAL> := NF format, with Prolog variables
+%%%% <FORMULA> := NF foRmat, quantified, with atoms as variables
+%%%% <LITERAL> := NF foRmat, with Prolog variables
 %%%%
 prover9_proofs(XMLFile, Proofs) :-
 	prooftrans_dtd(DTD),

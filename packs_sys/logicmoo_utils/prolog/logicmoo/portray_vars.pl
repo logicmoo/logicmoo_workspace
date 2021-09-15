@@ -67,7 +67,7 @@ maybe_debug_var(X,Y):- mort(may_debug_var(X,Y)).
 
 p_n_atom(Cmpd,UPO):- p_n_atom1(Cmpd,UP),toProperCamelAtom(UP,UPO),!.
 
-p_n_atom1(Cmpd,UP):- number(Cmpd),!,format(atom(UP),"_Num~w_",[Cmpd]).
+p_n_atom1(Cmpd,UP):- number(Cmpd),!,foRmat(atom(UP),"_Num~w_",[Cmpd]).
 p_n_atom1(Cmpd,UP):- string(Cmpd),atom_subst(Cmpd," ","_",String),!,p_n_atom1(String,UP).
 p_n_atom1(Cmpd,UP):- Cmpd=='', UP='',!.
 p_n_atom1(Var,UP):- var(Var),get_var_name(Var,UP),!.
@@ -150,7 +150,7 @@ p_n_atom0([C|S],UP):- !,notrace(catch(atom_codes_w_blobs(Atom,[C|S]),_,fail)),!,
 p_n_atom_filter_var_chars(AtomR,UP):- name(AtomR,Chars),filter_var_chars(Chars,[C|Was]),to_upper(C,U),name(UP,[U|Was]).
 % p_n_atom_filter_var_chars(AtomR,UP):- name(AtomR,[C|Was]),to_upper(C,U),filter_var_chars([U|Was],CS),name(UP,CS).
 
-atom_codes_w_blobs(Atom,Codes):-atom(Atom)->atom_codes(Atom,Codes);format(codes(Codes),"~w",[Atom]).
+atom_codes_w_blobs(Atom,Codes):-atom(Atom)->atom_codes(Atom,Codes);foRmat(codes(Codes),"~w",[Atom]).
 
 debug_var0(R,V):- is_dict(V), dict_pairs(V,VV,_), !, debug_var0(R,VV).
 debug_var0(V,R):- is_dict(V), dict_pairs(V,VV,_), !, debug_var0(VV,R).
@@ -234,7 +234,7 @@ mort(G):- nortrace,notrace,display(failed_mort(G)),trace,rtrace(G),notrace,trace
 to_var_or_name(L,LL):- var(L),!,LL=L.
 to_var_or_name('~','Not').
 to_var_or_name([],'NList').
-to_var_or_name(L,LL):- \+ atom(L),!,format(atom(LL),"~w",[L]).
+to_var_or_name(L,LL):- \+ atom(L),!,foRmat(atom(LL),"~w",[L]).
 to_var_or_name(L,LL):- to_var_or_name_2(L,LL),!.
 % to_var_or_name(F,LL):- is_letterless(F), name(F,X),atomic_list_concat([c|X],'c',LL),!.
 % to_var_or_name(F,''):- is_letterless(F),!.

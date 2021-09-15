@@ -32,7 +32,7 @@ delay_rule_eval(In,Wrap,WIn):- WIn=..[Wrap,In].
 
 % for SUMO
 sumo_to_pdkb_const('Collection','ttSumoCollection').
-sumo_to_pdkb_const(format,formatSumo).
+sumo_to_pdkb_const(foRmat,formatSumo).
 % sumo_to_pdkb_const(documentation,comment).
 sumo_to_pdkb_const('instance', isa).
 sumo_to_pdkb_const('subclass', genls).

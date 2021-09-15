@@ -120,7 +120,7 @@ find_call_location(CallerModule, CallerName, CallerArity, CalleeModule, CalleeNa
 	(	(	TermPosition = term_position(Start, End, _, _, _)
 		;	TermPosition = Start-End
 		)
-	->	format(atom(Location), '~w-~w', [Start, End])
+	->	foRmat(atom(Location), '~w-~w', [Start, End])
 	;	clause_property(Ref, line_count(Location))
 	),
 	clause_property(Ref, file(File)),

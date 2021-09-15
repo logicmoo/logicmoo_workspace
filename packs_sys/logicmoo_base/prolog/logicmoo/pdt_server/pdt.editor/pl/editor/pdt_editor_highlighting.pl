@@ -78,7 +78,7 @@ predicate_name_with_property_(Module,Name,Property) :-
 	
 make_duplicate_free_string(AllPredicateNames,Predicates) :-
     setof(Name, member(Name,AllPredicateNames), UniqueNames),
-	format(atom(Predicates),'~w',[UniqueNames]).
+	foRmat(atom(Predicates),'~w',[UniqueNames]).
 
 
 % Below this line is apparently dead code. 
@@ -102,8 +102,8 @@ predicates_with_unary_property(Property,Predicates,PropertyArguments) :-
 	   PredArgList),
 	findall(Pred, member((Pred,_),PredArgList), AllProps),
 	findall(Arg,  member((_,Arg), PredArgList), AllArgs),
-	format(atom(Predicates),'~w',[AllProps]),
-	format(atom(PropertyArguments),'~w',[AllArgs]).
+	foRmat(atom(Predicates),'~w',[AllProps]),
+	foRmat(atom(PropertyArguments),'~w',[AllArgs]).
 	   	  
 % helper
 predicate_name_with_unary_property_(Name,Property,Arg) :-

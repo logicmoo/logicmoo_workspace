@@ -35,7 +35,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%% 
 %%%% Conversion to and from formula formats "t" and "tnnfpl" used by some
-%%%% elimination methods.  "so" is the toyelim standard format (nf/nf.pl,
+%%%% elimination methods.  "so" is the toyelim standard foRmat (nf/nf.pl,
 %%%% logop_fol.pl).
 %%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

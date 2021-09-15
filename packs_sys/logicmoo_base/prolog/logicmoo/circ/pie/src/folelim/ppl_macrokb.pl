@@ -52,7 +52,7 @@ ppl_is_at_printtime :-
 ppl_debug_info(A) :-
 	flag(ppl_debug_pos, Pos, Pos),
 	( ppl_debug_source(Source) -> true ; Source = unknown ),
-	format(atom(A), 'After position ~w in source ~q', [Pos, Source]).
+	foRmat(atom(A), 'After position ~w in source ~q', [Pos, Source]).
 
 /*
 TODO:
@@ -146,7 +146,7 @@ ppl_content(Content, Source, Options, Outfile) :-
 			   ),
 			   ( member(Item, Content),
 			     ppl_content_item(Item, Source,
-					      [format=latex|Options]),
+					      [foRmat=latex|Options]),
 			     fail
 			   ; true
 			   ),
@@ -168,16 +168,16 @@ ppl_content(Content, Source, Options, Outfile) :-
 ppl_content_item(term(Pos, (L::F), VarNames), Source, Options) :-
 	!,
 	flag(ppl_debug_pos, _, Pos),
-	format('%~n% Statement at position ~w~n%~n', [Pos]),
+	foRmat('%~n% Statement at position ~w~n%~n', [Pos]),
 	ppl_stmt((L::F), Source, [varnames=VarNames|Options]).
 ppl_content_item((L::F), Source, Options) :-
 	!,
-	format('%~n% Statement~n%~n'),
+	foRmat('%~n% Statement~n%~n'),
 	ppl_stmt((L::F), Source, Options).
 ppl_content_item(doc(Pos, Lines), _, _Options) :-
 	!,
 	flag(ppl_debug_pos, _, Pos),
-	format('%~n% Doc at position ~w~n%~n', [Pos]),
+	foRmat('%~n% Doc at position ~w~n%~n', [Pos]),
 	append_doc_lines(Lines, L),
 	evaluate_prolog_inserts(L, L1),
 	( member(C, L1),
@@ -193,9 +193,9 @@ ppl_content_item(term(Pos, Term, VarNames), _, Options) :-
 	  copy_term(Term-VarNames, Term1-VarNames1),
 	  numbervars_from_varnames(VarNames1),
 	  Verbatim = verbatim,
- 	  format('{\\small~n\\begin{~w}~n', [Verbatim]),
+ 	  foRmat('{\\small~n\\begin{~w}~n', [Verbatim]),
  	  pp_clause(Term1),
- 	  format('\\end{~w}}~n', [Verbatim])
+ 	  foRmat('\\end{~w}}~n', [Verbatim])
 	; true
 	),
 	( Term = (:- ppl_printtime(Call)) ->
@@ -304,7 +304,7 @@ evaluate_prolog_inserts([0'\\,0'p,0'r,0'o,0'l,0'o,0'g,0'{|C], C1) :-
 	atom_codes(CallA, C2),
 	read_term_from_atom(CallA, Call, [variable_names(VarNames)]),
 	apply_var_names(VarNames),
-	format(atom(Result), '~@', call(Call)),
+	foRmat(atom(Result), '~@', call(Call)),
 	atom_codes(Result, C4),
 	append(C4, C5, C1),
 	evaluate_prolog_inserts(C3, C5).
@@ -333,43 +333,43 @@ ppl_stmt(Stmt, Source, Options) :-
 	( Form2 = (E ::- Body) -> true
 	; E = Form2
 	),
-	format('\\pplkbBefore~n'),
+	foRmat('\\pplkbBefore~n'),
 	write_index_label(DispPat1, Type, Options),
 	write_def_label(DispPat1, Type, Options),
-	format('$'),
+	foRmat('$'),
 	pp_form('$defmacro'(DispPat1), Options),
-	format('$'),
+	foRmat('$'),
 	%
 	% ppl_pretty_type(Type, Type1, _),
-	% format('\\pplkbDefType{~w}~n', [Type1]),
-	format('\\pplkbBetween~n'),
-	format('$'),
+	% foRmat('\\pplkbDefType{~w}~n', [Type1]),
+	foRmat('\\pplkbBetween~n'),
+	foRmat('$'),
 	( var(Body) -> Finally='.' ; Finally=',' ),
 	pp_form(E, [finally=Finally|Options] ),
-	format('$'),
-	format('\\pplkbAfter~n'),
+	foRmat('$'),
+	foRmat('\\pplkbAfter~n'),
 	( var(Body) -> true
-	; format('\\pplkbBodyBefore~n'),
-	  format('$'),
+	; foRmat('\\pplkbBodyBefore~n'),
+	  foRmat('$'),
 	  ppl_body(Body, Options),
-	  format('$'),
-	  format('\\pplkbBodyAfter~n')
+	  foRmat('$'),
+	  foRmat('\\pplkbBodyAfter~n')
 	).
 
 write_index_label(Pat, _Type, Options) :-
-	format(atom(Label), '~@', [write_term(Pat,[numbervars(true)])]),
+	foRmat(atom(Label), '~@', [write_term(Pat,[numbervars(true)])]),
 	convert_to_index_label(Label, Label1),
-	format('\\index{~w@$~@$}',
+	foRmat('\\index{~w@$~@$}',
  	       [Label1,	write_form('$defmacro'(Pat), Options)]).
 
 write_def_label(Pat, _Type, Options) :-
 	( memberchk(deflabels=true, Options) ->
 	  pattern_def_label(Pat, Label),
-	  format('\\refstepcounter{def}\\label{~w}%~n', [Label]),
+	  foRmat('\\refstepcounter{def}\\label{~w}%~n', [Label]),
 	  ( memberchk(deflabel_fmt=Fmt, Options) -> true
 	  ; Fmt = '\\ref{~w}. '
 	  ),
-	  format(Fmt, [Label])
+	  foRmat(Fmt, [Label])
 	; true
 	).
 
@@ -390,14 +390,14 @@ map_carl([], []).
 pattern_def_label(Pat, Label) :-
 	( atom(Pat) ->
 	  clean_atom_as_def_label(Pat, Label1),
-	  format(atom(Label), 'def:~w', [Label1])
+	  foRmat(atom(Label), 'def:~w', [Label1])
 	; compound(Pat) ->
 	  functor(Pat, F, N),
 	  clean_atom_as_def_label(F, Label1),
-	  format(atom(Label), 'def:~w:~w', [Label1, N])
-	; format(atom(Label1), '~w', [Pat]),
+	  foRmat(atom(Label), 'def:~w:~w', [Label1, N])
+	; foRmat(atom(Label1), '~w', [Pat]),
 	  clean_atom_as_def_label(Label1, Label2),
-	  format(atom(Label), 'def:~w', [Label2])
+	  foRmat(atom(Label), 'def:~w', [Label2])
 	).
 	
 apply_var_var_mappings([]).
@@ -456,20 +456,20 @@ map_mark_installed_macros([X|Xs], [X1|Xs1]) :-
 map_mark_installed_macros([], []).
 
 ppl_body(X, Options) :-
-	format('~n\\begin{array}{l}'),
+	foRmat('~n\\begin{array}{l}'),
 	ppl_body_1(X, Options),
-	format('~n\\end{array}').
+	foRmat('~n\\end{array}').
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 ppl_body_1((G, Gs), Options) :-
 	!,
 	ppl_item(G, Options),
-	format(',\\\\~n'),
+	foRmat(',\\\\~n'),
 	ppl_body_1(Gs, Options).
 ppl_body_1(G, Options) :-
 	ppl_item(G, Options),
-	format('.~n').
+	foRmat('.~n').
 
 ppl_item(G, Options) :-
 	ppl_pl(G, Options),
@@ -480,15 +480,15 @@ ppl_item(G, _) :-
 	char_type(F, graph),
 	F \= (=),
 	!,
-	format('\\mathit{[\\ldots unformattable\\ Prolog\\ code]}').
-% 	format(atom(G1), '~@', [pp(G, Options)]),
+	foRmat('\\mathit{[\\ldots unformattable\\ Prolog\\ code]}').
+% 	foRmat(atom(G1), '~@', [pp(G, Options)]),
 % 	esc_latex(G1, G2),
-% 	format('\\mathtt{~w}', [G2]).
-%	format('~n\\begin{verbatim}~w\\end{verbatim}~n', [G2]).
+% 	foRmat('\\mathtt{~w}', [G2]).
+%	foRmat('~n\\begin{verbatim}~w\\end{verbatim}~n', [G2]).
 ppl_item(G, _) :-
-	format(atom(G1), '~w', G),
+	foRmat(atom(G1), '~w', G),
 	esc_latex(G1, G2),
-	format('\\mathrm{~w}', [G2]).
+	foRmat('\\mathrm{~w}', [G2]).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

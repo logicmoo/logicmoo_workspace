@@ -60,9 +60,9 @@ info(V, Format, Args) :-
 	    nl(user_error)
 	  ; true
 	  ),
-	  format(user_error, '% ', []),
+	  foRmat(user_error, '% ', []),
 	  \+ \+ ( numbervars(Args, 0, _),
-		  format(user_error, Format, Args) ),
+		  foRmat(user_error, Format, Args) ),
 	  nl(user_error),
 	  flush_output(user_error)
 	; true
@@ -73,7 +73,7 @@ warn(Format) :-
 warn(Format, Args) :-
 	flag(warnings, W, W),
 	W > 0,
-	format(atom(Format1), 'WARNING: ~w', [Format]),
+	foRmat(atom(Format1), 'WARNING: ~w', [Format]),
 	info(0, Format1, Args).
 
 :- flag(progress_call_pos, _, 0).
@@ -106,7 +106,7 @@ info_progress(V, MOD, N) :-
 	    write(user_error, '\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b')
 	  ; true
 	  ),
-	  format(user_error, '% Progress: ~|~t~D~12+', [N]),
+	  foRmat(user_error, '% Progress: ~|~t~D~12+', [N]),
 	  flush_output(user_error),
 	  record_progress_call
 	; true

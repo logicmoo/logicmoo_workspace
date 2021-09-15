@@ -821,7 +821,7 @@ set_p_counter(N) :-
 
 gen_definitional_predicate(P) :-
 	flag_inc('$p_counter', P0),
-	format(atom(P), 'def_~|~`0t~d~6+$', [P0]).
+	foRmat(atom(P), 'def_~|~`0t~d~6+$', [P0]).
 
 definitional_atom(A) :-
 	functor(A, F, _),
@@ -1563,7 +1563,7 @@ writeq_formott_atomic(A) :-
 	C \= '_',
 	\+ char_type(C, alnum),
 	!,
-	format('"~w"', [A]).
+	foRmat('"~w"', [A]).
 writeq_formott_atomic(A) :-
 	write(A).
 

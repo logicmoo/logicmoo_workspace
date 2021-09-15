@@ -139,7 +139,7 @@ reduce_make_key(O,O).
 %
 % Cc Key.
 %
-cc_key(CC,Key):- cyclic_term(CC),!,dtrace,copy_term_nat(CC,CKey),numbervars(CKey,0,_,[attvars(error)]),format(atom(Key),'~w',[CKey]),!.
+cc_key(CC,Key):- cyclic_term(CC),!,dtrace,copy_term_nat(CC,CKey),numbervars(CKey,0,_,[attvars(error)]),foRmat(atom(Key),'~w',[CKey]),!.
 cc_key(CC,O):- copy_term_nat(CC,Key),numbervars(Key,0,_,[attvars(error)]),!,Key=O.
 
 

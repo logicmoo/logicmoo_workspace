@@ -78,7 +78,7 @@ compile_pfcg.
 
 parse(Words) :-
   parse(Words,Id),
-  format("~N% sentence id = ~w",Id),
+  foRmat("~N% sentence id = ~w",Id),
   show(Id,sentence(_X)).
 
 
@@ -110,7 +110,7 @@ l_do(X) :- call(X) -> true;true.
 show(Id,C) :-
   call_u(ss(C,Id,A \\ B)),
   append(Words,B,A),
-  format("~N%  ~w    :   ~w",[C,Words]),
+  foRmat("~N%  ~w    :   ~w",[C,Words]),
   fail.
 
 gen_s_tag(s(N2)) :-

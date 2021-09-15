@@ -58,7 +58,7 @@ find_all_loaded_files(Project):-
 filter_already_known_files([],[]).
 filter_already_known_files([File|Tail],[MissingTail]):-
     fileT_ri(File,_),
-  	%format('!!!!Already there: ~w~n',[File]),
+  	%foRmat('!!!!Already there: ~w~n',[File]),
     !,
     filter_already_known_files(Tail,MissingTail).
 filter_already_known_files([File|Tail],[File|MissingTail]):-

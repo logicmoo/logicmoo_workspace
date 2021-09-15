@@ -235,65 +235,65 @@ process_dotgraph_1(Dotgraph, MimeType, ImageFile, IsmapAreas) :-
 
 %!   print_dotgraph(++Dotgraph) is det.
 %
-%    Prints the given dotgraph in the format accepted by =dot= to the standard
+%    Prints the given dotgraph in the foRmat accepted by =dot= to the standard
 %    output.
 %
 %    @arg Dotgraph A =Dotgraph= as specified in the module description.
 % 
 print_dotgraph(dotgraph(Name, Statements)) :-
 	!,
-	format('digraph ~w {~n', [Name]),
+	foRmat('digraph ~w {~n', [Name]),
 	( member(Stmt, Statements),
 	  write('\t'), print_statement(Stmt),
 	  fail
 	; true
 	),
-	format('}~n').
+	foRmat('}~n').
 print_dotgraph(Object) :-
 	err('Not a dotgraph: ~q.', [Object]).
 
 print_statement(edge(Id1, Id2, AVs)) :-
 	!,
 	print_id(Id1),
-	format(' -> '),
+	foRmat(' -> '),
 	print_id(Id2),
 	( AVs = [] ->
-	  format(';~n')
-	; format(' ['),
+	  foRmat(';~n')
+	; foRmat(' ['),
 	  print_avs(AVs),
-	  format('];~n')
+	  foRmat('];~n')
 	).
 print_statement(node(Id, AVs)) :-
 	!,
 	print_id(Id),
 	( AVs = [] ->
-	  format(';~n')
-	; format(' ['),
+	  foRmat(';~n')
+	; foRmat(' ['),
 	  print_avs(AVs),
-	  format('];~n')
+	  foRmat('];~n')
 	).
 print_statement(edge_defaults(AVs)) :-
 	!,
 	( AVs = [] ->
 	  true
-	; format('edge ['),
+	; foRmat('edge ['),
 	  print_avs(AVs),
-	  format('];~n')
+	  foRmat('];~n')
 	).
 print_statement(node_defaults(AVs)) :-
 	!,
 	( AVs = [] ->
 	  true
-	; format('node ['),
+	; foRmat('node ['),
 	  print_avs(AVs),
-	  format('];~n')
+	  foRmat('];~n')
 	).
 print_statement(graph_attributes(AVs)) :-
 	!,
 	( member(A=V, AVs),
-	  format('~w=', [A]),
+	  foRmat('~w=', [A]),
 	  print_value(V),
-	  format(';~n'),
+	  foRmat(';~n'),
 	  fail
 	; true
 	).
@@ -302,26 +302,26 @@ print_statement(subgraph(Name, Statements)) :-
 	%% For now indentation corresponds always to the first subgraph
 	%% level, also for nested subgraphs.
 	write('\t'),
-	format('subgraph ~w {~n', [Name]),
+	foRmat('subgraph ~w {~n', [Name]),
 	( member(Stmt, Statements),
 	  write('\t\t'), print_statement(Stmt),
 	  fail
 	; true
 	),
 	write('\t'),
-	format('}~n').
+	foRmat('}~n').
 
 print_statement(statements(Statements)) :-
 	!,
 	write('\t'),
-	format('{~n'),
+	foRmat('{~n'),
 	( member(Stmt, Statements),
 	  write('\t\t'), print_statement(Stmt),
 	  fail
 	; true
 	),
 	write('\t'),
-	format('}~n').
+	foRmat('}~n').
 
 print_statement(S) :-
 	err('Bad graph statement term: ~q.', [S]).
@@ -331,17 +331,17 @@ print_avs([A=V]) :-
 	print_av(A, V).
 print_avs([A=V|AVs]) :-
 	print_av(A, V),
-	format(', '),
+	foRmat(', '),
 	print_avs(AVs).
 
 print_av(label, Label) :-
 	!,
-	format('label='),
+	foRmat('label='),
 	%% Seems that the escapes required for record labels are also
 	%% handled propery by labels for other shapes.
 	print_reclabel(Label).
 print_av(A, V) :-
-	format('~w=', [A]),
+	foRmat('~w=', [A]),
 	print_value(V).
 
 % print_label(Label) :-
@@ -365,7 +365,7 @@ print_av(A, V) :-
 % 	put_code(0'").
 	    
 print_escaped(Value) :-
-	format(atom(Value1), '~w', Value),
+	foRmat(atom(Value1), '~w', Value),
 	atom_codes(Value1, Codes),
 	( member(C, Codes),
 	  ( print_value_escape(C) ->
@@ -469,7 +469,7 @@ print_reclabel_2(Label) :-
 	err('Bad label: ~q.', [Label]).
 
 print_reclabel_escaped(Value) :-
-	format(atom(Value1), '~w', Value),
+	foRmat(atom(Value1), '~w', Value),
 	atom_codes(Value1, Codes),
 	( member(C, Codes),
 	  ( C = 10 ->

@@ -63,7 +63,7 @@ mac_install(File) :-
 		     ; Term = (L :: V) ->
 		       mac_install_def((L :: V), Varnames, File),
 		       fail
-		     ; % format('Skipping term: ~q~n', [Term]),
+		     ; % foRmat('Skipping term: ~q~n', [Term]),
 		       fail
 		     )
 		   ; true
@@ -482,7 +482,7 @@ tptp_to_mac(ProblemSpec, X) :-
 	  tptp_cnf_to_mac(Problem, Label, X)
 	; Format = fof ->
 	  tptp_fof_to_mac(Problem, Label, X)
-	; err('Unsupported TPTP format for tptp_to_mac: ~q', [Format])
+	; err('Unsupported TPTP foRmat for tptp_to_mac: ~q', [Format])
 	).
 
 tptp_label(ProblemSpec, Label) :-

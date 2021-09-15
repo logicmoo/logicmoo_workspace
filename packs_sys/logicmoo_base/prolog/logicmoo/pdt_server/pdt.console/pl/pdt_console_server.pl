@@ -133,7 +133,7 @@ service_client(InStream, OutStream, Peer, Options) :-
 	set_prolog_IO(InStream, OutStream, OutStream),
     set_stream(user_error,encoding(utf8)),
     catch(set_prolog_flag(color_term, false), _, true),
-	format(user_error,
+	foRmat(user_error,
 	       'Welcome to the SWI-Prolog server on thread ~w~n~n',
 	       [Id]),
 	run_prolog,
@@ -142,7 +142,7 @@ service_client(InStream, OutStream, Peer, Options) :-
 	thread_detach(Id).
 service_client(InStream, OutStream, _, _):-
 	thread_self(Id),
-	format(OutStream, 'Go away!!~n', []),
+	foRmat(OutStream, 'Go away!!~n', []),
 	close(InStream),
 	close(OutStream),
 	thread_detach(Id).

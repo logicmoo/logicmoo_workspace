@@ -76,7 +76,7 @@ find_undefined_call(Root, IncludeSomeExecutionContext, Module, Name, Arity, File
 	properties_for_predicate(Module,Name,Arity,PropertyList0),
 	(	nonvar(M)
 	->	(	M \== Module
-		->	format(atom(Prefix), '~w:', [M]),
+		->	foRmat(atom(Prefix), '~w:', [M]),
 			PropertyList = [prefix(Prefix)|PropertyList0]
 		;	PropertyList = PropertyList0
 		)
@@ -96,11 +96,11 @@ find_undefined_call(Root, IncludeSomeExecutionContext, Module, Name, Arity, File
 		;	true
 		),
 		atomic_list_concat(SortedMs, ', ', ModuleList),
-		format(atom(TransparentTargetsAtom), ' in execution context ~w (context dependend)', [ModuleList]),
+		foRmat(atom(TransparentTargetsAtom), ' in execution context ~w (context dependend)', [ModuleList]),
 		PropertyList = [suffix(TransparentTargetsAtom)|PropertyList0]
 	),
 	functor(Goal, UndefName, UndefArity).
-%	format(atom(GoalAsAtom), '~w', [Goal]).
+%	foRmat(atom(GoalAsAtom), '~w', [Goal]).
 
 %% find_dead_predicate(Root, Module, Functor, Arity, File, HeadLocation, ClauseStart, ClauseEnd, PropertyList) 
 %
@@ -141,7 +141,7 @@ positions_of_clause(Ref, Position, ClauseStart, ClauseEnd) :-
 	;	% at least one argument
 		HeadPosition = term_position(Start, End, _, _, _)
 	),
-	format(atom(Position), '~w-~w', [Start, End]).
+	foRmat(atom(Position), '~w-~w', [Start, End]).
 
 
 :- multifile(entry_point/1).
@@ -230,10 +230,10 @@ find_undeclared_meta_predicate(Root, Module, Name, Arity, MetaSpec, MetaSpecAtom
 	->	sub_atom(File, 0, _, _, Root)
 	;	true
 	),
-	format(atom(MetaSpecAtom), '~w', [MetaSpec]),
+	foRmat(atom(MetaSpecAtom), '~w', [MetaSpec]),
 	(	swi_meta_predicate_spec(MetaSpec)
-	->	format(atom(Directive), ':- meta_predicate(~w).~n', [MetaSpec])
-	;	format(atom(Directive), ':- extended_meta_predicate(~w).~n', [MetaSpec])
+	->	foRmat(atom(Directive), ':- meta_predicate(~w).~n', [MetaSpec])
+	;	foRmat(atom(Directive), ':- extended_meta_predicate(~w).~n', [MetaSpec])
 	).
 
 swi_meta_predicate_spec(Head) :-

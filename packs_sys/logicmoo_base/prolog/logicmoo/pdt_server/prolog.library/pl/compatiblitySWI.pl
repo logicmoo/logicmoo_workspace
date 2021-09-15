@@ -61,7 +61,7 @@ open_printf_to_memory(Key) :-
     close(Stream),
     free_memory_file(Handle)),
     Exception,true),
-    format('EXCEPTION: catched Exception in open_printf_to_memory. Possible reason: trying to create an existing stream~nSTREAM: ~w ~n~w ~n', [Key,Exception]),
+    foRmat('EXCEPTION: catched Exception in open_printf_to_memory. Possible reason: trying to create an existing stream~nSTREAM: ~w ~n~w ~n', [Key,Exception]),
     fail.
 
 open_printf_to_memory(Key) :-
@@ -177,22 +177,22 @@ test(memory_file) :-
 printf(_format, _args) :-
     output_to_memory(_,_,_stream),
     !,
-    format(_stream, _format, _args).
+    foRmat(_stream, _format, _args).
 
 %printf(_format, _args) :-
 %    output_to_tmp(_stream),
 %    !,
-%    format(_stream, _format, _args).
+%    foRmat(_stream, _format, _args).
 
 printf(_format, _args) :-
     output_to_file,
     file_output(_stream),
     !,
-    format(_stream, _format, _args).
+    foRmat(_stream, _format, _args).
 
 printf(_format, _args) :-
     current_output(_stream),
-    format(_stream, _format, _args),
+    foRmat(_stream, _format, _args),
     flush_output.
 
 
@@ -200,7 +200,7 @@ printf(_format) :-
     printf(_format, []).
 %    file_output(_stream),
 %    current_output(_stream),
-%    format(_stream, _format, []).
+%    foRmat(_stream, _format, []).
 
     
 

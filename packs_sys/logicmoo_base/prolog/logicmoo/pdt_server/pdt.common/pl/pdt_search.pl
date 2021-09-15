@@ -186,7 +186,7 @@ head_position_of_clause(Ref, Position) :-
 	;	% at least one argument
 		HeadPosition = term_position(Start, End, _, _, _)
 	),
-	format(atom(Position), '~w-~w', [Start, End]).
+	foRmat(atom(Position), '~w-~w', [Start, End]).
 
 find_decl_or_def_2(Name,Arity,Declarations) :-
    setof( declaration-DeclModule-Location, Name^Arity^ 
@@ -391,7 +391,7 @@ find_primary_definition_visible_in_(File, Line, OffsetStart, OffsetEnd, Term, tr
 	Alternatives \== [],
 	!,
 	member(a(RefModule, RefName, RefArity, TargetFile, TargetLine), Alternatives),
-	format(atom(TargetLabel), '~w:~w/~w', [RefModule, RefName, RefArity]).
+	foRmat(atom(TargetLabel), '~w:~w/~w', [RefModule, RefName, RefArity]).
 
 % any other term
 find_primary_definition_visible_in_(File, _Line, _OffsetStart, _OffsetEnd, Term, TargetKind, TargetFile, TargetLine, TargetLabel) :-
@@ -409,7 +409,7 @@ find_primary_definition_visible_in_(File, _Line, _OffsetStart, _OffsetEnd, Term,
 	),
 	!,
 	member(TargetFile-[location(TargetLine, _)|_], Locations),
-	format(atom(TargetLabel), '~w:~w', [TargetFile, TargetLine]).
+	foRmat(atom(TargetLabel), '~w:~w', [TargetFile, TargetLine]).
 
 :- if(current_prolog_flag(dialect, swi)).
 find_primary_definition_visible_in_(File, _Line, _OffsetStart, _OffsetEnd, Term, dwim, TargetFile, TargetLine, TargetLabel) :-
@@ -426,7 +426,7 @@ find_primary_definition_visible_in_(File, _Line, _OffsetStart, _OffsetEnd, Term,
 	;	TargetFile = foreign,
 		TargetLine = -1
 	),
-	format(atom(TargetLabel), '~w:~w/~w', [RefModule, RefName, RefArity]).
+	foRmat(atom(TargetLabel), '~w:~w/~w', [RefModule, RefName, RefArity]).
 :- endif.
 
 % If Term is a loading directive, find the related file,
@@ -661,7 +661,7 @@ first_argument_of_clause(Ref, Options, first_argument(Arg)) :-
 	;	functor(FirstArg, F, N),
 		(	N == 0
 		->	Arg = F
-		;	format(atom(Arg), '~w/~w', [F, N])
+		;	foRmat(atom(Arg), '~w/~w', [F, N])
 		)
 	).
 
@@ -813,7 +813,7 @@ predicate_arg_list(Comment, ArgList) :-
 	Begin is BeforeBegin + BeforeBeginLength,
 	Length is End - Begin,
 	sub_atom(Comment, Begin, Length, _, Args),
-	format(atom(ArgsWithDot), '~w.', [Args]),
+	foRmat(atom(ArgsWithDot), '~w.', [Args]),
 	open_chars_stream(ArgsWithDot, Stream),
 	call_cleanup(read_term(Stream, Term, [variable_names(Vars), module(pldoc_modes)]), close(Stream)),
 	args_from_mode_term(Term, ArgList, Vars).
@@ -897,7 +897,7 @@ find_module_reference(Module, ExactMatch, Root, File, Location, LoadingModule, _
 	->	sub_atom(File, 0, _, _, Root)
 	;	true
 	),
-	format(atom(Label), ':- load_files(~w, ~w).', [Module, OptionList]),
+	foRmat(atom(Label), ':- load_files(~w, ~w).', [Module, OptionList]),
 	(	read_term_position_at_location(File, Line, LoadingModule, Location)
 	->	true
 	;	Location = Line
@@ -931,7 +931,7 @@ read_term_position_at_location(File, Line, Module, Location) :-
 		close(In)
 	),
 	TermPos = term_position(Start, End, _, _, _),
-	format(atom(Location), '~w-~w', [Start, End]),
+	foRmat(atom(Location), '~w-~w', [Start, End]),
 	!.
 
 search_module_name(Module, true, Module) :- !.

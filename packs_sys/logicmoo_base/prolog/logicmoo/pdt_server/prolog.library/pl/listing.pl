@@ -61,7 +61,7 @@ listing_if_defined(Pred) :-
  */
 listing_if_defined_in_module(Module,Pred) :-
 %    term_to_atom(Pred,P),
-%    format('~n   Clauses of predicate ~a in module ~a: ',[P, Module]),
+%    foRmat('~n   Clauses of predicate ~a in module ~a: ',[P, Module]),
     catch(listing_in_module(Module,Pred),_AnyException,true). 
 
 /*

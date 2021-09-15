@@ -431,8 +431,8 @@ write_files(RelativePath, Files, Filters, Stream):-
 %    			fileT(FileId,_,_)
 %    		)
 %    	->	write_load_edge(Stream,LoadingFileId,FileId)
-%    		%format(Stream,'<edge source="~w" target="~w"/>~n', [LoadingFileId, FileId])
-%    	;	format('Problem with load-edge: ~w, ~w~n',[LoadingFileId, FileId])
+%    		%foRmat(Stream,'<edge source="~w" target="~w"/>~n', [LoadingFileId, FileId])
+%    	;	foRmat('Problem with load-edge: ~w, ~w~n',[LoadingFileId, FileId])
 %	    )
 %	).
 

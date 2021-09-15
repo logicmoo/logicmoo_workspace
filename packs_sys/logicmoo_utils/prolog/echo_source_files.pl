@@ -65,7 +65,7 @@ check_current_echo(F):- t_l:echoing_file_in_cmt(F),!,get_file_from_stream(S,F), 
 check_current_echo(F):- asserta(t_l:echoing_file_in_cmt(F)),!,check_current_echo(F).
 
 
-into_echo_cmt(Goal):- setup_call_cleanup(format('~N/*~~~n',[]),Goal,format('~N~~*/~n',[])).
+into_echo_cmt(Goal):- setup_call_cleanup(foRmat('~N/*~~~n',[]),Goal,foRmat('~N~~*/~n',[])).
 
 
 :- thread_local(t_l:feedback_started/2).
@@ -77,7 +77,7 @@ c_es(X):- stream_property(X,alias(user_error)),!.
 c_es(X):- stream_property(X,alias(main_error)),!.
 c_es(X):- stream_property(X,file_no(2)),!.
 
-feedback_open(F):- t_l:feedback_started(F,_),!, format('~N/*~~~n'),
+feedback_open(F):- t_l:feedback_started(F,_),!, foRmat('~N/*~~~n'),
   ignore(( \+ current_prolog_flag(capture_feedback,false), fail, feedback_close(F),!,feedback_open(F))).
 feedback_open(F):- current_prolog_flag(capture_feedback,true),
   current_input(I),current_output(O),c_es(E),
@@ -85,9 +85,9 @@ feedback_open(F):- current_prolog_flag(capture_feedback,true),
   asserta(t_l:feedback_started(F,mf_s(MF,S,I,O,E))),!,tell(S),set_prolog_IO(I,S,S),
   % for ansi color
   set_stream(S,tty(true)).
-feedback_open(F):-  format('~N/*~~~n'),assert(t_l:feedback_started(F,current_output)).
+feedback_open(F):-  foRmat('~N/*~~~n'),assert(t_l:feedback_started(F,current_output)).
 
-feedback_close(F):- retract(t_l:feedback_started(F,current_output)),!,format('~N~~*/~n').
+feedback_close(F):- retract(t_l:feedback_started(F,current_output)),!,foRmat('~N~~*/~n').
 feedback_close(F):- retract(t_l:feedback_started(F,mf_s(MF,S,I,O,E))),!,set_prolog_IO(I,O,E),
   close(S),memory_file_to_string(MF,String),free_memory_file(MF),
   atom_length(String,L), (L>0 -> into_echo_cmt(write(String));true).
@@ -99,7 +99,7 @@ mco_info(F,S,_I,Start,End):-
    character_count(S,Pos), get_file_range(F,End,Pos,After), peek_string(S,6,Peek),
    fmsg('~N%~~ ~q ~~%~n',[[string(STerm),term(Term),comments(Cmnts),quasi_quotations(QQ),
     variable_names(Vs),singletons(Sv),after(After),peek(Peek)]]).
-fmsg(Fmt,Args):- flush_output,ttyflush,format(user_output,Fmt,Args),ttyflush.
+fmsg(Fmt,Args):- flush_output,ttyflush,foRmat(user_output,Fmt,Args),ttyflush.
 
 
 :- module_transparent(echo_catchup/4).
@@ -153,7 +153,7 @@ mco_p(F,_S,_I,Start,End):- %garbage_collect_atoms,
 
 mco_p(F,S,I,Start,End):- print_tree(I),!,assume_caughtup_to(F,S,End).
  
-% mco_i(F,S,I,O):- format('~N/*~~'),
+% mco_i(F,S,I,O):- foRmat('~N/*~~'),
 mco_i2(F,S,I,O):- fail.
 mco_i(F,S,I,O):- fail.
 mco_i(F,S,_-->_,O):- fail.

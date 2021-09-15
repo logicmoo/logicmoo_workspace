@@ -71,14 +71,14 @@ listing_L:-
   db_L(DB), listing_L(DB).
 
 listing_L(val(H, _, _)):-
-  format('~N~n', []),
+  foRmat('~N~n', []),
   maplist(show_L, H),
-  %format('~N% Tail~n', []),
+  %foRmat('~N% Tail~n', []),
   %maplist(show_L, T),
   !.
 
-show_L(H:-B):- B==true, !, format('~NL: ~p.~n', [H]).
-show_L(H:-B):- !, format('~NL: ~p.~n', [H:-B]).
+show_L(H:-B):- B==true, !, foRmat('~NL: ~p.~n', [H]).
+show_L(H:-B):- !, foRmat('~NL: ~p.~n', [H:-B]).
 show_L(HP):- HP=..[F,Body|ARGS], H=..[F|ARGS], show_L(H:-Body).
 
 %! asserta_L(+P) is det
@@ -192,7 +192,7 @@ module_L:-
  prolog_load_context(source, S), prolog_load_context(module, M),
  forall(source_file(M:H, S),
  (functor(H, F, A),
- format('~N ~q/~q, ~n', [F, A]))).
+ foRmat('~N ~q/~q, ~n', [F, A]))).
 :- endif.
 
 :- reset_L.

@@ -63,7 +63,7 @@ find_or_create_var(Vs,N,V):-var(N),!,find_or_create_named_var(Vs,N,V).
 find_or_create_var(Vs,L,V):-is_list(L),!,member(VN=N,L),VN=vn,!,find_or_create_named_var(Vs,N,V).
 find_or_create_var(Vs,'$VAR'(A),V):-
    (atom(A)->find_or_create_named_var(Vs,A,V);
-   (atomic(A)-> (format(atom(N),'~w',[A]),find_or_create_named_var(Vs,N,V));
+   (atomic(A)-> (foRmat(atom(N),'~w',[A]),find_or_create_named_var(Vs,N,V));
    find_or_create_named_var(Vs,A,V))).
 find_or_create_var(Vs,N,V):-!,find_or_create_named_var(Vs,N,V).
 

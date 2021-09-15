@@ -46,7 +46,7 @@ derive_predicates_of_file(FileId):-
     	derive_predicate_for_clause(CId,Functor,Arity,Module,FileId,_PId)
     ),!.
 derive_predicates_of_file(File):-
-	format('Warning: An error occured while coputing predicates for file-id: ~w.~n',[File]).
+	foRmat('Warning: An error occured while coputing predicates for file-id: ~w.~n',[File]).
     
     	  
 derive_predicate_for_clause(CId,Functor,Arity,Module,_File,PId):-
@@ -100,7 +100,7 @@ derive_directive_collection_of_file(File):-
     	)
 	),!.
 derive_directive_collection_of_file(File):-
-	format('Warning: An error occured while collecting directives for file-id: ~w.~n',[File]).
+	foRmat('Warning: An error occured while collecting directives for file-id: ~w.~n',[File]).
 	
 
 compute_new_length(PId,Id) :-
@@ -143,7 +143,7 @@ compute_predicate_properties_for_file(File):-
     	)
     ),!.
 compute_predicate_properties_for_file(File):-
-	format('Warning: An error occured while computing predicate properties for file-id: ~w.~n',[File]).
+	foRmat('Warning: An error occured while computing predicate properties for file-id: ~w.~n',[File]).
 
 /*
  * analyse_directive(+Directive,+ParentId,+Module)
@@ -170,7 +170,7 @@ compute_predicate_property(Prop, Preds, DirectiveId, File, Module):-     % dynam
 		)
 	),!.	
 compute_predicate_property(Prop, Preds, _DirectiveId, _File, Module):-
-	format('Warning: Error occured while computing predicate property ~w for ~w of Module ~w~n.',[Prop,Preds,Module]). 
+	foRmat('Warning: Error occured while computing predicate property ~w for ~w of Module ~w~n.',[Prop,Preds,Module]). 
 
  	
 

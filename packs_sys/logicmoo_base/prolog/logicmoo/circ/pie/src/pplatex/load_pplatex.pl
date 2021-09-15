@@ -29,7 +29,7 @@ process :-
 	  Options = []
 	),
 	default_options(Options,
-			[format=latex, style=brief, maxpos=50],
+			[foRmat=latex, style=brief, maxpos=50],
 			Options1),
 	process_files(Files, Options1).
 
@@ -47,7 +47,7 @@ process_files(Files, Options) :-
 	    Options1 = Options
 	  ),
 	  read_from_chars(Codes1, Term),
-	  format('%% Term: ~q~n', [Term]),
+	  foRmat('%% Term: ~q~n', [Term]),
 	  pp_form(Term, Options1),
 	  fail
 	; true
