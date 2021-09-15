@@ -1583,6 +1583,7 @@ install_logicmoo:-
 
 qsave_bin(_):- current_prolog_flag(logicmoo_compiling,mud_server),!.
 qsave_bin(_):- current_prolog_flag(logicmoo_compiling,done),!.
+qsave_bin(_):- current_prolog_flag(os_argv,List), \+ member('-t',List), !.
 qsave_bin(Clif):- current_prolog_flag(logicmoo_compiling,Clif),!.
 
 qsave_bin(Clif):-

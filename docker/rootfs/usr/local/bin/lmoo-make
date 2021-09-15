@@ -7,6 +7,8 @@ cd $RDIR
 
 source ./logicmoo_env.sh $1 $2
 
+return 0 2>/dev/null ; exit 0
+
 BINARY=$LOGICMOO_WS/bin/lmoo-clif
 
 if [ "$1" = "-f" ]; then

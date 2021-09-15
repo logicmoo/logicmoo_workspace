@@ -373,7 +373,7 @@ pp_why(A):-mpred_why_1(A).
 
 clear_proofs:- retractall(t_l:whybuffer(_P,_Js)),color_line_t(cyan,1).
 
-color_line_t(C,L):- keep_going,!,format('~N').
+color_line_t(_,_):- keep_going,!,format('~N').
 color_line_t(C,L):- color_line(C,L).
 
 :- thread_local(t_l:shown_why/1).
@@ -420,7 +420,7 @@ mpred_why_justs_1a(DP,P) :-
     (color_line_t(yellow,1),
      nb_setarg(1,Found,1),
      pfcShowJustifications(P,Js))),
-  (Found==fnd(0)-> format("~N.~n~n",[no_proof_for(DP)]) ; true),
+  (Found==fnd(0)-> format("~N~p.~n~n",[no_proof_for(DP)]) ; true),
   color_line_t(green,2),!,
   Found\==fnd(0).
 

@@ -105,7 +105,7 @@ fmsg(Fmt,Args):- flush_output,ttyflush,format(user_output,Fmt,Args),ttyflush.
 :- module_transparent(echo_catchup/4).
 echo_catchup(I,P,O,PO):- 
  notrace((compound(P),
-   source_location(F,L),t_l:echoing_file(F),
+   source_location(F,_L),t_l:echoing_file(F),
    b_getval('$term', Term),I==Term)),
    prolog_load_context(stream,S),stream_property(S,file_name(F)),
    P=..[_,Start,End|_],!,
