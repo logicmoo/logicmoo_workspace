@@ -19,7 +19,7 @@ mkdir -p $TESTING_TEMP/
 
 JENKINS_BUILD_RESULT=/var/lib/jenkins/jobs/logicmoo_workspace/builds/${BUILD_NUMBER}
 
-source bin/build_xml.text > $JENKINS_BUILD_RESULT/build.xml
+# source bin/build_xml.text > $JENKINS_BUILD_RESULT/build.xml
 
 find $TESTING_TEMP -type f -name "*-junit.xml" -delete
 find $TESTING_TEMP -type f -name "*-rollup.html" -delete
