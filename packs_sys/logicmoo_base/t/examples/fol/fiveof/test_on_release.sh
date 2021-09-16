@@ -1,4 +1,6 @@
 #!/bin/bash -x
 
-lmoo-junit "*_01.* $*"
+export GLOB="$*"
+[ -z "$GLOB" ] && GLOB="*_01.*"
+lmoo-junit "$GLOB"
 

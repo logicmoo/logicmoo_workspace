@@ -17,6 +17,9 @@ export keep_going="-k"
 export TESTING_TEMP
 mkdir -p $TESTING_TEMP/   
 
+JENKINS_BUILD_RESULT=/var/lib/jenkins/jobs/logicmoo_workspace/builds/${BUILD_NUMBER}
+
+source bin/build_xml.text > $JENKINS_BUILD_RESULT/build.xml
 
 find $TESTING_TEMP -type f -name "*-junit.xml" -delete
 find $TESTING_TEMP -type f -name "*-rollup.html" -delete
@@ -24,8 +27,8 @@ rm -f $TESTING_TEMP/???*
 
 TEST_PARAMS="$*"
 if [ -z "$TEST_PARAMS" ]; then 
-#  TEST_PARAMS="*f*_01.p*"
   TEST_PARAMS="*0*.*"
+  #TEST_PARAMS="*f*_01.p*"
 fi
 
 echo -e "Running release (all) tests\nTESTING_TEMP=$TESTING_TEMP\n( cd $PWD ; $BASH_SOURCE $TEST_PARAMS )"

@@ -1,0 +1,47 @@
+
+result=UNSTABLE
+timestamp=`printf '%(%s)T\n' -1`666
+startTime=`printf '%(%s)T\n' -1`666
+duration=0
+
+read -r -d '' build_xml <<-EOF
+<?xml version='1.1' encoding='UTF-8'?>
+<build>
+  <actions>
+    <hudson.model.CauseAction>
+      <causeBag class="linked-hash-map">
+        <entry>
+          <hudson.model.Cause_-UserIdCause/>
+          <int>${BUILD_NUMBER}</int>
+        </entry>
+      </causeBag>
+    </hudson.model.CauseAction>
+    <jenkins.metrics.impl.TimeInQueueAction plugin="metrics@4.0.2.8">
+      <queuingDurationMillis>5</queuingDurationMillis>
+      <blockedDurationMillis>0</blockedDurationMillis>
+      <buildableDurationMillis>1</buildableDurationMillis>
+      <waitingDurationMillis>1</waitingDurationMillis>
+    </jenkins.metrics.impl.TimeInQueueAction>
+    <org.jenkinsci.plugins.ownership.model.runs.RunOwnershipAction plugin="ownership@0.13.0">
+      <describedItem class="build" reference="../../.."/>
+    </org.jenkinsci.plugins.ownership.model.runs.RunOwnershipAction>
+    <org.jvnet.hudson.plugins.DownstreamBuildViewAction plugin="downstream-buildview@1.9"/>
+    <com.sonyericsson.rebuild.RebuildAction plugin="rebuild@1.32"/>
+  </actions>
+  <queueId>10</queueId>
+  <timestamp>${timestamp}</timestamp>
+  <startTime>${startTime}</startTime>
+  <result>${result}</result>
+  <duration>${duration}</duration>
+  <charset>UTF-8</charset>
+  <keepLog>true</keepLog>
+  <builtOn></builtOn>
+  <workspace>/var/lib/jenkins/workspace/logicmoo_workspace</workspace>
+  <hudsonVersion>2.303.1</hudsonVersion>
+  <scm class="hudson.scm.NullChangeLogParser"/>
+  <culprits class="java.util.Collections$UnmodifiableSet">
+    <c class="sorted-set"/>
+  </culprits>
+</build>
+EOF
+echo "$build_xml"
