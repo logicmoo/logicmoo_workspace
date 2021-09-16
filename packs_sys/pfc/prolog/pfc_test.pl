@@ -647,20 +647,20 @@ junit_env_var('JUNIT_CMD').
 
 write_testcase_std_info(Testcase):-
 with_output_to(string(StdErr),
- writeln("\n    <system-err><![CDATA["),
+(writeln("\n    <system-err><![CDATA["),
  write_testcase_env(Testcase),
  ignore((j_u:junit_prop(Testcase,out,Str),format('~w',[Str]))),
   forall(j_u:junit_prop(Testcase,Type,Term), write_testcase_prop(Type,Term)),
- writeln("\n    ]]></system-err>")),
+ writeln("\n]]></system-err>"))),
  shrink_to(StdErr,250,Summary),
  write(Summary).
 
 write_testcase_prop(_Type,[]):-!.
 write_testcase_prop(info,S):- !, format('~N~w~n',[S]).
 write_testcase_prop(out,_).
-write_testcase_prop(url,Term):- !, format('~N\t~w \t= <pre>~w</pre>~n',[url,Term]).
-write_testcase_prop(Type,Term):- string(Term),!,format('~N\t~w \t=~w~n',[Type,Term]).
-write_testcase_prop(Type,Term):- format('~N\t~w \t= ~q.~n',[Type,Term]).
+write_testcase_prop(url,Term):- !, format('~N\t~w\t=~w~n',[url,Term]).
+write_testcase_prop(Type,Term):- string(Term),!,format('~N\t~w\t=~w~n',[Type,Term]).
+write_testcase_prop(Type,Term):- format('~N\t~w\t=~q.~n',[Type,Term]).
 
 :- use_module(library(sgml)).
 escape_attribute(I,O):-xml_quote_attribute(I,O).
