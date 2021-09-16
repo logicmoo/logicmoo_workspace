@@ -681,12 +681,10 @@ write_testcase_info(Testcase):- \+ j_u:junit_prop(Testcase,result,passed),!,
 write_testcase_info(Testcase):- write_testcase_std_info(Testcase),!.
 
 write_message_ele(Ele,NonGood):-  
-  text_to_string(NonGood,SNonGood), 
-  shrink_to(SNonGood,250,NonGoodTrimmed),
-  ignore((SNonGood\== NonGoodTrimmed, 
-   format(user_error,"~N~n<~w message=\"~w\" />\n", [Ele,NonGoodTrimmed]))),
-  escape_attribute(NonGoodTrimmed,ENonGood),  
-  format("      <~w message=\"~w\" />\n", [Ele,ENonGood]).
+  text_to_string(NonGood,SNonGood),  
+  escape_attribute(SNonGood,ENonGood),
+  shrink_to(ENonGood,250,NonGoodTrimmed),
+  format("      <~w message=\"~w\" />\n", [Ele,NonGoodTrimmed]).
 
 shrink_to(I,Max,O):- \+ sub_string(I,0,Max,_,_),!,I=O.
 shrink_to(I,Mx,O):- replace_in_string(['%%'='%','==='='=','\\x1B'=' ','\\[32m'=' ','\\[0m'=' ','  '=' '],I,M),I\==M,!,shrink_to(M,Mx,O).
