@@ -645,15 +645,14 @@ junit_env_var('JUNIT_CLASSNAME').
 %junit_env_var('JUNIT_SUITE').
 junit_env_var('JUNIT_CMD').
 
-write_testcase_std_info(Testcase):-
-with_output_to(string(StdErr),
-(writeln("\n    <system-err><![CDATA["),
- write_testcase_env(Testcase),
- ignore((j_u:junit_prop(Testcase,out,Str),format('~w',[Str]))),
-  forall(j_u:junit_prop(Testcase,Type,Term), write_testcase_prop(Type,Term)),
- writeln("\n]]></system-err>"))),
- shrink_to(StdErr,250,Summary),
- write(Summary).
+write_testcase_std_info(Testcase):- 
+ with_output_to(string(StdErr),
+ (write_testcase_env(Testcase),
+  ignore((j_u:junit_prop(Testcase,out,Str),format('~w',[Str]))),
+  forall(j_u:junit_prop(Testcase,Type,Term), write_testcase_prop(Type,Term)))),
+ shrink_to(StdErr,200,StdErr),
+ format("~N    <system-err><![CDATA[~w]]></system-err>",[Summary]),!.
+ 
 
 write_testcase_prop(_Type,[]):-!.
 write_testcase_prop(info,S):- !, format('~N~w~n',[S]).
