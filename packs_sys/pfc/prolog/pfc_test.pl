@@ -688,7 +688,7 @@ write_message_ele(Ele,NonGood):-
   escape_attribute(NonGoodTrimmed,ENonGood),  
   format("      <~w message=\"~w\" />\n", [Ele,ENonGood]).
 
-shrink_to(I,Max,O):- \+ shrink_to(I,0,Max,_,_),!,I=O.
+shrink_to(I,Max,O):- \+ sub_string(I,0,Max,_,_),!,I=O.
 shrink_to(I,Mx,O):- replace_in_string(['%%'='%','==='='=','\\x1B'=' ','\\[32m'=' ','\\[0m'=' ','  '=' '],I,M),I\==M,!,shrink_to(M,Mx,O).
 shrink_to(SNonGood,Max,NonGoodTrimmed):- sub_string(SNonGood,_,Max,0,NonGoodTrimmed),!.
 
