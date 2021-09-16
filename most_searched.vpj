@@ -1222,6 +1222,25 @@
 					</Folder>
 					<F N="packs_sys/logicmoo_agi/prolog/logicmoo_agi.pl"/>
 				</Folder>
+				<Folder Name="t">
+					<Folder Name="agi_tests">
+						<Folder Name="comprehension">
+							<F N="packs_sys/logicmoo_agi/t/agi_tests/comprehension/Convo_EmphasisLost_Grandma.plt"/>
+							<F N="packs_sys/logicmoo_agi/t/agi_tests/comprehension/Convo_Typo_Jim_Hooking.plt"/>
+							<F N="packs_sys/logicmoo_agi/t/agi_tests/comprehension/Hyperbole_NonStandard_takes_ a_million_years.plt"/>
+							<F N="packs_sys/logicmoo_agi/t/agi_tests/comprehension/Hyperbole_weighs_a_ton.plt"/>
+							<F N="packs_sys/logicmoo_agi/t/agi_tests/comprehension/Metaphor_Extended_Bray.plt"/>
+							<F N="packs_sys/logicmoo_agi/t/agi_tests/comprehension/Metaphor_Implied_Bray.plt"/>
+							<F N="packs_sys/logicmoo_agi/t/agi_tests/comprehension/Metaphor_SharpAsATack (2).plt"/>
+							<F N="packs_sys/logicmoo_agi/t/agi_tests/comprehension/Metaphor_SharpAsATack.plt"/>
+							<F N="packs_sys/logicmoo_agi/t/agi_tests/comprehension/Metaphor_StandardCommon_NightOwl.plt"/>
+							<F N="packs_sys/logicmoo_agi/t/agi_tests/comprehension/Metaphor_StandardOnly_Peacock.plt"/>
+							<F N="packs_sys/logicmoo_agi/t/agi_tests/comprehension/Synecdoche_NFL_teams.plt"/>
+							<F N="packs_sys/logicmoo_agi/t/agi_tests/comprehension/TEST TEMPLATE"/>
+							<F N="packs_sys/logicmoo_agi/t/agi_tests/comprehension/To Do Scratchpad"/>
+						</Folder>
+					</Folder>
+				</Folder>
 				<F N="packs_sys/logicmoo_agi/pack.pl"/>
 			</Folder>
 			<Folder Name="logicmoo_base">

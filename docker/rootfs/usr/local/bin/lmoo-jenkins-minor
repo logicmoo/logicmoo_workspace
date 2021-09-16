@@ -2,7 +2,7 @@
 #--help # Runs Secondary JUnit Tests that must be ran from Docker
 
 if [ ! -f /.dockerenv ]; then
-  lmoo $0 $*
+  docker exec -it logicmoo $(basename "${BASH_SOURCE[0]}") $*
   return 0 2>/dev/null
   exit 0
 fi
@@ -27,7 +27,7 @@ WAS_PWD=$PWD
 [ -z "$TESTING_TEMP" ] && [ -d "$(pwd)/test_results" ] && export TESTING_TEMP=$(pwd)/test_results/$(whoami)
 [ -z "$TESTING_TEMP" ] && [ -d "${LOGICMOO_WS}/test_results" ] && export TESTING_TEMP=${LOGICMOO_WS}/test_results/$(whoami)
 [ -z "$TESTING_TEMP" ] && export TESTING_TEMP=$(mktemp -d -t logicmoo_testing-$(date +%Y-%m-%d-%H-%M-%S)-XXXXXXXXXX)
-export TESTING_TEMP
+
 mkdir -p $TESTING_TEMP/
 
 TEST_PARAMS="$*"
