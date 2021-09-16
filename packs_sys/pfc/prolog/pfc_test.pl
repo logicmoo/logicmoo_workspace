@@ -519,18 +519,27 @@ show_junit_suite(File):-
    writeln("  </testsuite>"),
    clear_suite_attribs.
 
-find_issue_with_name(_Name,_IssueNumber):- fail.
+find_issue_with_name(Name,IssueNumber):- 
+  issue_labels(Name,Labels),
+  fail, % until those are ready
+  find_issues_by_labels(Labels,[Issue|_]),
+  issue_number(Issue,IssueNumber).
+
 update_issue(IssueNumber,FileName):- throw(todo(update_issue(IssueNumber,FileName))).
 
 create_issue_with_name(Name,FileName,IssueNumber):- nop(really_create_issue_with_name(Name,FileName,IssueNumber)),!.
 
-/*create_issue_with_name(Name,FileName,IssueNumber):-
-  getenv('JUNIT_CLASSNAME',Classname),
-  make_issue_labels(Package,Name,Labels),
+create_issue_with_name(Name,FileName,IssueNumber):-
+  issue_labels(Name,Labels),
+  dmsg(todo(create_issue_with_name(Name,FileName,Labels))).
+  
 
   
-make_issue_labels(Package,Name,Labels):- 
-  */
+issue_labels(Name,[Package,ShortClass,TestNum]):- 
+  getenv('JUNIT_CLASSNAME',Classname),
+  classname_to_package(Classname,Package,ShortClass),
+  sub_string(Name,1,9,_,TestNum).
+  
 
 save_single_testcase(Name):-
   locally(t_l:dont_shrink,
