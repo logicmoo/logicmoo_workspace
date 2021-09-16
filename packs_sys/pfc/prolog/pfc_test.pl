@@ -523,15 +523,15 @@ find_issue_with_name(_Name,_IssueNumber):- fail.
 update_issue(IssueNumber,FileName):- throw(todo(update_issue(IssueNumber,FileName))).
 
 create_issue_with_name(Name,FileName,IssueNumber):- nop(really_create_issue_with_name(Name,FileName,IssueNumber)),!.
-/*
-create_issue_with_name(Name,FileName,IssueNumber):-
-  getenv('JUNIT_PACKAGE',Package),
-  make_issue_labels(Name,Labels),
-*/
+
+/*create_issue_with_name(Name,FileName,IssueNumber):-
+  getenv('JUNIT_CLASSNAME',Classname),
+  make_issue_labels(Package,Name,Labels),
 
   
-  
-  
+make_issue_labels(Package,Name,Labels):- 
+  */
+
 save_single_testcase(Name):-
   locally(t_l:dont_shrink,
     save_single_testcase_shrink(Name,FileName)),
@@ -666,7 +666,7 @@ write_testcase_std_info(Testcase):-
  (write_testcase_env(Testcase),
   ignore((j_u:junit_prop(Testcase,out,Str),format('~w',[Str]))),
   forall(j_u:junit_prop(Testcase,Type,Term), write_testcase_prop(Type,Term)))),
- shrink_to(StdErr,200,StdErr),
+ shrink_to(StdErr,200,Summary),
  format("~N    <system-err><![CDATA[~w]]></system-err>",[Summary]),!.
  
 
