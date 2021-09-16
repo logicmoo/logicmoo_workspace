@@ -21,8 +21,6 @@ JENKINS_BUILD_RESULT=/var/lib/jenkins/jobs/logicmoo_workspace/builds/${BUILD_NUM
 
 # source bin/build_xml.text > $JENKINS_BUILD_RESULT/build.xml
 
-find $TESTING_TEMP -type f -name "*-junit.xml" -delete
-find $TESTING_TEMP -type f -name "*-rollup.html" -delete
 rm -f $TESTING_TEMP/???*
 
 TEST_PARAMS="$*"
@@ -39,8 +37,6 @@ find $WAS_PWD -mindepth 2 -name "test_on_*.sh" -execdir {} "$TEST_PARAMS" \;
 
 lmoo jenkins-minor "$TEST_PARAMS"
 
-#echo "<testsuites>" > $TESTING_TEMP/junit.xml
-#find $TESTING_TEMP -name "Report-*.xml" -exec sed -e "s/<testsuites>//g" -e "s|</testsuites>||g" {} >> $TESTING_TEMP/junit.xml  \;
-#echo "</testsuites>" >> $TESTING_TEMP/junit.xml
+find $TESTING_TEMP/ -print | zip $TESTING_TEMP/jenkin_results_${BUILD_NUMBER}.zip -@
 
 )

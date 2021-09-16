@@ -73,7 +73,7 @@ fi
 
 #npm install -g junit-viewer
 echo "junit-viewer --results=${junitCombined} --save=${TEST_STEM_PATH}-junit-viewer-rollup.html &> ${TEST_STEM_PATH}-junit-viewer.debug.html"
-(junit-viewer --results=${junitCombined} --save=${TEST_STEM_PATH}-junit-viewer-rollup.html &> ${TEST_STEM_PATH}-junit-viewer.debug.html )  ; /bin/true
+(junit-viewer --results=${junitCombined} --save=${TEST_STEM_PATH}-junit-viewer-rollup.html )  ; /bin/true
 #npm install -g xunit-viewer
 #(xunit-viewer --results ${junitCombined} -o ${TEST_STEM_PATH}-xunit-viewer-rollup.html )  ; /bin/true
 #pip3 install junit2html
@@ -81,4 +81,5 @@ echo "junit2html ${junitCombined} ${TEST_STEM_PATH}-junitCombined-rollup.html"
 (junit2html ${junitCombined} ${TEST_STEM_PATH}-junitCombined-rollup.html) ; /bin/true
 echo "TEST_STEM_PATH=${TEST_STEM_PATH}"
 #find ${TESTING_TEMP}*
+rm -f ${junitCombined}
 echo "-->"

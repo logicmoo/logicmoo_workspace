@@ -118,10 +118,10 @@ JUNIT_TESTS_GTOTAL_SKIPPED=0
 JUNIT_TESTS_GTOTAL_PASSED=0
 JUNIT_TESTS_GTOTAL_ERRORS=0
 echo "<!-- ROLLUP_TMP=${ROLLUP_TMP} -->"
-echo "" > ${ROLLUP_TMP}.tmp
+echo "" > ${ROLLUP_TMP}
 
 function JECHO {
- (echo -e "${*}\n") >> ${ROLLUP_TMP}.tmp
+ (echo -e "${*}\n") >> ${ROLLUP_TMP}
 }
 function INFO {
  willBe=$(echo "${*}" | sed -e 's/-/=/g' ) 
@@ -283,8 +283,8 @@ for ele2 in "${listOfNames[@]}"
 
 ( 
 echo "<testsuites><testsuite name=\"Rollup ${JUNIT_PACKAGE} in $(pwd)\" package=\"${JUNIT_PACKAGE}\" tests=\"${JUNIT_TESTS_GTOTAL_TESTS}\" failures=\"${JUNIT_TESTS_GTOTAL_FAILURES}\" errors=\"${JUNIT_TESTS_GTOTAL_ERRORS}\"  skipped=\"${JUNIT_TESTS_GTOTAL_SKIPPED}\">"
-sed -r "s/\x1B\[(([0-9]{1,2})?(;)?([0-9]{1,2})?)?[m,K,H,f,J]//g" ${ROLLUP_TMP}.tmp
+sed -r "s/\x1B\[(([0-9]{1,2})?(;)?([0-9]{1,2})?)?[m,K,H,f,J]//g" ${ROLLUP_TMP}
 echo -e "\n</testsuite></testsuites>\n\n\n\n" 
 ) | iconv -c -t utf-8 | perl -p -e 's/[\x00-\x08\x0b-\x0c\x0e-\x1f\x7f]//g' >  "${TESTING_TEMP}/Globbed-${ROLLUP_STEM}-Globbed-junit.xml"
-
+rm -f ${ROLLUP_TMP}
 
