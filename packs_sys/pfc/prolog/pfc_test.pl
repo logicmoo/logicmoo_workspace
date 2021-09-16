@@ -519,7 +519,29 @@ show_junit_suite(File):-
    writeln("  </testsuite>"),
    clear_suite_attribs.
 
-save_single_testcase(Name):- 
+find_issue_with_name(_Name,_IssueNumber):- fail.
+update_issue(IssueNumber,FileName):- throw(todo(update_issue(IssueNumber,FileName))).
+
+create_issue_with_name(Name,FileName,IssueNumber):- nop(really_create_issue_with_name(Name,FileName,IssueNumber)),!.
+/*
+create_issue_with_name(Name,FileName,IssueNumber):-
+  getenv('JUNIT_PACKAGE',Package),
+  make_issue_labels(Name,Labels),
+*/
+
+  
+  
+  
+save_single_testcase(Name):-
+  locally(t_l:dont_shrink,
+    save_single_testcase_shrink(Name,FileName)),
+  (find_issue_with_name(Name,IssueNumber)-> update_issue(IssueNumber,FileName);
+    create_issue_with_name(Name,FileName,IssueNumber)),
+  nop(save_single_testcase_shrink(Name,_)),
+  clear_suite_attribs.
+
+
+save_single_testcase_shrink(Name,FileName):- 
  with_output_to(string(Text),
   (writeln('<?xml version="1.0" encoding="utf-8"?>'),
    j_u:junit_prop(testsuite,file,File),
@@ -534,7 +556,7 @@ save_single_testcase(Name):-
  %shorten_and_clean_name(Name,SName),
  %atomic_list_concat([SFile,'-',SName],RSName),
  atomic_list_concat([SuiteName,'-',Name],RSName),
- save_to_junit_file(RSName,Text).
+ save_to_junit_file(RSName,Text,FileName).
 
 classname_to_package(CN,P,C):- atomic_list_concat(List,'.',CN), append(Left,[C],List),atomic_list_concat(Left,'.',P).
 
@@ -570,31 +592,25 @@ clean_away_ansi(DirtyText,DirtyText).
 
 :- dynamic(j_u:last_saved_junit/1).
 
-save_to_junit_file_text(Full,Text):- j_u:last_saved_junit(Full),!,
+save_to_junit_file_text(Full,Text,FullF):- j_u:last_saved_junit(Full),!,
     flag(Full,X,X+1),
     atomic_list_concat([Full,'_',X,'-junit.xml'],FullF),
     format('~N% saving_junit: ~w~n',[FullF]),
   setup_call_cleanup(open(FullF, write, Out),writeln(Out,Text), close(Out)),!.
-save_to_junit_file_text(Full,Text):- 
+save_to_junit_file_text(Full,Text,FullF):- 
     asserta(j_u:last_saved_junit(Full)),
     atomic_list_concat([Full,'-junit.xml'],FullF),
     format('~N% saving_junit: ~w~n',[FullF]),    
   setup_call_cleanup(open(FullF, write, Out),writeln(Out,Text), close(Out)),!.
 
-save_to_junit_file(Name,DirtyText):-
+save_to_junit_file(Name,DirtyText,FileName):-
  clean_away_ansi(DirtyText,Text),
   getenv('TEST_STEM_PATH',Dir),!,
   must_det_l(( 
   atomic_list_concat([Dir,'-',Name],Full),
   write_testcase_env(Name),
-  save_to_junit_file_text(Full,Text),
-  clear_suite_attribs)).
+  save_to_junit_file_text(Full,Text,FileName))).
 
-save_to_junit_file(Name,DirtyText):- 
-  clean_away_ansi(DirtyText,Text),
-   format('<Test name="~w">',[Name]),
-   writeln(Text),!,
-   format('<!-- ~w--></Test>',[Name]).
 
 save_junit_results_single:-
   % $TESTING_TEMP
@@ -688,6 +704,9 @@ write_message_ele(Ele,NonGood):-
   shrink_to(ENonGood,250,NonGoodTrimmed),
   format("  <~w message=\"~w\" />\n", [Ele,NonGoodTrimmed]).
 
+:- thread_local(t_l:dont_shrink/0).
+shrink_to(I,_,O):- replace_in_string([' \n'='\n','\t\n'='\n','\n\n\n'='\n\n'],I,O), !. % For now!
+shrink_to(I,_,I):- t_l:dont_shrink,!.
 shrink_to(I,Max,O):- \+ sub_string(I,0,Max,_,_),!,I=O.
 shrink_to(I,Mx,O):- replace_in_string([
    '%%%'='%%','%~'='%','~*/'='*/','/*~'='/*',
