@@ -646,11 +646,14 @@ junit_env_var('JUNIT_CLASSNAME').
 junit_env_var('JUNIT_CMD').
 
 write_testcase_std_info(Testcase):-
+with_output_to(string(StdErr),
  writeln("\n    <system-err><![CDATA["),
  write_testcase_env(Testcase),
  ignore((j_u:junit_prop(Testcase,out,Str),format('~w',[Str]))),
   forall(j_u:junit_prop(Testcase,Type,Term), write_testcase_prop(Type,Term)),
- writeln("\n    ]]></system-err>").
+ writeln("\n    ]]></system-err>")),
+ shrink_to(StdErr,250,Summary),
+ write(Summary).
 
 write_testcase_prop(_Type,[]):-!.
 write_testcase_prop(info,S):- !, format('~N~w~n',[S]).
@@ -684,10 +687,18 @@ write_message_ele(Ele,NonGood):-
   text_to_string(NonGood,SNonGood),  
   escape_attribute(SNonGood,ENonGood),
   shrink_to(ENonGood,250,NonGoodTrimmed),
-  format("      <~w message=\"~w\" />\n", [Ele,NonGoodTrimmed]).
+  format("  <~w message=\"~w\" />\n", [Ele,NonGoodTrimmed]).
 
 shrink_to(I,Max,O):- \+ sub_string(I,0,Max,_,_),!,I=O.
-shrink_to(I,Mx,O):- replace_in_string(['%%'='%','==='='=','\\x1B'=' ','\\[32m'=' ','\\[0m'=' ','  '=' '],I,M),I\==M,!,shrink_to(M,Mx,O).
+shrink_to(I,Mx,O):- replace_in_string([
+   '%%%'='%%','%~'='%','~*/'='*/','/*~'='/*',
+   ' \n'='\n','\t\n'='\n',
+   '\n\n\n'='\n\n',
+   '     '='\t',
+   '==='='=',
+   '\\x1B'=' ','\\[32m'=' ','\\[0m'=' ',
+   '   '='  '],
+                  I,M),I\==M,!,shrink_to(M,Mx,O).
 shrink_to(SNonGood,Max,NonGoodTrimmed):- sub_string(SNonGood,_,Max,0,NonGoodTrimmed),!.
 
 
