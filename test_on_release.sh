@@ -21,7 +21,7 @@ JENKINS_BUILD_RESULT=/var/lib/jenkins/jobs/logicmoo_workspace/builds/${BUILD_NUM
 
 # source bin/build_xml.text > $JENKINS_BUILD_RESULT/build.xml
 
-rm -f $TESTING_TEMP/???*
+rm -f $TESTING_TEMP/???*.*???
 
 TEST_PARAMS="$*"
 if [ -z "$TEST_PARAMS" ]; then 
@@ -37,6 +37,6 @@ find $WAS_PWD -mindepth 2 -name "test_on_*.sh" -execdir {} "$TEST_PARAMS" \;
 
 lmoo jenkins-minor "$TEST_PARAMS"
 
-find $TESTING_TEMP/ -print | zip $TESTING_TEMP/jenkin_results_${BUILD_NUMBER}.zip -@
+cd $TESTING_TEMP/ && find . -print | zip jenkin_results_${BUILD_NUMBER}.zip -@
 
 )
