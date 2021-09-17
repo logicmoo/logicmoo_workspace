@@ -10,6 +10,8 @@ FILTER=""
 
 export keep_going="-k"
 
+git pull origin master
+
 #unset TESTING_TEMP
 
 [ -z "$TESTING_TEMP" ] && [ -d "$(pwd)/test_results" ] && export TESTING_TEMP=$(pwd)/test_results/$(whoami)
@@ -54,7 +56,7 @@ echo DIRS_SORTED=$DIRS_SORTED
 
 for dirname in "${DIRS_SORTED[@]}"; do
     echo -e "$dirname\n"
-    find $dirname maxdepth 0 $FILTER -name "test_on_*.sh" -execdir {} "$TEST_PARAMS" \;
+    find $dirname -maxdepth 0 $FILTER -name "test_on_*.sh" -execdir {} "$TEST_PARAMS" \;
 done
 
 # Generate JUnit Results
