@@ -49,14 +49,15 @@ echo -e "Running release (all) tests\nTESTING_TEMP=$TESTING_TEMP\n( cd $PWD ; $B
 lmoo-make 2>&1 | grep -1 -i 'WARN\|ERROR'
 
 TEST_DIRS=`find -mindepth 2 $FILTER -type f -name "test_on_*.sh" -exec dirname {} \;`
-DIRS_SORTED=`find $TEST_DIRS -type d -printf "%T+ %p\n" | sort -r -u | cut -d " " -f 2`
+echo DIRS_SORTED=$DIRS_SORTED
+DIRS_SORTED=`find $TEST_DIRS -maxdepth 0 -type d -printf "%T+ %p\n" | sort -r -u | cut -d " " -f 2`
 echo DIRS_SORTED=$DIRS_SORTED
 
 
 
 for dirname in "${DIRS_SORTED[@]}"; do
     echo -e "$dirname\n"
-    find $dirname -maxdepth 0 $FILTER -name "test_on_*.sh" -execdir {} "$TEST_PARAMS" \;
+    find $dirname -maxdepth 1 $FILTER -name "test_on_*.sh" -execdir {} "$TEST_PARAMS" \;
 done
 
 # Generate JUnit Results
