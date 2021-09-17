@@ -17,8 +17,9 @@ if [[ $EUID -ne 0 ]]; then
    exit 1
 fi
 
-
-apt install -y git screen docker docker.io
+[ ! -x docker ] && apt install -y docker.io
+[ ! -x screen ] && apt install -y screen
+[ ! -x git ] && apt install -y git
 
 DIR0="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 #DIR0=/opt/logicmoo_workspace
