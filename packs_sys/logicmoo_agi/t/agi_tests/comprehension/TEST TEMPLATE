@@ -1,0 +1,40 @@
+test_e2c([
+  nlu_assert('The baby cries.'),
+  nlu_assert(
+    ['She looks at it.',
+     'She talks to it.']),
+
+  nlu_ask_answer(
+   "'How many agents are here?',
+   'At least one.', [infer_unique_objects]),
+
+  nlu_ask_answer(
+    'Did it cry?',
+    'It did if the baby was it.',
+    [it]).
+
+  nlu_ask_answer(
+    'What is "it"?',
+    'Unknown.',
+    [false_positives]),
+
+  nlu_assert('The baby is "it".'),
+
+  nlu_ask_answer(
+   'How many agents are here?',
+   'At least two.',[infer_unique_objects]),
+
+  nlu_ask_answer(
+    'Did it cry?',
+    'yes.',
+    [it]).
+
+  nlu_ask_answer(
+    'What is "it"?',
+    'The baby.',
+    [learned,it]),
+
+  ])
+),
+['implied metaphor "brayed". If failed, expect fail of extended metaphor. CasAm']).
+

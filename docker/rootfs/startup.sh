@@ -118,7 +118,7 @@ fi
 
 ln -sf `which swipl` /usr/bin/swipl
 
-chmod a+w -R /tmp/
+#chmod a+w -R /tmp/
 
 rsync -ra $LOGICMOO_WS/docker/rootfs/. /.
 

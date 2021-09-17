@@ -33,12 +33,12 @@
 */
 
 :- module(prolog_debug_tools,
-          [ (spy)/1,                  % :Spec
-            (nospy)/1,                % :Spec
-            (nospyall)/0,
-            (debugging)/0,
-            (trap)/1,                 % +Exception
-            (notrap)/1                % +Exception
+          [ spy/1,                  % :Spec
+            nospy/1,                % :Spec
+            nospyall/0,
+            debugging/0,
+            trap/1,                 % +Exception
+            notrap/1                % +Exception
           ]).
 :- use_module(library(broadcast), [broadcast/1]).
 :- autoload(library(edinburgh), [debug/0]).

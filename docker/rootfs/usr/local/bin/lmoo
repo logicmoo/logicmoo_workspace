@@ -1,8 +1,8 @@
 #!/bin/bash
 # if [ "${cmd}" == "emacs" ]; then sudo -u prologmud_server -- google-chrome "http://localhost:4125"
 
-if [ ! -f /.dockerenv ]; then
-   docker exec -it logicmoo "${BASH_SOURCE[0]}" $*
+if [ ! -z "$*" ] && [ ! -f /.dockerenv ]; then
+   docker exec -it logicmoo bash -c "cd $PWD; ${BASH_SOURCE[0]} $*" 
    return 0 2>/dev/null ; exit 0
 fi
 
@@ -99,12 +99,12 @@ elif [ -f "$ROOT_DIRECTORY/${cmd}.sh" ]; then
 elif [ -f "$ROOT_DIRECTORY/${cmd}" ]; then
   bash -c "$ROOT_DIRECTORY/${cmd} $*" 
 else
-
     export WHICH=`cd $ROOT_DIRECTORY ; which ${cmd}.sh`
     if ! [[ -z "${WHICH}" ]]; then 
       bash -c "cd $ROOT_DIRECTORY && $WHICH $*" 
     else
-      bash -c "cd ~ && $cmd $*"
+      #bash -c "cd ~ && $cmd $*" <- why?
+      bash -c "$cmd $*"
     fi
 
 fi

@@ -57,6 +57,7 @@ apt-get install -y \
         libxpm-dev libxt-dev \
         libdb-dev \
         libpcre3-dev \
+        default-jdk \
         libyaml-dev \
 	texlive
 
@@ -78,7 +79,7 @@ cd $LOGICMOO_WS
 INSTALL_BASE="$LOGICMOO_WS/lib/swipl"
 
 if [[ -z "${SWI_TAG}" ]]; then
-  SWI_TAG=origin/master
+  SWI_TAG=master
 #  SWI_TAG=tags/V8.3.22
 fi
 
@@ -102,7 +103,7 @@ cd swipl-devel/
 #git reset --hard HEAD
 #git clean -f -x 
 #git checkout . -f
-git pull $SWI_TAG --recurse-submodules
+git pull origin $SWI_TAG --recurse-submodules
 git status -s 
 )
 

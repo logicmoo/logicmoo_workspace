@@ -132,10 +132,19 @@ function INFO {
 me="${BASH_SOURCE[${#BASH_SOURCE[@]} - 1]}"
 INFO "Running Matching Tests: $me ${keep_going} ${listOfNames[*]}"
 
+
+FILES=""
 (
-for ele2 in "${listOfNames[@]}"
+for ele1 in "${listOfNames[@]}"
+ do
+  FILES="$FILES $ele1"
+done
+
+SORTED_FILES=`find $FILES -name "*" -printf "%T+ %p\n" | sort -r -u | cut -d " " -f 2`
+
+for ele2 in "${SORTED_FILES[@]}"
   do
-  	for ele in $ele2
+     for ele in $ele2
 	do
 	  retry=1
 	  while [ $retry == 1 ]
@@ -146,6 +155,8 @@ for ele2 in "${listOfNames[@]}"
         export JUNIT_SHORTCLASS=`echo "${FILENAME^^}" | cut -d'.' -f1 `
         export JUNIT_CLASSNAME=${JUNIT_PACKAGE}.${JUNIT_SHORTCLASS}
 	export JUNIT_SUITE=${JUNIT_CLASSNAME}
+
+
         export FileTestCase="${JUNIT_CLASSNAME}@Test_9999_Line_9999__Exitcode_7"
         INFO "FileTestCase=${FileTestCase}"
         [[ "$ele" == *".ansi" ]] && continue
@@ -154,6 +165,7 @@ for ele2 in "${listOfNames[@]}"
         [[ "$ele" == *".html" ]] && continue
         [[ "$ele" == *".xml" ]] && continue
         [[ "$ele" == *".sh" ]] && continue
+         
         if [[ "$ele" == *".sh" && -x "./$ele" ]]; then
          CMD="./${ele}"
         else
@@ -205,6 +217,7 @@ for ele2 in "${listOfNames[@]}"
         JECHO "<testcase name=\"${FileTestCase}\" classname='${JUNIT_CLASSNAME}' time='$totalTime'>"
         JECHO " <failure message='FAILED: $0 ${keep_going} ${ele} (returned ${exitcode})'/>"
            JECHO "<system-err><![CDATA[$(cat ${TEE_FILE2})]]></system-err>\n"
+	   touch "$ele"
         JECHO "</testcase>"
            JUNIT_TESTS_GTOTAL_FAILURES=$((JUNIT_TESTS_GTOTAL_FAILURES+1))
 

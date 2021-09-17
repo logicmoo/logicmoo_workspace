@@ -531,7 +531,9 @@ create_issue_with_name(Name,FileName,IssueNumber):- nop(really_create_issue_with
 
 create_issue_with_name(Name,FileName,IssueNumber):-
   issue_labels(Name,Labels),
-  dmsg(todo(create_issue_with_name(Name,FileName,Labels))).
+  dmsg(todo(create_issue_with_name(Name,FileName,Labels))),
+  IssueNumber=find(labels=Labels),!.
+
   
 
   
@@ -545,7 +547,7 @@ save_single_testcase(Name):-
   locally(t_l:dont_shrink,
     save_single_testcase_shrink(Name,FileName)),
   (find_issue_with_name(Name,IssueNumber)-> update_issue(IssueNumber,FileName);
-    create_issue_with_name(Name,FileName,IssueNumber)),
+    create_issue_with_name(Name,FileName,_IssueNumber)),
   nop(save_single_testcase_shrink(Name,_)),
   clear_suite_attribs.
 
