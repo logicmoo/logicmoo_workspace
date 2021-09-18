@@ -208,7 +208,7 @@ for ele2 in "${SORTED_FILES[@]}"
         INFO "${date} (cd $PWD ; $CMD)"
         export TEE_FILE=${TESTING_TEMP}/CMD_LAST.ansi
         export TEE_FILE2=${TEE_FILE}.too
-	export GH_MASTER_ISSUE_FINFO=$(echo "${GH_MASTER_ISSUE_INFO}" | grep "${JUNIT_SHORTCLASS}" | grep ${Test_9999} | head -1)
+	export GH_MASTER_ISSUE_FINFO=$(echo "${GH_MASTER_ISSUE_INFO}" | grep "${JUNIT_SHORTCLASS} " | grep ${Test_9999} | head -1)
 	export GH_MASTER_ISSUE_ID=$(echo "${GH_MASTER_ISSUE_FINFO}" | cut -f1)
 	export GH_MASTER_ISSUE_OC=$(echo "${GH_MASTER_ISSUE_FINFO}" | cut -f2)
         INFO "GH_MASTER_ISSUE_FINFO=${GH_MASTER_ISSUE_FINFO}"
