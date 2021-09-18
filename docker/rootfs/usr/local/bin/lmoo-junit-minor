@@ -139,7 +139,6 @@ function INFO {
 me="${BASH_SOURCE[${#BASH_SOURCE[@]} - 1]}"
 INFO "Running Matching Tests: $me ${keep_going} ${listOfNames[*]}"
 
-
 FILES=""
 (
 for ele1 in "${listOfNames[@]}"
@@ -148,6 +147,7 @@ for ele1 in "${listOfNames[@]}"
 done
 
 SORTED_FILES=`find $FILES -name "*" -printf "%T+ %p\n" | sort -r -u | cut -d " " -f 2`
+echo "SORTED_FILES=$SORTED_FILES"
 
 for ele2 in "${SORTED_FILES[@]}"
   do
@@ -159,7 +159,7 @@ for ele2 in "${SORTED_FILES[@]}"
 	    retry=0
 
         export RELPATH=$(echo "$PWD/${ele}" | sed -e "s|$LOGICMOO_WS/||g")
-        export FILENAME=${ele}
+        export FILENAME="${ele}"
         export JUNIT_SHORTCLASS=`echo "${FILENAME^^}" | cut -d'.' -f1 `
         export JUNIT_CLASSNAME="${JUNIT_PACKAGE}.${JUNIT_SHORTCLASS}"
 	export JUNIT_SUITE="${JUNIT_CLASSNAME}"
