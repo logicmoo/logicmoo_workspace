@@ -25,8 +25,6 @@ JUNIT_PACKAGE="logicmoo.${JUNIT_PACKAGE}"
 echo "<!-- JUNIT_PACKAGE=${JUNIT_PACKAGE} -->"
 
 
-gh api repos/logicmoo/logicmoo_workspace/labels -f name="${JUNIT_PACKAGE}" -f color="888000" 
-
 export JUNIT_PACKAGE_STEM=$(echo "${JUNIT_PACKAGE}" | sed -e "s/\./-/g" -e "s/--/-/g" | rev | cut -c 1-110 | rev)
 
 export GLOB="$*"

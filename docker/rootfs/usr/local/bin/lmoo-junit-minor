@@ -45,6 +45,7 @@ JUNIT_PACKAGE=$(echo $JUNIT_PACKAGE | sed -e "s/logicmoo_//g" -e "s|\.t\.|\.test
 JUNIT_PACKAGE="logicmoo.${JUNIT_PACKAGE}"
 echo "<!-- JUNIT_PACKAGE=${JUNIT_PACKAGE} -->"
 
+gh api repos/logicmoo/logicmoo_workspace/labels -f name="${JUNIT_PACKAGE}" -f color="888000" 
 
 export JUNIT_PACKAGE_STEM=$(echo "${JUNIT_PACKAGE}" | sed -e "s/\./-/g" -e "s/--/-/g" | rev | cut -c 1-110 | rev)
 
@@ -202,7 +203,7 @@ for ele2 in "${SORTED_FILES[@]}"
         export TEE_FILE2=${TEE_FILE}.too
 	export LAST_BUILD_REF="https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/${JUNIT_PACKAGE}/${JUNIT_SHORTCLASS}"
 	export BUILD_REF="https://jenkins.logicmoo.org/job/logicmoo_workspace/${BUILD_NUMBER}/testReport/${JUNIT_PACKAGE}/${JUNIT_SHORTCLASS}"
-	export FTC_LINK=`echo "${FileTestCase}"| sed -e "s/@/_/g" -e "s/\./_/g")`
+	export FTC_LINK=$(echo "${FileTestCase}" | sed -e "s/@/_/g" -e "s/\./_/g" )
         ####JECHO "<system-out><![CDATA["
 	cat /dev/null > ${TEE_FILE}
 	cat /dev/null > ${TEE_FILE2}
@@ -212,35 +213,36 @@ for ele2 in "${SORTED_FILES[@]}"
 	INFO "This: ${BUILD_REF}/${FTC_LINK}/"        
         
     startTime=$(date +%s%3N);
-	echo "```" >>  ${TEE_FILE}
+	echo "\`\`\`" >>  ${TEE_FILE}
 	# CMD is allowed to clobber TEE_FILE
         ( eval $CMD ) 2>&1 | tee -a ${TEE_FILE} | sed -r "s/\x1B\[(([0-9]{1,2})?(;)?([0-9]{1,2})?)?[m,K,H,f,J]//g" | tee ${TEE_FILE2}
         exitcode=${PIPESTATUS[0]}
-        endTime=$(date +%s);
-        totalTime=$(($endTime-$startTime));        
-        ####JECHO "]]></system-out>"
+        endTime=$(date +%s%3N);
+         totalTime=$((($endTime-$startTime)/1000));
+        echo "\`\`\`" >>  ${TEE_FILE}
 
-        if [ $exitcode -eq $good_exit ]; then
-			[ "${next_cls}" == 1 ] && cls && next_cls=0			
+        INFO "totalTime=${totalTime}"
+
+     
+      TEST_RESULT="FAILED"
+      [ $exitcode -eq $good_exit ] && TEST_RESULT="SUCCESS" && [ "${next_cls}" == 1 ] && cls && next_cls=0 
+      [ "$test_completed" == 'test_completed' ] && [ $exitcode -ne 7 ] && TEST_RESULT="FAILED"
+      [ $exitcode -eq 7 ] && TEST_RESULT="SUCCESS"
+      [ $exitcode -eq 0 ] && [ "$test_completed" == 'true' ] && TEST_RESULT="SUCCESS"
+
+      INFO "${TEST_RESULT}: $0 ${keep_going} ${ele} (returned ${exitcode})"
+
+      if [ "${TEST_RESULT}" = "SUCCESS" ]; then
          JECHO "<testcase name=\"${FileTestCase}\" classname='${JUNIT_CLASSNAME}' time='$totalTime'>"         
-         JECHO "<system-out><![CDATA[$(cat ${TEE_FILE2})]]></system-out>\n"
-         JECHO "</testcase>"
-         INFO "SUCCESS: $0 ${keep_going} ${ele} (returned ${exitcode})"
+         JECHO "<system-out><![CDATA[$(cat ${TEE_FILE2})]]></system-out>\n</testcase>"
            JUNIT_TESTS_GTOTAL_PASSED=$((JUNIT_TESTS_GTOTAL_PASSED+1))
-			continue
-	     fi
+      else    
         JECHO "<testcase name=\"${FileTestCase}\" classname='${JUNIT_CLASSNAME}' time='$totalTime'>"
-        JECHO " <failure message='FAILED: $0 ${keep_going} ${ele} (returned ${exitcode})'/>"
-           JECHO "<system-err><![CDATA[$(cat ${TEE_FILE2})]]></system-err>\n"
+      	JECHO " <failure message='FAILED: $0 ${keep_going} ${ele} (returned ${exitcode})'/><system-err><![CDATA[$(cat ${TEE_FILE2})]]></system-err>\n</testcase>"	    JUNIT_TESTS_GTOTAL_FAILURES=$((JUNIT_TESTS_GTOTAL_FAILURES+1))
 	   touch "$ele"
-        JECHO "</testcase>"
-           JUNIT_TESTS_GTOTAL_FAILURES=$((JUNIT_TESTS_GTOTAL_FAILURES+1))
+        gh issue create -t "${FileTestCase}" -l "${JUNIT_PACKAGE},${JUNIT_SHORTCLASS},Test_9999" -F ${TEE_FILE}
+      fi
 
-        next_cls=0
-
-      [ "$test_completed" == 'test_completed' ] && [ $exitcode -ne 7 ] && INFO "FAILED: $0 ${keep_going} ${ele} (returned ${exitcode})"
-      [ $exitcode -eq 7 ] && INFO "SUCCESS: $0 ${keep_going} ${ele} (returned ${exitcode})"
-      [ $exitcode -eq 0 ] && [ "$test_completed" == 'true' ] && INFO "SUCCESS: $0 ${keep_going} ${ele} (returned ${exitcode})"
       [ $exitcode -eq 6 ] && retry=1 && continue
 
 
