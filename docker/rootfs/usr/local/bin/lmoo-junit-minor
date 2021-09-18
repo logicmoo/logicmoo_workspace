@@ -46,7 +46,7 @@ JUNIT_PACKAGE="logicmoo.${JUNIT_PACKAGE}"
 echo "<!-- JUNIT_PACKAGE=${JUNIT_PACKAGE} -->"
 
 gh api repos/logicmoo/logicmoo_workspace/labels -f name="${JUNIT_PACKAGE}" -f color="888000" 
-export GH_MASTER_ISSUE_INFO=`gh issue list -l {JUNIT_PACKAGE} -L 2000 | grep "unit_test"`
+export GH_MASTER_ISSUE_INFO=`gh issue list -l ${JUNIT_PACKAGE} -L 1000 | grep "unit_test"`
 
 export JUNIT_PACKAGE_STEM=$(echo "${JUNIT_PACKAGE}" | sed -e "s/\./-/g" -e "s/--/-/g" | rev | cut -c 1-110 | rev)
 
@@ -257,7 +257,7 @@ for ele2 in "${SORTED_FILES[@]}"
 	   gh issue reopen ${GH_MASTER_ISSUE_ID}
 	   gh issue comment ${GH_MASTER_ISSUE_ID} -F ${TEE_FILE}
 	 else
-	   [ -z "${GH_MASTER_ISSUE_ID}"] && gh issue create -t "${FileTestCase}" -l "unit_test,${JUNIT_PACKAGE},${JUNIT_SHORTCLASS},Test_9999" -F ${TEE_FILE}
+	   [ -z "${GH_MASTER_ISSUE_ID}"] && echo gh issue create -t "${FileTestCase}" -l "unit_test,${JUNIT_PACKAGE},${JUNIT_SHORTCLASS},Test_9999" -F ${TEE_FILE}
 	 fi
          
       fi
