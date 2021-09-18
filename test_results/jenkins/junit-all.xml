@@ -1,384 +1,384 @@
 <testsuites>
-<testsuite name="Rollup logicmoo.base.examples.fol in /var/lib/jenkins/workspace/logicmoo_workspace@2/packs_sys/logicmoo_base/t/examples/fol" package="logicmoo.base.examples.fol" tests="0" failures="0" errors="0"  skipped="0">
+<testsuite name="Rollup logicmoo.base.examples.fol in /var/lib/jenkins/workspace/logicmoo_workspace/packs_sys/logicmoo_base/t/examples/fol" package="logicmoo.base.examples.fol" tests="0" failures="0" errors="0"  skipped="0">
 
-<!-- Running Matching Tests: /var/lib/jenkins/workspace/logicmoo_workspace@2/bin/lmoo=junit=minor =k *f*_01.p*  -->
+<!-- Running Matching Tests: /var/lib/jenkins/workspace/logicmoo_workspace/bin/lmoo=junit=minor =k *f*_01.p*  -->
 
 <!-- FileTestCase=logicmoo.base.examples.fol.MAKE_TYPES_WFF_01@Test_9999_Line_9999__Exitcode_7  -->
 
 <!-- CMD=timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif make_types_wff_01.pfc.pl  -->
 
-<!--  (cd /var/lib/jenkins/workspace/logicmoo_workspace@2/packs_sys/logicmoo_base/t/examples/fol ; timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif make_types_wff_01.pfc.pl)  -->
+<!--  (cd /var/lib/jenkins/workspace/logicmoo_workspace/packs_sys/logicmoo_base/t/examples/fol ; timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif make_types_wff_01.pfc.pl)  -->
 
-<!-- Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/MAKE_TYPES_WFF_01/logicmoo_base_examples_fol_MAKE_TYPES_WFF_01_Test_9999_Line_9999__Exitcode_7/  -->
+<!-- Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/MAKE_TYPES_WFF_01//  -->
 
-<!-- This: https://jenkins.logicmoo.org/job/logicmoo_workspace/36/testReport/logicmoo.base.examples.fol/MAKE_TYPES_WFF_01/logicmoo_base_examples_fol_MAKE_TYPES_WFF_01_Test_9999_Line_9999__Exitcode_7/  -->
+<!-- This: https://jenkins.logicmoo.org/job/logicmoo_workspace/37/testReport/logicmoo.base.examples.fol/MAKE_TYPES_WFF_01//  -->
 
 <!-- totalTime=  -->
 
-<!-- SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace@2/bin/lmoo=junit=minor =k make_types_wff_01.pfc.pl (returned 7)  -->
+<!-- SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace/bin/lmoo=junit=minor =k make_types_wff_01.pfc.pl (returned 7)  -->
 
 <testcase name="logicmoo.base.examples.fol.MAKE_TYPES_WFF_01@Test_9999_Line_9999__Exitcode_7" classname='logicmoo.base.examples.fol.MAKE_TYPES_WFF_01' time=''>
 
-<system-out><![CDATA[ (cd /var/lib/jenkins/workspace/logicmoo_workspace@2/packs_sys/logicmoo_base/t/examples/fol ; timeout --foreground --preserve-status -s SIGKILL -k 10s 10s lmoo-clif make_types_wff_01.pfc.pl)
+<system-out><![CDATA[ (cd /var/lib/jenkins/workspace/logicmoo_workspace/packs_sys/logicmoo_base/t/examples/fol ; timeout --foreground --preserve-status -s SIGKILL -k 10s 10s lmoo-clif make_types_wff_01.pfc.pl)
 
-Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/MAKE_TYPES_WFF_01/logicmoo_base_examples_fol_MAKE_TYPES_WFF_01_Test_9999_Line_9999__Exitcode_7/
+Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/MAKE_TYPES_WFF_01//
 
-This: https://jenkins.logicmoo.org/job/logicmoo_workspace/36/testReport/logicmoo.base.examples.fol/MAKE_TYPES_WFF_01/logicmoo_base_examples_fol_MAKE_TYPES_WFF_01_Test_9999_Line_9999__Exitcode_7/
+This: https://jenkins.logicmoo.org/job/logicmoo_workspace/37/testReport/logicmoo.base.examples.fol/MAKE_TYPES_WFF_01//
 
 totalTime=
 
-SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace@2/bin/lmoo-junit-minor -k make_types_wff_01.pfc.pl (returned 7)]]></system-out>
+SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace/bin/lmoo-junit-minor -k make_types_wff_01.pfc.pl (returned 7)]]></system-out>
 </testcase>
 
 <!-- FileTestCase=logicmoo.base.examples.fol.KIF_SANITY_01@Test_9999_Line_9999__Exitcode_7  -->
 
 <!-- CMD=timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif kif_sanity_01.pfc.pl  -->
 
-<!--  (cd /var/lib/jenkins/workspace/logicmoo_workspace@2/packs_sys/logicmoo_base/t/examples/fol ; timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif kif_sanity_01.pfc.pl)  -->
+<!--  (cd /var/lib/jenkins/workspace/logicmoo_workspace/packs_sys/logicmoo_base/t/examples/fol ; timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif kif_sanity_01.pfc.pl)  -->
 
-<!-- Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/KIF_SANITY_01/logicmoo_base_examples_fol_KIF_SANITY_01_Test_9999_Line_9999__Exitcode_7/  -->
+<!-- Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/KIF_SANITY_01//  -->
 
-<!-- This: https://jenkins.logicmoo.org/job/logicmoo_workspace/36/testReport/logicmoo.base.examples.fol/KIF_SANITY_01/logicmoo_base_examples_fol_KIF_SANITY_01_Test_9999_Line_9999__Exitcode_7/  -->
+<!-- This: https://jenkins.logicmoo.org/job/logicmoo_workspace/37/testReport/logicmoo.base.examples.fol/KIF_SANITY_01//  -->
 
 <!-- totalTime=  -->
 
-<!-- SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace@2/bin/lmoo=junit=minor =k kif_sanity_01.pfc.pl (returned 7)  -->
+<!-- SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace/bin/lmoo=junit=minor =k kif_sanity_01.pfc.pl (returned 7)  -->
 
 <testcase name="logicmoo.base.examples.fol.KIF_SANITY_01@Test_9999_Line_9999__Exitcode_7" classname='logicmoo.base.examples.fol.KIF_SANITY_01' time=''>
 
-<system-out><![CDATA[ (cd /var/lib/jenkins/workspace/logicmoo_workspace@2/packs_sys/logicmoo_base/t/examples/fol ; timeout --foreground --preserve-status -s SIGKILL -k 10s 10s lmoo-clif kif_sanity_01.pfc.pl)
+<system-out><![CDATA[ (cd /var/lib/jenkins/workspace/logicmoo_workspace/packs_sys/logicmoo_base/t/examples/fol ; timeout --foreground --preserve-status -s SIGKILL -k 10s 10s lmoo-clif kif_sanity_01.pfc.pl)
 
-Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/KIF_SANITY_01/logicmoo_base_examples_fol_KIF_SANITY_01_Test_9999_Line_9999__Exitcode_7/
+Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/KIF_SANITY_01//
 
-This: https://jenkins.logicmoo.org/job/logicmoo_workspace/36/testReport/logicmoo.base.examples.fol/KIF_SANITY_01/logicmoo_base_examples_fol_KIF_SANITY_01_Test_9999_Line_9999__Exitcode_7/
+This: https://jenkins.logicmoo.org/job/logicmoo_workspace/37/testReport/logicmoo.base.examples.fol/KIF_SANITY_01//
 
 totalTime=
 
-SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace@2/bin/lmoo-junit-minor -k kif_sanity_01.pfc.pl (returned 7)]]></system-out>
+SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace/bin/lmoo-junit-minor -k kif_sanity_01.pfc.pl (returned 7)]]></system-out>
 </testcase>
 
 <!-- FileTestCase=logicmoo.base.examples.fol.KIF_IO_TEST_01@Test_9999_Line_9999__Exitcode_7  -->
 
 <!-- CMD=timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif kif_io_test_01.pl  -->
 
-<!--  (cd /var/lib/jenkins/workspace/logicmoo_workspace@2/packs_sys/logicmoo_base/t/examples/fol ; timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif kif_io_test_01.pl)  -->
+<!--  (cd /var/lib/jenkins/workspace/logicmoo_workspace/packs_sys/logicmoo_base/t/examples/fol ; timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif kif_io_test_01.pl)  -->
 
-<!-- Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/KIF_IO_TEST_01/logicmoo_base_examples_fol_KIF_IO_TEST_01_Test_9999_Line_9999__Exitcode_7/  -->
+<!-- Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/KIF_IO_TEST_01//  -->
 
-<!-- This: https://jenkins.logicmoo.org/job/logicmoo_workspace/36/testReport/logicmoo.base.examples.fol/KIF_IO_TEST_01/logicmoo_base_examples_fol_KIF_IO_TEST_01_Test_9999_Line_9999__Exitcode_7/  -->
+<!-- This: https://jenkins.logicmoo.org/job/logicmoo_workspace/37/testReport/logicmoo.base.examples.fol/KIF_IO_TEST_01//  -->
 
 <!-- totalTime=  -->
 
-<!-- SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace@2/bin/lmoo=junit=minor =k kif_io_test_01.pl (returned 7)  -->
+<!-- SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace/bin/lmoo=junit=minor =k kif_io_test_01.pl (returned 7)  -->
 
 <testcase name="logicmoo.base.examples.fol.KIF_IO_TEST_01@Test_9999_Line_9999__Exitcode_7" classname='logicmoo.base.examples.fol.KIF_IO_TEST_01' time=''>
 
-<system-out><![CDATA[ (cd /var/lib/jenkins/workspace/logicmoo_workspace@2/packs_sys/logicmoo_base/t/examples/fol ; timeout --foreground --preserve-status -s SIGKILL -k 10s 10s lmoo-clif kif_io_test_01.pl)
+<system-out><![CDATA[ (cd /var/lib/jenkins/workspace/logicmoo_workspace/packs_sys/logicmoo_base/t/examples/fol ; timeout --foreground --preserve-status -s SIGKILL -k 10s 10s lmoo-clif kif_io_test_01.pl)
 
-Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/KIF_IO_TEST_01/logicmoo_base_examples_fol_KIF_IO_TEST_01_Test_9999_Line_9999__Exitcode_7/
+Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/KIF_IO_TEST_01//
 
-This: https://jenkins.logicmoo.org/job/logicmoo_workspace/36/testReport/logicmoo.base.examples.fol/KIF_IO_TEST_01/logicmoo_base_examples_fol_KIF_IO_TEST_01_Test_9999_Line_9999__Exitcode_7/
+This: https://jenkins.logicmoo.org/job/logicmoo_workspace/37/testReport/logicmoo.base.examples.fol/KIF_IO_TEST_01//
 
 totalTime=
 
-SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace@2/bin/lmoo-junit-minor -k kif_io_test_01.pl (returned 7)]]></system-out>
+SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace/bin/lmoo-junit-minor -k kif_io_test_01.pl (returned 7)]]></system-out>
 </testcase>
 
 <!-- FileTestCase=logicmoo.base.examples.fol.FOL_CALC_01@Test_9999_Line_9999__Exitcode_7  -->
 
 <!-- CMD=timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif fol_calc_01.pfc.pl  -->
 
-<!--  (cd /var/lib/jenkins/workspace/logicmoo_workspace@2/packs_sys/logicmoo_base/t/examples/fol ; timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif fol_calc_01.pfc.pl)  -->
+<!--  (cd /var/lib/jenkins/workspace/logicmoo_workspace/packs_sys/logicmoo_base/t/examples/fol ; timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif fol_calc_01.pfc.pl)  -->
 
-<!-- Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/FOL_CALC_01/logicmoo_base_examples_fol_FOL_CALC_01_Test_9999_Line_9999__Exitcode_7/  -->
+<!-- Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/FOL_CALC_01//  -->
 
-<!-- This: https://jenkins.logicmoo.org/job/logicmoo_workspace/36/testReport/logicmoo.base.examples.fol/FOL_CALC_01/logicmoo_base_examples_fol_FOL_CALC_01_Test_9999_Line_9999__Exitcode_7/  -->
+<!-- This: https://jenkins.logicmoo.org/job/logicmoo_workspace/37/testReport/logicmoo.base.examples.fol/FOL_CALC_01//  -->
 
 <!-- totalTime=  -->
 
-<!-- SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace@2/bin/lmoo=junit=minor =k fol_calc_01.pfc.pl (returned 7)  -->
+<!-- SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace/bin/lmoo=junit=minor =k fol_calc_01.pfc.pl (returned 7)  -->
 
 <testcase name="logicmoo.base.examples.fol.FOL_CALC_01@Test_9999_Line_9999__Exitcode_7" classname='logicmoo.base.examples.fol.FOL_CALC_01' time=''>
 
-<system-out><![CDATA[ (cd /var/lib/jenkins/workspace/logicmoo_workspace@2/packs_sys/logicmoo_base/t/examples/fol ; timeout --foreground --preserve-status -s SIGKILL -k 10s 10s lmoo-clif fol_calc_01.pfc.pl)
+<system-out><![CDATA[ (cd /var/lib/jenkins/workspace/logicmoo_workspace/packs_sys/logicmoo_base/t/examples/fol ; timeout --foreground --preserve-status -s SIGKILL -k 10s 10s lmoo-clif fol_calc_01.pfc.pl)
 
-Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/FOL_CALC_01/logicmoo_base_examples_fol_FOL_CALC_01_Test_9999_Line_9999__Exitcode_7/
+Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/FOL_CALC_01//
 
-This: https://jenkins.logicmoo.org/job/logicmoo_workspace/36/testReport/logicmoo.base.examples.fol/FOL_CALC_01/logicmoo_base_examples_fol_FOL_CALC_01_Test_9999_Line_9999__Exitcode_7/
+This: https://jenkins.logicmoo.org/job/logicmoo_workspace/37/testReport/logicmoo.base.examples.fol/FOL_CALC_01//
 
 totalTime=
 
-SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace@2/bin/lmoo-junit-minor -k fol_calc_01.pfc.pl (returned 7)]]></system-out>
+SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace/bin/lmoo-junit-minor -k fol_calc_01.pfc.pl (returned 7)]]></system-out>
 </testcase>
 
 <!-- FileTestCase=logicmoo.base.examples.fol.FAMILY_REGRESS_01@Test_9999_Line_9999__Exitcode_7  -->
 
 <!-- CMD=timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif family_regress_01.pfc.pl  -->
 
-<!--  (cd /var/lib/jenkins/workspace/logicmoo_workspace@2/packs_sys/logicmoo_base/t/examples/fol ; timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif family_regress_01.pfc.pl)  -->
+<!--  (cd /var/lib/jenkins/workspace/logicmoo_workspace/packs_sys/logicmoo_base/t/examples/fol ; timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif family_regress_01.pfc.pl)  -->
 
-<!-- Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/FAMILY_REGRESS_01/logicmoo_base_examples_fol_FAMILY_REGRESS_01_Test_9999_Line_9999__Exitcode_7/  -->
+<!-- Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/FAMILY_REGRESS_01//  -->
 
-<!-- This: https://jenkins.logicmoo.org/job/logicmoo_workspace/36/testReport/logicmoo.base.examples.fol/FAMILY_REGRESS_01/logicmoo_base_examples_fol_FAMILY_REGRESS_01_Test_9999_Line_9999__Exitcode_7/  -->
+<!-- This: https://jenkins.logicmoo.org/job/logicmoo_workspace/37/testReport/logicmoo.base.examples.fol/FAMILY_REGRESS_01//  -->
 
 <!-- totalTime=  -->
 
-<!-- SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace@2/bin/lmoo=junit=minor =k family_regress_01.pfc.pl (returned 7)  -->
+<!-- SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace/bin/lmoo=junit=minor =k family_regress_01.pfc.pl (returned 7)  -->
 
 <testcase name="logicmoo.base.examples.fol.FAMILY_REGRESS_01@Test_9999_Line_9999__Exitcode_7" classname='logicmoo.base.examples.fol.FAMILY_REGRESS_01' time=''>
 
-<system-out><![CDATA[ (cd /var/lib/jenkins/workspace/logicmoo_workspace@2/packs_sys/logicmoo_base/t/examples/fol ; timeout --foreground --preserve-status -s SIGKILL -k 10s 10s lmoo-clif family_regress_01.pfc.pl)
+<system-out><![CDATA[ (cd /var/lib/jenkins/workspace/logicmoo_workspace/packs_sys/logicmoo_base/t/examples/fol ; timeout --foreground --preserve-status -s SIGKILL -k 10s 10s lmoo-clif family_regress_01.pfc.pl)
 
-Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/FAMILY_REGRESS_01/logicmoo_base_examples_fol_FAMILY_REGRESS_01_Test_9999_Line_9999__Exitcode_7/
+Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/FAMILY_REGRESS_01//
 
-This: https://jenkins.logicmoo.org/job/logicmoo_workspace/36/testReport/logicmoo.base.examples.fol/FAMILY_REGRESS_01/logicmoo_base_examples_fol_FAMILY_REGRESS_01_Test_9999_Line_9999__Exitcode_7/
+This: https://jenkins.logicmoo.org/job/logicmoo_workspace/37/testReport/logicmoo.base.examples.fol/FAMILY_REGRESS_01//
 
 totalTime=
 
-SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace@2/bin/lmoo-junit-minor -k family_regress_01.pfc.pl (returned 7)]]></system-out>
+SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace/bin/lmoo-junit-minor -k family_regress_01.pfc.pl (returned 7)]]></system-out>
 </testcase>
 
 <!-- FileTestCase=logicmoo.base.examples.fol.FAMILY_INHERITANCE_01@Test_9999_Line_9999__Exitcode_7  -->
 
 <!-- CMD=timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif family_inheritance_01.pfc.pl  -->
 
-<!--  (cd /var/lib/jenkins/workspace/logicmoo_workspace@2/packs_sys/logicmoo_base/t/examples/fol ; timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif family_inheritance_01.pfc.pl)  -->
+<!--  (cd /var/lib/jenkins/workspace/logicmoo_workspace/packs_sys/logicmoo_base/t/examples/fol ; timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif family_inheritance_01.pfc.pl)  -->
 
-<!-- Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/FAMILY_INHERITANCE_01/logicmoo_base_examples_fol_FAMILY_INHERITANCE_01_Test_9999_Line_9999__Exitcode_7/  -->
+<!-- Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/FAMILY_INHERITANCE_01//  -->
 
-<!-- This: https://jenkins.logicmoo.org/job/logicmoo_workspace/36/testReport/logicmoo.base.examples.fol/FAMILY_INHERITANCE_01/logicmoo_base_examples_fol_FAMILY_INHERITANCE_01_Test_9999_Line_9999__Exitcode_7/  -->
+<!-- This: https://jenkins.logicmoo.org/job/logicmoo_workspace/37/testReport/logicmoo.base.examples.fol/FAMILY_INHERITANCE_01//  -->
 
 <!-- totalTime=  -->
 
-<!-- SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace@2/bin/lmoo=junit=minor =k family_inheritance_01.pfc.pl (returned 7)  -->
+<!-- SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace/bin/lmoo=junit=minor =k family_inheritance_01.pfc.pl (returned 7)  -->
 
 <testcase name="logicmoo.base.examples.fol.FAMILY_INHERITANCE_01@Test_9999_Line_9999__Exitcode_7" classname='logicmoo.base.examples.fol.FAMILY_INHERITANCE_01' time=''>
 
-<system-out><![CDATA[ (cd /var/lib/jenkins/workspace/logicmoo_workspace@2/packs_sys/logicmoo_base/t/examples/fol ; timeout --foreground --preserve-status -s SIGKILL -k 10s 10s lmoo-clif family_inheritance_01.pfc.pl)
+<system-out><![CDATA[ (cd /var/lib/jenkins/workspace/logicmoo_workspace/packs_sys/logicmoo_base/t/examples/fol ; timeout --foreground --preserve-status -s SIGKILL -k 10s 10s lmoo-clif family_inheritance_01.pfc.pl)
 
-Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/FAMILY_INHERITANCE_01/logicmoo_base_examples_fol_FAMILY_INHERITANCE_01_Test_9999_Line_9999__Exitcode_7/
+Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/FAMILY_INHERITANCE_01//
 
-This: https://jenkins.logicmoo.org/job/logicmoo_workspace/36/testReport/logicmoo.base.examples.fol/FAMILY_INHERITANCE_01/logicmoo_base_examples_fol_FAMILY_INHERITANCE_01_Test_9999_Line_9999__Exitcode_7/
+This: https://jenkins.logicmoo.org/job/logicmoo_workspace/37/testReport/logicmoo.base.examples.fol/FAMILY_INHERITANCE_01//
 
 totalTime=
 
-SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace@2/bin/lmoo-junit-minor -k family_inheritance_01.pfc.pl (returned 7)]]></system-out>
+SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace/bin/lmoo-junit-minor -k family_inheritance_01.pfc.pl (returned 7)]]></system-out>
 </testcase>
 
 <!-- FileTestCase=logicmoo.base.examples.fol.SANITY_FI_SK_01@Test_9999_Line_9999__Exitcode_7  -->
 
 <!-- CMD=timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif sanity_fi_sk_01.pfc.pl  -->
 
-<!--  (cd /var/lib/jenkins/workspace/logicmoo_workspace@2/packs_sys/logicmoo_base/t/examples/fol ; timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif sanity_fi_sk_01.pfc.pl)  -->
+<!--  (cd /var/lib/jenkins/workspace/logicmoo_workspace/packs_sys/logicmoo_base/t/examples/fol ; timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif sanity_fi_sk_01.pfc.pl)  -->
 
-<!-- Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/SANITY_FI_SK_01/logicmoo_base_examples_fol_SANITY_FI_SK_01_Test_9999_Line_9999__Exitcode_7/  -->
+<!-- Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/SANITY_FI_SK_01//  -->
 
-<!-- This: https://jenkins.logicmoo.org/job/logicmoo_workspace/36/testReport/logicmoo.base.examples.fol/SANITY_FI_SK_01/logicmoo_base_examples_fol_SANITY_FI_SK_01_Test_9999_Line_9999__Exitcode_7/  -->
+<!-- This: https://jenkins.logicmoo.org/job/logicmoo_workspace/37/testReport/logicmoo.base.examples.fol/SANITY_FI_SK_01//  -->
 
 <!-- totalTime=  -->
 
-<!-- SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace@2/bin/lmoo=junit=minor =k sanity_fi_sk_01.pfc.pl (returned 7)  -->
+<!-- SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace/bin/lmoo=junit=minor =k sanity_fi_sk_01.pfc.pl (returned 7)  -->
 
 <testcase name="logicmoo.base.examples.fol.SANITY_FI_SK_01@Test_9999_Line_9999__Exitcode_7" classname='logicmoo.base.examples.fol.SANITY_FI_SK_01' time=''>
 
-<system-out><![CDATA[ (cd /var/lib/jenkins/workspace/logicmoo_workspace@2/packs_sys/logicmoo_base/t/examples/fol ; timeout --foreground --preserve-status -s SIGKILL -k 10s 10s lmoo-clif sanity_fi_sk_01.pfc.pl)
+<system-out><![CDATA[ (cd /var/lib/jenkins/workspace/logicmoo_workspace/packs_sys/logicmoo_base/t/examples/fol ; timeout --foreground --preserve-status -s SIGKILL -k 10s 10s lmoo-clif sanity_fi_sk_01.pfc.pl)
 
-Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/SANITY_FI_SK_01/logicmoo_base_examples_fol_SANITY_FI_SK_01_Test_9999_Line_9999__Exitcode_7/
+Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/SANITY_FI_SK_01//
 
-This: https://jenkins.logicmoo.org/job/logicmoo_workspace/36/testReport/logicmoo.base.examples.fol/SANITY_FI_SK_01/logicmoo_base_examples_fol_SANITY_FI_SK_01_Test_9999_Line_9999__Exitcode_7/
+This: https://jenkins.logicmoo.org/job/logicmoo_workspace/37/testReport/logicmoo.base.examples.fol/SANITY_FI_SK_01//
 
 totalTime=
 
-SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace@2/bin/lmoo-junit-minor -k sanity_fi_sk_01.pfc.pl (returned 7)]]></system-out>
+SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace/bin/lmoo-junit-minor -k sanity_fi_sk_01.pfc.pl (returned 7)]]></system-out>
 </testcase>
 
 <!-- FileTestCase=logicmoo.base.examples.fol.SANITY_FI_HUMAN_01@Test_9999_Line_9999__Exitcode_7  -->
 
 <!-- CMD=timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif sanity_fi_human_01.pfc.pl  -->
 
-<!--  (cd /var/lib/jenkins/workspace/logicmoo_workspace@2/packs_sys/logicmoo_base/t/examples/fol ; timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif sanity_fi_human_01.pfc.pl)  -->
+<!--  (cd /var/lib/jenkins/workspace/logicmoo_workspace/packs_sys/logicmoo_base/t/examples/fol ; timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif sanity_fi_human_01.pfc.pl)  -->
 
-<!-- Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/SANITY_FI_HUMAN_01/logicmoo_base_examples_fol_SANITY_FI_HUMAN_01_Test_9999_Line_9999__Exitcode_7/  -->
+<!-- Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/SANITY_FI_HUMAN_01//  -->
 
-<!-- This: https://jenkins.logicmoo.org/job/logicmoo_workspace/36/testReport/logicmoo.base.examples.fol/SANITY_FI_HUMAN_01/logicmoo_base_examples_fol_SANITY_FI_HUMAN_01_Test_9999_Line_9999__Exitcode_7/  -->
+<!-- This: https://jenkins.logicmoo.org/job/logicmoo_workspace/37/testReport/logicmoo.base.examples.fol/SANITY_FI_HUMAN_01//  -->
 
 <!-- totalTime=  -->
 
-<!-- SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace@2/bin/lmoo=junit=minor =k sanity_fi_human_01.pfc.pl (returned 7)  -->
+<!-- SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace/bin/lmoo=junit=minor =k sanity_fi_human_01.pfc.pl (returned 7)  -->
 
 <testcase name="logicmoo.base.examples.fol.SANITY_FI_HUMAN_01@Test_9999_Line_9999__Exitcode_7" classname='logicmoo.base.examples.fol.SANITY_FI_HUMAN_01' time=''>
 
-<system-out><![CDATA[ (cd /var/lib/jenkins/workspace/logicmoo_workspace@2/packs_sys/logicmoo_base/t/examples/fol ; timeout --foreground --preserve-status -s SIGKILL -k 10s 10s lmoo-clif sanity_fi_human_01.pfc.pl)
+<system-out><![CDATA[ (cd /var/lib/jenkins/workspace/logicmoo_workspace/packs_sys/logicmoo_base/t/examples/fol ; timeout --foreground --preserve-status -s SIGKILL -k 10s 10s lmoo-clif sanity_fi_human_01.pfc.pl)
 
-Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/SANITY_FI_HUMAN_01/logicmoo_base_examples_fol_SANITY_FI_HUMAN_01_Test_9999_Line_9999__Exitcode_7/
+Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/SANITY_FI_HUMAN_01//
 
-This: https://jenkins.logicmoo.org/job/logicmoo_workspace/36/testReport/logicmoo.base.examples.fol/SANITY_FI_HUMAN_01/logicmoo_base_examples_fol_SANITY_FI_HUMAN_01_Test_9999_Line_9999__Exitcode_7/
+This: https://jenkins.logicmoo.org/job/logicmoo_workspace/37/testReport/logicmoo.base.examples.fol/SANITY_FI_HUMAN_01//
 
 totalTime=
 
-SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace@2/bin/lmoo-junit-minor -k sanity_fi_human_01.pfc.pl (returned 7)]]></system-out>
+SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace/bin/lmoo-junit-minor -k sanity_fi_human_01.pfc.pl (returned 7)]]></system-out>
 </testcase>
 
 <!-- FileTestCase=logicmoo.base.examples.fol.POSS_FORALL_EXISTS_01@Test_9999_Line_9999__Exitcode_7  -->
 
 <!-- CMD=timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif poss_forall_exists_01.pfc.pl  -->
 
-<!--  (cd /var/lib/jenkins/workspace/logicmoo_workspace@2/packs_sys/logicmoo_base/t/examples/fol ; timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif poss_forall_exists_01.pfc.pl)  -->
+<!--  (cd /var/lib/jenkins/workspace/logicmoo_workspace/packs_sys/logicmoo_base/t/examples/fol ; timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif poss_forall_exists_01.pfc.pl)  -->
 
-<!-- Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/POSS_FORALL_EXISTS_01/logicmoo_base_examples_fol_POSS_FORALL_EXISTS_01_Test_9999_Line_9999__Exitcode_7/  -->
+<!-- Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/POSS_FORALL_EXISTS_01//  -->
 
-<!-- This: https://jenkins.logicmoo.org/job/logicmoo_workspace/36/testReport/logicmoo.base.examples.fol/POSS_FORALL_EXISTS_01/logicmoo_base_examples_fol_POSS_FORALL_EXISTS_01_Test_9999_Line_9999__Exitcode_7/  -->
+<!-- This: https://jenkins.logicmoo.org/job/logicmoo_workspace/37/testReport/logicmoo.base.examples.fol/POSS_FORALL_EXISTS_01//  -->
 
 <!-- totalTime=  -->
 
-<!-- SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace@2/bin/lmoo=junit=minor =k poss_forall_exists_01.pfc.pl (returned 7)  -->
+<!-- SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace/bin/lmoo=junit=minor =k poss_forall_exists_01.pfc.pl (returned 7)  -->
 
 <testcase name="logicmoo.base.examples.fol.POSS_FORALL_EXISTS_01@Test_9999_Line_9999__Exitcode_7" classname='logicmoo.base.examples.fol.POSS_FORALL_EXISTS_01' time=''>
 
-<system-out><![CDATA[ (cd /var/lib/jenkins/workspace/logicmoo_workspace@2/packs_sys/logicmoo_base/t/examples/fol ; timeout --foreground --preserve-status -s SIGKILL -k 10s 10s lmoo-clif poss_forall_exists_01.pfc.pl)
+<system-out><![CDATA[ (cd /var/lib/jenkins/workspace/logicmoo_workspace/packs_sys/logicmoo_base/t/examples/fol ; timeout --foreground --preserve-status -s SIGKILL -k 10s 10s lmoo-clif poss_forall_exists_01.pfc.pl)
 
-Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/POSS_FORALL_EXISTS_01/logicmoo_base_examples_fol_POSS_FORALL_EXISTS_01_Test_9999_Line_9999__Exitcode_7/
+Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/POSS_FORALL_EXISTS_01//
 
-This: https://jenkins.logicmoo.org/job/logicmoo_workspace/36/testReport/logicmoo.base.examples.fol/POSS_FORALL_EXISTS_01/logicmoo_base_examples_fol_POSS_FORALL_EXISTS_01_Test_9999_Line_9999__Exitcode_7/
+This: https://jenkins.logicmoo.org/job/logicmoo_workspace/37/testReport/logicmoo.base.examples.fol/POSS_FORALL_EXISTS_01//
 
 totalTime=
 
-SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace@2/bin/lmoo-junit-minor -k poss_forall_exists_01.pfc.pl (returned 7)]]></system-out>
+SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace/bin/lmoo-junit-minor -k poss_forall_exists_01.pfc.pl (returned 7)]]></system-out>
 </testcase>
 
 <!-- FileTestCase=logicmoo.base.examples.fol.MAKE_WFF_01@Test_9999_Line_9999__Exitcode_7  -->
 
 <!-- CMD=timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif make_wff_01.pfc.pl  -->
 
-<!--  (cd /var/lib/jenkins/workspace/logicmoo_workspace@2/packs_sys/logicmoo_base/t/examples/fol ; timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif make_wff_01.pfc.pl)  -->
+<!--  (cd /var/lib/jenkins/workspace/logicmoo_workspace/packs_sys/logicmoo_base/t/examples/fol ; timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif make_wff_01.pfc.pl)  -->
 
-<!-- Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/MAKE_WFF_01/logicmoo_base_examples_fol_MAKE_WFF_01_Test_9999_Line_9999__Exitcode_7/  -->
+<!-- Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/MAKE_WFF_01//  -->
 
-<!-- This: https://jenkins.logicmoo.org/job/logicmoo_workspace/36/testReport/logicmoo.base.examples.fol/MAKE_WFF_01/logicmoo_base_examples_fol_MAKE_WFF_01_Test_9999_Line_9999__Exitcode_7/  -->
+<!-- This: https://jenkins.logicmoo.org/job/logicmoo_workspace/37/testReport/logicmoo.base.examples.fol/MAKE_WFF_01//  -->
 
 <!-- totalTime=  -->
 
-<!-- SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace@2/bin/lmoo=junit=minor =k make_wff_01.pfc.pl (returned 7)  -->
+<!-- SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace/bin/lmoo=junit=minor =k make_wff_01.pfc.pl (returned 7)  -->
 
 <testcase name="logicmoo.base.examples.fol.MAKE_WFF_01@Test_9999_Line_9999__Exitcode_7" classname='logicmoo.base.examples.fol.MAKE_WFF_01' time=''>
 
-<system-out><![CDATA[ (cd /var/lib/jenkins/workspace/logicmoo_workspace@2/packs_sys/logicmoo_base/t/examples/fol ; timeout --foreground --preserve-status -s SIGKILL -k 10s 10s lmoo-clif make_wff_01.pfc.pl)
+<system-out><![CDATA[ (cd /var/lib/jenkins/workspace/logicmoo_workspace/packs_sys/logicmoo_base/t/examples/fol ; timeout --foreground --preserve-status -s SIGKILL -k 10s 10s lmoo-clif make_wff_01.pfc.pl)
 
-Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/MAKE_WFF_01/logicmoo_base_examples_fol_MAKE_WFF_01_Test_9999_Line_9999__Exitcode_7/
+Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/MAKE_WFF_01//
 
-This: https://jenkins.logicmoo.org/job/logicmoo_workspace/36/testReport/logicmoo.base.examples.fol/MAKE_WFF_01/logicmoo_base_examples_fol_MAKE_WFF_01_Test_9999_Line_9999__Exitcode_7/
+This: https://jenkins.logicmoo.org/job/logicmoo_workspace/37/testReport/logicmoo.base.examples.fol/MAKE_WFF_01//
 
 totalTime=
 
-SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace@2/bin/lmoo-junit-minor -k make_wff_01.pfc.pl (returned 7)]]></system-out>
+SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace/bin/lmoo-junit-minor -k make_wff_01.pfc.pl (returned 7)]]></system-out>
 </testcase>
 
 <!-- FileTestCase=logicmoo.base.examples.fol.LEFTY_01@Test_9999_Line_9999__Exitcode_7  -->
 
 <!-- CMD=timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif lefty_01.pfc.pl  -->
 
-<!--  (cd /var/lib/jenkins/workspace/logicmoo_workspace@2/packs_sys/logicmoo_base/t/examples/fol ; timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif lefty_01.pfc.pl)  -->
+<!--  (cd /var/lib/jenkins/workspace/logicmoo_workspace/packs_sys/logicmoo_base/t/examples/fol ; timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif lefty_01.pfc.pl)  -->
 
-<!-- Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/LEFTY_01/logicmoo_base_examples_fol_LEFTY_01_Test_9999_Line_9999__Exitcode_7/  -->
+<!-- Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/LEFTY_01//  -->
 
-<!-- This: https://jenkins.logicmoo.org/job/logicmoo_workspace/36/testReport/logicmoo.base.examples.fol/LEFTY_01/logicmoo_base_examples_fol_LEFTY_01_Test_9999_Line_9999__Exitcode_7/  -->
+<!-- This: https://jenkins.logicmoo.org/job/logicmoo_workspace/37/testReport/logicmoo.base.examples.fol/LEFTY_01//  -->
 
 <!-- totalTime=  -->
 
-<!-- SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace@2/bin/lmoo=junit=minor =k lefty_01.pfc.pl (returned 7)  -->
+<!-- SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace/bin/lmoo=junit=minor =k lefty_01.pfc.pl (returned 7)  -->
 
 <testcase name="logicmoo.base.examples.fol.LEFTY_01@Test_9999_Line_9999__Exitcode_7" classname='logicmoo.base.examples.fol.LEFTY_01' time=''>
 
-<system-out><![CDATA[ (cd /var/lib/jenkins/workspace/logicmoo_workspace@2/packs_sys/logicmoo_base/t/examples/fol ; timeout --foreground --preserve-status -s SIGKILL -k 10s 10s lmoo-clif lefty_01.pfc.pl)
+<system-out><![CDATA[ (cd /var/lib/jenkins/workspace/logicmoo_workspace/packs_sys/logicmoo_base/t/examples/fol ; timeout --foreground --preserve-status -s SIGKILL -k 10s 10s lmoo-clif lefty_01.pfc.pl)
 
-Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/LEFTY_01/logicmoo_base_examples_fol_LEFTY_01_Test_9999_Line_9999__Exitcode_7/
+Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/LEFTY_01//
 
-This: https://jenkins.logicmoo.org/job/logicmoo_workspace/36/testReport/logicmoo.base.examples.fol/LEFTY_01/logicmoo_base_examples_fol_LEFTY_01_Test_9999_Line_9999__Exitcode_7/
+This: https://jenkins.logicmoo.org/job/logicmoo_workspace/37/testReport/logicmoo.base.examples.fol/LEFTY_01//
 
 totalTime=
 
-SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace@2/bin/lmoo-junit-minor -k lefty_01.pfc.pl (returned 7)]]></system-out>
+SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace/bin/lmoo-junit-minor -k lefty_01.pfc.pl (returned 7)]]></system-out>
 </testcase>
 
 <!-- FileTestCase=logicmoo.base.examples.fol.FORALL_QUANT_01@Test_9999_Line_9999__Exitcode_7  -->
 
 <!-- CMD=timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif forall_quant_01.pfc.pl  -->
 
-<!--  (cd /var/lib/jenkins/workspace/logicmoo_workspace@2/packs_sys/logicmoo_base/t/examples/fol ; timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif forall_quant_01.pfc.pl)  -->
+<!--  (cd /var/lib/jenkins/workspace/logicmoo_workspace/packs_sys/logicmoo_base/t/examples/fol ; timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif forall_quant_01.pfc.pl)  -->
 
-<!-- Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/FORALL_QUANT_01/logicmoo_base_examples_fol_FORALL_QUANT_01_Test_9999_Line_9999__Exitcode_7/  -->
+<!-- Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/FORALL_QUANT_01//  -->
 
-<!-- This: https://jenkins.logicmoo.org/job/logicmoo_workspace/36/testReport/logicmoo.base.examples.fol/FORALL_QUANT_01/logicmoo_base_examples_fol_FORALL_QUANT_01_Test_9999_Line_9999__Exitcode_7/  -->
+<!-- This: https://jenkins.logicmoo.org/job/logicmoo_workspace/37/testReport/logicmoo.base.examples.fol/FORALL_QUANT_01//  -->
 
 <!-- totalTime=  -->
 
-<!-- SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace@2/bin/lmoo=junit=minor =k forall_quant_01.pfc.pl (returned 7)  -->
+<!-- SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace/bin/lmoo=junit=minor =k forall_quant_01.pfc.pl (returned 7)  -->
 
 <testcase name="logicmoo.base.examples.fol.FORALL_QUANT_01@Test_9999_Line_9999__Exitcode_7" classname='logicmoo.base.examples.fol.FORALL_QUANT_01' time=''>
 
-<system-out><![CDATA[ (cd /var/lib/jenkins/workspace/logicmoo_workspace@2/packs_sys/logicmoo_base/t/examples/fol ; timeout --foreground --preserve-status -s SIGKILL -k 10s 10s lmoo-clif forall_quant_01.pfc.pl)
+<system-out><![CDATA[ (cd /var/lib/jenkins/workspace/logicmoo_workspace/packs_sys/logicmoo_base/t/examples/fol ; timeout --foreground --preserve-status -s SIGKILL -k 10s 10s lmoo-clif forall_quant_01.pfc.pl)
 
-Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/FORALL_QUANT_01/logicmoo_base_examples_fol_FORALL_QUANT_01_Test_9999_Line_9999__Exitcode_7/
+Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/FORALL_QUANT_01//
 
-This: https://jenkins.logicmoo.org/job/logicmoo_workspace/36/testReport/logicmoo.base.examples.fol/FORALL_QUANT_01/logicmoo_base_examples_fol_FORALL_QUANT_01_Test_9999_Line_9999__Exitcode_7/
+This: https://jenkins.logicmoo.org/job/logicmoo_workspace/37/testReport/logicmoo.base.examples.fol/FORALL_QUANT_01//
 
 totalTime=
 
-SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace@2/bin/lmoo-junit-minor -k forall_quant_01.pfc.pl (returned 7)]]></system-out>
+SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace/bin/lmoo-junit-minor -k forall_quant_01.pfc.pl (returned 7)]]></system-out>
 </testcase>
 
 <!-- FileTestCase=logicmoo.base.examples.fol.FOL_CARDINAITY_AXIOMITIZED_01@Test_9999_Line_9999__Exitcode_7  -->
 
 <!-- CMD=timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif fol_cardinaity_axiomitized_01.pfc.pl  -->
 
-<!--  (cd /var/lib/jenkins/workspace/logicmoo_workspace@2/packs_sys/logicmoo_base/t/examples/fol ; timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif fol_cardinaity_axiomitized_01.pfc.pl)  -->
+<!--  (cd /var/lib/jenkins/workspace/logicmoo_workspace/packs_sys/logicmoo_base/t/examples/fol ; timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif fol_cardinaity_axiomitized_01.pfc.pl)  -->
 
-<!-- Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/FOL_CARDINAITY_AXIOMITIZED_01/logicmoo_base_examples_fol_FOL_CARDINAITY_AXIOMITIZED_01_Test_9999_Line_9999__Exitcode_7/  -->
+<!-- Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/FOL_CARDINAITY_AXIOMITIZED_01//  -->
 
-<!-- This: https://jenkins.logicmoo.org/job/logicmoo_workspace/36/testReport/logicmoo.base.examples.fol/FOL_CARDINAITY_AXIOMITIZED_01/logicmoo_base_examples_fol_FOL_CARDINAITY_AXIOMITIZED_01_Test_9999_Line_9999__Exitcode_7/  -->
+<!-- This: https://jenkins.logicmoo.org/job/logicmoo_workspace/37/testReport/logicmoo.base.examples.fol/FOL_CARDINAITY_AXIOMITIZED_01//  -->
 
 <!-- totalTime=  -->
 
-<!-- SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace@2/bin/lmoo=junit=minor =k fol_cardinaity_axiomitized_01.pfc.pl (returned 7)  -->
+<!-- SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace/bin/lmoo=junit=minor =k fol_cardinaity_axiomitized_01.pfc.pl (returned 7)  -->
 
 <testcase name="logicmoo.base.examples.fol.FOL_CARDINAITY_AXIOMITIZED_01@Test_9999_Line_9999__Exitcode_7" classname='logicmoo.base.examples.fol.FOL_CARDINAITY_AXIOMITIZED_01' time=''>
 
-<system-out><![CDATA[ (cd /var/lib/jenkins/workspace/logicmoo_workspace@2/packs_sys/logicmoo_base/t/examples/fol ; timeout --foreground --preserve-status -s SIGKILL -k 10s 10s lmoo-clif fol_cardinaity_axiomitized_01.pfc.pl)
+<system-out><![CDATA[ (cd /var/lib/jenkins/workspace/logicmoo_workspace/packs_sys/logicmoo_base/t/examples/fol ; timeout --foreground --preserve-status -s SIGKILL -k 10s 10s lmoo-clif fol_cardinaity_axiomitized_01.pfc.pl)
 
-Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/FOL_CARDINAITY_AXIOMITIZED_01/logicmoo_base_examples_fol_FOL_CARDINAITY_AXIOMITIZED_01_Test_9999_Line_9999__Exitcode_7/
+Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/FOL_CARDINAITY_AXIOMITIZED_01//
 
-This: https://jenkins.logicmoo.org/job/logicmoo_workspace/36/testReport/logicmoo.base.examples.fol/FOL_CARDINAITY_AXIOMITIZED_01/logicmoo_base_examples_fol_FOL_CARDINAITY_AXIOMITIZED_01_Test_9999_Line_9999__Exitcode_7/
+This: https://jenkins.logicmoo.org/job/logicmoo_workspace/37/testReport/logicmoo.base.examples.fol/FOL_CARDINAITY_AXIOMITIZED_01//
 
 totalTime=
 
-SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace@2/bin/lmoo-junit-minor -k fol_cardinaity_axiomitized_01.pfc.pl (returned 7)]]></system-out>
+SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace/bin/lmoo-junit-minor -k fol_cardinaity_axiomitized_01.pfc.pl (returned 7)]]></system-out>
 </testcase>
 
 <!-- FileTestCase=logicmoo.base.examples.fol.FOL_BIRDT_01@Test_9999_Line_9999__Exitcode_7  -->
 
 <!-- CMD=timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif fol_birdt_01.pfc.pl  -->
 
-<!--  (cd /var/lib/jenkins/workspace/logicmoo_workspace@2/packs_sys/logicmoo_base/t/examples/fol ; timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif fol_birdt_01.pfc.pl)  -->
+<!--  (cd /var/lib/jenkins/workspace/logicmoo_workspace/packs_sys/logicmoo_base/t/examples/fol ; timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif fol_birdt_01.pfc.pl)  -->
 
-<!-- Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/FOL_BIRDT_01/logicmoo_base_examples_fol_FOL_BIRDT_01_Test_9999_Line_9999__Exitcode_7/  -->
+<!-- Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/FOL_BIRDT_01//  -->
 
-<!-- This: https://jenkins.logicmoo.org/job/logicmoo_workspace/36/testReport/logicmoo.base.examples.fol/FOL_BIRDT_01/logicmoo_base_examples_fol_FOL_BIRDT_01_Test_9999_Line_9999__Exitcode_7/  -->
+<!-- This: https://jenkins.logicmoo.org/job/logicmoo_workspace/37/testReport/logicmoo.base.examples.fol/FOL_BIRDT_01//  -->
 
 <!-- totalTime=  -->
 
-<!-- SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace@2/bin/lmoo=junit=minor =k fol_birdt_01.pfc.pl (returned 7)  -->
+<!-- SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace/bin/lmoo=junit=minor =k fol_birdt_01.pfc.pl (returned 7)  -->
 
 <testcase name="logicmoo.base.examples.fol.FOL_BIRDT_01@Test_9999_Line_9999__Exitcode_7" classname='logicmoo.base.examples.fol.FOL_BIRDT_01' time=''>
 
-<system-out><![CDATA[ (cd /var/lib/jenkins/workspace/logicmoo_workspace@2/packs_sys/logicmoo_base/t/examples/fol ; timeout --foreground --preserve-status -s SIGKILL -k 10s 10s lmoo-clif fol_birdt_01.pfc.pl)
+<system-out><![CDATA[ (cd /var/lib/jenkins/workspace/logicmoo_workspace/packs_sys/logicmoo_base/t/examples/fol ; timeout --foreground --preserve-status -s SIGKILL -k 10s 10s lmoo-clif fol_birdt_01.pfc.pl)
 
-Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/FOL_BIRDT_01/logicmoo_base_examples_fol_FOL_BIRDT_01_Test_9999_Line_9999__Exitcode_7/
+Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/FOL_BIRDT_01//
 
-This: https://jenkins.logicmoo.org/job/logicmoo_workspace/36/testReport/logicmoo.base.examples.fol/FOL_BIRDT_01/logicmoo_base_examples_fol_FOL_BIRDT_01_Test_9999_Line_9999__Exitcode_7/
+This: https://jenkins.logicmoo.org/job/logicmoo_workspace/37/testReport/logicmoo.base.examples.fol/FOL_BIRDT_01//
 
 totalTime=
 
-SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace@2/bin/lmoo-junit-minor -k fol_birdt_01.pfc.pl (returned 7)]]></system-out>
+SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace/bin/lmoo-junit-minor -k fol_birdt_01.pfc.pl (returned 7)]]></system-out>
 </testcase>
 
 
@@ -387,35 +387,35 @@ SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace@2/bin/lmoo-junit-minor -k
 
 
 
-<testsuite name="Rollup logicmoo.base.fol.fiveof in /var/lib/jenkins/workspace/logicmoo_workspace@2/packs_sys/logicmoo_base/t/examples/fol/fiveof" package="logicmoo.base.fol.fiveof" tests="0" failures="0" errors="0"  skipped="0">
+<testsuite name="Rollup logicmoo.base.fol.fiveof in /var/lib/jenkins/workspace/logicmoo_workspace/packs_sys/logicmoo_base/t/examples/fol/fiveof" package="logicmoo.base.fol.fiveof" tests="0" failures="0" errors="0"  skipped="0">
 
-<!-- Running Matching Tests: /var/lib/jenkins/workspace/logicmoo_workspace@2/bin/lmoo=junit=minor =k *f*_01.p*  -->
+<!-- Running Matching Tests: /var/lib/jenkins/workspace/logicmoo_workspace/bin/lmoo=junit=minor =k *f*_01.p*  -->
 
 <!-- FileTestCase=logicmoo.base.fol.fiveof.FIVE_LEFTOF_TYPE_01@Test_9999_Line_9999__Exitcode_7  -->
 
 <!-- CMD=timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif five_leftof_type_01.pl  -->
 
-<!--  (cd /var/lib/jenkins/workspace/logicmoo_workspace@2/packs_sys/logicmoo_base/t/examples/fol/fiveof ; timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif five_leftof_type_01.pl)  -->
+<!--  (cd /var/lib/jenkins/workspace/logicmoo_workspace/packs_sys/logicmoo_base/t/examples/fol/fiveof ; timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif five_leftof_type_01.pl)  -->
 
-<!-- Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.fol.fiveof/FIVE_LEFTOF_TYPE_01/logicmoo_base_fol_fiveof_FIVE_LEFTOF_TYPE_01_Test_9999_Line_9999__Exitcode_7/  -->
+<!-- Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.fol.fiveof/FIVE_LEFTOF_TYPE_01//  -->
 
-<!-- This: https://jenkins.logicmoo.org/job/logicmoo_workspace/36/testReport/logicmoo.base.fol.fiveof/FIVE_LEFTOF_TYPE_01/logicmoo_base_fol_fiveof_FIVE_LEFTOF_TYPE_01_Test_9999_Line_9999__Exitcode_7/  -->
+<!-- This: https://jenkins.logicmoo.org/job/logicmoo_workspace/37/testReport/logicmoo.base.fol.fiveof/FIVE_LEFTOF_TYPE_01//  -->
 
 <!-- totalTime=  -->
 
-<!-- SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace@2/bin/lmoo=junit=minor =k five_leftof_type_01.pl (returned 7)  -->
+<!-- SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace/bin/lmoo=junit=minor =k five_leftof_type_01.pl (returned 7)  -->
 
 <testcase name="logicmoo.base.fol.fiveof.FIVE_LEFTOF_TYPE_01@Test_9999_Line_9999__Exitcode_7" classname='logicmoo.base.fol.fiveof.FIVE_LEFTOF_TYPE_01' time=''>
 
-<system-out><![CDATA[ (cd /var/lib/jenkins/workspace/logicmoo_workspace@2/packs_sys/logicmoo_base/t/examples/fol/fiveof ; timeout --foreground --preserve-status -s SIGKILL -k 10s 10s lmoo-clif five_leftof_type_01.pl)
+<system-out><![CDATA[ (cd /var/lib/jenkins/workspace/logicmoo_workspace/packs_sys/logicmoo_base/t/examples/fol/fiveof ; timeout --foreground --preserve-status -s SIGKILL -k 10s 10s lmoo-clif five_leftof_type_01.pl)
 
-Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.fol.fiveof/FIVE_LEFTOF_TYPE_01/logicmoo_base_fol_fiveof_FIVE_LEFTOF_TYPE_01_Test_9999_Line_9999__Exitcode_7/
+Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.fol.fiveof/FIVE_LEFTOF_TYPE_01//
 
-This: https://jenkins.logicmoo.org/job/logicmoo_workspace/36/testReport/logicmoo.base.fol.fiveof/FIVE_LEFTOF_TYPE_01/logicmoo_base_fol_fiveof_FIVE_LEFTOF_TYPE_01_Test_9999_Line_9999__Exitcode_7/
+This: https://jenkins.logicmoo.org/job/logicmoo_workspace/37/testReport/logicmoo.base.fol.fiveof/FIVE_LEFTOF_TYPE_01//
 
 totalTime=
 
-SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace@2/bin/lmoo-junit-minor -k five_leftof_type_01.pl (returned 7)]]></system-out>
+SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace/bin/lmoo-junit-minor -k five_leftof_type_01.pl (returned 7)]]></system-out>
 </testcase>
 
 
@@ -424,35 +424,35 @@ SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace@2/bin/lmoo-junit-minor -k
 
 
 
-<testsuite name="Rollup logicmoo.pfc.sanity_base.quick_test in /var/lib/jenkins/workspace/logicmoo_workspace@2/packs_sys/pfc/t/sanity_base/quick_test" package="logicmoo.pfc.sanity_base.quick_test" tests="0" failures="0" errors="0"  skipped="0">
+<testsuite name="Rollup logicmoo.pfc.sanity_base.quick_test in /var/lib/jenkins/workspace/logicmoo_workspace/packs_sys/pfc/t/sanity_base/quick_test" package="logicmoo.pfc.sanity_base.quick_test" tests="0" failures="0" errors="0"  skipped="0">
 
-<!-- Running Matching Tests: /var/lib/jenkins/workspace/logicmoo_workspace@2/bin/lmoo=junit=minor =k *f*_01.p*  -->
+<!-- Running Matching Tests: /var/lib/jenkins/workspace/logicmoo_workspace/bin/lmoo=junit=minor =k *f*_01.p*  -->
 
 <!-- FileTestCase=logicmoo.pfc.sanity_base.quick_test.FC_01@Test_9999_Line_9999__Exitcode_7  -->
 
 <!-- CMD=timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif fc_01.pfc  -->
 
-<!--  (cd /var/lib/jenkins/workspace/logicmoo_workspace@2/packs_sys/pfc/t/sanity_base/quick_test ; timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif fc_01.pfc)  -->
+<!--  (cd /var/lib/jenkins/workspace/logicmoo_workspace/packs_sys/pfc/t/sanity_base/quick_test ; timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif fc_01.pfc)  -->
 
-<!-- Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.sanity_base.quick_test/FC_01/logicmoo_pfc_sanity_base_quick_test_FC_01_Test_9999_Line_9999__Exitcode_7/  -->
+<!-- Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.sanity_base.quick_test/FC_01//  -->
 
-<!-- This: https://jenkins.logicmoo.org/job/logicmoo_workspace/36/testReport/logicmoo.pfc.sanity_base.quick_test/FC_01/logicmoo_pfc_sanity_base_quick_test_FC_01_Test_9999_Line_9999__Exitcode_7/  -->
+<!-- This: https://jenkins.logicmoo.org/job/logicmoo_workspace/37/testReport/logicmoo.pfc.sanity_base.quick_test/FC_01//  -->
 
 <!-- totalTime=  -->
 
-<!-- SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace@2/bin/lmoo=junit=minor =k fc_01.pfc (returned 7)  -->
+<!-- SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace/bin/lmoo=junit=minor =k fc_01.pfc (returned 7)  -->
 
 <testcase name="logicmoo.pfc.sanity_base.quick_test.FC_01@Test_9999_Line_9999__Exitcode_7" classname='logicmoo.pfc.sanity_base.quick_test.FC_01' time=''>
 
-<system-out><![CDATA[ (cd /var/lib/jenkins/workspace/logicmoo_workspace@2/packs_sys/pfc/t/sanity_base/quick_test ; timeout --foreground --preserve-status -s SIGKILL -k 10s 10s lmoo-clif fc_01.pfc)
+<system-out><![CDATA[ (cd /var/lib/jenkins/workspace/logicmoo_workspace/packs_sys/pfc/t/sanity_base/quick_test ; timeout --foreground --preserve-status -s SIGKILL -k 10s 10s lmoo-clif fc_01.pfc)
 
-Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.sanity_base.quick_test/FC_01/logicmoo_pfc_sanity_base_quick_test_FC_01_Test_9999_Line_9999__Exitcode_7/
+Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.sanity_base.quick_test/FC_01//
 
-This: https://jenkins.logicmoo.org/job/logicmoo_workspace/36/testReport/logicmoo.pfc.sanity_base.quick_test/FC_01/logicmoo_pfc_sanity_base_quick_test_FC_01_Test_9999_Line_9999__Exitcode_7/
+This: https://jenkins.logicmoo.org/job/logicmoo_workspace/37/testReport/logicmoo.pfc.sanity_base.quick_test/FC_01//
 
 totalTime=
 
-SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace@2/bin/lmoo-junit-minor -k fc_01.pfc (returned 7)]]></system-out>
+SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace/bin/lmoo-junit-minor -k fc_01.pfc (returned 7)]]></system-out>
 </testcase>
 
 
@@ -461,386 +461,386 @@ SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace@2/bin/lmoo-junit-minor -k
 
 
 
-<testsuite name="Rollup logicmoo.pfc.test.sanity_base in /var/lib/jenkins/workspace/logicmoo_workspace@2/packs_sys/pfc/t/sanity_base" package="logicmoo.pfc.test.sanity_base" tests="0" failures="0" errors="0"  skipped="0">
+<testsuite name="Rollup logicmoo.pfc.test.sanity_base in /var/lib/jenkins/workspace/logicmoo_workspace/packs_sys/pfc/t/sanity_base" package="logicmoo.pfc.test.sanity_base" tests="0" failures="0" errors="0"  skipped="0">
 
-<!-- Running Matching Tests: /var/lib/jenkins/workspace/logicmoo_workspace@2/bin/lmoo=junit=minor =k *f*_01.p*  -->
+<!-- Running Matching Tests: /var/lib/jenkins/workspace/logicmoo_workspace/bin/lmoo=junit=minor =k *f*_01.p*  -->
 
 <!-- FileTestCase=logicmoo.pfc.test.sanity_base.FC_01@Test_9999_Line_9999__Exitcode_7  -->
 
 <!-- CMD=timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif fc_01.pfc  -->
 
-<!--  (cd /var/lib/jenkins/workspace/logicmoo_workspace@2/packs_sys/pfc/t/sanity_base ; timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif fc_01.pfc)  -->
+<!--  (cd /var/lib/jenkins/workspace/logicmoo_workspace/packs_sys/pfc/t/sanity_base ; timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif fc_01.pfc)  -->
 
-<!-- Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/FC_01/logicmoo_pfc_test_sanity_base_FC_01_Test_9999_Line_9999__Exitcode_7/  -->
+<!-- Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/FC_01//  -->
 
-<!-- This: https://jenkins.logicmoo.org/job/logicmoo_workspace/36/testReport/logicmoo.pfc.test.sanity_base/FC_01/logicmoo_pfc_test_sanity_base_FC_01_Test_9999_Line_9999__Exitcode_7/  -->
+<!-- This: https://jenkins.logicmoo.org/job/logicmoo_workspace/37/testReport/logicmoo.pfc.test.sanity_base/FC_01//  -->
 
 <!-- totalTime=  -->
 
-<!-- SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace@2/bin/lmoo=junit=minor =k fc_01.pfc (returned 7)  -->
+<!-- SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace/bin/lmoo=junit=minor =k fc_01.pfc (returned 7)  -->
 
 <testcase name="logicmoo.pfc.test.sanity_base.FC_01@Test_9999_Line_9999__Exitcode_7" classname='logicmoo.pfc.test.sanity_base.FC_01' time=''>
 
-<system-out><![CDATA[ (cd /var/lib/jenkins/workspace/logicmoo_workspace@2/packs_sys/pfc/t/sanity_base ; timeout --foreground --preserve-status -s SIGKILL -k 10s 10s lmoo-clif fc_01.pfc)
+<system-out><![CDATA[ (cd /var/lib/jenkins/workspace/logicmoo_workspace/packs_sys/pfc/t/sanity_base ; timeout --foreground --preserve-status -s SIGKILL -k 10s 10s lmoo-clif fc_01.pfc)
 
-Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/FC_01/logicmoo_pfc_test_sanity_base_FC_01_Test_9999_Line_9999__Exitcode_7/
+Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/FC_01//
 
-This: https://jenkins.logicmoo.org/job/logicmoo_workspace/36/testReport/logicmoo.pfc.test.sanity_base/FC_01/logicmoo_pfc_test_sanity_base_FC_01_Test_9999_Line_9999__Exitcode_7/
+This: https://jenkins.logicmoo.org/job/logicmoo_workspace/37/testReport/logicmoo.pfc.test.sanity_base/FC_01//
 
 totalTime=
 
-SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace@2/bin/lmoo-junit-minor -k fc_01.pfc (returned 7)]]></system-out>
+SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace/bin/lmoo-junit-minor -k fc_01.pfc (returned 7)]]></system-out>
 </testcase>
 
 <!-- FileTestCase=logicmoo.pfc.test.sanity_base.MPRED_PFC_TEST_01@Test_9999_Line_9999__Exitcode_7  -->
 
 <!-- CMD=timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif mpred_pfc_test_01.plt  -->
 
-<!--  (cd /var/lib/jenkins/workspace/logicmoo_workspace@2/packs_sys/pfc/t/sanity_base ; timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif mpred_pfc_test_01.plt)  -->
+<!--  (cd /var/lib/jenkins/workspace/logicmoo_workspace/packs_sys/pfc/t/sanity_base ; timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif mpred_pfc_test_01.plt)  -->
 
-<!-- Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/MPRED_PFC_TEST_01/logicmoo_pfc_test_sanity_base_MPRED_PFC_TEST_01_Test_9999_Line_9999__Exitcode_7/  -->
+<!-- Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/MPRED_PFC_TEST_01//  -->
 
-<!-- This: https://jenkins.logicmoo.org/job/logicmoo_workspace/36/testReport/logicmoo.pfc.test.sanity_base/MPRED_PFC_TEST_01/logicmoo_pfc_test_sanity_base_MPRED_PFC_TEST_01_Test_9999_Line_9999__Exitcode_7/  -->
+<!-- This: https://jenkins.logicmoo.org/job/logicmoo_workspace/37/testReport/logicmoo.pfc.test.sanity_base/MPRED_PFC_TEST_01//  -->
 
 <!-- totalTime=  -->
 
-<!-- SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace@2/bin/lmoo=junit=minor =k mpred_pfc_test_01.plt (returned 7)  -->
+<!-- SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace/bin/lmoo=junit=minor =k mpred_pfc_test_01.plt (returned 7)  -->
 
 <testcase name="logicmoo.pfc.test.sanity_base.MPRED_PFC_TEST_01@Test_9999_Line_9999__Exitcode_7" classname='logicmoo.pfc.test.sanity_base.MPRED_PFC_TEST_01' time=''>
 
-<system-out><![CDATA[ (cd /var/lib/jenkins/workspace/logicmoo_workspace@2/packs_sys/pfc/t/sanity_base ; timeout --foreground --preserve-status -s SIGKILL -k 10s 10s lmoo-clif mpred_pfc_test_01.plt)
+<system-out><![CDATA[ (cd /var/lib/jenkins/workspace/logicmoo_workspace/packs_sys/pfc/t/sanity_base ; timeout --foreground --preserve-status -s SIGKILL -k 10s 10s lmoo-clif mpred_pfc_test_01.plt)
 
-Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/MPRED_PFC_TEST_01/logicmoo_pfc_test_sanity_base_MPRED_PFC_TEST_01_Test_9999_Line_9999__Exitcode_7/
+Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/MPRED_PFC_TEST_01//
 
-This: https://jenkins.logicmoo.org/job/logicmoo_workspace/36/testReport/logicmoo.pfc.test.sanity_base/MPRED_PFC_TEST_01/logicmoo_pfc_test_sanity_base_MPRED_PFC_TEST_01_Test_9999_Line_9999__Exitcode_7/
+This: https://jenkins.logicmoo.org/job/logicmoo_workspace/37/testReport/logicmoo.pfc.test.sanity_base/MPRED_PFC_TEST_01//
 
 totalTime=
 
-SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace@2/bin/lmoo-junit-minor -k mpred_pfc_test_01.plt (returned 7)]]></system-out>
+SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace/bin/lmoo-junit-minor -k mpred_pfc_test_01.plt (returned 7)]]></system-out>
 </testcase>
 
 <!-- FileTestCase=logicmoo.pfc.test.sanity_base.MDEFAULT_01@Test_9999_Line_9999__Exitcode_7  -->
 
 <!-- CMD=timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif mdefault_01.pfc  -->
 
-<!--  (cd /var/lib/jenkins/workspace/logicmoo_workspace@2/packs_sys/pfc/t/sanity_base ; timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif mdefault_01.pfc)  -->
+<!--  (cd /var/lib/jenkins/workspace/logicmoo_workspace/packs_sys/pfc/t/sanity_base ; timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif mdefault_01.pfc)  -->
 
-<!-- Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/MDEFAULT_01/logicmoo_pfc_test_sanity_base_MDEFAULT_01_Test_9999_Line_9999__Exitcode_7/  -->
+<!-- Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/MDEFAULT_01//  -->
 
-<!-- This: https://jenkins.logicmoo.org/job/logicmoo_workspace/36/testReport/logicmoo.pfc.test.sanity_base/MDEFAULT_01/logicmoo_pfc_test_sanity_base_MDEFAULT_01_Test_9999_Line_9999__Exitcode_7/  -->
+<!-- This: https://jenkins.logicmoo.org/job/logicmoo_workspace/37/testReport/logicmoo.pfc.test.sanity_base/MDEFAULT_01//  -->
 
 <!-- totalTime=  -->
 
-<!-- SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace@2/bin/lmoo=junit=minor =k mdefault_01.pfc (returned 7)  -->
+<!-- SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace/bin/lmoo=junit=minor =k mdefault_01.pfc (returned 7)  -->
 
 <testcase name="logicmoo.pfc.test.sanity_base.MDEFAULT_01@Test_9999_Line_9999__Exitcode_7" classname='logicmoo.pfc.test.sanity_base.MDEFAULT_01' time=''>
 
-<system-out><![CDATA[ (cd /var/lib/jenkins/workspace/logicmoo_workspace@2/packs_sys/pfc/t/sanity_base ; timeout --foreground --preserve-status -s SIGKILL -k 10s 10s lmoo-clif mdefault_01.pfc)
+<system-out><![CDATA[ (cd /var/lib/jenkins/workspace/logicmoo_workspace/packs_sys/pfc/t/sanity_base ; timeout --foreground --preserve-status -s SIGKILL -k 10s 10s lmoo-clif mdefault_01.pfc)
 
-Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/MDEFAULT_01/logicmoo_pfc_test_sanity_base_MDEFAULT_01_Test_9999_Line_9999__Exitcode_7/
+Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/MDEFAULT_01//
 
-This: https://jenkins.logicmoo.org/job/logicmoo_workspace/36/testReport/logicmoo.pfc.test.sanity_base/MDEFAULT_01/logicmoo_pfc_test_sanity_base_MDEFAULT_01_Test_9999_Line_9999__Exitcode_7/
+This: https://jenkins.logicmoo.org/job/logicmoo_workspace/37/testReport/logicmoo.pfc.test.sanity_base/MDEFAULT_01//
 
 totalTime=
 
-SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace@2/bin/lmoo-junit-minor -k mdefault_01.pfc (returned 7)]]></system-out>
+SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace/bin/lmoo-junit-minor -k mdefault_01.pfc (returned 7)]]></system-out>
 </testcase>
 
 <!-- FileTestCase=logicmoo.pfc.test.sanity_base.DIA_PFC_MOD_01@Test_9999_Line_9999__Exitcode_7  -->
 
 <!-- CMD=timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif dia_pfc_mod_01.pl  -->
 
-<!--  (cd /var/lib/jenkins/workspace/logicmoo_workspace@2/packs_sys/pfc/t/sanity_base ; timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif dia_pfc_mod_01.pl)  -->
+<!--  (cd /var/lib/jenkins/workspace/logicmoo_workspace/packs_sys/pfc/t/sanity_base ; timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif dia_pfc_mod_01.pl)  -->
 
-<!-- Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/DIA_PFC_MOD_01/logicmoo_pfc_test_sanity_base_DIA_PFC_MOD_01_Test_9999_Line_9999__Exitcode_7/  -->
+<!-- Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/DIA_PFC_MOD_01//  -->
 
-<!-- This: https://jenkins.logicmoo.org/job/logicmoo_workspace/36/testReport/logicmoo.pfc.test.sanity_base/DIA_PFC_MOD_01/logicmoo_pfc_test_sanity_base_DIA_PFC_MOD_01_Test_9999_Line_9999__Exitcode_7/  -->
+<!-- This: https://jenkins.logicmoo.org/job/logicmoo_workspace/37/testReport/logicmoo.pfc.test.sanity_base/DIA_PFC_MOD_01//  -->
 
 <!-- totalTime=  -->
 
-<!-- SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace@2/bin/lmoo=junit=minor =k dia_pfc_mod_01.pl (returned 7)  -->
+<!-- SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace/bin/lmoo=junit=minor =k dia_pfc_mod_01.pl (returned 7)  -->
 
 <testcase name="logicmoo.pfc.test.sanity_base.DIA_PFC_MOD_01@Test_9999_Line_9999__Exitcode_7" classname='logicmoo.pfc.test.sanity_base.DIA_PFC_MOD_01' time=''>
 
-<system-out><![CDATA[ (cd /var/lib/jenkins/workspace/logicmoo_workspace@2/packs_sys/pfc/t/sanity_base ; timeout --foreground --preserve-status -s SIGKILL -k 10s 10s lmoo-clif dia_pfc_mod_01.pl)
+<system-out><![CDATA[ (cd /var/lib/jenkins/workspace/logicmoo_workspace/packs_sys/pfc/t/sanity_base ; timeout --foreground --preserve-status -s SIGKILL -k 10s 10s lmoo-clif dia_pfc_mod_01.pl)
 
-Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/DIA_PFC_MOD_01/logicmoo_pfc_test_sanity_base_DIA_PFC_MOD_01_Test_9999_Line_9999__Exitcode_7/
+Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/DIA_PFC_MOD_01//
 
-This: https://jenkins.logicmoo.org/job/logicmoo_workspace/36/testReport/logicmoo.pfc.test.sanity_base/DIA_PFC_MOD_01/logicmoo_pfc_test_sanity_base_DIA_PFC_MOD_01_Test_9999_Line_9999__Exitcode_7/
+This: https://jenkins.logicmoo.org/job/logicmoo_workspace/37/testReport/logicmoo.pfc.test.sanity_base/DIA_PFC_MOD_01//
 
 totalTime=
 
-SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace@2/bin/lmoo-junit-minor -k dia_pfc_mod_01.pl (returned 7)]]></system-out>
+SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace/bin/lmoo-junit-minor -k dia_pfc_mod_01.pl (returned 7)]]></system-out>
 </testcase>
 
 <!-- FileTestCase=logicmoo.pfc.test.sanity_base.FILE_01@Test_9999_Line_9999__Exitcode_7  -->
 
 <!-- CMD=timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif file_01.pfc  -->
 
-<!--  (cd /var/lib/jenkins/workspace/logicmoo_workspace@2/packs_sys/pfc/t/sanity_base ; timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif file_01.pfc)  -->
+<!--  (cd /var/lib/jenkins/workspace/logicmoo_workspace/packs_sys/pfc/t/sanity_base ; timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif file_01.pfc)  -->
 
-<!-- Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/FILE_01/logicmoo_pfc_test_sanity_base_FILE_01_Test_9999_Line_9999__Exitcode_7/  -->
+<!-- Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/FILE_01//  -->
 
-<!-- This: https://jenkins.logicmoo.org/job/logicmoo_workspace/36/testReport/logicmoo.pfc.test.sanity_base/FILE_01/logicmoo_pfc_test_sanity_base_FILE_01_Test_9999_Line_9999__Exitcode_7/  -->
+<!-- This: https://jenkins.logicmoo.org/job/logicmoo_workspace/37/testReport/logicmoo.pfc.test.sanity_base/FILE_01//  -->
 
 <!-- totalTime=  -->
 
-<!-- SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace@2/bin/lmoo=junit=minor =k file_01.pfc (returned 7)  -->
+<!-- SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace/bin/lmoo=junit=minor =k file_01.pfc (returned 7)  -->
 
 <testcase name="logicmoo.pfc.test.sanity_base.FILE_01@Test_9999_Line_9999__Exitcode_7" classname='logicmoo.pfc.test.sanity_base.FILE_01' time=''>
 
-<system-out><![CDATA[ (cd /var/lib/jenkins/workspace/logicmoo_workspace@2/packs_sys/pfc/t/sanity_base ; timeout --foreground --preserve-status -s SIGKILL -k 10s 10s lmoo-clif file_01.pfc)
+<system-out><![CDATA[ (cd /var/lib/jenkins/workspace/logicmoo_workspace/packs_sys/pfc/t/sanity_base ; timeout --foreground --preserve-status -s SIGKILL -k 10s 10s lmoo-clif file_01.pfc)
 
-Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/FILE_01/logicmoo_pfc_test_sanity_base_FILE_01_Test_9999_Line_9999__Exitcode_7/
+Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/FILE_01//
 
-This: https://jenkins.logicmoo.org/job/logicmoo_workspace/36/testReport/logicmoo.pfc.test.sanity_base/FILE_01/logicmoo_pfc_test_sanity_base_FILE_01_Test_9999_Line_9999__Exitcode_7/
+This: https://jenkins.logicmoo.org/job/logicmoo_workspace/37/testReport/logicmoo.pfc.test.sanity_base/FILE_01//
 
 totalTime=
 
-SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace@2/bin/lmoo-junit-minor -k file_01.pfc (returned 7)]]></system-out>
+SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace/bin/lmoo-junit-minor -k file_01.pfc (returned 7)]]></system-out>
 </testcase>
 
 <!-- FileTestCase=logicmoo.pfc.test.sanity_base.SHIFT_01@Test_9999_Line_9999__Exitcode_7  -->
 
 <!-- CMD=timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif shift_01.pl  -->
 
-<!--  (cd /var/lib/jenkins/workspace/logicmoo_workspace@2/packs_sys/pfc/t/sanity_base ; timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif shift_01.pl)  -->
+<!--  (cd /var/lib/jenkins/workspace/logicmoo_workspace/packs_sys/pfc/t/sanity_base ; timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif shift_01.pl)  -->
 
-<!-- Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/SHIFT_01/logicmoo_pfc_test_sanity_base_SHIFT_01_Test_9999_Line_9999__Exitcode_7/  -->
+<!-- Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/SHIFT_01//  -->
 
-<!-- This: https://jenkins.logicmoo.org/job/logicmoo_workspace/36/testReport/logicmoo.pfc.test.sanity_base/SHIFT_01/logicmoo_pfc_test_sanity_base_SHIFT_01_Test_9999_Line_9999__Exitcode_7/  -->
+<!-- This: https://jenkins.logicmoo.org/job/logicmoo_workspace/37/testReport/logicmoo.pfc.test.sanity_base/SHIFT_01//  -->
 
 <!-- totalTime=  -->
 
-<!-- SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace@2/bin/lmoo=junit=minor =k shift_01.pl (returned 7)  -->
+<!-- SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace/bin/lmoo=junit=minor =k shift_01.pl (returned 7)  -->
 
 <testcase name="logicmoo.pfc.test.sanity_base.SHIFT_01@Test_9999_Line_9999__Exitcode_7" classname='logicmoo.pfc.test.sanity_base.SHIFT_01' time=''>
 
-<system-out><![CDATA[ (cd /var/lib/jenkins/workspace/logicmoo_workspace@2/packs_sys/pfc/t/sanity_base ; timeout --foreground --preserve-status -s SIGKILL -k 10s 10s lmoo-clif shift_01.pl)
+<system-out><![CDATA[ (cd /var/lib/jenkins/workspace/logicmoo_workspace/packs_sys/pfc/t/sanity_base ; timeout --foreground --preserve-status -s SIGKILL -k 10s 10s lmoo-clif shift_01.pl)
 
-Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/SHIFT_01/logicmoo_pfc_test_sanity_base_SHIFT_01_Test_9999_Line_9999__Exitcode_7/
+Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/SHIFT_01//
 
-This: https://jenkins.logicmoo.org/job/logicmoo_workspace/36/testReport/logicmoo.pfc.test.sanity_base/SHIFT_01/logicmoo_pfc_test_sanity_base_SHIFT_01_Test_9999_Line_9999__Exitcode_7/
+This: https://jenkins.logicmoo.org/job/logicmoo_workspace/37/testReport/logicmoo.pfc.test.sanity_base/SHIFT_01//
 
 totalTime=
 
-SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace@2/bin/lmoo-junit-minor -k shift_01.pl (returned 7)]]></system-out>
+SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace/bin/lmoo-junit-minor -k shift_01.pl (returned 7)]]></system-out>
 </testcase>
 
 <!-- FileTestCase=logicmoo.pfc.test.sanity_base.MPRED_PFC_TEST_01@Test_9999_Line_9999__Exitcode_7  -->
 
 <!-- CMD=timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif mpred_pfc_test_01.pl  -->
 
-<!--  (cd /var/lib/jenkins/workspace/logicmoo_workspace@2/packs_sys/pfc/t/sanity_base ; timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif mpred_pfc_test_01.pl)  -->
+<!--  (cd /var/lib/jenkins/workspace/logicmoo_workspace/packs_sys/pfc/t/sanity_base ; timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif mpred_pfc_test_01.pl)  -->
 
-<!-- Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/MPRED_PFC_TEST_01/logicmoo_pfc_test_sanity_base_MPRED_PFC_TEST_01_Test_9999_Line_9999__Exitcode_7/  -->
+<!-- Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/MPRED_PFC_TEST_01//  -->
 
-<!-- This: https://jenkins.logicmoo.org/job/logicmoo_workspace/36/testReport/logicmoo.pfc.test.sanity_base/MPRED_PFC_TEST_01/logicmoo_pfc_test_sanity_base_MPRED_PFC_TEST_01_Test_9999_Line_9999__Exitcode_7/  -->
+<!-- This: https://jenkins.logicmoo.org/job/logicmoo_workspace/37/testReport/logicmoo.pfc.test.sanity_base/MPRED_PFC_TEST_01//  -->
 
 <!-- totalTime=  -->
 
-<!-- SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace@2/bin/lmoo=junit=minor =k mpred_pfc_test_01.pl (returned 7)  -->
+<!-- SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace/bin/lmoo=junit=minor =k mpred_pfc_test_01.pl (returned 7)  -->
 
 <testcase name="logicmoo.pfc.test.sanity_base.MPRED_PFC_TEST_01@Test_9999_Line_9999__Exitcode_7" classname='logicmoo.pfc.test.sanity_base.MPRED_PFC_TEST_01' time=''>
 
-<system-out><![CDATA[ (cd /var/lib/jenkins/workspace/logicmoo_workspace@2/packs_sys/pfc/t/sanity_base ; timeout --foreground --preserve-status -s SIGKILL -k 10s 10s lmoo-clif mpred_pfc_test_01.pl)
+<system-out><![CDATA[ (cd /var/lib/jenkins/workspace/logicmoo_workspace/packs_sys/pfc/t/sanity_base ; timeout --foreground --preserve-status -s SIGKILL -k 10s 10s lmoo-clif mpred_pfc_test_01.pl)
 
-Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/MPRED_PFC_TEST_01/logicmoo_pfc_test_sanity_base_MPRED_PFC_TEST_01_Test_9999_Line_9999__Exitcode_7/
+Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/MPRED_PFC_TEST_01//
 
-This: https://jenkins.logicmoo.org/job/logicmoo_workspace/36/testReport/logicmoo.pfc.test.sanity_base/MPRED_PFC_TEST_01/logicmoo_pfc_test_sanity_base_MPRED_PFC_TEST_01_Test_9999_Line_9999__Exitcode_7/
+This: https://jenkins.logicmoo.org/job/logicmoo_workspace/37/testReport/logicmoo.pfc.test.sanity_base/MPRED_PFC_TEST_01//
 
 totalTime=
 
-SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace@2/bin/lmoo-junit-minor -k mpred_pfc_test_01.pl (returned 7)]]></system-out>
+SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace/bin/lmoo-junit-minor -k mpred_pfc_test_01.pl (returned 7)]]></system-out>
 </testcase>
 
 <!-- FileTestCase=logicmoo.pfc.test.sanity_base.ECHO_TEST_FC_01@Test_9999_Line_9999__Exitcode_7  -->
 
 <!-- CMD=timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif echo_test_fc_01.pfc  -->
 
-<!--  (cd /var/lib/jenkins/workspace/logicmoo_workspace@2/packs_sys/pfc/t/sanity_base ; timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif echo_test_fc_01.pfc)  -->
+<!--  (cd /var/lib/jenkins/workspace/logicmoo_workspace/packs_sys/pfc/t/sanity_base ; timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif echo_test_fc_01.pfc)  -->
 
-<!-- Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/ECHO_TEST_FC_01/logicmoo_pfc_test_sanity_base_ECHO_TEST_FC_01_Test_9999_Line_9999__Exitcode_7/  -->
+<!-- Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/ECHO_TEST_FC_01//  -->
 
-<!-- This: https://jenkins.logicmoo.org/job/logicmoo_workspace/36/testReport/logicmoo.pfc.test.sanity_base/ECHO_TEST_FC_01/logicmoo_pfc_test_sanity_base_ECHO_TEST_FC_01_Test_9999_Line_9999__Exitcode_7/  -->
+<!-- This: https://jenkins.logicmoo.org/job/logicmoo_workspace/37/testReport/logicmoo.pfc.test.sanity_base/ECHO_TEST_FC_01//  -->
 
 <!-- totalTime=  -->
 
-<!-- SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace@2/bin/lmoo=junit=minor =k echo_test_fc_01.pfc (returned 7)  -->
+<!-- SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace/bin/lmoo=junit=minor =k echo_test_fc_01.pfc (returned 7)  -->
 
 <testcase name="logicmoo.pfc.test.sanity_base.ECHO_TEST_FC_01@Test_9999_Line_9999__Exitcode_7" classname='logicmoo.pfc.test.sanity_base.ECHO_TEST_FC_01' time=''>
 
-<system-out><![CDATA[ (cd /var/lib/jenkins/workspace/logicmoo_workspace@2/packs_sys/pfc/t/sanity_base ; timeout --foreground --preserve-status -s SIGKILL -k 10s 10s lmoo-clif echo_test_fc_01.pfc)
+<system-out><![CDATA[ (cd /var/lib/jenkins/workspace/logicmoo_workspace/packs_sys/pfc/t/sanity_base ; timeout --foreground --preserve-status -s SIGKILL -k 10s 10s lmoo-clif echo_test_fc_01.pfc)
 
-Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/ECHO_TEST_FC_01/logicmoo_pfc_test_sanity_base_ECHO_TEST_FC_01_Test_9999_Line_9999__Exitcode_7/
+Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/ECHO_TEST_FC_01//
 
-This: https://jenkins.logicmoo.org/job/logicmoo_workspace/36/testReport/logicmoo.pfc.test.sanity_base/ECHO_TEST_FC_01/logicmoo_pfc_test_sanity_base_ECHO_TEST_FC_01_Test_9999_Line_9999__Exitcode_7/
+This: https://jenkins.logicmoo.org/job/logicmoo_workspace/37/testReport/logicmoo.pfc.test.sanity_base/ECHO_TEST_FC_01//
 
 totalTime=
 
-SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace@2/bin/lmoo-junit-minor -k echo_test_fc_01.pfc (returned 7)]]></system-out>
+SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace/bin/lmoo-junit-minor -k echo_test_fc_01.pfc (returned 7)]]></system-out>
 </testcase>
 
 <!-- FileTestCase=logicmoo.pfc.test.sanity_base.SV_FWD_01@Test_9999_Line_9999__Exitcode_7  -->
 
 <!-- CMD=timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif sv_fwd_01.pfc  -->
 
-<!--  (cd /var/lib/jenkins/workspace/logicmoo_workspace@2/packs_sys/pfc/t/sanity_base ; timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif sv_fwd_01.pfc)  -->
+<!--  (cd /var/lib/jenkins/workspace/logicmoo_workspace/packs_sys/pfc/t/sanity_base ; timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif sv_fwd_01.pfc)  -->
 
-<!-- Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/SV_FWD_01/logicmoo_pfc_test_sanity_base_SV_FWD_01_Test_9999_Line_9999__Exitcode_7/  -->
+<!-- Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/SV_FWD_01//  -->
 
-<!-- This: https://jenkins.logicmoo.org/job/logicmoo_workspace/36/testReport/logicmoo.pfc.test.sanity_base/SV_FWD_01/logicmoo_pfc_test_sanity_base_SV_FWD_01_Test_9999_Line_9999__Exitcode_7/  -->
+<!-- This: https://jenkins.logicmoo.org/job/logicmoo_workspace/37/testReport/logicmoo.pfc.test.sanity_base/SV_FWD_01//  -->
 
 <!-- totalTime=  -->
 
-<!-- SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace@2/bin/lmoo=junit=minor =k sv_fwd_01.pfc (returned 7)  -->
+<!-- SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace/bin/lmoo=junit=minor =k sv_fwd_01.pfc (returned 7)  -->
 
 <testcase name="logicmoo.pfc.test.sanity_base.SV_FWD_01@Test_9999_Line_9999__Exitcode_7" classname='logicmoo.pfc.test.sanity_base.SV_FWD_01' time=''>
 
-<system-out><![CDATA[ (cd /var/lib/jenkins/workspace/logicmoo_workspace@2/packs_sys/pfc/t/sanity_base ; timeout --foreground --preserve-status -s SIGKILL -k 10s 10s lmoo-clif sv_fwd_01.pfc)
+<system-out><![CDATA[ (cd /var/lib/jenkins/workspace/logicmoo_workspace/packs_sys/pfc/t/sanity_base ; timeout --foreground --preserve-status -s SIGKILL -k 10s 10s lmoo-clif sv_fwd_01.pfc)
 
-Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/SV_FWD_01/logicmoo_pfc_test_sanity_base_SV_FWD_01_Test_9999_Line_9999__Exitcode_7/
+Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/SV_FWD_01//
 
-This: https://jenkins.logicmoo.org/job/logicmoo_workspace/36/testReport/logicmoo.pfc.test.sanity_base/SV_FWD_01/logicmoo_pfc_test_sanity_base_SV_FWD_01_Test_9999_Line_9999__Exitcode_7/
+This: https://jenkins.logicmoo.org/job/logicmoo_workspace/37/testReport/logicmoo.pfc.test.sanity_base/SV_FWD_01//
 
 totalTime=
 
-SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace@2/bin/lmoo-junit-minor -k sv_fwd_01.pfc (returned 7)]]></system-out>
+SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace/bin/lmoo-junit-minor -k sv_fwd_01.pfc (returned 7)]]></system-out>
 </testcase>
 
 <!-- FileTestCase=logicmoo.pfc.test.sanity_base.SV_DEFAULT_01@Test_9999_Line_9999__Exitcode_7  -->
 
 <!-- CMD=timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif sv_default_01.pfc  -->
 
-<!--  (cd /var/lib/jenkins/workspace/logicmoo_workspace@2/packs_sys/pfc/t/sanity_base ; timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif sv_default_01.pfc)  -->
+<!--  (cd /var/lib/jenkins/workspace/logicmoo_workspace/packs_sys/pfc/t/sanity_base ; timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif sv_default_01.pfc)  -->
 
-<!-- Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/SV_DEFAULT_01/logicmoo_pfc_test_sanity_base_SV_DEFAULT_01_Test_9999_Line_9999__Exitcode_7/  -->
+<!-- Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/SV_DEFAULT_01//  -->
 
-<!-- This: https://jenkins.logicmoo.org/job/logicmoo_workspace/36/testReport/logicmoo.pfc.test.sanity_base/SV_DEFAULT_01/logicmoo_pfc_test_sanity_base_SV_DEFAULT_01_Test_9999_Line_9999__Exitcode_7/  -->
+<!-- This: https://jenkins.logicmoo.org/job/logicmoo_workspace/37/testReport/logicmoo.pfc.test.sanity_base/SV_DEFAULT_01//  -->
 
 <!-- totalTime=  -->
 
-<!-- SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace@2/bin/lmoo=junit=minor =k sv_default_01.pfc (returned 7)  -->
+<!-- SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace/bin/lmoo=junit=minor =k sv_default_01.pfc (returned 7)  -->
 
 <testcase name="logicmoo.pfc.test.sanity_base.SV_DEFAULT_01@Test_9999_Line_9999__Exitcode_7" classname='logicmoo.pfc.test.sanity_base.SV_DEFAULT_01' time=''>
 
-<system-out><![CDATA[ (cd /var/lib/jenkins/workspace/logicmoo_workspace@2/packs_sys/pfc/t/sanity_base ; timeout --foreground --preserve-status -s SIGKILL -k 10s 10s lmoo-clif sv_default_01.pfc)
+<system-out><![CDATA[ (cd /var/lib/jenkins/workspace/logicmoo_workspace/packs_sys/pfc/t/sanity_base ; timeout --foreground --preserve-status -s SIGKILL -k 10s 10s lmoo-clif sv_default_01.pfc)
 
-Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/SV_DEFAULT_01/logicmoo_pfc_test_sanity_base_SV_DEFAULT_01_Test_9999_Line_9999__Exitcode_7/
+Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/SV_DEFAULT_01//
 
-This: https://jenkins.logicmoo.org/job/logicmoo_workspace/36/testReport/logicmoo.pfc.test.sanity_base/SV_DEFAULT_01/logicmoo_pfc_test_sanity_base_SV_DEFAULT_01_Test_9999_Line_9999__Exitcode_7/
+This: https://jenkins.logicmoo.org/job/logicmoo_workspace/37/testReport/logicmoo.pfc.test.sanity_base/SV_DEFAULT_01//
 
 totalTime=
 
-SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace@2/bin/lmoo-junit-minor -k sv_default_01.pfc (returned 7)]]></system-out>
+SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace/bin/lmoo-junit-minor -k sv_default_01.pfc (returned 7)]]></system-out>
 </testcase>
 
 <!-- FileTestCase=logicmoo.pfc.test.sanity_base.RETRY_UNDEFINED_01@Test_9999_Line_9999__Exitcode_7  -->
 
 <!-- CMD=timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif retry_undefined_01.pfc  -->
 
-<!--  (cd /var/lib/jenkins/workspace/logicmoo_workspace@2/packs_sys/pfc/t/sanity_base ; timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif retry_undefined_01.pfc)  -->
+<!--  (cd /var/lib/jenkins/workspace/logicmoo_workspace/packs_sys/pfc/t/sanity_base ; timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif retry_undefined_01.pfc)  -->
 
-<!-- Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/RETRY_UNDEFINED_01/logicmoo_pfc_test_sanity_base_RETRY_UNDEFINED_01_Test_9999_Line_9999__Exitcode_7/  -->
+<!-- Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/RETRY_UNDEFINED_01//  -->
 
-<!-- This: https://jenkins.logicmoo.org/job/logicmoo_workspace/36/testReport/logicmoo.pfc.test.sanity_base/RETRY_UNDEFINED_01/logicmoo_pfc_test_sanity_base_RETRY_UNDEFINED_01_Test_9999_Line_9999__Exitcode_7/  -->
+<!-- This: https://jenkins.logicmoo.org/job/logicmoo_workspace/37/testReport/logicmoo.pfc.test.sanity_base/RETRY_UNDEFINED_01//  -->
 
 <!-- totalTime=  -->
 
-<!-- SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace@2/bin/lmoo=junit=minor =k retry_undefined_01.pfc (returned 7)  -->
+<!-- SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace/bin/lmoo=junit=minor =k retry_undefined_01.pfc (returned 7)  -->
 
 <testcase name="logicmoo.pfc.test.sanity_base.RETRY_UNDEFINED_01@Test_9999_Line_9999__Exitcode_7" classname='logicmoo.pfc.test.sanity_base.RETRY_UNDEFINED_01' time=''>
 
-<system-out><![CDATA[ (cd /var/lib/jenkins/workspace/logicmoo_workspace@2/packs_sys/pfc/t/sanity_base ; timeout --foreground --preserve-status -s SIGKILL -k 10s 10s lmoo-clif retry_undefined_01.pfc)
+<system-out><![CDATA[ (cd /var/lib/jenkins/workspace/logicmoo_workspace/packs_sys/pfc/t/sanity_base ; timeout --foreground --preserve-status -s SIGKILL -k 10s 10s lmoo-clif retry_undefined_01.pfc)
 
-Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/RETRY_UNDEFINED_01/logicmoo_pfc_test_sanity_base_RETRY_UNDEFINED_01_Test_9999_Line_9999__Exitcode_7/
+Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/RETRY_UNDEFINED_01//
 
-This: https://jenkins.logicmoo.org/job/logicmoo_workspace/36/testReport/logicmoo.pfc.test.sanity_base/RETRY_UNDEFINED_01/logicmoo_pfc_test_sanity_base_RETRY_UNDEFINED_01_Test_9999_Line_9999__Exitcode_7/
+This: https://jenkins.logicmoo.org/job/logicmoo_workspace/37/testReport/logicmoo.pfc.test.sanity_base/RETRY_UNDEFINED_01//
 
 totalTime=
 
-SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace@2/bin/lmoo-junit-minor -k retry_undefined_01.pfc (returned 7)]]></system-out>
+SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace/bin/lmoo-junit-minor -k retry_undefined_01.pfc (returned 7)]]></system-out>
 </testcase>
 
 <!-- FileTestCase=logicmoo.pfc.test.sanity_base.MIN_FAIL_01@Test_9999_Line_9999__Exitcode_7  -->
 
 <!-- CMD=timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif min_fail_01.pl  -->
 
-<!--  (cd /var/lib/jenkins/workspace/logicmoo_workspace@2/packs_sys/pfc/t/sanity_base ; timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif min_fail_01.pl)  -->
+<!--  (cd /var/lib/jenkins/workspace/logicmoo_workspace/packs_sys/pfc/t/sanity_base ; timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif min_fail_01.pl)  -->
 
-<!-- Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/MIN_FAIL_01/logicmoo_pfc_test_sanity_base_MIN_FAIL_01_Test_9999_Line_9999__Exitcode_7/  -->
+<!-- Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/MIN_FAIL_01//  -->
 
-<!-- This: https://jenkins.logicmoo.org/job/logicmoo_workspace/36/testReport/logicmoo.pfc.test.sanity_base/MIN_FAIL_01/logicmoo_pfc_test_sanity_base_MIN_FAIL_01_Test_9999_Line_9999__Exitcode_7/  -->
+<!-- This: https://jenkins.logicmoo.org/job/logicmoo_workspace/37/testReport/logicmoo.pfc.test.sanity_base/MIN_FAIL_01//  -->
 
 <!-- totalTime=  -->
 
-<!-- SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace@2/bin/lmoo=junit=minor =k min_fail_01.pl (returned 7)  -->
+<!-- SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace/bin/lmoo=junit=minor =k min_fail_01.pl (returned 7)  -->
 
 <testcase name="logicmoo.pfc.test.sanity_base.MIN_FAIL_01@Test_9999_Line_9999__Exitcode_7" classname='logicmoo.pfc.test.sanity_base.MIN_FAIL_01' time=''>
 
-<system-out><![CDATA[ (cd /var/lib/jenkins/workspace/logicmoo_workspace@2/packs_sys/pfc/t/sanity_base ; timeout --foreground --preserve-status -s SIGKILL -k 10s 10s lmoo-clif min_fail_01.pl)
+<system-out><![CDATA[ (cd /var/lib/jenkins/workspace/logicmoo_workspace/packs_sys/pfc/t/sanity_base ; timeout --foreground --preserve-status -s SIGKILL -k 10s 10s lmoo-clif min_fail_01.pl)
 
-Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/MIN_FAIL_01/logicmoo_pfc_test_sanity_base_MIN_FAIL_01_Test_9999_Line_9999__Exitcode_7/
+Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/MIN_FAIL_01//
 
-This: https://jenkins.logicmoo.org/job/logicmoo_workspace/36/testReport/logicmoo.pfc.test.sanity_base/MIN_FAIL_01/logicmoo_pfc_test_sanity_base_MIN_FAIL_01_Test_9999_Line_9999__Exitcode_7/
+This: https://jenkins.logicmoo.org/job/logicmoo_workspace/37/testReport/logicmoo.pfc.test.sanity_base/MIN_FAIL_01//
 
 totalTime=
 
-SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace@2/bin/lmoo-junit-minor -k min_fail_01.pl (returned 7)]]></system-out>
+SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace/bin/lmoo-junit-minor -k min_fail_01.pl (returned 7)]]></system-out>
 </testcase>
 
 <!-- FileTestCase=logicmoo.pfc.test.sanity_base.DF_01@Test_9999_Line_9999__Exitcode_7  -->
 
 <!-- CMD=timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif df_01.pfc  -->
 
-<!--  (cd /var/lib/jenkins/workspace/logicmoo_workspace@2/packs_sys/pfc/t/sanity_base ; timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif df_01.pfc)  -->
+<!--  (cd /var/lib/jenkins/workspace/logicmoo_workspace/packs_sys/pfc/t/sanity_base ; timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif df_01.pfc)  -->
 
-<!-- Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/DF_01/logicmoo_pfc_test_sanity_base_DF_01_Test_9999_Line_9999__Exitcode_7/  -->
+<!-- Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/DF_01//  -->
 
-<!-- This: https://jenkins.logicmoo.org/job/logicmoo_workspace/36/testReport/logicmoo.pfc.test.sanity_base/DF_01/logicmoo_pfc_test_sanity_base_DF_01_Test_9999_Line_9999__Exitcode_7/  -->
+<!-- This: https://jenkins.logicmoo.org/job/logicmoo_workspace/37/testReport/logicmoo.pfc.test.sanity_base/DF_01//  -->
 
 <!-- totalTime=  -->
 
-<!-- SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace@2/bin/lmoo=junit=minor =k df_01.pfc (returned 7)  -->
+<!-- SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace/bin/lmoo=junit=minor =k df_01.pfc (returned 7)  -->
 
 <testcase name="logicmoo.pfc.test.sanity_base.DF_01@Test_9999_Line_9999__Exitcode_7" classname='logicmoo.pfc.test.sanity_base.DF_01' time=''>
 
-<system-out><![CDATA[ (cd /var/lib/jenkins/workspace/logicmoo_workspace@2/packs_sys/pfc/t/sanity_base ; timeout --foreground --preserve-status -s SIGKILL -k 10s 10s lmoo-clif df_01.pfc)
+<system-out><![CDATA[ (cd /var/lib/jenkins/workspace/logicmoo_workspace/packs_sys/pfc/t/sanity_base ; timeout --foreground --preserve-status -s SIGKILL -k 10s 10s lmoo-clif df_01.pfc)
 
-Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/DF_01/logicmoo_pfc_test_sanity_base_DF_01_Test_9999_Line_9999__Exitcode_7/
+Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/DF_01//
 
-This: https://jenkins.logicmoo.org/job/logicmoo_workspace/36/testReport/logicmoo.pfc.test.sanity_base/DF_01/logicmoo_pfc_test_sanity_base_DF_01_Test_9999_Line_9999__Exitcode_7/
+This: https://jenkins.logicmoo.org/job/logicmoo_workspace/37/testReport/logicmoo.pfc.test.sanity_base/DF_01//
 
 totalTime=
 
-SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace@2/bin/lmoo-junit-minor -k df_01.pfc (returned 7)]]></system-out>
+SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace/bin/lmoo-junit-minor -k df_01.pfc (returned 7)]]></system-out>
 </testcase>
 
 <!-- FileTestCase=logicmoo.pfc.test.sanity_base.IF_MISSING_01@Test_9999_Line_9999__Exitcode_7  -->
 
 <!-- CMD=timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif if_missing_01.pfc  -->
 
-<!--  (cd /var/lib/jenkins/workspace/logicmoo_workspace@2/packs_sys/pfc/t/sanity_base ; timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif if_missing_01.pfc)  -->
+<!--  (cd /var/lib/jenkins/workspace/logicmoo_workspace/packs_sys/pfc/t/sanity_base ; timeout ==foreground ==preserve=status =s SIGKILL =k 10s 10s lmoo=clif if_missing_01.pfc)  -->
 
-<!-- Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/IF_MISSING_01/logicmoo_pfc_test_sanity_base_IF_MISSING_01_Test_9999_Line_9999__Exitcode_7/  -->
+<!-- Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/IF_MISSING_01//  -->
 
-<!-- This: https://jenkins.logicmoo.org/job/logicmoo_workspace/36/testReport/logicmoo.pfc.test.sanity_base/IF_MISSING_01/logicmoo_pfc_test_sanity_base_IF_MISSING_01_Test_9999_Line_9999__Exitcode_7/  -->
+<!-- This: https://jenkins.logicmoo.org/job/logicmoo_workspace/37/testReport/logicmoo.pfc.test.sanity_base/IF_MISSING_01//  -->
 
 <!-- totalTime=  -->
 
-<!-- SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace@2/bin/lmoo=junit=minor =k if_missing_01.pfc (returned 7)  -->
+<!-- SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace/bin/lmoo=junit=minor =k if_missing_01.pfc (returned 7)  -->
 
 <testcase name="logicmoo.pfc.test.sanity_base.IF_MISSING_01@Test_9999_Line_9999__Exitcode_7" classname='logicmoo.pfc.test.sanity_base.IF_MISSING_01' time=''>
 
-<system-out><![CDATA[ (cd /var/lib/jenkins/workspace/logicmoo_workspace@2/packs_sys/pfc/t/sanity_base ; timeout --foreground --preserve-status -s SIGKILL -k 10s 10s lmoo-clif if_missing_01.pfc)
+<system-out><![CDATA[ (cd /var/lib/jenkins/workspace/logicmoo_workspace/packs_sys/pfc/t/sanity_base ; timeout --foreground --preserve-status -s SIGKILL -k 10s 10s lmoo-clif if_missing_01.pfc)
 
-Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/IF_MISSING_01/logicmoo_pfc_test_sanity_base_IF_MISSING_01_Test_9999_Line_9999__Exitcode_7/
+Latest: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/IF_MISSING_01//
 
-This: https://jenkins.logicmoo.org/job/logicmoo_workspace/36/testReport/logicmoo.pfc.test.sanity_base/IF_MISSING_01/logicmoo_pfc_test_sanity_base_IF_MISSING_01_Test_9999_Line_9999__Exitcode_7/
+This: https://jenkins.logicmoo.org/job/logicmoo_workspace/37/testReport/logicmoo.pfc.test.sanity_base/IF_MISSING_01//
 
 totalTime=
 
-SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace@2/bin/lmoo-junit-minor -k if_missing_01.pfc (returned 7)]]></system-out>
+SUCCESS: /var/lib/jenkins/workspace/logicmoo_workspace/bin/lmoo-junit-minor -k if_missing_01.pfc (returned 7)]]></system-out>
 </testcase>
 
 
