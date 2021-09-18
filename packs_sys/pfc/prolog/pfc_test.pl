@@ -385,6 +385,7 @@ test_completed_exit(_):- once((listing(j_u:junit_prop(_,warn,_)),
 test_completed_exit(N):- keep_going,!, halt(N).
 test_completed_exit(N):- (current_prolog_flag(debug,true)-> true ; halt(N)).
 
+test_completed_exit_maybe(_):- j_u:junit_prop(_,result,failure), test_completed_exit(6).
 test_completed_exit_maybe(_):- j_u:junit_prop(_,error,_), test_completed_exit(9).
 test_completed_exit_maybe(_):- j_u:junit_prop(_,warning,_),test_completed_exit(3).
 test_completed_exit_maybe(_):- j_u:junit_prop(_,warn,_),test_completed_exit(3).
