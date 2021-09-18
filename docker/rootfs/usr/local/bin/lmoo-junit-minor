@@ -158,7 +158,7 @@ for ele2 in "${SORTED_FILES[@]}"
 	   do
 	    retry=0
 
-        export RELPATH=$(echo "$PWD/{$ele}" | sed -e "s|$LOGICMOO_WS/||g")
+        export RELPATH=$(echo "$PWD/${ele}" | sed -e "s|$LOGICMOO_WS/||g")
         export FILENAME=${ele}
         export JUNIT_SHORTCLASS=`echo "${FILENAME^^}" | cut -d'.' -f1 `
         export JUNIT_CLASSNAME="${JUNIT_PACKAGE}.${JUNIT_SHORTCLASS}"
