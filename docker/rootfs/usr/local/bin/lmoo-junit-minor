@@ -209,12 +209,13 @@ for ele2 in "${SORTED_FILES[@]}"
         INFO "GH_MASTER_ISSUE_FINFO=${GH_MASTER_ISSUE_FINFO}"
 	export GH_MASTER_ISSUE_ID=$(echo "${GH_MASTER_ISSUE_FINFO}" | cut -f1)
 	export GH_MASTER_ISSUE_OC=$(echo "${GH_MASTER_ISSUE_FINFO}" | cut -f2)
-	INFO "GH_MASTER_ISSUE_ID/OC=${GH_MASTER_ISSUE_ID}/${GH_MASTER_ISSUE_OC}"
+	INFO "GH_MASTER_ISSUE_ID=#${GH_MASTER_ISSUE_ID} ${GH_MASTER_ISSUE_OC}"
 	export FTC_LINK=$(echo "${FileTestCase}" | sed -e "s/@/_/g" -e "s/\./_/g" )
 	export LAST_BUILD_REF="https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/${JUNIT_PACKAGE}/${JUNIT_SHORTCLASS}"
 	INFO "Latest: ${LAST_BUILD_REF}/${FTC_LINK}/"
 	export BUILD_REF="https://jenkins.logicmoo.org/job/logicmoo_workspace/${BUILD_NUMBER}/testReport/${JUNIT_PACKAGE}/${JUNIT_SHORTCLASS}"
-	INFO "This: ${BUILD_REF}/${FTC_LINK}/"        
+	INFO "This: ${BUILD_REF}/${FTC_LINK}/"       
+	INFO "GIT: $(git rev-parse HEAD)"
         
 	startTime=$(date +%s%3N);
 	echo "\`\`\`" >>  ${TEE_FILE}
