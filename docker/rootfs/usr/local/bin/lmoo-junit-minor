@@ -209,21 +209,23 @@ for ele2 in "${SORTED_FILES[@]}"
         export TEE_FILE=${TESTING_TEMP}/CMD_LAST.ansi
         export TEE_FILE2=${TEE_FILE}.too
 	export GH_MASTER_ISSUE_FINFO=$(echo "${GH_MASTER_ISSUE_INFO}" | grep "${JUNIT_SHORTCLASS}" | grep ${Test_9999} | head -1)
-        INFO "GH_MASTER_ISSUE_FINFO=${GH_MASTER_ISSUE_FINFO}"
 	export GH_MASTER_ISSUE_ID=$(echo "${GH_MASTER_ISSUE_FINFO}" | cut -f1)
 	export GH_MASTER_ISSUE_OC=$(echo "${GH_MASTER_ISSUE_FINFO}" | cut -f2)
-	INFO "GH_MASTER_ISSUE_ID=#${GH_MASTER_ISSUE_ID} '${GH_MASTER_ISSUE_OC}'"
+        INFO "GH_MASTER_ISSUE_FINFO=${GH_MASTER_ISSUE_FINFO}"
+	#INFO "GH_MASTER_ISSUE_ID=#${GH_MASTER_ISSUE_ID} '${GH_MASTER_ISSUE_OC}'"
+
 	export FTC_LINK=$(echo "${FileTestCase}" | sed -e "s/[@. ]/_/g")
 	export LAST_BUILD_REF="https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/${JUNIT_PACKAGE}/${JUNIT_SHORTCLASS}"
 	export BUILD_REF=$(echo $LAST_BUILD_REF | sed -e "s/lastBuild/${BUILD_ID}/g")
         export ISSUE_SEARCH="https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3A${JUNIT_SHORTCLASS}"
-	LINKS="Latest: ${LAST_BUILD_REF}/${FTC_LINK}/\n"
-	LINKS+="This: ${BUILD_REF}/${FTC_LINK}/\n"
+	LINKS=""
+	LINKS+="ISSUE_SEARCH: ${ISSUE_SEARCH}\n"
+	LINKS+="GITLAB: https://logicmoo.org:2082/gitlab/logicmoo/logicmoo_workspace/-/commit/${GIT_REV}\n"
+	LINKS+=" https://gitlab.logicmoo.org/gitlab/logicmoo/logicmoo_workspace/-/blob/${GIT_REV}/$RELPATH\n"	
+	LINKS+="Latest: ${LAST_BUILD_REF}/${FTC_LINK}/\n"
+	LINKS+="This Build: ${BUILD_REF}/${FTC_LINK}/\n"
 	LINKS+="GITHUB: https://github.com/logicmoo/logicmoo_workspace/commit/${GIT_REV}\n"
 	LINKS+=" https://github.com/logicmoo/logicmoo_workspace/blob/${GIT_REV}/$RELPATH\n"
-	LINKS+="GITLAB: https://logicmoo.org:2082/gitlab/logicmoo/logicmoo_workspace/-/commit/${GIT_REV}\n"
-	LINKS+=" https://gitlab.logicmoo.org/gitlab/logicmoo/logicmoo_workspace/-/blob/${GIT_REV}/$RELPATH\n"
-	LINKS+="ISSUE_SEARCH: ${ISSUE_SEARCH}"
 	INFO "${LINKS}"
 
 	startTime=$(date +%s%3N);
