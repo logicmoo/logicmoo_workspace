@@ -240,6 +240,7 @@ for ele2 in "${SORTED_FILES[@]}"
 
       INFO "${TEST_RESULT}: $0 ${keep_going} ${ele} (returned ${exitcode})"
 
+      echo source $LOGICMOO_WS/bin/lmoo-issue ${JUNIT_PACKAGE} ${JUNIT_SHORTCLASS} ${Test_9999} ${TEST_RESULT} "${FileTestCase}" ${TEE_FILE}
       source $LOGICMOO_WS/bin/lmoo-issue ${JUNIT_PACKAGE} ${JUNIT_SHORTCLASS} ${Test_9999} ${TEST_RESULT} "${FileTestCase}" ${TEE_FILE}
 
       

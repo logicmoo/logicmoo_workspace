@@ -22,29 +22,29 @@ function foc_gh_issue {
     echo "ISSUE_OC=${ISSUE_OC}"
 
     if [ "${4}" = "SUCCESS" ]; then
-       if [ "${ISSUE_OC}" = "OPEN" ]; then      
+       (if [ "${ISSUE_OC}" = "OPEN" ]; then      
            echo "Closing Issue $ISSUE_INFO"
 	   $GH_ISSUE comment ${ISSUE_ID} -F ${TEE_FILE}
 	   $GH_ISSUE comment ${ISSUE_ID} -b "Fixed in ${LINKS}"
 	   $GH_ISSUE close ${ISSUE_ID}
-       elif [ -z "${ISSUE_ID}"]
+       elif [ -z "${ISSUE_ID}" ]; then
            echo "NOT creating Issue $ISSUE_INFO"
        else
            echo "NOT editing Issue $ISSUE_INFO"
-       fi
+       fi)
     else
-       if [ "${ISSUE_OC}" = "CLOSED" ]; then
+       (if [ "${ISSUE_OC}" = "CLOSED" ]; then
             echo "Reopening $ISSUE_INFO"
 	    $GH_ISSUE comment ${ISSUE_ID} -b "Regression in ${LINKS}"
 	    $GH_ISSUE reopen ${ISSUE_ID}
 	    $GH_ISSUE comment ${ISSUE_ID} -F ${6}
-       elif [ -z "${ISSUE_ID}"]
+       elif [ -z "${ISSUE_ID}" ]; then
             echo "Creating Issue $ISSUE_INFO"
 	    $GH_ISSUE create -l "unit_test,${1},${2},${3}" -t "${5}" -F ${6}
        else 
             echo "Editing Issue $ISSUE_INFO"
 	    $GH_ISSUE edit ${ISSUE_ID} -t "${5}" -F ${6}
-       fi
+       fi)
     fi
 }
 export foc_gh_issue
