@@ -15,7 +15,6 @@ if [ "$1" == "-k" ]; then
   shift
 fi
 
-
 if [ "$(whoami)" == "jenkins" ]; then
     INTERACTIVE=0
 fi
@@ -194,6 +193,7 @@ for ele2 in "${SORTED_FILES[@]}"
             CMD="$SWIPL ${ele}"
         fi
 
+	export Test_9999="Test_9999"
         [ -z "${CMD_TIMEOUT}" ] && CMD_TIMEOUT="10s"
         [ -z "${CMD_WRAPPER}" ] && CMD_WRAPPER="timeout --foreground --preserve-status -s SIGKILL -k ${CMD_TIMEOUT} ${CMD_TIMEOUT}"
         CMD="${CMD_WRAPPER} ${CMD}"
@@ -205,18 +205,21 @@ for ele2 in "${SORTED_FILES[@]}"
         INFO "${date} (cd $PWD ; $CMD)"
         export TEE_FILE=${TESTING_TEMP}/CMD_LAST.ansi
         export TEE_FILE2=${TEE_FILE}.too
-	export GH_MASTER_ISSUE_FINFO=$(echo "${GH_MASTER_ISSUE_INFO}" | grep "${JUNIT_SHORTCLASS}" | grep Test_9999 | head -1)
+	export GH_MASTER_ISSUE_FINFO=$(echo "${GH_MASTER_ISSUE_INFO}" | grep "${JUNIT_SHORTCLASS}" | grep ${Test_9999} | head -1)
         INFO "GH_MASTER_ISSUE_FINFO=${GH_MASTER_ISSUE_FINFO}"
-	export GH_MASTER_ISSUE_ID=$(echo "${GH_MASTER_ISSUE_FINFO}" | cut -d " " -f1)
-	export GH_MASTER_ISSUE_OC=$(echo "${GH_MASTER_ISSUE_FINFO}" | cut -d " " -f2)
-	INFO "GH_MASTER_ISSUE_ID=#${GH_MASTER_ISSUE_ID} ${GH_MASTER_ISSUE_OC}"
+	export GH_MASTER_ISSUE_ID=$(echo "${GH_MASTER_ISSUE_FINFO}" | cut -f1)
+	export GH_MASTER_ISSUE_OC=$(echo "${GH_MASTER_ISSUE_FINFO}" | cut -f2)
+	INFO "GH_MASTER_ISSUE_ID=#${GH_MASTER_ISSUE_ID} '${GH_MASTER_ISSUE_OC}'"
 	export FTC_LINK=$(echo "${FileTestCase}" | sed -e "s/@/_/g" -e "s/\./_/g" )
 	export LAST_BUILD_REF="https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/${JUNIT_PACKAGE}/${JUNIT_SHORTCLASS}"
 	INFO "Latest: ${LAST_BUILD_REF}/${FTC_LINK}/"
 	export BUILD_REF="https://jenkins.logicmoo.org/job/logicmoo_workspace/${BUILD_NUMBER}/testReport/${JUNIT_PACKAGE}/${JUNIT_SHORTCLASS}"
 	INFO "This: ${BUILD_REF}/${FTC_LINK}/"       
-	INFO "GIT: $(git rev-parse HEAD)"
-        
+	INFO "GITHUB: https://github.com/logicmoo/logicmoo_workspace/commit/$(git rev-parse HEAD)"
+	INFO "GITLAB: https://logicmoo.org:2082/gitlab/logicmoo/logicmoo_workspace/-/commit/$(git rev-parse HEAD)"
+        export ISSUE_SEARCH="https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3A${JUNIT_SHORTCLASS}"
+        INFO "ISSUE_SEARCH: ${ISSUE_SEARCH}"
+
 	startTime=$(date +%s%3N);
 	echo "\`\`\`" >>  ${TEE_FILE}
 	# CMD is allowed to clobber TEE_FILE
@@ -242,25 +245,14 @@ for ele2 in "${SORTED_FILES[@]}"
          JECHO "<testcase name=\"${FileTestCase}\" classname='${JUNIT_CLASSNAME}' time='$totalTime'>"       
          JECHO "<system-out><![CDATA[$(cat ${TEE_FILE2})]]></system-out>\n</testcase>"
          JUNIT_TESTS_GTOTAL_PASSED=$((JUNIT_TESTS_GTOTAL_PASSED+1))
-	 if [ "${GH_MASTER_ISSUE_OC}" = "OPEN" ]; then           
-	   gh issue comment ${GH_MASTER_ISSUE_ID} -F ${TEE_FILE}
-	   gh issue comment ${GH_MASTER_ISSUE_ID} -b "Fixed in $(git rev-parse HEAD)"
-	   gh issue close ${GH_MASTER_ISSUE_ID}
-	 fi
       else    
         JECHO "<testcase name=\"${FileTestCase}\" classname='${JUNIT_CLASSNAME}' time='$totalTime'>"       
       	JECHO " <failure message='FAILED: $0 ${keep_going} ${ele} (returned ${exitcode})'/><system-err><![CDATA[$(cat ${TEE_FILE2})]]></system-err>\n</testcase>"	    JUNIT_TESTS_GTOTAL_FAILURES=$((JUNIT_TESTS_GTOTAL_FAILURES+1))
-	 touch "$ele" ; /bin/true
-
-         if [ "${GH_MASTER_ISSUE_OC}" = "CLOSED" ]; then          	   
-	   gh issue comment ${GH_MASTER_ISSUE_ID} -b "Regression in $(git rev-parse HEAD)"
-	   gh issue reopen ${GH_MASTER_ISSUE_ID}
-	   gh issue comment ${GH_MASTER_ISSUE_ID} -F ${TEE_FILE}
-	 else
-	   [ -z "${GH_MASTER_ISSUE_ID}"] && echo gh issue create -t "${FileTestCase}" -l "unit_test,${JUNIT_PACKAGE},${JUNIT_SHORTCLASS},Test_9999" -F ${TEE_FILE}
-	 fi
-         
+	touch "$ele" ; /bin/true         
       fi
+
+      lmoo-issue ${JUNIT_PACKAGE} ${JUNIT_SHORTCLASS} ${Test_9999} ${TEST_RESULT} "${FileTestCase}" ${TEE_FILE}
+
 
       [ $exitcode -eq 6 ] && retry=1 && continue
 

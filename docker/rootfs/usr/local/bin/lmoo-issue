@@ -1,0 +1,36 @@
+# foc_gh_issue 1${JUNIT_PACKAGE} 2${JUNIT_SHORTCLASS} 3${Test_9999} 4${TEST_RESULT} 5"${Title}" 6${BodyFile}
+function foc_gh_issue {
+
+    [ -z "${GH_MASTER_ISSUE_INFO}" ] && export GH_MASTER_ISSUE_INFO=`gh issue list -l ${1} -L 1000 | sed -e "s/UTC /\n/g" | grep "unit_test"`
+    [ -z "${GH_MASTER_ISSUE_INFO}" ] && export GH_MASTER_ISSUE_INFO=`gh issue list -l unit_test -L 2000 | sed -e "s/UTC /\n/g" | grep "unit_test"`
+
+    GH_MASTER_ISSUE_FINFO=$(echo "${GH_MASTER_ISSUE_INFO}" | grep "${2}" | grep ${3} | head -1)
+    echo "GH_MASTER_ISSUE_FINFO=${GH_MASTER_ISSUE_FINFO}"
+
+    GH_MASTER_ISSUE_ID=$(echo "${GH_MASTER_ISSUE_FINFO}" | cut -f1)
+    echo "GH_MASTER_ISSUE_ID=${GH_MASTER_ISSUE_ID}"
+
+    GH_MASTER_ISSUE_OC=$(echo "${GH_MASTER_ISSUE_FINFO}" | cut -f2)
+    echo "GH_MASTER_ISSUE_OC=${GH_MASTER_ISSUE_OC}"
+
+    if [ "${4}" = "SUCCESS" ]; then
+       if [ "${GH_MASTER_ISSUE_OC}" = "OPEN" ]; then           
+	   gh issue comment ${GH_MASTER_ISSUE_ID} -F ${TEE_FILE}
+	   gh issue comment ${GH_MASTER_ISSUE_ID} -b "Fixed in https://github.com/logicmoo/logicmoo_workspace/commit/$(git rev-parse HEAD) https://logicmoo.org:2082/gitlab/logicmoo/logicmoo_workspace/-/commit/$(git rev-parse HEAD)"
+	   gh issue close ${GH_MASTER_ISSUE_ID}
+       fi
+    else
+       if [ "${GH_MASTER_ISSUE_OC}" = "CLOSED" ]; then          	   
+	    gh issue comment ${GH_MASTER_ISSUE_ID} -b "Regression in https://github.com/logicmoo/logicmoo_workspace/commit/$(git rev-parse HEAD) https://logicmoo.org:2082/gitlab/logicmoo/logicmoo_workspace/-/commit/$(git rev-parse HEAD)"
+	    gh issue reopen ${GH_MASTER_ISSUE_ID}
+	    gh issue comment ${GH_MASTER_ISSUE_ID} -F ${6}
+       elif [ -z "${GH_MASTER_ISSUE_ID}"]
+	    echo gh issue create -t "${5}" -l "unit_test,${1},${2},${3}" -F ${6}
+       else 
+	    echo gh issue edit ${GH_MASTER_ISSUE_ID} -t "${5}" -F ${6}
+       fi
+    fi
+}
+export foc_gh_issue
+
+foc_gh_issue ${1} ${2} ${3} ${4} "${5}" ${6}
