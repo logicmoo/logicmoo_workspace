@@ -122,6 +122,7 @@ echo "<!-- ROLLUP_TMP=${ROLLUP_TMP} -->"
 echo "" > ${ROLLUP_TMP}
 
 export TEE_FILE=/dev/null
+export TEE_FILE1=/dev/null
 export TEE_FILE2=/dev/null
 
 function JECHO {
@@ -132,6 +133,7 @@ function INFO {
  willBe=$(echo "${*}" | sed -e 's/-/=/g' )
  echo -e "${doesBe}"
  echo -e "${doesBe}" >> ${TEE_FILE}
+ echo -e "${doesBe}" >> ${TEE_FILE1}
  echo -e "${doesBe}" >> ${TEE_FILE2}
  JECHO "<!-- ${willBe}  -->"
 }
@@ -203,16 +205,18 @@ for ele2 in "${SORTED_FILES[@]}"
 	export JUNIT_CMD="${CMD}"
         JUNIT_TESTS_GTOTAL_TESTS=$((JUNIT_TESTS_GTOTAL_TESTS+1))
         INFO "CMD=$CMD"
+        export TEE_FILE=${TESTING_TEMP}/CMD_LAST.ansi
+	export TEE_FILE1=${TEE_FILE}.one
+        export TEE_FILE2=${TEE_FILE}.too
 	cat /dev/null > ${TEE_FILE}
+	cat /dev/null > ${TEE_FILE1}
 	cat /dev/null > ${TEE_FILE2}
         INFO "${date} (cd $PWD ; $CMD)"
-        export TEE_FILE=${TESTING_TEMP}/CMD_LAST.ansi
-        export TEE_FILE2=${TEE_FILE}.too
 	export GH_MASTER_ISSUE_FINFO=$(echo "${GH_MASTER_ISSUE_INFO}" | grep "${JUNIT_SHORTCLASS} " | grep ${Test_9999} | head -1)
-	export GH_MASTER_ISSUE_ID=$(echo "${GH_MASTER_ISSUE_FINFO}" | cut -f1)
-	export GH_MASTER_ISSUE_OC=$(echo "${GH_MASTER_ISSUE_FINFO}" | cut -f2)
         INFO "GH_MASTER_ISSUE_FINFO=${GH_MASTER_ISSUE_FINFO}"
+	#export GH_MASTER_ISSUE_ID=$(echo "${GH_MASTER_ISSUE_FINFO}" | cut -f1)
 	#INFO "GH_MASTER_ISSUE_ID=#${GH_MASTER_ISSUE_ID} '${GH_MASTER_ISSUE_OC}'"
+	#export GH_MASTER_ISSUE_OC=$(echo "${GH_MASTER_ISSUE_FINFO}" | cut -f2)
 
 	export FTC_LINK=$(echo "${FileTestCase}" | sed -e "s/[@. ]/_/g")
 	export LAST_BUILD_REF="https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/${JUNIT_PACKAGE}/${JUNIT_SHORTCLASS}"
@@ -229,13 +233,13 @@ for ele2 in "${SORTED_FILES[@]}"
 	INFO "${LINKS}"
 
 	startTime=$(date +%s%3N);
-	echo "\`\`\`" >>  ${TEE_FILE}
+	echo "\`\`\`" >>  ${TEE_FILE1}
 	# CMD is allowed to clobber TEE_FILE
-        ( eval $CMD ) 2>&1 | tee -a ${TEE_FILE} | sed -r "s/\x1B\[(([0-9]{1,2})?(;)?([0-9]{1,2})?)?[m,K,H,f,J]//g" | tee ${TEE_FILE2}
+        ( eval $CMD ) 2>&1 | tee -a ${TEE_FILE} | tee -a ${TEE_FILE1} | sed -r "s/\x1B\[(([0-9]{1,2})?(;)?([0-9]{1,2})?)?[m,K,H,f,J]//g" | tee ${TEE_FILE2}
         exitcode=${PIPESTATUS[0]}
         endTime=$(date +%s%3N);
         totalTime=$((($endTime-$startTime)/1000));
-        echo "\`\`\`" >>  ${TEE_FILE}
+        echo "\`\`\`" >>  ${TEE_FILE1}
 
         INFO "totalTime=${totalTime}"
 
@@ -249,8 +253,8 @@ for ele2 in "${SORTED_FILES[@]}"
 	INFO "${LINKS}"
 	INFO "${TEST_RESULT}: $0 ${keep_going} ${ele} (returned ${exitcode})"
 
-      echo source $LOGICMOO_WS/bin/lmoo-issue ${JUNIT_PACKAGE} ${JUNIT_SHORTCLASS} ${Test_9999} ${TEST_RESULT} "${FileTestCase}" ${TEE_FILE}
-      source $LOGICMOO_WS/bin/lmoo-issue ${JUNIT_PACKAGE} ${JUNIT_SHORTCLASS} ${Test_9999} ${TEST_RESULT} "${FileTestCase}" ${TEE_FILE}
+      echo source $LOGICMOO_WS/bin/lmoo-issue ${JUNIT_PACKAGE} ${JUNIT_SHORTCLASS} ${Test_9999} ${TEST_RESULT} "${FileTestCase}" ${TEE_FILE1}
+      source $LOGICMOO_WS/bin/lmoo-issue ${JUNIT_PACKAGE} ${JUNIT_SHORTCLASS} ${Test_9999} ${TEST_RESULT} "${FileTestCase}" ${TEE_FILE1}
 
       
       if [ "${TEST_RESULT}" = "SUCCESS" ]; then
