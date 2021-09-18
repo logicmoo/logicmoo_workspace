@@ -1,3 +1,5 @@
+#/bin/bash
+
 # foc_gh_issue 1${JUNIT_PACKAGE} 2${JUNIT_SHORTCLASS} 3${Test_9999} 4${TEST_RESULT} 5"${Title}" 6${BodyFile}
 function foc_gh_issue {
 
@@ -14,7 +16,8 @@ function foc_gh_issue {
     echo "GH_MASTER_ISSUE_OC=${GH_MASTER_ISSUE_OC}"
 
     if [ "${4}" = "SUCCESS" ]; then
-       if [ "${GH_MASTER_ISSUE_OC}" = "OPEN" ]; then           
+       if [ "${GH_MASTER_ISSUE_OC}" = "OPEN" ]; then      
+                
 	   gh issue comment ${GH_MASTER_ISSUE_ID} -F ${TEE_FILE}
 	   gh issue comment ${GH_MASTER_ISSUE_ID} -b "Fixed in https://github.com/logicmoo/logicmoo_workspace/commit/$(git rev-parse HEAD) https://logicmoo.org:2082/gitlab/logicmoo/logicmoo_workspace/-/commit/$(git rev-parse HEAD)"
 	   gh issue close ${GH_MASTER_ISSUE_ID}
@@ -25,9 +28,9 @@ function foc_gh_issue {
 	    gh issue reopen ${GH_MASTER_ISSUE_ID}
 	    gh issue comment ${GH_MASTER_ISSUE_ID} -F ${6}
        elif [ -z "${GH_MASTER_ISSUE_ID}"]
-	    echo gh issue create -t "${5}" -l "unit_test,${1},${2},${3}" -F ${6}
+	    gh issue create -t "${5}" -l "unit_test,${1},${2},${3}" -F ${6}
        else 
-	    echo gh issue edit ${GH_MASTER_ISSUE_ID} -t "${5}" -F ${6}
+	    gh issue edit ${GH_MASTER_ISSUE_ID} -t "${5}" -F ${6}
        fi
     fi
 }
