@@ -1,36 +1,49 @@
 #/bin/bash
 
+GH_ISSUE="gh issue"
+
+GIT_REV=$(git rev-parse HEAD)
+
+LINKS="https://github.com/logicmoo/logicmoo_workspace/commit/${GIT_REV} https://logicmoo.org:2082/gitlab/logicmoo/logicmoo_workspace/-/commit/${GIT_REV}"
+
 # foc_gh_issue 1${JUNIT_PACKAGE} 2${JUNIT_SHORTCLASS} 3${Test_9999} 4${TEST_RESULT} 5"${Title}" 6${BodyFile}
 function foc_gh_issue {
 
-    [ -z "${GH_MASTER_ISSUE_INFO}" ] && export GH_MASTER_ISSUE_INFO=`gh issue list -l ${1} -L 1000 | sed -e "s/UTC /\n/g" | grep "unit_test"`
-    [ -z "${GH_MASTER_ISSUE_INFO}" ] && export GH_MASTER_ISSUE_INFO=`gh issue list -l unit_test -L 2000 | sed -e "s/UTC /\n/g" | grep "unit_test"`
+    [ -z "${GH_MASTER_ISSUE_INFO}" ] && export GH_MASTER_ISSUE_INFO=`$GH_ISSUE list -l ${1} -L 1000 | sed -e "s/UTC /\n/g" | grep "unit_test"`
+    [ -z "${GH_MASTER_ISSUE_INFO}" ] && export GH_MASTER_ISSUE_INFO=`$GH_ISSUE list -l unit_test -L 2000 | sed -e "s/UTC /\n/g" | grep "unit_test"`
 
-    GH_MASTER_ISSUE_FINFO=$(echo "${GH_MASTER_ISSUE_INFO}" | grep "${2}" | grep ${3} | head -1)
-    echo "GH_MASTER_ISSUE_FINFO=${GH_MASTER_ISSUE_FINFO}"
+    ISSUE_INFO=$(echo "${GH_MASTER_ISSUE_INFO}" | grep "${2}" | grep ${3} | head -1)
+    echo "ISSUE_INFO=${ISSUE_INFO}"
 
-    GH_MASTER_ISSUE_ID=$(echo "${GH_MASTER_ISSUE_FINFO}" | cut -f1)
-    echo "GH_MASTER_ISSUE_ID=${GH_MASTER_ISSUE_ID}"
+    ISSUE_ID=$(echo "${ISSUE_INFO}" | cut -f1)
+    echo "ISSUE_ID=${ISSUE_ID}"
 
-    GH_MASTER_ISSUE_OC=$(echo "${GH_MASTER_ISSUE_FINFO}" | cut -f2)
-    echo "GH_MASTER_ISSUE_OC=${GH_MASTER_ISSUE_OC}"
+    ISSUE_OC=$(echo "${ISSUE_INFO}" | cut -f2)
+    echo "ISSUE_OC=${ISSUE_OC}"
 
     if [ "${4}" = "SUCCESS" ]; then
-       if [ "${GH_MASTER_ISSUE_OC}" = "OPEN" ]; then      
-                
-	   gh issue comment ${GH_MASTER_ISSUE_ID} -F ${TEE_FILE}
-	   gh issue comment ${GH_MASTER_ISSUE_ID} -b "Fixed in https://github.com/logicmoo/logicmoo_workspace/commit/$(git rev-parse HEAD) https://logicmoo.org:2082/gitlab/logicmoo/logicmoo_workspace/-/commit/$(git rev-parse HEAD)"
-	   gh issue close ${GH_MASTER_ISSUE_ID}
+       if [ "${ISSUE_OC}" = "OPEN" ]; then      
+           echo "Closing Issue $ISSUE_INFO"
+	   $GH_ISSUE comment ${ISSUE_ID} -F ${TEE_FILE}
+	   $GH_ISSUE comment ${ISSUE_ID} -b "Fixed in ${LINKS}"
+	   $GH_ISSUE close ${ISSUE_ID}
+       elif [ -z "${ISSUE_ID}"]
+           echo "NOT creating Issue $ISSUE_INFO"
+       else
+           echo "NOT editing Issue $ISSUE_INFO"
        fi
     else
-       if [ "${GH_MASTER_ISSUE_OC}" = "CLOSED" ]; then          	   
-	    gh issue comment ${GH_MASTER_ISSUE_ID} -b "Regression in https://github.com/logicmoo/logicmoo_workspace/commit/$(git rev-parse HEAD) https://logicmoo.org:2082/gitlab/logicmoo/logicmoo_workspace/-/commit/$(git rev-parse HEAD)"
-	    gh issue reopen ${GH_MASTER_ISSUE_ID}
-	    gh issue comment ${GH_MASTER_ISSUE_ID} -F ${6}
-       elif [ -z "${GH_MASTER_ISSUE_ID}"]
-	    gh issue create -t "${5}" -l "unit_test,${1},${2},${3}" -F ${6}
+       if [ "${ISSUE_OC}" = "CLOSED" ]; then
+            echo "Reopening $ISSUE_INFO"
+	    $GH_ISSUE comment ${ISSUE_ID} -b "Regression in ${LINKS}"
+	    $GH_ISSUE reopen ${ISSUE_ID}
+	    $GH_ISSUE comment ${ISSUE_ID} -F ${6}
+       elif [ -z "${ISSUE_ID}"]
+            echo "Creating Issue $ISSUE_INFO"
+	    $GH_ISSUE create -l "unit_test,${1},${2},${3}" -t "${5}" -F ${6}
        else 
-	    gh issue edit ${GH_MASTER_ISSUE_ID} -t "${5}" -F ${6}
+            echo "Editing Issue $ISSUE_INFO"
+	    $GH_ISSUE edit ${ISSUE_ID} -t "${5}" -F ${6}
        fi
     fi
 }
