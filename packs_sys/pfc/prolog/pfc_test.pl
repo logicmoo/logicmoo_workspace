@@ -535,8 +535,6 @@ create_issue_with_name(Name,FileName,IssueNumber):-
   IssueNumber=find(labels=Labels),!.
 
   
-
-  
 issue_labels(Name,[Package,ShortClass,TestNum]):- 
   getenv('JUNIT_CLASSNAME',Classname),
   classname_to_package(Classname,Package,ShortClass),

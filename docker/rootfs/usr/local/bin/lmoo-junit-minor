@@ -210,11 +210,11 @@ for ele2 in "${SORTED_FILES[@]}"
 	export GH_MASTER_ISSUE_ID=$(echo "${GH_MASTER_ISSUE_FINFO}" | cut -f1)
 	export GH_MASTER_ISSUE_OC=$(echo "${GH_MASTER_ISSUE_FINFO}" | cut -f2)
 	INFO "GH_MASTER_ISSUE_ID=#${GH_MASTER_ISSUE_ID} '${GH_MASTER_ISSUE_OC}'"
-	export FTC_LINK=$(echo "${FileTestCase}" | sed -e "s/@/_/g" -e "s/\./_/g" )
+	export FTC_LINK=$(echo "${FileTestCase}" | sed -e "s/[@. ]/_/g")
 	export LAST_BUILD_REF="https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/${JUNIT_PACKAGE}/${JUNIT_SHORTCLASS}"
 	INFO "Latest: ${LAST_BUILD_REF}/${FTC_LINK}/"
-	export BUILD_REF="https://jenkins.logicmoo.org/job/logicmoo_workspace/${BUILD_NUMBER}/testReport/${JUNIT_PACKAGE}/${JUNIT_SHORTCLASS}"
-	INFO "This: ${BUILD_REF}/${FTC_LINK}/"       
+	export BUILD_REF=$(echo $LAST_BUILD_REF | sed -e "s/lastBuild/${BUILD_NUM}/g")
+	INFO "This: ${BUILD_REF}/${FTC_LINK}/"
 	INFO "GITHUB: https://github.com/logicmoo/logicmoo_workspace/commit/$(git rev-parse HEAD)"
 	INFO "GITLAB: https://logicmoo.org:2082/gitlab/logicmoo/logicmoo_workspace/-/commit/$(git rev-parse HEAD)"
         export ISSUE_SEARCH="https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3A${JUNIT_SHORTCLASS}"
@@ -240,6 +240,8 @@ for ele2 in "${SORTED_FILES[@]}"
 
       INFO "${TEST_RESULT}: $0 ${keep_going} ${ele} (returned ${exitcode})"
 
+      source $LOGICMOO_WS/bin/lmoo-issue ${JUNIT_PACKAGE} ${JUNIT_SHORTCLASS} ${Test_9999} ${TEST_RESULT} "${FileTestCase}" ${TEE_FILE}
+
       
       if [ "${TEST_RESULT}" = "SUCCESS" ]; then
          JECHO "<testcase name=\"${FileTestCase}\" classname='${JUNIT_CLASSNAME}' time='$totalTime'>"       
@@ -250,8 +252,6 @@ for ele2 in "${SORTED_FILES[@]}"
       	JECHO " <failure message='FAILED: $0 ${keep_going} ${ele} (returned ${exitcode})'/><system-err><![CDATA[$(cat ${TEE_FILE2})]]></system-err>\n</testcase>"	    JUNIT_TESTS_GTOTAL_FAILURES=$((JUNIT_TESTS_GTOTAL_FAILURES+1))
 	touch "$ele" ; /bin/true         
       fi
-
-      lmoo-issue ${JUNIT_PACKAGE} ${JUNIT_SHORTCLASS} ${Test_9999} ${TEST_RESULT} "${FileTestCase}" ${TEE_FILE}
 
 
       [ $exitcode -eq 6 ] && retry=1 && continue
