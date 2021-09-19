@@ -29,9 +29,6 @@
 :- (abolish(apply_macros:expand_apply, 4), asserta((apply_macros:expand_apply(_In, _, _, _):- !, fail))).
 :- (abolish(apply_macros:expand_apply, 2), asserta((apply_macros:expand_apply(_In, _):- !, fail))).
 
-foo2.
-:- listing(foo2/0).
-
 %:- use_module(library(pfc_lib)).
 %:- '$set_typein_module'(baseKB).
 %:- nop('$set_source_module'( baseKB)).
@@ -46,8 +43,6 @@ foo2.
 :- dmsg(nl_pipeline_start).
 
 % ==============================================================================
-foo1.
-:- listing(foo1/0).
 
 :- volatile(t_l:disable_px/0).
 :- thread_local(t_l:disable_px/0).
@@ -76,10 +71,6 @@ foo1.
 :- shared_parser_data(talkdb:talk_db/6).
 
 
-foo3.
-:- listing(foo3/0).
-
-:- break.
 % ================================================================================================
 :- if(load_parser_interface(parser_e2c)).
 % ================================================================================================
@@ -95,9 +86,6 @@ foo4a.
 %:- debug.
 
 :- endif.
-
-foo4.
-:- listing(foo4/0).
 
 % ================================================================================================
 %:- include(parser_ape).
@@ -423,7 +411,6 @@ pipeline_file_loading:-
   (pipeline_file_loaded->Loaded=true;Loaded=false),
   assert_if_new(pipeline_file_loaded),!,
   nop(Loaded=false-> break ; true).
-:- break.
 
 :- if( \+ getenv('keep_going','-k')).
 :- use_module(library(editline)).

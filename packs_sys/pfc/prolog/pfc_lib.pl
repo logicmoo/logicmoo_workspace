@@ -549,9 +549,9 @@ is_pfc_file:- quietly(is_pfc_file_notrace),!.
 is_pfc_file_notrace:- prolog_load_context(dialect,Other),Other\==swi,Other\==pfc,
   % dmsg(prolog_load_context(dialect,Other)),
   !,fail.
-is_pfc_file_notrace:- notrace(( prolog_load_context(source, SFile), 
+is_pfc_file_notrace:- notrace(( %prolog_load_context(source, SFile), 
                        (source_location(File,_W);prolog_load_context(file,File)))),!,
-              is_pfc_filename(File,SFile),!.
+              is_pfc_filename(File,File),!.
 
 is_pfc_file_notrace:- current_source_file(FileL),(FileL=File:_),!,is_pfc_file(File),!.
 %is_pfc_file_notrace:- expecting_pfc_dialect.
@@ -608,7 +608,7 @@ is_loadin(M,CC):- cna_functor_safe(CC,F,A),show_call(kb_local(M:F/A)),break.
 %must_pfc(IM,_):- is_never_pfc(IM),!,fail.
 %must_pfc(SM:P,SM:'==>'(P)):- !, (in_dialect_pfc;must_pfc_checked(P)),!.
 
-must_pfc(P,'==>'(P)):- simple_IM(P),!. 
+%must_pfc(P,'==>'(P)):- simple_IM(P),!. 
 must_pfc(P,P):- in_dialect_pfc,!, \+ is_never_pfc(P). 
 must_pfc(P,P):- must_pfc_checked(P),!. % ,source_module(SM),!.
 
@@ -710,7 +710,7 @@ is_never_pfc_sys(P):- predicate_property(P,system),cna_functor_safe(P,F,2),curre
 make_ain(ASSERT,Out) :- get_source_uu(S),Out = ':-'(mpred_ain(ASSERT,S)).
 
 simple_IM(IM):- \+ callable(IM),!, \+ var(IM).
-simple_IM(IM):- atomic(IM),(sub_atom(IM,';');sub_atom(IM,'(');sub_atom(IM,' ')).
+%simple_IM(IM):- atomic(IM),(sub_atom(IM,';');sub_atom(IM,'(');sub_atom(IM,' ')).
 
 % base_clause_expansion(MZ,Var,Var):- current_prolog_flag(mpred_te,false),!.
 %base_clause_expansion(:-(I),O):- strip_module(I,MZ,II), I\=II,!, fail,  base_clause_expansion(MZ,':-'(II),OO),!,O=MZ:(OO).
@@ -726,13 +726,13 @@ base_clause_expansion(_MZ,':-'(In),':-'(Out)):- in_dialect_pfc,fully_expand(In,O
 base_clause_expansion(_MZ,':-'(I),':-'(I)):- !.
 
 base_clause_expansion(_MZ,':-'(H,(CWC,B)),(H:-B)):- atom(CWC),arg(_,v(cwc),CWC), \+ in_dialect_pfc, !.
-base_clause_expansion(_MZ,IN, Out):- notrace_ex(must_pfc(IN,ASSERT)),!,make_ain(ASSERT,Out).
 %base_clause_expansion(MZ,IN, Out):- simple_IM(IN),!,make_ain(==>(IN),Out). 
 
 % @TODO 
 % base_clause_expansion(MZ,NeverPFC, EverPFC):- mpred_prop(baseKB, mtHybrid, 1, pfcWatches), in_dialect_pfc.
 
 base_clause_expansion(_MZ,NeverPFC, EverPFC):- is_never_pfc(NeverPFC),!,NeverPFC=EverPFC.
+base_clause_expansion(_MZ,IN, Out):- notrace_ex(must_pfc(IN,ASSERT)),!,make_ain(ASSERT,Out).
 base_clause_expansion(MZ,In,Out):- in_dialect_pfc,dmsg(warning(in_dialect_pfc+base_clause_expansion(MZ,In))), fully_expand(In,Out),!.
 %base_clause_expansion(MZ,M:In,M:Out):- !,base_clause_expansion(MZ,In,Out).
 %base_clause_expansion(MZ,In,Out):- fully_expand(In,Out),!.
@@ -938,9 +938,9 @@ system:goal_expansion(I,P,O,PO):- pfc_goal_expansion(I,P,O,PO).
 :- multifile(system:clause_expansion/2).
 :- module_transparent(system:clause_expansion/2).
 
-system:clause_expansion(I,O):-
+%system:clause_expansion(I,O):-
  % ((in_dialect_pfc;prolog_load_context(module,M),pfc_may_see_module(M))),
-  pfc_clause_expansion(I,O).
+%  pfc_clause_expansion(I,O).
 
 system:term_expansion(I,PI,O,PO):-
  % ((in_dialect_pfc;prolog_load_context(module,M),pfc_may_see_module(M))),

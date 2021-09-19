@@ -733,6 +733,7 @@ system:call_tru(M,X):- call(M:call,nesc(X)).
 call_e_tru(_E,X):- proven_tru(X), \+ proven_neg((X)).
 
 call_e_tru(_,X):- context_module(M), inherit_above(M, (X)).
+:- kb_global(call_e_tru/2).
 
 
 % call_tru(P):- is_recorded(P).

@@ -1872,7 +1872,6 @@ mpred_type_constraints_file.
 %
 % system:goal_expansion(G,O):- \+ current_prolog_flag(xref,true),\+ pldoc_loading, nonvar(G),boxlog_goal_expansion(G,O).
 
-:- kb_global(call_e_tru/2).
 :- baseKB:import(is_fort/1).
 :- baseKB:import(member_eqz/2).
 

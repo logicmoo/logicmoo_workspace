@@ -45,7 +45,7 @@
 
 :- export(load_parser_interface/1).
 % load_parser_interface(File):- \+ exists_source(File), !, call(File:ensure_loaded_no_mpreds(logicmoo_nlu_ext(File))).
-load_parser_interface(File):- call(File:ensure_loaded_no_mpreds(File)).
+load_parser_interface(File):- '@'(call(File:ensure_loaded_no_mpreds(File)),File).
 %:- parser_chat80:import(load_parser_interface/1).
 
 

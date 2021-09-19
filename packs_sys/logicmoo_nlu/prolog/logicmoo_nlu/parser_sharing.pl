@@ -103,7 +103,7 @@ nl_call_exit(_M,_F,_A,_P).
 :- module_transparent(each_parser_module/1).
 each_parser_module(M):- no_repeats(M,each_parser_module_0(M)).
 :- module_transparent(each_parser_module_0/1).
-each_parser_module_0(baseKB).
+each_parser_module_0(baseKB):- fail.
 each_parser_module_0(parser_shared).
 each_parser_module_0(parser_all).
 each_parser_module_0(M):- each_parser_module_1(E),default_module(E,M).
