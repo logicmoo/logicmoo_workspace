@@ -77,7 +77,7 @@ dont_wl(X):- var(X),!,fail.
 dont_wl(all_source_file_predicates_are_exported).
 dont_wl(X):- compound(X),compound_name_arity(X,F,_),(dont_wl(F);(arg(_,X,E),dont_wl(E))).
 maybe_writeln(X):- dont_wl(X),!.
-% maybe_writeln(_):- !.
+maybe_writeln(_):- !.
 maybe_writeln(X):- writeln(X).
 
 
