@@ -17,6 +17,8 @@
 :- system:use_module(library(prolog_stack)).
 :- system:use_module(library(listing)).
 :- system:use_module(library(lists)).
+:- system:use_module(library(time)).
+:- system:use_module(library(readutil)).
 :- system:use_module(library(must_trace)).
 
 :- use_module(library(prolog_stack)).
@@ -215,7 +217,8 @@ warn_fail_TODO(G):- dmsg_pretty(:-warn_fail_TODO(G)).
 % break = break on warnings and errors
 :- create_prolog_flag(logicmoo_message_hook,none,[keep(true),type(term)]).
 
-system:is_junit_test:- getenv('JUNIT_PACKAGE',_).
+system:is_junit_test:- getenv('JUNIT_PACKAGE',_),!.
+system:is_junit_test:- current_prolog_flag(test_src,Src),prolog_load_context(file,Src).
 
 skip_warning(T):- \+ callable(T),!,fail.
 skip_warning(informational).
@@ -325,19 +328,17 @@ outer_junit(G):- nop(G).
 system:halt_junit:- j_u:junit_prop(system,halted_junit,true),!.
 system:halt_junit:- asserta(j_u:junit_prop(system,halted_junit,true)),!,
   % list_test_results,
+  %nortrace,trace,
   save_junit_results.
 
-junit_term_expansion(I,_):-
- notrace((
-    I==end_of_file,   
-    current_prolog_flag(test_src,Src),
-    source_location(Src,_),
-    current_prolog_flag(test_completed,Goal))),
-    ignore(Goal),fail.
-junit_term_expansion(_ , _ ):- prolog_load_context(file,SF), \+ j_u:junit_prop(testsuite,file,SF),!,fail.
-junit_term_expansion(Var , _ ):- var(Var),!,fail.
-junit_term_expansion( (end_of_file), [] ):- !, system:halt_junit, fail.
+junit_term_expansion(Var , _ ):- notrace(var(Var)),!,fail.
 junit_term_expansion(M:I,M:O):- !, junit_term_expansion(I,O).
+
+junit_term_expansion(_ , _ ):- prolog_load_context(file,Src),  \+ j_u:junit_prop(testsuite,file,Src), 
+   \+ current_prolog_flag(test_src,Src), !, fail.
+junit_term_expansion( (end_of_file), [] ):- 
+  !, system:halt_junit, current_prolog_flag(test_completed,Goal), ignore(Goal),fail.
+
 junit_term_expansion((:- I),O):- !, junit_dirrective_expansion(I,M), (is_list(M) -> O=M ; O=(:-M)).
 
 junit_dirrective_expansion(I,O):- junit_expansion(junit_dirrective_exp,I,O).
@@ -383,6 +384,7 @@ test_completed_exit(_):- once((listing(j_u:junit_prop(_,warn,_)),
                                listing(j_u:junit_prop(_,error,_)))),fail.
 
 test_completed_exit(N):- keep_going,!, halt(N).
+test_completed_exit(N):- halt(N).
 test_completed_exit(N):- (current_prolog_flag(debug,true)-> true ; halt(N)).
 
 test_completed_exit_maybe(_):- j_u:junit_prop(_,result,failure), test_completed_exit(8).
@@ -489,9 +491,10 @@ system:test_retake:- system:halt_junit,test_completed_exit_maybe(3).
 </testsuites>
   */
 save_junit_results:-
+ \+ \+ j_u:junit_prop(testsuite,file,_),
  forall(j_u:junit_prop(testsuite,file,File), 
     (with_output_to(string(Text),show_junit_suite_xml(File)),
-     save_to_junit_file(File,Text))).
+     save_to_junit_file(File,Text))),!.
 save_junit_results:- wdmsg(unused(save_junit_results)).
 
 show_junit_suite_xml(File):- 
@@ -781,7 +784,7 @@ user:message_hook(T,Type,Term):-
    current_prolog_flag(logicmoo_message_hook,Was),Was\==none,Was\==false)),
    once(message_hook_handle(T,Type,Term)),!.
 
-system:term_expansion(I,P,O,PO):- notrace((nonvar(P),is_junit_test, junit_term_expansion(I,O))),P=PO.
+system:term_expansion(I,P,O,PO):- ((nonvar(P),is_junit_test, junit_term_expansion(I,O))),P=PO.
 system:goal_expansion(I,P,O,PO):- notrace((nonvar(P),is_junit_test, junit_goal_expansion(I,O))),P=PO.
 /*
 

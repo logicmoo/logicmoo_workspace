@@ -57,7 +57,10 @@ This module allows DCGs to use meta predicates like And Or Not.
 :- meta_predicate read_string_until(*,*,//,?,?).
 :- meta_predicate read_string_until_pairs(*,//,?,?).
 
-
+:- system:use_module(library(listing)).
+:- system:use_module(library(lists)).
+:- system:use_module(library(time)).
+:- system:use_module(library(readutil)).
 
 
 :- dynamic(t_l:dcg_meta_reader_options/2).

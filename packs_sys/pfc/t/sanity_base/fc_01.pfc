@@ -6,13 +6,13 @@
 
 :- include(library(logicmoo_test_header)).
 
-
 :- expects_dialect(pfc).
 
 a11 ==> b11.
 a11.
 
 :- mpred_test(b11).
+
 
 
 

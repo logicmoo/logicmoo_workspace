@@ -15,6 +15,8 @@ if [ "$1" == "-k" ]; then
   shift
 fi
 
+lmoo-make
+
 if [ "$(whoami)" == "jenkins" ]; then
     INTERACTIVE=0
 fi
@@ -198,7 +200,7 @@ for ele2 in "${SORTED_FILES[@]}"
            if type lmoo-clif > /dev/null 2>&1; then
              SWIPL=lmoo-clif
            fi
-           
+          
             #// Runs the test -f .swiplrc
             #//CMD="swipl -g 'set_prolog_flag(runtime_testing,${runtime_testing})' -g \"thread_create(['${ele}'],Id),thread_join(Id),$test_completed\" "
             #//CMD="$SWIPL -g 'set_prolog_flag(runtime_testing,${runtime_testing})' -g \"(['${ele}'])\" -g \"$test_completed\" "
@@ -206,9 +208,9 @@ for ele2 in "${SORTED_FILES[@]}"
         fi
 
 	export Test_9999="Test_9999"
-        trap 'echo caught interrupt and exiting;exit' INT
+        
         [ -z "${CMD_TIMEOUT}" ] && CMD_TIMEOUT="10s"
-        [ -z "${CMD_WRAPPER}" ] && CMD_WRAPPER="timeout --foreground --preserve-status -s SIGKILL -k ${CMD_TIMEOUT} ${CMD_TIMEOUT}"
+        [ -z "${CMD_WRAPPER}" ] && CMD_WRAPPER="timeout --foreground --preserve-status -s SIGKILL -k ${CMD_TIMEOUT} ${CMD_TIMEOUT}" && trap 'echo caught interrupt and exiting;exit' INT
         CMD="${CMD_WRAPPER} ${CMD}"
 	export GIT_REV=$(git rev-parse HEAD)
 	export JUNIT_CMD="${CMD}"

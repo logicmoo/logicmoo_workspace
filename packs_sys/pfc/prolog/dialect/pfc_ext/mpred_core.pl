@@ -4407,6 +4407,8 @@ mpred_trigger_key(X,X).
 % % :- set_prolog_flag(mpred_pfc_file,true).
 % local_testing
 
+:- fixup_exports.
+
 :- set_prolog_flag(expect_pfc_file,never).
 
 %:- fixup_exports.

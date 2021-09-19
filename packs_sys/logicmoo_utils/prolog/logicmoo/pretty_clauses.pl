@@ -55,6 +55,7 @@ etc.
 :- use_module(library(option)).
 :- use_module(library(error)).
 :- use_module(library(debug)).
+:- system:use_module(library(backcomp)).
 
 :- multifile blob_rendering//3.              % +Type, +Blob, +Options
 
@@ -462,12 +463,12 @@ print_et_to_string(T,S,Options):-
                   portray(false)],
    notrace(my_merge_options(Old,Options,WriteOpts)),
    PrintOpts = [output(current_output)|Options],                                
-  sformat(S, '~@', [(plpp(TT,WriteOpts,PrintOpts), ttyflush)]).
+  sformat(S, '~@', [(sys:plpp(TT,WriteOpts,PrintOpts), ttyflush)]).
 
-% plpp(T):- !, print(T).
-plpp(T):- plpp(T,[]).
+% sys:plpp(T):- !, print(T).
+sys:plpp(T):- sys:plpp(T,[]).
 
-plpp(T, Opts):- notrace(plpp(T, Opts)).
+sys:plpp(T, Opts):- notrace(sys:plpp(T, Opts)).
 
 plpp0(T, Opts):- 
  get_varname_list(Vs),
@@ -479,10 +480,10 @@ plpp0(T, Opts):-
    notrace(my_merge_options(Old,Options,WriteOpts1)),
    notrace(my_merge_options(WriteOpts1,Opts,WriteOpts)),
    PrintOpts = [output(current_output)|Options],                                
-  plpp(TT,WriteOpts,PrintOpts).
-%plpp(TT,WriteOpts,PrintOpts):- !,
+  sys:plpp(TT,WriteOpts,PrintOpts).
+%sys:plpp(TT,WriteOpts,PrintOpts):- !,
 %   pprint_tree(TT, [write_options(WriteOpts)|PrintOpts]).
-plpp(TT,WriteOpts,PrintOpts):- 
+sys:plpp(TT,WriteOpts,PrintOpts):- 
    \+ \+ pprint_tree(TT, 
              [   %left_margin(1),
                  %operators(true),
@@ -1151,7 +1152,7 @@ pformat(Fmt):- in_pp(http), !,pformat_html(pre(Fmt)).
 pformat(Fmt):- pformat_write(Fmt).
 
 pformat_html(_):- in_pp(ansi),!.
-pformat_html(Fmt):- var(Fmt),!,sformat('~w',[Fmt]).
+pformat_html(Fmt):- var(Fmt),!,format('~w',[Fmt]).
 pformat_html(PREC):- PREC == pre(:), !, write(':').
 pformat_html(pre(Fmt)):- pformat_string(Fmt,S), !, into_attribute(S,Attr),write(Attr). % print_html(['<pre>',S,'</pre>']).
 %pformat_html(pre(Fmt)):- pformat_string(Fmt,S), phrase(pretty_clauses:html(S), Tokens), print_html(Tokens).
@@ -1169,7 +1170,7 @@ pformat_write(Str):- write(Str).
 pformat_std(_,List):- is_codelist(List),string_codes(Str,List),!,pformat_write(Str).
 pformat_std(P,List):- is_list(List),!,maplist(P,List).
 pformat_std(_,Fmt):- (Fmt=='';Fmt==[]),!.
-pformat_std(_,Fmt):- (var(Fmt);Fmt=='.'),!,sformat('~w',[Fmt]).
+pformat_std(_,Fmt):- (var(Fmt);Fmt=='.'),!,format('~w',[Fmt]).
 pformat_std(P,Fmt):- (var(Fmt);Fmt=='.'),!,term_to_atom(Fmt,T),call(P,T).
 pformat_std(_,w(Fmt)):- !, pformat_write(Fmt).
 pformat_std(_,html(Fmt)):- !, pformat_html(Fmt).
@@ -1398,7 +1399,7 @@ pt1(_, Tab,Term) :-
    as_is(Term), !,
    system_portray(Tab,Term).
    
-% pt1(_FS,_Tab,Term) :- is_dict(Term), ansi_ansi,!,plpp(Term),!.
+% pt1(_FS,_Tab,Term) :- is_dict(Term), ansi_ansi,!,sys:plpp(Term),!.
 pt1(FS,Tab,Term) :- 
    is_dict(Term),
    dict_pairs(Term, Tag, Pairs), maplist(pair_to_colon,Pairs,Colons),

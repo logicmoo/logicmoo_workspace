@@ -33,6 +33,7 @@
           pack_upgrade_soft/1,
           is_startup_script/1,
           init_why/2,
+          now_and_later/1,
           run_pending_inits/0]).
 
 /** <module> Utility LOGICMOO_STARTUP
@@ -49,9 +50,33 @@ This module manages logicmoo startup (adding history and tests, etc).
 :- autoload(library(lists),[member/2,append/3]).
 :- autoload(library(debug),[debug/3]).
 
+:- module_transparent(now_and_later/1).
+:- module_transparent(now_and_later/3).
+
+now_and_later(MGoal):- strip_module(MGoal,M,Goal), '$current_typein_module'(TIM), '$current_source_module'(SM), 
+  now_and_later(TIM,SM,M:Goal).
+now_and_later(TIM,SM,MGoal):- strip_module(MGoal,M,Goal), 
+  sys:call_now_al(TIM,SM,M:Goal),
+  initialization(sys:call_now_al(TIM,SM,M:Goal),restore).
+
+:- module_transparent(sys:call_now_al/3).
+sys:call_now_al(TIM,SM,MGoal):-
+  strip_module(MGoal,M,Goal),
+  % maybe_writeln(sys:call_now_al(TIM,SM,MGoal)),
+  '$current_typein_module'(WasTIM), '$current_source_module'(WasSM),
+  setup_call_cleanup(('$set_typein_module'(TIM),'$set_source_module'(SM)),
+      M:Goal, ('$set_typein_module'(WasTIM),'$set_source_module'(WasSM))).
+
+/*
+dont_wl(X):- var(X),!,fail.
+dont_wl(all_source_file_predicates_are_exported).
+dont_wl(X):- compound(X),compound_name_arity(X,F,_),(dont_wl(F);(arg(_,X,E),dont_wl(E))).
+maybe_writeln(X):- dont_wl(X),!.
+maybe_writeln(_):- !.
+maybe_writeln(X):- writeln(X).
+*/
 
 :- if( \+ current_predicate(add_absolute_search_folder/2)).
-
 
 name_to_files(Spec, Files) :-
     name_to_files(Spec, Files, true).
@@ -268,7 +293,7 @@ add_pack_path(Y):-  \+ user:file_search_path(pack,Y) ->asserta(user:file_search_
  :- endif.
 :- endif.
 setup_hist0:-  '$toplevel':setup_history.
-:- initialize(setup_hist0, now).
+:- initialization(setup_hist0, now).
 :- endif.
 :- endif.
 :- endif.
@@ -1057,7 +1082,8 @@ iff_defined(Goal,Else):- current_predicate(_,Goal)*->Goal;Else.
           all_source_file_predicates_are_transparent/0,
           all_source_file_predicates_are_transparent/2,
           all_source_file_predicates_are_exported/0,
-          all_source_file_predicates_are_exported/2)).
+          all_source_file_predicates_are_exported/2,
+          all_source_file_predicates_are_exported/4)).
 
 :- meta_predicate(ignore_not_not(0)).
 
@@ -1182,8 +1208,7 @@ maybe_export(LC,M,F,A):-
 
 :- set_prolog_flag(logicmoo_import_to_system, baseKB).
 
-all_source_file_predicates_are_exported(S,LC)
- :- 
+all_source_file_predicates_are_exported(S,LC):- 
  (ignore(source_location(S,_);prolog_load_context(source,S))),
   ignore(prolog_load_context(module,LC)),
  
@@ -1192,10 +1217,12 @@ all_source_file_predicates_are_exported(S,LC)
    \+ atom_concat(_,'__aux_',F),
   %(module_property(M,exports(List))-> \+ member(F/A,List); true),
   % M:public(M:F/A),
-  enotrace(catch(maybe_export(M,M,F,A),_,fail)),
-  maybe_export(LC,M,F,A),
-  (current_prolog_flag(logicmoo_import_to_system, BaseKB)-> maybe_export(BaseKB,M,F,A) ; true),
-  maybe_export(system,M,F,A)))).
+  now_and_later(all_source_file_predicates_are_exported(LC,M,F,A))))).
+
+all_source_file_predicates_are_exported(LC,M,F,A):-
+  enotrace(catch(maybe_export(M,M,F,A),_,fail)), maybe_export(LC,M,F,A),
+ (current_prolog_flag(logicmoo_import_to_system, BaseKB)-> maybe_export(BaseKB,M,F,A) ; true),
+  maybe_export(system,M,F,A).
 
 :- export(con_x_fail/1).
 :- meta_predicate(con_x_fail(:)).
@@ -1220,11 +1247,14 @@ all_source_file_predicates_are_transparent:-
  forall((TIM\==LC,TIM\==user,module_property(TIM,file(S))),all_source_file_predicates_are_transparent(S,TIM)).
 
 :- module_transparent(all_source_file_predicates_are_transparent/2).
-all_source_file_predicates_are_transparent(S,_LC):- 
+all_source_file_predicates_are_transparent(S,_LC):-
  forall(source_file(M:H,S),
  (functor(H,F,A),
-  ignore(((\+ predicate_property(M:H,transparent), \+ lmconfig:never_export_named(M,F,A), module_transparent(M:F/A), 
-  \+ atom_concat('__aux',_,F),debug(modules,'~N:- module_transparent((~q)/~q).~n',[F,A])))))).
+   now_and_later(ensure_transparent(M,F,A)))).
+
+ensure_transparent(M,F,A):- functor(H,F,A),
+  ignore(((\+ predicate_property(M:H,transparent), \+ lmconfig:never_export_named(M,F,A), module_transparent(M:F/A),
+  \+ atom_concat('__aux',_,F),debug(modules,'~N:- module_transparent((~q)/~q).~n',[F,A])))).
 
 dont_mess_with(baseKB:isa/2).
 
