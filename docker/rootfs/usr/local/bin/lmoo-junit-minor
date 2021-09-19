@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 
 export good_exit=64
 exitcode=${good_exit}
