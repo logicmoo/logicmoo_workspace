@@ -2,7 +2,7 @@
 :- module(mpred_pttp_compile,[]).
 :- endif.
 
-:- '$set_source_module'(baseKB).
+:- nop('$set_source_module'( baseKB)).
 
 :- abolish(pttp_prove,6).
 :- abolish(search_cost,3).

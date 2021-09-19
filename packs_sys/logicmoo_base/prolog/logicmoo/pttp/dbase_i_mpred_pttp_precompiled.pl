@@ -2,7 +2,7 @@
 :- module(mpred_pttp_precompiled,[]).
 %:- endif.
 
-:- '$set_source_module'(baseKB).
+:- nop('$set_source_module'( baseKB)).
 
 :- kb_shared(wrapper_for/2).
 

@@ -95,7 +95,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %:- '$set_typein_module'(baseKB).
-%:- '$set_source_module'(baseKB).
+%:- nop('$set_source_module'( baseKB)).
 
 :- use_module(library(plunit)).
 :- kb_global(plunit:loading_unit/4).
@@ -119,7 +119,7 @@
 %:- autoload([verbose(true)]).
 %:- reload_library_index.
 
-:- if(\+ current_module(baseKB)).
+:- if(\+ current_module( baseKB)).
 :- set_prolog_flag(logicmoo_qsave,true).
 :- else.
 :- set_prolog_flag(logicmoo_qsave,false).

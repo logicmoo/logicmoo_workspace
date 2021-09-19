@@ -95,10 +95,7 @@
 :- kb_global(mpred_hooks:holds_t/3).
 :- kb_global(mpred_storage:equals_call/2).
 
-:- kb_global(baseKB:call_e_tru/2).
-:- kb_global(baseKB:is_fort/1).
 :- kb_global(common_logic_utils:kif_option_value/2).
-:- kb_global(baseKB:member_eqz/2).
 
 :- op(300,fx,('~')).
 
@@ -1875,4 +1872,7 @@ mpred_type_constraints_file.
 %
 % system:goal_expansion(G,O):- \+ current_prolog_flag(xref,true),\+ pldoc_loading, nonvar(G),boxlog_goal_expansion(G,O).
 
+:- kb_global(call_e_tru/2).
+:- baseKB:import(is_fort/1).
+:- baseKB:import(member_eqz/2).
 

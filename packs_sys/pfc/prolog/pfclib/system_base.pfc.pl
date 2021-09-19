@@ -1,7 +1,7 @@
 %:- module(system_base_lite,[]).
 %:- set_module(class(development)).
 %:- mpred_unload_file.
-:- '$set_source_module'(baseKB).
+:- nop('$set_source_module'( baseKB)).
 %:- ensure_abox(baseKB).
 :- baseKB:export(baseKB:never_assert_u/1).
 :- baseKB:export(baseKB:never_assert_u/2).

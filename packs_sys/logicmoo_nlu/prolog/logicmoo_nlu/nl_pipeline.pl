@@ -11,7 +11,7 @@
 
 :- module(nl_pipeline, [pipeline_file_loaded/0]).
 
-
+:- '$set_source_module'(nl_pipeline).
 % end_of_file.
 % :- ensure_loaded(library(logicmoo_nlu/nl_pipeline)).
 
@@ -31,7 +31,7 @@
 
 %:- use_module(library(pfc_lib)).
 %:- '$set_typein_module'(baseKB).
-%:- '$set_source_module'(baseKB).
+%:- nop('$set_source_module'( baseKB)).
 :- use_module(library(logicmoo_utils)).
 :- use_module(parser_sharing).
 :- use_module(parser_tokenize).
@@ -132,14 +132,13 @@ system:my_aceparagraph_to_drs(AceText, Sentences, SyntaxTrees, UnresolvedDrsCopy
 :- install_converter(drs_to_sdrs:drs_to_sdrs(+drs, -sdrs)).
 :- endif.
 
-
-% ================================================================================================
-% CHAT80:  acetext, text_no_punct, pos_sents_pre, parsed80, simplify80, qplan
-:-  if(load_parser_interface(parser_chat80)).
-% ================================================================================================
+/*
+:- '$set_source_module'(nl_pipeline).
 
 :- export(pa_domain/2).
 pa_domain(Var, List):-freeze(Var, member(Var, List)).
+
+:- listing(pa_domain/2).
 
 :- export(was_punct/1).
 was_punct(Remove):-
@@ -151,7 +150,7 @@ remove_punctuation(W2, NP):- is_list(W2), !, maplist(remove_punctuation, W2, NP)
 remove_punctuation(W2, NP):- atom(W2), member(P, [(, ), (.), (?), (!)]), (atom_concat(NP, P, W2);atom_concat(P, NP, W2)), !.
 remove_punctuation(W2, NP):- string(W2), member(P, [(, ), (.), (?), (!)]), (string_concat(NP, P, W2);string_concat(P, NP, W2)), !.
 remove_punctuation(W2, W2).
-
+*/
 %:- install_converter(nl_pipeline:remove_punctuation(+acetext, -acetext_no_punct)).
 
 %:- install_converter(parser_chat80:words_to_segs(+acetext_no_punct, -pos_sents_pre)).
@@ -167,11 +166,15 @@ remove_punctuation(W2, W2).
 :- install_converter(parser_penn_trees:ape_to_penn_tree(+syntaxTrees, -ape_penn_syntaxTree)).
 :- install_converter(parser_penn_trees:smerge_segs(ape, +e2c_lexical_segs, +ape_penn_segs, -merged_lexical_segs)).
 
-
 :- parser_pipeline:asserta((
  default_pipeline_opts([lf, clause, combined_info, simplify80, results80, clause_e2c, 
    reply_e2c, ape_penn_syntaxTree, ape_penn_segs, merged_lexical_segs]))).
 
+
+% ================================================================================================
+% CHAT80:  acetext, text_no_punct, pos_sents_pre, parsed80, simplify80, qplan
+:-  if(load_parser_interface(parser_chat80)).
+% ================================================================================================
 % TEMP DISABLE :- install_converter(parser_chat80:smerge_segs(+charniak_segs, +corenlp_segs,-e2c_segs)).
 :- install_converter(parser_chat80:sent_to_parsed(+merged_lexical_segs, -parsed80)).
 :- install_converter(parser_chat80:i_sentence(+parsed80, -sent80)).
@@ -179,13 +182,10 @@ remove_punctuation(W2, W2).
 %:- install_converter(parser_chat80:simplify80(+clausify80, -simplify80)).
 %:- install_converter(parser_chat80:qplan(+clausify80, -qplan80)).
 :- install_converter(parser_chat80:results80(+clausify80, -results80)).
-
-:-asserta((type(SET):- call_u(tSet(SET)))).
-
-
-
-
+:- asserta((parser_chat80:type(SET):- call_u(tSet(SET)))).
 :- endif.
+:- '$set_source_module'(nl_pipeline).
+
 
 % ================================================================================================
 % TODO - grovel the API
@@ -199,14 +199,13 @@ remove_punctuation(W2, W2).
 :- endif.
 
 % ================================================================================================
-load_parser_stanford:-  load_parser_interface(parser_stanford).
-:- if(load_parser_stanford).
+baseKB:load_parser_stanford:-  load_parser_interface(parser_stanford).
+:- if(baseKB:load_parser_stanford).
 % ================================================================================================
 
 %:- install_converter(parser_stanford:text_to_corenlp(+acetext, -corenlp)).
 % TEMP DISABLE :- install_converter(parser_corenlp:text_to_corenlp_segs(+text80, -corenlp_segs)).
 :- endif.
-
 % ================================================================================================
 % TODO - grovel the API
 :- if(load_parser_interface(parser_lexical)).
@@ -217,7 +216,7 @@ load_parser_stanford:-  load_parser_interface(parser_stanford).
 
 % ================================================================================================
 % English2CycL:
-:-  if((fail, load_parser_interface(parser_e2c))). % TODO confirm CHAT80 runs without E2C
+:-  if((fail, load_parser_interface(parser_E2fC))). % TODO confirm CHAT80 runs without E2C
 % ================================================================================================
 
 
@@ -235,13 +234,12 @@ load_parser_stanford:-  load_parser_interface(parser_stanford).
 
 :- endif.
 
-
 % ================================================================================================
 %:-  load_parser_interface(parser_chart89).
 % ================================================================================================
 
 % ================================================================================================
-:-  if((false, load_parser_interface(parser_e2c))).
+:-  if((false, load_parser_interface(parser_bratko))).
 % ================================================================================================
 
 eng_to_bratko(Sentence, LF, Type, Clause, FreeVars) :-
@@ -411,6 +409,7 @@ pipeline_file_loading:-
   (pipeline_file_loaded->Loaded=true;Loaded=false),
   assert_if_new(pipeline_file_loaded),!,
   nop(Loaded=false-> break ; true).
+:- break.
 
 :- if( \+ getenv('keep_going','-k')).
 :- use_module(library(editline)).

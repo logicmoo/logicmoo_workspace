@@ -13,7 +13,7 @@
 % =============================================
 %
 
-:- module(baseKB).
+:- nop(module( baseKB)).
 
 :- expects_dialect(clif).
 

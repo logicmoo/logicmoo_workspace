@@ -16,8 +16,8 @@
 :- kif_compile.
 
 
-:- module(baseKB).
-:- '$set_source_module'(baseKB).
+:- nop(module( baseKB)).
+:- nop('$set_source_module'( baseKB)).
 
 
 

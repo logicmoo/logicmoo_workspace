@@ -10,7 +10,7 @@
 % =============================================
 %
 
-:- module(baseKB).
+:- nop(module( baseKB)).
 :- process_script_file.
 :- dynamic house/1.
 

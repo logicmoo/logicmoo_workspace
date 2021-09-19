@@ -41,7 +41,7 @@ This module constrains arguments for faster and more exact search.
 :- debug.
 */
 
-:- '$set_source_module'(baseKB).
+:- nop('$set_source_module'( baseKB)).
 :- use_module(library(pfc_lib)).
 
 use_shared_module(USM):- with_no_mpred_expansions(baseKB:reexport(USM)).
@@ -140,7 +140,7 @@ wsce(W):- with_subclause_expansion((set_how_virtualize_file(bodies,W,0),baseKB:c
 % SETUP KB EXTENSIONS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%:- '$set_source_module'(baseKB).
+%:- nop('$set_source_module'( baseKB)).
 %:- '$set_typein_module'(baseKB).
 
 %:- clause(user:term_expansion(I,O),M:Body).

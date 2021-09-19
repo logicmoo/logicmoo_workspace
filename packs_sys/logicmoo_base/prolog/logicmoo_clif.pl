@@ -31,13 +31,13 @@ This special module hooks into the logicmoo engine allow clif syntax to be recoc
 */
 
 
-:- '$set_source_module'(baseKB).
+:- nop('$set_source_module'( baseKB)).
 
 :- ensure_loaded(library(logicmoo_lib)).
 
 
 :- pfc_lib:use_module(library(pfc_lib)).
-:- set_fileAssertMt(baseKB).
+%:- set_fileAssertMt(baseKB).
 
 %:- set_defaultAssertMt(baseKB).
 
@@ -55,7 +55,7 @@ This special module hooks into the logicmoo engine allow clif syntax to be recoc
    DirFor = library,
    before_boot((( \+ user:file_search_path(DirFor,Dir)) ->asserta(user:file_search_path(DirFor,Dir));true)),!.
 
-:- '$set_source_module'(baseKB).
+:- nop('$set_source_module'( baseKB)).
 
 :- asserta_new(user:file_search_path(logicmoo,library('logicmoo/.'))).
 :- prolog_load_context(directory,Dir), asserta_new(user:file_search_path(logicmoo,Dir)).

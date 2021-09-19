@@ -13,7 +13,7 @@
 
 
 %:- '$set_typein_module'(baseKB).
-%:- '$set_source_module'(baseKB).
+%:- nop('$set_source_module'( baseKB)).
 
 % end_of_file.
 % :- ensure_loaded(library(logicmoo_nlu/nl_pipeline)).

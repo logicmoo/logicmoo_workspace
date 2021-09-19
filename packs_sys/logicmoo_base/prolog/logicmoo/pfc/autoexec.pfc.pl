@@ -1,7 +1,7 @@
 %:- set_module(class(development)).
 %:- expects_dialect(pfc).
 :- ensure_loaded(library('logicmoo/common_logic/common_logic_utils.pl')).
-:- '$set_source_module'(baseKB).
+:- nop('$set_source_module'( baseKB)).
 
 /* <module>
 % =============================================

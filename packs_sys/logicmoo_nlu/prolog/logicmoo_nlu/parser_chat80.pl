@@ -37,7 +37,7 @@
 %:- use_module(library(with_thread_local)).
 %:- load_library_system(library(logicmoo_plarkc)).
 %:- kb_shared(baseKB:que/2).
-%:- '$set_source_module'(baseKB).
+%:- nop('$set_source_module'( baseKB)).
 %:- '$set_typein_module'(baseKB).
 
 :- set_prolog_flag(expect_pfc_file, never).

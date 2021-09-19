@@ -13,7 +13,7 @@
 :- module(mpred_pttp,[]).
 %:- endif.
 
-:- '$set_source_module'(baseKB).
+:- nop('$set_source_module'( baseKB)).
 
 :- thread_local(t_l:disable_px/0).
 

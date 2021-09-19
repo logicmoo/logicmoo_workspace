@@ -5,7 +5,7 @@
 % Douglas Miles
 %
 */
-:- module(baseKB).
+%:- nop(module( baseKB)).
 :- expects_dialect(pfc).
 
 %:- expects_dialect(pfc).

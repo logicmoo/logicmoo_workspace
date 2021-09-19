@@ -635,7 +635,7 @@ demodulize(Op,H,HH):- H  univ_safe  [F|HL],must_maplist(demodulize(Op),HL,HHL),H
 
 old_is_stripped_module(_):-!,fail.
 old_is_stripped_module(user).
-old_is_stripped_module(baseKB).
+old_is_stripped_nop(module( baseKB)).
 %= 	 	 
 
 %% to_reduced_hb( ?Op, ?HB, ?HH, ?BB) is semidet.
@@ -917,7 +917,7 @@ is_stripped_module(Mt):- call_u(mtExact(Mt)),!,fail.
 %is_stripped_module(Inherited):-'$current_typein_module'(E), default_module(E,Inherited).
 is_stripped_module(abox).
 % is_stripped_module(_):-!,fail.
-% is_stripped_module(baseKB).
+% is_stripped_nop(module( baseKB)).
 % is_stripped_module(A):- defaultAssertMt(AB),!,AB=A.
 
 

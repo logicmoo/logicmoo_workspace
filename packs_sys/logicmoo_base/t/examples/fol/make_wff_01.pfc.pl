@@ -24,8 +24,8 @@
 %:- set_prolog_flag_until_eof(runtime_speed,0). % but dont gripe about speed
 :- kif_compile.
 
-:- module(baseKB).
-:- '$set_source_module'(baseKB).
+:- nop(module( baseKB)).
+:- nop('$set_source_module'( baseKB)).
 
 % =================================================================================
 % Define a couple predicates

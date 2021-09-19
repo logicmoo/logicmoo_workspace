@@ -28,7 +28,7 @@ f% ===================================================================
 :- set_prolog_flag(do_renames_sumo,never).
 
 
-% expand_file_search_path(pldata(assertions),From),[module(baseKB),derived_from(From)]
+% expand_file_search_path(pldata(assertions),From),[nop(module( baseKB)),derived_from(From)]
 
 :- baseKB:kb_shared((('abbreviationString-PN'/2),
         ('adjSemTrans-Restricted'/5),

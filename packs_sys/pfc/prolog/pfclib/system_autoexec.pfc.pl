@@ -4,7 +4,7 @@
 :- else.
 :- pfc_lib:use_module(library(pfc_lib)).
 :- set_fileAssertMt(baseKB).
-% :- '$set_source_module'(baseKB).
+% :- nop('$set_source_module'( baseKB)).
 :- endif.
 */ 
 /** <module> system_autoexec
@@ -129,7 +129,7 @@ first_std_provider/3)).
 %:- ensure_abox_hybrid(baseKB).
 
 :- set_fileAssertMt(baseKB).
-
+:- break.
 :- thread_local(t_l:disable_px/0).
 
 :- must(retractall( t_l:disable_px)).

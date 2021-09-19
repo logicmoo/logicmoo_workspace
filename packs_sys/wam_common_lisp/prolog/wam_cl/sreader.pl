@@ -252,7 +252,7 @@ prolog_expr_next--> dcg_peek(`.{`).
 
 prolog_readable_term(Expr) -->  `.`,prolog_readable_term(Read), {arg(1,Read,Expr),!}.
 prolog_readable_term(Expr,S,E):- 
-  catch((read_term_from_codes(S,Expr,[subterm_positions(FromTo),cycles(true), module(baseKB),
+  catch((read_term_from_codes(S,Expr,[subterm_positions(FromTo),cycles(true), module( baseKB),
    double_quotes(string),
    comments(CMT), variable_names(Vars)]),implode_threse_vars(Vars),
    arg(2,FromTo,To), length(TermCodes,To),

@@ -1,7 +1,7 @@
 %:- if(( ( \+ ((current_prolog_flag(logicmoo_include,Call),Call))) )).
 :- module(mpred_pttp_testing,[]).
 %:- endif.
-:- '$set_source_module'(baseKB).
+:- nop('$set_source_module'( baseKB)).
 
 %%% ****h* PTTP/PTTP TESTING INTERFACE
 %%% 

@@ -1,6 +1,6 @@
 %:- module(system_common,[]).
 %:- set_module(class(development)).
-:- '$set_source_module'(baseKB).
+:- nop('$set_source_module'( baseKB)).
 %:- expects_dialect(pfc).
 :- expects_dialect(pfc).
 
@@ -60,10 +60,10 @@ without_depth_limit(G):-
 %:- use_module(library(rtrace)).
 :- mpred_unload_file.
 :- expects_dialect(pfc).
-% :- '$set_source_module'(baseKB).
+% :- nop('$set_source_module'( baseKB)).
 % :- prolog_load_context(module,Mod),sanity(Mod==baseKB),writeq(prolog_load_context(module,Mod)),nl.
 
-:- ensure_abox(baseKB).
+%:- ensure_abox(baseKB).
 
 
 

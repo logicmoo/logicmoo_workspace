@@ -213,10 +213,11 @@ kb_global_w(M:F/A):-
 :- kb_global_w(baseKB:mpred_prop/4).
 :- kb_global_w(baseKB:mpred_database_term/3).
 
+:- dynamic(baseKB:que/2).
+:- kb_global_w(baseKB:que/2).
 /*
 :- kb_global_w(baseKB:pk/3).
 :- kb_global_w(baseKB:hs/1).
-:- kb_global_w(baseKB:que/2).
 :- kb_global_w(baseKB:pm/1).
 :- kb_global_w(baseKB:tms/1).
 

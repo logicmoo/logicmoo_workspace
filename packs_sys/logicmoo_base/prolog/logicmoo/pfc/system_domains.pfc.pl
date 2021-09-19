@@ -1,5 +1,5 @@
 %:- set_module(class(development)).
-:- '$set_source_module'(baseKB).
+:- nop('$set_source_module'( baseKB)).
 :- expects_dialect(pfc).
 
 

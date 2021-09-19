@@ -23,7 +23,7 @@
 
 :- baseKB:file_begin(pfc).
 
-:- module(baseKB).
+:- nop(module( baseKB)).
 
 ==>(aaa,bbb(1)).
 aaa.

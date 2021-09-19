@@ -10,7 +10,7 @@
 :- endif.
 
 
-:- module(baseKB).
+:- nop(module( baseKB)).
 :- expects_dialect(pfc).
 :- set_fileAssertMt(baseKB).
 :- ensure_loaded(library(pfc_test)).

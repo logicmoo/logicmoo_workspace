@@ -28,7 +28,7 @@ end_of_file.
 %:- endif.
 mpred_userkb_file.
 
-% :- '$set_source_module'(baseKB).
+% :- nop('$set_source_module'( baseKB)).
 
 %% base_kb_pred_list( ?VALUE1) is semidet.
 %
@@ -224,7 +224,7 @@ prologEquality/1,pfcBcTrigger/1,
 :- set_fileAssertMt(baseKB).
 */
 
-%:- '$set_source_module'(baseKB).
+%:- nop('$set_source_module'( baseKB)).
 %:- '$set_typein_module'(baseKB).
 
 
@@ -259,7 +259,7 @@ kb_shared_m(E):- must(with_source_module(baseKB,decl_as(kb_shared,E))).
 
 
 :- source_location(F,_),set_how_virtualize_file(false,F).
-%:- '$set_source_module'(baseKB).
+%:- nop('$set_source_module'( baseKB)).
 
 
 %% skolem( ?X, ?SK) is semidet.

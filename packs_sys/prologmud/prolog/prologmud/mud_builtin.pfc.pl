@@ -34,7 +34,7 @@
 :- dynamic lmcache:session_io/4, lmcache:session_agent/2, lmcache:agent_session/2,   telnet_fmt_shown/3,   agent_action_queue/3).
 
 */
-%:- '$set_source_module'(baseKB).
+%:- nop('$set_source_module'( baseKB)).
 :- set_prolog_flag(runtime_speed, 0).
 :- set_prolog_flag(runtime_safety, 2).
 :- set_prolog_flag(runtime_debug, 2).

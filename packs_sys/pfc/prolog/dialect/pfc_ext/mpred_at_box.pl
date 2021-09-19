@@ -102,7 +102,7 @@ user_m_check(_Out).
 
 :- meta_predicate transitive_path(2,*,*).
 
-% add_abox_module(baseKB):-!.
+% add_abox_nop(module( baseKB)):-!.
 /*add_abox_module(ABox):- must(atom(ABox)),
   must(is_mtCanAssert(ABox)),
   baseKB:ain(baseKB:mtHybrid(ABox)).
@@ -252,6 +252,7 @@ fileAssertMt0(M):- must(get_fallBackAssertMt(M)),!.
 
 % set_fileAssertMt(M):- '$current_source_module'(M),!.
 :- expose_api(set_fileAssertMt/1).
+set_fileAssertMt(M):- wdmsg(set_fileAssertMt(M)),!.
 set_fileAssertMt(M):-  (M==system;M==pfc_lib),!,set_fileAssertMt(baseKB).
 set_fileAssertMt(M):-
   ensure_abox_hybrid(M),

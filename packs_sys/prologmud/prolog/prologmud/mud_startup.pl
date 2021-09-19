@@ -15,7 +15,7 @@
 %:-pfc_untrace.
 %:-pfc_no_spy_all.
 
-use_baseKB :- '$set_typein_module'(baseKB),'$set_source_module'(baseKB),module(baseKB),ignore(notrace(update_changed_files)).
+use_baseKB :- nop('$set_typein_module'( baseKB)),nop('$set_source_module'( baseKB)),nop(module( baseKB)),ignore(notrace(update_changed_files)).
 :- use_baseKB.
 
 % ==============================================

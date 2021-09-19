@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash
 
 [ -z "${TESTING_TEMP}" ] && [ -d "$(pwd)/test_results" ] && export TESTING_TEMP=$(pwd)/test_results/$(whoami)
 [ -z "${TESTING_TEMP}" ] && [ -d "${LOGICMOO_WS}/test_results" ] && export TESTING_TEMP=${LOGICMOO_WS}/test_results/$(whoami)

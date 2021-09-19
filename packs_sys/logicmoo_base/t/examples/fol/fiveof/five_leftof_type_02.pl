@@ -12,7 +12,7 @@
 
 
 % There are five houses in a row.
-:- module(baseKB).
+:- nop(module( baseKB)).
 
 % makes the KB monotonic
 :- set_kif_option(qualify_modality,simple_nesc).

@@ -30,8 +30,8 @@
 %:- use_module(nl_pipeline).
 
 
-:- '$set_source_module'(baseKB).
-:- module(baseKB).
+%:- nop('$set_source_module'( baseKB)).
+%:- nop(module( baseKB)).
 %:- expects_dialect(pfc).
 
 :- share_mp(common_logic_kb_hooks:cyckb_t/1).

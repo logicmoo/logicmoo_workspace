@@ -1653,7 +1653,7 @@ mpred_prolog_only_module(logicmoo_utils).
 mpred_prolog_only_module(t_l).
 mpred_prolog_only_module(tlbugger).
 mpred_prolog_only_module(lmcache).
-mpred_prolog_only_module(baseKB).
+mpred_prolog_only_nop(module( baseKB)).
 mpred_prolog_only_module(M):-atom_concat(mpred_, _, M).
 mpred_prolog_only_module(M):-atom_concat(logicmoo_util, _, M).
 mpred_prolog_only_module(M):-atom_concat(common_logic_, _, M).

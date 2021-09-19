@@ -4,7 +4,7 @@
 
 :- ensure_loaded(library(pfc_lib)).
 :- ensure_loaded(library('pfc2.0'/'mpred_header.pi')).
-:- '$set_source_module'(baseKB).
+:- nop('$set_source_module'( baseKB)).
 
 :- 
  %swi_module(mpred_pttp_statics,[ 

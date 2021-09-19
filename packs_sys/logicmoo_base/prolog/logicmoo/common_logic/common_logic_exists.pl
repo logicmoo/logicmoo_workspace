@@ -15,12 +15,12 @@
 */
 % NEW
 :- include(library('logicmoo/common_logic/common_header.pi')).
-:- '$set_source_module'(baseKB).
+:- nop('$set_source_module'( baseKB)).
 
 %:- endif.
 %:- use_module(library(dictoo)).
 
-% :- '$set_source_module'(baseKB).
+% :- nop('$set_source_module'( baseKB)).
 :- meta_predicate skolem_test(0).
 :- meta_predicate skolem_unify(*,0).
 

@@ -4,7 +4,7 @@
 
 */
 :- set_module(class(system)).
-:- '$set_source_module'(baseKB).
+:- nop('$set_source_module'( baseKB)).
 :- set_module(baseKB:class(development)).
 :- ensure_loaded(library(xlisting)).
 %:- ensure_loaded(library(xlisting_web)).
@@ -24,7 +24,7 @@ logicmoo_web :- whenever_flag_permits(load_network,with_no_mpred_expansions(user
 % :- set_prolog_flag(toplevel_print_factorized,true).
 % :- set_prolog_flag(toplevel_mode,recursive).
 
-:- if(\+ current_module(baseKB)).
+:- if(\+ current_module( baseKB)).
 :- set_prolog_flag(logicmoo_qsave,true).
 :- else.
 :- set_prolog_flag(logicmoo_qsave,false).
@@ -32,7 +32,7 @@ logicmoo_web :- whenever_flag_permits(load_network,with_no_mpred_expansions(user
 
 
 
-%:- '$set_source_module'(baseKB).
+%:- nop('$set_source_module'( baseKB)).
 %:- '$set_typein_module'(baseKB).
 
 
@@ -58,7 +58,7 @@ run_mud_server:- consult(library(prologmud_sample_games/run_mud_server)).
 
 :- before_boot(add_history_ideas).
 
-%:- '$set_source_module'(baseKB).
+%:- nop('$set_source_module'( baseKB)).
 %:- '$set_typein_module'(baseKB).
 
 :- set_prolog_flag(do_renames,restore).

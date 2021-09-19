@@ -164,7 +164,7 @@ maybe_delete_import_module(From,To):- writeln_safely(ignore(system:delete_import
 :- baseKB:export(baseKB:is_declared_global_module/1).
 :- system:import(baseKB:is_declared_global_module/1).
 
-baseKB:is_declared_global_module(baseKB).
+baseKB:is_declared_global_nop(module( baseKB)).
 baseKB:is_declared_global_module(eggdrop).
 baseKB:is_declared_global_module(parser_all).
 baseKB:is_declared_global_module(parser_chat80).
