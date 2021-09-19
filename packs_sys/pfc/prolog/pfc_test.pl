@@ -374,9 +374,9 @@ blocks_on_input( prolog ).
 
 
 test_completed_exit(N):- dmsg_pretty(test_completed_exit(N)),fail.
-test_completed_exit(7):- halt(7). % Passed
+test_completed_exit(64):- halt(64). % Passed
 test_completed_exit(4):- halt(4). % Aborted by User
-test_completed_exit(5):- halt(5). % Aborted by System
+test_completed_exit(2):- halt(2). % Aborted by System
 
 test_completed_exit(_):- once((listing(j_u:junit_prop(_,warn,_)),
                                listing(j_u:junit_prop(_,warning,_)),
@@ -391,9 +391,16 @@ test_completed_exit_maybe(_):- j_u:junit_prop(_,warning,_),test_completed_exit(3
 test_completed_exit_maybe(_):- j_u:junit_prop(_,warn,_),test_completed_exit(3).
 test_completed_exit_maybe(N):- test_completed_exit(N).
 
+calc_exit_code(XC):- findall(X,calc_exit_code0(X),List).sum_list(List,XC).
+
+calc_exit_code0(8):- \+ \+ j_u:junit_prop(_,result,failure).
+calc_exit_code0(16):- \+ \+ j_u:junit_prop(_,warning,_).
+calc_exit_code0(32):- once(j_u:junit_prop(_,error,_) ; j_u:junit_prop(_,result,error)).
+calc_exit_code0(64):- \+ j_u:junit_prop(_,result,failure), \+ \+ j_u:junit_prop(_,result,passed).
+  
 
 system:test_repl:-  assertz(system:junit_prop(need_retake,warn,need_retake)).
-system:test_completed:- system:halt_junit,test_completed_exit_maybe(7).
+system:test_completed:- system:halt_junit,calc_exit_code(XC),test_completed_exit_maybe(XC).
 system:test_retake:- system:halt_junit,test_completed_exit_maybe(3).
 
 /* 
@@ -745,7 +752,7 @@ message_hook_handle(Term, Kind, Lines):- message_hook_dontcare(Term, Kind, Lines
 message_hook_handle(message_lines(_),error,['~w'-[_]]). 
 message_hook_handle(error(resource_error(portray_nesting),_),
    error, ['Not enough resources: ~w'-[portray_nesting], nl,
-      'In:', nl, '~|~t[~D]~6+ '-[9], '~q'-[_], nl, '~|~t[~D]~6+ '-[7], 
+      'In:', nl, '~|~t[~D]~6+ '-[9], '~q'-[_], nl, '~|~t[~D]~6+ '-[64], 
         _-[], nl, nl, 'Note: some frames are missing due to last-call optimization.'-[], nl, 
         'Re-run your program in debug mode (:- debug.) to get more detail.'-[]]).
 message_hook_handle(T,Type,Term):- 
