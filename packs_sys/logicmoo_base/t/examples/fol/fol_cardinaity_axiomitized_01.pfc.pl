@@ -2,14 +2,6 @@
 :- include(test_header).
 
 
-
-
-end_of_file.
-
-
-
-
-
 % Tests that you can express regular semweb cardinatility though in FOL
 
 /*
