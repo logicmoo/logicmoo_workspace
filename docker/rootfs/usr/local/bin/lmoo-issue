@@ -23,12 +23,20 @@ function foc_gh_issue {
 
     if [ "${4}" = "SUCCESS" ]; then
        (if [ "${ISSUE_OC}" = "OPEN" ]; then      
-           echo "Closing Issue $ISSUE_INFO"
+           echo "Updating Issue $ISSUE_INFO"
 	   $GH_ISSUE comment ${ISSUE_ID} -F ${TEE_FILE}
-	   $GH_ISSUE comment ${ISSUE_ID} -b "Fixed in ${LINKS}"
-	   $GH_ISSUE close ${ISSUE_ID}
+           if echo "${ISSUE_INFO}" | grep -q "Failing"; then
+	      $GH_ISSUE comment ${ISSUE_ID} -b "Fixed in ${LINKS}"	      
+	      $GH_ISSUE edit ${ISSUE_ID} --add-label "Passing" --remove-label "Failing,Regression,Unknown"
+	   else
+	      if echo "${ISSUE_INFO}" | grep -b -v "Passing"; then
+		 $GH_ISSUE edit ${ISSUE_ID} --add-label "Passing"
+	      fi 
+	   fi 
+	   #$GH_ISSUE close ${ISSUE_ID}
        elif [ -z "${ISSUE_ID}" ]; then
-           echo "NOT Creating Issue For ${4} $ISSUE_INFO"
+           echo "Creating Issue For ${4} $ISSUE_INFO"
+	   $GH_ISSUE create -l "unit_test,${1},${2},${3},Passing" -t "${5}" -F ${6}
        else
            echo "NOT Editing Closed For ${4} Issue $ISSUE_INFO"
        fi)
@@ -42,10 +50,15 @@ function foc_gh_issue {
 	   #(gh api repos/logicmoo/logicmoo_workspace/labels -f name="${2}" -f color="fff000")
 	   #(gh api repos/logicmoo/logicmoo_workspace/labels -f name="${3}" -f color="ccc000")
 	    echo "Creating ${4} Issue $ISSUE_INFO"
-	    $GH_ISSUE create -l "unit_test,${1},${2},${3}" -t "${5}" -F ${6}
+	    $GH_ISSUE create -l "unit_test,${1},${2},${3},Failing" -t "${5}" -F ${6}
        else 
-            echo "Editing Issue For ${4} $ISSUE_INFO"
-	    $GH_ISSUE edit ${ISSUE_ID} -t "${5}" -F ${6}
+           echo "Editing Issue For ${4} $ISSUE_INFO"
+           if echo "${ISSUE_INFO}" | grep -q "Passing"; then
+	      $GH_ISSUE comment ${ISSUE_ID} -b "Broken in ${LINKS}"
+	      $GH_ISSUE edit ${ISSUE_ID} -t "${5}" -F ${6} --remove-label "Passing" --add-label "Failing,Regression"
+	   else
+              $GH_ISSUE edit ${ISSUE_ID} -t "${5}" -F ${6} --remove-label "Passing" --add-label "Failing"
+	   fi 
        fi)
     fi
 }

@@ -212,9 +212,19 @@ for ele2 in "${SORTED_FILES[@]}"
 	cat /dev/null > ${TEE_FILE1}
 	cat /dev/null > ${TEE_FILE2}
         INFO "${date} (cd $PWD ; $CMD)"
+	
+                
 	export GH_MASTER_ISSUE_FINFO=$(echo "${GH_MASTER_ISSUE_INFO}" | grep "${JUNIT_SHORTCLASS} " | grep ${Test_9999} | head -1)
-        INFO "GH_MASTER_ISSUE_FINFO=${GH_MASTER_ISSUE_FINFO}"
-	#export GH_MASTER_ISSUE_ID=$(echo "${GH_MASTER_ISSUE_FINFO}" | cut -f1)
+	export GH_MASTER_ISSUE_ID=$(echo "${GH_MASTER_ISSUE_FINFO}" | cut -f1)
+	[ -z "${GH_MASTER_ISSUE_ID}" ] && (
+          source $LOGICMOO_WS/bin/lmoo-issue ${JUNIT_PACKAGE} ${JUNIT_SHORTCLASS} ${Test_9999} "FAILURE" "${FileTestCase}" $LOGICMOO_WS/${RELPATH}
+  	  export GH_MASTER_ISSUE_INFO=`gh issue list -l ${JUNIT_PACKAGE} -L 1000 | sed -e "s/UTC /\n/g" | grep "unit_test"`
+  	  export GH_MASTER_ISSUE_FINFO=$(echo "${GH_MASTER_ISSUE_INFO}" | grep "${JUNIT_SHORTCLASS} " | grep ${Test_9999} | head -1)
+	  export GH_MASTER_ISSUE_ID=$(echo "${GH_MASTER_ISSUE_FINFO}" | cut -f1)
+	)
+	INFO "GH_MASTER_ISSUE_FINFO=${GH_MASTER_ISSUE_FINFO}"
+
+
 	#INFO "GH_MASTER_ISSUE_ID=#${GH_MASTER_ISSUE_ID} '${GH_MASTER_ISSUE_OC}'"
 	#export GH_MASTER_ISSUE_OC=$(echo "${GH_MASTER_ISSUE_FINFO}" | cut -f2)
 
@@ -223,13 +233,14 @@ for ele2 in "${SORTED_FILES[@]}"
 	export BUILD_REF=$(echo $LAST_BUILD_REF | sed -e "s/lastBuild/${BUILD_ID}/g")
         export ISSUE_SEARCH="https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3A${JUNIT_SHORTCLASS}"
 	LINKS=""
+	LINKS+="ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/$GH_MASTER_ISSUE_ID \n"
+	LINKS+="EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/$RELPATH \n"
+	LINKS+="JENKINS: ${LAST_BUILD_REF}/${FTC_LINK}/ \n"
+	LINKS+="PREVIOUS: ${BUILD_REF}/${FTC_LINK}/ \n"	
 	LINKS+="ISSUE_SEARCH: ${ISSUE_SEARCH} \n"
-	LINKS+="GITLAB: https://logicmoo.org:2082/gitlab/logicmoo/logicmoo_workspace/-/commit/${GIT_REV} \n"
-	LINKS+=" https://gitlab.logicmoo.org/gitlab/logicmoo/logicmoo_workspace/-/blob/${GIT_REV}/$RELPATH \n"	
-	LINKS+="Latest: ${LAST_BUILD_REF}/${FTC_LINK}/ \n"
-	LINKS+="This Build: ${BUILD_REF}/${FTC_LINK}/ \n"
+	LINKS+="GITLAB: https://gitlab.logicmoo.org/gitlab/logicmoo/logicmoo_workspace/-/blob/${GIT_REV}/$RELPATH \n"	
 	LINKS+="GITHUB: https://github.com/logicmoo/logicmoo_workspace/commit/${GIT_REV} \n"
-	LINKS+=" https://github.com/logicmoo/logicmoo_workspace/blob/${GIT_REV}/$RELPATH \n"
+	
 	INFO "${LINKS}"
 
 	startTime=$(date +%s%3N);
@@ -252,8 +263,7 @@ for ele2 in "${SORTED_FILES[@]}"
 
 	INFO "${LINKS}"
 	INFO "${TEST_RESULT}: $0 ${keep_going} ${ele} (returned ${exitcode})"
-
-      echo source $LOGICMOO_WS/bin/lmoo-issue ${JUNIT_PACKAGE} ${JUNIT_SHORTCLASS} ${Test_9999} ${TEST_RESULT} "${FileTestCase}" ${TEE_FILE1}
+      
       source $LOGICMOO_WS/bin/lmoo-issue ${JUNIT_PACKAGE} ${JUNIT_SHORTCLASS} ${Test_9999} ${TEST_RESULT} "${FileTestCase}" ${TEE_FILE1}
 
       
