@@ -2,15 +2,19 @@
 
 GH_ISSUE="gh issue"
 
+[ "${1}" = "-t" ] && shift && GH_ISSUE="echo $GH_ISSUE"
+
 GIT_REV=$(git rev-parse HEAD)
 
 LINKS="https://github.com/logicmoo/logicmoo_workspace/commit/${GIT_REV} https://logicmoo.org:2082/gitlab/logicmoo/logicmoo_workspace/-/commit/${GIT_REV}"
+Add_LABELS="${7}" && [ ! -z "$Add_LABELS" ] && Add_LABELS=",$Add_LABELS"
+Rem_LABELS="${8}" && [ ! -z "$Rem_LABELS" ] && Rem_LABELS=",$Rem_LABELS"
 
 # foc_gh_issue 1${JUNIT_PACKAGE} 2${JUNIT_SHORTCLASS} 3${Test_9999} 4${TEST_RESULT} 5"${Title}" 6${BodyFile}
 function foc_gh_issue {
 
-    [ -z "${GH_MASTER_ISSUE_INFO}" ] && export GH_MASTER_ISSUE_INFO=`$GH_ISSUE list -l ${1} -L 1000 | sed -e "s/UTC /\n/g" | grep "unit_test"`
-    [ -z "${GH_MASTER_ISSUE_INFO}" ] && export GH_MASTER_ISSUE_INFO=`$GH_ISSUE list -l unit_test -L 2000 | sed -e "s/UTC /\n/g" | grep "unit_test"`
+    [ -z "${GH_MASTER_ISSUE_INFO}" ] && export GH_MASTER_ISSUE_INFO=`gh issue list -l ${1} -L 1000 | sed -e "s/UTC /\n/g" | grep "unit_test"`
+    [ -z "${GH_MASTER_ISSUE_INFO}" ] && export GH_MASTER_ISSUE_INFO=`gh issue list -l unit_test -L 2000 | sed -e "s/UTC /\n/g" | grep "unit_test"`
 
     ISSUE_INFO=$(echo "${GH_MASTER_ISSUE_INFO}" | grep "${2} " | grep ${3} | head -1)
     echo "ISSUE_INFO=${ISSUE_INFO}"
@@ -27,18 +31,17 @@ function foc_gh_issue {
 	   $GH_ISSUE comment ${ISSUE_ID} -F ${TEE_FILE}
            if echo "${ISSUE_INFO}" | grep -q "Failing"; then
 	      $GH_ISSUE comment ${ISSUE_ID} -b "Fixed in ${LINKS}"	      
-	      $GH_ISSUE edit ${ISSUE_ID} --add-label "Passing" --remove-label "Failing,Regression,Unknown"
+	      $GH_ISSUE edit ${ISSUE_ID} --add-label "Passing$Add_LABELS" --remove-label "Failing,Regression$Rem_LABELS"
 	   else
-	      if echo "${ISSUE_INFO}" | grep -b -v "Passing"; then
-		 $GH_ISSUE edit ${ISSUE_ID} --add-label "Passing"
-	      fi 
+	      $GH_ISSUE edit ${ISSUE_ID} --add-label "Passing$Add_LABELS" --remove-label "Failing,Regression$Rem_LABELS"
 	   fi 
 	   #$GH_ISSUE close ${ISSUE_ID}
        elif [ -z "${ISSUE_ID}" ]; then
            echo "Creating Issue For ${4} $ISSUE_INFO"
-	   $GH_ISSUE create -l "unit_test,${1},${2},${3},Passing" -t "${5}" -F ${6}
+	   $GH_ISSUE create -l "unit_test,${1},${2},${3},Passing$Add_LABELS" -t "${5}" -F ${6}
        else
            echo "NOT Editing Closed For ${4} Issue $ISSUE_INFO"
+	   $GH_ISSUE edit ${ISSUE_ID} --add-label "$Add_LABELS" --remove-label "$Rem_LABELS"
        fi)
     else
        (if [ "${ISSUE_OC}" = "CLOSED" ]; then
@@ -46,18 +49,19 @@ function foc_gh_issue {
 	    $GH_ISSUE comment ${ISSUE_ID} -b "Regression in ${LINKS}"
 	    $GH_ISSUE reopen ${ISSUE_ID}
 	    $GH_ISSUE comment ${ISSUE_ID} -F ${6}
+	    $GH_ISSUE edit ${ISSUE_ID} --add-label "$Add_LABELS" --remove-label "$Rem_LABELS"
        elif [ -z "${ISSUE_ID}" ]; then            
 	   #(gh api repos/logicmoo/logicmoo_workspace/labels -f name="${2}" -f color="fff000")
 	   #(gh api repos/logicmoo/logicmoo_workspace/labels -f name="${3}" -f color="ccc000")
 	    echo "Creating ${4} Issue $ISSUE_INFO"
-	    $GH_ISSUE create -l "unit_test,${1},${2},${3},Failing" -t "${5}" -F ${6}
+	    $GH_ISSUE create -l "unit_test,${1},${2},${3},Failing$Add_LABLES" -t "${5}" -F ${6}
        else 
            echo "Editing Issue For ${4} $ISSUE_INFO"
            if echo "${ISSUE_INFO}" | grep -q "Passing"; then
 	      $GH_ISSUE comment ${ISSUE_ID} -b "Broken in ${LINKS}"
-	      $GH_ISSUE edit ${ISSUE_ID} -t "${5}" -F ${6} --remove-label "Passing" --add-label "Failing,Regression"
+	      $GH_ISSUE edit ${ISSUE_ID} -t "${5}" -F ${6} --remove-label "Passing$Rem_LABELS" --add-label "Failing,Regression$Add_LABELS"
 	   else
-              $GH_ISSUE edit ${ISSUE_ID} -t "${5}" -F ${6} --remove-label "Passing" --add-label "Failing"
+              $GH_ISSUE edit ${ISSUE_ID} -t "${5}" -F ${6} --remove-label "Passing$Rem_LABELS" --add-label "Failing$Add_LABELS"
 	   fi 
        fi)
     fi

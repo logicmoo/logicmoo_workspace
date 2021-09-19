@@ -36,7 +36,7 @@
 
 ==> isa(fred,servant).  
 
-:- mpred_test(isa(fred,human))
+:- mpred_test(isa(fred,human)).
 
 %?- all(X,t(OP,isa(X,human),~isa(X,servant))).
 %OP = {A,B}/( if(~A,B) ).

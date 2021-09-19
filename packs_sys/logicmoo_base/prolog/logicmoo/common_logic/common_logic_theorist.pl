@@ -2,7 +2,7 @@
 % the only difference is that the latex version comments out the following
 % line:
 
-:- module(snark_theorist,[]).
+:- module(common_logic_snark_theorist,[]).
 
 
 /* 
@@ -1601,7 +1601,7 @@ an appropriate state at the end of the computation.
 
 % :- dynamic statistics/2.
 
-'explain'(G) :-
+'clst_explain'(G) :-
    (th_flag((timing,on))),
     statistics(runtime,_),
     expl(G,[],D,A),
