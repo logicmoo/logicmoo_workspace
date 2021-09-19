@@ -66,6 +66,7 @@
    ; nop((sanity( \+ is_pfc_file),set_prolog_flag(is_pfc_file_dialect,false))))))))).  
 :- endif.
 
+
 :- if((
  %set_prolog_flag(debug, true),
  %set_prolog_flag(gc, false),
@@ -79,22 +80,26 @@
  true)).
 :- endif.
 
-:- if((set_stream(current_output,tty(true)))).  :- endif.
 % :- if(('$current_source_module'(W), '$set_typein_module'(W))). :- endif.
 :- if((current_prolog_flag(test_typein_module,Module), '$set_typein_module'(Module), module(Module))). :- endif.
 :- if((current_prolog_flag(test_typein_module,Module), clifops:clif_op_decls(OPS), call(Module:OPS))). :- endif.
 
-:- if((ensure_loaded(library(pfc_test)))). :- endif.
-:- if((prolog_load_context(source,Src),set_prolog_flag(test_src,Src))). :- endif.
-:- if((prolog_load_context(source,Src),add_test_info(testsuite,file,Src))). :- endif.
-:- if(at_halt(system:halt_junit)). :- endif.
-
-:- if((dmsg(this_test_might_need(:- use_module(library(logicmoo_plarkc)))))).  :- endif.
 :- if(current_prolog_flag(is_pfc_file_dialect,true)).
 :- expects_dialect(pfc).
+
 :- else.
 :- if((dmsg(this_test_might_need(:- expects_dialect(pfc))))).  :- endif.
 :- endif.
+:- if((dmsg(this_test_might_need(:- use_module(library(logicmoo_plarkc)))))).  :- endif.
+
 :- if((prolog_load_context(source,F),echo_source_file_no_catchup(F))).  :- endif.
 
+:- if((ensure_loaded(library(pfc_test)))). :- endif.
+
+:- if((prolog_load_context(source,Src),set_prolog_flag(test_src,Src))). :- endif.
+:- if((prolog_load_context(source,Src),add_test_info(testsuite,file,Src))). :- endif.
+:- if(at_halt(system:test_completed)). :- endif.
+
+
+% :- if((set_stream(current_output,tty(true)))).  :- endif.
 

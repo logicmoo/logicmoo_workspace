@@ -449,21 +449,21 @@ system:do_call_inherited(MtAbove,Query):- !, on_x_debug(MtAbove:Query).
 system:do_call_inherited(MtAbove,Query):- on_x_debug(call(call,ireq(MtAbove:Query))).
   
 
-export_everywhere(M,F,A):- now_and_later(n,export_everywhere0(M,F,A)).
-export_everywhere0(system,F,A):- !, system:export(system:F/A).
-export_everywhere0(user,F,A):- !,user:export(user:F/A),system:import(user:F/A),baseKB:import(user:F/A).
-export_everywhere0(baseKB,F,A):- !, baseKB:export(baseKB:F/A),system:import(baseKB:F/A),user:import(baseKB:F/A).
-export_everywhere0(M,F,A):- M:export(M:F/A),system:import(M:F/A),user:import(M:F/A),baseKB:import(M:F/A).
+export_everywhere(M,F,A):- now_and_later(n,export_everywhere_now(M,F,A)).
+export_everywhere_now(system,F,A):- !, system:export(system:F/A).
+export_everywhere_now(user,F,A):- !,user:export(user:F/A),system:import(user:F/A),baseKB:import(user:F/A).
+export_everywhere_now(baseKB,F,A):- !, baseKB:export(baseKB:F/A),system:import(baseKB:F/A),user:import(baseKB:F/A).
+export_everywhere_now(M,F,A):- M:export(M:F/A),system:import(M:F/A),user:import(M:F/A),baseKB:import(M:F/A).
 
 %make_as_dynamic(M,F,A):- make_as_dynamic(make_as_dynamic,M,F,A).
 
-make_as_dynamic(Reason,M,F,A):- now_and_later(n,make_as_dynamic0(Reason,M,F,A)).
+make_as_dynamic(Reason,M,F,A):- now_and_later(n,make_as_dynamic_now(Reason,M,F,A)).
 
-make_as_dynamic0(Reason,M,F,A):- Reason= kb_global(_),!,make_as_dynamic_really(Reason,M,F,A),export_everywhere(M,F,A).
-make_as_dynamic0(Reason,M,F,A):- Reason= kb_local(_),!,make_as_dynamic_really(Reason,M,F,A),!. 
-make_as_dynamic0(Reason,M,F,A):- Reason= decl_kb_type(_,_),!,make_as_dynamic_really(Reason,M,F,A),!. 
-make_as_dynamic0(Reason,M,F,A):- F== is_pfc_file, break, make_as_dynamic_really(Reason,M,F,A).
-make_as_dynamic0(Reason,M,F,A):- dmsg(make_as_dynamic(Reason,M,F,A)),!,make_as_dynamic_really(Reason,M,F,A),!. 
+make_as_dynamic_now(Reason,M,F,A):- Reason= kb_global(_),!,make_as_dynamic_really(Reason,M,F,A),export_everywhere(M,F,A).
+make_as_dynamic_now(Reason,M,F,A):- Reason= kb_local(_),!,make_as_dynamic_really(Reason,M,F,A),!. 
+make_as_dynamic_now(Reason,M,F,A):- Reason= decl_kb_type(_,_),!,make_as_dynamic_really(Reason,M,F,A),!. 
+make_as_dynamic_now(Reason,M,F,A):- F== is_pfc_file, break, make_as_dynamic_really(Reason,M,F,A).
+make_as_dynamic_now(Reason,M,F,A):- dmsg(make_as_dynamic(Reason,M,F,A)),!,make_as_dynamic_really(Reason,M,F,A),!. 
 
 :- multifile(user:message_hook/3).
 :- dynamic(user:message_hook/3).

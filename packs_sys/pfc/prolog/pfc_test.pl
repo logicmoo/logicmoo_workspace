@@ -218,7 +218,7 @@ warn_fail_TODO(G):- dmsg_pretty(:-warn_fail_TODO(G)).
 :- create_prolog_flag(logicmoo_message_hook,none,[keep(true),type(term)]).
 
 system:is_junit_test:- getenv('JUNIT_PACKAGE',_),!.
-system:is_junit_test:- current_prolog_flag(test_src,Src),prolog_load_context(file,Src).
+system:is_junit_test:- current_prolog_flag(test_src,Src), Src\==[], prolog_load_context(file,Src).
 
 skip_warning(T):- \+ callable(T),!,fail.
 skip_warning(informational).
@@ -331,13 +331,15 @@ system:halt_junit:- asserta(j_u:junit_prop(system,halted_junit,true)),!,
   %nortrace,trace,
   save_junit_results.
 
+:- initialization(retractall(j_u:junit_prop(_,_,_)),prepare_state).
+:- initialization(set_prolog_flag(test_src,[]),prepare_state).
+
 junit_term_expansion(Var , _ ):- notrace(var(Var)),!,fail.
 junit_term_expansion(M:I,M:O):- !, junit_term_expansion(I,O).
 
 junit_term_expansion(_ , _ ):- prolog_load_context(file,Src),  \+ j_u:junit_prop(testsuite,file,Src), 
    \+ current_prolog_flag(test_src,Src), !, fail.
-junit_term_expansion( (end_of_file), [] ):- 
-  !, system:halt_junit, current_prolog_flag(test_completed,Goal), ignore(Goal),fail.
+junit_term_expansion( (end_of_file), [] ):-  !, test_completed.
 
 junit_term_expansion((:- I),O):- !, junit_dirrective_expansion(I,M), (is_list(M) -> O=M ; O=(:-M)).
 
@@ -372,28 +374,49 @@ blocks_on_input( trace ).
 blocks_on_input( break ).
 blocks_on_input( prolog ).
 
+test_completed_props(warn).
+test_completed_props(warning).
+test_completed_props(error).
+test_completed_props(result).
 
+% explain_junit_results:- listing(j_u::junit_prop/3).
+explain_junit_results:- 
+  j_u:junit_prop(S,V,O),
+  once(test_completed_props(V);(term_to_atom(O,Atom), atom_length(Atom,L), L<200)), 
+  write_testcase_prop(S,V,O),
+  fail.
+explain_junit_results:- ttyflush.
 
-test_completed_exit(N):- dmsg_pretty(test_completed_exit(N)),fail.
+/*
 test_completed_exit(64):- halt(64). % Passed
 test_completed_exit(4):- halt(4). % Aborted by User
 test_completed_exit(2):- halt(2). % Aborted by System
+*/
 
-test_completed_exit(_):- once((listing(j_u:junit_prop(_,warn,_)),
-                               listing(j_u:junit_prop(_,warning,_)),
-                               listing(j_u:junit_prop(_,error,_)))),fail.
+test_completed_exit(N):- dmsg_pretty(begin_test_completed_exit(N)),fail.
+test_completed_exit(_):- ttyflush,fail.
+test_completed_exit(_):- once(system:halt_junit),fail.
+test_completed_exit(_):- ttyflush,fail.
+test_completed_exit(_):- explain_junit_results,fail.
+test_completed_exit(_):- ttyflush,fail.
+test_completed_exit(N):- dmsg_pretty(test_completed_exit(N)),fail.
+test_completed_exit(_):- ttyflush,fail.
+test_completed_exit(_):- current_prolog_flag(test_completed,MGoal), strip_module(MGoal,M,Goal), Goal\=[], 
+   Goal\==test_completed,  callable(Goal), call(M:Goal). 
 
-test_completed_exit(N):- keep_going,!, halt(N).
+test_completed_exit(_):- ttyflush,fail.
+% test_completed_exit(N):- keep_going,!, halt(N).
+% test_completed_exit(N):- (current_prolog_flag(debug,true)-> true ; halt(N)).
 test_completed_exit(N):- halt(N).
-test_completed_exit(N):- (current_prolog_flag(debug,true)-> true ; halt(N)).
-
+/*
 test_completed_exit_maybe(_):- j_u:junit_prop(_,result,failure), test_completed_exit(8).
 test_completed_exit_maybe(_):- j_u:junit_prop(_,error,_), test_completed_exit(9).
 test_completed_exit_maybe(_):- j_u:junit_prop(_,warning,_),test_completed_exit(3).
 test_completed_exit_maybe(_):- j_u:junit_prop(_,warn,_),test_completed_exit(3).
+*/
 test_completed_exit_maybe(N):- test_completed_exit(N).
 
-calc_exit_code(XC):- findall(X,calc_exit_code0(X),List).sum_list(List,XC).
+calc_exit_code(XC):- findall(X,calc_exit_code0(X),List),lists:sum_list(List,XC).
 
 calc_exit_code0(8):- \+ \+ j_u:junit_prop(_,result,failure).
 calc_exit_code0(16):- \+ \+ j_u:junit_prop(_,warning,_).
@@ -401,8 +424,13 @@ calc_exit_code0(32):- once(j_u:junit_prop(_,error,_) ; j_u:junit_prop(_,result,e
 calc_exit_code0(64):- \+ j_u:junit_prop(_,result,failure), \+ \+ j_u:junit_prop(_,result,passed).
   
 
-system:test_repl:-  assertz(system:junit_prop(need_retake,warn,need_retake)).
-system:test_completed:- system:halt_junit,calc_exit_code(XC),test_completed_exit_maybe(XC).
+
+:- dynamic(j_u:started_test_completed/0).
+:- volatile(j_u:started_test_completed/0).
+system:test_completed:- j_u:started_test_completed,!.
+system:test_completed:- asserta(j_u:started_test_completed),calc_exit_code(XC),test_completed_exit_maybe(XC).
+
+system:test_repl:-  assertz(j_u:junit_prop(need_retake,warn,need_retake)).
 system:test_retake:- system:halt_junit,test_completed_exit_maybe(3).
 
 /* 
@@ -490,12 +518,12 @@ system:test_retake:- system:halt_junit,test_completed_exit_maybe(3).
   </testsuite>
 </testsuites>
   */
-save_junit_results:-
+save_junit_results:- 
  \+ \+ j_u:junit_prop(testsuite,file,_),
  forall(j_u:junit_prop(testsuite,file,File), 
     (with_output_to(string(Text),show_junit_suite_xml(File)),
      save_to_junit_file(File,Text))),!.
-save_junit_results:- wdmsg(unused(save_junit_results)).
+save_junit_results:- wdmsg(unused(no_junit_results)).
 
 show_junit_suite_xml(File):- 
   writeln('<?xml version="1.0" encoding="utf-8"?>'),
@@ -689,13 +717,15 @@ write_testcase_std_info(Testcase):-
  shrink_to(StdErr,200,Summary),
  format("~N    <system-err><![CDATA[~w]]></system-err>",[Summary]),!.
  
+write_testcase_prop(S,V,O):- format('~N'), write(S),write_testcase_n_v(V,O), format('~N').
+write_testcase_prop(Type,Term):- format('~N'), write_testcase_n_v(Type,Term), format('~N').
 
-write_testcase_prop(_Type,[]):-!.
-write_testcase_prop(info,S):- !, format('~N~w~n',[S]).
-write_testcase_prop(out,_).
-write_testcase_prop(url,Term):- !, format('~N\t~w\t=~w~n',[url,Term]).
-write_testcase_prop(Type,Term):- string(Term),!,format('~N\t~w\t=~w~n',[Type,Term]).
-write_testcase_prop(Type,Term):- format('~N\t~w\t=~q.~n',[Type,Term]).
+write_testcase_n_v(_Type,[]):-!.
+write_testcase_n_v(info,S):- !, format('~w ',[S]).
+write_testcase_n_v(out,_).
+write_testcase_n_v(url,Term):- !, format('\t~w\t=\t~w ',[url,Term]).
+write_testcase_n_v(Type,Term):- string(Term),!,format('\t~w\t=\t~w ',[Type,Term]).
+write_testcase_n_v(Type,Term):- format('\t~w\t=\t~q. ',[Type,Term]).
 
 :- use_module(library(sgml)).
 escape_attribute(I,O):-xml_quote_attribute(I,O).
@@ -783,6 +813,8 @@ user:message_hook(T,Type,Term):-
    Type \== silent, Type \== debug, Type \== informational,
    current_prolog_flag(logicmoo_message_hook,Was),Was\==none,Was\==false)),
    once(message_hook_handle(T,Type,Term)),!.
+
+:- initialization(set_prolog_flag(logicmoo_message_hook,none),prepare_state).
 
 system:term_expansion(I,P,O,PO):- ((nonvar(P),is_junit_test, junit_term_expansion(I,O))),P=PO.
 system:goal_expansion(I,P,O,PO):- notrace((nonvar(P),is_junit_test, junit_goal_expansion(I,O))),P=PO.

@@ -13,8 +13,9 @@ a11.
 
 :- mpred_test(b11).
 
+:- listing(j_u:junit_prop/3).
 
-
+:- test_completed. 
 
 
 

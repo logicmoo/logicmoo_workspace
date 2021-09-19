@@ -3,7 +3,7 @@
 export good_exit=64
 exitcode=${good_exit}
 [ -z "${keep_going}" ] && export keep_going=""
-[ "$*" == *"-k"* ] && export keep_going="-k"
+[[ "$*" == *"-k"* ]] && export keep_going="-k"
 runtime_testing=4
 INTERACTIVE=1
 export next_cls=0
@@ -14,8 +14,6 @@ if [ "$1" == "-k" ]; then
   runtime_testing=5
   shift
 fi
-
-lmoo-make
 
 if [ "$(whoami)" == "jenkins" ]; then
     INTERACTIVE=0
@@ -60,18 +58,6 @@ echo "<!-- TEST_STEM_PATH=${TEST_STEM_PATH} -->"
 echo "<!-- LOGICMOO_WS=${LOGICMOO_WS} -->"
 
 
-SWIPL=swipl
-if [ -z `which swipl` ]; then
-    # default locations on OS X
-    SWIPL=/Applications/SWI-Prolog.app/Contents/MacOS/swipl;
-    if [ ! -e $SWIPL ]; then
-        SWIPL=~/bin/swipl; 
-    fi
-    if [ ! -e $SWIPL ]; then
-        echo PFC requires SWI-Prolog. Please download from http://www.swi-prolog.org/
-        return 1 2>/dev/null ; exit 1
-    fi
-fi
 
 OUTER_TEE=""
 [ -t 1 ] && OUTER_TEE="1"
@@ -139,6 +125,33 @@ function INFO {
  JECHO "<!-- ${willBe}  -->"
 }
 
+SWIPL="swipl -x ${LOGICMOO_WS}/bin/lmoo-clif"
+
+[ -z "$SWIPL" ] && 
+(
+    export SWIPL=swipl
+    if [ -z `which swipl` ]; then
+	# default locations on OS X
+	SWIPL=/Applications/SWI-Prolog.app/Contents/MacOS/swipl;
+	if ! type ${SWIPL} > /dev/null 2>&1; then
+	    SWIPL=~/bin/swipl; 
+	fi
+    fi
+    if type lmoo-pfc > /dev/null 2>&1; then
+      SWIPL=lmoo-pfc
+    fi
+    if type lmoo-clif > /dev/null 2>&1; then
+      SWIPL=lmoo-clif
+    fi
+    if ! type ${SWIPL} > /dev/null 2>&1; then
+       echo LOGICMOO requires SWI-Prolog. Please download from http://www.swi-prolog.org/
+       return 1 2>/dev/null ; exit 1
+    fi
+)
+
+# [[ "$SWIPL" == *"lmoo"* ]] && lmoo-make
+
+
 function expand { for arg in "$@"; do [[ -f $arg ]] && echo $arg; done }
 
 me="${BASH_SOURCE[${#BASH_SOURCE[@]} - 1]}"
@@ -189,18 +202,13 @@ for ele2 in "${SORTED_FILES[@]}"
          
         if [[ "$ele" == *".sh" && -x "./$ele" ]]; then
          CMD="./${ele}"
-        else
-           if type lmoo-pfc > /dev/null 2>&1; then
-             SWIPL=lmoo-pfc
-           fi
-	   EXT=`echo "$ele" | cut -d'.' -f2`
-           if type lmoo-${EXT} > /dev/null 2>&1; then
-             SWIPL=lmoo-${EXT}
-           fi
-           if type lmoo-clif > /dev/null 2>&1; then
-             SWIPL=lmoo-clif
-           fi
-          
+        else         
+	    : 'if ! type $SWIPL > /dev/null 2>&1; then
+		EXT=`echo "$ele" | cut -d'.' -f2`
+		if type lmoo-${EXT} > /dev/null 2>&1; then
+		  SWIPL=lmoo-${EXT}
+		fi
+	    fi ' 
             #// Runs the test -f .swiplrc
             #//CMD="swipl -g 'set_prolog_flag(runtime_testing,${runtime_testing})' -g \"thread_create(['${ele}'],Id),thread_join(Id),$test_completed\" "
             #//CMD="$SWIPL -g 'set_prolog_flag(runtime_testing,${runtime_testing})' -g \"(['${ele}'])\" -g \"$test_completed\" "
