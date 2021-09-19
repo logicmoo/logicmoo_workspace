@@ -16,7 +16,7 @@ function foc_gh_issue {
     [ -z "${GH_MASTER_ISSUE_INFO}" ] && export GH_MASTER_ISSUE_INFO=`gh issue list -l ${1} -L 1000 | sed -e "s/UTC /\n/g" | grep "unit_test"`
     [ -z "${GH_MASTER_ISSUE_INFO}" ] && export GH_MASTER_ISSUE_INFO=`gh issue list -l unit_test -L 2000 | sed -e "s/UTC /\n/g" | grep "unit_test"`
 
-    ISSUE_INFO=$(echo "${GH_MASTER_ISSUE_INFO}" | grep "${2} " | grep ${3} | head -1)
+    ISSUE_INFO=$(echo "${GH_MASTER_ISSUE_INFO}" | grep "${1}.${2} " | grep ${3} | head -1)
     echo "ISSUE_INFO=${ISSUE_INFO}"
 
     ISSUE_ID=$(echo "${ISSUE_INFO}" | cut -f1)

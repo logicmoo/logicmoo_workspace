@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 
 [ -z "${TESTING_TEMP}" ] && [ -d "$(pwd)/test_results" ] && export TESTING_TEMP=$(pwd)/test_results/$(whoami)
 [ -z "${TESTING_TEMP}" ] && [ -d "${LOGICMOO_WS}/test_results" ] && export TESTING_TEMP=${LOGICMOO_WS}/test_results/$(whoami)
@@ -16,7 +16,7 @@ parent-find() {
   parent-find "$file" "$(dirname "$dir")"
 }
 
-export PACK_DIR=$(basename $(parent-find "pack.pl" .  )/junit)
+export PACK_DIR=$(basename junit/$(parent-find "pack.pl" .  ))
 echo "<!-- PACK_DIR=${PACK_DIR} -->"
 
 export JUNIT_PACKAGE="${PACK_DIR}.$(basename `realpath .. | sed -e 's|/[^.]/|/|g' `).$(basename `realpath .`)"
@@ -33,7 +33,7 @@ GLOBSTEM=$(echo "${JUNIT_PACKAGE_STEM}-${GLOB}" | sed -e "s/[*]/vSTARv/g" -e "s/
 echo "<!-- GLOBSTEM=${GLOBSTEM} -->"
 [ -z "${TEST_STEM}" ] && export TEST_STEM=Report-${GLOBSTEM}-Units
 echo "<!-- TEST_STEM=${TEST_STEM} -->"
-[ -z "${TEST_STEM_PATH}" ] && export TEST_STEM_PATH=${TESTING_TEMP}/${TEST_STEM}
+[ -z "${TEST_STEM_PATH}" ] && export TEST_STEM_PATH="${TESTING_TEMP}/${TEST_STEM}"
 echo "<!-- TEST_STEM_PATH=${TEST_STEM_PATH} -->"
 
 
