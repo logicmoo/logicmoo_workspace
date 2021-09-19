@@ -4,7 +4,7 @@
 :- module(cute6,[]).
 
 :- include(test_header).
-:- user:use_module(library(editline)).
+%:- user:use_module(library(editline)).
 :- use_module(library(occurs)). % sub_term/2
 :- use_module(library(sort)). % predsort/3
 :- use_module(library(backcomp)). % concat_atom/2
