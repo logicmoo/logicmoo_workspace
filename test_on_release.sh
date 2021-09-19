@@ -10,6 +10,7 @@ FILTER=""
 
 export keep_going="-k"
 
+git switch master
 git pull origin master
 
 #unset TESTING_TEMP
