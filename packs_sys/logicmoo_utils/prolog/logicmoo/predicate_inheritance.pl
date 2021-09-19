@@ -68,6 +68,9 @@ check_mfa/4,
 create_predicate_inheritance/4,
 now_inherit_above/4,
 decl_as/2,
+decl_az/2,
+decl_as/4,
+decl_az/4,
 do_import/4,
 (kb_local)/1,
 (kb_global)/1,
@@ -446,19 +449,21 @@ system:do_call_inherited(MtAbove,Query):- !, on_x_debug(MtAbove:Query).
 system:do_call_inherited(MtAbove,Query):- on_x_debug(call(call,ireq(MtAbove:Query))).
   
 
-
-export_everywhere(system,F,A):- !, system:export(system:F/A).
-export_everywhere(user,F,A):- !,user:export(user:F/A),system:import(user:F/A),baseKB:import(user:F/A).
-export_everywhere(baseKB,F,A):- !, baseKB:export(baseKB:F/A),system:import(baseKB:F/A),user:import(baseKB:F/A).
-export_everywhere(M,F,A):- M:export(M:F/A),system:import(M:F/A),user:import(M:F/A),baseKB:import(M:F/A).
+export_everywhere(M,F,A):- now_and_later(n,export_everywhere0(M,F,A)).
+export_everywhere0(system,F,A):- !, system:export(system:F/A).
+export_everywhere0(user,F,A):- !,user:export(user:F/A),system:import(user:F/A),baseKB:import(user:F/A).
+export_everywhere0(baseKB,F,A):- !, baseKB:export(baseKB:F/A),system:import(baseKB:F/A),user:import(baseKB:F/A).
+export_everywhere0(M,F,A):- M:export(M:F/A),system:import(M:F/A),user:import(M:F/A),baseKB:import(M:F/A).
 
 %make_as_dynamic(M,F,A):- make_as_dynamic(make_as_dynamic,M,F,A).
 
-make_as_dynamic(Reason,M,F,A):- Reason= kb_global(_),!,make_as_dynamic_really(Reason,M,F,A),export_everywhere(M,F,A).
-make_as_dynamic(Reason,M,F,A):- Reason= kb_local(_),!,make_as_dynamic_really(Reason,M,F,A),!. 
-make_as_dynamic(Reason,M,F,A):- Reason= decl_kb_type(_,_),!,make_as_dynamic_really(Reason,M,F,A),!. 
-make_as_dynamic(Reason,M,F,A):- F== is_pfc_file, break, make_as_dynamic_really(Reason,M,F,A).
-make_as_dynamic(Reason,M,F,A):- dmsg(make_as_dynamic(Reason,M,F,A)),!,make_as_dynamic_really(Reason,M,F,A),!. 
+make_as_dynamic(Reason,M,F,A):- now_and_later(n,make_as_dynamic0(Reason,M,F,A)).
+
+make_as_dynamic0(Reason,M,F,A):- Reason= kb_global(_),!,make_as_dynamic_really(Reason,M,F,A),export_everywhere(M,F,A).
+make_as_dynamic0(Reason,M,F,A):- Reason= kb_local(_),!,make_as_dynamic_really(Reason,M,F,A),!. 
+make_as_dynamic0(Reason,M,F,A):- Reason= decl_kb_type(_,_),!,make_as_dynamic_really(Reason,M,F,A),!. 
+make_as_dynamic0(Reason,M,F,A):- F== is_pfc_file, break, make_as_dynamic_really(Reason,M,F,A).
+make_as_dynamic0(Reason,M,F,A):- dmsg(make_as_dynamic(Reason,M,F,A)),!,make_as_dynamic_really(Reason,M,F,A),!. 
 
 :- multifile(user:message_hook/3).
 :- dynamic(user:message_hook/3).
@@ -570,32 +575,34 @@ do_import(TM,M,F,A):-
 %
 % Declare as Types.
 %
-decl_as(Types,Var):-var(Var),!,trace_or_throw(var_decl_shared(Types,Var)).
-decl_as(Types,M:FA):- if_defined(defaultAssertMt(M),fail),!,decl_as(Types,FA),!.
-decl_as(Types,abox:FA):-!,decl_as(Types,FA),!.
-decl_as(Types,MM:G1):- (MM= (_:M)), !,decl_as(Types,M:G1),!.
+decl_as(Types,Goal):- now_and_later(n,decl_az(Types,Goal)).
 
-decl_as(Types,(G1,G2)):-!,decl_as(Types,G1),!,decl_as(Types,G2),!.
-decl_as(Types,[G1]):-!,decl_as(Types,G1),!.
-decl_as(Types,[G1|G2]):-!,decl_as(Types,G1),!,decl_as(Types,G2),!.
-decl_as(Types,M:(G1,G2)):-!,decl_as(Types,M:G1),!,decl_as(Types,M:G2),!.
-decl_as(Types,M:[G1]):-!,decl_as(Types,M:G1),!.
-decl_as(Types,M:[G1|G2]):-!,decl_as(Types,M:G1),!,decl_as(Types,M:G2),!.
-decl_as(Types,M:F):-atom(F),!,decl_as(Types,M,F,_).
-decl_as(Types,F):-atom(F),!,decl_as(Types,_,F,_).
-decl_as(Types,M:'//'(F,Am2)):-!,A is Am2+2, decl_as(Types,M,F,A).
-decl_as(Types,M:F/A):-!,decl_as(Types,M,F,A).
-decl_as(Types,'//'(F,Am2)):-!,A is Am2+2, decl_as(Types,_,F,A).
-decl_as(Types,F/A):-!,decl_as(Types,_,F,A).
-decl_as(Types,M:Goal):-compound(Goal),!,functor(Goal,F,A),decl_as(Types,M,F,A).
-decl_as(Types,Goal):-compound(Goal),!,functor(Goal,F,A),decl_as(Types,_,F,A).
-decl_as(Types,Goal):-trace_or_throw(bad_decl_as(Types,Goal)).
+decl_az(Types,Var):-var(Var),!,trace_or_throw(var_decl_shared(Types,Var)).
+decl_az(Types,M:FA):- if_defined(defaultAssertMt(M),fail),!,decl_az(Types,FA),!.
+decl_az(Types,abox:FA):-!,decl_az(Types,FA),!.
+decl_az(Types,MM:G1):- (MM= (_:M)), !,decl_az(Types,M:G1),!.
 
+decl_az(Types,(G1,G2)):-!,decl_az(Types,G1),!,decl_az(Types,G2),!.
+decl_az(Types,[G1]):-!,decl_az(Types,G1),!.
+decl_az(Types,[G1|G2]):-!,decl_az(Types,G1),!,decl_az(Types,G2),!.
+decl_az(Types,M:(G1,G2)):-!,decl_az(Types,M:G1),!,decl_az(Types,M:G2),!.
+decl_az(Types,M:[G1]):-!,decl_az(Types,M:G1),!.
+decl_az(Types,M:[G1|G2]):-!,decl_az(Types,M:G1),!,decl_az(Types,M:G2),!.
+decl_az(Types,M:F):-atom(F),!,decl_az(Types,M,F,_).
+decl_az(Types,F):-atom(F),!,decl_az(Types,_,F,_).
+decl_az(Types,M:'//'(F,Am2)):-!,A is Am2+2, decl_az(Types,M,F,A).
+decl_az(Types,M:F/A):-!,decl_az(Types,M,F,A).
+decl_az(Types,'//'(F,Am2)):-!,A is Am2+2, decl_az(Types,_,F,A).
+decl_az(Types,F/A):-!,decl_az(Types,_,F,A).
+decl_az(Types,M:Goal):-compound(Goal),!,functor(Goal,F,A),decl_az(Types,M,F,A).
+decl_az(Types,Goal):-compound(Goal),!,functor(Goal,F,A),decl_az(Types,_,F,A).
+decl_az(Types,Goal):-trace_or_throw(bad_decl_as(Types,Goal)).
 
-decl_as(Types,M,F,A):- var(M),if_defined(defaultAssertMt(M),M=baseKB),!,decl_as(Types,M,F,A).
-decl_as(Types,M,F,A):- var(A),!,forall(between(1,12,A),decl_as(Types,M,F,A)).
-decl_as(M:Types,M,F,A):-!, decl_as(Types,M,F,A).
-decl_as(Types,M,F,A):-!, decl_as_rev(M:F/A,Types).
+decl_as(Types,M,F,A):- now_and_later(n,decl_az(Types,M,F,A)).
+decl_az(Types,M,F,A):- var(M),if_defined(defaultAssertMt(M),M=baseKB),!,decl_az(Types,M,F,A).
+decl_az(Types,M,F,A):- var(A),!,forall(between(1,12,A),decl_az(Types,M,F,A)).
+decl_az(M:Types,M,F,A):-!, decl_az(Types,M,F,A).
+decl_az(Types,M,F,A):-!, decl_as_rev(M:F/A,Types).
 
 decl_as_rev(MFA,(G1,G2)):-!,decl_as_rev(MFA,G1),!,decl_as_rev(MFA,G2),!.
 decl_as_rev(MFA,[G1]):-!,decl_as_rev(MFA,G1),!.
