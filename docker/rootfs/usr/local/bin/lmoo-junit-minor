@@ -139,7 +139,7 @@ function INFO {
 }
 
 me="${BASH_SOURCE[${#BASH_SOURCE[@]} - 1]}"
-INFO "Running Matching Tests: $me ${keep_going} ${listOfNames[*]}"
+INFO "Running Matching Tests: (cd $PWD ; $me ${keep_going} ${listOfNames[*]})"
 
 FILES=""
 (
