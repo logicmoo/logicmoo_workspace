@@ -16,9 +16,8 @@
 
 :- include(test_header).
 
-:- set_prolog_flag(gc,true).
+:- set_prolog_flag(gc,false).
 
-:- include(test_header).
 
 % =================================================================================
 % Set our engine up

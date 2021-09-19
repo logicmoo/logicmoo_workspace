@@ -12,33 +12,6 @@
 :- statistics.
 
 
-subtest_assert(I):-kif_assert(I).
-
-subtest([subtest_assert(tAnimal(joe)),
-        mpred_test(isa(_,tHeart))]).
-
-subtest([subtest_assert(tAnimal(joe)),
-        mpred_test(hasOrgan(joe,_))]).
-
-subtest([subtest_assert(tHeart(_)),
-        mpred_test(~hasOrgan(jack,_))]).
-
-
-dbanner:- nl,nl,dmsg('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%'),nl,nl.
-
-add_test(Name,Assert):- 
-   % test_boxlog(Assert),
-   assert(( Name:- dbanner,
-      test_assert(Assert))).
-
-test_assert(A):-
-  kif_assert(A),
-  nop(forall(subtest(T),do_subtest(T))).
-
-
-do_subtest(List):- must_maplist(call,List).
-
-
 :- add_test(t121, (all([[Human,tAnimal]],exists([[Heart,tHeart]],hasOrgan(Human,Heart))))).
 
 :- add_test(t122, 
