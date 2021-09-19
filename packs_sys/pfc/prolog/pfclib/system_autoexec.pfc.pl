@@ -129,7 +129,6 @@ first_std_provider/3)).
 %:- ensure_abox_hybrid(baseKB).
 
 :- set_fileAssertMt(baseKB).
-:- break.
 :- thread_local(t_l:disable_px/0).
 
 :- must(retractall( t_l:disable_px)).

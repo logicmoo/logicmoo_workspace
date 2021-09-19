@@ -1813,7 +1813,8 @@ with_mpred_expansions(Goal):-
 % Ensure Loaded No Managed Predicates.
 %
 ensure_loaded_no_mpreds(M:F):-
-  with_delayed_chaining(forall(must_locate_file(F,L),((set_how_virtualize_file(false,L)),M:ensure_loaded(M:L)))).
+  with_delayed_chaining(forall(must_locate_file(F,L),
+    ((set_how_virtualize_file(false,L)),M:ensure_loaded(M:L)))).
 
 :- meta_predicate(with_delayed_chaining(+)).
 %% with_delayed_chaining( :Goal) is det.

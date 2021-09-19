@@ -97,6 +97,7 @@ install_converter(M, CNV):-
   '@'(export(M:F/A), M),
   '@'(import(M:F/A), parser_all),
   '@'(import(M:F/A), baseKB),
+  '@'(import(M:F/A), user),
   catch(system:import(M:F/A),_,true),
   %while_tracing_pipeline(dmsg(installed_converter(M, CNVLST))),
   get_in_outs(CNVLST,Ins,Outs),

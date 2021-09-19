@@ -29,6 +29,9 @@
 :- (abolish(apply_macros:expand_apply, 4), asserta((apply_macros:expand_apply(_In, _, _, _):- !, fail))).
 :- (abolish(apply_macros:expand_apply, 2), asserta((apply_macros:expand_apply(_In, _):- !, fail))).
 
+foo2.
+:- listing(foo2/0).
+
 %:- use_module(library(pfc_lib)).
 %:- '$set_typein_module'(baseKB).
 %:- nop('$set_source_module'( baseKB)).
@@ -43,6 +46,8 @@
 :- dmsg(nl_pipeline_start).
 
 % ==============================================================================
+foo1.
+:- listing(foo1/0).
 
 :- volatile(t_l:disable_px/0).
 :- thread_local(t_l:disable_px/0).
@@ -71,10 +76,16 @@
 :- shared_parser_data(talkdb:talk_db/6).
 
 
+foo3.
+:- listing(foo3/0).
 
+:- break.
 % ================================================================================================
 :- if(load_parser_interface(parser_e2c)).
 % ================================================================================================
+
+foo4a.
+:- listing(foo4a/0).
 
 :- install_converter(parser_e2c, e2c_parse(+merged_lexical_segs, -clause_e2c)).
 %:- install_converter(parser_e2c:e2c(+acetext, -lf_e2c)).
@@ -84,6 +95,9 @@
 %:- debug.
 
 :- endif.
+
+foo4.
+:- listing(foo4/0).
 
 % ================================================================================================
 %:- include(parser_ape).
@@ -199,8 +213,8 @@ remove_punctuation(W2, W2).
 :- endif.
 
 % ================================================================================================
-baseKB:load_parser_stanford:-  load_parser_interface(parser_stanford).
-:- if(baseKB:load_parser_stanford).
+load_parser_stanford:-  load_parser_interface(parser_stanford).
+:- if(load_parser_stanford).
 % ================================================================================================
 
 %:- install_converter(parser_stanford:text_to_corenlp(+acetext, -corenlp)).
