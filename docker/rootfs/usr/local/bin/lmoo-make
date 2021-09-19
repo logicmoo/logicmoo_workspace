@@ -18,7 +18,7 @@ fi
 
 
 if [ -x "${BINARY}" ]; then
-NEWER_FILES=`find $LOGICMOO_WS/docker/ $LOGICMOO_WS/packs_??*/ -type f -newer ${BINARY} -name "*.pl"`
+NEWER_FILES=`find $LOGICMOO_WS/docker/rootfs/usr/local/lib/swipl/ $LOGICMOO_WS/packs_??*/*/prolog/ -type f -newer ${BINARY} -name "*.pl"`
     if [ -z "${NEWER_FILES}" ]; then
       return 0 2>/dev/null ; exit 0
     fi
