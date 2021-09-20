@@ -219,7 +219,7 @@ warn_fail_TODO(G):- dmsg_pretty(:-warn_fail_TODO(G)).
 
 system:is_junit_test:- getenv('JUNIT_PACKAGE',_),!.
 system:is_junit_test:- system:is_junit_test_file.
-system:is_junit_test_file:- test_src(test_src,Src), prolog_load_context(file,Src),!.
+system:is_junit_test_file:- test_src(Src), prolog_load_context(file,Src),!.
 
 skip_warning(T):- \+ callable(T),!,fail.
 skip_warning(informational).
