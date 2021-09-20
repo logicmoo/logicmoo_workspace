@@ -51,3 +51,9 @@ bc_p(b).
 
 :- xlisting(bc_q/1).
 
+
+% ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/308 
+% EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/pfc/t/sanity_base/bwd_01a.pfc 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/BWD_01A/logicmoo_pfc_test_sanity_base_BWD_01A_JUnit/ 
+% ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3ABWD_01A 
+

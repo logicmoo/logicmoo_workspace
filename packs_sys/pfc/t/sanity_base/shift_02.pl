@@ -128,3 +128,9 @@ what i wanted was the output of:
 
 */
 
+
+% ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/99 
+% EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/pfc/t/sanity_base/shift_02.pl 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/SHIFT_02/logicmoo_pfc_test_sanity_base_SHIFT_02_JUnit/ 
+% ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3ASHIFT_02 
+

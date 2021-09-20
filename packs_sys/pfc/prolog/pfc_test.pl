@@ -367,6 +367,7 @@ junit_goal_expansion(I,O):- junit_expansion(junit_goal_exp,I,O).
 junit_goal_exp( Break, dmsg(skipped(blocks_on_input,Break))):- blocks_on_input(Break), keep_going. 
 junit_goal_exp( Messy, dmsg(skipped(messy_on_output,Messy))):- messy_on_output(Messy), keep_going. 
 junit_goal_exp( must(A),mpred_test(A)) :- is_junit_test_file.
+junit_goal_exp( mpred_why(A),mpred_test(A)) :- is_junit_test_file.
 
 
 

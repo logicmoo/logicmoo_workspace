@@ -43,3 +43,9 @@ bc_01_d_p(b).
 
 
 
+
+% ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/93 
+% EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/pfc/t/sanity_base/bc_01d.pfc 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/BC_01D/logicmoo_pfc_test_sanity_base_BC_01D_JUnit/ 
+% ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3ABC_01D 
+

@@ -33,3 +33,9 @@ a4u(1).
 :- mpred_test(b4u(1)).
 
 
+
+% ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/91 
+% EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/pfc/t/sanity_base/fc_04_user.pfc 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/FC_04_USER/logicmoo_pfc_test_sanity_base_FC_04_USER_JUnit/ 
+% ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3AFC_04_USER 
+

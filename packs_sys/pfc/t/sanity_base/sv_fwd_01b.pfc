@@ -64,3 +64,9 @@ dmilesWorld ==> inChair(b).
 %:- mpred_test(inChair(a)).
 
 % :- break.
+
+% ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/97 
+% EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/pfc/t/sanity_base/sv_fwd_01b.pfc 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/SV_FWD_01B/logicmoo_pfc_test_sanity_base_SV_FWD_01B_JUnit/ 
+% ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3ASV_FWD_01B 
+

@@ -46,3 +46,9 @@ cycKB1:loves(sally,joe).
 :- pfc_test_feature(mt,\+ call_u(header_sane:loves(_,_))).
 
 
+
+% ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/88 
+% EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/pfc/t/sanity_base/mt_01c_0a.pl 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/MT_01C_0A/logicmoo_pfc_test_sanity_base_MT_01C_0A_JUnit/ 
+% ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3AMT_01C_0A 
+

@@ -30,3 +30,9 @@ a(X) ==> b(X).
 :- mpred_test(b(1)).
 
 
+
+% ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/ 
+% EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/pfc/t/sanity_base/fc_05.pfc 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/FC_05/logicmoo_pfc_test_sanity_base_FC_05_JUnit/ 
+% ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3AFC_05 
+

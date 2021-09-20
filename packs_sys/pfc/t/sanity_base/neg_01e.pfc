@@ -33,3 +33,9 @@ path(1,4).
 %:- mpred_test(\+path(1,3)).
 
 
+
+% ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/300 
+% EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/pfc/t/sanity_base/neg_01e.pfc 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/NEG_01E/logicmoo_pfc_test_sanity_base_NEG_01E_JUnit/ 
+% ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3ANEG_01E 
+
