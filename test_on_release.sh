@@ -70,6 +70,10 @@ sed -r "s/\x1B\[(([0-9]{1,2})?(;)?([0-9]{1,2})?)?[m,K,H,f,J]//g" ${TESTING_TEMP}
 echo -e "\n</testsuites>\n\n\n" 
 ) | iconv -c -t utf-8  > ${TESTING_TEMP}/junit-all.xml
 
+# Generate Html Reports
+( junit-viewer --results=${TESTING_TEMP}/junit-all.xml --save=${TESTING_TEMP}/junit-all.html )  ; /bin/true
+( junit2html ${TESTING_TEMP}/junit-all.xml ${TESTING_TEMP}/junit2html-all.html )  ; /bin/true
+
 
 cd $TESTING_TEMP/ && find . -print | zip jenkin_results_${BUILD_NUMBER}.zip -@ 2>&1 > /dev/null
 
