@@ -218,7 +218,8 @@ warn_fail_TODO(G):- dmsg_pretty(:-warn_fail_TODO(G)).
 :- create_prolog_flag(logicmoo_message_hook,none,[keep(true),type(term)]).
 
 system:is_junit_test:- getenv('JUNIT_PACKAGE',_),!.
-system:is_junit_test:- current_prolog_flag(test_src,Src), Src\==[], prolog_load_context(file,Src).
+system:is_junit_test:- system:is_junit_test_file.
+system:is_junit_test_file:- current_prolog_flag(test_src,Src), Src\==[], prolog_load_context(file,Src).
 
 skip_warning(T):- \+ callable(T),!,fail.
 skip_warning(informational).
@@ -347,7 +348,7 @@ junit_dirrective_expansion(I,O):- junit_expansion(junit_dirrective_exp,I,O).
 
 junit_dirrective_exp( I , O ) :- junit_goal_exp(I,O) -> I\=@=O. 
 junit_dirrective_exp( listing(X), dmsg(skipped(listing(X))) ):- keep_going. 
-junit_dirrective_exp( \+ X, mpred_test( \+ X ) ).
+junit_dirrective_exp( \+ X, mpred_test( \+ X ) ):- is_junit_test_file.
 %junit_dirrective_exp( X, X  ):- predicate_property(X,static).
 %junit_dirrective_exp( X, X  ):- predicate_property(X,built_in).
 %junit_dirrective_exp( X, mpred_test( X ) ).
@@ -362,7 +363,7 @@ junit_expansion(P,I,O):-call(P,I,O).
 junit_goal_expansion(I,O):- junit_expansion(junit_goal_exp,I,O).
 junit_goal_exp( Break, dmsg(skipped(blocks_on_input,Break))):- blocks_on_input(Break), keep_going. 
 junit_goal_exp( Messy, dmsg(skipped(messy_on_output,Messy))):- messy_on_output(Messy), keep_going. 
-% junit_goal_exp( must(A),mpred_test(A)) :- is_junit_test.
+junit_goal_exp( must(A),mpred_test(A)) :- is_junit_test_file.
 
 
 

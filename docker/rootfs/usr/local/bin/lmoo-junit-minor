@@ -14,7 +14,7 @@ if [ "$1" == "-k" ]; then
   runtime_testing=5
   shift
 fi
-
+ 
 if [ "$(whoami)" == "jenkins" ]; then
     INTERACTIVE=0
 fi
@@ -262,10 +262,10 @@ for ele2 in "${SORTED_FILES[@]}"
 	LINKS+="ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/$GH_MASTER_ISSUE_ID \n"
 	LINKS+="EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/$RELPATH \n"
 	LINKS+="JENKINS: ${LAST_BUILD_REF}/${FTC_LINK}/ \n"
-	LINKS+="PREVIOUS: ${BUILD_REF}/${FTC_LINK}/ \n"	
+	#LINKS+="PREVIOUS: ${BUILD_REF}/${FTC_LINK}/ \n"	
 	LINKS+="ISSUE_SEARCH: ${ISSUE_SEARCH} \n"
-	LINKS+="GITLAB: https://gitlab.logicmoo.org/gitlab/logicmoo/logicmoo_workspace/-/blob/${GIT_REV}/$RELPATH \n"	
-	LINKS+="GITHUB: https://github.com/logicmoo/logicmoo_workspace/commit/${GIT_REV} \n"
+       #LINKS+="GITLAB: https://gitlab.logicmoo.org/gitlab/logicmoo/logicmoo_workspace/-/blob/${GIT_REV}/$RELPATH \n"	
+       #LINKS+="GITHUB: https://github.com/logicmoo/logicmoo_workspace/commit/${GIT_REV} \n"
 	
 	INFO "${LINKS}"
 
@@ -325,8 +325,27 @@ for ele2 in "${SORTED_FILES[@]}"
 
       INFO "${LINKS}"
       INFO "${TEST_RESULT}: $0 ${keep_going} ${ele} (returned ${exitcode}) Add_LABELS='$Add_LABELS' Rem_LABELS='$Rem_LABELS'"
-      
-      source $LOGICMOO_WS/bin/lmoo-issue ${JUNIT_PACKAGE} ${JUNIT_SHORTCLASS} ${Test_9999} ${TEST_RESULT} "${FileTestCase}" ${TEE_FILE2} "$Add_LABELS" "$Rem_LABELS"
+
+      [ -w "${ele}" ] && (
+	    if grep -v -q JENKINS "${ele}"; then
+	       echo -e "\n/*\n ${LINKS} */\n" >> "${ele}"
+	    fi
+      )
+
+      echo '```' > ${TEE_FILE2}.bug
+      cat ${TEE_FILE2} | perl -pe '
+	      s/\e\[[\x30-\x3f]*[\x20-\x2f]*[\x40-\x7e]//g;
+	      s/\e[PX^_].*?\e\\//g;
+	      s/\e\][^\a]*(?:\a|\e\\)//g;
+	      s/\e[\[\]A-Z\\^_@]//g;' | sed -E $'
+	      s|\x1b\\[[0-\\?]*[ -/]*[@-~]||g;
+	      s|\x1b[PX^_][^\x1b]*\x1b\\\\||g;
+	      s:\x1b\\][^\x07]*(\x07|\x1b\\\\)::g;
+	      s|\x1b[@-_]||g'  >> ${TEE_FILE2}.bug
+      echo '```' >> ${TEE_FILE2}.bug
+
+      sleep 10
+      # source $LOGICMOO_WS/bin/lmoo-issue ${JUNIT_PACKAGE} ${JUNIT_SHORTCLASS} ${Test_9999} ${TEST_RESULT} "${FileTestCase}" ${TEE_FILE2}.bug "$Add_LABELS" "$Rem_LABELS"
       
       if [ "${TEST_RESULT}" = "SUCCESS" ]; then
          JECHO "<testcase name=\"${FileTestCase}\" classname='${JUNIT_CLASSNAME}' time='$totalTime'>"       
@@ -340,11 +359,12 @@ for ele2 in "${SORTED_FILES[@]}"
          JECHO "<testcase name=\"${FileTestCase}\" classname='${JUNIT_CLASSNAME}' time='$totalTime'>"       
          JECHO " <failure message='FAILED: $0 ${keep_going} ${ele} (returned ${exitcode})'/><system-err><![CDATA[$(cat ${TEE_FILE2})]]></system-err>\n</testcase>"	    
          JUNIT_TESTS_GTOTAL_ERRORS=$((JUNIT_TESTS_GTOTAL_ERRORS+1))
+	 [ -w "${ele}" ] && touch "$ele" ; /bin/true         
       else    
         JECHO "<testcase name=\"${FileTestCase}\" classname='${JUNIT_CLASSNAME}' time='$totalTime'>"       
       	JECHO " <failure message='FAILED: $0 ${keep_going} ${ele} (returned ${exitcode})'/><system-err><![CDATA[$(cat ${TEE_FILE2})]]></system-err>\n</testcase>"	    
 	JUNIT_TESTS_GTOTAL_FAILURES=$((JUNIT_TESTS_GTOTAL_FAILURES+1))
-	touch "$ele" ; /bin/true         
+	[ -w "${ele}" ] && touch "$ele" ; /bin/true         
       fi
 
 
