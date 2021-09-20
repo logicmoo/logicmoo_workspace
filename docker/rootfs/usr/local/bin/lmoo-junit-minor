@@ -151,7 +151,7 @@ SWIPL="swipl -x ${LOGICMOO_WS}/bin/lmoo-clif"
     fi
 )
 
-# [[ "$SWIPL" == *"lmoo"* ]] && lmoo-make
+
 
 
 function expand { for arg in "$@"; do [[ -f $arg ]] && echo $arg; done }
@@ -200,7 +200,9 @@ for ele2 in "${SORTED_FILES[@]}"
 	   do
 	    retry=0
 
-        export RELPATH=$(echo "$PWD/${ele}" | sed -e "s|$LOGICMOO_WS/||g")
+        
+
+        export RELPATH=$(echo "$PWD/${ele}" |  sed  -e "s|${LOGICMOO_WS}@2/||g" -e "s|$LOGICMOO_WS/||g")
         export FILENAME="${ele}"
         export JUNIT_SHORTCLASS=`echo "${FILENAME^^}" | cut -d'.' -f1 `
         export JUNIT_CLASSNAME="${JUNIT_PACKAGE}.${JUNIT_SHORTCLASS}"
@@ -231,7 +233,7 @@ for ele2 in "${SORTED_FILES[@]}"
         fi
 
 	export Test_9999="Test_9999"
-        
+        lmoo-make
         [ -z "${CMD_TIMEOUT}" ] && CMD_TIMEOUT="10s"
         [ INTERACTIVE -eq 0 ] && [ -z "${CMD_WRAPPER}" ] && CMD_WRAPPER="timeout --foreground --preserve-status -s SIGKILL -k ${CMD_TIMEOUT} ${CMD_TIMEOUT}" # && trap 'echo caught interrupt and exiting;exit' INT
 	[ -z "${CMD_WRAPPER}" ] && CMD_WRAPPER=" "
