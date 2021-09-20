@@ -14,6 +14,8 @@ git switch master
 git pull gitlab master
 git pull github master
 git pull origin master
+#git push gitlab master
+git push github master
 
 #unset TESTING_TEMP
 
