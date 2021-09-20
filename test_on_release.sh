@@ -66,11 +66,11 @@ done
 # Generate JUnit Results
 ( 
 echo "<testsuites>" 
-sed -r "s/\x1B\[(([0-9]{1,2})?(;)?([0-9]{1,2})?)?[m,K,H,f,J]//g" ${TESTING_TEMP}/Globbed-*-junit.xml | sed -e "s|<testsuites>||g" -e 's|<?xml version="1.0" encoding="utf-8"?>||g' -e "s|</testsuites>||g"
+sed -r "s/\x1B\[(([0-9]{1,2})?(;)?([0-9]{1,2})?)?[m,K,H,f,J]//g" ${TESTING_TEMP}/?*-junit.xml | sed -e "s|<testsuites>||g" -e 's|<?xml version="1.0" encoding="utf-8"?>||g' -e "s|</testsuites>||g"
 echo -e "\n</testsuites>\n\n\n" 
 ) | iconv -c -t utf-8  > ${TESTING_TEMP}/junit-all.xml
 
 
-cd $TESTING_TEMP/ && find . -print | zip jenkin_results_${BUILD_NUMBER}.zip -@
+cd $TESTING_TEMP/ && find . -print | zip jenkin_results_${BUILD_NUMBER}.zip -@ 2>&1 > /dev/null
 
 )

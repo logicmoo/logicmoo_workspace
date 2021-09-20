@@ -103,7 +103,11 @@ fi
 export ROLLUP_STEM=${TEST_STEM}-Rollup
 echo "<!-- ROLLUP_STEM=${ROLLUP_STEM} -->"
 
+
 export ROLLUP_TMP="${TESTING_TEMP}/${ROLLUP_STEM}.tmp"
+
+#touch ${ROLLUP_TMP}.stamp
+
 JUNIT_TESTS_GTOTAL_TESTS=0
 JUNIT_TESTS_GTOTAL_FAILURES=0
 JUNIT_TESTS_GTOTAL_SKIPPED=0
@@ -282,7 +286,7 @@ for ele2 in "${SORTED_FILES[@]}"
        #LINKS+="GITLAB: https://gitlab.logicmoo.org/gitlab/logicmoo/logicmoo_workspace/-/blob/${GIT_REV}/$RELPATH \n"	
        #LINKS+="GITHUB: https://github.com/logicmoo/logicmoo_workspace/commit/${GIT_REV} \n"
 	
-	INFO "${LINKS}"
+	echo "${LINKS}" >> ${TEE_FILE2}
 
 	if ! grep -q "JENKINS" "${ele}"; then
 	   [ -w "${ele}" ] && echo -e "\n${LINKS}" >> "${ele}"
@@ -452,11 +456,12 @@ for ele2 in "${SORTED_FILES[@]}"
   return $exitcode 2>/dev/null ; exit $exitcode
 ) 
 
-[ $JUNIT_TESTS_GTOTAL_TESTS -ne 0 ] &&
+
 ( 
 echo "<testsuites><testsuite name=\"Rollup ${JUNIT_PACKAGE} in $(pwd)\" package=\"${JUNIT_PACKAGE}\" tests=\"${JUNIT_TESTS_GTOTAL_TESTS}\" failures=\"${JUNIT_TESTS_GTOTAL_FAILURES}\" errors=\"${JUNIT_TESTS_GTOTAL_ERRORS}\"  skipped=\"${JUNIT_TESTS_GTOTAL_SKIPPED}\">"
 sed -r "s/\x1B\[(([0-9]{1,2})?(;)?([0-9]{1,2})?)?[m,K,H,f,J]//g" ${ROLLUP_TMP}
 echo -e "\n</testsuite></testsuites>\n\n\n\n" 
 ) | iconv -c -t utf-8 | perl -p -e 's/[\x00-\x08\x0b-\x0c\x0e-\x1f\x7f]//g' >  "${TESTING_TEMP}/Globbed-${ROLLUP_STEM}-Globbed-junit.xml"
+
 rm -f ${ROLLUP_TMP}
 
