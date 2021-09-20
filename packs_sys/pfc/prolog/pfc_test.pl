@@ -96,7 +96,7 @@ mpred_test_fok(Testcase, G):-
     ignore((source_location(S,L),atom(S),add_test_info(Testcase,src,S:L),
     sformat(URI,'~w#L~w',[S,L]),
     replace_in_string( [ "/opt/logicmoo_workspace"
-        ="https://logicmoo.org:2082/gitlab/logicmoo/logicmoo_workspace/-/blob/master"],
+        ="https://logicmoo.org/gitlab/logicmoo/logicmoo_workspace/-/edit/master"],
         URI,URL),
     add_test_info(Testcase,url,URL))),    
     get_time(Start))),

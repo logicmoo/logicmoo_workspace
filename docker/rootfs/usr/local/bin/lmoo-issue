@@ -27,10 +27,10 @@ function foc_gh_issue {
 
     if [ "${4}" = "SUCCESS" ]; then
        (if [ "${ISSUE_OC}" = "OPEN" ]; then      
-           echo "Updating Issue $ISSUE_INFO"
-	   $GH_ISSUE comment ${ISSUE_ID} -F ${TEE_FILE}
+           echo "Updating Issue $ISSUE_INFO"	   
            if echo "${ISSUE_INFO}" | grep -q "Failing"; then
-	      $GH_ISSUE comment ${ISSUE_ID} -b "Fixed in ${LINKS}"	      
+	      $GH_ISSUE comment ${ISSUE_ID} -b "Fixed in ${LINKS}"
+	      $GH_ISSUE comment ${ISSUE_ID} -F ${6}         
 	      $GH_ISSUE edit ${ISSUE_ID} --add-label "Passing$Add_LABELS" --remove-label "Failing,Regression$Rem_LABELS"
 	   else
 	      $GH_ISSUE edit ${ISSUE_ID} --add-label "Passing$Add_LABELS" --remove-label "Failing,Regression$Rem_LABELS"
