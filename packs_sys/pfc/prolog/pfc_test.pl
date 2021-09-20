@@ -217,6 +217,7 @@ warn_fail_TODO(G):- dmsg_pretty(:-warn_fail_TODO(G)).
 % break = break on warnings and errors
 :- create_prolog_flag(logicmoo_message_hook,none,[keep(true),type(term)]).
 
+system:test_src(Src):- (current_prolog_flag(test_src,Src), Src\==[]);j_u:junit_prop(testsuite,file,Src).
 system:is_junit_test:- getenv('JUNIT_PACKAGE',_),!.
 system:is_junit_test:- system:is_junit_test_file.
 system:is_junit_test_file:- test_src(Src), prolog_load_context(file,Src),!.
@@ -333,7 +334,6 @@ system:halt_junit:- asserta(j_u:junit_prop(system,halted_junit,true)),!,
   save_junit_results.
 
 
-test_src(Src):- (current_prolog_flag(test_src,Src), Src\==[]);j_u:junit_prop(testsuite,file,Src).
 
 :- initialization(retractall(j_u:junit_prop(_,_,_)),prepare_state).
 :- initialization(set_prolog_flag(test_src,[]),prepare_state).

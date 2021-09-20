@@ -11,7 +11,7 @@
     Maintainers:   logicmoo
     E-mail:        logicmoo@gmail.com
     WWW:           http://www.logicmoo.org
-    SCM:           https://github.com/logicmoo/logicmoo_utils/blob/master/prolog/logicmoo_startup.pl
+    SCM:           https://github.com/logicmoo/logicmoo_utils/edit/master/prolog/logicmoo_startup.pl
     Copyleft:      1999-2021, LogicMOO Prolog Extensions
     License:       Lesser GNU Public License
 % ===================================================================

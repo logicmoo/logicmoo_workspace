@@ -6,7 +6,7 @@ exitcode=${good_exit}
 [[ "$*" == *"-k"* ]] && export keep_going="-k"
 runtime_testing=4
 
-[ "$(whoami)" == "jenkins" ] && INTERACTIVE=0 || INTERACTIVE=1
+[[ "$(whoami)" == "jenkins" ]] && INTERACTIVE=0 || INTERACTIVE=1
 
 if [ "$1" == "-i" ]; then
   INTERACTIVE=1
