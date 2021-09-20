@@ -219,7 +219,7 @@ warn_fail_TODO(G):- dmsg_pretty(:-warn_fail_TODO(G)).
 
 system:is_junit_test:- getenv('JUNIT_PACKAGE',_),!.
 system:is_junit_test:- system:is_junit_test_file.
-system:is_junit_test_file:- current_prolog_flag(test_src,Src), Src\==[], prolog_load_context(file,Src).
+system:is_junit_test_file:- test_src(test_src,Src), prolog_load_context(file,Src),!.
 
 skip_warning(T):- \+ callable(T),!,fail.
 skip_warning(informational).
@@ -331,6 +331,9 @@ system:halt_junit:- asserta(j_u:junit_prop(system,halted_junit,true)),!,
   % list_test_results,
   %nortrace,trace,
   save_junit_results.
+
+
+test_src(Src):- (current_prolog_flag(test_src,Src), Src\==[]);j_u:junit_prop(testsuite,file,Src).
 
 :- initialization(retractall(j_u:junit_prop(_,_,_)),prepare_state).
 :- initialization(set_prolog_flag(test_src,[]),prepare_state).
@@ -519,12 +522,14 @@ system:test_retake:- system:halt_junit,test_completed_exit_maybe(3).
   </testsuite>
 </testsuites>
   */
-save_junit_results:- 
- must_or_rtrace((
+save_junit_results:-  
  \+ \+ j_u:junit_prop(testsuite,file,_),
  forall(j_u:junit_prop(testsuite,file,File), 
     (with_output_to(string(Text),show_junit_suite_xml(File)),
-     save_to_junit_file(File,Text))))),!.
+     save_to_junit_file(File,Text))),!.
+save_junit_results:-  test_src(File),
+    (with_output_to(string(Text),show_junit_suite_xml(File)),
+     save_to_junit_file(File,Text)),!.
 save_junit_results:- wdmsg(unused(no_junit_results)).
 
 show_junit_suite_xml(File):- 
@@ -811,12 +816,15 @@ message_hook_handle(T,Type,Term):-
 :- module_transparent prolog:message//1, user:message_hook/3.
 
 user:message_hook(T,Type,Term):- 
-   notrace((
+   %notrace
+  ((
    Type \== silent, Type \== debug, Type \== informational,
    current_prolog_flag(logicmoo_message_hook,Was),Was\==none,Was\==false)),
-   once(message_hook_handle(T,Type,Term)),!.
+   setup_call_cleanup(set_prolog_flag(logicmoo_message_hook,none),
+     once(catch(message_hook_handle(T,Type,Term),_,fail)),
+      set_prolog_flag(logicmoo_message_hook,Was)),!.
 
-:- initialization(set_prolog_flag(logicmoo_message_hook,none),prepare_state).
+%:- initialization(set_prolog_flag(logicmoo_message_hook,none),prepare_state).
 
 system:term_expansion(I,P,O,PO):- ((nonvar(P),is_junit_test, junit_term_expansion(I,O))),P=PO.
 system:goal_expansion(I,P,O,PO):- notrace((nonvar(P),is_junit_test, junit_goal_expansion(I,O))),P=PO.

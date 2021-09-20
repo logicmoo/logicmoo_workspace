@@ -49,3 +49,11 @@ singleValued(list_holder_one/1).
 
 arity(list_holder_two,2).
 singleValuedInArg(list_holder_two,2).
+
+end_of_file.
+
+ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/484 
+EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/pfc/t/sanity_base/update_list_01.pfc 
+JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/UPDATE_LIST_01/logicmoo_pfc_test_sanity_base_UPDATE_LIST_01_JUnit/ 
+ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3AUPDATE_LIST_01 
+

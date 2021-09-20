@@ -51,3 +51,11 @@ value(3).
 :- mpred_test(sum(4)).
 
 
+
+end_of_file.
+
+ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/297 
+EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/pfc/t/sanity_base/undo_01a.pfc 
+JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/UNDO_01A/logicmoo_pfc_test_sanity_base_UNDO_01A_JUnit/ 
+ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3AUNDO_01A 
+

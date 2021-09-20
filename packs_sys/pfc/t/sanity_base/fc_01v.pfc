@@ -33,3 +33,11 @@ a11 ==> b11.
 :- mpred_test(\+ a11).
 :- mpred_test(\+ b11).
 
+
+end_of_file.
+
+ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/368 
+EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/pfc/t/sanity_base/fc_01v.pfc 
+JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/FC_01V/logicmoo_pfc_test_sanity_base_FC_01V_JUnit/ 
+ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3AFC_01V 
+
