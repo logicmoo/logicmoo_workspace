@@ -11,6 +11,8 @@ FILTER=""
 export keep_going="-k"
 
 git switch master
+git pull gitlab master
+git pull github master
 git pull origin master
 
 #unset TESTING_TEMP
