@@ -48,3 +48,9 @@ a(t).
 :- mpred_test(\+ b(t,4)).
 :- mpred_test(\+ b(t,5)).
 
+
+% EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/pfc/t/sanity_base/nd_02.pfc 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/ND_02/logicmoo_pfc_test_sanity_base_ND_02_JUnit/ 
+% ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3AND_02 
+
+% ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/591

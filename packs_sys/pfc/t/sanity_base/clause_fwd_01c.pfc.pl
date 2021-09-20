@@ -113,3 +113,9 @@ gg(G):- call(G).
 :- listing([early_not_bb_HB/2,late_not_bb_HB/2]).
 
 
+
+% ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/400 
+% EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/pfc/t/sanity_base/clause_fwd_01c.pfc.pl 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/CLAUSE_FWD_01C/logicmoo_pfc_test_sanity_base_CLAUSE_FWD_01C_JUnit/ 
+% ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3ACLAUSE_FWD_01C 
+

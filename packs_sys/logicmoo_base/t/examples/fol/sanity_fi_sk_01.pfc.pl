@@ -172,3 +172,9 @@ father(eileen,bob).
 
 
 
+
+% EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/logicmoo_base/t/examples/fol/sanity_fi_sk_01.pfc.pl 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/SANITY_FI_SK_01/logicmoo_base_examples_fol_SANITY_FI_SK_01_JUnit/ 
+% ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3ASANITY_FI_SK_01 
+
+% ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/610

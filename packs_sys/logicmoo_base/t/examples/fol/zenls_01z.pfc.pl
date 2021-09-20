@@ -59,3 +59,9 @@ tPenguin(X) ==>  ~(tFly(X)).
 
 
 
+
+% ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/415 
+% EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/logicmoo_base/t/examples/fol/zenls_01z.pfc.pl 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/ZENLS_01Z/logicmoo_base_examples_fol_ZENLS_01Z_JUnit/ 
+% ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3AZENLS_01Z 
+

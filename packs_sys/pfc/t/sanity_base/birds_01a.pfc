@@ -52,3 +52,9 @@ penguin(X) ==> ( ~fly(X)).
 :- listing(fly).
 :- listing(~).
 
+
+% ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/351 
+% EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/pfc/t/sanity_base/birds_01a.pfc 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/BIRDS_01A/logicmoo_pfc_test_sanity_base_BIRDS_01A_JUnit/ 
+% ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3ABIRDS_01A 
+

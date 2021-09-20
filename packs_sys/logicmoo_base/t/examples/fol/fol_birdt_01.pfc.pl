@@ -119,3 +119,9 @@ tFly(iChilly).
 :- mpred_test(( \+ ~tFly(iChilly))).
 
 
+
+% ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/76 
+% EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/logicmoo_base/t/examples/fol/fol_birdt_01.pfc.pl 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/FOL_BIRDT_01/logicmoo_base_examples_fol_FOL_BIRDT_01_JUnit/ 
+% ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3AFOL_BIRDT_01 
+

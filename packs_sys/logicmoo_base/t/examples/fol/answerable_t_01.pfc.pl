@@ -37,3 +37,9 @@
 
 
 
+
+% ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/458 
+% EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/logicmoo_base/t/examples/fol/answerable_t_01.pfc.pl 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/ANSWERABLE_T_01/logicmoo_base_examples_fol_ANSWERABLE_T_01_JUnit/ 
+% ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3AANSWERABLE_T_01 
+

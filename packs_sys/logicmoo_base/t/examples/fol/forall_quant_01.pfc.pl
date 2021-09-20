@@ -37,3 +37,9 @@ end_of_file.
 
 
                                               
+
+% EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/logicmoo_base/t/examples/fol/forall_quant_01.pfc.pl 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/FORALL_QUANT_01/logicmoo_base_examples_fol_FORALL_QUANT_01_JUnit/ 
+% ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3AFORALL_QUANT_01 
+
+% ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/613

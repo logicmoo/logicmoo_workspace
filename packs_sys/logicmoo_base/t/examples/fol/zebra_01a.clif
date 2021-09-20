@@ -172,3 +172,9 @@
 ; {:- forall((C <== A) ,  (dynamic(C),ain(A ==> C)))}.
 
 
+
+% ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/461 
+% EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/logicmoo_base/t/examples/fol/zebra_01a.clif 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/ZEBRA_01A/logicmoo_base_examples_fol_ZEBRA_01A_JUnit/ 
+% ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3AZEBRA_01A 
+

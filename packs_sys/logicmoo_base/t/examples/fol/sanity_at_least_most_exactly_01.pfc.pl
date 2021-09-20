@@ -44,3 +44,9 @@ testable_quants(X,Fml,~Q,Name):-member(QF,[all,exists]),Q=..[QF,X,Fml],atom_conc
 :- add_test(most3, (all([[Human,tHuman]],atmost(3,[[M3Meal,tMeal]],hasMeal(Human,M3Meal))))).
 
 
+
+% ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/420 
+% EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/logicmoo_base/t/examples/fol/sanity_at_least_most_exactly_01.pfc.pl 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/SANITY_AT_LEAST_MOST_EXACTLY_01/logicmoo_base_examples_fol_SANITY_AT_LEAST_MOST_EXACTLY_01_JUnit/ 
+% ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3ASANITY_AT_LEAST_MOST_EXACTLY_01 
+

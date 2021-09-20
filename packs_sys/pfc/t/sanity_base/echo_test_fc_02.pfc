@@ -117,3 +117,9 @@ i_catch_up_stream(S,Pos):- t_l:stream_for_file(F,S,PosBefore), Pos>PosBefore, pr
 i_catch_up_stream(S):- character_count(S,Pos),catch_up_stream(S,Pos).
 
 :- fixup_exports.
+
+% EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/pfc/t/sanity_base/echo_test_fc_02.pfc 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/ECHO_TEST_FC_02/logicmoo_pfc_test_sanity_base_ECHO_TEST_FC_02_JUnit/ 
+% ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3AECHO_TEST_FC_02 
+
+% ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/544

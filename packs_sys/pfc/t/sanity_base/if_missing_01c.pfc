@@ -54,3 +54,9 @@ if_missing(fooc(_),fooc(a)).
 
 :- mpred_test(fooc(a)).
 
+
+% EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/pfc/t/sanity_base/if_missing_01c.pfc 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/IF_MISSING_01C/logicmoo_pfc_test_sanity_base_IF_MISSING_01C_JUnit/ 
+% ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3AIF_MISSING_01C 
+
+% ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/537

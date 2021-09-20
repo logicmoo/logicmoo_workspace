@@ -37,3 +37,9 @@ dmiles ==> world.
 :- mpred_test(\+ dmiles ==> world).
 
 
+
+% ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/336 
+% EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/pfc/t/sanity_base/retract_01a.pfc 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/RETRACT_01A/logicmoo_pfc_test_sanity_base_RETRACT_01A_JUnit/ 
+% ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3ARETRACT_01A 
+

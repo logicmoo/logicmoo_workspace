@@ -52,3 +52,9 @@ tc(X,Z):- tc(X,Y),tc(Y,Z).
 :- time(findall(_,tc(_X,_Y),L)),!,length(L,N),write_ln(length_was(N)).
 :- statistics(cputime,X),retract(load_time(LT)), Time is X-LT,write_ln(time_was(Time)).
 
+
+% ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/360 
+% EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/pfc/t/sanity_base/nldm320_fwd.pl 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/NLDM320_FWD/logicmoo_pfc_test_sanity_base_NLDM320_FWD_JUnit/ 
+% ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3ANLDM320_FWD 
+

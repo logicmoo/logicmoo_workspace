@@ -28,3 +28,9 @@ socialMt:loves(sally,joe).
 
 
 
+
+% EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/pfc/t/sanity_base/predmt_01b.pl 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/PREDMT_01B/logicmoo_pfc_test_sanity_base_PREDMT_01B_JUnit/ 
+% ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3APREDMT_01B 
+
+% ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/589

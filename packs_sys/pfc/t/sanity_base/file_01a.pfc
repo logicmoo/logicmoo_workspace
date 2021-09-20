@@ -41,3 +41,9 @@ a.
 
 
 
+
+% ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/367 
+% EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/pfc/t/sanity_base/file_01a.pfc 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/FILE_01A/logicmoo_pfc_test_sanity_base_FILE_01A_JUnit/ 
+% ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3AFILE_01A 
+

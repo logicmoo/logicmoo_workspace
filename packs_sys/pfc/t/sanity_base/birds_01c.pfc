@@ -14,3 +14,9 @@ penguin(X) ==> ~fly(X).
 bird(X), injured(X) ==> ~fly(X).
 
 bird(X), dead(X) ==> ~fly(X).
+
+% EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/pfc/t/sanity_base/birds_01c.pfc 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/BIRDS_01C/logicmoo_pfc_test_sanity_base_BIRDS_01C_JUnit/ 
+% ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3ABIRDS_01C 
+
+% ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/583

@@ -129,3 +129,9 @@ equal_v2_truths(kb1,kb2) <->
 
 
 
+
+% ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/451 
+% EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/logicmoo_base/t/examples/fol/fol_cardinaity_axiomitized_02.pfc.pl 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/FOL_CARDINAITY_AXIOMITIZED_02/logicmoo_base_examples_fol_FOL_CARDINAITY_AXIOMITIZED_02_JUnit/ 
+% ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3AFOL_CARDINAITY_AXIOMITIZED_02 
+

@@ -36,3 +36,9 @@ symmetric(hop).
 :- dif(X,Y), mpred_why(edge(X,Y)==>hop(Y,X)).
 
 
+
+% EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/pfc/t/sanity_base/gshape_01b.pfc 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/GSHAPE_01B/logicmoo_pfc_test_sanity_base_GSHAPE_01B_JUnit/ 
+% ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3AGSHAPE_01B 
+
+% ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/541

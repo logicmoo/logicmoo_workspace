@@ -57,3 +57,9 @@ adj(40,1).
 
 
 
+
+% ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/405 
+% EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/pfc/t/sanity_base/nldm40.P 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/NLDM40/logicmoo_pfc_test_sanity_base_NLDM40_JUnit/ 
+% ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3ANLDM40 
+

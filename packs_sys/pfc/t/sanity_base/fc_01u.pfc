@@ -28,3 +28,9 @@ end_of_file.
 
 
 
+
+% EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/pfc/t/sanity_base/fc_01u.pfc 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/FC_01U/logicmoo_pfc_test_sanity_base_FC_01U_JUnit/ 
+% ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3AFC_01U 
+
+% ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/581

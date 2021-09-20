@@ -91,3 +91,9 @@ And at least 5 houses.
 
 
 ")
+
+% ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/450 
+% EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/logicmoo_base/t/examples/fol/kif_io_test_01a.pl 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/KIF_IO_TEST_01A/logicmoo_base_examples_fol_KIF_IO_TEST_01A_JUnit/ 
+% ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3AKIF_IO_TEST_01A 
+

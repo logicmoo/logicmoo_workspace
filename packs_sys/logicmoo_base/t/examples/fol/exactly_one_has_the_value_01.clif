@@ -20,3 +20,9 @@
 ; There is only one entity with address 1
 ; ============================================================
 (exactly 1 (?h1) (address ?h1 1))
+
+% ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/465 
+% EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/logicmoo_base/t/examples/fol/exactly_one_has_the_value_01.clif 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/EXACTLY_ONE_HAS_THE_VALUE_01/logicmoo_base_examples_fol_EXACTLY_ONE_HAS_THE_VALUE_01_JUnit/ 
+% ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3AEXACTLY_ONE_HAS_THE_VALUE_01 
+

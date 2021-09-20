@@ -72,3 +72,9 @@ poss(livesAt(joe,green_house)).
 
 
 
+
+% ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/73 
+% EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/logicmoo_base/t/examples/fol/poss_forall_exists_01.pfc.pl 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/POSS_FORALL_EXISTS_01/logicmoo_base_examples_fol_POSS_FORALL_EXISTS_01_JUnit/ 
+% ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3APOSS_FORALL_EXISTS_01 
+

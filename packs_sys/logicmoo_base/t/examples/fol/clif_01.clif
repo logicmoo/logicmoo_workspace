@@ -38,3 +38,9 @@
 ;;;; .{ parent(C,M) & female(M) <=> mother(C,M) }.
 
 
+
+% ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/467 
+% EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/logicmoo_base/t/examples/fol/clif_01.clif 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/CLIF_01/logicmoo_base_examples_fol_CLIF_01_JUnit/ 
+% ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3ACLIF_01 
+

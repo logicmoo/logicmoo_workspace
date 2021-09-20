@@ -46,3 +46,9 @@ like(A,B)==>loves(B,A).
 
 
 
+
+% EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/pfc/t/sanity_base/mt_02a_0c.pfc 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/MT_02A_0C/logicmoo_pfc_test_sanity_base_MT_02A_0C_JUnit/ 
+% ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3AMT_02A_0C 
+
+% ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/535

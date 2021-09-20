@@ -43,3 +43,9 @@ bc_p(b).
 %= something cached
 :- listing(bc_q/1).
 
+
+% ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/352 
+% EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/pfc/t/sanity_base/bc_02.pfc 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/BC_02/logicmoo_pfc_test_sanity_base_BC_02_JUnit/ 
+% ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3ABC_02 
+

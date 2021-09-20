@@ -40,3 +40,9 @@ sk6_in(avar([vn='ExIn',sk6='SKF-666'])).
 :- ((sk6a_out(FOUND),get_attr(FOUND,sk6,What), What == 'SKF-666')),dmsg(fOUND=FOUND).
 :- ((sk6_out(FOUND),get_attr(FOUND,sk6,What), What == 'SKF-666')),dmsg(fOUND=FOUND).
 
+
+% ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/377 
+% EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/pfc/t/sanity_base/attvar_06.pfc 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/ATTVAR_06/logicmoo_pfc_test_sanity_base_ATTVAR_06_JUnit/ 
+% ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3AATTVAR_06 
+

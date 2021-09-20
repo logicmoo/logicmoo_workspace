@@ -32,3 +32,9 @@ mdefault(( tFish(X) ==> tSwim(X))).
 :- mpred_test( \+ (tSwim(iTweety))).
 :- mpred_test( (tSwim(iChilly))).
 
+
+% ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/317 
+% EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/pfc/t/sanity_base/mdefault_01c.pfc 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/MDEFAULT_01C/logicmoo_pfc_test_sanity_base_MDEFAULT_01C_JUnit/ 
+% ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3AMDEFAULT_01C 
+

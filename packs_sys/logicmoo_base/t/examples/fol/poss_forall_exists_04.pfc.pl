@@ -97,3 +97,9 @@ exists(X, livesAt(X, green_house) & drinks(X, coffee)).
 :- mpred_test(~poss(livesAt(_X,green_house))).
 
 
+
+% ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/442 
+% EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/logicmoo_base/t/examples/fol/poss_forall_exists_04.pfc.pl 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/POSS_FORALL_EXISTS_04/logicmoo_base_examples_fol_POSS_FORALL_EXISTS_04_JUnit/ 
+% ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3APOSS_FORALL_EXISTS_04 
+

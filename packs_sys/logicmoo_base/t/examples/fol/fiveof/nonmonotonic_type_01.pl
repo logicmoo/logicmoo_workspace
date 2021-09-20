@@ -47,3 +47,9 @@ leftof(H1, H2) => house(H1) & house(H2).
 :- mpred_test(\+ nesc(house(false_positive))).
 
 :- listing([house/1,nesc/1]).
+
+% ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/468 
+% EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/logicmoo_base/t/examples/fol/fiveof/nonmonotonic_type_01.pl 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.fol.fiveof/NONMONOTONIC_TYPE_01/logicmoo_base_fol_fiveof_NONMONOTONIC_TYPE_01_JUnit/ 
+% ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3ANONMONOTONIC_TYPE_01 
+

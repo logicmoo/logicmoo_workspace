@@ -43,3 +43,8 @@
 
 :- mpred_test(all(X,if(isa(X,servant),isa(X,human)))). 
 :- mpred_test(all(X,if(~isa(X,human),~isa(X,servant)))). 
+% ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/67 
+% EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/logicmoo_base/t/examples/fol/make_types_wff_01.pfc.pl 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/MAKE_TYPES_WFF_01/logicmoo_base_examples_fol_MAKE_TYPES_WFF_01_JUnit/ 
+% ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3AMAKE_TYPES_WFF_01 
+

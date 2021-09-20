@@ -44,3 +44,9 @@ baseKB:genlMt(mt_06,kb2).
 kb3: (a0==>c).
 
 :- mpred_must(clause(kb2:a0,_)).
+
+% ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/344 
+% EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/pfc/t/sanity_base/mt_06.pl 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/MT_06/logicmoo_pfc_test_sanity_base_MT_06_JUnit/ 
+% ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3AMT_06 
+

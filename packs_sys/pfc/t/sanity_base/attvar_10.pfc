@@ -43,3 +43,9 @@ sk_in(Ex)==>sk_out(Ex).
 :- must((sk_out(FOUND),get_attr(FOUND,sk,What),What='SKF-666')),dmsg(fOUND=FOUND).
 :- must((findall(Ex,(clause_u(sk_out(Ex),_,_),wdmsg(sk_out(Ex))),L),length(L,THREE),THREE=3)).
 
+
+% ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/330 
+% EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/pfc/t/sanity_base/attvar_10.pfc 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/ATTVAR_10/logicmoo_pfc_test_sanity_base_ATTVAR_10_JUnit/ 
+% ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3AATTVAR_10 
+

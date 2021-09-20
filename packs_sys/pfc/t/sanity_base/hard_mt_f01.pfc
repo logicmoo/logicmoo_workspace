@@ -37,3 +37,9 @@ accessable:- clause_u(myMt:loves(_,_),_,Ref), \+ clause_property(Ref,module(myMt
 
 
 
+
+% ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/349 
+% EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/pfc/t/sanity_base/hard_mt_f01.pfc 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/HARD_MT_F01/logicmoo_pfc_test_sanity_base_HARD_MT_F01_JUnit/ 
+% ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3AHARD_MT_F01 
+

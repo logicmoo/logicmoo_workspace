@@ -88,3 +88,9 @@ clif(((human(P1),ancestor(P2,P1))=>human(P2))).
 :- printAll(must(ancestor(eileen,_))).
 
 % lol.. i have a frame problm in my solver.. whenever     forall(c,exists([m,f], if(human(c), (mother(c,m) & father(c,f))))).  ((human(P1),ancestor(P2,P1))=>human(P2)). human(douglas). I now have a skolemation of a mother who is human .. i my mothers children are human (thus i am) .. but while i am adding a named mother.. the skolem mother loses her assertion and is deduced nonhuman 
+
+% ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/70 
+% EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/logicmoo_base/t/examples/fol/family_regress_01.pfc.pl 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/FAMILY_REGRESS_01/logicmoo_base_examples_fol_FAMILY_REGRESS_01_JUnit/ 
+% ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3AFAMILY_REGRESS_01 
+

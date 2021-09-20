@@ -24,3 +24,9 @@ adj(10,1)
 :- statistics(cputime,X),retract(load_time(LT)), Time is X-LT,
    wdmsg(time_was(Time)).
 
+
+% ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/361 
+% EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/pfc/t/sanity_base/nldm10.pfc 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/NLDM10/logicmoo_pfc_test_sanity_base_NLDM10_JUnit/ 
+% ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3ANLDM10 
+

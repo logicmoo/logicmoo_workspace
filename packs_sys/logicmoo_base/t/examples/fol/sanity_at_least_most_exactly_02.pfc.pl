@@ -1596,3 +1596,9 @@ File W:\home\prologmud_server\lib\swipl\pack\prologmud_samples\prolog\prologmud_
 File W:\home\prologmud_server\lib\swipl\pack\prologmud_samples\prolog\prologmud_sample_games\tempDir\lib\swipl\pack\colore\ontologies\gwml2\Module7.clif
   49 47:(cl-comment 'A CHGB is a HGB that consists of atleast two distinct SHGBs')
 
+
+% ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/419 
+% EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/logicmoo_base/t/examples/fol/sanity_at_least_most_exactly_02.pfc.pl 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/SANITY_AT_LEAST_MOST_EXACTLY_02/logicmoo_base_examples_fol_SANITY_AT_LEAST_MOST_EXACTLY_02_JUnit/ 
+% ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3ASANITY_AT_LEAST_MOST_EXACTLY_02 
+

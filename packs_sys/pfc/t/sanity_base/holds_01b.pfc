@@ -34,8 +34,8 @@ genlInverse(P1,P2) ==> ( t(P1,A,B) ==> t(P2,B,A)).
 
 
 
-% ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/ 
 % EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/pfc/t/sanity_base/holds_01b.pfc 
 % JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/HOLDS_01B/logicmoo_pfc_test_sanity_base_HOLDS_01B_JUnit/ 
 % ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3AHOLDS_01B 
 
+% ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/520

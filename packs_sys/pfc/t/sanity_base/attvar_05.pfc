@@ -49,3 +49,9 @@ sk5_in(Ex)==>sk5_out(Ex).
 :- must(lookup_u(pt(sk5_in(avar([vn='IS',sk5='SKF-666'])),FOUND))),dmsg(fOUND=FOUND).
 
 
+
+% ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/331 
+% EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/pfc/t/sanity_base/attvar_05.pfc 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/ATTVAR_05/logicmoo_pfc_test_sanity_base_ATTVAR_05_JUnit/ 
+% ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3AATTVAR_05 
+

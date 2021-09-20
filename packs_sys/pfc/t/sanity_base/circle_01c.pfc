@@ -31,3 +31,9 @@ a11.
 c11 ==> a11.
 :- mpred_test(c11).
 
+
+% EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/pfc/t/sanity_base/circle_01c.pfc 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/CIRCLE_01C/logicmoo_pfc_test_sanity_base_CIRCLE_01C_JUnit/ 
+% ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3ACIRCLE_01C 
+
+% ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/546

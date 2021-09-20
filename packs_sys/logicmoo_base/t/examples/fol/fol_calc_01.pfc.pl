@@ -281,3 +281,9 @@ equiv_v4(W,X,Y) <=>
   exists(W, 
    true_in_world(X,W))).
                                               
+
+% ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/69 
+% EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/logicmoo_base/t/examples/fol/fol_calc_01.pfc.pl 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/FOL_CALC_01/logicmoo_base_examples_fol_FOL_CALC_01_JUnit/ 
+% ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3AFOL_CALC_01 
+

@@ -210,3 +210,9 @@ house(red_house). house(green_house). house(white_house). house(yellow_house). h
 %:- forall((C <== A) ,  (dynamic(C),ain(A ==> C))).
 
 
+
+% ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/426 
+% EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/logicmoo_base/t/examples/fol/einstein_simpler_03.pfc.pl 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/EINSTEIN_SIMPLER_03/logicmoo_base_examples_fol_EINSTEIN_SIMPLER_03_JUnit/ 
+% ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3AEINSTEIN_SIMPLER_03 
+

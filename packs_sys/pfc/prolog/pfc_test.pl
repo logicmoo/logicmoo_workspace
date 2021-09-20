@@ -356,7 +356,7 @@ junit_dirrective_exp( \+ X, mpred_test( \+ X ) ):- is_junit_test_file.
 %junit_dirrective_exp( X, X  ):- predicate_property(X,built_in).
 %junit_dirrective_exp( X, mpred_test( X ) ).
 junit_dirrective_exp( X, X  ):- !.
-
+ 
 junit_expansion(_,Var , Var ):- var(Var),!.
 junit_expansion(P,(A,B),(AO,BO)):- !,junit_expansion(P,A,AO),junit_expansion(P,B,BO).
 junit_expansion(P,(A;B),(AO;BO)):- !,junit_expansion(P,A,AO),junit_expansion(P,B,BO).
@@ -364,10 +364,14 @@ junit_expansion(P,M:I,M:O):- !, junit_expansion(P,I,O).
 junit_expansion(P,I,O):-call(P,I,O).
 
 junit_goal_expansion(I,O):- junit_expansion(junit_goal_exp,I,O).
+
+junit_goal_exp( must(A),mpred_test(A)) :- is_junit_test_file.
+junit_goal_exp( sanity(A),mpred_test(A)) :- is_junit_test_file.
+junit_goal_exp( mpred_why(A),mpred_test(A)) :- is_junit_test_file.
+junit_goal_exp( test_boxlog(A),mpred_test(test_boxlog(A))) :- is_junit_test_file.
+
 junit_goal_exp( Break, dmsg(skipped(blocks_on_input,Break))):- blocks_on_input(Break), keep_going. 
 junit_goal_exp( Messy, dmsg(skipped(messy_on_output,Messy))):- messy_on_output(Messy), keep_going. 
-junit_goal_exp( must(A),mpred_test(A)) :- is_junit_test_file.
-junit_goal_exp( mpred_why(A),mpred_test(A)) :- is_junit_test_file.
 
 
 
@@ -433,10 +437,10 @@ calc_exit_code0(64):- \+ j_u:junit_prop(_,result,failure), \+ \+ j_u:junit_prop(
 :- dynamic(j_u:started_test_completed/0).
 :- volatile(j_u:started_test_completed/0).
 system:test_completed:- j_u:started_test_completed,!.
-system:test_completed:- asserta(j_u:started_test_completed),calc_exit_code(XC),test_completed_exit_maybe(XC).
+system:test_completed:- asserta(j_u:started_test_completed),pfc_test:calc_exit_code(XC),pfc_test:test_completed_exit_maybe(XC).
 
 system:test_repl:-  assertz(j_u:junit_prop(need_retake,warn,need_retake)).
-system:test_retake:- system:halt_junit,test_completed_exit_maybe(3).
+system:test_retake:- system:halt_junit,pfc_test:test_completed_exit_maybe(3).
 
 /* 
 <?xml version="1.0" encoding="UTF-8"?>

@@ -56,3 +56,9 @@ adj(40,1).
 :- time(findall(_,tc(_X,_Y),_)).
 :- statistics(cputime,X),retract(load_time(LT)), Time is X-LT,write(time_was(Time)).
 
+
+% ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/381 
+% EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/pfc/t/sanity_base/nldm40_dra.pl 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/NLDM40_DRA/logicmoo_pfc_test_sanity_base_NLDM40_DRA_JUnit/ 
+% ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3ANLDM40_DRA 
+

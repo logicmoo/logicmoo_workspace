@@ -5,7 +5,6 @@
 % Tests that you can express regular semweb cardinatility though in FOL
 
 /*
-ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/70 
 EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/logicmoo_base/t/examples/fol/family_regress_01.pfc.pl 
 JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/FAMILY_REGRESS_01/logicmoo_base_examples_fol_FAMILY_REGRESS_01_JUnit/ 
 PREVIOUS: https://jenkins.logicmoo.org/job/logicmoo_workspace/69/testReport/logicmoo.base.examples.fol/FAMILY_REGRESS_01/logicmoo_base_examples_fol_FAMILY_REGRESS_01_JUnit/ 
@@ -186,3 +185,4 @@ house(skFn(1, house(_))).
 :- must((existing_count(X,house(X),EC),EC==3)).
 :- break.
 
+% ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/607

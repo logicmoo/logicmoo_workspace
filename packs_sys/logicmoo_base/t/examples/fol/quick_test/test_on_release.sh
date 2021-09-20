@@ -1,4 +1,5 @@
 #!/bin/bash -x
 
-lmoo-junit "*.*
+lmoo-junit  "$*"
+
 

@@ -67,3 +67,9 @@ a(2).
 
 
 
+
+% ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/372 
+% EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/pfc/t/sanity_base/df_03.pfc 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/DF_03/logicmoo_pfc_test_sanity_base_DF_03_JUnit/ 
+% ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3ADF_03 
+

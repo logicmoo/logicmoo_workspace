@@ -455,3 +455,9 @@ kif_sanity_test_0:- kif_result((tNotFly(X):-tPengin(X))).
 kif_sanity_test_0:- kif_result((  ~(tPengin(A)) :-  ~tNotFly(A)  )).
 
 
+
+% ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/68 
+% EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/logicmoo_base/t/examples/fol/kif_sanity_01.pfc.pl 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/KIF_SANITY_01/logicmoo_base_examples_fol_KIF_SANITY_01_JUnit/ 
+% ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3AKIF_SANITY_01 
+

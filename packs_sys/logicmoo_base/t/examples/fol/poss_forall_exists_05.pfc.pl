@@ -101,3 +101,9 @@ possible(livesAt(joe,green_house)).
 %all(X, if(possible(livesAt(X, green_house)),lives(X, green_house) )).
 
 
+
+% ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/441 
+% EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/logicmoo_base/t/examples/fol/poss_forall_exists_05.pfc.pl 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/POSS_FORALL_EXISTS_05/logicmoo_base_examples_fol_POSS_FORALL_EXISTS_05_JUnit/ 
+% ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3APOSS_FORALL_EXISTS_05 
+

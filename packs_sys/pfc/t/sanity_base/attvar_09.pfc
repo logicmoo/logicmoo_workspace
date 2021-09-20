@@ -47,3 +47,9 @@ sk_in(Ex)==>sk_out(Ex).
 :- break.
 :- must((findall(Ex,(clause_u(sk_out(Ex),_,_),wdmsg(sk_out(Ex))),L),length(L,THREE),THREE=3)).
 
+
+% EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/pfc/t/sanity_base/attvar_09.pfc 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/ATTVAR_09/logicmoo_pfc_test_sanity_base_ATTVAR_09_JUnit/ 
+% ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3AATTVAR_09 
+
+% ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/563

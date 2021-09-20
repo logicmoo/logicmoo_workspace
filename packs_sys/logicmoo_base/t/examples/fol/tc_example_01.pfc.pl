@@ -10,3 +10,9 @@ all([X,Y,R],
 
 
 
+
+% ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/430 
+% EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/logicmoo_base/t/examples/fol/tc_example_01.pfc.pl 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/TC_EXAMPLE_01/logicmoo_base_examples_fol_TC_EXAMPLE_01_JUnit/ 
+% ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3ATC_EXAMPLE_01 
+

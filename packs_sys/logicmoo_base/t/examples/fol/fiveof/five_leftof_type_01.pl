@@ -52,3 +52,9 @@ leftof(H1, H2) => house(H1) & house(H2).
 % but not "too" nice
 :- mpred_test(\+ nesc(house(false_positive))).
 
+
+% EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/logicmoo_base/t/examples/fol/fiveof/five_leftof_type_01.pl 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.fol.fiveof/FIVE_LEFTOF_TYPE_01/logicmoo_base_fol_fiveof_FIVE_LEFTOF_TYPE_01_JUnit/ 
+% ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3AFIVE_LEFTOF_TYPE_01 
+
+% ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/619

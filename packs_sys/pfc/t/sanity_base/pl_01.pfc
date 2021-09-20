@@ -13,3 +13,9 @@
 :- include(library(logicmoo_test_header)).
 
 :- wdmsg(test_was_dupe).
+
+% EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/pfc/t/sanity_base/pl_01.pfc 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/PL_01/logicmoo_pfc_test_sanity_base_PL_01_JUnit/ 
+% ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3APL_01 
+
+% ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/551

@@ -1013,3 +1013,9 @@
 (cyc-assert '(#$adj 999 1000) #$TestTC1000Mt)
 (cyc-assert '(#$adj 1000 1) #$TestTC1000Mt)
 
+
+% ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/413 
+% EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/pfc/t/sanity_base/nldm1000_fwd.subl 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/NLDM1000_FWD/logicmoo_pfc_test_sanity_base_NLDM1000_FWD_JUnit/ 
+% ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3ANLDM1000_FWD 
+

@@ -20,3 +20,9 @@ nesc(exists(X,cute_puppy(X)) v ~exists(X,cute_puppy(X))).
 
 
 
+
+% ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/429 
+% EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/logicmoo_base/t/examples/fol/unit_projection_lem_01.pfc.pl 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/UNIT_PROJECTION_LEM_01/logicmoo_base_examples_fol_UNIT_PROJECTION_LEM_01_JUnit/ 
+% ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3AUNIT_PROJECTION_LEM_01 
+
