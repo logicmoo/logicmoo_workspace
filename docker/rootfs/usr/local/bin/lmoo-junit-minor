@@ -274,12 +274,15 @@ for ele2 in "${SORTED_FILES[@]}"
 	INFO "${LINKS}"
 
 	startTime=$(date +%s%3N);
+
 	echo "\`\`\`" >>  ${TEE_FILE1}
+
 	# CMD is allowed to clobber TEE_FILE
-        ( eval $CMD ) 2>&1 | tee -a ${TEE_FILE} | tee -a ${TEE_FILE1} | sed -r "s/\x1B\[(([0-9]{1,2})?(;)?([0-9]{1,2})?)?[m,K,H,f,J]//g" | tee ${TEE_FILE2}
+        ( eval $CMD ) 2>&1 | tee -a ${TEE_FILE} | sed -r "s/\x1B\[(([0-9]{1,2})?(;)?([0-9]{1,2})?)?[m,K,H,f,J]//g" | tee ${TEE_FILE2} | tee -a ${TEE_FILE1} 
         exitcode=${PIPESTATUS[0]}
         endTime=$(date +%s%3N);
-        totalTime=$((($endTime-$startTime)/1000));
+        timeSpan=$((($endTime-$startTime)));
+        totalTime=`printf "%.3f" $[$timeSpan/1000]`
         echo "\`\`\`" >>  ${TEE_FILE1}
 
         INFO "totalTime=${totalTime}"
