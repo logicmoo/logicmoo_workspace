@@ -60,8 +60,8 @@ total_income(person, 2035, 6666).
 
 end_of_file.
 
-ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/490 
 EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/pfc/t/sanity_base/hybrid_02.pfc 
 JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/HYBRID_02/logicmoo_pfc_test_sanity_base_HYBRID_02_JUnit/ 
 ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3AHYBRID_02 
 
+% ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/506

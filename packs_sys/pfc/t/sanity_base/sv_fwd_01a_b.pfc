@@ -73,3 +73,9 @@ end_of_file.   ERROR TODO
 :- mpred_test(\+ inChairZ(bYb)).
 :- mpred_test(\+ inChairZ(cXc)).
 
+
+% ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/512 
+% EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/pfc/t/sanity_base/sv_fwd_01a_b.pfc 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/SV_FWD_01A_B/logicmoo_pfc_test_sanity_base_SV_FWD_01A_B_JUnit/ 
+% ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3ASV_FWD_01A_B 
+

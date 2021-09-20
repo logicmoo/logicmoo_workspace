@@ -61,3 +61,9 @@ dmilesWorld ==> inChair(b).
 % TODO
 %:- mpred_test(inChair(a)).
 
+
+% ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/81 
+% EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/pfc/t/sanity_base/sv_fwd_01c.pfc 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/SV_FWD_01C/logicmoo_pfc_test_sanity_base_SV_FWD_01C_JUnit/ 
+% ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3ASV_FWD_01C 
+

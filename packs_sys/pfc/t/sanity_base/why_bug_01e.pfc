@@ -54,8 +54,8 @@ antireflexive(P) ==>
 
 end_of_file.
 
-ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/482 
 EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/pfc/t/sanity_base/why_bug_01e.pfc 
 JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/WHY_BUG_01E/logicmoo_pfc_test_sanity_base_WHY_BUG_01E_JUnit/ 
 ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3AWHY_BUG_01E 
 
+% ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/510

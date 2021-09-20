@@ -336,3 +336,9 @@ adj(320,1).
 :- time(findall(_,tc(_X,_Y),_)).
 :- statistics(cputime,X),retract(load_time(LT)), Time is X-LT,write(time_was(Time)).
 
+
+% ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/85 
+% EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/pfc/t/sanity_base/nldm320_dra.pl 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/NLDM320_DRA/logicmoo_pfc_test_sanity_base_NLDM320_DRA_JUnit/ 
+% ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3ANLDM320_DRA 
+

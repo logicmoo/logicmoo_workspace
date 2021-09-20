@@ -276,8 +276,9 @@ for ele2 in "${SORTED_FILES[@]}"
 	LINKS+="% ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/$GH_MASTER_ISSUE_ID \n"
 	LINKS+="% EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/$RELPATH \n"
 	LINKS+="% JENKINS: ${LAST_BUILD_REF}/${FTC_LINK}/ \n"
-	#LINKS+="PREVIOUS: ${BUILD_REF}/${FTC_LINK}/ \n"	
 	LINKS+="% ISSUE_SEARCH: ${ISSUE_SEARCH} \n"
+	#LINKS+="PREVIOUS: ${BUILD_REF}/${FTC_LINK}/ \n"	
+	
        #LINKS+="GITLAB: https://gitlab.logicmoo.org/gitlab/logicmoo/logicmoo_workspace/-/blob/${GIT_REV}/$RELPATH \n"	
        #LINKS+="GITHUB: https://github.com/logicmoo/logicmoo_workspace/commit/${GIT_REV} \n"
 	
@@ -295,6 +296,7 @@ for ele2 in "${SORTED_FILES[@]}"
 	fi
 	startTime=$(date +%s%3N);
 
+	echo '```' >>  ${TEE_FILE}
 	echo '```' >>  ${TEE_FILE2}
 
 	# CMD is allowed to clobber TEE_FILE
