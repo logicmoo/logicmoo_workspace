@@ -274,7 +274,15 @@ for ele2 in "${SORTED_FILES[@]}"
 	echo '```' >>  ${TEE_FILE2}
 
 	# CMD is allowed to clobber TEE_FILE
-        ( eval $CMD ) 2>&1 | tee -a ${TEE_FILE} | sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" | sed -r "s/\x1B\[(([0-9]{1,2})?(;)?([0-9]{1,2})?)?[m,K,H,f,J]//g" | tee -a ${TEE_FILE2}
+        ( eval $CMD ) 2>&1 | tee -a ${TEE_FILE} | perl -pe '
+	      s/\e\[[\x30-\x3f]*[\x20-\x2f]*[\x40-\x7e]//g;
+	      s/\e[PX^_].*?\e\\//g;
+	      s/\e\][^\a]*(?:\a|\e\\)//g;
+	      s/\e[\[\]A-Z\\^_@]//g;' | sed -E $'
+	      s|\x1b\\[[0-\\?]*[ -/]*[@-~]||g;
+	      s|\x1b[PX^_][^\x1b]*\x1b\\\\||g;
+	      s:\x1b\\][^\x07]*(\x07|\x1b\\\\)::g;
+	      s|\x1b[@-_]||g' | tee -a ${TEE_FILE2}
         exitcode=${PIPESTATUS[0]}
         endTime=$(date +%s%3N);
         timeSpan=$((($endTime-$startTime)));
