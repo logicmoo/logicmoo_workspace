@@ -520,10 +520,11 @@ system:test_retake:- system:halt_junit,test_completed_exit_maybe(3).
 </testsuites>
   */
 save_junit_results:- 
+ must_or_rtrace((
  \+ \+ j_u:junit_prop(testsuite,file,_),
  forall(j_u:junit_prop(testsuite,file,File), 
     (with_output_to(string(Text),show_junit_suite_xml(File)),
-     save_to_junit_file(File,Text))),!.
+     save_to_junit_file(File,Text))))),!.
 save_junit_results:- wdmsg(unused(no_junit_results)).
 
 show_junit_suite_xml(File):- 
