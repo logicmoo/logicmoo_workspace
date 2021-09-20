@@ -109,7 +109,6 @@ echo "<!-- ROLLUP_TMP=${ROLLUP_TMP} -->"
 echo "" > ${ROLLUP_TMP}
 
 export TEE_FILE=/dev/null
-export TEE_FILE1=/dev/null
 export TEE_FILE2=/dev/null
 
 function JECHO {
@@ -120,7 +119,6 @@ function INFO {
  willBe=$(echo "${*}" | sed -e 's/-/=/g' )
  echo -e "${doesBe}"
  echo -e "${doesBe}" >> ${TEE_FILE}
- echo -e "${doesBe}" >> ${TEE_FILE1}
  echo -e "${doesBe}" >> ${TEE_FILE2}
  JECHO "<!-- ${willBe}  -->"
 }
@@ -234,10 +232,8 @@ for ele2 in "${SORTED_FILES[@]}"
         JUNIT_TESTS_GTOTAL_TESTS=$((JUNIT_TESTS_GTOTAL_TESTS+1))
         INFO "CMD=$CMD"
         export TEE_FILE=${TESTING_TEMP}/CMD_LAST.ansi
-	export TEE_FILE1=${TEE_FILE}.one
         export TEE_FILE2=${TEE_FILE}.too
 	cat /dev/null > ${TEE_FILE}
-	cat /dev/null > ${TEE_FILE1}
 	cat /dev/null > ${TEE_FILE2}
         INFO "${date} (cd $PWD ; $CMD)"
 	
@@ -275,15 +271,15 @@ for ele2 in "${SORTED_FILES[@]}"
 
 	startTime=$(date +%s%3N);
 
-	echo '```' >>  ${TEE_FILE1}
+	echo '```' >>  ${TEE_FILE2}
 
 	# CMD is allowed to clobber TEE_FILE
-        ( eval $CMD ) 2>&1 | tee -a ${TEE_FILE} | sed -r "s/\x1B\[(([0-9]{1,2})?(;)?([0-9]{1,2})?)?[m,K,H,f,J]//g" | tee ${TEE_FILE2} | tee -a ${TEE_FILE1} 
+        ( eval $CMD ) 2>&1 | tee -a ${TEE_FILE} | sed -r "s/\x1B\[(([0-9]{1,2})?(;)?([0-9]{1,2})?)?[m,K,H,f,J]//g" | tee ${TEE_FILE2}
         exitcode=${PIPESTATUS[0]}
         endTime=$(date +%s%3N);
         timeSpan=$((($endTime-$startTime)));
         totalTime=`printf "%.3f" $[$timeSpan/1000]`
-        echo '```' >> ${TEE_FILE1}
+        echo '```' >> ${TEE_FILE2}
 
         INFO "totalTime=${totalTime}"
 
@@ -314,7 +310,7 @@ for ele2 in "${SORTED_FILES[@]}"
       [ $(($exitcode & 8)) -ne 0 ] && TEST_RESULT="FAILED"
       [ $(($exitcode & 4)) -ne 0 ] && (COMMENT+=" UserAborted" && TEST_RESULT="SKIPPED" && Add_LABELS+=" Skipped") || Rem_LABELS+=" Skipped"
       BASH_EVAL=$(grep "% Bash Eval: " ${TEE_FILE2} | sed -e "s|% Bash Eval: ||g")
-      [ ! -z $BASH_EVAL ] && $BASH_EVAL
+      [ ! -z "$BASH_EVAL" ] && $BASH_EVAL
 
       Add_LABELS=$(echo $Add_LABELS | xargs | sed -e "s/ /,/g")
       Rem_LABELS=$(echo $Rem_LABELS | xargs | sed -e "s/ /,/g")
@@ -322,7 +318,7 @@ for ele2 in "${SORTED_FILES[@]}"
       INFO "${LINKS}"
       INFO "${TEST_RESULT}: $0 ${keep_going} ${ele} (returned ${exitcode}) Add_LABELS='$Add_LABELS' Rem_LABELS='$Rem_LABELS'"
       
-      source $LOGICMOO_WS/bin/lmoo-issue ${JUNIT_PACKAGE} ${JUNIT_SHORTCLASS} ${Test_9999} ${TEST_RESULT} "${FileTestCase}" ${TEE_FILE1} "$Add_LABELS" "$Rem_LABELS"
+      source $LOGICMOO_WS/bin/lmoo-issue ${JUNIT_PACKAGE} ${JUNIT_SHORTCLASS} ${Test_9999} ${TEST_RESULT} "${FileTestCase}" ${TEE_FILE2} "$Add_LABELS" "$Rem_LABELS"
       
       if [ "${TEST_RESULT}" = "SUCCESS" ]; then
          JECHO "<testcase name=\"${FileTestCase}\" classname='${JUNIT_CLASSNAME}' time='$totalTime'>"       
