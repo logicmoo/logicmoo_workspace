@@ -72,17 +72,19 @@ if test ! -z "${CAPTURE_TEST_ANSI+}"; then
  (cat ${CAPTURE_TEST_ANSI} | $ansi2html > ${TEST_STEM_PATH}-README-rollup.html)  ; /bin/true
 fi
 
-#npm install -g junit-viewer
-[ -x junit-viewer ] && (
+type npm && npm install -g junit-viewer
+type junit-viewer && (
 echo "junit-viewer --results=${junitCombined} --save=${TEST_STEM_PATH}-junit-viewer-rollup.html &> ${TEST_STEM_PATH}-junit-viewer.debug.html"
 junit-viewer --results=${junitCombined} --save=${TEST_STEM_PATH}-junit-viewer-rollup.html )  ; /bin/true
 #npm install -g xunit-viewer
 #(xunit-viewer --results ${junitCombined} -o ${TEST_STEM_PATH}-xunit-viewer-rollup.html )  ; /bin/true
 #pip3 install junit2html
-[ -x junit2html ] && (
+
+type junit2html && (
 echo "junit2html ${junitCombined} ${TEST_STEM_PATH}-junitCombined-rollup.html"
 junit2html ${junitCombined} ${TEST_STEM_PATH}-junitCombined-rollup.html) ; /bin/true
 echo "TEST_STEM_PATH=${TEST_STEM_PATH}"
 #find ${TESTING_TEMP}*
+
 rm -f ${junitCombined}
 echo "-->"
