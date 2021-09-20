@@ -6,10 +6,8 @@ exitcode=${good_exit}
 [[ "$*" == *"-k"* ]] && export keep_going="-k"
 runtime_testing=4
 
-INTERACTIVE=1
-if [ "$(whoami)" == "jenkins" ]; then
-    INTERACTIVE=0
-fi
+
+[ "$(whoami)" == "jenkins" ] && INTERACTIVE=0 || INTERACTIVE=1
 
 if [ "$1" == "-i" ]; then
   INTERACTIVE=1
@@ -343,13 +341,15 @@ for ele2 in "${SORTED_FILES[@]}"
 
 
 
-     echo "========================================="
-     cat ${TEE_FILE2}
-     echo "========================================="
+     #echo "========================================="
+     #cat ${TEE_FILE2}
+     #echo "========================================="
      
 
       #sleep 10
-      # source $LOGICMOO_WS/bin/lmoo-issue ${JUNIT_PACKAGE} ${JUNIT_SHORTCLASS} ${Test_9999} ${TEST_RESULT} "${FileTestCase}" ${TEE_FILE2} "$Add_LABELS" "$Rem_LABELS"
+      [ ${INTERACTIVE} -eq 0 ] && (
+         source $LOGICMOO_WS/bin/lmoo-issue ${JUNIT_PACKAGE} ${JUNIT_SHORTCLASS} ${Test_9999} ${TEST_RESULT} "${FileTestCase}" ${TEE_FILE2} "$Add_LABELS" "$Rem_LABELS"
+      )
       
       if [ "${TEST_RESULT}" = "SUCCESS" ]; then
          JECHO "<testcase name=\"${FileTestCase}\" classname='${JUNIT_CLASSNAME}' time='$totalTime'>"       
