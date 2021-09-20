@@ -275,7 +275,7 @@ for ele2 in "${SORTED_FILES[@]}"
 
 	startTime=$(date +%s%3N);
 
-	echo "\`\`\`" >>  ${TEE_FILE1}
+	echo '```' >>  ${TEE_FILE1}
 
 	# CMD is allowed to clobber TEE_FILE
         ( eval $CMD ) 2>&1 | tee -a ${TEE_FILE} | sed -r "s/\x1B\[(([0-9]{1,2})?(;)?([0-9]{1,2})?)?[m,K,H,f,J]//g" | tee ${TEE_FILE2} | tee -a ${TEE_FILE1} 
@@ -283,7 +283,7 @@ for ele2 in "${SORTED_FILES[@]}"
         endTime=$(date +%s%3N);
         timeSpan=$((($endTime-$startTime)));
         totalTime=`printf "%.3f" $[$timeSpan/1000]`
-        echo "\`\`\`" >>  ${TEE_FILE1}
+        echo '```' >> ${TEE_FILE1}
 
         INFO "totalTime=${totalTime}"
 

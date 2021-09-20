@@ -382,10 +382,10 @@ test_completed_props(result).
 % explain_junit_results:- listing(j_u::junit_prop/3).
 explain_junit_results:- 
   j_u:junit_prop(S,V,O),
-  once(test_completed_props(V);(term_to_atom(O,Atom), atom_length(Atom,L), L<200)), 
+  once(test_completed_props(V);(fail,term_to_atom(O,Atom), atom_length(Atom,L), L<200)), 
   write_testcase_prop(S,V,O),
   fail.
-explain_junit_results:- ttyflush.
+explain_junit_results:- nl, ttyflush.
 
 /*
 test_completed_exit(64):- halt(64). % Passed
@@ -393,7 +393,7 @@ test_completed_exit(4):- halt(4). % Aborted by User
 test_completed_exit(2):- halt(2). % Aborted by System
 */
 
-test_completed_exit(N):- dmsg_pretty(begin_test_completed_exit(N)),fail.
+%test_completed_exit(N):- dmsg_pretty(begin_test_completed_exit(N)),fail.
 test_completed_exit(_):- ttyflush,fail.
 test_completed_exit(_):- once(system:halt_junit),fail.
 test_completed_exit(_):- ttyflush,fail.
