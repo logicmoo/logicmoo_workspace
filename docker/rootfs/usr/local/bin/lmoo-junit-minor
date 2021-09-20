@@ -6,7 +6,6 @@ exitcode=${good_exit}
 [[ "$*" == *"-k"* ]] && export keep_going="-k"
 runtime_testing=4
 
-
 [ "$(whoami)" == "jenkins" ] && INTERACTIVE=0 || INTERACTIVE=1
 
 if [ "$1" == "-i" ]; then
@@ -186,8 +185,9 @@ SORTED_FILES=$(set -f; IFS=$'\n'; ls -t $(echo $FILES))
 fi
 
 if [ -z "$SORTED_FILES" ]; then
- SORTED_FILES=FILES
+ SORTED_FILES=$FILES
 fi
+SORTED_FILES=(echo $SORTED_FILES | sed -e "s|\n| |g" -e "s|  | |g")
 
 echo "SORTED_FILES=$SORTED_FILES"
 (

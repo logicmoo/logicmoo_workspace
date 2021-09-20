@@ -67,6 +67,7 @@ if [[ -z "${LOGICMOO_WS}" ]]; then
       fi
    fi
 
+   LOGICMOO_WS=$(echo $LOGICMOO_WS | sed -e 's|@2||g')
    $ECHO "#* Set logicmoo workspace"
    $ECHO "#* LOGICMOO_WS=$LOGICMOO_WS"
 
