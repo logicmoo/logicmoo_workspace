@@ -78,7 +78,7 @@ echo "junit-viewer --results=${junitCombined} --save=${TEST_STEM_PATH}-junit-vie
 junit-viewer --results=${junitCombined} --save=${TEST_STEM_PATH}-junit-viewer-rollup.html )  ; /bin/true
 #npm install -g xunit-viewer
 #(xunit-viewer --results ${junitCombined} -o ${TEST_STEM_PATH}-xunit-viewer-rollup.html )  ; /bin/true
-#pip3 install junit2html
+pip3 install junit2html
 
 type junit2html && (
 echo "junit2html ${junitCombined} ${TEST_STEM_PATH}-junitCombined-rollup.html"

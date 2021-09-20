@@ -191,7 +191,8 @@ fi
 if [ -z "$SORTED_FILES" ]; then
  SORTED_FILES=$FILES
 fi
-SORTED_FILES=(echo $SORTED_FILES | sed -e "s|\n| |g" -e "s|  | |g")
+
+SORTED_FILES=$(echo $SORTED_FILES | sed -e "s|\n| |g" -e "s|  | |g")
 
 echo "SORTED_FILES=$SORTED_FILES"
 (
@@ -255,25 +256,25 @@ for ele2 in "${SORTED_FILES[@]}"
 	cat /dev/null > ${TEE_FILE2}
         INFO "${date} (cd $PWD ; $CMD)"
 	
-	export FTC_LINK=$(echo "${FileTestCase}" | sed -e "s/[@. ]/_/g")
+	export FTC_LINK=$(echo "${JUNIT_CLASSNAME}" | sed -e "s/[@. ]/_/g")
 	export LAST_BUILD_REF="https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/${JUNIT_PACKAGE}/${JUNIT_SHORTCLASS}"
 	export BUILD_REF=$(echo $LAST_BUILD_REF | sed -e "s/lastBuild/${BUILD_ID}/g")
         export ISSUE_SEARCH="https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3A${JUNIT_SHORTCLASS}"
 	LINKS=""
-	LINKS+="% EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/$RELPATH \n"
-	LINKS+="% JENKINS: ${LAST_BUILD_REF}/${FTC_LINK}/ \n"
-	LINKS+="% ISSUE_SEARCH: ${ISSUE_SEARCH} \n"
+	LINKS+="% EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/$RELPATH " && LINKS+='\n'
+	LINKS+="% JENKINS: ${LAST_BUILD_REF}/${FTC_LINK}/ " && LINKS+='\n'
+	LINKS+="% ISSUE_SEARCH: ${ISSUE_SEARCH} " && LINKS+='\n'
                 
 	export GH_MASTER_ISSUE_FINFO=$(echo "${GH_MASTER_ISSUE_INFO}" | grep "${FileTestCase}" | grep ${Test_9999} | head -1)
 	export GH_MASTER_ISSUE_ID=$(echo "${GH_MASTER_ISSUE_FINFO}" | cut -f1)
 	[ -z "${GH_MASTER_ISSUE_ID}" ] && (
-	  gh api repos/logicmoo/logicmoo_workspace/labels -f name="${JUNIT_SHORTCLASS}" -f color="888000" 
+	  gh api repos/logicmoo/logicmoo_workspace/labels -f name="${JUNIT_SHORTCLASS}" -f color="888000"
           gh issue create -t "${FileTestCase}" -l "${JUNIT_PACKAGE},${JUNIT_SHORTCLASS},${Test_9999},unit_test,Skipped" -b "${LINKS}"
   	  export GH_MASTER_ISSUE_INFO=`gh issue list -l ${JUNIT_PACKAGE} -L 1000 | sed -e "s/UTC /\n/g" | grep "unit_test"`
   	  export GH_MASTER_ISSUE_FINFO=$(echo "${GH_MASTER_ISSUE_INFO}" | grep "${FileTestCase}" | head -1)
 	  export GH_MASTER_ISSUE_ID=$(echo "${GH_MASTER_ISSUE_FINFO}" | cut -f1)
 	)
-	LINKS+="% ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/$GH_MASTER_ISSUE_ID \n"
+	LINKS+="% ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/$GH_MASTER_ISSUE_ID " && LINKS+='\n'
 	Add_LABELS=""
 	Rem_LABELS=""
 

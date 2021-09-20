@@ -18,3 +18,9 @@
 
 :- test_chat80.
 
+
+% EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/logicmoo_nlu/test/logicmoo_nlu/test_chat80_01.pl 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.nlu.test.nlu/TEST_CHAT80_01/logicmoo_nlu_test_nlu_TEST_CHAT80_01_JUnit/ 
+% ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3ATEST_CHAT80_01 
+
+% ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/644

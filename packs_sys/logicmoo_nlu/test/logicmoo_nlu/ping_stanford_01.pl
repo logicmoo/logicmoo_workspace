@@ -17,3 +17,9 @@
 
 :- mpred_test(false).
 
+
+% EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/logicmoo_nlu/test/logicmoo_nlu/ping_stanford_01.pl 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.nlu.test.nlu/PING_STANFORD_01/logicmoo_nlu_test_nlu_PING_STANFORD_01_JUnit/ 
+% ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3APING_STANFORD_01 
+
+% ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/640

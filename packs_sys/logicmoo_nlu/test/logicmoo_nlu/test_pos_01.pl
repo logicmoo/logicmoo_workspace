@@ -16,3 +16,9 @@
 %:- ensure_loaded(library(parser_chat80)).
 
 :- mpred_test(false).
+
+% EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/logicmoo_nlu/test/logicmoo_nlu/test_pos_01.pl 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.nlu.test.nlu/TEST_POS_01/logicmoo_nlu_test_nlu_TEST_POS_01_JUnit/ 
+% ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3ATEST_POS_01 
+
+% ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/642

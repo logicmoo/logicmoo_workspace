@@ -91,7 +91,7 @@ mpred_test_fok(Testcase, G):-
   add_test_info(testsuite,testcase,Testcase),
   locally(t_l:mpred_current_testcase(Testcase), 
   (must_det_l((
-    wdmsg(mpred_test(Testcase, G)),
+    wdmsg('?-'(mpred_test(Testcase, G))),
     add_test_info(Testcase,goal,G),
     ignore((source_location(S,L),atom(S),add_test_info(Testcase,src,S:L),
     sformat(URI,'~w#L~w',[S,L]),
@@ -102,7 +102,7 @@ mpred_test_fok(Testcase, G):-
     get_time(Start))),
     Answers = nb(0),
     catch( ( call_u_hook(G) *-> TestResult = passed; TestResult = failure), E, TestResult=error(E)),
-    ignore((Answers = nb(0),
+    ignore((%Answers = nb(0),
       must_det_l((get_time(End),
       Elapsed is End - Start,
       add_test_info(Testcase,time,Elapsed),
@@ -156,12 +156,17 @@ catch_timeout(P):- catch(call_with_time_limit(30,w_o_c(P)),E,wdmsg(P->E)).
 generate_test_name(G,Name):- source_context_name(SCName), gtn_no_pack(G,GName),
   (atom_length(GName,0)-> SCName = Name ; sformat(Name,'~w__~w',[SCName,GName])).
 
+find_string(G,String):- sub_term(String,G), string(String), !.
+find_string(G,String):- sub_term(NameL,G),is_list(NameL), maplist(atomic,NameL),atomic_list_concat(NameL,' ',String).
+find_string(G,String):- sub_term(String,G),atom(String),member(Space,[' ','_']),atom_contains(String,Space).
+
 gtn_no_pack(G,''):- \+ callable(G), !.
 gtn_no_pack(baseKB:G,Testcase):- nonvar(G), !, gtn_no_pack(G,Testcase).
 gtn_no_pack(M: G, Name):- nonvar(G), !, gtn_no_pack(G,Name1), sformat(Name,'~w_in_~w',[Name1, M]).
 gtn_no_pack(\+ G, Name):- nonvar(G), !, gtn_no_pack(G,Name1), sformat(Name,'naf_~w',[Name1]).
-gtn_no_pack(G,Name):- atom(G), sformat(Name1,'~w',[G]), !, shorten_and_clean_name(Name1,Name).
+%gtn_no_pack(G,Name):- atom(G), sformat(Name1,'~w',[G]), !, shorten_and_clean_name(Name1,Name).
 gtn_no_pack(G,Name):- \+ compound(G), sformat(Name1,'~w',[G]), !, shorten_and_clean_name(Name1,Name).
+gtn_no_pack(G,Name):- find_string(G,String), !, shorten_and_clean_name(String,Name).
 gtn_no_pack(G,Name):- arg(_,G,A), compound(A), \+ is_list(A), !, gtn_no_pack(A,Name).
 gtn_no_pack(G,Name):- is_list(G), member(E,G),!,gtn_no_pack(E,Name).
 gtn_no_pack(G,Name):- arg(_,G,A), integer(A), !, functor(G,F,_),sformat(Name,'~w_~w',[F,A]).
@@ -175,6 +180,7 @@ gtn_no_pack(G,Name):- \+ compound(G), !,
 gtn_no_pack(G,Name):- is_list(G),!,maplist(gtn_no_pack,G,NameL), atomic_list_concat(NameL,'_',Name).
 gtn_no_pack(G,Name):- compound_name_arguments(G,F,A), gtn_no_pack([F|A],Name).
 */
+
   
 
 source_context_name(SCName):- 
@@ -631,10 +637,10 @@ shorten_and_clean_name(Name,RSName):-
    '/'='_',
    '_master_packs_'='_'],Name0,Name1),
   p_n_atom_filter_var_chars(Name1,Name2),
-  replace_in_string(['__'='_'],Name2,Name3),
+  replace_in_string(['_c32_'='_','__'='_'],Name2,Name3),
   last_n_chars(Name3,RSName),!.
 
-%last_n_chars(SName,RSName):- sub_atom(SName,0,20,0,RSName),!.
+last_n_chars(SName,RSName):- sub_atom(SName,_,30,0,RSName),!.
 last_n_chars(SName,SName).
 
 
