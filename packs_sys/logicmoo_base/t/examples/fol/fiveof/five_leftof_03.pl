@@ -83,6 +83,6 @@ clif(exists(H1,exists(H2,exists(H3,
 
 % ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/471 
 % EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/logicmoo_base/t/examples/fol/fiveof/five_leftof_03.pl 
-% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.fol.fiveof/FIVE_LEFTOF_03/logicmoo_base_fol_fiveof_FIVE_LEFTOF_03_JUnit/ 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.fol.fiveof/FIVE_LEFTOF_03/ 
 % ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3AFIVE_LEFTOF_03 
 

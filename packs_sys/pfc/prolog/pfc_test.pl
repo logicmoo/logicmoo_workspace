@@ -542,7 +542,9 @@ classname_to_package(CN,P,C):- atomic_list_concat(List,'.',CN), append(Left,[C],
 %shorten_and_clean_name(Name,RSName):- atomic_list_concat([L,_|_],'.',Name),!,shorten_and_clean_name(L,RSName).
 %shorten_and_clean_name(Name,RSName):- atomic_list_concat(List,'/',Name),append(_,[N1,N2,N3,N4],List),
 %  atomic_list_concat(['prolog.',test_,N1,'.',N2,'.',N3,'.',N4],'',RSName).
-shorten_and_clean_name(Name,RSName):- 
+
+shorten_and_clean_name(Name,RSName):- shorten_and_clean_name(Name,-30,RSName).
+shorten_and_clean_name(Name,Size,RSName):- 
   ensure_compute_file_link(Name,Name0),
   replace_in_string(
   ['https://logicmoo.org:2082/gitlab/logicmoo/'="",
@@ -551,10 +553,11 @@ shorten_and_clean_name(Name,RSName):-
    '_master_packs_'='_'],Name0,Name1),
   p_n_atom_filter_var_chars(Name1,Name2),
   replace_in_string(['_c32_'='_','__'='_'],Name2,Name3),
-  last_n_chars(Name3,RSName),!.
+  trim_to_size(Name3,Size,RSName),!.
 
-last_n_chars(SName,RSName):- sub_atom(SName,_,30,0,RSName),!.
-last_n_chars(SName,SName).
+trim_to_size(SName,-N,RSName):- !, sub_atom(SName,_,N,0,RSName)->true;SName=RSName.
+trim_to_size(SName,N,RSName):- N <0 ,!, NN is  -N, trim_to_size(SName,-NN,RSName).
+trim_to_size(SName,N,RSName):- sub_atom(SName,0,N,_,RSName)->true;SName=RSName.
 
 
 clean_away_ansi(DirtyText,CleanText):- atom_codes(DirtyText,Codes),clean_ansi_codes(Codes,CodesC),sformat(CleanText,'~s',[CodesC]),!.
@@ -584,9 +587,10 @@ save_to_junit_file_text(Full,Text,FullF):-
 
 save_to_junit_file(Name,DirtyText,FileName):-
  clean_away_ansi(DirtyText,Text),
-  getenv('TEST_STEM_PATH',Dir),!,
+ getenv('TEST_STEM_PATH',Dir),!,
+ shorten_and_clean_name(Name,20,SName),
   must_det_l(( 
-  atomic_list_concat([Dir,'-',Name],Full),
+  atomic_list_concat([Dir,'-',SName],Full),
   write_testcase_env(Name),
   save_to_junit_file_text(Full,Text,FileName))).
 
@@ -647,7 +651,7 @@ write_testcase_std_info(Testcase):-
   forall(j_u:junit_prop(Testcase,Type,Term), write_testcase_prop(Type,Term)))),
   shrink_to(StdErr,200,Summary),
   replace_in_string(['CDATA'='CDAT4'],Summary,SummaryClean),
-  format("~N    <system-err>~w[~w[CD~w]]></system-err>",['<!','ATA',SummaryClean]),!.
+  format("  <system-err>~w[~w[CD~w]]></system-err>",['<!','ATA',SummaryClean]),!.
  
 write_testcase_prop(S,V,O):- format('~N'), write(S),write_testcase_n_v(V,O), format('~N').
 write_testcase_prop(Type,Term):- format('~N'), write_testcase_n_v(Type,Term), format('~N').

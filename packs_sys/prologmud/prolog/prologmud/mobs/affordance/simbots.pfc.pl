@@ -485,9 +485,10 @@ do_define_affordance(LIST):-
 
 do_define_type_affordance1(Type,_= Type):-!.
 do_define_type_affordance1(Type,subjType= String):-
- coerce(String,ftString,StringM),
+ no_repeats(call_u(coerce_hook(String,ftString,StringM))),
  ain_expanded(nameString(Type,StringM)).
 
+%coerce(A,B,C):-no_repeats(call_u(coerce_hook(A,B,C))),nop((sanity(show_failure(call_u(isa(C,B))))->!;true)).
 
 do_define_type_affordance1(Type,alsoType= TWhat):-ti_name(t,TWhat,ParentType),ain(genls(Type,ParentType)).
 do_define_type_affordance1(Type,superType= TWhat):-ti_name(t,TWhat,ParentType),ain(genls(Type,ParentType)).

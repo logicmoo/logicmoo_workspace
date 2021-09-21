@@ -717,6 +717,6 @@ cute6:  ?-
 
 % ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/452 
 % EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/logicmoo_base/t/examples/fol/exactly_puppy_02.pfc.pl 
-% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/EXACTLY_PUPPY_02/logicmoo_base_examples_fol_EXACTLY_PUPPY_02_JUnit/ 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/EXACTLY_PUPPY_02/ 
 % ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3AEXACTLY_PUPPY_02 
 

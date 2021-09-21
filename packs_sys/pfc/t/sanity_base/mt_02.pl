@@ -50,7 +50,7 @@ genlMt(mt1,socialMt).
 
 
 % EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/pfc/t/sanity_base/mt_02.pl 
-% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/MT_02/logicmoo_pfc_test_sanity_base_MT_02_JUnit/ 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/MT_02/ 
 % ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3AMT_02 
 
 % ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/552

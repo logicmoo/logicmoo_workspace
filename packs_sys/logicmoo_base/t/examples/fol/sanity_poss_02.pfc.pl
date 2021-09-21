@@ -46,6 +46,6 @@ poss(a(b)).
 
 % ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/434 
 % EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/logicmoo_base/t/examples/fol/sanity_poss_02.pfc.pl 
-% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/SANITY_POSS_02/logicmoo_base_examples_fol_SANITY_POSS_02_JUnit/ 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/SANITY_POSS_02/ 
 % ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3ASANITY_POSS_02 
 

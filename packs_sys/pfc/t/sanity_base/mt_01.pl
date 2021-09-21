@@ -31,7 +31,7 @@ socialMt:loves(sally,joe).
 
 
 % EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/pfc/t/sanity_base/mt_01.pl 
-% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/MT_01/logicmoo_pfc_test_sanity_base_MT_01_JUnit/ 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/MT_01/ 
 % ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3AMT_01 
 
 % ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/576

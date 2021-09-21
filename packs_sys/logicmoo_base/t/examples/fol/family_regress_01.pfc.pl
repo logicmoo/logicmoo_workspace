@@ -91,6 +91,6 @@ clif(((human(P1),ancestor(P2,P1))=>human(P2))).
 
 % ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/70 
 % EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/logicmoo_base/t/examples/fol/family_regress_01.pfc.pl 
-% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/FAMILY_REGRESS_01/logicmoo_base_examples_fol_FAMILY_REGRESS_01_JUnit/ 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/FAMILY_REGRESS_01/ 
 % ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3AFAMILY_REGRESS_01 
 

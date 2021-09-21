@@ -26,12 +26,10 @@
           ]).
 
 
-/** <module> Utility LOGICMOO PREDICATE STREAMS
+/** <module> predicate_streams - Abstract Predicate Streams Utility LOGICMOO PREDICATE STREAMS
 This module creates virtual/abstract input and output streams in prolog using predicates. 
 @author Douglas R. Miles
 @license LGPL
-*/
-/** predicate_streams - Abstract Predicate Streams
 
     Author:        Douglas R. Miles
     E-mail:        logicmoo@gmail.com

@@ -111,6 +111,6 @@ what i wanted was the output of:
 
 % ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/66 
 % EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/pfc/t/sanity_base/shift_01.pl 
-% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/SHIFT_01/logicmoo_pfc_test_sanity_base_SHIFT_01_JUnit/ 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/SHIFT_01/ 
 % ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3ASHIFT_01 
 

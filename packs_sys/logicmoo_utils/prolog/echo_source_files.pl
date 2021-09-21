@@ -39,7 +39,7 @@ This module allows running prolog files as echos.
 :- thread_local(t_l:echoing_file_in_cmt/1).
 :- thread_local(t_l:file_stream_loc/3).
 
-%! echo_source_file/1 is det.
+%! echo_source_file(+File) is det.
 %
 echo_source_file(F):- 
  (\+ t_l:echoing_file(F) -> asserta(t_l:echoing_file(F)) ; true),

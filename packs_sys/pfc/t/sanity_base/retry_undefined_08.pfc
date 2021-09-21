@@ -21,6 +21,6 @@
 
 % ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/513 
 % EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/pfc/t/sanity_base/retry_undefined_08.pfc 
-% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/RETRY_UNDEFINED_08/logicmoo_pfc_test_sanity_base_RETRY_UNDEFINED_08_JUnit/ 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/RETRY_UNDEFINED_08/ 
 % ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3ARETRY_UNDEFINED_08 
 

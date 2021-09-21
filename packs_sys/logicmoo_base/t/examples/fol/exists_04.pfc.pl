@@ -45,6 +45,6 @@ exists(X, livesAt(X, green_house) & drinks(X, coffee)).
 
 % ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/425 
 % EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/logicmoo_base/t/examples/fol/exists_04.pfc.pl 
-% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/EXISTS_04/logicmoo_base_examples_fol_EXISTS_04_JUnit/ 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/EXISTS_04/ 
 % ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3AEXISTS_04 
 

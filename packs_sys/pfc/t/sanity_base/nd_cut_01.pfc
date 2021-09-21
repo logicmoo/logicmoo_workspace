@@ -37,6 +37,6 @@ a(t).
 
 % ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/342 
 % EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/pfc/t/sanity_base/nd_cut_01.pfc 
-% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/ND_CUT_01/logicmoo_pfc_test_sanity_base_ND_CUT_01_JUnit/ 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/ND_CUT_01/ 
 % ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3AND_CUT_01 
 

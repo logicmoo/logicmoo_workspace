@@ -51,7 +51,7 @@ leftof(H1, H2) => house(H1) & house(H2).
 
 
 % EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/logicmoo_base/t/examples/fol/fiveof/monotonic_type_01.pl 
-% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.fol.fiveof/MONOTONIC_TYPE_01/logicmoo_base_fol_fiveof_MONOTONIC_TYPE_01_JUnit/ 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.fol.fiveof/MONOTONIC_TYPE_01/ 
 % ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3AMONOTONIC_TYPE_01 
 
 % ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/617

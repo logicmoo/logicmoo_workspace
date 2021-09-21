@@ -239,6 +239,6 @@ if(gendered_human(P), (female(P) v male(P))).
 
 % ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/71 
 % EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/logicmoo_base/t/examples/fol/family_inheritance_01.pfc.pl 
-% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/FAMILY_INHERITANCE_01/logicmoo_base_examples_fol_FAMILY_INHERITANCE_01_JUnit/ 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/FAMILY_INHERITANCE_01/ 
 % ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3AFAMILY_INHERITANCE_01 
 

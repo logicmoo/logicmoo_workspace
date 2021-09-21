@@ -27,6 +27,6 @@ all(R, (room_number(R,77) => ( big(R)))) .
 
 % ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/440 
 % EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/logicmoo_base/t/examples/fol/room_numbers_01.pfc.pl 
-% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/ROOM_NUMBERS_01/logicmoo_base_examples_fol_ROOM_NUMBERS_01_JUnit/ 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/ROOM_NUMBERS_01/ 
 % ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3AROOM_NUMBERS_01 
 

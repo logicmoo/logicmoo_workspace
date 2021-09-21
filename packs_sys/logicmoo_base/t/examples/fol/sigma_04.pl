@@ -49,6 +49,6 @@ exists([P1,I1,I2,P2,H1,H2],
 
 % ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/431 
 % EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/logicmoo_base/t/examples/fol/sigma_04.pl 
-% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/SIGMA_04/logicmoo_base_examples_fol_SIGMA_04_JUnit/ 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/SIGMA_04/ 
 % ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3ASIGMA_04 
 

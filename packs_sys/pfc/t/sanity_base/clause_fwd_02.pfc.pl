@@ -116,6 +116,6 @@ gg(G):- call(G).
 
 % ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/399 
 % EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/pfc/t/sanity_base/clause_fwd_02.pfc.pl 
-% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/CLAUSE_FWD_02/logicmoo_pfc_test_sanity_base_CLAUSE_FWD_02_JUnit/ 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/CLAUSE_FWD_02/ 
 % ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3ACLAUSE_FWD_02 
 

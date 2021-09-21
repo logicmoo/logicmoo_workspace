@@ -756,10 +756,10 @@ parseIsaMost(List,Term) --> parseIsa(isAnd(List),Term),{!}.
 
 coerce_as(B,A,C):-coerce(A,B,C).
 
-coerce_hook(A,B,C):- (var(A);var(B)),!,fail,trace_or_throw(freeze(A,coerce_hook(A,B,C))).
+% coerce_hook(A,B,C):- (var(A);var(B)),!,fail,trace_or_throw(freeze(A,coerce_hook(A,B,C))).
 % futureAssertion: THIS IS WHAT I THINKL THE CODE SHOULD LIKE
 % coerce_hook(A,B,C):- to_arg_value(A,AStr),A\=@=AStr,!,coerce_hook(AStr,B,C).
-coerce_hook(A,B,C):- to_arg_value(A,AStr),isa_or_type(AStr,B),AStr=C,!.
+coerce_hook(A,B,C):- to_arg_value(A,AStr),call_u(isa_or_type(AStr,B)),AStr=C,!.
 coerce_hook(A,B,C):- no_repeats(C,(coerce0(A,B,C0),to_arg_value(C0,C))),(show_failure(isa_or_type(C,B))->!;true).
 % THIS SHOULD BEEN OK.. coerce_hook(AStr,B,C):- any_to_string(AStr,A), no_repeats(C,(coerce0(A,B,C0),to_arg_value(C0,C))),(show_failure(ereq(isa(C,B)))->!;true).
 

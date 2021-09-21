@@ -40,7 +40,7 @@ b(t).
 :- mpred_test(b(t)).
 
 % EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/pfc/t/sanity_base/fc_08.pfc 
-% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/FC_08/logicmoo_pfc_test_sanity_base_FC_08_JUnit/ 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/FC_08/ 
 % ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3AFC_08 
 
 % ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/521

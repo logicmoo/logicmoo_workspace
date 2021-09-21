@@ -740,6 +740,6 @@ cute6:  ?-
 
 % ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/414 
 % EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/logicmoo_base/t/examples/fol/exactly_poss_cute_06.pfc.pl 
-% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/EXACTLY_POSS_CUTE_06/logicmoo_base_examples_fol_EXACTLY_POSS_CUTE_06_JUnit/ 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/EXACTLY_POSS_CUTE_06/ 
 % ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3AEXACTLY_POSS_CUTE_06 
 

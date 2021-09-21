@@ -158,6 +158,6 @@ what i was going to say about why cyc ended up the way it did was jus tthe concx
 
 % ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/438 
 % EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/logicmoo_base/t/examples/fol/sanity_atmost_01.pfc.pl 
-% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/SANITY_ATMOST_01/logicmoo_base_examples_fol_SANITY_ATMOST_01_JUnit/ 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/SANITY_ATMOST_01/ 
 % ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3ASANITY_ATMOST_01 
 

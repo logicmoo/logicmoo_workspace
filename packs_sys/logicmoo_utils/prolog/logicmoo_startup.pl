@@ -63,18 +63,22 @@ now_and_later(MC,TIM,SM,MGoal):- strip_module(MGoal,M,Goal),
   sys:call_now(c,TIM,SM,M:Goal),
   initialization(sys:call_now(MC,TIM,SM,M:Goal),restore).
 
-
 :- module_transparent(sys:call_now/4).
 %sys:call_now(n,_TIM,_SM,_MGoal):-!.
 %sys:call_now(m,_TIM,_SM,_MGoal):-!.
 sys:call_now(_,TIM,SM,MGoal):-
   strip_module(MGoal,M,Goal),
    maybe_writeln(sys:call_now(TIM,SM,M:Goal)),
-   call_with_typein_and_source(TIM,SM,MGoal).
+  sys:with_typein_and_source(TIM,SM,M:Goal).
 
-:- module_transparent(sys:call_with_typein_and_source/3).
+:- module_transparent(call_with_typein_and_source/3).
 call_with_typein_and_source(TIM,SM,MGoal):-
   strip_module(MGoal,M,Goal),  
+  sys:with_typein_and_source(TIM,SM,M:Goal).
+
+:- module_transparent(sys:with_typein_and_source/3).
+sys:with_typein_and_source(TIM,SM,MGoal):-
+  strip_module(MGoal,M,Goal),
   '$current_typein_module'(WasTIM), '$current_source_module'(WasSM),
   setup_call_cleanup(('$set_typein_module'(TIM),'$set_source_module'(SM)),
       M:Goal, ('$set_typein_module'(WasTIM),'$set_source_module'(WasSM))).
@@ -190,12 +194,12 @@ add_absolute_search_folder(Name,Path):- with_abs_paths(ain_file_search_path(Name
 enotrace(G):- call(G),!.
 
 
-%:- use_module(library(logicmoo_utils_all)).
+%:- system:use_module(library(logicmoo_utils_all)).
 :- create_prolog_flag(dmsg_level,[never,error,warning,info,filter,always],[type(term),keep(true)]).
 
 
 :- if( \+ current_predicate(each_call_cleanup/3)).
-% :- use_module(library(each_call_cleanup)).
+% :- system:use_module(library(each_call_cleanup)).
 :- endif.
 
 % ==============================================
@@ -283,7 +287,7 @@ add_pack_path(Y):-  \+ user:file_search_path(pack,Y) ->asserta(user:file_search_
 
 
 %:- setenv('DISPLAY', '').
-% :- use_module(library(plunit)).
+% :- system:use_module(library(plunit)).
 
 
 % ==============================================
@@ -294,13 +298,13 @@ add_pack_path(Y):-  \+ user:file_search_path(pack,Y) ->asserta(user:file_search_
 :- if(current_prolog_flag(windows, false)).
 
 :- if(exists_source(library(editline))).
-:- use_module(library(editline)).
+:- system:use_module(library(editline)).
 :- else.
 :- if(exists_source(library(readline))).
- :- use_module(library(readline)).
+ :- system:use_module(library(readline)).
 :- else.
  :- if(exists_source(library(editline))).
-  :- use_module(library(editline)).
+  :- system:use_module(library(editline)).
  :- endif.
 :- endif.
 setup_hist0:-  '$toplevel':setup_history.
@@ -431,17 +435,6 @@ setup_hist0:-  '$toplevel':setup_history.
 :- system:use_module(library(http/http_unix_daemon)).
 :- system:use_module(library(http/http_wrapper)).
 :- system:use_module(library(http/hub)).
-:- system:use_module(library(http/jquery)).
-:- system:use_module(library(http/js_grammar)).
-:- system:use_module(library(http/js_write)).
-:- user:use_module(library(http/json)).
-:- user:use_module(library(http/json_convert)).
-:- system:use_module(library(http/mimepack)).
-:- system:use_module(library(http/mimetype)).
-:- system:use_module(library(http/term_html)).
-:- system:use_module(library(http/thread_httpd)).
-:- system:use_module(library(http/websocket)).
-:- system:use_module(library(http/yadis)).
 :- system:use_module(library(increval)).
 :- system:use_module(library(intercept)).
 :- system:use_module(library(iostream)).
@@ -486,11 +479,9 @@ setup_hist0:-  '$toplevel':setup_history.
 :- system:use_module(library(pldoc)).
 :- system:use_module(library(pldoc/doc_access)).
 :- system:use_module(library(pldoc/doc_colour)).
-:- system:use_module(library(pldoc/doc_html)).
 :- system:use_module(library(pldoc/doc_htmlsrc)).
 :- system:use_module(library(pldoc/doc_index)).
 :- system:use_module(library(pldoc/doc_library)).
-:- system:use_module(library(pldoc/doc_man)).
 :- system:use_module(library(pldoc/doc_modes)).
 :- system:use_module(library(pldoc/doc_pack)).
 :- system:use_module(library(pldoc/doc_process)).
@@ -942,7 +933,7 @@ user:expand_answer(_Bindings, _ExpandedBindings):- run_pending_inits,fail.
 user:expand_query(_Goal, _Expanded, _Bindings, _ExpandedBindings):-  run_pending_inits,fail.
 :- endif.
 
-%:- use_module(logicmoo_utils_all).
+%:- system:use_module(logicmoo_utils_all).
 %:- fixup_exports.
 
 :- if( app_argv1('--upgrade') ).
@@ -950,8 +941,8 @@ user:expand_query(_Goal, _Expanded, _Bindings, _ExpandedBindings):-  run_pending
 :- endif.
 
 
-%:- use_module(library(logicmoo/each_call)).
-%:- use_module(library(logicmoo_startup)).
+%:- system:use_module(library(logicmoo/each_call)).
+%:- system:use_module(library(logicmoo_startup)).
 
 :- meta_predicate if_debugging(*,0).
 
@@ -1323,7 +1314,7 @@ init_logicmoo :- ensure_loaded(library(logicmoo_repl)),init_why(during_booting,i
 
 % invert_varname(NV):-  ignore(((NV=(N=V), V='$VAR'(N)))).
 
-:- use_module(library(prolog_history)).
+:- system:use_module(library(prolog_history)).
 
 add_history(O):- is_list(O), member(E,O), compound(E), !, maplist(add_history,O).
 %add_history(O):- !, wdmsg(not_add_history(O)),!.
@@ -1519,7 +1510,7 @@ update_packs:-
    initialization(attach_packs,now).
 
 % :- update_packs.
-:- use_module(library(prolog_pack)).
+:- system:use_module(library(prolog_pack)).
 :- export(pack_upgrade_soft/1).
 pack_upgrade_soft(Which) :- which_pack(Which,Pack)-> Which\==Pack,!, pack_upgrade_soft(Pack).
 pack_upgrade_soft(Pack) :-
@@ -1655,10 +1646,10 @@ qsave_bin_now(Clif):-
       stand_alone(false)]).
 
 
-%:- use_module(library(logicmoo/each_call)).
+%:- system:use_module(library(logicmoo/each_call)).
 
-%:- use_module(library(debuggery/dmsg)).
-%:- use_module(library(must_sanity)).
+%:- system:use_module(library(debuggery/dmsg)).
+%:- system:use_module(library(must_sanity)).
 
 % ( GFE = Girl-Friend Experience )
 
@@ -1666,15 +1657,54 @@ qsave_bin_now(Clif):-
 %=======================================
 
 %=======================================
-:- system:use_module(library(prolog_stack)).
+:- user:use_module(library(http/term_html)).
+:- system:use_module(library(http/http_session)).
+:- system:use_module(library(apply)).
+:- system:use_module(library(dcg/basics)).
+:- system:use_module(library(debug)).
+:- system:use_module(library(error)).
+:- system:use_module(library(filesex)).
+:- system:use_module(library(http/html_head)).
+:- user:use_module(library(http/html_write)).
+:- system:use_module(library(http/http_dispatch)).
+:- system:use_module(library(http/http_path)).
+:- system:use_module(library(http/http_wrapper)).
+:- system:use_module(library(http/jquery)).
+:- system:use_module(library(http/js_grammar)).
+:- system:use_module(library(http/js_write)).
+:- system:use_module(library(http/mimepack)).
+:- system:use_module(library(http/mimetype)).
+:- system:use_module(library(http/thread_httpd)).
+:- system:use_module(library(http/websocket)).
+:- system:use_module(library(http/yadis)).
+:- user:use_module(library(http/json)).
+:- user:use_module(library(http/json_convert)).
 :- system:use_module(library(listing)).
 :- system:use_module(library(lists)).
-:- system:use_module(library(time)).
-:- system:use_module(library(readutil)).
-:- system:use_module(library(http/js_grammar)).
-:- system:use_module(library(dcg/basics)).
+:- system:use_module(library(lists)).
+:- system:use_module(library(occurs)).
+:- system:use_module(library(option)).
+:- system:use_module(library(pairs)).
+:- system:use_module(library(prolog_source)).
+:- system:use_module(library(prolog_stack)).
+:- system:use_module(library(prolog_xref)).
 :- system:use_module(library(pure_input)).     % syntax_error//1
+:- system:use_module(library(readutil)).
+:- system:use_module(library(solution_sequences)).
+:- system:use_module(library(time)).
+:- system:use_module(library(uri)).
 
+:- user:use_module(library(pldoc)).
+:- user:use_module(library(pldoc/doc_html)).
+/*
+:- system:use_module(library(pldoc/doc_index)).
+:- system:use_module(library(pldoc/doc_man)).
+:- system:use_module(library(pldoc/doc_modes)).
+:- system:use_module(library(pldoc/doc_process)).
+:- system:use_module(library(pldoc/doc_search)).
+:- system:use_module(library(pldoc/doc_util)).
+:- system:use_module(library(pldoc/doc_wiki)).
+*/
 :- system:reexport(library(logicmoo/predicate_inheritance)).
 
 :- system:reexport(library(debuggery/first)).

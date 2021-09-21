@@ -35,7 +35,7 @@ good.
 
 
 % EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/pfc/t/sanity_base/if_missing_03.pfc 
-% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/IF_MISSING_03/logicmoo_pfc_test_sanity_base_IF_MISSING_03_JUnit/ 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/IF_MISSING_03/ 
 % ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3AIF_MISSING_03 
 
 % ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/593

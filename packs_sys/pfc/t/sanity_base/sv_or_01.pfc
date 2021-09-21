@@ -45,7 +45,7 @@ single_override(p(a),p(b)).
 
 
 % EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/pfc/t/sanity_base/sv_or_01.pfc 
-% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/SV_OR_01/logicmoo_pfc_test_sanity_base_SV_OR_01_JUnit/ 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/SV_OR_01/ 
 % ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3ASV_OR_01 
 
 % ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/570

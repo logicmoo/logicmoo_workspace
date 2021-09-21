@@ -55,6 +55,6 @@ house(skFn(1, house(_))).
 
 % ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/421 
 % EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/logicmoo_base/t/examples/fol/missing_count_03.pfc.pl 
-% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/MISSING_COUNT_03/logicmoo_base_examples_fol_MISSING_COUNT_03_JUnit/ 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/MISSING_COUNT_03/ 
 % ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3AMISSING_COUNT_03 
 

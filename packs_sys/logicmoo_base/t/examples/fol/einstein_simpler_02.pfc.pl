@@ -20,6 +20,6 @@ smokes(german, prince)
 
 % ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/455 
 % EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/logicmoo_base/t/examples/fol/einstein_simpler_02.pfc.pl 
-% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/EINSTEIN_SIMPLER_02/logicmoo_base_examples_fol_EINSTEIN_SIMPLER_02_JUnit/ 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/EINSTEIN_SIMPLER_02/ 
 % ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3AEINSTEIN_SIMPLER_02 
 

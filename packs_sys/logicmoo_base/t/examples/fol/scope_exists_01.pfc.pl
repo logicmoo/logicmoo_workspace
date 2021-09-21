@@ -22,7 +22,7 @@
 
 
 % EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/logicmoo_base/t/examples/fol/scope_exists_01.pfc.pl 
-% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/SCOPE_EXISTS_01/logicmoo_base_examples_fol_SCOPE_EXISTS_01_JUnit/ 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/SCOPE_EXISTS_01/ 
 % ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3ASCOPE_EXISTS_01 
 
 % ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/609

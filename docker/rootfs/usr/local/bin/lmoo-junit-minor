@@ -130,6 +130,13 @@ function INFO {
  echo -e "${doesBe}" >> ${TEE_FILE2}
  JECHO "<!-- ${willBe}  -->"
 }
+function INFO2 {
+ doesBe="${*}\n"
+ willBe=$(echo "${*}" | sed -e 's/-/=/g' )
+ echo -e "${doesBe}"
+ echo -e "${doesBe}" >> ${TEE_FILE2}
+ JECHO "<!-- ${willBe}  -->"
+}
 
 SWIPL="swipl -x ${LOGICMOO_WS}/bin/lmoo-clif"
 
@@ -286,8 +293,7 @@ for ele2 in "${SORTED_FILES[@]}"
 	
        #LINKS+="GITLAB: https://gitlab.logicmoo.org/gitlab/logicmoo/logicmoo_workspace/-/blob/${GIT_REV}/$RELPATH \n"	
        #LINKS+="GITHUB: https://github.com/logicmoo/logicmoo_workspace/commit/${GIT_REV} \n"
-	
-	echo "${LINKS}" >> ${TEE_FILE2}
+        INFO2 "${LINKS}"
 
 	if ! grep -q "JENKINS" "${ele}"; then
 	   [ -w "${ele}" ] && echo -e "\n${LINKS}" >> "${ele}"

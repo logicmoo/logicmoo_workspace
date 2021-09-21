@@ -23,7 +23,7 @@
             assert_predArgTypes_l/3,
             atom_to_value/2,
             checkAnyType/4,
-            % coerce/4,
+            coerce/3,
             correctAnyType/4,
             correctAnyTypeOrFail/4,
             correctArgsIsa/2,
@@ -329,7 +329,7 @@ coerce(_ ,_,     NewThing,Else):- NewThing = Else.
 
 coerce(A,B,C):-no_repeats(call_u(coerce_hook(A,B,C))),nop((sanity(show_failure(call_u(isa(C,B))))->!;true)).
 
-
+baseKB:coerce(A,B,C):-coerce(A,B,C).
 
 
 

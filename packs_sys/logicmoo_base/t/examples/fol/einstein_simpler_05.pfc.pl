@@ -210,6 +210,6 @@ house(red_house). house(green_house). house(white_house). house(yellow_house). h
 
 % ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/454 
 % EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/logicmoo_base/t/examples/fol/einstein_simpler_05.pfc.pl 
-% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/EINSTEIN_SIMPLER_05/logicmoo_base_examples_fol_EINSTEIN_SIMPLER_05_JUnit/ 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.base.examples.fol/EINSTEIN_SIMPLER_05/ 
 % ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3AEINSTEIN_SIMPLER_05 
 
