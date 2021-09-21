@@ -370,11 +370,11 @@ for ele2 in "${SORTED_FILES[@]}"
       
       if [ "${TEST_RESULT}" = "SUCCESS" ]; then
          JECHO "<testcase name=\"${FileTestCase}\" classname='${JUNIT_CLASSNAME}' time='$totalTime'>"       
-         JECHO "<system-out><![CDATA[$(cat ${TEE_FILE2})]]></system-out>\n</testcase>"
+         JECHO "<system-out><![CDATA[$(cat ${TEE_FILE2} | grep -v CDATA)]]></system-out>\n</testcase>"
          JUNIT_TESTS_GTOTAL_PASSED=$((JUNIT_TESTS_GTOTAL_PASSED+1))
       elif [ "${TEST_RESULT}" = "SKIPPED" ]; then
          JECHO "<testcase name=\"${FileTestCase}\" classname='${JUNIT_CLASSNAME}' time='$totalTime'>"       
-         JECHO "<system-out><![CDATA[$(cat ${TEE_FILE2})]]></system-out>\n</testcase>"
+         JECHO "<system-out><![CDATA[$(cat ${TEE_FILE2} | grep -v CDATA)]]></system-out>\n</testcase>"
          JUNIT_TESTS_GTOTAL_SKIPPED=$((JUNIT_TESTS_GTOTAL_SKIPPED+1))
       elif [ "${TEST_RESULT}" = "ERROR" ]; then
          JECHO "<testcase name=\"${FileTestCase}\" classname='${JUNIT_CLASSNAME}' time='$totalTime'>"       
