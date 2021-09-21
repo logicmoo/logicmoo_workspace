@@ -131,7 +131,7 @@ process_test_result(TestResult, G):- !,
   negate_call(G, Retry),
   save_info_to(TestResult, 
     (why_was_true(Retry),
-     rtrace(G))).
+     nop(rtrace(G)))).
 
 
 
@@ -318,14 +318,15 @@ inform_message_to_string(Term,Str):- format(string(Str), '~q', [Term]),!.
 
 %list_test_results:- !.
 list_test_results:-
-  writeln('\n<!-- '),
+  write('\n<'),writeln('!-- '),
   % listing(j_u:junit_prop/3), 
   show_all_junit_suites,
-  writeln(' -->').
+  write(' -'),writeln('->'),!.
+  
 
 show_all_junit_suites:- 
   %listing(j_u:junit_prop/3),
-  outer_junit(writeln('<?xml version="1.0" encoding="utf-8"?>\n<testsuites>')),
+  outer_junit((xml_header,writeln('<testsuites>'))),
   findall(File,j_u:junit_prop(testsuite,file,File),L),list_to_set(L,S),
   maplist(show_junit_suite,S),
   outer_junit(writeln('</testsuites>')).
@@ -448,91 +449,6 @@ system:test_completed:- asserta(j_u:started_test_completed),pfc_test:calc_exit_c
 system:test_repl:-  assertz(j_u:junit_prop(need_retake,warn,need_retake)).
 system:test_retake:- system:halt_junit,pfc_test:test_completed_exit_maybe(3).
 
-/* 
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- a description of the JUnit XML format and how Jenkins parses it. See also junit.xsd -->
-
-<!-- if only a single testsuite element is present, the testsuites
-     element can be omitted. All attributes are optional. -->
-<testsuites disabled="#" <!-- total number of disabled tests from all testsuites. -->
-            errors="#"   <!-- total number of tests with error result from all testsuites. -->
-            failures="#" <!-- total number of failed tests from all testsuites. -->
-            name=""
-            tests="#"    <!-- total number of successful tests from all testsuites. -->
-            time="Total"     <!-- time in seconds to execute all test suites. -->
-        >
-
-  <!-- testsuite can appear multiple times, if contained in a testsuites element.
-       It can also be the root element. -->
-  <testsuite name=""      <!-- Full (class) name of the test for non-aggregated testsuite documents.
-                               ShortClass name without the package for aggregated testsuites documents. Required -->
-         tests="#"     <!-- The total number of tests in the suite, required. -->
-         disabled="#"  <!-- the total number of disabled tests in the suite. optional -->
-             errors="#"    <!-- The total number of tests in the suite that errored. An errored test is one that had an unanticipated problem,
-                               for example an unchecked throwable; or a problem with the implementation of the test. optional -->
-             failures=""  <!-- The total number of tests in the suite that failed. A failure is a test which the code has explicitly failed
-                               by using the mechanisms for that purpose. e.g., via an assertEquals. optional -->
-             hostname=""  <!-- Host on which the tests were executed. 'localhost' should be used if the hostname cannot be determined. optional -->
-         id=""        <!-- Starts at 0 for the first testsuite and is incremented by 1 for each following testsuite -->
-         package=""   <!-- Derived from testsuite/@name in the non-aggregated documents. optional -->
-         skipped=""   <!-- The total number of skipped tests. optional -->
-         time=""      <!-- Time taken (in seconds) to execute the tests in the suite. optional -->
-         timestamp="" <!-- when the test was executed in ISO 8601 format (2014-01-21T16:17:18). Timezone may not be specified. optional -->
-         >
-
-    <!-- Properties (e.g., environment settings) set during test
-     execution. The properties element can appear 0 or once. -->
-    <properties>
-      <!-- property can appear multiple times. The name and value attributres are required. -->
-      <property name="" value=""/>
-    </properties>
-
-    <!-- testcase can appear multiple times, see /testsuites/testsuite@tests -->
-    <testcase name=""       <!-- Name of the test method, required. -->
-          assertions="" <!-- number of assertions in the test case. optional -->
-          classname=""  <!-- Full class name for the class the test method is in. required -->
-          status=""
-          time=""       <!-- Time taken (in seconds) to execute the test. optional -->
-          >
-
-      <!-- If the test was not executed or failed, you can specify one
-           the skipped, error or failure elements. -->
-
-      <!-- skipped can appear 0 or once. optional -->
-      <skipped/>
-
-      <!-- Indicates that the test errored. An errored test is one
-           that had an unanticipated problem. For example an unchecked
-           throwable or a problem with the implementation of the
-           test. Contains as a text node relevant data for the error,
-           for example a stack trace. optional -->
-      <error message="" <!-- The error message. e.g., if a java exception is thrown, the return value of getMessage() -->
-         type=""    <!-- The type of error that occured. e.g., if a java execption is thrown the full class name of the exception. -->
-         ></error>
-
-      <!-- Indicates that the test failed. A failure is a test which
-       the code has explicitly failed by using the mechanisms for
-       that purpose. For example via an assertEquals. Contains as
-       a text node relevant data for the failure, e.g., a stack
-       trace. optional -->
-      <failure message="" <!-- The message specified in the assert. -->
-           type=""    <!-- The type of the assert. -->
-           ></failure>
-
-      <!-- Data that was written to standard out while the test was executed. optional -->
-      <system-out></system-out>
-
-      <!-- Data that was written to standard error while the test was executed. optional -->
-      <system-err></system-err>
-    </testcase>
-
-    <!-- Data that was written to standard out while the test suite was executed. optional -->
-    <system-out></system-out>
-    <!-- Data that was written to standard error while the test suite was executed. optional -->
-    <system-err></system-err>
-  </testsuite>
-</testsuites>
-  */
 save_junit_results:-  
  \+ \+ j_u:junit_prop(testsuite,file,_),
  forall(j_u:junit_prop(testsuite,file,File), 
@@ -544,7 +460,7 @@ save_junit_results:-  test_src(File),
 save_junit_results:- wdmsg(unused(no_junit_results)).
 
 show_junit_suite_xml(File):- 
-  writeln('<?xml version="1.0" encoding="utf-8"?>'),
+  xml_header,
   writeln('<testsuites>'),
   maplist(show_junit_suite,File),
   writeln('</testsuites>'),!.
@@ -606,10 +522,10 @@ save_single_testcase(Name):-
   nop(save_single_testcase_shrink(Name,_)),
   clear_suite_attribs.
 
-
+xml_header :- write('<?'),write('xml version="1.0" '), writeln('encoding="utf-8"?>').
 save_single_testcase_shrink(Name,FileName):- 
  with_output_to(string(Text),
-  (writeln('<?xml version="1.0" encoding="utf-8"?>'),
+  (xml_header,
    j_u:junit_prop(testsuite,file,File),
    writeln("  <testsuites>"),
    (getenv('JUNIT_SUITE',SuiteName);SuiteName=File),!,
@@ -734,7 +650,7 @@ write_testcase_std_info(Testcase):-
   forall(j_u:junit_prop(Testcase,Type,Term), write_testcase_prop(Type,Term)))),
   shrink_to(StdErr,200,Summary),
   replace_in_string(['CDATA'='CDAT4'],Summary,SummaryClean),
-  format("~N    <system-err><![CDATA[~w]]></system-err>",[SummaryClean]),!.
+  format("~N    <system-err>~w[~w[CD~w]]></system-err>",['<!','ATA',SummaryClean]),!.
  
 write_testcase_prop(S,V,O):- format('~N'), write(S),write_testcase_n_v(V,O), format('~N').
 write_testcase_prop(Type,Term):- format('~N'), write_testcase_n_v(Type,Term), format('~N').
@@ -898,3 +814,90 @@ system:goal_expansion(I,P,O,PO):- notrace((nonvar(P),is_junit_test, junit_goal_e
 </suite>
 
 */
+
+/* 
+<?xml version="1.0" 
+encoding="UTF-8"?>
+<!-- a description of the JUnit XML format and how Jenkins parses it. See also junit.xsd -->
+
+<!-- if only a single testsuite element is present, the testsuites
+     element can be omitted. All attributes are optional. -->
+<testsuites disabled="#" <!-- total number of disabled tests from all testsuites. -->
+            errors="#"   <!-- total number of tests with error result from all testsuites. -->
+            failures="#" <!-- total number of failed tests from all testsuites. -->
+            name=""
+            tests="#"    <!-- total number of successful tests from all testsuites. -->
+            time="Total"     <!-- time in seconds to execute all test suites. -->
+        >
+
+  <!-- testsuite can appear multiple times, if contained in a testsuites element.
+       It can also be the root element. -->
+  <testsuite name=""      <!-- Full (class) name of the test for non-aggregated testsuite documents.
+                               ShortClass name without the package for aggregated testsuites documents. Required -->
+         tests="#"     <!-- The total number of tests in the suite, required. -->
+         disabled="#"  <!-- the total number of disabled tests in the suite. optional -->
+             errors="#"    <!-- The total number of tests in the suite that errored. An errored test is one that had an unanticipated problem,
+                               for example an unchecked throwable; or a problem with the implementation of the test. optional -->
+             failures=""  <!-- The total number of tests in the suite that failed. A failure is a test which the code has explicitly failed
+                               by using the mechanisms for that purpose. e.g., via an assertEquals. optional -->
+             hostname=""  <!-- Host on which the tests were executed. 'localhost' should be used if the hostname cannot be determined. optional -->
+         id=""        <!-- Starts at 0 for the first testsuite and is incremented by 1 for each following testsuite -->
+         package=""   <!-- Derived from testsuite/@name in the non-aggregated documents. optional -->
+         skipped=""   <!-- The total number of skipped tests. optional -->
+         time=""      <!-- Time taken (in seconds) to execute the tests in the suite. optional -->
+         timestamp="" <!-- when the test was executed in ISO 8601 format (2014-01-21T16:17:18). Timezone may not be specified. optional -->
+         >
+
+    <!-- Properties (e.g., environment settings) set during test
+     execution. The properties element can appear 0 or once. -->
+    <properties>
+      <!-- property can appear multiple times. The name and value attributres are required. -->
+      <property name="" value=""/>
+    </properties>
+
+    <!-- testcase can appear multiple times, see /testsuites/testsuite@tests -->
+    <testcase name=""       <!-- Name of the test method, required. -->
+          assertions="" <!-- number of assertions in the test case. optional -->
+          classname=""  <!-- Full class name for the class the test method is in. required -->
+          status=""
+          time=""       <!-- Time taken (in seconds) to execute the test. optional -->
+          >
+
+      <!-- If the test was not executed or failed, you can specify one
+           the skipped, error or failure elements. -->
+
+      <!-- skipped can appear 0 or once. optional -->
+      <skipped/>
+
+      <!-- Indicates that the test errored. An errored test is one
+           that had an unanticipated problem. For example an unchecked
+           throwable or a problem with the implementation of the
+           test. Contains as a text node relevant data for the error,
+           for example a stack trace. optional -->
+      <error message="" <!-- The error message. e.g., if a java exception is thrown, the return value of getMessage() -->
+         type=""    <!-- The type of error that occured. e.g., if a java execption is thrown the full class name of the exception. -->
+         ></error>
+
+      <!-- Indicates that the test failed. A failure is a test which
+       the code has explicitly failed by using the mechanisms for
+       that purpose. For example via an assertEquals. Contains as
+       a text node relevant data for the failure, e.g., a stack
+       trace. optional -->
+      <failure message="" <!-- The message specified in the assert. -->
+           type=""    <!-- The type of the assert. -->
+           ></failure>
+
+      <!-- Data that was written to standard out while the test was executed. optional -->
+      <system-out></system-out>
+
+      <!-- Data that was written to standard error while the test was executed. optional -->
+      <system-err></system-err>
+    </testcase>
+
+    <!-- Data that was written to standard out while the test suite was executed. optional -->
+    <system-out></system-out>
+    <!-- Data that was written to standard error while the test suite was executed. optional -->
+    <system-err></system-err>
+  </testsuite>
+</testsuites>
+  */
