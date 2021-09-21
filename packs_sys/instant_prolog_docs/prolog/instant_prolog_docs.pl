@@ -92,7 +92,6 @@
 :- export((helper_name0/1, is_crossfile_module_0/1, make_summary0/3, mpred_source_file_0/2, skip_functor_export_0/1, to_comparable_name_arity/3, to_mfa_0/4)).
 % :- kb_shared(baseKB:sf_known/4).
 
-:- dynamic(mpred_prolog_only_module/1).
 /*
 */
 %:- if(exists_source(library(pldoc))).
@@ -1642,6 +1641,8 @@ mpred_type_module(A):- \+ atom(A), !, fail.
 %
 % Managed Predicate Prolog Only Module.
 %
+
+:- dynamic(mpred_prolog_only_module/1).
 mpred_prolog_only_module(M):- var(M), !, current_module(M), mpred_prolog_only_module(M).
 mpred_prolog_only_module(user):-!, fail.
 mpred_prolog_only_module(mpred_type_wff).
@@ -1653,7 +1654,8 @@ mpred_prolog_only_module(logicmoo_utils).
 mpred_prolog_only_module(t_l).
 mpred_prolog_only_module(tlbugger).
 mpred_prolog_only_module(lmcache).
-mpred_prolog_only_nop(module( baseKB)).
+mpred_prolog_only_module(baseKB).
+mpred_prolog_only_module( baseKB).
 mpred_prolog_only_module(M):-atom_concat(mpred_, _, M).
 mpred_prolog_only_module(M):-atom_concat(logicmoo_util, _, M).
 mpred_prolog_only_module(M):-atom_concat(common_logic_, _, M).

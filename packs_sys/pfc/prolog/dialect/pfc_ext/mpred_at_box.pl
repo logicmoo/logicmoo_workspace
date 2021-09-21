@@ -102,7 +102,7 @@ user_m_check(_Out).
 
 :- meta_predicate transitive_path(2,*,*).
 
-% add_abox_nop(module( baseKB)):-!.
+% add_abox_module( baseKB):-!.
 /*add_abox_module(ABox):- must(atom(ABox)),
   must(is_mtCanAssert(ABox)),
   baseKB:ain(baseKB:mtHybrid(ABox)).

@@ -282,19 +282,15 @@ run_setup:- within_user(after_boot(run_setup_now)).
 debug_repl_w_cyc(Module,CallFirst):- !,         
           locally_hide(t_l:useOnlyExternalDBs,
             locally(baseKB:use_cyc_database,
-               ((decl_type(person),          
+               ((ain(tCol(person)),
                 ensure_mpred_file_loaded(logicmoo('rooms/startrek.all.pfc.pl')),
-                module(Module),
-                show_call(CallFirst), 
-                prolog_repl)))).
+                 call_with_typein_and_source(Module,Module,(show_call(CallFirst), prolog_repl)))))).
 debug_repl_wo_cyc(Module,CallFirst):- !,         
           locally(t_l:useOnlyExternalDBs,
             locally_hide(baseKB:use_cyc_database,
-               ((decl_type(person),          
+               ((ain(tCol(person)),          
                 ensure_mpred_file_loaded(logicmoo('rooms/startrek.all.pfc.pl')),
-                module(Module),
-                show_call(CallFirst), 
-                prolog_repl)))).
+                 call_with_typein_and_source(Module,Module,(show_call(CallFirst), prolog_repl)))))).
 
 %  bug.. swi does not maintain context_module(CM) outside
 %  of the current caller (so we have no idea what the real context module is!?!)

@@ -152,6 +152,7 @@ index((app_argv_off), 1, logicmoo_startup, logicmoo_startup).
 index((pack_upgrade_soft), 1, logicmoo_startup, logicmoo_startup).
 index((is_startup_script), 1, logicmoo_startup, logicmoo_startup).
 index((init_why), 2, logicmoo_startup, logicmoo_startup).
+index((now_and_later), 1, logicmoo_startup, logicmoo_startup).
 index((run_pending_inits), 0, logicmoo_startup, logicmoo_startup).
 index((test_case_1), 0, multivar, multivar).
 index((test_case_2), 0, multivar, multivar).

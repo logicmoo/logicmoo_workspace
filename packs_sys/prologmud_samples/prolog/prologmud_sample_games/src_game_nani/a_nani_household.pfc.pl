@@ -23,6 +23,7 @@ use this file with...
 % ==================================================
 
 /* technically the following are not needed due the mudAreaConnected/2s below */
+:- kb_shared((onSpawn)/1).
 onSpawn tRegion(tKitchen).
 onSpawn tRegion(tHallWay).
 onSpawn tRegion(tCellar).

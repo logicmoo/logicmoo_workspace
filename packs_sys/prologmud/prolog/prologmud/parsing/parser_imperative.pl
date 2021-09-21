@@ -366,12 +366,12 @@ parse_agent_text_command_1(Agent,SVERB,ARGS,Agent,GOAL):-
    dmsg_parserm(parserm("chooseBestGoal"=GOAL)).
 
 
-baseKB:text_actverb("i",actInventory).
-baseKB:text_actverb("l",actLook).
-baseKB:text_actverb("lo",actLook).
-baseKB:text_actverb("s",actMove(vSouth)).
-baseKB:text_actverb("go",actMove).
-baseKB:text_actverb("where is",actWhere).
+==>baseKB:text_actverb("i",actInventory).
+==>baseKB:text_actverb("l",actLook).
+==>baseKB:text_actverb("lo",actLook).
+==>baseKB:text_actverb("s",actMove(vSouth)).
+==>baseKB:text_actverb("go",actMove).
+==>baseKB:text_actverb("where is",actWhere).
 % baseKB:text_actverb(["where","is"],actWhereTest).
 
 % remove nonstringed aliases
@@ -379,9 +379,9 @@ baseKB:text_actverb("where is",actWhere).
     baseKB:text_actverb(EStr, Act),
    { ignore(call(call,retractall(( baseKB:text_actverb(NonStr, Act)) ))) } )).
                      
-ttTypeType(ttCoercable).
+==>ttTypeType(ttCoercable).
 
-genls(ttStringType,ttCoercable).
+==>genls(ttStringType,ttCoercable).
 
 nameString(O,S):-nonvar(O),nonvar(S),nameString(O,SU),same_ci(S,SU).
 
@@ -396,7 +396,7 @@ nameString(O,S):-nonvar(O),nonvar(S),nameString(O,SU),same_ci(S,SU).
 % :- sanity((clause_u(baseKB:text_actverb(S,actWhere)),argIsa(text_actverb,1,C),isa(S,C))).
 
 :- must((clause_u(baseKB:text_actverb(S,actWhere))))
-  ->must(((argIsa(text_actverb,1,C);argQuotedIsa(text_actverb,1,C)),(isa(S,C);quotedIsa(S,C)))).
+  ->must(((argIsa(text_actverb,1,C);call_u(argQuotedIsa(text_actverb,1,C))),(isa(S,C);quotedIsa(S,C)))).
 
 %:- listing(baseKB:text_actverb/2).
 %:- break.
@@ -567,6 +567,8 @@ to_descriptive_name(_For,Desc,Atom):-any_to_atom(Desc,Atom),!.
 :-ain((vtActionTemplate(AT)/(get_functor(AT,F))) ==> vtVerb(F)).
 
 freeze_safe(A,G):- nonvar(A),freeze(A,G).
+
+:- kb_shared(baseKB:(onSpawn)/1).
 
 onSpawn((ttKeyworded(T),{freeze_safe(F,atomic(F))},isa(F,T),{ \+ call_u(nameString(F,_)),once(guess_nameStrings(F,Txt))}==>(nameString(F,Txt)))).
 onSpawn((ttKeyworded(T),{freeze_safe(F,atomic(F))},isa(F,T),{ \+ call_u(mudDescription(F,_)),once(guess_mudDescription(F,Txt))}==>(mudDescription(F,Txt)))).

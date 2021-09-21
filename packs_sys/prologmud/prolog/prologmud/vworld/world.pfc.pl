@@ -47,7 +47,7 @@
             list_object_dir_near/3,
             num_near_reverse/3,
             asInvoked/2,
-            decl_type/1,
+            %decl_type/1,
             
                        
          init_location_grid/1,

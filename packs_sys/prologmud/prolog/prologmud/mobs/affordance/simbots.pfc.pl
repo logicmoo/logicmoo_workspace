@@ -21,7 +21,7 @@
 % See the the seemingly white (not dirrectly usable) in some tUsefull way
 defined_affordance([subjType= "Passable",actionVerb= "TravelThru"]).
 
-prologHybrid(mudDescription(ftTerm,ftString)).
+==>prologHybrid(mudDescription(ftTerm,ftString)).
 prologHybrid(nameString(ftTerm,ftString)).
 
 rtArgsVerbatum(defined_affordance).
@@ -480,7 +480,7 @@ to_personal(Pred,APred):-atom_concat('',Pred,APred).
 do_define_affordance(LIST):-
   (member(subjType= SType,LIST);member(alsoType= SType,LIST)),
   ti_name('t',SType,Type),!,
-  decl_type(Type),
+  ain(tCol(Type)),
   do_define_type_affordance(Type,LIST).
 
 do_define_type_affordance1(Type,_= Type):-!.

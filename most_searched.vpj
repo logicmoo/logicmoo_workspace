@@ -96,7 +96,6 @@
 			<F N="bin/swipl"/>
 			<F N="bin/swipl-ld"/>
 			<F N="bin/swipl-prologmud"/>
-			<F N="bin/swipl-win"/>
 			<F N="bin/swipl-yesbot"/>
 			<F N="bin/test_biomake.sh"/>
 			<F N="bin/websocket_redir.sh"/>
@@ -625,7 +624,6 @@
 									<F N="docker/rootfs/usr/local/lib/swipl/library/iso_639.pl"/>
 									<F N="docker/rootfs/usr/local/lib/swipl/library/isub.pl"/>
 									<F N="docker/rootfs/usr/local/lib/swipl/library/jpl.pl"/>
-									<F N="docker/rootfs/usr/local/lib/swipl/library/language_server.pl"/>
 									<F N="docker/rootfs/usr/local/lib/swipl/library/lazy_lists.pl"/>
 									<F N="docker/rootfs/usr/local/lib/swipl/library/listing.pl"/>
 									<F N="docker/rootfs/usr/local/lib/swipl/library/lists.pl"/>
@@ -3875,7 +3873,6 @@
 						<F N="packs_sys/logicmoo_nlu/test/logicmoo_nlu/ping_stanford_01.pl"/>
 						<F N="packs_sys/logicmoo_nlu/test/logicmoo_nlu/test_charniak_01.pl"/>
 						<F N="packs_sys/logicmoo_nlu/test/logicmoo_nlu/test_chat80_01.pl"/>
-						<F N="packs_sys/logicmoo_nlu/test/logicmoo_nlu/test_from_docker.sh"/>
 						<F N="packs_sys/logicmoo_nlu/test/logicmoo_nlu/test_header.pl"/>
 						<F N="packs_sys/logicmoo_nlu/test/logicmoo_nlu/test_pos_01.pl"/>
 					</Folder>
@@ -4343,7 +4340,6 @@
 						<F N="packs_sys/pfc/t/sanity_base/retract_01c.pfc"/>
 						<F N="packs_sys/pfc/t/sanity_base/retract_01d.pfc"/>
 						<F N="packs_sys/pfc/t/sanity_base/retract_01e.pfc"/>
-						<F N="packs_sys/pfc/t/sanity_base/retry_inheritance_01a.pfc.hide"/>
 						<F N="packs_sys/pfc/t/sanity_base/retry_inheritance_02.pfc"/>
 						<F N="packs_sys/pfc/t/sanity_base/retry_inheritance_03.pfc"/>
 						<F N="packs_sys/pfc/t/sanity_base/retry_inheritance_04.pfc"/>
@@ -4382,7 +4378,6 @@
 						<F N="packs_sys/pfc/t/sanity_base/tml_01a.pfc"/>
 						<F N="packs_sys/pfc/t/sanity_base/tml_01b.pfc"/>
 						<F N="packs_sys/pfc/t/sanity_base/tml_01c.pfc"/>
-						<F N="packs_sys/pfc/t/sanity_base/tml_01d.pfc.hide"/>
 						<F N="packs_sys/pfc/t/sanity_base/tml_01e.pfc"/>
 						<F N="packs_sys/pfc/t/sanity_base/tms_01.pfc"/>
 						<F N="packs_sys/pfc/t/sanity_base/undo_01.pfc"/>

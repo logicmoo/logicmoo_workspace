@@ -18,7 +18,6 @@
 :- use_module(library(pfc_lib)).
 
 %:- kb_shared(get_session_id/1).
-:- enable_mpred_expansion.
 :- 
  current_prolog_flag(access_level,Was),
  set_prolog_flag(access_level,system),
@@ -38,5 +37,6 @@
  set_prolog_flag(access_level,Was).
 
 :- style_check(-discontiguous).
-
+:- enable_mpred_expansion.
+:- expects_dialect(pfc).
 

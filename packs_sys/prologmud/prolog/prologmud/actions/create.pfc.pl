@@ -68,7 +68,7 @@ create_new_object(Agent,[NameOrType|Params]):-
 
 :-export(create_new_type/2).
 create_new_type(Agent,[NewObj|DefaultParams]):-
-   call_u((decl_type(NewObj),
+   call_u((ain(tCol(NewObj)),
    padd(NewObj,authorWas(create_new_type(Agent,[NewObj|DefaultParams]))),
    padd(Agent,current_pronoun("it",NewObj)),
    getPropInfo(Agent,NewObj,DefaultParams,2,PropList),!,

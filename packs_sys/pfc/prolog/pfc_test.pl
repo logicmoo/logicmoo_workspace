@@ -14,11 +14,6 @@
 :- module(pfc_test,[mpred_test/1]).
 :- endif.                             
 
-:- system:use_module(library(prolog_stack)).
-:- system:use_module(library(listing)).
-:- system:use_module(library(lists)).
-:- system:use_module(library(time)).
-:- system:use_module(library(readutil)).
 :- system:use_module(library(must_trace)).
 
 :- use_module(library(prolog_stack)).
@@ -33,7 +28,7 @@ quietly_must_ex(G):- tracing -> (notrace,call_cleanup(must_or_rtrace(G),trace));
 :- module_transparent(quietly_must_ex/1).
 
 :- meta_predicate(must_ex(:)).
-must(G):- !, call(G).
+must_ex(G):- !, call(G).
 must_ex(G):- !, must_or_rtrace(G).
 :- module_transparent(must_ex/1).
 %must_ex(G):- !, must(G).

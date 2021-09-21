@@ -33,19 +33,19 @@ toCamelAtom00(I,O):-toCamelcase(I,O).
  % :- set_prolog_flag(subclause_expansion,true).
 
 
-vtColor(vRed).
+==>vtColor(vRed).
 
-ttValueType(vtColor).
+==>ttValueType(vtColor).
 
 '==>'((isa(X,ttValueType)/(X\==vtValue)),
   (genls(X,vtValue),completelyAssertedCollection(X))).
 
-completelyAssertedCollection(vtValue).
+==>completelyAssertedCollection(vtValue).
 
-isa(vtValue,ttValueType).
+==>isa(vtValue,ttValueType).
 
 
-typeGenls(ttValueType,vtValue).
+==>typeGenls(ttValueType,vtValue).
 
 
 :-must(vtColor(vRed)).
@@ -159,6 +159,10 @@ predicate0(isa)-->[is].
 
  % :- set_prolog_flag(subclause_expansion,true).
 
+
+:- kb_shared((onSpawn)/1).
+
+:- expects_dialect(pfc).
 
 tCol('tRoom').
 

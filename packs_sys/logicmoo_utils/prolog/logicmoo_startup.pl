@@ -63,12 +63,18 @@ now_and_later(MC,TIM,SM,MGoal):- strip_module(MGoal,M,Goal),
   sys:call_now(c,TIM,SM,M:Goal),
   initialization(sys:call_now(MC,TIM,SM,M:Goal),restore).
 
+
 :- module_transparent(sys:call_now/4).
 %sys:call_now(n,_TIM,_SM,_MGoal):-!.
 %sys:call_now(m,_TIM,_SM,_MGoal):-!.
 sys:call_now(_,TIM,SM,MGoal):-
   strip_module(MGoal,M,Goal),
-   maybe_writeln(sys:call_now(TIM,SM,MGoal)),
+   maybe_writeln(sys:call_now(TIM,SM,M:Goal)),
+   call_with_typein_and_source(TIM,SM,MGoal).
+
+:- module_transparent(sys:call_with_typein_and_source/3).
+call_with_typein_and_source(TIM,SM,MGoal):-
+  strip_module(MGoal,M,Goal),  
   '$current_typein_module'(WasTIM), '$current_source_module'(WasSM),
   setup_call_cleanup(('$set_typein_module'(TIM),'$set_source_module'(SM)),
       M:Goal, ('$set_typein_module'(WasTIM),'$set_source_module'(WasSM))).
@@ -1660,6 +1666,14 @@ qsave_bin_now(Clif):-
 %=======================================
 
 %=======================================
+:- system:use_module(library(prolog_stack)).
+:- system:use_module(library(listing)).
+:- system:use_module(library(lists)).
+:- system:use_module(library(time)).
+:- system:use_module(library(readutil)).
+:- system:use_module(library(http/js_grammar)).
+:- system:use_module(library(dcg/basics)).
+:- system:use_module(library(pure_input)).     % syntax_error//1
 
 :- system:reexport(library(logicmoo/predicate_inheritance)).
 
