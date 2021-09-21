@@ -1,4 +1,5 @@
-Report-*
+generatedJUnitFiles/
+#Report-*
 packs_sys/prologmud_samples/prolog/prologmud_sample_games/.swipl_history
 /platform
 /Unity

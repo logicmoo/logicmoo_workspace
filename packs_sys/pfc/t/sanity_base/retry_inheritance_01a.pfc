@@ -1,0 +1,35 @@
+% -*-Prolog-*-
+
+% Tests if this will lazily define new predicates
+%
+
+:- include(library(logicmoo_test_header)).
+
+:- if((pfc_test_feature(localMt,X=1),X==1)).
+
+:- endif.
+
+
+:- if((pfc_test_feature(mt,X=1),X==1)).
+
+:- endif.
+
+user:message_hook(T,Type,Warn):- Type \== informational,Type \== silent, dmsg(user:message_hook(T,Type,Warn)),dumpST,break.
+
+% :- set_prolog_flag(retry_undefined, kb_shared).
+
+:- install_retry_undefined(header_sane, kb_shared).
+
+:- \+ a_01.
+
+:- prolog_listing:listing(header_sane:a_01).
+
+:- repropagate(mtHybrid(_)).
+:- listing(header_sane:_).
+
+
+% EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/pfc/t/sanity_base/retry_inheritance_01a.pfc 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.pfc.test.sanity_base/RETRY_INHERITANCE_01A/logicmoo_pfc_test_sanity_base_RETRY_INHERITANCE_01A_JUnit/ 
+% ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3ARETRY_INHERITANCE_01A 
+
+% ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/602
