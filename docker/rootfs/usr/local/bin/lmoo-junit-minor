@@ -307,7 +307,7 @@ for ele2 in "${SORTED_FILES[@]}"
 	if [ $INTERACTIVE -eq 1 ]; then
            eval $CMD 
 	else
-          ( eval $CMD ) 2>&1 | sed -e "s/<?xml/<oxml/g" -e "s/CDATA/CDAT5/g" | tee -a ${TEE_FILE} | perl -pe '
+          ( eval $CMD ) 2>&1 | sed -e "s/<?xml/<oxml/g" -e "s/CDATA/CDAT5/g" -e "s|<|&gt;|g" | tee -a ${TEE_FILE} | perl -pe '
 	      s/\e\[[\x30-\x3f]*[\x20-\x2f]*[\x40-\x7e]//g;
 	      s/\e[PX^_].*?\e\\//g;
 	      s/\e\][^\a]*(?:\a|\e\\)//g;

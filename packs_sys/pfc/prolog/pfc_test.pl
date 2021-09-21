@@ -28,10 +28,12 @@
 
 %quietly_must_ex(G):- !, must_or_rtrace(G).
 :- meta_predicate(quietly_must_ex(:)).
+quietly_must_ex(G):- !, call(G).
 quietly_must_ex(G):- tracing -> (notrace,call_cleanup(must_or_rtrace(G),trace)); quietly_must(G).
 :- module_transparent(quietly_must_ex/1).
 
 :- meta_predicate(must_ex(:)).
+must(G):- !, call(G).
 must_ex(G):- !, must_or_rtrace(G).
 :- module_transparent(must_ex/1).
 %must_ex(G):- !, must(G).
@@ -900,4 +902,20 @@ encoding="UTF-8"?>
     <system-err></system-err>
   </testsuite>
 </testsuites>
+
+
+^  Exit: (80) [pfc_test] format(string(\"<oxml version=\\"1.0\\" encoding=\\"utf-8\\"?>\n  \n  <testsuite name=\\"logicmoo.pfc.test.sanity_base.ATTVAR_02\\"  package=\\"logicmoo.pfc.test.sanity_base\\" time=\\"0.378\\" tests=\\"1\\" errors=\\"0\\" skipped=\\"0\\" f
+ailures=\\"0\\">\n\n     <testcase name=\\"logicmoo.pfc.test.sanity_base.ATTVAR_02@Test_0001_Line_0000__sk2_in_1: baseKB:(sk2_in(_155064),get_attr(_155064,sk2,_155078),_155078==SKF-6667)\\" classname=\\"logicmoo.pfc.test.sanity_base.ATTVAR_02\\" time=\\"0.000\\">\n
+  <failure message=\\"failure = &quot;failure=info((why_was_true(baseKB:(\\\\+ (sk2_in(_13908),get_attr(_13908,sk2,_13930),_13930=='SKF-6667'))),nop(rtrace(baseKB:(sk2_in(_13908),get_attr(_13908,sk2,_13930),_13930=='SKF-6667')))))\\nno_proof_for(\\\\+ (sk2_in(In_Sk
+2),get_attr(In_Sk2,sk2,Attr_SKF_6667),Attr_SKF_6667=='SKF-6667')).\\n\\nno_proof_for(\\\\+ (sk2_in(In_Sk2),get_attr(In_Sk2,sk2,Attr_SKF_6667),Attr_SKF_6667=='SKF-6667')).\\n\\nno_proof_for(\\\\+ (sk2_in(In_Sk2),get_attr(In_Sk2,sk2,Attr_SKF_6667),Attr_SKF_6667=='SKF
+-6667')).\\n\\n&quot;.\nfailure = [].\n\\" />\n    <system-err><![ATA[CDname=Test_0001_Line_0000__sk2_in_1\nJUNIT_CLASSNAME='logicmoo.pfc.test.sanity_base.ATTVAR_02'.\nJUNIT_CMD='timeout --foreground --preserve-status -s SIGKILL -k 10s 10s swipl -x /var/lib/jenkins
+/workspace/logicmoo_workspace/bin/lmoo-clif attvar_02.pfc'.\n (cd /var/lib/jenkins/workspace/logicmoo_workspace@2/packs_sys/pfc/t/sanity_base ; timeout --foreground --preserve-status -s SIGKILL -k 10s 10s swipl -x /var/lib/jenkins/workspace/logicmoo_workspace/bin/l
+moo-clif attvar_02.pfc)\n\n```\ngoal=baseKB:(sk2_in(_105036),get_attr(_105036,sk2,_105050),_105050=='SKF-6667').\ntime=0.00023984909057617188.\nfailure=failure=info((why_was_true(baseKB:(\\+ (sk2_in(_13908),get_attr(_13908,sk2,_13930),_13930=='SKF-6667'))),nop(rtra
+ce(baseKB:(sk2_in(_13908),get_attr(_13908,sk2,_13930),_13930=='SKF-6667')))))\nno_proof_for(\\+ (sk2_in(In_Sk2),get_attr(In_Sk2,sk2,Attr_SKF_6667),Attr_SKF_6667=='SKF-6667')).\n\nno_proof_for(\\+ (sk2_in(In_Sk2),get_attr(In_Sk2,sk2,Attr_SKF_6667),Attr_SKF_6667=='SK
+F-6667')).\n\nno_proof_for(\\+ (sk2_in(In_Sk2),get_attr(In_Sk2,sk2,Attr_SKF_6667),Attr_SKF_6667=='SKF-6667')).\n\nresult=failure.\ngoal=baseKB:clause_asserted_i(sk2_in(avar([vn='Ex',sk2='SKF-6667']))).\ntime=0.0029447078704833984.\nresult=passed.\n]]></system-err>\
+n    </testcase>\n  </testsuite>\n \n\"), '~s', [|<oxml version=\"1.0\" encodi ... |])
+
+
   */
+
+
