@@ -56,7 +56,7 @@ load_web_package_dirs:-
   in_lm_ws(load_web_package_dirs0).
 
 load_web_package_dirs0:- 
-  findall(PackDir,'$pack':pack(_Pack, PackDir),Before),  
+  findall(PackDir,'$pack':pack(_, PackDir),Before),  
 
    %ignore(catch(make_directory('/tmp/tempDir/pack'),_,true)),
    %(user:file_search_path(pack,'/tmp/tempDir/pack') -> true ; asserta(user:file_search_path(pack,'/tmp/tempDir/pack'))),
@@ -75,7 +75,7 @@ load_web_package_dirs0:-
    % ignore(( \+ exists_source(library(rserve_client)), attach_packs_relative_web_dir('../packs_web/swish/pack/'))),
    % ignore(( \+ exists_source(library(rserve_client)), attach_packs_relative_web_dir('../swish/pack/'))),
    % ignore(( \+ exists_source(pack(plweb/pack_info)), attach_packs('/opt/logicmoo_workspace/packs_web'))),
-  findall(PackDir,'$pack':pack(_Pack, PackDir),After),
+  findall(PackDir,'$pack':pack(_, PackDir),After),
   (Before\==After -> (nop(writeln(load_package_dirs(After))),nop(pack_list_installed)) ; true),
   !.
 
