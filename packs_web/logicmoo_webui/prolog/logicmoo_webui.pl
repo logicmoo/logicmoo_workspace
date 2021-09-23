@@ -45,7 +45,7 @@ attach_packs_relative_web_dir(Rel):-
     lmconfig:logicmoo_webui_dir(Dir),
     (absolute_file_name(Rel,PackDir,[relative_to(Dir),file_type(directory),file_errors(fail)]);
       absolute_file_name(Rel,PackDir,[file_type(directory),file_errors(fail)])),
-    writeln(attach_packs(PackDir)),attach_packs(PackDir)));writeln(failed(attach_packs_relative_web_dir(Rel)))).
+    nop(writeln(attach_packs(PackDir))),attach_packs(PackDir)));nop(writeln(failed(attach_packs_relative_web_dir(Rel))))).
 
 load_web_package_dirs:-
   in_lm_ws(load_web_package_dirs0).

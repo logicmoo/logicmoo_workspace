@@ -117,7 +117,7 @@ echo "<!-- ROLLUP_TMP=${ROLLUP_TMP} -->"
 echo "" > ${ROLLUP_TMP}
 
 export TEE_FILE=/dev/null
-export TEE_FILE2=/dev/null
+export TEE_FILE_NOANSI=/dev/null
 
 function JECHO {
  (echo -e "${*}\n") >> ${ROLLUP_TMP}
@@ -127,14 +127,14 @@ function INFO {
  willBe=$(echo "${*}" | sed -e 's/-/=/g' )
  echo -e "${doesBe}"
  echo -e "${doesBe}" >> ${TEE_FILE}
- echo -e "${doesBe}" >> ${TEE_FILE2}
+ echo -e "${doesBe}" >> ${TEE_FILE_NOANSI}
  JECHO "<!-- ${willBe}  -->"
 }
 function INFO2 {
  doesBe="${*}\n"
  willBe=$(echo "${*}" | sed -e 's/-/=/g' )
  echo -e "${doesBe}"
- echo -e "${doesBe}" >> ${TEE_FILE2}
+ echo -e "${doesBe}" >> ${TEE_FILE_NOANSI}
  JECHO "<!-- ${willBe}  -->"
 }
 
@@ -258,9 +258,9 @@ for ele2 in "${SORTED_FILES[@]}"
         JUNIT_TESTS_GTOTAL_TESTS=$((JUNIT_TESTS_GTOTAL_TESTS+1))
         INFO "CMD=$CMD"
         export TEE_FILE=${TESTING_TEMP}/CMD_LAST.ansi
-        export TEE_FILE2=${TEE_FILE}.too
+        export TEE_FILE_NOANSI=${TEE_FILE}.too
 	cat /dev/null > ${TEE_FILE}
-	cat /dev/null > ${TEE_FILE2}
+	cat /dev/null > ${TEE_FILE_NOANSI}
         INFO "${date} (cd $PWD ; $CMD)"
 	
 	export FTC_LINK=$(echo "${JUNIT_CLASSNAME}" | sed -e "s/[@. ]/_/g")
@@ -307,7 +307,7 @@ for ele2 in "${SORTED_FILES[@]}"
 	startTime=$(date +%s%3N);
 
 	echo '```' >>  ${TEE_FILE}
-	echo '```' >>  ${TEE_FILE2}
+	echo '```' >>  ${TEE_FILE_NOANSI}
 
 	# CMD is allowed to clobber TEE_FILE
 	if [ $INTERACTIVE -eq 1 ]; then
@@ -317,13 +317,14 @@ for ele2 in "${SORTED_FILES[@]}"
 	      s/\e\[[\x30-\x3f]*[\x20-\x2f]*[\x40-\x7e]//g;
 	      s/\e[PX^_].*?\e\\//g;
 	      s/\e\][^\a]*(?:\a|\e\\)//g;
-	      s/\e[\[\]A-Z\\^_@]//g;' | tee -a ${TEE_FILE2}
+	      s/\e[\[\]A-Z\\^_@]//g;' | tee -a ${TEE_FILE_NOANSI}
 	fi
         exitcode=${PIPESTATUS[0]}
         endTime=$(date +%s%3N);
         timeSpan=$((($endTime-$startTime)));
         totalTime=`printf "%.3f" $[$timeSpan/1000]`
-        echo '```' >> ${TEE_FILE2}
+        echo '```' >> ${TEE_FILE_NOANSI}
+	echo '```' >> ${TEE_FILE}
 
         INFO "totalTime=${totalTime}"
 
@@ -353,7 +354,7 @@ for ele2 in "${SORTED_FILES[@]}"
       [ $(($exitcode & $good_exit)) -ne 0 ] && TEST_RESULT="SUCCESS" && [ "${next_cls}" == 1 ] && cls && next_cls=0       
       [ $(($exitcode & 8)) -ne 0 ] && TEST_RESULT="FAILED" || Rem_LABELS+=" Skipped"
       [ $(($exitcode & 4)) -ne 0 ] && (COMMENT+=" UserAborted" && TEST_RESULT="SKIPPED" && Add_LABELS+=" Skipped") || Rem_LABELS+=" Skipped"
-      #BASH_EVAL=$(grep "% Bash Eval: " ${TEE_FILE2} | sed -e "s|% Bash Eval: ||g")
+      #BASH_EVAL=$(grep "% Bash Eval: " ${TEE_FILE_NOANSI} | sed -e "s|% Bash Eval: ||g")
       #[ ! -z "$BASH_EVAL" ] && $BASH_EVAL
 
       Add_LABELS=$(echo $Add_LABELS | xargs | sed -e "s/ /,/g")
@@ -365,31 +366,31 @@ for ele2 in "${SORTED_FILES[@]}"
 
 
      #echo "========================================="
-     #cat ${TEE_FILE2}
+     #cat ${TEE_FILE_NOANSI}
      #echo "========================================="
      
 
       #sleep 10
       [ ${INTERACTIVE} -eq 0 ] && (
-         source $LOGICMOO_WS/bin/lmoo-issue ${JUNIT_PACKAGE} ${JUNIT_SHORTCLASS} ${Test_9999} ${TEST_RESULT} "${FileTestCase}" ${TEE_FILE2} "$Add_LABELS" "$Rem_LABELS"
+         source $LOGICMOO_WS/bin/lmoo-issue ${JUNIT_PACKAGE} ${JUNIT_SHORTCLASS} ${Test_9999} ${TEST_RESULT} "${FileTestCase}" ${TEE_FILE_NOANSI} "$Add_LABELS" "$Rem_LABELS"
       )
       
       if [ "${TEST_RESULT}" = "SUCCESS" ]; then
          JECHO "<testcase name=\"${FileTestCase}\" classname='${JUNIT_CLASSNAME}' time='$totalTime'>"       
-         JECHO "<system-out><![CDATA[$(cat ${TEE_FILE2} | grep -v CDATA)]]></system-out>\n</testcase>"
+         JECHO "<system-out><![CDATA[$(cat ${TEE_FILE_NOANSI} | grep -v CDATA)]]></system-out>\n</testcase>"
          JUNIT_TESTS_GTOTAL_PASSED=$((JUNIT_TESTS_GTOTAL_PASSED+1))
       elif [ "${TEST_RESULT}" = "SKIPPED" ]; then
          JECHO "<testcase name=\"${FileTestCase}\" classname='${JUNIT_CLASSNAME}' time='$totalTime'>"       
-         JECHO "<system-out><![CDATA[$(cat ${TEE_FILE2} | grep -v CDATA)]]></system-out>\n</testcase>"
+         JECHO "<system-out><![CDATA[$(cat ${TEE_FILE_NOANSI} | grep -v CDATA)]]></system-out>\n</testcase>"
          JUNIT_TESTS_GTOTAL_SKIPPED=$((JUNIT_TESTS_GTOTAL_SKIPPED+1))
       elif [ "${TEST_RESULT}" = "ERROR" ]; then
          JECHO "<testcase name=\"${FileTestCase}\" classname='${JUNIT_CLASSNAME}' time='$totalTime'>"       
-         JECHO " <failure message='FAILED: $0 ${keep_going} ${ele} (returned ${exitcode})'/><system-err><![CDATA[$(cat ${TEE_FILE2})]]></system-err>\n</testcase>"	    
+         JECHO " <failure message='FAILED: $0 ${keep_going} ${ele} (returned ${exitcode})'/><system-err><![CDATA[$(cat ${TEE_FILE_NOANSI})]]></system-err>\n</testcase>"	    
          JUNIT_TESTS_GTOTAL_ERRORS=$((JUNIT_TESTS_GTOTAL_ERRORS+1))
 	 [ -w "${ele}" ] && touch "$ele" ; /bin/true         
       else    
         JECHO "<testcase name=\"${FileTestCase}\" classname='${JUNIT_CLASSNAME}' time='$totalTime'>"       
-      	JECHO " <failure message='FAILED: $0 ${keep_going} ${ele} (returned ${exitcode})'/><system-err><![CDATA[$(cat ${TEE_FILE2})]]></system-err>\n</testcase>"	    
+      	JECHO " <failure message='FAILED: $0 ${keep_going} ${ele} (returned ${exitcode})'/><system-err><![CDATA[$(cat ${TEE_FILE_NOANSI})]]></system-err>\n</testcase>"	    
 	JUNIT_TESTS_GTOTAL_FAILURES=$((JUNIT_TESTS_GTOTAL_FAILURES+1))
 	[ -w "${ele}" ] && touch "$ele" ; /bin/true         
       fi

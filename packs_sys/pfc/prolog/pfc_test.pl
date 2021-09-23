@@ -99,7 +99,7 @@ mpred_test_fok(Testcase, G):-
     get_time(Start))),
     Answers = nb(0),
     catch( ( call_u_hook(G) *-> TestResult = passed; TestResult = failure), E, TestResult=error(E)),
-    ignore((%Answers = nb(0),
+    notrace((ignore((%Answers = nb(0),
       must_det_l((get_time(End),
       Elapsed is End - Start,
       add_test_info(Testcase,time,Elapsed),
@@ -111,7 +111,7 @@ mpred_test_fok(Testcase, G):-
         read_file_to_string(Tee,Str,[]),
         add_test_info(Testcase,out,Str),
         save_single_testcase(Testcase),
-        nop(kill_junit_tee))))))))),
+        nop(kill_junit_tee))))))))))),
     (TestResult=error(E)-> throw(E) ; true),
     nb_setarg(1,Answers,1))),
     Type == passed.
@@ -150,7 +150,7 @@ catch_timeout(P):- tracing,!,call(P).
 catch_timeout(P):- catch(call_with_time_limit(30,w_o_c(P)),E,wdmsg(P->E)).
 
 %generate_test_name(G,Name):- getenv('JUNIT_CLASSNAME',Class), gtn_no_pack(G,NPack),sformat(Name,'~w ~w',[Class, NPack]),!.
-generate_test_name(G,Name):- source_context_name(SCName), gtn_no_pack(G,GName),
+generate_test_name(G,Name):- source_context_name(SCName), gtn_no_pack(G,GUName), trim_to_size(GUName,-30,GName),
   (atom_length(GName,0)-> SCName = Name ; sformat(Name,'~w__~w',[SCName,GName])).
 
 find_string(G,String):- sub_term(String,G), string(String), !.
@@ -451,9 +451,9 @@ save_junit_results:-
  forall(j_u:junit_prop(testsuite,file,File), 
     (with_output_to(string(Text),show_junit_suite_xml(File)),
      save_to_junit_file(File,Text))),!.
-save_junit_results:-  test_src(File),
-    (with_output_to(string(Text),show_junit_suite_xml(File)),
-     save_to_junit_file(File,Text)),!.
+save_junit_results:- test_src(Named),
+    (with_output_to(string(Text),show_junit_suite_xml(Named)),
+     save_to_junit_file(Named,Text)),!.
 save_junit_results:- wdmsg(unused(no_junit_results)).
 
 show_junit_suite_xml(File):- 
@@ -552,7 +552,7 @@ shorten_and_clean_name(Name,Size,RSName):-
    '/'='_',
    '_master_packs_'='_'],Name0,Name1),
   p_n_atom_filter_var_chars(Name1,Name2),
-  replace_in_string(['_c32_'='_','__'='_'],Name2,Name3),
+  replace_in_string(['_c32_'='_','_c46_'='_','_c64_'='_'],Name2,Name3),
   trim_to_size(Name3,Size,RSName),!.
 
 trim_to_size(SName,-N,RSName):- !, sub_atom(SName,_,N,0,RSName)->true;SName=RSName.
@@ -588,7 +588,7 @@ save_to_junit_file_text(Full,Text,FullF):-
 save_to_junit_file(Name,DirtyText,FileName):-
  clean_away_ansi(DirtyText,Text),
  getenv('TEST_STEM_PATH',Dir),!,
- shorten_and_clean_name(Name,20,SName),
+ shorten_and_clean_name(Name,-150,SName),
   must_det_l(( 
   atomic_list_concat([Dir,'-',SName],Full),
   write_testcase_env(Name),

@@ -18,8 +18,8 @@
 
 :- reexport(library('logicmoo/common_logic/common_logic_utils.pl')).
 
-:- use_module(library(logicmoo_webui)).
-:-  webui_load_swish_and_clio.
+%:- use_module(library(logicmoo_webui)).
+%:-  webui_load_swish_and_clio.
 
 %:-  webui_start_swish_and_clio.
 
