@@ -878,7 +878,7 @@ essence_hook( T, T ).    % default, may be overridden by the interpreted program
 
 
 %------------------------------------------------------------------------------
-%% are_variants(+Term,+Term ) is det.
+%% are_variants(+Term1,+Term2) is det.
 %    Succeeds only if both arguments are variants of each other.
 %    Does not instantiate any variables.
 % NOTE:
@@ -893,7 +893,7 @@ are_variants( T1, T2 ) :-
 
 
 %------------------------------------------------------------------------------
-%% write_shallow(+Output stream,+Term,+Maximum depth) is det.
+%% write_shallow(+OutputStream,+Term,+MaximumDepth) is det.
 % Like write/2, but only to a limited print depth.
 
 write_shallow( OutputStream, Term, MaxDepth ) :-
@@ -901,7 +901,7 @@ write_shallow( OutputStream, Term, MaxDepth ) :-
 
 
 %------------------------------------------------------------------------------
-%% is_swi_builtin(?goal) is semidet.
+%% is_swi_builtin(:Goal) is semidet.
 % Does this goal call a built-in predicate?  Or generate a built-in goal.
 
 is_swi_builtin( Pred ) :-
@@ -969,7 +969,7 @@ dra_incval_flag( Name ) :-flag( Name, Value, Value+1 ).
 %     empty_hypotheses(-stack of hypotheses ):
 %         Create an empty stack for coinductive hypotheses.
 %
-%     push_is_coinductive(+Goal,+Stack of hypotheses ,-new stack ):
+%     push_is_coinductive(+Goal,+Stack of hypotheses ,-newStack ):
 %         Push the coinductive goal onto the stack.
 %
 %     unify_with_coinductive_ancestor(+Goal,+Stack of hypotheses ):
@@ -1077,22 +1077,22 @@ tree_add( Node, Key, Info, LessPred, ModifyPred, NewNode ) :-
 %------------------------------------------------------------------------------
 
 
-% In this implementation the goal table is a binary tree.
+% In this implementation the goalTable is a binary tree.
 % Each key is a predicate specification.
 % The information associated with a key is a list of goals
 % that invoke the predicate specified by the key.
 
 
 %------------------------------------------------------------------------------
-%% empty_goal_table(?goal table) is semidet.
-% Create an empty goal table, or check that the provided table is empty.
+%% empty_goal_table(?goalTable) is semidet.
+% Create an empty goalTable, or check that the provided table is empty.
 
 empty_goal_table( Table ) :-
         empty_tree( Table ).
 
 
 %------------------------------------------------------------------------------
-%% goal_table_member(+Goal,+Goal table) is semidet.
+%% goal_table_member(+Goal,+GoalTable) is semidet.
 % Check whether any instantiations of the goal are in the table: if there are,
 % unify the goal with the first one (backtracking will unify it with each of
 % them in turn).
@@ -1108,7 +1108,7 @@ goal_table_member( Goal, Table ) :-
 
 
 %------------------------------------------------------------------------------
-%% is_a_variant_in_goal_table(+Goal,+Goal table) is semidet.
+%% is_a_variant_in_goal_table(+Goal,+GoalTable) is semidet.
 % Succeed iff a variant of this goal is present in the table.
 % Do not modify the goal.
 %
@@ -1125,7 +1125,7 @@ is_a_variant_in_goal_table( Goal, Table ) :-
 
 
 %------------------------------------------------------------------------------
-%% member_reversed(?item,+ListOfItems) is semidet.
+%% member_reversed(?Item,+ListOfItems) is semidet.
 % Like member/2, but the order of searching/generation is reversed.
 
 member_reversed( M, [ _ | L ] ) :-
@@ -1236,7 +1236,7 @@ unify_with_coinductive_ancestor( Goal, Hyp ) :-
 %     empty_stack(-stack )
 %            Create an empty stack.
 %
-%     push_is_tabled(+Goal,+Index,+Clause,+Stack,-new stack )
+%     push_is_tabled(+Goal,+Index,+Clause,+Stack,-newStack )
 %            where the first three arguments are the constitutive elements of
 %            a triple.
 %            Push the triple goal onto the stack.
@@ -1278,10 +1278,10 @@ unify_with_coinductive_ancestor( Goal, Hyp ) :-
 
 %--------------  An implementation that uses goal_table:  --------------%
 %
-% The goal table is used to speed up the check whether there is a variant
+% The goalTable is used to speed up the check whether there is a variant
 % ancestor.  We still need a standard stack for getting the intermediate tabled
 % goals.  So the "stack" is represented by
-%    tstack( stack, goal table )
+%    tstack( stack, goalTable )
 
 
 %:-ensure_loaded( 'goal_table_in_tree' ).
@@ -1932,7 +1932,7 @@ use_clause(Goal, Body ) :-set_meta(Goal, is_never_tabled),Body = call(Goal).
 
 
 
-%% compute_fixed_point(+Pioneer goal,+Its index,+Stack,+Level) is semidet.
+%% compute_fixed_point(+PioneerGoal,+ItsIndex,+Stack,+Level) is semidet.
 % Solve the goal by associated rules from "looping_alternative", succeeding
 % with each new answer (and tabling it).  Fail when all the possible results
 % are exhausted.
@@ -2316,7 +2316,7 @@ tabling_store(assert).
 
 %------------------------------------------------------------------------------
 
-%% ensure_recorded(+Key, +item) is det.
+%% ensure_recorded(+Key, +Item) is det.
 % Make sure that the item is recorded in the database.
 
 ensure_recorded( Key, Item ) :-
@@ -2506,7 +2506,7 @@ reinitialise_result :-
 reinitialise_result.
 
 
-%% is_result_known(+PGIndex,+ fact) is semidet.
+%% is_result_known(+PGIndex,+Fact) is semidet.
 % Does the table "result" contain a variant of this fact associated with this
 % index?
 
@@ -2588,7 +2588,7 @@ is_a_variant_of_a_pioneer( Goal, PGIndex ) :-
         !.
 
 
-%% add_pioneer(+Goal,-index) is det.
+%% add_pioneer(+Goal,-Index) is det.
 % Add an entry for this goal to "pioneer", return the unique index.
 
 % :-mode add_pioneer(+,-).
