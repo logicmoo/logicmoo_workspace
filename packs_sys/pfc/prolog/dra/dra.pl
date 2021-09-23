@@ -801,7 +801,7 @@ mk_pattern( P, K, Pattern ) :-
 
 
 %------------------------------------------------------------------------------
-%% predspecs_to_patterns(+PredSpecs,-PatternsList)
+%% predspecs_to_patterns(+PredSpecs,-PatternsList) is det.
 % Given one or several predicate specifications (in the form "p/k" or
 % "p/k, q/l, ...") check whether they are well-formed: if not, raise a fatal
 % dra_error; otherwise return a list of the most general instances that correspond
@@ -878,7 +878,7 @@ essence_hook( T, T ).    % default, may be overridden by the interpreted program
 
 
 %------------------------------------------------------------------------------
-%% are_variants(+Term,+Term )
+%% are_variants(+Term,+Term ) is det.
 %    Succeeds only if both arguments are variants of each other.
 %    Does not instantiate any variables.
 % NOTE:
@@ -893,7 +893,7 @@ are_variants( T1, T2 ) :-
 
 
 %------------------------------------------------------------------------------
-%% write_shallow(+Output stream,+Term,+Maximum depth)
+%% write_shallow(+Output stream,+Term,+Maximum depth) is det.
 % Like write/2, but only to a limited print depth.
 
 write_shallow( OutputStream, Term, MaxDepth ) :-
@@ -901,7 +901,7 @@ write_shallow( OutputStream, Term, MaxDepth ) :-
 
 
 %------------------------------------------------------------------------------
-%% is_swi_builtin(?goal)
+%% is_swi_builtin(?goal) is semidet.
 % Does this goal call a built-in predicate?  Or generate a built-in goal.
 
 is_swi_builtin( Pred ) :-
@@ -911,7 +911,7 @@ is_swi_builtin( Pred ) :-
 
 
 %------------------------------------------------------------------------------
-%% dra_setval_flag(+Name,+Value)
+%% dra_setval_flag(+Name,+Value) is det.
 % Set this counter to this value.
 %
 % NOTE: Since DRA uses global variables to store only integers, we use the
@@ -922,14 +922,14 @@ dra_setval_flag( Name, Value ) :-flag( Name, _Old, Value ).
 
 
 %------------------------------------------------------------------------------
-%% dra_getval_flag(+Name,-Value)
+%% dra_getval_flag(+Name,-Value) is det.
 % Get the value associated with this counter.
 
 dra_getval_flag( Name, Value ) :-flag( Name, Value, Value ).
 
 
 %------------------------------------------------------------------------------
-%% dra_incval_flag(+Name)
+%% dra_incval_flag(+Name) is det.
 % Increment this counter by 1.
 dra_incval_flag( Name ) :-flag( Name, Value, Value+1 ).
 
@@ -1003,7 +1003,7 @@ dra_incval_flag( Name ) :-flag( Name, Value, Value+1 ).
 
 
 %------------------------------------------------------------------------------
-%% empty_otree(?OpenTree)
+%% empty_otree(?OpenTree) is semidet.
 %
 % Create an empty tree, or check that the provided tree is empty.
 
@@ -1011,7 +1011,7 @@ empty_tree( empty ).
 
 
 %------------------------------------------------------------------------------
-%% is_in_tree(+Tree,+Key,+ComparisonLessThanPredicate,-Information)
+%% is_in_tree(+Tree,+Key,+ComparisonLessThanPredicate,-Information) is semidet.
 %
 % If the entry for this key is present in the tree, succeed and return the
 % associated information; if it is not, fail.
@@ -1036,7 +1036,7 @@ is_in_tree( Node, Key, LessPred, Info ) :-
 
 
 %------------------------------------------------------------------------------
-%% tree_add(+Tree,+Key,+Information,+ComparisonLTPredicate,+ModificationAddPredicate,+NewTree)
+%% tree_add(+Tree,+Key,+Information,+ComparisonLTPredicate,+ModificationAddPredicate,+NewTree) is det.
 %           
 % Make sure that the key is associated with this information in the tree.
 % If the entry for this key is already present, modify the existing
@@ -1084,7 +1084,7 @@ tree_add( Node, Key, Info, LessPred, ModifyPred, NewNode ) :-
 
 
 %------------------------------------------------------------------------------
-%% empty_goal_table(?goal table)
+%% empty_goal_table(?goal table) is semidet.
 % Create an empty goal table, or check that the provided table is empty.
 
 empty_goal_table( Table ) :-
@@ -1092,7 +1092,7 @@ empty_goal_table( Table ) :-
 
 
 %------------------------------------------------------------------------------
-%% goal_table_member(+Goal,+Goal table)
+%% goal_table_member(+Goal,+Goal table) is semidet.
 % Check whether any instantiations of the goal are in the table: if there are,
 % unify the goal with the first one (backtracking will unify it with each of
 % them in turn).
@@ -1108,7 +1108,7 @@ goal_table_member( Goal, Table ) :-
 
 
 %------------------------------------------------------------------------------
-%% is_a_variant_in_goal_table(+Goal,+Goal table)
+%% is_a_variant_in_goal_table(+Goal,+Goal table) is semidet.
 % Succeed iff a variant of this goal is present in the table.
 % Do not modify the goal.
 %
@@ -1125,7 +1125,7 @@ is_a_variant_in_goal_table( Goal, Table ) :-
 
 
 %------------------------------------------------------------------------------
-%% member_reversed(?item,+ListOfItems)
+%% member_reversed(?item,+ListOfItems) is semidet.
 % Like member/2, but the order of searching/generation is reversed.
 
 member_reversed( M, [ _ | L ] ) :-
@@ -1134,7 +1134,7 @@ member_reversed( M, [ M | _ ] ).
 
 
 %------------------------------------------------------------------------------
-%% goal_table_add(+GoalTable,+Goal,-NewGoalYable)
+%% goal_table_add(+GoalTable,+Goal,-NewGoalYable) is det.
 %
 % Add this goal to the table.
 
@@ -1486,7 +1486,7 @@ print_statistics :-  notrace((
 
 
 
-%% dra_interp(?Cutted,+Goal,+Stack,+CoinductiveHypotheses,+Level)
+%% dra_interp(?Cutted,+Goal,+Stack,+CoinductiveHypotheses,+Level) is semidet.
 % Solve the sequence of goals, maintaining information about the current chain
 % of tabled ancestors(stack) and the chain of coinductive0 ancestors
 %(coinductive hypotheses).  The level is the level of recursion, and is used
@@ -1877,7 +1877,7 @@ dra_call_tabled(Cutted, Goal, Stack, Hyp, Level ) :-
 
 
 
-%% get_tabled_if_old_first(+Goal,+PGIndex,+TraceLabel,+Level)
+%% get_tabled_if_old_first(+Goal,+PGIndex,+TraceLabel,+Level) is semidet.
 %
 % If the goal has been declared as "old_first", produce all the tabled answers,
 % remembering them in "result", then succeed; otherwise just fail.
@@ -1890,7 +1890,7 @@ get_tabled_if_old_first( Goal, PGIndex, Label, Level ) :-
         new_result_or_fail( PGIndex, Goal ).     % i.e., make a note of the answer
 
 
-%% get_all_tabled_answers(+Goal,+PGIndex,+TraceLabel,+Level)
+%% get_all_tabled_answers(+Goal,+PGIndex,+TraceLabel,+Level) is semidet.
 % Return (one by one) all the answers that are currently tabled for this goal.
 % (Each answer is returned by appropriately instantiating the goal.)
 
@@ -1901,7 +1901,7 @@ get_all_tabled_answers( Goal, PGIndex, Label, Level ) :-
         trace_success( Label, Goal, PGIndex, Level ).
 
 
-%% get_remaining_tabled_answers(+Goal,+PGIndex,+TraceLabel,+Level)
+%% get_remaining_tabled_answers(+Goal,+PGIndex,+TraceLabel,+Level) is semidet.
 %
 % Return (one by one) all the answers that are currently tabled for this goal
 % but are not present in its "result" entries.
@@ -1932,7 +1932,7 @@ use_clause(Goal, Body ) :-set_meta(Goal, is_never_tabled),Body = call(Goal).
 
 
 
-%% compute_fixed_point(+Pioneer goal,+Its index,+Stack,+Level)
+%% compute_fixed_point(+Pioneer goal,+Its index,+Stack,+Level) is semidet.
 % Solve the goal by associated rules from "looping_alternative", succeeding
 % with each new answer (and tabling it).  Fail when all the possible results
 % are exhausted.
@@ -1973,7 +1973,7 @@ compute_fixed_point_( Goal, PGIndex, Stack, Hyp, Level, NAns ) :-
 
 
 
-%% suppress_pioneers_on_list(+ListOfTriples,+Level)
+%% suppress_pioneers_on_list(+ListOfTriples,+Level) is semidet.
 % If any of the triples describe goals that are pioneers, make sure those goals
 % cease to be pioneers.
 
@@ -1988,7 +1988,7 @@ suppress_pioneers_on_list( _, _ ).
 
 
 
-%% rescind_pioneer_status(+Index)
+%% rescind_pioneer_status(+Index) is det.
 % Remove auxiliary table entries for the pioneer with this index.
 % Specifically, clean up "pioneer", "loop" and "looping_alternative".
 
@@ -2000,7 +2000,7 @@ rescind_pioneer_status( PGIndex ) :-
         delete_looping_alternatives( PGIndex ).
 
 
-%% complete_cluster(+PioneerIndexOfGoal,+Level)
+%% complete_cluster(+PioneerIndexOfGoal,+Level) is det.
 % If the goal has an associated cluster, make sure all the goals in the cluster
 % are marked as completed.
 % Recall that a cluster may consist of a number of "loops".
@@ -2017,7 +2017,7 @@ complete_cluster( _, _ ).
 
 
 
-%% extract_goals(+ListOfTriplesOfGoalsWIndicesAndClauses,-ListOfGoals)
+%% extract_goals(+ListOfTriplesOfGoalsWIndicesAndClauses,-ListOfGoals) is det.
 % Filter away the other info in each triple, return list of goals only.
 
 % :-mode extract_goals(+,-).
@@ -2036,7 +2036,7 @@ extract_goals( [ triple( G, _, _ ) | Ts ], [ G | Gs ] ) :-
 %       "looping_alternative" and "completed".
 
 
-%% get_unique_index(-PGIndex)
+%% get_unique_index(-PGIndex) is det.
 % Produce a new unique index.
 
 % :-mode get_unique_index(-).
@@ -2052,7 +2052,7 @@ get_unique_index( PGIndex ) :-
 %-----  Custom-tailored utilities  -----
 
 
-%% are_essences_variants(+Term,+Term)
+%% are_essences_variants(+Term,+Term) is semidet.
 % Are both the terms variants of each other after filtering through
 % essence_hook?
 
@@ -2065,7 +2065,7 @@ are_essences_variants( T1, T2 ) :-
 
 
 
-%% trace_entry(+Label,+Goal,+PGIndex,+Level)
+%% trace_entry(+Label,+Goal,+PGIndex,+Level) is det.
 % If the goal matches one of the traced patterns, print out a traces line about
 % entering the goal (at this level, with this label).
 % (The PGIndex is not always relevant: "?" is used for those cases.)
@@ -2082,7 +2082,7 @@ trace_entry( Label, Goal, PGIndex, Level ) :-
 trace_entry( _, _, _, _ ).
 
 
-%% trace_success(+Label,+Goal,+PGIndex,+Level)
+%% trace_success(+Label,+Goal,+PGIndex,+Level) is det.
 % If the goal matches one of the traced patterns, print out a traces line about
 % success of the goal (at this level, with this label).  Moreover, just before
 % backtracking gets back to the goal, print out a traces line about retrying the
@@ -2109,7 +2109,7 @@ trace_success( Label, Goal, PGIndex, Level ) :-
 trace_success( _, _, _, _ ).
 
 
-%% trace_failure(+Label,+Goal,+PGIndex,+Level)
+%% trace_failure(+Label,+Goal,+PGIndex,+Level) is det.
 % If the goal matches one of the traced patterns, print out a traces line about
 % failure of the goal (at this level, with this label).
 % (The PGIndex is not always relevant: "?" is used for those cases.)
@@ -2126,7 +2126,7 @@ trace_failure( Label, Goal, PGIndex, Level ) :-
 trace_failure( _, _, _, _ ).
 
 
-%% trace_other(+Label,+Goal,+PGIndex,+Level)
+%% trace_other(+Label,+Goal,+PGIndex,+Level) is det.
 % If the goal matches one of the traced patterns, print out a traces line about
 % this goal (at this level, with this label).
 % (The PGIndex is not always relevant: "?" is used for those cases.)
@@ -2171,7 +2171,7 @@ print_depth( 10 ).
 
 
 
-%% optional_trace(+Label,+Goal,+Term,+Level)
+%% optional_trace(+Label,+Goal,+Term,+Level) is det.
 % If the goal matches one of the traced patterns, print out a traces line with
 % this label, the goal and the term.
 
@@ -2316,7 +2316,7 @@ tabling_store(assert).
 
 %------------------------------------------------------------------------------
 
-%% ensure_recorded(+Key,+ item)
+%% ensure_recorded(+Key, +item) is det.
 % Make sure that the item is recorded in the database.
 
 ensure_recorded( Key, Item ) :-
@@ -2373,7 +2373,7 @@ reinitialise_answer :-
 
 reinitialise_answer.
 
-%% is_answer_known(+Goal,+Fact)
+%% is_answer_known(+Goal,+Fact) is semidet.
 % Does the table "answer" contain a variant of this fact paired with a variant
 % of this goal?
 
@@ -2396,7 +2396,7 @@ is_answer_known( Goal, Fact ) :-
         !.
 
 
-%% %memo(+Goal,+Fact,+Level)
+%% memo(+Goal,+Fact,+Level) is semidet.
 % If the table "answer" does not contain a variant of this fact paired with
 % a variant of this goal, then add the pair to the table, increasing
 % "number_of_answers".
@@ -2427,7 +2427,7 @@ memo( Goal, Fact, Level ) :-
         dra_incval_flag( number_of_answers ).
 
 %------------------------------------------------------------------------------
-%% most_general_instance(+Term,-MostGeneralInstanceSameFunctor)
+%% most_general_instance(+Term,-MostGeneralInstanceSameFunctor) is det.
 % E.g., p( a, q( X, Y ) )  is transformed to  p( _, _ ).
 
 % :-mode most_general_instance( +, -).
@@ -2438,7 +2438,7 @@ most_general_instance( Term, Pattern ) :-
 
 
 
-%% %get_answer(?Goal)
+%% get_answer(?Goal) is semidet.
 % Get an instantiation (if any) tabled in "answer" for variants of this goal.
 % Sequence through all such instantiations on backtracking.
 
@@ -2467,7 +2467,7 @@ get_answer( Goal ) :-
         EssenceOfGoal = EssenceOfAns .  % instantiate
 
 
-%% get_all_tabled_goals(-ListOfGoals)
+%% get_all_tabled_goals(-ListOfGoals) is det.
 % Get all the goals that were tabled together with their answers.
 
 get_all_tabled_goals( Goals ) :- tabling_store(assert),!,
@@ -2506,7 +2506,7 @@ reinitialise_result :-
 reinitialise_result.
 
 
-%% is_result_known(+PGIndex,+ fact)
+%% is_result_known(+PGIndex,+ fact) is semidet.
 % Does the table "result" contain a variant of this fact associated with this
 % index?
 
@@ -2523,7 +2523,7 @@ is_result_known( PGIndex, Fact ) :-
         !.
 
 
-%% new_result_or_fail(+PGIndex,+Fact)
+%% new_result_or_fail(+PGIndex,+Fact) is semidet.
 % If the table "result" already contains a variant of this fact associated with
 % this index, then fail.  Otherwise record the fact in the table and succeed.
 
@@ -2567,7 +2567,7 @@ reinitialise_pioneer :-
 reinitialise_pioneer.
 
 
-%% is_a_variant_of_a_pioneer(+Goal,-PGIndex)
+%% is_a_variant_of_a_pioneer(+Goal,-PGIndex) is semidet.
 % Succeeds if the goal is a variant of a goal that is tabled in "pioneer";
 % returns the index of the relevant entry in table "pioneer".
 
@@ -2588,7 +2588,7 @@ is_a_variant_of_a_pioneer( Goal, PGIndex ) :-
         !.
 
 
-%% add_pioneer(+Goal,-index)
+%% add_pioneer(+Goal,-index) is det.
 % Add an entry for this goal to "pioneer", return the unique index.
 
 % :-mode add_pioneer(+,-).
@@ -2609,7 +2609,7 @@ add_pioneer( Goal, PGIndex ) :-
         recordz( PGIndex, pioneer_goal( Key ) ).
 
 
-%% delete_pioneer(+PGIndex)
+%% delete_pioneer(+PGIndex) is det.
 % Remove the entry in "pioneer" associated with this index.
 
 % :-mode delete_pioneer( + ).
@@ -2648,7 +2648,7 @@ reinitialise_loop :-
 reinitialise_loop.
 
 
-%% add_loop(+PGIndex,+ListOfGoals)
+%% add_loop(+PGIndex,+ListOfGoals) is det.
 % Add an entry to "loop".
 
 % :-mode add_loop(+,+).
@@ -2668,7 +2668,7 @@ add_loop( PGIndex, Goals ) :-
         recordz( PGIndex, loop( Goals ) ),
         ensure_recorded( loop_key, PGIndex ).
 
-%% delete_loops(+PGIndex)
+%% delete_loops(+PGIndex) is det.
 % Remove all the entries in "loop" that are associated with this index.
 
 delete_loops( PGIndex ) :- tabling_store(assert),!,
@@ -2684,7 +2684,7 @@ delete_loops( _ ).
 
 
 
-%% get_loop(+PGIndex,-Goals)
+%% get_loop(+PGIndex,-Goals) is det.
 % Get an entry from table "loop" that is associated with this index;
 % another such entry (if it exists) on backtracking etc.
 
@@ -2720,7 +2720,7 @@ reinitialise_looping_alternative :-
 reinitialise_looping_alternative.
 
 
-%% add_looping_alternative(+PGIndex,+Clause)
+%% add_looping_alternative(+PGIndex,+Clause) is det.
 % Add and entry to "looping_alternative".
 
 % :-mode add_looping_alternative(+,+).
@@ -2738,7 +2738,7 @@ add_looping_alternative( PGIndex, Clause ) :-
         ensure_recorded( looping_alternative_key, PGIndex ).
 
 
-%% delete_looping_alternatives(+PGIndex)
+%% delete_looping_alternatives(+PGIndex) is det.
 % Remove all the entries in "loop" that are associated with this index.
 
 delete_looping_alternatives( PGIndex ) :- tabling_store(assert),!,
@@ -2754,7 +2754,7 @@ delete_looping_alternatives( _ ).
 
 
 
-%% get_looping_alternative(+PGIndex,-Clause)
+%% get_looping_alternative(+PGIndex,-Clause) is det.
 % Get an entry from table "looping_alternative" that is associated with this
 % index; another such entry (if it exists) on backtracking etc.
 
@@ -2792,7 +2792,7 @@ reinitialise_completed :-
 reinitialise_completed.
 
 
-%% is_completed(+Goal)
+%% is_completed(+Goal) is semidet.
 % Succeeds iff the goal is a variant of a goal that has been stored in
 % the table "completed".
 
@@ -2810,7 +2810,7 @@ is_completed( Goal ) :-
         recorded( Goal, completed( CopyEssence, G ) ),
         are_essences_variants( Goal, G ).
 
-%% complete_goal(+Goal,+IndexFortracing)
+%% complete_goal(+Goal,+IndexFortracing) is det.
 % Make sure the goal is marked as completed.
 
 % :-mode complete_goal(+,+).

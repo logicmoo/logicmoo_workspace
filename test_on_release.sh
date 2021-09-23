@@ -17,6 +17,7 @@ git pull origin master
 #git push gitlab master
 git push github master
 
+
 #unset TESTING_TEMP
 
 [ -z "$TESTING_TEMP" ] && [ -d "$(pwd)/test_results" ] && export TESTING_TEMP=$(pwd)/test_results/$(whoami)
@@ -30,6 +31,12 @@ JENKINS_BUILD_RESULT=/var/lib/jenkins/jobs/logicmoo_workspace/builds/${BUILD_NUM
 # source bin/build_xml.text > $JENKINS_BUILD_RESULT/build.xml
 
 rm -f $TESTING_TEMP/???*.*???
+
+VERBOSITY="2>&1 | grep -1 -i 'WARN\|ERROR\|_file\|00'"
+if [ "$1" == "-v" ]; then
+  VERBOSITY=""
+  shift 1
+fi
 
 if [ "$1" == "new" ]; then
   FILTER="-mtime 0"
@@ -51,7 +58,7 @@ fi
 
 echo -e "Running release (all) tests\nTESTING_TEMP=$TESTING_TEMP\n( cd $PWD ; $BASH_SOURCE $TEST_PARAMS )"
 
-lmoo-make 2>&1 | grep -1 -i 'WARN\|ERROR'
+lmoo-make -v $VERBOSITY
 
 TEST_DIRS=`find -mindepth 2 $FILTER -type f -name "test_on_*.sh" -exec dirname {} \;`
 echo TEST_DIRS=$TEST_DIRS
@@ -62,7 +69,7 @@ echo DIRS_SORTED=$DIRS_SORTED
 
 for dirname in "${DIRS_SORTED[@]}"; do
     echo -e "$dirname\n"
-    find $dirname -maxdepth 1 $FILTER -name "test_on_*.sh" -execdir {} "$TEST_PARAMS" \;
+    find $dirname -maxdepth 1 $FILTER -name "test_on_*.sh" -execdir {} "$TEST_PARAMS" $VERBOSITY \;
 done
 
 # Generate JUnit Results

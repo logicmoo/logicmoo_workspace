@@ -816,7 +816,7 @@ before_phase(P1,P2):- number_phase(N1,P1), number_phase(N2,P2), N1 < N2.
 
 :- set_prolog_flag(current_phase, load).
 
-%% before_boot(:Goal) is semidet.
+%% loadtime_boot(:Goal) is semidet.
 % 
 % Run a +Goal as soon as possible
 %
@@ -895,12 +895,12 @@ number_phase(5,runtime). % when running
 
 
 init_why(Phase, Why):- 
-  %dmsg("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"),
-  %dmsg("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"),
+  %dmsg("%~%%%~%%%~%%%~%%%~%%%~%%%~%%%~%%%~%%%~%%%~%%%~%%%~%%%~%%%~%%%~%%%~%%%~%%%~%%%~%%%%"),
+  %dmsg("%~%%%~%%%~%%%~%%%~%%%~%%%~%%%~%%%~%%%~%%%~%%%~%%%~%%%~%%%~%%%~%%%~%%%~%%%~%%%~%%%%"),
   dmsg(init_why(Phase, Why)),
   set_prolog_flag(current_phase, Phase),
-  %dmsg("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"),
-  %dmsg("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"),!,
+  %dmsg("%~%%%~%%%~%%%~%%%~%%%~%%%~%%%~%%%~%%%~%%%~%%%~%%%~%%%~%%%~%%%~%%%~%%%~%%%~%%%~%%%%"),
+  %dmsg("%~%%%~%%%~%%%~%%%~%%%~%%%~%%%~%%%~%%%~%%%~%%%~%%%~%%%~%%%~%%%~%%%~%%%~%%%~%%%~%%%%"),!,
   run_pending_inits(Phase).
 
 :- module_transparent(run_pending_inits/0).
@@ -1149,9 +1149,9 @@ absolute_directory(Dir,Dir):- atom(Dir),is_absolute_file_name(Dir),exists_direct
 absolute_directory(Dir,ABS):- absolute_file_name(Dir,ABS,[file_type(directory),solutions(all),expand(true),case_sensitive(false),access(read),file_errors(fail)]),exists_directory(ABS),!.
 absolute_directory(Dir,ABS):- absolute_file_name(library(Dir),ABS,[file_type(directory),solutions(all),case_sensitive(false),expand(true),access(read),file_errors(fail)]),exists_directory(ABS),!.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%~%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % DEFAULT PROLOG FLAGS
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%~%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
  % :- set_prolog_flag(subclause_expansion,default).
  % :- set_prolog_flag(subclause_expansion,false).
 :- set_prolog_flag(dialect_pfc,default).
