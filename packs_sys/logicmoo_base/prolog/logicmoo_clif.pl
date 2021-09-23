@@ -16,12 +16,12 @@
  op(300,fx,'~'),
  op(300,fx,'-').
 
+:- if(use_module(library(logicmoo_utils))). :- endif.
+%:- in_lm_ws(use_module(library(logicmoo_webui))).
+%:- webui_load_swish_and_clio.
+
+
 :- reexport(library('logicmoo/common_logic/common_logic_utils.pl')).
-
-%:- use_module(library(logicmoo_webui)).
-%:-  webui_load_swish_and_clio.
-
-%:-  webui_start_swish_and_clio.
 
 :- reexport(library(sigma_ace)).
 

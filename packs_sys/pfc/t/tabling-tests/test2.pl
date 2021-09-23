@@ -5,7 +5,7 @@
 :- if((fail,exists_source(library(drac)))).
 	:- use_module(library(drac)).
 :- else.
-	:- use_module(library(dra)).
+	:- use_module(library(dra/dra)).
 :- endif.
 
 /*

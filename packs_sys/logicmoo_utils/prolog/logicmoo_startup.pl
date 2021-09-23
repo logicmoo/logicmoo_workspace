@@ -63,11 +63,13 @@ now_and_later(MC,TIM,SM,MGoal):- strip_module(MGoal,M,Goal),
   sys:call_now(c,TIM,SM,M:Goal),
   initialization(sys:call_now(MC,TIM,SM,M:Goal),restore).
 
-
-in_lm_ws(Goal):- 
+:- meta_predicate(in_lm_ws(:)).
+:- export(in_lm_ws/1).
+in_lm_ws(MGoal):- 
+   strip_module(MGoal,M,Goal),
    working_directory(X,X),
    getenv('LOGICMOO_WS',WS),      
-   setup_call_cleanup(cd(WS),(cd(prologmud_server),call(Goal)),cd(X)).
+   setup_call_cleanup(cd(WS),(cd(prologmud_server),call(M:Goal)),cd(X)).
 
 
 :- module_transparent(sys:call_now/4).
@@ -110,6 +112,22 @@ name_to_files(Spec, Files, Exists) :-
     ;   true
     ).
 
+
+:- meta_predicate(call_safely(:)).
+call_safely(MGoal):- strip_module(MGoal,M,Goal),!,call_safely(M,Goal).
+ 
+call_safely(M,[H|T]):- !, maplist(call_safely(M),[H|T]).
+call_safely(M,(Goal,!,Goal2)):- !, call_safely(M,Goal),!,call_safely(M,Goal2).
+call_safely(M,(Goal,!)):- !, call_safely(M,Goal),!.
+call_safely(M,(Goal,Goal2)):-!, call_safely(M,Goal),call_safely(M,Goal2).
+call_safely(_,M:Goal):- !, call_safely(M,Goal).
+call_safely(M,Goal):- ignore(must_or_rtrace(in_lm_ws(M:Goal))),
+  nop(check_memory(Goal)).
+
+logicmoo_compiling_mud_server:- (current_prolog_flag(logicmoo_compiling,mud_server);compiling).
+
+:- meta_predicate(only_runtime(:)).
+only_runtime(MGoal):- strip_module(MGoal,M,Goal), (logicmoo_compiling_mud_server -> true; call_safely(M:Goal)).
 
 %    working_directory(Dir,Dir);prolog_load_context(directory,Dir)
 

@@ -167,7 +167,7 @@
    NOTEs:
    -----------
  
-    1.  `:- use_module(library(dra))`.
+    1.  `:- use_module(library(dra/dra))`.
 
  
     2. The interpreter supports a number of directives:

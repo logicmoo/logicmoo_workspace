@@ -1,7 +1,7 @@
 
 :- module(test,[p/2]).
 
-:- use_module(library(dra)).
+:- use_module(library(dra/dra)).
 
 :- table((p/2, q/2)).
 

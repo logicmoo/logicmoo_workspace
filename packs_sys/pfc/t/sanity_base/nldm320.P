@@ -4,8 +4,8 @@
 % XSB 5 seconds
 % dra-intrerp 
 
-:- use_module(library(dra)).
-:- dra_table(tc/2).
+:- use_module(library(dra/dra)).
+:- table(tc/2).
 
 tc(X,Y):- adj(X,Y).
 tc(X,Z):- tc(X,Y), tc(Y,Z).

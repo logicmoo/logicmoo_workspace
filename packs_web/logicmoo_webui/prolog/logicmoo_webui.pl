@@ -18,9 +18,13 @@ This module starts and defines the web UI for LOGICMOO.
 :- multifile(swish_version:git_update_versions/1).
 :- dynamic(swish_version:git_update_versions/1).
 
+:- if(use_module(library(logicmoo_utils))). :- endif.
+
+
 
 :- use_module(library(prolog_pack)).
 
+/*
 :- if( \+ current_prolog_flag(windows,true)).
  :- if( \+ exists_source(library(phil))).
   attach_linuxOnly_packs_web :- (working_directory(Dir,Dir);prolog_load_context(directory,Dir)),
@@ -32,6 +36,7 @@ This module starts and defines the web UI for LOGICMOO.
 
  :- endif.
 :- endif.
+*/
 
 :- dynamic(lmconfig:logicmoo_webui_dir/1).
 
@@ -51,7 +56,7 @@ load_web_package_dirs:-
   in_lm_ws(load_web_package_dirs0).
 
 load_web_package_dirs0:- 
-  findall(PackDir,'$pack':pack(Pack, PackDir),Before),  
+  findall(PackDir,'$pack':pack(_Pack, PackDir),Before),  
 
    %ignore(catch(make_directory('/tmp/tempDir/pack'),_,true)),
    %(user:file_search_path(pack,'/tmp/tempDir/pack') -> true ; asserta(user:file_search_path(pack,'/tmp/tempDir/pack'))),
@@ -63,15 +68,15 @@ load_web_package_dirs0:-
    % pack_install(sldnfdraw,[upgrade(true),interactive(false)]),
    % pack_install(phil,[upgrade(true),interactive(false)]),
    !,
-
-  ignore(( \+ exists_source(library(logicmoo_common)), attach_packs_relative_web_dir('../../logicmoo_utils/../'))),
-  ignore(( \+ exists_source(library(sldnfdraw)), attach_packs_relative_web_dir('../../packs_lib/'))),
-  ignore(( \+ exists_source(library(lps_corner)), attach_packs_relative_web_dir('../..'))),
-  ignore(( \+ exists_source(library(rserve_client)), attach_packs_relative_web_dir('../packs_web/swish/pack/'))),
-  % ignore(( \+ exists_source(library(rserve_client)), attach_packs_relative_web_dir('../swish/pack/'))),
-  % ignore(( \+ exists_source(pack(plweb/pack_info)), attach_packs('/opt/logicmoo_workspace/packs_web'))),
-  findall(PackDir,'$pack':pack(Pack, PackDir),After),
-  (Before\==After -> (writeln(load_package_dirs(After)),nop(pack_list_installed)) ; true),
+   ignore(( \+ exists_source(library(logicmoo_common)), attach_packs_relative_web_dir('../../logicmoo_utils/../'))),
+   ignore(( \+ exists_source(library(sldnfdraw)), attach_packs_relative_web_dir('../../packs_lib/'))),
+   ignore(( \+ exists_source(library(lps_corner)), attach_packs_relative_web_dir('../..'))),
+   ignore(( \+ exists_source(library(bddem)), attach_packs_relative_web_dir('../packs_web/swish/pack/'))),
+   % ignore(( \+ exists_source(library(rserve_client)), attach_packs_relative_web_dir('../packs_web/swish/pack/'))),
+   % ignore(( \+ exists_source(library(rserve_client)), attach_packs_relative_web_dir('../swish/pack/'))),
+   % ignore(( \+ exists_source(pack(plweb/pack_info)), attach_packs('/opt/logicmoo_workspace/packs_web'))),
+  findall(PackDir,'$pack':pack(_Pack, PackDir),After),
+  (Before\==After -> (nop(writeln(load_package_dirs(After))),nop(pack_list_installed)) ; true),
   !.
 
   

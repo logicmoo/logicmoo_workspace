@@ -543,7 +543,7 @@ classname_to_package(CN,P,C):- atomic_list_concat(List,'.',CN), append(Left,[C],
 %shorten_and_clean_name(Name,RSName):- atomic_list_concat(List,'/',Name),append(_,[N1,N2,N3,N4],List),
 %  atomic_list_concat(['prolog.',test_,N1,'.',N2,'.',N3,'.',N4],'',RSName).
 
-shorten_and_clean_name(Name,RSName):- shorten_and_clean_name(Name,-30,RSName).
+shorten_and_clean_name(Name,RSName):- shorten_and_clean_name(Name,-30,RSName),!.
 shorten_and_clean_name(Name,Size,RSName):- 
   ensure_compute_file_link(Name,Name0),
   replace_in_string(
@@ -552,7 +552,7 @@ shorten_and_clean_name(Name,Size,RSName):-
    '/'='_',
    '_master_packs_'='_'],Name0,Name1),
   p_n_atom_filter_var_chars(Name1,Name2),
-  replace_in_string(['_c32_'='_','_c46_'='_','_c64_'='_'],Name2,Name3),
+  replace_in_string(['_c32_'='_','_c46_'='_','_c64_'='_','___'='__'],Name2,Name3),
   trim_to_size(Name3,Size,RSName),!.
 
 trim_to_size(SName,-N,RSName):- !, sub_atom(SName,_,N,0,RSName)->true;SName=RSName.
