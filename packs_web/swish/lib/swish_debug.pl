@@ -58,6 +58,8 @@
 :- export(malloc_info/1).
 :- endif.
 
+:- dynamic(swish_stats_ever_started/0).
+
 :- setting(stats_file, callable, data('stats.db'),
 	   "Save statistics to achieve a long term view").
 :- setting(stats_interval, integer, 300,	% 5 minutes
@@ -209,9 +211,11 @@ start_swish_stat_collector :-
 
 swish_stat_collector(Name, Dims, Interval, Persists) :-
 	atom(Name), !,
-	thread_create(stat_collect(Dims, Interval, Persists), _, [alias(Name)]).
+	thread_create(stat_collect(Dims, Interval, Persists), _, [alias(Name)]),
+  assert(swish_stats_ever_started).
 swish_stat_collector(Thread, Dims, Interval, Persists) :-
-	thread_create(stat_collect(Dims, Interval, Persists), Thread, []).
+	thread_create(stat_collect(Dims, Interval, Persists), Thread, []),
+  assert(swish_stats_ever_started).
 
 persistent_stats(save(Path, Interval)) :-
 	setting(stats_interval, Interval),
@@ -273,9 +277,11 @@ stats_ring(day,	   3).
 stats_ring(week,   4).
 stats_ring(year,   5).
 
+
+
 swish_stats(Name, Ring, Stats) :-
 	thread_self(Me),
-	catch(thread_send_message(Name, Me-get_stats(Ring)), E,
+  catch(thread_send_message(Name, Me-get_stats(Ring)), E,
 	      stats_died(Name, E)),
 	thread_get_message(get_stats(Ring, Stats)).
 

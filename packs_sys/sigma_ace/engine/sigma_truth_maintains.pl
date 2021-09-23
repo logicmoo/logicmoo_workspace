@@ -293,24 +293,24 @@ getTruthCheckResults_can(Driver,Form,CAN,Ctx,TN,KB,Vars,Author,accept('Accepted'
 % Limits for Compiler
 % =========================================
 %clean_clauses((CAN,B),BB):-found_in(CAN,B),!,clean_clauses(B,BB).
-clean_clauses((CAN,B),BB):-unused_clause(CAN),!,clean_clauses(B,BB).
+clean_clauses((CAN,B),BB):-non_used_clause(CAN),!,clean_clauses(B,BB).
 clean_clauses((CAN,B),(CAN,BB)):-!,clean_clauses(CAN,CAN),clean_clauses(B,BB).
 clean_clauses((equal(X,Y) :- CAN),(same(X,Y) :- CAN)):-!.
-clean_clauses((CAN , B),BB):-unused_clause(CAN),!,clean_clauses(B,BB).
+clean_clauses((CAN , B),BB):-non_used_clause(CAN),!,clean_clauses(B,BB).
 clean_clauses((CAN , B),(CAN , BB)):-!,clean_clauses(CAN,CAN),clean_clauses(B,BB).
-clean_clauses(CAN,true):-unused_clause(CAN).
+clean_clauses(CAN,true):-non_used_clause(CAN).
 clean_clauses(CAN,CAN).
 
-unused_clause(end_of_file).
-unused_clause((not(equal(_,_)) :- _ )).
-unused_clause((not(same(_,_)) :- _ )).
-unused_clause((_ :- not(equal(_,_))  )).
-unused_clause(true).
-unused_clause(nop_ok).
-unused_clause(surf).
-%unused_clause((equal(_,_):-_)).
-%unused_clause((not(equal(_,_)):-_)).
-unused_clause((not('domain-check'(_,_,_)):-_)).
+non_used_clause(end_of_file).
+non_used_clause((not(equal(_,_)) :- _ )).
+non_used_clause((not(same(_,_)) :- _ )).
+non_used_clause((_ :- not(equal(_,_))  )).
+non_used_clause(true).
+non_used_clause(nop_ok).
+non_used_clause(surf).
+%non_used_clause((equal(_,_):-_)).
+%non_used_clause((not(equal(_,_)):-_)).
+non_used_clause((not('domain-check'(_,_,_)):-_)).
 found_in(CAN,B):-CAN==B,!.
 found_in(CAN,(B , BB)):- !,
       found_in(CAN,B),

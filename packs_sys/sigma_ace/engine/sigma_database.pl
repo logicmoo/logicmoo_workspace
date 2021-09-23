@@ -182,8 +182,6 @@ ensureSigmaKB(KnowledgeBase,Context):-
 show_active_memory:-!.
 show_active_memory:-listing('in-active-memory').
 
-
-
 	
 
 save_each_clause_in_buffer(KnowledgeBase,Context,(PRO,LOG)):-!,

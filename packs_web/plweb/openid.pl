@@ -110,9 +110,9 @@ You can fake OpenID login using the debug interface:
 		token:atom).
 
 :- initialization
-	db_attach('openid.db',
+	in_lm_ws(db_attach('openid.db',
 		  [ sync(close)
-		  ]).
+		  ])).
 
 :- http_handler(root(user/create_profile),  create_profile, []).
 :- http_handler(root(user/submit_profile),  submit_profile, []).

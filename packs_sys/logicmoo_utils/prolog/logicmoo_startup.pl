@@ -63,6 +63,13 @@ now_and_later(MC,TIM,SM,MGoal):- strip_module(MGoal,M,Goal),
   sys:call_now(c,TIM,SM,M:Goal),
   initialization(sys:call_now(MC,TIM,SM,M:Goal),restore).
 
+
+in_lm_ws(Goal):- 
+   working_directory(X,X),
+   getenv('LOGICMOO_WS',WS),      
+   setup_call_cleanup(cd(WS),(cd(prologmud_server),call(Goal)),cd(X)).
+
+
 :- module_transparent(sys:call_now/4).
 %sys:call_now(n,_TIM,_SM,_MGoal):-!.
 %sys:call_now(m,_TIM,_SM,_MGoal):-!.

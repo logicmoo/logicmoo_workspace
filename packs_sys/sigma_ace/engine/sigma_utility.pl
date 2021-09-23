@@ -682,7 +682,7 @@ conjoin(A,B,C) :-
 	%true ->
 		C = (A , B).
 
-disjoin(A,B,C) :-
+sigma_disjoin(A,B,C) :-
 	A == true ->
 		C = true;
 	B == true ->

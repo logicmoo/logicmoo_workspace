@@ -479,7 +479,7 @@ as rules. Each of these can then be used to prove the left hand literal
 if we know the other literals are false. Here we are treating the negation
 of an atom as a different Prolog atom (i.e.,\ we treat $\neg p(\overline{X})$
 as an atom $notp(\overline{X})$).
-\item the ancestor cancellation rule. While trying to prove $L$ we can assume
+\item the ancestor cancellation th_rule. While trying to prove $L$ we can assume
 $\neg L$. We have a subgoal proven if it unifies with the negation of
 an ancestor in the proof tree.
 This is an instance of proof by contradiction. We can see this as assuming
@@ -525,7 +525,7 @@ goal as long as we add it to the th_set of answers. To do this we carry a list
 of the alternate disjuncts that we are assuming in proving the top level goal.
 \subsection{Conversion to Clausal Form}
 It is desirable that we can convert an
-arbitrary well formed formula into clausal (or rule) form
+arbitrary well formed formula into clausal (or th_rule) form
 without mapping out subterms. Instead of distributing, we do this by
 creating a new term to refer to the disjunct.
 
@@ -706,12 +706,12 @@ add_prefix(Prefix,Pred,NewPred) :-
 /* \end{verbatim}
 \subsection{Compiling Rules}
 The next simplest compilation form we consider is the intermediate form
-called a ``rule''.
+called a ``th_rule''.
 Rules are statements of how to conclude
 the value of some relation. Each Theorist fact corresponds to a number
 of rules (one for each literal in the fact).
-Each rule gets translated into Prolog rules to explain
-and prove the head of the rule. 
+Each th_rule gets translated into Prolog rules to explain
+and prove the head of the th_rule. 
 
 Rules use the intermediate form called a ``literal''.
 A literal is either an atomic symbol or of the form $n(A)$ where $A$ is
@@ -740,7 +740,7 @@ $anc(P,[h(-x-)|N])$. If any of the $b_i$ are negated, then the
 corresponding predicate will be $ex\_not\_b_i$.
 
 \begin{example}\em
-the rule
+the th_rule
 \begin{quote}
 $gr(X,Y) \leftarrow f(X,Z), p(Z,Y)$
 \end{quote}
@@ -779,7 +779,7 @@ $...$\AND
 $prove\_b_n(-x_n-,T,anc([h(-x-)|P],N)).$
 \end{prolog}
 
-\begin{example} \em the rule
+\begin{example} \em the th_rule
 \begin{quote}
 $gr(X,Y) \leftarrow f(X,Z), p(Z,Y)$
 \end{quote}
@@ -811,7 +811,7 @@ The answers and assumed hypotheses should be accumulated from
 whichever branch was taken.
 This is then executed without mapping out subterms.
 \begin{example} \em
-The rule
+The th_rule
 \begin{quote}
 $p(A) \leftarrow q(A),(r(A),s(A);t(A)),m(A).$
 \end{quote}
@@ -839,7 +839,7 @@ $r$ and $s$ or executing $t$ from the explanation $J$.
 The following relation builds the desired structure for the bodies:
 \[make\_bodies(B,T,[Ths,Anc,Ans],ProveB,ExB)\]
 where $B$ is a disjunct/conjunct of literals (the body
-of the rule), $T$ is a theory for the proving,
+of the th_rule), $T$ is a theory for the proving,
 $Ths$ is a theory structure for explaining,
 $Anc$ is an ancestor
 structure (of form $anc(P,N)$), $Ans$ is an answer structure
@@ -887,14 +887,14 @@ make_bodies(A, T, [Ths,Anc,Ans], ProveA, ExA) :-
 /* \end{verbatim}
 
 The procedure $rule(F,R)$ declares $R$ to be a fact
-or constraint rule (depending on the value of $F$).
+or constraint th_rule (depending on the value of $F$).
 Constraints can only be used for proving;
 facts can be used for explaining as well as proving.
 $R$ is either a literal or of the form $if(H,B)$ where $H$ is a literal
 and $B$ is a body.
 
 This $rule$ first checks to see whether we want sound unification and
-then uses $drule(F,R)$ to decare the rule.
+then uses $drule(F,R)$ to decare the th_rule.
 
 $prolog\_cl(C)$ is a way of asserting to Prolog the clause $C$.
 This can either be asserted or written to a file to be consulted
@@ -904,16 +904,16 @@ $make\_anc(H)$ is a procedure which ensures that the ancestor search
 is th_set up properly for $H$. It is described in section \ref{anc-section},
 and can be ignored on first reading.
 
-\index{rule}
+\index{th_rule}
 \index{drule}
 \begin{verbatim} */
 
 
-rule(F,R) :-
+th_rule(F,R) :-
    th_flag((sound_unification,on)),!,
    make_sound(R,S),
    drule(F,S).
-rule(F,R) :-
+th_rule(F,R) :-
    drule(F,R).
 
 drule(F,if(H,B)) :-
@@ -991,7 +991,7 @@ either ``{\em fact\/}'' or ``{\em constraint\/}''
 and $N$ is the negation of a fact or constraint
 in negation normal form (see section \ref{th_nnf}),
 means that all rules which can be formed from $N$ (by allowing each
-atom in $N$ being the head of some rule) should be declared as such.
+atom in $N$ being the head of some th_rule) should be declared as such.
 \index{rulify}
 \begin{verbatim} */
 
@@ -1007,7 +1007,7 @@ rulify(H,A,OUT):-
   
 
 rulify(H,A) :- quietly(var_or_atomic(A)),!,
-   rule(H,n(A)).
+   th_rule(H,n(A)).
 
 rulify(H,(A,B)) :- !,
    contrapos(H,B,A),
@@ -1018,10 +1018,10 @@ rulify(H,(A;B)) :- !,
    rulify(H,B).
 
 rulify(H,n(A)) :- !,
-   rule(H,A).
+   th_rule(H,A).
 
 rulify(H,A) :-
-   rule(H,n(A)).
+   th_rule(H,n(A)).
 
 
 /* \end{verbatim}
@@ -1029,17 +1029,17 @@ rulify(H,A) :-
 $contrapos(H,D,T)$ where $H$ is either ``{\em fact\/}'' 
 or ``{\em constraint\/}'', and $(D,T)$ is (the negation of)
 a formula in negation normal form means that all rules
-which can be formed from $(D,T)$ with head of the rule coming from $T$
+which can be formed from $(D,T)$ with head of the th_rule coming from $T$
 should be formed.
 Think of $D$ as the literals for which the rules with them as heads
 have been formed, and $T$ as those which remain to be as the head of
-some rule.
+some th_rule.
 \index{contrapos}
 \begin{verbatim} */
 
 
 contrapos(H,D,A) :- quietly(var_or_atomic(A)),!,
-   rule(H,if(n(A),D)).
+   th_rule(H,if(n(A),D)).
 
 contrapos(H,D, (L,R)) :- !,
    contrapos(H,(R,D),L),
@@ -1050,10 +1050,10 @@ contrapos(H,D,(L;R)) :- !,
    contrapos(H,D,R).
 
 contrapos(H,D,n(A)) :- !,
-   rule(H,if(A,D)).
+   th_rule(H,if(A,D)).
 
 contrapos(H,D,A) :-
-   rule(H,if(n(A),D)).
+   th_rule(H,if(n(A),D)).
 
 
 /* \end{verbatim}
@@ -1062,7 +1062,7 @@ if we are to {\em rulify} the negation normal form
 \begin{quote}
 $n(p(A)),q(A),(r(A),s(A);t(A)),m(A)$
 \end{quote}
-we generate the following rule forms, which can then be given to {\em rule}
+we generate the following th_rule forms, which can then be given to {\em th_rule}
 \begin{quote}
 $p(A)\leftarrow q(A),(r(A),s(A);t(A)),m(A)$\\
 $n(q(A))\leftarrow (r(A),s(A);t(A)),m(A),n(p(A))$\\
@@ -1074,7 +1074,7 @@ $n(m(A))\leftarrow (r(A),s(A);t(A)),q(A),n(p(A))$
 \end{example}
 \subsection{Sound Unification}
 Sound unification works, by checking for repeated variables in the left
-hand side of a rule, and then unifies them by hand. This idea was stolen from 
+hand side of a th_rule, and then unifies them by hand. This idea was stolen from 
 Stickel's implementation.
 
 \index{make\_sound}
@@ -1434,7 +1434,7 @@ literals (either an atom or of the form $n(A)$ where $A$ is an atom).
 The relation defined here puts formulae into negation normal form
 without mapping out subterms.
 Usually we want to find the negation normal form of the negation of the
-formula, as this is the form suitable for use in the body of a rule.
+formula, as this is the form suitable for use in the body of a th_rule.
 
 The predicate used is of the form
 \[th_nnf(Fla,Parity,Body)\]
@@ -1646,7 +1646,7 @@ that $g$ is not explainable from $S$.
 \end{theorem}
 
 The intuition is that
-if $g$ is not in every extension then there is no reason to rule out
+if $g$ is not in every extension then there is no reason to th_rule out
 $S$ (based on the information given) and so we should not predict $g$.
                       
 We can use theorem \ref{everythm} to consider another way to view membership
@@ -2106,23 +2106,23 @@ same_length([_|L1],[_|L2]) :-
 \index{remove}
 \begin{verbatim} */
 
-
+/*
 remove(A,[A|B],B).
 remove(A,[H|T],[H|R]) :-
    remove(A,T,R).
-
+*/
 
 /* \end{verbatim}
 
 \index{remove\_all}
 \begin{verbatim} */
 
-
+/*
 remove_all([],L,L).
 remove_all([H|T],L,L2) :-
    remove(H,L,L1),
    remove_all(T,L1,L2).
-
+*/
 
 /* \end{verbatim}
 
@@ -2172,10 +2172,11 @@ groundseed(26).
 \begin{verbatim} */
 
 
+/*
 reverse([],T,T).
 reverse([H|T],A,B) :-
    reverse(T,A,[H|B]).
-
+*/
 
 /* \end{verbatim}
                                                      

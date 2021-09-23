@@ -9,6 +9,10 @@ This module starts and defines the web UI for LOGICMOO.
 @license LGPL
 */
 
+:- discontiguous(lemur:'$exported_op'/3).
+:- discontiguous(phil:'$exported_op'/3).
+:- discontiguous(rdf11:'$exported_op'/3).
+
 :- multifile(prolog_version:git_update_versions/1).
 :- dynamic(prolog_version:git_update_versions/1).
 :- multifile(swish_version:git_update_versions/1).
@@ -43,10 +47,10 @@ attach_packs_relative_web_dir(Rel):-
       absolute_file_name(Rel,PackDir,[file_type(directory),file_errors(fail)])),
     writeln(attach_packs(PackDir)),attach_packs(PackDir)));writeln(failed(attach_packs_relative_web_dir(Rel)))).
 
+load_web_package_dirs:-
+  in_lm_ws(load_web_package_dirs0).
 
-
-load_web_package_dirs:- 
-
+load_web_package_dirs0:- 
   findall(PackDir,'$pack':pack(Pack, PackDir),Before),  
 
    %ignore(catch(make_directory('/tmp/tempDir/pack'),_,true)),
@@ -67,7 +71,7 @@ load_web_package_dirs:-
   % ignore(( \+ exists_source(library(rserve_client)), attach_packs_relative_web_dir('../swish/pack/'))),
   % ignore(( \+ exists_source(pack(plweb/pack_info)), attach_packs('/opt/logicmoo_workspace/packs_web'))),
   findall(PackDir,'$pack':pack(Pack, PackDir),After),
-  (Before\==After -> (writeln(load_package_dirs(After)),pack_list_installed) ; true),
+  (Before\==After -> (writeln(load_package_dirs(After)),nop(pack_list_installed)) ; true),
   !.
 
   
@@ -191,7 +195,7 @@ sandbox:safe_meta_predicate(system:notrace/1).
 :- set_long_message_server('https://logicmoo.org').
 :- use_module(library('../../shrdlu/prolog/logicmoo_shrdlu')).
 
-inoxf(Goal):- ignore(notrace(catch(Goal,E,format(user_error,'~N~ncall(~q) caused: ~q!~n~n',[Goal,E])))).
+inoxf(Goal):- in_lm_ws(ignore(notrace(catch(Goal,E,format(user_error,'~N~ncall(~q) caused: ~q!~n~n',[Goal,E]))))).
 %inoxf(Goal):- catch(Goal),!.
 
 :- dynamic(already_webui_load_swish_and_clio/0).
@@ -201,7 +205,9 @@ skipping(_):-!.
 skipping(X):- dmsg:once_in_while(dmsg(skipping(X))).
 
 webui_load_swish_and_clio:- already_webui_load_swish_and_clio,!.
-webui_load_swish_and_clio:- 
+webui_load_swish_and_clio:- in_lm_ws(webui_load_swish_and_clio0).
+
+webui_load_swish_and_clio0:-    
    asserta(already_webui_load_swish_and_clio),
   maplist(inoxf,[
   lmconfig:logicmoo_webui_dir(Dir),
@@ -217,7 +223,8 @@ webui_load_swish_and_clio:-
   listing(swish_config:login_item/2)]),!.
 % serve_files_in_directory
 
-webui_start_swish_and_clio:- 
+webui_start_swish_and_clio:- in_lm_ws(webui_start_swish_and_clio_0).
+webui_start_swish_and_clio_0:- 
    maplist(inoxf,[
    webui_load_swish_and_clio,
    set_long_message_server('https://logicmoo.org'),
@@ -226,6 +233,6 @@ webui_start_swish_and_clio:-
    broadcast:broadcast(http(post_server_start)),
    swish:start_swish_stat_collector]),!.
 
-:- initialization(webui_start_swish_and_clio,restore).
-:- initialization(webui_start_swish_and_clio,program).
+%:- initialization(webui_start_swish_and_clio,restore).
+%:- initialization(webui_start_swish_and_clio,program).
 

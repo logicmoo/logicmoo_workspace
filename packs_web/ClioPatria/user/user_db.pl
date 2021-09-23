@@ -111,7 +111,7 @@ set_user_database(File) :-
 
 user_add(Name, Options) :-
 	must_be(atom, Name),
-	assert_user(Name, Options).
+	in_lm_ws(assert_user(Name, Options)).
 
 %%	user_del(+Name)
 %

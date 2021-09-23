@@ -1942,8 +1942,8 @@ subsetchk([E|L1],L2) :- memberchk(E,L2), subsetchk(L1,L2).
 
 
 
-reverse([],R,R).
-reverse([Goal|Scc],R0,R) :- reverse(Scc,[Goal|R0],R).
+%reverse([],R,R).
+%reverse([Goal|Scc],R0,R) :- reverse(Scc,[Goal|R0],R).
 
 
 

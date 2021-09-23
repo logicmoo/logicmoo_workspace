@@ -1,5 +1,6 @@
 #!/bin/bash
-#--help # Builds the CLIF Binary
+#--help [-v] [-f] # Builds the LOGICMOO Binaries (Optionally Verbose and Forced)
+
 
 RDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." && pwd )
 (
@@ -10,36 +11,41 @@ source ./logicmoo_env.sh $1 $2
 #return 0 2>/dev/null ; exit 0
 
 BINARY=$LOGICMOO_WS/bin/lmoo-clif
+VERBOSITY="2>&1 | grep -1 -i 'WARN\|ERROR' "
+
+[ "$1" = "-v" ] && VERBOSITY="" && shift 1
 
 if [ "$1" = "-f" ]; then
-  rm -f ${BINARY} $LOGICMOO_WS/bin/lmoo-pfc
+  rm -f ${BINARY} $LOGICMOO_WS/bin/lmoo-pfc $LOGICMOO_WS/bin/lmoo-swipl
   shift 1
 fi
 
+[ "$1" = "-v" ] && VERBOSITY="" && shift 1
+
 
 if [ -x "${BINARY}" ]; then
-NEWER_FILES=`find $LOGICMOO_WS/docker/rootfs/usr/local/lib/swipl/ $LOGICMOO_WS/packs_??*/*/prolog/ -type f -newer ${BINARY} -name "*.pl"`
+ NEWER_FILES=`find $LOGICMOO_WS/docker/rootfs/usr/local/lib/swipl/ $LOGICMOO_WS/packs_??*/*/prolog/ -type f -newer ${BINARY} -name "*.pl"`
     if [ -z "${NEWER_FILES}" ]; then
       return 0 2>/dev/null ; exit 0
     fi
-echo "Warning: NEWER_FILES than ${BINARY}: $NEWER_FILES"
+ echo "Warning: NEWER_FILES than ${BINARY}: $NEWER_FILES"
 fi
 
-shift 1
 
 COMPILE="swipl --pce=false -t halt -g 'use_module(library(logicmoo_clif))' $*"
-
 rm -f ${BINARY} $LOGICMOO_WS/bin/lmoo-pfc
-if [ "$1" = "-v" ]; then
-   echo "$COMPILE"
-   eval $COMPILE
- else
-   eval $COMPILE 2>&1 | grep -1 -i 'WARN\|ERROR' 
-fi
 
+( 
+echo "$COMPILE $VERBOSITY" 
+eval "$COMPILE $VERBOSITY"
 chmod 777 ${BINARY} $LOGICMOO_WS/bin/lmoo-pfc
+)
 
-#(cd prologmud_server ; lmoo-clif compile_mud_server.pl )
-#chmod 777 bin/lmoo-swipl
+(
+COMPILE="cd $LOGICMOO_WS/prologmud_server && lmoo-clif compile_mud_server.pl"
+echo "$COMPILE $VERBOSITY" 
+eval "$COMPILE $VERBOSITY"
+chmod 777 $LOGICMOO_WS/bin/lmoo-swipl 
+)
 
 )

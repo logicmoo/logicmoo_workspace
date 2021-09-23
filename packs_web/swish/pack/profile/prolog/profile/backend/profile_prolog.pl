@@ -89,10 +89,10 @@ impl_profile_open_db(Options) :-
 	db_attach(impl_profile_prolog_session:SessionDB, Options).
 
 db_file(Spec, File) :-
-	absolute_file_name(Spec, File,
+	in_lm_ws(absolute_file_name(Spec, File,
 			   [ extensions([db]),
 			     access(write)
-			   ]).
+			   ])).
 
 
 %%	impl_profile_create(+ProfileID, +CanAttributes)

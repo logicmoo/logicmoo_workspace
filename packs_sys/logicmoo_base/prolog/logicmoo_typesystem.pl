@@ -103,7 +103,7 @@ use_shared_module(USM):- with_no_mpred_expansions(baseKB:reexport(USM)).
 :- system:use_module(library(logicmoo/virtualize_source)).
 :- system:use_module(library(logicmoo/filesystem)).
 
-wsce(W):- with_subclause_expansion((set_how_virtualize_file(bodies,W,0),baseKB:consult(W))).
+wsce(W):- with_subclause_expansion((set_how_virtualize_file(bodies,W,0),ensure_loaded(W))).
 :- wsce(library('logicmoo/typesystem/mpred_agenda.pl')).
 :- wsce(library('logicmoo/typesystem/mpred_hooks.pl')).
 :- wsce(library('logicmoo/typesystem/mpred_storage.pl')).

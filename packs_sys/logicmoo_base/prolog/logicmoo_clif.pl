@@ -18,6 +18,11 @@
 
 :- reexport(library('logicmoo/common_logic/common_logic_utils.pl')).
 
+:- use_module(library(logicmoo_webui)).
+:-  webui_load_swish_and_clio.
+
+%:-  webui_start_swish_and_clio.
+
 :- reexport(library(sigma_ace)).
 
 /** <module> MODULE LOGICMOO CLIF / logicmoo_plarkc
@@ -48,6 +53,7 @@ This special module hooks into the logicmoo engine allow clif syntax to be recoc
 :- if((exists_source(library(wam_cl/sreader)), \+ current_module(wmclrt))).
 :- use_module(library(wam_cl/sreader)).
 :- endif.
+
 
 :- dynamic   user:file_search_path/2.
 :- multifile user:file_search_path/2.

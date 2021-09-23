@@ -13,7 +13,7 @@
 :- include(library(logicmoo_test_header)).
 
 
-:- kb_global(mudContains/2).
+:- kb_global(baseKB:mudContains/2).
 mudContains(a,b).
 
 %:- kb_shared(genlInverse/2).

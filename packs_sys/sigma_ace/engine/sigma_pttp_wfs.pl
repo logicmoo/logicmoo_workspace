@@ -1217,7 +1217,7 @@ add_lemmatization_args(Body,Proof,ProofEnd,Body1,Lemma) :-
         Body = (A ; B) ->
                 add_lemmatization_args(A,Proof,ProofEnd,A1,L1),
                 add_lemmatization_args(B,Proof,ProofEnd,B1,L2),
-                disjoin(A1,B1,Body1),
+                sigma_disjoin(A1,B1,Body1),
                 conjoin(L1,L2,Lemma);
         Body = infer_by(X) ->
 	        add_lemmatization_inference(X,Proof,ProofEnd,Record,Lemma),
@@ -1457,13 +1457,13 @@ default_assumptions([_|Proof],ProofEnd,Wff) :-
 
 disjoin1(A,B,C) :-
         disjoin2(A,B,C1),
-        disjoin(A,C1,C).
+        sigma_disjoin(A,C1,C).
 
 disjoin2(A,(B ; C),D) :-
         !,
         disjoin2(A,B,B1),
         disjoin2(A,C,C1),
-        disjoin(B1,C1,D).
+        sigma_disjoin(B1,C1,D).
 disjoin2(A,B,false) :-
         A == B,
         !.
@@ -1917,9 +1917,9 @@ cnf(NNF,CNF) :-
 	    cnf(F1,CNF1),
 	    cnf(F2,CNF2),
             (cnf_p(CNF1,CNF2,F1,F2) ->
-	           disjoin(CNF1,CNF2,CNF);
+	           sigma_disjoin(CNF1,CNF2,CNF);
 	    %true ->
-		   disjoin(CNF1,CNF2,CNF12),
+		   sigma_disjoin(CNF1,CNF2,CNF12),
 	           cnf(CNF12,CNF));
 	%true ->
 	    NNF=CNF.
@@ -2263,7 +2263,7 @@ add_complete_search_args(Body,DepthIn,DepthOut,Body1) :-
                 %true ->
                         add_complete_search_args(A,DepthIn,DepthOut,A1),
                         add_complete_search_args(B,DepthIn,DepthOut,B1)),
-                disjoin(A1,B1,Body1);
+                sigma_disjoin(A1,B1,Body1);
         Body = search(Goal,Max,Min,Inc) ->
                 PrevInc is Min + 1,
                 add_complete_search_args(Goal,DepthIn1,DepthOut1,Goal1),
@@ -2431,7 +2431,7 @@ add_ancestor_args(Body,AncestorLists,Body1) :-
         Body = (A ; B) ->
                 add_ancestor_args(A,AncestorLists,A1),
                 add_ancestor_args(B,AncestorLists,B1),
-                disjoin(A1,B1,Body1);
+                sigma_disjoin(A1,B1,Body1);
         Body =.. [search,Goal|L] ->
                 add_ancestor_args(Goal,AncestorLists,Goal1),
                 Body1 =.. [search,Goal1|L];
@@ -2503,7 +2503,7 @@ add_proof_recording_args(Body,Proof,ProofEnd,Body1) :-
         Body = (A ; B) ->
                 add_proof_recording_args(A,Proof,ProofEnd,A1),
                 add_proof_recording_args(B,Proof,ProofEnd,B1),
-                disjoin(A1,B1,Body1);
+                sigma_disjoin(A1,B1,Body1);
         Body =.. [search,Goal|L] ->
                 add_proof_recording_args(Goal,Proof,ProofEnd,Goal1),
                 Body1 =.. [search,Goal1|L];
@@ -2578,7 +2578,7 @@ body_for_head_literal(Head,Wff,Body) :-
         Wff = (A , B) ->
                 body_for_head_literal(Head,A,A1),
                 body_for_head_literal(Head,B,B1),
-                disjoin(A1,B1,Body);
+                sigma_disjoin(A1,B1,Body);
         Wff = (A ; B) ->
                 body_for_head_literal(Head,A,A1),
                 body_for_head_literal(Head,B,B1),
@@ -3069,7 +3069,7 @@ add_consistency_checking_args(Body,MMIn,MMOut,Body1) :-
         Body = (A ; B) ->
                 add_consistency_checking_args(A,MMIn,MMOut,A1),
                 add_consistency_checking_args(B,MMIn,MMOut,B1),
-                disjoin(A1,B1,Body1);
+                sigma_disjoin(A1,B1,Body1);
         Body =.. [search,Goal|L] ->
                 add_consistency_checking_args(Goal,MMIn,MMOut,Goal1), % ???
                 Body1 =.. [search,Goal1|L];
@@ -3093,7 +3093,7 @@ add_model_structure(WffI,Q,C,WffO) :-
         WffI = (A ; B) ->
                 add_model_structure(A,Q,C,A1),
                 add_model_structure(B,Q,C,B1),
-		disjoin(A1,B1,WffO);
+		sigma_disjoin(A1,B1,WffO);
         WffI = (A :- B) ->
                 add_model_structure(B,Q,C,B1),
 		WffO = (A :- B1);
@@ -3111,7 +3111,7 @@ classical_clauses(WffI,WffO) :-
         WffI = (A ; B) ->
                 classical_clauses(A,A1),
                 classical_clauses(B,B1),
-		disjoin(A1,B1,WffO);
+		sigma_disjoin(A1,B1,WffO);
         WffI = (A :- B) ->                        % ??? (special case query elim. TS Apr04)
 	        WffO = true;
         builtin(WffI) ->

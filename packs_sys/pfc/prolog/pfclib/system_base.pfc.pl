@@ -106,7 +106,7 @@ pfcSanityA.
 :- kb_shared(alwaysGaf/1).
 
 :- kb_shared(rtReformulatorDirectivePredicate/1).
-:- kb_global(rtArgsVerbatum/1).
+:- kb_global(baseKB:rtArgsVerbatum/1).
 :- kb_shared(rtAvoidForwardChain/1).
 
 :- kb_shared(pfcControlled/1).
