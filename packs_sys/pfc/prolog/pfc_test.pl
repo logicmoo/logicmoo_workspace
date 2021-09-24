@@ -651,7 +651,7 @@ write_testcase_std_info(Testcase):-
   forall(j_u:junit_prop(Testcase,Type,Term), write_testcase_prop(Type,Term)))),
   shrink_to(StdErr,200,Summary),
   replace_in_string(['CDATA'='CDAT4'],Summary,SummaryClean),
-  format("  <system-err>~w[~w[CD~w]]></system-err>",['<!','ATA',SummaryClean]),!.
+  format("  <system-err>~wCD~w[~w]]></system-err>",['<![','ATA',SummaryClean]),!.
  
 write_testcase_prop(S,V,O):- format('~N'), write(S),write_testcase_n_v(V,O), format('~N').
 write_testcase_prop(Type,Term):- format('~N'), write_testcase_n_v(Type,Term), format('~N').
