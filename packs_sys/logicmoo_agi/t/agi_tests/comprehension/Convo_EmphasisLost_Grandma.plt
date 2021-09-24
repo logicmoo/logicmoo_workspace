@@ -8,10 +8,9 @@ test_convo_flo([
    timing or emphasis. 
     '),
   convo_assert(
-    [p1'It look like the buffet is running out of food.',
-     p2'lets go eat, grandma',
-     p1'no. we cant eat grandma, i love her.'
-     ,]),
+    [p1:'It look like the buffet is running out of food.',
+     p2:'lets go eat, grandma',
+     p1:'no. we cant eat grandma, i love her.']),
  
   convo_ask_answer(
     'what did p1 think p2 said?',
@@ -21,10 +20,8 @@ test_convo_flo([
   convo_ask_answer(
     'What did p1 mean',
     'that p1 and grandma should go eat',
-    [p1_said_lets_eat]),
+    [p1_said_lets_eat])],
 
-   ])
- ),
  ['convo lost emphasis or punctuation "lets_eat_grandma". CasAm']).
 
 

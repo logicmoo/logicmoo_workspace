@@ -19,7 +19,7 @@ test_e2c([
    'Is Jim an owl?',
    'Yes.', [assert_jim_night_owl]),
 
- nlu_assert([ 'humans are not owls','night owl is a common metaphor',
+ nlu_assert([ 'humans are not owls','night owl is a common metaphor']),
 
   nlu_ask_answer(
     'Is Jim an owl?',
@@ -47,18 +47,18 @@ test_e2c([
     'Why is Jim frequently awake at night?',
     'Jim is a night owl.',
     [used_metaphor_night_owl]),
-  ])
+ 
   nlu_ask_answer(
     'What is a night owl?',
     'a common metaphor for an agent that is frequently awake at night',
-     [combined_metaphor_with_meaning])
+     [combined_metaphor_with_meaning]),
 
- nlu_assert(['Linda is awake when Jim is awake.'])
+ nlu_assert(['Linda is awake when Jim is awake.']),
 
    nlu_ask_answer(
     'Is Linda a night owl?',
     'Yes.',
      [learned_common_metaphor, linda_is_a_night_owl, nightowl, metaphor]),
-    ])
-),
-['common standard metaphor "night owl" is not unique to subject CasAm']).
+   
+
+['common standard metaphor "night owl" is not unique to subject CasAm']]).

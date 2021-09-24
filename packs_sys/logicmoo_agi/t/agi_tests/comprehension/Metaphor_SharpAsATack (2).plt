@@ -37,4 +37,5 @@ test_e2c([
     'What did Jim mean to say about Linda?',
     'She is intelligent.',
     [learned,it]),
-  ]).
+
+  []]).

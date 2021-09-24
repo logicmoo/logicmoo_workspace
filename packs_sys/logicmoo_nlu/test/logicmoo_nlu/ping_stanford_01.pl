@@ -15,7 +15,13 @@
 
 %:- ensure_loaded(library(parser_chat80)).
 
-:- mpred_test(false).
+:- mpred_test(test_corenlp_parse1).
+
+:- mpred_test(test_corenlp1).
+
+test_here(X):- mpred_test(test_corenlp(X)).
+
+:- forall(parser_tests(X),test_here(X)).
 
 
 % EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/logicmoo_nlu/test/logicmoo_nlu/ping_stanford_01.pl 

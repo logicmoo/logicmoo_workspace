@@ -13,9 +13,10 @@
 % =============================================
 %
 
-%:- ensure_loaded(library(parser_chat80)).
+test_here(X):- mpred_test(text_to_best_tree(X,format)).
 
-:- mpred_test(false).
+:- forall(parser_tests(X),test_here(X)).
+
 
 % EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/logicmoo_nlu/test/logicmoo_nlu/test_pos_01.pl 
 % JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.nlu.test.nlu/TEST_POS_01/ 

@@ -32,9 +32,9 @@ JENKINS_BUILD_RESULT=/var/lib/jenkins/jobs/logicmoo_workspace/builds/${BUILD_NUM
 
 rm -f $TESTING_TEMP/???*.*???
 
-VERBOSITY="2>&1 | grep -1 -i 'WARN\|ERROR\|_file\|00\|fail\|pass'"
+export VERBOSITY="2>&1 | grep -2 -i 'WARN\|ERROR\|_file\|00\|fail\|pass'"
 if [ "$1" == "-v" ]; then
-  VERBOSITY=""
+  export VERBOSITY=""
   shift 1
 fi
 
@@ -58,7 +58,7 @@ fi
 
 echo -e "Running release (all) tests\nTESTING_TEMP=$TESTING_TEMP\n( cd $PWD ; $BASH_SOURCE $TEST_PARAMS )"
 
-lmoo-make -v $VERBOSITY
+eval "lmoo-make $VERBOSITY"
 
 TEST_DIRS=`find -mindepth 2 $FILTER -type f -name "test_on_*.sh" -exec dirname {} \;`
 echo TEST_DIRS=$TEST_DIRS

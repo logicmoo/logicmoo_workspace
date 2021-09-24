@@ -17,8 +17,8 @@ test_e2c([
 
 
 nlu_assert(
-    ['A metaphor is an expression whose meaning is not literal and has a figurative meaning.",  
-  'The expression of a metaphor and its figurative meaning are sometimes related by 
+    ["A metaphor is an expression whose meaning is not literal and has a figurative meaning.",  
+  "The expression of a metaphor and its figurative meaning are sometimes related by 
     an analogy or other similarity.",
     '"sharp as a tack" is a metaphor.',
     '"sharp as a tack" is a metaphor about/meaning being intelligent.']),
@@ -45,6 +45,5 @@ nlu_ask_answer(
     'What did Jim mean to say about Linda?',
     'She is intelligent.',
     [metaphor_meaning_intention2]),
-        ])
-),
-['metaphor "sharp as a tack" used to infer intentioned statement, CasAm']).
+
+['metaphor "sharp as a tack" used to infer intentioned statement, CasAm']]).

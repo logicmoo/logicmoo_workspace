@@ -259,9 +259,6 @@ eng_to_bratko(Sentence, LF, Type, Clause, FreeVars) :-
 :- endif.
 
 
-
-
-
 % :- get_pos_tagger(I), jpl_set(I, is_DEBUG, '@'(false)).
 
 

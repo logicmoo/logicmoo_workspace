@@ -3869,11 +3869,15 @@
 				<Folder Name="test">
 					<Folder Name="logicmoo_nlu">
 						<F N="packs_sys/logicmoo_nlu/test/logicmoo_nlu/core"/>
+						<F N="packs_sys/logicmoo_nlu/test/logicmoo_nlu/how_are_you_f_01.plt"/>
 						<F N="packs_sys/logicmoo_nlu/test/logicmoo_nlu/parser_e2c.plt"/>
 						<F N="packs_sys/logicmoo_nlu/test/logicmoo_nlu/ping_stanford_01.pl"/>
 						<F N="packs_sys/logicmoo_nlu/test/logicmoo_nlu/test_charniak_01.pl"/>
 						<F N="packs_sys/logicmoo_nlu/test/logicmoo_nlu/test_chat80_01.pl"/>
+						<F N="packs_sys/logicmoo_nlu/test/logicmoo_nlu/test_e2c_01.pl"/>
+						<F N="packs_sys/logicmoo_nlu/test/logicmoo_nlu/test_e2c_02.pl"/>
 						<F N="packs_sys/logicmoo_nlu/test/logicmoo_nlu/test_header.pl"/>
+						<F N="packs_sys/logicmoo_nlu/test/logicmoo_nlu/test_on_release.sh"/>
 						<F N="packs_sys/logicmoo_nlu/test/logicmoo_nlu/test_pos_01.pl"/>
 					</Folder>
 					<F N="packs_sys/logicmoo_nlu/test/fracas-problems.dtd"/>

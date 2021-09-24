@@ -219,7 +219,7 @@ is_testing_e2c(S, Traits, Type1-Type2):- !,
   is_testing_e2c(S, Traits, Type1),
   \+ is_testing_e2c(S, Traits, Type2).
 
-run_e2c_test(S, _T):- e2c(S).
+run_e2c_test(S, _T):- e2c(S),!.
 
 add_e2c(S):- add_e2c(S, sanity).
 add_e2c(S, W):- nonvar(W), \+ is_list(W), !, add_e2c(S, [W]).
@@ -234,7 +234,7 @@ sent_to_parsed(U,E):- deepen_pos(parser_chat80:sentence80(E,U,[],[],[])).
 test_e2c(String) :- string(String), !, run_e2c_test(String, [requested]).
 test_e2c(TestTypes) :-
   forall((test_e2c(S, T), is_testing_e2c(S, T, TestTypes)),
-         (flatten([T, TestTypes], TestInfo), run_e2c_test(S, TestInfo))).
+         (flatten([T, TestTypes], TestInfo), once(run_e2c_test(S, TestInfo)))).
 
 
 

@@ -12,6 +12,12 @@
 test_e2c(X,[ape(Y)]):- ape_test(Y,X).
 test_e2c(X,[owlswrl(Y)]):- current_predicate(test_owlswrl/2),call(call,test_owlswrl(Y,X)), \+ clause(ape_test(Y,X),true).
 
+parser_tests(X):-test_charniak(X).
+parser_tests(X):-ape_test(Y,X), integer(Y), 1 is Y mod 4.
+parser_tests(X):-fracas_test_problem(X).
+
+fracas_test_problem(Text):- fracas_iface:fracas_test_problem(_, TAH, Text), memberchk(TAH,[tell,ask,hypothesis]).
+
 :- discontiguous(ape_test/2).
 
 test_e2c([

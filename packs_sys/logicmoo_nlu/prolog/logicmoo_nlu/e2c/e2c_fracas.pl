@@ -96,11 +96,11 @@ note(_, Note):- nb_current('$fracas_test',N),problem(N, note, Note),!.
 :- abolish(fracas_test_problem/3).
 
 %problem(N, _Else, Text):- N == Text.
-problem(N, Else, Text):- part_of_test(Else,New),!,problem(N, New, Text).
+problem( N, Else, Text):- part_of_test(Else,New), !, problem(N, New, Text).
 %problem(N, Else, Text):- \+ is_list(Else),flatten([fracas(N),Else],NewElse),!,problem(N, NewElse, Text).
-problem(N, Else, Text):- dmsg(fracas_test_problem(N, Else, Text)), fail.
+problem( N, Else, Text):- dmsg(fracas_test_problem(N, Else, Text)), fail.
 % problem(_N, _Else, _Text):-!.
-problem(N, Else, Text):- assertz_if_new(fracas_test_problem(N, Else, Text)),!.
+problem( N, Else, Text):- assertz_if_new(fracas_test_problem(N, Else, Text)), !.
 problem(_N, p, Text):- !, e2c(Text).
 problem(_N, q, Text):- !, e2c(Text).
 problem(_N, _, Text):- !, e2c(Text).

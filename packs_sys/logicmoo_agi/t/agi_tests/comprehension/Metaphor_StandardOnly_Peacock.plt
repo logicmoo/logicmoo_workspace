@@ -55,7 +55,7 @@ nlu_assert(['"jim is a peacock" is a metaphor meaning to show off']).
     'Why does Jim show off?',
     'Jim is a peacock.','"jim is a peacock" is a metaphor meaning to show off',
     [learned_standard_metaphor]),
-  ]).
+
 
 nlu_assert(["Kiki is a peacock"]).
  nlu_ask_answer(
@@ -65,9 +65,9 @@ nlu_assert(["Kiki is a peacock"]).
   nlu_ask_answer(
    "Does kiki show off?",
    'unknown',[kiki_is_not_a_show_off, standard_metaphor_not_common]),
-    ])
-),
-['standard metaphor "peacock" is unique to subject. CasAm']).
+   
+
+['standard metaphor "peacock" is unique to subject. CasAm']]).
 
 
 

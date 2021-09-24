@@ -15,7 +15,14 @@
 
 %:- ensure_loaded(library(parser_chat80)).
 
-:- mpred_test(false).
+:- mpred_test(test_charniak_parse1).
+
+:- mpred_test(test_charniak1).
+
+test_here(X):- mpred_test(test_corenlp(X)).
+
+:- forall(parser_tests(X),test_here(X)).
+
 
 % EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/logicmoo_nlu/test/logicmoo_nlu/test_charniak_01.pl 
 % JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.nlu.test.nlu/TEST_CHARNIAK_01/ 

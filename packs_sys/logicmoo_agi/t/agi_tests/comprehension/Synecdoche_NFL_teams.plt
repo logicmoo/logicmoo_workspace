@@ -69,8 +69,6 @@ nlu_assert('All NFL teams were required to have exactly 53 players.'),
     'the Chicago team',
     [synecdoche_learned]),
 
-  ])
-),
-['double synecdoche vince_trophy. CasAm']).
+['double synecdoche vince_trophy. CasAm']]).
 
 
