@@ -512,30 +512,33 @@ issue_labels(Name,[Package,ShortClass,TestNum]):-
   
 
 save_single_testcase(Name):-
+ must_det_l((
   locally(t_l:dont_shrink,
     save_single_testcase_shrink(Name,FileName)),
-  (find_issue_with_name(Name,IssueNumber)-> update_issue(IssueNumber,FileName);
-    create_issue_with_name(Name,FileName,_IssueNumber)),
+  nop(((find_issue_with_name(Name,IssueNumber)-> update_issue(IssueNumber,FileName);
+    create_issue_with_name(Name,FileName,_IssueNumber)))),
   nop(save_single_testcase_shrink(Name,_)),
-  clear_suite_attribs.
+  clear_suite_attribs)).
 
 xml_header :- write('<?'),write('xml version="1.0" '), writeln('encoding="utf-8"?>').
 save_single_testcase_shrink(Name,FileName):- 
+must_det_l((
  with_output_to(string(Text),
   (xml_header,
-   j_u:junit_prop(testsuite,file,File),
-   writeln("  <testsuites>"),
-   (getenv('JUNIT_SUITE',SuiteName);SuiteName=File),!,
-  get_suite_attribs(SuiteAttribs),
-  format("  <testsuite name=\"~w\" ~w>\n", [SuiteName, SuiteAttribs]),
-   show_junit_testcase(File,Name),
-   writeln("  </testsuite>"),
-   writeln(" </testsuites>"))),
+    must_det_l((
+          j_u:junit_prop(testsuite,file,File),
+          writeln("  <testsuites>"),
+          (getenv('JUNIT_SUITE',SuiteName);SuiteName=File),!,
+          get_suite_attribs(SuiteAttribs),
+          format("  <testsuite name=\"~w\" ~w>\n", [SuiteName, SuiteAttribs]),
+          show_junit_testcase(File,Name),
+          writeln("  </testsuite>"),
+          writeln(" </testsuites>"))))),
  %shorten_and_clean_name(File,SFile),
  %shorten_and_clean_name(Name,SName),
  %atomic_list_concat([SFile,'-',SName],RSName),
  atomic_list_concat([SuiteName,'-',Name],RSName),
- save_to_junit_file(RSName,Text,FileName).
+ save_to_junit_file(RSName,Text,FileName))).
 
 classname_to_package(CN,P,C):- atomic_list_concat(List,'.',CN), append(Left,[C],List),atomic_list_concat(Left,'.',P).
 
@@ -586,13 +589,12 @@ save_to_junit_file_text(Full,Text,FullF):-
   setup_call_cleanup(open(FullF, write, Out),writeln(Out,Text), close(Out)),!.
 
 save_to_junit_file(Name,DirtyText,FileName):-
- clean_away_ansi(DirtyText,Text),
+ must_det_l((clean_away_ansi(DirtyText,Text),
  getenv('TEST_STEM_PATH',Dir),!,
  shorten_and_clean_name(Name,-150,SName),
-  must_det_l(( 
-  atomic_list_concat([Dir,'-',SName],Full),
-  write_testcase_env(Name),
-  save_to_junit_file_text(Full,Text,FileName))).
+ atomic_list_concat([Dir,'-',SName],Full),
+ write_testcase_env(Name),
+ save_to_junit_file_text(Full,Text,FileName))).
 
 
 save_junit_results_single:-

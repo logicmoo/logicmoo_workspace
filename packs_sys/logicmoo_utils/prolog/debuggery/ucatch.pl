@@ -26,6 +26,7 @@
             main_self/1,
             set_main_error/0,
             find_main_eror/1,
+            call_each/2,
             set_mains/0,
             current_why/1,
             thread_self_main/0,
@@ -100,7 +101,7 @@
             must_det_l/1,
             must_det_l_pred/2,
             call_must_det/2,
-            call_each/2,
+            call_each_det/2,
             p_call/2,
 
             nd_dbgsubst/4,
@@ -225,8 +226,9 @@ hide_non_user_console:-current_input(In),stream_property(In, close_on_exec(true)
 
         must_det_l(0),
         must_det_l_pred(1,+),
-        call_must_det(1,+),
-        call_each(*,+),
+        call_must_det(1,+),       
+        call_each_det(1,+),
+        call_each(1,+),
         p_call(*,+),
 
         must_l(0),
@@ -383,7 +385,7 @@ hide_non_user_console:-current_input(In),stream_property(In, close_on_exec(true)
 
 :-meta_predicate(skip_failx_u(*)).
 skip_failx_u(G):- must_det_l(G).
-% skip_failx_u(G):-call_each([baseKB:call_u,on_xf_log_cont,notrace],G).
+% skip_failx_u(G):-call_each_det([baseKB:call_u,on_xf_log_cont,notrace],G).
 
 
 
@@ -1587,7 +1589,7 @@ on_x_log_fail(Goal):- catchv(Goal,E,(dmsg(E:Goal),fail)).
 
 on_xf_log_cont(Goal):- (on_x_log_cont(Goal)*->true;dmsg(on_f_log_cont(Goal))).
 
-on_xf_log_cont_l(Goal):- call_each(on_xf_log_cont,Goal).
+on_xf_log_cont_l(Goal):- call_each_det(on_xf_log_cont,Goal).
 
 % -- CODEBLOCK
 
@@ -1753,22 +1755,27 @@ one_must_det(_Call,OnFail):-OnFail,!.
 %
 % Must Be Successfull Deterministic (list Version).
 %
-must_det_l(Goal):- call_each(must_det_u,Goal).
+must_det_l(Goal):- call_each_det(must_det_u,Goal).
 
 must_det_l_pred(Pred,Rest):- tlbugger:skip_bugger,!,call(Pred,Rest).
-must_det_l_pred(Pred,Rest):- call_each(call_must_det(Pred),Rest).
+must_det_l_pred(Pred,Rest):- call_each_det(call_must_det(Pred),Rest).
 
 call_must_det(Pred,Arg):- must_det_u(call(Pred,Arg)),!.
 
 is_call_var(Goal):- strip_module(Goal,_,P),var(P).
 
-call_each(Pred,Goal):- (is_call_var(Pred);is_call_var(Goal)),!,trace_or_throw(var_call_each(Pred,Goal)),!.
-call_each(Pred,[Goal]):- !, dmsg(trace_syntax(call_each(Pred,[Goal]))),!,call_each(Pred,Goal).
-call_each(Pred,[Goal|List]):- !, dmsg(trace_syntax(call_each(Pred,[Goal|List]))), !, call_each(Pred,Goal),!,call_each(Pred,List).
-% call_each(Pred,Goal):-tlbugger:skip_bugger,!,p_call(Pred,Goal).
-call_each(Pred,M:(Goal,List)):-!, call_each(Pred,M:Goal),!,call_each(Pred,M:List).
-call_each(Pred,(Goal,List)):- !, call_each(Pred,Goal),!,call_each(Pred,List).
-call_each(Pred,Goal):- p_call(Pred,Goal),!.
+
+call_each(Pred,Goal):- call_each_det(Pred,Goal).
+
+call_each_det(Pred,Goal):- (is_call_var(Pred);is_call_var(Goal)),!,trace_or_throw(var_call_each(Pred,Goal)),!.
+call_each_det(Pred,[Goal]):- !, dmsg(trace_syntax(call_each_det(Pred,[Goal]))),!,call_each_det(Pred,Goal).
+call_each_det(Pred,[Goal|List]):- !, dmsg(trace_syntax(call_each_det(Pred,[Goal|List]))), !, call_each_det(Pred,Goal),!,call_each_det(Pred,List).
+% call_each_det(Pred,Goal1):-tlbugger:skip_bugger,!,p_call(Pred,Goal1).
+call_each_det(Pred,M:(Goal1,!,Goal2)):-!, call_each_det(Pred,M:Goal1),!,call_each_det(Pred,M:Goal2).
+call_each_det(Pred,M:(Goal1,Goal2)):-!, call_each_det(Pred,M:Goal1),!,call_each_det(Pred,M:Goal2).
+call_each_det(Pred,(Goal1,!,Goal2)):- !, call_each_det(Pred,Goal1),!,call_each_det(Pred,Goal2).
+call_each_det(Pred,(Goal1,Goal2)):- !, call_each_det(Pred,Goal1),!,call_each_det(Pred,Goal2).
+call_each_det(Pred,Goal):- p_call(Pred,Goal),!.
 
 % p_call(Pred,_:M:Goal):-!,p_call(Pred,M:Goal).
 p_call([Pred1|PredS],Goal):-!,p_call(Pred1,Goal),p_call(PredS,Goal).

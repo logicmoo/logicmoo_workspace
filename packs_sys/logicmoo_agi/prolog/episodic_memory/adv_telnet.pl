@@ -27,9 +27,9 @@
 :- dynamic(mu_global:console_tokens/2).
 :- volatile(mu_global:console_tokens/2).
 
-:- dynamic(mu_global:console_io_conn_history/7).
 :- dynamic(mu_global:console_io_player/3).
 :- volatile(mu_global:console_io_player/3).
+:- dynamic(mu_global:console_io_conn_history/7).
 :- volatile(mu_global:console_io_conn_history/7).
 
 :- use_module(library(socket)).

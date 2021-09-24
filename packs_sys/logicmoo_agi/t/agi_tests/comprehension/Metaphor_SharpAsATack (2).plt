@@ -1,6 +1,8 @@
 test_e2c([
   nlu_assert("Jim said 'Linda is sharp as a tack.'"),
-  nlu_assert(
+  
+  
+ nlu_assert(
     ["A metaphor is a pre-existing phrase whose meaning is not literal and has a different fixed meaning.  
   The word choice of a particular metaphor and the meaning are sometimes related by an analogy or similarity.",
     "sharp as a tack is a metaphor",

@@ -541,6 +541,11 @@ stream_pairs(In, Out):- nonvar(Out), var(In), stream_property(Out, file_no(F)), 
 stream_pairs(In, Out):- var(In), !, stream_property(Out, input), \+ stream_property(Out, file_name(_)), once(stream_pairs(In, Out)), \+ using_stream_in(In, _OtherAgent).
 %stream_pairs(In, Out):- var(Out), !, stream_property(Out, output), \+ stream_property(Out, fileno(2)), once(stream_pairs(In, Out)), \+ using_stream_in(In, _OtherAgent).
 
+:- dynamic(mu_global:console_io_player/3).
+:- volatile(mu_global:console_io_player/3).
+:- dynamic(mu_global:console_io_conn_history/7).
+:- volatile(mu_global:console_io_conn_history/7).
+
 using_stream_in(Stream, OtherAgent):- mu_global:console_io_player(Stream, _, OtherAgent).
 using_stream_in(Stream, OtherAgent):- mu_global:console_io_conn_history(Id, Alias, Stream, _OutStream, _Host, _Peer, Agent),
   once(OtherAgent = Agent ;  Alias = OtherAgent ; Id = OtherAgent).

@@ -34,7 +34,5 @@ test_e2c([
     'The baby.',
     [learned,it]),
 
-  ])
-),
-['implied metaphor "brayed". If failed, expect fail of extended metaphor. CasAm']).
+['implied metaphor "brayed". If failed, expect fail of extended metaphor. CasAm']]).
 

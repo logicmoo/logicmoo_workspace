@@ -31,10 +31,13 @@
 :- endif.
 */
 
-:- multifile aXiom/1.
-:- meta_predicate aXiom(+).
-:- multifile aXiom/3.
-:- meta_predicate aXiom(+, ?, ?).
+:- multifile(aXiom/1).
+:- dynamic(aXiom/1).
+:- meta_predicate(aXiom(+)).
+
+:- multifile(aXiom/3).
+:- dynamic(aXiom/3).
+:- meta_predicate(aXiom(+, ?, ?)).
 
 must_security_of(Doer, Level):- security_of(Doer, Level).
 

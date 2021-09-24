@@ -16,21 +16,22 @@
 % Main file.
 %
 */
-:- module(adv_test, [test_adv/0]).
+:- module(mu, [test_adv/0,nlu_assert/1]).
+:- '$set_source_module'(mu).
+:- module(mu).
+%:- include(library(logicmoo_test_header)).
 
-%:- ensure_loaded(adv_main).
+%:- '$set_source_module'(mu).
+nlu_assert(X):- mpred_test(baseKB:e2c((X))).
+:- ensure_loaded(library(episodic_memory/adv_main)).
+%:- ensure_loaded(library(episodic_memory/adv_telnet)).
+
+:- adventure_init.
+
 adv_reset:-
- adventure_init,
- main_once,
- main_once,
- main_once, !.
+ adventure_reset.
 
-test_adv :- test_adv(1).
 
-test_adv(M-N) :- integer(N), !,
- forall(
- between(M, N, O),
- test_adv(O)).
 
 test_adv(N) :-
  adv_reset,
@@ -38,15 +39,21 @@ test_adv(N) :-
  mainloop.
 
 
-adv_tst(0):- adv_reset.
+adv_tst(M-N) :- integer(N), !, forall(between(M, N, O),test_adv(O)).
+adv_tst(L) :- is_list(L), !, maplist(adv_tst,L).
 
+adv_tst(0):- adv_reset.
 adv_tst(1):-
  nlu_assert("He is in the kitchen."),
- nlu_assert("There are boxes on the floor.").
+ nlu_assert("There are boxes on the floor."),
+ !.
 
 adv_tst(2):-
  nlu_assert("He opens a box."),
- nlu_assert("There are books in the box.").
+ nlu_assert("There are books in the box."),
+ !.
+
+:- mpred_test(test_adv([1-2])).
 
 adv_tst(3):-
  nlu_assert("He takes out the books."),
@@ -56,6 +63,7 @@ adv_tst(3):-
  nlu_assert("He takes out the plates."),
  nlu_assert("He puts them in the kitchen cabinet.").
 
+:- mpred_test(test_adv([0-3])).
 
 adv_tst(4):-
  nlu_assert("He stands on the corner."),
@@ -67,7 +75,8 @@ adv_tst(4):-
  nlu_assert("They look inside the purses."),
  nlu_assert("They put the purses on their shoulders."),
  nlu_assert("Many women buy a purse."),
- nlu_assert("Some women buy two purses."),
+ nlu_assert("Some women buy two purses."),!,
+ !.
 
 adv_tst(5):-
  nlu_assert("She is in her pajamas."),
@@ -80,6 +89,7 @@ adv_tst(5):-
  nlu_assert("Her bedroom is dark."),
  nlu_assert("She puts her head back on the pillow."),
  nlu_assert("She goes to sleep."),
+ !.
 
 adv_tst(6):-
  nlu_assert("She opens the envelope."),
@@ -90,7 +100,8 @@ adv_tst(6):-
  nlu_assert("She finishes the letter."),
  nlu_assert("She writes a letter to her cousin."),
  nlu_assert("She tells her cousin all the latest news at home."),
- nlu_assert("She thanks her cousin for the letter."), !.
+ nlu_assert("She thanks her cousin for the letter."),
+ !.
 
 adv_tst(7):-
  nlu_assert("She is a model."),
@@ -103,7 +114,8 @@ adv_tst(7):-
  nlu_assert("People spend lots of money on the clothes."),
  nlu_assert("People buy the clothes."),
  nlu_assert("She never buys the clothes."),
- nlu_assert("She just wears them.").
+ nlu_assert("She just wears them."),
+ !.
 
 adv_tst(8):-
  nlu_assert("The baby cries."),
@@ -117,7 +129,8 @@ adv_tst(8):-
  nlu_assert("She puts the baby down."),
  nlu_assert("She looks at it."),
  nlu_assert("The baby looks at her."),
- nlu_assert("It smiles at her.").
+ nlu_assert("It smiles at her."),
+ !.
 
 adv_tst(9):-
  nlu_assert("He has a secret."),
@@ -131,7 +144,8 @@ adv_tst(9):-
  nlu_assert("She is smart."),
  nlu_assert("She likes him too."),
  nlu_assert("She gives him A's on his homework."),
- nlu_assert("She gives him gold stars for his class work."), !.
+ nlu_assert("She gives him gold stars for his class work."), !,
+ !.
 
 adv_tst(10):-
  nlu_assert("It is winter."),
@@ -143,7 +157,8 @@ adv_tst(10):-
  nlu_assert("Nobody else is on the pond."),
  nlu_assert("He has it all to himself."),
  nlu_assert("It is quiet on the pond."),
- nlu_assert("The only sound is his skates on the ice."), !.
+ nlu_assert("The only sound is his skates on the ice."),
+ !.
 
 adv_tst(11):-
  nlu_assert("He has a pocketknife."),
@@ -155,26 +170,30 @@ adv_tst(11):-
  nlu_assert("He cuts wood with the knife."),
  nlu_assert("The other part is a file."),
  nlu_assert("The file is two inches long."),
- nlu_assert("He files his nails with the file."), !.
+ nlu_assert("He files his nails with the file."),
+ !.
 
 
 adv_tst(12):- 
   nlu_assert("He blows air into the flute."),
   % ....
-  nlu_assert("A sound is heard by all in the room").
+  nlu_assert("A sound is heard by all in the room"),
+  !.
 
 adv_tst(13):- 
   nlu_assert("He blows air into the flute."),
   % ....
-  nlu_assert("No sound is heard by all in the room").
+  nlu_assert("No sound is heard by all in the room"),
+  !.
 
 adv_tst(14):- 
   nlu_assert("He tries to walk north from here."),
   nlu_assert("A northward path is able to accomidate his body walking."),
   nlu_assert("The northward path leads to a differnt place."),
   nlu_assert("He is seen leaving northward from here."),
-  nlu_assert("He arrives at a different place coming from the south").
+  nlu_assert("He arrives at a different place coming from the south"),
+  !.
 
-
-:- initialization(test_adv, main).
+:- test_adv.
+%:- initialization(test_adv, main).
 

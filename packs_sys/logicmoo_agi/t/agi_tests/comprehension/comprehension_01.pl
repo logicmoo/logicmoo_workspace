@@ -1,7 +1,9 @@
-% convo flow involving letter mistyped
-%Hook vs look: He’s been looking for money.
 
+:- include(library(logicmoo_test_header)).
 
+test_here(X):- notrace(mpred_test(e2c(X))).
+
+test_convo_file(File):- atom_contains(File,'0'),!.
 test_convo_file(File):-
   open(File,read,IS),
   repeat,
@@ -13,7 +15,7 @@ test_convo_term(X):-
  forall((sub_term(E,X),atomic(E),atom_contains(E,' '), 
    %dont parse end comment (Yet)
    \+ atom_contains(E,'CasAm')),
-  e2c(E)).
+  test_here(E)).
 
 :- prolog_load_context(directory,X), cd(X), 
    expand_file_name('*.plt',Files),

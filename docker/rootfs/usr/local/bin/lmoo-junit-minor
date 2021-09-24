@@ -316,7 +316,7 @@ for ele2 in "${SORTED_FILES[@]}"
 	if [ $INTERACTIVE -eq 1 ]; then
            eval $CMD 
 	else
-          ( eval $CMD ) 2>&1 | sed -e "s/<?xml/<oxml/g" -e "s/CDATA/CDAT5/g" -e "s|<|&gt;|g" | tee -a ${TEE_FILE} | perl -pe '
+          ( eval $CMD ) 2>&1 | sed -e "s/<?xml/<oxml/g" -e "s/CDATA/CDAT5/g" | tee -a ${TEE_FILE} | perl -pe '
 	      s/\e\[[\x30-\x3f]*[\x20-\x2f]*[\x40-\x7e]//g;
 	      s/\e[PX^_].*?\e\\//g;
 	      s/\e\][^\a]*(?:\a|\e\\)//g;
@@ -372,11 +372,11 @@ for ele2 in "${SORTED_FILES[@]}"
      #cat ${TEE_FILE_NOANSI}
      #echo "========================================="
      
+      [ ${INTERACTIVE} -eq 0 ] && (
+         source $LOGICMOO_WS/bin/lmoo-issue ${JUNIT_PACKAGE} ${JUNIT_SHORTCLASS} ${Test_9999} ${TEST_RESULT} "${FileTestCase}" ${TEE_FILE_NOANSI} "$Add_LABELS" "$Rem_LABELS"
+      )
 
       #sleep 10
-      [ ${INTERACTIVE} -eq 0 ] && (
-         echo source $LOGICMOO_WS/bin/lmoo-issue ${JUNIT_PACKAGE} ${JUNIT_SHORTCLASS} ${Test_9999} ${TEST_RESULT} "${FileTestCase}" ${TEE_FILE_NOANSI} "$Add_LABELS" "$Rem_LABELS"
-      )
       
       if [ "${TEST_RESULT}" = "SUCCESS" ]; then
          JECHO "<testcase name=\"${FileTestCase}\" classname='${JUNIT_CLASSNAME}' time='$totalTime'>"       
@@ -395,6 +395,7 @@ for ele2 in "${SORTED_FILES[@]}"
         JECHO "<testcase name=\"${FileTestCase}\" classname='${JUNIT_CLASSNAME}' time='$totalTime'>"       
       	JECHO " <failure message='FAILED: $0 ${keep_going} ${ele} (returned ${exitcode})'/><system-err><![CDATA[$(cat ${TEE_FILE_NOANSI})]]></system-err>\n</testcase>"	    
 	JUNIT_TESTS_GTOTAL_FAILURES=$((JUNIT_TESTS_GTOTAL_FAILURES+1))
+
 	[ -w "${ele}" ] && touch "$ele" ; /bin/true         
       fi
 

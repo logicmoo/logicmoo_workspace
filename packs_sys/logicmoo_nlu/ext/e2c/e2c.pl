@@ -38,9 +38,14 @@
    the third is the empty list.
 */
 
+e2c(assert(English)):- !,
+      e2c(English,CycLOut),
+      format('~p~n',[CycLOut]),
+      assert(e2c_result(English,CycLOut)).
+
 e2c(English):-
       e2c(English,CycLOut),
-      format('~w~n',[CycLOut]).
+      format('~p~n',[CycLOut]).
 
 
 e2c(English,CycLOut):-atomic(English),
