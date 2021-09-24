@@ -32,7 +32,7 @@ JENKINS_BUILD_RESULT=/var/lib/jenkins/jobs/logicmoo_workspace/builds/${BUILD_NUM
 
 rm -f $TESTING_TEMP/???*.*???
 
-VERBOSITY="2>&1 | grep -1 -i 'WARN\|ERROR\|_file\|00'"
+VERBOSITY="2>&1 | grep -1 -i 'WARN\|ERROR\|_file\|00\|fail\|pass'"
 if [ "$1" == "-v" ]; then
   VERBOSITY=""
   shift 1

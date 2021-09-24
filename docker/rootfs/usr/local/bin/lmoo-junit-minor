@@ -183,7 +183,7 @@ if [ -z "$FILES" ]; then
  return 0 2>/dev/null ; exit 0
 fi
 
-echo MAYBE_GH="echo gh"
+MAYBE_GH="echo gh"
 
 $MAYBE_GH api repos/logicmoo/logicmoo_workspace/labels -f name="${JUNIT_PACKAGE}" -f color="888000" 2>&1 > /dev/null
 export GH_MASTER_ISSUE_INFO=`$MAYBE_GH issue list -l ${JUNIT_PACKAGE} -L 1000 | sed -e "s/UTC /\n/g" | grep "unit_test"`
