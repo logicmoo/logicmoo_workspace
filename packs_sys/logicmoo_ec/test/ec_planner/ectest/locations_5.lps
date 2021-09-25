@@ -1,0 +1,29 @@
+:-was_s_l('/opt/logicmoo_workspace/packs_sys/logicmoo_ec/test/ec_planner/ectest/locations_5.e',0).
+%~ From E:
+%~ 
+%~ :-( call_pel_directive( translate(unskipped,'/opt/logicmoo_workspace/packs_sys/logicmoo_ec/test/ec_planner/ectest/locations_5.lps.pl')))
+:-( call_pel_directive( translate(unskipped,'/opt/logicmoo_workspace/packs_sys/logicmoo_ec/test/ec_planner/ectest/locations_5.lps.pl'))).
+:-include(library('ec_planner/ec_test_incl')).
+:-expects_dialect(lps).
+:-was_s_l('/opt/logicmoo_workspace/packs_sys/logicmoo_ec/test/ec_planner/ectest/locations_5.e',0).
+%~ From E:
+%~ 
+%~ :-( call_pel_directive( translate(begining,'/opt/logicmoo_workspace/packs_sys/logicmoo_ec/test/ec_planner/ectest/locations_5.lps.pl')))
+:-( call_pel_directive( translate(begining,'/opt/logicmoo_workspace/packs_sys/logicmoo_ec/test/ec_planner/ectest/locations_5.lps.pl'))).
+% Sat, 25 Sep 2021 06:59:29 GMT File: <stream>(0x558c73509e00)
+
+
+% [location1,location2]
+% Adjacent(location1,location2) <->
+% (location1=L1 & location2=L2) |
+% (location1=L2 & location2=L1) |
+% (location1=L2 & location2=L3) |
+% (location1=L3 & location2=L2) |
+% (location1=L3 & location2=L4) |
+% (location1=L4 & location2=L3) |
+% (location1=L4 & location2=L5) |
+% (location1=L5 & location2=L4).
+:-was_s_l('/opt/logicmoo_workspace/packs_sys/logicmoo_ec/test/ec_planner/ectest/locations_5.e',4).
+%~ From E:
+%~ 
+%~ (     adjacent(Location1,Location2) <->     ( Location1=l1,Location2=l2  ;        Location1=l2,Location2=l1 ;         Location1=l2,Location2=l3 ;         Location1=l3,Location2=l2 ;         Location1=l3,Location2=l4 ;         Location1=l4,Location2=l3 ;         Location1=l4,Location2=l5 ;         Location1=l5,Location2=l4))
