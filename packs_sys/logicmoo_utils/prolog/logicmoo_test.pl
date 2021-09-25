@@ -128,7 +128,7 @@ process_test_result(TestResult, G):- !,
   negate_call(G, Retry),
   save_info_to(TestResult, 
     (why_was_true(Retry),
-     nop(rtrace(G)))).
+     nop(ftrace(G)))).
 
 
 

@@ -132,6 +132,7 @@ pfcSanityA.
 % ===================================================================
 
 :- kb_global(baseKB:mtHybrid/1).
+:- dynamic(baseKB:mtProlog/1).
 :- kb_global(baseKB:mtProlog/1).
 :- kb_global(baseKB:genlMt/2).
 
