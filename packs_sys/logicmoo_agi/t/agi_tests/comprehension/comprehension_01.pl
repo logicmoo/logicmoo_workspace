@@ -18,7 +18,7 @@ test_convo_term(X):-
   test_here(E)).
 
 :- prolog_load_context(directory,X), cd(X), 
-   expand_file_name('*.plt',Files),
+   expand_file_name('Meta*Peacock.plt',Files),
    maplist(test_convo_file,Files).
 
 

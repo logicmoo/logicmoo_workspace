@@ -8,9 +8,9 @@
 
 :- ec:use_module(ec_planner_dmiles).
 
-:- discontiguous do_test/1.
-:- multifile do_test/1.
-:- dynamic(do_test/1).
+:- discontiguous(do_ec_test/1).
+:- multifile(do_ec_test/1).
+:- dynamic(do_ec_test/1).
                           
 :- style_check(-singleton).
 

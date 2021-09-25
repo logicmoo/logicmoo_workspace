@@ -83,7 +83,7 @@ test_body(N,Body,Info,Vs):-
    dbginfo(verbose, nl(2)).
 
 do_tests:- 
-  clause_w_names(do_test(N),Body,_Ref,File,Vs),
+  clause_w_names(do_ec_test(N),Body,_Ref,File,Vs),
   once(test_body(N,Body,File,Vs)),
   fail.
 do_tests:- current_prolog_flag(debug,false) -> halt(7) ; true.
