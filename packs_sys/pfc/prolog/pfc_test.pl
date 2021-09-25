@@ -147,6 +147,7 @@ why_was_true(P):- % predicate_property(P,dynamic),
 why_was_true(P):- dmsg_pretty(justfied_true(P)),!.
 
 catch_timeout(P):- tracing,!,call(P).
+catch_timeout(P):- !,call(P).
 catch_timeout(P):- catch(call_with_time_limit(30,w_o_c(P)),E,wdmsg(P->E)).
 
 %generate_test_name(G,Name):- getenv('JUNIT_CLASSNAME',Class), gtn_no_pack(G,NPack),sformat(Name,'~w ~w',[Class, NPack]),!.

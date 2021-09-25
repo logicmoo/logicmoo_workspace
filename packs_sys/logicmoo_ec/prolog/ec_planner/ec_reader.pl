@@ -197,13 +197,14 @@ convert_e(Proc1, Out, F):- with_e_file(Proc1, Out, F).
 
   
 %with_e_file(Proc1, Out, F):- dmsg(with_e_file(Proc1, Out, F)), fail.
-:- dynamic(done_it/1).
+:- dynamic(tmp_ec:done_it/1).
 
 with_e_file(Proc1, OutputName, Ins):- dmsg(with_e_file(Proc1, OutputName, Ins)),fail.
 with_e_file(Proc1, OutputName, F):- atom(F), atom_concat(DotLess,'.',F), with_e_file(Proc1, OutputName, DotLess).
 
 with_e_file(_Proc1, _OutputName, F):-  atom(F),
-    (\+ done_it(F) -> assert(done_it(F)) ; throw(done_it(F))),
+    DONE_IT = tmp_ec:done_it(F),
+    (\+ DONE_IT -> assert(DONE_IT) ; throw(DONE_IT)),
     atom_concat(_,'e.',F),throw(bad_file_name(F)),!.
 
 with_e_file(Proc1, Out, F):- compound(Out), Out=outdir(Dir), !, with_e_file(Proc1, outdir(Dir, ep), F),!.

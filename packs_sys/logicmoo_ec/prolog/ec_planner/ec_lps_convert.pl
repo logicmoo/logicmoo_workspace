@@ -233,14 +233,16 @@ last_lps_pass(Form,Lps):-
   ep_to_lps_arg(1,3,[],Form,Lps), !.
 
 
-ep_to_lps_arg(_Tries,_Pass,_Top,Form,Lps):- atomic_or_var(Form),!,Lps=Form.
-ep_to_lps_arg(_Tries,_Pass,_Top,Form,Lps):- already_lps(Form),!,Lps=Form.
-ep_to_lps_arg(Tries,Pass, Top,Form,Lps):-  Tries>6,!, Lps=Form.
-ep_to_lps_arg(Tries,Pass, Top,Form,Lps):-  Tries>6, throw(looped(ep_to_lps_arg(Tries,Pass, Top,Form,Lps))).
-ep_to_lps_arg(Tries,Pass, Top,Form,Lps):- TriesP1 is Tries+1,
+ep_to_lps_arg(_Tries,_Pass,_Top, Form, Lps):- atomic_or_var(Form),!,Lps=Form.
+ep_to_lps_arg(_Tries,_Pass,_Top, Form, Lps):- already_lps(Form),!,Lps=Form.
+ep_to_lps_arg( Tries, Pass, Top, Form, Lps):-  Tries>6,!,
+  Msg=looped(ep_to_lps_arg(Tries,Pass, Top,Form, Lps)), 
+  (Lps=Form -> dmsg(Msg) ; throw(Msg)).
+
+ep_to_lps_arg( Tries, Pass, Top, Form, Lps):- TriesP1 is Tries+1,
  (over_pass(Pass,Top,Form,LpsM) -> Form\=@=LpsM),!, ep_to_lps_arg(TriesP1,Pass, Top,LpsM,Lps).
 
-ep_to_lps_arg(Tries,Pass, Top, Form,Lps):- 
+ep_to_lps_arg(Tries, Pass, Top, Form, Lps):- 
    compound_name_arguments(Form,F,Args),
    must_maplist(ep_to_lps_arg(Tries,Pass,[F|Top]),Args,ArgsO),
    compound_name_arguments_maybe_zero(LpsM,F,ArgsO),
@@ -401,7 +403,6 @@ simply_atomic_or_conj((X1,X2)):- !, simply_atomic_or_conj(X1),simply_atomic_or_c
 simply_atomic_or_conj(X1):- simply_atomic(X1).
 
 simply_atomic(X1):- is_ftVar(X1),!,fail.
-simply_atomic(cl(_,_)).
 simply_atomic(X1):- atomic_or_var(X1),!.
 simply_atomic(not(X1)):-!, simply_atomic(X1).
 simply_atomic(at(X1,_)):-!, simply_atomic(X1).
