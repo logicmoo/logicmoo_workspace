@@ -22,7 +22,11 @@
 %:- include(library(logicmoo_test_header)).
 
 %:- '$set_source_module'(mu).
-nlu_assert(X):- mpred_test(baseKB:e2c((X))).
+nlu_assert(X):- 
+  mpred_test(baseKB:e2c((X,LF))),
+  mpred_test(assert(baseKB:e2c_assert_lf((X,LF)))).
+
+
 :- ensure_loaded(library(episodic_memory/adv_main)).
 %:- ensure_loaded(library(episodic_memory/adv_telnet)).
 
@@ -36,28 +40,37 @@ adv_reset:-
 test_adv(N) :-
  adv_reset,
  adv_tst(N),
- mainloop.
+ wdmsg(autoplay).
 
 
 adv_tst(M-N) :- integer(N), !, forall(between(M, N, O),test_adv(O)).
 adv_tst(L) :- is_list(L), !, maplist(adv_tst,L).
 
+% Resets the simulator
 adv_tst(0):- adv_reset.
+
 adv_tst(1):-
+ % The player becomes a male character
  nlu_assert("He is in the kitchen."),
+ % A box is already in the simulator, this adds the notion of 2 or more
  nlu_assert("There are boxes on the floor."),
  !.
 
 adv_tst(2):-
+ % Boxes are ensured to now open in not before
  nlu_assert("He opens a box."),
- nlu_assert("There are books in the box."),
+ % creates the notion of 'book' (plural) that at least 2 or more fit into a box
+ nlu_assert("There are books in the box."), 
  !.
 
 :- mpred_test(test_adv([1-2])).
 
 adv_tst(3):-
+%  'books' are removable from the box
  nlu_assert("He takes out the books."),
+ % creates the notion of 'bookshelf' that at least 2 or more books fit onto a bookshelf
  nlu_assert("He puts the books on the bookshelf."),
+ % this box is already in the simulator
  nlu_assert("He opens another box."),
  nlu_assert("There are plates in the box."),
  nlu_assert("He takes out the plates."),
