@@ -11,8 +11,10 @@ only_lps(Goal):- into_lps->call(Goal);true.
 :- dynamic(translating_inline/0).
 :- dynamic(translating_files/0).
 :- thread_local(t_l:is_ec_cvt/1).
-into_lps :- fail, (t_l:is_ec_cvt(lps) ; true),!.
-into_dec_pl :- \+ into_lps. % t_l:is_ec_cvt(lps).
+%into_lps :-  fail, (t_l:is_ec_cvt(lps) ; true),!.
+into_lps :-   t_l:is_ec_cvt(What),!,What==lps.
+into_dec_pl :- into_lps,!,fail. % t_l:is_ec_cvt(lps).
+into_dec_pl :- t_l:is_ec_cvt(What)->What==pel,!.
 no_canon :- true. 
 reduce_holds_at:- fail.
 prefer_lps(X,X):- fail, holds_not_holds_at.
@@ -493,7 +495,7 @@ assert_ready(Type,Value):-
   assert_ready_now(Type,Value).
 
 assert_ready_now(Type,Value):- 
-   only_dec_pl(pprint_ecp_pl(Type,Type=Value)),
+   only_dec_pl(pprint_ecp_pl(Type,Value)),
    notrace((echo_format('~N'))),
    mpred_fwc(Value),
    fix_assert(_Time,Value,ValueO),

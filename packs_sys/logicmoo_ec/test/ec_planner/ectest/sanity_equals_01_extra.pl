@@ -45,3 +45,9 @@ do_test(all):-  maplist(call,
 :- listing([axiom]).
 
 
+
+% EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/logicmoo_ec/test/ec_planner/ectest/sanity_equals_01_extra.pl 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.ec.ec_planner.ectest/SANITY_EQUALS_01_EXTRA/ 
+% ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3ASANITY_EQUALS_01_EXTRA 
+% ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/ 
+

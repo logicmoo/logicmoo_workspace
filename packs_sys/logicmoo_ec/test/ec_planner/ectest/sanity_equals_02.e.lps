@@ -1392,3 +1392,9 @@
 (154)$[y_each]# y_each:wtl_how(reader:ecc,y_each:clause_true(tlbugger,bugger:dmsg_match(show,A)),y_each:key_asserta(tlbugger,bugger:dmsg_match(show,A)),reader:(prolog_current_frame(1457),b_setval('$dump_frame',1457),dumpST1),y_each:key_erase(tlbugger)).   %  redo_locally.pl:199: 
 (158)$[system]# system:setup_call_catcher_cleanup(y_each:key_asserta(tlbugger,bugger:dmsg_match(show,A)),leanup:((reader:(prolog_current_frame(1457),b_setval('$dump_frame',1457),dumpST1),deterministic(B)),(notrace(B==true)->!;mquietly(y_each:key_erase(tlbugger)),notrace(nb_setarg(1,mquietly(y_each:key_erase(tlbugger)),true));y_each:key_asserta(tlbugger,bugger:dmsg_match(show,A)),notrace(nb_setarg(1,mquietly(y_each:key_erase(tlbugger)),y_each:key_erase(tlbugger))),notrace(fail))),C,leanup:mquietly(y_each:key_erase(tlbugger))).   %  init.pl:619: 
 (159)$[leanup]# system:'<meta-call>'(leanup:((reader:(prolog_current_frame(1457),b_setval('$dump_frame',1457),dumpST1),deterministic(A)),(notrace(A==true)->!;mquietly(y_each:key_erase(tlbugger)),notrace(nb_setarg(1,mquietly(y_each:key_erase(tlbugger)),true));y_each:key_asserta(tlbugger,bugger:dmsg_match(show,B)),notrace(nb_setarg(1,mquietly(y_each:key_erase(tlbugger)),y_each:key_erase(tlbugger))),notrace(fail)))).  no(clause) 
+
+% EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/logicmoo_ec/test/ec_planner/ectest/sanity_equals_02.e.lps 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.ec.ec_planner.ectest/SANITY_EQUALS_02/ 
+% ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3ASANITY_EQUALS_02 
+% ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/ 
+

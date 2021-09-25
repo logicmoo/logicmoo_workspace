@@ -249,7 +249,7 @@ for ele2 in "${SORTED_FILES[@]}"
             #// Runs the test -f .swiplrc
             #//CMD="swipl -g 'set_prolog_flag(runtime_testing,${runtime_testing})' -g \"thread_create(['${ele}'],Id),thread_join(Id),$test_completed\" "
             #//CMD="$SWIPL -g 'set_prolog_flag(runtime_testing,${runtime_testing})' -g \"(['${ele}'])\" -g \"$test_completed\" "
-            CMD="$SWIPL ${ele}"
+            CMD="$SWIPL -t \"['${ele}']\""
         fi
 
 	export Test_9999="Test_9999"
@@ -260,7 +260,7 @@ for ele2 in "${SORTED_FILES[@]}"
 	[ -z "${CMD_WRAPPER}" ] && CMD_WRAPPER="timeout --foreground --preserve-status -s SIGKILL -k ${CMD_TIMEOUT} ${CMD_TIMEOUT}" && USING_TIMEOUT=1
     
 	[ -z "${CMD_WRAPPER}" ] && CMD_WRAPPER=" "
-        [ USING_TIMEOUT -eq 1 ] && CMD="${CMD_WRAPPER} ${CMD} &" | CMD="${CMD_WRAPPER} ${CMD}" 
+        [ USING_TIMEOUT -eq 1 ] && export CMD="${CMD_WRAPPER} ${CMD} &" | CMD="${CMD_WRAPPER} ${CMD}" 
 	export GIT_REV=$(git rev-parse HEAD)
 	export JUNIT_CMD="${CMD}"
         JUNIT_TESTS_GTOTAL_TESTS=$((JUNIT_TESTS_GTOTAL_TESTS+1))

@@ -1,23 +1,38 @@
-:-was_s_l('/opt/logicmoo_workspace/packs_sys/logicmoo_ec/test/ec_planner/ectest/locations_1.e',0).
+:-was_s_l('/opt/logicmoo_workspace/packs_sys/logicmoo_ec/test/ec_planner/ectest/locations_1.e',9).
 %~ From E:
 %~ 
 %~ :-( call_pel_directive( translate(unskipped,'/opt/logicmoo_workspace/packs_sys/logicmoo_ec/test/ec_planner/ectest/locations_1.e.lps')))
 :-( call_pel_directive( translate(unskipped,'/opt/logicmoo_workspace/packs_sys/logicmoo_ec/test/ec_planner/ectest/locations_1.e.lps'))).
 :-include(library('ec_planner/ec_test_incl')).
 :-expects_dialect(lps).
-:-was_s_l('/opt/logicmoo_workspace/packs_sys/logicmoo_ec/test/ec_planner/ectest/locations_1.e',0).
+:-was_s_l('/opt/logicmoo_workspace/packs_sys/logicmoo_ec/test/ec_planner/ectest/locations_1.e',9).
 %~ From E:
 %~ 
 %~ :-( call_pel_directive( translate(begining,'/opt/logicmoo_workspace/packs_sys/logicmoo_ec/test/ec_planner/ectest/locations_1.e.lps')))
 :-( call_pel_directive( translate(begining,'/opt/logicmoo_workspace/packs_sys/logicmoo_ec/test/ec_planner/ectest/locations_1.e.lps'))).
-% Sat, 25 Sep 2021 11:22:01 GMT File: <stream>(0x55d04e365600)
+% Sat, 25 Sep 2021 13:23:13 GMT File: <stream>(0x559f31c30200)
 
 
+:-was_s_l('/opt/logicmoo_workspace/packs_sys/logicmoo_ec/test/ec_planner/ectest/locations_1.e',2).
+%; location1 is adjacent to location2.
+
+% predicate Adjacent(location,location)
+%~ From E:
+%~ 
+%~ predicate( adjacent(location,location))
+%~ cpc :- predicates([adjacent/2])
+%~ ooo :- [   cl([predicates([adjacent/2])],[])]
+%~ cpc :- mpred_prop(adjacent(location,location),predicate)
+%~ ooo :- [   cl([mpred_prop(adjacent(location,location),predicate)],[])]
+:-was_s_l('/opt/logicmoo_workspace/packs_sys/logicmoo_ec/test/ec_planner/ectest/locations_1.e',2).
+cl(mpred_prop(adjacent(location,location),predicate),[]),cl(predicates(adjacent/2),[]).
+
+
+:-was_s_l('/opt/logicmoo_workspace/packs_sys/logicmoo_ec/test/ec_planner/ectest/locations_1.e',5).
 % [location1,location2]
 % Adjacent(location1,location2) <-> 
 %  (location1=L1 & location2=L2) |
 %  (location1=L2 & location2=L1).
-:-was_s_l('/opt/logicmoo_workspace/packs_sys/logicmoo_ec/test/ec_planner/ectest/locations_1.e',4).
 %~ From E:
 %~ 
 %~ (     adjacent(Location1,Location2) <->     Location1=l1,Location2=l2;Location1=l2,Location2=l1)
@@ -26,7 +41,7 @@
 ( cl(    equals(Location1,l1),equals(Location1,l2),       adjacent(Location1,Location2))  ,    cl(      equals(Location1,l1),equals(Location2,l1),           adjacent(Location1,Location2)) ,     cl(      equals(Location2,l2),equals(Location1,l2),           adjacent(Location1,Location2)) ,     cl(      equals(Location2,l2),equals(Location2,l1),           adjacent(Location1,Location2)) ,     cl( adjacent(Location1,Location2),     equals(Location1,l1),equals(Location2,l2)) ,     cl( adjacent(Location1,Location2),     equals(Location1,l2),equals(Location2,l1))).
  %  ( cl(    equals(Location1,l1),equals(Location1,l2),       adjacent(Location1,Location2))  ,    cl(      equals(Location1,l1),equals(Location2,l1),           adjacent(Location1,Location2)) ,     cl(      equals(Location2,l2),equals(Location1,l2),           adjacent(Location1,Location2)) ,     cl(      equals(Location2,l2),equals(Location2,l1),           adjacent(Location1,Location2)) ,     cl( adjacent(Location1,Location2),     equals(Location1,l1),equals(Location2,l2)) ,     cl( adjacent(Location1,Location2),     equals(Location1,l2),equals(Location2,l1))).
  %  % =================================.
-:-was_s_l('/opt/logicmoo_workspace/packs_sys/logicmoo_ec/test/ec_planner/ectest/locations_1.e',7).
+:-was_s_l('/opt/logicmoo_workspace/packs_sys/logicmoo_ec/test/ec_planner/ectest/locations_1.e',9).
 %~ From E:
 %~ 
 %~ :-( call_pel_directive( translate(ending,'/opt/logicmoo_workspace/packs_sys/logicmoo_ec/test/ec_planner/ectest/locations_1.e.lps')))

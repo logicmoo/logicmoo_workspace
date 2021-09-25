@@ -15,5 +15,5 @@ test_logicmoo_ec_lps_reader_here(X):-
 % EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/logicmoo_ec/test/ec_planner/ectest/locations_5.pl 
 % JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.ec.ec_planner.ectest/LOCATIONS_5/logicmoo_ec_ec_planner_ectest_LOCATIONS_5/ 
 % ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3ALOCATIONS_5 
-% ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/654 
 
+% ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/659

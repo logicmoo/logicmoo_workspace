@@ -88,3 +88,9 @@ happens_at(wakeUp(james),0).
 :-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/Example1a.e',43).
 :- call_pel_directive(translate(ending,
                                 '/pack/logicmoo_ec/test/ec_planner/ectest/Example1a.e.pl')).
+
+% EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/logicmoo_ec/test/ec_planner/ectest/Example1a.e.pl 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.ec.ec_planner.ectest/EXAMPLE1A/ 
+% ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3AEXAMPLE1A 
+% ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/ 
+

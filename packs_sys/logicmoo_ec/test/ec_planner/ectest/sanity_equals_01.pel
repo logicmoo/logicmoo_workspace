@@ -102,3 +102,9 @@ neighbor(Position1, Position2) <->
 
 :- call_pel_directive(translate(ending,
                                 '/pack/logicmoo_ec/test/ec_planner/ectest/sanity_equals_01.pel')).
+
+% EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/logicmoo_ec/test/ec_planner/ectest/sanity_equals_01.pel 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.ec.ec_planner.ectest/SANITY_EQUALS_01/ 
+% ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3ASANITY_EQUALS_01 
+% ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/ 
+

@@ -10,7 +10,7 @@
 %~ 
 %~ :-( call_pel_directive( translate(begining,'/opt/logicmoo_workspace/packs_sys/logicmoo_ec/test/ec_planner/ectest/locations_2.e.lps')))
 :-( call_pel_directive( translate(begining,'/opt/logicmoo_workspace/packs_sys/logicmoo_ec/test/ec_planner/ectest/locations_2.e.lps'))).
-% Sat, 25 Sep 2021 11:58:12 GMT File: <stream>(0x55b9812bda00)
+% Sat, 25 Sep 2021 13:23:06 GMT File: <stream>(0x55fe88e7b100)
 
 
 :-was_s_l('/opt/logicmoo_workspace/packs_sys/logicmoo_ec/test/ec_planner/ectest/locations_2.e',2).
@@ -49,3 +49,9 @@ cl(mpred_prop(adjacent(location,location),predicate),[]),cl(predicates(adjacent/
 %~ 
 %~ :-( call_pel_directive( translate(ending,'/opt/logicmoo_workspace/packs_sys/logicmoo_ec/test/ec_planner/ectest/locations_2.e.lps')))
 :-( call_pel_directive( translate(ending,'/opt/logicmoo_workspace/packs_sys/logicmoo_ec/test/ec_planner/ectest/locations_2.e.lps'))).
+
+% EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/logicmoo_ec/test/ec_planner/ectest/locations_2.e.lps 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.ec.ec_planner.ectest/LOCATIONS_2/ 
+% ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3ALOCATIONS_2 
+% ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/656 
+
