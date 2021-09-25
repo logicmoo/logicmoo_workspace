@@ -58,7 +58,7 @@ append_terms(P, L, O):- is_list(L)->append_termlist(P, L, O);append_term(P, L, O
 writeEachTo(_ID, _Ctx, []):-!.
 writeEachTo(_ID, _Ctx, ''):-!.
 writeEachTo(ID, Ctx, List):- is_list(List), !, must_maplist(writeEachTo(ID, Ctx), List).
-writeEachTo(ID, Ctx, N=V):- crrect_value_arg(N, V, VV), !, append_terms([Ctx, ID, N, VV], O), !, do_ec_test(O).
+writeEachTo(ID, Ctx, N=V):- crrect_value_arg(N, V, VV), !, append_terms([Ctx, ID, N, VV], O), !, do_fracas_test(O).
 
 writeEachTo(ID, Ctx, element(Tag, [], STUFF)):- member(Tag, ['fracas', 'problems']), !, writeEachTo(ID, Ctx, STUFF).
 
@@ -68,7 +68,7 @@ writeEachTo(ParentID, Ctx, element(CLASS, S, STUFF)):- % member(CLASS, ['VNCLASS
    member('id'=ID, S), !,
    flag(frame_num, _, 0),
    nl, nl,
-   do_ec_test(switch_test(ID, CLASS, ParentID, Ctx)),
+   do_fracas_test(switch_test(ID, CLASS, ParentID, Ctx)),
    writeEachTo(ID, [CLASS], S),
    writeEachTo(ID, [CLASS], STUFF), !.
 
@@ -82,12 +82,11 @@ writeEachTo(_D, _Tx, element('comment', _, S)):-!, nl, writeEachTo(problem_heade
 
 writeEachTo(ID, Ctx, element(Tag, [], STUFF)):- !, writeEachTo(ID, [Tag|Ctx], STUFF).
 
-writeEachTo(_, Ctx, Atom):-append_terms(Ctx, Atom, O), !, do_ec_test(O).
-writeEachTo(_, Ctx, S):-length(Ctx, L), tab(L), append_terms(S, Ctx, O), do_ec_test(O), !.
+writeEachTo(_, Ctx, Atom):-append_terms(Ctx, Atom, O), !, do_fracas_test(O).
+writeEachTo(_, Ctx, S):-length(Ctx, L), tab(L), append_terms(S, Ctx, O), do_fracas_test(O), !.
 
-do_ec_test(problem_header(O)):- write('\n/*\n'), fmt(O), write('\n\n*/\n').
-
-do_ec_test(O):- format('~N~q.~n', [:-O]), call(O).
+do_fracas_test(problem_header(O)):- write('\n/*\n'), fmt(O), write('\n\n*/\n').
+do_fracas_test(       O         ):- format('~N~q.~n', [:-O]), call(O).
 
 switch_test(N, _, _, _):- dmsg(switch_test(N)), nb_setval('$fracas_test',N).
 
