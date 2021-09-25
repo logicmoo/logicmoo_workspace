@@ -4,7 +4,7 @@
 
 */
 
-do_test(plant1) :- abdemo_special(easy,[holds_at(plant_safe,t)],R).
+do_ec_test(plant1) :- abdemo_special(easy,[holds_at(plant_safe,t)],R).
 
 
 axiom(holds_at(plant_safe,T),

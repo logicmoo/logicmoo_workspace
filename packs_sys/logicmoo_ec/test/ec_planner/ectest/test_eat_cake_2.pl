@@ -5,12 +5,12 @@
 
 do_test_cakes(N) :- abdemo_special(loops,[holds_at(num_cakes(N),t)],R).
 
-%do_test(1) :- do_test_cakes(1).
-%do_test(0) :- do_test_cakes(0).
-do_test(4) :- do_test_cakes(4).
-do_test(5) :- do_test_cakes(5).
-do_test(6) :- \+ do_test_cakes(6).
-do_test(3) :- do_test_cakes(3).
+%do_ec_test(1) :- do_test_cakes(1).
+%do_ec_test(0) :- do_test_cakes(0).
+do_ec_test(4) :- do_test_cakes(4).
+do_ec_test(5) :- do_test_cakes(5).
+do_ec_test(6) :- \+ do_test_cakes(6).
+do_ec_test(3) :- do_test_cakes(3).
 
 fluent(num_cakes(_)).
 

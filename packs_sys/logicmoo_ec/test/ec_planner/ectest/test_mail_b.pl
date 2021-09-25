@@ -12,12 +12,12 @@
 
 */
 
-do_test(mail1)   :- abdemo_special(loops,[holds_at(inRoom(p1,r2),t)],R).
-do_test(mail2)   :- abdemo_special(loops,[holds_at(inRoom(p1,r3),t)],R).
-do_test(mail2T)   :- abdemo_special(loops,[holds_at(inRoom(p1,r3),T)],R).
-do_test(mail3)   :- abdemo_special(loops,[holds_at(inRoom(p1,r3),T),holds_at(neg(hasGot(agent(1),p1)),T)],R).
-do_test(mail4)   :- abdemo_special(loops,[holds_at(inRoom(p2,r3),T),holds_at(inRoom(p1,r3),T),holds_at(neg(hasGot(agent(1),p1)),T)],R).
-do_test(mail5)   :- abdemo_special(loops,[holds_at(inRoom(p2,r3),T),
+do_ec_test(mail1)   :- abdemo_special(loops,[holds_at(inRoom(p1,r2),t)],R).
+do_ec_test(mail2)   :- abdemo_special(loops,[holds_at(inRoom(p1,r3),t)],R).
+do_ec_test(mail2T)   :- abdemo_special(loops,[holds_at(inRoom(p1,r3),T)],R).
+do_ec_test(mail3)   :- abdemo_special(loops,[holds_at(inRoom(p1,r3),T),holds_at(neg(hasGot(agent(1),p1)),T)],R).
+do_ec_test(mail4)   :- abdemo_special(loops,[holds_at(inRoom(p2,r3),T),holds_at(inRoom(p1,r3),T),holds_at(neg(hasGot(agent(1),p1)),T)],R).
+do_ec_test(mail5)   :- abdemo_special(loops,[holds_at(inRoom(p2,r3),T),
                                           holds_at(inRoom(p1,r3),T),
                                           holds_at(neg(hasGot(agent(1),p1)),T),holds_at(hasGot(agent(1),p2),T)],R).
 
@@ -52,7 +52,7 @@ do_test(mail5)   :- abdemo_special(loops,[holds_at(inRoom(p2,r3),T),
 
 */
 
-do_test(mail6)   :- abdemo_special(loops,[holds_at(inRoom(p2,r3),T),
+do_ec_test(mail6)   :- abdemo_special(loops,[holds_at(inRoom(p2,r3),T),
                                           holds_at(inRoom(p1,r3),T),
                                           happens(do(A, deliver_pack(p1, r1)), T),
                                           holds_at(neg(hasGot(agent(1),p1)),T),holds_at(hasGot(agent(1),p2),T)],R).

@@ -5,48 +5,48 @@
 
 */
 
-do_test(stdtest+3) :-
+do_ec_test(stdtest+3) :-
      testing_msg('Test 3'),
      abdemo_special(easy,[holds_at(have(o1),t), holds_at(have(o2),t),
           holds_at(have(o3),t)], R).
 
-do_test(stdtest+4) :-
+do_ec_test(stdtest+4) :-
      testing_msg('Test 4'),
      abdemo_special(easy,[holds_at(have(o1),t), holds_at(have(o2),t),
           holds_at(have(o3),t), holds_at(have(o4),t)], R).
 
-do_test(stdtest+5) :-
+do_ec_test(stdtest+5) :-
      abdemo_special(easy,[holds_at(have(o1),t), holds_at(have(o2),t),
           holds_at(have(o3),t), holds_at(have(o4),t),
           holds_at(have(o5),t)], R).
 
-do_test(stdtest+6) :-
+do_ec_test(stdtest+6) :-
      testing_msg('Test 6'),
      abdemo_special(easy,[holds_at(have(o1),t), holds_at(have(o2),t),
           holds_at(have(o3),t), holds_at(have(o4),t),
           holds_at(have(o5),t), holds_at(have(o6),t)], R).
 
-do_test(stdtest+7) :-
+do_ec_test(stdtest+7) :-
      abdemo_special(easy,[holds_at(have(o1),t), holds_at(have(o2),t),
           holds_at(have(o3),t), holds_at(have(o4),t),
           holds_at(have(o5),t), holds_at(have(o6),t),
           holds_at(have(o7),t)], R).
 
-do_test(stdtest+8) :-
+do_ec_test(stdtest+8) :-
      testing_msg('Test 8 - 111 sicstus'),
      abdemo_special(easy,[holds_at(have(o1),t), holds_at(have(o2),t),
           holds_at(have(o3),t), holds_at(have(o4),t),
           holds_at(have(o5),t), holds_at(have(o6),t),
           holds_at(have(o7),t), holds_at(have(o8),t)], R).
 
-do_test(benchtest+9) :-
+do_ec_test(benchtest+9) :-
      abdemo_special(long,[holds_at(have(o1),t), holds_at(have(o2),t),
           holds_at(have(o3),t), holds_at(have(o4),t),
           holds_at(have(o5),t), holds_at(have(o6),t),
           holds_at(have(o7),t), holds_at(have(o8),t),
           holds_at(have(o9),t)], R).
 
-do_test(benchtest+10+long) :-
+do_ec_test(benchtest+10+long) :-
      testing_msg('Test 10'),
      abdemo_special(long,[holds_at(have(o1),t), holds_at(have(o2),t),
           holds_at(have(o3),t), holds_at(have(o4),t),
@@ -54,7 +54,7 @@ do_test(benchtest+10+long) :-
           holds_at(have(o7),t), holds_at(have(o8),t),
           holds_at(have(o9),t), holds_at(have(o10),t)], R).
 
-do_test(benchtest+12+long) :-
+do_ec_test(benchtest+12+long) :-
      testing_msg('Test 12'),
      abdemo_special(long,[holds_at(have(o1),t), holds_at(have(o2),t),
           holds_at(have(o3),t), holds_at(have(o4),t),
@@ -63,7 +63,7 @@ do_test(benchtest+12+long) :-
           holds_at(have(o9),t), holds_at(have(o10),t),
           holds_at(have(o11),t), holds_at(have(o12),t)], R).
 
-do_test(benchtest+14+long) :-
+do_ec_test(benchtest+14+long) :-
      testing_msg('Test 14'),
      abdemo_special(long,[holds_at(have(o1),t), holds_at(have(o2),t),
           holds_at(have(o3),t), holds_at(have(o4),t),
@@ -73,7 +73,7 @@ do_test(benchtest+14+long) :-
           holds_at(have(o11),t), holds_at(have(o12),t),
           holds_at(have(o13),t), holds_at(have(o14),t)], R).
 
-do_test(benchtest+16+long) :-
+do_ec_test(benchtest+16+long) :-
      testing_msg('Test 16'),
      abdemo_special(long,[holds_at(have(o1),t), holds_at(have(o2),t),
           holds_at(have(o3),t), holds_at(have(o4),t),

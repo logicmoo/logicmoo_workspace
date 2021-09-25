@@ -8,12 +8,12 @@
 
 %   Here's a test query.
 
-   do_test(shopping1) :- abdemo_special(easy,[holds_at(have(drill),t), holds_at(have(milk),t),
+   do_ec_test(shopping1) :- abdemo_special(easy,[holds_at(have(drill),t), holds_at(have(milk),t),
         holds_at(have(banana),t), holds_at(at(home),t)],R).
 
 %   Here's a simpler one.
 
-   do_test(shopping2) :- abdemo_special(easy,[holds_at(have(drill),t), holds_at(have(milk),t)],R).
+   do_ec_test(shopping2) :- abdemo_special(easy,[holds_at(have(drill),t), holds_at(have(milk),t)],R).
 
 
 

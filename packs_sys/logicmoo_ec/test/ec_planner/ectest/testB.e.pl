@@ -4,35 +4,35 @@
 */
 
 
-do_test(test2) :-
+do_ec_test(test2) :-
      testing_msg('Test 2'),
      abdemo_special(easy,[holds_at(f2,t)], R).
 
-do_test(test4) :-
+do_ec_test(test4) :-
      testing_msg('Test 4'),
      abdemo_special(easy,[holds_at(f4,t)], R).
 
-do_test(test6) :-
+do_ec_test(test6) :-
      testing_msg('Test 6'),
      abdemo_special(easy,[holds_at(f6,t)], R).
 
-do_test(test8) :-
+do_ec_test(test8) :-
      testing_msg('Test 8'),
      abdemo_special(easy,[holds_at(f8,t)], R).
 
-do_test(test10) :-
+do_ec_test(test10) :-
      testing_msg('Test 10'),
      abdemo_special(easy,[holds_at(f10,t)], R).
 
-do_test(test12) :-
+do_ec_test(test12) :-
      testing_msg('Test 12'),
      abdemo_special(easy,[holds_at(f12,t)], R).
 
-do_test(test14) :-
+do_ec_test(test14) :-
      testing_msg('Test 14'),
      abdemo_special(easy,[holds_at(f14,t)], R).
 
-do_test(test16) :-
+do_ec_test(test16) :-
      testing_msg('Test 16'),
      abdemo_special(easy,[holds_at(f16,t)], R).
 

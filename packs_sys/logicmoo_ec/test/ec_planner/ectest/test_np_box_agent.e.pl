@@ -8,7 +8,7 @@
 % ectest/TestBoxRoom.e:1
 :- module(ec).
 
-:- discontiguous do_test/1.
+:- discontiguous do_ec_test/1.
 
 do_test_gen(What) :- ec_current_domain_db(fluent(P)),functor(P,F,A),functor(What,F,A).
 
@@ -26,42 +26,42 @@ These tests Pass
 
 
 */
-do_test(test_np_box_1) :-  local_demo([holds_at(directlyIn(lisa,livingRoom),t)]).
-do_test(test_np_box_2) :-  local_demo([holds_at(inRoom(lisa,livingRoom),t)]).
-do_test(test_np_box_3) :-  local_demo([holds_at(directlyIn(lisa,kitchen),t)]).
-do_test(test_np_box_4) :-  local_demo([holds_at(inRoom(lisa,kitchen),t)]).
-do_test(test_np_box_5) :-  local_demo([holds_at(directlyIn(box,kitchen),t)]).
+do_ec_test(test_np_box_1) :-  local_demo([holds_at(directlyIn(lisa,livingRoom),t)]).
+do_ec_test(test_np_box_2) :-  local_demo([holds_at(inRoom(lisa,livingRoom),t)]).
+do_ec_test(test_np_box_3) :-  local_demo([holds_at(directlyIn(lisa,kitchen),t)]).
+do_ec_test(test_np_box_4) :-  local_demo([holds_at(inRoom(lisa,kitchen),t)]).
+do_ec_test(test_np_box_5) :-  local_demo([holds_at(directlyIn(box,kitchen),t)]).
 
 % fix this next test and the "test_np_box_occurs" should pass
-%do_test(has_occured) :-  local_demo([has_occured(move(lisa,box,livingRoom,lisa))],R).
+%do_ec_test(has_occured) :-  local_demo([has_occured(move(lisa,box,livingRoom,lisa))],R).
 
 
 
 
 % 
-do_test(happened) :-  local_demo([happens(move(lisa,box,livingRoom,lisa),_T)]).
+do_ec_test(happened) :-  local_demo([happens(move(lisa,box,livingRoom,lisa),_T)]).
 
-do_test(happened2) :-  local_demo([happens(move(lisa,box,livingRoom,lisa),_T1,_T2)]).
+do_ec_test(happened2) :-  local_demo([happens(move(lisa,box,livingRoom,lisa),_T1,_T2)]).
 
 % 
-do_test(happend2b) :-  fail, local_demo(
+do_ec_test(happend2b) :-  fail, local_demo(
               [happens(move(lisa,newspaper,livingRoom,box),t_plus_01),
                 before(t_plus_01, t_plus_41),
                happens(move(lisa,lisa,kitchen,livingRoom),t_plus_41)]).
 
-do_test(happend2a) :- fail,  local_demo(
+do_ec_test(happend2a) :- fail,  local_demo(
               [happens(move(lisa,newspaper,livingRoom,box),t_plus_01,t_plus_02),
                 before(t_plus_01, t_plus_41),
                happens(move(lisa,lisa,kitchen,livingRoom),t_plus_41,t_plus_42)]).
 
-do_test(happend2r) :- fail, local_demo(
+do_ec_test(happend2r) :- fail, local_demo(
               [happens(move(lisa,newspaper,livingRoom,box),t_plus_01,t_plus_02),
                 before(t_plus_41, t_plus_01),
                happens(move(lisa,lisa,kitchen,livingRoom),t_plus_41,t_plus_42)]).
 
 
 
-do_test(test_np_box_occurs) :- test_np_box_occurs.
+do_ec_test(test_np_box_occurs) :- test_np_box_occurs.
 
 test_np_box_occurs1(HapsList):-
  bagof(E, H^((axiom(H,B),functor(H,happens,_)),member(E,[H|B])),  UHapsList),
@@ -113,7 +113,7 @@ test_np_box_occurs:-
  */
  local_demo(Edges),!.
 
-do_test(test_np_box_agent) :-  forall(do_test_gen(What), local_demo([holds_at(What,_When)])).
+do_ec_test(test_np_box_agent) :-  forall(do_test_gen(What), local_demo([holds_at(What,_When)])).
 
 
 
