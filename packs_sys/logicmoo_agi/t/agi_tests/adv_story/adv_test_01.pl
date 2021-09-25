@@ -7,7 +7,8 @@
 %
 % LogicMOO, Inform7, FROLOG, Guncho, PrologMUD and Marty's Prolog Adventure Prototype
 %
-% Copyright (C) 2004 Marty White under the GNU GPL
+% 2010 - Douglas Miles
+% 2004 - Marty White 
 % Sept 20, 1999 - Douglas Miles
 % July 10, 1996 - John Eikenberry
 %
@@ -49,36 +50,47 @@ adv_tst(L) :- is_list(L), !, maplist(adv_tst,L).
 % Resets the simulator
 adv_tst(0):- adv_reset.
 
-adv_tst(1):-
+
+adv_tst(10):-
  % The player becomes a male character
+  nlu_assert("He is in the kitchen."),
+  nlu_assert("There is an apple in the crate."),
+  nlu_assert("He takes out the apple."),
+  nlu_assert("He puts it on the table."),!.
+
+% only controls existing objects
+:- mpred_test(test_adv([0-10])).
+
+adv_tst(20):-
  nlu_assert("He is in the kitchen."),
- % A box is already in the simulator, this adds the notion of 2 or more
- nlu_assert("There are boxes on the floor."),
+ % this box not yet in the simulator
+ nlu_assert("He opens another box."),
+ nlu_assert("There are plates in the box."),
+ nlu_assert("He takes out the plates."),
+ nlu_assert("He puts them in the kitchen cabinet."),
  !.
 
-adv_tst(2):-
+adv_tst(25):-
+ % A box is already in the simulator, this adds the notion of 2 or more
+ nlu_assert("There are boxes on the floor."),
  % Boxes are ensured to now open in not before
  nlu_assert("He opens a box."),
  % creates the notion of 'book' (plural) that at least 2 or more fit into a box
  nlu_assert("There are books in the box."), 
  !.
 
-:- mpred_test(test_adv([1-2])).
+:- mpred_test(test_adv([20])).
 
-adv_tst(3):-
+
+adv_tst(30):-
 %  'books' are removable from the box
  nlu_assert("He takes out the books."),
  % creates the notion of 'bookshelf' that at least 2 or more books fit onto a bookshelf
  nlu_assert("He puts the books on the bookshelf."),
- % this box is already in the simulator
- nlu_assert("He opens another box."),
- nlu_assert("There are plates in the box."),
- nlu_assert("He takes out the plates."),
- nlu_assert("He puts them in the kitchen cabinet.").
 
-:- mpred_test(test_adv([0-3])).
+:- mpred_test(test_adv([0-30])).
 
-adv_tst(4):-
+adv_tst(40):-
  nlu_assert("He stands on the corner."),
  nlu_assert("He sells purses."),
  nlu_assert("He says, 'Ten Dollars' over and over."),
@@ -91,7 +103,7 @@ adv_tst(4):-
  nlu_assert("Some women buy two purses."),!,
  !.
 
-adv_tst(5):-
+adv_tst(50):-
  nlu_assert("She is in her pajamas."),
  nlu_assert("She lies down."),
  nlu_assert("She puts her head on the pillow."),
@@ -104,7 +116,7 @@ adv_tst(5):-
  nlu_assert("She goes to sleep."),
  !.
 
-adv_tst(6):-
+adv_tst(60):-
  nlu_assert("She opens the envelope."),
  nlu_assert("She reads the letter."),
  nlu_assert("The letter is from her cousin."),
@@ -116,7 +128,7 @@ adv_tst(6):-
  nlu_assert("She thanks her cousin for the letter."),
  !.
 
-adv_tst(7):-
+adv_tst(70):-
  nlu_assert("She is a model."),
  nlu_assert("She walks up and down the runway."),
  nlu_assert("She models clothes."),
@@ -130,7 +142,7 @@ adv_tst(7):-
  nlu_assert("She just wears them."),
  !.
 
-adv_tst(8):-
+adv_tst(80):-
  nlu_assert("The baby cries."),
  nlu_assert("She looks at it."),
  nlu_assert("She talks to it."),
@@ -145,7 +157,7 @@ adv_tst(8):-
  nlu_assert("It smiles at her."),
  !.
 
-adv_tst(9):-
+adv_tst(90):-
  nlu_assert("He has a secret."),
  nlu_assert("He keeps his secret."),
  nlu_assert("He shares it with nobody."),
@@ -160,7 +172,7 @@ adv_tst(9):-
  nlu_assert("She gives him gold stars for his class work."), !,
  !.
 
-adv_tst(10):-
+adv_tst(100):-
  nlu_assert("It is winter."),
  nlu_assert("It is early morning."),
  nlu_assert("He goes to the park."),
@@ -173,7 +185,7 @@ adv_tst(10):-
  nlu_assert("The only sound is his skates on the ice."),
  !.
 
-adv_tst(11):-
+adv_tst(110):-
  nlu_assert("He has a pocketknife."),
  nlu_assert("It has two parts."),
  nlu_assert("It has a knife."),
@@ -187,19 +199,19 @@ adv_tst(11):-
  !.
 
 
-adv_tst(12):- 
+adv_tst(120):- 
   nlu_assert("He blows air into the flute."),
   % ....
   nlu_assert("A sound is heard by all in the room"),
   !.
 
-adv_tst(13):- 
+adv_tst(130):- 
   nlu_assert("He blows air into the flute."),
   % ....
   nlu_assert("No sound is heard by all in the room"),
   !.
 
-adv_tst(14):- 
+adv_tst(140):- 
   nlu_assert("He tries to walk north from here."),
   nlu_assert("A northward path is able to accomidate his body walking."),
   nlu_assert("The northward path leads to a differnt place."),
@@ -209,4 +221,5 @@ adv_tst(14):-
 
 :- test_adv.
 %:- initialization(test_adv, main).
+
 
