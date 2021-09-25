@@ -6,7 +6,7 @@ test_header_include.
 
 :- expects_dialect(pfc).
 
-%:- ensure_loaded(library(pfc_test)).
+%:- ensure_loaded(library(logicmoo_test)).
 %:- module(header_sane).
 
 

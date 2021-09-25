@@ -11,7 +11,7 @@
 :- module(header_sane,[test_header_include/0]).
 test_header_include.
 %:- endif.
-:- ensure_loaded(library(pfc_test)).
+:- ensure_loaded(library(logicmoo_test)).
 
 :- expects_dialect(pfc).
 

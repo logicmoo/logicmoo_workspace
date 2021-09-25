@@ -94,7 +94,7 @@
 
 :- if((prolog_load_context(source,F),echo_source_file_no_catchup(F))).  :- endif.
 
-:- if((ensure_loaded(library(pfc_test)))). :- endif.
+:- if((ensure_loaded(library(logicmoo_test)))). :- endif.
 
 :- if((prolog_load_context(source,Src),set_prolog_flag(test_src,Src))). :- endif.
 :- if((prolog_load_context(source,Src),add_test_info(testsuite,file,Src))). :- endif.

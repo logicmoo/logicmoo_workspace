@@ -51,7 +51,7 @@ test_header_include.
 %:- endif.
 
 
-:- ensure_loaded(library(pfc_test)).
+:- ensure_loaded(library(logicmoo_test)).
 
 %:- endif. % current_prolog_flag(test_header,_).
 

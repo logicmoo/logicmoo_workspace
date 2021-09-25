@@ -11,7 +11,7 @@
 % ===================================================================
 */
 :- if((prolog_load_context(source,File),prolog_load_context(file,File));current_prolog_flag(xref,true)).
-:- module(pfc_test,[mpred_test/1]).
+:- module(logicmoo_test,[mpred_test/1]).
 :- endif.                             
 
 :- system:use_module(library(must_trace)).
@@ -442,10 +442,10 @@ calc_exit_code0(64):- \+ j_u:junit_prop(_,result,failure), \+ \+ j_u:junit_prop(
 :- dynamic(j_u:started_test_completed/0).
 :- volatile(j_u:started_test_completed/0).
 system:test_completed:- j_u:started_test_completed,!.
-system:test_completed:- asserta(j_u:started_test_completed),pfc_test:calc_exit_code(XC),pfc_test:test_completed_exit_maybe(XC).
+system:test_completed:- asserta(j_u:started_test_completed),logicmoo_test:calc_exit_code(XC),logicmoo_test:test_completed_exit_maybe(XC).
 
 system:test_repl:-  assertz(j_u:junit_prop(need_retake,warn,need_retake)).
-system:test_retake:- system:halt_junit,pfc_test:test_completed_exit_maybe(3).
+system:test_retake:- system:halt_junit,logicmoo_test:test_completed_exit_maybe(3).
 
 save_junit_results:-  
  \+ \+ j_u:junit_prop(testsuite,file,_),
@@ -906,7 +906,7 @@ encoding="UTF-8"?>
 </testsuites>
 
 
-^  Exit: (80) [pfc_test] format(string(\"<oxml version=\\"1.0\\" encoding=\\"utf-8\\"?>\n  \n  <testsuite name=\\"logicmoo.pfc.test.sanity_base.ATTVAR_02\\"  package=\\"logicmoo.pfc.test.sanity_base\\" time=\\"0.378\\" tests=\\"1\\" errors=\\"0\\" skipped=\\"0\\" f
+^  Exit: (80) [logicmoo_test] format(string(\"<oxml version=\\"1.0\\" encoding=\\"utf-8\\"?>\n  \n  <testsuite name=\\"logicmoo.pfc.test.sanity_base.ATTVAR_02\\"  package=\\"logicmoo.pfc.test.sanity_base\\" time=\\"0.378\\" tests=\\"1\\" errors=\\"0\\" skipped=\\"0\\" f
 ailures=\\"0\\">\n\n     <testcase name=\\"logicmoo.pfc.test.sanity_base.ATTVAR_02@Test_0001_Line_0000__sk2_in_1: baseKB:(sk2_in(_155064),get_attr(_155064,sk2,_155078),_155078==SKF-6667)\\" classname=\\"logicmoo.pfc.test.sanity_base.ATTVAR_02\\" time=\\"0.000\\">\n
   <failure message=\\"failure = &quot;failure=info((why_was_true(baseKB:(\\\\+ (sk2_in(_13908),get_attr(_13908,sk2,_13930),_13930=='SKF-6667'))),nop(rtrace(baseKB:(sk2_in(_13908),get_attr(_13908,sk2,_13930),_13930=='SKF-6667')))))\\nno_proof_for(\\\\+ (sk2_in(In_Sk
 2),get_attr(In_Sk2,sk2,Attr_SKF_6667),Attr_SKF_6667=='SKF-6667')).\\n\\nno_proof_for(\\\\+ (sk2_in(In_Sk2),get_attr(In_Sk2,sk2,Attr_SKF_6667),Attr_SKF_6667=='SKF-6667')).\\n\\nno_proof_for(\\\\+ (sk2_in(In_Sk2),get_attr(In_Sk2,sk2,Attr_SKF_6667),Attr_SKF_6667=='SKF

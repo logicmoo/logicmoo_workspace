@@ -8,7 +8,7 @@
 %  was_module(sanity_attvar_03,[]).
 
 :- expects_dialect(pfc).
-:- use_module(library(pfc_test)).
+:- use_module(library(logicmoo_test)).
 
 :- include(library(logicmoo_test_header)).
 :- if(\+ current_module(attvar_reader)).

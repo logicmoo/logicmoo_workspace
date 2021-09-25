@@ -20,7 +20,7 @@
 %:- rtrace.
 
 %:- use_module(library(pfc)).
-%:- use_module(library(pfc_test)).
+%:- use_module(library(logicmoo_test)).
 :- true.
 :- expects_dialect(  /* pfc */  pfc).
 

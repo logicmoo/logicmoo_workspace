@@ -13,7 +13,7 @@
 :- nop(module( baseKB)).
 :- expects_dialect(pfc).
 :- set_fileAssertMt(baseKB).
-:- ensure_loaded(library(pfc_test)).
+:- ensure_loaded(library(logicmoo_test)).
 
 :- expects_dialect(pfc).
 % :- mpred_trace_exec.

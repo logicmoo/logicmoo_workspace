@@ -4,7 +4,7 @@
 
 '==>'(a,b).
 
-:- ensure_loaded(library(pfc_test)).
+:- ensure_loaded(library(logicmoo_test)).
 :- expects_dialect(pfc).
 
 (a ==> b).

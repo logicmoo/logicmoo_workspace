@@ -2,7 +2,7 @@
 
 :- module(t123,[]).
 
-%:- ensure_loaded(library(pfc_test)).
+%:- ensure_loaded(library(logicmoo_test)).
 %:- use_module(library(logicmoo_clif)).
 %:- use_module(library(logicmoo_plarkc)).
 :- include(test_header).

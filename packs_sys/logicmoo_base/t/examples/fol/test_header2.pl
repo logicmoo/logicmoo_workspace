@@ -115,7 +115,7 @@ add_pack_path(Rel):-
 :- prolog_load_context(source,File),(atom_contains(File,'.pfc')-> sanity(is_pfc_file) ; must_not_be_pfc_file).
 :- endif.
 
-:- ensure_loaded(library(pfc_test)).
+:- ensure_loaded(library(logicmoo_test)).
 
 :- kb_global(baseKB:ttExpressionType/1).
 

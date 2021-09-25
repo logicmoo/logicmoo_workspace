@@ -3,7 +3,7 @@
 % Tests Emulation of assertable attributed variables
 % :- include(library(logicmoo_test_header)).
 
-:- ensure_loaded(library(pfc_test)).
+:- ensure_loaded(library(logicmoo_test)).
 
 %:- set_prolog_flag(logicmoo_message_hook, break).
 :- set_prolog_flag(gc, false).

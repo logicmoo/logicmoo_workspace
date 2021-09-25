@@ -200,7 +200,7 @@ push_current_choice/1,
 
 :- dynamic(lmcache:mpred_is_spying_pred/2).
 
-:- use_module(library(pfc_test)).
+:- use_module(library(logicmoo_test)).
 :- use_module(library(logicmoo_common)).
 :- use_module(library(logicmoo/misc_terms)).
 
@@ -228,7 +228,7 @@ make_meta_predicate(X):- functor(X,F,A), module_transparent(F/A),
   
 
 
-%:- include(library(pfc_test)).
+%:- include(library(logicmoo_test)).
 :- make_meta_predicate([
       %call_mp(+,0,+),
       call_u(0),

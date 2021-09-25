@@ -1,5 +1,5 @@
 
-:- ensure_loaded(library(pfc_test)).
+:- ensure_loaded(library(logicmoo_test)).
 :- expects_dialect(pfc).
 
 ==> a(1).

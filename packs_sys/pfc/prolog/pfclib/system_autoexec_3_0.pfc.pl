@@ -57,7 +57,7 @@
 % Douglas Miles
 */
 
-%:- use_module(library(pfc_test)).
+%:- use_module(library(logicmoo_test)).
 :- prolog_load_context(file,File),unload_file(File).
 
 :- set_prolog_flag(runtime_debug, 1). % 2 = important but dont sacrifice other features for it

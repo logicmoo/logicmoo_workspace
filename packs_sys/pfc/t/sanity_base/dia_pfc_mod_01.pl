@@ -4,7 +4,7 @@
 %:- set_prolog_flag(pfc_version,1.8).
 :- set_prolog_flag(pfc_version,v(1,8,2)).
 
-:- ensure_loaded(library(pfc_test)).
+:- ensure_loaded(library(logicmoo_test)).
 :- expects_dialect(pfc).
 
 %:- trace.
