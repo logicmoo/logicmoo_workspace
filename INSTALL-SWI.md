@@ -57,9 +57,11 @@ apt-get install -y \
         libxpm-dev libxt-dev \
         libdb-dev \
         libpcre3-dev \
+        junit4 qt5-default \
         default-jdk \
         libyaml-dev \
 	texlive
+        
 
 MAINTAINER apt-get install -y \
         texlive-latex-extra \
@@ -78,6 +80,8 @@ cd $LOGICMOO_WS
 
 INSTALL_BASE="$LOGICMOO_WS/lib/swipl"
 
+SWI_TAG=master
+
 if [[ -z "${SWI_TAG}" ]]; then
   SWI_TAG=master
 #  SWI_TAG=tags/V8.3.22
@@ -94,9 +98,10 @@ if ! [ -d "$LOGICMOO_WS/swipl-devel" ]; then
   #patch -p1 --merge < /opt/logicmoo_workspace/Patch/dmiles-attvar.patch
   #patch -p1 --merge < /opt/logicmoo_workspace/Patch/dmiles-save-reference-error.patch
   #patch -p1 --merge < /opt/logicmoo_workspace/Patch/dmiles-no-sandbox.patch
-  patch -p1 --merge < /opt/logicmoo_workspace/Patch/0001-dmiles.patch
-  patch -p1 --merge < /opt/logicmoo_workspace/Patch/0002-dmiles2.patch
-
+  #patch -p1 --merge < /opt/logicmoo_workspace/Patch/0001-dmiles.patch
+  #patch -p1 --merge < /opt/logicmoo_workspace/Patch/0002-dmiles2.patch
+  patch -p1 --merge < /opt/logicmoo_workspace/Patch/dmiles-all.patch
+  git checkout library/threadutil.pl
   ( cd packages/ssl ; patch -p1 --merge < /opt/logicmoo_workspace/Patch/dmiles-ssl.patch )
 )
 fi
@@ -113,11 +118,12 @@ git status -s
 MAKE=ninja
 MAKE=make
 (cd swipl-devel
- \cp -a ../Patch/rootfs/usr/local/lib/swipl/* .
+ # \cp -a ../Patch/rootfs/usr/local/lib/swipl/* .
  rm -rf build
  mkdir -p build
  cd build
  cmake -DCMAKE_INSTALL_PREFIX=$LOGICMOO_WS -G "Unix Makefiles" ..
+ #cmake -DBUILD_PDF_DOCUMENTATION=ON -DCMAKE_INSTALL_PREFIX=$LOGICMOO_WS -G "Unix Makefiles" ..
  # cmake -DCMAKE_INSTALL_PREFIX=$LOGICMOO_WS -G Ninja .. 
  $MAKE -j 40 
  ctest -j 40
