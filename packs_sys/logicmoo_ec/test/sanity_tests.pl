@@ -34,8 +34,8 @@ term_expansion(EOF,S,Out,S):- nonvar(S),
    (:-  set_test_options([load(never)])),
    (:- use_module(library(test_wizard))),
    (:- set_prolog_flag(log_query_file, '/tmp/Queries.pl')),
- % (:- run_tests(sanity_tests)),
-   (:- show_coverage(run_tests)),
+ % (:- run_ec_tests(sanity_tests)),
+   (:- show_coverage(run_ec_tests)),
    end_of_file],!.
 
 :-  Unit = sanity_tests, prolog_load_context(source,File), plunit:make_unit_module(Unit, Name), 

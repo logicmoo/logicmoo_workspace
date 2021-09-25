@@ -17,12 +17,12 @@ This module combines all LOGICMOO EventCalc modules into a unified interface for
 :- use_module(library(ec_planner/ec_reader)).
 :- use_module(library(ec_planner/ec_planner_dmiles)).
 
+:- use_module(library(ec_planner/ec_lps_convert)).
+:- use_module(library(ec_planner/lps_pddl_convert)).
+:- listing(test_logicmoo_ec_lps_reader/0).
 
-ensure_lps_now:- 
-(use_module(library(logicmoo_lps)),
- use_module(library(ec_planner/ec_lps_convert)),
- use_module(library(ec_planner/lps_pddl_convert)),
- listing(test_logicmoo_ec_lps_reader/0)).
+ensure_lps_now:- use_module(library(logicmoo_lps)).
+:- listing(ensure_lps_now).
 
 % :- ensure_lps_now.
 
@@ -30,8 +30,8 @@ ensure_lps_now:-
 
 %test_logicmoo_ec:- run_tests.
 
-:- dynamic user:prolog_file_type/2.
-:- multifile user:prolog_file_type/2.
+:- dynamic(user:prolog_file_type/2).
+:- multifile(user:prolog_file_type/2).
 
 user:prolog_file_type(pel, prolog).
 user:prolog_file_type(e, prolog).

@@ -41,6 +41,7 @@ do_test(all):-  maplist(call,
     test_neighbor(6, 8),
     test_neighbor(7, 8) ]).
 
-:- listing([ec_current_domain_db, axiom]).
+:- show_ec_current_domain_db.
+:- listing([axiom]).
 
 

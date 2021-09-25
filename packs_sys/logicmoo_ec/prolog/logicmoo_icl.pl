@@ -13,7 +13,7 @@ test_logicmoo_icl_lps_reader.
 test_logicmoo_icl_sanity.
 
 
-%:- use_module(library(lps_corner)).
+%:- use_module(library(logicmoo_lps)).
 :- user:use_module(library('code_icl/icl_int.tex')).
 :- user:reexport(library('code_icl/icl_int.tex')).
 

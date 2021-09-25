@@ -1,0 +1,372 @@
+diff --git a/boot/autoload.pl b/boot/autoload.pl
+old mode 100644
+new mode 100755
+index 26e609bca..c2fd15499
+--- a/boot/autoload.pl
++++ b/boot/autoload.pl
+@@ -514,7 +514,7 @@ system:term_expansion((:- autoload_path(Alias)),
+ '$autoload2'(PI) :-
+     setup_call_cleanup(
+         leave_sandbox(Old),
+-        '$autoload3'(PI),
++        safe_autoload3(PI),
+         restore_sandbox(Old)).
+ 
+ leave_sandbox(Sandboxed) :-
+@@ -523,6 +523,9 @@ leave_sandbox(Sandboxed) :-
+ restore_sandbox(Sandboxed) :-
+     set_prolog_flag(sandboxed_load, Sandboxed).
+ 
++safe_autoload3(M:_/_):-  \+ ground(M),!.
++safe_autoload3(PI) :- '$autoload3'(PI).
++
+ '$autoload3'(PI) :-
+     autoload_from(PI, LoadModule, FullFile),
+     do_autoload(FullFile, PI, LoadModule).
+diff --git a/boot/init.pl b/boot/init.pl
+old mode 100644
+new mode 100755
+index 0b0c22784..e35cc2b7b
+--- a/boot/init.pl
++++ b/boot/init.pl
+@@ -2977,6 +2977,7 @@ load_files(Module:Files, Options) :-
+ %   Test  that  a  non-module  file  is  not  loaded  into  multiple
+ %   contexts.
+ 
++'$check_load_non_module'(_, _) :- !.
+ '$check_load_non_module'(File, _) :-
+     '$current_module'(_, File),
+     !.          % File is a module file
+diff --git a/debian b/debian
+index 59a1a4d5c..91442c995 160000
+--- a/debian
++++ b/debian
+@@ -1 +1 @@
+-Subproject commit 59a1a4d5cef4d74e16b1f9da3614028aaeeb0684
++Subproject commit 91442c9950139f7ee6943c556391c0aaf665c645
+diff --git a/library/edit.pl b/library/edit.pl
+index 3153602e0..d9dc6efc8 100644
+--- a/library/edit.pl
++++ b/library/edit.pl
+@@ -39,8 +39,12 @@
+           ]).
+ :- autoload(library(lists),[member/2,append/3,nth1/3]).
+ :- autoload(library(make),[make/0]).
++:- if(exists_source(library(pce))).
+ :- autoload(library(pce),[in_pce_thread/1]).
++:- endif.
++:- if(exists_source(library(pce_emacs))).
+ :- autoload(library(pce_emacs),[emacs/1]).
++:- endif.
+ :- autoload(library(prolog_breakpoints),[breakpoint_property/2]).
+ 
+ 
+diff --git a/library/prolog_debug.pl b/library/prolog_debug.pl
+index addef4a6f..6cd202a81 100644
+--- a/library/prolog_debug.pl
++++ b/library/prolog_debug.pl
+@@ -33,12 +33,12 @@
+ */
+ 
+ :- module(prolog_debug_tools,
+-          [ spy/1,                  % :Spec
+-            nospy/1,                % :Spec
+-            nospyall/0,
+-            debugging/0,
+-            trap/1,                 % +Exception
+-            notrap/1                % +Exception
++          [ (spy)/1,                  % :Spec
++            (nospy)/1,                % :Spec
++            (nospyall)/0,
++            (debugging)/0,
++            (trap)/1,                 % +Exception
++            (notrap)/1                % +Exception
+           ]).
+ :- use_module(library(broadcast), [broadcast/1]).
+ :- autoload(library(edinburgh), [debug/0]).
+diff --git a/library/qsave.pl b/library/qsave.pl
+old mode 100644
+new mode 100755
+index e79615136..24be13ea2
+--- a/library/qsave.pl
++++ b/library/qsave.pl
+@@ -634,7 +634,7 @@ save_autoload(Options) :-
+     !,
+     setup_call_cleanup(
+         current_prolog_flag(autoload, Old),
+-        autoload_all(Options),
++        prolog_autoload:autoload_all(Options),
+         set_prolog_flag(autoload, Old)).
+ save_autoload(_).
+ 
+diff --git a/library/sandbox.pl b/library/sandbox.pl
+old mode 100644
+new mode 100755
+index bbac12633..d50cec963
+--- a/library/sandbox.pl
++++ b/library/sandbox.pl
+@@ -74,6 +74,7 @@ safe_goal/1, which determines whether it is safe to call its argument.
+ @see    http://www.swi-prolog.org/pldoc/package/pengines.html
+ */
+ 
++:- create_prolog_flag(no_sandbox, false, [type(boolean), keep(true)]).
+ 
+ :- meta_predicate
+     safe_goal(:),
+@@ -145,6 +146,9 @@ safe(V, _, Parents, _, _) :-
+     Error = error(instantiation_error, sandbox(V, Parents)),
+     nb_setval(sandbox_last_error, Error),
+     throw(Error).
++
++safe(_, _, _Parents, _Safe0, true):- current_prolog_flag(no_sandbox, true), !.
++
+ safe(M:G, _, Parents, Safe0, Safe) :-
+     !,
+     must_be(atom, M),
+@@ -260,6 +264,7 @@ compiled(system:(@(_,_))).
+ known_module(M:_, _) :-
+     current_module(M),
+     !.
++known_module(_,_):- current_prolog_flag(no_sandbox, true), !, fail.    
+ known_module(M:G, Parents) :-
+     throw(error(permission_error(call, sandboxed, M:G),
+                 sandbox(M:G, Parents))).
+@@ -450,6 +455,9 @@ verify_safe_declaration(Var) :-
+     var(Var),
+     !,
+     instantiation_error(Var).
++
++
++verify_safe_declaration(_):- current_prolog_flag(no_sandbox, true), !.
+ verify_safe_declaration(Module:Goal) :-
+     !,
+     must_be(atom, Module),
+@@ -478,6 +486,7 @@ ok_meta(system:load_files(_,_)).
+ ok_meta(system:use_module(_,_)).
+ ok_meta(system:use_module(_)).
+ 
++verify_predefined_safe_declarations :- current_prolog_flag(no_sandbox, true), !.
+ verify_predefined_safe_declarations :-
+     forall(clause(safe_primitive(Goal), _Body, Ref),
+            ( E = error(F,_),
+@@ -831,6 +840,7 @@ safe_assert(_).
+ %   private information from other modules.
+ 
+ safe_clause(H) :- var(H), !.
++safe_clause(_):- current_prolog_flag(no_sandbox, true), !.
+ safe_clause(_:_) :- !, fail.
+ safe_clause(_).
+ 
+@@ -840,6 +850,7 @@ safe_clause(_).
+ %   True if Name  is  a  global   variable  to  which  assertion  is
+ %   considered safe.
+ 
++safe_global_var(_Name):- current_prolog_flag(no_sandbox, true), !.
+ safe_global_var(Name) :-
+     var(Name),
+     !,
+@@ -947,6 +958,9 @@ expand_nt(NT, Xs0, Xs, NewGoal) :-
+ safe_meta_call(Goal, _, _Called) :-
+     debug(sandbox(meta), 'Safe meta ~p?', [Goal]),
+     fail.
++    
++safe_meta_call(_, _, _):- current_prolog_flag(no_sandbox, true), !.    
++    
+ safe_meta_call(Goal, Context, Called) :-
+     (   safe_meta(Goal, Called)
+     ->  true
+@@ -1124,6 +1138,7 @@ format_callables([_|TT], [_|TA], TG) :-
+ prolog:sandbox_allowed_directive(Directive) :-
+     debug(sandbox(directive), 'Directive: ~p', [Directive]),
+     fail.
++prolog:sandbox_allowed_directive(_):- current_prolog_flag(no_sandbox, true), !.    
+ prolog:sandbox_allowed_directive(Directive) :-
+     safe_directive(Directive),
+     !.
+@@ -1166,6 +1181,7 @@ prolog:sandbox_allowed_directive(G) :-
+ %     ==
+ 
+ 
++safe_pattr(_):- current_prolog_flag(no_sandbox, true), !.    
+ safe_pattr(dynamic(_)).
+ safe_pattr(thread_local(_)).
+ safe_pattr(volatile(_)).
+@@ -1176,6 +1192,7 @@ safe_pattr(meta_predicate(_)).
+ safe_pattr(table(_)).
+ safe_pattr(non_terminal(_)).
+ 
++safe_pattr(_, _):- current_prolog_flag(no_sandbox, true), !.    
+ safe_pattr(Var, _) :-
+     var(Var),
+     !,
+@@ -1215,6 +1232,7 @@ directive_loads_file(load_files(library(X), _Options), X).
+ directive_loads_file(ensure_loaded(library(X)), X).
+ directive_loads_file(include(X), X).
+ 
++safe_path(_):- current_prolog_flag(no_sandbox, true), !.    
+ safe_path(X) :-
+     var(X),
+     !,
+@@ -1270,6 +1288,7 @@ safe_prolog_flag(max_table_answer_size,_).
+ safe_prolog_flag(max_table_answer_size_action,_).
+ safe_prolog_flag(max_table_subgoal_size,_).
+ safe_prolog_flag(max_table_subgoal_size_action,_).
++safe_prolog_flag(_,_):- current_prolog_flag(no_sandbox, true), !.    
+ 
+ 
+ %!  prolog:sandbox_allowed_expansion(:G) is det.
+diff --git a/library/threadutil.pl b/library/threadutil.pl
+index dd720501a..967cdaf3e 100644
+--- a/library/threadutil.pl
++++ b/library/threadutil.pl
+@@ -56,21 +56,19 @@
+ :- autoload(library(apply),[maplist/3]).
+ :- autoload(library(backcomp),[thread_at_exit/1]).
+ :- autoload(library(edinburgh),[nodebug/0]).
++:- if(exists_source(library(gui_tracer))).
++:- autoload(library(gui_tracer),[gdebug/0]).
++:- endif.
+ :- autoload(library(lists),[max_list/2,append/2]).
+ :- autoload(library(option),[merge_options/3,option/3]).
++:- if(exists_source(library(pce))).
++:- autoload(library(pce),[send/2]).
++:- endif.
+ :- autoload(library(prolog_stack),
+ 	    [print_prolog_backtrace/2,get_prolog_backtrace/3]).
+ :- autoload(library(statistics),[thread_statistics/2,show_profile/1]).
+ :- autoload(library(thread),[call_in_thread/2]).
+ 
+-:- if(exists_source(library(pce))).
+-:- autoload(library(gui_tracer),[gdebug/0]).
+-:- autoload(library(pce),[send/2]).
+-:- else.
+-gdebug :-
+-    debug.
+-:- endif.
+-
+ 
+ :- set_prolog_flag(generate_debug_info, false).
+ 
+@@ -429,12 +427,10 @@ tprofile(Thread) :-
+ %   Make sure XPCE is running if it is   attached, so we can use the
+ %   graphical display using in_pce_thread/1.
+ 
+-:- if(exists_source(library(pce))).
+ init_pce :-
+     current_prolog_flag(gui, true),
+     !,
+     call(send(@(display), open)).   % avoid autoloading
+-:- endif.
+ init_pce.
+ 
+ 
+diff --git a/packages/ssl b/packages/ssl
+--- a/packages/ssl
++++ b/packages/ssl
+@@ -1 +1 @@
+-Subproject commit 93f076f7ee308c5c2fa2edc7d55f5a43d0bd901f
++Subproject commit 93f076f7ee308c5c2fa2edc7d55f5a43d0bd901f-dirty
+diff --git a/src/os/pl-file.c b/src/os/pl-file.c
+index 45b7f5081..9c9eb90ce 100644
+--- a/src/os/pl-file.c
++++ b/src/os/pl-file.c
+@@ -584,8 +584,10 @@ save_stream_ref(atom_t aref, IOSTREAM *fd)
+ { stream_ref *ref = PL_blob_data(aref, NULL, NULL);
+   (void)fd;
+ 
+-  return PL_warning("Cannot save reference to <stream>(%p,%p)",
++  PL_warning("Cannot save reference to <stream>(%p,%p)",
+ 		    ref->read, ref->write);
++  return PL_error(NULL, 0, NULL, ERR_TYPE, ATOM_stream, aref);
++
+ }
+ 
+ 
+diff --git a/src/pl-attvar.c b/src/pl-attvar.c
+index 8186af7b1..b2ed61b49 100644
+--- a/src/pl-attvar.c
++++ b/src/pl-attvar.c
+@@ -193,6 +193,17 @@ assignAttVar(DECL_LD Word av, Word value)
+   a = valPAttVar(*av);
+   registerWakeup(a, value);
+ 
++ /* When first attribute is $VAR$ skip binding (allows to be done elsewhere) */
++  { Word l = a;
++        deRef(l);
++        if ( isTerm(*l) )
++         { Functor f = valueTerm(*l);
++          if ( f->definition == FUNCTOR_att3 )
++          { Word n;
++                deRef2(&f->arguments[0], n);
++                if ( *n == ATOM_dvard ) return;
++        }}}
++
+   TrailAssignment(av);
+   if ( isAttVar(*value) )
+   { DEBUG(1, Sdprintf("Unifying two attvars\n"));
+@@ -611,6 +622,32 @@ restoreWakeup(DECL_LD wakeup_state *state)
+ }
+ 
+ 
++
++/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
++ attv_bind(+AttVar, +Value) is det.
++    Binds AttVar with Value without calling wakeup
++ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
++static
++PRED_IMPL("attv_bind", 2, attv_bind, 0)
++{ PRED_LD
++  Word av;
++
++  if ( !hasGlobalSpace(0) )
++  { int rc;
++    if ( (rc=ensureGlobalSpace(0, ALLOW_GC)) != TRUE )
++      return raiseStackOverflow(rc);
++  }
++
++  deRef2(valTermRef(A1), av);
++  if (!isAttVar(*av) )
++  { return PL_error("attv_bind", 2, NULL, ERR_UNINSTANTIATION, 1, A1);
++ }
++
++ TrailAssignment(av);
++  *av = linkValI(valTermRef(A2));
++  return TRUE;
++}
++
+ 		 /*******************************
+ 		 *	     PREDICATES		*
+ 		 *******************************/
+@@ -1421,6 +1458,7 @@ BeginPredDefs(attvar)
+   PRED_DEF("del_attr",  2, del_attr2, 0)
+   PRED_DEF("del_attrs", 1, del_attrs, 0)
+   PRED_DEF("get_attrs", 2, get_attrs, 0)
++  PRED_DEF("attv_bind", 2, attv_bind, 0)
+   PRED_DEF("put_attrs", 2, put_attrs, 0)
+   PRED_DEF("$freeze",   2, freeze,    0)
+   PRED_DEF("$eval_when_condition", 2, eval_when_condition, 0)
+diff --git a/src/pl-comp.c b/src/pl-comp.c
+index c1b30b697..ca243ac5c 100644
+--- a/src/pl-comp.c
++++ b/src/pl-comp.c
+@@ -4344,7 +4344,7 @@ record_clause(DECL_LD term_t term, term_t owner, term_t source, term_t ref)
+   if ( PL_get_atom(source, &a) && a == ATOM_minus )
+   { loc.file = source_file_name;
+     loc.line = source_line_no;
+-    assert(source_line_no != -1);
++    //assert(source_line_no != -1);
+   } else if ( PL_is_functor(source, FUNCTOR_colon2) )
+   { term_t arg = PL_new_term_ref();	/* file:line */
+ 
+diff --git a/src/pl-trace.c b/src/pl-trace.c
+index 99bf4e602..e81704e89 100644
+--- a/src/pl-trace.c
++++ b/src/pl-trace.c
+@@ -1800,6 +1800,7 @@ interruptHandler(int sig)
+ 
+   Sreset();
+ again:
++  safe =  TRUE;
+   if ( safe )
+   { if ( !printMessage(ATOM_debug, PL_FUNCTOR, FUNCTOR_interrupt1,
+ 		                     PL_ATOM, ATOM_begin) )

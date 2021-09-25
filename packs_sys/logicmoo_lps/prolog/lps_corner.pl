@@ -19,10 +19,11 @@ golps(T,DFAgraph,Options) :-
 
 :- user:ensure_loaded(library(dialect/lps)).
 :- current_predicate(swish:is_a_module/0) -> true ; asserta(swish:is_a_module).
+
 :- interpreter:use_module(library('../engine/interpreter.P')).
-:- lps_term_expander:ensure_loaded(library('../swish/term_expander')).
 :- visualizer:use_module(library('../utils/visualizer.P')).
-   
+
+:- lps_term_expander:ensure_loaded(library('../swish/term_expander')).   
 
 
 

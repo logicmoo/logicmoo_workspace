@@ -179,8 +179,8 @@ executable(do(Agnt,go_to_room(R))).
 */
 executable(do(Agn,Act)).
 
-:- listing(ec_current_domain_db).
+:- mpred_test(show_ec_current_domain_db).
 
-:- run_tests.
+:- run_ec_tests.
 
 :- halt.

@@ -36,7 +36,7 @@ is_sicstus:- \+ current_prolog_flag(version_data,swi(_,_,_,_)).
 :- reexport((ec_loader)).
 :- use_module((ec_loader)).
 
- 
+run_ec_tests:- wdmsg('@TODO '(run_ec_tests)).
 
 % =========================================
 % Test Decls
@@ -202,7 +202,7 @@ ec_current_domain_db1(G):- G \= axiom(_,_),!, ec_current_domain_db1(axiom(G,B)),
 :- lock_predicate(ec_current_domain_db1/1).
 
 
-% :- use_module(library(lps_corner)). % ,[u_call_lps/1]).
+% :- use_module(library(logicmoo_lps)). % ,[u_call_lps/1]).
 
 :- multifile(u_call_contrib/2).
 :- dynamic(u_call_contrib/2).

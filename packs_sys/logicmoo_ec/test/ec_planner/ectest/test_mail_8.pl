@@ -109,6 +109,6 @@ executable(do(Agnt,go_to_room(R))).
 */
 executable(do(Agn,Act)).
 
-:- run_tests.
+:- run_ec_tests.
 
 :- halt.

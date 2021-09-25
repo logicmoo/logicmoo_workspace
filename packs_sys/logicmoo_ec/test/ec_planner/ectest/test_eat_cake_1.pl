@@ -34,7 +34,13 @@ abducible(dummy).
 :- listing(ec_current_domain_db/2).
 
 
-:- run_tests.
+:- run_ec_tests.
 
 
 
+
+% EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/logicmoo_ec/test/ec_planner/ectest/test_eat_cake_1.pl 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.ec.ec_planner.ectest/TEST_EAT_CAKE_1/logicmoo_ec_ec_planner_ectest_TEST_EAT_CAKE_1/ 
+% ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3ATEST_EAT_CAKE_1 
+
+% ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/646

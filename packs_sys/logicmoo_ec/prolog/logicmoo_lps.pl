@@ -49,7 +49,7 @@ run_lps_db(DB,File):-
        abolish_lps_module(DB)))).
 
 run_lps_db_now(DB,File):-
-   DB:use_module(library(lps_corner)), 
+   DB:use_module(library( lps_corner)), 
    %listing(db:actions/1),
    %listing(interpreter:actions/1),
    interpreter:check_lps_program_module(DB),
@@ -72,7 +72,9 @@ abolish_lps_module(M):-
 
 
 load_lps_corner:-!.
-load_lps_corner:- lps_corner:use_module(library(lps_corner)).
+load_lps_corner:- lps_corner:use_module(library( lps_corner)).
+
+:- lps_corner:use_module(library( lps_corner)).
 
 test_logicmoo_lps(Files):- run_lps(Files).
 

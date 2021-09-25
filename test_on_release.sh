@@ -80,7 +80,7 @@ echo -e "\n</testsuites>\n\n\n"
 ) | iconv -c -t utf-8  > ${TESTING_TEMP}/junit-all.xml
 
 # Generate Html Reports
-( junit-viewer --results=${TESTING_TEMP}/junit-all.xml --save=${TESTING_TEMP}/junit-all.html )  ; /bin/true
+( echo junit-viewer --results=${TESTING_TEMP}/junit-all.xml --save=${TESTING_TEMP}/junit-all.html )  ; /bin/true
 ( junit2html ${TESTING_TEMP}/junit-all.xml ${TESTING_TEMP}/junit2html-all.html )  ; /bin/true
 
 

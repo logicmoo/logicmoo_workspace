@@ -252,7 +252,7 @@ as analysis by cross-referencers. Given the simple nature of the access
 predicates, an optimizing compiler can easily inline them for optimal 
 performance.
 
-<p>A record is defined using the directive <a id="idx:record1:2601"></a><a class="pred" href="record.html#record/1">record/1</a>. 
+<p>A record is defined using the directive <a id="idx:record1:2604"></a><a class="pred" href="record.html#record/1">record/1</a>. 
 We introduce the library with a short example:
 
 <pre class="code">
@@ -275,7 +275,7 @@ a term of the format below.
 
 <p>In this definition, &lt;<var>name</var>&gt; is an atom defining the 
 name of the argument,
-&lt;<var>type</var>&gt; is an optional type specification as defined by <a id="idx:mustbe2:2602"></a><a class="pred" href="error.html#must_be/2">must_be/2</a> 
+&lt;<var>type</var>&gt; is an optional type specification as defined by <a id="idx:mustbe2:2605"></a><a class="pred" href="error.html#must_be/2">must_be/2</a> 
 from library <code>library(error)</code>, and &lt;<var>default</var>&gt; 
 is the default initial value. The
 &lt;<var>type</var>&gt; defaults to <code>any</code>. If no default 
@@ -311,7 +311,7 @@ is motivated by option-list processing. See library <code>library(option)</code>
 <p>
 <li><i>&lt;<var>constructor</var>&gt;_&lt;<var>name</var>&gt;(Record, 
 Value)</i><br>
-Unify <var>Value</var> with argument in <var>Record</var> named &lt;<var>name</var>&gt;.<sup class="fn">216<span class="fn-text">Note 
+Unify <var>Value</var> with argument in <var>Record</var> named &lt;<var>name</var>&gt;.<sup class="fn">217<span class="fn-text">Note 
 this is not called&lsquo;get_' as it performs unification and can 
 perfectly well instantiate the argument.</span></sup>
 
@@ -331,13 +331,13 @@ and unify the result with <var>NewRecord</var>.
 !Record)</i><br>
 Destructively replace the argument &lt;<var>name</var>&gt; in <var>Record</var> 
 by
-<var>Value</var> based on <a id="idx:setarg3:2603"></a><a class="pred" href="manipterm.html#setarg/3">setarg/3</a>. 
+<var>Value</var> based on <a id="idx:setarg3:2606"></a><a class="pred" href="manipterm.html#setarg/3">setarg/3</a>. 
 Use with care.
 
 <p>
 <li><i>nb_set_&lt;<var>name</var>&gt;_of_&lt;<var>constructor</var>&gt;(+Value, 
 !Record)</i><br>
-As above, but using non-backtrackable assignment based on <a id="idx:nbsetarg3:2604"></a><a class="pred" href="manipterm.html#nb_setarg/3">nb_setarg/3</a>. 
+As above, but using non-backtrackable assignment based on <a id="idx:nbsetarg3:2607"></a><a class="pred" href="manipterm.html#nb_setarg/3">nb_setarg/3</a>. 
 Use with <em>extreme</em> care.
 
 <p>
@@ -349,7 +349,7 @@ but starting with <var>Record0</var> rather than the default record.
 <p>
 <li><i>set_&lt;<var>constructor</var>&gt;_fields(+Fields, +Record0, 
 -Record, -RestFields)</i><br>
-Similar to set_&lt;<var>constructor</var>&gt;_<a id="idx:fields4:2605"></a><span class="pred-ext">fields/4</span>, 
+Similar to set_&lt;<var>constructor</var>&gt;_<a id="idx:fields4:2608"></a><span class="pred-ext">fields/4</span>, 
 but fields not defined by
 &lt;<var>constructor</var>&gt; are returned in <var>RestFields</var>.
 
@@ -364,7 +364,7 @@ Set a single field specified as a term &lt;<var>name</var>&gt;(&lt;<var>value</v
 <dd class="defbody">
 The construct <code>:- record Spec, ...</code> is used to define access 
 to named fields in a compound. It is subject to term-expansion (see
-<a id="idx:expandterm2:2606"></a><a class="pred" href="consulting.html#expand_term/2">expand_term/2</a>) 
+<a id="idx:expandterm2:2609"></a><a class="pred" href="consulting.html#expand_term/2">expand_term/2</a>) 
 and cannot be called as a predicate. See
 <a class="sec" href="record.html#sec:A.42">section A.42</a> for details.
 </dd>

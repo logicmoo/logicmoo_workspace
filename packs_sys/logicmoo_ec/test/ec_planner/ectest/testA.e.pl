@@ -1,4 +1,4 @@
-:- include('../ec_test_incl').
+:- include('../ec_test_incl.pl').
 /*
 
    Test A

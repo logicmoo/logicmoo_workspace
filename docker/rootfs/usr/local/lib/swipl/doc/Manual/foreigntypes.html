@@ -287,7 +287,7 @@ indicates the argument is&lsquo;input'. </td></tr>
 <p><b>WARNING</b> Term references that are accessed in&lsquo;write' (-) 
 mode will refer to an invalid term if the term is allocated on the 
 global stack and backtracking takes us back to a point before the term 
-was written.<sup class="fn">200<span class="fn-text">This could have 
+was written.<sup class="fn">201<span class="fn-text">This could have 
 been avoided by <em>trailing</em> term references when data is written 
 to them. This seriously hurts performance in some scenarios though. If 
 this is desired, use <a class="func" href="foreigninclude.html#PL_put_variable()">PL_put_variable()</a> 

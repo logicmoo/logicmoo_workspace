@@ -159,10 +159,10 @@ axiom(initially(neg(has_occured(Event))),[]):- executable(Event).
 
 :- load_e('TestBoxRoom.e').
 
-:- listing(ec_current_domain_db).
+:- mpred_test(show_ec_current_domain_db).
 
 
-:- run_tests.
+:- run_ec_tests.
 
 %:- halt.
 

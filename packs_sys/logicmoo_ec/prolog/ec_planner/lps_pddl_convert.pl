@@ -18,9 +18,7 @@ This module extends the LPS engine to run PPDL files.
 */
 :- use_module(library(logicmoo_common)).
 
-/*export_transparent(P):-
-  export(P),
-  module_transparent(P).
+/*
 
    A big problem with distruted wi
    Imagine for the moment the current weights are ideally fitted for a current task
@@ -38,7 +36,7 @@ This module extends the LPS engine to run PPDL files.
 %:- user:use_module(library('pddl_planner/pddl_planner_dmiles')).
 %:- use_module(library(pddl_planner/pddl_reader)).
 
-:- use_module(library(lps_corner)).
+:- use_module(library(logicmoo_lps)).
 
 :- set_prolog_flag(lps_translation_only_HIDE,false).
 :- set_prolog_flag(lps_translation_only,false).

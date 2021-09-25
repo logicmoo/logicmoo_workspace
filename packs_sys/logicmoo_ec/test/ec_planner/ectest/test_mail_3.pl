@@ -107,6 +107,6 @@ executable(put_down(Agnt,P)).
 executable(go_to_room(Agnt,R)).
 
 
-:- run_tests.
+:- run_ec_tests.
 
 :- halt.

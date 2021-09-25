@@ -39,7 +39,7 @@ executable(turn_off_boiler).
 
 
 
-:- run_tests.
+:- run_ec_tests.
 
 % :- halt.
 

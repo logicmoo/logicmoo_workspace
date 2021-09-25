@@ -242,20 +242,20 @@ resource usage</span></a></h2>
 Prolog stacks. An&lsquo;empty' engine requires about 20&nbsp;KBytes of 
 memory. This grows when the engine requires additional stack space. 
 Anonymous engines are subject to atom garbage collection (see
-<a id="idx:garbagecollectatoms0:2377"></a><a class="pred" href="memory.html#garbage_collect_atoms/0">garbage_collect_atoms/0</a>). 
+<a id="idx:garbagecollectatoms0:2380"></a><a class="pred" href="memory.html#garbage_collect_atoms/0">garbage_collect_atoms/0</a>). 
 Engines may be reclaimed immediately using
-<a id="idx:enginedestroy1:2378"></a><a class="pred" href="engine-predicates.html#engine_destroy/1">engine_destroy/1</a>. 
-Calling <a id="idx:enginedestroy1:2379"></a><a class="pred" href="engine-predicates.html#engine_destroy/1">engine_destroy/1</a> 
+<a id="idx:enginedestroy1:2381"></a><a class="pred" href="engine-predicates.html#engine_destroy/1">engine_destroy/1</a>. 
+Calling <a id="idx:enginedestroy1:2382"></a><a class="pred" href="engine-predicates.html#engine_destroy/1">engine_destroy/1</a> 
 destroys the virtual machine state, while the handle itself is left to 
 atom garbage collection. The virtual machine is reclaimed as soon as an 
 engine produced its last result, failed or raised an exception. This 
-implies that it is only advantageous to call <a id="idx:enginedestroy1:2380"></a><a class="pred" href="engine-predicates.html#engine_destroy/1">engine_destroy/1</a> 
+implies that it is only advantageous to call <a id="idx:enginedestroy1:2383"></a><a class="pred" href="engine-predicates.html#engine_destroy/1">engine_destroy/1</a> 
 explicitly if you are not interested in further answers.
 
 <p>Engines that are expected to be left in inactive state for a 
-prolonged time can be minimized by calling <a id="idx:garbagecollect0:2381"></a><a class="pred" href="memory.html#garbage_collect/0">garbage_collect/0</a> 
-and <a id="idx:trimstacks0:2382"></a><a class="pred" href="memory.html#trim_stacks/0">trim_stacks/0</a> 
-(in that order) before calling <a id="idx:engineyield1:2383"></a><a class="pred" href="engine-predicates.html#engine_yield/1">engine_yield/1</a> 
+prolonged time can be minimized by calling <a id="idx:garbagecollect0:2384"></a><a class="pred" href="memory.html#garbage_collect/0">garbage_collect/0</a> 
+and <a id="idx:trimstacks0:2385"></a><a class="pred" href="memory.html#trim_stacks/0">trim_stacks/0</a> 
+(in that order) before calling <a id="idx:engineyield1:2386"></a><a class="pred" href="engine-predicates.html#engine_yield/1">engine_yield/1</a> 
 or succeeding.
 
 <p></body></html>

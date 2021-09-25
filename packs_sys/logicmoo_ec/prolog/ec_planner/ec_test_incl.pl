@@ -4,6 +4,8 @@
 %:- consult(planner115).
 %:- consult(ec_common).
 
+:- include(library(logicmoo_test_header)).
+
 :- ec:use_module(ec_planner_dmiles).
 
 :- discontiguous do_test/1.

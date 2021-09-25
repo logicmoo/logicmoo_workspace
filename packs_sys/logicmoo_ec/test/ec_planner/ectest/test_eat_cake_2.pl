@@ -32,10 +32,10 @@ axiom(terminates(eat_cakes(Eat),num_cakes(N),T), [call((number(E),Eat>0)),holds_
 abducible(dummy).
 
 
-:- listing(ec_current_domain_db).
+:- mpred_test(show_ec_current_domain_db).
 
 
-:- run_tests.
+:- run_ec_tests.
 
 
 

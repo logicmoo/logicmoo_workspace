@@ -108,6 +108,6 @@ executable(do(agent(N),go_to_room,R)).
 */
 executable(do(agent(N),Act,R)).
 
-:- run_tests.
+:- run_ec_tests.
 
 :- halt.

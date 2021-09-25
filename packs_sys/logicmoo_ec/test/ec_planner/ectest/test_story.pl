@@ -36,6 +36,6 @@ do_test(test_story_5) :-  local_demo([holds_at(directlyIn(box,kitchen),t)]).
 
 :- consult('Story1.pel').
 
-:- listing(ec_current_domain_db).
+:- mpred_test(show_ec_current_domain_db).
 
 

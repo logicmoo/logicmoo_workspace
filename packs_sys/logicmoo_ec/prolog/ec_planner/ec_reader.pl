@@ -197,10 +197,16 @@ convert_e(Proc1, Out, F):- with_e_file(Proc1, Out, F).
 
   
 %with_e_file(Proc1, Out, F):- dmsg(with_e_file(Proc1, Out, F)), fail.
+:- dynamic(done_it/1).
 
-with_e_file(Proc1, OutputName, Ins):- wdmsg(with_e_file(Proc1, OutputName, Ins)),fail.
+with_e_file(Proc1, OutputName, Ins):- dmsg(with_e_file(Proc1, OutputName, Ins)),fail.
+with_e_file(Proc1, OutputName, F):- atom(F), atom_concat(DotLess,'.',F), with_e_file(Proc1, OutputName, DotLess).
 
-with_e_file(Proc1, Out, F):- compound(Out), Out=outdir(Dir), !, with_e_file(Proc1, outdir(Dir, ep), F).
+with_e_file(_Proc1, _OutputName, F):-  atom(F),
+    (\+ done_it(F) -> assert(done_it(F)) ; throw(done_it(F))),
+    atom_concat(_,'e.',F),throw(bad_file_name(F)),!.
+
+with_e_file(Proc1, Out, F):- compound(Out), Out=outdir(Dir), !, with_e_file(Proc1, outdir(Dir, ep), F),!.
 
 % wildcard input file  "./foo*.e"
 with_e_file(Proc1, Out, F):- atom(F), \+ is_stream(F), \+ is_filename(F), 
@@ -209,7 +215,7 @@ with_e_file(Proc1, Out, F):- atom(F), \+ is_stream(F), \+ is_filename(F),
 % wildcard input file  logical(./foo*.e).
 with_e_file(Proc1, Out, F):-  \+ is_stream(F), \+ is_filename(F),
    findall(N, absolute_file_name(F, N, [file_type(txt), file_errors(fail), expand(false), solutions(all)]), L), 
-   L\=[F], !, maplist(with_e_file(Proc1, Out), L).
+   L\=[F], !, maplist(with_e_file(Proc1, Out), L),!.
 
 
 with_e_file(Proc1, Out, F):- nonvar(F), quietly_needs_resolve_local_files(F, L), !, maplist(with_e_file(Proc1, Out), L).  
@@ -230,13 +236,13 @@ with_e_file(Proc1, OutputName, _Ins):- is_filename(OutputName),
    
 % Out is like a wildcard stream (but we have a real filename)
 with_e_file(Proc1, outdir(Dir, Ext), F):- is_filename(F), !, 
-   calc_where_to(outdir(Dir, Ext), F, OutputName),
-   with_e_file(Proc1, OutputName, F).
+   calc_where_to(outdir(Dir, Ext), F, OutputName),!,
+   with_e_file(Proc1, OutputName, F),!.
 
 with_e_file(Proc1, Out, F):- is_filename(F), !, 
   quietly(absolute_file_name(F,AF)),
     locally(b_setval('$ec_input_file',AF),
-      setup_call_cleanup(
+     setup_call_cleanup(
         open(F, read, Ins),    
          with_e_file(Proc1, Out, Ins),
         close(Ins))),!.
@@ -245,20 +251,20 @@ with_e_file(Proc1, Out, F):- is_filename(F), !,
 with_e_file(Proc1, outdir(Dir, Ext), Ins):- must(is_stream(Ins)), !, 
    must(stream_property(Ins, file(InputName))),
    calc_where_to(outdir(Dir, Ext), InputName, OutputName),
-   with_e_file(Proc1, OutputName, Ins).
+   with_e_file(Proc1, OutputName, Ins),!.
 
 
 
 % Out is a filename not currently loadable 
 with_e_file(MProc1, OutputName, Ins):- \+ is_stream(OutputName), 
   assertion(is_stream(Ins)), assertion(stream_property(Ins, input)),
-  with_e_file_write1(MProc1, OutputName, Ins).
+  with_e_file_write1(MProc1, OutputName, Ins),!.
 
 % with_e_file(MProc1, OutputName, Ins):- with_e_file_write2(MProc1, OutputName, Ins).
 
 with_e_file(Proc1, Out, Ins):- 
       assertion(current_output(Out)),       
-      e_io(Proc1, Ins).
+      e_io(Proc1, Ins),!.
 
 :- nb_setval('$ec_input_file',[]).
 :- nb_setval('$ec_input_stream',[]).
@@ -534,6 +540,7 @@ fix_predname(Happens, Happens):- builtin_pred(Happens).
 fix_predname(F, New):- downcase_atom(F, DC), F\==DC, !, fix_predname(DC, New).
 
 
+system:call_pel_directive(translate(ending,_Filename)):- run_ec_tests,!.
 system:call_pel_directive(B):- pprint_ecp_cmt(red,call_pel_directive(B)).
 
 

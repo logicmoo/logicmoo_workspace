@@ -257,13 +257,13 @@ person has either no address or two addresses, depending on the
 assert/retract order.
 
 <p>The code below provides a solution to this problem based on
-<a id="idx:withmutex2:2314"></a><a class="pred" href="threadsync.html#with_mutex/2">with_mutex/2</a>. 
+<a id="idx:withmutex2:2317"></a><a class="pred" href="threadsync.html#with_mutex/2">with_mutex/2</a>. 
 It also illustrates the problem of mutexes. The predicate
-<a id="idx:withmutex2:2315"></a><a class="pred" href="threadsync.html#with_mutex/2">with_mutex/2</a> 
-behaves as <a id="idx:once1:2316"></a><a class="pred" href="metacall.html#once/1">once/1</a> 
+<a id="idx:withmutex2:2318"></a><a class="pred" href="threadsync.html#with_mutex/2">with_mutex/2</a> 
+behaves as <a id="idx:once1:2319"></a><a class="pred" href="metacall.html#once/1">once/1</a> 
 with respect to the guarded goal. This means that our predicate 
 address/2 is no longer a nice logical non-deterministic relation. This 
-could be solved by explicit locking and unlocking a mutex using <a id="idx:setupcallcleanup3:2317"></a><a class="pred" href="metacall.html#setup_call_cleanup/3">setup_call_cleanup/3</a>, 
+could be solved by explicit locking and unlocking a mutex using <a id="idx:setupcallcleanup3:2320"></a><a class="pred" href="metacall.html#setup_call_cleanup/3">setup_call_cleanup/3</a>, 
 but at the risk of deadlocking the program if the choice point is left 
 open by accident.
 
@@ -279,7 +279,7 @@ address(Id, Address) :-
                    address_db(Id, Address)).
 </pre>
 
-<p>Message queues (see <a id="idx:messagequeuecreate2:2318"></a><a class="pred" href="threadcom.html#message_queue_create/2">message_queue_create/2</a>) 
+<p>Message queues (see <a id="idx:messagequeuecreate2:2321"></a><a class="pred" href="threadcom.html#message_queue_create/2">message_queue_create/2</a>) 
 often provide simpler and more robust ways for threads to communicate. 
 Still, mutexes can be a sensible solution and are therefore provided.
 
@@ -314,15 +314,15 @@ becomes unlocked.</dd>
 :Goal</var>)</a></dt>
 <dd class="defbody">
 Execute <var>Goal</var> while holding <var>MutexId</var>. If <var>Goal</var> 
-leaves choice points, these are destroyed (as in <a id="idx:once1:2319"></a><a class="pred" href="metacall.html#once/1">once/1</a>). 
+leaves choice points, these are destroyed (as in <a id="idx:once1:2322"></a><a class="pred" href="metacall.html#once/1">once/1</a>). 
 The mutex is unlocked regardless of whether <var>Goal</var> succeeds, 
 fails or raises an exception. An exception thrown by <var>Goal</var> is 
-re-thrown after the mutex has been successfully unlocked. See also <a id="idx:mutexcreate1:2320"></a><a class="pred" href="threadsync.html#mutex_create/1">mutex_create/1</a> 
-and <a id="idx:setupcallcleanup3:2321"></a><a class="pred" href="metacall.html#setup_call_cleanup/3">setup_call_cleanup/3</a>.
+re-thrown after the mutex has been successfully unlocked. See also <a id="idx:mutexcreate1:2323"></a><a class="pred" href="threadsync.html#mutex_create/1">mutex_create/1</a> 
+and <a id="idx:setupcallcleanup3:2324"></a><a class="pred" href="metacall.html#setup_call_cleanup/3">setup_call_cleanup/3</a>.
 
 <p>Although described in the thread section, this predicate is also 
 available in the single-threaded version, where it behaves simply as
-<a id="idx:once1:2322"></a><a class="pred" href="metacall.html#once/1">once/1</a>.</dd>
+<a id="idx:once1:2325"></a><a class="pred" href="metacall.html#once/1">once/1</a>.</dd>
 <dt class="pubdef"><a id="mutex_lock/1"><strong>mutex_lock</strong>(<var>+MutexId</var>)</a></dt>
 <dd class="defbody">
 Lock the mutex. Prolog mutexes are <em>recursive</em> mutexes: they can 
@@ -332,20 +332,20 @@ by other threads. If another thread has locked the mutex the calling
 thread is suspended until the mutex is unlocked.
 
 <p>If <var>MutexId</var> is an atom, and there is no current mutex with 
-that name, the mutex is created automatically using <a id="idx:mutexcreate1:2323"></a><a class="pred" href="threadsync.html#mutex_create/1">mutex_create/1</a>. 
+that name, the mutex is created automatically using <a id="idx:mutexcreate1:2326"></a><a class="pred" href="threadsync.html#mutex_create/1">mutex_create/1</a>. 
 This implies named mutexes need not be declared explicitly.
 
 <p>Please note that locking and unlocking mutexes should be paired 
 carefully. Especially make sure to unlock mutexes even if the protected 
 code fails or raises an exception. For most common cases, use
-<a id="idx:withmutex2:2324"></a><a class="pred" href="threadsync.html#with_mutex/2">with_mutex/2</a>, 
+<a id="idx:withmutex2:2327"></a><a class="pred" href="threadsync.html#with_mutex/2">with_mutex/2</a>, 
 which provides a safer way for handling Prolog-level mutexes. The 
-predicate <a id="idx:setupcallcleanup3:2325"></a><a class="pred" href="metacall.html#setup_call_cleanup/3">setup_call_cleanup/3</a> 
+predicate <a id="idx:setupcallcleanup3:2328"></a><a class="pred" href="metacall.html#setup_call_cleanup/3">setup_call_cleanup/3</a> 
 is another way to guarantee that the mutex is unlocked while retaining 
 non-determinism.</dd>
 <dt class="pubdef"><a id="mutex_trylock/1"><strong>mutex_trylock</strong>(<var>+MutexId</var>)</a></dt>
 <dd class="defbody">
-As <a id="idx:mutexlock1:2326"></a><a class="pred" href="threadsync.html#mutex_lock/1">mutex_lock/1</a>, 
+As <a id="idx:mutexlock1:2329"></a><a class="pred" href="threadsync.html#mutex_lock/1">mutex_lock/1</a>, 
 but if the mutex is held by another thread, this predicates fails 
 immediately.</dd>
 <dt class="pubdef"><a id="mutex_unlock/1"><strong>mutex_unlock</strong>(<var>+MutexId</var>)</a></dt>
@@ -356,10 +356,10 @@ exception is raised.</dd>
 <dt class="pubdef"><span class="pred-tag">[deprecated]</span><a id="mutex_unlock_all/0"><strong>mutex_unlock_all</strong></a></dt>
 <dd class="defbody">
 Unlock all mutexes held by the current thread. This predicate should not 
-be needed if mutex unlocking is guaranteed with <a id="idx:withmutex2:2327"></a><a class="pred" href="threadsync.html#with_mutex/2">with_mutex/2</a> 
+be needed if mutex unlocking is guaranteed with <a id="idx:withmutex2:2330"></a><a class="pred" href="threadsync.html#with_mutex/2">with_mutex/2</a> 
 or
-<a id="idx:setupcallcleanup3:2328"></a><a class="pred" href="metacall.html#setup_call_cleanup/3">setup_call_cleanup/3</a>.<sup class="fn">194<span class="fn-text">The 
-also deprecated <a id="idx:threadexit1:2329"></a><a class="pred" href="threadcreate.html#thread_exit/1">thread_exit/1</a> 
+<a id="idx:setupcallcleanup3:2331"></a><a class="pred" href="metacall.html#setup_call_cleanup/3">setup_call_cleanup/3</a>.<sup class="fn">195<span class="fn-text">The 
+also deprecated <a id="idx:threadexit1:2332"></a><a class="pred" href="threadcreate.html#thread_exit/1">thread_exit/1</a> 
 bypasses the automatic cleanup.</span></sup></dd>
 <dt class="pubdef"><a id="mutex_property/2"><strong>mutex_property</strong>(<var>?MutexId, 
 ?Property</var>)</a></dt>
@@ -370,7 +370,7 @@ properties are:
 <dl class="latex">
 <dt><strong>alias</strong>(<var>Alias</var>)</dt>
 <dd class="defbody">
-Mutex has the defined alias name. See <a id="idx:mutexcreate2:2330"></a><a class="pred" href="threadsync.html#mutex_create/2">mutex_create/2</a> 
+Mutex has the defined alias name. See <a id="idx:mutexcreate2:2333"></a><a class="pred" href="threadsync.html#mutex_create/2">mutex_create/2</a> 
 using the&lsquo;alias' option.</dd>
 <dt><strong>status</strong>(<var>Status</var>)</dt>
 <dd class="defbody">

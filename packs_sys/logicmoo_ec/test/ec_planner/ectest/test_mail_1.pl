@@ -112,6 +112,6 @@ executable(put_down(robot,P)).
 executable(go_to_room(robot,R)).
 
 
-%:- run_tests.
+%:- run_ec_tests.
 
 %:- halt.

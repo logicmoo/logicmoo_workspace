@@ -1,15 +1,15 @@
 #!/bin/bash
 
 function test_it () {
- $1 -l $2 $3 "run_tests."
+ $1 -l $2 $3 "run_ec_tests."
 }
 function test_sicstus() {
-  sicstus -f --noinfo --nologo -l $1 --goal "run_tests."
+  sicstus -f --noinfo --nologo -l $1 --goal "run_ec_tests."
 }
 
 function test_swipl() {
   
-  swipl -O -l $1 -g run_tests
+  swipl -O -l $1 -g run_ec_tests
   return_value=$?
      if [ $return_value == 4 ]; then
        echo "Command uncleanly exited"

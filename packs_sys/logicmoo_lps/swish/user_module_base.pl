@@ -5,7 +5,7 @@
 % swipl -l user_module_file.pl -l ../../swish/server.pl -g server:server
 
 :- multifile sandbox:safe_primitive/1.
- 
+
 % For debugging:
 % sandbox:safe_primitive(swish_highlight:server_tokens(_)).  % swish_highlight:server_tokens(source).
 % sandbox:safe_primitive(swish_highlight:show_mirror(_)).
@@ -32,6 +32,7 @@ swish_config:config(community_examples,false).
 % don't see the point: swish_config:config(public_access,true). % HACK here
 swish_config:config(chat,false).
 :- else.
+
 :- dynamic swish_config:config/2.
 swish_config:config(public_access,true). % HACK here
 swish_config:config(community_examples,true).
@@ -401,8 +402,10 @@ sandbox:safe_primitive(interpreter:uretract(_)).
 sandbox:safe_primitive(interpreter:uretractall(_)). 
 
 % For debugging:
-sandbox:safe_primitive(swish_highlight:server_tokens(_)).  % swish_highlight:server_tokens(source).
-sandbox:safe_primitive(swish_highlight:show_mirror(_)).
+:- if(current_module(swish)). % @TODO DODO DMILES
+%sandbox:safe_primitive(swish_highlight:server_tokens(_)).  % swish_highlight:server_tokens(source).
+%sandbox:safe_primitive(swish_highlight:show_mirror(_)).
+:- endif.
 
 
 /** 

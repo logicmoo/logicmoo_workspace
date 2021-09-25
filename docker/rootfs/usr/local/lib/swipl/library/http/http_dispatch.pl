@@ -895,7 +895,8 @@ find_handler(Path, Action, Options) :-
     ->  true
     ;   \+ sub_atom(Path, _, _, 0, /),
         atom_concat(Path, /, Dir),
-        find_handler(Tree, Dir, Action, Options)
+        find_handler(Tree, Dir, Action, Options),
+        \+ memberchk(segment_pattern(_), Options) % Variables in pattern
     ->  throw(http_reply(moved(Dir)))
     ;   throw(error(existence_error(http_location, Path), _))
     ).

@@ -91,9 +91,12 @@ if ! [ -d "$LOGICMOO_WS/swipl-devel" ]; then
   git checkout $SWI_TAG
   git submodule update --init
   git checkout $SWI_TAG --recurse-submodules
-  patch -p1 --merge < /opt/logicmoo_workspace/Patch/dmiles-attvar.patch
-  patch -p1 --merge < /opt/logicmoo_workspace/Patch/dmiles-save-reference-error.patch
-  patch -p1 --merge < /opt/logicmoo_workspace/Patch/dmiles-no-sandbox.patch
+  #patch -p1 --merge < /opt/logicmoo_workspace/Patch/dmiles-attvar.patch
+  #patch -p1 --merge < /opt/logicmoo_workspace/Patch/dmiles-save-reference-error.patch
+  #patch -p1 --merge < /opt/logicmoo_workspace/Patch/dmiles-no-sandbox.patch
+  patch -p1 --merge < /opt/logicmoo_workspace/Patch/0001-dmiles.patch
+  patch -p1 --merge < /opt/logicmoo_workspace/Patch/0002-dmiles2.patch
+
   ( cd packages/ssl ; patch -p1 --merge < /opt/logicmoo_workspace/Patch/dmiles-ssl.patch )
 )
 fi

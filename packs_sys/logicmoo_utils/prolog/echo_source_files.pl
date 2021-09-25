@@ -70,7 +70,7 @@ into_echo_cmt(Goal):- setup_call_cleanup(format('~N/*~~~n',[]),Goal,format('~N~~
 
 :- thread_local(t_l:feedback_started/2).
 
-:- create_prolog_flag(capture_feedback,true,[keep(true)]).
+:- create_prolog_flag(capture_feedback,false,[keep(true)]).
 
 c_es(X):- stream_property(X,alias(current_error)),!.
 c_es(X):- stream_property(X,alias(user_error)),!.

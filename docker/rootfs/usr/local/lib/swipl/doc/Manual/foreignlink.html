@@ -245,13 +245,13 @@ distributed as a C library, are linked together to form a new
 executable. Using <em>dynamic linking</em>, the extensions are linked to 
 a shared library (<code>.so</code> file on most Unix systems) or dynamic 
 link library (<code>.DLL</code> file on Microsoft platforms) and loaded 
-into the running Prolog process.<sup class="fn">198<span class="fn-text">The 
+into the running Prolog process.<sup class="fn">199<span class="fn-text">The 
 system also contains code to load <code>.o</code> files directly for 
 some operating systems, notably Unix systems using the BSD <code>a.out</code> 
 executable format. As the number of Unix platforms supporting this 
 quickly gets smaller and this interface is difficult to port and slow, 
 it is no longer described in this manual. The best alternative would be 
-to use the <a id="idx:dld:2401">dld</a> package on machines that do not 
+to use the <a id="idx:dld:2404">dld</a> package on machines that do not 
 have shared libraries.</span></sup>
 
 <p><h3 id="sec:foreign-linking"><a id="sec:12.2.1"><span class="sec-nr">12.2.1</span> <span class="sec-title">What 
@@ -263,9 +263,9 @@ linking is provided?</span></a></h3>
 SWI-Prolog. Whether or not dynamic linking is supported can be deduced 
 from the Prolog flag <a class="flag" href="flags.html#flag:open_shared_object">open_shared_object</a> 
 (see
-<a id="idx:currentprologflag2:2402"></a><a class="pred" href="flags.html#current_prolog_flag/2">current_prolog_flag/2</a>). 
+<a id="idx:currentprologflag2:2405"></a><a class="pred" href="flags.html#current_prolog_flag/2">current_prolog_flag/2</a>). 
 If this Prolog flag yields <code>true</code>,
-<a id="idx:opensharedobject2:2403"></a><a class="pred" href="foreignlink.html#open_shared_object/2">open_shared_object/2</a> 
+<a id="idx:opensharedobject2:2406"></a><a class="pred" href="foreignlink.html#open_shared_object/2">open_shared_object/2</a> 
 and related predicates are defined. See
 <a class="sec" href="foreignlink.html#sec:12.2.3">section 12.2.3</a> for 
 a suitable high-level interface to these predicates.
@@ -284,8 +284,8 @@ linker may vary from system to system, though the utility program
 
 <p>Loading shared objects (DLL files on Windows) provides sharing and 
 protection and is generally the best choice. If a saved state is created 
-using <a id="idx:qsaveprogram12:2404"></a><a class="pred" href="saved-states.html#qsave_program/1">qsave_program/[1,2]</a>, 
-an <a id="idx:initialization1:2405"></a><a class="pred" href="consulting.html#initialization/1">initialization/1</a> 
+using <a id="idx:qsaveprogram12:2407"></a><a class="pred" href="saved-states.html#qsave_program/1">qsave_program/[1,2]</a>, 
+an <a id="idx:initialization1:2408"></a><a class="pred" href="consulting.html#initialization/1">initialization/1</a> 
 directive may be used to load the appropriate library at startup.
 
 <p>Note that the definition of the foreign predicates is the same, 
@@ -480,15 +480,15 @@ is advised to use the predicates from <a class="sec" href="foreignlink.html#sec:
 This file is attached to the current process, and
 <var>Handle</var> is unified with a handle to the library. Equivalent to
 <code>open_shared_object(File, Handle, [])</code>. See also
-<a id="idx:opensharedobject3:2406"></a><a class="pred" href="foreignlink.html#open_shared_object/3">open_shared_object/3</a> 
-and <a id="idx:loadforeignlibrary1:2407"></a><a class="pred" href="foreignlink.html#load_foreign_library/1">load_foreign_library/1</a>.
+<a id="idx:opensharedobject3:2409"></a><a class="pred" href="foreignlink.html#open_shared_object/3">open_shared_object/3</a> 
+and <a id="idx:loadforeignlibrary1:2410"></a><a class="pred" href="foreignlink.html#load_foreign_library/1">load_foreign_library/1</a>.
 
 <p>On errors, an exception <code>shared_object(Action, Message)</code> 
 is raised. <var>Message</var> is the return value from dlerror().</dd>
 <dt class="pubdef"><a id="open_shared_object/3"><strong>open_shared_object</strong>(<var>+File, 
 -Handle, +Options</var>)</a></dt>
 <dd class="defbody">
-As <a id="idx:opensharedobject2:2408"></a><a class="pred" href="foreignlink.html#open_shared_object/2">open_shared_object/2</a>, 
+As <a id="idx:opensharedobject2:2411"></a><a class="pred" href="foreignlink.html#open_shared_object/2">open_shared_object/2</a>, 
 but allows for additional flags to be passed.
 <var>Options</var> is a list of atoms. <code>now</code> implies the 
 symbols are resolved immediately rather than lazy (default). <code>global</code> 
@@ -520,7 +520,7 @@ Linking</span></a></h3>
 library because practically every OS properly supports dynamic linking 
 without serious drawbacks and dynamic linking has several advantages. It 
 is on many platforms required to be able to load SWI-Prolog foreign 
-libraries (see <a id="idx:useforeignlibrary1:2409"></a><a class="pred" href="foreignlink.html#use_foreign_library/1">use_foreign_library/1</a>). 
+libraries (see <a id="idx:useforeignlibrary1:2412"></a><a class="pred" href="foreignlink.html#use_foreign_library/1">use_foreign_library/1</a>). 
 Only on ELF based systems such as Linux we can load foreign libraries <em>if</em> 
 the main executable is linked to export its global symbols (<b>gcc</b> <code>-rdynamic</code> 
 option). Another advantage of dynamic libraries is that the user does 
@@ -534,7 +534,7 @@ source. This causes building and installing <code>libswipl_static.a</code>.
 Note the
 <code>_static</code> postfix to avoid a name conflict on Windows between 
 the
-<em>import library</em> and the <em>static library</em>.<sup class="fn">199<span class="fn-text">As 
+<em>import library</em> and the <em>static library</em>.<sup class="fn">200<span class="fn-text">As 
 is, the Windows build is cross-compiled using MinGW which produces <code>libswipl_static.a</code>. 
 This file can, as far as we know, <em>not</em> be used by MSVC.</span></sup>.
 
