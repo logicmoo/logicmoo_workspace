@@ -40,7 +40,7 @@ createPrologServer(Port) :-
 
 win32:-
 	setSigmaOption(client=html),
-	xmlPrologServer(5001).
+	xmlPrologServer(4051).
 
 :- dynamic(sigma_tmp:sigma_server_socket/1).
 :- volatile(sigma_tmp:sigma_server_socket/1).
@@ -287,7 +287,7 @@ throwSigma(Module,Type,Details):-
 	ifInteractive(writeDebug('Post throwSigma')),!.
 
 cs:-  setSigmaOption(client=html),
-	createPrologServer(5001),
+	createPrologServer(4051),
 	cleanOldThreads.
 
 :- ensure_loaded('sigma_swiprolog.pl').

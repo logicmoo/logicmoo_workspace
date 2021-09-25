@@ -1093,6 +1093,16 @@
 			</Folder>
 		</Folder>
 		<Folder Name="packs_sys">
+			<Folder Name="logicmoo_ec/.github">
+				<Folder Name="ISSUE_TEMPLATE">
+					<F N="packs_sys/logicmoo_ec/.github/ISSUE_TEMPLATE/bug_report.md"/>
+					<F N="packs_sys/logicmoo_ec/.github/ISSUE_TEMPLATE/feature_request.md"/>
+				</Folder>
+				<Folder Name="workflows">
+					<F N="packs_sys/logicmoo_ec/.github/workflows/blank.yml"/>
+					<F N="packs_sys/logicmoo_ec/.github/workflows/greetings.yml"/>
+				</Folder>
+			</Folder>
 			<Folder Name="dictoo">
 				<Folder Name="prolog">
 					<F N="packs_sys/dictoo/prolog/dictoo.pl"/>
@@ -2792,20 +2802,147 @@
 				<F N="packs_sys/logicmoo_cg/pack.pl"/>
 			</Folder>
 			<Folder Name="logicmoo_ec">
+				<Folder Name="docs">
+					<Folder Name="files">
+						<Folder Name="driverlog">
+							<F N="packs_sys/logicmoo_ec/docs/files/driverlog/domain.pddl"/>
+							<F N="packs_sys/logicmoo_ec/docs/files/driverlog/pfile01"/>
+							<F N="packs_sys/logicmoo_ec/docs/files/driverlog/pfile02"/>
+							<F N="packs_sys/logicmoo_ec/docs/files/driverlog/pfile03"/>
+						</Folder>
+						<Folder Name="letseat">
+							<F N="packs_sys/logicmoo_ec/docs/files/letseat/domain.pddl"/>
+							<F N="packs_sys/logicmoo_ec/docs/files/letseat/pfile.pddl"/>
+						</Folder>
+					</Folder>
+					<Folder Name="images">
+						<F N="packs_sys/logicmoo_ec/docs/images/arm-cupcake.png"/>
+						<F N="packs_sys/logicmoo_ec/docs/images/fig1.png"/>
+						<F N="packs_sys/logicmoo_ec/docs/images/fig2.png"/>
+						<F N="packs_sys/logicmoo_ec/docs/images/fig3.png"/>
+					</Folder>
+					<F N="packs_sys/logicmoo_ec/docs/ai05.pdf"/>
+					<F N="packs_sys/logicmoo_ec/docs/ai05.pdf.txt"/>
+					<F N="packs_sys/logicmoo_ec/docs/cap2.tex"/>
+					<F N="packs_sys/logicmoo_ec/docs/kbcs00.ps.txt"/>
+					<F N="packs_sys/logicmoo_ec/docs/P9VFFI~0.PDF.text"/>
+					<F N="packs_sys/logicmoo_ec/docs/P9VFFI~0.PDF.txt"/>
+					<F N="packs_sys/logicmoo_ec/docs/PDDL 2.1.pdf.txt"/>
+					<F N="packs_sys/logicmoo_ec/docs/PDDL opt-manual.pdf.txt"/>
+					<F N="packs_sys/logicmoo_ec/docs/PLASP.md"/>
+					<F N="packs_sys/logicmoo_ec/docs/README.md"/>
+					<F N="packs_sys/logicmoo_ec/docs/requires.txt"/>
+					<F N="packs_sys/logicmoo_ec/docs/transplan.ps.txt"/>
+				</Folder>
 				<Folder Name="ext">
 					<Folder Name="aiswi">
+						<Folder Name="dist">
+							<Folder Name="javadoc">
+								<Folder Name="index-files">
+									<F N="packs_sys/logicmoo_ec/ext/aiswi/dist/javadoc/index-files/index-1.html"/>
+									<F N="packs_sys/logicmoo_ec/ext/aiswi/dist/javadoc/index-files/index-2.html"/>
+									<F N="packs_sys/logicmoo_ec/ext/aiswi/dist/javadoc/index-files/index-3.html"/>
+									<F N="packs_sys/logicmoo_ec/ext/aiswi/dist/javadoc/index-files/index-4.html"/>
+									<F N="packs_sys/logicmoo_ec/ext/aiswi/dist/javadoc/index-files/index-5.html"/>
+									<F N="packs_sys/logicmoo_ec/ext/aiswi/dist/javadoc/index-files/index-6.html"/>
+									<F N="packs_sys/logicmoo_ec/ext/aiswi/dist/javadoc/index-files/index-7.html"/>
+									<F N="packs_sys/logicmoo_ec/ext/aiswi/dist/javadoc/index-files/index-8.html"/>
+								</Folder>
+								<Folder Name="javasciff">
+									<Folder Name="class-use">
+										<F N="packs_sys/logicmoo_ec/ext/aiswi/dist/javadoc/javasciff/class-use/Project.html"/>
+										<F N="packs_sys/logicmoo_ec/ext/aiswi/dist/javadoc/javasciff/class-use/SciffBridge.html"/>
+									</Folder>
+									<F N="packs_sys/logicmoo_ec/ext/aiswi/dist/javadoc/javasciff/package-frame.html"/>
+									<F N="packs_sys/logicmoo_ec/ext/aiswi/dist/javadoc/javasciff/package-summary.html"/>
+									<F N="packs_sys/logicmoo_ec/ext/aiswi/dist/javadoc/javasciff/package-tree.html"/>
+									<F N="packs_sys/logicmoo_ec/ext/aiswi/dist/javadoc/javasciff/package-use.html"/>
+									<F N="packs_sys/logicmoo_ec/ext/aiswi/dist/javadoc/javasciff/Project.html"/>
+									<F N="packs_sys/logicmoo_ec/ext/aiswi/dist/javadoc/javasciff/SciffBridge.html"/>
+								</Folder>
+								<Folder Name="resources">
+									<F N="packs_sys/logicmoo_ec/ext/aiswi/dist/javadoc/resources/inherit.gif"/>
+								</Folder>
+								<Folder Name="test">
+									<Folder Name="class-use">
+										<F N="packs_sys/logicmoo_ec/ext/aiswi/dist/javadoc/test/class-use/Main.html"/>
+									</Folder>
+									<F N="packs_sys/logicmoo_ec/ext/aiswi/dist/javadoc/test/Main.html"/>
+									<F N="packs_sys/logicmoo_ec/ext/aiswi/dist/javadoc/test/package-frame.html"/>
+									<F N="packs_sys/logicmoo_ec/ext/aiswi/dist/javadoc/test/package-summary.html"/>
+									<F N="packs_sys/logicmoo_ec/ext/aiswi/dist/javadoc/test/package-tree.html"/>
+									<F N="packs_sys/logicmoo_ec/ext/aiswi/dist/javadoc/test/package-use.html"/>
+								</Folder>
+								<F N="packs_sys/logicmoo_ec/ext/aiswi/dist/javadoc/allclasses-frame.html"/>
+								<F N="packs_sys/logicmoo_ec/ext/aiswi/dist/javadoc/allclasses-noframe.html"/>
+								<F N="packs_sys/logicmoo_ec/ext/aiswi/dist/javadoc/constant-values.html"/>
+								<F N="packs_sys/logicmoo_ec/ext/aiswi/dist/javadoc/deprecated-list.html"/>
+								<F N="packs_sys/logicmoo_ec/ext/aiswi/dist/javadoc/help-doc.html"/>
+								<F N="packs_sys/logicmoo_ec/ext/aiswi/dist/javadoc/index.html"/>
+								<F N="packs_sys/logicmoo_ec/ext/aiswi/dist/javadoc/overview-frame.html"/>
+								<F N="packs_sys/logicmoo_ec/ext/aiswi/dist/javadoc/overview-summary.html"/>
+								<F N="packs_sys/logicmoo_ec/ext/aiswi/dist/javadoc/overview-tree.html"/>
+								<F N="packs_sys/logicmoo_ec/ext/aiswi/dist/javadoc/package-list"/>
+								<F N="packs_sys/logicmoo_ec/ext/aiswi/dist/javadoc/stylesheet.css"/>
+							</Folder>
+						</Folder>
+						<Folder Name="img">
+							<F N="packs_sys/logicmoo_ec/ext/aiswi/img/arm.png"/>
+							<F N="packs_sys/logicmoo_ec/ext/aiswi/img/arms-lancia.png"/>
+							<F N="packs_sys/logicmoo_ec/ext/aiswi/img/arrow.png"/>
+							<F N="packs_sys/logicmoo_ec/ext/aiswi/img/ass.png"/>
+							<F N="packs_sys/logicmoo_ec/ext/aiswi/img/bin.png"/>
+							<F N="packs_sys/logicmoo_ec/ext/aiswi/img/book.png"/>
+							<F N="packs_sys/logicmoo_ec/ext/aiswi/img/brain-icon.png"/>
+							<F N="packs_sys/logicmoo_ec/ext/aiswi/img/disk.png"/>
+							<F N="packs_sys/logicmoo_ec/ext/aiswi/img/error.png"/>
+							<F N="packs_sys/logicmoo_ec/ext/aiswi/img/exit.png"/>
+							<F N="packs_sys/logicmoo_ec/ext/aiswi/img/home.png"/>
+							<F N="packs_sys/logicmoo_ec/ext/aiswi/img/iconDelete.gif"/>
+							<F N="packs_sys/logicmoo_ec/ext/aiswi/img/iconHelp.gif"/>
+							<F N="packs_sys/logicmoo_ec/ext/aiswi/img/iconOpen.png"/>
+							<F N="packs_sys/logicmoo_ec/ext/aiswi/img/iconRun.png"/>
+							<F N="packs_sys/logicmoo_ec/ext/aiswi/img/iconUndo.png"/>
+							<F N="packs_sys/logicmoo_ec/ext/aiswi/img/ipod.png"/>
+							<F N="packs_sys/logicmoo_ec/ext/aiswi/img/martello.png"/>
+							<F N="packs_sys/logicmoo_ec/ext/aiswi/img/money.png"/>
+							<F N="packs_sys/logicmoo_ec/ext/aiswi/img/monkey.png"/>
+							<F N="packs_sys/logicmoo_ec/ext/aiswi/img/mouse.png"/>
+							<F N="packs_sys/logicmoo_ec/ext/aiswi/img/ok.png"/>
+							<F N="packs_sys/logicmoo_ec/ext/aiswi/img/paper.png"/>
+							<F N="packs_sys/logicmoo_ec/ext/aiswi/img/pen.png"/>
+							<F N="packs_sys/logicmoo_ec/ext/aiswi/img/poison.png"/>
+							<F N="packs_sys/logicmoo_ec/ext/aiswi/img/sciffGameLogo.png"/>
+							<F N="packs_sys/logicmoo_ec/ext/aiswi/img/scissors.png"/>
+							<F N="packs_sys/logicmoo_ec/ext/aiswi/img/skull-empty.png"/>
+							<F N="packs_sys/logicmoo_ec/ext/aiswi/img/star.png"/>
+							<F N="packs_sys/logicmoo_ec/ext/aiswi/img/treasure.png"/>
+							<F N="packs_sys/logicmoo_ec/ext/aiswi/img/troll.png"/>
+							<F N="packs_sys/logicmoo_ec/ext/aiswi/img/warning.png"/>
+						</Folder>
 						<Folder Name="project_template">
+							<F N="packs_sys/logicmoo_ec/ext/aiswi/project_template/compl_rules.txt"/>
 							<F N="packs_sys/logicmoo_ec/ext/aiswi/project_template/kb.pl"/>
 							<F N="packs_sys/logicmoo_ec/ext/aiswi/project_template/project.pl"/>
+							<F N="packs_sys/logicmoo_ec/ext/aiswi/project_template/rules.txt"/>
+							<F N="packs_sys/logicmoo_ec/ext/aiswi/project_template/trace.txt"/>
+						</Folder>
+						<Folder Name="relazione">
+							<F N="packs_sys/logicmoo_ec/ext/aiswi/relazione/AiRelation.pages"/>
+							<F N="packs_sys/logicmoo_ec/ext/aiswi/relazione/doc_Swi_Prolog.doc"/>
+							<F N="packs_sys/logicmoo_ec/ext/aiswi/relazione/SWI-Prolog-5.6.59.pdf"/>
 						</Folder>
 						<Folder Name="sciff">
+							<F N="packs_sys/logicmoo_ec/ext/aiswi/sciff/.project"/>
 							<F N="packs_sys/logicmoo_ec/ext/aiswi/sciff/apache_log_parser.pl"/>
 							<F N="packs_sys/logicmoo_ec/ext/aiswi/sciff/browser.pl"/>
 							<F N="packs_sys/logicmoo_ec/ext/aiswi/sciff/ccopy.pl"/>
 							<F N="packs_sys/logicmoo_ec/ext/aiswi/sciff/compile_sciff.pl"/>
 							<F N="packs_sys/logicmoo_ec/ext/aiswi/sciff/debug.pl"/>
 							<F N="packs_sys/logicmoo_ec/ext/aiswi/sciff/defaults.pl"/>
+							<F N="packs_sys/logicmoo_ec/ext/aiswi/sciff/devman.html"/>
 							<F N="packs_sys/logicmoo_ec/ext/aiswi/sciff/domains.pl"/>
+							<F N="packs_sys/logicmoo_ec/ext/aiswi/sciff/errors.html"/>
 							<F N="packs_sys/logicmoo_ec/ext/aiswi/sciff/fd_solver.pl"/>
 							<F N="packs_sys/logicmoo_ec/ext/aiswi/sciff/graphviz.pl"/>
 							<F N="packs_sys/logicmoo_ec/ext/aiswi/sciff/help.pl"/>
@@ -2816,6 +2953,7 @@
 							<F N="packs_sys/logicmoo_ec/ext/aiswi/sciff/ics_quant.pl"/>
 							<F N="packs_sys/logicmoo_ec/ext/aiswi/sciff/linda_his.pl"/>
 							<F N="packs_sys/logicmoo_ec/ext/aiswi/sciff/my_chr_extensions.pl"/>
+							<F N="packs_sys/logicmoo_ec/ext/aiswi/sciff/notes.txt"/>
 							<F N="packs_sys/logicmoo_ec/ext/aiswi/sciff/parser_utils.pl"/>
 							<F N="packs_sys/logicmoo_ec/ext/aiswi/sciff/pretty_print.pl"/>
 							<F N="packs_sys/logicmoo_ec/ext/aiswi/sciff/print_clp_constraints.pl"/>
@@ -2826,6 +2964,7 @@
 							<F N="packs_sys/logicmoo_ec/ext/aiswi/sciff/quantif.pl"/>
 							<F N="packs_sys/logicmoo_ec/ext/aiswi/sciff/r_solver.pl"/>
 							<F N="packs_sys/logicmoo_ec/ext/aiswi/sciff/reified_unif.pl"/>
+							<F N="packs_sys/logicmoo_ec/ext/aiswi/sciff/report.xml"/>
 							<F N="packs_sys/logicmoo_ec/ext/aiswi/sciff/restrictions.pl"/>
 							<F N="packs_sys/logicmoo_ec/ext/aiswi/sciff/ruleml_parser.08.pl"/>
 							<F N="packs_sys/logicmoo_ec/ext/aiswi/sciff/ruleml_parser.pl"/>
@@ -2842,84 +2981,600 @@
 							<F N="packs_sys/logicmoo_ec/ext/aiswi/sciff/swi_clpfd.pl"/>
 							<F N="packs_sys/logicmoo_ec/ext/aiswi/sciff/swi_specific.pl"/>
 							<F N="packs_sys/logicmoo_ec/ext/aiswi/sciff/text_style.pl"/>
+							<F N="packs_sys/logicmoo_ec/ext/aiswi/sciff/userman.html"/>
+							<F N="packs_sys/logicmoo_ec/ext/aiswi/sciff/wishlist.txt"/>
 						</Folder>
+						<Folder Name="src">
+							<Folder Name="gamegui">
+								<F N="packs_sys/logicmoo_ec/ext/aiswi/src/gamegui/Autocomplete.java"/>
+								<F N="packs_sys/logicmoo_ec/ext/aiswi/src/gamegui/Cell.java"/>
+								<F N="packs_sys/logicmoo_ec/ext/aiswi/src/gamegui/ChessBoard.form"/>
+								<F N="packs_sys/logicmoo_ec/ext/aiswi/src/gamegui/ChessBoard.java"/>
+							</Folder>
+							<Folder Name="icons">
+								<F N="packs_sys/logicmoo_ec/ext/aiswi/src/icons/iconDelete.gif"/>
+								<F N="packs_sys/logicmoo_ec/ext/aiswi/src/icons/iconHelp.gif"/>
+								<F N="packs_sys/logicmoo_ec/ext/aiswi/src/icons/iconOpen.png"/>
+								<F N="packs_sys/logicmoo_ec/ext/aiswi/src/icons/iconRun.png"/>
+								<F N="packs_sys/logicmoo_ec/ext/aiswi/src/icons/iconSave.png"/>
+								<F N="packs_sys/logicmoo_ec/ext/aiswi/src/icons/iconUndo.png"/>
+							</Folder>
+							<Folder Name="javasciff">
+								<F N="packs_sys/logicmoo_ec/ext/aiswi/src/javasciff/Project.java"/>
+								<F N="packs_sys/logicmoo_ec/ext/aiswi/src/javasciff/SciffBridge.java"/>
+								<F N="packs_sys/logicmoo_ec/ext/aiswi/src/javasciff/SciffCompiler.java"/>
+								<F N="packs_sys/logicmoo_ec/ext/aiswi/src/javasciff/SciffGenerate.java"/>
+								<F N="packs_sys/logicmoo_ec/ext/aiswi/src/javasciff/SProject.java"/>
+							</Folder>
+							<Folder Name="lib">
+								<F N="packs_sys/logicmoo_ec/ext/aiswi/src/lib/EscapeChars.java"/>
+								<F N="packs_sys/logicmoo_ec/ext/aiswi/src/lib/FileManager.java"/>
+								<F N="packs_sys/logicmoo_ec/ext/aiswi/src/lib/Move.java"/>
+								<F N="packs_sys/logicmoo_ec/ext/aiswi/src/lib/MoveConverter.java"/>
+								<F N="packs_sys/logicmoo_ec/ext/aiswi/src/lib/WorldDescription.java"/>
+								<F N="packs_sys/logicmoo_ec/ext/aiswi/src/lib/XMLObj.java"/>
+								<F N="packs_sys/logicmoo_ec/ext/aiswi/src/lib/XMLValidator.java"/>
+							</Folder>
+							<Folder Name="test">
+								<F N="packs_sys/logicmoo_ec/ext/aiswi/src/test/Main.java"/>
+							</Folder>
+						</Folder>
+						<Folder Name="xml">
+							<F N="packs_sys/logicmoo_ec/ext/aiswi/xml/game.xml"/>
+							<F N="packs_sys/logicmoo_ec/ext/aiswi/xml/game.xsd"/>
+						</Folder>
+					</Folder>
+					<Folder Name="dialog_test">
+						<F N="packs_sys/logicmoo_ec/ext/dialog_test/car_inspection_domain.pddl"/>
+						<F N="packs_sys/logicmoo_ec/ext/dialog_test/car_inspection_problem.pddl"/>
+						<F N="packs_sys/logicmoo_ec/ext/dialog_test/dom_foil.pddl"/>
+						<F N="packs_sys/logicmoo_ec/ext/dialog_test/dom_unsolv.pddl"/>
+						<F N="packs_sys/logicmoo_ec/ext/dialog_test/prob_foil.pddl"/>
+						<F N="packs_sys/logicmoo_ec/ext/dialog_test/prob_unsolv.pddl"/>
+						<F N="packs_sys/logicmoo_ec/ext/dialog_test/six-tests.pddl"/>
 					</Folder>
 					<Folder Name="ec_sources">
 						<Folder Name="ecnet">
+							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/Arson.e"/>
 							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/Arson.lps.pl"/>
+							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/Baseball.e"/>
 							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/Baseball.lps.pl"/>
+							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/Bomb.e"/>
 							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/Bomb.lps.pl"/>
+							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/Book.e"/>
 							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/Book.lps.pl"/>
+							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/Cognition.e"/>
 							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/Cognition.lps.pl"/>
+							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/Condition.e"/>
 							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/Condition.lps.pl"/>
+							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/Container.e"/>
 							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/Container.lps.pl"/>
+							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/COPYRIGHT"/>
+							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/CTime.e"/>
 							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/CTime.lps.pl"/>
+							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/Diving.e"/>
 							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/Diving.lps.pl"/>
+							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/Dress.e"/>
 							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/Dress.lps.pl"/>
+							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/EatingInAHouse.e"/>
 							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/EatingInAHouse.lps.pl"/>
+							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/Feeling.e"/>
 							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/Feeling.lps.pl"/>
+							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/Fire.e"/>
 							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/Fire.lps.pl"/>
+							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/GSpace.e"/>
 							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/GSpace.lps.pl"/>
+							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/Gun.e"/>
 							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/Gun.lps.pl"/>
+							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/HandTo.e"/>
 							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/HandTo.lps.pl"/>
+							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/HungerNeed.e"/>
 							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/HungerNeed.lps.pl"/>
+							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/IPRel.e"/>
 							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/IPRel.lps.pl"/>
+							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/Kidnapping.e"/>
 							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/Kidnapping.lps.pl"/>
+							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/LICENSE"/>
+							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/MakingAnAcquaintance.e"/>
 							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/MakingAnAcquaintance.lps.pl"/>
+							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/Money.e"/>
 							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/Money.lps.pl"/>
+							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/OMSpace.e"/>
 							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/OMSpace.lps.pl"/>
+							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/Ontology.e"/>
 							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/Ontology.lps.pl"/>
+							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/OTSpace.e"/>
 							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/OTSpace.lps.pl"/>
+							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/PlayNeed.e"/>
 							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/PlayNeed.lps.pl"/>
+							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/PolySpace.e"/>
 							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/PolySpace.lps.pl"/>
+							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/Rain.e"/>
 							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/Rain.lps.pl"/>
+							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/ReaderTest.e"/>
 							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/ReaderTest.lps.pl"/>
+							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/ReadingABook.e"/>
 							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/ReadingABook.lps.pl"/>
+							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/ReadingALetter.e"/>
 							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/ReadingALetter.lps.pl"/>
+							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/RepRest.e"/>
 							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/RepRest.lps.pl"/>
+							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/Rest.e"/>
 							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/Rest.lps.pl"/>
+							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/Restaurant.e"/>
 							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/Restaurant.lps.pl"/>
+							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/RidingInACarriage.e"/>
 							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/RidingInACarriage.lps.pl"/>
+							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/RTSpace.e"/>
 							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/RTSpace.lps.pl"/>
+							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/ShootingAttack.e"/>
 							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/ShootingAttack.lps.pl"/>
+							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/Sleep.e"/>
 							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/Sleep.lps.pl"/>
+							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/Sleeping.e"/>
 							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/Sleeping.lps.pl"/>
+							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/SmallFire.e"/>
 							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/SmallFire.lps.pl"/>
+							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/Smoke.e"/>
 							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/Smoke.lps.pl"/>
+							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/Smoking.e"/>
 							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/Smoking.lps.pl"/>
+							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/SpeechAct.e"/>
 							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/SpeechAct.lps.pl"/>
+							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/TakingATrain.e"/>
 							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/TakingATrain.lps.pl"/>
+							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/TakingAWalk.e"/>
 							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/TakingAWalk.lps.pl"/>
+							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/TimeDelayBombing.e"/>
 							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/TimeDelayBombing.lps.pl"/>
+							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/Vehicle.e"/>
 							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/Vehicle.lps.pl"/>
+							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/Vision.e"/>
 							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/Vision.lps.pl"/>
+							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/WritingABook.e"/>
 							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/WritingABook.lps.pl"/>
+							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/XWalk.e"/>
 							<F N="packs_sys/logicmoo_ec/ext/ec_sources/ecnet/XWalk.lps.pl"/>
 						</Folder>
 						<Folder Name="examples">
+							<Folder Name="AkmanEtAl2004">
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/AkmanEtAl2004/ZooTest1.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/AkmanEtAl2004/ZooTest1.txt"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/AkmanEtAl2004/ZooTest2.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/AkmanEtAl2004/ZooTest2.txt"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/AkmanEtAl2004/ZooTest3.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/AkmanEtAl2004/ZooTest3.txt"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/AkmanEtAl2004/ZooTest4.1.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/AkmanEtAl2004/ZooTest4.1.txt"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/AkmanEtAl2004/ZooTest4.2.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/AkmanEtAl2004/ZooTest4.2.txt"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/AkmanEtAl2004/ZooTest5.1.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/AkmanEtAl2004/ZooTest5.1.txt"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/AkmanEtAl2004/ZooTest5.2.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/AkmanEtAl2004/ZooTest5.2.txt"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/AkmanEtAl2004/ZooTest6.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/AkmanEtAl2004/ZooTest6.txt"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/AkmanEtAl2004/ZooWorld.e"/>
+							</Folder>
+							<Folder Name="Antoniou1997">
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Antoniou1997/Dropout.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Antoniou1997/Dropout.txt"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Antoniou1997/Student.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Antoniou1997/Student.txt"/>
+							</Folder>
+							<Folder Name="BrewkaDixKonolige1997">
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/BrewkaDixKonolige1997/Wine.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/BrewkaDixKonolige1997/Wine.txt"/>
+							</Folder>
+							<Folder Name="Cassimatis2002">
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Cassimatis2002/OneScreen.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Cassimatis2002/OneScreen.txt"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Cassimatis2002/PolySpace.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Cassimatis2002/TwoScreens.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Cassimatis2002/TwoScreens.txt"/>
+							</Folder>
+							<Folder Name="ecasp">
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp/BusRide2-ea.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp/BusRide2-ea.lp"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp/BusRide40-ea.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp/BusRide40-ea.lp"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp/ChessBoard2-ea.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp/ChessBoard2-ea.lp"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp/ChessBoard40-ea.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp/ChessBoard40-ea.lp"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp/CoinToss4-ea.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp/CoinToss4-ea.lp"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp/CoinToss40-ea.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp/CoinToss40-ea.lp"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp/Commuter15-ea.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp/Commuter15-ea.lp"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp/DeadOrAlive3-ea.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp/DeadOrAlive3-ea.lp"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp/DeadOrAlive40-ea.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp/DeadOrAlive40-ea.lp"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp/FallingObjectWithAntiTrajectory15-ea.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp/FallingObjectWithAntiTrajectory15-ea.lp"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp/FallingObjectWithAntiTrajectory25-ea.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp/FallingObjectWithAntiTrajectory25-ea.lp"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp/FallingObjectWithAntiTrajectory5-ea.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp/FallingObjectWithAntiTrajectory5-ea.lp"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp/FallingObjectWithEvents20-ea.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp/FallingObjectWithEvents20-ea.lp"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp/FallingObjectWithEvents25-ea.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp/FallingObjectWithEvents25-ea.lp"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp/FallingObjectWithEvents40-ea.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp/FallingObjectWithEvents40-ea.lp"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp/FallingObjectWithEvents5-ea.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp/FallingObjectWithEvents5-ea.lp"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp/Happy2-ea.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp/Happy2-ea.lp"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp/Happy40-ea.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp/Happy40-ea.lp"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp/HotAirBalloon15-ea.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp/HotAirBalloon15-ea.lp"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp/HotAirBalloon20-ea.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp/HotAirBalloon20-ea.lp"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp/HotAirBalloon3-ea.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp/HotAirBalloon3-ea.lp"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp/HotAirBalloon40-ea.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp/HotAirBalloon40-ea.lp"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp/KitchenSink_M25-ea.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp/KitchenSink_M25-ea.lp"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp/KitchenSink_M40-ea.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp/KitchenSink_M40-ea.lp"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp/KitchenSink_M5-ea.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp/KitchenSink_M5-ea.lp"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp/RussianTurkey4-ea.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp/RussianTurkey4-ea.lp"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp/RussianTurkey40-ea.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp/RussianTurkey40-ea.lp"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp/StolenCar2-ea.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp/StolenCar2-ea.lp"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp/StolenCar40-ea.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp/StolenCar40-ea.lp"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp/StuffyRoom2-ea.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp/StuffyRoom2-ea.lp"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp/StuffyRoom40-ea.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp/StuffyRoom40-ea.lp"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp/Supermarket12-ea.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp/Supermarket12-ea.lp"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp/Supermarket40-ea.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp/Supermarket40-ea.lp"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp/Telephone3-ea.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp/Telephone3-ea.lp"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp/Telephone40-ea.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp/Telephone40-ea.lp"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp/ThielscherCircuit1-ea.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp/ThielscherCircuit1-ea.lp"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp/ThielscherCircuit20-ea.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp/ThielscherCircuit20-ea.lp"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp/ThielscherCircuit40-ea.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp/ThielscherCircuit40-ea.lp"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp/WalkingTurkey3-ea.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp/WalkingTurkey3-ea.lp"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp/WalkingTurkey40-ea.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp/WalkingTurkey40-ea.lp"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp/Yale3-ea.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp/Yale3-ea.lp"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp/Yale40-ea.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp/Yale40-ea.lp"/>
+							</Folder>
+							<Folder Name="ecasp-decreasoner">
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp-decreasoner/ChessBoard2.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp-decreasoner/ChessBoard40.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp-decreasoner/CoinToss4.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp-decreasoner/CoinToss40.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp-decreasoner/DeadOrAlive3.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp-decreasoner/DeadOrAlive40.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp-decreasoner/FallingObjectWithAntiTrajectory15.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp-decreasoner/FallingObjectWithAntiTrajectory5.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp-decreasoner/FallingObjectWithEvents20.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp-decreasoner/FallingObjectWithEvents25.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp-decreasoner/FallingObjectWithEvents5.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp-decreasoner/Happy2.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp-decreasoner/Happy40.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp-decreasoner/HotAirBalloon15.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp-decreasoner/HotAirBalloon20.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp-decreasoner/HotAirBalloon3.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp-decreasoner/KitchenSink.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp-decreasoner/KitchenSink_M25.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp-decreasoner/KitchenSink_M5.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp-decreasoner/Pendulum_Prediction.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp-decreasoner/PickUp.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp-decreasoner/RussianTurkey4.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp-decreasoner/RussianTurkey40.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp-decreasoner/Sleep.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp-decreasoner/Sleep_Planning.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp-decreasoner/Sleep_Postdiction.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp-decreasoner/StolenCar2.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp-decreasoner/StolenCar40.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp-decreasoner/StuffyRoom2.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp-decreasoner/StuffyRoom40.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp-decreasoner/Supermarket12.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp-decreasoner/Supermarket40.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp-decreasoner/Telephone3.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp-decreasoner/Telephone40.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp-decreasoner/ThielscherCircuit1.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp-decreasoner/ThielscherCircuit20.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp-decreasoner/ThielscherCircuit40.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp-decreasoner/Yale3.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ecasp-decreasoner/Yale40.e"/>
+							</Folder>
+							<Folder Name="FrankEtAl2003">
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/FrankEtAl2003/FrankEtAl.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/FrankEtAl2003/Story1.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/FrankEtAl2003/Story1.txt"/>
+							</Folder>
+							<Folder Name="GiunchigliaEtAl2004">
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/GiunchigliaEtAl2004/MonkeyBananas.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/GiunchigliaEtAl2004/MonkeyPlanning.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/GiunchigliaEtAl2004/MonkeyPlanning.txt"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/GiunchigliaEtAl2004/MonkeyPostdiction.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/GiunchigliaEtAl2004/MonkeyPostdiction.txt"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/GiunchigliaEtAl2004/MonkeyPrediction.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/GiunchigliaEtAl2004/MonkeyPrediction.txt"/>
+							</Folder>
+							<Folder Name="Manual">
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Manual/Example1.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Manual/Example1.txt"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Manual/Example1a.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Manual/Example1a.txt"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Manual/Example2.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Manual/Example2.txt"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Manual/Example3.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Manual/Example3.txt"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Manual/Example4.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Manual/Example4.txt"/>
+							</Folder>
+							<Folder Name="MillerShanahan2002">
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/MillerShanahan2002/Bowl.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/MillerShanahan2002/Bowl.txt"/>
+							</Folder>
+							<Folder Name="Mueller2004a">
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2004a/Holding.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2004a/Holding.txt"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2004a/Leaf.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2004a/Leaf.txt"/>
+							</Folder>
+							<Folder Name="Mueller2004b">
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2004b/Approve.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2004b/Approve.txt"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2004b/Leaf.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2004b/Leaf.txt"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2004b/OffOn.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2004b/OffOn.txt"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2004b/PickUp.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2004b/PickUp.txt"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2004b/RouletteWheel.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2004b/RouletteWheel.txt"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2004b/RunningAndDriving1.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2004b/RunningAndDriving1.txt"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2004b/RunningAndDriving2.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2004b/RunningAndDriving2.txt"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2004b/TV1.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2004b/TV1.txt"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2004b/TV2.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2004b/TV2.txt"/>
+							</Folder>
 							<Folder Name="Mueller2006">
+								<Folder Name="Chapter10">
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter10/MovingNewspaperAndBox.e"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter10/MovingNewspaperAndBox.txt"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter10/OneScreen.e"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter10/OneScreen.txt"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter10/TwoScreens.e"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter10/TwoScreens.txt"/>
+								</Folder>
 								<Folder Name="Chapter11">
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e"/>
 									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.pfc"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.txt"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/Lottery.e"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/Lottery.txt"/>
+								</Folder>
+								<Folder Name="Chapter12">
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter12/BrokenDevice.e"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter12/BrokenDevice.txt"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter12/DefaultEvent.e"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter12/DefaultEvent.txt"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter12/DefaultLocation.e"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter12/DefaultLocation.txt"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter12/Device.e"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter12/Device.txt"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter12/ErraticDevice.e"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter12/ErraticDevice.txt"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter12/MethodB.e"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter12/MethodB.txt"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter12/MethodD.e"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter12/MethodD.txt"/>
+								</Folder>
+								<Folder Name="Chapter13">
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter13/Abduction.e"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter13/Abduction.txt"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter13/Deduction1.e"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter13/Deduction1.txt"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter13/Deduction2.e"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter13/Deduction2.txt"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter13/ModelFinding.e"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter13/ModelFinding.txt"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter13/Postdiction.e"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter13/Postdiction.txt"/>
+								</Folder>
+								<Folder Name="Chapter14">
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter14/NetBill1.e"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter14/NetBill1.txt"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter14/NetBill2.e"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter14/NetBill2.txt"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter14/NetBill3.e"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter14/NetBill3.txt"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter14/Vision.e"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter14/Vision.txt"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter14/Workflow.e"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter14/Workflow.txt"/>
+								</Folder>
+								<Folder Name="Chapter2">
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter2/Inconsistency1.e"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter2/Inconsistency1.txt"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter2/Inconsistency2.e"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter2/Inconsistency2.txt"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter2/Inconsistency3.e"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter2/Inconsistency3.txt"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter2/Inconsistency4.e"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter2/Inconsistency4.txt"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter2/Sleep1.e"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter2/Sleep1.txt"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter2/Sleep2.e"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter2/Sleep2.txt"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter2/Sleep3.e"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter2/Sleep3.txt"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter2/Sleep4.e"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter2/Sleep4.txt"/>
+								</Folder>
+								<Folder Name="Chapter3">
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter3/Telephone1.e"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter3/Telephone1.txt"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter3/Telephone2.e"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter3/Telephone2.txt"/>
+								</Folder>
+								<Folder Name="Chapter4">
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter4/AlarmClock.e"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter4/AlarmClock.txt"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter4/BankAccountServiceFee.e"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter4/BankAccountServiceFee.txt"/>
+								</Folder>
+								<Folder Name="Chapter6">
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter6/CarryingABook1.e"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter6/CarryingABook1.txt"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter6/CarryingABook2.e"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter6/CarryingABook2.txt"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter6/ShanahanCircuit.e"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter6/ShanahanCircuit.txt"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter6/ThielscherCircuit1.e"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter6/ThielscherCircuit1.txt"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter6/ThielscherCircuit2.e"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter6/ThielscherCircuit2.txt"/>
+								</Folder>
+								<Folder Name="Chapter7">
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter7/FallingObjectWithAntiTrajectory.e"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter7/FallingObjectWithAntiTrajectory.txt"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter7/FallingObjectWithEvents.e"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter7/FallingObjectWithEvents.txt"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter7/HotAirBalloon.e"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter7/HotAirBalloon.txt"/>
+								</Folder>
+								<Folder Name="Chapter8">
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter8/CameraWithFlash.e"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter8/CameraWithFlash.txt"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter8/MovingRobot.e"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter8/MovingRobot.txt"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter8/PatHeadRubStomach.e"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter8/PatHeadRubStomach.txt"/>
+								</Folder>
+								<Folder Name="Chapter9">
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter9/RouletteWheel.e"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter9/RouletteWheel.txt"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter9/RunningAndDriving.e"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter9/RunningAndDriving.txt"/>
+								</Folder>
+								<Folder Name="Exercises">
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Exercises/Counter.e"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Exercises/Counter.txt"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Exercises/MixingPaints.e"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Exercises/MixingPaints.txt"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Exercises/SnoozeAlarm.e"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Exercises/SnoozeAlarm.txt"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Exercises/TeacherTells.e"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Exercises/TeacherTells.txt"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Exercises/TelephoneBugs.e"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Exercises/TelephoneBugs.txt"/>
 								</Folder>
 							</Folder>
+							<Folder Name="ReiterCriscuolo1981">
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ReiterCriscuolo1981/NixonDiamond1.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ReiterCriscuolo1981/NixonDiamond1.txt"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ReiterCriscuolo1981/NixonDiamond2.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/ReiterCriscuolo1981/NixonDiamond2.txt"/>
+							</Folder>
+							<Folder Name="Shanahan1997">
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Shanahan1997/BusRide.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Shanahan1997/BusRide.txt"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Shanahan1997/DeadOrAlive.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Shanahan1997/DeadOrAlive.txt"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Shanahan1997/StolenCar.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Shanahan1997/StolenCar.txt"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Shanahan1997/StuffyRoom.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Shanahan1997/StuffyRoom.txt"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Shanahan1997/Supermarket.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Shanahan1997/Supermarket.txt"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Shanahan1997/Yale.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Shanahan1997/Yale.txt"/>
+							</Folder>
+							<Folder Name="Shanahan1999">
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Shanahan1999/ChessBoard.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Shanahan1999/ChessBoard.txt"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Shanahan1999/CoinToss.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Shanahan1999/CoinToss.txt"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Shanahan1999/Happy.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Shanahan1999/Happy.txt"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Shanahan1999/RussianTurkey.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Shanahan1999/RussianTurkey.txt"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Shanahan1999/ThielscherCircuit.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/Shanahan1999/ThielscherCircuit.txt"/>
+							</Folder>
+							<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/list"/>
+							<F N="packs_sys/logicmoo_ec/ext/ec_sources/examples/log"/>
 						</Folder>
 						<Folder Name="foundations">
+							<F N="packs_sys/logicmoo_ec/ext/ec_sources/foundations/DEC.e"/>
+							<F N="packs_sys/logicmoo_ec/ext/ec_sources/foundations/DEC.lp"/>
 							<F N="packs_sys/logicmoo_ec/ext/ec_sources/foundations/DEC.lps.pl"/>
+							<F N="packs_sys/logicmoo_ec/ext/ec_sources/foundations/EC.e"/>
+							<F N="packs_sys/logicmoo_ec/ext/ec_sources/foundations/EC.lp"/>
 							<F N="packs_sys/logicmoo_ec/ext/ec_sources/foundations/EC.lps.pl"/>
+							<F N="packs_sys/logicmoo_ec/ext/ec_sources/foundations/EC_dur.lp"/>
+							<F N="packs_sys/logicmoo_ec/ext/ec_sources/foundations/ECCausal.e"/>
+							<F N="packs_sys/logicmoo_ec/ext/ec_sources/foundations/ECCausal.lp"/>
 							<F N="packs_sys/logicmoo_ec/ext/ec_sources/foundations/ECCausal.lps.pl"/>
+							<F N="packs_sys/logicmoo_ec/ext/ec_sources/foundations/ECTraj.e"/>
 							<F N="packs_sys/logicmoo_ec/ext/ec_sources/foundations/ECTraj.lps.pl"/>
+							<F N="packs_sys/logicmoo_ec/ext/ec_sources/foundations/Root.e"/>
 							<F N="packs_sys/logicmoo_ec/ext/ec_sources/foundations/Root.lps.pl"/>
+						</Folder>
+						<Folder Name="includes">
+							<Folder Name="SaaSPatterns">
+								<Folder Name="PolicyPatterns">
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/includes/SaaSPatterns/PolicyPatterns/policyModel.e"/>
+								</Folder>
+								<Folder Name="PolicySetPatterns">
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/includes/SaaSPatterns/PolicySetPatterns/policySetModel.e"/>
+								</Folder>
+								<Folder Name="RulesPatterns">
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/includes/SaaSPatterns/RulesPatterns/ConditionsVerification.e"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/includes/SaaSPatterns/RulesPatterns/ruleModel.e"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/includes/SaaSPatterns/RulesPatterns/ruleOutput.e"/>
+									<F N="packs_sys/logicmoo_ec/ext/ec_sources/includes/SaaSPatterns/RulesPatterns/targetHolds.e"/>
+								</Folder>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/includes/SaaSPatterns/input.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/includes/SaaSPatterns/ordering.e"/>
+								<F N="packs_sys/logicmoo_ec/ext/ec_sources/includes/SaaSPatterns/sorts.e"/>
+							</Folder>
 						</Folder>
 					</Folder>
 					<Folder Name="flp">
 						<Folder Name="templates">
 							<Folder Name="flp">
+								<F N="packs_sys/logicmoo_ec/ext/flp/templates/flp/flp.d.verb"/>
 								<F N="packs_sys/logicmoo_ec/ext/flp/templates/flp/flp.metadata.pl"/>
+								<F N="packs_sys/logicmoo_ec/ext/flp/templates/flp/flp.p.verb"/>
 							</Folder>
 						</Folder>
 						<Folder Name="worlds">
 							<Folder Name="flp">
+								<F N="packs_sys/logicmoo_ec/ext/flp/worlds/flp/flp.d.pddl"/>
 								<F N="packs_sys/logicmoo_ec/ext/flp/worlds/flp/flp.metadata.pl"/>
+								<F N="packs_sys/logicmoo_ec/ext/flp/worlds/flp/flp.p.pddl"/>
+								<F N="packs_sys/logicmoo_ec/ext/flp/worlds/flp/flp.p.pddl.LPG.sol"/>
+								<F N="packs_sys/logicmoo_ec/ext/flp/worlds/flp/flp.p.pddl.LPG.sol.filtered"/>
 							</Folder>
 						</Folder>
 						<F N="packs_sys/logicmoo_ec/ext/flp/args.pl"/>
@@ -2936,7 +3591,9 @@
 						<F N="packs_sys/logicmoo_ec/ext/flp/iem.pl"/>
 						<F N="packs_sys/logicmoo_ec/ext/flp/iem_parser.pl"/>
 						<F N="packs_sys/logicmoo_ec/ext/flp/loader.pl"/>
+						<F N="packs_sys/logicmoo_ec/ext/flp/lpg-td-1.0"/>
 						<F N="packs_sys/logicmoo_ec/ext/flp/normal_form.pl"/>
+						<F N="packs_sys/logicmoo_ec/ext/flp/optic-clp"/>
 						<F N="packs_sys/logicmoo_ec/ext/flp/parseDomainPDDL2.2.pl"/>
 						<F N="packs_sys/logicmoo_ec/ext/flp/parseDomainVerb.pl"/>
 						<F N="packs_sys/logicmoo_ec/ext/flp/parseProblemPDDL2.2.pl"/>
@@ -2945,15 +3602,21 @@
 						<F N="packs_sys/logicmoo_ec/ext/flp/parseSolutionLPGTD.pl"/>
 						<F N="packs_sys/logicmoo_ec/ext/flp/pddl_wrapper.pl"/>
 						<F N="packs_sys/logicmoo_ec/ext/flp/profile.pl"/>
+						<F N="packs_sys/logicmoo_ec/ext/flp/prolog-to-pddl-pretty-print"/>
 						<F N="packs_sys/logicmoo_ec/ext/flp/prolog-to-pddl-pretty-print-prolog.pl"/>
 						<F N="packs_sys/logicmoo_ec/ext/flp/readFile.pl"/>
 						<F N="packs_sys/logicmoo_ec/ext/flp/readFileI.pl"/>
 						<F N="packs_sys/logicmoo_ec/ext/flp/regex.pl"/>
+						<F N="packs_sys/logicmoo_ec/ext/flp/sample-output-2.txt"/>
+						<F N="packs_sys/logicmoo_ec/ext/flp/sample-output.txt"/>
 						<F N="packs_sys/logicmoo_ec/ext/flp/shared.pl"/>
 						<F N="packs_sys/logicmoo_ec/ext/flp/sharedPDDL2.2.pl"/>
 						<F N="packs_sys/logicmoo_ec/ext/flp/sharedPDDL2.2Domain.pl"/>
 						<F N="packs_sys/logicmoo_ec/ext/flp/sharedPDDL2.2Problem.pl"/>
+						<F N="packs_sys/logicmoo_ec/ext/flp/shell-command-async-wrapper.sh"/>
 						<F N="packs_sys/logicmoo_ec/ext/flp/shell-utils.pl"/>
+						<F N="packs_sys/logicmoo_ec/ext/flp/test.sh"/>
+						<F N="packs_sys/logicmoo_ec/ext/flp/to.do"/>
 						<F N="packs_sys/logicmoo_ec/ext/flp/trim.pl"/>
 						<F N="packs_sys/logicmoo_ec/ext/flp/trim_optic_clp.pl"/>
 						<F N="packs_sys/logicmoo_ec/ext/flp/util.pl"/>
@@ -2961,6 +3624,13 @@
 						<F N="packs_sys/logicmoo_ec/ext/flp/world_knowledge.pl"/>
 					</Folder>
 					<Folder Name="PKnows-0.9.9">
+						<Folder Name="vpdl">
+							<F N="packs_sys/logicmoo_ec/ext/PKnows-0.9.9/vpdl/vpdl.ml"/>
+							<F N="packs_sys/logicmoo_ec/ext/PKnows-0.9.9/vpdl/vpdlFunctions.ml"/>
+							<F N="packs_sys/logicmoo_ec/ext/PKnows-0.9.9/vpdl/vpdlRewrite.ml"/>
+						</Folder>
+						<F N="packs_sys/logicmoo_ec/ext/PKnows-0.9.9/adv_mindi2.P"/>
+						<F N="packs_sys/logicmoo_ec/ext/PKnows-0.9.9/COPYING.txt"/>
 						<F N="packs_sys/logicmoo_ec/ext/PKnows-0.9.9/domain.pl"/>
 						<F N="packs_sys/logicmoo_ec/ext/PKnows-0.9.9/domain2.pl"/>
 						<F N="packs_sys/logicmoo_ec/ext/PKnows-0.9.9/domain_wumpus.pl"/>
@@ -2970,19 +3640,164 @@
 						<F N="packs_sys/logicmoo_ec/ext/PKnows-0.9.9/fluent2.pl"/>
 						<F N="packs_sys/logicmoo_ec/ext/PKnows-0.9.9/main.pl"/>
 						<F N="packs_sys/logicmoo_ec/ext/PKnows-0.9.9/main2.pl"/>
+						<F
+							N="packs_sys/logicmoo_ec/ext/PKnows-0.9.9/Makefile"
+							Type="Makefile"/>
 						<F N="packs_sys/logicmoo_ec/ext/PKnows-0.9.9/prover.pl"/>
 						<F N="packs_sys/logicmoo_ec/ext/PKnows-0.9.9/prover2.pl"/>
+						<F N="packs_sys/logicmoo_ec/ext/PKnows-0.9.9/README.txt"/>
+						<F N="packs_sys/logicmoo_ec/ext/PKnows-0.9.9/README2.txt"/>
 						<F N="packs_sys/logicmoo_ec/ext/PKnows-0.9.9/sitcalc.pl"/>
 						<F N="packs_sys/logicmoo_ec/ext/PKnows-0.9.9/sitcalc2.pl"/>
 						<F N="packs_sys/logicmoo_ec/ext/PKnows-0.9.9/twb_vpdl.pl"/>
 						<F N="packs_sys/logicmoo_ec/ext/PKnows-0.9.9/utils.pl"/>
 						<F N="packs_sys/logicmoo_ec/ext/PKnows-0.9.9/utils2.pl"/>
 					</Folder>
+					<Folder Name="RTEC">
+						<Folder Name="examples">
+							<Folder Name="caviar">
+								<Folder Name="CE patterns">
+									<F N="packs_sys/logicmoo_ec/ext/RTEC/examples/caviar/CE patterns/caviar_CE_patterns.prolog"/>
+									<F N="packs_sys/logicmoo_ec/ext/RTEC/examples/caviar/CE patterns/caviar_declarations.prolog"/>
+									<F N="packs_sys/logicmoo_ec/ext/RTEC/examples/caviar/CE patterns/compiled_caviar_CE_patterns.prolog"/>
+									<F N="packs_sys/logicmoo_ec/ext/RTEC/examples/caviar/CE patterns/pre-processing.prolog"/>
+								</Folder>
+								<Folder Name="data">
+									<Folder Name="complete caviar">
+										<F N="packs_sys/logicmoo_ec/ext/RTEC/examples/caviar/data/complete caviar/appearance.prolog"/>
+										<F N="packs_sys/logicmoo_ec/ext/RTEC/examples/caviar/data/complete caviar/list-of-ids.prolog"/>
+										<F N="packs_sys/logicmoo_ec/ext/RTEC/examples/caviar/data/complete caviar/movementB.prolog"/>
+									</Folder>
+								</Folder>
+								<Folder Name="execution scripts">
+									<Folder Name="complete caviar">
+										<F N="packs_sys/logicmoo_ec/ext/RTEC/examples/caviar/execution scripts/complete caviar/continuousQueries.prolog"/>
+									</Folder>
+								</Folder>
+								<F N="packs_sys/logicmoo_ec/ext/RTEC/examples/caviar/readme-caviar.md"/>
+							</Folder>
+							<Folder Name="ctm">
+								<Folder Name="CE patterns">
+									<F N="packs_sys/logicmoo_ec/ext/RTEC/examples/ctm/CE patterns/compiled_ctm_CE_patterns.prolog"/>
+									<F N="packs_sys/logicmoo_ec/ext/RTEC/examples/ctm/CE patterns/ctm_CE_patterns.prolog"/>
+									<F N="packs_sys/logicmoo_ec/ext/RTEC/examples/ctm/CE patterns/ctm_declarations.prolog"/>
+								</Folder>
+								<Folder Name="execution scripts">
+									<Folder Name="100_vehicles">
+										<F N="packs_sys/logicmoo_ec/ext/RTEC/examples/ctm/execution scripts/100_vehicles/continuousQueries.prolog"/>
+									</Folder>
+								</Folder>
+								<F N="packs_sys/logicmoo_ec/ext/RTEC/examples/ctm/readme-ctm.md"/>
+							</Folder>
+							<Folder Name="toy">
+								<F N="packs_sys/logicmoo_ec/ext/RTEC/examples/toy/readme-toy.md"/>
+								<F N="packs_sys/logicmoo_ec/ext/RTEC/examples/toy/toy_declarations.prolog"/>
+								<F N="packs_sys/logicmoo_ec/ext/RTEC/examples/toy/toy_event_stream.prolog"/>
+								<F N="packs_sys/logicmoo_ec/ext/RTEC/examples/toy/toy_queries.prolog"/>
+								<F N="packs_sys/logicmoo_ec/ext/RTEC/examples/toy/toy_rules.prolog"/>
+								<F N="packs_sys/logicmoo_ec/ext/RTEC/examples/toy/toy_rules_compiled.prolog"/>
+								<F N="packs_sys/logicmoo_ec/ext/RTEC/examples/toy/toy_var_domain.prolog"/>
+							</Folder>
+						</Folder>
+						<Folder Name="src">
+							<Folder Name="utilities">
+								<F N="packs_sys/logicmoo_ec/ext/RTEC/src/utilities/amalgamate-periods.prolog"/>
+								<F N="packs_sys/logicmoo_ec/ext/RTEC/src/utilities/interval-manipulation.prolog"/>
+							</Folder>
+							<F N="packs_sys/logicmoo_ec/ext/RTEC/src/compiler.prolog"/>
+							<F N="packs_sys/logicmoo_ec/ext/RTEC/src/inputModule.prolog"/>
+							<F N="packs_sys/logicmoo_ec/ext/RTEC/src/processEvents.prolog"/>
+							<F N="packs_sys/logicmoo_ec/ext/RTEC/src/processSDFluents.prolog"/>
+							<F N="packs_sys/logicmoo_ec/ext/RTEC/src/processSimpleFluents.prolog"/>
+							<F N="packs_sys/logicmoo_ec/ext/RTEC/src/RTEC.prolog"/>
+						</Folder>
+						<F N="packs_sys/logicmoo_ec/ext/RTEC/.gitignore"/>
+						<F N="packs_sys/logicmoo_ec/ext/RTEC/LICENSE"/>
+						<F N="packs_sys/logicmoo_ec/ext/RTEC/README.md"/>
+						<F N="packs_sys/logicmoo_ec/ext/RTEC/RTEC_manual.pdf"/>
+					</Folder>
 					<Folder Name="theorist">
 						<Folder Name="ailog">
+							<Folder Name="ailog_code">
+								<Folder Name="ch05">
+									<F N="packs_sys/logicmoo_ec/ext/theorist/ailog/ailog_code/ch05/beach.ail"/>
+									<F N="packs_sys/logicmoo_ec/ext/theorist/ailog/ailog_code/ch05/bronchitis.ail"/>
+									<F N="packs_sys/logicmoo_ec/ext/theorist/ailog/ailog_code/ch05/elect_abd.ail"/>
+									<F N="packs_sys/logicmoo_ec/ext/theorist/ailog/ailog_code/ch05/elect_ask.ail"/>
+									<F N="packs_sys/logicmoo_ec/ext/theorist/ailog/ailog_code/ch05/elect_bug.ail"/>
+									<F N="packs_sys/logicmoo_ec/ext/theorist/ailog/ailog_code/ch05/elect_bug2.ail"/>
+									<F N="packs_sys/logicmoo_ec/ext/theorist/ailog/ailog_code/ch05/elect_bug3.ail"/>
+									<F N="packs_sys/logicmoo_ec/ext/theorist/ailog/ailog_code/ch05/elect_cbd.ail"/>
+									<F N="packs_sys/logicmoo_ec/ext/theorist/ailog/ailog_code/ch05/elect_design.ail"/>
+									<F N="packs_sys/logicmoo_ec/ext/theorist/ailog/ailog_code/ch05/elect_naf.ail"/>
+									<F N="packs_sys/logicmoo_ec/ext/theorist/ailog/ailog_code/ch05/elect_prop.ail"/>
+									<F N="packs_sys/logicmoo_ec/ext/theorist/ailog/ailog_code/ch05/plumbing.ail"/>
+								</Folder>
+								<Folder Name="ch12">
+									<F N="packs_sys/logicmoo_ec/ext/theorist/ailog/ailog_code/ch12/before.ail"/>
+									<F N="packs_sys/logicmoo_ec/ext/theorist/ailog/ailog_code/ch12/cfg_simple.ail"/>
+									<F N="packs_sys/logicmoo_ec/ext/theorist/ailog/ailog_code/ch12/elect_relational.ail"/>
+									<F N="packs_sys/logicmoo_ec/ext/theorist/ailog/ailog_code/ch12/nl_interface.ail"/>
+									<F N="packs_sys/logicmoo_ec/ext/theorist/ailog/ailog_code/ch12/nl_numbera.ail"/>
+									<F N="packs_sys/logicmoo_ec/ext/theorist/ailog/ailog_code/ch12/trans.ail"/>
+									<F N="packs_sys/logicmoo_ec/ext/theorist/ailog/ailog_code/ch12/trees.ail"/>
+									<F N="packs_sys/logicmoo_ec/ext/theorist/ailog/ailog_code/ch12/west.ail"/>
+								</Folder>
+								<Folder Name="ch13">
+									<F N="packs_sys/logicmoo_ec/ext/theorist/ailog/ailog_code/ch13/bprove.ail"/>
+									<F N="packs_sys/logicmoo_ec/ext/theorist/ailog/ailog_code/ch13/dprove.ail"/>
+									<F N="packs_sys/logicmoo_ec/ext/theorist/ailog/ailog_code/ch13/elect_base.ail"/>
+									<F N="packs_sys/logicmoo_ec/ext/theorist/ailog/ailog_code/ch13/elect_delay.ail"/>
+									<F N="packs_sys/logicmoo_ec/ext/theorist/ailog/ailog_code/ch13/hprove.ail"/>
+									<F N="packs_sys/logicmoo_ec/ext/theorist/ailog/ailog_code/ch13/prove.ail"/>
+									<F N="packs_sys/logicmoo_ec/ext/theorist/ailog/ailog_code/ch13/prove2.ail"/>
+								</Folder>
+								<Folder Name="ch14">
+									<F N="packs_sys/logicmoo_ec/ext/theorist/ailog/ailog_code/ch14/addition.ail"/>
+									<F N="packs_sys/logicmoo_ec/ext/theorist/ailog/ailog_code/ch14/delrob_sitc.ail"/>
+									<F N="packs_sys/logicmoo_ec/ext/theorist/ailog/ailog_code/ch14/grades.ailog"/>
+									<F N="packs_sys/logicmoo_ec/ext/theorist/ailog/ailog_code/ch14/leaving.ail"/>
+									<F N="packs_sys/logicmoo_ec/ext/theorist/ailog/ailog_code/ch14/movie.ailog"/>
+								</Folder>
+								<F N="packs_sys/logicmoo_ec/ext/theorist/ailog/ailog_code/ailog_code.html"/>
+							</Folder>
+							<F N="packs_sys/logicmoo_ec/ext/theorist/ailog/addition.ail"/>
+							<F N="packs_sys/logicmoo_ec/ext/theorist/ailog/ailog2.html"/>
 							<F N="packs_sys/logicmoo_ec/ext/theorist/ailog/ailog2.pl"/>
 							<F N="packs_sys/logicmoo_ec/ext/theorist/ailog/ailog21.pl"/>
 							<F N="packs_sys/logicmoo_ec/ext/theorist/ailog/ailog2_swi.pl"/>
+							<F N="packs_sys/logicmoo_ec/ext/theorist/ailog/ailog_man.html"/>
+							<F N="packs_sys/logicmoo_ec/ext/theorist/ailog/ailog_man.pdf"/>
+							<F N="packs_sys/logicmoo_ec/ext/theorist/ailog/ailog_man_1.html"/>
+							<F N="packs_sys/logicmoo_ec/ext/theorist/ailog/ailog_man_10.html"/>
+							<F N="packs_sys/logicmoo_ec/ext/theorist/ailog/ailog_man_11.html"/>
+							<F N="packs_sys/logicmoo_ec/ext/theorist/ailog/ailog_man_12.html"/>
+							<F N="packs_sys/logicmoo_ec/ext/theorist/ailog/ailog_man_13.html"/>
+							<F N="packs_sys/logicmoo_ec/ext/theorist/ailog/ailog_man_14.html"/>
+							<F N="packs_sys/logicmoo_ec/ext/theorist/ailog/ailog_man_15.html"/>
+							<F N="packs_sys/logicmoo_ec/ext/theorist/ailog/ailog_man_16.html"/>
+							<F N="packs_sys/logicmoo_ec/ext/theorist/ailog/ailog_man_17.html"/>
+							<F N="packs_sys/logicmoo_ec/ext/theorist/ailog/ailog_man_18.html"/>
+							<F N="packs_sys/logicmoo_ec/ext/theorist/ailog/ailog_man_19.html"/>
+							<F N="packs_sys/logicmoo_ec/ext/theorist/ailog/ailog_man_2.html"/>
+							<F N="packs_sys/logicmoo_ec/ext/theorist/ailog/ailog_man_20.html"/>
+							<F N="packs_sys/logicmoo_ec/ext/theorist/ailog/ailog_man_21.html"/>
+							<F N="packs_sys/logicmoo_ec/ext/theorist/ailog/ailog_man_3.html"/>
+							<F N="packs_sys/logicmoo_ec/ext/theorist/ailog/ailog_man_4.html"/>
+							<F N="packs_sys/logicmoo_ec/ext/theorist/ailog/ailog_man_5.html"/>
+							<F N="packs_sys/logicmoo_ec/ext/theorist/ailog/ailog_man_6.html"/>
+							<F N="packs_sys/logicmoo_ec/ext/theorist/ailog/ailog_man_7.html"/>
+							<F N="packs_sys/logicmoo_ec/ext/theorist/ailog/ailog_man_8.html"/>
+							<F N="packs_sys/logicmoo_ec/ext/theorist/ailog/ailog_man_9.html"/>
+							<F N="packs_sys/logicmoo_ec/ext/theorist/ailog/batcode.cil"/>
+							<F N="packs_sys/logicmoo_ec/ext/theorist/ailog/blip.ailog"/>
+							<F N="packs_sys/logicmoo_ec/ext/theorist/ailog/blocks3.ailog"/>
+							<F N="packs_sys/logicmoo_ec/ext/theorist/ailog/hierarchicalBayes.cil"/>
+							<F N="packs_sys/logicmoo_ec/ext/theorist/ailog/index.html"/>
+							<F N="packs_sys/logicmoo_ec/ext/theorist/ailog/plates.cil"/>
+							<F N="packs_sys/logicmoo_ec/ext/theorist/ailog/rob_key.ail"/>
+							<F N="packs_sys/logicmoo_ec/ext/theorist/ailog/robot_sitc.cil"/>
+							<F N="packs_sys/logicmoo_ec/ext/theorist/ailog/tug_of_war.ailog"/>
 						</Folder>
 						<Folder Name="cilog_code">
 							<Folder Name="ch2">
@@ -3016,13 +3831,64 @@
 								<F N="packs_sys/logicmoo_ec/ext/theorist/cilog_code/ch8/regr_strips_sim.pl"/>
 								<F N="packs_sys/logicmoo_ec/ext/theorist/cilog_code/ch8/strips_strips.pl"/>
 							</Folder>
+							<F N="packs_sys/logicmoo_ec/ext/theorist/cilog_code/cilog_code.html"/>
 						</Folder>
+						<F N="packs_sys/logicmoo_ec/ext/theorist/all_ex"/>
+						<F N="packs_sys/logicmoo_ec/ext/theorist/bats"/>
+						<F N="packs_sys/logicmoo_ec/ext/theorist/birdsfly"/>
+						<F N="packs_sys/logicmoo_ec/ext/theorist/ce.txt"/>
+						<F N="packs_sys/logicmoo_ec/ext/theorist/CILOG User Manual.html"/>
 						<F N="packs_sys/logicmoo_ec/ext/theorist/cilog_swi.pl"/>
+						<F N="packs_sys/logicmoo_ec/ext/theorist/cir2"/>
 						<F N="packs_sys/logicmoo_ec/ext/theorist/cir2.pl"/>
+						<F N="packs_sys/logicmoo_ec/ext/theorist/depiction"/>
+						<F N="packs_sys/logicmoo_ec/ext/theorist/emu"/>
+						<F N="packs_sys/logicmoo_ec/ext/theorist/hunt"/>
+						<F N="packs_sys/logicmoo_ec/ext/theorist/lookslike"/>
+						<F N="packs_sys/logicmoo_ec/ext/theorist/nixon"/>
+						<F N="packs_sys/logicmoo_ec/ext/theorist/nixon2"/>
+						<F N="packs_sys/logicmoo_ec/ext/theorist/nqueens"/>
+						<F N="packs_sys/logicmoo_ec/ext/theorist/nrev"/>
+						<F N="packs_sys/logicmoo_ec/ext/theorist/README"/>
 						<F N="packs_sys/logicmoo_ec/ext/theorist/snark_klsnl.pl"/>
 						<F N="packs_sys/logicmoo_ec/ext/theorist/snark_theorist.pl"/>
+						<F N="packs_sys/logicmoo_ec/ext/theorist/theorist.pdf"/>
+						<F N="packs_sys/logicmoo_ec/ext/theorist/theorist.tex"/>
+						<F N="packs_sys/logicmoo_ec/ext/theorist/tl-otter.el"/>
+						<F N="packs_sys/logicmoo_ec/ext/theorist/users-guide.tex"/>
 					</Folder>
 					<Folder Name="Tom">
+						<Folder Name="Doc">
+							<F N="packs_sys/logicmoo_ec/ext/Tom/Doc/nonnengart.run"/>
+							<F N="packs_sys/logicmoo_ec/ext/Tom/Doc/tom_man.dvi"/>
+							<F N="packs_sys/logicmoo_ec/ext/Tom/Doc/tom_man.pdf"/>
+							<F N="packs_sys/logicmoo_ec/ext/Tom/Doc/tom_man.tex"/>
+						</Folder>
+						<Folder Name="Samples">
+							<F N="packs_sys/logicmoo_ec/ext/Tom/Samples/counter.mat"/>
+							<F N="packs_sys/logicmoo_ec/ext/Tom/Samples/counter2.mat"/>
+							<F N="packs_sys/logicmoo_ec/ext/Tom/Samples/non1.mat"/>
+							<F N="packs_sys/logicmoo_ec/ext/Tom/Samples/non10.mat"/>
+							<F N="packs_sys/logicmoo_ec/ext/Tom/Samples/non11.mat"/>
+							<F N="packs_sys/logicmoo_ec/ext/Tom/Samples/non12.mat"/>
+							<F N="packs_sys/logicmoo_ec/ext/Tom/Samples/non13.mat"/>
+							<F N="packs_sys/logicmoo_ec/ext/Tom/Samples/non14.mat"/>
+							<F N="packs_sys/logicmoo_ec/ext/Tom/Samples/non15.mat"/>
+							<F N="packs_sys/logicmoo_ec/ext/Tom/Samples/non16.mat"/>
+							<F N="packs_sys/logicmoo_ec/ext/Tom/Samples/non17.mat"/>
+							<F N="packs_sys/logicmoo_ec/ext/Tom/Samples/non18.mat"/>
+							<F N="packs_sys/logicmoo_ec/ext/Tom/Samples/non19.mat"/>
+							<F N="packs_sys/logicmoo_ec/ext/Tom/Samples/non2.mat"/>
+							<F N="packs_sys/logicmoo_ec/ext/Tom/Samples/non20.mat"/>
+							<F N="packs_sys/logicmoo_ec/ext/Tom/Samples/non3.mat"/>
+							<F N="packs_sys/logicmoo_ec/ext/Tom/Samples/non4.mat"/>
+							<F N="packs_sys/logicmoo_ec/ext/Tom/Samples/non5.mat"/>
+							<F N="packs_sys/logicmoo_ec/ext/Tom/Samples/non6.mat"/>
+							<F N="packs_sys/logicmoo_ec/ext/Tom/Samples/non7.mat"/>
+							<F N="packs_sys/logicmoo_ec/ext/Tom/Samples/non8.mat"/>
+							<F N="packs_sys/logicmoo_ec/ext/Tom/Samples/non9.mat"/>
+							<F N="packs_sys/logicmoo_ec/ext/Tom/Samples/wise2.mat"/>
+						</Folder>
 						<Folder Name="Src">
 							<F N="packs_sys/logicmoo_ec/ext/Tom/Src/merge.pl"/>
 							<F N="packs_sys/logicmoo_ec/ext/Tom/Src/merge2.pl"/>
@@ -3033,6 +3899,7 @@
 							<F N="packs_sys/logicmoo_ec/ext/Tom/Src/nnf.pl"/>
 							<F N="packs_sys/logicmoo_ec/ext/Tom/Src/normalize_path.pl"/>
 							<F N="packs_sys/logicmoo_ec/ext/Tom/Src/normalize_unify_a1.pl"/>
+							<F N="packs_sys/logicmoo_ec/ext/Tom/Src/tom.cfg"/>
 							<F N="packs_sys/logicmoo_ec/ext/Tom/Src/tom.pl"/>
 							<F N="packs_sys/logicmoo_ec/ext/Tom/Src/tom_constraints.pl"/>
 							<F N="packs_sys/logicmoo_ec/ext/Tom/Src/tom_inference.pl"/>
@@ -3045,6 +3912,7 @@
 						<F N="packs_sys/logicmoo_ec/ext/xray/builtin.pl"/>
 						<F N="packs_sys/logicmoo_ec/ext/xray/db.pl"/>
 						<F N="packs_sys/logicmoo_ec/ext/xray/debug.pl"/>
+						<F N="packs_sys/logicmoo_ec/ext/xray/FIXES"/>
 						<F N="packs_sys/logicmoo_ec/ext/xray/herbrand.pl"/>
 						<F N="packs_sys/logicmoo_ec/ext/xray/hooks.pl"/>
 						<F N="packs_sys/logicmoo_ec/ext/xray/hooks_config.pl"/>
@@ -3054,13 +3922,26 @@
 						<F N="packs_sys/logicmoo_ec/ext/xray/lemmaflex.pl"/>
 						<F N="packs_sys/logicmoo_ec/ext/xray/model.pl"/>
 						<F N="packs_sys/logicmoo_ec/ext/xray/pttp.pl"/>
+						<F N="packs_sys/logicmoo_ec/ext/xray/TODO"/>
 						<F N="packs_sys/logicmoo_ec/ext/xray/xray.pl"/>
 						<F N="packs_sys/logicmoo_ec/ext/xray/xray_config.pl"/>
 					</Folder>
 					<Folder Name="yadlr">
 						<Folder Name="examples">
+							<Folder Name="iris">
+								<F
+									N="packs_sys/logicmoo_ec/ext/yadlr/examples/iris/Makefile"
+									Type="Makefile"/>
+								<F N="packs_sys/logicmoo_ec/ext/yadlr/examples/iris/mkdata.sh"/>
+							</Folder>
 							<Folder Name="trains">
+								<F N="packs_sys/logicmoo_ec/ext/yadlr/examples/trains/crisptrains.b"/>
+								<F N="packs_sys/logicmoo_ec/ext/yadlr/examples/trains/crisptrains.f"/>
+								<F N="packs_sys/logicmoo_ec/ext/yadlr/examples/trains/crisptrains.n"/>
 								<F N="packs_sys/logicmoo_ec/ext/yadlr/examples/trains/domain.pl"/>
+								<F N="packs_sys/logicmoo_ec/ext/yadlr/examples/trains/trains.b"/>
+								<F N="packs_sys/logicmoo_ec/ext/yadlr/examples/trains/trains.f"/>
+								<F N="packs_sys/logicmoo_ec/ext/yadlr/examples/trains/trains.n"/>
 							</Folder>
 							<F N="packs_sys/logicmoo_ec/ext/yadlr/examples/abstract-alc.pl"/>
 							<F N="packs_sys/logicmoo_ec/ext/yadlr/examples/abstract-shoiq.pl"/>
@@ -3082,22 +3963,174 @@
 						<F N="packs_sys/logicmoo_ec/ext/yadlr/abstract-alc.pl"/>
 						<F N="packs_sys/logicmoo_ec/ext/yadlr/abstract-shoiq.pl"/>
 						<F N="packs_sys/logicmoo_ec/ext/yadlr/domain.pl"/>
+						<F N="packs_sys/logicmoo_ec/ext/yadlr/INSTALL"/>
+						<F N="packs_sys/logicmoo_ec/ext/yadlr/LICENSE"/>
+						<F N="packs_sys/logicmoo_ec/ext/yadlr/README.md"/>
+						<F N="packs_sys/logicmoo_ec/ext/yadlr/README.text"/>
 						<F N="packs_sys/logicmoo_ec/ext/yadlr/reasoner.pl"/>
 						<F N="packs_sys/logicmoo_ec/ext/yadlr/simple-alc.pl"/>
+						<F N="packs_sys/logicmoo_ec/ext/yadlr/VERSION"/>
 					</Folder>
 					<F N="packs_sys/logicmoo_ec/ext/tist.pl"/>
 				</Folder>
 				<Folder Name="prolog">
 					<Folder Name="ccalc">
+						<Folder Name="CVS">
+							<F N="packs_sys/logicmoo_ec/prolog/ccalc/CVS/Entries"/>
+							<F N="packs_sys/logicmoo_ec/prolog/ccalc/CVS/Repository"/>
+							<F N="packs_sys/logicmoo_ec/prolog/ccalc/CVS/Root"/>
+						</Folder>
+						<Folder Name="examples">
+							<Folder Name="additive">
+								<F N="packs_sys/logicmoo_ec/prolog/ccalc/examples/additive/buying"/>
+								<F N="packs_sys/logicmoo_ec/prolog/ccalc/examples/additive/buying-test"/>
+								<F N="packs_sys/logicmoo_ec/prolog/ccalc/examples/additive/mcp"/>
+								<F N="packs_sys/logicmoo_ec/prolog/ccalc/examples/additive/mcp-test"/>
+								<F N="packs_sys/logicmoo_ec/prolog/ccalc/examples/additive/spacecraft"/>
+								<F N="packs_sys/logicmoo_ec/prolog/ccalc/examples/additive/spacecraft-test"/>
+							</Folder>
+							<Folder Name="airport">
+								<F N="packs_sys/logicmoo_ec/prolog/ccalc/examples/airport/airport-domain"/>
+								<F N="packs_sys/logicmoo_ec/prolog/ccalc/examples/airport/airport-problem"/>
+							</Folder>
+							<Folder Name="nmct">
+								<F N="packs_sys/logicmoo_ec/prolog/ccalc/examples/nmct/defeasible"/>
+								<F N="packs_sys/logicmoo_ec/prolog/ccalc/examples/nmct/go"/>
+								<F N="packs_sys/logicmoo_ec/prolog/ccalc/examples/nmct/lifting"/>
+								<F N="packs_sys/logicmoo_ec/prolog/ccalc/examples/nmct/mb"/>
+								<F N="packs_sys/logicmoo_ec/prolog/ccalc/examples/nmct/mbpp"/>
+								<F N="packs_sys/logicmoo_ec/prolog/ccalc/examples/nmct/pendulum"/>
+								<F N="packs_sys/logicmoo_ec/prolog/ccalc/examples/nmct/publish"/>
+								<F N="packs_sys/logicmoo_ec/prolog/ccalc/examples/nmct/turkeys"/>
+							</Folder>
+							<Folder Name="traffic">
+								<F N="packs_sys/logicmoo_ec/prolog/ccalc/examples/traffic/scenario1"/>
+								<F N="packs_sys/logicmoo_ec/prolog/ccalc/examples/traffic/scenario2"/>
+								<F N="packs_sys/logicmoo_ec/prolog/ccalc/examples/traffic/scenario3"/>
+								<F N="packs_sys/logicmoo_ec/prolog/ccalc/examples/traffic/traffic"/>
+							</Folder>
+							<Folder Name="zoo">
+								<F N="packs_sys/logicmoo_ec/prolog/ccalc/examples/zoo/zoo"/>
+								<F N="packs_sys/logicmoo_ec/prolog/ccalc/examples/zoo/zoo-actions"/>
+								<F N="packs_sys/logicmoo_ec/prolog/ccalc/examples/zoo/zoo-animals"/>
+								<F N="packs_sys/logicmoo_ec/prolog/ccalc/examples/zoo/zoo-example"/>
+								<F N="packs_sys/logicmoo_ec/prolog/ccalc/examples/zoo/zoo-landscape"/>
+								<F N="packs_sys/logicmoo_ec/prolog/ccalc/examples/zoo/zoo-movement"/>
+								<F N="packs_sys/logicmoo_ec/prolog/ccalc/examples/zoo/zoo-test1"/>
+								<F N="packs_sys/logicmoo_ec/prolog/ccalc/examples/zoo/zoo-test2"/>
+								<F N="packs_sys/logicmoo_ec/prolog/ccalc/examples/zoo/zoo-test3"/>
+								<F N="packs_sys/logicmoo_ec/prolog/ccalc/examples/zoo/zoo-test4"/>
+								<F N="packs_sys/logicmoo_ec/prolog/ccalc/examples/zoo/zoo-test5"/>
+								<F N="packs_sys/logicmoo_ec/prolog/ccalc/examples/zoo/zoo-test6"/>
+							</Folder>
+							<F N="packs_sys/logicmoo_ec/prolog/ccalc/examples/bw"/>
+							<F N="packs_sys/logicmoo_ec/prolog/ccalc/examples/bw-test"/>
+							<F N="packs_sys/logicmoo_ec/prolog/ccalc/examples/hanoi"/>
+							<F N="packs_sys/logicmoo_ec/prolog/ccalc/examples/index.html"/>
+						</Folder>
+						<Folder Name="solvers">
+							<Folder Name="CVS">
+								<F N="packs_sys/logicmoo_ec/prolog/ccalc/solvers/CVS/Entries"/>
+								<F N="packs_sys/logicmoo_ec/prolog/ccalc/solvers/CVS/Repository"/>
+								<F N="packs_sys/logicmoo_ec/prolog/ccalc/solvers/CVS/Root"/>
+							</Folder>
+							<Folder Name="Linux">
+								<Folder Name="CVS">
+									<F N="packs_sys/logicmoo_ec/prolog/ccalc/solvers/Linux/CVS/Entries"/>
+									<F N="packs_sys/logicmoo_ec/prolog/ccalc/solvers/Linux/CVS/Repository"/>
+									<F N="packs_sys/logicmoo_ec/prolog/ccalc/solvers/Linux/CVS/Root"/>
+								</Folder>
+								<F N="packs_sys/logicmoo_ec/prolog/ccalc/solvers/Linux/compact"/>
+								<F N="packs_sys/logicmoo_ec/prolog/ccalc/solvers/Linux/grasp"/>
+								<F N="packs_sys/logicmoo_ec/prolog/ccalc/solvers/Linux/mchaff"/>
+								<F N="packs_sys/logicmoo_ec/prolog/ccalc/solvers/Linux/relsat"/>
+								<F N="packs_sys/logicmoo_ec/prolog/ccalc/solvers/Linux/relsat_old"/>
+								<F N="packs_sys/logicmoo_ec/prolog/ccalc/solvers/Linux/sato"/>
+								<F N="packs_sys/logicmoo_ec/prolog/ccalc/solvers/Linux/satz"/>
+								<F N="packs_sys/logicmoo_ec/prolog/ccalc/solvers/Linux/satz-rand"/>
+								<F N="packs_sys/logicmoo_ec/prolog/ccalc/solvers/Linux/walksat"/>
+								<F N="packs_sys/logicmoo_ec/prolog/ccalc/solvers/Linux/zchaff"/>
+							</Folder>
+							<Folder Name="SunOS">
+								<Folder Name="CVS">
+									<F N="packs_sys/logicmoo_ec/prolog/ccalc/solvers/SunOS/CVS/Entries"/>
+									<F N="packs_sys/logicmoo_ec/prolog/ccalc/solvers/SunOS/CVS/Repository"/>
+									<F N="packs_sys/logicmoo_ec/prolog/ccalc/solvers/SunOS/CVS/Root"/>
+								</Folder>
+								<F N="packs_sys/logicmoo_ec/prolog/ccalc/solvers/SunOS/compact"/>
+								<F N="packs_sys/logicmoo_ec/prolog/ccalc/solvers/SunOS/grasp"/>
+								<F N="packs_sys/logicmoo_ec/prolog/ccalc/solvers/SunOS/mchaff"/>
+								<F N="packs_sys/logicmoo_ec/prolog/ccalc/solvers/SunOS/relsat"/>
+								<F N="packs_sys/logicmoo_ec/prolog/ccalc/solvers/SunOS/relsat_old"/>
+								<F N="packs_sys/logicmoo_ec/prolog/ccalc/solvers/SunOS/sato"/>
+								<F N="packs_sys/logicmoo_ec/prolog/ccalc/solvers/SunOS/sato_old"/>
+								<F N="packs_sys/logicmoo_ec/prolog/ccalc/solvers/SunOS/satz"/>
+								<F N="packs_sys/logicmoo_ec/prolog/ccalc/solvers/SunOS/satz-rand"/>
+								<F N="packs_sys/logicmoo_ec/prolog/ccalc/solvers/SunOS/walksat"/>
+								<F N="packs_sys/logicmoo_ec/prolog/ccalc/solvers/SunOS/zchaff"/>
+							</Folder>
+							<F N="packs_sys/logicmoo_ec/prolog/ccalc/solvers/compact.tar.gz"/>
+							<F N="packs_sys/logicmoo_ec/prolog/ccalc/solvers/mchaff-opts.smj.1"/>
+							<F N="packs_sys/logicmoo_ec/prolog/ccalc/solvers/mchaff-opts.smj.2"/>
+						</Folder>
+						<Folder Name="tutorial">
+							<F N="packs_sys/logicmoo_ec/prolog/ccalc/tutorial/9-9-03-file2-small.jpg"/>
+							<F N="packs_sys/logicmoo_ec/prolog/ccalc/tutorial/9-9-03-small.jpg"/>
+							<F N="packs_sys/logicmoo_ec/prolog/ccalc/tutorial/bullets.html"/>
+							<F N="packs_sys/logicmoo_ec/prolog/ccalc/tutorial/coins"/>
+							<F N="packs_sys/logicmoo_ec/prolog/ccalc/tutorial/describing.html"/>
+							<F N="packs_sys/logicmoo_ec/prolog/ccalc/tutorial/families.html"/>
+							<F N="packs_sys/logicmoo_ec/prolog/ccalc/tutorial/how.html"/>
+							<F N="packs_sys/logicmoo_ec/prolog/ccalc/tutorial/input1.html"/>
+							<F N="packs_sys/logicmoo_ec/prolog/ccalc/tutorial/input2.html"/>
+							<F N="packs_sys/logicmoo_ec/prolog/ccalc/tutorial/nondeterminism.html"/>
+							<F N="packs_sys/logicmoo_ec/prolog/ccalc/tutorial/objects.html"/>
+							<F N="packs_sys/logicmoo_ec/prolog/ccalc/tutorial/parameters.html"/>
+							<F N="packs_sys/logicmoo_ec/prolog/ccalc/tutorial/queries.html"/>
+							<F N="packs_sys/logicmoo_ec/prolog/ccalc/tutorial/running.html"/>
+							<F N="packs_sys/logicmoo_ec/prolog/ccalc/tutorial/toc.html"/>
+							<F N="packs_sys/logicmoo_ec/prolog/ccalc/tutorial/transitionsystems.html"/>
+							<F N="packs_sys/logicmoo_ec/prolog/ccalc/tutorial/ysp.html"/>
+						</Folder>
+						<F N="packs_sys/logicmoo_ec/prolog/ccalc/additive"/>
+						<F N="packs_sys/logicmoo_ec/prolog/ccalc/arithmetic"/>
+						<F N="packs_sys/logicmoo_ec/prolog/ccalc/calc.orig"/>
 						<F N="packs_sys/logicmoo_ec/prolog/ccalc/ccalc.pl"/>
 						<F N="packs_sys/logicmoo_ec/prolog/ccalc/cchelp.pl"/>
+						<F N="packs_sys/logicmoo_ec/prolog/ccalc/ccsat.in"/>
+						<F N="packs_sys/logicmoo_ec/prolog/ccalc/ccsat.out"/>
+						<F N="packs_sys/logicmoo_ec/prolog/ccalc/ccsat.out2"/>
+						<F N="packs_sys/logicmoo_ec/prolog/ccalc/history.std"/>
+						<F N="packs_sys/logicmoo_ec/prolog/ccalc/index.html"/>
+						<F N="packs_sys/logicmoo_ec/prolog/ccalc/macros.std"/>
+						<F N="packs_sys/logicmoo_ec/prolog/ccalc/mchaff-opts.smj"/>
+						<F N="packs_sys/logicmoo_ec/prolog/ccalc/options.std"/>
+						<F N="packs_sys/logicmoo_ec/prolog/ccalc/precedences.std"/>
+						<F N="packs_sys/logicmoo_ec/prolog/ccalc/README.md"/>
+						<F N="packs_sys/logicmoo_ec/prolog/ccalc/release"/>
+						<F N="packs_sys/logicmoo_ec/prolog/ccalc/release-excludes"/>
 						<F N="packs_sys/logicmoo_ec/prolog/ccalc/sicstus.pl"/>
 						<F N="packs_sys/logicmoo_ec/prolog/ccalc/solver_test.pl"/>
+						<F N="packs_sys/logicmoo_ec/prolog/ccalc/static0.std"/>
 						<F N="packs_sys/logicmoo_ec/prolog/ccalc/swi.pl"/>
 					</Folder>
 					<Folder Name="code_icl">
+						<F N="packs_sys/logicmoo_ec/prolog/code_icl/blocks1.ec"/>
+						<F N="packs_sys/logicmoo_ec/prolog/code_icl/blocks2.ec"/>
+						<F N="packs_sys/logicmoo_ec/prolog/code_icl/blocks3.ec"/>
+						<F N="packs_sys/logicmoo_ec/prolog/code_icl/blocks3a.ec"/>
+						<F N="packs_sys/logicmoo_ec/prolog/code_icl/blocks4.ec"/>
 						<F N="packs_sys/logicmoo_ec/prolog/code_icl/dtp.pl"/>
+						<F N="packs_sys/logicmoo_ec/prolog/code_icl/help_icl.txt"/>
+						<F N="packs_sys/logicmoo_ec/prolog/code_icl/icl_int.pdf"/>
+						<F N="packs_sys/logicmoo_ec/prolog/code_icl/icl_int.tex"/>
 						<F N="packs_sys/logicmoo_ec/prolog/code_icl/icl_widget.pl"/>
+						<F N="packs_sys/logicmoo_ec/prolog/code_icl/ReadMe_ICL"/>
+						<F N="packs_sys/logicmoo_ec/prolog/code_icl/rob_key.ec"/>
+						<F N="packs_sys/logicmoo_ec/prolog/code_icl/rob_key_agent.ec"/>
+						<F N="packs_sys/logicmoo_ec/prolog/code_icl/sexam1.ec"/>
+						<F N="packs_sys/logicmoo_ec/prolog/code_icl/sexam2.ec"/>
+						<F N="packs_sys/logicmoo_ec/prolog/code_icl/widget.ec"/>
 					</Folder>
 					<Folder Name="dialect">
 						<Folder Name="logicmoo">
@@ -3113,6 +4146,7 @@
 							<F N="packs_sys/logicmoo_ec/prolog/ec_planner/hist/ec_planner_current.pl"/>
 							<F N="packs_sys/logicmoo_ec/prolog/ec_planner/hist/ec_reader_no_lps.pl"/>
 							<F N="packs_sys/logicmoo_ec/prolog/ec_planner/hist/ec_rules.pfc.pl"/>
+							<F N="packs_sys/logicmoo_ec/prolog/ec_planner/hist/eventCalculus_README.md"/>
 							<F N="packs_sys/logicmoo_ec/prolog/ec_planner/hist/eventCalculusPlannerDMiles.pl"/>
 							<F N="packs_sys/logicmoo_ec/prolog/ec_planner/hist/eventCalculusPlannerDMiles_OLD.pl"/>
 							<F N="packs_sys/logicmoo_ec/prolog/ec_planner/hist/planner115.pl"/>
@@ -3141,14 +4175,18 @@
 						<F N="packs_sys/logicmoo_ec/prolog/ec_planner/ec_reader.pl"/>
 						<F N="packs_sys/logicmoo_ec/prolog/ec_planner/ec_test_incl.pl"/>
 						<F N="packs_sys/logicmoo_ec/prolog/ec_planner/lps_pddl_convert.pl"/>
+						<F N="packs_sys/logicmoo_ec/prolog/ec_planner/lps_pddl_convert.pl.bak"/>
 					</Folder>
 					<Folder Name="hyhtn_pddl">
 						<Folder Name="ptools">
 							<F N="packs_sys/logicmoo_ec/prolog/hyhtn_pddl/ptools/assert_sort.pl"/>
 							<F N="packs_sys/logicmoo_ec/prolog/hyhtn_pddl/ptools/compile.pl"/>
 							<F N="packs_sys/logicmoo_ec/prolog/hyhtn_pddl/ptools/consyn.pl"/>
+							<F N="packs_sys/logicmoo_ec/prolog/hyhtn_pddl/ptools/convert.sh"/>
 							<F N="packs_sys/logicmoo_ec/prolog/hyhtn_pddl/ptools/fmacgr.pl"/>
 							<F N="packs_sys/logicmoo_ec/prolog/hyhtn_pddl/ptools/Forward.pl"/>
+							<F N="packs_sys/logicmoo_ec/prolog/hyhtn_pddl/ptools/gen_order.sh"/>
+							<F N="packs_sys/logicmoo_ec/prolog/hyhtn_pddl/ptools/gen_task.sh"/>
 							<F N="packs_sys/logicmoo_ec/prolog/hyhtn_pddl/ptools/gentasks.pl"/>
 							<F N="packs_sys/logicmoo_ec/prolog/hyhtn_pddl/ptools/groundCE.pl"/>
 							<F N="packs_sys/logicmoo_ec/prolog/hyhtn_pddl/ptools/hyhtn_code1.pl"/>
@@ -3176,15 +4214,22 @@
 						<F N="packs_sys/logicmoo_ec/prolog/hyhtn_pddl/hyhtn_new.pl"/>
 						<F N="packs_sys/logicmoo_ec/prolog/hyhtn_pddl/hyhtn_old.pl"/>
 						<F N="packs_sys/logicmoo_ec/prolog/hyhtn_pddl/hyhtn_works.pl"/>
+						<F N="packs_sys/logicmoo_ec/prolog/hyhtn_pddl/pddl_as_ocl.old"/>
 						<F N="packs_sys/logicmoo_ec/prolog/hyhtn_pddl/pddl_as_ocl.pl"/>
+						<F N="packs_sys/logicmoo_ec/prolog/hyhtn_pddl/rsasak_forward_wa_star_h_add.old"/>
 						<F N="packs_sys/logicmoo_ec/prolog/hyhtn_pddl/rsasak_forward_wa_star_h_add.pl"/>
+						<F N="packs_sys/logicmoo_ec/prolog/hyhtn_pddl/rsasak_pddl_parser.old"/>
 						<F N="packs_sys/logicmoo_ec/prolog/hyhtn_pddl/rsasak_pddl_parser.pl"/>
 					</Folder>
+					<F N="packs_sys/logicmoo_ec/prolog/.gitattributes"/>
 					<F N="packs_sys/logicmoo_ec/prolog/logicmoo_dec.pl"/>
+					<F N="packs_sys/logicmoo_ec/prolog/logicmoo_dec.pl.bak"/>
 					<F N="packs_sys/logicmoo_ec/prolog/logicmoo_ec.pl"/>
+					<F N="packs_sys/logicmoo_ec/prolog/logicmoo_ec.pl.bak"/>
 					<F N="packs_sys/logicmoo_ec/prolog/logicmoo_flp.pl"/>
 					<F N="packs_sys/logicmoo_ec/prolog/logicmoo_icl.pl"/>
 					<F N="packs_sys/logicmoo_ec/prolog/logicmoo_lps.pl"/>
+					<F N="packs_sys/logicmoo_ec/prolog/logicmoo_lps.pl.bak"/>
 					<F N="packs_sys/logicmoo_ec/prolog/logicmoo_ocl.pl"/>
 					<F N="packs_sys/logicmoo_ec/prolog/logicmoo_planner.pl"/>
 					<F N="packs_sys/logicmoo_ec/prolog/logicmoo_rsasak.pl"/>
@@ -3542,6 +4587,7 @@
 							<F N="packs_sys/logicmoo_ec/test/ec_planner/ecasp-source/format-output.cc"/>
 						</Folder>
 						<Folder Name="ectest">
+							<F N="packs_sys/logicmoo_ec/test/ec_planner/ectest/convert_e_to_lps_01.pl"/>
 							<F N="packs_sys/logicmoo_ec/test/ec_planner/ectest/ec_reader_test.e"/>
 							<F N="packs_sys/logicmoo_ec/test/ec_planner/ectest/ec_reader_test.e.lps"/>
 							<F N="packs_sys/logicmoo_ec/test/ec_planner/ectest/ec_reader_test.pel"/>
@@ -3577,6 +4623,10 @@
 							<F N="packs_sys/logicmoo_ec/test/ec_planner/ectest/Example4.e.lps"/>
 							<F N="packs_sys/logicmoo_ec/test/ec_planner/ectest/Example4.e.pl"/>
 							<F N="packs_sys/logicmoo_ec/test/ec_planner/ectest/Example4.txt"/>
+							<F N="packs_sys/logicmoo_ec/test/ec_planner/ectest/locations_5.e"/>
+							<F N="packs_sys/logicmoo_ec/test/ec_planner/ectest/locations_5.e.lps"/>
+							<F N="packs_sys/logicmoo_ec/test/ec_planner/ectest/locations_5.lps"/>
+							<F N="packs_sys/logicmoo_ec/test/ec_planner/ectest/locations_5.pl"/>
 							<F N="packs_sys/logicmoo_ec/test/ec_planner/ectest/sanity_equals_01.e"/>
 							<F N="packs_sys/logicmoo_ec/test/ec_planner/ectest/sanity_equals_01.e.lps"/>
 							<F N="packs_sys/logicmoo_ec/test/ec_planner/ectest/sanity_equals_01.pel"/>
@@ -10645,7 +11695,12 @@
 					<F N="packs_sys/logicmoo_ec/test/README.md"/>
 					<F N="packs_sys/logicmoo_ec/test/sanity_tests.pl"/>
 				</Folder>
+				<F N="packs_sys/logicmoo_ec/.gitignore"/>
+				<F N="packs_sys/logicmoo_ec/.travis.yml"/>
+				<F N="packs_sys/logicmoo_ec/LICENSE.md"/>
+				<F N="packs_sys/logicmoo_ec/LogicmooPlanner.vpj"/>
 				<F N="packs_sys/logicmoo_ec/pack.pl"/>
+				<F N="packs_sys/logicmoo_ec/README.md"/>
 			</Folder>
 			<Folder Name="logicmoo_lps">
 				<Folder Name="engine">

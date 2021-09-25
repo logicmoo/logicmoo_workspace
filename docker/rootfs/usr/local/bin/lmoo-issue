@@ -2,7 +2,7 @@
 
 GH_ISSUE="gh issue"
 
-[ "${1}" = "-t" ] && shift && GH_ISSUE="echo $GH_ISSUE"
+[ "${1}" = "-t" ] && shift 1 && GH_ISSUE="echo $GH_ISSUE"
 
 GIT_REV=$(git rev-parse HEAD)
 

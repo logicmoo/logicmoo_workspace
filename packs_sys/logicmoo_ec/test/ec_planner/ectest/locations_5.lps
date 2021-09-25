@@ -27,3 +27,9 @@
 %~ From E:
 %~ 
 %~ (     adjacent(Location1,Location2) <->     ( Location1=l1,Location2=l2  ;        Location1=l2,Location2=l1 ;         Location1=l2,Location2=l3 ;         Location1=l3,Location2=l2 ;         Location1=l3,Location2=l4 ;         Location1=l4,Location2=l3 ;         Location1=l4,Location2=l5 ;         Location1=l5,Location2=l4))
+
+% EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master/packs_sys/logicmoo_ec/test/ec_planner/ectest/locations_5.lps 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.ec.ec_planner.ectest/LOCATIONS_5/logicmoo_ec_ec_planner_ectest_LOCATIONS_5/ 
+% ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3ALOCATIONS_5 
+% ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/ 
+

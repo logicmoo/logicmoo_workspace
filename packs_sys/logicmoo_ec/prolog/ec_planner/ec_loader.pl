@@ -213,8 +213,8 @@ get_date_atom(Atom):-
    get_time(Now),stamp_date_time(Now, Date, 'UTC'), 
    format_time(atom(Atom),'%a, %d %b %Y %T GMT', Date, posix),!.
 
-cvt_e_pl(F0,OutputName):- dumpST,
- wdmsg(call(trans_e)), break,
+cvt_e_pl(F0,OutputName):- 
+ %dumpST, wdmsg(call(trans_e)), break,
  absolute_file_name(F0,F),
  ( 
  (( ( fail, \+ should_update(OutputName))) -> true ;
@@ -376,7 +376,8 @@ fix_numbered_argtypes(_Time, _NthArg, _FType, [], []).
 :- export_transparent(fix_axiom_head/3).
 
 fix_axiom_head(_, X, Y):- prefer_lps(X,Y), !.
-fix_axiom_head(_, X, Y):-  (\+ callable(X);\+ compound(X)), !, X=Y.
+fix_axiom_head(_, X, Y):-  ( \+ callable(X); \+ compound(X); is_ftVar(X)), !, X=Y.
+fix_axiom_head(_, G, G):-  G = holds_at_oops(_,_).
 fix_axiom_head(T, [G1|G2], [GG1|GG2]):- !, fix_axiom_head(T, G1, GG1),fix_axiom_head(T, G2, GG2). 
 fix_axiom_head(T, (G1,G2), (GG1,GG2)):- !, fix_axiom_head(T, G1, GG1),fix_axiom_head(T, G2, GG2). 
 fix_axiom_head(T, (G1;G2), (GG1;GG2)):- !, fix_axiom_head(T, G1, GG1),fix_axiom_head(T, G2, GG2). 
@@ -426,7 +427,7 @@ fix_axiom_head(_, P, P):-  functor(P,F,_),fixed_already(F),!.
 fix_axiom_head(_, P, P):-  functor(P,F,_),atom_concat(F0,'s',F),fixed_already(F0),!.
 
 fix_axiom_head(T, G, GG):- if_debugging(ec, ((call(dumpST), wdmsg(fix_axiom_head(T, G)), break))),  \+ into_lps,
-  GG = holds_at_oops(G, T).
+  fail, GG = holds_at_oops(G, T).
 fix_axiom_head(_T,G,G):-!.
 
 same_times(T1,T):- T1==T,!.
@@ -594,11 +595,14 @@ assert_ele(t(F, W)):- !, must_maplist(assert_ready(yellow),['==>'(sort(F)), '==>
 assert_ele(Cvt1):- \+ into_lps,  (cvt0(_T, Cvt1,Cvt2) -> Cvt1\=@=Cvt2), !, assert_ele(Cvt2).
 
   %locally(b_setval('$output_lang',[ec]), assert_ele(P)).
+
+assert_ele('<->'(H,B)):- special_dble_impl('<->'(H,B),Redo),!,assert_ele(Redo).
 assert_ele('<->'(H,B)):- 
   pprint_ecp_cmt(green, '<->'(H,B)), !,
-  only_dec_pl((atoms_of(H,HH), atoms_of(B,BB),pprint_ecp_cmt(yellow, '<->'(HH,BB)))), !,
+  only_dec_pl((atoms_of(H,HH), atoms_of(B,BB),pprint_ecp_cmt(yellow, atoms_of -> '<->'(HH,BB)))), !,
   assert_ele('->'(H,B)),
   assert_ele('->'(B,H)).
+
 
 
 % assert_ele(initially(F)):- !, assert_axiom(initially(F),[]).
@@ -703,9 +707,11 @@ start_plus(Zero,start+Zero):- number(Zero),!.
 cvt0(_, X, Y):-  (\+ callable(X);\+ compound(X)), !, X=Y.
 cvt0(_, X\=Y, diff(X,Y)) :- !.
 cvt0(T, equals(X,Y), O):- is_ftVar(X), \+ is_ftVar(Y),!,cvt0(T, equals(Y,X), O),!.
-cvt0(T, equals(X,Y), O):- \+compound(X), compound(Y),!,cvt0(T, equals(Y,X), O),!.
-cvt0(_, equals(X,Y), O):-compound(X), functionform_to_predform(equals(X,Y),O),!.
+cvt0(T, equals(X,Y), O):- atom(X), is_ftVar(Y),!, as_equals(X,Y,O).
+cvt0(T, equals(X,Y), O):- \+ compound(X), compound(Y), \+ is_ftVar(Y),!,cvt0(T, equals(Y,X), O),!.
+cvt0(_, equals(X,Y), O):- compound(X), functionform_to_predform(equals(X,Y),O),!.
 cvt0(_, X=Y, Equals):- !,as_equals(X,Y,Equals).
+cvt0(_, equals(X,Y), Equals):- !,as_equals(X,Y,Equals).
 cvt0(T0, /**/holds(NotH,T),O):- compound(NotH),not(H)= NotH, !, cvt0(T0, /**/holds(/**/not(H),T), O).
 %cvt0(T, P, call(P)):- predicate_property(P,foreign),!.
 %cvt0(_, not(exists(_Vars, /**/holds(P, Time))),not(/**/holds(/**/not(P), Time))).
@@ -834,6 +840,8 @@ assert_ele_clauses(_X,_L,H):-
 assert_m_axiom(Ax):- 
   retract(ec_tmp:do_next_axiom_uses(Value)),!,
   assert_m_axiom(axiom_uses(Value)->Ax).
+
+assert_m_axiom('<->'(H,B)):- special_dble_impl('<->'(H,B),Redo),!,assert_m_axiom(Redo).
 assert_m_axiom('<->'(A,B)):- !, assert_m_axiom(A->B), assert_m_axiom(B->A). 
 assert_m_axiom('<-'(A,B)):- !, assert_m_axiom(A->B). 
 
@@ -913,7 +921,7 @@ assert_axiom(H,B) :-
 
   correct_axiom_time_args_other(Time,HH,BB,HHH,BBB),
   with_no_brk_on_bind(quietly(notrace(only_dec_pl(report_time_values(Time,HH,BB,HHH,BBB))))),
-  must(assert_axiom_2(HHH,BBB)),!.
+  must(loop_check(assert_axiom_2(HHH,BBB),assert_ready(axiom(HHH,BBB)))),!.
 
 
 report_time_values(Time,HH,BB,HHH,BBB):-
@@ -1128,6 +1136,9 @@ ec_to_ax(_, X,Y):-  (\+ callable(X) ; \+ compound(X)), !, X=Y.
 %ec_to_ax(T, or(Pre , '->'(HB,BH)), HBO):- ec_to_ax(T, '->'(or(Pre , HB),BH), HBO).
 %ec_to_ax(T, (H<-B),O):- !, into_axiom(T,H,B,O).
 ec_to_ax(T, '->'(B,H),O):- !, into_axiom(T,H,B,O).
+
+ec_to_ax(T,'<->'(H,B),O):- special_dble_impl('<->'(H,B),Redo),!,ec_to_ax(T,Redo,O).
+
 ec_to_ax(T, '<->'(HB1,HB2),[A,B]):- !, ec_to_ax(T, '->'(HB1,HB2),A),ec_to_ax(T, '->'(HB2,HB1),B).
 ec_to_ax(T, axiom(H,B),O):- into_axiom(T,H,B,O), !.
 ec_to_ax(_, axiom(H,B), axiom(H,B)):- !.
@@ -1443,6 +1454,8 @@ convert_to_axiom(L,[H|T],ABC):- % trace,
 convert_to_axiom(T, (Pre -> '<->'(HB,BH)), HBO):-
   convert_to_axiom(T, ('<->'((Pre,HB),(Pre,BH))), HBO),!.
 
+convert_to_axiom(T,'<->'(H,B),O):- special_dble_impl('<->'(H,B),Redo),!,convert_to_axiom(T,Redo,O).
+
 convert_to_axiom(T, '<->'(HB,BH), HBOO):-
   convert_to_axiom(T, '->'(HB,BH), HBO1),
   convert_to_axiom(T, '->'(BH,HB), HBO2),
@@ -1478,6 +1491,21 @@ convert_exists( exists(Vars, H), HBO):- conjoin(H,some(Vars),Conj), !,  Conj = H
 
 is_axiom_head(P):- compound_name_arity(P,F,_), arg_info(axiom_head,F,_),!.
 is_axiom_head(P):- functor_skel(P, G), syntx_term_check(predicate(G)),!.
+
+
+special_dble_impl(I,O):- compound(I), dble_impl_special(I,O),!, I\==O.
+
+dble_impl_special('<->'(X1,X2),Out):- simply_atomic(X1), compound(X2), X2=(_;_), dble_impl_special('->'(X2,X1),Out).
+dble_impl_special('<->'(X2,X1),Out):- simply_atomic(X1), compound(X2), X2=(_;_), dble_impl_special('->'(X2,X1),Out).
+
+dble_impl_special('->'(X2,X1),[Lps1,Lps2]):- simply_atomic(X1), compound(X2), X2=(X2A;X2B),
+   dble_impl_special('->'(X2A,X1),Lps1),
+   dble_impl_special('->'(X2B,X1),Lps2).
+
+dble_impl_special('<->'(X1,X2),[Lps1,Lps2]):- simply_atomic(X1), compound(X2), X2=(X2A;X2B),
+   dble_impl_special('->'(X2A,X1),Lps1),
+   dble_impl_special('<->'(X1,X2B),Lps2).
+dble_impl_special(O,O).
 
 
 arg_info(domain,event,arginfo).

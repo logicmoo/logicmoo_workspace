@@ -1,4 +1,6 @@
 
+; location1 is adjacent to location2.
+predicate Adjacent(location,location)
 
 [location1,location2]
 Adjacent(location1,location2) <->

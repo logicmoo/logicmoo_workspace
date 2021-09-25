@@ -236,8 +236,8 @@ last_lps_pass(Form,Lps):-
 ep_to_lps_arg(_Tries,_Pass,_Top, Form, Lps):- atomic_or_var(Form),!,Lps=Form.
 ep_to_lps_arg(_Tries,_Pass,_Top, Form, Lps):- already_lps(Form),!,Lps=Form.
 ep_to_lps_arg( Tries, Pass, Top, Form, Lps):-  Tries>6,!,
-  Msg=looped(ep_to_lps_arg(Tries,Pass, Top,Form, Lps)), 
-  (Lps=Form -> dmsg(Msg) ; throw(Msg)).
+  Msg=looped(ep_to_lps_arg(Tries,Pass, Top,Form)), 
+  (Lps=Form -> wdmsg(Msg) ; throw(Msg)).
 
 ep_to_lps_arg( Tries, Pass, Top, Form, Lps):- TriesP1 is Tries+1,
  (over_pass(Pass,Top,Form,LpsM) -> Form\=@=LpsM),!, ep_to_lps_arg(TriesP1,Pass, Top,LpsM,Lps).
@@ -330,6 +330,9 @@ over_pass(_,_Top,':-'(X1,X2),(X2 -> X1)):-!.
 over_pass(_Pass,_Top,Form,OO):- Form=..[EFP,X], needs_protify(EFP,_), protify(EFP,X,Lps),!,flatten([Lps],LpsO),unlistify(LpsO,OO).
 over_pass(_Pass,_Top,X=Y,Lps):- \+ atomic_or_var(X), append_term(X,Y,Lps).
 
+
+over_pass(Pass,Top,'<->'(X1,X2),Out):- special_dble_impl('<->'(X1,X2),Reduce),!,over_pass(Pass,Top,Reduce,Out).
+
 %over_pass(Pass,_Top,';'(not(X2);X1),if(X2,X1)):- !.
 over_pass(_Pass,[],(A;B),if(AA, BB)):- clausify_pnf_conv(B,BB),clausify_pnf_conv(not(A),AA),simply_atomic(BB).
 
@@ -338,7 +341,7 @@ over_pass(Pass,Top,exists(Stuff,'<->'(X1,X2)),[Lps1,Lps2]):-
    simply_atomic_or_conj(X1),simply_atomic_or_conj(X2), 
    over_pass(Pass,Top,'->'(X1,exists(Stuff,X2)),Lps1),
    over_pass(Pass,Top,'->'(X2,exists(Stuff,X1)),Lps2).
-
+  
 over_pass(Pass,Top,'<->'(X1,X2),[Lps1,Lps2]):- 
    simply_atomic_or_conj(X1), simply_atomic_or_conj(X2), 
    over_pass(Pass,Top,'->'(X1,X2),Lps1),
@@ -358,14 +361,20 @@ over_pass(Pass,Top, In, Out) :- Top==[], clausify_pnf_conv(In,Mid)-> \+ sub_var(
 over_pass(_Pass,[],X1,Lps):- \+ (X1 = false(_)), into_false_conj(X1,Lps),Lps\=not(_),!.
 over_pass(_Pass,_Top,X,X):-!.
 
-clausify_pnf_conv(In,OO):- is_list(In),!,maplist(clausify_pnf_conv,In,Mid),flatten([Mid],MidM),list_to_set(MidM,MidO),unlistify(MidO,OO).
+clausify_pnf_conv(In,OO):- is_list(In),!,maplist(clausify_pnf_conv,In,Mid),
+  flatten([Mid],MidM),list_to_set(MidM,MidO),unlistify(MidO,OO).
 clausify_pnf_conv(cl(A,B),cl(A,B)):- !.
-clausify_pnf_conv(In,MidO):-   
+
+clausify_pnf_conv((A,B),(AO,BO)):-!, clausify_pnf_conv(A,AO),clausify_pnf_conv(B,BO).
+
+clausify_pnf_conv(In,MidO):-    
   expandQuants(KB,In,In2),
   un_quant3(KB,In2,In3),
   thereExists_to_exists(In3,In4),!,
   clausify_pnf_v1(In4,MidM),!,
-  list_to_set(MidM,MidO),!.
+  list_to_set(MidM,MidO),!,
+  in_cmt(print_tree(cpc:- (In))),
+  in_cmt(print_tree(ooo:- (MidO))),!.
 
 thereExists_to_exists(In3,In4):- map_nonvars(p,thereExists1_to_exists,In3,In4).
 thereExists1_to_exists(thereExists,exists).
