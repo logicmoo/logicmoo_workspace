@@ -239,8 +239,7 @@ ed( 23, [ what, countries, are, there, in, europe, ? ],
 		united_kingdom, west_germany, yugoslavia]  ).
 
 
-ed( 24, [ what, are, the, areas, of, the, countries, bordering, the,
-	  baltic, ? ],
+ed( 24, [ what, are, the, areas, of, the, countries, bordering, the, baltic, ? ],
 
 		[[ [denmark]:[--(16.615,ksqmiles)],
                  [east_germany]:[--(40.646,ksqmiles)],

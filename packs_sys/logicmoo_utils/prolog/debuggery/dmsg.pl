@@ -1348,6 +1348,7 @@ dmsg(L,F,A):-loggerReFmt(L,LR),loggerFmtReal(LR,F,A).
 %
 % (debug)message Primary Helper.
 %
+
 dmsg0(V):-notrace((locally(local_override(no_kif_var_coroutines,true),
    ignore(with_output_to_main_error(dmsg00(V)))))),!.
 
@@ -1357,6 +1358,7 @@ dmsg0(V):-notrace((locally(local_override(no_kif_var_coroutines,true),
 %
 % (debug)message Primary Helper Primary Helper.
 %
+dmsg00(V):-notrace(var(V)),!,dmsg00(dmsg_var(V)).
 dmsg00(V):-cyclic_term(V),!,writeln(cyclic_term),flush_output,writeln(V),!.
 dmsg00(call(Code)):- callable(Code), !, with_output_to(string(S),catch((dzotrace(Code)->TF=true;TF=failed),TF,true)), 
   (TF=true->dmsg(S);(smart_format(string(S2),'~Ndmsg(call(Code)) of ~q~n~q: ~s ~n',[Code,TF,S]),wdmsg(S2),!,fail)).
