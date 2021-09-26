@@ -6,6 +6,12 @@
 export TESTING_TEMP
 mkdir -p ${TESTING_TEMP}/
 
+if [ -n "${MAX_JUNIT_TESTS}" ]; then
+ if [ $MAX_JUNIT_TESTS -le 0 ]; then 
+  echo "Warn exceeded MAX_JUNIT_TESTS"
+  return 0 2>/dev/null ; exit 0
+ fi
+fi
 
 parent-find() {
   local file="$1"

@@ -183,6 +183,14 @@ if [ -z "$FILES" ]; then
  return 0 2>/dev/null ; exit 0
 fi
 
+
+if [ -n "${MAX_JUNIT_TESTS}" ]; then
+ if [ $MAX_JUNIT_TESTS -le 0 ]; then 
+  echo "Warn exceeded MAX_JUNIT_TESTS"
+  return 0 2>/dev/null ; exit 0
+ fi
+fi
+
 MAYBE_GH="echo gh"
 
 gh api repos/logicmoo/logicmoo_workspace/labels -f name="${JUNIT_PACKAGE}" -f color="888000" 2>&1 > /dev/null
@@ -204,6 +212,7 @@ fi
 CRLF='
 '
 
+SKIP_GH=echo
 
 SORTED_FILES=$(echo $SORTED_FILES | sed -e "s|\n| |g" -e "s|  | |g")
 
@@ -211,16 +220,15 @@ echo "SORTED_FILES=$SORTED_FILES"
 (
 for ele2 in "${SORTED_FILES[@]}"
   do
-     
+     [ -n "${MAX_JUNIT_TESTS}" ] && [ $MAX_JUNIT_TESTS -le 0 ] && echo "Warn: reached MAX_JUNIT_TESTS .. skipping .. $ele2" && continue
      for ele in $ele2
 	do	 
+	[ -n "${MAX_JUNIT_TESTS}" ] && [ $MAX_JUNIT_TESTS -le 0 ] && echo "Warn: reached MAX_JUNIT_TESTS .. skipping .. $ele" && continue
 	  retry=1
 	  while [ $retry == 1 ]
 	   do
 	    retry=0
         
-
-	USING_TIMEOUT=0
         export RELPATH=$(echo "$PWD/${ele}" |  sed  -e "s|${LOGICMOO_WS}@2/||g" -e "s|$LOGICMOO_WS/||g")
         export FILENAME="${ele}"
         export JUNIT_SHORTCLASS=`echo "${FILENAME^^}" | cut -d'.' -f1 `
@@ -253,10 +261,10 @@ for ele2 in "${SORTED_FILES[@]}"
             CMD="$SWIPL -t \"['${ele}']\""
         fi
 
-	stty echo      
+	#stty echo      
 
-        [ ! -z "${MAX_JUNIT_TESTS}" ] && [ ${MAX_JUNIT_TESTS} -lt 1 ] && echo "Warn: reached MAX_JUNIT_TESTS .. skipping .. $CMD" && continue
-        [ ! -z "${MAX_JUNIT_TESTS}" ] && export MAX_JUNIT_TESTS=$((MAX_JUNIT_TESTS - 1))
+        [ -n "${MAX_JUNIT_TESTS}" ] && [ $MAX_JUNIT_TESTS -le 0 ] && echo "Warn: reached MAX_JUNIT_TESTS .. skipping .. $CMD" && continue
+        [ -n "${MAX_JUNIT_TESTS}" ] && export MAX_JUNIT_TESTS=$((MAX_JUNIT_TESTS - 1))
 
 	export Test_9999="Test_9999"
         lmoo-make 
@@ -291,8 +299,8 @@ for ele2 in "${SORTED_FILES[@]}"
 	export GH_ISSUE_ID=$(echo "${GH_ISSUE_INFO}" | cut -f1)
 	[ -z "${GH_ISSUE_ID}" ] && (
 	  
-	  gh api repos/logicmoo/logicmoo_workspace/labels -f name="${JUNIT_SHORTCLASS}" -f color="888000"
-          gh issue create -t "${FileTestCase}" -l "${JUNIT_PACKAGE},${JUNIT_SHORTCLASS},${Test_9999},unit_test,Skipped" -b "${LINKS}"
+	  $SKIP_GH gh api repos/logicmoo/logicmoo_workspace/labels -f name="${JUNIT_SHORTCLASS}" -f color="888000"
+          $SKIP_GH gh issue create -t "${FileTestCase}" -l "${JUNIT_PACKAGE},${JUNIT_SHORTCLASS},${Test_9999},unit_test,Skipped" -b "${LINKS}"
   	  export GH_MASTER_ISSUE_LIST=`gh issue list -l ${JUNIT_PACKAGE} -L 1000 | sed -e "s/UTC /\n/g" | grep "unit_test"`
   	  export GH_ISSUE_INFO=$(echo "${GH_MASTER_ISSUE_LIST}" | grep "${FileTestCase}" | head -1)
 	  export GH_ISSUE_ID=$(echo "${GH_ISSUE_INFO}" | cut -f1)
@@ -389,12 +397,12 @@ for ele2 in "${SORTED_FILES[@]}"
       
       [ ${ISSUE_IS_NEW} -eq 1 ] && (
          [ ! -z "$GH_ISSUE_ID "] && (
-            gh issue edit $GH_ISSUE_ID --body-file "${TEE_FILE_NOANSI}"
+            $SKIP_GH gh issue edit $GH_ISSUE_ID --body-file "${TEE_FILE_NOANSI}"
 	     )
       )
       
       [ ${INTERACTIVE} -eq 0 ] && (
-         source $LOGICMOO_WS/bin/lmoo-issue ${JUNIT_PACKAGE} ${JUNIT_SHORTCLASS} ${Test_9999} ${TEST_RESULT} "${FileTestCase}" ${TEE_FILE_NOANSI} "$Add_LABELS" "$Rem_LABELS"
+        $SKIP_GH source $LOGICMOO_WS/bin/lmoo-issue ${JUNIT_PACKAGE} ${JUNIT_SHORTCLASS} ${Test_9999} ${TEST_RESULT} "${FileTestCase}" ${TEE_FILE_NOANSI} "$Add_LABELS" "$Rem_LABELS"
       )
       
       if [ "${TEST_RESULT}" = "SUCCESS" ]; then
