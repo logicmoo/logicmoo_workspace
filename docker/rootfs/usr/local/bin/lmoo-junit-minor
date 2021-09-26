@@ -212,7 +212,8 @@ fi
 CRLF='
 '
 
-SKIP_GH=echo
+SKIP_GH="echo"
+SKIP_GH=""
 
 SORTED_FILES=$(echo $SORTED_FILES | sed -e "s|\n| |g" -e "s|  | |g")
 
