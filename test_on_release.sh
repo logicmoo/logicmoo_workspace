@@ -65,10 +65,10 @@ echo TEST_DIRS=$TEST_DIRS
 DIRS_SORTED=`find $TEST_DIRS -maxdepth 0 -type d -printf "%T+ %p\n" | sort -r -u | cut -d " " -f 2`
 echo DIRS_SORTED=$DIRS_SORTED
 
-
-
+[ -z "${MAX_JUNIT_TESTS}" ] && export MAX_JUNIT_TESTS=4
+   
 for dirname in "${DIRS_SORTED[@]}"; do
-    echo -e "$dirname\n"
+    echo -e "$dirname\n"    
     find $dirname -maxdepth 1 $FILTER -name "test_on_*.sh" -execdir {} "$TEST_PARAMS" $VERBOSITY \;
 done
 

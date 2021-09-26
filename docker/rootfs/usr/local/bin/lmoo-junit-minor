@@ -10,7 +10,7 @@ runtime_testing=4
 
 if [ "$1" == "-i" ]; then
   INTERACTIVE=1
-  shift
+  shift 1
 fi
 
 export next_cls=0
@@ -204,19 +204,20 @@ fi
 CRLF='
 '
 
+
 SORTED_FILES=$(echo $SORTED_FILES | sed -e "s|\n| |g" -e "s|  | |g")
 
 echo "SORTED_FILES=$SORTED_FILES"
 (
 for ele2 in "${SORTED_FILES[@]}"
   do
+     
      for ele in $ele2
-	do
+	do	 
 	  retry=1
 	  while [ $retry == 1 ]
 	   do
 	    retry=0
-
         
 
 	USING_TIMEOUT=0
@@ -252,18 +253,24 @@ for ele2 in "${SORTED_FILES[@]}"
             CMD="$SWIPL -t \"['${ele}']\""
         fi
 
+	stty echo      
+
+        [ ! -z "${MAX_JUNIT_TESTS}" ] && [ ${MAX_JUNIT_TESTS} -lt 1 ] && echo "Warn: reached MAX_JUNIT_TESTS .. skipping .. $CMD" && continue
+        [ ! -z "${MAX_JUNIT_TESTS}" ] && export MAX_JUNIT_TESTS=$((MAX_JUNIT_TESTS - 1))
+
 	export Test_9999="Test_9999"
         lmoo-make 
         [ -z "${CMD_TIMEOUT}" ] && CMD_TIMEOUT="10s"
         #[ ${INTERACTIVE} -eq 0 ] &&  
-		[ -z "${CMD_WRAPPER}" ] && CMD_WRAPPER="timeout --foreground --preserve-status -s SIGKILL -k ${CMD_TIMEOUT} ${CMD_TIMEOUT}"
-		#[ -z "${CMD_WRAPPER}" ] && CMD_WRAPPER="trap 'echo caught interrupt and exiting;exit' INT ; timeout --foreground --preserve-status -s SIGKILL -k ${CMD_TIMEOUT} ${CMD_TIMEOUT}"
+	[ -z "${CMD_WRAPPER}" ] && CMD_WRAPPER="timeout --foreground --preserve-status -s SIGKILL -k ${CMD_TIMEOUT} ${CMD_TIMEOUT}"
+	#[ -z "${CMD_WRAPPER}" ] && CMD_WRAPPER="trap 'echo caught interrupt and exiting;exit' INT ; timeout --foreground --preserve-status -s SIGKILL -k ${CMD_TIMEOUT} ${CMD_TIMEOUT}"
 	[ -z "${CMD_WRAPPER}" ] && CMD_WRAPPER=" "
         CMD="${CMD_WRAPPER} ${CMD}"
 	export GIT_REV=$(git rev-parse HEAD)
 	export JUNIT_CMD="${CMD}"
         JUNIT_TESTS_GTOTAL_TESTS=$((JUNIT_TESTS_GTOTAL_TESTS+1))
         INFO "CMD=$CMD"
+
         export TEE_FILE=${TESTING_TEMP}/CMD_LAST.ansi
         export TEE_FILE_NOANSI=${TEE_FILE}.too
 	cat /dev/null > ${TEE_FILE}
@@ -320,7 +327,7 @@ for ele2 in "${SORTED_FILES[@]}"
 	echo '```' >>  ${TEE_FILE_NOANSI}
 
 	# CMD is allowed to clobber TEE_FILE
-	if [ $INTERACTIVE -eq 1 ]; then
+	if [ ${INTERACTIVE} -eq 1 ]; then
            eval $CMD 
 	else
           ( eval $CMD ) 2>&1 | sed -e "s/<?xml/<oxml/g" -e "s/CDATA/CDAT5/g" -e "s|<|&gt;|g" | tee -a ${TEE_FILE} | perl -pe '
@@ -410,7 +417,7 @@ for ele2 in "${SORTED_FILES[@]}"
 	[ -w "${ele}" ] && touch "$ele" ; /bin/true         
       fi
 
-
+      
       [ $exitcode -eq 6 ] && retry=1 && continue
 
 
