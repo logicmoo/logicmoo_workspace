@@ -184,9 +184,9 @@ if [ -z "$FILES" ]; then
 fi
 
 
-if [ -n "${MAX_JUNIT_TESTS}" ]; then
- if [ $MAX_JUNIT_TESTS -le 0 ]; then 
-  echo "Warn exceeded MAX_JUNIT_TESTS"
+if [ -n "${MAX_JUNIT_SUITES}" ]; then
+ if [ $MAX_JUNIT_SUITES -le 0 ]; then 
+  echo "Warn exceeded MAX_JUNIT_SUITES"
   return 0 2>/dev/null ; exit 0
  fi
 fi
@@ -221,10 +221,10 @@ echo "SORTED_FILES=$SORTED_FILES"
 (
 for ele2 in "${SORTED_FILES[@]}"
   do
-     [ -n "${MAX_JUNIT_TESTS}" ] && [ $MAX_JUNIT_TESTS -le 0 ] && echo "Warn: reached MAX_JUNIT_TESTS .. skipping .. $ele2" && continue
+     [ -n "${MAX_JUNIT_SUITES}" ] && [ $MAX_JUNIT_SUITES -le 0 ] && echo "Warn: reached MAX_JUNIT_SUITES .. skipping .. $ele2" && continue
      for ele in $ele2
 	do	 
-	[ -n "${MAX_JUNIT_TESTS}" ] && [ $MAX_JUNIT_TESTS -le 0 ] && echo "Warn: reached MAX_JUNIT_TESTS .. skipping .. $ele" && continue
+	[ -n "${MAX_JUNIT_SUITES}" ] && [ $MAX_JUNIT_SUITES -le 0 ] && echo "Warn: reached MAX_JUNIT_SUITES .. skipping .. $ele" && continue
 	  retry=1
 	  while [ $retry == 1 ]
 	   do
@@ -264,8 +264,8 @@ for ele2 in "${SORTED_FILES[@]}"
 
 	#stty echo      
 
-        [ -n "${MAX_JUNIT_TESTS}" ] && [ $MAX_JUNIT_TESTS -le 0 ] && echo "Warn: reached MAX_JUNIT_TESTS .. skipping .. $CMD" && continue
-        [ -n "${MAX_JUNIT_TESTS}" ] && export MAX_JUNIT_TESTS=$((MAX_JUNIT_TESTS - 1))
+        [ -n "${MAX_JUNIT_SUITES}" ] && [ $MAX_JUNIT_SUITES -le 0 ] && echo "Warn: reached MAX_JUNIT_SUITES .. skipping .. $CMD" && continue
+        [ -n "${MAX_JUNIT_SUITES}" ] && export MAX_JUNIT_SUITES=$((MAX_JUNIT_SUITES - 1))
 
 	export Test_9999="Test_9999"
         lmoo-make 

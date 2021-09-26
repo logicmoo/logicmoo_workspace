@@ -30,6 +30,10 @@ JENKINS_BUILD_RESULT=/var/lib/jenkins/jobs/logicmoo_workspace/builds/${BUILD_NUM
 
 # source bin/build_xml.text > $JENKINS_BUILD_RESULT/build.xml
 
+
+export TESTING_LOG=$TESTING_TEMP/testing.log
+cat /dev/null > ${TESTING_LOG}
+
 rm -f $TESTING_TEMP/???*.*???
 
 export VERBOSITY="2>&1 | grep -2 -i 'WARN\|ERROR\|_file\|00\|fail\|pass'"
@@ -50,14 +54,15 @@ fi
 
 TEST_PARAMS="$*"
 if [ -z "$TEST_PARAMS" ]; then 
-  TEST_PARAMS="*0*.*"
-  #TEST_PARAMS="*f*_01.p*"
+  # TEST_PARAMS="*0*.*"
+  # TEST_PARAMS="*f*_01.p*"
 fi
 
 
 
 echo -e "Running release (all) tests\nTESTING_TEMP=$TESTING_TEMP\n( cd $PWD ; $BASH_SOURCE $TEST_PARAMS )"
 
+cat /dev/null > 
 eval "lmoo-make $VERBOSITY"
 
 TEST_DIRS=`find -mindepth 2 $FILTER -type f -name "test_on_*.sh" -exec dirname {} \;`
@@ -65,12 +70,15 @@ echo TEST_DIRS=$TEST_DIRS
 DIRS_SORTED=`find $TEST_DIRS -maxdepth 0 -type d -printf "%T+ %p\n" | sort -r -u | cut -d " " -f 2`
 echo DIRS_SORTED=$DIRS_SORTED
 
-export MAX_JUNIT_TESTS=40000
-export MAX_JUNIT_TESTS=4
-   
+export MAX_JUNIT_SUITES=40000
+# export MAX_JUNIT_SUITES=6
+
+export MAX_TOTAL_JUNIT_TEST_TIME=30
+
+
 for dirname in "${DIRS_SORTED[@]}"; do
     echo -e "$dirname\n"    
-#    [ $MAX_JUNIT_TESTS -gt 0 ] && (
+#    [ $MAX_JUNIT_SUITES -gt 0 ] && (
         find $dirname -maxdepth 1 $FILTER -name "test_on_*.sh" -execdir {} "$TEST_PARAMS" $VERBOSITY \;
 #    )
 done
@@ -90,3 +98,5 @@ echo -e "\n</testsuites>\n\n\n"
 cd $TESTING_TEMP/ && find . -print | zip jenkin_results_${BUILD_NUMBER}.zip -@ 2>&1 > /dev/null
 
 )
+echo "DID $DIRS_SORTED"
+cat ${TESTING_LOG}
