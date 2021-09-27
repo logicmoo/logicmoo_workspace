@@ -79,7 +79,7 @@ if test ! -z "${CAPTURE_TEST_ANSI+}"; then
 fi
 
 #type npm && npm install -g junit-viewer
-type junit-viewer && (
+false && type junit-viewer && (
 echo "junit-viewer --results=${junitCombined} --save=${TEST_STEM_PATH}-junit-viewer-rollup.html &> ${TEST_STEM_PATH}-junit-viewer.debug.html"
 echo junit-viewer --results=${junitCombined} --save=${TEST_STEM_PATH}-junit-viewer-rollup.html )  ; /bin/true
 #npm install -g xunit-viewer

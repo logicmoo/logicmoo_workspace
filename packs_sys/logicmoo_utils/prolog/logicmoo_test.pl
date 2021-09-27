@@ -29,11 +29,18 @@
 :- reexport(library(statistics), [profile/1]).
 
 :- plunit:use_module(library(plunit)).
-:- system:use_module(library(test_cover)).
+:- use_module(library(test_cover)).
 
+
+:- set_prolog_flag(ran_junit_tests,false).
+run_junit_tests_at_halt:- 
+   current_prolog_flag(ran_junit_tests,true)-> true;  
+   call_with_time_limit(5,run_junit_tests).
+
+%:- at_halt(run_junit_tests_at_halt).
 
 %  main test runner
-run_junit_tests :-
+run_junit_tests:-  
   run_junit_tests(all).
 
 run_junit_tests(Spec) :-
@@ -43,17 +50,25 @@ run_junit_tests(Spec) :-
   run_junit_tests([Spec]).
 
 run_junit_tests(Spec) :-
-  term_to_atom(Spec,SpecAtom),tmp_file(SpecAtom,TmpName), atomic_list_concat([TmpName,'-junit.xml'],FileName),
+  set_prolog_flag(ran_junit_tests,true),
+  term_to_atom(Spec,SpecAtom),
+  statistics(cputime,Y),
+  (getenv('TESTING_TEMP',TESTING_TEMP)->true;TESTING_TEMP='/tmp'), %tmp_file(SpecAtom,TmpName), 
+  atomic_list_concat([TESTING_TEMP,'/',SpecAtom,Y,'-junit.xml'],FileName),
   capturing_user_error(string(UserErr), (run_junit_tests_user_error(Spec,UnitXml),plunit:check_for_test_errors)),
   sformat(JUnitStr,"~w~n~w]]>></system-out></testsuites>\n",[UnitXml,UserErr]),
   format(user_error,"~N% Writing: ~w~n",[FileName]),
   setup_call_cleanup(open(FileName, write, Out),write(Out,JUnitStr),close(Out)),
-  write(JUnitStr),
+  write(JUnitStr),!.
   % Now we fail if all did not go right?  
-  ignore((getenv('TESTING_TEMP',TESTING_TEMP),shell:mv(FileName,TESTING_TEMP))).
 
-run_junit_tests_user_error(Spec,UnitXml):-
-  set_prolog_flag(verbose, normal),
+:- create_prolog_flag(junit_show_converage, false, [keep(true)]).
+
+do_show_coverage(Spec,TotalConverage):- current_prolog_flag(junit_show_converage, false),!,
+    TotalConverage = "% use :- set_prolog_flag(junit_show_converage, true). ", 
+    (Spec==all -> run_tests ; run_tests(Spec)).
+
+do_show_coverage(Spec,TotalConverage):-
   patch_show_coverage,  
   nb_setval(seen, 0),
   nb_setval(covered, 0),
@@ -111,8 +126,12 @@ run_junit_tests_user_error(Spec,UnitXml):-
   nb_getval(seen, Seen),
   nb_getval(covered, Cover),
   Covered is Cover*100/Seen,
-  sformat(TotalConverage,'TOTAL coverage~t ~D~64| ~t~1f~72|~n', [Seen, Covered]),
-   
+  sformat(TotalConverage,'~w~nTOTAL coverage~t ~D~64| ~t~1f~72|~n', [Coverage, Seen, Covered]).
+
+
+run_junit_tests_user_error(Spec,UnitXml):-
+  set_prolog_flag(verbose, normal),
+  do_show_coverage(Spec,TotalConverage),   
   with_output_to(string(UnitXml),
   (format(
     
@@ -129,17 +148,16 @@ run_junit_tests_user_error(Spec,UnitXml):-
   format('<system-out><![C~w[',['DATA']),
   version(V1), current_prolog_flag(version, V2),
   format("Biocham v~w running on SWI-Prolog ~w~n", [V1, V2]),
-  writeln(Coverage), 
   writeln(TotalConverage))).
 
-
+:- meta_predicate(capturing_user_error(+,:)).
 capturing_user_error(To, Goal):-
  with_output_to(To,
  (current_output(Stream),
   stream_property(Was,alias(user_error)),
   setup_call_cleanup(once(stream_property(Stream,alias(A));A=[]),
   setup_call_cleanup(
-    set_stream(Stream,alias(user_error)),
+    (tracing->true;set_stream(Stream,alias(user_error))),
     call(Goal),  
     set_stream(Was,alias(user_error))),
      once(A=[];set_stream(Stream,alias(A)))))).
@@ -196,9 +214,9 @@ run_tests_and_halt(Spec) :-
   call_cleanup(
     (
       run_junit_tests(Spec),
-      halt(0)
+      test_completed_exit(0)
     ),
-    halt(1)
+    test_completed_exit(1)
   ).
 
 
@@ -495,7 +513,7 @@ inform_message_hook(error(existence_error(procedure,'$toplevel':_),_),error,_).
 
 inform_message_hook(T,Type,Term):- atom(Type),
   memberchk(Type,[error,warning]),!, 
-  once((dmsg_pretty(message_hook_type(Type)),dmsg_pretty(message_hook(T,Type,Term)),  
+  once((nop(dmsg_pretty(message_hook_type(Type))),dmsg_pretty(message_hook(T,Type,Term)),  
   ignore((source_location(File,Line),dmsg_pretty(source_location(File,Line)))),
   with_output_to(string(Text),
    ignore((set_stream(current_output,tty(true)),
@@ -545,7 +563,8 @@ system:halt_junit:- j_u:junit_prop(system,halted_junit,true),!.
 system:halt_junit:- asserta(j_u:junit_prop(system,halted_junit,true)),!,
   % list_test_results,
   %nortrace,trace,
-  save_junit_results.
+  ignore(save_junit_results),
+  ignore(catch(run_junit_tests_at_halt,_,true)).
 
 
 
@@ -651,7 +670,8 @@ calc_exit_code0(64):- \+ j_u:junit_prop(_,result,failure), \+ \+ j_u:junit_prop(
 :- dynamic(j_u:started_test_completed/0).
 :- volatile(j_u:started_test_completed/0).
 system:test_completed:- j_u:started_test_completed,!.
-system:test_completed:- asserta(j_u:started_test_completed),logicmoo_test:calc_exit_code(XC),logicmoo_test:test_completed_exit_maybe(XC).
+system:test_completed:- 
+ ignore((asserta(j_u:started_test_completed),logicmoo_test:calc_exit_code(XC),logicmoo_test:test_completed_exit_maybe(XC))).
 
 system:test_repl:-  assertz(j_u:junit_prop(need_retake,warn,need_retake)).
 system:test_retake:- system:halt_junit,logicmoo_test:test_completed_exit_maybe(3).

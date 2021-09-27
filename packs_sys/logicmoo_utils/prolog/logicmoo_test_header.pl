@@ -1,4 +1,18 @@
 % This file is mostly all inside if/endifs so it doesnt interfere with `module/2`
+:- if((set_stream(current_output,tty(true)))).  :- endif.
+
+:- if((
+ %set_prolog_flag(debug, true),
+ %set_prolog_flag(gc, false),
+ %set_prolog_flag(runtime_speed,0), % 0 = dont care
+ set_prolog_flag(runtime_speed, 0), % 1 = default
+ set_prolog_flag(runtime_debug, 3), % 2 = important but dont sacrifice other features for it
+ set_prolog_flag(runtime_safety, 3),  % 3 = very important
+ set_prolog_flag(unsafe_speedups, false),
+ set_prolog_flag(logicmoo_message_hook,junit),
+ %mpred_trace_exec,
+ true)).
+:- endif.
 
 
 :- if( \+ current_module(logicmoo_clif)).
@@ -6,6 +20,7 @@
 :- if( \+ getenv('keep_going','-k')).
 % Load Editline/Readline
 :- if( \+ current_module(prolog_history)).
+:- if((set_stream(current_input,tty(true)))).  :- endif.
 :- if(( %ignore(exists_source(library(editline))->use_module(library(editline))
        %;(exists_source(library(readline)),use_module(library(readline)))),
    '$toplevel':(  setup_colors,
@@ -58,47 +73,42 @@
 :- endif. % current_prolog_flag(loaded_test_header,_)
 
 %:- if((current_prolog_flag(test_module,Module), '$set_source_module'(Module))). :- endif.
-:- if((current_prolog_flag(test_module,Module), clifops:clif_op_decls(OPS), call(Module:OPS))). :- endif.
+
 
 :- if((prolog_load_context(source,File),!,
    ignore((((sub_atom(File,_,_,_,'.pfc')
    -> (sanity(is_pfc_file),set_prolog_flag(is_pfc_file_dialect,true))
    ; nop((sanity( \+ is_pfc_file),set_prolog_flag(is_pfc_file_dialect,false))))))))).  
+:- if((current_prolog_flag(test_module,Module), clifops:clif_op_decls(OPS), call(Module:OPS))). :- endif.
 :- endif.
 
-
-:- if((
- %set_prolog_flag(debug, true),
- %set_prolog_flag(gc, false),
- %set_prolog_flag(runtime_speed,0), % 0 = dont care
- set_prolog_flag(runtime_speed, 0), % 1 = default
- set_prolog_flag(runtime_debug, 3), % 2 = important but dont sacrifice other features for it
- set_prolog_flag(runtime_safety, 3),  % 3 = very important
- set_prolog_flag(unsafe_speedups, false),
- set_prolog_flag(logicmoo_message_hook,junit),
- %mpred_trace_exec,
- true)).
-:- endif.
 
 % :- if(('$current_source_module'(W), '$set_typein_module'(W))). :- endif.
 %:- if((current_prolog_flag(test_typein_module,Module), '$set_typein_module'(Module), module(Module))). :- endif.
-:- if((current_prolog_flag(test_typein_module,Module), clifops:clif_op_decls(OPS), call(Module:OPS))). :- endif.
 
 :- if(current_prolog_flag(is_pfc_file_dialect,true)).
+:- if((current_prolog_flag(test_typein_module,Module), clifops:clif_op_decls(OPS), call(Module:OPS))). :- endif.
 :- expects_dialect(pfc).
-
 :- else.
 :- if((dmsg(this_test_might_need(:- expects_dialect(pfc))))).  :- endif.
 :- endif.
+
 :- if((dmsg(this_test_might_need(:- use_module(library(logicmoo_plarkc)))))).  :- endif.
 
-:- if((prolog_load_context(source,F),echo_source_file_no_catchup(F))).  :- endif.
+:- if((ensure_loaded(library(logicmoo_test)))). 
+:- if(at_halt(system:test_completed)). :- endif.
+:- endif.
 
-:- if((ensure_loaded(library(logicmoo_test)))). :- endif.
 
+%:- if(false).
 :- if((prolog_load_context(source,Src),set_prolog_flag(test_src,Src))). :- endif.
 :- if((prolog_load_context(source,Src),add_test_info(testsuite,file,Src))). :- endif.
-:- if(at_halt(system:test_completed)). :- endif.
+%:- endif.
 
-% :- if((set_stream(current_output,tty(true)))).  :- endif.
+:- if((prolog_load_context(source,File), sub_atom(File,_,_,_,'.plt'),!, user:use_module(library(plunit)))).
+:- if(at_halt(logicmoo_test:run_junit_tests_at_halt)). :- endif.
+:- else.
+:- if((prolog_load_context(source,F),echo_source_file_no_catchup(F))).  :- endif.
+:- endif.
+
 

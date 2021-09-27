@@ -101,16 +101,22 @@ mco_info(F,S,_I,Start,End):-
     variable_names(Vs),singletons(Sv),after(After),peek(Peek)]]).
 fmsg(Fmt,Args):- flush_output,ttyflush,format(user_output,Fmt,Args),ttyflush.
 
+never_echo_term(_:P):-!,compound(P),never_echo_term(P).
+never_echo_term(end_tests(_)).
+never_echo_term(begin_tests(_)).
 
 :- module_transparent(echo_catchup/4).
-echo_catchup(I,P,O,PO):- 
+
+echo_catchup(I,P,O,PO):- \+ echo_catchup_f(I,P,O,PO), fail.
+echo_catchup_f(I,P,O,PO):- 
  notrace((compound(P),
    source_location(F,_L),t_l:echoing_file(F),
    b_getval('$term', Term),I==Term)),
+   nonvar(I), \+ never_echo_term(I),
    prolog_load_context(stream,S),stream_property(S,file_name(F)),
    P=..[_,Start,End|_],!,
    ttyflush,
-   mco(F,S,I,Start,End,O),
+   mco(F,S,I,Start,End,O),!,
    PO=P.
 
 :- style_check(-singleton).
@@ -209,9 +215,8 @@ assume_caughtup_to(F,S,Pos):- retractall(t_l:file_stream_loc(F,S,_)),assert(t_l:
 
 se:echo_expander(system:term_expansion(I,P,O,PO), echo_catchup(I,P,O,PO)).
 
-system:term_expansion(I,P,O,PO):-  echo_catchup(I,P,O,PO).
-/*
-system:term_expansion(_,_,_,_):-  
+%user:term_expansion(I,P,O,PO):-  echo_catchup(I,P,O,PO).
+system:term_expansion(_,_,_,_):- 
   notrace((
     se:echo_expander(H,B),
     nth_clause(H,1,Ref), 
@@ -219,5 +224,6 @@ system:term_expansion(_,_,_,_):-
     ignore(retract(H:- B)),
            asserta(H:-B),
     fail.
-*/
+%system:term_expansion(I,P,O,PO):-  echo_catchup(I,P,O,PO).
+
 

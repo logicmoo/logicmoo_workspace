@@ -782,11 +782,16 @@ term_expansion_UNUSED(:-module(M,List),Pos,ExportList,Pos):- nonvar(Pos),
 
 %:- thread_local t_l:side_effect_ok/0.
 
+never_pfc_expand(begin_tests(_)).
+never_pfc_expand(end_tests(_)).
+never_pfc_expand(end_of_file).
+never_pfc_expand(begin_of_file).
+never_pfc_expand(expects_dialect(_)).
 
 % (prolog_load_context(module,M),pfc_may_see_module(M)).
 pfc_clause_expansion(I,O):- 
   % ((in_dialect_pfc)),
-  nonvar(I), I\==end_of_file,  I\==begin_of_file,  
+  nonvar(I), \+ never_pfc_expand(I),
   base_clause_expansion(I,M),!,I\=@=M,
    ((
       maybe_should_rename(M,MO), 
