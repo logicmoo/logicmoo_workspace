@@ -53,7 +53,7 @@ run_junit_tests(Spec) :-
   set_prolog_flag(ran_junit_tests,true),
   term_to_atom(Spec,SpecAtom),
   statistics(cputime,Y),
-  (getenv('TESTING_TEMP',TESTING_TEMP)->true;TESTING_TEMP='/tmp'), %tmp_file(SpecAtom,TmpName), 
+  (getenv_safe('TESTING_TEMP',TESTING_TEMP)->true;TESTING_TEMP='/tmp'), %tmp_file(SpecAtom,TmpName), 
   atomic_list_concat([TESTING_TEMP,'/',SpecAtom,Y,'-junit.xml'],FileName),
   capturing_user_error(string(UserErr), (run_junit_tests_user_error(Spec,UnitXml),plunit:check_for_test_errors)),
   sformat(JUnitStr,"~w~n~w]]>></system-out></testsuites>\n",[UnitXml,UserErr]),
@@ -140,15 +140,18 @@ run_junit_tests_user_error(Spec,UnitXml):-
   forall(
     plunit:current_test_set(Unit),
     (
-      format( "  <testsuite name=\"~w\">\n", [Unit]),
+      unit_to_sn(Unit,SuiteName,Package),
+      format( "  <testsuite name=\"~w\" package=\"~w\">\n", [SuiteName,Package]),
       output_unit_results(Unit),
       format( "  </testsuite>\n", [])
     )
   ),
   format('<system-out><![C~w[',['DATA']),
-  version(V1), current_prolog_flag(version, V2),
-  format("Biocham v~w running on SWI-Prolog ~w~n", [V1, V2]),
+  current_prolog_flag(version, V2),
+  format("Running on SWI-Prolog ~w~n", [ V2]),
   writeln(TotalConverage))).
+
+
 
 :- meta_predicate(capturing_user_error(+,:)).
 capturing_user_error(To, Goal):-
@@ -214,11 +217,21 @@ run_tests_and_halt(Spec) :-
   call_cleanup(
     (
       run_junit_tests(Spec),
-      test_completed_exit(0)
+      test_completed(64)
     ),
-    test_completed_exit(1)
+    test_completed(8)
   ).
 
+
+getenv_safe(N,V):- getenv(N,V),!.
+getenv_safe(N,N).
+
+unit_to_sn(Unit,SuiteName,Package):- getenv_safe('JUNIT_PACKAGE',Package),getenv_safe('JUNIT_SUITE',Suite), 
+  sformat(SuiteName,"~w_~w",[Suite,Unit]).
+name_to_tc(Name,Line,SCName,Classname):-  
+  getenv_safe('JUNIT_CLASSNAME',Classname), 
+  sformat(TCName,"~w@Test_0001_Line_~4d ~w",[Classname,Line,Name]),
+  replace_in_string(['_0.'='_'],TCName,SCName),!.
 
 %  scans plunit dynamic predicates and outputs corresponding info to XML
 output_unit_results(Unit) :-
@@ -229,17 +242,21 @@ output_unit_results(Unit) :-
 %  outputs a successful testcase with its time for each plunit:passed/5 entry
 output_passed_results(Unit) :-
   forall(
-    plunit:passed(Unit, Name, _Line, _Det, Time),
-    format( "    <testcase name=\"~w\" time=\"~w\" />\n", [Name, Time])
+    plunit:passed(Unit, Name, Line, _Det, Time),
+    (name_to_tc(Name,Line,TCName,Classname),
+     add_test_info(TCName,result,passed),
+     format( "    <testcase name=\"~w\" classname=\"~w\" time=\"~w\" />\n", [TCName, Classname, Time]))
   ).
 
 
 %  outputs a failure inside a testcase for each plunit:failed/4 entry
 output_failed_results(Unit) :-
   forall(
-    plunit:failed(Unit, Name, _Line, Error),
+    plunit:failed(Unit, Name, Line, Error),
     (
-      format( "    <testcase name=\"~w\">\n", [Name]),
+      name_to_tc(Name,Line,TCName,Classname),
+      add_test_info(TCName,result,failure),
+      format( "    <testcase name=\"~w\" classname=\"~w\">\n", [TCName,Classname]),
       format( "      <failure message=\"~w\" />\n", [Error]),
       format( "    </testcase>\n", [])
     )
@@ -332,7 +349,7 @@ mpred_test_fok(Testcase, G):-
       process_test_result(TestResult, G),    
       TestResult=..[Type|Info],add_test_info(Testcase,Type,Info),
       add_test_info(Testcase,result,Type),
-      ignore((getenv('TEE_FILE',Tee),
+      ignore((getenv_safe('TEE_FILE',Tee),
       must_det_l((
         read_file_to_string(Tee,Str,[]),
         add_test_info(Testcase,out,Str),
@@ -343,7 +360,7 @@ mpred_test_fok(Testcase, G):-
     Type == passed.
 
 kill_junit_tee:- 
-  ignore((getenv('TEE_FILE',Tee),
+  ignore((getenv_safe('TEE_FILE',Tee),
           sformat(Exec,'cat /dev/null > ~w',[Tee]),
           shell(Exec))).
 
@@ -373,11 +390,11 @@ why_was_true(P):- % predicate_property(P,dynamic),
 why_was_true(P):- dmsg_pretty(justfied_true(P)),!.
 
 catch_timeout(P):- tracing,!,call(P).
-%catch_timeout(P):-  getenv('CMD_TIMEOUT',X), \+ atom_length(X,0),!, call(P). % Caller will kill it
-catch_timeout(P):-  getenv('CMD',X), atom_contains(X,"timeout"),!, call(P). % Caller will kill it
+%catch_timeout(P):-  getenv_safe('CMD_TIMEOUT',X), \+ atom_length(X,0),!, call(P). % Caller will kill it
+catch_timeout(P):-  getenv_safe('CMD',X), atom_contains(X,"timeout"),!, call(P). % Caller will kill it
 catch_timeout(P):- catch(call_with_time_limit(30,w_o_c(P)),E,wdmsg(P->E)).
 
-%generate_test_name(G,Name):- getenv('JUNIT_CLASSNAME',Class), gtn_no_pack(G,NPack),sformat(Name,'~w ~w',[Class, NPack]),!.
+%generate_test_name(G,Name):- getenv_safe('JUNIT_CLASSNAME',Class), gtn_no_pack(G,NPack),sformat(Name,'~w ~w',[Class, NPack]),!.
 generate_test_name(G,Name):- source_context_name(SCName), gtn_no_pack(G,GUName), trim_to_size(GUName,-30,GName),
   (atom_length(GName,0)-> SCName = Name ; sformat(Name,'~w__~w',[SCName,GName])).
 
@@ -449,7 +466,7 @@ warn_fail_TODO(G):- dmsg_pretty(:-warn_fail_TODO(G)).
 :- create_prolog_flag(logicmoo_message_hook,none,[keep(true),type(term)]).
 
 system:test_src(Src):- (current_prolog_flag(test_src,Src), Src\==[]);j_u:junit_prop(testsuite,file,Src).
-system:is_junit_test:- getenv('JUNIT_PACKAGE',_),!.
+system:is_junit_test:- getenv_safe('JUNIT_PACKAGE',_),!.
 system:is_junit_test:- system:is_junit_test_file.
 system:is_junit_test_file:- test_src(Src), prolog_load_context(file,Src),!.
 
@@ -491,7 +508,7 @@ add_test_info(Type,Info):- ignore(((get_current_testcase(Testcase), add_test_inf
 
 get_current_testcase(Testcase):- t_l:mpred_current_testcase(Testcase),!.
 
-get_current_testcase(Testcase):- getenv('FileTestCase',Testcase), add_test_info(testsuite,testcase,Testcase),!.
+get_current_testcase(Testcase):- getenv_safe('FileTestCase',Testcase), add_test_info(testsuite,testcase,Testcase),!.
 get_current_testcase(Testcase):- "suiteTestcase"=Testcase, add_test_info(testsuite,testcase,Testcase),!.
 % get_current_testcase(Testcase):- j_u:junit_prop(testsuite,file,Testcase).
 
@@ -706,12 +723,12 @@ clear_suite_attribs:- forall(junit_count(F),flag(F,_,0)),
 
 get_suite_attribs(SuiteAttribs):-    
   with_output_to(string(SuiteAttribs),
-(( ignore((getenv('JUNIT_PACKAGE',Package), format(' package="~w"', [Package]))),
+(( ignore((getenv_safe('JUNIT_PACKAGE',Package), format(' package="~w"', [Package]))),
    ignore((j_u:junit_prop(testsuite,start,Start),get_time(End),Elapsed is End - Start,format(' time="~3f"',[Elapsed]))),
    forall((junit_count(F),flag(F,C,C)),format(' ~w="~w"',[F,C]))))).
 
 show_junit_suite(File):- 
-   (getenv('JUNIT_SUITE',SuiteName);SuiteName=File),!,
+   (getenv_safe('JUNIT_SUITE',SuiteName);SuiteName=File),!,
   get_suite_attribs(SuiteAttribs),
   format("  <testsuite name=\"~w\" ~w>\n", [SuiteName, SuiteAttribs]),
    findall(Name,j_u:junit_prop(testsuite,testcase,Name),L),list_to_set(L,S),
@@ -736,7 +753,7 @@ create_issue_with_name(Name,FileName,IssueNumber):-
 
   
 issue_labels(Name,[Package,ShortClass,TestNum]):- 
-  getenv('JUNIT_CLASSNAME',Classname),
+  getenv_safe('JUNIT_CLASSNAME',Classname),
   classname_to_package(Classname,Package,ShortClass),
   sub_string(Name,1,9,_,TestNum).
   
@@ -758,7 +775,7 @@ must_det_l((
     must_det_l((
           j_u:junit_prop(testsuite,file,File),
           writeln("  <testsuites>"),
-          (getenv('JUNIT_SUITE',SuiteName);SuiteName=File),!,
+          (getenv_safe('JUNIT_SUITE',SuiteName);SuiteName=File),!,
           get_suite_attribs(SuiteAttribs),
           format("  <testsuite name=\"~w\" ~w>\n", [SuiteName, SuiteAttribs]),
           show_junit_testcase(File,Name),
@@ -820,7 +837,7 @@ save_to_junit_file_text(Full,Text,FullF):-
 
 save_to_junit_file(Name,DirtyText,FileName):-
  must_det_l((clean_away_ansi(DirtyText,Text),
- getenv('TEST_STEM_PATH',Dir),!,
+ getenv_safe('TEST_STEM_PATH',Dir),!,
  shorten_and_clean_name(Name,-150,SName),
  atomic_list_concat([Dir,'-',SName],Full),
  write_testcase_env(Name),
@@ -829,7 +846,7 @@ save_to_junit_file(Name,DirtyText,FileName):-
 
 save_junit_results_single:-
   % $TESTING_TEMP
-  getenv('TESTING_TEMP',Dir),
+  getenv_safe('TESTING_TEMP',Dir),
   directory_file_path(Dir,'junit_single.ansi',Full),!,
   tell(Full),
   show_all_junit_suites,
@@ -850,10 +867,10 @@ suite_to_package(Suite,Package):- shorten_and_clean_name(Suite,Suite0),
 
 show_junit_testcase(Suite,Testcase):- 
  j_u:junit_prop(Testcase,goal,Goal),
- (getenv('JUNIT_CLASSNAME',Classname)-> true ; suite_to_package(Suite,Classname)),
- %(getenv('JUNIT_PACKAGE',Package) -> true ; classname_to_package(Classname,Package,_ShortClass)),
- %ignore((getenv('JUNIT_SHORTCLASS',ShortClass))),
- %ignore((getenv('JUNIT_SUITE',JUNIT_SUITE))),
+ (getenv_safe('JUNIT_CLASSNAME',Classname)-> true ; suite_to_package(Suite,Classname)),
+ %(getenv_safe('JUNIT_PACKAGE',Package) -> true ; classname_to_package(Classname,Package,_ShortClass)),
+ %ignore((getenv_safe('JUNIT_SHORTCLASS',ShortClass))),
+ %ignore((getenv_safe('JUNIT_SUITE',JUNIT_SUITE))),
  %(nonvar(ShortClass)-> true; atom_concat(Package,ShortClass,Classname)),
  sformat(DisplayName,'~w@~w: ~p',[Classname,Testcase,Goal]),
  escape_attribute(DisplayName,EDisplayName),
@@ -868,7 +885,7 @@ show_junit_testcase(Suite,Testcase):-
 
 write_testcase_env(Name):-
   write_testcase_prop(name,Name),
-  forall(junit_env_var(N),ignore((getenv(N,V),write_testcase_prop(N,V)))),!.
+  forall(junit_env_var(N),ignore((getenv_safe(N,V),write_testcase_prop(N,V)))),!.
 
 junit_env_var('JUNIT_CLASSNAME').
 %junit_env_var('JUNIT_PACKAGE').

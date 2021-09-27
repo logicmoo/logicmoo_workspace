@@ -43,3 +43,9 @@ test(loop_inf4a):- must((   loop_inf4(X),X=2,!)).
 % :- run_tests.
 
 
+
+% EDIT: https://github.com/logicmoo/logicmoo_workspace/edit/master//var/lib/jenkins/workspace/logicmoo_workspace/packs_sys/logicmoo_utils/t/loop_check_tests_01.plt 
+% JENKINS: https://jenkins.logicmoo.org/job/logicmoo_workspace/lastBuild/testReport/logicmoo.utils.utils.t/LOOP_CHECK_TESTS_01/ 
+% ISSUE_SEARCH: https://github.com/logicmoo/logicmoo_workspace/issues?q=is%3Aissue+label%3ALOOP_CHECK_TESTS_01 
+% ISSUE: https://github.com/logicmoo/logicmoo_workspace/issues/ 
+
