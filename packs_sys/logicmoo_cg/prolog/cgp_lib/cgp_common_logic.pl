@@ -9,7 +9,7 @@
 :- use_module(library(logicmoo_clif)).
 :- cgp_common_logic:import(dcg_basics:eol/2).
 
-:-ensure_loaded('cgp_common_logic.plt').
+%:-ensure_loaded('cgp_common_logic.plt').
 
 % ==========================================================================
 % do_varaibles/5 replaces the VARS in things like (exists ...VARS... Stuff)

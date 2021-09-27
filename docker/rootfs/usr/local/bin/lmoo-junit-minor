@@ -184,16 +184,17 @@ if [ -z "$FILES" ]; then
 fi
 
 
-if [ -n "${MAX_JUNIT_SUITES}" ]; then
- if [ $MAX_JUNIT_SUITES -le 0 ]; then 
-  echo "Warn exceeded MAX_JUNIT_SUITES"
+if [ -n "${MAX_TEST_SUITE_NUM}" ]; then
+ if [ $MAX_TEST_SUITE_NUM -le 0 ]; then 
+  echo "Warn exceeded MAX_TEST_SUITE_NUM"
   return 0 2>/dev/null ; exit 0
  fi
 fi
 
-MAYBE_GH="echo gh"
 
-gh api repos/logicmoo/logicmoo_workspace/labels -f name="${JUNIT_PACKAGE}" -f color="888000" 2>&1 > /dev/null
+export MAYBE_GH="gh"
+export MAYBE_GH="echo SKIPPING gh"
+$MAYBE_GH api repos/logicmoo/logicmoo_workspace/labels -f name="${JUNIT_PACKAGE}" -f color="888000" 2>&1 > /dev/null
 export GH_MASTER_ISSUE_LIST=`gh issue list -l ${JUNIT_PACKAGE} -L 1000 | sed -e "s/UTC /\n/g" | grep "unit_test"`
 
 #DIRS_SORTED=`find $TEST_DIRS -maxdepth 0 -type d -printf "%T+ %p\n" | sort -r -u | cut -d " " -f 2`
@@ -212,8 +213,6 @@ fi
 CRLF='
 '
 
-SKIP_GH="echo"
-SKIP_GH=""
 
 SORTED_FILES=$(echo $SORTED_FILES | sed -e "s|\n| |g" -e "s|  | |g")
 
@@ -221,10 +220,10 @@ echo "SORTED_FILES=$SORTED_FILES"
 (
 for ele2 in "${SORTED_FILES[@]}"
   do
-     [ -n "${MAX_JUNIT_SUITES}" ] && [ $MAX_JUNIT_SUITES -le 0 ] && echo "Warn: reached MAX_JUNIT_SUITES .. skipping .. $ele2" && continue
+     [ -n "${MAX_TEST_SUITE_TIME}" ] && [ $MAX_TEST_SUITE_NUM -le 0 ] && echo "Warn: reached MAX_TEST_SUITE_NUM .. skipping .. $ele2" && continue
      for ele in $ele2
 	do	 
-	[ -n "${MAX_JUNIT_SUITES}" ] && [ $MAX_JUNIT_SUITES -le 0 ] && echo "Warn: reached MAX_JUNIT_SUITES .. skipping .. $ele" && continue
+	[ -n "${MAX_TEST_SUITE_TIME}" ] && [ $MAX_TEST_SUITE_NUM -le 0 ] && echo "Warn: reached MAX_TEST_SUITE_NUM .. skipping .. $ele" && continue
 	  retry=1
 	  while [ $retry == 1 ]
 	   do
@@ -264,8 +263,8 @@ for ele2 in "${SORTED_FILES[@]}"
 
 	#stty echo      
 
-        [ -n "${MAX_JUNIT_SUITES}" ] && [ $MAX_JUNIT_SUITES -le 0 ] && echo "Warn: reached MAX_JUNIT_SUITES .. skipping .. $CMD" && continue
-        [ -n "${MAX_JUNIT_SUITES}" ] && export MAX_JUNIT_SUITES=$((MAX_JUNIT_SUITES - 1))
+        [ -n "${MAX_TEST_SUITE_TIME}" ] && [ $MAX_TEST_SUITE_NUM -le 0 ] && echo "Warn: reached MAX_TEST_SUITE_NUM .. skipping .. $CMD" && continue
+        [ -n "${MAX_TEST_SUITE_NUM}" ] && export MAX_TEST_SUITE_NUM=$((MAX_TEST_SUITE_NUM - 1))
 
 	export Test_9999="Test_9999"
         lmoo-make 
@@ -300,8 +299,8 @@ for ele2 in "${SORTED_FILES[@]}"
 	export GH_ISSUE_ID=$(echo "${GH_ISSUE_INFO}" | cut -f1)
 	[ -z "${GH_ISSUE_ID}" ] && (
 	  
-	  $SKIP_GH gh api repos/logicmoo/logicmoo_workspace/labels -f name="${JUNIT_SHORTCLASS}" -f color="888000"
-          $SKIP_GH gh issue create -t "${FileTestCase}" -l "${JUNIT_PACKAGE},${JUNIT_SHORTCLASS},${Test_9999},unit_test,Skipped" -b "${LINKS}"
+	  $MAYBE_GH api repos/logicmoo/logicmoo_workspace/labels -f name="${JUNIT_SHORTCLASS}" -f color="888000"
+          $MAYBE_GH issue create -t "${FileTestCase}" -l "${JUNIT_PACKAGE},${JUNIT_SHORTCLASS},${Test_9999},unit_test,Skipped" -b "${LINKS}"
   	  export GH_MASTER_ISSUE_LIST=`gh issue list -l ${JUNIT_PACKAGE} -L 1000 | sed -e "s/UTC /\n/g" | grep "unit_test"`
   	  export GH_ISSUE_INFO=$(echo "${GH_MASTER_ISSUE_LIST}" | grep "${FileTestCase}" | head -1)
 	  export GH_ISSUE_ID=$(echo "${GH_ISSUE_INFO}" | cut -f1)
@@ -398,12 +397,12 @@ for ele2 in "${SORTED_FILES[@]}"
       
       [ ${ISSUE_IS_NEW} -eq 1 ] && (
          [ ! -z "$GH_ISSUE_ID "] && (
-            $SKIP_GH gh issue edit $GH_ISSUE_ID --body-file "${TEE_FILE_NOANSI}"
+            $MAYBE_GH issue edit $GH_ISSUE_ID --body-file "${TEE_FILE_NOANSI}"
 	     )
       )
       
       [ ${INTERACTIVE} -eq 0 ] && (
-        $SKIP_GH source $LOGICMOO_WS/bin/lmoo-issue ${JUNIT_PACKAGE} ${JUNIT_SHORTCLASS} ${Test_9999} ${TEST_RESULT} "${FileTestCase}" ${TEE_FILE_NOANSI} "$Add_LABELS" "$Rem_LABELS"
+          source $LOGICMOO_WS/bin/lmoo-issue ${JUNIT_PACKAGE} ${JUNIT_SHORTCLASS} ${Test_9999} ${TEST_RESULT} "${FileTestCase}" ${TEE_FILE_NOANSI} "$Add_LABELS" "$Rem_LABELS"
       )
       
       if [ "${TEST_RESULT}" = "SUCCESS" ]; then

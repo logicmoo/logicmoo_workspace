@@ -70,17 +70,18 @@ echo TEST_DIRS=$TEST_DIRS
 DIRS_SORTED=`find $TEST_DIRS -maxdepth 0 -type d -printf "%T+ %p\n" | sort -r -u | cut -d " " -f 2`
 echo DIRS_SORTED=$DIRS_SORTED
 
-export MAX_JUNIT_SUITES=40000
-# export MAX_JUNIT_SUITES=6
+export MAX_TEST_SUITE_NUM=40000
 
-export MAX_TOTAL_JUNIT_TEST_TIME=30
+export MAX_TEST_SUITE_TIME=1
 
 
 for dirname in "${DIRS_SORTED[@]}"; do
+
+    export MAX_TEST_SUITE_NUM=6
     echo -e "$dirname\n"    
-#    [ $MAX_JUNIT_SUITES -gt 0 ] && (
+    [ $MAX_TEST_SUITE_NUM -gt 0 ] && (
         find $dirname -maxdepth 1 $FILTER -name "test_on_*.sh" -execdir {} "$TEST_PARAMS" $VERBOSITY \;
-#    )
+    )
 done
 
 # Generate JUnit Results

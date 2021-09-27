@@ -1,5 +1,11 @@
 
-:- include(sanity_tests).
+%:- include(sanity_tests).
+
+:- use_module('../prolog/logicmoo_common').
+:- use_module(library(plunit)).
+:- use_module(library(test_cover)).
+:- use_module(library(biocham_junit)).
+:- at_halt(biocham_junit:run_junit_tests).
 
 :- use_module(library(loop_check)).
 

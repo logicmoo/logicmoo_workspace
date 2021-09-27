@@ -209,7 +209,8 @@ assume_caughtup_to(F,S,Pos):- retractall(t_l:file_stream_loc(F,S,_)),assert(t_l:
 
 se:echo_expander(system:term_expansion(I,P,O,PO), echo_catchup(I,P,O,PO)).
 
-
+system:term_expansion(I,P,O,PO):-  echo_catchup(I,P,O,PO).
+/*
 system:term_expansion(_,_,_,_):-  
   notrace((
     se:echo_expander(H,B),
@@ -218,5 +219,5 @@ system:term_expansion(_,_,_,_):-
     ignore(retract(H:- B)),
            asserta(H:-B),
     fail.
-
+*/
 

@@ -6,9 +6,9 @@
 export TESTING_TEMP
 mkdir -p ${TESTING_TEMP}/
 
-if [ -n "${MAX_JUNIT_SUITES}" ]; then
- if [ $MAX_JUNIT_SUITES -le 0 ]; then 
-  echo "Warn exceeded MAX_JUNIT_SUITES"
+if [ -n "${MAX_TEST_SUITE_NUM}" ]; then
+ if [ $MAX_TEST_SUITE_NUM -le 0 ]; then 
+  echo "Warn exceeded MAX_TEST_SUITE_NUM"
   return 0 2>/dev/null ; exit 0
  fi
 fi

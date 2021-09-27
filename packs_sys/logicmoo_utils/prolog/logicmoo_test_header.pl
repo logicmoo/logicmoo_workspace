@@ -57,7 +57,7 @@
 :- endif. % prolog_load_context(module,user)
 :- endif. % current_prolog_flag(loaded_test_header,_)
 
-:- if((current_prolog_flag(test_module,Module), '$set_source_module'(Module))). :- endif.
+%:- if((current_prolog_flag(test_module,Module), '$set_source_module'(Module))). :- endif.
 :- if((current_prolog_flag(test_module,Module), clifops:clif_op_decls(OPS), call(Module:OPS))). :- endif.
 
 :- if((prolog_load_context(source,File),!,
@@ -81,7 +81,7 @@
 :- endif.
 
 % :- if(('$current_source_module'(W), '$set_typein_module'(W))). :- endif.
-:- if((current_prolog_flag(test_typein_module,Module), '$set_typein_module'(Module), module(Module))). :- endif.
+%:- if((current_prolog_flag(test_typein_module,Module), '$set_typein_module'(Module), module(Module))). :- endif.
 :- if((current_prolog_flag(test_typein_module,Module), clifops:clif_op_decls(OPS), call(Module:OPS))). :- endif.
 
 :- if(current_prolog_flag(is_pfc_file_dialect,true)).
@@ -99,7 +99,6 @@
 :- if((prolog_load_context(source,Src),set_prolog_flag(test_src,Src))). :- endif.
 :- if((prolog_load_context(source,Src),add_test_info(testsuite,file,Src))). :- endif.
 :- if(at_halt(system:test_completed)). :- endif.
-
 
 % :- if((set_stream(current_output,tty(true)))).  :- endif.
 

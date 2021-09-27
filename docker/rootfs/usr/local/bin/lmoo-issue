@@ -1,8 +1,9 @@
 #/bin/bash
 
-GH_ISSUE="gh issue"
+[ -z "$MAYBE_GH" ] && export MAYBE_GH="gh"
+GH_ISSUE="${MAYBE_GH} issue"
 
-[ "${1}" = "-t" ] && shift 1 && GH_ISSUE="echo $GH_ISSUE"
+[ "${1}" = "-t" ] && shift 1 && GH_ISSUE="echo SKIPPING $GH_ISSUE"
 
 GIT_REV=$(git rev-parse HEAD)
 
