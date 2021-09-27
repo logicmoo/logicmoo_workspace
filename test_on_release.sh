@@ -55,14 +55,13 @@ fi
 TEST_PARAMS="$*"
 if [ -z "$TEST_PARAMS" ]; then 
   # TEST_PARAMS="*0*.*"
-  # TEST_PARAMS="*f*_01.p*"
+  echo TEST_PARAMS="*f*_01.p*"
 fi
 
 
 
 echo -e "Running release (all) tests\nTESTING_TEMP=$TESTING_TEMP\n( cd $PWD ; $BASH_SOURCE $TEST_PARAMS )"
 
-cat /dev/null > 
 eval "lmoo-make $VERBOSITY"
 
 TEST_DIRS=`find -mindepth 2 $FILTER -type f -name "test_on_*.sh" -exec dirname {} \;`
