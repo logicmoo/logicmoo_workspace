@@ -1,0 +1,34 @@
+This package provides DCG related utilities.
+It is organised into several modules:
+
+*	library(dcg_core)
+	Provides predicates which can be used in DCGs where the threaded
+	state variable can be of any type, not just lists of terminals as
+	with applications to grammars in the linguistic sense.
+*	library(dcg_codes)
+	Utilities for DCGs over sequences of character codes, ie, grammars
+	in the linguistic sense. Note that only some of these can be used
+	for both parsing and generation. The rules for writing Prolog values
+	of various types can only be used for generation.
+*	library(dcg_macros)
+	Provides goal expansions for some of the mapping predicates in
+	library(dcg_core), similar to those in library(apply_macros).
+*	library(dcg_progress)
+	Sequencing predicates that show progress information, for slow-running
+	processes on sequences.
+*	library(dcg_pair)
+	Operators for working with DCGs over pair states.
+*	library(dcg_shell)
+	Provides a top-level read-eval-print loop similar to the Prolog top-level,
+	but for running DCG goals and managing the current 'state'.
+*	library(snobol)
+	A collection of SNOBOL inspired pattern matching predicates.
+
+---++++ Prerequisites
+
+SWI Prolog version at least 7.1.18 to get call_dcg/3.
+
+---++++ Simple usage
+
+---++++ Planned enhancements
+
