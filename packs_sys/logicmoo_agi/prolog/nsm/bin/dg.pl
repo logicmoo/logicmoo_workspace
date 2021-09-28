@@ -19,32 +19,59 @@
 
 */
 
+    :- module(dg,[
+		  dg_parse/3,
+		  dg_gen/3,
+		  dg_gen_tagm/3,
+		  dg_parse_text_level/3,
+		  dg_gen_text_level/3
+		 ]).
+		  
+/** <module> Dependency grammar
+
+This module contains the routines for syntactic parsing and
+generation with NSM-DALIA dependency grammars.
+
+@tbd dg_parse_text_level/3 and dg_gen_text_level/3 implementation.
+*/
+    
 
 :- include('operators.pl').
-:- include('dynamic.pl').
+
+:- use_module(messages).
+:- use_module(checkers).
+:- use_module(grammar).
+:- use_module(word_scanner).
+:- use_module(morph_parse).
+:- use_module(morph_gen).
 
 
 /* SYNTACTICAL DEPENDENCY PARSER  */
-dg_parse(Lang,Sent,Parse) :-
-	generic_get_word(Lang,Sent,"##",Word,[],Rest,Stack),
-	parse_dg(Lang,Word,Rest,Stack,Parse).
 
-generic_get_word(Lang,Sent,PrevWord,Word,Stack,Rest,NewStack) :-
-	morph_grammar_type(Lang,dependency),
-	!,
-	dg_morph_parse_word(Lang,Sent,PrevWord,Word,Stack,Rest,NewStack).
-generic_get_word(Lang,Sent,PrevWord,Word,Stack,Rest,[Analysis|Stack]) :-
-	morph_grammar_type(Lang,tagmemic),
-	!,
-	tm_morph_parse_word(Lang,dg,Sent,PrevWord,Word,Analysis,Rest).
-      
 
-parse_dg(Lang,_Word,[],Stack,Parse) :-
-	!,
+%%	dg_parse(+Lang,+Sentence:string,-Parse) is det
+%
+%	Parses a sentence written in language Lang according
+%	to the active transcription table (see module transcr.pl)
+%	and returns the parse in the third argument.
+%	
+%	The first word is parsed, calling 
+%	morph_parse:generic_parse_word/7. Then, the internal 
+%	procedure parse_dg/5 does the job.
+dg_parse(Lang,Sent,ct(CT,Parse)) :-
+	generic_parse_word(Lang,Sent,"##",Word,[],Rest,Stack),
+	parse_dg(Lang,Word,Rest,Stack,ct(CT,Parse1)),
+	explain_idiom(Lang,Parse1,Parse),
+	!.
+dg_parse(_,Sent,noparse(Sent)).
+   
+
+parse_dg(Lang,_PrevWord,[],Stack,Parse) :-
+%	!,
 	try_reduce(Lang,1,Stack,NewStack,yes),
 	reduce_all(Lang,1,NewStack,Parse).
 parse_dg(Lang,PrevWord,Sent,Stack,Parse) :-
-	generic_get_word(Lang,Sent,PrevWord,Word,Stack,Rest,Stack1),
+	generic_parse_word(Lang,Sent,PrevWord,Word,Stack,Rest,Stack1),
         notify_shift(Stack1),
 	try_reduce(Lang,1,Stack1,Stack2,no),
 	parse_dg(Lang,Word,Rest,Stack2,Parse).
@@ -61,11 +88,11 @@ try_reduce(Lang,Level,[W1,W2,W3|Stack],NewStack,B) :-
 	no_dbl_dependency(Lang,Level,W1,W2,W3,Degree),
 	notify_reduce(Degree,W3+W2==>W4,[W1,W4|Stack]),
 	try_reduce(Lang,Level,[W1,W4|Stack],NewStack,B).
-try_reduce(Lang,Level,[W1,W2|Stack],NewStack,yes) :-
+try_reduce(Lang,Level,[W1,W2|Stack],NewStack,yes) :- %yes
 	dependency(Lang,Level,W1,W2,W3,Degree),
 	notify_reduce(Degree,W2+W1==>W3,[W3|Stack]),
 	try_reduce(Lang,Level,[W3|Stack],NewStack,yes).
-try_reduce(Lang,Level,[W1,W2,W3|Stack],NewStack,yes) :-
+try_reduce(Lang,Level,[W1,W2,W3|Stack],NewStack,yes) :- %yes
 	dbl_dependency(Lang,Level,W1,W2,W3,W5,Degree),
 	notify_reduce(Degree,W3+W2+W1==>W5,[W5|Stack]),
 	try_reduce(Lang,Level,[W5|Stack],NewStack,yes).
@@ -73,11 +100,9 @@ try_reduce(_Lang,_Level,Stack,Stack,_).
 
 
 reduce_all(_Lang,_Level,[Parse],Parse) :- !.
-reduce_all(Lang,Level,_Stack,noparse) :- 
-	max_dep_threshold(Lang,L),
-	Level > L,
-	!.
 reduce_all(Lang,Level,Stack,Parse) :- 
+	grammar:max_dep_threshold(Lang,L),	
+	Level < L,
 	NewLevel is Level + 1,
 	reverse(Stack,NewStack),
 	reparse(Lang,NewLevel,NewStack,[],Parse).
@@ -97,14 +122,14 @@ reparse(Lang,Level,[W|Sent],Stack,Parse) :-
 
 
 dependency(Lang,Level,W2,W1,W3,Deg) :-
-	dep(Lang,Deg,W1+W2 ==> W3,C),
-	dep_threshold(Lang,Level,X),
+	grammar:dep(Lang,Deg,W1+W2 ==> W3,C),
+	grammar:dep_threshold(Lang,Level,X),
 	Deg < X,
 	check_cond_list(Lang,C).
 
 dbl_dependency(Lang,Level,W3,W2,W1,W4,Deg) :-
-	dep(Lang,Deg,W1+W2+W3 ==> W4,C),
-	dep_threshold(Lang,Level,X),
+	grammar:dep(Lang,Deg,W1+W2+W3 ==> W4,C),
+	grammar:dep_threshold(Lang,Level,X),
 	Deg < X,
 	check_cond_list(Lang,C).
 
@@ -121,57 +146,79 @@ no_dbl_dependency(Lang,Level,W3,W2,W1,Deg) :-
 no_dbl_dependency(_Lang,_Level,_W3,_W2,_W1,_Deg).
 
 
-/* MORPHOLOGICAL DEPENDENCY PARSER */
 
-dg_parse_word_standalone(Lang,Word,Analysis,Lex) :-
-	append(Word,"#",Word1),
-	dg_scan_rest(Lang,start,Word1,parsed("#",[],[]),parsed(_,[45|Lex],_),[],Stack),
-	!,
-	reduce_all(Lang,1,Stack,Analysis).
+explain_back_idiom(Lang,ct(Cat,Parse1),ct(Cat,Parse)) :-
+	explain_idiom(Lang,Parse,Parse1).
 
-dg_morph_parse_word(Lang,Sent,PrevWord,Word2,Stack,Rest,NewStack) :-
-	get_word(Sent,Word,Rest),
-	check_external_sandhi(Lang,PrevWord,Word,Rest,Word2),
-	!,
-	dg_morph_parse_word_aux(Lang,Word2,Stack,NewStack).
-
-dg_morph_parse_word_aux(Lang,Word,Stack,[ct(Cat,LF)|Stack]) :-
-	m(Lang,Cat,Word,Exp),
-	convert_lexical(Lang,Cat,Exp,LF),!.
-dg_morph_parse_word_aux(Lang,Word2,Stack,NewStack) :-
-	append(Word2,"#",Word1),
-	dg_scan_rest(Lang,start,Word1,parsed("#",[],[]),_Parsed1,Stack,NewStack).
-
-dg_scan_rest(Lang,Class,[],Parsed,Parsed,Stack,Stack) :-
-	arc(Lang,Class,stop),!.
-dg_scan_rest(Lang,Class,"#",Parsed,Parsed,Stack,Stack) :-
-	arc(Lang,Class,stop),!.
-dg_scan_rest(Lang,OldClass,RestWord,Parsed,NewParsed,Stack,NewStack) :-
-	find_morph(Lang,NewClass,NewExponent,RestWord,NewRestWord,Parsed,Parsed1),
-	arc(Lang,OldClass,NewClass),
-	convert_lexical(Lang,NewClass,NewExponent,LF),
-	append([ct(NewClass,LF)],Stack,Stack1),
-	notify_shift_morph(Stack1),
-	try_reduce(Lang,1,Stack1,Stack2,no),
-	dg_scan_rest(Lang,NewClass,NewRestWord,Parsed1,NewParsed,Stack2,NewStack).
-
-convert_lexical(Lang,Class,Exp,LF) :-
-	dg_class_macro(Lang,Class,Exp,LF),!.
-convert_lexical(_Lang,_Class,LF,LF).
-
-check_external_sandhi(Lang,Prev,Surf,Next,Lex) :-
-	allo(Lang,Surf,Lex,_Residue,PredSurf,SuccSurf,[],[],Conditions),
-	check_pred(PredSurf,Prev),
-	check_succ(SuccSurf,Next),
-	check_cond_list_aux(Lang,Conditions,PredSurf,[]),
+explain_idiom(Lang,Parse,Parse1) :-
+	grammar:idiom(Lang,Parse,Parse1),
 	!.
-check_external_sandhi(_,_,W,_,W).
 
+explain_idiom(Lang,if(S1,S2),if(S1a,S2a)) :-
+	explain_idiom(Lang,S1,S1a),
+	explain_idiom(Lang,S2,S2a).
+explain_idiom(Lang,when(S1,S2),when(S1a,S2a)) :-
+	explain_idiom(Lang,S1,S1a),
+	explain_idiom(Lang,S2,S2a).
+explain_idiom(Lang,because(S1,S2),because(S1a,S2a)) :-
+	explain_idiom(Lang,S1,S1a),
+	explain_idiom(Lang,S2,S2a).
+explain_idiom(Lang,like(S1,S2),like(S1a,S2a)) :-
+	explain_idiom(Lang,S1,S1a),
+	explain_idiom(Lang,S2,S2a).
+explain_idiom(Lang,s(A,B,C,D,E,p(P,[R:S,prop:PROP|REST]),F,G),
+	           s(A,B,C,D,E,p(P,[R:S,prop:PROP1|REST]),F,G)) :-
+	explain_idiom(Lang,PROP,PROP1).
+explain_idiom(_Lang,Parse,Parse).
+
+
+%%	dg_parse_text_level(+Lang,-Parse,+NewParse) is det
+%
+%	Scans a parse result for _|text-level dependencies|_.
+%	To be done.
+%	
+dg_parse_text_level(_,T,T).
+/*
+dg_parse_text_level(Lang,T,T) :-
+	max_dep_threshold(Lang,Threshold),
+	actual_max_dep(Lang,MaxDep),
+	MaxDep < Threshold,
+	!.
+
+dg_parse_text_level(Lang,T1,T2) :-
+	max_dep_threshold(Lang,Threshold),
+	dg_parse_text_level_aux(Lang,Threshold,T1,T2).
+
+dg_parse_text_level_aux(Lang,Level,[S1,S2|T1],[S3,S4|T2]) :-
+	text_dependency(Lang,Level,S1,S2,S3+S4),
+	!,
+	dg_parse_text_level_aux(Lang,Level,T1,T2).
+dg_parse_text_level_aux(Lang,Level,[S1,S2|T1],[S3|T2]) :-
+	text_dependency(Lang,Level,S1,S2,S3),
+	!,
+	dg_parse_text_level_aux(Lang,Level,T1,T2).
+dg_parse_text_level_aux(Lang,Level,[S1|T1],[S1|T2]) :-
+	dg_parse_text_level_aux(Lang,Level,T1,T2).
+dg_parse_text_level_aux(_,_,[],[]).
+
+*/
+
+/* MORPHOLOGICAL DEPENDENCY PARSER */
 
 /* DEPENDENCY GENERATOR (MORPHOLOGICAL AND SYNTACTICAL) */
 
+%%	dg_gen(+Lang,+LF,-PF) is det
+%
+%	Generates a sentence into language Lang, from the 
+%	semantic representation contained in LF, and unifies the
+%	third argument with the generated sentence. 
+%	
+%	Procedure dg_gen_aux/3 generates the sentence as a sequence
+%	of morphemes, which is then turned into a string by
+%	procedure lex_to_surf/3.
 dg_gen(Lang,LF,PF) :-
-	dg_gen_aux(Lang,LF,Lex),
+	explain_back_idiom(Lang,LF,LF1),
+	dg_gen_aux(Lang,LF1,Lex),
 	lex_to_surf(Lang,Lex,PF).
 
 dg_gen_aux(Lang,ct(Cat,LF),PF) :-
@@ -179,7 +226,7 @@ dg_gen_aux(Lang,ct(Cat,LF),PF) :-
 	notify_gen_found(PF),
 	!.
 dg_gen_aux(Lang,LF,PF) :-
-	dep(Lang,Deg,A+B+D ==> LF,C),
+	grammar:dep(Lang,Deg,A+B+D ==> LF,C),
 	check_cond_list_reverse(Lang,C),
 	notify_gen_pushdown(Deg,A+B+D ==> LF,C),
 	dg_gen_aux(Lang,A,PF1),
@@ -193,7 +240,7 @@ dg_gen_aux(Lang,LF,PF) :-
 	append(NewPF3,PF3,PF),
 	notify_gen_sofar(PF).
 dg_gen_aux(Lang,LF,PF) :-
-	dep(Lang,Deg,A+B ==> LF,C),
+	grammar:dep(Lang,Deg,A+B ==> LF,C),
 	check_cond_list_reverse(Lang,C),
 	notify_gen_pushdown(Deg,A+B ==> LF,C),
 	dg_gen_aux(Lang,A,PF1),
@@ -203,10 +250,13 @@ dg_gen_aux(Lang,LF,PF) :-
 	append(NewPF1,PF2,PF),
 	notify_gen_sofar(PF).
 
+/*
 find_correct_boundary(Lang,_Deg,ct(Cat1,_LF1),ct(Cat2,_LF2),45) :-
-	arc(Lang,Cat1,Cat2),!.
+	grammar:arc(Lang,Cat1,Cat2),!.
+*/
+
 find_correct_boundary(Lang,Deg,_A,_B,45) :-
-	morph_threshold(Lang,Deg1),
+	grammar:morph_threshold(Lang,Deg1),
 	Deg < Deg1,
 	!.
 find_correct_boundary(_Lang,_Deg,_A,_B,32).
@@ -226,24 +276,70 @@ dg_get_next_word([C|Lex],[C|Word],Rest) :-
 	dg_get_next_word(Lex,Word,Rest).
 
 lex(Lang,Cat,PF,LF) :-
-	m(Lang,Cat,PF,LF),!.
+	grammar:m(Lang,Cat,PF,LF),!.
 lex(Lang,Cat,PF,LF) :-
-	dg_class_macro(Lang,Cat,Exp,LF),
-	m(Lang,Cat,PF,Exp).
+	grammar:dg_class_macro(Lang,Cat,Exp,LF),
+	grammar:m(Lang,Cat,PF,Exp).
+lex(_Lang,group,[],_).
 
+
+
+% TEXT LEVEL DEPENDENCIES (funzionano solo con traduzione, parse text,
+% gen text)
+
+%%	dg_gen_text_level(+Lang,+NSMFormulas,-NewNSMFormulas) is det
+%
+%	Scans a formula for _|text-level dependencies|_ before generation.
+%	To be done.
+%	
+dg_gen_text_level(_,T,T).
+/*
+% prima clausola: so non ho dipendenze di livello testo, 
+% inutile fare lo scanning
+dg_gen_text_level(Lang,T,T) :-
+	max_dep_threshold(Lang,Threshold),
+	actual_max_dep(Lang,MaxDep),
+	MaxDep < Threshold,
+	!.
+dg_gen_text_level(Lang,T1,T2) :-
+	max_dep_threshold(Lang,Threshold),
+	dg_gen_text_level_aux(Lang,Threshold,T1,T2).
+
+dg_gen_text_level_aux(Lang,Level,[S1,S2|T1],[S3,S4|T2]) :-
+	text_dependency(Lang,Level,S3,S4,S1+S2),
+	!,
+	dg_gen_text_level_aux(Lang,Level,T1,T2).
+dg_gen_text_level_aux(Lang,Level,[S3|T1],[S1,S2|T2]) :-
+	text_dependency(Lang,Level,S1,S2,S3),
+	!,
+	dg_gen_text_level_aux(Lang,Level,T1,T2).
+dg_gen_text_level_aux(Lang,Level,[S1|T1],[S1|T2]) :-
+	dg_gen_text_level_aux(Lang,Level,T1,T2).
+dg_gen_text_level_aux(_,_,[],[]).
+*/
+
+text_dependency(Lang,Level,S1,S2,S3) :-
+	grammar:dep(Lang,Deg,S1+S2==>S3,C),
+	check_cond_list(Lang,C),
+	Deg >= Level.
 
 
 /* SYNTACTICAL DEPENDENCY GENERATOR for MORPHOLOGICAL TAGMEMIC GRAMMAR */
 
+%%	dg_gen_tagm(+Lang,+LF,-PF) is det
+%
+%	Syntactic generator for tagmemic grammars.
+%	To be revised.
+%	
 dg_gen_tagm(Lang,LF,PF) :-
 	dg_gen_tagm_aux(Lang,LF,Lex), 
 	tm_morph_gen_sent(Lang,Lex,PF).
 
 dg_gen_tagm_aux(Lang,ct(Cat,LF),[m(Cat,LF)]) :-
-	morph_synt(Lang,Cat,_Tagmeme,LF,_C),
+	grammar:morph_synt(Lang,Cat,_Tagmeme,LF,_C),
 	!.
 dg_gen_tagm_aux(Lang,LF,Lex) :-
-	dep(Lang,_Deg,A+B ==> LF,C),
+	grammar:dep(Lang,_Deg,A+B ==> LF,C),
 	check_cond_list_reverse(Lang,C),
 	dg_gen_tagm_aux(Lang,A,Lex1),
 	dg_gen_tagm_aux(Lang,B,Lex2),
@@ -253,4 +349,15 @@ dg_gen_tagm_aux(Lang,LF,Lex) :-
 
 
 
-     	
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,177 @@
+H1.file {
+	BACKGROUND-COLOR: #b9daff
+}
+H1.module {
+	BACKGROUND-COLOR: #b9daff
+}
+H1.dir {
+	BACKGROUND-COLOR: #b9daff
+}
+.undef {
+	COLOR: red
+}
+A.builtin {
+	COLOR: navy
+}
+.defbody {
+	MARGIN-BOTTOM: 1em
+}
+.arglist {
+	FONT-STYLE: italic
+}
+TABLE.paramlist TD {
+	VERTICAL-ALIGN: top
+}
+.pred {
+	FONT-WEIGHT: bold
+}
+.det {
+	FONT-WEIGHT: bold
+}
+.functor {
+	FONT-WEIGHT: bold
+}
+SPAN.pred-tag {
+	FONT-SIZE: 80%; FLOAT: right; COLOR: #202020; FONT-STYLE: italic
+}
+DL.tags DT {
+	FONT-WEIGHT: bold
+}
+DT.keyword-bug {
+	FONT-WEIGHT: bold; COLOR: red
+}
+DT.keyword-deprecated {
+	FONT-WEIGHT: bold; COLOR: red
+}
+DT.keyword-tbd {
+	FONT-WEIGHT: bold; COLOR: red
+}
+DT.pubdef {
+	BACKGROUND-COLOR: #c5e1ff
+}
+DT.privdef {
+	BACKGROUND-COLOR: #fbffa6
+}
+DT.undoc {
+	BACKGROUND-COLOR: #ffbc87
+}
+H2.undoc {
+	BACKGROUND-COLOR: #ffbc87
+}
+DL.tags {
+	MARGIN-TOP: 0.5em; FONT-SIZE: 80%
+}
+DL.termlist {
+	MARGIN-TOP: 0.7em; MARGIN-BOTTOM: 1em; MARGIN-LEFT: 1.5em
+}
+DL.undoc {
+	MARGIN-TOP: 0.7em
+}
+DL.wiki {
+	MARGIN-TOP: 0.7em; MARGIN-BOTTOM: 1em; MARGIN-LEFT: 1.5em
+}
+DL.wiki DT {
+	FONT-WEIGHT: bold; FONT-SIZE: 90%
+}
+UL {
+	MARGIN-TOP: 0.7em
+}
+OL {
+	MARGIN-TOP: 0.7em
+}
+DL {
+	MARGIN-TOP: 0.7em
+}
+.argdescr {
+	PADDING-LEFT: 1em
+}
+TABLE.wiki {
+	BORDER-RIGHT: blue 1px outset; BORDER-TOP: blue 1px outset; MARGIN-TOP: 0.7em; MARGIN-LEFT: 1.5em; BORDER-LEFT: blue 1px outset; BORDER-BOTTOM: blue 1px outset; border-spacing: 0
+}
+TABLE.wiki TD {
+	BORDER-RIGHT: gray 1px inset; PADDING-RIGHT: 3px; BORDER-TOP: gray 1px inset; PADDING-LEFT: 3px; PADDING-BOTTOM: 3px; VERTICAL-ALIGN: top; BORDER-LEFT: gray 1px inset; PADDING-TOP: 3px; BORDER-BOTTOM: gray 1px inset
+}
+IMG.icon {
+	BORDER-TOP-WIDTH: 0px; BORDER-LEFT-WIDTH: 0px; FLOAT: right; BORDER-BOTTOM-WIDTH: 0px; PADDING-TOP: 4px; HEIGHT: 32px; BORDER-RIGHT-WIDTH: 0px
+}
+PRE.code {
+	BORDER-RIGHT: 1px dotted; BORDER-TOP: 1px dotted; PADDING-LEFT: 5px; PADDING-BOTTOM: 5px; MARGIN-LEFT: 1.5em; BORDER-LEFT: 1px dotted; MARGIN-RIGHT: 1.5em; PADDING-TOP: 5px; BORDER-BOTTOM: 1px dotted; BACKGROUND-COLOR: #f8f8f8
+}
+DIV.navhdr {
+	BORDER-RIGHT: 1px dotted; PADDING-RIGHT: 5px; BORDER-TOP: 1px dotted; PADDING-LEFT: 5px; PADDING-BOTTOM: 3px; BORDER-LEFT: 1px dotted; PADDING-TOP: 5px; BORDER-BOTTOM: 1px dotted; BACKGROUND-COLOR: #f0f0f0
+}
+TABLE.summary {
+	MARGIN-LEFT: 0px; WIDTH: 100%; MARGIN-RIGHT: 0px
+}
+TABLE.summary TH.category {
+	BORDER-RIGHT: 1px dotted; BORDER-TOP: 1px dotted; FONT-WEIGHT: bold; FONT-SIZE: 150%; PADDING-BOTTOM: 0.4em; BORDER-LEFT: 1px dotted; PADDING-TOP: 0.5em; BORDER-BOTTOM: 1px dotted; BACKGROUND-COLOR: #f0f0f0; TEXT-ALIGN: center
+}
+TABLE.summary TH.section {
+	BACKGROUND-COLOR: #bbffba; TEXT-ALIGN: left
+}
+TABLE.summary TH {
+	BACKGROUND-COLOR: #b9daff; TEXT-ALIGN: left
+}
+TABLE.summary TD {
+	VERTICAL-ALIGN: top
+}
+TR.private {
+	COLOR: #707070; BACKGROUND-COLOR: #fbffa6
+}
+SPAN.for {
+	FONT-STYLE: italic
+}
+DIV.search-results {
+	MARGIN-TOP: 1em; FONT-WEIGHT: bold; FONT-SIZE: larger; MARGIN-BOTTOM: 0.5em
+}
+DIV.search-counts {
+	FONT-SIZE: smaller; MARGIN-BOTTOM: 1em; FONT-STYLE: italic
+}
+DIV.search-options {
+	FONT-SIZE: 70%
+}
+SPAN.search-in {
+	BORDER-RIGHT: 1px inset; PADDING-RIGHT: 5px; BORDER-TOP: 1px inset; PADDING-LEFT: 1px; PADDING-BOTTOM: 1px; BORDER-LEFT: 1px inset; PADDING-TOP: 3px; BORDER-BOTTOM: 1px inset
+}
+SPAN.search-match {
+	BORDER-RIGHT: 1px inset; PADDING-RIGHT: 5px; BORDER-TOP: 1px inset; PADDING-LEFT: 1px; PADDING-BOTTOM: 1px; BORDER-LEFT: 1px inset; PADDING-TOP: 3px; BORDER-BOTTOM: 1px inset
+}
+SPAN.search-help {
+	PADDING-LEFT: 1em
+}
+SUP.fn {
+	COLOR: blue; TEXT-DECORATION: underline
+}
+SPAN.fn-text {
+	DISPLAY: none
+}
+SUP.fn SPAN {
+	DISPLAY: none
+}
+SUP:hover SPAN {
+	BORDER-RIGHT: 2px solid; PADDING-RIGHT: 5px; BORDER-TOP: 2px solid; DISPLAY: block! important; PADDING-LEFT: 5px; FONT-SIZE: smaller; Z-INDEX: 100; BACKGROUND: white; LEFT: auto; PADDING-BOTTOM: 5px; MARGIN: 10px; BORDER-LEFT: 2px solid; WIDTH: 80%; COLOR: #000; PADDING-TOP: 5px; BORDER-BOTTOM: 2px solid; POSITION: absolute; TOP: auto
+}
+SPAN.sec-nr {
+	
+}
+SPAN.sec-title {
+	MARGIN-LEFT: 0.5em
+}
+DL.comment {
+	BORDER-RIGHT: 2px inset; PADDING-RIGHT: 5px; BORDER-TOP: 2px inset; MARGIN-TOP: 2em; PADDING-LEFT: 5px; MARGIN-BOTTOM: 1em; PADDING-BOTTOM: 0px; BORDER-LEFT: 2px inset; COLOR: #006400; PADDING-TOP: 5px; BORDER-BOTTOM: 2px inset; BACKGROUND-COLOR: #e5e5e5
+}
+DIV.comment {
+	BORDER-RIGHT: 2px inset; PADDING-RIGHT: 5px; BORDER-TOP: 2px inset; MARGIN-TOP: 2em; PADDING-LEFT: 5px; MARGIN-BOTTOM: 1em; PADDING-BOTTOM: 0px; BORDER-LEFT: 2px inset; COLOR: #006400; PADDING-TOP: 5px; BORDER-BOTTOM: 2px inset; BACKGROUND-COLOR: #e5e5e5
+}
+PRE.listing {
+	MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px
+}
+SPAN.line-no {
+	BORDER-RIGHT: 1px inset; BORDER-TOP: 1px inset; FONT-WEIGHT: normal; FONT-SIZE: 0.8em; BORDER-LEFT: 1px inset; COLOR: #505050; MARGIN-RIGHT: 1em; BORDER-BOTTOM: 1px inset; BACKGROUND-COLOR: white
+}
+DIV.comment H1.module {
+	MARGIN-TOP: 0px
+}
+A.prolog_version {
+	FONT-SIZE: 70%; FONT-STYLE: italic
+}

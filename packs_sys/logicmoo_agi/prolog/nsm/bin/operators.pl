@@ -19,18 +19,22 @@
 
 */
 
+    
+    
 
 :- op(700,xfx,<>).
 :- op(1100,xfx,=>).
 :- op(500,xfx,//).
+:- op(850,fx,*).
 :- op(850,fx,?).
 :- op(870,fx,~).
 % :- op(870,fx,<*).
 % :- op(870,xf,*>).
 :- op(800,xfx,===).
 :- op(900,xfy,::).
-:- op(700,fx,'P').
+:- op(700,fx,prolog_pred).
 :- op(740,xfx,:).
+:- op(740,xfx,:::).
 :- op(700,xfx,/).
 :- op(700,xfx,\).
 :- op(700,xfx,<<).
@@ -45,4 +49,30 @@
 
 /* DEPENDENCY */
 :- op(730,xfy,dr).
+:- op(730,xfy,dar).
 :- op(720,xfx,==>).
+:- op(700,fx,r_doc).
+:- op(700,fx,r_a).
+:- op(700,fx,r_t).
+:- op(700,fx,r_c).
+
+:- op(700,xfx,gtitle).
+:- op(700,fx,gdate).
+:- op(700,fx,gauthor).
+:- op(700,fx,gversion).
+:- op(700,fx,gackn).
+
+:- op(700,xfx,gabstract).
+:- op(700,xfx,glevels).
+:- op(700,xfx,gprologue).
+:- op(700,xfx,gtranscr).
+:- op(700,xfx,gmorph).
+:- op(700,xfx,gsynt).
+:- op(700,xfx,gdep_intro).
+:- op(700,xfx,gepilogue).
+
+
+:- discontiguous(':::'/2).
+:- discontiguous('::'/2).
+:- discontiguous(m/3).
+:- discontiguous(dr/2).

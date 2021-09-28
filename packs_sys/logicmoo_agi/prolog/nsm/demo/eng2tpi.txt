@@ -1,0 +1,246 @@
+This file contains a review of basic canonic sentences, which NSM-DALIA
+can translate  from English into Tok Pisin.
+
+To process the file in NSM-DALIA, first load English as L1 and Tok Pisin
+as L2:
+
+
+==
+DALIA> l(eng).
+ ** eng:e language module loaded.
+ ** Current L1 set to eng:e
+
+DALIA> l2(tpi).
+ ** tpi:e language module loaded.
+ ** Current L2 set to tpi:e
+==
+
+
+Then, if you issue the command:
+
+==
+DALIA> pf("eng2tpi.txt").
+==
+
+you will have this file displayed in the PROLOG terminal,
+with the English NSM text replaced by its Tok Pisin equivalent.
+
+If you want to send the results to a text file, before the
+"parse_file" command, set an output file like this:
+
+==
+DALIA> so("myOutputFile.txt").
+==
+
+
+Sentences between a @t tag and an @e tag are translated
+from L1 to L2:
+
+@t
+God is someone.
+@e
+
+
+----------------------------
+1) Basic substantive phrases:
+
+@t
+something moves.
+someone moves.
+I move.
+you move.
+this person moves.
+these persons move.
+these things move.
+
+two things move.
+many things move.
+some things move.
+all things move.
+@e
+
+
+----------------------------
+2) More complex substantive phrases:
+@t
+these two things move.
+these two good things move.
+these many things move.
+all these things move.
+
+something good happens.
+something very good happens.
+something bad happens.
+
+the same thing happens.
+something else happens.
+
+these things are good.
+these things are very bad.
+
+he is someone good.
+
+something very good happens.
+something like this happens.
+
+this person lives.
+these two good persons live.
+these other persons live.
+the same person lives.
+
+something happens.
+something happened.
+something will happen.
+something is happening.
+something was happening.
+something has happened.
+someone moves.
+someone like me moves.
+@e
+
+
+----------------------------
+3) KIND and PART
+@t
+there are many kinds of thing.
+this thing has many parts.
+@e
+
+
+
+----------------------------
+4) Valences of predicates:
+
+
+4.1 DO
+
+@t
+I do something.
+I do something with you.
+I do something good for you.
+I do something with this thing.
+I do something with this person.
+@e
+
+4.2 HAPPEN
+@t
+
+something happened.
+something happened in this place.
+something happened to this person.
+@e
+
+4.3 WANT
+
+@t
+I want to do this thing.
+I want you to do this thing.
+I want this thing.
+@e
+
+4.4. LIVE
+
+@t
+I live in this place.
+this person has died.
+@e
+
+4.5 BE LIKE
+
+@t
+this person is like you.
+@e
+
+4.6. FEEL
+
+@t
+I feel something good.
+I feel something bad.
+@e
+
+4.7 THINK
+
+@t
+I think you are someone good.
+I think something good about you.
+I think about you.
+I think something.
+@e
+
+4.8 SAY
+
+@t
+I say something.
+I say something to you.
+I say something to you about this thing.
+I say this.
+@e
+
+4.9 HEAR
+
+@t
+I hear something.
+@e
+
+4.10 KNOW
+
+@t
+I know this.
+I know something.
+I know something about you.
+I know you are someone good.
+@e
+
+
+----------------------------
+5) LOCATION
+
+@t
+this place is near.
+this place is far.
+this place is above.
+this place is below.
+
+this place is near this other place.
+this place is far from this other place.
+this place is above this other place.
+this place is below this other place.
+@e
+
+----------------------------
+6) COMPLEX SENTENCES
+
+@t
+I do this because I want to do this.
+I do this because you want me to do this.
+because of this I want to do something.
+
+if you do this I feel something good.
+if you want me to do something, I will do this thing.
+
+when you are here I feel something good.
+I want to do good some things for you.
+I want to do good some good things for you as you do some good things for me.
+@e
+
+
+----------------------------
+7) A text, written in NSM format. Note that the tag to translate texts
+written in NSM format is @T (uppercase).
+
+
+@T
+(a) God is someone
+(b) God is not something
+(c) this someone is someone good
+(d) he is not like people
+(e) there is no-one else like this someone
+(f) this someone exists always
+(g) all things exist \
+       because he wants these things to exist
+(h) people exist \
+      because this someone wants people to exist
+(i) he exists because he exists
+(j) he exists only because of this
+(k) this someone lives
+@e

@@ -19,12 +19,44 @@
 
 */
 
-
+:- module(messages,[notify_load/2,
+		    notify_save/2,
+		    notify_set_lang/3,
+		    notify_tracing/2,
+		    notify_parse/1,
+		    notify_reduce/3,
+		    notify_shift/1,
+		    notify_shift_morph/1,
+		    notify_generated/1,
+		    notify_try_allo/2,
+		    notify_try_morph/1,
+		    notify_discard_morph/2,
+		    notify_gen_pushdown/3,
+		    notify_gen_sofar/1,
+		    notify_check/1,
+		    notify_gen_found/1,
+		    notify_check_ok/1,
+		    notify_id_format/0,
+		    notify_stt/0,
+		    notify_load_text_db/1,
+		    notify_markup/1,
+		    notify_unknown_markup/1,
+		    notify_double_format/1,
+		    notify_missing/2
+		   ]).
 :- include('operators.pl').
 :- include('dynamic.pl').
 
+:- use_module(utils).
+
+
+/** <module> Answers to user input.
+
+@tbd A better implementation: export only a generat three-place
+procedure message(+Language,+MessageId:term,+Data:list)
+*/
 find_fullname(L,_Lang,Name) :-
-	available_language(L,Name),
+	global_par:available_language(L,Name),
 	!.
 find_fullname(L:D,_Lang,Name) :-
 	name(L,NL),
@@ -62,6 +94,12 @@ notify_tracing(Module,0) :-
 	!,append(Module," tracing is off.",S),
 	put_message(S).
 
+notify_parse(noparse(A)) :-
+	!,
+	put_string("noparse(\""),
+	put_string(A),
+	put_string("\")."),
+	nl.
 notify_parse(A) :-
 	put_term(A).
 
@@ -69,24 +107,24 @@ notify_generated(S) :-
 	put_string(S).
 
 notify_reduce(_Deg,_Dep,_Stack) :-
-	trace_synt(0),!.
+	global_par:trace_synt(0),!.
 notify_reduce(Deg,Dep,Stack) :-
 	write('REDUCE: '),write(Stack),nl,
 	put_dep_rule(Deg,Dep,_).
 
 notify_shift(_Stack) :-
-	trace_synt(0),!.
+	global_par:trace_synt(0),!.
 notify_shift(Stack) :-
 	write('SHIFT: '),write(Stack),nl,nl.
 
 notify_shift_morph(_Stack) :-
-	trace_morph(0),!.
+	global_par:trace_morph(0),!.
 notify_shift_morph(Stack) :-
 	write('SHIFT: '),write(Stack),nl,nl.
 
 
 notify_try_allo(_,_) :-
-        trace_morph(0),!.
+        global_par:trace_morph(0),!.
 notify_try_allo(
     allo(Morpheme-Residue => Morph,PredSurf-SuccSurf,l:PredLex-NextSuccLex, 
 	                 cond :_Conditions),
@@ -99,12 +137,12 @@ notify_try_allo(
 
 
 notify_try_morph(_PF) :-
-	trace_morph(0),!.
+	global_par:trace_morph(0),!.
 notify_try_morph(PF) :-
 	append_list(S,["Trying morpheme: \"",PF,"\""]),
 	put_message_var(S).
 
-notify_discard_morph(_,_) :- trace_morph(0),!.
+notify_discard_morph(_,_) :- cline_interface:trace_morph(0),!.
 notify_discard_morph(
     allo(Morpheme-Residue => Morph,PredSurf-SuccSurf,l:PredLex-NextSuccLex, 
 	                 cond :Conditions),
@@ -116,42 +154,62 @@ notify_discard_morph(
      put_message_var(S2).
 
 notify_gen_pushdown(_Deg,_Dep,_C) :-
-	trace_gen(0),!.
+	global_par:trace_gen(0),!.
 notify_gen_pushdown(Deg,Dep,C) :- nl,
 	put_message("PUSH: "),
 	put_dep_gen_rule(Deg,Dep,C).
 
 notify_gen_sofar(_PF) :-
-	trace_gen(0),!.
+	global_par:trace_gen(0),!.
 notify_gen_sofar(PF) :- nl,
 	append_list(S,["GENERATED: \"",PF,"\""]),
 	put_message(S).
 
 notify_gen_found(_PF) :-
-	trace_gen(0),!.
+	global_par:trace_gen(0),!.
 notify_gen_found(PF) :- nl,
 	append("FOUND: ",PF,S),
 	put_message(S).
 
 notify_check(_) :-
-	tracing_mode(0),
+	global_par:tracing_mode(0),
 	!.
 notify_check(Cond) :- nl,
 	put_message("TRYING PARADIGM MATCH:"),
 	put_term(Cond).
 
 notify_check_ok(_) :-
-	tracing_mode(0),
+	global_par:tracing_mode(0),
 	!.
 notify_check_ok(NewParad) :-
 	put_term(' -- PARADIGM MATCHES'),
 	put_term(NewParad),nl.
 
+notify_markup(Markup) :-
+	name(Markup,Name),
+	append("Markup set to ",Name,S),
+	put_message(S).
 
-append_list(S,List) :-
-	append_list(S,[],List).
+notify_unknown_markup(Markup) :-
+	name(Markup,Name),
+	append("Unknown markup identifier ",Name,S),
+	put_message(S).
 
-append_list(S,S,[]).
-append_list(S,S2,[S1|List]) :-
-	append(S2,S1,S3),
-	append_list(S,S3,List).
+notify_double_format(F) :-
+	name(F,Name),
+	append("Double-text format set to ",Name,S),
+	put_message(S).
+
+notify_load_text_db(FileName) :-
+	append_list(S,["Text database \"",FileName,"\" compiled."]),
+	put_message(S).
+
+notify_stt :-
+	put_message("Transcription table set").
+
+notify_id_format :-
+	put_message("Text identifier format set").
+
+notify_missing(Missing,In) :-
+	append_list(S,[Missing," missing in ",In]),
+	put_message(S).

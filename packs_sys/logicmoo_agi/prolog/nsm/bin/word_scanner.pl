@@ -19,17 +19,38 @@
 
 */
 
+:- module(word_scanner,[
+			get_word/3
+		       ]).
 
+/** <module> 
+
+Simple word scanner (reads from a string).
+*/
+
+%%	get_word(+Sentence:string,-Word:string,-Rest:string) is det
+%
+%	Unifies Word with the first word of Sentence, and Rest
+%	with the original sentence minus the first word.
+%	
 get_word([32|Rest],[],Rest1) :- 
-	!,gw_skip_white(Rest,Rest1).
+	!,
+	skip_white(Rest,Rest1).
 get_word([13|Rest],[],Rest1) :- 
-	!,gw_skip_white(Rest,Rest1).
+	!,
+	skip_white(Rest,Rest1).
 get_word([10|Rest],[],Rest1) :- 
-	!,gw_skip_white(Rest,Rest1).
+	!,
+	skip_white(Rest,Rest1).
 get_word([C|Rest],[],[Token|Rest1]) :- 
 	single_token([C],Token),
+	parsable(Token),
 	!,
-	gw_skip_white(Rest,Rest1).
+	skip_white(Rest,Rest1).
+get_word([C|Rest],[],Rest1) :- 
+	single_token([C],_Token),
+	!,
+	skip_white(Rest,Rest1).
 get_word([W|String],[W|Word],Rest) :-
 	get_word(String,Word,Rest).
 get_word([],[],[]).
@@ -40,13 +61,18 @@ single_token(":",colon).
 single_token(";",semi).
 
 
-gw_skip_white([10|Rest],Rest1) :-
-	!,gw_skip_white(Rest,Rest1).
-gw_skip_white([13|Rest],Rest1) :-
-	!,gw_skip_white(Rest,Rest1).
-gw_skip_white([8|Rest],Rest1) :-
-	!,gw_skip_white(Rest,Rest1).
-gw_skip_white([32|Rest],Rest1) :-
-	!,gw_skip_white(Rest,Rest1).
-gw_skip_white(R,R).
+skip_white([10|Rest],Rest1) :-
+	!,
+	skip_white(Rest,Rest1).
+skip_white([13|Rest],Rest1) :-
+	!,
+	skip_white(Rest,Rest1).
+skip_white([8|Rest],Rest1) :-
+	!,
+	skip_white(Rest,Rest1).
+skip_white([32|Rest],Rest1) :-
+	!,
+	skip_white(Rest,Rest1).
+skip_white(R,R).
 
+parsable(fullstop).

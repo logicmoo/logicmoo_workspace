@@ -1,0 +1,12 @@
+---+ Introduction
+This file contains a short description of NSM-DALIA command-line interface.
+
+
+You work with NSM-DALIA by writing commands at the prompt.
+
+Commands are full-stop terminated, and can have arguments between parentheses.
+
+There must be no space between the command name and the open parenthesis.
+
+---+ Commands
+[[cline_interface.pl]].

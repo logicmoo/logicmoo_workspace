@@ -24,6 +24,24 @@
 :- include('dynamic.pl').
 
 
+
+
+tm_gen_sentence(Lang,F) :-
+	tm_synt_gen_sent(Lang,s:F,F1),
+	tm_morph_gen_sent(Lang,F1,S),
+	transcr(Lang,S1,S),
+	write('Sentence: '), write(S1),nl.
+	
+tm_transl_sentence(L1,L2,S1,S2,R1) :-
+	transcr(L1,S1,S1a),
+	p_chart(L1,tagm,S1a,_Slot:Parse,R1),
+	analyze_semantics(L1,Parse,Parse1),
+	synt_semantics(L2,Parse1,Parse2),
+	tm_morph_gen_sent(L2,s:Parse2,S2a),
+	transcr(L2,S2,S2a).
+
+
+
 gen_sentence(LF) :-
 	current_lang(Lang),
 	tm_synt_gen_sent(Lang,s:LF,Lex),

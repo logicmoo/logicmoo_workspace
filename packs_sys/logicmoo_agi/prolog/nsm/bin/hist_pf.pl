@@ -20,7 +20,18 @@
 */
 
 
-:- include('dynamic.pl').
+:- module(hist_pf,[
+		   do_pf/5
+		  ]).
+
+:- use_module(utils).
+:- use_module(checkers).
+
+/** <module> Historic grammar.
+
+
+*/
+
 
 /*
 do_pf(Lang,S1,S2) :-
@@ -61,7 +72,16 @@ do_pf_rule(_,_,PF,PF,NM,NM).
 
 */
 
-
+%%	do_pf(+Language,+HistRules:list,+From:int,Morphemes,+WFRules:List) is det
+%
+%	Takes as input the list of historic-grammar 
+%	(HistRules) and word-formation (WFRules) rules, and a morpheme,
+%	and returns a list of the new morphemes formed by
+%	the application of historical rules and word-formation rules.
+%	
+%	Argument Morphemes have the form 
+%       =|shape(m(+Cat,+A,+LF),-Output:list).|=
+%	
 do_pf(_Lang,[],_From,shape(PF,PF),[]).
 do_pf(Lang,Rules,From,shape(PF1,PF),WF) :-
 	find_first_rule(Rules,From,NewRules),

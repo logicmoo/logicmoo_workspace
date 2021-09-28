@@ -23,6 +23,8 @@
 :- include('operators.pl').
 :- include('dynamic.pl').
 
+:- use_module(checkers).
+
 /*
 Date le regole:
 ph : [ X+"t" => X+C, [] - [C],   cond : [C << cons]].
@@ -35,21 +37,17 @@ allo(Lang,Morph,Morpheme,Residue,PredSurf,SuccSurf,PredLex,SuccLex,Conditions).
 
 build_allo(Lang) :-
 	findall(a(Shape),
-		m(Lang,_Class,Shape,_Exp),
+		grammar:m(Lang,_Class,Shape,_Exp),
 		Morphemes),
-	build_allo_list(Lang,Morphemes),
-	retractall(ph(Lang,_,_,_,_,_,_,_,_,_)),
-	retractall(ph_to_expand(Lang,_)).
+	build_allo_list(Lang,Morphemes).
+%	retractall(ph(Lang,Name,_,_,_,_,_,_,_,_,_)),
+%	retractall(ph_to_expand(Lang,_)).
 
 
 ph_expand_rules([],[]).
 ph_expand_rules([R|Rules],[R1|Rules1]) :-
 	ph_expand(R,R1),
 	ph_expand_rules(Rules,Rules1).
-
-
-
-
 
 
 build_allo_list(_Lang,[]).
@@ -59,7 +57,7 @@ build_allo_list(Lang,[Morpheme|List]) :-
 %	       Rules1),
 %	ph_expand_rules(Rules1,Rules2),
 	findall(ph(A,B,C,D,E,F,G,H,I),
-		ph(Lang,A,B,C,D,E,F,G,H,I),
+		grammar:ph(Lang,_Name,A,B,C,D,E,F,G,H,I),
 		Rules),
 %	append(Rules2,Rules3,Rules),
 	build_allo(Lang,Morpheme,Rules),
@@ -72,33 +70,8 @@ build_allo(Lang,Morpheme,[Rule|Rules]) :-
 
 match_rule(Lang,a(Morpheme),ph(Shape,AlloShape,Residue,PredSurf,SuccSurf,PredLex,SuccLex,Cond,PreCond)) :-
 	match_shape(Morpheme,Shape),
-	match_shape(Allo,AlloShape),
+	match_shape(Allo,AlloShape), % in utils.pl
 	check_cond_list(Lang,PreCond),
 	!,
-	assertz(allo(Lang,Allo,Morpheme,Residue,PredSurf,SuccSurf,PredLex,SuccLex,Cond)).
+	assertz(grammar:allo(Lang,Allo,Morpheme,Residue,PredSurf,SuccSurf,PredLex,SuccLex,Cond)).
 match_rule(_Lang,_,_).
-
-
-
-
-% Nuova match_shape in utils.pl
-
-/*
-
-match_shape(A,X+Y) :-
-	!,
-	append(X,Y,A).
-match_shape(A,A).
-*/
-
-
-
-plist( ["angut","angutip","angummut","angutaa",
-	"nuna", "nunap", "nunamut", "nunaa",
-	"nuuk", "nuummut",
-	"neqi", "neqimut", "neqip", "neqaa",
-	"qaqqaq", "qaqqap", "qaqqamut", "qaqqaa",
-	"erneq", "ernerup", "ernermut", "erneraa",
-	"nerrivik", "nerriviup", "nerrivia", "nerrivimmut",
-	"assik", "assiNut", "assiNa", "assimmut"]).
-

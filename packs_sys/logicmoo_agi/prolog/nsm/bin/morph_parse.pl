@@ -19,11 +19,19 @@
 
 */
 
+:- module(morph_parse,[
+		       generic_parse_word/7,
+		       tm_morph_all_readings/5,
+		       p_morph_lex/3
+		      ]).
 
 :- include('operators.pl').
-:- include('dynamic.pl').
-:- include('morphophon.pl').
-:- include('word_scanner.pl').
+
+
+:- use_module(checkers).
+:- use_module(word_scanner).
+:- use_module(morphophon).
+:- use_module(dg_morph).
 
 /* MORPHOLOGICAL PARSER */
 
@@ -45,6 +53,15 @@ p_morph_lex(Lang,W,A) :-
 	nl.
 
 
+generic_parse_word(Lang,Sent,PrevWord,Word,Stack,Rest,NewStack) :-
+	grammar:morph_grammar_type(Lang,Type),
+	get_class_prefix(Type,Class),
+	Class:parse_word(Lang,Sent,PrevWord,Word,Stack,Rest,NewStack).
+
+get_class_prefix(tagmemic,tm_morph).
+get_class_prefix(dependency,dg_morph).
+
+
 format_readings(_,[],[]).
 format_readings(Format,[A1|Readings1],[A|Readings]) :-
 	o_format(Format,A1,A),
@@ -59,11 +76,11 @@ tm_morph_parse_word(Lang,Format,String,A,Rest) :-
 
 
 generic_p_morph(Lang,W,A,Lex) :-
-	morph_grammar_type(Lang,tagmemic),
+	grammar:morph_grammar_type(Lang,tagmemic),
 	p_morph(Lang,W,A,Lex).
 generic_p_morph(Lang,W,A,Lex) :-
-	morph_grammar_type(Lang,dependency),
-	dg_parse_word_standalone(Lang,W,A,Lex).
+	grammar:morph_grammar_type(Lang,dependency),
+	dg_morph:parse_word_standalone(Lang,W,A,Lex).
 
 
 /* TAGMEMIC PARSER */

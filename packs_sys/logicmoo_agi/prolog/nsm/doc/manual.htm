@@ -1,0 +1,516 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3c.org/TR/1999/REC-html401-19991224/loose.dtd">
+<!-- saved from url=(0100)http://localhost:4000/doc/c:/users/francio/desktop/nsm-dalia/bin/cline_interface.pl?public_only=true -->
+<HTML><HEAD><TITLE>cline_interface.pl</TITLE>
+<META http-equiv=Content-Type content="text/html; charset=utf-8"><LINK 
+href="manual_file/pldoc.css" type=text/css rel=stylesheet>
+<SCRIPT src="manual_file/pldoc.js" type=text/javascript>
+</SCRIPT>
+
+<META content="MSHTML 6.00.6000.16386" name=GENERATOR></HEAD>
+<BODY>
+<DIV class=navhdr><SPAN style="FLOAT: left">
+<DIV>
+<FORM action=/directory><INPUT type=submit value=Go> <SELECT name=dir> <OPTION 
+  onclick="document.location='/doc/swi/index.html';">c:/program 
+  files/pl</OPTION> <OPTION 
+  onclick="document.location='/doc/swi/boot/index.html';">c:/program 
+  files/pl/boot</OPTION> <OPTION 
+  onclick="document.location='/doc/swi/library/index.html';">c:/program 
+  files/pl/library</OPTION> <OPTION 
+  onclick="document.location='/doc/swi/library/http/index.html';">c:/program 
+  files/pl/library/http</OPTION> <OPTION 
+  onclick="document.location='/doc/swi/library/pldoc/index.html';">c:/program 
+  files/pl/library/pldoc</OPTION> <OPTION 
+  onclick="document.location='/doc/swi/xpce/prolog/boot/index.html';">c:/program 
+  files/pl/xpce/prolog/boot</OPTION> <OPTION 
+  onclick="document.location='/doc/swi/xpce/prolog/lib/index.html';">c:/program 
+  files/pl/xpce/prolog/lib</OPTION> <OPTION 
+  onclick="document.location='/doc/swi/xpce/prolog/lib/emacs/index.html';">c:/program 
+  files/pl/xpce/prolog/lib/emacs</OPTION> <OPTION 
+  onclick="document.location='/doc/swi/xpce/prolog/lib/english/index.html';">c:/program 
+  files/pl/xpce/prolog/lib/english</OPTION> <OPTION 
+  onclick="document.location='/doc/c:/users/francio/desktop/nsm-dalia/bin/index.html';" 
+  selected>c:/users/francio/desktop/nsm-dalia/bin</OPTION></SELECT> </FORM><A 
+class=prolog_version href="http://www.swi-prolog.org/">SWI-Prolog 
+5.6.64</A></DIV></SPAN><SPAN style="FLOAT: right">
+<FORM action=/search>
+<DIV><INPUT size=36 name=for><INPUT type=submit value=Search></DIV>
+<DIV class=search-options><SPAN class=search-in><INPUT type=radio CHECKED 
+value=all name=in>All<INPUT type=radio value=app name=in>Application<INPUT 
+type=radio value=man name=in>Manual</SPAN><SPAN class=search-match><INPUT 
+type=radio value=name name=match>Name<INPUT type=radio CHECKED value=summary 
+name=match>Summary</SPAN><SPAN class=search-help><A 
+href="http://localhost:4000/package/pldoc.html#sec:browser">Help</A></SPAN></DIV></FORM></SPAN><BR 
+clear=both></DIV>
+<H1 class=file><SPAN style="FLOAT: right"><A 
+href="http://localhost:4000/doc/c:/users/francio/desktop/nsm-dalia/bin/cline_interface.pl?reload=true&amp;public_only=true"><IMG 
+style="BORDER-TOP-WIDTH: 0px; BORDER-LEFT-WIDTH: 0px; BORDER-BOTTOM-WIDTH: 0px; PADDING-TOP: 4px; BORDER-RIGHT-WIDTH: 0px" 
+height=24 alt=Reload src="manual_file/reload.gif"></A><A 
+href="http://localhost:4000/doc/c:/users/francio/desktop/nsm-dalia/bin/cline_interface.pl?public_only=false"><IMG 
+style="BORDER-TOP-WIDTH: 0px; BORDER-LEFT-WIDTH: 0px; BORDER-BOTTOM-WIDTH: 0px; PADDING-TOP: 4px; BORDER-RIGHT-WIDTH: 0px" 
+height=24 alt="Show all" src="manual_file/zoomin.gif"></A><A 
+href="http://localhost:4000/doc/c:/users/francio/desktop/nsm-dalia/bin/cline_interface.pl?source=true"><IMG 
+style="BORDER-TOP-WIDTH: 0px; BORDER-LEFT-WIDTH: 0px; BORDER-BOTTOM-WIDTH: 0px; PADDING-TOP: 4px; BORDER-RIGHT-WIDTH: 0px" 
+height=24 alt="Show source" src="manual_file/source.gif"></A><A 
+onmouseover="window.status='Edit file'; return true;" 
+onclick="HTTPrequest('/edit?file=c%3a%2fusers%2ffrancio%2fdesktop%2fnsm-dalia%2fbin%2fcline_interface.pl')"><IMG 
+style="BORDER-TOP-WIDTH: 0px; BORDER-LEFT-WIDTH: 0px; BORDER-BOTTOM-WIDTH: 0px; BORDER-RIGHT-WIDTH: 0px" 
+height=24 alt=edit src="manual_file/edit.gif"></A></SPAN>cline_interface.pl -- 
+NSM-DALIA, command line version</H1>
+<P>This module provides aliases to call the main NSM-DALIA predicates, 
+(contained in modules <A class=file 
+href="http://localhost:4000/doc/c:/users/francio/desktop/nsm-dalia/bin/nsmdalia.pl">nsmdalia.pl</A> 
+and <A class=file 
+href="http://localhost:4000/doc/c:/users/francio/desktop/nsm-dalia/bin/file_reader.pl">file_reader.pl</A>), 
+and the running interface. 
+<DL class=tags>
+  <DT class=keyword-tbd>To be done
+  <DD class=keyword-tbd>- <SPAN class=undef>wl/0</SPAN> implementation
+  <DD class=keyword-tbd>- re-implementation of pw </DD></DL>
+<DL>
+  <DT class=pubdef><SPAN style="FLOAT: right"><A 
+  onclick="HTTPrequest('/edit?name=l&amp;arity=1&amp;module=cline_interface')"><IMG 
+  style="BORDER-TOP-WIDTH: 0px; BORDER-LEFT-WIDTH: 0px; BORDER-BOTTOM-WIDTH: 0px; BORDER-RIGHT-WIDTH: 0px" 
+  height=12 src="manual_file/edit.gif"></A></SPAN><A name=l/1><B 
+  class=pred>l</B><VAR class=arglist>(+Lang)</VAR></A> is <B class=det>det</B>
+  <DD class=defbody>Loads a language module into the program, and sets the 
+  current_language flag to the loaded language. From now on, parse commands will 
+  be taken to refer to that language as the parsing-from language. 
+  <DL class=tags>
+    <DT class=keyword-see>See also
+    <DD class=keyword-see>- nsmdalia:load(<VAR>Lang</VAR>) 
+    <P>The "<VAR>Lang</VAR>" argument is either a language code (without 
+    quotation marks), or a full language name (a PROLOG string, between double 
+    quotation marks). 
+    <P>The "load" command works like this: if a compiled module is found in the 
+    lang_bin directory, it will be loaded. If not, the directory lang_src will 
+    be searched for the source files, compiled and loaded. (The latter procedure 
+    is slower). 
+    <P>The user who is not also writing a grammar need only know which languages 
+    are available, and what their code is (the "list" command displays all the 
+    installed languages with their code). As the only language available in 
+    NSM-DALIA v. 0.8 is English (code: eng), you can load the English grammar 
+    with: <PRE class=code>DALIA&gt; l(eng).
+</PRE>
+    <P>or: <PRE class=code>DALIA&gt; l("English").
+</PRE>
+    <P>A note for gramamr writers: please remember that, once a grammar is saved 
+    in the lang_bin directory ("s" command), l(<VAR>Lang</VAR>) will read from 
+    that directory, NOT from the source file. If, after you modified your source 
+    file, and you are wondering why on earth that sentence still do not parse, 
+    though you have fixed the bug in your grammar -- that's because you have 
+    loaded the file with "l", not with "b", so the program does not read the new 
+    grammar, but the old compiled one! When you are developing a grammar, better 
+    not to compile it ("c" command") until you are finished. (However, see "b" 
+    command below). </P></DD></DL>
+  <DT class=pubdef><SPAN style="FLOAT: right"><A 
+  onclick="HTTPrequest('/edit?name=l2&amp;arity=1&amp;module=cline_interface')"><IMG 
+  style="BORDER-TOP-WIDTH: 0px; BORDER-LEFT-WIDTH: 0px; BORDER-BOTTOM-WIDTH: 0px; BORDER-RIGHT-WIDTH: 0px" 
+  height=12 src="manual_file/edit.gif"></A></SPAN><A name=l2/1><B 
+  class=pred>l2</B><VAR class=arglist>(+Lang)</VAR></A> is <B class=det>det</B>
+  <DD class=defbody>This command loads a grammar module, just like 
+  l(<VAR>Lang</VAR>), with the difference that the language loaded is set as 
+  <B>l2</B> (<I>second language</I>). Translation commands like t(Sentence) will 
+  translate into l2. 
+  <DT class=pubdef><SPAN style="FLOAT: right"><A 
+  onclick="HTTPrequest('/edit?name=ldb&amp;arity=1&amp;module=cline_interface')"><IMG 
+  style="BORDER-TOP-WIDTH: 0px; BORDER-LEFT-WIDTH: 0px; BORDER-BOTTOM-WIDTH: 0px; BORDER-RIGHT-WIDTH: 0px" 
+  height=12 src="manual_file/edit.gif"></A></SPAN><A name=ldb/1><B 
+  class=pred>ldb</B><VAR class=arglist>(+FileName:string)</VAR></A> is <B 
+  class=det>det</B>
+  <DD class=defbody>Loads a text database. Text is stored in a series of <SPAN 
+  class=undef>mtext/3</SPAN> facts (see <CODE class=file>nsmfiles.txt</CODE> for 
+  details). 
+  <DT class=pubdef><SPAN style="FLOAT: right"><A 
+  onclick="HTTPrequest('/edit?name=b&amp;arity=1&amp;module=cline_interface')"><IMG 
+  style="BORDER-TOP-WIDTH: 0px; BORDER-LEFT-WIDTH: 0px; BORDER-BOTTOM-WIDTH: 0px; BORDER-RIGHT-WIDTH: 0px" 
+  height=12 src="manual_file/edit.gif"></A></SPAN><A name=b/1><B 
+  class=pred>b</B><VAR class=arglist>(+Lang)</VAR></A> is <B class=det>det</B>
+  <DD class=defbody>Full form: build(+<VAR>Lang</VAR>). Loads a language module 
+  into the program, and sets the current_language flag to the loaded language. 
+  Files are searched for exclusively in the lang_src directory. Useful for 
+  grammar writers. The "<VAR>Lang</VAR>" argument is a language code or a string 
+  (full language name). 
+  <DT class=pubdef><SPAN style="FLOAT: right"><A 
+  onclick="HTTPrequest('/edit?name=sl1&amp;arity=1&amp;module=cline_interface')"><IMG 
+  style="BORDER-TOP-WIDTH: 0px; BORDER-LEFT-WIDTH: 0px; BORDER-BOTTOM-WIDTH: 0px; BORDER-RIGHT-WIDTH: 0px" 
+  height=12 src="manual_file/edit.gif"></A></SPAN><A name=sl1/1><B 
+  class=pred>sl1</B><VAR class=arglist>(+Lang)</VAR></A> is <B class=det>det</B>
+  <DD class=defbody>Sets <VAR>Lang</VAR> as the current language. 
+  <DT class=pubdef><SPAN style="FLOAT: right"><A 
+  onclick="HTTPrequest('/edit?name=sl2&amp;arity=1&amp;module=cline_interface')"><IMG 
+  style="BORDER-TOP-WIDTH: 0px; BORDER-LEFT-WIDTH: 0px; BORDER-BOTTOM-WIDTH: 0px; BORDER-RIGHT-WIDTH: 0px" 
+  height=12 src="manual_file/edit.gif"></A></SPAN><A name=sl2/1><B 
+  class=pred>sl2</B><VAR class=arglist>(+Lang)</VAR></A> is <B class=det>det</B>
+  <DD class=defbody>Full form: set_current_l2(<VAR>Lang</VAR>). 
+  <P>Used in automatic translation. Once current_lang and current_l2 are set, 
+  the "translation" commands translate NSM sentences from current_lang into 
+  current_l2. <VAR>Lang</VAR> = language code. </P>
+  <DT class=pubdef><SPAN style="FLOAT: right"><A 
+  onclick="HTTPrequest('/edit?name=sl&amp;arity=0&amp;module=cline_interface')"><IMG 
+  style="BORDER-TOP-WIDTH: 0px; BORDER-LEFT-WIDTH: 0px; BORDER-BOTTOM-WIDTH: 0px; BORDER-RIGHT-WIDTH: 0px" 
+  height=12 src="manual_file/edit.gif"></A></SPAN><A name=sl/0><B 
+  class=pred>sl</B></A>
+  <DD class=defbody>Full form: switch_languages. 
+  <P>Useful to switch between various languages when you have loaded more than 
+  one grammar. The "Lang" argument is a language code. </P>
+  <DT class=pubdef><SPAN style="FLOAT: right"><A 
+  onclick="HTTPrequest('/edit?name=sm&amp;arity=1&amp;module=cline_interface')"><IMG 
+  style="BORDER-TOP-WIDTH: 0px; BORDER-LEFT-WIDTH: 0px; BORDER-BOTTOM-WIDTH: 0px; BORDER-RIGHT-WIDTH: 0px" 
+  height=12 src="manual_file/edit.gif"></A></SPAN><A name=sm/1><B 
+  class=pred>sm</B><VAR class=arglist>(+MarkUp)</VAR></A> is <B 
+class=det>det</B>
+  <DD class=defbody>Full form: set_markup(+<VAR>MarkUp</VAR>). 
+  <P><VAR>MarkUp</VAR> is a term referring to one of the supported markup 
+  schemes (see NSM-<CODE class=file>files.txt</CODE> and <CODE 
+  class=file>grammars.txt</CODE>). </P>
+  <DT class=pubdef><SPAN style="FLOAT: right"><A 
+  onclick="HTTPrequest('/edit?name=smf&amp;arity=1&amp;module=cline_interface')"><IMG 
+  style="BORDER-TOP-WIDTH: 0px; BORDER-LEFT-WIDTH: 0px; BORDER-BOTTOM-WIDTH: 0px; BORDER-RIGHT-WIDTH: 0px" 
+  height=12 src="manual_file/edit.gif"></A></SPAN><A name=smf/1><B 
+  class=pred>smf</B><VAR class=arglist>(+Format)</VAR></A> is <B 
+  class=det>det</B>
+  <DD class=defbody><VAR>Format</VAR> is one of the terms 
+  <CODE>line_by_line</CODE> or <CODE>whole_text</CODE>. The NSM-file parser has 
+  an option for translating an NSM text and displaying the translation together 
+  with the original. 
+  <P>Note that, for example, the rtf markup scheme requires a 
+  <CODE>line_by_line</CODE> option which, however, result in the texts being 
+  displayed in a two_column table, one column for the original, the other for 
+  the translation, and with corresponding lines aligned. </P>
+  <DT class=pubdef><SPAN style="FLOAT: right"><A 
+  onclick="HTTPrequest('/edit?name=stt&amp;arity=1&amp;module=cline_interface')"><IMG 
+  style="BORDER-TOP-WIDTH: 0px; BORDER-LEFT-WIDTH: 0px; BORDER-BOTTOM-WIDTH: 0px; BORDER-RIGHT-WIDTH: 0px" 
+  height=12 src="manual_file/edit.gif"></A></SPAN><A name=stt/1><B 
+  class=pred>stt</B><VAR class=arglist>(+TableId:integer)</VAR></A> is <B 
+  class=det>det</B>
+  <DD class=defbody>For languages having more than one transcription 
+  possibility, sets the transcription table number <VAR>TableId</VAR> as active. 
+
+  <DT class=pubdef><SPAN style="FLOAT: right"><A 
+  onclick="HTTPrequest('/edit?name=pw&amp;arity=1&amp;module=cline_interface')"><IMG 
+  style="BORDER-TOP-WIDTH: 0px; BORDER-LEFT-WIDTH: 0px; BORDER-BOTTOM-WIDTH: 0px; BORDER-RIGHT-WIDTH: 0px" 
+  height=12 src="manual_file/edit.gif"></A></SPAN><A name=pw/1><B 
+  class=pred>pw</B><VAR class=arglist>(+W)</VAR></A> is <B class=det>det</B>
+  <DD class=defbody>Full form: parse_and_write_word(<VAR>W</VAR>). 
+  <P>You won't need this very much, because "ps" can parse single words, as well 
+  as whole sentences. When you are developing a grammar, however, this command 
+  can be useful, because it also outputs a morpheme split-up of the word. The 
+  argument <VAR>W</VAR> is a double-quoted string, which is analyzed as a word 
+  of the last current language set. Ex. <PRE class=code>DALIA&gt; pw("things").
+</PRE>
+  <P>NSM-DALIA answers: <PRE class=code>Morphemic String: thing-s
+ct(n(n), sp(e, e, plur(e), [], something(thing))).
+</PRE>
+  <DT class=pubdef><SPAN style="FLOAT: right"><A 
+  onclick="HTTPrequest('/edit?name=ps&amp;arity=1&amp;module=cline_interface')"><IMG 
+  style="BORDER-TOP-WIDTH: 0px; BORDER-LEFT-WIDTH: 0px; BORDER-BOTTOM-WIDTH: 0px; BORDER-RIGHT-WIDTH: 0px" 
+  height=12 src="manual_file/edit.gif"></A></SPAN><A name=ps/1><B 
+  class=pred>ps</B><VAR class=arglist>(+S)</VAR></A> is <B class=det>det</B>
+  <DD class=defbody>Full form: parse_and_write_sentence(<VAR>S</VAR>). Like 
+  "pw", but it parses a whole sentence. Ex. <PRE class=code>DALIA&gt; ps("something good is happening now").
+</PRE>
+  <P>NSM-DALIA answers with the corresponding NSM-PROLOG formula: <PRE class=code>ct(s, s(e, time(e, now, e), e, e, e,
+        p(i(happen),
+          [o:sp(e, e, sing(e),[good], something(thing)),
+           d:e]),
+        e, e)).
+</PRE>
+  <DT class=pubdef><SPAN style="FLOAT: right"><A 
+  onclick="HTTPrequest('/edit?name=pst&amp;arity=1&amp;module=cline_interface')"><IMG 
+  style="BORDER-TOP-WIDTH: 0px; BORDER-LEFT-WIDTH: 0px; BORDER-BOTTOM-WIDTH: 0px; BORDER-RIGHT-WIDTH: 0px" 
+  height=12 src="manual_file/edit.gif"></A></SPAN><A name=pst/1><B 
+  class=pred>pst</B><VAR class=arglist>(+S)</VAR></A> is <B class=det>det</B>
+  <DD class=defbody>Full form: 
+  parse_and_write_tabular_sentence(<VAR>S</VAR>,min). Like "ps", but delivers 
+  the analysis in tabular fashion. 
+  <P>Prints only the "minimal" table. <PRE class=code>DALIA&gt; ps("I do something good")
+</PRE>
+  <P>NSM-DALIA answers with the corresponding NSM-PROLOG formula: <PRE class=code>s: _____
+. pred: _____
+. . v:do
+. . a: _____
+. . . pers:loc(me)
+. . . n:me
+. . o: _____
+. . . a: _____
+. . . . eval: _____
+. . . . . a:good
+. . . n:something(thing)
+</PRE>
+  <DT class=pubdef><SPAN style="FLOAT: right"><A 
+  onclick="HTTPrequest('/edit?name=pstf&amp;arity=1&amp;module=cline_interface')"><IMG 
+  style="BORDER-TOP-WIDTH: 0px; BORDER-LEFT-WIDTH: 0px; BORDER-BOTTOM-WIDTH: 0px; BORDER-RIGHT-WIDTH: 0px" 
+  height=12 src="manual_file/edit.gif"></A></SPAN><A name=pstf/1><B 
+  class=pred>pstf</B><VAR class=arglist>(+S)</VAR></A> is <B class=det>det</B>
+  <DD class=defbody>Full form: 
+  parse_and_write_tabular_sentence(<VAR>S</VAR>,full). Like "ps", but delivers 
+  the analysis in tabular fashion. 
+  <P>Prints only the full table. <PRE class=code>DALIA&gt; ps("I do something good")
+</PRE>
+  <P>NSM-DALIA answers with the corresponding NSM-PROLOG formula: <PRE class=code>s: _____
+. c: _____
+. . compl:e
+. . top:e
+. . int:e
+. . top2:e
+. . foc:e
+. . pol:e
+. mod: _____
+. . speech_act:e
+. . eval:e
+. . evid:e
+. . epist:e
+. f: _____
+. . top3:e
+. . finite:e
+. t: _____
+. . past:e
+. . fut:e
+. m: _____
+. . irrealis:e
+. . necess:e
+. . possib:e
+. . vol:e
+. . oblig:e
+. . allow:e
+. asp: _____
+. . hab:e
+. . rep:e
+. . freq:e
+. . celer:e
+. . ant:e
+. . term:e
+. . cont:e
+. . perf:e
+. . retro:e
+. . pross:e
+. . dur:e
+. . prog:e
+. . prosp:e
+. . compl_sg:e
+. . compl_pl:e
+. vo: _____
+. . v_1:e
+. . v_2:e
+. . v_3:e
+. ak: _____
+. . celer:e
+. . comp:e
+. . rep:e
+. . freq:e
+. pred: _____
+. . v:do
+. . a: _____
+. . . det:e
+. . . alt:e
+. . . q:e
+. . . pers:loc(me)
+. . . a: _____
+. . . . eval:e
+. . . . size:e
+. . . . length:e
+. . . . height:e
+. . . . speed:e
+. . . . width:e
+. . . . weight:e
+. . . . temp:
+. . . . age:e
+. . . . shape:e
+. . . . colour:e
+. . . . origin:e
+. . . . material:e
+. . . dem:e
+. . . poss:e
+. . . class:e
+. . . n:me
+. . o: _____
+. . . det:e
+. . . alt:e
+. . . q:e
+. . . pers:e
+. . . a: _____
+. . . . eval: _____
+. . . . . int:e
+. . . . . a:good
+. . . . size:e
+. . . . length:e
+. . . . height:e
+. . . . speed:e
+. . . . width:e
+. . . . weight:e
+. . . . temp:e
+. . . . age:e
+. . . . shape:e
+. . . . colour:e
+. . . . origin:e
+. . . . material:e
+. . . dem:e
+. . . poss:e
+. . . class:e
+. . . n:something(thing)
+. . d:e
+. . e:e
+. . c:e
+. . i:e
+. . b:e
+. . l:e
+. . m:e
+</PRE>
+  <DT class=pubdef><SPAN style="FLOAT: right"><A 
+  onclick="HTTPrequest('/edit?name=gs&amp;arity=1&amp;module=cline_interface')"><IMG 
+  style="BORDER-TOP-WIDTH: 0px; BORDER-LEFT-WIDTH: 0px; BORDER-BOTTOM-WIDTH: 0px; BORDER-RIGHT-WIDTH: 0px" 
+  height=12 src="manual_file/edit.gif"></A></SPAN><A name=gs/1><B 
+  class=pred>gs</B><VAR class=arglist>(+LF)</VAR></A> is <B class=det>det</B>
+  <DD class=defbody>Full form: gen_and_write_sentence(<VAR>LF</VAR>). The 
+  "<VAR>LF</VAR>" argument is an NSM-PROLOG formula; the output is the 
+  corresponding sentence in the current language (or the formula itself, if 
+  NSM-DALIA fails generation). Ex. <PRE class=code>DALIA&gt; gs(ct(s, s(e, before(now), e, e, e,
+                  p(do, [a:sp(e, e, sing(e), [], me),
+                         o:sp(e, e, sing(e), [good],
+                              something(thing)),
+                         d:e, c:e, i:e]),
+                  e, e))).
+</PRE>
+  <P>Answer: <PRE class=code>I did something good
+</PRE>
+  <DT class=pubdef><SPAN style="FLOAT: right"><A 
+  onclick="HTTPrequest('/edit?name=t&amp;arity=1&amp;module=cline_interface')"><IMG 
+  style="BORDER-TOP-WIDTH: 0px; BORDER-LEFT-WIDTH: 0px; BORDER-BOTTOM-WIDTH: 0px; BORDER-RIGHT-WIDTH: 0px" 
+  height=12 src="manual_file/edit.gif"></A></SPAN><A name=t/1><B 
+  class=pred>t</B><VAR class=arglist>(+Sentence)</VAR></A> is <B 
+  class=det>det</B>
+  <DD class=defbody>Full form: 
+  translate_and_write_sentence(<VAR>Sentence</VAR>). Translates a sentence from 
+  current_language to current_l2. <VAR>Sentence</VAR> argument is a string, 
+  between double quotation marks. 
+  <DT class=pubdef><SPAN style="FLOAT: right"><A 
+  onclick="HTTPrequest('/edit?name=so&amp;arity=1&amp;module=cline_interface')"><IMG 
+  style="BORDER-TOP-WIDTH: 0px; BORDER-LEFT-WIDTH: 0px; BORDER-BOTTOM-WIDTH: 0px; BORDER-RIGHT-WIDTH: 0px" 
+  height=12 src="manual_file/edit.gif"></A></SPAN><A name=so/1><B 
+  class=pred>so</B><VAR class=arglist>(+Filename)</VAR></A> is <B 
+  class=det>det</B>
+  <DD class=defbody>Full form: set_output_file(<VAR>Filename</VAR>). Redirects 
+  the output to the file named <VAR>Filename</VAR> (in some operating systems, 
+  you will need to give a full name with extension -- NSM-DALIA adds none). 
+  "<VAR>Filename</VAR>" is double-quoted string. Ex. <PRE class=code>DALIA&gt; so("pippo.txt").
+  * Output file set to pippo.txt
+</PRE>
+  <P>You will perhaps use this mostly before a "pf" command. </P>
+  <DT class=pubdef><SPAN style="FLOAT: right"><A 
+  onclick="HTTPrequest('/edit?name=ro&amp;arity=1&amp;module=cline_interface')"><IMG 
+  style="BORDER-TOP-WIDTH: 0px; BORDER-LEFT-WIDTH: 0px; BORDER-BOTTOM-WIDTH: 0px; BORDER-RIGHT-WIDTH: 0px" 
+  height=12 src="manual_file/edit.gif"></A></SPAN><A name=ro/1><B 
+  class=pred>ro</B><VAR class=arglist>(+F)</VAR></A> is <B class=det>det</B>
+  <DD class=defbody>Used to select an output file if the user wants it to be 
+  overwritten by the new data. <A 
+  href="http://localhost:4000/doc_for?object=cline_interface%3aso%2f1">so/1</A> 
+  <I>appends</I> the output file if it exists, and does not rewrite it, as <A 
+  href="http://localhost:4000/doc_for?object=cline_interface%3aro%2f1">ro/1</A> 
+  does. 
+  <DT class=pubdef><SPAN style="FLOAT: right"><A 
+  onclick="HTTPrequest('/edit?name=co&amp;arity=0&amp;module=cline_interface')"><IMG 
+  style="BORDER-TOP-WIDTH: 0px; BORDER-LEFT-WIDTH: 0px; BORDER-BOTTOM-WIDTH: 0px; BORDER-RIGHT-WIDTH: 0px" 
+  height=12 src="manual_file/edit.gif"></A></SPAN><A name=co/0><B 
+  class=pred>co</B></A>
+  <DD class=defbody>Full form: close_output_file 
+  <P>Users will rarely use this command, because the output file is 
+  automatically closed (and the output redirected again to the console) when the 
+  parsing of an NSM-input file is finished. </P>
+  <DT class=pubdef><SPAN style="FLOAT: right"><A 
+  onclick="HTTPrequest('/edit?name=pf&amp;arity=1&amp;module=cline_interface')"><IMG 
+  style="BORDER-TOP-WIDTH: 0px; BORDER-LEFT-WIDTH: 0px; BORDER-BOTTOM-WIDTH: 0px; BORDER-RIGHT-WIDTH: 0px" 
+  height=12 src="manual_file/edit.gif"></A></SPAN><A name=pf/1><B 
+  class=pred>pf</B><VAR class=arglist>(+F)</VAR></A> is <B class=det>det</B>
+  <DD class=defbody>Full form: parse_file(<VAR>F</VAR>). Parses and outputs a 
+  text file with particular tags (see the documentation file "NSM-<CODE 
+  class=file>files.txt</CODE>"). You can write a whole file of NSM texts in, 
+  say, English NSM, and then have it parsed or translated automatically. This 
+  will probably be one of the most used commands, when other language modules 
+  are available. 
+  <DT class=pubdef><SPAN style="FLOAT: right"><A 
+  onclick="HTTPrequest('/edit?name=tm&amp;arity=1&amp;module=cline_interface')"><IMG 
+  style="BORDER-TOP-WIDTH: 0px; BORDER-LEFT-WIDTH: 0px; BORDER-BOTTOM-WIDTH: 0px; BORDER-RIGHT-WIDTH: 0px" 
+  height=12 src="manual_file/edit.gif"></A></SPAN><A name=tm/1><B 
+  class=pred>tm</B><VAR class=arglist>(+SWITCH)</VAR></A> is <B 
+class=det>det</B>
+  <DD class=defbody>Full form: trace_morphology(<VAR>SWITCH</VAR>). To switch on 
+  verbose mode for morphology parsing, say: <PRE class=code>tm(1).
+</PRE>
+  <P>To switch it off, say <PRE class=code>tm(0)
+</PRE>
+  <P>Verbose modes are useful in grammar development. Turning tracing morphology 
+  on, the "parse" and "generate" commands will display information about the 
+  grammar rules used during the parsing process, in the morphophonemic component 
+  of the grammar. This will help you to find out why the morphophonemic 
+  component of your grammar is not doing what you intended it to do. </P>
+  <DT class=pubdef><SPAN style="FLOAT: right"><A 
+  onclick="HTTPrequest('/edit?name=ts&amp;arity=1&amp;module=cline_interface')"><IMG 
+  style="BORDER-TOP-WIDTH: 0px; BORDER-LEFT-WIDTH: 0px; BORDER-BOTTOM-WIDTH: 0px; BORDER-RIGHT-WIDTH: 0px" 
+  height=12 src="manual_file/edit.gif"></A></SPAN><A name=ts/1><B 
+  class=pred>ts</B><VAR class=arglist>(+SWITCH)</VAR></A> is <B 
+class=det>det</B>
+  <DD class=defbody>Full form: trace_syntax(<VAR>SWITCH</VAR>). 
+  "<VAR>SWITCH</VAR>" is either "1" or "0". Turns on or off syntax verbose mode 
+  for parsing. 
+  <DT class=pubdef><SPAN style="FLOAT: right"><A 
+  onclick="HTTPrequest('/edit?name=tg&amp;arity=1&amp;module=cline_interface')"><IMG 
+  style="BORDER-TOP-WIDTH: 0px; BORDER-LEFT-WIDTH: 0px; BORDER-BOTTOM-WIDTH: 0px; BORDER-RIGHT-WIDTH: 0px" 
+  height=12 src="manual_file/edit.gif"></A></SPAN><A name=tg/1><B 
+  class=pred>tg</B><VAR class=arglist>(+SWITCH)</VAR></A> is <B 
+class=det>det</B>
+  <DD class=defbody>Full form: trace_generation(<VAR>SWITCH</VAR>). 
+  "<VAR>SWITCH</VAR>" is either 0 or 1. Turns on/of verbose mode for generation. 
+
+  <DT class=pubdef><SPAN style="FLOAT: right"><A 
+  onclick="HTTPrequest('/edit?name=s&amp;arity=2&amp;module=cline_interface')"><IMG 
+  style="BORDER-TOP-WIDTH: 0px; BORDER-LEFT-WIDTH: 0px; BORDER-BOTTOM-WIDTH: 0px; BORDER-RIGHT-WIDTH: 0px" 
+  height=12 src="manual_file/edit.gif"></A></SPAN><A name=s/2><B 
+  class=pred>s</B><VAR class=arglist>(+L, +FullName)</VAR></A> is <B 
+  class=det>det</B>
+  <DD class=defbody>See <A 
+  href="http://localhost:4000/doc_for?object=cline_interface%3as%2f1">s/1</A> 
+  <DT class=pubdef><SPAN style="FLOAT: right"><A 
+  onclick="HTTPrequest('/edit?name=wl&amp;arity=1&amp;module=cline_interface')"><IMG 
+  style="BORDER-TOP-WIDTH: 0px; BORDER-LEFT-WIDTH: 0px; BORDER-BOTTOM-WIDTH: 0px; BORDER-RIGHT-WIDTH: 0px" 
+  height=12 src="manual_file/edit.gif"></A></SPAN><A name=wl/1><B 
+  class=pred>wl</B><VAR class=arglist>(+Lang)</VAR></A> is <B class=det>det</B>
+  <DD class=defbody>Full form: word_list(+<VAR>Lang</VAR>). 
+  <P>Saves a formatted version of the lexical database (stored with <SPAN 
+  class=undef>m/4</SPAN> predicates), in the current active markup format. </P>
+  <DT class=pubdef><SPAN style="FLOAT: right"><A 
+  onclick="HTTPrequest('/edit?name=w&amp;arity=0&amp;module=cline_interface')"><IMG 
+  style="BORDER-TOP-WIDTH: 0px; BORDER-LEFT-WIDTH: 0px; BORDER-BOTTOM-WIDTH: 0px; BORDER-RIGHT-WIDTH: 0px" 
+  height=12 src="manual_file/edit.gif"></A></SPAN><A name=w/0><B 
+  class=pred>w</B></A> is <B class=det>det</B>
+  <DD class=defbody>GNU-ish command, to display the "WARRANTY" part of the GNU 
+  GPL. 
+  <DT class=pubdef><SPAN style="FLOAT: right"><A 
+  onclick="HTTPrequest('/edit?name=c&amp;arity=0&amp;module=cline_interface')"><IMG 
+  style="BORDER-TOP-WIDTH: 0px; BORDER-LEFT-WIDTH: 0px; BORDER-BOTTOM-WIDTH: 0px; BORDER-RIGHT-WIDTH: 0px" 
+  height=12 src="manual_file/edit.gif"></A></SPAN><A name=c/0><B 
+  class=pred>c</B></A> is <B class=det>det</B>
+  <DD class=defbody>GNU-ish command, a pointer to the "CONDITION" part of the 
+  GNU GPL. 
+  <DT class=pubdef><SPAN style="FLOAT: right"><A 
+  onclick="HTTPrequest('/edit?name=pg&amp;arity=0&amp;module=cline_interface')"><IMG 
+  style="BORDER-TOP-WIDTH: 0px; BORDER-LEFT-WIDTH: 0px; BORDER-BOTTOM-WIDTH: 0px; BORDER-RIGHT-WIDTH: 0px" 
+  height=12 src="manual_file/edit.gif"></A></SPAN><A name=pg/0><B 
+  class=pred>pg</B></A> is <B class=det>det</B>
+  <DD class=defbody>Prints a formatted version of the grammar. 
+  <DT class=pubdef><SPAN style="FLOAT: right"><A 
+  onclick="HTTPrequest('/edit?name=run&amp;arity=0&amp;module=cline_interface')"><IMG 
+  style="BORDER-TOP-WIDTH: 0px; BORDER-LEFT-WIDTH: 0px; BORDER-BOTTOM-WIDTH: 0px; BORDER-RIGHT-WIDTH: 0px" 
+  height=12 src="manual_file/edit.gif"></A></SPAN><A name=run/0><B 
+  class=pred>run</B></A> is <B class=det>det</B>
+  <DD class=defbody>Procedure run calls <A 
+  href="http://localhost:4000/doc/c:/users/francio/desktop/nsm-dalia/bin/cline_interface.pl?public_only=true#init%2f0">init/0</A>, 
+  then enters the main loop. Fails on bugs </DD></DL>
+<H2 class=undoc>Undocumented predicates</H2>
+<P>The following predicates are exported, but not or incorrectly documented. 
+<DL class=undoc>
+  <DT class=undoc><SPAN style="FLOAT: right"><A 
+  onclick="HTTPrequest('/edit?name=swtt&amp;arity=1&amp;module=cline_interface')"><IMG 
+  style="BORDER-TOP-WIDTH: 0px; BORDER-LEFT-WIDTH: 0px; BORDER-BOTTOM-WIDTH: 0px; BORDER-RIGHT-WIDTH: 0px" 
+  height=12 src="manual_file/edit.gif"></A></SPAN><A name=swtt/1><B 
+  class=pred>swtt</B><VAR class=arglist>(Arg1)</VAR></A> </DT></DL></BODY></HTML>

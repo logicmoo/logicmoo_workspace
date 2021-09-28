@@ -1,0 +1,4225 @@
+{\rtf1\ansi\deff0
+{\fonttbl{\f0 Aboriginal Serif;}{\f1 Aboriginal Sans;}}
+{\colortbl;\red0\green0\blue0;\red255\green0\blue0;\red0\green0\blue255;}
+{\stylesheet
+{\s1\f1\cf3\fs24 NSM1;}
+{\s2\f2\cf1\fs28 NSM2;}
+{\s3\f1\cf1\fs40\qc\sb500\b\brdrt\brdrs \brdrl\brdrs \brdrr\brdrs\lang1024 TITLE;}}
+{\pard\s3 Tok Pisin NSM Grammar\par}
+{\pard\b0\qc\fs24\brdrl\brdrs\brdrr\brdrs\lang1024 Version 0.8\par}
+{\pard\i\qc\sb100\fs28\brdrl\brdrs\brdrr\brdrs Francesco Zamblera\par}
+{\pard\i\qc\sb200\fs24\brdrl\brdrs\brdrr\brdrs\lang1024 2009\par}
+{\pard\ql\b\ql\fs28\brdrl\brdrs\brdrr\brdrs\brdrb\brdrs\lang1024 Acknowledgements to: \b0\i Carol Priestley\par}
+
+
+{\pard\qj\sb200\sa200\b\lang1024 Abstract: \b0 This grammar is an attempt to a computational treatment of the Tok Pisin Natural Semantic Metalanguage. It is still a preliminary version, and feedback is needed to improve the
+ automatically generated Tok Pisin.\par}
+
+
+\page
+
+{\pard\fs32\b\sb200\qc\keepn 1 Prologue\par}
+{\pard\qj\fs24 This Tok Pisin NSM computational grammar is the second module to have been written for NSM-DALIA after the English one. It is based largely on Carol Priestley's work on Tok Pisin NSM. I here thank Dr. Priestley for having kindly sent me her unpublished material on Tok Pisin semantic primes. Any inadequacy in the resulting
+ grammar is of course my full responsibility.\par}
+{\pard\sb100\qj\fi500\fs24 
+This grammar exemplifies a literal programming approach to grammar writing, with source code and comments interspersed. The "print grammar" command of NSM-DALIA collects the comments, with a formatted version of the source code, and generates a printable booklet. This file has been generated
+ from "tpi_nsmg.pl", the source code of the Tok Pisin grammar. 
+ I have only added the seventh section ("Bibliography"), but the next 
+ version of NSM-DALIA will do this automatically. 
+ You can compare the source with the generated rtf to see how it works.\par}
+{\pard\sb100\qj\fi500\fs24 
+This grammar also shows the flaws and limits of the current format: 
+ the final output of a sentence-processing session must be a NSM-PROLOG formula, but, at the intermediate stages, the sentence representation can be everything we want, provided it has the form ct(Category,Structure). 
+ This lets in whatever hack we want (you will see many in this grammar), and 
+ renders grammars difficult to write and read, and theoretically dubious for 
+ their unrestrictedness. As you will see comparing this booklet with 
+ the source code, writing a NSM-PROLOG grammar is still too 
+ much an exercise in PROLOG programming.\par}
+{\pard\sb100\qj\fi500\fs24 
+I am currently developing a new grammar format which will be much more restricted and far easier to read and write. 
+ NSM-DALIA version 0.9 (the one currently released) can already
+ automatically detect which version of the grammar is used, and 
+ adapt the resulting NSM-PROLOG formula, so old grammars will
+ not have to be rewritten in the new format.\par}
+
+\lang1024
+
+{\pard\fs32\b\sb200\qc\keepn 2 Transcription Tables\par}
+{\pard\qj\fs24 Tok Pisin NSM grammar needs no special transcription system, so
+ no transcription table is provided. You can see an example of 
+ transcription table in the English module.\par}
+
+{\pard\fs32\b\sb200\qc\keepn 3 Level Declaration\par}
+{\pard\qj\fs24 Dependencies are parted into \i levels\i0 , and the parser tries to apply 
+ lower-level dependencies first. Consider, for example, the following
+ string:\par}
+{\pard\sb100\qj\fi500\fs24 
+"do something good" \par}
+{\pard\sb100\qj\fi500\fs24 
+We probably want the parser to recognise first the dependency between 
+ "something" and "good", and only then the one between "something 
+ good" and "do". We will obtain this by assigning the "verb-object" 
+ dependency to a higher level.\par}
+{\pard\sb100\qj\fi500\fs24 
+I have tentatively recognised the following levels:
+ \par}
+{\pard\tabx5000\tldot\tqc\brdrt\brdrs\brdrl\brdrs\brdrb\brdrs\brdrr\brdrs\li4000\ri4000Level:\tab Ends at:\line
+\line
+  1\tab 100\line
+  2\tab 150\line
+  3\tab 300\line
+  4\tab 370\line
+  5\tab 400\par}
+
+{\pard\fs32\b\sb200\qc\keepn 4 Morphology\par}
+{\pard\qj\fs24 The morphology section in an NSM-PROLOG grammar consists of three parts: a series of \i allomorph construction rules\i0 , a statement of \i permissible morpheme sequences\i0 , and that subset of dependency rules which refers to dependencies between \i morphemes\i0 .\par}
+{\pard\sb100\qj\fi500\fs24 
+As Tok Pisin needs no allomorph construction rules, the first subsection is empty. As for the second subsection, there is a default rule (1. *), which simply states that any morpheme can constitute a word of its own, and then a rule which permits \i reduplication\i0  and
+ \i -im\i0  morpheme. NSM grammar needs these word forms to distinguish between allolexes of THINK and SAY (\i ting\i0 , \i tingting\i0 , \i tingim\i0  and, 
+ respectively, \i tok\i0 , \i toktok\i0  and \i tokim\i0 ).\par}
+{\pard\sb100\qj\fi500\fs24 
+The \i morpheme sequence specification\i0  number 2 reads as follows: " a
+ word can be consist of a verb stem, optionally followed by (a copy of)
+ itself, optionally followed by the \b trans\b0  suffix (\i -im\i0 )" \par}
+
+{\pard\qc\sb150\i\fs32\keepn Allomorph Construction Rules\par}
+{\pard\sb150\qc\i\fs32\keepn Allowed Morpheme Sequence Rules\par}
+{\pard
+1. *\line
+2. v(*) + ?(v(*)) + ?(trans)\line
+\par}
+{\pard\qc\fs32\i Dependencies\par}
+{\pard\qj\fs24 The bulk of an NSM-PROLOG grammar consists of 
+ \b dependency rules\b0 . The source code of these rules is rendered into tables
+ by the grammar formatter. Each rule is displayed as follows:\par}
+{\pard\sb100\qj\fi500\fs24 
+1. A header, which shows the rule number, followed by the formula \i A+B=C\i0 
+ if the rule is directional, or \i A+B=C // B+A=C\i0 , if the dependants can
+ show up in both linear orders;\par}
+{\pard\sb100\qj\fi500\fs24 
+2. then, a three-column table shows the structures of, respectively, 
+ \i A\i0 , \i B\i0  and \i C\i0 .\par}
+{\pard\sb100\qj\fi500\fs24 
+3. If variables in the rules are bound by \i conditions\i0  (paradigms),
+ these conditions are shown just below the tables.\par}
+{\pard\sb100\qj\fi500\fs24 
+4. Then, if the author has added some textual comment to a rule, it is 
+ displayed.\par}
+{\pard\sb100\qj\fi500\fs24 
+5. The author can provide two example lists for each rule: an
+ \i analysis\i0  and a \i translation\i0  list. Examples in
+ each list are processed, and the results are tabulated after textual
+ comment.\par}
+{\pard\sb100\qj\fi500\fs24 
+Now all the rules of the Tok Pisin grammar follow, first the 
+ morphological dependencies, then, in the next section, the syntactic ones.
+ \par}
+
+{\pard\sb250\fs28\cf2\keepn 3 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i v(?subcat)}\line 
+head :: ?pred_A\line
+arguments\line
+ \cell 
+\pard\intbl B: {\i trans}\line
+trans\line
+\cell
+\pard\intbl C: {\i v(?subcat)}\line
+head :: ?pred_C\line
+arguments\line
+\cell
+\row}
+{\pard\b Conditions: \line
+trans(?pred_A, ?pred_C, [], [])\line
+\par}
+{\pard Suffix \i -im\i0  added to verb stems acts often as a transitivizer, modifying their argument list. The trans/4 paradigm relates the verb V with its equivalent \i V-im\i0  (you can find the code 
+ in the \i p ::: trans\i0  section of the grammar). The NSM exponents \i tok\i0  and \i ting\i0  have allolexes \i tokim\i0  and \i tingim\i0  in transitive syntactic configuration (see Priestley 1999a, p. 9, 1999b, p. 2-4)\par}
+{\pard\sb200\b Examples:\par}
+{\pard
+\trowd\trgaph144\cellx2500\cellx9600
+{\pard\fs24\cf3\intbl ting\cell}
+{\pard\cf0\fs20\intbl ct(v(v), p(think, [e:e]))\cell}
+\row
+{\pard\fs24\cf3\intbl tingim\cell}
+{\pard\cf0\fs20\intbl ct(v(v), p(think, [e:e, o:e]))\cell}
+\row
+{\pard\fs24\cf3\intbl tok\cell}
+{\pard\cf0\fs20\intbl ct(v(v), p(say, [a:e]))\cell}
+\row
+{\pard\fs24\cf3\intbl tokim\cell}
+{\pard\cf0\fs20\intbl ct(v(v), p(say, [a:e, t:e]))\cell}
+\row
+}
+
+{\pard\sb250\fs28\cf2\keepn 7 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i v(?subcat)}\line 
+head :: ?pred_A\line
+arguments\line
+ \cell 
+\pard\intbl B: {\i v(?subcat)}\line
+head :: ?pred_A\line
+arguments\line
+\cell
+\pard\intbl C: {\i v(?subcat)}\line
+head :: ?pred_C\line
+arguments\line
+\cell
+\row}
+{\pard\b Conditions: \line
+redupl(?pred_A, ?pred_C, [], [])\line
+\par}
+{\pard The NSM exponents \i tok\i0  and \i ting\i0  show a reduplicated allomorph (\i toktok\i0  and \i tingting\i0 ) in specific syntactic configurations (see Priestley 1999a, p. 9, 199b, p. 2-4).\par}
+{\pard\sb100\qj\fi500\fs24 
+The rule works by recognising to identical instances of a verb 
+ following each other.\par}
+{\pard\sb100\qj\fi500\fs24 
+This Tok Pisin NSM grammar needs no more morphological rules. From now on, 
+ all the listed dependencies are syntactical.\par}
+{\pard\sb200\b Examples:\par}
+{\pard
+\trowd\trgaph144\cellx2500\cellx9600
+{\pard\fs24\cf3\intbl tok\cell}
+{\pard\cf0\fs20\intbl ct(v(v), p(say, [a:e]))\cell}
+\row
+{\pard\fs24\cf3\intbl toktok\cell}
+{\pard\cf0\fs20\intbl ct(v(v), p(say, [a:e, o:e, d:e, t:e]))\cell}
+\row
+{\pard\fs24\cf3\intbl ting\cell}
+{\pard\cf0\fs20\intbl ct(v(v), p(think, [e:e]))\cell}
+\row
+{\pard\fs24\cf3\intbl tingting\cell}
+{\pard\cf0\fs20\intbl ct(v(v), p(think, [e:e, o:e, t:e]))\cell}
+\row
+}
+
+{\pard\fs32\b\sb200\qc\keepn 5 Syntax\par}
+{\pard\qj\fs24 \par}
+
+{\pard\sb250\fs28\cf2\keepn 11 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i n(n)}\line 
+substantive\line
+. det :: e\line
+. same_or_other :: e\line
+. number :: e\line
+. attributes\line
+. head_noun :: ?head_noun_A\line
+ \cell 
+\pard\intbl B: {\i n(n)}\line
+substantive\line
+. det :: e\line
+. same_or_other :: e\line
+. number :: e\line
+. attributes\line
+. head_noun :: ?head_noun_B\line
+\cell
+\pard\intbl C: {\i n(n)}\line
+substantive\line
+. det :: e\line
+. same_or_other :: e\line
+. number :: e\line
+. attributes\line
+. head_noun :: ?head_noun_C\line
+\cell
+\row}
+{\pard\b Conditions: \line
+compound(?head_noun_A, ?head_noun_B, ?head_noun_C)\line
+\par}
+{\pard This rule recognises \i compound nouns\i0  as \b haus mani\b0  
+ "bank".\par}
+{\pard\sb200\b Examples:\par}
+{\pard
+\trowd\trgaph144\cellx2500\cellx9600
+{\pard\fs24\cf3\intbl haus mani\cell}
+{\pard\cf0\fs20\intbl ct(n(n), sp(e, e, e, [], somewhere(bank)))\cell}
+\row
+{\pard\fs24\cf3\intbl pikinini meri\cell}
+{\pard\cf0\fs20\intbl ct(n(n), sp(e, e, e, [], someone(girl)))\cell}
+\row
+}
+
+{\pard\sb250\fs28\cf2\keepn 13 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i adv(dur)}\line 
+long\line
+ \cell 
+\pard\intbl B: {\i a(a)}\line
+small\line
+\cell
+\pard\intbl C: {\i adv(dur)}\line
+some\line
+\cell
+\row}
+{\pard Rules 13 to 15 form compound lexical items: \b longtaim 
+ liklik\b0  \i for some time\i0 , \b long wanem\b0  \i because\i0 , and the conjunction 
+ \b olsem na\b0  \i as\i0 \par}
+{\pard\sb200\b Examples:\par}
+{\pard
+\trowd\trgaph144\cellx2500\cellx9600
+{\pard\fs24\cf3\intbl longtaim liklik\cell}
+{\pard\cf0\fs20\intbl ct(adv(dur), some)\cell}
+\row
+}
+
+{\pard\sb250\fs28\cf2\keepn 14 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i p}\line 
+long\line
+ \cell 
+\pard\intbl B: {\i n(q)}\line
+what\line
+\cell
+\pard\intbl C: {\i conj}\line
+because\line
+\cell
+\row}
+{\pard\sb200\b Examples:\par}
+{\pard
+\trowd\trgaph144\cellx2500\cellx9600
+{\pard\fs24\cf3\intbl long wanem\cell}
+{\pard\cf0\fs20\intbl ct(conj, because)\cell}
+\row
+}
+
+{\pard\sb250\fs28\cf2\keepn 15 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i p}\line 
+like\line
+ \cell 
+\pard\intbl B: {\i conj}\line
+and\line
+\cell
+\pard\intbl C: {\i conj}\line
+like\line
+\cell
+\row}
+{\pard\sb200\b Examples:\par}
+{\pard
+\trowd\trgaph144\cellx2500\cellx9600
+{\pard\fs24\cf3\intbl olsem na\cell}
+{\pard\cf0\fs20\intbl ct(conj, like)\cell}
+\row
+}
+
+{\pard\sb250\fs28\cf2\keepn 16 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i tma}\line 
+bin\line
+ \cell 
+\pard\intbl B: {\i v(?subcat)}\line
+head :: ?pred_B\line
+arguments\line
+\cell
+\pard\intbl C: {\i v(?subcat)}\line
+head :: pf(?pred_B)\line
+arguments\line
+\cell
+\row}
+{\pard This rule recognises \b bin\b0  + \i verb\i0  as a construction 
+ marking anterior time.\par}
+{\pard\sb200\b Examples:\par}
+{\pard
+\trowd\trgaph144\cellx2500\cellx9600
+{\pard\fs24\cf3\intbl bin wokim\cell}
+{\pard\cf0\fs20\intbl ct(v(v), p(pf(do), [a:e, o:e, d:e, c:e, i:e, b:e]))\cell}
+\row
+{\pard\fs24\cf3\intbl bin go\cell}
+{\pard\cf0\fs20\intbl ct(v(v), p(pf(go), [a:e]))\cell}
+\row
+{\pard\fs24\cf3\intbl bin stap\cell}
+{\pard\cf0\fs20\intbl ct(v(v), p(pf(live), [a:e, c:e]))\cell}
+\row
+{\pard\fs24\cf3\intbl bin harim\cell}
+{\pard\cf0\fs20\intbl ct(v(v), p(pf(hear), [a:e, o:e, t:e]))\cell}
+\row
+{\pard\fs24\cf3\intbl bin lukim\cell}
+{\pard\cf0\fs20\intbl ct(v(v), p(pf(see), [a:e, o:e]))\cell}
+\row
+}
+
+{\pard\sb250\fs28\cf2\keepn 19 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i neg}\line 
+not\line
+ \cell 
+\pard\intbl B: {\i v(?subcat)}\line
+head :: ?pred_B\line
+arguments\line
+\cell
+\pard\intbl C: {\i v(?subcat)}\line
+head :: neg(?pred_B)\line
+arguments\line
+\cell
+\row}
+{\pard Negation rule: \b no\b0  + \i verb\i0  -->  \i negative verb\i0 .\par}
+{\pard\sb200\b Examples:\par}
+{\pard
+\trowd\trgaph144\cellx2500\cellx9600
+{\pard\fs24\cf3\intbl no wokim\cell}
+{\pard\cf0\fs20\intbl ct(v(v), p(neg(do), [a:e, o:e, d:e, c:e, i:e, b:e]))\cell}
+\row
+{\pard\fs24\cf3\intbl no stap\cell}
+{\pard\cf0\fs20\intbl ct(v(v), p(neg(live), [a:e, c:e]))\cell}
+\row
+{\pard\fs24\cf3\intbl no bin wokim\cell}
+{\pard\cf0\fs20\intbl ct(v(v), p(neg(pf(do)), [a:e, o:e, d:e, c:e, i:e, b:e]))\cell}
+\row
+{\pard\fs24\cf3\intbl no bin lukim\cell}
+{\pard\cf0\fs20\intbl ct(v(v), p(neg(pf(see)), [a:e, o:e]))\cell}
+\row
+}
+
+{\pard\sb250\fs28\cf2\keepn 20 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i i}\line 
+i\line
+ \cell 
+\pard\intbl B: {\i v(?subcat)}\line
+head :: ?pred_B\line
+arguments\line
+. ?role\line
+. . e\line
+\cell
+\pard\intbl C: {\i v(?subcat)}\line
+head :: ?pred_B\line
+arguments\line
+. ?role\line
+. . 3\line
+\cell
+\row}
+{\pard When the subject is a third person nominal (that is, when it is different from \i I\i0  or \i you\i0 ), the predicate is preceded by the agreement particle \b i\b0 \par}
+{\pard\sb200\b Examples:\par}
+{\pard
+\trowd\trgaph144\cellx2500\cellx9600
+{\pard\fs24\cf3\intbl i stap\cell}
+{\pard\cf0\fs20\intbl ct(v(v), p(live, [a:3, c:e]))\cell}
+\row
+{\pard\fs24\cf3\intbl stap\cell}
+{\pard\cf0\fs20\intbl ct(v(v), p(live, [a:e, c:e]))\cell}
+\row
+{\pard\fs24\cf3\intbl i wokim\cell}
+{\pard\cf0\fs20\intbl ct(v(v), p(do, [a:3, o:e, d:e, c:e, i:e, b:e]))\cell}
+\row
+{\pard\fs24\cf3\intbl wokim\cell}
+{\pard\cf0\fs20\intbl ct(v(v), p(do, [a:e, o:e, d:e, c:e, i:e, b:e]))\cell}
+\row
+{\pard\fs24\cf3\intbl i bin wokim\cell}
+{\pard\cf0\fs20\intbl ct(v(v), p(pf(do), [a:3, o:e, d:e, c:e, i:e, b:e]))\cell}
+\row
+{\pard\fs24\cf3\intbl i bin lukim\cell}
+{\pard\cf0\fs20\intbl ct(v(v), p(pf(see), [a:3, o:e]))\cell}
+\row
+{\pard\fs24\cf3\intbl i no stap\cell}
+{\pard\cf0\fs20\intbl ct(v(v), p(neg(live), [a:3, c:e]))\cell}
+\row
+{\pard\fs24\cf3\intbl i no bin wokim\cell}
+{\pard\cf0\fs20\intbl ct(v(v), p(neg(pf(do)), [a:3, o:e, d:e, c:e, i:e, b:e]))\cell}
+\row
+{\pard\fs24\cf3\intbl i no bin harim\cell}
+{\pard\cf0\fs20\intbl ct(v(v), p(neg(pf(hear)), [a:3, o:e, t:e]))\cell}
+\row
+}
+
+{\pard\sb250\fs28\cf2\keepn 22 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i v(?subcat)}\line 
+head :: go\line
+arguments\line
+ \cell 
+\pard\intbl B: {\i v(?subcat)}\line
+head :: come\line
+arguments\line
+\cell
+\pard\intbl C: {\i v(?subcat)}\line
+head :: move\line
+arguments\line
+\cell
+\row}
+{\pard The prime MOVE is expressed by a compound of \b go\b0  and \b kam\b0 . 
+ (Priestley 1999b pag. 7).\par}
+{\pard\sb100\qj\fi500\fs24 
+This rule has a higher level number than the "i+verb" dependency 
+ in order for it to recognise combination as \b i go i kam\b0 . The 
+ following rule (23) recognises the negative version of MOVE.\par}
+{\pard\sb200\b Examples:\par}
+{\pard
+\trowd\trgaph144\cellx2500\cellx9600
+{\pard\fs24\cf3\intbl go kam\cell}
+{\pard\cf0\fs20\intbl ct(v(v), p(move, [a:e]))\cell}
+\row
+{\pard\fs24\cf3\intbl i go i kam\cell}
+{\pard\cf0\fs20\intbl ct(v(v), p(move, [a:3]))\cell}
+\row
+}
+{\pard\sb200\b\keepn Examples:\par}
+\par{\pard
+\trowd\trgaph144\cellx4800\cellx9600
+{\pard\s1\cf3\intbl mi go kam\cell}
+{\pard\s2\intbl I move\cell}
+\row
+{\pard\s1\cf3\intbl em i go i kam\cell}
+{\pard\s2\intbl he moves\cell}
+\row
+{\pard\s1\cf3\intbl dispela samting i go i kam\cell}
+{\pard\s2\intbl this thing moves\cell}
+\row
+\lastrow}
+
+{\pard\sb250\fs28\cf2\keepn 23 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i v(?subcat)}\line 
+head :: neg(go)\line
+arguments\line
+ \cell 
+\pard\intbl B: {\i v(?subcat)}\line
+head :: neg(come)\line
+arguments\line
+\cell
+\pard\intbl C: {\i v(?subcat)}\line
+head :: neg(move)\line
+arguments\line
+\cell
+\row}
+{\pard\sb200\b Examples:\par}
+{\pard
+\trowd\trgaph144\cellx2500\cellx9600
+{\pard\fs24\cf3\intbl em i no go i no kam\cell}
+{\pard\cf0\fs20\intbl ct(s, s(not, e, e, e, e, p(move, [a:sp(this, e, e, [], someone(person))]), e, e))\cell}
+\row
+}
+
+{\pard\sb250\fs28\cf2\keepn 25 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i v(?subcat)}\line 
+head :: ?pred_A\line
+arguments\line
+ \cell 
+\pard\intbl B: {\i v(v)}\line
+head :: live\line
+arguments\line
+. agent\line
+. . 3\line
+. comitative\line
+. . e\line
+\cell
+\pard\intbl C: {\i v(?subcat)}\line
+head :: i(?pred_A)\line
+arguments\line
+\cell
+\row}
+{\pard This rule recognises \i verb\i0  + \b i stap\b0  as a construction marking 
+ imperfective (progressive) aspect. The form of the B part of the rule 
+ depends on the fact that \b i stap\b0  has already been recognised 
+ by previous rules as the third-person form of the verb \b stap\b0  LIVE.\par}
+{\pard\sb200\b\keepn Examples:\par}
+\par{\pard
+\trowd\trgaph144\cellx4800\cellx9600
+{\pard\s1\cf3\intbl em i lukim mi i stap\cell}
+{\pard\s2\intbl he is seing me\cell}
+\row
+{\pard\s1\cf3\intbl dispela man i wokim samting i stap\cell}
+{\pard\s2\intbl he is doing something\cell}
+\row
+\lastrow}
+
+{\pard\sb250\fs28\cf2\keepn 30 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i adv(time(tr))}\line 
+time\line
+. e\line
+. _G13963 :: _G13964\line
+. _G13997 :: _G13998\line
+ \cell 
+\pard\intbl B: {\i adv}\line
+very\line
+. _G14162 :: _G14163\line
+\cell
+\pard\intbl C: {\i adv(time(tr))}\line
+time\line
+. much\line
+. _G13963 :: _G13964\line
+. _G13997 :: _G13998\line
+\cell
+\row}
+{\pard Rules 30 to 32 recognise the combinatory properties 
+ of \b tumas\b0  and \b tru\b0  (both VERY). Both Priestley 2008 p. 278 and 
+ Priestley 1999b, p. 15, give \b tumas\b0  as equivalent of \i very\i0 ; I 
+ tentatively include \b tru\b0  for the expressin \b bipo tru\b0  \i a long time before\i0 \par}
+
+{\pard\sb250\fs28\cf2\keepn 31 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i a(?subcat)}\line 
+ \cell 
+\pard\intbl B: {\i adv}\line
+very\line
+. _G17083 :: _G17084\line
+\cell
+\pard\intbl C: {\i a(?subcat)}\line
+very\line
+\cell
+\row}
+{\pard\sb200\b Examples:\par}
+{\pard
+\trowd\trgaph144\cellx2500\cellx9600
+{\pard\fs24\cf3\intbl gutpela tumas\cell}
+{\pard\cf0\fs20\intbl ct(a(a), very(good))\cell}
+\row
+{\pard\fs24\cf3\intbl bikpela tumas\cell}
+{\pard\cf0\fs20\intbl ct(a(a), very(big))\cell}
+\row
+}
+
+{\pard\sb250\fs28\cf2\keepn 32 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i adv(?subcat)}\line 
+ \cell 
+\pard\intbl B: {\i adv}\line
+very\line
+. _G19890 :: _G19891\line
+\cell
+\pard\intbl C: {\i adv(?subcat)}\line
+very\line
+\cell
+\row}
+
+{\pard\sb250\fs28\cf2\keepn 35 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i adv(l(rel))}\line 
+ \cell 
+\pard\intbl B: {\i p}\line
+long\line
+\cell
+\pard\intbl C: {\i p}\line
+\cell
+\row}
+{\pard Spatial adverbs as \b antap\b0  \i above\i0 , \b insait\b0  \i inside\i0 , become spatial preposition when followed by the all-purpose preposition \b long\b0 \par}
+{\pard\sb200\b Examples:\par}
+{\pard
+\trowd\trgaph144\cellx2500\cellx9600
+{\pard\fs24\cf3\intbl antap long\cell}
+{\pard\cf0\fs20\intbl ct(p, above)\cell}
+\row
+{\pard\fs24\cf3\intbl klostu long\cell}
+{\pard\cf0\fs20\intbl ct(p, near)\cell}
+\row
+{\pard\fs24\cf3\intbl insait long\cell}
+{\pard\cf0\fs20\intbl ct(p, inside)\cell}
+\row
+{\pard\fs24\cf3\intbl ananit long\cell}
+{\pard\cf0\fs20\intbl ct(p, below)\cell}
+\row
+}
+
+{\pard\sb250\fs28\cf2\keepn 36 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i adv(time(tr))}\line 
+time\line
+. _G25622 :: _G25623\line
+. _G25656 :: _G25657\line
+. _G25690 :: _G25691\line
+ \cell 
+\pard\intbl B: {\i adv(time(tr))}\line
+time\line
+. _G25622 :: _G25623\line
+. _G25656 :: _G25657\line
+. _G25690 :: _G25691\line
+\cell
+\pard\intbl C: {\i adv(time(tr))}\line
+time\line
+. emph\line
+. _G25622 :: _G25623\line
+. _G25656 :: _G25657\line
+. _G25690 :: _G25691\line
+\cell
+\row}
+{\pard Tentative rule for reduplicated time adverbials lie \b bipo bipo\b0 .\par}
+
+{\pard\sb250\fs28\cf2\keepn 50 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i v(v)}\line 
+head :: say\line
+arguments\line
+ \cell 
+\pard\intbl B: {\i p}\line
+like\line
+\cell
+\pard\intbl C: {\i v(v)}\line
+head :: say_so\line
+arguments\line
+\cell
+\row}
+{\pard\sb200\b Examples:\par}
+{\pard
+\trowd\trgaph144\cellx2500\cellx9600
+{\pard\fs24\cf3\intbl em i tok olsem\cell}
+{\pard\cf0\fs20\intbl ct(s, s(e, e, e, e, e, p(say_so, [a:sp(this, e, e, [], someone(person))]), e, e))\cell}
+\row
+}
+
+{\pard\sb250\fs28\cf2\keepn 71 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i a(a)}\line 
+ \cell 
+\pard\intbl B: {\i n(?subcat)}\line
+substantive\line
+. det :: e\line
+. same_or_other :: e\line
+. number :: e\line
+. attributes :: ?attributes_B\line
+. head_noun :: ?head_noun_B\line
+\cell
+\pard\intbl C: {\i n(?subcat)}\line
+substantive\line
+. det :: e\line
+. same_or_other :: e\line
+. number :: e\line
+. attributes :: [[]|?attributes_B]\line
+. head_noun :: ?head_noun_B\line
+\cell
+\row}
+{\pard This grammar partitions adjectives into two subclasses, according to whether they precede (class \b a(a)\b0 ) or follow (class \b a(p)\b0 ) the head noun. Most adjectives precede. Examples from Priestley 1999a,  p. 8\par}
+{\pard\sb200\b Examples:\par}
+{\pard
+\trowd\trgaph144\cellx2500\cellx9600
+{\pard\fs24\cf3\intbl gutpela samting\cell}
+{\pard\cf0\fs20\intbl ct(n(n), sp(e, e, e, [good], something(thing)))\cell}
+\row
+{\pard\fs24\cf3\intbl bikpela samting\cell}
+{\pard\cf0\fs20\intbl ct(n(n), sp(e, e, e, [big], something(thing)))\cell}
+\row
+{\pard\fs24\cf3\intbl liklik samting\cell}
+{\pard\cf0\fs20\intbl ct(n(n), sp(e, e, e, [small], something(thing)))\cell}
+\row
+}
+
+{\pard\sb250\fs28\cf2\keepn 72 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i n(?subcat)}\line 
+substantive\line
+. det :: e\line
+. same_or_other :: e\line
+. number :: e\line
+. attributes :: ?attributes_A\line
+. head_noun :: ?head_noun_A\line
+ \cell 
+\pard\intbl B: {\i a(p)}\line
+\cell
+\pard\intbl C: {\i n(?subcat)}\line
+substantive\line
+. det :: e\line
+. same_or_other :: e\line
+. number :: e\line
+. attributes :: [[]|?attributes_A]\line
+. head_noun :: ?head_noun_A\line
+\cell
+\row}
+{\pard Dependency rule for adjectives which follow the head noun.\par}
+{\pard\sb200\b Examples:\par}
+{\pard
+\trowd\trgaph144\cellx2500\cellx9600
+{\pard\fs24\cf3\intbl samting nogut\cell}
+{\pard\cf0\fs20\intbl ct(n(n), sp(e, e, e, [bad], something(thing)))\cell}
+\row
+{\pard\fs24\cf3\intbl ples nogut\cell}
+{\pard\cf0\fs20\intbl ct(n(n), sp(e, e, e, [bad], somewhere(place)))\cell}
+\row
+}
+
+{\pard\sb250\fs28\cf2\keepn 78 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i alt}\line 
+ \cell 
+\pard\intbl B: {\i n(?subcat)}\line
+substantive\line
+. det :: e\line
+. same_or_other :: e\line
+. number :: e\line
+. attributes :: ?attributes_B\line
+. head_noun :: ?head_noun_B\line
+\cell
+\pard\intbl C: {\i n(?subcat)}\line
+substantive\line
+. det :: ?det_C\line
+. same_or_other\line
+. number :: e\line
+. attributes :: ?attributes_B\line
+. head_noun :: ?head_noun_B\line
+\cell
+\row}
+{\pard Rule for the prime \b narapela\b0  OTHER.\par}
+{\pard\sb200\b Examples:\par}
+{\pard
+\trowd\trgaph144\cellx2500\cellx9600
+{\pard\fs24\cf3\intbl narapela samting\cell}
+{\pard\cf0\fs20\intbl ct(n(n), sp(_G41294, other, e, [], something(thing)))\cell}
+\row
+{\pard\fs24\cf3\intbl dispela narapela man\cell}
+{\pard\cf0\fs20\intbl ct(n(n), sp(this, other, e, [], someone(person)))\cell}
+\row
+{\pard\fs24\cf3\intbl narapela mamneri\cell}
+{\pard\cf0\fs20\intbl noparse([110, 97, 114, 97, 112, 101, 108, 97, 32, 109, 97, 109, 110, 101, 114, 105])\cell}
+\row
+}
+{\pard\sb200\b\keepn Examples:\par}
+\par{\pard
+\trowd\trgaph144\cellx4800\cellx9600
+{\pard\s1\cf3\intbl em i stap long narapela ples\cell}
+{\pard\s2\intbl he exists in another place\cell}
+\row
+{\pard\s1\cf3\intbl mi bin wokim narapela samting\cell}
+{\pard\s2\intbl I have done another thing\cell}
+\row
+\lastrow}
+
+{\pard\sb250\fs28\cf2\keepn 80 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i num}\line 
+ \cell 
+\pard\intbl B: {\i n(?subcat)}\line
+substantive\line
+. det :: e\line
+. same_or_other :: ?same_or_other_B\line
+. number :: e\line
+. attributes :: ?attributes_B\line
+. head_noun :: ?head_noun_B\line
+\cell
+\pard\intbl C: {\i n(n)}\line
+substantive\line
+. det :: e\line
+. same_or_other :: ?same_or_other_B\line
+. number :: num([])\line
+. attributes :: ?attributes_B\line
+. head_noun :: ?head_noun_B\line
+\cell
+\row}
+{\pard Dependency rule for numerals other than \b wanpela\b0  \i one\i0 
+  in a substantive phrase. For \b wanpela\b0 , cf. rule 82\par}
+{\pard\sb200\b Examples:\par}
+{\pard
+\trowd\trgaph144\cellx2500\cellx9600
+{\pard\fs24\cf3\intbl wanpela man\cell}
+{\pard\cf0\fs20\intbl ct(n(n), sp(e, e, num(one), [], someone(person)))\cell}
+\row
+{\pard\fs24\cf3\intbl tupela man\cell}
+{\pard\cf0\fs20\intbl ct(n(n), sp(e, e, num(two), [], someone(person)))\cell}
+\row
+{\pard\fs24\cf3\intbl planti man\cell}
+{\pard\cf0\fs20\intbl ct(n(n), sp(e, e, num(many), [], someone(person)))\cell}
+\row
+{\pard\fs24\cf3\intbl olgeta man\cell}
+{\pard\cf0\fs20\intbl ct(n(n), sp(e, e, num(all), [], someone(person)))\cell}
+\row
+}
+
+{\pard\sb250\fs28\cf2\keepn 82 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i n(d)}\line 
+substantive\line
+. det :: e\line
+. same_or_other :: e\line
+. number :: e\line
+. attributes\line
+. head_noun :: someone(person)\line
+ \cell 
+\pard\intbl B: {\i n(n)}\line
+substantive\line
+. det :: e\line
+. same_or_other :: ?same_or_other_B\line
+. number :: e\line
+. attributes :: ?attributes_B\line
+. head_noun :: ?head_noun_B\line
+\cell
+\pard\intbl C: {\i n(n)}\line
+substantive\line
+. det :: e\line
+. same_or_other :: ?same_or_other_B\line
+. number :: num(one)\line
+. attributes :: ?attributes_B\line
+. head_noun :: ?head_noun_B\line
+\cell
+\row}
+{\pard As \b wanpela\b0  represents both numeral ONE and substative SOMEONE, 
+ it is given this special rule. The two primes are easily distinguished 
+ syntactically: when \b wanpela\b0  means SOMEONE, it is the head of the 
+ substantive phrase, while, in its numeral meaning, it is followed 
+ by a substantive-head.\par}
+{\pard\sb200\b Examples:\par}
+{\pard
+\trowd\trgaph144\cellx2500\cellx9600
+{\pard\fs24\cf3\intbl wanpela pikinini\cell}
+{\pard\cf0\fs20\intbl ct(n(n), sp(e, e, num(one), [], someone(child)))\cell}
+\row
+{\pard\fs24\cf3\intbl wanpela man\cell}
+{\pard\cf0\fs20\intbl ct(n(n), sp(e, e, num(one), [], someone(person)))\cell}
+\row
+{\pard\fs24\cf3\intbl wanpela ples\cell}
+{\pard\cf0\fs20\intbl ct(n(n), sp(e, e, num(one), [], somewhere(place)))\cell}
+\row
+}
+
+{\pard\sb250\fs28\cf2\keepn 84 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i q(1)}\line 
+plur\line
+ \cell 
+\pard\intbl B: {\i n(n)}\line
+substantive\line
+. det :: e\line
+. same_or_other :: ?same_or_other_B\line
+. number :: e\line
+. attributes\line
+. head_noun :: ?head_noun_B\line
+\cell
+\pard\intbl C: {\i n(n)}\line
+substantive\line
+. det :: e\line
+. same_or_other :: ?same_or_other_B\line
+. number :: num(plur)\line
+. attributes\line
+. head_noun :: ?head_noun_B\line
+\cell
+\row}
+{\pard This rule probably belongs to an extention of NSM rather than 
+ to NSM proper. \b ol\b0  is the plural marker in a substantive phrase. 
+ As English NSM often uses expressions like HE IS DOING THINGS, 
+ SUCH THINGS, I tentatively add a rule for \b ol\b0  to match English plural. 
+ Of course, if the English expressions are elliptical (the prime SOME remains 
+ unexpressed), then we can do without \b ol\b0  in Tok Pisin NSM.\par}
+{\pard\sb200\b\keepn Examples:\par}
+\par{\pard
+\trowd\trgaph144\cellx4800\cellx9600
+{\pard\s1\cf3\intbl dispela samting i gutpela\cell}
+{\pard\s2\intbl this thing is good\cell}
+\row
+{\pard\s1\cf3\intbl dispela ol samting i gutpela\cell}
+{\pard\s2\intbl these things are good\cell}
+\row
+\lastrow}
+
+{\pard\sb250\fs28\cf2\keepn 85 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i d}\line 
+ \cell 
+\pard\intbl B: {\i n(?subcat)}\line
+substantive\line
+. det :: e\line
+. same_or_other :: ?same_or_other_B\line
+. number :: ?number_B\line
+. attributes :: ?attributes_B\line
+. head_noun :: ?head_noun_B\line
+\cell
+\pard\intbl C: {\i n(n)}\line
+substantive\line
+. det\line
+. same_or_other :: ?same_or_other_B\line
+. number :: ?number_B\line
+. attributes :: ?attributes_B\line
+. head_noun :: ?head_noun_B\line
+\cell
+\row}
+{\pard\b Conditions: \line
+lexical(d, [])\line
+\par}
+{\pard Determiner in a substantive phrase. This rule exemplifies the 
+ important built-in condition lexical(Category,Meaning), which checks 
+ if there is such a lexical entry before applying the rule. \par}
+{\pard\sb100\qj\fi500\fs24 
+One of the main cause of errors in writing rules for the generator is 
+ \i left recursion\i0 . If you look at the source code for rule 85, you see 
+ that it could be matched vacuously \i ad infinitum\i0 , as the output of the 
+ rule in generation (B part of A+B) still matches the input (C), 
+ because nothing prevents the empty predicate \b e\b0  to be matched 
+ against the variable \b D\b0 . \par}
+{\pard\sb100\qj\fi500\fs24 
+Therefore, A and B parts of a dependency rule \b must always be
+ such that they do not match part C any more\b0 .\par}
+{\pard\sb100\qj\fi500\fs24 
+If a rule must be written that does not meet this restriction, a check must 
+ be made to avoid sending the generator into an infinite loop.\par}
+{\pard\sb100\qj\fi500\fs24 
+In generation, this rule produces a lexical item (the determiner), and 
+ a "less instantiated" substantive phrase, which has been stripped 
+ of the determiner. The condition that will prevent further vacuous 
+ application of the rule is simply that \i there be such lexical item\i0  as
+ m(d,PhoneticForm,Meaning). As there is no such entry as 
+ m(d,"...",e), the rule is stopped.\par}
+{\pard\sb200\b Examples:\par}
+{\pard
+\trowd\trgaph144\cellx2500\cellx9600
+{\pard\fs24\cf3\intbl dispela samting\cell}
+{\pard\cf0\fs20\intbl ct(n(n), sp(this, e, e, [], something(thing)))\cell}
+\row
+{\pard\fs24\cf3\intbl dispela man\cell}
+{\pard\cf0\fs20\intbl ct(n(n), sp(this, e, e, [], someone(person)))\cell}
+\row
+{\pard\fs24\cf3\intbl dispela wanpela\cell}
+{\pard\cf0\fs20\intbl ct(n(n), sp(this, e, e, [], someone(person)))\cell}
+\row
+}
+
+{\pard\sb250\fs28\cf2\keepn 108 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i v(v)}\line 
+head :: want\line
+arguments\line
+. e\line
+. . e\line
+ \cell 
+\pard\intbl B: {\i p}\line
+long\line
+\cell
+\pard\intbl C: {\i v(v)}\line
+head :: want\line
+arguments\line
+. e\line
+. . e\line
+. object\line
+. . p\line
+\cell
+\row}
+{\pard This rule recognises \b laik\b0  + \b long\b0  as the construction 
+ for non-equi WANT in Tok Pisin.\par}
+{\pard\sb200\b Examples:\par}
+{\pard
+\trowd\trgaph144\cellx2500\cellx9600
+{\pard\fs24\cf3\intbl laik\cell}
+{\pard\cf0\fs20\intbl ct(v(v), p(want, [e:e]))\cell}
+\row
+{\pard\fs24\cf3\intbl laik long\cell}
+{\pard\cf0\fs20\intbl ct(v(v), p(want, [e:e, o:p]))\cell}
+\row
+}
+{\pard\sb200\b\keepn Examples:\par}
+\par{\pard
+\trowd\trgaph144\cellx4800\cellx9600
+{\pard\s1\cf3\intbl mi laik wokim samting\cell}
+{\pard\s2\intbl I want to do something\cell}
+\row
+{\pard\s1\cf3\intbl mi laik long yu wokim samting\cell}
+{\pard\s2\intbl I want you to do something\cell}
+\row
+\lastrow}
+
+{\pard\sb250\fs28\cf2\keepn 109 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i tma}\line 
+bai\line
+ \cell 
+\pard\intbl B: {\i v(?subcat)}\line
+head :: ?pred_B\line
+arguments\line
+\cell
+\pard\intbl C: {\i v(?subcat)}\line
+head :: fut(?pred_B)\line
+arguments\line
+\cell
+\row}
+{\pard The future-irrealis marker \b bai\b0 . Its syntax is more 
+ unrestricted thant that of the marker \b bin\b0 : while \b bin\b0  immediately 
+ precedes the verb, \b bai\b0  can precede the verb or stay at the beginning of 
+ the sentence.\par}
+{\pard\sb200\b Examples:\par}
+{\pard
+\trowd\trgaph144\cellx2500\cellx9600
+{\pard\fs24\cf3\intbl bai go\cell}
+{\pard\cf0\fs20\intbl ct(v(v), p(fut(go), [a:e]))\cell}
+\row
+{\pard\fs24\cf3\intbl bai wokim\cell}
+{\pard\cf0\fs20\intbl ct(v(v), p(fut(do), [a:e, o:e, d:e, c:e, i:e, b:e]))\cell}
+\row
+}
+{\pard\sb200\b\keepn Examples:\par}
+\par{\pard
+\trowd\trgaph144\cellx4800\cellx9600
+{\pard\s1\cf3\intbl samting i kamap\cell}
+{\pard\s2\intbl something happens\cell}
+\row
+{\pard\s1\cf3\intbl samting i bin kamap\cell}
+{\pard\s2\intbl something has happenen\cell}
+\row
+{\pard\s1\cf3\intbl bai samting i kamap\cell}
+{\pard\s2\intbl something will happen\cell}
+\row
+{\pard\s1\cf3\intbl samting bai i kamap\cell}
+{\pard\s2\intbl something will happen\cell}
+\row
+\lastrow}
+
+{\pard\sb250\fs28\cf2\keepn 110 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i p}\line 
+ \cell 
+\pard\intbl B: {\i n(?subcat)}\line
+substantive\line
+. det :: ?det_B\line
+. same_or_other :: ?same_or_other_B\line
+. number :: ?number_B\line
+. attributes :: ?attributes_B\line
+. head_noun :: ?head_noun_B\line
+\cell
+\pard\intbl C: {\i pp([])}\line
+substantive\line
+. det :: ?det_B\line
+. same_or_other :: ?same_or_other_B\line
+. number :: ?number_B\line
+. attributes :: ?attributes_B\line
+. head_noun :: ?head_noun_B\line
+\cell
+\row}
+{\pard Preposition + Substantive Phrase ---> 
+ Prepositional phrase. This rule belongs to the second level, so it will 
+ be tried (in parsing) after all the substantive-phrase-building rules 
+ have been attempted.\par}
+{\pard\sb200\b Examples:\par}
+{\pard
+\trowd\trgaph144\cellx2500\cellx9600
+{\pard\fs24\cf3\intbl long dispela manmeri\cell}
+{\pard\cf0\fs20\intbl ct(pp(long), sp(this, e, e, [], people))\cell}
+\row
+{\pard\fs24\cf3\intbl wantaim yu\cell}
+{\pard\cf0\fs20\intbl ct(pp(with), sp(e, e, e, [], d(you)))\cell}
+\row
+{\pard\fs24\cf3\intbl bilong mi\cell}
+{\pard\cf0\fs20\intbl ct(pp(gen), sp(e, e, e, [], d(me)))\cell}
+\row
+}
+
+{\pard\sb250\fs28\cf2\keepn 111 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i p}\line 
+ \cell 
+\pard\intbl B: {\i d}\line
+this\line
+\cell
+\pard\intbl C: {\i pp([])}\line
+substantive\line
+. det :: this\line
+. same_or_other :: e\line
+. number :: e\line
+. attributes\line
+. head_noun :: something(fact)\line
+\cell
+\row}
+{\pard Substantive use of \b dispela\b0  THIS. When the parser is trying to 
+ apply this rule, all first-level rules have been tried. If \b dispela\b0  had 
+ been part of a substantive phrase, this would already have been recognised. 
+ Therefore, a preposition can combine with a "stranded" THIS to form 
+ a prepositional phrase. Rule 112 is a particular case -- the prime 
+ LIKE THIS, formed, as in English, by \b olsem\b0  + \b dispela\b0 
+ (Cf. Priestley 2008, pp. 282, 285, 291)\par}
+{\pard\sb200\b Examples:\par}
+{\pard
+\trowd\trgaph144\cellx2500\cellx9600
+{\pard\fs24\cf3\intbl wantaim dispela\cell}
+{\pard\cf0\fs20\intbl ct(pp(with), sp(this, e, e, [], something(fact)))\cell}
+\row
+{\pard\fs24\cf3\intbl long dispela\cell}
+{\pard\cf0\fs20\intbl ct(pp(long), sp(this, e, e, [], something(fact)))\cell}
+\row
+{\pard\fs24\cf3\intbl bilong dispela\cell}
+{\pard\cf0\fs20\intbl ct(pp(gen), sp(this, e, e, [], something(fact)))\cell}
+\row
+}
+
+{\pard\sb250\fs28\cf2\keepn 112 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i p}\line 
+like\line
+ \cell 
+\pard\intbl B: {\i d}\line
+this\line
+\cell
+\pard\intbl C: {\i pp(like)}\line
+this\line
+\cell
+\row}
+{\pard\sb200\b Examples:\par}
+{\pard
+\trowd\trgaph144\cellx2500\cellx9600
+{\pard\fs24\cf3\intbl olsem dispela\cell}
+{\pard\cf0\fs20\intbl ct(pp(like), this)\cell}
+\row
+}
+
+{\pard\sb250\fs28\cf2\keepn 120 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i n(?subcat)}\line 
+substantive\line
+. det :: ?det_A\line
+. same_or_other :: ?same_or_other_A\line
+. number :: ?number_A\line
+. attributes :: ?attributes_A\line
+. head_noun :: ?head_noun_A\line
+ \cell 
+\pard\intbl B: {\i pp(?subcat)}\line
+\cell
+\pard\intbl C: {\i n(?subcat)}\line
+substantive\line
+. det :: ?det_A\line
+. same_or_other :: ?same_or_other_A\line
+. number :: ?number_A\line
+. attributes :: [rel(?subcat, [])|?attributes_A]\line
+. head_noun :: ?head_noun_A\line
+\cell
+\row}
+{\pard\b Conditions: \line
+np_adj(?subcat)\line
+not_pn(?subcat)\line
+\par}
+{\pard Prepositional phrases used as modifiers of substantive 
+ phrases. Cf. Presteley 1999a p.8\par}
+{\pard\sb200\b Examples:\par}
+{\pard
+\trowd\trgaph144\cellx2500\cellx9600
+{\pard\fs24\cf3\intbl em i samting bilong mi\cell}
+{\pard\cf0\fs20\intbl ct(s, s(e, e, e, e, e, p(be, [j:sp(this, e, e, [], someone(person)), j:sp(e, e, e, [rel(gen, sp(e, e, e, [], d(me)))], something(thing))]), e, e))\cell}
+\row
+{\pard\fs24\cf3\intbl manmeri bilong dispela ples\cell}
+{\pard\cf0\fs20\intbl ct(n(n), sp(e, e, e, [rel(gen, sp(this, e, e, [], somewhere(place)))], people))\cell}
+\row
+}
+
+{\pard\sb250\fs28\cf2\keepn 121 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i n(n)}\line 
+substantive\line
+. det :: ?det_A\line
+. same_or_other :: ?same_or_other_A\line
+. number :: ?number_A\line
+. attributes :: ?attributes_A\line
+. head_noun :: kind\line
+ \cell 
+\pard\intbl B: {\i n(?subcat)}\line
+substantive\line
+. det :: e\line
+. same_or_other :: e\line
+. number :: e\line
+. attributes\line
+. head_noun :: ?head_noun_B\line
+\cell
+\pard\intbl C: {\i n(n)}\line
+substantive\line
+. det :: ?det_A\line
+. same_or_other :: ?same_or_other_A\line
+. number :: ?number_A\line
+. attributes :: [rel(kind, e)|?attributes_A]\line
+. head_noun :: ?head_noun_B\line
+\cell
+\row}
+{\pard Dependency rule for prime KIND OF.\par}
+{\pard\sb200\b Examples:\par}
+{\pard
+\trowd\trgaph144\cellx2500\cellx9600
+{\pard\fs24\cf3\intbl kain samting\cell}
+{\pard\cf0\fs20\intbl ct(n(n), sp(e, e, e, [rel(kind, e)], something(thing)))\cell}
+\row
+{\pard\fs24\cf3\intbl kai ples\cell}
+{\pard\cf0\fs20\intbl noparse([107, 97, 105, 32, 112, 108, 101, 115])\cell}
+\row
+{\pard\fs24\cf3\intbl narapela kain samting\cell}
+{\pard\cf0\fs20\intbl ct(n(n), sp(_G9034, other, e, [rel(kind, e)], something(thing)))\cell}
+\row
+}
+
+{\pard\sb250\fs28\cf2\keepn 123 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i n(?subcat)}\line 
+substantive\line
+. det :: ?det_A\line
+. same_or_other :: ?same_or_other_A\line
+. number :: ?number_A\line
+. attributes :: ?attributes_A\line
+. head_noun :: ?head_noun_A\line
+ \cell 
+\pard\intbl B: {\i adv}\line
+only\line
+\cell
+\pard\intbl C: {\i n(?subcat)}\line
+substantive\line
+. det :: only(?det_A)\line
+. same_or_other :: ?same_or_other_A\line
+. number :: ?number_A\line
+. attributes :: ?attributes_A\line
+. head_noun :: ?head_noun_A\line
+\cell
+\row}
+{\pard Rules 123 and 124: TASOL after a substantive phrase is interpreted as 
+ a further determiner (to be reviewed).\par}
+{\pard\sb200\b Examples:\par}
+{\pard
+\trowd\trgaph144\cellx2500\cellx9600
+{\pard\fs24\cf3\intbl dispela samting tasol\cell}
+{\pard\cf0\fs20\intbl ct(n(n), sp(only(this), e, e, [], something(thing)))\cell}
+\row
+}
+
+{\pard\sb250\fs28\cf2\keepn 124 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i pp(?subcat)}\line 
+substantive\line
+. det :: ?det_A\line
+. same_or_other :: ?same_or_other_A\line
+. number :: ?number_A\line
+. attributes :: ?attributes_A\line
+. head_noun :: ?head_noun_A\line
+ \cell 
+\pard\intbl B: {\i adv}\line
+only\line
+\cell
+\pard\intbl C: {\i pp(?subcat)}\line
+substantive\line
+. det :: only(?det_A)\line
+. same_or_other :: ?same_or_other_A\line
+. number :: ?number_A\line
+. attributes :: ?attributes_A\line
+. head_noun :: ?head_noun_A\line
+\cell
+\row}
+{\pard\sb200\b Examples:\par}
+{\pard
+\trowd\trgaph144\cellx2500\cellx9600
+{\pard\fs24\cf3\intbl bilong dispela samting tasol\cell}
+{\pard\cf0\fs20\intbl ct(pp(gen), sp(only(this), e, e, [], something(thing)))\cell}
+\row
+}
+
+{\pard\sb250\fs28\cf2\keepn 203 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i v(v)}\line 
+head :: say\line
+arguments\line
+. agent\line
+. . ?a_A\line
+. t\line
+. . e\line
+ \cell 
+\pard\intbl B: {\i n(?subcat)}\line
+substantive\line
+. det :: ?det_B\line
+. same_or_other :: ?same_or_other_B\line
+. number :: ?number_B\line
+. attributes :: ?attributes_B\line
+. head_noun :: ?head_noun_B\line
+\cell
+\pard\intbl C: {\i v(v)}\line
+head :: say\line
+arguments\line
+. agent\line
+. . ?a_A\line
+. object\line
+. . e\line
+. dative\line
+. . substantive\line
+. . . det :: ?det_B\line
+. . . same_or_other :: ?same_or_other_B\line
+. . . number :: ?number_B\line
+. . . attributes :: ?attributes_B\line
+. . . head_noun :: ?head_noun_B\line
+. t\line
+. . e\line
+\cell
+\row}
+{\pard\b Conditions: \line
+is_animate(?head_noun_B)\line
+\par}
+{\pard Object of \b tokim\b0  SAY. If the object is animate (if a "someone"), 
+ it is interpreted as the \i dative\i0  argument (SAY SOMETHING \b TO SOMEONE\b0 ); if 
+ the object is \i something\i0  or \i words\i0 , it is the complement (SAY \b SOMETHING\b0 ).\par}
+{\pard\sb100\qj\fi500\fs24 
+This rule recognises the first case; rule 204 the second.\par}
+
+{\pard\sb250\fs28\cf2\keepn 204 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i v(v)}\line 
+head :: say\line
+arguments\line
+. agent\line
+. . ?a_A\line
+. t\line
+. . e\line
+ \cell 
+\pard\intbl B: {\i n(?subcat)}\line
+substantive\line
+. det :: ?det_B\line
+. same_or_other :: ?same_or_other_B\line
+. number :: ?number_B\line
+. attributes :: ?attributes_B\line
+. head_noun :: ?head_noun_B\line
+\cell
+\pard\intbl C: {\i v(v)}\line
+head :: say\line
+arguments\line
+. agent\line
+. . ?a_A\line
+. object\line
+. . substantive\line
+. . . det :: ?det_B\line
+. . . same_or_other :: ?same_or_other_B\line
+. . . number :: ?number_B\line
+. . . attributes :: ?attributes_B\line
+. . . head_noun :: ?head_noun_B\line
+. dative\line
+. . e\line
+. t\line
+. . e\line
+\cell
+\row}
+{\pard\b Conditions: \line
+not(is_animate(?head_noun_B))\line
+\par}
+{\pard After substantive phrases and prepositional phrases have been 
+ recognised, the verb phrase is then attempted. The first rule of the third 
+ level links a verb with a following substantive phrase in a \i verb-object\i0   
+ dependency. Translation examples from Priestley 1999a p. 8.\par}
+{\pard\sb100\qj\fi500\fs24 
+The object must be the \i first\i0  substantive phrase after the verb, hence the 
+ condition that all other slots in the argument list be empty at the point an 
+ object is recognised.\par}
+{\pard\sb200\b Examples:\par}
+{\pard
+\trowd\trgaph144\cellx2500\cellx9600
+{\pard\fs24\cf3\intbl lukim mi\cell}
+{\pard\cf0\fs20\intbl ct(v(v), p(see, [a:e, o:sp(e, e, e, [], d(me))]))\cell}
+\row
+{\pard\fs24\cf3\intbl harim yu\cell}
+{\pard\cf0\fs20\intbl ct(v(v), p(hear, [a:e, o:sp(e, e, e, [], d(you)), t:e]))\cell}
+\row
+{\pard\fs24\cf3\intbl wokim gutpela samting\cell}
+{\pard\cf0\fs20\intbl ct(v(v), p(do, [a:e, o:sp(e, e, e, [good], something(thing)), d:e, c:e, i:e, b:e]))\cell}
+\row
+}
+{\pard\sb200\b\keepn Examples:\par}
+\par{\pard
+\trowd\trgaph144\cellx4800\cellx9600
+{\pard\s1\cf3\intbl mi wokim gutpela samting\cell}
+{\pard\s2\intbl I do something good\cell}
+\row
+{\pard\s1\cf3\intbl mi laikim samting\cell}
+{\pard\s2\intbl I want something\cell}
+\row
+{\pard\s1\cf3\intbl mi tingim samting\cell}
+{\pard\s2\intbl I think something\cell}
+\row
+{\pard\s1\cf3\intbl em i lukim mi\cell}
+{\pard\s2\intbl he sees me\cell}
+\row
+\lastrow}
+
+{\pard\sb250\fs28\cf2\keepn 207 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i v(?subcat)}\line 
+head :: ?pred_A\line
+arguments\line
+. ?role :: ??role_A\line
+. object\line
+. . e\line
+ \cell 
+\pard\intbl B: {\i num}\line
+many\line
+\cell
+\pard\intbl C: {\i v(?subcat)}\line
+head :: ?pred_A\line
+arguments\line
+. ?role :: ??role_A\line
+. object\line
+. . substantive\line
+. . . det :: e\line
+. . . same_or_other :: e\line
+. . . number :: num(many)\line
+. . . attributes\line
+. . . head_noun :: something(thing)\line
+\cell
+\row}
+{\pard MANY (\b planti\b0 ) used alone as object (cf. Priestley 1999a p. 11-12). 
+ To be reviewed.\par}
+{\pard\sb200\b\keepn Examples:\par}
+\par{\pard
+\trowd\trgaph144\cellx4800\cellx9600
+{\pard\s1\cf3\intbl mi save planti long yu\cell}
+{\pard\s2\intbl I know many things about you\cell}
+\row
+\lastrow}
+
+{\pard\sb250\fs28\cf2\keepn 208 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i v(?subcat)}\line 
+head :: ?pred_A\line
+arguments\line
+. ?role :: ??role_A\line
+. object\line
+. . e\line
+ \cell 
+\pard\intbl B: {\i d}\line
+this\line
+\cell
+\pard\intbl C: {\i v(?subcat)}\line
+head :: ?pred_A\line
+arguments\line
+. ?role :: ??role_A\line
+. object\line
+. . substantive\line
+. . . det :: this\line
+. . . same_or_other :: e\line
+. . . number :: e\line
+. . . attributes\line
+. . . head_noun :: something(fact)\line
+\cell
+\row}
+{\pard "Standalone" THIS used as object. It is surely a flaw 
+ of this kind of representation (SN-PROLOG) that so many separate rules for 
+ substantive and pronominal objects must be written.\par}
+{\pard\sb200\b\keepn Examples:\par}
+\par{\pard
+\trowd\trgaph144\cellx4800\cellx9600
+{\pard\s1\cf3\intbl mi save dispela\cell}
+{\pard\s2\intbl I know this\cell}
+\row
+{\pard\s1\cf3\intbl em i bin wokim dispela\cell}
+{\pard\s2\intbl he has done this\cell}
+\row
+{\pard\s1\cf3\intbl mi lukim dispela\cell}
+{\pard\s2\intbl I see this\cell}
+\row
+\lastrow}
+
+{\pard\sb250\fs28\cf2\keepn 209 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i v(v)}\line 
+head :: live\line
+arguments\line
+. agent\line
+. . ?a_A\line
+. comitative\line
+. . e\line
+ \cell 
+\pard\intbl B: {\i r(a)}\line
+very\line
+. good\line
+\cell
+\pard\intbl C: {\i v(stat)}\line
+head :: be_very_good\line
+arguments\line
+. e\line
+. . ?a_A\line
+\cell
+\row}
+{\pard This rule and the following recognise the expression \b stap gut\b0  
+ (be well) which is used in the translation of the prime combination 
+ FEEL SOMETHING GOOD (cf. Priestley 199a, p. 13-16). The final expression 
+ (\b bel bilong me i stap gut\b0  = I feel something good) is recognised by 
+ a idiom/2 predicate, which is a tentative add-on to the NSM-PROLOG engine. 
+ You can see how it looks in the source code.\par}
+{\pard\sb200\b Examples:\par}
+{\pard
+\trowd\trgaph144\cellx2500\cellx9600
+{\pard\fs24\cf3\intbl mi stap gut\cell}
+{\pard\cf0\fs20\intbl ct(s, s(e, e, e, e, e, p(be_good, [e:sp(e, e, e, [], d(me))]), e, e))\cell}
+\row
+}
+{\pard\sb200\b\keepn Examples:\par}
+\par{\pard
+\trowd\trgaph144\cellx4800\cellx9600
+{\pard\s1\cf3\intbl bel bilong mi i stap gut\cell}
+{\pard\s2\intbl I feel something good\cell}
+\row
+\lastrow}
+
+{\pard\sb250\fs28\cf2\keepn 210 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i v(?subcat)}\line 
+head :: ?pred_A\line
+arguments\line
+. ?role :: ??role_A\line
+. ?role\line
+. . e\line
+ \cell 
+\pard\intbl B: {\i pp(?subcat)}\line
+substantive\line
+. det :: ?det_B\line
+. same_or_other :: ?same_or_other_B\line
+. number :: ?number_B\line
+. attributes :: ?attributes_B\line
+. head_noun :: ?head_noun_B\line
+\cell
+\pard\intbl C: {\i v(?subcat)}\line
+head :: ?pred_A\line
+arguments\line
+. ?role :: ??role_A\line
+. ?role\line
+. . substantive\line
+. . . det :: ?det_B\line
+. . . same_or_other :: ?same_or_other_B\line
+. . . number :: ?number_B\line
+. . . attributes :: ?attributes_B\line
+. . . head_noun :: ?head_noun_B\line
+\cell
+\row}
+{\pard\b Conditions: \line
+macro_role(?subcat, ?head_noun_B, _G10976)\line
+\par}
+{\pard Rules 210 to 215 link the verb to its prepositional complements. 
+ This is also an area for further improvements in the NSM-PROLOG notation.\par}
+
+{\pard\sb250\fs28\cf2\keepn 212 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i v(?subcat)}\line 
+head :: ?pred_A\line
+arguments\line
+. ?role :: ??role_A\line
+. ?role :: ??role_A\line
+. ?role :: ??role_A\line
+. ?role\line
+. . e\line
+ \cell 
+\pard\intbl B: {\i pp(?subcat)}\line
+substantive\line
+. det :: ?det_B\line
+. same_or_other :: ?same_or_other_B\line
+. number :: ?number_B\line
+. attributes :: ?attributes_B\line
+. head_noun :: ?head_noun_B\line
+\cell
+\pard\intbl C: {\i v(?subcat)}\line
+head :: ?pred_A\line
+arguments\line
+. ?role :: ??role_A\line
+. ?role :: ??role_A\line
+. ?role :: ??role_A\line
+. ?role\line
+. . substantive\line
+. . . det :: ?det_B\line
+. . . same_or_other :: ?same_or_other_B\line
+. . . number :: ?number_B\line
+. . . attributes :: ?attributes_B\line
+. . . head_noun :: ?head_noun_B\line
+\cell
+\row}
+{\pard\b Conditions: \line
+macro_role(?subcat, ?head_noun_B, _G14644)\line
+\par}
+{\pard\sb200\b\keepn Examples:\par}
+\par{\pard
+\trowd\trgaph144\cellx4800\cellx9600
+{\pard\s1\cf3\intbl em i wokim gutpela samting wantaim mi\cell}
+{\pard\s2\intbl he does something good with me\cell}
+\row
+\lastrow}
+
+{\pard\sb250\fs28\cf2\keepn 213 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i v(?subcat)}\line 
+head :: ?pred_A\line
+arguments\line
+. ?role :: ??role_A\line
+. ?role :: ??role_A\line
+. ?role\line
+. . e\line
+ \cell 
+\pard\intbl B: {\i pp(?subcat)}\line
+substantive\line
+. det :: ?det_B\line
+. same_or_other :: ?same_or_other_B\line
+. number :: ?number_B\line
+. attributes :: ?attributes_B\line
+. head_noun :: ?head_noun_B\line
+\cell
+\pard\intbl C: {\i v(?subcat)}\line
+head :: ?pred_A\line
+arguments\line
+. ?role :: ??role_A\line
+. ?role :: ??role_A\line
+. ?role\line
+. . substantive\line
+. . . det :: ?det_B\line
+. . . same_or_other :: ?same_or_other_B\line
+. . . number :: ?number_B\line
+. . . attributes :: ?attributes_B\line
+. . . head_noun :: ?head_noun_B\line
+\cell
+\row}
+{\pard\b Conditions: \line
+macro_role(?subcat, ?head_noun_B, _G23751)\line
+\par}
+{\pard\sb200\b\keepn Examples:\par}
+\par{\pard
+\trowd\trgaph144\cellx4800\cellx9600
+{\pard\s1\cf3\intbl em i wokim gutpela samting long mi\cell}
+{\pard\s2\intbl he does something good for me\cell}
+\row
+\lastrow}
+
+{\pard\sb250\fs28\cf2\keepn 214 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i v(?subcat)}\line 
+head :: ?pred_A\line
+arguments\line
+. ?role :: ??role_A\line
+. ?role :: ??role_A\line
+. ?role :: ??role_A\line
+. ?role :: ??role_A\line
+. ?role\line
+. . e\line
+ \cell 
+\pard\intbl B: {\i pp(?subcat)}\line
+substantive\line
+. det :: ?det_B\line
+. same_or_other :: ?same_or_other_B\line
+. number :: ?number_B\line
+. attributes :: ?attributes_B\line
+. head_noun :: ?head_noun_B\line
+\cell
+\pard\intbl C: {\i v(?subcat)}\line
+head :: ?pred_A\line
+arguments\line
+. ?role :: ??role_A\line
+. ?role :: ??role_A\line
+. ?role :: ??role_A\line
+. ?role :: ??role_A\line
+. ?role\line
+. . substantive\line
+. . . det :: ?det_B\line
+. . . same_or_other :: ?same_or_other_B\line
+. . . number :: ?number_B\line
+. . . attributes :: ?attributes_B\line
+. . . head_noun :: ?head_noun_B\line
+\cell
+\row}
+{\pard\b Conditions: \line
+macro_role(?subcat, ?head_noun_B, _G32628)\line
+\par}
+{\pard\sb200\b\keepn Examples:\par}
+\par{\pard
+\trowd\trgaph144\cellx4800\cellx9600
+{\pard\s1\cf3\intbl em i wokim samting wantaim dispela samting\cell}
+{\pard\s2\intbl he does something with this thing\cell}
+\row
+\lastrow}
+
+{\pard\sb250\fs28\cf2\keepn 215 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i v(?subcat)}\line 
+head :: ?pred_A\line
+arguments\line
+. ?role :: ??role_A\line
+. ?role :: ??role_A\line
+. ?role :: ??role_A\line
+. ?role :: ??role_A\line
+. ?role :: ??role_A\line
+. ?role\line
+. . e\line
+ \cell 
+\pard\intbl B: {\i pp(?subcat)}\line
+substantive\line
+. det :: ?det_B\line
+. same_or_other :: ?same_or_other_B\line
+. number :: ?number_B\line
+. attributes :: ?attributes_B\line
+. head_noun :: ?head_noun_B\line
+\cell
+\pard\intbl C: {\i v(?subcat)}\line
+head :: ?pred_A\line
+arguments\line
+. ?role :: ??role_A\line
+. ?role :: ??role_A\line
+. ?role :: ??role_A\line
+. ?role :: ??role_A\line
+. ?role :: ??role_A\line
+. ?role\line
+. . substantive\line
+. . . det :: ?det_B\line
+. . . same_or_other :: ?same_or_other_B\line
+. . . number :: ?number_B\line
+. . . attributes :: ?attributes_B\line
+. . . head_noun :: ?head_noun_B\line
+\cell
+\row}
+{\pard\b Conditions: \line
+macro_role(?subcat, ?head_noun_B, _G42321)\line
+\par}
+
+{\pard\sb250\fs28\cf2\keepn 250 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i i}\line 
+i\line
+ \cell 
+\pard\intbl B: {\i neg}\line
+not\line
+\cell
+\pard\intbl C: {\i i}\line
+not\line
+\cell
+\row}
+{\pard Rules 250 to 264  are another area for future improvements. 
+ These 
+ rules recognise subject-predicate dependencies when 
+ the predicate is a substantive, and adjective and an adverb, and link 
+ the inflectional particle \b i\b0  and sentence negator \b no\b0  to these predicates.\par}
+{\pard\sb200\b Examples:\par}
+{\pard
+\trowd\trgaph144\cellx2500\cellx9600
+{\pard\fs24\cf3\intbl i no\cell}
+{\pard\cf0\fs20\intbl ct(i, not)\cell}
+\row
+}
+
+{\pard\sb250\fs28\cf2\keepn 251 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i i}\line 
+ \cell 
+\pard\intbl B: {\i n(?subcat)}\line
+?j_C\line
+\cell
+\pard\intbl C: {\i v(stat)}\line
+head :: ?pred_C\line
+arguments\line
+. theme\line
+. . 3\line
+. theme\line
+. . ?j_C\line
+\cell
+\row}
+{\pard\b Conditions: \line
+i_no([], ?pred_C)\line
+\par}
+{\pard\sb200\b Examples:\par}
+{\pard
+\trowd\trgaph144\cellx2500\cellx9600
+{\pard\fs24\cf3\intbl i no gutpela samting\cell}
+{\pard\cf0\fs20\intbl ct(v(stat), p(neg(be), [j:3, j:sp(e, e, e, [good], something(thing))]))\cell}
+\row
+}
+{\pard\sb200\b\keepn Examples:\par}
+\par{\pard
+\trowd\trgaph144\cellx4800\cellx9600
+{\pard\s1\cf3\intbl dispela samting i no gutpela samting\cell}
+{\pard\s2\intbl this thing is not something good\cell}
+\row
+\lastrow}
+
+{\pard\sb250\fs28\cf2\keepn 252 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i i}\line 
+i\line
+ \cell 
+\pard\intbl B: {\i a(?subcat)}\line
+?pred_C\line
+\cell
+\pard\intbl C: {\i v(stat)}\line
+head :: ?pred_C\line
+arguments\line
+. object\line
+. . 3\line
+\cell
+\row}
+{\pard\b Conditions: \line
+good_for(?pred_C, [])\line
+\par}
+{\pard\sb200\b\keepn Examples:\par}
+\par{\pard
+\trowd\trgaph144\cellx4800\cellx9600
+{\pard\s1\cf3\intbl dispela samting i gutpela\cell}
+{\pard\s2\intbl this thing is good\cell}
+\row
+\lastrow}
+
+{\pard\sb250\fs28\cf2\keepn 253 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i i}\line 
+not\line
+ \cell 
+\pard\intbl B: {\i a(?subcat)}\line
+\cell
+\pard\intbl C: {\i v(stat)}\line
+head :: neg([])\line
+arguments\line
+. object\line
+. . 3\line
+\cell
+\row}
+{\pard\b Conditions: \line
+good_for([], [])\line
+\par}
+
+{\pard\sb250\fs28\cf2\keepn 254 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i i}\line 
+i\line
+ \cell 
+\pard\intbl B: {\i pp(?subcat)}\line
+\cell
+\pard\intbl C: {\i v(v)}\line
+head :: be\line
+arguments\line
+. theme\line
+. . 3\line
+. locative\line
+. . loc\line
+. . . ?subcat\line
+\cell
+\row}
+{\pard\b Conditions: \line
+locative(?subcat)\line
+\par}
+{\pard\sb200\b Examples:\par}
+{\pard
+\trowd\trgaph144\cellx2500\cellx9600
+{\pard\fs24\cf3\intbl i antap long dispela narapela samting\cell}
+{\pard\cf0\fs20\intbl ct(v(v), p(be, [j:3, l:loc(above, sp(this, other, e, [], something(thing)))]))\cell}
+\row
+}
+{\pard\sb200\b\keepn Examples:\par}
+\par{\pard
+\trowd\trgaph144\cellx4800\cellx9600
+{\pard\s1\cf3\intbl dispela samting i antap long dispela narapela samting\cell}
+{\pard\s2\intbl this thing is above this another thing\cell}
+\row
+\lastrow}
+
+{\pard\sb250\fs28\cf2\keepn 255 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i i}\line 
+i\line
+ \cell 
+\pard\intbl B: {\i pp(like)}\line
+?o_C\line
+\cell
+\pard\intbl C: {\i v(v)}\line
+head :: like\line
+arguments\line
+. theme\line
+. . 3\line
+. object\line
+. . ?o_C\line
+\cell
+\row}
+{\pard\sb200\b Examples:\par}
+{\pard
+\trowd\trgaph144\cellx2500\cellx9600
+{\pard\fs24\cf3\intbl i olsem dispela narapela samting\cell}
+{\pard\cf0\fs20\intbl ct(v(v), p(like, [j:3, o:sp(this, other, e, [], something(thing))]))\cell}
+\row
+}
+{\pard\sb200\b\keepn Examples:\par}
+\par{\pard
+\trowd\trgaph144\cellx4800\cellx9600
+{\pard\s1\cf3\intbl dispela samting i olsem dispela narapela samting\cell}
+{\pard\s2\intbl this thing is like this another thing\cell}
+\row
+\lastrow}
+
+{\pard\sb250\fs28\cf2\keepn 256 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i i}\line 
+not\line
+ \cell 
+\pard\intbl B: {\i pp(?subcat)}\line
+\cell
+\pard\intbl C: {\i v(v)}\line
+head :: neg(be)\line
+arguments\line
+. theme\line
+. . 3\line
+. locative\line
+. . loc\line
+. . . ?subcat\line
+\cell
+\row}
+{\pard\b Conditions: \line
+locative(?subcat)\line
+\par}
+{\pard\sb200\b Examples:\par}
+{\pard
+\trowd\trgaph144\cellx2500\cellx9600
+{\pard\fs24\cf3\intbl i no ananit long dispela narapela samting\cell}
+{\pard\cf0\fs20\intbl ct(v(v), p(neg(be), [j:3, l:loc(below, sp(this, other, e, [], something(thing)))]))\cell}
+\row
+}
+
+{\pard\sb250\fs28\cf2\keepn 257 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i i}\line 
+not\line
+ \cell 
+\pard\intbl B: {\i pp(like)}\line
+?o_C\line
+\cell
+\pard\intbl C: {\i v(v)}\line
+head :: neg(like)\line
+arguments\line
+. theme\line
+. . 3\line
+. object\line
+. . ?o_C\line
+\cell
+\row}
+{\pard\sb200\b Examples:\par}
+{\pard
+\trowd\trgaph144\cellx2500\cellx9600
+{\pard\fs24\cf3\intbl i no olsem dispela narapela samting\cell}
+{\pard\cf0\fs20\intbl ct(v(v), p(neg(like), [j:3, o:sp(this, other, e, [], something(thing))]))\cell}
+\row
+}
+
+{\pard\sb250\fs28\cf2\keepn 258 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i neg}\line 
+not\line
+ \cell 
+\pard\intbl B: {\i n(?subcat)}\line
+?j_C\line
+\cell
+\pard\intbl C: {\i v(stat)}\line
+head :: neg(be)\line
+arguments\line
+. theme\line
+. . e\line
+. theme\line
+. . ?j_C\line
+\cell
+\row}
+{\pard\sb200\b\keepn Examples:\par}
+\par{\pard
+\trowd\trgaph144\cellx4800\cellx9600
+{\pard\s1\cf3\intbl mi no samting\cell}
+{\pard\s2\intbl I am not something\cell}
+\row
+\lastrow}
+
+{\pard\sb250\fs28\cf2\keepn 259 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i neg}\line 
+not\line
+ \cell 
+\pard\intbl B: {\i a(?subcat)}\line
+\cell
+\pard\intbl C: {\i v(stat)}\line
+head :: neg([])\line
+arguments\line
+. object\line
+. . e\line
+\cell
+\row}
+{\pard\b Conditions: \line
+good_for([], [])\line
+\par}
+{\pard\sb200\b\keepn Examples:\par}
+\par{\pard
+\trowd\trgaph144\cellx4800\cellx9600
+{\pard\s1\cf3\intbl mi no bikpela\cell}
+{\pard\s2\intbl I am not big\cell}
+\row
+\lastrow}
+
+{\pard\sb250\fs28\cf2\keepn 260 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i neg}\line 
+not\line
+ \cell 
+\pard\intbl B: {\i pp(?subcat)}\line
+\cell
+\pard\intbl C: {\i v(v)}\line
+head :: neg(be)\line
+arguments\line
+. theme\line
+. . e\line
+. locative\line
+. . loc\line
+. . . ?subcat\line
+\cell
+\row}
+{\pard\sb200\b\keepn Examples:\par}
+\par{\pard
+\trowd\trgaph144\cellx4800\cellx9600
+{\pard\s1\cf3\intbl mi no antap long yu\cell}
+{\pard\s2\intbl I am not above you\cell}
+\row
+\lastrow}
+
+{\pard\sb250\fs28\cf2\keepn 261 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i i}\line 
+i\line
+ \cell 
+\pard\intbl B: {\i n(?subcat)}\line
+?j_C\line
+\cell
+\pard\intbl C: {\i v(stat)}\line
+head :: be\line
+arguments\line
+. theme\line
+. . 3\line
+. theme\line
+. . ?j_C\line
+\cell
+\row}
+{\pard \b i\b0  + \i NP\i0  (COPULA).\par}
+{\pard\sb200\b Examples:\par}
+{\pard
+\trowd\trgaph144\cellx2500\cellx9600
+{\pard\fs24\cf3\intbl em i bikpela man\cell}
+{\pard\cf0\fs20\intbl ct(s, s(e, e, e, e, e, p(be, [j:sp(this, e, e, [], someone(person)), j:sp(e, e, e, [big], someone(person))]), e, e))\cell}
+\row
+}
+
+{\pard\sb250\fs28\cf2\keepn 262 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i i}\line 
+i\line
+ \cell 
+\pard\intbl B: {\i a(?subcat)}\line
+?pred_C\line
+\cell
+\pard\intbl C: {\i v(stat)}\line
+head :: ?pred_C\line
+arguments\line
+. object\line
+. . 3\line
+\cell
+\row}
+{\pard\b Conditions: \line
+good_for(?pred_C, [])\line
+\par}
+{\pard \b i\b0  + \i A\i0  (COPULA). Ex. \i Priestley\i0  p.8.\par}
+{\pard\sb200\b Examples:\par}
+{\pard
+\trowd\trgaph144\cellx2500\cellx9600
+{\pard\fs24\cf3\intbl i gutpela\cell}
+{\pard\cf0\fs20\intbl ct(v(stat), p(good, [o:3, b:e]))\cell}
+\row
+{\pard\fs24\cf3\intbl i bikpela\cell}
+{\pard\cf0\fs20\intbl ct(v(stat), p(big, [o:3]))\cell}
+\row
+{\pard\fs24\cf3\intbl i nogut\cell}
+{\pard\cf0\fs20\intbl ct(v(stat), p(bad, [o:3, b:e]))\cell}
+\row
+}
+
+{\pard\sb250\fs28\cf2\keepn 309 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i v(v)}\line 
+head :: exist\line
+arguments\line
+. theme\line
+. . e\line
+ \cell 
+\pard\intbl B: {\i n(?subcat)}\line
+?o_C\line
+\cell
+\pard\intbl C: {\i v(v)}\line
+head :: have\line
+arguments\line
+. theme\line
+. . e\line
+. object\line
+. . ?o_C\line
+\cell
+\row}
+{\pard If \b gat\b0  is not preceded by \b i\b0 , it is surely an 
+ instance of HAVE with local subject (I or YOU). So, before the rule that 
+ recognises the subject-verb dependency, we can transform \b gat\b0  + 
+ substantive phrase into a verb-object structure. Cf. \b i gat\b0  + substantive 
+ phrase instead.\par}
+{\pard\sb200\b Examples:\par}
+{\pard
+\trowd\trgaph144\cellx2500\cellx9600
+{\pard\fs24\cf3\intbl gat samting\cell}
+{\pard\cf0\fs20\intbl ct(v(v), p(have, [j:e, o:sp(e, e, e, [], something(thing))]))\cell}
+\row
+{\pard\fs24\cf3\intbl gat planti samting\cell}
+{\pard\cf0\fs20\intbl ct(v(v), p(have, [j:e, o:sp(e, e, num(many), [], something(thing))]))\cell}
+\row
+{\pard\fs24\cf3\intbl i gat samting\cell}
+{\pard\cf0\fs20\intbl ct(s, s(e, e, e, e, e, p(exist, [j:sp(e, e, e, [], something(thing))]), e, e))\cell}
+\row
+}
+
+{\pard\sb250\fs28\cf2\keepn 310 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i n(?subcat)}\line 
+ \cell 
+\pard\intbl B: {\i v(?subcat)}\line
+head :: ?pred_B\line
+arguments\line
+. ?role :: ??role_B\line
+\cell
+\pard\intbl C: {\i s}\line
+sentence\line
+. neg :: ?neg_C\line
+. time :: ?time_C\line
+. can_or_will :: e\line
+. times :: e\line
+. how_long :: e\line
+. predicate\line
+. . head :: ?pred_C\line
+. . arguments\line
+. . . ?role :: ??role_C\line
+. loc\line
+. . e\line
+. manner\line
+. . e\line
+\cell
+\row}
+{\pard\b Conditions: \line
+subj_agr(?subcat, ?subcat, ??role_B, [], ??role_C)\line
+tma(?pred_B, ?time_C, _G59121)\line
+neg(_G59121, _G59127, ?neg_C)\line
+exist(_G59127, ?pred_C, _G59083, _G59104, [], [], ??role_C)\line
+\par}
+{\pard \i Subject-verb\i0  dependency.\par}
+{\pard\sb100\qj\fi500\fs24 
+Conditions check sobject agreement (a third person subject triggers the particle \b i\b0  
+ before the verb) and negation. Thr third condition (to be reviewed) tries to 
+ distinguish between the meanings LIVE and EXIST, which are both \b stap\b0 . in Tok 
+ Pisin.\par}
+{\pard\sb100\qj\fi500\fs24 
+Examples from Presteley 1999a, p.5\par}
+{\pard\sb200\b Examples:\par}
+{\pard
+\trowd\trgaph144\cellx2500\cellx9600
+{\pard\fs24\cf3\intbl mi ting\cell}
+{\pard\cf0\fs20\intbl ct(s, s(e, e, e, e, e, p(think, [e:sp(e, e, e, [], d(me))]), e, e))\cell}
+\row
+{\pard\fs24\cf3\intbl mi save\cell}
+{\pard\cf0\fs20\intbl ct(s, s(e, e, e, e, e, p(know, [e:sp(e, e, e, [], d(me))]), e, e))\cell}
+\row
+{\pard\fs24\cf3\intbl yu laik\cell}
+{\pard\cf0\fs20\intbl ct(s, s(e, e, e, e, e, p(want, [e:sp(e, e, e, [], d(you))]), e, e))\cell}
+\row
+{\pard\fs24\cf3\intbl dispela manmeri i lukim\cell}
+{\pard\cf0\fs20\intbl ct(s, s(e, e, e, e, e, p(see, [a:sp(this, e, e, [], people), o:e]), e, e))\cell}
+\row
+}
+{\pard\sb200\b\keepn Examples:\par}
+\par{\pard
+\trowd\trgaph144\cellx4800\cellx9600
+{\pard\s1\cf3\intbl mi ting\cell}
+{\pard\s2\intbl I think\cell}
+\row
+{\pard\s1\cf3\intbl wanpela i save\cell}
+{\pard\s2\intbl someone knows\cell}
+\row
+{\pard\s1\cf3\intbl yu harim\cell}
+{\pard\s2\intbl you hear\cell}
+\row
+{\pard\s1\cf3\intbl dispela samting i go i kam\cell}
+{\pard\s2\intbl this thing moves\cell}
+\row
+{\pard\s1\cf3\intbl mi bin wokim gutpela samting\cell}
+{\pard\s2\intbl I have done something good\cell}
+\row
+{\pard\s1\cf3\intbl em i stap\cell}
+{\pard\s2\intbl he exists\cell}
+\row
+\lastrow}
+
+{\pard\sb250\fs28\cf2\keepn 311 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i v(v)}\line 
+head :: exist\line
+arguments\line
+. theme\line
+. . 3\line
+ \cell 
+\pard\intbl B: {\i n(?subcat)}\line
+substantive\line
+. det :: ?det_B\line
+. same_or_other :: ?same_or_other_B\line
+. number :: ?number_B\line
+. attributes :: ?attributes_B\line
+. head_noun :: ?head_noun_B\line
+\cell
+\pard\intbl C: {\i s}\line
+sentence\line
+. neg :: e\line
+. time :: e\line
+. can_or_will :: e\line
+. times :: e\line
+. how_long :: e\line
+. predicate\line
+. . head :: exist\line
+. . arguments\line
+. . . theme\line
+. . . . substantive\line
+. . . . . det :: ?det_B\line
+. . . . . same_or_other :: ?same_or_other_B\line
+. . . . . number :: ?number_B\line
+. . . . . attributes :: ?attributes_B\line
+. . . . . head_noun :: ?head_noun_B\line
+. loc\line
+. . e\line
+. manner\line
+. . e\line
+\cell
+\row}
+{\pard\b Conditions: \line
+indet_sp(?det_B)\line
+\par}
+{\pard Rules 311 and 312 recognise the existential structure 
+ \b i gat\b0  + substantive phrase.\par}
+{\pard\sb200\b\keepn Examples:\par}
+\par{\pard
+\trowd\trgaph144\cellx4800\cellx9600
+{\pard\s1\cf3\intbl i gat planti samting long dispela ples\cell}
+{\pard\s2\intbl there are many things in this place\cell}
+\row
+{\pard\s1\cf3\intbl i gat sampela manmeri\cell}
+{\pard\s2\intbl there are some people\cell}
+\row
+\lastrow}
+
+{\pard\sb250\fs28\cf2\keepn 312 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i v(v)}\line 
+head :: neg(exist)\line
+arguments\line
+. theme\line
+. . 3\line
+ \cell 
+\pard\intbl B: {\i n(?subcat)}\line
+substantive\line
+. det :: ?det_B\line
+. same_or_other :: ?same_or_other_B\line
+. number :: ?number_B\line
+. attributes :: ?attributes_B\line
+. head_noun :: ?head_noun_B\line
+\cell
+\pard\intbl C: {\i s}\line
+sentence\line
+. neg :: not\line
+. time :: e\line
+. can_or_will :: e\line
+. times :: e\line
+. how_long :: e\line
+. predicate\line
+. . head :: exist\line
+. . arguments\line
+. . . theme\line
+. . . . substantive\line
+. . . . . det :: ?det_B\line
+. . . . . same_or_other :: ?same_or_other_B\line
+. . . . . number :: ?number_B\line
+. . . . . attributes :: ?attributes_B\line
+. . . . . head_noun :: ?head_noun_B\line
+. loc\line
+. . e\line
+. manner\line
+. . e\line
+\cell
+\row}
+{\pard\b Conditions: \line
+indet_sp(?det_B)\line
+\par}
+{\pard\sb200\b\keepn Examples:\par}
+\par{\pard
+\trowd\trgaph144\cellx4800\cellx9600
+{\pard\s1\cf3\intbl i no gat samting\cell}
+{\pard\s2\intbl there is not anything\cell}
+\row
+\lastrow}
+
+{\pard\sb250\fs28\cf2\keepn 313 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i n(?subcat)}\line 
+ \cell 
+\pard\intbl B: {\i s}\line
+sentence\line
+. neg :: ?neg_B\line
+. time :: e\line
+. can_or_will :: e\line
+. times :: e\line
+. how_long :: e\line
+. predicate\line
+. . head :: exist\line
+. . arguments\line
+. . . theme\line
+. . . . ?j_B\line
+. loc\line
+. . e\line
+. manner\line
+. . e\line
+\cell
+\pard\intbl C: {\i s}\line
+sentence\line
+. neg :: ?neg_B\line
+. time :: e\line
+. can_or_will :: e\line
+. times :: e\line
+. how_long :: e\line
+. predicate\line
+. . head :: have\line
+. . arguments\line
+. . . theme\line
+. . . . ?j_C\line
+. . . object\line
+. . . . ?j_B\line
+. loc\line
+. . e\line
+. manner\line
+. . e\line
+\cell
+\row}
+{\pard\b Conditions: \line
+subj_agr(_G40308, _G40309, _G40310, [], ?j_C)\line
+\par}
+{\pard If the \b i gat\b0  structure recognised in rule 312 is preceded by a 
+ substantive phrase, then it is an instance of the HAVE prime.\par}
+{\pard\sb200\b\keepn Examples:\par}
+\par{\pard
+\trowd\trgaph144\cellx4800\cellx9600
+{\pard\s1\cf3\intbl em i gat planti samting\cell}
+{\pard\s2\intbl he has many things\cell}
+\row
+\lastrow}
+
+{\pard\sb250\fs28\cf2\keepn 315 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i n(p)}\line 
+?o_C\line
+ \cell 
+\pard\intbl B: {\i a(?subcat)}\line
+?pred_C\line
+\cell
+\pard\intbl C: {\i s}\line
+sentence\line
+. neg :: e\line
+. time :: e\line
+. can_or_will :: e\line
+. times :: e\line
+. how_long :: e\line
+. predicate\line
+. . head :: ?pred_C\line
+. . arguments\line
+. . . object\line
+. . . . ?o_C\line
+. loc\line
+. . e\line
+. manner\line
+. . e\line
+\cell
+\row}
+{\pard Subject of adjectival predicate.\par}
+{\pard\sb200\b\keepn Examples:\par}
+\par{\pard
+\trowd\trgaph144\cellx4800\cellx9600
+{\pard\s1\cf3\intbl yu gutpela\cell}
+{\pard\s2\intbl you are good\cell}
+\row
+{\pard\s1\cf3\intbl mi liklik\cell}
+{\pard\s2\intbl I am small\cell}
+\row
+\lastrow}
+
+{\pard\sb250\fs28\cf2\keepn 316 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i n(p)}\line 
+?j_C\line
+ \cell 
+\pard\intbl B: {\i pp(?subcat)}\line
+\cell
+\pard\intbl C: {\i s}\line
+sentence\line
+. neg :: e\line
+. time :: e\line
+. can_or_will :: e\line
+. times :: e\line
+. how_long :: e\line
+. predicate\line
+. . head :: be\line
+. . arguments\line
+. . . theme\line
+. . . . ?j_C\line
+. . . locative\line
+. . . . loc\line
+. . . . . _G56234 :: _G56235\line
+. loc\line
+. . e\line
+. manner\line
+. . e\line
+\cell
+\row}
+{\pard\b Conditions: \line
+locative(_G56234:_G56235)\line
+\par}
+{\pard Subject of prepositional (locative) predicate.\par}
+
+{\pard\sb250\fs28\cf2\keepn 317 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i n(p)}\line 
+?j_C\line
+ \cell 
+\pard\intbl B: {\i pp(like)}\line
+?o_C\line
+\cell
+\pard\intbl C: {\i s}\line
+sentence\line
+. neg :: e\line
+. time :: e\line
+. can_or_will :: e\line
+. times :: e\line
+. how_long :: e\line
+. predicate\line
+. . head :: like\line
+. . arguments\line
+. . . theme\line
+. . . . ?j_C\line
+. . . object\line
+. . . . ?o_C\line
+. loc\line
+. . e\line
+. manner\line
+. . e\line
+\cell
+\row}
+{\pard Subject of prepositional (non locative) predicate.\par}
+{\pard\sb200\b\keepn Examples:\par}
+\par{\pard
+\trowd\trgaph144\cellx4800\cellx9600
+{\pard\s1\cf3\intbl em i olsem yu\cell}
+{\pard\s2\intbl he is like you\cell}
+\row
+{\pard\s1\cf3\intbl mi olsem dispela man\cell}
+{\pard\s2\intbl I am like he\cell}
+\row
+\lastrow}
+
+{\pard\sb250\fs28\cf2\keepn 319 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i n(p)}\line 
+?j_C\line
+ \cell 
+\pard\intbl B: {\i n(?subcat)}\line
+?j_C\line
+\cell
+\pard\intbl C: {\i s}\line
+sentence\line
+. neg :: e\line
+. time :: e\line
+. can_or_will :: e\line
+. times :: e\line
+. how_long :: e\line
+. predicate\line
+. . head :: be\line
+. . arguments\line
+. . . theme\line
+. . . . ?j_C\line
+. . . theme\line
+. . . . ?j_C\line
+. loc\line
+. . e\line
+. manner\line
+. . e\line
+\cell
+\row}
+{\pard Subject of nominal predicate.\par}
+{\pard\sb200\b\keepn Examples:\par}
+\par{\pard
+\trowd\trgaph144\cellx4800\cellx9600
+{\pard\s1\cf3\intbl yu gutpela wanpela\cell}
+{\pard\s2\intbl you are someone good\cell}
+\row
+{\pard\s1\cf3\intbl mi wanpela\cell}
+{\pard\s2\intbl I am someone\cell}
+\row
+\lastrow}
+
+{\pard\sb250\fs28\cf2\keepn 320 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i s}\line 
+sentence\line
+. neg :: ?neg_A\line
+. time :: ?time_A\line
+. can_or_will :: ?can_or_will_A\line
+. times :: ?times_A\line
+. how_long :: ?how_long_A\line
+. predicate\line
+. . head :: ?pred_A\line
+. . arguments\line
+. loc\line
+. . e\line
+. manner :: ?manner_A\line
+ \cell 
+\pard\intbl B: {\i adv(l(_G13825))}\line
+\cell
+\pard\intbl C: {\i s}\line
+sentence\line
+. neg :: ?neg_A\line
+. time :: ?time_A\line
+. can_or_will :: ?can_or_will_A\line
+. times :: ?times_A\line
+. how_long :: ?how_long_A\line
+. predicate\line
+. . head :: ?pred_A\line
+. . arguments\line
+. loc\line
+. . loc\line
+. manner :: ?manner_A\line
+\cell
+\row}
+{\pard Locative adjuncts (adverbials).\par}
+{\pard\sb200\b\keepn Examples:\par}
+\par{\pard
+\trowd\trgaph144\cellx4800\cellx9600
+{\pard\s1\cf3\intbl em i wokim samting hia\cell}
+{\pard\s2\intbl he does something here\cell}
+\row
+\lastrow}
+
+{\pard\sb250\fs28\cf2\keepn 321 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i s}\line 
+sentence\line
+. neg :: ?neg_A\line
+. time :: ?time_A\line
+. can_or_will :: ?can_or_will_A\line
+. times :: ?times_A\line
+. how_long :: ?how_long_A\line
+. predicate\line
+. . head :: ?pred_A\line
+. . arguments\line
+. loc\line
+. . e\line
+. manner :: ?manner_A\line
+ \cell 
+\pard\intbl B: {\i pp(?subcat)}\line
+substantive\line
+. det :: ?det_B\line
+. same_or_other :: ?same_or_other_B\line
+. number :: ?number_B\line
+. attributes :: ?attributes_B\line
+. head_noun :: somewhere(_G21129)\line
+\cell
+\pard\intbl C: {\i s}\line
+sentence\line
+. neg :: ?neg_A\line
+. time :: ?time_A\line
+. can_or_will :: ?can_or_will_A\line
+. times :: ?times_A\line
+. how_long :: ?how_long_A\line
+. predicate\line
+. . head :: ?pred_A\line
+. . arguments\line
+. loc\line
+. . loc\line
+. . . _G24456 :: _G24457\line
+. . . sp(?det_B, ?same_or_other_B, ?number_B, ?attributes_B, somewhere(_G21129))\line
+. manner :: ?manner_A\line
+\cell
+\row}
+{\pard\b Conditions: \line
+loc_p(?subcat, _G24456:_G24457)\line
+\par}
+{\pard Locative adjuncts (prepositional phrases).\par}
+{\pard\sb200\b\keepn Examples:\par}
+\par{\pard
+\trowd\trgaph144\cellx4800\cellx9600
+{\pard\s1\cf3\intbl em i wokim samting i stap long dispela ples\cell}
+{\pard\s2\intbl he is doing something in this place\cell}
+\row
+\lastrow}
+
+{\pard\sb250\fs28\cf2\keepn 322 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i s}\line 
+sentence\line
+. neg :: ?neg_A\line
+. time :: ?time_A\line
+. can_or_will :: ?can_or_will_A\line
+. times :: ?times_A\line
+. how_long :: ?how_long_A\line
+. predicate\line
+. . head :: ?pred_A\line
+. . arguments\line
+. loc\line
+. . e\line
+. manner :: ?manner_A\line
+ \cell 
+\pard\intbl B: {\i pp(?subcat)}\line
+substantive\line
+. det :: ?det_B\line
+. same_or_other :: ?same_or_other_B\line
+. number :: ?number_B\line
+. attributes :: ?attributes_B\line
+. head_noun :: something(_G32072)\line
+\cell
+\pard\intbl C: {\i s}\line
+sentence\line
+. neg :: ?neg_A\line
+. time :: ?time_A\line
+. can_or_will :: ?can_or_will_A\line
+. times :: ?times_A\line
+. how_long :: ?how_long_A\line
+. predicate\line
+. . head :: ?pred_A\line
+. . arguments\line
+. loc\line
+. . loc\line
+. . . _G35399 :: _G35400\line
+. . . sp(?det_B, ?same_or_other_B, ?number_B, ?attributes_B, something(_G32072))\line
+. manner :: ?manner_A\line
+\cell
+\row}
+{\pard\b Conditions: \line
+strict_loc_p(?subcat, _G35399:_G35400)\line
+\par}
+{\pard Local adjuncts when the head noun of the adjunct is not 
+ a local noun. As a prepositional phrase introduce by \i long\i0  can be a causal as 
+ well as a local adjunct, we check that a local preposition be present.\par}
+{\pard\sb100\qj\fi500\fs24 
+This treatmen of adjuncts is provisional; if there are only two NSM 
+ constructons of the prime BECAUSE (1. BECAUSE+THIS \i because of this\i0  and 2. 
+ Sentence1 BECAUSE Sentence2), then such "causal adjuncts" are not needed.\par}
+
+{\pard\sb250\fs28\cf2\keepn 323 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i s}\line 
+sentence\line
+. neg :: ?neg_A\line
+. time :: ?time_A\line
+. can_or_will :: e\line
+. times :: e\line
+. how_long :: e\line
+. predicate\line
+. . head :: exist\line
+. . arguments\line
+. . . theme\line
+. . . . ?j_A\line
+. loc\line
+. . e\line
+. manner\line
+. . e\line
+ \cell 
+\pard\intbl B: {\i adv(l(_G37434))}\line
+?l_C\line
+\cell
+\pard\intbl C: {\i s}\line
+sentence\line
+. neg :: ?neg_A\line
+. time :: ?time_A\line
+. can_or_will :: e\line
+. times :: e\line
+. how_long :: e\line
+. predicate\line
+. . head :: be\line
+. . arguments\line
+. . . theme\line
+. . . . ?j_A\line
+. . . locative\line
+. . . . ?l_C\line
+. loc\line
+. . e\line
+. manner\line
+. . e\line
+\cell
+\row}
+{\pard Locative prepositional phrases are \i arguments\i0 , and not 
+ adjuncts, with the prime BE(loc). This rule recogfnises the absolute 
+ (adverbial) use of the local prepositions; rule 324 links a locatve 
+ preposition with its NP complement to the locative slot of the valence 
+ list of the prime BE(loc).\par}
+{\pard\sb200\b\keepn Examples:\par}
+\par{\pard
+\trowd\trgaph144\cellx4800\cellx9600
+{\pard\s1\cf3\intbl em i stap antap\cell}
+{\pard\s2\intbl he is above\cell}
+\row
+{\pard\s1\cf3\intbl em i stap insait\cell}
+{\pard\s2\intbl he is inside\cell}
+\row
+\lastrow}
+
+{\pard\sb250\fs28\cf2\keepn 324 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i s}\line 
+sentence\line
+. neg :: ?neg_A\line
+. time :: ?time_A\line
+. can_or_will :: e\line
+. times :: e\line
+. how_long :: e\line
+. predicate\line
+. . head :: exist\line
+. . arguments\line
+. . . theme\line
+. . . . ?j_A\line
+. loc\line
+. . e\line
+. manner\line
+. . e\line
+ \cell 
+\pard\intbl B: {\i pp(?subcat)}\line
+\cell
+\pard\intbl C: {\i s}\line
+sentence\line
+. neg :: ?neg_A\line
+. time :: ?time_A\line
+. can_or_will :: e\line
+. times :: e\line
+. how_long :: e\line
+. predicate\line
+. . head :: be\line
+. . arguments\line
+. . . theme\line
+. . . . ?j_A\line
+. . . locative\line
+. . . . loc\line
+. . . . . ?subcat\line
+. loc\line
+. . e\line
+. manner\line
+. . e\line
+\cell
+\row}
+{\pard\b Conditions: \line
+locative(?subcat)\line
+\par}
+
+{\pard\sb250\fs28\cf2\keepn 330 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i s}\line 
+ \cell 
+\pard\intbl B: {\i pp(long)}\line
+substantive\line
+. det :: this\line
+. same_or_other :: e\line
+. number :: e\line
+. attributes\line
+. head_noun :: something(fact)\line
+\cell
+\pard\intbl C: {\i s}\line
+because_sentence\line
+. cause\line
+. . substantive\line
+. . . det :: this\line
+. . . same_or_other :: e\line
+. . . number :: e\line
+. . . attributes\line
+. . . head_noun :: something(fact)\line
+. consequence\line
+\cell
+\row}
+{\pard Causal adjunct (he did this because of something).\par}
+{\pard\sb200\b\keepn Examples:\par}
+\par{\pard
+\trowd\trgaph144\cellx4800\cellx9600
+{\pard\s1\cf3\intbl em i wokim samting long dispela\cell}
+{\pard\s2\intbl he does something because of this\cell}
+\row
+\lastrow}
+
+{\pard\sb250\fs28\cf2\keepn 331 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i s}\line 
+ \cell 
+\pard\intbl B: {\i pp(long)}\line
+substantive\line
+. det :: only(this)\line
+. same_or_other :: e\line
+. number :: e\line
+. attributes\line
+. head_noun :: something(fact)\line
+\cell
+\pard\intbl C: {\i s}\line
+because_sentence\line
+. cause\line
+. . substantive\line
+. . . det :: only(this)\line
+. . . same_or_other :: e\line
+. . . number :: e\line
+. . . attributes\line
+. . . head_noun :: something(fact)\line
+. consequence\line
+\cell
+\row}
+{\pard Causal adjunct (he did this just because of something). This 
+ rule is probably external to the NSM core.\par}
+
+{\pard\sb250\fs28\cf2\keepn 332 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i s}\line 
+sentence\line
+. neg :: ?neg_A\line
+. time :: ?time_A\line
+. can_or_will :: ?can_or_will_A\line
+. times :: ?times_A\line
+. how_long :: e\line
+. predicate\line
+. . head :: ?pred_A\line
+. . arguments\line
+. loc :: ?loc_A\line
+. manner :: ?manner_A\line
+ \cell 
+\pard\intbl B: {\i adv(dur)}\line
+\cell
+\pard\intbl C: {\i s}\line
+sentence\line
+. neg :: ?neg_A\line
+. time :: ?time_A\line
+. can_or_will :: ?can_or_will_A\line
+. times :: ?times_A\line
+. how_long :: dur([])\line
+. predicate\line
+. . head :: ?pred_A\line
+. . arguments\line
+. loc :: ?loc_A\line
+. manner :: ?manner_A\line
+\cell
+\row}
+{\pard FOR-SOME-TIME adjuncts (duration). NSM proposed prime is  
+ FOR SOME TIME, which can be modified to yield FOR A LONG/SHORT TIME (cf. 
+ Goddard 2008b, p. 66-68). This rule recognises "for a long time", the 
+ following, "for a short time/for some time".\par}
+{\pard\sb200\b\keepn Examples:\par}
+\par{\pard
+\trowd\trgaph144\cellx4800\cellx9600
+{\pard\s1\cf3\intbl em i wokim samting longtaim\cell}
+{\pard\s2\intbl he does something for a long time\cell}
+\row
+{\pard\s1\cf3\intbl em i wokim samting liklik taim\cell}
+{\pard\s2\intbl he does something for a short time\cell}
+\row
+\lastrow}
+
+{\pard\sb250\fs28\cf2\keepn 333 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i s}\line 
+sentence\line
+. neg :: ?neg_A\line
+. time :: ?time_A\line
+. can_or_will :: ?can_or_will_A\line
+. times :: ?times_A\line
+. how_long :: e\line
+. predicate\line
+. . head :: ?pred_A\line
+. . arguments\line
+. loc :: ?loc_A\line
+. manner :: ?manner_A\line
+ \cell 
+\pard\intbl B: {\i n(n)}\line
+substantive\line
+. det :: e\line
+. same_or_other :: e\line
+. number :: e\line
+. attributes\line
+. . small\line
+. head_noun :: time(time)\line
+\cell
+\pard\intbl C: {\i s}\line
+sentence\line
+. neg :: ?neg_A\line
+. time :: ?time_A\line
+. can_or_will :: ?can_or_will_A\line
+. times :: ?times_A\line
+. how_long :: dur(short)\line
+. predicate\line
+. . head :: ?pred_A\line
+. . arguments\line
+. loc :: ?loc_A\line
+. manner :: ?manner_A\line
+\cell
+\row}
+{\pard\sb200\b\keepn Examples:\par}
+\par{\pard
+\trowd\trgaph144\cellx4800\cellx9600
+{\pard\s1\cf3\intbl em i wokim dispela samting liklik taim\cell}
+{\pard\s2\intbl he does this thing for a short time\cell}
+\row
+\lastrow}
+
+{\pard\sb250\fs28\cf2\keepn 335 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i s}\line 
+sentence\line
+. neg :: ?neg_A\line
+. time :: e\line
+. can_or_will :: ?can_or_will_A\line
+. times :: e\line
+. how_long :: ?how_long_A\line
+. predicate :: ?predicate_A\line
+. loc :: ?loc_A\line
+. manner :: ?manner_A\line
+ \cell 
+\pard\intbl B: {\i n(n)}\line
+substantive\line
+. det :: e\line
+. same_or_other :: e\line
+. number :: num(_G27776)\line
+. attributes\line
+. head_noun :: time(time)\line
+\cell
+\pard\intbl C: {\i s}\line
+sentence\line
+. neg :: ?neg_A\line
+. time :: e\line
+. can_or_will :: ?can_or_will_A\line
+. times :: freq(_G27776)\line
+. how_long :: ?how_long_A\line
+. predicate :: ?predicate_A\line
+. loc :: ?loc_A\line
+. manner :: ?manner_A\line
+\cell
+\row}
+{\pard N-TIMES (repetition) adjunct.\par}
+{\pard\sb200\b\keepn Examples:\par}
+\par{\pard
+\trowd\trgaph144\cellx4800\cellx9600
+{\pard\s1\cf3\intbl em i wokim samting tupela taim\cell}
+{\pard\s2\intbl he does something twice\cell}
+\row
+\lastrow}
+
+{\pard\sb250\fs28\cf2\keepn 337 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i s}\line 
+sentence\line
+. neg :: ?neg_A\line
+. time :: e\line
+. can_or_will :: ?can_or_will_A\line
+. times :: ?times_A\line
+. how_long :: ?times_A\line
+. predicate :: ?predicate_A\line
+. loc :: ?loc_A\line
+. manner\line
+. . e\line
+ \cell 
+\pard\intbl B: {\i pp(like)}\line
+\cell
+\pard\intbl C: {\i s}\line
+sentence\line
+. neg :: ?neg_A\line
+. time :: e\line
+. can_or_will :: ?can_or_will_A\line
+. times :: ?times_A\line
+. how_long :: ?times_A\line
+. predicate :: ?predicate_A\line
+. loc :: ?loc_A\line
+. manner\line
+. . manner\line
+\cell
+\row}
+{\pard Manner adjuncts, which in NSM depend on the prime LIKE.\par}
+{\pard\sb200\b\keepn Examples:\par}
+\par{\pard
+\trowd\trgaph144\cellx4800\cellx9600
+{\pard\s1\cf3\intbl em i wokim dispela samting olsem mi\cell}
+{\pard\s2\intbl he does this thing like me\cell}
+\row
+\lastrow}
+
+{\pard\sb250\fs28\cf2\keepn 338 A + B = C   //   B + A = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i adv(time(_G43262))}\line 
+time\line
+. _G44882 :: _G44883\line
+. _G44916 :: _G44917\line
+. e\line
+ \cell 
+\pard\intbl B: {\i s}\line
+sentence\line
+. neg :: ?neg_B\line
+. time :: e\line
+. can_or_will :: ?can_or_will_B\line
+. times :: ?times_B\line
+. how_long :: ?how_long_B\line
+. predicate :: ?predicate_B\line
+. loc :: ?loc_B\line
+. manner :: ?manner_B\line
+\cell
+\pard\intbl C: {\i s}\line
+sentence\line
+. neg :: ?neg_B\line
+. time :: time(_G44882:_G44883, _G44916:_G44917, e)\line
+. can_or_will :: ?can_or_will_B\line
+. times :: ?times_B\line
+. how_long :: ?how_long_B\line
+. predicate :: ?predicate_B\line
+. loc :: ?loc_B\line
+. manner :: ?manner_B\line
+\cell
+\row}
+{\pard Time adjuncts is surely another area of further improvement  
+ for NSM-PROLOG. In the current English grammar, I have tentatively taken tense 
+ inflection to stand for temporal primes such as BEFORE+NOW (past tense) 
+ and AFTER+NOW (future). In Tok Pisin NSM, future tense finds a tentative  
+ equivalent in future-irrealis particle \b bai\b0 ; as for past tense, I have 
+ used here the adverb \b bipo\b0  \i before\i0 . \par}
+{\pard\sb100\qj\fi500\fs24 
+The adverb \b bihain\b0  \i after\i0  can mean not only AFTER+NOW 
+ (that is, \i in the future\i0 ), but also "after that" (as in: he did this 
+ thing. AFTER THAT, he did this other thing. In a Swahili NSM, this second 
+ sentence would need a particular tense, the \i narrative\i0  or \i consecutive\i0 :
+ alifanya kitu hicho. (baado) \b akafanya\b0  kitu kingine). \par}
+{\pard\sb100\qj\fi500\fs24 
+This means that  in an Englis NSM sentence as \i after that, he did 
+ something\i0  there are \b two\b0  time adverbials (\i after that\i0  and \i before now\i0 , 
+ which surfaces as past tense).\par}
+{\pard\sb100\qj\fi500\fs24 
+In my first paper about NSM-PROLOG, I have distinguished three kinds 
+ of time modifier, by giving three different slots in the sentence 
+ representation formula:\par}
+{\pard\sb100\qj\fi500\fs24 
+1. \i Frequency\i0  (ONE+TIME \i once\i0 , TWO+TIMES \i twice\i0 , MANY+TIMES);\par}
+{\pard\sb100\qj\fi500\fs24 
+2. \i Duration\i0  (FOR SOME TIME + LONG/SHORT);\par}
+{\pard\sb100\qj\fi500\fs24 
+3. \i Time Location\i0 .\par}
+{\pard\sb100\qj\fi500\fs24 
+I think that the \i time location\i0  slot will have to be split into an 
+ \i absolute time location\i0  (NOW, BEFORE/AFTER + NOW) and a \i relative 
+ time location\i0  (AT/BEFORE/AFTER + THIS TIME, where THIS refers to a 
+ previously mentioned situation).\par}
+{\pard\sb100\qj\fi500\fs24 
+This will require some changes in the current English grammar, which will be 
+ done for the next release.\par}
+{\pard\sb100\qj\fi500\fs24 
+I am not yet sure as to how to render all this effective in Tok Pisin; 
+ feedback is welcome in this like in any other area.\par}
+{\pard\sb200\b\keepn Examples:\par}
+\par{\pard
+\trowd\trgaph144\cellx4800\cellx9600
+{\pard\s1\cf3\intbl bipo em i wokim dispela\cell}
+{\pard\s2\intbl he did this\cell}
+\row
+\lastrow}
+
+{\pard\sb250\fs28\cf2\keepn 339 A + B = C   //   B + A = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i pp(long)}\line 
+substantive\line
+. det :: this\line
+. same_or_other :: e\line
+. number :: e\line
+. attributes\line
+. head_noun :: time(time)\line
+ \cell 
+\pard\intbl B: {\i s}\line
+sentence\line
+. neg :: ?neg_B\line
+. time :: e\line
+. can_or_will :: ?can_or_will_B\line
+. times :: ?times_B\line
+. how_long :: ?how_long_B\line
+. predicate :: ?predicate_B\line
+. loc :: ?loc_B\line
+. manner :: ?manner_B\line
+\cell
+\pard\intbl C: {\i s}\line
+sentence\line
+. neg :: ?neg_B\line
+. time :: time(e, at, this)\line
+. can_or_will :: ?can_or_will_B\line
+. times :: ?times_B\line
+. how_long :: ?how_long_B\line
+. predicate :: ?predicate_B\line
+. loc :: ?loc_B\line
+. manner :: ?manner_B\line
+\cell
+\row}
+{\pard\sb200\b Examples:\par}
+{\pard
+\trowd\trgaph144\cellx2500\cellx9600
+{\pard\fs24\cf3\intbl long dispela taim em i wokim dispela\cell}
+{\pard\cf0\fs20\intbl ct(s, s(e, time(e, at, this), e, e, e, p(do, [a:sp(this, e, e, [], someone(person)), o:sp(this, e, e, [], something(fact)), d:e, c:e, i:e, b:e]), e, e))\cell}
+\row
+}
+
+{\pard\sb250\fs28\cf2\keepn 340 A + B = C   //   B + A = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i n(n)}\line 
+substantive\line
+. det :: e\line
+. same_or_other :: e\line
+. number :: num(all)\line
+. attributes\line
+. head_noun :: time(time)\line
+ \cell 
+\pard\intbl B: {\i s}\line
+sentence\line
+. neg :: ?neg_B\line
+. time :: e\line
+. can_or_will :: ?can_or_will_B\line
+. times :: ?times_B\line
+. how_long :: ?how_long_B\line
+. predicate :: ?predicate_B\line
+. loc :: ?loc_B\line
+. manner :: ?manner_B\line
+\cell
+\pard\intbl C: {\i s}\line
+sentence\line
+. neg :: ?neg_B\line
+. time :: time(e, at, all)\line
+. can_or_will :: ?can_or_will_B\line
+. times :: ?times_B\line
+. how_long :: ?how_long_B\line
+. predicate :: ?predicate_B\line
+. loc :: ?loc_B\line
+. manner :: ?manner_B\line
+\cell
+\row}
+{\pard\sb200\b Examples:\par}
+{\pard
+\trowd\trgaph144\cellx2500\cellx9600
+{\pard\fs24\cf3\intbl mi wokim dispela olgeta taim\cell}
+{\pard\cf0\fs20\intbl ct(s, s(e, e, e, e, e, p(do, [a:sp(e, e, e, [], d(me)), o:sp(this, e, num(all), [], time(time)), d:e, c:e, i:e, b:e]), e, e))\cell}
+\row
+}
+
+{\pard\sb250\fs28\cf2\keepn 341 A + B = C   //   B + A = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i adv(time(_G6049))}\line 
+time\line
+. e\line
+. now\line
+. e\line
+ \cell 
+\pard\intbl B: {\i s}\line
+sentence\line
+. neg :: ?neg_B\line
+. time :: e\line
+. can_or_will :: ?can_or_will_B\line
+. times :: ?times_B\line
+. how_long :: ?how_long_B\line
+. predicate :: ?predicate_B\line
+. loc :: ?loc_B\line
+. manner :: ?manner_B\line
+\cell
+\pard\intbl C: {\i s}\line
+sentence\line
+. neg :: ?neg_B\line
+. time :: time(e, at, now)\line
+. can_or_will :: ?can_or_will_B\line
+. times :: ?times_B\line
+. how_long :: ?how_long_B\line
+. predicate :: ?predicate_B\line
+. loc :: ?loc_B\line
+. manner :: ?manner_B\line
+\cell
+\row}
+{\pard\sb200\b Examples:\par}
+{\pard
+\trowd\trgaph144\cellx2500\cellx9600
+{\pard\fs24\cf3\intbl nau mi wokim dispela\cell}
+{\pard\cf0\fs20\intbl ct(s, s(e, time(e, at, now), e, e, e, p(do, [a:sp(e, e, e, [], d(me)), o:sp(this, e, e, [], something(fact)), d:e, c:e, i:e, b:e]), e, e))\cell}
+\row
+}
+
+{\pard\sb250\fs28\cf2\keepn 342 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i tma}\line 
+bai\line
+ \cell 
+\pard\intbl B: {\i s}\line
+sentence\line
+. neg :: ?neg_B\line
+. time :: e\line
+. can_or_will :: ?can_or_will_B\line
+. times :: ?times_B\line
+. how_long :: ?how_long_B\line
+. predicate\line
+. . head :: ?pred_B\line
+. . arguments\line
+. loc\line
+. . e\line
+. manner :: ?manner_B\line
+\cell
+\pard\intbl C: {\i s}\line
+sentence\line
+. neg :: ?neg_B\line
+. time :: time(e, after, e)\line
+. can_or_will :: ?can_or_will_B\line
+. times :: ?times_B\line
+. how_long :: ?how_long_B\line
+. predicate\line
+. . head :: ?pred_B\line
+. . arguments\line
+. loc\line
+. . e\line
+. manner :: ?manner_B\line
+\cell
+\row}
+{\pard Rule for \b bai\b0  (future marker) in sentence-initial 
+ position.\par}
+{\pard\sb200\b\keepn Examples:\par}
+\par{\pard
+\trowd\trgaph144\cellx4800\cellx9600
+{\pard\s1\cf3\intbl bai mi wokim samting\cell}
+{\pard\s2\intbl I will do something\cell}
+\row
+\lastrow}
+
+{\pard\sb250\fs28\cf2\keepn 343 A + B = C   //   B + A = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i adv(time(_G16862))}\line 
+time\line
+. emph\line
+. _G18513 :: _G18514\line
+. _G18547 :: _G18548\line
+. e\line
+ \cell 
+\pard\intbl B: {\i s}\line
+sentence\line
+. neg :: ?neg_B\line
+. time :: e\line
+. can_or_will :: ?can_or_will_B\line
+. times :: ?times_B\line
+. how_long :: ?how_long_B\line
+. predicate :: ?predicate_B\line
+. loc :: ?loc_B\line
+. manner :: ?manner_B\line
+\cell
+\pard\intbl C: {\i s}\line
+sentence\line
+. neg :: ?neg_B\line
+. time :: time(emph, _G18513:_G18514, _G18547:_G18548, _G16896)\line
+. can_or_will :: ?can_or_will_B\line
+. times :: ?times_B\line
+. how_long :: ?how_long_B\line
+. predicate :: ?predicate_B\line
+. loc :: ?loc_B\line
+. manner :: ?manner_B\line
+\cell
+\row}
+{\pard This rule and the following will have to be reviewed when 
+ a better representation of time location adverbials will be available.\par}
+
+{\pard\sb250\fs28\cf2\keepn 344 A + B = C   //   B + A = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i adv(time(_G20252))}\line 
+time\line
+. emph\line
+. e\line
+. now\line
+. e\line
+ \cell 
+\pard\intbl B: {\i s}\line
+sentence\line
+. neg :: ?neg_B\line
+. time :: e\line
+. can_or_will :: ?can_or_will_B\line
+. times :: ?times_B\line
+. how_long :: ?how_long_B\line
+. predicate :: ?predicate_B\line
+. loc :: ?loc_B\line
+. manner :: ?manner_B\line
+\cell
+\pard\intbl C: {\i s}\line
+sentence\line
+. neg :: ?neg_B\line
+. time :: time(emph, e, at, now)\line
+. can_or_will :: ?can_or_will_B\line
+. times :: ?times_B\line
+. how_long :: ?how_long_B\line
+. predicate :: ?predicate_B\line
+. loc :: ?loc_B\line
+. manner :: ?manner_B\line
+\cell
+\row}
+
+{\pard\sb250\fs28\cf2\keepn 350 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i s}\line 
+sentence\line
+. neg :: e\line
+. time :: e\line
+. can_or_will :: e\line
+. times :: e\line
+. how_long :: e\line
+. predicate\line
+. . head :: ?pred_A\line
+. . arguments\line
+. . . e\line
+. . . . ?e_A\line
+. loc\line
+. . e\line
+. manner\line
+. . e\line
+ \cell 
+\pard\intbl B: {\i s}\line
+?prop_C\line
+\cell
+\pard\intbl C: {\i s}\line
+sentence\line
+. neg :: e\line
+. time :: e\line
+. can_or_will :: e\line
+. times :: e\line
+. how_long :: e\line
+. predicate\line
+. . head :: ?pred_A\line
+. . arguments\line
+. . . e\line
+. . . . ?e_A\line
+. . . prop\line
+. . . . ?prop_C\line
+. loc\line
+. . e\line
+. manner\line
+. . e\line
+\cell
+\row}
+{\pard\b Conditions: \line
+prop_compl(?pred_A)\line
+\par}
+{\pard \b ting\b0  THINK and \b save\b0  KNOW + proposition.\par}
+{\pard\sb200\b\keepn Examples:\par}
+\par{\pard
+\trowd\trgaph144\cellx4800\cellx9600
+{\pard\s1\cf3\intbl mi ting yu gutpela\cell}
+{\pard\s2\intbl I think that you are good\cell}
+\row
+{\pard\s1\cf3\intbl em i save mi bin wokim samting\cell}
+{\pard\s2\intbl he knows that I have done something\cell}
+\row
+\lastrow}
+
+{\pard\sb250\fs28\cf2\keepn 351 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i s}\line 
+sentence\line
+. neg :: e\line
+. time :: e\line
+. can_or_will :: e\line
+. times :: e\line
+. how_long :: e\line
+. predicate\line
+. . head :: know\line
+. . arguments\line
+. . . e\line
+. . . . ?e_A\line
+. loc\line
+. . e\line
+. manner\line
+. . e\line
+ \cell 
+\pard\intbl B: {\i n(?subcat)}\line
+?o_C\line
+\cell
+\pard\intbl C: {\i s}\line
+sentence\line
+. neg :: e\line
+. time :: e\line
+. can_or_will :: e\line
+. times :: e\line
+. how_long :: e\line
+. predicate\line
+. . head :: know\line
+. . arguments\line
+. . . e\line
+. . . . ?e_A\line
+. . . object\line
+. . . . ?o_C\line
+. loc\line
+. . e\line
+. manner\line
+. . e\line
+\cell
+\row}
+{\pard In the lexical representation of the verbs which can take 
+ a proposition as complement (\b save\b0 , \b tok\b0 , \b ting\b0 ), I have put no 
+ object slot, to prevent the parser from analysing structures like  
+ \i I know you are someone good\i0  as [\i I know you\i0 ] where \i you\i0  is 
+ attached as an object of \i know\i0 .\par}
+{\pard\sb100\qj\fi500\fs24 
+In spoken language there are probably hints to the human parser (due to 
+ intonation and/or stress) which alert the hearer to wait further.\par}
+{\pard\sb100\qj\fi500\fs24 
+The NSM-PROLOG parser does not treat \i know\i0  and \i think\i0  like normal 
+ transitive verbs, so it does not expect an object. \par}
+{\pard\sb100\qj\fi500\fs24 
+Therefore, the transitive version of \i know\i0  and \i think\i0  (KNOW SOMETHING, 
+ THINK SOMETHING) need a separate rule, which is to be higher than the rule 
+ which recognises the propositional frame THINK/KNOW (THAT) + S.\par}
+{\pard\sb100\qj\fi500\fs24 
+					 
+ This happens in English because the complementizer \i that is optional, and in 
+ Tok Pisin, because this language has no complementizer in this construction.
+ \par}
+{\pard\sb200\b\keepn Examples:\par}
+\par{\pard
+\trowd\trgaph144\cellx4800\cellx9600
+{\pard\s1\cf3\intbl em i save planti samting\cell}
+{\pard\s2\intbl he knows many things\cell}
+\row
+{\pard\s1\cf3\intbl mi save dispela samting\cell}
+{\pard\s2\intbl I know this thing\cell}
+\row
+\lastrow}
+
+{\pard\sb250\fs28\cf2\keepn 352 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i s}\line 
+sentence\line
+. neg :: e\line
+. time :: e\line
+. can_or_will :: e\line
+. times :: e\line
+. how_long :: e\line
+. predicate\line
+. . head :: know\line
+. . arguments\line
+. . . e\line
+. . . . ?e_A\line
+. loc\line
+. . e\line
+. manner\line
+. . e\line
+ \cell 
+\pard\intbl B: {\i num}\line
+many\line
+\cell
+\pard\intbl C: {\i s}\line
+sentence\line
+. neg :: e\line
+. time :: e\line
+. can_or_will :: e\line
+. times :: e\line
+. how_long :: e\line
+. predicate\line
+. . head :: know\line
+. . arguments\line
+. . . e\line
+. . . . ?e_A\line
+. . . object\line
+. . . . substantive\line
+. . . . . det :: e\line
+. . . . . same_or_other :: e\line
+. . . . . number :: num(many)\line
+. . . . . attributes\line
+. . . . . head_noun :: something(thing)\line
+. loc\line
+. . e\line
+. manner\line
+. . e\line
+\cell
+\row}
+{\pard \b save\b0  + \b plenti\b0  = KNOW MANY THINGS\par}
+{\pard\sb200\b\keepn Examples:\par}
+\par{\pard
+\trowd\trgaph144\cellx4800\cellx9600
+{\pard\s1\cf3\intbl em i save plenti\cell}
+{\pard\s2\intbl em i save plenti\cell}
+\row
+\lastrow}
+
+{\pard\sb250\fs28\cf2\keepn 353 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i s}\line 
+sentence\line
+. neg :: e\line
+. time :: e\line
+. can_or_will :: e\line
+. times :: e\line
+. how_long :: e\line
+. predicate\line
+. . head :: know\line
+. . arguments\line
+. . . e\line
+. . . . ?e_A\line
+. loc\line
+. . e\line
+. manner\line
+. . e\line
+ \cell 
+\pard\intbl B: {\i pp(long)}\line
+?t_C\line
+\cell
+\pard\intbl C: {\i s}\line
+sentence\line
+. neg :: e\line
+. time :: e\line
+. can_or_will :: e\line
+. times :: e\line
+. how_long :: e\line
+. predicate\line
+. . head :: know\line
+. . arguments\line
+. . . e\line
+. . . . ?e_A\line
+. . . object\line
+. . . . substantive\line
+. . . . . det :: e\line
+. . . . . same_or_other :: e\line
+. . . . . number :: e\line
+. . . . . attributes\line
+. . . . . head_noun :: something(thing)\line
+. . . object\line
+. . . . e\line
+. . . t\line
+. . . . ?t_C\line
+. loc\line
+. . e\line
+. manner\line
+. . e\line
+\cell
+\row}
+{\pard \b save\b0  + \b long N\b0  = KNOW (SOMETHING) ABOUT N.\par}
+{\pard\sb200\b Examples:\par}
+{\pard
+\trowd\trgaph144\cellx2500\cellx9600
+{\pard\fs24\cf3\intbl mi save long yu\cell}
+{\pard\cf0\fs20\intbl ct(s, s(e, e, e, e, e, p(know, [e:sp(e, e, e, [], d(me)), o:sp(e, e, e, [], something(thing)), o:e, t:sp(e, e, e, [], d(you))]), e, e))\cell}
+\row
+}
+
+{\pard\sb250\fs28\cf2\keepn 354 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i s}\line 
+sentence\line
+. neg :: e\line
+. time :: e\line
+. can_or_will :: e\line
+. times :: e\line
+. how_long :: e\line
+. predicate\line
+. . head :: know\line
+. . arguments\line
+. . . e\line
+. . . . ?e_A\line
+. loc\line
+. . e\line
+. manner\line
+. . e\line
+ \cell 
+\pard\intbl B: {\i d}\line
+this\line
+\cell
+\pard\intbl C: {\i s}\line
+sentence\line
+. neg :: e\line
+. time :: e\line
+. can_or_will :: e\line
+. times :: e\line
+. how_long :: e\line
+. predicate\line
+. . head :: know\line
+. . arguments\line
+. . . e\line
+. . . . ?e_A\line
+. . . object\line
+. . . . substantive\line
+. . . . . det :: this\line
+. . . . . same_or_other :: e\line
+. . . . . number :: e\line
+. . . . . attributes\line
+. . . . . head_noun :: something(fact)\line
+. loc\line
+. . e\line
+. manner\line
+. . e\line
+\cell
+\row}
+{\pard "Standalone THIS" as object of KNOW.\par}
+{\pard\sb200\b\keepn Examples:\par}
+\par{\pard
+\trowd\trgaph144\cellx4800\cellx9600
+{\pard\s1\cf3\intbl mi save dispela\cell}
+{\pard\s2\intbl I know this\cell}
+\row
+\lastrow}
+
+{\pard\sb250\fs28\cf2\keepn 355 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i s}\line 
+sentence\line
+. neg :: e\line
+. time :: e\line
+. can_or_will :: e\line
+. times :: e\line
+. how_long :: e\line
+. predicate\line
+. . head :: know\line
+. . arguments\line
+. . . e\line
+. . . . ?e_A\line
+. . . object\line
+. . . . ?o_A\line
+. loc\line
+. . e\line
+. manner\line
+. . e\line
+ \cell 
+\pard\intbl B: {\i pp(long)}\line
+?t_C\line
+\cell
+\pard\intbl C: {\i s}\line
+sentence\line
+. neg :: e\line
+. time :: e\line
+. can_or_will :: e\line
+. times :: e\line
+. how_long :: e\line
+. predicate\line
+. . head :: know\line
+. . arguments\line
+. . . e\line
+. . . . ?e_A\line
+. . . object\line
+. . . . ?o_A\line
+. . . t\line
+. . . . ?t_C\line
+. loc\line
+. . e\line
+. manner\line
+. . e\line
+\cell
+\row}
+{\pard KNOW SOMETHING ABOUT\par}
+{\pard\sb200\b Examples:\par}
+{\pard
+\trowd\trgaph144\cellx2500\cellx9600
+{\pard\fs24\cf3\intbl mi no save plenti samting long dispela\cell}
+{\pard\cf0\fs20\intbl noparse([109, 105, 32, 110, 111, 32, 115, 97, 118, 101, 32, 112, 108, 101, 110, 116, 105, 32, 115, 97, 109, 116, 105, 110, 103, 32, 108, 111, 110, 103, 32, 100, 105, 115, 112, 101, 108, 97])\cell}
+\row
+}
+
+{\pard\sb250\fs28\cf2\keepn 357 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i s}\line 
+sentence\line
+. neg :: ?neg_A\line
+. time :: ?time_A\line
+. can_or_will :: ?can_or_will_A\line
+. times :: ?times_A\line
+. how_long :: ?how_long_A\line
+. predicate\line
+. . head :: want\line
+. . arguments\line
+. . . e\line
+. . . . ?e_A\line
+. loc :: ?loc_A\line
+. manner :: ?manner_A\line
+ \cell 
+\pard\intbl B: {\i v(?subcat)}\line
+head :: ?pred_B\line
+arguments\line
+. ?role\line
+. . e\line
+\cell
+\pard\intbl C: {\i s}\line
+sentence\line
+. neg :: ?neg_A\line
+. time :: ?time_A\line
+. can_or_will :: ?can_or_will_A\line
+. times :: ?times_A\line
+. how_long :: ?how_long_A\line
+. predicate\line
+. . head :: want\line
+. . arguments\line
+. . . e\line
+. . . . ?e_A\line
+. . . object\line
+. . . . p(?pred_B, [_G12011:e])\line
+. loc :: ?loc_A\line
+. manner :: ?manner_A\line
+\cell
+\row}
+{\pard \i Equi\i0  want. The prime WANT is \b laik\b0  in Tok Pisin (cf. 
+ Priestley 1999a, pp. 12-13).\par}
+{\pard\sb200\b\keepn Examples:\par}
+\par{\pard
+\trowd\trgaph144\cellx4800\cellx9600
+{\pard\s1\cf3\intbl mi laik wokim samting\cell}
+{\pard\s2\intbl I want to do something\cell}
+\row
+\lastrow}
+
+{\pard\sb250\fs28\cf2\keepn 358 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i s}\line 
+sentence\line
+. neg :: ?neg_A\line
+. time :: ?time_A\line
+. can_or_will :: ?can_or_will_A\line
+. times :: e\line
+. how_long :: e\line
+. predicate\line
+. . head :: want\line
+. . arguments\line
+. . . e\line
+. . . . ?e_A\line
+. . . object\line
+. . . . p\line
+. loc\line
+. . e\line
+. manner\line
+. . e\line
+ \cell 
+\pard\intbl B: {\i s}\line
+sentence\line
+. neg :: ?neg_B\line
+. time :: e\line
+. can_or_will :: e\line
+. times :: ?times_B\line
+. how_long :: ?how_long_B\line
+. predicate\line
+. . head :: ?pred_B\line
+. . arguments\line
+. . . ?role :: ??role_B\line
+. loc :: ?loc_B\line
+. manner :: ?manner_B\line
+\cell
+\pard\intbl C: {\i s}\line
+sentence\line
+. neg :: ?neg_A\line
+. time :: ?time_A\line
+. can_or_will :: ?can_or_will_A\line
+. times :: ?times_B\line
+. how_long :: ?how_long_B\line
+. predicate\line
+. . head :: want\line
+. . arguments\line
+. . . e\line
+. . . . ?e_A\line
+. . . object\line
+. . . . p(_G19968, [_G19935: ??role_B])\line
+. loc :: ?loc_B\line
+. manner :: ?manner_B\line
+\cell
+\row}
+{\pard\b Conditions: \line
+want_not(?neg_B, ?pred_B, _G19968)\line
+\par}
+{\pard \i Non-equi\i0  want is \b laik long\b0  + Sentence.\par}
+{\pard\sb200\b\keepn Examples:\par}
+\par{\pard
+\trowd\trgaph144\cellx4800\cellx9600
+{\pard\s1\cf3\intbl mi laik long yu wokim samting\cell}
+{\pard\s2\intbl I want you to do something\cell}
+\row
+\lastrow}
+
+{\pard\sb250\fs28\cf2\keepn 371 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i n(n)}\line 
+substantive\line
+. det :: e\line
+. same_or_other :: e\line
+. number :: e\line
+. attributes\line
+. head_noun :: time(time)\line
+ \cell 
+\pard\intbl B: {\i s}\line
+\cell
+\pard\intbl C: {\i s(when)}\line
+\cell
+\row}
+{\pard The last level in Tok Pisin grammars is that of complex 
+ sentences. Rule 372 takes care of recognising subordinate 
+ clauses (clauses preceded by a conjunction); before of this, however, a 
+ stranded \b taim\b0  before a clause will be interpreted as the 
+ conjunction \i when\i0 .\par}
+{\pard\sb200\b Examples:\par}
+{\pard
+\trowd\trgaph144\cellx2500\cellx9600
+{\pard\fs24\cf3\intbl taim yu wokim samting\cell}
+{\pard\cf0\fs20\intbl ct(s(when), s(e, e, e, e, e, p(do, [a:sp(e, e, e, [], d(you)), o:sp(e, e, e, [], something(thing)), d:e, c:e, i:e, b:e]), e, e))\cell}
+\row
+}
+
+{\pard\sb250\fs28\cf2\keepn 372 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i conj}\line 
+ \cell 
+\pard\intbl B: {\i s}\line
+\cell
+\pard\intbl C: {\i s([])}\line
+\cell
+\row}
+{\pard\sb200\b Examples:\par}
+{\pard
+\trowd\trgaph144\cellx2500\cellx9600
+{\pard\fs24\cf3\intbl mi stap\cell}
+{\pard\cf0\fs20\intbl ct(s, s(e, e, e, e, e, p(live, [a:sp(e, e, e, [], d(me)), c:e]), e, e))\cell}
+\row
+{\pard\fs24\cf3\intbl sapos mi stap\cell}
+{\pard\cf0\fs20\intbl ct(s(if), s(e, e, e, e, e, p(live, [a:sp(e, e, e, [], d(me)), c:e]), e, e))\cell}
+\row
+{\pard\fs24\cf3\intbl yu go kam\cell}
+{\pard\cf0\fs20\intbl ct(s, s(e, e, e, e, e, p(move, [a:sp(e, e, e, [], d(you))]), e, e))\cell}
+\row
+{\pard\fs24\cf3\intbl long wanem yu go kam\cell}
+{\pard\cf0\fs20\intbl ct(s(because), s(e, e, e, e, e, p(move, [a:sp(e, e, e, [], d(you))]), e, e))\cell}
+\row
+}
+
+{\pard\sb250\fs28\cf2\keepn 373 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i s(if)}\line 
+ \cell 
+\pard\intbl B: {\i s}\line
+\cell
+\pard\intbl C: {\i s}\line
+if\line
+\cell
+\row}
+{\pard IF S1 S2.\par}
+{\pard\sb200\b\keepn Examples:\par}
+\par{\pard
+\trowd\trgaph144\cellx4800\cellx9600
+{\pard\s1\cf3\intbl sapos yu wokim dispela samting bel bilong mi i stap gut\cell}
+{\pard\s2\intbl if you do this thing I feel something good\cell}
+\row
+\lastrow}
+
+{\pard\sb250\fs28\cf2\keepn 374 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i s}\line 
+ \cell 
+\pard\intbl B: {\i s(like)}\line
+\cell
+\pard\intbl C: {\i s}\line
+like\line
+\cell
+\row}
+{\pard S1 as S2.\par}
+{\pard\sb200\b\keepn Examples:\par}
+\par{\pard
+\trowd\trgaph144\cellx4800\cellx9600
+{\pard\s1\cf3\intbl bel bilong mi i stap gut olsem na bel bilong yu i stap gut\cell}
+{\pard\s2\intbl I feel something good as you feel something good\cell}
+\row
+\lastrow}
+
+{\pard\sb250\fs28\cf2\keepn 375 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i s(when)}\line 
+ \cell 
+\pard\intbl B: {\i s}\line
+\cell
+\pard\intbl C: {\i s}\line
+when\line
+\cell
+\row}
+{\pard WHEN S1, S2\par}
+{\pard\sb200\b\keepn Examples:\par}
+\par{\pard
+\trowd\trgaph144\cellx4800\cellx9600
+{\pard\s1\cf3\intbl taim yu wokim dispela samting bel bilong mi i stap gut\cell}
+{\pard\s2\intbl when you do this thing I feel something good\cell}
+\row
+\lastrow}
+
+{\pard\sb250\fs28\cf2\keepn 377 A + B = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i s}\line 
+ \cell 
+\pard\intbl B: {\i s(because)}\line
+\cell
+\pard\intbl C: {\i s}\line
+because_sentence\line
+. cause\line
+. consequence\line
+\cell
+\row}
+{\pard S1 BECAUSE S2\par}
+{\pard\sb200\b\keepn Examples:\par}
+\par{\pard
+\trowd\trgaph144\cellx4800\cellx9600
+{\pard\s1\cf3\intbl mi wokim samting long wanem yu laik long mi wokim samting\cell}
+{\pard\s2\intbl I do something because you want me to do something\cell}
+\row
+\lastrow}
+
+{\pard\sb250\fs28\cf2\keepn 380 A + B = C   //   B + A = C\par}
+
+{\pard\fs20
+\trowd\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx3200\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144\cellx6400\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs\trgaph144 \cellx9600\clbrdrt\brdrs\clbrdrl\brdrs\clbrdrb\brdrs\clbrdrr\brdrs
+\pard\intbl A: {\i pp(long)}\line 
+substantive\line
+. det :: this\line
+. same_or_other :: e\line
+. number :: e\line
+. attributes\line
+. head_noun :: something(fact)\line
+ \cell 
+\pard\intbl B: {\i s}\line
+\cell
+\pard\intbl C: {\i s}\line
+because_sentence\line
+. cause\line
+. . this\line
+. consequence\line
+\cell
+\row}
+{\pard S + because of this\par}
+{\pard\sb200\b\keepn Examples:\par}
+\par{\pard
+\trowd\trgaph144\cellx4800\cellx9600
+{\pard\s1\cf3\intbl mi wokim samting long dispela\cell}
+{\pard\s2\intbl I do something because of this\cell}
+\row
+\lastrow}
+
+{\pard\fs32\b\sb200\qc\keepn 6 Epilogue\par}
+{\pard\qj\fs24 This grammar of Tok Pisin NSM is still very tentative.\par}
+{\pard\sb100\qj\fi500\fs24 
+First of all, feedback from Tok Pisin experts will presumably lead to 
+ corrections (the generated Tok Pisin could be simply wrong in some cases, 
+ constructions could have to be added, etc.). \par}
+{\pard\sb100\qj\fi500\fs24 
+Secondly, a better NSM-PROLOG representation of time adverbials will lead 
+ to changes in both the English and Tok Pisin grammars.\par}
+{\pard\sb100\qj\fi500\fs24 
+When this will be done, a sort of "NSM-specification" should be prepared 
+ using English, Tok Pisin and other modules which will have been prepared in 
+ the meantime. NSM texts written for automatic treatment should of course 
+ stick to the NSM standard so defined, and new grammars should be able 
+ to parse and generate those sentences in the specification.\par}
+{\pard\sb100\qj\fi500\fs24 
+Now that a Tok Pisin module is available, NSM-PROLOG can translate between 
+ two (language-particular) NSMs. I am confident that this project can have 
+ both theoretical and practical significance:\par}
+{\pard\sb100\qj\fi500\fs24 
+* from the side of theory, "reducing" a language-particular NSM to 
+ computational treatment forces the grammar writer to make all assumptions 
+ explicit. \par}
+{\pard\sb100\qj\fi500\fs24 
+* As for the practical significance, every text written in a 
+ language-particular NSM  will be immediately available in every other 
+ language-particular NSM for which a grammar is available. This is, 
+ in essence, Father Roberto Busa's dream (cf. Busa 2006), if we see NSM as 
+ a radical form of "controlled language".\par}
+{\pard\sb100\qj\fi500\fs24 
+Now, I think that NSM can greatly help endangered (or already dead) language 
+ revitalization programs. If a language-particular NSM is the smallest 
+ usable subset of that language, a first step in a language revitalization 
+ program could consist in teaching NSM first. Even the most time-lacking and 
+ grammar-intimidated person could think he/she can afford learning some 
+ sixty-odd 
+ words and their structural patterns. Ther result would be rewarding, because 
+ NSM can be used to express cultural scripts, word definitions and perhaps 
+ other culturally significant aspects of one's own culture, if these two were 
+ not enough. \par}
+{\pard\sb100\qj\fi500\fs24 
+Let's imagine, for example, an American First Nation whose language is gone 
+ or almost gone, but documented. By extracting this language's NSM from 
+ the documentation, and writing a PROLOG grammar, all NSM texts stored in 
+ electronic format could immediately be made available in that language. Such 
+ texts could include, for example, an "NSM primer", a ground-level course 
+ (I am preparing one, for the matter), and various anthologies of cultural 
+ scripts, or some biblical paraphrase. \par}
+{\pard\sb100\qj\fi500\fs24 
+But. most important, that First Nation could engage in detecting their 
+ own cultural scripts. They could put them down in English, and have 
+ them translated into their language NSM. This language could then become 
+ \i culturally functional\i0 , in that it would have a sphere of use -- transmitting 
+ the traditional culture of the group. If learning a "whole" language can 
+ be seen as a daunting, intimidating task for many people, learning an NSM 
+ surely shouldn't. If for someone the language revitalization enterprise 
+ ended there, it would already be something.\par}
+{\pard\sb100\qj\fi500\fs24 
+But, of course, if NSM is a first step, then one could ask what should be 
+ the second. Is there a "next subset", larger than NSM but nonetheless 
+ restricted? Does this subset (if it is there at all) coincide with what 
+ Father busa has in mind with his "controlled languages"?\par}
+
+\page
+{\pard\fs32\b\sb200\qc\keepn 7 Bibliography\par}
+
+{\pard\ql\fs24\b Busa, Roberto S.J. \b0 2006. Rovesciando Babele. Ossia tornare alle radici d'ogni lingua. \i Spirali.\par}
+{\pard\ql\fs24\b Priestley, Carol \b0 2008. The semantics of "inalienable possession" in Koromu (PNG), \i in\i0 : 
+\b Goddard 2008a\b0 , pp. 277-300.\par}
+{\pard\ql\fs24\b Goddard, Cliff \b0 2008a (ed). Cross-Linguistic Semantics. \i John Benjamins Publishing Company. \par}
+{\pard\ql\fs24\b Goddard, Cliff \b0 2008b. Towards a systematic table of semantic elements. \i In\i0 : \b Goddard 2008a\b0, 
+pp. 59-81.. \par}
+{\pard\ql\fs24\b Priestley, Carol \b0 1999a. Suggested exponents and grammar of substantives and 
+mental predicates in Tok Pisin.\par}
+{\pard\ql\fs24\b Priestley,  Carol \b0 1999b. Suggested exponents and grammar of some further predicates  predicates in Tok Pisin.\par}
+
+}
