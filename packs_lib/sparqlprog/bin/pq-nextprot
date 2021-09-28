@@ -1,2 +1,0 @@
-#!/bin/sh
-pl2sparql  -s nextprot  -u sparqlprog/ontologies/nextprot "$@"
