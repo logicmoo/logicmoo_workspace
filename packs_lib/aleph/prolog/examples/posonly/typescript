@@ -1,0 +1,370 @@
+Script started on Wed 20 Nov 2002 17:02:56 GMT
+[1m~[41]>[m cd ~/aleph/test/examples/posonly
+[1m~/aleph/test/examples/posonly[42]>[m yap
+[ Restoring file /users/ashwin/Yap-4.3.18/solaris/startup ]
+[ YAP version Yap-4.3.18 ]
+   ?- [aleph].
+ [ consulting aleph... ]
+
+
+A L E P H
+Version 4
+Last modified: Wed Nov 13 16:18:53 GMT 2002
+
+Manual: http://www.comlab.ox.ac.uk/oucl/groups/machlearn/Aleph/index.html
+
+ [ aleph consulted 1161928 bytes in 0.47 seconds ]
+
+yes
+   ?- read_all(animals).
+ [ reconsulting animals.b... ]
+ [ animals.b reconsulted 26748 bytes in 0.01 seconds ]
+[consulting pos examples] [animals.f]
+[cannot open] [animals.n]
+[included generator] [*class/2]
+
+yes
+   ?- induce.
+[select example] [1]
+[sat] [1]
+[class(eagle,bird)]
+
+[bottom clause]
+class(A,bird) :-
+   has_covering(A,feathers), has_legs(A,2), nhas_gills(A), habitat(A,land), 
+   habitat(A,air).
+[literals] [6]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,0.0910425]/0]
+class(A,bird).
+[4/ -1.29928]
+[-------------------------------------]
+[found clause]
+class(A,bird).
+[posonly bayes estimate] [2.43558]
+[clause label] [[4,-1.29928,1,2.43558,1.36364]]
+[clauses constructed] [1]
+[-------------------------------------]
+class(A,bird) :-
+   has_covering(A,feathers).
+[4/ -3.09104]
+[-------------------------------------]
+[found clause]
+class(A,bird) :-
+   has_covering(A,feathers).
+[posonly bayes estimate] [3.97734]
+[clause label] [[4,-3.09104,2,3.97734,0.227273]]
+[clauses constructed] [2]
+[-------------------------------------]
+class(A,bird) :-
+   has_legs(A,2).
+class(A,bird) :-
+   nhas_gills(A).
+class(A,bird) :-
+   habitat(A,land).
+class(A,bird) :-
+   habitat(A,air).
+[clauses constructed] [6]
+[search time] [0.0]
+[best clause]
+class(A,bird) :-
+   has_covering(A,feathers).
+[posonly bayes estimate] [3.97734]
+[atoms left] [16]
+[select example] [2]
+[sat] [2]
+[class(bat,mammal)]
+
+[bottom clause]
+class(A,mammal) :-
+   has_covering(A,hair), has_legs(A,2), nhas_gills(A), habitat(A,caves), 
+   habitat(A,air), has_milk(A).
+[literals] [7]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,0.0910425]/0]
+class(A,mammal).
+[6/ -1.0116]
+[-------------------------------------]
+[found clause]
+class(A,mammal).
+[posonly bayes estimate] [2.63669]
+[clause label] [[6,-1.0116,1,2.63669,1.21212]]
+[clauses constructed] [1]
+[-------------------------------------]
+class(A,mammal) :-
+   has_covering(A,hair).
+[6/ -2.3979]
+[-------------------------------------]
+[found clause]
+class(A,mammal) :-
+   has_covering(A,hair).
+[posonly bayes estimate] [3.85632]
+[clause label] [[6,-2.3979,2,3.85632,0.30303]]
+[clauses constructed] [2]
+[-------------------------------------]
+class(A,mammal) :-
+   has_legs(A,2).
+class(A,mammal) :-
+   nhas_gills(A).
+[6/ -1.14513]
+[-------------------------------------]
+[good clause]
+class(A,mammal) :-
+   nhas_gills(A).
+[posonly bayes estimate] [2.60356]
+[clause label] [[6,-1.14513,2,2.60356,1.06061]]
+[clauses constructed] [4]
+[-------------------------------------]
+class(A,mammal) :-
+   habitat(A,caves).
+class(A,mammal) :-
+   habitat(A,air).
+class(A,mammal) :-
+   has_milk(A).
+[6/ -1.70475]
+[-------------------------------------]
+[good clause]
+class(A,mammal) :-
+   has_milk(A).
+[posonly bayes estimate] [3.16317]
+[clause label] [[6,-1.70475,2,3.16317,0.606061]]
+[clauses constructed] [7]
+[-------------------------------------]
+[clauses constructed] [7]
+[search time] [0.01]
+[best clause]
+class(A,mammal) :-
+   has_covering(A,hair).
+[posonly bayes estimate] [3.85632]
+[atoms left] [10]
+[select example] [7]
+[sat] [7]
+[class(shark,fish)]
+
+[bottom clause]
+class(A,fish) :-
+   has_gills(A), has_covering(A,none), has_legs(A,0), habitat(A,water).
+[literals] [5]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,0.0910425]/0]
+class(A,fish).
+[4/ -1.4816]
+[-------------------------------------]
+[found clause]
+class(A,fish).
+[posonly bayes estimate] [2.6179]
+[clause label] [[4,-1.4816,1,2.6179,1.13636]]
+[clauses constructed] [1]
+[-------------------------------------]
+class(A,fish) :-
+   has_gills(A).
+[4/ -2.3979]
+[-------------------------------------]
+[found clause]
+class(A,fish) :-
+   has_gills(A).
+[posonly bayes estimate] [3.28419]
+[clause label] [[4,-2.3979,2,3.28419,0.454545]]
+[clauses constructed] [2]
+[-------------------------------------]
+class(A,fish) :-
+   has_covering(A,none).
+[4/ -1.99243]
+[-------------------------------------]
+[good clause]
+class(A,fish) :-
+   has_covering(A,none).
+[posonly bayes estimate] [2.87872]
+[clause label] [[4,-1.99243,2,2.87872,0.681818]]
+[clauses constructed] [3]
+[-------------------------------------]
+class(A,fish) :-
+   has_legs(A,0).
+[4/ -1.99243]
+[-------------------------------------]
+[good clause]
+class(A,fish) :-
+   has_legs(A,0).
+[posonly bayes estimate] [2.87872]
+[clause label] [[4,-1.99243,2,2.87872,0.681818]]
+[clauses constructed] [4]
+[-------------------------------------]
+class(A,fish) :-
+   habitat(A,water).
+[4/ -1.99243]
+[-------------------------------------]
+[good clause]
+class(A,fish) :-
+   habitat(A,water).
+[posonly bayes estimate] [2.87872]
+[clause label] [[4,-1.99243,2,2.87872,0.681818]]
+[clauses constructed] [5]
+[-------------------------------------]
+[clauses constructed] [5]
+[search time] [0.0]
+[best clause]
+class(A,fish) :-
+   has_gills(A).
+[posonly bayes estimate] [3.28419]
+[atoms left] [6]
+[select example] [8]
+[sat] [8]
+[class(crocodile,reptile)]
+
+[bottom clause]
+class(A,reptile) :-
+   has_covering(A,scales), has_legs(A,4), nhas_gills(A), habitat(A,land), 
+   habitat(A,water).
+[literals] [6]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,0.0910425]/0]
+class(A,reptile).
+[6/ -1.4816]
+[-------------------------------------]
+[found clause]
+class(A,reptile).
+[posonly bayes estimate] [3.1067]
+[clause label] [[6,-1.4816,1,3.1067,0.757576]]
+[clauses constructed] [1]
+[-------------------------------------]
+class(A,reptile) :-
+   has_covering(A,scales).
+[6/ -1.70475]
+[-------------------------------------]
+[found clause]
+class(A,reptile) :-
+   has_covering(A,scales).
+[posonly bayes estimate] [3.16317]
+[clause label] [[6,-1.70475,2,3.16317,0.606061]]
+[clauses constructed] [2]
+[-------------------------------------]
+class(A,reptile) :-
+   has_legs(A,4).
+[5/ -2.3979]
+[-------------------------------------]
+[found clause]
+class(A,reptile) :-
+   has_legs(A,4).
+[posonly bayes estimate] [3.60733]
+[clause label] [[5,-2.3979,2,3.60733,0.363636]]
+[clauses constructed] [3]
+[-------------------------------------]
+class(A,reptile) :-
+   nhas_gills(A).
+[6/ -1.70475]
+[-------------------------------------]
+[good clause]
+class(A,reptile) :-
+   nhas_gills(A).
+[posonly bayes estimate] [3.16317]
+[clause label] [[6,-1.70475,2,3.16317,0.606061]]
+[clauses constructed] [4]
+[-------------------------------------]
+class(A,reptile) :-
+   habitat(A,land).
+[6/ -1.99243]
+[-------------------------------------]
+[good clause]
+class(A,reptile) :-
+   habitat(A,land).
+[posonly bayes estimate] [3.45086]
+[clause label] [[6,-1.99243,2,3.45086,0.454545]]
+[clauses constructed] [5]
+[-------------------------------------]
+class(A,reptile) :-
+   habitat(A,water).
+[4/ -1.99243]
+[-------------------------------------]
+[good clause]
+class(A,reptile) :-
+   habitat(A,water).
+[posonly bayes estimate] [2.87872]
+[clause label] [[4,-1.99243,2,2.87872,0.681818]]
+[clauses constructed] [6]
+[-------------------------------------]
+[clauses constructed] [6]
+[search time] [0.01]
+[best clause]
+class(A,reptile) :-
+   has_legs(A,4).
+[posonly bayes estimate] [3.60733]
+[atoms left] [1]
+[select example] [17]
+[sat] [17]
+[class(snake,reptile)]
+
+[bottom clause]
+class(A,reptile) :-
+   has_covering(A,scales), has_legs(A,0), nhas_gills(A), habitat(A,land).
+[literals] [5]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,0.0910425]/0]
+class(A,reptile).
+[1/ -1.70475]
+[-------------------------------------]
+[found clause]
+class(A,reptile).
+[posonly bayes estimate] [0.704748]
+[clause label] [[1,-1.70475,1,0.704748,3.63636]]
+[clauses constructed] [1]
+[-------------------------------------]
+class(A,reptile) :-
+   has_covering(A,scales).
+class(A,reptile) :-
+   has_legs(A,0).
+class(A,reptile) :-
+   nhas_gills(A).
+class(A,reptile) :-
+   habitat(A,land).
+[clauses constructed] [5]
+[search time] [0.01]
+[best clause]
+class(A,reptile).
+[posonly bayes estimate] [0.704748]
+[atoms left] [0]
+
+[theory]
+
+[Rule 1] [Pos cover = 4 Rand cover = 0]
+class(A,bird) :-
+   has_covering(A,feathers).
+
+[Rule 2] [Pos cover = 6 Rand cover = 1]
+class(A,mammal) :-
+   has_covering(A,hair).
+
+[Rule 3] [Pos cover = 4 Rand cover = 1]
+class(A,fish) :-
+   has_gills(A).
+
+[Rule 4] [Pos cover = 5 Rand cover = 1]
+class(A,reptile) :-
+   has_legs(A,4).
+
+[Rule 5] [Pos cover = 6 Rand cover = 4]
+class(A,reptile).
+
+[Training set performance]
+          Actual
+       +        - 
+     + 20        0        20 
+Pred 
+     - 0        0        0 
+
+       20        0        20 
+
+Accuracy = 1.0
+[Training set summary] [[20,0,0,0]]
+[time taken] [0.04]
+[total clauses constructed] [29]
+
+yes
+   ?- [1m~/aleph/test/examples/posonly[43]>[m exit
+exit
+
+script done on Wed 20 Nov 2002 17:03:19 GMT

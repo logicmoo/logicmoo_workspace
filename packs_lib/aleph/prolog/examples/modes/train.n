@@ -1,0 +1,12 @@
+
+eastbound(west6).
+eastbound(west7).
+eastbound(west8).
+eastbound(west9).
+eastbound(west10).
+
+%westbound(east1).
+%westbound(east2).
+%westbound(east3).
+%westbound(east4).
+%westbound(east5).

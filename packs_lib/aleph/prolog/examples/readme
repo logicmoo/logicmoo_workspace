@@ -1,0 +1,20 @@
+The directories here contain example files illustrating the use
+of Aleph for some tasks.
+
+Directory                  Purpose
+---------                  -------
+
+abduce                    Abductive learning
+constraints               Learning constraints
+features                  Boolean feature construction from good clauses
+gcws                      Generalised closed-world specialisation
+good                      Storing good clauses
+incremental               Incremental learning
+modes                     Learning modes
+numbers                   Simple forms of numerical models
+portray                   Pretty printing
+posonly                   Positive-only learning
+recursion                 Learning recursive theories
+refine                    User-defined refinement operator
+trains                    Michalski's trains
+tree                      Tree learning

@@ -1,0 +1,490 @@
+Script started on Fri 15 Nov 2002 17:00:52 GMT
+[1m~[41]>[m cd ~/aleph/test/examples/portray
+[1m~/aleph/test/examples/portray[42]>[m yap
+[ Restoring file /users/ashwin/Yap-4.3.18/solaris/startup ]
+[ YAP version Yap-4.3.18 ]
+   ?- [aleph].
+ [ consulting aleph... ]
+
+
+A L E P H
+Version 4
+Last modified: Wed Nov 13 16:18:53 GMT 2002
+
+Manual: http://www.comlab.ox.ac.uk/oucl/groups/machlearn/Aleph/index.html
+
+ [ aleph consulted 1161856 bytes in 0.45 seconds ]
+
+yes
+   ?- read_all(train).
+ [ reconsulting train.b... ]
+ [ train.b reconsulted 52224 bytes in 0.02 seconds ]
+[consulting pos examples] [train.f]
+[consulting neg examples] [train.n]
+
+yes
+   ?- sat(1).
+[sat] [1]
+[eastbound(east1)]
+
+[bottom clause]
+Train A is eastbound if:
+   train A has a car B, 
+   train A has a car C, 
+   train A has a car D, 
+   train A has a car E, 
+   car B is short, 
+   car D is short, 
+   car D is closed, 
+   car C is long, 
+   car E is long, 
+   car B is open, 
+   car C is open, 
+   car E is open, 
+   car B is rectangle-shaped, 
+   car C is rectangle-shaped, 
+   car D is rectangle-shaped, 
+   car E is rectangle-shaped, 
+   car B has 2 wheels, 
+   car C has 3 wheels, 
+   car D has 2 wheels, 
+   car E has 2 wheels, 
+   car B has 1 circle-shaped load(s), 
+   car C has 1 hexagon-shaped load(s), 
+   car D has 1 triangle-shaped load(s), 
+   car E has 3 rectangle-shaped load(s).
+[literals] [25]
+[saturation time] [0.01]
+
+yes
+   ?- reduce.
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+Train A is eastbound.
+[5/5]
+Train A is eastbound if:
+   train A has a car B.
+[5/5]
+Train A is eastbound if:
+   train A has a car B.
+[5/5]
+Train A is eastbound if:
+   train A has a car B.
+[5/5]
+Train A is eastbound if:
+   train A has a car B.
+[5/5]
+Train A is eastbound if:
+   train A has a car B and 
+   car B is short.
+[5/5]
+Train A is eastbound if:
+   train A has a car B and 
+   car B is open.
+[5/5]
+Train A is eastbound if:
+   train A has a car B and 
+   car B is rectangle-shaped.
+[5/5]
+Train A is eastbound if:
+   train A has a car B and 
+   car B has 2 wheels.
+[5/5]
+Train A is eastbound if:
+   train A has a car B and 
+   car B has 1 circle-shaped load(s).
+[3/3]
+Train A is eastbound if:
+   train A has a car B and 
+   train A has a car C.
+[5/5]
+Train A is eastbound if:
+   train A has a car B and 
+   train A has a car C.
+[5/5]
+Train A is eastbound if:
+   train A has a car B and 
+   train A has a car C.
+[5/5]
+Train A is eastbound if:
+   train A has a car B and 
+   car B is long.
+[2/5]
+Train A is eastbound if:
+   train A has a car B and 
+   car B is open.
+[5/5]
+Train A is eastbound if:
+   train A has a car B and 
+   car B is rectangle-shaped.
+[5/5]
+Train A is eastbound if:
+   train A has a car B and 
+   car B has 3 wheels.
+[3/1]
+Train A is eastbound if:
+   train A has a car B and 
+   car B has 1 hexagon-shaped load(s).
+Train A is eastbound if:
+   train A has a car B and 
+   train A has a car C.
+[5/5]
+Train A is eastbound if:
+   train A has a car B and 
+   train A has a car C.
+[5/5]
+Train A is eastbound if:
+   train A has a car B and 
+   car B is short.
+[5/5]
+Train A is eastbound if:
+   train A has a car B and 
+   car B is closed.
+[5/2]
+Train A is eastbound if:
+   train A has a car B and 
+   car B is rectangle-shaped.
+[5/5]
+Train A is eastbound if:
+   train A has a car B and 
+   car B has 2 wheels.
+[5/5]
+Train A is eastbound if:
+   train A has a car B and 
+   car B has 1 triangle-shaped load(s).
+[5/2]
+Train A is eastbound if:
+   train A has a car B and 
+   train A has a car C.
+[5/5]
+Train A is eastbound if:
+   train A has a car B and 
+   car B is long.
+[2/5]
+Train A is eastbound if:
+   train A has a car B and 
+   car B is open.
+[5/5]
+Train A is eastbound if:
+   train A has a car B and 
+   car B is rectangle-shaped.
+[5/5]
+Train A is eastbound if:
+   train A has a car B and 
+   car B has 2 wheels.
+[5/5]
+Train A is eastbound if:
+   train A has a car B and 
+   car B has 3 rectangle-shaped load(s).
+Train A is eastbound if:
+   train A has a car B and 
+   car B is closed and 
+   car B is rectangle-shaped.
+Train A is eastbound if:
+   train A has a car B and 
+   car B is closed and 
+   car B has 2 wheels.
+Train A is eastbound if:
+   train A has a car B and 
+   car B is closed and 
+   car B has 1 triangle-shaped load(s).
+[2/0]
+[-------------------------------------]
+[found clause]
+Train A is eastbound if:
+   train A has a car B and 
+   car B is closed and 
+   car B has 1 triangle-shaped load(s).
+[pos-neg] [2]
+[clause label] [[2,0,4,2]]
+[clauses constructed] [34]
+[-------------------------------------]
+Train A is eastbound if:
+   train A has a car B and 
+   car B is closed and 
+   train A has a car C.
+Train A is eastbound if:
+   train A has a car B and 
+   car B has 1 triangle-shaped load(s) and 
+   train A has a car C.
+Train A is eastbound if:
+   train A has a car B and 
+   car B has 3 wheels and 
+   train A has a car C.
+Train A is eastbound if:
+   train A has a car B and 
+   car B has 3 wheels and 
+   train A has a car C.
+Train A is eastbound if:
+   train A has a car B and 
+   car B is short and 
+   car B is open.
+Train A is eastbound if:
+   train A has a car B and 
+   car B is short and 
+   car B is rectangle-shaped.
+Train A is eastbound if:
+   train A has a car B and 
+   car B is short and 
+   car B has 2 wheels.
+Train A is eastbound if:
+   train A has a car B and 
+   car B is short and 
+   car B has 1 circle-shaped load(s).
+Train A is eastbound if:
+   train A has a car B and 
+   car B is short and 
+   train A has a car C.
+Train A is eastbound if:
+   train A has a car B and 
+   car B is short and 
+   train A has a car C.
+Train A is eastbound if:
+   train A has a car B and 
+   car B is short and 
+   train A has a car C.
+Train A is eastbound if:
+   train A has a car B and 
+   car B is open and 
+   car B is rectangle-shaped.
+Train A is eastbound if:
+   train A has a car B and 
+   car B is open and 
+   car B has 2 wheels.
+Train A is eastbound if:
+   train A has a car B and 
+   car B is open and 
+   car B has 1 circle-shaped load(s).
+Train A is eastbound if:
+   train A has a car B and 
+   car B is open and 
+   train A has a car C.
+Train A is eastbound if:
+   train A has a car B and 
+   car B is open and 
+   train A has a car C.
+Train A is eastbound if:
+   train A has a car B and 
+   car B is open and 
+   train A has a car C.
+Train A is eastbound if:
+   train A has a car B and 
+   car B is rectangle-shaped and 
+   car B has 2 wheels.
+Train A is eastbound if:
+   train A has a car B and 
+   car B is rectangle-shaped and 
+   car B has 1 circle-shaped load(s).
+Train A is eastbound if:
+   train A has a car B and 
+   car B is rectangle-shaped and 
+   train A has a car C.
+Train A is eastbound if:
+   train A has a car B and 
+   car B is rectangle-shaped and 
+   train A has a car C.
+Train A is eastbound if:
+   train A has a car B and 
+   car B is rectangle-shaped and 
+   train A has a car C.
+Train A is eastbound if:
+   train A has a car B and 
+   car B has 2 wheels and 
+   car B has 1 circle-shaped load(s).
+Train A is eastbound if:
+   train A has a car B and 
+   car B has 2 wheels and 
+   train A has a car C.
+Train A is eastbound if:
+   train A has a car B and 
+   car B has 2 wheels and 
+   train A has a car C.
+Train A is eastbound if:
+   train A has a car B and 
+   car B has 2 wheels and 
+   train A has a car C.
+Train A is eastbound if:
+   train A has a car B and 
+   car B has 1 circle-shaped load(s) and 
+   train A has a car C.
+Train A is eastbound if:
+   train A has a car B and 
+   car B has 1 circle-shaped load(s) and 
+   train A has a car C.
+Train A is eastbound if:
+   train A has a car B and 
+   car B has 1 circle-shaped load(s) and 
+   train A has a car C.
+Train A is eastbound if:
+   train A has a car B and 
+   train A has a car C and 
+   car C is long.
+Train A is eastbound if:
+   train A has a car B and 
+   train A has a car C and 
+   car C is open.
+Train A is eastbound if:
+   train A has a car B and 
+   train A has a car C and 
+   car C is rectangle-shaped.
+Train A is eastbound if:
+   train A has a car B and 
+   train A has a car C and 
+   car C has 3 wheels.
+Train A is eastbound if:
+   train A has a car B and 
+   train A has a car C and 
+   car C has 1 hexagon-shaped load(s).
+Train A is eastbound if:
+   train A has a car B and 
+   train A has a car C and 
+   train A has a car D.
+Train A is eastbound if:
+   train A has a car B and 
+   train A has a car C and 
+   train A has a car D.
+Train A is eastbound if:
+   train A has a car B and 
+   train A has a car C and 
+   car C is short.
+Train A is eastbound if:
+   train A has a car B and 
+   train A has a car C and 
+   car C is closed.
+Train A is eastbound if:
+   train A has a car B and 
+   train A has a car C and 
+   car C is rectangle-shaped.
+Train A is eastbound if:
+   train A has a car B and 
+   train A has a car C and 
+   car C has 2 wheels.
+Train A is eastbound if:
+   train A has a car B and 
+   train A has a car C and 
+   car C has 1 triangle-shaped load(s).
+Train A is eastbound if:
+   train A has a car B and 
+   train A has a car C and 
+   train A has a car D.
+Train A is eastbound if:
+   train A has a car B and 
+   train A has a car C and 
+   car C is long.
+Train A is eastbound if:
+   train A has a car B and 
+   train A has a car C and 
+   car C is open.
+Train A is eastbound if:
+   train A has a car B and 
+   train A has a car C and 
+   car C is rectangle-shaped.
+Train A is eastbound if:
+   train A has a car B and 
+   train A has a car C and 
+   car C has 2 wheels.
+Train A is eastbound if:
+   train A has a car B and 
+   train A has a car C and 
+   car C has 3 rectangle-shaped load(s).
+Train A is eastbound if:
+   train A has a car B and 
+   car B is open and 
+   car B is rectangle-shaped.
+Train A is eastbound if:
+   train A has a car B and 
+   car B is open and 
+   car B has 3 wheels.
+Train A is eastbound if:
+   train A has a car B and 
+   car B is open and 
+   train A has a car C.
+Train A is eastbound if:
+   train A has a car B and 
+   car B is open and 
+   train A has a car C.
+Train A is eastbound if:
+   train A has a car B and 
+   car B is rectangle-shaped and 
+   car B has 3 wheels.
+Train A is eastbound if:
+   train A has a car B and 
+   car B is rectangle-shaped and 
+   train A has a car C.
+Train A is eastbound if:
+   train A has a car B and 
+   car B is rectangle-shaped and 
+   train A has a car C.
+Train A is eastbound if:
+   train A has a car B and 
+   train A has a car C and 
+   car C is short.
+Train A is eastbound if:
+   train A has a car B and 
+   train A has a car C and 
+   car C is closed.
+Train A is eastbound if:
+   train A has a car B and 
+   train A has a car C and 
+   car C is rectangle-shaped.
+Train A is eastbound if:
+   train A has a car B and 
+   train A has a car C and 
+   car C has 2 wheels.
+Train A is eastbound if:
+   train A has a car B and 
+   train A has a car C and 
+   car C has 1 triangle-shaped load(s).
+Train A is eastbound if:
+   train A has a car B and 
+   train A has a car C and 
+   train A has a car D.
+Train A is eastbound if:
+   train A has a car B and 
+   train A has a car C and 
+   car C is long.
+Train A is eastbound if:
+   train A has a car B and 
+   train A has a car C and 
+   car C is open.
+Train A is eastbound if:
+   train A has a car B and 
+   train A has a car C and 
+   car C is rectangle-shaped.
+Train A is eastbound if:
+   train A has a car B and 
+   train A has a car C and 
+   car C has 2 wheels.
+Train A is eastbound if:
+   train A has a car B and 
+   train A has a car C and 
+   car C has 3 rectangle-shaped load(s).
+Train A is eastbound if:
+   train A has a car B and 
+   car B is short and 
+   car B is closed.
+[5/0]
+[-------------------------------------]
+[found clause]
+Train A is eastbound if:
+   train A has a car B and 
+   car B is short and 
+   car B is closed.
+[pos-neg] [5]
+[clause label] [[5,0,4,5]]
+[clauses constructed] [100]
+[-------------------------------------]
+[clauses constructed] [100]
+[search time] [0.03]
+[best clause]
+Train A is eastbound if:
+   train A has a car B and 
+   car B is short and 
+   car B is closed.
+[pos-neg] [5]
+
+yes
+   ?- [1m~/aleph/test/examples/portray[43]>[m exit
+exit
+
+script done on Fri 15 Nov 2002 17:01:17 GMT

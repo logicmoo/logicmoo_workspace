@@ -1,0 +1,2346 @@
+Script started on Mon 07 Nov 2005 02:19:48 PM IST
+[41]> cd ~/aleph/test/examples/abduce
+~/aleph/test/examples/abduce[42]> yap
+[ Restoring file /home/ashwin/scye/Yap-4.3.22/intel/startup ]
+[ YAP version Yap-4.3.22 ]
+   ?- [aleph].
+ [ consulting /home/ashwin/scye/aleph/test/examples/abduce/aleph.pl... ]
+
+
+A L E P H
+Version 5
+Last modified: Sun Nov  6 12:49:12 UTC 2005
+
+Manual: http://www.comlab.ox.ac.uk/oucl/groups/machlearn/Aleph/index.html
+
+ [ consulted /home/ashwin/scye/aleph/test/examples/abduce/aleph.pl in module user, 90 msec 1326548 bytes ]
+
+yes
+   ?- read_all(gp).
+ [ reconsulting /home/ashwin/scye/aleph/test/examples/abduce/gp.b... ]
+ [ reconsulted /home/ashwin/scye/aleph/test/examples/abduce/gp.b in module user, 0 msec 12644 bytes ]
+[consulting pos examples] [gp.f]
+[consulting neg examples] [gp.n]
+
+yes
+   ?- induce.
+[select example] [1]
+[sat] [1]
+[grandparent(dad(dad(bob)),bob)]
+
+[bottom clause]
+grandparent(A,B) :-
+   father(A,C), father(C,B).
+[literals] [3]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+grandparent(A,B).
+[16/768]
+grandparent(A,B) :-
+   father(A,C).
+[8/328]
+grandparent(A,B) :-
+   father(A,C), father(C,B).
+[4/0]
+[-------------------------------------]
+[found clause]
+grandparent(A,B) :-
+   father(A,C), father(C,B).
+[pos-neg] [4]
+[clause label] [[4,0,3,4]]
+[clauses constructed] [3]
+[-------------------------------------]
+[clauses constructed] [3]
+[search time] [0.01]
+[best clause]
+grandparent(A,B) :-
+   father(A,C), father(C,B).
+[pos-neg] [4]
+[sat] [1]
+[parent(dad(bob),bob)]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   father(A,B).
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[16/768]
+parent(A,B) :-
+   father(A,B).
+[4/0]
+[-------------------------------------]
+[found clause]
+parent(A,B) :-
+   father(A,B).
+[pos-neg] [4]
+[clause label] [[4,0,2,4]]
+[clauses constructed] [2]
+[-------------------------------------]
+[clauses constructed] [2]
+[search time] [0.03]
+[best clause]
+parent(A,B) :-
+   father(A,B).
+[pos-neg] [4]
+[sat] [2]
+[parent(dad(dad(bob)),mum(bob))]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   father(A,C).
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[16/768]
+parent(A,B) :-
+   father(A,C).
+[8/328]
+[clauses constructed] [2]
+[search time] [0.02]
+[best clause]
+parent(dad(dad(bob)),mum(bob)).
+[pos-neg] [1]
+[sat] [3]
+[parent(mum(bob),bob)]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   mother(A,B).
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[16/768]
+parent(A,B) :-
+   mother(A,B).
+[5/0]
+[-------------------------------------]
+[found clause]
+parent(A,B) :-
+   mother(A,B).
+[pos-neg] [5]
+[clause label] [[5,0,2,5]]
+[clauses constructed] [2]
+[-------------------------------------]
+[clauses constructed] [2]
+[search time] [0.04]
+[best clause]
+parent(A,B) :-
+   mother(A,B).
+[pos-neg] [5]
+[sat] [4]
+[parent(dad(dad(bob)),dad(mum(bob)))]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   father(A,C).
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[16/768]
+parent(A,B) :-
+   father(A,C).
+[8/328]
+[clauses constructed] [2]
+[search time] [0.02]
+[best clause]
+parent(dad(dad(bob)),dad(mum(bob))).
+[pos-neg] [1]
+[sat] [5]
+[parent(dad(mum(bob)),bob)]
+[repeated literals] [1/4]
+
+[bottom clause]
+parent(A,B) :-
+   father(A,C), mother(C,B).
+[literals] [3]
+[saturation time] [0.01]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[16/768]
+parent(A,B) :-
+   father(A,C).
+[8/328]
+parent(A,B) :-
+   father(A,C), mother(C,B).
+[clauses constructed] [3]
+[search time] [0.02]
+[best clause]
+parent(dad(mum(bob)),bob).
+[pos-neg] [1]
+[sat] [6]
+[parent(dad(dad(bob)),mum(dad(bob)))]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   father(A,C).
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[16/768]
+parent(A,B) :-
+   father(A,C).
+[8/328]
+[clauses constructed] [2]
+[search time] [0.02]
+[best clause]
+parent(dad(dad(bob)),mum(dad(bob))).
+[pos-neg] [1]
+[sat] [7]
+[parent(mum(dad(bob)),bob)]
+[repeated literals] [1/4]
+
+[bottom clause]
+parent(A,B) :-
+   mother(A,C), father(C,B).
+[literals] [3]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[16/768]
+parent(A,B) :-
+   mother(A,C).
+[9/354]
+parent(A,B) :-
+   mother(A,C), father(C,B).
+[clauses constructed] [3]
+[search time] [0.01]
+[best clause]
+parent(mum(dad(bob)),bob).
+[pos-neg] [1]
+[sat] [8]
+[parent(dad(dad(bob)),mum(mum(bob)))]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   father(A,C).
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[16/768]
+parent(A,B) :-
+   father(A,C).
+[8/328]
+[clauses constructed] [2]
+[search time] [0.02]
+[best clause]
+parent(dad(dad(bob)),mum(mum(bob))).
+[pos-neg] [1]
+[sat] [9]
+[parent(mum(mum(bob)),bob)]
+[repeated literals] [1/4]
+
+[bottom clause]
+parent(A,B) :-
+   mother(A,C), mother(C,B).
+[literals] [3]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[16/768]
+parent(A,B) :-
+   mother(A,C).
+[9/354]
+parent(A,B) :-
+   mother(A,C), mother(C,B).
+[clauses constructed] [3]
+[search time] [0.02]
+[best clause]
+parent(mum(mum(bob)),bob).
+[pos-neg] [1]
+[sat] [10]
+[parent(jo,bob)]
+[repeated literals] [1/2]
+
+[bottom clause]
+parent(A,B).
+[literals] [1]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[16/768]
+[clauses constructed] [1]
+[search time] [0.01]
+[best clause]
+parent(jo,bob).
+[pos-neg] [1]
+[sat] [11]
+[parent(dad(dad(bob)),jo)]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   father(A,C).
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[16/768]
+parent(A,B) :-
+   father(A,C).
+[8/328]
+[clauses constructed] [2]
+[search time] [0.02]
+[best clause]
+parent(dad(dad(bob)),jo).
+[pos-neg] [1]
+[sat] [12]
+[parent(dad(jo),bob)]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   father(A,C).
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[16/768]
+parent(A,B) :-
+   father(A,C).
+[8/328]
+[clauses constructed] [2]
+[search time] [0.03]
+[best clause]
+parent(dad(jo),bob).
+[pos-neg] [1]
+[sat] [13]
+[parent(dad(dad(bob)),dad(jo))]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   father(A,C).
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[16/768]
+parent(A,B) :-
+   father(A,C).
+[8/328]
+[clauses constructed] [2]
+[search time] [0.02]
+[best clause]
+parent(dad(dad(bob)),dad(jo)).
+[pos-neg] [1]
+[sat] [14]
+[parent(dad(dad(bob)),mum(jo))]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   father(A,C).
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[16/768]
+parent(A,B) :-
+   father(A,C).
+[8/328]
+[clauses constructed] [2]
+[search time] [0.02]
+[best clause]
+parent(dad(dad(bob)),mum(jo)).
+[pos-neg] [1]
+[sat] [15]
+[parent(mum(jo),bob)]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   mother(A,C).
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[16/768]
+parent(A,B) :-
+   mother(A,C).
+[9/354]
+[clauses constructed] [2]
+[search time] [0.02]
+[best clause]
+parent(mum(jo),bob).
+[pos-neg] [1]
+[sat] [16]
+[parent(dad(dad(bob)),dad(dad(jo)))]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   father(A,C).
+[literals] [2]
+[saturation time] [0.01]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[16/768]
+parent(A,B) :-
+   father(A,C).
+[8/328]
+[clauses constructed] [2]
+[search time] [0.02]
+[best clause]
+parent(dad(dad(bob)),dad(dad(jo))).
+[pos-neg] [1]
+[sat] [17]
+[parent(dad(dad(jo)),bob)]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   father(A,C).
+[literals] [2]
+[saturation time] [0.01]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[16/768]
+parent(A,B) :-
+   father(A,C).
+[8/328]
+[clauses constructed] [2]
+[search time] [0.02]
+[best clause]
+parent(dad(dad(jo)),bob).
+[pos-neg] [1]
+[sat] [18]
+[parent(dad(dad(bob)),dad(mum(jo)))]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   father(A,C).
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[16/768]
+parent(A,B) :-
+   father(A,C).
+[8/328]
+[clauses constructed] [2]
+[search time] [0.02]
+[best clause]
+parent(dad(dad(bob)),dad(mum(jo))).
+[pos-neg] [1]
+[sat] [19]
+[parent(dad(mum(jo)),bob)]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   father(A,C).
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[16/768]
+parent(A,B) :-
+   father(A,C).
+[8/328]
+[clauses constructed] [2]
+[search time] [0.02]
+[best clause]
+parent(dad(mum(jo)),bob).
+[pos-neg] [1]
+[sat] [20]
+[parent(dad(dad(bob)),mum(dad(jo)))]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   father(A,C).
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[16/768]
+parent(A,B) :-
+   father(A,C).
+[8/328]
+[clauses constructed] [2]
+[search time] [0.03]
+[best clause]
+parent(dad(dad(bob)),mum(dad(jo))).
+[pos-neg] [1]
+[sat] [21]
+[parent(mum(dad(jo)),bob)]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   mother(A,C).
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[16/768]
+parent(A,B) :-
+   mother(A,C).
+[9/354]
+[clauses constructed] [2]
+[search time] [0.02]
+[best clause]
+parent(mum(dad(jo)),bob).
+[pos-neg] [1]
+[sat] [22]
+[parent(dad(dad(bob)),mum(mum(jo)))]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   father(A,C).
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[16/768]
+parent(A,B) :-
+   father(A,C).
+[8/328]
+[clauses constructed] [2]
+[search time] [0.02]
+[best clause]
+parent(dad(dad(bob)),mum(mum(jo))).
+[pos-neg] [1]
+[sat] [23]
+[parent(mum(mum(jo)),bob)]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   mother(A,C).
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[16/768]
+parent(A,B) :-
+   mother(A,C).
+[9/354]
+[clauses constructed] [2]
+[search time] [0.0199999999999999]
+[best clause]
+parent(mum(mum(jo)),bob).
+[pos-neg] [1]
+[sat] [24]
+[parent(peter,bob)]
+[repeated literals] [1/2]
+
+[bottom clause]
+parent(A,B).
+[literals] [1]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[16/768]
+[clauses constructed] [1]
+[search time] [0.0]
+[best clause]
+parent(peter,bob).
+[pos-neg] [1]
+[sat] [25]
+[parent(dad(dad(bob)),peter)]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   father(A,C).
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[16/768]
+parent(A,B) :-
+   father(A,C).
+[8/328]
+[clauses constructed] [2]
+[search time] [0.02]
+[best clause]
+parent(dad(dad(bob)),peter).
+[pos-neg] [1]
+[sat] [26]
+[parent(dad(peter),bob)]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   father(A,C).
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[16/768]
+parent(A,B) :-
+   father(A,C).
+[8/328]
+[clauses constructed] [2]
+[search time] [0.01]
+[best clause]
+parent(dad(peter),bob).
+[pos-neg] [1]
+[sat] [27]
+[parent(dad(dad(bob)),dad(peter))]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   father(A,C).
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[16/768]
+parent(A,B) :-
+   father(A,C).
+[8/328]
+[clauses constructed] [2]
+[search time] [0.02]
+[best clause]
+parent(dad(dad(bob)),dad(peter)).
+[pos-neg] [1]
+[sat] [28]
+[parent(dad(dad(bob)),mum(peter))]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   father(A,C).
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[16/768]
+parent(A,B) :-
+   father(A,C).
+[8/328]
+[clauses constructed] [2]
+[search time] [0.02]
+[best clause]
+parent(dad(dad(bob)),mum(peter)).
+[pos-neg] [1]
+[sat] [29]
+[parent(mum(peter),bob)]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   mother(A,C).
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[16/768]
+parent(A,B) :-
+   mother(A,C).
+[9/354]
+[clauses constructed] [2]
+[search time] [0.02]
+[best clause]
+parent(mum(peter),bob).
+[pos-neg] [1]
+[sat] [30]
+[parent(dad(dad(bob)),dad(dad(peter)))]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   father(A,C).
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[16/768]
+parent(A,B) :-
+   father(A,C).
+[8/328]
+[clauses constructed] [2]
+[search time] [0.0199999999999999]
+[best clause]
+parent(dad(dad(bob)),dad(dad(peter))).
+[pos-neg] [1]
+[sat] [31]
+[parent(dad(dad(peter)),bob)]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   father(A,C).
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[16/768]
+parent(A,B) :-
+   father(A,C).
+[8/328]
+[clauses constructed] [2]
+[search time] [0.02]
+[best clause]
+parent(dad(dad(peter)),bob).
+[pos-neg] [1]
+[sat] [32]
+[parent(dad(dad(bob)),dad(mum(peter)))]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   father(A,C).
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[16/768]
+parent(A,B) :-
+   father(A,C).
+[8/328]
+[clauses constructed] [2]
+[search time] [0.02]
+[best clause]
+parent(dad(dad(bob)),dad(mum(peter))).
+[pos-neg] [1]
+[sat] [33]
+[parent(dad(mum(peter)),bob)]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   father(A,C).
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[16/768]
+parent(A,B) :-
+   father(A,C).
+[8/328]
+[clauses constructed] [2]
+[search time] [0.02]
+[best clause]
+parent(dad(mum(peter)),bob).
+[pos-neg] [1]
+[sat] [34]
+[parent(dad(dad(bob)),mum(dad(peter)))]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   father(A,C).
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[16/768]
+parent(A,B) :-
+   father(A,C).
+[8/328]
+[clauses constructed] [2]
+[search time] [0.02]
+[best clause]
+parent(dad(dad(bob)),mum(dad(peter))).
+[pos-neg] [1]
+[sat] [35]
+[parent(mum(dad(peter)),bob)]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   mother(A,C).
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[16/768]
+parent(A,B) :-
+   mother(A,C).
+[9/354]
+[clauses constructed] [2]
+[search time] [0.0199999999999999]
+[best clause]
+parent(mum(dad(peter)),bob).
+[pos-neg] [1]
+[sat] [36]
+[parent(dad(dad(bob)),mum(mum(peter)))]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   father(A,C).
+[literals] [2]
+[saturation time] [0.01]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[16/768]
+parent(A,B) :-
+   father(A,C).
+[8/328]
+[clauses constructed] [2]
+[search time] [0.02]
+[best clause]
+parent(dad(dad(bob)),mum(mum(peter))).
+[pos-neg] [1]
+[sat] [37]
+[parent(mum(mum(peter)),bob)]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   mother(A,C).
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[16/768]
+parent(A,B) :-
+   mother(A,C).
+[9/354]
+[clauses constructed] [2]
+[search time] [0.02]
+[best clause]
+parent(mum(mum(peter)),bob).
+[pos-neg] [1]
+[sat] [38]
+[parent(jane,bob)]
+[repeated literals] [1/2]
+
+[bottom clause]
+parent(A,B).
+[literals] [1]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[16/768]
+[clauses constructed] [1]
+[search time] [0.01]
+[best clause]
+parent(jane,bob).
+[pos-neg] [1]
+[sat] [39]
+[parent(dad(dad(bob)),jane)]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   father(A,C).
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[16/768]
+parent(A,B) :-
+   father(A,C).
+[8/328]
+[clauses constructed] [2]
+[search time] [0.02]
+[best clause]
+parent(dad(dad(bob)),jane).
+[pos-neg] [1]
+[sat] [40]
+[parent(dad(jane),bob)]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   father(A,C).
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[16/768]
+parent(A,B) :-
+   father(A,C).
+[8/328]
+[clauses constructed] [2]
+[search time] [0.02]
+[best clause]
+parent(dad(jane),bob).
+[pos-neg] [1]
+[sat] [41]
+[parent(dad(dad(bob)),dad(jane))]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   father(A,C).
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[16/768]
+parent(A,B) :-
+   father(A,C).
+[8/328]
+[clauses constructed] [2]
+[search time] [0.02]
+[best clause]
+parent(dad(dad(bob)),dad(jane)).
+[pos-neg] [1]
+[sat] [42]
+[parent(dad(dad(bob)),mum(jane))]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   father(A,C).
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[16/768]
+parent(A,B) :-
+   father(A,C).
+[8/328]
+[clauses constructed] [2]
+[search time] [0.02]
+[best clause]
+parent(dad(dad(bob)),mum(jane)).
+[pos-neg] [1]
+[sat] [43]
+[parent(mum(jane),bob)]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   mother(A,C).
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[16/768]
+parent(A,B) :-
+   mother(A,C).
+[9/354]
+[clauses constructed] [2]
+[search time] [0.02]
+[best clause]
+parent(mum(jane),bob).
+[pos-neg] [1]
+[sat] [44]
+[parent(dad(dad(bob)),dad(dad(jane)))]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   father(A,C).
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[16/768]
+parent(A,B) :-
+   father(A,C).
+[8/328]
+[clauses constructed] [2]
+[search time] [0.02]
+[best clause]
+parent(dad(dad(bob)),dad(dad(jane))).
+[pos-neg] [1]
+[sat] [45]
+[parent(dad(dad(jane)),bob)]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   father(A,C).
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[16/768]
+parent(A,B) :-
+   father(A,C).
+[8/328]
+[clauses constructed] [2]
+[search time] [0.02]
+[best clause]
+parent(dad(dad(jane)),bob).
+[pos-neg] [1]
+[sat] [46]
+[parent(dad(dad(bob)),dad(mum(jane)))]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   father(A,C).
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[16/768]
+parent(A,B) :-
+   father(A,C).
+[8/328]
+[clauses constructed] [2]
+[search time] [0.02]
+[best clause]
+parent(dad(dad(bob)),dad(mum(jane))).
+[pos-neg] [1]
+[sat] [47]
+[parent(dad(mum(jane)),bob)]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   father(A,C).
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[16/768]
+parent(A,B) :-
+   father(A,C).
+[8/328]
+[clauses constructed] [2]
+[search time] [0.03]
+[best clause]
+parent(dad(mum(jane)),bob).
+[pos-neg] [1]
+[sat] [48]
+[parent(dad(dad(bob)),mum(dad(jane)))]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   father(A,C).
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[16/768]
+parent(A,B) :-
+   father(A,C).
+[8/328]
+[clauses constructed] [2]
+[search time] [0.04]
+[best clause]
+parent(dad(dad(bob)),mum(dad(jane))).
+[pos-neg] [1]
+[sat] [49]
+[parent(mum(dad(jane)),bob)]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   mother(A,C).
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[16/768]
+parent(A,B) :-
+   mother(A,C).
+[9/354]
+[clauses constructed] [2]
+[search time] [0.03]
+[best clause]
+parent(mum(dad(jane)),bob).
+[pos-neg] [1]
+[sat] [50]
+[parent(dad(dad(bob)),mum(mum(jane)))]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   father(A,C).
+[literals] [2]
+[saturation time] [0.01]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[16/768]
+parent(A,B) :-
+   father(A,C).
+[8/328]
+[clauses constructed] [2]
+[search time] [0.02]
+[best clause]
+parent(dad(dad(bob)),mum(mum(jane))).
+[pos-neg] [1]
+[sat] [51]
+[parent(mum(mum(jane)),bob)]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   mother(A,C).
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[16/768]
+parent(A,B) :-
+   mother(A,C).
+[9/354]
+[clauses constructed] [2]
+[search time] [0.0199999999999998]
+[best clause]
+parent(mum(mum(jane)),bob).
+[pos-neg] [1]
+[atoms left] [11]
+[select example] [2]
+[sat] [2]
+[grandparent(dad(mum(bob)),bob)]
+
+[bottom clause]
+grandparent(A,B) :-
+   father(A,C), parent(C,B), mother(C,B).
+[literals] [4]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+grandparent(A,B).
+[11/768]
+grandparent(A,B) :-
+   father(A,C).
+[7/328]
+grandparent(A,B) :-
+   father(A,C), parent(C,B).
+[4/0]
+[-------------------------------------]
+[found clause]
+grandparent(A,B) :-
+   father(A,C), parent(C,B).
+[pos-neg] [4]
+[clause label] [[4,0,3,4]]
+[clauses constructed] [3]
+[-------------------------------------]
+grandparent(A,B) :-
+   father(A,C), mother(C,B).
+[clauses constructed] [4]
+[search time] [0.0]
+[best clause]
+grandparent(A,B) :-
+   father(A,C), parent(C,B).
+[pos-neg] [4]
+[sat] [1]
+[parent(dad(bob),bob)]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   father(A,B).
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[11/768]
+parent(A,B) :-
+   father(A,B).
+[11/0]
+[-------------------------------------]
+[found clause]
+parent(A,B) :-
+   father(A,B).
+[pos-neg] [11]
+[clause label] [[11,0,2,11]]
+[clauses constructed] [2]
+[-------------------------------------]
+[clauses constructed] [2]
+[search time] [0.04]
+[best clause]
+parent(A,B) :-
+   father(A,B).
+[pos-neg] [11]
+[sat] [52]
+[parent(dad(mum(bob)),dad(bob))]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   father(A,C).
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[11/768]
+parent(A,B) :-
+   father(A,C).
+[11/432]
+[clauses constructed] [2]
+[search time] [0.03]
+[best clause]
+parent(dad(mum(bob)),dad(bob)).
+[pos-neg] [1]
+[sat] [53]
+[parent(dad(mum(bob)),mum(bob))]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   father(A,B).
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[11/768]
+parent(A,B) :-
+   father(A,B).
+[11/0]
+[-------------------------------------]
+[found clause]
+parent(A,B) :-
+   father(A,B).
+[pos-neg] [11]
+[clause label] [[11,0,2,11]]
+[clauses constructed] [2]
+[-------------------------------------]
+[clauses constructed] [2]
+[search time] [0.03]
+[best clause]
+parent(A,B) :-
+   father(A,B).
+[pos-neg] [11]
+[sat] [53]
+[parent(dad(mum(bob)),mum(bob))]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   father(A,B).
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[11/768]
+parent(A,B) :-
+   father(A,B).
+[11/0]
+[-------------------------------------]
+[found clause]
+parent(A,B) :-
+   father(A,B).
+[pos-neg] [11]
+[clause label] [[11,0,2,11]]
+[clauses constructed] [2]
+[-------------------------------------]
+[clauses constructed] [2]
+[search time] [0.03]
+[best clause]
+parent(A,B) :-
+   father(A,B).
+[pos-neg] [11]
+[sat] [3]
+[parent(mum(bob),bob)]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   mother(A,B).
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[11/768]
+parent(A,B) :-
+   mother(A,B).
+[clauses constructed] [2]
+[search time] [0.0]
+[best clause]
+parent(mum(bob),bob).
+[pos-neg] [1]
+[sat] [54]
+[parent(dad(dad(bob)),bob)]
+[repeated literals] [1/4]
+
+[bottom clause]
+parent(A,B) :-
+   father(A,C), father(C,B).
+[literals] [3]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[11/768]
+parent(A,B) :-
+   father(A,C).
+[11/432]
+parent(A,B) :-
+   father(A,C), father(C,B).
+[clauses constructed] [3]
+[search time] [0.02]
+[best clause]
+parent(dad(dad(bob)),bob).
+[pos-neg] [1]
+[sat] [55]
+[parent(dad(mum(bob)),dad(dad(bob)))]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   father(A,C).
+[literals] [2]
+[saturation time] [0.01]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[11/768]
+parent(A,B) :-
+   father(A,C).
+[11/432]
+[clauses constructed] [2]
+[search time] [0.02]
+[best clause]
+parent(dad(mum(bob)),dad(dad(bob))).
+[pos-neg] [1]
+[sat] [56]
+[parent(dad(mum(bob)),mum(dad(bob)))]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   father(A,C).
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[11/768]
+parent(A,B) :-
+   father(A,C).
+[11/432]
+[clauses constructed] [2]
+[search time] [0.02]
+[best clause]
+parent(dad(mum(bob)),mum(dad(bob))).
+[pos-neg] [1]
+[sat] [7]
+[parent(mum(dad(bob)),bob)]
+[repeated literals] [1/4]
+
+[bottom clause]
+parent(A,B) :-
+   mother(A,C), father(C,B).
+[literals] [3]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[11/768]
+parent(A,B) :-
+   mother(A,C).
+[5/380]
+parent(A,B) :-
+   mother(A,C), father(C,B).
+[clauses constructed] [3]
+[search time] [0.02]
+[best clause]
+parent(mum(dad(bob)),bob).
+[pos-neg] [1]
+[sat] [57]
+[parent(dad(mum(bob)),mum(mum(bob)))]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   father(A,C).
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[11/768]
+parent(A,B) :-
+   father(A,C).
+[11/432]
+[clauses constructed] [2]
+[search time] [0.0199999999999998]
+[best clause]
+parent(dad(mum(bob)),mum(mum(bob))).
+[pos-neg] [1]
+[sat] [9]
+[parent(mum(mum(bob)),bob)]
+[repeated literals] [1/5]
+
+[bottom clause]
+parent(A,B) :-
+   mother(A,C), parent(C,B), mother(C,B).
+[literals] [4]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[11/768]
+parent(A,B) :-
+   mother(A,C).
+[5/380]
+parent(A,B) :-
+   mother(A,C), parent(C,B).
+parent(A,B) :-
+   mother(A,C), mother(C,B).
+[clauses constructed] [4]
+[search time] [0.02]
+[best clause]
+parent(mum(mum(bob)),bob).
+[pos-neg] [1]
+[sat] [10]
+[parent(jo,bob)]
+[repeated literals] [1/2]
+
+[bottom clause]
+parent(A,B).
+[literals] [1]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[11/768]
+[clauses constructed] [1]
+[search time] [0.0]
+[best clause]
+parent(jo,bob).
+[pos-neg] [1]
+[sat] [58]
+[parent(dad(mum(bob)),jo)]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   father(A,C).
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[11/768]
+parent(A,B) :-
+   father(A,C).
+[11/433]
+[clauses constructed] [2]
+[search time] [0.02]
+[best clause]
+parent(dad(mum(bob)),jo).
+[pos-neg] [1]
+[sat] [12]
+[parent(dad(jo),bob)]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   father(A,C).
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[11/768]
+parent(A,B) :-
+   father(A,C).
+[11/432]
+[clauses constructed] [2]
+[search time] [0.02]
+[best clause]
+parent(dad(jo),bob).
+[pos-neg] [1]
+[sat] [59]
+[parent(dad(mum(bob)),dad(jo))]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   father(A,C).
+[literals] [2]
+[saturation time] [0.01]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[11/768]
+parent(A,B) :-
+   father(A,C).
+[11/432]
+[clauses constructed] [2]
+[search time] [0.02]
+[best clause]
+parent(dad(mum(bob)),dad(jo)).
+[pos-neg] [1]
+[sat] [60]
+[parent(dad(mum(bob)),mum(jo))]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   father(A,C).
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[11/768]
+parent(A,B) :-
+   father(A,C).
+[11/433]
+[clauses constructed] [2]
+[search time] [0.02]
+[best clause]
+parent(dad(mum(bob)),mum(jo)).
+[pos-neg] [1]
+[sat] [15]
+[parent(mum(jo),bob)]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   mother(A,C).
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[11/768]
+parent(A,B) :-
+   mother(A,C).
+[5/380]
+[clauses constructed] [2]
+[search time] [0.02]
+[best clause]
+parent(mum(jo),bob).
+[pos-neg] [1]
+[sat] [17]
+[parent(dad(dad(jo)),bob)]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   father(A,C).
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[11/768]
+parent(A,B) :-
+   father(A,C).
+[11/432]
+[clauses constructed] [2]
+[search time] [0.03]
+[best clause]
+parent(dad(dad(jo)),bob).
+[pos-neg] [1]
+[sat] [61]
+[parent(dad(mum(bob)),dad(dad(jo)))]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   father(A,C).
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[11/768]
+parent(A,B) :-
+   father(A,C).
+[11/432]
+[clauses constructed] [2]
+[search time] [0.01]
+[best clause]
+parent(dad(mum(bob)),dad(dad(jo))).
+[pos-neg] [1]
+[sat] [62]
+[parent(dad(mum(bob)),dad(mum(jo)))]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   father(A,C).
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[11/768]
+parent(A,B) :-
+   father(A,C).
+[11/432]
+[clauses constructed] [2]
+[search time] [0.02]
+[best clause]
+parent(dad(mum(bob)),dad(mum(jo))).
+[pos-neg] [1]
+[sat] [19]
+[parent(dad(mum(jo)),bob)]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   father(A,C).
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[11/768]
+parent(A,B) :-
+   father(A,C).
+[11/432]
+[clauses constructed] [2]
+[search time] [0.02]
+[best clause]
+parent(dad(mum(jo)),bob).
+[pos-neg] [1]
+[sat] [63]
+[parent(dad(mum(bob)),mum(dad(jo)))]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   father(A,C).
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[11/768]
+parent(A,B) :-
+   father(A,C).
+[11/432]
+[clauses constructed] [2]
+[search time] [0.0299999999999998]
+[best clause]
+parent(dad(mum(bob)),mum(dad(jo))).
+[pos-neg] [1]
+[sat] [21]
+[parent(mum(dad(jo)),bob)]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   mother(A,C).
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[11/768]
+parent(A,B) :-
+   mother(A,C).
+[5/380]
+[clauses constructed] [2]
+[search time] [0.02]
+[best clause]
+parent(mum(dad(jo)),bob).
+[pos-neg] [1]
+[sat] [64]
+[parent(dad(mum(bob)),mum(mum(jo)))]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   father(A,C).
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[11/768]
+parent(A,B) :-
+   father(A,C).
+[11/432]
+[clauses constructed] [2]
+[search time] [0.02]
+[best clause]
+parent(dad(mum(bob)),mum(mum(jo))).
+[pos-neg] [1]
+[sat] [23]
+[parent(mum(mum(jo)),bob)]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   mother(A,C).
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[11/768]
+parent(A,B) :-
+   mother(A,C).
+[5/380]
+[clauses constructed] [2]
+[search time] [0.02]
+[best clause]
+parent(mum(mum(jo)),bob).
+[pos-neg] [1]
+[sat] [24]
+[parent(peter,bob)]
+[repeated literals] [1/2]
+
+[bottom clause]
+parent(A,B).
+[literals] [1]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[11/768]
+[clauses constructed] [1]
+[search time] [0.0]
+[best clause]
+parent(peter,bob).
+[pos-neg] [1]
+[sat] [65]
+[parent(dad(mum(bob)),peter)]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   father(A,C).
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[11/768]
+parent(A,B) :-
+   father(A,C).
+[11/433]
+[clauses constructed] [2]
+[search time] [0.02]
+[best clause]
+parent(dad(mum(bob)),peter).
+[pos-neg] [1]
+[sat] [26]
+[parent(dad(peter),bob)]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   father(A,C).
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[11/768]
+parent(A,B) :-
+   father(A,C).
+[11/432]
+[clauses constructed] [2]
+[search time] [0.02]
+[best clause]
+parent(dad(peter),bob).
+[pos-neg] [1]
+[sat] [66]
+[parent(dad(mum(bob)),dad(peter))]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   father(A,C).
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[11/768]
+parent(A,B) :-
+   father(A,C).
+[11/432]
+[clauses constructed] [2]
+[search time] [0.02]
+[best clause]
+parent(dad(mum(bob)),dad(peter)).
+[pos-neg] [1]
+[sat] [67]
+[parent(dad(mum(bob)),mum(peter))]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   father(A,C).
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[11/768]
+parent(A,B) :-
+   father(A,C).
+[11/433]
+[clauses constructed] [2]
+[search time] [0.02]
+[best clause]
+parent(dad(mum(bob)),mum(peter)).
+[pos-neg] [1]
+[sat] [29]
+[parent(mum(peter),bob)]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   mother(A,C).
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[11/768]
+parent(A,B) :-
+   mother(A,C).
+[5/380]
+[clauses constructed] [2]
+[search time] [0.02]
+[best clause]
+parent(mum(peter),bob).
+[pos-neg] [1]
+[sat] [31]
+[parent(dad(dad(peter)),bob)]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   father(A,C).
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[11/768]
+parent(A,B) :-
+   father(A,C).
+[11/432]
+[clauses constructed] [2]
+[search time] [0.02]
+[best clause]
+parent(dad(dad(peter)),bob).
+[pos-neg] [1]
+[sat] [68]
+[parent(dad(mum(bob)),dad(dad(peter)))]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   father(A,C).
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[11/768]
+parent(A,B) :-
+   father(A,C).
+[11/432]
+[clauses constructed] [2]
+[search time] [0.02]
+[best clause]
+parent(dad(mum(bob)),dad(dad(peter))).
+[pos-neg] [1]
+[sat] [69]
+[parent(dad(mum(bob)),dad(mum(peter)))]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   father(A,C).
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[11/768]
+parent(A,B) :-
+   father(A,C).
+[11/432]
+[clauses constructed] [2]
+[search time] [0.02]
+[best clause]
+parent(dad(mum(bob)),dad(mum(peter))).
+[pos-neg] [1]
+[sat] [33]
+[parent(dad(mum(peter)),bob)]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   father(A,C).
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[11/768]
+parent(A,B) :-
+   father(A,C).
+[11/432]
+[clauses constructed] [2]
+[search time] [0.02]
+[best clause]
+parent(dad(mum(peter)),bob).
+[pos-neg] [1]
+[sat] [70]
+[parent(dad(mum(bob)),mum(dad(peter)))]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   father(A,C).
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[11/768]
+parent(A,B) :-
+   father(A,C).
+[11/432]
+[clauses constructed] [2]
+[search time] [0.02]
+[best clause]
+parent(dad(mum(bob)),mum(dad(peter))).
+[pos-neg] [1]
+[sat] [35]
+[parent(mum(dad(peter)),bob)]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   mother(A,C).
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[11/768]
+parent(A,B) :-
+   mother(A,C).
+[5/380]
+[clauses constructed] [2]
+[search time] [0.00999999999999979]
+[best clause]
+parent(mum(dad(peter)),bob).
+[pos-neg] [1]
+[sat] [71]
+[parent(dad(mum(bob)),mum(mum(peter)))]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   father(A,C).
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[11/768]
+parent(A,B) :-
+   father(A,C).
+[11/432]
+[clauses constructed] [2]
+[search time] [0.02]
+[best clause]
+parent(dad(mum(bob)),mum(mum(peter))).
+[pos-neg] [1]
+[sat] [37]
+[parent(mum(mum(peter)),bob)]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   mother(A,C).
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[11/768]
+parent(A,B) :-
+   mother(A,C).
+[5/380]
+[clauses constructed] [2]
+[search time] [0.0199999999999996]
+[best clause]
+parent(mum(mum(peter)),bob).
+[pos-neg] [1]
+[sat] [38]
+[parent(jane,bob)]
+[repeated literals] [1/2]
+
+[bottom clause]
+parent(A,B).
+[literals] [1]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[11/768]
+[clauses constructed] [1]
+[search time] [0.0100000000000002]
+[best clause]
+parent(jane,bob).
+[pos-neg] [1]
+[sat] [72]
+[parent(dad(mum(bob)),jane)]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   father(A,C).
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[11/768]
+parent(A,B) :-
+   father(A,C).
+[11/433]
+[clauses constructed] [2]
+[search time] [0.0299999999999998]
+[best clause]
+parent(dad(mum(bob)),jane).
+[pos-neg] [1]
+[sat] [40]
+[parent(dad(jane),bob)]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   father(A,C).
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[11/768]
+parent(A,B) :-
+   father(A,C).
+[11/432]
+[clauses constructed] [2]
+[search time] [0.02]
+[best clause]
+parent(dad(jane),bob).
+[pos-neg] [1]
+[sat] [73]
+[parent(dad(mum(bob)),dad(jane))]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   father(A,C).
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[11/768]
+parent(A,B) :-
+   father(A,C).
+[11/432]
+[clauses constructed] [2]
+[search time] [0.02]
+[best clause]
+parent(dad(mum(bob)),dad(jane)).
+[pos-neg] [1]
+[sat] [74]
+[parent(dad(mum(bob)),mum(jane))]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   father(A,C).
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[11/768]
+parent(A,B) :-
+   father(A,C).
+[11/433]
+[clauses constructed] [2]
+[search time] [0.02]
+[best clause]
+parent(dad(mum(bob)),mum(jane)).
+[pos-neg] [1]
+[sat] [43]
+[parent(mum(jane),bob)]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   mother(A,C).
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[11/768]
+parent(A,B) :-
+   mother(A,C).
+[5/380]
+[clauses constructed] [2]
+[search time] [0.0299999999999998]
+[best clause]
+parent(mum(jane),bob).
+[pos-neg] [1]
+[sat] [45]
+[parent(dad(dad(jane)),bob)]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   father(A,C).
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[11/768]
+parent(A,B) :-
+   father(A,C).
+[11/432]
+[clauses constructed] [2]
+[search time] [0.02]
+[best clause]
+parent(dad(dad(jane)),bob).
+[pos-neg] [1]
+[sat] [75]
+[parent(dad(mum(bob)),dad(dad(jane)))]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   father(A,C).
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[11/768]
+parent(A,B) :-
+   father(A,C).
+[11/432]
+[clauses constructed] [2]
+[search time] [0.02]
+[best clause]
+parent(dad(mum(bob)),dad(dad(jane))).
+[pos-neg] [1]
+[sat] [76]
+[parent(dad(mum(bob)),dad(mum(jane)))]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   father(A,C).
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[11/768]
+parent(A,B) :-
+   father(A,C).
+[11/432]
+[clauses constructed] [2]
+[search time] [0.02]
+[best clause]
+parent(dad(mum(bob)),dad(mum(jane))).
+[pos-neg] [1]
+[sat] [47]
+[parent(dad(mum(jane)),bob)]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   father(A,C).
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[11/768]
+parent(A,B) :-
+   father(A,C).
+[11/432]
+[clauses constructed] [2]
+[search time] [0.02]
+[best clause]
+parent(dad(mum(jane)),bob).
+[pos-neg] [1]
+[sat] [77]
+[parent(dad(mum(bob)),mum(dad(jane)))]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   father(A,C).
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[11/768]
+parent(A,B) :-
+   father(A,C).
+[11/432]
+[clauses constructed] [2]
+[search time] [0.02]
+[best clause]
+parent(dad(mum(bob)),mum(dad(jane))).
+[pos-neg] [1]
+[sat] [49]
+[parent(mum(dad(jane)),bob)]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   mother(A,C).
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[11/768]
+parent(A,B) :-
+   mother(A,C).
+[5/380]
+[clauses constructed] [2]
+[search time] [0.02]
+[best clause]
+parent(mum(dad(jane)),bob).
+[pos-neg] [1]
+[sat] [78]
+[parent(dad(mum(bob)),mum(mum(jane)))]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   father(A,C).
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[11/768]
+parent(A,B) :-
+   father(A,C).
+[11/432]
+[clauses constructed] [2]
+[search time] [0.02]
+[best clause]
+parent(dad(mum(bob)),mum(mum(jane))).
+[pos-neg] [1]
+[sat] [51]
+[parent(mum(mum(jane)),bob)]
+[repeated literals] [1/3]
+
+[bottom clause]
+parent(A,B) :-
+   mother(A,C).
+[literals] [2]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+parent(A,B).
+[11/768]
+parent(A,B) :-
+   mother(A,C).
+[5/380]
+[clauses constructed] [2]
+[search time] [0.02]
+[best clause]
+parent(mum(mum(jane)),bob).
+[pos-neg] [1]
+[atoms left] [0]
+
+[theory]
+
+[Rule 1] [Pos cover = 0 Neg cover = 0]
+parent(dad(dad(bob)),mum(bob)).
+
+[Rule 2] [Pos cover = 0 Neg cover = 0]
+parent(A,B) :-
+   mother(A,B).
+
+[Rule 3] [Pos cover = 0 Neg cover = 0]
+parent(A,B) :-
+   father(A,B).
+
+[Training set performance]
+           Actual
+        +          -  
+     + 16         0         16 
+Pred 
+     -  0         768        768 
+
+       16        768        784 
+
+Accuracy = 1.0
+[Training set summary] [[16,0,0,768]]
+[time taken] [2.46]
+[total clauses constructed] [216]
+
+yes
+   ?- ~/aleph/test/examples/abduce[43]> exit
+
+Script done on Mon 07 Nov 2005 02:20:31 PM IST
