@@ -1,0 +1,13 @@
+#: i18n_test
+msgid "hello"
+msgstr "hola"
+
+#: i18n_test
+msgid "world"
+msgstr "mundo"
+
+#: i18n_test
+msgid "hello"
+"world"
+msgstr "hola"
+"mundo"
