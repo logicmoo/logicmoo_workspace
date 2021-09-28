@@ -1,0 +1,605 @@
+\section{Learning}
+\label{learning}
+The following learning algorithms are available:
+\begin{itemize}
+\item EMBLEM (EM over Bdds for probabilistic Logic programs Efficient Mining): an implementation of EM for learning parameters that computes expectations directly on BDDs \cite{BelRig11-IDA-IJ}, \cite{BelRig11-CILC11-NC}, \cite{BelRig11-TR}
+\item SLIPCOVER (Structure LearnIng of Probabilistic logic programs by searChing OVER the clause space): an algorithm for learning the structure of programs by searching the clause space and the theory space separately \cite{BelRig13-TPLP-IJ}
+\item LEMUR (LEarning with a Monte carlo Upgrade of tRee search): an algorithm 
+for learning the structure of programs by searching the clase space using 
+Monte-Carlo tree search \cite{DiMBelRig15-ML-IJ}
+\end{itemize}
+
+\subsection{Input}
+To execute the learning algorithms, prepare a Prolog file divided in five parts
+\begin{itemize}
+\item preamble
+\item  background knowledge, i.e., knowledge valid for all interpretations
+\item  LPAD/CPL-program for you which you want to learn the parameters (optional)
+\item language bias information
+\item  example interpretations 
+\end{itemize}
+The preamble must come first, the order of the other parts can be changed.
+
+For example, consider the Bongard problems of \cite{RaeLae95-ALT95}. 
+%The \texttt{pack/cplint/ prolog/examples/learning} folder in SWI-Prolog home contains some example learning files. 
+\href{http://cplint.eu/e/bongard.pl}{\texttt{bongard.pl}} and \href{http://cplint.eu/e/bongardkeys.pl}{\texttt{bongardkeys.pl}} represent a Bongard problem for SLIPCOVER.
+\href{http://cplint.eu/example/lemur/bongard.pl}{\texttt{bongard.pl}} and \href{http://cplint.eu/example/lemur/bongardkeys.pl}{\texttt{bongardkeys.pl}} represent a Bongard problem for LEMUR.
+
+
+\subsubsection{Preamble}
+In the preamble, the SLIPCOVER library is loaded with (see \href{http://cplint.eu/e/bongard.pl}{\texttt{bongard.pl}}):
+\begin{verbatim}
+:- use_module(library(slipcover)).
+\end{verbatim}
+%Then, if you are using your file in cplint on SWISH, you could add
+%\begin{verbatim}
+%:- if(current_predicate(use_rendering/1)).
+%:- use_rendering(c3).
+%:- use_rendering(lpad).
+%:- endif.
+%\end{verbatim}
+%if you want a nice representation of the output (in particular, if you want graphs of the ROC and PR curves).
+Now you can initialize SLIPCOVER with
+\begin{verbatim}
+:- sc.
+\end{verbatim}
+At this point you can start setting parameters for SLIPCOVER such as for example
+\begin{verbatim}
+:- set_sc(megaex_bottom,20).
+:- set_sc(max_iter,2).
+:- set_sc(max_iter_structure,5).
+:- set_sc(verbosity,1).
+\end{verbatim}
+We will see later the list of available parameters.
+
+
+In the preamble, the LEMUR library is loaded with (see \href{http://cplint.eu/example/lemur/bongard.pl}{\texttt{bongard.pl}}):
+\begin{verbatim}
+:- use_module(library(lemur)).
+\end{verbatim}
+%Then, if you are using your file in cplint on SWISH, you could add
+%\begin{verbatim}
+%:- if(current_predicate(use_rendering/1)).
+%:- use_rendering(c3).
+%:- use_rendering(lpad).
+%:- endif.
+%\end{verbatim}
+%if you want a nice representation of the output (in particular, if you want graphs of the ROC and PR curves).
+Now you can initialize LEMUR with
+\begin{verbatim}
+:- lemur.
+\end{verbatim}
+At this point you can start setting parameters for LEMUR such as for example
+\begin{verbatim}
+:- set_lm(verbosity,1).
+\end{verbatim}
+A parameter that is particularly important for both SLIPCOVER and LEMUR is \verb|verbosity|: if set
+to 1, nothing is printed and learning is  fastest, if set to 3 much information is printed and learning is slowest, 2 is in between.
+This ends the preamble.
+
+
+
+\subsubsection{Background and Initial LPAD/CPL-program}
+%
+Now you can specify the background knowledge with a 
+fact of the form 
+\begin{verbatim}
+bg(<list of terms representing clauses>).
+\end{verbatim}
+where the clauses must  be deterministic.
+Alternatively, you can specify a set of clauses by including them in 
+a section between
+\verb|:- begin_bg.| and \verb|:- end_bg.| For example
+\begin{verbatim}
+:- begin_bg.
+replaceable(gear).
+replaceable(wheel).
+replaceable(chain).
+not_replaceable(engine).
+not_replaceable(control_unit).
+component(C):-
+  replaceable(C).
+component(C):-
+  not_replaceable(C).
+:- end_bg.
+\end{verbatim}
+from the \href{http://cplint.eu/e/mach.pl}{\texttt{mach.pl}} example.
+If you specify both a \verb|bg/1| fact and a section, the clauses of the two will be combined.
+
+
+Moreover, you can specify an initial program with a fact of the form 
+\begin{verbatim}
+in(<list of terms representing clauses>).
+\end{verbatim}
+The initial program is used in parameter learning for providing 
+the structure.
+Remember to enclose each clause in parentheses because \verb|:-| has the highest precedence.
+
+For example, \href{http://cplint.eu/e/bongard.pl}{\texttt{bongard.pl}} has the initial program 
+\begin{verbatim}
+in([(pos:0.197575 :-
+       circle(A),
+       in(B,A)),
+    (pos:0.000303421 :-
+       circle(A),
+       triangle(B)), 
+    (pos:0.000448807 :-
+       triangle(A),
+       circle(B))]).
+\end{verbatim}
+%Both facts should be present. If there are no background/input clauses then write \verb|bg([]).|/\verb|in([]).|
+Alternatively, you can specify an input program in a section between \verb|:- begin_in.| and \verb|:- end_in.|, as for example
+\begin{verbatim}
+:- begin_in.
+pos:0.197575 :-
+  circle(A),
+  in(B,A).
+pos:0.000303421 :-
+  circle(A),
+  triangle(B).
+pos:0.000448807 :-
+  triangle(A),
+  circle(B).
+:- end_in.
+\end{verbatim}
+If you specify both a \verb|in/1| fact and a section, the clauses of the two will be combined.
+
+The annotations of the head atoms of the initial program can be 
+ probabilities, as in the example above, in this case the  parameters do not matter as they are first randomized.
+The type of randomization depends on the setting \verb|alpha|.
+If it takes value 0, a truncated Dirichlet process is
+used to initialize the parameters: the probability of being true of  each Boolean random variable 
+used to represent multivalued
+random variables is sampled and independently uniformly in [0,1].
+
+If it takes a value $\geq 0$, the parameters are sampled from
+a symmetric Dirichlet distribution, i.e. a Dirichlet distribution  with vector of parameters $(\alpha,\ldots,\alpha)$.
+
+The annotations of the head atoms of the initial program can also be 
+ \verb|p(<prob>)| with \verb|<prob>| a probability, in this case the parameter is fixed so it is not tuned by learning, as
+ in 
+ \begin{verbatim}
+in([(pos:0.5 :-
+ 	circle(A),
+ 	in(B,A)),
+     (pos:p(0.5) :-
+ 	circle(A),
+ 	triangle(B))]).
+\end{verbatim}
+The annotations of the head atoms of the initial program can also be 
+ \verb|t(<prob>,<args>)| with \verb|<prob>| either a probability, in this case it is the initial value of the 
+parameter, or a variable, in this case the parameter is initially randomized, and \verb|<args>| a tuple of variables
+that also appear in the clause. In this case a different parameter is learned for every grounding of  
+\verb|<args>| that make the body true.
+
+For example, we can set the initial value of the parameter of the second clause to 0.9 with
+ \begin{verbatim}
+in([(pos:0.5 :-
+ 	circle(A),
+ 	in(B,A)),
+     (pos:t(0.9) :-
+ 	circle(A),
+ 	triangle(B))]).
+\end{verbatim}
+With the program below we learn a different parameter for every instantiation of \verb|C| in the second clause:
+\begin{verbatim}
+in([(pos:0.5 :-
+ 	circle(A),
+ 	in(_B,A)),
+     (pos:t(_,C) :-
+ 	triangle(A),
+ 	config(A,C))]).
+\end{verbatim}
+
+\subsubsection{Language Bias}
+%
+The language bias part contains the declarations of the input and output predicates.
+Output predicates are declared as
+\begin{verbatim}
+output(<predicate>/<arity>).
+\end{verbatim}
+and indicate the predicate whose atoms you want to predict. Derivations for the atoms for this predicates in the input data
+are built by the system. These are the predicates for which new clauses are generated.
+
+Input predicates are those whose atoms you are not interested in predicting. You can declare closed world input predicates with
+\begin{verbatim}
+input_cw(<predicate>/<arity>).
+\end{verbatim}
+For these predicates, the only true atoms are those in the interpretations and those derivable from them using the background knowledge, the clauses in the input or in the hypothesized program are not used to derive atoms for these predicates. Moreover,   clauses of the background knowledge that define closed world input predicates and that call an output predicate in the body will not be used for deriving examples.
+
+Open world input predicates are declared with
+\begin{verbatim}
+input(<predicate>/<arity>).
+\end{verbatim}
+In this case, if a subgoal for such a predicate is encountered when deriving a subgoal for the output predicates, 
+both the facts in the interpretations, those derivable from them and the background knowledge, the background clauses and the clauses of the input program are used.
+
+Then, you have to specify the language bias by means of mode declarations in the style of 
+\href{http://www.doc.ic.ac.uk/\string ~shm/progol.html}{Progol}.
+\begin{verbatim}
+modeh(<recall>,<predicate>(<arg1>,...)).
+\end{verbatim}
+specifies the atoms that can appear in the head of clauses, while
+\begin{verbatim}
+modeb(<recall>,<predicate>(<arg1>,...)).
+\end{verbatim}
+specifies the atoms that can appear in the body of clauses.
+\texttt{<recall>} can be an integer or \texttt{*}.
+\texttt{<recall>} indicates how many atoms for the predicate specification are
+retained in the bottom clause during a saturation step. \texttt{*} stands for all those that are found. Otherwise the indicated number is randomly chosen.
+
+For SLIPCOVER, two specialization modes are available: \verb|bottom| and \verb|mode|.
+In the first, a bottom clause is built and the literals to be added during 
+refinement are taken from it. In the latter, no bottom clause is built and
+the literals to be added during refinement are generated 
+directly from the mode declarations. 
+LEMUR has only specialization \verb|mode|.
+
+Arguments of the form
+\begin{verbatim}
++<type>
+\end{verbatim}
+specifies that the argument should be an input variable of type \texttt{<type>}, i.e., a variable replacing a \texttt{+<type>} argument in the head or a \texttt{-<type>} argument in a preceding literal in the current hypothesized clause.
+
+Another argument form is
+\begin{verbatim}
+-<type>
+\end{verbatim}
+for specifying that the argument should be a output variable of type \texttt{<type>}. 
+Any variable can replace this argument, either input or output.
+The only constraint on output variables is that those in the head of the current hypothesized 
+clause must appear as output variables in an atom of the body.
+
+Other forms are
+\begin{verbatim}
+#<type>
+\end{verbatim}
+for specifying an argument which should be replaced by a constant of type \texttt{<type>} in the bottom clause but should not be used for replacing input variables of the following literals when building the bottom clause or 
+\begin{verbatim}
+-#<type>
+\end{verbatim}
+for specifying an argument which should be replaced by a constant of type \texttt{<type>} in the bottom clause and that should be used for replacing input variables of the following literals when building the bottom clause. 
+%\verb|#| and \verb|-#| differ only in the creation of the bottom clause.
+\begin{verbatim}
+<constant>
+\end{verbatim}
+for specifying a constant.
+
+Note that arguments of the form
+\verb|#<type>| \verb|-#<type>| are not available in 
+specialization mode \verb|mode|, if you want constants to appear in 
+the literals you have to indicate them one by one in the mode declarations.
+
+
+An example of language bias for the Bongard domain is
+\begin{verbatim}
+output(pos/0).
+
+input_cw(triangle/1).
+input_cw(square/1).
+input_cw(circle/1).
+input_cw(in/2).
+input_cw(config/2).
+
+modeh(*,pos).
+modeb(*,triangle(-obj)).
+modeb(*,square(-obj)).
+modeb(*,circle(-obj)).
+modeb(*,in(+obj,-obj)).
+modeb(*,in(-obj,+obj)).
+modeb(*,config(+obj,-#dir)).
+\end{verbatim}
+SLIPCOVER and LEMUR also require facts for the \verb|determination/2| Aleph-style predicate that indicate which predicates can appear in the body of clauses. 
+For example
+\begin{verbatim}
+determination(pos/0,triangle/1).
+determination(pos/0,square/1).
+determination(pos/0,circle/1).
+determination(pos/0,in/2).
+determination(pos/0,config/2).
+\end{verbatim}
+state that \verb|triangle/1| can appear in the body of clauses for \verb|pos/0|.
+
+SLIPCOVER and LEMUR also allow mode declarations of the form
+\begin{verbatim}
+modeh(<r>,[<s1>,...,<sn>],[<a1>,...,<an>],[<P1/Ar1>,...,<Pk/Ark>]). 
+\end{verbatim}
+These mode declarations are used to generate clauses with more than two head atoms. In them, \verb|<s1>,...,<sn>| are schemas,  \verb|<a1>,...,<an>| are atoms such that \verb|<ai>| is obtained from $\verb|<si>|$ by replacing placemarkers with variables, 
+\verb|<Pi/Ari>| are the predicates admitted in the body. \verb|<a1>,...,<an>| are used to indicate which variables should be shared by the atoms in the head.
+An example of such a mode declaration (from \texttt{uwcselearn.pl}) is
+\begin{verbatim}
+modeh(*,
+[advisedby(+person,+person),tempadvisedby(+person,+person)],
+[advisedby(A,B),tempadvisedby(A,B)],
+[professor/1,student/1,hasposition/2,inphase/2,
+publication/2,taughtby/3,ta/3,courselevel/2,yearsinprogram/2]).
+\end{verbatim}
+%
+If you want to specify negative literals for addition in the body of clauses,
+you should define a new predicate in the background as in
+\begin{verbatim}
+not_worn(C):-
+  component(C),
+  \+ worn(C).
+one_worn:-
+  worn(_).
+none_worn:-
+  \+ one_worn.
+\end{verbatim}
+from \href{http://cplint.eu/e/mach.pl}{\texttt{mach.pl}} and add the new predicate in a \verb|modeb/2| fact
+\begin{verbatim}
+modeb(*,not_worn(-comp)).
+modeb(*,none_worn).
+\end{verbatim}
+Note that successful negative literals do not instantiate the variables, so if you want
+a variable appearing in a negative literal to be an output variable you must instantiate 
+before calling the negative literals.
+The new predicates must also be declared as input
+\begin{verbatim}
+input_cw(not_worn/1).
+input_cw(none_worn/0).
+\end{verbatim}
+Lookahead can also be specified with facts of the form
+\begin{verbatim}
+lookahead(<literal>,<list of literals>).
+\end{verbatim}
+In this case when a literal matching \verb|<literal>| is added to the body of clause during refinement, then also
+the literals matching \verb|<list of literals>| will be added.
+An example of such declaration (from \href{http://cplint.eu/e/muta.pl}{\texttt{muta.pl}}) is
+\begin{verbatim}
+lookahead(logp(_),[(_=_))]).
+\end{verbatim}
+Note that
+\verb|<list of literals>| is copied with \verb|copy_term/2| before matching, so
+variables in common between \verb|<literal>| and \verb|<list of literals>|
+may not be in common in the refined clause.
+
+It is also possible to specify that a literal can only be added together with 
+other literals with facts of the form 
+\begin{verbatim}
+lookahead_cons(<literal>,<list of literals>).
+\end{verbatim}
+In this case \verb|<literal>| is added to the body of clause during refinement only together with
+literals matching \verb|<list of literals>|.
+An example of such declaration is
+\begin{verbatim}
+lookahead_cons(logp(_),[(_=_))]).
+\end{verbatim}
+Also here 
+\verb|<list of literals>| is copied with \verb|copy_term/2| before matching, so
+variables in common between \verb|<literal>| and \verb|<list of literals>|
+may not be in common in the refined clause.
+
+Moreover, we can specify lookahead with
+\begin{verbatim}
+lookahead_cons_var(<literal>,<list of literals>).
+\end{verbatim}
+In this case \verb|<literal>| is added to the body of clause during refinement only together with
+literals matching \verb|<list of literals>| and \verb|<list of literals>| is not copied before matching, so
+variables in common between \verb|<literal>| and \verb|<list of literals>|
+are in common also in the refined clause. This is allowed only with
+\verb|specialization| set to \verb|bottom|.
+An example of such declaration is
+\begin{verbatim}
+lookahead_cons_var(logp(B),[(B=_))]).
+\end{verbatim}
+
+\subsubsection{Example Interpretations}
+The last part of the file contains the data.
+You can specify data with two modalities:
+models and keys.
+In the models type, you specify an example model (or interpretation or megaexample) as a list of Prolog facts initiated by 
+\verb|begin(model(<name>)).| and terminated by \verb|end(model(<name>)).| as in
+\begin{verbatim}
+begin(model(2)).
+pos.
+triangle(o5).
+config(o5,up).
+square(o4).
+in(o4,o5).
+circle(o3).
+triangle(o2).
+config(o2,up).
+in(o2,o3).
+triangle(o1).
+config(o1,up).
+end(model(2)).
+\end{verbatim}
+The interpretations may contain a fact of the form
+\begin{verbatim}
+prob(0.3).
+\end{verbatim}
+assigning a probability (0.3 in this case) to the interpretations. If this is omitted, the probability of each interpretation is considered equal to $1/n$ where $n$ is the total number of interpretations. \verb|prob/1| can be used to set a different multiplicity for the interpretations.
+
+The facts in the interpretation are loaded in SWI-Prolog database by adding an extra initial argument equal to the name of the model.
+After each interpretation is loaded, a fact of the form \verb|int(<id>)| is asserted, where \verb|id| is the name of the interpretation. This can be used in
+order to retrieve the list of interpretations.
+
+Alternatively, with the keys modality, you can directly write the facts and the first argument will be interpreted as a model identifier. The above interpretation in the keys modality is
+\begin{verbatim}
+pos(2).
+triangle(2,o5).
+config(2,o5,up).
+square(2,o4).
+in(2,o4,o5).
+circle(2,o3).
+triangle(2,o2).
+config(2,o2,up).
+in(2,o2,o3).
+triangle(2,o1).
+config(2,o1,up).
+\end{verbatim}
+which is contained in the \href{http://cplint.eu/e/bongardkeys.pl}{\texttt{bongardkeys.pl}}
+This is also how model \verb|2| above is stored in SWI-Prolog database.
+The two modalities, models and keys, can be mixed in the same file.
+Facts for \verb|int/1| are not asserted for interpretations in the key
+modality but can be added by the user explicitly.
+
+
+Note that you can add background knowledge that is not probabilistic directly to the file writing the clauses taking into account the model argument. For example (\texttt{carc.pl})
+contains
+\begin{verbatim}
+connected(_M,Ring1,Ring2):-
+  Ring1 \= Ring2,
+  member(A,Ring1),
+  member(A,Ring2), !.
+
+symbond(Mod,A,B,T):- bond(Mod,A,B,T).
+symbond(Mod,A,B,T):- bond(Mod,B,A,T).
+\end{verbatim}
+where the first argument of all the atoms is the model.
+
+Example \href{http://cplint.eu/e/registration.pl}{\texttt{registration.pl}} contains for example
+\begin{verbatim}
+party(M,P):-
+  participant(M,_, _, P, _).
+\end{verbatim}
+that defines intensionally the target predicate \verb|party/1|. Here \verb|M| is the model and \verb|participant/4| is defined in the interpretations.
+You can also define intensionally the negative examples with
+\begin{verbatim}
+neg(party(M,yes)):- party(M,no).
+neg(party(M,no)):- party(M,yes).
+\end{verbatim}
+Then you must indicate how the examples are divided in folds with facts of the form:
+\verb|fold(<fold_name>,<list of model identifiers>)|, as for example
+\begin{verbatim}
+fold(train,[2,3,...]).
+fold(test,[490,491,...]).
+\end{verbatim}
+As the input file is a Prolog program, you can define intensionally the folds as in
+\begin{verbatim}
+fold(all,F):-
+  findall(I,int(I),F).
+\end{verbatim}
+\verb|fold/2| is dynamic so you can also write (\href{http://cplint.eu/e/registration.pl}{\texttt{registration.pl}})
+\begin{verbatim}
+:- fold(all,F),
+   sample(4,F,FTr,FTe),
+   assert(fold(rand_train,FTr)),
+   assert(fold(rand_test,FTe)).
+\end{verbatim}
+which however must be inserted after the input interpretations otherwise the facts for \verb|int/1| will not be available and
+the fold \verb|all| would be empty. This command uses  \verb|sample(N,List,Sampled,Rest)| exported from \verb|slipcover| that samples \verb|N| elements from \verb|List| and returns the sampled elements in \verb|Sampled| and the rest in \verb|Rest|. If \verb|List| has \verb|N| elements or less, \verb|Sampled| is equal to \verb|List| 
+and \verb|Rest| is empty.
+
+\subsection{Commands}
+\subsubsection{Parameter Learning}
+To execute EMBLEM, prepare an input file in the editor panel as indicated above 
+and call
+\begin{verbatim}
+?- induce_par(<list of folds>,P).
+\end{verbatim}
+where \verb|<list of folds>| is a list of the folds for training and
+\verb|P| will contain the input program with updated parameters.
+
+For example \href{http://cplint.eu/example/bongard.pl}{\texttt{bongard.pl}}, you can 
+perform parameter learning on the \verb|train| fold with 
+\begin{verbatim}
+?- induce_par([train],P).
+\end{verbatim}
+
+
+\subsubsection{Structure Learning}
+To execute SLIPCOVER,
+prepare an input file in the editor panel as indicated above 
+and call
+\begin{verbatim}
+induce(+List_of_folds:list,-P:list) is det
+\end{verbatim}
+where \verb|List_of_folds| is a list of the folds for training and
+\verb|P| will contain the learned program.
+
+For example \href{http://cplint.eu/e/bongard.pl}{\texttt{bongard.pl}}, you can perform structure learning on the \verb|train| fold with 
+\begin{verbatim}
+?- induce([train],P).
+\end{verbatim}
+A program can also be tested on a test set with \verb|test/7| or \verb|test_prob/6| as
+described below.
+
+Between two executions of \verb|induce/2| you should exit SWI-Prolog to have a 
+clean database.
+
+To execute LEMUR,
+prepare an input file in the editor panel as indicated above 
+and call
+\begin{verbatim}
+induce_lm(+List_of_folds:list,-P:list) is det
+\end{verbatim}
+where \verb|List_of_folds| is a list of the folds for training and
+\verb|P| will contain the learned program.
+
+For example \href{http://cplint.eu/example/lemur/bongard.pl}{\texttt{bongard.pl}}, you can perform structure learning on the \verb|train| fold with 
+\begin{verbatim}
+?- induce_lm([train],P).
+\end{verbatim}
+
+Between two executions of \verb|induce_lm/2| you should exit SWI-Prolog to have a 
+clean database.
+
+\subsubsection{Testing}
+
+
+A program can also be tested on a test set in SLIPCOVER and LEMUR with
+\begin{verbatim}
+test(+Program:list,+List_of_folds:list,-LL:float,
+  -AUCROC:float,-ROC:list,-AUCPR:float,-PR:list) is det
+\end{verbatim}
+or
+\begin{verbatim}
+test(+Program:list,+List_of_folds:list,-NPos:int,-NNeg:int,
+  -LL:float,-ExampleList:list) is det
+\end{verbatim}
+where \verb|Program| is a list of terms representing clauses and
+\verb|List_of_folds| is a list of folds.
+
+\verb|test/7| returns the log likelihood of the test examples in \verb|LL|, the Area Under the ROC curve in \verb|AUCROC|, a dictionary containing the list of points (in the form of Prolog pairs \verb|x-y|) of the ROC curve in \verb|ROC|,
+the Area Under the PR curve in \verb|AUCPR|, a dictionary containing the list of points of the PR curve in \verb|PR|.
+
+\verb|test_prob/6| returns the log likelihood of the test examples in \verb|LL|, the numbers of positive and negative examples in \verb|NPos| and \verb|NNeg| and the list 
+\verb|ExampleList| containing couples \verb|Prob-Ex| where \verb|Ex| is \verb|a| for \verb|a| a positive example and \verb|\+(a)| for \verb|a| a negative example
+and \verb|Prob| is the probability of example \verb|a|.
+
+Then you can draw the curves in \texttt{cplint}  on SWISH using C3.js using
+\begin{verbatim}
+compute_areas_diagrams(+ExampleList:list,
+  -AUCROC:float,-ROC:dict,-AUCPR:float,-PR:dict) is det
+\end{verbatim}
+(from pack \href{http://www.swi-prolog.org/pack/list?p=auc}{\texttt{auc}})
+that takes as input a list \verb|ExampleList| of pairs probability-literal of the form that is returned by
+\verb|test_prob/6|.
+
+For example, to test on fold \verb|test| the program learned on fold \verb|train| you can run the query
+\begin{verbatim}
+?- induce_par([train],P),
+   test(P,[test],LL,AUCROC,ROC,AUCPR,PR).
+\end{verbatim}
+Or you can test the input program on the fold \verb|test| with
+\begin{verbatim}
+?- in(P),
+   test(P,[test],LL,AUCROC,ROC,AUCPR,PR).
+\end{verbatim}
+In \verb|cplint| on SWISH, by including
+\begin{verbatim}
+:- use_rendering(c3).
+:- use_rendering(lpad).
+\end{verbatim}
+in the code before \verb|:- sc.| the curves will be shown as graphs using C3.js and the output program will be pretty printed.
+
+You can also draw the curves in \texttt{cplint}  on SWISH using R by loading library
+\texttt{cplint\_r}  with
+\begin{verbatim}
+:- use_module(library(cplint_r)).
+\end{verbatim}
+and using 
+\begin{verbatim}
+test_r(+Program:list,+List_of_folds:list,-LL:float,
+  -AUCROC:float,-AUCPR:float) is det
+\end{verbatim}
+or predicate
+\begin{verbatim}
+compute_areas_diagrams_r(+ExampleList:list,
+  -AUCROC:float,-AUCPR:float) is det
+\end{verbatim}
+that takes as input a list \verb|ExampleList| of pairs probability-literal of the form that is returned by
+\verb|test_prob/6|.
+
