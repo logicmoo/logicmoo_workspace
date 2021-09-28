@@ -1,0 +1,55 @@
+/*
+    This file is part of NSM-DALIA, an extensible parser and generator
+    for NSM grammars.
+       
+    Copyright (C) 2009 Francesco Zamblera.
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+*/
+
+
+This file shows NSM texts in NSM format.
+
+By parsing whis file with NSM-DALIA, you will get the 
+NSM-PROLOG formulas corresponding to these texts.
+
+THIS PERSON IS SAD =
+@P
+(a) this person feels something
+(b) sometimes a person thinks like this
+(c)     I know that something bad happened
+(d)     I do not want things like this to happen
+(e)     I cannot think now that I will do something because of this
+(f)     I know that I cannot do anything
+(g) because of this this person feels something bad
+(h) this person feels something like this
+@e
+
+
+GOD =
+@P
+God is someone
+God is not something
+this someone is someone good
+this someone is not someone like people
+there is not anyone else like this someone
+this someone exists always
+everything exists because this someone wants these things to exist
+people exist because this someone wants people to exist
+this someone exists because this someone exists
+this someone exists not because of anything else
+this someone lives
+@e
+

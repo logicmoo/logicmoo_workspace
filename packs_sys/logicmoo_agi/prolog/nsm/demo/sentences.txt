@@ -1,0 +1,358 @@
+/*
+    This file is part of NSM-DALIA, an extensible parser and generator
+    for NSM grammars.
+       
+    Copyright (C) 2009 Francesco Zamblera.
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+*/
+
+Here is a sample of the sentences which NSM-DALIA can parse.
+This file is also an example of NSM input files.
+
+It's a simple text file with tags added.
+
+The tag @p at the beginning of a line causes all the following text to be parsed.
+The text to be parsed is not in NSM format: sentences are ended by fullstops, and indentation
+is not significative.
+
+The tag @e at the beginning of a line stops the parsing mode: the text following that tag is 
+simply output how it is.
+
+
+A minimal NSM sentence has the structure "Substantive Phrase + Predicate Phrase:"
+
+@p
+something happened.
+something happened in this place.
+@e
+
+SUBSTANTIVE PHRASES WITH ATTRIBUTES:
+@p
+something good. something bad. someone good. someone bad.
+good people. bad people. good things. bad things.
+@e
+
+DETERMINERS:
+@p
+this person. this thing. these people. the same person.
+the same thing.  the same people. someone else. something else.
+other people.
+@e
+
+QUANTIFIERS:
+@p
+one thing. two things. some people. some things. many people. many things. all people. all things.
+@e
+
+KIND, PART:
+@p
+this kind. the same kind. another kind. one kind. two kinds. all kinds. many kinds.
+this part. the same part. another part. one part. two parts. many parts. all parts. some parts.
+@e
+
+TIME, PLACE
+@p
+this time. the same time. another time. 
+this place. the same place. another place. 
+@e
+
+LIKE
+@p
+someone like this. someone like this person. something like this. something like this thing. 
+@e
+
+COMPLEX SUBSTANTIVE PHRASES:
+@p
+these two things.
+these two people.
+these two places.
+one other person.
+one other thing.
+one other place.
+two other people.
+two other things.
+two other places.
+I did the same thing.
+@e
+
+
+"ONE OF"
+@p
+one of these people.
+one of these things.
+two of these people.
+two of these things.
+many of these people.
+many of these things.
+@e
+
+PREDICATE PHRASE
+@p
+something happened at this time.
+something moved at this time.
+someone did something at this time.
+I saw something at this time.
+I heard something at this time.
+I said something at this time.
+this person did something.
+I said one thing.
+I want something.
+I saw someone.
+@e
+
+VALENCES
+
+DO
+
+@p
+someone did something.
+someone did something to someone.
+someone did something to someone with something.
+someone did something with someone.
+@e
+
+HAPPEN
+
+@p
+something happened.
+something happened to someone.
+something happened in this place.
+something happened here.
+@e
+
+LIKE THIS
+
+@p
+I did like this.
+I said like this.
+this thing happened like this.
+this thing moved like this.
+this person died like this.
+@e
+
+LIVE
+@p
+these people lived for a long time.
+this person was living with that person.
+@e
+
+
+EXIST
+@p
+there are many kinds of birds.
+there are people here.
+there is someone in this place.
+there is no-one here.
+@e
+
+
+LOCATIONAL
+
+@p
+I do not have anything.
+this person has many things.
+this person is in this place.
+this person is not here.
+this thing is above that thing.
+this thing is below that thing.
+this thing is inside that thing.
+this thing is on the other side of that thing.
+this person is near me.
+this person is far from me.
+@e
+
+
+
+THINK
+@p
+I think that you are someone good.
+I think about something.
+I think something good about someone.
+I think this.
+@e
+
+
+KNOW
+@p
+I know that you are someone good.
+I know something.
+I know something about someone.
+@e
+
+
+SAY
+@p
+someone said something.
+someone said something about something.
+someone said this.
+someone said something to someone.
+someone said some words.
+@e
+
+
+WANT
+
+@p
+I want something.
+I want to do something.
+I want to know something.
+I want you to do something.
+I want something to happen.
+@e
+
+
+SEE, HEAR
+@p
+I saw something.
+I heard something.
+I heard these words.
+I saw someone in that place.
+@e
+
+FEEL
+@p
+I felt something like this.
+I felt something good.
+I felt something good towards you.
+@e
+
+GOOD
+@p
+I did something good for you.
+this thing was good for me.
+it is good if people do this.
+it is good if something like this happens.
+it is not good to do this kind of things.
+it is not good if you do this kind of things.
+@e
+
+
+TIME ADV
+@p
+at this time.
+at that time.
+at the same time.
+before.
+after.
+before this time.
+after this time.
+before that time.
+after that time.
+some time before.
+a long time after.
+at this time these people were doing something like this.
+at the same time these people were doing something like this.
+a long time before these people were doing something like this.
+some time before these people were doing something like this.
+this thing happened at this time.
+this thing happened a long time before.
+this thing happened for some time.
+@e
+
+
+LOC ADV
+@p
+this place is far from here.
+this place is a big place.
+in this place.
+in the same place.
+in all places.
+in many places.
+this thing happened here.
+this thing happened above.
+near here.
+far from here.
+near this place.
+far from this place.
+@e
+
+
+VERY
+@p
+very far.
+a very long time.
+very good.
+very bad.
+very big.
+very small.
+@e
+
+
+MORE
+@p
+I want to say more.
+I want to see more.
+I want to hear more.
+I want to know more about this thing.
+I want to do more.
+someone is not living any more.
+someone is not big any more.
+@e
+
+CAN
+@p
+this person can do it.
+this person cannot do it.
+I can move.
+I cannot move.
+I can see this thing.
+I cannot see this thing.
+you cannot do things like this.
+something bad can happen to me.
+this thing can move.
+when something bad happens to someone it can be good for this person.
+@e
+
+MAYBE
+@p
+I cannot do this. maybe someone else can do it.
+maybe this person knows something about it.
+maybe someone did something bad.
+maybe there is someone in this place.
+@e
+
+
+IF
+@p
+if you do this people will say bad things about you.
+if this thing happens it will be good for me.
+if I do this thing all these people will do the same thing.
+@e
+
+
+BECAUSE
+@p
+because of this I did something to this thing for some time.
+because of this this thing was big.
+this thing happened because this other thing happened.
+I did this because you said these words.
+@e
+
+
+LIKE
+@p
+someone like me.
+something like this.
+I did it like this.
+I did something like this.
+it happened like this.
+these people think about it like this.
+these people say it like this.
+these people live like this.
+these things were moving like this.
+I want to do something bad to this person as this person did something bad to me.
+@e
+

@@ -1,0 +1,221 @@
+/*
+    This file is part of NSM-DALIA, an extensible parser and generator
+    for NSM grammars.
+       
+    Copyright (C) 2009 Francesco Zamblera.
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+*/
+
+
+ 	    NSM-DALIA version 0.8  -  COMMAND LINE INTERFACE
+
+1.
+l(Lang). Full form: load(Lang).
+
+Loads a language module into the program, and sets the
+current_language flag to the loaded language. From now on, parse
+commands will be taken to refer to that language as the parsing-from
+language.
+
+The "Lang" argument is either a language code (without quotation
+marks), or a full language name (a PROLOG string, between double
+quotation marks).
+
+The "load" command works like this: if a compiled module is found in
+the lang_bin directory, it will be loaded. If not, the directory
+lang_src will be searched for the source files, compiled and
+loaded. (The latter procedure is slower).
+
+The user who is not also writing a grammar need only know which
+languages are available, and what their code is (the "list" command
+displays all the installed languages with their code). As the only
+language available in NSM-DALIA v. 0.8 is English (code: eng), you can
+load the English grammar with:
+
+DALIA> l(eng).
+
+or:
+
+DALIA> l("English").
+
+
+A note for gramamr writers: please remember that, once a grammar is
+saved in the lang_bin directory ("s" command), l(Lang) will read from
+that directory, NOT from the source file. If, after you modified your
+source file, and you are wondering why on earth that sentence still do
+not parse, though you have fixed the bug in your grammar -- that's
+because you have loaded the file with "l", not with "b", so the
+program does not read the new grammar, but the old compiled one! When
+you are developing a grammar, better not to compile it ("c" command")
+until you are finished. (However, see "b" command below).
+
+
+
+2.  
+b(Lang).  Full form: build(Lang). 
+Loads a language module into the program, and sets the
+current_language flag to the loaded language. Files are searched for
+exclusively in the lang_src directory. Useful for grammar writers. The
+"Lang" argument is a language code or a string (full language name).
+
+
+
+3. 
+sl(Lang). Full form: set_current_lang(Lang). 
+Useful to switch between various languages when you have loaded more
+than one grammar. The "Lang" argument is a language code.
+
+
+
+4. 
+sl2(Lang). Full form: set_current_l2(Lang). 
+Used in automatic translation. Once current_lang and current_l2 are
+set, the "translation" commands translate NSM sentences from
+current_lang into current_l2. Lang = language code.
+
+
+5. 
+pw(W).  Full form: parse_and_write_word(W). 
+You won't need this very much, because "ps" can parse single words, as
+well as whole sentences. When you are developing a grammar, however,
+this command can be useful, because it also outputs a morpheme
+split-up of the word.  The argument W is a double-quoted string, which
+is analyzed as a word of the last current language set. Ex.
+
+DALIA> pw("things").
+
+NSM-DALIA answers:
+
+Morphemic String: thing-s
+ct(n(n), sp(e, e, plur(e), [], something(thing))).
+
+
+6.
+ps(S). Full form: parse_and_write_sentence(S). 
+Like "pw", but it parses a whole sentence. Ex.
+
+DALIA> ps("something good is happening now").
+
+NSM-DALIA answers with the corresponding NSM-PROLOG formula:
+ct(s, s(e, time(e, now, e), e, e, e, p(i(happen), [o:sp(e, e, sing(e), [good], something(thing)), d:e]), e, e)).
+
+
+7.
+gs(LF). Full form: gen_and_write_sentence(LF). 
+The "LF" argument is an NSM-PROLOG formula; the output is the
+corresponding sentence in the current language (or the formula itself,
+if NSM-DALIA fails generation). Ex.
+
+DALIA> gs(ct(s, s(e, before(now), e, e, e, p(do, [a:sp(e, e, sing(e), [], me), o:sp(e, e, sing(e), [good], something(thing)), d:e, c:e, i:e]), e, e))).
+
+Answer:
+I did something good
+
+
+8.
+t(S). Full form: translate_and_write_sentence(S). 
+Translates a sentence from current_language to current_l2. The "S"
+argument is a string, between double quotation marks.
+
+
+9.
+so(Filename). Full form: set_output_file(Filename). 
+Redirects the output to the file named Filename (in some operating
+systems, you will need to give a full name with extension -- NSM-DALIA
+adds none). "Filename" is double-quoted string. Ex.
+
+DALIA> so("pippo.txt").
+ ** Output file set to pippo.txt
+
+You will perhaps use this mostly before a "pf" command.
+
+
+10.
+pf(F). Full form: parse_file(F). 
+Parses and outputs a text file with particular tags (see the
+documentation file "NSM-files.txt"). You can write a whole file
+of NSM texts in, say, English NSM, and then have it parsed or
+translated automatically. This will probably be one of the most used
+commands, when other language modules are available.
+
+
+11.
+tm(SWITCH). Full form: trace_morphology(SWITCH).
+To switch on verbose mode for morphology parsing, say tm(1). To switch
+it off, say tm(0). Verbose modes are useful in grammar
+development. Turning tracing morphology on, the "parse" and "generate"
+commands will display information about the grammar rules used during
+the parsing process, in the morphophonemic component of the
+grammar. This will help you to find out why the morphophonemic
+component of your grammar is not doing what you intended it to do.
+
+
+12.
+ts(SWITCH). Full form: trace_syntax(SWITCH). 
+"SWITCH" is either "1" or "0". Turns on or off syntax verbose mode for
+parsing.
+
+
+13.
+
+tg(SWITCH). Full form: trace_generation(SWITCH).
+"SWITCH" is either 0 or 1. Turns on/of verbose mode for generation.
+
+
+14.
+s(L). Full form: save_lang(L). 
+Used by grammar writers. NSM-DALIA grammars can manage various related
+language at once, in just one grammar. Because of this, grammar rules
+and lexical items are elaborated and compiled, and, especially when a
+grammar and its lexicon are big, there is no meaning in repeating this
+amount of elaboration each time a language is loaded. Therefore, from
+a single grammar you can load various languages or dialects. When the
+grammar is finished, these langauges can be compiled separately for
+fast loading.
+
+
+15.
+wl(L). Full form: word_list(L). 
+This feature must still be implemented. It will allow the user to get
+a kind of "dictionary" from the grammar, in various formats.
+
+
+16.
+w. 
+GNU-ish command, to display the "WARRANTY" part of the GNU GPL.
+
+
+17.
+c. 
+GNU-ish command; displays a pointer to the "CONDITIONS" section of the
+GNU GPL.
+
+
+18. 
+stop. 
+Stops NSM-DALIA, switching to SWI-PROLOG.
+
+
+19.
+halt. 
+Stops NSM-DALIA and closes the  SWI-PROLOG window too.
+
+
+20.
+list. 
+Displays a list of the installed languages, together with their
+language code.
+

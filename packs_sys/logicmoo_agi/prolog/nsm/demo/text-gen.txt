@@ -1,0 +1,114 @@
+/*
+    This file is part of NSM-DALIA, an extensible parser and generator
+    for NSM grammars.
+       
+    Copyright (C) 2009 Francesco Zamblera.
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+*/
+
+
+This file shows NSM texts generation from formulas.
+
+The first two texts are in NSM format, taken from the published literature in/about NSM.
+A @G tag starts a group which must be enden by an "end." (with fullstop!) instruction, and
+not by the usual "@e" tag. Note how each formula is preceded by a number (showing the generator
+the amount of indentation it has to put in the output for that sentence) and an optional label.
+
+
+THIS PERSON IS SAD =
+@G
+4+"(a) ":ct(s, s(e, e, e, e, e, p(feel, [e:sp(this, e, sing(e), [], someone(person)), o:sp(e, e, sing(e), [], something(thing)), g:e]), e, e)).
+4+"(b) ":ct(s, s(e, e, e, freq(some), e, p(think, [e:sp(ref(unkn), e, sing(e), [], someone(person)), o:e, t:e]), e, manner(this))).
+ct(group, begin).
+8+"(c) ":ct(s, s(e, e, e, e, e, p(know, [e:sp(e, e, sing(e), [], me), o:s(e, before(now), e, e, e, p(happen, [o:sp(e, e, sing(e), [bad], something(thing)), d:e]), e, e), t:e]), e, e)).
+8+"(d) ":ct(s, s(not, e, e, e, e, p(want, [e:sp(e, e, sing(e), [], me), o:[p(happen, [o:sp(e, e, plur(e), like(this), something(thing)), d:e])]]), e, e)).
+8+"(e) ":ct(s, because(s(not, time(e, now, e), can, e, e, p(think, [e:sp(e, e, sing(e), [], me), o:s(e, after(now), e, e, e, p(do, [a:sp(e, e, sing(e), [], me), o:sp(e, e, sing(e), [], something(thing)), d:e, c:e, i:e]), e, e), t:e]), e, e), sp(this, e, sing(e), [], something(fact)))).
+8+"(f) ":ct(s, s(e, e, e, e, e, p(know, [e:sp(e, e, sing(e), [], me), o:s(not, e, can, e, e, p(do, [a:sp(e, e, sing(e), [], me), o:sp(e, e, sing(e), [], something(thing)), d:e, c:e, i:e]), e, e), t:e]), e, e)).
+ct(group, end).
+4+"(g) ":ct(s, because(s(e, e, e, e, e, p(feel, [e:sp(this, e, sing(e), [], someone(person)), o:sp(e, e, sing(e), [bad], something(thing)), g:e]), e, e), sp(this, e, sing(e), [], something(fact)))).
+4+"(h) ":ct(s, s(e, e, e, e, e, p(feel, [e:sp(this, e, sing(e), [], someone(person)), o:sp(e, e, sing(e), like(this), something(thing)), g:e]), e, e)).
+end.
+
+
+
+
+The second text is taken from Wierzbicka's book "What did Jesus mean?", and explains the 
+Jewish-Christian concept of God in English NSM.
+
+GOD =
+@G
+0+[]:ct(s, s(e, e, e, e, e, p(be, [j:sp(e, e, sing(e), [], someone(god)), o:sp(e, e, sing(e), [], someone(person))]), e, e)).
+0+[]:ct(s, s(not, e, e, e, e, p(be, [j:sp(e, e, sing(e), [], someone(god)), o:sp(e, e, sing(e), [], something(thing))]), e, e)).
+0+[]:ct(s, s(e, e, e, e, e, p(be, [j:sp(this, e, sing(e), [], someone(person)), o:sp(e, e, sing(e), [good], someone(person))]), e, e)).
+0+[]:ct(s, s(not, e, e, e, e, p(be, [j:sp(this, e, sing(e), [], someone(person)), o:sp(e, e, sing(e), like(sp(e, e, plur(e), [], people)), someone(person))]), e, e)).
+0+[]:ct(s, s(e, e, e, e, e, p(exist, [j:sp(no, other, sing(e), like(sp(this, e, sing(e), [], someone(person))), someone(person))]), e, e)).
+0+[]:ct(s, s(e, e, e, freq(all), e, p(exist, [j:sp(this, e, sing(e), [], someone(person))]), e, e)).
+0+[]:ct(s, because(s(e, e, e, e, e, p(want, [e:sp(this, e, sing(e), [], someone(person)), o:[p(exist, [j:sp(this, e, plur(e), [], something(thing))])]]), e, e), s(e, e, e, e, e, p(exist, [j:sp(e, e, sing(all), [], something(thing))]), e, e))).
+0+[]:ct(s, because(s(e, e, e, e, e, p(want, [e:sp(this, e, sing(e), [], someone(person)), o:[p(exist, [j:sp(e, e, plur(e), [], people)])]]), e, e), s(e, e, e, e, e, p(exist, [j:sp(e, e, plur(e), [], people)]), e, e))).
+0+[]:ct(s, because(s(e, e, e, e, e, p(exist, [j:sp(this, e, sing(e), [], someone(person))]), e, e), s(e, e, e, e, e, p(exist, [j:sp(this, e, sing(e), [], someone(person))]), e, e))).
+0+[]:ct(s, because(s(e, e, e, e, e, p(exist, [j:sp(this, e, sing(e), [], someone(person))]), e, e), not(sp(any, other, sing(e), [], something(thing))))).
+0+[]:ct(s, s(e, e, e, e, e, p(live, [a:sp(this, e, sing(e), [], someone(person)), c:e]), e, e)).
+end.
+
+As you can see, the generation grammar is still far from perfect, and some bugs will
+have to be fixed.
+
+
+And last, an example of how the @g tag works. NSM-PROLOG formulas in a "@g ... end." group
+are read, and the corresponding sentences are generated (in normal format, with fullstops
+and no indentation). Note tht these formulas are NOT preceded by the indentation number and 
+the label.
+
+SUBSTANTIVE PHRASES WITH ATTRIBUTES:
+@g
+ct(n(d), sp(e, e, sing(e), [good], something(thing))).
+ct(n(d), sp(e, e, sing(e), [bad], something(thing))).
+ct(n(d), sp(e, e, sing(e), [good], someone(person))).
+ct(n(d), sp(e, e, sing(e), [bad], someone(person))).
+ct(n(n), sp(e, e, plur(e), [good], people)).
+ct(n(n), sp(e, e, plur(e), [bad], people)).
+ct(n(n), sp(e, e, plur(e), [good], something(thing))).
+ct(n(n), sp(e, e, plur(e), [bad], something(thing))).
+end.
+
+
+DETERMINERS:
+@g
+ct(n(n), sp(this, e, sing(e), [], someone(person))).
+ct(n(n), sp(this, e, sing(e), [], something(thing))).
+ct(n(n), sp(this, e, plur(e), [], people)).
+ct(n(n), sp(ref(known), same, sing(e), [], someone(person))).
+ct(n(n), sp(ref(known), same, sing(e), [], something(thing))).
+ct(n(n), sp(ref(known), same, plur(e), [], people)).
+ct(n(d), sp(e, other, sing(e), [], someone(person))).
+ct(n(d), sp(e, other, sing(e), [], something(thing))).
+ct(n(n), sp(e, other, plur(e), [], people)).
+end.
+
+
+QUANTIFIERS:
+@g
+ct(n(n), sp(e, e, sing(one), [], something(thing))).
+ct(n(n), sp(e, e, plur(two), [], something(thing))).
+ct(n(n), sp(e, e, plur(some), [], people)).
+ct(n(n), sp(e, e, plur(some), [], something(thing))).
+ct(n(n), sp(e, e, plur(many), [], people)).
+ct(n(n), sp(e, e, plur(many), [], something(thing))).
+ct(n(n), sp(e, e, plur(all), [], people)).
+ct(n(n), sp(e, e, plur(all), [], something(thing))).
+end.
+
+End of file "text-gen.txt".

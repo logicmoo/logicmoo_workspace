@@ -1,0 +1,143 @@
+/*
+    This file is part of NSM-DALIA, an extensible parser and generator
+    for NSM grammars.
+       
+    Copyright (C) 2009 Francesco Zamblera.
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+*/
+
+			NSM-DALIA version 0.8
+
+NSM-DALIA is a natural language parser and generator, which is
+especially tailored to the NSM subset of a natural language, but can
+easily be extended to cover larger subsets.
+
+Below is an essential description of how NSM-DALIA works. A
+grammar-writing howto and more substantial documentation (including
+technical description of the source code), as well as more grammar
+modules, will follow.
+
+NSM-DALIA has (so far) only a command-line interface. To run
+NSM-DALIA, open the file "dalia-cline.tm" into the SWI-PROLOG
+interpreter. (by dobule-clicking the file; LINUX users will start a
+console, use a cd command to move to the NSM-DALIA-0.8 directory, and
+load dalia-cline.tm into SWI-PROLOG with the command "pl dalia-cline.tm").
+
+When NSM-DALIA is launched, a command-line console will pop up,
+printing the usual "GNU-welcome" message, and then prompting the
+user:
+
+DALIA>
+
+Now you can control the program by entering commands at the prompt,
+followed by <ENTER>. Most commands have a short form for quick typing,
+and a longer, but more mnemonic, form. A quick tour of the main
+commands follows. A list of all commands is in the file "commands.txt".
+
+
+First, you will need to load into the program the grammar of the
+target language(s). You do this with the "l" command. For example, if
+you type:
+
+DALIA> l(eng).
+
+NSM-DALIA will answer:
+
+ ** English language module loaded.
+ ** Current L1 set to English
+
+Now you can:
+-parse English-NSM sentences, producing NSM-PROLOG formulas ("ps" command),
+-generate English-NSM sentences from NSM-PROLOG formulas ("gs" command).
+
+
+For example, you can type:
+DALIA> ps("I am doing something good").
+
+NSM-DALIA will output:
+ct(s, s(e, e, e, e, e, p(i(do), [a:sp(e, e, sing(e), [], me), o:sp(e, e, sing(e), [good], something(0)), d:e, c:e, i:e]), e, e))
+
+which is the corresponding NSM-PROLOG formula.
+
+By typing:
+DALIA> gs(ct(s, s(e, e, e, e, e, p(i(do), [a:sp(e, e, sing(e), [], someone(0)), o:sp(e, e, sing(e), [good], something(0)), d:e, c:e, i:e]), e, e)).
+
+you get the following output:
+
+  someone  is  doing  something  good
+
+
+Now suppose you want to translate from English NSM to, say, Tok Pisin
+NSM. Your L1 is set to English; to load and set the L2 module, use the
+"l2" command:
+
+
+DALIA> l2(tpi).
+
+ ** Tok Pisin language module loaded.
+ ** Current L2 set to Tok Pisin
+
+Of course, this will work when a Tok Pisin module will be written (I
+am writing one). For the time being, the only answer you will get is:
+
+ ** No "tpi" language module found
+
+Supposing you have loaded a Tok Pisin module as L2, if later you want
+to translate from Tok Pisin into English, you only need to switch
+between L1 and L2. Use the set_language commands:
+
+DALIA> sl1(tpi).
+
+ ** Current L1 set to Tok Pisin
+
+DALIA> sl2(eng).
+
+ ** Current L2 set to English
+
+However, you can also effect this by typing the "sl"
+("switch-languages") command. If you type it now (when L1 is Tok Pisin
+and L2 English), you will get:
+
+DALIA> sl.
+ ** Current L1 set to English
+ ** Current L2 set to Tok Pisin
+
+NSM-DALIA can get its input from files. You can write a special
+NSM-input file, which is a simple text file with some tags added (see
+the included documetation file "NSM-files.txt"). For example, if you type:
+
+DALIA> pf("demo/sentences.txt").
+
+NSM-DALIA will read and parse the file "sentences.txt", included in
+the directory "demo".
+
+NSM input files allows the user to write NSM texts in the standard
+format (with no punctuation, no capital letters at the beginnning of
+a sentence and line indentation showing embedding).
+
+
+You can also redirect your output to files:
+
+DALIA> so("outputfile.txt").
+ **  Output file set to "outputfile.txt"
+
+DALIA> pf("demo/sentences.txt").
+ **  Output written to file "outputfile.txt"
+
+By doing this, you get a text file (outputfile.txt) with the the
+parsing of the file "sentences.txt".
+
+

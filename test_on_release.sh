@@ -54,8 +54,8 @@ fi
 
 TEST_PARAMS="$*"
 if [ -z "$TEST_PARAMS" ]; then 
-  # TEST_PARAMS="*0*.*"
-  echo TEST_PARAMS="*f*_01.p*"
+  TEST_PARAMS="*0*.*"
+ # echo TEST_PARAMS="*f*_01.p*"
 fi
 
 
@@ -76,10 +76,11 @@ export MAX_TEST_SUITE_TIME=1
 
 for dirname in "${DIRS_SORTED[@]}"; do
 
-    export MAX_TEST_SUITE_NUM=6
+   # export MAX_TEST_SUITE_NUM=9
     echo -e "$dirname\n"    
     [ $MAX_TEST_SUITE_NUM -gt 0 ] && (
         find $dirname -maxdepth 1 $FILTER -name "test_on_*.sh" -execdir {} "$TEST_PARAMS" $VERBOSITY \;
+    #    export MAX_TEST_SUITE_NUM=9
     )
 done
 
