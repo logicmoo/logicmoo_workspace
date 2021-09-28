@@ -16,17 +16,18 @@
 % 2003 February 12
 ****************************************************/
 
+:- module(pronto_morph_engine,[morph_atoms/2]).
 
 
 % *******************************************************************
 % Be sure to install these files in the same directory as morph_engine.pl
 % *******************************************************************
-%:- ensure_loaded( 'pronto_morph_tokenizer.pl' ).
-:- ensure_loaded( 'pronto_morph_spelling_rules.pl').
-:- ensure_loaded( 'pronto_morph_irreg_adj.pl' ).
-:- ensure_loaded( 'pronto_morph_irreg_adv.pl' ).
-:- ensure_loaded( 'pronto_morph_irreg_noun.pl' ).
-:- ensure_loaded( 'pronto_morph_irreg_verb.pl' ).
+%:- include( 'pronto_morph_tokenizer.pl' ).
+:- include( 'pronto_morph_spelling_rules.pl').
+:- include( 'pronto_morph_irreg_adj.pl' ).
+:- include( 'pronto_morph_irreg_adv.pl' ).
+:- include( 'pronto_morph_irreg_noun.pl' ).
+:- include( 'pronto_morph_irreg_verb.pl' ).
 :- multifile( irregular_form/3 ).
 
 % How inflectional suffixes are named:

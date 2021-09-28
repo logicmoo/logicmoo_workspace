@@ -76,7 +76,7 @@ format_ph_cond_list([Cond|CondList],PS,SS,PL,SL,Num,NewNum) :-
 	format_ph_cond_list(CondList,PS,SS,PL,SL,NewNum1,NewNum).
 
 
-format_ph_cond(Var << Class,_PredSurf,_SuccSurf,_PredLex,_SuccLex,Num,Num) :-
+format_ph_cond('<<'(Var,Class),_PredSurf,_SuccSurf,_PredLex,_SuccLex,Num,Num) :-
 	% importante passarli, così Var viene istanziata anche lì
 	var(Var),
 	!,

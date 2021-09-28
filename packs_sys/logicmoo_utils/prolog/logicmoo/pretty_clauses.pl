@@ -1514,18 +1514,21 @@ pt1(FS,Tab,Term) :-
    compound_name_arguments(Term,F,[Arg]), nonvar(Arg), Arg = [A|Args],
    is_arity_lt1(A), !,
    prefix_spaces(Tab), print_atomf(F), pformat_functor('([ '),
-   pt_args_arglist([F|FS],Tab+3,'','|','])',[A|Args]), !.
+   pt_args_arglist([F|FS],Tab+3,'','|','',[A|Args]), !,
+   pformat('])').
 
 pt1(FS,Tab,Term) :- 
    compound_name_arguments(Term,F,[Arg]), nonvar(Arg), Arg = [A|Args],
    is_arity_lt1(A),
    prefix_spaces(Tab), print_atomf(F), pformat_functor(format('([ ~p, ',[A])),
-   pt_args_arglist([F|FS],Tab+3,'','|','])',Args), !.
+   pt_args_arglist([F|FS],Tab+3,'','|','',Args), !,
+   pformat('])').
 
 pt1(FS,Tab,Term) :- 
    compound_name_arguments(Term,F,[Args]), nonvar(Args), Args = [_|_],
    prefix_spaces(Tab), print_atomf(F), pformat_functor('([ '),
-   pt_args_arglist([F|FS],Tab+3,'','|','])',Args), !.
+   pt_args_arglist([F|FS],Tab+3,'','|','',Args), !,
+   pformat('])').
 
 pt1(_FS,Tab,(NPV)) :- NPV=..[OP,N|Args], Args=[Arg], as_is(N), compound(Arg), compound_name_arity(Arg,_,3),!,
   prefix_spaces(Tab), print_atomf(OP),
@@ -1538,7 +1541,7 @@ pt1(FS,Tab,(NPV)) :- NPV=..[OP,N|Args], as_is(N), % \+ compound_gt(N,0),
   prefix_spaces(Tab), print_atomf(OP), 
   pformat('( '), print_tree_no_nl(N), pformat_functor(', ['),  
  %do_fold_this_round
- (( pt_args_arglist([OP|FS],Tab+2,'','@',')]',Args))),!.
+  pt_args_arglist([OP|FS],Tab+2,'','@','])',Arg),!.
 
  % include arg1
 pt1(FS,Tab,(NPV)) :- NPV=..[OP,N|Args], as_is(N), % \+ compound_gt(N,0),  
@@ -1546,14 +1549,14 @@ pt1(FS,Tab,(NPV)) :- NPV=..[OP,N|Args], as_is(N), % \+ compound_gt(N,0),
   prefix_spaces(Tab), print_atomf(OP),
   pl_span_goal('functor', ( pformat('( '), print_tree_no_nl(N), pformat(', '))),  
  %do_fold_this_round
- (( pt_args_arglist([OP|FS],Tab+2,'','@',')',Args))),!.
+  pt_args_arglist([OP|FS],Tab+2,'','@',')',Args),!.
 
 % include arg1
 pt1(FS,Tab,(NPV)) :- NPV=..[OP,N|Args], as_is(N), % \+ compound_gt(N,0),  
   prefix_spaces(Tab), print_atomf(OP),
   pl_span_goal('functor', ( pformat('( '), print_tree_no_nl(N), pformat(', '))),  
  %do_fold_this_round
- (( pt_args_arglist([OP|FS],Tab+2,'','@',')',Args))),!.
+  pt_args_arglist([OP|FS],Tab+2,'','@',')',Args),!.
 
 pt1(FS,Tab,Term) :- 
    compound_name_arguments(Term,F,Args),

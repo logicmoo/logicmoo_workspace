@@ -269,7 +269,7 @@ to_base_form(String, 'xtAdverb', BaseWord):- morph_stem(String, BaseWord, 'ly').
 to_base_form(String, 'xtUn', BaseWord):- morph_stem(String, 'un', BaseWord).
 
 morph_stem(String, Base, Suffix):- atom_concat(Base, Suffix, String).
-morph_stem(String, Base, Suffix):- morph_atoms(String, [[Base, -Suffix]]).
+morph_stem(String, Base, Suffix):- pronto_morph_engine:morph_atoms(String, [[Base, -Suffix]]).
 
 base_to_cycword(String, Pos, C):- ac(partOfSpeech, C, Pos, String).
 base_to_cycword(String, P, C):-
@@ -355,14 +355,16 @@ lex_winfo(W2,R):- notrace(lex_winfo0(W2,R)).
 lex_winfo0(W2,R):- is_list(W2),!, maplist(lex_winfo0,W2,R),!.
 lex_winfo0(W2,R):- (var(W2);W2=span(_)),!,R=W2.
 %lex_winfo(W2,W2):-!.
-lex_winfo0(W2,W2O):- W2=W2O, W2 = w(Word, Had),!, 
-  nonvar(Word), !,  is_list(Had), 
-  (member(lex_winfo,Had) -> true; 
-     (lex_winfo_r(Word,R),unlevelize(R,R2),nb_set_add(W2,[lex_winfo|R2]))).
+lex_winfo0(W2,W2O):- W2 = w(Word,Had),W2=W2O,!,lex_winfo1(Word,Had,W2O),!.
 lex_winfo0(Word,W2):- lex_winfo_r(Word,Had),  W2 = w(Word, [lex_winfo|Had]),!.
 lex_winfo0(W,W):-!.
 
+lex_winfo1(_, Had, _):- is_list(Had),member(lex_winfo,Had).
+lex_winfo1(Word,_,W2):- lex_winfo_r(Word,R), R\==[],unlevelize(R,R2),nb_set_add(W2,[lex_winfo|R2]).
+lex_winfo1(_, Had,W2):- member(txt(Text),Had), trace, lex_winfo_r(Text,R),unlevelize(R,R2),nb_set_add(W2,[lex_winfo|R2]).
 
+lex_winfo_r(Word,R):- is_list(Word),!,maplist(lex_winfo_r,Word,Rs),append(Rs,R).
+lex_winfo_r(Word,R):- string(Word),atom_string(Text,Word),!,lex_winfo_r(Text,R).
 lex_winfo_r(Word,R):- lex_tinfo(text(a), Word, R).
 
 
@@ -382,6 +384,7 @@ unlevelize0(level(_, 0, _, X, _),X):- !.
 unlevelize0(level(_, _, _, X, _),X):- !.
 unlevelize0(text_to_cycword(_, _,_,X),X):-!.
 unlevelize0(todo(_, cycpred,X), cycpred):-  atom(X),!.
+unlevelize0(todo(_, cycpred,Y),Y):-!.
 unlevelize0(todo(_, X,Y),Z):- atom(X),append_term(X,Y,Z).
 unlevelize0(todo(_, X,Y),eq(X,Y)):-!.
 %unlevelize0(todo(_, X,Y),Z):- append_term(X,Y,Z).
@@ -837,15 +840,19 @@ searches_arg(_F, _A, Arg):- atom_length(Arg, Len), Len<4, !, fail.
 % searches_arg(_F, _A, Arg):- atom_contains(Arg, '.'), !.
 %searches_arg(_F, _A, Arg):- (atom_contains(Arg, '.');atom_contains(Arg, '-');atom_contains(Arg, '%')), !.
 
-:- ensure_loaded(library('../ext/ProNTo/Schlachter/pronto_morph_engine.pl')).
+:- use_module(library('../ext/ProNTo/Schlachter/pronto_morph_engine.pl')).
 %  morph_atoms(causer, [[W, -er]]).
 
 
 :- abolish(tmp:saved_denote_lex/3).
 :- dynamic(tmp:saved_denote_lex/3).
+
+prolog:make_hook(after, _Reload):- abolish(tmp:saved_denote_lex/3),dynamic(tmp:saved_denote_lex/3),fail.
+
 %get_lex_info(Kind, text(a), String, Out):- catch(downcase_atom(String, DCAtom), _, fail), DCAtom\==String, !, get_lex_info(Kind, text(a), DCAtom, Out).
 get_lex_info(_Kind, Type, DCAtom, Out):- tmp:saved_denote_lex(Type, DCAtom, Out), !.
 get_lex_info(Kind, Type, DCAtom, Out):- do_lex_info(Kind, Type, DCAtom, Out), asserta(tmp:saved_denote_lex(Type, DCAtom, Out)), !.
+
 
 
 do_lex_info(Kind, text(Type), AString, OutS):-

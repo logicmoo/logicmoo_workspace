@@ -2,8 +2,8 @@
 % %%%%%%%%%%%%%%%%%%%%%%% Grammar %%%%%%%%%%%%%%%%%%%%%%%
 % =================================================================
 
- char_type_sentence(w(W,_),Type):- !, char_type_sentence(W,Type).
- char_type_sentence(?, ask).
+ char_type_sentence(w(W,_),Type):- nonvar(W),!, char_type_sentence(W,Type).
+ char_type_sentence((?), ask).
  char_type_sentence((.), tell).
  char_type_sentence((.), act).
  char_type_sentence((!), act).
@@ -20,9 +20,9 @@ user:portray(X):- notrace((tracing,compound(X),write_simple_seg(X))),!.
 
 
 utterance(Type, LF, Sentence, E):- (into_lexical_segs(Sentence,Segs)->Sentence\==Segs),!,utterance(Type, LF, Segs, E).
-utterance(Type, LF, Segs, E):-  var(Type), is_list(S), partition_segs(Segs,W2s,_Spans), last(W2s,Char),
+utterance(Type, LF, Segs, E):-  var(Type), is_list(Segs), partition_segs(Segs,W2s,_Spans), last(W2s,Char),
   char_type_sentence(Char, Type),
-  select(Char,S,_First),!,
+  select(Char,Segs,_First),!,
   utterance(Type, LF, Segs, UE),
   phrase(UE,optional(Char),E).
   
