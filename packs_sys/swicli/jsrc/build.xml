@@ -1,0 +1,72 @@
+<project name="org.logicmoo.jpl" default="test" basedir="..">
+    <description>
+    simplest example build file
+    </description>
+    <!-- input directories and files -->
+    <property name="app.src.dir" value="jsrc" />
+    <property name="tests.src.dir" value="jsrc" />
+    <property name="lib.dir" value="lib" />
+
+    <!-- output directories and files -->
+    <property name="build.dir" value="build" />
+    <property name="app.classes.dir" value="${build.dir}/application/classes" />
+    <property name="app.jar.dir" value="${build.dir}/application/jar" />
+    <property name="app.jar.name" value="Trx.jar" />
+    <property name="app.jar.main-class" value="org.emptyhammock.trx.TrxEdit" />
+    <property name="tests.classes.dir" value="${build.dir}/tests/classes" />
+    <property name="install.dir" value="${user.home}/bin" />
+
+    <target name="build">
+        <mkdir dir="${app.classes.dir}" />
+        <mkdir dir="${app.jar.dir}" />
+        <mkdir dir="${tests.classes.dir}" />
+        <pathconvert property="classpathInName" refid="project.classpath" />
+        <echo>Classpath is ${classpathInName}</echo>
+
+        <javac srcdir="${app.src.dir}" destdir="${app.classes.dir}">
+        <classpath refid="project.classpath"/>
+        </javac>
+        <jar destfile="${app.jar.dir}/${app.jar.name}" basedir="${app.classes.dir}">
+            <manifest>
+                <attribute name="Main-Class" value="${app.jar.main-class}" />
+            </manifest>
+        </jar>
+
+        <javac srcdir="${tests.src.dir}" destdir="${tests.classes.dir}">
+            <classpath refid="project.classpath"/>
+        </javac>
+
+    </target>
+
+    <path id="project.classpath">
+        <!-- fileset dir="${lib.dir}" includes="**/*.jar"/ -->
+        <fileset dir=".">
+            <include name="**/*.jar" />
+        </fileset>
+        <fileset dir="/usr/share/java/" includes="**/*.jar"/>
+        <path location="${app.jar.dir}/${app.jar.name}"/>
+    </path>
+
+
+    <target name="clean">
+        <delete dir="${build.dir}" />
+    </target>
+
+    <target name="test" depends="build">
+        <junit printsummary="on" haltonfailure="yes" fork="true">
+            <classpath>
+                <fileset dir="${lib.dir}" includes="**/*.jar"/>
+                <path location="${app.jar.dir}/${app.jar.name}"/>
+                <pathelement location="${tests.classes.dir}"/>
+            </classpath>
+            <formatter type="brief" usefile="false" />
+            <batchtest>
+                <fileset dir="${tests.src.dir}" includes="**/*Test.java" />
+            </batchtest>
+        </junit>
+    </target>
+
+    <target name="install" depends="build">
+        <copy file="${app.jar.dir}/${app.jar.name}" todir="${install.dir}" />
+    </target>
+</project>

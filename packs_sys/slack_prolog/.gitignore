@@ -1,3 +1,5 @@
 prolog/.*
-
+*~
+prolog/classes
+guild_info_file
 
