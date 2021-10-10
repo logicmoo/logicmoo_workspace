@@ -1,3 +1,4 @@
+
 :- if((  % FYI, this "if" prevents this file from getting autoload support
        \+ current_prolog_flag(xref, true),
        Type = qvars,
