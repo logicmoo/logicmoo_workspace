@@ -315,23 +315,6 @@ suppliment_cp_menu:-
 :- meta_predicate return_to_pos(0).
 :- meta_predicate edit1term(+).
 
-:- meta_predicate(weto(0)).
-%weto(G):- !, call(G).
-weto(G):- 
-  stream_property(UE,alias(user_error)),
-  stream_property(CO,alias(current_output)),
-  UE==CO,!,call(G).
-
-weto(G):- 
-
- stream_property(UE,alias(user_error)),
-  stream_property(CE,alias(current_error)),
-  stream_property(CO,alias(current_output)),
-  stream_property(UO,alias(user_output)),
-  setup_call_cleanup(
-     (set_stream(CO,alias(user_error)),set_stream(CO,alias(user_output)),set_stream(CO,alias(current_output)),set_stream(CO,alias(current_error))),
-     locally_tl(thread_local_error_stream(CO),G), 
-     (set_stream(UE,alias(user_error)),set_stream(CE,alias(current_error)),set_stream(UO,alias(user_output)))).
 
 :- multifile(http_session:session_data/2).
 :- volatile(http_session:session_data/2).

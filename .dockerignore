@@ -151,3 +151,15 @@ generatedJUnitFiles/
 ./wiki/.clang-format
 ./wiki/.github/
 ./workspace.code-workspace
+back_sys/
+packs_lib/phil.git/
+packs_lib/philo/
+packs_sys/lmgc/
+packs_sys/logicmoo_agi/prolog/theory-toolbox-2/
+packs_sys/logicmoo_agi/prolog/theory-toolbox/
+packs_sys/logicmoo_lps_save2/
+packs_sys/lsp_server/
+packs_sys/wcl/
+packs_sys_new/
+packs_web_waz/
+

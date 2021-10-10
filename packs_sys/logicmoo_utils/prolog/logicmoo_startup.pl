@@ -65,12 +65,11 @@ now_and_later(MC,TIM,SM,MGoal):- strip_module(MGoal,M,Goal),
 
 :- meta_predicate(in_lm_ws(:)).
 :- export(in_lm_ws/1).
-in_lm_ws(MGoal):- 
+in_lm_ws(MGoal):- getenv('LOGICMOO_WS',WS),!,
    strip_module(MGoal,M,Goal),
-   working_directory(X,X),
-   getenv('LOGICMOO_WS',WS),      
+   working_directory(X,X),   
    setup_call_cleanup(cd(WS),(cd(prologmud_server),call(M:Goal)),cd(X)).
-
+in_lm_ws(MGoal):- strip_module(MGoal,M,Goal), call(M:Goal).
 
 :- module_transparent(sys:call_now/4).
 %sys:call_now(n,_TIM,_SM,_MGoal):-!.

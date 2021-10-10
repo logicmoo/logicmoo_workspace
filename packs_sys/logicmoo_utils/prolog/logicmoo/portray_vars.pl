@@ -226,10 +226,10 @@ bad_varname(UP):-
 % mort(G):- must_or_rtrace(G),!.
 
 mort((G1,G2)):- !, mort(G1),mort(G2).
-mort(G):- notrace(catch(w_o_c(error,G),E,(nl,display(mort_error(E)),nl,fail))),!.
-mort(G):- notrace(catch(G,E,(nl,display(mort_error(E)),nl,fail))),!.
-mort(G):- tracing,display(failed_mort(G)),!,break,(G).
-mort(G):- nortrace,notrace,display(failed_mort(G)),trace,rtrace(G),notrace,trace,break.
+%mort(G):- notrace(catch(w_o_c(error,G),E,(nl,display(mort_error(E)),nl,fail))),!.
+mort(G):- catch(G,E,(nl,display(mort_error(E)),nl,throw(E))),!.
+%mort(G):- tracing,display(failed_mort1(G)),!,break,(G).
+%mort(G):- nortrace,notrace,display(failed_mort2(G)),throw(G),trace,rtrace(G),notrace,trace,break.
 
 to_var_or_name(L,LL):- var(L),!,LL=L.
 to_var_or_name('~','Not').
@@ -281,11 +281,11 @@ prologcase_name0(String,Nonvar):-nonvar(Nonvar),!,prologcase_name(String,Propose
 prologcase_name0(String,ProposedName):- 
   string_lower(String,In),string_codes(In,Was),!,filter_var_chars(Was,CS),!,name(ProposedName,CS),!.
 
-
+:- set_prolog_flag(no_pretty,true).
 atom_trim_prefix(Root,Prefix,Result):- atom_concat_w_blobs(Prefix,Result,Root) -> true ; Result=Root.
 atom_trim_suffix(Root,Suffix,Result):- atom_concat_w_blobs(Result,Suffix,Root) -> true ; Result=Root.
 
-% pretty_numbervars_g(T,T):-!.
+pretty_numbervars_g(T,T):- current_prolog_flag(no_pretty,true),!.
 pretty_numbervars_g(Term, TermO):- (ground(Term);current_prolog_flag(no_pretty,true)),!,duplicate_term(Term,TermO).
 %pretty_numbervars(Term, TermO):- copy_term(Term,TermO,_),guess_pretty(Term),Term=@=TermO,Term=TermO,!.
 
@@ -354,6 +354,7 @@ vees_to_varname_list([V|Vs],[N=V|NewVs]):-
   once(get_var_name(V,N);gensym('_',N)),
   vees_to_varname_list(Vs,NewVs).
 
+guess_pretty(_):- current_prolog_flag(no_pretty,true),!.
 guess_pretty(O):- mort((copy_term(O,C),guess_pretty1(O),O=@=C)).
 
 maybe_xfr_varname(CV,V):- get_var_name(CV,Name),may_debug_var(Name,V).

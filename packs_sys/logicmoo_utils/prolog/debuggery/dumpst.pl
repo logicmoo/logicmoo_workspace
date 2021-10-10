@@ -432,8 +432,8 @@ simplify_goal_printed(setup_call_cleanup,scc).
 simplify_goal_printed(each_call_cleanup,ecc).
 simplify_goal_printed(call_cleanup,cc).
 simplify_goal_printed([Var|_],'$'):-compound(Var),Var = (VT = _ ), (attvar(VT);var(VT);VT = var_tracker(_); VT = fbound(_)),!.
-simplify_goal_printed(M:G,MG):-atom(M),number(G),exists_file(M),public_file_link(M:G,MG),!.
-simplify_goal_printed(M,MG):-atom(M),exists_file(M), public_file_link(M,MG),!.
+%  %simplify_goal_printed(M:G,MG):-atom(M),number(G),exists_file_safe(M),public_file_link(M:G,MG),!.
+%  %simplify_goal_printed(M,MG):-atom(M),exists_file_safe(M), public_file_link(M,MG),!.
 simplify_goal_printed(M:G,MS:GS):-atom(M), simplify_m(M,MS),!,simplify_goal_printed(G,GS).
 simplify_goal_printed(M:I,M:O):-!, simplify_goal_printed(I,O).
 %simplify_goal_printed(M:I,O):- atom(M),(M==user;M==system),!,simplify_goal_printed(I,O).

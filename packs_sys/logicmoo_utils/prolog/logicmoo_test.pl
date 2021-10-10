@@ -768,8 +768,10 @@ save_single_testcase(Name):-
   clear_suite_attribs)).
 
 xml_header :- write('<?'),write('xml version="1.0" '), writeln('encoding="utf-8"?>').
+
+save_single_testcase_shrink(_Name,_FileName):- \+ j_u:junit_prop(testsuite,file,_File),!.
 save_single_testcase_shrink(Name,FileName):- 
-must_det_l((
+ must_det_l((
  with_output_to(string(Text),
   (xml_header,
     must_det_l((

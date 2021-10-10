@@ -350,7 +350,7 @@ only_if_ends_with([Ext|L],File):- only_if_ends_with(Ext,File)->true;only_if_ends
 % Enumerate Files.
 %
 enumerate_files(Spec0,Result):- strip_module(Spec0,_,Spec),
-   call((atom(Spec),(exists_file(Spec);exists_directory(Spec)),prolog_to_os_filename(Result,Spec))),
+   call((atom(Spec),(exists_file_safe(Spec);exists_directory(Spec)),prolog_to_os_filename(Result,Spec))),
    absolute_file_name(Spec,Result),exists_file_or_dir(Result),!.
 enumerate_files(Spec,Result):-absolute_file_name(Spec,Result),exists_file_or_dir(Result),!.
 enumerate_files(M:Spec,Result):-
@@ -508,7 +508,7 @@ nav_each(Path,[A|Seg],O):-  directory_file_path(Path,A,Try),!,nav_each(Try,Seg,O
 %
 % Exists File Or Dir.
 %
-exists_file_or_dir(X):- nonvar(X),( X=(_:F)->exists_file_or_dir(F); (atomic(X),once((catch(exists_file(X),E,(fmt(E:X),fail));is_directory(X))))).
+exists_file_or_dir(X):- nonvar(X),( X=(_:F)->exists_file_or_dir(F); (atomic(X),once((catch(exists_file_safe(X),E,(fmt(E:X),fail));is_directory(X))))).
 :- export(is_directory/1).
 
 %= 	 	 
@@ -587,13 +587,13 @@ current_dirs0('.').
 %
 % Converted To Filename.
 %
-to_filename( FileName, AFN ) :- atomic(FileName),exists_file(FileName),!,AFN=FileName.
+to_filename( FileName, AFN ) :- atomic(FileName),exists_file_safe(FileName),!,AFN=FileName.
 to_filename( FileName, AFN ) :-
  ((((t_l:default_extension( Ext ));Ext='.tlp';Ext='';Ext='.pl'), 
      current_dirs(D),
      member(TF,[false,true]),
         absolute_file_name(FileName,AFN,[solutions(all),expand(TF),access(read),relative_to(D),file_errors(fail),extensions(['',Ext,'.pl','.tlp','.clp','.P'])]),
-        exists_file(AFN))),!.
+        exists_file_safe(AFN))),!.
 
 
 :- export((add_to_search_path/2,add_to_search_path_first/2,prolog_file_dir/2,if_startup_script/1,if_startup_script/0)).
@@ -832,9 +832,12 @@ local_directory_search('../src_mud').  % for vetted src of the MUD
 %
 % Exists Dirf.
 %
-exists_dirf(X):-atomic(X),(exists_file(X);exists_directory(X)).
+exists_dirf(X):-atomic(X),(exists_file_safe(X);exists_directory(X)).
 
 %= 	 	 
+
+exists_file_safe(File):- 
+  catch((((nonvar(File),(File=(_:F)->exists_file_safe(F);(atomic(File),exists_file(File)))))),_,fail).
 
 
 %= 	 	 
@@ -843,7 +846,6 @@ exists_dirf(X):-atomic(X),(exists_file(X);exists_directory(X)).
 %
 % Exists File Safely Paying Attention To Corner Cases.
 %
-exists_file_safe(File):- ((nonvar(File),(File=(_:F)->exists_file_safe(F);(atomic(File),exists_file(File))))).
 
 %= 	 	 
 
@@ -972,7 +974,7 @@ os_to_prolog_filename(OS,PL):-absolute_file_name(OS,OSP),OS \== OSP,!,os_to_prol
 dedupe_files(SL0,SL):- maplist(relative_file_name,SL0,SL1), list_to_set(SL1,SL2),maplist(absolute_file_name_or_dir,SL2,SLO),!,
   list_to_set(SLO,SL),!.
 
-  relative_file_name(A,S):-  prolog_canonical_source(A,L), file_name_on_path(L,S), atom(S), \+ name(S,[]), (exists_file(S);exists_directory(S)),!.
+  relative_file_name(A,S):-  prolog_canonical_source(A,L), file_name_on_path(L,S), atom(S), \+ name(S,[]), (exists_file_safe(S);exists_directory(S)),!.
   relative_file_name(A,A).          
 
 exists_all_filenames(S0, SL, Options):- 
@@ -994,7 +996,7 @@ absolute_file_name_or_dir(S0,N,Options):- absolute_file_name(S0,N,Options).
 
 :- export(resolve_local_files/2).
 resolve_local_files(S0,SL):- is_list(S0), !, maplist(resolve_local_files,S0,SS), append(SS,SF),dedupe_files(SF,SL).
-resolve_local_files(S0,SL):- atom(S0), exists_file(S0), !, SL = [S0].
+resolve_local_files(S0,SL):- atom(S0), exists_file_safe(S0), !, SL = [S0].
 resolve_local_files(S0,SS):- atom(S0),atom_concat(AA,'M.e',S0),atom_concat(AA,'.e',SL),resolve_local_files(SL,SS),!.
 resolve_local_files(S0,SS):- atom(S0),atom_concat('answers/Mueller2004c/',AA,S0),atom_concat("ecnet/",AA,SL),resolve_local_files(SL,SS),!.
 %resolve_local_files(S0,SS):- atom(S0),atom_concat("answers/",AA,S0),atom_concat("examples/",AA,SL),resolve_local_files(SL,SS),!.
@@ -1002,7 +1004,7 @@ resolve_local_files(S0,SS):- findall(S1,resolve_local_files_1(S0,S1),SL),flatten
 % expand_file_search_path
 %resolve_local_files(S0,SS):- atom(S0), findall(S1,resolve_local_files_1(ec(S0),S1),SL),flatten(SL,SF),dedupe_files(SF,SS),!.
    
-resolve_local_files_1(S0,SL):- atom(S0), expand_file_name(S0,SL), SL = [E|_], exists_file(E), !.
+resolve_local_files_1(S0,SL):- atom(S0), expand_file_name(S0,SL), SL = [E|_], exists_file_safe(E), !.
 resolve_local_files_1(S0,SL):- exists_all_filenames(S0,SL, [expand(false)]), SL \= [].
 resolve_local_files_1(S0,SL):- exists_all_filenames(S0,SL, [expand(true)]), SL \= [].
 resolve_local_files_1(S0,SL):- expand_file_search_path(S0,S1),S0\==S1,resolve_local_files(S1,SL).
@@ -1013,7 +1015,7 @@ relative_from(D):- working_directory(D,D),exists_directory(D).
 relative_from(F):- stream_property(_,file_name(F)),nonvar(F).
 
 /*
-resolve_file(S0,SS):- atom(S0), exists_file(S0), !, SS=S0. 
+resolve_file(S0,SS):- atom(S0), exists_file_safe(S0), !, SS=S0. 
 resolve_file(S0,SS):- absolute_file_name(S0, SS, [expand(true), file_errors(fail), access(read)]), !.
 resolve_file(S0,SS):- relative_from(F), absolute_file_name(S0, SS, [relative_to(F),file_errors(fail),access(read)]), !.
 resolve_file(S0,SS):- atom(S0), file_base_name(S0,S1), S0\==S1, resolve_file(S1,SS).
@@ -1025,7 +1027,7 @@ needs_resolve_local_files(F, L):- \+ is_stream(F), \+ is_filename(F),
 
 :- export(is_filename/1).
 is_filename(F):- atom(F), \+ is_stream(F),
-  (exists_file(F);is_absolute_file_name(F)).
+  (exists_file_safe(F);is_absolute_file_name(F)).
 
 %chop_e(InputNameE,InputName):- atom_concat(InputName,'.e',InputNameE),!.
 %chop_e(InputName,InputName).

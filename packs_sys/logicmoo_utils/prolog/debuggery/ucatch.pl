@@ -825,7 +825,7 @@ show_new_src_location(K,FL):- retractall(t_l:last_src_loc(K,_)),format_to_error(
 %
 % Sl Converted To Filename.
 %
-sl_to_filename(W,W):-atom(W),exists_file(W),!.
+sl_to_filename(W,W):-atom(W),exists_file_safe(W).
 sl_to_filename(W,W):-atom(W),!.
 sl_to_filename(mfl4(_VarNameZ,_,F,_),F):-atom(F),!.
 sl_to_filename(_:W,W):-atom(W),!.
@@ -973,9 +973,9 @@ loading_file(FIn):- (quietly((((source_file0(F) *-> (retractall(t_l:last_source_
 source_file0(F):-source_location(F,_).
 source_file0(F):-prolog_load_context(file, F).
 source_file0(F):-prolog_load_context(source, F).
-source_file0(F):-seeing(S),is_stream(S),stream_property(S,file_name(F)),exists_file(F).
-source_file0(F):-prolog_load_context(stream, S),stream_property(S,file_name(F)),exists_file(F).
-source_file0(F):-findall(E,catch((stream_property( S,mode(read)),stream_property(S,file_name(E)),exists_file(E),
+source_file0(F):-seeing(S),is_stream(S),stream_property(S,file_name(F)),exists_file_safe(F).
+source_file0(F):-prolog_load_context(stream, S),stream_property(S,file_name(F)),exists_file_safe(F).
+source_file0(F):-findall(E,catch((stream_property( S,mode(read)),stream_property(S,file_name(E)),exists_file_safe(E),
   line_count(S,Goal),Goal>0),_,fail),L),last(L,F).
 
 
@@ -1049,9 +1049,11 @@ lmconf:http_file_stem('~',"https://logicmoo.org:2082/gitlab/logicmoo/prologmud_s
 ensure_compute_file_link(S,URL):- \+ ( nb_current('$inprint_message', Messages), Messages\==[] ), maybe_compute_file_link(S,URL),!.
 ensure_compute_file_link(S,S).
 
+maybe_compute_file_link(_,_):- !, fail.
 maybe_compute_file_link(S,O):- atom(S),!, lmconf:http_file_stem(F,R),atomic_list_concat([_,A],F,S),!,atom_concat(R,A,O).
 maybe_compute_file_link(S:L,O):- integer(L),!,maybe_compute_file_link(S,F),format(atom(O),'~w#L~w',[F,L]).
 
+public_file_link(MG,MG):-!.
 public_file_link(S,O):-   \+ ( nb_current('$inprint_message', Messages), Messages\==[] ), maybe_compute_file_link(S,M),into_link(S,M,O).
 public_file_link(MG,MG).
 
@@ -1343,7 +1345,7 @@ block(Name, Goal) :-  block3(Name, Goal, Var),  (   Var == !  ->  !  ;   true  )
 :- abolish(buggerFile/1),prolog_load_context(source,D),asserta(buggerFile(D)).
 
 
-% hasLibrarySupport :- absolute_file_name('logicmoo_util_library.pl',File),exists_file(File).
+% hasLibrarySupport :- absolute_file_name('logicmoo_util_library.pl',File),exists_file_safe(File).
 
 
 %=

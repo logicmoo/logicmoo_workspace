@@ -570,9 +570,9 @@ without_ec_portray_hook(Goal):- exact_ec_portray_hook(1000,Goal).
 %pc_portray(X):- is_list(X),print_tree(X).
 
 pc_portray(Term):- var(Term),!,fail.
-pc_portray(Term):- atom(Term), exists_file(Term),public_file_link(Term,Public),writeq(Public).
-pc_portray(Term:L):- integer(L),atom(Term), exists_file(Term),public_file_link(Term:L,Public),writeq(Public).
-pc_portray(mfl4(M,F,Term,L)):- integer(L),atom(Term), exists_file(Term),public_file_link(Term:L,Public),writeq(mfl4(M,F,Public,L)).
+pc_portray(Term):- atom(Term), exists_file_safe(Term),public_file_link(Term,Public),writeq(Public).
+pc_portray(Term:L):- integer(L),atom(Term), exists_file_safe(Term),public_file_link(Term:L,Public),writeq(Public).
+pc_portray(mfl4(M,F,Term,L)):- integer(L),atom(Term), exists_file_safe(Term),public_file_link(Term:L,Public),writeq(mfl4(M,F,Public,L)).
 pc_portray(Term):- 
   \+ ( nb_current('$inprint_message', Messages), Messages\==[] ), 
   % (tracing->dumpST;true),
@@ -623,14 +623,15 @@ uses_op(F,A):- current_op(_,XFY,F),once((name(XFY,[_|Len]),length(Len,L))),L=A.
   format('~s', [S]),!.
 */
 pprint_ec_no_newline(C, P):-
+ must_det_l((
   print_e_to_string(P, S),
   to_ansi(C, C0),
-  real_ansi_format(C0, '~s', [S]).
+  real_ansi_format(C0, '~s', [S]))).
   
 
 %print_e_to_string(P, S):-  notrace(with_output_to(string(S),fmt(P))),!.
 print_e_to_string(P, S):- 
-  quietly(( mort((
+  quietly(( must_det_l((
    pretty_numbervars(P, T),
    get_operators(T, Ops))),!,
    % maybe_bfly_html

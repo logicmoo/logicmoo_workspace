@@ -41,6 +41,24 @@ apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv E084DAB9
 #apt-get install r-base r-base-dev
 #apt-get install r-cran-rserve r-cran-devtools 
 
+git subtree add --prefix packs_lib/regex https://github.com/mndrix/regex.git master
+git subtree add --prefix packs_lib/auc https://github.com/friguzzi/auc.git master
+git subtree add --prefix packs_lib/matrix https://github.com/friguzzi/matrix.git master
+git subtree add --prefix packs_lib/cplint https://github.com/friguzzi/cplint.git  master
+git subtree add --prefix packs_lib/bddem https://github.com/friguzzi/bddem.git  master
+git subtree add --prefix packs_lib/aleph https://github.com/friguzzi/aleph.git  master
+git subtree add --prefix packs_lib/mpi https://github.com/friguzzi/mpi.git master
+git subtree add --prefix packs_lib/xlibrary https://github.com/edisonm/xlibrary.git master
+git subtree add --prefix packs_lib/assertions https://github.com/edisonm/assertions.git master
+git subtree add --prefix packs_lib/rtchecks https://github.com/edisonm/rtchecks.git master
+git subtree add --prefix packs_lib/xtools https://github.com/edisonm/xtools.git master
+git subtree add --prefix packs_lib/cplint_r https://github.com/friguzzi/cplint_r.git master
+git subtree add --prefix packs_lib/phil https://github.com/ArnaudFadja/phil.git master
+git subtree add --prefix packs_lib/trill https://github.com/rzese/trill.git master
+git subtree add --prefix packs_lib/sparqlprog   https://github.com/cmungall/sparqlprog master
+
+git subtree add --prefix packs_lib/rocksdb https://github.com/JanWielemaker/rocksdb.git master
+git submodule add https://github.com/facebook/rocksdb packs_lib/rocksdb/rocksdb
 
 #add-apt-repository -y ppa:tsl0922/ttyd-dev
 #apt-get update
@@ -61,32 +79,14 @@ fi
 
 export -f install_swi_package
 
-install_swi_package packs_lib auc 
-install_swi_package packs_lib matrix 
-install_swi_package packs_lib cplint 
-
-install_swi_package packs_lib aleph
-
-
-install_swi_package packs_lib bddem
-install_swi_package packs_lib lambda
 install_swi_package packs_lib rserve_client	 
 
 apt-get install libopenmpi-dev
 
 install_swi_package packs_lib mpi 
 #install_swi_package packs_lib libfgs 
-install_swi_package packs_lib xlibrary 
-install_swi_package packs_lib assertions 
 install_swi_package packs_lib lambda 
-install_swi_package packs_lib rtchecks 
-install_swi_package packs_lib xtools 
 
-install_swi_package packs_lib cplint_r
-
-install_swi_package packs_lib phil 
-install_swi_package packs_lib trill 
-install_swi_package packs_lib rocksdb 
 
 # apt-get install libffi-dev
 # install_swi_package packs_lib https://github.com/JanWielemaker/rserve_client.git,[interactive(false),package_directory(Dir)])" -g halt

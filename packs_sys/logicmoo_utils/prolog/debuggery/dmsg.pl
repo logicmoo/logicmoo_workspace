@@ -1623,12 +1623,50 @@ wots(S,Goal):-
 woto(S,Goal):- compound(S),!,
  (stream_property(current_output,tty(TTY));TTY=false),!,
   with_output_to(S,(set_stream(current_output,tty(TTY)),Goal)).
-woto(S,Goal):- is_stream(S),!,
+woto(S,Goal):- is_stream(S), \+ atom(S),!,
  (stream_property(current_output,tty(TTY));stream_property(S,tty(TTY));TTY=false),!,
   with_output_to(S,(set_stream(current_output,tty(TTY)),Goal)).
 woto(S,Goal):- 
  (stream_property(current_output,tty(TTY));stream_property(S,tty(TTY));TTY=false),!,
   with_output_to(S,(set_stream(current_output,tty(TTY)),Goal)).
+
+
+:- meta_predicate(weto(0)).
+%weto(G):- !, call(G).
+weto(G):- 
+  stream_property(UE,alias(user_error)),
+  stream_property(CO,alias(current_output)),
+  UE==CO,!,call(G).
+weto(G):-
+  stream_property(UE,alias(user_error)),
+  stream_property(UO,alias(user_output)),
+  once(stream_property(CE,alias(current_error));CE=UE),
+  once(stream_property(CO,alias(current_output));current_output(CO)),!,
+  setup_call_cleanup(
+     (set_stream(CO,alias(user_error)),set_stream(CO,alias(user_output)),
+         set_stream(CO,alias(current_error)),set_stream(CO,alias(current_output))),
+     locally_tl(thread_local_error_stream(CO),G), 
+     (set_stream(UE,alias(user_error)),set_stream(CE,alias(current_error)),
+         set_stream(UO,alias(user_output)),set_stream(CO,alias(current_output)))).
+weto(G):- call(G).
+
+:- meta_predicate(wets(+,0)).
+wets(S,G):-
+  with_ioe((
+     (set_stream(S,alias(user_error)),
+         set_stream(S,alias(current_error))),
+     locally_tl(thread_local_error_stream(S),G))).
+
+:- meta_predicate(with_ioe(0)).
+with_ioe(G):-
+  stream_property(UE,alias(user_error)),
+  stream_property(UO,alias(user_output)),
+  once(stream_property(CE,alias(current_error));CE=UE),
+  once(stream_property(CO,alias(current_output));current_output(CO)),!,
+  setup_call_cleanup(true, G, 
+     (set_stream(UE,alias(user_error)),set_stream(CE,alias(current_error)),
+         set_stream(UO,alias(user_output)),set_stream(CO,alias(current_output)))).
+
 
 %= 	 	 
 

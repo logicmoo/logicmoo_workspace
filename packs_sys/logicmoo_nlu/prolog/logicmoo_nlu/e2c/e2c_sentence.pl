@@ -24,10 +24,7 @@ utterance(Type, LF, Segs, E):-  var(Type), is_list(Segs), partition_segs(Segs,W2
   char_type_sentence(Char, Type),
   select(Char,Segs,_First),!,
   utterance(Type, LF, Segs, UE),
-  phrase(UE,optional(Char),E).
-  
-
-  %append([Char],ES,E).
+  phrase(optional(Char),UE,E).
 
 utterance(Type, LFOut, Sentence, E):- 
  (grab_primary_segs(0,Sentence,Segs,true,Primary)->Sentence\==Segs),!,
@@ -79,7 +76,7 @@ grab_primary_segs(Sz,SegsI,SegsO,LFI,LFOut):- Sz==0, select(span(L),SegsI,SegsM)
 
 grab_primary_segs(Sz,SegsI,SegsO,LFI,LFOut):- % Sz==0,
   select(span(L),SegsI,SegsM),
-  nop(singleton(Range)),
+  %nop(singleton(Range)),
   member(phrase(NP),L), member(NP,['NP','WHNP']),
  once((
   member('#'(Ref),L),
@@ -89,8 +86,8 @@ grab_primary_segs(Sz,SegsI,SegsO,LFI,LFOut):- % Sz==0,
   member(txt(Words),L), p_n_atom(Words,VarNameU),
   p_n_atom(Ref,RefU),
   atomic_list_concat(['XVAR',RefU,VarNameU,B,E],'_',VarName),
-  FullInfo = [loc(B),pos(NP),equals(VarName)
-  % ,words(Range)
+  FullInfo = [loc(B),pos(NP),equals(VarName),
+  words(Range)
   |L],
   insert_just_before(E,w(VarName,FullInfo),SegsM2,SegsM3),
   LFMid1 = info(VarName,FullInfo),

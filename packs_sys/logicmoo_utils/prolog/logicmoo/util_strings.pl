@@ -1097,8 +1097,7 @@ unquoteAtom(Atom,New):-concat_atom_safe(LIST,'"',Atom),concat_atom_safe(LIST,'',
 %
 % If Is A Charlist.
 %
-is_charlist([A]):-  !, is_charlist_char(A).
-is_charlist([A|L]):- is_charlist_char(A),is_charlist(L).
+is_charlist(L):- ground(L), L\==[], is_list(L),!,maplist(is_charlist_char,L).
 
 is_charlist_char(C):- atom(C), atom_length(C,1), name(C,[Code]),swish_render_codes_charset_code(_,Code).
 
@@ -1112,8 +1111,7 @@ any_to_charlist(A,C):- any_to_string(A,S),atom_chars(S,C).
 %
 % If Is A Codelist.
 %
-is_codelist([A]):-  !, is_codelist_code(A).
-is_codelist([A|L]):- is_codelist_code(A)->is_codelist(L). 
+is_codelist(L):- ground(L), L\==[], is_list(L),!,maplist(is_codelist_code,L).
 
 is_codelist_code(H):- integer(H), swish_render_codes_charset_code(_,H),!.
 
