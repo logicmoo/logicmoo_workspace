@@ -9,10 +9,10 @@ character_initialization :-
    start_task($root, everyday_life, 1, T, [T/repeating_task]).
 
 character_debug_display(Character, line("Pending:\t", Task)) :-
-   Character::(/goals/pending_tasks/Task).
+   unity_call(Character::(/goals/pending_tasks/Task)).
 
 character_debug_display(Character, line("Topics:\t", Person:Topic)) :-
-   Character::(/pending_conversation_topics/Person/Topic).
+   unity_call(Character::(/pending_conversation_topics/Person/Topic)).
 
 normalize_task(work_on_everyday_life_task(T),
 	       begin(call(set_concern_status($task, T)),

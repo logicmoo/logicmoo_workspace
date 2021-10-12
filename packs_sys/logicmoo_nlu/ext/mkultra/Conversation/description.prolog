@@ -84,6 +84,8 @@ interesting_attribute(Listener, Purpose, Object, Attribute) :-
    ;
    interesting_relation(Listener, Purpose, Object, Attribute).
 
+:- dynamic(visibility/2).
+
 interesting_property(Listener, Purpose, Object, Prop:Value) :-
    property_nondefault_value(Object, Prop, Value),
    \+ /mentioned_to/ $addressee /Object/Prop:Value,

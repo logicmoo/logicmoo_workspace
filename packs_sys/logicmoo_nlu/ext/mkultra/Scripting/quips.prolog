@@ -1,4 +1,5 @@
-strategy(Task, run_quip(Quip)) :-
+/*
+strategy(Task, run_quip(QuipName)) :-
    quip(Task, QuipName, _, _).
 
 strategy(run_quip(Quip),
@@ -9,3 +10,5 @@ strategy(run_quip(Quip),
 
 quip(Task, QuipName, Speech, null) :-
    quip(Task, QuipName, Speech).
+
+   */

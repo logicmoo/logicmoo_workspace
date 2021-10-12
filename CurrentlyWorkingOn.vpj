@@ -2998,6 +2998,14 @@
 				Excludes="pldata/;*.qlf;*.class;.git/;~*;*~;~*/;*~/;.svn/;*.*r;*.*o;*.dll;*.exe;*.bak;*.jpg;*.xp*;*.gif;*.b?*"/>
 		</Folder>
 		<Folder Name="packs_sys">
+			<Folder Name="logicmoo_nlu">
+				<Folder Name="ext">
+					<Folder Name="mkultra">
+						<F N="packs_sys/logicmoo_nlu/ext/mkultra/logicmoo_mkultra.pl"/>
+						<F N="packs_sys/logicmoo_nlu/ext/mkultra/unity_prolog.pl"/>
+					</Folder>
+				</Folder>
+			</Folder>
 			<Folder Name="slack_prolog">
 				<Folder Name="prolog">
 					<Folder Name="discord">
@@ -3009,8 +3017,6 @@
 						<F N="packs_sys/slack_prolog/prolog/discord/guild_info_file"/>
 						<F N="packs_sys/slack_prolog/prolog/discord/main.pl"/>
 						<F N="packs_sys/slack_prolog/prolog/discord/makeWS.sh"/>
-						<F N="packs_sys/slack_prolog/prolog/discord/mesg.pl"/>
-						<F N="packs_sys/slack_prolog/prolog/discord/mess.pl"/>
 						<F N="packs_sys/slack_prolog/prolog/discord/objs.pl"/>
 						<F N="packs_sys/slack_prolog/prolog/discord/PrologWebSocket.java"/>
 						<F N="packs_sys/slack_prolog/prolog/discord/task.pl"/>
@@ -3023,7 +3029,6 @@
 						<F N="packs_sys/slack_prolog/prolog/slack_client_udt/udt3.pl"/>
 					</Folder>
 					<F N="packs_sys/slack_prolog/prolog/discord_client.pl"/>
-					<F N="packs_sys/slack_prolog/prolog/guild_info_file"/>
 					<F N="packs_sys/slack_prolog/prolog/lt_dict_broker.lgt"/>
 					<F N="packs_sys/slack_prolog/prolog/slack_client.new"/>
 					<F N="packs_sys/slack_prolog/prolog/slack_client.pl"/>

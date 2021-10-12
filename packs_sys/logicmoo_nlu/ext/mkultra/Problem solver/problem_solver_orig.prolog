@@ -1,3 +1,6 @@
+
+end_of_file.
+
 %%
 %% Simple problem solver in the general tradition of NASL
 %%

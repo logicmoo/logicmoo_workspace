@@ -1,3 +1,5 @@
+:- dynamic(reduces_to_aux/4).
+
 build_reduction_cross_reference :-
    $global::retractall(reduces_to_aux(_,_,_,_)),
    forall(reduction_clause(Goal, Reduction),

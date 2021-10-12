@@ -45,7 +45,7 @@ assert_phrase_rule(Phrase, Words) :-
 	  register_lexical_item(Word)),
    append(Words, Tail, WordsWithTail),
    term_append(Phrase, [WordsWithTail, Tail], DCGRule),
-   assertz($global::DCGRule).
+   swi_or_unity(assertz(DCGRule),assertz($global::DCGRule)).
 
 %% assert_phrase_rule(Phrase, Words, Guard) is det
 %  Asserts that Phrase can be matched by Words (a list of symbols) if

@@ -413,6 +413,8 @@ dictionary.
 %   clauses for the predicate contradictory_pair/2.
 %
 
+:- dynamic(contradictory_pair/2).
+
 contradictions :-
         abolish(contradictory_pair/2),
         fail.

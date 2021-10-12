@@ -2,6 +2,9 @@
 %% Predicates for manipulating logical forms
 %%
 
+:- dynamic(adjective/2).
+
+
 %% modalized(?LF, ?Tense, ?Aspect, ?Modalized) is det
 %  Modalized is LF inflected with Tense and Aspect
 

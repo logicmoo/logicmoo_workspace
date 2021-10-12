@@ -8,14 +8,14 @@ exclamation(acknowledgement) --> [yes, '?'].
 
 exclamation(greeting-reply) --> exclamation(greeting).
 
-exclamation(greeting) --> [X], member(X, [hey, hello, hi]).
+exclamation(greeting) --> [X], {member(X, [hey, hello, hi])}.
 exclamation(greeting) --> [hi, there].
 
 exclamation(apology) --> [sorry].
 exclamation(apology-minimization) --> [no, problem].
 exclamation(apology-minimization) --> [quite, alright].
 
-exclamation(parting) --> [X], member(X, [bye, byebye, goodbye]).
+exclamation(parting) --> [X], {member(X, [bye, byebye, goodbye])}.
 exclamation(parting) --> [see, you].
 exclamation(parting) --> [be, seeing, you].
 exclamation(parting-reply) --> exclamation(parting).

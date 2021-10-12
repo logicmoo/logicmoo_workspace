@@ -1,3 +1,6 @@
+
+:- style_check(-discontiguous).
+
 %%%
 %%% Exposition beat
 %%%
@@ -11,13 +14,13 @@ beat_dialog(exposition,
 	    [ mention_macguffin,
 	      mention_keepout ]).
 
-$kavi::quip(mention_macguffin,
+:- assert($kavi::quip(mention_macguffin,
 	    ["Sorry to hear your macguffin was stolen.",
-	     "Make yourself at home."]).
-$kavi::quip(mention_keepout,
+	     "Make yourself at home."])).
+:- assert($kavi::quip(mention_keepout,
 	    ["By the way,",
 	     "Stay out of my bedroom",
-	     "It's a personal thing."]).
+	     "It's a personal thing."])).
 
 %%%
 %%% Pc reacts to Kavi's speech

@@ -51,5 +51,5 @@ personal_strategy(achieve(bedroom_empty),
 		  ingest(Intruder)) :-
    intruder(Intruder, $bedroom).
 
-$global::fkey_command(alt-k, "Display Kavi's status") :-
-   generate_character_debug_overlay($kavi).
+:- assert($global::fkey_command(alt-k, "Display Kavi's status") :-
+   generate_character_debug_overlay($kavi)).

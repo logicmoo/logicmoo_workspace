@@ -50,6 +50,8 @@ decode_kind_name([-], _, []).
 decode_kind_name([], Default, Default).
 decode_kind_name(Name, _, Name).
 
+:- dynamic(kind_noun//2).
+
 assert_kind_noun(_, _, []).
 assert_kind_noun(Kind, Singular, Plural) :-
    assert_phrase_rule(kind_noun(Kind, singular), Singular),
@@ -82,6 +84,8 @@ check_predicate_signature(_Type, ArgTypes) :-
    ArgTypes =.. [_Functor | Types],
    forall(member(AType, Types),
 	  ((kind(AType),!) ; log(bad_declared_argument_type(AType, ArgTypes)))).
+
+:- dynamic(visibility/2).
 
 %%
 %% Properties
@@ -117,6 +121,8 @@ load_special_csv_row(_RowNumber,
 	  assert(implies_relation(Name, Gen))),
    (Inverse \= null -> assert(inverse_relation(Name, Inverse)) ; true).
 
+:- dynamic(copular_relation//1).
+
 assert_copular_form(_Name, [ ]).
 assert_copular_form(Name, [be | CopularForm]) :-
    assert_phrase_rule(copular_relation(Name), CopularForm).
@@ -124,6 +130,8 @@ assert_copular_form(Name, CopularForm) :-
    % Copular forms must start with the word "be"
    % (the English copula is the verb "to be").
    log(malformed_copular_form_of_relation(Name, CopularForm)).
+
+:- dynamic(genitive_form_of_relation//2).
 
 assert_genitive_form(_Name, _Number, []).
 assert_genitive_form(Name, Number, Phrase) :-

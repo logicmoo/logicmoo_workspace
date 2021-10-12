@@ -21,7 +21,7 @@ parse(Nonterminal, WordList, Completion) :-
    Full.
 
 nonterminal(np(_LF, _C, _A, nogap, nogap)).
-nonterminal(aux(_, _P, _A, _T, _A, _F, _M)).
+nonterminal(aux(_, _P, _Agreement, _T, _Aspect, _F, _M)).
 nonterminal(vp(_F, _LF, _S, _T, _A, nogap)).
 nonterminal(aux_vp(_VP, _P, _A, _T, _)).
 nonterminal(s(_LF, _M, _P, _T, _A)).
@@ -30,6 +30,8 @@ nonterminal(utterance(_DialogAct)).
 %%%
 %%% Regression testing
 %%%
+
+:- dynamic(parser_tests/2).
 
 :- public test_parser/0, try_completion/3, try_parse/3.
 

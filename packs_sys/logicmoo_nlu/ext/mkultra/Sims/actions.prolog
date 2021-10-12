@@ -16,6 +16,7 @@ action(T) :-
 %% action_functor(?Functor, ?Arity)
 %  True when any structor with the specified Functor and Arity
 %  is a primitive action.
+:- dynamic action_functor/2.
 :- external action_functor/2.
 
 %% precondition(?Action, ?P)

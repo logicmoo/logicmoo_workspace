@@ -15,5 +15,5 @@
 				 "I'm sure Kavi stole it,",
 				 "but I don't know where he hid it."].
 
-$global::fkey_command(alt-p, "Display player character's status") :-
-   generate_character_debug_overlay($pc).
+:- assert(($global::fkey_command(alt-p, "Display player character's status") :-
+   generate_character_debug_overlay($pc))).
