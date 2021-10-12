@@ -20,7 +20,7 @@ canonicalize_question(Q, Q).
 reduce_question(X:manner(be(C), X),
 		X:wellbeing(C, X)).
 
-%% Yes/no quetsions
+% % Yes/no quetsions
 strategy(answer_yes_no(Asker, Q),
 	 generate_answer(Q, Answer)) :-
    admitted_truth_value(Asker, Q, Answer).
