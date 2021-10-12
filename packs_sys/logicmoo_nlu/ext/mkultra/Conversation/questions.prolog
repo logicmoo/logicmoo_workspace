@@ -1,5 +1,5 @@
 %%
-%% Questions
+%% Responding to questions
 %%
 
 % Dispatch on question type
@@ -43,28 +43,36 @@ strategy(answer_wh(Asker, Identity, _,
 
 strategy(answer_wh(_Asker, Identity, _,
 		   (be(player, Identity), is_a(player, person))),
-	 say(be(player, $me))).
+	 say_answer(be(player, $me))).
 
 strategy(answer_wh(_Asker, Answer, can(Action), Constraint),
 	 answer_with_list(List, "or", Type,
 			  (can(Action), is_a(Answer, Type)))) :-
    possible_types_given_constraint(Answer, Constraint, List).
 
+% Change what is in X queries from location queries to contained_in queries.
+strategy(answer_wh(Asker,
+		   Answer, location(Answer, Container),
+		   (location(Answer, Container), is_a(Answer, Type))),
+	 answer_wh(Asker,
+		   Answer, location(Answer, Container),
+		   (contained_in(Answer, Container), is_a(Answer, Type)))).
+
 strategy(answer_wh(M, _,
 		   manner(be(Who), M),
 		   _),
-	 say(okay(Who))).
+	 say_answer(okay(Who))).
 
 strategy(answer_wh(Asker, Explanation, explanation(P, Explanation), _),
 	 cases([admitted_truth_value(Asker, P, false):
-	          assertion($me, Asker, not(P), present, simple),
+	          question_answer($me, Asker, not(P), present, simple),
 		admitted_truth_value(Asker, explanation(P, E), true):
-	          assertion($me, Asker, E, present, simple),
+	       question_answer($me, Asker, E, present, simple),
 	        true:speech(["I couldn't speculate."])])).
 
 default_strategy(generate_unique_answer(Asker, _Answer, Core, Constraint),
 		 if(admitted_truth_value(Asker, Constraint, true),
-		    assertion($me, Partner, Core, present, simple),
+		    question_answer($me, Partner, Core, present, simple),
 		    speech(["Don't know"]))) :-
    nonvar(Constraint),
    $task/partner/Partner.
@@ -88,4 +96,4 @@ strategy(answer_with_list([ ], _, Var, Constraint),
 	      S="Nothing" ).
 
 strategy(answer_with_list(ItemList, Termination, Var, Constraint),
-	 say_list(ItemList, Termination, Var^s(Constraint))).
+	 say_list(ItemList, Termination, Var^question_answer(Constraint))).

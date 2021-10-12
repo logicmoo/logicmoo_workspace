@@ -1,249 +1,359 @@
-%	TALK Grammar
-%
-%	From the book "Prolog and Natural-Language Analysis"
-%	by Fernando Pereira and Stuart Shieber
+test_file(completion(s, _), "NL/base_grammar_test").
+test_file(generate(s, _), "NL/base_grammar_test").
+
+sentence(S, Mood, Polarity, Tense, Aspect) -->
+   { input_from_player },
+   [X],
+   { X=='(',
+     !,
+     begin(bind(speaker, player),
+	   bind(addressee, $me)) },
+   s(S, Mood, Polarity, Tense, Aspect),
+   opt_stop(Mood),
+   [')'].
+
+sentence(S, Mood, Polarity, Tense, Aspect) -->
+   [ Name, ',' ],     
+   { input_from_player },
+   { bind_indexicals_for_addressing_character_named(Name) },
+   s(S, Mood, Polarity, Tense, Aspect),
+   opt_stop(Mood).
+
+sentence(S, Mood, Polarity, Tense, Aspect) -->
+   { bind_discourse_variables(S, Core) },
+   s(Core, Mood, Polarity, Tense, Aspect),
+   opt_stop(Mood).
+
+bind_discourse_variables(Var, Var) :-
+   var(Var),
+   !.
+bind_discourse_variables( (Core, Other), Core) :-
+   !,
+   bind_discourse_variables(Other).
+bind_discourse_variables(S, S).
+
+bind_discourse_variables( (X, Y)) :-
+   !,
+   bind_discourse_variables(X),
+   bind_discourse_variables(Y).
+bind_discourse_variables(is_a(Var, Kind)) :-
+   !,
+   bind(discourse_variables, [is_a(Var, Kind) | $discourse_variables]).
+bind_discourse_variables(_).
+
+%% discourse_variable_type(Var, Kind)
+%  Var is bound in $discourse_variables using is_a(Var,Kind).
+discourse_variable_type(Var, Kind) :-
+   member(is_a(Var, Kind), $discourse_variables).
+
+%% bound_discourse_variable(Var)
+%  Var is an uninstantiated variable that is bound to a type in $discourse_variables.
+bound_discourse_variable(Var) :-
+   var(Var),
+   discourse_variable_type(Var, _).
+
+opt_stop(interrogative) --> [ '?' ].
+opt_stop(_Mood) --> [ ].
+opt_stop(Mood) --> [ '.' ], { Mood \= interrogative }.
+opt_stop(Mood) --> [ '!' ], { Mood \= interrogative }.
+
+%% s(?S, ?Mood, ?Polarity, ?Tense, ?Aspect)
+%  Sentences
+
+:- randomizable s/7.
+
+%%%
+%%% Indicative mood
+%%%
+s(S, indicative, Polarity, Tense, Aspect) -->
+   { lf_subject(S, NP) },
+   np((NP^S1)^S, subject, Agreement, nogap, nogap),
+   aux_vp(NP^S1, Polarity, Agreement, Tense, Aspect).
+
+% NP is [not] Adj
+s(S, indicative, Polarity, Tense, simple) -->
+   { lf_subject(S, Noun) },
+   np((Noun^S)^S, subject, Agreement, nogap, nogap),
+   aux_be(Tense, Agreement),
+   opt_not(Polarity),
+   ap(Noun^S).
+
+% NP is [not] KIND
+s(is_a(Noun, Kind), indicative, Polarity, Tense, simple) -->
+   np((Noun^_)^_, subject, Agreement, nogap, nogap),
+   aux_be(Tense, Agreement),
+   opt_not(Polarity),
+   [a],
+   kind_noun(Kind, singular).
+
+% NP is [not] NP
+s(be(S, O), indicative, Polarity, Tense, simple) -->
+   np((S^_)^_, subject, Agreement, nogap, nogap),
+   aux_be(Tense, Agreement),
+   opt_not(Polarity),
+   np((O^_)^_, object, _, nogap, nogap).
+
+% NP is [not] in NP
+s(location(S, Container), indicative, Polarity, Tense, simple) -->
+   np((S^_)^_, subject, Agreement, nogap, nogap),
+   aux_be(Tense, Agreement),
+   opt_not(Polarity),
+   [in],
+   np((Container^_)^_, object, _, nogap, nogap),
+   { is_a(Container, enclosing_container) }.
+
+% NP is [not] on NP
+s(location(S, Container), indicative, Polarity, Tense, simple) -->
+   np((S^_)^_, subject, Agreement, nogap, nogap),
+   aux_be(Tense, Agreement),
+   opt_not(Polarity),
+   [on],
+   np((Container^_)^_, object, _, nogap, nogap),
+   { is_a(Container, work_surface) }.
+
+% Character has  NP
+s(location(Object, Character), indicative, Polarity, Tense, simple) -->
+   np((Character^_)^_, subject, Agreement, nogap, nogap),
+   { character(Character) },
+   aux_have(Tense, Agreement),
+   opt_not(Polarity),
+   np((Object^_)^_, object, _, nogap, nogap).
+
+% NP's Property is [not] PropertyValue
+s(property_value(Noun, Property, Value), indicative, Polarity, Tense, simple) -->
+   { valid_property_value(Property, Value),
+     % Prefer other forms of realization, when available
+     % But always let the user type this version if they want.
+     ( input_from_player
+       ;
+       ( \+ adjectival_property(Property),
+	 \+ nominal_property(Property) ) ) },
+   np((Noun^_)^_, genitive, _Agreement, nogap, nogap),
+   property_name(Property),
+   copula(simple, Tense, third:singular),
+   opt_not(Polarity),
+   property_value_np(Property, Value).
+
+% NP is [not] PropertyValue
+s(property_value(Noun, Property, Value), indicative, Polarity, Tense, simple) -->
+   { valid_property_value(Property, Value),
+     adjectival_property(Property) },
+   np((Noun^_)^_, subject, Agreement, nogap, nogap),
+   aux_be(Tense, Agreement),
+   opt_not(Polarity),
+   [Value].
+
+% NP is [not] a PropertyValue
+s(property_value(Noun, Property, Value), indicative, Polarity, Tense, simple) -->
+   { valid_property_value(Property, Value),
+     nominal_property(Property) },
+   np((Noun^_)^_, subject, Agreement, nogap, nogap),
+   aux_be(Tense, Agreement),
+   opt_not(Polarity),
+   [a, Value].
+
+% NP's Relation is [not] Relatum
+s(related(Noun, Relation, Relatum), indicative, Polarity, Tense, simple) -->
+   np((Noun^_)^_, genitive, _Agreement, nogap, nogap),
+   genitive_form_of_relation(Relation, singular),
+   copula(simple, Tense, third:singular),
+   opt_not(Polarity),
+   np((Relatum^_)^_, object, _Agreement, nogap, nogap).
+
+%%%
+%%% Imperative mood
+%%%
+s(S, imperative, Polarity, present, simple) -->
+   { lf_subject(S, $addressee) },
+   aux_vp($addressee^S, Polarity, second:singular, present, simple).
+s(S, imperative, Polarity, present, simple) -->
+   [let, us],
+   { lf_subject(S, $dialog_group) },
+   aux_vp($dialog_group^S, Polarity, first:singular, present, simple).
+
+%%%
+%%% Interrogative mood
+%%%
+
+% Yes/no question generated by subject-aux inversion
+s(S, interrogative, Polarity, Tense, Aspect) -->
+   { var(S) ; S \= (_:_) },  % don't try if we already know it's a wh-question.
+   inverted_sentence(S, Polarity, Tense, Aspect).
+
+% Normal inverted sentence
+inverted_sentence(S, Polarity, Tense, Aspect) -->
+   { lf_subject(S, NP) },
+   aux(np((NP^S1)^S, subject, Agreement),
+       Polarity, Agreement, Tense, Aspect, Form, Modality),
+   vp(Form, Modality, NP^S1, Tense, Agreement, nogap).
+
+% Wh-questions about properties
+
+% Whose property is Value?
+s(Noun:property_value(Noun, Property, Value),
+  interrogative, affirmative, Tense, simple) -->
+   { valid_property_value(Property, Value) },
+   [ whose ],
+   property_name(Property),
+   copula(simple, Tense, third:singular),
+   property_value_np(Property, Value).
+
+:- register_lexical_item(whose).
+
+% NP's Property is [not] PropertyValue
+s((Value:(property_value(Noun, Property, Value), is_a(Value, Kind))),
+  interrogative, affirmative, Tense, simple) -->
+   whpron(Kind),
+   copula(simple, Tense, third:singular),
+   np((Noun^_)^_, genitive, _Agreement, nogap, nogap),
+   property_name(Property).
+
+% Wh-questions about relations
+
+% Whose relation is Value?
+s(Noun:related(Noun, Relation, Value),
+  interrogative, affirmative, Tense, simple) -->
+   [ whose ],
+   genitive_form_of_relation(Relation, Number),
+   copula(simple, Tense, Person:Number),
+   np((Value^_)^_, subject, Person:Number, nogap, nogap).
+
+% NP's Relation is [not] RelationValue
+s((Value:(related(Noun, Relation, Value), is_a(Value, Kind))),
+  interrogative, affirmative, Tense, simple) -->
+   whpron(Kind),
+   copula(simple, Tense, third:Number),
+   np((Noun^_)^_, genitive, _Agreement, nogap, nogap),
+   genitive_form_of_relation(Relation, Number).
+
+% Wh-questions about the subject.
+s(Subject:(S, is_a(Subject, Kind)), interrogative, Polarity, Tense, Aspect) -->
+   { lf_subject(S, Subject), var(Subject) },
+   whpron(Kind),
+   aux_vp(Subject^S, Polarity, _Agreement, Tense, Aspect).
+
+% Wh-questions about the object.
+s(Object:(S, is_a(Object, Kind)), interrogative, Polarity, Tense, Aspect) -->
+   { lf_subject(S, NP) },
+   whpron(Kind),
+   aux(nogap, Polarity, Agreement, Tense, Aspect, Form, Modality),
+   np((NP^S1)^S, subject, Agreement, nogap, nogap),
+   vp(Form, Modality, NP^S1, Tense, Agreement, np(Object)).
+
+% Who is/what is Subject
+s(Object:(be(Subject, Object), is_a(Subject, Kind)), interrogative, affirmative, present, simple) -->
+   whpron(Kind),
+   aux_be(present, Agreement),
+   np((Subject^S)^S, subject, Agreement, nogap, nogap).
+
+% How is Subject?
+s(Manner:manner(be(Subject), Manner), interrogative, affirmative, present, simple) -->
+   [ how ],
+   aux_be(present, Agreement),
+   np((Subject^be(Subject))^be(Subject), subject, Agreement, nogap, nogap).
+
+% How does Subject Predicate?
+s(Method:method(S, Method), interrogative, affirmative, Tense, simple) -->
+   [ how ],
+   { lf_subject(S, NP) },
+   aux_do(Tense, Agreement),
+   np((NP^S1)^S, subject, Agreement, nogap, nogap),
+   vp(base, M^M, NP^S1, present, Agreement, nogap).
+
+:- register_lexical_item(how).
+
+% Is he Adjective?
+s(S, interrogative, Polarity, present, simple) -->
+   aux_be(present, Agreement),
+   opt_not(Polarity),
+   np((Noun^_)^_, subject, Agreement, nogap, nogap),
+   ap(Noun^S).
+
+% Is X in/on Container?
+s(contained_in(S, Container), interrogative, Polarity, Tense, simple) -->
+   aux_be(Tense, Agreement),
+   np((S^_)^_, subject, Agreement, nogap, nogap),
+   opt_not(Polarity),
+   [in],
+   np((Container^_)^_, object, _, nogap, nogap),
+   { is_a(Container, enclosing_container) }.
+
+s(contained_in(S, Container), interrogative, Polarity, Tense, simple) -->
+   aux_be(Tense, Agreement),
+   np((S^_)^_, subject, Agreement, nogap, nogap),
+   opt_not(Polarity),
+   [on],
+   np((Container^_)^_, object, _, nogap, nogap),
+   { is_a(Container, work_surface) }.
+
+% Is Subject a PROPERTYVALUE?
+inverted_sentence(property_value(Subject, Property, Value), Polarity, Tense, simple) -->
+   copula(simple, Tense, Agreement),
+   opt_not(Polarity),
+   np((Subject^_)^_, subject, Agreement, nogap, nogap),
+   { nominal_property(Property),
+     valid_property_value(Property, Value) },
+   [ a, Value ].
+
+% why did he X?
+s(X:explanation(S, X), interrogative, Polarity, Tense, Aspect) -->
+   [why],
+   inverted_sentence(S, Polarity, Tense, Aspect).
+
+:- register_lexical_item(why).
+
+% where is NP
+s(Container:location(S, Container), interrogative, Polarity, Tense, simple) -->
+   [where],
+   aux_be(Tense, Agreement),
+   opt_not(Polarity),
+   np((S^S)^S, subject, Agreement, nogap, nogap).
+
+:- register_lexical_item(where).
+
+% Who has  NP
+s((Character:location(Object, Character), is_a(Character, person)), interrogative, Polarity, Tense, simple) -->
+   [who],
+   aux_have(Tense, third:singular),
+   opt_not(Polarity),
+   np((Object^S)^S, object, _, nogap, nogap).
+
+% what is on the X
+s(S:location(S, Container), interrogative, Polarity, Tense, simple) -->
+   [what],
+   aux_be(Tense, Agreement),
+   opt_not(Polarity),
+   [on],
+   { impose_selectional_constraint(Container, work_surface) },
+   np((Container^Ignored)^Ignored, subject, Agreement, nogap, nogap),
+   { is_a(Container, work_surface) }.
+
+% Who/what is in the X
+s(S:(location(S, Container), is_a(S, Kind)), interrogative, Polarity, Tense, simple) -->
+   whpron(Kind),
+   aux_be(Tense, Agreement),
+   opt_not(Polarity),
+   [in],
+   { impose_selectional_constraint(Container, enclosing_container) },
+   np((Container^Ignored)^Ignored, subject, Agreement, nogap, nogap),
+   { is_a(Container, enclosing_container), \+ character(Container) }.
+
+% what does Character have?
+s(S:location(S, Character), interrogative, Polarity, Tense, simple) -->
+   [what],
+   aux_do(Tense, Agreement),
+   opt_not(Polarity),
+   np((Character^Ignored)^Ignored, subject, Agreement, nogap, nogap),
+   { character(Character) },
+   aux_have(Tense, Agreement).
 
 
-%	TEST AS FOLLOWS:
-%
-%	PARSING
-%
-%		String: bertrand wrote principia
-%
-%	GENERATION
-%
-%		Start Symbol :  s(_,nogap)
-%		Max Tree Depth:  5	
-%		Mode: Random		
 
- 
+%%%
+%%% Adjectival phrases
+%%% Seems silly to make a whole new file for one clause...
+%%%
 
-/*=====================================================
-                       Operators
-=====================================================*/
-
-:- op(500,xfy,&). 
-:- op(510,xfy,=>). 
-:- op(100,fx,Õ).
-
-
-/*=====================================================
-                        Grammar
-
-Nonterminal names:
-
-        q        Question
-        sinv     INVerted Sentence
-        s        noninverted Sentence
-        np       Noun Phrase
-        vp       Verb Phrase
-        iv       Intransitive Verb
-        tv       Transitive Verb
-        aux      AUXiliary verb
-        rov      subject-Object Raising Verb
-        optrel   OPTional RELative clause
-        relpron  RELative PRONoun
-        whpron   WH PRONoun
-        det      DETerminer
-        n        Noun
-        pn       Proper Noun
-
-Typical order of and values for arguments:
-
-   1. verb form:
-
-      (main verbs)  finite, nonfinite, etc.
-      (auxiliaries and raising verbs)  Form1-Form2 
-          where Form1 is form of embedded VP
-                Form2 is form of verb itself)
-
-   2. FOL logical form
-
-   3. gap information:  
-
-      nogap or gap(Nonterm, Var)
-          where Nonterm is nonterminal for gap
-                    Var is the LF variable that
-                           the filler will bind
-=====================================================*/
-
-%%%                    Questions
-
-q(S =>  `answer(X)) --> 
-   whpron, vp(finite, X^S, nogap).
-q(S => `answer(X)) --> 
-   whpron, sinv(S, gap(np, X)).
-q(S => `answer(yes)) --> 
-   sinv(S, nogap).
-q(S => `answer(yes)) -->
-   cop, 
-   np((X^S0)^S, nogap), 
-   np((X^true)^exists(X,S0&true), nogap).
-
-%%%              Declarative Sentences
-
-s(S, GapInfo) --> 
-   np(VP^S, nogap), 
-   vp(finite, VP, GapInfo).
-
-%%%               Inverted Sentences
-
-sinv(S, GapInfo) --> 
-   aux(finite/Form, VP1^VP2), 
-   np(VP2^S, nogap), 
-   vp(Form, VP1, GapInfo).
-
-%%%                  Noun Phrases
-
-np(NP, nogap) --> 
-   det(N2^NP), n(N1), optrel(N1^N2).
-np(NP, nogap) --> pn(NP).
-np((X^S)^S, gap(np, X)) --> [].
-
-%%%                  Verb Phrases
-
-vp(Form, X^S, GapInfo) -->
-   tv(Form, X^VP), 
-   np(VP^S, GapInfo).
-vp(Form, VP, nogap) --> 
-   iv(Form, VP).
-vp(Form1, VP2, GapInfo) -->
-   aux(Form1/Form2, VP1^VP2), 
-   vp(Form2, VP1, GapInfo).
-
-
-vp(Form1, VP2, GapInfo) -->
-   rov(Form1/Form2, NP^VP1^VP2), 
-   np(NP, GapInfo), 
-   vp(Form2, VP1, nogap).
-vp(Form2, VP2, GapInfo) -->
-   rov(Form1/Form2, NP^VP1^VP2), 
-   np(NP, nogap), 
-   vp(Form1, VP1, GapInfo).
-
-
-%% This rule is responsible for creating a cyclic term when parsing 
-%% sentences like "bertrand is bertrand" that will bomb the tree 
-%% drawing routine. If you want to use this rule, you must not try 
-%% to print the trees corresponding to sentences like that.
-
-vp(finite, X^S, GapInfo) -->
-  cop,
-  np((X^P)^exists(X,S&P), GapInfo).
-
-
-%%%                 Relative Clauses
-
-optrel((X^S1)^(X^(S1&S2))) -->
-   relpron, vp(finite,X^S2, nogap).
-optrel((X^S1)^(X^(S1&S2))) -->
-   relpron, s(S2, gap(np, X)).
-optrel(N^N) --> [].
-
-
-
-/*=====================================================
-                      Dictionary
-=====================================================*/
-
-/*-----------------------------------------------------
-                     Preterminals
------------------------------------------------------*/
-
-det(LF) --> [D], {det(D, LF)}.
-n(LF)   --> [N], {n(N, LF)}.
-pn((E^S)^S) --> [PN], {pn(PN, E)}.
-
-aux(Form, LF) --> [Aux], {aux(Aux, Form, LF)}.
-relpron --> [RP], {relpron(RP)}.
-whpron --> [WH], {whpron(WH)}.
-
-% Verb entry arguments:
-%   1. nonfinite form of the verb
-%   2. third person singular present tense form of the verb
-%   3. past tense form of the verb
-%   4. past participle form of the verb
-%   5. pres participle form of the verb
-%   6. logical form of the verb
-
-iv(nonfinite,       LF) --> [IV], {iv(IV, _, _, _, _, LF)}.
-iv(finite,          LF) --> [IV], {iv(_, IV, _, _, _, LF)}.
-iv(finite,          LF) --> [IV], {iv(_, _, IV, _, _, LF)}.
-iv(past_participle, LF) --> [IV], {iv(_, _, _, IV, _, LF)}.
-iv(pres_participle, LF) --> [IV], {iv(_, _, _, _, IV, LF)}.
-
-tv(nonfinite,       LF) --> [TV], {tv(TV, _, _, _, _, LF)}.
-tv(finite,          LF) --> [TV], {tv(_, TV, _, _, _, LF)}.
-tv(finite,          LF) --> [TV], {tv(_, _, TV, _, _, LF)}.
-tv(past_participle, LF) --> [TV], {tv(_, _, _, TV, _, LF)}.
-tv(pres_participle, LF) --> [TV], {tv(_, _, _, _, TV, LF)}.
-
-rov(nonfinite      /Requires, LF) 
-           --> [ROV], {rov(ROV, _, _, _, _, LF, Requires)}.
-rov(finite         /Requires, LF)
-           --> [ROV], {rov(_, ROV, _, _, _, LF, Requires)}.
-rov(finite         /Requires, LF)
-           --> [ROV], {rov(_, _, ROV, _, _, LF, Requires)}.
-rov(past_participle/Requires, LF)
-           --> [ROV], {rov(_, _, _, ROV, _, LF, Requires)}.
-rov(pres_participle/Requires, LF)
-           --> [ROV], {rov(_, _, _, _, ROV, LF, Requires)}.
-
-
-cop --> [is].
-
-
-/*-----------------------------------------------------
-                     Lexical Items
------------------------------------------------------*/
-
-relpron( that ).
-relpron( who  ).
-relpron( whom ).
-
-whpron( who  ).
-whpron( whom ).
-whpron( what ).
-
-det( every, (X^S1)^(X^S2)^   all(X,S1=>S2) ).
-det( a,     (X^S1)^(X^S2)^exists(X,S1&S2)  ).
-det( some,  (X^S1)^(X^S2)^exists(X,S1&S2)  ).
-
-n( author,     X^`author(X)     ).
-n( book,       X^`book(X)       ).
-n( professor,  X^`professor(X)  ).
-n( program,    X^`program(X)    ).
-n( programmer, X^`programmer(X) ).
-n( student,    X^`student(X)    ).
-pn( begriffsschrift, begriffsschrift ).
-pn( bertrand,        bertrand        ).
-pn( bill,            bill            ).
-pn( gottlob,         gottlob         ).
-pn( lunar,           lunar           ).
-pn( principia,       principia       ).
-pn( shrdlu,          shrdlu          ).
-pn( terry,           terry           ).
-
-iv( halt,      halts,      halted,    
-    halted,    halting,    X^`halt(X)         ).
-
-tv( write,     writes,     wrote,
-    written,   writing,    X^Y^`writes(X,Y)   ).
-tv( meet,      meets,      met,
-    met,       meeting,    X^Y^`meets(X,Y)    ).
-tv( concern,   concerns,   concerned, 
-    concerned, concerning, X^Y^`concerns(X,Y) ).
-tv( run,       runs,       ran,       
-    run,       running,    X^Y^`runs(X,Y)     ).
-
-rov( want,     wants,      wanted,    
-     wanted,    wanting,
-     % semantics is partial execution of
-     % NP ^ VP ^ Y ^ NP( X^want(Y,X,VP(X)) )
-     ((X^`want(Y,X,Comp))^S) ^ (X^Comp) ^ Y ^ S,
-     % form of VP required:
-     infinitival).
-
-aux( to,   infinitival/nonfinite, VP^ VP       ).
-aux( does, finite/nonfinite,      VP^ VP       ).
-aux( did,  finite/nonfinite,      VP^ VP       ).
+ap(Meaning) -->
+   [ Adjective ],
+   { adjective(Adjective, Meaning) }.

@@ -25,17 +25,25 @@ invoke_continuation(TaskConcern, K) :-
 
 restart_or_kill_task :-
    $task/repeating_task ->
-      ( $task/type:task:Goal, invoke_continuation(Goal) )
+      begin($task/type:task:Goal,
+	    ignore(retract($task/log)),
+	    invoke_continuation(Goal))
       ;
-      kill_concern($task).
+      kill_task($task).
+
+kill_task(T) :-
+   begin(assert(T/current:exiting),
+	 maybe_save_log(T),
+	 kill_concern(T)).
 
 %% restart_task(+TaskConcern)
 %  Restarts a repeating task
 restart_task(TaskConcern) :-
-   perform_restart_retractions(TaskConcern),
-   assertion(TaskConcern/repeating_task, "Attempt to restart a non-repeating task"),
-   TaskConcern/type:task:Goal,
-   invoke_continuation(TaskConcern, Goal).
+   begin(perform_restart_retractions(TaskConcern),
+	 assertion(TaskConcern/repeating_task, "Attempt to restart a non-repeating task"),
+	 assert(TaskConcern/current:restarting),
+	 TaskConcern/type:task:Goal,
+	 invoke_continuation(TaskConcern, Goal)).
 
 perform_restart_retractions(Task) :-
    forall(retract_on_restart(Task, Assertion),

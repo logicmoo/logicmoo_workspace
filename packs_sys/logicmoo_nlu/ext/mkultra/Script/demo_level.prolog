@@ -1,4 +1,3 @@
-
 %%%
 %%% Exposition beat
 %%%
@@ -6,9 +5,9 @@
 beat(exposition).
 beat_start_task(exposition,
 		$kavi,
-		goto($bruce)).
+		goto($pc)).
 beat_dialog(exposition,
-	    $bruce, $kavi,
+	    $pc, $kavi,
 	    [ mention_macguffin,
 	      mention_keepout ]).
 
@@ -21,55 +20,79 @@ $kavi::quip(mention_keepout,
 	     "It's a personal thing."]).
 
 %%%
-%%% Bruce reacts to Kavi's speech
+%%% Pc reacts to Kavi's speech
 %%%
 
-beat(bruce_reacts).
-beat_start_task(bruce_reacts, $kavi, goto($'kitchen sink')).
-beat_monolog(bruce_reacts,
-	     $bruce,
+beat(pc_reacts).
+beat_sequel(pc_reacts, exposition).
+beat_start_task(pc_reacts, $kavi, goto($'kitchen sink')).
+beat_monolog(pc_reacts,
+	     $pc,
 	     [ sleep(3),
 	       "I'm sure Kavi stole my macguffin.",
 	       "It must be here someplace.",
-	       "Kavi's a member of the illuminati.",
-	       "He'd kill me if he knew I knew.",
-	       "Or that I'm an agent of WWW.",
+	       "He's a member of the illuminati.",
 	       "I need to search the house." ]).
 
 %%%
-%%% Bruce explores the house
+%%% Pc explores the house
 %%%
 
-beat(bruce_explores_the_house).
-beat_completion_condition(bruce_explores_the_house,
-			  ( $bruce::contained_in($macguffin, $bruce),
-			    $bruce::contained_in($report, $bruce) )).
-beat_idle_task(bruce_explores_the_house,
-	       $bruce,
-	       search_for($bruce, kavis_house, _)).
+beat(pc_explores_the_house).
+beat_delay(pc_explores_the_house, 5).
+beat_follows(pc_explores_the_house, pc_reacts).
+beat_completion_condition(pc_explores_the_house,
+			  ( $pc::contained_in($macguffin, $pc),
+			    $pc::contained_in($report, $pc) )).
+beat_idle_task(pc_explores_the_house,
+	       $pc,
+	       search_object(kavis_house,
+			     X^previously_hidden(X),
+			     Y^pickup(Y),
+			     mental_monologue(["Nothing seems to be hidden."]))).
+
+after(pickup($report),
+      describe($report)).
 
 %%%
-%%% Bruce finds the report
+%%% Pc finds the report
 %%%
 
-beat(bruce_finds_the_report).
-beat_priority(bruce_finds_the_report, 1).
-beat_precondition(bruce_finds_the_report,
-		  $bruce::contained_in($report, $bruce)).
-beat_monolog(bruce_finds_the_report,
-	     $bruce,
+beat(pc_finds_the_report).
+beat_priority(pc_finds_the_report, 1).
+beat_precondition(pc_finds_the_report,
+		  $pc::contained_in($report, $pc)).
+beat_monolog(pc_finds_the_report,
+	     $pc,
 	     ["What's this?",
-	      "I need to find out what MKSPARSE is."]).
+	      "It's a report on project MKSPARSE.",
+	      "I've never heard of it."]).
 
 %%%
-%%% Bruce finds the macguffin
+%%% Pc finds the macguffin
 %%%
 
-beat(bruce_finds_the_macguffin).
-beat_priority(bruce_finds_the_macguffin, 1).
-beat_precondition(bruce_finds_the_macguffin,
-		  $bruce::contained_in($macguffin, $bruce)).
-beat_monolog(bruce_finds_the_macguffin,
-	     $bruce,
+beat(pc_finds_the_macguffin).
+beat_priority(pc_finds_the_macguffin, 1).
+beat_precondition(pc_finds_the_macguffin,
+		  $pc::contained_in($macguffin, $pc)).
+beat_monolog(pc_finds_the_macguffin,
+	     $pc,
 	     ["Got it!",
 	      "I knew he stole it."]).
+
+%%%
+%%% Kavi eats Pc
+%%%
+
+beat(kavi_eats_pc).
+beat_priority(kavi_eats_pc, 2).
+beat_precondition(kavi_eats_pc,
+		  $global_root/plot_points/ate/ $kavi/ $pc).
+beat_monolog(kavi_eats_pc,
+	     $kavi,
+	     ["Sorry, old chap,",
+	      "but I can't let you investigate my house.",
+	      "I know it's horribly rude to eat you,",
+	      "But you see, I don't have a gun.",
+	      "So there's really no alternative."]).

@@ -1,20 +1,30 @@
-%%
-%% The Patrol activity
-%%
+%%%
+%%% The Patrol concern
+%%% Causes character to wanter around from object to object
+%%%
+%%% Internal state:
+%%%  Concern/visited/Object:Time      When character last visited each object
+%%%
 
-propose_action(patrol, _, goto(Prop)) :-
-    not(/motor_state/walking_to),  % not already going somewhere
-    prop(Prop).
+% When you arrive at a new place, update its last visit time and rebid.
+on_event(arrived_at(Place),
+	 patrol, Concern,
+	 begin(assert(Concern/visited/Place: $now),
+	       rebid_patrol(Concern))).
 
-score_action(patrol, Activity, goto(Prop), Score) :-
-    Activity/visited/Prop:Time,
-    Score is ($now-Time)-distance(Prop, $game_object).
+% When you start, initialize all objects to being unvisited.
+on_enter_state(start, patrol, Concern) :-
+   forall(patrol_destination(P),
+	  assert(Concern/visited/P:(-100))),
+   rebid_patrol(Concern).
 
-on_event(patrol, Activity, arrived_at(Place)) :-
-    Time is $now,
-    assert(Activity/visited/Place:Time).
+% Visit a prop if it's in a room (and not in another container).
+patrol_destination(Prop) :-
+   prop(Prop),
+   in_room(Prop, _).
 
-on_initiate(patrol, Activity) :-
-    forall(prop(P), assert(Activity/visited/P:0)).
-
-:- spawn_activity(patrol, _).
+% Update location bids.
+rebid_patrol(Concern) :-
+   forall(Concern/visited/Prop:Time,
+	  begin(Score is ($now-Time)-distance(Prop, $me),
+		assert(Concern/location_bids/Prop:Score))).

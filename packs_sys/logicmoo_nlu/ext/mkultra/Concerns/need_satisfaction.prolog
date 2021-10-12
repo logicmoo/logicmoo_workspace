@@ -5,19 +5,25 @@
 % Tell the system to automatically start this concern.
 standard_concern(need_satisfaction, 1).
 
+
+
+
+
 %%%
-%%% Declarations about needs and satisfaction
+%%% NEEDS AND SATISFYING ACTIONS/OBJECTS
 %%%
 
 %% need(?NeedNanme, ?DepletionTime)
 %  NeedName takes DepletionTime seconds to deplete.
-need(hunger, 60).
-need(thirst, 40).
-need(sleep, 120).
-need(bladder, 40).
-need(hygiene, 120).
-need(fun, 30).
+
 need(social, 30).
+
+%% survival_need(?Need)
+%  True if Need is necessary to survival, i.e. the character would
+%  die if the satisfaction level went to 0.
+survival_need(hunger).
+survival_need(thirst).
+survival_need(sleep).
 
 %% satisfies(?Need, ?Object, ?Delta, ?Action, ?DelayTime)
 %  True if performing Action at Object will increase satisfaction
@@ -35,6 +41,12 @@ satisfies(sleep, $bed, 100, say("I really wish I had an animation for lying down
 satisfies(sleep, $sofa, 100, say("That's a comfy looking sofa"), 15).
 satisfies(hygiene, $'bathroom sink', 100, say("Brush brush brush!"), 5).
 
+
+
+%%%
+%%% COMPUTING DESIRABILITY
+%%%
+
 %% action_here_would_satisfy_need(?Action, ?Need, -Delta, -DelayTime)
 %  True when executing the specified Action would satisfy Need by Delta units
 %  and would take DelayTime seconds.
@@ -46,7 +58,7 @@ action_here_would_satisfy_need(Action, Need, Delta, DelayTime) :-
 %  How desirable it would be to increase the sataisfaction of Need by Delta.
 desirability_of_satisfying_need(Need, Delta, Desirability) :-
    satisfaction_level(Need, Level),
-   Desirability is 100-min(100, Level+Delta).
+   Desirability is min(Delta, 100-Level).
 
 %% desirability_of_action(+Action, -Score)
 % How desirable it would be to perform Action at the current location
@@ -61,12 +73,60 @@ desirability_of_action(Action, Score) :-
 desirability_of_going_to_object(Object, Desirability) :-
    % Choose the object first
    satisfies(_, Object, _, _, _),
-   % Iterate over all the actions we could perform there (in case there are
+   % Iterate over all the actions we could perform at Object (in case there are
    % more than one) to get a total score.
    sumall(Score,
 	  ( satisfies(Need, Object, Delta, _, _),
 	    desirability_of_satisfying_need(Need, Delta, Score) ),
 	  Desirability).
+
+
+
+%%%
+%%% TRACKING AND MODIFYING SATISFACTION LEVELS
+%%%
+
+%% satisfaction_level(+Need, -SatisfactionLevel)
+%  Need is SatisfactionLevel percent satisfied.
+satisfaction_level(Need, SatisfactionLevel) :-
+   need(Need, DepletionTime),
+   last_satisfied_time(Need, Time),
+   SatisfactionLevel is max(0, 100*(1-(($now-Time)/DepletionTime))).
+
+%% increase_satisfaction(+Need, +Delta)
+%  IMPERATIVE
+%  Updates Need to be Delta units more satisfied than before,
+%  or 100% satisfied, whichever is lower.
+increase_satisfaction(Need, Delta) :-
+   need(Need, DepletionTime),
+   satisfaction_level(Need, Level),
+   NewLevel is min(100, Level+Delta),
+   LastSatTime is $now-(DepletionTime*(1-(NewLevel/100))),
+   assert(/needs/last_satisfied/Need: LastSatTime).
+
+%% last_satisfied_time(+Need, -Time)
+%  It's been Time seconds since Need was last satisfied.
+last_satisfied_time(Need, Time) :-
+   /needs/last_satisfied/Need:Time.
+
+initialize_last_satisfied_times :-
+   forall(need(Need, DepletionTime),
+	  begin(random_member(InitialState, [30, 40, 50, 60, 70, 80, 90]),
+		LastSatTime is $now-(DepletionTime*(1-(InitialState/100))),
+		assert(/needs/last_satisfied/Need:LastSatTime))).
+
+% When you start, initialize all objects to being unvisited.
+on_enter_state(start, need_satisfaction, Concern) :-
+   initialize_last_satisfied_times,
+   rebid_need_destinations(Concern).
+
+
+
+
+
+%%%
+%%% INTERFACE TO ACTION AND EVENT SYSTEM
+%%%
 
 %%
 %% Event handling
@@ -99,52 +159,25 @@ propose_action(Action, need_satisfaction, Concern) :-
 score_action(Action, need_satisfaction, _, Score) :-
    desirability_of_action(Action, Score).
 
+%%
+%% Locomotion control
+%%
+
+%% rebid_need_destinations(+Concern)
+%  IMPERATIVE
+%  Updates locomotion bids for all the objects
 rebid_need_destinations(NeedConcern) :-
    forall(satisfies(_, Object, _, _, _),
 	  begin(desirability_of_going_to_object(Object, D),
 		assert(NeedConcern/location_bids/Object:D))).
 
-%%
-%% Bookkeeping: predicates for tracking need states.
-%%
 
-%% last_satisfied_time(+Need, -Time)
-%  It's been Time seconds since Need was last satisfied.
-last_satisfied_time(Need, Time) :-
-   /needs/last_satisfied/Need:Time.
 
-initialize_last_satisfied_times :-
-   forall(need(Need, DepletionTime),
-	  begin(random_member(InitialState, [30, 40, 50, 60, 70, 80, 90]),
-		LastSatTime is $now-(DepletionTime*(1-(InitialState/100))),
-		assert(/needs/last_satisfied/Need:LastSatTime))).
 
-% When you start, initialize all objects to being unvisited.
-on_enter_state(start, need_satisfaction, Concern) :-
-   initialize_last_satisfied_times,
-   rebid_need_destinations(Concern).
 
-%% increase_satisfaction(+Need, +Delta)
-%  IMPERATIVE
-%  Updates Need to be Delta units more satisfied than before,
-%  or 100% satisfied, whichever is lower.
-increase_satisfaction(Need, Delta) :-
-   need(Need, DepletionTime),
-   satisfaction_level(Need, Level),
-   NewLevel is min(100, Level+Delta),
-   LastSatTime is $now-(DepletionTime*(1-(NewLevel/100))),
-   assert(/needs/last_satisfied/Need: LastSatTime).
-
-%% satisfaction_level(+Need, -SatisfactionLevel)
-%  Need is SatisfactionLevel percent satisfied.
-satisfaction_level(Need, SatisfactionLevel) :-
-   need(Need, DepletionTime),
-   last_satisfied_time(Need, Time),
-   SatisfactionLevel is max(0, 100*(1-(($now-Time)/DepletionTime))).
-
-%%
-%% Debugging tools 
-%%
+%%%
+%%% DEBUGGING TOOLS
+%%%
 
 fkey_command(alt-n, "Display need states") :-
    $pc::generate_overlay("Need satisfaction levels",
@@ -156,6 +189,8 @@ fkey_command(alt-o, "Display need scores of different objects") :-
 			 desirability_of_going_to_object(Object, Desirability),
 			 line(Object, "\t", Desirability)).
 
+%% force_need_update
+%  Forces character to update their location bids.  Useful if character gets stuck.
 :- public force_need_update/0.
 force_need_update :-
    concern(C, need_satisfaction),

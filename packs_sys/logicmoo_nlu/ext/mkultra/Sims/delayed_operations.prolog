@@ -3,6 +3,7 @@
 %%% Supports delay_until/2, delay_for/2.
 %%%
 
+:- higher_order delay_until(0, 1).
 delay_until(Time, Code) :-
    assert(/delayed/queue/Time:Code),
    % Recompute deadline
@@ -11,6 +12,7 @@ delay_until(Time, Code) :-
 	   assert(/delayed/next_deadline:Time)),
       assert(/delayed/next_deadline:Time)).
 
+:- higher_order delay_for(0, 1).
 delay_for(Seconds, Code) :-
    Time is $now + Seconds,
    delay_until(Time, Code).
