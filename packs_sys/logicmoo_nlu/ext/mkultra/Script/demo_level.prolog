@@ -55,9 +55,9 @@ plot_goal_achieves(house_searched,
 
 beat(exposition,
      {
-      start($kavi): goto($pc),
-      ($kavi + $pc):
-         [ $kavi::"Sorry to hear your macguffin was stolen.",
+ start($kavi): goto($pc),
+ ($kavi + $pc):[ 
+     $kavi::"Sorry to hear your macguffin was stolen.",
 	   $kavi::"Make yourself at home.",
 	   $kavi::"By the way,",
 	   $kavi::("Stay out of my bedroom"

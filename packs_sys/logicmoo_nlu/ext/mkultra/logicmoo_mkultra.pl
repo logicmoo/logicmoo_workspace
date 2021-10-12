@@ -9,6 +9,12 @@ load_mkultra:- expand_file_name('*/*.prolog',List),
   reverse(List,Rev),
   maplist(load_unity_prolog_file,Rev).
 
+print_load_unity_prolog_file(F):- format('~N :- ~q.~n',[load_unity_prolog_file(F)]).
+
+print_load_mkultra:- expand_file_name('*/*.prolog',List),
+  reverse(List,Rev),
+  maplist(print_load_unity_prolog_file,Rev).
+%:- print_load_mkultra.
 
 process_kind_hierarchy:- wdmsg(todo(process_kind_hierarchy)).
 
@@ -85,6 +91,107 @@ process_kind_hierarchy:- wdmsg(todo(process_kind_hierarchy)).
 :- assume_dyn(begin_concern/1).
 :- assume_dyn(begin_child_concern/3).
 */
-:- load_mkultra.
+%:- load_mkultra.
+:- load_unity_prolog_file('Prolog/prolog_primitives.prolog').
+:- load_unity_prolog_file('Sims/indexicals.prolog').
+:- load_unity_prolog_file('Utilities/tell.prolog').
+:- load_unity_prolog_file('Utilities/general.prolog').
+:- load_unity_prolog_file('Utilities/unity_stuff.prolog').
+:- load_unity_prolog_file('Utilities/startup.prolog').
+:- load_unity_prolog_file('Ontology/type_check.prolog').
+:- load_unity_prolog_file('NL/interface.prolog').
+
+
+:- load_unity_prolog_file('Utilities/why.prolog').
+:- load_unity_prolog_file('Utilities/truth_value.prolog').
+:- load_unity_prolog_file('Utilities/test_rig.prolog').
+:- load_unity_prolog_file('Utilities/graphviz.prolog').
+:- load_unity_prolog_file('Utilities/freeze_tests.prolog').
+:- load_unity_prolog_file('Utilities/episodic_memory.prolog').
+:- load_unity_prolog_file('Utilities/data_structures.prolog').
+:- load_unity_prolog_file('Sims/utilities.prolog').
+:- load_unity_prolog_file('Sims/events.prolog').
+:- load_unity_prolog_file('Sims/delayed_operations.prolog').
+:- load_unity_prolog_file('Sims/actions.prolog').
+:- load_unity_prolog_file('Sims/action_selection.prolog').
+:- load_unity_prolog_file('Script/radio.prolog').
+%:- load_unity_prolog_file('Scripting/quips.prolog').
+:- load_unity_prolog_file('Scripting/quip_manager.prolog').
+:- load_unity_prolog_file('Scripting/beat_task_crossrefs.prolog').
+:- load_unity_prolog_file('Scripting/beat_manager.prolog').
+:- load_unity_prolog_file('Problem solver/task_reduction.prolog').
+:- load_unity_prolog_file('Problem solver/switch_to_task.prolog').
+:- load_unity_prolog_file('Problem solver/ps_tests.prolog').
+:- load_unity_prolog_file('Problem solver/problem_solver.prolog').
+%:- load_unity_prolog_file('Problem solver/problem_solver_orig.prolog').
+:- load_unity_prolog_file('Problem solver/metastrategies.prolog').
+:- load_unity_prolog_file('Problem solver/invoke_continuation.prolog').
+:- load_unity_prolog_file('Problem solver/integrity_checks.prolog').
+:- load_unity_prolog_file('Problem solver/general_strategies.prolog').
+:- load_unity_prolog_file('Problem solver/everyday_life.prolog').
+:- load_unity_prolog_file('Problem solver/driver_code.prolog').
+:- load_unity_prolog_file('Problem solver/debugger.prolog').
+:- load_unity_prolog_file('Problem solver/crash_log.prolog').
+:- load_unity_prolog_file('Ontology/tort.prolog').
+:- load_unity_prolog_file('Concerns/script.prolog').
+:- load_unity_prolog_file('Ontology/physical_object.prolog').
+:- load_unity_prolog_file('Ontology/person.prolog').
+:- load_unity_prolog_file('Ontology/knowledge_representation.prolog').
+:- load_unity_prolog_file('Ontology/kinds.prolog').
+:- load_unity_prolog_file('Ontology/integrity_checks.prolog').
+:- load_unity_prolog_file('Ontology/hypno.prolog').
+:- load_unity_prolog_file('Ontology/food_drink.prolog').
+:- load_unity_prolog_file('Ontology/csv_loading.prolog').
+:- load_unity_prolog_file('Ontology/container.prolog').
+:- load_unity_prolog_file('Norms/ethics.prolog').
+:- load_unity_prolog_file('Norms/dputils.prolog').
+:- load_unity_prolog_file('Norms/dprolog.prolog').
+:- load_unity_prolog_file('NL/vp_tests.prolog').
+:- load_unity_prolog_file('NL/vp.prolog').
+:- load_unity_prolog_file('NL/preterminals.prolog').
+:- load_unity_prolog_file('NL/pp.prolog').
+:- load_unity_prolog_file('NL/player_help.prolog').
+:- load_unity_prolog_file('NL/pdebug.prolog').
+:- load_unity_prolog_file('NL/np_tests.prolog').
+:- load_unity_prolog_file('NL/np.prolog').
+:- load_unity_prolog_file('NL/lf.prolog').
+:- load_unity_prolog_file('NL/discourse.prolog').
+:- load_unity_prolog_file('NL/contractions.prolog').
+:- load_unity_prolog_file('NL/context_menu.prolog').
+:- load_unity_prolog_file('NL/base_grammar_test.prolog').
+:- load_unity_prolog_file('NL/base_grammar.prolog').
+:- load_unity_prolog_file('NL/auxverbs.prolog').
+:- load_unity_prolog_file('NL/_aux.prolog').
+:- load_unity_prolog_file('Conversation/strategies.prolog').
+:- load_unity_prolog_file('Conversation/questions.prolog').
+:- load_unity_prolog_file('Conversation/normalization.prolog').
+:- load_unity_prolog_file('Conversation/misc_responses.prolog').
+:- load_unity_prolog_file('Conversation/introductions.prolog').
+:- load_unity_prolog_file('Conversation/imperatives.prolog').
+:- load_unity_prolog_file('Conversation/description.prolog').
+:- load_unity_prolog_file('Conversation/assertions.prolog').
+:- load_unity_prolog_file('Concerns/social_interaction.prolog').
+:- load_unity_prolog_file('Concerns/roles.prolog').
+:- load_unity_prolog_file('Concerns/player_interaction.prolog').
+:- load_unity_prolog_file('Concerns/patrol.prolog').
+:- load_unity_prolog_file('Concerns/need_satisfaction.prolog').
+:- load_unity_prolog_file('Concerns/need_satifaction.prolog').
+:- load_unity_prolog_file('Concerns/event_grammar.prolog').
+:- load_unity_prolog_file('Concerns/conversation.prolog').
+:- load_unity_prolog_file('Concerns/concerns.prolog').
+:- load_unity_prolog_file('Concerns/command_line.prolog').
+:- load_unity_prolog_file('Concerns/be_polite.prolog').
+:- load_unity_prolog_file('Concerns/affect_manager.prolog').
+:- load_unity_prolog_file('NL/grammar_exclaim.prolog').
+
+:- load_unity_prolog_file('NL/lexicon.prolog').
+:- load_unity_prolog_file('Characters/Kavi.prolog').
+:- load_unity_prolog_file('Characters/captive.prolog').
+:- load_unity_prolog_file('Characters/pc.prolog').
+
+:- load_unity_prolog_file('NL/grammar.prolog').
+:- load_unity_prolog_file('Script/demo_level.prolog').
+
+:- module(mkultra).
 
 :- fixup_exports.

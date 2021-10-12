@@ -38,13 +38,15 @@ bind_discourse_variables( (X, Y)) :-
    bind_discourse_variables(Y).
 bind_discourse_variables(is_a(Var, Kind)) :-
    !,
-   bind(discourse_variables, [is_a(Var, Kind) | $discourse_variables]).
+   must_getvar(discourse_variables,DV),
+   bind(discourse_variables, [is_a(Var, Kind) | DV]).
 bind_discourse_variables(_).
 
 %% discourse_variable_type(Var, Kind)
 %  Var is bound in $discourse_variables using is_a(Var,Kind).
 discourse_variable_type(Var, Kind) :-
-   member(is_a(Var, Kind), $discourse_variables).
+    must_getvar(discourse_variables,DV),
+   member(is_a(Var, Kind), DV).
 
 %% bound_discourse_variable(Var)
 %  Var is an uninstantiated variable that is bound to a type in $discourse_variables.

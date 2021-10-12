@@ -40,7 +40,8 @@ nb_set_rem1(Set, F):- functor(Set,_, A),
   ((arg(N, Set, E), N < A, E=@=F) -> throw(cant_remove(arg(N, Set, E))) ;
    (arg(A,Set,T), ((T==[];var(T)) -> true ; nb_set_rem1(T, F)))).
 
-remove_el_via_setarg(List,Value):- [_|T] = List, [_,Was|_] = List,(Was=Value -> nb_setarg(2,List,T) ;  remove_el_via_setarg(Was|T,Value)).
+remove_el_via_setarg(List,Value):- [_|T] = List, [_,Was|_] = List,
+  (Was=Value -> nb_setarg(2,List,T) ;  remove_el_via_setarg([Was|T],Value)).
 
 append_el_via_setarg(List,Value):- List = [_|T], (T==[] -> setarg(2,List,[Value]) ; append_el_via_setarg(T,Value)).
 
