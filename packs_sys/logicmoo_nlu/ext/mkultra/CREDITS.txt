@@ -1,0 +1,9 @@
+* Tileset by Silveira Neto,
+  http://silveiraneto.net/2009/07/31/my-free-tileset-version-10/
+* Character spritesheets from Sithjester's RXMP Resources,
+  http://untamed.wild-refuge.net/rpgxp.php,
+  sith_jester@yahoo.com
+* Popup attribute implementation by HunterPT,
+  http://forum.unity3d.com/threads/150337-PropertyDrawers-for-easy-Inspector-customization/page2
+* Prolog reader and writer ported from Koen De Bosschere's C implementation
+

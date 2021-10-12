@@ -1,0 +1,238 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!91 &9100000
+AnimatorController:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: Walk
+  serializedVersion: 2
+  m_AnimatorParameters: []
+  m_AnimatorLayers:
+  - serializedVersion: 3
+    m_Name: Base Layer
+    m_StateMachine: {fileID: 110700000}
+    m_Mask: {fileID: 0}
+    m_BlendingMode: 0
+    m_SyncedLayerIndex: -1
+    m_StateMachineMotionSetIndex: 0
+    m_DefaultWeight: 0
+    m_IKPass: 0
+    m_SyncedLayerAffectsTiming: 0
+    m_Controller: {fileID: 9100000}
+--- !u!1102 &110200000
+State:
+  m_ObjectHideFlags: 3
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: South
+  m_Speed: 1
+  m_CycleOffset: 0
+  m_Motions:
+  - {fileID: 7400000, guid: c961e437af1aab747a8f96498179dddd, type: 2}
+  m_ParentStateMachine: {fileID: 110700000}
+  m_Position: {x: 792, y: 120, z: 0}
+  m_IKOnFeet: 0
+  m_Mirror: 0
+  m_Tag: 
+--- !u!1102 &110204020
+State:
+  m_ObjectHideFlags: 3
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: FaceSouth
+  m_Speed: 0
+  m_CycleOffset: 0
+  m_Motions:
+  - {fileID: 7400000, guid: c961e437af1aab747a8f96498179dddd, type: 2}
+  m_ParentStateMachine: {fileID: 110700000}
+  m_Position: {x: 816, y: 180, z: 0}
+  m_IKOnFeet: 0
+  m_Mirror: 0
+  m_Tag: 
+--- !u!1102 &110207442
+State:
+  m_ObjectHideFlags: 3
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: FaceNorth
+  m_Speed: 0
+  m_CycleOffset: 0
+  m_Motions:
+  - {fileID: 7400000, guid: 546507106003034498dcd93f4a578369, type: 2}
+  m_ParentStateMachine: {fileID: 110700000}
+  m_Position: {x: 756, y: -288, z: 0}
+  m_IKOnFeet: 0
+  m_Mirror: 0
+  m_Tag: 
+--- !u!1102 &110212874
+State:
+  m_ObjectHideFlags: 3
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: FaceEast
+  m_Speed: 0
+  m_CycleOffset: 0
+  m_Motions:
+  - {fileID: 7400000, guid: 3ada42f0b44bf9b48bcd1e17cfb10651, type: 2}
+  m_ParentStateMachine: {fileID: 110700000}
+  m_Position: {x: 1380, y: -24, z: 0}
+  m_IKOnFeet: 0
+  m_Mirror: 0
+  m_Tag: 
+--- !u!1102 &110220211
+State:
+  m_ObjectHideFlags: 3
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: West
+  m_Speed: 1
+  m_CycleOffset: 0
+  m_Motions:
+  - {fileID: 7400000, guid: f664f4c986c36e646b52b308f12729ee, type: 2}
+  m_ParentStateMachine: {fileID: 110700000}
+  m_Position: {x: 552, y: 0, z: 0}
+  m_IKOnFeet: 0
+  m_Mirror: 0
+  m_Tag: 
+--- !u!1102 &110240896
+State:
+  m_ObjectHideFlags: 3
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: West 0
+  m_Speed: 1
+  m_CycleOffset: 0
+  m_Motions:
+  - {fileID: 7400000, guid: f664f4c986c36e646b52b308f12729ee, type: 2}
+  m_ParentStateMachine: {fileID: 110700000}
+  m_Position: {x: 225, y: -16, z: 0}
+  m_IKOnFeet: 0
+  m_Mirror: 0
+  m_Tag: 
+--- !u!1102 &110247677
+State:
+  m_ObjectHideFlags: 3
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: North
+  m_Speed: 1
+  m_CycleOffset: 0
+  m_Motions:
+  - {fileID: 7400000, guid: 546507106003034498dcd93f4a578369, type: 2}
+  m_ParentStateMachine: {fileID: 110700000}
+  m_Position: {x: 780, y: -240, z: 0}
+  m_IKOnFeet: 0
+  m_Mirror: 0
+  m_Tag: 
+--- !u!1102 &110251119
+State:
+  m_ObjectHideFlags: 3
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: FaceWest
+  m_Speed: 0
+  m_CycleOffset: 0
+  m_Motions:
+  - {fileID: 7400000, guid: f664f4c986c36e646b52b308f12729ee, type: 2}
+  m_ParentStateMachine: {fileID: 110700000}
+  m_Position: {x: 336, y: 0, z: 0}
+  m_IKOnFeet: 0
+  m_Mirror: 0
+  m_Tag: 
+--- !u!1102 &110269843
+State:
+  m_ObjectHideFlags: 3
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: South 0
+  m_Speed: 1
+  m_CycleOffset: 0
+  m_Motions:
+  - {fileID: 7400000, guid: c961e437af1aab747a8f96498179dddd, type: 2}
+  m_ParentStateMachine: {fileID: 110700000}
+  m_Position: {x: -534, y: -383, z: 0}
+  m_IKOnFeet: 0
+  m_Mirror: 0
+  m_Tag: 
+--- !u!1102 &110271471
+State:
+  m_ObjectHideFlags: 3
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: East
+  m_Speed: 1
+  m_CycleOffset: 0
+  m_Motions:
+  - {fileID: 7400000, guid: 3ada42f0b44bf9b48bcd1e17cfb10651, type: 2}
+  m_ParentStateMachine: {fileID: 110700000}
+  m_Position: {x: 1164, y: -12, z: 0}
+  m_IKOnFeet: 0
+  m_Mirror: 0
+  m_Tag: 
+--- !u!1102 &110276920
+State:
+  m_ObjectHideFlags: 3
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: West 0
+  m_Speed: 1
+  m_CycleOffset: 0
+  m_Motions:
+  - {fileID: 7400000, guid: f664f4c986c36e646b52b308f12729ee, type: 2}
+  m_ParentStateMachine: {fileID: 110700000}
+  m_Position: {x: 241, y: 175, z: 0}
+  m_IKOnFeet: 0
+  m_Mirror: 0
+  m_Tag: 
+--- !u!1107 &110700000
+StateMachine:
+  serializedVersion: 2
+  m_ObjectHideFlags: 3
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: Base Layer
+  m_DefaultState: {fileID: 110204020}
+  m_States:
+  - {fileID: 110200000}
+  - {fileID: 110247677}
+  - {fileID: 110220211}
+  - {fileID: 110271471}
+  - {fileID: 110269843}
+  - {fileID: 110204020}
+  - {fileID: 110207442}
+  - {fileID: 110251119}
+  - {fileID: 110212874}
+  m_ChildStateMachine: []
+  m_ChildStateMachinePosition: []
+  m_OrderedTransitions:
+    data:
+      first: {fileID: 110204020}
+      second: []
+    data:
+      first: {fileID: 110200000}
+      second: []
+    data:
+      first: {fileID: 110247677}
+      second: []
+    data:
+      first: {fileID: 110220211}
+      second: []
+    data:
+      first: {fileID: 110271471}
+      second: []
+    data:
+      first: {fileID: 110269843}
+      second: []
+    data:
+      first: {fileID: 110207442}
+      second: []
+    data:
+      first: {fileID: 110251119}
+      second: []
+    data:
+      first: {fileID: 110212874}
+      second: []
+  m_MotionSetCount: 1
+  m_AnyStatePosition: {x: 816, y: 0, z: 0}
+  m_ParentStateMachinePosition: {x: 800, y: 20, z: 0}
