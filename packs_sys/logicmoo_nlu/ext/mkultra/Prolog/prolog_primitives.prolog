@@ -1,8 +1,16 @@
 
 :- module(unity_prolog_prims,[]).
 
-term_expansion(X,X):- compound(X), compound_name_arity(X,def_prolog_prim,_), prolog_load_context(variables,G),maplist(call,G).
+:- use_module(library(logicmoo_utils)).
 
+term_expansion(X,A4):- compound(X), compound_name_arguments(X,def_prolog_prim,[A,B,C|Rest]), 
+  prolog_load_context(variable_names,G),maplist(call,G),
+  compound_name_arguments(A4,def_prolog_prim,[A,B,C,Rest]).
+ 
+
+
+:- set_prolog_flag_until_eof(allow_variable_name_as_functor,true).
+:- style_check(- singleton).
 
 def_prolog_prim(Symbol.Comma, AndImplementation, "flow control", "True if both goals are true.", ":goal1",
                 ":goal2").
@@ -142,14 +150,14 @@ def_prolog_prim("parent_of_gameobject", ParentOfGameObjectImplementation, ".net 
                 "?child", "?parent").
 def_prolog_prim("discontiguous", (args1, context1) => CutStateSequencer.Succeed(), "declarations",
                 "Declares that the specified predicate is allowed to be scattered through a file.  Currently unused but provided for compatibility with other Prolog implementation.",
-                ":predicateIndicator", "..."). // noop
+                ":predicateIndicator", "..."). %// noop
 def_prolog_prim("multifile", (args2, context2) => CutStateSequencer.Succeed(), "declarations",
                 "Declares that the specified predicate is allowed to be scattered through multiple files.  Currently unused but provided for compatibility with other Prolog implementation.",
-                ":predicateIndicator", "..."). // noop
+                ":predicateIndicator", "..."). %// noop
 def_prolog_prim("dynamic", MakeDeclarationPredicate( (p, context) => context.KnowledgeBase.DeclareExternal(p)),
                 "declarations",
                 "Declares that the specified predicate is allowed be dynamically modified using assert.  Currently unused but provided for compatibility with other Prolog implementation.",
-                ":predicateIndicator", "..."). // noop
+                ":predicateIndicator", "..."). %// noop
 def_prolog_prim("trace", TraceImplementation,
                 "flow control,declarations",
                 "Declares that the specified predicate should be traced when executing.",
@@ -252,7 +260,7 @@ def_prolog_prim("<", MakeComparisonPredicate("<", (a, b) => a < b), "comparisons
                 "True if number X is less than Y.  Both must be ground.", "*x", "*y").
 def_prolog_prim(">", MakeComparisonPredicate(">", (a, b) => a > b), "comparisons",
                 "True if number X is greater than Y.  Both must be ground.", "*x", "*y").
-def_prolog_prim("=<", MakeComparisonPredicate("<=", (a, b) => a <= b), "comparisons",
+def_prolog_prim("=<", MakeComparisonPredicate("<=", (a, b) => (a =< b)), "comparisons",
                 "True if number X is less than or equal to Y.  Both must be ground.", "*x", "*y").
 def_prolog_prim(">=", MakeComparisonPredicate(">=", (a, b) => a >= b), "comparisons",
                 "True if number X is greater than or equal to Y.  Both must be ground.", "*x", "*y").
@@ -260,26 +268,30 @@ def_prolog_prim("@<", MakeTermComparisonPredicate("@<", a => a < 0), "comparison
     "True if term X is less than Y given Prolog's ordering on terms.  X and Y need not be numbers.", "?x", "?y").
 def_prolog_prim("@>", MakeTermComparisonPredicate("@>", a => a > 0), "comparisons",
                 "True if term X is greater than Y given Prolog's ordering on terms.  X and Y need not be numbers.", "?x", "?y").
-def_prolog_prim("@=<", MakeTermComparisonPredicate("@<=", a => a <= 0), "comparisons",
+def_prolog_prim("@=<", MakeTermComparisonPredicate("@<=", a => a @=< 0), "comparisons",
                 "True if term X is less than or equal to Y given Prolog's ordering on terms.  X and Y need not be numbers.", "?x", "?y").
-def_prolog_prim("@>=", MakeTermComparisonPredicate("@>=", a => a >= 0), "comparisons",
+def_prolog_prim("@>=", MakeTermComparisonPredicate("@>=", a => a @>= 0), "comparisons",
                 "True if term X is greater than or equal to Y given Prolog's ordering on terms.  X and Y need not be numbers.", "?x", "?y").
 
-// ReSharper disable CompareOfFloatsByEqualityOperator
-def_prolog_prim("=\\=", MakeComparisonPredicate("=\\=", (a, b) => a != b), "comparisons",
+%// ReSharper disable CompareOfFloatsByEqualityOperator
+def_prolog_prim("=\\=", MakeComparisonPredicate("=\\=", (a, b) => a \== b), "comparisons",
                 "True if X and Y are different numbers.  Both must be ground.", "*x", "*y").
-// ReSharper restore CompareOfFloatsByEqualityOperator
-// ReSharper disable CompareOfFloatsByEqualityOperator
+%// ReSharper restore CompareOfFloatsByEqualityOperator
+%// ReSharper disable CompareOfFloatsByEqualityOperator
 def_prolog_prim("=:=", MakeComparisonPredicate("=:=", (a, b) => a == b), "comparisons",
                 "True if functional expressions X and Y have the same values.  Both must be ground.",
                 "*x", "*y").
-// ReSharper restore CompareOfFloatsByEqualityOperator
+%// ReSharper restore CompareOfFloatsByEqualityOperator
 def_prolog_prim("C", CPrimitiveImplementation, "definite clause grammars",
                 "Used in implementation of DGCs.  True if LIST starts with WORD and continues with TAIL.",
                 "?list", "?word", "?tail").
 def_prolog_prim("var", MakeNullFailingTypePredicate("var", (x => (x is LogicVariable))),
                 "meta-logical predicates", "True if X is an uninstantiated variable.", "?x").
-    // ReSharper disable once RedundantComparisonWithNull
+
+:- op(1000,xfx,'||').
+
+/*
+%    // ReSharper disable once RedundantComparisonWithNull
 def_prolog_prim("nonvar", MakeNullTestingTypePredicate("nonvar", (x => x==null || !(x is LogicVariable))),
                 "meta-logical predicates",
                 "True if X isn't an uninstantiated variable, that is, if it's instantiated to some term.",
@@ -292,7 +304,7 @@ def_prolog_prim("integer", MakeNullFailingTypePredicate("integer", (x => (x is i
                 "True if X is an integer.", "?x").
 def_prolog_prim("float", MakeNullFailingTypePredicate("float", (x => ((x is float) || (x is double)))),
                 "type predicates", "True if X is a floating-point number.", "?x").
-    // ReSharper disable once RedundantComparisonWithNull
+%    // ReSharper disable once RedundantComparisonWithNull
 def_prolog_prim("atomic", MakeNullTestingTypePredicate("atomic", (x => x == null || !(x is Structure))),
                 "type predicates", "True if X is not a structured term, i.e. it's a number, symbol, etc..",
                 "?x").
@@ -300,6 +312,9 @@ def_prolog_prim("string", MakeNullFailingTypePredicate("string", (x => (x is str
                 "True if X is a string.", "?x").
 def_prolog_prim("atom", MakeNullTestingTypePredicate("atom", (x => (x == null) || (x is Symbol))), "type predicates",
                 "True if X is a symbol.", "?x").
+
+*/
+
 def_prolog_prim("symbol", MakeNullFailingTypePredicate("symbol", (x => (x is Symbol))), "type predicates",
                 "True if X is a symbol.", "?x").
 def_prolog_prim("compound", MakeNullFailingTypePredicate("compound", (x => (x is Structure))),

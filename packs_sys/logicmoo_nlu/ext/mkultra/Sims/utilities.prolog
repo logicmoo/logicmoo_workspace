@@ -2,6 +2,8 @@
 %%% Finding and testing Unity GameObjects
 %%%
 
+:- op(300,fx,'~').
+
 :- public prop/1, character/1, world_object/1, nearest/2, docked_with/1, after_time/1.
 
 :- public register_room/2, register_prop/3, register_character/1.
@@ -77,7 +79,8 @@ exists(X) :-
         C.'Exists'
         ;
         true ).
-~exists(X) :-
+
+~(exists(X)):-
    is_class(X, $'GameObject'),
    component_of_gameobject_with_type(C, X, $'PhysicalObject'),
    \+ C.'Exists'.

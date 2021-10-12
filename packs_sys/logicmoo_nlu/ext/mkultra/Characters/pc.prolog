@@ -2,7 +2,7 @@
 %%% Initializations for the player character
 %%%
 
-:- unless(proper_name($pc, _, X, []),
+:- unless(proper_name($pc, _, _X, []),
 	  assert_proper_name($pc, ['Betsy'], singular)),
    unless(declare_value($pc, gender, _),
 	  assert($global::declare_value($pc, gender, female))),

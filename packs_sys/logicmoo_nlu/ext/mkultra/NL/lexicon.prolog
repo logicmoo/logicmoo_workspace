@@ -1,6 +1,7 @@
-%% relpron( that ).
-%% relpron( who  ).
-%% relpron( whom ).
+
+% relpron( that ).
+% relpron( who  ).
+% relpron( whom ).
 
 pronoun_word('I', subject, first, singular, $speaker).
 pronoun_word(me, object, first, singular, $speaker).
