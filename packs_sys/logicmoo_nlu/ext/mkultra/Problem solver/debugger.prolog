@@ -17,11 +17,11 @@ debugger_line(line(Step)) :-
 fkey_command(alt-c, "Continue from problem solver breakpoint.") :-
    unpause_game,
    character(C),
-   unity_call(C::continue_from_breakpoint).
+   C::continue_from_breakpoint.
 
 continue_from_breakpoint :-
    concern(C, task),
-   unity_call(C/current:breakpoint),
+   C/current:breakpoint,
    % Can't call step completed directly because this is called by the UI code,
    % Note from within the character itself.
    % So we kluge it by rewritting the current step to be a wait that will continue

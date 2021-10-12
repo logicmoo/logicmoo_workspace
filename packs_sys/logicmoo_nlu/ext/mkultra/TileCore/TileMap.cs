@@ -2,17 +2,21 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 using UnityEngine;
 
 /// <summary>
 /// A map (background) built out of tiles in a TileSet (a kind of sprite sheet).
 /// </summary>
+[AddComponentMenu("Tile/TileMap")]
 public class TileMap : BindingBehaviour
 {
-    public static string WallTileRegex = "^Wall top";
+    public static TileMap TheTileMap;
+
+    public string WallTileNamePrefix = "Wall ";
     #region Map data
     private Tile[,] contents;
+
+    private Room[,] tileRoom;
 
     private SpriteRenderer[,] renderers;
 
@@ -51,12 +55,31 @@ public class TileMap : BindingBehaviour
     public override void Awake()
     {
         base.Awake();
+        this.EnsureMapBuilt();
+    }
 
-        var allSprites = this.GetComponentsInChildren<SpriteRenderer>();
-        this.GetMapDimensions(allSprites);
-        this.PopulateMap(allSprites);
+    private bool mapBuilt;
+    public void EnsureMapBuilt()
+    {
+        if (mapBuilt)
+            return;
+        this.RebuildMap();
+    }
 
-        MarkObstacles();
+    public void RebuildMap()
+    {
+        TheTileMap = this;
+        var allTileSprites = this.transform.Find("Tiles").GetComponentsInChildren<SpriteRenderer>();
+        this.GetMapDimensions(allTileSprites);
+        this.PopulateMap(allTileSprites);
+
+        this.MarkObstacles();
+        this.mapBuilt = true;
+    }
+
+    public static void UpdateMapVariables()
+    {
+        FindObjectOfType<TileMap>().EnsureMapBuilt();
     }
 
     public void UpdateCamera(Camera c)
@@ -97,6 +120,8 @@ public class TileMap : BindingBehaviour
     {
         if (sprite.sortingLayerName == "Map")
             return false;
+        if (sprite.GetComponent<Door>() != null)
+            return false;
         if (sprite.GetComponent<BoxCollider2D>() == null)
             return false;
         return sprite.GetComponent<Rigidbody2D>() == null;
@@ -108,18 +133,29 @@ public class TileMap : BindingBehaviour
     }
 
     // ReSharper disable ParameterTypeCanBeEnumerable.Local
-    private void PopulateMap(SpriteRenderer[] allSprites)
+    private void PopulateMap(SpriteRenderer[] tileSprites)
         // ReSharper restore ParameterTypeCanBeEnumerable.Local
     {
-        var wall = new Regex(WallTileRegex);
-        foreach (var spriteRenderer in allSprites)
+        foreach (var spriteRenderer in tileSprites)
         {
             TilePosition p = spriteRenderer.bounds.center;
             var tile = this[p];
             var spriteName = spriteRenderer.sprite.name;
             tile.SpriteName = spriteName;
-            tile.Type = wall.IsMatch(spriteName) ? TileType.Wall : TileType.Freespace;
+            tile.Type = spriteName.StartsWith(WallTileNamePrefix) ? TileType.Wall : TileType.Freespace;
             renderers[p.Column, p.Row] = spriteRenderer;
+        }
+
+        // Mark what tiles are in what rooms
+        tileRoom = new Room[MapColumns, MapRows];
+        foreach (var r in Registry<Room>())
+        {
+            r.Initialize();
+            foreach (var tp in r.TileRect)
+                tileRoom[tp.Column, tp.Row] = r;
+            foreach (var p in r.Portals)
+                foreach (var tp in p.TileRect)
+                    tileRoom[tp.Column, tp.Row] = r;
         }
     }
 
@@ -130,21 +166,30 @@ public class TileMap : BindingBehaviour
             tileRenderer.color = c;
     }
 
+    public void SetTileSprite(TilePosition p, Sprite s)
+    {
+        var tileRenderer = renderers[p.Column, p.Row];
+        if (tileRenderer != null)
+        {
+            tileRenderer.sprite = s;
+        }
+    }
+
     public void SetTileColor(TileRect r, Color c)
     {
         foreach (var tile in r)
             SetTileColor(tile, c);
     }
 
-    private void GetMapDimensions(SpriteRenderer[] allSprites)
+    private void GetMapDimensions(SpriteRenderer[] tileSprites)
     {
-        float tileSize = 2*allSprites[0].bounds.extents.x;
+        float tileSize = 2*tileSprites[0].bounds.extents.x;
         float minX = float.PositiveInfinity;
         float minY = float.PositiveInfinity;
         float maxX = float.NegativeInfinity;
         float maxY = float.NegativeInfinity;
 
-        foreach (var spriteRenderer in allSprites)
+        foreach (var spriteRenderer in tileSprites)
         {
             var bounds = spriteRenderer.bounds;
             if (Mathf.Abs((bounds.max.x-bounds.min.x)-tileSize) > 0.01
@@ -190,6 +235,29 @@ public class TileMap : BindingBehaviour
             if (!IsFreespace(p))
                 return false;
         return true;
+    }
+
+    /// <summary>
+    /// Returns the room a given tile position appears in, or null if it doesn't correspond to any room.
+    /// </summary>
+    /// <param name="tp">Tile position to check</param>
+    /// <returns>Room object or null</returns>
+    public Room TileRoom(TilePosition tp)
+    {
+        if (tp.Column < 0 || tp.Row < 0 || tp.Column >= TheTileMap.MapColumns || tp.Row >= TheTileMap.MapRows)
+            return null;
+
+        return tileRoom[tp.Column, tp.Row];
+    }
+
+    /// <summary>
+    /// Returns the room a given GameObject appears in, or null if it doesn't correspond to any room.
+    /// </summary>
+    /// <param name="o">GameObject to check</param>
+    /// <returns>Room object or null</returns>
+    public Room TileRoom(GameObject o)
+    {
+        return TileRoom(o.Position());
     }
     #endregion
 

@@ -1,3 +1,8 @@
+hot_button_topic($macguffin).
+hot_button_topic($bedroom).
+hot_button_topic($bookshelf).
+hot_button_topic(illuminati).
+
 % Keep intruders out of bedroom
 /goals/maintain/bedroom_empty.
 
@@ -51,5 +56,5 @@ personal_strategy(achieve(bedroom_empty),
 		  ingest(Intruder)) :-
    intruder(Intruder, $bedroom).
 
-:- assert($global::fkey_command(alt-k, "Display Kavi's status") :-
-   generate_character_debug_overlay($kavi)).
+$global::fkey_command(alt-k, "Display Kavi's status") :-
+   generate_character_debug_overlay($kavi).

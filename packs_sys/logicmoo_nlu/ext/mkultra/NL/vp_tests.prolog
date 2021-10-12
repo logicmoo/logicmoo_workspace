@@ -3,7 +3,8 @@
 %%
 
 test(generate(vp, intransitive),
-     [ true(Generated == [halts]) ]) :-
+     [ true(Generated == [halts]),
+       nondet ]) :-
    vp_test(halt(x), simple, Generated).
 
 test(generate(vp, transitive),

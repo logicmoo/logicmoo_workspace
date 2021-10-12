@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Prolog;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 /*
  * WORKING MEMORY INTERFACE
@@ -26,6 +27,7 @@ using UnityEngine;
 /// </summary>
 
 [AddComponentMenu("Sims/Sim Controller")]
+// ReSharper disable once CheckNamespace
 public class SimController : PhysicalObject
 {
     #region Public fields
@@ -33,6 +35,9 @@ public class SimController : PhysicalObject
     /// If true, the things the character says to themselves are displayed
     /// </summary>
     public bool ShowMentalMonologue;
+
+    public float PositiveAffect;
+    public float NegativeAffect;
     #endregion
 
     #region Constants
@@ -97,7 +102,7 @@ public class SimController : PhysicalObject
 
     #region Private fields
 
-    private static Texture2D greyOutTexture;
+    internal static Texture2D GreyOutTexture;
 
     private ELNode elRoot;
 
@@ -152,11 +157,11 @@ public class SimController : PhysicalObject
     {
         get
         {
-            return this.currentDestination;
+            return currentDestination;
         }
         set
         {
-            this.currentDestination = value;
+            currentDestination = value;
             if (currentDestination == null)
             {
                 motorRoot.DeleteKey(SWalkingTo);
@@ -174,7 +179,7 @@ public class SimController : PhysicalObject
     /// <summary>
     /// Time to wake character up and ask for an action.
     /// </summary>
-    private float? sleepUntil;
+    private float? pauseUntil;
     #endregion
 
     #region Event queue operations
@@ -185,7 +190,7 @@ public class SimController : PhysicalObject
     {
         get
         {
-            return this.eventQueue.Count > 0;
+            return eventQueue.Count > 0;
         }
     }
 
@@ -200,7 +205,7 @@ public class SimController : PhysicalObject
     {
         if (args == null)
             args = NullArgs;
-        this.QueueEvent(new Structure(Symbol.Intern(eventType), args));
+        QueueEvent(new Structure(Symbol.Intern(eventType), args));
     }
 
     /// <summary>
@@ -210,12 +215,12 @@ public class SimController : PhysicalObject
     /// WARNING: does not copy the term, so it must either be ground or not used elsewhere.</param>
     public void QueueEvent(Structure eventDescription)
     {
-        this.eventQueue.Enqueue((Structure)Term.CopyInstantiation(eventDescription));
+        eventQueue.Enqueue((Structure)Term.CopyInstantiation(eventDescription));
     }
 
     Structure GetNextEvent()
     {
-        return this.eventQueue.Dequeue();
+        return eventQueue.Dequeue();
     }
     #endregion
 
@@ -226,9 +231,9 @@ public class SimController : PhysicalObject
     private void HandleEvents()
     {
         if (EventsPending)
-            this.sleepUntil = null;
+            pauseUntil = null;
         while (EventsPending)
-            this.NotifyEvent(this.GetNextEvent());
+            NotifyEvent(GetNextEvent());
     }
 
     /// <summary>
@@ -248,22 +253,23 @@ public class SimController : PhysicalObject
     #region Unity hooks
     internal void Start()
     {
-        updateConcernBids = this.UpdateConcernBids;
+        updateConcernBids = UpdateConcernBids;
+        updateStatusTextBids = UpdateStatusTextBids;
         elRoot = this.KnowledgeBase().ELRoot;
-        this.perceptionRoot = elRoot / Symbol.Intern("perception");
-        this.locationRoot = perceptionRoot / Symbol.Intern("location");
-        this.conversationalSpace = perceptionRoot / Symbol.Intern("conversational_space");
-        this.socialSpace = perceptionRoot / Symbol.Intern("social_space");
-        this.motorRoot = elRoot / Symbol.Intern("motor_state");
-        this.physiologicalStates = elRoot / Symbol.Intern("physiological_states");
-        this.eventHistory = elRoot / Symbol.Intern("event_history");
-        this.lastDestination = elRoot / Symbol.Intern("last_destination");
+        perceptionRoot = elRoot / Symbol.Intern("perception");
+        locationRoot = perceptionRoot / Symbol.Intern("location");
+        conversationalSpace = perceptionRoot / Symbol.Intern("conversational_space");
+        socialSpace = perceptionRoot / Symbol.Intern("social_space");
+        motorRoot = elRoot / Symbol.Intern("motor_state");
+        physiologicalStates = elRoot / Symbol.Intern("physiological_states");
+        eventHistory = elRoot / Symbol.Intern("event_history");
+        lastDestination = elRoot / Symbol.Intern("last_destination");
         ELNode.Store(lastDestination % null);  // Need a placeholder last destination so that /last_destination/X doesn't fail.
         if (!KB.Global.IsTrue("register_character", gameObject))
             throw new Exception("Can't register character " + name);
-        if (greyOutTexture == null) {
-            greyOutTexture = new Texture2D(1,1);
-            greyOutTexture.SetPixel(0,0, new Color(0,0,0, 128));
+        if (GreyOutTexture == null) {
+            GreyOutTexture = new Texture2D(1,1);
+            GreyOutTexture.SetPixel(0,0, new Color(0,0,0, 128));
         }
     }
 
@@ -275,11 +281,11 @@ public class SimController : PhysicalObject
         try
         {
             prologInitializationsExecuted = true;
-            this.gameObject.IsTrue(Symbol.Intern("do_all_character_initializations"));
+            gameObject.IsTrue(Symbol.Intern("do_all_character_initializations"));
         }
         catch (Exception e)
         {
-            Debug.LogError("Exception while initializing character " + this.gameObject.name);
+            Debug.LogError("Exception while initializing character " + gameObject.name);
             Debug.LogException(e);
         }
     }
@@ -293,14 +299,42 @@ public class SimController : PhysicalObject
 
     private float flashPeriod;
 
+    public void AffectiveEvent(float positive, float pWeight, float negative, float nWeight)
+    {
+        PositiveAffect = positive*pWeight + PositiveAffect*(1 - pWeight);
+        NegativeAffect = negative*nWeight + NegativeAffect*(1 - nWeight);
+        if (float.IsNaN(PositiveAffect))
+        {
+            Debug.Log(gameObject.name+": positive Affect is not a number: "+Time.time);
+            PositiveAffect = 0;
+        }
+
+        if (float.IsNaN(NegativeAffect))
+        {
+            Debug.Log(gameObject.name+": negative Affect is not a number: "+Time.time);
+            NegativeAffect = 0;
+        }
+    }
+
+    public float Arousal
+    {
+        get { return 0.5f*(PositiveAffect + NegativeAffect); }
+    }
+
+    public float Valence
+    {
+        get { return PositiveAffect - NegativeAffect; }
+    }
+
     internal void Update()
     {
+        AffectiveEvent(0, 0.001f, 0, 0.001f);
         var t = Time.time;
         if (t < flashEndTime)
         {
             var dT = t - flashStartTime;
             var phase = (dT / flashPeriod) % 1;
-            spriteController.Color = phase < 0.5f ? this.flashColorA : this.flashColorB;
+            spriteController.Color = phase < 0.5f ? flashColorA : flashColorB;
         }
         else
         {
@@ -309,42 +343,48 @@ public class SimController : PhysicalObject
 
         if (!PauseManager.Paused)
         {
-            this.UpdateSpeechBubble();
+            UpdatePerception();
 
-            this.UpdateLocomotion();
+            UpdateSpeechBubble();
 
-            this.UpdateLocations();
+            UpdateLocomotion();
 
-            this.UpdateSpace(
-                conversationalSpaceColliders,
-                ConversationalSpaceRadius,
-                conversationalSpace,
-                "enter_conversational_space",
-                "exit_conversational_space",
-                true);
-            this.UpdateSpace(
-                socialSpaceColliders,
-                SocialSpaceRadius,
-                socialSpace,
-                "enter_social_space",
-                "exit_social_space",
-                false);
+            EnsureCharacterInitialized();
 
-            this.EnsureCharacterInitialized();
+            HandleEvents();
 
-            this.HandleEvents();
-
-            this.MaybeDoNextAction();
+            MaybeDoNextAction();
         }
     }
 
     internal void OnCollisionEnter2D(Collision2D collision)
     {
-        this.QueueEvent("collision", collision.gameObject);
+        QueueEvent("collision", collision.gameObject);
     }
     #endregion
 
     #region Perception update
+
+    private void UpdatePerception()
+    {
+        UpdateLocations();
+
+        UpdateSpace(
+            conversationalSpaceColliders,
+            ConversationalSpaceRadius,
+            conversationalSpace,
+            "enter_conversational_space",
+            "exit_conversational_space",
+            true);
+        UpdateSpace(
+            socialSpaceColliders,
+            SocialSpaceRadius,
+            socialSpace,
+            "enter_social_space",
+            "exit_social_space",
+            false);
+    }
+
     readonly Collider2D[] conversationalSpaceColliders = new Collider2D[MaxConversationalSpaceColliders];
     readonly Collider2D[] socialSpaceColliders = new Collider2D[MaxConversationalSpaceColliders];
 
@@ -386,7 +426,7 @@ public class SimController : PhysicalObject
         for (var i = 0; i<characterCount;i++)
         {
             var character = colliders[i].gameObject;
-            if (character != gameObject && !statusNode.ContainsKey(character) && myCurrentRoom.Contains(character))
+            if (character != gameObject && !statusNode.ContainsKey(character) && myCurrentRoom != null && myCurrentRoom.Contains(character))
             {
                 // The character just arrived in this character's conversational space
 
@@ -420,45 +460,47 @@ public class SimController : PhysicalObject
     }
 
     private readonly Symbol brainwashedSymbol = Symbol.Intern("brainwashed");
+
     private void UpdateLocations()
     {
+        // TODO: FIX THIS SO THAT DESTROYED OBJECTS GET THEIR ENTRIES GC'ed.
         foreach (var p in Registry<PhysicalObject>())
         {
             var o = p.gameObject;
-            var n = this.locationRoot.ChildWithKey(o);
+            var n = locationRoot.ChildWithKey(o);
             // Don't do anything if /perception/location/O:Location:override in database,
             // which would mean the character is brainwashed about O's position.
-            if (n == null || n.Children.Count == 0 || !n.Children[0].ContainsKey(this.brainwashedSymbol))
+            if (n == null || n.Children.Count == 0 || !n.Children[0].ContainsKey(brainwashedSymbol))
             {
+                if (!p.Exists)
+                    // Dead; remove it.
+                    locationRoot.DeleteKey(o);
                 // Determine if it's inside something
-                if (p.Container == null)
+                else if (p.Container == null)
                 {
                     // It's not inside another object, so find what room it's in.
-                    
+
                     if (n == null || !n.ExclusiveKeyValue<GameObject>().GetComponent<Room>().Contains(o))
                     {
-                        foreach (var r in Registry<Room>())
+                        var r = TileMap.TheTileMap.TileRoom(o);
+                        var location = r!=null?(r.gameObject):null;
+                        if (location == null && p is Door)
+                            location = ((Door) p).ForceRoom;
+                        ELNode.Store(locationRoot / o % location);
+                        if (o == gameObject)
                         {
-                            if (r.Contains(o))
-                            {
-                                ELNode.Store(this.locationRoot / o % (r.gameObject));
-                                if (o == this.gameObject)
-                                {
-                                    this.myCurrentRoom = r;
-                                }
-                            }
+                            myCurrentRoom = r;
                         }
                     }
                 }
                 else
                 {
                     if (!p.IsHidden)
-                        ELNode.Store((this.locationRoot / o % p.Container));
+                        ELNode.Store((locationRoot / o % p.Container));
                 }
             }
         }
     }
-
     #endregion
 
     #region Primitive actions handled by SimController
@@ -466,12 +508,12 @@ public class SimController : PhysicalObject
     private bool pollActions;
     private void MaybeDoNextAction()
     {
-        if (pollActions || !this.sleepUntil.HasValue || this.sleepUntil.Value <= Time.time)
+        if (pollActions || !pauseUntil.HasValue || pauseUntil.Value <= Time.time)
         {
             pollActions = false;
-            sleepUntil = null;
-            this.DoNextAction();
-            this.DecisionCycleCount++;
+            pauseUntil = null;
+            DoNextAction();
+            DecisionCycleCount++;
         }
     }
 
@@ -487,7 +529,7 @@ public class SimController : PhysicalObject
         var allocBytes = GC.GetTotalMemory(false) - beforeBytes;
         if (allocBytes > 0)
             DecisionCycleAlloc = (int)allocBytes;
-        this.InitiateAction(action);
+        InitiateAction(action);
     }
 
     private static readonly Symbol SNextAction = Symbol.Intern("next_action");
@@ -510,27 +552,29 @@ public class SimController : PhysicalObject
             switch (structure.Functor.Name)
             {
                 case "face":
-                    this.Face(structure.Argument<GameObject>(0));
+                    Face(structure.Argument<GameObject>(0));
                     break;
 
                 case "say":
                     // Say a fixed string
-                    this.Say(structure.Argument<string>(0), gameObject);
+                    Say(structure.Argument<string>(0), gameObject);
                     break;
 
                 case "cons":
                     // It's a list of actions to initiate.
-                    this.InitiateAction(structure.Argument(0));
-                    this.InitiateAction(structure.Argument(1));
+                    InitiateAction(structure.Argument(0));
+                    InitiateAction(structure.Argument(1));
                     break;
 
-                case "sleep":
-                    this.sleepUntil = Time.time + Convert.ToSingle(structure.Argument(0));
+                case "pause":
+                    pauseUntil = Time.time + Convert.ToSingle(structure.Argument(0));
                     break;
 
                 case "pickup":
                 {
                     var patient = structure.Argument<GameObject>(0);
+                    if (patient == gameObject)
+                        throw new InvalidOperationException(name+": tried to pickup() self!");
                     if (patient == gameObject)
                         return;
                     if (patient == null)
@@ -551,13 +595,15 @@ public class SimController : PhysicalObject
                     if (physob == null)
                         throw new NullReferenceException("Argument to ingest is not a physical object.");
                     physob.Destroy();
+                    // TODO: FIX LOCATION UPDATE SO WE DON'T NEED TO KLUGE THIS
+                    locationRoot.DeleteKey(patient);
                     var propinfo = patient.GetComponent<PropInfo>();
                     if (propinfo != null)
                     {
                         if (propinfo.IsFood)
-                            this.physiologicalStates.DeleteKey(Symbol.Intern("hungry"));
+                            physiologicalStates.DeleteKey(Symbol.Intern("hungry"));
                         if (propinfo.IsBeverage)
-                            this.physiologicalStates.DeleteKey(Symbol.Intern("thirsty"));
+                            physiologicalStates.DeleteKey(Symbol.Intern("thirsty"));
                     }
                     break;
                 }
@@ -565,6 +611,8 @@ public class SimController : PhysicalObject
                 case "putdown":
                 {
                     var patient = structure.Argument<GameObject>(0);
+                    if (patient == gameObject)
+                        throw new InvalidOperationException(name+": tried to putdown() self!");
                     if (patient == null)
                         throw new NullReferenceException("Argument to putdown is not a gameobject");
                     var physob = patient.GetComponent<PhysicalObject>();
@@ -579,13 +627,21 @@ public class SimController : PhysicalObject
 
                 case "flash":
                 {
-                    this.flashColorA = structure.Argument<Color>(0);
-                    this.flashColorB = structure.Argument<Color>(1);
+                    flashColorA = structure.Argument<Color>(0);
+                    flashColorB = structure.Argument<Color>(1);
                     flashPeriod = Convert.ToSingle(structure.Argument(2));
                     flashStartTime = Time.time;
                     flashEndTime = flashStartTime + Convert.ToSingle(structure.Argument(3));
                     break;
                 }
+
+                case "get_in":
+                    GetIn(structure.Argument<GameObject>(0));
+                    break;
+
+                case "dismount":
+                    Dismount();
+                    break;
 
                 case "end_game":
                     Application.Quit();
@@ -597,7 +653,7 @@ public class SimController : PhysicalObject
                     GameObject thisAddressee = 
                         ((structure.Arity >= 2) ? 
                             structure.Argument(1) as GameObject
-                            : this.gameObject) ?? this.gameObject;
+                            : gameObject) ?? gameObject;
                     var talkingToSelf = thisAddressee == gameObject;
                     if (!talkingToSelf || ShowMentalMonologue)
                     {
@@ -619,32 +675,36 @@ public class SimController : PhysicalObject
                                 + ISOPrologWriter.WriteToString(structure));
                         var talkingToPlayer = structure.Arity >= 2
                                               && ReferenceEquals(structure.Argument(1), playerSymbol);
-                        this.SetSpeechTimeout(textString);
+                        SetSpeechTimeout(textString);
                         if (talkingToPlayer)
                             // Character is talking to zhimself
                         {
                             if (nlPrompt != null)
                                 nlPrompt.OutputToPlayer(textString);
                             else
-                                this.Say(string.Format("({0})", textString), thisAddressee);
+                                Say(string.Format("({0})", textString), thisAddressee);
                         }
                         else
-                            this.Say(textString, thisAddressee);
+                            Say(textString, thisAddressee);
 
                         if (!talkingToPlayer && !talkingToSelf)
                         {
                             // Tell the other characters
-                            foreach (var node in this.socialSpace.Children)
+                            foreach (var node in socialSpace.Children)
                             {
                                 var character = (GameObject)(node.Key);
-                                if (character != this.gameObject)
+                                if (character != gameObject)
                                     character.QueueEvent((Structure)Term.CopyInstantiation(structure));
                             }
+                            // TODO: fix it so that when characters appear, the system computes their social
+                            // spaces from scratch.  Then we won't need this kluge.
+                            if (!socialSpace.ContainsKey(thisAddressee))
+                                thisAddressee.QueueEvent((Structure)Term.CopyInstantiation(structure));
                         }
                     }
                     break;
             }
-            if (structure.Functor.Name != "sleep")
+            if (structure.Functor.Name != "pause")
                 // Report back to the character that the action has occurred.
                 QueueEvent(structure);
         }
@@ -655,12 +715,61 @@ public class SimController : PhysicalObject
     private void UpdateSpeechBubble()
     {
         // Clear speech bubble if it's time.
-        if (currentlySpeaking && Time.time > this.clearSpeechTime)
+        if (currentlySpeaking && Time.time > clearSpeechTime)
         {
-            this.currentSpeechBubbleText = null;
-            this.currentlySpeaking = false;
-            this.motorRoot.DeleteKey(SIAmSpeaking);
+            currentSpeechBubbleText = null;
+            currentlySpeaking = false;
+            motorRoot.DeleteKey(SIAmSpeaking);
         }
+    }
+
+    public void GetIn(GameObject target)
+    {
+        var prop = target.GetComponent<PropInfo>();
+        if (prop == null)
+        {
+            Debug.Log(name+": attempted to get in the non-prop "+target);
+            return;
+        }
+        if (prop.LayAnimation == null)
+        {
+            Debug.Log(name + ": attempted to get in non-layable prop "+target);
+            return;
+        }
+        GetComponent<PhysicalObject>().MoveTo(target);
+	if (prop.ContentsVisible)
+            spriteController.StartIdleAnimation(prop.LayAnimation);
+    }
+
+    /// <summary>
+    /// Remove the character from their current physical container, and return them to its
+    /// docking region in the enclosing room.
+    /// 
+    /// Internally, this means reparenting the character's gameobject back to the Characters
+    /// gameobject and setting its position to the center of the original container's
+    /// docking region.
+    /// </summary>
+    public void Dismount()
+    {
+        var container = gameObject.transform.parent.gameObject;
+        if (container.GetComponent<PhysicalObject>() == null)
+        {
+            // we're not in a container; do nothing
+            return;
+        }
+
+        var dockingRegion = container.GetComponent<DockingRegion>();
+        if (dockingRegion == null)
+            throw new InvalidOperationException(
+                string.Format(
+                    "{0} is dismounting from object {1}, which has no docking region defined.",
+                    name,
+                    container.name));
+
+        transform.parent = (GameObject.Find("Characters")??new GameObject("Characters")).transform;
+        transform.position = dockingRegion.WorldDockingRect.center;
+	    spriteController.enabled = true;
+        spriteController.Visible = true;
     }
 
     /// <summary>
@@ -680,14 +789,14 @@ public class SimController : PhysicalObject
     public void Say(string speech, GameObject thisAddressee)
     {
         addressee = thisAddressee;
-        this.currentSpeechBubbleText = speech;
+        currentSpeechBubbleText = speech;
     }
 
     private void SetSpeechTimeout(string speech)
     {
-        this.currentlySpeaking = true;
-        ELNode.Store(this.motorRoot / SIAmSpeaking);
-        this.clearSpeechTime = Time.time
+        currentlySpeaking = true;
+        ELNode.Store(motorRoot / SIAmSpeaking);
+        clearSpeechTime = Time.time
                           + Math.Max(
                               SpeechDelayMinimum,
                               Math.Min(SpeechDelayMaximum, speech.Length * SpeechDelaySecondsPerChar));
@@ -701,32 +810,32 @@ public class SimController : PhysicalObject
     private static readonly Symbol SDockedWith = Symbol.Intern("docked_with");
     private void UpdateLocomotion()
     {
-        this.UpdateLocomotionBidsAndPath();
+        UpdateLocomotionBidsAndPath();
 
-        if (CurrentlyDockedWith != null && !CurrentlyDockedWith.DockingTiles().Contains(this.transform.position))
+        if (CurrentlyDockedWith != null && !CurrentlyDockedWith.DockingTiles().Contains(transform.position))
         {
             // We were docked with an object, but are not anymore.
             perceptionRoot.DeleteKey(SDockedWith);
             CurrentlyDockedWith = null;
         }
 
-        if (this.currentPath != null)
+        if (currentPath != null)
         {
             // Update the steering
-            if (this.currentPath.UpdateSteering(this.steering)
-                || (Vector2.Distance(this.transform.position, currentDestination.transform.position) < 0.75
+            if (currentPath.UpdateSteering(steering)
+                || (Vector2.Distance(transform.position, currentDestination.transform.position) < 0.75
                      && currentDestination.IsCharacter()))
             {
                 // Finished the path
-                this.CurrentlyDockedWith = CurrentDestination;
+                CurrentlyDockedWith = CurrentDestination;
                 ELNode.Store(perceptionRoot/SDockedWith%CurrentlyDockedWith);
-                ELNode.Store(lastDestination % this.CurrentDestination);
-                this.currentPath = null;
-                this.currentDestination = null;
+                ELNode.Store(lastDestination % CurrentDestination);
+                currentPath = null;
+                currentDestination = null;
                 (motorRoot / SWalkingTo).DeleteSelf();
-                this.Face(CurrentlyDockedWith);
-                this.steering.Stop();
-                this.QueueEvent("arrived_at", this.CurrentlyDockedWith);
+                Face(CurrentlyDockedWith);
+                steering.Stop();
+                QueueEvent("arrived_at", CurrentlyDockedWith);
             }
         }
     }
@@ -741,7 +850,7 @@ public class SimController : PhysicalObject
         //foreach (var pair in bidTotals)
         //    bidTotals[pair.Key] = 0;
         bidTotals.Clear();
-        elRoot.WalkTree(SConcerns, this.updateConcernBids);
+        elRoot.WalkTree(SConcerns, updateConcernBids);
 
         GameObject winner = null;
         float winningBid = 0;
@@ -757,12 +866,21 @@ public class SimController : PhysicalObject
             // Replan if destination has changed or if destination has moved away from current path.
             var newDestination = (winner != CurrentDestination && winner != CurrentlyDockedWith);
             if (newDestination
+                || (currentDestination != null && currentPath == null)
                 || (currentDestination != null && currentPath != null && !CurrentDestination.DockingTiles().Contains(currentPath.FinalTile)))
             {
                 if (newDestination)
+                {
+                    Dismount();
                     ELNode.Store(eventHistory / new Structure("goto", winner)); // Log change for debugging purposes.
-                this.CurrentDestination = winner;
-                this.currentPath = planner.Plan(gameObject.TilePosition(), this.CurrentDestination.DockingTiles());
+                }
+                CurrentDestination = winner;
+                if (currentDestination.DockingTiles().Contains(gameObject.TilePosition()))
+                {
+                    QueueEvent("arrived_at", currentDestination);
+                }
+                else
+                    currentPath = planner.Plan(gameObject.TilePosition(), CurrentDestination.DockingTiles());
             }
         }
     }
@@ -794,7 +912,7 @@ public class SimController : PhysicalObject
     }
     #endregion
 
-    #region Speech bubbles
+    #region GUI and speech bubbles
 
     public GUIStyle SpeechBubbleStyle;
 
@@ -810,21 +928,35 @@ public class SimController : PhysicalObject
 
     internal void OnGUI()
     {
-        if (Camera.current != null && !string.IsNullOrEmpty(this.currentSpeechBubbleText))
+        var guiScreenPosition = gameObject.GUIScreenPosition();
+
+        var statusText = GetStatusText();
+        if (!IsHidden && !string.IsNullOrEmpty(statusText))
         {
-            var bubblelocation = (Vector2)Camera.current.WorldToScreenPoint(transform.position);
+            var status = new GUIContent(statusText);
+            var style = GUIStyle.none;
+            style.normal.textColor = Color.yellow;
+            var size = style.CalcSize(status);
+            var statusRect = new Rect(guiScreenPosition.x - 0.5f*size.x,
+                guiScreenPosition.y - 0.9f*CharacterHeight*Tile.TileSizeInPixels, size.x, size.y);
+            GUI.Box(statusRect, GreyOutTexture);
+            GUI.Label(statusRect, status, style);
+        }
+
+        if (Camera.current != null && !string.IsNullOrEmpty(currentSpeechBubbleText))
+        {
+            var bubblelocation = guiScreenPosition;
             var addresseeOffset = addressee.transform.position - transform.position;
 
             if (addresseeOffset.x > 0 || addresseeOffset.y < 0)
-                bubblelocation.y += (CharacterHeight+0.5f)*Tile.TileSizeInPixels;
-            var size = SpeechBubbleStyle.CalcSize(new GUIContent(this.currentSpeechBubbleText));
+                bubblelocation.y -= (CharacterHeight + 0.5f)*Tile.TileSizeInPixels;
+            var size = SpeechBubbleStyle.CalcSize(new GUIContent(currentSpeechBubbleText));
             bubblelocation.x += (CharacterWidth*0.5f)*Tile.TileSizeInPixels;
-            var topLeft = new Vector2(bubblelocation.x, Screen.height-bubblelocation.y);
-            var bubbleRect = new Rect(topLeft.x, topLeft.y, size.x, size.y);
+            var bubbleRect = new Rect(bubblelocation.x, bubblelocation.y, size.x, size.y);
 
             // Handle rects that overshoot the map
             var overshoot = bubbleRect.xMax - Screen.width;
-            if (overshoot>0)
+            if (overshoot > 0)
             {
                 bubbleRect.xMin -= overshoot;
                 bubbleRect.xMax -= overshoot;
@@ -835,8 +967,43 @@ public class SimController : PhysicalObject
                     bubbleRect.yMin -= size.y;
                 }
             }
-            GUI.Box(bubbleRect, greyOutTexture);
-            GUI.Label(bubbleRect, this.currentSpeechBubbleText, SpeechBubbleStyle);
+
+            var vovershoot = bubbleRect.yMax - Screen.height;
+            if (vovershoot > 0)
+                bubbleRect.yMin -= vovershoot;
+
+            GUI.Box(bubbleRect, GreyOutTexture);
+            GUI.Label(bubbleRect, currentSpeechBubbleText, SpeechBubbleStyle);
+        }
+    }
+
+    string maxBidStatus;
+    float maxStatusBid;
+    private Action<ELNode> updateStatusTextBids;
+    private string GetStatusText()
+    {
+        maxStatusBid = -1;
+        maxBidStatus = "";
+        elRoot.WalkTree(SConcerns, updateStatusTextBids);
+        return maxBidStatus;
+    }
+
+    private readonly Symbol SStatusText = Symbol.Intern("status_text");
+    private void UpdateStatusTextBids(ELNode concern)
+    {
+        var textRoot = concern.ChildWithKey(SStatusText);
+        if (textRoot != null && textRoot.Children.Count > 0)
+        {
+            var text = textRoot.Children[0];
+            if (text.Children.Count > 0)
+            {
+                var bid = Convert.ToSingle(text.Children[0].Key);
+                if (bid > maxStatusBid)
+                {
+                    maxStatusBid = bid;
+                    maxBidStatus = text.Key.ToString();
+                }
+            }
         }
     }
     #endregion

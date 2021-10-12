@@ -24,12 +24,14 @@ invoke_continuation(TaskConcern, K) :-
    within_task(TaskConcern, invoke_continuation(K)).
 
 restart_or_kill_task :-
-   $task/repeating_task ->
+   % Poor being's flow: task achievement -> positive affect
+   affective_reaction(0.2, 0.05, 0, 0),
+   ($task/repeating_task ->
       begin($task/type:task:Goal,
 	    ignore(retract($task/log)),
 	    invoke_continuation(Goal))
       ;
-      kill_task($task).
+      kill_task($task)).
 
 kill_task(T) :-
    begin(assert(T/current:exiting),
@@ -60,7 +62,7 @@ retract_on_restart(Task, Task/monitor).
 %  Executes InterruptingTask, then returns to previous step.
 interrupt_step(TaskConcern, InterruptingTask) :-
    within_task(TaskConcern,
-	      (begin(TaskConcern/current:C),
-		     begin(TaskConcern/continuation:K),
-		     begin(assert(TaskConcern/continuation:(C,K))),
-		     begin(switch_to_task(InterruptingTask)))).
+	       begin(TaskConcern/current:C,
+		     TaskConcern/continuation:K,
+		     assert(TaskConcern/continuation:(C,K)),
+		     switch_to_task(InterruptingTask))).

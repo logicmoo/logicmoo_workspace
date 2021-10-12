@@ -1,3 +1,5 @@
+:- external owner/2.
+
 location(X, Location) :-
    X == player,
    !,

@@ -132,9 +132,9 @@ public struct TilePosition
     }
 
     /// <summary>
-    /// The tile above this one
+    /// The tile below this one
     /// </summary>
-    public TilePosition Up
+    public TilePosition Down
     {
         get
         {
@@ -143,9 +143,9 @@ public struct TilePosition
     }
 
     /// <summary>
-    /// The tile below this one
+    /// The tile above this one
     /// </summary>
-    public TilePosition Down
+    public TilePosition Up
     {
         get
         {

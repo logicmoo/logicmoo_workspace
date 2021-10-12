@@ -26,7 +26,7 @@ strategy(respond_to_dialog_act(greet($addressee, $me)),
 strategy(respond_to_dialog_act(parting(Them, $me)),
 	 begin(assert(Parent/generated_parting),
 	       parting($me, Them),
-	       sleep(1),
+	       pause(1),
 	       call(kill_concern(Parent)))) :-
    parent_concern_of($task, Parent),
    \+ Parent/generated_parting.
@@ -58,6 +58,8 @@ strategy(respond_to_increment(Speaker, Addressee, s(LF)),
 	 respond_to_dialog_act(assertion(Speaker, Addressee, LF, present, simple))).
 strategy(respond_to_increment(Speaker, Addressee, question_answer(LF)),
 	 respond_to_dialog_act(question_answer(Speaker, Addressee, LF))).
+strategy(respond_to_increment(_Speaker, _Addressee, _String:Markup),
+	 respond_to_quip_markup(Markup)).
 
 %%
 %% Agreement/disagreement
@@ -77,7 +79,9 @@ strategy(respond_to_dialog_act(hypno_command(_, $me, LF, present, simple)),
 
 strategy(do_hypnotically_believe(LF),
 	 begin(flash(Yellow, Green, 0.3, 1.5),
-	       assertion($me, Partner, LF, present, simple))) :-
+	       emote(hypnotized),
+	       discourse_increment($me, Partner, [ uninterpreted_s(LF) ]),
+	       emote(hypnotized))) :-
    hypnotically_believe(LF),
    Yellow is $'Color'.yellow,
    Green is $'Color'.green,
@@ -86,3 +90,23 @@ strategy(do_hypnotically_believe(LF),
 default_strategy(do_hypnotically_believe(_LF),
 		 % No effect
 		 null).
+
+%%
+%% Offers
+%%
+
+strategy(respond_to_dialog_act(offer(Offerer, $me, TheirAct, MyAct)),
+	 Response) :-
+   acceptable_offer(Offerer, TheirAct, MyAct) ->
+   Response = (acceptance($me, Offerer, TheirAct, MyAct),
+	       call(add_pending_task(on_behalf_of(Offerer, MyAct))))
+      ;
+      Response = rejection($me, Offerer, TheirAct, MyAct).
+
+acceptable_offer(_, _, _).
+
+strategy(respond_to_dialog_act(acceptance(Acceptor, $me, MyAct, _TheirAct)),
+	 call(add_pending_task(on_behalf_of(Acceptor, MyAct)))).
+
+strategy(respond_to_dialog_act(rejection(_Acceptor, $me, _MyAct, _TheirAct)),
+	 null).

@@ -28,6 +28,9 @@ switch_to_task(null) :-
 switch_to_task(call(PrologCode)) :-
    begin(PrologCode,
 	 step_completed).
+switch_to_task(tell(Fact)) :-
+   begin(tell(Fact),
+	 step_completed).
 switch_to_task(assert(Fact)) :-
    begin(assert(Fact),
 	 step_completed).
@@ -37,7 +40,6 @@ switch_to_task(retract(Fact)) :-
 switch_to_task(invoke_continuation(K)) :-
    !,
    invoke_continuation(K).
-
 % Non-immediates that can be taken care of now.
 switch_to_task(wait_condition(Condition)) :-
    Condition,
@@ -80,8 +82,10 @@ switch_to_task(resolve_match_failure(resolve_match_failure(resolve_match_failure
 
 fail_task(Why, FailedTask) :-
    begin($task/type:task:TopLevelTask,
+	 emote(frustration),
 	 asserta($global::failed_task($me, (TopLevelTask-> FailedTask))),
 	 emit_grain("task fail", 100),
+	 affective_reaction(0,0, 1, 0.1),
 	 restart_or_kill_task,
 	 throw(task_failed($me, Why, (TopLevelTask->FailedTask)))).
 

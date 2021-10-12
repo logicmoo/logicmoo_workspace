@@ -1,6 +1,23 @@
 fileFormatVersion: 2
 guid: e3e154506053952478eaa0dadad6bbeb
 TextureImporter:
+  fileIDToRecycleName:
+    21300000: kavi_0
+    21300002: kavi_1
+    21300004: kavi_2
+    21300006: kavi_3
+    21300008: kavi_4
+    21300010: kavi_5
+    21300012: kavi_6
+    21300014: kavi_7
+    21300016: kavi_8
+    21300018: kavi_9
+    21300020: kavi_10
+    21300022: kavi_11
+    21300024: kavi_12
+    21300026: kavi_13
+    21300028: kavi_14
+    21300030: kavi_15
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -19,22 +36,27 @@ TextureImporter:
   isReadable: 0
   grayScaleToAlpha: 0
   generateCubemap: 0
+  cubemapConvolution: 0
+  cubemapConvolutionSteps: 8
+  cubemapConvolutionExponent: 1.5
   seamlessCubemap: 0
   textureFormat: -1
   maxTextureSize: 1024
   textureSettings:
-    filterMode: -1
+    filterMode: 0
     aniso: 1
     mipBias: -1
     wrapMode: 1
   nPOTScale: 0
   lightmap: 0
+  rGBM: 0
   compressionQuality: 50
   spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: .5, y: .5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spritePixelsToUnits: 32
   alphaIsTransparency: 1
   textureType: 8
@@ -54,6 +76,7 @@ TextureImporter:
         height: 48
       alignment: 9
       pivot: {x: .5, y: .100000001}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: kavi_1
       rect:
         serializedVersion: 2
@@ -63,6 +86,7 @@ TextureImporter:
         height: 48
       alignment: 9
       pivot: {x: .5, y: .100000001}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: kavi_2
       rect:
         serializedVersion: 2
@@ -72,6 +96,7 @@ TextureImporter:
         height: 48
       alignment: 9
       pivot: {x: .5, y: .100000001}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: kavi_3
       rect:
         serializedVersion: 2
@@ -81,6 +106,7 @@ TextureImporter:
         height: 48
       alignment: 9
       pivot: {x: .5, y: .100000001}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: kavi_4
       rect:
         serializedVersion: 2
@@ -90,6 +116,7 @@ TextureImporter:
         height: 48
       alignment: 9
       pivot: {x: .5, y: .100000001}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: kavi_5
       rect:
         serializedVersion: 2
@@ -99,6 +126,7 @@ TextureImporter:
         height: 48
       alignment: 9
       pivot: {x: .5, y: .100000001}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: kavi_6
       rect:
         serializedVersion: 2
@@ -108,6 +136,7 @@ TextureImporter:
         height: 48
       alignment: 9
       pivot: {x: .5, y: .100000001}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: kavi_7
       rect:
         serializedVersion: 2
@@ -117,6 +146,7 @@ TextureImporter:
         height: 48
       alignment: 9
       pivot: {x: .5, y: .100000001}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: kavi_8
       rect:
         serializedVersion: 2
@@ -126,6 +156,7 @@ TextureImporter:
         height: 48
       alignment: 9
       pivot: {x: .5, y: .100000001}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: kavi_9
       rect:
         serializedVersion: 2
@@ -135,6 +166,7 @@ TextureImporter:
         height: 48
       alignment: 9
       pivot: {x: .5, y: .100000001}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: kavi_10
       rect:
         serializedVersion: 2
@@ -144,6 +176,7 @@ TextureImporter:
         height: 48
       alignment: 9
       pivot: {x: .5, y: .100000001}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: kavi_11
       rect:
         serializedVersion: 2
@@ -153,6 +186,7 @@ TextureImporter:
         height: 48
       alignment: 9
       pivot: {x: .5, y: .100000001}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: kavi_12
       rect:
         serializedVersion: 2
@@ -162,6 +196,7 @@ TextureImporter:
         height: 48
       alignment: 9
       pivot: {x: .5, y: .100000001}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: kavi_13
       rect:
         serializedVersion: 2
@@ -171,6 +206,7 @@ TextureImporter:
         height: 48
       alignment: 9
       pivot: {x: .5, y: .100000001}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: kavi_14
       rect:
         serializedVersion: 2
@@ -180,6 +216,7 @@ TextureImporter:
         height: 48
       alignment: 9
       pivot: {x: .5, y: .100000001}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: kavi_15
       rect:
         serializedVersion: 2
@@ -189,5 +226,8 @@ TextureImporter:
         height: 48
       alignment: 9
       pivot: {x: .5, y: .100000001}
+      border: {x: 0, y: 0, z: 0, w: 0}
   spritePackingTag: 
   userData: 
+  assetBundleName: 
+  assetBundleVariant: 

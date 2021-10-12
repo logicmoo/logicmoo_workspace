@@ -1,3 +1,6 @@
+
+:-if(current_prolog_flag(use_old_code_to,true)).
+
 :- randomizable utterance//1, exclamation//1, sentence//1.
 
 utterance(DialogAct) --> exclamation(DialogAct).
@@ -19,3 +22,5 @@ exclamation(parting) --> [X], {member(X, [bye, byebye, goodbye])}.
 exclamation(parting) --> [see, you].
 exclamation(parting) --> [be, seeing, you].
 exclamation(parting-reply) --> exclamation(parting).
+
+:- endif.

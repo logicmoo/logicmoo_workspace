@@ -1,1 +1,24 @@
-Entity,Kinds (list),Description,Proper noun (word list),Number,Properties (list),Relations (list)player,person,,the player,,,$pc,person,,,,"age=23, job=spy","knows_about: spying, member_of:www, interested_in: illuminati, friend_of: $'Kavi'"$kavi,person,, 'Kavi',,"age=23, given_name=""Kavi"", surname=""Surkow"", gender=male","member_of: illuminati, friend_of: $pc"illuminati,conspiracy,"""A shadowy conspiracy to floridate our precious bodily fluids""",the 'Illuminati',plural,,"goal: ""complete world domination"", leader: adam_weishaupt"adam_weishaupt,person,,  'Adam' 'Weishaupt',,,cia,"government_agency, clandestine_organization",,the 'CIA',,,www,organization,"[""A ragtag group of performance artists,"", ""working to undermine the apalling level of normativity"", ""of late capitalism.""]", 'Wiccans' for a 'Weirder' 'World',plural,,"goal: ""the enweirdening of the world."""spying,action,,,,,tamping,action,,,,,$report,"report, key_item","""Final report on project MKSPARSE.""",the report,,"text=""\""Subject LNJOKER is manifesting.  Contact MKMOTHER.\""""",kavis_house,house,, 'Kavis' '\'' s house,,,the_word,enclosing_container,"""The word is everything""",the world,,,the_game,enclosing_container,"""The game is everything.""",the game,,,$mainframe,mainframe,"[""It's an old mainframe computer"", ""inexplicably located in Kavi's house.""]",the mainframe,,,$macguffin,"macguffin, key_item",,the macguffin,,,
+Entity,Kinds (list),Description,Proper noun (phrase list),Number,Properties (list),Relations (list)
+player,person,,the player,,,
+$pc,person,,,,"age=23, job=spy","knows_about: spying, member_of:www, interested_in: illuminati, friend_of: $'Kavi'"
+$kavi,person,, 'Kavi',,"age=23, given_name=""Kavi"", surname=""Surkow"", gender=male",member_of: illuminati
+$captive,person,,'Trip',,"age=23, given_name=""Trip"", surname=""Abel"", gender=male",friend_of: $pc
+illuminati,conspiracy,"""A shadowy conspiracy to floridate our precious bodily fluids""",the 'Illuminati',plural,,"goal: ""complete world domination"", leader: adam_weishaupt"
+adam_weishaupt,person,,  'Adam' 'Weishaupt',,,
+cia,"government_agency, clandestine_organization",,the 'CIA',,,
+www,organization,"[""A ragtag group of performance artists,"", ""working to undermine the apalling level of normativity"", ""of late capitalism.""]", 'Wiccans' for a 'Weirder' 'World',plural,,"goal: ""the enweirdening of the world."""
+spying,action,,,,,
+tamping,action,,,,,
+$report,"report, key_item","""Final report on project MKSPARSE.""",,,"text=""\""Subject LNJOKER is manifesting.  Contact MKMOTHER.\""""",
+$photo,"photograph, key_item","""A surveillance photo""",,,,
+kavis_house,house,,,,exit= $exit,
+the_world,enclosing_container,"""The word is everything""",the world,,,
+the_game,enclosing_container,"""The game is everything.""",the game,,,
+$mainframe,mainframe,"[""It's an old mainframe computer"", ""inexplicably located in Kavi's house."", ""It has three buttons: run, stop,"", ""MAGIC,"", ""and MORE MAGIC.""]",,,"caption=""an antique mainframe?""",
+$macguffin,"macguffin, key_item",,,,,
+$'run button',button,"""a run button""",the run button,,,
+$'stop button',button,"""a stop button""",the stop button,,,
+$'magic button',button,"""a MAGIC button""",the magic button,,,
+$'more magic button',button,"""a MORE MAGIC button""",the more magic button,,,
+$exit,"door, exit","""The exit.""",,,"caption=""The exit""",
+$'bathroom door',"door, exit",,,,"caption=""Bathroom door""",

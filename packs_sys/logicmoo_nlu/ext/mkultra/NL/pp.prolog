@@ -35,6 +35,14 @@ generator_pp([ Preposition | Prepositions ], Predication, Gap, S1, S3) -->
 :- randomizable parser_opt_pp//3.
 
 parser_opt_pp(_, nogap, S, S) --> [ ].
+% We model here as a kind of weird PP rather than as an adverb
+% That lets us specifically annotate verbs with information about
+% what slots to bind, rather than needing to have a general theory.
+parser_opt_pp(Predication, nogap, S, S) -->
+   [ Here ],
+   { here_there_adverb(Here),
+     prepositional_slot(here, Selection, Predication),
+     /perception/mouse_selection:Selection }.
 parser_opt_pp(Predication, Gap, S1, S3) -->
    [ Preposition ],
    { preposition(Preposition),

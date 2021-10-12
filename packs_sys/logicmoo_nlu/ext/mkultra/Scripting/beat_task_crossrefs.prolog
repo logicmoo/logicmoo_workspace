@@ -11,6 +11,10 @@ reduction_clause(beat_tasks(Beat), Task) :-
    member(Task, TaskList),
    \+ string(Task).
 
+% Strip markup from dialog tasks.
+reduction_clause(_::Goal, Goal).
+reduction_clause(Goal:_, Goal).
+
 reduction_clause(Goal, quip) :-
    character(C),
    C::clause(quip(Goal, _QuipName, _), _),

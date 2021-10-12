@@ -20,14 +20,16 @@
 :- external score_action/4.
 
 %% next_action(-Action) is det
-%  Action is the highest rated action available, or sleep if no available
+%  Action is the highest rated action available, or pause if no available
 %  actions.
 %  Called by SimController component's Update routine.
 next_action(Action) :-
    begin(run_delayed_operations,
-	 poll_tasks),
+	 poll_tasks,
+	 update_halo,
+	 update_character_status),
    best_action(Action).
-next_action(sleep(1)).
+next_action(pause(1)).
 
 best_action(Action) :-
    ignore(retract(/action_state/candidates)),

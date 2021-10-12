@@ -84,7 +84,8 @@ variable_well_typed(V, Kind, PreviousKind, B, [V:Kind | B]) :-
    kind_of(Kind, PreviousKind),  % Kind is a more specific type. 
    !.
 
-lookup_variable_type(Var, Type, [Var:Type | _]) :-
+lookup_variable_type(Var, Type, [V:Type | _]) :-
+   V==Var,
    !.
 lookup_variable_type(Var, Type, [_ | Tail]) :-
    lookup_variable_type(Var, Type, Tail).

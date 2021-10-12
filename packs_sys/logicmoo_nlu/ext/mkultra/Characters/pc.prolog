@@ -2,7 +2,12 @@
 %%% Initializations for the player character
 %%%
 
-:- unless(proper_name($pc, _, _X, []),
+player_character.
+
+% Monitor goals quickly
+/parameters/poll_time:1.
+
+:- unless(proper_name($pc, _, X, []),
 	  assert_proper_name($pc, ['Betsy'], singular)),
    unless(declare_value($pc, gender, _),
 	  assert($global::declare_value($pc, gender, female))),
@@ -15,5 +20,5 @@
 				 "I'm sure Kavi stole it,",
 				 "but I don't know where he hid it."].
 
-:- assert(($global::fkey_command(alt-p, "Display player character's status") :-
-   generate_character_debug_overlay($pc))).
+$global::fkey_command(alt-p, "Display player character's status") :-
+   generate_character_debug_overlay($pc).

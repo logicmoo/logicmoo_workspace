@@ -35,6 +35,45 @@ utterance(hypno_command(Speaker, Addressee, LF, T, A)) -->
    s(LF, indicative, affirmative, T, A),
    { current_dialog_pair(Speaker, Addressee) }.
 
+%%
+%% THREATS AND OFFERS
+%%
+%% An offer is a suggestion that each party perform an action
+%% A threat is a an offer to not do an action, provided the reciprocal
+%% action is taken.
+%%
+
+utterance(offer(Speaker, Addressee, SpeakerAct, AddresseeAct)) -->
+   s(AddresseeAct, imperative, affirmative, _, _),
+   [ and ],
+   s(SpeakerAct, indicative, affirmative, future, simple),
+   { current_dialog_pair(Speaker, Addressee) },
+   opt_stop(conditional).
+utterance(offer(Speaker, Addressee, SpeakerAct, AddresseeAct)) -->
+   [ if ],
+   s(AddresseeAct, indicative, affirmative, _, _),
+   opt_comma,
+   s(SpeakerAct, indicative, affirmative, future, simple),
+   { current_dialog_pair(Speaker, Addressee) },
+   opt_stop(conditional).
+
+utterance(threat(Speaker, Addressee, SpeakerAct, AddresseeAct)) -->
+   s(AddresseeAct, imperative, affirmative, _, _),
+   [ or ],
+   s(SpeakerAct, indicative, affirmative, future, simple),
+   { current_dialog_pair(Speaker, Addressee) },
+   opt_stop(conditional).
+
+utterance(acceptance(Speaker, Addressee, _, _)) -->
+   [ okay ],
+   { current_dialog_pair(Speaker, Addressee) },
+   opt_stop(agreement).
+
+opt_comma --> [].
+opt_comma --> [ '.' ].
+
+
+:- register_lexical_items([and, or, if, okay]).
 
 current_dialog_pair($speaker, $addressee).
 
@@ -114,6 +153,69 @@ stock_phrase(color_query(player, $me, white)) -->
 stock_phrase(color_query(player, $me, white)) -->
    [why, does, my, text, turn, white, '?'].
 
+nsew(north).
+nsew(south).
+nsew(east).
+nsew(west).
+nsew(n).
+nsew(s).
+nsew(e).
+nsew(w).
+
+:- forall(nsew(X), register_lexical_item(X)).
+
+stock_phrase(if_navigation_command(player, $me)) -->
+   { input_from_player },
+   nsew_nav_command.
+
+nsew_nav_command -->
+   [go, X],
+   { nsew(X) }.
+
+nsew_nav_command -->
+   [go, to, the, X],
+   { nsew(X) }.
+
+nsew_nav_command -->
+   [X],
+   { nsew(X) }.
+
+stock_phrase(show_status(player, $pc, What)) -->
+   [ check ],
+   status_display_term_with_determiner(What).
+
+stock_phrase(show_status(player, $pc, What)) -->
+   status_display_term(What).
+
+stock_phrase(show_status(player, $pc, What)) -->
+   [ show, me ],
+   status_display_term_with_determiner(What).
+
+stock_phrase(show_status(player, $pc, What)) -->
+   [ look, at ],
+   status_display_term_with_determiner(What).
+
+stock_phrase(show_status(player, $pc, What)) -->
+   [ examine ],
+   status_display_term_with_determiner(What).
+
+:- register_lexical_items([examine, look, at, show, check, inventory, notebook, vocabulary ]).
+
+:- randomizable status_display_term/3.
+status_display_term(inventory) -->
+   [ inventory ].
+status_display_term(notebook) -->
+   [ notebook ].
+status_display_term(vocabulary) -->
+   [ vocabulary ].
+
+status_display_term_with_determiner(What) -->
+   [ my ],
+   status_display_term(What).
+status_display_term_with_determiner(What) -->
+   [ the ],
+   status_display_term(What).
+
 %
 % Increments produced by the discourse generator
 %
@@ -134,6 +236,8 @@ discourse_fragment(question_answer(X)) -->
    {!}, sentence(X, indicative, affirmative, present, simple).
 discourse_fragment(s(X)) -->
    {!}, sentence(X, indicative, affirmative, present, simple).
+discourse_fragment(uninterpreted_s(X)) -->
+   {!}, sentence(X, indicative, affirmative, present, simple).
 
 discourse_fragment(np(X)) -->
    {kind(X), !}, [a, X].
@@ -141,9 +245,12 @@ discourse_fragment(np(X)) -->
 discourse_fragment(np(X)) -->
    {!}, np((X^S)^S, subject, third:singular, nogap, nogap).
 
-discourse_fragment(X) -->
-   { string(X), ! },
-   [ X ].
+discourse_fragment(String) -->
+   { string(String), ! },
+   [ String ].
+discourse_fragment(String:_Markup) -->
+   { string(String), ! },
+   [ String ].
 
 %
 % Interface to action and conversation systems
@@ -176,8 +283,9 @@ add_conversation_dispatch_clause(Structure) :-
    length(EventArgs, Arity),
    Event =.. [Functor | EventArgs],
    assert( ( on_event(Event, conversation, C,
-		      conversation_handler_task(C, respond_to_dialog_act(Event))) :-
-	        C/partner/Partner
+		      conversation_handler_task(C, respond_to_dialog_act(Normalized))) :-
+	       C/partner/Partner,
+	       normalize_dialog_act(Event, Normalized)
 	   ) ).
 
 :- register_utterance_types.

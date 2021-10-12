@@ -44,13 +44,13 @@ strategy(generate_last(Property/Value, attribute_of(Object)),
 strategy(describe_property(Linkage, Object, Property, Value, Termination),
 	 speech([Linkage, Surface, Termination])) :-
    surface_form(property_value(Object, Property, Value), Surface),
-   assert(/mentioned_to/ $addressee /Object/Property:Value).
+   tell(/mentioned_to/ $addressee /Object/Property:Value).
 
 strategy(describe_relation(Linkage, Object, Relation, Relatum, Termination),
 	 speech([Linkage, Surface, Termination])) :-
    surface_form(related(Object, Relation, Relatum), Surface),
    forall(ancestor_relation(A, Relation),
-	  assert(/mentioned_to/ $addressee /Object/A/Relatum)).
+	  tell(/mentioned_to/ $addressee /Object/A/Relatum)).
 
 surface_form(property_value(Object, Property, Value),
 	     question_answer(property_value(Object, Property, Value))).

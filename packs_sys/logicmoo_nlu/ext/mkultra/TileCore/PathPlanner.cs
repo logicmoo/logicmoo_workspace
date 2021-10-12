@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
+[AddComponentMenu("Tile/PathPlanner")]
 public class PathPlanner : BindingBehaviour
 {
     /// <summary>
@@ -312,26 +313,26 @@ public class PathPlanner : BindingBehaviour
 
         private IEnumerable<TilePosition> Neighbors(TilePosition p)
         {
-            var freeUp = map.IsFreespace(p.Up);
-            var freeDown = map.IsFreespace(p.Down);
+            var freeUp = map.IsFreespace(p.Down);
+            var freeDown = map.IsFreespace(p.Up);
             var freeLeft = map.IsFreespace(p.Left);
             var freeRight = map.IsFreespace(p.Right);
 
-            if (freeUp) yield return p.Up;
-            if (freeDown) yield return p.Down;
+            if (freeUp) yield return p.Down;
+            if (freeDown) yield return p.Up;
             if (freeLeft) yield return p.Left;
             if (freeRight) yield return p.Right;
 
-            var corner = p.Up.Left;
+            var corner = p.Down.Left;
             if (freeUp && freeLeft && map.IsFreespace(corner))
                 yield return corner;
-            corner = p.Up.Right;
+            corner = p.Down.Right;
             if (freeUp && freeRight && map.IsFreespace(corner))
                 yield return corner;
-            corner = p.Down.Left;
+            corner = p.Up.Left;
             if (freeDown && freeLeft && map.IsFreespace(corner))
                 yield return corner;
-            corner = p.Down.Right;
+            corner = p.Up.Right;
             if (freeDown && freeRight && map.IsFreespace(corner))
                 yield return corner;
         } 

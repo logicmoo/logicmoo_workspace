@@ -21,9 +21,11 @@ conversation_idle_task(Partner, do_beat_dialog(Task)) :-
    \+ beat_waiting_for_timeout,
    dialog_task_with_partner_advances_current_beat(B, Partner, Task).
 
-strategy(do_beat_dialog(Task),
-	 begin(Task,
-	       assert($global_root/beats/Beat/completed_tasks/Task))) :-
+strategy(do_beat_dialog(null), null).
+default_strategy(do_beat_dialog(Task),
+		 begin(Task,
+		       tell($global_root/beats/Beat/completed_tasks/Name))) :-
+   beat_task_name(Task, Name),
    current_beat(Beat).
 
 strategy(ask_about($me, $addressee, $addressee),
@@ -33,7 +35,14 @@ strategy(ask_about($me, $addressee, $addressee),
 strategy(ask_about($me, $addressee, Topic),
 	 command($me, $addressee,
 		 tell_about($addressee, $me, Topic))) :-
-   Topic \= $addressee.
+   Topic \= $addressee,
+   Topic \= question(_).
+strategy(ask_about($me, $addressee, question(Q)),
+	 question($me, $addressee, Q, present, simple)).
 strategy(ask_about($me, Who, Topic),
 	 add_conversation_topic(Who, Topic)) :-
+   Who \= $addressee.
+
+strategy(ask_value($me, Who, Question),
+	 add_conversation_topic(Who, question(Question))) :-
    Who \= $addressee.

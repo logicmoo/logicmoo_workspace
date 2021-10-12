@@ -4,6 +4,7 @@
 /// A world object (character or prop) represented as a sprite.
 /// Contains information about footprint and docking position.
 /// </summary>
+[AddComponentMenu("Tile/DockingRegion")]
 public class DockingRegion: MonoBehaviour
 {
     /// <summary>

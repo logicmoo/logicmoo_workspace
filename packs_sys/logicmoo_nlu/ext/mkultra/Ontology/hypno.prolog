@@ -14,6 +14,7 @@ hypnotically_believe(~LF) :-
 hypnotically_believe(LF) :-
    hypnotically_believable(LF, Assertion),
    !,
+   assert(/brainwash/brainwashed),
    assert(Assertion).
 
 %% hypnotically_believable(+LF, -ELAssertion)

@@ -87,6 +87,7 @@ opt_not(negative) --> [not].
 modal_aux(can).
 modal_aux(may).
 modal_aux(should).
+modal_aux(would).
 modal_aux(must).
 
 :- register_all_lexical_items([A], modal_aux(A)).

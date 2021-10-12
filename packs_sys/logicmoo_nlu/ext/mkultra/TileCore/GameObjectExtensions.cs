@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public static class GameObjectExtensions
 {
@@ -29,7 +30,10 @@ public static class GameObjectExtensions
     /// <returns>The TileRect for the footprint</returns>
     public static Rect Footprint(this GameObject o)
     {
-        return o.GetComponent<Collider2D>().BoundingBox();
+        var collider2D = o.GetComponent<Collider2D>();
+        if (collider2D != null)
+            return collider2D.BoundingBox();
+        throw new InvalidOperationException("Attempt to get footprint of objecct with no collider: "+o.name);
     }
 
     /// <summary>

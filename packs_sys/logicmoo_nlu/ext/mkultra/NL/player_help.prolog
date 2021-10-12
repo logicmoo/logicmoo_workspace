@@ -6,6 +6,27 @@ normalize_task(respond_to_dialog_act(objective_query(player, $me)),
 	       objective_query).
 normalize_task(respond_to_dialog_act(color_query(player, $me, Color)),
 	       color_query(Color)).
+normalize_task(respond_to_dialog_act(if_navigation_command(player, $me)),
+	       if_navigation_command).
+normalize_task(respond_to_dialog_act(show_status(player, $me, What)),
+	       show_status(What)).
+before(show_status(notebook),
+       { speech(["I should check my notebook",
+		 "to take stock of the situation"]),
+	 pause(1) }).
+strategy(show_status(What),
+	 {
+	  pause_game,
+	  call(display_status_screen(What))
+	 }).
+
+strategy(if_navigation_command,
+	 monolog(["Just say what to go to.",
+		  "For example, \"go to the desk\",",
+		  "or \"go to Kavi\"",
+		  "or \"go to the kitchen\"",
+		  "or just point someplace with the mouse and say \"go there\"",
+		  "or \"go to this\"."])).
 
 strategy(general_help,
 	 monolog(["Okay, I'm going to break character for a minute.",

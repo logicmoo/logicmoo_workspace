@@ -26,7 +26,9 @@ request_status(_Requestor, _Task, normal).
 strategy(follow_command(Requestor, Task, normal),
 	 if(dialog_task(Task),
 	    Task,
-	    call(add_pending_task(on_behalf_of(Requestor, Task))))).
+	    if(Task=halt($me),
+	       call(kill_current_everyday_life_task),
+	       call(add_pending_task(on_behalf_of(Requestor, Task)))))).
 
 :- public dialog_task/1.
 dialog_task(tell_about(_,_,_)).
@@ -48,8 +50,17 @@ default_strategy(explain_failure(_),
 strategy(explain_failure(~know(X:location(Object, X))),
 	 speech(["I don't know where", np(Object), "is"])).
 
-strategy(tell_about($me, _, Topic),
-	 describe(Topic, general, null)).
+strategy(explain_failure(~ready_to_hand(Object)),
+	 speech([np(Object), "isn't ready to hand."])).
+
+default_strategy(tell_about($me, _, Topic),
+		 describe(Topic, general, null)).
+strategy(tell_about($me, Who, Topic),
+	 add_conversation_task(Who, tell_about($me, Who, Topic))) :-
+   Who \= $addressee.
+
+strategy(tell($me, Who, What),
+	 add_conversation_task(Who, assertion($me, Who, What, present, simple))).
 
 normalize_task(go($me, Location),
 	       goto(Location)).
@@ -67,10 +78,21 @@ strategy(talk($me, ConversationalPartner, Topic),
 	 add_conversation_topic(ConversationalPartner, Topic)) :-
    ConversationalPartner \= $addressee.
 
-strategy(add_conversation_topic(Person, Topic),
-	 assert(/pending_conversation_topics/Person/ask_about($me,
-							      Person,
-							      Topic))) :-
-   var(Topic) -> Topic = Person ; true.
-
 strategy(end_game(_,_), end_game(null)).
+
+%%%
+%%% Converstation topic queue
+%%%
+
+todo(engage_in_conversation(Person), 1) :-
+   \+ currently_in_conversation,
+   /pending_conversation_topics/Person/_.
+
+strategy(add_conversation_topic(Person, Topic),
+	 tell(/pending_conversation_topics/Person/ask_about($me,
+							    Person,
+							    Topic))) :-
+   var(Topic) -> Topic = Person ; true.
+strategy(add_conversation_task(Person, Task),
+	 tell(/pending_conversation_topics/Person/Task)) :-
+   var(Topic) -> Topic = Person ; true.

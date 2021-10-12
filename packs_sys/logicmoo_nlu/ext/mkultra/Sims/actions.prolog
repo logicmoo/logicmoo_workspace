@@ -16,7 +16,6 @@ action(T) :-
 %% action_functor(?Functor, ?Arity)
 %  True when any structor with the specified Functor and Arity
 %  is a primitive action.
-:- dynamic action_functor/2.
 :- external action_functor/2.
 
 %% precondition(?Action, ?P)
@@ -39,7 +38,8 @@ precondition(pickup(X),
 precondition(pickup(X),
 	     docked_with(X)).
 postcondition(pickup(X),
-	      location(X, $me)).
+	      location(X, $me)) :-
+   X \= $me.
 
 action_functor(putdown, 2).
 precondition(putdown(Object, _Dest),
@@ -48,12 +48,19 @@ precondition(putdown(_Object, Dest),
 	     docked_with(Dest)).
 postcondition(putdown(Object, Dest),
 	      location(Object, Dest)) :-
-   Dest \= $me.
+   Dest \= $me,
+   Object \= $me.
 
 action_functor(face, 1).
 action_functor(ingest, 1).
+action_functor(get_in, 1).
 precondition(ingest(Edible),
 	     location(Edible, $me)) :-
+   \+ is_a(Edible, person),
+   Edible \= $me.
+precondition(ingest(Edible),
+	     docked_with(Edible)) :-
+   is_a(Edible, person),
    Edible \= $me.
 precondition(ingest(Edible),
 	     exists(Edible)).

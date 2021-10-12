@@ -16,6 +16,8 @@ public class SpriteSheetAnimationController : MonoBehaviour
     public int Rows = 4;
 
     public int Columns = 4;
+
+    public bool Visible = true;
     #endregion
 
     #region State variables for animation
@@ -105,6 +107,7 @@ public class SpriteSheetAnimationController : MonoBehaviour
         Animations["East"] = new RowSpriteAnimation("East", 1, 4, Stride, 0);
         Animations["West"] = new RowSpriteAnimation("West", 2, 4, Stride, 0);
         Animations["South"] = new RowSpriteAnimation("South", 3, 4, Stride, 0);
+        Animations["Lay in bed"] = new RowSpriteAnimation("Lay in bed", 3, 1, 0, 0);
     }
 
     #region User-callable procedures for controling animation.
@@ -195,28 +198,43 @@ public class SpriteSheetAnimationController : MonoBehaviour
 
     public void OnRenderObject()
     {
-        var p = transform.position-SpriteOffset;
-        var uSize = 1.0f / Columns;
-        var vSize = 1.0f / Rows;
-        var frame = CurrentFrame;
-        var column = frame.Column;
-        var row = frame.Row;
-        // Kluge
-        if (Color == Color.yellow)
-            return;
-        Material.color = Color;
-        Material.SetPass(0);
-        GL.Begin(GL.QUADS);
-        GL.Color(Color);
-        GL.TexCoord2(column*uSize, row*vSize);
-        GL.Vertex3(p.x, p.y, p.z);
-        GL.TexCoord2(column * uSize, (row+1) * vSize);
-        GL.Vertex3(p.x, p.y+1.5f, p.z);
-        GL.TexCoord2((column+1) * uSize, (row+1) * vSize);
-        GL.Vertex3(p.x+1, p.y+1.5f, p.z);
-        GL.TexCoord2((column+1) * uSize, row * vSize);
-        GL.Vertex3(p.x+1, p.y, p.z);
-        GL.End();
+        if (Visible)
+        {
+            var p = transform.position - SpriteOffset;
+            var uSize = 1.0f/Columns;
+            var vSize = 1.0f/Rows;
+            var frame = CurrentFrame;
+            var column = frame.Column;
+            var row = frame.Row;
+            // Kluge
+            if (Color == Color.yellow)
+                return;
+            Material.color = Color;
+            Material.SetPass(0);
+            GL.Begin(GL.QUADS);
+            GL.Color(Color);
+            GL.TexCoord2(column*uSize, row*vSize);
+            GL.Vertex3(p.x, p.y, p.z);
+            GL.TexCoord2(column*uSize, (row + 1)*vSize);
+            GL.Vertex3(p.x, p.y + 1.5f, p.z);
+            GL.TexCoord2((column + 1)*uSize, (row + 1)*vSize);
+            GL.Vertex3(p.x + 1, p.y + 1.5f, p.z);
+            GL.TexCoord2((column + 1)*uSize, row*vSize);
+            GL.Vertex3(p.x + 1, p.y, p.z);
+            GL.End();
+        }
     }
     #endregion
+
+    public void DrawThumbNail(Vector2 screenLocation)
+    {
+        var uSize = 1.0f / Columns;
+        var vSize = 1.0f / Rows;
+        var column = 1;
+        var row = 1;
+        GUI.DrawTextureWithTexCoords(
+            new Rect(screenLocation.x, screenLocation.y, SpriteSheet.width / Columns, SpriteSheet.height / Rows),
+            SpriteSheet,
+            new Rect(column*uSize, row*vSize, uSize, vSize));
+    }
 }

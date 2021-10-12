@@ -1,5 +1,6 @@
 ﻿using Prolog;
 using UnityEngine;
+using System.Collections.Generic;
 
 // ReSharper disable once InconsistentNaming
 public class NLPrompt : BindingBehaviour
@@ -26,6 +27,8 @@ public class NLPrompt : BindingBehaviour
     /// Font, color, etc. for displaying the decoded dialog act
     /// </summary>
     public GUIStyle CommentaryGUIStyle = new GUIStyle();
+
+    public GUIStyle MenuGUIStyle = new GUIStyle();
     #endregion
 
     #region Private fields
@@ -58,17 +61,34 @@ public class NLPrompt : BindingBehaviour
     /// Output form player character to player, if any.
     /// </summary>
     private string characterResponse = "";
+    
+    private ELNode elRoot;
+
+    private ELNode haloElNode;
+
+    private ELNode mouseSelectionELNode;
+
+    private ELNode talkingToElNode;
 
     [Bind]
 #pragma warning disable 649
     private SimController simController;
+
+    private float typingPromptStartTime;
 #pragma warning restore 649
+
+    private PieMenu contextMenu;
     #endregion
 
     internal void Start()
     {
-        this.lastPlayerActivity = KnowledgeBase.Global.ELRoot.StoreNonExclusive(Symbol.Intern("last_player_activity"));
-        this.lastPlayerActivity.StoreExclusive(-1, true);
+        lastPlayerActivity = KnowledgeBase.Global.ELRoot.StoreNonExclusive(Symbol.Intern("last_player_activity"));
+        lastPlayerActivity.StoreExclusive(-1, true);
+        elRoot = this.KnowledgeBase().ELRoot;
+        haloElNode = elRoot/Symbol.Intern("halo");
+        mouseSelectionELNode = elRoot/ Symbol.Intern("perception") / Symbol.Intern("mouse_selection");
+        talkingToElNode = elRoot/Symbol.Intern("social_state")/Symbol.Intern("talking_to");
+        MouseSelection = null;
     }
 
     /// <summary>
@@ -82,26 +102,161 @@ public class NLPrompt : BindingBehaviour
 
     internal void OnGUI()
     {
+
+        // You'd want this to be called by a MouseMove event, but it's not supported in game,
+        // and in any case, we probably need to keep updating because of potential object movement.
+        if (contextMenu == null)
+            UpdateMouseSelection();
+
         GUI.depth = 0;
         var e = Event.current;
         switch (e.type)
         {
-            case EventType.KeyDown:
-                if (GUI.GetNameOfFocusedControl()=="")
+            case EventType.MouseDown:
+                //typingPromptStartTime = Time.time;
+                contextMenu = MakeMenu(MouseSelection);
+                lastPlayerActivity.StoreExclusive(Time.time, true);
+                break;
+
+            case EventType.MouseUp:
+                if (contextMenu != null && MouseSelection != null)
                 {
-                    this.HandleKeyDown(e);
-                    this.TryCompletionIfCompleteWord();
+                    var guiScreenRect = MouseSelection.GUIScreenRect();
+                    if (guiScreenRect.HasValue)
+                    {
+                        var selection = contextMenu.SelectedAction(guiScreenRect.Value.Center());
+                        if (selection != null)
+                            simController.QueueEvent("player_input", selection);
+                    }
+                }
+
+                lastPlayerActivity.StoreExclusive(Time.time, true);
+                contextMenu = null;
+                break;
+
+            case EventType.KeyDown:
+                if (GUI.GetNameOfFocusedControl() == "")
+                {
+                    HandleKeyDown(e);
+                    if (!e.alt && !e.control)
+                        TryCompletionIfCompleteWord();
                 }
                 break;
 
             case EventType.Repaint:
-                GUI.Label(InputRect, formatted, InputGUIStyle);
-                GUI.Label(CommentaryRect, commentary, CommentaryGUIStyle);
-                GUI.Label(ResponseRect, characterResponse, InputGUIStyle);
+                DrawGUI();
                 break;
         }
     }
 
+    PieMenu MakeMenu(GameObject selection)
+    {
+        var tags = new List<string>();
+        var actions = new List<object>();
+        var stringVar = new LogicVariable("Tag");
+        var actionVar = new LogicVariable("Action");
+        var goal = new Structure("menu_item", selection, stringVar, actionVar);
+
+        // ReSharper disable once UnusedVariable
+#pragma warning disable 168
+        foreach (var ignore in gameObject.KnowledgeBase().Prove(goal))
+#pragma warning restore 168
+        {
+            tags.Add((string)stringVar.Value);
+            actions.Add(Term.CopyInstantiation(actionVar));
+        }
+
+        return new PieMenu(tags, actions, MenuGUIStyle, 50, SimController.GreyOutTexture);
+    }
+
+    #region Drawing the screen
+    private void DrawGUI()
+    {
+        var arrowActive = typingPromptStartTime > Time.time - 3;
+
+        if (contextMenu == null)
+            ShowMouseSelectionCaption();
+
+        if (!string.IsNullOrEmpty(input) || arrowActive  || Time.time > haloOnset + 2f)
+        {
+            GameObject addressee;
+
+            var da = dialogAct as Structure;
+            if (da != null)
+                addressee = (GameObject) da.Argument(1);
+            else if (talkingToElNode.Children.Count > 0)
+                addressee = (GameObject) talkingToElNode.Children[0].Key;
+            else
+                addressee = gameObject;
+
+            addressee.DrawThumbNail(new Vector2(InputRect.x - 40, InputRect.y));
+        }
+        var text = (string.IsNullOrEmpty(input) && arrowActive) ? "<color=grey><i>Talk to me</i></color>" : formatted;
+        GUI.Label(InputRect, text, InputGUIStyle);
+        GUI.Label(CommentaryRect, commentary, CommentaryGUIStyle);
+        GUI.Label(ResponseRect, characterResponse, InputGUIStyle);
+        GUI.depth = 0;
+        if (contextMenu != null && MouseSelection != null)
+        {
+            var guiScreenRect = MouseSelection.GUIScreenRect();
+            if (guiScreenRect.HasValue)
+                contextMenu.Draw(guiScreenRect.Value.Center(), 50);
+        }
+    }
+
+    public Material OutlineMaterial;
+    private float haloOnset;
+    private static readonly Symbol SOn = Symbol.Intern("on");
+
+    internal void OnRenderObject()
+    {
+        if (haloElNode.ExclusiveKeyValue<Symbol>() == SOn)
+        {
+            var pos = gameObject.Position();
+            var rect = new Rect(pos.x - 0.5f, pos.y-0.2f, 1, 1.5f);
+            var lineColor = Color.yellow;
+            lineColor.a = (1 - Mathf.Cos(Time.time - haloOnset))*0.5f;
+            OutlineMaterial.SetPass(0);
+            GLDrawRect(lineColor, rect);
+            GL.PushMatrix();
+            GL.LoadPixelMatrix();
+            var r = InputRect;
+            r.yMin = Screen.height - r.yMin;
+            r.yMax = Screen.height - r.yMax;
+            GLDrawRect(lineColor, r);
+            GL.PopMatrix();
+        }
+        else
+        {
+            haloOnset = Time.time;
+        }
+    }
+
+    // ReSharper disable once InconsistentNaming
+    private static void GLDrawRect(Color lineColor, Rect rect)
+    {
+        GL.Begin(GL.LINES);
+        GL.Color(lineColor);
+        GL.Vertex3(rect.xMin, rect.yMin, 0);
+        GL.Vertex3(rect.xMin, rect.yMax, 0);
+
+
+        GL.Color(lineColor);
+        GL.Vertex3(rect.xMin, rect.yMax, 0);
+        GL.Vertex3(rect.xMax, rect.yMax, 0);
+
+        GL.Color(lineColor);
+        GL.Vertex3(rect.xMax, rect.yMax, 0);
+        GL.Vertex3(rect.xMax, rect.yMin, 0);
+
+        GL.Color(lineColor);
+        GL.Vertex3(rect.xMax, rect.yMin, 0);
+        GL.Vertex3(rect.xMin, rect.yMin, 0);
+        GL.End();
+    }
+    #endregion
+
+    #region Keyboard handling
     private void HandleKeyDown(Event e)
     {
         if (e.keyCode != KeyCode.None)
@@ -122,59 +277,66 @@ public class NLPrompt : BindingBehaviour
                 else if (e.control)
                     key = new Structure("-", Symbol.Intern("control"), key);
 
-                KnowledgeBase.Global.IsTrue(new Structure("fkey_command", key));
+                gameObject.IsTrue(new Structure("fkey_command", key));
                 return;
             }
 
             // Update last user activity time
-            this.lastPlayerActivity.StoreExclusive(Time.time, true);
+            lastPlayerActivity.StoreExclusive(Time.time, true);
 
             switch (e.keyCode)
             {
                 case KeyCode.Escape:
-                    this.input = this.formatted = this.commentary = "";
-                    this.dialogAct = null;
+                    input = formatted = commentary = "";
+                    dialogAct = null;
                     PauseManager.Paused = false;
                     break;
 
                 case KeyCode.Delete:
                 case KeyCode.Backspace:
-                    if (this.input != "")
+                    if (input != "")
                     {
-                        this.formatted = this.input = this.input.Substring(0, this.input.Length - 1);
-                        this.TryCompletionIfCompleteWord();
+                        formatted = input = input.Substring(0, input.Length - 1);
+                        TryCompletionIfCompleteWord();
                     }
                     break;
 
                 case KeyCode.Tab:
-                    this.input = string.Format(
+                    input = string.Format(
                         "{0}{1}{2}",
-                        this.input,
-                        (this.input.EndsWith(" ")
+                        input,
+                        (input.EndsWith(" ")
                          || (!string.IsNullOrEmpty(completion) && !char.IsLetterOrDigit(completion[0])))
                             ? ""
                             : " ",
-                        this.completion);
+                        completion);
                     break;
 
                 case KeyCode.Return:
                 case KeyCode.KeypadEnter:
-                    if (this.dialogAct != null)
+                    if (dialogAct != null)
                     {
                         simController.QueueEvent("player_input", dialogAct);
                         this.IsTrue("log_dialog_act", dialogAct);
-                        this.formatted = this.input = this.completion = this.commentary = "";
-                        this.dialogAct = null;
+                        formatted = input = completion = commentary = "";
+                        dialogAct = null;
                         PauseManager.Paused = false;
                     }
                     Event.current.Use();
+                    break;
+
+                case KeyCode.UpArrow:
+                case KeyCode.DownArrow:
+                case KeyCode.LeftArrow:
+                case KeyCode.RightArrow:
+                    typingPromptStartTime = Time.time;
                     break;
             }
         }
 
         if (e.character > 0 && !e.alt && !e.control && e.character >= ' ')
         {
-            this.AddToInput(e.character);
+            AddToInput(e.character);
         }
     }
 
@@ -185,10 +347,10 @@ public class NLPrompt : BindingBehaviour
 
         PauseManager.Paused = true;
         characterResponse = "";
-        if (c != ' ' || (this.input != "" && !this.input.EndsWith(" "))) // don't let them type redundant spaces
-            this.input = this.input + c;
+        if (c != ' ' || (input != "" && !input.EndsWith(" "))) // don't let them type redundant spaces
+            input = input + c;
 
-        this.TryCompletionIfCompleteWord();
+        TryCompletionIfCompleteWord();
     }
 
     /// <summary>
@@ -204,6 +366,7 @@ public class NLPrompt : BindingBehaviour
                 && !char.IsLetterOrDigit(input[input.Length-1]))
                 return true;
             // Check for cases like "who're"
+            // ReSharper disable once LoopCanBeConvertedToQuery
             foreach (var e in Prolog.Prolog.EnglishEnclitics)
             {
                 if (input.EndsWith(e) && input.Length > e.Length && input[input.Length - 1 - e.Length] == '\'')
@@ -215,92 +378,202 @@ public class NLPrompt : BindingBehaviour
 
     private void TryCompletionIfCompleteWord()
     {
-        this.formatted = null;
+        formatted = null;
         if (InputEndsWithCompleteWord)
-            this.TryCompletion();
+            TryCompletion();
         else
         {
-            var lastSpace = this.input.LastIndexOf(' ');
-            var lastWord = lastSpace < 0 ? this.input : this.input.Substring(lastSpace + 1);
-            lastWord = lastWord.Trim('(', ')', '.', ',', '?', '!', ';', ':', '\'', '"');
+            var lastWord = LastWordOfInput;
 
             if (Prolog.Prolog.IsLexicalItem(lastWord))
             {
-                this.TryCompletion();
+                TryCompletion();
+            } else if (!Prolog.Prolog.IsPrefixOfDistinctLexicalItem(lastWord))
+            {
+                FormatRejectionOfInput();
             }
         }
 
-        if (this.formatted == null)
+        if (formatted == null)
         {
-            this.formatted = this.input;
-            this.dialogAct = null;
+            
+            FormatInputWithoutColorCoding();
+        }
+    }
+
+    private string LastWordOfInput
+    {
+        get
+        {
+            var lastSpace = input.LastIndexOf(' ');
+            var lastWord = lastSpace < 0 ? input : input.Substring(lastSpace + 1);
+            lastWord = lastWord.Trim('(', ')', '.', ',', '?', '!', ';', ':', '\'', '"');
+            return lastWord;
         }
     }
 
     private void TryCompletion()
     {
+        // Update the mouse selection, so Prolog can get at it.
+        mouseSelectionELNode.StoreExclusive(MouseSelection, true);
+
         var completionVar = new LogicVariable("Output");
         var dialogActVar = new LogicVariable("DialogAct");
         bool completionSuccess = false;
         try
         {
-            completionSuccess = this.IsTrue("input_completion", this.input, completionVar, dialogActVar);
+            completionSuccess = this.IsTrue("input_completion", input, completionVar, dialogActVar);
         }
         catch (InferenceStepsExceededException e)
         {
-            Debug.LogError("Completion took too many steps for input: "+this.input);
+            Debug.LogError("Completion took too many steps for input: "+ input);
             Debug.LogException(e);
         }
         if (completionSuccess)
         {
-            this.completion = (string)completionVar.Value;
-            this.dialogAct = Term.CopyInstantiation(dialogActVar.Value);
-            if (this.IsTrue("well_formed_dialog_act", this.dialogAct))
+            completion = (string)completionVar.Value;
+            dialogAct = Term.CopyInstantiation(dialogActVar.Value);
+            if (this.IsTrue("well_formed_dialog_act", dialogAct))
             {
-                this.formatted = this.completion == "" ?
-                    string.Format("<b><color=lime>{0}</color></b>", this.input)
+                formatted = completion == "" ?
+                    string.Format("<b><color=lime>{0}</color></b>", input)
                     : string.Format("<color=lime>{0}{1}<i>{2}</i></color>",
-                                    this.input,
-                                    ( this.input.EndsWith(" ") || this.input.EndsWith("'") 
-                                      || !char.IsLetterOrDigit(this.completion[0])) 
+                                    input,
+                                    (input.EndsWith(" ") || input.EndsWith("'") 
+                                      || !char.IsLetterOrDigit(completion[0])) 
                                     ? "" : " ",
-                                    this.completion);
-                var da = this.dialogAct as Structure;
+                                    completion);
+
+                var da = dialogAct as Structure;
                 if (da != null && da.Arity > 1)
                 {
                     var a = da.Argument<GameObject>(1);
-                    this.commentary = string.Format("{0} to {1}\n{2}", da.Functor, (a == this) ? "myself" : a.name,
+                    var addressee = (a == gameObject) ? "myself" : a.name;
+                    commentary = string.Format("{0} to {1}\n{2}", da.Functor, addressee,
                                                     ISOPrologWriter.WriteToString(dialogActVar.Value));
+                    formatted = string.Format("{1} (speaking to {0})", addressee, formatted);
                 }
                 else
                 {
-                    this.commentary = ISOPrologWriter.WriteToString(dialogActVar.Value);
+                    commentary = ISOPrologWriter.WriteToString(dialogActVar.Value);
                 }
             }
             else
             {
                 // Input is grammatical but not well formed.
-                this.formatted = this.completion == "" ?
-                    string.Format("<b><color=yellow>{0}</color></b>", this.input)
+                formatted = completion == "" ?
+                    string.Format("<b><color=yellow>{0}</color></b>", input)
                     : string.Format("<color=yellow>{0}{1}</color><color=grey><i>{2}</i></color>",
-                                    this.input,
-                                    (this.input.EndsWith(" ") || !char.IsLetterOrDigit(this.completion[0])) ? "" : " ",
-                                    this.completion);
-                if (this.completion == "")
-                    this.commentary = string.Format(
+                                    input,
+                                    (input.EndsWith(" ") || !char.IsLetterOrDigit(completion[0])) ? "" : " ",
+                                    completion);
+                if (completion == "")
+                    commentary = string.Format(
                         "This input is grammatical, but doesn't make sense to me\n{0}",
                         ISOPrologWriter.WriteToString(dialogActVar.Value));
                 else
                 {
-                    this.commentary = "This is grammatical but nonsensical\n" + ISOPrologWriter.WriteToString(dialogActVar.Value);
+                    commentary = "This is grammatical but nonsensical\n" + ISOPrologWriter.WriteToString(dialogActVar.Value);
                 }
             }
 
         }
         else
         {
-            this.formatted = string.Format("<color=red>{0}</color>", this.input);
-            this.commentary = "Sorry; I don't understand any sentences beginning with those words.";
+            var lastWordOfInput = LastWordOfInput;
+            if (lastWordOfInput != "" && Prolog.Prolog.IsPrefixOfDistinctLexicalItem(lastWordOfInput))
+            {
+                FormatInputWithoutColorCoding();
+            }
+            else
+            {
+                FormatRejectionOfInput();
+            }
         }
     }
+
+    private void FormatInputWithoutColorCoding()
+    {
+        formatted = input;
+        commentary = "";
+        dialogAct = null;
+    }
+
+    private void FormatRejectionOfInput()
+    {
+        formatted = string.Format("<color=red>{0}</color>   (sorry, I don't understand; hit backspace)", input);
+        commentary = "Sorry; I don't understand any sentences beginning with those words.";
+        dialogAct = null;
+    }
+
+    #endregion
+
+    #region Mouse handling
+    /// <summary>
+    /// The GameObject of the PhysicalObject over which the mouse is currently hovering.
+    /// </summary>
+    public GameObject MouseSelection;
+    private void UpdateMouseSelection()
+    {
+        GameObject newSelection = null;
+
+        foreach (var physob in FindObjectsOfType<PhysicalObject>())
+        {
+            var go = physob.gameObject;
+            if (!physob.IsHidden)
+            {
+                var rect = go.GUIScreenRect();
+                if (rect.HasValue && rect.Value.Contains(Event.current.mousePosition))
+                    newSelection = go;
+            }
+        }
+        if (newSelection == null)
+        {
+            var mouseLocation = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            var room = TileMap.TheTileMap.TileRoom(mouseLocation);
+            if (room != null)
+                newSelection = room.gameObject;
+        }
+
+        if (newSelection != MouseSelection)
+            MouseSelectionChanged(newSelection);
+    }
+
+    GUIContent caption;
+    GUIStyle captionStyle = new GUIStyle(GUIStyle.none);
+    Vector2 captionSize;
+
+    private void MouseSelectionChanged(GameObject newSelection)
+    {
+        MouseSelection = newSelection;
+        if (MouseSelection != null)
+        {
+            captionStyle.normal.textColor = Color.white;
+            var cap = new LogicVariable("Caption");
+            caption =
+                new GUIContent(
+                    (string) KnowledgeBase.Global.SolveFor(cap, new Structure("caption", MouseSelection, cap), this));
+            captionSize = captionStyle.CalcSize(caption);
+        }
+        TryCompletionIfCompleteWord();
+    }
+
+    protected void ShowMouseSelectionCaption()
+    {
+        if (MouseSelection != null)
+        {
+            var screenPosition = MouseSelection.GUIScreenPosition();
+            if (screenPosition.y < 0)
+                screenPosition.y = 0;
+            if (screenPosition.y > Screen.height-30)
+                screenPosition.y = Screen.height - 30;
+            var bubbleRect = new Rect(screenPosition.x, screenPosition.y, captionSize.x, captionSize.y);
+            GUI.Box(bubbleRect, SimController.GreyOutTexture);
+            GUI.Label(
+                bubbleRect,
+                caption,
+                captionStyle);
+        }
+    }
+    #endregion
 }

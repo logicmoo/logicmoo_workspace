@@ -45,7 +45,7 @@ assert_phrase_rule(Phrase, Words) :-
 	  register_lexical_item(Word)),
    append(Words, Tail, WordsWithTail),
    term_append(Phrase, [WordsWithTail, Tail], DCGRule),
-   swi_or_unity(assertz(DCGRule),assertz($global::DCGRule)).
+   assertz($global::DCGRule).
 
 %% assert_phrase_rule(Phrase, Words, Guard) is det
 %  Asserts that Phrase can be matched by Words (a list of symbols) if
@@ -70,6 +70,12 @@ assert_proper_name(Object, [ ], _) :-
 assert_proper_name(Object, [ ], NumberSpec) :-
    !,
    assert_proper_name(Object, [Object], NumberSpec).
+assert_proper_name(Object, [the | Name], NumberSpec) :-
+   !,
+   (number_spec_number(NumberSpec, Number) -> 
+      assert_phrase_rule(proper_name_without_the(Object, Number), Name)
+      ;
+      log(bad_grammatical_number(NumberSpec:Name))).
 assert_proper_name(Object, Name, NumberSpec) :-
    number_spec_number(NumberSpec, Number) -> 
       assert_phrase_rule(proper_name(Object, Number), Name)

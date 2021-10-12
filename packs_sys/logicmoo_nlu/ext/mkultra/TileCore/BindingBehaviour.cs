@@ -57,7 +57,7 @@ using Object = UnityEngine.Object;
     // - ComponentType must be a subclass or BindingBehaviour, or else you must manually write Awake/OnEnable and OnDisable
     //   methods to call Register() and Unregister().
     [Bind]
-    System.Collections.Generic.List<ComponentType> field;  
+    System.Collections.Generic.ValueMenu<ComponentType> field;  
  }
  */
 
@@ -230,7 +230,7 @@ public abstract class BindingBehaviour : MonoBehaviour
     }
 
     /// <summary>
-    /// Binds a System.Collections.Generic.List of components to all the components of its type within the scope specified by the [Bind] attribute.
+    /// Binds a System.Collections.Generic.ValueMenu of components to all the components of its type within the scope specified by the [Bind] attribute.
     /// Does nothing if the field is already non-null.
     /// </summary>
     /// <param name="component">Component containing the field</param>
@@ -357,8 +357,8 @@ public abstract class BindingBehaviour : MonoBehaviour
     #region Tracking of registered instances of types
     //
     // Collections of BindingBehaviours of a given type are collected in System.Collections.Generic.Lists, known as "registries".
-    // When a field of type List(T) is bound using [Bind], it is set to the registry itself, so that it updates automatically
-    // as instances of the type are created and deleted.  Thus all fields of a given List(T) type are set to the same underlying
+    // When a field of type ValueMenu(T) is bound using [Bind], it is set to the registry itself, so that it updates automatically
+    // as instances of the type are created and deleted.  Thus all fields of a given ValueMenu(T) type are set to the same underlying
     // list object, aka the registry.
     //
 
@@ -371,7 +371,7 @@ public abstract class BindingBehaviour : MonoBehaviour
     /// Returns the registry for the given type.
     /// </summary>
     /// <param name="type">The type to get the registry for.</param>
-    /// <returns>The registry for type.  This will be of type System.Collections.Generic.List(type), but since all generic lists are also ILists, we can manipulate it using the IList interface, which simplifies the code for maintaining the registry.</returns>
+    /// <returns>The registry for type.  This will be of type System.Collections.Generic.ValueMenu(type), but since all generic lists are also ILists, we can manipulate it using the IList interface, which simplifies the code for maintaining the registry.</returns>
     public static IList Registry(Type type)
     {
         IList probe;
@@ -396,7 +396,7 @@ public abstract class BindingBehaviour : MonoBehaviour
     } 
 
     /// <summary>
-    /// Creates an empty list of type System.Collections.Generic.List(T), where T is the argument type.
+    /// Creates an empty list of type System.Collections.Generic.ValueMenu(T), where T is the argument type.
     /// </summary>
     /// <param name="t">The element type for the list</param>
     /// <returns>An empty list of the type.</returns>

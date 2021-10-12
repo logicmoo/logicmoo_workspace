@@ -18,7 +18,8 @@ default_strategy(resolve_match_failure(T), restart(T)) :-
    \+ ($task/failed/PastFailure, PastFailure=T) .
 
 strategy(restart(T),
-	 ( assert($task/failed/T),
+	 ( tell($task/failed/T),
+	   % was assert($task/failed/T),
 	   invoke_continuation(Goal) )) :-
    $task/type:task:Goal.
 

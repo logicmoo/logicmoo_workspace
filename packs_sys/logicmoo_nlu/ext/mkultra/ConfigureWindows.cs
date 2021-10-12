@@ -19,13 +19,17 @@ internal class ConfigureWindows : MonoBehaviour
         FindObjectOfType<TileMap>().UpdateCamera(theCamera);
         Tile.UpdateTileSize(theCamera);
 
-        // Place the Prolog console in the upper-right-hand corner
+        // Give the ELInspector and Prolog console equal real estate
         var console = FindObjectOfType<PrologConsole>();
+        var inspector = FindObjectOfType<ELInspector>();
+        // ReSharper disable once PossibleLossOfFraction
+        console.WindowRect.height = inspector.WindowRect.height = Screen.height/2;
+
+        // Place the Prolog console in the upper-right-hand corner
         console.WindowRect.y = 0;
         console.WindowRect.x = Screen.width - console.WindowRect.width;
 
         // Place the EL inspector in the lower-right-hand corner
-        var inspector = FindObjectOfType<ELInspector>();
         inspector.WindowRect.y = console.WindowRect.y + console.WindowRect.height;
         inspector.WindowRect.height = Screen.height - inspector.WindowRect.height;
         inspector.WindowRect.x = Screen.width - inspector.WindowRect.width;

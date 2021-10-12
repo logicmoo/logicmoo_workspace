@@ -72,9 +72,6 @@ process_kind_hierarchy:- wdmsg(todo(process_kind_hierarchy)).
 %:- assume_dyn(can/1).
 %:- assume_dyn(>-->/2).
 /*
-:- assume_dyn(visibility/2).
-:- assume_dyn(reduces_to_aux/4).
-:- assume_dyn(parser_tests/2).
 :- assume_dyn(manner/2).
 :- assume_dyn(leaf_kind/1).
 :- assume_dyn(kind_noun/4).
@@ -83,12 +80,10 @@ process_kind_hierarchy:- wdmsg(todo(process_kind_hierarchy)).
 :- assume_dyn(implies_relation/2).
 :- assume_dyn(genitive_form_of_relation/4).
 :- assume_dyn(dialog_task_advances_current_beat/1).
-:- assume_dyn(copular_relation/3).
 :- assume_dyn(contradictory_pair/2).
 :- assume_dyn(character/1).
 :- assume_dyn(begin_concern/1).
 :- assume_dyn(begin_child_concern/3).
-:- assume_dyn(adjective/2).
 */
 :- load_mkultra.
 

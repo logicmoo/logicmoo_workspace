@@ -3,7 +3,7 @@
 %%%
 
 strategy(introduce_person(Person),
-	 describe(Person, introduction, null)).
+	 describe(Person, introduction, say_string("Not much to say."))).
 
 strategy(preface_description(Person),
 	 give_name(Person)) :-

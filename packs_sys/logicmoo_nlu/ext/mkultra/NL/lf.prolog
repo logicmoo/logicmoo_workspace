@@ -2,8 +2,7 @@
 %% Predicates for manipulating logical forms
 %%
 
-:- dynamic(adjective/2).
-
+:- external past/1, future/1, can/1, may/1, should/1, would/1, must/1.
 
 %% modalized(?LF, ?Tense, ?Aspect, ?Modalized) is det
 %  Modalized is LF inflected with Tense and Aspect
@@ -49,6 +48,9 @@ lf_core_predicate(can(S), P) :-
 lf_core_predicate(must(S), P) :-
    !,
    lf_core_predicate(S, P).
+lf_core_predicate(would(S), P) :-
+   !,
+   lf_core_predicate(S, P).
 lf_core_predicate(S, S).
 
 
@@ -73,5 +75,16 @@ lf_core_predicate_subject(S, Subject) :-
 lf_core_predicate_subject(S, Subject) :-
    dtv(past_participle, _, Subject^_^_^S, _, _, _, _).
 lf_core_predicate_subject(S, Subject) :-
-   adjective(_, Subject^S).
-
+   adjective(Subject^S, _, []).
+lf_core_predicate_subject(S, Subject) :-
+   modal_verb(_, _, Subject^_Complement^S, _, _).
+lf_core_predicate_subject(S, Subject) :-
+   verb_with_clausal_complement(_, _, Subject, _Complement, S, _, _, _).
+lf_core_predicate_subject(S, Subject) :-
+   verb_with_clausal_complement(_, _, Subject, _Complement, _, S, _, _).
+lf_core_predicate_subject(S, Subject) :-
+   verb_with_object_and_clausal_complement(_, _, Subject, _Object, _Complement, S, _, _, _).
+lf_core_predicate_subject(S, Subject) :-
+   verb_with_object_and_clausal_complement(_, _, Subject, _Object, _Complement, _, S, _, _).
+lf_core_predicate_subject(S, Subject) :-
+   turn_phrasal_verb(_, Subject, _, S).

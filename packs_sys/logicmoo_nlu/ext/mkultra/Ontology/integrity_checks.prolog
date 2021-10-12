@@ -6,7 +6,7 @@ known_object(Object) :-
 known_type(number).
 known_type(string).
 known_type(List) :-
-   is_list(List).
+   list(List).
 known_type(kind_of(Kind)) :-
    kind(Kind).
 known_type(subkind_of(Kind)) :-
@@ -128,8 +128,8 @@ test(integrity(ditransitive_verb_semantics_defined),
 test(integrity(adjective_semantics_defined),
      [ problem_list("The following undefined predicates or attributes appear in word definitions",
 		    UndefinedPredicates) ]) :-
-   all(Spec:Word,
-       ( adjective(Word, Semantics),
+   all(Spec:Phrase,
+       ( adjective(Semantics, Phrase, []),
 	 lambda_contains_undefined_predicate(Semantics, Spec) ),
        UndefinedPredicates).
 

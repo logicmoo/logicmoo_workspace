@@ -1,3 +1,6 @@
+
+:-if(current_prolog_flag(use_old_code_to,true)).
+
 %%%%
 %%%% A simple (read: lame) implementation of Sims-style needs
 %%%%
@@ -195,3 +198,6 @@ fkey_command(alt-o, "Display need scores of different objects") :-
 force_need_update :-
    concern(C, need_satisfaction),
    rebid_need_destinations(C).
+
+
+:- endif.

@@ -53,11 +53,13 @@ builtin_task(T) :-
 immediate_builtin(null).
 immediate_builtin(done).
 immediate_builtin(call(_)).
+immediate_builtin(tell(_)).
 immediate_builtin(assert(_)).
 immediate_builtin(retract(_)).
 immediate_builtin(invoke_continuation(_)).
 immediate_builtin((_,_)).
 immediate_builtin(let(_,_)).
+polled_builtin(yield).
 polled_builtin(wait_condition(_)).
 polled_builtin(wait_event(_)).
 polled_builtin(wait_event(_,_)).
@@ -78,5 +80,11 @@ polled_builtin(breakpoint).
 have_strategy(Task) :-
    task_reduction(Task, Reduct),
    !,
-   Reduct \= resolve_match_failure(_).
-   
+   have_strategy_aux(Reduct).
+
+have_strategy_aux(resolve_match_failure(Task)) :-
+   !,
+   task_reduction(resolve_match_failure(Task),
+		  Default),
+   Default \= resolve_match_failure(_).
+have_strategy_aux(_).   

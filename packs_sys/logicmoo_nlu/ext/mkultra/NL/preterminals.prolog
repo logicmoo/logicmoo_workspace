@@ -9,6 +9,10 @@
 proper_name(Object, Name) :-
    proper_name(Object, _, Name, [ ]).
 
+proper_name(Object, Number) -->
+   [the],
+   proper_name_without_the(Object, Number).
+
 pronoun(Case, Person:Number, (E^S)^S) -->
    [PN],
    { \+ bound_discourse_variable(E),
@@ -143,3 +147,11 @@ check_lexical_entry_type(LF) :-
    !.
 check_lexical_entry_type(LF) :-
    log(no_type_specified_for(LF)).
+
+load_special_csv_row(_RowNumber,
+                     adjective(Phrase, Meaning)) :-
+   assert_phrase_rule(adjective(Meaning), Phrase).
+
+end_csv_loading(adjective) :-
+   forall(adjective(_, Phrase, []),
+	  register_lexical_items(Phrase)).

@@ -4,12 +4,18 @@ begin(G):- must_det_l(G).
 
 :- arithmetic_function('$'/1).
 :- arithmetic_function('now'/0).
+
+:- op(1100,fx,@),
+   op(1100,xfy,:=),
+   op(1100,xfy,:^).
+
+
 :- op(800,fx,'/').
 :- op(900,xfx,'::').
 :- op(399,xfy,':').
-:- op(1200,xfy,':=').
-:- op(700,xfx,':^').
-:- op(1000,fx,('@')).
+
+:- op(399,fx,'~').
+
 %:- op(1000,fx,('$')).
 :- multifile (/)/1.
 :- multifile  '~' / 1.

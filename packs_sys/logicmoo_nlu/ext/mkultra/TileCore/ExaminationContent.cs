@@ -3,6 +3,7 @@
 /// <summary>
 /// An overlay to show some image or text when the player examines the object.
 /// </summary>
+[AddComponentMenu("Props/ExaminationContent")]
 public class ExaminationContent : MonoBehaviour
 {
     protected ExaminationContent()
@@ -18,6 +19,8 @@ public class ExaminationContent : MonoBehaviour
     /// Style in which to display the content.
     /// </summary>
     public GUIStyle Style;
+
+    public TextAsset Text;
 
     private int popUpTimestamp;
     public void PopUp()
@@ -52,6 +55,8 @@ public class ExaminationContent : MonoBehaviour
             // For some reason, changing the alpha value here has no effect on the amount of greying out
             greyOutTexture.SetPixel(0, 0, new Color(0, 0, 0, 0.5f));
         }
+        if (Text != null)
+            Content.text = Text.text;
     }
 
     private Vector2 scrollPosition;
@@ -68,7 +73,7 @@ public class ExaminationContent : MonoBehaviour
                 GUI.depth = -1;
 
                 var screenRect = new Rect(0, 0, Screen.width, Screen.height);
-                // For some reason, changing the alpha on greyOutTexture has no effect on the greying out
+                // For some reason, changing the alpha on GreyOutTexture has no effect on the greying out
                 // but drawing the box twice does :(
                 GUI.Box(screenRect, greyOutTexture);
                 GUI.Box(screenRect, greyOutTexture);

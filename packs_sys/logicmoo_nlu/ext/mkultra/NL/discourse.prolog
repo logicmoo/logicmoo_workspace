@@ -68,8 +68,8 @@ normalize_task(monolog([ ]),
 normalize_task(monolog([String | MoreMonolog]),
 	       ( say_string(String), monolog(MoreMonolog) )).
 normalize_task(monolog(String),
-	       say_string(String)) :-
-   string(String).
+	       say_string(String)).
+
 
 %%
 %% Enumerating lists
@@ -148,8 +148,12 @@ strategy(say_answer(Assertion),
 
 strategy(speech(Items),
 	 discourse_increment($me, $addressee, Items)).
-strategy(mental_monologue(Items),
-	 discourse_increment($me, $me, Items)).
+strategy(mental_monolog(String),
+	 discourse_increment($me, $me, [String])) :-
+   	 string(String).
+strategy(mental_monolog(Items),
+	 discourse_increment($me, $me, Items)) :-
+   list(Items).
 
 % When tasks other than conversations try to generate speech, this is where
 % it will be directed.

@@ -62,9 +62,68 @@ opt_stop(Mood) --> [ '!' ], { Mood \= interrogative }.
 
 :- randomizable s/7.
 
+%%%%
+%%%% CLAUSES
+%%%%
+
+%%%
+%%% Finite clauses
+%%%
+
+content_clause(ComplementLF, DeclarativePredicate, InterrogativePredicate, Predicate) -->
+   complementizer(DeclarativePredicate, InterrogativePredicate, Predicate),
+   { Predicate \= null },
+   s(ComplementLF, indicative, affirmative, present, simple).
+content_clause((Wh:(S, is_a(Wh, Kind))), _, InterrogativePredicate, InterrogativePredicate) -->
+   { InterrogativePredicate \= null },
+   whpron(Kind),
+   np((NP^S1)^S, subject, Agreement, nogap, nogap),
+   vp(base, X^X, NP^S1, _Tense, Agreement, np(Wh)).
+content_clause(Object:(be(Subject, Object), is_a(Subject, Kind)), _, InterrogativePredicate, InterrogativePredicate) -->
+   { InterrogativePredicate \= null },
+   whpron(Kind),
+   np((Subject^S)^S, subject, Agreement, nogap, nogap),
+   aux_be(present, Agreement).
+content_clause(Container:contained_in(Subject, Container), _, InterrogativePredicate, InterrogativePredicate) -->
+   { InterrogativePredicate \= null },
+   [where],
+   np((Subject^S)^S, subject, Agreement, nogap, nogap),
+   aux_be(present, Agreement).
+content_clause(ComplementLF, _, InterrogativePredicate, InterrogativePredicate) -->
+   { InterrogativePredicate \= null },
+   s(ComplementLF, interrogative, affirmative, present, simple).
+
+%% complementizer(+DeclarativePredicate, +InterrogativePredicate, -Predicate)
+%  Matches a complementizer (that, if, whether, null), chooses which version of the
+%  Predicate should be used based on whether this is a declarative or interrogative
+%  content clause.
+complementizer(_, IPredicate, IPredicate) --> [whether].
+complementizer(_, IPredicate, IPredicate) --> [if].
+complementizer(Predicate, _, Predicate) --> [that].
+complementizer(Predicate, _, Predicate) --> [].
+
+
+%%%
+%%% Infinitival clauses
+%%%
+
+infinitival_clause(EnclosingSubject, S) -->
+   { lf_subject(S, NP) },
+   np((NP^S1)^S, subject, _Agreement, nogap, nogap),
+   { NP \= EnclosingSubject },
+   infinitival_vp(NP^S1).
+
+infinitival_clause(EnclosingSubject, S) -->
+   infinitival_vp(EnclosingSubject^S).
+
+%%%%
+%%%% SENTENCES
+%%%%
+
 %%%
 %%% Indicative mood
 %%%
+
 s(S, indicative, Polarity, Tense, Aspect) -->
    { lf_subject(S, NP) },
    np((NP^S1)^S, subject, Agreement, nogap, nogap),
@@ -94,7 +153,7 @@ s(be(S, O), indicative, Polarity, Tense, simple) -->
    np((O^_)^_, object, _, nogap, nogap).
 
 % NP is [not] in NP
-s(location(S, Container), indicative, Polarity, Tense, simple) -->
+s(contained_in(S, Container), indicative, Polarity, Tense, simple) -->
    np((S^_)^_, subject, Agreement, nogap, nogap),
    aux_be(Tense, Agreement),
    opt_not(Polarity),
@@ -103,7 +162,7 @@ s(location(S, Container), indicative, Polarity, Tense, simple) -->
    { is_a(Container, enclosing_container) }.
 
 % NP is [not] on NP
-s(location(S, Container), indicative, Polarity, Tense, simple) -->
+s(contained_in(S, Container), indicative, Polarity, Tense, simple) -->
    np((S^_)^_, subject, Agreement, nogap, nogap),
    aux_be(Tense, Agreement),
    opt_not(Polarity),
@@ -112,7 +171,7 @@ s(location(S, Container), indicative, Polarity, Tense, simple) -->
    { is_a(Container, work_surface) }.
 
 % Character has  NP
-s(location(Object, Character), indicative, Polarity, Tense, simple) -->
+s(contained_in(Object, Character), indicative, Polarity, Tense, simple) -->
    np((Character^_)^_, subject, Agreement, nogap, nogap),
    { character(Character) },
    aux_have(Tense, Agreement),
@@ -121,7 +180,7 @@ s(location(Object, Character), indicative, Polarity, Tense, simple) -->
 
 % NP's Property is [not] PropertyValue
 s(property_value(Noun, Property, Value), indicative, Polarity, Tense, simple) -->
-   { valid_property_value(Property, Value),
+   { once(valid_property_value(Property, Value)),
      % Prefer other forms of realization, when available
      % But always let the user type this version if they want.
      ( input_from_player
@@ -136,7 +195,7 @@ s(property_value(Noun, Property, Value), indicative, Polarity, Tense, simple) --
 
 % NP is [not] PropertyValue
 s(property_value(Noun, Property, Value), indicative, Polarity, Tense, simple) -->
-   { valid_property_value(Property, Value),
+   { once(valid_property_value(Property, Value)),
      adjectival_property(Property) },
    np((Noun^_)^_, subject, Agreement, nogap, nogap),
    aux_be(Tense, Agreement),
@@ -145,7 +204,7 @@ s(property_value(Noun, Property, Value), indicative, Polarity, Tense, simple) --
 
 % NP is [not] a PropertyValue
 s(property_value(Noun, Property, Value), indicative, Polarity, Tense, simple) -->
-   { valid_property_value(Property, Value),
+   { once(valid_property_value(Property, Value)),
      nominal_property(Property) },
    np((Noun^_)^_, subject, Agreement, nogap, nogap),
    aux_be(Tense, Agreement),
@@ -186,6 +245,29 @@ inverted_sentence(S, Polarity, Tense, Aspect) -->
    aux(np((NP^S1)^S, subject, Agreement),
        Polarity, Agreement, Tense, Aspect, Form, Modality),
    vp(Form, Modality, NP^S1, Tense, Agreement, nogap).
+
+% is NP a KIND?
+s(is_a(Noun, Kind), interrogative, affirmative, Tense, simple) -->
+   aux_be(Tense, Agreement),
+   np((Noun^_)^_, subject, Agreement, nogap, nogap),
+   [a],
+   kind_noun(Kind, singular).
+
+% Wh-questions about normal verbs
+
+% This seems redundant with the "questions about the subject" rule below.
+% % What Verbs?
+% s((Wh:(S, is_a(Wh, Kind))), interrogative, affirmative, Tense, Aspect) -->
+%    whpron(Kind),
+%    aux_vp(Wh^S, affirmative, third:singular, Tense, Aspect).
+
+% What did Subject Verb?
+s((Wh:(S, is_a(Wh, Kind))), interrogative, affirmative, Tense, simple) -->
+   whpron(Kind),
+   aux_do(Tense, Agreement),
+   np((NP^S1)^S, subject, Agreement, nogap, nogap),
+   vp(base, X^X, NP^S1, Tense, Agreement, np(Wh)).
+
 
 % Wh-questions about properties
 
@@ -303,7 +385,7 @@ s(X:explanation(S, X), interrogative, Polarity, Tense, Aspect) -->
 :- register_lexical_item(why).
 
 % where is NP
-s(Container:location(S, Container), interrogative, Polarity, Tense, simple) -->
+s(Container:contained_in(S, Container), interrogative, Polarity, Tense, simple) -->
    [where],
    aux_be(Tense, Agreement),
    opt_not(Polarity),
@@ -312,14 +394,14 @@ s(Container:location(S, Container), interrogative, Polarity, Tense, simple) -->
 :- register_lexical_item(where).
 
 % Who has  NP
-s((Character:location(Object, Character), is_a(Character, person)), interrogative, Polarity, Tense, simple) -->
+s((Character:contained_in(Object, Character), is_a(Character, person)), interrogative, Polarity, Tense, simple) -->
    [who],
    aux_have(Tense, third:singular),
    opt_not(Polarity),
    np((Object^S)^S, object, _, nogap, nogap).
 
 % what is on the X
-s(S:location(S, Container), interrogative, Polarity, Tense, simple) -->
+s(S:contained_in(S, Container), interrogative, Polarity, Tense, simple) -->
    [what],
    aux_be(Tense, Agreement),
    opt_not(Polarity),
@@ -329,7 +411,7 @@ s(S:location(S, Container), interrogative, Polarity, Tense, simple) -->
    { is_a(Container, work_surface) }.
 
 % Who/what is in the X
-s(S:(location(S, Container), is_a(S, Kind)), interrogative, Polarity, Tense, simple) -->
+s(S:(contained_in(S, Container), is_a(S, Kind)), interrogative, Polarity, Tense, simple) -->
    whpron(Kind),
    aux_be(Tense, Agreement),
    opt_not(Polarity),
@@ -339,7 +421,7 @@ s(S:(location(S, Container), is_a(S, Kind)), interrogative, Polarity, Tense, sim
    { is_a(Container, enclosing_container), \+ character(Container) }.
 
 % what does Character have?
-s(S:location(S, Character), interrogative, Polarity, Tense, simple) -->
+s(S:contained_in(S, Character), interrogative, Polarity, Tense, simple) -->
    [what],
    aux_do(Tense, Agreement),
    opt_not(Polarity),
@@ -347,13 +429,10 @@ s(S:location(S, Character), interrogative, Polarity, Tense, simple) -->
    { character(Character) },
    aux_have(Tense, Agreement).
 
-
-
 %%%
 %%% Adjectival phrases
 %%% Seems silly to make a whole new file for one clause...
 %%%
 
 ap(Meaning) -->
-   [ Adjective ],
-   { adjective(Adjective, Meaning) }.
+   adjective(Meaning).

@@ -1,5 +1,7 @@
 fileFormatVersion: 2
 guid: f68bb1969f57aa540ab4fd8198d49358
+timeCreated: 1440972013
+licenseType: Pro
 TextureImporter:
   fileIDToRecycleName:
     21300000: Black
@@ -31,10 +33,10 @@ TextureImporter:
     21300052: free_tileset_version_10_26
     21300054: free_tileset_version_10_27
     21300056: free_tileset_version_10_28
-    21300058: free_tileset_version_10_30
-    21300060: free_tileset_version_10_31
-    21300062: free_tileset_version_10_32
-    21300064: free_tileset_version_10_33
+    21300058: Wall pink singleton
+    21300060: Wall pink left
+    21300062: Wall pink right
+    21300064: Wall pink center
     21300066: Wall top white end E
     21300068: Wall top tee E
     21300070: Wall top tee S
@@ -48,6 +50,7 @@ TextureImporter:
     21300086: Refridgerator
     21300088: Stove
     21300090: Kitchen table
+    21300092: Kitchen sink
     21300094: Radio table
     21300096: Shelf 1
     21300098: Shelf 2
@@ -92,9 +95,9 @@ TextureImporter:
     21300176: Toilet
     21300178: Bathroom sink
     21300180: Shower head
-    21300182: free_tileset_version_10_132
+    21300182: Double closed door
     21300184: free_tileset_version_10_133
-    21300186: free_tileset_version_10_134
+    21300186: Single closed door
     21300188: Rug big
     21300190: Candelabra
     21300192: Throne
@@ -355,6 +358,9 @@ TextureImporter:
   isReadable: 0
   grayScaleToAlpha: 0
   generateCubemap: 0
+  cubemapConvolution: 0
+  cubemapConvolutionSteps: 8
+  cubemapConvolutionExponent: 1.5
   seamlessCubemap: 0
   textureFormat: -3
   maxTextureSize: 4096
@@ -363,8 +369,9 @@ TextureImporter:
     aniso: 1
     mipBias: -1
     wrapMode: 1
-  nPOTScale: 2
+  nPOTScale: 0
   lightmap: 0
+  rGBM: 0
   compressionQuality: 50
   spriteMode: 2
   spriteExtrude: 1
@@ -672,7 +679,7 @@ TextureImporter:
       alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: free_tileset_version_10_30
+    - name: Wall pink singleton
       rect:
         serializedVersion: 2
         x: 0
@@ -682,7 +689,7 @@ TextureImporter:
       alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: free_tileset_version_10_31
+    - name: Wall pink left
       rect:
         serializedVersion: 2
         x: 32
@@ -692,7 +699,7 @@ TextureImporter:
       alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: free_tileset_version_10_32
+    - name: Wall pink right
       rect:
         serializedVersion: 2
         x: 64
@@ -702,7 +709,7 @@ TextureImporter:
       alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: free_tileset_version_10_33
+    - name: Wall pink center
       rect:
         serializedVersion: 2
         x: 96
@@ -842,15 +849,15 @@ TextureImporter:
       alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: 
+    - name: Kitchen sink
       rect:
         serializedVersion: 2
         x: 128
         y: 1056
         width: 64
         height: 64
-      alignment: 2
-      pivot: {x: .5, y: 1}
+      alignment: 7
+      pivot: {x: .5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: Radio table
       rect:
@@ -1292,12 +1299,12 @@ TextureImporter:
       alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: free_tileset_version_10_132
+    - name: Double closed door
       rect:
         serializedVersion: 2
         x: 96
         y: 864
-        width: 32
+        width: 64
         height: 64
       alignment: 6
       pivot: {x: 0, y: 0}
@@ -1312,7 +1319,7 @@ TextureImporter:
       alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: free_tileset_version_10_134
+    - name: Single closed door
       rect:
         serializedVersion: 2
         x: 160
@@ -3742,5 +3749,7 @@ TextureImporter:
       alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-  spritePackingTag: 
+  spritePackingTag: Background
   userData: 
+  assetBundleName: 
+  assetBundleVariant: 

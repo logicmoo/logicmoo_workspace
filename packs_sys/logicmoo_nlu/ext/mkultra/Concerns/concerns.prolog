@@ -28,6 +28,9 @@ descendant_concern_of(Ancestor, Descendant) :-
 parent_concern_of(Child, Parent) :-
    Parent is Child.'Parent'.'Parent'.
 
+concern_uid(Concern, UID) :-
+   property(Concern, "Key", UID).
+
 :- public concern_status/2, set_concern_status/2.
 
 %% concern_status(+Concern, -Status)
@@ -40,6 +43,18 @@ concern_status(Concern, Status) :-
 %  Update's concern's status field.
 set_concern_status(Concern, Status) :-
    assert(Concern/status:Status).
+
+normalize_task(set_status(Status),
+	       call(set_concern_status($task, Status))).
+
+%% current_priority(-Priority)
+% Priority is the priority of the currently runnign concern,
+% or 1, if this code is not running in a concern.
+current_priority(P) :-
+   $task \= null,
+   $task/priority:P,
+   !.
+current_priority(1).
 
 %%
 %% Creation

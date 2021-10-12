@@ -5,12 +5,26 @@ using Prolog;
 
 using UnityEngine;
 
+[AddComponentMenu("Props/PropInfo")]
 public class PropInfo : PhysicalObject
 {
     /// <summary>
     /// True if this is a container that can hold other things.
     /// </summary>
     public bool IsContainer;
+
+    /// <summary>
+    /// True if this object can be portrayed visually.
+    /// Set to false if e.g. it is a component of the parent object
+    /// whose rendering encompasses the rendering of this object, or
+    /// if the object is immaterial.
+    /// </summary>
+    public bool IsVisuallyPortrayable = true;
+
+    /// <summary>
+    /// Name of the animation to play to display the character laying on this object
+    /// </summary>
+    public string LayAnimation;
 
     /// <summary>
     /// True if this satisfies hunger
@@ -32,6 +46,47 @@ public class PropInfo : PhysicalObject
     /// </summary>
     public string[] Adjectives=new string[0];
 
+    /// <summary>
+    /// For appliances and other active objects: is the device on?
+    /// </summary>
+    public bool IsOn
+    {
+        get { return currentlyOn; }
+        set
+        {
+            if (currentlyOn != value)
+            {
+                try
+                {
+                    var call = new Structure(OnActivationChanged, gameObject, value);
+                    if (gameObject.GetComponent<KB>() != null)
+                        gameObject.IsTrue(call);
+                    else
+                        KnowledgeBase.Global.IsTrue(call);
+                }
+                catch (Exception e)
+                {
+                    Debug.LogException(e, gameObject);
+                }
+            }
+            currentlyOn = value;
+        }
+    }
+
+    public static readonly Symbol OnActivationChanged = Symbol.Intern("on_activation_changed");
+
+    bool currentlyOn;
+
+    /// <summary>
+    /// Position for the text relative to sprite
+    /// </summary>
+    public Vector2 TextPosition;
+
+    /// <summary>
+    /// Text to be displayed, if any
+    /// </summary>
+    string outputText;
+
     public override void Awake()
     {
         base.Awake();
@@ -52,14 +107,25 @@ public class PropInfo : PhysicalObject
 
     internal void OnGUI()
     {
-        if (Camera.current != null && GetComponent<Renderer>() == null && !IsHidden)
+        if (IsVisuallyPortrayable && !IsHidden && Camera.current != null && GetComponent<Renderer>() == null
+            && Container != null && Container.GetComponent<SimController>() == null)
         {
-            var bubblelocation = (Vector2)Camera.current.WorldToScreenPoint(transform.position);
-            var topLeft = new Vector2(bubblelocation.x, Camera.current.pixelHeight - bubblelocation.y);
+            var topLeft = gameObject.GUIScreenPosition();
             var size = new Vector2(300, 3000);
             var bubbleRect = new Rect(topLeft.x, topLeft.y, size.x, size.y);
             GUI.Label(bubbleRect, name);
         }
+
+        if (outputText != null)
+        {
+            var pos = gameObject.GUIScreenPosition()+TextPosition;
+            GUI.Label(new Rect(pos.x, pos.y, 100, 30), outputText);
+        }
+    }
+
+    public void SetText(string newText)
+    {
+        outputText = newText;
     }
 
     #region Container operations

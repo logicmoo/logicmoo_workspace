@@ -29,16 +29,68 @@ np((X^S)^S, _C, _Agreement, np(X), nogap) -->
 np(NP, Case, Agreement, Gap, Gap) -->
    pronoun(Case, Agreement,NP).
 
+% Demonstrative pronouns
+np((E^S)^S, _Case, third:singular, Gap, Gap) -->
+   { var(E) },
+   [ Demonstrative ],
+   { input_from_player,
+     demonstrative_pronoun(Demonstrative),
+     /perception/mouse_selection:E }.
+
 % Proper names
 np((E^S)^S, Case, third:Number, Gap, Gap) -->
    { \+ bound_discourse_variable(E) },
    proper_name(E, Number),
    opt_genitive(Case).
 
+% PARSE ONLY
+np((E^S)^S, Case, third:Number, Gap, Gap) -->
+   { \+ bound_discourse_variable(E) },
+   { input_from_player },  % filter for parse mode
+   proper_name_without_the(E, Number),
+   opt_genitive(Case).
+
 opt_genitive(subject) --> [].
 opt_genitive(object) --> [].
 opt_genitive(genitive) --> ['\'', s].
 
+% Possessive constructions (parse only right now).
+np((X^S)^S, _, third:Number, Gap, Gap) -->
+   not_generating_or_completing,
+   possessive_np(X, Number).
+
+:- public not_generating_or_completing/2, not_completing/3.
+not_generating_or_completing(In, In) :-
+   nonvar(In).
+   
+not_completing(LF, _, _) :-
+   nonvar(LF),
+   !.
+not_completing(_, In, In) :-
+   nonvar(In).
+   
+possessive_np(X, Number) -->
+   [your],
+   kind_noun(Kind, Number),
+   { is_a(X, Kind),
+     owner($addressee, X) }.
+
+possessive_np(X, Number) -->
+   [my],
+   kind_noun(Kind, Number),
+   { is_a(X, Kind),
+     possessive_pronoun_referrent($speaker, Owner),
+     owner(Owner, X) }.
+
+possessive_np(X, Number) -->
+   proper_name(Owner, singular),
+   ['\'', s],
+   kind_noun(Kind, Number),
+   { is_a(X, Kind),
+     owner(Owner, X) }.
+
+possessive_pronoun_referrent(player, $pc) :- !.
+possessive_pronoun_referrent(X, X).
 
 % PARSE/COMPLETE ONLY
 % "a KIND" from unbound variables with declared types
@@ -60,6 +112,14 @@ np((X^S)^S, _, third:singular, Gap, Gap) -->
 % "the NOUN"
 np((X^S)^S, _C, third:singular, Gap, Gap) -->
    [ the ],
+   { var(X),
+     input_from_player},	% filter for parsing
+   kind_noun(Kind, singular),
+   { resolve_definite_description(X, is_a(X, Kind)) }.
+
+% PARSE ONLY
+% "NOUN" (not grammatical English but common in IF text 
+np((X^S)^S, _C, third:singular, Gap, Gap) -->
    { var(X),
      input_from_player},	% filter for parsing
    kind_noun(Kind, singular),

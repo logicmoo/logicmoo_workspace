@@ -25,13 +25,14 @@
 :- public notify_event/1.
 
 notify_event(Event) :-
-    findall(Handler,
-	    event_handler(Event, _Type, _Concern, Handler), 
-	    Handlers),
-    maybe_log_event(Event, Handlers),
-    forall(member(Handler, Handlers),
-	   unless(Handler,
-		  log(handler_failed(Handler)))).
+   ignore(maybe_remember_event(Event)),
+   findall(Handler,
+	   event_handler(Event, _Type, _Concern, Handler), 
+	   Handlers),
+   maybe_log_event(Event, Handlers),
+   forall(member(Handler, Handlers),
+	  unless(Handler,
+		 log(handler_failed(Handler)))).
 
 %% event_handler(+Event, ?Type, ?Concern, -Handler)
 %  Handler is Concern's handler for some construal of Event
@@ -77,4 +78,19 @@ construals(Event, ConstrualList) :-
 %  Construal is a possible construal of Event.
 construal(Event, Event).
 construal(Event, Construal) :-
-    construe(Event, C), construal(C, Construal).
+   construe(Event, C), construal(C, Construal).
+
+construe(assertion(_, _, LF, _, _), mention(C)) :-
+   mentions(LF, C).
+construe(question(_, _, LF, _, _), mention(Concept)) :-
+   mentions(LF, Concept).
+construe(command(_, _, Command), mention(Concept)) :-
+   mentions(Command, Concept).
+
+mentions(Concept, Concept) :-
+   nonvar(Concept).
+mentions(Term, Subterm) :-
+   compound(Term),
+   Term =.. List,
+   member(Sub, List),
+   mentions(Sub, Subterm).

@@ -5,10 +5,20 @@
 % Dispatch on question type
 strategy(respond_to_dialog_act(question(Asker, $me, Question,
 					_Tense, _Aspect)),
-	 if((Question = Answer:Constraint),
+	 if((Canon = Answer:Constraint),
 	    let(lf_main_predicate(Constraint, Core),
 		answer_wh(Asker, Answer, Core, Constraint)),
-	    answer_yes_no(Asker, Question))).
+	    answer_yes_no(Asker, Canon))) :-
+   canonicalize_question(Question, Canon).
+
+canonicalize_question(Q, C) :-
+   reduce_question(Q, Reduced),
+   !,
+   canonicalize_question(Reduced, C).
+canonicalize_question(Q, Q).
+
+reduce_question(X:manner(be(C), X),
+		X:wellbeing(C, X)).
 
 %% Yes/no quetsions
 strategy(answer_yes_no(Asker, Q),
@@ -23,7 +33,7 @@ strategy(generate_answer(_Q, unknown),
 	 speech(["Don't know."])).
 
 
-% % Wh-questions
+%% Wh-questions
 
 :- public unique_answer/2.
 :- external unique_answer/2.
@@ -32,23 +42,48 @@ default_strategy(answer_wh(Asker, Answer, Core, Constraint),
 		    generate_unique_answer(Asker, Answer, Core, Constraint),
 		    enumerate_answers(Asker, Answer, Core, Constraint))).
 
+strategy(answer_wh(Asker, Answer, contained_in(Object, Answer), Constraint),
+	 answer_wh(Asker, Answer, location(Object, Answer), Constraint)).
+
 strategy(answer_wh(_Asker, Identity, _,
 		   (be(Person, Identity), is_a(Person, person))),
 	 introduce_person(Person)) :-
    character(Person).
 
-strategy(answer_wh(Asker, Identity, _,
+strategy(answer_wh(player, Answer,
+		   should(do(player, Answer)),
+		   _),
+	 show_status(notebook)).
+
+strategy(answer_wh(Asker, Identity,
+		   be(Entity, Identity),
 		   (be(Entity, Identity), is_a(Entity, entity))),
 	 tell_about($me, Asker, Entity)).
 
-strategy(answer_wh(_Asker, Identity, _,
+strategy(answer_wh(_Asker, Identity,
+		   be(player, Identity),
 		   (be(player, Identity), is_a(player, person))),
 	 say_answer(be(player, $me))).
 
-strategy(answer_wh(_Asker, Answer, can(Action), Constraint),
-	 answer_with_list(List, "or", Type,
-			  (can(Action), is_a(Answer, Type)))) :-
+strategy(answer_wh(Asker, Answer, can(Action), Constraint),
+	 answer_can_wh(Asker, Answer, can(Action), Constraint)).
+
+default_strategy(answer_can_wh(_Asker, Answer, can(Action), Constraint),
+		 answer_with_list(List, "or", Type,
+				  (can(Action), is_a(Answer, Type)))) :-
    possible_types_given_constraint(Answer, Constraint, List).
+
+strategy(answer_can_wh(player, Answer,
+		       can(type(player, Answer)),
+		       _),
+	 show_status(sample_commands)).
+
+strategy(answer_can_wh(player, Answer,
+		       can(do(Who, Answer)),
+		       _),
+	 show_status(sample_commands)) :-
+   member(Who, [player, $pc]).
+
 
 % Change what is in X queries from location queries to contained_in queries.
 strategy(answer_wh(Asker,
@@ -58,9 +93,7 @@ strategy(answer_wh(Asker,
 		   Answer, location(Answer, Container),
 		   (contained_in(Answer, Container), is_a(Answer, Type)))).
 
-strategy(answer_wh(M, _,
-		   manner(be(Who), M),
-		   _),
+strategy(answer_wh(_Asker, X, wellbeing(Who, X), _),
 	 say_answer(okay(Who))).
 
 strategy(answer_wh(Asker, Explanation, explanation(P, Explanation), _),
@@ -71,9 +104,10 @@ strategy(answer_wh(Asker, Explanation, explanation(P, Explanation), _),
 	        true:speech(["I couldn't speculate."])])).
 
 default_strategy(generate_unique_answer(Asker, _Answer, Core, Constraint),
-		 if(admitted_truth_value(Asker, Constraint, true),
-		    question_answer($me, Partner, Core, present, simple),
-		    speech(["Don't know"]))) :-
+		 let(admitted_truth_value(Asker, Constraint, TruthValue),
+		     if(TruthValue=true,
+			question_answer($me, Partner, Core, present, simple),
+			speech(["Don't know"])))) :-
    nonvar(Constraint),
    $task/partner/Partner.
 

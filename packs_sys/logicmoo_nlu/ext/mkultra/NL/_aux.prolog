@@ -1,3 +1,6 @@
+
+:-if(current_prolog_flag(use_old_code_to,true)).
+
 %%
 %% Auxilliary verb forms (will, do have, be)
 %%
@@ -42,3 +45,6 @@ aux_be(past, third:singular) -->
 aux_be(past, _:plural) -->
 	[ were ].
 aux_be(future, _Agreement) --> [be].
+
+
+:- endif.

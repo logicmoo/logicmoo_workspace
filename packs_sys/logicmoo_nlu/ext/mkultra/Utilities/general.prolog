@@ -1,7 +1,6 @@
 :- public assertion/2, thaw/1, arguments_unbound/2.
 :- higher_order(assertion(1,0)).
 
-
 %% arguments_unbound(+Structure, -Unbound)
 %  Unbound is a structure with the same functor and arity as Structure,
 %  but with all its arguments replaced with fresh variables.
@@ -49,7 +48,7 @@ if(_, _, E) :-
 :- higher_order when(1,1,1,1,1).
 :- higher_order when(1,1,1,1,1,1).
 
-%% when(?Condition, :Imperatives)
+%% when(?Condition, :Imperatives, ...)
 %  CONTROL FLOW OPERATOR FOR IMPERATIVES
 %  Run Imperatives in order if Condition is true, else do nothing
 when(P, Imperative) :-
@@ -71,7 +70,7 @@ when(P, Imperative1, Imperative2, Imperative3, Imperative4, Imperative5) :-
 :- higher_order unless(1,1,1,1,1,1).
 
 
-%% unless(?Condition, :Imperatives)
+%% unless(?Condition, :Imperatives, ...)
 %  CONTROL FLOW OPERATOR FOR IMPERATIVES
 %  Run Imperatives in order unless Condition is true.
 unless(P, Imperative) :-

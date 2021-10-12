@@ -1,6 +1,23 @@
 fileFormatVersion: 2
 guid: 0a08b824907484a1ab3bbbbf8ea3b59c
 TextureImporter:
+  fileIDToRecycleName:
+    21300000: steampunk_m10_0
+    21300002: steampunk_m10_1
+    21300004: steampunk_m10_2
+    21300006: steampunk_m10_3
+    21300008: steampunk_m10_4
+    21300010: steampunk_m10_5
+    21300012: steampunk_m10_6
+    21300014: steampunk_m10_7
+    21300016: steampunk_m10_8
+    21300018: steampunk_m10_9
+    21300020: steampunk_m10_10
+    21300022: steampunk_m10_11
+    21300024: steampunk_m10_12
+    21300026: steampunk_m10_13
+    21300028: steampunk_m10_14
+    21300030: steampunk_m10_15
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -19,6 +36,9 @@ TextureImporter:
   isReadable: 0
   grayScaleToAlpha: 0
   generateCubemap: 0
+  cubemapConvolution: 0
+  cubemapConvolutionSteps: 8
+  cubemapConvolutionExponent: 1.5
   seamlessCubemap: 0
   textureFormat: -1
   maxTextureSize: 1024
@@ -29,12 +49,15 @@ TextureImporter:
     wrapMode: 1
   nPOTScale: 0
   lightmap: 0
+  rGBM: 0
   compressionQuality: 50
+  allowsAlphaSplitting: 0
   spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: .5, y: .5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spritePixelsToUnits: 32
   alphaIsTransparency: 1
   textureType: 8
@@ -43,6 +66,7 @@ TextureImporter:
     maxTextureSize: 1024
     textureFormat: -2
     compressionQuality: 50
+    allowsAlphaSplitting: 0
   spriteSheet:
     sprites:
     - name: steampunk_m10_0
@@ -54,6 +78,7 @@ TextureImporter:
         height: 52
       alignment: 9
       pivot: {x: .519999981, y: .150000006}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: steampunk_m10_1
       rect:
         serializedVersion: 2
@@ -63,6 +88,7 @@ TextureImporter:
         height: 52
       alignment: 9
       pivot: {x: .519999981, y: .150000006}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: steampunk_m10_2
       rect:
         serializedVersion: 2
@@ -72,6 +98,7 @@ TextureImporter:
         height: 52
       alignment: 9
       pivot: {x: .519999981, y: .150000006}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: steampunk_m10_3
       rect:
         serializedVersion: 2
@@ -81,6 +108,7 @@ TextureImporter:
         height: 52
       alignment: 9
       pivot: {x: .519999981, y: .150000006}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: steampunk_m10_4
       rect:
         serializedVersion: 2
@@ -90,6 +118,7 @@ TextureImporter:
         height: 52
       alignment: 9
       pivot: {x: .519999981, y: .150000006}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: steampunk_m10_5
       rect:
         serializedVersion: 2
@@ -99,6 +128,7 @@ TextureImporter:
         height: 52
       alignment: 9
       pivot: {x: .519999981, y: .150000006}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: steampunk_m10_6
       rect:
         serializedVersion: 2
@@ -108,6 +138,7 @@ TextureImporter:
         height: 52
       alignment: 9
       pivot: {x: .519999981, y: .150000006}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: steampunk_m10_7
       rect:
         serializedVersion: 2
@@ -117,6 +148,7 @@ TextureImporter:
         height: 52
       alignment: 9
       pivot: {x: .519999981, y: .150000006}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: steampunk_m10_8
       rect:
         serializedVersion: 2
@@ -126,6 +158,7 @@ TextureImporter:
         height: 52
       alignment: 9
       pivot: {x: .519999981, y: .150000006}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: steampunk_m10_9
       rect:
         serializedVersion: 2
@@ -135,6 +168,7 @@ TextureImporter:
         height: 52
       alignment: 9
       pivot: {x: .519999981, y: .150000006}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: steampunk_m10_10
       rect:
         serializedVersion: 2
@@ -144,6 +178,7 @@ TextureImporter:
         height: 52
       alignment: 9
       pivot: {x: .519999981, y: .150000006}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: steampunk_m10_11
       rect:
         serializedVersion: 2
@@ -153,6 +188,7 @@ TextureImporter:
         height: 52
       alignment: 9
       pivot: {x: .519999981, y: .150000006}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: steampunk_m10_12
       rect:
         serializedVersion: 2
@@ -162,6 +198,7 @@ TextureImporter:
         height: 52
       alignment: 9
       pivot: {x: .519999981, y: .150000006}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: steampunk_m10_13
       rect:
         serializedVersion: 2
@@ -171,6 +208,7 @@ TextureImporter:
         height: 52
       alignment: 9
       pivot: {x: .519999981, y: .150000006}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: steampunk_m10_14
       rect:
         serializedVersion: 2
@@ -180,6 +218,7 @@ TextureImporter:
         height: 52
       alignment: 9
       pivot: {x: .519999981, y: .150000006}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: steampunk_m10_15
       rect:
         serializedVersion: 2
@@ -189,5 +228,8 @@ TextureImporter:
         height: 52
       alignment: 9
       pivot: {x: .519999981, y: .150000006}
+      border: {x: 0, y: 0, z: 0, w: 0}
   spritePackingTag: 
   userData: 
+  assetBundleName: 
+  assetBundleVariant: 

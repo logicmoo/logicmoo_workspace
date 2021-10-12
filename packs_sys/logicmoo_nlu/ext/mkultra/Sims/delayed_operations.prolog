@@ -13,6 +13,7 @@ delay_until(Time, Code) :-
       assert(/delayed/next_deadline:Time)).
 
 :- higher_order delay_for(0, 1).
+:- public delay_for/2.
 delay_for(Seconds, Code) :-
    Time is $now + Seconds,
    delay_until(Time, Code).
