@@ -584,11 +584,12 @@ binding_residual('Residual'  = '$residual'(Residual),   'Residual', [Residual]) 
 binding_residual_clauses(
     '_wfs_residual_program' = '$wfs_residual_program'(Delays, Clauses),
     '_wfs_residual_program', Residuals, Clauses) :-
-    phrase(comma_list(Delays), Residuals).
+    phrase(delay_list(Delays), Residuals).
 
-comma_list(true) --> !.
-comma_list((A,B)) --> !, comma_list(A), comma_list(B).
-comma_list(A) --> [A].
+delay_list(true) --> !.
+delay_list((A,B)) --> !, delay_list(A), delay_list(B).
+delay_list(M:A) --> !, [M:'$wfs_undefined'(A)].
+delay_list(A) --> ['$wfs_undefined'(A)].
 
 add_projection(-, _, JSON, JSON) :- !.
 add_projection(VarNames0, ResVars0, JSON0, JSON) :-
@@ -657,6 +658,12 @@ term_html(Term, Vars, WriteOptions) -->
     { nonvar(Term) },
     binding_term(Term, Vars, WriteOptions),
     !.
+term_html(Undef, _Vars, WriteOptions) -->
+    { nonvar(Undef),
+      Undef = '$wfs_undefined'(Term),
+      !
+    },
+    html(span(class(wfs_undefined), \term(Term, WriteOptions))).
 term_html(Term, _Vars, WriteOptions) -->
     term(Term, WriteOptions).
 

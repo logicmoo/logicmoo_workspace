@@ -36,7 +36,8 @@
 :- module(prolog_trace,
           [ trace/1,                            % :Spec
             trace/2,                            % :Spec, +Ports
-            tracing/2                           % :Spec, -Ports
+            tracing/2,                          % :Spec, -Ports
+            notraceall/0
           ]).
 :- autoload(library(apply),[maplist/2]).
 :- autoload(library(error),[instantiation_error/1]).
@@ -116,7 +117,10 @@ set_trace(Spec, Pred) :-
     ),
     modify(Spec, Spec0, Spec1),
     retractall(tracing_mask(Pred, _)),
-    asserta(tracing_mask(Pred, Spec1)),
+    (   Spec1 == []
+    ->  true
+    ;   asserta(tracing_mask(Pred, Spec1))
+    ),
     mask_ports(Spec1, Ports),
     pi_head(Pred, Head0),
     (   predicate_property(Head0, imported_from(M))
@@ -229,3 +233,11 @@ is_masked(Pattern0, Port, Pattern) :-
 tracing(Spec, Ports) :-
     tracing_mask(Spec, Mask),
     mask_ports(Mask, Ports).
+
+%!  notraceall is det.
+%
+%   Remove all trace points
+
+notraceall :-
+    forall(tracing(M:Spec, _Ports),
+           trace(M:Spec, -all)).

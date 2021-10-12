@@ -41,7 +41,8 @@
 :- use_module(library(debug)).
 
 :- multifile
-    blob_rendering//3.              % +Type, +Blob, +Options
+    blob_rendering//3,              % +Type, +Blob, +Options
+    portray//2.                     % +Term, +Options
 
 /** <module> Represent Prolog terms as HTML
 
@@ -77,7 +78,7 @@ term(Term, Options) -->
                       depth(0)
                     ],
                     Options1),
-      dict_create(Dict, _, Options1)
+      dict_options(Dict, Options1)
     },
     any(Term, Dict).
 
@@ -86,6 +87,13 @@ any(_, Options) -->
     { Options.depth >= Options.max_depth },
     !,
     html(span(class('pl-ellipsis'), ...)).
+any(Term, Options) -->
+    (   {   nonvar(Term)
+        ;   attvar(Term)
+        }
+    ->  portray(Term, Options)
+    ),
+    !.
 any(Term, Options) -->
     { primitive(Term, Class0),
       !,

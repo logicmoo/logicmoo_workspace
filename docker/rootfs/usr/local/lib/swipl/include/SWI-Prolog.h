@@ -68,7 +68,7 @@ extern "C" {
 /* PLVERSION_TAG: a string, normally "", but for example "rc1" */
 
 #ifndef PLVERSION
-#define PLVERSION 80329
+#define PLVERSION 80500
 #endif
 #ifndef PLVERSION_TAG
 #define PLVERSION_TAG ""
@@ -351,6 +351,7 @@ typedef struct PL_extension
 #define PL_FA_CREF		(0x10)	/* Internal: has clause-reference */
 #define PL_FA_ISO		(0x20)	/* Internal: ISO core predicate */
 #define PL_FA_META		(0x40)	/* Additional meta-argument spec */
+#define PL_FA_SIG_ATOMIC	(0x80)  /* Internal: do not dispatch signals */
 
 extern			PL_extension PL_extensions[]; /* not Win32! */
 PL_EXPORT(void)		PL_register_extensions(const PL_extension *e);
@@ -778,6 +779,7 @@ PL_EXPORT(char *)	PL_cwd(char *buf, size_t buflen);
 		 *******************************/
 
 PL_EXPORT(int)		PL_cvt_i_char(term_t p, char *c);
+PL_EXPORT(int)		PL_cvt_i_schar(term_t p, signed char *c);
 PL_EXPORT(int)		PL_cvt_i_uchar(term_t p, unsigned char *c);
 PL_EXPORT(int)		PL_cvt_i_short(term_t p, short *s);
 PL_EXPORT(int)		PL_cvt_i_ushort(term_t p, unsigned short *s);

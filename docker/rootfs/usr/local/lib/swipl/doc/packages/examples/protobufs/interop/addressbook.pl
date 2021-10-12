@@ -100,9 +100,32 @@ test_read(Path) :-
     message_file(Path, FullPath),
     read_file_to_codes(FullPath, WireCodes, [encoding(octet),type(binary)]),
     protobuf_parse_from_codes(WireCodes, 'tutorial.AddressBook', AddressBook),
-    format('=== address book ===~n', []),
-    maplist(print_entry, AddressBook.people),
-    format('=== address book (end ===~n', []).
+    % format('=== address book ===~n', []),
+    % maplist(print_entry, AddressBook.people),
+    % format('=== address book (end) ===~n', []).
+    % Note the use of =/2 in the following and not ==/2, because of the "_"s:
+    assertion(ground(AddressBook.people)),
+    assertion(AddressBook.people =
+             ['.tutorial.Person'{email:"jdoe@example.com",
+                                 id:1234,
+                                 name:"John Doe",
+                                 phones:['.tutorial.Person.PhoneNumber'{number:"555-4321", type:'HOME'}],
+                                 timestamps:'.tutorial.TimeStamps'{last_updated:'.google.protobuf.Timestamp'{nanos:_,seconds:_},
+                                                                   updates:[]}},
+              '.tutorial.Person'{email:"satan@fb.com",
+                                 id:666,
+                                 name:"Satan",
+                                 phones:['.tutorial.Person.PhoneNumber'{number:"555-1212", type:'WORK'},
+                                         '.tutorial.Person.PhoneNumber'{number:"555-1234", type:'HOME'}],
+                                 timestamps:'.tutorial.TimeStamps'{last_updated:'.google.protobuf.Timestamp'{nanos:_,seconds:_},
+                                                                   updates:[]}},
+              '.tutorial.Person'{email:"",
+                                 id:999,
+                                 name:"Crowley",
+                                 phones:[],
+                                 timestamps:'.tutorial.TimeStamps'{last_updated:'.google.protobuf.Timestamp'{nanos:_,seconds:_},
+                                                                   updates:[]}}
+             ]).
 
 print_entry(Person) :-
     % In Python, you test for the email existing by

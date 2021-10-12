@@ -122,6 +122,7 @@ index((eval_license), 0, backward_compatibility, backcomp).
 index((trie_insert_new), 3, backward_compatibility, backcomp).
 index((thread_at_exit), 1, backward_compatibility, backcomp).
 index((read_history), 6, backward_compatibility, backcomp).
+index(('$sig_atomic'), 1, backward_compatibility, backcomp).
 index((base32), 2, base32, base32).
 index((base32), 3, base32, base32).
 index((base64_encoded), 3, base64, base64).
@@ -196,11 +197,6 @@ index((list_strings), 1, check, check).
 index((list_rationals), 0, check, check).
 index((list_rationals), 1, check, check).
 index((check_old_select), 0, checkselect, checkselect).
-index((chr_show_store), 1, chr, chr).
-index((find_chr_constraint), 1, chr, chr).
-index((chr_trace), 0, chr, chr).
-index((chr_notrace), 0, chr, chr).
-index((chr_leash), 1, chr, chr).
 index((format_to_codes), 3, codesio, codesio).
 index((format_to_codes), 4, codesio, codesio).
 index((write_to_codes), 2, codesio, codesio).
@@ -876,6 +872,7 @@ index((open_prolog_stream), 4, prolog_stream, prolog_stream).
 index((trace), 1, prolog_trace, prolog_trace).
 index((trace), 2, prolog_trace, prolog_trace).
 index((tracing), 2, prolog_trace, prolog_trace).
+index((notraceall), 0, prolog_trace, prolog_trace).
 index((wrap_predicate), 4, prolog_wrap, prolog_wrap).
 index((unwrap_predicate), 2, prolog_wrap, prolog_wrap).
 index((current_predicate_wrapper), 4, prolog_wrap, prolog_wrap).

@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.3.29 Reference Manual: Section 10.3</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.5.0 Reference Manual: Section 10.3</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -704,39 +704,165 @@ threads</span></a></h3>
 
 <a id="sec:thread-signal"></a>
 
-<p>These predicates provide a mechanism to make another thread execute 
-some goal as an <em>interrupt</em>. Signalling threads is safe as these 
-interrupts are only checked at safe points in the virtual machine. 
-Nevertheless, signalling in multithreaded environments should be handled 
-with care as the receiving thread may hold a <em>mutex</em> (see <a id="idx:withmutex2:2306"></a><a class="pred" href="threadsync.html#with_mutex/2">with_mutex/2</a>). 
-Signalling probably only makes sense to start debugging threads and to 
-cancel no-longer-needed threads with <a id="idx:throw1:2307"></a><a class="pred" href="exception.html#throw/1">throw/1</a>, 
-where the receiving thread should be designed carefully to handle 
-exceptions at any point.
+<p>The predicates in this section provide <em>signalling</em> between 
+threads. A thread signal inserts any goal as an <em>interrupt</em> into 
+the control flow of any target thread. The target thread processes the 
+goal at the first safe opportunity. The mechanism was introduced with 
+two goals in mind: (1) running a goal inside a thread for debugging 
+purposes such as enabling the status or get access thread-specific data 
+and (2) force a thread to abort its current goal by inserting an 
+exeption into its control flow.
+
+<p>Over time, more complicated use cases have been identified that may 
+result in multiple signals that occur (nearly) simultaneous. As of 
+version 8.5.1 the interface has been extended and the interaction with 
+other built-in predicates has been specified in much more detail.
 
 <dl class="latex">
-<dt class="pubdef"><a id="thread_signal/2"><strong>thread_signal</strong>(<var>+ThreadId, 
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="thread_signal/2"><strong>thread_signal</strong>(<var>+ThreadId, 
 :Goal</var>)</a></dt>
 <dd class="defbody">
 Make thread <var>ThreadId</var> execute <var>Goal</var> at the first 
-opportunity. In the current implementation, this implies at the first 
-pass through the <em>Call port</em>. The predicate <a id="idx:threadsignal2:2308"></a><a class="pred" href="threadcom.html#thread_signal/2">thread_signal/2</a> 
+opportunity. The predicate <a id="idx:threadsignal2:2306"></a><a class="pred" href="threadcom.html#thread_signal/2">thread_signal/2</a> 
 itself places <var>Goal</var> into the signalled thread's signal queue 
 and returns immediately.
 
-<p>Signals (interrupts) do not cooperate well with the world of 
-multithreading, mainly because the status of mutexes cannot be 
-guaranteed easily. At the call port, the Prolog virtual machine holds no 
-locks and therefore the asynchronous execution is safe.
+<p><var>ThreadId</var> executes <var>Goal</var> as an <em>interrupt</em> 
+at the first opportunity. Defined opportunities are:
 
-<p><var>Goal</var> can be any valid Prolog goal, including <a id="idx:throw1:2309"></a><a class="pred" href="exception.html#throw/1">throw/1</a> 
-to make the receiving thread generate an exception, and <a id="idx:trace0:2310"></a><a class="pred" href="debugger.html#trace/0">trace/0</a> 
-to start tracing the receiving thread.
+<p>
+<ul class="latex">
+<li>At the <em>call port</em> of any predicate except for predicates 
+with the property <code>sig_atomic</code>. Currently this only applies 
+to <a id="idx:sigatomic1:2307"></a><a class="pred" href="threadcom.html#sig_atomic/1">sig_atomic/1</a>.
+<li>Before retrying a foreign predicate.
+<li>Before backtracking to the next clause of a Prolog predicate.
+<li>When a foreign predicate calls <a class="func" href="foreigninclude.html#PL_handle_signals()">PL_handle_signals()</a>. 
+Foreign predicates that take long to complete should call
+<a class="func" href="foreigninclude.html#PL_handle_signals()">PL_handle_signals()</a> 
+regularly and return with <code>FALSE</code> after <a class="func" href="foreigninclude.html#PL_handle_signals()">PL_handle_signals()</a> 
+returned -1, indicating an exception was raised.
+<li>Foreign predicates calling <em>blocking system calls</em> should 
+attempt to make these system calls interruptible. To enable this on 
+POSIX systems, SWI-Prolog sends a
+<code>SIGUSR2</code> to the signalled thread while the handler is an 
+empty function. This causes most blocking system calls to return with <code>EINTR</code>. 
+See also the commandline option
+<strong>--sig-alert</strong>. On Windows, <a class="func" href="foreigninclude.html#PL_handle_signals()">PL_handle_signals()</a> 
+is called when the user processes Windows messages.
+<li>For some blocking (thread) APIs we use a timed version with a 0.25 
+sec timeout to achieve a <em>polling loop</em>.
+</ul>
 
-<p>In the Windows version, the receiving thread immediately executes the 
-signal if it reaches a Windows GetMessage() call, which generally 
-happens if the thread is waiting for (user) input.
+<p>If one or more signals are queued, the queue is processed. Processing 
+the queue skips signals blocked due to <a id="idx:sigblock1:2308"></a><a class="pred" href="threadcom.html#sig_block/1">sig_block/1</a> 
+and stops after the queue does not contain any more non-blocked signals 
+or processing a signal results in an exception. After an exception, 
+other signals remain in the queue and will be processed after unwinding 
+to the matching
+<a id="idx:catch3:2309"></a><a class="pred" href="exception.html#catch/3">catch/3</a>. 
+Typically these queued signals will be processed during the
+<var>Recover</var> goal of the <a id="idx:catch3:2310"></a><a class="pred" href="exception.html#catch/3">catch/3</a>. 
+Note that <a id="idx:sigatomic1:2311"></a><a class="pred" href="threadcom.html#sig_atomic/1">sig_atomic/1</a> 
+may be used to protect the recovery goal.
+
+<p>The <a id="idx:threadsignal2:2312"></a><a class="pred" href="threadcom.html#thread_signal/2">thread_signal/2</a> 
+mechanism is primarily used by the system to insert debugging goals into 
+the target thread (<a id="idx:tspy1:2313"></a><a class="pred" href="thutil.html#tspy/1">tspy/1</a>, <a id="idx:tbacktrace1:2314"></a><span class="pred-ext">tbacktrace/1</span>, 
+etc.) or to interrupt a thread using e.g., <code>thread_signal(Thread, 
+abort)</code>. Predicates from library <code>library(thread)</code> use 
+signals to stop workers for e.g. <a id="idx:concurrentmaplist2:2315"></a><a class="pred" href="thread.html#concurrent_maplist/2">concurrent_maplist/2</a> 
+if some call fails. Applications may use it, typically for similar 
+purposes such as asynchronously stopping tasks or inspecting the status 
+of a task. Below we describe the behaviour of thread signalling in more 
+detail. The following notes apply for
+<var>Goal</var> executing in <var>ThreadId</var>
+
+<p>
+<ul class="latex">
+<li>The execution is protected by <a id="idx:sigatomic1:2316"></a><a class="pred" href="threadcom.html#sig_atomic/1">sig_atomic/1</a> 
+and thus signal execution is <em>not nested</em>.
+<li>If <var>Goal</var> <em>succeeds</em>, possible choice points are 
+discarded. Changes to the Prolog stacks such as changes to backtrackable 
+global variables remain.
+<li>If <var>Goal</var> <em>fails</em>, no action is taken, i.e., failure 
+is not considered a special condition.
+<li>If <var>Goal</var> <em>raises an exception</em> the exeception is 
+propagated into the environment. This allows for forcefully stopping the 
+target thread. The system uses this to implement
+<a id="idx:abort0:2317"></a><a class="pred" href="toplevel.html#abort/0">abort/0</a> 
+and <a id="idx:callwithtimelimit2:2318"></a><span class="pred-ext">call_with_time_limit/2</span>.
+<li>Code into which signals may be injected must make sure to use
+<a id="idx:setupcallcleanup3:2319"></a><a class="pred" href="metacall.html#setup_call_cleanup/3">setup_call_cleanup/3</a> 
+and friends to ensure proper cleanup in the case of an exception. This 
+is good practice anyway to guard against unpredicatable exceptions such 
+as resource exhaustion.
+<li><var>Goal</var> may use stack inspection such as <a id="idx:prologframeattribute3:2320"></a><a class="pred" href="manipstack.html#prolog_frame_attribute/3">prolog_frame_attribute/3</a> 
+to determine what the thread is doing.
+</ul>
 </dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="sig_pending/1"><strong>sig_pending</strong>(<var>-List</var>)</a></dt>
+<dd class="defbody">
+True when <var>List</var> contains all signals submitted using
+<a id="idx:threadsignal2:2321"></a><a class="pred" href="threadcom.html#thread_signal/2">thread_signal/2</a> 
+that are not yet processed. This includes signals blocked by <a id="idx:sigblock1:2322"></a><a class="pred" href="threadcom.html#sig_block/1">sig_block/1</a>.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="sig_remove/2"><strong>sig_remove</strong>(<var>:Pattern, 
+-List</var>)</a></dt>
+<dd class="defbody">
+Remove all signals that unify with <var>Pattern</var> from the signal 
+queue and make the removed signals available in <var>List</var></dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="sig_block/1"><strong>sig_block</strong>(<var>:Pattern</var>)</a></dt>
+<dd class="defbody">
+Block thread signals queued using <a id="idx:threadsignal2:2323"></a><a class="pred" href="threadcom.html#thread_signal/2">thread_signal/2</a> 
+that match
+<var>Pattern</var>.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="sig_unblock/1"><strong>sig_unblock</strong>(<var>:Pattern</var>)</a></dt>
+<dd class="defbody">
+Remove any effect of <a id="idx:sigblock1:2324"></a><a class="pred" href="threadcom.html#sig_block/1">sig_block/1</a> 
+for patterns that are more specific (see <a id="idx:subsumesterm2:2325"></a><a class="pred" href="compare.html#subsumes_term/2">subsumes_term/2</a>). 
+If any patterns are removed, reschedule blocked signals. Note that <a id="idx:sigunblock1:2326"></a><a class="pred" href="threadcom.html#sig_unblock/1">sig_unblock/1</a> 
+normally causes all unblocked signals to be executed immediately.</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="sig_atomic/1"><strong>sig_atomic</strong>(<var>:Goal</var>)</a></dt>
+<dd class="defbody">
+Execute <var>Goal</var> as <a id="idx:once1:2327"></a><a class="pred" href="metacall.html#once/1">once/1</a> 
+while blocking both thread signals (see <a id="idx:threadsignal2:2328"></a><a class="pred" href="threadcom.html#thread_signal/2">thread_signal/2</a>) 
+and OS signals (see <a id="idx:onsignal3:2329"></a><a class="pred" href="signal.html#on_signal/3">on_signal/3</a>). 
+The system executes some goals while blocking signals. These are:
+
+<p>
+<ul class="latex">
+<li>The goal injected using <a id="idx:threadsignal2:2330"></a><a class="pred" href="threadcom.html#thread_signal/2">thread_signal/2</a>, 
+i.e., signals do not interrupt a running signal handler.
+<li>The <var>Setup</var> call of <a id="idx:setupcallcleanup3:2331"></a><a class="pred" href="metacall.html#setup_call_cleanup/3">setup_call_cleanup/3</a> 
+and friends.
+<li>The <var>Cleanup</var> call of <a id="idx:callcleanup2:2332"></a><a class="pred" href="metacall.html#call_cleanup/2">call_cleanup/2</a> 
+and friends.
+<li>Compiling a file or loading a <em>quick load file</em>.
+</ul>
+
+<p>The call port of <a id="idx:sigatomic1:2333"></a><a class="pred" href="threadcom.html#sig_atomic/1">sig_atomic/1</a> 
+does not handle signals. This may notably be used to prevent 
+interruption of the <a id="idx:catch3:2334"></a><a class="pred" href="exception.html#catch/3">catch/3</a> <var>Recover</var> 
+goal. For example, we may ensure the recovery goal of a timeout is 
+called using the code below. Without this precaution another signal may 
+run before
+<a id="idx:writeln1:2335"></a><a class="pred" href="termrw.html#writeln/1">writeln/1</a> 
+and raise an exception to prevent its execution. Note that
+<a id="idx:catch3:2336"></a><a class="pred" href="exception.html#catch/3">catch/3</a> 
+should generally <em>not</em> be used for cleanup of resources in case 
+of an exception and thus it is typically fine if its <var>Recover</var> 
+goal is interrupted. Use <a id="idx:setupcallcleanup3:2337"></a><a class="pred" href="metacall.html#setup_call_cleanup/3">setup_call_cleanup/3</a> 
+or one of the other predicates from the <a id="idx:callcleanup2:2338"></a><a class="pred" href="metacall.html#call_cleanup/2">call_cleanup/2</a> 
+family for cleanup.
+
+<pre class="code">
+    ...,
+    catch(call_with_time_limit(Time, Goal),
+          time_limit_exceeded,
+          sig_atomic(writeln('Time limit exceeded'))).
+</pre>
+
+<p></dd>
 </dl>
 
 <p><h3 id="sec:threadlocal"><a id="sec:10.3.4"><span class="sec-nr">10.3.4</span> <span class="sec-title">Threads 
@@ -748,7 +874,7 @@ and dynamic predicates</span></a></h3>
 10.3.1</a>) threads can share and exchange data using dynamic 
 predicates. The multithreaded version knows about two types of dynamic 
 predicates. By default, a predicate declared
-<em>dynamic</em> (see <a id="idx:dynamic1:2311"></a><a class="pred" href="dynamic.html#dynamic/1">dynamic/1</a>) 
+<em>dynamic</em> (see <a id="idx:dynamic1:2339"></a><a class="pred" href="dynamic.html#dynamic/1">dynamic/1</a>) 
 is shared by all threads. Each thread may assert, retract and run the 
 dynamic predicate. Synchronisation inside Prolog guarantees the 
 consistency of the predicate. Updates are
@@ -760,7 +886,7 @@ maintained.
 
 <p>Besides shared predicates, dynamic predicates can be declared with 
 the
-<a id="idx:threadlocal1:2312"></a><a class="pred" href="threadcom.html#thread_local/1">thread_local/1</a> 
+<a id="idx:threadlocal1:2340"></a><a class="pred" href="threadcom.html#thread_local/1">thread_local/1</a> 
 directive. Such predicates share their attributes, but the clause list 
 is different in each thread.
 
@@ -768,13 +894,13 @@ is different in each thread.
 <dt class="pubdef"><a id="thread_local/1"><strong>thread_local</strong> <var>+Functor/+Arity, 
 ...</var></a></dt>
 <dd class="defbody">
-This directive is related to the <a id="idx:dynamic1:2313"></a><a class="pred" href="dynamic.html#dynamic/1">dynamic/1</a> 
-directive. It tells the system that the predicate may be modified using <a id="idx:assert1:2314"></a><a class="pred" href="db.html#assert/1">assert/1</a>, <a id="idx:retract1:2315"></a><a class="pred" href="db.html#retract/1">retract/1</a>, 
+This directive is related to the <a id="idx:dynamic1:2341"></a><a class="pred" href="dynamic.html#dynamic/1">dynamic/1</a> 
+directive. It tells the system that the predicate may be modified using <a id="idx:assert1:2342"></a><a class="pred" href="db.html#assert/1">assert/1</a>, <a id="idx:retract1:2343"></a><a class="pred" href="db.html#retract/1">retract/1</a>, 
 etc., during execution of the program. Unlike normal shared dynamic 
 data, however, each thread has its own clause list for the predicate. As 
 a thread starts, this clause list is empty. If there are still clauses 
 when the thread terminates, these are automatically reclaimed by the 
-system (see also <a id="idx:volatile1:2316"></a><a class="pred" href="saved-states.html#volatile/1">volatile/1</a>). 
+system (see also <a id="idx:volatile1:2344"></a><a class="pred" href="saved-states.html#volatile/1">volatile/1</a>). 
 The thread_local property implies the properties <em>dynamic</em> and <em>volatile</em>.
 
 <p>Thread-local dynamic predicates are intended for maintaining 

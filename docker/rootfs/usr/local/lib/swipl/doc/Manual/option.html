@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.3.29 Reference Manual: Section A.27</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.5.0 Reference Manual: Section A.27</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -388,7 +388,8 @@ lead to (type) errors.
 <li><var>Dict</var> keys can be integers. This is not allowed in 
 canonical option lists.
 <li><var>Options</var> can hold multiple options with the same key. This 
-is not allowed in dicts.
+is not allowed in dicts. This predicate removes all but the first option 
+on the same key.
 <li><var>Options</var> can have more than one value (<code>name(V1,V2)</code>). 
 This is not allowed in dicts.
 </ul>

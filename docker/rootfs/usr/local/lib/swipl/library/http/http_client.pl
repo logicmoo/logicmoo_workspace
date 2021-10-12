@@ -271,7 +271,7 @@ http_read_data(In, Fields, Data, Options) :-
                   ;   copy_stream_data(In, Stream)
                   ),
                   close(Stream)),
-              encoding(Fields, Encoding),
+              encoding(Fields, Encoding, Options),
               memory_file_to(X, MemFile, Encoding, Data0)
             ),
             free_memory_file(MemFile)),
@@ -301,14 +301,17 @@ memory_file_to(codes, MemFile, Encoding, Data) :-
     memory_file_to_codes(MemFile, Data, Encoding).
 
 
-encoding(Fields, utf8) :-
+encoding(_Fields, Encoding, Options) :-
+    option(input_encoding(Encoding), Options),
+    !.
+encoding(Fields, utf8, _) :-
     memberchk(content_type(Type), Fields),
     (   sub_atom(Type, _, _, _, 'UTF-8')
     ->  true
     ;   sub_atom(Type, _, _, _, 'utf-8')
     ),
     !.
-encoding(_, octet).
+encoding(_, octet, _).
 
 is_content_type(ContentType, Check) :-
     sub_atom(ContentType, 0, Len, After, Check),

@@ -1,10 +1,10 @@
-prefix=/opt/logicmoo_workspace
+prefix=/opt/logicmoo_workspace/docker/rootfs/usr/local
 exec_prefix=${prefix}
-libdir=/opt/logicmoo_workspace/lib/swipl/lib/x86_64-linux
-includedir=/opt/logicmoo_workspace/lib/swipl/include
+libdir=/opt/logicmoo_workspace/docker/rootfs/usr/local/lib/swipl/lib/x86_64-linux
+includedir=/opt/logicmoo_workspace/docker/rootfs/usr/local/lib/swipl/include
 
 Name: swipl
 Description: ISO/Edinburgh-style Prolog compiler
-Version: 8.3.29
+Version: 8.5.0
 Libs: -L${libdir} -lswipl
 Cflags: -I${includedir}

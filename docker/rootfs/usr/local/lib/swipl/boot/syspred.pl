@@ -84,6 +84,8 @@
             nb_setval/2,                        % +Var, +Value
             thread_create/2,                    % :Goal, -Id
             thread_join/1,                      % +Id
+            sig_block/1,                        % :Pattern
+            sig_unblock/1,                      % :Pattern
             transaction/1,                      % :Goal
             transaction/2,                      % :Goal, +Options
             transaction/3,                      % :Goal, :Constraint, +Mutex
@@ -102,7 +104,9 @@
     transaction(0,0,+),
     snapshot(0),
     rule(:, -),
-    rule(:, -, ?).
+    rule(:, -, ?),
+    sig_block(:),
+    sig_unblock(:).
 
 
                 /********************************
@@ -803,6 +807,8 @@ define_or_generate(Pred) :-
     '$get_predicate_attribute'(Pred, iso, 1).
 '$predicate_property'(det, Pred) :-
     '$get_predicate_attribute'(Pred, det, 1).
+'$predicate_property'(sig_atomic, Pred) :-
+    '$get_predicate_attribute'(Pred, sig_atomic, 1).
 '$predicate_property'(quasi_quotation_syntax, Pred) :-
     '$get_predicate_attribute'(Pred, quasi_quotation_syntax, 1).
 '$predicate_property'(defined, Pred) :-
@@ -1428,6 +1434,47 @@ thread_join(Id) :-
     ->  true
     ;   throw(error(thread_error(Id, Status), _))
     ).
+
+%!  sig_block(:Pattern) is det.
+%
+%   Block thread signals that unify with Pattern.
+
+%!  sig_unblock(:Pattern) is det.
+%
+%   Remove any signal block that is more specific than Pattern.
+
+sig_block(Pattern) :-
+    (   nb_current('$sig_blocked', List)
+    ->  true
+    ;   List = []
+    ),
+    nb_setval('$sig_blocked', [Pattern|List]).
+
+sig_unblock(Pattern) :-
+    (   nb_current('$sig_blocked', List)
+    ->  unblock(List, Pattern, NewList),
+        (   List == NewList
+        ->  true
+        ;   nb_setval('$sig_blocked', NewList),
+            '$sig_unblock'
+        )
+    ;   true
+    ).
+
+unblock([], _, []).
+unblock([H|T], P, List) :-
+    (   subsumes_term(P, H)
+    ->  unblock(T, P, List)
+    ;   List = [H|T1],
+        unblock(T, P, T1)
+    ).
+
+:- public signal_is_blocked/1.          % called by signal_is_blocked()
+
+signal_is_blocked(Head) :-
+    nb_current('$sig_blocked', List),
+    '$member'(Head, List),
+    !.
 
 %!  set_prolog_gc_thread(+Status)
 %

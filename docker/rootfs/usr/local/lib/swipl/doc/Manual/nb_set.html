@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.3.29 Reference Manual: Section A.24</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.5.0 Reference Manual: Section A.24</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -240,7 +240,7 @@ Non-backtrackable set</span></a></h2>
 
 <p>The library <code>library(nb_set)</code> defines <em>non-backtrackable 
 sets</em>, implemented as binary trees. The sets are represented as 
-compound terms and manipulated using <a id="idx:nbsetarg3:2598"></a><a class="pred" href="manipterm.html#nb_setarg/3">nb_setarg/3</a>. 
+compound terms and manipulated using <a id="idx:nbsetarg3:2626"></a><a class="pred" href="manipterm.html#nb_setarg/3">nb_setarg/3</a>. 
 Non-backtrackable manipulation of data structures is not supported by a 
 large number of Prolog implementations, but it has several advantages 
 over using the database. It produces less garbage, is thread-safe, 
@@ -271,7 +271,7 @@ True if <var>Set</var> is a non-backtrackable empty set.</dd>
 <dd class="defbody">
 Add <var>Key</var> to <var>Set</var>. If <var>Key</var> is already a 
 member of
-<var>Set</var>, <a id="idx:addnbset3:2599"></a><a class="pred" href="nb_set.html#add_nb_set/3">add_nb_set/3</a> 
+<var>Set</var>, <a id="idx:addnbset3:2627"></a><a class="pred" href="nb_set.html#add_nb_set/3">add_nb_set/3</a> 
 succeeds without modifying <var>Set</var>.</dd>
 <dt class="pubdef"><a id="add_nb_set/3"><strong>add_nb_set</strong>(<var>+Key, 
 !Set, ?New</var>)</a></dt>
@@ -293,7 +293,7 @@ member </td></tr>
 -Key</var>)</a></dt>
 <dd class="defbody">
 Generate all members of <var>Set</var> on backtracking in the standard 
-order of terms. To test membership, use <a id="idx:addnbset3:2600"></a><a class="pred" href="nb_set.html#add_nb_set/3">add_nb_set/3</a>.</dd>
+order of terms. To test membership, use <a id="idx:addnbset3:2628"></a><a class="pred" href="nb_set.html#add_nb_set/3">add_nb_set/3</a>.</dd>
 <dt class="pubdef"><a id="size_nb_set/2"><strong>size_nb_set</strong>(<var>+Set, 
 -Size</var>)</a></dt>
 <dd class="defbody">

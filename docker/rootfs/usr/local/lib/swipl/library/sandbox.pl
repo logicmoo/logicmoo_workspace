@@ -692,6 +692,7 @@ safe_primitive(asserta(X)) :- safe_assert(X).
 safe_primitive(assertz(X)) :- safe_assert(X).
 safe_primitive(retract(X)) :- safe_assert(X).
 safe_primitive(retractall(X)) :- safe_assert(X).
+safe_primitive('$dcg':dcg_translate_rule(_,_)).
 
 % We need to do data flow analysis to find the tag of the
 % target key before we can conclude that functions on dicts
@@ -1077,6 +1078,7 @@ safe_meta(call(5,*,*,*,*,*)).
 safe_meta(call(6,*,*,*,*,*,*)).
 safe_meta('$tabling':start_tabling(*,0)).
 safe_meta('$tabling':start_tabling(*,0,*,*)).
+safe_meta(wfs:call_delays(0,*)).
 
 %!  safe_output(+Output)
 %
