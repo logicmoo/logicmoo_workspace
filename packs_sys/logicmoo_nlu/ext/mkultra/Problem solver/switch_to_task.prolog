@@ -7,7 +7,7 @@
 
 switch_to_task(Task) :-
    % This clause just logs Task and fails over to the next clause.
-   maybe_log_task(Task),
+   assert($task/log/Task),
    emit_grain("task", 10),
    trace_task($me, Task),
    ($task/current:CurrentStep ->
@@ -53,10 +53,7 @@ switch_to_task(let(BindingCode, Task)) :-
       switch_to_task(Task)
       ;
       throw(let_failed(let(BindingCode, Task))).
-switch_to_task(breakpoint) :-
-   !,
-   assert($task/current:breakpoint),
-   display_task_debugger.
+
 % All other primitive tasks
 switch_to_task(B) :-
    polled_builtin(B),
@@ -98,23 +95,3 @@ switch_to_canonical_task(Task) :-
 switch_to_canonical_task(Task) :-
    begin(task_reduction(Task, Reduced),
 	 switch_to_task(Reduced)).
-
-%%
-%% Task preconditions
-%%
-
-unsatisfied_task_precondition(Task, P) :-
-   precondition(Task, P),
-   \+ task_precondition_satisfied(P).
-
-task_precondition_satisfied(know(_:Condition)) :-
-   !,
-   ($task/on_behalf_of:Beneficiary) ->
-      admitted_truth_value(Beneficiary, Condition, true)
-      ;
-      truth_value(Condition, true).
-task_precondition_satisfied(Condition) :-
-   ($task/on_behalf_of:Beneficiary) ->
-      admitted_truth_value(Beneficiary, Condition, true)
-      ;
-      truth_value(Condition, true).

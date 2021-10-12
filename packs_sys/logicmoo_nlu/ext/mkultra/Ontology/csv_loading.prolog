@@ -1,46 +1,19 @@
-%%
-%% Rules for loading the KB from spreadsheets
-%% These start as sheets of KB.xslm and get exported as separate .csv files.
-%%
-
-%%
-%% Kinds
-%%
 
 load_special_csv_row(RowNumber,
 		     kinds(Kind, Parents,
 			   Description,
 			   SingularSpec, PluralSpec,
 			   DefaultProperties,
-			   DefaultRelations,
-			   ClassProperties,
-			   ClassRelations)) :-
-   begin(define_kind(RowNumber, Kind, Parents),
-	 assert_default_description(Kind, Description),
-	 decode_kind_name(SingularSpec, [Kind], Singular),
-	 decode_kind_name(PluralSpec, Singular, Plural),
-	 assert_kind_noun(Kind, Singular, Plural),
-	 assert(declare_kind(Kind, kind)),
-	 parse_list(Prop=Value, DefaultProperties,
-		    assert(default_value(Kind, Prop, Value)),
-		    BadElement,
-		    kind_declaration_syntax_error(Kind, row:RowNumber,
-						  default_property_list:BadElement)),
-	 parse_list(Relation:Relatum, DefaultRelations,
-		    assert(default_related(Kind, Relation, Relatum)),
-		    BadElement,
-		    kind_declaration_syntax_error(Kind, row:RowNumber,
-						  default_relation_list:BadElement)),
-	 parse_list(Prop=Value, ClassProperties,
-		    assert(declare_value(Kind, Prop, Value)),
-		    BadElement,
-		    kind_declaration_syntax_error(Kind, row:RowNumber,
-						  class_property_list:BadElement)),
-	 parse_list(Relation:Relatum, ClassRelations,
-		    assert(declare_related(Kind, Relation, Relatum)),
-		    BadElement,
-		    kind_declaration_syntax_error(Kind, row:RowNumber,
-						  class_relation_list:BadElement))).
+			   DefaultRelations)) :-
+   define_kind(RowNumber, Kind, Parents),
+   assert_default_description(Kind, Description),
+   decode_kind_name(SingularSpec, [Kind], Singular),
+   decode_kind_name(PluralSpec, Singular, Plural),
+   assert_kind_noun(Kind, Singular, Plural),
+   forall(member(Prop=Value, DefaultProperties),
+	  assert(default_value(Kind, Prop, Value))),
+   forall(member(Relation:Relatum, DefaultRelations),
+	  assert(default_related(Kind, Relation, Relatum))).
 
 assert_default_description(_, null).
 assert_default_description(Kind, Description) :-
@@ -83,32 +56,19 @@ check_predicate_signature(_Type, ArgTypes) :-
    forall(member(AType, Types),
 	  ((kind(AType),!) ; log(bad_declared_argument_type(AType, ArgTypes)))).
 
-%%
-%% Properties
-%%
-
-load_special_csv_row(_RowNumber, properties(Name, Visibility,
-					    SurfaceForm,
-					    ObjectType, ValueType)) :-
+load_special_csv_row(_RowNumber, properties(Name, SurfaceForm, ObjectType, ValueType)) :-
    assert(declare_kind(Name, property)),
-   assert(visibility(Name, Visibility)),
    assert(property_type(Name, ObjectType, ValueType)),
    assert_phrase_rule(property_name(Name), SurfaceForm).
 
-%%
-%% Relations
-%%
-
 load_special_csv_row(_RowNumber,
-		     relations(Name, Visibility,
-			       ObjectType, ValueType,
+		     relations(Name, ObjectType, ValueType,
 			       CopularForm,
 			       SingularForm,
 			       PluralForm,
 			       Generalizations,
 			       Inverse)) :-
    assert(declare_kind(Name, relation)),
-   assert(visibility(Name, Visibility)),
    assert(relation_type(Name, ObjectType, ValueType)),
    assert_copular_form(Name, CopularForm),
    assert_genitive_form(Name, singular, SingularForm),
@@ -129,10 +89,6 @@ assert_genitive_form(_Name, _Number, []).
 assert_genitive_form(Name, Number, Phrase) :-
    assert_phrase_rule(genitive_form_of_relation(Name, Number), Phrase).
 
-%%
-%% Entities
-%%
-
 load_special_csv_row(_RowNumber,
 		     entities(EntityName, KindList,
 			      Description,
@@ -150,10 +106,3 @@ load_special_csv_row(_RowNumber,
 assert_description(_, null).
 assert_description(Entity, Description) :-
    assert(declare_value(Entity, description, Description)).
-
-parse_list(Pattern, List, Goal, ListElement, ErrorMessage) :-
-   forall(member(ListElement, List),
-	  ( ListElement=Pattern ->
-	       Goal
-	       ;
-	       throw(error(ErrorMessage)) )).

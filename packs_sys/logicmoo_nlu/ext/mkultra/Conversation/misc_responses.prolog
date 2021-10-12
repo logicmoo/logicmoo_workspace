@@ -2,6 +2,19 @@
 %% Top-level strategies for responding to different kinds of dialog acts
 %%
 
+strategy(respond_to_dialog_act(parting(Them, $me)),
+	 begin(assert(Parent/generated_parting),
+	       parting($me, Them),
+	       sleep(1),
+	       call(kill_concern(Parent)))) :-
+   parent_concern_of($task, Parent),
+   \+ Parent/generated_parting.
+
+strategy(respond_to_dialog_act(parting(_Them, $me)),
+	 call(kill_concern(Parent))) :-
+   parent_concern_of($task, Parent),
+   Parent/generated_parting.
+
 %%
 %% Uninterpretable inputs
 %%
@@ -23,24 +36,6 @@ strategy(respond_to_dialog_act(greet($addressee, $me)),
    parent_concern_of($task, Conversation),
    Conversation/greeted.
 
-strategy(respond_to_dialog_act(parting(Them, $me)),
-	 begin(assert(Parent/generated_parting),
-	       parting($me, Them),
-	       sleep(1),
-	       call(kill_concern(Parent)))) :-
-   parent_concern_of($task, Parent),
-   \+ Parent/generated_parting.
-
-strategy(respond_to_dialog_act(parting(_Them, $me)),
-	 call(kill_concern(Parent))) :-
-   parent_concern_of($task, Parent),
-   Parent/generated_parting.
-
-strategy(respond_to_dialog_act(excuse_self(Them, $me)),
-	 call(kill_concern(Parent))) :-
-   $task/partner/Them,
-   parent_concern_of($task, Parent).
-
 %%
 %% Discourse increments
 %%
@@ -56,8 +51,6 @@ default_strategy(respond_to_increment(_, _, _),
 		 null).
 strategy(respond_to_increment(Speaker, Addressee, s(LF)),
 	 respond_to_dialog_act(assertion(Speaker, Addressee, LF, present, simple))).
-strategy(respond_to_increment(Speaker, Addressee, question_answer(LF)),
-	 respond_to_dialog_act(question_answer(Speaker, Addressee, LF))).
 
 %%
 %% Agreement/disagreement

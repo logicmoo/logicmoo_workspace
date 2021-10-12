@@ -1,145 +1,41 @@
-%:- public det/3.
+det(LF) --> [D], {det(D, LF)}.
 
-%det(LF) --> [D], {det(D, LF)}.
+:- randomizable n//2.
+n(singular, LF)   --> [N], {noun(N, _, LF)}.
+n(plural, LF)   --> [N], {noun(_, N, LF)}.
 
-:- randomizable proper_name/4, proper_name/2.
+proper_noun(singular, (E^S)^S) --> [PN], {proper_noun(PN, E)}.
 
-%% proper_name(?Object, ?Name) is nondet
-%  Object has proper name Name (a list of words)
-proper_name(Object, Name) :-
-   proper_name(Object, _, Name, [ ]).
-
-pronoun(Case, Person:Number, (E^S)^S) -->
-   [PN],
-   { \+ bound_discourse_variable(E),
-     pronoun_word(PN, Case, Person, Number, E) }.
+pronoun(Case, Person:Number, (E^S)^S) --> [PN], {pronoun(PN, Case, Person, Number, E)}.
 
 %relpron --> [RP], {relpron(RP)}.
-whpron(Kind) -->
-   { Kind \== person,		% Use who for persons
-     Kind \= entity },		% Just say what, rather than "what entities"
-   [what],
-   kind_noun(Kind, _).
-
-whpron(Kind) --> [WH], {whpron(WH, Kind)}.
+whpron --> [WH], {whpron(WH)}.
 
 %%
 %% Verb conjugations
 %%
 
-:- randomizable iv//5.
+:- randomizable iv//4.
+%                                                      Base TPS Past PastP PresP LF
+iv(simple, third:singular, LF, present) --> [IV], { intransitive_verb(_,   IV, _,   _,    _,    LF) }.
+iv(simple, Agreement,      LF, present) --> [IV], { intransitive_verb(IV,  _,  _,   _,    _,    LF),
+						    Agreement \= third:singular }.
+iv(simple, _Agreement,      LF, past)   -->  [IV], { intransitive_verb(_,  _,  IV,  _,    _,    LF) }.
+iv(simple, _Agreement,      LF, future) -->  [IV], { intransitive_verb(IV, _,  _,   _,    _,    LF) }.
+% Used only in the construction X does not BASEFORM.
+iv(base, _Agreement,      LF, present) -->  [IV], { intransitive_verb(IV, _,  _,   _,    _,    LF) }.
+iv(past_participle, _Agreement,      LF, _Tense) -->  [IV], { intransitive_verb(_,  _,  _,   IV,   _,    LF) }.
+iv(present_participle, _Agreement,   LF, _Tense) -->  [IV], { intransitive_verb(_,  _,  _,   _,    IV,   LF) }.
 
-load_special_csv_row(_RowNumber,
-                     intransitive_verb(Base, TPS, Past, PastP, PresentP,
-				       ForcePPs, LF)) :-
-   assert_phrase_rule(iv(simple, third:singular, LF, present, ForcePPs),
-		      TPS),
-   assert_phrase_rule(iv(simple, Agreement, LF, present, ForcePPs),
-		      Base,
-		      Agreement \= third:singular),
-   assert_phrase_rule(iv(simple, _Agreement, LF, past, ForcePPs),
-		      Past),
-   assert_phrase_rule(iv(simple, _Agreement, LF, future, ForcePPs),
-		      Base),
-   % Used only in the construction X does not BASEFORM.
-   assert_phrase_rule(iv(base, _Agreement, LF, present, ForcePPs),
-		      Base),
-   assert_phrase_rule(iv(base, _Agreement, LF, past, ForcePPs),
-		      Base),
-   assert_phrase_rule(iv(past_participle, _Agreement, LF, _Tense, ForcePPs),
-		      PastP),
-   assert_phrase_rule(iv(present_participle, _Agreement, LF, _Tense, ForcePPs),
-		      PresentP).
-		     
-end_csv_loading(intransitive_verb) :-
-   check_lexicon_typing(LF^iv(past_participle, _, LF, _, _, _, _)).
+:- randomizable tv//4.
+%                                                      Base TPS Past PastP PresP LF
+tv(simple, third:singular, LF, present) --> [TV], { transitive_verb(_,   TV, _,   _,    _,    LF) }.
+tv(simple, Agreement,      LF, present) --> [TV], { transitive_verb(TV,  _,  _,   _,    _,    LF),
+						    Agreement \= third:singular }.
+tv(simple, _Agreement,      LF, past)   -->  [TV], { transitive_verb(_,  _,  TV,  _,    _,    LF) }.
+tv(simple, _Agreement,      LF, future) -->  [TV], { transitive_verb(TV, _,  _,   _,    _,    LF) }.
+% Used only in the construction X does not BASEFORM.
+tv(base, _Agreement,      LF, present) -->  [TV], { transitive_verb(TV, _,  _,   _,    _,    LF) }.
+tv(past_participle, _Agreement,      LF, _Tense) -->  [TV], { transitive_verb(_,  _,  _,   TV,   _,    LF) }.
+tv(present_participle, _Agreement,   LF, _Tense) -->  [TV], { transitive_verb(_,  _,  _,   _,    TV,   LF) }.
 
-					
-:- randomizable tv//5.
-
-load_special_csv_row(_RowNumber,
-                     transitive_verb(Base, TPS, Past, PastP, PresentP,
-				       ForcePPs, LF)) :-
-   assert_phrase_rule(tv(simple, third:singular, LF, present, ForcePPs),
-		      TPS),
-   assert_phrase_rule(tv(simple, Agreement, LF, present, ForcePPs),
-		      Base,
-		      Agreement \= third:singular),
-   assert_phrase_rule(tv(simple, _Agreement, LF, past, ForcePPs),
-		      Past),
-   assert_phrase_rule(tv(simple, _Agreement, LF, future, ForcePPs),
-		      Base),
-   % Used only in the construction X does not BASEFORM.
-   assert_phrase_rule(tv(base, _Agreement, LF, present, ForcePPs),
-		      Base),
-   assert_phrase_rule(tv(base, _Agreement, LF, past, ForcePPs),
-		      Base),
-   assert_phrase_rule(tv(past_participle, _Agreement, LF, _Tense, ForcePPs),
-		      PastP),
-   assert_phrase_rule(tv(present_participle, _Agreement, LF, _Tense, ForcePPs),
-		      PresentP).
-
-end_csv_loading(transitive_verb) :-
-   check_lexicon_typing(LF^tv(past_participle, _, LF, _, _, _, _)).
-
-%
-% Relations and properties disguised as transitive verbs
-%
-
-% Uninverted sentence
-tv(Form, Agreement, S^O^related(S, Relation, O), Tense, [ ]) -->
-   {Form \== present_participle ; Tense \== present },
-   copula(Form, Tense, Agreement),
-   copular_relation(Relation).
-% Inverted sentence
-tv(present_participle, _Agreement, S^O^related(S, Relation, O), present, [ ])
-   -->
-   copular_relation(Relation).
-
-%tv(Form, Agreement, S^O^property_value(S, Property, O), Tense, [ ]) -->
-%   property_verb(Property, Form, Agreement, Tense).
-
-
-:- randomizable dtv//5.
-
-load_special_csv_row(_RowNumber,
-                     ditransitive_verb(Base, TPS, Past, PastP, PresentP,
-				       ForcePPs, LF)) :-
-   assert_phrase_rule(dtv(simple, third:singular, LF, present, ForcePPs),
-		      TPS),
-   assert_phrase_rule(dtv(simple, Agreement, LF, present, ForcePPs),
-		      Base,
-		      Agreement \= third:singular),
-   assert_phrase_rule(dtv(simple, _Agreement, LF, past, ForcePPs),
-		      Past),
-   assert_phrase_rule(dtv(simple, _Agreement, LF, future, ForcePPs),
-		      Base),
-   % Used only in the construction X does not BASEFORM.
-   assert_phrase_rule(dtv(base, _Agreement, LF, present, ForcePPs),
-		      Base),
-   assert_phrase_rule(dtv(base, _Agreement, LF, past, ForcePPs),
-		      Base),
-   assert_phrase_rule(dtv(past_participle, _Agreement, LF, _Tense, ForcePPs),
-		      PastP),
-   assert_phrase_rule(dtv(present_participle, _Agreement, LF, _Tense, ForcePPs),
-		      PresentP).
-
-end_csv_loading(ditransitive_verb) :-
-   check_lexicon_typing(LF^dtv(past_participle, _, LF, _, _, _, _)).
-
-check_lexicon_typing(LF^Generator) :-
-   forall(Generator,
-	  check_lexical_entry_type(LF)).
-
-check_lexical_entry_type(_Arg^LF) :-
-   !,
-   check_lexical_entry_type(LF).
-check_lexical_entry_type(LF) :-
-   LF =.. [Functor | Args],
-   length(Args, N),
-   length(BlankArgs, N),
-   BlankLF =.. [Functor | BlankArgs],
-   predicate_type(_, BlankLF),
-   !.
-check_lexical_entry_type(LF) :-
-   log(no_type_specified_for(LF)).

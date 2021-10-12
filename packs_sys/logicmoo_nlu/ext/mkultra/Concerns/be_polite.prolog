@@ -1,23 +1,17 @@
-%%%
-%%% Be_polite concern
-%%% Causes character to initiate conversations with any character
-%%% who comes into this character's social space.
-%%%
+propose_action(be_polite, Concern, say("Sorry!")) :-
+    Concern/bumped,
+    retract(Concern/bumped).
 
-% Currently disabled because it's annoying to have your character constantly
-% get into pointless conversations.
-%standard_concern(be_polite, 1).
+propose_action(be_polite, Concern, say("Hey")) :-
+    Concern/new_arrival,
+    retract(Concern/new_arrival).
 
-score_action(greet(_, _), be_polite, _, 50).
+score_action(be_polite, _, say("Sorry!"), 100).
+score_action(be_polite, _, say("Hey"), 50).
 
-on_event(enter_social_space(Character),
-	 be_polite, C, 
-	 assert(C/should_greet/Character)).
+on_event(be_polite, _, collision(X)) :-
+    character(X),
+    propose_once(say("Sorry!")).
 
-on_event(greet($me, Character),
-	 be_polite, C,
-	 ignore(retract(C/should_greet/Character))).
-
-propose_action(greet($me, Character),
-	       be_polite, C) :-
-    C/should_greet/Character.
+on_event(be_polite, _, enter_conversational_space(X)) :-
+    propose_once(say("Hey!")).

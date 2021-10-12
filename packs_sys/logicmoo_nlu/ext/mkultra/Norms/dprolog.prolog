@@ -16,13 +16,6 @@
 
 :- dynamic (:=)/2, (:^)/2.
 :- multifile (:=)/2, (:^)/2.
-:- higher_order( (0 := 1) ).
-
-:- external sup/2, incompatible/2, (~)/1.
-:- public (@)/1.
-:- public preempt/0.
-
-~(~P) :- P.
 
 %
 % @(+Goal)
@@ -86,21 +79,14 @@ def_der(KB,(First,Rest)) :-
         def_der(KB,Rest).
 
 def_der(_,Goal) :-
-        %predicate_property(Goal,built_in),
-        %\+ functor(Goal,',',_),
+        predicate_property(Goal,built_in),
+        \+ functor(Goal,',',_),
       % A goal with a built-in functor is defeasibly
       % derivable if and only if it succeeds. The test
       % used here is for Quintus Prolog. This test may
       % be different for another version of Prolog.
-   dprolog_treat_as_primitive(Goal),
         !,
         Goal.
-
-dprolog_treat_as_primitive(kind_of(_,_)).
-dprolog_treat_as_primitive(is_a(_,_)).
-dprolog_treat_as_primitive(true_after(_,_)).
-dprolog_treat_as_primitive(Goal) :-
-   predicate_property(Goal, built_in).
 
 def_der(KB,Goal) :-
       % A goal is defeasibly derivable if it is
@@ -315,8 +301,6 @@ preempted(KB,(Head := Body)) :-
 %   enabled and disabled.
 %
 
-:- external preemption/0.
-
 preempt :-
         retract(preemption),
         !,
@@ -326,3 +310,6 @@ preempt :-
         assert(preemption),
         write('Preemption is enabled.'), nl.
 
+:- abolish(preemption/0).
+
+:- consult('dputils.pl').
