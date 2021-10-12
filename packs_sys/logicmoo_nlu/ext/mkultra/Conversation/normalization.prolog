@@ -4,6 +4,7 @@ normalize_dialog_act(Act, Normalized) :-
    normalize_dialog_act(Reduced, Normalized).
 normalize_dialog_act(Act, Act).
 
+:- multifile(da_normal_form/2).
 % Indirect request - "can you hand me that screwdriver?"
 da_normal_form(question(Speaker, Addressee, can(Command), present, simple),
 	       command(Speaker, Addressee, Command)) :-

@@ -3,6 +3,7 @@
 %%%
 
 :- op(300,fx,'~').
+:- style_check(-discontiguous).
 
 :- public prop/1, character/1, door/1, world_object/1, nearest/2, docked_with/1, after_time/1.
 
@@ -223,7 +224,7 @@ normalize_task(emote(E),
 %%%
 
 :- dynamic core_systems_initialized/0.
-:- external initialization/0.
+:- external (initialization)/0.
 
 ensure_core_systems_initialized :-
    core_systems_initialized,

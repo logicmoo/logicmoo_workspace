@@ -69,6 +69,8 @@ not_completing(LF, _, _) :-
 not_completing(_, In, In) :-
    nonvar(In).
    
+:- dynamic(kind_noun//2).
+
 possessive_np(X, Number) -->
    [your],
    kind_noun(Kind, Number),

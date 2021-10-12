@@ -63,6 +63,9 @@ assert_phrase_rule(Phrase, Words, Guard) :-
 %  gramatical number Number (singular or plural).
 %  Functionally, this means it adds the grammar rule:
 %    proper_name(Object, Number) --> Name.
+
+:- dynamic(proper_name_without_the//2).
+
 assert_proper_name(Object, [ ], _) :-
    % Don't default a name for GameObjects
    is_class(Object, $'GameObject'),

@@ -19,6 +19,7 @@ tell(P) :-
 maybe_log_when_added_action(P, Action) :-
    log_when_added_action(P, Action) -> log((P ==> Action)) ; true.
 
+:- multifile(when_added/2).
 when_added(P, tell(Q)) :-
    (P ==> Q).
 

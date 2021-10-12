@@ -1,3 +1,6 @@
+
+:- style_check(-discontiguous).
+
 %%%
 %%% STARTING PLOT GOAL
 %%% Find the macguffin

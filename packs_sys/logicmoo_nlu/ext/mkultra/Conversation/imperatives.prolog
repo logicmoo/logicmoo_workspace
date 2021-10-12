@@ -84,6 +84,7 @@ strategy(end_game(_,_), end_game(null)).
 %%% Converstation topic queue
 %%%
 
+:- multifile(todo/2).
 todo(engage_in_conversation(Person), 1) :-
    \+ currently_in_conversation,
    /pending_conversation_topics/Person/_.
@@ -93,6 +94,7 @@ strategy(add_conversation_topic(Person, Topic),
 							    Person,
 							    Topic))) :-
    var(Topic) -> Topic = Person ; true.
+
 strategy(add_conversation_task(Person, Task),
 	 tell(/pending_conversation_topics/Person/Task)) :-
-   var(Topic) -> Topic = Person ; true.
+   true. % var(Topic) -> Topic = Person ; true.

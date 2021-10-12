@@ -6,7 +6,7 @@ known_object(Object) :-
 known_type(number).
 known_type(string).
 known_type(List) :-
-   list(List).
+   is_list(List).
 known_type(kind_of(Kind)) :-
    kind(Kind).
 known_type(subkind_of(Kind)) :-

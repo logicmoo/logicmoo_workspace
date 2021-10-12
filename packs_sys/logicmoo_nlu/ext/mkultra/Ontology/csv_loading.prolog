@@ -101,6 +101,7 @@ load_special_csv_row(_RowNumber, properties(Name, Visibility,
 %%
 %% Relations
 %%
+:- dynamic(symmetric/1).
 
 load_special_csv_row(_RowNumber,
 		     relations(Name, Visibility,

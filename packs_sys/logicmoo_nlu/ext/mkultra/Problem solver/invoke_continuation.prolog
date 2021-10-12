@@ -62,7 +62,7 @@ retract_on_restart(Task, Task/monitor).
 %  Executes InterruptingTask, then returns to previous step.
 interrupt_step(TaskConcern, InterruptingTask) :-
    within_task(TaskConcern,
-	       begin(TaskConcern/current:C,
+	       begin([TaskConcern/current:C,
 		     TaskConcern/continuation:K,
 		     assert(TaskConcern/continuation:(C,K)),
-		     switch_to_task(InterruptingTask))).
+		     switch_to_task(InterruptingTask)])).

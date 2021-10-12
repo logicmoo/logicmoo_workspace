@@ -7,6 +7,7 @@
 %%% be "hidden" from individual characters by declaring that they
 %%% don't know it.
 %%%
+:- style_check(-discontiguous).
 
 :- public truth_value/2, admitted_truth_value/3,
    know_true/1, know_false/1,

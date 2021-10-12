@@ -55,6 +55,8 @@ set_prop_text(Prop, String) :-
 %  True is Appliance is turned on.
 turned_on(Appliance) :-
    prop_activated(Appliance).
+% maybe informed_about(_, turned_on(_)).
+:- multifile(informed_about/2).
 informed_about(_, turned_on(_)).
 closed(turned_on(_)).
 

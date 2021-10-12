@@ -153,7 +153,7 @@ strategy(mental_monolog(String),
    	 string(String).
 strategy(mental_monolog(Items),
 	 discourse_increment($me, $me, Items)) :-
-   list(Items).
+   is_list(Items).
 
 % When tasks other than conversations try to generate speech, this is where
 % it will be directed.

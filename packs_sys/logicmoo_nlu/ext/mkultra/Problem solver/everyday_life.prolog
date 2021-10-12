@@ -4,6 +4,8 @@
 %% Periodically searches for stuff to do.
 %%
 
+:- style_check(-discontiguous).
+
 character_initialization :-
    \+ $global_root/configuration/inhibit_concern_initialization,
    start_task($root, everyday_life, 1, T, [T/repeating_task, T/status:idle]),
@@ -20,6 +22,8 @@ character_debug_display(Character, line("Topics:\t", Person:Topic)) :-
 % When executing this task, it should first run Preamble
 % Preamble is used for housekeeping, e.g. to remove Task
 % from a queue of pending tasks. 
+
+:- multifile(todo/2).
 
 todo(Task, Priority) :-
    personal_todo(Task, Priority).

@@ -33,7 +33,7 @@ strategy(generate_answer(_Q, unknown),
 	 speech(["Don't know."])).
 
 
-%% Wh-questions
+% % Wh-questions
 
 :- public unique_answer/2.
 :- external unique_answer/2.

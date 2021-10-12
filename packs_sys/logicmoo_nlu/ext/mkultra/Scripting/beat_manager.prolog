@@ -34,6 +34,8 @@
    plot_goal/1, plot_goal_flavor_text/2,
    clue/1, clue_flavor_text/2, objective_description/2.
 
+:- style_check(-discontiguous).
+
 %%%
 %%% Foreground/background relations on characters
 %%%
@@ -84,7 +86,7 @@ dialog_task_with_partner_advances_current_beat(Beat, Partner, Canon) :-
    ( incomplete_beat_task_from_list(Beat, TaskList, T) ->
      (can_perform_beat_task(T, Task), canonicalize_beat_dialog_task(Task, Canon))
         ;
-     (Task=null, check_beat_completion) ).
+     (_Task=null, check_beat_completion) ).
 
 canonicalize_beat_dialog_task(String, run_quip(String)) :-
    string(String),
@@ -319,6 +321,7 @@ test_file(problem_solver(_),
 on_memorable_event(Event) :-
    plot_event(Event) -> maybe_interrupt_current_beat.
 
+:- multifile(when_added/2).
 when_added(Assertion, maybe_interrupt_current_beat) :-
    beat_precondition(_, Assertion).
 
@@ -368,7 +371,7 @@ menu_hypno_command(Object, DialogAct) :-
 
 :- public beat/2.
 
-initialization :-
+(initialization) :-
    beat(BeatName, { Declarations }),
    assert($global::beat(BeatName)),
    forall(( member_of_comma_separated_list(Declaration, Declarations),
@@ -656,7 +659,7 @@ line_includes_markup((_::(_:LineMarkup)), Markup) :-
 markup_matches(M, M) :-
    !.
 markup_matches(List, M) :-
-   list(List),
+   is_list(List),
    member(M, List).
 
 beat_graph_subgraph(TerminalBeats, [rank=sink]) :-

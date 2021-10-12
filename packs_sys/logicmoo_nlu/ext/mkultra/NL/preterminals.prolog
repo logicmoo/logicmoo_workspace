@@ -86,6 +86,7 @@ load_special_csv_row(_RowNumber,
 end_csv_loading(transitive_verb) :-
    check_lexicon_typing(LF^tv(past_participle, _, LF, _, _, _, _)).
 
+:- dynamic(copular_relation//1).
 %
 % Relations and properties disguised as transitive verbs
 %
@@ -147,6 +148,8 @@ check_lexical_entry_type(LF) :-
    !.
 check_lexical_entry_type(LF) :-
    log(no_type_specified_for(LF)).
+
+:- dynamic(adjective//1).
 
 load_special_csv_row(_RowNumber,
                      adjective(Phrase, Meaning)) :-

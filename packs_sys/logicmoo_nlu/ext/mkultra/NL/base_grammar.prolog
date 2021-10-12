@@ -292,6 +292,8 @@ s((Value:(property_value(Noun, Property, Value), is_a(Value, Kind))),
 
 % Wh-questions about relations
 
+:- dynamic(genitive_form_of_relation//2).
+
 % Whose relation is Value?
 s(Noun:related(Noun, Relation, Value),
   interrogative, affirmative, Tense, simple) -->

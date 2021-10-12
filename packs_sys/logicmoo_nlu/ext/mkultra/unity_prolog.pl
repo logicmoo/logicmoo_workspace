@@ -9,10 +9,13 @@ begin(G):- must_det_l(G).
    op(1100,xfy,:=),
    op(1100,xfy,:^).
 
+:- multifile(menu_action/2).
 
 :- op(800,fx,'/').
 :- op(900,xfx,'::').
 :- op(399,xfy,':').
+
+string_representation(Term,String):- term_to_atom(Term,String).
 
 :- op(399,fx,'~').
 
