@@ -47,6 +47,7 @@ recursive_modal(P) :-
 
 player_input_response(X, C, assert(C/propose_action:X)).
 
+:- multifile(da_normal_form/2).
 da_normal_form(assertion($pc, NPC, knows(NPC, Proposition), present, simple),
 	       hypno_command($pc, NPC, Proposition, present, simple)).
 da_normal_form(assertion($pc, NPC, believes(NPC, Proposition), present, simple),

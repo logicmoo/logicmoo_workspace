@@ -18,7 +18,7 @@
 :- multifile (:=)/2, (:^)/2.
 :- higher_order( (0 := 1) ).
 
-:- external sup/2, incompatible/2, (~)/1.
+:- external sup/2, incompatible_cl/2, (~)/1.
 :- public (@)/1.
 :- public preempt/0.
 
@@ -156,14 +156,14 @@ def_der(KB,Goal) :-
 %
 % contrary(+Clause1,-Clause2)
 %   Discovers Clause2 which either is the complement of
-%   Clause1 or is incompatible with Clause1.
+%   Clause1 or is incompatible_cl with Clause1.
 %
 
 contrary(Clause1,Clause2) :-
-        incompatible(Clause1,Clause2).
+        incompatible_cl(Clause1,Clause2).
 
 contrary(Clause1,Clause2) :-
-        incompatible(Clause2,Clause1).
+        incompatible_cl(Clause2,Clause1).
 
 contrary(Clause1,Clause2) :-
         comp(Clause1,Clause2).

@@ -41,20 +41,49 @@ handle_discord_chat_event(ID,say(User,Message)):- !,
  thread_id_user_say(ID,User,Str),!. 
 handle_discord_chat_event(ID,Message):- dmsg(failed_chat_event(ID,Message)).
 
-:- dynamic(tmp:predicate_stream_for_uid/2).
+:- dynamic(tmp:output_predicate_stream_for_uid/2).
 
-stream_for_dest(User,Err):- tmp:predicate_stream_for_uid(User,Err),!.
-stream_for_dest(User,Err):- 
+output_stream_for_dest(User,Err):- tmp:output_predicate_stream_for_uid(User,Err),!.
+output_stream_for_dest(User,Err):- 
   new_predicate_output_stream(discord_chat_say_buff(User), Err),
   set_stream(Err,buffer(false)),
-  assert(tmp:predicate_stream_for_uid(User,Err)).
+  assert(tmp:output_predicate_stream_for_uid(User,Err)).
+
+%input_stream_for_dest(User,Err):- tmp:input_predicate_stream_for_uid(User,Err),!.
+input_stream_for_dest(DEST,User,Err):- 
+  new_predicate_input_stream(discord_chat_hear_buff(DEST,User), Err),
+  assert(tmp:input_predicate_stream_for_uid(DEST,User,Err)).
+
+discord_chat_hear_buff(DEST,User,Input):- 
+ any_to_channel_id(DEST,CID),get_time(Now),
+ setup_call_cleanup(asserta(tmp:hook_user_chat(DEST,User,CID,Now),Clause),
+  get_hear_buff(DEST,User,CID,Now,Input),
+  erase(Clause)).
+
+get_hear_buff(DEST,User,CID,Now,Input):-
+ sformat(S,"Reading input from: ~w in ~w after ~w (reply to this message)",[User,CID,Now]),
+ discord_say(DEST,S),
+ repeat,
+  sleep(1),
+  once((
+  discord_ddd(MID,author_username,User),
+  nop(discord_ddd(MID,channel_id,CID)),
+  discord_ddd(MID,content,InputS),
+  discord_ddd(MID,timestamp,Time),
+  Time>Now,
+  dmsg(m(MID,User,Now,Time,InputS)))),!,
+  feed_input(InputS,Input).
+
+feed_input(InputS,Input):- 
+  member(Input,[InputS,'\n']).
 
 
-get_stdio(DEST,_User,In,Out,Err):- 
-  stream_property(In,file_no(0)),
-  stream_for_dest(DEST,Out),
-  stream_property(Err,file_no(2)),
-  %stream_for_dest(User,Err),
+get_stdio(DEST,User,In,Out,Err):-   
+  input_stream_for_dest(DEST,User,In),
+  %stream_property(In,file_no(0)),
+  output_stream_for_dest(DEST,Out),
+  %stream_property(Err,file_no(2)),
+  output_stream_for_dest(User,Err),
   !.
 get_stdio(_DEST,_User,In,Out,Err):-
    %stream_property(In,file_no(0)),
@@ -85,7 +114,7 @@ discord_in_thread(DEST,G,In,Out,Err):-
   HasConsole = thread_util:has_console(Self, In, Out, Err),
   locally(t_l:discord_msg_id(DEST),
    ignore((
-   %set_prolog_IO(In,Out,Err),
+   set_prolog_IO(In,Out,Err),
    %nodebug,
    setup_call_cleanup(
     assert(HasConsole),
@@ -119,10 +148,10 @@ do_full_goal(Goal,Vs):-
        deterministic(Done),
        flag(ans,N,N+1),
        discord_show_each_result(Goal,Done,N,Vs)))),!.
-do_full_goal(Goal,Vs):- flag(ans,W,W),
-   (W\==0 ->
-      (write(' '),writeq(fail_do_full_goal(Goal,W,Vs)),write(' '))
-    ; write(' % No. ')).
+do_full_goal(_Goal,_Vs):- flag(ans,W,W),
+   (W==0 -> writeln(' % No. ');
+   (W==1 -> writeln(' % Yes. ');
+    format(' % Yes ~d answers',[W]))),!.
 
 id_user_say(DEST,User,say(Str)):- notrace_catch(read_term_from_atom(Str,Term,[variable_names(Vs)])),!,id_user_say(DEST,User,term(Term,Vs)).
 id_user_say(DEST,User,term(Term,Vs)):- 

@@ -91,7 +91,7 @@ kill_current_everyday_life_task :-
 %%%
 
 todo(T/retract(Node), P) :-
-   /goals/pending_tasks/T>>Node,
+   /goals/pending_tasks/(T>>Node),
    Node:P.
 
 add_pending_task(Task) :-

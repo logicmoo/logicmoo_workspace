@@ -98,15 +98,15 @@ dlisting(Predicate) :-
         fail.
 
 dlisting(Predicate) :-
-        clause(incompatible(Clause1,Clause2),Body),
+        clause(incompatible_cl(Clause1,Clause2),Body),
         dfunctor(Clause1,Predicate,_),
-        pprint(incompatible(Clause1,Clause2),' :-',Body),
+        pprint(incompatible_cl(Clause1,Clause2),' :-',Body),
         fail.
 
 dlisting(Predicate) :-
-        clause(incompatible(Clause1,Clause2),Body),
+        clause(incompatible_cl(Clause1,Clause2),Body),
         dfunctor(Clause2,Predicate,_),
-        pprint(incompatible(Clause1,Clause2),' :-',Body),
+        pprint(incompatible_cl(Clause1,Clause2),' :-',Body),
         fail.
 
 dlisting(Predicate) :-

@@ -13,7 +13,7 @@ unique_answer(X, location(Object, X)) :-
    var(X),
    nonvar(Object).
 
-incompatible(location(X, Y),
+incompatible_cl(location(X, Y),
 	     location(X, Z)) :-
    Y \= Z.
 

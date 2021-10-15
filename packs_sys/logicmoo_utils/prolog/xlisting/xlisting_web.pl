@@ -3304,7 +3304,7 @@ Do you say* then that LMs taken to the extreme fundamentally cannot achieve AGI?
 [11:58 AM] dmiles: With the  cyc/logicmoo way .. when we have access to the same information as the language model did when training, answering such questions would not be a problem
 [12:01 PM] dmiles: identifying and changing that information is much easier to when it is wrong (language model obfuscates the storage a bit too much i think for the system to update itself)
 [12:05 PM] dmiles: note, the cyc way, even if it does beat LMs at Q&A, still doesnt go towards what they would need for AGI
-[12:09 PM] dmiles: what is needed for AGI is a type of process that models a handful of concurrent informationally incompatible hill-climbs (simplistic even) and then maps a single non-simplistic hill-climb process and a system to keep cohesion between that one and the set.
+[12:09 PM] dmiles: what is needed for AGI is a type of process that models a handful of concurrent informationally in-compatible hill-climbs (simplistic even) and then maps a single non-simplistic hill-climb process and a system to keep cohesion between that one and the set.
 [12:11 PM] dmiles: What Cyc and LMs do is models the hills but without modeling the climbing process
 [12:13 PM] dmiles: The LM stores multiple final results of climbs and hopes the next usecase will be a search to find the right climbed hill.. the best-case is it will have hopefully blended a climb together
 [12:16 PM] dmiles: Cyc's problem (the gold standard of GOFAI and mostly Logicmoo's) is that sometimes blending is so rigid .. the blending falls short

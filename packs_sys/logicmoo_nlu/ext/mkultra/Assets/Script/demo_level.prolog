@@ -250,4 +250,4 @@ beat(exit_house,
 owner($kavi, X) :- X \= $macguffin.
 owner($pc, $macguffin).
 
-:- consult("Script/radio").
+%:- consult("Script/radio").

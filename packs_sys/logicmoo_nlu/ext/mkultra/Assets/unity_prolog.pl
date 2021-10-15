@@ -50,12 +50,10 @@ system:unity_call(M:G):- G=..[F|Args],unity_apply(M:F,Args).
 
 :- meta_predicate(system:unity_apply(:,+)).
 system:unity_apply(F,[Arg]):- once(convert_assert(Arg,Slash)),Arg\==Slash,!, unity_apply(F,[Slash]).
-
 system:unity_apply(M:(public),[Arg]):- !, system:unity_apply(M:(external),[Arg]).
-
 system:unity_apply(F,Args):- \+ ground(Args), wdmsg(unity_apply(F,Args)), fail.
-
 system:unity_apply(F,Args):- apply(F,Args).
+
 
 convert_assert(G,G):- var(G),!.
 convert_assert(::(G,Arg),Slash):- G == $global,!, convert_assert(Arg,Slash).
@@ -66,6 +64,8 @@ convert_assert(X,Y):- compound(X),
   maplist(convert_assert,AX,AY),
   compound_name_arguments(Y,F,AY).
 convert_assert(X,X).
+
+:- system:import(convert_assert/2).
 
 maybe_into_slash_db(C,_):- \+ compound(C),!,fail.
 maybe_into_slash_db(slash_db(_,_),_):- !,fail.
@@ -147,13 +147,16 @@ ugoal_expansion(G::X,Y):- G == $global,!,ugoal_expansion(X,Y).
 ugoal_expansion(B,BBB):- once(uclause_expansion_inner(hb,goal,B,goal:-BB)),B\==BB,!,expand_goal(BB,BBB).
 %ugoal_expansion(X,_):- \+ compound(X),!,fail.
 %ugoal_expansion(Var,unity_call(Var)):- var(Var),!.
-ugoal_expansion(G,begin(Args)):- compound_name_arguments(G,begin,Args),Args\=[_],!.
+ugoal_expansion(G,BArgs):- compound_name_arguments(G,B,Args),args_to_list(B),Args\=[_],!,BArgs=..[B|Args].
 ugoal_expansion(public(X),unity_call(public(X))).
 ugoal_expansion(X,Y):- compound(X),maybe_into_slash_db(X,Y).
 %ugoal_expansion(X,Y):- prolog_load_context(term,:-T),T==X,uarg_expansion(X,Y).
 %ugoal_expansion(X,Y):- prolog_load_context(term,_:-T),T==X,uarg_expansion(X,Y).
 ugoal_expansion(G,unity_call(G)):-  compound_name_arguments(G,DBPred,_),db_pred(DBPred).
 ugoal_expansion(X,Y):- uarg_expansion(X,Y).
+
+args_to_list(begin).
+args_to_list(displayln).
 
 %:- use_module(library(pfc_lib)).
 
@@ -220,9 +223,10 @@ system:distributed_pred(X):- nop(wdmsg(distributed_pred(X))),dynamic(X),multifil
 randomizable(X):- dynamic(X),multifile(X),discontiguous(X),nop(wdmsg(randomizable(X))).
 
 load_unity_prolog_file(F):- 
-  load_files(F,[module(unity_prolog),dialect(pfc),must_be_module(false),redefine_module(false),scope_settings(false)]).
+  load_files(F,[module(mkultra),must_be_module(false),redefine_module(false),scope_settings(false)]).
 
-assume_todo(F/A):- functor(P,F,A), TODO=todo(P), assert((P:- wdmsg(warn(TODO)),throw(TODO))).
+assume_todo(F/A):- functor(P,F,A), TODO=todo(P), asserta((P:- wdmsg(warn(TODO)),throw(TODO))).
+assume_done(F/A):- functor(P,F,A), TODO=assume_done(P), asserta((P:- !, wdmsg(warn(TODO)))).
 
 now(Now):-  get_time(Now).
 
@@ -240,16 +244,16 @@ now(Now):-  get_time(Now).
 :- assume_todo(property/3).
 %:- assume_todo(prop/1).
 :- assume_todo(predicate_type/2).
-:- assume_todo(pause_game/0).
+:- assume_done(pause_game/0).
 :- assume_todo(parent_of_gameobject/2).
 %:- assume_todo(now/1).
 :- assume_todo(is_class/2).
 :- assume_todo(generate_unique/2).
-:- assume_todo(displayln/7).
-:- assume_todo(displayln/5).
-:- assume_todo(displayln/4).
-:- assume_todo(displayln/3).
-:- assume_todo(displayln/1).
+
+:- forall(between(2,7,A),assume_todo(displayln/A)).
+displayln(X):- is_list(X),!,maplist(write,X),nl.
+displayln(X):- write(X),nl.
+
 %:- assume_todo(consult/2).
 :- assume_todo(component_of_gameobject_with_type/3).
 :- assume_todo(call_with_step_limit/2).
@@ -261,16 +265,20 @@ word_list(X,Y):- atomic_list_concat(Y,X).
 
 consult(File, M):- M:consult(File).
 
-unity_ctx:- prolog_load_context(module,mkultra),!.
-unity_ctx:- prolog_load_context(module,user).
+module_ctx(X):- '$current_typein_module'(X),!.
+module_ctx(X):- prolog_load_context(module,X),!.
+
+unity_ctx:- module_ctx(mkultra).
+
+
+:- fixup_exports.
 
 term_expansion(X,Y):- compound(X), unity_ctx, uterm_expansion(X,Y).
-:- load_unity_prolog_file('Utilities/startup.prolog').
 system:goal_expansion(X,Y):- compound(X), unity_ctx, ugoal_expansion(X,Y).
-
+:- load_unity_prolog_file('Utilities/startup.prolog').
 
 
 end_of_file.
 
-:- dynamic($/2).
+%:- dynamic($/2).
 

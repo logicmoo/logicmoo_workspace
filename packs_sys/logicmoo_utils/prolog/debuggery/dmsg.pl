@@ -1229,7 +1229,7 @@ transform_mesg(F,A,fmt0(F,A)).
 
 %with_output_to_main_error(G):- !,call(G).
 
-with_output_to_main_error(G):- fail,
+with_output_to_main_error(G):-
   t_l:thread_local_error_stream(Where),!,
   with_output_to(Where,G).
 with_output_to_main_error(G):-
@@ -1263,13 +1263,13 @@ same_streams(TErr,Err):- stream_property(TErr,file_no(A)),stream_property(Err,fi
 % Wdmsg.
 %
 wdmsg(_):- notrace((current_prolog_flag(debug_level,0),current_prolog_flag(dmsg_level,never))),!.
-wdmsg(X):- likely_folded(wdmsg_goal(fmt(X),fmt(X))).
+wdmsg(X):- likely_folded(wdmsg_goal(in_cmt(fmt(X)),dmsg(X))).
 
 likely_folded(X):- dis_pp(bfly)->pretty_clauses:with_folding_depth(1,X);call(X).
 
 wdmsg_goal(G,G2):-  
   quietly((ignore((with_all_dmsg(G2),  
-  (fmt_visible_to_console -> true ;ignore(on_x_fail(with_output_to_main(in_cmt(G))))))))), !.
+  (fmt_visible_to_console -> true ;ignore(on_x_fail(with_output_to_main_error((G))))))))), !.
 
 fmt_visible_to_console:- 
   thread_self(main), 
@@ -1287,14 +1287,14 @@ fmt_visible_to_console(Where):- stream_property(StdOut,file_no(1)), same_streams
 % Wdmsg.
 %
 wdmsg(_,_):- current_prolog_flag(debug_level,0),current_prolog_flag(dmsg_level,never),!.
-wdmsg(F,X):- wdmsg_goal(fmt(F,X),dmsg(F,X)).
+wdmsg(F,X):- wdmsg_goal(in_cmt(fmt(F,X)),dmsg(F,X)).
 
 
 %% wdmsg( ?F, ?X) is semidet.
 %
 % Wdmsg.
 %
-wdmsg(W,F,X):- wdmsg_goal(fmt(F,X),dmsg(W,F,X)).
+wdmsg(W,F,X):- wdmsg_goal(in_cmt(fmt(F,X)),dmsg(W,F,X)).
 
 :- meta_predicate wdmsgl(1,+).
 :- meta_predicate wdmsgl(+,1,+).

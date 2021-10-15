@@ -54,7 +54,7 @@ process_kind_hierarchy:- wdmsg(todo(process_kind_hierarchy)).
 :- multifile normalize_task/2.
 :- multifile load_special_csv_row/2.
 :- multifile initialize_prop/2.
-:- multifile incompatible/2.
+:- multifile incompatible_cl/2.
 :- multifile ignore_undeclared_task/2.
 :- multifile default_strategy/2.
 :- multifile be/2.
