@@ -274,7 +274,7 @@ quietly_must_ex(G):- tracing -> (notrace,call_cleanup(must_or_rtrace(G),trace));
 must_ex(G):- !, call(G).
 must_ex(G):- !, must_or_rtrace(G).
 :- module_transparent(must_ex/1).
-%must_ex(G):- !, must(G).
+must_ex(G):- !, must(G).
 %must_ex(G):- !, (catch(G,Error,(wdmsg(error_must_ex(G,Error)),fail))*->true;(wdmsg(must_ex(G)),if_interactive((ignore(rtrace(G)),wdmsg(must_ex(G)), break)))).
 %must_ex(G):- (catch(quietly(G),Error,(wdmsg(error_must_ex(G,Error)),fail))*->true;(wdmsg(must_ex(G)),if_interactive((ignore(rtrace(G)),wdmsg(must_ex(G)), break)))).
 
@@ -296,11 +296,11 @@ test_red_lined(Failed):- notrace((
 :- meta_predicate(mpred_test(:)).
 :- module_transparent(mpred_test/1).
 :- if(false).
-%mpred_test(G):- notrace(mpred_test0(G)) -> true ; with_no_breaks(with_mpred_trace_exec(must(mpred_test(G)))),!.
+%mpred_test(G):- notrace(mpred_test0(G)) -> true ; with_no_breaks(with_mpred_trace_exec(must_ex(mpred_test(G)))),!.
 %mpred_test(_):- notrace((compiling; current_prolog_flag(xref,true))),!.
-mpred_test(MPRED):- must(mpred_to_pfc(MPRED,PFC)),!,(show_call(umt(PFC))*->true;(call_u(PFC)*->mpred_why2(MPRED);test_red_lined(mpred_test(MPRED)),!,fail)).
-%mpred_test(MPRED):- must(mpred_to_pfc(MPRED,PFC)),!,(show_call(call_u(PFC))*->true;(call(PFC)*->mpred_why2(MPRED);test_red_lined(mpred_test(MPRED)),!,fail)).
-% % mpred_why2(MPRED):- must(mpred_to_pfc(MPRED,PFC)),!,(show_call(mpred_why(PFC))*->true;(test_red_lined(mpred_why(MPRED)),!,fail)).
+mpred_test(MPRED):- must_ex(mpred_to_pfc(MPRED,PFC)),!,(show_call(umt(PFC))*->true;(call_u(PFC)*->mpred_why2(MPRED);test_red_lined(mpred_test(MPRED)),!,fail)).
+%mpred_test(MPRED):- must_ex(mpred_to_pfc(MPRED,PFC)),!,(show_call(call_u(PFC))*->true;(call(PFC)*->mpred_why2(MPRED);test_red_lined(mpred_test(MPRED)),!,fail)).
+% % mpred_why2(MPRED):- must_ex(mpred_to_pfc(MPRED,PFC)),!,(show_call(mpred_why(PFC))*->true;(test_red_lined(mpred_why(MPRED)),!,fail)).
 :- endif.
 mpred_test(G):- mpred_test(_Testcase, G).
 
@@ -323,6 +323,8 @@ negate_call(G, \+ G).
 mpred_test(_,_):- notrace((compiling; current_prolog_flag(xref,true))),!.
 mpred_test(Testcase, G):- ignore(mpred_test_fok(Testcase, G)).
 
+must_det_l_ex(G):- must_det_l(ignore(G)),!.
+%must_det_l_ex(G):- must_det_l(G).
 
 mpred_test_fok(Testcase, G):-   
   junit_incr(tests), 
@@ -330,7 +332,7 @@ mpred_test_fok(Testcase, G):-
   ignore((var(Testcase),generate_test_name(G, Testcase))),
   add_test_info(testsuite,testcase,Testcase),
   locally(t_l:mpred_current_testcase(Testcase), 
-  (must_det_l((
+  (must_det_l_ex((
     wdmsg('?-'(mpred_test(Testcase, G))),
     add_test_info(Testcase,goal,G),
     ignore((source_location(S,L),atom(S),add_test_info(Testcase,src,S:L),
@@ -343,14 +345,14 @@ mpred_test_fok(Testcase, G):-
     Answers = nb(0),
     catch( ( call_u_hook(G) *-> TestResult = passed; TestResult = failure), E, TestResult=error(E)),
     notrace((ignore((%Answers = nb(0),
-      must_det_l((get_time(End),
+      must_det_l_ex((get_time(End),
       Elapsed is End - Start,
       add_test_info(Testcase,time,Elapsed),
       process_test_result(TestResult, G),    
       TestResult=..[Type|Info],add_test_info(Testcase,Type,Info),
       add_test_info(Testcase,result,Type),
       ignore((getenv_safe('TEE_FILE',Tee),
-      must_det_l((
+      must_det_l_ex((
         read_file_to_string(Tee,Str,[]),
         add_test_info(Testcase,out,Str),
         save_single_testcase(Testcase),
@@ -615,7 +617,7 @@ junit_expansion(P,I,O):-call(P,I,O).
 
 junit_goal_expansion(I,O):- junit_expansion(junit_goal_exp,I,O).
 
-junit_goal_exp( must(A),mpred_test(A)) :- is_junit_test_file.
+junit_goal_exp( must_ex(A),mpred_test(A)) :- is_junit_test_file.
 junit_goal_exp( sanity(A),mpred_test(A)) :- is_junit_test_file.
 junit_goal_exp( mpred_why(A),mpred_test(A)) :- is_junit_test_file.
 junit_goal_exp( test_boxlog(A),mpred_test(test_boxlog(A))) :- is_junit_test_file.
@@ -759,7 +761,7 @@ issue_labels(Name,[Package,ShortClass,TestNum]):-
   
 
 save_single_testcase(Name):-
- must_det_l((
+ must_det_l_ex((
   locally(t_l:dont_shrink,
     save_single_testcase_shrink(Name,FileName)),
   nop(((find_issue_with_name(Name,IssueNumber)-> update_issue(IssueNumber,FileName);
@@ -771,10 +773,10 @@ xml_header :- write('<?'),write('xml version="1.0" '), writeln('encoding="utf-8"
 
 save_single_testcase_shrink(_Name,_FileName):- \+ j_u:junit_prop(testsuite,file,_File),!.
 save_single_testcase_shrink(Name,FileName):- 
- must_det_l((
+ must_det_l_ex((
  with_output_to(string(Text),
   (xml_header,
-    must_det_l((
+    must_det_l_ex((
           j_u:junit_prop(testsuite,file,File),
           writeln("  <testsuites>"),
           (getenv_safe('JUNIT_SUITE',SuiteName);SuiteName=File),!,
@@ -838,7 +840,7 @@ save_to_junit_file_text(Full,Text,FullF):-
   setup_call_cleanup(open(FullF, write, Out),writeln(Out,Text), close(Out)),!.
 
 save_to_junit_file(Name,DirtyText,FileName):-
- must_det_l((clean_away_ansi(DirtyText,Text),
+ must_det_l_ex((clean_away_ansi(DirtyText,Text),
  getenv_safe('TEST_STEM_PATH',Dir),!,
  shorten_and_clean_name(Name,-150,SName),
  atomic_list_concat([Dir,'-',SName],Full),

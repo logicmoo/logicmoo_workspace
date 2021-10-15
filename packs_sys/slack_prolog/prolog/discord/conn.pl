@@ -17,6 +17,8 @@
 :- dynamic(tmp:discord_websocket_event/2).
 :- dynamic(tmp:discord_chat_event/2).
 :- dynamic(tmp:last_disconnect/1).
+:- multifile(tmp:discord_token/1).
+:- dynamic(tmp:discord_token/1).
 
 %gw_op(0,'dispatch','receive','an event was dispatched.').
 %gw_op(1,'heartbeat',_,'fired periodically by the client to keep the connection alive.').
@@ -143,7 +145,7 @@ discord_remove_websocket(OLD_WS):-
 discord_start_gateway:- disable_gateway,!.
 discord_start_gateway:- tmp:jpl_websocket(_),!.
 discord_start_gateway:- is_thread_running(discord_start_gateway),!.
-%discord_start_gateway:- discord_gateway_proc,!.
+discord_start_gateway:- discord_gateway_proc,!.
 discord_start_gateway:- \+ thread_self(discord_start_gateway), 
   !,thread_create(discord_gateway_proc,_,[alias(discord_start_gateway)]),!.
 
@@ -178,7 +180,7 @@ discord_send_ws(WebSocket,Data):- tmp:discord_websocket(WebSocket, _WsInput, WsO
 
 system:discord_websocket_hook(Type,Message):- discord_client:discord_websocket_client_hook(Type,Message).
 
-discord_websocket_client_hook(onOpen,_):- ping_discord.
+discord_websocket_client_hook(onOpen,_):- once(ping_discord),fail.
 discord_websocket_client_hook(Event,Message):- discord_reconn_after(Event),!, 
   writeln(user_error,discord_event(Event,Message)), discord_reconnect.
 discord_websocket_client_hook(Event,Message):- assertz(tmp:discord_websocket_event(Event,Message)).
@@ -192,7 +194,7 @@ discord_gateway_proc:-
   once(my_ws_receive(WS,Data,[format(json)])),
   (Data==
     end_of_file->!;
-  (once(discord_receive(gateway,Data)),flush_output,fail))),
+  (once(discord_receive(gateway,Data)),fail))),
   discord_remove_websocket(WS)).
 
 my_ws_close(Ws,Data,Options):- ws_close(Ws,Data,Options).
@@ -269,7 +271,9 @@ discord_connect_0:- %setenv('CLASSPATH','/opt/logicmoo_workspace/packs_sys/swicl
   jpl_new('PrologWebSocket',[URL,'discord_websocket_hook'],O),
   assert(tmp:jpl_websocket(O)),!.
 
+
 discord_identify:-
+ retractall(tmp:discord_info(_,op,10)),
  discord_add(s,null),
  discord_send(
   {"op": 2,

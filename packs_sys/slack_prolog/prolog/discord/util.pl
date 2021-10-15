@@ -59,13 +59,19 @@ if_debug(_).
 :- meta_predicate(without_ddbg(:)).
 without_ddbg(G):- locally(t_l:hide_ddbg,call(G)).
 
+numeric_prop(permissions).
+numeric_prop(id).
+numeric_snowflake(id).
+
 discord_debug_cvt(T,T):- var(T),!.
 discord_debug_cvt(tmp:T,S):- nonvar(T), !,discord_debug_cvt(T,S).
-discord_debug_cvt(discord_info(A,B,C),discord_info(S,id,C)):- B==id, !, discord_debug_cvt(A,S).
+
+discord_debug_cvt(discord_addd(A,B,C),discord_addd(S,B,C)):- nonvar(B), numeric_prop(B), !, discord_debug_cvt(A,S).
+discord_debug_cvt(discord_info(A,B,C),discord_info(S,B,C)):- nonvar(B), numeric_prop(B), !, discord_debug_cvt(A,S).
 discord_debug_cvt(T,S):- compound(T), compound_name_arguments(T,F,As),maplist(discord_debug_cvt,As,AAs),!,compound_name_arguments(S,F,AAs).
-discord_debug_cvt(T,S):- number(T), !, int_to_name(T,S)-> true ; T=S.
+discord_debug_cvt(T,S):- number(T), !, (int_to_name(T,S)-> true ; T=S).
 discord_debug_cvt(T,S):- (atom(T);string(T)),discord_is_secret(T),!,(discord_ddd(V,hasValue,T)-> S= '$'(V) ; S="nZC-SECRET").
-%discord_debug_cvt(T,S):- string(T), notrace_catch(atom_number(T,N)), !, discord_debug_cvt(N,S).
+discord_debug_cvt(T,S):- string(T), notrace_catch(atom_number(T,N)), !, discord_debug_cvt(N,S).
 discord_debug_cvt(S,S).
 
 %ddbg(O):- sub_var("PRESENCE_UPDATE",O),!.

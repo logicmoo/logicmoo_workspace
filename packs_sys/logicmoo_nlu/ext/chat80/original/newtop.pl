@@ -331,6 +331,7 @@ inform1([H|T]) :- write(H), put(32), inform1(T).
 	Top level processing for verification and performance analysis
    ---------------------------------------------------------------------- */
 
+
 test_chat80 :- test_chat80(_,on).
 
 :- share_mp(test_chat80/1).
@@ -354,14 +355,16 @@ test_chat80(Sentence, OnOff) :-
 test_chat80(N, Sentence, OnOff, CorrectAnswer):-  
   ignore((baseKB:test_chat80_mpred(N, Sentence, OnOff, CorrectAnswer))),!,
   kill_junit_tee.
- 
+
+:- use_module(library(logicmoo_test)).
+
 baseKB_test_chat80_mpred(N, Sentence, OnOff, CorrectAnswer) :-
-    report_item0(print_test,Sentence),!,
-	  process5(test,Sentence,CorrectAnswer,Status,Times),!,
-	  show_results(N,Status,Times),!,
+    wotso(report_item0(print_test,Sentence)),!,
+	  wotso(process5(test,Sentence,CorrectAnswer,Status,Times)),!,
+	  wotso(show_results(N,Status,Times)),!,
     OnOff \= off,
     tracing ~= OnOff,
-    process(normal,Sentence),!.
+    wotso(process(normal,Sentence)),!.
 
 % register so works in unit tests
 /*
@@ -370,8 +373,9 @@ baseKB_test_chat80_mpred(N, Sentence, OnOff, CorrectAnswer) :-
                      M:baseKB_test_chat80_mpred(N, Sentence, OnOff, CorrectAnswer)).
 */
 baseKB:test_chat80_mpred(N, Sentence, OnOff, CorrectAnswer):- 
-                     parser_chat80:baseKB_test_chat80_mpred(N, Sentence, OnOff, CorrectAnswer),!.
-test :-
+        parser_chat80:baseKB_test_chat80_mpred(N, Sentence, OnOff, CorrectAnswer),!.
+
+c80test :-
 	time(rtest_chats(30)).
 
 					% added JW
@@ -669,16 +673,18 @@ results80(S1,Results):-
   nonvar(S1),
   findall(Res,deepen_pos((answer802(S1,Res),Res\=[])),Results).
 
-report(none,_,_,_,_):- !.
-report(test,_,_,_,_):- !.
-report(How,Item,Label,Time,Mode) :-
+report(How,Item,Label,Time,Mode):- wotso(report0(How,Item,Label,Time,Mode)).
+
+report0(none,_,_,_,_):- !.
+report0(test,_,_,_,_):- !.
+report0(How,Item,Label,Time,Mode) :-
    ((tracing =: on); How==debug; How==always), !,
    nl, write(Label), write(': '), write(Time), write('msec.'), nl,
    \+ \+ report_item(Mode,Item),!.
-report(_,_,_,_,_).
+report0(_,_,_,_,_).
 
 report_item(none,_).
-report_item(Tree,Item):- copy_term(Item,Nat), once(report_item0(Tree,Nat)),fail.
+report_item(Tree,Item):- copy_term(Item,Nat), wotso(report_item0(Tree,Nat)),fail.
 report_item(_,_).
 
 %report_item(_,Item):- pprint_ecp_cmt(yellow,Item),!.

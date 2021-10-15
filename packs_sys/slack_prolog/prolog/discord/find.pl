@@ -76,8 +76,10 @@ int_to_name(S,V):- discord_name_id_type(Name,S,Type),!,name_type_string(Name,Typ
 int_to_name(S,V):- discord_ddd(S,name,VV),!,format(atom(V),'name(~q)',[VV]).
 int_to_name(S,V):- discord_ddd(S,username,VV),!,format(atom(V),'username(~q)',[VV]).
 int_to_name(S,V):- discord_ddd(S,user_username,VV),!,format(atom(V),'user_username(~q)',[VV]).
+int_to_name(S,V):- discord_ddd(S,user_seen,VV),!,format(atom(V),'user_seen(~q)',[VV]).
+int_to_name(S,V):- snowflake_to_name(S,V).
 %int_to_name(S,V):- discord_ddd(Vc,ontent,S),!.
-%int_to_name(S,V):- % S> 4194304,  S > 1178066625, id_to_time(S,T),int_to_date(T,TT),sformat(V,'{~w?~w}',[S,TT]).
+snowflake_to_name(S,V):- S> 4194304,  S > 1178066625, id_to_time(S,T),int_to_date(T,TT),sformat(V,'{~w~w}',[S,TT]).
 
 id_to_name(S,V):- discord_ddd(S,name,V).
 id_to_name(S,V):- discord_ddd(S,username,V).

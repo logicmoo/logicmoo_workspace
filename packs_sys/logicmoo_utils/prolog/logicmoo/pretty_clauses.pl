@@ -629,7 +629,7 @@ pprint_ec_no_newline(C, P):-
   real_ansi_format(C0, '~s', [S]))).
   
 
-%print_e_to_string(P, S):-  notrace(with_output_to(string(S),fmt(P))),!.
+print_e_to_string(P, S):-  notrace(with_output_to(string(S),print_tree(P))),!.
 print_e_to_string(P, S):- 
   quietly(( must_det_l((
    pretty_numbervars(P, T),
@@ -647,9 +647,16 @@ print_e_to_string(P, S):-
  
 */
 
+pretty_trim_message(A,C):- replace_in_string(['\n\n\n'='\n\n'],A,B),A\==B,!,pretty_trim_message(B,C).
+pretty_trim_message(A,C):- replace_in_string(['\n\n'='\n'],A,B),A\==B,!,pretty_trim_message(B,C).
+pretty_trim_message(A,C):- replace_in_string(['\n          \n'='\n'],A,B),A\==B,!,pretty_trim_message(B,C).
+pretty_trim_message(A,C):- \+ string(A),!,any_to_string(A,S),pretty_trim_message(S,C).
+pretty_trim_message(A,C):- split_string(A, "", "`\s\t\n", [B]), A\==B,!,pretty_trim_message(B,C).
+pretty_trim_message(A,A).
 
 
-into_space_cmt(S0,O):- 
+into_space_cmt(S00,O):- 
+  pretty_trim_message(S00,S0),
   %normalize_space(string(S1),S0),
   str_repl('\n','\n     ',S0, S),
   (S0==S -> sformat(O, '~N %  ~s.~n', [S]); 
@@ -693,8 +700,8 @@ is_outputing_to_file:-
 stream_property_s(S,P):- on_x_fail(stream_property(S,P)).
 
 get_ansi_dest(S):- \+ is_outputing_to_file,!,current_output(S).
-get_ansi_dest(S):- S = user_error, !.
 get_ansi_dest(S):- S = user_output, !.
+get_ansi_dest(S):- S = user_error, !.
 
 with_output_to_ansi_dest(Goal):- 
   maybe_bfly_html((get_ansi_dest(AnsiDest),stream_property_s(AnsiDest,output),
@@ -709,10 +716,10 @@ real_format(Fmt, Args):- listify(Args,ArgsL), real_ansi_format([hfg(magenta)], F
 
 real_ansi_format(Ansi, Fmt, Args):- listify(Args,ArgsL), real_ansi_format0(Ansi, Fmt, ArgsL).
 real_ansi_format0(Ansi, Fmt, Args) :-  \+ is_outputing_to_file, !, maybe_bfly_html(color_format_maybe(Ansi, Fmt, Args)).
-real_ansi_format0(Ansi, Fmt, Args) :-  
-     format(Fmt, Args), with_output_to_ansi_dest(color_format_maybe(Ansi, Fmt, Args)).
+real_ansi_format0(_Ansi, Fmt, Args) :-  format(Fmt, Args), !.
+%real_ansi_format0(Ansi, Fmt, Args) :-  with_output_to_ansi_dest(color_format_maybe(Ansi, Fmt, Args)),!.
 
-
+%flush_channel_output_buffer
 
 %s_l(F,L):- source_location(F,L),!.
 

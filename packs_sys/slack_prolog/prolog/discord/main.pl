@@ -105,18 +105,20 @@ discord_restore_2:- discord_connect.
 :- prolog_load_context(file,File), forall((source_file(PP,File),strip_module(PP,M,P),functor(P,F,0)),add_history(M:F)).
 :- endif.
 
-
 % start discord gateway in a thread
 :- initialization(discord_start_gateway).
+%:- initialization(ping_discord).
 % dequee discord events in a thread
-:- deque_discord_events.
+/*
 % start discord pinger in a thread
-%:- ping_discord.
 % start discord message checker in a thread 
+
+:- deque_discord_events2.
+:- deque_discord_events3.
+:- deque_discord_events4.
+*/
+:- initialization(deque_discord_sends).
 :- initialization(discord_proc_tasks).
-
-
-
 
 end_of_file.
 

@@ -811,11 +811,14 @@ dfmt(X,Y):- get_thread_current_error(Err), with_output_to_stream(Err,fmt(X,Y)).
 %
 % Using Output Converted To Stream.
 %
-with_output_to_stream(Stream,Goal):-
+with_output_to_stream(Stream,Goal):- is_stream(Stream),!,
    current_output(Saved),
    scce_orig(set_output(Stream),
          Goal,
          set_output(Saved)).
+with_output_to_stream(Prop,Goal):- compound(Prop), on_x_fail(stream_property(Stream,Prop)),!, 
+  with_output_to_stream(Stream,Goal).
+with_output_to_stream(Out,Goal):- with_output_to_each(Out,Goal).
 
 
 %= 	 	 
@@ -1226,7 +1229,7 @@ transform_mesg(F,A,fmt0(F,A)).
 
 %with_output_to_main_error(G):- !,call(G).
 
-with_output_to_main_error(G):- 
+with_output_to_main_error(G):- fail,
   t_l:thread_local_error_stream(Where),!,
   with_output_to(Where,G).
 with_output_to_main_error(G):-
@@ -1234,9 +1237,11 @@ with_output_to_main_error(G):-
 
 with_output_to_real_main_error(G):-
   set_prolog_flag(occurs_check,false),
-  stream_property(Err,file_no(2)),!,
+  %stream_property(Err,file_no(2)),!,
+  tmp:real_main_error(Err),
   with_output_to(Err,G).
 
+:- stream_property(Err,file_no(2)),asserta(tmp:real_main_error(Err)).
 /*
 with_output_to_main_error(G):-
   set_prolog_flag(occurs_check,false),
@@ -1258,13 +1263,13 @@ same_streams(TErr,Err):- stream_property(TErr,file_no(A)),stream_property(Err,fi
 % Wdmsg.
 %
 wdmsg(_):- notrace((current_prolog_flag(debug_level,0),current_prolog_flag(dmsg_level,never))),!.
-wdmsg(X):- likely_folded(wdmsg_goal(fmt(X),dmsg(X))).
+wdmsg(X):- likely_folded(wdmsg_goal(fmt(X),fmt(X))).
 
 likely_folded(X):- dis_pp(bfly)->pretty_clauses:with_folding_depth(1,X);call(X).
 
 wdmsg_goal(G,G2):-  
   quietly((ignore((with_all_dmsg(G2),  
-  (fmt_visible_to_console -> true ;ignore(on_x_fail(in_cmt(G)))))))), !.
+  (fmt_visible_to_console -> true ;ignore(on_x_fail(with_output_to_main(in_cmt(G))))))))), !.
 
 fmt_visible_to_console:- 
   thread_self(main), 
@@ -1607,29 +1612,21 @@ ansi_control_conv0(Ctrl,CtrlO):-flatten([Ctrl],CtrlO),!.
 :- thread_local(tlbugger:no_colors/0).
 is_tty(Out):- \+ tlbugger:no_colors, \+ tlbugger:no_slow_io, is_stream(Out),stream_property(Out,tty(true)).
 
-:- meta_predicate(wotso(0)).
-wotso(Goal):- 
- (stream_property(current_output,tty(TTY));TTY=false)->
-  with_output_to(string(S),(set_stream(current_output,tty(TTY)),Goal)),
-  write(S).
+use_tty(S,TTY):- \+ compound(S), is_stream(S), stream_property(S,tty(TTY)),!.
+use_tty(_,TTY):- stream_property(current_output,tty(TTY)),!.
+use_tty(_,false).
 
+:- meta_predicate(woto_tty(+,+,0)).
+woto_tty(S,TTY,Goal):- with_output_to(S,(set_stream(current_output,tty(TTY)),Goal)).
+
+:- meta_predicate(woto(+,0)).
+woto(S,Goal):- use_tty(S,TTY),woto_tty(S,TTY,Goal).
 
 :- meta_predicate(wots(-,0)).
-wots(S,Goal):- 
- (stream_property(current_output,tty(TTY));TTY=false)->
-  with_output_to(string(S),(set_stream(current_output,tty(TTY)),Goal)).
+wots(S,Goal):- woto(string(S),Goal).
 
-
-woto(S,Goal):- compound(S),!,
- (stream_property(current_output,tty(TTY));TTY=false),!,
-  with_output_to(S,(set_stream(current_output,tty(TTY)),Goal)).
-woto(S,Goal):- is_stream(S), \+ atom(S),!,
- (stream_property(current_output,tty(TTY));stream_property(S,tty(TTY));TTY=false),!,
-  with_output_to(S,(set_stream(current_output,tty(TTY)),Goal)).
-woto(S,Goal):- 
- (stream_property(current_output,tty(TTY));stream_property(S,tty(TTY));TTY=false),!,
-  with_output_to(S,(set_stream(current_output,tty(TTY)),Goal)).
-
+:- meta_predicate(wotso(0)).
+wotso(Goal):- wots(S,Goal), ignore((S\=="",write(S))).
 
 :- meta_predicate(weto(0)).
 %weto(G):- !, call(G).

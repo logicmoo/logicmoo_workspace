@@ -10,6 +10,8 @@
 % ===========================
 % Data Access
 % ===========================
+:- multifile(tmp:discord_token/1).
+:- dynamic(tmp:discord_token/1).
 
 discord_dd(ID,Data):- discord_ddd(ID,hasValue,Data).
 discord_dd(ID,Prop,Value):- discord_ddd(ID,Prop,Value)*->true;get_discord2(ID,Prop,Value).
@@ -18,6 +20,7 @@ get_discord_info(ID,Prop,Data):- discord_ddd(ID,Prop,Data)*-> true;
   (\+ integer(ID), \+ var(ID), any_to_id(ID,ID2),!, discord_ddd(ID2,Prop,Data)).
 
 discord_ddd(guilds, id, X):- default_guild(X).
+discord_ddd(token, hasValue, X):- discord_token_string(X).
 discord_ddd(A,B,C):- tmp:discord_info(A,B,C).
 discord_ddd(A,B,C):- integer(A), B == timestamp, !, id_to_time(A,C).
 
@@ -26,7 +29,7 @@ discord_ddd(A,B,C):- integer(A), B == timestamp, !, id_to_time(A,C).
 % ===========================
 reload_discord_info:- reconsult(guild_info_file).
 
-%load_discord_info:- !.
+load_discord_info:- !.
 load_discord_info:- exists_file(guild_info_file)->consult(guild_info_file);true.
 
 clear_discord_info:- retractall(tmp:discord_info/3).
@@ -157,7 +160,7 @@ discord_addd(ID,recipient,UserID):- integer(UserID),
   fail.
 
 discord_addd(ID,attachments,List):- is_list(List),maplist(discord_addd(ID,attachment),List).
-discord_addd(ID,attachment_url,URL):- notrace_catch(http_open:http_get(URL,Data,[])), 
+discord_addd(ID,attachment_url,URL):- http_client:notrace_catch(http_client:http_get(URL,Data,[])), 
   once(discord_addd(ID,attached_content,Data)),fail.
 
 discord_addd(ID,content,Data):- Data \== "",
@@ -178,6 +181,7 @@ discord_addd(MID,channel_id,CID):-
   add_id_type(CID,channels),
   add_id_type(MID,messages),
   discord_ddd(MID,author_username,Who),
+  \+ self_user(Who),
   without_ddbg(discord_addd(CID,user_seen,Who)),
   fail.
 

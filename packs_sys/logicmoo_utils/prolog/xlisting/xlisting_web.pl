@@ -2717,7 +2717,7 @@ must_run0(Goal):- flush_output_safe,
 call_for_terms(Call):- 
    must_run_html((
         setup_call_cleanup(format('<pre>',[]),        
-        ignore((locally_tl(print_mode(html),with_search_filters(catch(ignore((Call)),E,dmsg(E)))))),
+        ignore((locally_tl(print_mode(html),with_search_filters(catch(ignore(with_no_xdbg(Call)),E,dmsg(E)))))),
         format('</pre>',[])),
         show_pcall_footer)),!.
 
@@ -2742,9 +2742,9 @@ with_search_filters0(C):-
 with_search_filters0(C):- must_run_html(C).
 
 
-call_with_time_limit_notrace(_,Goal):- (thread_self(main);pengines:pengine_self(_)), !, call(Goal).
+call_with_time_limit_notrace(_,Goal):- (thread_self(main);pengines:pengine_self(_)), !, with_no_xdbg(Goal).
 %call_with_time_limit_notrace(Time,Goal):- call_with_time_limit(Time,Goal).
-call_with_time_limit_notrace(_,Goal):- call(Goal).
+call_with_time_limit_notrace(_,Goal):- with_no_xdbg(Goal).
 
 
 
@@ -2771,7 +2771,7 @@ xlisting_html_c(T,Obj):-
 fast_and_mean:- true.
 
 try_or_rtrace(G):- tracing,!,dmsg(try(G)),call(G).
-try_or_rtrace(G):- fast_and_mean, !, call(G).
+try_or_rtrace(G):- fast_and_mean, !, with_no_xdbg(G).
 try_or_rtrace(G):- catch(G,E,(E==time_limit_exceeded->throw(time_limit_exceeded);(ignore((dmsg(G=E),dumpST,dmsg(G=E),thread_self(main),rtrace(G),dumpST,dmsg(G=E),break))))).
 
 % :- prolog_xref:assert_default_options(register_called(all)).

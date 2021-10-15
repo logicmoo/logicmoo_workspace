@@ -97,7 +97,7 @@ fi
 if command -v nmap &> /dev/null
 then
    # Declare an array of string with type
-   declare -a StringArray=("10.0.0.78" "172.17.0.1" "127.0.0.1"  )   
+   declare -a StringArray=("10.0.0.78" "10.0.0.122" "172.17.0.1" "127.0.0.1"  )   
    for val in ${StringArray[@]}; do
      if [ -n "$DISPLAY" ] || [ -z "$DISPLAY" ]; then
       NMAP=$(nmap -p 6000  $val)
@@ -108,6 +108,8 @@ then
    done
 fi
 
+export DISPLAY
+#unset DISPLAY
 $ECHO "#* DISPLAY=$DISPLAY"
 
 if [[ -z "${LIBJVM}" ]]; then  
