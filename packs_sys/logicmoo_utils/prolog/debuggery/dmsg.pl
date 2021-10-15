@@ -1236,9 +1236,9 @@ with_output_to_main_error(G):-
   with_output_to_real_main_error(G).
 
 with_output_to_real_main_error(G):-
-  set_prolog_flag(occurs_check,false),
+  %set_prolog_flag(occurs_check,false),
   %stream_property(Err,file_no(2)),!,
-  tmp:real_main_error(Err),
+  tmp:real_main_error(Err),!,
   with_output_to(Err,G).
 
 :- stream_property(Err,file_no(2)),asserta(tmp:real_main_error(Err)).
