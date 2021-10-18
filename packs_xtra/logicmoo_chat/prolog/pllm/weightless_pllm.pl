@@ -71,7 +71,7 @@ assert_ngram(List):- W=..[ngram|List],term_to_atom(W,A),flag(A,X,X+1),
 retok([],[]).
 retok(['.'],[]):-!.
 retok(['!'],[]):-!.
-retok([X,X,X|Nxt],O):-!,retok([X|Nxt],O).
+retok([X,X,X|Nxt],O):-!,atomic_list_concat([X,X,X],' ',Y),retok([Y|Nxt],O).
 retok([A,'\'',S|Grams],[F|ReTok]):- atom_concat(A,S,F),!, retok(Grams,ReTok).
 retok([S|Grams],[S|ReTok]):- retok(Grams,ReTok).
 
@@ -102,6 +102,7 @@ map_sent(List):- five(Five,_Occurs),append(List,_,Five),
 
 :-dynamic(used_cl/1).
 
+:- style_check(- singleton).
 
 may_use(_,B,C,D,_):- \+ used_cl(ngram(A,B,C,D)), assert(used_cl(ngram(A,B,C,D)),Cl2), undo(erase(Cl2)), !.
 
