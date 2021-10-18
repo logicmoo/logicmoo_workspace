@@ -2,7 +2,8 @@
 
 This is an early release Leveraging of the Self-dialogue Corpus containing 24,165 conversations, or 3,653,313 words, across 23 topics.
 
-It contains a very simple proceedure writen in prolog that emulates a NN using a language model.
+It contains a very simple proceedure writen in prolog that emulates a language model.
+(see https://gitlab.logicmoo.org/gitlab/logicmoo/logicmoo_workspace/-/blob/master/packs_xtra/logicmoo_chat/prolog/pllm/)
 
 ## PROBLEM   
 Language Models can engage in freeform dialog and generate palatable word salad better than any other systems.  They do well holding a topic of conversation on its own, but has difficulty with letting users create the flow.  Language Models might be sophisticated enough to pick up context, sentiment, or emotion and use them effectively and not just leveraging the “Eliza Effect.”
