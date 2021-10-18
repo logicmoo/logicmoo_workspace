@@ -1,5 +1,5 @@
 
-:- include(training).
+:- include(training_bi).
 
 :-dynamic(used_cl/1).
 

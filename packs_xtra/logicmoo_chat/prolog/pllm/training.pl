@@ -3,7 +3,7 @@
 
 % :- include(weightless_pllm).
 
-:- X= (is_tok/1,is_tok/2,ngram/5,ngram/6),
+:- X= (is_tok/1,is_tok/2,ngram/5,ngram/6,trigram/3,trigram/4),
   dynamic(X),multifile(X).
 
 :- use_module(library(logicmoo_utils)).
@@ -12,6 +12,7 @@
 debugln(X):- \+ is_list(X) -> dmsg(X) ; maplist(debuglnw,X,Y),atomics_to_string(Y,' ',Z),debugln(Z).
 debuglnw(V,S):- var(V), !, sformat(S,"~p",[V]).
 debuglnw([N|A],S):- is_list(A),!,maplist(debuglnw,[N|A],Y),atomics_to_string(Y,'_',S).
+debuglnw((F/A),S):- functor(P,F,A),predicate_property(P,number_of_clauses(V)),!,sformat(S,"~w=~:d~n",[(F/A),V]).
 debuglnw('$'(E),S):- get_flag(E,V),!,sformat(S,"~w=~:d~n",[E,V]).
 debuglnw([N],S):- !, debuglnw(N,S).
 debuglnw(C,S):- compound(C),!,sformat(S,"~p",[C]).
@@ -44,11 +45,21 @@ save_stat(G):- assert(G),nop((writeq(G),writeln('.'))).
 compute_corpus_stats:-
  debugln("compute corpus stats..."),
  time((forall(is_tok(X),(get_flag(X,NN),save_stat(is_tok(X,NN)))),
- functor(NGram,ngram,5),
- forall(NGram,(ngram_key(NGram,X), get_flag(X,NN),append_term(NGram,NN,NGramStat),save_stat(NGramStat))))),!.
+ compute_extent(ngram,5),
+ compute_extent(trigram,3),
+ debugln(["Trained stats: ", ngram/5,ngram/6,is_tok/2]))).
 
-ngram_key(ngram(_Loc,A,B,C,D),Key):- term_to_atom([A,B,C,D],Key).
-ngram_key(ngram(_Loc,A,B,C,D,_),Key):- term_to_atom([A,B,C,D],Key).
+compute_extent(F,A):-
+  functor(NGram,F,A),
+  forall(NGram,(ngram_key(NGram,X), get_flag(X,NN),append_term(NGram,NN,NGramStat),save_stat(NGramStat))),!.
+
+ngram_key(P,K):- ngram_key(P,_,K).
+ngram_key(ngram(Loc,A,B,C,D,_),T,Key):- !, ngram_key(ngram(Loc,A,B,C,D),T,Key).
+ngram_key(ngram(_Loc,oc(_),A,B,C),T,Key):- T= sgram(A,B,C), !, term_to_atom(T,Key).
+ngram_key(ngram(_Loc,A,B,C,oc(_)),T,Key):- T= sgram(A,B,C), !, term_to_atom(T,Key).
+ngram_key(ngram(_Loc,A,B,C,D),[trigram(A,B,C,D)],Key):- !, term_to_atom([A,B,C],Key).
+ngram_key(trigram(A,B,C),[],Key):- term_to_atom([A,B,C],Key).
+
 
 save_corpus_stats:-
  time((tell('plm.pl'),
@@ -72,7 +83,7 @@ add_training(_,"XXXXXXXXXXX"):- flag(corpus_blocks,Z,Z+1),
    Y is (Z10+1)*100,flag(sent_num,_,Y),!.
 add_training(X,Str):- flag(sent_num,Y,Y), tokenize_atom(Str,Toks),
  maplist(downcase_atom,Toks,TokList), 
- retok(TokList,ReToks), 
+ pretok(TokList,ReToks), 
  maplist(add_token_occurs,ReToks),
  append([other_conversant(X)|ReToks],[other_conversant(Y)],Grams),
  flag(corpus_training,T,T+1),
@@ -89,12 +100,12 @@ add_token_occurs(Tok):-
   ignore(( \+  is_tok(Tok), assert(is_tok(Tok)), flag(corpus_unique_toks,O,O+1) )),
   flag(Tok,X,X+1),flag(corpus_total_toks,T,T+1).
 
-retok([],[]).
-retok(['.'],[]):-!.
-retok(['!'],[]):-!.
-retok([X,X,X|Nxt],O):-!,atomic_list_concat([X,X,X],' ',Y),retok([Y|Nxt],O).
-retok([A,'\'',S|Grams],[F|ReTok]):- atom_concat(A,S,F),!, retok(Grams,ReTok).
-retok([S|Grams],[S|ReTok]):- retok(Grams,ReTok).
+pretok([],[]).
+pretok(['.'],[]):-!.
+pretok(['!'],[]):-!.
+pretok([X,X,X|Nxt],O):-!,atomic_list_concat([X,X,X],' ',Y),pretok([Y|Nxt],O).
+pretok([A,'\'',S|Grams],[F|ReTok]):- atom_concat(A,S,F),!, pretok(Grams,ReTok).
+pretok([S|Grams],[S|ReTok]):- pretok(Grams,ReTok).
 
 % @TODO use average 
 %as_good(T,X):- is_tok(T,X),(Nxt>500->X=0;X is 500-Nxt).
@@ -117,5 +128,11 @@ ngram(Loc,A,other_conversant(X),B,C,NN):- nonvar(X), ngram(Loc,_,_,A,other_conve
 ngram(Loc,A,B,other_conversant(X),C,NN):- nonvar(X), ngram(Loc,_,A,B,other_conversant(X),_),ngram(_ULoc,other_conversant(X),C,_,_,NN).
 
 :- add_history(compile_corpus).
+
+good_toks(Key,E):- functor(P,ngram,6),arg(6,P,E),no_repeats(Key,(P,ngram_key(P,Key))).
+
+:- if(\+ prolog_load_context(reloading, true)).
+:- compile_corpus.
+:- endif.
 
 :- fixup_exports.
