@@ -9,7 +9,7 @@ Language Models can engage in freeform dialog and generate palatable word salad 
 
 Perhaps the problem is due to Language Models spending too much parameter space into acquiring syntactic correctness.  Most people are waiting for larger versions of Language Models to come out as they assume they likely runs out of parameter space before actual semantics are learned.  (Ignore for now OpenAI’s argument that many of the “subtleties of the human” have been embedding itself in our syntax). 
  
-## SOLUTION  
+## IDEA  
 The Logicmoo system removes all of the syntactic requirements from Language Models.  This allows faster bootstrap training times by feeding they an entirely Logic Form (LF) . Without these constraints Language Models will have the best chance at successfully showing its abilities.   Logicmoo ensures all parameter space is dedicated to semantics and logic. 
 
 Our LF happens in two general forms:
