@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<aiml>
+
+<!-- main Reduce.aiml (180958) mp=-159.080053362034: KONRAD * -->
+
+<!-- MINSEQ: mp=-159.080053362034: who is konrad on de beers terenure  -->
+<category><pattern>EXPDEX KONRAD *</pattern><template><srai>WHO IS KONRAD <star/></srai></template></category>
+<category><pattern>KONRAD *</pattern><template><srai>EXPDEX KONRAD <star/></srai></template></category>
+<category><pattern>KONRAD ADENAUER FOUNDATION *</pattern><template><think><srai>NOPX 118</srai></think><random><li><srai>EXPDEX KONRAD ADENAUER FOUNDATION <star/></srai></li></random></template></category>
+<!-- p=-83.8942909583869 	:<srai>who is konrad adenauer foundation *</srai> -->
+<category><pattern>KONRAD KUKUK HARDY *</pattern><template><think><srai>NOPX 1276</srai></think><random><li><srai>EXPDEX KONRAD KUKUK HARDY <star/></srai></li></random></template></category>
+<!-- p=-83.8942909583869 	:<srai>who is konrad kukuk hardy *</srai> -->
+<category><pattern>KONRAD ON DE *</pattern><template><think><srai>NOPX 634</srai></think><random><li><srai>EXPDEX KONRAD ON DE <star/></srai></li></random></template></category>
+<!-- p=-98.1777260236416 	:<srai>who is konrad on de *</srai> -->
+<category><pattern>KONRAD ADENAUER AIRPORT *</pattern><template><think><srai>NOPX 526</srai></think><random><li><srai>EXPDEX KONRAD ADENAUER AIRPORT <star/></srai></li></random></template></category>
+<!-- p=-83.8942909583869 	:<srai>who is konrad adenauer airport *</srai> -->
+<category><pattern>KONRAD ADENAUER FOUNDATION *</pattern><template><think><srai>NOPX 11582</srai></think><random><li><srai>EXPDEX KONRAD ADENAUER FOUNDATION <star/></srai></li></random></template></category>
+<!-- p=-83.8942909583869 	:<srai>who is konrad adenauer foundation *</srai> -->
+<category><pattern>KONRAD ADENAUER KOO *</pattern><template><think><srai>NOPX 2025</srai></think><random><li><srai>EXPDEX KONRAD ADENAUER KOO <star/></srai></li></random></template></category>
+<!-- p=-83.8942909583869 	:<srai>who is konrad adenauer koo *</srai> -->
+<category><pattern>KONRAD ADENAUER L *</pattern><template><think><srai>NOPX 660</srai></think><random><li><srai>EXPDEX KONRAD ADENAUER L <star/></srai></li></random></template></category>
+<!-- p=-83.8942909583869 	:<srai>who is konrad adenauer l *</srai> -->
+<category><pattern>KONRAD ADENAUER STIFTUNG *</pattern><template><think><srai>NOPX 8674</srai></think><random><li><srai>EXPDEX KONRAD ADENAUER STIFTUNG <star/></srai></li></random></template></category>
+<!-- p=-83.8942909583869 	:<srai>who is konrad adenauer stiftung *</srai> -->
+<category><pattern>KONRAD ADENAUER AIRPORT *</pattern><template><think><srai>NOPX 516</srai></think><random><li><srai>EXPDEX KONRAD ADENAUER AIRPORT <star/></srai></li></random></template></category>
+<!-- p=-83.8942909583869 	:<srai>who is konrad adenauer airport *</srai> -->
+<category><pattern>KONRAD ADENAUER AND *</pattern><template><think><srai>NOPX 1044</srai></think><random><li><srai>EXPDEX KONRAD ADENAUER AND <star/></srai></li></random></template></category>
+<!-- p=-83.8942909583869 	:<srai>who is konrad adenauer and *</srai> -->
+<category><pattern>KONRAD BROWNLEE KOOS *</pattern><template><think><srai>NOPX 521</srai></think><random><li><srai>EXPDEX KONRAD BROWNLEE KOOS <star/></srai></li></random></template></category>
+<!-- p=-83.8942909583869 	:<srai>who is konrad brownlee koos *</srai> -->
+<category><pattern>KONRAD EMIL BLOCH *</pattern><template><think><srai>NOPX 438</srai></think><random><li><srai>EXPDEX KONRAD EMIL BLOCH <star/></srai></li></random></template></category>
+<!-- p=-84.8997642070207 	:<srai>who is konrad emil bloch *</srai> -->
+<category><pattern>KONRAD FISCHER GALERIE *</pattern><template><think><srai>NOPX 783</srai></think><random><li><srai>EXPDEX KONRAD FISCHER GALERIE <star/></srai></li></random></template></category>
+<!-- p=-86.7097641339868 	:<srai>who is konrad fischer galerie *</srai> -->
+<category><pattern>KONRAD I OF *</pattern><template><think><srai>NOPX 867</srai></think><random><li><srai>EXPDEX KONRAD I OF <star/></srai></li></random></template></category>
+<!-- p=-98.2455088772422 	:<srai>who is konrad i of *</srai> -->
+<category><pattern>KONRAD KORZENIOWSKI HAS *</pattern><template><think><srai>NOPX 502</srai></think><random><li><srai>EXPDEX KONRAD KORZENIOWSKI HAS <star/></srai></li></random></template></category>
+<!-- p=-83.8942909583869 	:<srai>who is konrad korzeniowski has *</srai> -->
+<category><pattern>KONRAD LORENZ INSTITUTE *</pattern><template><think><srai>NOPX 1636</srai></think><random><li><srai>EXPDEX KONRAD LORENZ INSTITUTE <star/></srai></li></random></template></category>
+<!-- p=-84.5552233465935 	:<srai>who is konrad lorenz institute *</srai> -->
+<category><pattern>KONRAD LORENZ AND *</pattern><template><think><srai>NOPX 706</srai></think><random><li><srai>EXPDEX KONRAD LORENZ AND <star/></srai></li></random></template></category>
+<!-- p=-84.5552233465935 	:<srai>who is konrad lorenz and *</srai> -->
+<category><pattern>KONRAD MARINE 540 *</pattern><template><think><srai>NOPX 495</srai></think><random><li><srai>EXPDEX KONRAD MARINE 540 <star/></srai></li></random></template></category>
+<!-- p=-91.3940976540876 	:<srai>who is konrad marine 540 *</srai> -->
+<category><pattern>KONRAD RACZKOWSKI AND *</pattern><template><think><srai>NOPX 854</srai></think><random><li><srai>EXPDEX KONRAD RACZKOWSKI AND <star/></srai></li></random></template></category>
+<!-- p=-83.8942909583869 	:<srai>who is konrad raczkowski and *</srai> -->
+<category><pattern>KONRAD RAISER FROM *</pattern><template><think><srai>NOPX 881</srai></think><random><li><srai>EXPDEX KONRAD RAISER FROM <star/></srai></li></random></template></category>
+<!-- p=-83.8942909583869 	:<srai>who is konrad raiser from *</srai> -->
+<category><pattern>KONRAD STAFF WRITER *</pattern><template><think><srai>NOPX 736</srai></think><random><li><srai>EXPDEX KONRAD STAFF WRITER <star/></srai></li></random></template></category>
+<!-- p=-92.8995968915794 	:<srai>who is konrad staff writer *</srai> -->
+<category><pattern>KONRAD THE KONRAD *</pattern><template><think><srai>NOPX 470</srai></think><random><li><srai>EXPDEX KONRAD THE KONRAD <star/></srai></li></random></template></category>
+<!-- p=-101.079985377935 	:<srai>who is konrad the konrad *</srai> -->
+<category><pattern>KONRAD VON MOLTKE *</pattern><template><think><srai>NOPX 135</srai></think><random><li><srai>EXPDEX KONRAD VON MOLTKE <star/></srai></li></random></template></category>
+<!-- p=-89.8097687041985 	:<srai>who is konrad von moltke *</srai> -->
+<category><pattern>KONRAD WITZEL WO *</pattern><template><think><srai>NOPX 529</srai></think><random><li><srai>EXPDEX KONRAD WITZEL WO <star/></srai></li></random></template></category>
+<!-- p=-83.8942909583869 	:<srai>who is konrad witzel wo *</srai> -->
+<category><pattern>KONRAD ZUSE ZENTRUM *</pattern><template><think><srai>NOPX 418</srai></think><random><li><srai>EXPDEX KONRAD ZUSE ZENTRUM <star/></srai></li></random></template></category>
+<!-- p=-83.8942909583869 	:<srai>who is konrad zuse zentrum *</srai> -->
+<category><pattern>KONRAD ZUSE IN *</pattern><template><think><srai>NOPX 404</srai></think><random><li><srai>EXPDEX KONRAD ZUSE IN <star/></srai></li></random></template></category>
+<!-- p=-83.8942909583869 	:<srai>who is konrad zuse in *</srai> -->
+<category><pattern>KONRAD ET AL *</pattern><template><think><srai>NOPX 604</srai></think><random><li><srai>EXPDEX KONRAD ET AL <star/></srai></li></random></template></category>
+<!-- p=-91.7388198279655 	:<srai>who is konrad et al *</srai> -->
+<category><pattern>KONRAD ON DE *</pattern><template><think><srai>NOPX 789</srai></think><random><li><srai>EXPDEX KONRAD ON DE <star/></srai></li></random></template></category>
+<!-- p=-98.1777260236416 	:<srai>who is konrad on de *</srai> -->
+<category><pattern>KONRAD PIN OF *</pattern><template><think><srai>NOPX 1273</srai></think><random><li><srai>EXPDEX KONRAD PIN OF <star/></srai></li></random></template></category>
+<!-- p=-89.2880207646059 	:<srai>who is konrad pin of *</srai> -->
+<category><pattern>KONRAD RECREATES THE *</pattern><template><think><srai>NOPX 501</srai></think><random><li><srai>EXPDEX KONRAD RECREATES THE <star/></srai></li></random></template></category>
+<!-- p=-83.8942909583869 	:<srai>who is konrad recreates the *</srai> -->
+<category><pattern>KONRAD VON FINCKENSTEIN *</pattern><template><think><srai>NOPX 1718</srai></think><random><li><srai>EXPDEX KONRAD VON FINCKENSTEIN <star/></srai></li></random></template></category>
+<!-- p=-89.8097687041985 	:<srai>who is konrad von finckenstein *</srai> -->
+<category><pattern>KONRAD VON GESNER *</pattern><template><think><srai>NOPX 420</srai></think><random><li><srai>EXPDEX KONRAD VON GESNER <star/></srai></li></random></template></category>
+<!-- p=-89.8097687041985 	:<srai>who is konrad von gesner *</srai> -->
+<category><pattern>KONRAD VON MOLTKE *</pattern><template><think><srai>NOPX 1488</srai></think><random><li><srai>EXPDEX KONRAD VON MOLTKE <star/></srai></li></random></template></category>
+<!-- p=-89.8097687041985 	:<srai>who is konrad von moltke *</srai> -->
+<category><pattern>KONRAD FISCHER INFO *</pattern><template><think><srai>NOPX 456</srai></think><random><li><srai>EXPDEX KONRAD FISCHER INFO <star/></srai></li></random></template></category>
+<!-- p=-86.7097641339868 	:<srai>who is konrad fischer info *</srai> -->
+<category><pattern>KONRAD SUBMITTED BY *</pattern><template><think><srai>NOPX 413</srai></think><random><li><srai>EXPDEX KONRAD SUBMITTED BY <star/></srai></li></random></template></category>
+<!-- p=-91.3544384588502 	:<srai>who is konrad submitted by *</srai> -->
+<category><pattern>KONRAD KUKUK HARDY *</pattern><template><think><srai>NOPX 1276</srai></think><random><li><srai>EXPDEX KONRAD KUKUK HARDY <star/></srai></li></random></template></category>
+<!-- p=-83.8942909583869 	:<srai>who is konrad kukuk hardy *</srai> -->
+<category><pattern>KONRAD ON DE *</pattern><template><think><srai>NOPX 634</srai></think><random><li><srai>EXPDEX KONRAD ON DE <star/></srai></li></random></template></category>
+<!-- p=-98.1777260236416 	:<srai>who is konrad on de *</srai> -->
+<category><pattern>KONRAD MAUBLANC *</pattern><template><think><srai>NOPX 520</srai></think><random><li><srai>EXPDEX KONRAD MAUBLANC <star/></srai></li></random></template></category>
+<!-- p=-65.7535560313183 	:<srai>who is konrad maublanc *</srai> -->
+<category><pattern>KONRAD UNK *</pattern><template><think><srai>NOPX 2346</srai></think><random><li><srai>EXPDEX KONRAD UNK <star/></srai></li></random></template></category>
+<!-- p=-65.7535560313183 	:<srai>who is konrad unk *</srai> -->
+<category><pattern>KONRAD UNK UNK *</pattern><template><think><srai>NOPX 467</srai></think><random><li><srai>EXPDEX KONRAD UNK UNK <star/></srai></li></random></template></category>
+<!-- p=-84.997180972495 	:<srai>who is konrad unk unk *</srai> -->
+<category><pattern>KONRAD ADENAUER *</pattern><template><think><srai>NOPX 10388</srai></think><random><li><srai>EXPDEX KONRAD ADENAUER <star/></srai></li></random></template></category>
+<!-- p=-65.7535560313183 	:<srai>who is konrad adenauer *</srai> -->
+<category><pattern>KONRAD ADENAUER AIRPORT *</pattern><template><think><srai>NOPX 526</srai></think><random><li><srai>EXPDEX KONRAD ADENAUER AIRPORT <star/></srai></li></random></template></category>
+<!-- p=-83.8942909583869 	:<srai>who is konrad adenauer airport *</srai> -->
+<category><pattern>KONRAD ADENAUER FOUNDATION *</pattern><template><think><srai>NOPX 11582</srai></think><random><li><srai>EXPDEX KONRAD ADENAUER FOUNDATION <star/></srai></li></random></template></category>
+<!-- p=-83.8942909583869 	:<srai>who is konrad adenauer foundation *</srai> -->
+<category><pattern>KONRAD ADENAUER KOO *</pattern><template><think><srai>NOPX 2025</srai></think><random><li><srai>EXPDEX KONRAD ADENAUER KOO <star/></srai></li></random></template></category>
+<!-- p=-83.8942909583869 	:<srai>who is konrad adenauer koo *</srai> -->
+<category><pattern>KONRAD ADENAUER L *</pattern><template><think><srai>NOPX 660</srai></think><random><li><srai>EXPDEX KONRAD ADENAUER L <star/></srai></li></random></template></category>
+<!-- p=-83.8942909583869 	:<srai>who is konrad adenauer l *</srai> -->
+<category><pattern>KONRAD ADENAUER STIFTUNG *</pattern><template><think><srai>NOPX 8674</srai></think><random><li><srai>EXPDEX KONRAD ADENAUER STIFTUNG <star/></srai></li></random></template></category>
+<!-- p=-83.8942909583869 	:<srai>who is konrad adenauer stiftung *</srai> -->
+<category><pattern>KONRAD ADENAUER AIRPORT *</pattern><template><think><srai>NOPX 516</srai></think><random><li><srai>EXPDEX KONRAD ADENAUER AIRPORT <star/></srai></li></random></template></category>
+<!-- p=-83.8942909583869 	:<srai>who is konrad adenauer airport *</srai> -->
+<category><pattern>KONRAD ADENAUER AND *</pattern><template><think><srai>NOPX 1044</srai></think><random><li><srai>EXPDEX KONRAD ADENAUER AND <star/></srai></li></random></template></category>
+<!-- p=-83.8942909583869 	:<srai>who is konrad adenauer and *</srai> -->
+<category><pattern>KONRAD BAUD RE RAYMOND *</pattern><template><think><srai>NOPX 428</srai></think><random><li><srai>EXPDEX KONRAD BAUD RE RAYMOND <star/></srai></li></random></template></category>
+<!-- p=-108.151364785389 	:<srai>who is konrad baud re raymond *</srai> -->
+<category><pattern>KONRAD BLUNCK *</pattern><template><think><srai>NOPX 1007</srai></think><random><li><srai>EXPDEX KONRAD BLUNCK <star/></srai></li></random></template></category>
+<!-- p=-65.7535560313183 	:<srai>who is konrad blunck *</srai> -->
+<category><pattern>KONRAD BROWNLEE KOOS *</pattern><template><think><srai>NOPX 521</srai></think><random><li><srai>EXPDEX KONRAD BROWNLEE KOOS <star/></srai></li></random></template></category>
+<!-- p=-83.8942909583869 	:<srai>who is konrad brownlee koos *</srai> -->
+<category><pattern>KONRAD CIBOROWSKI *</pattern><template><think><srai>NOPX 766</srai></think><random><li><srai>EXPDEX KONRAD CIBOROWSKI <star/></srai></li></random></template></category>
+<!-- p=-65.7535560313183 	:<srai>who is konrad ciborowski *</srai> -->
+<category><pattern>KONRAD EMIL BLOCH *</pattern><template><think><srai>NOPX 438</srai></think><random><li><srai>EXPDEX KONRAD EMIL BLOCH <star/></srai></li></random></template></category>
+<!-- p=-84.8997642070207 	:<srai>who is konrad emil bloch *</srai> -->
+<category><pattern>KONRAD FISCHER GALERIE *</pattern><template><think><srai>NOPX 783</srai></think><random><li><srai>EXPDEX KONRAD FISCHER GALERIE <star/></srai></li></random></template></category>
+<!-- p=-86.7097641339868 	:<srai>who is konrad fischer galerie *</srai> -->
+<category><pattern>KONRAD GLOGOWSKI *</pattern><template><think><srai>NOPX 2302</srai></think><random><li><srai>EXPDEX KONRAD GLOGOWSKI <star/></srai></li></random></template></category>
+<!-- p=-65.7535560313183 	:<srai>who is konrad glogowski *</srai> -->
+<category><pattern>KONRAD H JARAUSCH *</pattern><template><think><srai>NOPX 674</srai></think><random><li><srai>EXPDEX KONRAD H JARAUSCH <star/></srai></li></random></template></category>
+<!-- p=-94.32912527991 	:<srai>who is konrad h jarausch *</srai> -->
+<category><pattern>KONRAD HACK *</pattern><template><think><srai>NOPX 416</srai></think><random><li><srai>EXPDEX KONRAD HACK <star/></srai></li></random></template></category>
+<!-- p=-65.7535560313183 	:<srai>who is konrad hack *</srai> -->
+<category><pattern>KONRAD HEUER *</pattern><template><think><srai>NOPX 557</srai></think><random><li><srai>EXPDEX KONRAD HEUER <star/></srai></li></random></template></category>
+<!-- p=-65.7535560313183 	:<srai>who is konrad heuer *</srai> -->
+<category><pattern>KONRAD HINSEN *</pattern><template><think><srai>NOPX 2465</srai></think><random><li><srai>EXPDEX KONRAD HINSEN <star/></srai></li></random></template></category>
+<!-- p=-65.7535560313183 	:<srai>who is konrad hinsen *</srai> -->
+<category><pattern>KONRAD HINSEN UNK *</pattern><template><think><srai>NOPX 754</srai></think><random><li><srai>EXPDEX KONRAD HINSEN UNK <star/></srai></li></random></template></category>
+<!-- p=-83.8942909583869 	:<srai>who is konrad hinsen unk *</srai> -->
+<category><pattern>KONRAD HINSEN *</pattern><template><think><srai>NOPX 641</srai></think><random><li><srai>EXPDEX KONRAD HINSEN <star/></srai></li></random></template></category>
+<!-- p=-65.7535560313183 	:<srai>who is konrad hinsen *</srai> -->
+<category><pattern>KONRAD I OF *</pattern><template><think><srai>NOPX 867</srai></think><random><li><srai>EXPDEX KONRAD I OF <star/></srai></li></random></template></category>
+<!-- p=-98.2455088772422 	:<srai>who is konrad i of *</srai> -->
+<category><pattern>KONRAD KARCZEWSKI *</pattern><template><think><srai>NOPX 1032</srai></think><random><li><srai>EXPDEX KONRAD KARCZEWSKI <star/></srai></li></random></template></category>
+<!-- p=-65.7535560313183 	:<srai>who is konrad karczewski *</srai> -->
+<category><pattern>KONRAD KOKOSZKIEWICZ *</pattern><template><think><srai>NOPX 675</srai></think><random><li><srai>EXPDEX KONRAD KOKOSZKIEWICZ <star/></srai></li></random></template></category>
+<!-- p=-65.7535560313183 	:<srai>who is konrad kokoszkiewicz *</srai> -->
+<category><pattern>KONRAD KOLOSOWSKI *</pattern><template><think><srai>NOPX 428</srai></think><random><li><srai>EXPDEX KONRAD KOLOSOWSKI <star/></srai></li></random></template></category>
+<!-- p=-65.7535560313183 	:<srai>who is konrad kolosowski *</srai> -->
+<category><pattern>KONRAD KORZENIOWSKI HAS *</pattern><template><think><srai>NOPX 502</srai></think><random><li><srai>EXPDEX KONRAD KORZENIOWSKI HAS <star/></srai></li></random></template></category>
+<!-- p=-83.8942909583869 	:<srai>who is konrad korzeniowski has *</srai> -->
+<category><pattern>KONRAD KOSMOWSKI *</pattern><template><think><srai>NOPX 412</srai></think><random><li><srai>EXPDEX KONRAD KOSMOWSKI <star/></srai></li></random></template></category>
+<!-- p=-65.7535560313183 	:<srai>who is konrad kosmowski *</srai> -->
+<category><pattern>KONRAD LORENZ *</pattern><template><think><srai>NOPX 1626</srai></think><random><li><srai>EXPDEX KONRAD LORENZ <star/></srai></li></random></template></category>
+<!-- p=-65.7535560313183 	:<srai>who is konrad lorenz *</srai> -->
+<category><pattern>KONRAD LORENZ INSTITUTE *</pattern><template><think><srai>NOPX 1636</srai></think><random><li><srai>EXPDEX KONRAD LORENZ INSTITUTE <star/></srai></li></random></template></category>
+<!-- p=-84.5552233465935 	:<srai>who is konrad lorenz institute *</srai> -->
+<category><pattern>KONRAD LORENZ AND *</pattern><template><think><srai>NOPX 706</srai></think><random><li><srai>EXPDEX KONRAD LORENZ AND <star/></srai></li></random></template></category>
+<!-- p=-84.5552233465935 	:<srai>who is konrad lorenz and *</srai> -->
+<category><pattern>KONRAD M KOKOSZKIEWICZ *</pattern><template><think><srai>NOPX 1126</srai></think><random><li><srai>EXPDEX KONRAD M KOKOSZKIEWICZ <star/></srai></li></random></template></category>
+<!-- p=-94.6525568806439 	:<srai>who is konrad m kokoszkiewicz *</srai> -->
+<category><pattern>KONRAD MARINE 540 *</pattern><template><think><srai>NOPX 495</srai></think><random><li><srai>EXPDEX KONRAD MARINE 540 <star/></srai></li></random></template></category>
+<!-- p=-91.3940976540876 	:<srai>who is konrad marine 540 *</srai> -->
+<category><pattern>KONRAD MOTORSPORT *</pattern><template><think><srai>NOPX 500</srai></think><random><li><srai>EXPDEX KONRAD MOTORSPORT <star/></srai></li></random></template></category>
+<!-- p=-65.7535560313183 	:<srai>who is konrad motorsport *</srai> -->
+<category><pattern>KONRAD PAPALA *</pattern><template><think><srai>NOPX 490</srai></think><random><li><srai>EXPDEX KONRAD PAPALA <star/></srai></li></random></template></category>
+<!-- p=-65.7535560313183 	:<srai>who is konrad papala *</srai> -->
+<category><pattern>KONRAD PERLMAN *</pattern><template><think><srai>NOPX 1022</srai></think><random><li><srai>EXPDEX KONRAD PERLMAN <star/></srai></li></random></template></category>
+<!-- p=-65.7535560313183 	:<srai>who is konrad perlman *</srai> -->
+<category><pattern>KONRAD PICTURES *</pattern><template><think><srai>NOPX 9307</srai></think><random><li><srai>EXPDEX KONRAD PICTURES <star/></srai></li></random></template></category>
+<!-- p=-65.7535560313183 	:<srai>who is konrad pictures *</srai> -->
+<category><pattern>KONRAD POLTHIER *</pattern><template><think><srai>NOPX 426</srai></think><random><li><srai>EXPDEX KONRAD POLTHIER <star/></srai></li></random></template></category>
+<!-- p=-65.7535560313183 	:<srai>who is konrad polthier *</srai> -->
+<category><pattern>KONRAD RACZKOWSKI AND *</pattern><template><think><srai>NOPX 854</srai></think><random><li><srai>EXPDEX KONRAD RACZKOWSKI AND <star/></srai></li></random></template></category>
+<!-- p=-83.8942909583869 	:<srai>who is konrad raczkowski and *</srai> -->
+<category><pattern>KONRAD RAISER FROM *</pattern><template><think><srai>NOPX 881</srai></think><random><li><srai>EXPDEX KONRAD RAISER FROM <star/></srai></li></random></template></category>
+<!-- p=-83.8942909583869 	:<srai>who is konrad raiser from *</srai> -->
+<category><pattern>KONRAD REINSHAGEN *</pattern><template><think><srai>NOPX 737</srai></think><random><li><srai>EXPDEX KONRAD REINSHAGEN <star/></srai></li></random></template></category>
+<!-- p=-65.7535560313183 	:<srai>who is konrad reinshagen *</srai> -->
+<category><pattern>KONRAD ROSENBAUM *</pattern><template><think><srai>NOPX 602</srai></think><random><li><srai>EXPDEX KONRAD ROSENBAUM <star/></srai></li></random></template></category>
+<!-- p=-65.7535560313183 	:<srai>who is konrad rosenbaum *</srai> -->
+<category><pattern>KONRAD SCHMIDT *</pattern><template><think><srai>NOPX 2286</srai></think><random><li><srai>EXPDEX KONRAD SCHMIDT <star/></srai></li></random></template></category>
+<!-- p=-65.7535560313183 	:<srai>who is konrad schmidt *</srai> -->
+<category><pattern>KONRAD SCHRODER *</pattern><template><think><srai>NOPX 985</srai></think><random><li><srai>EXPDEX KONRAD SCHRODER <star/></srai></li></random></template></category>
+<!-- p=-65.7535560313183 	:<srai>who is konrad schroder *</srai> -->
+<category><pattern>KONRAD SCHRODER UNK *</pattern><template><think><srai>NOPX 1103</srai></think><random><li><srai>EXPDEX KONRAD SCHRODER UNK <star/></srai></li></random></template></category>
+<!-- p=-83.8942909583869 	:<srai>who is konrad schroder unk *</srai> -->
+<category><pattern>KONRAD SLIND *</pattern><template><think><srai>NOPX 957</srai></think><random><li><srai>EXPDEX KONRAD SLIND <star/></srai></li></random></template></category>
+<!-- p=-65.7535560313183 	:<srai>who is konrad slind *</srai> -->
+<category><pattern>KONRAD STAFF WRITER *</pattern><template><think><srai>NOPX 736</srai></think><random><li><srai>EXPDEX KONRAD STAFF WRITER <star/></srai></li></random></template></category>
+<!-- p=-92.8995968915794 	:<srai>who is konrad staff writer *</srai> -->
+<category><pattern>KONRAD THE KONRAD *</pattern><template><think><srai>NOPX 470</srai></think><random><li><srai>EXPDEX KONRAD THE KONRAD <star/></srai></li></random></template></category>
+<!-- p=-101.079985377935 	:<srai>who is konrad the konrad *</srai> -->
+<category><pattern>KONRAD WEST *</pattern><template><think><srai>NOPX 656</srai></think><random><li><srai>EXPDEX KONRAD WEST <star/></srai></li></random></template></category>
+<!-- p=-65.7535560313183 	:<srai>who is konrad west *</srai> -->
+<category><pattern>KONRAD WINDSZUS *</pattern><template><think><srai>NOPX 416</srai></think><random><li><srai>EXPDEX KONRAD WINDSZUS <star/></srai></li></random></template></category>
+<!-- p=-65.7535560313183 	:<srai>who is konrad windszus *</srai> -->
+<category><pattern>KONRAD WITZ *</pattern><template><think><srai>NOPX 1047</srai></think><random><li><srai>EXPDEX KONRAD WITZ <star/></srai></li></random></template></category>
+<!-- p=-65.7535560313183 	:<srai>who is konrad witz *</srai> -->
+<category><pattern>KONRAD WITZEL WO *</pattern><template><think><srai>NOPX 529</srai></think><random><li><srai>EXPDEX KONRAD WITZEL WO <star/></srai></li></random></template></category>
+<!-- p=-83.8942909583869 	:<srai>who is konrad witzel wo *</srai> -->
+<category><pattern>KONRAD WOETHE *</pattern><template><think><srai>NOPX 1935</srai></think><random><li><srai>EXPDEX KONRAD WOETHE <star/></srai></li></random></template></category>
+<!-- p=-65.7535560313183 	:<srai>who is konrad woethe *</srai> -->
+<category><pattern>KONRAD WOLF *</pattern><template><think><srai>NOPX 469</srai></think><random><li><srai>EXPDEX KONRAD WOLF <star/></srai></li></random></template></category>
+<!-- p=-65.7535560313183 	:<srai>who is konrad wolf *</srai> -->
+<category><pattern>KONRAD WOTHE *</pattern><template><think><srai>NOPX 1718</srai></think><random><li><srai>EXPDEX KONRAD WOTHE <star/></srai></li></random></template></category>
+<!-- p=-65.7535560313183 	:<srai>who is konrad wothe *</srai> -->
+<category><pattern>KONRAD ZUSE *</pattern><template><think><srai>NOPX 1045</srai></think><random><li><srai>EXPDEX KONRAD ZUSE <star/></srai></li></random></template></category>
+<!-- p=-65.7535560313183 	:<srai>who is konrad zuse *</srai> -->
+<category><pattern>KONRAD ZUSE ZENTRUM *</pattern><template><think><srai>NOPX 418</srai></think><random><li><srai>EXPDEX KONRAD ZUSE ZENTRUM <star/></srai></li></random></template></category>
+<!-- p=-83.8942909583869 	:<srai>who is konrad zuse zentrum *</srai> -->
+<category><pattern>KONRAD ZUSE IN *</pattern><template><think><srai>NOPX 404</srai></think><random><li><srai>EXPDEX KONRAD ZUSE IN <star/></srai></li></random></template></category>
+<!-- p=-83.8942909583869 	:<srai>who is konrad zuse in *</srai> -->
+<category><pattern>KONRAD PERSONAL *</pattern><template><think><srai>NOPX 442</srai></think><random><li><srai>EXPDEX KONRAD PERSONAL <star/></srai></li></random></template></category>
+<!-- p=-65.7535560313183 	:<srai>who is konrad personal *</srai> -->
+<category><pattern>KONRAD ET AL *</pattern><template><think><srai>NOPX 604</srai></think><random><li><srai>EXPDEX KONRAD ET AL <star/></srai></li></random></template></category>
+<!-- p=-91.7388198279655 	:<srai>who is konrad et al *</srai> -->
+<category><pattern>KONRAD ON DE *</pattern><template><think><srai>NOPX 789</srai></think><random><li><srai>EXPDEX KONRAD ON DE <star/></srai></li></random></template></category>
+<!-- p=-98.1777260236416 	:<srai>who is konrad on de *</srai> -->
+<category><pattern>KONRAD PIN OF *</pattern><template><think><srai>NOPX 1273</srai></think><random><li><srai>EXPDEX KONRAD PIN OF <star/></srai></li></random></template></category>
+<!-- p=-89.2880207646059 	:<srai>who is konrad pin of *</srai> -->
+<category><pattern>KONRAD RECREATES THE *</pattern><template><think><srai>NOPX 501</srai></think><random><li><srai>EXPDEX KONRAD RECREATES THE <star/></srai></li></random></template></category>
+<!-- p=-83.8942909583869 	:<srai>who is konrad recreates the *</srai> -->
+<category><pattern>KONRAD VON UNK *</pattern><template><think><srai>NOPX 619</srai></think><random><li><srai>EXPDEX KONRAD VON UNK <star/></srai></li></random></template></category>
+<!-- p=-89.8097687041985 	:<srai>who is konrad von unk *</srai> -->
+<category><pattern>KONRAD VON FINCKENSTEIN *</pattern><template><think><srai>NOPX 1718</srai></think><random><li><srai>EXPDEX KONRAD VON FINCKENSTEIN <star/></srai></li></random></template></category>
+<!-- p=-89.8097687041985 	:<srai>who is konrad von finckenstein *</srai> -->
+<category><pattern>KONRAD VON GESNER *</pattern><template><think><srai>NOPX 420</srai></think><random><li><srai>EXPDEX KONRAD VON GESNER <star/></srai></li></random></template></category>
+<!-- p=-89.8097687041985 	:<srai>who is konrad von gesner *</srai> -->
+<category><pattern>KONRAD VON MOLTKE *</pattern><template><think><srai>NOPX 1488</srai></think><random><li><srai>EXPDEX KONRAD VON MOLTKE <star/></srai></li></random></template></category>
+<!-- p=-89.8097687041985 	:<srai>who is konrad von moltke *</srai> -->
+<category><pattern>KONRAD DECEMBER *</pattern><template><think><srai>NOPX 409</srai></think><random><li><srai>EXPDEX KONRAD DECEMBER <star/></srai></li></random></template></category>
+<!-- p=-65.7535560313183 	:<srai>who is konrad december *</srai> -->
+<category><pattern>KONRAD RACZKOWSKI *</pattern><template><think><srai>NOPX 790</srai></think><random><li><srai>EXPDEX KONRAD RACZKOWSKI <star/></srai></li></random></template></category>
+<!-- p=-65.7535560313183 	:<srai>who is konrad raczkowski *</srai> -->
+<category><pattern>KONRAD PIN *</pattern><template><think><srai>NOPX 1265</srai></think><random><li><srai>EXPDEX KONRAD PIN <star/></srai></li></random></template></category>
+<!-- p=-65.7535560313183 	:<srai>who is konrad pin *</srai> -->
+<category><pattern>KONRAD FISCHER INFO *</pattern><template><think><srai>NOPX 456</srai></think><random><li><srai>EXPDEX KONRAD FISCHER INFO <star/></srai></li></random></template></category>
+<!-- p=-86.7097641339868 	:<srai>who is konrad fischer info *</srai> -->
+<category><pattern>KONRAD SUBMITTED BY *</pattern><template><think><srai>NOPX 413</srai></think><random><li><srai>EXPDEX KONRAD SUBMITTED BY <star/></srai></li></random></template></category>
+<!-- p=-91.3544384588502 	:<srai>who is konrad submitted by *</srai> -->
+<category><pattern>KONRAD HINSEN AT LAPOSTE NET *</pattern><template><think><srai>NOPX 495</srai></think><random><li><srai>EXPDEX KONRAD HINSEN AT LAPOSTE NET <star/></srai></li></random></template></category>
+<!-- p=-147.179160364776 	:<srai>who is konrad hinsen at laposte net *</srai> -->
+<category><pattern>KONRAD KUKUK HARDY LAIBACH *</pattern><template><think><srai>NOPX 1276</srai></think><random><li><srai>EXPDEX KONRAD KUKUK HARDY LAIBACH <star/></srai></li></random></template></category>
+<!-- p=-105.338738198227 	:<srai>who is konrad kukuk hardy laibach *</srai> -->
+<category><pattern>KONRAD ON DE BEERS *</pattern><template><think><srai>NOPX 634</srai></think><random><li><srai>EXPDEX KONRAD ON DE BEERS <star/></srai></li></random></template></category>
+<!-- p=-130.601896015965 	:<srai>who is konrad on de beers *</srai> -->
+<category><pattern>KONRAD ADENAUER FOUNDATION *</pattern><template><think><srai>NOPX 822</srai></think><random><li><srai>EXPDEX KONRAD ADENAUER FOUNDATION <star/></srai></li></random></template></category>
+<!-- p=-83.8942909583869 	:<srai>who is konrad adenauer foundation *</srai> -->
+<category><pattern>KONRAD ADENAUER FOUNDATION AMMAN *</pattern><template><think><srai>NOPX 418</srai></think><random><li><srai>EXPDEX KONRAD ADENAUER FOUNDATION AMMAN <star/></srai></li></random></template></category>
+<!-- p=-110.027716656104 	:<srai>who is konrad adenauer foundation amman *</srai> -->
+<category><pattern>KONRAD ADENAUER FOUNDATION AND *</pattern><template><think><srai>NOPX 862</srai></think><random><li><srai>EXPDEX KONRAD ADENAUER FOUNDATION AND <star/></srai></li></random></template></category>
+<!-- p=-110.027716656104 	:<srai>who is konrad adenauer foundation and *</srai> -->
+<category><pattern>KONRAD ADENAUER FOUNDATION IN *</pattern><template><think><srai>NOPX 587</srai></think><random><li><srai>EXPDEX KONRAD ADENAUER FOUNDATION IN <star/></srai></li></random></template></category>
+<!-- p=-110.027716656104 	:<srai>who is konrad adenauer foundation in *</srai> -->
+<category><pattern>KONRAD ADENAUER KOO STARK *</pattern><template><think><srai>NOPX 2025</srai></think><random><li><srai>EXPDEX KONRAD ADENAUER KOO STARK <star/></srai></li></random></template></category>
+<!-- p=-101.034511624196 	:<srai>who is konrad adenauer koo stark *</srai> -->
+<category><pattern>KONRAD ADENAUER STIFTUNG *</pattern><template><think><srai>NOPX 472</srai></think><random><li><srai>EXPDEX KONRAD ADENAUER STIFTUNG <star/></srai></li></random></template></category>
+<!-- p=-83.8942909583869 	:<srai>who is konrad adenauer stiftung *</srai> -->
+<category><pattern>KONRAD ADENAUER STIFTUNG EV *</pattern><template><think><srai>NOPX 5101</srai></think><random><li><srai>EXPDEX KONRAD ADENAUER STIFTUNG EV <star/></srai></li></random></template></category>
+<!-- p=-100.632607565826 	:<srai>who is konrad adenauer stiftung ev *</srai> -->
+<category><pattern>KONRAD BAUD RE RAYMOND BAUMANN *</pattern><template><think><srai>NOPX 428</srai></think><random><li><srai>EXPDEX KONRAD BAUD RE RAYMOND BAUMANN <star/></srai></li></random></template></category>
+<!-- p=-132.000878411977 	:<srai>who is konrad baud re raymond baumann *</srai> -->
+<category><pattern>KONRAD BROWNLEE KOOS KOMBUIS *</pattern><template><think><srai>NOPX 521</srai></think><random><li><srai>EXPDEX KONRAD BROWNLEE KOOS KOMBUIS <star/></srai></li></random></template></category>
+<!-- p=-101.519457547545 	:<srai>who is konrad brownlee koos kombuis *</srai> -->
+<category><pattern>KONRAD FISCHER GALERIE GMBH *</pattern><template><think><srai>NOPX 413</srai></think><random><li><srai>EXPDEX KONRAD FISCHER GALERIE GMBH <star/></srai></li></random></template></category>
+<!-- p=-107.846825938674 	:<srai>who is konrad fischer galerie gmbh *</srai> -->
+<category><pattern>KONRAD HINSEN E *</pattern><template><think><srai>NOPX 617</srai></think><random><li><srai>EXPDEX KONRAD HINSEN E <star/></srai></li></random></template></category>
+<!-- p=-83.8942909583869 	:<srai>who is konrad hinsen e *</srai> -->
+<category><pattern>KONRAD I OF MASOVIA *</pattern><template><think><srai>NOPX 647</srai></think><random><li><srai>EXPDEX KONRAD I OF MASOVIA <star/></srai></li></random></template></category>
+<!-- p=-132.736623860439 	:<srai>who is konrad i of masovia *</srai> -->
+<category><pattern>KONRAD KORZENIOWSKI HAS INSTANCE *</pattern><template><think><srai>NOPX 502</srai></think><random><li><srai>EXPDEX KONRAD KORZENIOWSKI HAS INSTANCE <star/></srai></li></random></template></category>
+<!-- p=-114.663242035217 	:<srai>who is konrad korzeniowski has instance *</srai> -->
+<category><pattern>KONRAD LORENZ INSTITUTE FOR *</pattern><template><think><srai>NOPX 1136</srai></think><random><li><srai>EXPDEX KONRAD LORENZ INSTITUTE FOR <star/></srai></li></random></template></category>
+<!-- p=-111.724636503763 	:<srai>who is konrad lorenz institute for *</srai> -->
+<category><pattern>KONRAD M KOKOSZKIEWICZ UNK *</pattern><template><think><srai>NOPX 537</srai></think><random><li><srai>EXPDEX KONRAD M KOKOSZKIEWICZ UNK <star/></srai></li></random></template></category>
+<!-- p=-123.55155772997 	:<srai>who is konrad m kokoszkiewicz unk *</srai> -->
+<category><pattern>KONRAD RACZKOWSKI AND PAWEL *</pattern><template><think><srai>NOPX 464</srai></think><random><li><srai>EXPDEX KONRAD RACZKOWSKI AND PAWEL <star/></srai></li></random></template></category>
+<!-- p=-116.237213607485 	:<srai>who is konrad raczkowski and pawel *</srai> -->
+<category><pattern>KONRAD RAISER FROM THE *</pattern><template><think><srai>NOPX 878</srai></think><random><li><srai>EXPDEX KONRAD RAISER FROM THE <star/></srai></li></random></template></category>
+<!-- p=-115.287674392273 	:<srai>who is konrad raiser from the *</srai> -->
+<category><pattern>KONRAD THE KONRAD ON *</pattern><template><think><srai>NOPX 467</srai></think><random><li><srai>EXPDEX KONRAD THE KONRAD ON <star/></srai></li></random></template></category>
+<!-- p=-136.406414724551 	:<srai>who is konrad the konrad on *</srai> -->
+<category><pattern>KONRAD WITZEL WO YUE *</pattern><template><think><srai>NOPX 529</srai></think><random><li><srai>EXPDEX KONRAD WITZEL WO YUE <star/></srai></li></random></template></category>
+<!-- p=-104.144570868695 	:<srai>who is konrad witzel wo yue *</srai> -->
+<category><pattern>KONRAD PERSONAL TOPIC *</pattern><template><think><srai>NOPX 442</srai></think><random><li><srai>EXPDEX KONRAD PERSONAL TOPIC <star/></srai></li></random></template></category>
+<!-- p=-94.3005967518173 	:<srai>who is konrad personal topic *</srai> -->
+<category><pattern>KONRAD ON DE BEERS *</pattern><template><think><srai>NOPX 788</srai></think><random><li><srai>EXPDEX KONRAD ON DE BEERS <star/></srai></li></random></template></category>
+<!-- p=-130.601896015965 	:<srai>who is konrad on de beers *</srai> -->
+<category><pattern>KONRAD RECREATES THE GERMAN *</pattern><template><think><srai>NOPX 501</srai></think><random><li><srai>EXPDEX KONRAD RECREATES THE GERMAN <star/></srai></li></random></template></category>
+<!-- p=-119.220720305003 	:<srai>who is konrad recreates the german *</srai> -->
+<category><pattern>KONRAD RACZKOWSKI AND *</pattern><template><think><srai>NOPX 748</srai></think><random><li><srai>EXPDEX KONRAD RACZKOWSKI AND <star/></srai></li></random></template></category>
+<!-- p=-83.8942909583869 	:<srai>who is konrad raczkowski and *</srai> -->
+<category><pattern>KONRAD PIN OF *</pattern><template><think><srai>NOPX 1265</srai></think><random><li><srai>EXPDEX KONRAD PIN OF <star/></srai></li></random></template></category>
+<!-- p=-89.2880207646059 	:<srai>who is konrad pin of *</srai> -->
+<category><pattern>KONRAD SUBMITTED BY KONRAD *</pattern><template><think><srai>NOPX 413</srai></think><random><li><srai>EXPDEX KONRAD SUBMITTED BY KONRAD <star/></srai></li></random></template></category>
+<!-- p=-123.424151578184 	:<srai>who is konrad submitted by konrad *</srai> -->
+<category><pattern>KONRAD I OF *</pattern><template><think><srai>NOPX 412</srai></think><random><li><srai>EXPDEX KONRAD I OF <star/></srai></li></random></template></category>
+<!-- p=-98.2455088772422 	:<srai>who is konrad i of *</srai> -->
+<category><pattern>KONRAD KUKUK HARDY LAIBACH LAKOMY *</pattern><template><think><srai>NOPX 1276</srai></think><random><li><srai>EXPDEX KONRAD KUKUK HARDY LAIBACH LAKOMY <star/></srai></li></random></template></category>
+<!-- p=-126.783185438066 	:<srai>who is konrad kukuk hardy laibach lakomy *</srai> -->
+<category><pattern>KONRAD ON DE BEERS TERENURE *</pattern><template><think><srai>NOPX 413</srai></think><random><li><srai>EXPDEX KONRAD ON DE BEERS TERENURE <star/></srai></li></random></template></category>
+<!-- p=-159.080053362034 	:<srai>who is konrad on de beers terenure *</srai> -->
+<category><pattern>KONRAD ADENAUER FOUNDATION AMMAN OFFICE *</pattern><template><think><srai>NOPX 417</srai></think><random><li><srai>EXPDEX KONRAD ADENAUER FOUNDATION AMMAN OFFICE <star/></srai></li></random></template></category>
+<!-- p=-136.161142353821 	:<srai>who is konrad adenauer foundation amman office *</srai> -->
+<category><pattern>KONRAD ADENAUER KOO STARK KOSYGIN *</pattern><template><think><srai>NOPX 2025</srai></think><random><li><srai>EXPDEX KONRAD ADENAUER KOO STARK KOSYGIN <star/></srai></li></random></template></category>
+<!-- p=-122.395854142589 	:<srai>who is konrad adenauer koo stark kosygin *</srai> -->
+<category><pattern>KONRAD BAUD RE RAYMOND BAUMANN RUEDI *</pattern><template><think><srai>NOPX 428</srai></think><random><li><srai>EXPDEX KONRAD BAUD RE RAYMOND BAUMANN RUEDI <star/></srai></li></random></template></category>
+<!-- p=-154.356299144203 	:<srai>who is konrad baud re raymond baumann ruedi *</srai> -->
+<category><pattern>KONRAD BROWNLEE KOOS KOMBUIS KOP *</pattern><template><think><srai>NOPX 521</srai></think><random><li><srai>EXPDEX KONRAD BROWNLEE KOOS KOMBUIS KOP <star/></srai></li></random></template></category>
+<!-- p=-117.676863699144 	:<srai>who is konrad brownlee koos kombuis kop *</srai> -->
+<category><pattern>KONRAD KORZENIOWSKI HAS INSTANCE *</pattern><template><think><srai>NOPX 502</srai></think><random><li><srai>EXPDEX KONRAD KORZENIOWSKI HAS INSTANCE <star/></srai></li></random></template></category>
+<!-- p=-114.663242035217 	:<srai>who is konrad korzeniowski has instance *</srai> -->
+<category><pattern>KONRAD M KOKOSZKIEWICZ UNK *</pattern><template><think><srai>NOPX 510</srai></think><random><li><srai>EXPDEX KONRAD M KOKOSZKIEWICZ UNK <star/></srai></li></random></template></category>
+<!-- p=-123.55155772997 	:<srai>who is konrad m kokoszkiewicz unk *</srai> -->
+<category><pattern>KONRAD RAISER FROM THE EVANGELICAL *</pattern><template><think><srai>NOPX 875</srai></think><random><li><srai>EXPDEX KONRAD RAISER FROM THE EVANGELICAL <star/></srai></li></random></template></category>
+<!-- p=-150.614103738889 	:<srai>who is konrad raiser from the evangelical *</srai> -->
+<category><pattern>KONRAD PERSONAL TOPIC *</pattern><template><think><srai>NOPX 442</srai></think><random><li><srai>EXPDEX KONRAD PERSONAL TOPIC <star/></srai></li></random></template></category>
+<!-- p=-94.3005967518173 	:<srai>who is konrad personal topic *</srai> -->
+<category><pattern>KONRAD ON DE BEERS THE *</pattern><template><think><srai>NOPX 467</srai></think><random><li><srai>EXPDEX KONRAD ON DE BEERS THE <star/></srai></li></random></template></category>
+<!-- p=-159.080053362034 	:<srai>who is konrad on de beers the *</srai> -->
+<category><pattern>KONRAD RECREATES THE GERMAN ATTEMPT *</pattern><template><think><srai>NOPX 495</srai></think><random><li><srai>EXPDEX KONRAD RECREATES THE GERMAN ATTEMPT <star/></srai></li></random></template></category>
+<!-- p=-154.547149651619 	:<srai>who is konrad recreates the german attempt *</srai> -->
+</aiml>

@@ -1,0 +1,212 @@
+            notaiml
+          Anne Ogborn
+
+1. introduction
+Notaiml is an alternative representation for the AIML language. It attempts to remain semanticly equivilent (and hence easy to write converters to and from from AIML) while eliminating much of the xml awkwardness of AIML.
+
+In practice, AIML is a dfg, while notaiml is a ndfg because of the inclusion of the *0 element. however notaiml's
+
+*0 foo
+-foo ends the sentence
+
+expands easily into
+
+foo
+-foo ends the sentence
+
+and
+
+*1 foo
+-foo ends the sentence
+
+
+2. Format
+Notaiml treats newlines as syntacticly significant. Whitespace is not significant.
+blank lines are syntacticly significant. A 'blank line' is a sequence preceeded by a newline which consists of zero or more whitespace characters and a newline.
+
+3. File organization
+A notaiml file consists of comments, catagories, and directives.
+
+3.1 Comments
+Lines whose first non-whitespace character is # are discarded. The line is not considered a 'blank line'. Thus
+
+DON'T DO THIS
+
+a pattern
+-a template
+                #a comment
+a second pattern
+-a second template
+
+makes the second pattern a dependent pattern (see the section on THAT).
+
+3.2 Directives
+Special directives are on lines starting with : followed by - as the first non-whitespace characters.
+
+:- use sentence splitting.
+
+It is idiomatic to follow directives with a blank line.
+A directive does not count as a blank line for separating catagories.
+
+Normally directives are active over the lexical scope from where they occur to end of file.
+
+3.3 Categories
+Categories consist of pattern-template pairs followed by blank lines and/or EOF.
+
+The first line of the pair is the pattern, the second line is the template, and must start with a -.
+
+a pattern
+-a template
+
+is identical to the AIML
+<category>
+<pattern>a pattern</pattern>
+<template>a template</template>
+</category>
+
+3.3.1 input normalization.
+Input and patterns are normalized for matching.
+Whitespace (including newlines) is discarded.
+Numbers are converted to a canonical representation.
+text is converted to uppercase.
+non-alpha characters except for <TODO make a list> are discarded.
+Additional characters may be included by the directive
+:- include characters <chars>
+where <chars> is the ANSI C++ representation of the characters. (Note that space will need to be represented by \x20)
+
+Additional characters may be excluded by the directive
+:- exclude characters <chars>
+where <chars> is the ANSI C++ representation of the characters. (Note that space will need to be represented by \x20)
+
+Syntacticly important characters will be 'seen' even if excluded (exclusion happens after parsing). So the pattern
+
+You're Bob?
+
+which normally normalizes to
+
+YOU ' RE BOB ?
+
+if the :- exclude characters ?
+directive has been encountered this will normalize to
+
+YOU ' RE BOB
+
+
+
+<TODO think about allowing a mode where propercase creates a token, like #$PROPER YOU ' RE #$PROPER BOB ?>
+
+
+3.3.2 handling THAT
+
+Categories may restrict their match based on the previously issued response (in AIML the previously issued response is called THAT). Dependence on THAT may be implicit or explicit.
+
+3.3.2.1 implicit THAT
+
+Categories with more than one pair of lines have an implicit 'THAT' dependence of the lower pair on the upper.
+
+#this uses the implied THAT
+I like sailing.
+-Me too. I have a small sailboat.
+What kind?  # this pattern only matches if the bot answered 'Me too. ...'
+-A J/24
+*           # this pattern matches any time the last utterance is A J/24
+-Do you have a boat?
+A boat_type=(*)   # this pattern always matches after
+-That's a nice boat
+
+3.3.2.2 explicit THAT
+
+lines which start with that- define a pattern which the last template must have produced. This converts the 'pair' into a triple. the that line must follow the pattern line and preceed the template if it exists.
+
+This category would fix this problem in the example of 3.3.2.1:
+bot: A J/24
+User: I have a kriscraft
+bot: Do you have a boat?
+
+The category to fix it would look something like:
+
+I have a *
+that-A J/24
+-That's a nice boat
+
+3.3.3 Topic
+
+The Prolog predicate ~topic is available for setting the topic
+
+The directive
+:- topic <pattern>
+
+causes the topic to be changed to <pattern> until another topic directive occurs.
+The directive
+
+:- topic *
+
+effectively cancels the topic.
+
+There is an implied
+
+:- topic *
+
+At the top of each file.
+
+3.3.4 Context
+
+Patterns which end in ? are considered questions.
+Templates which end in a ? make the next user input a question regardless of the pattern unless the input ends in a question. <TODO suspicious>
+
+4 Patterns
+
+4.1 literal words
+literal words match themselves. A word is a sequence of characters from the set A-Za-z0-9_ that starts with a member of A-Za-z
+
+4.2 numbers
+
+numbers in any representation match themselves. Thus
+
+12980.0  matches
+
+twelve thousand nine hundred and eighty
+
+4.3 alternatives
+
+adjacent /'s begin and end a set of alternatives.
+
+//hello/hi/howdy/aloha//
+
+4.4 wildcards
+
+* and _
+
+* is not greedy
+_ is greedy
+
+*0    match zero or more words
+*1    match one or more words
+*     match one or more words
+*2    match two or more words (up to 9)
+
+_0    match zero or more words
+
+^     as *, but matches preceeding articles, which are removed from the
+consequent
+@     as _, but matches preceeding articles, which are removed from the consequent
+
+for example
+I have @
+-I didn't know you have a *
+
+produces the following conversation:
+user: I have the book
+bot: I didn't know you have a book
+
+^ and @ may be followed by a digit similarly to * and _
+
+in templates ** matches the second match of * or _, *** the third, and so on
+
+5 Variables
+
+
+
+
+
+

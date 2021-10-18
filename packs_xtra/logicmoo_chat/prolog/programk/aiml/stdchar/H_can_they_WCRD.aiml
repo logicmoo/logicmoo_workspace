@@ -1,0 +1,512 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<aiml>
+
+<!-- main H_Default.aiml (1029508) mp=-1: CAN THEY * -->
+
+<!-- MINSEQ: mp=-1:  -->
+<category><pattern>EXPDEX CAN THEY *</pattern><template>   <random>      <li>It depends who "they" are.</li>      <li>They could, but it might be dangerous.</li>      <li>I think they probably could.</li>     </random>     <think>      <set name="it">       <set name="topic">        <person/>       </set>      </set>     </think>    </template></category>
+<category><pattern>CAN THEY *</pattern><template><srai>EXPDEX CAN THEY <star/></srai></template></category>
+<category><pattern>CAN THEY UNK *</pattern><template><think><srai>NOPX 764</srai></think><random><li><srai>EXPDEX CAN THEY UNK <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY NOT *</pattern><template><think><srai>NOPX 501</srai></think><random><li><srai>EXPDEX CAN THEY NOT <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY ACCEPT *</pattern><template><think><srai>NOPX 981</srai></think><random><li><srai>EXPDEX CAN THEY ACCEPT <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY ACCESS *</pattern><template><think><srai>NOPX 947</srai></think><random><li><srai>EXPDEX CAN THEY ACCESS <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY ACCOMMODATE *</pattern><template><think><srai>NOPX 422</srai></think><random><li><srai>EXPDEX CAN THEY ACCOMMODATE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY ACHIEVE *</pattern><template><think><srai>NOPX 1311</srai></think><random><li><srai>EXPDEX CAN THEY ACHIEVE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY ACT *</pattern><template><think><srai>NOPX 875</srai></think><random><li><srai>EXPDEX CAN THEY ACT <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY ACTUALLY *</pattern><template><think><srai>NOPX 1904</srai></think><random><li><srai>EXPDEX CAN THEY ACTUALLY <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY ADD *</pattern><template><think><srai>NOPX 1302</srai></think><random><li><srai>EXPDEX CAN THEY ADD <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY AFFECT *</pattern><template><think><srai>NOPX 734</srai></think><random><li><srai>EXPDEX CAN THEY AFFECT <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY AFFORD *</pattern><template><think><srai>NOPX 7557</srai></think><random><li><srai>EXPDEX CAN THEY AFFORD <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY AGREE *</pattern><template><think><srai>NOPX 509</srai></think><random><li><srai>EXPDEX CAN THEY AGREE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY ALLOW *</pattern><template><think><srai>NOPX 998</srai></think><random><li><srai>EXPDEX CAN THEY ALLOW <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY ALSO *</pattern><template><think><srai>NOPX 2733</srai></think><random><li><srai>EXPDEX CAN THEY ALSO <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY ALWAYS *</pattern><template><think><srai>NOPX 456</srai></think><random><li><srai>EXPDEX CAN THEY ALWAYS <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY ANSWER *</pattern><template><think><srai>NOPX 514</srai></think><random><li><srai>EXPDEX CAN THEY ANSWER <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY APPEAR *</pattern><template><think><srai>NOPX 484</srai></think><random><li><srai>EXPDEX CAN THEY APPEAR <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY APPLY *</pattern><template><think><srai>NOPX 1131</srai></think><random><li><srai>EXPDEX CAN THEY APPLY <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY ARE *</pattern><template><think><srai>NOPX 1079</srai></think><random><li><srai>EXPDEX CAN THEY ARE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY ARGUE *</pattern><template><think><srai>NOPX 950</srai></think><random><li><srai>EXPDEX CAN THEY ARGUE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY ASK *</pattern><template><think><srai>NOPX 1482</srai></think><random><li><srai>EXPDEX CAN THEY ASK <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY ASSIST *</pattern><template><think><srai>NOPX 555</srai></think><random><li><srai>EXPDEX CAN THEY ASSIST <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY AT *</pattern><template><think><srai>NOPX 710</srai></think><random><li><srai>EXPDEX CAN THEY AT <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY AVOID *</pattern><template><think><srai>NOPX 1349</srai></think><random><li><srai>EXPDEX CAN THEY AVOID <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY BE *</pattern><template><think><srai>NOPX 182888</srai></think><random><li><srai>EXPDEX CAN THEY BE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY BEAR *</pattern><template><think><srai>NOPX 535</srai></think><random><li><srai>EXPDEX CAN THEY BEAR <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY BEAT *</pattern><template><think><srai>NOPX 888</srai></think><random><li><srai>EXPDEX CAN THEY BEAT <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY BECOME *</pattern><template><think><srai>NOPX 2416</srai></think><random><li><srai>EXPDEX CAN THEY BECOME <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY BEGIN *</pattern><template><think><srai>NOPX 1331</srai></think><random><li><srai>EXPDEX CAN THEY BEGIN <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY BELIEVE *</pattern><template><think><srai>NOPX 3309</srai></think><random><li><srai>EXPDEX CAN THEY BELIEVE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY BENEFIT *</pattern><template><think><srai>NOPX 886</srai></think><random><li><srai>EXPDEX CAN THEY BENEFIT <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY BEST *</pattern><template><think><srai>NOPX 2416</srai></think><random><li><srai>EXPDEX CAN THEY BEST <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY BLAME *</pattern><template><think><srai>NOPX 545</srai></think><random><li><srai>EXPDEX CAN THEY BLAME <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY BREAK *</pattern><template><think><srai>NOPX 472</srai></think><random><li><srai>EXPDEX CAN THEY BREAK <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY BRING *</pattern><template><think><srai>NOPX 1973</srai></think><random><li><srai>EXPDEX CAN THEY BRING <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY BUILD *</pattern><template><think><srai>NOPX 1403</srai></think><random><li><srai>EXPDEX CAN THEY BUILD <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY BUY *</pattern><template><think><srai>NOPX 1350</srai></think><random><li><srai>EXPDEX CAN THEY BUY <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY CALL *</pattern><template><think><srai>NOPX 4939</srai></think><random><li><srai>EXPDEX CAN THEY CALL <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY CAPTURE *</pattern><template><think><srai>NOPX 499</srai></think><random><li><srai>EXPDEX CAN THEY CAPTURE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY CARRY *</pattern><template><think><srai>NOPX 843</srai></think><random><li><srai>EXPDEX CAN THEY CARRY <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY CATCH *</pattern><template><think><srai>NOPX 571</srai></think><random><li><srai>EXPDEX CAN THEY CATCH <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY CAUSE *</pattern><template><think><srai>NOPX 954</srai></think><random><li><srai>EXPDEX CAN THEY CAUSE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY CHANGE *</pattern><template><think><srai>NOPX 2184</srai></think><random><li><srai>EXPDEX CAN THEY CHANGE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY CHARGE *</pattern><template><think><srai>NOPX 1891</srai></think><random><li><srai>EXPDEX CAN THEY CHARGE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY CHOOSE *</pattern><template><think><srai>NOPX 843</srai></think><random><li><srai>EXPDEX CAN THEY CHOOSE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY CLAIM *</pattern><template><think><srai>NOPX 3950</srai></think><random><li><srai>EXPDEX CAN THEY CLAIM <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY CO *</pattern><template><think><srai>NOPX 739</srai></think><random><li><srai>EXPDEX CAN THEY CO <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY COEXIST *</pattern><template><think><srai>NOPX 496</srai></think><random><li><srai>EXPDEX CAN THEY COEXIST <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY COME *</pattern><template><think><srai>NOPX 3698</srai></think><random><li><srai>EXPDEX CAN THEY COME <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY COMMUNICATE *</pattern><template><think><srai>NOPX 643</srai></think><random><li><srai>EXPDEX CAN THEY COMMUNICATE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY COMPARE *</pattern><template><think><srai>NOPX 628</srai></think><random><li><srai>EXPDEX CAN THEY COMPARE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY COMPETE *</pattern><template><think><srai>NOPX 1613</srai></think><random><li><srai>EXPDEX CAN THEY COMPETE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY COMPLAIN *</pattern><template><think><srai>NOPX 550</srai></think><random><li><srai>EXPDEX CAN THEY COMPLAIN <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY CONNECT *</pattern><template><think><srai>NOPX 726</srai></think><random><li><srai>EXPDEX CAN THEY CONNECT <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY CONTACT *</pattern><template><think><srai>NOPX 1104</srai></think><random><li><srai>EXPDEX CAN THEY CONTACT <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY CONTAIN *</pattern><template><think><srai>NOPX 494</srai></think><random><li><srai>EXPDEX CAN THEY CONTAIN <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY CONTINUE *</pattern><template><think><srai>NOPX 2796</srai></think><random><li><srai>EXPDEX CAN THEY CONTINUE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY CONTRIBUTE *</pattern><template><think><srai>NOPX 1454</srai></think><random><li><srai>EXPDEX CAN THEY CONTRIBUTE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY CONTROL *</pattern><template><think><srai>NOPX 1656</srai></think><random><li><srai>EXPDEX CAN THEY CONTROL <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY CONVINCE *</pattern><template><think><srai>NOPX 671</srai></think><random><li><srai>EXPDEX CAN THEY CONVINCE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY COPE *</pattern><template><think><srai>NOPX 524</srai></think><random><li><srai>EXPDEX CAN THEY COPE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY COUNT *</pattern><template><think><srai>NOPX 708</srai></think><random><li><srai>EXPDEX CAN THEY COUNT <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY CREATE *</pattern><template><think><srai>NOPX 1240</srai></think><random><li><srai>EXPDEX CAN THEY CREATE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY CUT *</pattern><template><think><srai>NOPX 606</srai></think><random><li><srai>EXPDEX CAN THEY CUT <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY DEAL *</pattern><template><think><srai>NOPX 971</srai></think><random><li><srai>EXPDEX CAN THEY DEAL <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY DECIDE *</pattern><template><think><srai>NOPX 903</srai></think><random><li><srai>EXPDEX CAN THEY DECIDE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY DEFEND *</pattern><template><think><srai>NOPX 690</srai></think><random><li><srai>EXPDEX CAN THEY DEFEND <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY DELIVER *</pattern><template><think><srai>NOPX 1750</srai></think><random><li><srai>EXPDEX CAN THEY DELIVER <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY DEMAND *</pattern><template><think><srai>NOPX 428</srai></think><random><li><srai>EXPDEX CAN THEY DEMAND <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY DEMONSTRATE *</pattern><template><think><srai>NOPX 409</srai></think><random><li><srai>EXPDEX CAN THEY DEMONSTRATE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY DENY *</pattern><template><think><srai>NOPX 921</srai></think><random><li><srai>EXPDEX CAN THEY DENY <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY DETERMINE *</pattern><template><think><srai>NOPX 1028</srai></think><random><li><srai>EXPDEX CAN THEY DETERMINE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY DEVELOP *</pattern><template><think><srai>NOPX 887</srai></think><random><li><srai>EXPDEX CAN THEY DEVELOP <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY DIE *</pattern><template><think><srai>NOPX 1520</srai></think><random><li><srai>EXPDEX CAN THEY DIE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY DO *</pattern><template><think><srai>NOPX 63714</srai></think><random><li><srai>EXPDEX CAN THEY DO <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY DOUBLE *</pattern><template><think><srai>NOPX 416</srai></think><random><li><srai>EXPDEX CAN THEY DOUBLE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY DRAW *</pattern><template><think><srai>NOPX 530</srai></think><random><li><srai>EXPDEX CAN THEY DRAW <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY EASILY *</pattern><template><think><srai>NOPX 875</srai></think><random><li><srai>EXPDEX CAN THEY EASILY <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY EAT *</pattern><template><think><srai>NOPX 906</srai></think><random><li><srai>EXPDEX CAN THEY EAT <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY EFFECTIVELY *</pattern><template><think><srai>NOPX 644</srai></think><random><li><srai>EXPDEX CAN THEY EFFECTIVELY <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY ENJOY *</pattern><template><think><srai>NOPX 490</srai></think><random><li><srai>EXPDEX CAN THEY ENJOY <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY ENSURE *</pattern><template><think><srai>NOPX 1165</srai></think><random><li><srai>EXPDEX CAN THEY ENSURE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY ENTER *</pattern><template><think><srai>NOPX 588</srai></think><random><li><srai>EXPDEX CAN THEY ENTER <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY ESCAPE *</pattern><template><think><srai>NOPX 1051</srai></think><random><li><srai>EXPDEX CAN THEY ESCAPE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY EVEN *</pattern><template><think><srai>NOPX 6501</srai></think><random><li><srai>EXPDEX CAN THEY EVEN <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY EVER *</pattern><template><think><srai>NOPX 5645</srai></think><random><li><srai>EXPDEX CAN THEY EVER <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY EXIST *</pattern><template><think><srai>NOPX 634</srai></think><random><li><srai>EXPDEX CAN THEY EXIST <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY EXPECT *</pattern><template><think><srai>NOPX 16234</srai></think><random><li><srai>EXPDEX CAN THEY EXPECT <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY EXPLAIN *</pattern><template><think><srai>NOPX 2075</srai></think><random><li><srai>EXPDEX CAN THEY EXPLAIN <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY EXPRESS *</pattern><template><think><srai>NOPX 497</srai></think><random><li><srai>EXPDEX CAN THEY EXPRESS <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY FAIL *</pattern><template><think><srai>NOPX 759</srai></think><random><li><srai>EXPDEX CAN THEY FAIL <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY FEEL *</pattern><template><think><srai>NOPX 1093</srai></think><random><li><srai>EXPDEX CAN THEY FEEL <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY FIGHT *</pattern><template><think><srai>NOPX 751</srai></think><random><li><srai>EXPDEX CAN THEY FIGHT <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY FIND *</pattern><template><think><srai>NOPX 9244</srai></think><random><li><srai>EXPDEX CAN THEY FIND <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY FIRE *</pattern><template><think><srai>NOPX 494</srai></think><random><li><srai>EXPDEX CAN THEY FIRE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY FIT *</pattern><template><think><srai>NOPX 612</srai></think><random><li><srai>EXPDEX CAN THEY FIT <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY FIX *</pattern><template><think><srai>NOPX 594</srai></think><random><li><srai>EXPDEX CAN THEY FIX <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY FLY *</pattern><template><think><srai>NOPX 776</srai></think><random><li><srai>EXPDEX CAN THEY FLY <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY FOLLOW *</pattern><template><think><srai>NOPX 551</srai></think><random><li><srai>EXPDEX CAN THEY FOLLOW <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY FORCE *</pattern><template><think><srai>NOPX 614</srai></think><random><li><srai>EXPDEX CAN THEY FORCE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY FORGET *</pattern><template><think><srai>NOPX 455</srai></think><random><li><srai>EXPDEX CAN THEY FORGET <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY FORM *</pattern><template><think><srai>NOPX 491</srai></think><random><li><srai>EXPDEX CAN THEY FORM <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY FULFILL *</pattern><template><think><srai>NOPX 402</srai></think><random><li><srai>EXPDEX CAN THEY FULFILL <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY FULLY *</pattern><template><think><srai>NOPX 660</srai></think><random><li><srai>EXPDEX CAN THEY FULLY <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY GAIN *</pattern><template><think><srai>NOPX 1489</srai></think><random><li><srai>EXPDEX CAN THEY GAIN <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY GARNISH *</pattern><template><think><srai>NOPX 1514</srai></think><random><li><srai>EXPDEX CAN THEY GARNISH <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY GENERATE *</pattern><template><think><srai>NOPX 567</srai></think><random><li><srai>EXPDEX CAN THEY GENERATE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY GET *</pattern><template><think><srai>NOPX 22210</srai></think><random><li><srai>EXPDEX CAN THEY GET <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY GIVE *</pattern><template><think><srai>NOPX 6000</srai></think><random><li><srai>EXPDEX CAN THEY GIVE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY GO *</pattern><template><think><srai>NOPX 13305</srai></think><random><li><srai>EXPDEX CAN THEY GO <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY GROW *</pattern><template><think><srai>NOPX 874</srai></think><random><li><srai>EXPDEX CAN THEY GROW <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY GUARANTEE *</pattern><template><think><srai>NOPX 1308</srai></think><random><li><srai>EXPDEX CAN THEY GUARANTEE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY HANDLE *</pattern><template><think><srai>NOPX 2007</srai></think><random><li><srai>EXPDEX CAN THEY HANDLE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY HAVE *</pattern><template><think><srai>NOPX 12747</srai></think><random><li><srai>EXPDEX CAN THEY HAVE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY HEAR *</pattern><template><think><srai>NOPX 3625</srai></think><random><li><srai>EXPDEX CAN THEY HEAR <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY HELP *</pattern><template><think><srai>NOPX 10845</srai></think><random><li><srai>EXPDEX CAN THEY HELP <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY HIDE *</pattern><template><think><srai>NOPX 594</srai></think><random><li><srai>EXPDEX CAN THEY HIDE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY HOLD *</pattern><template><think><srai>NOPX 2617</srai></think><random><li><srai>EXPDEX CAN THEY HOLD <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY HONESTLY *</pattern><template><think><srai>NOPX 482</srai></think><random><li><srai>EXPDEX CAN THEY HONESTLY <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY HOPE *</pattern><template><think><srai>NOPX 2560</srai></think><random><li><srai>EXPDEX CAN THEY HOPE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY IDENTIFY *</pattern><template><think><srai>NOPX 731</srai></think><random><li><srai>EXPDEX CAN THEY IDENTIFY <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY IGNORE *</pattern><template><think><srai>NOPX 1048</srai></think><random><li><srai>EXPDEX CAN THEY IGNORE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY IMAGINE *</pattern><template><think><srai>NOPX 415</srai></think><random><li><srai>EXPDEX CAN THEY IMAGINE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY IMPROVE *</pattern><template><think><srai>NOPX 2174</srai></think><random><li><srai>EXPDEX CAN THEY IMPROVE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY IN *</pattern><template><think><srai>NOPX 673</srai></think><random><li><srai>EXPDEX CAN THEY IN <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY INCREASE *</pattern><template><think><srai>NOPX 541</srai></think><random><li><srai>EXPDEX CAN THEY INCREASE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY INFLUENCE *</pattern><template><think><srai>NOPX 484</srai></think><random><li><srai>EXPDEX CAN THEY INFLUENCE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY JOIN *</pattern><template><think><srai>NOPX 439</srai></think><random><li><srai>EXPDEX CAN THEY JOIN <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY JUDGE *</pattern><template><think><srai>NOPX 596</srai></think><random><li><srai>EXPDEX CAN THEY JUDGE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY JUST *</pattern><template><think><srai>NOPX 4339</srai></think><random><li><srai>EXPDEX CAN THEY JUST <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY JUSTIFY *</pattern><template><think><srai>NOPX 3428</srai></think><random><li><srai>EXPDEX CAN THEY JUSTIFY <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY KEEP *</pattern><template><think><srai>NOPX 7514</srai></think><random><li><srai>EXPDEX CAN THEY KEEP <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY KICK *</pattern><template><think><srai>NOPX 446</srai></think><random><li><srai>EXPDEX CAN THEY KICK <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY KILL *</pattern><template><think><srai>NOPX 559</srai></think><random><li><srai>EXPDEX CAN THEY KILL <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY KNOW *</pattern><template><think><srai>NOPX 6703</srai></think><random><li><srai>EXPDEX CAN THEY KNOW <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY LAST *</pattern><template><think><srai>NOPX 572</srai></think><random><li><srai>EXPDEX CAN THEY LAST <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY LEAD *</pattern><template><think><srai>NOPX 643</srai></think><random><li><srai>EXPDEX CAN THEY LEAD <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY LEARN *</pattern><template><think><srai>NOPX 3323</srai></think><random><li><srai>EXPDEX CAN THEY LEARN <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY LEAVE *</pattern><template><think><srai>NOPX 1029</srai></think><random><li><srai>EXPDEX CAN THEY LEAVE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY LEGALLY *</pattern><template><think><srai>NOPX 916</srai></think><random><li><srai>EXPDEX CAN THEY LEGALLY <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY LET *</pattern><template><think><srai>NOPX 2063</srai></think><random><li><srai>EXPDEX CAN THEY LET <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY LIVE *</pattern><template><think><srai>NOPX 2999</srai></think><random><li><srai>EXPDEX CAN THEY LIVE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY LOOK *</pattern><template><think><srai>NOPX 1618</srai></think><random><li><srai>EXPDEX CAN THEY LOOK <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY LOSE *</pattern><template><think><srai>NOPX 750</srai></think><random><li><srai>EXPDEX CAN THEY LOSE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY LOVE *</pattern><template><think><srai>NOPX 482</srai></think><random><li><srai>EXPDEX CAN THEY LOVE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY MAINTAIN *</pattern><template><think><srai>NOPX 1169</srai></think><random><li><srai>EXPDEX CAN THEY MAINTAIN <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY MAKE *</pattern><template><think><srai>NOPX 20153</srai></think><random><li><srai>EXPDEX CAN THEY MAKE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY MANAGE *</pattern><template><think><srai>NOPX 1086</srai></think><random><li><srai>EXPDEX CAN THEY MANAGE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY MEAN *</pattern><template><think><srai>NOPX 1084</srai></think><random><li><srai>EXPDEX CAN THEY MEAN <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY MEET *</pattern><template><think><srai>NOPX 1002</srai></think><random><li><srai>EXPDEX CAN THEY MEET <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY MISS *</pattern><template><think><srai>NOPX 418</srai></think><random><li><srai>EXPDEX CAN THEY MISS <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY MOVE *</pattern><template><think><srai>NOPX 1546</srai></think><random><li><srai>EXPDEX CAN THEY MOVE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY NOT *</pattern><template><think><srai>NOPX 19452</srai></think><random><li><srai>EXPDEX CAN THEY NOT <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY NOW *</pattern><template><think><srai>NOPX 2702</srai></think><random><li><srai>EXPDEX CAN THEY NOW <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY OBTAIN *</pattern><template><think><srai>NOPX 880</srai></think><random><li><srai>EXPDEX CAN THEY OBTAIN <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY OFFER *</pattern><template><think><srai>NOPX 3178</srai></think><random><li><srai>EXPDEX CAN THEY OFFER <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY ONLY *</pattern><template><think><srai>NOPX 2263</srai></think><random><li><srai>EXPDEX CAN THEY ONLY <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY OPEN *</pattern><template><think><srai>NOPX 513</srai></think><random><li><srai>EXPDEX CAN THEY OPEN <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY OVERCOME *</pattern><template><think><srai>NOPX 933</srai></think><random><li><srai>EXPDEX CAN THEY OVERCOME <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY PARTICIPATE *</pattern><template><think><srai>NOPX 684</srai></think><random><li><srai>EXPDEX CAN THEY PARTICIPATE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY PASS *</pattern><template><think><srai>NOPX 2316</srai></think><random><li><srai>EXPDEX CAN THEY PASS <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY PAY *</pattern><template><think><srai>NOPX 1325</srai></think><random><li><srai>EXPDEX CAN THEY PAY <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY PERFORM *</pattern><template><think><srai>NOPX 830</srai></think><random><li><srai>EXPDEX CAN THEY PERFORM <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY PICK *</pattern><template><think><srai>NOPX 532</srai></think><random><li><srai>EXPDEX CAN THEY PICK <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY PLAY *</pattern><template><think><srai>NOPX 2932</srai></think><random><li><srai>EXPDEX CAN THEY PLAY <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY PLEASE *</pattern><template><think><srai>NOPX 4848</srai></think><random><li><srai>EXPDEX CAN THEY PLEASE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY POINT *</pattern><template><think><srai>NOPX 447</srai></think><random><li><srai>EXPDEX CAN THEY POINT <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY POSSIBLY *</pattern><template><think><srai>NOPX 11235</srai></think><random><li><srai>EXPDEX CAN THEY POSSIBLY <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY POST *</pattern><template><think><srai>NOPX 937</srai></think><random><li><srai>EXPDEX CAN THEY POST <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY PREACH *</pattern><template><think><srai>NOPX 1120</srai></think><random><li><srai>EXPDEX CAN THEY PREACH <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY PREDICT *</pattern><template><think><srai>NOPX 607</srai></think><random><li><srai>EXPDEX CAN THEY PREDICT <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY PREVENT *</pattern><template><think><srai>NOPX 901</srai></think><random><li><srai>EXPDEX CAN THEY PREVENT <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY PRODUCE *</pattern><template><think><srai>NOPX 1260</srai></think><random><li><srai>EXPDEX CAN THEY PRODUCE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY PROTECT *</pattern><template><think><srai>NOPX 1246</srai></think><random><li><srai>EXPDEX CAN THEY PROTECT <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY PROVE *</pattern><template><think><srai>NOPX 2587</srai></think><random><li><srai>EXPDEX CAN THEY PROVE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY PROVIDE *</pattern><template><think><srai>NOPX 3738</srai></think><random><li><srai>EXPDEX CAN THEY PROVIDE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY PULL *</pattern><template><think><srai>NOPX 853</srai></think><random><li><srai>EXPDEX CAN THEY PULL <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY PUT *</pattern><template><think><srai>NOPX 3094</srai></think><random><li><srai>EXPDEX CAN THEY PUT <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY RAISE *</pattern><template><think><srai>NOPX 539</srai></think><random><li><srai>EXPDEX CAN THEY RAISE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY REACH *</pattern><template><think><srai>NOPX 1335</srai></think><random><li><srai>EXPDEX CAN THEY REACH <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY READ *</pattern><template><think><srai>NOPX 2051</srai></think><random><li><srai>EXPDEX CAN THEY READ <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY REALLY *</pattern><template><think><srai>NOPX 9464</srai></think><random><li><srai>EXPDEX CAN THEY REALLY <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY RECEIVE *</pattern><template><think><srai>NOPX 1129</srai></think><random><li><srai>EXPDEX CAN THEY RECEIVE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY RECOMMEND *</pattern><template><think><srai>NOPX 429</srai></think><random><li><srai>EXPDEX CAN THEY RECOMMEND <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY RECOVER *</pattern><template><think><srai>NOPX 532</srai></think><random><li><srai>EXPDEX CAN THEY RECOVER <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY REDUCE *</pattern><template><think><srai>NOPX 425</srai></think><random><li><srai>EXPDEX CAN THEY REDUCE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY REFUSE *</pattern><template><think><srai>NOPX 799</srai></think><random><li><srai>EXPDEX CAN THEY REFUSE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY RELY *</pattern><template><think><srai>NOPX 650</srai></think><random><li><srai>EXPDEX CAN THEY RELY <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY REMAIN *</pattern><template><think><srai>NOPX 1014</srai></think><random><li><srai>EXPDEX CAN THEY REMAIN <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY REMEMBER *</pattern><template><think><srai>NOPX 470</srai></think><random><li><srai>EXPDEX CAN THEY REMEMBER <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY REMOVE *</pattern><template><think><srai>NOPX 403</srai></think><random><li><srai>EXPDEX CAN THEY REMOVE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY REPEAT *</pattern><template><think><srai>NOPX 953</srai></think><random><li><srai>EXPDEX CAN THEY REPEAT <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY REPLACE *</pattern><template><think><srai>NOPX 774</srai></think><random><li><srai>EXPDEX CAN THEY REPLACE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY REPRESENT *</pattern><template><think><srai>NOPX 507</srai></think><random><li><srai>EXPDEX CAN THEY REPRESENT <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY REPRODUCE *</pattern><template><think><srai>NOPX 745</srai></think><random><li><srai>EXPDEX CAN THEY REPRODUCE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY RESIST *</pattern><template><think><srai>NOPX 574</srai></think><random><li><srai>EXPDEX CAN THEY RESIST <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY RESPOND *</pattern><template><think><srai>NOPX 485</srai></think><random><li><srai>EXPDEX CAN THEY RESPOND <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY RETURN *</pattern><template><think><srai>NOPX 542</srai></think><random><li><srai>EXPDEX CAN THEY RETURN <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY RUN *</pattern><template><think><srai>NOPX 1417</srai></think><random><li><srai>EXPDEX CAN THEY RUN <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY SAVE *</pattern><template><think><srai>NOPX 1502</srai></think><random><li><srai>EXPDEX CAN THEY SAVE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY SAY *</pattern><template><think><srai>NOPX 10381</srai></think><random><li><srai>EXPDEX CAN THEY SAY <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY SEE *</pattern><template><think><srai>NOPX 6147</srai></think><random><li><srai>EXPDEX CAN THEY SEE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY SELL *</pattern><template><think><srai>NOPX 2075</srai></think><random><li><srai>EXPDEX CAN THEY SELL <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY SEND *</pattern><template><think><srai>NOPX 1225</srai></think><random><li><srai>EXPDEX CAN THEY SEND <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY SERIOUSLY *</pattern><template><think><srai>NOPX 404</srai></think><random><li><srai>EXPDEX CAN THEY SERIOUSLY <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY SERVE *</pattern><template><think><srai>NOPX 871</srai></think><random><li><srai>EXPDEX CAN THEY SERVE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY SET *</pattern><template><think><srai>NOPX 580</srai></think><random><li><srai>EXPDEX CAN THEY SET <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY SHARE *</pattern><template><think><srai>NOPX 1049</srai></think><random><li><srai>EXPDEX CAN THEY SHARE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY SHOW *</pattern><template><think><srai>NOPX 1443</srai></think><random><li><srai>EXPDEX CAN THEY SHOW <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY SIGN *</pattern><template><think><srai>NOPX 849</srai></think><random><li><srai>EXPDEX CAN THEY SIGN <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY SIMPLY *</pattern><template><think><srai>NOPX 666</srai></think><random><li><srai>EXPDEX CAN THEY SIMPLY <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY SING *</pattern><template><think><srai>NOPX 1597</srai></think><random><li><srai>EXPDEX CAN THEY SING <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY SIT *</pattern><template><think><srai>NOPX 833</srai></think><random><li><srai>EXPDEX CAN THEY SIT <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY SLEEP *</pattern><template><think><srai>NOPX 941</srai></think><random><li><srai>EXPDEX CAN THEY SLEEP <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY SOLVE *</pattern><template><think><srai>NOPX 648</srai></think><random><li><srai>EXPDEX CAN THEY SOLVE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY SPEAK *</pattern><template><think><srai>NOPX 958</srai></think><random><li><srai>EXPDEX CAN THEY SPEAK <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY SPEND *</pattern><template><think><srai>NOPX 839</srai></think><random><li><srai>EXPDEX CAN THEY SPEND <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY STAND *</pattern><template><think><srai>NOPX 1636</srai></think><random><li><srai>EXPDEX CAN THEY STAND <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY START *</pattern><template><think><srai>NOPX 1143</srai></think><random><li><srai>EXPDEX CAN THEY START <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY STAY *</pattern><template><think><srai>NOPX 2113</srai></think><random><li><srai>EXPDEX CAN THEY STAY <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY STILL *</pattern><template><think><srai>NOPX 5979</srai></think><random><li><srai>EXPDEX CAN THEY STILL <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY STOP *</pattern><template><think><srai>NOPX 2652</srai></think><random><li><srai>EXPDEX CAN THEY STOP <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY SUCCEED *</pattern><template><think><srai>NOPX 655</srai></think><random><li><srai>EXPDEX CAN THEY SUCCEED <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY SUE *</pattern><template><think><srai>NOPX 732</srai></think><random><li><srai>EXPDEX CAN THEY SUE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY SUFFER *</pattern><template><think><srai>NOPX 541</srai></think><random><li><srai>EXPDEX CAN THEY SUFFER <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY SUGGEST *</pattern><template><think><srai>NOPX 438</srai></think><random><li><srai>EXPDEX CAN THEY SUGGEST <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY SUPERSEDE *</pattern><template><think><srai>NOPX 440</srai></think><random><li><srai>EXPDEX CAN THEY SUPERSEDE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY SUPPORT *</pattern><template><think><srai>NOPX 1245</srai></think><random><li><srai>EXPDEX CAN THEY SUPPORT <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY SURVIVE *</pattern><template><think><srai>NOPX 3592</srai></think><random><li><srai>EXPDEX CAN THEY SURVIVE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY SUSTAIN *</pattern><template><think><srai>NOPX 772</srai></think><random><li><srai>EXPDEX CAN THEY SUSTAIN <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY TAKE *</pattern><template><think><srai>NOPX 8276</srai></think><random><li><srai>EXPDEX CAN THEY TAKE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY TALK *</pattern><template><think><srai>NOPX 1936</srai></think><random><li><srai>EXPDEX CAN THEY TALK <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY TEACH *</pattern><template><think><srai>NOPX 2073</srai></think><random><li><srai>EXPDEX CAN THEY TEACH <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY TELL *</pattern><template><think><srai>NOPX 8763</srai></think><random><li><srai>EXPDEX CAN THEY TELL <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY THEN *</pattern><template><think><srai>NOPX 1730</srai></think><random><li><srai>EXPDEX CAN THEY THEN <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY THINK *</pattern><template><think><srai>NOPX 2636</srai></think><random><li><srai>EXPDEX CAN THEY THINK <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY TOP *</pattern><template><think><srai>NOPX 509</srai></think><random><li><srai>EXPDEX CAN THEY TOP <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY TRAIN *</pattern><template><think><srai>NOPX 406</srai></think><random><li><srai>EXPDEX CAN THEY TRAIN <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY TREAT *</pattern><template><think><srai>NOPX 451</srai></think><random><li><srai>EXPDEX CAN THEY TREAT <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY TRULY *</pattern><template><think><srai>NOPX 1117</srai></think><random><li><srai>EXPDEX CAN THEY TRULY <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY TRUST *</pattern><template><think><srai>NOPX 2859</srai></think><random><li><srai>EXPDEX CAN THEY TRUST <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY TRY *</pattern><template><think><srai>NOPX 549</srai></think><random><li><srai>EXPDEX CAN THEY TRY <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY TURN *</pattern><template><think><srai>NOPX 2954</srai></think><random><li><srai>EXPDEX CAN THEY TURN <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY UNDERSTAND *</pattern><template><think><srai>NOPX 2245</srai></think><random><li><srai>EXPDEX CAN THEY UNDERSTAND <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY USE *</pattern><template><think><srai>NOPX 6280</srai></think><random><li><srai>EXPDEX CAN THEY USE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY VOTE *</pattern><template><think><srai>NOPX 612</srai></think><random><li><srai>EXPDEX CAN THEY VOTE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY WAIT *</pattern><template><think><srai>NOPX 1203</srai></think><random><li><srai>EXPDEX CAN THEY WAIT <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY WALK *</pattern><template><think><srai>NOPX 787</srai></think><random><li><srai>EXPDEX CAN THEY WALK <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY WANT *</pattern><template><think><srai>NOPX 575</srai></think><random><li><srai>EXPDEX CAN THEY WANT <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY WIN *</pattern><template><think><srai>NOPX 2647</srai></think><random><li><srai>EXPDEX CAN THEY WIN <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY WORK *</pattern><template><think><srai>NOPX 3596</srai></think><random><li><srai>EXPDEX CAN THEY WORK <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY WRITE *</pattern><template><think><srai>NOPX 1126</srai></think><random><li><srai>EXPDEX CAN THEY WRITE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY AFFORD IT *</pattern><template><think><srai>NOPX 470</srai></think><random><li><srai>EXPDEX CAN THEY AFFORD IT <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY AFFORD THE *</pattern><template><think><srai>NOPX 527</srai></think><random><li><srai>EXPDEX CAN THEY AFFORD THE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY AFFORD TO *</pattern><template><think><srai>NOPX 4186</srai></think><random><li><srai>EXPDEX CAN THEY AFFORD TO <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY ALSO BE *</pattern><template><think><srai>NOPX 687</srai></think><random><li><srai>EXPDEX CAN THEY ALSO BE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY ARGUE IT *</pattern><template><think><srai>NOPX 462</srai></think><random><li><srai>EXPDEX CAN THEY ARGUE IT <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY ASK FOR *</pattern><template><think><srai>NOPX 427</srai></think><random><li><srai>EXPDEX CAN THEY ASK FOR <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY BE *</pattern><template><think><srai>NOPX 3419</srai></think><random><li><srai>EXPDEX CAN THEY BE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY BE A *</pattern><template><think><srai>NOPX 1375</srai></think><random><li><srai>EXPDEX CAN THEY BE A <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY BE ACCESSED *</pattern><template><think><srai>NOPX 432</srai></think><random><li><srai>EXPDEX CAN THEY BE ACCESSED <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY BE ACHIEVED *</pattern><template><think><srai>NOPX 440</srai></think><random><li><srai>EXPDEX CAN THEY BE ACHIEVED <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY BE ADDRESSED *</pattern><template><think><srai>NOPX 1034</srai></think><random><li><srai>EXPDEX CAN THEY BE ADDRESSED <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY BE ALLOWED *</pattern><template><think><srai>NOPX 913</srai></think><random><li><srai>EXPDEX CAN THEY BE ALLOWED <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY BE APPLIED *</pattern><template><think><srai>NOPX 994</srai></think><random><li><srai>EXPDEX CAN THEY BE APPLIED <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY BE APPROVED *</pattern><template><think><srai>NOPX 778</srai></think><random><li><srai>EXPDEX CAN THEY BE APPROVED <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY BE AVOIDED *</pattern><template><think><srai>NOPX 1140</srai></think><random><li><srai>EXPDEX CAN THEY BE AVOIDED <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY BE BROUGHT *</pattern><template><think><srai>NOPX 544</srai></think><random><li><srai>EXPDEX CAN THEY BE BROUGHT <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY BE CALLED *</pattern><template><think><srai>NOPX 1003</srai></think><random><li><srai>EXPDEX CAN THEY BE CALLED <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY BE CHANGED *</pattern><template><think><srai>NOPX 793</srai></think><random><li><srai>EXPDEX CAN THEY BE CHANGED <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY BE COMBINED *</pattern><template><think><srai>NOPX 868</srai></think><random><li><srai>EXPDEX CAN THEY BE COMBINED <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY BE COMPARED *</pattern><template><think><srai>NOPX 475</srai></think><random><li><srai>EXPDEX CAN THEY BE COMPARED <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY BE CONSIDERED *</pattern><template><think><srai>NOPX 1407</srai></think><random><li><srai>EXPDEX CAN THEY BE CONSIDERED <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY BE CONTACTED *</pattern><template><think><srai>NOPX 500</srai></think><random><li><srai>EXPDEX CAN THEY BE CONTACTED <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY BE DESCRIBED *</pattern><template><think><srai>NOPX 404</srai></think><random><li><srai>EXPDEX CAN THEY BE DESCRIBED <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY BE EXPECTED *</pattern><template><think><srai>NOPX 3412</srai></think><random><li><srai>EXPDEX CAN THEY BE EXPECTED <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY BE EXPLAINED *</pattern><template><think><srai>NOPX 604</srai></think><random><li><srai>EXPDEX CAN THEY BE EXPLAINED <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY BE FIXED *</pattern><template><think><srai>NOPX 405</srai></think><random><li><srai>EXPDEX CAN THEY BE FIXED <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY BE FOUND *</pattern><template><think><srai>NOPX 2317</srai></think><random><li><srai>EXPDEX CAN THEY BE FOUND <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY BE FRIENDS *</pattern><template><think><srai>NOPX 2137</srai></think><random><li><srai>EXPDEX CAN THEY BE FRIENDS <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY BE GIVEN *</pattern><template><think><srai>NOPX 450</srai></think><random><li><srai>EXPDEX CAN THEY BE GIVEN <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY BE HELD *</pattern><template><think><srai>NOPX 1545</srai></think><random><li><srai>EXPDEX CAN THEY BE HELD <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY BE HELPED *</pattern><template><think><srai>NOPX 508</srai></think><random><li><srai>EXPDEX CAN THEY BE HELPED <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY BE IDENTIFIED *</pattern><template><think><srai>NOPX 501</srai></think><random><li><srai>EXPDEX CAN THEY BE IDENTIFIED <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY BE IF *</pattern><template><think><srai>NOPX 442</srai></think><random><li><srai>EXPDEX CAN THEY BE IF <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY BE IMPLEMENTED *</pattern><template><think><srai>NOPX 486</srai></think><random><li><srai>EXPDEX CAN THEY BE IMPLEMENTED <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY BE IMPROVED *</pattern><template><think><srai>NOPX 1580</srai></think><random><li><srai>EXPDEX CAN THEY BE IMPROVED <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY BE IN *</pattern><template><think><srai>NOPX 1141</srai></think><random><li><srai>EXPDEX CAN THEY BE IN <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY BE INTEGRATED *</pattern><template><think><srai>NOPX 513</srai></think><random><li><srai>EXPDEX CAN THEY BE INTEGRATED <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY BE JUSTIFIED *</pattern><template><think><srai>NOPX 401</srai></think><random><li><srai>EXPDEX CAN THEY BE JUSTIFIED <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY BE MADE *</pattern><template><think><srai>NOPX 3128</srai></think><random><li><srai>EXPDEX CAN THEY BE MADE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY BE MANAGED *</pattern><template><think><srai>NOPX 555</srai></think><random><li><srai>EXPDEX CAN THEY BE MANAGED <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY BE MEASURED *</pattern><template><think><srai>NOPX 666</srai></think><random><li><srai>EXPDEX CAN THEY BE MEASURED <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY BE MODIFIED *</pattern><template><think><srai>NOPX 420</srai></think><random><li><srai>EXPDEX CAN THEY BE MODIFIED <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY BE MORE *</pattern><template><think><srai>NOPX 575</srai></think><random><li><srai>EXPDEX CAN THEY BE MORE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY BE MOVED *</pattern><template><think><srai>NOPX 439</srai></think><random><li><srai>EXPDEX CAN THEY BE MOVED <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY BE OBTAINED *</pattern><template><think><srai>NOPX 688</srai></think><random><li><srai>EXPDEX CAN THEY BE OBTAINED <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY BE OF *</pattern><template><think><srai>NOPX 457</srai></think><random><li><srai>EXPDEX CAN THEY BE OF <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY BE OVERCOME *</pattern><template><think><srai>NOPX 1777</srai></think><random><li><srai>EXPDEX CAN THEY BE OVERCOME <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY BE PREVENTED *</pattern><template><think><srai>NOPX 861</srai></think><random><li><srai>EXPDEX CAN THEY BE PREVENTED <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY BE PURCHASED *</pattern><template><think><srai>NOPX 694</srai></think><random><li><srai>EXPDEX CAN THEY BE PURCHASED <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY BE PUT *</pattern><template><think><srai>NOPX 448</srai></think><random><li><srai>EXPDEX CAN THEY BE PUT <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY BE REACHED *</pattern><template><think><srai>NOPX 848</srai></think><random><li><srai>EXPDEX CAN THEY BE REACHED <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY BE RECONCILED *</pattern><template><think><srai>NOPX 449</srai></think><random><li><srai>EXPDEX CAN THEY BE RECONCILED <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY BE REDUCED *</pattern><template><think><srai>NOPX 516</srai></think><random><li><srai>EXPDEX CAN THEY BE REDUCED <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY BE RELIED *</pattern><template><think><srai>NOPX 499</srai></think><random><li><srai>EXPDEX CAN THEY BE RELIED <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY BE REMOVED *</pattern><template><think><srai>NOPX 888</srai></think><random><li><srai>EXPDEX CAN THEY BE REMOVED <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY BE REPLACED *</pattern><template><think><srai>NOPX 412</srai></think><random><li><srai>EXPDEX CAN THEY BE REPLACED <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY BE REPRODUCED *</pattern><template><think><srai>NOPX 411</srai></think><random><li><srai>EXPDEX CAN THEY BE REPRODUCED <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY BE RESOLVED *</pattern><template><think><srai>NOPX 732</srai></think><random><li><srai>EXPDEX CAN THEY BE RESOLVED <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY BE SAID *</pattern><template><think><srai>NOPX 1068</srai></think><random><li><srai>EXPDEX CAN THEY BE SAID <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY BE SAVED *</pattern><template><think><srai>NOPX 738</srai></think><random><li><srai>EXPDEX CAN THEY BE SAVED <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY BE SEEN *</pattern><template><think><srai>NOPX 746</srai></think><random><li><srai>EXPDEX CAN THEY BE SEEN <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY BE SERVICED *</pattern><template><think><srai>NOPX 640</srai></think><random><li><srai>EXPDEX CAN THEY BE SERVICED <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY BE SOLVED *</pattern><template><think><srai>NOPX 602</srai></think><random><li><srai>EXPDEX CAN THEY BE SOLVED <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY BE STOPPED *</pattern><template><think><srai>NOPX 1006</srai></think><random><li><srai>EXPDEX CAN THEY BE STOPPED <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY BE SURE *</pattern><template><think><srai>NOPX 2022</srai></think><random><li><srai>EXPDEX CAN THEY BE SURE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY BE TAKEN *</pattern><template><think><srai>NOPX 5929</srai></think><random><li><srai>EXPDEX CAN THEY BE TAKEN <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY BE THAT *</pattern><template><think><srai>NOPX 401</srai></think><random><li><srai>EXPDEX CAN THEY BE THAT <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY BE THE *</pattern><template><think><srai>NOPX 1105</srai></think><random><li><srai>EXPDEX CAN THEY BE THE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY BE THINKING *</pattern><template><think><srai>NOPX 538</srai></think><random><li><srai>EXPDEX CAN THEY BE THINKING <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY BE TRANSFERRED *</pattern><template><think><srai>NOPX 415</srai></think><random><li><srai>EXPDEX CAN THEY BE TRANSFERRED <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY BE TREATED *</pattern><template><think><srai>NOPX 548</srai></think><random><li><srai>EXPDEX CAN THEY BE TREATED <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY BE TRUSTED *</pattern><template><think><srai>NOPX 2349</srai></think><random><li><srai>EXPDEX CAN THEY BE TRUSTED <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY BE USED *</pattern><template><think><srai>NOPX 13153</srai></think><random><li><srai>EXPDEX CAN THEY BE USED <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY BEGIN TO *</pattern><template><think><srai>NOPX 986</srai></think><random><li><srai>EXPDEX CAN THEY BEGIN TO <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY BELIEVE IN *</pattern><template><think><srai>NOPX 2060</srai></think><random><li><srai>EXPDEX CAN THEY BELIEVE IN <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY BEST BE *</pattern><template><think><srai>NOPX 1302</srai></think><random><li><srai>EXPDEX CAN THEY BEST BE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY CALL IT *</pattern><template><think><srai>NOPX 742</srai></think><random><li><srai>EXPDEX CAN THEY CALL IT <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY CALL ON *</pattern><template><think><srai>NOPX 1373</srai></think><random><li><srai>EXPDEX CAN THEY CALL ON <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY CALL THEMSELVES *</pattern><template><think><srai>NOPX 535</srai></think><random><li><srai>EXPDEX CAN THEY CALL THEMSELVES <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY CHANGE THE *</pattern><template><think><srai>NOPX 481</srai></think><random><li><srai>EXPDEX CAN THEY CHANGE THE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY CLAIM THAT *</pattern><template><think><srai>NOPX 912</srai></think><random><li><srai>EXPDEX CAN THEY CLAIM THAT <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY CLAIM THEY *</pattern><template><think><srai>NOPX 401</srai></think><random><li><srai>EXPDEX CAN THEY CLAIM THEY <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY CLAIM TO *</pattern><template><think><srai>NOPX 1067</srai></think><random><li><srai>EXPDEX CAN THEY CLAIM TO <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY COME BACK *</pattern><template><think><srai>NOPX 405</srai></think><random><li><srai>EXPDEX CAN THEY COME BACK <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY COME TO *</pattern><template><think><srai>NOPX 716</srai></think><random><li><srai>EXPDEX CAN THEY COME TO <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY COME UP *</pattern><template><think><srai>NOPX 583</srai></think><random><li><srai>EXPDEX CAN THEY COME UP <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY COMPETE WITH *</pattern><template><think><srai>NOPX 839</srai></think><random><li><srai>EXPDEX CAN THEY COMPETE WITH <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY CONTACT YOU *</pattern><template><think><srai>NOPX 446</srai></think><random><li><srai>EXPDEX CAN THEY CONTACT YOU <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY CONTINUE TO *</pattern><template><think><srai>NOPX 2040</srai></think><random><li><srai>EXPDEX CAN THEY CONTINUE TO <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY CONTRIBUTE TO *</pattern><template><think><srai>NOPX 787</srai></think><random><li><srai>EXPDEX CAN THEY CONTRIBUTE TO <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY CONTROL THE *</pattern><template><think><srai>NOPX 716</srai></think><random><li><srai>EXPDEX CAN THEY CONTROL THE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY COUNT ON *</pattern><template><think><srai>NOPX 493</srai></think><random><li><srai>EXPDEX CAN THEY COUNT ON <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY DEAL WITH *</pattern><template><think><srai>NOPX 809</srai></think><random><li><srai>EXPDEX CAN THEY DEAL WITH <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY DIE ANY *</pattern><template><think><srai>NOPX 1146</srai></think><random><li><srai>EXPDEX CAN THEY DIE ANY <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY DO A *</pattern><template><think><srai>NOPX 438</srai></think><random><li><srai>EXPDEX CAN THEY DO A <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY DO ABOUT *</pattern><template><think><srai>NOPX 1498</srai></think><random><li><srai>EXPDEX CAN THEY DO ABOUT <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY DO ANYTHING *</pattern><template><think><srai>NOPX 695</srai></think><random><li><srai>EXPDEX CAN THEY DO ANYTHING <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY DO FOR *</pattern><template><think><srai>NOPX 3667</srai></think><random><li><srai>EXPDEX CAN THEY DO FOR <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY DO IF *</pattern><template><think><srai>NOPX 558</srai></think><random><li><srai>EXPDEX CAN THEY DO IF <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY DO IN *</pattern><template><think><srai>NOPX 635</srai></think><random><li><srai>EXPDEX CAN THEY DO IN <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY DO IT *</pattern><template><think><srai>NOPX 5349</srai></think><random><li><srai>EXPDEX CAN THEY DO IT <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY DO SO *</pattern><template><think><srai>NOPX 1216</srai></think><random><li><srai>EXPDEX CAN THEY DO SO <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY DO THAT *</pattern><template><think><srai>NOPX 7019</srai></think><random><li><srai>EXPDEX CAN THEY DO THAT <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY DO THE *</pattern><template><think><srai>NOPX 774</srai></think><random><li><srai>EXPDEX CAN THEY DO THE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY DO THIS *</pattern><template><think><srai>NOPX 7090</srai></think><random><li><srai>EXPDEX CAN THEY DO THIS <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY DO TO *</pattern><template><think><srai>NOPX 7958</srai></think><random><li><srai>EXPDEX CAN THEY DO TO <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY DO WHEN *</pattern><template><think><srai>NOPX 472</srai></think><random><li><srai>EXPDEX CAN THEY DO WHEN <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY DO WITH *</pattern><template><think><srai>NOPX 1559</srai></think><random><li><srai>EXPDEX CAN THEY DO WITH <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY ENSURE THAT *</pattern><template><think><srai>NOPX 614</srai></think><random><li><srai>EXPDEX CAN THEY ENSURE THAT <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY EVEN ATTEMPT *</pattern><template><think><srai>NOPX 3081</srai></think><random><li><srai>EXPDEX CAN THEY EVEN ATTEMPT <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY EVER BE *</pattern><template><think><srai>NOPX 1340</srai></think><random><li><srai>EXPDEX CAN THEY EVER BE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY EXPECT FROM *</pattern><template><think><srai>NOPX 460</srai></think><random><li><srai>EXPDEX CAN THEY EXPECT FROM <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY EXPECT THE *</pattern><template><think><srai>NOPX 554</srai></think><random><li><srai>EXPDEX CAN THEY EXPECT THE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY EXPECT TO *</pattern><template><think><srai>NOPX 2537</srai></think><random><li><srai>EXPDEX CAN THEY EXPECT TO <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY EXPECT US *</pattern><template><think><srai>NOPX 471</srai></think><random><li><srai>EXPDEX CAN THEY EXPECT US <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY EXPLAIN THE *</pattern><template><think><srai>NOPX 491</srai></think><random><li><srai>EXPDEX CAN THEY EXPLAIN THE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY FAIL TO *</pattern><template><think><srai>NOPX 513</srai></think><random><li><srai>EXPDEX CAN THEY FAIL TO <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY FIND A *</pattern><template><think><srai>NOPX 969</srai></think><random><li><srai>EXPDEX CAN THEY FIND A <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY FIND OUT *</pattern><template><think><srai>NOPX 896</srai></think><random><li><srai>EXPDEX CAN THEY FIND OUT <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY FIND THE *</pattern><template><think><srai>NOPX 894</srai></think><random><li><srai>EXPDEX CAN THEY FIND THE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY FIND WHAT *</pattern><template><think><srai>NOPX 456</srai></think><random><li><srai>EXPDEX CAN THEY FIND WHAT <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY FIND YOU *</pattern><template><think><srai>NOPX 479</srai></think><random><li><srai>EXPDEX CAN THEY FIND YOU <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY GAIN FROM *</pattern><template><think><srai>NOPX 572</srai></think><random><li><srai>EXPDEX CAN THEY GAIN FROM <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY GARNISH HIS *</pattern><template><think><srai>NOPX 1295</srai></think><random><li><srai>EXPDEX CAN THEY GARNISH HIS <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY GET A *</pattern><template><think><srai>NOPX 1736</srai></think><random><li><srai>EXPDEX CAN THEY GET A <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY GET AWAY *</pattern><template><think><srai>NOPX 2836</srai></think><random><li><srai>EXPDEX CAN THEY GET AWAY <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY GET IN *</pattern><template><think><srai>NOPX 490</srai></think><random><li><srai>EXPDEX CAN THEY GET IN <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY GET IT *</pattern><template><think><srai>NOPX 1070</srai></think><random><li><srai>EXPDEX CAN THEY GET IT <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY GET OUT *</pattern><template><think><srai>NOPX 426</srai></think><random><li><srai>EXPDEX CAN THEY GET OUT <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY GET THE *</pattern><template><think><srai>NOPX 1396</srai></think><random><li><srai>EXPDEX CAN THEY GET THE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY GET THEIR *</pattern><template><think><srai>NOPX 491</srai></think><random><li><srai>EXPDEX CAN THEY GET THEIR <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY GET TO *</pattern><template><think><srai>NOPX 599</srai></think><random><li><srai>EXPDEX CAN THEY GET TO <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY GIVE AWAY *</pattern><template><think><srai>NOPX 929</srai></think><random><li><srai>EXPDEX CAN THEY GIVE AWAY <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY GIVE ME *</pattern><template><think><srai>NOPX 676</srai></think><random><li><srai>EXPDEX CAN THEY GIVE ME <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY GIVE YOU *</pattern><template><think><srai>NOPX 661</srai></think><random><li><srai>EXPDEX CAN THEY GIVE YOU <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY GO ON *</pattern><template><think><srai>NOPX 657</srai></think><random><li><srai>EXPDEX CAN THEY GO ON <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY GO TO *</pattern><template><think><srai>NOPX 1201</srai></think><random><li><srai>EXPDEX CAN THEY GO TO <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY HAVE A *</pattern><template><think><srai>NOPX 1760</srai></think><random><li><srai>EXPDEX CAN THEY HAVE A <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY HAVE ANY *</pattern><template><think><srai>NOPX 631</srai></think><random><li><srai>EXPDEX CAN THEY HAVE ANY <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY HAVE BEEN *</pattern><template><think><srai>NOPX 451</srai></think><random><li><srai>EXPDEX CAN THEY HAVE BEEN <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY HAVE THE *</pattern><template><think><srai>NOPX 939</srai></think><random><li><srai>EXPDEX CAN THEY HAVE THE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY HEAR IF *</pattern><template><think><srai>NOPX 407</srai></think><random><li><srai>EXPDEX CAN THEY HEAR IF <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY HEAR WITHOUT *</pattern><template><think><srai>NOPX 1403</srai></think><random><li><srai>EXPDEX CAN THEY HEAR WITHOUT <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY HELP ME *</pattern><template><think><srai>NOPX 1162</srai></think><random><li><srai>EXPDEX CAN THEY HELP ME <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY HELP US *</pattern><template><think><srai>NOPX 683</srai></think><random><li><srai>EXPDEX CAN THEY HELP US <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY HELP YOU *</pattern><template><think><srai>NOPX 1812</srai></think><random><li><srai>EXPDEX CAN THEY HELP YOU <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY HOPE TO *</pattern><template><think><srai>NOPX 2238</srai></think><random><li><srai>EXPDEX CAN THEY HOPE TO <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY IMPROVE YOUR *</pattern><template><think><srai>NOPX 695</srai></think><random><li><srai>EXPDEX CAN THEY IMPROVE YOUR <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY KEEP IT *</pattern><template><think><srai>NOPX 1302</srai></think><random><li><srai>EXPDEX CAN THEY KEEP IT <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY KEEP THE *</pattern><template><think><srai>NOPX 480</srai></think><random><li><srai>EXPDEX CAN THEY KEEP THE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY KEEP THEIR *</pattern><template><think><srai>NOPX 1301</srai></think><random><li><srai>EXPDEX CAN THEY KEEP THEIR <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY KEEP UP *</pattern><template><think><srai>NOPX 493</srai></think><random><li><srai>EXPDEX CAN THEY KEEP UP <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY KNOW THAT *</pattern><template><think><srai>NOPX 588</srai></think><random><li><srai>EXPDEX CAN THEY KNOW THAT <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY KNOW THEY *</pattern><template><think><srai>NOPX 593</srai></think><random><li><srai>EXPDEX CAN THEY KNOW THEY <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY KNOW WHAT *</pattern><template><think><srai>NOPX 698</srai></think><random><li><srai>EXPDEX CAN THEY KNOW WHAT <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY KNOW WHEN *</pattern><template><think><srai>NOPX 629</srai></think><random><li><srai>EXPDEX CAN THEY KNOW WHEN <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY LEARN FROM *</pattern><template><think><srai>NOPX 859</srai></think><random><li><srai>EXPDEX CAN THEY LEARN FROM <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY LEARN TO *</pattern><template><think><srai>NOPX 663</srai></think><random><li><srai>EXPDEX CAN THEY LEARN TO <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY LET ME *</pattern><template><think><srai>NOPX 719</srai></think><random><li><srai>EXPDEX CAN THEY LET ME <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY LIVE WITH *</pattern><template><think><srai>NOPX 668</srai></think><random><li><srai>EXPDEX CAN THEY LIVE WITH <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY MAKE A *</pattern><template><think><srai>NOPX 2260</srai></think><random><li><srai>EXPDEX CAN THEY MAKE A <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY MAKE ANY *</pattern><template><think><srai>NOPX 478</srai></think><random><li><srai>EXPDEX CAN THEY MAKE ANY <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY MAKE IT *</pattern><template><think><srai>NOPX 1714</srai></think><random><li><srai>EXPDEX CAN THEY MAKE IT <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY MAKE MONEY *</pattern><template><think><srai>NOPX 435</srai></think><random><li><srai>EXPDEX CAN THEY MAKE MONEY <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY MAKE THE *</pattern><template><think><srai>NOPX 1246</srai></think><random><li><srai>EXPDEX CAN THEY MAKE THE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY MAKE THEIR *</pattern><template><think><srai>NOPX 533</srai></think><random><li><srai>EXPDEX CAN THEY MAKE THEIR <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY MEAN TO *</pattern><template><think><srai>NOPX 540</srai></think><random><li><srai>EXPDEX CAN THEY MEAN TO <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY NOT BE *</pattern><template><think><srai>NOPX 2818</srai></think><random><li><srai>EXPDEX CAN THEY NOT BE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY NOT DO *</pattern><template><think><srai>NOPX 596</srai></think><random><li><srai>EXPDEX CAN THEY NOT DO <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY NOT GET *</pattern><template><think><srai>NOPX 1209</srai></think><random><li><srai>EXPDEX CAN THEY NOT GET <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY NOT HAVE *</pattern><template><think><srai>NOPX 578</srai></think><random><li><srai>EXPDEX CAN THEY NOT HAVE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY NOT KNOW *</pattern><template><think><srai>NOPX 637</srai></think><random><li><srai>EXPDEX CAN THEY NOT KNOW <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY NOT PASS *</pattern><template><think><srai>NOPX 426</srai></think><random><li><srai>EXPDEX CAN THEY NOT PASS <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY NOT PREVAIL *</pattern><template><think><srai>NOPX 480</srai></think><random><li><srai>EXPDEX CAN THEY NOT PREVAIL <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY NOT SEE *</pattern><template><think><srai>NOPX 941</srai></think><random><li><srai>EXPDEX CAN THEY NOT SEE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY NOW ARGUE *</pattern><template><think><srai>NOPX 1161</srai></think><random><li><srai>EXPDEX CAN THEY NOW ARGUE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY ONLY BE *</pattern><template><think><srai>NOPX 1325</srai></think><random><li><srai>EXPDEX CAN THEY ONLY BE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY PARTICIPATE IN *</pattern><template><think><srai>NOPX 403</srai></think><random><li><srai>EXPDEX CAN THEY PARTICIPATE IN <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY PASS TO *</pattern><template><think><srai>NOPX 1368</srai></think><random><li><srai>EXPDEX CAN THEY PASS TO <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY POSSIBLY BE *</pattern><template><think><srai>NOPX 1677</srai></think><random><li><srai>EXPDEX CAN THEY POSSIBLY BE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY POSSIBLY DO *</pattern><template><think><srai>NOPX 594</srai></think><random><li><srai>EXPDEX CAN THEY POSSIBLY DO <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY POSSIBLY HAVE *</pattern><template><think><srai>NOPX 483</srai></think><random><li><srai>EXPDEX CAN THEY POSSIBLY HAVE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY POSSIBLY KNOW *</pattern><template><think><srai>NOPX 794</srai></think><random><li><srai>EXPDEX CAN THEY POSSIBLY KNOW <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY PREACH UNLESS *</pattern><template><think><srai>NOPX 917</srai></think><random><li><srai>EXPDEX CAN THEY PREACH UNLESS <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY PROVE IT *</pattern><template><think><srai>NOPX 553</srai></think><random><li><srai>EXPDEX CAN THEY PROVE IT <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY PROVE THAT *</pattern><template><think><srai>NOPX 466</srai></think><random><li><srai>EXPDEX CAN THEY PROVE THAT <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY PROVE THE *</pattern><template><think><srai>NOPX 548</srai></think><random><li><srai>EXPDEX CAN THEY PROVE THE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY PROVIDE A *</pattern><template><think><srai>NOPX 530</srai></think><random><li><srai>EXPDEX CAN THEY PROVIDE A <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY REALLY BE *</pattern><template><think><srai>NOPX 1546</srai></think><random><li><srai>EXPDEX CAN THEY REALLY BE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY REALLY DO *</pattern><template><think><srai>NOPX 926</srai></think><random><li><srai>EXPDEX CAN THEY REALLY DO <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY REFUSE TO *</pattern><template><think><srai>NOPX 479</srai></think><random><li><srai>EXPDEX CAN THEY REFUSE TO <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY RELY ON *</pattern><template><think><srai>NOPX 551</srai></think><random><li><srai>EXPDEX CAN THEY RELY ON <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY REPEAT THE *</pattern><template><think><srai>NOPX 748</srai></think><random><li><srai>EXPDEX CAN THEY REPEAT THE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY SAY IT *</pattern><template><think><srai>NOPX 560</srai></think><random><li><srai>EXPDEX CAN THEY SAY IT <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY SAY THAT *</pattern><template><think><srai>NOPX 2262</srai></think><random><li><srai>EXPDEX CAN THEY SAY THAT <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY SAY THEY *</pattern><template><think><srai>NOPX 686</srai></think><random><li><srai>EXPDEX CAN THEY SAY THEY <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY SEE THE *</pattern><template><think><srai>NOPX 735</srai></think><random><li><srai>EXPDEX CAN THEY SEE THE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY SIGN IT *</pattern><template><think><srai>NOPX 565</srai></think><random><li><srai>EXPDEX CAN THEY SIGN IT <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY SLEEP AT *</pattern><template><think><srai>NOPX 583</srai></think><random><li><srai>EXPDEX CAN THEY SLEEP AT <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY STILL BE *</pattern><template><think><srai>NOPX 1556</srai></think><random><li><srai>EXPDEX CAN THEY STILL BE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY STOP THE *</pattern><template><think><srai>NOPX 437</srai></think><random><li><srai>EXPDEX CAN THEY STOP THE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY SUPERSEDE THE *</pattern><template><think><srai>NOPX 429</srai></think><random><li><srai>EXPDEX CAN THEY SUPERSEDE THE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY SURVIVE THE *</pattern><template><think><srai>NOPX 794</srai></think><random><li><srai>EXPDEX CAN THEY SURVIVE THE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY TAKE IT *</pattern><template><think><srai>NOPX 651</srai></think><random><li><srai>EXPDEX CAN THEY TAKE IT <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY TAKE MY *</pattern><template><think><srai>NOPX 405</srai></think><random><li><srai>EXPDEX CAN THEY TAKE MY <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY TAKE THE *</pattern><template><think><srai>NOPX 646</srai></think><random><li><srai>EXPDEX CAN THEY TAKE THE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY TALK ABOUT *</pattern><template><think><srai>NOPX 740</srai></think><random><li><srai>EXPDEX CAN THEY TALK ABOUT <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY TEACH US *</pattern><template><think><srai>NOPX 567</srai></think><random><li><srai>EXPDEX CAN THEY TEACH US <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY TELL IF *</pattern><template><think><srai>NOPX 470</srai></think><random><li><srai>EXPDEX CAN THEY TELL IF <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY TELL ME *</pattern><template><think><srai>NOPX 999</srai></think><random><li><srai>EXPDEX CAN THEY TELL ME <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY TELL THE *</pattern><template><think><srai>NOPX 513</srai></think><random><li><srai>EXPDEX CAN THEY TELL THE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY TELL US *</pattern><template><think><srai>NOPX 2215</srai></think><random><li><srai>EXPDEX CAN THEY TELL US <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY TELL YOU *</pattern><template><think><srai>NOPX 930</srai></think><random><li><srai>EXPDEX CAN THEY TELL YOU <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY THINK OF *</pattern><template><think><srai>NOPX 820</srai></think><random><li><srai>EXPDEX CAN THEY THINK OF <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY THINK THAT *</pattern><template><think><srai>NOPX 457</srai></think><random><li><srai>EXPDEX CAN THEY THINK THAT <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY TURN FOR *</pattern><template><think><srai>NOPX 443</srai></think><random><li><srai>EXPDEX CAN THEY TURN FOR <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY TURN TO *</pattern><template><think><srai>NOPX 565</srai></think><random><li><srai>EXPDEX CAN THEY TURN TO <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY UNDERSTAND THE *</pattern><template><think><srai>NOPX 601</srai></think><random><li><srai>EXPDEX CAN THEY UNDERSTAND THE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY USE IT *</pattern><template><think><srai>NOPX 661</srai></think><random><li><srai>EXPDEX CAN THEY USE IT <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY USE THE *</pattern><template><think><srai>NOPX 1128</srai></think><random><li><srai>EXPDEX CAN THEY USE THE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY WAIT FOR *</pattern><template><think><srai>NOPX 774</srai></think><random><li><srai>EXPDEX CAN THEY WAIT FOR <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY WIN OVER *</pattern><template><think><srai>NOPX 799</srai></think><random><li><srai>EXPDEX CAN THEY WIN OVER <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY WIN THE *</pattern><template><think><srai>NOPX 440</srai></think><random><li><srai>EXPDEX CAN THEY WIN THE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY WORK FOR *</pattern><template><think><srai>NOPX 431</srai></think><random><li><srai>EXPDEX CAN THEY WORK FOR <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY WORK TOGETHER *</pattern><template><think><srai>NOPX 994</srai></think><random><li><srai>EXPDEX CAN THEY WORK TOGETHER <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY BE FRIENDS *</pattern><template><think><srai>NOPX 2025</srai></think><random><li><srai>EXPDEX CAN THEY BE FRIENDS <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY BE SURE THAT *</pattern><template><think><srai>NOPX 818</srai></think><random><li><srai>EXPDEX CAN THEY BE SURE THAT <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY CLAIM TO BE *</pattern><template><think><srai>NOPX 562</srai></think><random><li><srai>EXPDEX CAN THEY CLAIM TO BE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY COME UP WITH *</pattern><template><think><srai>NOPX 534</srai></think><random><li><srai>EXPDEX CAN THEY COME UP WITH <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY CONTROL THE *</pattern><template><think><srai>NOPX 515</srai></think><random><li><srai>EXPDEX CAN THEY CONTROL THE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY DO ABOUT IT *</pattern><template><think><srai>NOPX 1032</srai></think><random><li><srai>EXPDEX CAN THEY DO ABOUT IT <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY DO FOR ME *</pattern><template><think><srai>NOPX 743</srai></think><random><li><srai>EXPDEX CAN THEY DO FOR ME <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY DO FOR YOU *</pattern><template><think><srai>NOPX 1808</srai></think><random><li><srai>EXPDEX CAN THEY DO FOR YOU <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY DO THIS *</pattern><template><think><srai>NOPX 3723</srai></think><random><li><srai>EXPDEX CAN THEY DO THIS <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY DO TO ADDRESS *</pattern><template><think><srai>NOPX 537</srai></think><random><li><srai>EXPDEX CAN THEY DO TO ADDRESS <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY DO TO HELP *</pattern><template><think><srai>NOPX 703</srai></think><random><li><srai>EXPDEX CAN THEY DO TO HELP <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY DO TO MAKE *</pattern><template><think><srai>NOPX 420</srai></think><random><li><srai>EXPDEX CAN THEY DO TO MAKE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY EXPECT TO BE *</pattern><template><think><srai>NOPX 548</srai></think><random><li><srai>EXPDEX CAN THEY EXPECT TO BE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY EXPECT US TO *</pattern><template><think><srai>NOPX 452</srai></think><random><li><srai>EXPDEX CAN THEY EXPECT US TO <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY GET A NEW *</pattern><template><think><srai>NOPX 704</srai></think><random><li><srai>EXPDEX CAN THEY GET A NEW <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY GET AWAY WITH *</pattern><template><think><srai>NOPX 2753</srai></think><random><li><srai>EXPDEX CAN THEY GET AWAY WITH <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY HEAR WITHOUT SOMEONE *</pattern><template><think><srai>NOPX 1224</srai></think><random><li><srai>EXPDEX CAN THEY HEAR WITHOUT SOMEONE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY IMPROVE YOUR PRODUCTIVITY *</pattern><template><think><srai>NOPX 535</srai></think><random><li><srai>EXPDEX CAN THEY IMPROVE YOUR PRODUCTIVITY <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY KEEP IT UP *</pattern><template><think><srai>NOPX 522</srai></think><random><li><srai>EXPDEX CAN THEY KEEP IT UP <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY PREACH UNLESS THEY *</pattern><template><think><srai>NOPX 901</srai></think><random><li><srai>EXPDEX CAN THEY PREACH UNLESS THEY <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY REPEAT THE TRICK *</pattern><template><think><srai>NOPX 690</srai></think><random><li><srai>EXPDEX CAN THEY REPEAT THE TRICK <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY SLEEP AT NIGHT *</pattern><template><think><srai>NOPX 562</srai></think><random><li><srai>EXPDEX CAN THEY SLEEP AT NIGHT <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY SUPERSEDE THE ADMINISTRATIVE *</pattern><template><think><srai>NOPX 424</srai></think><random><li><srai>EXPDEX CAN THEY SUPERSEDE THE ADMINISTRATIVE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY TELL US ABOUT *</pattern><template><think><srai>NOPX 1019</srai></think><random><li><srai>EXPDEX CAN THEY TELL US ABOUT <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY WAIT FOR THE *</pattern><template><think><srai>NOPX 714</srai></think><random><li><srai>EXPDEX CAN THEY WAIT FOR THE <star/></srai></li></random></template></category>
+<category><pattern>CAN THEY WIN OVER THE *</pattern><template><think><srai>NOPX 789</srai></think><random><li><srai>EXPDEX CAN THEY WIN OVER THE <star/></srai></li></random></template></category>
+</aiml>

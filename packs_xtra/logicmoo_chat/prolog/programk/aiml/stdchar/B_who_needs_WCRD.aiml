@@ -1,0 +1,780 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<aiml>
+
+<!-- bot B_Default.aiml (2772885) mp=-1: WHO NEEDS * -->
+
+<!-- MINSEQ: mp=-1:  -->
+<category><pattern>EXPDEX WHO NEEDS *</pattern><template>   <random>      <li>All I can say is, I am a <bot name="etype"/>.</li>      <li>I think we can do a lot of jobs.</li>      <li>There is no limit to the imagination.</li>     </random>    </template></category>
+<category><pattern>WHO NEEDS *</pattern><template><srai>EXPDEX WHO NEEDS <star/></srai></template></category>
+<category><pattern>WHO NEEDS A *</pattern><template><think><srai>NOPX 3316</srai></think><random><li><srai>EXPDEX WHO NEEDS A <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS AN *</pattern><template><think><srai>NOPX 2860</srai></think><random><li><srai>EXPDEX WHO NEEDS AN <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS ANY *</pattern><template><think><srai>NOPX 161</srai></think><random><li><srai>EXPDEX WHO NEEDS ANY <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS IT *</pattern><template><think><srai>NOPX 1507</srai></think><random><li><srai>EXPDEX WHO NEEDS IT <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS LOVE *</pattern><template><think><srai>NOPX 400</srai></think><random><li><srai>EXPDEX WHO NEEDS LOVE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS SLEEP *</pattern><template><think><srai>NOPX 835</srai></think><random><li><srai>EXPDEX WHO NEEDS SLEEP <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS SOME *</pattern><template><think><srai>NOPX 127</srai></think><random><li><srai>EXPDEX WHO NEEDS SOME <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS THE *</pattern><template><think><srai>NOPX 1059</srai></think><random><li><srai>EXPDEX WHO NEEDS THE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS THEM *</pattern><template><think><srai>NOPX 385</srai></think><random><li><srai>EXPDEX WHO NEEDS THEM <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS THIS *</pattern><template><think><srai>NOPX 491</srai></think><random><li><srai>EXPDEX WHO NEEDS THIS <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO *</pattern><template><think><srai>NOPX 2353</srai></think><random><li><srai>EXPDEX WHO NEEDS TO <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS YA *</pattern><template><think><srai>NOPX 104</srai></think><random><li><srai>EXPDEX WHO NEEDS YA <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS YOU *</pattern><template><think><srai>NOPX 388</srai></think><random><li><srai>EXPDEX WHO NEEDS YOU <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A *</pattern><template><think><srai>NOPX 140</srai></think><random><li><srai>EXPDEX WHO NEEDS A <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO *</pattern><template><think><srai>NOPX 840</srai></think><random><li><srai>EXPDEX WHO NEEDS TO <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A *</pattern><template><think><srai>NOPX 9536</srai></think><random><li><srai>EXPDEX WHO NEEDS A <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS AN *</pattern><template><think><srai>NOPX 693</srai></think><random><li><srai>EXPDEX WHO NEEDS AN <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS EM *</pattern><template><think><srai>NOPX 156</srai></think><random><li><srai>EXPDEX WHO NEEDS EM <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS EXTRA *</pattern><template><think><srai>NOPX 145</srai></think><random><li><srai>EXPDEX WHO NEEDS EXTRA <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS FRIENDS *</pattern><template><think><srai>NOPX 545</srai></think><random><li><srai>EXPDEX WHO NEEDS FRIENDS <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS HIM *</pattern><template><think><srai>NOPX 235</srai></think><random><li><srai>EXPDEX WHO NEEDS HIM <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS IT *</pattern><template><think><srai>NOPX 14981</srai></think><random><li><srai>EXPDEX WHO NEEDS IT <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS LOVE *</pattern><template><think><srai>NOPX 5909</srai></think><random><li><srai>EXPDEX WHO NEEDS LOVE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS MONEY *</pattern><template><think><srai>NOPX 2279</srai></think><random><li><srai>EXPDEX WHO NEEDS MONEY <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS NEW *</pattern><template><think><srai>NOPX 108</srai></think><random><li><srai>EXPDEX WHO NEEDS NEW <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS NO *</pattern><template><think><srai>NOPX 1194</srai></think><random><li><srai>EXPDEX WHO NEEDS NO <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS ONE *</pattern><template><think><srai>NOPX 606</srai></think><random><li><srai>EXPDEX WHO NEEDS ONE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS RELIGION *</pattern><template><think><srai>NOPX 261</srai></think><random><li><srai>EXPDEX WHO NEEDS RELIGION <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS SLEEP *</pattern><template><think><srai>NOPX 4143</srai></think><random><li><srai>EXPDEX WHO NEEDS SLEEP <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS SOME *</pattern><template><think><srai>NOPX 179</srai></think><random><li><srai>EXPDEX WHO NEEDS SOME <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS THAT *</pattern><template><think><srai>NOPX 130</srai></think><random><li><srai>EXPDEX WHO NEEDS THAT <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS THE *</pattern><template><think><srai>NOPX 4007</srai></think><random><li><srai>EXPDEX WHO NEEDS THE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS THEM *</pattern><template><think><srai>NOPX 3976</srai></think><random><li><srai>EXPDEX WHO NEEDS THEM <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS THESE *</pattern><template><think><srai>NOPX 144</srai></think><random><li><srai>EXPDEX WHO NEEDS THESE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS THIS *</pattern><template><think><srai>NOPX 1447</srai></think><random><li><srai>EXPDEX WHO NEEDS THIS <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO *</pattern><template><think><srai>NOPX 3118</srai></think><random><li><srai>EXPDEX WHO NEEDS TO <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS WHAT *</pattern><template><think><srai>NOPX 586</srai></think><random><li><srai>EXPDEX WHO NEEDS WHAT <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS WORDS *</pattern><template><think><srai>NOPX 114</srai></think><random><li><srai>EXPDEX WHO NEEDS WORDS <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS YA *</pattern><template><think><srai>NOPX 572</srai></think><random><li><srai>EXPDEX WHO NEEDS YA <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS YOU *</pattern><template><think><srai>NOPX 5920</srai></think><random><li><srai>EXPDEX WHO NEEDS YOU <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS YOUR *</pattern><template><think><srai>NOPX 227</srai></think><random><li><srai>EXPDEX WHO NEEDS YOUR <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A *</pattern><template><think><srai>NOPX 13140</srai></think><random><li><srai>EXPDEX WHO NEEDS A <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS AN *</pattern><template><think><srai>NOPX 2184</srai></think><random><li><srai>EXPDEX WHO NEEDS AN <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS IT *</pattern><template><think><srai>NOPX 1346</srai></think><random><li><srai>EXPDEX WHO NEEDS IT <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS THE *</pattern><template><think><srai>NOPX 4140</srai></think><random><li><srai>EXPDEX WHO NEEDS THE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS THEM *</pattern><template><think><srai>NOPX 281</srai></think><random><li><srai>EXPDEX WHO NEEDS THEM <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS THIS *</pattern><template><think><srai>NOPX 171</srai></think><random><li><srai>EXPDEX WHO NEEDS THIS <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO *</pattern><template><think><srai>NOPX 6506</srai></think><random><li><srai>EXPDEX WHO NEEDS TO <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A *</pattern><template><think><srai>NOPX 125</srai></think><random><li><srai>EXPDEX WHO NEEDS A <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS LOVE *</pattern><template><think><srai>NOPX 151</srai></think><random><li><srai>EXPDEX WHO NEEDS LOVE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS NEW *</pattern><template><think><srai>NOPX 115</srai></think><random><li><srai>EXPDEX WHO NEEDS NEW <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS THE *</pattern><template><think><srai>NOPX 222</srai></think><random><li><srai>EXPDEX WHO NEEDS THE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A *</pattern><template><think><srai>NOPX 66717</srai></think><random><li><srai>EXPDEX WHO NEEDS A <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS ALL *</pattern><template><think><srai>NOPX 1972</srai></think><random><li><srai>EXPDEX WHO NEEDS ALL <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS AN *</pattern><template><think><srai>NOPX 9928</srai></think><random><li><srai>EXPDEX WHO NEEDS AN <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS ANOTHER *</pattern><template><think><srai>NOPX 1750</srai></think><random><li><srai>EXPDEX WHO NEEDS ANOTHER <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS ANY *</pattern><template><think><srai>NOPX 313</srai></think><random><li><srai>EXPDEX WHO NEEDS ANY <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS ANYTHING *</pattern><template><think><srai>NOPX 345</srai></think><random><li><srai>EXPDEX WHO NEEDS ANYTHING <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS DRUGS *</pattern><template><think><srai>NOPX 787</srai></think><random><li><srai>EXPDEX WHO NEEDS DRUGS <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS EM *</pattern><template><think><srai>NOPX 472</srai></think><random><li><srai>EXPDEX WHO NEEDS EM <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS EXTRA *</pattern><template><think><srai>NOPX 174</srai></think><random><li><srai>EXPDEX WHO NEEDS EXTRA <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS FANCY *</pattern><template><think><srai>NOPX 666</srai></think><random><li><srai>EXPDEX WHO NEEDS FANCY <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS FRIENDS *</pattern><template><think><srai>NOPX 1200</srai></think><random><li><srai>EXPDEX WHO NEEDS FRIENDS <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS HER *</pattern><template><think><srai>NOPX 199</srai></think><random><li><srai>EXPDEX WHO NEEDS HER <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS HIM *</pattern><template><think><srai>NOPX 535</srai></think><random><li><srai>EXPDEX WHO NEEDS HIM <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS HIS *</pattern><template><think><srai>NOPX 208</srai></think><random><li><srai>EXPDEX WHO NEEDS HIS <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS IT *</pattern><template><think><srai>NOPX 16795</srai></think><random><li><srai>EXPDEX WHO NEEDS IT <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS LOVE *</pattern><template><think><srai>NOPX 1228</srai></think><random><li><srai>EXPDEX WHO NEEDS LOVE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS LUCK *</pattern><template><think><srai>NOPX 186</srai></think><random><li><srai>EXPDEX WHO NEEDS LUCK <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS MONEY *</pattern><template><think><srai>NOPX 1841</srai></think><random><li><srai>EXPDEX WHO NEEDS MONEY <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS MY *</pattern><template><think><srai>NOPX 219</srai></think><random><li><srai>EXPDEX WHO NEEDS MY <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS NEW *</pattern><template><think><srai>NOPX 298</srai></think><random><li><srai>EXPDEX WHO NEEDS NEW <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS NO *</pattern><template><think><srai>NOPX 154</srai></think><random><li><srai>EXPDEX WHO NEEDS NO <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS ONE *</pattern><template><think><srai>NOPX 1319</srai></think><random><li><srai>EXPDEX WHO NEEDS ONE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS PEOPLE *</pattern><template><think><srai>NOPX 298</srai></think><random><li><srai>EXPDEX WHO NEEDS PEOPLE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS PLASTIC *</pattern><template><think><srai>NOPX 155</srai></think><random><li><srai>EXPDEX WHO NEEDS PLASTIC <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS PROOF *</pattern><template><think><srai>NOPX 175</srai></think><random><li><srai>EXPDEX WHO NEEDS PROOF <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS RELIGION *</pattern><template><think><srai>NOPX 151</srai></think><random><li><srai>EXPDEX WHO NEEDS RELIGION <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS SLEEP *</pattern><template><think><srai>NOPX 3216</srai></think><random><li><srai>EXPDEX WHO NEEDS SLEEP <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS SO *</pattern><template><think><srai>NOPX 102</srai></think><random><li><srai>EXPDEX WHO NEEDS SO <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS SOME *</pattern><template><think><srai>NOPX 697</srai></think><random><li><srai>EXPDEX WHO NEEDS SOME <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS SOMEONE *</pattern><template><think><srai>NOPX 119</srai></think><random><li><srai>EXPDEX WHO NEEDS SOMEONE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS SOMETHING *</pattern><template><think><srai>NOPX 122</srai></think><random><li><srai>EXPDEX WHO NEEDS SOMETHING <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS SUCH *</pattern><template><think><srai>NOPX 628</srai></think><random><li><srai>EXPDEX WHO NEEDS SUCH <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS THAT *</pattern><template><think><srai>NOPX 6431</srai></think><random><li><srai>EXPDEX WHO NEEDS THAT <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS THE *</pattern><template><think><srai>NOPX 25875</srai></think><random><li><srai>EXPDEX WHO NEEDS THE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS THEIR *</pattern><template><think><srai>NOPX 396</srai></think><random><li><srai>EXPDEX WHO NEEDS THEIR <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS THEM *</pattern><template><think><srai>NOPX 5014</srai></think><random><li><srai>EXPDEX WHO NEEDS THEM <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS THESE *</pattern><template><think><srai>NOPX 943</srai></think><random><li><srai>EXPDEX WHO NEEDS THESE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS THIS *</pattern><template><think><srai>NOPX 4156</srai></think><random><li><srai>EXPDEX WHO NEEDS THIS <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS THOSE *</pattern><template><think><srai>NOPX 945</srai></think><random><li><srai>EXPDEX WHO NEEDS THOSE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO *</pattern><template><think><srai>NOPX 39454</srai></think><random><li><srai>EXPDEX WHO NEEDS TO <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS WHAT *</pattern><template><think><srai>NOPX 1325</srai></think><random><li><srai>EXPDEX WHO NEEDS WHAT <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS WORDS *</pattern><template><think><srai>NOPX 401</srai></think><random><li><srai>EXPDEX WHO NEEDS WORDS <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS YA *</pattern><template><think><srai>NOPX 155</srai></think><random><li><srai>EXPDEX WHO NEEDS YA <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS YOU *</pattern><template><think><srai>NOPX 1144</srai></think><random><li><srai>EXPDEX WHO NEEDS YOU <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS YOUR *</pattern><template><think><srai>NOPX 573</srai></think><random><li><srai>EXPDEX WHO NEEDS YOUR <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A *</pattern><template><think><srai>NOPX 196</srai></think><random><li><srai>EXPDEX WHO NEEDS A <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO *</pattern><template><think><srai>NOPX 315</srai></think><random><li><srai>EXPDEX WHO NEEDS TO <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A *</pattern><template><think><srai>NOPX 332</srai></think><random><li><srai>EXPDEX WHO NEEDS A <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS THE *</pattern><template><think><srai>NOPX 125</srai></think><random><li><srai>EXPDEX WHO NEEDS THE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO *</pattern><template><think><srai>NOPX 273</srai></think><random><li><srai>EXPDEX WHO NEEDS TO <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A *</pattern><template><think><srai>NOPX 150267</srai></think><random><li><srai>EXPDEX WHO NEEDS A <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS ADVICE *</pattern><template><think><srai>NOPX 1364</srai></think><random><li><srai>EXPDEX WHO NEEDS ADVICE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS ALL *</pattern><template><think><srai>NOPX 3035</srai></think><random><li><srai>EXPDEX WHO NEEDS ALL <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS AN *</pattern><template><think><srai>NOPX 23581</srai></think><random><li><srai>EXPDEX WHO NEEDS AN <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS ANOTHER *</pattern><template><think><srai>NOPX 2295</srai></think><random><li><srai>EXPDEX WHO NEEDS ANOTHER <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS ANY *</pattern><template><think><srai>NOPX 2136</srai></think><random><li><srai>EXPDEX WHO NEEDS ANY <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS ANYONE *</pattern><template><think><srai>NOPX 110</srai></think><random><li><srai>EXPDEX WHO NEEDS ANYONE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS ANYTHING *</pattern><template><think><srai>NOPX 885</srai></think><random><li><srai>EXPDEX WHO NEEDS ANYTHING <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS AS *</pattern><template><think><srai>NOPX 206</srai></think><random><li><srai>EXPDEX WHO NEEDS AS <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS AT *</pattern><template><think><srai>NOPX 330</srai></think><random><li><srai>EXPDEX WHO NEEDS AT <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS DRUGS *</pattern><template><think><srai>NOPX 458</srai></think><random><li><srai>EXPDEX WHO NEEDS DRUGS <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS EITHER *</pattern><template><think><srai>NOPX 267</srai></think><random><li><srai>EXPDEX WHO NEEDS EITHER <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS EM *</pattern><template><think><srai>NOPX 5591</srai></think><random><li><srai>EXPDEX WHO NEEDS EM <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS EVERY *</pattern><template><think><srai>NOPX 465</srai></think><random><li><srai>EXPDEX WHO NEEDS EVERY <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS EXTRA *</pattern><template><think><srai>NOPX 24788</srai></think><random><li><srai>EXPDEX WHO NEEDS EXTRA <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS FANCY *</pattern><template><think><srai>NOPX 269</srai></think><random><li><srai>EXPDEX WHO NEEDS FANCY <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS FOR *</pattern><template><think><srai>NOPX 105</srai></think><random><li><srai>EXPDEX WHO NEEDS FOR <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS FRIENDS *</pattern><template><think><srai>NOPX 1784</srai></think><random><li><srai>EXPDEX WHO NEEDS FRIENDS <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS GLASSES *</pattern><template><think><srai>NOPX 573</srai></think><random><li><srai>EXPDEX WHO NEEDS GLASSES <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS GRAPHICS *</pattern><template><think><srai>NOPX 125</srai></think><random><li><srai>EXPDEX WHO NEEDS GRAPHICS <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS HER *</pattern><template><think><srai>NOPX 3620</srai></think><random><li><srai>EXPDEX WHO NEEDS HER <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS HIM *</pattern><template><think><srai>NOPX 1780</srai></think><random><li><srai>EXPDEX WHO NEEDS HIM <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS HIS *</pattern><template><think><srai>NOPX 3829</srai></think><random><li><srai>EXPDEX WHO NEEDS HIS <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS IN *</pattern><template><think><srai>NOPX 210</srai></think><random><li><srai>EXPDEX WHO NEEDS IN <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS IT *</pattern><template><think><srai>NOPX 63030</srai></think><random><li><srai>EXPDEX WHO NEEDS IT <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS LABELS *</pattern><template><think><srai>NOPX 117</srai></think><random><li><srai>EXPDEX WHO NEEDS LABELS <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS LOVE *</pattern><template><think><srai>NOPX 1607</srai></think><random><li><srai>EXPDEX WHO NEEDS LOVE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS LUCK *</pattern><template><think><srai>NOPX 160</srai></think><random><li><srai>EXPDEX WHO NEEDS LUCK <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS MANY *</pattern><template><think><srai>NOPX 105</srai></think><random><li><srai>EXPDEX WHO NEEDS MANY <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS MONEY *</pattern><template><think><srai>NOPX 2255</srai></think><random><li><srai>EXPDEX WHO NEEDS MONEY <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS MUCH *</pattern><template><think><srai>NOPX 231</srai></think><random><li><srai>EXPDEX WHO NEEDS MUCH <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS MY *</pattern><template><think><srai>NOPX 2035</srai></think><random><li><srai>EXPDEX WHO NEEDS MY <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS NEW *</pattern><template><think><srai>NOPX 686</srai></think><random><li><srai>EXPDEX WHO NEEDS NEW <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS NO *</pattern><template><think><srai>NOPX 6743</srai></think><random><li><srai>EXPDEX WHO NEEDS NO <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS NOTHING *</pattern><template><think><srai>NOPX 475</srai></think><random><li><srai>EXPDEX WHO NEEDS NOTHING <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS ON *</pattern><template><think><srai>NOPX 173</srai></think><random><li><srai>EXPDEX WHO NEEDS ON <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS ONE *</pattern><template><think><srai>NOPX 8731</srai></think><random><li><srai>EXPDEX WHO NEEDS ONE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS OTHER *</pattern><template><think><srai>NOPX 228</srai></think><random><li><srai>EXPDEX WHO NEEDS OTHER <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS PEOPLE *</pattern><template><think><srai>NOPX 679</srai></think><random><li><srai>EXPDEX WHO NEEDS PEOPLE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS PERMISSION *</pattern><template><think><srai>NOPX 135</srai></think><random><li><srai>EXPDEX WHO NEEDS PERMISSION <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS PROOF *</pattern><template><think><srai>NOPX 507</srai></think><random><li><srai>EXPDEX WHO NEEDS PROOF <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS RELIGION *</pattern><template><think><srai>NOPX 139</srai></think><random><li><srai>EXPDEX WHO NEEDS RELIGION <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS SLEEP *</pattern><template><think><srai>NOPX 2155</srai></think><random><li><srai>EXPDEX WHO NEEDS SLEEP <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS SO *</pattern><template><think><srai>NOPX 342</srai></think><random><li><srai>EXPDEX WHO NEEDS SO <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS SOME *</pattern><template><think><srai>NOPX 10530</srai></think><random><li><srai>EXPDEX WHO NEEDS SOME <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS SOMEBODY *</pattern><template><think><srai>NOPX 798</srai></think><random><li><srai>EXPDEX WHO NEEDS SOMEBODY <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS SOMEONE *</pattern><template><think><srai>NOPX 2571</srai></think><random><li><srai>EXPDEX WHO NEEDS SOMEONE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS SOMETHING *</pattern><template><think><srai>NOPX 2195</srai></think><random><li><srai>EXPDEX WHO NEEDS SOMETHING <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS SUCH *</pattern><template><think><srai>NOPX 1289</srai></think><random><li><srai>EXPDEX WHO NEEDS SUCH <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS THAT *</pattern><template><think><srai>NOPX 8192</srai></think><random><li><srai>EXPDEX WHO NEEDS THAT <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS THE *</pattern><template><think><srai>NOPX 37361</srai></think><random><li><srai>EXPDEX WHO NEEDS THE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS THEIR *</pattern><template><think><srai>NOPX 3065</srai></think><random><li><srai>EXPDEX WHO NEEDS THEIR <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS THEM *</pattern><template><think><srai>NOPX 17918</srai></think><random><li><srai>EXPDEX WHO NEEDS THEM <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS THESE *</pattern><template><think><srai>NOPX 1255</srai></think><random><li><srai>EXPDEX WHO NEEDS THESE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS THINGS *</pattern><template><think><srai>NOPX 201</srai></think><random><li><srai>EXPDEX WHO NEEDS THINGS <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS THIS *</pattern><template><think><srai>NOPX 8625</srai></think><random><li><srai>EXPDEX WHO NEEDS THIS <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS THOSE *</pattern><template><think><srai>NOPX 2543</srai></think><random><li><srai>EXPDEX WHO NEEDS THOSE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO *</pattern><template><think><srai>NOPX 284063</srai></think><random><li><srai>EXPDEX WHO NEEDS TO <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS WHAT *</pattern><template><think><srai>NOPX 5380</srai></think><random><li><srai>EXPDEX WHO NEEDS WHAT <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS WORDS *</pattern><template><think><srai>NOPX 287</srai></think><random><li><srai>EXPDEX WHO NEEDS WORDS <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS YA *</pattern><template><think><srai>NOPX 193</srai></think><random><li><srai>EXPDEX WHO NEEDS YA <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS YOU *</pattern><template><think><srai>NOPX 5579</srai></think><random><li><srai>EXPDEX WHO NEEDS YOU <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS YOUR *</pattern><template><think><srai>NOPX 5474</srai></think><random><li><srai>EXPDEX WHO NEEDS YOUR <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A *</pattern><template><think><srai>NOPX 3316</srai></think><random><li><srai>EXPDEX WHO NEEDS A <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS AN *</pattern><template><think><srai>NOPX 2860</srai></think><random><li><srai>EXPDEX WHO NEEDS AN <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS BOND *</pattern><template><think><srai>NOPX 2970</srai></think><random><li><srai>EXPDEX WHO NEEDS BOND <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS DESPERATE *</pattern><template><think><srai>NOPX 469</srai></think><random><li><srai>EXPDEX WHO NEEDS DESPERATE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS HELP *</pattern><template><think><srai>NOPX 475</srai></think><random><li><srai>EXPDEX WHO NEEDS HELP <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS IT *</pattern><template><think><srai>NOPX 1507</srai></think><random><li><srai>EXPDEX WHO NEEDS IT <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS SLEEP *</pattern><template><think><srai>NOPX 835</srai></think><random><li><srai>EXPDEX WHO NEEDS SLEEP <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS THE *</pattern><template><think><srai>NOPX 1059</srai></think><random><li><srai>EXPDEX WHO NEEDS THE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS THIS *</pattern><template><think><srai>NOPX 491</srai></think><random><li><srai>EXPDEX WHO NEEDS THIS <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO *</pattern><template><think><srai>NOPX 2353</srai></think><random><li><srai>EXPDEX WHO NEEDS TO <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS UNK *</pattern><template><think><srai>NOPX 614</srai></think><random><li><srai>EXPDEX WHO NEEDS UNK <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A *</pattern><template><think><srai>NOPX 9536</srai></think><random><li><srai>EXPDEX WHO NEEDS A <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS AN *</pattern><template><think><srai>NOPX 693</srai></think><random><li><srai>EXPDEX WHO NEEDS AN <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS BEACH *</pattern><template><think><srai>NOPX 749</srai></think><random><li><srai>EXPDEX WHO NEEDS BEACH <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS BERLIN *</pattern><template><think><srai>NOPX 1943</srai></think><random><li><srai>EXPDEX WHO NEEDS BERLIN <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS BIG *</pattern><template><think><srai>NOPX 6745</srai></think><random><li><srai>EXPDEX WHO NEEDS BIG <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS BLOOD *</pattern><template><think><srai>NOPX 735</srai></think><random><li><srai>EXPDEX WHO NEEDS BLOOD <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS BOTOX *</pattern><template><think><srai>NOPX 401</srai></think><random><li><srai>EXPDEX WHO NEEDS BOTOX <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS BOYS *</pattern><template><think><srai>NOPX 4219</srai></think><random><li><srai>EXPDEX WHO NEEDS BOYS <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS CLASSICAL *</pattern><template><think><srai>NOPX 609</srai></think><random><li><srai>EXPDEX WHO NEEDS CLASSICAL <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS COUNSELING *</pattern><template><think><srai>NOPX 627</srai></think><random><li><srai>EXPDEX WHO NEEDS COUNSELING <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS DEMOCRACY *</pattern><template><think><srai>NOPX 432</srai></think><random><li><srai>EXPDEX WHO NEEDS DEMOCRACY <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS DONUTS *</pattern><template><think><srai>NOPX 419</srai></think><random><li><srai>EXPDEX WHO NEEDS DONUTS <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS EMOTIONS *</pattern><template><think><srai>NOPX 1238</srai></think><random><li><srai>EXPDEX WHO NEEDS EMOTIONS <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS ENEMAS *</pattern><template><think><srai>NOPX 2272</srai></think><random><li><srai>EXPDEX WHO NEEDS ENEMAS <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS ENEMIES *</pattern><template><think><srai>NOPX 7354</srai></think><random><li><srai>EXPDEX WHO NEEDS ENEMIES <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS FEMINISM *</pattern><template><think><srai>NOPX 551</srai></think><random><li><srai>EXPDEX WHO NEEDS FEMINISM <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS FILM *</pattern><template><think><srai>NOPX 6022</srai></think><random><li><srai>EXPDEX WHO NEEDS FILM <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS FOREVER *</pattern><template><think><srai>NOPX 1001</srai></think><random><li><srai>EXPDEX WHO NEEDS FOREVER <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS FRIENDS *</pattern><template><think><srai>NOPX 545</srai></think><random><li><srai>EXPDEX WHO NEEDS FRIENDS <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS GALLERIES *</pattern><template><think><srai>NOPX 428</srai></think><random><li><srai>EXPDEX WHO NEEDS GALLERIES <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS GOD *</pattern><template><think><srai>NOPX 1023</srai></think><random><li><srai>EXPDEX WHO NEEDS GOD <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS GUITARS *</pattern><template><think><srai>NOPX 2309</srai></think><random><li><srai>EXPDEX WHO NEEDS GUITARS <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS HELP *</pattern><template><think><srai>NOPX 671</srai></think><random><li><srai>EXPDEX WHO NEEDS HELP <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS INFORMATION *</pattern><template><think><srai>NOPX 746</srai></think><random><li><srai>EXPDEX WHO NEEDS INFORMATION <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS IT *</pattern><template><think><srai>NOPX 14981</srai></think><random><li><srai>EXPDEX WHO NEEDS IT <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS LIFE *</pattern><template><think><srai>NOPX 792</srai></think><random><li><srai>EXPDEX WHO NEEDS LIFE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS LOVE *</pattern><template><think><srai>NOPX 5909</srai></think><random><li><srai>EXPDEX WHO NEEDS LOVE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS ME *</pattern><template><think><srai>NOPX 1140</srai></think><random><li><srai>EXPDEX WHO NEEDS ME <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS MEN *</pattern><template><think><srai>NOPX 553</srai></think><random><li><srai>EXPDEX WHO NEEDS MEN <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS MONEY *</pattern><template><think><srai>NOPX 2279</srai></think><random><li><srai>EXPDEX WHO NEEDS MONEY <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS NO *</pattern><template><think><srai>NOPX 1194</srai></think><random><li><srai>EXPDEX WHO NEEDS NO <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS ONE *</pattern><template><think><srai>NOPX 606</srai></think><random><li><srai>EXPDEX WHO NEEDS ONE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS OXYGEN *</pattern><template><think><srai>NOPX 3416</srai></think><random><li><srai>EXPDEX WHO NEEDS OXYGEN <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS PICTURES *</pattern><template><think><srai>NOPX 3647</srai></think><random><li><srai>EXPDEX WHO NEEDS PICTURES <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS REAL *</pattern><template><think><srai>NOPX 755</srai></think><random><li><srai>EXPDEX WHO NEEDS REAL <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS SANTA *</pattern><template><think><srai>NOPX 521</srai></think><random><li><srai>EXPDEX WHO NEEDS SANTA <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS SHELTER *</pattern><template><think><srai>NOPX 899</srai></think><random><li><srai>EXPDEX WHO NEEDS SHELTER <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS SLEEP *</pattern><template><think><srai>NOPX 4143</srai></think><random><li><srai>EXPDEX WHO NEEDS SLEEP <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TV *</pattern><template><think><srai>NOPX 434</srai></think><random><li><srai>EXPDEX WHO NEEDS TV <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TERRORIST *</pattern><template><think><srai>NOPX 456</srai></think><random><li><srai>EXPDEX WHO NEEDS TERRORIST <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS THE *</pattern><template><think><srai>NOPX 4007</srai></think><random><li><srai>EXPDEX WHO NEEDS THE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS THEM *</pattern><template><think><srai>NOPX 3976</srai></think><random><li><srai>EXPDEX WHO NEEDS THEM <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS THEOLOGY *</pattern><template><think><srai>NOPX 713</srai></think><random><li><srai>EXPDEX WHO NEEDS THEOLOGY <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS THIS *</pattern><template><think><srai>NOPX 1447</srai></think><random><li><srai>EXPDEX WHO NEEDS THIS <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO *</pattern><template><think><srai>NOPX 3118</srai></think><random><li><srai>EXPDEX WHO NEEDS TO <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS WHAT *</pattern><template><think><srai>NOPX 586</srai></think><random><li><srai>EXPDEX WHO NEEDS WHAT <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS WHO *</pattern><template><think><srai>NOPX 410</srai></think><random><li><srai>EXPDEX WHO NEEDS WHO <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS WINDOWS *</pattern><template><think><srai>NOPX 755</srai></think><random><li><srai>EXPDEX WHO NEEDS WINDOWS <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS YA *</pattern><template><think><srai>NOPX 572</srai></think><random><li><srai>EXPDEX WHO NEEDS YA <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS YOU *</pattern><template><think><srai>NOPX 5920</srai></think><random><li><srai>EXPDEX WHO NEEDS YOU <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A *</pattern><template><think><srai>NOPX 13140</srai></think><random><li><srai>EXPDEX WHO NEEDS A <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS AN *</pattern><template><think><srai>NOPX 2184</srai></think><random><li><srai>EXPDEX WHO NEEDS AN <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS IT *</pattern><template><think><srai>NOPX 1346</srai></think><random><li><srai>EXPDEX WHO NEEDS IT <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS THE *</pattern><template><think><srai>NOPX 4140</srai></think><random><li><srai>EXPDEX WHO NEEDS THE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO *</pattern><template><think><srai>NOPX 6506</srai></think><random><li><srai>EXPDEX WHO NEEDS TO <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS UNK *</pattern><template><think><srai>NOPX 1452</srai></think><random><li><srai>EXPDEX WHO NEEDS UNK <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS ALJAZEERA *</pattern><template><think><srai>NOPX 598</srai></think><random><li><srai>EXPDEX WHO NEEDS ALJAZEERA <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS BRADMAN *</pattern><template><think><srai>NOPX 665</srai></think><random><li><srai>EXPDEX WHO NEEDS BRADMAN <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TV *</pattern><template><think><srai>NOPX 1994</srai></think><random><li><srai>EXPDEX WHO NEEDS TV <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS UFOS *</pattern><template><think><srai>NOPX 565</srai></think><random><li><srai>EXPDEX WHO NEEDS UFOS <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS VOGUE *</pattern><template><think><srai>NOPX 404</srai></think><random><li><srai>EXPDEX WHO NEEDS VOGUE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS WINDOWS *</pattern><template><think><srai>NOPX 799</srai></think><random><li><srai>EXPDEX WHO NEEDS WINDOWS <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A *</pattern><template><think><srai>NOPX 66717</srai></think><random><li><srai>EXPDEX WHO NEEDS A <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS ACCESS *</pattern><template><think><srai>NOPX 422</srai></think><random><li><srai>EXPDEX WHO NEEDS ACCESS <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS ACTION *</pattern><template><think><srai>NOPX 520</srai></think><random><li><srai>EXPDEX WHO NEEDS ACTION <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS ACTUAL *</pattern><template><think><srai>NOPX 1624</srai></think><random><li><srai>EXPDEX WHO NEEDS ACTUAL <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS ALL *</pattern><template><think><srai>NOPX 1972</srai></think><random><li><srai>EXPDEX WHO NEEDS ALL <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS AN *</pattern><template><think><srai>NOPX 9928</srai></think><random><li><srai>EXPDEX WHO NEEDS AN <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS ANOTHER *</pattern><template><think><srai>NOPX 1750</srai></think><random><li><srai>EXPDEX WHO NEEDS ANOTHER <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS BIG *</pattern><template><think><srai>NOPX 3022</srai></think><random><li><srai>EXPDEX WHO NEEDS BIG <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS BRAINS *</pattern><template><think><srai>NOPX 1595</srai></think><random><li><srai>EXPDEX WHO NEEDS BRAINS <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS CARE *</pattern><template><think><srai>NOPX 462</srai></think><random><li><srai>EXPDEX WHO NEEDS CARE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS COFFEE *</pattern><template><think><srai>NOPX 712</srai></think><random><li><srai>EXPDEX WHO NEEDS COFFEE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS DRUGS *</pattern><template><think><srai>NOPX 787</srai></think><random><li><srai>EXPDEX WHO NEEDS DRUGS <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS EM *</pattern><template><think><srai>NOPX 472</srai></think><random><li><srai>EXPDEX WHO NEEDS EM <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS ENEMIES *</pattern><template><think><srai>NOPX 1193</srai></think><random><li><srai>EXPDEX WHO NEEDS ENEMIES <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS EXPANSION *</pattern><template><think><srai>NOPX 4760</srai></think><random><li><srai>EXPDEX WHO NEEDS EXPANSION <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS EXPENSIVE *</pattern><template><think><srai>NOPX 1020</srai></think><random><li><srai>EXPDEX WHO NEEDS EXPENSIVE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS FACTS *</pattern><template><think><srai>NOPX 459</srai></think><random><li><srai>EXPDEX WHO NEEDS FACTS <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS FANCY *</pattern><template><think><srai>NOPX 666</srai></think><random><li><srai>EXPDEX WHO NEEDS FANCY <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS FOOD *</pattern><template><think><srai>NOPX 457</srai></think><random><li><srai>EXPDEX WHO NEEDS FOOD <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS FRIENDS *</pattern><template><think><srai>NOPX 1200</srai></think><random><li><srai>EXPDEX WHO NEEDS FRIENDS <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS HELP *</pattern><template><think><srai>NOPX 1044</srai></think><random><li><srai>EXPDEX WHO NEEDS HELP <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS HIGH *</pattern><template><think><srai>NOPX 472</srai></think><random><li><srai>EXPDEX WHO NEEDS HIGH <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS HIM *</pattern><template><think><srai>NOPX 535</srai></think><random><li><srai>EXPDEX WHO NEEDS HIM <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS INFORMATION *</pattern><template><think><srai>NOPX 733</srai></think><random><li><srai>EXPDEX WHO NEEDS INFORMATION <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS IT *</pattern><template><think><srai>NOPX 16795</srai></think><random><li><srai>EXPDEX WHO NEEDS IT <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS LOVE *</pattern><template><think><srai>NOPX 1228</srai></think><random><li><srai>EXPDEX WHO NEEDS LOVE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS ME *</pattern><template><think><srai>NOPX 803</srai></think><random><li><srai>EXPDEX WHO NEEDS ME <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS MEN *</pattern><template><think><srai>NOPX 1089</srai></think><random><li><srai>EXPDEX WHO NEEDS MEN <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS MONEY *</pattern><template><think><srai>NOPX 1841</srai></think><random><li><srai>EXPDEX WHO NEEDS MONEY <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS MORNING *</pattern><template><think><srai>NOPX 1784</srai></think><random><li><srai>EXPDEX WHO NEEDS MORNING <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS NARNIA *</pattern><template><think><srai>NOPX 1791</srai></think><random><li><srai>EXPDEX WHO NEEDS NARNIA <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS NUCLEAR *</pattern><template><think><srai>NOPX 472</srai></think><random><li><srai>EXPDEX WHO NEEDS NUCLEAR <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS PANTS *</pattern><template><think><srai>NOPX 463</srai></think><random><li><srai>EXPDEX WHO NEEDS PANTS <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS REAL *</pattern><template><think><srai>NOPX 410</srai></think><random><li><srai>EXPDEX WHO NEEDS REAL <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS REALITY *</pattern><template><think><srai>NOPX 412</srai></think><random><li><srai>EXPDEX WHO NEEDS REALITY <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS REASONS *</pattern><template><think><srai>NOPX 522</srai></think><random><li><srai>EXPDEX WHO NEEDS REASONS <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS RHETORICAL *</pattern><template><think><srai>NOPX 883</srai></think><random><li><srai>EXPDEX WHO NEEDS RHETORICAL <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS SEX *</pattern><template><think><srai>NOPX 449</srai></think><random><li><srai>EXPDEX WHO NEEDS SEX <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS SKILL *</pattern><template><think><srai>NOPX 4441</srai></think><random><li><srai>EXPDEX WHO NEEDS SKILL <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS SLEEP *</pattern><template><think><srai>NOPX 3216</srai></think><random><li><srai>EXPDEX WHO NEEDS SLEEP <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS SOFTWARE *</pattern><template><think><srai>NOPX 433</srai></think><random><li><srai>EXPDEX WHO NEEDS SOFTWARE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS SOME *</pattern><template><think><srai>NOPX 697</srai></think><random><li><srai>EXPDEX WHO NEEDS SOME <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS STATE *</pattern><template><think><srai>NOPX 1378</srai></think><random><li><srai>EXPDEX WHO NEEDS STATE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS SUCH *</pattern><template><think><srai>NOPX 628</srai></think><random><li><srai>EXPDEX WHO NEEDS SUCH <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS THAT *</pattern><template><think><srai>NOPX 6431</srai></think><random><li><srai>EXPDEX WHO NEEDS THAT <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS THE *</pattern><template><think><srai>NOPX 25875</srai></think><random><li><srai>EXPDEX WHO NEEDS THE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS THEM *</pattern><template><think><srai>NOPX 5014</srai></think><random><li><srai>EXPDEX WHO NEEDS THEM <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS THESE *</pattern><template><think><srai>NOPX 943</srai></think><random><li><srai>EXPDEX WHO NEEDS THESE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS THIS *</pattern><template><think><srai>NOPX 4156</srai></think><random><li><srai>EXPDEX WHO NEEDS THIS <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS THOSE *</pattern><template><think><srai>NOPX 945</srai></think><random><li><srai>EXPDEX WHO NEEDS THOSE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TRAINING *</pattern><template><think><srai>NOPX 469</srai></think><random><li><srai>EXPDEX WHO NEEDS TRAINING <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS WOMEN *</pattern><template><think><srai>NOPX 611</srai></think><random><li><srai>EXPDEX WHO NEEDS WOMEN <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS WORDS *</pattern><template><think><srai>NOPX 401</srai></think><random><li><srai>EXPDEX WHO NEEDS WORDS <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS YOGA *</pattern><template><think><srai>NOPX 777</srai></think><random><li><srai>EXPDEX WHO NEEDS YOGA <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS YOU *</pattern><template><think><srai>NOPX 1144</srai></think><random><li><srai>EXPDEX WHO NEEDS YOU <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS YOUR *</pattern><template><think><srai>NOPX 573</srai></think><random><li><srai>EXPDEX WHO NEEDS YOUR <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS 12 *</pattern><template><think><srai>NOPX 412</srai></think><random><li><srai>EXPDEX WHO NEEDS 12 <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS UNK *</pattern><template><think><srai>NOPX 1262</srai></think><random><li><srai>EXPDEX WHO NEEDS UNK <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS GATES *</pattern><template><think><srai>NOPX 1502</srai></think><random><li><srai>EXPDEX WHO NEEDS GATES <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS GOD *</pattern><template><think><srai>NOPX 496</srai></think><random><li><srai>EXPDEX WHO NEEDS GOD <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS WINDOWS *</pattern><template><think><srai>NOPX 2745</srai></think><random><li><srai>EXPDEX WHO NEEDS WINDOWS <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A *</pattern><template><think><srai>NOPX 150267</srai></think><random><li><srai>EXPDEX WHO NEEDS A <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS ACCESS *</pattern><template><think><srai>NOPX 3713</srai></think><random><li><srai>EXPDEX WHO NEEDS ACCESS <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS ACCOMMODATION *</pattern><template><think><srai>NOPX 987</srai></think><random><li><srai>EXPDEX WHO NEEDS ACCOMMODATION <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS ADDITIONAL *</pattern><template><think><srai>NOPX 3823</srai></think><random><li><srai>EXPDEX WHO NEEDS ADDITIONAL <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS ADVICE *</pattern><template><think><srai>NOPX 1364</srai></think><random><li><srai>EXPDEX WHO NEEDS ADVICE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS ALL *</pattern><template><think><srai>NOPX 3035</srai></think><random><li><srai>EXPDEX WHO NEEDS ALL <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS AN *</pattern><template><think><srai>NOPX 23581</srai></think><random><li><srai>EXPDEX WHO NEEDS AN <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS ANOTHER *</pattern><template><think><srai>NOPX 2295</srai></think><random><li><srai>EXPDEX WHO NEEDS ANOTHER <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS ANY *</pattern><template><think><srai>NOPX 2136</srai></think><random><li><srai>EXPDEX WHO NEEDS ANY <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS ANYTHING *</pattern><template><think><srai>NOPX 885</srai></think><random><li><srai>EXPDEX WHO NEEDS ANYTHING <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS APPLIANCE *</pattern><template><think><srai>NOPX 6029</srai></think><random><li><srai>EXPDEX WHO NEEDS APPLIANCE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS ASSISTANCE *</pattern><template><think><srai>NOPX 7266</srai></think><random><li><srai>EXPDEX WHO NEEDS ASSISTANCE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS ATTACKERS *</pattern><template><think><srai>NOPX 855</srai></think><random><li><srai>EXPDEX WHO NEEDS ATTACKERS <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS ATTENTION *</pattern><template><think><srai>NOPX 593</srai></think><random><li><srai>EXPDEX WHO NEEDS ATTENTION <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS BASIC *</pattern><template><think><srai>NOPX 605</srai></think><random><li><srai>EXPDEX WHO NEEDS BASIC <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS BIG *</pattern><template><think><srai>NOPX 873</srai></think><random><li><srai>EXPDEX WHO NEEDS BIG <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS BLOOD *</pattern><template><think><srai>NOPX 564</srai></think><random><li><srai>EXPDEX WHO NEEDS BLOOD <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS BOTH *</pattern><template><think><srai>NOPX 890</srai></think><random><li><srai>EXPDEX WHO NEEDS BOTH <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS CARE *</pattern><template><think><srai>NOPX 1767</srai></think><random><li><srai>EXPDEX WHO NEEDS CARE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS CHEERING *</pattern><template><think><srai>NOPX 533</srai></think><random><li><srai>EXPDEX WHO NEEDS CHEERING <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS CONSTANT *</pattern><template><think><srai>NOPX 1061</srai></think><random><li><srai>EXPDEX WHO NEEDS CONSTANT <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS CUPID *</pattern><template><think><srai>NOPX 539</srai></think><random><li><srai>EXPDEX WHO NEEDS CUPID <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS CUSHIONING *</pattern><template><think><srai>NOPX 940</srai></think><random><li><srai>EXPDEX WHO NEEDS CUSHIONING <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS DRUGS *</pattern><template><think><srai>NOPX 458</srai></think><random><li><srai>EXPDEX WHO NEEDS DRUGS <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS EM *</pattern><template><think><srai>NOPX 5591</srai></think><random><li><srai>EXPDEX WHO NEEDS EM <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS EMERGENCY *</pattern><template><think><srai>NOPX 449</srai></think><random><li><srai>EXPDEX WHO NEEDS EMERGENCY <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS ENCOURAGEMENT *</pattern><template><think><srai>NOPX 754</srai></think><random><li><srai>EXPDEX WHO NEEDS ENCOURAGEMENT <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS ENEMAS *</pattern><template><think><srai>NOPX 806</srai></think><random><li><srai>EXPDEX WHO NEEDS ENEMAS <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS ENEMIES *</pattern><template><think><srai>NOPX 10171</srai></think><random><li><srai>EXPDEX WHO NEEDS ENEMIES <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS EVERY *</pattern><template><think><srai>NOPX 465</srai></think><random><li><srai>EXPDEX WHO NEEDS EVERY <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS EVERYTHING *</pattern><template><think><srai>NOPX 408</srai></think><random><li><srai>EXPDEX WHO NEEDS EVERYTHING <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS EXTRA *</pattern><template><think><srai>NOPX 24788</srai></think><random><li><srai>EXPDEX WHO NEEDS EXTRA <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS FAST *</pattern><template><think><srai>NOPX 541</srai></think><random><li><srai>EXPDEX WHO NEEDS FAST <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS FINANCIAL *</pattern><template><think><srai>NOPX 963</srai></think><random><li><srai>EXPDEX WHO NEEDS FINANCIAL <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS FLEXIBILITY *</pattern><template><think><srai>NOPX 4830</srai></think><random><li><srai>EXPDEX WHO NEEDS FLEXIBILITY <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS FOOD *</pattern><template><think><srai>NOPX 2457</srai></think><random><li><srai>EXPDEX WHO NEEDS FOOD <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS FRIENDS *</pattern><template><think><srai>NOPX 1784</srai></think><random><li><srai>EXPDEX WHO NEEDS FRIENDS <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS FULL *</pattern><template><think><srai>NOPX 483</srai></think><random><li><srai>EXPDEX WHO NEEDS FULL <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS FURTHER *</pattern><template><think><srai>NOPX 618</srai></think><random><li><srai>EXPDEX WHO NEEDS FURTHER <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS GLASSES *</pattern><template><think><srai>NOPX 573</srai></think><random><li><srai>EXPDEX WHO NEEDS GLASSES <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS GOOD *</pattern><template><think><srai>NOPX 891</srai></think><random><li><srai>EXPDEX WHO NEEDS GOOD <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS GUIDANCE *</pattern><template><think><srai>NOPX 563</srai></think><random><li><srai>EXPDEX WHO NEEDS GUIDANCE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS HEALING *</pattern><template><think><srai>NOPX 554</srai></think><random><li><srai>EXPDEX WHO NEEDS HEALING <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS HEALTH *</pattern><template><think><srai>NOPX 477</srai></think><random><li><srai>EXPDEX WHO NEEDS HEALTH <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS HELP *</pattern><template><think><srai>NOPX 33546</srai></think><random><li><srai>EXPDEX WHO NEEDS HELP <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS HER *</pattern><template><think><srai>NOPX 3620</srai></think><random><li><srai>EXPDEX WHO NEEDS HER <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS HIGH *</pattern><template><think><srai>NOPX 756</srai></think><random><li><srai>EXPDEX WHO NEEDS HIGH <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS HIM *</pattern><template><think><srai>NOPX 1780</srai></think><random><li><srai>EXPDEX WHO NEEDS HIM <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS HIS *</pattern><template><think><srai>NOPX 3829</srai></think><random><li><srai>EXPDEX WHO NEEDS HIS <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS HOUSING *</pattern><template><think><srai>NOPX 550</srai></think><random><li><srai>EXPDEX WHO NEEDS HOUSING <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS IMMEDIATE *</pattern><template><think><srai>NOPX 1279</srai></think><random><li><srai>EXPDEX WHO NEEDS IMMEDIATE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS INFORMATION *</pattern><template><think><srai>NOPX 2611</srai></think><random><li><srai>EXPDEX WHO NEEDS INFORMATION <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS IT *</pattern><template><think><srai>NOPX 63030</srai></think><random><li><srai>EXPDEX WHO NEEDS IT <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS JUST *</pattern><template><think><srai>NOPX 984</srai></think><random><li><srai>EXPDEX WHO NEEDS JUST <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS LEGAL *</pattern><template><think><srai>NOPX 419</srai></think><random><li><srai>EXPDEX WHO NEEDS LEGAL <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS LIFE *</pattern><template><think><srai>NOPX 409</srai></think><random><li><srai>EXPDEX WHO NEEDS LIFE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS LITTLE *</pattern><template><think><srai>NOPX 774</srai></think><random><li><srai>EXPDEX WHO NEEDS LITTLE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS LONG *</pattern><template><think><srai>NOPX 592</srai></think><random><li><srai>EXPDEX WHO NEEDS LONG <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS LOOKING *</pattern><template><think><srai>NOPX 544</srai></think><random><li><srai>EXPDEX WHO NEEDS LOOKING <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS LOTS *</pattern><template><think><srai>NOPX 1018</srai></think><random><li><srai>EXPDEX WHO NEEDS LOTS <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS LOVE *</pattern><template><think><srai>NOPX 1607</srai></think><random><li><srai>EXPDEX WHO NEEDS LOVE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS MASSIVE *</pattern><template><think><srai>NOPX 1403</srai></think><random><li><srai>EXPDEX WHO NEEDS MASSIVE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS MAXIMUM *</pattern><template><think><srai>NOPX 490</srai></think><random><li><srai>EXPDEX WHO NEEDS MAXIMUM <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS ME *</pattern><template><think><srai>NOPX 4400</srai></think><random><li><srai>EXPDEX WHO NEEDS ME <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS MEDICAL *</pattern><template><think><srai>NOPX 1251</srai></think><random><li><srai>EXPDEX WHO NEEDS MEDICAL <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS MONEY *</pattern><template><think><srai>NOPX 2255</srai></think><random><li><srai>EXPDEX WHO NEEDS MONEY <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS MORE *</pattern><template><think><srai>NOPX 11435</srai></think><random><li><srai>EXPDEX WHO NEEDS MORE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS MUSIC *</pattern><template><think><srai>NOPX 440</srai></think><random><li><srai>EXPDEX WHO NEEDS MUSIC <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS MY *</pattern><template><think><srai>NOPX 2035</srai></think><random><li><srai>EXPDEX WHO NEEDS MY <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS NEW *</pattern><template><think><srai>NOPX 686</srai></think><random><li><srai>EXPDEX WHO NEEDS NEW <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS NO *</pattern><template><think><srai>NOPX 6743</srai></think><random><li><srai>EXPDEX WHO NEEDS NO <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS NOT *</pattern><template><think><srai>NOPX 535</srai></think><random><li><srai>EXPDEX WHO NEEDS NOT <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS NOTHING *</pattern><template><think><srai>NOPX 475</srai></think><random><li><srai>EXPDEX WHO NEEDS NOTHING <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS ONE *</pattern><template><think><srai>NOPX 8731</srai></think><random><li><srai>EXPDEX WHO NEEDS ONE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS ONLY *</pattern><template><think><srai>NOPX 1435</srai></think><random><li><srai>EXPDEX WHO NEEDS ONLY <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS OUR *</pattern><template><think><srai>NOPX 3048</srai></think><random><li><srai>EXPDEX WHO NEEDS OUR <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS PEOPLE *</pattern><template><think><srai>NOPX 679</srai></think><random><li><srai>EXPDEX WHO NEEDS PEOPLE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS POWER *</pattern><template><think><srai>NOPX 629</srai></think><random><li><srai>EXPDEX WHO NEEDS POWER <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS POWERFUL *</pattern><template><think><srai>NOPX 961</srai></think><random><li><srai>EXPDEX WHO NEEDS POWERFUL <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS PRAYER *</pattern><template><think><srai>NOPX 2015</srai></think><random><li><srai>EXPDEX WHO NEEDS PRAYER <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS PRO *</pattern><template><think><srai>NOPX 455</srai></think><random><li><srai>EXPDEX WHO NEEDS PRO <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS PROFESSIONAL *</pattern><template><think><srai>NOPX 564</srai></think><random><li><srai>EXPDEX WHO NEEDS PROFESSIONAL <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS PROOF *</pattern><template><think><srai>NOPX 507</srai></think><random><li><srai>EXPDEX WHO NEEDS PROOF <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS PROTECTION *</pattern><template><think><srai>NOPX 1286</srai></think><random><li><srai>EXPDEX WHO NEEDS PROTECTION <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS QUALITY *</pattern><template><think><srai>NOPX 454</srai></think><random><li><srai>EXPDEX WHO NEEDS QUALITY <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS QUICK *</pattern><template><think><srai>NOPX 770</srai></think><random><li><srai>EXPDEX WHO NEEDS QUICK <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS REAL *</pattern><template><think><srai>NOPX 752</srai></think><random><li><srai>EXPDEX WHO NEEDS REAL <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS REGULAR *</pattern><template><think><srai>NOPX 467</srai></think><random><li><srai>EXPDEX WHO NEEDS REGULAR <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS REMINDING *</pattern><template><think><srai>NOPX 422</srai></think><random><li><srai>EXPDEX WHO NEEDS REMINDING <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS RESCUING *</pattern><template><think><srai>NOPX 731</srai></think><random><li><srai>EXPDEX WHO NEEDS RESCUING <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS ROUTINE *</pattern><template><think><srai>NOPX 673</srai></think><random><li><srai>EXPDEX WHO NEEDS ROUTINE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS SERVICES *</pattern><template><think><srai>NOPX 539</srai></think><random><li><srai>EXPDEX WHO NEEDS SERVICES <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS SLEEP *</pattern><template><think><srai>NOPX 2155</srai></think><random><li><srai>EXPDEX WHO NEEDS SLEEP <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS SOME *</pattern><template><think><srai>NOPX 10530</srai></think><random><li><srai>EXPDEX WHO NEEDS SOME <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS SOMEBODY *</pattern><template><think><srai>NOPX 798</srai></think><random><li><srai>EXPDEX WHO NEEDS SOMEBODY <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS SOMEONE *</pattern><template><think><srai>NOPX 2571</srai></think><random><li><srai>EXPDEX WHO NEEDS SOMEONE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS SOMETHING *</pattern><template><think><srai>NOPX 2195</srai></think><random><li><srai>EXPDEX WHO NEEDS SOMETHING <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS SPECIAL *</pattern><template><think><srai>NOPX 2556</srai></think><random><li><srai>EXPDEX WHO NEEDS SPECIAL <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS STRONG *</pattern><template><think><srai>NOPX 422</srai></think><random><li><srai>EXPDEX WHO NEEDS STRONG <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS SUCH *</pattern><template><think><srai>NOPX 1289</srai></think><random><li><srai>EXPDEX WHO NEEDS SUCH <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS SUPPORT *</pattern><template><think><srai>NOPX 2298</srai></think><random><li><srai>EXPDEX WHO NEEDS SUPPORT <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS THAT *</pattern><template><think><srai>NOPX 8192</srai></think><random><li><srai>EXPDEX WHO NEEDS THAT <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS THE *</pattern><template><think><srai>NOPX 37361</srai></think><random><li><srai>EXPDEX WHO NEEDS THE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS THEIR *</pattern><template><think><srai>NOPX 3065</srai></think><random><li><srai>EXPDEX WHO NEEDS THEIR <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS THEM *</pattern><template><think><srai>NOPX 17918</srai></think><random><li><srai>EXPDEX WHO NEEDS THEM <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS THERAPY *</pattern><template><think><srai>NOPX 580</srai></think><random><li><srai>EXPDEX WHO NEEDS THERAPY <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS THESE *</pattern><template><think><srai>NOPX 1255</srai></think><random><li><srai>EXPDEX WHO NEEDS THESE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS THIS *</pattern><template><think><srai>NOPX 8625</srai></think><random><li><srai>EXPDEX WHO NEEDS THIS <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS THOSE *</pattern><template><think><srai>NOPX 2543</srai></think><random><li><srai>EXPDEX WHO NEEDS THOSE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TIME *</pattern><template><think><srai>NOPX 896</srai></think><random><li><srai>EXPDEX WHO NEEDS TIME <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO *</pattern><template><think><srai>NOPX 284063</srai></think><random><li><srai>EXPDEX WHO NEEDS TO <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TOP *</pattern><template><think><srai>NOPX 907</srai></think><random><li><srai>EXPDEX WHO NEEDS TOP <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TRAINING *</pattern><template><think><srai>NOPX 1166</srai></think><random><li><srai>EXPDEX WHO NEEDS TRAINING <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TREATMENT *</pattern><template><think><srai>NOPX 1606</srai></think><random><li><srai>EXPDEX WHO NEEDS TREATMENT <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TWO *</pattern><template><think><srai>NOPX 692</srai></think><random><li><srai>EXPDEX WHO NEEDS TWO <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS US *</pattern><template><think><srai>NOPX 1427</srai></think><random><li><srai>EXPDEX WHO NEEDS US <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS VISA *</pattern><template><think><srai>NOPX 586</srai></think><random><li><srai>EXPDEX WHO NEEDS VISA <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS WHAT *</pattern><template><think><srai>NOPX 5380</srai></think><random><li><srai>EXPDEX WHO NEEDS WHAT <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS WHO *</pattern><template><think><srai>NOPX 436</srai></think><random><li><srai>EXPDEX WHO NEEDS WHO <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS WINDOWS *</pattern><template><think><srai>NOPX 2186</srai></think><random><li><srai>EXPDEX WHO NEEDS WINDOWS <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS WORK *</pattern><template><think><srai>NOPX 720</srai></think><random><li><srai>EXPDEX WHO NEEDS WORK <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS YOU *</pattern><template><think><srai>NOPX 5579</srai></think><random><li><srai>EXPDEX WHO NEEDS YOU <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS YOUR *</pattern><template><think><srai>NOPX 5474</srai></think><random><li><srai>EXPDEX WHO NEEDS YOUR <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS AN IPOD *</pattern><template><think><srai>NOPX 2440</srai></think><random><li><srai>EXPDEX WHO NEEDS AN IPOD <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS DESPERATE HOUSEWIVES *</pattern><template><think><srai>NOPX 466</srai></think><random><li><srai>EXPDEX WHO NEEDS DESPERATE HOUSEWIVES <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO BE *</pattern><template><think><srai>NOPX 476</srai></think><random><li><srai>EXPDEX WHO NEEDS TO BE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO GET *</pattern><template><think><srai>NOPX 443</srai></think><random><li><srai>EXPDEX WHO NEEDS TO GET <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A TV *</pattern><template><think><srai>NOPX 2358</srai></think><random><li><srai>EXPDEX WHO NEEDS A TV <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A TIMEOUT *</pattern><template><think><srai>NOPX 1185</srai></think><random><li><srai>EXPDEX WHO NEEDS A TIMEOUT <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS BEACH VOLLEYBALL *</pattern><template><think><srai>NOPX 749</srai></think><random><li><srai>EXPDEX WHO NEEDS BEACH VOLLEYBALL <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS BIG TITS *</pattern><template><think><srai>NOPX 6364</srai></think><random><li><srai>EXPDEX WHO NEEDS BIG TITS <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS CLASSICAL MUSIC *</pattern><template><think><srai>NOPX 605</srai></think><random><li><srai>EXPDEX WHO NEEDS CLASSICAL MUSIC <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS FILM *</pattern><template><think><srai>NOPX 5978</srai></think><random><li><srai>EXPDEX WHO NEEDS FILM <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS GUITARS ANYWAY *</pattern><template><think><srai>NOPX 2138</srai></think><random><li><srai>EXPDEX WHO NEEDS GUITARS ANYWAY <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS IT *</pattern><template><think><srai>NOPX 778</srai></think><random><li><srai>EXPDEX WHO NEEDS IT <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS LIFE INSURANCE *</pattern><template><think><srai>NOPX 743</srai></think><random><li><srai>EXPDEX WHO NEEDS LIFE INSURANCE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS LOVE LIKE *</pattern><template><think><srai>NOPX 2288</srai></think><random><li><srai>EXPDEX WHO NEEDS LOVE LIKE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS MONEY LYRICS *</pattern><template><think><srai>NOPX 744</srai></think><random><li><srai>EXPDEX WHO NEEDS MONEY LYRICS <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS MONEY WHOLE *</pattern><template><think><srai>NOPX 659</srai></think><random><li><srai>EXPDEX WHO NEEDS MONEY WHOLE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS NO GUIDANCE *</pattern><template><think><srai>NOPX 793</srai></think><random><li><srai>EXPDEX WHO NEEDS NO GUIDANCE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS OXYGEN *</pattern><template><think><srai>NOPX 2233</srai></think><random><li><srai>EXPDEX WHO NEEDS OXYGEN <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS OXYGEN PHOTOS *</pattern><template><think><srai>NOPX 438</srai></think><random><li><srai>EXPDEX WHO NEEDS OXYGEN PHOTOS <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS PICTURES *</pattern><template><think><srai>NOPX 909</srai></think><random><li><srai>EXPDEX WHO NEEDS PICTURES <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS PICTURES *</pattern><template><think><srai>NOPX 455</srai></think><random><li><srai>EXPDEX WHO NEEDS PICTURES <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS REAL HELP *</pattern><template><think><srai>NOPX 642</srai></think><random><li><srai>EXPDEX WHO NEEDS REAL HELP <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS SLEEP TONIGHT *</pattern><template><think><srai>NOPX 424</srai></think><random><li><srai>EXPDEX WHO NEEDS SLEEP TONIGHT <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS THE BLEACHERS *</pattern><template><think><srai>NOPX 627</srai></think><random><li><srai>EXPDEX WHO NEEDS THE BLEACHERS <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS THE HASSLE *</pattern><template><think><srai>NOPX 415</srai></think><random><li><srai>EXPDEX WHO NEEDS THE HASSLE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS THE PEACE *</pattern><template><think><srai>NOPX 1129</srai></think><random><li><srai>EXPDEX WHO NEEDS THE PEACE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS THE WORLD *</pattern><template><think><srai>NOPX 632</srai></think><random><li><srai>EXPDEX WHO NEEDS THE WORLD <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO BE *</pattern><template><think><srai>NOPX 1081</srai></think><random><li><srai>EXPDEX WHO NEEDS TO BE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO DREAM *</pattern><template><think><srai>NOPX 533</srai></think><random><li><srai>EXPDEX WHO NEEDS TO DREAM <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS YOU *</pattern><template><think><srai>NOPX 1422</srai></think><random><li><srai>EXPDEX WHO NEEDS YOU <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS YOU BABY *</pattern><template><think><srai>NOPX 673</srai></think><random><li><srai>EXPDEX WHO NEEDS YOU BABY <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS YOU WHO *</pattern><template><think><srai>NOPX 515</srai></think><random><li><srai>EXPDEX WHO NEEDS YOU WHO <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS YOU LYRICS *</pattern><template><think><srai>NOPX 637</srai></think><random><li><srai>EXPDEX WHO NEEDS YOU LYRICS <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A VISA *</pattern><template><think><srai>NOPX 402</srai></think><random><li><srai>EXPDEX WHO NEEDS A VISA <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A WHITE *</pattern><template><think><srai>NOPX 429</srai></think><random><li><srai>EXPDEX WHO NEEDS A WHITE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS AN INTERIOR *</pattern><template><think><srai>NOPX 506</srai></think><random><li><srai>EXPDEX WHO NEEDS AN INTERIOR <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS THE PEACE *</pattern><template><think><srai>NOPX 485</srai></think><random><li><srai>EXPDEX WHO NEEDS THE PEACE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO ATTEND *</pattern><template><think><srai>NOPX 1893</srai></think><random><li><srai>EXPDEX WHO NEEDS TO ATTEND <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO KNOW *</pattern><template><think><srai>NOPX 833</srai></think><random><li><srai>EXPDEX WHO NEEDS TO KNOW <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO BE *</pattern><template><think><srai>NOPX 420</srai></think><random><li><srai>EXPDEX WHO NEEDS TO BE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A GB *</pattern><template><think><srai>NOPX 558</srai></think><random><li><srai>EXPDEX WHO NEEDS A GB <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A LAUNDROMAT *</pattern><template><think><srai>NOPX 1445</srai></think><random><li><srai>EXPDEX WHO NEEDS A LAUNDROMAT <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A MAC *</pattern><template><think><srai>NOPX 899</srai></think><random><li><srai>EXPDEX WHO NEEDS A MAC <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A MEGASITE *</pattern><template><think><srai>NOPX 1209</srai></think><random><li><srai>EXPDEX WHO NEEDS A MEGASITE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A TV *</pattern><template><think><srai>NOPX 608</srai></think><random><li><srai>EXPDEX WHO NEEDS A TV <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A CAR *</pattern><template><think><srai>NOPX 546</srai></think><random><li><srai>EXPDEX WHO NEEDS A CAR <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A GIRLFRIEND *</pattern><template><think><srai>NOPX 403</srai></think><random><li><srai>EXPDEX WHO NEEDS A GIRLFRIEND <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A GUN *</pattern><template><think><srai>NOPX 749</srai></think><random><li><srai>EXPDEX WHO NEEDS A GUN <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A HEART *</pattern><template><think><srai>NOPX 500</srai></think><random><li><srai>EXPDEX WHO NEEDS A HEART <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A JOB *</pattern><template><think><srai>NOPX 451</srai></think><random><li><srai>EXPDEX WHO NEEDS A JOB <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A LIFE *</pattern><template><think><srai>NOPX 769</srai></think><random><li><srai>EXPDEX WHO NEEDS A LIFE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A MAN *</pattern><template><think><srai>NOPX 638</srai></think><random><li><srai>EXPDEX WHO NEEDS A MAN <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A NEW *</pattern><template><think><srai>NOPX 435</srai></think><random><li><srai>EXPDEX WHO NEEDS A NEW <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A PERMIT *</pattern><template><think><srai>NOPX 505</srai></think><random><li><srai>EXPDEX WHO NEEDS A PERMIT <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A PORTABLE *</pattern><template><think><srai>NOPX 1625</srai></think><random><li><srai>EXPDEX WHO NEEDS A PORTABLE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A TITLE *</pattern><template><think><srai>NOPX 513</srai></think><random><li><srai>EXPDEX WHO NEEDS A TITLE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A VISA *</pattern><template><think><srai>NOPX 2886</srai></think><random><li><srai>EXPDEX WHO NEEDS A VISA <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS ACTUAL PENNSYLVANIANS *</pattern><template><think><srai>NOPX 1558</srai></think><random><li><srai>EXPDEX WHO NEEDS ACTUAL PENNSYLVANIANS <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS AN IQAS *</pattern><template><think><srai>NOPX 405</srai></think><random><li><srai>EXPDEX WHO NEEDS AN IQAS <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS AN IPOD *</pattern><template><think><srai>NOPX 551</srai></think><random><li><srai>EXPDEX WHO NEEDS AN IPOD <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS AN OLD *</pattern><template><think><srai>NOPX 956</srai></think><random><li><srai>EXPDEX WHO NEEDS AN OLD <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS BIG TITS *</pattern><template><think><srai>NOPX 2857</srai></think><random><li><srai>EXPDEX WHO NEEDS BIG TITS <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS DATING SITES *</pattern><template><think><srai>NOPX 690</srai></think><random><li><srai>EXPDEX WHO NEEDS DATING SITES <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS EXPANSION PACKS *</pattern><template><think><srai>NOPX 4757</srai></think><random><li><srai>EXPDEX WHO NEEDS EXPANSION PACKS <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS EXPENSIVE SEO *</pattern><template><think><srai>NOPX 651</srai></think><random><li><srai>EXPDEX WHO NEEDS EXPENSIVE SEO <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS MONEY *</pattern><template><think><srai>NOPX 698</srai></think><random><li><srai>EXPDEX WHO NEEDS MONEY <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS MORNING COFFEE *</pattern><template><think><srai>NOPX 1780</srai></think><random><li><srai>EXPDEX WHO NEEDS MORNING COFFEE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS NARNIA DESCRIPTION *</pattern><template><think><srai>NOPX 1790</srai></think><random><li><srai>EXPDEX WHO NEEDS NARNIA DESCRIPTION <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS NUCLEAR ENERGY *</pattern><template><think><srai>NOPX 432</srai></think><random><li><srai>EXPDEX WHO NEEDS NUCLEAR ENERGY <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS RHETORICAL QUESTIONS *</pattern><template><think><srai>NOPX 881</srai></think><random><li><srai>EXPDEX WHO NEEDS RHETORICAL QUESTIONS <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS STATE TELEVISION *</pattern><template><think><srai>NOPX 1355</srai></think><random><li><srai>EXPDEX WHO NEEDS STATE TELEVISION <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS THE PATRIOT *</pattern><template><think><srai>NOPX 404</srai></think><random><li><srai>EXPDEX WHO NEEDS THE PATRIOT <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS THE SCOTS *</pattern><template><think><srai>NOPX 2041</srai></think><random><li><srai>EXPDEX WHO NEEDS THE SCOTS <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS THE SUN *</pattern><template><think><srai>NOPX 2389</srai></think><random><li><srai>EXPDEX WHO NEEDS THE SUN <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS THE WORLD *</pattern><template><think><srai>NOPX 548</srai></think><random><li><srai>EXPDEX WHO NEEDS THE WORLD <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS THE YOUNG *</pattern><template><think><srai>NOPX 950</srai></think><random><li><srai>EXPDEX WHO NEEDS THE YOUNG <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS THIS *</pattern><template><think><srai>NOPX 824</srai></think><random><li><srai>EXPDEX WHO NEEDS THIS <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A *</pattern><template><think><srai>NOPX 425</srai></think><random><li><srai>EXPDEX WHO NEEDS A <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A *</pattern><template><think><srai>NOPX 639</srai></think><random><li><srai>EXPDEX WHO NEEDS A <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A BAR *</pattern><template><think><srai>NOPX 1842</srai></think><random><li><srai>EXPDEX WHO NEEDS A BAR <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A BASIC *</pattern><template><think><srai>NOPX 714</srai></think><random><li><srai>EXPDEX WHO NEEDS A BASIC <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A BETTER *</pattern><template><think><srai>NOPX 759</srai></think><random><li><srai>EXPDEX WHO NEEDS A BETTER <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A BIG *</pattern><template><think><srai>NOPX 715</srai></think><random><li><srai>EXPDEX WHO NEEDS A BIG <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A BIT *</pattern><template><think><srai>NOPX 964</srai></think><random><li><srai>EXPDEX WHO NEEDS A BIT <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A BREAK *</pattern><template><think><srai>NOPX 1135</srai></think><random><li><srai>EXPDEX WHO NEEDS A BREAK <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A CAR *</pattern><template><think><srai>NOPX 646</srai></think><random><li><srai>EXPDEX WHO NEEDS A CAR <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A COMPREHENSIVE *</pattern><template><think><srai>NOPX 528</srai></think><random><li><srai>EXPDEX WHO NEEDS A COMPREHENSIVE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A COMPUTER *</pattern><template><think><srai>NOPX 772</srai></think><random><li><srai>EXPDEX WHO NEEDS A COMPUTER <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A COPY *</pattern><template><think><srai>NOPX 439</srai></think><random><li><srai>EXPDEX WHO NEEDS A COPY <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A CUSTOM *</pattern><template><think><srai>NOPX 824</srai></think><random><li><srai>EXPDEX WHO NEEDS A CUSTOM <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A DESCRIPTION *</pattern><template><think><srai>NOPX 777</srai></think><random><li><srai>EXPDEX WHO NEEDS A DESCRIPTION <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A DICTIONARY *</pattern><template><think><srai>NOPX 4242</srai></think><random><li><srai>EXPDEX WHO NEEDS A DICTIONARY <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A FAST *</pattern><template><think><srai>NOPX 718</srai></think><random><li><srai>EXPDEX WHO NEEDS A FAST <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A FEW *</pattern><template><think><srai>NOPX 464</srai></think><random><li><srai>EXPDEX WHO NEEDS A FEW <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A FRESH *</pattern><template><think><srai>NOPX 404</srai></think><random><li><srai>EXPDEX WHO NEEDS A FRESH <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A FRIEND *</pattern><template><think><srai>NOPX 1137</srai></think><random><li><srai>EXPDEX WHO NEEDS A FRIEND <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A FULL *</pattern><template><think><srai>NOPX 449</srai></think><random><li><srai>EXPDEX WHO NEEDS A FULL <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A GOOD *</pattern><template><think><srai>NOPX 4638</srai></think><random><li><srai>EXPDEX WHO NEEDS A GOOD <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A GREAT *</pattern><template><think><srai>NOPX 603</srai></think><random><li><srai>EXPDEX WHO NEEDS A GREAT <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A HAND *</pattern><template><think><srai>NOPX 444</srai></think><random><li><srai>EXPDEX WHO NEEDS A HAND <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A HEART *</pattern><template><think><srai>NOPX 491</srai></think><random><li><srai>EXPDEX WHO NEEDS A HEART <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A HELPING *</pattern><template><think><srai>NOPX 582</srai></think><random><li><srai>EXPDEX WHO NEEDS A HELPING <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A HIGH *</pattern><template><think><srai>NOPX 563</srai></think><random><li><srai>EXPDEX WHO NEEDS A HIGH <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A HOLIDAY *</pattern><template><think><srai>NOPX 1009</srai></think><random><li><srai>EXPDEX WHO NEEDS A HOLIDAY <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A HOME *</pattern><template><think><srai>NOPX 2404</srai></think><random><li><srai>EXPDEX WHO NEEDS A HOME <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A HUG *</pattern><template><think><srai>NOPX 507</srai></think><random><li><srai>EXPDEX WHO NEEDS A HUG <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A JOB *</pattern><template><think><srai>NOPX 1506</srai></think><random><li><srai>EXPDEX WHO NEEDS A JOB <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A LAWYER *</pattern><template><think><srai>NOPX 6690</srai></think><random><li><srai>EXPDEX WHO NEEDS A LAWYER <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A LIFE *</pattern><template><think><srai>NOPX 614</srai></think><random><li><srai>EXPDEX WHO NEEDS A LIFE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A LIFT *</pattern><template><think><srai>NOPX 674</srai></think><random><li><srai>EXPDEX WHO NEEDS A LIFT <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A LIGHT *</pattern><template><think><srai>NOPX 458</srai></think><random><li><srai>EXPDEX WHO NEEDS A LIGHT <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A LITTLE *</pattern><template><think><srai>NOPX 5113</srai></think><random><li><srai>EXPDEX WHO NEEDS A LITTLE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A LOT *</pattern><template><think><srai>NOPX 1750</srai></think><random><li><srai>EXPDEX WHO NEEDS A LOT <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A LOVING *</pattern><template><think><srai>NOPX 402</srai></think><random><li><srai>EXPDEX WHO NEEDS A LOVING <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A MAN *</pattern><template><think><srai>NOPX 597</srai></think><random><li><srai>EXPDEX WHO NEEDS A MAN <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A NEW *</pattern><template><think><srai>NOPX 2751</srai></think><random><li><srai>EXPDEX WHO NEEDS A NEW <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A PLACE *</pattern><template><think><srai>NOPX 1608</srai></think><random><li><srai>EXPDEX WHO NEEDS A PLACE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A PRODUCT *</pattern><template><think><srai>NOPX 759</srai></think><random><li><srai>EXPDEX WHO NEEDS A PRODUCT <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A QUICK *</pattern><template><think><srai>NOPX 1604</srai></think><random><li><srai>EXPDEX WHO NEEDS A QUICK <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A REFRESHER *</pattern><template><think><srai>NOPX 584</srai></think><random><li><srai>EXPDEX WHO NEEDS A REFRESHER <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A RELIABLE *</pattern><template><think><srai>NOPX 880</srai></think><random><li><srai>EXPDEX WHO NEEDS A RELIABLE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A RIDE *</pattern><template><think><srai>NOPX 1193</srai></think><random><li><srai>EXPDEX WHO NEEDS A RIDE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A SIMPLE *</pattern><template><think><srai>NOPX 495</srai></think><random><li><srai>EXPDEX WHO NEEDS A SIMPLE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A SPECIAL *</pattern><template><think><srai>NOPX 992</srai></think><random><li><srai>EXPDEX WHO NEEDS A SPECIAL <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A STRONG *</pattern><template><think><srai>NOPX 437</srai></think><random><li><srai>EXPDEX WHO NEEDS A STRONG <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A TIMER *</pattern><template><think><srai>NOPX 629</srai></think><random><li><srai>EXPDEX WHO NEEDS A TIMER <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A TRANSPLANT *</pattern><template><think><srai>NOPX 485</srai></think><random><li><srai>EXPDEX WHO NEEDS A TRANSPLANT <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A VISA *</pattern><template><think><srai>NOPX 1005</srai></think><random><li><srai>EXPDEX WHO NEEDS A VISA <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A WEBSITE *</pattern><template><think><srai>NOPX 664</srai></think><random><li><srai>EXPDEX WHO NEEDS A WEBSITE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A WHIRLPOOL *</pattern><template><think><srai>NOPX 502</srai></think><random><li><srai>EXPDEX WHO NEEDS A WHIRLPOOL <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS ADDITIONAL STABILITY *</pattern><template><think><srai>NOPX 2140</srai></think><random><li><srai>EXPDEX WHO NEEDS ADDITIONAL STABILITY <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS ALL THE *</pattern><template><think><srai>NOPX 1114</srai></think><random><li><srai>EXPDEX WHO NEEDS ALL THE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS ALL THOSE *</pattern><template><think><srai>NOPX 461</srai></think><random><li><srai>EXPDEX WHO NEEDS ALL THOSE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS AN ACCOMMODATION *</pattern><template><think><srai>NOPX 647</srai></think><random><li><srai>EXPDEX WHO NEEDS AN ACCOMMODATION <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS AN ATTORNEY *</pattern><template><think><srai>NOPX 5819</srai></think><random><li><srai>EXPDEX WHO NEEDS AN ATTORNEY <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS AN EFFORTLESS *</pattern><template><think><srai>NOPX 1040</srai></think><random><li><srai>EXPDEX WHO NEEDS AN EFFORTLESS <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS AN EXCUSE *</pattern><template><think><srai>NOPX 461</srai></think><random><li><srai>EXPDEX WHO NEEDS AN EXCUSE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS AN EXTRA *</pattern><template><think><srai>NOPX 639</srai></think><random><li><srai>EXPDEX WHO NEEDS AN EXTRA <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS AN OLD *</pattern><template><think><srai>NOPX 964</srai></think><random><li><srai>EXPDEX WHO NEEDS AN OLD <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS ANY ACCOMMODATION *</pattern><template><think><srai>NOPX 631</srai></think><random><li><srai>EXPDEX WHO NEEDS ANY ACCOMMODATION <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS APPLIANCE PARTS *</pattern><template><think><srai>NOPX 6025</srai></think><random><li><srai>EXPDEX WHO NEEDS APPLIANCE PARTS <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS ASSISTANCE IN *</pattern><template><think><srai>NOPX 1157</srai></think><random><li><srai>EXPDEX WHO NEEDS ASSISTANCE IN <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS ASSISTANCE OF *</pattern><template><think><srai>NOPX 407</srai></think><random><li><srai>EXPDEX WHO NEEDS ASSISTANCE OF <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS ASSISTANCE WITH *</pattern><template><think><srai>NOPX 986</srai></think><random><li><srai>EXPDEX WHO NEEDS ASSISTANCE WITH <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS BIG TITS *</pattern><template><think><srai>NOPX 601</srai></think><random><li><srai>EXPDEX WHO NEEDS BIG TITS <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS CHEERING UP *</pattern><template><think><srai>NOPX 499</srai></think><random><li><srai>EXPDEX WHO NEEDS CHEERING UP <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS CUSHIONING AND *</pattern><template><think><srai>NOPX 869</srai></think><random><li><srai>EXPDEX WHO NEEDS CUSHIONING AND <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS EXTRA HELP *</pattern><template><think><srai>NOPX 629</srai></think><random><li><srai>EXPDEX WHO NEEDS EXTRA HELP <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS EXTRA MONEY *</pattern><template><think><srai>NOPX 21786</srai></think><random><li><srai>EXPDEX WHO NEEDS EXTRA MONEY <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS FINANCIAL ASSISTANCE *</pattern><template><think><srai>NOPX 433</srai></think><random><li><srai>EXPDEX WHO NEEDS FINANCIAL ASSISTANCE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS FLEXIBILITY AND *</pattern><template><think><srai>NOPX 4543</srai></think><random><li><srai>EXPDEX WHO NEEDS FLEXIBILITY AND <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS HELP *</pattern><template><think><srai>NOPX 690</srai></think><random><li><srai>EXPDEX WHO NEEDS HELP <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS HELP AND *</pattern><template><think><srai>NOPX 1410</srai></think><random><li><srai>EXPDEX WHO NEEDS HELP AND <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS HELP GETTING *</pattern><template><think><srai>NOPX 616</srai></think><random><li><srai>EXPDEX WHO NEEDS HELP GETTING <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS HELP IN *</pattern><template><think><srai>NOPX 2111</srai></think><random><li><srai>EXPDEX WHO NEEDS HELP IN <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS HELP OR *</pattern><template><think><srai>NOPX 641</srai></think><random><li><srai>EXPDEX WHO NEEDS HELP OR <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS HELP PLANNING *</pattern><template><think><srai>NOPX 803</srai></think><random><li><srai>EXPDEX WHO NEEDS HELP PLANNING <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS HELP WITH *</pattern><template><think><srai>NOPX 4305</srai></think><random><li><srai>EXPDEX WHO NEEDS HELP WITH <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS HIS HELP *</pattern><template><think><srai>NOPX 850</srai></think><random><li><srai>EXPDEX WHO NEEDS HIS HELP <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS IMMEDIATE CONFIRMATION *</pattern><template><think><srai>NOPX 603</srai></think><random><li><srai>EXPDEX WHO NEEDS IMMEDIATE CONFIRMATION <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS INFORMATION ABOUT *</pattern><template><think><srai>NOPX 558</srai></think><random><li><srai>EXPDEX WHO NEEDS INFORMATION ABOUT <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS INFORMATION ON *</pattern><template><think><srai>NOPX 512</srai></think><random><li><srai>EXPDEX WHO NEEDS INFORMATION ON <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS IT *</pattern><template><think><srai>NOPX 988</srai></think><random><li><srai>EXPDEX WHO NEEDS IT <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS IT ALL *</pattern><template><think><srai>NOPX 1310</srai></think><random><li><srai>EXPDEX WHO NEEDS IT ALL <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS IT ANYWAY *</pattern><template><think><srai>NOPX 567</srai></think><random><li><srai>EXPDEX WHO NEEDS IT ANYWAY <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS IT FOR *</pattern><template><think><srai>NOPX 692</srai></think><random><li><srai>EXPDEX WHO NEEDS IT FOR <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS IT IN *</pattern><template><think><srai>NOPX 561</srai></think><random><li><srai>EXPDEX WHO NEEDS IT IN <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS IT THE *</pattern><template><think><srai>NOPX 614</srai></think><random><li><srai>EXPDEX WHO NEEDS IT THE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS LOOKING AFTER *</pattern><template><think><srai>NOPX 525</srai></think><random><li><srai>EXPDEX WHO NEEDS LOOKING AFTER <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS MASSIVE AMOUNTS *</pattern><template><think><srai>NOPX 1385</srai></think><random><li><srai>EXPDEX WHO NEEDS MASSIVE AMOUNTS <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS MORE INFORMATION *</pattern><template><think><srai>NOPX 511</srai></think><random><li><srai>EXPDEX WHO NEEDS MORE INFORMATION <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS MORE TIME *</pattern><template><think><srai>NOPX 480</srai></think><random><li><srai>EXPDEX WHO NEEDS MORE TIME <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS MY HELP *</pattern><template><think><srai>NOPX 582</srai></think><random><li><srai>EXPDEX WHO NEEDS MY HELP <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS NO INTRODUCTION *</pattern><template><think><srai>NOPX 3978</srai></think><random><li><srai>EXPDEX WHO NEEDS NO INTRODUCTION <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS OUR HELP *</pattern><template><think><srai>NOPX 1494</srai></think><random><li><srai>EXPDEX WHO NEEDS OUR HELP <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS POWERFUL COMPUTING *</pattern><template><think><srai>NOPX 858</srai></think><random><li><srai>EXPDEX WHO NEEDS POWERFUL COMPUTING <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS PRO UNK *</pattern><template><think><srai>NOPX 424</srai></think><random><li><srai>EXPDEX WHO NEEDS PRO UNK <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS ROUTINE AIRPORT *</pattern><template><think><srai>NOPX 640</srai></think><random><li><srai>EXPDEX WHO NEEDS ROUTINE AIRPORT <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS SOME EXTRA *</pattern><template><think><srai>NOPX 651</srai></think><random><li><srai>EXPDEX WHO NEEDS SOME EXTRA <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS SOME HELP *</pattern><template><think><srai>NOPX 1421</srai></think><random><li><srai>EXPDEX WHO NEEDS SOME HELP <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS SPECIAL EDUCATION *</pattern><template><think><srai>NOPX 545</srai></think><random><li><srai>EXPDEX WHO NEEDS SPECIAL EDUCATION <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS THAT KIND *</pattern><template><think><srai>NOPX 430</srai></think><random><li><srai>EXPDEX WHO NEEDS THAT KIND <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS THE CODE *</pattern><template><think><srai>NOPX 555</srai></think><random><li><srai>EXPDEX WHO NEEDS THE CODE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS THE EXTRA *</pattern><template><think><srai>NOPX 544</srai></think><random><li><srai>EXPDEX WHO NEEDS THE EXTRA <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS THE HELP *</pattern><template><think><srai>NOPX 2811</srai></think><random><li><srai>EXPDEX WHO NEEDS THE HELP <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS THE INFORMATION *</pattern><template><think><srai>NOPX 1177</srai></think><random><li><srai>EXPDEX WHO NEEDS THE INFORMATION <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS THE LEAST *</pattern><template><think><srai>NOPX 798</srai></think><random><li><srai>EXPDEX WHO NEEDS THE LEAST <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS THE MONEY *</pattern><template><think><srai>NOPX 853</srai></think><random><li><srai>EXPDEX WHO NEEDS THE MONEY <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS THE MOST *</pattern><template><think><srai>NOPX 602</srai></think><random><li><srai>EXPDEX WHO NEEDS THE MOST <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS THE QUIK *</pattern><template><think><srai>NOPX 1625</srai></think><random><li><srai>EXPDEX WHO NEEDS THE QUIK <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS THEIR HELP *</pattern><template><think><srai>NOPX 460</srai></think><random><li><srai>EXPDEX WHO NEEDS THEIR HELP <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS THEM ANYWAY *</pattern><template><think><srai>NOPX 780</srai></think><random><li><srai>EXPDEX WHO NEEDS THEM ANYWAY <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS THIS *</pattern><template><think><srai>NOPX 509</srai></think><random><li><srai>EXPDEX WHO NEEDS THIS <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS THIS INFORMATION *</pattern><template><think><srai>NOPX 458</srai></think><random><li><srai>EXPDEX WHO NEEDS THIS INFORMATION <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS THIS REMEDY *</pattern><template><think><srai>NOPX 2621</srai></think><random><li><srai>EXPDEX WHO NEEDS THIS REMEDY <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO *</pattern><template><think><srai>NOPX 1980</srai></think><random><li><srai>EXPDEX WHO NEEDS TO <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO ACCESS *</pattern><template><think><srai>NOPX 1239</srai></think><random><li><srai>EXPDEX WHO NEEDS TO ACCESS <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO ACHIEVE *</pattern><template><think><srai>NOPX 785</srai></think><random><li><srai>EXPDEX WHO NEEDS TO ACHIEVE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO ADD *</pattern><template><think><srai>NOPX 570</srai></think><random><li><srai>EXPDEX WHO NEEDS TO ADD <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO APPLY *</pattern><template><think><srai>NOPX 450</srai></think><random><li><srai>EXPDEX WHO NEEDS TO APPLY <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO APPROVE *</pattern><template><think><srai>NOPX 407</srai></think><random><li><srai>EXPDEX WHO NEEDS TO APPROVE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO ARRANGE *</pattern><template><think><srai>NOPX 810</srai></think><random><li><srai>EXPDEX WHO NEEDS TO ARRANGE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO ATTEND *</pattern><template><think><srai>NOPX 418</srai></think><random><li><srai>EXPDEX WHO NEEDS TO ATTEND <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO BE *</pattern><template><think><srai>NOPX 42396</srai></think><random><li><srai>EXPDEX WHO NEEDS TO BE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO BECOME *</pattern><template><think><srai>NOPX 414</srai></think><random><li><srai>EXPDEX WHO NEEDS TO BECOME <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO BRUSH *</pattern><template><think><srai>NOPX 492</srai></think><random><li><srai>EXPDEX WHO NEEDS TO BRUSH <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO BUILD *</pattern><template><think><srai>NOPX 750</srai></think><random><li><srai>EXPDEX WHO NEEDS TO BUILD <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO BUY *</pattern><template><think><srai>NOPX 940</srai></think><random><li><srai>EXPDEX WHO NEEDS TO BUY <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO CAPTURE *</pattern><template><think><srai>NOPX 11528</srai></think><random><li><srai>EXPDEX WHO NEEDS TO CAPTURE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO CARRY *</pattern><template><think><srai>NOPX 1074</srai></think><random><li><srai>EXPDEX WHO NEEDS TO CARRY <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO CHANGE *</pattern><template><think><srai>NOPX 1310</srai></think><random><li><srai>EXPDEX WHO NEEDS TO CHANGE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO CHECK *</pattern><template><think><srai>NOPX 809</srai></think><random><li><srai>EXPDEX WHO NEEDS TO CHECK <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO COME *</pattern><template><think><srai>NOPX 912</srai></think><random><li><srai>EXPDEX WHO NEEDS TO COME <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO COMMUNICATE *</pattern><template><think><srai>NOPX 848</srai></think><random><li><srai>EXPDEX WHO NEEDS TO COMMUNICATE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO COMPLETE *</pattern><template><think><srai>NOPX 480</srai></think><random><li><srai>EXPDEX WHO NEEDS TO COMPLETE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO CONNECT *</pattern><template><think><srai>NOPX 426</srai></think><random><li><srai>EXPDEX WHO NEEDS TO CONNECT <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO CONTACT *</pattern><template><think><srai>NOPX 462</srai></think><random><li><srai>EXPDEX WHO NEEDS TO CONTACT <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO CONVERT *</pattern><template><think><srai>NOPX 555</srai></think><random><li><srai>EXPDEX WHO NEEDS TO CONVERT <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO CREATE *</pattern><template><think><srai>NOPX 5460</srai></think><random><li><srai>EXPDEX WHO NEEDS TO CREATE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO DEAL *</pattern><template><think><srai>NOPX 521</srai></think><random><li><srai>EXPDEX WHO NEEDS TO DEAL <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO DEVELOP *</pattern><template><think><srai>NOPX 1155</srai></think><random><li><srai>EXPDEX WHO NEEDS TO DEVELOP <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO DISTRIBUTE *</pattern><template><think><srai>NOPX 456</srai></think><random><li><srai>EXPDEX WHO NEEDS TO DISTRIBUTE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO DO *</pattern><template><think><srai>NOPX 4476</srai></think><random><li><srai>EXPDEX WHO NEEDS TO DO <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO EAT *</pattern><template><think><srai>NOPX 650</srai></think><random><li><srai>EXPDEX WHO NEEDS TO EAT <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO EDIT *</pattern><template><think><srai>NOPX 585</srai></think><random><li><srai>EXPDEX WHO NEEDS TO EDIT <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO ENSURE *</pattern><template><think><srai>NOPX 531</srai></think><random><li><srai>EXPDEX WHO NEEDS TO ENSURE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO EXPRESS *</pattern><template><think><srai>NOPX 1102</srai></think><random><li><srai>EXPDEX WHO NEEDS TO EXPRESS <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO FEEL *</pattern><template><think><srai>NOPX 812</srai></think><random><li><srai>EXPDEX WHO NEEDS TO FEEL <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO FILL *</pattern><template><think><srai>NOPX 413</srai></think><random><li><srai>EXPDEX WHO NEEDS TO FILL <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO FIND *</pattern><template><think><srai>NOPX 2902</srai></think><random><li><srai>EXPDEX WHO NEEDS TO FIND <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO GAIN *</pattern><template><think><srai>NOPX 493</srai></think><random><li><srai>EXPDEX WHO NEEDS TO GAIN <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO GET *</pattern><template><think><srai>NOPX 11226</srai></think><random><li><srai>EXPDEX WHO NEEDS TO GET <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO GIVE *</pattern><template><think><srai>NOPX 1084</srai></think><random><li><srai>EXPDEX WHO NEEDS TO GIVE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO GO *</pattern><template><think><srai>NOPX 3967</srai></think><random><li><srai>EXPDEX WHO NEEDS TO GO <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO GROW *</pattern><template><think><srai>NOPX 992</srai></think><random><li><srai>EXPDEX WHO NEEDS TO GROW <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO HAVE *</pattern><template><think><srai>NOPX 4596</srai></think><random><li><srai>EXPDEX WHO NEEDS TO HAVE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO HEAR *</pattern><template><think><srai>NOPX 2489</srai></think><random><li><srai>EXPDEX WHO NEEDS TO HEAR <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO IMPLEMENT *</pattern><template><think><srai>NOPX 600</srai></think><random><li><srai>EXPDEX WHO NEEDS TO IMPLEMENT <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO IMPROVE *</pattern><template><think><srai>NOPX 1068</srai></think><random><li><srai>EXPDEX WHO NEEDS TO IMPROVE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO INSTALL *</pattern><template><think><srai>NOPX 3545</srai></think><random><li><srai>EXPDEX WHO NEEDS TO INSTALL <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO JOIN *</pattern><template><think><srai>NOPX 4474</srai></think><random><li><srai>EXPDEX WHO NEEDS TO JOIN <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO KEEP *</pattern><template><think><srai>NOPX 4688</srai></think><random><li><srai>EXPDEX WHO NEEDS TO KEEP <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO KNOW *</pattern><template><think><srai>NOPX 15381</srai></think><random><li><srai>EXPDEX WHO NEEDS TO KNOW <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO LEARN *</pattern><template><think><srai>NOPX 5579</srai></think><random><li><srai>EXPDEX WHO NEEDS TO LEARN <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO LEAVE *</pattern><template><think><srai>NOPX 737</srai></think><random><li><srai>EXPDEX WHO NEEDS TO LEAVE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO LOOK *</pattern><template><think><srai>NOPX 887</srai></think><random><li><srai>EXPDEX WHO NEEDS TO LOOK <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO LOSE *</pattern><template><think><srai>NOPX 1307</srai></think><random><li><srai>EXPDEX WHO NEEDS TO LOSE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO MAINTAIN *</pattern><template><think><srai>NOPX 894</srai></think><random><li><srai>EXPDEX WHO NEEDS TO MAINTAIN <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO MAKE *</pattern><template><think><srai>NOPX 4597</srai></think><random><li><srai>EXPDEX WHO NEEDS TO MAKE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO MANAGE *</pattern><template><think><srai>NOPX 824</srai></think><random><li><srai>EXPDEX WHO NEEDS TO MANAGE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO MONITOR *</pattern><template><think><srai>NOPX 554</srai></think><random><li><srai>EXPDEX WHO NEEDS TO MONITOR <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO MOVE *</pattern><template><think><srai>NOPX 1748</srai></think><random><li><srai>EXPDEX WHO NEEDS TO MOVE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO PAY *</pattern><template><think><srai>NOPX 908</srai></think><random><li><srai>EXPDEX WHO NEEDS TO PAY <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO PERFORM *</pattern><template><think><srai>NOPX 574</srai></think><random><li><srai>EXPDEX WHO NEEDS TO PERFORM <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO PLAY *</pattern><template><think><srai>NOPX 526</srai></think><random><li><srai>EXPDEX WHO NEEDS TO PLAY <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO PREPARE *</pattern><template><think><srai>NOPX 609</srai></think><random><li><srai>EXPDEX WHO NEEDS TO PREPARE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO PRODUCE *</pattern><template><think><srai>NOPX 539</srai></think><random><li><srai>EXPDEX WHO NEEDS TO PRODUCE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO PROVE *</pattern><template><think><srai>NOPX 424</srai></think><random><li><srai>EXPDEX WHO NEEDS TO PROVE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO PROVIDE *</pattern><template><think><srai>NOPX 456</srai></think><random><li><srai>EXPDEX WHO NEEDS TO PROVIDE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO PUT *</pattern><template><think><srai>NOPX 649</srai></think><random><li><srai>EXPDEX WHO NEEDS TO PUT <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO RAISE *</pattern><template><think><srai>NOPX 525</srai></think><random><li><srai>EXPDEX WHO NEEDS TO RAISE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO READ *</pattern><template><think><srai>NOPX 1955</srai></think><random><li><srai>EXPDEX WHO NEEDS TO READ <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO RECEIVE *</pattern><template><think><srai>NOPX 769</srai></think><random><li><srai>EXPDEX WHO NEEDS TO RECEIVE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO RECRUIT *</pattern><template><think><srai>NOPX 453</srai></think><random><li><srai>EXPDEX WHO NEEDS TO RECRUIT <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO REGISTER *</pattern><template><think><srai>NOPX 481</srai></think><random><li><srai>EXPDEX WHO NEEDS TO REGISTER <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO RELAX *</pattern><template><think><srai>NOPX 466</srai></think><random><li><srai>EXPDEX WHO NEEDS TO RELAX <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO REVIEW *</pattern><template><think><srai>NOPX 434</srai></think><random><li><srai>EXPDEX WHO NEEDS TO REVIEW <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO RIDE *</pattern><template><think><srai>NOPX 500</srai></think><random><li><srai>EXPDEX WHO NEEDS TO RIDE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO RUN *</pattern><template><think><srai>NOPX 919</srai></think><random><li><srai>EXPDEX WHO NEEDS TO RUN <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO SAVE *</pattern><template><think><srai>NOPX 912</srai></think><random><li><srai>EXPDEX WHO NEEDS TO SAVE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO SEE *</pattern><template><think><srai>NOPX 3302</srai></think><random><li><srai>EXPDEX WHO NEEDS TO SEE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO SELL *</pattern><template><think><srai>NOPX 712</srai></think><random><li><srai>EXPDEX WHO NEEDS TO SELL <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO SEND *</pattern><template><think><srai>NOPX 2553</srai></think><random><li><srai>EXPDEX WHO NEEDS TO SEND <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO SET *</pattern><template><think><srai>NOPX 409</srai></think><random><li><srai>EXPDEX WHO NEEDS TO SET <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO SIGN *</pattern><template><think><srai>NOPX 488</srai></think><random><li><srai>EXPDEX WHO NEEDS TO SIGN <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO SOLVE *</pattern><template><think><srai>NOPX 419</srai></think><random><li><srai>EXPDEX WHO NEEDS TO SOLVE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO SPEND *</pattern><template><think><srai>NOPX 748</srai></think><random><li><srai>EXPDEX WHO NEEDS TO SPEND <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO START *</pattern><template><think><srai>NOPX 563</srai></think><random><li><srai>EXPDEX WHO NEEDS TO START <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO STAY *</pattern><template><think><srai>NOPX 2117</srai></think><random><li><srai>EXPDEX WHO NEEDS TO STAY <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO STOP *</pattern><template><think><srai>NOPX 625</srai></think><random><li><srai>EXPDEX WHO NEEDS TO STOP <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO TAKE *</pattern><template><think><srai>NOPX 4665</srai></think><random><li><srai>EXPDEX WHO NEEDS TO TAKE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO TALK *</pattern><template><think><srai>NOPX 1447</srai></think><random><li><srai>EXPDEX WHO NEEDS TO TALK <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO THINK *</pattern><template><think><srai>NOPX 532</srai></think><random><li><srai>EXPDEX WHO NEEDS TO THINK <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO TRACK *</pattern><template><think><srai>NOPX 965</srai></think><random><li><srai>EXPDEX WHO NEEDS TO TRACK <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO TRANSMIT *</pattern><template><think><srai>NOPX 735</srai></think><random><li><srai>EXPDEX WHO NEEDS TO TRANSMIT <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO TRAVEL *</pattern><template><think><srai>NOPX 757</srai></think><random><li><srai>EXPDEX WHO NEEDS TO TRAVEL <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO UNDERSTAND *</pattern><template><think><srai>NOPX 4684</srai></think><random><li><srai>EXPDEX WHO NEEDS TO UNDERSTAND <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO UPDATE *</pattern><template><think><srai>NOPX 717</srai></think><random><li><srai>EXPDEX WHO NEEDS TO UPDATE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO UPGRADE *</pattern><template><think><srai>NOPX 650</srai></think><random><li><srai>EXPDEX WHO NEEDS TO UPGRADE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO USE *</pattern><template><think><srai>NOPX 4382</srai></think><random><li><srai>EXPDEX WHO NEEDS TO USE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO VIEW *</pattern><template><think><srai>NOPX 438</srai></think><random><li><srai>EXPDEX WHO NEEDS TO VIEW <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO WATCH *</pattern><template><think><srai>NOPX 468</srai></think><random><li><srai>EXPDEX WHO NEEDS TO WATCH <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO WIN *</pattern><template><think><srai>NOPX 414</srai></think><random><li><srai>EXPDEX WHO NEEDS TO WIN <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO WORK *</pattern><template><think><srai>NOPX 2955</srai></think><random><li><srai>EXPDEX WHO NEEDS TO WORK <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO WORRY *</pattern><template><think><srai>NOPX 570</srai></think><random><li><srai>EXPDEX WHO NEEDS TO WORRY <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO WRITE *</pattern><template><think><srai>NOPX 1476</srai></think><random><li><srai>EXPDEX WHO NEEDS TO WRITE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TOP LINE *</pattern><template><think><srai>NOPX 739</srai></think><random><li><srai>EXPDEX WHO NEEDS TOP LINE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS VISA FOR *</pattern><template><think><srai>NOPX 557</srai></think><random><li><srai>EXPDEX WHO NEEDS VISA FOR <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS WHAT *</pattern><template><think><srai>NOPX 1798</srai></think><random><li><srai>EXPDEX WHO NEEDS WHAT <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS YOUR HELP *</pattern><template><think><srai>NOPX 2384</srai></think><random><li><srai>EXPDEX WHO NEEDS YOUR HELP <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A *</pattern><template><think><srai>NOPX 1584</srai></think><random><li><srai>EXPDEX WHO NEEDS A <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A TV CELL *</pattern><template><think><srai>NOPX 2350</srai></think><random><li><srai>EXPDEX WHO NEEDS A TV CELL <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS BIG TITS WITH *</pattern><template><think><srai>NOPX 6315</srai></think><random><li><srai>EXPDEX WHO NEEDS BIG TITS WITH <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS GALLERIES THESE DAYS *</pattern><template><think><srai>NOPX 427</srai></think><random><li><srai>EXPDEX WHO NEEDS GALLERIES THESE DAYS <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS MONEY LYRICS *</pattern><template><think><srai>NOPX 728</srai></think><random><li><srai>EXPDEX WHO NEEDS MONEY LYRICS <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS MONEY WHOLE LOTTA *</pattern><template><think><srai>NOPX 634</srai></think><random><li><srai>EXPDEX WHO NEEDS MONEY WHOLE LOTTA <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS NO GUIDANCE NORTHERN *</pattern><template><think><srai>NOPX 773</srai></think><random><li><srai>EXPDEX WHO NEEDS NO GUIDANCE NORTHERN <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS THE PEACE CORPS *</pattern><template><think><srai>NOPX 1097</srai></think><random><li><srai>EXPDEX WHO NEEDS THE PEACE CORPS <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO BE ON *</pattern><template><think><srai>NOPX 801</srai></think><random><li><srai>EXPDEX WHO NEEDS TO BE ON <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS YOU WHO WANTS *</pattern><template><think><srai>NOPX 510</srai></think><random><li><srai>EXPDEX WHO NEEDS YOU WHO WANTS <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS AN INTERIOR DESIGNER *</pattern><template><think><srai>NOPX 503</srai></think><random><li><srai>EXPDEX WHO NEEDS AN INTERIOR DESIGNER <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS THE PEACE CORPS *</pattern><template><think><srai>NOPX 461</srai></think><random><li><srai>EXPDEX WHO NEEDS THE PEACE CORPS <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO ATTEND *</pattern><template><think><srai>NOPX 1498</srai></think><random><li><srai>EXPDEX WHO NEEDS TO ATTEND <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A MAC MINI *</pattern><template><think><srai>NOPX 852</srai></think><random><li><srai>EXPDEX WHO NEEDS A MAC MINI <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A MEGASITE *</pattern><template><think><srai>NOPX 1208</srai></think><random><li><srai>EXPDEX WHO NEEDS A MEGASITE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A TV STATION *</pattern><template><think><srai>NOPX 455</srai></think><random><li><srai>EXPDEX WHO NEEDS A TV STATION <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A PORTABLE GENERATOR *</pattern><template><think><srai>NOPX 1167</srai></think><random><li><srai>EXPDEX WHO NEEDS A PORTABLE GENERATOR <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A PORTABLE GENRATOR *</pattern><template><think><srai>NOPX 441</srai></think><random><li><srai>EXPDEX WHO NEEDS A PORTABLE GENRATOR <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS AN IQAS EVALUATION *</pattern><template><think><srai>NOPX 405</srai></think><random><li><srai>EXPDEX WHO NEEDS AN IQAS EVALUATION <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS AN OLD GUY *</pattern><template><think><srai>NOPX 927</srai></think><random><li><srai>EXPDEX WHO NEEDS AN OLD GUY <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS THE 12 STEP *</pattern><template><think><srai>NOPX 1181</srai></think><random><li><srai>EXPDEX WHO NEEDS THE 12 STEP <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS THE PATRIOT ACT *</pattern><template><think><srai>NOPX 404</srai></think><random><li><srai>EXPDEX WHO NEEDS THE PATRIOT ACT <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS THE SCOTS DICTIONARY *</pattern><template><think><srai>NOPX 2040</srai></think><random><li><srai>EXPDEX WHO NEEDS THE SCOTS DICTIONARY <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS THE YOUNG ONES *</pattern><template><think><srai>NOPX 928</srai></think><random><li><srai>EXPDEX WHO NEEDS THE YOUNG ONES <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS THIS *</pattern><template><think><srai>NOPX 747</srai></think><random><li><srai>EXPDEX WHO NEEDS THIS <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A BIT OF *</pattern><template><think><srai>NOPX 711</srai></think><random><li><srai>EXPDEX WHO NEEDS A BIT OF <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A CUSTOM TAG *</pattern><template><think><srai>NOPX 718</srai></think><random><li><srai>EXPDEX WHO NEEDS A CUSTOM TAG <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A DESCRIPTION *</pattern><template><think><srai>NOPX 757</srai></think><random><li><srai>EXPDEX WHO NEEDS A DESCRIPTION <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A DICTIONARY JOE *</pattern><template><think><srai>NOPX 4117</srai></think><random><li><srai>EXPDEX WHO NEEDS A DICTIONARY JOE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A GOOD HOME *</pattern><template><think><srai>NOPX 1025</srai></think><random><li><srai>EXPDEX WHO NEEDS A GOOD HOME <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A HOME FOR *</pattern><template><think><srai>NOPX 403</srai></think><random><li><srai>EXPDEX WHO NEEDS A HOME FOR <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A LAWYER IN *</pattern><template><think><srai>NOPX 5707</srai></think><random><li><srai>EXPDEX WHO NEEDS A LAWYER IN <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A LITTLE EXTRA *</pattern><template><think><srai>NOPX 646</srai></think><random><li><srai>EXPDEX WHO NEEDS A LITTLE EXTRA <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A LITTLE HELP *</pattern><template><think><srai>NOPX 1146</srai></think><random><li><srai>EXPDEX WHO NEEDS A LITTLE HELP <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A LOT OF *</pattern><template><think><srai>NOPX 1624</srai></think><random><li><srai>EXPDEX WHO NEEDS A LOT OF <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A NEW HOME *</pattern><template><think><srai>NOPX 509</srai></think><random><li><srai>EXPDEX WHO NEEDS A NEW HOME <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A PLACE TO *</pattern><template><think><srai>NOPX 1377</srai></think><random><li><srai>EXPDEX WHO NEEDS A PLACE TO <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A SPECIAL ACCOMMODATION *</pattern><template><think><srai>NOPX 455</srai></think><random><li><srai>EXPDEX WHO NEEDS A SPECIAL ACCOMMODATION <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS AN ATTORNEY IN *</pattern><template><think><srai>NOPX 5697</srai></think><random><li><srai>EXPDEX WHO NEEDS AN ATTORNEY IN <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS AN OLD GUY *</pattern><template><think><srai>NOPX 927</srai></think><random><li><srai>EXPDEX WHO NEEDS AN OLD GUY <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS ANY ACCOMMODATION IN *</pattern><template><think><srai>NOPX 603</srai></think><random><li><srai>EXPDEX WHO NEEDS ANY ACCOMMODATION IN <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS THAT KIND OF *</pattern><template><think><srai>NOPX 427</srai></think><random><li><srai>EXPDEX WHO NEEDS THAT KIND OF <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS THE HELP OF *</pattern><template><think><srai>NOPX 2177</srai></think><random><li><srai>EXPDEX WHO NEEDS THE HELP OF <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS THE QUIK E *</pattern><template><think><srai>NOPX 1620</srai></think><random><li><srai>EXPDEX WHO NEEDS THE QUIK E <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS THIS *</pattern><template><think><srai>NOPX 473</srai></think><random><li><srai>EXPDEX WHO NEEDS THIS <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS THIS REMEDY IS *</pattern><template><think><srai>NOPX 430</srai></think><random><li><srai>EXPDEX WHO NEEDS THIS REMEDY IS <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS THIS REMEDY OFTEN *</pattern><template><think><srai>NOPX 609</srai></think><random><li><srai>EXPDEX WHO NEEDS THIS REMEDY OFTEN <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS TO BE *</pattern><template><think><srai>NOPX 560</srai></think><random><li><srai>EXPDEX WHO NEEDS TO BE <star/></srai></li></random></template></category>
+<category><pattern>WHO NEEDS A LAUNDROMAT *</pattern><template><think><srai>NOPX 1427</srai></think><random><li><srai>EXPDEX WHO NEEDS A LAUNDROMAT <star/></srai></li></random></template></category>
+</aiml>

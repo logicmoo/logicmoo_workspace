@@ -1,0 +1,1115 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<aiml>
+
+<!-- main Reduce.aiml (2194699) mp=-99.9278801061868: WHO MAKE * -->
+
+<!-- MINSEQ: mp=-99.9278801061868: who made the world worse   -->
+<category><pattern>EXPDEX WHO MAKE *</pattern><template><srai>who made <star/> </srai> </template></category>
+<category><pattern>WHO MAKE *</pattern><template><srai>EXPDEX WHO MAKE <star/></srai></template></category>
+<category><pattern>WHO MAKE A *</pattern><template><think><srai>NOPX 571</srai></think><random><li><srai>EXPDEX WHO MAKE A <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made a * </srai>  -->
+<category><pattern>WHO MAKE IT *</pattern><template><think><srai>NOPX 281</srai></think><random><li><srai>EXPDEX WHO MAKE IT <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made it * </srai>  -->
+<category><pattern>WHO MAKE ME *</pattern><template><think><srai>NOPX 294</srai></think><random><li><srai>EXPDEX WHO MAKE ME <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made me * </srai>  -->
+<category><pattern>WHO MAKE THE *</pattern><template><think><srai>NOPX 904</srai></think><random><li><srai>EXPDEX WHO MAKE THE <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made the * </srai>  -->
+<category><pattern>WHO MAKE THIS *</pattern><template><think><srai>NOPX 249</srai></think><random><li><srai>EXPDEX WHO MAKE THIS <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made this * </srai>  -->
+<category><pattern>WHO MAKE UP *</pattern><template><think><srai>NOPX 320</srai></think><random><li><srai>EXPDEX WHO MAKE UP <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made up * </srai>  -->
+<category><pattern>WHO MAKE IT *</pattern><template><think><srai>NOPX 3112</srai></think><random><li><srai>EXPDEX WHO MAKE IT <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made it * </srai>  -->
+<category><pattern>WHO MAKE A *</pattern><template><think><srai>NOPX 3227</srai></think><random><li><srai>EXPDEX WHO MAKE A <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made a * </srai>  -->
+<category><pattern>WHO MAKE GOOD *</pattern><template><think><srai>NOPX 462</srai></think><random><li><srai>EXPDEX WHO MAKE GOOD <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made good * </srai>  -->
+<category><pattern>WHO MAKE IT *</pattern><template><think><srai>NOPX 1237</srai></think><random><li><srai>EXPDEX WHO MAKE IT <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made it * </srai>  -->
+<category><pattern>WHO MAKE ME *</pattern><template><think><srai>NOPX 1438</srai></think><random><li><srai>EXPDEX WHO MAKE ME <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made me * </srai>  -->
+<category><pattern>WHO MAKE MISTAKES *</pattern><template><think><srai>NOPX 300</srai></think><random><li><srai>EXPDEX WHO MAKE MISTAKES <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made mistakes * </srai>  -->
+<category><pattern>WHO MAKE THE *</pattern><template><think><srai>NOPX 1312</srai></think><random><li><srai>EXPDEX WHO MAKE THE <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made the * </srai>  -->
+<category><pattern>WHO MAKE THEM *</pattern><template><think><srai>NOPX 519</srai></think><random><li><srai>EXPDEX WHO MAKE THEM <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made them * </srai>  -->
+<category><pattern>WHO MAKE THINGS *</pattern><template><think><srai>NOPX 358</srai></think><random><li><srai>EXPDEX WHO MAKE THINGS <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made things * </srai>  -->
+<category><pattern>WHO MAKE THIS *</pattern><template><think><srai>NOPX 1466</srai></think><random><li><srai>EXPDEX WHO MAKE THIS <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made this * </srai>  -->
+<category><pattern>WHO MAKE UP *</pattern><template><think><srai>NOPX 814</srai></think><random><li><srai>EXPDEX WHO MAKE UP <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made up * </srai>  -->
+<category><pattern>WHO MAKE YOUR *</pattern><template><think><srai>NOPX 512</srai></think><random><li><srai>EXPDEX WHO MAKE YOUR <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made your * </srai>  -->
+<category><pattern>WHO MAKE A *</pattern><template><think><srai>NOPX 5262</srai></think><random><li><srai>EXPDEX WHO MAKE A <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made a * </srai>  -->
+<category><pattern>WHO MAKE IT *</pattern><template><think><srai>NOPX 322</srai></think><random><li><srai>EXPDEX WHO MAKE IT <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made it * </srai>  -->
+<category><pattern>WHO MAKE THE *</pattern><template><think><srai>NOPX 11972</srai></think><random><li><srai>EXPDEX WHO MAKE THE <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made the * </srai>  -->
+<category><pattern>WHO MAKE A *</pattern><template><think><srai>NOPX 405</srai></think><random><li><srai>EXPDEX WHO MAKE A <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made a * </srai>  -->
+<category><pattern>WHO MAKE IT *</pattern><template><think><srai>NOPX 141</srai></think><random><li><srai>EXPDEX WHO MAKE IT <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made it * </srai>  -->
+<category><pattern>WHO MAKE ME *</pattern><template><think><srai>NOPX 139</srai></think><random><li><srai>EXPDEX WHO MAKE ME <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made me * </srai>  -->
+<category><pattern>WHO MAKE MONEY *</pattern><template><think><srai>NOPX 100</srai></think><random><li><srai>EXPDEX WHO MAKE MONEY <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made money * </srai>  -->
+<category><pattern>WHO MAKE THE *</pattern><template><think><srai>NOPX 1021</srai></think><random><li><srai>EXPDEX WHO MAKE THE <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made the * </srai>  -->
+<category><pattern>WHO MAKE THIS *</pattern><template><think><srai>NOPX 133</srai></think><random><li><srai>EXPDEX WHO MAKE THIS <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made this * </srai>  -->
+<category><pattern>WHO MAKE UP *</pattern><template><think><srai>NOPX 672</srai></think><random><li><srai>EXPDEX WHO MAKE UP <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made up * </srai>  -->
+<category><pattern>WHO MAKE THE *</pattern><template><think><srai>NOPX 111</srai></think><random><li><srai>EXPDEX WHO MAKE THE <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made the * </srai>  -->
+<category><pattern>WHO MAKE A *</pattern><template><think><srai>NOPX 142</srai></think><random><li><srai>EXPDEX WHO MAKE A <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made a * </srai>  -->
+<category><pattern>WHO MAKE THE *</pattern><template><think><srai>NOPX 393</srai></think><random><li><srai>EXPDEX WHO MAKE THE <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made the * </srai>  -->
+<category><pattern>WHO MAKE A *</pattern><template><think><srai>NOPX 118</srai></think><random><li><srai>EXPDEX WHO MAKE A <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made a * </srai>  -->
+<category><pattern>WHO MAKE HIM *</pattern><template><think><srai>NOPX 119</srai></think><random><li><srai>EXPDEX WHO MAKE HIM <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made him * </srai>  -->
+<category><pattern>WHO MAKE IT *</pattern><template><think><srai>NOPX 106</srai></think><random><li><srai>EXPDEX WHO MAKE IT <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made it * </srai>  -->
+<category><pattern>WHO MAKE THE *</pattern><template><think><srai>NOPX 1347</srai></think><random><li><srai>EXPDEX WHO MAKE THE <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made the * </srai>  -->
+<category><pattern>WHO MAKE A *</pattern><template><think><srai>NOPX 117450</srai></think><random><li><srai>EXPDEX WHO MAKE A <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made a * </srai>  -->
+<category><pattern>WHO MAKE ADDITIONAL *</pattern><template><think><srai>NOPX 155</srai></think><random><li><srai>EXPDEX WHO MAKE ADDITIONAL <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made additional * </srai>  -->
+<category><pattern>WHO MAKE AN *</pattern><template><think><srai>NOPX 15815</srai></think><random><li><srai>EXPDEX WHO MAKE AN <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made an * </srai>  -->
+<category><pattern>WHO MAKE ANY *</pattern><template><think><srai>NOPX 1694</srai></think><random><li><srai>EXPDEX WHO MAKE ANY <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made any * </srai>  -->
+<category><pattern>WHO MAKE AT *</pattern><template><think><srai>NOPX 926</srai></think><random><li><srai>EXPDEX WHO MAKE AT <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made at * </srai>  -->
+<category><pattern>WHO MAKE CHANGES *</pattern><template><think><srai>NOPX 810</srai></think><random><li><srai>EXPDEX WHO MAKE CHANGES <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made changes * </srai>  -->
+<category><pattern>WHO MAKE DECISIONS *</pattern><template><think><srai>NOPX 19315</srai></think><random><li><srai>EXPDEX WHO MAKE DECISIONS <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made decisions * </srai>  -->
+<category><pattern>WHO MAKE ENOUGH *</pattern><template><think><srai>NOPX 440</srai></think><random><li><srai>EXPDEX WHO MAKE ENOUGH <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made enough * </srai>  -->
+<category><pattern>WHO MAKE FRIENDS *</pattern><template><think><srai>NOPX 650</srai></think><random><li><srai>EXPDEX WHO MAKE FRIENDS <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made friends * </srai>  -->
+<category><pattern>WHO MAKE FUN *</pattern><template><think><srai>NOPX 5084</srai></think><random><li><srai>EXPDEX WHO MAKE FUN <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made fun * </srai>  -->
+<category><pattern>WHO MAKE GOOD *</pattern><template><think><srai>NOPX 5227</srai></think><random><li><srai>EXPDEX WHO MAKE GOOD <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made good * </srai>  -->
+<category><pattern>WHO MAKE HIM *</pattern><template><think><srai>NOPX 1871</srai></think><random><li><srai>EXPDEX WHO MAKE HIM <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made him * </srai>  -->
+<category><pattern>WHO MAKE IT *</pattern><template><think><srai>NOPX 88523</srai></think><random><li><srai>EXPDEX WHO MAKE IT <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made it * </srai>  -->
+<category><pattern>WHO MAKE JUDGMENTS *</pattern><template><think><srai>NOPX 300</srai></think><random><li><srai>EXPDEX WHO MAKE JUDGMENTS <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made judgments * </srai>  -->
+<category><pattern>WHO MAKE MANY *</pattern><template><think><srai>NOPX 1137</srai></think><random><li><srai>EXPDEX WHO MAKE MANY <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made many * </srai>  -->
+<category><pattern>WHO MAKE ME *</pattern><template><think><srai>NOPX 14149</srai></think><random><li><srai>EXPDEX WHO MAKE ME <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made me * </srai>  -->
+<category><pattern>WHO MAKE MISTAKES *</pattern><template><think><srai>NOPX 6072</srai></think><random><li><srai>EXPDEX WHO MAKE MISTAKES <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made mistakes * </srai>  -->
+<category><pattern>WHO MAKE MONEY *</pattern><template><think><srai>NOPX 11169</srai></think><random><li><srai>EXPDEX WHO MAKE MONEY <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made money * </srai>  -->
+<category><pattern>WHO MAKE MUCH *</pattern><template><think><srai>NOPX 939</srai></think><random><li><srai>EXPDEX WHO MAKE MUCH <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made much * </srai>  -->
+<category><pattern>WHO MAKE PAYMENT *</pattern><template><think><srai>NOPX 862</srai></think><random><li><srai>EXPDEX WHO MAKE PAYMENT <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made payment * </srai>  -->
+<category><pattern>WHO MAKE PAYMENTS *</pattern><template><think><srai>NOPX 1088</srai></think><random><li><srai>EXPDEX WHO MAKE PAYMENTS <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made payments * </srai>  -->
+<category><pattern>WHO MAKE PEOPLE *</pattern><template><think><srai>NOPX 1083</srai></think><random><li><srai>EXPDEX WHO MAKE PEOPLE <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made people * </srai>  -->
+<category><pattern>WHO MAKE SENSE *</pattern><template><think><srai>NOPX 836</srai></think><random><li><srai>EXPDEX WHO MAKE SENSE <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made sense * </srai>  -->
+<category><pattern>WHO MAKE SOME *</pattern><template><think><srai>NOPX 2092</srai></think><random><li><srai>EXPDEX WHO MAKE SOME <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made some * </srai>  -->
+<category><pattern>WHO MAKE SUCH *</pattern><template><think><srai>NOPX 12888</srai></think><random><li><srai>EXPDEX WHO MAKE SUCH <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made such * </srai>  -->
+<category><pattern>WHO MAKE SURE *</pattern><template><think><srai>NOPX 8024</srai></think><random><li><srai>EXPDEX WHO MAKE SURE <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made sure * </srai>  -->
+<category><pattern>WHO MAKE THAT *</pattern><template><think><srai>NOPX 6595</srai></think><random><li><srai>EXPDEX WHO MAKE THAT <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made that * </srai>  -->
+<category><pattern>WHO MAKE THE *</pattern><template><think><srai>NOPX 162181</srai></think><random><li><srai>EXPDEX WHO MAKE THE <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made the * </srai>  -->
+<category><pattern>WHO MAKE THEM *</pattern><template><think><srai>NOPX 28958</srai></think><random><li><srai>EXPDEX WHO MAKE THEM <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made them * </srai>  -->
+<category><pattern>WHO MAKE THESE *</pattern><template><think><srai>NOPX 15909</srai></think><random><li><srai>EXPDEX WHO MAKE THESE <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made these * </srai>  -->
+<category><pattern>WHO MAKE THINGS *</pattern><template><think><srai>NOPX 9849</srai></think><random><li><srai>EXPDEX WHO MAKE THINGS <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made things * </srai>  -->
+<category><pattern>WHO MAKE THIS *</pattern><template><think><srai>NOPX 39277</srai></think><random><li><srai>EXPDEX WHO MAKE THIS <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made this * </srai>  -->
+<category><pattern>WHO MAKE THOSE *</pattern><template><think><srai>NOPX 4699</srai></think><random><li><srai>EXPDEX WHO MAKE THOSE <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made those * </srai>  -->
+<category><pattern>WHO MAKE TIME *</pattern><template><think><srai>NOPX 656</srai></think><random><li><srai>EXPDEX WHO MAKE TIME <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made time * </srai>  -->
+<category><pattern>WHO MAKE TOO *</pattern><template><think><srai>NOPX 1439</srai></think><random><li><srai>EXPDEX WHO MAKE TOO <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made too * </srai>  -->
+<category><pattern>WHO MAKE UP *</pattern><template><think><srai>NOPX 196198</srai></think><random><li><srai>EXPDEX WHO MAKE UP <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made up * </srai>  -->
+<category><pattern>WHO MAKE USE *</pattern><template><think><srai>NOPX 19696</srai></think><random><li><srai>EXPDEX WHO MAKE USE <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made use * </srai>  -->
+<category><pattern>WHO MAKE YOUR *</pattern><template><think><srai>NOPX 6565</srai></think><random><li><srai>EXPDEX WHO MAKE YOUR <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made your * </srai>  -->
+<category><pattern>WHO MAKE A *</pattern><template><think><srai>NOPX 571</srai></think><random><li><srai>EXPDEX WHO MAKE A <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made a * </srai>  -->
+<category><pattern>WHO MAKE THE *</pattern><template><think><srai>NOPX 904</srai></think><random><li><srai>EXPDEX WHO MAKE THE <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made the * </srai>  -->
+<category><pattern>WHO MAKE IT *</pattern><template><think><srai>NOPX 3112</srai></think><random><li><srai>EXPDEX WHO MAKE IT <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made it * </srai>  -->
+<category><pattern>WHO MAKE A *</pattern><template><think><srai>NOPX 3227</srai></think><random><li><srai>EXPDEX WHO MAKE A <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made a * </srai>  -->
+<category><pattern>WHO MAKE GOOD *</pattern><template><think><srai>NOPX 462</srai></think><random><li><srai>EXPDEX WHO MAKE GOOD <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made good * </srai>  -->
+<category><pattern>WHO MAKE HISTORY *</pattern><template><think><srai>NOPX 428</srai></think><random><li><srai>EXPDEX WHO MAKE HISTORY <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made history * </srai>  -->
+<category><pattern>WHO MAKE IT *</pattern><template><think><srai>NOPX 1237</srai></think><random><li><srai>EXPDEX WHO MAKE IT <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made it * </srai>  -->
+<category><pattern>WHO MAKE ME *</pattern><template><think><srai>NOPX 1438</srai></think><random><li><srai>EXPDEX WHO MAKE ME <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made me * </srai>  -->
+<category><pattern>WHO MAKE ORGANIZATIONS *</pattern><template><think><srai>NOPX 490</srai></think><random><li><srai>EXPDEX WHO MAKE ORGANIZATIONS <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made organizations * </srai>  -->
+<category><pattern>WHO MAKE THE *</pattern><template><think><srai>NOPX 1312</srai></think><random><li><srai>EXPDEX WHO MAKE THE <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made the * </srai>  -->
+<category><pattern>WHO MAKE THEM *</pattern><template><think><srai>NOPX 519</srai></think><random><li><srai>EXPDEX WHO MAKE THEM <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made them * </srai>  -->
+<category><pattern>WHO MAKE THIS *</pattern><template><think><srai>NOPX 1466</srai></think><random><li><srai>EXPDEX WHO MAKE THIS <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made this * </srai>  -->
+<category><pattern>WHO MAKE UP *</pattern><template><think><srai>NOPX 814</srai></think><random><li><srai>EXPDEX WHO MAKE UP <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made up * </srai>  -->
+<category><pattern>WHO MAKE VIRGINITY *</pattern><template><think><srai>NOPX 2683</srai></think><random><li><srai>EXPDEX WHO MAKE VIRGINITY <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made virginity * </srai>  -->
+<category><pattern>WHO MAKE WEBSITES *</pattern><template><think><srai>NOPX 1221</srai></think><random><li><srai>EXPDEX WHO MAKE WEBSITES <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made websites * </srai>  -->
+<category><pattern>WHO MAKE YOUR *</pattern><template><think><srai>NOPX 512</srai></think><random><li><srai>EXPDEX WHO MAKE YOUR <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made your * </srai>  -->
+<category><pattern>WHO MAKE A *</pattern><template><think><srai>NOPX 5262</srai></think><random><li><srai>EXPDEX WHO MAKE A <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made a * </srai>  -->
+<category><pattern>WHO MAKE THE *</pattern><template><think><srai>NOPX 11972</srai></think><random><li><srai>EXPDEX WHO MAKE THE <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made the * </srai>  -->
+<category><pattern>WHO MAKE A *</pattern><template><think><srai>NOPX 405</srai></think><random><li><srai>EXPDEX WHO MAKE A <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made a * </srai>  -->
+<category><pattern>WHO MAKE THE *</pattern><template><think><srai>NOPX 1021</srai></think><random><li><srai>EXPDEX WHO MAKE THE <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made the * </srai>  -->
+<category><pattern>WHO MAKE UP *</pattern><template><think><srai>NOPX 672</srai></think><random><li><srai>EXPDEX WHO MAKE UP <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made up * </srai>  -->
+<category><pattern>WHO MAKE UNK *</pattern><template><think><srai>NOPX 1490</srai></think><random><li><srai>EXPDEX WHO MAKE UNK <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made unk * </srai>  -->
+<category><pattern>WHO MAKE AMERICA *</pattern><template><think><srai>NOPX 516</srai></think><random><li><srai>EXPDEX WHO MAKE AMERICA <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made america * </srai>  -->
+<category><pattern>WHO MAKE GOD *</pattern><template><think><srai>NOPX 517</srai></think><random><li><srai>EXPDEX WHO MAKE GOD <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made god * </srai>  -->
+<category><pattern>WHO MAKE NEW *</pattern><template><think><srai>NOPX 780</srai></think><random><li><srai>EXPDEX WHO MAKE NEW <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made new * </srai>  -->
+<category><pattern>WHO MAKE PANERA *</pattern><template><think><srai>NOPX 460</srai></think><random><li><srai>EXPDEX WHO MAKE PANERA <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made panera * </srai>  -->
+<category><pattern>WHO MAKE THE *</pattern><template><think><srai>NOPX 1347</srai></think><random><li><srai>EXPDEX WHO MAKE THE <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made the * </srai>  -->
+<category><pattern>WHO MAKE W *</pattern><template><think><srai>NOPX 1184</srai></think><random><li><srai>EXPDEX WHO MAKE W <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made w * </srai>  -->
+<category><pattern>WHO MAKE A *</pattern><template><think><srai>NOPX 117450</srai></think><random><li><srai>EXPDEX WHO MAKE A <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made a * </srai>  -->
+<category><pattern>WHO MAKE ABOUT *</pattern><template><think><srai>NOPX 714</srai></think><random><li><srai>EXPDEX WHO MAKE ABOUT <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made about * </srai>  -->
+<category><pattern>WHO MAKE ALL *</pattern><template><think><srai>NOPX 6427</srai></think><random><li><srai>EXPDEX WHO MAKE ALL <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made all * </srai>  -->
+<category><pattern>WHO MAKE ALLEGATIONS *</pattern><template><think><srai>NOPX 583</srai></think><random><li><srai>EXPDEX WHO MAKE ALLEGATIONS <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made allegations * </srai>  -->
+<category><pattern>WHO MAKE AN *</pattern><template><think><srai>NOPX 15815</srai></think><random><li><srai>EXPDEX WHO MAKE AN <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made an * </srai>  -->
+<category><pattern>WHO MAKE ANNUAL *</pattern><template><think><srai>NOPX 799</srai></think><random><li><srai>EXPDEX WHO MAKE ANNUAL <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made annual * </srai>  -->
+<category><pattern>WHO MAKE ANY *</pattern><template><think><srai>NOPX 1694</srai></think><random><li><srai>EXPDEX WHO MAKE ANY <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made any * </srai>  -->
+<category><pattern>WHO MAKE APPEARANCES *</pattern><template><think><srai>NOPX 529</srai></think><random><li><srai>EXPDEX WHO MAKE APPEARANCES <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made appearances * </srai>  -->
+<category><pattern>WHO MAKE APPLICATION *</pattern><template><think><srai>NOPX 1563</srai></think><random><li><srai>EXPDEX WHO MAKE APPLICATION <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made application * </srai>  -->
+<category><pattern>WHO MAKE APPLICATIONS *</pattern><template><think><srai>NOPX 494</srai></think><random><li><srai>EXPDEX WHO MAKE APPLICATIONS <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made applications * </srai>  -->
+<category><pattern>WHO MAKE APPOINTMENTS *</pattern><template><think><srai>NOPX 438</srai></think><random><li><srai>EXPDEX WHO MAKE APPOINTMENTS <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made appointments * </srai>  -->
+<category><pattern>WHO MAKE ARRANGEMENTS *</pattern><template><think><srai>NOPX 550</srai></think><random><li><srai>EXPDEX WHO MAKE ARRANGEMENTS <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made arrangements * </srai>  -->
+<category><pattern>WHO MAKE ART *</pattern><template><think><srai>NOPX 1408</srai></think><random><li><srai>EXPDEX WHO MAKE ART <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made art * </srai>  -->
+<category><pattern>WHO MAKE AS *</pattern><template><think><srai>NOPX 727</srai></think><random><li><srai>EXPDEX WHO MAKE AS <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made as * </srai>  -->
+<category><pattern>WHO MAKE ASSUMPTIONS *</pattern><template><think><srai>NOPX 502</srai></think><random><li><srai>EXPDEX WHO MAKE ASSUMPTIONS <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made assumptions * </srai>  -->
+<category><pattern>WHO MAKE AT *</pattern><template><think><srai>NOPX 926</srai></think><random><li><srai>EXPDEX WHO MAKE AT <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made at * </srai>  -->
+<category><pattern>WHO MAKE ATOMIC *</pattern><template><think><srai>NOPX 1065</srai></think><random><li><srai>EXPDEX WHO MAKE ATOMIC <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made atomic * </srai>  -->
+<category><pattern>WHO MAKE AVAILABLE *</pattern><template><think><srai>NOPX 746</srai></think><random><li><srai>EXPDEX WHO MAKE AVAILABLE <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made available * </srai>  -->
+<category><pattern>WHO MAKE BAD *</pattern><template><think><srai>NOPX 1630</srai></think><random><li><srai>EXPDEX WHO MAKE BAD <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made bad * </srai>  -->
+<category><pattern>WHO MAKE BETWEEN *</pattern><template><think><srai>NOPX 783</srai></think><random><li><srai>EXPDEX WHO MAKE BETWEEN <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made between * </srai>  -->
+<category><pattern>WHO MAKE BIG *</pattern><template><think><srai>NOPX 1572</srai></think><random><li><srai>EXPDEX WHO MAKE BIG <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made big * </srai>  -->
+<category><pattern>WHO MAKE BILLIONS *</pattern><template><think><srai>NOPX 517</srai></think><random><li><srai>EXPDEX WHO MAKE BILLIONS <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made billions * </srai>  -->
+<category><pattern>WHO MAKE BOTH *</pattern><template><think><srai>NOPX 482</srai></think><random><li><srai>EXPDEX WHO MAKE BOTH <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made both * </srai>  -->
+<category><pattern>WHO MAKE BUSINESS *</pattern><template><think><srai>NOPX 558</srai></think><random><li><srai>EXPDEX WHO MAKE BUSINESS <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made business * </srai>  -->
+<category><pattern>WHO MAKE CALLS *</pattern><template><think><srai>NOPX 792</srai></think><random><li><srai>EXPDEX WHO MAKE CALLS <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made calls * </srai>  -->
+<category><pattern>WHO MAKE CAREERS *</pattern><template><think><srai>NOPX 439</srai></think><random><li><srai>EXPDEX WHO MAKE CAREERS <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made careers * </srai>  -->
+<category><pattern>WHO MAKE CASH *</pattern><template><think><srai>NOPX 452</srai></think><random><li><srai>EXPDEX WHO MAKE CASH <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made cash * </srai>  -->
+<category><pattern>WHO MAKE CERTAIN *</pattern><template><think><srai>NOPX 792</srai></think><random><li><srai>EXPDEX WHO MAKE CERTAIN <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made certain * </srai>  -->
+<category><pattern>WHO MAKE CHANGES *</pattern><template><think><srai>NOPX 810</srai></think><random><li><srai>EXPDEX WHO MAKE CHANGES <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made changes * </srai>  -->
+<category><pattern>WHO MAKE CHARITABLE *</pattern><template><think><srai>NOPX 471</srai></think><random><li><srai>EXPDEX WHO MAKE CHARITABLE <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made charitable * </srai>  -->
+<category><pattern>WHO MAKE CHOICES *</pattern><template><think><srai>NOPX 1404</srai></think><random><li><srai>EXPDEX WHO MAKE CHOICES <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made choices * </srai>  -->
+<category><pattern>WHO MAKE CLAIMS *</pattern><template><think><srai>NOPX 2233</srai></think><random><li><srai>EXPDEX WHO MAKE CLAIMS <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made claims * </srai>  -->
+<category><pattern>WHO MAKE COBWEBS *</pattern><template><think><srai>NOPX 2481</srai></think><random><li><srai>EXPDEX WHO MAKE COBWEBS <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made cobwebs * </srai>  -->
+<category><pattern>WHO MAKE COMMENTS *</pattern><template><think><srai>NOPX 2050</srai></think><random><li><srai>EXPDEX WHO MAKE COMMENTS <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made comments * </srai>  -->
+<category><pattern>WHO MAKE COMMON *</pattern><template><think><srai>NOPX 915</srai></think><random><li><srai>EXPDEX WHO MAKE COMMON <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made common * </srai>  -->
+<category><pattern>WHO MAKE COMPLAINTS *</pattern><template><think><srai>NOPX 1286</srai></think><random><li><srai>EXPDEX WHO MAKE COMPLAINTS <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made complaints * </srai>  -->
+<category><pattern>WHO MAKE CONTACT *</pattern><template><think><srai>NOPX 1109</srai></think><random><li><srai>EXPDEX WHO MAKE CONTACT <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made contact * </srai>  -->
+<category><pattern>WHO MAKE CONTRIBUTIONS *</pattern><template><think><srai>NOPX 2998</srai></think><random><li><srai>EXPDEX WHO MAKE CONTRIBUTIONS <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made contributions * </srai>  -->
+<category><pattern>WHO MAKE COPIES *</pattern><template><think><srai>NOPX 554</srai></think><random><li><srai>EXPDEX WHO MAKE COPIES <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made copies * </srai>  -->
+<category><pattern>WHO MAKE CRITICAL *</pattern><template><think><srai>NOPX 455</srai></think><random><li><srai>EXPDEX WHO MAKE CRITICAL <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made critical * </srai>  -->
+<category><pattern>WHO MAKE DAILY *</pattern><template><think><srai>NOPX 620</srai></think><random><li><srai>EXPDEX WHO MAKE DAILY <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made daily * </srai>  -->
+<category><pattern>WHO MAKE DECISIONS *</pattern><template><think><srai>NOPX 19315</srai></think><random><li><srai>EXPDEX WHO MAKE DECISIONS <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made decisions * </srai>  -->
+<category><pattern>WHO MAKE DEMANDS *</pattern><template><think><srai>NOPX 568</srai></think><random><li><srai>EXPDEX WHO MAKE DEMANDS <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made demands * </srai>  -->
+<category><pattern>WHO MAKE DIFFERENT *</pattern><template><think><srai>NOPX 585</srai></think><random><li><srai>EXPDEX WHO MAKE DIFFERENT <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made different * </srai>  -->
+<category><pattern>WHO MAKE DIRECT *</pattern><template><think><srai>NOPX 492</srai></think><random><li><srai>EXPDEX WHO MAKE DIRECT <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made direct * </srai>  -->
+<category><pattern>WHO MAKE DISCIPLES *</pattern><template><think><srai>NOPX 615</srai></think><random><li><srai>EXPDEX WHO MAKE DISCIPLES <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made disciples * </srai>  -->
+<category><pattern>WHO MAKE DISCLOSURES *</pattern><template><think><srai>NOPX 926</srai></think><random><li><srai>EXPDEX WHO MAKE DISCLOSURES <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made disclosures * </srai>  -->
+<category><pattern>WHO MAKE DO *</pattern><template><think><srai>NOPX 553</srai></think><random><li><srai>EXPDEX WHO MAKE DO <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made do * </srai>  -->
+<category><pattern>WHO MAKE DONATIONS *</pattern><template><think><srai>NOPX 1668</srai></think><random><li><srai>EXPDEX WHO MAKE DONATIONS <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made donations * </srai>  -->
+<category><pattern>WHO MAKE EACH *</pattern><template><think><srai>NOPX 754</srai></think><random><li><srai>EXPDEX WHO MAKE EACH <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made each * </srai>  -->
+<category><pattern>WHO MAKE EFFORTS *</pattern><template><think><srai>NOPX 514</srai></think><random><li><srai>EXPDEX WHO MAKE EFFORTS <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made efforts * </srai>  -->
+<category><pattern>WHO MAKE EMPTY *</pattern><template><think><srai>NOPX 1033</srai></think><random><li><srai>EXPDEX WHO MAKE EMPTY <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made empty * </srai>  -->
+<category><pattern>WHO MAKE ERRORS *</pattern><template><think><srai>NOPX 618</srai></think><random><li><srai>EXPDEX WHO MAKE ERRORS <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made errors * </srai>  -->
+<category><pattern>WHO MAKE EVERY *</pattern><template><think><srai>NOPX 1712</srai></think><random><li><srai>EXPDEX WHO MAKE EVERY <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made every * </srai>  -->
+<category><pattern>WHO MAKE EVERYONE *</pattern><template><think><srai>NOPX 462</srai></think><random><li><srai>EXPDEX WHO MAKE EVERYONE <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made everyone * </srai>  -->
+<category><pattern>WHO MAKE EVERYTHING *</pattern><template><think><srai>NOPX 862</srai></think><random><li><srai>EXPDEX WHO MAKE EVERYTHING <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made everything * </srai>  -->
+<category><pattern>WHO MAKE EXCELLENT *</pattern><template><think><srai>NOPX 464</srai></think><random><li><srai>EXPDEX WHO MAKE EXCELLENT <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made excellent * </srai>  -->
+<category><pattern>WHO MAKE EXCEPTIONAL *</pattern><template><think><srai>NOPX 500</srai></think><random><li><srai>EXPDEX WHO MAKE EXCEPTIONAL <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made exceptional * </srai>  -->
+<category><pattern>WHO MAKE EXCUSES *</pattern><template><think><srai>NOPX 1388</srai></think><random><li><srai>EXPDEX WHO MAKE EXCUSES <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made excuses * </srai>  -->
+<category><pattern>WHO MAKE EXTENSIVE *</pattern><template><think><srai>NOPX 679</srai></think><random><li><srai>EXPDEX WHO MAKE EXTENSIVE <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made extensive * </srai>  -->
+<category><pattern>WHO MAKE EXTRAORDINARY *</pattern><template><think><srai>NOPX 486</srai></think><random><li><srai>EXPDEX WHO MAKE EXTRAORDINARY <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made extraordinary * </srai>  -->
+<category><pattern>WHO MAKE FALSE *</pattern><template><think><srai>NOPX 3474</srai></think><random><li><srai>EXPDEX WHO MAKE FALSE <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made false * </srai>  -->
+<category><pattern>WHO MAKE FEW *</pattern><template><think><srai>NOPX 548</srai></think><random><li><srai>EXPDEX WHO MAKE FEW <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made few * </srai>  -->
+<category><pattern>WHO MAKE FILMS *</pattern><template><think><srai>NOPX 1163</srai></think><random><li><srai>EXPDEX WHO MAKE FILMS <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made films * </srai>  -->
+<category><pattern>WHO MAKE FINAL *</pattern><template><think><srai>NOPX 447</srai></think><random><li><srai>EXPDEX WHO MAKE FINAL <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made final * </srai>  -->
+<category><pattern>WHO MAKE FINANCIAL *</pattern><template><think><srai>NOPX 669</srai></think><random><li><srai>EXPDEX WHO MAKE FINANCIAL <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made financial * </srai>  -->
+<category><pattern>WHO MAKE FLAT *</pattern><template><think><srai>NOPX 1455</srai></think><random><li><srai>EXPDEX WHO MAKE FLAT <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made flat * </srai>  -->
+<category><pattern>WHO MAKE FOR *</pattern><template><think><srai>NOPX 701</srai></think><random><li><srai>EXPDEX WHO MAKE FOR <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made for * </srai>  -->
+<category><pattern>WHO MAKE FREQUENT *</pattern><template><think><srai>NOPX 2372</srai></think><random><li><srai>EXPDEX WHO MAKE FREQUENT <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made frequent * </srai>  -->
+<category><pattern>WHO MAKE FRIENDS *</pattern><template><think><srai>NOPX 650</srai></think><random><li><srai>EXPDEX WHO MAKE FRIENDS <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made friends * </srai>  -->
+<category><pattern>WHO MAKE FULL *</pattern><template><think><srai>NOPX 611</srai></think><random><li><srai>EXPDEX WHO MAKE FULL <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made full * </srai>  -->
+<category><pattern>WHO MAKE FUN *</pattern><template><think><srai>NOPX 5084</srai></think><random><li><srai>EXPDEX WHO MAKE FUN <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made fun * </srai>  -->
+<category><pattern>WHO MAKE GAMES *</pattern><template><think><srai>NOPX 557</srai></think><random><li><srai>EXPDEX WHO MAKE GAMES <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made games * </srai>  -->
+<category><pattern>WHO MAKE GIFTS *</pattern><template><think><srai>NOPX 977</srai></think><random><li><srai>EXPDEX WHO MAKE GIFTS <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made gifts * </srai>  -->
+<category><pattern>WHO MAKE GOOD *</pattern><template><think><srai>NOPX 5227</srai></think><random><li><srai>EXPDEX WHO MAKE GOOD <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made good * </srai>  -->
+<category><pattern>WHO MAKE GREAT *</pattern><template><think><srai>NOPX 3792</srai></think><random><li><srai>EXPDEX WHO MAKE GREAT <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made great * </srai>  -->
+<category><pattern>WHO MAKE HER *</pattern><template><think><srai>NOPX 1373</srai></think><random><li><srai>EXPDEX WHO MAKE HER <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made her * </srai>  -->
+<category><pattern>WHO MAKE HIGH *</pattern><template><think><srai>NOPX 1015</srai></think><random><li><srai>EXPDEX WHO MAKE HIGH <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made high * </srai>  -->
+<category><pattern>WHO MAKE HIM *</pattern><template><think><srai>NOPX 1871</srai></think><random><li><srai>EXPDEX WHO MAKE HIM <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made him * </srai>  -->
+<category><pattern>WHO MAKE HIS *</pattern><template><think><srai>NOPX 923</srai></think><random><li><srai>EXPDEX WHO MAKE HIS <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made his * </srai>  -->
+<category><pattern>WHO MAKE HISTORY *</pattern><template><think><srai>NOPX 1470</srai></think><random><li><srai>EXPDEX WHO MAKE HISTORY <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made history * </srai>  -->
+<category><pattern>WHO MAKE HOME *</pattern><template><think><srai>NOPX 756</srai></think><random><li><srai>EXPDEX WHO MAKE HOME <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made home * </srai>  -->
+<category><pattern>WHO MAKE HONEST *</pattern><template><think><srai>NOPX 472</srai></think><random><li><srai>EXPDEX WHO MAKE HONEST <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made honest * </srai>  -->
+<category><pattern>WHO MAKE HOUSE *</pattern><template><think><srai>NOPX 1076</srai></think><random><li><srai>EXPDEX WHO MAKE HOUSE <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made house * </srai>  -->
+<category><pattern>WHO MAKE HUGE *</pattern><template><think><srai>NOPX 683</srai></think><random><li><srai>EXPDEX WHO MAKE HUGE <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made huge * </srai>  -->
+<category><pattern>WHO MAKE ILLEGAL *</pattern><template><think><srai>NOPX 407</srai></think><random><li><srai>EXPDEX WHO MAKE ILLEGAL <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made illegal * </srai>  -->
+<category><pattern>WHO MAKE IMPORTANT *</pattern><template><think><srai>NOPX 972</srai></think><random><li><srai>EXPDEX WHO MAKE IMPORTANT <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made important * </srai>  -->
+<category><pattern>WHO MAKE INDEPENDENT *</pattern><template><think><srai>NOPX 551</srai></think><random><li><srai>EXPDEX WHO MAKE INDEPENDENT <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made independent * </srai>  -->
+<category><pattern>WHO MAKE INDIVIDUAL *</pattern><template><think><srai>NOPX 555</srai></think><random><li><srai>EXPDEX WHO MAKE INDIVIDUAL <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made individual * </srai>  -->
+<category><pattern>WHO MAKE INFORMATION *</pattern><template><think><srai>NOPX 492</srai></think><random><li><srai>EXPDEX WHO MAKE INFORMATION <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made information * </srai>  -->
+<category><pattern>WHO MAKE INQUIRIES *</pattern><template><think><srai>NOPX 816</srai></think><random><li><srai>EXPDEX WHO MAKE INQUIRIES <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made inquiries * </srai>  -->
+<category><pattern>WHO MAKE INTERESTING *</pattern><template><think><srai>NOPX 2763</srai></think><random><li><srai>EXPDEX WHO MAKE INTERESTING <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made interesting * </srai>  -->
+<category><pattern>WHO MAKE INTERNATIONAL *</pattern><template><think><srai>NOPX 405</srai></think><random><li><srai>EXPDEX WHO MAKE INTERNATIONAL <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made international * </srai>  -->
+<category><pattern>WHO MAKE INVESTMENT *</pattern><template><think><srai>NOPX 600</srai></think><random><li><srai>EXPDEX WHO MAKE INVESTMENT <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made investment * </srai>  -->
+<category><pattern>WHO MAKE INVESTMENTS *</pattern><template><think><srai>NOPX 543</srai></think><random><li><srai>EXPDEX WHO MAKE INVESTMENTS <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made investments * </srai>  -->
+<category><pattern>WHO MAKE IT *</pattern><template><think><srai>NOPX 88523</srai></think><random><li><srai>EXPDEX WHO MAKE IT <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made it * </srai>  -->
+<category><pattern>WHO MAKE ITS *</pattern><template><think><srai>NOPX 612</srai></think><random><li><srai>EXPDEX WHO MAKE ITS <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made its * </srai>  -->
+<category><pattern>WHO MAKE JOKES *</pattern><template><think><srai>NOPX 573</srai></think><random><li><srai>EXPDEX WHO MAKE JOKES <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made jokes * </srai>  -->
+<category><pattern>WHO MAKE LARGE *</pattern><template><think><srai>NOPX 1476</srai></think><random><li><srai>EXPDEX WHO MAKE LARGE <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made large * </srai>  -->
+<category><pattern>WHO MAKE LAWS *</pattern><template><think><srai>NOPX 1334</srai></think><random><li><srai>EXPDEX WHO MAKE LAWS <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made laws * </srai>  -->
+<category><pattern>WHO MAKE LIFE *</pattern><template><think><srai>NOPX 3919</srai></think><random><li><srai>EXPDEX WHO MAKE LIFE <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made life * </srai>  -->
+<category><pattern>WHO MAKE LIGHT *</pattern><template><think><srai>NOPX 640</srai></think><random><li><srai>EXPDEX WHO MAKE LIGHT <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made light * </srai>  -->
+<category><pattern>WHO MAKE LITTLE *</pattern><template><think><srai>NOPX 1097</srai></think><random><li><srai>EXPDEX WHO MAKE LITTLE <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made little * </srai>  -->
+<category><pattern>WHO MAKE LOANS *</pattern><template><think><srai>NOPX 752</srai></think><random><li><srai>EXPDEX WHO MAKE LOANS <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made loans * </srai>  -->
+<category><pattern>WHO MAKE LOTS *</pattern><template><think><srai>NOPX 962</srai></think><random><li><srai>EXPDEX WHO MAKE LOTS <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made lots * </srai>  -->
+<category><pattern>WHO MAKE LOVE *</pattern><template><think><srai>NOPX 1357</srai></think><random><li><srai>EXPDEX WHO MAKE LOVE <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made love * </srai>  -->
+<category><pattern>WHO MAKE MAJOR *</pattern><template><think><srai>NOPX 808</srai></think><random><li><srai>EXPDEX WHO MAKE MAJOR <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made major * </srai>  -->
+<category><pattern>WHO MAKE MANY *</pattern><template><think><srai>NOPX 1137</srai></think><random><li><srai>EXPDEX WHO MAKE MANY <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made many * </srai>  -->
+<category><pattern>WHO MAKE ME *</pattern><template><think><srai>NOPX 14149</srai></think><random><li><srai>EXPDEX WHO MAKE ME <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made me * </srai>  -->
+<category><pattern>WHO MAKE MEN *</pattern><template><think><srai>NOPX 645</srai></think><random><li><srai>EXPDEX WHO MAKE MEN <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made men * </srai>  -->
+<category><pattern>WHO MAKE MENTION *</pattern><template><think><srai>NOPX 423</srai></think><random><li><srai>EXPDEX WHO MAKE MENTION <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made mention * </srai>  -->
+<category><pattern>WHO MAKE MILLIONS *</pattern><template><think><srai>NOPX 2429</srai></think><random><li><srai>EXPDEX WHO MAKE MILLIONS <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made millions * </srai>  -->
+<category><pattern>WHO MAKE MINIMUM *</pattern><template><think><srai>NOPX 574</srai></think><random><li><srai>EXPDEX WHO MAKE MINIMUM <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made minimum * </srai>  -->
+<category><pattern>WHO MAKE MISCHIEF *</pattern><template><think><srai>NOPX 408</srai></think><random><li><srai>EXPDEX WHO MAKE MISCHIEF <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made mischief * </srai>  -->
+<category><pattern>WHO MAKE MISTAKES *</pattern><template><think><srai>NOPX 6072</srai></think><random><li><srai>EXPDEX WHO MAKE MISTAKES <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made mistakes * </srai>  -->
+<category><pattern>WHO MAKE MONEY *</pattern><template><think><srai>NOPX 11169</srai></think><random><li><srai>EXPDEX WHO MAKE MONEY <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made money * </srai>  -->
+<category><pattern>WHO MAKE MOVIES *</pattern><template><think><srai>NOPX 2305</srai></think><random><li><srai>EXPDEX WHO MAKE MOVIES <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made movies * </srai>  -->
+<category><pattern>WHO MAKE MULTIPLE *</pattern><template><think><srai>NOPX 577</srai></think><random><li><srai>EXPDEX WHO MAKE MULTIPLE <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made multiple * </srai>  -->
+<category><pattern>WHO MAKE MUSIC *</pattern><template><think><srai>NOPX 4267</srai></think><random><li><srai>EXPDEX WHO MAKE MUSIC <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made music * </srai>  -->
+<category><pattern>WHO MAKE MY *</pattern><template><think><srai>NOPX 3319</srai></think><random><li><srai>EXPDEX WHO MAKE MY <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made my * </srai>  -->
+<category><pattern>WHO MAKE NEW *</pattern><template><think><srai>NOPX 771</srai></think><random><li><srai>EXPDEX WHO MAKE NEW <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made new * </srai>  -->
+<category><pattern>WHO MAKE NEWS *</pattern><template><think><srai>NOPX 2658</srai></think><random><li><srai>EXPDEX WHO MAKE NEWS <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made news * </srai>  -->
+<category><pattern>WHO MAKE NO *</pattern><template><think><srai>NOPX 8124</srai></think><random><li><srai>EXPDEX WHO MAKE NO <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made no * </srai>  -->
+<category><pattern>WHO MAKE NOISE *</pattern><template><think><srai>NOPX 528</srai></think><random><li><srai>EXPDEX WHO MAKE NOISE <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made noise * </srai>  -->
+<category><pattern>WHO MAKE OF *</pattern><template><think><srai>NOPX 560</srai></think><random><li><srai>EXPDEX WHO MAKE OF <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made of * </srai>  -->
+<category><pattern>WHO MAKE ON *</pattern><template><think><srai>NOPX 579</srai></think><random><li><srai>EXPDEX WHO MAKE ON <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made on * </srai>  -->
+<category><pattern>WHO MAKE ORAL *</pattern><template><think><srai>NOPX 620</srai></think><random><li><srai>EXPDEX WHO MAKE ORAL <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made oral * </srai>  -->
+<category><pattern>WHO MAKE OTHER *</pattern><template><think><srai>NOPX 1046</srai></think><random><li><srai>EXPDEX WHO MAKE OTHER <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made other * </srai>  -->
+<category><pattern>WHO MAKE OTHERS *</pattern><template><think><srai>NOPX 1063</srai></think><random><li><srai>EXPDEX WHO MAKE OTHERS <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made others * </srai>  -->
+<category><pattern>WHO MAKE OUR *</pattern><template><think><srai>NOPX 15207</srai></think><random><li><srai>EXPDEX WHO MAKE OUR <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made our * </srai>  -->
+<category><pattern>WHO MAKE OUT *</pattern><template><think><srai>NOPX 974</srai></think><random><li><srai>EXPDEX WHO MAKE OUT <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made out * </srai>  -->
+<category><pattern>WHO MAKE OUTSTANDING *</pattern><template><think><srai>NOPX 2138</srai></think><random><li><srai>EXPDEX WHO MAKE OUTSTANDING <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made outstanding * </srai>  -->
+<category><pattern>WHO MAKE OVER *</pattern><template><think><srai>NOPX 2867</srai></think><random><li><srai>EXPDEX WHO MAKE OVER <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made over * </srai>  -->
+<category><pattern>WHO MAKE PAYMENT *</pattern><template><think><srai>NOPX 862</srai></think><random><li><srai>EXPDEX WHO MAKE PAYMENT <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made payment * </srai>  -->
+<category><pattern>WHO MAKE PAYMENTS *</pattern><template><think><srai>NOPX 1088</srai></think><random><li><srai>EXPDEX WHO MAKE PAYMENTS <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made payments * </srai>  -->
+<category><pattern>WHO MAKE PEACE *</pattern><template><think><srai>NOPX 1489</srai></think><random><li><srai>EXPDEX WHO MAKE PEACE <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made peace * </srai>  -->
+<category><pattern>WHO MAKE PEACEFUL *</pattern><template><think><srai>NOPX 6400</srai></think><random><li><srai>EXPDEX WHO MAKE PEACEFUL <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made peaceful * </srai>  -->
+<category><pattern>WHO MAKE PEOPLE *</pattern><template><think><srai>NOPX 1083</srai></think><random><li><srai>EXPDEX WHO MAKE PEOPLE <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made people * </srai>  -->
+<category><pattern>WHO MAKE PERSONAL *</pattern><template><think><srai>NOPX 941</srai></think><random><li><srai>EXPDEX WHO MAKE PERSONAL <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made personal * </srai>  -->
+<category><pattern>WHO MAKE PLANS *</pattern><template><think><srai>NOPX 521</srai></think><random><li><srai>EXPDEX WHO MAKE PLANS <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made plans * </srai>  -->
+<category><pattern>WHO MAKE POLICIES *</pattern><template><think><srai>NOPX 489</srai></think><random><li><srai>EXPDEX WHO MAKE POLICIES <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made policies * </srai>  -->
+<category><pattern>WHO MAKE POLICY *</pattern><template><think><srai>NOPX 3320</srai></think><random><li><srai>EXPDEX WHO MAKE POLICY <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made policy * </srai>  -->
+<category><pattern>WHO MAKE POLITICAL *</pattern><template><think><srai>NOPX 650</srai></think><random><li><srai>EXPDEX WHO MAKE POLITICAL <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made political * </srai>  -->
+<category><pattern>WHO MAKE POOR *</pattern><template><think><srai>NOPX 793</srai></think><random><li><srai>EXPDEX WHO MAKE POOR <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made poor * </srai>  -->
+<category><pattern>WHO MAKE POSITIVE *</pattern><template><think><srai>NOPX 709</srai></think><random><li><srai>EXPDEX WHO MAKE POSITIVE <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made positive * </srai>  -->
+<category><pattern>WHO MAKE POSSIBLE *</pattern><template><think><srai>NOPX 733</srai></think><random><li><srai>EXPDEX WHO MAKE POSSIBLE <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made possible * </srai>  -->
+<category><pattern>WHO MAKE POSTINGS *</pattern><template><think><srai>NOPX 1298</srai></think><random><li><srai>EXPDEX WHO MAKE POSTINGS <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made postings * </srai>  -->
+<category><pattern>WHO MAKE PREDICTIONS *</pattern><template><think><srai>NOPX 507</srai></think><random><li><srai>EXPDEX WHO MAKE PREDICTIONS <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made predictions * </srai>  -->
+<category><pattern>WHO MAKE PRESENTATIONS *</pattern><template><think><srai>NOPX 917</srai></think><random><li><srai>EXPDEX WHO MAKE PRESENTATIONS <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made presentations * </srai>  -->
+<category><pattern>WHO MAKE PRODUCTS *</pattern><template><think><srai>NOPX 1137</srai></think><random><li><srai>EXPDEX WHO MAKE PRODUCTS <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made products * </srai>  -->
+<category><pattern>WHO MAKE PROGRESS *</pattern><template><think><srai>NOPX 469</srai></think><random><li><srai>EXPDEX WHO MAKE PROGRESS <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made progress * </srai>  -->
+<category><pattern>WHO MAKE PROMISES *</pattern><template><think><srai>NOPX 858</srai></think><random><li><srai>EXPDEX WHO MAKE PROMISES <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made promises * </srai>  -->
+<category><pattern>WHO MAKE PUBLIC *</pattern><template><think><srai>NOPX 1447</srai></think><random><li><srai>EXPDEX WHO MAKE PUBLIC <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made public * </srai>  -->
+<category><pattern>WHO MAKE PURCHASES *</pattern><template><think><srai>NOPX 2137</srai></think><random><li><srai>EXPDEX WHO MAKE PURCHASES <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made purchases * </srai>  -->
+<category><pattern>WHO MAKE REAL *</pattern><template><think><srai>NOPX 773</srai></think><random><li><srai>EXPDEX WHO MAKE REAL <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made real * </srai>  -->
+<category><pattern>WHO MAKE RECOMMENDATIONS *</pattern><template><think><srai>NOPX 1607</srai></think><random><li><srai>EXPDEX WHO MAKE RECOMMENDATIONS <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made recommendations * </srai>  -->
+<category><pattern>WHO MAKE REFERRALS *</pattern><template><think><srai>NOPX 500</srai></think><random><li><srai>EXPDEX WHO MAKE REFERRALS <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made referrals * </srai>  -->
+<category><pattern>WHO MAKE REGULAR *</pattern><template><think><srai>NOPX 4464</srai></think><random><li><srai>EXPDEX WHO MAKE REGULAR <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made regular * </srai>  -->
+<category><pattern>WHO MAKE REPEAT *</pattern><template><think><srai>NOPX 876</srai></think><random><li><srai>EXPDEX WHO MAKE REPEAT <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made repeat * </srai>  -->
+<category><pattern>WHO MAKE REPORTS *</pattern><template><think><srai>NOPX 547</srai></think><random><li><srai>EXPDEX WHO MAKE REPORTS <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made reports * </srai>  -->
+<category><pattern>WHO MAKE REPRESENTATIONS *</pattern><template><think><srai>NOPX 501</srai></think><random><li><srai>EXPDEX WHO MAKE REPRESENTATIONS <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made representations * </srai>  -->
+<category><pattern>WHO MAKE REQUESTS *</pattern><template><think><srai>NOPX 910</srai></think><random><li><srai>EXPDEX WHO MAKE REQUESTS <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made requests * </srai>  -->
+<category><pattern>WHO MAKE RESERVATIONS *</pattern><template><think><srai>NOPX 1480</srai></think><random><li><srai>EXPDEX WHO MAKE RESERVATIONS <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made reservations * </srai>  -->
+<category><pattern>WHO MAKE SACRIFICES *</pattern><template><think><srai>NOPX 865</srai></think><random><li><srai>EXPDEX WHO MAKE SACRIFICES <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made sacrifices * </srai>  -->
+<category><pattern>WHO MAKE SALES *</pattern><template><think><srai>NOPX 544</srai></think><random><li><srai>EXPDEX WHO MAKE SALES <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made sales * </srai>  -->
+<category><pattern>WHO MAKE SENSE *</pattern><template><think><srai>NOPX 836</srai></think><random><li><srai>EXPDEX WHO MAKE SENSE <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made sense * </srai>  -->
+<category><pattern>WHO MAKE SERIOUS *</pattern><template><think><srai>NOPX 440</srai></think><random><li><srai>EXPDEX WHO MAKE SERIOUS <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made serious * </srai>  -->
+<category><pattern>WHO MAKE SHORT *</pattern><template><think><srai>NOPX 483</srai></think><random><li><srai>EXPDEX WHO MAKE SHORT <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made short * </srai>  -->
+<category><pattern>WHO MAKE SIGNIFICANT *</pattern><template><think><srai>NOPX 3747</srai></think><random><li><srai>EXPDEX WHO MAKE SIGNIFICANT <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made significant * </srai>  -->
+<category><pattern>WHO MAKE SIMILAR *</pattern><template><think><srai>NOPX 901</srai></think><random><li><srai>EXPDEX WHO MAKE SIMILAR <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made similar * </srai>  -->
+<category><pattern>WHO MAKE SMALL *</pattern><template><think><srai>NOPX 850</srai></think><random><li><srai>EXPDEX WHO MAKE SMALL <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made small * </srai>  -->
+<category><pattern>WHO MAKE SOFTWARE *</pattern><template><think><srai>NOPX 519</srai></think><random><li><srai>EXPDEX WHO MAKE SOFTWARE <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made software * </srai>  -->
+<category><pattern>WHO MAKE SOME *</pattern><template><think><srai>NOPX 2092</srai></think><random><li><srai>EXPDEX WHO MAKE SOME <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made some * </srai>  -->
+<category><pattern>WHO MAKE SPECIAL *</pattern><template><think><srai>NOPX 542</srai></think><random><li><srai>EXPDEX WHO MAKE SPECIAL <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made special * </srai>  -->
+<category><pattern>WHO MAKE STATEMENTS *</pattern><template><think><srai>NOPX 1376</srai></think><random><li><srai>EXPDEX WHO MAKE STATEMENTS <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made statements * </srai>  -->
+<category><pattern>WHO MAKE STUFF *</pattern><template><think><srai>NOPX 859</srai></think><random><li><srai>EXPDEX WHO MAKE STUFF <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made stuff * </srai>  -->
+<category><pattern>WHO MAKE STUPID *</pattern><template><think><srai>NOPX 697</srai></think><random><li><srai>EXPDEX WHO MAKE STUPID <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made stupid * </srai>  -->
+<category><pattern>WHO MAKE SUBMISSIONS *</pattern><template><think><srai>NOPX 505</srai></think><random><li><srai>EXPDEX WHO MAKE SUBMISSIONS <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made submissions * </srai>  -->
+<category><pattern>WHO MAKE SUBSTANTIAL *</pattern><template><think><srai>NOPX 709</srai></think><random><li><srai>EXPDEX WHO MAKE SUBSTANTIAL <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made substantial * </srai>  -->
+<category><pattern>WHO MAKE SUCH *</pattern><template><think><srai>NOPX 12888</srai></think><random><li><srai>EXPDEX WHO MAKE SUCH <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made such * </srai>  -->
+<category><pattern>WHO MAKE SUGGESTIONS *</pattern><template><think><srai>NOPX 578</srai></think><random><li><srai>EXPDEX WHO MAKE SUGGESTIONS <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made suggestions * </srai>  -->
+<category><pattern>WHO MAKE SURE *</pattern><template><think><srai>NOPX 8024</srai></think><random><li><srai>EXPDEX WHO MAKE SURE <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made sure * </srai>  -->
+<category><pattern>WHO MAKE THAT *</pattern><template><think><srai>NOPX 6595</srai></think><random><li><srai>EXPDEX WHO MAKE THAT <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made that * </srai>  -->
+<category><pattern>WHO MAKE THE *</pattern><template><think><srai>NOPX 162181</srai></think><random><li><srai>EXPDEX WHO MAKE THE <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made the * </srai>  -->
+<category><pattern>WHO MAKE THEIR *</pattern><template><think><srai>NOPX 61044</srai></think><random><li><srai>EXPDEX WHO MAKE THEIR <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made their * </srai>  -->
+<category><pattern>WHO MAKE THEM *</pattern><template><think><srai>NOPX 28958</srai></think><random><li><srai>EXPDEX WHO MAKE THEM <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made them * </srai>  -->
+<category><pattern>WHO MAKE THEMSELVES *</pattern><template><think><srai>NOPX 4989</srai></think><random><li><srai>EXPDEX WHO MAKE THEMSELVES <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made themselves * </srai>  -->
+<category><pattern>WHO MAKE THESE *</pattern><template><think><srai>NOPX 15909</srai></think><random><li><srai>EXPDEX WHO MAKE THESE <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made these * </srai>  -->
+<category><pattern>WHO MAKE THINGS *</pattern><template><think><srai>NOPX 9849</srai></think><random><li><srai>EXPDEX WHO MAKE THINGS <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made things * </srai>  -->
+<category><pattern>WHO MAKE THIS *</pattern><template><think><srai>NOPX 39277</srai></think><random><li><srai>EXPDEX WHO MAKE THIS <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made this * </srai>  -->
+<category><pattern>WHO MAKE THOSE *</pattern><template><think><srai>NOPX 4699</srai></think><random><li><srai>EXPDEX WHO MAKE THOSE <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made those * </srai>  -->
+<category><pattern>WHO MAKE THOUSANDS *</pattern><template><think><srai>NOPX 482</srai></think><random><li><srai>EXPDEX WHO MAKE THOUSANDS <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made thousands * </srai>  -->
+<category><pattern>WHO MAKE THREATS *</pattern><template><think><srai>NOPX 706</srai></think><random><li><srai>EXPDEX WHO MAKE THREATS <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made threats * </srai>  -->
+<category><pattern>WHO MAKE TIME *</pattern><template><think><srai>NOPX 656</srai></think><random><li><srai>EXPDEX WHO MAKE TIME <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made time * </srai>  -->
+<category><pattern>WHO MAKE TROUBLE *</pattern><template><think><srai>NOPX 449</srai></think><random><li><srai>EXPDEX WHO MAKE TROUBLE <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made trouble * </srai>  -->
+<category><pattern>WHO MAKE UNAUTHORISED *</pattern><template><think><srai>NOPX 808</srai></think><random><li><srai>EXPDEX WHO MAKE UNAUTHORISED <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made unauthorised * </srai>  -->
+<category><pattern>WHO MAKE UNDER *</pattern><template><think><srai>NOPX 689</srai></think><random><li><srai>EXPDEX WHO MAKE UNDER <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made under * </srai>  -->
+<category><pattern>WHO MAKE UNJUST *</pattern><template><think><srai>NOPX 413</srai></think><random><li><srai>EXPDEX WHO MAKE UNJUST <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made unjust * </srai>  -->
+<category><pattern>WHO MAKE US *</pattern><template><think><srai>NOPX 7143</srai></think><random><li><srai>EXPDEX WHO MAKE US <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made us * </srai>  -->
+<category><pattern>WHO MAKE USE *</pattern><template><think><srai>NOPX 19696</srai></think><random><li><srai>EXPDEX WHO MAKE USE <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made use * </srai>  -->
+<category><pattern>WHO MAKE WAR *</pattern><template><think><srai>NOPX 2626</srai></think><random><li><srai>EXPDEX WHO MAKE WAR <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made war * </srai>  -->
+<category><pattern>WHO MAKE WEB *</pattern><template><think><srai>NOPX 555</srai></think><random><li><srai>EXPDEX WHO MAKE WEB <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made web * </srai>  -->
+<category><pattern>WHO MAKE WEBSITES *</pattern><template><think><srai>NOPX 11240</srai></think><random><li><srai>EXPDEX WHO MAKE WEBSITES <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made websites * </srai>  -->
+<category><pattern>WHO MAKE WINE *</pattern><template><think><srai>NOPX 504</srai></think><random><li><srai>EXPDEX WHO MAKE WINE <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made wine * </srai>  -->
+<category><pattern>WHO MAKE YOU *</pattern><template><think><srai>NOPX 11989</srai></think><random><li><srai>EXPDEX WHO MAKE YOU <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made you * </srai>  -->
+<category><pattern>WHO MAKE YOUR *</pattern><template><think><srai>NOPX 6565</srai></think><random><li><srai>EXPDEX WHO MAKE YOUR <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made your * </srai>  -->
+<category><pattern>WHO MAKE A DIFFERENCE *</pattern><template><think><srai>NOPX 3086</srai></think><random><li><srai>EXPDEX WHO MAKE A DIFFERENCE <star/></srai></li></random></template></category>
+<!-- p=-63.3612714368817 	:<srai>who made a difference * </srai>  -->
+<category><pattern>WHO MAKE GOOD ART *</pattern><template><think><srai>NOPX 420</srai></think><random><li><srai>EXPDEX WHO MAKE GOOD ART <star/></srai></li></random></template></category>
+<!-- p=-58.0203898418487 	:<srai>who made good art * </srai>  -->
+<category><pattern>WHO MAKE ME LAUGH *</pattern><template><think><srai>NOPX 877</srai></think><random><li><srai>EXPDEX WHO MAKE ME LAUGH <star/></srai></li></random></template></category>
+<!-- p=-58.5497651978892 	:<srai>who made me laugh * </srai>  -->
+<category><pattern>WHO MAKE ORGANIZATIONS GO *</pattern><template><think><srai>NOPX 486</srai></think><random><li><srai>EXPDEX WHO MAKE ORGANIZATIONS GO <star/></srai></li></random></template></category>
+<!-- p=-57.0033502003777 	:<srai>who made organizations go * </srai>  -->
+<category><pattern>WHO MAKE THE WORLD *</pattern><template><think><srai>NOPX 533</srai></think><random><li><srai>EXPDEX WHO MAKE THE WORLD <star/></srai></li></random></template></category>
+<!-- p=-64.6014507595706 	:<srai>who made the world * </srai>  -->
+<category><pattern>WHO MAKE THIS SITE *</pattern><template><think><srai>NOPX 1406</srai></think><random><li><srai>EXPDEX WHO MAKE THIS SITE <star/></srai></li></random></template></category>
+<!-- p=-62.0591408321368 	:<srai>who made this site * </srai>  -->
+<category><pattern>WHO MAKE UP OUR *</pattern><template><think><srai>NOPX 447</srai></think><random><li><srai>EXPDEX WHO MAKE UP OUR <star/></srai></li></random></template></category>
+<!-- p=-58.6258152894979 	:<srai>who made up our * </srai>  -->
+<category><pattern>WHO MAKE VIRGINITY PLEDGES *</pattern><template><think><srai>NOPX 2682</srai></think><random><li><srai>EXPDEX WHO MAKE VIRGINITY PLEDGES <star/></srai></li></random></template></category>
+<!-- p=-57.0033502003777 	:<srai>who made virginity pledges * </srai>  -->
+<category><pattern>WHO MAKE WEBSITES *</pattern><template><think><srai>NOPX 995</srai></think><random><li><srai>EXPDEX WHO MAKE WEBSITES <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made websites * </srai>  -->
+<category><pattern>WHO MAKE A DIFFERENCE *</pattern><template><think><srai>NOPX 4952</srai></think><random><li><srai>EXPDEX WHO MAKE A DIFFERENCE <star/></srai></li></random></template></category>
+<!-- p=-63.3612714368817 	:<srai>who made a difference * </srai>  -->
+<category><pattern>WHO MAKE THE WORLD *</pattern><template><think><srai>NOPX 10331</srai></think><random><li><srai>EXPDEX WHO MAKE THE WORLD <star/></srai></li></random></template></category>
+<!-- p=-64.6014507595706 	:<srai>who made the world * </srai>  -->
+<category><pattern>WHO MAKE THE PANAMA *</pattern><template><think><srai>NOPX 848</srai></think><random><li><srai>EXPDEX WHO MAKE THE PANAMA <star/></srai></li></random></template></category>
+<!-- p=-64.6014507595706 	:<srai>who made the panama * </srai>  -->
+<category><pattern>WHO MAKE W LOOK *</pattern><template><think><srai>NOPX 1182</srai></think><random><li><srai>EXPDEX WHO MAKE W LOOK <star/></srai></li></random></template></category>
+<!-- p=-57.8210646148061 	:<srai>who made w look * </srai>  -->
+<category><pattern>WHO MAKE A *</pattern><template><think><srai>NOPX 1680</srai></think><random><li><srai>EXPDEX WHO MAKE A <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made a * </srai>  -->
+<category><pattern>WHO MAKE A BRIGHTER *</pattern><template><think><srai>NOPX 1168</srai></think><random><li><srai>EXPDEX WHO MAKE A BRIGHTER <star/></srai></li></random></template></category>
+<!-- p=-63.3612714368817 	:<srai>who made a brighter * </srai>  -->
+<category><pattern>WHO MAKE A BUSINESS *</pattern><template><think><srai>NOPX 1088</srai></think><random><li><srai>EXPDEX WHO MAKE A BUSINESS <star/></srai></li></random></template></category>
+<!-- p=-63.3612714368817 	:<srai>who made a business * </srai>  -->
+<category><pattern>WHO MAKE A CAR *</pattern><template><think><srai>NOPX 3106</srai></think><random><li><srai>EXPDEX WHO MAKE A CAR <star/></srai></li></random></template></category>
+<!-- p=-63.3612714368817 	:<srai>who made a car * </srai>  -->
+<category><pattern>WHO MAKE A CAREER *</pattern><template><think><srai>NOPX 1183</srai></think><random><li><srai>EXPDEX WHO MAKE A CAREER <star/></srai></li></random></template></category>
+<!-- p=-63.3612714368817 	:<srai>who made a career * </srai>  -->
+<category><pattern>WHO MAKE A CLAIM *</pattern><template><think><srai>NOPX 536</srai></think><random><li><srai>EXPDEX WHO MAKE A CLAIM <star/></srai></li></random></template></category>
+<!-- p=-63.3612714368817 	:<srai>who made a claim * </srai>  -->
+<category><pattern>WHO MAKE A COMMITMENT *</pattern><template><think><srai>NOPX 1856</srai></think><random><li><srai>EXPDEX WHO MAKE A COMMITMENT <star/></srai></li></random></template></category>
+<!-- p=-63.3612714368817 	:<srai>who made a commitment * </srai>  -->
+<category><pattern>WHO MAKE A CONTRIBUTION *</pattern><template><think><srai>NOPX 1293</srai></think><random><li><srai>EXPDEX WHO MAKE A CONTRIBUTION <star/></srai></li></random></template></category>
+<!-- p=-63.3612714368817 	:<srai>who made a contribution * </srai>  -->
+<category><pattern>WHO MAKE A CUMSH *</pattern><template><think><srai>NOPX 1928</srai></think><random><li><srai>EXPDEX WHO MAKE A CUMSH <star/></srai></li></random></template></category>
+<!-- p=-63.3612714368817 	:<srai>who made a cumsh * </srai>  -->
+<category><pattern>WHO MAKE A DECISION *</pattern><template><think><srai>NOPX 876</srai></think><random><li><srai>EXPDEX WHO MAKE A DECISION <star/></srai></li></random></template></category>
+<!-- p=-63.3612714368817 	:<srai>who made a decision * </srai>  -->
+<category><pattern>WHO MAKE A DIFFERENCE *</pattern><template><think><srai>NOPX 16155</srai></think><random><li><srai>EXPDEX WHO MAKE A DIFFERENCE <star/></srai></li></random></template></category>
+<!-- p=-63.3612714368817 	:<srai>who made a difference * </srai>  -->
+<category><pattern>WHO MAKE A DISTINCTION *</pattern><template><think><srai>NOPX 427</srai></think><random><li><srai>EXPDEX WHO MAKE A DISTINCTION <star/></srai></li></random></template></category>
+<!-- p=-63.3612714368817 	:<srai>who made a distinction * </srai>  -->
+<category><pattern>WHO MAKE A DONATION *</pattern><template><think><srai>NOPX 878</srai></think><random><li><srai>EXPDEX WHO MAKE A DONATION <star/></srai></li></random></template></category>
+<!-- p=-63.3612714368817 	:<srai>who made a donation * </srai>  -->
+<category><pattern>WHO MAKE A GIFT *</pattern><template><think><srai>NOPX 489</srai></think><random><li><srai>EXPDEX WHO MAKE A GIFT <star/></srai></li></random></template></category>
+<!-- p=-63.3612714368817 	:<srai>who made a gift * </srai>  -->
+<category><pattern>WHO MAKE A HABIT *</pattern><template><think><srai>NOPX 1710</srai></think><random><li><srai>EXPDEX WHO MAKE A HABIT <star/></srai></li></random></template></category>
+<!-- p=-63.3612714368817 	:<srai>who made a habit * </srai>  -->
+<category><pattern>WHO MAKE A LIVING *</pattern><template><think><srai>NOPX 16530</srai></think><random><li><srai>EXPDEX WHO MAKE A LIVING <star/></srai></li></random></template></category>
+<!-- p=-63.3612714368817 	:<srai>who made a living * </srai>  -->
+<category><pattern>WHO MAKE A LOT *</pattern><template><think><srai>NOPX 3165</srai></think><random><li><srai>EXPDEX WHO MAKE A LOT <star/></srai></li></random></template></category>
+<!-- p=-63.3612714368817 	:<srai>who made a lot * </srai>  -->
+<category><pattern>WHO MAKE A MINIMUM *</pattern><template><think><srai>NOPX 433</srai></think><random><li><srai>EXPDEX WHO MAKE A MINIMUM <star/></srai></li></random></template></category>
+<!-- p=-63.3612714368817 	:<srai>who made a minimum * </srai>  -->
+<category><pattern>WHO MAKE A MISTAKE *</pattern><template><think><srai>NOPX 553</srai></think><random><li><srai>EXPDEX WHO MAKE A MISTAKE <star/></srai></li></random></template></category>
+<!-- p=-63.3612714368817 	:<srai>who made a mistake * </srai>  -->
+<category><pattern>WHO MAKE A MOCKERY *</pattern><template><think><srai>NOPX 465</srai></think><random><li><srai>EXPDEX WHO MAKE A MOCKERY <star/></srai></li></random></template></category>
+<!-- p=-63.3612714368817 	:<srai>who made a mockery * </srai>  -->
+<category><pattern>WHO MAKE A PACT *</pattern><template><think><srai>NOPX 526</srai></think><random><li><srai>EXPDEX WHO MAKE A PACT <star/></srai></li></random></template></category>
+<!-- p=-63.3612714368817 	:<srai>who made a pact * </srai>  -->
+<category><pattern>WHO MAKE A POINT *</pattern><template><think><srai>NOPX 1779</srai></think><random><li><srai>EXPDEX WHO MAKE A POINT <star/></srai></li></random></template></category>
+<!-- p=-63.3612714368817 	:<srai>who made a point * </srai>  -->
+<category><pattern>WHO MAKE A PRACTICE *</pattern><template><think><srai>NOPX 487</srai></think><random><li><srai>EXPDEX WHO MAKE A PRACTICE <star/></srai></li></random></template></category>
+<!-- p=-63.3612714368817 	:<srai>who made a practice * </srai>  -->
+<category><pattern>WHO MAKE A PROFESSION *</pattern><template><think><srai>NOPX 793</srai></think><random><li><srai>EXPDEX WHO MAKE A PROFESSION <star/></srai></li></random></template></category>
+<!-- p=-63.3612714368817 	:<srai>who made a profession * </srai>  -->
+<category><pattern>WHO MAKE A PROFIT *</pattern><template><think><srai>NOPX 736</srai></think><random><li><srai>EXPDEX WHO MAKE A PROFIT <star/></srai></li></random></template></category>
+<!-- p=-63.3612714368817 	:<srai>who made a profit * </srai>  -->
+<category><pattern>WHO MAKE A PURCHASE *</pattern><template><think><srai>NOPX 1374</srai></think><random><li><srai>EXPDEX WHO MAKE A PURCHASE <star/></srai></li></random></template></category>
+<!-- p=-63.3612714368817 	:<srai>who made a purchase * </srai>  -->
+<category><pattern>WHO MAKE A REQUEST *</pattern><template><think><srai>NOPX 558</srai></think><random><li><srai>EXPDEX WHO MAKE A REQUEST <star/></srai></li></random></template></category>
+<!-- p=-63.3612714368817 	:<srai>who made a request * </srai>  -->
+<category><pattern>WHO MAKE AN *</pattern><template><think><srai>NOPX 413</srai></think><random><li><srai>EXPDEX WHO MAKE AN <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made an * </srai>  -->
+<category><pattern>WHO MAKE AN APPLICATION *</pattern><template><think><srai>NOPX 445</srai></think><random><li><srai>EXPDEX WHO MAKE AN APPLICATION <star/></srai></li></random></template></category>
+<!-- p=-60.65036190685 	:<srai>who made an application * </srai>  -->
+<category><pattern>WHO MAKE AN EFFORT *</pattern><template><think><srai>NOPX 2267</srai></think><random><li><srai>EXPDEX WHO MAKE AN EFFORT <star/></srai></li></random></template></category>
+<!-- p=-60.65036190685 	:<srai>who made an effort * </srai>  -->
+<category><pattern>WHO MAKE AN HART *</pattern><template><think><srai>NOPX 562</srai></think><random><li><srai>EXPDEX WHO MAKE AN HART <star/></srai></li></random></template></category>
+<!-- p=-60.65036190685 	:<srai>who made an hart * </srai>  -->
+<category><pattern>WHO MAKE AN IMPACT *</pattern><template><think><srai>NOPX 474</srai></think><random><li><srai>EXPDEX WHO MAKE AN IMPACT <star/></srai></li></random></template></category>
+<!-- p=-60.65036190685 	:<srai>who made an impact * </srai>  -->
+<category><pattern>WHO MAKE ATOMIC BOMBS *</pattern><template><think><srai>NOPX 1065</srai></think><random><li><srai>EXPDEX WHO MAKE ATOMIC BOMBS <star/></srai></li></random></template></category>
+<!-- p=-57.0033502003777 	:<srai>who made atomic bombs * </srai>  -->
+<category><pattern>WHO MAKE BAD CHOICES *</pattern><template><think><srai>NOPX 436</srai></think><random><li><srai>EXPDEX WHO MAKE BAD CHOICES <star/></srai></li></random></template></category>
+<!-- p=-57.0033502003777 	:<srai>who made bad choices * </srai>  -->
+<category><pattern>WHO MAKE BAD DECISIONS *</pattern><template><think><srai>NOPX 444</srai></think><random><li><srai>EXPDEX WHO MAKE BAD DECISIONS <star/></srai></li></random></template></category>
+<!-- p=-57.0033502003777 	:<srai>who made bad decisions * </srai>  -->
+<category><pattern>WHO MAKE COBWEBS OUT *</pattern><template><think><srai>NOPX 2479</srai></think><random><li><srai>EXPDEX WHO MAKE COBWEBS OUT <star/></srai></li></random></template></category>
+<!-- p=-57.0033502003777 	:<srai>who made cobwebs out * </srai>  -->
+<category><pattern>WHO MAKE DECISIONS *</pattern><template><think><srai>NOPX 514</srai></think><random><li><srai>EXPDEX WHO MAKE DECISIONS <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made decisions * </srai>  -->
+<category><pattern>WHO MAKE DECISIONS ABOUT *</pattern><template><think><srai>NOPX 4289</srai></think><random><li><srai>EXPDEX WHO MAKE DECISIONS ABOUT <star/></srai></li></random></template></category>
+<!-- p=-57.0033502003777 	:<srai>who made decisions about * </srai>  -->
+<category><pattern>WHO MAKE DECISIONS FOR *</pattern><template><think><srai>NOPX 879</srai></think><random><li><srai>EXPDEX WHO MAKE DECISIONS FOR <star/></srai></li></random></template></category>
+<!-- p=-57.0033502003777 	:<srai>who made decisions for * </srai>  -->
+<category><pattern>WHO MAKE DECISIONS IN *</pattern><template><think><srai>NOPX 977</srai></think><random><li><srai>EXPDEX WHO MAKE DECISIONS IN <star/></srai></li></random></template></category>
+<!-- p=-57.0033502003777 	:<srai>who made decisions in * </srai>  -->
+<category><pattern>WHO MAKE DECISIONS ON *</pattern><template><think><srai>NOPX 2067</srai></think><random><li><srai>EXPDEX WHO MAKE DECISIONS ON <star/></srai></li></random></template></category>
+<!-- p=-57.0033502003777 	:<srai>who made decisions on * </srai>  -->
+<category><pattern>WHO MAKE DECISIONS REGARDING *</pattern><template><think><srai>NOPX 576</srai></think><random><li><srai>EXPDEX WHO MAKE DECISIONS REGARDING <star/></srai></li></random></template></category>
+<!-- p=-57.0033502003777 	:<srai>who made decisions regarding * </srai>  -->
+<category><pattern>WHO MAKE DECISIONS THAT *</pattern><template><think><srai>NOPX 1337</srai></think><random><li><srai>EXPDEX WHO MAKE DECISIONS THAT <star/></srai></li></random></template></category>
+<!-- p=-57.0033502003777 	:<srai>who made decisions that * </srai>  -->
+<category><pattern>WHO MAKE EMPTY PROPHECIES *</pattern><template><think><srai>NOPX 913</srai></think><random><li><srai>EXPDEX WHO MAKE EMPTY PROPHECIES <star/></srai></li></random></template></category>
+<!-- p=-57.0033502003777 	:<srai>who made empty prophecies * </srai>  -->
+<category><pattern>WHO MAKE EVERY EFFORT *</pattern><template><think><srai>NOPX 665</srai></think><random><li><srai>EXPDEX WHO MAKE EVERY EFFORT <star/></srai></li></random></template></category>
+<!-- p=-57.1971225997788 	:<srai>who made every effort * </srai>  -->
+<category><pattern>WHO MAKE EXCUSES FOR *</pattern><template><think><srai>NOPX 880</srai></think><random><li><srai>EXPDEX WHO MAKE EXCUSES FOR <star/></srai></li></random></template></category>
+<!-- p=-57.0033502003777 	:<srai>who made excuses for * </srai>  -->
+<category><pattern>WHO MAKE FALSE CLAIMS *</pattern><template><think><srai>NOPX 572</srai></think><random><li><srai>EXPDEX WHO MAKE FALSE CLAIMS <star/></srai></li></random></template></category>
+<!-- p=-57.0033502003777 	:<srai>who made false claims * </srai>  -->
+<category><pattern>WHO MAKE FALSE STATEMENTS *</pattern><template><think><srai>NOPX 490</srai></think><random><li><srai>EXPDEX WHO MAKE FALSE STATEMENTS <star/></srai></li></random></template></category>
+<!-- p=-57.0033502003777 	:<srai>who made false statements * </srai>  -->
+<category><pattern>WHO MAKE FLAT CARS *</pattern><template><think><srai>NOPX 1422</srai></think><random><li><srai>EXPDEX WHO MAKE FLAT CARS <star/></srai></li></random></template></category>
+<!-- p=-57.0033502003777 	:<srai>who made flat cars * </srai>  -->
+<category><pattern>WHO MAKE HOME VISITS *</pattern><template><think><srai>NOPX 457</srai></think><random><li><srai>EXPDEX WHO MAKE HOME VISITS <star/></srai></li></random></template></category>
+<!-- p=-60.8223530214524 	:<srai>who made home visits * </srai>  -->
+<category><pattern>WHO MAKE INTERESTING SHORT *</pattern><template><think><srai>NOPX 2537</srai></think><random><li><srai>EXPDEX WHO MAKE INTERESTING SHORT <star/></srai></li></random></template></category>
+<!-- p=-57.0033502003777 	:<srai>who made interesting short * </srai>  -->
+<category><pattern>WHO MAKE IT *</pattern><template><think><srai>NOPX 681</srai></think><random><li><srai>EXPDEX WHO MAKE IT <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made it * </srai>  -->
+<category><pattern>WHO MAKE IT A *</pattern><template><think><srai>NOPX 4478</srai></think><random><li><srai>EXPDEX WHO MAKE IT A <star/></srai></li></random></template></category>
+<!-- p=-61.3394565111348 	:<srai>who made it a * </srai>  -->
+<category><pattern>WHO MAKE IT ALL *</pattern><template><think><srai>NOPX 5179</srai></think><random><li><srai>EXPDEX WHO MAKE IT ALL <star/></srai></li></random></template></category>
+<!-- p=-61.3394565111348 	:<srai>who made it all * </srai>  -->
+<category><pattern>WHO MAKE IT ARE *</pattern><template><think><srai>NOPX 832</srai></think><random><li><srai>EXPDEX WHO MAKE IT ARE <star/></srai></li></random></template></category>
+<!-- p=-61.3394565111348 	:<srai>who made it are * </srai>  -->
+<category><pattern>WHO MAKE IT BIG *</pattern><template><think><srai>NOPX 763</srai></think><random><li><srai>EXPDEX WHO MAKE IT BIG <star/></srai></li></random></template></category>
+<!-- p=-61.3394565111348 	:<srai>who made it big * </srai>  -->
+<category><pattern>WHO MAKE IT CLEAR *</pattern><template><think><srai>NOPX 615</srai></think><random><li><srai>EXPDEX WHO MAKE IT CLEAR <star/></srai></li></random></template></category>
+<!-- p=-61.3394565111348 	:<srai>who made it clear * </srai>  -->
+<category><pattern>WHO MAKE IT DIFFICULT *</pattern><template><think><srai>NOPX 426</srai></think><random><li><srai>EXPDEX WHO MAKE IT DIFFICULT <star/></srai></li></random></template></category>
+<!-- p=-61.3394565111348 	:<srai>who made it difficult * </srai>  -->
+<category><pattern>WHO MAKE IT EASY *</pattern><template><think><srai>NOPX 703</srai></think><random><li><srai>EXPDEX WHO MAKE IT EASY <star/></srai></li></random></template></category>
+<!-- p=-61.3394565111348 	:<srai>who made it easy * </srai>  -->
+<category><pattern>WHO MAKE IT HAPPEN *</pattern><template><think><srai>NOPX 6116</srai></think><random><li><srai>EXPDEX WHO MAKE IT HAPPEN <star/></srai></li></random></template></category>
+<!-- p=-61.3394565111348 	:<srai>who made it happen * </srai>  -->
+<category><pattern>WHO MAKE IT HOME *</pattern><template><think><srai>NOPX 6728</srai></think><random><li><srai>EXPDEX WHO MAKE IT HOME <star/></srai></li></random></template></category>
+<!-- p=-61.3394565111348 	:<srai>who made it home * </srai>  -->
+<category><pattern>WHO MAKE IT IMPOSSIBLE *</pattern><template><think><srai>NOPX 980</srai></think><random><li><srai>EXPDEX WHO MAKE IT IMPOSSIBLE <star/></srai></li></random></template></category>
+<!-- p=-61.3394565111348 	:<srai>who made it impossible * </srai>  -->
+<category><pattern>WHO MAKE IT IN *</pattern><template><think><srai>NOPX 810</srai></think><random><li><srai>EXPDEX WHO MAKE IT IN <star/></srai></li></random></template></category>
+<!-- p=-61.3394565111348 	:<srai>who made it in * </srai>  -->
+<category><pattern>WHO MAKE IT INTO *</pattern><template><think><srai>NOPX 1302</srai></think><random><li><srai>EXPDEX WHO MAKE IT INTO <star/></srai></li></random></template></category>
+<!-- p=-61.3394565111348 	:<srai>who made it into * </srai>  -->
+<category><pattern>WHO MAKE IT LOOK *</pattern><template><think><srai>NOPX 651</srai></think><random><li><srai>EXPDEX WHO MAKE IT LOOK <star/></srai></li></random></template></category>
+<!-- p=-61.3394565111348 	:<srai>who made it look * </srai>  -->
+<category><pattern>WHO MAKE IT OUT *</pattern><template><think><srai>NOPX 506</srai></think><random><li><srai>EXPDEX WHO MAKE IT OUT <star/></srai></li></random></template></category>
+<!-- p=-61.3394565111348 	:<srai>who made it out * </srai>  -->
+<category><pattern>WHO MAKE IT PAST *</pattern><template><think><srai>NOPX 666</srai></think><random><li><srai>EXPDEX WHO MAKE IT PAST <star/></srai></li></random></template></category>
+<!-- p=-61.3394565111348 	:<srai>who made it past * </srai>  -->
+<category><pattern>WHO MAKE IT POSSIBLE *</pattern><template><think><srai>NOPX 7068</srai></think><random><li><srai>EXPDEX WHO MAKE IT POSSIBLE <star/></srai></li></random></template></category>
+<!-- p=-61.3394565111348 	:<srai>who made it possible * </srai>  -->
+<category><pattern>WHO MAKE IT SO *</pattern><template><think><srai>NOPX 1178</srai></think><random><li><srai>EXPDEX WHO MAKE IT SO <star/></srai></li></random></template></category>
+<!-- p=-61.3394565111348 	:<srai>who made it so * </srai>  -->
+<category><pattern>WHO MAKE IT THAT *</pattern><template><think><srai>NOPX 540</srai></think><random><li><srai>EXPDEX WHO MAKE IT THAT <star/></srai></li></random></template></category>
+<!-- p=-61.3394565111348 	:<srai>who made it that * </srai>  -->
+<category><pattern>WHO MAKE IT THE *</pattern><template><think><srai>NOPX 528</srai></think><random><li><srai>EXPDEX WHO MAKE IT THE <star/></srai></li></random></template></category>
+<!-- p=-61.3394565111348 	:<srai>who made it the * </srai>  -->
+<category><pattern>WHO MAKE IT THROUGH *</pattern><template><think><srai>NOPX 2445</srai></think><random><li><srai>EXPDEX WHO MAKE IT THROUGH <star/></srai></li></random></template></category>
+<!-- p=-61.3394565111348 	:<srai>who made it through * </srai>  -->
+<category><pattern>WHO MAKE IT UP *</pattern><template><think><srai>NOPX 2214</srai></think><random><li><srai>EXPDEX WHO MAKE IT UP <star/></srai></li></random></template></category>
+<!-- p=-61.3394565111348 	:<srai>who made it up * </srai>  -->
+<category><pattern>WHO MAKE IT WORK *</pattern><template><think><srai>NOPX 2559</srai></think><random><li><srai>EXPDEX WHO MAKE IT WORK <star/></srai></li></random></template></category>
+<!-- p=-61.3394565111348 	:<srai>who made it work * </srai>  -->
+<category><pattern>WHO MAKE LOTS OF *</pattern><template><think><srai>NOPX 924</srai></think><random><li><srai>EXPDEX WHO MAKE LOTS OF <star/></srai></li></random></template></category>
+<!-- p=-57.0033502003777 	:<srai>who made lots of * </srai>  -->
+<category><pattern>WHO MAKE ME FEEL *</pattern><template><think><srai>NOPX 2109</srai></think><random><li><srai>EXPDEX WHO MAKE ME FEEL <star/></srai></li></random></template></category>
+<!-- p=-58.5497651978892 	:<srai>who made me feel * </srai>  -->
+<category><pattern>WHO MAKE ME LAUGH *</pattern><template><think><srai>NOPX 3385</srai></think><random><li><srai>EXPDEX WHO MAKE ME LAUGH <star/></srai></li></random></template></category>
+<!-- p=-58.5497651978892 	:<srai>who made me laugh * </srai>  -->
+<category><pattern>WHO MAKE ME SMILE *</pattern><template><think><srai>NOPX 732</srai></think><random><li><srai>EXPDEX WHO MAKE ME SMILE <star/></srai></li></random></template></category>
+<!-- p=-58.5497651978892 	:<srai>who made me smile * </srai>  -->
+<category><pattern>WHO MAKE ME THINK *</pattern><template><think><srai>NOPX 554</srai></think><random><li><srai>EXPDEX WHO MAKE ME THINK <star/></srai></li></random></template></category>
+<!-- p=-58.5497651978892 	:<srai>who made me think * </srai>  -->
+<category><pattern>WHO MAKE ME WANT *</pattern><template><think><srai>NOPX 561</srai></think><random><li><srai>EXPDEX WHO MAKE ME WANT <star/></srai></li></random></template></category>
+<!-- p=-58.5497651978892 	:<srai>who made me want * </srai>  -->
+<category><pattern>WHO MAKE MILLIONS OF *</pattern><template><think><srai>NOPX 682</srai></think><random><li><srai>EXPDEX WHO MAKE MILLIONS OF <star/></srai></li></random></template></category>
+<!-- p=-57.0033502003777 	:<srai>who made millions of * </srai>  -->
+<category><pattern>WHO MAKE MISTAKES IN *</pattern><template><think><srai>NOPX 448</srai></think><random><li><srai>EXPDEX WHO MAKE MISTAKES IN <star/></srai></li></random></template></category>
+<!-- p=-57.0033502003777 	:<srai>who made mistakes in * </srai>  -->
+<category><pattern>WHO MAKE MONEY DECISIONS *</pattern><template><think><srai>NOPX 458</srai></think><random><li><srai>EXPDEX WHO MAKE MONEY DECISIONS <star/></srai></li></random></template></category>
+<!-- p=-57.2486258170336 	:<srai>who made money decisions * </srai>  -->
+<category><pattern>WHO MAKE MOVIES BY *</pattern><template><think><srai>NOPX 474</srai></think><random><li><srai>EXPDEX WHO MAKE MOVIES BY <star/></srai></li></random></template></category>
+<!-- p=-57.5181268923516 	:<srai>who made movies by * </srai>  -->
+<category><pattern>WHO MAKE MY LIFE *</pattern><template><think><srai>NOPX 889</srai></think><random><li><srai>EXPDEX WHO MAKE MY LIFE <star/></srai></li></random></template></category>
+<!-- p=-59.8737637336906 	:<srai>who made my life * </srai>  -->
+<category><pattern>WHO MAKE NO ATTEMPT *</pattern><template><think><srai>NOPX 419</srai></think><random><li><srai>EXPDEX WHO MAKE NO ATTEMPT <star/></srai></li></random></template></category>
+<!-- p=-59.6111313116157 	:<srai>who made no attempt * </srai>  -->
+<category><pattern>WHO MAKE NO EFFORT *</pattern><template><think><srai>NOPX 759</srai></think><random><li><srai>EXPDEX WHO MAKE NO EFFORT <star/></srai></li></random></template></category>
+<!-- p=-59.6111313116157 	:<srai>who made no effort * </srai>  -->
+<category><pattern>WHO MAKE ORAL COMMENTS *</pattern><template><think><srai>NOPX 476</srai></think><random><li><srai>EXPDEX WHO MAKE ORAL COMMENTS <star/></srai></li></random></template></category>
+<!-- p=-57.0033502003777 	:<srai>who made oral comments * </srai>  -->
+<category><pattern>WHO MAKE OTHER CHOICES *</pattern><template><think><srai>NOPX 436</srai></think><random><li><srai>EXPDEX WHO MAKE OTHER CHOICES <star/></srai></li></random></template></category>
+<!-- p=-59.2563606921487 	:<srai>who made other choices * </srai>  -->
+<category><pattern>WHO MAKE OUR COMMUNITY *</pattern><template><think><srai>NOPX 672</srai></think><random><li><srai>EXPDEX WHO MAKE OUR COMMUNITY <star/></srai></li></random></template></category>
+<!-- p=-59.6730565968312 	:<srai>who made our community * </srai>  -->
+<category><pattern>WHO MAKE OUR LAWS *</pattern><template><think><srai>NOPX 500</srai></think><random><li><srai>EXPDEX WHO MAKE OUR LAWS <star/></srai></li></random></template></category>
+<!-- p=-59.6730565968312 	:<srai>who made our laws * </srai>  -->
+<category><pattern>WHO MAKE OUR LIVES *</pattern><template><think><srai>NOPX 798</srai></think><random><li><srai>EXPDEX WHO MAKE OUR LIVES <star/></srai></li></random></template></category>
+<!-- p=-59.6730565968312 	:<srai>who made our lives * </srai>  -->
+<category><pattern>WHO MAKE OUR LIVING *</pattern><template><think><srai>NOPX 1007</srai></think><random><li><srai>EXPDEX WHO MAKE OUR LIVING <star/></srai></li></random></template></category>
+<!-- p=-59.6730565968312 	:<srai>who made our living * </srai>  -->
+<category><pattern>WHO MAKE OUR ORGANIZATION *</pattern><template><think><srai>NOPX 414</srai></think><random><li><srai>EXPDEX WHO MAKE OUR ORGANIZATION <star/></srai></li></random></template></category>
+<!-- p=-59.6730565968312 	:<srai>who made our organization * </srai>  -->
+<category><pattern>WHO MAKE OUR SOULS *</pattern><template><think><srai>NOPX 866</srai></think><random><li><srai>EXPDEX WHO MAKE OUR SOULS <star/></srai></li></random></template></category>
+<!-- p=-59.6730565968312 	:<srai>who made our souls * </srai>  -->
+<category><pattern>WHO MAKE OUR WORK *</pattern><template><think><srai>NOPX 581</srai></think><random><li><srai>EXPDEX WHO MAKE OUR WORK <star/></srai></li></random></template></category>
+<!-- p=-59.6730565968312 	:<srai>who made our work * </srai>  -->
+<category><pattern>WHO MAKE OUTSTANDING CONTRIBUTIONS *</pattern><template><think><srai>NOPX 1760</srai></think><random><li><srai>EXPDEX WHO MAKE OUTSTANDING CONTRIBUTIONS <star/></srai></li></random></template></category>
+<!-- p=-57.0033502003777 	:<srai>who made outstanding contributions * </srai>  -->
+<category><pattern>WHO MAKE POLICY DECISIONS *</pattern><template><think><srai>NOPX 726</srai></think><random><li><srai>EXPDEX WHO MAKE POLICY DECISIONS <star/></srai></li></random></template></category>
+<!-- p=-58.9898553565292 	:<srai>who made policy decisions * </srai>  -->
+<category><pattern>WHO MAKE PURCHASES FROM *</pattern><template><think><srai>NOPX 426</srai></think><random><li><srai>EXPDEX WHO MAKE PURCHASES FROM <star/></srai></li></random></template></category>
+<!-- p=-57.0033502003777 	:<srai>who made purchases from * </srai>  -->
+<category><pattern>WHO MAKE REPEAT PURCHASES *</pattern><template><think><srai>NOPX 694</srai></think><random><li><srai>EXPDEX WHO MAKE REPEAT PURCHASES <star/></srai></li></random></template></category>
+<!-- p=-57.0033502003777 	:<srai>who made repeat purchases * </srai>  -->
+<category><pattern>WHO MAKE SIGNIFICANT CONTRIBUTIONS *</pattern><template><think><srai>NOPX 1975</srai></think><random><li><srai>EXPDEX WHO MAKE SIGNIFICANT CONTRIBUTIONS <star/></srai></li></random></template></category>
+<!-- p=-57.0033502003777 	:<srai>who made significant contributions * </srai>  -->
+<category><pattern>WHO MAKE SUCH CLAIMS *</pattern><template><think><srai>NOPX 1155</srai></think><random><li><srai>EXPDEX WHO MAKE SUCH CLAIMS <star/></srai></li></random></template></category>
+<!-- p=-57.3635584928157 	:<srai>who made such claims * </srai>  -->
+<category><pattern>WHO MAKE SUCH DECISIONS *</pattern><template><think><srai>NOPX 520</srai></think><random><li><srai>EXPDEX WHO MAKE SUCH DECISIONS <star/></srai></li></random></template></category>
+<!-- p=-57.3635584928157 	:<srai>who made such decisions * </srai>  -->
+<category><pattern>WHO MAKE SUCH STATEMENTS *</pattern><template><think><srai>NOPX 536</srai></think><random><li><srai>EXPDEX WHO MAKE SUCH STATEMENTS <star/></srai></li></random></template></category>
+<!-- p=-57.3635584928157 	:<srai>who made such statements * </srai>  -->
+<category><pattern>WHO MAKE THE *</pattern><template><think><srai>NOPX 2107</srai></think><random><li><srai>EXPDEX WHO MAKE THE <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made the * </srai>  -->
+<category><pattern>WHO MAKE THE ARGUMENT *</pattern><template><think><srai>NOPX 548</srai></think><random><li><srai>EXPDEX WHO MAKE THE ARGUMENT <star/></srai></li></random></template></category>
+<!-- p=-64.6014507595706 	:<srai>who made the argument * </srai>  -->
+<category><pattern>WHO MAKE THE CASE *</pattern><template><think><srai>NOPX 478</srai></think><random><li><srai>EXPDEX WHO MAKE THE CASE <star/></srai></li></random></template></category>
+<!-- p=-64.6014507595706 	:<srai>who made the case * </srai>  -->
+<category><pattern>WHO MAKE THE CELLOPHANE *</pattern><template><think><srai>NOPX 477</srai></think><random><li><srai>EXPDEX WHO MAKE THE CELLOPHANE <star/></srai></li></random></template></category>
+<!-- p=-64.6014507595706 	:<srai>who made the cellophane * </srai>  -->
+<category><pattern>WHO MAKE THE CHOICE *</pattern><template><think><srai>NOPX 1541</srai></think><random><li><srai>EXPDEX WHO MAKE THE CHOICE <star/></srai></li></random></template></category>
+<!-- p=-64.6014507595706 	:<srai>who made the choice * </srai>  -->
+<category><pattern>WHO MAKE THE CITY *</pattern><template><think><srai>NOPX 465</srai></think><random><li><srai>EXPDEX WHO MAKE THE CITY <star/></srai></li></random></template></category>
+<!-- p=-64.6014507595706 	:<srai>who made the city * </srai>  -->
+<category><pattern>WHO MAKE THE CLAIM *</pattern><template><think><srai>NOPX 867</srai></think><random><li><srai>EXPDEX WHO MAKE THE CLAIM <star/></srai></li></random></template></category>
+<!-- p=-64.6014507595706 	:<srai>who made the claim * </srai>  -->
+<category><pattern>WHO MAKE THE COMMITMENT *</pattern><template><think><srai>NOPX 611</srai></think><random><li><srai>EXPDEX WHO MAKE THE COMMITMENT <star/></srai></li></random></template></category>
+<!-- p=-64.6014507595706 	:<srai>who made the commitment * </srai>  -->
+<category><pattern>WHO MAKE THE CUT *</pattern><template><think><srai>NOPX 863</srai></think><random><li><srai>EXPDEX WHO MAKE THE CUT <star/></srai></li></random></template></category>
+<!-- p=-64.6014507595706 	:<srai>who made the cut * </srai>  -->
+<category><pattern>WHO MAKE THE DECISION *</pattern><template><think><srai>NOPX 3182</srai></think><random><li><srai>EXPDEX WHO MAKE THE DECISION <star/></srai></li></random></template></category>
+<!-- p=-64.6014507595706 	:<srai>who made the decision * </srai>  -->
+<category><pattern>WHO MAKE THE DECISIONS *</pattern><template><think><srai>NOPX 9102</srai></think><random><li><srai>EXPDEX WHO MAKE THE DECISIONS <star/></srai></li></random></template></category>
+<!-- p=-64.6014507595706 	:<srai>who made the decisions * </srai>  -->
+<category><pattern>WHO MAKE THE DIFFERENCE *</pattern><template><think><srai>NOPX 2409</srai></think><random><li><srai>EXPDEX WHO MAKE THE DIFFERENCE <star/></srai></li></random></template></category>
+<!-- p=-64.6014507595706 	:<srai>who made the difference * </srai>  -->
+<category><pattern>WHO MAKE THE EFFORT *</pattern><template><think><srai>NOPX 4240</srai></think><random><li><srai>EXPDEX WHO MAKE THE EFFORT <star/></srai></li></random></template></category>
+<!-- p=-64.6014507595706 	:<srai>who made the effort * </srai>  -->
+<category><pattern>WHO MAKE THE GAME *</pattern><template><think><srai>NOPX 630</srai></think><random><li><srai>EXPDEX WHO MAKE THE GAME <star/></srai></li></random></template></category>
+<!-- p=-64.6014507595706 	:<srai>who made the game * </srai>  -->
+<category><pattern>WHO MAKE THE GAMES *</pattern><template><think><srai>NOPX 915</srai></think><random><li><srai>EXPDEX WHO MAKE THE GAMES <star/></srai></li></random></template></category>
+<!-- p=-64.6014507595706 	:<srai>who made the games * </srai>  -->
+<category><pattern>WHO MAKE THE GRADE *</pattern><template><think><srai>NOPX 492</srai></think><random><li><srai>EXPDEX WHO MAKE THE GRADE <star/></srai></li></random></template></category>
+<!-- p=-64.6014507595706 	:<srai>who made the grade * </srai>  -->
+<category><pattern>WHO MAKE THE JOURNEY *</pattern><template><think><srai>NOPX 1007</srai></think><random><li><srai>EXPDEX WHO MAKE THE JOURNEY <star/></srai></li></random></template></category>
+<!-- p=-64.6014507595706 	:<srai>who made the journey * </srai>  -->
+<category><pattern>WHO MAKE THE LAW *</pattern><template><think><srai>NOPX 982</srai></think><random><li><srai>EXPDEX WHO MAKE THE LAW <star/></srai></li></random></template></category>
+<!-- p=-64.6014507595706 	:<srai>who made the law * </srai>  -->
+<category><pattern>WHO MAKE THE LAWS *</pattern><template><think><srai>NOPX 3297</srai></think><random><li><srai>EXPDEX WHO MAKE THE LAWS <star/></srai></li></random></template></category>
+<!-- p=-64.6014507595706 	:<srai>who made the laws * </srai>  -->
+<category><pattern>WHO MAKE THE MAJORITY *</pattern><template><think><srai>NOPX 938</srai></think><random><li><srai>EXPDEX WHO MAKE THE MAJORITY <star/></srai></li></random></template></category>
+<!-- p=-64.6014507595706 	:<srai>who made the majority * </srai>  -->
+<category><pattern>WHO MAKE THE MISTAKE *</pattern><template><think><srai>NOPX 1715</srai></think><random><li><srai>EXPDEX WHO MAKE THE MISTAKE <star/></srai></li></random></template></category>
+<!-- p=-64.6014507595706 	:<srai>who made the mistake * </srai>  -->
+<category><pattern>WHO MAKE THE MONEY *</pattern><template><think><srai>NOPX 688</srai></think><random><li><srai>EXPDEX WHO MAKE THE MONEY <star/></srai></li></random></template></category>
+<!-- p=-64.6014507595706 	:<srai>who made the money * </srai>  -->
+<category><pattern>WHO MAKE THE MOVIES *</pattern><template><think><srai>NOPX 459</srai></think><random><li><srai>EXPDEX WHO MAKE THE MOVIES <star/></srai></li></random></template></category>
+<!-- p=-64.6014507595706 	:<srai>who made the movies * </srai>  -->
+<category><pattern>WHO MAKE THE MUSIC *</pattern><template><think><srai>NOPX 1569</srai></think><random><li><srai>EXPDEX WHO MAKE THE MUSIC <star/></srai></li></random></template></category>
+<!-- p=-64.6014507595706 	:<srai>who made the music * </srai>  -->
+<category><pattern>WHO MAKE THE NEWS *</pattern><template><think><srai>NOPX 765</srai></think><random><li><srai>EXPDEX WHO MAKE THE NEWS <star/></srai></li></random></template></category>
+<!-- p=-64.6014507595706 	:<srai>who made the news * </srai>  -->
+<category><pattern>WHO MAKE THE PILGRIMAGE *</pattern><template><think><srai>NOPX 746</srai></think><random><li><srai>EXPDEX WHO MAKE THE PILGRIMAGE <star/></srai></li></random></template></category>
+<!-- p=-64.6014507595706 	:<srai>who made the pilgrimage * </srai>  -->
+<category><pattern>WHO MAKE THE PRODUCT *</pattern><template><think><srai>NOPX 429</srai></think><random><li><srai>EXPDEX WHO MAKE THE PRODUCT <star/></srai></li></random></template></category>
+<!-- p=-64.6014507595706 	:<srai>who made the product * </srai>  -->
+<category><pattern>WHO MAKE THE PRODUCTS *</pattern><template><think><srai>NOPX 1130</srai></think><random><li><srai>EXPDEX WHO MAKE THE PRODUCTS <star/></srai></li></random></template></category>
+<!-- p=-64.6014507595706 	:<srai>who made the products * </srai>  -->
+<category><pattern>WHO MAKE THE RIGHT *</pattern><template><think><srai>NOPX 626</srai></think><random><li><srai>EXPDEX WHO MAKE THE RIGHT <star/></srai></li></random></template></category>
+<!-- p=-64.6014507595706 	:<srai>who made the right * </srai>  -->
+<category><pattern>WHO MAKE THE RULES *</pattern><template><think><srai>NOPX 2261</srai></think><random><li><srai>EXPDEX WHO MAKE THE RULES <star/></srai></li></random></template></category>
+<!-- p=-64.6014507595706 	:<srai>who made the rules * </srai>  -->
+<category><pattern>WHO MAKE THE SHIPS *</pattern><template><think><srai>NOPX 1428</srai></think><random><li><srai>EXPDEX WHO MAKE THE SHIPS <star/></srai></li></random></template></category>
+<!-- p=-64.6014507595706 	:<srai>who made the ships * </srai>  -->
+<category><pattern>WHO MAKE THE SHOW *</pattern><template><think><srai>NOPX 690</srai></think><random><li><srai>EXPDEX WHO MAKE THE SHOW <star/></srai></li></random></template></category>
+<!-- p=-64.6014507595706 	:<srai>who made the show * </srai>  -->
+<category><pattern>WHO MAKE THE SOFTWARE *</pattern><template><think><srai>NOPX 608</srai></think><random><li><srai>EXPDEX WHO MAKE THE SOFTWARE <star/></srai></li></random></template></category>
+<!-- p=-64.6014507595706 	:<srai>who made the software * </srai>  -->
+<category><pattern>WHO MAKE THE STRING *</pattern><template><think><srai>NOPX 1433</srai></think><random><li><srai>EXPDEX WHO MAKE THE STRING <star/></srai></li></random></template></category>
+<!-- p=-64.6014507595706 	:<srai>who made the string * </srai>  -->
+<category><pattern>WHO MAKE THE SWITCH *</pattern><template><think><srai>NOPX 414</srai></think><random><li><srai>EXPDEX WHO MAKE THE SWITCH <star/></srai></li></random></template></category>
+<!-- p=-64.6014507595706 	:<srai>who made the switch * </srai>  -->
+<category><pattern>WHO MAKE THE TRANSITION *</pattern><template><think><srai>NOPX 804</srai></think><random><li><srai>EXPDEX WHO MAKE THE TRANSITION <star/></srai></li></random></template></category>
+<!-- p=-64.6014507595706 	:<srai>who made the transition * </srai>  -->
+<category><pattern>WHO MAKE THE TREK *</pattern><template><think><srai>NOPX 717</srai></think><random><li><srai>EXPDEX WHO MAKE THE TREK <star/></srai></li></random></template></category>
+<!-- p=-64.6014507595706 	:<srai>who made the trek * </srai>  -->
+<category><pattern>WHO MAKE THE TRIP *</pattern><template><think><srai>NOPX 1001</srai></think><random><li><srai>EXPDEX WHO MAKE THE TRIP <star/></srai></li></random></template></category>
+<!-- p=-64.6014507595706 	:<srai>who made the trip * </srai>  -->
+<category><pattern>WHO MAKE THE WEB *</pattern><template><think><srai>NOPX 424</srai></think><random><li><srai>EXPDEX WHO MAKE THE WEB <star/></srai></li></random></template></category>
+<!-- p=-64.6014507595706 	:<srai>who made the web * </srai>  -->
+<category><pattern>WHO MAKE THE WORLD *</pattern><template><think><srai>NOPX 2900</srai></think><random><li><srai>EXPDEX WHO MAKE THE WORLD <star/></srai></li></random></template></category>
+<!-- p=-64.6014507595706 	:<srai>who made the world * </srai>  -->
+<category><pattern>WHO MAKE THEIR *</pattern><template><think><srai>NOPX 661</srai></think><random><li><srai>EXPDEX WHO MAKE THEIR <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made their * </srai>  -->
+<category><pattern>WHO MAKE THEIR CAREERS *</pattern><template><think><srai>NOPX 614</srai></think><random><li><srai>EXPDEX WHO MAKE THEIR CAREERS <star/></srai></li></random></template></category>
+<!-- p=-58.4884757033311 	:<srai>who made their careers * </srai>  -->
+<category><pattern>WHO MAKE THEIR DECISIONS *</pattern><template><think><srai>NOPX 412</srai></think><random><li><srai>EXPDEX WHO MAKE THEIR DECISIONS <star/></srai></li></random></template></category>
+<!-- p=-58.4884757033311 	:<srai>who made their decisions * </srai>  -->
+<category><pattern>WHO MAKE THEIR FIRST *</pattern><template><think><srai>NOPX 714</srai></think><random><li><srai>EXPDEX WHO MAKE THEIR FIRST <star/></srai></li></random></template></category>
+<!-- p=-58.4884757033311 	:<srai>who made their first * </srai>  -->
+<category><pattern>WHO MAKE THEIR HOME *</pattern><template><think><srai>NOPX 2290</srai></think><random><li><srai>EXPDEX WHO MAKE THEIR HOME <star/></srai></li></random></template></category>
+<!-- p=-58.4884757033311 	:<srai>who made their home * </srai>  -->
+<category><pattern>WHO MAKE THEIR HOMES *</pattern><template><think><srai>NOPX 1859</srai></think><random><li><srai>EXPDEX WHO MAKE THEIR HOMES <star/></srai></li></random></template></category>
+<!-- p=-58.4884757033311 	:<srai>who made their homes * </srai>  -->
+<category><pattern>WHO MAKE THEIR LIVELIHOOD *</pattern><template><think><srai>NOPX 563</srai></think><random><li><srai>EXPDEX WHO MAKE THEIR LIVELIHOOD <star/></srai></li></random></template></category>
+<!-- p=-58.4884757033311 	:<srai>who made their livelihood * </srai>  -->
+<category><pattern>WHO MAKE THEIR LIVELIHOODS *</pattern><template><think><srai>NOPX 685</srai></think><random><li><srai>EXPDEX WHO MAKE THEIR LIVELIHOODS <star/></srai></li></random></template></category>
+<!-- p=-58.4884757033311 	:<srai>who made their livelihoods * </srai>  -->
+<category><pattern>WHO MAKE THEIR LIVES *</pattern><template><think><srai>NOPX 707</srai></think><random><li><srai>EXPDEX WHO MAKE THEIR LIVES <star/></srai></li></random></template></category>
+<!-- p=-58.4884757033311 	:<srai>who made their lives * </srai>  -->
+<category><pattern>WHO MAKE THEIR LIVING *</pattern><template><think><srai>NOPX 18691</srai></think><random><li><srai>EXPDEX WHO MAKE THEIR LIVING <star/></srai></li></random></template></category>
+<!-- p=-58.4884757033311 	:<srai>who made their living * </srai>  -->
+<category><pattern>WHO MAKE THEIR LIVINGS *</pattern><template><think><srai>NOPX 1788</srai></think><random><li><srai>EXPDEX WHO MAKE THEIR LIVINGS <star/></srai></li></random></template></category>
+<!-- p=-58.4884757033311 	:<srai>who made their livings * </srai>  -->
+<category><pattern>WHO MAKE THEIR MANY *</pattern><template><think><srai>NOPX 1429</srai></think><random><li><srai>EXPDEX WHO MAKE THEIR MANY <star/></srai></li></random></template></category>
+<!-- p=-58.4884757033311 	:<srai>who made their many * </srai>  -->
+<category><pattern>WHO MAKE THEIR MONEY *</pattern><template><think><srai>NOPX 1717</srai></think><random><li><srai>EXPDEX WHO MAKE THEIR MONEY <star/></srai></li></random></template></category>
+<!-- p=-58.4884757033311 	:<srai>who made their money * </srai>  -->
+<category><pattern>WHO MAKE THEIR OWN *</pattern><template><think><srai>NOPX 6134</srai></think><random><li><srai>EXPDEX WHO MAKE THEIR OWN <star/></srai></li></random></template></category>
+<!-- p=-58.4884757033311 	:<srai>who made their own * </srai>  -->
+<category><pattern>WHO MAKE THEIR PRODUCTS *</pattern><template><think><srai>NOPX 543</srai></think><random><li><srai>EXPDEX WHO MAKE THEIR PRODUCTS <star/></srai></li></random></template></category>
+<!-- p=-58.4884757033311 	:<srai>who made their products * </srai>  -->
+<category><pattern>WHO MAKE THEIR TRACKS *</pattern><template><think><srai>NOPX 525</srai></think><random><li><srai>EXPDEX WHO MAKE THEIR TRACKS <star/></srai></li></random></template></category>
+<!-- p=-58.4884757033311 	:<srai>who made their tracks * </srai>  -->
+<category><pattern>WHO MAKE THEIR WAY *</pattern><template><think><srai>NOPX 2795</srai></think><random><li><srai>EXPDEX WHO MAKE THEIR WAY <star/></srai></li></random></template></category>
+<!-- p=-58.4884757033311 	:<srai>who made their way * </srai>  -->
+<category><pattern>WHO MAKE THEM *</pattern><template><think><srai>NOPX 4906</srai></think><random><li><srai>EXPDEX WHO MAKE THEM <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made them * </srai>  -->
+<category><pattern>WHO MAKE THEM ARE *</pattern><template><think><srai>NOPX 970</srai></think><random><li><srai>EXPDEX WHO MAKE THEM ARE <star/></srai></li></random></template></category>
+<!-- p=-57.3105612511309 	:<srai>who made them are * </srai>  -->
+<category><pattern>WHO MAKE THEM AVAILABLE *</pattern><template><think><srai>NOPX 910</srai></think><random><li><srai>EXPDEX WHO MAKE THEM AVAILABLE <star/></srai></li></random></template></category>
+<!-- p=-57.3105612511309 	:<srai>who made them available * </srai>  -->
+<category><pattern>WHO MAKE THEM FEEL *</pattern><template><think><srai>NOPX 1308</srai></think><random><li><srai>EXPDEX WHO MAKE THEM FEEL <star/></srai></li></random></template></category>
+<!-- p=-57.3105612511309 	:<srai>who made them feel * </srai>  -->
+<category><pattern>WHO MAKE THEM HAPPEN *</pattern><template><think><srai>NOPX 592</srai></think><random><li><srai>EXPDEX WHO MAKE THEM HAPPEN <star/></srai></li></random></template></category>
+<!-- p=-57.3105612511309 	:<srai>who made them happen * </srai>  -->
+<category><pattern>WHO MAKE THEM UNSAFE *</pattern><template><think><srai>NOPX 595</srai></think><random><li><srai>EXPDEX WHO MAKE THEM UNSAFE <star/></srai></li></random></template></category>
+<!-- p=-57.3105612511309 	:<srai>who made them unsafe * </srai>  -->
+<category><pattern>WHO MAKE THEM UP *</pattern><template><think><srai>NOPX 467</srai></think><random><li><srai>EXPDEX WHO MAKE THEM UP <star/></srai></li></random></template></category>
+<!-- p=-57.3105612511309 	:<srai>who made them up * </srai>  -->
+<category><pattern>WHO MAKE THEMSELVES AVAILABLE *</pattern><template><think><srai>NOPX 893</srai></think><random><li><srai>EXPDEX WHO MAKE THEMSELVES AVAILABLE <star/></srai></li></random></template></category>
+<!-- p=-57.0033502003777 	:<srai>who made themselves available * </srai>  -->
+<category><pattern>WHO MAKE THESE CLAIMS *</pattern><template><think><srai>NOPX 446</srai></think><random><li><srai>EXPDEX WHO MAKE THESE CLAIMS <star/></srai></li></random></template></category>
+<!-- p=-58.4340951046493 	:<srai>who made these claims * </srai>  -->
+<category><pattern>WHO MAKE THESE DECISIONS *</pattern><template><think><srai>NOPX 1731</srai></think><random><li><srai>EXPDEX WHO MAKE THESE DECISIONS <star/></srai></li></random></template></category>
+<!-- p=-58.4340951046493 	:<srai>who made these decisions * </srai>  -->
+<category><pattern>WHO MAKE THESE PRODUCTS *</pattern><template><think><srai>NOPX 1163</srai></think><random><li><srai>EXPDEX WHO MAKE THESE PRODUCTS <star/></srai></li></random></template></category>
+<!-- p=-58.4340951046493 	:<srai>who made these products * </srai>  -->
+<category><pattern>WHO MAKE THESE THINGS *</pattern><template><think><srai>NOPX 533</srai></think><random><li><srai>EXPDEX WHO MAKE THESE THINGS <star/></srai></li></random></template></category>
+<!-- p=-58.4340951046493 	:<srai>who made these things * </srai>  -->
+<category><pattern>WHO MAKE THIS *</pattern><template><think><srai>NOPX 424</srai></think><random><li><srai>EXPDEX WHO MAKE THIS <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made this * </srai>  -->
+<category><pattern>WHO MAKE THIS FREE *</pattern><template><think><srai>NOPX 3146</srai></think><random><li><srai>EXPDEX WHO MAKE THIS FREE <star/></srai></li></random></template></category>
+<!-- p=-62.0591408321368 	:<srai>who made this free * </srai>  -->
+<category><pattern>WHO MAKE THIS ARGUMENT *</pattern><template><think><srai>NOPX 1044</srai></think><random><li><srai>EXPDEX WHO MAKE THIS ARGUMENT <star/></srai></li></random></template></category>
+<!-- p=-62.0591408321368 	:<srai>who made this argument * </srai>  -->
+<category><pattern>WHO MAKE THIS CHOICE *</pattern><template><think><srai>NOPX 584</srai></think><random><li><srai>EXPDEX WHO MAKE THIS CHOICE <star/></srai></li></random></template></category>
+<!-- p=-62.0591408321368 	:<srai>who made this choice * </srai>  -->
+<category><pattern>WHO MAKE THIS CLAIM *</pattern><template><think><srai>NOPX 1113</srai></think><random><li><srai>EXPDEX WHO MAKE THIS CLAIM <star/></srai></li></random></template></category>
+<!-- p=-62.0591408321368 	:<srai>who made this claim * </srai>  -->
+<category><pattern>WHO MAKE THIS COUNTRY *</pattern><template><think><srai>NOPX 1018</srai></think><random><li><srai>EXPDEX WHO MAKE THIS COUNTRY <star/></srai></li></random></template></category>
+<!-- p=-62.0591408321368 	:<srai>who made this country * </srai>  -->
+<category><pattern>WHO MAKE THIS EVENT *</pattern><template><think><srai>NOPX 728</srai></think><random><li><srai>EXPDEX WHO MAKE THIS EVENT <star/></srai></li></random></template></category>
+<!-- p=-62.0591408321368 	:<srai>who made this event * </srai>  -->
+<category><pattern>WHO MAKE THIS HAPPEN *</pattern><template><think><srai>NOPX 437</srai></think><random><li><srai>EXPDEX WHO MAKE THIS HAPPEN <star/></srai></li></random></template></category>
+<!-- p=-62.0591408321368 	:<srai>who made this happen * </srai>  -->
+<category><pattern>WHO MAKE THIS NEWSPAPER *</pattern><template><think><srai>NOPX 2694</srai></think><random><li><srai>EXPDEX WHO MAKE THIS NEWSPAPER <star/></srai></li></random></template></category>
+<!-- p=-62.0591408321368 	:<srai>who made this newspaper * </srai>  -->
+<category><pattern>WHO MAKE THIS PLACE *</pattern><template><think><srai>NOPX 613</srai></think><random><li><srai>EXPDEX WHO MAKE THIS PLACE <star/></srai></li></random></template></category>
+<!-- p=-62.0591408321368 	:<srai>who made this place * </srai>  -->
+<category><pattern>WHO MAKE THIS PROGRAM *</pattern><template><think><srai>NOPX 414</srai></think><random><li><srai>EXPDEX WHO MAKE THIS PROGRAM <star/></srai></li></random></template></category>
+<!-- p=-62.0591408321368 	:<srai>who made this program * </srai>  -->
+<category><pattern>WHO MAKE THIS SITE *</pattern><template><think><srai>NOPX 3552</srai></think><random><li><srai>EXPDEX WHO MAKE THIS SITE <star/></srai></li></random></template></category>
+<!-- p=-62.0591408321368 	:<srai>who made this site * </srai>  -->
+<category><pattern>WHO MAKE THOSE DECISIONS *</pattern><template><think><srai>NOPX 844</srai></think><random><li><srai>EXPDEX WHO MAKE THOSE DECISIONS <star/></srai></li></random></template></category>
+<!-- p=-57.0033502003777 	:<srai>who made those decisions * </srai>  -->
+<category><pattern>WHO MAKE THOUSANDS OF *</pattern><template><think><srai>NOPX 437</srai></think><random><li><srai>EXPDEX WHO MAKE THOUSANDS OF <star/></srai></li></random></template></category>
+<!-- p=-57.0033502003777 	:<srai>who made thousands of * </srai>  -->
+<category><pattern>WHO MAKE US FEEL *</pattern><template><think><srai>NOPX 1142</srai></think><random><li><srai>EXPDEX WHO MAKE US FEEL <star/></srai></li></random></template></category>
+<!-- p=-60.6991884923417 	:<srai>who made us feel * </srai>  -->
+<category><pattern>WHO MAKE US HAPPY *</pattern><template><think><srai>NOPX 1013</srai></think><random><li><srai>EXPDEX WHO MAKE US HAPPY <star/></srai></li></random></template></category>
+<!-- p=-60.6991884923417 	:<srai>who made us happy * </srai>  -->
+<category><pattern>WHO MAKE US LAUGH *</pattern><template><think><srai>NOPX 495</srai></think><random><li><srai>EXPDEX WHO MAKE US LAUGH <star/></srai></li></random></template></category>
+<!-- p=-60.6991884923417 	:<srai>who made us laugh * </srai>  -->
+<category><pattern>WHO MAKE WEBSITES *</pattern><template><think><srai>NOPX 8531</srai></think><random><li><srai>EXPDEX WHO MAKE WEBSITES <star/></srai></li></random></template></category>
+<!-- p=-29.2750214129544 	:<srai>who made websites * </srai>  -->
+<category><pattern>WHO MAKE YOU FEEL *</pattern><template><think><srai>NOPX 3618</srai></think><random><li><srai>EXPDEX WHO MAKE YOU FEEL <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:<srai>who made you feel * </srai>  -->
+<category><pattern>WHO MAKE YOU LAUGH *</pattern><template><think><srai>NOPX 774</srai></think><random><li><srai>EXPDEX WHO MAKE YOU LAUGH <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:<srai>who made you laugh * </srai>  -->
+<category><pattern>WHO MAKE YOU SMILE *</pattern><template><think><srai>NOPX 428</srai></think><random><li><srai>EXPDEX WHO MAKE YOU SMILE <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:<srai>who made you smile * </srai>  -->
+<category><pattern>WHO MAKE YOU WANT *</pattern><template><think><srai>NOPX 408</srai></think><random><li><srai>EXPDEX WHO MAKE YOU WANT <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:<srai>who made you want * </srai>  -->
+<category><pattern>WHO MAKE YOUR BUSINESS *</pattern><template><think><srai>NOPX 414</srai></think><random><li><srai>EXPDEX WHO MAKE YOUR BUSINESS <star/></srai></li></random></template></category>
+<!-- p=-61.0150017095295 	:<srai>who made your business * </srai>  -->
+<category><pattern>WHO MAKE YOUR EYE *</pattern><template><think><srai>NOPX 743</srai></think><random><li><srai>EXPDEX WHO MAKE YOUR EYE <star/></srai></li></random></template></category>
+<!-- p=-61.0150017095295 	:<srai>who made your eye * </srai>  -->
+<category><pattern>WHO MAKE YOUR LIFE *</pattern><template><think><srai>NOPX 528</srai></think><random><li><srai>EXPDEX WHO MAKE YOUR LIFE <star/></srai></li></random></template></category>
+<!-- p=-61.0150017095295 	:<srai>who made your life * </srai>  -->
+<category><pattern>WHO MAKE YOUR WEDDING *</pattern><template><think><srai>NOPX 657</srai></think><random><li><srai>EXPDEX WHO MAKE YOUR WEDDING <star/></srai></li></random></template></category>
+<!-- p=-61.0150017095295 	:<srai>who made your wedding * </srai>  -->
+<category><pattern>WHO MAKE A DIFFERENCE *</pattern><template><think><srai>NOPX 1593</srai></think><random><li><srai>EXPDEX WHO MAKE A DIFFERENCE <star/></srai></li></random></template></category>
+<!-- p=-63.3612714368817 	:<srai>who made a difference * </srai>  -->
+<category><pattern>WHO MAKE ME LAUGH *</pattern><template><think><srai>NOPX 801</srai></think><random><li><srai>EXPDEX WHO MAKE ME LAUGH <star/></srai></li></random></template></category>
+<!-- p=-58.5497651978892 	:<srai>who made me laugh * </srai>  -->
+<category><pattern>WHO MAKE THE WORLD WORSE *</pattern><template><think><srai>NOPX 518</srai></think><random><li><srai>EXPDEX WHO MAKE THE WORLD WORSE <star/></srai></li></random></template></category>
+<!-- p=-99.9278801061868 	:<srai>who made the world worse * </srai>  -->
+<category><pattern>WHO MAKE THIS SITE POSSIBLE *</pattern><template><think><srai>NOPX 1402</srai></think><random><li><srai>EXPDEX WHO MAKE THIS SITE POSSIBLE <star/></srai></li></random></template></category>
+<!-- p=-94.8432602513193 	:<srai>who made this site possible * </srai>  -->
+<category><pattern>WHO MAKE UP OUR SALES *</pattern><template><think><srai>NOPX 444</srai></think><random><li><srai>EXPDEX WHO MAKE UP OUR SALES <star/></srai></li></random></template></category>
+<!-- p=-89.0238504733747 	:<srai>who made up our sales * </srai>  -->
+<category><pattern>WHO MAKE VIRGINITY PLEDGES HAVE *</pattern><template><think><srai>NOPX 2681</srai></think><random><li><srai>EXPDEX WHO MAKE VIRGINITY PLEDGES HAVE <star/></srai></li></random></template></category>
+<!-- p=-76.7419290525826 	:<srai>who made virginity pledges have * </srai>  -->
+<category><pattern>WHO MAKE A DIFFERENCE *</pattern><template><think><srai>NOPX 1018</srai></think><random><li><srai>EXPDEX WHO MAKE A DIFFERENCE <star/></srai></li></random></template></category>
+<!-- p=-63.3612714368817 	:<srai>who made a difference * </srai>  -->
+<category><pattern>WHO MAKE THE WORLD WORSE *</pattern><template><think><srai>NOPX 10233</srai></think><random><li><srai>EXPDEX WHO MAKE THE WORLD WORSE <star/></srai></li></random></template></category>
+<!-- p=-99.9278801061868 	:<srai>who made the world worse * </srai>  -->
+<category><pattern>WHO MAKE W LOOK LIKE *</pattern><template><think><srai>NOPX 1182</srai></think><random><li><srai>EXPDEX WHO MAKE W LOOK LIKE <star/></srai></li></random></template></category>
+<!-- p=-86.3671078166577 	:<srai>who made w look like * </srai>  -->
+<category><pattern>WHO MAKE A DIFFERENCE *</pattern><template><think><srai>NOPX 2669</srai></think><random><li><srai>EXPDEX WHO MAKE A DIFFERENCE <star/></srai></li></random></template></category>
+<!-- p=-63.3612714368817 	:<srai>who made a difference * </srai>  -->
+<category><pattern>WHO MAKE DECISIONS THAT AFFECT *</pattern><template><think><srai>NOPX 519</srai></think><random><li><srai>EXPDEX WHO MAKE DECISIONS THAT AFFECT <star/></srai></li></random></template></category>
+<!-- p=-88.8718348916362 	:<srai>who made decisions that affect * </srai>  -->
+<category><pattern>WHO MAKE IT EASY FOR *</pattern><template><think><srai>NOPX 419</srai></think><random><li><srai>EXPDEX WHO MAKE IT EASY FOR <star/></srai></li></random></template></category>
+<!-- p=-93.4038916093151 	:<srai>who made it easy for * </srai>  -->
+<category><pattern>WHO MAKE IT HAPPEN *</pattern><template><think><srai>NOPX 419</srai></think><random><li><srai>EXPDEX WHO MAKE IT HAPPEN <star/></srai></li></random></template></category>
+<!-- p=-61.3394565111348 	:<srai>who made it happen * </srai>  -->
+<category><pattern>WHO MAKE IT HAPPEN FOR *</pattern><template><think><srai>NOPX 472</srai></think><random><li><srai>EXPDEX WHO MAKE IT HAPPEN FOR <star/></srai></li></random></template></category>
+<!-- p=-93.4038916093151 	:<srai>who made it happen for * </srai>  -->
+<category><pattern>WHO MAKE IT POSSIBLE *</pattern><template><think><srai>NOPX 488</srai></think><random><li><srai>EXPDEX WHO MAKE IT POSSIBLE <star/></srai></li></random></template></category>
+<!-- p=-61.3394565111348 	:<srai>who made it possible * </srai>  -->
+<category><pattern>WHO MAKE IT POSSIBLE FOR *</pattern><template><think><srai>NOPX 3071</srai></think><random><li><srai>EXPDEX WHO MAKE IT POSSIBLE FOR <star/></srai></li></random></template></category>
+<!-- p=-93.4038916093151 	:<srai>who made it possible for * </srai>  -->
+<category><pattern>WHO MAKE LOTS OF MONEY *</pattern><template><think><srai>NOPX 417</srai></think><random><li><srai>EXPDEX WHO MAKE LOTS OF MONEY <star/></srai></li></random></template></category>
+<!-- p=-91.4944651835747 	:<srai>who made lots of money * </srai>  -->
+<category><pattern>WHO MAKE ME WANT TO *</pattern><template><think><srai>NOPX 554</srai></think><random><li><srai>EXPDEX WHO MAKE ME WANT TO <star/></srai></li></random></template></category>
+<!-- p=-87.8562110579032 	:<srai>who made me want to * </srai>  -->
+<category><pattern>WHO MAKE MILLIONS OF DOLLARS *</pattern><template><think><srai>NOPX 607</srai></think><random><li><srai>EXPDEX WHO MAKE MILLIONS OF DOLLARS <star/></srai></li></random></template></category>
+<!-- p=-91.4944651835747 	:<srai>who made millions of dollars * </srai>  -->
+<category><pattern>WHO MAKE MOVIES BY UNDERSTANDING *</pattern><template><think><srai>NOPX 470</srai></think><random><li><srai>EXPDEX WHO MAKE MOVIES BY UNDERSTANDING <star/></srai></li></random></template></category>
+<!-- p=-89.5878400116857 	:<srai>who made movies by understanding * </srai>  -->
+<category><pattern>WHO MAKE OUR SOULS BLOSSOM *</pattern><template><think><srai>NOPX 832</srai></think><random><li><srai>EXPDEX WHO MAKE OUR SOULS BLOSSOM <star/></srai></li></random></template></category>
+<!-- p=-90.071091780708 	:<srai>who made our souls blossom * </srai>  -->
+<category><pattern>WHO MAKE THE DECISIONS ABOUT *</pattern><template><think><srai>NOPX 940</srai></think><random><li><srai>EXPDEX WHO MAKE THE DECISIONS ABOUT <star/></srai></li></random></template></category>
+<!-- p=-99.9278801061868 	:<srai>who made the decisions about * </srai>  -->
+<category><pattern>WHO MAKE THE DECISIONS IN *</pattern><template><think><srai>NOPX 412</srai></think><random><li><srai>EXPDEX WHO MAKE THE DECISIONS IN <star/></srai></li></random></template></category>
+<!-- p=-99.9278801061868 	:<srai>who made the decisions in * </srai>  -->
+<category><pattern>WHO MAKE THE DECISIONS ON *</pattern><template><think><srai>NOPX 518</srai></think><random><li><srai>EXPDEX WHO MAKE THE DECISIONS ON <star/></srai></li></random></template></category>
+<!-- p=-99.9278801061868 	:<srai>who made the decisions on * </srai>  -->
+<category><pattern>WHO MAKE THE DECISIONS THAT *</pattern><template><think><srai>NOPX 534</srai></think><random><li><srai>EXPDEX WHO MAKE THE DECISIONS THAT <star/></srai></li></random></template></category>
+<!-- p=-99.9278801061868 	:<srai>who made the decisions that * </srai>  -->
+<category><pattern>WHO MAKE THE FINAL DECISIONS *</pattern><template><think><srai>NOPX 457</srai></think><random><li><srai>EXPDEX WHO MAKE THE FINAL DECISIONS <star/></srai></li></random></template></category>
+<!-- p=-99.9278801061868 	:<srai>who made the final decisions * </srai>  -->
+<category><pattern>WHO MAKE THE IMPORTANT DECISIONS *</pattern><template><think><srai>NOPX 1009</srai></think><random><li><srai>EXPDEX WHO MAKE THE IMPORTANT DECISIONS <star/></srai></li></random></template></category>
+<!-- p=-99.9278801061868 	:<srai>who made the important decisions * </srai>  -->
+<category><pattern>WHO MAKE THEIR CAREERS IN *</pattern><template><think><srai>NOPX 417</srai></think><random><li><srai>EXPDEX WHO MAKE THEIR CAREERS IN <star/></srai></li></random></template></category>
+<!-- p=-87.7019299937077 	:<srai>who made their careers in * </srai>  -->
+<category><pattern>WHO MAKE THEIR HOMES IN *</pattern><template><think><srai>NOPX 840</srai></think><random><li><srai>EXPDEX WHO MAKE THEIR HOMES IN <star/></srai></li></random></template></category>
+<!-- p=-87.7019299937077 	:<srai>who made their homes in * </srai>  -->
+<category><pattern>WHO MAKE THEIR MANY TOOLS *</pattern><template><think><srai>NOPX 1429</srai></think><random><li><srai>EXPDEX WHO MAKE THEIR MANY TOOLS <star/></srai></li></random></template></category>
+<!-- p=-87.7019299937077 	:<srai>who made their many tools * </srai>  -->
+<category><pattern>WHO MAKE THEM AVAILABLE FOR *</pattern><template><think><srai>NOPX 742</srai></think><random><li><srai>EXPDEX WHO MAKE THEM AVAILABLE FOR <star/></srai></li></random></template></category>
+<!-- p=-85.7744185833657 	:<srai>who made them available for * </srai>  -->
+<category><pattern>WHO MAKE YOU FEEL GOOD *</pattern><template><think><srai>NOPX 530</srai></think><random><li><srai>EXPDEX WHO MAKE YOU FEEL GOOD <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:<srai>who made you feel good * </srai>  -->
+<category><pattern>WHO MAKE YOU FEEL LIKE *</pattern><template><think><srai>NOPX 516</srai></think><random><li><srai>EXPDEX WHO MAKE YOU FEEL LIKE <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:<srai>who made you feel like * </srai>  -->
+<category><pattern>WHO MAKE YOU WANT TO *</pattern><template><think><srai>NOPX 403</srai></think><random><li><srai>EXPDEX WHO MAKE YOU WANT TO <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:<srai>who made you want to * </srai>  -->
+</aiml>

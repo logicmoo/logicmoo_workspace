@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<aiml>
+    <!--
+      Some extra SRAI Cogbot TESTS  
+    -->
+
+    <category>
+      <pattern>SRAITEST1</pattern>
+      <template><condition>
+          <li name="inloop" value="YES">SRAITEST1 NOT SPINNING ON <inputreq/> or <star/></li>
+          <li>
+              <think><set var="inloop">YES</set></think>
+              <srai>SRAITEST1</srai>
+              <think><set var="inloop">NO</set></think>
+          </li>
+      </condition></template>
+    </category>
+
+    <category>
+      <pattern>SRAITEST2</pattern>
+      <template><condition>
+          <li name="inloop2" value="YES">SRAITEST2 NOT SPINNING ON <inputreq/> or <star/></li>
+          <li><srai with_inloop2="YES">SRAITEST2</srai>inloop2 = <get var="inloop2"/></li>
+      </condition></template>
+    </category>
+
+    <category>
+      <pattern>SRAITEST3 A B *</pattern>
+      <template><condition>
+          <li name="inloop3" value="YES">SRAITEST3 NOT SPINNING ON <inputreq/> or <star/></li>
+          <li><srai with_inloop3="YES">SRAITEST3 A B C D</srai>inloop3 = <get var="inloop3"/></li>
+      </condition></template>
+    </category>
+
+    <category>
+      <pattern>SRAITEST3</pattern>
+      <template><srai>SRAITEST3 A B C</srai>inloop3 = <get var="inloop3"/></template>
+    </category>
+
+</aiml>

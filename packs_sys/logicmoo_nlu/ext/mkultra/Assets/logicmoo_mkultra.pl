@@ -3,7 +3,13 @@
 
 :- use_module(library(logicmoo_utils)).
 
-assume_dyn(F/A):- external(F/A), functor(P,F,A), assert((P:- wdmsg(warn(todo(P))))).
+pi_to_p(F/A,P):- functor(P,F,A),!.
+pi_to_p(F//A,P):- A2 is A + 2, functor(P,F,A2).
+assume_todo(FA):- pi_to_p(FA,P), TODO=assume_todo(P), asserta((P:- !, log(warn(TODO)),throw(TODO))).
+assume_done(FA):- pi_to_p(FA,P), TODO=assume_done(P), asserta((P:- !, log(warn(TODO)))).
+assume_dyn_fail(FA):- pi_to_p(FA,P), TODO=assume_dyn_fail(P), asserta((P:- !, log(warn(TODO)),fail)).
+assume_dyn_succeed(FA):- pi_to_p(FA,P), TODO=assume_dyn_succeed(P), asserta((P:- !, log(warn(TODO)),!)).
+
 
 load_mkultra:- expand_file_name('*/*.prolog',List),
   reverse(List,Rev),
@@ -16,7 +22,7 @@ print_load_mkultra:- expand_file_name('*/*.prolog',List),
   maplist(print_load_unity_prolog_file,Rev).
 %:- print_load_mkultra.
 
-process_kind_hierarchy:- wdmsg(todo(process_kind_hierarchy)).
+process_kind_hierarchy:- log(todo(process_kind_hierarchy)).
 
 :- discontiguous valid_property_value/2.
 :- discontiguous utterance/3.
@@ -64,32 +70,32 @@ process_kind_hierarchy:- wdmsg(todo(process_kind_hierarchy)).
 
 :- ensure_loaded(unity_prolog).
 
-%:- assume_dyn(switch_to_task/1).
-%:- assume_dyn(player_question/3).
-%:- assume_dyn(np/7).
-%:- assume_dyn(member/4).
-%:- assume_dyn(maintenance_goal/1).
-%:- assume_dyn(know_about_object/1).
-%:- assume_dyn(inverted_sentence/6).
-%:- assume_dyn(conversation_idle_task/2).
-%:- assume_dyn(beat_monolog/3).
-%:- assume_dyn(adjectival_property/1).
-%:- assume_dyn(member/4).
-%:- assume_dyn(can/1).
-%:- assume_dyn(>-->/2).
+%:- assume_dyn_succeed(switch_to_task/1).
+%:- assume_dyn_succeed(player_question/3).
+%:- assume_dyn_succeed(np/7).
+%:- assume_dyn_succeed(member/4).
+%:- assume_dyn_succeed(maintenance_goal/1).
+%:- assume_dyn_succeed(know_about_object/1).
+%:- assume_dyn_succeed(inverted_sentence/6).
+%:- assume_dyn_succeed(conversation_idle_task/2).
+%:- assume_dyn_succeed(beat_monolog/3).
+%:- assume_dyn_succeed(adjectival_property/1).
+%:- assume_dyn_succeed(member/4).
+%:- assume_dyn_succeed(can/1).
+%:- assume_dyn_succeed(>-->/2).
 /*
-:- assume_dyn(manner/2).
-:- assume_dyn(leaf_kind/1).
-:- assume_dyn(kind_noun/4).
-:- assume_dyn(kind/1).
-:- assume_dyn(inverse_relation/2).
-:- assume_dyn(implies_relation/2).
-:- assume_dyn(genitive_form_of_relation/4).
-:- assume_dyn(dialog_task_advances_current_beat/1).
-:- assume_dyn(contradictory_pair/2).
-:- assume_dyn(character/1).
-:- assume_dyn(begin_concern/1).
-:- assume_dyn(begin_child_concern/3).
+:- assume_dyn_succeed(manner/2).
+:- assume_dyn_succeed(leaf_kind/1).
+:- assume_dyn_succeed(kind_noun/4).
+:- assume_dyn_succeed(kind/1).
+:- assume_dyn_succeed(inverse_relation/2).
+:- assume_dyn_succeed(implies_relation/2).
+:- assume_dyn_succeed(genitive_form_of_relation/4).
+:- assume_dyn_succeed(dialog_task_advances_current_beat/1).
+:- assume_dyn_succeed(contradictory_pair/2).
+:- assume_dyn_succeed(character/1).
+:- assume_dyn_succeed(begin_concern/1).
+:- assume_dyn_succeed(begin_child_concern/3).
 */
 %:- load_mkultra.
 :- load_unity_prolog_file('Prolog/prolog_primitives.prolog').
@@ -182,7 +188,7 @@ process_kind_hierarchy:- wdmsg(todo(process_kind_hierarchy)).
 :- load_unity_prolog_file('Concerns/command_line.prolog').
 :- load_unity_prolog_file('Concerns/be_polite.prolog').
 :- load_unity_prolog_file('Concerns/affect_manager.prolog').
-:- load_unity_prolog_file('NL/grammar_exclaim.prolog').
+%:- load_unity_prolog_file('NL/grammar_exclaim.prolog').
 
 :- load_unity_prolog_file('NL/lexicon.prolog').
 :- load_unity_prolog_file('Characters/Kavi.prolog').
@@ -194,4 +200,6 @@ process_kind_hierarchy:- wdmsg(todo(process_kind_hierarchy)).
 
 :- module(mkultra).
 
+gen_all:- between(1,6,L),length(S,L),utterance(X,S,[]),print_tree_with_final(S=X,'.\n\n'),fail.
+:- add_history(gen_all).
 :- fixup_exports.

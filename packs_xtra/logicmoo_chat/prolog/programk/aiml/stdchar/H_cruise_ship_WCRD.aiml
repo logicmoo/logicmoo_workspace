@@ -1,0 +1,443 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<aiml>
+
+<!-- main H_Default.aiml (680287) mp=-1: CRUISE SHIP * -->
+
+<!-- MINSEQ: mp=-1:  -->
+<category><pattern>EXPDEX CRUISE SHIP *</pattern><template>   <random>      <li>When did you first become a master?</li>      <li>What was you first command?</li>      <li>Where did you attend merchant marine academy?</li>      <li>Did you come from an entertainment background?</li>      <li>How much of the year do you work ships?</li>      <li>Where is home to you?</li>      <li>Tell me about tour family?</li>      <li>When is your next vacation?</li>      <li>Who are the best tippers?</li>     </random>    </template></category>
+<category><pattern>CRUISE SHIP *</pattern><template><srai>EXPDEX CRUISE SHIP <star/></srai></template></category>
+<category><pattern>CRUISE SHIP JOB *</pattern><template><think><srai>NOPX 530</srai></think><random><li><srai>EXPDEX CRUISE SHIP JOB <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP JOBS *</pattern><template><think><srai>NOPX 532</srai></think><random><li><srai>EXPDEX CRUISE SHIP JOBS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP TIMINGS *</pattern><template><think><srai>NOPX 449</srai></think><random><li><srai>EXPDEX CRUISE SHIP TIMINGS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP UNK *</pattern><template><think><srai>NOPX 2027</srai></think><random><li><srai>EXPDEX CRUISE SHIP UNK <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP ACCIDENT *</pattern><template><think><srai>NOPX 1812</srai></think><random><li><srai>EXPDEX CRUISE SHIP ACCIDENT <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP ACCIDENTS *</pattern><template><think><srai>NOPX 1429</srai></think><random><li><srai>EXPDEX CRUISE SHIP ACCIDENTS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP ACT *</pattern><template><think><srai>NOPX 859</srai></think><random><li><srai>EXPDEX CRUISE SHIP ACT <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP ACTIVITY *</pattern><template><think><srai>NOPX 519</srai></think><random><li><srai>EXPDEX CRUISE SHIP ACTIVITY <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP ADS *</pattern><template><think><srai>NOPX 2058</srai></think><random><li><srai>EXPDEX CRUISE SHIP ADS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP AUDITIONS *</pattern><template><think><srai>NOPX 806</srai></think><random><li><srai>EXPDEX CRUISE SHIP AUDITIONS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP BACK *</pattern><template><think><srai>NOPX 461</srai></think><random><li><srai>EXPDEX CRUISE SHIP BACK <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP BLUES *</pattern><template><think><srai>NOPX 790</srai></think><random><li><srai>EXPDEX CRUISE SHIP BLUES <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP CABIN *</pattern><template><think><srai>NOPX 800</srai></think><random><li><srai>EXPDEX CRUISE SHIP CABIN <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP CABINEAST *</pattern><template><think><srai>NOPX 2995</srai></think><random><li><srai>EXPDEX CRUISE SHIP CABINEAST <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP CABINPLANNING *</pattern><template><think><srai>NOPX 1738</srai></think><random><li><srai>EXPDEX CRUISE SHIP CABINPLANNING <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP CAMS *</pattern><template><think><srai>NOPX 486</srai></think><random><li><srai>EXPDEX CRUISE SHIP CAMS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP CARNIVAL *</pattern><template><think><srai>NOPX 1103</srai></think><random><li><srai>EXPDEX CRUISE SHIP CARNIVAL <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP CENTER *</pattern><template><think><srai>NOPX 546</srai></think><random><li><srai>EXPDEX CRUISE SHIP CENTER <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP CENTERS *</pattern><template><think><srai>NOPX 425</srai></think><random><li><srai>EXPDEX CRUISE SHIP CENTERS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP CHALLENGE *</pattern><template><think><srai>NOPX 9007</srai></think><random><li><srai>EXPDEX CRUISE SHIP CHALLENGE <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP CHEAP *</pattern><template><think><srai>NOPX 407</srai></think><random><li><srai>EXPDEX CRUISE SHIP CHEAP <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP COLLIDES *</pattern><template><think><srai>NOPX 433</srai></think><random><li><srai>EXPDEX CRUISE SHIP COLLIDES <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP COMPANY *</pattern><template><think><srai>NOPX 874</srai></think><random><li><srai>EXPDEX CRUISE SHIP COMPANY <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP COVERUP *</pattern><template><think><srai>NOPX 894</srai></think><random><li><srai>EXPDEX CRUISE SHIP COVERUP <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP CRASH *</pattern><template><think><srai>NOPX 433</srai></think><random><li><srai>EXPDEX CRUISE SHIP CRASH <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP CREWMAN *</pattern><template><think><srai>NOPX 433</srai></think><random><li><srai>EXPDEX CRUISE SHIP CREWMAN <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP CRUISE *</pattern><template><think><srai>NOPX 3030</srai></think><random><li><srai>EXPDEX CRUISE SHIP CRUISE <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP DAYS *</pattern><template><think><srai>NOPX 643</srai></think><random><li><srai>EXPDEX CRUISE SHIP DAYS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP DEAL *</pattern><template><think><srai>NOPX 450</srai></think><random><li><srai>EXPDEX CRUISE SHIP DEAL <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP DEALS *</pattern><template><think><srai>NOPX 4783</srai></think><random><li><srai>EXPDEX CRUISE SHIP DEALS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP DETAILS *</pattern><template><think><srai>NOPX 773</srai></think><random><li><srai>EXPDEX CRUISE SHIP DETAILS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP DIARY *</pattern><template><think><srai>NOPX 759</srai></think><random><li><srai>EXPDEX CRUISE SHIP DIARY <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP DINING *</pattern><template><think><srai>NOPX 3804</srai></think><random><li><srai>EXPDEX CRUISE SHIP DINING <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP DINNER *</pattern><template><think><srai>NOPX 3094</srai></think><random><li><srai>EXPDEX CRUISE SHIP DINNER <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP DIRECTORY *</pattern><template><think><srai>NOPX 571</srai></think><random><li><srai>EXPDEX CRUISE SHIP DIRECTORY <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP DISAPPEARANCE *</pattern><template><think><srai>NOPX 1543</srai></think><random><li><srai>EXPDEX CRUISE SHIP DISAPPEARANCE <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP DISAPPEARANCES *</pattern><template><think><srai>NOPX 2166</srai></think><random><li><srai>EXPDEX CRUISE SHIP DISAPPEARANCES <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP DISCOUNT *</pattern><template><think><srai>NOPX 412</srai></think><random><li><srai>EXPDEX CRUISE SHIP DISCOUNT <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP DISCOUNTS *</pattern><template><think><srai>NOPX 428</srai></think><random><li><srai>EXPDEX CRUISE SHIP DISCOUNTS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP DOCK *</pattern><template><think><srai>NOPX 620</srai></think><random><li><srai>EXPDEX CRUISE SHIP DOCK <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP DOCKS *</pattern><template><think><srai>NOPX 1169</srai></think><random><li><srai>EXPDEX CRUISE SHIP DOCKS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP DRAM *</pattern><template><think><srai>NOPX 433</srai></think><random><li><srai>EXPDEX CRUISE SHIP DRAM <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP EMPLOYEE *</pattern><template><think><srai>NOPX 601</srai></think><random><li><srai>EXPDEX CRUISE SHIP EMPLOYEE <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP EMPLOYMENT *</pattern><template><think><srai>NOPX 5905</srai></think><random><li><srai>EXPDEX CRUISE SHIP EMPLOYMENT <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP ENTERTAINMENT *</pattern><template><think><srai>NOPX 756</srai></think><random><li><srai>EXPDEX CRUISE SHIP ENTERTAINMENT <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP EXCURSIONS *</pattern><template><think><srai>NOPX 449</srai></think><random><li><srai>EXPDEX CRUISE SHIP EXCURSIONS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP EXPLOSION *</pattern><template><think><srai>NOPX 451</srai></think><random><li><srai>EXPDEX CRUISE SHIP EXPLOSION <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP FAMILY *</pattern><template><think><srai>NOPX 3044</srai></think><random><li><srai>EXPDEX CRUISE SHIP FAMILY <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP GAMING *</pattern><template><think><srai>NOPX 472</srai></think><random><li><srai>EXPDEX CRUISE SHIP GAMING <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP GETTING *</pattern><template><think><srai>NOPX 866</srai></think><random><li><srai>EXPDEX CRUISE SHIP GETTING <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP GUIDE *</pattern><template><think><srai>NOPX 876</srai></think><random><li><srai>EXPDEX CRUISE SHIP GUIDE <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP HANDLING *</pattern><template><think><srai>NOPX 5062</srai></think><random><li><srai>EXPDEX CRUISE SHIP HANDLING <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP HISTORIC *</pattern><template><think><srai>NOPX 1298</srai></think><random><li><srai>EXPDEX CRUISE SHIP HISTORIC <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP HITS *</pattern><template><think><srai>NOPX 496</srai></think><random><li><srai>EXPDEX CRUISE SHIP HITS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP HOLIDAY *</pattern><template><think><srai>NOPX 1118</srai></think><random><li><srai>EXPDEX CRUISE SHIP HOLIDAY <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP HOLIDAYS *</pattern><template><think><srai>NOPX 537</srai></think><random><li><srai>EXPDEX CRUISE SHIP HOLIDAYS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP HORROR *</pattern><template><think><srai>NOPX 433</srai></think><random><li><srai>EXPDEX CRUISE SHIP HORROR <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP IN *</pattern><template><think><srai>NOPX 876</srai></think><random><li><srai>EXPDEX CRUISE SHIP IN <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP INDUSTRY *</pattern><template><think><srai>NOPX 1290</srai></think><random><li><srai>EXPDEX CRUISE SHIP INDUSTRY <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP INFO *</pattern><template><think><srai>NOPX 829</srai></think><random><li><srai>EXPDEX CRUISE SHIP INFO <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP INFORMATION *</pattern><template><think><srai>NOPX 1326</srai></think><random><li><srai>EXPDEX CRUISE SHIP INFORMATION <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP INITIATIVE *</pattern><template><think><srai>NOPX 638</srai></think><random><li><srai>EXPDEX CRUISE SHIP INITIATIVE <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP INJURIES *</pattern><template><think><srai>NOPX 504</srai></think><random><li><srai>EXPDEX CRUISE SHIP INJURIES <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP INJURY *</pattern><template><think><srai>NOPX 4059</srai></think><random><li><srai>EXPDEX CRUISE SHIP INJURY <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP INTO *</pattern><template><think><srai>NOPX 434</srai></think><random><li><srai>EXPDEX CRUISE SHIP INTO <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP IS *</pattern><template><think><srai>NOPX 4014</srai></think><random><li><srai>EXPDEX CRUISE SHIP IS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP ITINERARIES *</pattern><template><think><srai>NOPX 561</srai></think><random><li><srai>EXPDEX CRUISE SHIP ITINERARIES <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP ITINERARY *</pattern><template><think><srai>NOPX 458</srai></think><random><li><srai>EXPDEX CRUISE SHIP ITINERARY <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP JOB *</pattern><template><think><srai>NOPX 4045</srai></think><random><li><srai>EXPDEX CRUISE SHIP JOB <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP JOB COM *</pattern><template><think><srai>NOPX 648</srai></think><random><li><srai>EXPDEX CRUISE SHIP JOB COM <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP JOBS *</pattern><template><think><srai>NOPX 15240</srai></think><random><li><srai>EXPDEX CRUISE SHIP JOBS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP KILLS *</pattern><template><think><srai>NOPX 447</srai></think><random><li><srai>EXPDEX CRUISE SHIP KILLS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP LAWYERS *</pattern><template><think><srai>NOPX 440</srai></think><random><li><srai>EXPDEX CRUISE SHIP LAWYERS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP LINES *</pattern><template><think><srai>NOPX 1726</srai></think><random><li><srai>EXPDEX CRUISE SHIP LINES <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP MYSTERY *</pattern><template><think><srai>NOPX 569</srai></think><random><li><srai>EXPDEX CRUISE SHIP MYSTERY <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP NAME *</pattern><template><think><srai>NOPX 419</srai></think><random><li><srai>EXPDEX CRUISE SHIP NAME <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP NEWS *</pattern><template><think><srai>NOPX 1089</srai></think><random><li><srai>EXPDEX CRUISE SHIP NEWS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP NIGHTMARE *</pattern><template><think><srai>NOPX 869</srai></think><random><li><srai>EXPDEX CRUISE SHIP NIGHTMARE <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP NORWEGIAN *</pattern><template><think><srai>NOPX 877</srai></think><random><li><srai>EXPDEX CRUISE SHIP NORWEGIAN <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP OFF *</pattern><template><think><srai>NOPX 426</srai></think><random><li><srai>EXPDEX CRUISE SHIP OFF <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP PASSENGER *</pattern><template><think><srai>NOPX 1401</srai></think><random><li><srai>EXPDEX CRUISE SHIP PASSENGER <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP PASSENGERS *</pattern><template><think><srai>NOPX 2471</srai></think><random><li><srai>EXPDEX CRUISE SHIP PASSENGERS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP PHOTO *</pattern><template><think><srai>NOPX 2634</srai></think><random><li><srai>EXPDEX CRUISE SHIP PHOTO <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP PHOTOS *</pattern><template><think><srai>NOPX 836</srai></think><random><li><srai>EXPDEX CRUISE SHIP PHOTOS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP PIER *</pattern><template><think><srai>NOPX 600</srai></think><random><li><srai>EXPDEX CRUISE SHIP PIER <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP POLLUTION *</pattern><template><think><srai>NOPX 720</srai></think><random><li><srai>EXPDEX CRUISE SHIP POLLUTION <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP PORT *</pattern><template><think><srai>NOPX 1750</srai></think><random><li><srai>EXPDEX CRUISE SHIP PORT <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP POSTCARDS *</pattern><template><think><srai>NOPX 2144</srai></think><random><li><srai>EXPDEX CRUISE SHIP POSTCARDS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP PROBLEMS *</pattern><template><think><srai>NOPX 450</srai></think><random><li><srai>EXPDEX CRUISE SHIP PROBLEMS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP PROFILE *</pattern><template><think><srai>NOPX 1257</srai></think><random><li><srai>EXPDEX CRUISE SHIP PROFILE <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP PROFILES *</pattern><template><think><srai>NOPX 606</srai></think><random><li><srai>EXPDEX CRUISE SHIP PROFILES <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP RAPE *</pattern><template><think><srai>NOPX 431</srai></think><random><li><srai>EXPDEX CRUISE SHIP RAPE <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP RATINGS *</pattern><template><think><srai>NOPX 1345</srai></think><random><li><srai>EXPDEX CRUISE SHIP RATINGS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP RESERVATIONS *</pattern><template><think><srai>NOPX 565</srai></think><random><li><srai>EXPDEX CRUISE SHIP RESERVATIONS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP RETURNS *</pattern><template><think><srai>NOPX 2819</srai></think><random><li><srai>EXPDEX CRUISE SHIP RETURNS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP REVIEW *</pattern><template><think><srai>NOPX 2571</srai></think><random><li><srai>EXPDEX CRUISE SHIP REVIEW <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP REVIEWS *</pattern><template><think><srai>NOPX 3222</srai></think><random><li><srai>EXPDEX CRUISE SHIP REVIEWS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP SAFETY *</pattern><template><think><srai>NOPX 835</srai></think><random><li><srai>EXPDEX CRUISE SHIP SAFETY <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP SAILS *</pattern><template><think><srai>NOPX 479</srai></think><random><li><srai>EXPDEX CRUISE SHIP SAILS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP SALES *</pattern><template><think><srai>NOPX 2037</srai></think><random><li><srai>EXPDEX CRUISE SHIP SALES <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP SCHEDULE *</pattern><template><think><srai>NOPX 3761</srai></think><random><li><srai>EXPDEX CRUISE SHIP SCHEDULE <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP SCHEDULES *</pattern><template><think><srai>NOPX 2551</srai></think><random><li><srai>EXPDEX CRUISE SHIP SCHEDULES <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP SERVICES *</pattern><template><think><srai>NOPX 651</srai></think><random><li><srai>EXPDEX CRUISE SHIP SERVICES <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP SEXUAL *</pattern><template><think><srai>NOPX 521</srai></think><random><li><srai>EXPDEX CRUISE SHIP SEXUAL <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP SHUT *</pattern><template><think><srai>NOPX 433</srai></think><random><li><srai>EXPDEX CRUISE SHIP SHUT <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP SITE *</pattern><template><think><srai>NOPX 460</srai></think><random><li><srai>EXPDEX CRUISE SHIP SITE <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP SKORPIOS *</pattern><template><think><srai>NOPX 971</srai></think><random><li><srai>EXPDEX CRUISE SHIP SKORPIOS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP STAFF *</pattern><template><think><srai>NOPX 526</srai></think><random><li><srai>EXPDEX CRUISE SHIP STAFF <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP TERMINAL *</pattern><template><think><srai>NOPX 7549</srai></think><random><li><srai>EXPDEX CRUISE SHIP TERMINAL <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP TERMINALS *</pattern><template><think><srai>NOPX 1024</srai></think><random><li><srai>EXPDEX CRUISE SHIP TERMINALS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP TOUR *</pattern><template><think><srai>NOPX 619</srai></think><random><li><srai>EXPDEX CRUISE SHIP TOUR <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP TOURS *</pattern><template><think><srai>NOPX 32333</srai></think><random><li><srai>EXPDEX CRUISE SHIP TOURS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP TRAVEL *</pattern><template><think><srai>NOPX 1199</srai></think><random><li><srai>EXPDEX CRUISE SHIP TRAVEL <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP TRENDS *</pattern><template><think><srai>NOPX 838</srai></think><random><li><srai>EXPDEX CRUISE SHIP TRENDS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP TURNED *</pattern><template><think><srai>NOPX 871</srai></think><random><li><srai>EXPDEX CRUISE SHIP TURNED <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP TURNS *</pattern><template><think><srai>NOPX 433</srai></think><random><li><srai>EXPDEX CRUISE SHIP TURNS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP TYCOON *</pattern><template><think><srai>NOPX 5859</srai></think><random><li><srai>EXPDEX CRUISE SHIP TYCOON <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP VACATION *</pattern><template><think><srai>NOPX 924</srai></think><random><li><srai>EXPDEX CRUISE SHIP VACATION <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP VACATIONS *</pattern><template><think><srai>NOPX 1812</srai></think><random><li><srai>EXPDEX CRUISE SHIP VACATIONS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP VIRUS *</pattern><template><think><srai>NOPX 707</srai></think><random><li><srai>EXPDEX CRUISE SHIP VIRUS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP VISIT *</pattern><template><think><srai>NOPX 4890</srai></think><random><li><srai>EXPDEX CRUISE SHIP VISIT <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP VISITORS *</pattern><template><think><srai>NOPX 808</srai></think><random><li><srai>EXPDEX CRUISE SHIP VISITORS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP WEDDING *</pattern><template><think><srai>NOPX 1079</srai></think><random><li><srai>EXPDEX CRUISE SHIP WEDDING <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP WEDDINGS *</pattern><template><think><srai>NOPX 541</srai></think><random><li><srai>EXPDEX CRUISE SHIP WEDDINGS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP WORKER *</pattern><template><think><srai>NOPX 643</srai></think><random><li><srai>EXPDEX CRUISE SHIP WORKER <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP WWW *</pattern><template><think><srai>NOPX 416</srai></think><random><li><srai>EXPDEX CRUISE SHIP WWW <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP AND *</pattern><template><think><srai>NOPX 3879</srai></think><random><li><srai>EXPDEX CRUISE SHIP AND <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP AT *</pattern><template><think><srai>NOPX 570</srai></think><random><li><srai>EXPDEX CRUISE SHIP AT <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP BY *</pattern><template><think><srai>NOPX 437</srai></think><random><li><srai>EXPDEX CRUISE SHIP BY <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP FOR *</pattern><template><think><srai>NOPX 584</srai></think><random><li><srai>EXPDEX CRUISE SHIP FOR <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP IN *</pattern><template><think><srai>NOPX 2149</srai></think><random><li><srai>EXPDEX CRUISE SHIP IN <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP IS *</pattern><template><think><srai>NOPX 513</srai></think><random><li><srai>EXPDEX CRUISE SHIP IS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP LEVEL *</pattern><template><think><srai>NOPX 487</srai></think><random><li><srai>EXPDEX CRUISE SHIP LEVEL <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP ON *</pattern><template><think><srai>NOPX 431</srai></think><random><li><srai>EXPDEX CRUISE SHIP ON <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP TO *</pattern><template><think><srai>NOPX 960</srai></think><random><li><srai>EXPDEX CRUISE SHIP TO <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP CRUISER *</pattern><template><think><srai>NOPX 6894</srai></think><random><li><srai>EXPDEX CRUISE SHIP CRUISER <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP AT *</pattern><template><think><srai>NOPX 4257</srai></think><random><li><srai>EXPDEX CRUISE SHIP AT <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP DINING *</pattern><template><think><srai>NOPX 1003</srai></think><random><li><srai>EXPDEX CRUISE SHIP DINING <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP EMPLOYMENT *</pattern><template><think><srai>NOPX 684</srai></think><random><li><srai>EXPDEX CRUISE SHIP EMPLOYMENT <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP IN *</pattern><template><think><srai>NOPX 2221</srai></think><random><li><srai>EXPDEX CRUISE SHIP IN <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP JOBS *</pattern><template><think><srai>NOPX 1097</srai></think><random><li><srai>EXPDEX CRUISE SHIP JOBS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP MURDER *</pattern><template><think><srai>NOPX 1104</srai></think><random><li><srai>EXPDEX CRUISE SHIP MURDER <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP PASSENGERS *</pattern><template><think><srai>NOPX 1462</srai></think><random><li><srai>EXPDEX CRUISE SHIP PASSENGERS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP REVIEWS *</pattern><template><think><srai>NOPX 627</srai></think><random><li><srai>EXPDEX CRUISE SHIP REVIEWS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP TERMINAL *</pattern><template><think><srai>NOPX 592</srai></think><random><li><srai>EXPDEX CRUISE SHIP TERMINAL <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP TRACKER *</pattern><template><think><srai>NOPX 1135</srai></think><random><li><srai>EXPDEX CRUISE SHIP TRACKER <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP UNK *</pattern><template><think><srai>NOPX 3257</srai></think><random><li><srai>EXPDEX CRUISE SHIP UNK <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP ACHILLE *</pattern><template><think><srai>NOPX 2974</srai></think><random><li><srai>EXPDEX CRUISE SHIP ACHILLE <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP CRUISE *</pattern><template><think><srai>NOPX 409</srai></think><random><li><srai>EXPDEX CRUISE SHIP CRUISE <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP I *</pattern><template><think><srai>NOPX 458</srai></think><random><li><srai>EXPDEX CRUISE SHIP I <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP QUEEN *</pattern><template><think><srai>NOPX 576</srai></think><random><li><srai>EXPDEX CRUISE SHIP QUEEN <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP ADD *</pattern><template><think><srai>NOPX 669</srai></think><random><li><srai>EXPDEX CRUISE SHIP ADD <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP ARRIVALS *</pattern><template><think><srai>NOPX 923</srai></think><random><li><srai>EXPDEX CRUISE SHIP ARRIVALS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP BUSINESS *</pattern><template><think><srai>NOPX 965</srai></think><random><li><srai>EXPDEX CRUISE SHIP BUSINESS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP CABIN *</pattern><template><think><srai>NOPX 676</srai></think><random><li><srai>EXPDEX CRUISE SHIP CABIN <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP CABINS *</pattern><template><think><srai>NOPX 629</srai></think><random><li><srai>EXPDEX CRUISE SHIP CABINS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP CALLS *</pattern><template><think><srai>NOPX 818</srai></think><random><li><srai>EXPDEX CRUISE SHIP CALLS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP CARNIVAL *</pattern><template><think><srai>NOPX 932</srai></think><random><li><srai>EXPDEX CRUISE SHIP CARNIVAL <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP CELEBRATION *</pattern><template><think><srai>NOPX 441</srai></think><random><li><srai>EXPDEX CRUISE SHIP CELEBRATION <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP CELEBRITY *</pattern><template><think><srai>NOPX 436</srai></think><random><li><srai>EXPDEX CRUISE SHIP CELEBRITY <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP COMPANIES *</pattern><template><think><srai>NOPX 1554</srai></think><random><li><srai>EXPDEX CRUISE SHIP COMPANIES <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP COMPANY *</pattern><template><think><srai>NOPX 1797</srai></think><random><li><srai>EXPDEX CRUISE SHIP COMPANY <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP CRUISE *</pattern><template><think><srai>NOPX 2946</srai></think><random><li><srai>EXPDEX CRUISE SHIP CRUISE <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP DAYS *</pattern><template><think><srai>NOPX 454</srai></think><random><li><srai>EXPDEX CRUISE SHIP DAYS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP DEAL *</pattern><template><think><srai>NOPX 631</srai></think><random><li><srai>EXPDEX CRUISE SHIP DEAL <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP DESCRIPTIONS *</pattern><template><think><srai>NOPX 484</srai></think><random><li><srai>EXPDEX CRUISE SHIP DESCRIPTIONS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP DESIGN *</pattern><template><think><srai>NOPX 488</srai></think><random><li><srai>EXPDEX CRUISE SHIP DESIGN <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP DESTINATION *</pattern><template><think><srai>NOPX 831</srai></think><random><li><srai>EXPDEX CRUISE SHIP DESTINATION <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP DINING *</pattern><template><think><srai>NOPX 520</srai></think><random><li><srai>EXPDEX CRUISE SHIP DINING <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP DISCHARGES *</pattern><template><think><srai>NOPX 462</srai></think><random><li><srai>EXPDEX CRUISE SHIP DISCHARGES <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP DISCOUNT *</pattern><template><think><srai>NOPX 479</srai></think><random><li><srai>EXPDEX CRUISE SHIP DISCOUNT <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP DOCK *</pattern><template><think><srai>NOPX 2625</srai></think><random><li><srai>EXPDEX CRUISE SHIP DOCK <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP DOCKS *</pattern><template><think><srai>NOPX 1900</srai></think><random><li><srai>EXPDEX CRUISE SHIP DOCKS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP DOES *</pattern><template><think><srai>NOPX 432</srai></think><random><li><srai>EXPDEX CRUISE SHIP DOES <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP EMPLOYMENT *</pattern><template><think><srai>NOPX 5630</srai></think><random><li><srai>EXPDEX CRUISE SHIP EMPLOYMENT <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP ENTERTAINMENT *</pattern><template><think><srai>NOPX 452</srai></think><random><li><srai>EXPDEX CRUISE SHIP ENTERTAINMENT <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP EXPERIENCE *</pattern><template><think><srai>NOPX 671</srai></think><random><li><srai>EXPDEX CRUISE SHIP EXPERIENCE <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP FACILITIES *</pattern><template><think><srai>NOPX 599</srai></think><random><li><srai>EXPDEX CRUISE SHIP FACILITIES <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP FACILITY *</pattern><template><think><srai>NOPX 429</srai></think><random><li><srai>EXPDEX CRUISE SHIP FACILITY <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP FEATURES *</pattern><template><think><srai>NOPX 414</srai></think><random><li><srai>EXPDEX CRUISE SHIP FEATURES <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP HAS *</pattern><template><think><srai>NOPX 1615</srai></think><random><li><srai>EXPDEX CRUISE SHIP HAS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP HOLIDAY *</pattern><template><think><srai>NOPX 1590</srai></think><random><li><srai>EXPDEX CRUISE SHIP HOLIDAY <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP HOLIDAYS *</pattern><template><think><srai>NOPX 793</srai></think><random><li><srai>EXPDEX CRUISE SHIP HOLIDAYS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP IMAGINATION *</pattern><template><think><srai>NOPX 533</srai></think><random><li><srai>EXPDEX CRUISE SHIP IMAGINATION <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP INDUSTRY *</pattern><template><think><srai>NOPX 6761</srai></think><random><li><srai>EXPDEX CRUISE SHIP INDUSTRY <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP INFINITY *</pattern><template><think><srai>NOPX 712</srai></think><random><li><srai>EXPDEX CRUISE SHIP INFINITY <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP INFORMATION *</pattern><template><think><srai>NOPX 751</srai></think><random><li><srai>EXPDEX CRUISE SHIP INFORMATION <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP INSPECTION *</pattern><template><think><srai>NOPX 705</srai></think><random><li><srai>EXPDEX CRUISE SHIP INSPECTION <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP IS *</pattern><template><think><srai>NOPX 7961</srai></think><random><li><srai>EXPDEX CRUISE SHIP IS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP JOB *</pattern><template><think><srai>NOPX 6203</srai></think><random><li><srai>EXPDEX CRUISE SHIP JOB <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP JOBS *</pattern><template><think><srai>NOPX 8543</srai></think><random><li><srai>EXPDEX CRUISE SHIP JOBS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP LINE *</pattern><template><think><srai>NOPX 1416</srai></think><random><li><srai>EXPDEX CRUISE SHIP LINE <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP LINES *</pattern><template><think><srai>NOPX 1878</srai></think><random><li><srai>EXPDEX CRUISE SHIP LINES <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP MARKET *</pattern><template><think><srai>NOPX 562</srai></think><random><li><srai>EXPDEX CRUISE SHIP MARKET <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP MODEL *</pattern><template><think><srai>NOPX 5949</srai></think><random><li><srai>EXPDEX CRUISE SHIP MODEL <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP NEWS *</pattern><template><think><srai>NOPX 555</srai></think><random><li><srai>EXPDEX CRUISE SHIP NEWS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP NORWEGIAN *</pattern><template><think><srai>NOPX 450</srai></think><random><li><srai>EXPDEX CRUISE SHIP NORWEGIAN <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP OFFERS *</pattern><template><think><srai>NOPX 2496</srai></think><random><li><srai>EXPDEX CRUISE SHIP OFFERS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP OPERATIONS *</pattern><template><think><srai>NOPX 929</srai></think><random><li><srai>EXPDEX CRUISE SHIP OPERATIONS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP OPERATOR *</pattern><template><think><srai>NOPX 583</srai></think><random><li><srai>EXPDEX CRUISE SHIP OPERATOR <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP OPERATORS *</pattern><template><think><srai>NOPX 1198</srai></think><random><li><srai>EXPDEX CRUISE SHIP OPERATORS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP PARADISE *</pattern><template><think><srai>NOPX 407</srai></think><random><li><srai>EXPDEX CRUISE SHIP PARADISE <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP PASSENGER *</pattern><template><think><srai>NOPX 1833</srai></think><random><li><srai>EXPDEX CRUISE SHIP PASSENGER <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP PASSENGERS *</pattern><template><think><srai>NOPX 10618</srai></think><random><li><srai>EXPDEX CRUISE SHIP PASSENGERS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP PASSES *</pattern><template><think><srai>NOPX 501</srai></think><random><li><srai>EXPDEX CRUISE SHIP PASSES <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP PHOTO *</pattern><template><think><srai>NOPX 560</srai></think><random><li><srai>EXPDEX CRUISE SHIP PHOTO <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP PHOTOS *</pattern><template><think><srai>NOPX 521</srai></think><random><li><srai>EXPDEX CRUISE SHIP PHOTOS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP PICTURE *</pattern><template><think><srai>NOPX 437</srai></think><random><li><srai>EXPDEX CRUISE SHIP PICTURE <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP PICTURES *</pattern><template><think><srai>NOPX 760</srai></think><random><li><srai>EXPDEX CRUISE SHIP PICTURES <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP PIER *</pattern><template><think><srai>NOPX 1526</srai></think><random><li><srai>EXPDEX CRUISE SHIP PIER <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP PIERS *</pattern><template><think><srai>NOPX 603</srai></think><random><li><srai>EXPDEX CRUISE SHIP PIERS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP POLLUTION *</pattern><template><think><srai>NOPX 903</srai></think><random><li><srai>EXPDEX CRUISE SHIP POLLUTION <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP PORT *</pattern><template><think><srai>NOPX 3347</srai></think><random><li><srai>EXPDEX CRUISE SHIP PORT <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP PORTS *</pattern><template><think><srai>NOPX 825</srai></think><random><li><srai>EXPDEX CRUISE SHIP PORTS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP PRINCESS *</pattern><template><think><srai>NOPX 1100</srai></think><random><li><srai>EXPDEX CRUISE SHIP PRINCESS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP RATING *</pattern><template><think><srai>NOPX 547</srai></think><random><li><srai>EXPDEX CRUISE SHIP RATING <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP RATINGS *</pattern><template><think><srai>NOPX 3113</srai></think><random><li><srai>EXPDEX CRUISE SHIP RATINGS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP REACHES *</pattern><template><think><srai>NOPX 1552</srai></think><random><li><srai>EXPDEX CRUISE SHIP REACHES <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP REVIEW *</pattern><template><think><srai>NOPX 2870</srai></think><random><li><srai>EXPDEX CRUISE SHIP REVIEW <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP REVIEWS *</pattern><template><think><srai>NOPX 8113</srai></think><random><li><srai>EXPDEX CRUISE SHIP REVIEWS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP ROYAL *</pattern><template><think><srai>NOPX 430</srai></think><random><li><srai>EXPDEX CRUISE SHIP ROYAL <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP SAILING *</pattern><template><think><srai>NOPX 1305</srai></think><random><li><srai>EXPDEX CRUISE SHIP SAILING <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP SAILS *</pattern><template><think><srai>NOPX 709</srai></think><random><li><srai>EXPDEX CRUISE SHIP SAILS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP SCHEDULE *</pattern><template><think><srai>NOPX 533</srai></think><random><li><srai>EXPDEX CRUISE SHIP SCHEDULE <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP SEAMEN *</pattern><template><think><srai>NOPX 433</srai></think><random><li><srai>EXPDEX CRUISE SHIP SEAMEN <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP SEASON *</pattern><template><think><srai>NOPX 861</srai></think><random><li><srai>EXPDEX CRUISE SHIP SEASON <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP SENSATION *</pattern><template><think><srai>NOPX 426</srai></think><random><li><srai>EXPDEX CRUISE SHIP SENSATION <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP SETS *</pattern><template><think><srai>NOPX 423</srai></think><random><li><srai>EXPDEX CRUISE SHIP SETS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP STAFF *</pattern><template><think><srai>NOPX 432</srai></think><random><li><srai>EXPDEX CRUISE SHIP STAFF <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP TERMINAL *</pattern><template><think><srai>NOPX 8957</srai></think><random><li><srai>EXPDEX CRUISE SHIP TERMINAL <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP TERMINALS *</pattern><template><think><srai>NOPX 2649</srai></think><random><li><srai>EXPDEX CRUISE SHIP TERMINALS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP TO *</pattern><template><think><srai>NOPX 6753</srai></think><random><li><srai>EXPDEX CRUISE SHIP TO <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP TOUR *</pattern><template><think><srai>NOPX 409</srai></think><random><li><srai>EXPDEX CRUISE SHIP TOUR <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP TOURISM *</pattern><template><think><srai>NOPX 582</srai></think><random><li><srai>EXPDEX CRUISE SHIP TOURISM <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP TOURISTS *</pattern><template><think><srai>NOPX 753</srai></think><random><li><srai>EXPDEX CRUISE SHIP TOURISTS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP TOURS *</pattern><template><think><srai>NOPX 767</srai></think><random><li><srai>EXPDEX CRUISE SHIP TOURS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP TRAFFIC *</pattern><template><think><srai>NOPX 1078</srai></think><random><li><srai>EXPDEX CRUISE SHIP TRAFFIC <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP TRAVEL *</pattern><template><think><srai>NOPX 1476</srai></think><random><li><srai>EXPDEX CRUISE SHIP TRAVEL <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP TRAVELER *</pattern><template><think><srai>NOPX 1247</srai></think><random><li><srai>EXPDEX CRUISE SHIP TRAVELER <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP TRAVELERS *</pattern><template><think><srai>NOPX 1374</srai></think><random><li><srai>EXPDEX CRUISE SHIP TRAVELERS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP TRAVELS *</pattern><template><think><srai>NOPX 455</srai></think><random><li><srai>EXPDEX CRUISE SHIP TRAVELS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP TYCOON *</pattern><template><think><srai>NOPX 1373</srai></think><random><li><srai>EXPDEX CRUISE SHIP TYCOON <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP VACATION *</pattern><template><think><srai>NOPX 2272</srai></think><random><li><srai>EXPDEX CRUISE SHIP VACATION <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP VACATIONS *</pattern><template><think><srai>NOPX 793</srai></think><random><li><srai>EXPDEX CRUISE SHIP VACATIONS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP VICTORY *</pattern><template><think><srai>NOPX 565</srai></think><random><li><srai>EXPDEX CRUISE SHIP VICTORY <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP VISION *</pattern><template><think><srai>NOPX 433</srai></think><random><li><srai>EXPDEX CRUISE SHIP VISION <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP VISITORS *</pattern><template><think><srai>NOPX 1467</srai></think><random><li><srai>EXPDEX CRUISE SHIP VISITORS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP VISITS *</pattern><template><think><srai>NOPX 1464</srai></think><random><li><srai>EXPDEX CRUISE SHIP VISITS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP WE *</pattern><template><think><srai>NOPX 414</srai></think><random><li><srai>EXPDEX CRUISE SHIP WE <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP WEB *</pattern><template><think><srai>NOPX 973</srai></think><random><li><srai>EXPDEX CRUISE SHIP WEB <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP WEDDING *</pattern><template><think><srai>NOPX 758</srai></think><random><li><srai>EXPDEX CRUISE SHIP WEDDING <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP WHEN *</pattern><template><think><srai>NOPX 930</srai></think><random><li><srai>EXPDEX CRUISE SHIP WHEN <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP WHERE *</pattern><template><think><srai>NOPX 762</srai></think><random><li><srai>EXPDEX CRUISE SHIP WHERE <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP WORK *</pattern><template><think><srai>NOPX 1972</srai></think><random><li><srai>EXPDEX CRUISE SHIP WORK <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP YOU *</pattern><template><think><srai>NOPX 741</srai></think><random><li><srai>EXPDEX CRUISE SHIP YOU <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP TIMINGS *</pattern><template><think><srai>NOPX 449</srai></think><random><li><srai>EXPDEX CRUISE SHIP TIMINGS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP ACCIDENT *</pattern><template><think><srai>NOPX 420</srai></think><random><li><srai>EXPDEX CRUISE SHIP ACCIDENT <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP ACCIDENT LAWYER *</pattern><template><think><srai>NOPX 446</srai></think><random><li><srai>EXPDEX CRUISE SHIP ACCIDENT LAWYER <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP ACCIDENT LAWYERS *</pattern><template><think><srai>NOPX 444</srai></think><random><li><srai>EXPDEX CRUISE SHIP ACCIDENT LAWYERS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP ACCIDENT ON *</pattern><template><think><srai>NOPX 435</srai></think><random><li><srai>EXPDEX CRUISE SHIP ACCIDENT ON <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP ACCIDENTS MARITIME *</pattern><template><think><srai>NOPX 1003</srai></think><random><li><srai>EXPDEX CRUISE SHIP ACCIDENTS MARITIME <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP ACT OF *</pattern><template><think><srai>NOPX 662</srai></think><random><li><srai>EXPDEX CRUISE SHIP ACT OF <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP ADS GALLERY *</pattern><template><think><srai>NOPX 489</srai></think><random><li><srai>EXPDEX CRUISE SHIP ADS GALLERY <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP ADS VINTAGE *</pattern><template><think><srai>NOPX 885</srai></think><random><li><srai>EXPDEX CRUISE SHIP ADS VINTAGE <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP AUDITIONS *</pattern><template><think><srai>NOPX 547</srai></think><random><li><srai>EXPDEX CRUISE SHIP AUDITIONS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP BACK IN *</pattern><template><think><srai>NOPX 456</srai></think><random><li><srai>EXPDEX CRUISE SHIP BACK IN <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP CABINEAST OR *</pattern><template><think><srai>NOPX 2995</srai></think><random><li><srai>EXPDEX CRUISE SHIP CABINEAST OR <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP CABINPLANNING YOUR *</pattern><template><think><srai>NOPX 1738</srai></think><random><li><srai>EXPDEX CRUISE SHIP CABINPLANNING YOUR <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP CAMS *</pattern><template><think><srai>NOPX 466</srai></think><random><li><srai>EXPDEX CRUISE SHIP CAMS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP CARNIVAL CRUISE *</pattern><template><think><srai>NOPX 664</srai></think><random><li><srai>EXPDEX CRUISE SHIP CARNIVAL CRUISE <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP CHALLENGE *</pattern><template><think><srai>NOPX 8824</srai></think><random><li><srai>EXPDEX CRUISE SHIP CHALLENGE <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP COLLIDES WITH *</pattern><template><think><srai>NOPX 433</srai></think><random><li><srai>EXPDEX CRUISE SHIP COLLIDES WITH <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP CREWMAN CLEARED *</pattern><template><think><srai>NOPX 433</srai></think><random><li><srai>EXPDEX CRUISE SHIP CREWMAN CLEARED <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP CRUISE SHIP *</pattern><template><think><srai>NOPX 1320</srai></think><random><li><srai>EXPDEX CRUISE SHIP CRUISE SHIP <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP DAYS *</pattern><template><think><srai>NOPX 598</srai></think><random><li><srai>EXPDEX CRUISE SHIP DAYS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP DEALS LIMOSINES *</pattern><template><think><srai>NOPX 3895</srai></think><random><li><srai>EXPDEX CRUISE SHIP DEALS LIMOSINES <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP DETAILS *</pattern><template><think><srai>NOPX 737</srai></think><random><li><srai>EXPDEX CRUISE SHIP DETAILS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP DIARY *</pattern><template><think><srai>NOPX 742</srai></think><random><li><srai>EXPDEX CRUISE SHIP DIARY <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP DINING DECK *</pattern><template><think><srai>NOPX 3024</srai></think><random><li><srai>EXPDEX CRUISE SHIP DINING DECK <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP DINNER DANCE *</pattern><template><think><srai>NOPX 2868</srai></think><random><li><srai>EXPDEX CRUISE SHIP DINNER DANCE <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP DISAPPEARANCE CASE *</pattern><template><think><srai>NOPX 1133</srai></think><random><li><srai>EXPDEX CRUISE SHIP DISAPPEARANCE CASE <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP DISAPPEARANCES *</pattern><template><think><srai>NOPX 2158</srai></think><random><li><srai>EXPDEX CRUISE SHIP DISAPPEARANCES <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP DOCKS IN *</pattern><template><think><srai>NOPX 598</srai></think><random><li><srai>EXPDEX CRUISE SHIP DOCKS IN <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP DRAM SHOP *</pattern><template><think><srai>NOPX 433</srai></think><random><li><srai>EXPDEX CRUISE SHIP DRAM SHOP <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP EMPLOYEE ALMOST *</pattern><template><think><srai>NOPX 572</srai></think><random><li><srai>EXPDEX CRUISE SHIP EMPLOYEE ALMOST <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP EMPLOYMENT *</pattern><template><think><srai>NOPX 793</srai></think><random><li><srai>EXPDEX CRUISE SHIP EMPLOYMENT <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP EMPLOYMENT AGENCY *</pattern><template><think><srai>NOPX 1054</srai></think><random><li><srai>EXPDEX CRUISE SHIP EMPLOYMENT AGENCY <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP EMPLOYMENT CRUISE *</pattern><template><think><srai>NOPX 1193</srai></think><random><li><srai>EXPDEX CRUISE SHIP EMPLOYMENT CRUISE <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP FAMILY CRUISES *</pattern><template><think><srai>NOPX 3024</srai></think><random><li><srai>EXPDEX CRUISE SHIP FAMILY CRUISES <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP GAMING *</pattern><template><think><srai>NOPX 462</srai></think><random><li><srai>EXPDEX CRUISE SHIP GAMING <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP GETTING NATIONAL *</pattern><template><think><srai>NOPX 865</srai></think><random><li><srai>EXPDEX CRUISE SHIP GETTING NATIONAL <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP HANDLING UNK *</pattern><template><think><srai>NOPX 4981</srai></think><random><li><srai>EXPDEX CRUISE SHIP HANDLING UNK <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP HISTORIC LOCATION *</pattern><template><think><srai>NOPX 1282</srai></think><random><li><srai>EXPDEX CRUISE SHIP HISTORIC LOCATION <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP HITS PIER *</pattern><template><think><srai>NOPX 437</srai></think><random><li><srai>EXPDEX CRUISE SHIP HITS PIER <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP HORROR SHOW *</pattern><template><think><srai>NOPX 433</srai></think><random><li><srai>EXPDEX CRUISE SHIP HORROR SHOW <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP INFORMATION *</pattern><template><think><srai>NOPX 542</srai></think><random><li><srai>EXPDEX CRUISE SHIP INFORMATION <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP INTO WAVE *</pattern><template><think><srai>NOPX 433</srai></think><random><li><srai>EXPDEX CRUISE SHIP INTO WAVE <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP IS CATCHING *</pattern><template><think><srai>NOPX 3877</srai></think><random><li><srai>EXPDEX CRUISE SHIP IS CATCHING <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP ITINERARIES *</pattern><template><think><srai>NOPX 493</srai></think><random><li><srai>EXPDEX CRUISE SHIP ITINERARIES <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP ITINERARY *</pattern><template><think><srai>NOPX 416</srai></think><random><li><srai>EXPDEX CRUISE SHIP ITINERARY <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP JOB *</pattern><template><think><srai>NOPX 940</srai></think><random><li><srai>EXPDEX CRUISE SHIP JOB <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP JOBS *</pattern><template><think><srai>NOPX 2280</srai></think><random><li><srai>EXPDEX CRUISE SHIP JOBS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP JOBS CRUISE *</pattern><template><think><srai>NOPX 1402</srai></think><random><li><srai>EXPDEX CRUISE SHIP JOBS CRUISE <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP JOBS IN *</pattern><template><think><srai>NOPX 2666</srai></think><random><li><srai>EXPDEX CRUISE SHIP JOBS IN <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP JOBS *</pattern><template><think><srai>NOPX 538</srai></think><random><li><srai>EXPDEX CRUISE SHIP JOBS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP NEWS BY *</pattern><template><think><srai>NOPX 969</srai></think><random><li><srai>EXPDEX CRUISE SHIP NEWS BY <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP NIGHTMARE BEEN *</pattern><template><think><srai>NOPX 433</srai></think><random><li><srai>EXPDEX CRUISE SHIP NIGHTMARE BEEN <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP NORWEGIAN DAWN *</pattern><template><think><srai>NOPX 460</srai></think><random><li><srai>EXPDEX CRUISE SHIP NORWEGIAN DAWN <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP PASSENGER *</pattern><template><think><srai>NOPX 464</srai></think><random><li><srai>EXPDEX CRUISE SHIP PASSENGER <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP PASSENGERS *</pattern><template><think><srai>NOPX 446</srai></think><random><li><srai>EXPDEX CRUISE SHIP PASSENGERS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP PHOTO FRAME *</pattern><template><think><srai>NOPX 2311</srai></think><random><li><srai>EXPDEX CRUISE SHIP PHOTO FRAME <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP PORT OF *</pattern><template><think><srai>NOPX 475</srai></think><random><li><srai>EXPDEX CRUISE SHIP PORT OF <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP POSTCARDS *</pattern><template><think><srai>NOPX 1019</srai></think><random><li><srai>EXPDEX CRUISE SHIP POSTCARDS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP PROBLEMS *</pattern><template><think><srai>NOPX 438</srai></think><random><li><srai>EXPDEX CRUISE SHIP PROBLEMS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP PROFILE *</pattern><template><think><srai>NOPX 586</srai></think><random><li><srai>EXPDEX CRUISE SHIP PROFILE <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP PROFILES CRUISE *</pattern><template><think><srai>NOPX 449</srai></think><random><li><srai>EXPDEX CRUISE SHIP PROFILES CRUISE <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP RATINGS CRUISE *</pattern><template><think><srai>NOPX 462</srai></think><random><li><srai>EXPDEX CRUISE SHIP RATINGS CRUISE <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP RATINGS *</pattern><template><think><srai>NOPX 632</srai></think><random><li><srai>EXPDEX CRUISE SHIP RATINGS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP RESERVATIONS *</pattern><template><think><srai>NOPX 540</srai></think><random><li><srai>EXPDEX CRUISE SHIP RESERVATIONS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP RETURNS WITH *</pattern><template><think><srai>NOPX 2699</srai></think><random><li><srai>EXPDEX CRUISE SHIP RETURNS WITH <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP REVIEW *</pattern><template><think><srai>NOPX 455</srai></think><random><li><srai>EXPDEX CRUISE SHIP REVIEW <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP REVIEWS *</pattern><template><think><srai>NOPX 927</srai></think><random><li><srai>EXPDEX CRUISE SHIP REVIEWS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP REVIEWS CRUISE *</pattern><template><think><srai>NOPX 581</srai></think><random><li><srai>EXPDEX CRUISE SHIP REVIEWS CRUISE <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP REVIEWS *</pattern><template><think><srai>NOPX 404</srai></think><random><li><srai>EXPDEX CRUISE SHIP REVIEWS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP SAFETY DANGERS *</pattern><template><think><srai>NOPX 433</srai></think><random><li><srai>EXPDEX CRUISE SHIP SAFETY DANGERS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP SAILS UNDER *</pattern><template><think><srai>NOPX 438</srai></think><random><li><srai>EXPDEX CRUISE SHIP SAILS UNDER <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP SALES ONLINE *</pattern><template><think><srai>NOPX 2013</srai></think><random><li><srai>EXPDEX CRUISE SHIP SALES ONLINE <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP SCHEDULE *</pattern><template><think><srai>NOPX 672</srai></think><random><li><srai>EXPDEX CRUISE SHIP SCHEDULE <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP SCHEDULE DINING *</pattern><template><think><srai>NOPX 762</srai></think><random><li><srai>EXPDEX CRUISE SHIP SCHEDULE DINING <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP SCHEDULES *</pattern><template><think><srai>NOPX 1141</srai></think><random><li><srai>EXPDEX CRUISE SHIP SCHEDULES <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP SCHEDULES UNK *</pattern><template><think><srai>NOPX 460</srai></think><random><li><srai>EXPDEX CRUISE SHIP SCHEDULES UNK <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP SCHEDULES DINING *</pattern><template><think><srai>NOPX 838</srai></think><random><li><srai>EXPDEX CRUISE SHIP SCHEDULES DINING <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP SERVICES *</pattern><template><think><srai>NOPX 475</srai></think><random><li><srai>EXPDEX CRUISE SHIP SERVICES <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP SEXUAL ASSAULT *</pattern><template><think><srai>NOPX 516</srai></think><random><li><srai>EXPDEX CRUISE SHIP SEXUAL ASSAULT <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP SHUT OUT *</pattern><template><think><srai>NOPX 433</srai></think><random><li><srai>EXPDEX CRUISE SHIP SHUT OUT <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP SITE *</pattern><template><think><srai>NOPX 431</srai></think><random><li><srai>EXPDEX CRUISE SHIP SITE <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP SKORPIOS *</pattern><template><think><srai>NOPX 516</srai></think><random><li><srai>EXPDEX CRUISE SHIP SKORPIOS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP STAFF *</pattern><template><think><srai>NOPX 408</srai></think><random><li><srai>EXPDEX CRUISE SHIP STAFF <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP TERMINAL *</pattern><template><think><srai>NOPX 1168</srai></think><random><li><srai>EXPDEX CRUISE SHIP TERMINAL <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP TERMINAL AND *</pattern><template><think><srai>NOPX 403</srai></think><random><li><srai>EXPDEX CRUISE SHIP TERMINAL AND <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP TOUR WE *</pattern><template><think><srai>NOPX 426</srai></think><random><li><srai>EXPDEX CRUISE SHIP TOUR WE <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP TOURS CURRENCY *</pattern><template><think><srai>NOPX 504</srai></think><random><li><srai>EXPDEX CRUISE SHIP TOURS CURRENCY <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP TOURS LIMOSINES *</pattern><template><think><srai>NOPX 1474</srai></think><random><li><srai>EXPDEX CRUISE SHIP TOURS LIMOSINES <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP TOURS LIMOUSINES *</pattern><template><think><srai>NOPX 22288</srai></think><random><li><srai>EXPDEX CRUISE SHIP TOURS LIMOUSINES <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP TOURS TRAVEL *</pattern><template><think><srai>NOPX 7376</srai></think><random><li><srai>EXPDEX CRUISE SHIP TOURS TRAVEL <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP TRENDS *</pattern><template><think><srai>NOPX 835</srai></think><random><li><srai>EXPDEX CRUISE SHIP TRENDS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP TURNED AWAY *</pattern><template><think><srai>NOPX 866</srai></think><random><li><srai>EXPDEX CRUISE SHIP TURNED AWAY <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP TURNS INTO *</pattern><template><think><srai>NOPX 433</srai></think><random><li><srai>EXPDEX CRUISE SHIP TURNS INTO <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP TYCOON *</pattern><template><think><srai>NOPX 1042</srai></think><random><li><srai>EXPDEX CRUISE SHIP TYCOON <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP TYCOON CRUSADER *</pattern><template><think><srai>NOPX 911</srai></think><random><li><srai>EXPDEX CRUISE SHIP TYCOON CRUSADER <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP VISIT SCHEDULE *</pattern><template><think><srai>NOPX 1042</srai></think><random><li><srai>EXPDEX CRUISE SHIP VISIT SCHEDULE <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP WORKER CHARGED *</pattern><template><think><srai>NOPX 602</srai></think><random><li><srai>EXPDEX CRUISE SHIP WORKER CHARGED <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP WWW CRUISE *</pattern><template><think><srai>NOPX 416</srai></think><random><li><srai>EXPDEX CRUISE SHIP WWW CRUISE <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP AND AIR *</pattern><template><think><srai>NOPX 905</srai></think><random><li><srai>EXPDEX CRUISE SHIP AND AIR <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP AND MARITIME *</pattern><template><think><srai>NOPX 799</srai></think><random><li><srai>EXPDEX CRUISE SHIP AND MARITIME <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP IN THE *</pattern><template><think><srai>NOPX 541</srai></think><random><li><srai>EXPDEX CRUISE SHIP IN THE <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP CRUISER CUSTOMS *</pattern><template><think><srai>NOPX 6888</srai></think><random><li><srai>EXPDEX CRUISE SHIP CRUISER CUSTOMS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP AND SHOPPING *</pattern><template><think><srai>NOPX 479</srai></think><random><li><srai>EXPDEX CRUISE SHIP AND SHOPPING <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP AT DOCK *</pattern><template><think><srai>NOPX 3705</srai></think><random><li><srai>EXPDEX CRUISE SHIP AT DOCK <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP DINING *</pattern><template><think><srai>NOPX 542</srai></think><random><li><srai>EXPDEX CRUISE SHIP DINING <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP IN DRY *</pattern><template><think><srai>NOPX 914</srai></think><random><li><srai>EXPDEX CRUISE SHIP IN DRY <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP MURDER MYSTERY *</pattern><template><think><srai>NOPX 1020</srai></think><random><li><srai>EXPDEX CRUISE SHIP MURDER MYSTERY <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP TRACKER *</pattern><template><think><srai>NOPX 1129</srai></think><random><li><srai>EXPDEX CRUISE SHIP TRACKER <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP ACHILLE LAURO *</pattern><template><think><srai>NOPX 2948</srai></think><random><li><srai>EXPDEX CRUISE SHIP ACHILLE LAURO <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP QUEEN MARY *</pattern><template><think><srai>NOPX 477</srai></think><random><li><srai>EXPDEX CRUISE SHIP QUEEN MARY <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP CARNIVAL CRUISE *</pattern><template><think><srai>NOPX 634</srai></think><random><li><srai>EXPDEX CRUISE SHIP CARNIVAL CRUISE <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP CARRYING WESTERN *</pattern><template><think><srai>NOPX 706</srai></think><random><li><srai>EXPDEX CRUISE SHIP CARRYING WESTERN <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP CRUISE SHIP *</pattern><template><think><srai>NOPX 1261</srai></think><random><li><srai>EXPDEX CRUISE SHIP CRUISE SHIP <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP EMPLOYMENT *</pattern><template><think><srai>NOPX 744</srai></think><random><li><srai>EXPDEX CRUISE SHIP EMPLOYMENT <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP EVER BUILT *</pattern><template><think><srai>NOPX 788</srai></think><random><li><srai>EXPDEX CRUISE SHIP EVER BUILT <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP HOLIDAYS *</pattern><template><think><srai>NOPX 522</srai></think><random><li><srai>EXPDEX CRUISE SHIP HOLIDAYS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP INDUSTRY IS *</pattern><template><think><srai>NOPX 502</srai></think><random><li><srai>EXPDEX CRUISE SHIP INDUSTRY IS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP JOBS *</pattern><template><think><srai>NOPX 1136</srai></think><random><li><srai>EXPDEX CRUISE SHIP JOBS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP PRINCESS CRUISE *</pattern><template><think><srai>NOPX 719</srai></think><random><li><srai>EXPDEX CRUISE SHIP PRINCESS CRUISE <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP REACHES PORT *</pattern><template><think><srai>NOPX 1510</srai></think><random><li><srai>EXPDEX CRUISE SHIP REACHES PORT <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP WEB CAM *</pattern><template><think><srai>NOPX 453</srai></think><random><li><srai>EXPDEX CRUISE SHIP WEB CAM <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP WEB CAMS *</pattern><template><think><srai>NOPX 440</srai></think><random><li><srai>EXPDEX CRUISE SHIP WEB CAMS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP JOBS *</pattern><template><think><srai>NOPX 426</srai></think><random><li><srai>EXPDEX CRUISE SHIP JOBS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP PROFILE *</pattern><template><think><srai>NOPX 602</srai></think><random><li><srai>EXPDEX CRUISE SHIP PROFILE <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP RATINGS *</pattern><template><think><srai>NOPX 640</srai></think><random><li><srai>EXPDEX CRUISE SHIP RATINGS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP REVIEWS *</pattern><template><think><srai>NOPX 451</srai></think><random><li><srai>EXPDEX CRUISE SHIP REVIEWS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP ACCIDENT LAWYER *</pattern><template><think><srai>NOPX 434</srai></think><random><li><srai>EXPDEX CRUISE SHIP ACCIDENT LAWYER <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP ACCIDENT LAWYERS *</pattern><template><think><srai>NOPX 431</srai></think><random><li><srai>EXPDEX CRUISE SHIP ACCIDENT LAWYERS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP ACCIDENTS MARITIME LAWYER *</pattern><template><think><srai>NOPX 1003</srai></think><random><li><srai>EXPDEX CRUISE SHIP ACCIDENTS MARITIME LAWYER <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP ADS VINTAGE MOTORCYCLE *</pattern><template><think><srai>NOPX 423</srai></think><random><li><srai>EXPDEX CRUISE SHIP ADS VINTAGE MOTORCYCLE <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP CABINPLANNING YOUR FIRST *</pattern><template><think><srai>NOPX 1737</srai></think><random><li><srai>EXPDEX CRUISE SHIP CABINPLANNING YOUR FIRST <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP CARNIVAL CRUISE SHIPS *</pattern><template><think><srai>NOPX 453</srai></think><random><li><srai>EXPDEX CRUISE SHIP CARNIVAL CRUISE SHIPS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP CRASH UNSETTLES GAMBLERS *</pattern><template><think><srai>NOPX 433</srai></think><random><li><srai>EXPDEX CRUISE SHIP CRASH UNSETTLES GAMBLERS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP CREWMAN CLEARED OF *</pattern><template><think><srai>NOPX 433</srai></think><random><li><srai>EXPDEX CRUISE SHIP CREWMAN CLEARED OF <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP CRUISE SHIP EMPLOYMENT *</pattern><template><think><srai>NOPX 846</srai></think><random><li><srai>EXPDEX CRUISE SHIP CRUISE SHIP EMPLOYMENT <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP DEALS LIMOSINES TIPS *</pattern><template><think><srai>NOPX 3894</srai></think><random><li><srai>EXPDEX CRUISE SHIP DEALS LIMOSINES TIPS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP DINING DECK PLANS *</pattern><template><think><srai>NOPX 3024</srai></think><random><li><srai>EXPDEX CRUISE SHIP DINING DECK PLANS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP DINNER DANCE FESTIVAL *</pattern><template><think><srai>NOPX 2861</srai></think><random><li><srai>EXPDEX CRUISE SHIP DINNER DANCE FESTIVAL <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP DISAPPEARANCE CASE *</pattern><template><think><srai>NOPX 1062</srai></think><random><li><srai>EXPDEX CRUISE SHIP DISAPPEARANCE CASE <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP DRAM SHOP CASE *</pattern><template><think><srai>NOPX 433</srai></think><random><li><srai>EXPDEX CRUISE SHIP DRAM SHOP CASE <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP EMPLOYEE ALMOST RAPED *</pattern><template><think><srai>NOPX 572</srai></think><random><li><srai>EXPDEX CRUISE SHIP EMPLOYEE ALMOST RAPED <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP EMPLOYMENT CRUISE SHIP *</pattern><template><think><srai>NOPX 1157</srai></think><random><li><srai>EXPDEX CRUISE SHIP EMPLOYMENT CRUISE SHIP <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP GETTING NATIONAL EXPOSURE *</pattern><template><think><srai>NOPX 865</srai></think><random><li><srai>EXPDEX CRUISE SHIP GETTING NATIONAL EXPOSURE <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP HANDLING UNK FILM *</pattern><template><think><srai>NOPX 4980</srai></think><random><li><srai>EXPDEX CRUISE SHIP HANDLING UNK FILM <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP HITS PIER CUTTING *</pattern><template><think><srai>NOPX 433</srai></think><random><li><srai>EXPDEX CRUISE SHIP HITS PIER CUTTING <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP JOBS CRUISE SHIP *</pattern><template><think><srai>NOPX 1253</srai></think><random><li><srai>EXPDEX CRUISE SHIP JOBS CRUISE SHIP <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP KILLS 3 SEAMEN *</pattern><template><think><srai>NOPX 433</srai></think><random><li><srai>EXPDEX CRUISE SHIP KILLS 3 SEAMEN <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP NIGHTMARE BEEN AVOIDED *</pattern><template><think><srai>NOPX 433</srai></think><random><li><srai>EXPDEX CRUISE SHIP NIGHTMARE BEEN AVOIDED <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP NORWEGIAN DAWN *</pattern><template><think><srai>NOPX 432</srai></think><random><li><srai>EXPDEX CRUISE SHIP NORWEGIAN DAWN <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP PHOTO FRAME *</pattern><template><think><srai>NOPX 2304</srai></think><random><li><srai>EXPDEX CRUISE SHIP PHOTO FRAME <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP PROFILES CRUISE LINES *</pattern><template><think><srai>NOPX 443</srai></think><random><li><srai>EXPDEX CRUISE SHIP PROFILES CRUISE LINES <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP RATINGS CRUISE SHIP *</pattern><template><think><srai>NOPX 437</srai></think><random><li><srai>EXPDEX CRUISE SHIP RATINGS CRUISE SHIP <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP RATINGS CRUISE *</pattern><template><think><srai>NOPX 441</srai></think><random><li><srai>EXPDEX CRUISE SHIP RATINGS CRUISE <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP SALES ONLINE BLOW *</pattern><template><think><srai>NOPX 1843</srai></think><random><li><srai>EXPDEX CRUISE SHIP SALES ONLINE BLOW <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP SCHEDULE DINING REVIEWS *</pattern><template><think><srai>NOPX 762</srai></think><random><li><srai>EXPDEX CRUISE SHIP SCHEDULE DINING REVIEWS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP SCHEDULES UNK 2006 *</pattern><template><think><srai>NOPX 455</srai></think><random><li><srai>EXPDEX CRUISE SHIP SCHEDULES UNK 2006 <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP SCHEDULES DINING REVIEWS *</pattern><template><think><srai>NOPX 838</srai></think><random><li><srai>EXPDEX CRUISE SHIP SCHEDULES DINING REVIEWS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP SEXUAL ASSAULT LAWYERS *</pattern><template><think><srai>NOPX 433</srai></think><random><li><srai>EXPDEX CRUISE SHIP SEXUAL ASSAULT LAWYERS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP TOUR WE LOVED *</pattern><template><think><srai>NOPX 426</srai></think><random><li><srai>EXPDEX CRUISE SHIP TOUR WE LOVED <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP TOURS LIMOSINES *</pattern><template><think><srai>NOPX 1465</srai></think><random><li><srai>EXPDEX CRUISE SHIP TOURS LIMOSINES <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP TOURS LIMOUSINES TRAVEL *</pattern><template><think><srai>NOPX 22060</srai></think><random><li><srai>EXPDEX CRUISE SHIP TOURS LIMOUSINES TRAVEL <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP TOURS TRAVEL INSURANCE *</pattern><template><think><srai>NOPX 7376</srai></think><random><li><srai>EXPDEX CRUISE SHIP TOURS TRAVEL INSURANCE <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP TURNED AWAY FROM *</pattern><template><think><srai>NOPX 866</srai></think><random><li><srai>EXPDEX CRUISE SHIP TURNED AWAY FROM <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP TURNS INTO ROUGH *</pattern><template><think><srai>NOPX 433</srai></think><random><li><srai>EXPDEX CRUISE SHIP TURNS INTO ROUGH <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP TYCOON CRUSADER KINGS *</pattern><template><think><srai>NOPX 903</srai></think><random><li><srai>EXPDEX CRUISE SHIP TYCOON CRUSADER KINGS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP VISIT SCHEDULE *</pattern><template><think><srai>NOPX 1040</srai></think><random><li><srai>EXPDEX CRUISE SHIP VISIT SCHEDULE <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP VISIT OUR CRUISE *</pattern><template><think><srai>NOPX 3714</srai></think><random><li><srai>EXPDEX CRUISE SHIP VISIT OUR CRUISE <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP WWW CRUISE *</pattern><template><think><srai>NOPX 414</srai></think><random><li><srai>EXPDEX CRUISE SHIP WWW CRUISE <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP AT DOCK *</pattern><template><think><srai>NOPX 1848</srai></think><random><li><srai>EXPDEX CRUISE SHIP AT DOCK <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP IN DRY DOCK *</pattern><template><think><srai>NOPX 912</srai></think><random><li><srai>EXPDEX CRUISE SHIP IN DRY DOCK <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP MURDER MYSTERY *</pattern><template><think><srai>NOPX 1009</srai></think><random><li><srai>EXPDEX CRUISE SHIP MURDER MYSTERY <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP QUEEN MARY 2 *</pattern><template><think><srai>NOPX 418</srai></think><random><li><srai>EXPDEX CRUISE SHIP QUEEN MARY 2 <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP CARRYING WESTERN TOURISTS *</pattern><template><think><srai>NOPX 703</srai></think><random><li><srai>EXPDEX CRUISE SHIP CARRYING WESTERN TOURISTS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP IN THE CARIBBEAN *</pattern><template><think><srai>NOPX 938</srai></think><random><li><srai>EXPDEX CRUISE SHIP IN THE CARIBBEAN <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP IN THE MIDDLE *</pattern><template><think><srai>NOPX 632</srai></think><random><li><srai>EXPDEX CRUISE SHIP IN THE MIDDLE <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP IN THE WORLD *</pattern><template><think><srai>NOPX 1507</srai></think><random><li><srai>EXPDEX CRUISE SHIP IN THE WORLD <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP OFF THE COAST *</pattern><template><think><srai>NOPX 673</srai></think><random><li><srai>EXPDEX CRUISE SHIP OFF THE COAST <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP WITH SUPERVISED PROGRAMS *</pattern><template><think><srai>NOPX 823</srai></think><random><li><srai>EXPDEX CRUISE SHIP WITH SUPERVISED PROGRAMS <star/></srai></li></random></template></category>
+<category><pattern>CRUISE SHIP RATINGS *</pattern><template><think><srai>NOPX 616</srai></think><random><li><srai>EXPDEX CRUISE SHIP RATINGS <star/></srai></li></random></template></category>
+</aiml>

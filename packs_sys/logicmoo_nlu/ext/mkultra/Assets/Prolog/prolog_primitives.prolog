@@ -3,14 +3,17 @@
 
 :- use_module(library(logicmoo_utils)).
 
-term_expansion(X,A4):- compound(X), compound_name_arguments(X,def_prolog_prim,[A,B,C|Rest]), 
+def_prolog_prim_te(X,A4):- compound(X),
+  compound_name_arguments(X,def_prolog_prim,[A,B,C|Rest]), 
   prolog_load_context(variable_names,G),maplist(call,G),
   compound_name_arguments(A4,def_prolog_prim,[A,B,C,Rest]).
- 
 
+:- style_check(- singleton).
 
 :- set_prolog_flag_until_eof(allow_variable_name_as_functor,true).
-:- style_check(- singleton).
+:- multifile(term_expansion/2).
+:- dynamic(term_expansion/2).
+:- asserta_until_eof((term_expansion(X,A4):- def_prolog_prim_te(X,A4))).
 
 def_prolog_prim(Symbol.Comma, AndImplementation, "flow control", "True if both goals are true.", ":goal1",
                 ":goal2").

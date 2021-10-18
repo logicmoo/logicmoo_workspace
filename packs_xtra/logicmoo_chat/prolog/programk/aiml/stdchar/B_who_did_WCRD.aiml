@@ -1,0 +1,437 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<aiml>
+
+<!-- bot B_Default.aiml (1454797) mp=-1: WHO DID * -->
+
+<!-- MINSEQ: mp=-1:  -->
+<category><pattern>EXPDEX WHO DID *</pattern><template>   <random>      <li>George Washington.</li>      <li><bot name="name"/> <think><srai>DOTRICK HAPPY</srai></think></li>      <li>Pablo Picasso.</li>     </random>    </template></category>
+<category><pattern>WHO DID *</pattern><template><srai>EXPDEX WHO DID <star/></srai></template></category>
+<category><pattern>WHO DID YOU *</pattern><template><think><srai>NOPX 1316</srai></think><random><li><srai>EXPDEX WHO DID YOU <star/></srai></li></random></template></category>
+<category><pattern>WHO DID YOU *</pattern><template><think><srai>NOPX 191</srai></think><random><li><srai>EXPDEX WHO DID YOU <star/></srai></li></random></template></category>
+<category><pattern>WHO DID YOU *</pattern><template><think><srai>NOPX 3427</srai></think><random><li><srai>EXPDEX WHO DID YOU <star/></srai></li></random></template></category>
+<category><pattern>WHO DID YOU *</pattern><template><think><srai>NOPX 52253</srai></think><random><li><srai>EXPDEX WHO DID YOU <star/></srai></li></random></template></category>
+<category><pattern>WHO DID YOU *</pattern><template><think><srai>NOPX 108</srai></think><random><li><srai>EXPDEX WHO DID YOU <star/></srai></li></random></template></category>
+<category><pattern>WHO DID WITH *</pattern><template><think><srai>NOPX 784</srai></think><random><li><srai>EXPDEX WHO DID WITH <star/></srai></li></random></template></category>
+<category><pattern>WHO DID YOU *</pattern><template><think><srai>NOPX 24654</srai></think><random><li><srai>EXPDEX WHO DID YOU <star/></srai></li></random></template></category>
+<category><pattern>WHO DID IT *</pattern><template><think><srai>NOPX 1934</srai></think><random><li><srai>EXPDEX WHO DID IT <star/></srai></li></random></template></category>
+<category><pattern>WHO DID NOT *</pattern><template><think><srai>NOPX 8218</srai></think><random><li><srai>EXPDEX WHO DID NOT <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THAT *</pattern><template><think><srai>NOPX 481</srai></think><random><li><srai>EXPDEX WHO DID THAT <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THE *</pattern><template><think><srai>NOPX 1317</srai></think><random><li><srai>EXPDEX WHO DID THE <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THIS *</pattern><template><think><srai>NOPX 1076</srai></think><random><li><srai>EXPDEX WHO DID THIS <star/></srai></li></random></template></category>
+<category><pattern>WHO DID YOU *</pattern><template><think><srai>NOPX 1316</srai></think><random><li><srai>EXPDEX WHO DID YOU <star/></srai></li></random></template></category>
+<category><pattern>WHO DID NOT *</pattern><template><think><srai>NOPX 1008</srai></think><random><li><srai>EXPDEX WHO DID NOT <star/></srai></li></random></template></category>
+<category><pattern>WHO DID KNOW *</pattern><template><think><srai>NOPX 488</srai></think><random><li><srai>EXPDEX WHO DID KNOW <star/></srai></li></random></template></category>
+<category><pattern>WHO DID IT *</pattern><template><think><srai>NOPX 7592</srai></think><random><li><srai>EXPDEX WHO DID IT <star/></srai></li></random></template></category>
+<category><pattern>WHO DID JACK *</pattern><template><think><srai>NOPX 831</srai></think><random><li><srai>EXPDEX WHO DID JACK <star/></srai></li></random></template></category>
+<category><pattern>WHO DID NOT *</pattern><template><think><srai>NOPX 9419</srai></think><random><li><srai>EXPDEX WHO DID NOT <star/></srai></li></random></template></category>
+<category><pattern>WHO DID PORN *</pattern><template><think><srai>NOPX 448</srai></think><random><li><srai>EXPDEX WHO DID PORN <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THAT *</pattern><template><think><srai>NOPX 685</srai></think><random><li><srai>EXPDEX WHO DID THAT <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THE *</pattern><template><think><srai>NOPX 536</srai></think><random><li><srai>EXPDEX WHO DID THE <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THIS *</pattern><template><think><srai>NOPX 1069</srai></think><random><li><srai>EXPDEX WHO DID THIS <star/></srai></li></random></template></category>
+<category><pattern>WHO DID WHAT *</pattern><template><think><srai>NOPX 1965</srai></think><random><li><srai>EXPDEX WHO DID WHAT <star/></srai></li></random></template></category>
+<category><pattern>WHO DID YOU *</pattern><template><think><srai>NOPX 3427</srai></think><random><li><srai>EXPDEX WHO DID YOU <star/></srai></li></random></template></category>
+<category><pattern>WHO DID AND *</pattern><template><think><srai>NOPX 637</srai></think><random><li><srai>EXPDEX WHO DID AND <star/></srai></li></random></template></category>
+<category><pattern>WHO DID NOT *</pattern><template><think><srai>NOPX 13811</srai></think><random><li><srai>EXPDEX WHO DID NOT <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THE *</pattern><template><think><srai>NOPX 5171</srai></think><random><li><srai>EXPDEX WHO DID THE <star/></srai></li></random></template></category>
+<category><pattern>WHO DID GOD *</pattern><template><think><srai>NOPX 516</srai></think><random><li><srai>EXPDEX WHO DID GOD <star/></srai></li></random></template></category>
+<category><pattern>WHO DID JESUS *</pattern><template><think><srai>NOPX 1195</srai></think><random><li><srai>EXPDEX WHO DID JESUS <star/></srai></li></random></template></category>
+<category><pattern>WHO DID JOHN *</pattern><template><think><srai>NOPX 1104</srai></think><random><li><srai>EXPDEX WHO DID JOHN <star/></srai></li></random></template></category>
+<category><pattern>WHO DID ALL *</pattern><template><think><srai>NOPX 960</srai></think><random><li><srai>EXPDEX WHO DID ALL <star/></srai></li></random></template></category>
+<category><pattern>WHO DID HE *</pattern><template><think><srai>NOPX 7112</srai></think><random><li><srai>EXPDEX WHO DID HE <star/></srai></li></random></template></category>
+<category><pattern>WHO DID IT *</pattern><template><think><srai>NOPX 25133</srai></think><random><li><srai>EXPDEX WHO DID IT <star/></srai></li></random></template></category>
+<category><pattern>WHO DID NO *</pattern><template><think><srai>NOPX 1375</srai></think><random><li><srai>EXPDEX WHO DID NO <star/></srai></li></random></template></category>
+<category><pattern>WHO DID NOT *</pattern><template><think><srai>NOPX 20076</srai></think><random><li><srai>EXPDEX WHO DID NOT <star/></srai></li></random></template></category>
+<category><pattern>WHO DID SHE *</pattern><template><think><srai>NOPX 2694</srai></think><random><li><srai>EXPDEX WHO DID SHE <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THAT *</pattern><template><think><srai>NOPX 5423</srai></think><random><li><srai>EXPDEX WHO DID THAT <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THE *</pattern><template><think><srai>NOPX 19899</srai></think><random><li><srai>EXPDEX WHO DID THE <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THEIR *</pattern><template><think><srai>NOPX 631</srai></think><random><li><srai>EXPDEX WHO DID THEIR <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THESE *</pattern><template><think><srai>NOPX 768</srai></think><random><li><srai>EXPDEX WHO DID THESE <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THEY *</pattern><template><think><srai>NOPX 6123</srai></think><random><li><srai>EXPDEX WHO DID THEY <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THIS *</pattern><template><think><srai>NOPX 11999</srai></think><random><li><srai>EXPDEX WHO DID THIS <star/></srai></li></random></template></category>
+<category><pattern>WHO DID WE *</pattern><template><think><srai>NOPX 2247</srai></think><random><li><srai>EXPDEX WHO DID WE <star/></srai></li></random></template></category>
+<category><pattern>WHO DID WHAT *</pattern><template><think><srai>NOPX 5008</srai></think><random><li><srai>EXPDEX WHO DID WHAT <star/></srai></li></random></template></category>
+<category><pattern>WHO DID YOU *</pattern><template><think><srai>NOPX 52253</srai></think><random><li><srai>EXPDEX WHO DID YOU <star/></srai></li></random></template></category>
+<category><pattern>WHO DID YOUR *</pattern><template><think><srai>NOPX 2039</srai></think><random><li><srai>EXPDEX WHO DID YOUR <star/></srai></li></random></template></category>
+<category><pattern>WHO DID HAVE *</pattern><template><think><srai>NOPX 487</srai></think><random><li><srai>EXPDEX WHO DID HAVE <star/></srai></li></random></template></category>
+<category><pattern>WHO DID UNK *</pattern><template><think><srai>NOPX 2627</srai></think><random><li><srai>EXPDEX WHO DID UNK <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THE *</pattern><template><think><srai>NOPX 1157</srai></think><random><li><srai>EXPDEX WHO DID THE <star/></srai></li></random></template></category>
+<category><pattern>WHO DID ACCEPT *</pattern><template><think><srai>NOPX 968</srai></think><random><li><srai>EXPDEX WHO DID ACCEPT <star/></srai></li></random></template></category>
+<category><pattern>WHO DID AGREE *</pattern><template><think><srai>NOPX 594</srai></think><random><li><srai>EXPDEX WHO DID AGREE <star/></srai></li></random></template></category>
+<category><pattern>WHO DID ALL *</pattern><template><think><srai>NOPX 18535</srai></think><random><li><srai>EXPDEX WHO DID ALL <star/></srai></li></random></template></category>
+<category><pattern>WHO DID AN *</pattern><template><think><srai>NOPX 13203</srai></think><random><li><srai>EXPDEX WHO DID AN <star/></srai></li></random></template></category>
+<category><pattern>WHO DID ANSWER *</pattern><template><think><srai>NOPX 976</srai></think><random><li><srai>EXPDEX WHO DID ANSWER <star/></srai></li></random></template></category>
+<category><pattern>WHO DID ANY *</pattern><template><think><srai>NOPX 2050</srai></think><random><li><srai>EXPDEX WHO DID ANY <star/></srai></li></random></template></category>
+<category><pattern>WHO DID ANYTHING *</pattern><template><think><srai>NOPX 2075</srai></think><random><li><srai>EXPDEX WHO DID ANYTHING <star/></srai></li></random></template></category>
+<category><pattern>WHO DID APPEAR *</pattern><template><think><srai>NOPX 944</srai></think><random><li><srai>EXPDEX WHO DID APPEAR <star/></srai></li></random></template></category>
+<category><pattern>WHO DID APPLY *</pattern><template><think><srai>NOPX 722</srai></think><random><li><srai>EXPDEX WHO DID APPLY <star/></srai></li></random></template></category>
+<category><pattern>WHO DID ARRIVE *</pattern><template><think><srai>NOPX 463</srai></think><random><li><srai>EXPDEX WHO DID ARRIVE <star/></srai></li></random></template></category>
+<category><pattern>WHO DID AS *</pattern><template><think><srai>NOPX 3272</srai></think><random><li><srai>EXPDEX WHO DID AS <star/></srai></li></random></template></category>
+<category><pattern>WHO DID ASK *</pattern><template><think><srai>NOPX 750</srai></think><random><li><srai>EXPDEX WHO DID ASK <star/></srai></li></random></template></category>
+<category><pattern>WHO DID AT *</pattern><template><think><srai>NOPX 843</srai></think><random><li><srai>EXPDEX WHO DID AT <star/></srai></li></random></template></category>
+<category><pattern>WHO DID ATTEMPT *</pattern><template><think><srai>NOPX 612</srai></think><random><li><srai>EXPDEX WHO DID ATTEMPT <star/></srai></li></random></template></category>
+<category><pattern>WHO DID ATTEND *</pattern><template><think><srai>NOPX 6483</srai></think><random><li><srai>EXPDEX WHO DID ATTEND <star/></srai></li></random></template></category>
+<category><pattern>WHO DID BAD *</pattern><template><think><srai>NOPX 1000</srai></think><random><li><srai>EXPDEX WHO DID BAD <star/></srai></li></random></template></category>
+<category><pattern>WHO DID BATTLE *</pattern><template><think><srai>NOPX 429</srai></think><random><li><srai>EXPDEX WHO DID BATTLE <star/></srai></li></random></template></category>
+<category><pattern>WHO DID BELIEVE *</pattern><template><think><srai>NOPX 1752</srai></think><random><li><srai>EXPDEX WHO DID BELIEVE <star/></srai></li></random></template></category>
+<category><pattern>WHO DID BOTH *</pattern><template><think><srai>NOPX 1198</srai></think><random><li><srai>EXPDEX WHO DID BOTH <star/></srai></li></random></template></category>
+<category><pattern>WHO DID BRING *</pattern><template><think><srai>NOPX 440</srai></think><random><li><srai>EXPDEX WHO DID BRING <star/></srai></li></random></template></category>
+<category><pattern>WHO DID BUSINESS *</pattern><template><think><srai>NOPX 3009</srai></think><random><li><srai>EXPDEX WHO DID BUSINESS <star/></srai></li></random></template></category>
+<category><pattern>WHO DID BUY *</pattern><template><think><srai>NOPX 1232</srai></think><random><li><srai>EXPDEX WHO DID BUY <star/></srai></li></random></template></category>
+<category><pattern>WHO DID CALL *</pattern><template><think><srai>NOPX 772</srai></think><random><li><srai>EXPDEX WHO DID CALL <star/></srai></li></random></template></category>
+<category><pattern>WHO DID CARE *</pattern><template><think><srai>NOPX 738</srai></think><random><li><srai>EXPDEX WHO DID CARE <star/></srai></li></random></template></category>
+<category><pattern>WHO DID CHANGE *</pattern><template><think><srai>NOPX 687</srai></think><random><li><srai>EXPDEX WHO DID CHANGE <star/></srai></li></random></template></category>
+<category><pattern>WHO DID CHOOSE *</pattern><template><think><srai>NOPX 1023</srai></think><random><li><srai>EXPDEX WHO DID CHOOSE <star/></srai></li></random></template></category>
+<category><pattern>WHO DID COMMENT *</pattern><template><think><srai>NOPX 558</srai></think><random><li><srai>EXPDEX WHO DID COMMENT <star/></srai></li></random></template></category>
+<category><pattern>WHO DID COMMIT *</pattern><template><think><srai>NOPX 537</srai></think><random><li><srai>EXPDEX WHO DID COMMIT <star/></srai></li></random></template></category>
+<category><pattern>WHO DID COMPLETE *</pattern><template><think><srai>NOPX 1222</srai></think><random><li><srai>EXPDEX WHO DID COMPLETE <star/></srai></li></random></template></category>
+<category><pattern>WHO DID CONTRIBUTE *</pattern><template><think><srai>NOPX 602</srai></think><random><li><srai>EXPDEX WHO DID CONTRIBUTE <star/></srai></li></random></template></category>
+<category><pattern>WHO DID CREATE *</pattern><template><think><srai>NOPX 467</srai></think><random><li><srai>EXPDEX WHO DID CREATE <star/></srai></li></random></template></category>
+<category><pattern>WHO DID DEVELOP *</pattern><template><think><srai>NOPX 788</srai></think><random><li><srai>EXPDEX WHO DID DEVELOP <star/></srai></li></random></template></category>
+<category><pattern>WHO DID DIE *</pattern><template><think><srai>NOPX 938</srai></think><random><li><srai>EXPDEX WHO DID DIE <star/></srai></li></random></template></category>
+<category><pattern>WHO DID DO *</pattern><template><think><srai>NOPX 1762</srai></think><random><li><srai>EXPDEX WHO DID DO <star/></srai></li></random></template></category>
+<category><pattern>WHO DID DRINK *</pattern><template><think><srai>NOPX 423</srai></think><random><li><srai>EXPDEX WHO DID DRINK <star/></srai></li></random></template></category>
+<category><pattern>WHO DID DRUGS *</pattern><template><think><srai>NOPX 749</srai></think><random><li><srai>EXPDEX WHO DID DRUGS <star/></srai></li></random></template></category>
+<category><pattern>WHO DID EAT *</pattern><template><think><srai>NOPX 1380</srai></think><random><li><srai>EXPDEX WHO DID EAT <star/></srai></li></random></template></category>
+<category><pattern>WHO DID EITHER *</pattern><template><think><srai>NOPX 408</srai></think><random><li><srai>EXPDEX WHO DID EITHER <star/></srai></li></random></template></category>
+<category><pattern>WHO DID ENJOY *</pattern><template><think><srai>NOPX 477</srai></think><random><li><srai>EXPDEX WHO DID ENJOY <star/></srai></li></random></template></category>
+<category><pattern>WHO DID ENTER *</pattern><template><think><srai>NOPX 746</srai></think><random><li><srai>EXPDEX WHO DID ENTER <star/></srai></li></random></template></category>
+<category><pattern>WHO DID EVERYTHING *</pattern><template><think><srai>NOPX 8838</srai></think><random><li><srai>EXPDEX WHO DID EVERYTHING <star/></srai></li></random></template></category>
+<category><pattern>WHO DID EVIL *</pattern><template><think><srai>NOPX 1054</srai></think><random><li><srai>EXPDEX WHO DID EVIL <star/></srai></li></random></template></category>
+<category><pattern>WHO DID EXCELLENT *</pattern><template><think><srai>NOPX 445</srai></think><random><li><srai>EXPDEX WHO DID EXCELLENT <star/></srai></li></random></template></category>
+<category><pattern>WHO DID EXPERIENCE *</pattern><template><think><srai>NOPX 806</srai></think><random><li><srai>EXPDEX WHO DID EXPERIENCE <star/></srai></li></random></template></category>
+<category><pattern>WHO DID EXPRESS *</pattern><template><think><srai>NOPX 552</srai></think><random><li><srai>EXPDEX WHO DID EXPRESS <star/></srai></li></random></template></category>
+<category><pattern>WHO DID EXTENSIVE *</pattern><template><think><srai>NOPX 884</srai></think><random><li><srai>EXPDEX WHO DID EXTENSIVE <star/></srai></li></random></template></category>
+<category><pattern>WHO DID EXTRAORDINARY *</pattern><template><think><srai>NOPX 752</srai></think><random><li><srai>EXPDEX WHO DID EXTRAORDINARY <star/></srai></li></random></template></category>
+<category><pattern>WHO DID FEEL *</pattern><template><think><srai>NOPX 548</srai></think><random><li><srai>EXPDEX WHO DID FEEL <star/></srai></li></random></template></category>
+<category><pattern>WHO DID FIGHT *</pattern><template><think><srai>NOPX 484</srai></think><random><li><srai>EXPDEX WHO DID FIGHT <star/></srai></li></random></template></category>
+<category><pattern>WHO DID FIND *</pattern><template><think><srai>NOPX 1450</srai></think><random><li><srai>EXPDEX WHO DID FIND <star/></srai></li></random></template></category>
+<category><pattern>WHO DID FOLLOW *</pattern><template><think><srai>NOPX 551</srai></think><random><li><srai>EXPDEX WHO DID FOLLOW <star/></srai></li></random></template></category>
+<category><pattern>WHO DID FOR *</pattern><template><think><srai>NOPX 1016</srai></think><random><li><srai>EXPDEX WHO DID FOR <star/></srai></li></random></template></category>
+<category><pattern>WHO DID GET *</pattern><template><think><srai>NOPX 7648</srai></think><random><li><srai>EXPDEX WHO DID GET <star/></srai></li></random></template></category>
+<category><pattern>WHO DID GIVE *</pattern><template><think><srai>NOPX 2001</srai></think><random><li><srai>EXPDEX WHO DID GIVE <star/></srai></li></random></template></category>
+<category><pattern>WHO DID GO *</pattern><template><think><srai>NOPX 4389</srai></think><random><li><srai>EXPDEX WHO DID GO <star/></srai></li></random></template></category>
+<category><pattern>WHO DID GOOD *</pattern><template><think><srai>NOPX 2584</srai></think><random><li><srai>EXPDEX WHO DID GOOD <star/></srai></li></random></template></category>
+<category><pattern>WHO DID GRADUATE *</pattern><template><think><srai>NOPX 686</srai></think><random><li><srai>EXPDEX WHO DID GRADUATE <star/></srai></li></random></template></category>
+<category><pattern>WHO DID GREAT *</pattern><template><think><srai>NOPX 2074</srai></think><random><li><srai>EXPDEX WHO DID GREAT <star/></srai></li></random></template></category>
+<category><pattern>WHO DID GROW *</pattern><template><think><srai>NOPX 463</srai></think><random><li><srai>EXPDEX WHO DID GROW <star/></srai></li></random></template></category>
+<category><pattern>WHO DID HAVE *</pattern><template><think><srai>NOPX 15354</srai></think><random><li><srai>EXPDEX WHO DID HAVE <star/></srai></li></random></template></category>
+<category><pattern>WHO DID HE *</pattern><template><think><srai>NOPX 5310</srai></think><random><li><srai>EXPDEX WHO DID HE <star/></srai></li></random></template></category>
+<category><pattern>WHO DID HEAR *</pattern><template><think><srai>NOPX 694</srai></think><random><li><srai>EXPDEX WHO DID HEAR <star/></srai></li></random></template></category>
+<category><pattern>WHO DID HELP *</pattern><template><think><srai>NOPX 897</srai></think><random><li><srai>EXPDEX WHO DID HELP <star/></srai></li></random></template></category>
+<category><pattern>WHO DID HER *</pattern><template><think><srai>NOPX 6141</srai></think><random><li><srai>EXPDEX WHO DID HER <star/></srai></li></random></template></category>
+<category><pattern>WHO DID HIM *</pattern><template><think><srai>NOPX 1777</srai></think><random><li><srai>EXPDEX WHO DID HIM <star/></srai></li></random></template></category>
+<category><pattern>WHO DID HINDER *</pattern><template><think><srai>NOPX 694</srai></think><random><li><srai>EXPDEX WHO DID HINDER <star/></srai></li></random></template></category>
+<category><pattern>WHO DID HIS *</pattern><template><think><srai>NOPX 15621</srai></think><random><li><srai>EXPDEX WHO DID HIS <star/></srai></li></random></template></category>
+<category><pattern>WHO DID IN *</pattern><template><think><srai>NOPX 3393</srai></think><random><li><srai>EXPDEX WHO DID IN <star/></srai></li></random></template></category>
+<category><pattern>WHO DID IT *</pattern><template><think><srai>NOPX 150407</srai></think><random><li><srai>EXPDEX WHO DID IT <star/></srai></li></random></template></category>
+<category><pattern>WHO DID JOIN *</pattern><template><think><srai>NOPX 1011</srai></think><random><li><srai>EXPDEX WHO DID JOIN <star/></srai></li></random></template></category>
+<category><pattern>WHO DID KILL *</pattern><template><think><srai>NOPX 953</srai></think><random><li><srai>EXPDEX WHO DID KILL <star/></srai></li></random></template></category>
+<category><pattern>WHO DID KNOW *</pattern><template><think><srai>NOPX 5791</srai></think><random><li><srai>EXPDEX WHO DID KNOW <star/></srai></li></random></template></category>
+<category><pattern>WHO DID LEAVE *</pattern><template><think><srai>NOPX 982</srai></think><random><li><srai>EXPDEX WHO DID LEAVE <star/></srai></li></random></template></category>
+<category><pattern>WHO DID LIKE *</pattern><template><think><srai>NOPX 1101</srai></think><random><li><srai>EXPDEX WHO DID LIKE <star/></srai></li></random></template></category>
+<category><pattern>WHO DID LITTLE *</pattern><template><think><srai>NOPX 2594</srai></think><random><li><srai>EXPDEX WHO DID LITTLE <star/></srai></li></random></template></category>
+<category><pattern>WHO DID LIVE *</pattern><template><think><srai>NOPX 1215</srai></think><random><li><srai>EXPDEX WHO DID LIVE <star/></srai></li></random></template></category>
+<category><pattern>WHO DID LOOK *</pattern><template><think><srai>NOPX 1072</srai></think><random><li><srai>EXPDEX WHO DID LOOK <star/></srai></li></random></template></category>
+<category><pattern>WHO DID LOSE *</pattern><template><think><srai>NOPX 681</srai></think><random><li><srai>EXPDEX WHO DID LOSE <star/></srai></li></random></template></category>
+<category><pattern>WHO DID LOTS *</pattern><template><think><srai>NOPX 486</srai></think><random><li><srai>EXPDEX WHO DID LOTS <star/></srai></li></random></template></category>
+<category><pattern>WHO DID LOVE *</pattern><template><think><srai>NOPX 452</srai></think><random><li><srai>EXPDEX WHO DID LOVE <star/></srai></li></random></template></category>
+<category><pattern>WHO DID MAKE *</pattern><template><think><srai>NOPX 6382</srai></think><random><li><srai>EXPDEX WHO DID MAKE <star/></srai></li></random></template></category>
+<category><pattern>WHO DID MANAGE *</pattern><template><think><srai>NOPX 2426</srai></think><random><li><srai>EXPDEX WHO DID MANAGE <star/></srai></li></random></template></category>
+<category><pattern>WHO DID MANY *</pattern><template><think><srai>NOPX 1466</srai></think><random><li><srai>EXPDEX WHO DID MANY <star/></srai></li></random></template></category>
+<category><pattern>WHO DID MARRY *</pattern><template><think><srai>NOPX 430</srai></think><random><li><srai>EXPDEX WHO DID MARRY <star/></srai></li></random></template></category>
+<category><pattern>WHO DID ME *</pattern><template><think><srai>NOPX 1605</srai></think><random><li><srai>EXPDEX WHO DID ME <star/></srai></li></random></template></category>
+<category><pattern>WHO DID MEET *</pattern><template><think><srai>NOPX 664</srai></think><random><li><srai>EXPDEX WHO DID MEET <star/></srai></li></random></template></category>
+<category><pattern>WHO DID MINE *</pattern><template><think><srai>NOPX 426</srai></think><random><li><srai>EXPDEX WHO DID MINE <star/></srai></li></random></template></category>
+<category><pattern>WHO DID MOVE *</pattern><template><think><srai>NOPX 627</srai></think><random><li><srai>EXPDEX WHO DID MOVE <star/></srai></li></random></template></category>
+<category><pattern>WHO DID MY *</pattern><template><think><srai>NOPX 6505</srai></think><random><li><srai>EXPDEX WHO DID MY <star/></srai></li></random></template></category>
+<category><pattern>WHO DID NEED *</pattern><template><think><srai>NOPX 419</srai></think><random><li><srai>EXPDEX WHO DID NEED <star/></srai></li></random></template></category>
+<category><pattern>WHO DID NO *</pattern><template><think><srai>NOPX 3961</srai></think><random><li><srai>EXPDEX WHO DID NO <star/></srai></li></random></template></category>
+<category><pattern>WHO DID NOTHING *</pattern><template><think><srai>NOPX 19539</srai></think><random><li><srai>EXPDEX WHO DID NOTHING <star/></srai></li></random></template></category>
+<category><pattern>WHO DID NOTICE *</pattern><template><think><srai>NOPX 522</srai></think><random><li><srai>EXPDEX WHO DID NOTICE <star/></srai></li></random></template></category>
+<category><pattern>WHO DID ODD *</pattern><template><think><srai>NOPX 633</srai></think><random><li><srai>EXPDEX WHO DID ODD <star/></srai></li></random></template></category>
+<category><pattern>WHO DID OFFER *</pattern><template><think><srai>NOPX 561</srai></think><random><li><srai>EXPDEX WHO DID OFFER <star/></srai></li></random></template></category>
+<category><pattern>WHO DID OUR *</pattern><template><think><srai>NOPX 2265</srai></think><random><li><srai>EXPDEX WHO DID OUR <star/></srai></li></random></template></category>
+<category><pattern>WHO DID OWN *</pattern><template><think><srai>NOPX 560</srai></think><random><li><srai>EXPDEX WHO DID OWN <star/></srai></li></random></template></category>
+<category><pattern>WHO DID PARTICIPATE *</pattern><template><think><srai>NOPX 2856</srai></think><random><li><srai>EXPDEX WHO DID PARTICIPATE <star/></srai></li></random></template></category>
+<category><pattern>WHO DID PASS *</pattern><template><think><srai>NOPX 724</srai></think><random><li><srai>EXPDEX WHO DID PASS <star/></srai></li></random></template></category>
+<category><pattern>WHO DID PAY *</pattern><template><think><srai>NOPX 994</srai></think><random><li><srai>EXPDEX WHO DID PAY <star/></srai></li></random></template></category>
+<category><pattern>WHO DID PIONEERING *</pattern><template><think><srai>NOPX 720</srai></think><random><li><srai>EXPDEX WHO DID PIONEERING <star/></srai></li></random></template></category>
+<category><pattern>WHO DID PLAY *</pattern><template><think><srai>NOPX 1281</srai></think><random><li><srai>EXPDEX WHO DID PLAY <star/></srai></li></random></template></category>
+<category><pattern>WHO DID POST *</pattern><template><think><srai>NOPX 452</srai></think><random><li><srai>EXPDEX WHO DID POST <star/></srai></li></random></template></category>
+<category><pattern>WHO DID PROVIDE *</pattern><template><think><srai>NOPX 861</srai></think><random><li><srai>EXPDEX WHO DID PROVIDE <star/></srai></li></random></template></category>
+<category><pattern>WHO DID QUALIFY *</pattern><template><think><srai>NOPX 430</srai></think><random><li><srai>EXPDEX WHO DID QUALIFY <star/></srai></li></random></template></category>
+<category><pattern>WHO DID REACH *</pattern><template><think><srai>NOPX 413</srai></think><random><li><srai>EXPDEX WHO DID REACH <star/></srai></li></random></template></category>
+<category><pattern>WHO DID RECEIVE *</pattern><template><think><srai>NOPX 4584</srai></think><random><li><srai>EXPDEX WHO DID RECEIVE <star/></srai></li></random></template></category>
+<category><pattern>WHO DID REGISTER *</pattern><template><think><srai>NOPX 404</srai></think><random><li><srai>EXPDEX WHO DID REGISTER <star/></srai></li></random></template></category>
+<category><pattern>WHO DID REPLY *</pattern><template><think><srai>NOPX 626</srai></think><random><li><srai>EXPDEX WHO DID REPLY <star/></srai></li></random></template></category>
+<category><pattern>WHO DID REPORT *</pattern><template><think><srai>NOPX 1924</srai></think><random><li><srai>EXPDEX WHO DID REPORT <star/></srai></li></random></template></category>
+<category><pattern>WHO DID RESEARCH *</pattern><template><think><srai>NOPX 2349</srai></think><random><li><srai>EXPDEX WHO DID RESEARCH <star/></srai></li></random></template></category>
+<category><pattern>WHO DID RESPOND *</pattern><template><think><srai>NOPX 3764</srai></think><random><li><srai>EXPDEX WHO DID RESPOND <star/></srai></li></random></template></category>
+<category><pattern>WHO DID RETURN *</pattern><template><think><srai>NOPX 1540</srai></think><random><li><srai>EXPDEX WHO DID RETURN <star/></srai></li></random></template></category>
+<category><pattern>WHO DID SAY *</pattern><template><think><srai>NOPX 1257</srai></think><random><li><srai>EXPDEX WHO DID SAY <star/></srai></li></random></template></category>
+<category><pattern>WHO DID SEE *</pattern><template><think><srai>NOPX 3111</srai></think><random><li><srai>EXPDEX WHO DID SEE <star/></srai></li></random></template></category>
+<category><pattern>WHO DID SEEK *</pattern><template><think><srai>NOPX 827</srai></think><random><li><srai>EXPDEX WHO DID SEEK <star/></srai></li></random></template></category>
+<category><pattern>WHO DID SEEM *</pattern><template><think><srai>NOPX 542</srai></think><random><li><srai>EXPDEX WHO DID SEEM <star/></srai></li></random></template></category>
+<category><pattern>WHO DID SEND *</pattern><template><think><srai>NOPX 780</srai></think><random><li><srai>EXPDEX WHO DID SEND <star/></srai></li></random></template></category>
+<category><pattern>WHO DID SERVE *</pattern><template><think><srai>NOPX 1614</srai></think><random><li><srai>EXPDEX WHO DID SERVE <star/></srai></li></random></template></category>
+<category><pattern>WHO DID SEVERAL *</pattern><template><think><srai>NOPX 420</srai></think><random><li><srai>EXPDEX WHO DID SEVERAL <star/></srai></li></random></template></category>
+<category><pattern>WHO DID SHE *</pattern><template><think><srai>NOPX 1756</srai></think><random><li><srai>EXPDEX WHO DID SHE <star/></srai></li></random></template></category>
+<category><pattern>WHO DID SHOW *</pattern><template><think><srai>NOPX 2948</srai></think><random><li><srai>EXPDEX WHO DID SHOW <star/></srai></li></random></template></category>
+<category><pattern>WHO DID SIGN *</pattern><template><think><srai>NOPX 1327</srai></think><random><li><srai>EXPDEX WHO DID SIGN <star/></srai></li></random></template></category>
+<category><pattern>WHO DID SIMILAR *</pattern><template><think><srai>NOPX 639</srai></think><random><li><srai>EXPDEX WHO DID SIMILAR <star/></srai></li></random></template></category>
+<category><pattern>WHO DID SIN *</pattern><template><think><srai>NOPX 1540</srai></think><random><li><srai>EXPDEX WHO DID SIN <star/></srai></li></random></template></category>
+<category><pattern>WHO DID SMOKE *</pattern><template><think><srai>NOPX 468</srai></think><random><li><srai>EXPDEX WHO DID SMOKE <star/></srai></li></random></template></category>
+<category><pattern>WHO DID SOME *</pattern><template><think><srai>NOPX 10665</srai></think><random><li><srai>EXPDEX WHO DID SOME <star/></srai></li></random></template></category>
+<category><pattern>WHO DID SOMETHING *</pattern><template><think><srai>NOPX 8440</srai></think><random><li><srai>EXPDEX WHO DID SOMETHING <star/></srai></li></random></template></category>
+<category><pattern>WHO DID SPEAK *</pattern><template><think><srai>NOPX 1672</srai></think><random><li><srai>EXPDEX WHO DID SPEAK <star/></srai></li></random></template></category>
+<category><pattern>WHO DID STAND *</pattern><template><think><srai>NOPX 447</srai></think><random><li><srai>EXPDEX WHO DID STAND <star/></srai></li></random></template></category>
+<category><pattern>WHO DID START *</pattern><template><think><srai>NOPX 423</srai></think><random><li><srai>EXPDEX WHO DID START <star/></srai></li></random></template></category>
+<category><pattern>WHO DID STAY *</pattern><template><think><srai>NOPX 792</srai></think><random><li><srai>EXPDEX WHO DID STAY <star/></srai></li></random></template></category>
+<category><pattern>WHO DID STUFF *</pattern><template><think><srai>NOPX 459</srai></think><random><li><srai>EXPDEX WHO DID STUFF <star/></srai></li></random></template></category>
+<category><pattern>WHO DID SUBMIT *</pattern><template><think><srai>NOPX 434</srai></think><random><li><srai>EXPDEX WHO DID SUBMIT <star/></srai></li></random></template></category>
+<category><pattern>WHO DID SUCCEED *</pattern><template><think><srai>NOPX 443</srai></think><random><li><srai>EXPDEX WHO DID SUCCEED <star/></srai></li></random></template></category>
+<category><pattern>WHO DID SUCH *</pattern><template><think><srai>NOPX 7319</srai></think><random><li><srai>EXPDEX WHO DID SUCH <star/></srai></li></random></template></category>
+<category><pattern>WHO DID SUFFER *</pattern><template><think><srai>NOPX 554</srai></think><random><li><srai>EXPDEX WHO DID SUFFER <star/></srai></li></random></template></category>
+<category><pattern>WHO DID SUPPORT *</pattern><template><think><srai>NOPX 1091</srai></think><random><li><srai>EXPDEX WHO DID SUPPORT <star/></srai></li></random></template></category>
+<category><pattern>WHO DID SURVIVE *</pattern><template><think><srai>NOPX 1759</srai></think><random><li><srai>EXPDEX WHO DID SURVIVE <star/></srai></li></random></template></category>
+<category><pattern>WHO DID TAKE *</pattern><template><think><srai>NOPX 4874</srai></think><random><li><srai>EXPDEX WHO DID TAKE <star/></srai></li></random></template></category>
+<category><pattern>WHO DID TALK *</pattern><template><think><srai>NOPX 700</srai></think><random><li><srai>EXPDEX WHO DID TALK <star/></srai></li></random></template></category>
+<category><pattern>WHO DID TELL *</pattern><template><think><srai>NOPX 460</srai></think><random><li><srai>EXPDEX WHO DID TELL <star/></srai></li></random></template></category>
+<category><pattern>WHO DID TESTIFY *</pattern><template><think><srai>NOPX 715</srai></think><random><li><srai>EXPDEX WHO DID TESTIFY <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THAT *</pattern><template><think><srai>NOPX 34795</srai></think><random><li><srai>EXPDEX WHO DID THAT <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THE *</pattern><template><think><srai>NOPX 207676</srai></think><random><li><srai>EXPDEX WHO DID THE <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THEIR *</pattern><template><think><srai>NOPX 13607</srai></think><random><li><srai>EXPDEX WHO DID THEIR <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THEM *</pattern><template><think><srai>NOPX 4667</srai></think><random><li><srai>EXPDEX WHO DID THEM <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THESE *</pattern><template><think><srai>NOPX 3835</srai></think><random><li><srai>EXPDEX WHO DID THESE <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THEY *</pattern><template><think><srai>NOPX 5368</srai></think><random><li><srai>EXPDEX WHO DID THEY <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THINGS *</pattern><template><think><srai>NOPX 3414</srai></think><random><li><srai>EXPDEX WHO DID THINGS <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THINK *</pattern><template><think><srai>NOPX 950</srai></think><random><li><srai>EXPDEX WHO DID THINK <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THIS *</pattern><template><think><srai>NOPX 80419</srai></think><random><li><srai>EXPDEX WHO DID THIS <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THOSE *</pattern><template><think><srai>NOPX 2668</srai></think><random><li><srai>EXPDEX WHO DID THOSE <star/></srai></li></random></template></category>
+<category><pattern>WHO DID TIME *</pattern><template><think><srai>NOPX 1126</srai></think><random><li><srai>EXPDEX WHO DID TIME <star/></srai></li></random></template></category>
+<category><pattern>WHO DID TRAVEL *</pattern><template><think><srai>NOPX 404</srai></think><random><li><srai>EXPDEX WHO DID TRAVEL <star/></srai></li></random></template></category>
+<category><pattern>WHO DID TRY *</pattern><template><think><srai>NOPX 1720</srai></think><random><li><srai>EXPDEX WHO DID TRY <star/></srai></li></random></template></category>
+<category><pattern>WHO DID TURN *</pattern><template><think><srai>NOPX 1433</srai></think><random><li><srai>EXPDEX WHO DID TURN <star/></srai></li></random></template></category>
+<category><pattern>WHO DID UNDERSTAND *</pattern><template><think><srai>NOPX 1319</srai></think><random><li><srai>EXPDEX WHO DID UNDERSTAND <star/></srai></li></random></template></category>
+<category><pattern>WHO DID US *</pattern><template><think><srai>NOPX 1020</srai></think><random><li><srai>EXPDEX WHO DID US <star/></srai></li></random></template></category>
+<category><pattern>WHO DID USE *</pattern><template><think><srai>NOPX 3084</srai></think><random><li><srai>EXPDEX WHO DID USE <star/></srai></li></random></template></category>
+<category><pattern>WHO DID VENTURE *</pattern><template><think><srai>NOPX 501</srai></think><random><li><srai>EXPDEX WHO DID VENTURE <star/></srai></li></random></template></category>
+<category><pattern>WHO DID VISIT *</pattern><template><think><srai>NOPX 546</srai></think><random><li><srai>EXPDEX WHO DID VISIT <star/></srai></li></random></template></category>
+<category><pattern>WHO DID VOLUNTEER *</pattern><template><think><srai>NOPX 560</srai></think><random><li><srai>EXPDEX WHO DID VOLUNTEER <star/></srai></li></random></template></category>
+<category><pattern>WHO DID VOTE *</pattern><template><think><srai>NOPX 3464</srai></think><random><li><srai>EXPDEX WHO DID VOTE <star/></srai></li></random></template></category>
+<category><pattern>WHO DID WANT *</pattern><template><think><srai>NOPX 2019</srai></think><random><li><srai>EXPDEX WHO DID WANT <star/></srai></li></random></template></category>
+<category><pattern>WHO DID WATCH *</pattern><template><think><srai>NOPX 616</srai></think><random><li><srai>EXPDEX WHO DID WATCH <star/></srai></li></random></template></category>
+<category><pattern>WHO DID WE *</pattern><template><think><srai>NOPX 2119</srai></think><random><li><srai>EXPDEX WHO DID WE <star/></srai></li></random></template></category>
+<category><pattern>WHO DID WEAR *</pattern><template><think><srai>NOPX 464</srai></think><random><li><srai>EXPDEX WHO DID WEAR <star/></srai></li></random></template></category>
+<category><pattern>WHO DID WILL *</pattern><template><think><srai>NOPX 449</srai></think><random><li><srai>EXPDEX WHO DID WILL <star/></srai></li></random></template></category>
+<category><pattern>WHO DID WIN *</pattern><template><think><srai>NOPX 1691</srai></think><random><li><srai>EXPDEX WHO DID WIN <star/></srai></li></random></template></category>
+<category><pattern>WHO DID WITH *</pattern><template><think><srai>NOPX 784</srai></think><random><li><srai>EXPDEX WHO DID WITH <star/></srai></li></random></template></category>
+<category><pattern>WHO DID WORK *</pattern><template><think><srai>NOPX 3770</srai></think><random><li><srai>EXPDEX WHO DID WORK <star/></srai></li></random></template></category>
+<category><pattern>WHO DID WRITE *</pattern><template><think><srai>NOPX 1596</srai></think><random><li><srai>EXPDEX WHO DID WRITE <star/></srai></li></random></template></category>
+<category><pattern>WHO DID WRONG *</pattern><template><think><srai>NOPX 2559</srai></think><random><li><srai>EXPDEX WHO DID WRONG <star/></srai></li></random></template></category>
+<category><pattern>WHO DID YOU *</pattern><template><think><srai>NOPX 24654</srai></think><random><li><srai>EXPDEX WHO DID YOU <star/></srai></li></random></template></category>
+<category><pattern>WHO DID YOUR *</pattern><template><think><srai>NOPX 2410</srai></think><random><li><srai>EXPDEX WHO DID YOUR <star/></srai></li></random></template></category>
+<category><pattern>WHO DID NOT HAVE *</pattern><template><think><srai>NOPX 406</srai></think><random><li><srai>EXPDEX WHO DID NOT HAVE <star/></srai></li></random></template></category>
+<category><pattern>WHO DID NOT QUALIFY *</pattern><template><think><srai>NOPX 647</srai></think><random><li><srai>EXPDEX WHO DID NOT QUALIFY <star/></srai></li></random></template></category>
+<category><pattern>WHO DID NOT WORK *</pattern><template><think><srai>NOPX 518</srai></think><random><li><srai>EXPDEX WHO DID NOT WORK <star/></srai></li></random></template></category>
+<category><pattern>WHO DID KNOW ABOUT *</pattern><template><think><srai>NOPX 484</srai></think><random><li><srai>EXPDEX WHO DID KNOW ABOUT <star/></srai></li></random></template></category>
+<category><pattern>WHO DID IT *</pattern><template><think><srai>NOPX 1053</srai></think><random><li><srai>EXPDEX WHO DID IT <star/></srai></li></random></template></category>
+<category><pattern>WHO DID IT FOR *</pattern><template><think><srai>NOPX 1604</srai></think><random><li><srai>EXPDEX WHO DID IT FOR <star/></srai></li></random></template></category>
+<category><pattern>WHO DID NOT RECEIVE *</pattern><template><think><srai>NOPX 481</srai></think><random><li><srai>EXPDEX WHO DID NOT RECEIVE <star/></srai></li></random></template></category>
+<category><pattern>WHO DID NOT RESPOND *</pattern><template><think><srai>NOPX 401</srai></think><random><li><srai>EXPDEX WHO DID NOT RESPOND <star/></srai></li></random></template></category>
+<category><pattern>WHO DID NOT WORK *</pattern><template><think><srai>NOPX 2125</srai></think><random><li><srai>EXPDEX WHO DID NOT WORK <star/></srai></li></random></template></category>
+<category><pattern>WHO DID NOT *</pattern><template><think><srai>NOPX 640</srai></think><random><li><srai>EXPDEX WHO DID NOT <star/></srai></li></random></template></category>
+<category><pattern>WHO DID NOT BELIEVE *</pattern><template><think><srai>NOPX 1592</srai></think><random><li><srai>EXPDEX WHO DID NOT BELIEVE <star/></srai></li></random></template></category>
+<category><pattern>WHO DID NOT COME *</pattern><template><think><srai>NOPX 428</srai></think><random><li><srai>EXPDEX WHO DID NOT COME <star/></srai></li></random></template></category>
+<category><pattern>WHO DID NOT EXIST *</pattern><template><think><srai>NOPX 480</srai></think><random><li><srai>EXPDEX WHO DID NOT EXIST <star/></srai></li></random></template></category>
+<category><pattern>WHO DID NOT GIVE *</pattern><template><think><srai>NOPX 409</srai></think><random><li><srai>EXPDEX WHO DID NOT GIVE <star/></srai></li></random></template></category>
+<category><pattern>WHO DID NOT KILL *</pattern><template><think><srai>NOPX 419</srai></think><random><li><srai>EXPDEX WHO DID NOT KILL <star/></srai></li></random></template></category>
+<category><pattern>WHO DID NOT KNOW *</pattern><template><think><srai>NOPX 739</srai></think><random><li><srai>EXPDEX WHO DID NOT KNOW <star/></srai></li></random></template></category>
+<category><pattern>WHO DID NOT LIKE *</pattern><template><think><srai>NOPX 595</srai></think><random><li><srai>EXPDEX WHO DID NOT LIKE <star/></srai></li></random></template></category>
+<category><pattern>WHO DID NOT TAKE *</pattern><template><think><srai>NOPX 407</srai></think><random><li><srai>EXPDEX WHO DID NOT TAKE <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THE ODE *</pattern><template><think><srai>NOPX 4077</srai></think><random><li><srai>EXPDEX WHO DID THE ODE <star/></srai></li></random></template></category>
+<category><pattern>WHO DID I THINK *</pattern><template><think><srai>NOPX 464</srai></think><random><li><srai>EXPDEX WHO DID I THINK <star/></srai></li></random></template></category>
+<category><pattern>WHO DID HE THINK *</pattern><template><think><srai>NOPX 1169</srai></think><random><li><srai>EXPDEX WHO DID HE THINK <star/></srai></li></random></template></category>
+<category><pattern>WHO DID NO SIN *</pattern><template><think><srai>NOPX 1315</srai></think><random><li><srai>EXPDEX WHO DID NO SIN <star/></srai></li></random></template></category>
+<category><pattern>WHO DID NOT GET *</pattern><template><think><srai>NOPX 537</srai></think><random><li><srai>EXPDEX WHO DID NOT GET <star/></srai></li></random></template></category>
+<category><pattern>WHO DID NOT HAVE *</pattern><template><think><srai>NOPX 966</srai></think><random><li><srai>EXPDEX WHO DID NOT HAVE <star/></srai></li></random></template></category>
+<category><pattern>WHO DID NOT KNOW *</pattern><template><think><srai>NOPX 2513</srai></think><random><li><srai>EXPDEX WHO DID NOT KNOW <star/></srai></li></random></template></category>
+<category><pattern>WHO DID NOT LIKE *</pattern><template><think><srai>NOPX 472</srai></think><random><li><srai>EXPDEX WHO DID NOT LIKE <star/></srai></li></random></template></category>
+<category><pattern>WHO DID NOT MAKE *</pattern><template><think><srai>NOPX 506</srai></think><random><li><srai>EXPDEX WHO DID NOT MAKE <star/></srai></li></random></template></category>
+<category><pattern>WHO DID NOT SEE *</pattern><template><think><srai>NOPX 1954</srai></think><random><li><srai>EXPDEX WHO DID NOT SEE <star/></srai></li></random></template></category>
+<category><pattern>WHO DID NOT WANT *</pattern><template><think><srai>NOPX 817</srai></think><random><li><srai>EXPDEX WHO DID NOT WANT <star/></srai></li></random></template></category>
+<category><pattern>WHO DID SHE THINK *</pattern><template><think><srai>NOPX 448</srai></think><random><li><srai>EXPDEX WHO DID SHE THINK <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THE TAX *</pattern><template><think><srai>NOPX 1334</srai></think><random><li><srai>EXPDEX WHO DID THE TAX <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THE WORK *</pattern><template><think><srai>NOPX 585</srai></think><random><li><srai>EXPDEX WHO DID THE WORK <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THEY THINK *</pattern><template><think><srai>NOPX 651</srai></think><random><li><srai>EXPDEX WHO DID THEY THINK <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THIS *</pattern><template><think><srai>NOPX 5630</srai></think><random><li><srai>EXPDEX WHO DID THIS <star/></srai></li></random></template></category>
+<category><pattern>WHO DID I SEE *</pattern><template><think><srai>NOPX 1028</srai></think><random><li><srai>EXPDEX WHO DID I SEE <star/></srai></li></random></template></category>
+<category><pattern>WHO DID A FABULOUS *</pattern><template><think><srai>NOPX 504</srai></think><random><li><srai>EXPDEX WHO DID A FABULOUS <star/></srai></li></random></template></category>
+<category><pattern>WHO DID A FANTASTIC *</pattern><template><think><srai>NOPX 1585</srai></think><random><li><srai>EXPDEX WHO DID A FANTASTIC <star/></srai></li></random></template></category>
+<category><pattern>WHO DID A FEW *</pattern><template><think><srai>NOPX 481</srai></think><random><li><srai>EXPDEX WHO DID A FEW <star/></srai></li></random></template></category>
+<category><pattern>WHO DID A FINE *</pattern><template><think><srai>NOPX 1188</srai></think><random><li><srai>EXPDEX WHO DID A FINE <star/></srai></li></random></template></category>
+<category><pattern>WHO DID A GOOD *</pattern><template><think><srai>NOPX 2479</srai></think><random><li><srai>EXPDEX WHO DID A GOOD <star/></srai></li></random></template></category>
+<category><pattern>WHO DID A GREAT *</pattern><template><think><srai>NOPX 7529</srai></think><random><li><srai>EXPDEX WHO DID A GREAT <star/></srai></li></random></template></category>
+<category><pattern>WHO DID A LITTLE *</pattern><template><think><srai>NOPX 901</srai></think><random><li><srai>EXPDEX WHO DID A LITTLE <star/></srai></li></random></template></category>
+<category><pattern>WHO DID A LOT *</pattern><template><think><srai>NOPX 7449</srai></think><random><li><srai>EXPDEX WHO DID A LOT <star/></srai></li></random></template></category>
+<category><pattern>WHO DID A NICE *</pattern><template><think><srai>NOPX 481</srai></think><random><li><srai>EXPDEX WHO DID A NICE <star/></srai></li></random></template></category>
+<category><pattern>WHO DID A SIMILAR *</pattern><template><think><srai>NOPX 519</srai></think><random><li><srai>EXPDEX WHO DID A SIMILAR <star/></srai></li></random></template></category>
+<category><pattern>WHO DID A STINT *</pattern><template><think><srai>NOPX 423</srai></think><random><li><srai>EXPDEX WHO DID A STINT <star/></srai></li></random></template></category>
+<category><pattern>WHO DID A STUDY *</pattern><template><think><srai>NOPX 661</srai></think><random><li><srai>EXPDEX WHO DID A STUDY <star/></srai></li></random></template></category>
+<category><pattern>WHO DID A SUPERB *</pattern><template><think><srai>NOPX 773</srai></think><random><li><srai>EXPDEX WHO DID A SUPERB <star/></srai></li></random></template></category>
+<category><pattern>WHO DID A TERRIFIC *</pattern><template><think><srai>NOPX 536</srai></think><random><li><srai>EXPDEX WHO DID A TERRIFIC <star/></srai></li></random></template></category>
+<category><pattern>WHO DID A TREMENDOUS *</pattern><template><think><srai>NOPX 610</srai></think><random><li><srai>EXPDEX WHO DID A TREMENDOUS <star/></srai></li></random></template></category>
+<category><pattern>WHO DID A WONDERFUL *</pattern><template><think><srai>NOPX 1795</srai></think><random><li><srai>EXPDEX WHO DID A WONDERFUL <star/></srai></li></random></template></category>
+<category><pattern>WHO DID AN AMAZING *</pattern><template><think><srai>NOPX 912</srai></think><random><li><srai>EXPDEX WHO DID AN AMAZING <star/></srai></li></random></template></category>
+<category><pattern>WHO DID AN EXCELLENT *</pattern><template><think><srai>NOPX 3113</srai></think><random><li><srai>EXPDEX WHO DID AN EXCELLENT <star/></srai></li></random></template></category>
+<category><pattern>WHO DID AN OUTSTANDING *</pattern><template><think><srai>NOPX 1398</srai></think><random><li><srai>EXPDEX WHO DID AN OUTSTANDING <star/></srai></li></random></template></category>
+<category><pattern>WHO DID ANY WORK *</pattern><template><think><srai>NOPX 1047</srai></think><random><li><srai>EXPDEX WHO DID ANY WORK <star/></srai></li></random></template></category>
+<category><pattern>WHO DID BUSINESS WITH *</pattern><template><think><srai>NOPX 1847</srai></think><random><li><srai>EXPDEX WHO DID BUSINESS WITH <star/></srai></li></random></template></category>
+<category><pattern>WHO DID EVERYTHING FOR *</pattern><template><think><srai>NOPX 848</srai></think><random><li><srai>EXPDEX WHO DID EVERYTHING FOR <star/></srai></li></random></template></category>
+<category><pattern>WHO DID EVERYTHING FROM *</pattern><template><think><srai>NOPX 420</srai></think><random><li><srai>EXPDEX WHO DID EVERYTHING FROM <star/></srai></li></random></template></category>
+<category><pattern>WHO DID EVERYTHING IN *</pattern><template><think><srai>NOPX 886</srai></think><random><li><srai>EXPDEX WHO DID EVERYTHING IN <star/></srai></li></random></template></category>
+<category><pattern>WHO DID HE THINK *</pattern><template><think><srai>NOPX 466</srai></think><random><li><srai>EXPDEX WHO DID HE THINK <star/></srai></li></random></template></category>
+<category><pattern>WHO DID HIS DUTY *</pattern><template><think><srai>NOPX 620</srai></think><random><li><srai>EXPDEX WHO DID HIS DUTY <star/></srai></li></random></template></category>
+<category><pattern>WHO DID HIS JOB *</pattern><template><think><srai>NOPX 1624</srai></think><random><li><srai>EXPDEX WHO DID HIS JOB <star/></srai></li></random></template></category>
+<category><pattern>WHO DID IT *</pattern><template><think><srai>NOPX 1186</srai></think><random><li><srai>EXPDEX WHO DID IT <star/></srai></li></random></template></category>
+<category><pattern>WHO DID IT UNK *</pattern><template><think><srai>NOPX 981</srai></think><random><li><srai>EXPDEX WHO DID IT UNK <star/></srai></li></random></template></category>
+<category><pattern>WHO DID IT ARE *</pattern><template><think><srai>NOPX 780</srai></think><random><li><srai>EXPDEX WHO DID IT ARE <star/></srai></li></random></template></category>
+<category><pattern>WHO DID IT AS *</pattern><template><think><srai>NOPX 590</srai></think><random><li><srai>EXPDEX WHO DID IT AS <star/></srai></li></random></template></category>
+<category><pattern>WHO DID IT AT *</pattern><template><think><srai>NOPX 424</srai></think><random><li><srai>EXPDEX WHO DID IT AT <star/></srai></li></random></template></category>
+<category><pattern>WHO DID IT BECAUSE *</pattern><template><think><srai>NOPX 603</srai></think><random><li><srai>EXPDEX WHO DID IT BECAUSE <star/></srai></li></random></template></category>
+<category><pattern>WHO DID IT BEFORE *</pattern><template><think><srai>NOPX 821</srai></think><random><li><srai>EXPDEX WHO DID IT BEFORE <star/></srai></li></random></template></category>
+<category><pattern>WHO DID IT FIRST *</pattern><template><think><srai>NOPX 1651</srai></think><random><li><srai>EXPDEX WHO DID IT FIRST <star/></srai></li></random></template></category>
+<category><pattern>WHO DID IT FOR *</pattern><template><think><srai>NOPX 2485</srai></think><random><li><srai>EXPDEX WHO DID IT FOR <star/></srai></li></random></template></category>
+<category><pattern>WHO DID IT HAD *</pattern><template><think><srai>NOPX 459</srai></think><random><li><srai>EXPDEX WHO DID IT HAD <star/></srai></li></random></template></category>
+<category><pattern>WHO DID IT IN *</pattern><template><think><srai>NOPX 2600</srai></think><random><li><srai>EXPDEX WHO DID IT IN <star/></srai></li></random></template></category>
+<category><pattern>WHO DID IT ON *</pattern><template><think><srai>NOPX 730</srai></think><random><li><srai>EXPDEX WHO DID IT ON <star/></srai></li></random></template></category>
+<category><pattern>WHO DID IT RIGHT *</pattern><template><think><srai>NOPX 553</srai></think><random><li><srai>EXPDEX WHO DID IT RIGHT <star/></srai></li></random></template></category>
+<category><pattern>WHO DID IT SO *</pattern><template><think><srai>NOPX 493</srai></think><random><li><srai>EXPDEX WHO DID IT SO <star/></srai></li></random></template></category>
+<category><pattern>WHO DID IT TO *</pattern><template><think><srai>NOPX 2793</srai></think><random><li><srai>EXPDEX WHO DID IT TO <star/></srai></li></random></template></category>
+<category><pattern>WHO DID IT WAS *</pattern><template><think><srai>NOPX 1701</srai></think><random><li><srai>EXPDEX WHO DID IT WAS <star/></srai></li></random></template></category>
+<category><pattern>WHO DID IT WERE *</pattern><template><think><srai>NOPX 914</srai></think><random><li><srai>EXPDEX WHO DID IT WERE <star/></srai></li></random></template></category>
+<category><pattern>WHO DID IT WITH *</pattern><template><think><srai>NOPX 862</srai></think><random><li><srai>EXPDEX WHO DID IT WITH <star/></srai></li></random></template></category>
+<category><pattern>WHO DID MY HAIR *</pattern><template><think><srai>NOPX 513</srai></think><random><li><srai>EXPDEX WHO DID MY HAIR <star/></srai></li></random></template></category>
+<category><pattern>WHO DID NO SIN *</pattern><template><think><srai>NOPX 792</srai></think><random><li><srai>EXPDEX WHO DID NO SIN <star/></srai></li></random></template></category>
+<category><pattern>WHO DID NOTHING BECAUSE *</pattern><template><think><srai>NOPX 2119</srai></think><random><li><srai>EXPDEX WHO DID NOTHING BECAUSE <star/></srai></li></random></template></category>
+<category><pattern>WHO DID NOTHING FOR *</pattern><template><think><srai>NOPX 554</srai></think><random><li><srai>EXPDEX WHO DID NOTHING FOR <star/></srai></li></random></template></category>
+<category><pattern>WHO DID PIONEERING WORK *</pattern><template><think><srai>NOPX 451</srai></think><random><li><srai>EXPDEX WHO DID PIONEERING WORK <star/></srai></li></random></template></category>
+<category><pattern>WHO DID RESEARCH ON *</pattern><template><think><srai>NOPX 1053</srai></think><random><li><srai>EXPDEX WHO DID RESEARCH ON <star/></srai></li></random></template></category>
+<category><pattern>WHO DID SHOW UP *</pattern><template><think><srai>NOPX 1988</srai></think><random><li><srai>EXPDEX WHO DID SHOW UP <star/></srai></li></random></template></category>
+<category><pattern>WHO DID SOME RESEARCH *</pattern><template><think><srai>NOPX 443</srai></think><random><li><srai>EXPDEX WHO DID SOME RESEARCH <star/></srai></li></random></template></category>
+<category><pattern>WHO DID SOME WORK *</pattern><template><think><srai>NOPX 696</srai></think><random><li><srai>EXPDEX WHO DID SOME WORK <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THAT FOR *</pattern><template><think><srai>NOPX 578</srai></think><random><li><srai>EXPDEX WHO DID THAT FOR <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THAT IN *</pattern><template><think><srai>NOPX 472</srai></think><random><li><srai>EXPDEX WHO DID THAT IN <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THE *</pattern><template><think><srai>NOPX 1626</srai></think><random><li><srai>EXPDEX WHO DID THE <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THE UNK *</pattern><template><think><srai>NOPX 798</srai></think><random><li><srai>EXPDEX WHO DID THE UNK <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THE ACT *</pattern><template><think><srai>NOPX 612</srai></think><random><li><srai>EXPDEX WHO DID THE ACT <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THE ACTUAL *</pattern><template><think><srai>NOPX 2531</srai></think><random><li><srai>EXPDEX WHO DID THE ACTUAL <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THE ART *</pattern><template><think><srai>NOPX 537</srai></think><random><li><srai>EXPDEX WHO DID THE ART <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THE ARTWORK *</pattern><template><think><srai>NOPX 746</srai></think><random><li><srai>EXPDEX WHO DID THE ARTWORK <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THE AUTOPSY *</pattern><template><think><srai>NOPX 573</srai></think><random><li><srai>EXPDEX WHO DID THE AUTOPSY <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THE BEST *</pattern><template><think><srai>NOPX 2650</srai></think><random><li><srai>EXPDEX WHO DID THE BEST <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THE BOMBING *</pattern><template><think><srai>NOPX 619</srai></think><random><li><srai>EXPDEX WHO DID THE BOMBING <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THE BULK *</pattern><template><think><srai>NOPX 604</srai></think><random><li><srai>EXPDEX WHO DID THE BULK <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THE COOKING *</pattern><template><think><srai>NOPX 678</srai></think><random><li><srai>EXPDEX WHO DID THE COOKING <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THE COVER *</pattern><template><think><srai>NOPX 991</srai></think><random><li><srai>EXPDEX WHO DID THE COVER <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THE CRIME *</pattern><template><think><srai>NOPX 908</srai></think><random><li><srai>EXPDEX WHO DID THE CRIME <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THE DAMAGE *</pattern><template><think><srai>NOPX 1005</srai></think><random><li><srai>EXPDEX WHO DID THE DAMAGE <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THE DEED *</pattern><template><think><srai>NOPX 2645</srai></think><random><li><srai>EXPDEX WHO DID THE DEED <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THE DESIGN *</pattern><template><think><srai>NOPX 629</srai></think><random><li><srai>EXPDEX WHO DID THE DESIGN <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THE DIRTY *</pattern><template><think><srai>NOPX 1545</srai></think><random><li><srai>EXPDEX WHO DID THE DIRTY <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THE EXPERIMENT *</pattern><template><think><srai>NOPX 762</srai></think><random><li><srai>EXPDEX WHO DID THE EXPERIMENT <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THE FIGHTING *</pattern><template><think><srai>NOPX 596</srai></think><random><li><srai>EXPDEX WHO DID THE FIGHTING <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THE FIRST *</pattern><template><think><srai>NOPX 2659</srai></think><random><li><srai>EXPDEX WHO DID THE FIRST <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THE FOLLOWING *</pattern><template><think><srai>NOPX 485</srai></think><random><li><srai>EXPDEX WHO DID THE FOLLOWING <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THE GOOD *</pattern><template><think><srai>NOPX 448</srai></think><random><li><srai>EXPDEX WHO DID THE GOOD <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THE HARD *</pattern><template><think><srai>NOPX 817</srai></think><random><li><srai>EXPDEX WHO DID THE HARD <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THE HEAVY *</pattern><template><think><srai>NOPX 425</srai></think><random><li><srai>EXPDEX WHO DID THE HEAVY <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THE INITIAL *</pattern><template><think><srai>NOPX 1131</srai></think><random><li><srai>EXPDEX WHO DID THE INITIAL <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THE INSTALLATION *</pattern><template><think><srai>NOPX 443</srai></think><random><li><srai>EXPDEX WHO DID THE INSTALLATION <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THE INTERVIEW *</pattern><template><think><srai>NOPX 664</srai></think><random><li><srai>EXPDEX WHO DID THE INTERVIEW <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THE JOB *</pattern><template><think><srai>NOPX 2059</srai></think><random><li><srai>EXPDEX WHO DID THE JOB <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THE KILLING *</pattern><template><think><srai>NOPX 1873</srai></think><random><li><srai>EXPDEX WHO DID THE KILLING <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THE LAST *</pattern><template><think><srai>NOPX 698</srai></think><random><li><srai>EXPDEX WHO DID THE LAST <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THE MOST *</pattern><template><think><srai>NOPX 4408</srai></think><random><li><srai>EXPDEX WHO DID THE MOST <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THE MURDER *</pattern><template><think><srai>NOPX 431</srai></think><random><li><srai>EXPDEX WHO DID THE MURDER <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THE MUSIC *</pattern><template><think><srai>NOPX 1445</srai></think><random><li><srai>EXPDEX WHO DID THE MUSIC <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THE ORIGINAL *</pattern><template><think><srai>NOPX 4622</srai></think><random><li><srai>EXPDEX WHO DID THE ORIGINAL <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THE PROCEDURE *</pattern><template><think><srai>NOPX 453</srai></think><random><li><srai>EXPDEX WHO DID THE PROCEDURE <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THE REAL *</pattern><template><think><srai>NOPX 509</srai></think><random><li><srai>EXPDEX WHO DID THE REAL <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THE RESEARCH *</pattern><template><think><srai>NOPX 2188</srai></think><random><li><srai>EXPDEX WHO DID THE RESEARCH <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THE RIGHT *</pattern><template><think><srai>NOPX 1632</srai></think><random><li><srai>EXPDEX WHO DID THE RIGHT <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THE SAME *</pattern><template><think><srai>NOPX 10680</srai></think><random><li><srai>EXPDEX WHO DID THE SAME <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THE SHOOTING *</pattern><template><think><srai>NOPX 2398</srai></think><random><li><srai>EXPDEX WHO DID THE SHOOTING <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THE SHOPPING *</pattern><template><think><srai>NOPX 1204</srai></think><random><li><srai>EXPDEX WHO DID THE SHOPPING <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THE SLAUGHTERING *</pattern><template><think><srai>NOPX 407</srai></think><random><li><srai>EXPDEX WHO DID THE SLAUGHTERING <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THE SONG *</pattern><template><think><srai>NOPX 958</srai></think><random><li><srai>EXPDEX WHO DID THE SONG <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THE STUDY *</pattern><template><think><srai>NOPX 2229</srai></think><random><li><srai>EXPDEX WHO DID THE STUDY <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THE SURGERY *</pattern><template><think><srai>NOPX 786</srai></think><random><li><srai>EXPDEX WHO DID THE SURGERY <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THE SURVEY *</pattern><template><think><srai>NOPX 563</srai></think><random><li><srai>EXPDEX WHO DID THE SURVEY <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THE TALKING *</pattern><template><think><srai>NOPX 640</srai></think><random><li><srai>EXPDEX WHO DID THE TALKING <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THE TEST *</pattern><template><think><srai>NOPX 472</srai></think><random><li><srai>EXPDEX WHO DID THE TEST <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THE TESTING *</pattern><template><think><srai>NOPX 560</srai></think><random><li><srai>EXPDEX WHO DID THE TESTING <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THE TRANSLATION *</pattern><template><think><srai>NOPX 572</srai></think><random><li><srai>EXPDEX WHO DID THE TRANSLATION <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THE VOICE *</pattern><template><think><srai>NOPX 1701</srai></think><random><li><srai>EXPDEX WHO DID THE VOICE <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THE WHOLE *</pattern><template><think><srai>NOPX 507</srai></think><random><li><srai>EXPDEX WHO DID THE WHOLE <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THE WORK *</pattern><template><think><srai>NOPX 12044</srai></think><random><li><srai>EXPDEX WHO DID THE WORK <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THE WRONG *</pattern><template><think><srai>NOPX 723</srai></think><random><li><srai>EXPDEX WHO DID THE WRONG <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THEIR DUTY *</pattern><template><think><srai>NOPX 995</srai></think><random><li><srai>EXPDEX WHO DID THEIR DUTY <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THEIR HOMEWORK *</pattern><template><think><srai>NOPX 416</srai></think><random><li><srai>EXPDEX WHO DID THEIR HOMEWORK <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THEIR JOB *</pattern><template><think><srai>NOPX 497</srai></think><random><li><srai>EXPDEX WHO DID THEIR JOB <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THEIR PART *</pattern><template><think><srai>NOPX 499</srai></think><random><li><srai>EXPDEX WHO DID THEIR PART <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THEIR RESEARCH *</pattern><template><think><srai>NOPX 402</srai></think><random><li><srai>EXPDEX WHO DID THEIR RESEARCH <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THEIR WORK *</pattern><template><think><srai>NOPX 503</srai></think><random><li><srai>EXPDEX WHO DID THEIR WORK <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THIS *</pattern><template><think><srai>NOPX 407</srai></think><random><li><srai>EXPDEX WHO DID THIS <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THIS *</pattern><template><think><srai>NOPX 3914</srai></think><random><li><srai>EXPDEX WHO DID THIS <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THIS SOUTHEND *</pattern><template><think><srai>NOPX 701</srai></think><random><li><srai>EXPDEX WHO DID THIS SOUTHEND <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THIS FANSIGN *</pattern><template><think><srai>NOPX 922</srai></think><random><li><srai>EXPDEX WHO DID THIS FANSIGN <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THIS HORRIFIC *</pattern><template><think><srai>NOPX 542</srai></think><random><li><srai>EXPDEX WHO DID THIS HORRIFIC <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THIS THING *</pattern><template><think><srai>NOPX 562</srai></think><random><li><srai>EXPDEX WHO DID THIS THING <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THIS WILL *</pattern><template><think><srai>NOPX 652</srai></think><random><li><srai>EXPDEX WHO DID THIS WILL <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THIS WORK *</pattern><template><think><srai>NOPX 1054</srai></think><random><li><srai>EXPDEX WHO DID THIS WORK <star/></srai></li></random></template></category>
+<category><pattern>WHO DID TURN OUT *</pattern><template><think><srai>NOPX 401</srai></think><random><li><srai>EXPDEX WHO DID TURN OUT <star/></srai></li></random></template></category>
+<category><pattern>WHO DID TURN UP *</pattern><template><think><srai>NOPX 689</srai></think><random><li><srai>EXPDEX WHO DID TURN UP <star/></srai></li></random></template></category>
+<category><pattern>WHO DID VOTE FOR *</pattern><template><think><srai>NOPX 1044</srai></think><random><li><srai>EXPDEX WHO DID VOTE FOR <star/></srai></li></random></template></category>
+<category><pattern>WHO DID WORK FOR *</pattern><template><think><srai>NOPX 780</srai></think><random><li><srai>EXPDEX WHO DID WORK FOR <star/></srai></li></random></template></category>
+<category><pattern>WHO DID WORK ON *</pattern><template><think><srai>NOPX 612</srai></think><random><li><srai>EXPDEX WHO DID WORK ON <star/></srai></li></random></template></category>
+<category><pattern>WHO DID NOT QUALIFY THROUGH *</pattern><template><think><srai>NOPX 636</srai></think><random><li><srai>EXPDEX WHO DID NOT QUALIFY THROUGH <star/></srai></li></random></template></category>
+<category><pattern>WHO DID NOT BELIEVE IN *</pattern><template><think><srai>NOPX 1313</srai></think><random><li><srai>EXPDEX WHO DID NOT BELIEVE IN <star/></srai></li></random></template></category>
+<category><pattern>WHO DID NOT EXIST *</pattern><template><think><srai>NOPX 435</srai></think><random><li><srai>EXPDEX WHO DID NOT EXIST <star/></srai></li></random></template></category>
+<category><pattern>WHO DID NOT SEE THAT *</pattern><template><think><srai>NOPX 509</srai></think><random><li><srai>EXPDEX WHO DID NOT SEE THAT <star/></srai></li></random></template></category>
+<category><pattern>WHO DID NOT WANT TO *</pattern><template><think><srai>NOPX 526</srai></think><random><li><srai>EXPDEX WHO DID NOT WANT TO <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THE TAX CUT *</pattern><template><think><srai>NOPX 1331</srai></think><random><li><srai>EXPDEX WHO DID THE TAX CUT <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THIS *</pattern><template><think><srai>NOPX 4512</srai></think><random><li><srai>EXPDEX WHO DID THIS <star/></srai></li></random></template></category>
+<category><pattern>WHO DID A FABULOUS JOB *</pattern><template><think><srai>NOPX 453</srai></think><random><li><srai>EXPDEX WHO DID A FABULOUS JOB <star/></srai></li></random></template></category>
+<category><pattern>WHO DID A FANTASTIC JOB *</pattern><template><think><srai>NOPX 1459</srai></think><random><li><srai>EXPDEX WHO DID A FANTASTIC JOB <star/></srai></li></random></template></category>
+<category><pattern>WHO DID A FINE JOB *</pattern><template><think><srai>NOPX 1005</srai></think><random><li><srai>EXPDEX WHO DID A FINE JOB <star/></srai></li></random></template></category>
+<category><pattern>WHO DID A GOOD JOB *</pattern><template><think><srai>NOPX 1987</srai></think><random><li><srai>EXPDEX WHO DID A GOOD JOB <star/></srai></li></random></template></category>
+<category><pattern>WHO DID A GREAT DEAL *</pattern><template><think><srai>NOPX 959</srai></think><random><li><srai>EXPDEX WHO DID A GREAT DEAL <star/></srai></li></random></template></category>
+<category><pattern>WHO DID A GREAT JOB *</pattern><template><think><srai>NOPX 5605</srai></think><random><li><srai>EXPDEX WHO DID A GREAT JOB <star/></srai></li></random></template></category>
+<category><pattern>WHO DID A LOT FOR *</pattern><template><think><srai>NOPX 491</srai></think><random><li><srai>EXPDEX WHO DID A LOT FOR <star/></srai></li></random></template></category>
+<category><pattern>WHO DID A LOT OF *</pattern><template><think><srai>NOPX 6166</srai></think><random><li><srai>EXPDEX WHO DID A LOT OF <star/></srai></li></random></template></category>
+<category><pattern>WHO DID A SUPERB JOB *</pattern><template><think><srai>NOPX 692</srai></think><random><li><srai>EXPDEX WHO DID A SUPERB JOB <star/></srai></li></random></template></category>
+<category><pattern>WHO DID A TERRIFIC JOB *</pattern><template><think><srai>NOPX 498</srai></think><random><li><srai>EXPDEX WHO DID A TERRIFIC JOB <star/></srai></li></random></template></category>
+<category><pattern>WHO DID A TREMENDOUS JOB *</pattern><template><think><srai>NOPX 437</srai></think><random><li><srai>EXPDEX WHO DID A TREMENDOUS JOB <star/></srai></li></random></template></category>
+<category><pattern>WHO DID A WONDERFUL JOB *</pattern><template><think><srai>NOPX 1517</srai></think><random><li><srai>EXPDEX WHO DID A WONDERFUL JOB <star/></srai></li></random></template></category>
+<category><pattern>WHO DID AN AMAZING JOB *</pattern><template><think><srai>NOPX 664</srai></think><random><li><srai>EXPDEX WHO DID AN AMAZING JOB <star/></srai></li></random></template></category>
+<category><pattern>WHO DID AN EXCELLENT JOB *</pattern><template><think><srai>NOPX 2766</srai></think><random><li><srai>EXPDEX WHO DID AN EXCELLENT JOB <star/></srai></li></random></template></category>
+<category><pattern>WHO DID AN OUTSTANDING JOB *</pattern><template><think><srai>NOPX 1311</srai></think><random><li><srai>EXPDEX WHO DID AN OUTSTANDING JOB <star/></srai></li></random></template></category>
+<category><pattern>WHO DID ANY WORK AT *</pattern><template><think><srai>NOPX 716</srai></think><random><li><srai>EXPDEX WHO DID ANY WORK AT <star/></srai></li></random></template></category>
+<category><pattern>WHO DID HINDER YOU THAT *</pattern><template><think><srai>NOPX 584</srai></think><random><li><srai>EXPDEX WHO DID HINDER YOU THAT <star/></srai></li></random></template></category>
+<category><pattern>WHO DID IT UNK LOOK *</pattern><template><think><srai>NOPX 475</srai></think><random><li><srai>EXPDEX WHO DID IT UNK LOOK <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THE ACTUAL WORK *</pattern><template><think><srai>NOPX 407</srai></think><random><li><srai>EXPDEX WHO DID THE ACTUAL WORK <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THE BULK OF *</pattern><template><think><srai>NOPX 600</srai></think><random><li><srai>EXPDEX WHO DID THE BULK OF <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THE DIRTY WORK *</pattern><template><think><srai>NOPX 918</srai></think><random><li><srai>EXPDEX WHO DID THE DIRTY WORK <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THE HARD WORK *</pattern><template><think><srai>NOPX 579</srai></think><random><li><srai>EXPDEX WHO DID THE HARD WORK <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THE MUSIC FOR *</pattern><template><think><srai>NOPX 755</srai></think><random><li><srai>EXPDEX WHO DID THE MUSIC FOR <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THE RIGHT THING *</pattern><template><think><srai>NOPX 1524</srai></think><random><li><srai>EXPDEX WHO DID THE RIGHT THING <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THE SAME THING *</pattern><template><think><srai>NOPX 3423</srai></think><random><li><srai>EXPDEX WHO DID THE SAME THING <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THE VOICE OF *</pattern><template><think><srai>NOPX 828</srai></think><random><li><srai>EXPDEX WHO DID THE VOICE OF <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THE WORK FOR *</pattern><template><think><srai>NOPX 1091</srai></think><random><li><srai>EXPDEX WHO DID THE WORK FOR <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THE WORK OF *</pattern><template><think><srai>NOPX 650</srai></think><random><li><srai>EXPDEX WHO DID THE WORK OF <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THE WORK ON *</pattern><template><think><srai>NOPX 697</srai></think><random><li><srai>EXPDEX WHO DID THE WORK ON <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THIS *</pattern><template><think><srai>NOPX 3333</srai></think><random><li><srai>EXPDEX WHO DID THIS <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THIS FANSIGN FOR *</pattern><template><think><srai>NOPX 922</srai></think><random><li><srai>EXPDEX WHO DID THIS FANSIGN FOR <star/></srai></li></random></template></category>
+<category><pattern>WHO DID THIS HORRIFIC THING *</pattern><template><think><srai>NOPX 506</srai></think><random><li><srai>EXPDEX WHO DID THIS HORRIFIC THING <star/></srai></li></random></template></category>
+</aiml>

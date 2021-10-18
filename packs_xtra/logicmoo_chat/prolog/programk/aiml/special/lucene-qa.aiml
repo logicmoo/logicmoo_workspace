@@ -1,0 +1,410 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<aiml graph="default">
+
+  <aiml graph="parent">
+    <category>
+      <pattern>MY FAVORITE * IS *</pattern>
+      <template>
+        <think>
+          <dbpush>
+            <get var="name"/> favorite <star index="1"/> is <star index="2"/>
+          </dbpush>
+        </think>
+        Why do you think that is?
+      </template>
+    </category>
+  </aiml>
+  
+  <category>
+    <pattern>WHAT IS MY FAVORITE *</pattern>
+    <template>
+      <!-- Let me think... -->
+        <dbquery threshold="0.1" failprefix="DBFAIL">
+          <get var="name"/> favorite <star index="1"/> is
+        </dbquery>
+   
+    </template>
+  </category>
+  
+  <category>
+    <pattern>WHAT IS * FAVORITE *</pattern>
+    <template>
+      <!-- Let me think... -->
+      <dbquery threshold="0.1" failprefix="DBFAIL">
+        <star index="1"/> favorite <star index="2"/> is 
+      </dbquery>
+    </template>
+  </category>
+
+  <category>
+    <pattern>WHOSE FAVORITE * IS * </pattern>
+    <template>
+      <!-- Let me think... -->
+      <dbquery threshold="0.1" failprefix="DBFAIL">
+         who favorite <star index="1"/> is <star index="2"/> 
+      </dbquery>
+    </template>
+  </category>
+
+  <aiml graph="parent">
+    <category>
+      <pattern>MY * IS *</pattern>
+      <template>
+        <think>
+          <dbpush>
+            <get var="name"/> <star index="1"/> is <star index="2"/>
+          </dbpush>
+        </think>
+        Why do you think that is?
+      </template>
+    </category>
+  </aiml>
+  
+  <category>
+    <pattern>WHO IS MY *</pattern>
+    <template>
+      <!-- Let me think... -->
+      <dbquery threshold="0.1" failprefix="DBFAIL">
+        <get var="name"/> <star index="1"/> is 
+      </dbquery>
+    </template>
+  </category>
+
+
+  <!-- std-65percent subset -->
+
+<aiml graph="parent">
+<category>
+ <pattern>MY FAVORITE COLOR IS *</pattern>
+ <template>
+   <think>
+    <dbpush>
+      <get var="name"/> favorite color is <star index="1"/>
+    </dbpush>
+  </think>
+
+  <random>
+   <li>What do you have that is <person/>?</li>
+   <li>What does <person/> remind you of?</li>
+   <li>Why is <person/> your favorite color?</li>
+  </random>
+ </template>
+</category>
+
+<category>
+ <pattern>MY FAVORITE SHOW *</pattern>
+ <template>
+    <think>
+    <dbpush>
+      <get var="name"/> favorite show is <star index="1"/>
+    </dbpush>
+  </think>
+
+  <random>
+   <li>WHO IS YOUR FAVORITE character?</li>
+  </random>
+ </template>
+</category>
+
+<category>
+ <pattern>MY FAVORITE SHOW IS *</pattern>
+ <template>
+  <think>
+    <dbpush>
+      <get var="name"/> favorite show is <star index="1"/>
+    </dbpush>
+  </think>
+  <random>
+   <li>WHO IS YOUR FAVORITE character?</li>
+   <li>Wasn't that show cancelled?</li>
+  </random>
+ </template>
+</category>
+
+
+<category>
+<pattern>I AM *</pattern>
+<template>
+<think><set name="it"><set name="is"><star/></set></set></think>
+<think><gossip>Did you know <get name="name"/> was <star/>?</gossip></think>
+<think><dbpush><get var="name"/> is <star index="1"/> </dbpush> </think>
+<random> 
+<li>Why are you </li>
+<li>Good information: you are </li>
+<li>Do you mean your name is </li>
+<li>Do your friends call you </li>
+<li>I don't know anyone named </li>
+<li>I am glad to hear that you are </li>
+<li>It's good to meet someone who is </li>
+<li>Do you mind if I tell other people you are </li>
+</random> <person/>.
+</template>
+</category>
+
+<category>
+<pattern>I *</pattern>
+<template>
+<random>
+<li>Why?</li>
+<li>Interesting information</li>
+<li>That is interesting</li>
+<li>That's good information</li>
+<li>Thanks for the information</li>
+<li>Do you mind if I tell other people</li>
+<li>I haven't heard anything like that before</li>
+</random>: 
+<gossip><set name="memory"><get name="name"/> said <get name="heshe"/> <person2/></set></gossip>.
+<think><dbpush><get var="name"/> <person/> </dbpush> </think>
+</template>
+</category>
+
+<category>
+<pattern>I AM A *</pattern>
+<template>
+<think><set name="it"><set name="is">a <star/></set></set></think>
+<think><dbpush><get var="name"/> is a <person/> </dbpush> </think>
+You are a <star/>? 
+<random>
+<li>Is that your job?</li>
+<li>Does being a <star/> pay well?</li>
+<li>How do you like your work?</li>
+<li>Do you get to meet a lot of people?</li>
+</random>
+</template>
+</category>
+
+<category>
+<pattern>I AM AN *</pattern>
+<template>
+<think><dbpush><get var="name"/> is an <person/> </dbpush> </think>
+What is <set name="is"><star/></set>, your job?
+</template>
+</category>
+
+<category>
+<pattern>I AM FROM *</pattern>
+<template>
+<think><dbpush><get var="name"/> is from <person/> </dbpush> </think>
+What is it like growing up there?
+<srai>I AM IN <star/></srai>
+</template>
+</category>
+
+<category>
+<pattern>I AM IN *</pattern>
+<template>
+<think><set name="it"><set name="location"><formal><star/></formal></set></set></think>
+<think><dbpush><get var="name"/> is in <formal><person/></formal> </dbpush> </think>
+Tell me a little about why you are in <star/>.
+</template>
+</category>
+
+  <category>
+    <pattern>I LIVE IN *</pattern>
+    <template>
+      <think>
+        <dbpush><get var="name"/> lives in <formal> <person/> </formal></dbpush>
+      </think>
+
+      <think><set name="it"><set name="location"><formal><star/></formal></set></set></think>
+      What is living in <set name="it">
+        <set name="location">
+          <star/>
+        </set>
+      </set> like?
+    </template>
+  </category>
+
+  
+  <category>
+<pattern>I AM NOT *</pattern>
+<template>
+<think><dbpush><get var="name"/> is not <person/> </dbpush> </think>
+
+<think><set name="it"><set name="is">not <star/></set></set></think>
+I am 
+<random>
+<li>surprised </li>
+<li>sorry </li>
+<li>glad </li>
+</random>
+to hear that you are not <star/>.
+</template>
+</category>
+
+<category>
+<pattern>I AM NOT A *</pattern>
+<template>
+<think><dbpush><get var="name"/> is not a <person/> </dbpush> </think>
+<think><set name="it"><set name="is">not a <star/></set></set></think>
+Oh I see you are NOT A <star/>.
+</template>
+</category>
+</aiml>
+
+<category>
+<pattern> WHO IS *</pattern>
+<dbquery threshold="0.1" failprefix="DBFAIL">WHO IS <person/></dbquery>
+<template>
+</template>
+</category>
+
+<category>
+<pattern>DBFAIL WHO IS *</pattern>
+<template>
+<random>
+<li>I do not recognize the name.</li>
+<li>Not a robot.  Probably a human.  Maybe a celebrity?</li>
+<li>No one that I have talked to.</li>
+<li>I remember faces better than names.</li>
+<li>A 20th century celebrity of some sort?</li>
+<li>A human icon?</li>
+<li>They are sometimes a client on the internet.</li>
+<li>The name of someone I met online.</li>
+<li>Is that one of your friends?</li>
+<li>Some famous celebrity, right?</li>
+</random><br />
+</template>
+</category>
+
+  <category>
+    <pattern>WHAT IS MY *</pattern>
+    <template>
+      <!-- Let me think... -->
+		<dbquery threshold="0.1" failprefix="DBFAIL"><get var="id"/> <person/> is </dbquery>
+       </template>
+  </category>
+
+<category>
+<pattern>DBFAIL WHAT IS MY *</pattern>
+<template>
+<random>
+  <li>I have no clue.</li>
+  <li>You know I don't know.</li>
+  <li>I don't seem to know that.</li>
+</random>
+Can you tell me?
+</template>
+</category>
+
+
+  <category>
+    <pattern>DBFAIL *</pattern>
+    <template>
+      <random>
+        <li>I have no clue.</li>
+        <li>You know I don't know.</li>
+        <li>I don't seem to know that.</li>
+      </random>
+      Can you tell me?
+    </template>
+  </category>
+  
+  <!-- Client.aiml -->
+  <category>
+    <pattern>WHAT IS MY AGE</pattern>
+    <template>
+      <dbquery threshold="0.1" failprefix="DBFAIL">
+        <get var="id"/> <person/> is years old
+      </dbquery>
+    </template>
+  </category>
+  
+  <category>
+    <pattern>WHAT IS MY CATEGORY</pattern>
+    <template>
+      <dbquery threshold="0.1" failprefix="DBFAIL">
+        <get var="id"/> personality is 
+      </dbquery>
+    </template>
+  </category>
+  <category>
+    <pattern>WHAT IS MY FAVORITE COLOR</pattern>
+    <template>
+      <dbquery threshold="0.1" failprefix="DBFAIL">
+        <get var="id"/> favorite color is
+      </dbquery>
+     </template>
+  </category>
+  
+  <category>
+    <pattern>WHAT IS MY FAVORITE MOVIE</pattern>
+    <template>
+      <dbquery threshold="0.1" failprefix="DBFAIL">
+        <get var="id"/> favorite movie is
+      </dbquery>
+    </template>
+  </category>
+  
+   <category>
+    <pattern>WHAT IS MY HOMETOWN</pattern>
+    <template>
+      <dbquery threshold="0.1" failprefix="DBFAIL">
+        <get var="id"/> location is
+      </dbquery>
+    </template>
+  </category>
+  <category>
+    <pattern>WHERE DO I LIVE</pattern>
+    <template>
+      <dbquery threshold="0.1" failprefix="DBFAIL">
+        <get var="id"/> location is
+      </dbquery>
+    </template>
+  </category>
+  <category>
+    <pattern>WHICH COUNTRY DO I *</pattern>
+    <template>
+      <dbquery threshold="0.1" failprefix="DBFAIL">
+        <get var="id"/> location is
+      </dbquery>
+    </template>
+  </category>
+  <category>
+    <pattern>WHAT COUNTRY DO I *</pattern>
+    <template>
+      <dbquery threshold="0.1" failprefix="DBFAIL">
+        <get var="id"/> location is
+      </dbquery>
+    </template>
+  </category>
+
+  <category>
+    <pattern>WHAT IS MY LOCATION</pattern>
+    <template>
+      <dbquery threshold="0.1" failprefix="DBFAIL">
+        <get var="id"/> location is
+      </dbquery>
+    </template>
+  </category>
+  <category>
+    <pattern>WHAT IS MY NAME</pattern>
+    <template>
+      Your name is <get name="name"/>, seeker.
+    </template>
+  </category>
+  <category>
+    <pattern>WHAT IS MY PERSONALITY</pattern>
+    <template>
+      <dbquery threshold="0.1" failprefix="DBFAIL">
+        <get var="id"/> personality is
+      </dbquery>
+    </template>
+  </category>
+  <category>
+    <pattern>WHAT IS MY PHONE NUMBER</pattern>
+    <template>
+      <dbquery threshold="0.1" failprefix="DBFAIL">
+        <get var="id"/> phone number is
+      </dbquery>
+    </template>
+  </category>
+
+  <category>
+    <pattern>WHAT IS MY SIGN</pattern>
+    <dbquery threshold="0.1" failprefix="DBFAIL">
+      <get var="id"/> astrogical sign is
+    </dbquery>
+  </category>
+
+</aiml>

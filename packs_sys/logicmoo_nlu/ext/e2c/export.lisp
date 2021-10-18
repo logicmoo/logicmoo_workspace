@@ -699,9 +699,9 @@ timedatectl set-ntp 1 ; timedatectl
      (my-debug (showa assrt)) (force-output)))))
  
 
-;; 5848503-5851381
+;; 5848503-5851381 (start 5848550)
 
-(define dumpt (&optional (start 5848550))
+(define dumpt (&optional (start NIL) )
   (pre-export)
   (loadr)  
   (punless start 
@@ -813,6 +813,6 @@ timedatectl set-ntp 1 ; timedatectl
 #-:LOADING
 (force-print "done loading export.lisp...")
 
-;; (dumpt)
+(dumpt)
 
 ' (sl:csetq *PACKAGE* cyc::*OLD-PACKAGE*)

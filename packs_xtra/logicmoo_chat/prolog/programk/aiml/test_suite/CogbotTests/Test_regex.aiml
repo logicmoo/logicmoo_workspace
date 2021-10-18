@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<aiml>
+
+  <!-- 
+   test: test regex1 please
+  -->
+
+    <category>
+    <pattern>TEST REGEX1  *</pattern>
+    <template>hit test regex star</template>
+  </category>
+  <category>
+    <pattern>
+      TEST REGEX1 <regex match="*">.*(THING|ONE).*</regex>
+    </pattern>
+    <template>hit test regex  star thing star </template>
+  </category>
+  <category>
+    <pattern>
+      TEST REGEX1 <regex match="*">.*(THING|ONE)</regex>
+    </pattern>
+    <template>hit test regex  star thing </template>
+  </category>
+  <category>
+    <pattern>
+      TEST REGEX1 <regex match="*">(THING|ONE)</regex>
+    </pattern>
+    <template>hit test regex  thing </template>
+  </category>
+
+  <category>
+    <pattern>
+      TEST REGEX2 BUGGER <regex match="*">.*</regex>
+    </pattern>
+    <template>hit regex bugger1 </template>
+  </category>
+  <category>
+    <pattern>
+      TEST REGEX2 BUGGER <regex match="_">.*</regex>
+    </pattern>
+    <template>hit regex bugger2 </template>
+  </category>
+
+</aiml>

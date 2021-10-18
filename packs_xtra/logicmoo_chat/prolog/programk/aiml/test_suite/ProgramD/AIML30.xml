@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<TestSuite>
+    <TestCase name="input (30) setup a">
+        <Description>Tests the input element.</Description>
+        <Input>testinput</Input>
+        <ExpectedAnswer> Test case #30 setup a okay.</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="input (30) setup b">
+        <Description/>
+        <Input>testinput1</Input>
+        <ExpectedAnswer> Test case #30 setup b okay.</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="input (30) setup c">
+        <Description/>
+        <Input>testinput2</Input>
+        <ExpectedAnswer> Test case #30 setup c okay.</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="input (30)">
+        <Description/>
+        <Input>testinput3</Input>
+        <ExpectedAnswer>Test case #30.<br/>
+            Test (input) passed if this says testinput3:
+            testinput3.<br/>
+            Test (input index 1) passed if this says testinput3:
+            testinput3.<br/>
+            Test (input index 2) passed if this says testinput2:
+            testinput2.<br/>
+            Test (input index 3) passed if this says testinput1:
+            testinput1.<br/>
+            Test (input index 4) passed if this says testinput: testinput.  </ExpectedAnswer>
+    </TestCase>
+</TestSuite>

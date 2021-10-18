@@ -1,0 +1,676 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<aiml>
+
+<!-- main H_Default.aiml (6644297) mp=-1: NOT YOU * -->
+
+<!-- MINSEQ: mp=-1:  -->
+<category><pattern>EXPDEX NOT YOU *</pattern><template>If not me, who?</template></category>
+<category><pattern>NOT YOU *</pattern><template><srai>EXPDEX NOT YOU <star/></srai></template></category>
+<category><pattern>NOT YOU SOME *</pattern><template><think><srai>NOPX 602</srai></think><random><li><srai>EXPDEX NOT YOU SOME <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU UNK *</pattern><template><think><srai>NOPX 1181</srai></think><random><li><srai>EXPDEX NOT YOU UNK <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU AGREE *</pattern><template><think><srai>NOPX 412</srai></think><random><li><srai>EXPDEX NOT YOU AGREE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU ARE *</pattern><template><think><srai>NOPX 664</srai></think><random><li><srai>EXPDEX NOT YOU ARE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU BELIEVE *</pattern><template><think><srai>NOPX 900</srai></think><random><li><srai>EXPDEX NOT YOU BELIEVE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU CALL *</pattern><template><think><srai>NOPX 666</srai></think><random><li><srai>EXPDEX NOT YOU CALL <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU CARE *</pattern><template><think><srai>NOPX 572</srai></think><random><li><srai>EXPDEX NOT YOU CARE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU CRY *</pattern><template><think><srai>NOPX 514</srai></think><random><li><srai>EXPDEX NOT YOU CRY <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU DO *</pattern><template><think><srai>NOPX 1520</srai></think><random><li><srai>EXPDEX NOT YOU DO <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU FEEL *</pattern><template><think><srai>NOPX 898</srai></think><random><li><srai>EXPDEX NOT YOU FEEL <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU FORGET *</pattern><template><think><srai>NOPX 1138</srai></think><random><li><srai>EXPDEX NOT YOU FORGET <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU GO *</pattern><template><think><srai>NOPX 5137</srai></think><random><li><srai>EXPDEX NOT YOU GO <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU HATE *</pattern><template><think><srai>NOPX 762</srai></think><random><li><srai>EXPDEX NOT YOU HATE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU HAVE *</pattern><template><think><srai>NOPX 1942</srai></think><random><li><srai>EXPDEX NOT YOU HAVE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU HEAR *</pattern><template><think><srai>NOPX 2133</srai></think><random><li><srai>EXPDEX NOT YOU HEAR <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU IN *</pattern><template><think><srai>NOPX 433</srai></think><random><li><srai>EXPDEX NOT YOU IN <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU KNOW *</pattern><template><think><srai>NOPX 5321</srai></think><random><li><srai>EXPDEX NOT YOU KNOW <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU LIKE *</pattern><template><think><srai>NOPX 1213</srai></think><random><li><srai>EXPDEX NOT YOU LIKE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU LOVE *</pattern><template><think><srai>NOPX 1955</srai></think><random><li><srai>EXPDEX NOT YOU LOVE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU READ *</pattern><template><think><srai>NOPX 661</srai></think><random><li><srai>EXPDEX NOT YOU READ <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU REMEMBER *</pattern><template><think><srai>NOPX 413</srai></think><random><li><srai>EXPDEX NOT YOU REMEMBER <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU SAY *</pattern><template><think><srai>NOPX 732</srai></think><random><li><srai>EXPDEX NOT YOU SAY <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU SEE *</pattern><template><think><srai>NOPX 4455</srai></think><random><li><srai>EXPDEX NOT YOU SEE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU THINK *</pattern><template><think><srai>NOPX 3420</srai></think><random><li><srai>EXPDEX NOT YOU THINK <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU TRY *</pattern><template><think><srai>NOPX 628</srai></think><random><li><srai>EXPDEX NOT YOU TRY <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU UNDERSTAND *</pattern><template><think><srai>NOPX 1390</srai></think><random><li><srai>EXPDEX NOT YOU UNDERSTAND <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU WANT *</pattern><template><think><srai>NOPX 2916</srai></think><random><li><srai>EXPDEX NOT YOU WANT <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU WISH *</pattern><template><think><srai>NOPX 610</srai></think><random><li><srai>EXPDEX NOT YOU WISH <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU WRITE *</pattern><template><think><srai>NOPX 1414</srai></think><random><li><srai>EXPDEX NOT YOU WRITE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU DO *</pattern><template><think><srai>NOPX 456</srai></think><random><li><srai>EXPDEX NOT YOU DO <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU LIKE *</pattern><template><think><srai>NOPX 443</srai></think><random><li><srai>EXPDEX NOT YOU LIKE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU WANT *</pattern><template><think><srai>NOPX 413</srai></think><random><li><srai>EXPDEX NOT YOU WANT <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU NEED *</pattern><template><think><srai>NOPX 483</srai></think><random><li><srai>EXPDEX NOT YOU NEED <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU AS *</pattern><template><think><srai>NOPX 411</srai></think><random><li><srai>EXPDEX NOT YOU AS <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU DO *</pattern><template><think><srai>NOPX 635</srai></think><random><li><srai>EXPDEX NOT YOU DO <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU GET *</pattern><template><think><srai>NOPX 506</srai></think><random><li><srai>EXPDEX NOT YOU GET <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU GO *</pattern><template><think><srai>NOPX 642</srai></think><random><li><srai>EXPDEX NOT YOU GO <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU HAVE *</pattern><template><think><srai>NOPX 494</srai></think><random><li><srai>EXPDEX NOT YOU HAVE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU LEAVE *</pattern><template><think><srai>NOPX 424</srai></think><random><li><srai>EXPDEX NOT YOU LEAVE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU LIKE *</pattern><template><think><srai>NOPX 1260</srai></think><random><li><srai>EXPDEX NOT YOU LIKE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU TELL *</pattern><template><think><srai>NOPX 431</srai></think><random><li><srai>EXPDEX NOT YOU TELL <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU THINK *</pattern><template><think><srai>NOPX 556</srai></think><random><li><srai>EXPDEX NOT YOU THINK <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU WANT *</pattern><template><think><srai>NOPX 588</srai></think><random><li><srai>EXPDEX NOT YOU WANT <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU UNK *</pattern><template><think><srai>NOPX 1725</srai></think><random><li><srai>EXPDEX NOT YOU UNK <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU AGREE *</pattern><template><think><srai>NOPX 1125</srai></think><random><li><srai>EXPDEX NOT YOU AGREE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU ALL *</pattern><template><think><srai>NOPX 427</srai></think><random><li><srai>EXPDEX NOT YOU ALL <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU BELIEVE *</pattern><template><think><srai>NOPX 5814</srai></think><random><li><srai>EXPDEX NOT YOU BELIEVE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU CALL *</pattern><template><think><srai>NOPX 3914</srai></think><random><li><srai>EXPDEX NOT YOU CALL <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU COME *</pattern><template><think><srai>NOPX 10650</srai></think><random><li><srai>EXPDEX NOT YOU COME <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU DESERVE *</pattern><template><think><srai>NOPX 1205</srai></think><random><li><srai>EXPDEX NOT YOU DESERVE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU DO *</pattern><template><think><srai>NOPX 13067</srai></think><random><li><srai>EXPDEX NOT YOU DO <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU FALL *</pattern><template><think><srai>NOPX 883</srai></think><random><li><srai>EXPDEX NOT YOU FALL <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU FEEL *</pattern><template><think><srai>NOPX 4648</srai></think><random><li><srai>EXPDEX NOT YOU FEEL <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU FORGIVE *</pattern><template><think><srai>NOPX 650</srai></think><random><li><srai>EXPDEX NOT YOU FORGIVE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU GET *</pattern><template><think><srai>NOPX 12375</srai></think><random><li><srai>EXPDEX NOT YOU GET <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU GO *</pattern><template><think><srai>NOPX 3729</srai></think><random><li><srai>EXPDEX NOT YOU GO <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU GOT *</pattern><template><think><srai>NOPX 700</srai></think><random><li><srai>EXPDEX NOT YOU GOT <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU HATE *</pattern><template><think><srai>NOPX 3221</srai></think><random><li><srai>EXPDEX NOT YOU HATE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU HAVE *</pattern><template><think><srai>NOPX 3039</srai></think><random><li><srai>EXPDEX NOT YOU HAVE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU HEAR *</pattern><template><think><srai>NOPX 19352</srai></think><random><li><srai>EXPDEX NOT YOU HEAR <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU HEARD *</pattern><template><think><srai>NOPX 5357</srai></think><random><li><srai>EXPDEX NOT YOU HEARD <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU KNOW *</pattern><template><think><srai>NOPX 31697</srai></think><random><li><srai>EXPDEX NOT YOU KNOW <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU LEAVE *</pattern><template><think><srai>NOPX 2272</srai></think><random><li><srai>EXPDEX NOT YOU LEAVE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU LIE *</pattern><template><think><srai>NOPX 1920</srai></think><random><li><srai>EXPDEX NOT YOU LIE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU LIKE *</pattern><template><think><srai>NOPX 8574</srai></think><random><li><srai>EXPDEX NOT YOU LIKE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU LOSE *</pattern><template><think><srai>NOPX 1189</srai></think><random><li><srai>EXPDEX NOT YOU LOSE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU LOVE *</pattern><template><think><srai>NOPX 14163</srai></think><random><li><srai>EXPDEX NOT YOU LOVE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU MAKE *</pattern><template><think><srai>NOPX 4561</srai></think><random><li><srai>EXPDEX NOT YOU MAKE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU MARRIED *</pattern><template><think><srai>NOPX 438</srai></think><random><li><srai>EXPDEX NOT YOU MARRIED <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU NEED *</pattern><template><think><srai>NOPX 911</srai></think><random><li><srai>EXPDEX NOT YOU NEED <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU QUIT *</pattern><template><think><srai>NOPX 521</srai></think><random><li><srai>EXPDEX NOT YOU QUIT <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU REMEMBER *</pattern><template><think><srai>NOPX 1603</srai></think><random><li><srai>EXPDEX NOT YOU REMEMBER <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU SAY *</pattern><template><think><srai>NOPX 3522</srai></think><random><li><srai>EXPDEX NOT YOU SAY <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU SLEEP *</pattern><template><think><srai>NOPX 6520</srai></think><random><li><srai>EXPDEX NOT YOU SLEEP <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU TAKE *</pattern><template><think><srai>NOPX 3725</srai></think><random><li><srai>EXPDEX NOT YOU TAKE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU THE *</pattern><template><think><srai>NOPX 1044</srai></think><random><li><srai>EXPDEX NOT YOU THE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU THINK *</pattern><template><think><srai>NOPX 7336</srai></think><random><li><srai>EXPDEX NOT YOU THINK <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU UNDERSTAND *</pattern><template><think><srai>NOPX 3691</srai></think><random><li><srai>EXPDEX NOT YOU UNDERSTAND <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU USED *</pattern><template><think><srai>NOPX 616</srai></think><random><li><srai>EXPDEX NOT YOU USED <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU WALK *</pattern><template><think><srai>NOPX 1892</srai></think><random><li><srai>EXPDEX NOT YOU WALK <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU WANNA *</pattern><template><think><srai>NOPX 2832</srai></think><random><li><srai>EXPDEX NOT YOU WANNA <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU WANT *</pattern><template><think><srai>NOPX 33602</srai></think><random><li><srai>EXPDEX NOT YOU WANT <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU WEEP *</pattern><template><think><srai>NOPX 4384</srai></think><random><li><srai>EXPDEX NOT YOU WEEP <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU WISH *</pattern><template><think><srai>NOPX 3381</srai></think><random><li><srai>EXPDEX NOT YOU WISH <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU WORRY *</pattern><template><think><srai>NOPX 9940</srai></think><random><li><srai>EXPDEX NOT YOU WORRY <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU WRITE *</pattern><template><think><srai>NOPX 2852</srai></think><random><li><srai>EXPDEX NOT YOU WRITE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU ARE *</pattern><template><think><srai>NOPX 709</srai></think><random><li><srai>EXPDEX NOT YOU ARE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU COME *</pattern><template><think><srai>NOPX 499</srai></think><random><li><srai>EXPDEX NOT YOU COME <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU DO *</pattern><template><think><srai>NOPX 2649</srai></think><random><li><srai>EXPDEX NOT YOU DO <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU GIVE *</pattern><template><think><srai>NOPX 496</srai></think><random><li><srai>EXPDEX NOT YOU GIVE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU HAVE *</pattern><template><think><srai>NOPX 1068</srai></think><random><li><srai>EXPDEX NOT YOU HAVE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU IN *</pattern><template><think><srai>NOPX 424</srai></think><random><li><srai>EXPDEX NOT YOU IN <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU KNOW *</pattern><template><think><srai>NOPX 1111</srai></think><random><li><srai>EXPDEX NOT YOU KNOW <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU LOVE *</pattern><template><think><srai>NOPX 590</srai></think><random><li><srai>EXPDEX NOT YOU LOVE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU MAKE *</pattern><template><think><srai>NOPX 550</srai></think><random><li><srai>EXPDEX NOT YOU MAKE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU SAY *</pattern><template><think><srai>NOPX 651</srai></think><random><li><srai>EXPDEX NOT YOU SAY <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU SEE *</pattern><template><think><srai>NOPX 761</srai></think><random><li><srai>EXPDEX NOT YOU SEE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU THE *</pattern><template><think><srai>NOPX 645</srai></think><random><li><srai>EXPDEX NOT YOU THE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU THINK *</pattern><template><think><srai>NOPX 1098</srai></think><random><li><srai>EXPDEX NOT YOU THINK <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU UNK *</pattern><template><think><srai>NOPX 20609</srai></think><random><li><srai>EXPDEX NOT YOU UNK <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU COME *</pattern><template><think><srai>NOPX 590</srai></think><random><li><srai>EXPDEX NOT YOU COME <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU DO *</pattern><template><think><srai>NOPX 538</srai></think><random><li><srai>EXPDEX NOT YOU DO <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU DO *</pattern><template><think><srai>NOPX 1313</srai></think><random><li><srai>EXPDEX NOT YOU DO <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU HATE *</pattern><template><think><srai>NOPX 697</srai></think><random><li><srai>EXPDEX NOT YOU HATE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU JOIN *</pattern><template><think><srai>NOPX 10206</srai></think><random><li><srai>EXPDEX NOT YOU JOIN <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU KNOW *</pattern><template><think><srai>NOPX 3428</srai></think><random><li><srai>EXPDEX NOT YOU KNOW <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU LIKE *</pattern><template><think><srai>NOPX 921</srai></think><random><li><srai>EXPDEX NOT YOU LIKE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU LOVE *</pattern><template><think><srai>NOPX 793</srai></think><random><li><srai>EXPDEX NOT YOU LOVE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU MOSES *</pattern><template><think><srai>NOPX 457</srai></think><random><li><srai>EXPDEX NOT YOU MOSES <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU SEE *</pattern><template><think><srai>NOPX 736</srai></think><random><li><srai>EXPDEX NOT YOU SEE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU THE *</pattern><template><think><srai>NOPX 422</srai></think><random><li><srai>EXPDEX NOT YOU THE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU WANT *</pattern><template><think><srai>NOPX 478</srai></think><random><li><srai>EXPDEX NOT YOU WANT <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU ABOUT *</pattern><template><think><srai>NOPX 694</srai></think><random><li><srai>EXPDEX NOT YOU ABOUT <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU ACKNOWLEDGE *</pattern><template><think><srai>NOPX 797</srai></think><random><li><srai>EXPDEX NOT YOU ACKNOWLEDGE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU ACT *</pattern><template><think><srai>NOPX 2180</srai></think><random><li><srai>EXPDEX NOT YOU ACT <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU ADMIRE *</pattern><template><think><srai>NOPX 643</srai></think><random><li><srai>EXPDEX NOT YOU ADMIRE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU ADMIT *</pattern><template><think><srai>NOPX 6094</srai></think><random><li><srai>EXPDEX NOT YOU ADMIT <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU ADVERTISE *</pattern><template><think><srai>NOPX 573</srai></think><random><li><srai>EXPDEX NOT YOU ADVERTISE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU AGAINST *</pattern><template><think><srai>NOPX 710</srai></think><random><li><srai>EXPDEX NOT YOU AGAINST <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU AGREE *</pattern><template><think><srai>NOPX 93330</srai></think><random><li><srai>EXPDEX NOT YOU AGREE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU AGREED *</pattern><template><think><srai>NOPX 899</srai></think><random><li><srai>EXPDEX NOT YOU AGREED <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU ALL *</pattern><template><think><srai>NOPX 36460</srai></think><random><li><srai>EXPDEX NOT YOU ALL <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU ALLOW *</pattern><template><think><srai>NOPX 3648</srai></think><random><li><srai>EXPDEX NOT YOU ALLOW <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU ALLOWED *</pattern><template><think><srai>NOPX 789</srai></think><random><li><srai>EXPDEX NOT YOU ALLOWED <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU AN *</pattern><template><think><srai>NOPX 2169</srai></think><random><li><srai>EXPDEX NOT YOU AN <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU ANSWERED *</pattern><template><think><srai>NOPX 995</srai></think><random><li><srai>EXPDEX NOT YOU ANSWERED <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU ANY *</pattern><template><think><srai>NOPX 2576</srai></think><random><li><srai>EXPDEX NOT YOU ANY <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU APPEAR *</pattern><template><think><srai>NOPX 478</srai></think><random><li><srai>EXPDEX NOT YOU APPEAR <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU APPLY *</pattern><template><think><srai>NOPX 2947</srai></think><random><li><srai>EXPDEX NOT YOU APPLY <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU APPRECIATE *</pattern><template><think><srai>NOPX 1298</srai></think><random><li><srai>EXPDEX NOT YOU APPRECIATE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU APPROACH *</pattern><template><think><srai>NOPX 597</srai></think><random><li><srai>EXPDEX NOT YOU APPROACH <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU ARE *</pattern><template><think><srai>NOPX 110589</srai></think><random><li><srai>EXPDEX NOT YOU ARE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU ARGUE *</pattern><template><think><srai>NOPX 1137</srai></think><random><li><srai>EXPDEX NOT YOU ARGUE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU AS *</pattern><template><think><srai>NOPX 3926</srai></think><random><li><srai>EXPDEX NOT YOU AS <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU ASHAMED *</pattern><template><think><srai>NOPX 5396</srai></think><random><li><srai>EXPDEX NOT YOU ASHAMED <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU ASK *</pattern><template><think><srai>NOPX 47724</srai></think><random><li><srai>EXPDEX NOT YOU ASK <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU ASKED *</pattern><template><think><srai>NOPX 1499</srai></think><random><li><srai>EXPDEX NOT YOU ASKED <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU ASSUME *</pattern><template><think><srai>NOPX 1228</srai></think><random><li><srai>EXPDEX NOT YOU ASSUME <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU AT *</pattern><template><think><srai>NOPX 19217</srai></think><random><li><srai>EXPDEX NOT YOU AT <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU ATTACK *</pattern><template><think><srai>NOPX 616</srai></think><random><li><srai>EXPDEX NOT YOU ATTACK <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU ATTEMPT *</pattern><template><think><srai>NOPX 637</srai></think><random><li><srai>EXPDEX NOT YOU ATTEMPT <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU ATTEND *</pattern><template><think><srai>NOPX 2246</srai></think><random><li><srai>EXPDEX NOT YOU ATTEND <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU ATTENDED *</pattern><template><think><srai>NOPX 511</srai></think><random><li><srai>EXPDEX NOT YOU ATTENDED <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU BEAR *</pattern><template><think><srai>NOPX 766</srai></think><random><li><srai>EXPDEX NOT YOU BEAR <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU BEAT *</pattern><template><think><srai>NOPX 900</srai></think><random><li><srai>EXPDEX NOT YOU BEAT <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU BECAUSE *</pattern><template><think><srai>NOPX 632</srai></think><random><li><srai>EXPDEX NOT YOU BECAUSE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU BECOME *</pattern><template><think><srai>NOPX 7014</srai></think><random><li><srai>EXPDEX NOT YOU BECOME <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU BEGIN *</pattern><template><think><srai>NOPX 2123</srai></think><random><li><srai>EXPDEX NOT YOU BEGIN <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU BEHAVE *</pattern><template><think><srai>NOPX 1058</srai></think><random><li><srai>EXPDEX NOT YOU BEHAVE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU BELIEVE *</pattern><template><think><srai>NOPX 55841</srai></think><random><li><srai>EXPDEX NOT YOU BELIEVE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU BELONG *</pattern><template><think><srai>NOPX 704</srai></think><random><li><srai>EXPDEX NOT YOU BELONG <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU BET *</pattern><template><think><srai>NOPX 579</srai></think><random><li><srai>EXPDEX NOT YOU BET <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU BLAME *</pattern><template><think><srai>NOPX 2005</srai></think><random><li><srai>EXPDEX NOT YOU BLAME <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU BOOKED *</pattern><template><think><srai>NOPX 820</srai></think><random><li><srai>EXPDEX NOT YOU BOOKED <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU BORED *</pattern><template><think><srai>NOPX 681</srai></think><random><li><srai>EXPDEX NOT YOU BORED <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU BORROW *</pattern><template><think><srai>NOPX 788</srai></think><random><li><srai>EXPDEX NOT YOU BORROW <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU BOTH *</pattern><template><think><srai>NOPX 2744</srai></think><random><li><srai>EXPDEX NOT YOU BOTH <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU BOUGHT *</pattern><template><think><srai>NOPX 878</srai></think><random><li><srai>EXPDEX NOT YOU BOUGHT <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU BOYS *</pattern><template><think><srai>NOPX 1997</srai></think><random><li><srai>EXPDEX NOT YOU BOYS <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU BROUGHT *</pattern><template><think><srai>NOPX 662</srai></think><random><li><srai>EXPDEX NOT YOU BROUGHT <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU BURN *</pattern><template><think><srai>NOPX 1058</srai></think><random><li><srai>EXPDEX NOT YOU BURN <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU BURY *</pattern><template><think><srai>NOPX 465</srai></think><random><li><srai>EXPDEX NOT YOU BURY <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU BY *</pattern><template><think><srai>NOPX 1415</srai></think><random><li><srai>EXPDEX NOT YOU BY <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU CALL *</pattern><template><think><srai>NOPX 37408</srai></think><random><li><srai>EXPDEX NOT YOU CALL <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU CALLED *</pattern><template><think><srai>NOPX 2291</srai></think><random><li><srai>EXPDEX NOT YOU CALLED <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU CARE *</pattern><template><think><srai>NOPX 16603</srai></think><random><li><srai>EXPDEX NOT YOU CARE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU CARRY *</pattern><template><think><srai>NOPX 3103</srai></think><random><li><srai>EXPDEX NOT YOU CARRY <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU CAUGHT *</pattern><template><think><srai>NOPX 507</srai></think><random><li><srai>EXPDEX NOT YOU CAUGHT <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU CELEBRATE *</pattern><template><think><srai>NOPX 957</srai></think><random><li><srai>EXPDEX NOT YOU CELEBRATE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU CHANGED *</pattern><template><think><srai>NOPX 585</srai></think><random><li><srai>EXPDEX NOT YOU CHANGED <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU CHECKED *</pattern><template><think><srai>NOPX 623</srai></think><random><li><srai>EXPDEX NOT YOU CHECKED <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU CHOOSE *</pattern><template><think><srai>NOPX 11266</srai></think><random><li><srai>EXPDEX NOT YOU CHOOSE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU CHOSE *</pattern><template><think><srai>NOPX 665</srai></think><random><li><srai>EXPDEX NOT YOU CHOSE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU CITE *</pattern><template><think><srai>NOPX 442</srai></think><random><li><srai>EXPDEX NOT YOU CITE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU CLAIM *</pattern><template><think><srai>NOPX 1008</srai></think><random><li><srai>EXPDEX NOT YOU CLAIM <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU CLICK *</pattern><template><think><srai>NOPX 2070</srai></think><random><li><srai>EXPDEX NOT YOU CLICK <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU COLLECT *</pattern><template><think><srai>NOPX 481</srai></think><random><li><srai>EXPDEX NOT YOU COLLECT <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU COMBINE *</pattern><template><think><srai>NOPX 455</srai></think><random><li><srai>EXPDEX NOT YOU COMBINE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU COME *</pattern><template><think><srai>NOPX 129434</srai></think><random><li><srai>EXPDEX NOT YOU COME <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU COMMIT *</pattern><template><think><srai>NOPX 449</srai></think><random><li><srai>EXPDEX NOT YOU COMMIT <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU COMPARE *</pattern><template><think><srai>NOPX 1205</srai></think><random><li><srai>EXPDEX NOT YOU COMPARE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU COMPLAIN *</pattern><template><think><srai>NOPX 1890</srai></think><random><li><srai>EXPDEX NOT YOU COMPLAIN <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU CONCEDE *</pattern><template><think><srai>NOPX 544</srai></think><random><li><srai>EXPDEX NOT YOU CONCEDE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU CONCERNED *</pattern><template><think><srai>NOPX 2758</srai></think><random><li><srai>EXPDEX NOT YOU CONCERNED <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU CONNECT *</pattern><template><think><srai>NOPX 645</srai></think><random><li><srai>EXPDEX NOT YOU CONNECT <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU CONSIDER *</pattern><template><think><srai>NOPX 12479</srai></think><random><li><srai>EXPDEX NOT YOU CONSIDER <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU CONSIDERED *</pattern><template><think><srai>NOPX 467</srai></think><random><li><srai>EXPDEX NOT YOU CONSIDERED <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU CONTINUE *</pattern><template><think><srai>NOPX 1878</srai></think><random><li><srai>EXPDEX NOT YOU CONTINUE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU CONTRIBUTE *</pattern><template><think><srai>NOPX 1070</srai></think><random><li><srai>EXPDEX NOT YOU CONTRIBUTE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU COPY *</pattern><template><think><srai>NOPX 705</srai></think><random><li><srai>EXPDEX NOT YOU COPY <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU CORRECT *</pattern><template><think><srai>NOPX 506</srai></think><random><li><srai>EXPDEX NOT YOU CORRECT <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU COUNT *</pattern><template><think><srai>NOPX 2063</srai></think><random><li><srai>EXPDEX NOT YOU COUNT <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU COVER *</pattern><template><think><srai>NOPX 1627</srai></think><random><li><srai>EXPDEX NOT YOU COVER <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU CRAWL *</pattern><template><think><srai>NOPX 680</srai></think><random><li><srai>EXPDEX NOT YOU CRAWL <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU CROSS *</pattern><template><think><srai>NOPX 717</srai></think><random><li><srai>EXPDEX NOT YOU CROSS <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU CRY *</pattern><template><think><srai>NOPX 29424</srai></think><random><li><srai>EXPDEX NOT YOU CRY <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU CUT *</pattern><template><think><srai>NOPX 3330</srai></think><random><li><srai>EXPDEX NOT YOU CUT <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU DARE *</pattern><template><think><srai>NOPX 77591</srai></think><random><li><srai>EXPDEX NOT YOU DARE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU DEAL *</pattern><template><think><srai>NOPX 835</srai></think><random><li><srai>EXPDEX NOT YOU DEAL <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU DECIDE *</pattern><template><think><srai>NOPX 7580</srai></think><random><li><srai>EXPDEX NOT YOU DECIDE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU DECLARE *</pattern><template><think><srai>NOPX 450</srai></think><random><li><srai>EXPDEX NOT YOU DECLARE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU DEFINE *</pattern><template><think><srai>NOPX 895</srai></think><random><li><srai>EXPDEX NOT YOU DEFINE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU DEMAND *</pattern><template><think><srai>NOPX 759</srai></think><random><li><srai>EXPDEX NOT YOU DEMAND <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU DENY *</pattern><template><think><srai>NOPX 1047</srai></think><random><li><srai>EXPDEX NOT YOU DENY <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU DESCRIBE *</pattern><template><think><srai>NOPX 1163</srai></think><random><li><srai>EXPDEX NOT YOU DESCRIBE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU DESERVE *</pattern><template><think><srai>NOPX 6072</srai></think><random><li><srai>EXPDEX NOT YOU DESERVE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU DESIRE *</pattern><template><think><srai>NOPX 578</srai></think><random><li><srai>EXPDEX NOT YOU DESIRE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU DID *</pattern><template><think><srai>NOPX 2141</srai></think><random><li><srai>EXPDEX NOT YOU DID <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU DIE *</pattern><template><think><srai>NOPX 5095</srai></think><random><li><srai>EXPDEX NOT YOU DIE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU DO *</pattern><template><think><srai>NOPX 109359</srai></think><random><li><srai>EXPDEX NOT YOU DO <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU DONATE *</pattern><template><think><srai>NOPX 745</srai></think><random><li><srai>EXPDEX NOT YOU DONATE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU DONT *</pattern><template><think><srai>NOPX 475</srai></think><random><li><srai>EXPDEX NOT YOU DONT <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU DOUBT *</pattern><template><think><srai>NOPX 984</srai></think><random><li><srai>EXPDEX NOT YOU DOUBT <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU DRAG *</pattern><template><think><srai>NOPX 408</srai></think><random><li><srai>EXPDEX NOT YOU DRAG <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU DRAW *</pattern><template><think><srai>NOPX 2265</srai></think><random><li><srai>EXPDEX NOT YOU DRAW <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU DREAMED *</pattern><template><think><srai>NOPX 794</srai></think><random><li><srai>EXPDEX NOT YOU DREAMED <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU DRESS *</pattern><template><think><srai>NOPX 871</srai></think><random><li><srai>EXPDEX NOT YOU DRESS <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU DRINK *</pattern><template><think><srai>NOPX 2569</srai></think><random><li><srai>EXPDEX NOT YOU DRINK <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU DRIVE *</pattern><template><think><srai>NOPX 2915</srai></think><random><li><srai>EXPDEX NOT YOU DRIVE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU DROP *</pattern><template><think><srai>NOPX 5486</srai></think><random><li><srai>EXPDEX NOT YOU DROP <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU EAT *</pattern><template><think><srai>NOPX 7851</srai></think><random><li><srai>EXPDEX NOT YOU EAT <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU ELECT *</pattern><template><think><srai>NOPX 554</srai></think><random><li><srai>EXPDEX NOT YOU ELECT <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU EMAIL *</pattern><template><think><srai>NOPX 2735</srai></think><random><li><srai>EXPDEX NOT YOU EMAIL <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU EMBARRASSED *</pattern><template><think><srai>NOPX 815</srai></think><random><li><srai>EXPDEX NOT YOU EMBARRASSED <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU ENCOURAGE *</pattern><template><think><srai>NOPX 548</srai></think><random><li><srai>EXPDEX NOT YOU ENCOURAGE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU END *</pattern><template><think><srai>NOPX 2106</srai></think><random><li><srai>EXPDEX NOT YOU END <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU ENGAGE *</pattern><template><think><srai>NOPX 417</srai></think><random><li><srai>EXPDEX NOT YOU ENGAGE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU ENJOY *</pattern><template><think><srai>NOPX 6835</srai></think><random><li><srai>EXPDEX NOT YOU ENJOY <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU ENLIST *</pattern><template><think><srai>NOPX 515</srai></think><random><li><srai>EXPDEX NOT YOU ENLIST <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU ENTER *</pattern><template><think><srai>NOPX 1893</srai></think><random><li><srai>EXPDEX NOT YOU ENTER <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU ENVY *</pattern><template><think><srai>NOPX 556</srai></think><random><li><srai>EXPDEX NOT YOU ENVY <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU EXCITED *</pattern><template><think><srai>NOPX 3218</srai></think><random><li><srai>EXPDEX NOT YOU EXCITED <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU EXERCISE *</pattern><template><think><srai>NOPX 1249</srai></think><random><li><srai>EXPDEX NOT YOU EXERCISE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU EXPECT *</pattern><template><think><srai>NOPX 8576</srai></think><random><li><srai>EXPDEX NOT YOU EXPECT <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU EXPERIENCE *</pattern><template><think><srai>NOPX 585</srai></think><random><li><srai>EXPDEX NOT YOU EXPERIENCE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU EXPRESS *</pattern><template><think><srai>NOPX 777</srai></think><random><li><srai>EXPDEX NOT YOU EXPRESS <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU EXTEND *</pattern><template><think><srai>NOPX 510</srai></think><random><li><srai>EXPDEX NOT YOU EXTEND <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU FACE *</pattern><template><think><srai>NOPX 1012</srai></think><random><li><srai>EXPDEX NOT YOU FACE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU FALL *</pattern><template><think><srai>NOPX 2505</srai></think><random><li><srai>EXPDEX NOT YOU FALL <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU FEAR *</pattern><template><think><srai>NOPX 4775</srai></think><random><li><srai>EXPDEX NOT YOU FEAR <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU FED *</pattern><template><think><srai>NOPX 516</srai></think><random><li><srai>EXPDEX NOT YOU FED <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU FEED *</pattern><template><think><srai>NOPX 1674</srai></think><random><li><srai>EXPDEX NOT YOU FEED <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU FEEL *</pattern><template><think><srai>NOPX 87042</srai></think><random><li><srai>EXPDEX NOT YOU FEEL <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU FELLOWS *</pattern><template><think><srai>NOPX 515</srai></think><random><li><srai>EXPDEX NOT YOU FELLOWS <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU FELT *</pattern><template><think><srai>NOPX 726</srai></think><random><li><srai>EXPDEX NOT YOU FELT <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU FIGURED *</pattern><template><think><srai>NOPX 2988</srai></think><random><li><srai>EXPDEX NOT YOU FIGURED <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU FILE *</pattern><template><think><srai>NOPX 1097</srai></think><random><li><srai>EXPDEX NOT YOU FILE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU FIND *</pattern><template><think><srai>NOPX 55524</srai></think><random><li><srai>EXPDEX NOT YOU FIND <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU FINISHED *</pattern><template><think><srai>NOPX 1248</srai></think><random><li><srai>EXPDEX NOT YOU FINISHED <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU FIT *</pattern><template><think><srai>NOPX 721</srai></think><random><li><srai>EXPDEX NOT YOU FIT <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU FLY *</pattern><template><think><srai>NOPX 2278</srai></think><random><li><srai>EXPDEX NOT YOU FLY <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU FOCUS *</pattern><template><think><srai>NOPX 1260</srai></think><random><li><srai>EXPDEX NOT YOU FOCUS <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU FOLKS *</pattern><template><think><srai>NOPX 2438</srai></think><random><li><srai>EXPDEX NOT YOU FOLKS <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU FOLLOW *</pattern><template><think><srai>NOPX 5523</srai></think><random><li><srai>EXPDEX NOT YOU FOLLOW <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU FOR *</pattern><template><think><srai>NOPX 2362</srai></think><random><li><srai>EXPDEX NOT YOU FOR <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU FORGIVE *</pattern><template><think><srai>NOPX 1950</srai></think><random><li><srai>EXPDEX NOT YOU FORGIVE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU FOUND *</pattern><template><think><srai>NOPX 42810</srai></think><random><li><srai>EXPDEX NOT YOU FOUND <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU FRET *</pattern><template><think><srai>NOPX 4345</srai></think><random><li><srai>EXPDEX NOT YOU FRET <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU FRIGHTENED *</pattern><template><think><srai>NOPX 522</srai></think><random><li><srai>EXPDEX NOT YOU FRIGHTENED <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU FROM *</pattern><template><think><srai>NOPX 1406</srai></think><random><li><srai>EXPDEX NOT YOU FROM <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU FROWN *</pattern><template><think><srai>NOPX 440</srai></think><random><li><srai>EXPDEX NOT YOU FROWN <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU FUCK *</pattern><template><think><srai>NOPX 2557</srai></think><random><li><srai>EXPDEX NOT YOU FUCK <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU FUCKIN *</pattern><template><think><srai>NOPX 1845</srai></think><random><li><srai>EXPDEX NOT YOU FUCKIN <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU GENERATE *</pattern><template><think><srai>NOPX 403</srai></think><random><li><srai>EXPDEX NOT YOU GENERATE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU GET *</pattern><template><think><srai>NOPX 154892</srai></think><random><li><srai>EXPDEX NOT YOU GET <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU GIT *</pattern><template><think><srai>NOPX 405</srai></think><random><li><srai>EXPDEX NOT YOU GIT <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU GIVE *</pattern><template><think><srai>NOPX 67558</srai></think><random><li><srai>EXPDEX NOT YOU GIVE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU GO *</pattern><template><think><srai>NOPX 160504</srai></think><random><li><srai>EXPDEX NOT YOU GO <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU GOIN *</pattern><template><think><srai>NOPX 838</srai></think><random><li><srai>EXPDEX NOT YOU GOIN <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU GONNA *</pattern><template><think><srai>NOPX 5008</srai></think><random><li><srai>EXPDEX NOT YOU GONNA <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU GOT *</pattern><template><think><srai>NOPX 15810</srai></think><random><li><srai>EXPDEX NOT YOU GOT <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU GRIEVE *</pattern><template><think><srai>NOPX 555</srai></think><random><li><srai>EXPDEX NOT YOU GRIEVE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU GROW *</pattern><template><think><srai>NOPX 2683</srai></think><random><li><srai>EXPDEX NOT YOU GROW <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU GUESS *</pattern><template><think><srai>NOPX 3959</srai></think><random><li><srai>EXPDEX NOT YOU GUESS <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU GUESSED *</pattern><template><think><srai>NOPX 437</srai></think><random><li><srai>EXPDEX NOT YOU GUESSED <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU HAD *</pattern><template><think><srai>NOPX 12690</srai></think><random><li><srai>EXPDEX NOT YOU HAD <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU HANG *</pattern><template><think><srai>NOPX 1931</srai></think><random><li><srai>EXPDEX NOT YOU HANG <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU HAPPEN *</pattern><template><think><srai>NOPX 601</srai></think><random><li><srai>EXPDEX NOT YOU HAPPEN <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU HATE *</pattern><template><think><srai>NOPX 49639</srai></think><random><li><srai>EXPDEX NOT YOU HATE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU HAVE *</pattern><template><think><srai>NOPX 291289</srai></think><random><li><srai>EXPDEX NOT YOU HAVE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU HEAR *</pattern><template><think><srai>NOPX 69598</srai></think><random><li><srai>EXPDEX NOT YOU HEAR <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU HEARD *</pattern><template><think><srai>NOPX 42431</srai></think><random><li><srai>EXPDEX NOT YOU HEARD <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU HIT *</pattern><template><think><srai>NOPX 3021</srai></think><random><li><srai>EXPDEX NOT YOU HIT <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU HOLD *</pattern><template><think><srai>NOPX 5885</srai></think><random><li><srai>EXPDEX NOT YOU HOLD <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU HOOK *</pattern><template><think><srai>NOPX 541</srai></think><random><li><srai>EXPDEX NOT YOU HOOK <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU HOP *</pattern><template><think><srai>NOPX 881</srai></think><random><li><srai>EXPDEX NOT YOU HOP <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU HOPE *</pattern><template><think><srai>NOPX 911</srai></think><random><li><srai>EXPDEX NOT YOU HOPE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU HURT *</pattern><template><think><srai>NOPX 1734</srai></think><random><li><srai>EXPDEX NOT YOU HURT <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU IF *</pattern><template><think><srai>NOPX 2360</srai></think><random><li><srai>EXPDEX NOT YOU IF <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU IMAGINE *</pattern><template><think><srai>NOPX 5532</srai></think><random><li><srai>EXPDEX NOT YOU IMAGINE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU IMPRESSED *</pattern><template><think><srai>NOPX 1012</srai></think><random><li><srai>EXPDEX NOT YOU IMPRESSED <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU IN *</pattern><template><think><srai>NOPX 19719</srai></think><random><li><srai>EXPDEX NOT YOU IN <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU INCLUDE *</pattern><template><think><srai>NOPX 3995</srai></think><random><li><srai>EXPDEX NOT YOU INCLUDE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU INTEND *</pattern><template><think><srai>NOPX 3314</srai></think><random><li><srai>EXPDEX NOT YOU INTEND <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU INTRODUCED *</pattern><template><think><srai>NOPX 548</srai></think><random><li><srai>EXPDEX NOT YOU INTRODUCED <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU INVITE *</pattern><template><think><srai>NOPX 2840</srai></think><random><li><srai>EXPDEX NOT YOU INVITE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU IS *</pattern><template><think><srai>NOPX 1509</srai></think><random><li><srai>EXPDEX NOT YOU IS <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU JOINED *</pattern><template><think><srai>NOPX 603</srai></think><random><li><srai>EXPDEX NOT YOU JOINED <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU JUMP *</pattern><template><think><srai>NOPX 2463</srai></think><random><li><srai>EXPDEX NOT YOU JUMP <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU KICK *</pattern><template><think><srai>NOPX 1446</srai></think><random><li><srai>EXPDEX NOT YOU KICK <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU KILLED *</pattern><template><think><srai>NOPX 430</srai></think><random><li><srai>EXPDEX NOT YOU KILLED <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU KISS *</pattern><template><think><srai>NOPX 4423</srai></think><random><li><srai>EXPDEX NOT YOU KISS <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU KNEW *</pattern><template><think><srai>NOPX 837</srai></think><random><li><srai>EXPDEX NOT YOU KNEW <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU KNOW *</pattern><template><think><srai>NOPX 465280</srai></think><random><li><srai>EXPDEX NOT YOU KNOW <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU LADIES *</pattern><template><think><srai>NOPX 605</srai></think><random><li><srai>EXPDEX NOT YOU LADIES <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU LAUGH *</pattern><template><think><srai>NOPX 2246</srai></think><random><li><srai>EXPDEX NOT YOU LAUGH <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU LAY *</pattern><template><think><srai>NOPX 3657</srai></think><random><li><srai>EXPDEX NOT YOU LAY <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU LEAD *</pattern><template><think><srai>NOPX 1618</srai></think><random><li><srai>EXPDEX NOT YOU LEAD <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU LEARN *</pattern><template><think><srai>NOPX 8880</srai></think><random><li><srai>EXPDEX NOT YOU LEARN <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU LEARNED *</pattern><template><think><srai>NOPX 4422</srai></think><random><li><srai>EXPDEX NOT YOU LEARNED <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU LEARNT *</pattern><template><think><srai>NOPX 450</srai></think><random><li><srai>EXPDEX NOT YOU LEARNT <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU LEAVE *</pattern><template><think><srai>NOPX 30641</srai></think><random><li><srai>EXPDEX NOT YOU LEAVE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU LEFT *</pattern><template><think><srai>NOPX 929</srai></think><random><li><srai>EXPDEX NOT YOU LEFT <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU LEND *</pattern><template><think><srai>NOPX 1375</srai></think><random><li><srai>EXPDEX NOT YOU LEND <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU LET *</pattern><template><think><srai>NOPX 58298</srai></think><random><li><srai>EXPDEX NOT YOU LET <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU LICK *</pattern><template><think><srai>NOPX 489</srai></think><random><li><srai>EXPDEX NOT YOU LICK <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU LIE *</pattern><template><think><srai>NOPX 3894</srai></think><random><li><srai>EXPDEX NOT YOU LIE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU LIKE *</pattern><template><think><srai>NOPX 176474</srai></think><random><li><srai>EXPDEX NOT YOU LIKE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU LIKED *</pattern><template><think><srai>NOPX 1439</srai></think><random><li><srai>EXPDEX NOT YOU LIKED <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU LINK *</pattern><template><think><srai>NOPX 1598</srai></think><random><li><srai>EXPDEX NOT YOU LINK <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU LISTEN *</pattern><template><think><srai>NOPX 14278</srai></think><random><li><srai>EXPDEX NOT YOU LISTEN <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU LIVE *</pattern><template><think><srai>NOPX 10438</srai></think><random><li><srai>EXPDEX NOT YOU LIVE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU LL *</pattern><template><think><srai>NOPX 2154</srai></think><random><li><srai>EXPDEX NOT YOU LL <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU LOCK *</pattern><template><think><srai>NOPX 893</srai></think><random><li><srai>EXPDEX NOT YOU LOCK <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU LOG *</pattern><template><think><srai>NOPX 714</srai></think><random><li><srai>EXPDEX NOT YOU LOG <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU LOOK *</pattern><template><think><srai>NOPX 26527</srai></think><random><li><srai>EXPDEX NOT YOU LOOK <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU LOOKED *</pattern><template><think><srai>NOPX 757</srai></think><random><li><srai>EXPDEX NOT YOU LOOKED <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU LOSE *</pattern><template><think><srai>NOPX 5275</srai></think><random><li><srai>EXPDEX NOT YOU LOSE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU LOVE *</pattern><template><think><srai>NOPX 85532</srai></think><random><li><srai>EXPDEX NOT YOU LOVE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU MADE *</pattern><template><think><srai>NOPX 2619</srai></think><random><li><srai>EXPDEX NOT YOU MADE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU MAKE *</pattern><template><think><srai>NOPX 49227</srai></think><random><li><srai>EXPDEX NOT YOU MAKE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU MANAGE *</pattern><template><think><srai>NOPX 1196</srai></think><random><li><srai>EXPDEX NOT YOU MANAGE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU MARK *</pattern><template><think><srai>NOPX 452</srai></think><random><li><srai>EXPDEX NOT YOU MARK <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU MARRIED *</pattern><template><think><srai>NOPX 2423</srai></think><random><li><srai>EXPDEX NOT YOU MARRIED <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU MEAN *</pattern><template><think><srai>NOPX 45030</srai></think><random><li><srai>EXPDEX NOT YOU MEAN <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU MEANT *</pattern><template><think><srai>NOPX 1128</srai></think><random><li><srai>EXPDEX NOT YOU MEANT <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU MENTION *</pattern><template><think><srai>NOPX 5315</srai></think><random><li><srai>EXPDEX NOT YOU MENTION <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU MENTIONED *</pattern><template><think><srai>NOPX 838</srai></think><random><li><srai>EXPDEX NOT YOU MENTIONED <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU MET *</pattern><template><think><srai>NOPX 719</srai></think><random><li><srai>EXPDEX NOT YOU MET <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU MISS *</pattern><template><think><srai>NOPX 10017</srai></think><random><li><srai>EXPDEX NOT YOU MISS <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU MISSED *</pattern><template><think><srai>NOPX 677</srai></think><random><li><srai>EXPDEX NOT YOU MISSED <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU MOVED *</pattern><template><think><srai>NOPX 519</srai></think><random><li><srai>EXPDEX NOT YOU MOVED <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU NEED *</pattern><template><think><srai>NOPX 44080</srai></think><random><li><srai>EXPDEX NOT YOU NEED <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU NO *</pattern><template><think><srai>NOPX 549</srai></think><random><li><srai>EXPDEX NOT YOU NO <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU NOTICE *</pattern><template><think><srai>NOPX 9691</srai></think><random><li><srai>EXPDEX NOT YOU NOTICE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU NOTICED *</pattern><template><think><srai>NOPX 13484</srai></think><random><li><srai>EXPDEX NOT YOU NOTICED <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU OBSERVE *</pattern><template><think><srai>NOPX 663</srai></think><random><li><srai>EXPDEX NOT YOU OBSERVE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU OF *</pattern><template><think><srai>NOPX 2120</srai></think><random><li><srai>EXPDEX NOT YOU OF <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU OFFER *</pattern><template><think><srai>NOPX 5251</srai></think><random><li><srai>EXPDEX NOT YOU OFFER <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU ON *</pattern><template><think><srai>NOPX 6222</srai></think><random><li><srai>EXPDEX NOT YOU ON <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU OUT *</pattern><template><think><srai>NOPX 3030</srai></think><random><li><srai>EXPDEX NOT YOU OUT <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU OVER *</pattern><template><think><srai>NOPX 1222</srai></think><random><li><srai>EXPDEX NOT YOU OVER <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU OWE *</pattern><template><think><srai>NOPX 8363</srai></think><random><li><srai>EXPDEX NOT YOU OWE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU PAID *</pattern><template><think><srai>NOPX 887</srai></think><random><li><srai>EXPDEX NOT YOU PAID <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU PAINT *</pattern><template><think><srai>NOPX 1301</srai></think><random><li><srai>EXPDEX NOT YOU PAINT <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU PASS *</pattern><template><think><srai>NOPX 2377</srai></think><random><li><srai>EXPDEX NOT YOU PASS <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU PASSED *</pattern><template><think><srai>NOPX 468</srai></think><random><li><srai>EXPDEX NOT YOU PASSED <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU PERCEIVE *</pattern><template><think><srai>NOPX 684</srai></think><random><li><srai>EXPDEX NOT YOU PERCEIVE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU PERFORM *</pattern><template><think><srai>NOPX 693</srai></think><random><li><srai>EXPDEX NOT YOU PERFORM <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU PICK *</pattern><template><think><srai>NOPX 7258</srai></think><random><li><srai>EXPDEX NOT YOU PICK <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU PLAN *</pattern><template><think><srai>NOPX 5997</srai></think><random><li><srai>EXPDEX NOT YOU PLAN <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU PLAY *</pattern><template><think><srai>NOPX 14450</srai></think><random><li><srai>EXPDEX NOT YOU PLAY <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU PLAYED *</pattern><template><think><srai>NOPX 529</srai></think><random><li><srai>EXPDEX NOT YOU PLAYED <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU PLEASED *</pattern><template><think><srai>NOPX 788</srai></think><random><li><srai>EXPDEX NOT YOU PLEASED <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU POP *</pattern><template><think><srai>NOPX 1014</srai></think><random><li><srai>EXPDEX NOT YOU POP <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU POSTED *</pattern><template><think><srai>NOPX 1076</srai></think><random><li><srai>EXPDEX NOT YOU POSTED <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU POUR *</pattern><template><think><srai>NOPX 626</srai></think><random><li><srai>EXPDEX NOT YOU POUR <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU PRAY *</pattern><template><think><srai>NOPX 2425</srai></think><random><li><srai>EXPDEX NOT YOU PRAY <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU PREFER *</pattern><template><think><srai>NOPX 6388</srai></think><random><li><srai>EXPDEX NOT YOU PREFER <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU PREPARE *</pattern><template><think><srai>NOPX 427</srai></think><random><li><srai>EXPDEX NOT YOU PREPARE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU PRETEND *</pattern><template><think><srai>NOPX 1771</srai></think><random><li><srai>EXPDEX NOT YOU PRETEND <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU PRODUCE *</pattern><template><think><srai>NOPX 769</srai></think><random><li><srai>EXPDEX NOT YOU PRODUCE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU PROMISE *</pattern><template><think><srai>NOPX 1780</srai></think><random><li><srai>EXPDEX NOT YOU PROMISE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU PROPOSE *</pattern><template><think><srai>NOPX 831</srai></think><random><li><srai>EXPDEX NOT YOU PROPOSE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU PROVIDE *</pattern><template><think><srai>NOPX 4121</srai></think><random><li><srai>EXPDEX NOT YOU PROVIDE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU PUT *</pattern><template><think><srai>NOPX 33761</srai></think><random><li><srai>EXPDEX NOT YOU PUT <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU QUIT *</pattern><template><think><srai>NOPX 5728</srai></think><random><li><srai>EXPDEX NOT YOU QUIT <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU QUOTE *</pattern><template><think><srai>NOPX 1002</srai></think><random><li><srai>EXPDEX NOT YOU QUOTE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU RE *</pattern><template><think><srai>NOPX 1016</srai></think><random><li><srai>EXPDEX NOT YOU RE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU REACH *</pattern><template><think><srai>NOPX 2289</srai></think><random><li><srai>EXPDEX NOT YOU REACH <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU READ *</pattern><template><think><srai>NOPX 48463</srai></think><random><li><srai>EXPDEX NOT YOU READ <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU REALISE *</pattern><template><think><srai>NOPX 6043</srai></think><random><li><srai>EXPDEX NOT YOU REALISE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU REALIZE *</pattern><template><think><srai>NOPX 25748</srai></think><random><li><srai>EXPDEX NOT YOU REALIZE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU REALIZED *</pattern><template><think><srai>NOPX 1035</srai></think><random><li><srai>EXPDEX NOT YOU REALIZED <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU RECALL *</pattern><template><think><srai>NOPX 1689</srai></think><random><li><srai>EXPDEX NOT YOU RECALL <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU RECEIVE *</pattern><template><think><srai>NOPX 5139</srai></think><random><li><srai>EXPDEX NOT YOU RECEIVE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU RECEIVED *</pattern><template><think><srai>NOPX 1348</srai></think><random><li><srai>EXPDEX NOT YOU RECEIVED <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU RECKON *</pattern><template><think><srai>NOPX 1948</srai></think><random><li><srai>EXPDEX NOT YOU RECKON <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU RECOGNISE *</pattern><template><think><srai>NOPX 1223</srai></think><random><li><srai>EXPDEX NOT YOU RECOGNISE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU RECOGNIZE *</pattern><template><think><srai>NOPX 5214</srai></think><random><li><srai>EXPDEX NOT YOU RECOGNIZE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU RECOLLECT *</pattern><template><think><srai>NOPX 983</srai></think><random><li><srai>EXPDEX NOT YOU RECOLLECT <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU RECOMMEND *</pattern><template><think><srai>NOPX 1003</srai></think><random><li><srai>EXPDEX NOT YOU RECOMMEND <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU REFER *</pattern><template><think><srai>NOPX 515</srai></think><random><li><srai>EXPDEX NOT YOU REFER <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU REGARD *</pattern><template><think><srai>NOPX 502</srai></think><random><li><srai>EXPDEX NOT YOU REGARD <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU REGISTER *</pattern><template><think><srai>NOPX 5340</srai></think><random><li><srai>EXPDEX NOT YOU REGISTER <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU REGISTERED *</pattern><template><think><srai>NOPX 446</srai></think><random><li><srai>EXPDEX NOT YOU REGISTERED <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU REGRET *</pattern><template><think><srai>NOPX 642</srai></think><random><li><srai>EXPDEX NOT YOU REGRET <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU REMAIN *</pattern><template><think><srai>NOPX 521</srai></think><random><li><srai>EXPDEX NOT YOU REMAIN <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU REMEMBER *</pattern><template><think><srai>NOPX 58689</srai></think><random><li><srai>EXPDEX NOT YOU REMEMBER <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU REMIND *</pattern><template><think><srai>NOPX 607</srai></think><random><li><srai>EXPDEX NOT YOU REMIND <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU REPLIED *</pattern><template><think><srai>NOPX 2022</srai></think><random><li><srai>EXPDEX NOT YOU REPLIED <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU REPLY *</pattern><template><think><srai>NOPX 1341</srai></think><random><li><srai>EXPDEX NOT YOU REPLY <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU REPORT *</pattern><template><think><srai>NOPX 2603</srai></think><random><li><srai>EXPDEX NOT YOU REPORT <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU REQUEST *</pattern><template><think><srai>NOPX 748</srai></think><random><li><srai>EXPDEX NOT YOU REQUEST <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU REQUIRE *</pattern><template><think><srai>NOPX 1462</srai></think><random><li><srai>EXPDEX NOT YOU REQUIRE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU RESPOND *</pattern><template><think><srai>NOPX 2190</srai></think><random><li><srai>EXPDEX NOT YOU RESPOND <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU RIDE *</pattern><template><think><srai>NOPX 2053</srai></think><random><li><srai>EXPDEX NOT YOU RIDE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU RISE *</pattern><template><think><srai>NOPX 553</srai></think><random><li><srai>EXPDEX NOT YOU RISE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU ROLL *</pattern><template><think><srai>NOPX 1735</srai></think><random><li><srai>EXPDEX NOT YOU ROLL <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU RUN *</pattern><template><think><srai>NOPX 14323</srai></think><random><li><srai>EXPDEX NOT YOU RUN <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU RUSH *</pattern><template><think><srai>NOPX 639</srai></think><random><li><srai>EXPDEX NOT YOU RUSH <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU SAID *</pattern><template><think><srai>NOPX 2074</srai></think><random><li><srai>EXPDEX NOT YOU SAID <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU SATISFIED *</pattern><template><think><srai>NOPX 1024</srai></think><random><li><srai>EXPDEX NOT YOU SATISFIED <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU SAW *</pattern><template><think><srai>NOPX 537</srai></think><random><li><srai>EXPDEX NOT YOU SAW <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU SAY *</pattern><template><think><srai>NOPX 120287</srai></think><random><li><srai>EXPDEX NOT YOU SAY <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU SCARED *</pattern><template><think><srai>NOPX 3751</srai></think><random><li><srai>EXPDEX NOT YOU SCARED <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU SCREAM *</pattern><template><think><srai>NOPX 1505</srai></think><random><li><srai>EXPDEX NOT YOU SCREAM <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU SEE *</pattern><template><think><srai>NOPX 374911</srai></think><random><li><srai>EXPDEX NOT YOU SEE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU SEEK *</pattern><template><think><srai>NOPX 1464</srai></think><random><li><srai>EXPDEX NOT YOU SEEK <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU SEEM *</pattern><template><think><srai>NOPX 956</srai></think><random><li><srai>EXPDEX NOT YOU SEEM <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU SELECT *</pattern><template><think><srai>NOPX 657</srai></think><random><li><srai>EXPDEX NOT YOU SELECT <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU SENT *</pattern><template><think><srai>NOPX 886</srai></think><random><li><srai>EXPDEX NOT YOU SENT <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU SERVE *</pattern><template><think><srai>NOPX 698</srai></think><random><li><srai>EXPDEX NOT YOU SERVE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU SET *</pattern><template><think><srai>NOPX 7298</srai></think><random><li><srai>EXPDEX NOT YOU SET <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU SHARE *</pattern><template><think><srai>NOPX 7616</srai></think><random><li><srai>EXPDEX NOT YOU SHARE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU SHAVE *</pattern><template><think><srai>NOPX 503</srai></think><random><li><srai>EXPDEX NOT YOU SHAVE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU SHED *</pattern><template><think><srai>NOPX 547</srai></think><random><li><srai>EXPDEX NOT YOU SHED <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU SHINE *</pattern><template><think><srai>NOPX 875</srai></think><random><li><srai>EXPDEX NOT YOU SHINE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU SHIVER *</pattern><template><think><srai>NOPX 464</srai></think><random><li><srai>EXPDEX NOT YOU SHIVER <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU SHOUT *</pattern><template><think><srai>NOPX 604</srai></think><random><li><srai>EXPDEX NOT YOU SHOUT <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU SHOVE *</pattern><template><think><srai>NOPX 415</srai></think><random><li><srai>EXPDEX NOT YOU SHOVE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU SHOW *</pattern><template><think><srai>NOPX 18962</srai></think><random><li><srai>EXPDEX NOT YOU SHOW <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU SHUT *</pattern><template><think><srai>NOPX 5206</srai></think><random><li><srai>EXPDEX NOT YOU SHUT <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU SIGNED *</pattern><template><think><srai>NOPX 1199</srai></think><random><li><srai>EXPDEX NOT YOU SIGNED <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU SIT *</pattern><template><think><srai>NOPX 14121</srai></think><random><li><srai>EXPDEX NOT YOU SIT <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU SLEEP *</pattern><template><think><srai>NOPX 3894</srai></think><random><li><srai>EXPDEX NOT YOU SLEEP <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU SLIDE *</pattern><template><think><srai>NOPX 810</srai></think><random><li><srai>EXPDEX NOT YOU SLIDE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU SLUT *</pattern><template><think><srai>NOPX 450</srai></think><random><li><srai>EXPDEX NOT YOU SLUT <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU SMELL *</pattern><template><think><srai>NOPX 3451</srai></think><random><li><srai>EXPDEX NOT YOU SMELL <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU SMILE *</pattern><template><think><srai>NOPX 2565</srai></think><random><li><srai>EXPDEX NOT YOU SMILE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU SMOKE *</pattern><template><think><srai>NOPX 1745</srai></think><random><li><srai>EXPDEX NOT YOU SMOKE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU SOME *</pattern><template><think><srai>NOPX 602</srai></think><random><li><srai>EXPDEX NOT YOU SOME <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU SOW *</pattern><template><think><srai>NOPX 431</srai></think><random><li><srai>EXPDEX NOT YOU SOW <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU SPEAK *</pattern><template><think><srai>NOPX 10030</srai></think><random><li><srai>EXPDEX NOT YOU SPEAK <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU SPECIFY *</pattern><template><think><srai>NOPX 789</srai></think><random><li><srai>EXPDEX NOT YOU SPECIFY <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU SPELL *</pattern><template><think><srai>NOPX 1200</srai></think><random><li><srai>EXPDEX NOT YOU SPELL <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU SPEND *</pattern><template><think><srai>NOPX 5165</srai></think><random><li><srai>EXPDEX NOT YOU SPEND <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU SPLIT *</pattern><template><think><srai>NOPX 419</srai></think><random><li><srai>EXPDEX NOT YOU SPLIT <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU SPREAD *</pattern><template><think><srai>NOPX 455</srai></think><random><li><srai>EXPDEX NOT YOU SPREAD <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU STAND *</pattern><template><think><srai>NOPX 5933</srai></think><random><li><srai>EXPDEX NOT YOU STAND <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU START *</pattern><template><think><srai>NOPX 29560</srai></think><random><li><srai>EXPDEX NOT YOU START <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU STARTED *</pattern><template><think><srai>NOPX 588</srai></think><random><li><srai>EXPDEX NOT YOU STARTED <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU STICK *</pattern><template><think><srai>NOPX 5162</srai></think><random><li><srai>EXPDEX NOT YOU STICK <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU STIR *</pattern><template><think><srai>NOPX 491</srai></think><random><li><srai>EXPDEX NOT YOU STIR <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU STUMBLE *</pattern><template><think><srai>NOPX 548</srai></think><random><li><srai>EXPDEX NOT YOU STUMBLE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU SUBSCRIBE *</pattern><template><think><srai>NOPX 2945</srai></think><random><li><srai>EXPDEX NOT YOU SUBSCRIBE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU SUCK *</pattern><template><think><srai>NOPX 3271</srai></think><random><li><srai>EXPDEX NOT YOU SUCK <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU SUFFER *</pattern><template><think><srai>NOPX 646</srai></think><random><li><srai>EXPDEX NOT YOU SUFFER <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU SUGGEST *</pattern><template><think><srai>NOPX 1941</srai></think><random><li><srai>EXPDEX NOT YOU SUGGEST <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU SUPPORT *</pattern><template><think><srai>NOPX 4876</srai></think><random><li><srai>EXPDEX NOT YOU SUPPORT <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU SUPPOSE *</pattern><template><think><srai>NOPX 5774</srai></think><random><li><srai>EXPDEX NOT YOU SUPPOSE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU SUPPOSED *</pattern><template><think><srai>NOPX 16787</srai></think><random><li><srai>EXPDEX NOT YOU SUPPOSED <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU SURPRISED *</pattern><template><think><srai>NOPX 1041</srai></think><random><li><srai>EXPDEX NOT YOU SURPRISED <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU SUSPECT *</pattern><template><think><srai>NOPX 569</srai></think><random><li><srai>EXPDEX NOT YOU SUSPECT <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU SWEAR *</pattern><template><think><srai>NOPX 514</srai></think><random><li><srai>EXPDEX NOT YOU SWEAR <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU SWING *</pattern><template><think><srai>NOPX 662</srai></think><random><li><srai>EXPDEX NOT YOU SWING <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU SWITCH *</pattern><template><think><srai>NOPX 1514</srai></think><random><li><srai>EXPDEX NOT YOU SWITCH <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU SWITCHED *</pattern><template><think><srai>NOPX 1169</srai></think><random><li><srai>EXPDEX NOT YOU SWITCHED <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU TAKE *</pattern><template><think><srai>NOPX 101130</srai></think><random><li><srai>EXPDEX NOT YOU TAKE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU TALKED *</pattern><template><think><srai>NOPX 508</srai></think><random><li><srai>EXPDEX NOT YOU TALKED <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU TASTE *</pattern><template><think><srai>NOPX 952</srai></think><random><li><srai>EXPDEX NOT YOU TASTE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU TELL *</pattern><template><think><srai>NOPX 167102</srai></think><random><li><srai>EXPDEX NOT YOU TELL <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU TEND *</pattern><template><think><srai>NOPX 401</srai></think><random><li><srai>EXPDEX NOT YOU TEND <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU THAT *</pattern><template><think><srai>NOPX 11585</srai></think><random><li><srai>EXPDEX NOT YOU THAT <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU THE *</pattern><template><think><srai>NOPX 37060</srai></think><random><li><srai>EXPDEX NOT YOU THE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU THINK *</pattern><template><think><srai>NOPX 766138</srai></think><random><li><srai>EXPDEX NOT YOU THINK <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU THIS *</pattern><template><think><srai>NOPX 572</srai></think><random><li><srai>EXPDEX NOT YOU THIS <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU THOUGH *</pattern><template><think><srai>NOPX 643</srai></think><random><li><srai>EXPDEX NOT YOU THOUGH <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU THOUGHT *</pattern><template><think><srai>NOPX 2367</srai></think><random><li><srai>EXPDEX NOT YOU THOUGHT <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU THREATEN *</pattern><template><think><srai>NOPX 426</srai></think><random><li><srai>EXPDEX NOT YOU THREATEN <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU THRILLED *</pattern><template><think><srai>NOPX 506</srai></think><random><li><srai>EXPDEX NOT YOU THRILLED <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU TIRED *</pattern><template><think><srai>NOPX 9408</srai></think><random><li><srai>EXPDEX NOT YOU TIRED <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU TOLD *</pattern><template><think><srai>NOPX 2734</srai></think><random><li><srai>EXPDEX NOT YOU TOLD <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU TOOK *</pattern><template><think><srai>NOPX 512</srai></think><random><li><srai>EXPDEX NOT YOU TOOK <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU TOUCH *</pattern><template><think><srai>NOPX 4629</srai></think><random><li><srai>EXPDEX NOT YOU TOUCH <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU TRAVEL *</pattern><template><think><srai>NOPX 494</srai></think><random><li><srai>EXPDEX NOT YOU TRAVEL <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU TREAT *</pattern><template><think><srai>NOPX 3249</srai></think><random><li><srai>EXPDEX NOT YOU TREAT <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU TRIED *</pattern><template><think><srai>NOPX 1479</srai></think><random><li><srai>EXPDEX NOT YOU TRIED <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU TRUST *</pattern><template><think><srai>NOPX 11586</srai></think><random><li><srai>EXPDEX NOT YOU TRUST <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU TRY *</pattern><template><think><srai>NOPX 85931</srai></think><random><li><srai>EXPDEX NOT YOU TRY <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU UNDER *</pattern><template><think><srai>NOPX 421</srai></think><random><li><srai>EXPDEX NOT YOU UNDER <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU UNDERSTAND *</pattern><template><think><srai>NOPX 83633</srai></think><random><li><srai>EXPDEX NOT YOU UNDERSTAND <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU UNDERSTOOD *</pattern><template><think><srai>NOPX 422</srai></think><random><li><srai>EXPDEX NOT YOU UNDERSTOOD <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU UP *</pattern><template><think><srai>NOPX 1333</srai></think><random><li><srai>EXPDEX NOT YOU UP <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU UPDATED *</pattern><template><think><srai>NOPX 439</srai></think><random><li><srai>EXPDEX NOT YOU UPDATED <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU UPSET *</pattern><template><think><srai>NOPX 518</srai></think><random><li><srai>EXPDEX NOT YOU UPSET <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU USE *</pattern><template><think><srai>NOPX 65479</srai></think><random><li><srai>EXPDEX NOT YOU USE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU USED *</pattern><template><think><srai>NOPX 7263</srai></think><random><li><srai>EXPDEX NOT YOU USED <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU VISIT *</pattern><template><think><srai>NOPX 7941</srai></think><random><li><srai>EXPDEX NOT YOU VISIT <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU VOTED *</pattern><template><think><srai>NOPX 594</srai></think><random><li><srai>EXPDEX NOT YOU VOTED <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU WAKE *</pattern><template><think><srai>NOPX 3827</srai></think><random><li><srai>EXPDEX NOT YOU WAKE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU WALK *</pattern><template><think><srai>NOPX 7836</srai></think><random><li><srai>EXPDEX NOT YOU WALK <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU WANNA *</pattern><template><think><srai>NOPX 23083</srai></think><random><li><srai>EXPDEX NOT YOU WANNA <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU WANT *</pattern><template><think><srai>NOPX 220067</srai></think><random><li><srai>EXPDEX NOT YOU WANT <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU WANTA *</pattern><template><think><srai>NOPX 1696</srai></think><random><li><srai>EXPDEX NOT YOU WANTA <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU WANTED *</pattern><template><think><srai>NOPX 1470</srai></think><random><li><srai>EXPDEX NOT YOU WANTED <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU WARN *</pattern><template><think><srai>NOPX 1673</srai></think><random><li><srai>EXPDEX NOT YOU WARN <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU WAS *</pattern><template><think><srai>NOPX 537</srai></think><random><li><srai>EXPDEX NOT YOU WAS <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU WASH *</pattern><template><think><srai>NOPX 1064</srai></think><random><li><srai>EXPDEX NOT YOU WASH <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU WAT *</pattern><template><think><srai>NOPX 442</srai></think><random><li><srai>EXPDEX NOT YOU WAT <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU WATCH *</pattern><template><think><srai>NOPX 7402</srai></think><random><li><srai>EXPDEX NOT YOU WATCH <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU WATCHED *</pattern><template><think><srai>NOPX 574</srai></think><random><li><srai>EXPDEX NOT YOU WATCHED <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU WEAR *</pattern><template><think><srai>NOPX 6460</srai></think><random><li><srai>EXPDEX NOT YOU WEAR <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU WEEP *</pattern><template><think><srai>NOPX 2959</srai></think><random><li><srai>EXPDEX NOT YOU WEEP <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU WERE *</pattern><template><think><srai>NOPX 11153</srai></think><random><li><srai>EXPDEX NOT YOU WERE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU WITH *</pattern><template><think><srai>NOPX 2818</srai></think><random><li><srai>EXPDEX NOT YOU WITH <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU WON *</pattern><template><think><srai>NOPX 416</srai></think><random><li><srai>EXPDEX NOT YOU WON <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU WONDER *</pattern><template><think><srai>NOPX 7678</srai></think><random><li><srai>EXPDEX NOT YOU WONDER <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU WONDERED *</pattern><template><think><srai>NOPX 1031</srai></think><random><li><srai>EXPDEX NOT YOU WONDERED <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU WORK *</pattern><template><think><srai>NOPX 7513</srai></think><random><li><srai>EXPDEX NOT YOU WORK <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU WORKED *</pattern><template><think><srai>NOPX 511</srai></think><random><li><srai>EXPDEX NOT YOU WORKED <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU WORRIED *</pattern><template><think><srai>NOPX 5557</srai></think><random><li><srai>EXPDEX NOT YOU WORRIED <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU WORRY *</pattern><template><think><srai>NOPX 64720</srai></think><random><li><srai>EXPDEX NOT YOU WORRY <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU WRAP *</pattern><template><think><srai>NOPX 1048</srai></think><random><li><srai>EXPDEX NOT YOU WRAP <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU YELL *</pattern><template><think><srai>NOPX 440</srai></think><random><li><srai>EXPDEX NOT YOU YELL <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU GO BACK *</pattern><template><think><srai>NOPX 3884</srai></think><random><li><srai>EXPDEX NOT YOU GO BACK <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU COME BACK *</pattern><template><think><srai>NOPX 511</srai></think><random><li><srai>EXPDEX NOT YOU COME BACK <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU FEEL WELL *</pattern><template><think><srai>NOPX 567</srai></think><random><li><srai>EXPDEX NOT YOU FEEL WELL <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU FORGIVE *</pattern><template><think><srai>NOPX 480</srai></think><random><li><srai>EXPDEX NOT YOU FORGIVE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU HEARD *</pattern><template><think><srai>NOPX 473</srai></think><random><li><srai>EXPDEX NOT YOU HEARD <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU KNOW *</pattern><template><think><srai>NOPX 4311</srai></think><random><li><srai>EXPDEX NOT YOU KNOW <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU KNOW THERE *</pattern><template><think><srai>NOPX 4135</srai></think><random><li><srai>EXPDEX NOT YOU KNOW THERE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU THINK *</pattern><template><think><srai>NOPX 917</srai></think><random><li><srai>EXPDEX NOT YOU THINK <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU WALK SO *</pattern><template><think><srai>NOPX 1425</srai></think><random><li><srai>EXPDEX NOT YOU WALK SO <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU WEEP *</pattern><template><think><srai>NOPX 929</srai></think><random><li><srai>EXPDEX NOT YOU WEEP <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU WORRY *</pattern><template><think><srai>NOPX 532</srai></think><random><li><srai>EXPDEX NOT YOU WORRY <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU DO NOT *</pattern><template><think><srai>NOPX 2028</srai></think><random><li><srai>EXPDEX NOT YOU DO NOT <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU UNK *</pattern><template><think><srai>NOPX 2179</srai></think><random><li><srai>EXPDEX NOT YOU UNK <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU UNK UNK *</pattern><template><think><srai>NOPX 658</srai></think><random><li><srai>EXPDEX NOT YOU UNK UNK <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU DO NOT *</pattern><template><think><srai>NOPX 946</srai></think><random><li><srai>EXPDEX NOT YOU DO NOT <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU ARE *</pattern><template><think><srai>NOPX 1453</srai></think><random><li><srai>EXPDEX NOT YOU ARE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU ARE ABLE *</pattern><template><think><srai>NOPX 2495</srai></think><random><li><srai>EXPDEX NOT YOU ARE ABLE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU ARE ACTUALLY *</pattern><template><think><srai>NOPX 793</srai></think><random><li><srai>EXPDEX NOT YOU ARE ACTUALLY <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU ARE ALREADY *</pattern><template><think><srai>NOPX 423</srai></think><random><li><srai>EXPDEX NOT YOU ARE ALREADY <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU ARE AWARE *</pattern><template><think><srai>NOPX 578</srai></think><random><li><srai>EXPDEX NOT YOU ARE AWARE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU ARE CURRENTLY *</pattern><template><think><srai>NOPX 820</srai></think><random><li><srai>EXPDEX NOT YOU ARE CURRENTLY <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU ARE ELIGIBLE *</pattern><template><think><srai>NOPX 2730</srai></think><random><li><srai>EXPDEX NOT YOU ARE ELIGIBLE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU ARE FAMILIAR *</pattern><template><think><srai>NOPX 856</srai></think><random><li><srai>EXPDEX NOT YOU ARE FAMILIAR <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU ARE INTERESTED *</pattern><template><think><srai>NOPX 2583</srai></think><random><li><srai>EXPDEX NOT YOU ARE INTERESTED <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU ARE LIKELY *</pattern><template><think><srai>NOPX 587</srai></think><random><li><srai>EXPDEX NOT YOU ARE LIKELY <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU ARE NOT *</pattern><template><think><srai>NOPX 1445</srai></think><random><li><srai>EXPDEX NOT YOU ARE NOT <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU ARE PREGNANT *</pattern><template><think><srai>NOPX 1061</srai></think><random><li><srai>EXPDEX NOT YOU ARE PREGNANT <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU ARE READY *</pattern><template><think><srai>NOPX 1222</srai></think><random><li><srai>EXPDEX NOT YOU ARE READY <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU ARE STILL *</pattern><template><think><srai>NOPX 1039</srai></think><random><li><srai>EXPDEX NOT YOU ARE STILL <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU ARE WILLING *</pattern><template><think><srai>NOPX 1466</srai></think><random><li><srai>EXPDEX NOT YOU ARE WILLING <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU CLICK HERE *</pattern><template><think><srai>NOPX 441</srai></think><random><li><srai>EXPDEX NOT YOU CLICK HERE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU COME *</pattern><template><think><srai>NOPX 420</srai></think><random><li><srai>EXPDEX NOT YOU COME <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU COME BACK *</pattern><template><think><srai>NOPX 10637</srai></think><random><li><srai>EXPDEX NOT YOU COME BACK <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU COME DOWN *</pattern><template><think><srai>NOPX 3534</srai></think><random><li><srai>EXPDEX NOT YOU COME DOWN <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU COME HERE *</pattern><template><think><srai>NOPX 2054</srai></think><random><li><srai>EXPDEX NOT YOU COME HERE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU COME RIGHT *</pattern><template><think><srai>NOPX 427</srai></think><random><li><srai>EXPDEX NOT YOU COME RIGHT <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU COME TOO *</pattern><template><think><srai>NOPX 448</srai></think><random><li><srai>EXPDEX NOT YOU COME TOO <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU COME UP *</pattern><template><think><srai>NOPX 7299</srai></think><random><li><srai>EXPDEX NOT YOU COME UP <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU CRAWL BACK *</pattern><template><think><srai>NOPX 407</srai></think><random><li><srai>EXPDEX NOT YOU CRAWL BACK <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU CRY *</pattern><template><think><srai>NOPX 784</srai></think><random><li><srai>EXPDEX NOT YOU CRY <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU CRY TONIGHT *</pattern><template><think><srai>NOPX 6728</srai></think><random><li><srai>EXPDEX NOT YOU CRY TONIGHT <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU DARE CLOSE *</pattern><template><think><srai>NOPX 438</srai></think><random><li><srai>EXPDEX NOT YOU DARE CLOSE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU DARE EVEN *</pattern><template><think><srai>NOPX 410</srai></think><random><li><srai>EXPDEX NOT YOU DARE EVEN <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU DIE TONIGHT *</pattern><template><think><srai>NOPX 1112</srai></think><random><li><srai>EXPDEX NOT YOU DIE TONIGHT <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU DO BETTER *</pattern><template><think><srai>NOPX 1428</srai></think><random><li><srai>EXPDEX NOT YOU DO BETTER <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU DO NOT *</pattern><template><think><srai>NOPX 5135</srai></think><random><li><srai>EXPDEX NOT YOU DO NOT <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU DO RIGHT *</pattern><template><think><srai>NOPX 766</srai></think><random><li><srai>EXPDEX NOT YOU DO RIGHT <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU DO SO *</pattern><template><think><srai>NOPX 769</srai></think><random><li><srai>EXPDEX NOT YOU DO SO <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU END UP *</pattern><template><think><srai>NOPX 1754</srai></think><random><li><srai>EXPDEX NOT YOU END UP <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU FEAR EVEN *</pattern><template><think><srai>NOPX 446</srai></think><random><li><srai>EXPDEX NOT YOU FEAR EVEN <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU FEEL BAD *</pattern><template><think><srai>NOPX 1110</srai></think><random><li><srai>EXPDEX NOT YOU FEEL BAD <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU FEEL BETTER *</pattern><template><think><srai>NOPX 5231</srai></think><random><li><srai>EXPDEX NOT YOU FEEL BETTER <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU FEEL GOOD *</pattern><template><think><srai>NOPX 890</srai></think><random><li><srai>EXPDEX NOT YOU FEEL GOOD <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU FEEL GUILTY *</pattern><template><think><srai>NOPX 594</srai></think><random><li><srai>EXPDEX NOT YOU FEEL GUILTY <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU FEEL JUST *</pattern><template><think><srai>NOPX 516</srai></think><random><li><srai>EXPDEX NOT YOU FEEL JUST <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU FEEL MUCH *</pattern><template><think><srai>NOPX 412</srai></think><random><li><srai>EXPDEX NOT YOU FEEL MUCH <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU FEEL SILLY *</pattern><template><think><srai>NOPX 500</srai></think><random><li><srai>EXPDEX NOT YOU FEEL SILLY <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU FEEL SO *</pattern><template><think><srai>NOPX 933</srai></think><random><li><srai>EXPDEX NOT YOU FEEL SO <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU FEEL SORRY *</pattern><template><think><srai>NOPX 1591</srai></think><random><li><srai>EXPDEX NOT YOU FEEL SORRY <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU FEEL SPECIAL *</pattern><template><think><srai>NOPX 1630</srai></think><random><li><srai>EXPDEX NOT YOU FEEL SPECIAL <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU FEEL STUPID *</pattern><template><think><srai>NOPX 522</srai></think><random><li><srai>EXPDEX NOT YOU FEEL STUPID <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU FEEL WELL *</pattern><template><think><srai>NOPX 676</srai></think><random><li><srai>EXPDEX NOT YOU FEEL WELL <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU GET AWAY *</pattern><template><think><srai>NOPX 419</srai></think><random><li><srai>EXPDEX NOT YOU GET AWAY <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU GET BACK *</pattern><template><think><srai>NOPX 1119</srai></think><random><li><srai>EXPDEX NOT YOU GET BACK <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU GET DOWN *</pattern><template><think><srai>NOPX 760</srai></think><random><li><srai>EXPDEX NOT YOU GET DOWN <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU GET ENOUGH *</pattern><template><think><srai>NOPX 1007</srai></think><random><li><srai>EXPDEX NOT YOU GET ENOUGH <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU GET RID *</pattern><template><think><srai>NOPX 1582</srai></think><random><li><srai>EXPDEX NOT YOU GET RID <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU GET SICK *</pattern><template><think><srai>NOPX 1096</srai></think><random><li><srai>EXPDEX NOT YOU GET SICK <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU GET TIRED *</pattern><template><think><srai>NOPX 2949</srai></think><random><li><srai>EXPDEX NOT YOU GET TIRED <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU GET UP *</pattern><template><think><srai>NOPX 2256</srai></think><random><li><srai>EXPDEX NOT YOU GET UP <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU GIVE UP *</pattern><template><think><srai>NOPX 3387</srai></think><random><li><srai>EXPDEX NOT YOU GIVE UP <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU GO *</pattern><template><think><srai>NOPX 516</srai></think><random><li><srai>EXPDEX NOT YOU GO <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU GO AHEAD *</pattern><template><think><srai>NOPX 17528</srai></think><random><li><srai>EXPDEX NOT YOU GO AHEAD <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU GO AWAY *</pattern><template><think><srai>NOPX 2866</srai></think><random><li><srai>EXPDEX NOT YOU GO AWAY <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU GO BACK *</pattern><template><think><srai>NOPX 10055</srai></think><random><li><srai>EXPDEX NOT YOU GO BACK <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU GO DOWN *</pattern><template><think><srai>NOPX 2171</srai></think><random><li><srai>EXPDEX NOT YOU GO DOWN <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU GO FIRST *</pattern><template><think><srai>NOPX 676</srai></think><random><li><srai>EXPDEX NOT YOU GO FIRST <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU GO LIVE *</pattern><template><think><srai>NOPX 452</srai></think><random><li><srai>EXPDEX NOT YOU GO LIVE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU GO SOMEWHERE *</pattern><template><think><srai>NOPX 547</srai></think><random><li><srai>EXPDEX NOT YOU GO SOMEWHERE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU GO THERE *</pattern><template><think><srai>NOPX 1272</srai></think><random><li><srai>EXPDEX NOT YOU GO THERE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU GO UP *</pattern><template><think><srai>NOPX 1687</srai></think><random><li><srai>EXPDEX NOT YOU GO UP <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU GO UPSTAIRS *</pattern><template><think><srai>NOPX 607</srai></think><random><li><srai>EXPDEX NOT YOU GO UPSTAIRS <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU GROW UP *</pattern><template><think><srai>NOPX 1359</srai></think><random><li><srai>EXPDEX NOT YOU GROW UP <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU HAVE *</pattern><template><think><srai>NOPX 1377</srai></think><random><li><srai>EXPDEX NOT YOU HAVE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU HAVE ACTUALLY *</pattern><template><think><srai>NOPX 626</srai></think><random><li><srai>EXPDEX NOT YOU HAVE ACTUALLY <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU HAVE ALREADY *</pattern><template><think><srai>NOPX 776</srai></think><random><li><srai>EXPDEX NOT YOU HAVE ALREADY <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU HAVE BETTER *</pattern><template><think><srai>NOPX 1926</srai></think><random><li><srai>EXPDEX NOT YOU HAVE BETTER <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU HAVE ENOUGH *</pattern><template><think><srai>NOPX 2788</srai></think><random><li><srai>EXPDEX NOT YOU HAVE ENOUGH <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU HAVE EVER *</pattern><template><think><srai>NOPX 1066</srai></think><random><li><srai>EXPDEX NOT YOU HAVE EVER <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU HAVE JUST *</pattern><template><think><srai>NOPX 2231</srai></think><random><li><srai>EXPDEX NOT YOU HAVE JUST <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU HAVE NOT *</pattern><template><think><srai>NOPX 484</srai></think><random><li><srai>EXPDEX NOT YOU HAVE NOT <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU HAVE OTHER *</pattern><template><think><srai>NOPX 1102</srai></think><random><li><srai>EXPDEX NOT YOU HAVE OTHER <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU HAVE PRIOR *</pattern><template><think><srai>NOPX 3575</srai></think><random><li><srai>EXPDEX NOT YOU HAVE PRIOR <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU HAVE SOMEWHERE *</pattern><template><think><srai>NOPX 476</srai></think><random><li><srai>EXPDEX NOT YOU HAVE SOMEWHERE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU KNOW *</pattern><template><think><srai>NOPX 3444</srai></think><random><li><srai>EXPDEX NOT YOU KNOW <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU KNOW UNK *</pattern><template><think><srai>NOPX 911</srai></think><random><li><srai>EXPDEX NOT YOU KNOW UNK <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU KNOW BETTER *</pattern><template><think><srai>NOPX 812</srai></think><random><li><srai>EXPDEX NOT YOU KNOW BETTER <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU KNOW ENOUGH *</pattern><template><think><srai>NOPX 629</srai></think><random><li><srai>EXPDEX NOT YOU KNOW ENOUGH <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU KNOW NOW *</pattern><template><think><srai>NOPX 485</srai></think><random><li><srai>EXPDEX NOT YOU KNOW NOW <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU KNOW THERE *</pattern><template><think><srai>NOPX 5307</srai></think><random><li><srai>EXPDEX NOT YOU KNOW THERE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU KNOW YET *</pattern><template><think><srai>NOPX 498</srai></think><random><li><srai>EXPDEX NOT YOU KNOW YET <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU LIE DOWN *</pattern><template><think><srai>NOPX 969</srai></think><random><li><srai>EXPDEX NOT YOU LIE DOWN <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU LIKE *</pattern><template><think><srai>NOPX 761</srai></think><random><li><srai>EXPDEX NOT YOU LIKE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU LOOK BACK *</pattern><template><think><srai>NOPX 1103</srai></think><random><li><srai>EXPDEX NOT YOU LOOK BACK <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU LOOK DOWN *</pattern><template><think><srai>NOPX 619</srai></think><random><li><srai>EXPDEX NOT YOU LOOK DOWN <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU LOOK UP *</pattern><template><think><srai>NOPX 990</srai></think><random><li><srai>EXPDEX NOT YOU LOOK UP <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU MAKE SURE *</pattern><template><think><srai>NOPX 998</srai></think><random><li><srai>EXPDEX NOT YOU MAKE SURE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU MAKE UP *</pattern><template><think><srai>NOPX 1665</srai></think><random><li><srai>EXPDEX NOT YOU MAKE UP <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU MEAN UNK *</pattern><template><think><srai>NOPX 1189</srai></think><random><li><srai>EXPDEX NOT YOU MEAN UNK <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU PICK UP *</pattern><template><think><srai>NOPX 2182</srai></think><random><li><srai>EXPDEX NOT YOU PICK UP <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU RUN AWAY *</pattern><template><think><srai>NOPX 1742</srai></think><random><li><srai>EXPDEX NOT YOU RUN AWAY <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU SAY HELLO *</pattern><template><think><srai>NOPX 428</srai></think><random><li><srai>EXPDEX NOT YOU SAY HELLO <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU SAY SO *</pattern><template><think><srai>NOPX 12561</srai></think><random><li><srai>EXPDEX NOT YOU SAY SO <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU SAY THERE *</pattern><template><think><srai>NOPX 507</srai></think><random><li><srai>EXPDEX NOT YOU SAY THERE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU SEE *</pattern><template><think><srai>NOPX 2607</srai></think><random><li><srai>EXPDEX NOT YOU SEE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU SEE UNK *</pattern><template><think><srai>NOPX 795</srai></think><random><li><srai>EXPDEX NOT YOU SEE UNK <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU SEE THERE *</pattern><template><think><srai>NOPX 583</srai></think><random><li><srai>EXPDEX NOT YOU SEE THERE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU SEE NOW *</pattern><template><think><srai>NOPX 874</srai></think><random><li><srai>EXPDEX NOT YOU SEE NOW <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU SEE THERE *</pattern><template><think><srai>NOPX 2016</srai></think><random><li><srai>EXPDEX NOT YOU SEE THERE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU SHOW UP *</pattern><template><think><srai>NOPX 821</srai></think><random><li><srai>EXPDEX NOT YOU SHOW UP <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU SIT BACK *</pattern><template><think><srai>NOPX 1582</srai></think><random><li><srai>EXPDEX NOT YOU SIT BACK <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU SIT DOWN *</pattern><template><think><srai>NOPX 7247</srai></think><random><li><srai>EXPDEX NOT YOU SIT DOWN <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU SIT HERE *</pattern><template><think><srai>NOPX 440</srai></think><random><li><srai>EXPDEX NOT YOU SIT HERE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU SPEAK ENGLISH *</pattern><template><think><srai>NOPX 417</srai></think><random><li><srai>EXPDEX NOT YOU SPEAK ENGLISH <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU SPEAK UP *</pattern><template><think><srai>NOPX 681</srai></think><random><li><srai>EXPDEX NOT YOU SPEAK UP <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU STAND UP *</pattern><template><think><srai>NOPX 2032</srai></think><random><li><srai>EXPDEX NOT YOU STAND UP <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU TAKE UP *</pattern><template><think><srai>NOPX 847</srai></think><random><li><srai>EXPDEX NOT YOU TAKE UP <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU THINK *</pattern><template><think><srai>NOPX 1813</srai></think><random><li><srai>EXPDEX NOT YOU THINK <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU THINK UNK *</pattern><template><think><srai>NOPX 1760</srai></think><random><li><srai>EXPDEX NOT YOU THINK UNK <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU THINK MAYBE *</pattern><template><think><srai>NOPX 1429</srai></think><random><li><srai>EXPDEX NOT YOU THINK MAYBE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU THINK SO *</pattern><template><think><srai>NOPX 23513</srai></think><random><li><srai>EXPDEX NOT YOU THINK SO <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU THINK THERE *</pattern><template><think><srai>NOPX 8707</srai></think><random><li><srai>EXPDEX NOT YOU THINK THERE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU TRY UNK *</pattern><template><think><srai>NOPX 467</srai></think><random><li><srai>EXPDEX NOT YOU TRY UNK <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU TRY AGAIN *</pattern><template><think><srai>NOPX 611</srai></think><random><li><srai>EXPDEX NOT YOU TRY AGAIN <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU TRY JUST *</pattern><template><think><srai>NOPX 527</srai></think><random><li><srai>EXPDEX NOT YOU TRY JUST <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU UNDERSTAND YET *</pattern><template><think><srai>NOPX 498</srai></think><random><li><srai>EXPDEX NOT YOU UNDERSTAND YET <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU USE UNK *</pattern><template><think><srai>NOPX 1244</srai></think><random><li><srai>EXPDEX NOT YOU USE UNK <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU WAKE UP *</pattern><template><think><srai>NOPX 1706</srai></think><random><li><srai>EXPDEX NOT YOU WAKE UP <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU WALK AWAY *</pattern><template><think><srai>NOPX 2643</srai></think><random><li><srai>EXPDEX NOT YOU WALK AWAY <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU WANT *</pattern><template><think><srai>NOPX 570</srai></think><random><li><srai>EXPDEX NOT YOU WANT <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU WORRY ANYMORE *</pattern><template><think><srai>NOPX 403</srai></think><random><li><srai>EXPDEX NOT YOU WORRY ANYMORE <star/></srai></li></random></template></category>
+<category><pattern>NOT YOU THINK UNK *</pattern><template><think><srai>NOPX 401</srai></think><random><li><srai>EXPDEX NOT YOU THINK UNK <star/></srai></li></random></template></category>
+</aiml>

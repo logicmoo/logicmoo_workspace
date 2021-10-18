@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<aiml graph="default">
+
+  <category>
+    <pattern>GOOD</pattern>
+    <template>
+      <set>
+        topic we agree <that/>
+      </set>
+    </template>
+  </category>
+
+  <aiml graph="default">
+    <srai>
+      <learn> aiml/programsharp/ </learn>
+    </srai>
+    <srai>
+      <learn> aiml/stdchar/ </learn>
+    </srai>
+    <srai>
+      <learn> aiml/programsharp/Y_OpenCyc.aiml </learn>
+    </srai>
+    <srai>
+      <learn> aiml/programsharp/CustomTagTest.aiml </learn>
+    </srai>
+    <srai>
+      <learn> aiml/stdmsm/ </learn>
+    </srai>
+  </aiml>
+
+  <aiml graph="step2">
+    <srai>
+      <learn graph="step2"> aiml/stdset/ </learn>
+    </srai>
+
+    <category>
+      <pattern>HANSANIM *</pattern>
+      <template>
+      </template>
+    </category>
+
+    <category>
+      <pattern>*</pattern>
+      <template>
+        <srai graph="step2">
+          STDCATCHALL <star/>
+        </srai>
+      </template>
+    </category>
+  </aiml>
+
+  <aiml graph="step2">
+    <srai>
+      <learn graph="step2"> aiml/stdset/std-personality.aiml </learn>
+    </srai>
+
+    <category>
+      <pattern>STEP3 *</pattern>
+      <template>
+        STEP THREE <star/>
+      </template>
+    </category>
+
+  </aiml>
+
+  <aiml graph="default">
+    <category>
+      <pattern>STEP2 *</pattern>
+      <template>
+        <srai graph="step2">
+          <star/>
+        </srai>
+      </template>
+    </category>
+
+    <!--
+	<category>
+	<pattern>*</pattern>
+	<template><srai graph="step2"><star/></srai></template>
+	</category
+	-->
+
+    <!--
+	<category>
+	 <pattern>*</pattern>
+	 <template>No response to: <star/></template>
+	</category>
+	-->
+
+    <category>
+      <pattern>INTERJECTION</pattern>
+      <that>*</that>
+      <template>Ok.</template>
+    </category>
+  </aiml>
+
+  <category>
+    <pattern>TELL ME *</pattern>
+    <template>
+      <srai>
+        WHAT IS <star/>
+      </srai>
+    </template>
+  </category>
+
+  <category>
+    <pattern>*</pattern>
+    <template>
+      <srai graph="step2">
+        <star/>
+      </srai>
+    </template>
+  </category>
+
+  <category>
+    <pattern>CALL ME *</pattern>
+    <template>
+      <random>
+        <li>OK I will call you</li>
+        <li>Hi there</li>
+        <li>Hi</li>
+      </random>
+      <set name="name">
+        <formal>
+          <star/>
+        </formal>
+      </set>.
+      <srai>GET NAME GENDER</srai>
+    </template>
+  </category>
+
+  <category>
+    <pattern>WHAT IS MY NAME</pattern>
+    <that>YOUR NAME IS *</that>
+    <template>
+      I told you that your name is <get name="name"/>.
+    </template>
+  </category>
+  <category>
+    <pattern>MY FAVORITE * IS *</pattern>
+    <template>
+      <think>
+        <set name="favorite">
+          <star index="1"/>
+        </set> = <set name="star_1">
+          <star index="2"/>
+        </set>
+      </think>
+    </template>
+  </category>
+
+
+  <aiml graph="parent">
+    <category>
+      <pattern>* THE *</pattern>
+      <template>
+        <think>
+          <set name="the">
+            <star index="2"/>
+          </set>
+        </think>
+      </template>
+    </category>
+
+    <category>
+      <pattern>* MY *</pattern>
+      <template>
+        <think>
+          <set name="own">
+            <star index="2"/>
+          </set>
+        </think>
+      </template>
+    </category>
+
+    <category>
+      <pattern>* EATS *</pattern>
+      <template>
+        <think>
+          <set name="who">
+            <star index="1"/>
+          </set>
+          <set name="food">
+            <star index="2"/>
+          </set>
+        </think>
+      </template>
+    </category>
+
+    <category>
+      <pattern>* KNOWS *</pattern>
+      <template>
+        <think>
+          <set name="who">
+            <star index="1"/>
+          </set>
+          <set name="what">
+            <star index="2"/>
+          </set>
+        </think>
+      </template>
+    </category>
+
+    <category>
+      <pattern>MY FAVORITE * IS *</pattern>
+      <template>
+        <think>
+          <set name="favorite">
+            <star index="1"/>
+          </set> = <set name="star_1">
+            <star index="2"/>
+          </set>
+        </think>
+      </template>
+    </category>
+
+    <category>
+      <pattern>*</pattern>
+      <that>* _ ABOUT *</that>
+      <template>
+        <think>
+          <set name="thatstar_3">
+            <star/>
+          </set>
+          <set name="what">
+            <thatstar index="3"/>
+          </set>
+        </think>
+        <srai>
+          <topicstar index="3"/> IS <star/>
+        </srai>
+      </template>
+    </category>
+
+  </aiml>
+
+  <aiml graph="parent">
+    <category>
+      <pattern>*</pattern>
+      <template>
+        <think>
+          <srai graph="step2">
+            <star/>
+          </srai>
+        </think>
+      </template>
+    </category>
+  </aiml>
+
+  <!-- todo dmiles must this livable -->
+  <category>
+    <pattern>*</pattern>
+    <that>WHAT IS *</that>
+    <template>
+      <srai>
+        <star/> IS <thatstar/>
+      </srai>
+    </template>
+  </category>
+
+  <category>
+    <pattern>MY FAVORITE * IS *</pattern>
+    <template>
+      <think>
+        <set name="favorite">
+          <star index="1"/>
+        </set> = <set name="star_1">
+          <star index="2"/>
+        </set>
+      </think>
+    </template>
+  </category>
+
+  <category>
+    <pattern>XFIND *</pattern>
+    <template>
+      <star/><get name="star_1"/> ... <srai graph="opencyc">
+        CYCFIND <star/>
+      </srai>
+    </template>
+  </category>
+
+  <!-- 
+   MSMM to msm   
+   We are in graph="default"   
+  -->
+
+  <category>
+    <pattern>TOMSM *</pattern>
+    <template>
+      <srai graph="msm">
+        <star/>
+      </srai>
+    </template>
+  </category>
+
+  <category>
+    <pattern>TOGRAPH _ *</pattern>
+    <template>
+      <srai graph="star_1">
+        <star index="2"/>
+      </srai>
+    </template>
+  </category>
+
+  <category>
+    <pattern>SETGRAPH _</pattern>
+    <template>
+      <set name="graphname">
+        <star/>
+      </set>
+    </template>
+  </category>
+
+  <!-- 
+   TOMSM MSM HOW ARE YOU
+  -->
+  <aiml graph="msm">
+    <category>
+      <pattern>MSM *</pattern>
+      <template>
+        <processmsm name="main">
+          <star/>
+        </processmsm>
+      </template>
+    </category>
+  </aiml>
+
+  <category>
+    <pattern>* IS *</pattern>
+    <template>
+      <think>
+        <set>
+          <star/> IS <star index="2"/>
+        </set>
+      </think>
+    </template>
+  </category>
+
+
+  <category>
+    <pattern>DO YOU DO IT</pattern>
+    <template>
+      You mean, do I do <get name="it"/>?
+    </template>
+  </category>
+</aiml>
+
+

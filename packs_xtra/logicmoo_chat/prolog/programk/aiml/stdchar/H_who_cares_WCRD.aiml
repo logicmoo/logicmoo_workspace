@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<aiml>
+
+<!-- main Reductions.aiml (1253525) mp=-1: WHO CARES * -->
+
+<!-- MINSEQ: mp=-1:  -->
+<category><pattern>EXPDEX WHO CARES *</pattern><template>   <srai>WHO CARES</srai>    </template></category>
+<category><pattern>WHO CARES *</pattern><template><srai>EXPDEX WHO CARES <star/></srai></template></category>
+<category><pattern>WHO CARES ABOUT *</pattern><template><think><srai>NOPX 3146</srai></think><random><li><srai>EXPDEX WHO CARES ABOUT <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES IF *</pattern><template><think><srai>NOPX 2504</srai></think><random><li><srai>EXPDEX WHO CARES IF <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES ABOUT *</pattern><template><think><srai>NOPX 177</srai></think><random><li><srai>EXPDEX WHO CARES ABOUT <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES IF *</pattern><template><think><srai>NOPX 462</srai></think><random><li><srai>EXPDEX WHO CARES IF <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES IF *</pattern><template><think><srai>NOPX 106</srai></think><random><li><srai>EXPDEX WHO CARES IF <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES ABOUT *</pattern><template><think><srai>NOPX 169</srai></think><random><li><srai>EXPDEX WHO CARES ABOUT <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES IF *</pattern><template><think><srai>NOPX 252</srai></think><random><li><srai>EXPDEX WHO CARES IF <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES ABOUT *</pattern><template><think><srai>NOPX 11099</srai></think><random><li><srai>EXPDEX WHO CARES ABOUT <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES IF *</pattern><template><think><srai>NOPX 1192</srai></think><random><li><srai>EXPDEX WHO CARES IF <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES ABOUT *</pattern><template><think><srai>NOPX 3658</srai></think><random><li><srai>EXPDEX WHO CARES ABOUT <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES IF *</pattern><template><think><srai>NOPX 674</srai></think><random><li><srai>EXPDEX WHO CARES IF <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES ABOUT *</pattern><template><think><srai>NOPX 78430</srai></think><random><li><srai>EXPDEX WHO CARES ABOUT <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES IF *</pattern><template><think><srai>NOPX 72543</srai></think><random><li><srai>EXPDEX WHO CARES IF <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES ABOUT *</pattern><template><think><srai>NOPX 236</srai></think><random><li><srai>EXPDEX WHO CARES ABOUT <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES IF *</pattern><template><think><srai>NOPX 164</srai></think><random><li><srai>EXPDEX WHO CARES IF <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES IF *</pattern><template><think><srai>NOPX 379</srai></think><random><li><srai>EXPDEX WHO CARES IF <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES ABOUT *</pattern><template><think><srai>NOPX 176091</srai></think><random><li><srai>EXPDEX WHO CARES ABOUT <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES IF *</pattern><template><think><srai>NOPX 56408</srai></think><random><li><srai>EXPDEX WHO CARES IF <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES UNK *</pattern><template><think><srai>NOPX 1729</srai></think><random><li><srai>EXPDEX WHO CARES UNK <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES ABOUT *</pattern><template><think><srai>NOPX 3146</srai></think><random><li><srai>EXPDEX WHO CARES ABOUT <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES FOR *</pattern><template><think><srai>NOPX 1031</srai></think><random><li><srai>EXPDEX WHO CARES FOR <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES IF *</pattern><template><think><srai>NOPX 2504</srai></think><random><li><srai>EXPDEX WHO CARES IF <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES WHAT *</pattern><template><think><srai>NOPX 2817</srai></think><random><li><srai>EXPDEX WHO CARES WHAT <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES IF *</pattern><template><think><srai>NOPX 462</srai></think><random><li><srai>EXPDEX WHO CARES IF <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES UNK *</pattern><template><think><srai>NOPX 855</srai></think><random><li><srai>EXPDEX WHO CARES UNK <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES A *</pattern><template><think><srai>NOPX 1865</srai></think><random><li><srai>EXPDEX WHO CARES A <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES ABOUT *</pattern><template><think><srai>NOPX 11099</srai></think><random><li><srai>EXPDEX WHO CARES ABOUT <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES ANYWAY *</pattern><template><think><srai>NOPX 757</srai></think><random><li><srai>EXPDEX WHO CARES ANYWAY <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES FOR *</pattern><template><think><srai>NOPX 769</srai></think><random><li><srai>EXPDEX WHO CARES FOR <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES HIGHLY *</pattern><template><think><srai>NOPX 1937</srai></think><random><li><srai>EXPDEX WHO CARES HIGHLY <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES IF *</pattern><template><think><srai>NOPX 1192</srai></think><random><li><srai>EXPDEX WHO CARES IF <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES TRUST *</pattern><template><think><srai>NOPX 606</srai></think><random><li><srai>EXPDEX WHO CARES TRUST <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES WHAT *</pattern><template><think><srai>NOPX 2117</srai></think><random><li><srai>EXPDEX WHO CARES WHAT <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES WHO *</pattern><template><think><srai>NOPX 1219</srai></think><random><li><srai>EXPDEX WHO CARES WHO <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES WINS *</pattern><template><think><srai>NOPX 1963</srai></think><random><li><srai>EXPDEX WHO CARES WINS <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES YOU *</pattern><template><think><srai>NOPX 656</srai></think><random><li><srai>EXPDEX WHO CARES YOU <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES A *</pattern><template><think><srai>NOPX 856</srai></think><random><li><srai>EXPDEX WHO CARES A <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES ABOUT *</pattern><template><think><srai>NOPX 3658</srai></think><random><li><srai>EXPDEX WHO CARES ABOUT <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES FOR *</pattern><template><think><srai>NOPX 2487</srai></think><random><li><srai>EXPDEX WHO CARES FOR <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES IF *</pattern><template><think><srai>NOPX 674</srai></think><random><li><srai>EXPDEX WHO CARES IF <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES WROTE *</pattern><template><think><srai>NOPX 564</srai></think><random><li><srai>EXPDEX WHO CARES WROTE <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES UNK *</pattern><template><think><srai>NOPX 15654</srai></think><random><li><srai>EXPDEX WHO CARES UNK <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES I *</pattern><template><think><srai>NOPX 587</srai></think><random><li><srai>EXPDEX WHO CARES I <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES A *</pattern><template><think><srai>NOPX 442</srai></think><random><li><srai>EXPDEX WHO CARES A <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES ABOUT *</pattern><template><think><srai>NOPX 78430</srai></think><random><li><srai>EXPDEX WHO CARES ABOUT <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES ANYMORE *</pattern><template><think><srai>NOPX 738</srai></think><random><li><srai>EXPDEX WHO CARES ANYMORE <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES ANYWAY *</pattern><template><think><srai>NOPX 1992</srai></think><random><li><srai>EXPDEX WHO CARES ANYWAY <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES AS *</pattern><template><think><srai>NOPX 1338</srai></think><random><li><srai>EXPDEX WHO CARES AS <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES FOR *</pattern><template><think><srai>NOPX 7045</srai></think><random><li><srai>EXPDEX WHO CARES FOR <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES IF *</pattern><template><think><srai>NOPX 72543</srai></think><random><li><srai>EXPDEX WHO CARES IF <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES IT *</pattern><template><think><srai>NOPX 525</srai></think><random><li><srai>EXPDEX WHO CARES IT <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES NOW *</pattern><template><think><srai>NOPX 528</srai></think><random><li><srai>EXPDEX WHO CARES NOW <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES REALLY *</pattern><template><think><srai>NOPX 567</srai></think><random><li><srai>EXPDEX WHO CARES REALLY <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES THAT *</pattern><template><think><srai>NOPX 7398</srai></think><random><li><srai>EXPDEX WHO CARES THAT <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES THE *</pattern><template><think><srai>NOPX 544</srai></think><random><li><srai>EXPDEX WHO CARES THE <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES THOUGH *</pattern><template><think><srai>NOPX 987</srai></think><random><li><srai>EXPDEX WHO CARES THOUGH <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES WHETHER *</pattern><template><think><srai>NOPX 3817</srai></think><random><li><srai>EXPDEX WHO CARES WHETHER <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES WINS *</pattern><template><think><srai>NOPX 428</srai></think><random><li><srai>EXPDEX WHO CARES WINS <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES UNK *</pattern><template><think><srai>NOPX 5860</srai></think><random><li><srai>EXPDEX WHO CARES UNK <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES I *</pattern><template><think><srai>NOPX 2303</srai></think><random><li><srai>EXPDEX WHO CARES I <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES NEW *</pattern><template><think><srai>NOPX 515</srai></think><random><li><srai>EXPDEX WHO CARES NEW <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES YOUR *</pattern><template><think><srai>NOPX 427</srai></think><random><li><srai>EXPDEX WHO CARES YOUR <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES A *</pattern><template><think><srai>NOPX 2194</srai></think><random><li><srai>EXPDEX WHO CARES A <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES ABOUT *</pattern><template><think><srai>NOPX 176091</srai></think><random><li><srai>EXPDEX WHO CARES ABOUT <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES ANYMORE *</pattern><template><think><srai>NOPX 1351</srai></think><random><li><srai>EXPDEX WHO CARES ANYMORE <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES ANYWAY *</pattern><template><think><srai>NOPX 5634</srai></think><random><li><srai>EXPDEX WHO CARES ANYWAY <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES ANYWAYS *</pattern><template><think><srai>NOPX 562</srai></think><random><li><srai>EXPDEX WHO CARES ANYWAYS <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES AS *</pattern><template><think><srai>NOPX 4876</srai></think><random><li><srai>EXPDEX WHO CARES AS <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES AT *</pattern><template><think><srai>NOPX 2737</srai></think><random><li><srai>EXPDEX WHO CARES AT <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES BECAUSE *</pattern><template><think><srai>NOPX 996</srai></think><random><li><srai>EXPDEX WHO CARES BECAUSE <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES BOUT *</pattern><template><think><srai>NOPX 634</srai></think><random><li><srai>EXPDEX WHO CARES BOUT <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES BY *</pattern><template><think><srai>NOPX 993</srai></think><random><li><srai>EXPDEX WHO CARES BY <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES DEEPLY *</pattern><template><think><srai>NOPX 5944</srai></think><random><li><srai>EXPDEX WHO CARES DEEPLY <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES ENOUGH *</pattern><template><think><srai>NOPX 7344</srai></think><random><li><srai>EXPDEX WHO CARES ENOUGH <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES FOR *</pattern><template><think><srai>NOPX 44870</srai></think><random><li><srai>EXPDEX WHO CARES FOR <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES HAS *</pattern><template><think><srai>NOPX 446</srai></think><random><li><srai>EXPDEX WHO CARES HAS <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES HOW *</pattern><template><think><srai>NOPX 7711</srai></think><random><li><srai>EXPDEX WHO CARES HOW <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES I *</pattern><template><think><srai>NOPX 1446</srai></think><random><li><srai>EXPDEX WHO CARES I <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES IF *</pattern><template><think><srai>NOPX 56408</srai></think><random><li><srai>EXPDEX WHO CARES IF <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES IN *</pattern><template><think><srai>NOPX 1022</srai></think><random><li><srai>EXPDEX WHO CARES IN <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES IS *</pattern><template><think><srai>NOPX 1018</srai></think><random><li><srai>EXPDEX WHO CARES IS <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES IT *</pattern><template><think><srai>NOPX 2310</srai></think><random><li><srai>EXPDEX WHO CARES IT <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES ITS *</pattern><template><think><srai>NOPX 1665</srai></think><random><li><srai>EXPDEX WHO CARES ITS <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES JUST *</pattern><template><think><srai>NOPX 833</srai></think><random><li><srai>EXPDEX WHO CARES JUST <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES LESS *</pattern><template><think><srai>NOPX 547</srai></think><random><li><srai>EXPDEX WHO CARES LESS <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES LITTLE *</pattern><template><think><srai>NOPX 1292</srai></think><random><li><srai>EXPDEX WHO CARES LITTLE <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES LOL *</pattern><template><think><srai>NOPX 437</srai></think><random><li><srai>EXPDEX WHO CARES LOL <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES MORE *</pattern><template><think><srai>NOPX 6524</srai></think><random><li><srai>EXPDEX WHO CARES MORE <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES MOST *</pattern><template><think><srai>NOPX 464</srai></think><random><li><srai>EXPDEX WHO CARES MOST <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES MUCH *</pattern><template><think><srai>NOPX 594</srai></think><random><li><srai>EXPDEX WHO CARES MUCH <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES NOT *</pattern><template><think><srai>NOPX 2024</srai></think><random><li><srai>EXPDEX WHO CARES NOT <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES NOTHING *</pattern><template><think><srai>NOPX 2074</srai></think><random><li><srai>EXPDEX WHO CARES NOTHING <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES NOW *</pattern><template><think><srai>NOPX 972</srai></think><random><li><srai>EXPDEX WHO CARES NOW <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES OF *</pattern><template><think><srai>NOPX 526</srai></think><random><li><srai>EXPDEX WHO CARES OF <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES ON *</pattern><template><think><srai>NOPX 1621</srai></think><random><li><srai>EXPDEX WHO CARES ON <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES ONLY *</pattern><template><think><srai>NOPX 2167</srai></think><random><li><srai>EXPDEX WHO CARES ONLY <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES PASSIONATELY *</pattern><template><think><srai>NOPX 711</srai></think><random><li><srai>EXPDEX WHO CARES PASSIONATELY <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES REALLY *</pattern><template><think><srai>NOPX 2130</srai></think><random><li><srai>EXPDEX WHO CARES REALLY <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES RIGHT *</pattern><template><think><srai>NOPX 3282</srai></think><random><li><srai>EXPDEX WHO CARES RIGHT <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES SO *</pattern><template><think><srai>NOPX 2812</srai></think><random><li><srai>EXPDEX WHO CARES SO <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES THAT *</pattern><template><think><srai>NOPX 4966</srai></think><random><li><srai>EXPDEX WHO CARES THAT <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES THE *</pattern><template><think><srai>NOPX 1844</srai></think><random><li><srai>EXPDEX WHO CARES THE <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES THEY *</pattern><template><think><srai>NOPX 1214</srai></think><random><li><srai>EXPDEX WHO CARES THEY <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES THIS *</pattern><template><think><srai>NOPX 650</srai></think><random><li><srai>EXPDEX WHO CARES THIS <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES TO *</pattern><template><think><srai>NOPX 26794</srai></think><random><li><srai>EXPDEX WHO CARES TO <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES TOO *</pattern><template><think><srai>NOPX 442</srai></think><random><li><srai>EXPDEX WHO CARES TOO <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES VERY *</pattern><template><think><srai>NOPX 877</srai></think><random><li><srai>EXPDEX WHO CARES VERY <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES WE *</pattern><template><think><srai>NOPX 865</srai></think><random><li><srai>EXPDEX WHO CARES WE <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES WHAT *</pattern><template><think><srai>NOPX 36906</srai></think><random><li><srai>EXPDEX WHO CARES WHAT <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES WHEN *</pattern><template><think><srai>NOPX 7759</srai></think><random><li><srai>EXPDEX WHO CARES WHEN <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES WHERE *</pattern><template><think><srai>NOPX 2961</srai></think><random><li><srai>EXPDEX WHO CARES WHERE <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES WHETHER *</pattern><template><think><srai>NOPX 3068</srai></think><random><li><srai>EXPDEX WHO CARES WHETHER <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES WHO *</pattern><template><think><srai>NOPX 5774</srai></think><random><li><srai>EXPDEX WHO CARES WHO <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES WHY *</pattern><template><think><srai>NOPX 990</srai></think><random><li><srai>EXPDEX WHO CARES WHY <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES WILL *</pattern><template><think><srai>NOPX 495</srai></think><random><li><srai>EXPDEX WHO CARES WILL <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES WITH *</pattern><template><think><srai>NOPX 680</srai></think><random><li><srai>EXPDEX WHO CARES WITH <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES YOU *</pattern><template><think><srai>NOPX 988</srai></think><random><li><srai>EXPDEX WHO CARES YOU <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES FOR YOU *</pattern><template><think><srai>NOPX 499</srai></think><random><li><srai>EXPDEX WHO CARES FOR YOU <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES IF ITS *</pattern><template><think><srai>NOPX 502</srai></think><random><li><srai>EXPDEX WHO CARES IF ITS <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES IF THIS *</pattern><template><think><srai>NOPX 1024</srai></think><random><li><srai>EXPDEX WHO CARES IF THIS <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES A LOT *</pattern><template><think><srai>NOPX 1791</srai></think><random><li><srai>EXPDEX WHO CARES A LOT <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES HIGHLY RESPECTED *</pattern><template><think><srai>NOPX 1937</srai></think><random><li><srai>EXPDEX WHO CARES HIGHLY RESPECTED <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES WHAT YOU *</pattern><template><think><srai>NOPX 562</srai></think><random><li><srai>EXPDEX WHO CARES WHAT YOU <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES WHO READS *</pattern><template><think><srai>NOPX 697</srai></think><random><li><srai>EXPDEX WHO CARES WHO READS <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES WINS *</pattern><template><think><srai>NOPX 538</srai></think><random><li><srai>EXPDEX WHO CARES WINS <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES A LOT *</pattern><template><think><srai>NOPX 735</srai></think><random><li><srai>EXPDEX WHO CARES A LOT <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES FOR AMERICA *</pattern><template><think><srai>NOPX 576</srai></think><random><li><srai>EXPDEX WHO CARES FOR AMERICA <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES FOR THE *</pattern><template><think><srai>NOPX 835</srai></think><random><li><srai>EXPDEX WHO CARES FOR THE <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES UNK *</pattern><template><think><srai>NOPX 8726</srai></think><random><li><srai>EXPDEX WHO CARES UNK <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES UNK I *</pattern><template><think><srai>NOPX 693</srai></think><random><li><srai>EXPDEX WHO CARES UNK I <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES UNK *</pattern><template><think><srai>NOPX 1380</srai></think><random><li><srai>EXPDEX WHO CARES UNK <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES UNK GOOD *</pattern><template><think><srai>NOPX 423</srai></think><random><li><srai>EXPDEX WHO CARES UNK GOOD <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES NEW *</pattern><template><think><srai>NOPX 505</srai></think><random><li><srai>EXPDEX WHO CARES NEW <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES A LOT *</pattern><template><think><srai>NOPX 984</srai></think><random><li><srai>EXPDEX WHO CARES A LOT <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES ABOUT *</pattern><template><think><srai>NOPX 689</srai></think><random><li><srai>EXPDEX WHO CARES ABOUT <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES AS LONG *</pattern><template><think><srai>NOPX 3155</srai></think><random><li><srai>EXPDEX WHO CARES AS LONG <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES AS MUCH *</pattern><template><think><srai>NOPX 922</srai></think><random><li><srai>EXPDEX WHO CARES AS MUCH <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES AT ALL *</pattern><template><think><srai>NOPX 1777</srai></think><random><li><srai>EXPDEX WHO CARES AT ALL <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES DEEPLY ABOUT *</pattern><template><think><srai>NOPX 4635</srai></think><random><li><srai>EXPDEX WHO CARES DEEPLY ABOUT <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES DEEPLY FOR *</pattern><template><think><srai>NOPX 977</srai></think><random><li><srai>EXPDEX WHO CARES DEEPLY FOR <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES ENOUGH ABOUT *</pattern><template><think><srai>NOPX 1941</srai></think><random><li><srai>EXPDEX WHO CARES ENOUGH ABOUT <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES FOR A *</pattern><template><think><srai>NOPX 2131</srai></think><random><li><srai>EXPDEX WHO CARES FOR A <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES FOR ALL *</pattern><template><think><srai>NOPX 501</srai></think><random><li><srai>EXPDEX WHO CARES FOR ALL <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES FOR AN *</pattern><template><think><srai>NOPX 589</srai></think><random><li><srai>EXPDEX WHO CARES FOR AN <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES FOR HER *</pattern><template><think><srai>NOPX 2439</srai></think><random><li><srai>EXPDEX WHO CARES FOR HER <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES FOR HIM *</pattern><template><think><srai>NOPX 1348</srai></think><random><li><srai>EXPDEX WHO CARES FOR HIM <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES FOR HIS *</pattern><template><think><srai>NOPX 2132</srai></think><random><li><srai>EXPDEX WHO CARES FOR HIS <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES FOR ME *</pattern><template><think><srai>NOPX 2304</srai></think><random><li><srai>EXPDEX WHO CARES FOR ME <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES FOR NOTHING *</pattern><template><think><srai>NOPX 449</srai></think><random><li><srai>EXPDEX WHO CARES FOR NOTHING <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES FOR THE *</pattern><template><think><srai>NOPX 6643</srai></think><random><li><srai>EXPDEX WHO CARES FOR THE <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES FOR THEIR *</pattern><template><think><srai>NOPX 629</srai></think><random><li><srai>EXPDEX WHO CARES FOR THEIR <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES FOR THEM *</pattern><template><think><srai>NOPX 1956</srai></think><random><li><srai>EXPDEX WHO CARES FOR THEM <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES FOR US *</pattern><template><think><srai>NOPX 1850</srai></think><random><li><srai>EXPDEX WHO CARES FOR US <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES FOR YOU *</pattern><template><think><srai>NOPX 2867</srai></think><random><li><srai>EXPDEX WHO CARES FOR YOU <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES FOR YOUR *</pattern><template><think><srai>NOPX 3181</srai></think><random><li><srai>EXPDEX WHO CARES FOR YOUR <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES IF I *</pattern><template><think><srai>NOPX 2075</srai></think><random><li><srai>EXPDEX WHO CARES IF I <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES IF A *</pattern><template><think><srai>NOPX 1151</srai></think><random><li><srai>EXPDEX WHO CARES IF A <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES IF HE *</pattern><template><think><srai>NOPX 4105</srai></think><random><li><srai>EXPDEX WHO CARES IF HE <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES IF I *</pattern><template><think><srai>NOPX 563</srai></think><random><li><srai>EXPDEX WHO CARES IF I <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES IF IT *</pattern><template><think><srai>NOPX 8493</srai></think><random><li><srai>EXPDEX WHO CARES IF IT <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES IF ITS *</pattern><template><think><srai>NOPX 2081</srai></think><random><li><srai>EXPDEX WHO CARES IF ITS <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES IF SHE *</pattern><template><think><srai>NOPX 1622</srai></think><random><li><srai>EXPDEX WHO CARES IF SHE <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES IF SOME *</pattern><template><think><srai>NOPX 530</srai></think><random><li><srai>EXPDEX WHO CARES IF SOME <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES IF SOMEONE *</pattern><template><think><srai>NOPX 890</srai></think><random><li><srai>EXPDEX WHO CARES IF SOMEONE <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES IF THE *</pattern><template><think><srai>NOPX 6304</srai></think><random><li><srai>EXPDEX WHO CARES IF THE <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES IF THEY *</pattern><template><think><srai>NOPX 5972</srai></think><random><li><srai>EXPDEX WHO CARES IF THEY <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES IF THIS *</pattern><template><think><srai>NOPX 414</srai></think><random><li><srai>EXPDEX WHO CARES IF THIS <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES IF WE *</pattern><template><think><srai>NOPX 1737</srai></think><random><li><srai>EXPDEX WHO CARES IF WE <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES IF YOU *</pattern><template><think><srai>NOPX 6701</srai></think><random><li><srai>EXPDEX WHO CARES IF YOU <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES IF YOUR *</pattern><template><think><srai>NOPX 1076</srai></think><random><li><srai>EXPDEX WHO CARES IF YOUR <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES LITTLE ABOUT *</pattern><template><think><srai>NOPX 507</srai></think><random><li><srai>EXPDEX WHO CARES LITTLE ABOUT <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES LITTLE FOR *</pattern><template><think><srai>NOPX 606</srai></think><random><li><srai>EXPDEX WHO CARES LITTLE FOR <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES NOT FOR *</pattern><template><think><srai>NOPX 524</srai></think><random><li><srai>EXPDEX WHO CARES NOT FOR <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES NOTHING ABOUT *</pattern><template><think><srai>NOPX 652</srai></think><random><li><srai>EXPDEX WHO CARES NOTHING ABOUT <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES NOTHING FOR *</pattern><template><think><srai>NOPX 1245</srai></think><random><li><srai>EXPDEX WHO CARES NOTHING FOR <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES ONLY ABOUT *</pattern><template><think><srai>NOPX 1015</srai></think><random><li><srai>EXPDEX WHO CARES ONLY ABOUT <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES ONLY FOR *</pattern><template><think><srai>NOPX 967</srai></think><random><li><srai>EXPDEX WHO CARES ONLY FOR <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES PASSIONATELY ABOUT *</pattern><template><think><srai>NOPX 614</srai></think><random><li><srai>EXPDEX WHO CARES PASSIONATELY ABOUT <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES SO MUCH *</pattern><template><think><srai>NOPX 1707</srai></think><random><li><srai>EXPDEX WHO CARES SO MUCH <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES THAT IT *</pattern><template><think><srai>NOPX 531</srai></think><random><li><srai>EXPDEX WHO CARES THAT IT <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES THAT THE *</pattern><template><think><srai>NOPX 537</srai></think><random><li><srai>EXPDEX WHO CARES THAT THE <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES TO DO *</pattern><template><think><srai>NOPX 486</srai></think><random><li><srai>EXPDEX WHO CARES TO DO <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES TO JOIN *</pattern><template><think><srai>NOPX 627</srai></think><random><li><srai>EXPDEX WHO CARES TO JOIN <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES TO KNOW *</pattern><template><think><srai>NOPX 1011</srai></think><random><li><srai>EXPDEX WHO CARES TO KNOW <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES TO LISTEN *</pattern><template><think><srai>NOPX 2564</srai></think><random><li><srai>EXPDEX WHO CARES TO LISTEN <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES TO LOOK *</pattern><template><think><srai>NOPX 2576</srai></think><random><li><srai>EXPDEX WHO CARES TO LOOK <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES TO READ *</pattern><template><think><srai>NOPX 2440</srai></think><random><li><srai>EXPDEX WHO CARES TO READ <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES TO SEE *</pattern><template><think><srai>NOPX 693</srai></think><random><li><srai>EXPDEX WHO CARES TO SEE <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES TO TAKE *</pattern><template><think><srai>NOPX 656</srai></think><random><li><srai>EXPDEX WHO CARES TO TAKE <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES VERY MUCH *</pattern><template><think><srai>NOPX 478</srai></think><random><li><srai>EXPDEX WHO CARES VERY MUCH <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES WHETHER IT *</pattern><template><think><srai>NOPX 422</srai></think><random><li><srai>EXPDEX WHO CARES WHETHER IT <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES IF ITS GOTH *</pattern><template><think><srai>NOPX 465</srai></think><random><li><srai>EXPDEX WHO CARES IF ITS GOTH <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES IF THIS GUY *</pattern><template><think><srai>NOPX 1019</srai></think><random><li><srai>EXPDEX WHO CARES IF THIS GUY <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES HIGHLY RESPECTED DONATOR *</pattern><template><think><srai>NOPX 1937</srai></think><random><li><srai>EXPDEX WHO CARES HIGHLY RESPECTED DONATOR <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES WHO READS WHAT *</pattern><template><think><srai>NOPX 696</srai></think><random><li><srai>EXPDEX WHO CARES WHO READS WHAT <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES IF THE GAME *</pattern><template><think><srai>NOPX 677</srai></think><random><li><srai>EXPDEX WHO CARES IF THE GAME <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES UNK GOOD FRIENDS *</pattern><template><think><srai>NOPX 423</srai></think><random><li><srai>EXPDEX WHO CARES UNK GOOD FRIENDS <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES A LOT ABOUT *</pattern><template><think><srai>NOPX 638</srai></think><random><li><srai>EXPDEX WHO CARES A LOT ABOUT <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES AS LONG AS *</pattern><template><think><srai>NOPX 3083</srai></think><random><li><srai>EXPDEX WHO CARES AS LONG AS <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES AS MUCH ABOUT *</pattern><template><think><srai>NOPX 565</srai></think><random><li><srai>EXPDEX WHO CARES AS MUCH ABOUT <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES ENOUGH TO KNOCK *</pattern><template><think><srai>NOPX 983</srai></think><random><li><srai>EXPDEX WHO CARES ENOUGH TO KNOCK <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES FOR A CHILD *</pattern><template><think><srai>NOPX 448</srai></think><random><li><srai>EXPDEX WHO CARES FOR A CHILD <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES FOR THE CHILD *</pattern><template><think><srai>NOPX 434</srai></think><random><li><srai>EXPDEX WHO CARES FOR THE CHILD <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES FOR YOUR CHILD *</pattern><template><think><srai>NOPX 2291</srai></think><random><li><srai>EXPDEX WHO CARES FOR YOUR CHILD <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES IF ITS EMO *</pattern><template><think><srai>NOPX 465</srai></think><random><li><srai>EXPDEX WHO CARES IF ITS EMO <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES NOTHING FOR THE *</pattern><template><think><srai>NOPX 417</srai></think><random><li><srai>EXPDEX WHO CARES NOTHING FOR THE <star/></srai></li></random></template></category>
+<category><pattern>WHO CARES ON KY NEWS *</pattern><template><think><srai>NOPX 1034</srai></think><random><li><srai>EXPDEX WHO CARES ON KY NEWS <star/></srai></li></random></template></category>
+</aiml>

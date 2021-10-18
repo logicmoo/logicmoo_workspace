@@ -1,0 +1,407 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<aiml>
+
+<!-- main H_Default.aiml (817668) mp=-215.496693582524: TELL ME ABOUT * -->
+
+<!-- MINSEQ: mp=-215.496693582524: ambiguous ask who what or where is the creation   -->
+<category><pattern>EXPDEX TELL ME ABOUT *</pattern><template>Ambiguous: Ask who, what or where is <person/> ?</template></category>
+<category><pattern>TELL ME ABOUT *</pattern><template><srai>EXPDEX TELL ME ABOUT <star/></srai></template></category>
+<category><pattern>TELL ME ABOUT UNK *</pattern><template><think><srai>NOPX 505</srai></think><random><li><srai>EXPDEX TELL ME ABOUT UNK <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is unk * ? -->
+<category><pattern>TELL ME ABOUT IT *</pattern><template><think><srai>NOPX 2247</srai></think><random><li><srai>EXPDEX TELL ME ABOUT IT <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is it * ? -->
+<category><pattern>TELL ME ABOUT THE *</pattern><template><think><srai>NOPX 1539</srai></think><random><li><srai>EXPDEX TELL ME ABOUT THE <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is the * ? -->
+<category><pattern>TELL ME ABOUT YOU *</pattern><template><think><srai>NOPX 450</srai></think><random><li><srai>EXPDEX TELL ME ABOUT YOU <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is you * ? -->
+<category><pattern>TELL ME ABOUT YOUR *</pattern><template><think><srai>NOPX 1121</srai></think><random><li><srai>EXPDEX TELL ME ABOUT YOUR <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is your * ? -->
+<category><pattern>TELL ME ABOUT YOURSELF *</pattern><template><think><srai>NOPX 28482</srai></think><random><li><srai>EXPDEX TELL ME ABOUT YOURSELF <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is yourself * ? -->
+<category><pattern>TELL ME ABOUT DIRECTORY *</pattern><template><think><srai>NOPX 1466</srai></think><random><li><srai>EXPDEX TELL ME ABOUT DIRECTORY <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is directory * ? -->
+<category><pattern>TELL ME ABOUT IT *</pattern><template><think><srai>NOPX 12641</srai></think><random><li><srai>EXPDEX TELL ME ABOUT IT <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is it * ? -->
+<category><pattern>TELL ME ABOUT JESUS *</pattern><template><think><srai>NOPX 1854</srai></think><random><li><srai>EXPDEX TELL ME ABOUT JESUS <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is jesus * ? -->
+<category><pattern>TELL ME ABOUT THAT *</pattern><template><think><srai>NOPX 23254</srai></think><random><li><srai>EXPDEX TELL ME ABOUT THAT <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is that * ? -->
+<category><pattern>TELL ME ABOUT THE *</pattern><template><think><srai>NOPX 3738</srai></think><random><li><srai>EXPDEX TELL ME ABOUT THE <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is the * ? -->
+<category><pattern>TELL ME ABOUT YOU *</pattern><template><think><srai>NOPX 1135</srai></think><random><li><srai>EXPDEX TELL ME ABOUT YOU <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is you * ? -->
+<category><pattern>TELL ME ABOUT YOUR *</pattern><template><think><srai>NOPX 5433</srai></think><random><li><srai>EXPDEX TELL ME ABOUT YOUR <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is your * ? -->
+<category><pattern>TELL ME ABOUT YOURSELF *</pattern><template><think><srai>NOPX 2391</srai></think><random><li><srai>EXPDEX TELL ME ABOUT YOURSELF <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is yourself * ? -->
+<category><pattern>TELL ME ABOUT A *</pattern><template><think><srai>NOPX 554</srai></think><random><li><srai>EXPDEX TELL ME ABOUT A <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is a * ? -->
+<category><pattern>TELL ME ABOUT THE *</pattern><template><think><srai>NOPX 1530</srai></think><random><li><srai>EXPDEX TELL ME ABOUT THE <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is the * ? -->
+<category><pattern>TELL ME ABOUT MUHAMMAD *</pattern><template><think><srai>NOPX 1056</srai></think><random><li><srai>EXPDEX TELL ME ABOUT MUHAMMAD <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is muhammad * ? -->
+<category><pattern>TELL ME ABOUT UNK *</pattern><template><think><srai>NOPX 1807</srai></think><random><li><srai>EXPDEX TELL ME ABOUT UNK <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is unk * ? -->
+<category><pattern>TELL ME ABOUT OIDS *</pattern><template><think><srai>NOPX 3803</srai></think><random><li><srai>EXPDEX TELL ME ABOUT OIDS <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is oids * ? -->
+<category><pattern>TELL ME ABOUT THE *</pattern><template><think><srai>NOPX 411</srai></think><random><li><srai>EXPDEX TELL ME ABOUT THE <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is the * ? -->
+<category><pattern>TELL ME ABOUT A *</pattern><template><think><srai>NOPX 15899</srai></think><random><li><srai>EXPDEX TELL ME ABOUT A <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is a * ? -->
+<category><pattern>TELL ME ABOUT ADVERTISING *</pattern><template><think><srai>NOPX 2491</srai></think><random><li><srai>EXPDEX TELL ME ABOUT ADVERTISING <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is advertising * ? -->
+<category><pattern>TELL ME ABOUT ALL *</pattern><template><think><srai>NOPX 405</srai></think><random><li><srai>EXPDEX TELL ME ABOUT ALL <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is all * ? -->
+<category><pattern>TELL ME ABOUT AN *</pattern><template><think><srai>NOPX 836</srai></think><random><li><srai>EXPDEX TELL ME ABOUT AN <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is an * ? -->
+<category><pattern>TELL ME ABOUT ANY *</pattern><template><think><srai>NOPX 1068</srai></think><random><li><srai>EXPDEX TELL ME ABOUT ANY <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is any * ? -->
+<category><pattern>TELL ME ABOUT DESPAIR *</pattern><template><think><srai>NOPX 458</srai></think><random><li><srai>EXPDEX TELL ME ABOUT DESPAIR <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is despair * ? -->
+<category><pattern>TELL ME ABOUT HER *</pattern><template><think><srai>NOPX 1309</srai></think><random><li><srai>EXPDEX TELL ME ABOUT HER <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is her * ? -->
+<category><pattern>TELL ME ABOUT HIM *</pattern><template><think><srai>NOPX 1407</srai></think><random><li><srai>EXPDEX TELL ME ABOUT HIM <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is him * ? -->
+<category><pattern>TELL ME ABOUT HIS *</pattern><template><think><srai>NOPX 429</srai></think><random><li><srai>EXPDEX TELL ME ABOUT HIS <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is his * ? -->
+<category><pattern>TELL ME ABOUT IT *</pattern><template><think><srai>NOPX 48095</srai></think><random><li><srai>EXPDEX TELL ME ABOUT IT <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is it * ? -->
+<category><pattern>TELL ME ABOUT ME *</pattern><template><think><srai>NOPX 675</srai></think><random><li><srai>EXPDEX TELL ME ABOUT ME <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is me * ? -->
+<category><pattern>TELL ME ABOUT MY *</pattern><template><think><srai>NOPX 1129</srai></think><random><li><srai>EXPDEX TELL ME ABOUT MY <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is my * ? -->
+<category><pattern>TELL ME ABOUT NEW *</pattern><template><think><srai>NOPX 2598</srai></think><random><li><srai>EXPDEX TELL ME ABOUT NEW <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is new * ? -->
+<category><pattern>TELL ME ABOUT ONE *</pattern><template><think><srai>NOPX 664</srai></think><random><li><srai>EXPDEX TELL ME ABOUT ONE <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is one * ? -->
+<category><pattern>TELL ME ABOUT SALES *</pattern><template><think><srai>NOPX 13084</srai></think><random><li><srai>EXPDEX TELL ME ABOUT SALES <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is sales * ? -->
+<category><pattern>TELL ME ABOUT SOME *</pattern><template><think><srai>NOPX 2532</srai></think><random><li><srai>EXPDEX TELL ME ABOUT SOME <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is some * ? -->
+<category><pattern>TELL ME ABOUT SOMETHING *</pattern><template><think><srai>NOPX 494</srai></think><random><li><srai>EXPDEX TELL ME ABOUT SOMETHING <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is something * ? -->
+<category><pattern>TELL ME ABOUT SPECIAL *</pattern><template><think><srai>NOPX 899</srai></think><random><li><srai>EXPDEX TELL ME ABOUT SPECIAL <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is special * ? -->
+<category><pattern>TELL ME ABOUT THAT *</pattern><template><think><srai>NOPX 5712</srai></think><random><li><srai>EXPDEX TELL ME ABOUT THAT <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is that * ? -->
+<category><pattern>TELL ME ABOUT THE *</pattern><template><think><srai>NOPX 43884</srai></think><random><li><srai>EXPDEX TELL ME ABOUT THE <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is the * ? -->
+<category><pattern>TELL ME ABOUT THEM *</pattern><template><think><srai>NOPX 1917</srai></think><random><li><srai>EXPDEX TELL ME ABOUT THEM <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is them * ? -->
+<category><pattern>TELL ME ABOUT THESE *</pattern><template><think><srai>NOPX 874</srai></think><random><li><srai>EXPDEX TELL ME ABOUT THESE <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is these * ? -->
+<category><pattern>TELL ME ABOUT THIS *</pattern><template><think><srai>NOPX 5128</srai></think><random><li><srai>EXPDEX TELL ME ABOUT THIS <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is this * ? -->
+<category><pattern>TELL ME ABOUT THOSE *</pattern><template><think><srai>NOPX 638</srai></think><random><li><srai>EXPDEX TELL ME ABOUT THOSE <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is those * ? -->
+<category><pattern>TELL ME ABOUT TRAVEL *</pattern><template><think><srai>NOPX 460</srai></think><random><li><srai>EXPDEX TELL ME ABOUT TRAVEL <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is travel * ? -->
+<category><pattern>TELL ME ABOUT YOU *</pattern><template><think><srai>NOPX 2484</srai></think><random><li><srai>EXPDEX TELL ME ABOUT YOU <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is you * ? -->
+<category><pattern>TELL ME ABOUT YOUR *</pattern><template><think><srai>NOPX 44011</srai></think><random><li><srai>EXPDEX TELL ME ABOUT YOUR <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is your * ? -->
+<category><pattern>TELL ME ABOUT YOURSELF *</pattern><template><think><srai>NOPX 14614</srai></think><random><li><srai>EXPDEX TELL ME ABOUT YOURSELF <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is yourself * ? -->
+<category><pattern>TELL ME ABOUT UNK *</pattern><template><think><srai>NOPX 3685</srai></think><random><li><srai>EXPDEX TELL ME ABOUT UNK <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is unk * ? -->
+<category><pattern>TELL ME ABOUT BL3 *</pattern><template><think><srai>NOPX 401</srai></think><random><li><srai>EXPDEX TELL ME ABOUT BL3 <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is bl3 * ? -->
+<category><pattern>TELL ME ABOUT GOD *</pattern><template><think><srai>NOPX 467</srai></think><random><li><srai>EXPDEX TELL ME ABOUT GOD <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is god * ? -->
+<category><pattern>TELL ME ABOUT JESUS *</pattern><template><think><srai>NOPX 489</srai></think><random><li><srai>EXPDEX TELL ME ABOUT JESUS <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is jesus * ? -->
+<category><pattern>TELL ME ABOUT LIMERICK *</pattern><template><think><srai>NOPX 403</srai></think><random><li><srai>EXPDEX TELL ME ABOUT LIMERICK <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is limerick * ? -->
+<category><pattern>TELL ME ABOUT MARJORIE *</pattern><template><think><srai>NOPX 488</srai></think><random><li><srai>EXPDEX TELL ME ABOUT MARJORIE <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is marjorie * ? -->
+<category><pattern>TELL ME ABOUT A *</pattern><template><think><srai>NOPX 12049</srai></think><random><li><srai>EXPDEX TELL ME ABOUT A <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is a * ? -->
+<category><pattern>TELL ME ABOUT ACTONEL *</pattern><template><think><srai>NOPX 613</srai></think><random><li><srai>EXPDEX TELL ME ABOUT ACTONEL <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is actonel * ? -->
+<category><pattern>TELL ME ABOUT ALL *</pattern><template><think><srai>NOPX 2826</srai></think><random><li><srai>EXPDEX TELL ME ABOUT ALL <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is all * ? -->
+<category><pattern>TELL ME ABOUT AMBIEN *</pattern><template><think><srai>NOPX 1576</srai></think><random><li><srai>EXPDEX TELL ME ABOUT AMBIEN <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is ambien * ? -->
+<category><pattern>TELL ME ABOUT AN *</pattern><template><think><srai>NOPX 2140</srai></think><random><li><srai>EXPDEX TELL ME ABOUT AN <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is an * ? -->
+<category><pattern>TELL ME ABOUT ANOTHER *</pattern><template><think><srai>NOPX 499</srai></think><random><li><srai>EXPDEX TELL ME ABOUT ANOTHER <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is another * ? -->
+<category><pattern>TELL ME ABOUT ANY *</pattern><template><think><srai>NOPX 4246</srai></think><random><li><srai>EXPDEX TELL ME ABOUT ANY <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is any * ? -->
+<category><pattern>TELL ME ABOUT ANYTHING *</pattern><template><think><srai>NOPX 467</srai></think><random><li><srai>EXPDEX TELL ME ABOUT ANYTHING <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is anything * ? -->
+<category><pattern>TELL ME ABOUT BEING *</pattern><template><think><srai>NOPX 699</srai></think><random><li><srai>EXPDEX TELL ME ABOUT BEING <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is being * ? -->
+<category><pattern>TELL ME ABOUT HEAVEN *</pattern><template><think><srai>NOPX 1512</srai></think><random><li><srai>EXPDEX TELL ME ABOUT HEAVEN <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is heaven * ? -->
+<category><pattern>TELL ME ABOUT HER *</pattern><template><think><srai>NOPX 15196</srai></think><random><li><srai>EXPDEX TELL ME ABOUT HER <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is her * ? -->
+<category><pattern>TELL ME ABOUT HIM *</pattern><template><think><srai>NOPX 2985</srai></think><random><li><srai>EXPDEX TELL ME ABOUT HIM <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is him * ? -->
+<category><pattern>TELL ME ABOUT HIS *</pattern><template><think><srai>NOPX 6732</srai></think><random><li><srai>EXPDEX TELL ME ABOUT HIS <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is his * ? -->
+<category><pattern>TELL ME ABOUT HOW *</pattern><template><think><srai>NOPX 9543</srai></think><random><li><srai>EXPDEX TELL ME ABOUT HOW <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is how * ? -->
+<category><pattern>TELL ME ABOUT IT *</pattern><template><think><srai>NOPX 75878</srai></think><random><li><srai>EXPDEX TELL ME ABOUT IT <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is it * ? -->
+<category><pattern>TELL ME ABOUT ITS *</pattern><template><think><srai>NOPX 612</srai></think><random><li><srai>EXPDEX TELL ME ABOUT ITS <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is its * ? -->
+<category><pattern>TELL ME ABOUT LIFE *</pattern><template><think><srai>NOPX 419</srai></think><random><li><srai>EXPDEX TELL ME ABOUT LIFE <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is life * ? -->
+<category><pattern>TELL ME ABOUT LIPITOR *</pattern><template><think><srai>NOPX 4875</srai></think><random><li><srai>EXPDEX TELL ME ABOUT LIPITOR <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is lipitor * ? -->
+<category><pattern>TELL ME ABOUT MY *</pattern><template><think><srai>NOPX 6487</srai></think><random><li><srai>EXPDEX TELL ME ABOUT MY <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is my * ? -->
+<category><pattern>TELL ME ABOUT MYSELF *</pattern><template><think><srai>NOPX 693</srai></think><random><li><srai>EXPDEX TELL ME ABOUT MYSELF <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is myself * ? -->
+<category><pattern>TELL ME ABOUT NEW *</pattern><template><think><srai>NOPX 6663</srai></think><random><li><srai>EXPDEX TELL ME ABOUT NEW <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is new * ? -->
+<category><pattern>TELL ME ABOUT OMEPRAZOLE *</pattern><template><think><srai>NOPX 575</srai></think><random><li><srai>EXPDEX TELL ME ABOUT OMEPRAZOLE <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is omeprazole * ? -->
+<category><pattern>TELL ME ABOUT ONE *</pattern><template><think><srai>NOPX 1078</srai></think><random><li><srai>EXPDEX TELL ME ABOUT ONE <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is one * ? -->
+<category><pattern>TELL ME ABOUT OTHER *</pattern><template><think><srai>NOPX 874</srai></think><random><li><srai>EXPDEX TELL ME ABOUT OTHER <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is other * ? -->
+<category><pattern>TELL ME ABOUT OUR *</pattern><template><think><srai>NOPX 423</srai></think><random><li><srai>EXPDEX TELL ME ABOUT OUR <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is our * ? -->
+<category><pattern>TELL ME ABOUT PLIGG *</pattern><template><think><srai>NOPX 865</srai></think><random><li><srai>EXPDEX TELL ME ABOUT PLIGG <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is pligg * ? -->
+<category><pattern>TELL ME ABOUT REVERSE *</pattern><template><think><srai>NOPX 5224</srai></think><random><li><srai>EXPDEX TELL ME ABOUT REVERSE <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is reverse * ? -->
+<category><pattern>TELL ME ABOUT SOME *</pattern><template><think><srai>NOPX 4038</srai></think><random><li><srai>EXPDEX TELL ME ABOUT SOME <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is some * ? -->
+<category><pattern>TELL ME ABOUT SOMETHING *</pattern><template><think><srai>NOPX 1188</srai></think><random><li><srai>EXPDEX TELL ME ABOUT SOMETHING <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is something * ? -->
+<category><pattern>TELL ME ABOUT THAT *</pattern><template><think><srai>NOPX 9270</srai></think><random><li><srai>EXPDEX TELL ME ABOUT THAT <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is that * ? -->
+<category><pattern>TELL ME ABOUT THE *</pattern><template><think><srai>NOPX 77187</srai></think><random><li><srai>EXPDEX TELL ME ABOUT THE <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is the * ? -->
+<category><pattern>TELL ME ABOUT THEIR *</pattern><template><think><srai>NOPX 7475</srai></think><random><li><srai>EXPDEX TELL ME ABOUT THEIR <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is their * ? -->
+<category><pattern>TELL ME ABOUT THEM *</pattern><template><think><srai>NOPX 8233</srai></think><random><li><srai>EXPDEX TELL ME ABOUT THEM <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is them * ? -->
+<category><pattern>TELL ME ABOUT THEMSELVES *</pattern><template><think><srai>NOPX 403</srai></think><random><li><srai>EXPDEX TELL ME ABOUT THEMSELVES <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is themselves * ? -->
+<category><pattern>TELL ME ABOUT THESE *</pattern><template><think><srai>NOPX 3493</srai></think><random><li><srai>EXPDEX TELL ME ABOUT THESE <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is these * ? -->
+<category><pattern>TELL ME ABOUT THINGS *</pattern><template><think><srai>NOPX 729</srai></think><random><li><srai>EXPDEX TELL ME ABOUT THINGS <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is things * ? -->
+<category><pattern>TELL ME ABOUT THIS *</pattern><template><think><srai>NOPX 22958</srai></think><random><li><srai>EXPDEX TELL ME ABOUT THIS <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is this * ? -->
+<category><pattern>TELL ME ABOUT THOSE *</pattern><template><think><srai>NOPX 1518</srai></think><random><li><srai>EXPDEX TELL ME ABOUT THOSE <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is those * ? -->
+<category><pattern>TELL ME ABOUT UR *</pattern><template><think><srai>NOPX 512</srai></think><random><li><srai>EXPDEX TELL ME ABOUT UR <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is ur * ? -->
+<category><pattern>TELL ME ABOUT VIAGRA *</pattern><template><think><srai>NOPX 933</srai></think><random><li><srai>EXPDEX TELL ME ABOUT VIAGRA <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is viagra * ? -->
+<category><pattern>TELL ME ABOUT WHEN *</pattern><template><think><srai>NOPX 700</srai></think><random><li><srai>EXPDEX TELL ME ABOUT WHEN <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is when * ? -->
+<category><pattern>TELL ME ABOUT WHERE *</pattern><template><think><srai>NOPX 1129</srai></think><random><li><srai>EXPDEX TELL ME ABOUT WHERE <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is where * ? -->
+<category><pattern>TELL ME ABOUT YOU *</pattern><template><think><srai>NOPX 3662</srai></think><random><li><srai>EXPDEX TELL ME ABOUT YOU <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is you * ? -->
+<category><pattern>TELL ME ABOUT YOUR *</pattern><template><think><srai>NOPX 37505</srai></think><random><li><srai>EXPDEX TELL ME ABOUT YOUR <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is your * ? -->
+<category><pattern>TELL ME ABOUT YOURS *</pattern><template><think><srai>NOPX 583</srai></think><random><li><srai>EXPDEX TELL ME ABOUT YOURS <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is yours * ? -->
+<category><pattern>TELL ME ABOUT YOURSELF *</pattern><template><think><srai>NOPX 12078</srai></think><random><li><srai>EXPDEX TELL ME ABOUT YOURSELF <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is yourself * ? -->
+<category><pattern>TELL ME ABOUT ZYBAN *</pattern><template><think><srai>NOPX 5475</srai></think><random><li><srai>EXPDEX TELL ME ABOUT ZYBAN <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is zyban * ? -->
+<category><pattern>TELL ME ABOUT IT *</pattern><template><think><srai>NOPX 514</srai></think><random><li><srai>EXPDEX TELL ME ABOUT IT <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is it * ? -->
+<category><pattern>TELL ME ABOUT DIRECTORY SEARCH *</pattern><template><think><srai>NOPX 1446</srai></think><random><li><srai>EXPDEX TELL ME ABOUT DIRECTORY SEARCH <star/></srai></li></random></template></category>
+<!-- p=-213.047042251567 	:ambiguous: ask who, what or where is directory search * ? -->
+<category><pattern>TELL ME ABOUT IT *</pattern><template><think><srai>NOPX 2960</srai></think><random><li><srai>EXPDEX TELL ME ABOUT IT <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is it * ? -->
+<category><pattern>TELL ME ABOUT JESUS *</pattern><template><think><srai>NOPX 1322</srai></think><random><li><srai>EXPDEX TELL ME ABOUT JESUS <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is jesus * ? -->
+<category><pattern>TELL ME ABOUT THAT 6 *</pattern><template><think><srai>NOPX 23219</srai></think><random><li><srai>EXPDEX TELL ME ABOUT THAT 6 <star/></srai></li></random></template></category>
+<!-- p=-213.047042251567 	:ambiguous: ask who, what or where is that 6 * ? -->
+<category><pattern>TELL ME ABOUT THE CREATION *</pattern><template><think><srai>NOPX 2313</srai></think><random><li><srai>EXPDEX TELL ME ABOUT THE CREATION <star/></srai></li></random></template></category>
+<!-- p=-215.496693582524 	:ambiguous: ask who, what or where is the creation * ? -->
+<category><pattern>TELL ME ABOUT YOUR COMPANY *</pattern><template><think><srai>NOPX 1067</srai></think><random><li><srai>EXPDEX TELL ME ABOUT YOUR COMPANY <star/></srai></li></random></template></category>
+<!-- p=-213.047042251567 	:ambiguous: ask who, what or where is your company * ? -->
+<category><pattern>TELL ME ABOUT YOUR PROPERTY *</pattern><template><think><srai>NOPX 1490</srai></think><random><li><srai>EXPDEX TELL ME ABOUT YOUR PROPERTY <star/></srai></li></random></template></category>
+<!-- p=-213.047042251567 	:ambiguous: ask who, what or where is your property * ? -->
+<category><pattern>TELL ME ABOUT YOURSELF *</pattern><template><think><srai>NOPX 632</srai></think><random><li><srai>EXPDEX TELL ME ABOUT YOURSELF <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is yourself * ? -->
+<category><pattern>TELL ME ABOUT A TIME *</pattern><template><think><srai>NOPX 512</srai></think><random><li><srai>EXPDEX TELL ME ABOUT A TIME <star/></srai></li></random></template></category>
+<!-- p=-214.256514259835 	:ambiguous: ask who, what or where is a time * ? -->
+<category><pattern>TELL ME ABOUT MUHAMMAD MY *</pattern><template><think><srai>NOPX 1056</srai></think><random><li><srai>EXPDEX TELL ME ABOUT MUHAMMAD MY <star/></srai></li></random></template></category>
+<!-- p=-213.047042251567 	:ambiguous: ask who, what or where is muhammad my * ? -->
+<category><pattern>TELL ME ABOUT OIDS YOU *</pattern><template><think><srai>NOPX 3803</srai></think><random><li><srai>EXPDEX TELL ME ABOUT OIDS YOU <star/></srai></li></random></template></category>
+<!-- p=-213.047042251567 	:ambiguous: ask who, what or where is oids you * ? -->
+<category><pattern>TELL ME ABOUT A PROJECT *</pattern><template><think><srai>NOPX 421</srai></think><random><li><srai>EXPDEX TELL ME ABOUT A PROJECT <star/></srai></li></random></template></category>
+<!-- p=-214.256514259835 	:ambiguous: ask who, what or where is a project * ? -->
+<category><pattern>TELL ME ABOUT A SITUATION *</pattern><template><think><srai>NOPX 1096</srai></think><random><li><srai>EXPDEX TELL ME ABOUT A SITUATION <star/></srai></li></random></template></category>
+<!-- p=-214.256514259835 	:ambiguous: ask who, what or where is a situation * ? -->
+<category><pattern>TELL ME ABOUT A TIME *</pattern><template><think><srai>NOPX 9551</srai></think><random><li><srai>EXPDEX TELL ME ABOUT A TIME <star/></srai></li></random></template></category>
+<!-- p=-214.256514259835 	:ambiguous: ask who, what or where is a time * ? -->
+<category><pattern>TELL ME ABOUT ADVERTISING CONTACT *</pattern><template><think><srai>NOPX 2487</srai></think><random><li><srai>EXPDEX TELL ME ABOUT ADVERTISING CONTACT <star/></srai></li></random></template></category>
+<!-- p=-213.047042251567 	:ambiguous: ask who, what or where is advertising contact * ? -->
+<category><pattern>TELL ME ABOUT IT *</pattern><template><think><srai>NOPX 921</srai></think><random><li><srai>EXPDEX TELL ME ABOUT IT <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is it * ? -->
+<category><pattern>TELL ME ABOUT IT UNK *</pattern><template><think><srai>NOPX 468</srai></think><random><li><srai>EXPDEX TELL ME ABOUT IT UNK <star/></srai></li></random></template></category>
+<!-- p=-213.047042251567 	:ambiguous: ask who, what or where is it unk * ? -->
+<category><pattern>TELL ME ABOUT NEW MAPS *</pattern><template><think><srai>NOPX 1704</srai></think><random><li><srai>EXPDEX TELL ME ABOUT NEW MAPS <star/></srai></li></random></template></category>
+<!-- p=-213.047042251567 	:ambiguous: ask who, what or where is new maps * ? -->
+<category><pattern>TELL ME ABOUT SPECIAL OFFERS *</pattern><template><think><srai>NOPX 815</srai></think><random><li><srai>EXPDEX TELL ME ABOUT SPECIAL OFFERS <star/></srai></li></random></template></category>
+<!-- p=-213.047042251567 	:ambiguous: ask who, what or where is special offers * ? -->
+<category><pattern>TELL ME ABOUT THE ATOMIC *</pattern><template><think><srai>NOPX 1003</srai></think><random><li><srai>EXPDEX TELL ME ABOUT THE ATOMIC <star/></srai></li></random></template></category>
+<!-- p=-215.496693582524 	:ambiguous: ask who, what or where is the atomic * ? -->
+<category><pattern>TELL ME ABOUT THE BEST *</pattern><template><think><srai>NOPX 1328</srai></think><random><li><srai>EXPDEX TELL ME ABOUT THE BEST <star/></srai></li></random></template></category>
+<!-- p=-215.496693582524 	:ambiguous: ask who, what or where is the best * ? -->
+<category><pattern>TELL ME ABOUT THE FIRST *</pattern><template><think><srai>NOPX 839</srai></think><random><li><srai>EXPDEX TELL ME ABOUT THE FIRST <star/></srai></li></random></template></category>
+<!-- p=-215.496693582524 	:ambiguous: ask who, what or where is the first * ? -->
+<category><pattern>TELL ME ABOUT THE LAST *</pattern><template><think><srai>NOPX 826</srai></think><random><li><srai>EXPDEX TELL ME ABOUT THE LAST <star/></srai></li></random></template></category>
+<!-- p=-215.496693582524 	:ambiguous: ask who, what or where is the last * ? -->
+<category><pattern>TELL ME ABOUT THE MOST *</pattern><template><think><srai>NOPX 661</srai></think><random><li><srai>EXPDEX TELL ME ABOUT THE MOST <star/></srai></li></random></template></category>
+<!-- p=-215.496693582524 	:ambiguous: ask who, what or where is the most * ? -->
+<category><pattern>TELL ME ABOUT THE NEW *</pattern><template><think><srai>NOPX 655</srai></think><random><li><srai>EXPDEX TELL ME ABOUT THE NEW <star/></srai></li></random></template></category>
+<!-- p=-215.496693582524 	:ambiguous: ask who, what or where is the new * ? -->
+<category><pattern>TELL ME ABOUT THE TIME *</pattern><template><think><srai>NOPX 413</srai></think><random><li><srai>EXPDEX TELL ME ABOUT THE TIME <star/></srai></li></random></template></category>
+<!-- p=-215.496693582524 	:ambiguous: ask who, what or where is the time * ? -->
+<category><pattern>TELL ME ABOUT THE TYPE *</pattern><template><think><srai>NOPX 1654</srai></think><random><li><srai>EXPDEX TELL ME ABOUT THE TYPE <star/></srai></li></random></template></category>
+<!-- p=-215.496693582524 	:ambiguous: ask who, what or where is the type * ? -->
+<category><pattern>TELL ME ABOUT YOU *</pattern><template><think><srai>NOPX 652</srai></think><random><li><srai>EXPDEX TELL ME ABOUT YOU <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is you * ? -->
+<category><pattern>TELL ME ABOUT YOUR RADIOHEAD *</pattern><template><think><srai>NOPX 447</srai></think><random><li><srai>EXPDEX TELL ME ABOUT YOUR RADIOHEAD <star/></srai></li></random></template></category>
+<!-- p=-213.047042251567 	:ambiguous: ask who, what or where is your radiohead * ? -->
+<category><pattern>TELL ME ABOUT YOUR BACKGROUND *</pattern><template><think><srai>NOPX 543</srai></think><random><li><srai>EXPDEX TELL ME ABOUT YOUR BACKGROUND <star/></srai></li></random></template></category>
+<!-- p=-213.047042251567 	:ambiguous: ask who, what or where is your background * ? -->
+<category><pattern>TELL ME ABOUT YOUR CHILDHOOD *</pattern><template><think><srai>NOPX 579</srai></think><random><li><srai>EXPDEX TELL ME ABOUT YOUR CHILDHOOD <star/></srai></li></random></template></category>
+<!-- p=-213.047042251567 	:ambiguous: ask who, what or where is your childhood * ? -->
+<category><pattern>TELL ME ABOUT YOUR DAY *</pattern><template><think><srai>NOPX 521</srai></think><random><li><srai>EXPDEX TELL ME ABOUT YOUR DAY <star/></srai></li></random></template></category>
+<!-- p=-213.047042251567 	:ambiguous: ask who, what or where is your day * ? -->
+<category><pattern>TELL ME ABOUT YOUR EXPERIENCE *</pattern><template><think><srai>NOPX 1081</srai></think><random><li><srai>EXPDEX TELL ME ABOUT YOUR EXPERIENCE <star/></srai></li></random></template></category>
+<!-- p=-213.047042251567 	:ambiguous: ask who, what or where is your experience * ? -->
+<category><pattern>TELL ME ABOUT YOUR EXPERIENCES *</pattern><template><think><srai>NOPX 489</srai></think><random><li><srai>EXPDEX TELL ME ABOUT YOUR EXPERIENCES <star/></srai></li></random></template></category>
+<!-- p=-213.047042251567 	:ambiguous: ask who, what or where is your experiences * ? -->
+<category><pattern>TELL ME ABOUT YOUR FAMILY *</pattern><template><think><srai>NOPX 1384</srai></think><random><li><srai>EXPDEX TELL ME ABOUT YOUR FAMILY <star/></srai></li></random></template></category>
+<!-- p=-213.047042251567 	:ambiguous: ask who, what or where is your family * ? -->
+<category><pattern>TELL ME ABOUT YOUR JOB *</pattern><template><think><srai>NOPX 518</srai></think><random><li><srai>EXPDEX TELL ME ABOUT YOUR JOB <star/></srai></li></random></template></category>
+<!-- p=-213.047042251567 	:ambiguous: ask who, what or where is your job * ? -->
+<category><pattern>TELL ME ABOUT YOUR LIFE *</pattern><template><think><srai>NOPX 647</srai></think><random><li><srai>EXPDEX TELL ME ABOUT YOUR LIFE <star/></srai></li></random></template></category>
+<!-- p=-213.047042251567 	:ambiguous: ask who, what or where is your life * ? -->
+<category><pattern>TELL ME ABOUT YOUR PROJECT *</pattern><template><think><srai>NOPX 461</srai></think><random><li><srai>EXPDEX TELL ME ABOUT YOUR PROJECT <star/></srai></li></random></template></category>
+<!-- p=-213.047042251567 	:ambiguous: ask who, what or where is your project * ? -->
+<category><pattern>TELL ME ABOUT YOUR RELATIONSHIP *</pattern><template><think><srai>NOPX 439</srai></think><random><li><srai>EXPDEX TELL ME ABOUT YOUR RELATIONSHIP <star/></srai></li></random></template></category>
+<!-- p=-213.047042251567 	:ambiguous: ask who, what or where is your relationship * ? -->
+<category><pattern>TELL ME ABOUT YOUR WORK *</pattern><template><think><srai>NOPX 2489</srai></think><random><li><srai>EXPDEX TELL ME ABOUT YOUR WORK <star/></srai></li></random></template></category>
+<!-- p=-213.047042251567 	:ambiguous: ask who, what or where is your work * ? -->
+<category><pattern>TELL ME ABOUT YOURSELF *</pattern><template><think><srai>NOPX 604</srai></think><random><li><srai>EXPDEX TELL ME ABOUT YOURSELF <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is yourself * ? -->
+<category><pattern>TELL ME ABOUT UNK UNK *</pattern><template><think><srai>NOPX 1663</srai></think><random><li><srai>EXPDEX TELL ME ABOUT UNK UNK <star/></srai></li></random></template></category>
+<!-- p=-213.047042251567 	:ambiguous: ask who, what or where is unk unk * ? -->
+<category><pattern>TELL ME ABOUT A CORK *</pattern><template><think><srai>NOPX 741</srai></think><random><li><srai>EXPDEX TELL ME ABOUT A CORK <star/></srai></li></random></template></category>
+<!-- p=-214.256514259835 	:ambiguous: ask who, what or where is a cork * ? -->
+<category><pattern>TELL ME ABOUT A NEW *</pattern><template><think><srai>NOPX 555</srai></think><random><li><srai>EXPDEX TELL ME ABOUT A NEW <star/></srai></li></random></template></category>
+<!-- p=-214.256514259835 	:ambiguous: ask who, what or where is a new * ? -->
+<category><pattern>TELL ME ABOUT A TIME *</pattern><template><think><srai>NOPX 908</srai></think><random><li><srai>EXPDEX TELL ME ABOUT A TIME <star/></srai></li></random></template></category>
+<!-- p=-214.256514259835 	:ambiguous: ask who, what or where is a time * ? -->
+<category><pattern>TELL ME ABOUT ALL OF *</pattern><template><think><srai>NOPX 414</srai></think><random><li><srai>EXPDEX TELL ME ABOUT ALL OF <star/></srai></li></random></template></category>
+<!-- p=-213.047042251567 	:ambiguous: ask who, what or where is all of * ? -->
+<category><pattern>TELL ME ABOUT HER *</pattern><template><think><srai>NOPX 441</srai></think><random><li><srai>EXPDEX TELL ME ABOUT HER <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is her * ? -->
+<category><pattern>TELL ME ABOUT HOW HE *</pattern><template><think><srai>NOPX 599</srai></think><random><li><srai>EXPDEX TELL ME ABOUT HOW HE <star/></srai></li></random></template></category>
+<!-- p=-213.047042251567 	:ambiguous: ask who, what or where is how he * ? -->
+<category><pattern>TELL ME ABOUT HOW THEY *</pattern><template><think><srai>NOPX 546</srai></think><random><li><srai>EXPDEX TELL ME ABOUT HOW THEY <star/></srai></li></random></template></category>
+<!-- p=-213.047042251567 	:ambiguous: ask who, what or where is how they * ? -->
+<category><pattern>TELL ME ABOUT HOW YOU *</pattern><template><think><srai>NOPX 1099</srai></think><random><li><srai>EXPDEX TELL ME ABOUT HOW YOU <star/></srai></li></random></template></category>
+<!-- p=-213.047042251567 	:ambiguous: ask who, what or where is how you * ? -->
+<category><pattern>TELL ME ABOUT IT *</pattern><template><think><srai>NOPX 2075</srai></think><random><li><srai>EXPDEX TELL ME ABOUT IT <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is it * ? -->
+<category><pattern>TELL ME ABOUT IT UNK *</pattern><template><think><srai>NOPX 802</srai></think><random><li><srai>EXPDEX TELL ME ABOUT IT UNK <star/></srai></li></random></template></category>
+<!-- p=-213.047042251567 	:ambiguous: ask who, what or where is it unk * ? -->
+<category><pattern>TELL ME ABOUT IT AND *</pattern><template><think><srai>NOPX 2368</srai></think><random><li><srai>EXPDEX TELL ME ABOUT IT AND <star/></srai></li></random></template></category>
+<!-- p=-213.047042251567 	:ambiguous: ask who, what or where is it and * ? -->
+<category><pattern>TELL ME ABOUT IT IN *</pattern><template><think><srai>NOPX 799</srai></think><random><li><srai>EXPDEX TELL ME ABOUT IT IN <star/></srai></li></random></template></category>
+<!-- p=-213.047042251567 	:ambiguous: ask who, what or where is it in * ? -->
+<category><pattern>TELL ME ABOUT IT SO *</pattern><template><think><srai>NOPX 618</srai></think><random><li><srai>EXPDEX TELL ME ABOUT IT SO <star/></srai></li></random></template></category>
+<!-- p=-213.047042251567 	:ambiguous: ask who, what or where is it so * ? -->
+<category><pattern>TELL ME ABOUT LIPITOR LIPITOR *</pattern><template><think><srai>NOPX 2642</srai></think><random><li><srai>EXPDEX TELL ME ABOUT LIPITOR LIPITOR <star/></srai></li></random></template></category>
+<!-- p=-213.047042251567 	:ambiguous: ask who, what or where is lipitor lipitor * ? -->
+<category><pattern>TELL ME ABOUT MY STUDENT *</pattern><template><think><srai>NOPX 558</srai></think><random><li><srai>EXPDEX TELL ME ABOUT MY STUDENT <star/></srai></li></random></template></category>
+<!-- p=-213.047042251567 	:ambiguous: ask who, what or where is my student * ? -->
+<category><pattern>TELL ME ABOUT NEW BOOKS *</pattern><template><think><srai>NOPX 6199</srai></think><random><li><srai>EXPDEX TELL ME ABOUT NEW BOOKS <star/></srai></li></random></template></category>
+<!-- p=-213.047042251567 	:ambiguous: ask who, what or where is new books * ? -->
+<category><pattern>TELL ME ABOUT ONE OF *</pattern><template><think><srai>NOPX 477</srai></think><random><li><srai>EXPDEX TELL ME ABOUT ONE OF <star/></srai></li></random></template></category>
+<!-- p=-213.047042251567 	:ambiguous: ask who, what or where is one of * ? -->
+<category><pattern>TELL ME ABOUT PLIGG *</pattern><template><think><srai>NOPX 865</srai></think><random><li><srai>EXPDEX TELL ME ABOUT PLIGG <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is pligg * ? -->
+<category><pattern>TELL ME ABOUT REVERSE MORTGAGE *</pattern><template><think><srai>NOPX 5153</srai></think><random><li><srai>EXPDEX TELL ME ABOUT REVERSE MORTGAGE <star/></srai></li></random></template></category>
+<!-- p=-213.047042251567 	:ambiguous: ask who, what or where is reverse mortgage * ? -->
+<category><pattern>TELL ME ABOUT SOME OF *</pattern><template><think><srai>NOPX 1729</srai></think><random><li><srai>EXPDEX TELL ME ABOUT SOME OF <star/></srai></li></random></template></category>
+<!-- p=-213.047042251567 	:ambiguous: ask who, what or where is some of * ? -->
+<category><pattern>TELL ME ABOUT THAT *</pattern><template><think><srai>NOPX 2221</srai></think><random><li><srai>EXPDEX TELL ME ABOUT THAT <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is that * ? -->
+<category><pattern>TELL ME ABOUT THE UNK *</pattern><template><think><srai>NOPX 521</srai></think><random><li><srai>EXPDEX TELL ME ABOUT THE UNK <star/></srai></li></random></template></category>
+<!-- p=-215.496693582524 	:ambiguous: ask who, what or where is the unk * ? -->
+<category><pattern>TELL ME ABOUT THE DIGESTIVE *</pattern><template><think><srai>NOPX 473</srai></think><random><li><srai>EXPDEX TELL ME ABOUT THE DIGESTIVE <star/></srai></li></random></template></category>
+<!-- p=-215.496693582524 	:ambiguous: ask who, what or where is the digestive * ? -->
+<category><pattern>TELL ME ABOUT THE DRUG *</pattern><template><think><srai>NOPX 666</srai></think><random><li><srai>EXPDEX TELL ME ABOUT THE DRUG <star/></srai></li></random></template></category>
+<!-- p=-215.496693582524 	:ambiguous: ask who, what or where is the drug * ? -->
+<category><pattern>TELL ME ABOUT THE FIRST *</pattern><template><think><srai>NOPX 755</srai></think><random><li><srai>EXPDEX TELL ME ABOUT THE FIRST <star/></srai></li></random></template></category>
+<!-- p=-215.496693582524 	:ambiguous: ask who, what or where is the first * ? -->
+<category><pattern>TELL ME ABOUT THE GREAT *</pattern><template><think><srai>NOPX 693</srai></think><random><li><srai>EXPDEX TELL ME ABOUT THE GREAT <star/></srai></li></random></template></category>
+<!-- p=-215.496693582524 	:ambiguous: ask who, what or where is the great * ? -->
+<category><pattern>TELL ME ABOUT THE HISTORY *</pattern><template><think><srai>NOPX 517</srai></think><random><li><srai>EXPDEX TELL ME ABOUT THE HISTORY <star/></srai></li></random></template></category>
+<!-- p=-215.496693582524 	:ambiguous: ask who, what or where is the history * ? -->
+<category><pattern>TELL ME ABOUT THE HOSTEL *</pattern><template><think><srai>NOPX 411</srai></think><random><li><srai>EXPDEX TELL ME ABOUT THE HOSTEL <star/></srai></li></random></template></category>
+<!-- p=-215.496693582524 	:ambiguous: ask who, what or where is the hostel * ? -->
+<category><pattern>TELL ME ABOUT THE NEW *</pattern><template><think><srai>NOPX 1132</srai></think><random><li><srai>EXPDEX TELL ME ABOUT THE NEW <star/></srai></li></random></template></category>
+<!-- p=-215.496693582524 	:ambiguous: ask who, what or where is the new * ? -->
+<category><pattern>TELL ME ABOUT THE OTHER *</pattern><template><think><srai>NOPX 496</srai></think><random><li><srai>EXPDEX TELL ME ABOUT THE OTHER <star/></srai></li></random></template></category>
+<!-- p=-215.496693582524 	:ambiguous: ask who, what or where is the other * ? -->
+<category><pattern>TELL ME ABOUT THE PEOPLE *</pattern><template><think><srai>NOPX 435</srai></think><random><li><srai>EXPDEX TELL ME ABOUT THE PEOPLE <star/></srai></li></random></template></category>
+<!-- p=-215.496693582524 	:ambiguous: ask who, what or where is the people * ? -->
+<category><pattern>TELL ME ABOUT THE THINGS *</pattern><template><think><srai>NOPX 413</srai></think><random><li><srai>EXPDEX TELL ME ABOUT THE THINGS <star/></srai></li></random></template></category>
+<!-- p=-215.496693582524 	:ambiguous: ask who, what or where is the things * ? -->
+<category><pattern>TELL ME ABOUT THE TIME *</pattern><template><think><srai>NOPX 455</srai></think><random><li><srai>EXPDEX TELL ME ABOUT THE TIME <star/></srai></li></random></template></category>
+<!-- p=-215.496693582524 	:ambiguous: ask who, what or where is the time * ? -->
+<category><pattern>TELL ME ABOUT THEIR EXPERIENCES *</pattern><template><think><srai>NOPX 530</srai></think><random><li><srai>EXPDEX TELL ME ABOUT THEIR EXPERIENCES <star/></srai></li></random></template></category>
+<!-- p=-213.047042251567 	:ambiguous: ask who, what or where is their experiences * ? -->
+<category><pattern>TELL ME ABOUT THIS *</pattern><template><think><srai>NOPX 3196</srai></think><random><li><srai>EXPDEX TELL ME ABOUT THIS <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is this * ? -->
+<category><pattern>TELL ME ABOUT THIS AREA *</pattern><template><think><srai>NOPX 425</srai></think><random><li><srai>EXPDEX TELL ME ABOUT THIS AREA <star/></srai></li></random></template></category>
+<!-- p=-213.047042251567 	:ambiguous: ask who, what or where is this area * ? -->
+<category><pattern>TELL ME ABOUT THIS BEFORE *</pattern><template><think><srai>NOPX 405</srai></think><random><li><srai>EXPDEX TELL ME ABOUT THIS BEFORE <star/></srai></li></random></template></category>
+<!-- p=-213.047042251567 	:ambiguous: ask who, what or where is this before * ? -->
+<category><pattern>TELL ME ABOUT THIS SITE *</pattern><template><think><srai>NOPX 439</srai></think><random><li><srai>EXPDEX TELL ME ABOUT THIS SITE <star/></srai></li></random></template></category>
+<!-- p=-213.047042251567 	:ambiguous: ask who, what or where is this site * ? -->
+<category><pattern>TELL ME ABOUT WHAT YOU *</pattern><template><think><srai>NOPX 1213</srai></think><random><li><srai>EXPDEX TELL ME ABOUT WHAT YOU <star/></srai></li></random></template></category>
+<!-- p=-213.047042251567 	:ambiguous: ask who, what or where is what you * ? -->
+<category><pattern>TELL ME ABOUT YOU AND *</pattern><template><think><srai>NOPX 590</srai></think><random><li><srai>EXPDEX TELL ME ABOUT YOU AND <star/></srai></li></random></template></category>
+<!-- p=-213.047042251567 	:ambiguous: ask who, what or where is you and * ? -->
+<category><pattern>TELL ME ABOUT YOUR BACKGROUND *</pattern><template><think><srai>NOPX 454</srai></think><random><li><srai>EXPDEX TELL ME ABOUT YOUR BACKGROUND <star/></srai></li></random></template></category>
+<!-- p=-213.047042251567 	:ambiguous: ask who, what or where is your background * ? -->
+<category><pattern>TELL ME ABOUT YOUR CHILDHOOD *</pattern><template><think><srai>NOPX 404</srai></think><random><li><srai>EXPDEX TELL ME ABOUT YOUR CHILDHOOD <star/></srai></li></random></template></category>
+<!-- p=-213.047042251567 	:ambiguous: ask who, what or where is your childhood * ? -->
+<category><pattern>TELL ME ABOUT YOUR DAY *</pattern><template><think><srai>NOPX 562</srai></think><random><li><srai>EXPDEX TELL ME ABOUT YOUR DAY <star/></srai></li></random></template></category>
+<!-- p=-213.047042251567 	:ambiguous: ask who, what or where is your day * ? -->
+<category><pattern>TELL ME ABOUT YOUR EXPERIENCE *</pattern><template><think><srai>NOPX 1452</srai></think><random><li><srai>EXPDEX TELL ME ABOUT YOUR EXPERIENCE <star/></srai></li></random></template></category>
+<!-- p=-213.047042251567 	:ambiguous: ask who, what or where is your experience * ? -->
+<category><pattern>TELL ME ABOUT YOUR EXPERIENCES *</pattern><template><think><srai>NOPX 1015</srai></think><random><li><srai>EXPDEX TELL ME ABOUT YOUR EXPERIENCES <star/></srai></li></random></template></category>
+<!-- p=-213.047042251567 	:ambiguous: ask who, what or where is your experiences * ? -->
+<category><pattern>TELL ME ABOUT YOUR FAMILY *</pattern><template><think><srai>NOPX 701</srai></think><random><li><srai>EXPDEX TELL ME ABOUT YOUR FAMILY <star/></srai></li></random></template></category>
+<!-- p=-213.047042251567 	:ambiguous: ask who, what or where is your family * ? -->
+<category><pattern>TELL ME ABOUT YOUR FAVORITE *</pattern><template><think><srai>NOPX 528</srai></think><random><li><srai>EXPDEX TELL ME ABOUT YOUR FAVORITE <star/></srai></li></random></template></category>
+<!-- p=-213.047042251567 	:ambiguous: ask who, what or where is your favorite * ? -->
+<category><pattern>TELL ME ABOUT YOUR FIRST *</pattern><template><think><srai>NOPX 610</srai></think><random><li><srai>EXPDEX TELL ME ABOUT YOUR FIRST <star/></srai></li></random></template></category>
+<!-- p=-213.047042251567 	:ambiguous: ask who, what or where is your first * ? -->
+<category><pattern>TELL ME ABOUT YOUR LIFE *</pattern><template><think><srai>NOPX 619</srai></think><random><li><srai>EXPDEX TELL ME ABOUT YOUR LIFE <star/></srai></li></random></template></category>
+<!-- p=-213.047042251567 	:ambiguous: ask who, what or where is your life * ? -->
+<category><pattern>TELL ME ABOUT YOUR NEW *</pattern><template><think><srai>NOPX 523</srai></think><random><li><srai>EXPDEX TELL ME ABOUT YOUR NEW <star/></srai></li></random></template></category>
+<!-- p=-213.047042251567 	:ambiguous: ask who, what or where is your new * ? -->
+<category><pattern>TELL ME ABOUT YOUR OWN *</pattern><template><think><srai>NOPX 403</srai></think><random><li><srai>EXPDEX TELL ME ABOUT YOUR OWN <star/></srai></li></random></template></category>
+<!-- p=-213.047042251567 	:ambiguous: ask who, what or where is your own * ? -->
+<category><pattern>TELL ME ABOUT YOUR SITE *</pattern><template><think><srai>NOPX 2677</srai></think><random><li><srai>EXPDEX TELL ME ABOUT YOUR SITE <star/></srai></li></random></template></category>
+<!-- p=-213.047042251567 	:ambiguous: ask who, what or where is your site * ? -->
+<category><pattern>TELL ME ABOUT YOURSELF AND *</pattern><template><think><srai>NOPX 1109</srai></think><random><li><srai>EXPDEX TELL ME ABOUT YOURSELF AND <star/></srai></li></random></template></category>
+<!-- p=-213.047042251567 	:ambiguous: ask who, what or where is yourself and * ? -->
+<category><pattern>TELL ME ABOUT ZYBAN ZYBAN *</pattern><template><think><srai>NOPX 2498</srai></think><random><li><srai>EXPDEX TELL ME ABOUT ZYBAN ZYBAN <star/></srai></li></random></template></category>
+<!-- p=-213.047042251567 	:ambiguous: ask who, what or where is zyban zyban * ? -->
+<category><pattern>TELL ME ABOUT IT *</pattern><template><think><srai>NOPX 484</srai></think><random><li><srai>EXPDEX TELL ME ABOUT IT <star/></srai></li></random></template></category>
+<!-- p=-180.170264235908 	:ambiguous: ask who, what or where is it * ? -->
+</aiml>

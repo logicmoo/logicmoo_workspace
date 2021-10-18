@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- Reload in chat GUI with      
+	/aiml @load <bot name="~genotype"/>/bina_v1/ZZ_Stu.aiml
+-->
+<aiml graph="start_graph">
+  <genlMt to="all_graphs" />
+
+  <aiml graph="all_graphs">
+    <category>
+      <pattern>GRAPHINFOS</pattern>
+      <template score="1.7">
+        botgraph <get var="botgraph" default="MISSING"/>
+        currentgraph <get var="currentgraph" default="MISSING"/>
+        usergraph <get var="usergraph" default="MISSING"/>
+        listenergraph <get var="listenergraph" default="MISSING"/>
+        startgraph <get var="startgraph" default="MISSING"/>
+      </template>
+    </category>
+    <category>
+      <pattern>WHAT GRAPH</pattern>
+      <template>
+        I am in all_graphs
+      </template>
+    </category>
+  </aiml>
+
+  <aiml graph="graph1">
+    <genlMt to="all_graphs" />
+    <category>
+      <pattern>WHAT GRAPH</pattern>
+      <template debug="true">
+        I am in graph1 next <srai graph="graph2">WHAT GRAPH</srai>
+      </template>
+    </category>
+  </aiml>
+
+  <aiml graph="graph2">
+    <genlMt to="all_graphs" />
+    <category>
+      <pattern>WHAT GRAPH</pattern>
+      <template>
+        I am in graph2 next <srai graph="graph3">WHAT GRAPH</srai>
+      </template>
+    </category>
+  </aiml>
+
+  <aiml graph="graph3">
+    <genlMt to="all_graphs" />
+    <category>
+      <pattern>WHAT GRAPH</pattern>
+      <template>
+        I am in graph3
+        <srai>GRAPHINFOS</srai>
+      </template>
+    </category>
+  </aiml>
+
+</aiml>
+

@@ -45,7 +45,7 @@ assert_phrase_rule(Phrase, Words) :-
 	  register_lexical_item(Word)),
    append(Words, Tail, WordsWithTail),
    term_append(Phrase, [WordsWithTail, Tail], DCGRule),
-   assertz($global::DCGRule).
+   assertz(/*$global::*/DCGRule).
 
 %% assert_phrase_rule(Phrase, Words, Guard) is det
 %  Asserts that Phrase can be matched by Words (a list of symbols) if
@@ -64,7 +64,9 @@ assert_phrase_rule(Phrase, Words, Guard) :-
 %  Functionally, this means it adds the grammar rule:
 %    proper_name(Object, Number) --> Name.
 
-:- dynamic(proper_name_without_the//2).
+:- assume_dyn_fail(proper_name_without_the//2).
+
+%proper_name_without_the
 
 assert_proper_name(Object, [ ], _) :-
    % Don't default a name for GameObjects

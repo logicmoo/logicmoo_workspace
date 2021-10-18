@@ -1,6 +1,17 @@
+% :- module(unity_prolog,[]).
+
+
+make_pred_narity_call_list(P,A):- 
+  length(L,A),
+  Head=..[P|L],Body=..[P,L],
+  assert((Head:-Body)).
 
 begin(G):- is_list(G),!,maplist(begin,G).
-begin(G):- must_det_l(G).
+begin(G):- must(G).
+:- forall(between(2,11,A), make_pred_narity_call_list(begin,A)).
+displayln(X):- is_list(X),!,maplist(write,X),nl.
+displayln(X):- write(X),nl.
+:- forall(between(2,7,A), make_pred_narity_call_list(displayln,A)).
 
 :- arithmetic_function('$'/1).
 :- arithmetic_function('now'/0).
@@ -20,7 +31,7 @@ string_representation(Term,String):- term_to_string(Term,String).
 :- op(399,fx,'~').
 
 %:- op(1000,fx,('$')).
-:- multifile (/)/1.
+%:- multifile (/)/1.
 :- multifile  '~' / 1.
 %:- multifile  :: / 2.
 
@@ -51,7 +62,7 @@ system:unity_call(M:G):- G=..[F|Args],unity_apply(M:F,Args).
 :- meta_predicate(system:unity_apply(:,+)).
 system:unity_apply(F,[Arg]):- once(convert_assert(Arg,Slash)),Arg\==Slash,!, unity_apply(F,[Slash]).
 system:unity_apply(M:(public),[Arg]):- !, system:unity_apply(M:(external),[Arg]).
-system:unity_apply(F,Args):- \+ ground(Args), wdmsg(unity_apply(F,Args)), fail.
+system:unity_apply(F,Args):- \+ ground(Args), log(unity_apply(F,Args)), fail.
 system:unity_apply(F,Args):- apply(F,Args).
 
 
@@ -90,7 +101,7 @@ is_slashed_g(/_:_).
 is_slashed_g((/_)/_).
 is_slashed_g((/_):_).
 
-slash_db(X,Y):- wdmsg(slash_db(X,Y)),fail.
+slash_db(X,Y):- log(slash_db(X,Y)),fail.
 %slash_db(top,_X):- fail.
 slash_db(rel,X):- slash_db(top,/X).
 slash_db(rel,X):- slash_db(top,/_/X).
@@ -180,23 +191,24 @@ ho2mp(X,X).
 all(X,Y,Z):- findall(X,Y,L), list_to_set(L,Z).
 
 :- current_op(X,Y,dynamic),op(X,Y,indexical).
-indexical(X=Y):- !, nb_setval(X,Y),wdmsg(indexical(X=Y)).
+indexical(X=Y):- !, nb_setval(X,Y),log(indexical(X=Y)).
 indexical(X):- %compound(X),!, 
   compound_name_arguments(X,_,AX), maplist(indexical,AX).
 
 indexical_named(X,Y):- must_getvar(X,Y).
 
 must_getvar(X,Y):- nb_current(X,Y),!.
-must_getvar(me,Y):- !, Y = me.
-must_getvar(X,Y):- wdmsg(warn(must_getvar(X,Y))),fail.
-must_getvar(X,Y):-X=Y.
+%must_getvar(me,Y):- !, Y = me.
+must_getvar(X,Y):- log(warn(must_getvar(X,Y))),fail.
+must_getvar(X,Y):- atom(X),!,atom_concat('unknown__',X,Y).
+must_getvar(X,'#'(X)).
 '$'(Number,Value):- number(Number),!,Number=Value.
 '$'(now,Value):- !, get_time(Value).
 '$'(Var,Value):- must_getvar(Var,Value).
 
 bind(X,Y):- b_setval(X,Y).
 
-log(X):-dmsg(X).
+log(X):-nop(dmsg(X)).
 
 starts_with_one_of(String,Word):- sub_string(Word,0,1,_,L),sub_string(String,_,_,_,L).
 
@@ -205,62 +217,64 @@ for_all_unique(T,Gen,Goal):-
   all(T,Gen,Set),member(T,Set),call(Goal).
 
 :- current_op(X,Y,dynamic),op(X,Y,register_lexical_items).
-register_lexical_item(X):- nop(wdmsg(register_lexical_item(X))), assert(is_lexical_item(X)).
-
+register_lexical_item(X):- nop(log(register_lexical_item(X))), assert(is_lexical_item(X)).
 
 
 :- current_op(X,Y,dynamic),op(X,Y,external).
 :- meta_predicate(system:external(:)).
-system:external(X):- nop(wdmsg(external(X))),discontiguous(X),distributed_pred(X).
+system:external(X):- nop(log(external(X))),discontiguous(X),distributed_pred(X).
 
 :- current_op(X,Y,dynamic),op(X,Y,distributed_pred).
 :- meta_predicate(system:distributed_pred(:)).
-system:distributed_pred(X):- nop(wdmsg(distributed_pred(X))),dynamic(X),multifile(X),discontiguous(X).
+system:distributed_pred(X):- nop(log(distributed_pred(X))),dynamic(X),multifile(X),discontiguous(X).
 
 :- distributed_pred(fkey_command/2).
 
 :- current_op(X,Y,dynamic),op(X,Y,randomizable).
-randomizable(X):- dynamic(X),multifile(X),discontiguous(X),nop(wdmsg(randomizable(X))).
+randomizable(X):- dynamic(X),multifile(X),discontiguous(X),nop(log(randomizable(X))).
 
 load_unity_prolog_file(F):- 
+  log(load_unity_prolog_file(F)),
   load_files(F,[module(mkultra),must_be_module(false),redefine_module(false),scope_settings(false)]).
-
-assume_todo(F/A):- functor(P,F,A), TODO=todo(P), asserta((P:- wdmsg(warn(TODO)),throw(TODO))).
-assume_done(F/A):- functor(P,F,A), TODO=assume_done(P), asserta((P:- !, wdmsg(warn(TODO)))).
 
 now(Now):-  get_time(Now).
 
 
+call_with_step_limit(Limit,Goal):- call_with_inference_limit(Goal, Limit, Result), 
+    ignore((inference_limit_exceeded == Result, throw(Result))),
+    (((Result == (!))-> ! ; Result)).
 
-:- assume_todo(unpause_game/0).
-:- assume_todo(type/2).
-:- assume_todo(sumall/3).
-:- assume_todo(step_limit/1).
-:- assume_todo(set_property/3).
-:- assume_todo(relation_type/3).
-:- assume_todo(randomize/1).
-:- assume_todo(property_type/3).
-:- assume_todo(property_name/3).
-:- assume_todo(property/3).
-%:- assume_todo(prop/1).
-:- assume_todo(predicate_type/2).
-:- assume_done(pause_game/0).
-:- assume_todo(parent_of_gameobject/2).
-%:- assume_todo(now/1).
-:- assume_todo(is_class/2).
-:- assume_todo(generate_unique/2).
+:- assume_done(step_limit/1).
 
-:- forall(between(2,7,A),assume_todo(displayln/A)).
-displayln(X):- is_list(X),!,maplist(write,X),nl.
-displayln(X):- write(X),nl.
-
-%:- assume_todo(consult/2).
 :- assume_todo(component_of_gameobject_with_type/3).
-:- assume_todo(call_with_step_limit/2).
+:- assume_todo(parent_of_gameobject/2).
+
+:- assume_todo(sumall/3).
+:- assume_todo(generate_unique/2).
 :- assume_todo(call_method/3).
 :- assume_todo(arg_min/3).
 :- assume_todo(arg_max/3).
-%:- assume_dyn(word_list/2).
+
+:- assume_dyn_fail(type/2).
+:- assume_dyn_fail(relation_type/3).
+:- assume_dyn_fail(property_type/3).
+:- assume_dyn_fail(property_name/3).
+:- assume_dyn_fail(property/3).
+:- assume_dyn_fail(predicate_type/2).
+:- assume_dyn_fail(is_class/2).
+
+:- assume_done(pause_game/0).
+:- assume_done(unpause_game/0).
+:- assume_done(randomize/1).
+
+
+:- assume_done(set_property/3).
+
+%:- assume_todo(prop/1).
+%:- assume_todo(now/1).
+%:- assume_todo(consult/2).
+
+%:- assume_dyn_fail(word_list/2).
 word_list(X,Y):- atomic_list_concat(Y,X).
 
 consult(File, M):- M:consult(File).
@@ -273,7 +287,9 @@ unity_ctx:- module_ctx(mkultra).
 
 :- fixup_exports.
 
-term_expansion(X,Y):- compound(X), unity_ctx, uterm_expansion(X,Y).
+:- multifile(term_expansion/2).
+:- dynamic(term_expansion/2).
+term_expansion(X,Y):- compound(X), unity_ctx, uterm_expansion(X,Y),writeq(Y),nl.
 system:goal_expansion(X,Y):- compound(X), unity_ctx, ugoal_expansion(X,Y).
 :- load_unity_prolog_file('Utilities/startup.prolog').
 

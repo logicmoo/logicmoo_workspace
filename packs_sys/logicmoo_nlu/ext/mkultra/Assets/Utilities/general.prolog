@@ -17,9 +17,7 @@ term_append(Term, AdditionalArgs, ExtendedTerm) :-
 
 %% assertion(:P. +Message)
 %  Throw exception if P is unprovable.
-assertion(P, _) :-
-   P,
-   !.
+assertion(P, _) :- P, !.
 assertion(P, Message) :-
    throw(error(assertion_failed(Message, P), null)).
 
@@ -40,6 +38,8 @@ if(C, T, _E) :-
    C, !, T.
 if(_, _, E) :-
    E.
+
+
 
 :- public when/2, when/3, when/4, when/5, when/6.
 :- higher_order when(1,1).

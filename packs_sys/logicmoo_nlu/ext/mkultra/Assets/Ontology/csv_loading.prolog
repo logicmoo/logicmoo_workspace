@@ -89,6 +89,7 @@ check_predicate_signature(_Type, ArgTypes) :-
 %%
 %% Properties
 %%
+:- dynamic(property_type/3).
 
 load_special_csv_row(_RowNumber, properties(Name, Visibility,
 					    SurfaceForm,

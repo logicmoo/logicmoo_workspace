@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!-- suggest this file is learnt via graph="default" -->
+<aiml>
+ 
+ <category>
+   <pattern>REMEMBER *</pattern>
+   <template>
+     <think><dbpush><person/></dbpush></think>
+   </template>
+  </category>
+
+ <category>
+   <pattern>* <bind index="1">#$BeAux</bind> *</pattern>
+   <template>
+     <think><dbpush><depersonalize><bind index="1"/> IS <bind index="2"/></depersonalize></dbpush></think>
+   </template>
+  </category>
+
+ <category>
+   <pattern>CHECK *</pattern>
+   <template>
+     Let me think ... <dbquery><person/></dbquery>
+   </template>
+  </category>
+
+  <category>
+  <pattern>WHAT IS A *</pattern>
+   <template>
+     Let me think WIA... <dbquery>WHAT IS A <person/></dbquery>
+   </template>
+  </category>
+
+  <category>
+  <pattern><bind bindstar="true">#$WHWord</bind> <bind bindstar="true">#$BeAux</bind> <bind bindstar="true">#$Determiner-Indefinate</bind> *</pattern>
+   <template>
+     Let me think WHWord... <dbquery><depersonalize><bind index="1"/> <bind index="2"/> <bind index="3"/> <bind index="4"/></depersonalize></dbquery>
+   </template>
+  </category>
+
+  <category>
+  <pattern>TAG DEPERSONALIZE *</pattern>
+   <template>
+     DEPERSONALIZE: <depersonalize/>
+   </template>
+  </category>  
+
+  <category>
+  <pattern>TAG PERSONALIZE *</pattern>
+   <template>
+     PERSONALIZE: <personalize/>
+   </template>
+  </category>
+
+  <category>
+  <pattern>TAG WHOLEINPUT *</pattern>
+   <template>
+     WHOLEINPUT: <request/>
+   </template>
+  </category>
+
+</aiml>

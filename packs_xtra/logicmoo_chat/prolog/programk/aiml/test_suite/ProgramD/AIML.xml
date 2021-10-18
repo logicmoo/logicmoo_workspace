@@ -1,0 +1,729 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<TestSuite xmlns="http://aitools.org/programd/4.6/test-cases"
+    xmlns:html="http://www.w3.org/1999/xhtml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://aitools.org/programd/4.6/test-cases http://aitools.org/programd/4.6/test-cases.xsd"
+    name="AIML 1.0.1">
+    <TestCase name="connect">
+        <Input>CONNECT</Input>
+        <ExpectedAnswer>Connected to test case AIML set.</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="simple (01)">
+        <Description>Tests the ability to output a simple statement.</Description>
+        <Input>testatomic</Input>
+        <ExpectedAnswer>Test case #01.<html:br/>
+            Test passed.</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="display set (02)">
+        <Description>Tests the ability to display a variable while setting it.</Description>
+        <Input>testdisplayset</Input>
+        <ExpectedAnswer>Test case #02.<html:br/>
+            Test passed.</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="think (03)">
+        <Description>Tests the ability to hide a function using the think element.</Description>
+        <Input>testhide</Input>
+        <ExpectedAnswer>Test case #03.<html:br/>
+            Test passed.</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="get (04)">
+        <Description>Tests the ability to display a variable with the get element.</Description>
+        <Input>testget</Input>
+        <ExpectedAnswer>Test case #04.<html:br/>
+            Test passed.</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="alter (05)">
+        <Description>Tests the ability to set a predicate value, display a predicate value with the
+            get element and then change the variable.</Description>
+        <Input>testalter</Input>
+        <ExpectedAnswer>Test case #05.<html:br/>
+            Test passed.</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="set topic (06)">
+        <Description>Tests the ability to set the topic, display the topic with get, and then use
+            two same-pattern categories within the topic, one with a that and one without.</Description>
+        <Input>testsettopic</Input>
+        <ExpectedAnswer>Test case #06.<html:br/>
+            Test passed topic.</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="set topic (06a)">
+        <Description/>
+        <Input>test6a</Input>
+        <ExpectedAnswer> Test case #06a.<html:br/>
+            Test with THAT passed.</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="set topic (06b)">
+        <Description/>
+        <Input>test6b</Input>
+        <ExpectedAnswer> Test case #06b.<html:br/>
+            Test without THAT passed.</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="simple condition (07)">
+        <Description>Tests the ability to use the simplest form of the condition element.</Description>
+        <Input>testsimplecondition</Input>
+        <ExpectedAnswer>Test case #07.<html:br/>
+            Test passed.</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="simple condition (07a)">
+        <Description/>
+        <Input>testsimpleconditiona</Input>
+        <ExpectedAnswer>Test case #07a.<html:br/>
+            Test passed.</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="simple condition match (07b)">
+        <Description>Tests the ability to match the value associated with the name attribute of a
+            condition with a pattern in the value attribute.</Description>
+        <Input>testsimpleconditionmatch</Input>
+        <ExpectedAnswer>Test case #07b.<html:br/>
+            Test passed.</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="condition list (08)">
+        <Description>Tests the ability to use the list form of the condition element.</Description>
+        <Input>testconditionlist</Input>
+        <ExpectedAnswer>Test case #08.<html:br/>
+            Test passed.</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="condition list match (08a)">
+        <Description>Tests the ability to match the value associated with the name attribute of one
+            of a condition's listitems with a pattern in the value attribute of the condition.</Description>
+        <Input>testconditionlistmatch</Input>
+        <ExpectedAnswer>Test case #08a.<html:br/>
+            Test passed.</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="condition list default (09)">
+        <Description>Tests the ability to use the condition element with the list format and fall
+            through to the default list entry when no other list items have a match.</Description>
+        <Input>testconditionlistdefault</Input>
+        <ExpectedAnswer>Test case #09.<html:br/>
+            Test passed.</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="condition list name (10)">
+        <Description>Tests the ability to use the condition element with the list format of both
+            name and value.</Description>
+        <Input>testconditionlistname</Input>
+        <ExpectedAnswer>Test case #10.<html:br/>
+            Test passed.</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="condition list name (10a)">
+        <Description>Tests the ability to match the value associated with the name attribute of one
+            of a condition's listitems with a pattern in the value attribute of the listitem.</Description>
+        <Input>testconditionlistnamematch</Input>
+        <ExpectedAnswer>Test case #10a.<html:br/>
+            Test passed.</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="star (11)">
+        <Description>Tests the ability to use the star element both with and without the index
+            attribute.</Description>
+        <Input>teststar Test passed</Input>
+        <ExpectedAnswer>Test case #11.<html:br/>
+            Test passed 1.<html:br/>
+            Test passed 2.  </ExpectedAnswer>
+    </TestCase>
+    <TestCase name="star * (11a)">
+        <Description>Tests the ability to return the values captured by indexed * (asterisk)
+            wildcards.</Description>
+        <Input>teststar Test passed one and Test passed two and Test passed three and Test passed
+            four</Input>
+        <ExpectedAnswer>Test case #11a.<html:br/>
+            star index 1: Test passed one.<html:br/>
+            star index
+            2: Test passed two.<html:br/>
+            star index 3: Test passed three.<html:br/>
+            star index 4: Test passed four.</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="star _ (11b)">
+        <Description>Tests the ability to return the values captured by indexed _ (underscore)
+            wildcards.</Description>
+        <Input>testunderscore Test passed one and Test passed two and Test passed three and Test
+            passed four</Input>
+        <ExpectedAnswer>Test case #11b.<html:br/>
+            star index 1: Test passed one.<html:br/>
+            star index
+            2: Test passed two.<html:br/>
+            star index 3: Test passed three.<html:br/>
+            star index 4: Test passed four.</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="random (12)">
+        <Description>Tests the ability to use the random function.</Description>
+        <Input>testrandom</Input>
+        <ExpectedKeywords>Test case #12.</ExpectedKeywords>
+        <ExpectedKeywords>1,2,3,4,5</ExpectedKeywords>
+    </TestCase>
+    <TestCase name="word format (13)">
+        <Description>Tests the ability to adjust the word case based on the four format elements:
+            uppercase, lowercase, sentence, and formal.</Description>
+        <Input>testwordformat</Input>
+        <ExpectedAnswer>Test case #13.<html:br/>
+            Test passed if UPPERCASE.<html:br/>
+            Test passed if
+            lowercase.<html:br/>
+            Test passed if Proper Name.<html:br/>
+            Test passed if This is a sentence.</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="nested word format (14)">
+        <Description>Tests the ability to use nested word format elements.</Description>
+        <Input>testnestedwordformat</Input>
+        <ExpectedAnswer>Test case #14.<html:br/>
+            Test passed if THIS IS UPPER CASE, and this is a Proper Name.</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="simple multisentence that (15)">
+        <Description>Tests the ability to properly set the bot's last response into the proper THAT
+            value holders. It issues a multi sentence response, which should result in the bot's
+            setting the THAT stack to each sentence.</Description>
+        <Input>testsimplemultisentencethat</Input>
+        <ExpectedAnswer>Test case #15 setup. THAT plus two. THAT plus one. THAT.</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="that (15)">
+        <Description/>
+        <Input>testthat</Input>
+        <ExpectedAnswer>Test case #15.<html:br/>
+            THAT: Old form: THAT.<html:br/>
+            New form:
+            THAT.<html:br/>
+            THAT+1: THAT plus one.<html:br/>
+            THAT+2: THAT plus two. </ExpectedAnswer>
+    </TestCase>
+    <TestCase name="multisentence that array (16) setup a">
+        <Description>Tests the ability to properly set the bot's last response into the proper THAT
+            value holders. It specifically tests a 3X4 deep array of the last four bot responses. It
+            has a setup phase, and a test phase.</Description>
+        <Input>testarray4multisentencethat</Input>
+        <ExpectedAnswer>Test case #16 setup a.<html:br/>
+            THAT array4 response three.<html:br/>
+            THAT
+            array4 response two.<html:br/>
+            THAT array4 response one.</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="multisentence that array (16) setup b">
+        <Description/>
+        <Input>testarray3multisentencethat</Input>
+        <ExpectedAnswer>Test case #16 setup b.<html:br/>
+            THAT array3 response three.<html:br/>
+            THAT
+            array3 response two.<html:br/>
+            THAT array3 response one.</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="multisentence that array (16) setup c">
+        <Description/>
+        <Input>testarray2multisentencethat</Input>
+        <ExpectedAnswer>Test case #16 setup c.<html:br/>
+            THAT array2 response three.<html:br/>
+            THAT
+            array2 response two.<html:br/>
+            THAT array2 response one.</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="multisentence that array (16) setup d">
+        <Description/>
+        <Input>testarray1multisentencethat</Input>
+        <ExpectedAnswer>Test case #16 setup d.<html:br/>
+            THAT array1 response three.<html:br/>
+            THAT
+            array1 response two.<html:br/>
+            THAT array1 response one.</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="multisentence that array (16)">
+        <Description/>
+        <Input>testthatarray</Input>
+        <ExpectedAnswer>Test case #16.<html:br/>
+            Array 1<html:br/>
+            THAT: THAT array1 response one.<html:br/>
+            THAT+1: THAT array1 response two.<html:br/>
+            THAT+2: THAT array1 response three.<html:br/>
+            Array 2<html:br/>
+            THAT: THAT array2 response one.<html:br/>
+            THAT+1: THAT array2 response two.<html:br/>
+            THAT+2: THAT array2 response three.<html:br/>
+            Array 3<html:br/>
+            THAT: THAT array3 response one.<html:br/>
+            THAT+1: THAT array3 response two.<html:br/>
+            THAT+2: THAT array3 response three.<html:br/>
+            Array 4<html:br/>
+            THAT: THAT array4 response one.<html:br/>
+            THAT+1: THAT array4 response two.<html:br/>
+            THAT+2: THAT array4 response three.<html:br/>
+         </ExpectedAnswer>
+    </TestCase>
+    <TestCase name="bot properties (17)">
+        <Description>Tests the ability to list some bot properties.</Description>
+        <Input>testbotproperties</Input>
+        <ExpectedKeywords>Test case #17.</ExpectedKeywords>
+        <ExpectedKeywords>Name:</ExpectedKeywords>
+        <ExpectedKeywords>Birthday:</ExpectedKeywords>
+        <ExpectedKeywords>BirthPlace:</ExpectedKeywords>
+        <ExpectedKeywords>BoyFriend:</ExpectedKeywords>
+        <ExpectedKeywords>Favorite:</ExpectedKeywords>
+        <ExpectedKeywords>Favorite:</ExpectedKeywords>
+        <ExpectedKeywords>Favorite Color:</ExpectedKeywords>
+        <ExpectedKeywords>Favorite Food:</ExpectedKeywords>
+        <ExpectedKeywords>Favorite Song:</ExpectedKeywords>
+        <ExpectedKeywords>Favorite Movie:</ExpectedKeywords>
+        <ExpectedKeywords>For Fun:</ExpectedKeywords>
+        <ExpectedKeywords>Friends:</ExpectedKeywords>
+        <ExpectedKeywords>Gender:</ExpectedKeywords>
+        <ExpectedKeywords>GirlFriend:</ExpectedKeywords>
+        <ExpectedKeywords>Kind of Music:</ExpectedKeywords>
+        <ExpectedKeywords>Location:</ExpectedKeywords>
+        <ExpectedKeywords>Look Like:</ExpectedKeywords>
+        <ExpectedKeywords>Botmaster:</ExpectedKeywords>
+        <ExpectedKeywords>Question:</ExpectedKeywords>
+        <ExpectedKeywords>Sign:</ExpectedKeywords>
+        <ExpectedKeywords>Talk About:</ExpectedKeywords>
+        <ExpectedKeywords>Wear old:</ExpectedKeywords>
+    </TestCase>
+    <TestCase name="condition set value (18)">
+        <Description>Tests the ability to use a set within a condition and then display the new
+            value of that set using the value attribute.</Description>
+        <Input>testconditionsetvalue</Input>
+        <ExpectedAnswer>Test case #18.<html:br/>
+            Test passed.</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="javascript (19)">
+        <Description>Tests the javascript element.</Description>
+        <Input>testjavascript</Input>
+        <ExpectedAnswer>Test case #19.<html:br/>
+            Test passed.</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="system (19a)">
+        <Description>Tests the system element.</Description>
+        <Input>testsystem</Input>
+        <ExpectedAnswer>Test case #19a.<html:br/>
+            Test passed.</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="nested condition (20a)">
+        <Description>Tests the ability to process nested conditions.</Description>
+        <Input>testnestedcondition</Input>
+        <ExpectedAnswer>Test case #20a.<html:br/>
+            Test passed.</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="nested condition (20b)">
+        <Description/>
+        <Input>testnestedcondition1</Input>
+        <ExpectedAnswer>Test case #20b.<html:br/>
+            Test passed.</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="nested condition (20c)">
+        <Description/>
+        <Input>testnestedcondition2</Input>
+        <ExpectedAnswer>Test case #20c.<html:br/>
+            Test passed.</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="set condition (21)">
+        <Description>ests the ability to process a condition element within a set element.</Description>
+        <Input>testsetcondition</Input>
+        <ExpectedAnswer>Test case #21.<html:br/>
+            Test passed.</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="version (22)">
+        <Description>Tests the version element.</Description>
+        <Input>testversion</Input>
+        <ExpectedKeywords>Test case #22.</ExpectedKeywords>
+        <ExpectedKeywords>Test of "version":</ExpectedKeywords>
+    </TestCase>
+    <TestCase name="srai (23)">
+        <Description>Tests the ability to process a simple srai.</Description>
+        <Input>testsrai</Input>
+        <ExpectedAnswer>Test case #23.<html:br/>
+            Test passed.</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="sr (23a)">
+        <Description>Tests the sr element.</Description>
+        <Input>testsr sraisucceeded</Input>
+        <ExpectedAnswer>Test case #23a.<html:br/>
+            Test passed.</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="nested srai (24)">
+        <Description>Tests the ability to process a nested srai.</Description>
+        <Input>testnestedsrai</Input>
+        <ExpectedAnswer>Test case #24.<html:br/>
+            Test passed.</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="think srai (25)">
+        <Description>Tests the ability to &lt;think&gt; a srai. Because the srai is called
+            within a think element, its output should be supressed.</Description>
+        <Input>testthinksrai</Input>
+        <ExpectedAnswer>Test case #25.<html:br/>
+            Test passed, IF NO OTHER MESSAGE.</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="star set (26)">
+        <Description>Tests the ability to set the value of a predicate from inside a think element
+            and then display the value.</Description>
+        <Input>teststarset Test passed</Input>
+        <ExpectedAnswer>Test case #26.<html:br/>
+            Test passed.</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="id, size, date (27)">
+        <Description>Tests the id, size and date elements.</Description>
+        <Input>testidsizedate</Input>
+        <ExpectedKeywords>Test case #27.</ExpectedKeywords>
+        <ExpectedKeywords>Result of Test ID =</ExpectedKeywords>
+        <ExpectedKeywords>Result of Test SIZE =</ExpectedKeywords>
+        <ExpectedKeywords>Result of Test DATE =</ExpectedKeywords>
+    </TestCase>
+    <TestCase name="gossip (28)">
+        <Description>Tests the gossip element.</Description>
+        <Input>testgossip</Input>
+        <ExpectedAnswer>Test case #28.<html:br/>
+            Test complete. Check the gossip log.  </ExpectedAnswer>
+    </TestCase>
+    <TestCase name="get, set (29)">
+        <Description>Tests the get and set elements.</Description>
+        <Input>testname</Input>
+        <ExpectedAnswer>Test case #29.<html:br/>
+            Test passed.</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="input (30) setup a">
+        <Description>Tests the input element.</Description>
+        <Input>testinput</Input>
+        <ExpectedAnswer> Test case #30 setup a okay.</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="input (30) setup b">
+        <Description/>
+        <Input>testinput1</Input>
+        <ExpectedAnswer> Test case #30 setup b okay.</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="input (30) setup c">
+        <Description/>
+        <Input>testinput2</Input>
+        <ExpectedAnswer> Test case #30 setup c okay.</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="input (30)">
+        <Description/>
+        <Input>testinput3</Input>
+        <ExpectedAnswer>Test case #30.<html:br/>
+            Test (input) passed if this says testinput3:
+            testinput3.<html:br/>
+            Test (input index 1) passed if this says testinput3:
+            testinput3.<html:br/>
+            Test (input index 2) passed if this says testinput2:
+            testinput2.<html:br/>
+            Test (input index 3) passed if this says testinput1:
+            testinput1.<html:br/>
+            Test (input index 4) passed if this says testinput: testinput.  </ExpectedAnswer>
+    </TestCase>
+    <TestCase name="gender (31) [000]">
+        <Input>testgender he</Input>
+        <ExpectedAnswer>Test case #31.<html:br/>
+            he becomes she</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="gender (31) [001]">
+        <Input>testgender she</Input>
+        <ExpectedAnswer>Test case #31.<html:br/>
+            she becomes he</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="gender (31) [002]">
+        <Input>testgender to him</Input>
+        <ExpectedAnswer>Test case #31.<html:br/>
+            to him becomes to her</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="gender (31) [003]">
+        <Input>testgender for him</Input>
+        <ExpectedAnswer>Test case #31.<html:br/>
+            for him becomes for her</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="gender (31) [004]">
+        <Input>testgender with him</Input>
+        <ExpectedAnswer>Test case #31.<html:br/>
+            with him becomes with her</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="gender (31) [005]">
+        <Input>testgender on him</Input>
+        <ExpectedAnswer>Test case #31.<html:br/>
+            on him becomes on her</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="gender (31) [006]">
+        <Input>testgender in him</Input>
+        <ExpectedAnswer>Test case #31.<html:br/>
+            in him becomes in her</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="gender (31) [007]">
+        <Input>testgender to her</Input>
+        <ExpectedAnswer>Test case #31.<html:br/>
+            to her becomes to him</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="gender (31) [008]">
+        <Input>testgender for her</Input>
+        <ExpectedAnswer>Test case #31.<html:br/>
+            for her becomes for him</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="gender (31) [009]">
+        <Input>testgender with her</Input>
+        <ExpectedAnswer>Test case #31.<html:br/>
+            with her becomes with him</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="gender (31) [010]">
+        <Input>testgender on her</Input>
+        <ExpectedAnswer>Test case #31.<html:br/>
+            on her becomes on him</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="gender (31) [011]">
+        <Input>testgender in her</Input>
+        <ExpectedAnswer>Test case #31.<html:br/>
+            in her becomes in him</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="gender (31) [012]">
+        <Input>testgender his</Input>
+        <ExpectedAnswer>Test case #31.<html:br/>
+            his becomes her</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="gender (31) [013]">
+        <Input>testgender her</Input>
+        <ExpectedAnswer>Test case #31.<html:br/>
+            her becomes his</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="gender (31) [014]">
+        <Input>testgender him</Input>
+        <ExpectedAnswer>Test case #31.<html:br/>
+            him becomes her</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="gender (31) [015]">
+        <Input>testgender he she he she he she he</Input>
+        <ExpectedAnswer>Test case #31.<html:br/>
+            he she he she he she he becomes she he she he she he she</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="thatstar (32) setup">
+        <Description>Tests the thatstar element.</Description>
+        <Input>testthatstar</Input>
+        <ExpectedAnswer>Test case #32 setup.<html:br/>
+            Check next to see if Test passed.  </ExpectedAnswer>
+    </TestCase>
+    <TestCase name="thatstar (32)">
+        <Description/>
+        <Input>testthatstar1</Input>
+        <ExpectedAnswer> Test case #32.<html:br/>
+            THATSTAR: Test passed<html:br/>
+            THATSTAR INDEX="1": Test passed</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="indexed star (33) setup">
+        <Description>Tests the indexed thatstar element.</Description>
+        <Input>testmultithatstar</Input>
+        <ExpectedAnswer>Test case #33 setup.<html:br/>
+            See whether thatstar test passed and whether index two test passed and whether index three test passed next.</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="indexed star (33)">
+        <Description/>
+        <Input>testmultithatstar1</Input>
+        <ExpectedAnswer> Test case #33.<html:br/>
+            THATSTAR: thatstar test passed<html:br/>
+            THATSTAR
+            INDEX="1": thatstar test passed<html:br/>
+            THATSTAR INDEX="2": index two test
+            passed<html:br/>
+            THATSTAR INDEX="3": index three test passed</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="topicstar (34) setup">
+        <Description>Tests the topicstar element.</Description>
+        <Input>testtopicstar</Input>
+        <ExpectedAnswer> Test case #34 setup okay.</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="topicstar (34)">
+        <Description/>
+        <Input>test34</Input>
+        <ExpectedAnswer>Test case #34.<html:br/>
+            TOPICSTAR: Test passed<html:br/>
+            TOPICSTAR INDEX="1": Test passed</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="indexed topicstar (35) setup">
+        <Description>Tests the indexed topicstar element.</Description>
+        <Input>testmultitopicstar</Input>
+        <ExpectedAnswer> Test case #35 setup okay.</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="indexed topicstar">
+        <Description/>
+        <Input>test35</Input>
+        <ExpectedAnswer>Test case #35.<html:br/>
+            TOPICSTAR: Test passed 1<html:br/>
+            TOPICSTAR
+            INDEX="1": Test passed 1<html:br/>
+            TOPICSTAR INDEX="2": Test passed 2<html:br/>
+            TOPICSTAR INDEX="3": Test passed 3</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="extreme srai (37)">
+        <Description>Tests an extremely deeply nested (20 levels) srai.</Description>
+        <Input>testextremesrai</Input>
+        <ExpectedAnswer>Test case #37.<html:br/>
+            Test passed.</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="person (38) [000]">
+        <Input>testperson i was there</Input>
+        <ExpectedAnswer>Test case #38.<html:br/>
+            i was there becomes he or she was there</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="person (38) [001]">
+        <Input>testperson he was away</Input>
+        <ExpectedAnswer>Test case #38.<html:br/>
+            he was away becomes I was away</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="person (38) [002]">
+        <Input>testperson she was kind</Input>
+        <ExpectedAnswer>Test case #38.<html:br/>
+            she was kind becomes I was kind</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="person (38) [003]">
+        <Input>testperson i am sleepy</Input>
+        <ExpectedAnswer>Test case #38.<html:br/>
+            i am sleepy becomes he or she is sleepy</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="person (38) [004]">
+        <Input>testperson i will</Input>
+        <ExpectedAnswer>Test case #38.<html:br/>
+            i will becomes he or she will</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="person (38) [005]">
+        <Input>testperson for me</Input>
+        <ExpectedAnswer>Test case #38.<html:br/>
+            for me becomes for him or her</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="person (38) [006]">
+        <Input>testperson my bot</Input>
+        <ExpectedAnswer>Test case #38.<html:br/>
+            my bot becomes his or her bot</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="person (38) [007]">
+        <Input>testperson beside myself</Input>
+        <ExpectedAnswer>Test case #38.<html:br/>
+            beside myself becomes beside him or herself</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="person (38) [008]">
+        <Input>testperson is mine</Input>
+        <ExpectedAnswer>Test case #38.<html:br/>
+            is mine becomes is his or hers</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="person2 (39) [000]">
+        <Input>testperson2 along with you</Input>
+        <ExpectedAnswer>Test case #39.<html:br/>
+            along with you becomes along with me</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="person2 (39) [001]">
+        <Input>testperson2 something is with me</Input>
+        <ExpectedAnswer>Test case #39.<html:br/>
+            something is with me becomes something is with you</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="person2 (39) [002]">
+        <Input>testperson2 send to you</Input>
+        <ExpectedAnswer>Test case #39.<html:br/>
+            send to you becomes send to me</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="person2 (39) [003]">
+        <Input>testperson2 present to me</Input>
+        <ExpectedAnswer>Test case #39.<html:br/>
+            present to me becomes present to you</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="person2 (39) [004]">
+        <Input>testperson2 picture of you</Input>
+        <ExpectedAnswer>Test case #39.<html:br/>
+            picture of you becomes picture of me</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="person2 (39) [005]">
+        <Input>testperson2 reminder of me</Input>
+        <ExpectedAnswer>Test case #39.<html:br/>
+            reminder of me becomes reminder of you</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="person2 (39) [006]">
+        <Input>testperson2 best wishes for you</Input>
+        <ExpectedAnswer>Test case #39.<html:br/>
+            best wishes for you becomes best wishes for me</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="person2 (39) [007]">
+        <Input>testperson2 for me this is</Input>
+        <ExpectedAnswer>Test case #39.<html:br/>
+            for me this is becomes for you this is</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="person2 (39) [008]">
+        <Input>testperson2 give you something</Input>
+        <ExpectedAnswer>Test case #39.<html:br/>
+            give you something becomes give me something</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="person2 (39) [009]">
+        <Input>testperson2 give me that</Input>
+        <ExpectedAnswer>Test case #39.<html:br/>
+            give me that becomes give you that</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="person2 (39) [010]">
+        <Input>testperson2 giving you a hand</Input>
+        <ExpectedAnswer>Test case #39.<html:br/>
+            giving you a hand becomes giving me a hand</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="person2 (39) [011]">
+        <Input>testperson2 giving me a lift</Input>
+        <ExpectedAnswer>Test case #39.<html:br/>
+            giving me a lift becomes giving you a lift</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="person2 (39) [012]">
+        <Input>testperson2 gave you a fork</Input>
+        <ExpectedAnswer>Test case #39.<html:br/>
+            gave you a fork becomes gave me a fork</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="person2 (39) [013]">
+        <Input>testperson2 gave me an idea</Input>
+        <ExpectedAnswer>Test case #39.<html:br/>
+            gave me an idea becomes gave you an idea</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="person2 (39) [014]">
+        <Input>testperson2 make you happy</Input>
+        <ExpectedAnswer>Test case #39.<html:br/>
+            make you happy becomes make me happy</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="person2 (39) [015]">
+        <Input>testperson2 make me sad</Input>
+        <ExpectedAnswer>Test case #39.<html:br/>
+            make me sad becomes make you sad</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="person2 (39) [016]">
+        <Input>testperson2 made you aware</Input>
+        <ExpectedAnswer>Test case #39.<html:br/>
+            made you aware becomes made me aware</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="person2 (39) [017]">
+        <Input>testperson2 made me cognizant</Input>
+        <ExpectedAnswer>Test case #39.<html:br/>
+            made me cognizant becomes made you cognizant</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="return name when set (40)">
+        <Description>Tests the ability to return the name of a return-name-when-set predicate when
+            it is set, and to return the value when a non-return-name-when-set predicate is set. It
+            depends on the proper definition of the "passed" and "failed" predicates in
+            predicates.xml.</Description>
+        <Input>testreturnnamewhenset</Input>
+        <ExpectedAnswer> Test case #40.<html:br/>
+            Test passed 1.<html:br/>
+            Test passed 2.</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="infinite loop (41)">
+        <Description>ests the ability to detect a simple kind of infinite loop, and avoid it by
+            substituting the phrase "INFINITE LOOP" (or whatever is configured).</Description>
+        <Input>testinfiniteloop</Input>
+        <ExpectedAnswer>Test case #41.<html:br/>
+            Test passed.</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="element in set (42)">
+        <Description>Probably redundant - just verifies that set elements can contain
+          other elements.</Description>
+        <Input>testelementinset</Input>
+        <ExpectedAnswer>Test case #42.<html:br />
+          Test passed.</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="mixed content in set (43)">
+        <Description>Also probably redundant - just verifies that set elements can contain
+          mixed content.</Description>
+        <Input>testmixedinset</Input>
+        <ExpectedAnswer>Test case #43.<html:br />
+          Test passed.</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="elements in block condition (45) setup">
+        <Description>Verifies that AIML elements within a block condition are properly processed.</Description>
+        <Input>testelementsinblockconditionsetup</Input>
+        <ExpectedAnswer>Test case #45 setup okay.</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="elements in block condition (45)">
+        <Description/>
+        <Input>testelementsinblockcondition</Input>
+        <ExpectedAnswer>Test passed if this sentence was capitalized.</ExpectedAnswer>
+    </TestCase>
+    <TestCase name="retention of star values during srai (46)">
+        <Description>Verifies that values assigned to star elements from pattern matching are
+        retained after a srai (i.e., that the srai does not improperly cause the reassignment
+        of a new value to the star, based on the srai'ed pattern match.</Description>
+        <Input>teststarrecursion</Input>
+        <ExpectedAnswer>Test case #46.<html:br/>
+        Test passed.</ExpectedAnswer>
+    </TestCase>
+</TestSuite>

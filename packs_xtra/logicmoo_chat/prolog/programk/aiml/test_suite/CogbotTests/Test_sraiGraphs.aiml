@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<aiml>
+    <!--
+      Some extra SRAI Cogbot TESTS  
+    -->
+
+    <aiml graph="BUDS">
+       <category>
+        <pattern>DO ME</pattern>
+        <template>WHERE?</template>
+      </category>
+
+       <category>
+         <pattern>DOME</pattern>
+         <template>WHERE?</template>
+       </category>
+
+       <category>
+         <pattern>* BUDS</pattern>
+         <template>STAR BUDS? <star/></template>
+       </category>
+
+    </aiml>
+
+    <category>
+      <pattern>*</pattern>
+      <template><condition><li name="isbuddy" value="YES"><srai graph="BUDS"><star/></srai></li></condition></template>
+    </category>
+
+      <category>
+        <pattern>WE ARE BUDS</pattern>
+        <template><think><set var="isbuddy">YES</set></think></template>
+      </category>
+
+      <category>
+        <pattern>WE ARE NOT BUDS</pattern>
+        <template><think><set var="isbuddy">NO</set></think></template>
+      </category>
+
+      <category>
+        <pattern>ARE WE BUDS</pattern>
+        <template><condition>
+                      <li name="isbuddy" value="YES">YES WE ARE BUDS</li>
+                      <li name="isbuddy" value="NO">NO WE ARE NOT BUDS</li>
+                      <li>DUNNO IF WE ARE BUDS</li>
+                      </condition></template>
+      </category>        
+
+</aiml>

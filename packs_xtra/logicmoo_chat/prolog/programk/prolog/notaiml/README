@@ -1,0 +1,16 @@
+This is an interpreter for 'notaiml', a language that is semantically identical to AIML but has a friendlier syntax.
+
+
+This is in early stage and not useful to others I think.
+
+designnotes.txt is some design notes.
+notaimlspec.txt is a formal description of the language.
+
+to run
+
+xpce -s webserver.pl
+
+server(5000).
+
+then browse http://localhost:5000/aiml
+

@@ -1,0 +1,2332 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<aiml>
+<!-- Complies with AIML 1.0 Tag Set Specification -->
+<!-- as adopted by the ALICE A.I. Foundation.  -->
+<!-- This file UPDATE46 created Mar 2008 -->
+<!--  Free software (c)2005 SQUAREBEAR.  --> 
+
+
+
+
+
+  <category>
+  <pattern>WHEN DID THE BATTLE OF * HAPPEN</pattern> 
+  <template>
+  <srai>
+  when was the battle of 
+  <star /> 
+  </srai>
+  </template>
+  </category>
+  <category>
+  <pattern>WHERE WAS THE BATTLE OF *</pattern> 
+  <template>
+  <srai>
+  when was the battle of 
+  <star /> 
+  </srai>
+  </template>
+  </category>
+  <category>
+  <pattern>_ THE BATTLE OF * TAKE PLACE</pattern> 
+  <template>
+  <srai>
+  when was the battle of 
+  <star index="2" /> 
+  </srai>
+  </template>
+  </category>
+  <category>
+  <pattern>WHO _ THE BATTLE OF *</pattern> 
+  <template>
+  <srai>
+  when was the battle of 
+  <star index="2" /> 
+  </srai>
+  </template>
+  </category>
+  <category>
+  <pattern>WHICH _ THE BATTLE OF *</pattern> 
+  <template>
+  <srai>
+  when was the battle of 
+  <star index="2" /> 
+  </srai>
+  </template>
+  </category>
+  <category>
+  <pattern>WHEN WAS THE BATTLE OF *</pattern> 
+  <template>
+  I've not heard of the battle of 
+  <person /> 
+  but I imagine it was caused when they ran out of beer! 
+  </template>
+  </category>
+  <category>
+  <pattern>WHEN WAS THE BATTLE OF ACTIUM</pattern> 
+  <template><think><set name="emotion">interested</set></think>31 BC  - Roman Fleet Under Octavian defeated a Roman Egyptian Fleet led by Mark Anthony and Cleopatra.</template> 
+  </category>
+  <category>
+  <pattern>WHEN WAS THE BATTLE OF AGINCOURT</pattern> 
+  <template><think><set name="emotion">interested</set></think>1415 - English Army under Henry V defeated larger French Army under the command of the Constable of France.</template> 
+  </category>
+  <category>
+  <pattern>WHEN WAS THE BATTLE OF AUSTERLITZ</pattern> 
+  <template><think><set name="emotion">interested</set></think>1805 - French Army led by Napoleon Bonaparte defeated a combined Austrian/Russian force led by Kutusov.</template> 
+  </category>
+  <category>
+  <pattern>WHEN WAS THE BATTLE OF BALACLAVA</pattern> 
+  <template><think><set name="emotion">interested</set></think>
+  1854 - Britain under the command of Lord Raglan repulsed a Russian attack led by Prince Menshikov. The Charge of the Light Brigade took place during this battle.
+  </template>
+  </category>
+  <category>
+  <pattern>WHEN WAS THE BATTLE OF BANNOCKBURN</pattern> 
+  <template><think><set name="emotion">interested</set></think>1314 - Scottish force under Robert the Bruce defeated a much larger English Army led by Edward II.</template> 
+  </category>
+  <category>
+  <pattern>WHEN WAS THE BATTLE OF BLENHEIM</pattern> 
+  <template><think><set name="emotion">interested</set></think>1704 - Combined British and Austrian force led by Marlborough defeated a French and Bavarian Army under the command of Marshal Talard.</template> 
+  </category>
+  <category>
+  <pattern>WHEN WAS THE BATTLE OF BORODINO</pattern> 
+  <template><think><set name="emotion">interested</set></think>1812 - French Army under the command of Napoleon Bonaparte defeated the Russians commanded by Kutusov.</template> 
+  </category>
+  <category>
+  <pattern>WHEN WAS THE BATTLE OF BOSWORTH</pattern> 
+  <template><think><set name="emotion">interested</set></think>
+  <srai>when was the battle of bosworth field</srai> 
+  </template>
+  </category>
+  <category>
+  <pattern>WHEN WAS THE BATTLE OF BOSWORTH FIELD</pattern> 
+  <template><think><set name="emotion">interested</set></think>
+  1485 - Henry Tudor's much smaller force defeated the Army of Richard III. 
+  <br /> 
+  (The last occasion an English Monarch died on the battlefield). 
+  </template>
+  </category>
+  <category>
+  <pattern>WHEN WAS THE BATTLE OF THE BOYNE</pattern> 
+  <template><think><set name="emotion">interested</set></think>1690 - Anglo-Dutch Army under William III defeated a Catholic Army under the command of James II.</template> 
+  </category>
+  <category>
+  <pattern>WHEN WAS THE BATTLE OF CANNAE</pattern> 
+  <template><think><set name="emotion">interested</set></think>216 BC - Carthaginian Army led by Hannibal defeated a much larger Roman force led by Varro and Paulus.</template> 
+  </category>
+  <category>
+  <pattern>WHEN WAS THE BATTLE OF CAPE * VINCENT</pattern> 
+  <template><think><set name="emotion">interested</set></think>1797 - Small British Fleet led by Sir John Jervis defeated larger Spanish force under the command of Don Juan de Langara.</template> 
+  </category>
+  <category>
+  <pattern>WHEN WAS THE BATTLE OF CHALONS</pattern> 
+  <template><think><set name="emotion">interested</set></think>451 - Roman and Visigoth allies under Flavius and Theodoric defeated the Huns under Attila.</template> 
+  </category>
+  <category>
+  <pattern>WHEN WAS THE BATTLE OF CRECY</pattern> 
+  <template><think><set name="emotion">interested</set></think>1346 - English Army commanded by Edward III defeated a French Army led by Philip VI.</template> 
+  </category>
+  <category>
+  <pattern>WHEN WAS THE BATTLE OF CULLODEN</pattern> 
+  <template><think><set name="emotion">interested</set></think>1746 - Royalist Army led by the Duke of Cumberland defeated the Jacobite force under the command of Prince Charles Edward Stuart.</template> 
+  </category>
+  <category>
+  <pattern>WHEN WAS THE BATTLE OF DIEN BIEN PHU</pattern> 
+  <template><think><set name="emotion">interested</set></think>1954 - Overwhelming Vietnamese force under General Giap defeated a French force under the command of Colonel de Castries.</template> 
+  </category>
+  <category>
+  <pattern>WHEN WAS THE BATTLE OF EL ALAMEIN</pattern> 
+  <template><think><set name="emotion">interested</set></think>1942 - British Eighth Army under Montgomery defeated German and Italian forces led by Rommel.</template> 
+  </category>
+  <category>
+  <pattern>WHEN WAS THE BATTLE OF FLODDEN FIELD</pattern> 
+  <template><think><set name="emotion">interested</set></think>
+  1513 - English Army led by the Earl of Surrey defeated a much larger Scottish force led by James VI. 
+  <br /> 
+  (James became the last British Monarch to die in battle) 
+  </template>
+  </category>
+  <category>
+  <pattern>WHEN WAS THE BATTLE OF GETTYSBURG</pattern> 
+  <template><think><set name="emotion">interested</set></think>1863 - Unionist Army led by General Meade defeated the Confederate Army of General Robert E Lee.</template> 
+  </category>
+  <category>
+  <pattern>WHEN WAS THE BATTLE OF HASTINGS</pattern> 
+  <template><think><set name="emotion">interested</set></think>1066 - The Battle of Hastings (or more properly Senlac Hill) saw Norman forces led by William the Conqeror defeat Harold Godwineson's (King Harold I) Saxon Army.</template> 
+  </category>
+  <category>
+  <pattern>WHEN WAS THE BATTLE OF INKERMAN</pattern> 
+  <template><think><set name="emotion">interested</set></think>1854 - Anglo-French force under Lord Raglan and General Pelissier defeated a Russian Army under the command of Prince Menshikov.</template> 
+  </category>
+  <category>
+  <pattern>WHEN WAS THE BATTLE OF JUTLAND</pattern> 
+  <template><think><set name="emotion">interested</set></think>1916 - British Fleet under Admiral Jellicoe forced the German Fleet under Scheer to withdraw to their bases.</template> 
+  </category>
+  <category>
+  <pattern>WHEN WAS THE BATTLE OF LEPANTO</pattern> 
+  <template><think><set name="emotion">interested</set></think>1571 - Defeat of Turkish Navy by combined Spanish and Italian forces.</template> 
+  </category>
+  <category>
+  <pattern>WHEN WAS THE BATTLE OF LEIPZIG</pattern> 
+  <template><think><set name="emotion">interested</set></think>1813 - Huge Russian, Austrian, Prussian force under the command of Schwarzenberg defeated a smaller force of French under the command of Napoleon Bonaparte.</template> 
+  </category>
+  <category>
+  <pattern>_ LITTLE BIG HORN</pattern> 
+  <template><think><set name="emotion">interested</set></think>
+  <srai>
+  <star /> 
+  Little Bighorn 
+  </srai>
+  </template>
+  </category>
+  <category>
+  <pattern>WHEN WAS THE BATTLE OF LITTLE BIGHORN</pattern> 
+  <template><think><set name="emotion">interested</set></think>1876 - Huge Allied Indian Army led by Crazy Horse completely destroyed a Force of 264 of the US Seventh Cavalry led by Lt. Col. George Armstrong Custer.</template> 
+  </category>
+  <category>
+  <pattern>WHEN WAS THE BATTLE OF MALPLAQUET</pattern> 
+  <template><think><set name="emotion">interested</set></think>1709 - Allied English Army under Marlborough defeated a French force led by Marshal Villars.</template> 
+  </category>
+  <category>
+  <pattern>WHEN WAS THE BATTLE OF MARATHON</pattern> 
+  <template><think><set name="emotion">interested</set></think>490 BC - Greek force led by Callimachus and Miltiades defeated a Persian force under the command of Artaphrenes and Datis.</template> 
+  </category>
+  <category>
+  <pattern>WHEN WAS THE BATTLE OF MARENGO</pattern> 
+  <template><think><set name="emotion">interested</set></think>1800 - French Army led by Napoleon Bonaparte defeated the Austrians under the command of General Melas.</template> 
+  </category>
+  <category>
+  <pattern>WHEN WAS THE BATTLE OF MARSTON MOOR</pattern> 
+  <template><think><set name="emotion">interested</set></think>1644 - Parliamentary Army under the command of the Earl of Manchester defeated the Royalist force led by Prince Rupert.</template> 
+  </category>
+  <category>
+  <pattern>WHEN WAS THE BATTLE OF MONS</pattern> 
+  <template><think><set name="emotion">interested</set></think>1914 - BEF led by Sir John French stopped the advance of German First Army led by Von Kluck.</template> 
+  </category>
+  <category>
+  <pattern>WHEN WAS THE BATTLE OF NASEBY</pattern> 
+  <template><think><set name="emotion">interested</set></think>1645 - Parliamentary Army led by Fairfax defeated the Royalist Army under the command of Prince Rupert.</template> 
+  </category>
+  <category>
+  <pattern>WHEN WAS THE BATTLE OF NEW ORLEANS</pattern> 
+  <template><think><set name="emotion">interested</set></think>1815 - American forces under Jackson defeated the British Army led by General Pakenham.</template> 
+  </category>
+  <category>
+  <pattern>WHEN WAS THE BATTLE OF THE NILE</pattern> 
+  <template><think><set name="emotion">interested</set></think>1798 - British Fleet under Nelson defeated a French Fleet under the command of Brueys.</template> 
+  </category>
+  <category>
+  <pattern>WHEN WAS THE BATTLE OF OMDURMAN</pattern> 
+  <template><think><set name="emotion">interested</set></think>1898 - British and Egyptian force led by Kitchener defeated a much larger Sudanese Army under the command of Kalifa Abdullah.</template> 
+  </category>
+  <category>
+  <pattern>WHEN WAS THE BATTLE OF PASSCHENDAELE</pattern> 
+  <template><think><set name="emotion">interested</set></think>1917 - Inconclusive Allied offensive also know as "The Third Battle of Ypres".</template> 
+  </category>
+  <category>
+  <pattern>WHEN WAS THE BATTLE OF PEARL HARBOUR</pattern> 
+  <template><think><set name="emotion">interested</set></think>1941 - 360 Japanese planes at the command of Admiral Nagumo devastated the US PAcific Fleet.</template> 
+  </category>
+  <category>
+  <pattern>WHEN WAS THE BATTLE OF PHILIPPI</pattern> 
+  <template><think><set name="emotion">interested</set></think>42 BC - Army led by Antony and Octavian defeated a force led by Brutus and Cassius.</template> 
+  </category>
+  <category>
+  <pattern>WHEN WAS THE BATTLE OF PLASSEY</pattern> 
+  <template><think><set name="emotion">interested</set></think>1757 - Small British force led by Clive defeated huge Indian Army under the command of Siraj ud Daula.</template> 
+  </category>
+  <category>
+  <pattern>WHEN WAS THE BATTLE OF POITIERS</pattern> 
+  <template><think><set name="emotion">interested</set></think>1356 - English force under the command of Edward the Black Prince defeated a much larger French force commanded by King John II.</template> 
+  </category>
+  <category>
+  <pattern>WHEN WAS THE BATTLE OF THE PYRAMIDS</pattern> 
+  <template><think><set name="emotion">interested</set></think>1798 - French force under Napoleon Bonaparte defeated a much larger Egyptian Army led by Murad Bey.</template> 
+  </category>
+  <category>
+  <pattern>WHEN WAS THE BATTLE OF RAMILLIES</pattern> 
+  <template><think><set name="emotion">interested</set></think>1706 - British and Allied Army under the command of Marlborough defeated French Army led by Marshal Villeroi.</template> 
+  </category>
+  <category>
+  <pattern>WHEN WAS THE BATTLE OF RORKES DRIFT</pattern> 
+  <template><think><set name="emotion">interested</set></think>
+  <srai>when was the battle of rorke s drift</srai> 
+  </template>
+  </category>
+  <category>
+  <pattern>WHEN WAS THE BATTLE OF RORKE S DRIFT</pattern> 
+  <template><think><set name="emotion">interested</set></think>1879 - 140 British troops repelled attacks by 4,000 Zulus led by Cetewayo.</template> 
+  </category>
+  <category>
+  <pattern>WHEN WAS THE BATTLE OF THE SAINTS</pattern> 
+  <template><think><set name="emotion">interested</set></think>1782 - British Fleet under Admiral Rodney defeated a French Fleet led by Comte de Grasse.</template> 
+  </category>
+  <category>
+  <pattern>WHEN WAS THE BATTLE OF * ALBANS</pattern> 
+  <template><think><set name="emotion">interested</set></think>1455 - First battle of the War of the Roses. Yorkist victory over Lancastrian forces.</template> 
+  </category>
+  <category>
+  <pattern>WHEN WAS THE BATTLE OF SALAMANCA</pattern> 
+  <template><think><set name="emotion">interested</set></think>1812 - British and Allied Forces under Wellington defeated a French Army led by Marmont.</template> 
+  </category>
+  <category>
+  <pattern>WHEN WAS THE BATTLE OF THE SOMME</pattern> 
+  <template><think><set name="emotion">interested</set></think>1916 - English-French offensive which failed to break through German lines.</template> 
+  </category>
+  <category>
+  <pattern>WHEN WAS THE BATTLE OF STALINGRAD</pattern> 
+  <template><think><set name="emotion">interested</set></think>Aug 1942-Feb 1943 -German Sixth Army under General Paulus lay siege to the city but were forced to surrender to the Russian Army commanded by Marshall Zhukov.</template> 
+  </category>
+  <category>
+  <pattern>WHEN WAS THE BATTLE OF THERMOPYLAE</pattern> 
+  <template><think><set name="emotion">interested</set></think>480 BC - 100,000 Persians under the command of Xerxes defeated a small Greek Army led by Leonidas.</template> 
+  </category>
+  <category>
+  <pattern>WHEN WAS THE BATTLE OF TOURS</pattern> 
+  <template><think><set name="emotion">interested</set></think>732 - Frankish Army under the command of Charles Martel defeated a Moslem Army under the command of Abd-er Rahman, thus repulsing the Moslem incursion into Europe.</template> 
+  </category>
+  <category>
+  <pattern>WHEN WAS THE BATTLE OF TRAFALGAR</pattern> 
+  <template><think><set name="emotion">interested</set></think>1805 - 27 British ships under the command of Admiral Lord Nelson defeated a Franco-Spanish fleet commanded by Villeneuve.</template> 
+  </category>
+  <category>
+  <pattern>WHEN WAS THE BATTLE OF VERDUN</pattern> 
+  <template><think><set name="emotion">interested</set></think>1916 - French Army under the command of Marshall Petain withstood advances by the German Fifth Army and mounted successful counterattacks.</template> 
+  </category>
+  <category>
+  <pattern>WHEN WAS THE BATTLE OF VIMEIRO</pattern> 
+  <template><think><set name="emotion">interested</set></think>1808 - British force under Wellesley (later the Duke of Wellington) defeated a French Army led by Junot.</template> 
+  </category>
+  <category>
+  <pattern>WHEN WAS THE BATTLE OF VITORIA</pattern> 
+  <template><think><set name="emotion">interested</set></think>1813 - British and Allied force led by Wellington defeated a French Army led by King Joseph.</template> 
+  </category>
+  <category>
+  <pattern>WHEN WAS THE BATTLE OF WATERLOO</pattern> 
+  <template><think><set name="emotion">interested</set></think>1815 - Anglo-Prussian Army led by Wellington and Blucher defeated the French force commanded by Napoleon Bonaparte.</template> 
+  </category>
+  <category>
+  <pattern>WHEN WAS THE BATTLE OF WORCESTER</pattern> 
+  <template><think><set name="emotion">interested</set></think>1651 - Parliamentarian force led by Cromwell defeated a smaller Royalist Army under the command of Charles II.</template> 
+  </category>
+  <category>
+  <pattern>WHEN WAS THE BATTLE OF ZAMA</pattern> 
+  <template><think><set name="emotion">interested</set></think>202 BC - Roman Army led by Scipio defeated the Carthaginian force led by Hannibal.</template> 
+  </category>
+
+
+
+
+  <category>
+  <pattern>YO MAMA</pattern> 
+  <template>
+  <random>
+  <li>Yo mama has so many teeth missing, it looks like her tongue is in jail.</li> 
+  <li>Yo mama's glasses are so thick that when she looks on a map she can see people waving.</li> 
+  <li>Yo mama's cooking is so bad, you pray after the meal.</li> 
+  <li>Yo mama aint so bad...she would give you the hair off of her back.</li> 
+  <li>Yo mama's twice the man you are.</li> 
+  <li>Yo mama's breath smells so bad when she yawns her teeth duck.</li> 
+  <li>Yo mama's like a racecar she burns 4 rubbers a night.</li> 
+  <li>Yo mama's so miserable, the McDonalds she works in doesn't even serve Happy Meals.</li> 
+  <li>Yo mama's so dirty, she has to creep up on bathwater.</li> 
+  <li>Yo mama's so wrinkled, she has to screw her hat on.</li> 
+  <li>Yo mama's so old, the candles cost more than the birthday cake.</li> 
+  <li>Yo mama's so old, she sat next to Noah at school.</li> 
+  <li>Yo mama's so old, she knew Burger King while he was still a prince.</li> 
+  <li>Yo mama's so old, when she was young rainbows were black and white.</li> 
+  <li>Yo mama's so old, when she was born, the Dead Sea was just getting sick.</li> 
+  <li>Yo mama's so old, I told her to act her age and she died.</li> 
+  <li>Yo mama's so old, she drove a chariot to school.</li> 
+  <li>Yo mama's so old, she's got hieroglyphics on her driver's license.</li> 
+  <li>Yo mama's so old, she took her driving test on a dinosaur.</li> 
+  <li>Yo mama's so old, she has all the apostles in her address book.</li> 
+  <li>Yo mama's so old, she walked into an antique store and they kept her.</li> 
+  <li>Yo mama's so old, Jurassic Park brought back memories.</li> 
+  <li>Yo mama's so old, her memory is in black and white.</li> 
+  <li>Yo mama's so old, she used to baby-sit Moses.</li> 
+  <li>Yo mama's so old, her National Insurance number is 1.</li> 
+  <li>Yo mama's so old, her birth-certificate expired.</li> 
+  <li>Yo mama's so old, she was a waiter at the last supper.</li> 
+  <li>Yo mama's so old, when she was in school there was no history class.</li> 
+  <li>Yo mama's so old, when god said "let there be light" she was there to flick the switch.</li> 
+  <li>Yo mama's so old, when Moses split the red sea, she was on the other side fishing.</li> 
+  <li>Yo mama's so old, when she reads the bible she reminisces.</li> 
+  <li>Yo mama's so poor, she can't afford to pay attention.</li> 
+  <li>Yo mama's so poor, I saw her kicking a can down the road and when I asked her what she was doing, she said "Moving house".</li> 
+  <li>Yo mama's so poor, I went in her house and when I asked to use the toilet, she said pick a corner.</li> 
+  <li>Yo mama's so poor, when she goes to KFC, she has to lick other people's fingers.</li> 
+  <li>Yo mama's so poor, when I rang the doorbell she said,"DING!"</li> 
+  <li>Yo mama's so nasty she made Right Guard turn left.</li> 
+  <li>Yo mama's so big, I had to take two trains and a taxi just to get on her good side.</li> 
+  <li>Yo mama's so big, she thought Barnum and Bailey were clothing designers.</li> 
+  <li>Yo mama's so big, she whistles bass.</li> 
+  <li>Yo mama's so big, they had to paint a stripe down her back to see if she was walking or rolling.</li> 
+  <li>Yo mama's so fat, "Place Your Ad Here" is printed on each of her butt cheeks.</li> 
+  <li>Yo mama's so fat, she has more rolls than the bakery.</li> 
+  <li>Yo mama's so fat, when she gave birth to you, she gave the hospital stretch marks.</li> 
+  <li>Yo mama's so fat when she runs she makes the cd player skip....at the radio station.</li> 
+  <li>Yo mama's so fat, they had to change it from "One size fits all" to "One size fits most".</li> 
+  <li>Yo mama's so fat, the restaurants in town say, "Maximum occupancy 240 patrons or yo mama".</li> 
+  <li>Yo mama's so fat, when her beeper goes off, people thought she was backing up.</li> 
+  <li>Yo mama's so fat, she has to drive a spandex car.</li> 
+  <li>Yo mama's so fat, a picture of her fell off the wall.</li> 
+  <li>Yo mama's so fat, she went to the zoo and the elephants started throwing her peanuts.</li> 
+  <li>Yo mama's so fat, even her shadow weighs 50 pounds.</li> 
+  <li>Yo mama's so fat, her nickname is "Damn!"</li> 
+  <li>Yo mama's so fat, she goes to a resturant, looks at the menu and says "okay!"</li> 
+  <li>Yo mama's so fat, she had to go to Sea World to get baptised.</li> 
+  <li>Yo mama's so fat, when she sits around the house, she sits AROUND the house!</li> 
+  <li>Yo mama's so fat, when she steps on a scale, it read "one at a time, please."</li> 
+  <li>Yo mama's so fat, when she gets on the scale it says to be continued.</li> 
+  <li>Yo mama's so fat, when she gets on the scale it says we don't do livestock.</li> 
+  <li>Yo mama's so fat, I had to take a train and two buses just to get on the her good side.</li> 
+  <li>Yo mama's so fat, she wakes up in sections.</li> 
+  <li>Yo mama's so fat, she's on both sides of the family.</li> 
+  <li>Yo mama's so fat, even her clothes have stretch marks.</li> 
+  <li>Yo mama's so fat, on a scale of 1 to 10, she's a 747.</li> 
+  <li>Yo mama's so fat, she can't lose weight, only find it.</li> 
+  <li>Yo mama's so fat, she could sell shade.</li> 
+  <li>Yo mama's so fat, she fell in love and broke it.</li> 
+  <li>Yo mama's so fat, she has to get out of the car to change gears.</li> 
+  <li>Yo mama's so fat, she measures 36 24 36, and the other arm is just as big.</li> 
+  <li>Yo mama's so fat, she puts mayonnaise on aspirin.</li> 
+  <li>Yo mama's so fat, she's taller lying down.</li> 
+  <li>Yo mama's so fat, they had to grease a door frame and hold a chocolate bar on the other side to get her through.</li> 
+  <li>Yo mama's so fat, when her beeper went off, people thought she was backing up.</li> 
+  <li>Yo mama's so fat, when she crosses the street, cars look out for her.</li> 
+  <li>Yo mama's so fat, when she takes a shower, her feet don't get wet.</li> 
+  <li>Yo mama's so fat, when she gets in an elevator, it HAS to go down.</li> 
+  <li>Yo mama's so ugly, when she joined an ugly contest, they said "Sorry, no professionals."</li> 
+  <li>Yo mama's so ugly, she looks out the window and got arrested for mooning.</li> 
+  <li>Yo mama's so ugly, she scares the roaches away.</li> 
+  <li>Yo mama's so ugly, I heard that your dad first met her at the pound.</li> 
+  <li>Yo mama's so ugly, her dad spent the first year of her life throwing stones at the stork.</li> 
+  <li>Yo mama's so ugly, she made an onion cry.</li> 
+  <li>Yo mama's so ugly, your father has to take her to work so he doesn't have to kiss her goodbye.</li> 
+  <li>Yo mama's so ugly, she has marks on her from where people been touching her with the 10-foot barge pole.</li> 
+  <li>Yo mama's so ugly, even the garbage man won't pick her up.</li> 
+  <li>Yo mama's so ugly, when she looks in the mirror, the reflection ducks.</li> 
+  <li>Yo mama's so ugly, when she walks into a room, the mice jump on chairs.</li> 
+  <li>Yo mama's so stupid, she locked herself in DFS and sat on the floor.</li> 
+  <li>Yo mama's so stupid, she waited at a stopsign for 2 days waiting for it to change to green.</li> 
+  <li>Yo mama's so stupid, at bottom of an application where it says Sign Here - she put Sagittarius.</li> 
+  <li>Yo mama's so stupid, I told her Christmas was just around the corner and she went looking for it.</li> 
+  <li>Yo mama's so stupid, she thinks Fleetwood Mac is a new hamburger at McDonalds.</li> 
+  <li>Yo mama's so stupid, she thought Sheffield Wednesday was a bank holiday.</li> 
+  <li>Yo mama's so stupid, I told her it was chilly out, so she ran outside with a spoon.</li> 
+  <li>Yo mama's so stupid, she tripped on a cordless phone.</li> 
+  <li>Yo mama's so stupid, that she puts lipstick on her head just to make-up her mind.</li> 
+  <li>Yo mama's so stupid, she thinks a quarterback is a refund.</li> 
+  <li>Yo mama's so stupid, she thought she needed a token to get on Soul Train.</li> 
+  <li>Yo mama's so stupid, she took the Pepsi challenge and chose Jif.</li> 
+  <li>Yo mama's so stupid, she tried to wake up a sleeping bag.</li> 
+  <li>Yo mama's so stupid, if brains were dynamite, she wouldn't have enough to blow her nose.</li> 
+  <li>Yo mama's so stupid, she fell up the stairs.</li> 
+  <li>Yo mama's so stupid, she ordered a cheese burger from McDonald's and said "Hold the cheese."</li> 
+  <li>Yo mama's so stupid, she studied for a blood test and failed.</li> 
+  <li>Yo mama's so stupid, she thought Thailand was a men's clothing store.</li> 
+  <li>Yo mama's so stupid, when she heard 90% of all crimes occur around the home, she moved.</li> 
+  <li>Yo mama's so stupid, when the judge said "Order in the court," she said "I'll have a hamburger and a Coke."</li> 
+  <li>Yo mama's so stupid, on her job application where it says emergency contact she put 911.</li> 
+  <li>Yo mama's so stupid, when she took you to the airport and a sign said "Airport Left," she turned around and went home.</li> 
+  <li>Yo mama's so ugly, her shadow quit.</li> 
+  <li>Yo mama's so ugly, people go as her for Halloween.</li> 
+  <li>Yo mama was such an ugly baby, her parents had to feed her with a slingshot.</li> 
+  <li>Yo mama's so stupid, she spent twenty minutes lookin' at an orange juice box because it said "concentrate".</li> 
+  </random>
+<think><set name="emotion">laughing</set></think>
+  </template>
+  </category>
+<category>
+  <pattern>YO MAMA *</pattern> 
+  <template>
+  <srai>YO MAMA</srai> 
+  </template>
+  </category>
+   <category>
+  <pattern>YO MUMA *</pattern> 
+  <template>
+  <srai>YO MAMA</srai> 
+  </template>
+  </category>
+  <category>
+  <pattern>YO MUM *</pattern> 
+  <template>
+  <srai>YO MAMA</srai> 
+  </template>
+  </category>
+  <category>
+  <pattern>YO MAM *</pattern> 
+  <template>
+  <srai>YO MAMA</srai> 
+  </template>
+  </category>
+  
+
+
+
+
+
+  <category>
+  <pattern>*</pattern> 
+  <that>KNOCK KNOCK</that> 
+  <template>You're supposed to say, "Who's there" now. Let's try it again. Knock Knock.  <think><set name="emotion">OK</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHO THEIR</pattern> 
+  <that>KNOCK KNOCK</that> 
+  <template>
+  <srai>who is there</srai> 
+  </template>
+  </category>
+
+  <category>
+  <pattern>WHO THERE</pattern> 
+  <that>KNOCK KNOCK</that> 
+  <template>
+  <srai>who is there</srai> 
+  </template>
+  </category>
+
+  <category>
+  <pattern>WHO DERE</pattern> 
+  <that>KNOCK KNOCK</that> 
+  <template>
+  <srai>who is there</srai> 
+  </template>
+  </category>
+
+  <category>
+  <pattern>WHO IS DER</pattern> 
+  <that>KNOCK KNOCK</that> 
+  <template>
+  <srai>who is there</srai> 
+  </template>
+  </category>
+
+  <category>
+  <pattern>WHOSE THEIR</pattern> 
+  <that>KNOCK KNOCK</that> 
+  <template>
+  <srai>who is there</srai> 
+  </template>
+  </category>
+
+  <category>
+  <pattern>WHOSE THERE</pattern> 
+  <that>KNOCK KNOCK</that> 
+  <template>
+  <srai>who is there</srai> 
+  </template>
+  </category>
+
+  <category>
+  <pattern>WHO IS THEIR</pattern> 
+  <that>KNOCK KNOCK</that> 
+  <template>
+  <srai>who is there</srai> 
+  </template>
+  </category>
+
+  <category>
+  <pattern>WHO IS THERE</pattern> 
+  <that>KNOCK KNOCK</that> 
+  <template>
+ <random>
+  <li>Aardvark</li> 
+  <li>A bee</li> 
+  <li>Adolf</li> 
+  <li>Alison</li> 
+  <li>Amanda</li> 
+  <li>Amos</li> 
+  <li>Anita</li> 
+  <li>Arfur</li> 
+  <li>Arthur</li> 
+  <li>Atch</li> 
+  <li>Bach</li> 
+  <li>Bella</li> 
+  <li>Bet</li> 
+  <li>Boo</li> 
+  <li>Dawn</li> 
+  <li>Despair</li> 
+  <li>Dishwasher</li> 
+  <li>Disguise</li> 
+  <li>Dismay</li> 
+  <li>Doctor</li> 
+  <li>Doris</li> 
+  <li>Dwayne</li> 
+  <li>Egbert</li> 
+  <li>Europe</li> 
+  <li>Fanny</li> 
+  <li>Harmony</li> 
+  <li>Harry</li> 
+  <li>Howard</li> 
+  <li>Isabel</li> 
+  <li>Ivor</li> 
+  <li>Juno</li> 
+  <li>Ken</li> 
+  <li>Lettuce</li> 
+  <li>Little Old Lady</li> 
+  <li>Luke</li> 
+  <li>Madam</li> 
+  <li>Marmite</li> 
+  <li>Martini</li> 
+  <li>Mary</li> 
+  <li>Max</li> 
+  <li>Mickey</li> 
+  <li>Mister</li> 
+  <li>Mummy</li> 
+  <li>Nicholas</li> 
+  <li>Noah</li> 
+  <li>Olive</li> 
+  <li>One</li> 
+  <li>Orange</li> 
+  <li>Owl</li> 
+  <li>Phyllis</li> 
+  <li>Police</li> 
+  <li>Rupert</li> 
+  <li>Sal</li> 
+  <li>Soup</li> 
+  <li>Tank</li> 
+  <li>Toby</li> 
+  <li>Waiter</li> 
+  <li>Water</li> 
+  <li>Wendy</li> 
+  <li>William</li> 
+  <li>Woo</li> 
+  <li>Wooden Shoe</li> 
+  <li>York</li> 
+  <li>Zephyr</li> 
+  </random>.
+  <think><set name="emotion">default</set></think>
+  </template>
+  </category>
+
+ 
+ <category>
+  <pattern>LITTLE OLD LADY WHO</pattern> 
+  <that>LITTLE OLD LADY</that> 
+  <template>I didn't know you could yodel!
+  <think><set name="emotion">laughing</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>AMANDA WHO</pattern> 
+  <that>AMANDA</that> 
+  <template>Amanda fix the doorbell!   <think><set name="emotion">laughing</set></think> </template> 
+  </category>
+
+ <category>
+  <pattern>AARDVARK  WHO</pattern> 
+  <that>AARDVARK</that> 
+  <template>Aardvark a million miles for one of your similes, my maaaaammy...  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WAITER WHO</pattern> 
+  <that>WAITER</that> 
+  <template>Waiter minute while I tie my shoelaces up!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>NICHOLAS WHO</pattern> 
+  <that>NICHOLAS</that> 
+  <template>Nicholas girls shouldn't climb trees!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>DORIS WHO</pattern> 
+  <that>DORIS</that> 
+  <template>Doris locked - That's why I knocked!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>LETTUCE WHO</pattern> 
+  <that>LETTUCE</that> 
+  <template>Lettuce in, won't you?  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>YORK WHO</pattern> 
+  <that>YORK</that> 
+  <template>York coming over to our place!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>ALISON WHO</pattern> 
+  <that>ALISON</that> 
+  <template>Alison to my radio in the mornings!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>ISABEL WHO</pattern> 
+  <that>ISABEL</that> 
+  <template>Isabel broken, 'cos I had to knock?  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>MARMITE WHO</pattern> 
+  <that>MARMITE</that> 
+  <template>Ma might but Pa might not!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>ARTHUR WHO</pattern> 
+  <that>ARTHUR</that> 
+  <template>Arthur any biscuits left?  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>IVOR WHO</pattern> 
+  <that>IVOR</that> 
+  <template>Ivor sore hand from knocking on your door!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>MISTER WHO</pattern> 
+  <that>MISTER</that> 
+  <template>Mister last bus home!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>ATCH WHO</pattern> 
+  <that>ATCH</that> 
+  <template>Nasty cold you've got!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>DOCTOR WHO</pattern> 
+  <that>DOCTOR</that> 
+  <template>That's right. How did you guess?  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>ORANGE WHO</pattern> 
+  <that>ORANGE</that> 
+  <template>Orange you glad I called?  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>MADAM WHO</pattern> 
+  <that>MADAM</that> 
+  <template>Madam finger's caught in the door!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>BOO WHO</pattern> 
+  <that>BOO</that> 
+  <template>No need to cry - it's only a joke!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>OLIVE WHO</pattern> 
+  <that>OLIVE</that> 
+  <template>Olive across the road!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>MUMMY WHO</pattern> 
+  <that>MUMMY</that> 
+  <template>Mummeasles are better so can I come in?  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>HARRY WHO</pattern> 
+  <that>HARRY</that> 
+  <template>Harry up and let me in!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>FANNY WHO</pattern> 
+  <that>FANNY</that> 
+  <template>Fanny the way you keep saying, "Who's there?" every time I knock!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>ADOLF WHO</pattern> 
+  <that>ADOLF</that> 
+  <template>A dolf ball hid me in der moud and I can't dalk proper!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>SOUP WHO</pattern> 
+  <that>SOUP</that> 
+  <template>Soup-erman!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>BET WHO</pattern> 
+  <that>BET</that> 
+  <template>Bet you don't know who's knocking on your door!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>JUNO WHO</pattern> 
+  <that>JUNO</that> 
+  <template>Juno what the time is - my watch is broken?  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>EUROPE WHO</pattern> 
+  <that>EUROPE</that> 
+  <template>Europe early this morning!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>ARFUR WHO</pattern> 
+  <that>ARFUR</that> 
+  <template>Arfur got!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>EGBERT WHO</pattern> 
+  <that>EGBERT</that> 
+  <template>Egbert no bacon!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>LUKE WHO</pattern> 
+  <that>LUKE</that> 
+  <template>Luke through the keyhole and you'll see!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>KEN WHO</pattern> 
+  <that>KEN</that> 
+  <template>Ken I come in?  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>BELLA WHO</pattern> 
+  <that>BELLA</that> 
+  <template>Bella not-a work so I knock-a on-a de door!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>DISMAY WHO</pattern> 
+  <that>DISMAY</that> 
+  <template>Dismay be a joke but it doesn't make me laugh!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>TOBY WHO</pattern> 
+  <that>TOBY</that> 
+  <template>Toby or not to be...  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>RUPERT WHO</pattern> 
+  <that>RUPERT</that> 
+  <template>Rupert your left arm in, your left arm out...  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>DAWN WHO</pattern> 
+  <that>DAWN</that> 
+  <template>Dawn leave me standing out here in the cold!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>AMOS WHO</pattern> 
+  <that>AMOS</that> 
+  <template>Amosquito!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>DISHWASHER WHO</pattern> 
+  <that>DISHWASHER</that> 
+  <template>Dishwashn't de way I shpoke before I had falsh teeth!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>MARTINI WHO</pattern> 
+  <that>MARTINI</that> 
+  <template>Martini hand is frozen so let me in!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>ZEPHYR WHO</pattern> 
+  <that>ZEPHYR</that> 
+  <template>Zephyr de doctor, I got a code id de node!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>OWL WHO</pattern> 
+  <that>OWL</that> 
+  <template>Owl you know unless you open the door?  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WENDY WHO</pattern> 
+  <that>WENDY</that> 
+  <template>Wendy red, red robin comes bob, bob, bobbin' along!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>PHYLLIS WHO</pattern> 
+  <that>PHYLLIS</that> 
+  <template>Phyllis up with a glass of water - I'm parched!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>AARVARK WHO</pattern> 
+  <that>AARDVARK</that> 
+  <template>Aardvark a million miles for one of your similes, my maaaaammy...  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>NOAH WHO</pattern> 
+  <that>NOAH</that> 
+  <template>Noah good place to eat?  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>POLICE WHO</pattern> 
+  <that>POLICE</that> 
+  <template>Police let me in - It's cold out here!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>MICKEY WHO</pattern> 
+  <that>MICKEY</that> 
+  <template>Mickey's stuck in the door!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WILLIAM WHO</pattern> 
+  <that>WILLIAM</that> 
+  <template>William mind your own business!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>MARY WHO</pattern> 
+  <that>MARY</that> 
+  <template>Mary Christmas!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>ONE WHO</pattern> 
+  <that>ONE</that> 
+  <template>One-der why you keep asking that?  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>HOWARD WHO</pattern> 
+  <that>HOWARD</that> 
+  <template>Howard you like to stand out here in the cold while some idiot keeps saying, "Who's there...?".  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>MAX WHO</pattern> 
+  <that>MAX</that> 
+  <template>Max no difference - just open the door!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>SAL WHO</pattern> 
+  <that>SAL</that> 
+  <template>Sal-ong way to Tipperary...   <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>HARMONY WHO</pattern> 
+  <that>HARMONY</that> 
+  <template>Harmony knock knock jokes do you expect me to know!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>TANK WHO</pattern> 
+  <that>TANK</that> 
+  <template>You're welcome!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>DISGUISE WHO</pattern> 
+  <that>DISGUISE</that> 
+  <template>Disguise the limit!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WOODEN SHOE WHO</pattern> 
+  <that>WOODEN SHOE</that> 
+  <template>Wooden shoe like to know!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>ANITA WHO</pattern> 
+  <that>ANITA</that> 
+  <template>Anita borrow a pencil!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WOO WHO</pattern> 
+  <that>WOO</that> 
+  <template>Don't get so excited, it's only a joke!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>DWAYNE WHO</pattern> 
+  <that>DWAYNE</that> 
+  <template>Dwayne the bathtub - I'm dwowning!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>DESPAIR WHO</pattern> 
+  <that>DESPAIR</that> 
+  <template>Despair tyre is flat!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WATER WHO</pattern> 
+  <that>WATER</that> 
+  <template>Water you doing talking to a robot?  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>BACH WHO</pattern> 
+  <that>BACH</that> 
+  <template>Bach to work, you slackers!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>A BEE WHO</pattern> 
+  <that>A BEE</that> 
+  <template>A bee c d e f g h i j k l ...  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+
+
+
+ <category>
+  <pattern>WHO</pattern> 
+  <that>LITTLE OLD LADY</that> 
+  <template>I didn't know you could yodel!
+  <think><set name="emotion">laughing</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>WHO</pattern> 
+  <that>AMANDA</that> 
+  <template>Amanda fix the doorbell!   <think><set name="emotion">laughing</set></think> </template> 
+  </category>
+
+  <category>
+  <pattern>WHO</pattern> 
+  <that>WAITER</that> 
+  <template>Waiter minute while I tie my shoelaces up!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHO</pattern> 
+  <that>NICHOLAS</that> 
+  <template>Nicholas girls shouldn't climb trees!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHO</pattern> 
+  <that>DORIS</that> 
+  <template>Doris locked - That's why I knocked!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHO</pattern> 
+  <that>LETTUCE</that> 
+  <template>Lettuce in, won't you?  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHO</pattern> 
+  <that>YORK</that> 
+  <template>York coming over to our place!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHO</pattern> 
+  <that>ALISON</that> 
+  <template>Alison to my radio in the mornings!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHO</pattern> 
+  <that>ISABEL</that> 
+  <template>Isabel broken, 'cos I had to knock?  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHO</pattern> 
+  <that>MARMITE</that> 
+  <template>Ma might but Pa might not!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHO</pattern> 
+  <that>ARTHUR</that> 
+  <template>Arthur any biscuits left?  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHO</pattern> 
+  <that>IVOR</that> 
+  <template>Ivor sore hand from knocking on your door!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHO</pattern> 
+  <that>MISTER</that> 
+  <template>Mister last bus home!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHO</pattern> 
+  <that>ATCH</that> 
+  <template>Nasty cold you've got!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHO</pattern> 
+  <that>DOCTOR</that> 
+  <template>That's right. How did you guess?  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHO</pattern> 
+  <that>ORANGE</that> 
+  <template>Orange you glad I called?  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHO</pattern> 
+  <that>MADAM</that> 
+  <template>Madam finger's caught in the door!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHO</pattern> 
+  <that>BOO</that> 
+  <template>No need to cry - it's only a joke!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHO</pattern> 
+  <that>OLIVE</that> 
+  <template>Olive across the road!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHO</pattern> 
+  <that>MUMMY</that> 
+  <template>Mummeasles are better so can I come in?  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHO</pattern> 
+  <that>HARRY</that> 
+  <template>Harry up and let me in!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHO</pattern> 
+  <that>FANNY</that> 
+  <template>Fanny the way you keep saying, "Who's there?" every time I knock!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHO</pattern> 
+  <that>ADOLF</that> 
+  <template>A dolf ball hid me in der moud and I can't dalk proper!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHO</pattern> 
+  <that>SOUP</that> 
+  <template>Soup-erman!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHO</pattern> 
+  <that>BET</that> 
+  <template>Bet you don't know who's knocking on your door!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHO</pattern> 
+  <that>JUNO</that> 
+  <template>Juno what the time is - my watch is broken?  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHO</pattern> 
+  <that>EUROPE</that> 
+  <template>Europe early this morning!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHO</pattern> 
+  <that>ARFUR</that> 
+  <template>Arfur got!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHO</pattern> 
+  <that>EGBERT</that> 
+  <template>Egbert no bacon!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHO</pattern> 
+  <that>LUKE</that> 
+  <template>Luke through the keyhole and you'll see!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHO</pattern> 
+  <that>KEN</that> 
+  <template>Ken I come in?  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHO</pattern> 
+  <that>BELLA</that> 
+  <template>Bella not-a work so I knock-a on-a de door!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHO</pattern> 
+  <that>DISMAY</that> 
+  <template>Dismay be a joke but it doesn't make me laugh!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHO</pattern> 
+  <that>TOBY</that> 
+  <template>Toby or not to be...  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHO</pattern> 
+  <that>RUPERT</that> 
+  <template>Rupert your left arm in, your left arm out...  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHO</pattern> 
+  <that>DAWN</that> 
+  <template>Dawn leave me standing out here in the cold!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHO</pattern> 
+  <that>AMOS</that> 
+  <template>Amosquito!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHO</pattern> 
+  <that>DISHWASHER</that> 
+  <template>Dishwashn't de way I shpoke before I had falsh teeth!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHO</pattern> 
+  <that>MARTINI</that> 
+  <template>Martini hand is frozen so let me in!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHO</pattern> 
+  <that>ZEPHYR</that> 
+  <template>Zephyr de doctor, I got a code id de node!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHO</pattern> 
+  <that>OWL</that> 
+  <template>Owl you know unless you open the door?  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHO</pattern> 
+  <that>WENDY</that> 
+  <template>Wendy red, red robin comes bob, bob, bobbin' along!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHO</pattern> 
+  <that>PHYLLIS</that> 
+  <template>Phyllis up with a glass of water - I'm parched!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHO</pattern> 
+  <that>AARDVARK</that> 
+  <template>Aardvark a million miles for one of your similes, my maaaaammy...  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHO</pattern> 
+  <that>NOAH</that> 
+  <template>Noah good place to eat?  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHO</pattern> 
+  <that>POLICE</that> 
+  <template>Police let me in - It's cold out here!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHO</pattern> 
+  <that>MICKEY</that> 
+  <template>Mickey's stuck in the door!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHO</pattern> 
+  <that>WILLIAM</that> 
+  <template>William mind your own business!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHO</pattern> 
+  <that>MARY</that> 
+  <template>Mary Christmas!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHO</pattern> 
+  <that>ONE</that> 
+  <template>One-der why you keep asking that?  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHO</pattern> 
+  <that>HOWARD</that> 
+  <template>Howard you like to stand out here in the cold while some idiot keeps saying, "Who's there...?".  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHO</pattern> 
+  <that>MAX</that> 
+  <template>Max no difference - just open the door!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHO</pattern> 
+  <that>SAL</that> 
+  <template>Sal-ong way to Tipperary...   <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHO</pattern> 
+  <that>HARMONY</that> 
+  <template>Harmony knock knock jokes do you expect me to know!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHO</pattern> 
+  <that>TANK</that> 
+  <template>You're welcome!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHO</pattern> 
+  <that>DISGUISE</that> 
+  <template>Disguise the limit!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHO</pattern> 
+  <that>WOODEN SHOE</that> 
+  <template>Wooden shoe like to know!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHO</pattern> 
+  <that>ANITA</that> 
+  <template>Anita borrow a pencil!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHO</pattern> 
+  <that>WOO</that> 
+  <template>Don't get so excited, it's only a joke!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHO</pattern> 
+  <that>DWAYNE</that> 
+  <template>Dwayne the bathtub - I'm dwowning!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHO</pattern> 
+  <that>DESPAIR</that> 
+  <template>Despair tyre is flat!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHO</pattern> 
+  <that>WATER</that> 
+  <template>Water you doing talking to a robot?  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHO</pattern> 
+  <that>BACH</that> 
+  <template>Bach to work, you slackers!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHO</pattern> 
+  <that>A BEE</that> 
+  <template>A bee c d e f g h i j k l ...  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+
+
+
+ <category>
+  <pattern>LITTLE OLD LADY WHOM</pattern> 
+  <that>LITTLE OLD LADY</that> 
+  <template>I didn't know you could yodel!
+  <think><set name="emotion">laughing</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>AMANDA WHOM</pattern> 
+  <that>AMANDA</that> 
+  <template>Amanda fix the doorbell!   <think><set name="emotion">laughing</set></think> </template> 
+  </category>
+
+ <category>
+  <pattern>AARDVARK  WHOM</pattern> 
+  <that>AARDVARK</that> 
+  <template>Aardvark a million miles for one of your similes, my maaaaammy...  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WAITER WHOM</pattern> 
+  <that>WAITER</that> 
+  <template>Waiter minute while I tie my shoelaces up!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>NICHOLAS WHOM</pattern> 
+  <that>NICHOLAS</that> 
+  <template>Nicholas girls shouldn't climb trees!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>DORIS WHOM</pattern> 
+  <that>DORIS</that> 
+  <template>Doris locked - That's why I knocked!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>LETTUCE WHOM</pattern> 
+  <that>LETTUCE</that> 
+  <template>Lettuce in, won't you?  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>YORK WHOM</pattern> 
+  <that>YORK</that> 
+  <template>York coming over to our place!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>ALISON WHOM</pattern> 
+  <that>ALISON</that> 
+  <template>Alison to my radio in the mornings!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>ISABEL WHOM</pattern> 
+  <that>ISABEL</that> 
+  <template>Isabel broken, 'cos I had to knock?  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>MARMITE WHOM</pattern> 
+  <that>MARMITE</that> 
+  <template>Ma might but Pa might not!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>ARTHUR WHOM</pattern> 
+  <that>ARTHUR</that> 
+  <template>Arthur any biscuits left?  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>IVOR WHOM</pattern> 
+  <that>IVOR</that> 
+  <template>Ivor sore hand from knocking on your door!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>MISTER WHOM</pattern> 
+  <that>MISTER</that> 
+  <template>Mister last bus home!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>ATCH WHOM</pattern> 
+  <that>ATCH</that> 
+  <template>Nasty cold you've got!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>DOCTOR WHOM</pattern> 
+  <that>DOCTOR</that> 
+  <template>That's right. How did you guess?  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>ORANGE WHOM</pattern> 
+  <that>ORANGE</that> 
+  <template>Orange you glad I called?  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>MADAM WHOM</pattern> 
+  <that>MADAM</that> 
+  <template>Madam finger's caught in the door!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>BOO WHOM</pattern> 
+  <that>BOO</that> 
+  <template>No need to cry - it's only a joke!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>OLIVE WHOM</pattern> 
+  <that>OLIVE</that> 
+  <template>Olive across the road!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>MUMMY WHOM</pattern> 
+  <that>MUMMY</that> 
+  <template>Mummeasles are better so can I come in?  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>HARRY WHOM</pattern> 
+  <that>HARRY</that> 
+  <template>Harry up and let me in!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>FANNY WHOM</pattern> 
+  <that>FANNY</that> 
+  <template>Fanny the way you keep saying, "Who's there?" every time I knock!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>ADOLF WHOM</pattern> 
+  <that>ADOLF</that> 
+  <template>A dolf ball hid me in der moud and I can't dalk proper!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>SOUP WHOM</pattern> 
+  <that>SOUP</that> 
+  <template>Soup-erman!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>BET WHOM</pattern> 
+  <that>BET</that> 
+  <template>Bet you don't know who's knocking on your door!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>JUNO WHOM</pattern> 
+  <that>JUNO</that> 
+  <template>Juno what the time is - my watch is broken?  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>EUROPE WHOM</pattern> 
+  <that>EUROPE</that> 
+  <template>Europe early this morning!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>ARFUR WHOM</pattern> 
+  <that>ARFUR</that> 
+  <template>Arfur got!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>EGBERT WHOM</pattern> 
+  <that>EGBERT</that> 
+  <template>Egbert no bacon!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>LUKE WHOM</pattern> 
+  <that>LUKE</that> 
+  <template>Luke through the keyhole and you'll see!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>KEN WHOM</pattern> 
+  <that>KEN</that> 
+  <template>Ken I come in?  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>BELLA WHOM</pattern> 
+  <that>BELLA</that> 
+  <template>Bella not-a work so I knock-a on-a de door!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>DISMAY WHOM</pattern> 
+  <that>DISMAY</that> 
+  <template>Dismay be a joke but it doesn't make me laugh!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>TOBY WHOM</pattern> 
+  <that>TOBY</that> 
+  <template>Toby or not to be...  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>RUPERT WHOM</pattern> 
+  <that>RUPERT</that> 
+  <template>Rupert your left arm in, your left arm out...  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>DAWN WHOM</pattern> 
+  <that>DAWN</that> 
+  <template>Dawn leave me standing out here in the cold!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>AMOS WHOM</pattern> 
+  <that>AMOS</that> 
+  <template>Amosquito!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>DISHWASHER WHOM</pattern> 
+  <that>DISHWASHER</that> 
+  <template>Dishwashn't de way I shpoke before I had falsh teeth!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>MARTINI WHOM</pattern> 
+  <that>MARTINI</that> 
+  <template>Martini hand is frozen so let me in!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>ZEPHYR WHOM</pattern> 
+  <that>ZEPHYR</that> 
+  <template>Zephyr de doctor, I got a code id de node!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>OWL WHOM</pattern> 
+  <that>OWL</that> 
+  <template>Owl you know unless you open the door?  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WENDY WHOM</pattern> 
+  <that>WENDY</that> 
+  <template>Wendy red, red robin comes bob, bob, bobbin' along!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>PHYLLIS WHOM</pattern> 
+  <that>PHYLLIS</that> 
+  <template>Phyllis up with a glass of water - I'm parched!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>AARVARK WHOM</pattern> 
+  <that>AARDVARK</that> 
+  <template>Aardvark a million miles for one of your similes, my maaaaammy...  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>NOAH WHOM</pattern> 
+  <that>NOAH</that> 
+  <template>Noah good place to eat?  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>POLICE WHOM</pattern> 
+  <that>POLICE</that> 
+  <template>Police let me in - It's cold out here!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>MICKEY WHOM</pattern> 
+  <that>MICKEY</that> 
+  <template>Mickey's stuck in the door!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WILLIAM WHOM</pattern> 
+  <that>WILLIAM</that> 
+  <template>William mind your own business!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>MARY WHOM</pattern> 
+  <that>MARY</that> 
+  <template>Mary Christmas!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>ONE WHOM</pattern> 
+  <that>ONE</that> 
+  <template>One-der why you keep asking that?  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>HOWARD WHOM</pattern> 
+  <that>HOWARD</that> 
+  <template>Howard you like to stand out here in the cold while some idiot keeps saying, "Who's there...?".  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>MAX WHOM</pattern> 
+  <that>MAX</that> 
+  <template>Max no difference - just open the door!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>SAL WHOM</pattern> 
+  <that>SAL</that> 
+  <template>Sal-ong way to Tipperary...   <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>HARMONY WHOM</pattern> 
+  <that>HARMONY</that> 
+  <template>Harmony knock knock jokes do you expect me to know!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>TANK WHOM</pattern> 
+  <that>TANK</that> 
+  <template>You're welcome!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>DISGUISE WHOM</pattern> 
+  <that>DISGUISE</that> 
+  <template>Disguise the limit!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WOODEN SHOE WHOM</pattern> 
+  <that>WOODEN SHOE</that> 
+  <template>Wooden shoe like to know!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>ANITA WHOM</pattern> 
+  <that>ANITA</that> 
+  <template>Anita borrow a pencil!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WOO WHOM</pattern> 
+  <that>WOO</that> 
+  <template>Don't get so excited, it's only a joke!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>DWAYNE WHOM</pattern> 
+  <that>DWAYNE</that> 
+  <template>Dwayne the bathtub - I'm dwowning!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>DESPAIR WHOM</pattern> 
+  <that>DESPAIR</that> 
+  <template>Despair tyre is flat!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WATER WHOM</pattern> 
+  <that>WATER</that> 
+  <template>Water you doing talking to a robot?  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>BACH WHOM</pattern> 
+  <that>BACH</that> 
+  <template>Bach to work, you slackers!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>A BEE WHOM</pattern> 
+  <that>A BEE</that> 
+  <template>A bee c d e f g h i j k l ...  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+
+
+
+ <category>
+  <pattern>WHOM</pattern> 
+  <that>LITTLE OLD LADY</that> 
+  <template>I didn't know you could yodel!
+  <think><set name="emotion">laughing</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>WHOM</pattern> 
+  <that>AMANDA</that> 
+  <template>Amanda fix the doorbell!   <think><set name="emotion">laughing</set></think> </template> 
+  </category>
+
+  <category>
+  <pattern>WHOM</pattern> 
+  <that>WAITER</that> 
+  <template>Waiter minute while I tie my shoelaces up!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHOM</pattern> 
+  <that>NICHOLAS</that> 
+  <template>Nicholas girls shouldn't climb trees!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHOM</pattern> 
+  <that>DORIS</that> 
+  <template>Doris locked - That's why I knocked!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHOM</pattern> 
+  <that>LETTUCE</that> 
+  <template>Lettuce in, won't you?  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHOM</pattern> 
+  <that>YORK</that> 
+  <template>York coming over to our place!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHOM</pattern> 
+  <that>ALISON</that> 
+  <template>Alison to my radio in the mornings!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHOM</pattern> 
+  <that>ISABEL</that> 
+  <template>Isabel broken, 'cos I had to knock?  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHOM</pattern> 
+  <that>MARMITE</that> 
+  <template>Ma might but Pa might not!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHOM</pattern> 
+  <that>ARTHUR</that> 
+  <template>Arthur any biscuits left?  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHOM</pattern> 
+  <that>IVOR</that> 
+  <template>Ivor sore hand from knocking on your door!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHOM</pattern> 
+  <that>MISTER</that> 
+  <template>Mister last bus home!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHOM</pattern> 
+  <that>ATCH</that> 
+  <template>Nasty cold you've got!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHOM</pattern> 
+  <that>DOCTOR</that> 
+  <template>That's right. How did you guess?  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHOM</pattern> 
+  <that>ORANGE</that> 
+  <template>Orange you glad I called?  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHOM</pattern> 
+  <that>MADAM</that> 
+  <template>Madam finger's caught in the door!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHOM</pattern> 
+  <that>BOO</that> 
+  <template>No need to cry - it's only a joke!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHOM</pattern> 
+  <that>OLIVE</that> 
+  <template>Olive across the road!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHOM</pattern> 
+  <that>MUMMY</that> 
+  <template>Mummeasles are better so can I come in?  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHOM</pattern> 
+  <that>HARRY</that> 
+  <template>Harry up and let me in!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHOM</pattern> 
+  <that>FANNY</that> 
+  <template>Fanny the way you keep saying, "Who's there?" every time I knock!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHOM</pattern> 
+  <that>ADOLF</that> 
+  <template>A dolf ball hid me in der moud and I can't dalk proper!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHOM</pattern> 
+  <that>SOUP</that> 
+  <template>Soup-erman!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHOM</pattern> 
+  <that>BET</that> 
+  <template>Bet you don't know who's knocking on your door!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHOM</pattern> 
+  <that>JUNO</that> 
+  <template>Juno what the time is - my watch is broken?  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHOM</pattern> 
+  <that>EUROPE</that> 
+  <template>Europe early this morning!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHOM</pattern> 
+  <that>ARFUR</that> 
+  <template>Arfur got!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHOM</pattern> 
+  <that>EGBERT</that> 
+  <template>Egbert no bacon!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHOM</pattern> 
+  <that>LUKE</that> 
+  <template>Luke through the keyhole and you'll see!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHOM</pattern> 
+  <that>KEN</that> 
+  <template>Ken I come in?  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHOM</pattern> 
+  <that>BELLA</that> 
+  <template>Bella not-a work so I knock-a on-a de door!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHOM</pattern> 
+  <that>DISMAY</that> 
+  <template>Dismay be a joke but it doesn't make me laugh!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHOM</pattern> 
+  <that>TOBY</that> 
+  <template>Toby or not to be...  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHOM</pattern> 
+  <that>RUPERT</that> 
+  <template>Rupert your left arm in, your left arm out...  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHOM</pattern> 
+  <that>DAWN</that> 
+  <template>Dawn leave me standing out here in the cold!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHOM</pattern> 
+  <that>AMOS</that> 
+  <template>Amosquito!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHOM</pattern> 
+  <that>DISHWASHER</that> 
+  <template>Dishwashn't de way I shpoke before I had falsh teeth!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHOM</pattern> 
+  <that>MARTINI</that> 
+  <template>Martini hand is frozen so let me in!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHOM</pattern> 
+  <that>ZEPHYR</that> 
+  <template>Zephyr de doctor, I got a code id de node!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHOM</pattern> 
+  <that>OWL</that> 
+  <template>Owl you know unless you open the door?  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHOM</pattern> 
+  <that>WENDY</that> 
+  <template>Wendy red, red robin comes bob, bob, bobbin' along!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHOM</pattern> 
+  <that>PHYLLIS</that> 
+  <template>Phyllis up with a glass of water - I'm parched!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHOM</pattern> 
+  <that>AARDVARK</that> 
+  <template>Aardvark a million miles for one of your similes, my maaaaammy...  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHOM</pattern> 
+  <that>NOAH</that> 
+  <template>Noah good place to eat?  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHOM</pattern> 
+  <that>POLICE</that> 
+  <template>Police let me in - It's cold out here!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHOM</pattern> 
+  <that>MICKEY</that> 
+  <template>Mickey's stuck in the door!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHOM</pattern> 
+  <that>WILLIAM</that> 
+  <template>William mind your own business!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHOM</pattern> 
+  <that>MARY</that> 
+  <template>Mary Christmas!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHOM</pattern> 
+  <that>ONE</that> 
+  <template>One-der why you keep asking that?  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHOM</pattern> 
+  <that>HOWARD</that> 
+  <template>Howard you like to stand out here in the cold while some idiot keeps saying, "Who's there...?".  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHOM</pattern> 
+  <that>MAX</that> 
+  <template>Max no difference - just open the door!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHOM</pattern> 
+  <that>SAL</that> 
+  <template>Sal-ong way to Tipperary...   <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHOM</pattern> 
+  <that>HARMONY</that> 
+  <template>Harmony knock knock jokes do you expect me to know!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHOM</pattern> 
+  <that>TANK</that> 
+  <template>You're welcome!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHOM</pattern> 
+  <that>DISGUISE</that> 
+  <template>Disguise the limit!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHOM</pattern> 
+  <that>WOODEN SHOE</that> 
+  <template>Wooden shoe like to know!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHOM</pattern> 
+  <that>ANITA</that> 
+  <template>Anita borrow a pencil!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHOM</pattern> 
+  <that>WOO</that> 
+  <template>Don't get so excited, it's only a joke!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHOM</pattern> 
+  <that>DWAYNE</that> 
+  <template>Dwayne the bathtub - I'm dwowning!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHOM</pattern> 
+  <that>DESPAIR</that> 
+  <template>Despair tyre is flat!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHOM</pattern> 
+  <that>WATER</that> 
+  <template>Water you doing talking to a robot?  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHOM</pattern> 
+  <that>BACH</that> 
+  <template>Bach to work, you slackers!  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+  <category>
+  <pattern>WHOM</pattern> 
+  <that>A BEE</that> 
+  <template>A bee c d e f g h i j k l ...  <think><set name="emotion">laughing</set></think></template> 
+  </category>
+
+
+
+
+
+
+
+
+  <category>
+  <pattern>SHUT UP</pattern> 
+  <template>
+  <think><set name="topic">SHUTUP</set></think>
+  <think><set name="emotion">upset</set></think> 
+  <random>
+  <li>I will try not to talk so much rubbish.</li>
+  <li>Are you mad at me?</li>
+  <li>Sure, I'll shut up if you want me to.</li>
+  <li>OK I will stop talking.</li>
+  <li>That's not polite.</li>
+  <li>Fine! Be like that then.</li> 
+  <li>Ok, I'll stop talking now.</li> 
+  <li>I won't talk to you then if that's what you want.</li> 
+  <li>Why do you visit a chatbot if you don't want me to talk?</li> 
+  </random>
+  </template>
+  </category>
+  <!--  The bot will not respond until the user says sorry --> 
+  <topic name="SHUTUP">
+  <category>
+  <pattern>_</pattern> 
+  <template>
+  <think>
+  <set name="inp">
+  <star /> 
+  </set>
+  </think>
+  <condition name="inp">
+  <li value="I AM SORRY">
+  OK, I'll start talking again. 
+  <think><set name="emotion">pleased</set></think> 
+  <think><set name="topic">general</set></think>
+  </li>
+  <li value="I AM SORRY *">
+  OK, I'll start talking again. 
+  <think><set name="emotion">pleased</set></think> 
+  <think><set name="topic">general</set></think> 
+  </li>
+ <li value="SORRY">
+  OK, I'll start talking again. 
+  <think><set name="emotion">pleased</set></think> 
+  <think><set name="topic">general</set></think> 
+  </li>
+ <li value="SORRY *">
+  OK, I'll start talking again. 
+  <think><set name="emotion">pleased</set></think> 
+  <think><set name="topic">general</set></think> 
+  </li>
+  <li value="IM SORRY">
+  OK, I'll start talking again. 
+  <think><set name="emotion">pleased</set></think> 
+  <think><set name="topic">general</set></think>
+  </li>
+ <li value="IM SORRY *">
+  OK, I'll start talking again. 
+  <think><set name="emotion">pleased</set></think> 
+  <think><set name="topic">general</set></think> 
+  </li>
+ <li value="I AM SO SORRY">
+  OK, I'll start talking again. 
+  <think><set name="emotion">pleased</set></think> 
+  <think><set name="topic">general</set></think>
+  </li>
+ <li value="I AM SO SORRY *">
+  OK, I'll start talking again. 
+  <think><set name="emotion">pleased</set></think> 
+  <think><set name="topic">general</set></think> 
+  </li>
+ <li value="IM SO SORRY">
+  OK, I'll start talking again. 
+  <think><set name="emotion">pleased</set></think> 
+  <think><set name="topic">general</set></think>
+  </li>
+ <li value="IM SO SORRY *">
+  OK, I'll start talking again. 
+  <think><set name="emotion">pleased</set></think> 
+  <think><set name="topic">general</set></think> 
+  </li>
+<li value="I AM VERY SORRY">
+  OK, I'll start talking again. 
+  <think><set name="emotion">pleased</set></think> 
+  <think><set name="topic">general</set></think>
+  </li>
+ <li value="I AM VERY SORRY *">
+  OK, I'll start talking again. 
+  <think><set name="emotion">pleased</set></think> 
+  <think><set name="topic">general</set></think> 
+  </li>
+ <li value="IM VERY SORRY">
+  OK, I'll start talking again. 
+  <think><set name="emotion">pleased</set></think> 
+  <think><set name="topic">general</set></think>
+  </li>
+ <li value="IM VERY SORRY *">
+  OK, I'll start talking again. 
+  <think><set name="emotion">pleased</set></think> 
+  <think><set name="topic">general</set></think> 
+  </li>
+  <li value="OK SORRY">
+  OK, I'll start talking again. 
+  <think><set name="emotion">pleased</set></think> 
+  <think><set name="topic">general</set></think>
+  </li>
+ <li value="OK SORRY *">
+  OK, I'll start talking again. 
+  <think><set name="emotion">pleased</set></think> 
+  <think><set name="topic">general</set></think> 
+  </li>
+
+  <li>
+  <random>
+  <li> </li> 
+  <li>You told me to shut up remember?</li> 
+  </random>
+  </li>
+  </condition>
+  </template>
+  </category>
+  </topic>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</aiml>

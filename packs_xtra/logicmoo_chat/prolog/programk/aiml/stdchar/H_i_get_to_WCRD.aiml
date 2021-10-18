@@ -1,0 +1,549 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<aiml>
+
+<!-- main Reduce.aiml (893337) mp=-127.032549825885: I GET TO * -->
+
+<!-- MINSEQ: mp=-127.032549825885: who lets you i know you  -->
+<category><pattern>EXPDEX I GET TO *</pattern><template>Who lets you? <srai>I <star/></srai></template></category>
+<category><pattern>I GET TO *</pattern><template><srai>EXPDEX I GET TO <star/></srai></template></category>
+<category><pattern>I GET TO BE *</pattern><template><think><srai>NOPX 413</srai></think><random><li><srai>EXPDEX I GET TO BE <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i be *</srai> -->
+<category><pattern>I GET TO KNOW *</pattern><template><think><srai>NOPX 623</srai></think><random><li><srai>EXPDEX I GET TO KNOW <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i know *</srai> -->
+<category><pattern>I GET TO BE *</pattern><template><think><srai>NOPX 691</srai></think><random><li><srai>EXPDEX I GET TO BE <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i be *</srai> -->
+<category><pattern>I GET TO REMOTE *</pattern><template><think><srai>NOPX 1589</srai></think><random><li><srai>EXPDEX I GET TO REMOTE <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i remote *</srai> -->
+<category><pattern>I GET TO UNK *</pattern><template><think><srai>NOPX 2655</srai></think><random><li><srai>EXPDEX I GET TO UNK <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i unk *</srai> -->
+<category><pattern>I GET TO ARTICLE *</pattern><template><think><srai>NOPX 7779</srai></think><random><li><srai>EXPDEX I GET TO ARTICLE <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i article *</srai> -->
+<category><pattern>I GET TO ACT *</pattern><template><think><srai>NOPX 585</srai></think><random><li><srai>EXPDEX I GET TO ACT <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i act *</srai> -->
+<category><pattern>I GET TO ADD *</pattern><template><think><srai>NOPX 1570</srai></think><random><li><srai>EXPDEX I GET TO ADD <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i add *</srai> -->
+<category><pattern>I GET TO ANSWER *</pattern><template><think><srai>NOPX 905</srai></think><random><li><srai>EXPDEX I GET TO ANSWER <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i answer *</srai> -->
+<category><pattern>I GET TO APPLY *</pattern><template><think><srai>NOPX 425</srai></think><random><li><srai>EXPDEX I GET TO APPLY <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i apply *</srai> -->
+<category><pattern>I GET TO ASK *</pattern><template><think><srai>NOPX 2069</srai></think><random><li><srai>EXPDEX I GET TO ASK <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i ask *</srai> -->
+<category><pattern>I GET TO ATTEND *</pattern><template><think><srai>NOPX 1434</srai></think><random><li><srai>EXPDEX I GET TO ATTEND <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i attend *</srai> -->
+<category><pattern>I GET TO AVOID *</pattern><template><think><srai>NOPX 410</srai></think><random><li><srai>EXPDEX I GET TO AVOID <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i avoid *</srai> -->
+<category><pattern>I GET TO BE *</pattern><template><think><srai>NOPX 45495</srai></think><random><li><srai>EXPDEX I GET TO BE <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i be *</srai> -->
+<category><pattern>I GET TO BEAT *</pattern><template><think><srai>NOPX 517</srai></think><random><li><srai>EXPDEX I GET TO BEAT <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i beat *</srai> -->
+<category><pattern>I GET TO BECOME *</pattern><template><think><srai>NOPX 454</srai></think><random><li><srai>EXPDEX I GET TO BECOME <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i become *</srai> -->
+<category><pattern>I GET TO BED *</pattern><template><think><srai>NOPX 1949</srai></think><random><li><srai>EXPDEX I GET TO BED <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i bed *</srai> -->
+<category><pattern>I GET TO BLOG *</pattern><template><think><srai>NOPX 490</srai></think><random><li><srai>EXPDEX I GET TO BLOG <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i blog *</srai> -->
+<category><pattern>I GET TO BLOW *</pattern><template><think><srai>NOPX 518</srai></think><random><li><srai>EXPDEX I GET TO BLOW <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i blow *</srai> -->
+<category><pattern>I GET TO BRAG *</pattern><template><think><srai>NOPX 406</srai></think><random><li><srai>EXPDEX I GET TO BRAG <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i brag *</srai> -->
+<category><pattern>I GET TO BREAK *</pattern><template><think><srai>NOPX 615</srai></think><random><li><srai>EXPDEX I GET TO BREAK <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i break *</srai> -->
+<category><pattern>I GET TO BRING *</pattern><template><think><srai>NOPX 1340</srai></think><random><li><srai>EXPDEX I GET TO BRING <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i bring *</srai> -->
+<category><pattern>I GET TO BUILD *</pattern><template><think><srai>NOPX 866</srai></think><random><li><srai>EXPDEX I GET TO BUILD <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i build *</srai> -->
+<category><pattern>I GET TO BUY *</pattern><template><think><srai>NOPX 2172</srai></think><random><li><srai>EXPDEX I GET TO BUY <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i buy *</srai> -->
+<category><pattern>I GET TO CALL *</pattern><template><think><srai>NOPX 2393</srai></think><random><li><srai>EXPDEX I GET TO CALL <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i call *</srai> -->
+<category><pattern>I GET TO CARRY *</pattern><template><think><srai>NOPX 695</srai></think><random><li><srai>EXPDEX I GET TO CARRY <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i carry *</srai> -->
+<category><pattern>I GET TO CATCH *</pattern><template><think><srai>NOPX 1246</srai></think><random><li><srai>EXPDEX I GET TO CATCH <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i catch *</srai> -->
+<category><pattern>I GET TO CELEBRATE *</pattern><template><think><srai>NOPX 847</srai></think><random><li><srai>EXPDEX I GET TO CELEBRATE <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i celebrate *</srai> -->
+<category><pattern>I GET TO CHANGE *</pattern><template><think><srai>NOPX 682</srai></think><random><li><srai>EXPDEX I GET TO CHANGE <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i change *</srai> -->
+<category><pattern>I GET TO CHAT *</pattern><template><think><srai>NOPX 768</srai></think><random><li><srai>EXPDEX I GET TO CHAT <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i chat *</srai> -->
+<category><pattern>I GET TO CHECK *</pattern><template><think><srai>NOPX 1303</srai></think><random><li><srai>EXPDEX I GET TO CHECK <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i check *</srai> -->
+<category><pattern>I GET TO CHOOSE *</pattern><template><think><srai>NOPX 9172</srai></think><random><li><srai>EXPDEX I GET TO CHOOSE <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i choose *</srai> -->
+<category><pattern>I GET TO CLAIM *</pattern><template><think><srai>NOPX 432</srai></think><random><li><srai>EXPDEX I GET TO CLAIM <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i claim *</srai> -->
+<category><pattern>I GET TO CLASS *</pattern><template><think><srai>NOPX 725</srai></think><random><li><srai>EXPDEX I GET TO CLASS <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i class *</srai> -->
+<category><pattern>I GET TO CLEAN *</pattern><template><think><srai>NOPX 653</srai></think><random><li><srai>EXPDEX I GET TO CLEAN <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i clean *</srai> -->
+<category><pattern>I GET TO COLLEGE *</pattern><template><think><srai>NOPX 839</srai></think><random><li><srai>EXPDEX I GET TO COLLEGE <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i college *</srai> -->
+<category><pattern>I GET TO COMBINE *</pattern><template><think><srai>NOPX 815</srai></think><random><li><srai>EXPDEX I GET TO COMBINE <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i combine *</srai> -->
+<category><pattern>I GET TO COME *</pattern><template><think><srai>NOPX 4487</srai></think><random><li><srai>EXPDEX I GET TO COME <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i come *</srai> -->
+<category><pattern>I GET TO CONTINUE *</pattern><template><think><srai>NOPX 769</srai></think><random><li><srai>EXPDEX I GET TO CONTINUE <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i continue *</srai> -->
+<category><pattern>I GET TO CONTROL *</pattern><template><think><srai>NOPX 553</srai></think><random><li><srai>EXPDEX I GET TO CONTROL <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i control *</srai> -->
+<category><pattern>I GET TO COOK *</pattern><template><think><srai>NOPX 646</srai></think><random><li><srai>EXPDEX I GET TO COOK <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i cook *</srai> -->
+<category><pattern>I GET TO COVER *</pattern><template><think><srai>NOPX 455</srai></think><random><li><srai>EXPDEX I GET TO COVER <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i cover *</srai> -->
+<category><pattern>I GET TO CREATE *</pattern><template><think><srai>NOPX 777</srai></think><random><li><srai>EXPDEX I GET TO CREATE <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i create *</srai> -->
+<category><pattern>I GET TO CUT *</pattern><template><think><srai>NOPX 475</srai></think><random><li><srai>EXPDEX I GET TO CUT <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i cut *</srai> -->
+<category><pattern>I GET TO DANCE *</pattern><template><think><srai>NOPX 810</srai></think><random><li><srai>EXPDEX I GET TO DANCE <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i dance *</srai> -->
+<category><pattern>I GET TO DEAL *</pattern><template><think><srai>NOPX 1784</srai></think><random><li><srai>EXPDEX I GET TO DEAL <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i deal *</srai> -->
+<category><pattern>I GET TO DECIDE *</pattern><template><think><srai>NOPX 2733</srai></think><random><li><srai>EXPDEX I GET TO DECIDE <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i decide *</srai> -->
+<category><pattern>I GET TO DESIGN *</pattern><template><think><srai>NOPX 672</srai></think><random><li><srai>EXPDEX I GET TO DESIGN <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i design *</srai> -->
+<category><pattern>I GET TO DO *</pattern><template><think><srai>NOPX 37418</srai></think><random><li><srai>EXPDEX I GET TO DO <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i do *</srai> -->
+<category><pattern>I GET TO DOCUMENT *</pattern><template><think><srai>NOPX 1603</srai></think><random><li><srai>EXPDEX I GET TO DOCUMENT <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i document *</srai> -->
+<category><pattern>I GET TO DOWNLOAD *</pattern><template><think><srai>NOPX 441</srai></think><random><li><srai>EXPDEX I GET TO DOWNLOAD <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i download *</srai> -->
+<category><pattern>I GET TO DRAW *</pattern><template><think><srai>NOPX 835</srai></think><random><li><srai>EXPDEX I GET TO DRAW <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i draw *</srai> -->
+<category><pattern>I GET TO DRESS *</pattern><template><think><srai>NOPX 1050</srai></think><random><li><srai>EXPDEX I GET TO DRESS <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i dress *</srai> -->
+<category><pattern>I GET TO DRINK *</pattern><template><think><srai>NOPX 1017</srai></think><random><li><srai>EXPDEX I GET TO DRINK <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i drink *</srai> -->
+<category><pattern>I GET TO DRIVE *</pattern><template><think><srai>NOPX 4253</srai></think><random><li><srai>EXPDEX I GET TO DRIVE <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i drive *</srai> -->
+<category><pattern>I GET TO EAT *</pattern><template><think><srai>NOPX 6216</srai></think><random><li><srai>EXPDEX I GET TO EAT <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i eat *</srai> -->
+<category><pattern>I GET TO ENJOY *</pattern><template><think><srai>NOPX 5191</srai></think><random><li><srai>EXPDEX I GET TO ENJOY <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i enjoy *</srai> -->
+<category><pattern>I GET TO EXERCISE *</pattern><template><think><srai>NOPX 487</srai></think><random><li><srai>EXPDEX I GET TO EXERCISE <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i exercise *</srai> -->
+<category><pattern>I GET TO EXPERIENCE *</pattern><template><think><srai>NOPX 2939</srai></think><random><li><srai>EXPDEX I GET TO EXPERIENCE <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i experience *</srai> -->
+<category><pattern>I GET TO EXPLAIN *</pattern><template><think><srai>NOPX 520</srai></think><random><li><srai>EXPDEX I GET TO EXPLAIN <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i explain *</srai> -->
+<category><pattern>I GET TO EXPLORE *</pattern><template><think><srai>NOPX 832</srai></think><random><li><srai>EXPDEX I GET TO EXPLORE <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i explore *</srai> -->
+<category><pattern>I GET TO EXPRESS *</pattern><template><think><srai>NOPX 553</srai></think><random><li><srai>EXPDEX I GET TO EXPRESS <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i express *</srai> -->
+<category><pattern>I GET TO FEEL *</pattern><template><think><srai>NOPX 2260</srai></think><random><li><srai>EXPDEX I GET TO FEEL <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i feel *</srai> -->
+<category><pattern>I GET TO FEELING *</pattern><template><think><srai>NOPX 1610</srai></think><random><li><srai>EXPDEX I GET TO FEELING <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i feeling *</srai> -->
+<category><pattern>I GET TO FIGHT *</pattern><template><think><srai>NOPX 561</srai></think><random><li><srai>EXPDEX I GET TO FIGHT <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i fight *</srai> -->
+<category><pattern>I GET TO FIGURE *</pattern><template><think><srai>NOPX 557</srai></think><random><li><srai>EXPDEX I GET TO FIGURE <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i figure *</srai> -->
+<category><pattern>I GET TO FILL *</pattern><template><think><srai>NOPX 488</srai></think><random><li><srai>EXPDEX I GET TO FILL <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i fill *</srai> -->
+<category><pattern>I GET TO FIND *</pattern><template><think><srai>NOPX 2267</srai></think><random><li><srai>EXPDEX I GET TO FIND <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i find *</srai> -->
+<category><pattern>I GET TO FINISH *</pattern><template><think><srai>NOPX 916</srai></think><random><li><srai>EXPDEX I GET TO FINISH <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i finish *</srai> -->
+<category><pattern>I GET TO FIX *</pattern><template><think><srai>NOPX 500</srai></think><random><li><srai>EXPDEX I GET TO FIX <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i fix *</srai> -->
+<category><pattern>I GET TO FLY *</pattern><template><think><srai>NOPX 1716</srai></think><random><li><srai>EXPDEX I GET TO FLY <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i fly *</srai> -->
+<category><pattern>I GET TO FOCUS *</pattern><template><think><srai>NOPX 485</srai></think><random><li><srai>EXPDEX I GET TO FOCUS <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i focus *</srai> -->
+<category><pattern>I GET TO FOLLOW *</pattern><template><think><srai>NOPX 445</srai></think><random><li><srai>EXPDEX I GET TO FOLLOW <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i follow *</srai> -->
+<category><pattern>I GET TO FUCK *</pattern><template><think><srai>NOPX 1574</srai></think><random><li><srai>EXPDEX I GET TO FUCK <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i fuck *</srai> -->
+<category><pattern>I GET TO GET *</pattern><template><think><srai>NOPX 3355</srai></think><random><li><srai>EXPDEX I GET TO GET <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i get *</srai> -->
+<category><pattern>I GET TO GIVE *</pattern><template><think><srai>NOPX 2348</srai></think><random><li><srai>EXPDEX I GET TO GIVE <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i give *</srai> -->
+<category><pattern>I GET TO GO *</pattern><template><think><srai>NOPX 47607</srai></think><random><li><srai>EXPDEX I GET TO GO <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i go *</srai> -->
+<category><pattern>I GET TO HANG *</pattern><template><think><srai>NOPX 4806</srai></think><random><li><srai>EXPDEX I GET TO HANG <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i hang *</srai> -->
+<category><pattern>I GET TO HAVE *</pattern><template><think><srai>NOPX 14257</srai></think><random><li><srai>EXPDEX I GET TO HAVE <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i have *</srai> -->
+<category><pattern>I GET TO HEAR *</pattern><template><think><srai>NOPX 10115</srai></think><random><li><srai>EXPDEX I GET TO HEAR <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i hear *</srai> -->
+<category><pattern>I GET TO HEAVEN *</pattern><template><think><srai>NOPX 5549</srai></think><random><li><srai>EXPDEX I GET TO HEAVEN <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i heaven *</srai> -->
+<category><pattern>I GET TO HELP *</pattern><template><think><srai>NOPX 4257</srai></think><random><li><srai>EXPDEX I GET TO HELP <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i help *</srai> -->
+<category><pattern>I GET TO HIT *</pattern><template><think><srai>NOPX 639</srai></think><random><li><srai>EXPDEX I GET TO HIT <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i hit *</srai> -->
+<category><pattern>I GET TO HOLD *</pattern><template><think><srai>NOPX 1500</srai></think><random><li><srai>EXPDEX I GET TO HOLD <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i hold *</srai> -->
+<category><pattern>I GET TO HUG *</pattern><template><think><srai>NOPX 742</srai></think><random><li><srai>EXPDEX I GET TO HUG <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i hug *</srai> -->
+<category><pattern>I GET TO INDULGE *</pattern><template><think><srai>NOPX 503</srai></think><random><li><srai>EXPDEX I GET TO INDULGE <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i indulge *</srai> -->
+<category><pattern>I GET TO INSTALL *</pattern><template><think><srai>NOPX 485</srai></think><random><li><srai>EXPDEX I GET TO INSTALL <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i install *</srai> -->
+<category><pattern>I GET TO INTERACT *</pattern><template><think><srai>NOPX 1256</srai></think><random><li><srai>EXPDEX I GET TO INTERACT <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i interact *</srai> -->
+<category><pattern>I GET TO INTERVIEW *</pattern><template><think><srai>NOPX 686</srai></think><random><li><srai>EXPDEX I GET TO INTERVIEW <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i interview *</srai> -->
+<category><pattern>I GET TO INTRODUCE *</pattern><template><think><srai>NOPX 610</srai></think><random><li><srai>EXPDEX I GET TO INTRODUCE <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i introduce *</srai> -->
+<category><pattern>I GET TO JOIN *</pattern><template><think><srai>NOPX 1047</srai></think><random><li><srai>EXPDEX I GET TO JOIN <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i join *</srai> -->
+<category><pattern>I GET TO KEEP *</pattern><template><think><srai>NOPX 12712</srai></think><random><li><srai>EXPDEX I GET TO KEEP <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i keep *</srai> -->
+<category><pattern>I GET TO KICK *</pattern><template><think><srai>NOPX 728</srai></think><random><li><srai>EXPDEX I GET TO KICK <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i kick *</srai> -->
+<category><pattern>I GET TO KILL *</pattern><template><think><srai>NOPX 1198</srai></think><random><li><srai>EXPDEX I GET TO KILL <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i kill *</srai> -->
+<category><pattern>I GET TO KISS *</pattern><template><think><srai>NOPX 936</srai></think><random><li><srai>EXPDEX I GET TO KISS <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i kiss *</srai> -->
+<category><pattern>I GET TO KNOW *</pattern><template><think><srai>NOPX 37444</srai></think><random><li><srai>EXPDEX I GET TO KNOW <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i know *</srai> -->
+<category><pattern>I GET TO LAUGH *</pattern><template><think><srai>NOPX 964</srai></think><random><li><srai>EXPDEX I GET TO LAUGH <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i laugh *</srai> -->
+<category><pattern>I GET TO LEAD *</pattern><template><think><srai>NOPX 457</srai></think><random><li><srai>EXPDEX I GET TO LEAD <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i lead *</srai> -->
+<category><pattern>I GET TO LEARN *</pattern><template><think><srai>NOPX 5599</srai></think><random><li><srai>EXPDEX I GET TO LEARN <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i learn *</srai> -->
+<category><pattern>I GET TO LEAVE *</pattern><template><think><srai>NOPX 3354</srai></think><random><li><srai>EXPDEX I GET TO LEAVE <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i leave *</srai> -->
+<category><pattern>I GET TO LET *</pattern><template><think><srai>NOPX 471</srai></think><random><li><srai>EXPDEX I GET TO LET <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i let *</srai> -->
+<category><pattern>I GET TO LISTEN *</pattern><template><think><srai>NOPX 4336</srai></think><random><li><srai>EXPDEX I GET TO LISTEN <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i listen *</srai> -->
+<category><pattern>I GET TO LIVE *</pattern><template><think><srai>NOPX 4760</srai></think><random><li><srai>EXPDEX I GET TO LIVE <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i live *</srai> -->
+<category><pattern>I GET TO LOOK *</pattern><template><think><srai>NOPX 4830</srai></think><random><li><srai>EXPDEX I GET TO LOOK <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i look *</srai> -->
+<category><pattern>I GET TO LOVE *</pattern><template><think><srai>NOPX 436</srai></think><random><li><srai>EXPDEX I GET TO LOVE <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i love *</srai> -->
+<category><pattern>I GET TO MAKE *</pattern><template><think><srai>NOPX 9744</srai></think><random><li><srai>EXPDEX I GET TO MAKE <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i make *</srai> -->
+<category><pattern>I GET TO MEET *</pattern><template><think><srai>NOPX 20969</srai></think><random><li><srai>EXPDEX I GET TO MEET <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i meet *</srai> -->
+<category><pattern>I GET TO MISS *</pattern><template><think><srai>NOPX 986</srai></think><random><li><srai>EXPDEX I GET TO MISS <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i miss *</srai> -->
+<category><pattern>I GET TO MOVE *</pattern><template><think><srai>NOPX 1919</srai></think><random><li><srai>EXPDEX I GET TO MOVE <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i move *</srai> -->
+<category><pattern>I GET TO NAME *</pattern><template><think><srai>NOPX 489</srai></think><random><li><srai>EXPDEX I GET TO NAME <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i name *</srai> -->
+<category><pattern>I GET TO OPEN *</pattern><template><think><srai>NOPX 953</srai></think><random><li><srai>EXPDEX I GET TO OPEN <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i open *</srai> -->
+<category><pattern>I GET TO PAINT *</pattern><template><think><srai>NOPX 757</srai></think><random><li><srai>EXPDEX I GET TO PAINT <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i paint *</srai> -->
+<category><pattern>I GET TO PARTICIPATE *</pattern><template><think><srai>NOPX 793</srai></think><random><li><srai>EXPDEX I GET TO PARTICIPATE <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i participate *</srai> -->
+<category><pattern>I GET TO PASS *</pattern><template><think><srai>NOPX 537</srai></think><random><li><srai>EXPDEX I GET TO PASS <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i pass *</srai> -->
+<category><pattern>I GET TO PAY *</pattern><template><think><srai>NOPX 2244</srai></think><random><li><srai>EXPDEX I GET TO PAY <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i pay *</srai> -->
+<category><pattern>I GET TO PERFORM *</pattern><template><think><srai>NOPX 698</srai></think><random><li><srai>EXPDEX I GET TO PERFORM <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i perform *</srai> -->
+<category><pattern>I GET TO PICK *</pattern><template><think><srai>NOPX 7014</srai></think><random><li><srai>EXPDEX I GET TO PICK <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i pick *</srai> -->
+<category><pattern>I GET TO PLAY *</pattern><template><think><srai>NOPX 23174</srai></think><random><li><srai>EXPDEX I GET TO PLAY <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i play *</srai> -->
+<category><pattern>I GET TO POST *</pattern><template><think><srai>NOPX 2149</srai></think><random><li><srai>EXPDEX I GET TO POST <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i post *</srai> -->
+<category><pattern>I GET TO PRACTICE *</pattern><template><think><srai>NOPX 1355</srai></think><random><li><srai>EXPDEX I GET TO PRACTICE <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i practice *</srai> -->
+<category><pattern>I GET TO PRETEND *</pattern><template><think><srai>NOPX 716</srai></think><random><li><srai>EXPDEX I GET TO PRETEND <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i pretend *</srai> -->
+<category><pattern>I GET TO PULL *</pattern><template><think><srai>NOPX 463</srai></think><random><li><srai>EXPDEX I GET TO PULL <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i pull *</srai> -->
+<category><pattern>I GET TO PUT *</pattern><template><think><srai>NOPX 4068</srai></think><random><li><srai>EXPDEX I GET TO PUT <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i put *</srai> -->
+<category><pattern>I GET TO RANT *</pattern><template><think><srai>NOPX 701</srai></think><random><li><srai>EXPDEX I GET TO RANT <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i rant *</srai> -->
+<category><pattern>I GET TO RE *</pattern><template><think><srai>NOPX 581</srai></think><random><li><srai>EXPDEX I GET TO RE <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i re *</srai> -->
+<category><pattern>I GET TO READ *</pattern><template><think><srai>NOPX 8531</srai></think><random><li><srai>EXPDEX I GET TO READ <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i read *</srai> -->
+<category><pattern>I GET TO RELAX *</pattern><template><think><srai>NOPX 1119</srai></think><random><li><srai>EXPDEX I GET TO RELAX <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i relax *</srai> -->
+<category><pattern>I GET TO RELIVE *</pattern><template><think><srai>NOPX 505</srai></think><random><li><srai>EXPDEX I GET TO RELIVE <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i relive *</srai> -->
+<category><pattern>I GET TO REST *</pattern><template><think><srai>NOPX 487</srai></think><random><li><srai>EXPDEX I GET TO REST <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i rest *</srai> -->
+<category><pattern>I GET TO RETURN *</pattern><template><think><srai>NOPX 742</srai></think><random><li><srai>EXPDEX I GET TO RETURN <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i return *</srai> -->
+<category><pattern>I GET TO REVIEW *</pattern><template><think><srai>NOPX 994</srai></think><random><li><srai>EXPDEX I GET TO REVIEW <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i review *</srai> -->
+<category><pattern>I GET TO RIDE *</pattern><template><think><srai>NOPX 2937</srai></think><random><li><srai>EXPDEX I GET TO RIDE <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i ride *</srai> -->
+<category><pattern>I GET TO RUN *</pattern><template><think><srai>NOPX 2341</srai></think><random><li><srai>EXPDEX I GET TO RUN <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i run *</srai> -->
+<category><pattern>I GET TO SAVE *</pattern><template><think><srai>NOPX 754</srai></think><random><li><srai>EXPDEX I GET TO SAVE <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i save *</srai> -->
+<category><pattern>I GET TO SAY *</pattern><template><think><srai>NOPX 6005</srai></think><random><li><srai>EXPDEX I GET TO SAY <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i say *</srai> -->
+<category><pattern>I GET TO SCHOOL *</pattern><template><think><srai>NOPX 2466</srai></think><random><li><srai>EXPDEX I GET TO SCHOOL <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i school *</srai> -->
+<category><pattern>I GET TO SEE *</pattern><template><think><srai>NOPX 85037</srai></think><random><li><srai>EXPDEX I GET TO SEE <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i see *</srai> -->
+<category><pattern>I GET TO SELL *</pattern><template><think><srai>NOPX 443</srai></think><random><li><srai>EXPDEX I GET TO SELL <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i sell *</srai> -->
+<category><pattern>I GET TO SEND *</pattern><template><think><srai>NOPX 755</srai></think><random><li><srai>EXPDEX I GET TO SEND <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i send *</srai> -->
+<category><pattern>I GET TO SERVE *</pattern><template><think><srai>NOPX 418</srai></think><random><li><srai>EXPDEX I GET TO SERVE <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i serve *</srai> -->
+<category><pattern>I GET TO SET *</pattern><template><think><srai>NOPX 1019</srai></think><random><li><srai>EXPDEX I GET TO SET <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i set *</srai> -->
+<category><pattern>I GET TO SHARE *</pattern><template><think><srai>NOPX 4176</srai></think><random><li><srai>EXPDEX I GET TO SHARE <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i share *</srai> -->
+<category><pattern>I GET TO SHOOT *</pattern><template><think><srai>NOPX 1147</srai></think><random><li><srai>EXPDEX I GET TO SHOOT <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i shoot *</srai> -->
+<category><pattern>I GET TO SHOP *</pattern><template><think><srai>NOPX 462</srai></think><random><li><srai>EXPDEX I GET TO SHOP <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i shop *</srai> -->
+<category><pattern>I GET TO SHOW *</pattern><template><think><srai>NOPX 2547</srai></think><random><li><srai>EXPDEX I GET TO SHOW <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i show *</srai> -->
+<category><pattern>I GET TO SING *</pattern><template><think><srai>NOPX 1995</srai></think><random><li><srai>EXPDEX I GET TO SING <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i sing *</srai> -->
+<category><pattern>I GET TO SIT *</pattern><template><think><srai>NOPX 6916</srai></think><random><li><srai>EXPDEX I GET TO SIT <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i sit *</srai> -->
+<category><pattern>I GET TO SKIP *</pattern><template><think><srai>NOPX 506</srai></think><random><li><srai>EXPDEX I GET TO SKIP <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i skip *</srai> -->
+<category><pattern>I GET TO SLEEP *</pattern><template><think><srai>NOPX 7918</srai></think><random><li><srai>EXPDEX I GET TO SLEEP <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i sleep *</srai> -->
+<category><pattern>I GET TO SPEAK *</pattern><template><think><srai>NOPX 2064</srai></think><random><li><srai>EXPDEX I GET TO SPEAK <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i speak *</srai> -->
+<category><pattern>I GET TO SPEND *</pattern><template><think><srai>NOPX 17847</srai></think><random><li><srai>EXPDEX I GET TO SPEND <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i spend *</srai> -->
+<category><pattern>I GET TO SPOUT *</pattern><template><think><srai>NOPX 806</srai></think><random><li><srai>EXPDEX I GET TO SPOUT <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i spout *</srai> -->
+<category><pattern>I GET TO STAND *</pattern><template><think><srai>NOPX 927</srai></think><random><li><srai>EXPDEX I GET TO STAND <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i stand *</srai> -->
+<category><pattern>I GET TO STARE *</pattern><template><think><srai>NOPX 726</srai></think><random><li><srai>EXPDEX I GET TO STARE <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i stare *</srai> -->
+<category><pattern>I GET TO START *</pattern><template><think><srai>NOPX 5284</srai></think><random><li><srai>EXPDEX I GET TO START <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i start *</srai> -->
+<category><pattern>I GET TO STAY *</pattern><template><think><srai>NOPX 5780</srai></think><random><li><srai>EXPDEX I GET TO STAY <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i stay *</srai> -->
+<category><pattern>I GET TO STEP *</pattern><template><think><srai>NOPX 838</srai></think><random><li><srai>EXPDEX I GET TO STEP <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i step *</srai> -->
+<category><pattern>I GET TO STOP *</pattern><template><think><srai>NOPX 664</srai></think><random><li><srai>EXPDEX I GET TO STOP <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i stop *</srai> -->
+<category><pattern>I GET TO STUDY *</pattern><template><think><srai>NOPX 696</srai></think><random><li><srai>EXPDEX I GET TO STUDY <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i study *</srai> -->
+<category><pattern>I GET TO TAG *</pattern><template><think><srai>NOPX 468</srai></think><random><li><srai>EXPDEX I GET TO TAG <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i tag *</srai> -->
+<category><pattern>I GET TO TAKE *</pattern><template><think><srai>NOPX 11133</srai></think><random><li><srai>EXPDEX I GET TO TAKE <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i take *</srai> -->
+<category><pattern>I GET TO TALK *</pattern><template><think><srai>NOPX 9254</srai></think><random><li><srai>EXPDEX I GET TO TALK <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i talk *</srai> -->
+<category><pattern>I GET TO TASTE *</pattern><template><think><srai>NOPX 691</srai></think><random><li><srai>EXPDEX I GET TO TASTE <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i taste *</srai> -->
+<category><pattern>I GET TO TEACH *</pattern><template><think><srai>NOPX 2198</srai></think><random><li><srai>EXPDEX I GET TO TEACH <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i teach *</srai> -->
+<category><pattern>I GET TO TELL *</pattern><template><think><srai>NOPX 4840</srai></think><random><li><srai>EXPDEX I GET TO TELL <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i tell *</srai> -->
+<category><pattern>I GET TO TEST *</pattern><template><think><srai>NOPX 1332</srai></think><random><li><srai>EXPDEX I GET TO TEST <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i test *</srai> -->
+<category><pattern>I GET TO THINK *</pattern><template><think><srai>NOPX 1319</srai></think><random><li><srai>EXPDEX I GET TO THINK <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i think *</srai> -->
+<category><pattern>I GET TO THINKIN *</pattern><template><think><srai>NOPX 455</srai></think><random><li><srai>EXPDEX I GET TO THINKIN <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i thinkin *</srai> -->
+<category><pattern>I GET TO THINKING *</pattern><template><think><srai>NOPX 3271</srai></think><random><li><srai>EXPDEX I GET TO THINKING <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i thinking *</srai> -->
+<category><pattern>I GET TO THROW *</pattern><template><think><srai>NOPX 567</srai></think><random><li><srai>EXPDEX I GET TO THROW <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i throw *</srai> -->
+<category><pattern>I GET TO TOUCH *</pattern><template><think><srai>NOPX 594</srai></think><random><li><srai>EXPDEX I GET TO TOUCH <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i touch *</srai> -->
+<category><pattern>I GET TO TOWN *</pattern><template><think><srai>NOPX 549</srai></think><random><li><srai>EXPDEX I GET TO TOWN <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i town *</srai> -->
+<category><pattern>I GET TO TRAIN *</pattern><template><think><srai>NOPX 421</srai></think><random><li><srai>EXPDEX I GET TO TRAIN <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i train *</srai> -->
+<category><pattern>I GET TO TRAVEL *</pattern><template><think><srai>NOPX 4447</srai></think><random><li><srai>EXPDEX I GET TO TRAVEL <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i travel *</srai> -->
+<category><pattern>I GET TO TRY *</pattern><template><think><srai>NOPX 3825</srai></think><random><li><srai>EXPDEX I GET TO TRY <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i try *</srai> -->
+<category><pattern>I GET TO TURN *</pattern><template><think><srai>NOPX 624</srai></think><random><li><srai>EXPDEX I GET TO TURN <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i turn *</srai> -->
+<category><pattern>I GET TO UNDERSTAND *</pattern><template><think><srai>NOPX 681</srai></think><random><li><srai>EXPDEX I GET TO UNDERSTAND <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i understand *</srai> -->
+<category><pattern>I GET TO UPDATE *</pattern><template><think><srai>NOPX 463</srai></think><random><li><srai>EXPDEX I GET TO UPDATE <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i update *</srai> -->
+<category><pattern>I GET TO USE *</pattern><template><think><srai>NOPX 12240</srai></think><random><li><srai>EXPDEX I GET TO USE <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i use *</srai> -->
+<category><pattern>I GET TO VIEW *</pattern><template><think><srai>NOPX 479</srai></think><random><li><srai>EXPDEX I GET TO VIEW <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i view *</srai> -->
+<category><pattern>I GET TO VISIT *</pattern><template><think><srai>NOPX 3511</srai></think><random><li><srai>EXPDEX I GET TO VISIT <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i visit *</srai> -->
+<category><pattern>I GET TO VOTE *</pattern><template><think><srai>NOPX 1989</srai></think><random><li><srai>EXPDEX I GET TO VOTE <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i vote *</srai> -->
+<category><pattern>I GET TO WAIT *</pattern><template><think><srai>NOPX 1197</srai></think><random><li><srai>EXPDEX I GET TO WAIT <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i wait *</srai> -->
+<category><pattern>I GET TO WAKE *</pattern><template><think><srai>NOPX 1150</srai></think><random><li><srai>EXPDEX I GET TO WAKE <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i wake *</srai> -->
+<category><pattern>I GET TO WALK *</pattern><template><think><srai>NOPX 1904</srai></think><random><li><srai>EXPDEX I GET TO WALK <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i walk *</srai> -->
+<category><pattern>I GET TO WATCH *</pattern><template><think><srai>NOPX 11968</srai></think><random><li><srai>EXPDEX I GET TO WATCH <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i watch *</srai> -->
+<category><pattern>I GET TO WEAR *</pattern><template><think><srai>NOPX 6021</srai></think><random><li><srai>EXPDEX I GET TO WEAR <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i wear *</srai> -->
+<category><pattern>I GET TO WITNESS *</pattern><template><think><srai>NOPX 666</srai></think><random><li><srai>EXPDEX I GET TO WITNESS <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i witness *</srai> -->
+<category><pattern>I GET TO WORK *</pattern><template><think><srai>NOPX 36409</srai></think><random><li><srai>EXPDEX I GET TO WORK <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i work *</srai> -->
+<category><pattern>I GET TO WRITE *</pattern><template><think><srai>NOPX 6930</srai></think><random><li><srai>EXPDEX I GET TO WRITE <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i write *</srai> -->
+<category><pattern>I GET TO UNK *</pattern><template><think><srai>NOPX 794</srai></think><random><li><srai>EXPDEX I GET TO UNK <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i unk *</srai> -->
+<category><pattern>I GET TO BE *</pattern><template><think><srai>NOPX 4737</srai></think><random><li><srai>EXPDEX I GET TO BE <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i be *</srai> -->
+<category><pattern>I GET TO CHOOSE *</pattern><template><think><srai>NOPX 637</srai></think><random><li><srai>EXPDEX I GET TO CHOOSE <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i choose *</srai> -->
+<category><pattern>I GET TO COME *</pattern><template><think><srai>NOPX 842</srai></think><random><li><srai>EXPDEX I GET TO COME <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i come *</srai> -->
+<category><pattern>I GET TO DO *</pattern><template><think><srai>NOPX 2827</srai></think><random><li><srai>EXPDEX I GET TO DO <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i do *</srai> -->
+<category><pattern>I GET TO DRIVE *</pattern><template><think><srai>NOPX 642</srai></think><random><li><srai>EXPDEX I GET TO DRIVE <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i drive *</srai> -->
+<category><pattern>I GET TO EAT *</pattern><template><think><srai>NOPX 678</srai></think><random><li><srai>EXPDEX I GET TO EAT <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i eat *</srai> -->
+<category><pattern>I GET TO GET *</pattern><template><think><srai>NOPX 644</srai></think><random><li><srai>EXPDEX I GET TO GET <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i get *</srai> -->
+<category><pattern>I GET TO GO *</pattern><template><think><srai>NOPX 8506</srai></think><random><li><srai>EXPDEX I GET TO GO <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i go *</srai> -->
+<category><pattern>I GET TO HANG *</pattern><template><think><srai>NOPX 997</srai></think><random><li><srai>EXPDEX I GET TO HANG <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i hang *</srai> -->
+<category><pattern>I GET TO HAVE *</pattern><template><think><srai>NOPX 1620</srai></think><random><li><srai>EXPDEX I GET TO HAVE <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i have *</srai> -->
+<category><pattern>I GET TO HEAR *</pattern><template><think><srai>NOPX 1207</srai></think><random><li><srai>EXPDEX I GET TO HEAR <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i hear *</srai> -->
+<category><pattern>I GET TO HEAVEN *</pattern><template><think><srai>NOPX 516</srai></think><random><li><srai>EXPDEX I GET TO HEAVEN <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i heaven *</srai> -->
+<category><pattern>I GET TO KEEP *</pattern><template><think><srai>NOPX 1064</srai></think><random><li><srai>EXPDEX I GET TO KEEP <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i keep *</srai> -->
+<category><pattern>I GET TO KNOW *</pattern><template><think><srai>NOPX 7505</srai></think><random><li><srai>EXPDEX I GET TO KNOW <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i know *</srai> -->
+<category><pattern>I GET TO LEARN *</pattern><template><think><srai>NOPX 465</srai></think><random><li><srai>EXPDEX I GET TO LEARN <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i learn *</srai> -->
+<category><pattern>I GET TO LEAVE *</pattern><template><think><srai>NOPX 637</srai></think><random><li><srai>EXPDEX I GET TO LEAVE <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i leave *</srai> -->
+<category><pattern>I GET TO LISTEN *</pattern><template><think><srai>NOPX 504</srai></think><random><li><srai>EXPDEX I GET TO LISTEN <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i listen *</srai> -->
+<category><pattern>I GET TO LOOK *</pattern><template><think><srai>NOPX 473</srai></think><random><li><srai>EXPDEX I GET TO LOOK <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i look *</srai> -->
+<category><pattern>I GET TO MAKE *</pattern><template><think><srai>NOPX 880</srai></think><random><li><srai>EXPDEX I GET TO MAKE <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i make *</srai> -->
+<category><pattern>I GET TO MEET *</pattern><template><think><srai>NOPX 2586</srai></think><random><li><srai>EXPDEX I GET TO MEET <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i meet *</srai> -->
+<category><pattern>I GET TO PICK *</pattern><template><think><srai>NOPX 622</srai></think><random><li><srai>EXPDEX I GET TO PICK <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i pick *</srai> -->
+<category><pattern>I GET TO PLAY *</pattern><template><think><srai>NOPX 2491</srai></think><random><li><srai>EXPDEX I GET TO PLAY <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i play *</srai> -->
+<category><pattern>I GET TO READ *</pattern><template><think><srai>NOPX 702</srai></think><random><li><srai>EXPDEX I GET TO READ <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i read *</srai> -->
+<category><pattern>I GET TO SAY *</pattern><template><think><srai>NOPX 643</srai></think><random><li><srai>EXPDEX I GET TO SAY <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i say *</srai> -->
+<category><pattern>I GET TO SEE *</pattern><template><think><srai>NOPX 20126</srai></think><random><li><srai>EXPDEX I GET TO SEE <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i see *</srai> -->
+<category><pattern>I GET TO SIT *</pattern><template><think><srai>NOPX 719</srai></think><random><li><srai>EXPDEX I GET TO SIT <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i sit *</srai> -->
+<category><pattern>I GET TO SLEEP *</pattern><template><think><srai>NOPX 1265</srai></think><random><li><srai>EXPDEX I GET TO SLEEP <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i sleep *</srai> -->
+<category><pattern>I GET TO SPEND *</pattern><template><think><srai>NOPX 1809</srai></think><random><li><srai>EXPDEX I GET TO SPEND <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i spend *</srai> -->
+<category><pattern>I GET TO START *</pattern><template><think><srai>NOPX 599</srai></think><random><li><srai>EXPDEX I GET TO START <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i start *</srai> -->
+<category><pattern>I GET TO STAY *</pattern><template><think><srai>NOPX 635</srai></think><random><li><srai>EXPDEX I GET TO STAY <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i stay *</srai> -->
+<category><pattern>I GET TO TAKE *</pattern><template><think><srai>NOPX 1055</srai></think><random><li><srai>EXPDEX I GET TO TAKE <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i take *</srai> -->
+<category><pattern>I GET TO TALK *</pattern><template><think><srai>NOPX 1341</srai></think><random><li><srai>EXPDEX I GET TO TALK <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i talk *</srai> -->
+<category><pattern>I GET TO USE *</pattern><template><think><srai>NOPX 1278</srai></think><random><li><srai>EXPDEX I GET TO USE <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i use *</srai> -->
+<category><pattern>I GET TO WATCH *</pattern><template><think><srai>NOPX 1436</srai></think><random><li><srai>EXPDEX I GET TO WATCH <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i watch *</srai> -->
+<category><pattern>I GET TO WEAR *</pattern><template><think><srai>NOPX 923</srai></think><random><li><srai>EXPDEX I GET TO WEAR <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i wear *</srai> -->
+<category><pattern>I GET TO WORK *</pattern><template><think><srai>NOPX 2873</srai></think><random><li><srai>EXPDEX I GET TO WORK <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i work *</srai> -->
+<category><pattern>I GET TO KNOW YOU *</pattern><template><think><srai>NOPX 523</srai></think><random><li><srai>EXPDEX I GET TO KNOW YOU <star/></srai></li></random></template></category>
+<!-- p=-127.032549825885 	:who lets you? <srai>i know you *</srai> -->
+<category><pattern>I GET TO UNK *</pattern><template><think><srai>NOPX 696</srai></think><random><li><srai>EXPDEX I GET TO UNK <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who lets you? <srai>i unk *</srai> -->
+<category><pattern>I GET TO DO IT *</pattern><template><think><srai>NOPX 4008</srai></think><random><li><srai>EXPDEX I GET TO DO IT <star/></srai></li></random></template></category>
+<!-- p=-127.032549825885 	:who lets you? <srai>i do it *</srai> -->
+<category><pattern>I GET TO DO MORE *</pattern><template><think><srai>NOPX 460</srai></think><random><li><srai>EXPDEX I GET TO DO MORE <star/></srai></li></random></template></category>
+<!-- p=-127.032549825885 	:who lets you? <srai>i do more *</srai> -->
+<category><pattern>I GET TO DO THEM *</pattern><template><think><srai>NOPX 606</srai></think><random><li><srai>EXPDEX I GET TO DO THEM <star/></srai></li></random></template></category>
+<!-- p=-127.032549825885 	:who lets you? <srai>i do them *</srai> -->
+<category><pattern>I GET TO DRIVE IT *</pattern><template><think><srai>NOPX 409</srai></think><random><li><srai>EXPDEX I GET TO DRIVE IT <star/></srai></li></random></template></category>
+<!-- p=-127.032549825885 	:who lets you? <srai>i drive it *</srai> -->
+<category><pattern>I GET TO ENJOY IT *</pattern><template><think><srai>NOPX 548</srai></think><random><li><srai>EXPDEX I GET TO ENJOY IT <star/></srai></li></random></template></category>
+<!-- p=-127.032549825885 	:who lets you? <srai>i enjoy it *</srai> -->
+<category><pattern>I GET TO HEAR IT *</pattern><template><think><srai>NOPX 498</srai></think><random><li><srai>EXPDEX I GET TO HEAR IT <star/></srai></li></random></template></category>
+<!-- p=-127.032549825885 	:who lets you? <srai>i hear it *</srai> -->
+<category><pattern>I GET TO HEAVEN I *</pattern><template><think><srai>NOPX 1353</srai></think><random><li><srai>EXPDEX I GET TO HEAVEN I <star/></srai></li></random></template></category>
+<!-- p=-127.032549825885 	:who lets you? <srai>i heaven i *</srai> -->
+<category><pattern>I GET TO KEEP IT *</pattern><template><think><srai>NOPX 1138</srai></think><random><li><srai>EXPDEX I GET TO KEEP IT <star/></srai></li></random></template></category>
+<!-- p=-127.032549825885 	:who lets you? <srai>i keep it *</srai> -->
+<category><pattern>I GET TO KNOW HIM *</pattern><template><think><srai>NOPX 918</srai></think><random><li><srai>EXPDEX I GET TO KNOW HIM <star/></srai></li></random></template></category>
+<!-- p=-127.032549825885 	:who lets you? <srai>i know him *</srai> -->
+<category><pattern>I GET TO KNOW MORE *</pattern><template><think><srai>NOPX 715</srai></think><random><li><srai>EXPDEX I GET TO KNOW MORE <star/></srai></li></random></template></category>
+<!-- p=-127.032549825885 	:who lets you? <srai>i know more *</srai> -->
+<category><pattern>I GET TO KNOW THEM *</pattern><template><think><srai>NOPX 2877</srai></think><random><li><srai>EXPDEX I GET TO KNOW THEM <star/></srai></li></random></template></category>
+<!-- p=-127.032549825885 	:who lets you? <srai>i know them *</srai> -->
+<category><pattern>I GET TO KNOW YA *</pattern><template><think><srai>NOPX 407</srai></think><random><li><srai>EXPDEX I GET TO KNOW YA <star/></srai></li></random></template></category>
+<!-- p=-127.032549825885 	:who lets you? <srai>i know ya *</srai> -->
+<category><pattern>I GET TO KNOW YOU *</pattern><template><think><srai>NOPX 7942</srai></think><random><li><srai>EXPDEX I GET TO KNOW YOU <star/></srai></li></random></template></category>
+<!-- p=-127.032549825885 	:who lets you? <srai>i know you *</srai> -->
+<category><pattern>I GET TO LEARN MORE *</pattern><template><think><srai>NOPX 436</srai></think><random><li><srai>EXPDEX I GET TO LEARN MORE <star/></srai></li></random></template></category>
+<!-- p=-127.032549825885 	:who lets you? <srai>i learn more *</srai> -->
+<category><pattern>I GET TO MEET HIM *</pattern><template><think><srai>NOPX 792</srai></think><random><li><srai>EXPDEX I GET TO MEET HIM <star/></srai></li></random></template></category>
+<!-- p=-127.032549825885 	:who lets you? <srai>i meet him *</srai> -->
+<category><pattern>I GET TO MEET THEM *</pattern><template><think><srai>NOPX 1192</srai></think><random><li><srai>EXPDEX I GET TO MEET THEM <star/></srai></li></random></template></category>
+<!-- p=-127.032549825885 	:who lets you? <srai>i meet them *</srai> -->
+<category><pattern>I GET TO MEET YOU *</pattern><template><think><srai>NOPX 1268</srai></think><random><li><srai>EXPDEX I GET TO MEET YOU <star/></srai></li></random></template></category>
+<!-- p=-127.032549825885 	:who lets you? <srai>i meet you *</srai> -->
+<category><pattern>I GET TO PLAY IT *</pattern><template><think><srai>NOPX 562</srai></think><random><li><srai>EXPDEX I GET TO PLAY IT <star/></srai></li></random></template></category>
+<!-- p=-127.032549825885 	:who lets you? <srai>i play it *</srai> -->
+<category><pattern>I GET TO READ IT *</pattern><template><think><srai>NOPX 767</srai></think><random><li><srai>EXPDEX I GET TO READ IT <star/></srai></li></random></template></category>
+<!-- p=-127.032549825885 	:who lets you? <srai>i read it *</srai> -->
+<category><pattern>I GET TO SAY I *</pattern><template><think><srai>NOPX 477</srai></think><random><li><srai>EXPDEX I GET TO SAY I <star/></srai></li></random></template></category>
+<!-- p=-127.032549825885 	:who lets you? <srai>i say i *</srai> -->
+<category><pattern>I GET TO SEE HIM *</pattern><template><think><srai>NOPX 3920</srai></think><random><li><srai>EXPDEX I GET TO SEE HIM <star/></srai></li></random></template></category>
+<!-- p=-127.032549825885 	:who lets you? <srai>i see him *</srai> -->
+<category><pattern>I GET TO SEE IT *</pattern><template><think><srai>NOPX 3345</srai></think><random><li><srai>EXPDEX I GET TO SEE IT <star/></srai></li></random></template></category>
+<!-- p=-127.032549825885 	:who lets you? <srai>i see it *</srai> -->
+<category><pattern>I GET TO SEE MORE *</pattern><template><think><srai>NOPX 878</srai></think><random><li><srai>EXPDEX I GET TO SEE MORE <star/></srai></li></random></template></category>
+<!-- p=-127.032549825885 	:who lets you? <srai>i see more *</srai> -->
+<category><pattern>I GET TO SEE THEM *</pattern><template><think><srai>NOPX 3935</srai></think><random><li><srai>EXPDEX I GET TO SEE THEM <star/></srai></li></random></template></category>
+<!-- p=-127.032549825885 	:who lets you? <srai>i see them *</srai> -->
+<category><pattern>I GET TO SEE YOU *</pattern><template><think><srai>NOPX 7002</srai></think><random><li><srai>EXPDEX I GET TO SEE YOU <star/></srai></li></random></template></category>
+<!-- p=-127.032549825885 	:who lets you? <srai>i see you *</srai> -->
+<category><pattern>I GET TO SHARE IT *</pattern><template><think><srai>NOPX 479</srai></think><random><li><srai>EXPDEX I GET TO SHARE IT <star/></srai></li></random></template></category>
+<!-- p=-127.032549825885 	:who lets you? <srai>i share it *</srai> -->
+<category><pattern>I GET TO SPEND IT *</pattern><template><think><srai>NOPX 675</srai></think><random><li><srai>EXPDEX I GET TO SPEND IT <star/></srai></li></random></template></category>
+<!-- p=-127.032549825885 	:who lets you? <srai>i spend it *</srai> -->
+<category><pattern>I GET TO SPEND MORE *</pattern><template><think><srai>NOPX 1044</srai></think><random><li><srai>EXPDEX I GET TO SPEND MORE <star/></srai></li></random></template></category>
+<!-- p=-127.032549825885 	:who lets you? <srai>i spend more *</srai> -->
+<category><pattern>I GET TO TAKE IT *</pattern><template><think><srai>NOPX 519</srai></think><random><li><srai>EXPDEX I GET TO TAKE IT <star/></srai></li></random></template></category>
+<!-- p=-127.032549825885 	:who lets you? <srai>i take it *</srai> -->
+<category><pattern>I GET TO TELL YOU *</pattern><template><think><srai>NOPX 1031</srai></think><random><li><srai>EXPDEX I GET TO TELL YOU <star/></srai></li></random></template></category>
+<!-- p=-127.032549825885 	:who lets you? <srai>i tell you *</srai> -->
+<category><pattern>I GET TO TRY IT *</pattern><template><think><srai>NOPX 423</srai></think><random><li><srai>EXPDEX I GET TO TRY IT <star/></srai></li></random></template></category>
+<!-- p=-127.032549825885 	:who lets you? <srai>i try it *</srai> -->
+<category><pattern>I GET TO USE IT *</pattern><template><think><srai>NOPX 1252</srai></think><random><li><srai>EXPDEX I GET TO USE IT <star/></srai></li></random></template></category>
+<!-- p=-127.032549825885 	:who lets you? <srai>i use it *</srai> -->
+<category><pattern>I GET TO WATCH IT *</pattern><template><think><srai>NOPX 938</srai></think><random><li><srai>EXPDEX I GET TO WATCH IT <star/></srai></li></random></template></category>
+<!-- p=-127.032549825885 	:who lets you? <srai>i watch it *</srai> -->
+<category><pattern>I GET TO WATCH THEM *</pattern><template><think><srai>NOPX 536</srai></think><random><li><srai>EXPDEX I GET TO WATCH THEM <star/></srai></li></random></template></category>
+<!-- p=-127.032549825885 	:who lets you? <srai>i watch them *</srai> -->
+<category><pattern>I GET TO WORK I *</pattern><template><think><srai>NOPX 1007</srai></think><random><li><srai>EXPDEX I GET TO WORK I <star/></srai></li></random></template></category>
+<!-- p=-127.032549825885 	:who lets you? <srai>i work i *</srai> -->
+<category><pattern>I GET TO GO BACK *</pattern><template><think><srai>NOPX 540</srai></think><random><li><srai>EXPDEX I GET TO GO BACK <star/></srai></li></random></template></category>
+<!-- p=-127.032549825885 	:who lets you? <srai>i go back *</srai> -->
+<category><pattern>I GET TO GO HOME *</pattern><template><think><srai>NOPX 817</srai></think><random><li><srai>EXPDEX I GET TO GO HOME <star/></srai></li></random></template></category>
+<!-- p=-127.032549825885 	:who lets you? <srai>i go home *</srai> -->
+<category><pattern>I GET TO GO TO *</pattern><template><think><srai>NOPX 3177</srai></think><random><li><srai>EXPDEX I GET TO GO TO <star/></srai></li></random></template></category>
+<!-- p=-127.032549825885 	:who lets you? <srai>i go to *</srai> -->
+<category><pattern>I GET TO KNOW SOMEONE *</pattern><template><think><srai>NOPX 1225</srai></think><random><li><srai>EXPDEX I GET TO KNOW SOMEONE <star/></srai></li></random></template></category>
+<!-- p=-127.032549825885 	:who lets you? <srai>i know someone *</srai> -->
+<category><pattern>I GET TO LISTEN TO *</pattern><template><think><srai>NOPX 464</srai></think><random><li><srai>EXPDEX I GET TO LISTEN TO <star/></srai></li></random></template></category>
+<!-- p=-127.032549825885 	:who lets you? <srai>i listen to *</srai> -->
+<category><pattern>I GET TO TALK TO *</pattern><template><think><srai>NOPX 1080</srai></think><random><li><srai>EXPDEX I GET TO TALK TO <star/></srai></li></random></template></category>
+<!-- p=-127.032549825885 	:who lets you? <srai>i talk to *</srai> -->
+</aiml>

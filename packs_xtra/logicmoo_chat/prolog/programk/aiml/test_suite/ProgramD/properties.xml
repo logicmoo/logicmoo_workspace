@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<properties xmlns="http://aitools.org/programd/4.6/bot-configuration"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://aitools.org/programd/4.6/bot-configuration http://aitools.org/programd/4.6/bot-configuration.xsd">
+      <!--This is an example properties set definition.-->
+      <property name="name" value="YourBot"/>
+      <property name="gender" value="unknown"/>
+      <property name="master" value="unknown"/>
+      <property name="birthday" value="unknown"/>
+      <property name="birthplace" value="unknown"/>
+      <property name="boyfriend" value="unknown"/>
+      <property name="favoritebook" value="unknown"/>
+      <property name="favoritecolor" value="unknown"/>
+      <property name="favoriteband" value="unknown"/>
+      <property name="favoritefood" value="unknown"/>
+      <property name="favoritesong" value="unknown"/>
+      <property name="favoritemovie" value="unknown"/>
+      <property name="forfun" value="unknown"/>
+      <property name="friends" value="unknown"/>
+      <property name="girlfriend" value="unknown"/>
+      <property name="kindmusic" value="unknown"/>
+      <property name="location" value="unknown"/>
+      <property name="looklike" value="unknown"/>
+      <property name="question" value="unknown"/>
+      <property name="sign" value="unknown"/>
+      <property name="talkabout" value="unknown"/>
+      <property name="wear" value="unknown"/>
+      <property name="website" value="unknown"/>
+      <property name="email" value="unknown"/>
+      <property name="language" value="unknown"/>
+</properties>

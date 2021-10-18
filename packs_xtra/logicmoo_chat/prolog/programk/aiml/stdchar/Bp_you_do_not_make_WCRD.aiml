@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<aiml>
+
+<!-- bot B_Reduce.aiml (137916) mp=-320.000209518223: YOU DO NOT MAKE * -->
+
+<!-- MINSEQ: mp=-320.000209518223: do you know any robots who make the  do you make the  -->
+<category><pattern>EXPDEX YOU DO NOT MAKE *</pattern><template>Do you know anyone who make <set name="it"><set name="topic"><person/></set></set>? <srai>DO YOU MAKE <star/></srai></template></category>
+<category><pattern>YOU DO NOT MAKE *</pattern><template><srai>EXPDEX YOU DO NOT MAKE <star/></srai></template></category>
+<category><pattern>YOU DO NOT MAKE IT *</pattern><template><think><srai>NOPX 457</srai></think><random><li><srai>EXPDEX YOU DO NOT MAKE IT <star/></srai></li></random></template></category>
+<!-- p=-313.476221021351 	:do you know any robots who make <set name="it"><set name="topic">it *</set></set>? <srai>do you make it *</srai> -->
+<category><pattern>YOU DO NOT MAKE A *</pattern><template><think><srai>NOPX 2336</srai></think><random><li><srai>EXPDEX YOU DO NOT MAKE A <star/></srai></li></random></template></category>
+<!-- p=-317.519850872845 	:do you know any robots who make <set name="it"><set name="topic">a *</set></set>? <srai>do you make a *</srai> -->
+<category><pattern>YOU DO NOT MAKE ANY *</pattern><template><think><srai>NOPX 1555</srai></think><random><li><srai>EXPDEX YOU DO NOT MAKE ANY <star/></srai></li></random></template></category>
+<!-- p=-310.632994836459 	:do you know any robots who make <set name="it"><set name="topic">any *</set></set>? <srai>do you make any *</srai> -->
+<category><pattern>YOU DO NOT MAKE FRIENDS *</pattern><template><think><srai>NOPX 445</srai></think><random><li><srai>EXPDEX YOU DO NOT MAKE FRIENDS <star/></srai></li></random></template></category>
+<!-- p=-309.664476581498 	:do you know any robots who make <set name="it"><set name="topic">friends *</set></set>? <srai>do you make friends *</srai> -->
+<category><pattern>YOU DO NOT MAKE IT *</pattern><template><think><srai>NOPX 1051</srai></think><random><li><srai>EXPDEX YOU DO NOT MAKE IT <star/></srai></li></random></template></category>
+<!-- p=-313.476221021351 	:do you know any robots who make <set name="it"><set name="topic">it *</set></set>? <srai>do you make it *</srai> -->
+<category><pattern>YOU DO NOT MAKE ME *</pattern><template><think><srai>NOPX 552</srai></think><random><li><srai>EXPDEX YOU DO NOT MAKE ME <star/></srai></li></random></template></category>
+<!-- p=-309.77466018886 	:do you know any robots who make <set name="it"><set name="topic">me *</set></set>? <srai>do you make me *</srai> -->
+<category><pattern>YOU DO NOT MAKE MONEY *</pattern><template><think><srai>NOPX 716</srai></think><random><li><srai>EXPDEX YOU DO NOT MAKE MONEY <star/></srai></li></random></template></category>
+<!-- p=-309.664476581498 	:do you know any robots who make <set name="it"><set name="topic">money *</set></set>? <srai>do you make money *</srai> -->
+<category><pattern>YOU DO NOT MAKE PEOPLE *</pattern><template><think><srai>NOPX 445</srai></think><random><li><srai>EXPDEX YOU DO NOT MAKE PEOPLE <star/></srai></li></random></template></category>
+<!-- p=-309.664476581498 	:do you know any robots who make <set name="it"><set name="topic">people *</set></set>? <srai>do you make people *</srai> -->
+<category><pattern>YOU DO NOT MAKE SENSE *</pattern><template><think><srai>NOPX 937</srai></think><random><li><srai>EXPDEX YOU DO NOT MAKE SENSE <star/></srai></li></random></template></category>
+<!-- p=-309.664476581498 	:do you know any robots who make <set name="it"><set name="topic">sense *</set></set>? <srai>do you make sense *</srai> -->
+<category><pattern>YOU DO NOT MAKE THE *</pattern><template><think><srai>NOPX 1332</srai></think><random><li><srai>EXPDEX YOU DO NOT MAKE THE <star/></srai></li></random></template></category>
+<!-- p=-320.000209518223 	:do you know any robots who make <set name="it"><set name="topic">the *</set></set>? <srai>do you make the *</srai> -->
+<category><pattern>YOU DO NOT MAKE UP *</pattern><template><think><srai>NOPX 478</srai></think><random><li><srai>EXPDEX YOU DO NOT MAKE UP <star/></srai></li></random></template></category>
+<!-- p=-309.850710280469 	:do you know any robots who make <set name="it"><set name="topic">up *</set></set>? <srai>do you make up *</srai> -->
+<category><pattern>YOU DO NOT MAKE YOUR *</pattern><template><think><srai>NOPX 825</srai></think><random><li><srai>EXPDEX YOU DO NOT MAKE YOUR <star/></srai></li></random></template></category>
+<!-- p=-312.827311418141 	:do you know any robots who make <set name="it"><set name="topic">your *</set></set>? <srai>do you make your *</srai> -->
+<category><pattern>YOU DO NOT MAKE ME *</pattern><template><think><srai>NOPX 506</srai></think><random><li><srai>EXPDEX YOU DO NOT MAKE ME <star/></srai></li></random></template></category>
+<!-- p=-309.77466018886 	:do you know any robots who make <set name="it"><set name="topic">me *</set></set>? <srai>do you make me *</srai> -->
+<category><pattern>YOU DO NOT MAKE A *</pattern><template><think><srai>NOPX 23421</srai></think><random><li><srai>EXPDEX YOU DO NOT MAKE A <star/></srai></li></random></template></category>
+<!-- p=-317.519850872845 	:do you know any robots who make <set name="it"><set name="topic">a *</set></set>? <srai>do you make a *</srai> -->
+<category><pattern>YOU DO NOT MAKE ADDITIONAL *</pattern><template><think><srai>NOPX 5395</srai></think><random><li><srai>EXPDEX YOU DO NOT MAKE ADDITIONAL <star/></srai></li></random></template></category>
+<!-- p=-309.664476581498 	:do you know any robots who make <set name="it"><set name="topic">additional *</set></set>? <srai>do you make additional *</srai> -->
+<category><pattern>YOU DO NOT MAKE AN *</pattern><template><think><srai>NOPX 5741</srai></think><random><li><srai>EXPDEX YOU DO NOT MAKE AN <star/></srai></li></random></template></category>
+<!-- p=-312.098031812782 	:do you know any robots who make <set name="it"><set name="topic">an *</set></set>? <srai>do you make an *</srai> -->
+<category><pattern>YOU DO NOT MAKE ANY *</pattern><template><think><srai>NOPX 14482</srai></think><random><li><srai>EXPDEX YOU DO NOT MAKE ANY <star/></srai></li></random></template></category>
+<!-- p=-310.632994836459 	:do you know any robots who make <set name="it"><set name="topic">any *</set></set>? <srai>do you make any *</srai> -->
+<category><pattern>YOU DO NOT MAKE AT *</pattern><template><think><srai>NOPX 757</srai></think><random><li><srai>EXPDEX YOU DO NOT MAKE AT <star/></srai></li></random></template></category>
+<!-- p=-312.63222023138 	:do you know any robots who make <set name="it"><set name="topic">at *</set></set>? <srai>do you make at *</srai> -->
+<category><pattern>YOU DO NOT MAKE CAR *</pattern><template><think><srai>NOPX 1215</srai></think><random><li><srai>EXPDEX YOU DO NOT MAKE CAR <star/></srai></li></random></template></category>
+<!-- p=-309.824244452067 	:do you know any robots who make <set name="it"><set name="topic">car *</set></set>? <srai>do you make car *</srai> -->
+<category><pattern>YOU DO NOT MAKE CHANGES *</pattern><template><think><srai>NOPX 765</srai></think><random><li><srai>EXPDEX YOU DO NOT MAKE CHANGES <star/></srai></li></random></template></category>
+<!-- p=-309.664476581498 	:do you know any robots who make <set name="it"><set name="topic">changes *</set></set>? <srai>do you make changes *</srai> -->
+<category><pattern>YOU DO NOT MAKE DECISIONS *</pattern><template><think><srai>NOPX 419</srai></think><random><li><srai>EXPDEX YOU DO NOT MAKE DECISIONS <star/></srai></li></random></template></category>
+<!-- p=-309.664476581498 	:do you know any robots who make <set name="it"><set name="topic">decisions *</set></set>? <srai>do you make decisions *</srai> -->
+<category><pattern>YOU DO NOT MAKE ENOUGH *</pattern><template><think><srai>NOPX 1466</srai></think><random><li><srai>EXPDEX YOU DO NOT MAKE ENOUGH <star/></srai></li></random></template></category>
+<!-- p=-309.664476581498 	:do you know any robots who make <set name="it"><set name="topic">enough *</set></set>? <srai>do you make enough *</srai> -->
+<category><pattern>YOU DO NOT MAKE FRIENDS *</pattern><template><think><srai>NOPX 528</srai></think><random><li><srai>EXPDEX YOU DO NOT MAKE FRIENDS <star/></srai></li></random></template></category>
+<!-- p=-309.664476581498 	:do you know any robots who make <set name="it"><set name="topic">friends *</set></set>? <srai>do you make friends *</srai> -->
+<category><pattern>YOU DO NOT MAKE FUN *</pattern><template><think><srai>NOPX 474</srai></think><random><li><srai>EXPDEX YOU DO NOT MAKE FUN <star/></srai></li></random></template></category>
+<!-- p=-309.664476581498 	:do you know any robots who make <set name="it"><set name="topic">fun *</set></set>? <srai>do you make fun *</srai> -->
+<category><pattern>YOU DO NOT MAKE GOOD *</pattern><template><think><srai>NOPX 475</srai></think><random><li><srai>EXPDEX YOU DO NOT MAKE GOOD <star/></srai></li></random></template></category>
+<!-- p=-309.664476581498 	:do you know any robots who make <set name="it"><set name="topic">good *</set></set>? <srai>do you make good *</srai> -->
+<category><pattern>YOU DO NOT MAKE HIM *</pattern><template><think><srai>NOPX 600</srai></think><random><li><srai>EXPDEX YOU DO NOT MAKE HIM <star/></srai></li></random></template></category>
+<!-- p=-309.664476581498 	:do you know any robots who make <set name="it"><set name="topic">him *</set></set>? <srai>do you make him *</srai> -->
+<category><pattern>YOU DO NOT MAKE IT *</pattern><template><think><srai>NOPX 16904</srai></think><random><li><srai>EXPDEX YOU DO NOT MAKE IT <star/></srai></li></random></template></category>
+<!-- p=-313.476221021351 	:do you know any robots who make <set name="it"><set name="topic">it *</set></set>? <srai>do you make it *</srai> -->
+<category><pattern>YOU DO NOT MAKE JUDGMENTS *</pattern><template><think><srai>NOPX 939</srai></think><random><li><srai>EXPDEX YOU DO NOT MAKE JUDGMENTS <star/></srai></li></random></template></category>
+<!-- p=-309.664476581498 	:do you know any robots who make <set name="it"><set name="topic">judgments *</set></set>? <srai>do you make judgments *</srai> -->
+<category><pattern>YOU DO NOT MAKE MANY *</pattern><template><think><srai>NOPX 419</srai></think><random><li><srai>EXPDEX YOU DO NOT MAKE MANY <star/></srai></li></random></template></category>
+<!-- p=-309.664476581498 	:do you know any robots who make <set name="it"><set name="topic">many *</set></set>? <srai>do you make many *</srai> -->
+<category><pattern>YOU DO NOT MAKE ME *</pattern><template><think><srai>NOPX 2263</srai></think><random><li><srai>EXPDEX YOU DO NOT MAKE ME <star/></srai></li></random></template></category>
+<!-- p=-309.77466018886 	:do you know any robots who make <set name="it"><set name="topic">me *</set></set>? <srai>do you make me *</srai> -->
+<category><pattern>YOU DO NOT MAKE MISTAKES *</pattern><template><think><srai>NOPX 2040</srai></think><random><li><srai>EXPDEX YOU DO NOT MAKE MISTAKES <star/></srai></li></random></template></category>
+<!-- p=-309.664476581498 	:do you know any robots who make <set name="it"><set name="topic">mistakes *</set></set>? <srai>do you make mistakes *</srai> -->
+<category><pattern>YOU DO NOT MAKE MONEY *</pattern><template><think><srai>NOPX 3219</srai></think><random><li><srai>EXPDEX YOU DO NOT MAKE MONEY <star/></srai></li></random></template></category>
+<!-- p=-309.664476581498 	:do you know any robots who make <set name="it"><set name="topic">money *</set></set>? <srai>do you make money *</srai> -->
+<category><pattern>YOU DO NOT MAKE MUCH *</pattern><template><think><srai>NOPX 857</srai></think><random><li><srai>EXPDEX YOU DO NOT MAKE MUCH <star/></srai></li></random></template></category>
+<!-- p=-309.664476581498 	:do you know any robots who make <set name="it"><set name="topic">much *</set></set>? <srai>do you make much *</srai> -->
+<category><pattern>YOU DO NOT MAKE PAYMENT *</pattern><template><think><srai>NOPX 579</srai></think><random><li><srai>EXPDEX YOU DO NOT MAKE PAYMENT <star/></srai></li></random></template></category>
+<!-- p=-309.664476581498 	:do you know any robots who make <set name="it"><set name="topic">payment *</set></set>? <srai>do you make payment *</srai> -->
+<category><pattern>YOU DO NOT MAKE PAYMENTS *</pattern><template><think><srai>NOPX 1286</srai></think><random><li><srai>EXPDEX YOU DO NOT MAKE PAYMENTS <star/></srai></li></random></template></category>
+<!-- p=-309.664476581498 	:do you know any robots who make <set name="it"><set name="topic">payments *</set></set>? <srai>do you make payments *</srai> -->
+<category><pattern>YOU DO NOT MAKE SENSE *</pattern><template><think><srai>NOPX 845</srai></think><random><li><srai>EXPDEX YOU DO NOT MAKE SENSE <star/></srai></li></random></template></category>
+<!-- p=-309.664476581498 	:do you know any robots who make <set name="it"><set name="topic">sense *</set></set>? <srai>do you make sense *</srai> -->
+<category><pattern>YOU DO NOT MAKE SOME *</pattern><template><think><srai>NOPX 559</srai></think><random><li><srai>EXPDEX YOU DO NOT MAKE SOME <star/></srai></li></random></template></category>
+<!-- p=-309.870456484223 	:do you know any robots who make <set name="it"><set name="topic">some *</set></set>? <srai>do you make some *</srai> -->
+<category><pattern>YOU DO NOT MAKE SUCH *</pattern><template><think><srai>NOPX 432</srai></think><random><li><srai>EXPDEX YOU DO NOT MAKE SUCH <star/></srai></li></random></template></category>
+<!-- p=-309.664476581498 	:do you know any robots who make <set name="it"><set name="topic">such *</set></set>? <srai>do you make such *</srai> -->
+<category><pattern>YOU DO NOT MAKE SURE *</pattern><template><think><srai>NOPX 1010</srai></think><random><li><srai>EXPDEX YOU DO NOT MAKE SURE <star/></srai></li></random></template></category>
+<!-- p=-309.664476581498 	:do you know any robots who make <set name="it"><set name="topic">sure *</set></set>? <srai>do you make sure *</srai> -->
+<category><pattern>YOU DO NOT MAKE THAT *</pattern><template><think><srai>NOPX 1760</srai></think><random><li><srai>EXPDEX YOU DO NOT MAKE THAT <star/></srai></li></random></template></category>
+<!-- p=-313.084320207508 	:do you know any robots who make <set name="it"><set name="topic">that *</set></set>? <srai>do you make that *</srai> -->
+<category><pattern>YOU DO NOT MAKE THE *</pattern><template><think><srai>NOPX 18542</srai></think><random><li><srai>EXPDEX YOU DO NOT MAKE THE <star/></srai></li></random></template></category>
+<!-- p=-320.000209518223 	:do you know any robots who make <set name="it"><set name="topic">the *</set></set>? <srai>do you make the *</srai> -->
+<category><pattern>YOU DO NOT MAKE THEM *</pattern><template><think><srai>NOPX 2413</srai></think><random><li><srai>EXPDEX YOU DO NOT MAKE THEM <star/></srai></li></random></template></category>
+<!-- p=-309.664476581498 	:do you know any robots who make <set name="it"><set name="topic">them *</set></set>? <srai>do you make them *</srai> -->
+<category><pattern>YOU DO NOT MAKE THESE *</pattern><template><think><srai>NOPX 1051</srai></think><random><li><srai>EXPDEX YOU DO NOT MAKE THESE <star/></srai></li></random></template></category>
+<!-- p=-309.664476581498 	:do you know any robots who make <set name="it"><set name="topic">these *</set></set>? <srai>do you make these *</srai> -->
+<category><pattern>YOU DO NOT MAKE THINGS *</pattern><template><think><srai>NOPX 550</srai></think><random><li><srai>EXPDEX YOU DO NOT MAKE THINGS <star/></srai></li></random></template></category>
+<!-- p=-309.664476581498 	:do you know any robots who make <set name="it"><set name="topic">things *</set></set>? <srai>do you make things *</srai> -->
+<category><pattern>YOU DO NOT MAKE THIS *</pattern><template><think><srai>NOPX 2378</srai></think><random><li><srai>EXPDEX YOU DO NOT MAKE THIS <star/></srai></li></random></template></category>
+<!-- p=-314.915589663355 	:do you know any robots who make <set name="it"><set name="topic">this *</set></set>? <srai>do you make this *</srai> -->
+<category><pattern>YOU DO NOT MAKE THOSE *</pattern><template><think><srai>NOPX 449</srai></think><random><li><srai>EXPDEX YOU DO NOT MAKE THOSE <star/></srai></li></random></template></category>
+<!-- p=-309.664476581498 	:do you know any robots who make <set name="it"><set name="topic">those *</set></set>? <srai>do you make those *</srai> -->
+<category><pattern>YOU DO NOT MAKE TIME *</pattern><template><think><srai>NOPX 489</srai></think><random><li><srai>EXPDEX YOU DO NOT MAKE TIME <star/></srai></li></random></template></category>
+<!-- p=-310.395671302652 	:do you know any robots who make <set name="it"><set name="topic">time *</set></set>? <srai>do you make time *</srai> -->
+<category><pattern>YOU DO NOT MAKE TOO *</pattern><template><think><srai>NOPX 630</srai></think><random><li><srai>EXPDEX YOU DO NOT MAKE TOO <star/></srai></li></random></template></category>
+<!-- p=-309.664476581498 	:do you know any robots who make <set name="it"><set name="topic">too *</set></set>? <srai>do you make too *</srai> -->
+<category><pattern>YOU DO NOT MAKE UP *</pattern><template><think><srai>NOPX 931</srai></think><random><li><srai>EXPDEX YOU DO NOT MAKE UP <star/></srai></li></random></template></category>
+<!-- p=-309.850710280469 	:do you know any robots who make <set name="it"><set name="topic">up *</set></set>? <srai>do you make up *</srai> -->
+<category><pattern>YOU DO NOT MAKE USE *</pattern><template><think><srai>NOPX 969</srai></think><random><li><srai>EXPDEX YOU DO NOT MAKE USE <star/></srai></li></random></template></category>
+<!-- p=-310.862588616787 	:do you know any robots who make <set name="it"><set name="topic">use *</set></set>? <srai>do you make use *</srai> -->
+<category><pattern>YOU DO NOT MAKE YOUR *</pattern><template><think><srai>NOPX 7811</srai></think><random><li><srai>EXPDEX YOU DO NOT MAKE YOUR <star/></srai></li></random></template></category>
+<!-- p=-312.827311418141 	:do you know any robots who make <set name="it"><set name="topic">your *</set></set>? <srai>do you make your *</srai> -->
+<category><pattern>YOU DO NOT MAKE YOURSELF *</pattern><template><think><srai>NOPX 1218</srai></think><random><li><srai>EXPDEX YOU DO NOT MAKE YOURSELF <star/></srai></li></random></template></category>
+<!-- p=-309.664476581498 	:do you know any robots who make <set name="it"><set name="topic">yourself *</set></set>? <srai>do you make yourself *</srai> -->
+</aiml>

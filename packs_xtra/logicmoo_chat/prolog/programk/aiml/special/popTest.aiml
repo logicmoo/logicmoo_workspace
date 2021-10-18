@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<aiml>
+
+<category>
+<pattern>PUSHIT * </pattern>
+<template>
+So you say <star/>. That's interesting.
+<think>
+ <push>What about <star/>? </push>
+ <push>Tell me something about <star/>? </push>
+ <push>Why do we need more <star/>? </push>
+ <push>Can you explain <star/>? </push>
+ <push>What makes <star/> so unique? </push>
+</think>
+</template>
+</category>
+
+<category>
+<pattern>POPIT</pattern>
+<template>
+ lets pop it now. <pop>RANDOM CONFUSION LINE</pop>
+</template>
+</category>
+
+</aiml>

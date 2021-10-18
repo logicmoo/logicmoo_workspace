@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<aiml graph="default">
+  
+<!--
+  <category>
+    <pattern>*</pattern>
+    <template>
+      <srai>STDCATCHALL-NEXVER</srai>
+    </template>
+  </category>
+-->
+
+  <category>
+    <pattern>TOELIZA *</pattern>
+    <template>
+      <srai graph="eliza">
+        <star/>
+      </srai>
+    </template>
+  </category>
+
+  <srai graph="eliza">
+      <learn> ../jliza/ </learn>
+  </srai>
+
+   <system>@cloj (setj MyBot.TurnOffSelfListening false)</system>
+   <system>@cloj (setj MyBot.WaitUntilVerbalOutput true)</system>
+</aiml>
+

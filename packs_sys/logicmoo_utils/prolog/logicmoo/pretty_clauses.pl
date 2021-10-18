@@ -610,7 +610,7 @@ ec_portray_now(Term):- atom(Term),!,color_format_maybe(hfg(blue),'~q',[Term]).
 ec_portray_now(Term):- \+ compound(Term),!, color_format_maybe(hfg(cyan),'~q',[Term]).
 %ec_portray_now(Term):- is_list(Term)
 %ec_portray_now(Term):- catch(print_tree(Term),_,fail),!.
-%ec_portray_now(Term):- N =0, \+ in_pp(ansi),!, print_tree(Term), !.
+%ec_portray_now(Term):- N =0, \+ ansi_ansi,!, print_tree(Term), !.
 %ec_portray_now(Term):- catch(pprint_ec_no_newline(green, Term),_,fail),!.
 
 will_need_space(_):- fail.
@@ -958,7 +958,7 @@ last_tag(S,Tag):- ending_tag(Tag),string_concat(_,Tag,S).
 
 print_as_tree(Term):- print_tree(Term).
 
-ansi_ansi:- once(is_pp_set(ansi);\+ is_pp_set(_)),toplevel_pp(ansi).
+ansi_ansi:- notrace((once(is_pp_set(ansi);\+ is_pp_set(_)),toplevel_pp(ansi))).
 
 print_tree(Term):- ansi_ansi,current_output_line_position(Pos),!,print_tab_term(Pos,Term).
 print_tree(Term):-
@@ -1121,12 +1121,14 @@ our_pengine_output(SO):- toplevel_pp(bfly),!,bfly_html_goal(format('<pre>~w </pr
 our_pengine_output(SO):- ttyflush,format('our_pengine_output\n{~w}',[SO]),nl.
 
 
-is_webui:- once(toplevel_pp(http);toplevel_pp(swish);in_pp(http);in_pp(swish);get_print_mode(html)).
+is_webui:- notrace(once(toplevel_pp(http);toplevel_pp(swish);in_pp(http);in_pp(swish);get_print_mode(html))).
 
 %in_bfly_esc:- !, current_predicate(in_bfly_style/2), in_bfly_style(style,'html_esc'), !.
-in_pp(X):- nonvar(X), in_pp(Y), !, X==Y.
-in_pp(X):- is_pp_set(X),!.
-in_pp(Guess):- toplevel_pp(Guess).
+in_pp(X):- notrace(in_pp0(X)).
+
+in_pp0(X):- nonvar(X), in_pp(Y), !, X==Y.
+in_pp0(X):- is_pp_set(X),!.
+in_pp0(Guess):- toplevel_pp(Guess).
 
 pp_set(X):- bfly_set(pp_output,X).
 
@@ -1159,7 +1161,7 @@ pformat(Fmt):- pformat_std(pformat,Fmt), !.
 pformat(Fmt):- in_pp(http), !,pformat_html(pre(Fmt)).
 pformat(Fmt):- pformat_write(Fmt).
 
-pformat_html(_):- in_pp(ansi),!.
+pformat_html(_):- ansi_ansi,!.
 pformat_html(Fmt):- var(Fmt),!,format('~w',[Fmt]).
 pformat_html(PREC):- PREC == pre(:), !, write(':').
 pformat_html(pre(Fmt)):- pformat_string(Fmt,S), !, into_attribute(S,Attr),write(Attr). % print_html(['<pre>',S,'</pre>']).
@@ -1200,7 +1202,7 @@ print_spaces(Need):- pformat_space,M1 is Need -1,print_spaces(M1).
 pformat_space:- write(' ').
 
 pformat_newline:- !,nl.
-pformat_newline:- in_pp(ansi),!,nl.
+pformat_newline:- ansi_ansi,!,nl.
 pformat_newline:- in_pp(bfly),!,write(' <br/>'),nl.
 pformat_newline:- in_pp(html_pre),!,write(' '),nl.
 pformat_newline:- in_pp(http),!,write(' <p/>\n').
@@ -1229,8 +1231,10 @@ bfly:- bfly_set(butterfly,t),bflyw.
 
 pl_span_c(Class):- pformat(html('<span class="pl-~w">',Class)).
 pl_span_e:- pformat(html('</span>')).
-pl_span_goal(Class, Goal):- setup_call_cleanup(pl_span_c(Class),Goal,pl_span_e).
 pl_span_s(Class, Goal):- pl_span_goal(Class, Goal).
+
+pl_span_goal(_, Goal):- ansi_ansi,!,call(Goal).
+pl_span_goal(Class, Goal):- setup_call_cleanup(pl_span_c(Class),Goal,pl_span_e).
 
 pt_s_e(S, Goal, E):- setup_call_cleanup(pformat(S),Goal,pformat(E)).
 
@@ -1248,7 +1252,7 @@ prefix_spaces1(Tab):- \+ integer(Tab), recalc_tab(Tab,   NewTab),!,prefix_spaces
 prefix_spaces1(Tab):- Floor is floor(Tab/2)+1, prefix_spaces0(Floor),!.
 
 */
-using_folding_depth:- \+ in_pp(ansi), nb_current('$use_folding',t).
+using_folding_depth:- \+ ansi_ansi, nb_current('$use_folding',t).
 
 fold_this_round:- using_folding_depth, flag('$fold_this_round',N,N), N=1.
 
@@ -1296,6 +1300,7 @@ pformat_e_args(E, Goal):- pformat_ellipsis(E), !, pl_span_goal('args',Goal),!.
 pformat_functor(F):- pl_span_goal('functor',pformat(F)).
 %pformat_functor(F,_):- \+ is_webui, !, pformat_functor(F).
 
+pformat_ellipsis(_):- ansi_ansi,!.
 pformat_ellipsis(E):- fold_this_round, !, pl_span_goal('ellipsis clickprev',ellipsis_html(E)),!.
 pformat_ellipsis(E):- pl_span_goal('ellipsis, clickprev, fold',ellipsis_html(E)),!.
 
@@ -1448,8 +1453,7 @@ pt1(_FS,_Tab,(NPV)) :- NPV=..[OP,N,V], is_colon_mark(OP), atomic(N),
   writeq(N), pformat(' '), pformat(OP),pformat(' '), print_tree(V),!.
 
 
-pt1(FS,Tab,(NPV)) :- NPV=..[OP,N,V], is_colon_mark(OP), current_op(_,yfx,OP),
-!,
+pt1(FS,Tab,(NPV)) :- NPV=..[OP,N,V], is_colon_mark(OP), current_op(_,yfx,OP), !,
     print_tab_term(Tab,[OP|FS], N),
     format(' '), pformat(OP), pformat(' '),
     print_tab_term(Tab+2,V).
@@ -1458,7 +1462,7 @@ pt1(FS,Tab,(NPV)) :- NPV=..[OP,N,V], is_colon_mark(OP),
   print_tab_term(Tab,[OP|FS], N),
   pl_span_goal('functor', (
     pformat(' '), pformat(OP), pformat('  '))),
-    pformat_ellipsis(V),prefix_spaces(Tab+5),
+    (ansi_ansi->true; (pformat_ellipsis(V),prefix_spaces(Tab+5))),
     pl_span_goal('args', (prefix_spaces(Tab+2), print_tree( V ))),!.
     
 
@@ -1660,12 +1664,13 @@ pt_cont_args(Sep1, Tab,Sep, Mid, FS,[A|As]) :- !,
 :- export(print_tab_term/2).
 :- export(print_tab_term/3).
 
-is_arity_lt1(A) :- \+ compound(A),!.
-is_arity_lt1(A) :- compound_name_arity(A,_,0),!.
-is_arity_lt1(A) :- functor(A,'$VAR',_),!.
-is_arity_lt1(V) :- is_dict(V), !, fail.
-is_arity_lt1(S) :- is_charlist(S),!.
-is_arity_lt1(S) :- is_codelist(S),!.
+is_arity_lt1(S):- notrace(is_arity_lt10(S)).
+is_arity_lt10(A) :- \+ compound(A),!.
+is_arity_lt10(A) :- compound_name_arity(A,_,0),!.
+is_arity_lt10(A) :- functor(A,'$VAR',_),!.
+is_arity_lt10(V) :- is_dict(V), !, fail.
+is_arity_lt10(S) :- is_charlist(S),!.
+is_arity_lt10(S) :- is_codelist(S),!.
 
 on_x_ignore(G):- catch(G,E,(dumpST,writeq(E=on_x_ignore(G)))).
 
@@ -1675,23 +1680,25 @@ as_is_cmpd(Term) :- Term=ref(_),!.
 as_is_cmpd(Term) :- Term=element(_,_,List),List==[],!.
 
 
-as_is(V):- var(V).
-as_is(V) :- is_dict(V), !, fail.
-as_is(A) :- is_arity_lt1(A), !.
-as_is(A) :- functor(A,F,_), simple_f(F), !.
+as_is(V):-notrace(as_is0(V)).
 
-as_is(A) :- is_list(A),length(A,L),L>4,!,fail.
-as_is(A) :- is_list(A), maplist(is_arity_lt1,A),!.
-as_is([A]) :- is_list(A),length(A,L),on_x_ignore(L<2),!.
-as_is(A) :- functor(A,F,2), simple_fs(F),arg(2,A,One),atomic(One),!.
-as_is(A):- \+ is_list(A), compound_name_arguments(A,_,L),as_is(L),!.
-as_is('_'(_)) :- !.
-as_is(Q) :- is_quoted_pt(Q).
+as_is0(V):- var(V).
+as_is0(V) :- is_dict(V), !, fail.
+as_is0(A) :- is_arity_lt1(A), !.
+as_is0(A) :- functor(A,F,_), simple_f(F), !.
 
-as_is(not(A)) :- !,as_is(A).
-as_is(A) :- A=..[_|S], maplist(is_arity_lt1,S),length(S,SL),SL<5, !.
-as_is(A) :- compound_name_arguments(A,PlusMinus,List),member(PlusMinus,[(+),(-)]),maplist(as_is,List).
-as_is(A) :- A=..[_,B|S], fail, as_is(B), maplist(is_arity_lt1,S), !.
+as_is0(A) :- is_list(A),length(A,L),L>4,!,fail.
+as_is0(A) :- is_list(A), maplist(is_arity_lt1,A),!.
+as_is0([A]) :- is_list(A),length(A,L),on_x_ignore(L<2),!.
+as_is0(A) :- functor(A,F,2), simple_fs(F),arg(2,A,One),atomic(One),!.
+as_is0(A):- \+ is_list(A), compound_name_arguments(A,_,L),as_is0(L),!.
+as_is0('_'(_)) :- !.
+as_is0(Q) :- is_quoted_pt(Q).
+
+as_is0(not(A)) :- !,as_is0(A).
+as_is0(A) :- A=..[_|S], maplist(is_arity_lt1,S),length(S,SL),SL<5, !.
+as_is0(A) :- compound_name_arguments(A,PlusMinus,List),member(PlusMinus,[(+),(-)]),maplist(as_is0,List).
+as_is0(A) :- A=..[_,B|S], fail, as_is0(B), maplist(is_arity_lt1,S), !.
 % as_is(F):- simple_arg(F), !.
 
 is_quoted_pt(Q):- nonvar(Q), fail, catch(call(call,quote80(Q)),_,fail),!.

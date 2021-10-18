@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<listeners xmlns="http://aitools.org/programd/4.6/bot-configuration"
+    xmlns:d="http://aitools.org/programd/4.6"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://aitools.org/programd/4.6/bot-configuration http://aitools.org/programd/4.6/bot-configuration.xsd">
+    <listener class="org.aitools.programd.listener.AIMListener" enabled="false">
+        <parameter name="userid" value="your-userid"/>
+        <parameter name="password" value="your-password"/>
+    </listener>
+    <listener class="org.aitools.programd.listener.IRCListener" enabled="false">
+        <parameter name="host" value="irc.freenode.net"/>
+        <parameter name="port" value="6667"/>
+        <parameter name="nick" value="your-nick"/>
+        <parameter name="password" value="your-password"/>
+        <parameter name="channel" value="#some-channel"/>
+    </listener>
+    <listener class="org.aitools.programd.listener.YahooListener" enabled="false">
+        <parameter name="userid" value="your-userid"/>
+        <parameter name="password" value="your-password"/>
+    </listener>
+</listeners>

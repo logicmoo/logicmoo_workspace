@@ -367,14 +367,16 @@ discord_say_file(Channel,File,JSON):-
    "curl -H 'Authorization: ~w' -H 'User-Agent: DiscordBot' -F 'payload_json=~w' -F 'filename=@~w' ~w/channels/~w/messages",
    [Token,Str,File,"https://discord.com/api/v9", Channel]), 
  ignore((catch((
+  shello(S,Output),
+  string_to_dict(Output,Dict),
+  discord_add(gateway,Dict)),E,(wdmsg(E=S),fail)))),!.
+
+shello(S):- shello(S,Output),write('\n'),write(Output).
+shello(S,Output):-
  setup_call_cleanup(
    process_create(path(bash),['-c',S],[stdout(pipe(Out))]),
    read_string(Out, _, Output),
-   close(Out)),
- string_to_dict(Output,Dict),
- discord_add(gateway,Dict)),E,(wdmsg(E=S),fail)))),!.
-
-
+   close(Out)).
 /*
   Dict=
     _{content: StrO,

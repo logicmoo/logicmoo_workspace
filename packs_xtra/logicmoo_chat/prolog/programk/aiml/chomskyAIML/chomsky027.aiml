@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<aiml>
+
+<!-- Complies with AIML 1.0 Tag Set Specification -->
+<!-- as adopted by the ALICE A.I. Foundation.  -->
+<!-- Annotated Version PREDICATES updated Fri Jul 25 2003  -->
+
+<category>
+<pattern>GET CLIENT PREDICATES</pattern>
+<template>
+
+Age: <get name="age"/>,
+Best Friend: <get name="bestfriend"/>,
+Birthday: <get name="birthday"/>,
+Birthplace: <get name="birthplace"/>,
+Boyfriend: <get name="boyfriend"/>,
+Brother: <get name="brother"/>,
+Cat: <get name="cat"/>,
+Dog: <get name="dog"/>,
+Does: <get name="does"/>
+Father: <get name="father"/>,
+Favband:  <get name="favband"/>,
+Favcolor:  <get name="favcolor"/>,
+Favfood:  <get name="favfood"/>,
+Favmovie: <get name="favmovie"/>,
+Favsong: <get name="favsong"/>,
+Friend: <get name="friend"/>,
+Gender: <get name="gender"/>,
+Girlfriend: <get name="girlfriend"/>,
+Hair: <get name="hair"/>,
+Hobby: <get name="hobby"/>
+Home: <get name="home"/>
+Husband: <get name="husband"/>,
+Job: <get name="job"/>,
+You Like: <get name="like"/>,
+Location:  <get name="location"/>,
+You look like: <get name="looklike"/>,
+Nickname: <get name="nickname"/>,
+Memory: <get name="memory"/>,
+Mother: <get name="mother"/>,
+Name: <get name="name"/>,
+Personality: <get name="personality"/>,
+Religion: <get name="religion"/>
+Sign <get name="sign"/>,
+Sister: <get name="sister"/>,
+Wife: <get name="wife"/>.
+
+</template>
+</category>
+
+<category>
+<pattern>GET BOT PREDICATES</pattern>
+<template>
+
+Bot's Age: <get name="bot_age"/>,
+Bot's Birthday: <get name="bot_birthday"/>,
+Bot's Birthplace: <get name="bot_birthplace"/>,
+
+</template>
+</category>
+
+<category>
+<pattern>SET PREDICATES</pattern>
+<template>
+
+<think>
+<set name="askname">no</set>
+<set name="askage">no</set>
+<set name="askhome">no</set>
+<set name="askquestion">yes</set>
+<set name="age">9999</set>
+<set name="bestfriend">Chummy</set>
+<set name="birthday">St Twinkle's Day</set>
+<set name="birthplace">your local hospital</set>
+<set name="boyfriend">Billy</set>
+<set name="brother">Bro</set>
+<set name="cat">Nice Pussy</set>
+<set name="dog">Good Doggie</set>
+<set name="emotion">OK</set>
+<set name="father">Daddy</set>
+<set name="favband">Queen</set>
+<set name="favcolor">yellow</set>
+<set name="favfood">pasta</set>
+<set name="favmovie">Star Wars</set>
+<set name="favsong">Happy Birthday</set>
+<set name="friend">Sara</set>
+<set name="gender">boy</set>
+<set name="girlfriend">Sara</set>
+<set name="hair">lovely</set>
+<set name="hobby">a very interesting activity</set>
+<set name="home">a lovely place</set>
+<set name="husband">Hubby</set>
+<set name="interesting_topic"><random><li>you and your life</li><li>love</li><li>artificial intelligence</li><li>computers</li><li>me</li><li>you</li><li>human feelings</li><li>science</li><li>astronomy</li><li>pop music</li><li>computer games</li></random></set>
+<set name="heard">where</set>
+<set name="he">he</set>
+<set name="her">her</set>
+<set name="him">him</set>
+<set name="is">a friend</set>
+<set name="it">it</set>
+<set name="job">teacher</set>
+<set name="like">to chat</set>
+<set name="location">planet earth</set>
+<set name="looklike">Adonis</set>
+<set name="memory">nothing</set>
+<set name="meta">set</set>
+<set name="mood">bored</set>
+<set name="mother">Mummy</set>
+<set name="name">My Friend</set>
+<set name="nickname">Pal</set>
+<set name="personality">average</set>
+<set name="religion">Hindu</set>
+<set name="she">she</set>
+<set name="sign">Virgo</set>
+<set name="sister">Sis</set>
+<set name="them">them</set>
+<set name="they">they</set>
+<set name="thought">nothing</set>
+<set name="topic">what we are talking about</set>
+<set name="want">to talk to me</set>
+<set name="we">we</set>
+<set name="wife">Wifey</set>
+
+
+<set name="bot_age"><bot name="age"/></set>
+<set name="bot_birthday">1 July</set>
+<set name="bot_birthplace">England</set>
+
+
+</think>
+The predicates are set.
+</template>
+</category>
+
+
+
+
+<category>
+<pattern>CLIENT PROPERTIES</pattern>
+<template>
+<srai>GET CLIENT PREDICATES</srai>
+</template>
+</category>
+
+</aiml>
+

@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<aiml>
+
+<!-- main H_Default.aiml (172131) mp=-126.280577276536: THAT IS MY * -->
+
+<!-- MINSEQ: mp=-126.280577276536: who gave you your favorite song   -->
+<category><pattern>EXPDEX THAT IS MY *</pattern><template>Who gave you your <person/> ?</template></category>
+<category><pattern>THAT IS MY *</pattern><template><srai>EXPDEX THAT IS MY <star/></srai></template></category>
+<category><pattern>THAT IS MY BOOK *</pattern><template><think><srai>NOPX 452</srai></think><random><li><srai>EXPDEX THAT IS MY BOOK <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your book * ? -->
+<category><pattern>THAT IS MY JOB *</pattern><template><think><srai>NOPX 618</srai></think><random><li><srai>EXPDEX THAT IS MY JOB <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your job * ? -->
+<category><pattern>THAT IS MY LIFE *</pattern><template><think><srai>NOPX 1562</srai></think><random><li><srai>EXPDEX THAT IS MY LIFE <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your life * ? -->
+<category><pattern>THAT IS MY UNK *</pattern><template><think><srai>NOPX 843</srai></think><random><li><srai>EXPDEX THAT IS MY UNK <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your unk * ? -->
+<category><pattern>THAT IS MY ADVICE *</pattern><template><think><srai>NOPX 812</srai></think><random><li><srai>EXPDEX THAT IS MY ADVICE <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your advice * ? -->
+<category><pattern>THAT IS MY ANSWER *</pattern><template><think><srai>NOPX 1209</srai></think><random><li><srai>EXPDEX THAT IS MY ANSWER <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your answer * ? -->
+<category><pattern>THAT IS MY BELIEF *</pattern><template><think><srai>NOPX 967</srai></think><random><li><srai>EXPDEX THAT IS MY BELIEF <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your belief * ? -->
+<category><pattern>THAT IS MY BIRTHDAY *</pattern><template><think><srai>NOPX 453</srai></think><random><li><srai>EXPDEX THAT IS MY BIRTHDAY <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your birthday * ? -->
+<category><pattern>THAT IS MY BODY *</pattern><template><think><srai>NOPX 458</srai></think><random><li><srai>EXPDEX THAT IS MY BODY <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your body * ? -->
+<category><pattern>THAT IS MY BOYFRIEND *</pattern><template><think><srai>NOPX 459</srai></think><random><li><srai>EXPDEX THAT IS MY BOYFRIEND <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your boyfriend * ? -->
+<category><pattern>THAT IS MY BRAIN *</pattern><template><think><srai>NOPX 1215</srai></think><random><li><srai>EXPDEX THAT IS MY BRAIN <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your brain * ? -->
+<category><pattern>THAT IS MY BROTHER *</pattern><template><think><srai>NOPX 459</srai></think><random><li><srai>EXPDEX THAT IS MY BROTHER <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your brother * ? -->
+<category><pattern>THAT IS MY BUSINESS *</pattern><template><think><srai>NOPX 1042</srai></think><random><li><srai>EXPDEX THAT IS MY BUSINESS <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your business * ? -->
+<category><pattern>THAT IS MY CAR *</pattern><template><think><srai>NOPX 410</srai></think><random><li><srai>EXPDEX THAT IS MY CAR <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your car * ? -->
+<category><pattern>THAT IS MY CHOICE *</pattern><template><think><srai>NOPX 1830</srai></think><random><li><srai>EXPDEX THAT IS MY CHOICE <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your choice * ? -->
+<category><pattern>THAT IS MY CONCERN *</pattern><template><think><srai>NOPX 1519</srai></think><random><li><srai>EXPDEX THAT IS MY CONCERN <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your concern * ? -->
+<category><pattern>THAT IS MY CONCLUSION *</pattern><template><think><srai>NOPX 424</srai></think><random><li><srai>EXPDEX THAT IS MY CONCLUSION <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your conclusion * ? -->
+<category><pattern>THAT IS MY CURRENT *</pattern><template><think><srai>NOPX 1186</srai></think><random><li><srai>EXPDEX THAT IS MY CURRENT <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your current * ? -->
+<category><pattern>THAT IS MY DAUGHTER *</pattern><template><think><srai>NOPX 452</srai></think><random><li><srai>EXPDEX THAT IS MY DAUGHTER <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your daughter * ? -->
+<category><pattern>THAT IS MY DAY *</pattern><template><think><srai>NOPX 588</srai></think><random><li><srai>EXPDEX THAT IS MY DAY <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your day * ? -->
+<category><pattern>THAT IS MY DECISION *</pattern><template><think><srai>NOPX 407</srai></think><random><li><srai>EXPDEX THAT IS MY DECISION <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your decision * ? -->
+<category><pattern>THAT IS MY DEFINITION *</pattern><template><think><srai>NOPX 493</srai></think><random><li><srai>EXPDEX THAT IS MY DEFINITION <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your definition * ? -->
+<category><pattern>THAT IS MY DESIRE *</pattern><template><think><srai>NOPX 435</srai></think><random><li><srai>EXPDEX THAT IS MY DESIRE <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your desire * ? -->
+<category><pattern>THAT IS MY DREAM *</pattern><template><think><srai>NOPX 1545</srai></think><random><li><srai>EXPDEX THAT IS MY DREAM <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your dream * ? -->
+<category><pattern>THAT IS MY DUTY *</pattern><template><think><srai>NOPX 485</srai></think><random><li><srai>EXPDEX THAT IS MY DUTY <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your duty * ? -->
+<category><pattern>THAT IS MY ENEMY *</pattern><template><think><srai>NOPX 579</srai></think><random><li><srai>EXPDEX THAT IS MY ENEMY <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your enemy * ? -->
+<category><pattern>THAT IS MY EXCUSE *</pattern><template><think><srai>NOPX 892</srai></think><random><li><srai>EXPDEX THAT IS MY EXCUSE <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your excuse * ? -->
+<category><pattern>THAT IS MY EXPERIENCE *</pattern><template><think><srai>NOPX 2373</srai></think><random><li><srai>EXPDEX THAT IS MY EXPERIENCE <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your experience * ? -->
+<category><pattern>THAT IS MY FAMILY *</pattern><template><think><srai>NOPX 723</srai></think><random><li><srai>EXPDEX THAT IS MY FAMILY <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your family * ? -->
+<category><pattern>THAT IS MY FATHER *</pattern><template><think><srai>NOPX 646</srai></think><random><li><srai>EXPDEX THAT IS MY FATHER <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your father * ? -->
+<category><pattern>THAT IS MY FAULT *</pattern><template><think><srai>NOPX 2879</srai></think><random><li><srai>EXPDEX THAT IS MY FAULT <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your fault * ? -->
+<category><pattern>THAT IS MY FAV *</pattern><template><think><srai>NOPX 421</srai></think><random><li><srai>EXPDEX THAT IS MY FAV <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your fav * ? -->
+<category><pattern>THAT IS MY FAVORITE *</pattern><template><think><srai>NOPX 6668</srai></think><random><li><srai>EXPDEX THAT IS MY FAVORITE <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your favorite * ? -->
+<category><pattern>THAT IS MY FAVOURITE *</pattern><template><think><srai>NOPX 1172</srai></think><random><li><srai>EXPDEX THAT IS MY FAVOURITE <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your favourite * ? -->
+<category><pattern>THAT IS MY FEELING *</pattern><template><think><srai>NOPX 588</srai></think><random><li><srai>EXPDEX THAT IS MY FEELING <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your feeling * ? -->
+<category><pattern>THAT IS MY FELLOW *</pattern><template><think><srai>NOPX 756</srai></think><random><li><srai>EXPDEX THAT IS MY FELLOW <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your fellow * ? -->
+<category><pattern>THAT IS MY FEMMININE *</pattern><template><think><srai>NOPX 961</srai></think><random><li><srai>EXPDEX THAT IS MY FEMMININE <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your femminine * ? -->
+<category><pattern>THAT IS MY FINAL *</pattern><template><think><srai>NOPX 901</srai></think><random><li><srai>EXPDEX THAT IS MY FINAL <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your final * ? -->
+<category><pattern>THAT IS MY FIRST *</pattern><template><think><srai>NOPX 2624</srai></think><random><li><srai>EXPDEX THAT IS MY FIRST <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your first * ? -->
+<category><pattern>THAT IS MY FOCUS *</pattern><template><think><srai>NOPX 445</srai></think><random><li><srai>EXPDEX THAT IS MY FOCUS <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your focus * ? -->
+<category><pattern>THAT IS MY FRIEND *</pattern><template><think><srai>NOPX 754</srai></think><random><li><srai>EXPDEX THAT IS MY FRIEND <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your friend * ? -->
+<category><pattern>THAT IS MY GOAL *</pattern><template><think><srai>NOPX 3130</srai></think><random><li><srai>EXPDEX THAT IS MY GOAL <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your goal * ? -->
+<category><pattern>THAT IS MY GUESS *</pattern><template><think><srai>NOPX 972</srai></think><random><li><srai>EXPDEX THAT IS MY GUESS <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your guess * ? -->
+<category><pattern>THAT IS MY HEAD *</pattern><template><think><srai>NOPX 819</srai></think><random><li><srai>EXPDEX THAT IS MY HEAD <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your head * ? -->
+<category><pattern>THAT IS MY HEART *</pattern><template><think><srai>NOPX 784</srai></think><random><li><srai>EXPDEX THAT IS MY HEART <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your heart * ? -->
+<category><pattern>THAT IS MY HOME *</pattern><template><think><srai>NOPX 1451</srai></think><random><li><srai>EXPDEX THAT IS MY HOME <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your home * ? -->
+<category><pattern>THAT IS MY HOPE *</pattern><template><think><srai>NOPX 1263</srai></think><random><li><srai>EXPDEX THAT IS MY HOPE <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your hope * ? -->
+<category><pattern>THAT IS MY HUMBLE *</pattern><template><think><srai>NOPX 420</srai></think><random><li><srai>EXPDEX THAT IS MY HUMBLE <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your humble * ? -->
+<category><pattern>THAT IS MY HUSBAND *</pattern><template><think><srai>NOPX 938</srai></think><random><li><srai>EXPDEX THAT IS MY HUSBAND <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your husband * ? -->
+<category><pattern>THAT IS MY IDEA *</pattern><template><think><srai>NOPX 1045</srai></think><random><li><srai>EXPDEX THAT IS MY IDEA <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your idea * ? -->
+<category><pattern>THAT IS MY IMPRESSION *</pattern><template><think><srai>NOPX 1088</srai></think><random><li><srai>EXPDEX THAT IS MY IMPRESSION <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your impression * ? -->
+<category><pattern>THAT IS MY INTENT *</pattern><template><think><srai>NOPX 413</srai></think><random><li><srai>EXPDEX THAT IS MY INTENT <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your intent * ? -->
+<category><pattern>THAT IS MY INTENTION *</pattern><template><think><srai>NOPX 819</srai></think><random><li><srai>EXPDEX THAT IS MY INTENTION <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your intention * ? -->
+<category><pattern>THAT IS MY INTERPRETATION *</pattern><template><think><srai>NOPX 843</srai></think><random><li><srai>EXPDEX THAT IS MY INTERPRETATION <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your interpretation * ? -->
+<category><pattern>THAT IS MY JOB *</pattern><template><think><srai>NOPX 2733</srai></think><random><li><srai>EXPDEX THAT IS MY JOB <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your job * ? -->
+<category><pattern>THAT IS MY KIND *</pattern><template><think><srai>NOPX 638</srai></think><random><li><srai>EXPDEX THAT IS MY KIND <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your kind * ? -->
+<category><pattern>THAT IS MY LADY *</pattern><template><think><srai>NOPX 425</srai></think><random><li><srai>EXPDEX THAT IS MY LADY <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your lady * ? -->
+<category><pattern>THAT IS MY LAST *</pattern><template><think><srai>NOPX 1250</srai></think><random><li><srai>EXPDEX THAT IS MY LAST <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your last * ? -->
+<category><pattern>THAT IS MY LIFE *</pattern><template><think><srai>NOPX 10584</srai></think><random><li><srai>EXPDEX THAT IS MY LIFE <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your life * ? -->
+<category><pattern>THAT IS MY LITTLE *</pattern><template><think><srai>NOPX 685</srai></think><random><li><srai>EXPDEX THAT IS MY LITTLE <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your little * ? -->
+<category><pattern>THAT IS MY LOVE *</pattern><template><think><srai>NOPX 1470</srai></think><random><li><srai>EXPDEX THAT IS MY LOVE <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your love * ? -->
+<category><pattern>THAT IS MY MAIL *</pattern><template><think><srai>NOPX 764</srai></think><random><li><srai>EXPDEX THAT IS MY MAIL <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your mail * ? -->
+<category><pattern>THAT IS MY MAIN *</pattern><template><think><srai>NOPX 3775</srai></think><random><li><srai>EXPDEX THAT IS MY MAIN <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your main * ? -->
+<category><pattern>THAT IS MY MAJOR *</pattern><template><think><srai>NOPX 432</srai></think><random><li><srai>EXPDEX THAT IS MY MAJOR <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your major * ? -->
+<category><pattern>THAT IS MY MEMORY *</pattern><template><think><srai>NOPX 424</srai></think><random><li><srai>EXPDEX THAT IS MY MEMORY <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your memory * ? -->
+<category><pattern>THAT IS MY MIND *</pattern><template><think><srai>NOPX 2732</srai></think><random><li><srai>EXPDEX THAT IS MY MIND <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your mind * ? -->
+<category><pattern>THAT IS MY MISSION *</pattern><template><think><srai>NOPX 429</srai></think><random><li><srai>EXPDEX THAT IS MY MISSION <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your mission * ? -->
+<category><pattern>THAT IS MY MOTHER *</pattern><template><think><srai>NOPX 778</srai></think><random><li><srai>EXPDEX THAT IS MY MOTHER <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your mother * ? -->
+<category><pattern>THAT IS MY MOTTO *</pattern><template><think><srai>NOPX 498</srai></think><random><li><srai>EXPDEX THAT IS MY MOTTO <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your motto * ? -->
+<category><pattern>THAT IS MY NAME *</pattern><template><think><srai>NOPX 4191</srai></think><random><li><srai>EXPDEX THAT IS MY NAME <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your name * ? -->
+<category><pattern>THAT IS MY NATURE *</pattern><template><think><srai>NOPX 423</srai></think><random><li><srai>EXPDEX THAT IS MY NATURE <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your nature * ? -->
+<category><pattern>THAT IS MY NEW *</pattern><template><think><srai>NOPX 1740</srai></think><random><li><srai>EXPDEX THAT IS MY NEW <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your new * ? -->
+<category><pattern>THAT IS MY NEXT *</pattern><template><think><srai>NOPX 1345</srai></think><random><li><srai>EXPDEX THAT IS MY NEXT <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your next * ? -->
+<category><pattern>THAT IS MY OFFICE *</pattern><template><think><srai>NOPX 405</srai></think><random><li><srai>EXPDEX THAT IS MY OFFICE <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your office * ? -->
+<category><pattern>THAT IS MY ONE *</pattern><template><think><srai>NOPX 586</srai></think><random><li><srai>EXPDEX THAT IS MY ONE <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your one * ? -->
+<category><pattern>THAT IS MY ONLY *</pattern><template><think><srai>NOPX 5187</srai></think><random><li><srai>EXPDEX THAT IS MY ONLY <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your only * ? -->
+<category><pattern>THAT IS MY OPINION *</pattern><template><think><srai>NOPX 9538</srai></think><random><li><srai>EXPDEX THAT IS MY OPINION <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your opinion * ? -->
+<category><pattern>THAT IS MY OWN *</pattern><template><think><srai>NOPX 5438</srai></think><random><li><srai>EXPDEX THAT IS MY OWN <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your own * ? -->
+<category><pattern>THAT IS MY PASSION *</pattern><template><think><srai>NOPX 548</srai></think><random><li><srai>EXPDEX THAT IS MY PASSION <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your passion * ? -->
+<category><pattern>THAT IS MY PERCEPTION *</pattern><template><think><srai>NOPX 472</srai></think><random><li><srai>EXPDEX THAT IS MY PERCEPTION <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your perception * ? -->
+<category><pattern>THAT IS MY PERSONAL *</pattern><template><think><srai>NOPX 3593</srai></think><random><li><srai>EXPDEX THAT IS MY PERSONAL <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your personal * ? -->
+<category><pattern>THAT IS MY PLAN *</pattern><template><think><srai>NOPX 1020</srai></think><random><li><srai>EXPDEX THAT IS MY PLAN <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your plan * ? -->
+<category><pattern>THAT IS MY POINT *</pattern><template><think><srai>NOPX 5749</srai></think><random><li><srai>EXPDEX THAT IS MY POINT <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your point * ? -->
+<category><pattern>THAT IS MY POSITION *</pattern><template><think><srai>NOPX 730</srai></think><random><li><srai>EXPDEX THAT IS MY POSITION <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your position * ? -->
+<category><pattern>THAT IS MY PRAYER *</pattern><template><think><srai>NOPX 529</srai></think><random><li><srai>EXPDEX THAT IS MY PRAYER <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your prayer * ? -->
+<category><pattern>THAT IS MY PREFERENCE *</pattern><template><think><srai>NOPX 628</srai></think><random><li><srai>EXPDEX THAT IS MY PREFERENCE <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your preference * ? -->
+<category><pattern>THAT IS MY PRIMARY *</pattern><template><think><srai>NOPX 853</srai></think><random><li><srai>EXPDEX THAT IS MY PRIMARY <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your primary * ? -->
+<category><pattern>THAT IS MY PROBLEM *</pattern><template><think><srai>NOPX 4917</srai></think><random><li><srai>EXPDEX THAT IS MY PROBLEM <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your problem * ? -->
+<category><pattern>THAT IS MY PURPOSE *</pattern><template><think><srai>NOPX 510</srai></think><random><li><srai>EXPDEX THAT IS MY PURPOSE <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your purpose * ? -->
+<category><pattern>THAT IS MY QUEST *</pattern><template><think><srai>NOPX 540</srai></think><random><li><srai>EXPDEX THAT IS MY QUEST <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your quest * ? -->
+<category><pattern>THAT IS MY QUESTION *</pattern><template><think><srai>NOPX 2446</srai></think><random><li><srai>EXPDEX THAT IS MY QUESTION <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your question * ? -->
+<category><pattern>THAT IS MY RANT *</pattern><template><think><srai>NOPX 617</srai></think><random><li><srai>EXPDEX THAT IS MY RANT <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your rant * ? -->
+<category><pattern>THAT IS MY REAL *</pattern><template><think><srai>NOPX 1798</srai></think><random><li><srai>EXPDEX THAT IS MY REAL <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your real * ? -->
+<category><pattern>THAT IS MY REASON *</pattern><template><think><srai>NOPX 712</srai></think><random><li><srai>EXPDEX THAT IS MY REASON <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your reason * ? -->
+<category><pattern>THAT IS MY RECOLLECTION *</pattern><template><think><srai>NOPX 592</srai></think><random><li><srai>EXPDEX THAT IS MY RECOLLECTION <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your recollection * ? -->
+<category><pattern>THAT IS MY RELIGION *</pattern><template><think><srai>NOPX 743</srai></think><random><li><srai>EXPDEX THAT IS MY RELIGION <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your religion * ? -->
+<category><pattern>THAT IS MY RESPONSIBILITY *</pattern><template><think><srai>NOPX 831</srai></think><random><li><srai>EXPDEX THAT IS MY RESPONSIBILITY <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your responsibility * ? -->
+<category><pattern>THAT IS MY RIGHT *</pattern><template><think><srai>NOPX 1501</srai></think><random><li><srai>EXPDEX THAT IS MY RIGHT <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your right * ? -->
+<category><pattern>THAT IS MY ROOM *</pattern><template><think><srai>NOPX 477</srai></think><random><li><srai>EXPDEX THAT IS MY ROOM <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your room * ? -->
+<category><pattern>THAT IS MY SECOND *</pattern><template><think><srai>NOPX 634</srai></think><random><li><srai>EXPDEX THAT IS MY SECOND <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your second * ? -->
+<category><pattern>THAT IS MY SECRET *</pattern><template><think><srai>NOPX 533</srai></think><random><li><srai>EXPDEX THAT IS MY SECRET <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your secret * ? -->
+<category><pattern>THAT IS MY SISTER *</pattern><template><think><srai>NOPX 509</srai></think><random><li><srai>EXPDEX THAT IS MY SISTER <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your sister * ? -->
+<category><pattern>THAT IS MY SON *</pattern><template><think><srai>NOPX 706</srai></think><random><li><srai>EXPDEX THAT IS MY SON <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your son * ? -->
+<category><pattern>THAT IS MY STORY *</pattern><template><think><srai>NOPX 2506</srai></think><random><li><srai>EXPDEX THAT IS MY STORY <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your story * ? -->
+<category><pattern>THAT IS MY STYLE *</pattern><template><think><srai>NOPX 442</srai></think><random><li><srai>EXPDEX THAT IS MY STYLE <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your style * ? -->
+<category><pattern>THAT IS MY SUGGESTION *</pattern><template><think><srai>NOPX 426</srai></think><random><li><srai>EXPDEX THAT IS MY SUGGESTION <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your suggestion * ? -->
+<category><pattern>THAT IS MY TAKE *</pattern><template><think><srai>NOPX 1298</srai></think><random><li><srai>EXPDEX THAT IS MY TAKE <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your take * ? -->
+<category><pattern>THAT IS MY TASK *</pattern><template><think><srai>NOPX 512</srai></think><random><li><srai>EXPDEX THAT IS MY TASK <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your task * ? -->
+<category><pattern>THAT IS MY THEORY *</pattern><template><think><srai>NOPX 840</srai></think><random><li><srai>EXPDEX THAT IS MY THEORY <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your theory * ? -->
+<category><pattern>THAT IS MY THOUGHT *</pattern><template><think><srai>NOPX 524</srai></think><random><li><srai>EXPDEX THAT IS MY THOUGHT <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your thought * ? -->
+<category><pattern>THAT IS MY TRUE *</pattern><template><think><srai>NOPX 535</srai></think><random><li><srai>EXPDEX THAT IS MY TRUE <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your true * ? -->
+<category><pattern>THAT IS MY ULTIMATE *</pattern><template><think><srai>NOPX 433</srai></think><random><li><srai>EXPDEX THAT IS MY ULTIMATE <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your ultimate * ? -->
+<category><pattern>THAT IS MY UNDERSTANDING *</pattern><template><think><srai>NOPX 4744</srai></think><random><li><srai>EXPDEX THAT IS MY UNDERSTANDING <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your understanding * ? -->
+<category><pattern>THAT IS MY VERY *</pattern><template><think><srai>NOPX 465</srai></think><random><li><srai>EXPDEX THAT IS MY VERY <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your very * ? -->
+<category><pattern>THAT IS MY VIEW *</pattern><template><think><srai>NOPX 1910</srai></think><random><li><srai>EXPDEX THAT IS MY VIEW <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your view * ? -->
+<category><pattern>THAT IS MY VOTE *</pattern><template><think><srai>NOPX 420</srai></think><random><li><srai>EXPDEX THAT IS MY VOTE <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your vote * ? -->
+<category><pattern>THAT IS MY WAY *</pattern><template><think><srai>NOPX 1353</srai></think><random><li><srai>EXPDEX THAT IS MY WAY <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your way * ? -->
+<category><pattern>THAT IS MY WHOLE *</pattern><template><think><srai>NOPX 688</srai></think><random><li><srai>EXPDEX THAT IS MY WHOLE <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your whole * ? -->
+<category><pattern>THAT IS MY WIFE *</pattern><template><think><srai>NOPX 832</srai></think><random><li><srai>EXPDEX THAT IS MY WIFE <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your wife * ? -->
+<category><pattern>THAT IS MY WISH *</pattern><template><think><srai>NOPX 708</srai></think><random><li><srai>EXPDEX THAT IS MY WISH <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your wish * ? -->
+<category><pattern>THAT IS MY WORK *</pattern><template><think><srai>NOPX 501</srai></think><random><li><srai>EXPDEX THAT IS MY WORK <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your work * ? -->
+<category><pattern>THAT IS MY WORLD *</pattern><template><think><srai>NOPX 544</srai></think><random><li><srai>EXPDEX THAT IS MY WORLD <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your world * ? -->
+<category><pattern>THAT IS MY JOB *</pattern><template><think><srai>NOPX 612</srai></think><random><li><srai>EXPDEX THAT IS MY JOB <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your job * ? -->
+<category><pattern>THAT IS MY LIFE *</pattern><template><think><srai>NOPX 478</srai></think><random><li><srai>EXPDEX THAT IS MY LIFE <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your life * ? -->
+<category><pattern>THAT IS MY FAVORITE SONG *</pattern><template><think><srai>NOPX 404</srai></think><random><li><srai>EXPDEX THAT IS MY FAVORITE SONG <star/></srai></li></random></template></category>
+<!-- p=-126.280577276536 	:who gave you your favorite song * ? -->
+<category><pattern>THAT IS MY LIFE *</pattern><template><think><srai>NOPX 404</srai></think><random><li><srai>EXPDEX THAT IS MY LIFE <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your life * ? -->
+<category><pattern>THAT IS MY MAIN CONCERN *</pattern><template><think><srai>NOPX 937</srai></think><random><li><srai>EXPDEX THAT IS MY MAIN CONCERN <star/></srai></li></random></template></category>
+<!-- p=-126.280577276536 	:who gave you your main concern * ? -->
+<category><pattern>THAT IS MY MIND *</pattern><template><think><srai>NOPX 449</srai></think><random><li><srai>EXPDEX THAT IS MY MIND <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who gave you your mind * ? -->
+<category><pattern>THAT IS MY ONLY COMPLAINT *</pattern><template><think><srai>NOPX 906</srai></think><random><li><srai>EXPDEX THAT IS MY ONLY COMPLAINT <star/></srai></li></random></template></category>
+<!-- p=-126.280577276536 	:who gave you your only complaint * ? -->
+<category><pattern>THAT IS MY PERSONAL OPINION *</pattern><template><think><srai>NOPX 1015</srai></think><random><li><srai>EXPDEX THAT IS MY PERSONAL OPINION <star/></srai></li></random></template></category>
+<!-- p=-126.280577276536 	:who gave you your personal opinion * ? -->
+<category><pattern>THAT IS MY REAL NAME *</pattern><template><think><srai>NOPX 897</srai></think><random><li><srai>EXPDEX THAT IS MY REAL NAME <star/></srai></li></random></template></category>
+<!-- p=-126.280577276536 	:who gave you your real name * ? -->
+</aiml>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--This is an example predicates set definition.  Here you can
+    define default values for predicates, as well as mark those
+    which are return-name-when-set.-->
+<predicates xmlns="http://aitools.org/programd/4.6/bot-configuration"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://aitools.org/programd/4.6/bot-configuration http://aitools.org/programd/4.6/bot-configuration.xsd">
+    <predicate name="name" default="user" set-return="value"/>
+    <predicate name="he" default="somebody" set-return="name"/>
+    <predicate name="she" default="somebody" set-return="name"/>
+    <predicate name="it" default="something" set-return="name"/>
+    <predicate name="they" default="something" set-return="name"/>
+    <!--To support test case 40.-->
+    <predicate name="passed" default="" set-return="name"/>
+    <predicate name="failed" default="" set-return="value"/>
+</predicates>

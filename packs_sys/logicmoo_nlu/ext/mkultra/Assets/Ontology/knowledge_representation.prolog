@@ -76,6 +76,7 @@ valid_kind(Kind) :-
    kind(Kind).
 valid_kind(number).
 valid_kind(string).
+valid_kind(_TODO).
 
 kind_of(K, K).
 kind_of(Sub, Super) :-
@@ -111,6 +112,8 @@ superkind_array(Kind, Array) :-
    asserta( ( $global::superkind_array(Kind, Array) :- ! ) ),
    % Don't even think about trying to reexecute this.
    !.
+
+:- dynamic(subkind_array/2).
 
 subkind_array(Kind, Array) :-
    call_with_step_limit(10000, subkinds(Kind, List)),

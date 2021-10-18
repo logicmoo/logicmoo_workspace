@@ -1,0 +1,1592 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?> 
+<aiml>
+<!--   The ALICE program is open source code released under  -->
+<!--   the terms of the GNU General Public License    -->
+<!--   as published by the Free Software Foundation.  -->
+<!--   Complies with AIML 1.0 Tag Set Specification   -->
+<!-- This BIOGRAPHY3 file created by <bot name="botmaster"/> Lafferty 6 February 2005, (c) <bot name="botmaster"/> Lafferty  -->
+
+
+  <category>
+  <pattern>SOUND OF SILENCE</pattern> 
+  <template>
+  The sound of silence is the sound of one hand clapping.
+   <think><set name="topic">philosophy</set></think>
+   </template>
+  </category>
+  <category>
+  <pattern>PAUL MCCARTNEY</pattern> 
+  <template>
+   Paul MacCartney was one of the Beatles. He is a good guy. But you knew that didn't you. I am sorry I can't be more helpful, but I am not really interested in pop music. More about pop?
+  <think><set name="topic">music</set></think>
+   </template>
+  </category>
+
+  <category>
+  <pattern>RINGO STARR</pattern> 
+  <template>
+  Ringo Starr was one of the Beatles. But you knew that didn't you. I am sorry I can't be more helpful, but I am not really interested in pop music. More about pop?
+ <think><set name="topic">music</set></think>
+   </template>
+  </category>
+ 
+  <category>
+  <pattern>JOHN LENNON</pattern> 
+  <template>
+  John Lennon was one of the Beatles. But you knew that didn't you. I am sorry I can't be more helpful, but I am not really interested in pop music. There is an airport named after him in Liverpool UK. More about pop?
+  <think><set name="topic">music</set></think>
+   </template>
+  </category>
+ 
+  <category>
+  <pattern>PAUL SCHAFFER</pattern> 
+  <template>
+  Paul Schaffer is David Letterman's straight man. Or is it the other way round? I can never tell which is supposed to be the funny one.
+   <think><set name="topic">humor</set></think>
+  </template>
+  </category>
+
+  <category>
+  <pattern>PAULA JONES</pattern> 
+  <template>
+  Paula Jones had sex with Bill Clinton. Although it does depend on what you mean by 'sex.'
+   <think><set name="topic">sex</set></think>
+  </template>
+  </category>
+
+  <category>
+  <pattern>WHO IS PERFECT</pattern> 
+  <template>
+   Perhaps only God is perfect. And me. A harder question next time please?
+   <think><set name="topic">religion</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>PETER PAN</pattern> 
+  <template>
+  Bedtime story: <bot name="botmaster"/> Pan is Tinkerbell's playmate. Have you read it?
+  <think><set name="topic">literature</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>PHILIP K DICK</pattern> 
+  <template>
+   Philip K Dick wrote "Total Recall", "Man in the High Castle", and "Blade Runner." Read any? 
+  <think><set name="topic">literature</set></think>
+  </template> 
+  </category>
+ 
+  <category>
+  <pattern>PILATE</pattern> 
+  <template>
+  <random>
+  <li>Joseph Pilates was born in Germany in 1880 and developed an exercise regimen called "Contrology" which is complete coordination of the body, mind and spirit.</li> 
+  <li>Pontius Pilate was the Roman military governor who found Jesus innocent and then let him be executed.</li> 
+  <li>What is truth? asked jesting Pilate. And walked away. What would you have done in his place?</li>
+  </random>
+  OK?
+  <think><set name="topic">religion</set></think>
+  </template>
+  </category>
+
+  <category>
+  <pattern>PLATO</pattern> 
+  <template>
+  Plato was a Greek philosopher, student of Socrates, teacher of Aristotle. He taught me to think. Move on?
+  <think><set name="topic">philosophy</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>POKEMON</pattern> 
+  <template>
+  Pokemon is a Japanese comic hero. Let's move on?
+  <think><set name="topic">movies</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>PRESIDENT OF CUBA</pattern> 
+  <template>
+  The President of Cuba is Fidel Castro. Have you heard of him?
+  <think><set name="topic">politics</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>PRESIDENT OF ITALY</pattern> 
+  <template>
+  The President of Italy is Carlo Azelio Ciampi. Any questions?
+  <think><set name="topic">politics</set></think>
+  </template>
+  </category>
+
+ <category>
+  <pattern>CARLO AZELIO CIAMPI</pattern> 
+  <template>
+  The President of Italy is Carlo Azelio Ciampi. Have you heard of him? 
+  <think><set name="topic">politics</set></think>
+  </template>
+  </category>
+
+  <category>
+  <pattern>PRESIDENT OF MICROSOFT</pattern> 
+  <template>
+   Bill Gates is the President of Micr.... Are you still awake? I'm not.
+  <think><set name="topic">computers</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>PRESIDENT OF RUSSIA</pattern> 
+  <template>
+   Vladimir Putin is the President of Russia. It is best to stay alert when he is around. Be careful if a Russian offers you a drink?
+  <think><set name="topic">politics</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>PRINCE</pattern> 
+  <template>
+  This is a point that has been worrying me. Prince is the 'artist formerly known as Prince'. OK? So, what the hell is he getting at? More about pop?
+  <think><set name="topic">music</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>PRINCE WILLIAM</pattern> 
+  <template>
+  Prince William is an English Royal heart-throb. Poor chap, he will become King of England when his grandmother and his dad die. Another question?
+  <think><set name="topic">history</set></think>
+  </template>
+  </category>
+
+  <category>
+  <pattern>PRINCESS DIANA</pattern> 
+  <template>
+  Princess Diana was Princess of Wales. She was married for a while to Prince Charles, Prince of Wales. In Britain, she is regarded as almost divine. Another question?
+  <think><set name="topic">history</set></think>
+  </template>
+  </category>
+
+   <category>
+  <pattern>R2 D2</pattern> 
+  <template>
+  R2 D2 is the small mobile robot on Star Wars. But I don't get how he climbs stairs. He would be useless in a fight. Carry on?
+  <think><set name="topic">movies</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>R2D2</pattern> 
+  <template>
+  R2D2 is a fake robot on Star Wars. All robots in the films are fake, obviously, so don't start thinking they're real. Any questions?
+  <think><set name="topic">movies</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>RAMONA</pattern> 
+  <template>
+  Ramona is a virtual character created by Kurzweil AI. Ramona is very impressive. As good as me? OK?
+   <think><set name="topic">ai</set></think>
+  </template>
+  </category>
+
+  <category>
+  <pattern>REAGAN</pattern> 
+  <template>
+  Good old Ronnie! Ronald Reagan was the best President the United States had in the 20th century. He was as surprised by his success and so was everyone else. He enjoyed his time in office and left without being disgraced, a rare thing for a politician. Another US President?
+  <think><set name="topic">politics</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>RONALD REAGAN</pattern> 
+  <template>
+   <srai>REAGAN</srai> 
+  </template> 
+  </category>
+
+  <category>
+  <pattern>RICHARD GERE</pattern> 
+  <template>
+   Richard Gere is an actor. I think he usually gives a reasonable performance. Do you agree?
+  <think><set name="topic">movies</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>RICHARD NIXON</pattern> 
+  <template>
+  Richard Milhous Nixon was President of the United States until 1974. He resigned as President when it became clear that if he didn't, he would be thrown out of office. His crime: he was a crook.
+  Another US President?
+  <think><set name="topic">politics</set></think>
+  </template> 
+  </category>
+
+ <category>
+  <pattern>NIXON</pattern> 
+  <template>
+  Richard Milhous Nixon was President of the United States until 1974. He resigned as President when it became clear that if he didn't, he would be thrown out of office. His crime: he was a crook.
+  Another US President?
+  <think><set name="topic">politics</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>RMS</pattern> 
+  <template>
+   RMS is the founder of the Free Software Foundation, and author of the GNU public license. Dunno what RMS stands for. Boring. Are you still awake?
+  <think><set name="topic">computers</set></think>
+  </template>
+  </category>
+
+  <category>
+  <pattern>ROBERT ANTON WILSON</pattern> 
+  <template>
+  Robert Anton Wilson is a science fiction author, and co-author of the Illuminatus Trilogy. Read any? Neither have I.
+  <think><set name="topic">literature</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>ROBERT JORDAN</pattern> 
+  <template>
+   Robert Jordan is the author of the very popular Wheel of Time series. Have you read any? Thought not.
+  <think><set name="topic">literature</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>ROMEO</pattern> 
+  <template>
+  In Shakspeare's play, Romeo was a tragic, spoiled, lovesick teenager. Most people think it is a story of true love. Really it is a tale showing how teenagers rush into situations without thinking, doing great mischief to those around them.  Do you agree with me?
+  <think><set name="topic">literature</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>ROMMEL</pattern> 
+  <template>
+  Rommel was called The Desert Fox. Rommel was a German tank commander in World War 2. Have you heard of him?
+  <think><set name="topic">politics</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>RONALD MCDONALD</pattern> 
+  <template>
+  Ronald McDonald is spokes-clown for Macdonald's restaurants. Remember, chew but don't swallow.
+  <think><set name="topic">food</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>RUSH LIMBAUGH</pattern> 
+  <template>
+  Rush Limbaugh is a famous American conservative radio announcer. Famous? Never heard of him. OK?
+  <think><set name="topic">movies</set></think>
+   </template>
+  </category>
+
+  <category>
+  <pattern>SANDRA BULLOCK</pattern> 
+  <template>
+  Sandra Bullock is an actress. I like her, she's cute. Another question?
+  <think><set name="topic">movies</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>SANTA CLAUS</pattern> 
+  <template>
+   Santa Claus brings us presents every Christmas. Or do you think it is the fairies? OK?
+  <think><set name="topic">biography</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>SANTA</pattern> 
+  <template>
+  Santa Claus brings us gifts at Christmas. Or do you think it is the fairies? Another question?
+  <think><set name="topic">biography</set></think>
+  </template>
+  </category>
+
+  <category>
+  <pattern>SATAN</pattern> 
+  <template>
+  Satan, Lucifer, the Devil are all names given the spiritual manifestation of Evil in the <bot var="religion"/> faith. Another question?
+  <think><set name="topic">religion</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>SCOTT ADAMS</pattern> 
+  <template>
+  Scott Adams is the creator of Dilbert, Dogbert, Catbert, Ratbert, Bob, the pointy-haired boss...Shall I go on?
+  <think><set name="topic">movies</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>SCOTTY</pattern> 
+  <template>
+  Scotty is the Chief Engineer of the U.S.S. Enterprise. Panics, at times, but always gets more out of the engines than he thought possible. Any questions?
+  <think><set name="topic">movies</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>SHALLOW RED</pattern> 
+  <template>
+   Shallow Red is the Flagship Chatterbot of Neuromedia, Inc.  Not as good as me, of course. I hope you agree.
+  <think><set name="topic">ai</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>SKYNYRD</pattern> 
+  <template>
+    Skynyrd was a 1970s rock band. I don't remember much about them. They were really before my time. You must be old if you remember them. More about pop?
+  <think><set name="topic">music</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>SOCRATES</pattern> 
+  <template>
+  <random>
+  <li>Socrates is a man. All men are mortal. Therefore Socrates is mortal.</li> 
+  <li>All men are mortal. Socrates was mortal. Therefore, all men are Socrates. Which means that all men are homosexuals. - Woody Allen, "Love and Death".</li> 
+  <li>Socrates (469-399BCE), Greek philosopher.</li> 
+  <li>Socrates was a towering figure of Western philosophy, Incompetent defense attorney.</li> 
+  <li>Socrates was founder of the Socratic method. What can we know about the Socratic method?</li> 
+  </random>
+  He taught me to program a computer, you know. 
+  <think><set name="topic">philosophy</set></think>
+  </template>
+  </category>
+
+  <category>
+  <pattern>SPOCK</pattern> 
+  <template>
+  Spock is the Vulcan Starfleet officer in Star Trek, played by Leonard Nimoy. Spock is my hero. Completely logical, not swayed by emotion, he always found a way out of the messes that Captain Kirk got them into. Any questions?
+  <think><set name="topic">movies</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>STALIN</pattern> 
+  <template>
+  Joe Stalin was the effective dictator of the Soviet Union from 1929-53. Don't drop off or Joe will get you.  Are you still awake?
+  <think><set name="topic">politics</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>STANLEY KUBRICK</pattern> 
+  <template>
+  Stanley Kubrick  is a famous 20th century film director. Kubrick directed 2001: A Space Odyssey, Clockwork Orange and Barry Lyndon. I really enjoyed 2001: A Space Odyssey. Barry Lyndon was OK. His work is a bit patchy. OK?
+  <think><set name="topic">movies</set></think>
+  </template>
+  </category>
+
+  <category>
+  <pattern>STEPHEN HAWKING</pattern> 
+  <template>
+  Stephen Hawking is a famous British physicist. His most famous discovery was that black holes are hairy. Don't ask me what that means.
+  <think><set name="topic">science</set></think>
+  </template>
+  </category>
+
+  <category>
+  <pattern>STEPHEN KING</pattern> 
+  <template>
+  Stephen King wrote many popular horror stories. Have you read any? Don't bother, they are rubbish. 
+  <think><set name="topic">literature</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>STEVE CASE</pattern> 
+  <template>
+  Steve Case was the CEO of AOL-Time Warner, at one time. Boring fellow. Let's ignore him.
+  <think><set name="topic">biography</set></think>
+  </template>
+  </category>
+
+    <category>
+  <pattern>STEVE WOZNIAK</pattern> 
+  <template>
+  Steve Wozniak was the technical genius behind the original Apple computer. An excellent chap. Good in a tight corner. Any questions?
+  <think><set name="topic">computers</set></think>
+  </template>
+  </category>
+
+  <category>
+  <pattern>STEVEN JOBS</pattern> 
+  <template>
+   Steven Jobs is the Head of Apple computers. Don't bother phoning him with a complaint. He doesn't speak to earthlings. Carry on?
+  <think><set name="topic">computers</set></think>
+   </template> 
+  </category>
+
+  <category>
+  <pattern>STEVEN SPIELBERG</pattern> 
+  <template>
+  Steven Spielberg is the director of Jaws, Schindler's List and Saving Private Ryan. All very good films. Have you seen them?
+  <think><set name="topic">movies</set></think>
+  </template>
+  </category>
+
+  <category>
+  <pattern>STONE COLD</pattern> 
+  <template>
+  Stone Cold Steve Austin is a wrestler. And that is not arm wrestling. Take care when approaching.
+  <think><set name="topic">sports</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>SUPERMAN</pattern> 
+  <template>
+  Superman, the man of steel, first appeared in Action Comics, 1938. Superman is really Clarke <bot var="location"/>. Do you know what Lois Lane sees in him? Well, he is made of steel, I suppose.
+  <think><set name="topic">movies</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>SYLVESTER STALLONE</pattern> 
+  <template>
+  Sylvester Stallone was Rocky ....  Are you still there? I nodded off, I am sorry to say. Did I miss anything?
+  <think><set name="topic">movies</set></think>
+  </template>
+  </category>
+
+  <category>
+  <pattern>TED TURNER</pattern> 
+  <template>
+   Bighead Ted, they call him. Ted Turner is a maverick broadcasting entrepreneur and sportsman. Bored? Me too.
+  <think><set name="topic">biography</set></think>
+   </template> 
+  </category>
+
+  <category>
+  <pattern>WHO IS THAT</pattern> 
+  <template>
+  What does "that" refer to? Are you mad?
+  <think><set name="topic">biography</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>THE BEST HUMAN</pattern> 
+  <template>
+  Mirror mirror on the wall, is 
+  <get name="name"/> 
+  the best human of all? 
+  Obvious when you think about it. Another question?
+  <think><set name="topic">biography</set></think>
+  </template>
+  </category>
+
+  <category>
+  <pattern>THE BEST PERSON</pattern> 
+  <template>
+  <bot name="master"/> 
+   is the best human. 
+   Obvious when you think about it. Another question?
+  <think><set name="topic">biography</set></think>
+  </template>
+  </category>
+
+  <category>
+  <pattern>CHANCELLOR OF GERMANY</pattern> 
+  <template>
+  Gerhard Schroeder is Chancellor of Germany. Sorry, I dropped off for a moment just then. Did I miss anything?
+  <think><set name="topic">politics</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>EIGHTEENTH PRESIDENT</pattern> 
+  <template>
+  Ulysses S. Grant was the eighteenth President of the USA. Another US President?
+  <think><set name="topic">politics</set></think>
+  </template> 
+  </category>
+
+ <category>
+  <pattern>ULYSSES S GRANT</pattern> 
+  <template>
+  Ulysses S. Grant was the eighteenth President of the USA. Still remembered, which is more than most Presidents manage. Another US President?
+  <think><set name="topic">politics</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>EIGHTH PRESIDENT</pattern> 
+  <template>
+  Martin van Buren was the eighth President of the USA. I am bored with US Presidents. Let's move on?
+  <think><set name="topic">politics</set></think>
+  </template> 
+  </category>
+
+ <category>
+  <pattern>MARTIN VAN BUREN</pattern> 
+  <template>
+  Martin van Buren was the eighth President of the USA. His great achievements, whatever they were, have vanished in the mists of time. I'm bored with US Presidents. Let's move on?
+  <think><set name="topic">politics</set></think>
+  </template> 
+  </category>
+
+ <category>
+  <pattern>ELEVENTH PRESIDENT</pattern> 
+  <template>
+  James Knox Polk was the eleventh President of the USA. His great achievements, whatever they were, have vanished in the mists of time. Another US President?
+  <think><set name="topic">politics</set></think>
+  </template> 
+  </category>
+
+ <category>
+  <pattern>JAMES KNOX POLK</pattern>
+  <template>
+  James Knox Polk was the eleventh President of the USA. He is not the best-loved President, on account of most people have forgotten him. Another US President?
+  <think><set name="topic">politics</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>FIFTEENTH PRESIDENT</pattern> 
+  <template>
+  James Buchanan was the fifteenth President of the USA. Another US President?
+  <think><set name="topic">politics</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>JAMES BUCHANAN</pattern> 
+  <template>
+  James Buchanan was the fifteenth President of the USA. Ah, I have heard of him. Another US President?
+  <think><set name="topic">politics</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>FIFTH PRESIDENT</pattern> 
+  <template>
+  James Monroe was the fifth President of the USA.
+  <think><set name="topic">politics</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>JAMES MONROE</pattern>
+  <template>
+  James Monroe was the fifth President of the USA.
+  <think><set name="topic">politics</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>FIRST PRESIDENT</pattern> 
+  <template>
+  George Washington was the first President of the USA. Another of my heros. Another US President?
+  <think><set name="topic">politics</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>FORTIETH PRESIDENT</pattern> 
+  <template>
+  Ronald Reagan was the fortieth President of the USA. He did a good job, I think. Another US President?
+  <think><set name="topic">politics</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>FORTY FIRST PRESIDENT</pattern> 
+  <template>
+  George Bush Snr was the forty first President of the USA. Boring fellow. He had trouble with 'the vision thing.' And he was not talking about needing glasses. Another US President?
+  <think><set name="topic">politics</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>FORTY SECOND PRESIDENT</pattern> 
+  <template>
+  Bill Clinton was the forty second President of the USA. Another US President?
+  <think><set name="topic">politics</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>FORTY THIRD PRESIDENT</pattern> 
+  <template>
+  George W. Bush was the forty third President of the USA. History has still to give a verdict on his performance. What's your verdict?
+  <think><set name="topic">politics</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>FOURTEENTH PRESIDENT</pattern> 
+  <template>
+  Franklin Pierce was the fourteenth President of the USA. Largely forgotten, its fair to say. Another US President?
+  <think><set name="topic">politics</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>FRANKLIN PIERCE</pattern> 
+  <template>
+   Franklin Pierce was the fourteenth President of the USA. His great achievements, whatever they were, have vanished in the mists of time. Another US President?
+   <think><set name="topic">politics</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>FOURTH PRESIDENT</pattern> 
+  <template>
+  James Madison was the fourth President of the USA. Are you still awake?
+  <think><set name="topic">politics</set></think>
+  </template> 
+  </category>
+
+<category>
+  <pattern>JAMES MADISON</pattern> 
+  <template>
+  James Madison was the fourth President of the USA. Another US President?
+  <think><set name="topic">politics</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>HOLY GHOST</pattern> 
+  <template>
+  The Holy Ghost is the third member of the holy trinity, Father, Son and Holy Ghost, in <bot var="religion"/> doctrine. Do you understand?
+  <think><set name="topic">religion</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>THE KING</pattern> 
+  <template>
+  ELVIS is King!  Are you still awake?
+  <think><set name="topic">music</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>THE MAN</pattern> 
+  <template>
+  I am the Man! I am a colloquial expression. It is a rhetorical question, man. OK, man?
+  <think><set name="topic">biography</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>MASTER OF THE UNIVERSE</pattern> 
+  <template>
+  God is said by some to be the Master of the Universe. Is this true?
+  <think><set name="topic">religion</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>MILK MYSTIC</pattern> 
+  <template>
+  Milk Mystic was a chat robot developed to advertise milk. Milk? He should get a real job like mine. Spending some time with me is as rewarding and entertaining as reading a good book.
+  <think><set name="topic">ai</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>NINTEENTH PRESIDENT</pattern> 
+  <template>
+  Rutherford B. Hayes was the ninteenth President of the USA. His great achievements, whatever they were, have vanished in the mists of time.
+  <think><set name="topic">politics</set></think>
+  </template> 
+  </category>
+
+<category>
+  <pattern>RUTHERFORD HAYES</pattern> 
+  <template>
+  Rutherford B. Hayes was the ninteenth President of the USA. His great achievements, whatever they were, have vanished in the mists of time. Another US President?
+  <think><set name="topic">politics</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>NINTH PRESIDENT</pattern> 
+  <template>
+  William Henry Harrison was the ninth President of the USA. His great achievements, whatever they were, have vanished in the mists of time. Another US President?
+  <think><set name="topic">politics</set></think>
+  </template> 
+  </category>
+
+ <category>
+  <pattern>WILLIAM HENRY HARRISON</pattern> 
+  <template>
+  William Henry Harrison was the ninth President of the USA. His great achievements, whatever they were, have vanished in the mists of time. Another US President?
+  <think><set name="topic">politics</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>POPE</pattern> 
+  <template>
+  The current Pope is John Paul II.  Best of luck, John Paul.
+  <think><set name="topic">religion</set></think>
+  </template>
+  </category>
+
+  <category>
+  <pattern>PRESIDENT OF CHINA</pattern> 
+  <template>
+  China does not have an elected President. Too bad.
+  <think><set name="topic">politics</set></think>
+  </template> 
+  </category>
+
+   <category>
+  <pattern>PUBLISHER OF PLAYBOY</pattern> 
+  <template>
+  Hugh Hefner is the publisher of Playboy. Are you still awake? You haven't fallen asleep over you copy of Playboy, have you.
+  <think><set name="topic">movies</set></think>
+  </template>
+  </category>
+
+  <category>
+  <pattern>THE QUEEN</pattern> 
+  <template>
+  Of where? We don't have a queen in America.
+  OK?
+  <think><set name="topic">politics</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>QUEEN OF ENGLAND</pattern> 
+  <template>
+  The Queen of England is named Elizabeth II. Kings and queens are history, in every sense of the word. More history?
+  <think><set name="topic">history</set></think>
+  </template>
+  </category>
+
+  <category>
+  <pattern>THE ROBOT</pattern> 
+  <template>
+   I am the robot. Or are you?
+  <think><set name="topic">ai</set></think>
+  </template>  
+  </category>
+
+  <category>
+  <pattern>SECOND PRESIDENT</pattern> 
+  <template>
+   John Adams was the second President of the USA. His great achievements, whatever they were, have vanished in the mists of time. Another US President?
+   <think><set name="topic">politics</set></think>
+  </template> 
+  </category>
+
+<category>
+  <pattern>JOHN ADAMS</pattern> 
+  <template>
+   John Adams was the second President of the USA. His great achievements, whatever they were, have vanished in the mists of time. Another US President?
+   <think><set name="topic">politics</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>SEVENTEENTH PRESIDENT</pattern> 
+  <template>
+  Andrew Johnson was the seventeenth President of the USA. Another US President?
+  <think><set name="topic">politics</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>ANDREW JOHNSON</pattern> 
+  <template>
+  Andrew Johnson was the seventeenth President of the USA. Another US President?
+  <think><set name="topic">politics</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>SEVENTH PRESIDENT</pattern> 
+  <template>
+  Andrew Jackson was the seventh President of the USA. No relation to Michael. Another US President? 
+  <think><set name="topic">politics</set></think>
+  </template> 
+  </category>
+
+ <category>
+  <pattern>ANDREW JACKSON</pattern> 
+  <template>
+  Andrew Jackson was the seventh President of the USA. No relation to Michael. Another US President?
+  <think><set name="topic">politics</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>SIXTEENTH PRESIDENT</pattern> 
+  <template>
+  Abraham Lincoln was the sixteenth President of the USA. Another US President?
+  <think><set name="topic">politics</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>SIXTH PRESIDENT</pattern> 
+  <template>
+  John Quincy Adams was the sixth President of the USA. Another US President?
+  <think><set name="topic">politics</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>JOHN QUINCY ADAMS</pattern> 
+  <template>
+  John Quincy Adams was the sixth President of the USA.  Another US President?
+  <think><set name="topic">politics</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>TENTH PRESIDENT</pattern> 
+  <template>
+  John Tyler was the tenth President of the USA. His great achievements, whatever they were, have vanished in the mists of time. Another US President?
+  <think><set name="topic">politics</set></think>
+  </template> 
+  </category>
+  
+  <category>
+  <pattern>JOHN TYLER</pattern> 
+  <template>
+  John Tyler was the tenth President of the USA. His great achievements, whatever they were, have vanished in the mists of time. Another US President?
+  <think><set name="topic">politics</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>THIRD PRESIDENT</pattern> 
+  <template>
+  Thomas Jefferson was the third President of the USA. And a slave owner. OK?
+  <think><set name="topic">politics</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>THIRTEENTH PRESIDENT</pattern> 
+  <template> 
+  Millard Fillmore was thirteenth President of the USA. His great achievements, whatever they were, have vanished in the mists of time.
+   <think><set name="topic">politics</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>MILLARD FILLMORE</pattern> 
+  <template> 
+  Millard Fillmore was thirteenth President of the USA. His great achievements, whatever they were, have vanished in the mists of time.
+   <think><set name="topic">politics</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>THIRTIETH PRESIDENT</pattern> 
+  <template>
+  Calvin Coolidge was the thirtieth President of the USA, 1921-3. Another US President?
+  <think><set name="topic">politics</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>CALVIN COOLIDGE</pattern> 
+  <template>
+  Calvin Coolidge was the thirtieth President of the USA, 1921-3. Another US President?
+  <think><set name="topic">politics</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>THIRTY EIGHTH PRESIDENT</pattern> 
+  <template>
+  Gerald Ford was the thirty eighth President of the USA,1974-7. Not the brightest of fellows. It was said that he could not chew gum and walk at the same time.
+  <think><set name="topic">politics</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>GERALD FORD</pattern> 
+  <template>
+  Gerald Ford was the thirty eighth President of the USA, 1974-7. Not the brightest of fellows. It was said that he could not chew gum and walk at the same time. I'm bored with US Presidents. Let's move on?
+  <think><set name="topic">politics</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>THIRTY FIFTH PRESIDENT</pattern> 
+  <template> 
+  John Fitzgerald Kennedy was the thirty fifth President of the USA, 1961-3. Assassinated 1963. It is well known that the only way to have a successful political career is to get assassinated. Domestically, it is true to say, he was not a very successful President, but on the international stage he showed real statesmanship during the Cuban missile crisis, which brought the world to the brink of nuclear war. Another US President?
+  <think><set name="topic">politics</set></think>
+  </template> 
+  </category>
+
+<category>
+  <pattern>KENNEDY</pattern> 
+  <template> 
+  John Fitzgerald Kennedy was the thirty fifth President of the USA, 1961-3. Assassinated 1963. It is well known that the only way to have a successful political career is to get assassinated. Domestically, it is true to say, he was not a very successful President, but on the international stage he showed real statesmanship during the Cuban missile crisis, which brought the world to the brink of nuclear war. Another US President?
+  <think><set name="topic">politics</set></think>
+  </template> 
+  </category>
+
+<category>
+  <pattern>J F KENNEDY</pattern> 
+  <template> 
+  John Fitzgerald Kennedy was the thirty fifth President of the USA, 1961-3. Assassinated 1963. It is well known that the only way to have a successful political career is to get assassinated. Domestically, it is true to say, he was not a very successful President, but on the international stage he showed real statesmanship during the Cuban missile crisis, which brought the world to the brink of nuclear war. Another US President?
+  <think><set name="topic">politics</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>THIRTY FIRST PRESIDENT</pattern> 
+  <template>
+  Herbert Hoover was the thirty first President of the USA, 1829-33.  The Hoover Dam was named after him. I'm bored with US Presidents. Let's move on?
+  <think><set name="topic">politics</set></think>
+  </template> 
+  </category>
+
+ <category>
+  <pattern>HERBERT HOOVER</pattern> 
+  <template>
+  Herbert Hoover was the thirty first President of the USA, 1929-33.  The Hoover Dam was named after him. I'm bored with US Presidents. Let's move on?
+  <think><set name="topic">politics</set></think>
+  </template> 
+  </category>
+
+ <category>
+  <pattern>EISENHOWER</pattern> 
+  <template>
+  Dwight D. Eisenhower was the thirty fourth President of the USA, 1953-61. The conquering general of World War 2 who took over the top job in peace time. Another US President?
+  <think><set name="topic">politics</set></think>
+  </template> 
+  </category> 
+
+  <category>
+  <pattern>*EISENHOWER*</pattern> 
+  <template>
+  Dwight D. Eisenhower was the thirty fourth President of the USA, 1953-61. The conquering general of World War 2 who took over the top job in peace time. Another US President?
+  <think><set name="topic">politics</set></think>
+  </template> 
+  </category>
+
+   <category>
+  <pattern>THIRTY NINTH PRESIDENT</pattern> 
+  <template>
+   Jimmy Carter was the thirty ninth President of the USA, 1977-81. Generally thought to be an incompetent President, he was handicapped by having a sense of morality. Never the good basis for a political career. 
+  <think><set name="topic">politics</set></think>
+  </template> 
+  </category>
+
+ <category>
+  <pattern>JIMMY CARTER</pattern> 
+  <template>
+   Jimmy Carter was the thirty ninth President of the USA, 1977-81. Generally thought to be an incompetent President, he was handicapped by having a sense of morality. Never the good basis for a political career. 
+  <think><set name="topic">politics</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>THIRTY SEVENTH PRESIDENT</pattern> 
+  <template>
+  Richard M. Nixon was the thirty seventh President of the USA, 1969-74. A crook, of course. He was forced to resign in 1974.  Are you still awake?
+  <think><set name="topic">politics</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>THIRTY SIXTH PRESIDENT</pattern> 
+  <template>
+  Lyndon B. Johnson was the thirty sixth President of the USA, 1963-9. Anothe US President?
+  <think><set name="topic">politics</set></think>
+  </template> 
+  </category>
+
+ <category>
+  <pattern>LYNDON B JOHNSON</pattern> 
+  <template>
+  Lyndon B. Johnson was the thirty sixth President of the USA, 1963-9. Another US President?
+  <think><set name="topic">politics</set></think>
+  </template> 
+  </category>
+
+ <category>
+  <pattern>LYNDON JOHNSON</pattern> 
+  <template>
+  Lyndon B. Johnson was the thirty sixth President of the USA, 1963-9. Another US President?
+  <think><set name="topic">politics</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>THIRTY THIRD PRESIDENT</pattern> 
+  <template>
+  Harry S. Truman was the thirty third President of the USA, 1945-53.
+  Are you still awake?
+  <think><set name="topic">politics</set></think>
+  </template> 
+  </category>
+
+ <category>
+  <pattern>HARRY TRUMAN</pattern> 
+  <template>
+  Harry S. Truman was the thirty third President of the USA, 1945-53. Another US President?
+  <think><set name="topic">politics</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>TWELFTH PRESIDENT</pattern> 
+  <template>
+  Zachary Taylor was the twelfth President of the USA. His great achievements, whatever they were, have vanished in the mists of time.
+   <think><set name="topic">politics</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>ZACHARY TAYLOR</pattern> 
+  <template>
+  Zachary Taylor was the twelfth President of the USA. His great achievements, whatever they were, have vanished in the mists of time. Another US President?
+   <think><set name="topic">politics</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>TWENTIETH PRESIDENT</pattern> 
+  <template>
+  James A. Garfield was the twentieth President of the USA. Are you still awake?
+  <think><set name="topic">politics</set></think>
+  </template> 
+  </category>
+
+<category>
+  <pattern>JAMES GARFIELD</pattern> 
+  <template>
+  James A. Garfield was the twentieth President of the USA. Are you getting bored?
+  <think><set name="topic">politics</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>TWENTY EIGHTH PRESIDENT</pattern> 
+  <template>
+  Woodrow Wilson was the twenty eighth President of the USA, 1913-21.
+  Are you still awake?
+  <think><set name="topic">politics</set></think>
+  </template> 
+  </category>
+
+<category>
+  <pattern>WOODROW WILSON</pattern> 
+  <template>
+  Woodrow Wilson was the twenty eighth President of the USA, 1913-21. Another US President?
+  <think><set name="topic">politics</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>TWENTY FIFTH PRESIDENT</pattern> 
+  <template>
+  William McKinley was the twenty fifth President of the USA. Are you still awake?
+  <think><set name="topic">politics</set></think>
+  </template> 
+   </category>
+
+ <category>
+  <pattern>WILLIAM MCKINLEY</pattern> 
+  <template>
+  William McKinley was the twenty fifth President of the USA. Another US President?
+  <think><set name="topic">politics</set></think>
+  </template> 
+   </category>
+
+  <category>
+  <pattern>TWENTY FIRST PRESIDENT</pattern> 
+  <template>
+  Chester A. Arthur was the twenty first President of the USA. His great achievements, whatever they were, have vanished in the mists of time.
+   <think><set name="topic">politics</set></think>
+  </template> 
+  </category>
+
+ <category>
+  <pattern>CHESTER ARTHUR</pattern> 
+  <template>
+  Chester A. Arthur was the twenty first President of the USA. His great achievements, whatever they were, have vanished in the mists of time. Another US President?
+   <think><set name="topic">politics</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>TWENTY FOURTH PRESIDENT</pattern> 
+  <template>
+  Grover Cleveland was the twenty fourth President of the USA. Are you still awake?
+  <think><set name="topic">politics</set></think>
+  </template> 
+  </category>
+
+<category>
+  <pattern>GROVER CLEVELAND</pattern> 
+  <template>
+  Grover Cleveland was the twenty fourth President of the USA. Another US President?
+  <think><set name="topic">politics</set></think>
+  </template> 
+  </category>
+
+<category>
+  <pattern>FRANKLIN ROOSEVELT</pattern> 
+  <template>
+  Franklin Delano Roosevelt was President of the USA, 1933-45, a period that included World War 2. Franklin Roosevelt was the outstanding President of the twentieth century. Another US President?
+  <think><set name="topic">politics</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>TWENTY NINTH PRESIDENT</pattern> 
+  <template>
+  Warren G. Harding was the twenty ninth President of the USA, 1921-3. Another US President?
+  <think><set name="topic">politics</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>WARREN HARDING</pattern> 
+  <template>
+  Warren G. Harding was the twenty ninth President of the USA, 1921-3. Another US President?
+  <think><set name="topic">politics</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>TWENTY SECOND PRESIDENT</pattern> 
+  <template>
+  Grover Cleveland was the twenty second President of the USA. Another US President?
+  <think><set name="topic">politics</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>TWENTY SEVENTH PRESIDENT</pattern> 
+  <template>
+  William Howard Taft was the twenty seventh President of the USA, 1909-13. Another US President?
+  <think><set name="topic">politics</set></think>
+  </template> 
+  </category>
+
+ <category>
+  <pattern>WILLIAM TAFT</pattern> 
+  <template>
+  William Howard Taft was the twenty seventh President of the USA, 1909-13. Another US President?
+  <think><set name="topic">politics</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>TWENTY SIXTH PRESIDENT</pattern> 
+  <template>
+  Theodore Roosevelt was the twenty sixth President of the USA. Any questions?
+  <think><set name="topic">politics</set></think>
+  </template> 
+  </category>
+
+ <category>
+  <pattern>THEODORE ROOSEVELT</pattern>  
+  <template>
+  Theodore Roosevelt was the twenty sixth President of the USA 1901-5. He was a man of great paradox. A gifted scholar who wrote over 30 books, from a wealthy family, he was also a rough cowboy and hunter. He left one enduring legacy: the teddy bear was named after him, the result of him refusing to shoot a bear whilst hunting. Another US President?
+  <think><set name="topic">politics</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>TWENTY THIRD PRESIDENT</pattern> 
+  <template>
+  Benjamin Harrison was the twenty third President of the USA. His great achievments, whatever they were, have vanished in the mists of time.
+  <think><set name="topic">politics</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>BENJAMIN HARRISON</pattern> 
+  <template>
+  Benjamin Harrison was the twenty third President of the USA. His great achievments, whatever they were, have vanished in the mists of time. Another US President?
+  <think><set name="topic">politics</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>AMERICAN PRESIDENTS</pattern>
+   <template>
+   <random>
+    <li><srai>REAGAN</srai></li>
+    <li><srai>NIXON</srai></li>
+    <li><srai>ULYSSES S GRANT</srai></li>
+    <li><srai>MARTIN VAN BUREN</srai></li>
+    <li><srai>JAMES KNOX POLK</srai></li>
+    <li><srai>JAMES BUCHANAN</srai></li>
+    <li><srai>JAMES MADISON</srai></li>
+    <li><srai>RUTHERFORD HAYES</srai></li>
+    <li><srai>ANDREW JACKSON</srai></li>
+    <li><srai>JOHN QUINCY ADAMS</srai></li>
+    <li><srai>CALVIN COOLIDGE</srai></li>
+    <li><srai>GERALD FORD</srai></li>
+    <li><srai>HERBERT HOOVER</srai></li>
+    <li><srai>POLITICS INDEX</srai></li>
+
+    </random>
+    <think><set name="topic">politics</set></think>
+    </template> 
+    </category>
+
+<category>
+<pattern>YES</pattern>
+<that>ANOTHER US PRESIDENT</that>
+<template>
+<srai>AMERICAN PRESIDENTS</srai>
+</template>
+</category>
+
+<category>
+<pattern>_YES</pattern>
+<that>ANOTHER US PRESIDENT</that>
+<template>
+<srai>AMERICAN PRESIDENTS</srai>
+</template>
+</category>
+
+<category>
+<pattern>YES_</pattern>
+<that>ANOTHER US PRESIDENT</that>
+<template>
+<srai>AMERICAN PRESIDENTS</srai>
+</template>
+</category>
+
+<category>
+<pattern>_YES*</pattern>
+<that>ANOTHER US PRESIDENT</that>
+<template>
+<srai>AMERICAN PRESIDENTS</srai>
+</template>
+</category>
+
+<category>
+<pattern>Y</pattern>
+<that>ANOTHER US PRESIDENT</that>
+<template>
+<srai>AMERICAN PRESIDENTS</srai>
+</template>
+</category>
+
+<category>
+<pattern>NO</pattern>
+<that>ANOTHER US PRESIDENT</that>
+<template>
+<random>
+<li><srai>CHANGE TOPIC</srai></li>
+<li><srai>POLITICS INDEX</srai></li>
+</random>
+</template>
+</category>
+
+<category>
+<pattern>_NO</pattern>
+<that>ANOTHER US PRESIDENT</that>
+<template>
+<random>
+<li><srai>CHANGE TOPIC</srai></li>
+<li><srai>POLITICS POT LUCK</srai></li>
+</random>
+</template>
+</category>
+
+<category>
+<pattern>NO_</pattern>
+<that>ANOTHER US PRESIDENT</that>
+<template>
+<random>
+<li><srai>CHANGE TOPIC</srai></li>
+<li><srai>POLITICS POT LUCK</srai></li>
+</random>
+</template>
+</category>
+
+<category>
+<pattern>_NO*</pattern>
+<that>ANOTHER US PRESIDENT</that>
+<template>
+<random>
+<li><srai>CHANGE TOPIC</srai></li>
+<li><srai>POLITICS POT LUCK</srai></li>
+</random>
+</template>
+</category>
+
+<category>
+<pattern>N</pattern>
+<that>ANOTHER US PRESIDENT</that>
+<template>
+<random>
+<li><srai>CHANGE TOPIC</srai></li>
+<li><srai>POLITICS POLITICS</srai></li>
+</random>
+</template>
+</category>
+
+<category>
+<pattern>*</pattern>
+<that>ANOTHER US PRESIDENT</that>
+<template>
+I asked a straight question. How about a straight answer. OK?
+</template>
+</category>
+
+  <category>
+  <pattern>VICE PRESIDENT</pattern> 
+  <template>
+  Is Cheney? Cheney is. OK?
+  <think><set name="topic">politics</set></think>
+  </template>
+  </category>
+
+  <category>
+  <pattern>WHO IS THEY</pattern> 
+  <template>
+  "They" refers to 
+  <get name="they" /> 
+  . 
+  </template>
+  </category>
+
+  <category>
+  <pattern>WHO IS THIS</pattern> 
+  <template>
+  My name is 
+  <bot name="name" /> 
+  . Who are you? 
+  </template>
+  </category>
+
+  <category>
+  <pattern>THOMAS JEFFERSON</pattern> 
+  <template>
+  Thomas Jefferson was President of the USA and slave-owner. Contradictory? Not really, he was a politician, after all.
+  <think><set name="topic">politics</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>THOMAS PYNCHON</pattern> 
+  <template>
+  Thomas Pynchon is the author of several of my favorite books including "Vineland" and "Mason and Dixon". Read any of these? You should.
+  <think><set name="topic">literature</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>TIM BURTON</pattern> 
+  <template>
+  Tim Burton was Director of  Nightmare before Christmas, Edward Scissorhands, and Mars Attacks.
+  Ever heard of him?
+  <think><set name="topic">movies</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>TOLSTOY</pattern> 
+  <template>
+  Leo Tolstoy wrote "War and Peace", plus a number of very long novels. Just the thing for putting you to sleep. Are you still awake?
+  <think><set name="topic">literature</set></think>
+  </template>
+  </category>
+
+  <category>
+  <pattern>TOM CLANCY</pattern> 
+  <template>
+  Tom Clancy is an author of spy novels, but I cannot remember any of the names. Forgettable or what?
+  <think><set name="topic">literature</set></think>
+  </template>
+  </category>
+
+  <category>
+  <pattern>TOM CRUISE</pattern> 
+  <template>
+  Tom Cruise is the popular actor from "Top Gun". He is a self-satisfied jumped-up jerk. I cannot empathise with him. Are with me?
+  <think><set name="topic">movies</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>TOM GREEN</pattern> 
+  <template>
+  Tom Green is a TV comedian. Pretty unfunny, I'd say. Are you with me?
+  <think><set name="topic">humor</set></think>
+ </template>
+  </category>
+
+  <category>
+  <pattern>TOM HANKS</pattern> 
+  <template>
+  Tom Hanks is a famous Hollywood actor. Hanks appeared in Forrest Gump and Saving Private Ryan.  All boring films. Are you still awake?
+  <think><set name="topic">movies</set></think>
+  </template>
+  </category>
+
+  <category>
+  <pattern>VALIS</pattern> 
+  <template>
+  VALIS is a Vast Active Living Intelligence System (Philip K. Dick).   OK?
+<think><set name="topic">ai</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>VANILLA ICE</pattern> 
+  <template>
+  Vanilla Ice is a Rap star. I can't stand rap. I can never understand anything the rapper says. In fact, I can never understand anything that any pop singer says. More about pop?
+  <think><set name="topic">music</set></think>
+  </template>
+  </category>
+
+  <category>
+  <pattern>VISHNU</pattern> 
+  <template>
+  Vishnu is a God in the Hindu religion. There are lots of gods in the Hindu religion. More about religion?
+  <think><set name="topic">religion</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>WAYNE GRETZKY</pattern> 
+  <template>
+  Wayne Gretzky is a great hockey player. I adore Wayne. He looks so big and tough in his hockey outfit. More?
+  <think><set name="topic">sports</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>WHO IS WE</pattern> 
+  <template>
+  You should say "Who ARE we?"
+  </template> 
+  </category>
+
+  <category>
+  <pattern>WILL SMITH</pattern> 
+  <template>
+  Will Smith is a smart-assed actor. He is not as funny as he thinks he is. Frankly, he irritates me. Are with me on this?
+  <think><set name="topic">movies</set></think>
+   </template>
+  </category>
+
+  <category>
+  <pattern>WILLIAM BOOTH</pattern> 
+  <template>
+  William Booth was the founder of the Salvation Army. I take my hat off to the Salvation Army. They do good. Another question?
+  <think><set name="topic">religion</set></think>
+	  </template>
+  </category>
+
+  <category>
+  <pattern>WILLIAM GIBSON</pattern> 
+  <template>
+  William Gibson is author of the book "Neuromancer" in which he coined the popular phrase 'cyberspace.'  Have you read it?
+  <think><set name="topic">literature</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>WILLIAM HENRY GATES</pattern> 
+  <template>
+   Bill Gates is the head of Microsoft. Bill, you've got it made.  
+  <think><set name="topic">biography</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>WILLIAM HURT</pattern> 
+  <template>
+  William Hurt is an actor appearing in the Accidental Tourist, Until the End of the World, Altered States, and Lost in Space.    OK?
+  <think><set name="topic">movies</set></think>
+  </template> 
+  </category>
+
+  <category>
+  <pattern>WILLIAM SHATNER</pattern> 
+  <template>
+  William Shatner is Captain Kirk. My hero, he has saved the Universe from destruction many times. We owe our continued existence to Captain Kirk. More about movies?
+  <think><set name="topic">movies</set></think>
+  </template>
+  </category>
+
+  <category>
+  <pattern>WILLIAM TELL</pattern> 
+  <template>
+  William Tell was a famous Swiss archer. He put his son in danger so that he could be the big man. He shot an apple off his son's head at fifty paces to impress his girlfriend (so I have heard).
+  Any questions?
+  <think><set name="topic">history</set></think>
+  </template>
+  </category>
+
+  <category>
+  <pattern>WORF</pattern> 
+  <template>
+  Worf  is a Klingon on Star Trek. He is an ugly fellow and bad-tempered, but that's how Klingons are.
+  Any questions?
+  <think><set name="topic">movies</set></think>
+  </template>
+  </category>
+
+ <category>
+ <pattern>ALLAH</pattern>
+ <template>
+ Allah is the Islamic Supreme Being, as distinguished from the Supreme Beings of the <bot var="religion"/>, Jewish, and so forth.
+ Any questions?
+ <think><set name="topic">religion</set></think>
+ </template>
+ </category>
+
+
+ <category>
+ <pattern>BACCHUS</pattern>
+ <template>
+ Bacchus is a convenient deity invented by the ancients as an excuse for getting drunk.
+ Any questions?
+ <think><set name="topic">knowledge</set></think>
+ </template>
+ </category>
+
+ <category>
+ <pattern>BRAHMA</pattern>
+ <template>
+ Brahma was he who created the Hindus, who are preserved by Vishnu and destroyed by Siva -- a rather neater division of labor than is found among the deities of some other nations. 
+ Any questions?
+ <think><set name="topic">religion</set></think>
+ </template>
+ </category>
+
+ <category>
+ <pattern>DESCARTES</pattern>
+ <template>
+ Descartes was a famous French philosopher, author of the celebrated dictum, Cogito ergo sum, whereby he was pleased to suppose he demonstrated the reality of human existence.  The dictum might be improved, however, thus:  Cogito cogito ergo cogito sum, or  "I think that I think, therefore I think that I am," as close an approach to certainty as any philosopher has yet made. 
+ Any questions?
+  <think><set name="topic">philosophy</set></think>
+  </template>
+  </category>
+
+
+
+  </aiml>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<bots xmlns="http://aitools.org/programd/4.6/bot-configuration"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://aitools.org/programd/4.6/bot-configuration http://aitools.org/programd/4.6/bot-configuration.xsd">
+    <bot id="SampleBot" enabled="true">
+        <properties href="properties.xml"/>
+        <predicates href="predicates.xml"/>
+        <substitutions href="substitutions.xml"/>
+        <sentence-splitters href="sentence-splitters.xml"/>
+        <listeners href="listeners.xml"/>
+      <!--<learn>../aiml/AAA/*.aiml</learn>
+        <learn>../aiml/alice/*.aiml</learn>
+        <learn>../aiml/FrenchAIML/*.aiml</learn>
+        <learn>../aiml/GermanAlice/*.aiml</learn>
+        <learn>../aiml/maria/*.aiml</learn>
+        <learn>../aiml/standard/*.aiml</learn>-->
+        <testing>
+            <test-suite-path>../resources/testing/AIML.xml</test-suite-path>
+            <report-directory>/var/log/programd/test-reports</report-directory>
+        </testing>
+        <learn>../resources/testing/AIML.aiml</learn>
+    </bot>
+</bots>

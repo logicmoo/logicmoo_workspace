@@ -35,18 +35,15 @@ how_long_ago(Task,Ago):-
 remember_task(Task):- with_mutex(last_done_mutex, 
   ignore((retractall(tmp:last_done(Task,_)),get_time(Time),asserta(tmp:last_done(Task,Time))))).
 
-%how_often(200, guilds).
-%how_often(30, channels).
-
+%how_often(200, discord_update(guilds)).
+%how_often(30, discord_update(channels)).
 how_often(1, handle_discord_websocket_events).
-how_often(41, send_ping).
+how_often(41,send_ping).
 how_often(2, handle_chat_events).
 %how_often(once, discord_update(channels)).
 %how_often(300, rtrv_new_messages).
-/*
-how_often(500, rtrv_dm_handles).
-*/
-how_often(300, show_discord_tasks).
+%how_often(500, rtrv_dm_handles).
+%how_often(300, show_discord_tasks).
 
 % ===============================================
 % Thread Pool Models

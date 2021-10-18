@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<aiml>
+
+<!-- main H_Client.aiml (1172879) mp=-97.234238543074: I HAVE HEARD * -->
+
+<!-- MINSEQ: mp=-97.234238543074: who told you the argument   -->
+<category><pattern>EXPDEX I HAVE HEARD *</pattern><template>Who told you <person/> ?</template></category>
+<category><pattern>I HAVE HEARD *</pattern><template><srai>EXPDEX I HAVE HEARD <star/></srai></template></category>
+<category><pattern>I HAVE HEARD ABOUT *</pattern><template><think><srai>NOPX 403</srai></think><random><li><srai>EXPDEX I HAVE HEARD ABOUT <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you about * ? -->
+<category><pattern>I HAVE HEARD OF *</pattern><template><think><srai>NOPX 480</srai></think><random><li><srai>EXPDEX I HAVE HEARD OF <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you of * ? -->
+<category><pattern>I HAVE HEARD THAT *</pattern><template><think><srai>NOPX 579</srai></think><random><li><srai>EXPDEX I HAVE HEARD THAT <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you that * ? -->
+<category><pattern>I HAVE HEARD UNK *</pattern><template><think><srai>NOPX 1592</srai></think><random><li><srai>EXPDEX I HAVE HEARD UNK <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you unk * ? -->
+<category><pattern>I HAVE HEARD I *</pattern><template><think><srai>NOPX 1929</srai></think><random><li><srai>EXPDEX I HAVE HEARD I <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you i * ? -->
+<category><pattern>I HAVE HEARD THE *</pattern><template><think><srai>NOPX 411</srai></think><random><li><srai>EXPDEX I HAVE HEARD THE <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you the * ? -->
+<category><pattern>I HAVE HEARD A *</pattern><template><think><srai>NOPX 46019</srai></think><random><li><srai>EXPDEX I HAVE HEARD A <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you a * ? -->
+<category><pattern>I HAVE HEARD ABOUT *</pattern><template><think><srai>NOPX 48417</srai></think><random><li><srai>EXPDEX I HAVE HEARD ABOUT <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you about * ? -->
+<category><pattern>I HAVE HEARD ABSOLUTELY *</pattern><template><think><srai>NOPX 439</srai></think><random><li><srai>EXPDEX I HAVE HEARD ABSOLUTELY <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you absolutely * ? -->
+<category><pattern>I HAVE HEARD AGAINST *</pattern><template><think><srai>NOPX 564</srai></think><random><li><srai>EXPDEX I HAVE HEARD AGAINST <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you against * ? -->
+<category><pattern>I HAVE HEARD ALL *</pattern><template><think><srai>NOPX 11612</srai></think><random><li><srai>EXPDEX I HAVE HEARD ALL <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you all * ? -->
+<category><pattern>I HAVE HEARD ALMOST *</pattern><template><think><srai>NOPX 632</srai></think><random><li><srai>EXPDEX I HAVE HEARD ALMOST <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you almost * ? -->
+<category><pattern>I HAVE HEARD ALOT *</pattern><template><think><srai>NOPX 2711</srai></think><random><li><srai>EXPDEX I HAVE HEARD ALOT <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you alot * ? -->
+<category><pattern>I HAVE HEARD ALSO *</pattern><template><think><srai>NOPX 663</srai></think><random><li><srai>EXPDEX I HAVE HEARD ALSO <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you also * ? -->
+<category><pattern>I HAVE HEARD AN *</pattern><template><think><srai>NOPX 2483</srai></think><random><li><srai>EXPDEX I HAVE HEARD AN <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you an * ? -->
+<category><pattern>I HAVE HEARD ANOTHER *</pattern><template><think><srai>NOPX 414</srai></think><random><li><srai>EXPDEX I HAVE HEARD ANOTHER <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you another * ? -->
+<category><pattern>I HAVE HEARD ANY *</pattern><template><think><srai>NOPX 870</srai></think><random><li><srai>EXPDEX I HAVE HEARD ANY <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you any * ? -->
+<category><pattern>I HAVE HEARD ANYONE *</pattern><template><think><srai>NOPX 557</srai></think><random><li><srai>EXPDEX I HAVE HEARD ANYONE <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you anyone * ? -->
+<category><pattern>I HAVE HEARD ANYTHING *</pattern><template><think><srai>NOPX 888</srai></think><random><li><srai>EXPDEX I HAVE HEARD ANYTHING <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you anything * ? -->
+<category><pattern>I HAVE HEARD AS *</pattern><template><think><srai>NOPX 1490</srai></think><random><li><srai>EXPDEX I HAVE HEARD AS <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you as * ? -->
+<category><pattern>I HAVE HEARD AT *</pattern><template><think><srai>NOPX 2223</srai></think><random><li><srai>EXPDEX I HAVE HEARD AT <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you at * ? -->
+<category><pattern>I HAVE HEARD BACK *</pattern><template><think><srai>NOPX 1009</srai></think><random><li><srai>EXPDEX I HAVE HEARD BACK <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you back * ? -->
+<category><pattern>I HAVE HEARD BEFORE *</pattern><template><think><srai>NOPX 4057</srai></think><random><li><srai>EXPDEX I HAVE HEARD BEFORE <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you before * ? -->
+<category><pattern>I HAVE HEARD BETTER *</pattern><template><think><srai>NOPX 1190</srai></think><random><li><srai>EXPDEX I HAVE HEARD BETTER <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you better * ? -->
+<category><pattern>I HAVE HEARD BOTH *</pattern><template><think><srai>NOPX 2998</srai></think><random><li><srai>EXPDEX I HAVE HEARD BOTH <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you both * ? -->
+<category><pattern>I HAVE HEARD BY *</pattern><template><think><srai>NOPX 1837</srai></think><random><li><srai>EXPDEX I HAVE HEARD BY <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you by * ? -->
+<category><pattern>I HAVE HEARD DURING *</pattern><template><think><srai>NOPX 458</srai></think><random><li><srai>EXPDEX I HAVE HEARD DURING <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you during * ? -->
+<category><pattern>I HAVE HEARD ELSEWHERE *</pattern><template><think><srai>NOPX 432</srai></think><random><li><srai>EXPDEX I HAVE HEARD ELSEWHERE <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you elsewhere * ? -->
+<category><pattern>I HAVE HEARD ENOUGH *</pattern><template><think><srai>NOPX 3742</srai></think><random><li><srai>EXPDEX I HAVE HEARD ENOUGH <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you enough * ? -->
+<category><pattern>I HAVE HEARD EVEN *</pattern><template><think><srai>NOPX 418</srai></think><random><li><srai>EXPDEX I HAVE HEARD EVEN <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you even * ? -->
+<category><pattern>I HAVE HEARD EVERY *</pattern><template><think><srai>NOPX 1505</srai></think><random><li><srai>EXPDEX I HAVE HEARD EVERY <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you every * ? -->
+<category><pattern>I HAVE HEARD EVERYTHING *</pattern><template><think><srai>NOPX 1318</srai></think><random><li><srai>EXPDEX I HAVE HEARD EVERYTHING <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you everything * ? -->
+<category><pattern>I HAVE HEARD FAR *</pattern><template><think><srai>NOPX 512</srai></think><random><li><srai>EXPDEX I HAVE HEARD FAR <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you far * ? -->
+<category><pattern>I HAVE HEARD FOR *</pattern><template><think><srai>NOPX 5879</srai></think><random><li><srai>EXPDEX I HAVE HEARD FOR <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you for * ? -->
+<category><pattern>I HAVE HEARD FROM *</pattern><template><think><srai>NOPX 72014</srai></think><random><li><srai>EXPDEX I HAVE HEARD FROM <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you from * ? -->
+<category><pattern>I HAVE HEARD HE *</pattern><template><think><srai>NOPX 3220</srai></think><random><li><srai>EXPDEX I HAVE HEARD HE <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you he * ? -->
+<category><pattern>I HAVE HEARD HERE *</pattern><template><think><srai>NOPX 1498</srai></think><random><li><srai>EXPDEX I HAVE HEARD HERE <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you here * ? -->
+<category><pattern>I HAVE HEARD HIM *</pattern><template><think><srai>NOPX 14621</srai></think><random><li><srai>EXPDEX I HAVE HEARD HIM <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you him * ? -->
+<category><pattern>I HAVE HEARD HORROR *</pattern><template><think><srai>NOPX 2202</srai></think><random><li><srai>EXPDEX I HAVE HEARD HORROR <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you horror * ? -->
+<category><pattern>I HAVE HEARD IF *</pattern><template><think><srai>NOPX 456</srai></think><random><li><srai>EXPDEX I HAVE HEARD IF <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you if * ? -->
+<category><pattern>I HAVE HEARD IN *</pattern><template><think><srai>NOPX 35457</srai></think><random><li><srai>EXPDEX I HAVE HEARD IN <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you in * ? -->
+<category><pattern>I HAVE HEARD IT *</pattern><template><think><srai>NOPX 58887</srai></think><random><li><srai>EXPDEX I HAVE HEARD IT <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you it * ? -->
+<category><pattern>I HAVE HEARD JUST *</pattern><template><think><srai>NOPX 737</srai></think><random><li><srai>EXPDEX I HAVE HEARD JUST <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you just * ? -->
+<category><pattern>I HAVE HEARD LATELY *</pattern><template><think><srai>NOPX 905</srai></think><random><li><srai>EXPDEX I HAVE HEARD LATELY <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you lately * ? -->
+<category><pattern>I HAVE HEARD MENTION *</pattern><template><think><srai>NOPX 789</srai></think><random><li><srai>EXPDEX I HAVE HEARD MENTION <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you mention * ? -->
+<category><pattern>I HAVE HEARD MUCH *</pattern><template><think><srai>NOPX 4410</srai></think><random><li><srai>EXPDEX I HAVE HEARD MUCH <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you much * ? -->
+<category><pattern>I HAVE HEARD MYSELF *</pattern><template><think><srai>NOPX 527</srai></think><random><li><srai>EXPDEX I HAVE HEARD MYSELF <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you myself * ? -->
+<category><pattern>I HAVE HEARD NO *</pattern><template><think><srai>NOPX 6901</srai></think><random><li><srai>EXPDEX I HAVE HEARD NO <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you no * ? -->
+<category><pattern>I HAVE HEARD NONE *</pattern><template><think><srai>NOPX 403</srai></think><random><li><srai>EXPDEX I HAVE HEARD NONE <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you none * ? -->
+<category><pattern>I HAVE HEARD NOT *</pattern><template><think><srai>NOPX 792</srai></think><random><li><srai>EXPDEX I HAVE HEARD NOT <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you not * ? -->
+<category><pattern>I HAVE HEARD NOTHING *</pattern><template><think><srai>NOPX 18995</srai></think><random><li><srai>EXPDEX I HAVE HEARD NOTHING <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you nothing * ? -->
+<category><pattern>I HAVE HEARD OF *</pattern><template><think><srai>NOPX 194224</srai></think><random><li><srai>EXPDEX I HAVE HEARD OF <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you of * ? -->
+<category><pattern>I HAVE HEARD OFTEN *</pattern><template><think><srai>NOPX 537</srai></think><random><li><srai>EXPDEX I HAVE HEARD OFTEN <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you often * ? -->
+<category><pattern>I HAVE HEARD ON *</pattern><template><think><srai>NOPX 8272</srai></think><random><li><srai>EXPDEX I HAVE HEARD ON <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you on * ? -->
+<category><pattern>I HAVE HEARD ONLY *</pattern><template><think><srai>NOPX 2721</srai></think><random><li><srai>EXPDEX I HAVE HEARD ONLY <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you only * ? -->
+<category><pattern>I HAVE HEARD OVER *</pattern><template><think><srai>NOPX 3720</srai></think><random><li><srai>EXPDEX I HAVE HEARD OVER <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you over * ? -->
+<category><pattern>I HAVE HEARD PLENTY *</pattern><template><think><srai>NOPX 1246</srai></think><random><li><srai>EXPDEX I HAVE HEARD PLENTY <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you plenty * ? -->
+<category><pattern>I HAVE HEARD QUITE *</pattern><template><think><srai>NOPX 1707</srai></think><random><li><srai>EXPDEX I HAVE HEARD QUITE <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you quite * ? -->
+<category><pattern>I HAVE HEARD REALLY *</pattern><template><think><srai>NOPX 554</srai></think><random><li><srai>EXPDEX I HAVE HEARD REALLY <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you really * ? -->
+<category><pattern>I HAVE HEARD RECENTLY *</pattern><template><think><srai>NOPX 2009</srai></think><random><li><srai>EXPDEX I HAVE HEARD RECENTLY <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you recently * ? -->
+<category><pattern>I HAVE HEARD REGARDING *</pattern><template><think><srai>NOPX 541</srai></think><random><li><srai>EXPDEX I HAVE HEARD REGARDING <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you regarding * ? -->
+<category><pattern>I HAVE HEARD REPEATEDLY *</pattern><template><think><srai>NOPX 762</srai></think><random><li><srai>EXPDEX I HAVE HEARD REPEATEDLY <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you repeatedly * ? -->
+<category><pattern>I HAVE HEARD RUMOR *</pattern><template><think><srai>NOPX 631</srai></think><random><li><srai>EXPDEX I HAVE HEARD RUMOR <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you rumor * ? -->
+<category><pattern>I HAVE HEARD SAY *</pattern><template><think><srai>NOPX 2789</srai></think><random><li><srai>EXPDEX I HAVE HEARD SAY <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you say * ? -->
+<category><pattern>I HAVE HEARD SHE *</pattern><template><think><srai>NOPX 776</srai></think><random><li><srai>EXPDEX I HAVE HEARD SHE <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you she * ? -->
+<category><pattern>I HAVE HEARD SINCE *</pattern><template><think><srai>NOPX 3565</srai></think><random><li><srai>EXPDEX I HAVE HEARD SINCE <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you since * ? -->
+<category><pattern>I HAVE HEARD SO *</pattern><template><think><srai>NOPX 20631</srai></think><random><li><srai>EXPDEX I HAVE HEARD SO <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you so * ? -->
+<category><pattern>I HAVE HEARD SOME *</pattern><template><think><srai>NOPX 32629</srai></think><random><li><srai>EXPDEX I HAVE HEARD SOME <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you some * ? -->
+<category><pattern>I HAVE HEARD SOMEONE *</pattern><template><think><srai>NOPX 1291</srai></think><random><li><srai>EXPDEX I HAVE HEARD SOMEONE <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you someone * ? -->
+<category><pattern>I HAVE HEARD SOMETHING *</pattern><template><think><srai>NOPX 3078</srai></think><random><li><srai>EXPDEX I HAVE HEARD SOMETHING <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you something * ? -->
+<category><pattern>I HAVE HEARD SOMEWHERE *</pattern><template><think><srai>NOPX 643</srai></think><random><li><srai>EXPDEX I HAVE HEARD SOMEWHERE <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you somewhere * ? -->
+<category><pattern>I HAVE HEARD SPEAK *</pattern><template><think><srai>NOPX 656</srai></think><random><li><srai>EXPDEX I HAVE HEARD SPEAK <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you speak * ? -->
+<category><pattern>I HAVE HEARD TALK *</pattern><template><think><srai>NOPX 1808</srai></think><random><li><srai>EXPDEX I HAVE HEARD TALK <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you talk * ? -->
+<category><pattern>I HAVE HEARD TELL *</pattern><template><think><srai>NOPX 2305</srai></think><random><li><srai>EXPDEX I HAVE HEARD TELL <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you tell * ? -->
+<category><pattern>I HAVE HEARD THAT *</pattern><template><think><srai>NOPX 205014</srai></think><random><li><srai>EXPDEX I HAVE HEARD THAT <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you that * ? -->
+<category><pattern>I HAVE HEARD THE *</pattern><template><think><srai>NOPX 72135</srai></think><random><li><srai>EXPDEX I HAVE HEARD THE <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you the * ? -->
+<category><pattern>I HAVE HEARD THEE *</pattern><template><think><srai>NOPX 2376</srai></think><random><li><srai>EXPDEX I HAVE HEARD THEE <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you thee * ? -->
+<category><pattern>I HAVE HEARD THEM *</pattern><template><think><srai>NOPX 10626</srai></think><random><li><srai>EXPDEX I HAVE HEARD THEM <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you them * ? -->
+<category><pattern>I HAVE HEARD THERE *</pattern><template><think><srai>NOPX 6973</srai></think><random><li><srai>EXPDEX I HAVE HEARD THERE <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you there * ? -->
+<category><pattern>I HAVE HEARD THESE *</pattern><template><think><srai>NOPX 3801</srai></think><random><li><srai>EXPDEX I HAVE HEARD THESE <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you these * ? -->
+<category><pattern>I HAVE HEARD THEY *</pattern><template><think><srai>NOPX 6629</srai></think><random><li><srai>EXPDEX I HAVE HEARD THEY <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you they * ? -->
+<category><pattern>I HAVE HEARD THIS *</pattern><template><think><srai>NOPX 31192</srai></think><random><li><srai>EXPDEX I HAVE HEARD THIS <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you this * ? -->
+<category><pattern>I HAVE HEARD THOSE *</pattern><template><think><srai>NOPX 1816</srai></think><random><li><srai>EXPDEX I HAVE HEARD THOSE <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you those * ? -->
+<category><pattern>I HAVE HEARD THOUGH *</pattern><template><think><srai>NOPX 758</srai></think><random><li><srai>EXPDEX I HAVE HEARD THOUGH <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you though * ? -->
+<category><pattern>I HAVE HEARD THROUGH *</pattern><template><think><srai>NOPX 2110</srai></think><random><li><srai>EXPDEX I HAVE HEARD THROUGH <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you through * ? -->
+<category><pattern>I HAVE HEARD THUS *</pattern><template><think><srai>NOPX 600</srai></think><random><li><srai>EXPDEX I HAVE HEARD THUS <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you thus * ? -->
+<category><pattern>I HAVE HEARD THY *</pattern><template><think><srai>NOPX 3085</srai></think><random><li><srai>EXPDEX I HAVE HEARD THY <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you thy * ? -->
+<category><pattern>I HAVE HEARD TIME *</pattern><template><think><srai>NOPX 769</srai></think><random><li><srai>EXPDEX I HAVE HEARD TIME <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you time * ? -->
+<category><pattern>I HAVE HEARD TO *</pattern><template><think><srai>NOPX 3644</srai></think><random><li><srai>EXPDEX I HAVE HEARD TO <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you to * ? -->
+<category><pattern>I HAVE HEARD TODAY *</pattern><template><think><srai>NOPX 2060</srai></think><random><li><srai>EXPDEX I HAVE HEARD TODAY <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you today * ? -->
+<category><pattern>I HAVE HEARD TOO *</pattern><template><think><srai>NOPX 2758</srai></think><random><li><srai>EXPDEX I HAVE HEARD TOO <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you too * ? -->
+<category><pattern>I HAVE HEARD VERY *</pattern><template><think><srai>NOPX 3624</srai></think><random><li><srai>EXPDEX I HAVE HEARD VERY <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you very * ? -->
+<category><pattern>I HAVE HEARD WITH *</pattern><template><think><srai>NOPX 1467</srai></think><random><li><srai>EXPDEX I HAVE HEARD WITH <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you with * ? -->
+<category><pattern>I HAVE HEARD YET *</pattern><template><think><srai>NOPX 1621</srai></think><random><li><srai>EXPDEX I HAVE HEARD YET <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you yet * ? -->
+<category><pattern>I HAVE HEARD YOU *</pattern><template><think><srai>NOPX 15264</srai></think><random><li><srai>EXPDEX I HAVE HEARD YOU <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you you * ? -->
+<category><pattern>I HAVE HEARD A *</pattern><template><think><srai>NOPX 2278</srai></think><random><li><srai>EXPDEX I HAVE HEARD A <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you a * ? -->
+<category><pattern>I HAVE HEARD ABOUT *</pattern><template><think><srai>NOPX 4696</srai></think><random><li><srai>EXPDEX I HAVE HEARD ABOUT <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you about * ? -->
+<category><pattern>I HAVE HEARD ALL *</pattern><template><think><srai>NOPX 834</srai></think><random><li><srai>EXPDEX I HAVE HEARD ALL <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you all * ? -->
+<category><pattern>I HAVE HEARD FOR *</pattern><template><think><srai>NOPX 559</srai></think><random><li><srai>EXPDEX I HAVE HEARD FOR <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you for * ? -->
+<category><pattern>I HAVE HEARD FROM *</pattern><template><think><srai>NOPX 2800</srai></think><random><li><srai>EXPDEX I HAVE HEARD FROM <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you from * ? -->
+<category><pattern>I HAVE HEARD IN *</pattern><template><think><srai>NOPX 3740</srai></think><random><li><srai>EXPDEX I HAVE HEARD IN <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you in * ? -->
+<category><pattern>I HAVE HEARD IT *</pattern><template><think><srai>NOPX 3027</srai></think><random><li><srai>EXPDEX I HAVE HEARD IT <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you it * ? -->
+<category><pattern>I HAVE HEARD NOTHING *</pattern><template><think><srai>NOPX 988</srai></think><random><li><srai>EXPDEX I HAVE HEARD NOTHING <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you nothing * ? -->
+<category><pattern>I HAVE HEARD OF *</pattern><template><think><srai>NOPX 9486</srai></think><random><li><srai>EXPDEX I HAVE HEARD OF <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you of * ? -->
+<category><pattern>I HAVE HEARD ON *</pattern><template><think><srai>NOPX 620</srai></think><random><li><srai>EXPDEX I HAVE HEARD ON <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you on * ? -->
+<category><pattern>I HAVE HEARD SO *</pattern><template><think><srai>NOPX 2945</srai></think><random><li><srai>EXPDEX I HAVE HEARD SO <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you so * ? -->
+<category><pattern>I HAVE HEARD SOME *</pattern><template><think><srai>NOPX 1512</srai></think><random><li><srai>EXPDEX I HAVE HEARD SOME <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you some * ? -->
+<category><pattern>I HAVE HEARD THAT *</pattern><template><think><srai>NOPX 10951</srai></think><random><li><srai>EXPDEX I HAVE HEARD THAT <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you that * ? -->
+<category><pattern>I HAVE HEARD THE *</pattern><template><think><srai>NOPX 2531</srai></think><random><li><srai>EXPDEX I HAVE HEARD THE <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you the * ? -->
+<category><pattern>I HAVE HEARD THEY *</pattern><template><think><srai>NOPX 896</srai></think><random><li><srai>EXPDEX I HAVE HEARD THEY <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you they * ? -->
+<category><pattern>I HAVE HEARD THIS *</pattern><template><think><srai>NOPX 1799</srai></think><random><li><srai>EXPDEX I HAVE HEARD THIS <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you this * ? -->
+<category><pattern>I HAVE HEARD YOU *</pattern><template><think><srai>NOPX 628</srai></think><random><li><srai>EXPDEX I HAVE HEARD YOU <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you you * ? -->
+<category><pattern>I HAVE HEARD A COUPLE *</pattern><template><think><srai>NOPX 1445</srai></think><random><li><srai>EXPDEX I HAVE HEARD A COUPLE <star/></srai></li></random></template></category>
+<!-- p=-95.994059220385 	:who told you a couple * ? -->
+<category><pattern>I HAVE HEARD A LOT *</pattern><template><think><srai>NOPX 17039</srai></think><random><li><srai>EXPDEX I HAVE HEARD A LOT <star/></srai></li></random></template></category>
+<!-- p=-95.994059220385 	:who told you a lot * ? -->
+<category><pattern>I HAVE HEARD A NUMBER *</pattern><template><think><srai>NOPX 2695</srai></think><random><li><srai>EXPDEX I HAVE HEARD A NUMBER <star/></srai></li></random></template></category>
+<!-- p=-95.994059220385 	:who told you a number * ? -->
+<category><pattern>I HAVE HEARD A RUMOR *</pattern><template><think><srai>NOPX 1304</srai></think><random><li><srai>EXPDEX I HAVE HEARD A RUMOR <star/></srai></li></random></template></category>
+<!-- p=-95.994059220385 	:who told you a rumor * ? -->
+<category><pattern>I HAVE HEARD A RUMOUR *</pattern><template><think><srai>NOPX 1217</srai></think><random><li><srai>EXPDEX I HAVE HEARD A RUMOUR <star/></srai></li></random></template></category>
+<!-- p=-95.994059220385 	:who told you a rumour * ? -->
+<category><pattern>I HAVE HEARD A STORY *</pattern><template><think><srai>NOPX 624</srai></think><random><li><srai>EXPDEX I HAVE HEARD A STORY <star/></srai></li></random></template></category>
+<!-- p=-95.994059220385 	:who told you a story * ? -->
+<category><pattern>I HAVE HEARD A VOICE *</pattern><template><think><srai>NOPX 505</srai></think><random><li><srai>EXPDEX I HAVE HEARD A VOICE <star/></srai></li></random></template></category>
+<!-- p=-95.994059220385 	:who told you a voice * ? -->
+<category><pattern>I HAVE HEARD ABOUT HIM *</pattern><template><think><srai>NOPX 677</srai></think><random><li><srai>EXPDEX I HAVE HEARD ABOUT HIM <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who told you about him * ? -->
+<category><pattern>I HAVE HEARD ABOUT IT *</pattern><template><think><srai>NOPX 3729</srai></think><random><li><srai>EXPDEX I HAVE HEARD ABOUT IT <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who told you about it * ? -->
+<category><pattern>I HAVE HEARD ABOUT THEM *</pattern><template><think><srai>NOPX 773</srai></think><random><li><srai>EXPDEX I HAVE HEARD ABOUT THEM <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who told you about them * ? -->
+<category><pattern>I HAVE HEARD ABOUT YOU *</pattern><template><think><srai>NOPX 737</srai></think><random><li><srai>EXPDEX I HAVE HEARD ABOUT YOU <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who told you about you * ? -->
+<category><pattern>I HAVE HEARD ALL DAY *</pattern><template><think><srai>NOPX 693</srai></think><random><li><srai>EXPDEX I HAVE HEARD ALL DAY <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who told you all day * ? -->
+<category><pattern>I HAVE HEARD ALL YEAR *</pattern><template><think><srai>NOPX 1039</srai></think><random><li><srai>EXPDEX I HAVE HEARD ALL YEAR <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who told you all year * ? -->
+<category><pattern>I HAVE HEARD FROM HIM *</pattern><template><think><srai>NOPX 1365</srai></think><random><li><srai>EXPDEX I HAVE HEARD FROM HIM <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who told you from him * ? -->
+<category><pattern>I HAVE HEARD FROM THEM *</pattern><template><think><srai>NOPX 871</srai></think><random><li><srai>EXPDEX I HAVE HEARD FROM THEM <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who told you from them * ? -->
+<category><pattern>I HAVE HEARD FROM YOU *</pattern><template><think><srai>NOPX 2067</srai></think><random><li><srai>EXPDEX I HAVE HEARD FROM YOU <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who told you from you * ? -->
+<category><pattern>I HAVE HEARD IT BEFORE *</pattern><template><think><srai>NOPX 1435</srai></think><random><li><srai>EXPDEX I HAVE HEARD IT BEFORE <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who told you it before * ? -->
+<category><pattern>I HAVE HEARD IT FROM *</pattern><template><think><srai>NOPX 1486</srai></think><random><li><srai>EXPDEX I HAVE HEARD IT FROM <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who told you it from * ? -->
+<category><pattern>I HAVE HEARD IT IN *</pattern><template><think><srai>NOPX 872</srai></think><random><li><srai>EXPDEX I HAVE HEARD IT IN <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who told you it in * ? -->
+<category><pattern>I HAVE HEARD IT ON *</pattern><template><think><srai>NOPX 412</srai></think><random><li><srai>EXPDEX I HAVE HEARD IT ON <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who told you it on * ? -->
+<category><pattern>I HAVE HEARD OF UNK *</pattern><template><think><srai>NOPX 742</srai></think><random><li><srai>EXPDEX I HAVE HEARD OF UNK <star/></srai></li></random></template></category>
+<!-- p=-96.3989241796548 	:who told you of unk * ? -->
+<category><pattern>I HAVE HEARD OF HIM *</pattern><template><think><srai>NOPX 3239</srai></think><random><li><srai>EXPDEX I HAVE HEARD OF HIM <star/></srai></li></random></template></category>
+<!-- p=-96.3989241796548 	:who told you of him * ? -->
+<category><pattern>I HAVE HEARD OF IT *</pattern><template><think><srai>NOPX 8719</srai></think><random><li><srai>EXPDEX I HAVE HEARD OF IT <star/></srai></li></random></template></category>
+<!-- p=-96.3989241796548 	:who told you of it * ? -->
+<category><pattern>I HAVE HEARD OF THEM *</pattern><template><think><srai>NOPX 2866</srai></think><random><li><srai>EXPDEX I HAVE HEARD OF THEM <star/></srai></li></random></template></category>
+<!-- p=-96.3989241796548 	:who told you of them * ? -->
+<category><pattern>I HAVE HEARD OF YOU *</pattern><template><think><srai>NOPX 3200</srai></think><random><li><srai>EXPDEX I HAVE HEARD OF YOU <star/></srai></li></random></template></category>
+<!-- p=-96.3989241796548 	:who told you of you * ? -->
+<category><pattern>I HAVE HEARD SOME HORROR *</pattern><template><think><srai>NOPX 522</srai></think><random><li><srai>EXPDEX I HAVE HEARD SOME HORROR <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who told you some horror * ? -->
+<category><pattern>I HAVE HEARD SOME SAY *</pattern><template><think><srai>NOPX 1217</srai></think><random><li><srai>EXPDEX I HAVE HEARD SOME SAY <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who told you some say * ? -->
+<category><pattern>I HAVE HEARD THAT *</pattern><template><think><srai>NOPX 439</srai></think><random><li><srai>EXPDEX I HAVE HEARD THAT <star/></srai></li></random></template></category>
+<!-- p=-61.9078091964578 	:who told you that * ? -->
+<category><pattern>I HAVE HEARD THE ARGUMENT *</pattern><template><think><srai>NOPX 1381</srai></think><random><li><srai>EXPDEX I HAVE HEARD THE ARGUMENT <star/></srai></li></random></template></category>
+<!-- p=-97.234238543074 	:who told you the argument * ? -->
+<category><pattern>I HAVE HEARD THE CALL *</pattern><template><think><srai>NOPX 429</srai></think><random><li><srai>EXPDEX I HAVE HEARD THE CALL <star/></srai></li></random></template></category>
+<!-- p=-97.234238543074 	:who told you the call * ? -->
+<category><pattern>I HAVE HEARD THE EXPRESSION *</pattern><template><think><srai>NOPX 438</srai></think><random><li><srai>EXPDEX I HAVE HEARD THE EXPRESSION <star/></srai></li></random></template></category>
+<!-- p=-97.234238543074 	:who told you the expression * ? -->
+<category><pattern>I HAVE HEARD THE NAME *</pattern><template><think><srai>NOPX 1200</srai></think><random><li><srai>EXPDEX I HAVE HEARD THE NAME <star/></srai></li></random></template></category>
+<!-- p=-97.234238543074 	:who told you the name * ? -->
+<category><pattern>I HAVE HEARD THE PHRASE *</pattern><template><think><srai>NOPX 779</srai></think><random><li><srai>EXPDEX I HAVE HEARD THE PHRASE <star/></srai></li></random></template></category>
+<!-- p=-97.234238543074 	:who told you the phrase * ? -->
+<category><pattern>I HAVE HEARD THE QUESTION *</pattern><template><think><srai>NOPX 581</srai></think><random><li><srai>EXPDEX I HAVE HEARD THE QUESTION <star/></srai></li></random></template></category>
+<!-- p=-97.234238543074 	:who told you the question * ? -->
+<category><pattern>I HAVE HEARD THE REPROACH *</pattern><template><think><srai>NOPX 452</srai></think><random><li><srai>EXPDEX I HAVE HEARD THE REPROACH <star/></srai></li></random></template></category>
+<!-- p=-97.234238543074 	:who told you the reproach * ? -->
+<category><pattern>I HAVE HEARD THE SONG *</pattern><template><think><srai>NOPX 757</srai></think><random><li><srai>EXPDEX I HAVE HEARD THE SONG <star/></srai></li></random></template></category>
+<!-- p=-97.234238543074 	:who told you the song * ? -->
+<category><pattern>I HAVE HEARD THE SOUND *</pattern><template><think><srai>NOPX 460</srai></think><random><li><srai>EXPDEX I HAVE HEARD THE SOUND <star/></srai></li></random></template></category>
+<!-- p=-97.234238543074 	:who told you the sound * ? -->
+<category><pattern>I HAVE HEARD THE STORY *</pattern><template><think><srai>NOPX 1076</srai></think><random><li><srai>EXPDEX I HAVE HEARD THE STORY <star/></srai></li></random></template></category>
+<!-- p=-97.234238543074 	:who told you the story * ? -->
+<category><pattern>I HAVE HEARD THE TERM *</pattern><template><think><srai>NOPX 1798</srai></think><random><li><srai>EXPDEX I HAVE HEARD THE TERM <star/></srai></li></random></template></category>
+<!-- p=-97.234238543074 	:who told you the term * ? -->
+<category><pattern>I HAVE HEARD THE VOICE *</pattern><template><think><srai>NOPX 1520</srai></think><random><li><srai>EXPDEX I HAVE HEARD THE VOICE <star/></srai></li></random></template></category>
+<!-- p=-97.234238543074 	:who told you the voice * ? -->
+<category><pattern>I HAVE HEARD THE WORD *</pattern><template><think><srai>NOPX 1670</srai></think><random><li><srai>EXPDEX I HAVE HEARD THE WORD <star/></srai></li></random></template></category>
+<!-- p=-97.234238543074 	:who told you the word * ? -->
+<category><pattern>I HAVE HEARD THIS ARGUMENT *</pattern><template><think><srai>NOPX 792</srai></think><random><li><srai>EXPDEX I HAVE HEARD THIS ARGUMENT <star/></srai></li></random></template></category>
+<!-- p=-94.6919286156402 	:who told you this argument * ? -->
+<category><pattern>I HAVE HEARD THIS MORNING *</pattern><template><think><srai>NOPX 430</srai></think><random><li><srai>EXPDEX I HAVE HEARD THIS MORNING <star/></srai></li></random></template></category>
+<!-- p=-94.6919286156402 	:who told you this morning * ? -->
+<category><pattern>I HAVE HEARD THIS QUESTION *</pattern><template><think><srai>NOPX 436</srai></think><random><li><srai>EXPDEX I HAVE HEARD THIS QUESTION <star/></srai></li></random></template></category>
+<!-- p=-94.6919286156402 	:who told you this question * ? -->
+<category><pattern>I HAVE HEARD THIS SONG *</pattern><template><think><srai>NOPX 817</srai></think><random><li><srai>EXPDEX I HAVE HEARD THIS SONG <star/></srai></li></random></template></category>
+<!-- p=-94.6919286156402 	:who told you this song * ? -->
+<category><pattern>I HAVE HEARD THIS STORY *</pattern><template><think><srai>NOPX 840</srai></think><random><li><srai>EXPDEX I HAVE HEARD THIS STORY <star/></srai></li></random></template></category>
+<!-- p=-94.6919286156402 	:who told you this story * ? -->
+<category><pattern>I HAVE HEARD THIS YEAR *</pattern><template><think><srai>NOPX 1796</srai></think><random><li><srai>EXPDEX I HAVE HEARD THIS YEAR <star/></srai></li></random></template></category>
+<!-- p=-94.6919286156402 	:who told you this year * ? -->
+<category><pattern>I HAVE HEARD THY PRAYER *</pattern><template><think><srai>NOPX 1900</srai></think><random><li><srai>EXPDEX I HAVE HEARD THY PRAYER <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who told you thy prayer * ? -->
+<category><pattern>I HAVE HEARD THY SPEECH *</pattern><template><think><srai>NOPX 514</srai></think><random><li><srai>EXPDEX I HAVE HEARD THY SPEECH <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who told you thy speech * ? -->
+<category><pattern>I HAVE HEARD A LOT *</pattern><template><think><srai>NOPX 1012</srai></think><random><li><srai>EXPDEX I HAVE HEARD A LOT <star/></srai></li></random></template></category>
+<!-- p=-95.994059220385 	:who told you a lot * ? -->
+<category><pattern>I HAVE HEARD GOOD THINGS *</pattern><template><think><srai>NOPX 620</srai></think><random><li><srai>EXPDEX I HAVE HEARD GOOD THINGS <star/></srai></li></random></template></category>
+<!-- p=-94.5405969799611 	:who told you good things * ? -->
+</aiml>

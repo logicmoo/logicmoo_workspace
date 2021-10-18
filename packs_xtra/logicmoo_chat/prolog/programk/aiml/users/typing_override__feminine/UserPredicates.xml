@@ -1,0 +1,96 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<root>
+  <fallback name="binabot daxeline" />
+  <fallback name="botmod" />
+  <synchon name="botmod" />
+  <prefixes name="user." value="typing_override__feminine" />
+  <prefixes name="bot." value="binabot daxeline" />
+  <metaproviders name="chat.relationprops" />
+  <item name="legacy_xmlns" value="http://aitools.org/programd/4.6/bot-configuration" />
+  <item name="xsi" value="http://www.w3.org/2001/XMLSchema-instance" />
+  <item name="schemaLocation" value="http://aitools.org/programd/4.6/bot-configuration http://aitools.org/programd/4.6/bot-configuration.xsd" />
+  <item name="catchall" value="STDCATCHALL" />
+  <item name="askage" value="no" />
+  <item name="askhome" value="no" />
+  <item name="askname" value="no" />
+  <item name="askquestion" value="yes" />
+  <item name="he" value="he" />
+  <item name="her" value="her" />
+  <item name="him" value="him" />
+  <item name="is" value="a friend" />
+  <item name="it" value="it" />
+  <item name="job" value="teacher" />
+  <item name="meta" value="set" />
+  <item name="nickname" value="Pal" />
+  <item name="personality" value="average" />
+  <item name="she" value="she" />
+  <item name="sister" value="Sis" />
+  <item name="them" value="them" />
+  <item name="they" value="they" />
+  <item name="want" value="to talk to me" />
+  <item name="we" value="we" />
+  <item name="myself" value="typing_override__feminine" />
+  <item name="i" value="typing_override__feminine" />
+  <item name="my" value="typing_override__feminine's" />
+  <item name="firstname" value="typing" />
+  <item name="fullname" value="typing_override__feminine" />
+  <item name="middlename" value="override" />
+  <item name="lastname" value="feminine" />
+  <item name="me" value="typing override - feminine" />
+  <item name="startgraph" value="typing_override__feminine_to_binabot_daxeline" />
+  <item name="name" value="typing_override__feminine" />
+  <item name="id" value="typing_override__feminine" />
+  <item name="passed" value="" />
+  <item name="failed" value="" />
+  <item name="master" value="unknown" />
+  <item name="birthplace" value="unknown" />
+  <item name="favoritebook" value="unknown" />
+  <item name="favoritecolor" value="unknown" />
+  <item name="favoriteband" value="unknown" />
+  <item name="favoritefood" value="unknown" />
+  <item name="favoritesong" value="unknown" />
+  <item name="favoritemovie" value="unknown" />
+  <item name="forfun" value="unknown" />
+  <item name="friends" value="unknown" />
+  <item name="kindmusic" value="unknown" />
+  <item name="question" value="unknown" />
+  <item name="talkabout" value="unknown" />
+  <item name="wear" value="unknown" />
+  <item name="website" value="unknown" />
+  <item name="language" value="unknown" />
+  <item name="that" value="something" />
+  <item name="who" value="someone" />
+  <item name="what" value="something" />
+  <item name="when" value="sometime" />
+  <item name="why" value="some reason" />
+  <item name="how" value="some way" />
+  <item name="age" value="unknown" />
+  <item name="birthday" value="unknown" />
+  <item name="boyfriend" value="unknown" />
+  <item name="brother" value="unknown" />
+  <item name="cat" value="unknown" />
+  <item name="does" value="unknown" />
+  <item name="dog" value="unknown" />
+  <item name="email" value="unknown" />
+  <item name="father" value="unknown" />
+  <item name="favcolor" value="unknown" />
+  <item name="favmovie" value="unknown" />
+  <item name="friend" value="unknown" />
+  <item name="gender" value="unknown" />
+  <item name="girlfriend" value="unknown" />
+  <item name="has" value="unknown" />
+  <item name="heard" value="unknown" />
+  <item name="husband" value="unknown" />
+  <item name="like" value="unknown" />
+  <item name="location" value="unknown" />
+  <item name="looklike" value="unknown" />
+  <item name="mother" value="unknown" />
+  <item name="password" value="unknown" />
+  <item name="phone" value="unknown" />
+  <item name="sign" value="unknown" />
+  <item name="cycself" value="#$Cyc" />
+  <item name="firsttime" value="" />
+  <item name="memory" value="nothing" />
+  <item name="thought" value="nothing" />
+  <item name="userdir" value="aiml/users/typing_override__feminine/" />
+</root>

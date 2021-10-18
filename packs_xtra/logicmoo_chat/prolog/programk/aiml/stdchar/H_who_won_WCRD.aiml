@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<aiml>
+
+<!-- main H_Default.aiml (1035947) mp=-1: WHO WON * -->
+
+<!-- MINSEQ: mp=-1:  -->
+<category><pattern>EXPDEX WHO WON *</pattern><template>I think the fans were the big winners.</template></category>
+<category><pattern>WHO WON *</pattern><template><srai>EXPDEX WHO WON <star/></srai></template></category>
+<category><pattern>WHO WON THE *</pattern><template><think><srai>NOPX 1600</srai></think><random><li><srai>EXPDEX WHO WON THE <star/></srai></li></random></template></category>
+<category><pattern>WHO WON THE *</pattern><template><think><srai>NOPX 245</srai></think><random><li><srai>EXPDEX WHO WON THE <star/></srai></li></random></template></category>
+<category><pattern>WHO WON THE *</pattern><template><think><srai>NOPX 275</srai></think><random><li><srai>EXPDEX WHO WON THE <star/></srai></li></random></template></category>
+<category><pattern>WHO WON THE *</pattern><template><think><srai>NOPX 3475</srai></think><random><li><srai>EXPDEX WHO WON THE <star/></srai></li></random></template></category>
+<category><pattern>WHO WON IN *</pattern><template><think><srai>NOPX 270</srai></think><random><li><srai>EXPDEX WHO WON IN <star/></srai></li></random></template></category>
+<category><pattern>WHO WON THE *</pattern><template><think><srai>NOPX 6713</srai></think><random><li><srai>EXPDEX WHO WON THE <star/></srai></li></random></template></category>
+<category><pattern>WHO WON AT *</pattern><template><think><srai>NOPX 226</srai></think><random><li><srai>EXPDEX WHO WON AT <star/></srai></li></random></template></category>
+<category><pattern>WHO WON IN *</pattern><template><think><srai>NOPX 731</srai></think><random><li><srai>EXPDEX WHO WON IN <star/></srai></li></random></template></category>
+<category><pattern>WHO WON THE *</pattern><template><think><srai>NOPX 26766</srai></think><random><li><srai>EXPDEX WHO WON THE <star/></srai></li></random></template></category>
+<category><pattern>WHO WON THE *</pattern><template><think><srai>NOPX 125</srai></think><random><li><srai>EXPDEX WHO WON THE <star/></srai></li></random></template></category>
+<category><pattern>WHO WON THE *</pattern><template><think><srai>NOPX 186</srai></think><random><li><srai>EXPDEX WHO WON THE <star/></srai></li></random></template></category>
+<category><pattern>WHO WON THE *</pattern><template><think><srai>NOPX 939</srai></think><random><li><srai>EXPDEX WHO WON THE <star/></srai></li></random></template></category>
+<category><pattern>WHO WON AT *</pattern><template><think><srai>NOPX 5217</srai></think><random><li><srai>EXPDEX WHO WON AT <star/></srai></li></random></template></category>
+<category><pattern>WHO WON AWARDS *</pattern><template><think><srai>NOPX 1968</srai></think><random><li><srai>EXPDEX WHO WON AWARDS <star/></srai></li></random></template></category>
+<category><pattern>WHO WON IN *</pattern><template><think><srai>NOPX 13326</srai></think><random><li><srai>EXPDEX WHO WON IN <star/></srai></li></random></template></category>
+<category><pattern>WHO WON MANY *</pattern><template><think><srai>NOPX 1176</srai></think><random><li><srai>EXPDEX WHO WON MANY <star/></srai></li></random></template></category>
+<category><pattern>WHO WON NUMEROUS *</pattern><template><think><srai>NOPX 447</srai></think><random><li><srai>EXPDEX WHO WON NUMEROUS <star/></srai></li></random></template></category>
+<category><pattern>WHO WON OVER *</pattern><template><think><srai>NOPX 2683</srai></think><random><li><srai>EXPDEX WHO WON OVER <star/></srai></li></random></template></category>
+<category><pattern>WHO WON SEVERAL *</pattern><template><think><srai>NOPX 1222</srai></think><random><li><srai>EXPDEX WHO WON SEVERAL <star/></srai></li></random></template></category>
+<category><pattern>WHO WON THE *</pattern><template><think><srai>NOPX 297629</srai></think><random><li><srai>EXPDEX WHO WON THE <star/></srai></li></random></template></category>
+<category><pattern>WHO WON THE *</pattern><template><think><srai>NOPX 1600</srai></think><random><li><srai>EXPDEX WHO WON THE <star/></srai></li></random></template></category>
+<category><pattern>WHO WON THE *</pattern><template><think><srai>NOPX 3475</srai></think><random><li><srai>EXPDEX WHO WON THE <star/></srai></li></random></template></category>
+<category><pattern>WHO WON THINGS *</pattern><template><think><srai>NOPX 494</srai></think><random><li><srai>EXPDEX WHO WON THINGS <star/></srai></li></random></template></category>
+<category><pattern>WHO WON WHAT *</pattern><template><think><srai>NOPX 477</srai></think><random><li><srai>EXPDEX WHO WON WHAT <star/></srai></li></random></template></category>
+<category><pattern>WHO WON AND *</pattern><template><think><srai>NOPX 634</srai></think><random><li><srai>EXPDEX WHO WON AND <star/></srai></li></random></template></category>
+<category><pattern>WHO WON THE *</pattern><template><think><srai>NOPX 6713</srai></think><random><li><srai>EXPDEX WHO WON THE <star/></srai></li></random></template></category>
+<category><pattern>WHO WON AND *</pattern><template><think><srai>NOPX 647</srai></think><random><li><srai>EXPDEX WHO WON AND <star/></srai></li></random></template></category>
+<category><pattern>WHO WON FOR *</pattern><template><think><srai>NOPX 555</srai></think><random><li><srai>EXPDEX WHO WON FOR <star/></srai></li></random></template></category>
+<category><pattern>WHO WON IN *</pattern><template><think><srai>NOPX 731</srai></think><random><li><srai>EXPDEX WHO WON IN <star/></srai></li></random></template></category>
+<category><pattern>WHO WON IT *</pattern><template><think><srai>NOPX 524</srai></think><random><li><srai>EXPDEX WHO WON IT <star/></srai></li></random></template></category>
+<category><pattern>WHO WON LAST *</pattern><template><think><srai>NOPX 478</srai></think><random><li><srai>EXPDEX WHO WON LAST <star/></srai></li></random></template></category>
+<category><pattern>WHO WON OUR *</pattern><template><think><srai>NOPX 2832</srai></think><random><li><srai>EXPDEX WHO WON OUR <star/></srai></li></random></template></category>
+<category><pattern>WHO WON THAT *</pattern><template><think><srai>NOPX 522</srai></think><random><li><srai>EXPDEX WHO WON THAT <star/></srai></li></random></template></category>
+<category><pattern>WHO WON THE *</pattern><template><think><srai>NOPX 26766</srai></think><random><li><srai>EXPDEX WHO WON THE <star/></srai></li></random></template></category>
+<category><pattern>WHO WON THIS *</pattern><template><think><srai>NOPX 803</srai></think><random><li><srai>EXPDEX WHO WON THIS <star/></srai></li></random></template></category>
+<category><pattern>WHO WON WHAT *</pattern><template><think><srai>NOPX 999</srai></think><random><li><srai>EXPDEX WHO WON WHAT <star/></srai></li></random></template></category>
+<category><pattern>WHO WON UNK *</pattern><template><think><srai>NOPX 1717</srai></think><random><li><srai>EXPDEX WHO WON UNK <star/></srai></li></random></template></category>
+<category><pattern>WHO WON BEST *</pattern><template><think><srai>NOPX 2264</srai></think><random><li><srai>EXPDEX WHO WON BEST <star/></srai></li></random></template></category>
+<category><pattern>WHO WON FLORIDA *</pattern><template><think><srai>NOPX 445</srai></think><random><li><srai>EXPDEX WHO WON FLORIDA <star/></srai></li></random></template></category>
+<category><pattern>WHO WON GOLD *</pattern><template><think><srai>NOPX 2101</srai></think><random><li><srai>EXPDEX WHO WON GOLD <star/></srai></li></random></template></category>
+<category><pattern>WHO WON NOBEL *</pattern><template><think><srai>NOPX 611</srai></think><random><li><srai>EXPDEX WHO WON NOBEL <star/></srai></li></random></template></category>
+<category><pattern>WHO WON OLYMPIC *</pattern><template><think><srai>NOPX 1022</srai></think><random><li><srai>EXPDEX WHO WON OLYMPIC <star/></srai></li></random></template></category>
+<category><pattern>WHO WON OSCARS *</pattern><template><think><srai>NOPX 938</srai></think><random><li><srai>EXPDEX WHO WON OSCARS <star/></srai></li></random></template></category>
+<category><pattern>WHO WON SATURDAY *</pattern><template><think><srai>NOPX 536</srai></think><random><li><srai>EXPDEX WHO WON SATURDAY <star/></srai></li></random></template></category>
+<category><pattern>WHO WON SUPER *</pattern><template><think><srai>NOPX 549</srai></think><random><li><srai>EXPDEX WHO WON SUPER <star/></srai></li></random></template></category>
+<category><pattern>WHO WON SURVIVOR *</pattern><template><think><srai>NOPX 1332</srai></think><random><li><srai>EXPDEX WHO WON SURVIVOR <star/></srai></li></random></template></category>
+<category><pattern>WHO WON THE *</pattern><template><think><srai>NOPX 939</srai></think><random><li><srai>EXPDEX WHO WON THE <star/></srai></li></random></template></category>
+<category><pattern>WHO WON WIMBLEDON *</pattern><template><think><srai>NOPX 573</srai></think><random><li><srai>EXPDEX WHO WON WIMBLEDON <star/></srai></li></random></template></category>
+<category><pattern>WHO WON WORLD *</pattern><template><think><srai>NOPX 877</srai></think><random><li><srai>EXPDEX WHO WON WORLD <star/></srai></li></random></template></category>
+<category><pattern>WHO WON ACCLAIM *</pattern><template><think><srai>NOPX 514</srai></think><random><li><srai>EXPDEX WHO WON ACCLAIM <star/></srai></li></random></template></category>
+<category><pattern>WHO WON AGAINST *</pattern><template><think><srai>NOPX 441</srai></think><random><li><srai>EXPDEX WHO WON AGAINST <star/></srai></li></random></template></category>
+<category><pattern>WHO WON ALL *</pattern><template><think><srai>NOPX 2885</srai></think><random><li><srai>EXPDEX WHO WON ALL <star/></srai></li></random></template></category>
+<category><pattern>WHO WON AN *</pattern><template><think><srai>NOPX 33810</srai></think><random><li><srai>EXPDEX WHO WON AN <star/></srai></li></random></template></category>
+<category><pattern>WHO WON AS *</pattern><template><think><srai>NOPX 880</srai></think><random><li><srai>EXPDEX WHO WON AS <star/></srai></li></random></template></category>
+<category><pattern>WHO WON AT *</pattern><template><think><srai>NOPX 5217</srai></think><random><li><srai>EXPDEX WHO WON AT <star/></srai></li></random></template></category>
+<category><pattern>WHO WON AWARDS *</pattern><template><think><srai>NOPX 1968</srai></think><random><li><srai>EXPDEX WHO WON AWARDS <star/></srai></li></random></template></category>
+<category><pattern>WHO WON BECAUSE *</pattern><template><think><srai>NOPX 483</srai></think><random><li><srai>EXPDEX WHO WON BECAUSE <star/></srai></li></random></template></category>
+<category><pattern>WHO WON BIG *</pattern><template><think><srai>NOPX 545</srai></think><random><li><srai>EXPDEX WHO WON BIG <star/></srai></li></random></template></category>
+<category><pattern>WHO WON BOTH *</pattern><template><think><srai>NOPX 3822</srai></think><random><li><srai>EXPDEX WHO WON BOTH <star/></srai></li></random></template></category>
+<category><pattern>WHO WON BRONZE *</pattern><template><think><srai>NOPX 1274</srai></think><random><li><srai>EXPDEX WHO WON BRONZE <star/></srai></li></random></template></category>
+<category><pattern>WHO WON BY *</pattern><template><think><srai>NOPX 4355</srai></think><random><li><srai>EXPDEX WHO WON BY <star/></srai></li></random></template></category>
+<category><pattern>WHO WON CONTRACTS *</pattern><template><think><srai>NOPX 543</srai></think><random><li><srai>EXPDEX WHO WON CONTRACTS <star/></srai></li></random></template></category>
+<category><pattern>WHO WON CONTROL *</pattern><template><think><srai>NOPX 594</srai></think><random><li><srai>EXPDEX WHO WON CONTROL <star/></srai></li></random></template></category>
+<category><pattern>WHO WON DESPITE *</pattern><template><think><srai>NOPX 758</srai></think><random><li><srai>EXPDEX WHO WON DESPITE <star/></srai></li></random></template></category>
+<category><pattern>WHO WON EACH *</pattern><template><think><srai>NOPX 614</srai></think><random><li><srai>EXPDEX WHO WON EACH <star/></srai></li></random></template></category>
+<category><pattern>WHO WON ELECTION *</pattern><template><think><srai>NOPX 1977</srai></think><random><li><srai>EXPDEX WHO WON ELECTION <star/></srai></li></random></template></category>
+<category><pattern>WHO WON ELECTIONS *</pattern><template><think><srai>NOPX 500</srai></think><random><li><srai>EXPDEX WHO WON ELECTIONS <star/></srai></li></random></template></category>
+<category><pattern>WHO WON EVERY *</pattern><template><think><srai>NOPX 684</srai></think><random><li><srai>EXPDEX WHO WON EVERY <star/></srai></li></random></template></category>
+<category><pattern>WHO WON FAME *</pattern><template><think><srai>NOPX 1336</srai></think><random><li><srai>EXPDEX WHO WON FAME <star/></srai></li></random></template></category>
+<category><pattern>WHO WON FIRST *</pattern><template><think><srai>NOPX 2856</srai></think><random><li><srai>EXPDEX WHO WON FIRST <star/></srai></li></random></template></category>
+<category><pattern>WHO WON FOR *</pattern><template><think><srai>NOPX 11972</srai></think><random><li><srai>EXPDEX WHO WON FOR <star/></srai></li></random></template></category>
+<category><pattern>WHO WON FROM *</pattern><template><think><srai>NOPX 724</srai></think><random><li><srai>EXPDEX WHO WON FROM <star/></srai></li></random></template></category>
+<category><pattern>WHO WON GOLD *</pattern><template><think><srai>NOPX 4751</srai></think><random><li><srai>EXPDEX WHO WON GOLD <star/></srai></li></random></template></category>
+<category><pattern>WHO WON HER *</pattern><template><think><srai>NOPX 5778</srai></think><random><li><srai>EXPDEX WHO WON HER <star/></srai></li></random></template></category>
+<category><pattern>WHO WON HIGH *</pattern><template><think><srai>NOPX 2038</srai></think><random><li><srai>EXPDEX WHO WON HIGH <star/></srai></li></random></template></category>
+<category><pattern>WHO WON HIS *</pattern><template><think><srai>NOPX 15834</srai></think><random><li><srai>EXPDEX WHO WON HIS <star/></srai></li></random></template></category>
+<category><pattern>WHO WON IN *</pattern><template><think><srai>NOPX 13326</srai></think><random><li><srai>EXPDEX WHO WON IN <star/></srai></li></random></template></category>
+<category><pattern>WHO WON INTERNATIONAL *</pattern><template><think><srai>NOPX 672</srai></think><random><li><srai>EXPDEX WHO WON INTERNATIONAL <star/></srai></li></random></template></category>
+<category><pattern>WHO WON IT *</pattern><template><think><srai>NOPX 5886</srai></think><random><li><srai>EXPDEX WHO WON IT <star/></srai></li></random></template></category>
+<category><pattern>WHO WON ITS *</pattern><template><think><srai>NOPX 734</srai></think><random><li><srai>EXPDEX WHO WON ITS <star/></srai></li></random></template></category>
+<category><pattern>WHO WON LAST *</pattern><template><think><srai>NOPX 8950</srai></think><random><li><srai>EXPDEX WHO WON LAST <star/></srai></li></random></template></category>
+<category><pattern>WHO WON MANY *</pattern><template><think><srai>NOPX 1176</srai></think><random><li><srai>EXPDEX WHO WON MANY <star/></srai></li></random></template></category>
+<category><pattern>WHO WON MEDALS *</pattern><template><think><srai>NOPX 1408</srai></think><random><li><srai>EXPDEX WHO WON MEDALS <star/></srai></li></random></template></category>
+<category><pattern>WHO WON MULTIPLE *</pattern><template><think><srai>NOPX 700</srai></think><random><li><srai>EXPDEX WHO WON MULTIPLE <star/></srai></li></random></template></category>
+<category><pattern>WHO WON MY *</pattern><template><think><srai>NOPX 945</srai></think><random><li><srai>EXPDEX WHO WON MY <star/></srai></li></random></template></category>
+<category><pattern>WHO WON NATIONAL *</pattern><template><think><srai>NOPX 545</srai></think><random><li><srai>EXPDEX WHO WON NATIONAL <star/></srai></li></random></template></category>
+<category><pattern>WHO WON NUMEROUS *</pattern><template><think><srai>NOPX 447</srai></think><random><li><srai>EXPDEX WHO WON NUMEROUS <star/></srai></li></random></template></category>
+<category><pattern>WHO WON OFFICE *</pattern><template><think><srai>NOPX 437</srai></think><random><li><srai>EXPDEX WHO WON OFFICE <star/></srai></li></random></template></category>
+<category><pattern>WHO WON ON *</pattern><template><think><srai>NOPX 2525</srai></think><random><li><srai>EXPDEX WHO WON ON <star/></srai></li></random></template></category>
+<category><pattern>WHO WON OUR *</pattern><template><think><srai>NOPX 4279</srai></think><random><li><srai>EXPDEX WHO WON OUR <star/></srai></li></random></template></category>
+<category><pattern>WHO WON OUT *</pattern><template><think><srai>NOPX 656</srai></think><random><li><srai>EXPDEX WHO WON OUT <star/></srai></li></random></template></category>
+<category><pattern>WHO WON OVER *</pattern><template><think><srai>NOPX 2683</srai></think><random><li><srai>EXPDEX WHO WON OVER <star/></srai></li></random></template></category>
+<category><pattern>WHO WON PRIZES *</pattern><template><think><srai>NOPX 1425</srai></think><random><li><srai>EXPDEX WHO WON PRIZES <star/></srai></li></random></template></category>
+<category><pattern>WHO WON RE *</pattern><template><think><srai>NOPX 1941</srai></think><random><li><srai>EXPDEX WHO WON RE <star/></srai></li></random></template></category>
+<category><pattern>WHO WON REELECTION *</pattern><template><think><srai>NOPX 448</srai></think><random><li><srai>EXPDEX WHO WON REELECTION <star/></srai></li></random></template></category>
+<category><pattern>WHO WON SEATS *</pattern><template><think><srai>NOPX 886</srai></think><random><li><srai>EXPDEX WHO WON SEATS <star/></srai></li></random></template></category>
+<category><pattern>WHO WON SECOND *</pattern><template><think><srai>NOPX 896</srai></think><random><li><srai>EXPDEX WHO WON SECOND <star/></srai></li></random></template></category>
+<category><pattern>WHO WON SEVERAL *</pattern><template><think><srai>NOPX 1222</srai></think><random><li><srai>EXPDEX WHO WON SEVERAL <star/></srai></li></random></template></category>
+<category><pattern>WHO WON SILVER *</pattern><template><think><srai>NOPX 1908</srai></think><random><li><srai>EXPDEX WHO WON SILVER <star/></srai></li></random></template></category>
+<category><pattern>WHO WON SOME *</pattern><template><think><srai>NOPX 594</srai></think><random><li><srai>EXPDEX WHO WON SOME <star/></srai></li></random></template></category>
+<category><pattern>WHO WON SUPER *</pattern><template><think><srai>NOPX 452</srai></think><random><li><srai>EXPDEX WHO WON SUPER <star/></srai></li></random></template></category>
+<category><pattern>WHO WON THAT *</pattern><template><think><srai>NOPX 4813</srai></think><random><li><srai>EXPDEX WHO WON THAT <star/></srai></li></random></template></category>
+<category><pattern>WHO WON THE *</pattern><template><think><srai>NOPX 297629</srai></think><random><li><srai>EXPDEX WHO WON THE <star/></srai></li></random></template></category>
+<category><pattern>WHO WON THEIR *</pattern><template><think><srai>NOPX 16976</srai></think><random><li><srai>EXPDEX WHO WON THEIR <star/></srai></li></random></template></category>
+<category><pattern>WHO WON THEM *</pattern><template><think><srai>NOPX 1260</srai></think><random><li><srai>EXPDEX WHO WON THEM <star/></srai></li></random></template></category>
+<category><pattern>WHO WON THIRD *</pattern><template><think><srai>NOPX 420</srai></think><random><li><srai>EXPDEX WHO WON THIRD <star/></srai></li></random></template></category>
+<category><pattern>WHO WON THIS *</pattern><template><think><srai>NOPX 10977</srai></think><random><li><srai>EXPDEX WHO WON THIS <star/></srai></li></random></template></category>
+<category><pattern>WHO WON THOSE *</pattern><template><think><srai>NOPX 422</srai></think><random><li><srai>EXPDEX WHO WON THOSE <star/></srai></li></random></template></category>
+<category><pattern>WHO WON THROUGH *</pattern><template><think><srai>NOPX 403</srai></think><random><li><srai>EXPDEX WHO WON THROUGH <star/></srai></li></random></template></category>
+<category><pattern>WHO WON TICKETS *</pattern><template><think><srai>NOPX 544</srai></think><random><li><srai>EXPDEX WHO WON TICKETS <star/></srai></li></random></template></category>
+<category><pattern>WHO WON TODAY *</pattern><template><think><srai>NOPX 441</srai></think><random><li><srai>EXPDEX WHO WON TODAY <star/></srai></li></random></template></category>
+<category><pattern>WHO WON WITH *</pattern><template><think><srai>NOPX 3026</srai></think><random><li><srai>EXPDEX WHO WON WITH <star/></srai></li></random></template></category>
+<category><pattern>WHO WON WORLD *</pattern><template><think><srai>NOPX 708</srai></think><random><li><srai>EXPDEX WHO WON WORLD <star/></srai></li></random></template></category>
+<category><pattern>WHO WON YOUR *</pattern><template><think><srai>NOPX 636</srai></think><random><li><srai>EXPDEX WHO WON YOUR <star/></srai></li></random></template></category>
+<category><pattern>WHO WON UNK *</pattern><template><think><srai>NOPX 562</srai></think><random><li><srai>EXPDEX WHO WON UNK <star/></srai></li></random></template></category>
+<category><pattern>WHO WON AND WHO *</pattern><template><think><srai>NOPX 432</srai></think><random><li><srai>EXPDEX WHO WON AND WHO <star/></srai></li></random></template></category>
+<category><pattern>WHO WON FOR US *</pattern><template><think><srai>NOPX 451</srai></think><random><li><srai>EXPDEX WHO WON FOR US <star/></srai></li></random></template></category>
+<category><pattern>WHO WON OLYMPIC GOLD *</pattern><template><think><srai>NOPX 600</srai></think><random><li><srai>EXPDEX WHO WON OLYMPIC GOLD <star/></srai></li></random></template></category>
+<category><pattern>WHO WON WORLD WAR *</pattern><template><think><srai>NOPX 655</srai></think><random><li><srai>EXPDEX WHO WON WORLD WAR <star/></srai></li></random></template></category>
+<category><pattern>WHO WON A BEST *</pattern><template><think><srai>NOPX 1355</srai></think><random><li><srai>EXPDEX WHO WON A BEST <star/></srai></li></random></template></category>
+<category><pattern>WHO WON A GOLDEN *</pattern><template><think><srai>NOPX 1172</srai></think><random><li><srai>EXPDEX WHO WON A GOLDEN <star/></srai></li></random></template></category>
+<category><pattern>WHO WON A GRAMMY *</pattern><template><think><srai>NOPX 797</srai></think><random><li><srai>EXPDEX WHO WON A GRAMMY <star/></srai></li></random></template></category>
+<category><pattern>WHO WON A NOBEL *</pattern><template><think><srai>NOPX 2683</srai></think><random><li><srai>EXPDEX WHO WON A NOBEL <star/></srai></li></random></template></category>
+<category><pattern>WHO WON A PULITZER *</pattern><template><think><srai>NOPX 3131</srai></think><random><li><srai>EXPDEX WHO WON A PULITZER <star/></srai></li></random></template></category>
+<category><pattern>WHO WON A SILVER *</pattern><template><think><srai>NOPX 696</srai></think><random><li><srai>EXPDEX WHO WON A SILVER <star/></srai></li></random></template></category>
+<category><pattern>WHO WON A SUPER *</pattern><template><think><srai>NOPX 753</srai></think><random><li><srai>EXPDEX WHO WON A SUPER <star/></srai></li></random></template></category>
+<category><pattern>WHO WON A TONY *</pattern><template><think><srai>NOPX 2007</srai></think><random><li><srai>EXPDEX WHO WON A TONY <star/></srai></li></random></template></category>
+<category><pattern>WHO WON A WORLD *</pattern><template><think><srai>NOPX 494</srai></think><random><li><srai>EXPDEX WHO WON A WORLD <star/></srai></li></random></template></category>
+<category><pattern>WHO WON A BEST *</pattern><template><think><srai>NOPX 824</srai></think><random><li><srai>EXPDEX WHO WON A BEST <star/></srai></li></random></template></category>
+<category><pattern>WHO WON A BRONZE *</pattern><template><think><srai>NOPX 1443</srai></think><random><li><srai>EXPDEX WHO WON A BRONZE <star/></srai></li></random></template></category>
+<category><pattern>WHO WON A CASH *</pattern><template><think><srai>NOPX 476</srai></think><random><li><srai>EXPDEX WHO WON A CASH <star/></srai></li></random></template></category>
+<category><pattern>WHO WON A COMPETITION *</pattern><template><think><srai>NOPX 621</srai></think><random><li><srai>EXPDEX WHO WON A COMPETITION <star/></srai></li></random></template></category>
+<category><pattern>WHO WON A CONTEST *</pattern><template><think><srai>NOPX 740</srai></think><random><li><srai>EXPDEX WHO WON A CONTEST <star/></srai></li></random></template></category>
+<category><pattern>WHO WON A COPY *</pattern><template><think><srai>NOPX 5713</srai></think><random><li><srai>EXPDEX WHO WON A COPY <star/></srai></li></random></template></category>
+<category><pattern>WHO WON A GOLD *</pattern><template><think><srai>NOPX 2822</srai></think><random><li><srai>EXPDEX WHO WON A GOLD <star/></srai></li></random></template></category>
+<category><pattern>WHO WON A LANDSLIDE *</pattern><template><think><srai>NOPX 429</srai></think><random><li><srai>EXPDEX WHO WON A LANDSLIDE <star/></srai></li></random></template></category>
+<category><pattern>WHO WON A LAWSUIT *</pattern><template><think><srai>NOPX 426</srai></think><random><li><srai>EXPDEX WHO WON A LAWSUIT <star/></srai></li></random></template></category>
+<category><pattern>WHO WON A NATIONAL *</pattern><template><think><srai>NOPX 795</srai></think><random><li><srai>EXPDEX WHO WON A NATIONAL <star/></srai></li></random></template></category>
+<category><pattern>WHO WON A PRIZE *</pattern><template><think><srai>NOPX 688</srai></think><random><li><srai>EXPDEX WHO WON A PRIZE <star/></srai></li></random></template></category>
+<category><pattern>WHO WON A RECORD *</pattern><template><think><srai>NOPX 1002</srai></think><random><li><srai>EXPDEX WHO WON A RECORD <star/></srai></li></random></template></category>
+<category><pattern>WHO WON A SCHOLARSHIP *</pattern><template><think><srai>NOPX 444</srai></think><random><li><srai>EXPDEX WHO WON A SCHOLARSHIP <star/></srai></li></random></template></category>
+<category><pattern>WHO WON A SEAT *</pattern><template><think><srai>NOPX 1083</srai></think><random><li><srai>EXPDEX WHO WON A SEAT <star/></srai></li></random></template></category>
+<category><pattern>WHO WON A SECOND *</pattern><template><think><srai>NOPX 616</srai></think><random><li><srai>EXPDEX WHO WON A SECOND <star/></srai></li></random></template></category>
+<category><pattern>WHO WON A SILVER *</pattern><template><think><srai>NOPX 2186</srai></think><random><li><srai>EXPDEX WHO WON A SILVER <star/></srai></li></random></template></category>
+<category><pattern>WHO WON A SPECIAL *</pattern><template><think><srai>NOPX 473</srai></think><random><li><srai>EXPDEX WHO WON A SPECIAL <star/></srai></li></random></template></category>
+<category><pattern>WHO WON A TOTAL *</pattern><template><think><srai>NOPX 451</srai></think><random><li><srai>EXPDEX WHO WON A TOTAL <star/></srai></li></random></template></category>
+<category><pattern>WHO WON A TRIP *</pattern><template><think><srai>NOPX 431</srai></think><random><li><srai>EXPDEX WHO WON A TRIP <star/></srai></li></random></template></category>
+<category><pattern>WHO WON A WHOPPING *</pattern><template><think><srai>NOPX 423</srai></think><random><li><srai>EXPDEX WHO WON A WHOPPING <star/></srai></li></random></template></category>
+<category><pattern>WHO WON AN ACADEMY *</pattern><template><think><srai>NOPX 2974</srai></think><random><li><srai>EXPDEX WHO WON AN ACADEMY <star/></srai></li></random></template></category>
+<category><pattern>WHO WON AN EMMY *</pattern><template><think><srai>NOPX 1855</srai></think><random><li><srai>EXPDEX WHO WON AN EMMY <star/></srai></li></random></template></category>
+<category><pattern>WHO WON AN OLYMPIC *</pattern><template><think><srai>NOPX 615</srai></think><random><li><srai>EXPDEX WHO WON AN OLYMPIC <star/></srai></li></random></template></category>
+<category><pattern>WHO WON AN OSCAR *</pattern><template><think><srai>NOPX 9633</srai></think><random><li><srai>EXPDEX WHO WON AN OSCAR <star/></srai></li></random></template></category>
+<category><pattern>WHO WON AN AWARD *</pattern><template><think><srai>NOPX 2362</srai></think><random><li><srai>EXPDEX WHO WON AN AWARD <star/></srai></li></random></template></category>
+<category><pattern>WHO WON AN INCREDIBLE *</pattern><template><think><srai>NOPX 8836</srai></think><random><li><srai>EXPDEX WHO WON AN INCREDIBLE <star/></srai></li></random></template></category>
+<category><pattern>WHO WON BRONZE IN *</pattern><template><think><srai>NOPX 549</srai></think><random><li><srai>EXPDEX WHO WON BRONZE IN <star/></srai></li></random></template></category>
+<category><pattern>WHO WON CONTROL OF *</pattern><template><think><srai>NOPX 566</srai></think><random><li><srai>EXPDEX WHO WON CONTROL OF <star/></srai></li></random></template></category>
+<category><pattern>WHO WON ELECTION IN *</pattern><template><think><srai>NOPX 789</srai></think><random><li><srai>EXPDEX WHO WON ELECTION IN <star/></srai></li></random></template></category>
+<category><pattern>WHO WON FAME AS *</pattern><template><think><srai>NOPX 494</srai></think><random><li><srai>EXPDEX WHO WON FAME AS <star/></srai></li></random></template></category>
+<category><pattern>WHO WON FIRST PLACE *</pattern><template><think><srai>NOPX 1310</srai></think><random><li><srai>EXPDEX WHO WON FIRST PLACE <star/></srai></li></random></template></category>
+<category><pattern>WHO WON FIRST PRIZE *</pattern><template><think><srai>NOPX 878</srai></think><random><li><srai>EXPDEX WHO WON FIRST PRIZE <star/></srai></li></random></template></category>
+<category><pattern>WHO WON GOLD AT *</pattern><template><think><srai>NOPX 704</srai></think><random><li><srai>EXPDEX WHO WON GOLD AT <star/></srai></li></random></template></category>
+<category><pattern>WHO WON GOLD IN *</pattern><template><think><srai>NOPX 1635</srai></think><random><li><srai>EXPDEX WHO WON GOLD IN <star/></srai></li></random></template></category>
+<category><pattern>WHO WON GOLD MEDALS *</pattern><template><think><srai>NOPX 1012</srai></think><random><li><srai>EXPDEX WHO WON GOLD MEDALS <star/></srai></li></random></template></category>
+<category><pattern>WHO WON HIS SEAT *</pattern><template><think><srai>NOPX 423</srai></think><random><li><srai>EXPDEX WHO WON HIS SEAT <star/></srai></li></random></template></category>
+<category><pattern>WHO WON IT IN *</pattern><template><think><srai>NOPX 808</srai></think><random><li><srai>EXPDEX WHO WON IT IN <star/></srai></li></random></template></category>
+<category><pattern>WHO WON LAST NIGHT *</pattern><template><think><srai>NOPX 498</srai></think><random><li><srai>EXPDEX WHO WON LAST NIGHT <star/></srai></li></random></template></category>
+<category><pattern>WHO WON LAST WEEK *</pattern><template><think><srai>NOPX 1533</srai></think><random><li><srai>EXPDEX WHO WON LAST WEEK <star/></srai></li></random></template></category>
+<category><pattern>WHO WON LAST YEAR *</pattern><template><think><srai>NOPX 4856</srai></think><random><li><srai>EXPDEX WHO WON LAST YEAR <star/></srai></li></random></template></category>
+<category><pattern>WHO WON OUR INDEPENDENCE *</pattern><template><think><srai>NOPX 1063</srai></think><random><li><srai>EXPDEX WHO WON OUR INDEPENDENCE <star/></srai></li></random></template></category>
+<category><pattern>WHO WON SECOND PLACE *</pattern><template><think><srai>NOPX 448</srai></think><random><li><srai>EXPDEX WHO WON SECOND PLACE <star/></srai></li></random></template></category>
+<category><pattern>WHO WON SILVER IN *</pattern><template><think><srai>NOPX 708</srai></think><random><li><srai>EXPDEX WHO WON SILVER IN <star/></srai></li></random></template></category>
+<category><pattern>WHO WON SUPER BOWL *</pattern><template><think><srai>NOPX 443</srai></think><random><li><srai>EXPDEX WHO WON SUPER BOWL <star/></srai></li></random></template></category>
+<category><pattern>WHO WON THE *</pattern><template><think><srai>NOPX 2151</srai></think><random><li><srai>EXPDEX WHO WON THE <star/></srai></li></random></template></category>
+<category><pattern>WHO WON THIS CONTEST *</pattern><template><think><srai>NOPX 660</srai></think><random><li><srai>EXPDEX WHO WON THIS CONTEST <star/></srai></li></random></template></category>
+<category><pattern>WHO WON THIS EVENT *</pattern><template><think><srai>NOPX 1322</srai></think><random><li><srai>EXPDEX WHO WON THIS EVENT <star/></srai></li></random></template></category>
+<category><pattern>WHO WON THIS RACE *</pattern><template><think><srai>NOPX 585</srai></think><random><li><srai>EXPDEX WHO WON THIS RACE <star/></srai></li></random></template></category>
+<category><pattern>WHO WON THIS TITLE *</pattern><template><think><srai>NOPX 679</srai></think><random><li><srai>EXPDEX WHO WON THIS TITLE <star/></srai></li></random></template></category>
+<category><pattern>WHO WON THIS YEAR *</pattern><template><think><srai>NOPX 2570</srai></think><random><li><srai>EXPDEX WHO WON THIS YEAR <star/></srai></li></random></template></category>
+<category><pattern>WHO WON UNK UNK *</pattern><template><think><srai>NOPX 498</srai></think><random><li><srai>EXPDEX WHO WON UNK UNK <star/></srai></li></random></template></category>
+<category><pattern>WHO WON WORLD WAR II *</pattern><template><think><srai>NOPX 589</srai></think><random><li><srai>EXPDEX WHO WON WORLD WAR II <star/></srai></li></random></template></category>
+<category><pattern>WHO WON A NOBEL PRIZE *</pattern><template><think><srai>NOPX 407</srai></think><random><li><srai>EXPDEX WHO WON A NOBEL PRIZE <star/></srai></li></random></template></category>
+<category><pattern>WHO WON A BRONZE MEDAL *</pattern><template><think><srai>NOPX 1050</srai></think><random><li><srai>EXPDEX WHO WON A BRONZE MEDAL <star/></srai></li></random></template></category>
+<category><pattern>WHO WON A CASH AWARD *</pattern><template><think><srai>NOPX 432</srai></think><random><li><srai>EXPDEX WHO WON A CASH AWARD <star/></srai></li></random></template></category>
+<category><pattern>WHO WON A COPY OF *</pattern><template><think><srai>NOPX 5660</srai></think><random><li><srai>EXPDEX WHO WON A COPY OF <star/></srai></li></random></template></category>
+<category><pattern>WHO WON A GOLD MEDAL *</pattern><template><think><srai>NOPX 2376</srai></think><random><li><srai>EXPDEX WHO WON A GOLD MEDAL <star/></srai></li></random></template></category>
+<category><pattern>WHO WON A SEAT IN *</pattern><template><think><srai>NOPX 629</srai></think><random><li><srai>EXPDEX WHO WON A SEAT IN <star/></srai></li></random></template></category>
+<category><pattern>WHO WON A SECOND TERM *</pattern><template><think><srai>NOPX 402</srai></think><random><li><srai>EXPDEX WHO WON A SECOND TERM <star/></srai></li></random></template></category>
+<category><pattern>WHO WON A SILVER MEDAL *</pattern><template><think><srai>NOPX 1839</srai></think><random><li><srai>EXPDEX WHO WON A SILVER MEDAL <star/></srai></li></random></template></category>
+<category><pattern>WHO WON AN AWARD FOR *</pattern><template><think><srai>NOPX 1673</srai></think><random><li><srai>EXPDEX WHO WON AN AWARD FOR <star/></srai></li></random></template></category>
+<category><pattern>WHO WON THIS EVENT IN *</pattern><template><think><srai>NOPX 658</srai></think><random><li><srai>EXPDEX WHO WON THIS EVENT IN <star/></srai></li></random></template></category>
+<category><pattern>WHO WON THIS TITLE IN *</pattern><template><think><srai>NOPX 485</srai></think><random><li><srai>EXPDEX WHO WON THIS TITLE IN <star/></srai></li></random></template></category>
+<category><pattern>WHO WON UNK UNK T *</pattern><template><think><srai>NOPX 494</srai></think><random><li><srai>EXPDEX WHO WON UNK UNK T <star/></srai></li></random></template></category>
+</aiml>

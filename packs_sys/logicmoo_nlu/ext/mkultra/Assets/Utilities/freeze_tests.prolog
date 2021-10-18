@@ -1,3 +1,5 @@
+
+
 test(freeze(wakes_on_binding),
      [ true(Y == 1) ]) :-
    freeze(X, Y = 1),

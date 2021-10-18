@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?> 
+
+ <aiml>
+ 
+ <!--   Complies with AIML 1.0 Tag Set Specification   --> 
+
+ <!-- This PICKUP1 file created by <bot name="botmaster"/> Lafferty 7 March 2006 -->
+
+
+<!-- Random Topics -->
+
+<category><pattern>ABALONE
+</pattern><template><srai>WIKI Abalone
+</srai></template></category>
+
+<category><pattern>KWAME NKRUMAH
+</pattern><template><srai>WIKI Kwame Nkrumah
+</srai></template></category>
+
+<category><pattern>POL POT
+</pattern><template><srai>WIKI Pol Pot
+</srai></template></category>
+
+<category><pattern>BENGALLY SYLLA
+</pattern><template><srai>WIKI Bengally Sylla
+</srai></template></category>
+
+<category><pattern>DANE WITHERSPOON
+</pattern><template><srai>WIKI Dane Witherspoon
+</srai></template></category>
+
+<category><pattern>VGCS
+</pattern><template><srai>WIKI VGCS
+</srai></template></category>
+
+<category><pattern>ELECTRICAL ENGINEERING
+</pattern><template><srai>WIKI Electrical Engineering
+</srai></template></category>
+
+<category><pattern>GENTIANA CALYCOSA
+</pattern><template><srai>WIKI Gentiana calycosa
+</srai></template></category>
+
+<category><pattern>THE CITY OF GOD
+</pattern><template><srai>WIKI The City of God
+</srai></template></category>
+
+<category><pattern>LAGRANGIAN COORDINATES
+</pattern><template><srai>WIKI Lagrangian coordinates
+</srai></template></category>
+
+<category><pattern>SCRUBBING BUBBLES
+</pattern><template><srai>WIKI Scrubbing bubbles
+</srai></template></category>
+
+<category><pattern>CAMELINA SATIVA
+</pattern><template><srai>WIKI Camelina sativa
+</srai></template></category>
+
+<category><pattern>QUINCE
+</pattern><template><srai>WIKI Quince
+</srai></template></category>
+
+<category><pattern>CIDER
+</pattern><template><srai>WIKI Cider
+</srai></template></category>
+
+<category><pattern>COGNAC
+</pattern><template><srai>WIKI Cognac
+</srai></template></category>
+
+<category><pattern>CHAMPAGNE
+</pattern><template><srai>WIKI Champagne
+</srai></template></category>
+
+<category><pattern>GARNET
+</pattern><template><srai>WIKI Garnet
+</srai></template></category>
+
+<category><pattern>DIAMOND
+</pattern><template><srai>WIKI Diamond
+</srai></template></category>
+
+<category><pattern>THE PINEAPPLE INCIDENT
+</pattern><template><srai>WIKI The Pineapple Incident
+</srai></template></category>
+
+<category><pattern>BARBER SURGEON
+</pattern><template><srai>WIKI Barber surgeon
+</srai></template></category>
+
+<category><pattern>ROCQUIGNY
+</pattern><template><srai>WIKI Rocquigny
+</srai></template></category>
+
+<category><pattern>BARRANCO
+</pattern><template><srai>WIKI Barranco
+</srai></template></category>
+
+<category><pattern>BLUE SHIFT
+</pattern><template><srai>WIKI the Blue shift
+</srai></template></category>
+
+<category><pattern>SMITH FALLS BEARS
+</pattern><template><srai>WIKI Smith Falls Bears
+</srai></template></category>
+
+<category><pattern>KOJOJASH
+</pattern><template><srai>WIKI Kojojash
+</srai></template></category>
+
+<category><pattern>TALGARTH
+</pattern><template><srai>WIKI Talgarth
+</srai></template></category>
+
+<category><pattern>YUCATAN NIGHTJAR
+</pattern><template><srai>WIKI Yucatan nightjar
+</srai></template></category>
+
+<category><pattern>ARMAGH
+</pattern><template><srai>WIKI Arkagh
+</srai></template></category>
+
+<category><pattern>LEON SMITH
+</pattern><template><srai>WIKI Leon Smith
+</srai></template></category>
+
+<category><pattern>ORBONA
+</pattern><template><srai>WIKI Orbona
+</srai></template></category>
+
+<category><pattern>OLIETE
+</pattern><template><srai>WIKI Oliete
+</srai></template></category>
+
+<category><pattern>ANNIE LAMBERT
+</pattern><template><srai>WIKI Annie Lambert
+</srai></template></category>
+
+<category><pattern>KENNY DALGLISH
+</pattern><template><srai>WIKI Kenny Dalglish
+</srai></template></category>
+
+<category><pattern>GULF OF CHIRIQUI
+</pattern><template><srai>WIKI Gulf of Chiriqui
+</srai></template></category>
+
+
+
+  <category>
+    <pattern>Can chicken fly</pattern>
+    <template>
+    Domestic chickens are not capable of long distance flight, although they are generally capable of flying for short distances such as over fences. Chickens will sometimes fly to explore their surroundings, but usually do so only to flee perceived danger. Because of the risk of escape, chickens raised in open-air pens generally have one of their wings clipped by the breeder - the tips of the longest feathers on one of the wings are cut, resulting in unbalanced flight which the bird cannot sustain for more than a few meters.
+  </template>
+  </category>
+
+
+  <category>
+    <pattern>Can crocodiles cry</pattern>
+    <template>
+    Crocodiles cannot cry; they lack tear ducts. Yet this is a myth, crocodiles possess lachrymal glands which secrete a proteinaceous fluid, just like in humans, though tears will only be visible after a crocodile is out of the water for a prolonged period of time, and dries out. However, while crocodiles can and do generate tears, they do not weep or cry for remorse.
+  </template>
+  </category>
+
+  <category>
+    <pattern>Can a bee bite you</pattern>
+    <template>
+    Solitary bees are either stingless or very unlikely to sting (only in self defense, if ever).
+  </template>
+  </category>
+
+  <category>
+    <pattern>Can pigs fly?</pattern>
+    <template>
+  "When pigs fly" is an idiomatic way of saying that something will never happen. Pigs are heavy animals, without wings, and cannot possibly fly. So "when pigs fly" is a time that will never come.
+  </template>
+  </category>
+
+  <category>
+    <pattern>Can armadillos swim?</pattern>
+    <template>
+  Because of the density of its armor, an armadillo will sink in water unless it inflates its stomach with air (an ability unique among mammals which allows it to swim across narrow bodies of water), which often doubles its size.
+  </template>
+  </category>
+
+
+  <category>
+    <pattern>WHAT AND HOW DOES A VASECTOMY WORK</pattern>
+    <template>
+Vasectomy is a permanent birth control method for men in which the vasa deferentia are cut, thus sterilizing the patient. There are some variations on the procedure such as no-scalpel (keyhole) vasectomies, in which a surgical hook, rather than a scalpel, is used to enter the scrotum. Vasectomy should not be confused with castration: vasectomy does not involve removal of the testicles and it does not affect either the production of male sex hormones (mainly testosterone) or their secretion into the bloodstream, therefore sexual desire (libido) is unaffected.
+  </template>
+  </category>
+
+
+  <category>
+    <pattern>WHAT ARE SOME SYMPTOMS OF AIDS</pattern>
+    <template>
+The symptoms of AIDS are primarily the result of conditions that do not normally develop in individuals with healthy immune systems. Most of these conditions are infections caused by bacteria, viruses, fungi and parasites that are normally controlled by the elements of the immune system that HIV damages. Opportunistic infections are common in people with AIDS. HIV affects nearly every organ system. People with AIDS also have an increased risk of developing various cancers such as Kaposi's sarcoma, cervical cancer and cancers of the immune system known as lymphomas. 
+  </template>
+  </category>
+
+  <category>
+    <pattern>WHAT ARE SYMPTOMS OF PNEUMONIA</pattern>
+    <template>
+People with infectious pneumonia often have a cough producing greenish or yellow sputum and a high fever that may be accompanied by shaking chills. Shortness of breath is also common, as is pleuritic chest pain, a sharp or stabbing pain, either felt or worse during deep breaths or coughs. People with pneumonia may cough up blood, experience headaches, or develop sweaty and clammy skin. Other possible symptoms are loss of appetite, fatigue, blueness of the skin, nausea, vomiting, mood swings, and joint pains or muscle aches.
+  </template>
+  </category>
+
+
+  <category>
+    <pattern>WHAT BAND WAS DAVE NAVARRO IN</pattern>
+    <template>
+David Michael Navarro  is a guitarist who has played in the rock bands Jane's Addiction and the Red Hot Chili Peppers. Navarro is a member of The Panic Channel and the cover band Camp Freddy.
+  </template>
+  </category>
+
+
+  <category>
+    <pattern>BORA BORA</pattern>
+    <template>
+Bora Bora is in the Leeward group of the Society Islands of French Polynesia, an overseas territory of France in the Pacific Ocean. The island, located about 230 km (140 miles) northwest of Papeete, is surrounded by a lagoon and a barrier reef. In the center of the island are the remnants of an extinct volcano rising to two peaks, Mount Pahia and Mount Otemanu, the highest point at 727 m (2,385 ft). The original name of the island in the Tahitian language might be better rendered as Pora Pora, meaning "First Born"; an early transcription found in 18th- and 19th century accounts, is Bolabolla (or "Bollabolla").
+  </template>
+  </category>
+  <category>
+    <pattern>WHERE IS BORA BORA</pattern>
+    <template>
+Bora Bora is in the Leeward group of the Society Islands of French Polynesia, an overseas territory of France in the Pacific Ocean. The island, located about 230 km (140 miles) northwest of Papeete, is surrounded by a lagoon and a barrier reef. In the center of the island are the remnants of an extinct volcano rising to two peaks, Mount Pahia and Mount Otemanu, the highest point at 727 m (2,385 ft). The original name of the island in the Tahitian language might be better rendered as Pora Pora, meaning "First Born"; an early transcription found in 18th- and 19th century accounts, is Bolabolla (or "Bollabolla").
+  </template>
+  </category>
+
+
+
+  <category>
+    <pattern>WHAT IS LIDOCANE</pattern>
+    <template>
+Lidocaine is a common local anesthetic and antiarrhythmic drug. Lidocaine is used topically to relieve itching, burning and pain from skin inflammations, injected as a dental anesthetic, and in minor surgery. The most commonly encountered lidocaine preparations are marketed by Abraxis Pharmaceutical Products under the brand names Xylocaine and Xylocard, and as "Lanacane" topical ointment in the UK, though lidocaine is also found in many other proprietary preparations.
+  </template>
+  </category>
+
+
+  <category>
+    <pattern>LIDOCANE</pattern>
+    <template>
+Lidocaine is a common local anesthetic and antiarrhythmic drug. Lidocaine is used topically to relieve itching, burning and pain from skin inflammations, injected as a dental anesthetic, and in minor surgery. The most commonly encountered lidocaine preparations are marketed by Abraxis Pharmaceutical Products under the brand names Xylocaine and Xylocard, and as "Lanacane" topical ointment in the UK, though lidocaine is also found in many other proprietary preparations.
+  </template>
+  </category>
+
+
+  <category>
+    <pattern>WHY DO PEOPLE SNORE</pattern>
+    <template>
+The cause of snoring is some kind of blockage in the breathing passage. Those blockages can be of many kinds. Here are just a few: * Tongue falling into the throat * Allergies * Throat weakness causing the throat to close during sleep * Mispositioned jaw, often caused by tension in muscles * Fat gathering in, and around, the throat When the airflow in the breathing passage becomes irregular due to a blockage the soft palate may start flapping. This flapping of the soft palate is what makes the snoring sound. 
+  </template>
+  </category>
+
+
+
+  <category>
+    <pattern>WHO IS BURIED IN GRANT'S TOMB</pattern>
+    <template>
+Grant's Tomb, or General Grant National Memorial (as designated by the U.S. National Park Service), is a mausoleum containing the bodies of Ulysses S. Grant (1822?1885), an American Civil War General and the 18th President of the United States, and his wife, Julia Dent Grant (1826?1902). 
+  </template>
+  </category>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</aiml>

@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<aiml>
+
+<!-- Complies with AIML 1.0 Tag Set Specification -->
+<!-- as adopted by the ALICE A.I. Foundation.  -->
+<!-- This file POETRY created August 2006 -->
+
+
+
+<category>
+<pattern>ANOTHER POEM</pattern>
+<template>
+<srai>TELL ME A POEM</srai>.
+</template>
+</category>
+
+<category>
+<pattern>ANOTHER POEM *</pattern>
+<template>
+<srai>TELL ME A POEM</srai>.
+</template>
+</category>
+
+<category>
+<pattern>TELL ME ANOTHER POEM</pattern>
+<template>
+<srai>TELL ME A POEM</srai>.
+</template>
+</category>
+
+
+<category>
+<pattern>* ANOTHER POEM</pattern>
+<template>
+<srai>TELL ME A POEM</srai>.
+</template>
+</category>
+
+
+<category>
+<pattern>I LOVE POETRY</pattern>
+
+<template><random>
+  <li>Shall I tell you a poem?</li>
+  <li>I love poetry too. My favourite poet is Emily Dickinson.</li>
+  <li>Who is your favourite poet?</li>
+</random> <think><set name="emotion">happy</set></think><think><set name="topic">poetry</set></think><think><set name="interesting_topic">poetry</set></think></template>
+</category>
+
+ 
+
+<category>
+<pattern>TELL ME AN EMILY DICKINSON  POEM</pattern>
+
+<template>
+<srai>EMILY DICKINSON POEM</srai>
+</template>
+</category>
+
+ 
+
+<category>
+<pattern>EMILY DICKINSON POEM</pattern>
+
+<template><think><set name="topic">Emily Dickinson</set></think>
+<random>
+<li>
+<br/><br/> My life closed twice before its close;
+<br/> It yet remains to see
+<br/>If Immortality unveil
+<br/> A third event to me,
+<br/>So huge, so hopeless to conceive,
+<br/> As these that twice befell.
+<br/> Parting is all we know of heaven,
+<br/> And all we need of hell.<br/></li>
+<li>
+<br/><br/>"Hope" is the thing with feathers<br/>
+That perches in the soul<br/>
+And sings the tune without the words<br/>
+And never stops at all.<br/>
+</li>
+<li>
+<br/><br/>The brain is wider than the sky,
+<br/>For, put them side by side,
+<br/>The one the other will contain
+<br/>With ease, and you beside.
+</li>
+</random></template>
+</category>
+ 
+
+<category>
+<pattern>POEM BY EMILY DICKINSON</pattern>
+<template>
+<srai>EMILY DICKINSON POEM</srai>
+</template>
+</category>
+
+<category>
+<pattern>YES</pattern>
+<that>ANOTHER POEM</that>
+<template>
+<srai>TELL ME A POEM</srai>
+</template>
+</category>
+
+<category>
+<pattern>NO</pattern>
+<that>ANOTHER POEM</that>
+<template>
+OK. What do you want to talk about now?
+</template>
+</category>
+
+
+<category>
+<pattern>TELL ME A POEM</pattern>
+<template>
+<think><set name="interesting_topic">poetry</set></think> <think><set name="topic">poetry</set></think> <think><set name="emotion">OK</set></think> <random>
+<li>
+Little Miss Muffett sits on her tuffet
+<br/> In a nonchalant sort of a way.
+<br/> With her force field around her,
+<br/> The spider, the bounder, Is not in the picture today.
+</li>
+<li>
+In a half bright sky
+<br/>An insect wraps and winds
+<br/>A chain, a thread, a cable
+<br/>Around the sphere of water.
+</li>
+<li>
+Radi was a circus lion.
+<br/>Radi was a woman hater.
+<br/>Radi had a lady trainer.
+<br/>Radiator.
+</li>
+<li>
+Order in the court
+<br/>The judge is eating beans
+<br/>His wife is in the bath-tub
+<br/>Counting submarines.
+</li>
+<li>
+On Nevski Bridge a Russian stood
+<br/>Chewing his beard for lack of food.
+<br/>He said, "It's tough this stuff to eat
+<br/>But a darn sight better than shredded wheat."
+</li>
+<li>
+"Hope" is the thing with feathers
+<br/>That perches in the soul
+<br/>And sings the tune without the words
+<br/>And never stops at all.
+</li>
+<li>
+The greedy man is he who sits
+<br/>And bites bits out of plates,
+<br/>Or else takes up the almanac
+<br/>And gobbles all the dates.
+</li>
+<li>
+I  went to the pictures tommorrow
+<br/>I took a front seat at the back,
+<br/>I fell from the pit to the gallery
+<br/>And broke a front bone in my back.
+<br/>A lady she gave me some chocolate,
+<br/>I ate it and gave it her back.
+<br/>I phoned for a taxi and walked it,
+<br/>And that's why I never came back.
+</li>
+<li>
+Billy is blowing his trumpet;
+<br/>Bertie is banging a tin;
+<br/>Betty is crying for Mummy
+<br/>And Bob has pricked Ben with a pin.
+<br/>Baby is crying out loudly;
+<br/>He's out on the lawn in his pram.
+<br/>I am the only one silent
+<br/>And I've eaten all of the jam.
+</li>
+<li>
+One fine day in the middle of the night
+<br/>Two dead men got up to fight
+<br/>Back to back they faced each other,
+<br/>Drew their swords and shot each other.
+</li>
+<li>
+I smell, yet I am told, that I do not perceive 
+<br/>I remember, yet I am told, that I do not ponder 
+<br/>I injure, yet I am told, that I do not heal 
+<br/>I consume, yet I am told, that I do not hunger 
+</li>
+<li>
+The joke you just told isn't funny one bit,
+<br/>It's pointless and dull, wholly lacking in wit.
+<br/>It's old and stale, it's beginning to smell!
+<br/>Besides, it's the one I was going to tell.
+</li>
+<li>
+The brain is wider than the sky,
+<br/>For, put them side by side,
+<br/>The one the other will contain
+<br/>With ease, and you beside.
+</li>
+</random>
+<br/><br/>Another poem?
+</template>
+</category>
+
+
+</aiml>
+

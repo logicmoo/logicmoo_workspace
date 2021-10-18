@@ -1,0 +1,149 @@
+Some good stuff in Richard Wallaces 'the Elements of Style in AIML'
+
+Initial thoughts on format. I'm thinking that catagories are separated by a blank line.
+
+#This is a comment and doesn't count
+What is *?
+I don't know what * is, let me research that.
+
+I feel * when I am **
+-I too feel * when I am *. Could we * together sometimes?
+
+a dependence on that matching the lexically previous catagory is implied by omitting the blank line
+
+#this uses the implied THAT
+I like sailing.
+-Ooh, I like sailing too. I have a small sailboat.
+What kind?
+-A J/24
+*
+-Do you have a boat?
+A boat_type=(*)
+
+the botmaster can also use an explicit that
+#this uses an explicit that
+that-Ooh, I like sailing *
+I have a boat_type=(*)
+
+It would be good to know the 'type of speech act' -
+if the user types something ending in ? we should only answer with answers.
+if the stimulus ends in ? the response would be an anwser.
+
+Handling Propercase? Maybe a directive to allow #$PROPER insertion?
+
+might be nice to somehow have confidence factors.
+
+Need an include mechanism
+
+How do we do escapes to Prolog?
+
+'that' and 'topic' seem to be a simple version of my 'context'
+
+SRAI
+
+Do you know who * is?
+Yes, [Who is *?]
+
+SR - an abbreviation for <srai><star/></srai>
+we don't need it, [*] is clearer and 1 char longer
+
+ALTERNATIVES
+
+//hello/hi/howdy/aloha//
+
+* and _
+
+* is not greedy
+_ is greedy
+
+*0    match zero or more words
+*1    match one or more words
+*     match one or more words
+*2    match two or more words (up to 9)
+
+_0    match zero or more words
+
+^     as *, but matches preceeding articles, which are removed from the
+consequent
+@     as _, but matches preceeding articles, which are removed from the consequent
+
+in templates ** matches the second match of * or _, *** the third, and so on
+
+escaping specials
+\<char> disables syntactic meaning
+
+~propername     means use some external matcher
+
+blink( some tokens)  means query blink/2 with the contents of the parens, blink([word(some), word(tokens)], X)  and replace the whole mass with X. If X is a list append it, if not then just add it. 
+
+#$ is preserved in patterns and templates, but stripped from input,
+so you can create catagories that can only be entered from SRAI
+
+articles are optional unless appended by an exclamation point?
+
+Prolog
+
+<dmiles_afk> ~propername* 
+<dmiles_afk> should be match it.. and put it inmto the star index
+<dmiles_afk> ~propername
+<dmiles_afk> should be match it.. and dont put it into the star index
+
+propername(Text, Result)
+
+xml in templates
+
+non chat input (e.g. from a camera and emotion recognizer)?
+answer - use #$
+
+=========
+Sentence splitting
+
+:- use sentence splitting.
+
+========
+Synonyms - 
+handle synonyms whereever they occur
+
+General mechanism for 
+
+=======
+handling specials that aren't syntactically important
+
+=======
+handling articles
+the aforementioned winky match on ^ and @
+
+=======
+implementation
+http://www.alicebot.org/TR/2005/WD-aiml/#section-explanation-via-implementation-description-graphmaster
+=======
+Input cleanup (input normalization)
+all word compares are caseless
+The AIML 1.0.1 spec contains useful ideas
+http://www.alicebot.org/TR/2005/WD-aiml/
+
+note that input cleanup needs defined for both the pattern and the input
+
+stemming?
+Should stemming work like the articles?
+
+==========
+
+How do we support training the bot?
+
+===============
+
+ok, no better place for this
+
+git add 
+ for new files
+git commit -m 'made the dancing bunnies cuter'
+to 'commit' 9which only commits them locally)
+and 
+git push origin master
+to push them back to the proejct
+
+
+
+
+
