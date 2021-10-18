@@ -15,7 +15,8 @@ compile_corpus_in_mem:-
 
 train_from_corpus:- 
  dmsg("reading corpus..."),
- time((open('../../self_dialogue_corpus/train_from.txt',read,In),
+ absolute_file_name(library('../self_dialogue_corpus/train_from.txt'),File,[access(read)]),
+ time((open(File,read,In),
  set_flag(line_num,0),
  repeat,
  (at_end_of_stream(In) -> ! ; 
