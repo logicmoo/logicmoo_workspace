@@ -10,11 +10,12 @@
 
 % debug printing
 debugln(X):- \+ is_list(X) -> (debuglnw(X,Y), dmsg(Y)) ; maplist(debuglnw,X,Y),atomics_to_string(Y,' ',Z),debugln(Z).
-debuglnw(V,S):- var(V), !, sformat(S,"~p",[V]).
-debuglnw([N|A],S):- is_list(A),!,maplist(debuglnw,[N|A],Y),atomics_to_string(Y,'_',S).
-debuglnw((F/A),S):- functor(P,F,A),predicate_property(P,number_of_clauses(V)),!,sformat(S,"~w=~:d~n",[(F/A),V]).
+debuglnw(Insts,S):- var(Insts), !, sformat(S,"~p",[Insts]).
+debuglnw([N|A],S):- is_list(A),!,maplist(debuglnw,[N|A],Y),atomics_to_string(Y,' ',S).
+debuglnw((F/A),S):- functor(P,F,A),predicate_property(P,number_of_clauses(Insts)),!,sformat(S,"~w=~:d~n",[(F/A),Insts]).
 debuglnw(w(E),S):- sformat(S,'~p',E),!.
-debuglnw('$'(E),S):- get_flag(E,V),!,sformat(S,"~w=~:d~n",[E,V]).
+debuglnw('$'(E),S):- get_flag(E,Insts),!,sformat(S,"~w=~:d~n",[E,Insts]).
+debuglnw(N=V,S):- integer(V),!,sformat(S,"\t~w =\t~:d ",[N,V]).
 debuglnw([N],S):- !, debuglnw(N,S).
 debuglnw(C,S):- tok_split(C,S,_),!.
 debuglnw(C,S):- compound(C),!,sformat(S,"~p",[C]).
@@ -29,30 +30,33 @@ compile_corpus:-
 
 compile_corpus_in_mem:- 
  train_from_corpus,
- compute_corpus_stats,!.
+ compute_corpus_extents,!.
+
+corpus_stat(corpus_training). corpus_stat(corpus_nodes). corpus_stat(corpus_node_overlap).
+corpus_stat(corpus_unique_toks). corpus_stat(corpus_total_toks). 
+corpus_stat(sent_num). corpus_stat(corpus_convos).
 
 train_from_corpus:- 
  debugln("reading corpus..."),
  absolute_file_name(library('../self_dialogue_corpus/train_from.txt'),File,[access(read)]),
- time((open(File,read,In),
+ time((open(File,read,In), 
+ forall(corpus_stat(Stat),set_flag(Stat,0)),
  set_flag(sent_num,0),
  repeat,
  (at_end_of_stream(In) -> ! ; 
  flag(sent_num,X,X+1), read_line_to_string(In,Str), add_training(X,Str), fail),
- debugln(["Trained results: ",nl, 
-   $corpus_training,$corpus_nodes,$corpus_node_overlap,$corpus_unique_toks,$corpus_total_toks]))).
+ forall(corpus_stat(Stat),(get_flag(Stat,Value),debugln(Stat=Value))))).
 
 save_stat(G):- assert(G),nop((writeq(G),writeln('.'))).
 
-compute_corpus_stats:-
- debugln("compute corpus stats..."),
- time((compute_extent(is_word,1),
- compute_extent(ngram,5),
- %compute_extent(trigram,3),
- compute_extent(tok_split,3))).
+use_extent(is_word,1). use_extent(tok_split,3). use_extent(ngram,5).
+compute_corpus_extents:-
+ debugln("compute corpus extents..."),
+ time((forall(use_extent(F,A),compute_extent(F,A)))).
 
-min(X,Y,X):-X<Y,!. min(_,Y,Y).
-max(X,Y,X):-X>Y,!. max(_,Y,Y).
+
+min_of(X,Y,X):-X<Y,!. min_of(_,Y,Y).
+max_of(X,Y,X):-X>Y,!. max_of(_,Y,Y).
 
 compute_extent(F,A):-
   functor(NGram,F,A),
@@ -60,15 +64,18 @@ compute_extent(F,A):-
   set_flag(min_fa,999999999),
   set_flag(max_fa,0),
   forall(NGram,(ngram_key(NGram,X), 
-    get_flag(X,NN),flag(total_fa,TFA,TFA+NN),
-     get_flag(min_fa,Min),min(Min,NN,NewMin),set_flag(min_fa,NewMin),
-     get_flag(max_fa,Max),max(Max,NN,NewMax),set_flag(max_fa,NewMax),
-     append_term(NGram,NN,NGramStat),save_stat(NGramStat))),
-  
-  get_flag(total_fa,TFA),
-  predicate_property(NGram,number_of_clauses(V)),
-  Averge is TFA/(V+1),
-  debugln([w(F/A=avrg( TFA/V is Averge)), $min_fa, $max_fa]),!.
+     get_flag(X,NN),flag(total_fa,Total,Total+NN),
+     get_flag(min_fa,Min),min_of(Min,NN,NewMin),set_flag(min_fa,NewMin),
+     get_flag(max_fa,Max),max_of(Max,NN,NewMax),set_flag(max_fa,NewMax),
+     append_term(NGram,NN,NGramStat),save_stat(NGramStat))),  
+  get_flag(total_fa,Total),
+  get_flag(min_fa,Min),
+  get_flag(max_fa,Max),
+  predicate_property(NGram,number_of_clauses(Insts)),
+  Avrg is Total/(Insts+1),
+  Props = [insts=Insts,total=Total,min=Min,max=Max,avrg=Avrg],
+  assert(extent_props(F,A,Props)),
+  debugln([extent_props(F/A),Props]),!.
   
 
 ngram_key(tok_split(O,_,_),O).
@@ -96,7 +103,7 @@ qcompile_corpus:-
   time(pllm:ensure_loaded(plm)),
   debugln("Corpus Ready").
 
-add_training(_,"XXXXXXXXXXX"):- flag(corpus_blocks,Z,Z+1),
+add_training(_,"XXXXXXXXXXX"):- flag(corpus_convos,Z,Z+1),
    % every 10 conversations will be considered "close"
    Z10 is Z div 10,
    Y is (Z10+1)*100,flag(sent_num,_,Y),!.
