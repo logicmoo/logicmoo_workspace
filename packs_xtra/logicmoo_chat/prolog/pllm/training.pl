@@ -3,7 +3,7 @@
 
 % :- include(weightless_pllm).
 
-:- X= (is_tok/1,is_tok/2,ngram/5,ngram/6,trigram/3,trigram/4),
+:- X= (is_tok/1,is_tok/2,ngram/5,ngram/6,trigram/3,trigram/4,tok_split/3),
   dynamic(X),multifile(X).
 
 :- use_module(library(logicmoo_utils)).
@@ -83,9 +83,10 @@ add_training(_,"XXXXXXXXXXX"):- flag(corpus_blocks,Z,Z+1),
    Y is (Z10+1)*100,flag(sent_num,_,Y),!.
 add_training(X,Str):- flag(sent_num,Y,Y), tokenize_atom(Str,Toks),
  maplist(downcase_atom,Toks,TokList), 
- pretok(TokList,ReToks), 
+ pretok(TokList,PreToks),!, 
+ dbltok(oc,PreToks,ReToks),!, 
+ append([oc(X)|ReToks],[oc(Y)],Grams),!,
  maplist(add_token_occurs,ReToks),
- append([other_conversant(X)|ReToks],[other_conversant(Y)],Grams),
  flag(corpus_training,T,T+1),
  add_ngrams(4,X,Grams).
 
@@ -93,8 +94,9 @@ add_ngrams(N,Loc,Grams):- length(NGram,N),
  append(NGram,_,Mid),
  forall(append(_,Mid,Grams),assert_ngram(ngram,Loc,NGram)).
 
-assert_ngram(P,Loc,List):- W=..[P,Loc|List],term_to_atom(List,A),flag(A,X,X+1),
- (X=0->(assert(W),flag(corpus_nodes,N,N+1));flag(corpus_node_overlap,O,O+1)).
+assert_ngram(P,Loc,List):- W=..[P,Loc|List],ngram_key(W,A),flag(A,X,X+1),
+ assert(W),
+ (X=0->(flag(corpus_nodes,N,N+1));flag(corpus_node_overlap,O,O+1)).
 
 add_token_occurs(Tok):- 
   ignore(( \+  is_tok(Tok), assert(is_tok(Tok)), flag(corpus_unique_toks,O,O+1) )),
@@ -105,7 +107,15 @@ pretok(['.'],[]):-!.
 pretok(['!'],[]):-!.
 pretok([X,X,X|Nxt],O):-!,atomic_list_concat([X,X,X],' ',Y),pretok([Y|Nxt],O).
 pretok([A,'\'',S|Grams],[F|ReTok]):- atom_concat(A,S,F),!, pretok(Grams,ReTok).
+pretok([','|Grams],ReTok):- pretok(Grams,ReTok).
 pretok([S|Grams],[S|ReTok]):- pretok(Grams,ReTok).
+
+dbltok(oc,[],[]):-!.
+dbltok(Pre,[],[PS]):-!,atoms_join(Pre,oc,PS).
+dbltok(Pre,[S|Grams],[PS|ReTok]):- atoms_join(Pre,S,PS),dbltok(S,Grams,ReTok).
+
+atoms_join(A,B,':',O):- tok_split(O,A,B),!.
+atoms_join(A,B,':',O):- atomic_list_concat([A,B],':',O),!,assert(tok_split(O,A,B)).
 
 % @TODO use average 
 %as_good(T,X):- is_tok(T,X),(Nxt>500->X=0;X is 500-Nxt).
@@ -124,8 +134,8 @@ loc_dists(Loc1,Loc2,Loc3, NN):- NN is (abs(Loc1-Loc2) + abs(Loc3-Loc2) + abs(Loc
 
 %:- pllm:ensure_loaded(plm).
 % added for conversations
-ngram(Loc,A,other_conversant(X),B,C,NN):- nonvar(X), ngram(Loc,_,_,A,other_conversant(X),_),ngram(_ULoc,other_conversant(X),B,C,_,NN).
-ngram(Loc,A,B,other_conversant(X),C,NN):- nonvar(X), ngram(Loc,_,A,B,other_conversant(X),_),ngram(_ULoc,other_conversant(X),C,_,_,NN).
+ngram(Loc,A,oc(X),B,C,NN):- nonvar(X), ngram(Loc,_,_,A,oc(X),_),ngram(_ULoc,oc(X),B,C,_,NN).
+ngram(Loc,A,B,oc(X),C,NN):- nonvar(X), ngram(Loc,_,A,B,oc(X),_),ngram(_ULoc,oc(X),C,_,_,NN).
 
 :- add_history(compile_corpus).
 

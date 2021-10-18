@@ -3,18 +3,20 @@
 
 % :- include(weightless_pllm).
 
-:- X= (is_tok/1,is_tok/2,ngram/5,ngram/6,trigram/3,trigram/4),
+:- X= (is_word/1,is_word/2,ngram/5,ngram/6,trigram/3,trigram/4,tok_split/3),
   dynamic(X),multifile(X).
 
 :- use_module(library(logicmoo_utils)).
 
 % debug printing
-debugln(X):- \+ is_list(X) -> dmsg(X) ; maplist(debuglnw,X,Y),atomics_to_string(Y,' ',Z),debugln(Z).
+debugln(X):- \+ is_list(X) -> (debuglnw(X,Y), dmsg(Y)) ; maplist(debuglnw,X,Y),atomics_to_string(Y,' ',Z),debugln(Z).
 debuglnw(V,S):- var(V), !, sformat(S,"~p",[V]).
 debuglnw([N|A],S):- is_list(A),!,maplist(debuglnw,[N|A],Y),atomics_to_string(Y,'_',S).
 debuglnw((F/A),S):- functor(P,F,A),predicate_property(P,number_of_clauses(V)),!,sformat(S,"~w=~:d~n",[(F/A),V]).
+debuglnw(w(E),S):- sformat(S,'~p',E),!.
 debuglnw('$'(E),S):- get_flag(E,V),!,sformat(S,"~w=~:d~n",[E,V]).
 debuglnw([N],S):- !, debuglnw(N,S).
+debuglnw(C,S):- tok_split(C,S,_),!.
 debuglnw(C,S):- compound(C),!,sformat(S,"~p",[C]).
 %debuglnw(C,S):- compound(C),compound_name_arguments(C,N,A),debuglnw([N|A],S).
 debuglnw(nl,'\n'):-!.
@@ -44,15 +46,33 @@ save_stat(G):- assert(G),nop((writeq(G),writeln('.'))).
 
 compute_corpus_stats:-
  debugln("compute corpus stats..."),
- time((forall(is_tok(X),(get_flag(X,NN),save_stat(is_tok(X,NN)))),
+ time((compute_extent(is_word,1),
  compute_extent(ngram,5),
- compute_extent(trigram,3),
- debugln(["Trained stats: ", ngram/5,ngram/6,is_tok/2]))).
+ %compute_extent(trigram,3),
+ compute_extent(tok_split,3))).
+
+min(X,Y,X):-X<Y,!. min(_,Y,Y).
+max(X,Y,X):-X>Y,!. max(_,Y,Y).
 
 compute_extent(F,A):-
   functor(NGram,F,A),
-  forall(NGram,(ngram_key(NGram,X), get_flag(X,NN),append_term(NGram,NN,NGramStat),save_stat(NGramStat))),!.
+  set_flag(total_fa,0),
+  set_flag(min_fa,999999999),
+  set_flag(max_fa,0),
+  forall(NGram,(ngram_key(NGram,X), 
+    get_flag(X,NN),flag(total_fa,TFA,TFA+NN),
+     get_flag(min_fa,Min),min(Min,NN,NewMin),set_flag(min_fa,NewMin),
+     get_flag(max_fa,Max),max(Max,NN,NewMax),set_flag(max_fa,NewMax),
+     append_term(NGram,NN,NGramStat),save_stat(NGramStat))),
+  
+  get_flag(total_fa,TFA),
+  predicate_property(NGram,number_of_clauses(V)),
+  Averge is TFA/(V+1),
+  debugln([w(F/A=avrg( TFA/V is Averge)), $min_fa, $max_fa]),!.
+  
 
+ngram_key(tok_split(O,_,_),O).
+ngram_key(is_word(O),O).
 ngram_key(P,K):- ngram_key(P,_,K).
 ngram_key(ngram(Loc,A,B,C,D,_),T,Key):- !, ngram_key(ngram(Loc,A,B,C,D),T,Key).
 ngram_key(ngram(_Loc,oc(_),A,B,C),T,Key):- T= sgram(A,B,C), !, term_to_atom(T,Key).
@@ -64,9 +84,9 @@ save_corpus_stats:-
  time((tell('plm.pl'),
  write('
  :- style_check(- discontiguous).
- :- X= (is_tok/2,ngram/6),
+ :- X= (is_word/2,ngram/6),
     dynamic(X),multifile(X). \n'),
-  listing([is_tok/2,ngram/6]), told)).
+  listing([is_word/2,ngram/6]), told)).
 
 qcompile_corpus:- 
   save_corpus_stats,
@@ -83,10 +103,9 @@ add_training(_,"XXXXXXXXXXX"):- flag(corpus_blocks,Z,Z+1),
 add_training(X,Str):- flag(sent_num,Y,Y), tokenize_atom(Str,Toks),
  maplist(downcase_atom,Toks,TokList), 
  pretok(TokList,PreToks),!,
+ maplist(add_occurs(is_word),PreToks),
  dbltok(oc,PreToks,ReToks),!, 
  append([oc(X)|ReToks],[oc(Y)],Grams),!,
- nop(debugln(Grams)),
- maplist(add_token_occurs,Grams),
  flag(corpus_training,T,T+1),
  add_ngrams(4,X,Grams).
 
@@ -98,8 +117,8 @@ assert_ngram(P,Loc,List):- W=..[P,Loc|List],ngram_key(W,A),flag(A,X,X+1),
  assert(W),
  (X=0->(flag(corpus_nodes,N,N+1));flag(corpus_node_overlap,O,O+1)).
 
-add_token_occurs(Tok):- 
-  ignore(( \+  is_tok(Tok), assert(is_tok(Tok)), flag(corpus_unique_toks,O,O+1) )),
+add_occurs(F,Tok):- P=..[F,Tok],
+  ignore(( \+ P, assert(P), flag(corpus_unique_toks,O,O+1) )),
   flag(Tok,X,X+1),flag(corpus_total_toks,T,T+1).
 
 pretok([],[]).
@@ -107,18 +126,18 @@ pretok(['.'],[]):-!.
 pretok(['!'],[]):-!.
 pretok([X,X,X|Nxt],O):-!,atomic_list_concat([X,X,X],' ',Y),pretok([Y|Nxt],O).
 pretok([A,'\'',S|Grams],[F|ReTok]):- atom_concat(A,S,F),!, pretok(Grams,ReTok).
+pretok([','|Grams],ReTok):- pretok(Grams,ReTok).
 pretok([S|Grams],[S|ReTok]):- pretok(Grams,ReTok).
 
 dbltok(oc,[],[]):-!.
-dbltok(Pre,[],[PS]):-!,atom_join([Pre,oc],':',PS).
-dbltok(Pre,[S|Grams],[PS|ReTok]):- atom_join([Pre,S],':',PS),dbltok(S,Grams,ReTok).
+dbltok(Pre,[],[PS]):-!,atoms_join(Pre,oc,PS).
+dbltok(Pre,[S|Grams],[PS|ReTok]):- atoms_join(Pre,S,PS),dbltok(S,Grams,ReTok).
 
-atom_join(List,F,O):- atomic_list_concat(List,F,O),!.
-atom_join(List,F,O):- atomics_to_string(List,F,O).
-atom_join(List,F,O):- O=..[F|List].
+atoms_join(A,B,O):- tok_split(O,A,B),!,flag(O,X,X+1).
+atoms_join(A,B,O):- atomic_list_concat([A,B],':',O),!,assert(tok_split(O,A,B)),flag(O,X,X+1).
 
 % @TODO use average 
-%as_good(T,X):- is_tok(T,X),(Nxt>500->X=0;X is 500-Nxt).
+%as_good(T,X):- is_word(T,X),(Nxt>500->X=0;X is 500-Nxt).
 %ngram_rate(A,B,C,D,N,NN):- ngram(Loc,A,B,C,D,N), maplist(as_good,[A,B,C,D],Num), sumlist(Num,NN).
 
 autoc(Sent):- autoc(1,Sent).
