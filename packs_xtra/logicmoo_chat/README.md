@@ -6,7 +6,7 @@ It contains a very simple proceedure writen in prolog that emulates a language m
 (see https://gitlab.logicmoo.org/gitlab/logicmoo/logicmoo_workspace/-/blob/master/packs_xtra/logicmoo_chat/prolog/pllm/)
 
 ## PROBLEM   
-GPT can engage in freeform dialog and generate palatable word salad better than any other systems.  They do well holding a topic of conversation on its own, but has difficulty with letting users create the flow.  GPT might be sophisticated enough to pick up context, sentiment, or emotion and use them effectively and not just leveraging the “Eliza Effect.”
+GPT can engage in freeform dialog and generate palatable word salad better than any other systems.  They do well holding a topic of conversation on its own, but has difficulty with letting users create the flow.  GPT might be sophisticated enough to pick up context, sentiment, or emotion and use them effectively and not just leveraging the [“Eliza Effect.”](https://en.wikipedia.org/wiki/ELIZA_effect#Overview)
 
 Perhaps the problem is due to GPT spending too much parameter space into acquiring syntactic correctness.  Most people are waiting for larger versions of GPT to come out as they assume they likely runs out of parameter space before actual semantics are learned.  (Ignore for now OpenAI’s argument that many of the “subtleties of the human” have been embedding itself in our syntax). 
  
