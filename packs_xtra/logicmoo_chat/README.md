@@ -6,9 +6,9 @@ It contains a very simple proceedure writen in prolog that emulates a language m
 (see https://gitlab.logicmoo.org/gitlab/logicmoo/logicmoo_workspace/-/blob/master/packs_xtra/logicmoo_chat/prolog/pllm/)
 
 ## PROBLEM   
-GPT can engage in freeform dialog and generate palatable word salad better than any other systems.  They do well holding a topic of conversation on its own, but has difficulty with letting users create the flow.  Some people would belive that GPT might be sophisticated enough to pick up context, sentiment, or emotion and use them effectively though most recognise that GPT is merely leveraging the [“Eliza Effect.”](https://en.wikipedia.org/wiki/ELIZA_effect#Overview)
+GPT can engage in freeform dialog and generate palatable word salad better than any other systems.  They do well holding a topic of conversation on its own, but has difficulty with letting users create the flow.  Some people would belive that GPT might be sophisticated enough to pick up context, sentiment, or emotion and use them effectively though some speculate that GPT is merely leveraging the [“Eliza Effect”](https://en.wikipedia.org/wiki/ELIZA_effect#Overview).
 
-Some people are waiting for larger versions of GPT to come out as they assume it is likely running out of parameter space acquiring syntactic correctness before any actual semantics are learned.
+Some people are waiting for larger versions of GPT to come out as they assume it is likely running out of parameter space in order to acquire syntactic correctness .. maybe before before any actual semantics are learned.
  
 ## IDEA
 The Logicmoo system removes all of the syntactic requirements.  (Ignore for now OpenAI’s argument that GPT needed the syntax as many of the “subtleties of the human” have been embedding itself in our syntax).  We allow faster bootstrap training times by feeding an entirely [Logical Form](https://plato.stanford.edu/entries/logical-form/) (LF) .  Logicmoo ensures all parameter space is dedicated to deep logical form.
