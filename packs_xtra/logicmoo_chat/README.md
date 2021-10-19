@@ -17,7 +17,7 @@ Our LF happens in two general forms:
 * DRS [(Discourse Representation Structures)](https://plato.stanford.edu/entries/discourse-representation-theory/#DRSLanSynSemAcc) These include questions, answers, offers, acceptances, declinations, requests, permissions and promises.
 * LPS [(Logic-based production system)](https://arxiv.org/pdf/1601.00529) to interact non-trivially with the world and have accomplishment specifications concerning what the dialog accomplishes in the world. 
 
-These are translated into communication inputs and outputs in an I-O language called TknLF (Tokenized Logical Form).  The “subject matter” of TknLF is defined in terms of the order of sequence.   Sentences of TknLF of correctness can be generated automatically from GPT.    
+These are translated into communication inputs and outputs in an I-O language called TknLF ([Tokenized Logical Form](https://logicmoo.org/xwiki/bin/view/Main/Psychology/Mentalese489)).  The “subject matter” of TknLF is defined in terms of the order of sequence.   Sentences of TknLF of correctness can be generated automatically from GPT.    
 English from the user is converted to DRS/LPS Logical forms and then into TknLF understood by PLLM.   PLLM outputs the TknLF which is converted back into DRS/LPS which then becomes English.  
 
 This document is intentionally terse sparing much details but gives at least a surface level easy to explain.
