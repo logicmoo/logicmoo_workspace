@@ -122,7 +122,7 @@ add_ngrams(N,Loc,Grams):- length(NGram,N),
  forall(append(_,Mid,Grams),assert_ngram(ngram,Loc,NGram)).
 
 assert_ngram(P,Loc,List):- W=..[P,Loc|List],ngram_key(W,A),flag(A,X,X+1),
- assert(W),
+  assert_if_new(W),
  (X=0->(flag(corpus_nodes,N,N+1));flag(corpus_node_overlap,O,O+1)).
 
 add_occurs(F,Tok):- P=..[F,Tok],
