@@ -13,9 +13,9 @@ Perhaps the problem is due to GPT spending too much parameter space into acquiri
 ## IDEA  
 The Logicmoo system removes all of the syntactic requirements from GPT.  This allows faster bootstrap training times by feeding they an entirely Logic Form (LF) . Without these constraints GPT will have the best chance at successfully showing its abilities.   Logicmoo ensures all parameter space is dedicated to semantics and logic. 
 
-Our LF happens in two general forms:
-* DRS (Discourse Representation Structures) These include questions, answers, offers, acceptances, declinations, requests, permissions and promises.
-* LPS (Logic-based production system) to interact non-trivially with the world and have accomplishment specifications concerning what the dialog accomplishes in the world. 
+Our [LF](https://plato.stanford.edu/entries/logical-form/) happens in two general forms:
+* [DRS](https://plato.stanford.edu/entries/discourse-representation-theory/#DRSLanSynSemAcc) (Discourse Representation Structures) These include questions, answers, offers, acceptances, declinations, requests, permissions and promises.
+* [LPS](https://arxiv.org/pdf/1601.00529) (Logic-based production system) to interact non-trivially with the world and have accomplishment specifications concerning what the dialog accomplishes in the world. 
 
 These are translated into communication inputs and outputs in an I-O language called TknLF (Tokenized Logical Form).  The “subject matter” of TknLF is defined in terms of the order of sequence.   Sentences of TknLF of correctness can be generated automatically from GPT.    
 English from the user is converted to DRS/LPS Logical forms and then into TknLF understood by PLLM.   PLLM outputs the TknLF which is converted back into DRS/LPS which then becomes English.  
