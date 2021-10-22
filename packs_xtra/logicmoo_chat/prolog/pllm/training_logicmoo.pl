@@ -40,7 +40,7 @@ get_last_oc(OC):- nb_current(last_oc,OC).
 train_from_corpus:- train_from_corpus(library('../self_dialogue_corpus/train_from.txt')).
 
 in_temp_dir(G):-
- must(absolute_file_name(library('../tmpdata'),Dir,[access(read),file_type(directory)])),
+ must(absolute_file_name(pldata('corpus/tmpdata'),Dir,[access(read),file_type(directory)])),
  setup_call_cleanup(working_directory(X,Dir),must_or_rtrace(G),working_directory(_,X)).
  
 
