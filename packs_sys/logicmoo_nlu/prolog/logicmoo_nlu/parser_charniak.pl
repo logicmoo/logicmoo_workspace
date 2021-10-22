@@ -14,7 +14,7 @@
 
 :- set_module(class(library)).
 :- set_module(base(system)).
-:- reexport(library(logicmoo_nlu/parser_penn_trees)).
+:- use_module(library(logicmoo_nlu/parser_penn_trees)).
 
 charniak_stream(Text,Out):-
   process_create(path(bash), [('/opt/logicmoo_workspace/prologmud_server/eclipse-workspace/bllip-parser/CharniakParse.sh'), Text ],
@@ -85,12 +85,17 @@ text_to_charniak_tree(Text,LExpr):-
 
 :- if( \+ getenv('keep_going','-k')).
 :- use_module(library(editline)).
-:- add_history((call(make),call(test_corenlp1))).
+:- add_history((call(make),call(test_charniak1))).
 :- endif.
 
 baseKB:regression_test:- test_charniak(1,X),!,test_charniak(X).
 baseKB:sanity_test:- make, forall(test_charniak(1,X),test_charniak(X)).
 baseKB:feature_test:- test_charniak.
+
+test_charniak0:- 
+  Txt = "PERSON1 asks : Hey , what 's going on XVAR. < p >. PERSON2 said : Not a whole lot . . < p >. PERSON2 said : I 'm looking forward to the weekend , though . . < p >. PERSON1 asks : Do you have any big plans XVAR. < p >. PERSON2 said : Yes . . < p >. PERSON2 said : I 'm going to Wrigley Field on Saturday . . < p >. PERSON1 asks : Aren 't the Cubs out of town XVAR. < p >. PERSON2 said : Yes , but there 's a big concert at Wrigley this weekend . . < p >. PERSON1 said : Oh nice . . < p >. PERSON1 asks : Who 's playing XVAR. < p >. PERSON2 said : Pearl Jam is headlining the Saturday night show . . < p >. PERSON1 said : Wow , Pearl Jam . . < p >. PERSON1 said : I remeber when I got their first CD , Ten , at the record store at Harlem and Irving Plaza . . < p >. PERSON2 said : Oh right . . < p >. PERSON2 said : I remember that record store . . < p >. PERSON1 said : It was called Rolling Stone , and they went out of business many years ago . . < p >. PERSON2 said : Oh that 's too bad . . < p >. PERSON2 said : I really loved taking the bus to Harlem and Irving and visiting that store . . < p >. PERSON1 said : Me too . . < p >. PERSON1 said : We did n't have the internet back then and had to discover new music the hard way . . < p >. PERSON2 said : Haha yes . . < p >. PERSON2 said : I remember discovering ' ' Nirvana before they got famous . . < p >. PERSON1 said : Those were the good old days . . < p >. PERSON2 said : Yes they were . . < p >. PERSON2 said : I need to dig up my old Sony disc player and pop in an old CD . . < p >. PERSON1 asks : Where did the time go XVAR. < p >. PERSON1 said : Pearl Jam is 25 years old already . . < p >. PERSON2 said : It seems like only yesterday that the grunge music movement took over . . < p >. PERSON1 said : Right . . < p >. PERSON1 said : I bet everyone at the concert will be in their forty 's . . < p >. PERSON2 said : No doubt . . < p >. PERSON2 said : Well , I hope you have a great time at the concert . . < p > .",
+  test_charniak(Txt),
+  ttyflush,writeln(('\n test_charniak0.')),!.
 
 test_charniak1:- 
   %Txt = "Rydell used his straw to stir the foam and ice remaining at the bottom of his tall plastic cup, as though he were hoping to find a secret prize.",

@@ -1062,6 +1062,7 @@ close_map :-
     !.
 close_map.
 
+%feedback(Fmt, Args) :- format(user_error,Fmt,Args),fail.
 feedback(Fmt, Args) :-
     verbose(Fd),
     !,

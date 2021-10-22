@@ -960,7 +960,10 @@ print_as_tree(Term):- print_tree(Term).
 
 ansi_ansi:- notrace((once(is_pp_set(ansi);\+ is_pp_set(_)),toplevel_pp(ansi))).
 
-print_tree(Term):- ansi_ansi,current_output_line_position(Pos),!,print_tab_term(Pos,Term).
+maybe_reset_spaces(Pos):- ignore((current_output_line_position(PosNew), PosNew>Pos,  prefix_spaces(Pos))).
+
+print_tree(Term):- ansi_ansi,current_output_line_position(Pos),!,print_tab_term(Pos,Term), maybe_reset_spaces(Pos).
+  
 print_tree(Term):-
  current_output_line_position(Pos),
  ensure_pp((   

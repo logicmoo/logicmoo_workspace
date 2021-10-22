@@ -12,6 +12,8 @@
 % ===========================
 :- multifile(tmp:discord_token/1).
 :- dynamic(tmp:discord_token/1).
+:- volatile(tmp:discord_token/1).
+
 
 discord_dd(ID,Data):- discord_ddd(ID,hasValue,Data).
 discord_dd(ID,Prop,Value):- discord_ddd(ID,Prop,Value)*->true;get_discord2(ID,Prop,Value).

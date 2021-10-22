@@ -20,6 +20,11 @@
 :- multifile(tmp:discord_token/1).
 :- dynamic(tmp:discord_token/1).
 
+:- volatile(tmp:discord_websocket_event/2).
+:- volatile(tmp:discord_chat_event/2).
+:- volatile(tmp:last_disconnect/1).
+:- volatile(tmp:discord_token/1).
+
 %gw_op(0,'dispatch','receive','an event was dispatched.').
 %gw_op(1,'heartbeat',_,'fired periodically by the client to keep the connection alive.').
 gw_op(2,'identify','send','starts a new session during the initial handshake.').
@@ -115,6 +120,7 @@ expand_discoure_host_post({A - B},O):- !, discord_dd(A,B,M),expand_discoure_host
 expand_discoure_host_post(A,O):- A=O.
 
 :- dynamic(tmp:discord_websocket/3).
+:- volatile(tmp:discord_websocket/3).
 
 % use dmiles proxy impl first?
 discord_get_websocket(WS):- tmp:jpl_websocket(WS),!.
@@ -124,6 +130,7 @@ discord_get_websocket(WS):-
    discord_open_websocket(URL,WS),!.
 
 :- dynamic(tmp:jpl_websocket/1).
+:- volatile(tmp:jpl_websocket/1).
 
 discord_open_websocket(URL,WS):-
    ignore(tmp:discord_websocket(OLD_WS,_,_)),

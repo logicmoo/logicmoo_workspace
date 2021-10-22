@@ -138,7 +138,7 @@ text_to_corenlp_low(English, OptionsIn, ReplyO):-
   uri_encoded(query_value, For, Encoded), 
   atomic_list_concat(['/?properties=',Encoded], URL))),!,
   %pprint_ecp_cmt(blue,  uRL=http_post(URL, [PostData], json(Reply), [])),
-  must_or_rtrace((get_post_reply('http://localhost:4090',URL, PostData, Reply))),!,
+  catch((get_post_reply('http://localhost:4090',URL, PostData, Reply)),E,(dumpST,dmsg(E),!,fail)),
  % print_tree(Reply),
   ttyflush,!,
   Reply=ReplyO.

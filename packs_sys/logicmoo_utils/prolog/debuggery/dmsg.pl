@@ -1235,13 +1235,23 @@ with_output_to_main_error(G):-
 with_output_to_main_error(G):-
   with_output_to_real_main_error(G).
 
+%:- volatile(tmp:real_main_error/1).
+:- dynamic(tmp:real_main_error/1).
+
+save_real_main_error:- 
+ % volatile(tmp:real_main_error/1),
+  dynamic(tmp:real_main_error/1),
+  stream_property(Err,file_no(2)),
+  asserta(tmp:real_main_error(Err)).
+
+:- initialization(retractall(tmp:real_main_error(_)), prepare_state).
+:- now_and_later(save_real_main_error).
+
 with_output_to_real_main_error(G):-
   %set_prolog_flag(occurs_check,false),
   %stream_property(Err,file_no(2)),!,
-  tmp:real_main_error(Err),!,
-  with_output_to(Err,G).
+  tmp:real_main_error(Err) -> with_output_to(Err,G); with_output_to(user_error,G).
 
-:- stream_property(Err,file_no(2)),asserta(tmp:real_main_error(Err)).
 /*
 with_output_to_main_error(G):-
   set_prolog_flag(occurs_check,false),

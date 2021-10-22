@@ -1,3 +1,25 @@
 #*.o filter=lfs diff=lfs merge=lfs -text
 #logicmoo_workspace.vtg~ filter=lfs diff=lfs merge=lfs -text
 *.pl gitlab-language=prolog
+*.pl linguist-language=Prolog
+*.pro gitlab-language=prolog
+*.pro linguist-language=Prolog
+*.lgt gitlab-language=prolog
+*.lgt linguist-language=Prolog
+*.P gitlab-language=prolog
+*.P linguist-language=Prolog
+*.plt gitlab-language=prolog
+*.plt linguist-language=Prolog
+*.lps linguist-language=Prolog
+*.lps gitlab-language=prolog
+*.pfc linguist-language=Prolog
+*.pfc gitlab-language=prolog
+*.chr linguist-language=Prolog
+*.chr gitlab-language=prolog
+*.ec linguist-language=Prolog
+*.ec gitlab-language=prolog
+*.prolog linguist-language=Prolog
+*.prolog gitlab-language=prolog
+*.pel linguist-language=Prolog
+*.pel gitlab-language=prolog
+

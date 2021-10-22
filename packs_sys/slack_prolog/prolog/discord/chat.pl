@@ -178,6 +178,8 @@ discord_set_typing(ID):-
 
 :- dynamic(t_l:discord_msg_id/1).
 :- dynamic(tmp:channel_output_buffer/2).
+:- volatile(t_l:discord_msg_id/1).
+:- volatile(tmp:channel_output_buffer/2).
 
 :- meta_predicate(disco_call(:)).
 disco_call(G):- wots(S,G),discord_say(S).

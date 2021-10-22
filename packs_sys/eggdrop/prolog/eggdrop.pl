@@ -414,6 +414,7 @@ consultation_thread(CtrlNick,Port):-
 
 join_chans:- maplist(join,['##prolog','#ai','##narrative-ai','#logicmoo']).
 
+:- volatile(tmp:last_say_owner/1).
 :- dynamic(tmp:last_say_owner/1).
 say_owner(Info):- get_time(Date), ignore(if_catch_fail(say_owner(Info,Date))).
 % throttle to once every 10 seconds

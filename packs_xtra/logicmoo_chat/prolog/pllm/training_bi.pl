@@ -5,27 +5,9 @@
 
 :- X= (is_word/1,is_word/2,ngram/5,ngram/6,trigram/3,trigram/4,tok_split/3,tok_split/4),
   dynamic(X),multifile(X).
+
 :- ensure_loaded(trains_trigrams).
-
-:- use_module(library(logicmoo_utils)).
-
-% debug printing
-debugln(X):- \+ is_list(X) -> (debuglnw(X,Y), dmsg(Y)) ; maplist(debuglnw,X,Y),atomics_to_string(Y,' ',Z),debugln(Z).
-debuglnw(Insts,S):- var(Insts), !, sformat(S,"~p",[Insts]).
-debuglnw([N|A],S):- is_list(A),!,maplist(debuglnw,[N|A],Y),atomics_to_string(Y,' ',S).
-debuglnw((F/A),S):- functor(P,F,A),predicate_property(P,number_of_clauses(Insts)),!,sformat(S,"~w=~:d~n",[(F/A),Insts]).
-debuglnw(w(E),S):- sformat(S,'~p',E),!.
-debuglnw('$'(E),S):- get_flag(E,Insts),!,sformat(S,"~w=~:d~n",[E,Insts]).
-debuglnw(N=V,S):- integer(V),!,sformat(S,"~n\t~w =\t~:d ",[N,V]).
-debuglnw(N=V,S):- !,sformat(S,"~n\t~w =\t~w ",[N,V]).
-debuglnw([N],S):- !, debuglnw(N,S).
-debuglnw(C,S):- tok_split(C,S,_),!.
-debuglnw(C,S):- compound(C),!,sformat(S,"~p",[C]).
-%debuglnw(C,S):- compound(C),compound_name_arguments(C,N,A),debuglnw([N|A],S).
-debuglnw(nl,'\n'):-!.
-debuglnw([],''):-!.
-debuglnw(E,E).
-
+:- ensure_loaded(utils_pllm).
 
 compile_corpus:- 
   compile_corpus_in_mem.
@@ -94,29 +76,28 @@ compute_extent(F,A):-
   get_flag(min_fa,Min),
   get_flag(max_fa,Max),
   predicate_property(NGram,number_of_clauses(Insts)),
-  Mean is round(Total/(Insts))+5,
+  max_of(Insts,1,Insts1), % avoid division by zero
+  Mean is round(Total/Insts1),
   High is ((Max-Mean)/2 + Mean),
   Low is (Mean-Min)/2 + Min,
-  set_flag(num_min_fa, 0),
-  set_flag(med_high_fa, High),
-  set_flag(med_low_fa, Low),
-  set_flag(above_med_high_fa, 0),
-  set_flag(below_mean_fa, 0),
-  set_flag(below_med_low_fa, 0),
+  set_flag(med_high_fa, High), set_flag(med_low_fa, Low),
+ nop((
+  % adds 20 seconds and is not yet used
+  set_flag(above_mean_fa, 0), set_flag(above_med_high_fa, 0), set_flag(num_min_fa, 0),
+  set_flag(below_mean_fa, 0), set_flag(below_med_low_fa, 0),
   append_term(NGram,NN,NGramStatN),
   forall(NGramStatN,
     (ignore((NN=Min,inc_flag(num_min_fa))),
      ignore((NN>High,inc_flag(above_med_high_fa))),
      ignore((NN<Low,inc_flag(below_med_low_fa))),
      (NN =< Mean ->inc_flag(below_mean_fa);inc_flag(above_mean_fa)))),
-  get_flag(num_min_fa, NEMin),
-  get_flag(above_med_high_fa, NAMedHi),
-  get_flag(below_mean_fa, NBMean),
-  get_flag(above_mean_fa, NAMean),  
+  get_flag(num_min_fa, NEMin), get_flag(above_med_high_fa, NAMedHi),
+  get_flag(below_mean_fa, NBMean), get_flag(above_mean_fa, NAMean),  
   get_flag(below_med_low_fa, NBMedLo),
   NAMeanNAMedHi is NAMean-NAMedHi,
   NBMeanNBMedLo is NBMean-NBMedLo,
   NBMedLoNEMin is NBMedLo-NEMin,
+ !)),
   Props = [
       (min->min)=NEMin,
       (min->low)=NBMedLoNEMin,
@@ -124,7 +105,7 @@ compute_extent(F,A):-
       (mean->high)=NAMeanNAMedHi,
       (high->max)=NAMedHi,
       '---------'='------------',
-      (min->max)=Insts,
+      (min->max)=Insts, 
       nl,
       min=Min,
       low=Low,
@@ -132,9 +113,11 @@ compute_extent(F,A):-
       high=High,
       max=Max,
       total=Total],
+  maplist(xthe_unbounds,Props),
   assert(extent_props(F,A,Props)),
   debugln([extent_props(F/A),Props]),!.
-  
+
+xthe_unbounds(X):- ignore(X = (_=x)).
 
 ngram_key(tok_split(O,_,_),O):-!.
 ngram_key(is_word(O),O):-!.
@@ -178,7 +161,7 @@ add_training_toks(X,PreToks):-
  add_ngrams(except_symbols,trigram,3,skip,PreToks),
  dbltok(oc,PreToks,ReToks),!,
  get_last_oc(LastOC),
- get_flag(corpus_convos,B),%source_location(_,L),
+ %get_flag(corpus_convos,B),%source_location(_,L),
  NewOC is X+1,
  flag(corpus_training,T,T+1),
  set_last_oc(NewOC),

@@ -1,3 +1,4 @@
+:- encoding(iso_latin_1).
 :-module(parser_penn_trees, 
 [
  is_word_or_span/1,
@@ -127,6 +128,8 @@ $	currency symbol	$, £
 */
 :- set_module(class(library)).
 :- set_module(base(system)).
+:- use_module(library(logicmoo/dcg_must)).
+
 
 
 check_tree_quality(Srch,X,G1,G2,Total):-findall(Srch,(sub_term(Srch,X),G1,G2),Sols),length(Sols,Total).

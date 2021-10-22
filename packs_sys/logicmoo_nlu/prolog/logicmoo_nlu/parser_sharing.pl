@@ -201,7 +201,7 @@ shared_parser_data(XY):- pi_p(XY,PI)-> XY\==PI,!,shared_parser_data(PI).
 shared_parser_data(MP):- predicate_visible_home(MP,M)->strip_module(MP,Imp,P),MP\==M:P,!, functor(P,F,A),M:multifile(M:F/A),M:export(M:F/A),shared_parser_data(M:P),Imp:import(M:F/A).
 shared_parser_data(M:P):- !,def_parser_data(M,P),strip_module(_,Imp,_),share_mp(M:P),functor(P,F,A),Imp:import(M:F/A).
 % shared_parser_data(P):- each_parser_module(M),predicate_property(M:P,defined), \+ predicate_property(M:P,imported_from(_)),!,shared_parser_data(M:P).
-shared_parser_data(P):-  get_query_from(SM),shared_parser_data(SM:P).
+shared_parser_data(P):-  if_defined(get_query_from(SM)),shared_parser_data(SM:P).
 :- share_mp((shared_parser_data)/1).
 
 
@@ -356,7 +356,9 @@ try_maybe_p(M:P):- !, call(M:P).
 try_maybe_p(M:P):- !, P=..[F,_|List],try_maybe_pl(M:P,F,List).
 try_maybe_p(P):-!,try_maybe_p(parser_chat80:P).
 
-try_maybe_pl(_  ,F,List):- (member(E,List),compound(E),E=error(F,_)),!,print_reply(E),fail.
+print_reply_local(Other) :- quietly((portray_vars:pretty_numbervars(Other, O), print_tree(O),format('~N',[]))), !.
+
+try_maybe_pl(_  ,F,List):- (member(E,List),compound(E),E=error(F,_)),!,print_reply_local(E),fail.
 try_maybe_pl(M:P,F,List):- member(E,List),var(E),reverse(List,RList),member(R,RList),var(R),!,                 
   (R==E -> try_maybe_f(F,M:P,R);
   (try_maybe_f(F,M:P,E);try_maybe_f(F,M:P,R))).

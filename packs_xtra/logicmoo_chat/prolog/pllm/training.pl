@@ -6,23 +6,7 @@
 :- X= (is_word/1,is_word/2,ngram/5,ngram/6,trigram/3,trigram/4,tok_split/3),
   dynamic(X),multifile(X).
 
-:- use_module(library(logicmoo_utils)).
-
-% debug printing
-debugln(X):- \+ is_list(X) -> (debuglnw(X,Y), dmsg(Y)) ; maplist(debuglnw,X,Y),atomics_to_string(Y,' ',Z),debugln(Z).
-debuglnw(Insts,S):- var(Insts), !, sformat(S,"~p",[Insts]).
-debuglnw([N|A],S):- is_list(A),!,maplist(debuglnw,[N|A],Y),atomics_to_string(Y,' ',S).
-debuglnw((F/A),S):- functor(P,F,A),predicate_property(P,number_of_clauses(Insts)),!,sformat(S,"~w=~:d~n",[(F/A),Insts]).
-debuglnw(w(E),S):- sformat(S,'~p',E),!.
-debuglnw('$'(E),S):- get_flag(E,Insts),!,sformat(S,"~w=~:d~n",[E,Insts]).
-debuglnw(N=V,S):- integer(V),!,sformat(S,"\t~w =\t~:d ",[N,V]).
-debuglnw([N],S):- !, debuglnw(N,S).
-debuglnw(C,S):- tok_split(C,S,_),!.
-debuglnw(C,S):- compound(C),!,sformat(S,"~p",[C]).
-%debuglnw(C,S):- compound(C),compound_name_arguments(C,N,A),debuglnw([N|A],S).
-debuglnw(nl,'\n'):-!.
-debuglnw([],''):-!.
-debuglnw(E,E).
+:- ensure_loaded(utils_pllm).
 
 
 compile_corpus:- 
