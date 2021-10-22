@@ -26,6 +26,10 @@ This document is intentionally terse sparing much details but gives at least a s
 
 ### Statistics on current Training set
 
+Now stored here
+https://gitlab.logicmoo.org/gitlab/logicmoo/prologmud_server/-/tree/master/.local/share/swi-prolog/pack/logicmoo_pldata/pldata/corpus/self_dialogue_corpus
+
+
 
 | Category | Count     |
 ---------- | -----------
