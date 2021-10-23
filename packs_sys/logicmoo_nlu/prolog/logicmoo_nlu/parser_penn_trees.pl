@@ -148,7 +148,24 @@ pick_tree_why( XX,X,_YY,Y,XX,X =@= Y, yellow).
 
 dont_format(_,_).
 
-text_to_best_tree(Text,Tree):- 
+:- multifile(tmp:cached_text_to_best_tree/2).
+:- dynamic(tmp:cached_text_to_best_tree/2).
+
+cached_text_to_best_tree:- ignore((F= '/tmp/text_to_best_tree.tmp', exists_file(F),ensure_loaded(F))).
+:- now_and_later(cached_text_to_best_tree).
+add_text_to_best_tree(P):-
+  ignore(on_x_fail(ignore((
+    \+ P, assert(P),
+    open('/tmp/text_to_best_tree.tmp',append,Out),
+    writeq(Out,P),writeln(Out,'.'),
+    close(Out))))).
+
+text_to_best_tree(Text,Tree):- tmp:cached_text_to_best_tree(Text,Tree),!.
+text_to_best_tree(Text,Tree):- text_to_best_tree_real(Text,Tree),
+  add_text_to_best_tree(tmp:cached_text_to_best_tree(Text,Tree)),!.
+
+
+text_to_best_tree_real(Text,Tree):- 
  (callable(Tree) -> Format = Tree ; (Format = dont_format)),
   call(Format,'=================================\n',[]),
   call(Format,'Testing: ~w  \n',[Text]),

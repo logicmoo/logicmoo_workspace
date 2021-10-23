@@ -15,7 +15,7 @@
       rtrace/1,  % Non-interactive tracing
       rtrace_break/1,  % Interactive tracing
       quietly/1,  % Non-det notrace/1
-      restore_trace/1, % After call restor tracer
+      restore_trace/1, % After call restore trace/debug settings
       rtrace/0, % Start non-intractive tracing
       srtrace/0, % Start non-intractive tracing at System level
       nortrace/0, % Stop non-intractive tracing
@@ -26,6 +26,7 @@
       should_maybe_leash/0,
       non_user_console/0,
       ftrace/1, % rtrace showing only failures
+      visible_rtrace/2, 
       push_guitracer/0,pop_guitracer/0
    ]).
 
@@ -55,7 +56,8 @@ call_call(G):-call(G).
    
    rtrace_break(:),
    quietly(:),
-   ftrace(:).
+   ftrace(:),
+   visible_rtrace(+,:).
 
 %! on_f_rtrace( :Goal) is det.
 %
@@ -445,11 +447,14 @@ rtrace_break(Goal):- stop_rtrace,trace,debugCallWhy(rtrace_break(Goal),Goal).
 
 %! ftrace( :Goal) is nondet.
 %
-% Functor Trace.
+% Trace failure.
 %
-ftrace(Goal):- restore_trace((
-   visible(-all),visible(+unify),
-   visible(+fail),visible(+exception),
+ftrace(Goal):- visible_rtrace([-all,+unify,+fail,+exception],Goal).
+
+visible_rtrace(List,Goal):-
+ restore_trace((
+   visible(-all), visible(+exception),
+   maplist(visible,List),
    maybe_leash(-all),maybe_leash(+exception),trace,Goal)).
 
 

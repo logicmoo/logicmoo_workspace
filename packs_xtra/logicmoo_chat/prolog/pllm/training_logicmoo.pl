@@ -201,7 +201,8 @@ add_training_str(XX,Str):- string(Str),
    assert_training(XX,string,Str),
    tokenize_atom(Str,Toks),!,
    pretok(Toks,PreToks),
-   do_training(XX,PreToks,text_to_tree),!.
+   add_training_toks(XX,PreToks).
+   
  
 /*
 add_training_str(XX,Str):- 
@@ -209,7 +210,6 @@ add_training_str(XX,Str):-
  maplist(downcase_atom,Toks,TokList), 
  pretok(TokList,PreToks),!,
  add_training_toks(XX,PreToks).
-
 
 */
 
@@ -246,7 +246,7 @@ text_to_tree(X,Y):- text_to_lgp_tree(X,Y),!.
 all_letters(X):- \+ (upcase_atom(X,U),downcase_atom(X,U)).
 
 
-
+add_training_toks(XX,PreToks):- do_training(XX,PreToks,text_to_tree),!.
 add_training_toks(_,[]):- !.
 add_training_toks(X,[A]):- !, add_training_toks(X,[A,'.']).
 add_training_toks(XX,PreToks):-
@@ -381,6 +381,6 @@ gen6([A,B,C,D,E,F,G,H]=N):-
   ignore(( 
     \+ prolog_load_context(reloading, true), 
      ignore(load_training), 
-     nop(ignore(compile_corpus)))).
+     ignore(compile_corpus))).
 
 

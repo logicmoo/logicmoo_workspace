@@ -1,5 +1,6 @@
 :- encoding(iso_latin_1).
 :- module(pllm,[]).
+:- encoding(iso_latin_1).
 
 % :- include(weightless_pllm).
 
@@ -37,10 +38,10 @@ set_last_oc(OC):- nb_setval(last_oc,OC).
 get_last_oc(OC):- nb_current(last_oc,OC).
 
 % train_from_corpus:- training(_,string,_),!,forall(training(XX,string,Val),add_training_str(XX,Val)).
-train_from_corpus:- train_from_corpus(library('../self_dialogue_corpus/train_from.txt')).
+train_from_corpus:- train_from_corpus(pldata('corpus/self_dialogue_corpus/train_from_topic_star_wars.txt')).
 
 in_temp_dir(G):-
- must(absolute_file_name(library('../tmpdata'),Dir,[access(read),file_type(directory)])),
+ must(absolute_file_name(pldata('corpus/tmpdata'),Dir,[access(read),file_type(directory)])),
  setup_call_cleanup(working_directory(X,Dir),must_or_rtrace(G),working_directory(_,X)).
  
 
@@ -54,7 +55,7 @@ setup_call_cleanup(
  set_flag(file_line,0),
  repeat,
  (at_end_of_stream(In) -> ! ; 
- inc_flag(file_line), read_line_to_string(In,Str),get_flag(file_line,X),add_training(X,Str), fail),
+ inc_flag(file_line), read_line_to_string(In,Str),get_flag(file_line,X),once(add_training(X,Str)), fail),
  forall(corpus_stat(Stat),(get_flag(Stat,Value),debugln(Stat=Value))))),
  save_training).
 
@@ -64,14 +65,23 @@ load_training:- in_temp_dir(load_training0).
 load_training0:-
   pllm_preds(L),maplist(load_training,L).
 
-load_training(MFA):- !, strip_module(MFA,M,F/A),
+load_training(MFA):- !, compute_module(MFA,M,F/A),
+ functor(P,F,A),MP=M:P,
  atomic_list_concat(['done_',M,'_',F,'_',A,'.pl'],File),
- ignore((exists_file(File) -> ensure_loaded(File) ; true)).
+ (predicate_property(MP,number_of_clauses(Before));Before=0),!,
+ ignore((exists_file(File) -> ensure_loaded(File) ; true)),
+ (predicate_property(MP,number_of_clauses(After));After=0),!,
+ debugln(M:F/A=(Before->After)).
+
+compute_module(MFA,M,FA):- strip_module(MFA,M0,FA),compute_m(M0,M),!.
+
+compute_m(user,pllm).
+compute_m(M,M).
 
 save_training:- in_temp_dir(save_training0).
 save_training0:-
   pllm_preds(L),maplist(save_training,L).
-save_training(MFA):- !, strip_module(MFA,M,F/A),
+save_training(MFA):- !, compute_module(MFA,M,F/A),
  atomic_list_concat(['done_',M,'_',F,'_',A,'.pl'],File),
  tell(File),
  writeq(:- encoding(iso_latin_1)),writeln('.'),
@@ -190,6 +200,9 @@ add_training(X,Str):-
  XX is ((Z+1)*100_000_000_000)+(A*10_000_000)+X, 
  add_training_str(XX,Str).
 
+add_punct(X,X):- last(X,E),member(E,['?','.','!']).
+add_punct(X,Y):- append(X,['.'],Y).
+
 add_training_str(_,"XXXXXXXXXXX"):- inc_flag(corpus_convos), 
   %C = 100_000_000_000, Buffer is floor(XX/C)*C + 01111111111,  
   %ignore(add_conversation_training(Buffer)), !,
@@ -197,14 +210,25 @@ add_training_str(_,"XXXXXXXXXXX"):- inc_flag(corpus_convos),
 %add_training_str(XX,Str):- 1 is XX mod 2, !, add_training_said(said,"Al",XX,Str),!. 
 %add_training_str(XX,Str):- add_training_said(said,"Jo",XX,Str),!. 
 
-add_training_str(XX,Str):- string(Str),
-   assert_training(XX,string,Str),
+
+add_training_str(XX,Str) :-
+ must_det_l((
+   string(Str),
+   assert_training_v(XX,string,Str),
    tokenize_atom(Str,Toks),!,
-   pretok(Toks,PreToks),
-   add_training_toks(XX,PreToks).
-   
+   pretok(Toks,PreToks0),
+   add_punct(PreToks0,PreToks),
+   text_to_tree(PreToks,Tree),
+   assert_training(XX,text_to_tree,Tree),
+   %writeq(sample_tree(Tree)),writeln('.'),
+   unphrasify(Tree,List),
+   assert_training(XX,unphrasify,List),
+   tree_to_toks(List,PostToks),!,
+   assert_training(XX,tree_to_toks,PostToks),
+   add_training_toks(XX,PostToks))).
+
  
-/*
+/* Old Way
 add_training_str(XX,Str):- 
  tokenize_atom(Str,Toks),
  maplist(downcase_atom,Toks,TokList), 
@@ -212,8 +236,101 @@ add_training_str(XX,Str):-
  add_training_toks(XX,PreToks).
  
 */
- 
-assert_training(XX,P,Parse):- assert_if_new(training(XX,P,Parse)),dmsg(training(XX,P,Parse)),nop(save_training(training/3)).
+
+tree_to_toks:- mmake, forall(sample_tree(Tree),tree_to_toks1(Tree)).
+sample_tree(['SEQBAR',['CORENLP',['S',['CC','And'],['ADVP',['RB',then]],['NP',['NP',['PRP$',her],['NN',son]],[',',','],['NP',['NNP','Ben']],[',',',']],['VP',['VP',['VBZ',turns],['NP',['DT',all],['NNP','Sith']]],['CC',and],['VP',['VBZ',joins],['NP',['DT',the],['JJ',dark],['NN',side]]]],['.','.']]],['CORENLP',['S',['PRN',['S',['NP',['DT','That']],['VP',['VBD',had],['S',['VP',['TO',to],['VP',['VB',have],['VP',['VBN',factored],['PP',['IN',into],['NP',['PRP$',her],['NNS',reasons]]],['S',['VP',['TO',to],['VP',['VB',stay],['ADVP',['RB',away]],['PP',['IN',from],['NP',['NP',['DT',the],['NN',call]],['PP',['IN',of],['NP',['DT',the],['NN',force]]]]]]]]]]]]]]],[',',','],['VB',do],['RB',not],['NP',['PRP',you]],['VP',['VB',think]],['.',?]]]]).
+sample_tree(['CORENLP',['S',['NP',['PRP','I']],['VP',['VB',hate],['S',['VP',['TO',to],['VP',['VB',say],['S',['NP',['PRP',it]],['VP',['VB','buuut.']],[',',',']]]]]],['.','.']],['S',['VP',[',',',']],['.','.']]]).
+sample_tree(['SEQBAR',['CORENLP',['SBAR',['NP',['WP',who]],['S',['VP',['MD',would],['VP',['VB',pick],['NP',['NN',kylo]]]]],['.',?]]],['CORENLP',['S',['ADVP',['RB',definitely]],['ADVP',['RB',not]],['NP',['PRP',me]]]]]).
+sample_tree(['SEQBAR',['CORENLP',['S',['S',['NP',['PRP','He']],['VP',['VBD',was],['NP',['NP',['NNP','Luke'],['POS','\'s']],['NNP','Padwan']]]],[',',','],['CC',but],['S',['NP',['PRP',he]],['VP',['VBD',turned]]],['.','.']]],['SEQBAR',['S',['NP',['PRP','It']],['VP',['AUX',has],['RB',not],['VP',['AUX',been],['VP',['VBN',shown],['FRAG',['WHADVP',['WRB',why]]]]]],['.','.']],['CORENLP',['S',['PRN',['S',['NP',['PRP','He']],['VP',['VBZ',is],['ADVP',['RB',no],['RBR',longer]],['NP',['NNP','Jedi']]]]],[',',','],['NP',['PRP',he]],['VP',['VBZ',is],['ADJP',['JJ',sith]],['ADVP',['RB',now]]]]]]]).
+sample_tree(['CORENLP',['SBAR',['INTJ',['UH','Well']],[',',','],['SBAR',['IN',if],['S',['NP',['PRP',it]],['VP',['VBZ',is],['NP',['NNP','Rey']]]]],[',',','],['ADVP',['RB',then]],['WHADVP',['WRB',why]],['S',['VBD',did],['NP',['PRP',it]],['RB',not],['VP',['VB',wake],['SBAR',['WHADVP',['WRB',when]],['S',['NP',['NNP','Klyo']],['VP',['VBD',came],['PP',['IN',into],['NP',['NN',power]]]]]]]]]]).
+sample_tree([ 'CORENLP',
+     [ 'SBAR',
+       [ 'NP',
+         ['WP','Who']],
+       [ 'S',
+         ['VBZ',is],
+         [ 'NP',
+           ['PRP$',your],
+           ['JJ',favorite],
+           ['NN',character]]],
+       ['.',?]]]).
+sample_tree(['SEQBAR',['CORENLP',['S',['INTJ',['UH','Well']],[',',','],['NP',['PRP',it]],['VP',['VBZ','\'s'],['NP',['DT',a],['NN',movie]]],['.','.']]],['CORENLP',['S',['NP',['PRP','He']],['VP',['MD',could],['VP',['VB',show],['PRT',['RP',up]]]]]]]).
+sample_tree(['CORENLP',['S',['VB','Are'],['NP',['PRP',you]],['NP',['NP',['DT',a],['NN',fan]],['PP',['IN',of],['NP',['DT',the],['NML',['NNP','Star'],['NNPS','Wars']],['NN',series]]]],['.',?]]]).
+sample_tree(['CORENLP',['S',['NP',['PRP','I']],['VP',['VB',think],['SBAR',['S',['NP',['PRP',he]],['VP',['VBD',was],['ADVP',['RB',just]],['VP',['VBG',giving],['NP',['DT',a],['JJ',giant],['JJ',middle],['NN',finger]],['PP',['IN',to],['NP',['DT',the],['NN',audience]]]]]]]]]]).
+sample_tree(['CORENLP',['S',['ADVP',['RB','Obviously']],['NP',['NNP','Darth'],['NNP','Vader']],['VP',['VBZ',is],['NP',['NP',['DT',the],['JJS',best]],['CC',and],['NP',['NP',['DT',the],['JJ',original],['JJ',bad],['NN',guy]],['PP',['IN',of],['NP',['NNP','Star'],['NNPS','Wars']]]]]]]]).
+sample_tree(['SEQBAR',['CORENLP',['S',['NP',['NNP','James'],['NNP','Earl'],['NNP','Jones']],['VP',['VBZ',does],['NP',['DT',the],['NN',voice]],[',',','],['SBAR',['RB',even],['IN',though],['S',['NP',['PRP',he]],['VP',['VBZ',is],['RB',not],['VP',['VBN',listed],['PP',['IN',in],['NP',['DT',the],['NNS',credits]]]]]]]],['.','.']]],['CORENLP',['S',['NP',['NNP','David'],['NNP','Prowse']],['VP',['VBD',did],['NP',['DT',the],['NN',acting]]]]]]).
+sample_tree(['CORENLP',['S',['S',['NP',['PRP','I']],['VP',['VB','\'m'],['ADVP',['RB',still]],['ADJP',['RB',really],['JJ',bummed],['PP',['IN',about],['NP',['DT',that]]]]]],[',',','],['CC',but],['S',['NP',['PRP','I']],['VP',['VB','\'m'],['ADJP',['JJ',sure],['SBAR',['S',['NP',['PRP',they]],['VP',['MD','\'ll'],['VP',['VB',figure],['NP',['NN',something]],['PRT',['RP',out]],['PP',['IN',for],['NP',['NP',['NNP','Leia']],['PP',['IN',in],['NP',['DT','The'],['JJ','Last'],['NNP','Jedi']]]]]]]]]]]]]]).
+tree_to_toks1(Tree):-
+ print_tree_nl(i=Tree),
+ unphrasify(Tree,UTree),
+ print_tree_nl(o:-UTree),
+ nop((visible_rtrace([+call,+exit],tree_to_toks(Tree,O)),
+ notrace(wdmsg(O)))).
+
+
+contains_phrase(Ls):- sub_term(E,Ls),atom(E),(is_penn_long(E);E=='NP').
+contains_phrase(Ls):- member(E,Ls),is_list(E),member(Sl,E),is_list(Sl).
+
+unphrasify([], []) :- !.
+%unphrasify([S|Ls], FlatL) :- is_penn_long(S), unphrasify(Ls, FlatL).
+unphrasify(['VP'|Ls], FlatL) :- !, unphrasify(Ls, FlatL).
+unphrasify(['PP'|Ls], FlatL) :- !, unphrasify(Ls, FlatL).
+unphrasify([S|Ls], [mark(S)|FlatL]) :- (is_penn_long(S), contains_phrase(Ls)  ),!, unphrasify(Ls, FlatL).
+unphrasify([S|Ls], FlatL) :- S=='NP', sub_var('NP', Ls), unphrasify(Ls, FlatL).
+unphrasify([L|Ls], [L|NewLs]) :- 
+    dont_flatten(L),!,
+    unphrasify(Ls, NewLs),!.
+unphrasify([L|Ls], FlatL) :-
+    unphrasify(L, NewL),
+    unphrasify(Ls, NewLs),
+    append(NewL, NewLs, FlatL).
+unphrasify(L, [L]).
+
+not_is_list(X):- \+ is_list(X).
+
+dont_flatten([_|L]):- sub_var('NP',L),!, fail.
+dont_flatten([S|_]):- is_penn_long(S),!, fail.
+dont_flatten([S|_]):- is_penn_tag(S).
+
+tree_to_toks(X,Y):- notrace(unphrasify(X,XX)), tree_to_toks(s,XX,YY),cleanup_toks(YY,Y).
+tree_to_toks(C,X,Y):- tree_to_tokz(C,X,M),!,notrace(flatten([M],Y)).
+
+cleanup_toks([],[]).
+cleanup_toks([mark(_)|YY],Y):-!,cleanup_toks(YY,Y).
+cleanup_toks([np,X,np|YY],[X|Y]):-!,cleanup_toks(YY,Y).
+cleanup_toks([np|Rest],[X|Y]):- append(Toks,[np|More],Rest),atomic_list_concat(Toks,'-',X),!,cleanup_toks(More,Y).
+cleanup_toks([X|YY],[X|Y]):-!,cleanup_toks(YY,Y).
+
+too_long('CORENLP').
+too_long('VP').
+too_long('PP').
+too_long('NML').
+too_long('FRAG').
+too_long(X):- atom_concat(_,'BAR',X).
+too_long(X):- atom_concat('S',_,X).
+is_penn_tag(S):- atom(S),upcase_atom(S,S), S\=='I'.
+is_penn_long(S):-is_penn_tag(S),too_long(S).
+
+tree_to_tokz(_,Item,Item):- atomic(Item),!.
+tree_to_tokz(C,['NP'|Items],X):- !, tree_l_to_toks(C,Items,List), notrace(undbltok(List,Un)), wrap_seg(np,Un,X).
+%tree_to_tokz(C,[_,Item],X):- !, tree_to_tokz(C,Item,X).
+tree_to_tokz(C,[S|Items],List):- notrace(is_penn_long(S)), Items\==[], !, tree_to_tokz(C,Items,List).
+tree_to_tokz(C,[S|Items],X):- notrace(is_penn_tag(S)), Items\==[], !, tree_l_to_toks(C,Items,List), =(S,D), wrap_seg(D,List,X).
+tree_to_tokz(C,Items,Toks):-  is_list(Items),!,tree_l_to_toks(C,Items,List),!,flatten(List,Toks),!.
+tree_to_tokz(_C,X,X):- !.
+
+clean_innerd([],[]).
+clean_innerd([D,E,D|Inner],[E|ReIn]):-!,clean_innerd(Inner,ReIn).
+clean_innerd([S|Inner],[S|ReIn]):- clean_innerd(Inner,ReIn).
+wrap_seg(O,List,X):- O\=='np',List=X.
+wrap_seg(O,List,X):- append([D|Inner],[D],List),clean_innerd(Inner,ReIn),wrap_seg(O,ReIn,X).
+wrap_seg(D,List,X):- append([D|List],[D],X),!.
+%wrap_seg(D,List,X):- dbltok(D,List,X).
+
+tree_l_to_toks(C,Items,O):- maplist(tree_to_toks(C),Items,List),flatten(List,O).
+
+assert_training(XX,P,Parse):- assert_if_new(training(XX,P,Parse)),nop(save_training(training/3)).
+assert_training_v(XX,P,Parse):- assert_training(XX,P,Parse),dmsg(training(XX,P,Parse)).
 
 do_training(XX,_Str,F2):- training(XX,F2,_),!.
 do_training(XX,Str,F2):-
@@ -221,30 +338,34 @@ do_training(XX,Str,F2):-
   assert_training(XX,F2,Result),!.
 
 text_to_tree([],[]).
+text_to_tree(TokList, Tree):- \+ string(TokList),!, atomics_to_string(TokList,' ',Text),!,text_to_tree(TokList,Text,Tree).
+text_to_tree(Text,    Tree):- tokenize_atom(Text,TokList), text_to_tree(TokList,Text,Tree).
 
-text_to_tree(X,Y):- is_list(X), member('"',X), !, text_to_best_tree(X,Y).
-
-text_to_tree(Toks,['SEQ',X,Y]):- append(Left,[LE|Right],Toks), Right\==[],
+text_to_tree(TokList,Text,Tree):- member('"',TokList), !, text_to_best_tree(Text,Tree).
+text_to_tree(TokList, _,['SEQBAR',X,Y]):- append(Left,[LE|Right],TokList), Right\==[],
   member(LE,['.','?','!']),append(Left,[LE],Said),!, text_to_tree(Said,X), text_to_tree(Right,Y).
-
-text_to_tree(X,Y):- \+ string(X),!, atomics_to_string(X,' ',S),!,text_to_tree(S,Y).
-text_to_tree(X,Y):- text_to_charniak_tree(X,Y),!.
-text_to_tree(X,Y):- text_to_lgp_tree(X,Y),!.
+text_to_tree(_TokList,Text,Tree):- text_to_best_tree(Text,Tree),!.
+text_to_tree(_TokList,Text,Tree):- text_to_lgp_tree(Text,Tree),!.
 
 
 all_letters(X):- \+ (upcase_atom(X,U),downcase_atom(X,U)).
 
+retokify([],[]).
+retokify([E|APreToks],[sp|PreToks]):- \+ atomic(E), retokify(APreToks,PreToks).
+retokify([E|APreToks],[F|PreToks]):- downcase_atom(E,F),retokify(APreToks,PreToks).
 
-add_training_toks(XX,PreToks):- do_training(XX,PreToks,text_to_tree),!.
 add_training_toks(_,[]):- !.
 add_training_toks(X,[A]):- !, add_training_toks(X,[A,'.']).
-add_training_toks(XX,PreToks):-
+add_training_toks(XX,APreToks):-
+ retokify(APreToks,PreToks),
  maplist(add_occurs(is_word),PreToks),
  inc_flag(corpus_training),
- add_ngrams(except_symbols,trigram,3,skip,PreToks),
- dbltok(oc,PreToks,ReToks),!,
+ ignore(add_ngrams(except_symbols,trigram,3,skip,PreToks)),
+ predbltok(PreToks,ReToks0),
+ dbltok(oc,ReToks0,ReToks),!,
  XX1 is XX+1,
  append([oc(XX)|ReToks],[oc(XX1)],Grams),!,
+ assert_training_v(XX,grams,Grams),
  add_ngrams(except_none,ngram,4,XX,Grams).
 
 add_ngrams(Except,F,N,Loc,Grams):- length(NGram,N),
@@ -266,7 +387,7 @@ add_occurs(F,Tok):- P=..[F,Tok],
 except_symbols(X):- \+ (upcase_atom(X,U),downcase_atom(X,U)).
 
 pretok([],[]).
-pretok(['.'],[]):-!.
+%pretok(['.'],[]):-!.
 pretok([X,X,X|Nxt],O):-!,atomic_list_concat([X,X,X],',',Y),pretok([Y|Nxt],O).
 pretok([A,'-',S|Grams],[F|ReTok]):- atomic_list_concat([A,S],'-',F),!, pretok(Grams,ReTok).
 pretok([A,'\'',S|Grams],[F|ReTok]):- all_letters(A),all_letters(S), atomic_list_concat([A,S],'\'',F),!, pretok(Grams,ReTok).
@@ -278,10 +399,32 @@ pretok([A,'`',S|Grams],[F|ReTok]):- all_letters(A),all_letters(S), atomic_list_c
 pretok(['!'|Grams],ReTok):- pretok(['.'|Grams],ReTok).
 pretok([S|Grams],[S|ReTok]):- pretok(Grams,ReTok).
 
+predbltok([],[]).
+predbltok(['.'],[]):-!.
+predbltok([X,X,X|Nxt],O):-!,atomic_list_concat([X,X,X],',',Y),predbltok([Y|Nxt],O).
+predbltok([A,'-',S|Grams],[F|ReTok]):- atomic_list_concat([A,S],'-',F),!, predbltok(Grams,ReTok).
+predbltok([A,'\'',S|Grams],[F|ReTok]):- all_letters(A),all_letters(S), atomic_list_concat([A,S],'\'',F),!, predbltok(Grams,ReTok).
+predbltok([A,'´',S|Grams],[F|ReTok]):- all_letters(A),all_letters(S), atomic_list_concat([A,S],'\'',F),!, predbltok(Grams,ReTok).
+predbltok([A,'`',S|Grams],[F|ReTok]):- all_letters(A),all_letters(S), atomic_list_concat([A,S],'\'',F),!, predbltok(Grams,ReTok).
+predbltok([','|Grams],ReTok):- predbltok(Grams,ReTok).
+predbltok(['!'|Grams],ReTok):- predbltok(['.'|Grams],ReTok).
+predbltok([S|Grams],[S|ReTok]):- predbltok(Grams,ReTok).
+
 % dbltok(_,X,X):-!.
-dbltok(oc,[],[]):-!.
+%dbltok(oc,[],[]):-!.
+dbltok(_,[S],[S]):- is_full_tok(S),!.
+%dbltok(Pre,[S],[PS]):- atoms_join(Pre,S,PS).
 dbltok(Pre,[],[PS]):-!, atoms_join(Pre,oc,PS).
+dbltok(Pre,[S|I],[S|O]):- is_full_tok(S),!,dbltok(Pre,I,O).
 dbltok(Pre,[S|Grams],[PS|ReTok]):- atoms_join(Pre,S,PS), dbltok(S,Grams,ReTok).
+
+
+
+undbltok(I,O):- is_list(I),!,maplist(undbltok,I,O).
+undbltok(S,PS):- into_mw(S,[PS|_]),!.
+undbltok(S,S):- !.
+
+is_full_tok(O):- atom(O),atomic_list_concat([_,_|_],':',O).
 
 atoms_join(A,B,O):- tok_split(O,A,B),!,ngram_inc(tok_split(O,A,B)).
 atoms_join(A,B,O):- atomic_list_concat([A,B],':',O),!,assert(tok_split(O,A,B)),ngram_inc(tok_split(O,A,B)).
@@ -352,12 +495,16 @@ rnd_ngram(Loc,A,B,C,D,N):-  G = ngram(Loc,A,B,C,D,N),
 
 :- style_check(- singleton).
 
+
 :- add_history((good_toks(Key,E),E>20)).
-:- add_history((autoc([ 'music:you',len(200)]))).
-:- add_history((autoc([oc,'music:you',len(200)]))).
-:- add_history((autoc([ 'oc:music', 'music:you',len(200)]))).
-:- add_history((autoc([ 'music',len(200)]))).
-:- add_history((autoc([len(10),music,len(200)]))).
+:- add_history((autoc([ 'like:you',len(200)]))).
+:- add_history((autoc([oc,'like:you',len(200)]))).
+:- add_history((autoc([ 'oc:like', 'like:you',len(200)]))).
+:- add_history((autoc([ 'like',len(200)]))).
+:- add_history((autoc([len(10),like,len(200)]))).
+:- add_history(load_training).
+:- add_history(compile_corpus).
+:- add_history(tree_to_toks).
 
 may_use(Loc,_,B,C,D,_):- \+ used_cl(ngram(A,B,C,D)), assert(used_cl(ngram(A,B,C,D)),Cl2), undo(erase(Cl2)), !.
 
@@ -366,10 +513,10 @@ gen6([A,B,C,D,E,F,G,H]=N):-
   ngram(Loc1,E,F,G,H,Z), ngram(Loc2,C,D,E,F,Y), ngram(Loc3,A,B,C,D,X), N is X+Y+Z.
 :- fixup_exports.
 
-:- 
+dotit:- 
   ignore(( 
     \+ prolog_load_context(reloading, true), 
-     % ignore(load_training), 
+     ignore(load_training), 
      ignore(compile_corpus))).
 
 

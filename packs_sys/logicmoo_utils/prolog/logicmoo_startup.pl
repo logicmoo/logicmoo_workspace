@@ -1342,8 +1342,8 @@ init_logicmoo :- ensure_loaded(library(logicmoo_repl)),init_why(during_booting,i
 
 add_history(O):- is_list(O), member(E,O), compound(E), !, maplist(add_history,O).
 %add_history(O):- !, wdmsg(not_add_history(O)),!.
-add_history(O):- 
-   ignore_not_not((nonvar(O),make_historial(O,A),add_history0(A))),!.
+add_history(_):- prolog_load_context(reloading, true),!.
+add_history(O):- ignore_not_not((nonvar(O),make_historial(O,A),add_history0(A))),!.
 
 ignore_not_not(G):- ignore((catch((( \+ \+ (ignore(once(G))))),_,fail))),!.
 

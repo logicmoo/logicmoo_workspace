@@ -970,6 +970,9 @@ print_tree(Term):-
   wots_pos(Pos, print_tree_with_final(Term, '', 
   [ partial(true), numbervars(true), character_escapes(true),fullstop(false)])))).
 
+
+print_tree_nl(Term):- print_tree_with_final(Term,'\n').
+
 print_tree_no_nl(Term):-
  current_output_line_position(Pos),
  ensure_pp(( 
@@ -1642,8 +1645,8 @@ pt_cont_args(_Sep1, _Ab,_Sep,_Mid,_In, Nil) :- Nil==[], !.
 pt_cont_args(_Sep1, Tab,_Sep, Mid, FS, A) :- (var(A) ; A \= [_|_]), !,  pformat(Mid), print_tab_term(Tab,FS,A), !.
 pt_cont_args(Sep1, Tab,_Sep,_Mid, FS,[A|R]) :- R==[], pformat(Sep1), !, print_tab_term(Tab,FS,A), !.
 
-pt_cont_args(Sep1, Tab, Sep, Mid,FS,RL) :-  rev_append(List,Right,RL),
-   length(List,L), L>1, max_output(Tab,80,List),!,
+pt_cont_args(Sep1, Tab, Sep, Mid,FS,RL) :-  rev_append(List,Right,RL), 
+   length(List,L), L>1, maplist(not_is_list_local,List), max_output(Tab,80,List),!,
    write_ar_simple(Sep1,Tab,Sep,List),
    ignore(( Right\==[], write(Sep), nl, prefix_spaces(Tab), pt_cont_args('', Tab,Sep, Mid, FS, Right))).
 
@@ -1651,7 +1654,7 @@ pt_cont_args(Sep1, Tab,Sep, Mid, FS, RL) :- RL=[A|_], is_arity_lt1(A), slice_eq(
   write_ar_simple(Sep1, Tab,Sep,List),
    ignore(( Right\==[], write(Sep), nl, prefix_spaces(Tab), pt_cont_args('', Tab,Sep, Mid, FS, Right))).
 
-pt_cont_args(Sep1, Tab, Sep, Mid, FS, RL) :- first_n(6, RL, List,Right),List\= [_], max_output(Tab,80,List),!,
+pt_cont_args(Sep1, Tab, Sep, Mid, FS, RL) :- first_n(6, RL, List,Right),List\= [_],  max_output(Tab,80,List),!,
    write_ar_simple(Sep1, Tab,Sep,List),
    ignore(( Right\==[], write(Sep), nl, prefix_spaces(Tab), pt_cont_args('', Tab,Sep, Mid, FS, Right))).
 
@@ -1675,6 +1678,8 @@ is_arity_lt10(V) :- is_dict(V), !, fail.
 is_arity_lt10(S) :- is_charlist(S),!.
 is_arity_lt10(S) :- is_codelist(S),!.
 
+not_is_list_local(X):- \+ is_list(X).
+
 on_x_ignore(G):- catch(G,E,(dumpST,writeq(E=on_x_ignore(G)))).
 
 as_is_cmpd(Term) :- \+ compound(Term),!,fail.
@@ -1692,7 +1697,8 @@ as_is0(A) :- functor(A,F,_), simple_f(F), !.
 
 as_is0(A) :- is_list(A),length(A,L),L>4,!,fail.
 as_is0(A) :- is_list(A), maplist(is_arity_lt1,A),!.
-as_is0([A]) :- is_list(A),length(A,L),on_x_ignore(L<2),!.
+%as_is0([A]) :- is_list(A),length(A,L),on_x_ignore(L<2),!.
+as_is0([A|L]) :- L==[],!, as_is0(A).
 as_is0(A) :- functor(A,F,2), simple_fs(F),arg(2,A,One),atomic(One),!.
 as_is0(A):- \+ is_list(A), compound_name_arguments(A,_,L),as_is0(L),!.
 as_is0('_'(_)) :- !.
