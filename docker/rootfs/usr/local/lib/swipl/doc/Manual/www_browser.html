@@ -252,17 +252,17 @@ and browser-specific task. It distinguishes between the following cases:
 <p>
 <ul class="latex">
 <li><i>MS-Windows</i><br>
-If it detects MS-Windows it uses <a id="idx:winshell2:2629"></a><a class="pred" href="system.html#win_shell/2">win_shell/2</a> 
+If it detects MS-Windows it uses <a id="idx:winshell2:2630"></a><a class="pred" href="system.html#win_shell/2">win_shell/2</a> 
 to open the <var>URL</var>. The behaviour and browser started depends on 
 the version of Windows and Windows-shell configuration, but in general 
 it should be the behaviour expected by the user.
 
 <p>
 <li><i>Other platforms</i><br>
-On other platforms it tests the environment variable (see <a id="idx:getenv2:2630"></a><a class="pred" href="system.html#getenv/2">getenv/2</a>) 
+On other platforms it tests the environment variable (see <a id="idx:getenv2:2631"></a><a class="pred" href="system.html#getenv/2">getenv/2</a>) 
 named <code>BROWSER</code> or uses <b>netscape</b> if this variable is 
 not set. If the browser is either <code>mozilla</code> or <code>netscape</code>,
-<a id="idx:wwwopenurl1:2631"></a><a class="pred" href="www_browser.html#www_open_url/1">www_open_url/1</a> 
+<a id="idx:wwwopenurl1:2632"></a><a class="pred" href="www_browser.html#www_open_url/1">www_open_url/1</a> 
 first tries to open a new window on a running browser using the <code>-remote</code> 
 option of Netscape. If this fails or the browser is not <code>mozilla</code> 
 or <code>netscape</code> the system simply passes the URL as first 

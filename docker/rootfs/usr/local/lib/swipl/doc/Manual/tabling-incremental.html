@@ -241,13 +241,13 @@ tabling</span></a></h2>
 <p>Incremental tabling maintains the consistency of a set of tabled 
 predicates that depend on a set of dynamic predicates. Both the tabled 
 and dynamic predicates must have the property <code>incremental</code> 
-set. See <a id="idx:dynamic1:2072"></a><a class="pred" href="dynamic.html#dynamic/1">dynamic/1</a> 
-and <a id="idx:table1:2073"></a><a class="pred" href="tabling-preds.html#table/1">table/1</a>.
+set. See <a id="idx:dynamic1:2073"></a><a class="pred" href="dynamic.html#dynamic/1">dynamic/1</a> 
+and <a id="idx:table1:2074"></a><a class="pred" href="tabling-preds.html#table/1">table/1</a>.
 
 <p>Incremental tabling causes the engine to connect the <em>answer tries</em> 
 and incremental dynamic predicates in an <em>Incremental Dependency 
-Graph</em> (IDG). Modifications (<a id="idx:asserta1:2074"></a><a class="pred" href="db.html#asserta/1">asserta/1</a>, <a id="idx:retract1:2075"></a><a class="pred" href="db.html#retract/1">retract/1</a>,
-<a id="idx:retractall1:2076"></a><a class="pred" href="db.html#retractall/1">retractall/1</a> 
+Graph</em> (IDG). Modifications (<a id="idx:asserta1:2075"></a><a class="pred" href="db.html#asserta/1">asserta/1</a>, <a id="idx:retract1:2076"></a><a class="pred" href="db.html#retract/1">retract/1</a>,
+<a id="idx:retractall1:2077"></a><a class="pred" href="db.html#retractall/1">retractall/1</a> 
 and friends) of an incremental dynamic predicate mark all depending 
 tables as invalid. Subsequent usage of these tables forces 
 re-evaluation.

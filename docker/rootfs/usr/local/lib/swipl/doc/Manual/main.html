@@ -241,7 +241,6 @@ Provide entry point for scripts</span></a></h2>
 <dl class="tags">
 <dt class="mtag">See also</dt>
 <dd>
-- <code>library(optparse)</code> for comprehensive option parsing. <br>
 - <code>library(prolog_stack)</code> to force backtraces in case of an 
 uncaught exception. <br>
 - XPCE users should have a look at <code>library(pce_main)</code>, which 
@@ -281,23 +280,153 @@ arguments. Before calling
 <span class="pred-ext">main/1</span> this predicate installs a signal 
 handler for <code>SIGINT</code> (Control-C) that terminates the process 
 with status 1.</dd>
-<dt class="pubdef"><span class="pred-tag">[det]</span><a id="argv_options/3"><strong>argv_options</strong>(<var>+Argv, 
--RestArgv, -Options</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="argv_options/3"><strong>argv_options</strong>(<var>:Argv, 
+-Positional, -Options</var>)</a></dt>
 <dd class="defbody">
-Generic transformation of long commandline arguments to options. Each 
---Name=Value is mapped to Name(Value). Each plain name is mapped to 
-Name(true), unless Name starts with <code>no-</code>, in which case the 
-option is mapped to Name(false). Numeric option values are mapped to 
-Prolog numbers.
+Parse command line arguments. This predicate acts in one of two modes.
 
-<dl class="tags">
-<dt class="tag">See also</dt>
-<dd>
-<code>library(optparse)</code> provides a more involved option library, 
-providing both short and long options, help and error handling. This 
-predicate is more for quick-and-dirty scripts.
+<p>
+<ul class="latex">
+<li>If the calling module defines <span class="pred-ext">opt_type/3</span>, 
+full featured parsing with long and short options, type conversion and 
+help is provided.
+<li>If <span class="pred-ext">opt_type/3</span> is not defined, only 
+unguided transformation using long options is supported. See <span class="pred-ext">argv_untyped_options/3</span> 
+for details.
+</ul>
+
+<p>When <b>guided</b>, three predicates are called in the calling 
+module.
+<span class="pred-ext">opt_type/3</span> <b>must</b> be defined, the 
+others need not. Note that these three predicates <i>may</i> be defined 
+as <i>multifile</i> to allow multiple modules contributing to the 
+provided commandline options. Defining them as <i>discontiguous</i> 
+allows for creating blocks that describe a group of related options.
+
+<dl class="latex">
+<dt><strong>opt_type</strong>(<var>Opt, Name, Type</var>)</dt>
+<dd class="defbody">
+Defines <var>Opt</var> to add an option <var>Name</var>(Value), where 
+Value statisfies
+<var>Type</var>. <var>Opt</var> does not include the leading <code>-</code>. 
+A single character implies a short option, multiple a long option. Long 
+options use <code>_</code> as <i>word separator</i>, user options may 
+use either <code>_</code> or <code>-</code>. <var>Type</var> is one of:
+
+<dl class="latex">
+<dt><strong>boolean</strong>(<var>Default</var>)</dt>
+<dt><strong>boolean</strong></dt>
+<dd class="defbody">
+Boolean options are special. They do not take a value except for when 
+using the long <code>--opt=value</code> notation. This explicit value 
+specification converts <code>true</code>, <code>True</code>,
+<code>TRUE</code>, <code>on</code>, <code>On</code>, <code>ON</code>, <code>1</code> 
+and the obvious false equivalents to Prolog <code>true</code> or <code>false</code>. 
+If the option is specified, Default is used. If <code>--no-opt</code> or
+<code>--noopt</code> is used, the inverse of Default is used.
+</dd>
+<dt><strong>integer</strong></dt>
+<dd class="defbody">
+Argument is converted to an integer
+</dd>
+<dt><strong>float</strong></dt>
+<dd class="defbody">
+Argument is converted to a float. User may specify an integer
+</dd>
+<dt><strong>nonneg</strong></dt>
+<dd class="defbody">
+As <code>integer</code>. Requires value <code>&gt;=</code> 0.
+</dd>
+<dt><strong>natural</strong></dt>
+<dd class="defbody">
+As <code>integer</code>. Requires value <code>&gt;=</code> 1.
+</dd>
+<dt><strong>between</strong>(<var>Low, High</var>)</dt>
+<dd class="defbody">
+If both one of <var>Low</var> and <var>High</var> is a float, convert as <code>float</code>, 
+else convert as <code>integer</code>. Then check the range.
+</dd>
+<dt><strong>atom</strong></dt>
+<dd class="defbody">
+No conversion
+</dd>
+<dt><strong>oneof</strong>(<var>List</var>)</dt>
+<dd class="defbody">
+As <code>atom</code>, but requires the value to be a member of <var>List</var> 
+(<i>enum</i> type).
+</dd>
+<dt><strong>string</strong></dt>
+<dd class="defbody">
+Convert to a SWI-Prolog string
+</dd>
+<dt><strong>file</strong></dt>
+<dd class="defbody">
+Convert to a file name in Prolog canonical notation using <a class="pred" href="files.html#prolog_to_os_filename/2">prolog_to_os_filename/2</a>.
+</dd>
+<dt><strong>file</strong>(<var>Access</var>)</dt>
+<dd class="defbody">
+As <code>file</code>, and check access using <a class="pred" href="files.html#access_file/2">access_file/2</a>. 
+A value <code>-</code> is not checked for access, assuming the 
+application handles this as standard input or output.
+</dd>
+<dt><strong>term</strong></dt>
+<dd class="defbody">
+Parse option value to a Prolog term. Variable names for the <i>last</i> 
+term processed are available using <a class="pred" href="consulting.html#var_property/2">var_property/2</a>.
 </dd>
 </dl>
+
+</dd>
+<dt><strong>opt_help</strong>(<var>Name, HelpString</var>)</dt>
+<dd class="defbody">
+Help string used by <a class="pred" href="main.html#argv_usage/1">argv_usage/1</a>.
+</dd>
+<dt><strong>opt_meta</strong>(<var>Name, Meta</var>)</dt>
+<dd class="defbody">
+If a typed argument is required this defines the placeholder in the help 
+message. The default is the uppercase version of the type <i>functor 
+name</i>. This produces the <code>FILE</code> in e.g. <code>-f FILE</code>.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="argv_options/4"><strong>argv_options</strong>(<var>:Argv, 
+-Positional, -Options, +ParseOptions</var>)</a></dt>
+<dd class="defbody">
+As <a class="pred" href="main.html#argv_options/3">argv_options/3</a> in <b>guided</b> 
+mode, Currently this version allows parsing argument options throwing an 
+exception rather than calling
+<a class="pred" href="toplevel.html#halt/1">halt/1</a> by passing an 
+empty list to <var>ParseOptions</var>. <var>ParseOptions</var>:
+
+<dl class="latex">
+<dt><strong>on_error</strong>(<var>+Goal</var>)</dt>
+<dd class="defbody">
+If <var>Goal</var> is <code>halt(Code)</code>, exit with Code.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="argv_usage/1"><strong>argv_usage</strong>(<var>:Level</var>)</a></dt>
+<dd class="defbody">
+Use <a class="pred" href="printmsg.html#print_message/2">print_message/2</a> 
+to print a usage message at <var>Level</var>. To print the message as 
+plain text indefault color, use <code>debug</code>. Other meaningful 
+options are <code>informational</code> or <code>warning</code>.
+
+<p>The default initial usage line is as below, where <var>&lt;</var>command<var>&gt;</var> 
+is an as good as possible approximation for running the script.
+
+<pre class="code">
+Usage: &lt;command&gt; [options]
+</pre>
+
+<p>The usage line can be defined using <span class="pred-ext">opt_help/1</span>, 
+as illustrated below.
+
+<pre class="code">
+opt_help(usage, String).
+</pre>
 
 </dd>
 <dt class="pubdef"><span class="pred-tag">[det]</span><a id="cli_parse_debug_options/2"><strong>cli_parse_debug_options</strong>(<var>+OptionsIn, 

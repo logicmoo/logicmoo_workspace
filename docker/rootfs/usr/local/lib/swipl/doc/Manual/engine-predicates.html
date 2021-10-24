@@ -249,10 +249,10 @@ message queue can be used to access engines.
 :Goal, -Engine, +Options</var>)</a></dt>
 <dd class="defbody">
 Create a new engine and unify <var>Engine</var> with a handle to it.
-<var>Template</var> and <var>Goal</var> form a pair similar to <a id="idx:findall3:2415"></a><a class="pred" href="allsolutions.html#findall/3">findall/3</a>: 
-the instantiation of <var>Template</var> becomes available through <a id="idx:enginenext2:2416"></a><a class="pred" href="engine-predicates.html#engine_next/2">engine_next/2</a> 
+<var>Template</var> and <var>Goal</var> form a pair similar to <a id="idx:findall3:2416"></a><a class="pred" href="allsolutions.html#findall/3">findall/3</a>: 
+the instantiation of <var>Template</var> becomes available through <a id="idx:enginenext2:2417"></a><a class="pred" href="engine-predicates.html#engine_next/2">engine_next/2</a> 
 after <var>Goal</var> succeeds. <var>Options</var> is a list of the 
-following options. See <a id="idx:threadcreate3:2417"></a><a class="pred" href="threadcreate.html#thread_create/3">thread_create/3</a> 
+following options. See <a id="idx:threadcreate3:2418"></a><a class="pred" href="threadcreate.html#thread_create/3">thread_create/3</a> 
 for details.
 
 <dl class="latex">
@@ -269,7 +269,7 @@ calling thread.
 </dd>
 </dl>
 
-The <var>Engine</var> argument of <a id="idx:enginecreate3:2418"></a><a class="pred" href="engine-predicates.html#engine_create/3">engine_create/3</a> 
+The <var>Engine</var> argument of <a id="idx:enginecreate3:2419"></a><a class="pred" href="engine-predicates.html#engine_create/3">engine_create/3</a> 
 may be instantiated to an atom, creating an engine with the given alias.</dd>
 <dt class="pubdef"><span class="pred-tag">[det]</span><a id="engine_destroy/1"><strong>engine_destroy</strong>(<var>+Engine</var>)</a></dt>
 <dd class="defbody">
@@ -281,13 +281,13 @@ Ask the engine <var>Engine</var> to produce a next answer. On this first
 call on a specific engine, the <var>Goal</var> of the engine is started. 
 If a previous call returned an answer through completion, this causes 
 the engine to backtrack and finally, if the engine produces a previous 
-result using <a id="idx:engineyield1:2419"></a><a class="pred" href="engine-predicates.html#engine_yield/1">engine_yield/1</a>, 
-execution proceeds after the <a id="idx:engineyield1:2420"></a><a class="pred" href="engine-predicates.html#engine_yield/1">engine_yield/1</a> 
+result using <a id="idx:engineyield1:2420"></a><a class="pred" href="engine-predicates.html#engine_yield/1">engine_yield/1</a>, 
+execution proceeds after the <a id="idx:engineyield1:2421"></a><a class="pred" href="engine-predicates.html#engine_yield/1">engine_yield/1</a> 
 call.</dd>
 <dt class="pubdef"><span class="pred-tag">[det]</span><a id="engine_next_reified/2"><strong>engine_next_reified</strong>(<var>+Engine, 
 -Term</var>)</a></dt>
 <dd class="defbody">
-Similar to <a id="idx:enginenext2:2421"></a><a class="pred" href="engine-predicates.html#engine_next/2">engine_next/2</a>, 
+Similar to <a id="idx:enginenext2:2422"></a><a class="pred" href="engine-predicates.html#engine_next/2">engine_next/2</a>, 
 but instead of success, failure or or raising an exception, <var>Term</var> 
 is unified with one of terms below. This predicate is provided primarily 
 for compatibility with Lean&nbsp;Prolog.
@@ -312,20 +312,20 @@ Goal raises the error <var>Exception</var>.
 <dt class="pubdef"><span class="pred-tag">[det]</span><a id="engine_post/2"><strong>engine_post</strong>(<var>+Engine, 
 +Term</var>)</a></dt>
 <dd class="defbody">
-Make <var>Term</var> available to <a id="idx:enginefetch1:2422"></a><a class="pred" href="engine-predicates.html#engine_fetch/1">engine_fetch/1</a> 
-inside the <var>Engine</var>. This call must be followed by a call to <a id="idx:enginenext2:2423"></a><a class="pred" href="engine-predicates.html#engine_next/2">engine_next/2</a> 
-and the engine must call <a id="idx:enginefetch1:2424"></a><a class="pred" href="engine-predicates.html#engine_fetch/1">engine_fetch/1</a>.</dd>
+Make <var>Term</var> available to <a id="idx:enginefetch1:2423"></a><a class="pred" href="engine-predicates.html#engine_fetch/1">engine_fetch/1</a> 
+inside the <var>Engine</var>. This call must be followed by a call to <a id="idx:enginenext2:2424"></a><a class="pred" href="engine-predicates.html#engine_next/2">engine_next/2</a> 
+and the engine must call <a id="idx:enginefetch1:2425"></a><a class="pred" href="engine-predicates.html#engine_fetch/1">engine_fetch/1</a>.</dd>
 <dt class="pubdef"><span class="pred-tag">[det]</span><a id="engine_post/3"><strong>engine_post</strong>(<var>+Engine, 
 +Term, -Reply</var>)</a></dt>
 <dd class="defbody">
-Combines <a id="idx:enginepost2:2425"></a><a class="pred" href="engine-predicates.html#engine_post/2">engine_post/2</a> 
-and <a id="idx:enginenext2:2426"></a><a class="pred" href="engine-predicates.html#engine_next/2">engine_next/2</a>.</dd>
+Combines <a id="idx:enginepost2:2426"></a><a class="pred" href="engine-predicates.html#engine_post/2">engine_post/2</a> 
+and <a id="idx:enginenext2:2427"></a><a class="pred" href="engine-predicates.html#engine_next/2">engine_next/2</a>.</dd>
 <dt class="pubdef"><span class="pred-tag">[det]</span><a id="engine_yield/1"><strong>engine_yield</strong>(<var>+Term</var>)</a></dt>
 <dd class="defbody">
-Called from within the engine, causing <a id="idx:enginenext2:2427"></a><a class="pred" href="engine-predicates.html#engine_next/2">engine_next/2</a> 
-in the caller to return with <var>Term</var>. A subsequent call to <a id="idx:enginenext2:2428"></a><a class="pred" href="engine-predicates.html#engine_next/2">engine_next/2</a> 
+Called from within the engine, causing <a id="idx:enginenext2:2428"></a><a class="pred" href="engine-predicates.html#engine_next/2">engine_next/2</a> 
+in the caller to return with <var>Term</var>. A subsequent call to <a id="idx:enginenext2:2429"></a><a class="pred" href="engine-predicates.html#engine_next/2">engine_next/2</a> 
 causes
-<a id="idx:engineyield1:2429"></a><a class="pred" href="engine-predicates.html#engine_yield/1">engine_yield/1</a> 
+<a id="idx:engineyield1:2430"></a><a class="pred" href="engine-predicates.html#engine_yield/1">engine_yield/1</a> 
 to&lsquo;return'. This predicate can only be called if the engine is not 
 involved in a callback from C, i.e., when the engine calls a predicate 
 defined in C that calls back Prolog it is not possible to use this 
@@ -334,8 +334,8 @@ predicate. Trying to do so results in a
 <dt class="pubdef"><span class="pred-tag">[det]</span><a id="engine_fetch/1"><strong>engine_fetch</strong>(<var>-Term</var>)</a></dt>
 <dd class="defbody">
 Called from within the engine to fetch the term made available through
-<a id="idx:enginepost2:2430"></a><a class="pred" href="engine-predicates.html#engine_post/2">engine_post/2</a> 
-or <a id="idx:enginepost3:2431"></a><a class="pred" href="engine-predicates.html#engine_post/3">engine_post/3</a>. 
+<a id="idx:enginepost2:2431"></a><a class="pred" href="engine-predicates.html#engine_post/2">engine_post/2</a> 
+or <a id="idx:enginepost3:2432"></a><a class="pred" href="engine-predicates.html#engine_post/3">engine_post/3</a>. 
 If no term is available an existence_error exception is raised.</dd>
 <dt class="pubdef"><span class="pred-tag">[det]</span><a id="engine_self/1"><strong>engine_self</strong>(<var>-Engine</var>)</a></dt>
 <dd class="defbody">

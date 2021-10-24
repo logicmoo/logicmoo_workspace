@@ -240,18 +240,18 @@ program resources</span></a></h2>
 
 <p>A <em>resource</em> is similar to a file. Resources, however, can be 
 represented in two different formats: on files, as well as part of the 
-resource <em>archive</em> of a saved state (see <a id="idx:qsaveprogram2:2576"></a><a class="pred" href="saved-states.html#qsave_program/2">qsave_program/2</a>) 
+resource <em>archive</em> of a saved state (see <a id="idx:qsaveprogram2:2577"></a><a class="pred" href="saved-states.html#qsave_program/2">qsave_program/2</a>) 
 that acts as a <em>virtual file system</em> for the SWI-Prolog I/O 
-predicates (see <a id="idx:open4:2577"></a><a class="pred" href="IO.html#open/4">open/4</a>, <a id="idx:registeririscheme3:2578"></a><a class="pred" href="IO.html#register_iri_scheme/3">register_iri_scheme/3</a>).
+predicates (see <a id="idx:open4:2578"></a><a class="pred" href="IO.html#open/4">open/4</a>, <a id="idx:registeririscheme3:2579"></a><a class="pred" href="IO.html#register_iri_scheme/3">register_iri_scheme/3</a>).
 
 <p>A resource has a <em>name</em>. The <em>source</em> data of a 
 resource is a file. Resources are declared by adding clauses to the 
 predicate
-<a id="idx:resource2:2579"></a><a class="pred" href="program-resources.html#resource/2">resource/2</a> 
-or <a id="idx:resource3:2580"></a><a class="pred" href="program-resources.html#resource/3">resource/3</a>. 
+<a id="idx:resource2:2580"></a><a class="pred" href="program-resources.html#resource/2">resource/2</a> 
+or <a id="idx:resource3:2581"></a><a class="pred" href="program-resources.html#resource/3">resource/3</a>. 
 Resources can be accessed from Prolog as files that start with <code>res://</code> 
 or they can be opened using
-<a id="idx:openresource3:2581"></a><a class="pred" href="program-resources.html#open_resource/3">open_resource/3</a>.
+<a id="idx:openresource3:2582"></a><a class="pred" href="program-resources.html#open_resource/3">open_resource/3</a>.
 
 <p><h3 id="sec:res-files"><a id="sec:13.4.1"><span class="sec-nr">13.4.1</span> <span class="sec-title">Resources 
 as files</span></a></h3>
@@ -264,16 +264,16 @@ following predicates transparently handle resources as read-only files:
 
 <p>
 <ul class="compact">
-<li><a id="idx:open3:2582"></a><a class="pred" href="IO.html#open/3">open/3</a>, <a id="idx:open4:2583"></a><a class="pred" href="IO.html#open/4">open/4</a>
-<li><a id="idx:accessfile2:2584"></a><a class="pred" href="files.html#access_file/2">access_file/2</a>
-<li><a id="idx:existsfile1:2585"></a><a class="pred" href="files.html#exists_file/1">exists_file/1</a>
-<li><a id="idx:existsdirectory1:2586"></a><a class="pred" href="files.html#exists_directory/1">exists_directory/1</a>
-<li><a id="idx:timefile2:2587"></a><a class="pred" href="files.html#time_file/2">time_file/2</a>
-<li><a id="idx:sizefile2:2588"></a><a class="pred" href="files.html#size_file/2">size_file/2</a>
+<li><a id="idx:open3:2583"></a><a class="pred" href="IO.html#open/3">open/3</a>, <a id="idx:open4:2584"></a><a class="pred" href="IO.html#open/4">open/4</a>
+<li><a id="idx:accessfile2:2585"></a><a class="pred" href="files.html#access_file/2">access_file/2</a>
+<li><a id="idx:existsfile1:2586"></a><a class="pred" href="files.html#exists_file/1">exists_file/1</a>
+<li><a id="idx:existsdirectory1:2587"></a><a class="pred" href="files.html#exists_directory/1">exists_directory/1</a>
+<li><a id="idx:timefile2:2588"></a><a class="pred" href="files.html#time_file/2">time_file/2</a>
+<li><a id="idx:sizefile2:2589"></a><a class="pred" href="files.html#size_file/2">size_file/2</a>
 </ul>
 
-<p>In addition, <a id="idx:opensharedobject3:2589"></a><a class="pred" href="foreignlink.html#open_shared_object/3">open_shared_object/3</a>, 
-underlying <a id="idx:useforeignlibrary1:2590"></a><a class="pred" href="foreignlink.html#use_foreign_library/1">use_foreign_library/1</a> 
+<p>In addition, <a id="idx:opensharedobject3:2590"></a><a class="pred" href="foreignlink.html#open_shared_object/3">open_shared_object/3</a>, 
+underlying <a id="idx:useforeignlibrary1:2591"></a><a class="pred" href="foreignlink.html#use_foreign_library/1">use_foreign_library/1</a> 
 handles <em>shared objects</em> or DLLs by copying them to a temporary 
 file and opening this file. If the OS allows for it, the copied file is 
 deleted immediately, otherwise it is deleted on program termination.
@@ -281,14 +281,14 @@ deleted immediately, otherwise it is deleted on program termination.
 <p>With the ability to open resources as if they were files we can use 
 them for many tasks without changing the source code as required when 
 using
-<a id="idx:openresource2:2591"></a><a class="pred" href="program-resources.html#open_resource/2">open_resource/2</a>. 
+<a id="idx:openresource2:2592"></a><a class="pred" href="program-resources.html#open_resource/2">open_resource/2</a>. 
 Below we describe a typical scenario.
 
 <p>
 <ul class="latex">
 <li>Related resources are placed in one or more directories. Consider a 
 web application where we have several directories holding icons. Add 
-clauses to <a id="idx:filesearchpath2:2592"></a><a class="pred" href="consulting.html#file_search_path/2">file_search_path/2</a> 
+clauses to <a id="idx:filesearchpath2:2593"></a><a class="pred" href="consulting.html#file_search_path/2">file_search_path/2</a> 
 that makes all icons accessible using the term <code>icon(file)</code>.
 
 <p>
@@ -301,7 +301,7 @@ resource(app/icon, icon(.)).
 </pre>
 
 <p>
-<li>Add a clause to <a id="idx:filesearchpath2:2593"></a><a class="pred" href="consulting.html#file_search_path/2">file_search_path/2</a> 
+<li>Add a clause to <a id="idx:filesearchpath2:2594"></a><a class="pred" href="consulting.html#file_search_path/2">file_search_path/2</a> 
 that make the icons available from the resource data. For example using 
 the code below.
 
@@ -318,8 +318,8 @@ resources using open_resource</span></a></h3>
 <a id="sec:res-resources"></a>
 
 <p>Before the system had the ability to open resources as files, 
-resources were opened using the predicates <a id="idx:openresource2:2594"></a><a class="pred" href="program-resources.html#open_resource/2">open_resource/2</a> 
-or <a id="idx:openresource3:2595"></a><a class="pred" href="program-resources.html#open_resource/3">open_resource/3</a>. 
+resources were opened using the predicates <a id="idx:openresource2:2595"></a><a class="pred" href="program-resources.html#open_resource/2">open_resource/2</a> 
+or <a id="idx:openresource3:2596"></a><a class="pred" href="program-resources.html#open_resource/3">open_resource/3</a>. 
 These predicates provide somewhat better dynamic control over resources 
 depending on whether the code is running from files or from a saved 
 state. The main disadvantage is that having a separate open call 
@@ -335,7 +335,7 @@ files.
 Opens the resource specified by <var>Name</var>. If successful, <var>Stream</var> 
 is unified with an input stream that provides access to the resource. 
 The stream can be tuned using the <var>Options</var>, which is a subset 
-of the options provided by <a id="idx:open4:2596"></a><a class="pred" href="IO.html#open/4">open/4</a>.
+of the options provided by <a id="idx:open4:2597"></a><a class="pred" href="IO.html#open/4">open/4</a>.
 
 <dl class="latex">
 <dt><strong>type</strong>(<var>Type</var>)</dt>
@@ -344,19 +344,19 @@ of the options provided by <a id="idx:open4:2596"></a><a class="pred" href="IO.h
 <dd class="defbody">
 Options that determine the binary/text type, encoding for text streams 
 and whether or not the content should be checked for a BOM marker. The 
-options have the same meaning as the corresponding options for <a id="idx:open4:2597"></a><a class="pred" href="IO.html#open/4">open/4</a>.
+options have the same meaning as the corresponding options for <a id="idx:open4:2598"></a><a class="pred" href="IO.html#open/4">open/4</a>.
 </dd>
 </dl>
 
-<p>The predicate <a id="idx:openresource3:2598"></a><a class="pred" href="program-resources.html#open_resource/3">open_resource/3</a> 
-first checks <a id="idx:resource2:2599"></a><a class="pred" href="program-resources.html#resource/2">resource/2</a>. 
+<p>The predicate <a id="idx:openresource3:2599"></a><a class="pred" href="program-resources.html#open_resource/3">open_resource/3</a> 
+first checks <a id="idx:resource2:2600"></a><a class="pred" href="program-resources.html#resource/2">resource/2</a>. 
 When successful it will open the returned resource source file. 
 Otherwise it will look in the program's resource database. When creating 
 a saved state, the system normally saves the resource contents into the 
 resource archive, but does not save the resource clauses.
 
 <p>This way, the development environment uses the files (and 
-modifications) to the <a id="idx:resource3:2600"></a><a class="pred" href="program-resources.html#resource/3">resource/3</a> 
+modifications) to the <a id="idx:resource3:2601"></a><a class="pred" href="program-resources.html#resource/3">resource/3</a> 
 declarations and/or files containing resource info, thus immediately 
 affecting the running environment, while the runtime system quickly 
 accesses the system resources.
@@ -379,9 +379,9 @@ These predicates are defined as dynamic predicates in the module
 including the user module. <var>Name</var> is the name of the resource 
 (an atom). A resource name may contain any character, except for $ and 
 :, which are reserved for internal usage by the resource library. <var>FileSpec</var> 
-is a file specification that may exploit <a id="idx:filesearchpath2:2601"></a><a class="pred" href="consulting.html#file_search_path/2">file_search_path/2</a> 
+is a file specification that may exploit <a id="idx:filesearchpath2:2602"></a><a class="pred" href="consulting.html#file_search_path/2">file_search_path/2</a> 
 (see
-<a id="idx:absolutefilename2:2602"></a><a class="pred" href="files.html#absolute_file_name/2">absolute_file_name/2</a>).
+<a id="idx:absolutefilename2:2603"></a><a class="pred" href="files.html#absolute_file_name/2">absolute_file_name/2</a>).
 
 <p>Often, resources are defined as unit clauses (facts), but the 
 definition of this predicate also allows for rules. For proper 
@@ -397,7 +397,7 @@ are enumerated and their content is added to the resource database. If
 an file appears in multiple results of this search path only the first 
 file is added. Note that this is consistent with the normal behaviour 
 where
-<a id="idx:absolutefilename3:2603"></a><a class="pred" href="files.html#absolute_file_name/3">absolute_file_name/3</a> 
+<a id="idx:absolutefilename3:2604"></a><a class="pred" href="files.html#absolute_file_name/3">absolute_file_name/3</a> 
 returns the first match. The <var>Options</var> can be used to control 
 what is saved from a directory.
 

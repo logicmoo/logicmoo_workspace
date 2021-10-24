@@ -256,7 +256,7 @@ These special modules are described in more detail in <a class="sec" href="resmo
 6.11</a>.
 
 <p>The list of import modules can be manipulated and queried using the 
-following predicates, as well as using <a id="idx:setmodule1:2007"></a><a class="pred" href="manipmodule.html#set_module/1">set_module/1</a>.
+following predicates, as well as using <a id="idx:setmodule1:2008"></a><a class="pred" href="manipmodule.html#set_module/1">set_module/1</a>.
 
 <dl class="latex">
 <dt class="pubdef"><span class="pred-tag">[nondet]</span><a id="import_module/2"><strong>import_module</strong>(<var>+Module, 
@@ -264,10 +264,10 @@ following predicates, as well as using <a id="idx:setmodule1:2007"></a><a class=
 <dd class="defbody">
 True if <var>Module</var> inherits directly from <var>Import</var>. All 
 normal modules only import from <code>user</code>, which imports from
-<code>system</code>. The predicates <a id="idx:addimportmodule3:2008"></a><a class="pred" href="importmodule.html#add_import_module/3">add_import_module/3</a> 
+<code>system</code>. The predicates <a id="idx:addimportmodule3:2009"></a><a class="pred" href="importmodule.html#add_import_module/3">add_import_module/3</a> 
 and
-<a id="idx:deleteimportmodule2:2009"></a><a class="pred" href="importmodule.html#delete_import_module/2">delete_import_module/2</a> 
-can be used to manipulate the import list. See also <a id="idx:defaultmodule2:2010"></a><a class="pred" href="importmodule.html#default_module/2">default_module/2</a>.</dd>
+<a id="idx:deleteimportmodule2:2010"></a><a class="pred" href="importmodule.html#delete_import_module/2">delete_import_module/2</a> 
+can be used to manipulate the import list. See also <a id="idx:defaultmodule2:2011"></a><a class="pred" href="importmodule.html#default_module/2">default_module/2</a>.</dd>
 <dt class="pubdef"><span class="pred-tag">[multi]</span><a id="default_module/2"><strong>default_module</strong>(<var>+Module, 
 -Default</var>)</a></dt>
 <dd class="defbody">
@@ -275,15 +275,15 @@ True if predicates and operators in <var>Default</var> are visible in
 <var>Module</var>. Modules are returned in the same search order used 
 for predicates and operators. That is, <var>Default</var> is first 
 unified with <var>Module</var>, followed by the depth-first transitive 
-closure of <a id="idx:importmodule2:2011"></a><a class="pred" href="importmodule.html#import_module/2">import_module/2</a>.</dd>
+closure of <a id="idx:importmodule2:2012"></a><a class="pred" href="importmodule.html#import_module/2">import_module/2</a>.</dd>
 <dt class="pubdef"><a id="add_import_module/3"><strong>add_import_module</strong>(<var>+Module, 
 +Import, +StartOrEnd</var>)</a></dt>
 <dd class="defbody">
 If <var>Import</var> is not already an import module for <var>Module</var>, 
 add it to this list at the <code>start</code> or <code>end</code> 
 depending on
-<var>StartOrEnd</var>. See also <a id="idx:importmodule2:2012"></a><a class="pred" href="importmodule.html#import_module/2">import_module/2</a> 
-and <a id="idx:deleteimportmodule2:2013"></a><a class="pred" href="importmodule.html#delete_import_module/2">delete_import_module/2</a>.</dd>
+<var>StartOrEnd</var>. See also <a id="idx:importmodule2:2013"></a><a class="pred" href="importmodule.html#import_module/2">import_module/2</a> 
+and <a id="idx:deleteimportmodule2:2014"></a><a class="pred" href="importmodule.html#delete_import_module/2">delete_import_module/2</a>.</dd>
 <dt class="pubdef"><a id="delete_import_module/2"><strong>delete_import_module</strong>(<var>+Module, 
 +Import</var>)</a></dt>
 <dd class="defbody">

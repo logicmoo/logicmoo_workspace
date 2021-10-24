@@ -666,7 +666,10 @@ read_string(Input, ",)", "\t ", Sep, String)
 True when <var>Stream</var> is an input stream that accesses the content 
 of
 <var>String</var>. <var>String</var> can be any text representation, 
-i.e., string, atom, list of codes or list of characters.
+i.e., string, atom, list of codes or list of characters. The created <var>Stream</var> 
+has the <code>reposition</code> property (see <a id="idx:streamproperty2:1869"></a><a class="pred" href="IO.html#stream_property/2">stream_property/2</a>). 
+Note that the internal encoding of the data is either ISO Latin 1 or 
+UTF-8.
 </dd>
 </dl>
 
@@ -714,7 +717,7 @@ could be used to indicate that we are dealing with a string.
 
 <p>Lacking runtime information, debuggers and the toplevel can only use 
 heuristics to decide whether to print a list of integers as such or as a 
-string (see <a id="idx:portraytext1:1869"></a><a class="pred" href="portraytext.html#portray_text/1">portray_text/1</a>).
+string (see <a id="idx:portraytext1:1870"></a><a class="pred" href="portraytext.html#portray_text/1">portray_text/1</a>).
 
 <p>While experienced Prolog programmers have learned to cope with this, 
 we still consider this an unfortunate situation.
@@ -788,8 +791,8 @@ term_expansion(my_class(_), Clauses) :-
 my_class(_).
 </pre>
 
-<p>Finally, the predicate <a id="idx:stringcode3:1870"></a><a class="pred" href="string.html#string_code/3">string_code/3</a> 
-can be exploited directly as a replacement for the <a id="idx:memberchk2:1871"></a><a class="pred" href="builtinlist.html#memberchk/2">memberchk/2</a> 
+<p>Finally, the predicate <a id="idx:stringcode3:1871"></a><a class="pred" href="string.html#string_code/3">string_code/3</a> 
+can be exploited directly as a replacement for the <a id="idx:memberchk2:1872"></a><a class="pred" href="builtinlist.html#memberchk/2">memberchk/2</a> 
 on a list of codes. Although the string is still pushed onto the stack, 
 it is more compact and only a single entity.
 </dd>
@@ -810,7 +813,7 @@ huge code base with which we were not familiar in about half a day.
 This predicate may be used to assess compatibility issues due to the 
 representation of double quoted text as string objects. See
 <a class="sec" href="string.html#sec:5.2">section 5.2</a> and <a class="sec" href="string.html#sec:5.2.3">section 
-5.2.3</a>. To use it, load your program into Prolog and run <a id="idx:liststrings0:1872"></a><a class="pred" href="string.html#list_strings/0">list_strings/0</a>. 
+5.2.3</a>. To use it, load your program into Prolog and run <a id="idx:liststrings0:1873"></a><a class="pred" href="string.html#list_strings/0">list_strings/0</a>. 
 The predicate lists source locations of string objects encountered in 
 the program that are not considered safe. Such string need to be 
 examined manually, after which one of the actions below may be 
@@ -834,12 +837,12 @@ will not make your code run regardless of the <strong>--traditional</strong>
 command line option and code exploiting this mapping is also not 
 portable to ISO compliant systems.
 <li>If the strings appear in facts and usage is safe, add a clause to 
-the multifile predicate <a id="idx:checkstringpredicate1:1873"></a><a class="pred" href="string.html#check:string_predicate/1">check:string_predicate/1</a> 
-to silence <a id="idx:liststrings0:1874"></a><a class="pred" href="string.html#list_strings/0">list_strings/0</a> 
+the multifile predicate <a id="idx:checkstringpredicate1:1874"></a><a class="pred" href="string.html#check:string_predicate/1">check:string_predicate/1</a> 
+to silence <a id="idx:liststrings0:1875"></a><a class="pred" href="string.html#list_strings/0">list_strings/0</a> 
 on all clauses of that predicate.
 <li>If the strings appear as an argument to a predicate that can handle 
-string objects, add a clause to the multifile predicate <a id="idx:checkvalidstringgoal1:1875"></a><a class="pred" href="string.html#check:valid_string_goal/1">check:valid_string_goal/1</a> 
-to silence <a id="idx:liststrings0:1876"></a><a class="pred" href="string.html#list_strings/0">list_strings/0</a>.
+string objects, add a clause to the multifile predicate <a id="idx:checkvalidstringgoal1:1876"></a><a class="pred" href="string.html#check:valid_string_goal/1">check:valid_string_goal/1</a> 
+to silence <a id="idx:liststrings0:1877"></a><a class="pred" href="string.html#list_strings/0">list_strings/0</a>.
 </ul>
 </dd>
 <dt class="pubdef"><a id="check:string_predicate/1"><strong>check:string_predicate</strong>(<var>:PredicateIndicator</var>)</a></dt>
@@ -849,7 +852,7 @@ strings, but that this is safe. For example, if there is a predicate
 help_info/2 , where the second argument contains a double quoted string 
 that is handled properly by the predicates of the applications' help 
 system, add the following declaration to stop
-<a id="idx:liststrings0:1877"></a><a class="pred" href="string.html#list_strings/0">list_strings/0</a> 
+<a id="idx:liststrings0:1878"></a><a class="pred" href="string.html#list_strings/0">list_strings/0</a> 
 from complaining:
 
 <pre class="code">
@@ -863,8 +866,8 @@ check:string_predicate(user:help_info/2).
 <dd class="defbody">
 Declare that calls to <var>Goal</var> are safe. The module qualification 
 is the actual module in which <var>Goal</var> is defined. For example, a 
-call to <a id="idx:format3:1878"></a><a class="pred" href="format.html#format/3">format/3</a> 
-is resolved by the predicate <a id="idx:systemformat3:1879"></a><span class="pred-ext">system:format/3</span>. 
+call to <a id="idx:format3:1879"></a><a class="pred" href="format.html#format/3">format/3</a> 
+is resolved by the predicate <a id="idx:systemformat3:1880"></a><span class="pred-ext">system:format/3</span>. 
 and the code below specifies that the second argument may be a string 
 (system predicates that accept strings are defined in the library).
 

@@ -197,11 +197,6 @@ index((list_strings), 1, check, check).
 index((list_rationals), 0, check, check).
 index((list_rationals), 1, check, check).
 index((check_old_select), 0, checkselect, checkselect).
-index((chr_show_store), 1, chr, chr).
-index((find_chr_constraint), 1, chr, chr).
-index((chr_trace), 0, chr, chr).
-index((chr_notrace), 0, chr, chr).
-index((chr_leash), 1, chr, chr).
 index((format_to_codes), 3, codesio, codesio).
 index((format_to_codes), 4, codesio, codesio).
 index((write_to_codes), 2, codesio, codesio).
@@ -563,6 +558,8 @@ index((subset), 2, lists, lists).
 index((subtract), 3, lists, lists).
 index((main), 0, prolog_main, main).
 index((argv_options), 3, prolog_main, main).
+index((argv_options), 4, prolog_main, main).
+index((argv_usage), 1, prolog_main, main).
 index((cli_parse_debug_options), 2, prolog_main, main).
 index((cli_enable_development_system), 0, prolog_main, main).
 index((make), 0, make, make).

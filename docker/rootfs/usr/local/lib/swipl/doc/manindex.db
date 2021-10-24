@@ -1257,10 +1257,10 @@ i(/(swritef,2),"Equivalent to swritef(String, Format, []).",swi_man_manual('form
 i(section(3,'4.32.2','sec:format-predicates'),"Format",swi_man_manual('format.html'),manual,9417).
 i(/(format,1),"Defined as‘format(Format) :- format(Format, []).",swi_man_manual('format.html'),manual,9804).
 i(/(format,2),"Format is an atom, list of character codes, or a Prolog string.",swi_man_manual('format.html'),manual,10100).
-i(/(format,3),"As format/2, but write the output on the given Output.",swi_man_manual('format.html'),manual,20258).
-i(section(3,'4.32.3','sec:format-hook'),"Programming Format",swi_man_manual('format.html'),manual,21055).
-i(/(format_predicate,2),"If a sequence ~c (tilde, followed by some character) is found, the format/3 and friends first check whether the user has defined a predicate to handle the format.",swi_man_manual('format.html'),manual,21244).
-i(/(current_format_predicate,2),"True when ~Code is handled by the user-defined predicate specified by Head.",swi_man_manual('format.html'),manual,22737).
+i(/(format,3),"As format/2, but write the output on the given Output.",swi_man_manual('format.html'),manual,20470).
+i(section(3,'4.32.3','sec:format-hook'),"Programming Format",swi_man_manual('format.html'),manual,21267).
+i(/(format_predicate,2),"If a sequence ~c (tilde, followed by some character) is found, the format/3 and friends first check whether the user has defined a predicate to handle the format.",swi_man_manual('format.html'),manual,21456).
+i(/(current_format_predicate,2),"True when ~Code is handled by the user-defined predicate specified by Head.",swi_man_manual('format.html'),manual,22949).
 i(section(2,'F.3','sec:funcsummary'),"Arithmetic Functions",swi_man_manual('funcsummary.html'),manual,3517).
 i(section(2,'2.6','sec:gemacs'),"GNU Emacs Interface",swi_man_manual('gemacs.html'),manual,3517).
 i(section(2,'A.17','sec:gensym'),"library(gensym): Generate unique identifiers",swi_man_manual('gensym.html'),manual,3512).
@@ -1409,35 +1409,35 @@ i(section(3,'F.2.24','sec:summary-lib-summaries.d-iostream.tex'),"library(summar
 i(section(3,'F.2.25','sec:summary-lib-listing'),"library(listing)",swi_man_manual('library.html'),manual,44884).
 i(section(3,'F.2.26','sec:summary-lib-lists'),"library(lists)",swi_man_manual('library.html'),manual,45905).
 i(section(3,'F.2.27','sec:summary-lib-main'),"library(main)",swi_man_manual('library.html'),manual,51105).
-i(section(3,'F.2.28','sec:summary-lib-occurs'),"library(occurs)",swi_man_manual('library.html'),manual,51946).
-i(section(3,'F.2.29','sec:summary-lib-option'),"library(option)",swi_man_manual('library.html'),manual,53602).
-i(section(3,'F.2.30','sec:summary-lib-optparse'),"library(optparse)",swi_man_manual('library.html'),manual,54737).
-i(section(3,'F.2.31','sec:summary-lib-ordsets'),"library(ordsets)",swi_man_manual('library.html'),manual,55738).
-i(section(3,'F.2.32','sec:summary-lib-persistency'),"library(persistency)",swi_man_manual('library.html'),manual,58887).
-i(section(3,'F.2.33','sec:summary-lib-portraytext'),"library(portraytext)",swi_man_manual('library.html'),manual,60688).
-i(section(3,'F.2.34','sec:summary-lib-predicate_options'),"library(predicate_options)",swi_man_manual('library.html'),manual,61513).
-i(section(3,'F.2.35','sec:summary-lib-prologdebug'),"library(prologdebug)",swi_man_manual('library.html'),manual,63704).
-i(section(3,'F.2.36','sec:summary-lib-prologjiti'),"library(prologjiti)",swi_man_manual('library.html'),manual,64872).
-i(section(3,'F.2.37','sec:summary-lib-prologpack'),"library(prologpack)",swi_man_manual('library.html'),manual,65394).
-i(section(3,'F.2.38','sec:summary-lib-prologxref'),"library(prologxref)",swi_man_manual('library.html'),manual,67916).
-i(section(3,'F.2.39','sec:summary-lib-pairs'),"library(pairs)",swi_man_manual('library.html'),manual,69279).
-i(section(3,'F.2.40','sec:summary-lib-pio'),"library(pio)",swi_man_manual('library.html'),manual,70378).
-i(section(4,'F.2.40.1','sec:summary-lib-pure-input'),"library(pure_input)",swi_man_manual('library.html'),manual,70548).
-i(section(3,'F.2.41','sec:summary-lib-random'),"library(random)",swi_man_manual('library.html'),manual,71911).
-i(section(3,'F.2.42','sec:summary-lib-readutil'),"library(readutil)",swi_man_manual('library.html'),manual,74089).
-i(section(3,'F.2.43','sec:summary-lib-record'),"library(record)",swi_man_manual('library.html'),manual,75581).
-i(section(3,'F.2.44','sec:summary-lib-registry'),"library(registry)",swi_man_manual('library.html'),manual,75895).
-i(section(3,'F.2.45','sec:summary-lib-settings'),"library(settings)",swi_man_manual('library.html'),manual,77220).
-i(section(3,'F.2.46','sec:summary-lib-simplex'),"library(simplex)",swi_man_manual('library.html'),manual,77409).
-i(section(3,'F.2.47','sec:summary-lib-terms'),"library(terms)",swi_man_manual('library.html'),manual,79043).
-i(section(3,'F.2.48','sec:summary-lib-ugraphs'),"library(ugraphs)",swi_man_manual('library.html'),manual,79223).
-i(section(3,'F.2.49','sec:summary-lib-url'),"library(url)",swi_man_manual('library.html'),manual,81443).
-i(section(3,'F.2.50','sec:summary-lib-www_browser'),"library(www_browser)",swi_man_manual('library.html'),manual,83028).
-i(section(3,'F.2.51','sec:summary-lib-solution_sequences'),"library(solution_sequences)",swi_man_manual('library.html'),manual,83373).
-i(section(3,'F.2.52','sec:summary-lib-thread'),"library(thread)",swi_man_manual('library.html'),manual,85085).
-i(section(3,'F.2.53','sec:summary-lib-thread_pool'),"library(thread_pool)",swi_man_manual('library.html'),manual,86774).
-i(section(3,'F.2.54','sec:summary-lib-varnumbers'),"library(varnumbers)",swi_man_manual('library.html'),manual,88136).
-i(section(3,'F.2.55','sec:summary-lib-yall'),"library(yall)",swi_man_manual('library.html'),manual,89302).
+i(section(3,'F.2.28','sec:summary-lib-occurs'),"library(occurs)",swi_man_manual('library.html'),manual,52336).
+i(section(3,'F.2.29','sec:summary-lib-option'),"library(option)",swi_man_manual('library.html'),manual,53992).
+i(section(3,'F.2.30','sec:summary-lib-optparse'),"library(optparse)",swi_man_manual('library.html'),manual,55127).
+i(section(3,'F.2.31','sec:summary-lib-ordsets'),"library(ordsets)",swi_man_manual('library.html'),manual,56128).
+i(section(3,'F.2.32','sec:summary-lib-persistency'),"library(persistency)",swi_man_manual('library.html'),manual,59277).
+i(section(3,'F.2.33','sec:summary-lib-portraytext'),"library(portraytext)",swi_man_manual('library.html'),manual,61078).
+i(section(3,'F.2.34','sec:summary-lib-predicate_options'),"library(predicate_options)",swi_man_manual('library.html'),manual,61903).
+i(section(3,'F.2.35','sec:summary-lib-prologdebug'),"library(prologdebug)",swi_man_manual('library.html'),manual,64094).
+i(section(3,'F.2.36','sec:summary-lib-prologjiti'),"library(prologjiti)",swi_man_manual('library.html'),manual,65262).
+i(section(3,'F.2.37','sec:summary-lib-prologpack'),"library(prologpack)",swi_man_manual('library.html'),manual,65784).
+i(section(3,'F.2.38','sec:summary-lib-prologxref'),"library(prologxref)",swi_man_manual('library.html'),manual,68306).
+i(section(3,'F.2.39','sec:summary-lib-pairs'),"library(pairs)",swi_man_manual('library.html'),manual,69669).
+i(section(3,'F.2.40','sec:summary-lib-pio'),"library(pio)",swi_man_manual('library.html'),manual,70768).
+i(section(4,'F.2.40.1','sec:summary-lib-pure-input'),"library(pure_input)",swi_man_manual('library.html'),manual,70938).
+i(section(3,'F.2.41','sec:summary-lib-random'),"library(random)",swi_man_manual('library.html'),manual,72301).
+i(section(3,'F.2.42','sec:summary-lib-readutil'),"library(readutil)",swi_man_manual('library.html'),manual,74479).
+i(section(3,'F.2.43','sec:summary-lib-record'),"library(record)",swi_man_manual('library.html'),manual,75971).
+i(section(3,'F.2.44','sec:summary-lib-registry'),"library(registry)",swi_man_manual('library.html'),manual,76285).
+i(section(3,'F.2.45','sec:summary-lib-settings'),"library(settings)",swi_man_manual('library.html'),manual,77610).
+i(section(3,'F.2.46','sec:summary-lib-simplex'),"library(simplex)",swi_man_manual('library.html'),manual,77799).
+i(section(3,'F.2.47','sec:summary-lib-terms'),"library(terms)",swi_man_manual('library.html'),manual,79433).
+i(section(3,'F.2.48','sec:summary-lib-ugraphs'),"library(ugraphs)",swi_man_manual('library.html'),manual,79613).
+i(section(3,'F.2.49','sec:summary-lib-url'),"library(url)",swi_man_manual('library.html'),manual,81833).
+i(section(3,'F.2.50','sec:summary-lib-www_browser'),"library(www_browser)",swi_man_manual('library.html'),manual,83418).
+i(section(3,'F.2.51','sec:summary-lib-solution_sequences'),"library(solution_sequences)",swi_man_manual('library.html'),manual,83763).
+i(section(3,'F.2.52','sec:summary-lib-thread'),"library(thread)",swi_man_manual('library.html'),manual,85475).
+i(section(3,'F.2.53','sec:summary-lib-thread_pool'),"library(thread_pool)",swi_man_manual('library.html'),manual,87164).
+i(section(3,'F.2.54','sec:summary-lib-varnumbers'),"library(varnumbers)",swi_man_manual('library.html'),manual,88526).
+i(section(3,'F.2.55','sec:summary-lib-yall'),"library(yall)",swi_man_manual('library.html'),manual,89692).
 i(section(1,'E','sec:license'),"SWI-Prolog License Conditions and Tools",swi_man_manual('license.html'),manual,3502).
 i(section(2,'2.20','sec:limits'),"System limits",swi_man_manual('limits.html'),manual,3516).
 i(section(3,'2.20.1','sec:memlimit'),"Limits on memory areas",swi_man_manual('limits.html'),manual,3670).
@@ -1498,10 +1498,12 @@ i(/(locale_property,2),"True when Locale has Property.",swi_man_manual('locale.h
 i(/(set_locale,1),"Set the default locale for the current thread, as well as the locale for the standard streams (user_input, user_output, user_error, current_output and current_input.",swi_man_manual('locale.html'),manual,8413).
 i(/(current_locale,1),"True when Locale is the locale of the calling thread.",swi_man_manual('locale.html'),manual,9045).
 i(section(2,'A.23','sec:main'),"library(main): Provide entry point for scripts",swi_man_manual('main.html'),manual,3508).
-i(/(main,0),"Call main/1 using the passed command-line arguments.",swi_man_manual('main.html'),manual,4695).
-i(/(argv_options,3),"Generic transformation of long commandline arguments to options.",swi_man_manual('main.html'),manual,5044).
-i(/(cli_parse_debug_options,2),"Parse certain commandline options for debugging and development purposes.",swi_man_manual('main.html'),manual,5783).
-i(/(cli_enable_development_system,0),"Re-enable the development environment.",swi_man_manual('main.html'),manual,6935).
+i(/(main,0),"Call main/1 using the passed command-line arguments.",swi_man_manual('main.html'),manual,4623).
+i(/(argv_options,3),"Parse command line arguments.",swi_man_manual('main.html'),manual,4972).
+i(/(argv_options,4),"As argv_options/3 in guided mode, Currently this version allows parsing argument options throwing an exception rather than calling halt/1 by passing an empty list to ParseOptions.",swi_man_manual('main.html'),manual,9468).
+i(/(argv_usage,1),"Use print_message/2 to print a usage message at Level.",swi_man_manual('main.html'),manual,10164).
+i(/(cli_parse_debug_options,2),"Parse certain commandline options for debugging and development purposes.",swi_man_manual('main.html'),manual,10980).
+i(/(cli_enable_development_system,0),"Re-enable the development environment.",swi_man_manual('main.html'),manual,12132).
 i(section(2,'4.22','sec:manipatom'),"Analysing and Constructing Atoms",swi_man_manual('manipatom.html'),manual,3516).
 i(/(atom_codes,2),"Convert between an atom and a list of character codes (integers denoting characters).",swi_man_manual('manipatom.html'),manual,5644).
 i(/(atom_chars,2),"Similar to atom_codes/2, but CharList is a list of characters (atoms of length 1) rather than a list of character codes (integers denoting characters).",swi_man_manual('manipatom.html'),manual,6928).
@@ -1759,12 +1761,12 @@ i(/(print_message_lines,3),"Print a message (see print_message/2) that has been 
 i(/(message_hook,3),"Hook predicate that may be defined in the module user to intercept messages from print_message/2.",swi_man_manual('printmsg.html'),manual,13270).
 i(/(thread_message_hook,3),"As message_hook/3, but this predicate is local to the calling thread (see thread_local/1).",swi_man_manual('printmsg.html'),manual,14216).
 i(/(message_property,2),"This hook can be used to define additional message kinds and the way they are displayed.",swi_man_manual('printmsg.html'),manual,14911).
-i(:(prolog,/(message_line_element,2)),"This hook is called to print the individual elements of a message from print_message_lines/3.",swi_man_manual('printmsg.html'),manual,16819).
-i(:(prolog,/(message_prefix_hook,2)),"This hook is called to add context to the message prefix.",swi_man_manual('printmsg.html'),manual,17295).
-i(/(message_to_string,2),"Translates a message term into a string object (see section 5.2).",swi_man_manual('printmsg.html'),manual,17756).
-i(/(version,0),"Write the SWI-Prolog banner message as well as additional messages registered using version/1.",swi_man_manual('printmsg.html'),manual,18014).
-i(/(version,1),"Register additional messages to be printed by version/0.",swi_man_manual('printmsg.html'),manual,18387).
-i(section(3,'4.11.1','sec:libprintmsg'),"Printing from libraries",swi_man_manual('printmsg.html'),manual,18817).
+i(:(prolog,/(message_line_element,2)),"This hook is called to print the individual elements of a message from print_message_lines/3.",swi_man_manual('printmsg.html'),manual,16984).
+i(:(prolog,/(message_prefix_hook,2)),"This hook is called to add context to the message prefix.",swi_man_manual('printmsg.html'),manual,17460).
+i(/(message_to_string,2),"Translates a message term into a string object (see section 5.2).",swi_man_manual('printmsg.html'),manual,17921).
+i(/(version,0),"Write the SWI-Prolog banner message as well as additional messages registered using version/1.",swi_man_manual('printmsg.html'),manual,18179).
+i(/(version,1),"Register additional messages to be printed by version/0.",swi_man_manual('printmsg.html'),manual,18552).
+i(section(3,'4.11.1','sec:libprintmsg'),"Printing from libraries",swi_man_manual('printmsg.html'),manual,18982).
 i(section(2,'4.42','sec:profile'),"Execution profiling",swi_man_manual('profile.html'),manual,3518).
 i(section(3,'4.42.1','sec:profiling-predicates'),"Profiling predicates",swi_man_manual('profile.html'),manual,4508).
 i(/(profile,1),"Execute Goal just like once/1, collecting profiling statistics, and call show_profile([]).",swi_man_manual('profile.html'),manual,4789).
@@ -2026,12 +2028,12 @@ i(/(string_lower,2),"Convert String to lower case and unify the result with Lowe
 i(/(read_string,3),"Read at most Length characters from Stream and return them in the string String.",swi_man_manual('string.html'),manual,21734).
 i(/(read_string,5),"Read a string from Stream, providing functionality similar to split_string/4.",swi_man_manual('string.html'),manual,22134).
 i(/(open_string,2),"True when Stream is an input stream that accesses the content of String.",swi_man_manual('string.html'),manual,24073).
-i(section(3,'5.2.3','sec:ext-dquotes-motivation'),"Why has the representation of double quoted text changed?",swi_man_manual('string.html'),manual,24423).
-i(section(3,'5.2.4','sec:ext-dquotes-port'),"Adapting code for double quoted strings",swi_man_manual('string.html'),manual,26929).
-i(section(3,'5.2.5','sec:ext-dquotes-port-predicates'),"Predicates to support adapting code for double quoted strings",swi_man_manual('string.html'),manual,29926).
-i(/(list_strings,0),"This predicate may be used to assess compatibility issues due to the representation of double quoted text as string objects.",swi_man_manual('string.html'),manual,30400).
-i(:(check,/(string_predicate,1)),"Declare that PredicateIndicator has clauses that contain strings, but that this is safe.",swi_man_manual('string.html'),manual,32577).
-i(:(check,/(valid_string_goal,1)),"Declare that calls to Goal are safe.",swi_man_manual('string.html'),manual,33297).
+i(section(3,'5.2.3','sec:ext-dquotes-motivation'),"Why has the representation of double quoted text changed?",swi_man_manual('string.html'),manual,24688).
+i(section(3,'5.2.4','sec:ext-dquotes-port'),"Adapting code for double quoted strings",swi_man_manual('string.html'),manual,27194).
+i(section(3,'5.2.5','sec:ext-dquotes-port-predicates'),"Predicates to support adapting code for double quoted strings",swi_man_manual('string.html'),manual,30191).
+i(/(list_strings,0),"This predicate may be used to assess compatibility issues due to the representation of double quoted text as string objects.",swi_man_manual('string.html'),manual,30665).
+i(:(check,/(string_predicate,1)),"Declare that PredicateIndicator has clauses that contain strings, but that this is safe.",swi_man_manual('string.html'),manual,32842).
+i(:(check,/(valid_string_goal,1)),"Declare that calls to Goal are safe.",swi_man_manual('string.html'),manual,33562).
 i(section(2,'A.45','sec:strings'),"library(strings): String utilities",swi_man_manual('strings.html'),manual,3516).
 i(/(string,4),"Implements the quasi quotation syntax string.",swi_man_manual('strings.html'),manual,5642).
 i(/(interpolate_string,4),"Establish a string from a template by replacing patterns.",swi_man_manual('strings.html'),manual,6874).

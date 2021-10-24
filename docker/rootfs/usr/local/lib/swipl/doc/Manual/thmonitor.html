@@ -241,7 +241,7 @@ threads</span></a></h2>
 <p>Normal multithreaded applications should not need the predicates from 
 this section because almost any usage of these predicates is unsafe. For 
 example checking the existence of a thread before signalling it is of no 
-use as it may vanish between the two calls. Catching exceptions using <a id="idx:catch3:2244"></a><a class="pred" href="exception.html#catch/3">catch/3</a> 
+use as it may vanish between the two calls. Catching exceptions using <a id="idx:catch3:2245"></a><a class="pred" href="exception.html#catch/3">catch/3</a> 
 is the only safe way to deal with thread-existence errors.
 
 <p>These predicates are provided for diagnosis and monitoring tasks. See 
@@ -257,9 +257,9 @@ True if <var>Term</var> is a handle to an existing thread.</dd>
 <dd class="defbody">
 True if thread <var>Id</var> has <var>Property</var>. Either or both 
 arguments may be unbound, enumerating all relations on backtracking. 
-Calling <a id="idx:threadproperty2:2245"></a><a class="pred" href="thmonitor.html#thread_property/2">thread_property/2</a> 
+Calling <a id="idx:threadproperty2:2246"></a><a class="pred" href="thmonitor.html#thread_property/2">thread_property/2</a> 
 does not influence any thread. See also
-<a id="idx:threadjoin2:2246"></a><a class="pred" href="threadcreate.html#thread_join/2">thread_join/2</a>. 
+<a id="idx:threadjoin2:2247"></a><a class="pred" href="threadcreate.html#thread_join/2">thread_join/2</a>. 
 For threads that have an alias name, this name is returned in <var>Id</var> 
 instead of the opaque thread identifier. Defined properties are:
 
@@ -297,14 +297,14 @@ The <var>Goal</var> of the thread has been completed and failed.</dd>
 The <var>Goal</var> of the thread has been completed and succeeded.</dd>
 <dt><strong>exited</strong>(<var>Term</var>)</dt>
 <dd class="defbody">
-The <var>Goal</var> of the thread has been terminated using <a id="idx:threadexit1:2247"></a><a class="pred" href="threadcreate.html#thread_exit/1">thread_exit/1</a> 
+The <var>Goal</var> of the thread has been terminated using <a id="idx:threadexit1:2248"></a><a class="pred" href="threadcreate.html#thread_exit/1">thread_exit/1</a> 
 with <var>Term</var> as argument. If the underlying native thread has 
 exited (using pthread_exit()) <var>Term</var> is unbound.</dd>
 <dt><strong>exception</strong>(<var>Term</var>)</dt>
 <dd class="defbody">
 The <var>Goal</var> of the thread has been terminated due to an uncaught 
-exception (see <a id="idx:throw1:2248"></a><a class="pred" href="exception.html#throw/1">throw/1</a> 
-and <a id="idx:catch3:2249"></a><a class="pred" href="exception.html#catch/3">catch/3</a>).
+exception (see <a id="idx:throw1:2249"></a><a class="pred" href="exception.html#throw/1">throw/1</a> 
+and <a id="idx:catch3:2250"></a><a class="pred" href="exception.html#catch/3">catch/3</a>).
 </dd>
 </dl>
 
@@ -322,7 +322,7 @@ If the thread is an engine that is currently attached to a thread,
 <dd class="defbody">
 The amount of memory associated with this thread. This includes the 
 thread structure, its stacks, its default message queue, its clauses in 
-its thread local dynamic predicates (see <a id="idx:threadlocal1:2250"></a><a class="pred" href="threadcom.html#thread_local/1">thread_local/1</a>) 
+its thread local dynamic predicates (see <a id="idx:threadlocal1:2251"></a><a class="pred" href="threadcom.html#thread_local/1">thread_local/1</a>) 
 and memory used for representing thread-local answer tries (see <a class="sec" href="tabling.html#sec:7">section 
 7</a>).</dd>
 <dt><strong>system_thread_id</strong>(<var>Integer</var>)</dt>
@@ -336,20 +336,20 @@ about Prolog threads.
 </dd>
 </dl>
 
-<p>See also <a id="idx:threadstatistics3:2251"></a><a class="pred" href="thmonitor.html#thread_statistics/3">thread_statistics/3</a> 
+<p>See also <a id="idx:threadstatistics3:2252"></a><a class="pred" href="thmonitor.html#thread_statistics/3">thread_statistics/3</a> 
 to obtain resource usage information and
-<a id="idx:messagequeueproperty2:2252"></a><a class="pred" href="threadcom.html#message_queue_property/2">message_queue_property/2</a> 
+<a id="idx:messagequeueproperty2:2253"></a><a class="pred" href="threadcom.html#message_queue_property/2">message_queue_property/2</a> 
 to get the number of queued messages for a thread.</dd>
 <dt class="pubdef"><a id="thread_statistics/3"><strong>thread_statistics</strong>(<var>+Id, 
 +Key, -Value</var>)</a></dt>
 <dd class="defbody">
-Obtains statistical information on thread <var>Id</var> as <a id="idx:statistics2:2253"></a><a class="pred" href="statistics.html#statistics/2">statistics/2</a> 
+Obtains statistical information on thread <var>Id</var> as <a id="idx:statistics2:2254"></a><a class="pred" href="statistics.html#statistics/2">statistics/2</a> 
 does in single-threaded applications. This call supports all keys of
-<a id="idx:statistics2:2254"></a><a class="pred" href="statistics.html#statistics/2">statistics/2</a>, 
+<a id="idx:statistics2:2255"></a><a class="pred" href="statistics.html#statistics/2">statistics/2</a>, 
 although only stack sizes, <code>cputime</code>,
 <code>inferences</code>, <code>epoch</code>, <code>errors</code> and <code>warnings</code> 
 yield different values for each thread. For <code>errors</code> and
-<code>warnings</code> <a id="idx:statistics2:2255"></a><a class="pred" href="statistics.html#statistics/2">statistics/2</a> 
+<code>warnings</code> <a id="idx:statistics2:2256"></a><a class="pred" href="statistics.html#statistics/2">statistics/2</a> 
 gives the global process count and this predicate gives the counts for 
 the calling thread.<sup class="fn">186<span class="fn-text">There is no 
 portable interface to obtain thread-specific CPU time and some operating 
@@ -363,7 +363,7 @@ dynamic predicates. For each mutex two numbers are printed: the number
 of times the mutex was acquired and the number of <em>collisions</em>: 
 the number of times the calling thread has to wait for the mutex. The 
 output is written to <code>current_output</code> and can thus be 
-redirected using <a id="idx:withoutputto2:2256"></a><a class="pred" href="IO.html#with_output_to/2">with_output_to/2</a>.
+redirected using <a id="idx:withoutputto2:2257"></a><a class="pred" href="IO.html#with_output_to/2">with_output_to/2</a>.
 </dd>
 </dl>
 

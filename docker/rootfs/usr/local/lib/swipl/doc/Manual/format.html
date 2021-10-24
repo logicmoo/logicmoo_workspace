@@ -550,6 +550,10 @@ tab stop on the position of that argument. This will cause all
 <code>~t</code>&rsquo;s to be distributed between the previous and this 
 tab stop.
 
+<p>If the current column is at or past the requested tabstop and the 
+modifier (:) is used, a newline is inserted and the padding character of 
+the last <code>~t</code> is used to pad to the requested position.
+
 <p>
 <li><code><code>+</code></code><br>
 Set a tab stop (as <code>~|</code>) relative to the last tab stop or the 
