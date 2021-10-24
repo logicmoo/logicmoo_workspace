@@ -64,6 +64,7 @@ multifile_dynamic_discontiguous(P):- multifile(P),dynamic(P),discontiguous(P).
 :- multifile_dynamic_discontiguous(type_conversion/2).
 :- multifile_dynamic_discontiguous(verb_form_db/5).
 :- multifile_dynamic_discontiguous(verb_type_db/3).
+:- multifile_dynamic_discontiguous(name_template_lf0/2).
 
 :- multifile_dynamic_discontiguous(adjunction_LF/4).
 :- multifile_dynamic_discontiguous(intrans_LF/6).
@@ -105,3 +106,5 @@ multifile_dynamic_discontiguous(P):- multifile(P),dynamic(P),discontiguous(P).
 :- ensure_loaded(newtop).	% top level
 
 :- fixup_exports.
+
+%:- break.

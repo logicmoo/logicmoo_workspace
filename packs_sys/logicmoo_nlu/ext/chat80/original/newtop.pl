@@ -89,7 +89,7 @@ inform1([H|T]) :- write(H), put(32), inform1(T).
    ---------------------------------------------------------------------- */
 
 
-system:test_chat80 :-  setenv('CMD',timeout), test_chat80(_,on).
+system:test_chat80 :-  setenv('CMD',timeout), test_chat80(_,off).
 
 :- share_mp(test_chat80/1).
 test_chat80(N):- test_chat80(N, on), !.
@@ -179,7 +179,7 @@ answer80((answer80(X):-E),S) :- seto(X,E,S).
 
 check_answer(_Sentence,A,B,true) :- close_answer(A,B),!.
 check_answer(Sentence,A,B,'wrong answer'):-
-  pprint_ecp_cmt(red,check_answer(Sentence,A,B,'wrong answer')),
+  pprint_ecp_cmt(red,check_answer(Sentence,A,B,'wrong answer')),dumpT,
   tracing ~= on,
   once(process(debug,Sentence)).
 
