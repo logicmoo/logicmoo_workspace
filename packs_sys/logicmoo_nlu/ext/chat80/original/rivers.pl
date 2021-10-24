@@ -43,11 +43,6 @@ verb_form_db(chat80,flowing,flow,pres+part,_).
 verb_form_db(chat80,drains,drain,pres+fin,3+sg).
 verb_form_db(chat80,draining,drain,pres+part,_).
 */
-% Lexical Data
-% ------------------
-verb_type_db(chat80,rise,main+iv).
-verb_type_db(chat80,flow,main+iv).
-verb_type_db(chat80,drain,main+iv).
 
 % Logical Interface to facts about rivers.
 % ------------------

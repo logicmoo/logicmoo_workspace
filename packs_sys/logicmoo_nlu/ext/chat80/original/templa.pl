@@ -24,11 +24,18 @@
 
 /* Measure */
 
-measure_LF(ksqmile,measure&area,[],ksqmiles).
+measure_pred(city,size,population,units).
+measure_pred(country,size,area,sqmiles).
+measure_pred(region,x,latitude,degrees).
+measure_pred(region,y,longitude,degrees).
+
+measure_LF(ksqmile,measure&Size,[],ksqmiles):- measure_LF(sqmile,measure&Size,[],sqmiles).
+
 measure_LF(sqmile,measure&area,[],sqmiles).
 measure_LF(degree,measure&position,[],degrees).
 measure_LF(thousand,measure&population/*citizens*/,[],thousand).
 measure_LF(million,measure&population/*citizens*/,[],million).
+
 verb_type_db(chat80,border,main+tv).
 symmetric_verb(Spatial,border):- spatial(Spatial).
 
@@ -425,8 +432,6 @@ node_pairs_indirect(L,C2,C1):-
   node_pairs_direct(L,C2,CM),
   (CM=C1;node_pairs_indirect(L,CM,C1)).
 
-verb_type_db(chat80,LessSpecific,main+iv):-
-  less_specific(_, LessSpecific).
 
 
 
@@ -437,6 +442,13 @@ less_specific(link,  continue).
 less_specific(Drain, end):-      type_specific_bte(_Type, _PathSystem,_,_,Drain).
 less_specific(end,   stop).
 
+% Lexical Data
+% ------------------
+%verb_type_db(chat80,Rise,main+iv):-  less_specific(Rise,  begin).
+%verb_type_db(chat80,Flow,main+iv):-  less_specific(Flow,  link).
+%verb_type_db(chat80,Drain,main+iv):- less_specific(Drain, end).
+verb_type_db(chat80,LessSpecific,main+iv):- less_specific(_, LessSpecific).
+verb_type_db(chat80,MoreSpecific,main+iv):- less_specific(MoreSpecific, _).
 
 type_begins_thru_ends(Type, PathSystem, Begin, Continue, Stop):- 
   type_specific_bte(Type, PathSystem, Rise, Flow, Drain),

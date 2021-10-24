@@ -100,6 +100,4 @@ multifile_dynamic_discontiguous(P):- multifile(P),dynamic(P),discontiguous(P).
 
 :- ensure_loaded(newtop).	% top level
 
-:- break.
-
 :- fixup_exports.
