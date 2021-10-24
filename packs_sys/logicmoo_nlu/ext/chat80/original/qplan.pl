@@ -25,7 +25,7 @@
 :- module(qplan,[qplan/2]).
 
 qplan((P:-Q),(P1:-Q1)) :- qplan(P,Q,P1,Q1), !.
-qplan(P,Q):- simplify80(P,Q),!.
+qplan(P,Q):- chat_80_icall(simplify80(P,Q)),!.
 
 
 qplan(X0,P0,X,P) :-
@@ -231,14 +231,14 @@ cost80(P,V,N) :-
 cost80(1,F,P,V,N) :-
    arg(1,P,X1),
    instantiated(X1,V,I1),
-   nd_costs(F,N0,N1),
+   chat_80_icall(nd_costs(F,N0,N1)),
    N is N0-I1*N1.
 cost80(2,F,P,V,N) :-
    arg(1,P,X1),
    instantiated(X1,V,I1),
    arg(2,P,X2),
    instantiated(X2,V,I2),
-   nd_costs(F,N0,N1,N2),
+   chat_80_icall(nd_costs(F,N0,N1,N2)),
    N is N0-I1*N1-I2*N2.
 cost80(3,F,P,V,N) :-
    arg(1,P,X1),
@@ -247,7 +247,7 @@ cost80(3,F,P,V,N) :-
    instantiated(X2,V,I2),
    arg(3,P,X3),
    instantiated(X3,V,I3),
-   nd_costs(F,N0,N1,N2,N3),
+   chat_80_icall(nd_costs(F,N0,N1,N2,N3)),
    N is N0-I1*N1-I2*N2-I3*N3.
 
 instantiated([X|_],V,N) :-
@@ -257,6 +257,8 @@ instantiated('$VAR'(N),V,0) :-
    setcontains(V,N),
    !.
 instantiated(_,_,1).
+
+chat_80_icall(G):- parser_chat80:call(G).
 
 /*-------------------------Put in reserve--------------------
 

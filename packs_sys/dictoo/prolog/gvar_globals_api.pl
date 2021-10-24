@@ -229,7 +229,7 @@ nb_oo_link(Tree,N,V):-
     ;  nb_oo_insert(Tree,N,oov(V))).
 
 
-is_ootree(Tree):- is_rbtree(Tree),!.
+is_ootree(Tree):- compound(Tree),t(_, _)=Tree,is_rbtree(Tree),!.
 is_ootree(Tree):- is_dict(Tree),!.
 is_ootree(Tree):- fail_if_undefined(is_oo(Tree)).
 

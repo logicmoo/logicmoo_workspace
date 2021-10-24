@@ -27,7 +27,6 @@ ti(capital_city,Cap) :- c_r_l_l_s_cap_m(_,_,_,_,_,_,Cap,_). % specific_pred(spat
 ti(city,C) :- country_contains_thing(_,C), \+ ti(river,C).
 ti(country,C) :- c_r_l_l_s_cap_m(C,_,_,_,_,_,_,_).
 
-count_pred(Spatial,Heads,C,Total):- is_list(C),maplist(count_pred(Spatial,Heads),C,Setof), u_total(Setof, Total).
 count_pred(spatial,population,C,P--thousand) :- city_country_popu(C,_,P).
 
 % Facts about cities.

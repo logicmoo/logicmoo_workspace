@@ -35,7 +35,7 @@
 :- set_prolog_flag(ran_junit_tests,false).
 run_junit_tests_at_halt:- 
    current_prolog_flag(ran_junit_tests,true)-> true;  
-   call_with_time_limit(5,run_junit_tests).
+   call_with_time_limit(20,run_junit_tests).
 
 %:- at_halt(run_junit_tests_at_halt).
 
@@ -351,7 +351,7 @@ mpred_test_fok(Testcase, G):-
       process_test_result(TestResult, G),    
       TestResult=..[Type|Info],add_test_info(Testcase,Type,Info),
       add_test_info(Testcase,result,Type),
-      ignore((getenv_safe('TEE_FILE',Tee),
+      ignore((getenv('TEE_FILE',Tee),
       must_det_l_ex((
         read_file_to_string(Tee,Str,[]),
         add_test_info(Testcase,out,Str),
@@ -362,7 +362,7 @@ mpred_test_fok(Testcase, G):-
     Type == passed.
 
 kill_junit_tee:- 
-  ignore((getenv_safe('TEE_FILE',Tee),
+  ignore((getenv('TEE_FILE',Tee),
           sformat(Exec,'cat /dev/null > ~w',[Tee]),
           shell(Exec))).
 
@@ -392,8 +392,8 @@ why_was_true(P):- % predicate_property(P,dynamic),
 why_was_true(P):- dmsg_pretty(justfied_true(P)),!.
 
 catch_timeout(P):- tracing,!,call(P).
-%catch_timeout(P):-  getenv_safe('CMD_TIMEOUT',X), \+ atom_length(X,0),!, call(P). % Caller will kill it
-catch_timeout(P):-  getenv_safe('CMD',X), atom_contains(X,"timeout"),!, call(P). % Caller will kill it
+%catch_timeout(P):-  getenv'CMD_TIMEOUT',X), \+ atom_length(X,0),!, call(P). % Caller will kill it
+catch_timeout(P):-  getenv('CMD',X), atom_contains(X,"timeout"),!, call(P). % Caller will kill it
 catch_timeout(P):- catch(call_with_time_limit(30,w_o_c(P)),E,wdmsg(P->E)).
 
 %generate_test_name(G,Name):- getenv_safe('JUNIT_CLASSNAME',Class), gtn_no_pack(G,NPack),sformat(Name,'~w ~w',[Class, NPack]),!.
@@ -468,7 +468,7 @@ warn_fail_TODO(G):- dmsg_pretty(:-warn_fail_TODO(G)).
 :- create_prolog_flag(logicmoo_message_hook,none,[keep(true),type(term)]).
 
 system:test_src(Src):- (current_prolog_flag(test_src,Src), Src\==[]);j_u:junit_prop(testsuite,file,Src).
-system:is_junit_test:- getenv_safe('JUNIT_PACKAGE',_),!.
+system:is_junit_test:- getenv('JUNIT_PACKAGE',_),!.
 system:is_junit_test:- system:is_junit_test_file.
 system:is_junit_test_file:- test_src(Src), prolog_load_context(file,Src),!.
 
@@ -510,7 +510,7 @@ add_test_info(Type,Info):- ignore(((get_current_testcase(Testcase), add_test_inf
 
 get_current_testcase(Testcase):- t_l:mpred_current_testcase(Testcase),!.
 
-get_current_testcase(Testcase):- getenv_safe('FileTestCase',Testcase), add_test_info(testsuite,testcase,Testcase),!.
+get_current_testcase(Testcase):- getenv('FileTestCase',Testcase), add_test_info(testsuite,testcase,Testcase),!.
 get_current_testcase(Testcase):- "suiteTestcase"=Testcase, add_test_info(testsuite,testcase,Testcase),!.
 % get_current_testcase(Testcase):- j_u:junit_prop(testsuite,file,Testcase).
 
@@ -725,7 +725,7 @@ clear_suite_attribs:- forall(junit_count(F),flag(F,_,0)),
 
 get_suite_attribs(SuiteAttribs):-    
   with_output_to(string(SuiteAttribs),
-(( ignore((getenv_safe('JUNIT_PACKAGE',Package), format(' package="~w"', [Package]))),
+(( ignore((getenv('JUNIT_PACKAGE',Package), format(' package="~w"', [Package]))),
    ignore((j_u:junit_prop(testsuite,start,Start),get_time(End),Elapsed is End - Start,format(' time="~3f"',[Elapsed]))),
    forall((junit_count(F),flag(F,C,C)),format(' ~w="~w"',[F,C]))))).
 
@@ -850,7 +850,7 @@ save_to_junit_file(Name,DirtyText,FileName):-
 
 save_junit_results_single:-
   % $TESTING_TEMP
-  getenv_safe('TESTING_TEMP',Dir),
+  getenv('TESTING_TEMP',Dir),
   directory_file_path(Dir,'junit_single.ansi',Full),!,
   tell(Full),
   show_all_junit_suites,

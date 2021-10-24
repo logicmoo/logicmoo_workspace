@@ -71,12 +71,11 @@ simple_atom_token(SymbolName):- atom_concat_or_rtrace('$',_,SymbolName),upcase_a
 simple_atom_token(SymbolName):- string_upper(SymbolName,UP),string_lower(SymbolName,DOWN),!,UP==DOWN.
 
 atom_symbol(_,SymbolName,Token):- simple_atom_token(SymbolName),!,SymbolName=Token.
-atom_symbol(_,SymbolName,Obj):- notrace(f_type_of(SymbolName,X))->X\==t,SymbolName=Obj.
+atom_symbol(_,SymbolName,Obj):- f_type_of(SymbolName,X)->X\==t,SymbolName=Obj.
 atom_symbol(Package,SymbolName,Symbol):-
   string_upper(SymbolName,SymbolNameU), 
   string_list_concat([SymbolName1|SymbolNameS],":",SymbolNameU),
   always(atom_symbol_s(SymbolName1,SymbolNameS,Package,Symbol)),!.
-
 
 % :KEYWORD
 atom_symbol_s("",[SymbolName],_UPackage,Symbol):- !,atom_symbol_s(SymbolName,[],pkg_kw,Symbol).

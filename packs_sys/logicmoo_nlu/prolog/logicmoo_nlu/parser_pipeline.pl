@@ -425,9 +425,11 @@ calc_good_depth(V,D,O):- compound_name_arguments(V,_,L),!,calc_good_depth(L,D,O)
 % show_term_tree(V):- print_html_term_tree(V,[fullstop(true)]),!.
 
 show_term_v(Term):- term_size(Term,Size),Size<50,!,show_term_tree(Term).
-show_term_v(Term):- calc_good_depth(Term,D),print_tree(Term,[max_depth(5),html_depth(D)]).
-show_term_tree(V):- calc_good_depth(V,D),print_tree(V,[html_depth(D)]).
 
+show_term_v(Term):- calc_good_depth(Term,D),on_own_line(print_tree(Term,[max_depth(5),html_depth(D)])).
+show_term_tree(V):- calc_good_depth(V,D),on_own_line(print_tree(V,[html_depth(D)])).
+
+on_own_line(X):- format('~N'),X,format('~N').
 
 :- export(sort_term_size/2).
 sort_term_size(List,Sorted):- notrace((predsort(by_word_term_size,List,S),reverse(S,Sorted))).

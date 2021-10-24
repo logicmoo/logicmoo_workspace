@@ -21,58 +21,6 @@ _________________________________________________________________________
 
 */
 
-:- abolish(tmp80:trans_rel_cache_creating,2).
-:- abolish(tmp80:trans_rel_cache_created,2).
-:- abolish(tmp80:trans_rel_cache_insts,3).
-:- abolish(tmp80:trans_rel_cache,4).
-
-:- dynamic(tmp80:trans_rel_cache_creating/2).
-:- dynamic(tmp80:trans_rel_cache_created/2).
-:- dynamic(tmp80:trans_rel_cache_insts/3).
-:- dynamic(tmp80:trans_rel_cache/4).
-
-trans_rel(Spatial,Contain,X,Y):- \+ compound(Contain),!,
-  trace_or_throw(wrong(trans_rel(Spatial,Contain,X,Y))),
-  trans_rel(=,trans_direct(Spatial,Contain),X,Y).
-
-trans_rel(P1,P2,X,Y) :- trans_rel_cache_create(P1,P2),!, tmp80:trans_rel_cache(P1,P2,X,Y).
-trans_rel(P1,P2,X,Y):- trans_rel_nc(P1,P2,X,Y).
-
-trans_rel_nc(P1,P2,X,Y) :- var(X),!, no_repeats(X, trans_rel_rl(P1,P2,X,Y)).
-trans_rel_nc(P1,P2,X,Y) :- nonvar(Y), !, trans_rel_lr(P1,P2,X,Y), !.
-trans_rel_nc(P1,P2,X,Y) :- no_repeats(Y, trans_rel_lr(P1,P2,X,Y)).
-
-trans_rel_lr(P1,P2,X,Y) :- call(P2,X,W), ( call(P1,W,Y) ; trans_rel_lr(P1,P2,W,Y) ).
-trans_rel_rl(P1,P2,X,Y) :- call(P2,W,Y), ( call(P1,W,X) ; trans_rel_rl(P1,P2,X,W) ).
-
-
-
-trans_rel_cache_create(P1,P2):- must_be(ground,(P1,P2)),
-                                tmp80:trans_rel_cache_created(P1,P2),!.
-trans_rel_cache_create(P1,P2):- tmp80:trans_rel_cache_creating(P1,P2),dmsg(looped(trans_rel_cache_create(P1,P2))),fail.
-trans_rel_cache_create(P1,P2):-
-  asserta((tmp80:trans_rel_cache_creating(P1,P2)),Ref),
-  dmsg(trans_rel_cache_creating(P1,P2)),
-  forall(call(P2,XX,YY),
-     (assert_if_new(tmp80:trans_rel_cache_insts(P1,P2,XX)),
-      assert_if_new(tmp80:trans_rel_cache_insts(P1,P2,YY)))),
-  forall(tmp80:trans_rel_cache_insts(P1,P2,E),
-        (forall(trans_rel_nc(P1,P2,E,Y),assert_if_new(tmp80:trans_rel_cache(P1,P2,E,Y))),
-         forall(trans_rel_nc(P1,P2,Y,E),assert_if_new(tmp80:trans_rel_cache(P1,P2,Y,E))))),
-  dmsg(trans_rel_cache_created(P1,P2)),
-  asserta((tmp80:trans_rel_cache_created(P1,P2))),!,
-  erase(Ref),
-  %listing(tmp80:trans_rel_cache_insts(P1,P2,_Instances)),
-  %listing(tmp80:trans_rel_cache(P1,P2,_,_)),
-  !.
-
-
-%contain(X,Y) :- trans_direct(spatial,contain,X,Y).
-%contain(X,Y) :- trans_direct(spatial,contain,X,W), contain(W,Y).
-
-
-trans_pred(Spatial,Contain,X,Y) :- trans_rel(=,trans_direct(Spatial,Contain),X,Y).
-%contain(X,X).
 
 ti(region,R) :- continent_contains_region(_,R).
 ti(continent,X):- continent(X).

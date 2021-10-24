@@ -27,7 +27,7 @@ get_last_oc(OC):- nb_current(last_oc,OC).
 train_from_corpus:- 
  debugln("reading corpus..."),
  set_last_oc(0:0:0),
- absolute_file_name(library('../self_dialogue_corpus/train_from.txt'),File,[access(read)]),
+ absolute_file_name(pldata('corpus/self_dialogue_corpus/train_from_topic_star_wars.txt'),File,[access(read)]),
  time((open(File,read,In), 
  forall(corpus_stat(Stat),set_flag(Stat,0)),
  set_flag(sent_num,0),

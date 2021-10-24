@@ -24,15 +24,6 @@
 
 :- dynamic(direct_ss/4).
 
-symmetric_pred(Spatial,B,X,C):- nonvar(X),nonvar(C),!,symmetric_direct(Spatial,B,X,C),!.
-symmetric_pred(Spatial,B,X,C):- symmetric_direct(Spatial,B,X,C).
-
-symmetric_direct(Spatial,B,X,C) :- direct_ss(Spatial,B,X,C).
-symmetric_direct(Spatial,B,X,C) :- direct_ss(Spatial,B,C,X).
-
-add_ss(Spatial,B,X,C):- X @> C, !, add_ss(Spatial,B,C,X).
-add_ss(Spatial,B,X,C):- direct_ss(Spatial,B, X,C), !.
-add_ss(Spatial,B,X,C):- assertz(direct_ss(Spatial,B, X,C)), !.
 
 % Facts about Europe.
 % ------------------

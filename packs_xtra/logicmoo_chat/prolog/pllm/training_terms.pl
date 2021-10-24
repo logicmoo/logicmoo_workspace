@@ -4,7 +4,7 @@
 
 % :- include(weightless_pllm).
 
-pllm_preds([training/3,is_word/1,is_word/2,ngram/5,ngram/6,trigram/3,trigram/4,tok_split/3,tok_split/4]).
+pllm_preds([training/4,is_word/2,ngram/5,ngram/6,ngram/7,ngram/8,trigram/4,tok_split/4]).
 
 declare_preds(X):- dynamic(X),multifile(X).
 
@@ -16,7 +16,7 @@ declare_preds(X):- dynamic(X),multifile(X).
 :- ensure_loaded(library(logicmoo_nlu/parser_link_grammar)).
 
 %compile_corpus:- functor(P,ngram,6), predicate_property(P,number_of_clauses(N)),N>2.
-compile_corpus:- 
+compile_corpus:- mmake,
   compile_corpus_in_mem.
 
 recompile_corpus:- 
@@ -92,7 +92,7 @@ save_training(MFA):- !, compute_module(MFA,M,F/A),
 
 save_stat(G):- 
   ( \+ G -> assert(G) ; true),
-  nop((writeq(G),writeln('.'))).
+  ((writeq(G),writeln('.'))).
 
 use_extent(is_word,1). use_extent(tok_split,3). use_extent(trigram,3). use_extent(ngram,5).
 compute_corpus_extents:-
@@ -166,14 +166,8 @@ ngram_val(NGram,NN):- ngram_key(NGram,Key),get_flag(Key,NN).
 ngram_inc(NGram):- ngram_inc(NGram,_NN).
 ngram_inc(NGram,NN):- ngram_key(NGram,Key),flag(Key,NN,NN+1).
 
-ngram_key(tok_split(O,_,_),O):-!.
-ngram_key(is_word(O),O):-!.
-ngram_key(trigram(A,B,C),Key):- !, join_text([A,B,C],Key).
-ngram_key(ngram(Loc,A,B,C,D,_),Key):- !, ngram_key(ngram(Loc,A,B,C,D),Key).
-ngram_key(ngram(_Loc,oc(_),B,C,oc(_)),Key):- !, join_text([oc,B,C,oc],Key).
-ngram_key(ngram(_Loc,oc(_),A,B,C),Key):- !, join_text([oc,A,B,C],Key).
-ngram_key(ngram(_Loc,A,B,C,oc(_)),Key):- !, join_text([A,B,C,oc],Key).
-ngram_key(ngram(_Loc,A,B,C,D),Key):- join_text([A,B,C,D],Key).
+ngram_key(P,Key):- P=..[ngram,_|Args],!,join_text(Args,Key).
+ngram_key(P,Key):- P=..[_|Args],join_text(Args,Key).
 
 join_text(List,Key):- atomic_list_concat(List,',',Key).
 
@@ -225,7 +219,7 @@ add_training_str(XX,Str) :-
    assert_training(XX,unphrasify,List),
    tree_to_toks(List,PostToks),!,
    assert_training(XX,tree_to_toks,PostToks),
-   add_training_toks(XX,PostToks))).
+   once(add_training_toks(XX,PostToks)))).
 
  
 /* Old Way
@@ -298,7 +292,8 @@ tree_to_toks(C,X,Y):- tree_to_tokz(C,X,M),!,notrace(flatten([M],Y)).
 cleanup_toks([],[]).
 cleanup_toks([mark(_)|YY],Y):-!,cleanup_toks(YY,Y).
 cleanup_toks([np,X,np|YY],[X|Y]):-!,cleanup_toks(YY,Y).
-cleanup_toks([np|Rest],[X|Y]):- append(Toks,[np|More],Rest),atomic_list_concat(Toks,'-',X),!,cleanup_toks(More,Y).
+cleanup_toks([np|Rest],[X|Y]):- append(Toks,[np|More],Rest),
+  include(all_letters,Toks,ToksA), ToksA\==[],atomic_list_concat(ToksA,'-',X),!,cleanup_toks(More,Y).
 cleanup_toks([X|YY],[X|Y]):-!,cleanup_toks(YY,Y).
 
 too_long('CORENLP').
@@ -308,7 +303,7 @@ too_long('NML').
 too_long('FRAG').
 too_long(X):- atom_concat(_,'BAR',X).
 too_long(X):- atom_concat('S',_,X).
-is_penn_tag(S):- atom(S),upcase_atom(S,S), S\=='I'.
+is_penn_tag(S):- atom(S),upcase_atom(S,S), \+ downcase_atom(S,S), S\=='I'.
 is_penn_long(S):-is_penn_tag(S),too_long(S).
 
 tree_to_tokz(_,Item,Item):- atomic(Item),!.
@@ -351,38 +346,46 @@ text_to_tree(_TokList,Text,Tree):- text_to_lgp_tree(Text,Tree),!.
 all_letters(X):- \+ (upcase_atom(X,U),downcase_atom(X,U)).
 
 retokify([],[]).
-retokify([E|APreToks],[sp|PreToks]):- \+ atomic(E), retokify(APreToks,PreToks).
+retokify([E|APreToks],PreToks):- ( \+ atomic(E); is_penn_tag(E) ),!,retokify(APreToks,PreToks).
 retokify([E|APreToks],[F|PreToks]):- downcase_atom(E,F),retokify(APreToks,PreToks).
 
 add_training_toks(_,[]):- !.
 add_training_toks(X,[A]):- !, add_training_toks(X,[A,'.']).
 add_training_toks(XX,APreToks):-
- retokify(APreToks,PreToks),
+ must_det_l((
+ notrace((retokify(APreToks,PreToks),
  maplist(add_occurs(is_word),PreToks),
  inc_flag(corpus_training),
- ignore(add_ngrams(except_symbols,trigram,3,skip,PreToks)),
- predbltok(PreToks,ReToks0),
- dbltok(oc,ReToks0,ReToks),!,
- XX1 is XX+1,
- append([oc(XX)|ReToks],[oc(XX1)],Grams),!,
- assert_training_v(XX,grams,Grams),
- add_ngrams(except_none,ngram,4,XX,Grams).
+ XX1 is XX+1)),
+ notrace((subst(PreToks,'.',(XX),PreToks1),
+ subst(PreToks1,',',(XX),PreToks2),
+ subst(PreToks2,'?',(XX1),PreToks3),
+ append([(XX)|PreToks3],[(XX1)],ReToks))),!,
+ predbltok(ReToks,Grams),
+ assert_training_v(XX,grams,Grams))),!,
+ forall(between(3,5,N),add_ngrams(except_none,ngram,N,XX,Grams)),!.
 
-add_ngrams(Except,F,N,Loc,Grams):- length(NGram,N),
+add_ngrams(_Except,_F,N,_Loc,Grams):- length(Grams,L),L<N,!.
+add_ngrams(Except,F,N,Loc,Grams):- 
+ length(NGram,N),
  append(NGram,_,Mid),
  forall(append(_,Mid,Grams),add_1ngram(Except,F,Loc,NGram)).
 
 except_none(_).
-add_1ngram(Except,F,Loc,List):- 
- (Except == except_none ; maplist(Except,List)),!,
- (Loc==skip->W=..[F|List];W=..[F,Loc|List]),
- ngram_inc(W,X),
- (Loc==skip-> (( \+ W -> assert(W) ; true)) ; assert(W)),
- (X=0->(inc_flag(corpus_nodes));inc_flag(corpus_node_overlap)),!.
+add_1ngram(Except,_F,_Loc,List):-  Except \== except_none , \+ maplist(Except,List),!.
+add_1ngram(_Except,F,Loc,List):- 
+ (Loc==skip->P=..[F,Was|List];P=..[F,Was,Loc|List]),
+ (Loc==skip->Q=..[F,N|List];Q=..[F,N,Loc|List]),
+  ngram_inc(P),!,
+  (clause(P,true,Ref)
+   -> (erase(Ref),N is Was+1, assertz(Q),inc_flag(corpus_node_overlap))
+    ; (N=1, assertz(Q), inc_flag(corpus_nodes))),!.
 
-add_occurs(F,Tok):- P=..[F,Tok],
-  ignore(( \+ P, assert(P), inc_flag(corpus_unique_toks) )),
-  ngram_inc(P),inc_flag(corpus_total_toks).
+add_occurs(F,Tok):- P=..[F,Was,Tok],Q=..[F,N,Tok],
+  (clause(P,true,Ref)
+   -> (erase(Ref),N is Was+1, assert(Q))
+   ; (N=1, assert(Q), inc_flag(corpus_unique_toks))),
+  inc_flag(corpus_total_toks).
 
 except_symbols(X):- \+ (upcase_atom(X,U),downcase_atom(X,U)).
 
@@ -401,6 +404,8 @@ pretok([S|Grams],[S|ReTok]):- pretok(Grams,ReTok).
 
 predbltok([],[]).
 predbltok(['.'],[]):-!.
+predbltok([X,X|Nxt],O):-number(X),predbltok([X|Nxt],O).
+predbltok([X,Y|Nxt],O):-number(X),number(Y),X<Y,!,predbltok([Y|Nxt],O).
 predbltok([X,X,X|Nxt],O):-!,atomic_list_concat([X,X,X],',',Y),predbltok([Y|Nxt],O).
 predbltok([A,'-',S|Grams],[F|ReTok]):- atomic_list_concat([A,S],'-',F),!, predbltok(Grams,ReTok).
 predbltok([A,'\'',S|Grams],[F|ReTok]):- all_letters(A),all_letters(S), atomic_list_concat([A,S],'\'',F),!, predbltok(Grams,ReTok).
@@ -411,10 +416,10 @@ predbltok(['!'|Grams],ReTok):- predbltok(['.'|Grams],ReTok).
 predbltok([S|Grams],[S|ReTok]):- predbltok(Grams,ReTok).
 
 % dbltok(_,X,X):-!.
-%dbltok(oc,[],[]):-!.
-dbltok(_,[S],[S]):- is_full_tok(S),!.
+dbltok(_,[X],[X]):-number(X),!.
+%dbltok(_,[S],[S]):- is_full_tok(S),!.
 %dbltok(Pre,[S],[PS]):- atoms_join(Pre,S,PS).
-dbltok(Pre,[],[PS]):-!, atoms_join(Pre,oc,PS).
+%dbltok(Pre,[],[PS]):-!, atoms_join(Pre,,PS).
 dbltok(Pre,[S|I],[S|O]):- is_full_tok(S),!,dbltok(Pre,I,O).
 dbltok(Pre,[S|Grams],[PS|ReTok]):- atoms_join(Pre,S,PS), dbltok(S,Grams,ReTok).
 
@@ -426,8 +431,8 @@ undbltok(S,S):- !.
 
 is_full_tok(O):- atom(O),atomic_list_concat([_,_|_],':',O).
 
-atoms_join(A,B,O):- tok_split(O,A,B),!,ngram_inc(tok_split(O,A,B)).
-atoms_join(A,B,O):- atomic_list_concat([A,B],':',O),!,assert(tok_split(O,A,B)),ngram_inc(tok_split(O,A,B)).
+atoms_join(A,B,O):- tok_split(Was,O,A,B),!,N is Was+1,assert(tok_split(N,O,A,B)).
+atoms_join(A,B,O):- atomic_list_concat([A,B],':',O),!,assert(tok_split(1,O,A,B)).
 
 % @TODO use average 
 %as_good(T,X):- is_word(T,X),(Nxt>500->X=0;X is 500-Nxt).
@@ -436,9 +441,9 @@ atoms_join(A,B,O):- atomic_list_concat([A,B],':',O),!,assert(tok_split(O,A,B)),n
 add_blanks(N,S,Slotted):- \+ is_list(S),!,add_blanks(N,[S],Slotted).
 add_blanks(_,[],[]):-!.
 
-add_blanks(N,[A,B|Sent],[O|Slotted]):- tok_split(O,A,B),!,add_blanks(N,Sent,Slotted).
-add_blanks(N,[S|Sent],[O|Slotted]):- \+ \+ tok_split(_,S,_),!, tok_split(O,S,_),add_blanks(N,Sent,Slotted).
-add_blanks(N,[O|Sent],[O|Slotted]):- atom(O), tok_split(O,_,_),!,add_blanks(N,Sent,Slotted).
+add_blanks(N,[A,B|Sent],[O|Slotted]):- tok_split(_Cnt,O,A,B),!,add_blanks(N,Sent,Slotted).
+add_blanks(N,[S|Sent],[O|Slotted]):- \+ \+ tok_split(_,_,S,_),!, tok_split(_Cnt,O,S,_),add_blanks(N,Sent,Slotted).
+add_blanks(N,[O|Sent],[O|Slotted]):- atom(O), tok_split(_,O,_,_),!,add_blanks(N,Sent,Slotted).
 
 add_blanks(N,[len(S)|Sent],Slotted):- integer(S),length(L,S),!,add_blanks(N,Sent,Mid),append(L,Mid,Slotted).
 add_blanks(N,[S|Sent],[A|Slotted]):- string(S),atom_string(A,S),!,add_blanks(N,Sent,Slotted).
@@ -459,8 +464,8 @@ loc_dists(Loc1,Loc2,Loc3, NN):- NN is (abs(Loc1-Loc2) + abs(Loc3-Loc2) + abs(Loc
 
 %:- pllm:ensure_loaded(plm).
 % added for conversations
-ngram(Loc,A,oc(X),B,C,NN):- nonvar(X), ngram(Loc,_,_,A,oc(X),_),ngram(_ULoc,oc(X),B,C,_,NN).
-ngram(Loc,A,B,oc(X),C,NN):- nonvar(X), ngram(Loc,_,A,B,oc(X),_),ngram(_ULoc,oc(X),C,_,_,NN).
+ngram(Loc,A,(X),B,C,NN):- nonvar(X), ngram(Loc,_,_,A,(X),_),ngram(_ULoc,(X),B,C,_,NN).
+ngram(Loc,A,B,(X),C,NN):- nonvar(X), ngram(Loc,_,A,B,(X),_),ngram(_ULoc,(X),C,_,_,NN).
 
 autoc(Sent):- autoc(1,Sent).
 autoc(N,Sent):- 
@@ -498,8 +503,7 @@ rnd_ngram(Loc,A,B,C,D,N):-  G = ngram(Loc,A,B,C,D,N),
 
 :- add_history((good_toks(Key,E),E>20)).
 :- add_history((autoc([ 'like:you',len(200)]))).
-:- add_history((autoc([oc,'like:you',len(200)]))).
-:- add_history((autoc([ 'oc:like', 'like:you',len(200)]))).
+:- add_history((autoc([ ':like', 'like:you',len(200)]))).
 :- add_history((autoc([ 'like',len(200)]))).
 :- add_history((autoc([len(10),like,len(200)]))).
 :- add_history(load_training).

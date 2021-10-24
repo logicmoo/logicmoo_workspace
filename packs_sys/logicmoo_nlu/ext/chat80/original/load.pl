@@ -51,36 +51,55 @@
 :- dynamic( direct_spatial/5 ).
 :- dynamic( done_by_rel/5 ).
 
+multifile_dynamic_discontiguous(P):- multifile(P),dynamic(P),discontiguous(P).
+
+:- multifile_dynamic_discontiguous(chat80/2).
+:- multifile_dynamic_discontiguous(clex_verb80/4).
+:- multifile_dynamic_discontiguous(count_pred/4).
+:- multifile_dynamic_discontiguous(intrans_LF/6).
+:- multifile_dynamic_discontiguous(measure_pred/4).
+:- multifile_dynamic_discontiguous(position_pred/4).
+:- multifile_dynamic_discontiguous(talkdb_talk_db/6).
+:- multifile_dynamic_discontiguous(thing_LF/6).
+:- multifile_dynamic_discontiguous(type_conversion/2).
+:- multifile_dynamic_discontiguous(verb_form_db/5).
+:- multifile_dynamic_discontiguous(verb_type_db/3).
+:- multifile_dynamic_discontiguous(thing_LF_access/6).
+:- multifile_dynamic_discontiguous(ti_subclass/2).
+
+% :- expects_dialect(pfc).
+:-op(600,xfy,--).
+
+:- ensure_loaded(templa).	% semantic dictionary
+
+
 %:- ensure_loaded(newg).		% clone + lex
 :-  load_plus_xg_file('/opt/logicmoo_workspace/packs_sys/logicmoo_nlu/ext/chat80/original/clone.xg').
 :-  load_plus_xg_file('/opt/logicmoo_workspace/packs_sys/logicmoo_nlu/ext/chat80/original/lex.xg').
 
 
-% :- expects_dialect(pfc).
-:-op(600,xfy,--).
+:- ensure_loaded(countries).
+:- ensure_loaded(world0).     	% data base
+:- ensure_loaded(rivers).
+:- ensure_loaded(cities).
+:- ensure_loaded(contain).
+:- ensure_loaded(borders).
 
-:- include(countries).
-:- include(world0).     	% data base
-:- include(rivers).
-:- include(cities).
-:- include(contain).
-:- include(borders).
+%:- ensure_loaded(clotab).	% attachment tables
+:- ensure_loaded(newdict).	% syntactic dictionary
+:- ensure_loaded(slots).	% fits arguments into predicates
+:- ensure_loaded(scopes).	% quantification and scoping
 
-%:- include(clotab).	% attachment tables
-:- include(newdict).	% syntactic dictionary
-:- include(slots).	% fits arguments into predicates
-:- include(scopes).	% quantification and scoping
-
-:- include(templa).	% semantic dictionary
 
 :- use_module(qplan).	% query planning
-:- include(talkr).	% query evaluation
-:- include(ndtabl).	% relation info.
-:- include(readin).	% sentence input
-:- include(ptree).	% print trees
-:- include(aggreg).	% aggregation operators
+:- ensure_loaded(talkr).	% query evaluation
+:- ensure_loaded(ndtabl).	% relation info.
+:- ensure_loaded(readin).	% sentence input
+:- ensure_loaded(ptree).	% print trees
+:- ensure_loaded(aggreg).	% aggregation operators
 
-:- include(newtop).	% top level
+:- ensure_loaded(newtop).	% top level
 
+:- break.
 
 :- fixup_exports.

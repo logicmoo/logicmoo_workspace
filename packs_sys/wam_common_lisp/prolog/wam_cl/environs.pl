@@ -47,9 +47,11 @@ gensym_in_labels(Ctx,Stem,GenSym):- suffix_by_context(Ctx,Stem,SuffixStem),gensy
 get_label_suffix(_Ctx,Suffix):-nb_current('$labels_suffix',Suffix).
 
 
+is_pl_rbtree(X):- compound(X),t(_, _)=X,is_rbtree(X).
+
 show_ctx_info(Ctx):- term_attvars(Ctx,CtxVars),maplist(del_attr_rev2(freeze),CtxVars),show_ctx_info2(Ctx).
 show_ctx_info2(Ctx):- ignore((get_tracker(Ctx,Ctx0),in_comment(show_ctx_info3(Ctx0)))).
-show_ctx_info3(Ctx):- is_rbtree(Ctx),!,forall(rb_in(Key, Value, Ctx),fmt9(Key=Value)).
+show_ctx_info3(Ctx):- is_pl_rbtree(Ctx),!,forall(rb_in(Key, Value, Ctx),fmt9(Key=Value)).
 show_ctx_info3(Ctx):- fmt9(ctx=Ctx).
      
 
@@ -122,7 +124,7 @@ hide_portray_g(var_tracker(_)=_Dict).
 
 wamcl_portray:- fail.
 
-user:portray(X):- wamcl_portray, is_rbtree(X),!,writeq(wamcl_portray_is_rbtree).
+user:portray(X):- wamcl_portray, is_pl_rbtree(X),!,writeq(wamcl_portray_is_rbtree).
 %user:portray(List):- nonvar(List),List=[_|_],member(E,List),hide_portray(E),!,write('[{'),ignore(my_portray_list(List)),write('}]'),!.
 %user:portray(Hide):- hide_portray(Hide),!,write('.').
 user:portray(environment{name:N, tracker:_}):- wamcl_portray, !,writeq(wamcl_portray_e(N)).
@@ -164,16 +166,16 @@ set_parent_child(_TL,ENV):-
 
 get_tracker(ENV,ENV).
 /*
-get_tracker(ENV,Ctx):- is_rbtree(ENV),!,ENV=Ctx.
+get_tracker(ENV,Ctx):- is_pl_rbtree(ENV),!,ENV=Ctx.
 get_tracker(ENV,Ctx):- var(ENV),get_attr(ENV,tracker,Ctx),!.
 get_tracker(ENV,_):- \+ compound(ENV),!,fail.
-get_tracker(ENV,Ctx):- arg(_,ENV,Ctx),is_rbtree(Ctx),!.
+get_tracker(ENV,Ctx):- arg(_,ENV,Ctx),is_pl_rbtree(Ctx),!.
 %get_tracker(ENV,Ctx):- arg(_,ENV,ENV2),get_tracker(ENV2,Ctx),!.
 */
 set_tracker(ENV,ENV):-!.
 /*set_tracker(ENV,Ctx):- var(ENV),!,put_attr(ENV,tracker,Ctx).
 set_tracker(ENV,Ctx):- compound(ENV),!,
-  (((arg(N,ENV,Ctx),is_rbtree(Ctx)))->nb_setarg(N,ENV,Ctx);nb_setarg(1,ENV,Ctx)).
+  (((arg(N,ENV,Ctx),is_pl_rbtree(Ctx)))->nb_setarg(N,ENV,Ctx);nb_setarg(1,ENV,Ctx)).
 */ 
 %is_env(ENV):- get_tracker(ENV,Ctx),!, rb_in(type,ctx(_),Ctx).
 is_env(ENV):- nonvar(ENV),!.

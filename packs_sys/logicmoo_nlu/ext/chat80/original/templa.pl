@@ -21,17 +21,30 @@
 
 :- op(400,xfy,&).
 
+
+/* Measure */
+
+measure_LF(ksqmile,measure&area,[],ksqmiles).
+measure_LF(sqmile,measure&area,[],sqmiles).
+measure_LF(degree,measure&position,[],degrees).
+measure_LF(thousand,measure&population/*citizens*/,[],thousand).
+measure_LF(million,measure&population/*citizens*/,[],million).
+verb_type_db(chat80,border,main+tv).
+symmetric_verb(Spatial,border):- spatial(Spatial).
+
+unit_format(population,_X--million).
+unit_format(population,_X--thousand).
+unit_format(latitude,_X--degrees).
+unit_format(longitude,_X--degrees).
+unit_format(area,_X--ksqmiles).
+
+ordering_pred(spatial,cp(east,of),X1,X2) :- position_pred(spatial,longitude,X1,L1), position_pred(spatial,longitude,X2,L2), exceeds(L2,L1).
+ordering_pred(spatial,cp(north,of),X1,X2) :- position_pred(spatial,latitude,X1,L1), position_pred(spatial,latitude,X2,L2), exceeds(L1,L2).
+ordering_pred(spatial,cp(south,of),X1,X2) :- position_pred(spatial,latitude,X1,L1), position_pred(spatial,latitude,X2,L2), exceeds(L2,L1).
+ordering_pred(spatial,cp(west,of),X1,X2) :- position_pred(spatial,longitude,X1,L1), position_pred(spatial,longitude,X2,L2), exceeds(L1,L2).
+
+
 /* Nouns */
-
-spatial(spatial).
-%:- if(false).
-:- if(true).
-feature_path1(Spatial,CR,Spatial&CR):- spatial(Spatial).
-:- else.
-feature_path1(Spatial,CR,Spatial&geo&CR):- spatial(Spatial).
-:- endif.
-
-bfeature_path(Spatial,CR,CVT):-  feature_path1(Spatial,CR,TYPE), btype_conversion(TYPE,CVT).
 
 property_LF(capital,  SpatialCity,    X,Spatial&geo&country,Y,  
  specific_pred(Spatial,nation_capital,Y,X),[],_,_):- feature_path1(Spatial,city,SpatialCity).
@@ -41,12 +54,6 @@ property_LF(latitude, measure&position,X,Spatial&_,Y, position_pred(Spatial,lati
 property_LF(longitude,measure&position,X,Spatial&_,Y, position_pred(Spatial,longitude,Y,X),[],_,_).
 property_LF(population, measure&population/*citizens*/, X,Spatial&_,Y,    count_pred(Spatial,population/*citizens*/,Y,X),[],_,_).
 
-% thing_LF(geo,Spatial&_,X,ti(geo,X),[],_):- spatial(Spatial).
-
-
-
-thing_LF(Nation,Path,X,LF,Slots,Other):- synonymous_thing(Nation,Country), thing_LF(Country,Path,X,LF,Slots,Other).
-
 synonymous_thing(nation,country).
 
 thing_LF_access(area,measure&area,X,unit_format(area,X),[],_).
@@ -54,14 +61,6 @@ thing_LF_access(latitude,measure&position,X,unit_format(latitude,X),[],_).
 thing_LF_access(longitude,measure&position,X,unit_format(longitude,X),[],_).
 thing_LF_access(population,measure&population/*citizens*/,X,unit_format(population,X),[],_).
 thing_LF_access(continent,Spatial&geo&continent,X,ti(continent,X),[],_):- spatial(Spatial).
-
-thing_LF_access(Noun,Type2,X,P,Slots,_):-
-  thing_LF(Noun,Type1,X,P,Slots,_),
-  btype_conversion(Type1,Type2).
-
-btype_conversion(_,_).
-type_conversion(Type1,Type2):- !, Type1=Type2.
-
 
 thing_LF(Place,  Spatial&_,          X,ti(Place,X),  [],_):- spatial(Spatial), place_lex(Place).
 thing_LF(region, Spatial&_,          X,ti(region,X), [],_):- spatial(Spatial).
@@ -71,12 +70,52 @@ thing_LF(OceanOrSea,Path,X,ti(OceanOrSea,X),Nil,Any):- ti_subclass(OceanOrSea,Se
    thing_LF(Seamass,Path,X,ti(Seamass,X),Nil,Any).
 
 thing_LF(seamass,Spatial&geo&seamass,X,ti(seamass,X),[],_):- spatial(Spatial).
-
 thing_LF(person,_,X,ti(person,X),[],_).
-
 thing_LF(capital,SpatialCity,X,ti(capital_city,X),[],_):- spatial(Spatial), bfeature_path(Spatial,city,SpatialCity).
 thing_LF(city,SpatialCity,X,ti(city,X),[],_):- spatial(Spatial), bfeature_path(Spatial,city,SpatialCity).
 thing_LF(river,SpatialRiver,X,ti(river,X),[],_):- spatial(Spatial), bfeature_path(Spatial,river,SpatialRiver).
+name_template_lf0(X,Spatial&circle_of_latitude) :-  ti(circle_of_latitude,X), spatial(Spatial).
+name_template_lf0(X,SpatialCity) :- ti(city,X), spatial(Spatial), bfeature_path(Spatial,city,SpatialCity).
+name_template_lf0(X,Spatial&geo&continent) :- spatial(Spatial), ti(continent,X).
+name_template_lf0(X,Spatial&geo&country) :- spatial(Spatial), ti(country,X).
+name_template_lf0(X,Spatial&_) :- spatial(Spatial), ti(region,X).
+name_template_lf0(X,SpatialRiver) :- ti(river,X), spatial(Spatial), bfeature_path(Spatial,river,SpatialRiver).
+name_template_lf0(X,Spatial&geo&seamass) :- spatial(Spatial), ti(seamass,X).
+trans_LF(contain,Spatial&_,X,Spatial&_,Y, trans_pred(Spatial,contain,X,Y),[],_,_).
+trans_LF(govern,SpatialCity,X,Spatial&geo&country,Y,specific_pred(Spatial,nation_capital,Y,X),[],_,_):-
+  spatial(Spatial), bfeature_path(Spatial,city,SpatialCity).
+
+/* Prepositions */
+
+attribute_LF(large,Spatial&_,X,measure&area,Y,measure_pred(Spatial,area,X,Y)).
+attribute_LF(small,Spatial&_,X,measure&area,Y,measure_pred(Spatial,area,X,Y)).
+attribute_LF(great,measure&Type,X,measure&Type,Y,exceeds(X,Y)).
+attribute_LF(populous,Spatial&_,X,measure&population/*citizens*/,Y,count_pred(Spatial,population/*citizens*/,Y,X)).
+
+adjunction_LF(in,Spatial&_-X,Spatial&_-Y,trans_pred(Spatial,contain,Y,X)).
+adjunction_LF(cp(East,Of),Spatial&_-X,Spatial&_-Y,ordering_pred(Spatial,cp(East,Of),X,Y)).
+/*
+adjunction_LF(cp(east,of),Spatial&_-X,Spatial&_-Y,ordering_pred(Spatial,cp(east,of),X,Y)).
+adjunction_LF(cp(west,of),Spatial&_-X,Spatial&_-Y,ordering_pred(Spatial,cp(west,of),X,Y)).
+adjunction_LF(cp(north,of),Spatial&_-X,Spatial&_-Y,ordering_pred(Spatial,cp(north,of),X,Y)).
+adjunction_LF(cp(south,of),Spatial&_-X,Spatial&_-Y,ordering_pred(Spatial,cp(south,of),X,Y)).
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+/* Proper nouns */
+
+name_template_LF(X,Type2):- name_template_lf0(X,Type1), type_conversion(Type1,Type2).
+
 
 
 aggr_noun(average,_,_,average).
@@ -85,17 +124,31 @@ aggr_noun(total,_,_,total).
 
 meta_noun_LF(number,of,_,V,Spatial&_,X,P,numberof(X,P,V)):- spatial(Spatial).
 
-/* Proper nouns */
+spatial(spatial).
+%:- if(false).
+:- if(true).
+feature_path1(Spatial,CR,Spatial&CR):- spatial(Spatial).
+:- else.
+feature_path1(Spatial,CR,Spatial&geo&CR):- spatial(Spatial).
+:- endif.
 
-name_template_LF(X,Type2):- name_template_lf0(X,Type1), type_conversion(Type1,Type2).
+%bfeature_path(Spatial,CR,CVT):-  feature_path1(Spatial,CR,TYPE), btype_conversion(TYPE,CVT).
+bfeature_path(Spatial,_CR,_&_):-spatial(Spatial).
 
-name_template_lf0(X,Spatial&circle) :-  ti(circle_of_latitude,X), spatial(Spatial).
-name_template_lf0(X,SpatialCity) :- ti(city,X), spatial(Spatial), bfeature_path(Spatial,city,SpatialCity).
-name_template_lf0(X,Spatial&geo&continent) :- spatial(Spatial), ti(continent,X).
-name_template_lf0(X,Spatial&geo&country) :- spatial(Spatial), ti(country,X).
-name_template_lf0(X,Spatial&_) :- spatial(Spatial), ti(region,X).
-name_template_lf0(X,SpatialRiver) :- ti(river,X), spatial(Spatial), bfeature_path(Spatial,river,SpatialRiver).
-name_template_lf0(X,Spatial&geo&seamass) :- spatial(Spatial), ti(seamass,X).
+
+% thing_LF(geo,Spatial&_,X,ti(geo,X),[],_):- spatial(Spatial).
+
+thing_LF(Nation,Path,X,LF,Slots,Other):- synonymous_thing(Nation,Country), thing_LF(Country,Path,X,LF,Slots,Other).
+
+
+thing_LF_access(Noun,Type2,X,P,Slots,_):-
+  thing_LF(Noun,Type1,X,P,Slots,_),
+  btype_conversion(Type1,Type2).
+
+btype_conversion(_,_).
+type_conversion(Type1,Type2):- !, Type1=Type2.
+
+
 
 /* Verbs */
 
@@ -119,8 +172,6 @@ trans_LF(Border,Spatial&Geo&_,X,Spatial&Geo&_,Y,symmetric_pred(Spatial,Border,X,
    verb_type_lex(Border,main+tv),
    symmetric_verb(Spatial, Border).
 
-verb_type_db(chat80,border,main+tv).
-symmetric_verb(Spatial,border):- spatial(Spatial).
 
 %use_lexicon_80(_):- !, true.
 use_lexicon_80(chat80).
@@ -168,16 +219,7 @@ trans_LF(Assign,feature&_,X,dbase_t(Assign,X,Y), [slot(prep(To),feature&_,Y,_,fr
 
 %trans_LF(Look,feature&_,X,dbase_t(Look,X,Y), [slot(prep(At),feature&_,Y,_,free)],_):- (tv_infpl(S,S);tv_finsg(S,S)), atomic_list_concat([Look,At],'-',S).
 
-
-trans_LF(contain,Spatial&_,X,Spatial&_,Y, trans_pred(Spatial,contain,X,Y),[],_,_).
-trans_LF(govern,SpatialCity,X,Spatial&geo&country,Y,specific_pred(Spatial,nation_capital,Y,X),[],_,_):-
-  spatial(Spatial),
-  bfeature_path(Spatial,city,SpatialCity).
-
 trans_LF(exceed,measure&Type,X,measure&Type,Y,exceeds(X,Y),[],_,_).
-
-
-
 
 
 /* Adjectives */
@@ -187,34 +229,12 @@ restriction_LF(African,Spatial&_,X,ti(African,X)):- adj_lex(African,restr), spat
 %restriction_LF(asian,Spatial&_,X,ti(asian,X)).
 %restriction_LF(european,Spatial&_,X,ti(european,X)).
 
-attribute_LF(large,Spatial&_,X,measure&area,Y,measure_pred(Spatial,area,X,Y)).
-attribute_LF(small,Spatial&_,X,measure&area,Y,measure_pred(Spatial,area,X,Y)).
-attribute_LF(great,measure&Type,X,measure&Type,Y,exceeds(X,Y)).
-attribute_LF(populous,Spatial&_,X,measure&population/*citizens*/,Y,count_pred(Spatial,population/*citizens*/,Y,X)).
-
 aggr_adj(average,_,_,average).
 aggr_adj(total,_,_,total).
 aggr_adj(minimum,_,_,minimum).
 aggr_adj(maximum,_,_,maximum).
 
-/* Prepositions */
-
-adjunction_LF(in,Spatial&_-X,Spatial&_-Y,trans_pred(Spatial,contain,Y,X)).
-adjunction_LF(cp(East,Of),Spatial&_-X,Spatial&_-Y,ordering_pred(Spatial,cp(East,Of),X,Y)).
-/*
-adjunction_LF(cp(east,of),Spatial&_-X,Spatial&_-Y,ordering_pred(Spatial,cp(east,of),X,Y)).
-adjunction_LF(cp(west,of),Spatial&_-X,Spatial&_-Y,ordering_pred(Spatial,cp(west,of),X,Y)).
-adjunction_LF(cp(north,of),Spatial&_-X,Spatial&_-Y,ordering_pred(Spatial,cp(north,of),X,Y)).
-adjunction_LF(cp(south,of),Spatial&_-X,Spatial&_-Y,ordering_pred(Spatial,cp(south,of),X,Y)).
-*/
-
 /* Measure */
-
-measure_LF(ksqmile,measure&area,[],ksqmiles).
-measure_LF(sqmile,measure&area,[],sqmiles).
-measure_LF(degree,measure&position,[],degrees).
-measure_LF(thousand,measure&population/*citizens*/,[],thousand).
-measure_LF(million,measure&population/*citizens*/,[],million).
 
 units(large,measure&_).
 units(small,measure&_).
@@ -227,3 +247,279 @@ chat_sign(great,+).
 
 comparator_LF(proportion,_,V,[],proportion(V)).
 comparator_LF(percentage,_,V,[],proportion(V)).
+
+
+
+
+:- style_check(-discontiguous).
+
+:- discontiguous unit_format/2. 
+
+
+% Interface.
+% ---------
+
+database801(aggregate80(X,Y,Z)) :- aggregate80(X,Y,Z).
+database801(one_of(X,Y)) :- one_of(X,Y).
+database801(ratio(X,Y,Z)) :- ratio(X,Y,Z).
+database801(card(X,Y)) :- card(X,Y).
+%database80(circle_of_latitude(X)) :- circle_of_latitude(X).
+%database80(continent(X)) :- continent(X).
+database801(exceeds(X,Y)) :- exceeds(X,Y).
+database801(ti(Place,X)) :- ti(Place,X).
+database801(X=Y) :- X=Y.
+%database80(person(X)) :- person(X).	% JW: person is not defined
+
+
+database801(unit_format(P,X)) :- unit_format(P,X).  % square miles
+database801(measure_pred(Type,P,X,Y)) :- measure_pred(Type,P,X,Y). % area of
+database801(count_pred(Type,P,X,Y)) :- count_pred(Type,P,X,Y). % population of 
+database801(position_pred(Type,P,X,Y)) :- position_pred(Type,P,X,Y). % latitude of
+database801(ordering_pred(Type,P,X,Y)) :- ordering_pred(Type,P,X,Y). % south of
+database801(symmetric_pred(Type,P,X,Y)) :- symmetric_pred(Type,P,X,Y). % border
+database801(specific_pred(Type,P,X,Y)) :- specific_pred(Type,P,X,Y). % capital 
+database801(trans_pred(Type,P,X,Y)) :- trans_pred(Type,P,X,Y). % contain 
+
+
+%database80(path_pred(begins(Flow),rises,river,X,Y)) :- path_pred(begins(Flow),rises,river,X,Y).
+%database80(path_pred(ends(Flow),drains,river,X,Y)) :- path_pred(ends(Flow),drains,river,X,Y).
+database801(path_pred(PathSystemPart,ObjType,X,Y)) :- path_pred(PathSystemPart,ObjType,X,Y).
+database801(path_pred_linkage(DirectPathSystem,ObjType,X,Y,Z)) :- path_pred_linkage(DirectPathSystem,ObjType,X,Y,Z).
+
+database80((A,B)):- nonvar(A),!,database80(A),database80(B).
+%database80(G):- \+ \+ clause(database801(G),G), !, database801(G).
+database80(G):-  must(current_predicate(_,G)), call(G).
+
+
+:- style_check(+singleton).
+
+
+measure_pred(Spatial,Area,Where,Total) :- not_where(Where), 
+ % ti(continent,Where),
+ setof(Value:[Country],
+               []^(database80(measure_pred(Spatial, Area, Country, Value)), 
+               %database80(ti(country, Country)), 
+               database80(trans_pred(Spatial,contain,Where,Country))),
+               Setof),
+         database80(aggregate80(total, Setof, Total)).
+
+
+%exceeds(X--U,Y--U) :- !, X > Y.
+%exceeds(X1--U1,X2--U2) :- ratio(U1,U2,M1,M2), X1*M1 > X2*M2.
+exceeds(X,Y):- term_variables(X-Y,Vars),freeze_until(Vars,exceeds0(X,Y)),!.
+
+freeze_until([],Goal):-!, term_variables(Goal, Vars),(Vars==[] -> Goal ; freeze_until(Vars,Goal)).
+freeze_until([V|Vars],Goal):- freeze(V,freeze_until(Vars,Goal)),!.
+
+exceeds0(X--U,Y--U) :- !, X > Y.
+exceeds0(X1--U1,X2--U2) :- once((ratio(U1,U2,M1,M2), X1*M1 > X2*M2)).
+
+ratio(thousand,million,1,1000).
+ratio(million,thousand,1000,1).
+
+ratio(ksqmiles,sqmiles,1000,1).
+ratio(sqmiles,ksqmiles,1,1000).
+
+
+measure_pred(Spatial,Heads,C,Total):- is_list(C),maplist(measure_pred(Spatial,Heads),C,Setof), u_total(Setof, Total).
+
+
+ti(NewType,X) :- agentitive_symmetric_type(Pred,SuperType), fail,
+  % dont loop
+  NewType\==SuperType, NewType\==SuperType, 
+  % get the type names
+  ti(SuperType,NewType), 
+  % find the instances 
+  symmetric_pred(spatial,Pred,NewType,X),
+  % dont find instances already of the super type
+  \+ ti(SuperType,X).
+
+ti(SC,X) :- ti_subclass(C,SC),ti(C,X).
+
+
+
+% if X is contained in africa then X is african.
+ti(An,X) :- agentitive_trans(Contains,Af,An), (trans_pred(spatial,Contains,Af,X);Af=X).
+
+agentitive_trans(Contains,Af,An):- agentitive_trans_80(Contains,Af,An).
+
+
+
+% NLU Logical Forms
+% ------------------
+
+% X rises in Begin
+% % chat80("where does the rhine rise?") -> [switzerland]
+% chat80("the rhine rises in switzerland ?      ").
+% @TODO: X begins from Begin
+intrans_LF(Start,SpatialType,X, LF,
+   [slot(prep(In),Spatial&_,Begin,_,free)],_):- 
+ type_begins_thru_ends(Type, PathSystem, Start, _Continue, _Stop),
+ bfeature_path(Spatial,Type,SpatialType),member(In,[in,from,at]),
+ LF = path_pred(begins(PathSystem),Type,X,Begin).
+
+% X drains into End
+intrans_LF(Stop,SpatialType,X, LF, 
+   [slot(prep(Into),Spatial&_,End,_,free)],_):- 
+ type_begins_thru_ends(Type, PathSystem, _Start, _Continue, Stop),
+ bfeature_path(Spatial,Type,SpatialType),member(Into,[into,in,to,at]),
+ LF = path_pred(ends(PathSystem),Type,X,End).
+
+
+intrans_LF(Continue,SpatialType,X,LF,
+   [slot(prep(Into),Spatial&_,Dest,_,free),
+    slot(prep(From),Spatial&_,Origin,_,free)],_):- 
+ type_begins_thru_ends(Type, PathSystem, _Start, Continue, _Stop),
+ bfeature_path(Spatial,Type,SpatialType),
+ member(Into,[into,to,through,in,at]),
+ member(From,[from,through,in,at]), 
+ dif(From,Into),
+ LF = path_pred_linkage(direct(PathSystem),Type,X,Origin,Dest).
+
+% X flows through Begin
+/*
+intrans_LF(Continue,SpatialType,X,LF,
+   [slot(prep(Through),Spatial&_,Link,_,free)],_):- 
+ type_begins_thru_ends(Type, PathSystem, _Start, Continue, _Stop),
+ bfeature_path(Spatial,Type,SpatialType),member(Through,[through,in]),
+ LF = path_pred(thru_from(PathSystem),Type,X,Link).
+*/
+
+% Logical Rules
+% ------------------
+ti(Type,Inst) :- 
+ type_specific_bte(Type, PathSystem,_Start,_Continue, _Stop),
+ path_nodes(PathSystem,Type,Inst,_L).
+
+path_pred(begins(PathSystem),Type,R,C) :-
+ %type_specific_bte(Type, PathSystem, Start,_Continue,_Stop),
+ path_nodes(PathSystem,Type,R,L), last_node(L,C).
+
+path_pred(ends(PathSystem),Type,R,S) :- 
+ %type_specific_bte(Type, PathSystem,_Start, _Continue, Stop),
+ path_nodes(PathSystem,Type,R,L), first_node(L,S).
+
+path_pred(thru_from(PathSystem),Type,R,C) :-
+ %type_specific_bte(Type, PathSystem,_Start, _Continue, _Stop),
+ path_pred_linkage(direct(PathSystem),Type,R,C,_).
+
+path_pred_linkage(direct(PathSystem),Type,R,C1,C2) :- 
+ %type_specific_bte(Type, PathSystem,_Start, _PathSystem, _Stop),
+ path_nodes(PathSystem,Type,R,L), node_pairs_direct(L,C2,C1).
+
+path_pred_linkage(indirect(PathSystem),Type,R,C1,C2) :- 
+ %type_specific_bte(Type, PathSystem,_Start, _PathSystem, _Stop),
+ path_nodes(PathSystem,Type,R,L), node_pairs_indirect(L,C2,C1).
+
+% Logical Rule Helpers
+% ------------------
+first_node([X|_],X).
+
+last_node([X],X).
+last_node([_|L],X) :- last_node(L,X).
+
+node_pairs_direct([X1,X2|_],X1,X2).
+node_pairs_direct([_|L],X1,X2) :- node_pairs_direct(L,X1,X2).
+
+node_pairs_indirect(L,C2,C1):- 
+  node_pairs_direct(L,C2,CM),
+  (CM=C1;node_pairs_indirect(L,CM,C1)).
+
+verb_type_db(chat80,LessSpecific,main+iv):-
+  less_specific(_, LessSpecific).
+
+
+
+less_specific(Rise,  begin):-    type_specific_bte(_Type, _PathSystem,Rise,_,_).
+less_specific(begin, start).
+less_specific(Flow,  link):-     type_specific_bte(_Type, _PathSystem,_,Flow,_).
+less_specific(link,  continue).
+less_specific(Drain, end):-      type_specific_bte(_Type, _PathSystem,_,_,Drain).
+less_specific(end,   stop).
+
+
+type_begins_thru_ends(Type, PathSystem, Begin, Continue, Stop):- 
+  type_specific_bte(Type, PathSystem, Rise, Flow, Drain),
+  maybe_less_specific(Rise,  Begin),
+  maybe_less_specific(Flow,  Continue),
+  maybe_less_specific(Drain, Stop).
+
+maybe_less_specific(Drain, Drain).
+maybe_less_specific(Drain, Stop):-
+ less_specific(Drain, End),
+ maybe_less_specific(End, Stop).
+
+
+
+
+symmetric_pred(Spatial,B,X,C):- nonvar(X),nonvar(C),!,symmetric_direct(Spatial,B,X,C),!.
+symmetric_pred(Spatial,B,X,C):- symmetric_direct(Spatial,B,X,C).
+
+symmetric_direct(Spatial,B,X,C) :- direct_ss(Spatial,B,X,C).
+symmetric_direct(Spatial,B,X,C) :- direct_ss(Spatial,B,C,X).
+
+add_ss(Spatial,B,X,C):- X @> C, !, add_ss(Spatial,B,C,X).
+add_ss(Spatial,B,X,C):- direct_ss(Spatial,B, X,C), !.
+add_ss(Spatial,B,X,C):- assertz(direct_ss(Spatial,B, X,C)), !.
+%:- add_ss(spatial,border,Albania,Greece).
+
+:- abolish(tmp80:trans_rel_cache_creating,2).
+:- abolish(tmp80:trans_rel_cache_created,2).
+:- abolish(tmp80:trans_rel_cache_insts,3).
+:- abolish(tmp80:trans_rel_cache,4).
+
+:- dynamic(tmp80:trans_rel_cache_creating/2).
+:- dynamic(tmp80:trans_rel_cache_created/2).
+:- dynamic(tmp80:trans_rel_cache_insts/3).
+:- dynamic(tmp80:trans_rel_cache/4).
+
+trans_rel(Spatial,Contain,X,Y):- \+ compound(Contain),!,
+  trace_or_throw(wrong(trans_rel(Spatial,Contain,X,Y))),
+  trans_rel(=,trans_direct(Spatial,Contain),X,Y).
+
+trans_rel(P1,P2,X,Y) :- trans_rel_cache_create(P1,P2),!, tmp80:trans_rel_cache(P1,P2,X,Y).
+trans_rel(P1,P2,X,Y):- trans_rel_nc(P1,P2,X,Y).
+
+trans_rel_nc(P1,P2,X,Y) :- var(X),!, no_repeats(X, trans_rel_rl(P1,P2,X,Y)).
+trans_rel_nc(P1,P2,X,Y) :- nonvar(Y), !, trans_rel_lr(P1,P2,X,Y), !.
+trans_rel_nc(P1,P2,X,Y) :- no_repeats(Y, trans_rel_lr(P1,P2,X,Y)).
+
+trans_rel_lr(P1,P2,X,Y) :- call(P2,X,W), ( call(P1,W,Y) ; trans_rel_lr(P1,P2,W,Y) ).
+trans_rel_rl(P1,P2,X,Y) :- call(P2,W,Y), ( call(P1,W,X) ; trans_rel_rl(P1,P2,X,W) ).
+
+
+
+trans_rel_cache_create(P1,P2):- must_be(ground,(P1,P2)),
+                                tmp80:trans_rel_cache_created(P1,P2),!.
+trans_rel_cache_create(P1,P2):- tmp80:trans_rel_cache_creating(P1,P2),dmsg(looped(trans_rel_cache_create(P1,P2))),fail.
+trans_rel_cache_create(P1,P2):-
+  asserta((tmp80:trans_rel_cache_creating(P1,P2)),Ref),
+  dmsg(trans_rel_cache_creating(P1,P2)),
+  forall(call(P2,XX,YY),
+     (assert_if_new(tmp80:trans_rel_cache_insts(P1,P2,XX)),
+      assert_if_new(tmp80:trans_rel_cache_insts(P1,P2,YY)))),
+  forall(tmp80:trans_rel_cache_insts(P1,P2,E),
+        (forall(trans_rel_nc(P1,P2,E,Y),assert_if_new(tmp80:trans_rel_cache(P1,P2,E,Y))),
+         forall(trans_rel_nc(P1,P2,Y,E),assert_if_new(tmp80:trans_rel_cache(P1,P2,Y,E))))),
+  dmsg(trans_rel_cache_created(P1,P2)),
+  asserta((tmp80:trans_rel_cache_created(P1,P2))),!,
+  erase(Ref),
+  %listing(tmp80:trans_rel_cache_insts(P1,P2,_Instances)),
+  %listing(tmp80:trans_rel_cache(P1,P2,_,_)),
+  !.
+
+
+%contain(X,Y) :- trans_direct(spatial,contain,X,Y).
+%contain(X,Y) :- trans_direct(spatial,contain,X,W), contain(W,Y).
+
+
+trans_pred(Spatial,Contain,X,Y) :- trans_rel(=,trans_direct(Spatial,Contain),X,Y).
+%contain(X,X).
+
+
+:- multifile(trans_direct/4).
+:- dynamic(trans_direct/4).
+
+
+count_pred(Spatial,Heads,C,Total):- is_list(C),maplist(count_pred(Spatial,Heads),C,Setof), u_total(Setof, Total).
+

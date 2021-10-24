@@ -1727,7 +1727,7 @@ one_must(MCall,OnFail):-  call(MCall) *->  true ; call(OnFail).
 
 %must_det_u(Goal):- !,maybe_notrace(Goal),!.
 must_det_u(Goal):- must(Goal),!.
-%must_det_u(Goal):- Goal->true;ignore(rtrace(Goal)).
+must_det_u(Goal):- Goal->true;(ignore(rtrace(Goal)),break).
 
 
 %=
@@ -1769,14 +1769,17 @@ is_call_var(Goal):- strip_module(Goal,_,P),var(P).
 
 call_each(Pred,Goal):- call_each_det(Pred,Goal).
 
-call_each_det(Pred,Goal):- (is_call_var(Pred);is_call_var(Goal)),!,trace_or_throw(var_call_each(Pred,Goal)),!.
+call_each_det(Pred,Goal):- notrace(is_call_var(Pred);is_call_var(Goal)),!,trace_or_throw(var_call_each(Pred,Goal)),!.
 call_each_det(Pred,[Goal]):- !, dmsg(trace_syntax(call_each_det(Pred,[Goal]))),!,call_each_det(Pred,Goal).
 call_each_det(Pred,[Goal|List]):- !, dmsg(trace_syntax(call_each_det(Pred,[Goal|List]))), !, call_each_det(Pred,Goal),!,call_each_det(Pred,List).
 % call_each_det(Pred,Goal1):-tlbugger:skip_bugger,!,p_call(Pred,Goal1).
+call_each_det(Pred,M:(Goal1,!)):-!, call_each_det(Pred,M:Goal1),!.
 call_each_det(Pred,M:(Goal1,!,Goal2)):-!, call_each_det(Pred,M:Goal1),!,call_each_det(Pred,M:Goal2).
 call_each_det(Pred,M:(Goal1,Goal2)):-!, call_each_det(Pred,M:Goal1),!,call_each_det(Pred,M:Goal2).
+call_each_det(Pred,(Goal1,!)):-!, call_each_det(Pred,Goal1),!.
 call_each_det(Pred,(Goal1,!,Goal2)):- !, call_each_det(Pred,Goal1),!,call_each_det(Pred,Goal2).
 call_each_det(Pred,(Goal1,Goal2)):- !, call_each_det(Pred,Goal1),!,call_each_det(Pred,Goal2).
+call_each_det(Pred,forall(Goal1,Goal2)):- !, forall(Goal1,call_each_det(Pred,Goal2)).
 call_each_det(Pred,Goal):- p_call(Pred,Goal),!.
 
 % p_call(Pred,_:M:Goal):-!,p_call(Pred,M:Goal).

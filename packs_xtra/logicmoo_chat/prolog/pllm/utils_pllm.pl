@@ -14,7 +14,8 @@ debugln_xfrm('$'(E),S):- get_flag(E,Insts),!,sformat(S,"~w=~:d~n",[E,Insts]).
 debugln_xfrm(N=V,S):- integer(V),!,sformat(S,"~n\t~w\t= ~:d ",[N,V]).
 debugln_xfrm(N=V,S):- !,sformat(S,"~n\t~w\t= ~w ",[N,V]).
 debugln_xfrm([N],S):- !, debugln_xfrm(N,S).
-debugln_xfrm(C,S):- tok_split(C,S,_),!.
+debugln_xfrm(C,S):- if_defined(tok_split(_,C,S,_)),!.
+debugln_xfrm(C,S):- if_defined(tok_split(C,S,_)),!.
 debugln_xfrm(C,S):- compound(C),!,sformat(S,"~p",[C]).
 %debugln_xfrm(C,S):- compound(C),compound_name_arguments(C,N,A),debugln_xfrm([N|A],S).
 debugln_xfrm(nl,'\n'):-!.
