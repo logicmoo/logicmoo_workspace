@@ -83,7 +83,7 @@ multifile_dynamic_discontiguous(P):- multifile(P),dynamic(P),discontiguous(P).
 :-  load_plus_xg_file('/opt/logicmoo_workspace/packs_sys/logicmoo_nlu/ext/chat80/original/lex.xg').
 
 
-:- ensure_loaded(countries).
+:- ensure_loaded(geography/load_kb).
 :- ensure_loaded(world0).     	% data base
 :- ensure_loaded(rivers).
 :- ensure_loaded(cities).

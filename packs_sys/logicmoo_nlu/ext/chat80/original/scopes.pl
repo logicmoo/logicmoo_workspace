@@ -26,6 +26,9 @@
 clausify80(question80(V0, P),OUT) :- 
   clausify80_qa(V0,P,V,B),!,
   OUT = (answer80(V):-B).
+clausify80(assertion80(P),OUT) :- 
+  clausify80_qa([],P,V,B),!,
+  OUT = (answer80(V):-B).
 clausify80(P,OUT) :- 
   clausify80_qa([],P,V,B),!,
   OUT = (run80(V):-B).

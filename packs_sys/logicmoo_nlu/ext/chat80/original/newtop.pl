@@ -179,10 +179,10 @@ answer80((answer80(X):-E),S) :- seto(X,E,S).
 
 check_answer(_Sentence,A,B,true) :- close_answer(A,B),!.
 check_answer(Sentence,A,B,'wrong answer'):-
-  pprint_ecp_cmt(red,check_answer(Sentence,A,B,'wrong answer')),
   dumpST,
-  nop((tracing ~= on,
-  once(process(debug,Sentence)))).
+  pprint_ecp_cmt(red,check_answer(Sentence,A,B,'wrong answer')),  
+  tracing ~= on,
+  once(process(debug,Sentence)).
 
 close_answer(A,A).
 close_answer(A,B):- number(A),number(B),!, X is integer(A*100),Y is integer(A*100),!, X=Y.

@@ -22,6 +22,7 @@
 :- op(400,xfy,&).
 
 
+
 like_type(geo,circle_of_latitude,circle_of_latitude).
 like_type(geo,seamass,seamass).
 like_type(geo,continent,continent).
