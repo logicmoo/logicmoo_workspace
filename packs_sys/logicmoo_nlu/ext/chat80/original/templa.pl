@@ -22,51 +22,13 @@
 :- op(400,xfy,&).
 
 
-/* Measure */
 
-measure_pred(city,size,population,units).
-measure_pred(country,size,area,sqmiles).
-measure_pred(region,x,latitude,degrees).
-measure_pred(region,y,longitude,degrees).
+type_measure_pred(city,size,population,units).
+type_measure_pred(city,size,citizens,units).
+type_measure_pred(country,size,area,ksqmiles).
+type_measure_pred(region,position(x),longitude,degrees).
+type_measure_pred(region,position(y),latitude,degrees).
 
-measure_LF(ksqmile,measure&Size,[],ksqmiles):- measure_LF(sqmile,measure&Size,[],sqmiles).
-
-measure_LF(sqmile,measure&area,[],sqmiles).
-measure_LF(degree,measure&position,[],degrees).
-measure_LF(thousand,measure&population/*citizens*/,[],thousand).
-measure_LF(million,measure&population/*citizens*/,[],million).
-
-verb_type_db(chat80,border,main+tv).
-symmetric_verb(Spatial,border):- spatial(Spatial).
-
-unit_format(population,_X--million).
-unit_format(population,_X--thousand).
-unit_format(latitude,_X--degrees).
-unit_format(longitude,_X--degrees).
-unit_format(area,_X--ksqmiles).
-
-ordering_pred(spatial,cp(east,of),X1,X2) :- position_pred(spatial,longitude,X1,L1), position_pred(spatial,longitude,X2,L2), exceeds(L2,L1).
-ordering_pred(spatial,cp(north,of),X1,X2) :- position_pred(spatial,latitude,X1,L1), position_pred(spatial,latitude,X2,L2), exceeds(L1,L2).
-ordering_pred(spatial,cp(south,of),X1,X2) :- position_pred(spatial,latitude,X1,L1), position_pred(spatial,latitude,X2,L2), exceeds(L2,L1).
-ordering_pred(spatial,cp(west,of),X1,X2) :- position_pred(spatial,longitude,X1,L1), position_pred(spatial,longitude,X2,L2), exceeds(L1,L2).
-
-
-/* Nouns */
-
-property_LF(capital,  SpatialCity,    X,Spatial&geo&country,Y,  
- specific_pred(Spatial,nation_capital,Y,X),[],_,_):- feature_path1(Spatial,city,SpatialCity).
-
-property_LF(area,     measure&area,    X,Spatial&_,Y,  measure_pred(Spatial,area,Y,X),[],_,_).
-property_LF(latitude, measure&position,X,Spatial&_,Y, position_pred(Spatial,latitude,Y,X),[],_,_).
-property_LF(longitude,measure&position,X,Spatial&_,Y, position_pred(Spatial,longitude,Y,X),[],_,_).
-property_LF(population, measure&population/*citizens*/, X,Spatial&_,Y,    count_pred(Spatial,population/*citizens*/,Y,X),[],_,_).
-
-synonymous_thing(nation,country).
-
-thing_LF_access(area,measure&area,X,unit_format(area,X),[],_).
-thing_LF_access(latitude,measure&position,X,unit_format(latitude,X),[],_).
-thing_LF_access(longitude,measure&position,X,unit_format(longitude,X),[],_).
-thing_LF_access(population,measure&population/*citizens*/,X,unit_format(population,X),[],_).
 thing_LF_access(continent,Spatial&geo&continent,X,ti(continent,X),[],_):- spatial(Spatial).
 
 thing_LF(Place,  Spatial&_,          X,ti(Place,X),  [],_):- spatial(Spatial), place_lex(Place).
@@ -75,6 +37,9 @@ thing_LF(country,Spatial&geo&country,X,ti(country,X),[],_):- spatial(Spatial).
 
 thing_LF(OceanOrSea,Path,X,ti(OceanOrSea,X),Nil,Any):- ti_subclass(OceanOrSea,Seamass), Seamass=seamass,
    thing_LF(Seamass,Path,X,ti(Seamass,X),Nil,Any).
+
+
+
 
 thing_LF(seamass,Spatial&geo&seamass,X,ti(seamass,X),[],_):- spatial(Spatial).
 thing_LF(person,_,X,ti(person,X),[],_).
@@ -88,16 +53,98 @@ name_template_lf0(X,Spatial&geo&country) :- spatial(Spatial), ti(country,X).
 name_template_lf0(X,Spatial&_) :- spatial(Spatial), ti(region,X).
 name_template_lf0(X,SpatialRiver) :- ti(river,X), spatial(Spatial), bfeature_path(Spatial,river,SpatialRiver).
 name_template_lf0(X,Spatial&geo&seamass) :- spatial(Spatial), ti(seamass,X).
+
 trans_LF(contain,Spatial&_,X,Spatial&_,Y, trans_pred(Spatial,contain,X,Y),[],_,_).
-trans_LF(govern,SpatialCity,X,Spatial&geo&country,Y,specific_pred(Spatial,nation_capital,Y,X),[],_,_):-
-  spatial(Spatial), bfeature_path(Spatial,city,SpatialCity).
+
+trans_LF(Govern,SpatialCity,X,Spatial&Geo&Country,Y,specific_pred(Spatial,Nation_capital,Y,X),[],_,_):-
+  unique_of_obj(Geo,Spatial,Country,Govern,_Capital,City,_Capital_city,Nation_capital),
+  spatial(Spatial), bfeature_path(Spatial,City,SpatialCity).
+
+
+like_type(geo,circle,circle).
+like_type(geo,circle,circle_of_latitude).
+like_type(geo,seamass,seamass).
+like_type(geo,continent,continent).
+like_type(geo,region,region).
+like_type(geo,country,country).
+%special_type(capital,city,capital_city).
+like_type(geo,city,city).
+like_type(geo,river,River).
+
+unique_of_obj(geo,spatial,country,govern,capital,city,capital_city,nation_capital).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+attribute_LF(populous,Spatial&_,X,measure&population/*citizens*/,Y,count_pred(Spatial,population/*citizens*/,Y,X)).
+
+attribute_LF(large,Spatial&_,X,measure&Area,Y,measure_pred(Spatial,Area,X,Y)):- type_measure_pred(_,size,Area,_).
+attribute_LF(small,Spatial&_,X,measure&Area,Y,measure_pred(Spatial,Area,X,Y)):- type_measure_pred(_,size,Area,_).
+attribute_LF(great,measure&Type,X,measure&Type,Y,exceeds(X,Y)).
+
+
+
+
+
+
+
+/* Measure */
+
+
+
+unit_format(Population,X--million):- unit_format(Population,X--thousand).
+unit_format(Population,_X--thousand):- type_measure_pred(_City,size,Population,units).
+unit_format(Latitude,_X--Degrees):- type_measure_pred(_Region, position(_),Latitude,Degrees).
+%unit_format(Longitude,_X--Degrees):- measure_pred(_Region,position(x),Longitude,Degrees).
+unit_format(Area,_X--Ksqmiles):- type_measure_pred(_Region,size,Area,Ksqmiles).
+
+measure_LF(Unit,measure&Size,[],Units):- type_measure_pred(_City,size,Size,Units), atom_concat(Unit,'s',Units).
+measure_LF(sqmile,measure&Size,[],sqmiles):- measure_LF(ksqmile,measure&Size,[],ksqmiles).
+measure_LF(sqmile,measure&area,[],sqmiles).
+measure_LF(Degree,measure&position,[],Degrees):- type_measure_pred(_Region, position(_),_Latitude,Degrees), atom_concat(Degree,'s',Degrees).
+measure_LF(thousand,measure&Population/*citizens*/,[],thousand):-  type_measure_pred(_City,size,Population,units).
+measure_LF(million,measure&Population/*citizens*/,[],million):-  type_measure_pred(_City,size,Population,units).
+
+verb_type_db(chat80,border,main+tv).
+symmetric_verb(Spatial,border):- spatial(Spatial).
+
+
+ordering_pred(spatial,cp(east,of),X1,X2) :- type_measure_pred(_Region,position(x),Longitude,_), position_pred(spatial,Longitude,X1,L1), position_pred(spatial,Longitude,X2,L2), exceeds(L2,L1).
+ordering_pred(spatial,cp(north,of),X1,X2) :- type_measure_pred(_Region,position(y),Latitude,_),  position_pred(spatial,Latitude,X1,L1), position_pred(spatial,Latitude,X2,L2), exceeds(L1,L2).
+ordering_pred(spatial,cp(south,of),X1,X2) :- type_measure_pred(_Region,position(y),Latitude,_),  position_pred(spatial,Latitude,X1,L1), position_pred(spatial,Latitude,X2,L2), exceeds(L2,L1).
+ordering_pred(spatial,cp(west,of),X1,X2) :- type_measure_pred(_Region,position(x),Longitude,_), position_pred(spatial,Longitude,X1,L1), position_pred(spatial,Longitude,X2,L2), exceeds(L1,L2).
+
+
+/* Nouns */
+
+property_LF(capital,  SpatialCity,    X,Spatial&geo&country,Y,  
+ specific_pred(Spatial,nation_capital,Y,X),[],_,_):- feature_path1(Spatial,city,SpatialCity).
+
+property_LF(Area,     measure&Area,    X,Spatial&_,Y,  measure_pred(Spatial,area,Y,X),[],_,_):- type_measure_pred(_,size,Area,_).
+property_LF(Latitude, measure&position,X,Spatial&_,Y, position_pred(Spatial,Latitude,Y,X),[],_,_):- type_measure_pred(_Region,position(y),Latitude,_).
+property_LF(Longitude,measure&position,X,Spatial&_,Y, position_pred(Spatial,Longitude,Y,X),[],_,_):- type_measure_pred(_Region,position(x),Longitude,_).
+property_LF(Population, measure&Population/*citizens*/, X,Spatial&_,Y,    count_pred(Spatial,Population/*citizens*/,Y,X),[],_,_):-
+  type_measure_pred(_City,size,Population,units).
+
+synonymous_thing(nation,country).
+
+thing_LF_access(Area,measure&area,X,unit_format(Area,X),[],_):- type_measure_pred(_,size,Area,_).
+thing_LF_access(Latitude,measure&position,X,unit_format(Latitude,X),[],_):- type_measure_pred(_Region,position(_Y),Latitude,_).
+%thing_LF_access(Longitude,measure&position,X,unit_format(Longitude,X),[],_):- type_measure_pred(_Region,position(x),Longitude,_).
+thing_LF_access(Population,measure&Population/*citizens*/,X,unit_format(Population,X),[],_):- type_measure_pred(_,size,Area,_).
+
 
 /* Prepositions */
-
-attribute_LF(large,Spatial&_,X,measure&area,Y,measure_pred(Spatial,area,X,Y)).
-attribute_LF(small,Spatial&_,X,measure&area,Y,measure_pred(Spatial,area,X,Y)).
-attribute_LF(great,measure&Type,X,measure&Type,Y,exceeds(X,Y)).
-attribute_LF(populous,Spatial&_,X,measure&population/*citizens*/,Y,count_pred(Spatial,population/*citizens*/,Y,X)).
 
 adjunction_LF(in,Spatial&_-X,Spatial&_-Y,trans_pred(Spatial,contain,Y,X)).
 adjunction_LF(cp(East,Of),Spatial&_-X,Spatial&_-Y,ordering_pred(Spatial,cp(East,Of),X,Y)).
@@ -107,11 +154,6 @@ adjunction_LF(cp(west,of),Spatial&_-X,Spatial&_-Y,ordering_pred(Spatial,cp(west,
 adjunction_LF(cp(north,of),Spatial&_-X,Spatial&_-Y,ordering_pred(Spatial,cp(north,of),X,Y)).
 adjunction_LF(cp(south,of),Spatial&_-X,Spatial&_-Y,ordering_pred(Spatial,cp(south,of),X,Y)).
 */
-
-
-
-
-
 
 
 

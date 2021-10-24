@@ -53,19 +53,23 @@
 
 multifile_dynamic_discontiguous(P):- multifile(P),dynamic(P),discontiguous(P).
 
+
 :- multifile_dynamic_discontiguous(chat80/2).
 :- multifile_dynamic_discontiguous(clex_verb80/4).
 :- multifile_dynamic_discontiguous(count_pred/4).
-:- multifile_dynamic_discontiguous(intrans_LF/6).
 :- multifile_dynamic_discontiguous(measure_pred/4).
 :- multifile_dynamic_discontiguous(position_pred/4).
 :- multifile_dynamic_discontiguous(talkdb_talk_db/6).
-:- multifile_dynamic_discontiguous(thing_LF/6).
+:- multifile_dynamic_discontiguous(ti_subclass/2).
 :- multifile_dynamic_discontiguous(type_conversion/2).
 :- multifile_dynamic_discontiguous(verb_form_db/5).
 :- multifile_dynamic_discontiguous(verb_type_db/3).
+
+:- multifile_dynamic_discontiguous(adjunction_LF/4).
+:- multifile_dynamic_discontiguous(intrans_LF/6).
+:- multifile_dynamic_discontiguous(thing_LF/6).
 :- multifile_dynamic_discontiguous(thing_LF_access/6).
-:- multifile_dynamic_discontiguous(ti_subclass/2).
+
 
 % :- expects_dialect(pfc).
 :-op(600,xfy,--).
