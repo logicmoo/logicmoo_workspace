@@ -71,7 +71,6 @@ w2_to_w(Txt,Txt).
 /* ----------------------------------------------------------------------
 	Simple Access to demonstrations
    ---------------------------------------------------------------------- */
-:- ensure_loaded(test_ext).
 
 demo(Type) :- demo(Type,L), ignore(control80(L)).
 

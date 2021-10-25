@@ -127,25 +127,44 @@ s_vp(_Subj,Agmt,Type,Verb,Args,Mods,Mask) --->
    verb_args(Type,Voice,Args,Nil,Mask0),
    {minus_mask(SAll,Mask0,Set), plus_mask(SAll,Mask0,Mask1)},
    verb_mods(Mods,Set,Mask1,Mask).
+/*
+s_vp(_Subj,Agmt,Type,Verb,Args,Mods,Mask) --->
+   verb_lc(Verb,Agmt,Type,Voice),
+   {is_empty_bits(Nil), is_s_all(SAll)},
+   verb_args(Type,Voice,Args,Nil,Mask0),
+   {minus_mask(SAll,Mask0,Set), plus_mask(SAll,Mask0,Mask1)},
+   verb_mods(Mods,Set,Mask1,Mask).
 
-subj(there,Agmt,_+be) ---> theText80(there).
-subj(Subj,Agmt,_) --->
+verb_lc(verb(Root,Voice,Time+fin,Aspect,Neg),Agmt,Type,Voice) --->
+   verb_form80(Root0,Time+fin,Agmt,Role),
+   {must(verb_type(Root0,Type0))},
+   neg_opt(Type0,Neg),
+   rest_verb(Role,Root0,Root,Voice,Aspect),
+   {must(verb_type(Root,Type)),!,verb_type_to_kind(Type,Kind)}.
+*/
+
+subj(Subj,Agmt,O) ---> subj0(Subj,Agmt,O).
+
+subj0(there,Agmt,_+be) ---> theText80(there).
+subj0(Subj,Agmt,_) --->
    {is_s_all(SAll), is_subj_case(Case)},
    np(Subj,Agmt,Case,_,subj,SAll,_).
 
 /* Noun Phrase */
 
-np(np(Agmt,Pronoun,[]),Agmt,NPCase,def,_,Set,Nil) --->
+np(AgmtKernelMods,Agmt,Case,Def,Role,Set,Mask) ---> np0(AgmtKernelMods,Agmt,Case,Def,Role,Set,Mask).
+
+np0(np(Agmt,Pronoun,[]),Agmt,NPCase,def,_,Set,Nil) --->
    {is_pp(Set)},
    pers_pron(Pronoun,Agmt,Case),
    {is_empty_bits(Nil), is_to_role_case(Case,decl,NPCase)}.
-np(np(Agmt,Kernel,Mods),Agmt,Case,Def,Role,Set,Mask) --->
+np0(np(Agmt,Kernel,Mods),Agmt,_Case,Def,Role,Set,Mask) --->
    {is_pp(Set)},
    np_head(Kernel,Agmt,Def+Type,PostMods,Mods),
    {is_np_all(NPAll)},
    np_compls(Type,Agmt,Role,PostMods,NPAll,Mask).
 % many of, one of
-np(part(Det,NP),3+Number,_,indef,Role,Set,Mask) --->
+np0(part(Det,NP),3+Number,_,indef,Role,Set,Mask) --->
    {is_pp(Set)},
    determiner(Det,Number,indef),
    theText80(of),
@@ -165,7 +184,10 @@ np_compls(common,Agmt,Case,Mods,Set0,Mask) --->
 
 /* Nuclear noun phrase */
 
+
+
 np_head0(nameOf(Name),3+sg,def+proper) ---> name_xg(Name).
+
 np_head0(Pronoun,Agmt,def+proper), gen_marker --->
    poss_pron(Pronoun,Agmt).
 np_head0(np_head(Det,[],Noun),3+sg,indef+common) --->
@@ -208,7 +230,7 @@ quant_phrase(quantV(Op,Quant),Number,Def) --->
 
 % Measure is more / less than
 quantV(Op,indef) --->
-   neg_adv(Op0,Op),
+   neg_adv_opt(Op0,Op),
    comp_adv(Op0),
    theText80(than).
 
@@ -217,11 +239,13 @@ quant_opt(Op,indef) --->
    theText80(at),
    sup_adv(Adv),
    {sup_op(Adv,Op)}.
+   
+
 quantV(the,def) ---> theText80(the).
 quantV(same,indef) ---> noText.
 
-neg_adv(Adv,not+Adv) ---> theText80(not).
-neg_adv(Adv,Adv) ---> noText.
+neg_adv_opt(Adv,not+Adv) ---> theText80(not).
+neg_adv_opt(Adv,Adv) ---> noText.
 
 sup_op(least,not+less).
 sup_op(most,not+more).
@@ -267,11 +291,12 @@ adjs_opt([Adj|Adjs]) --->
 adjs_opt([]) ---> noText.
 
 pre_adj(Adj) ---> adj(_,Adj).
+% TODO WHY pre_adj(poss(Pronoun,Agreement)) ---> poss_pron(Pronoun,Agreement).
 pre_adj(Adj) --->  sup_phrase(Adj).
 
 sup_phrase(sup(most,Adj)) ---> sup_adj(Adj).
 sup_phrase(sup(Op,Adj)) --->
-   sup_adv(Adv),
+   sup_adv(Op), % @DMILES why was Adv ?
    adj(quantV,Adj).
 
 comp_phrase(comp(Comp,Adj,Arg),Mask) --->
@@ -289,7 +314,7 @@ comp(Comp,Adj) --->
 comp(more,Adj) --->
    comp_adj(Adj),
    theText80(than).
-
+   
 % Measure is same = "as big as"  ?
 comp(same,Adj) --->
    theText80(as),
@@ -334,7 +359,7 @@ variable(Agmt0,X) ... np(NP,Agmt,NPCase,_,_,Set,Mask) --->
    {is_trace82(Set,Mask)}.
 variable(Agmt0,X) ... prep_phrase(prep_phrase(Prep,NP),compl,Set,Mask) --->
    prep(Prep),
-   wh(X,Agmt0,NP,Agmt,Case),
+   wh(X,Agmt0,NP,_Agmt,Case),
    {is_trace82(Set,Mask), is_compl_case(Case)}.
 
 wh(X,Agmt,np(Agmt,wh(X),[]),Agmt,NPCase) --->

@@ -45,8 +45,8 @@ like_type(geo,country,country).
 like_type(geo,city,city).
 like_type(geo,river,river).
 */
-type_measure_pred(city,sizeP,population,units).
-type_measure_pred(city,sizeP,citizens,units).
+type_measure_pred(city,sizeP,population,countV).
+type_measure_pred(city,sizeP,citizens,countV).
 type_measure_pred(country,size,area,ksqmiles).
 type_measure_pred(region,position(x),longitude,degrees).
 type_measure_pred(region,position(y),latitude,degrees).

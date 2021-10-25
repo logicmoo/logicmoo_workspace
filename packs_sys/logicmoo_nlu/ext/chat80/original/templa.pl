@@ -74,7 +74,7 @@ attribute_LF(great,measure&Type,X,measure&Type,Y,exceeds(X,Y)).
 
 
 unit_format(Population,X--million):- unit_format(Population,X--thousand).
-unit_format(Population,_X--thousand):- type_measure_pred(_City,sizeP,Population,units).
+unit_format(Population,_X--thousand):- type_measure_pred(_City,sizeP,Population,countV).
 unit_format(Latitude,_X--Degrees):- type_measure_pred(_Region, position(_),Latitude,Degrees).
 %unit_format(Longitude,_X--Degrees):- measure_pred(_Region,position(x),Longitude,Degrees).
 unit_format(Area,_X--Ksqmiles):- type_measure_pred(_Region,size,Area,Ksqmiles).
@@ -83,8 +83,8 @@ measure_LF(Unit,measure&Size,[],Units):- type_measure_pred(_City,sizeP,Size,Unit
 measure_LF(sqmile,measure&Size,[],sqmiles):- measure_LF(ksqmile,measure&Size,[],ksqmiles).
 measure_LF(sqmile,measure&area,[],sqmiles).
 measure_LF(Degree,measure&position,[],Degrees):- type_measure_pred(_Region, position(_),_Latitude,Degrees), atom_concat(Degree,'s',Degrees).
-measure_LF(thousand,measure&Population/*citizens*/,[],thousand):-  type_measure_pred(_City,sizeP,Population,units).
-measure_LF(million,measure&Population/*citizens*/,[],million):-  type_measure_pred(_City,sizeP,Population,units).
+measure_LF(thousand,measure&Population/*citizens*/,[],thousand):-  type_measure_pred(_City,sizeP,Population,countV).
+measure_LF(million,measure&Population/*citizens*/,[],million):-  type_measure_pred(_City,sizeP,Population,countV).
 
 verb_type_db(chat80,border,main+tv).
 symmetric_verb(Spatial,border):- spatial(Spatial).
@@ -107,7 +107,7 @@ property_LF(Area,     measure&Area,    X,Spatial&_,Y,  measure_pred(Spatial,Area
 property_LF(Latitude, measure&position,X,Spatial&_,Y, position_pred(Spatial,Latitude,Y,X),[],_,_):- type_measure_pred(_Region,position(y),Latitude,_).
 property_LF(Longitude,measure&position,X,Spatial&_,Y, position_pred(Spatial,Longitude,Y,X),[],_,_):- type_measure_pred(_Region,position(x),Longitude,_).
 property_LF(Population, measure&Population/*citizens*/, X,Spatial&_,Y,    count_pred(Spatial,Population/*citizens*/,Y,X),[],_,_):-
-  type_measure_pred(_City,sizeP,Population,units).
+  type_measure_pred(_City,sizeP,Population,countV).
 
 synonymous_thing(nation,country).
 
@@ -260,12 +260,12 @@ aggr_adj(maximum,_,_,maximum).
 
 /* Measure */
 
-units(large,measure&_).
-units(small,measure&_).
+units_db(large,measure&_).
+units_db(small,measure&_).
 
-chat_sign(large,+).
-chat_sign(small,-).
-chat_sign(great,+).
+adj_sign_db(large,+).
+adj_sign_db(small,-).
+adj_sign_db(great,+).
 
 /* Proportions and the like */
 

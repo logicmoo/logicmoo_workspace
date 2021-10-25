@@ -299,7 +299,7 @@ multifile_dynamic_discontiguous(P):- multifile(P),dynamic(P),discontiguous(P).
 :-multifile_dynamic_discontiguous(i_subj/7).
 :-multifile_dynamic_discontiguous(i_measure/5).
 :-multifile_dynamic_discontiguous(reshape_pred/6).
-:-multifile_dynamic_discontiguous(subj_case_opt/2).
+:-multifile_dynamic_discontiguous(active_passive_subjcase/2).
 :-multifile_dynamic_discontiguous(verb_kind/6).
 :-multifile_dynamic_discontiguous(i_sup_op/2).
 :-multifile_dynamic_discontiguous(meta_head/1).
@@ -407,8 +407,8 @@ multifile_dynamic_discontiguous(P):- multifile(P),dynamic(P),discontiguous(P).
 :-multifile_dynamic_discontiguous(database80/1).
 :-multifile_dynamic_discontiguous(database801/1).
 :-multifile_dynamic_discontiguous(comparator_LF/5).
-:-multifile_dynamic_discontiguous(chat_sign/2).
-:-multifile_dynamic_discontiguous(units/2).
+:-multifile_dynamic_discontiguous(adj_sign_db/2).
+%:-multifile_dynamic_discontiguous(units_db/2).
 :-multifile_dynamic_discontiguous(aggr_adj/4).
 :-multifile_dynamic_discontiguous(restriction_LF/4).
 :-multifile_dynamic_discontiguous(trans_LF/6).
@@ -531,14 +531,12 @@ multifile_dynamic_discontiguous(P):- multifile(P),dynamic(P),discontiguous(P).
 :-multifile_dynamic_discontiguous(conversion/5).
 :-multifile_dynamic_discontiguous(i_sup_op/2).
 :-multifile_dynamic_discontiguous(nominal_kind/1).
-:-multifile_dynamic_discontiguous(nominal_slot/3).
 :-multifile_dynamic_discontiguous(i_verb_mods/7).
 :-multifile_dynamic_discontiguous(i_measure/5).
 :-multifile_dynamic_discontiguous(i_adjoin/6).
 :-multifile_dynamic_discontiguous(i_pred/6).
 :-multifile_dynamic_discontiguous(verb_slot/9).
 :-multifile_dynamic_discontiguous(fill_verb/9).
-:-multifile_dynamic_discontiguous(subj_case_opt/2).
 :-multifile_dynamic_discontiguous(i_verb_args/9).
 :-multifile_dynamic_discontiguous(i_subj/7).
 :-multifile_dynamic_discontiguous(i_neg/2).
@@ -565,9 +563,9 @@ multifile_dynamic_discontiguous(P):- multifile(P),dynamic(P),discontiguous(P).
 :-multifile_dynamic_discontiguous(i_np_head/10).
 :-multifile_dynamic_discontiguous(i_np/8).
 :-multifile_dynamic_discontiguous(i_sentence/2).
-:-multifile_dynamic_discontiguous(ditrans_db/13).
-:-multifile_dynamic_discontiguous(standard/4).
-:-multifile_dynamic_discontiguous(adv_template/4).
+:-multifile_dynamic_discontiguous(ditrans_lex80/13).
+:-multifile_dynamic_discontiguous(standard_adj_db/4).
+:-multifile_dynamic_discontiguous(adv_template_db/4).
 :-multifile_dynamic_discontiguous(conj_apply/4).
 :-multifile_dynamic_discontiguous(bubble/3).
 :-multifile_dynamic_discontiguous(op_apply/3).
@@ -761,7 +759,8 @@ multifile_dynamic_discontiguous(P):- multifile(P),dynamic(P),discontiguous(P).
 :-  load_plus_xg_file('/opt/logicmoo_workspace/packs_sys/logicmoo_nlu/ext/chat80/original/lex.xg').
 
 
-:- ensure_loaded(geography/load_kb).
+%:- ensure_loaded(geography/load_kb).
+:- ensure_loaded(mud_status/load_kb).
 
 
 %:- ensure_loaded(clotab).	% attachment tables

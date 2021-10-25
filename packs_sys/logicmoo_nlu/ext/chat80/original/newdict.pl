@@ -101,6 +101,7 @@ pers_pron_lex(him,masc,3,sg,compl(_)).
 pers_pron_lex(i,_,1,sg,subj).
 pers_pron_lex(it,neut,3,sg,_).
 pers_pron_lex(me,_,1,sg,compl(_)).
+pers_pron_lex(myself,_,1,sg,_).
 pers_pron_lex(she,fem,3,sg,subj).
 pers_pron_lex(them,_,3,pl,compl(_)).
 pers_pron_lex(them,_,3,pl,subj).
@@ -248,9 +249,9 @@ verb_form_aux(having,have,pres+part,_).
 verb_form_aux(had,have,past+part,_).
 
 verb_form_lex(A,B,C,D):- verb_form_aux(A,B,C,D).
-verb_form_lex(A,B,C,D):- \+ avoided_verb(A), try_lex(verb_form_db(A,B,C,D)), \+ avoided_verb(A).
+verb_form_lex(A,B,C,D):- \+ avoided_verb(A), try_lex(verb_form_db(A,B,C,D)).
 
-avoided_verb(A):- nonvar(A), clause(verb_form_aux(A,_,_,_),true).
+avoided_verb(A):- freeze(A,clause(verb_form_aux(A,_,_,_),true)).
 
 
 

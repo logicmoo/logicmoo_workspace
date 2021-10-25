@@ -40,25 +40,25 @@ i_sentence(decl(S),assertion([],P)) :- !,
 i_sentence(imp(s(_,Verb,VArgs,VMods)),imp(V,Args)) :- !,
    i_verb(Verb,V,_,active,pos(_TFScope),Slots0,[],transparent),
    i_verb_args(VArgs,[],[],Slots0,Slots,Args,Args0,Up,-0),
-   conc80(Up,VMods,Mods),
-   i_verb_mods(Mods,_,[],Slots,Args0,Up,+0).
+   append(Up,VMods,Mods),
+   i_verb_mods(Mods,_,[],Slots,Args0,Up,+0),!.
 
 i_sentence(S,assertion([],P)) :-
    i_s(S,P,[],0).
 
-i_np(there,Y,quant(void(_Meaning),_X,'`'(true),'`'(true),[],Y),[],_,_,XA,XA).
+i_np(there,Y,quantV(void(_Meaning),_X,'`'(true),'`'(true),[],Y),[],_,_,XA,XA).
 i_np(NP,Y,Q,Up,Id0,Index,XA0,XA) :-
    i_np_head(NP,Y,Q,Det,Det0,X,Pred,QMods,Slots0,Id0),
    held_arg(XA0,XA,Slots0,Slots,Id0,Id),
    i_np_rest(NP,Det,Det0,X,Pred,QMods,Slots,Up,Id,Index).
 
 i_np_head(K,Y,Q,Det,Det0,X,Pred,QMods,Slots,_Id) :-
-   kyqdhq(K,Kernel,Y,Q,Det,T,Head,Pred0,QMods), %   K= np(_,Kernel,_),Y=Y, Q = quant(Det,T,Head,Pred0,QMods,Y),
+   kyqdhq(K,Kernel,Y,Q,Det,T,Head,Pred0,QMods), %   K= np(_,Kernel,_),Y=Y, Q = quantV(Det,T,Head,Pred0,QMods,Y),
    no_repeats(i_np_head0(Kernel,X,T,Det0,Head,Pred0,Pred,Slots)),
    Type-_=Y, Type-_=T,!.
 
 /*
-i_np_head(np(_,Kernel,_),Y,quant(Det,T,Head,Pred0,QMods,Y),Det,Det0,X,Pred,QMods,Slots,_Id) :- fail,
+i_np_head(np(_,Kernel,_),Y,quantV(Det,T,Head,Pred0,QMods,Y),Det,Det0,X,Pred,QMods,Slots,_Id) :- fail,
    no_repeats(i_np_head0(Kernel,X,T,Det0,Head,Pred0,Pred,Slots)),
    Type-_=Y, Type-_=T,!.
 */
@@ -82,7 +82,7 @@ i_np_head0(np_head(int_det(V),Adjs,Noun),
       Type-X,Type-X,Det,'`'(true),Pred,Pred,
       [slot(prep(of),Type,X,_,comparator)]) :-
    comparator_db(Noun,Type,V,Adjs,Det).
-i_np_head0(np_head(quant(Op0,N),Adjs,Noun),
+i_np_head0(np_head(quantV(Op0,N),Adjs,Noun),
       Type-X,Type-X,void(_Meaning),'`'(P),Pred,Pred,[]) :-
    measure_unit_type_db(Noun,Type,Adjs,Units),
    pos_conversion_db(N,Op0,Type,V,Op),
@@ -97,13 +97,13 @@ i_np_mods(Mods,_,[],'`'(true),[],Mods,_,_).
 i_np_mods([Mod|Mods],X,Slots0,Pred0,QMods0,Up,Id,Index) :-
    i_np_mod(Mod,X,Slots0,Slots,
             Pred0,Pred,QMods0,QMods,Up0,-Id,Index),
-   conc80(Up0,Mods,Mods0),
+   append(Up0,Mods,Mods0),
    i_np_mods(Mods0,X,Slots,Pred,QMods,Up,+Id,Index).
 i_np_mods(Mods,_,[Slot|Slots],'`'(true),QMods,Mods,Id,_) :-
    i_voids([Slot|Slots],QMods,Id).
 
 i_voids([],[],_).
-i_voids([Slot|Slots],[quant(void(_Meaning),X,'`'(true),'`'(true),[],_)|QMods],Id) :-
+i_voids([Slot|Slots],[quantV(void(_Meaning),X,'`'(true),'`'(true),[],_)|QMods],Id) :-
    slot_tag(Slot,X,-Id), !,
    i_voids(Slots,QMods,+Id).
 i_voids([_|Slots],QMods,Id) :-
@@ -123,7 +123,7 @@ i_np_mod(prep_phrase(Prep,NP),
       X,Slots0,Slots,Pred,Pred,[QMod|QMods],QMods,Up,Id0,Index0) :-
    i_np_head(NP,Y,Q,LDet,LDet0,LX,LPred,LQMods,LSlots0,Id0),
    i_bind(Prep,Slots0,Slots1,X,Y,Id0,Function,P,PSlots,XArg),
-   conc80(PSlots,Slots1,Slots),
+   append(PSlots,Slots1,Slots),
    i_np_modify(Function,P,Q,QMod,Index0,Index),
    held_arg(XArg,[],LSlots0,LSlots,Id0,Id),
    i_np_rest(NP,LDet,LDet0,LX,LPred,LQMods,LSlots,Up,Id,Index).
@@ -167,16 +167,16 @@ i_adj(sup(Op0,adj(Adj)),Type-X,Type-V,_,
    i_sup_op(Op,F),
    no_repeats_must(deduce_subj_obj_LF(attribute,Adj,Type,X,_,Y,P)).
 i_adj(adj(Adj),TypeX-X,T,T,_,
-      Head,Head,quant(void(_Meaning),TypeX-Y,'`'(P),'`'(Q)&Pred,[],_),Pred) :-
+      Head,Head,quantV(void(_Meaning),TypeX-Y,'`'(P),'`'(Q)&Pred,[],_),Pred) :-
    no_repeats_must(deduce_subj_obj_LF(attribute,Adj,TypeX,X,_,Y,P)),
    standard_adj_db(Adj,TypeX,Y,Q).
 
 i_s('s'(Subj,Verb,VArgs,VMods),Pred,Up,Id) :-
    i_verb(Verb,P,Tense,Voice,Neg,Slots0,XA0,Meta),
    i_subj(Voice,Subj,Slots0,Slots1,QSubj,SUp,'-'('-'(Id))),
-   conc80(SUp,VArgs,TArgs),
-   i_verb_args(TArgs,XA0,XA,Slots1,Slots,Args0,Args,Up0,'+'('-'(Id))),
-   conc80(Up0,VMods,Mods),
+   append(SUp,VArgs,TArgs),
+   i_verb_args(TArgs,XA0,XA,Slots1,Slots,Args0,Args,Up0,+(-Id)),
+   append(Up0,VMods,Mods),
    i_verb_mods(Mods,Tense,XA,Slots,Args,Up,+Id),
    reshape_pred(Meta,QSubj,Neg,P,Args0,Pred).
 
@@ -187,8 +187,8 @@ i_verb(verb(Root,Voice,Tense,_Aspect,Neg,Kind),
 
 reshape_pred(transparent,S,N,P,A,pred(S,N,P,A)).
 reshape_pred(have,Subj,Neg,Verb0,
-      [quant(Det,X,Head0,Pred,QArgs,Y)|MRest],
-      pred(Subj,Neg,Verb,[quant(Det,X,Head,Pred,QArgs,Y)|MRest])) :-
+      [quantV(Det,X,Head0,Pred,QArgs,Y)|MRest],
+      pred(Subj,Neg,Verb,[quantV(Det,X,Head,Pred,QArgs,Y)|MRest])) :-
    have_pred(Head0,Verb0,Head,Verb).
 
 have_pred('`'(Head),Verb,'`'(true),(Head,Verb)).
@@ -214,7 +214,7 @@ active_passive_subjcase(passive,s_subj).
 fill_verb([],XA,XA,Slots,Slots,Args,Args,[],_).
 fill_verb([Node|Nodes0],XA0,XA,Slots0,Slots,Args0,Args,Up,Id) :-
    verb_slot(Node,XA0,XA1,Slots0,Slots1,Args0,Args1,Up0,-Id),
-   conc80(Up0,Nodes0,Nodes),
+   append(Up0,Nodes0,Nodes),
    fill_verb(Nodes,XA1,XA,Slots1,Slots,Args1,Args,Up,+Id).
 
 verb_slot(prep_phrase(Prep,NP),
@@ -231,7 +231,7 @@ verb_slot(prep_phrase(prep(Prep),NP),
    i_np_head(NP,Y,Q,LDet,LDet0,LX,LPred,LQMods,LSlots0,Id0),
    held_arg(XArg,[],LSlots0,LSlots,Id0,Id),
    i_np_rest(NP,LDet,LDet0,LX,LPred,LQMods,LSlots,Up,Id,free),
-   conc80(PSlots,Slots1,Slots).
+   append(PSlots,Slots1,Slots).
 verb_slot(arg(SCase,NP),
       XArg0,XArg,Slots0,Slots,[Q|Args],Args,Up,Id) :-
    i_np(NP,X,Q,Up,Id,unit,XArg0,XArg),
@@ -251,7 +251,7 @@ i_pred(conj(Conj,Left,Right),X,
    i_pred(Right,X,RQMods,[],Up,+Id).
 i_pred(AP,T,['`'(Head)&Pred|As],As,[],_) :-
    i_adj(AP,T,_,_,Head,true,Pred,'`'(true)).
-i_pred(value(adj(Adj),wh(TypeY-Y)),Type-X,['`'(H)|As],As,[],_) :-
+i_pred(value80(adj(Adj),wh(TypeY-Y)),Type-X,['`'(H)|As],As,[],_) :-
    no_repeats(deduce_subj_obj_LF(attribute,Adj,Type,X,TypeY,Y,H)).
 i_pred(comp(Op0,adj(Adj),NP),X,[P1 & P2 & '`'(P3),Q|As],As,Up,Id) :-
    i_np(NP,Y,Q,Up,Id,unit,[],[]),
@@ -272,7 +272,7 @@ i_adjoin(Prep,X,Y,[],[],P) :-
 
 i_measure(Type-X,Adj,Type,X,'`'(true)) :-
    no_repeats(units_db(Adj,Type)).
-i_measure(TypeX-X,Adj,TypeY,Y,quant(void(_There),TypeY-Y,'`'(P),'`'(true),[],_)) :-
+i_measure(TypeX-X,Adj,TypeY,Y,quantV(void(_There),TypeY-Y,'`'(P),'`'(true),[],_)) :-
    no_repeats_must(deduce_subj_obj_LF(attribute,Adj,TypeX,X,TypeY,Y,P)).
 
 i_verb_mods(Mods,_,XA,Slots0,Args0,Up,Id) :-
@@ -360,7 +360,3 @@ index80(index(_I)).
 
 % ================================================================
 % Utilities
-
-conc80([],L,L).
-conc80([X|L1],L2,[X|L3]) :-
-   conc80(L1,L2,L3).

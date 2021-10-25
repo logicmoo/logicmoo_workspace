@@ -197,7 +197,7 @@ conj(Conj,list,end) --->
    {conj_lex(Conj)}.
 
 loc_pred(Of,P) --->
-   theText80(W),
+   theText80(W), % north of
    {loc_pred_lex(Of,W,P)}.
 
 :-retract(tlxgproc:do_xg_process_te).
