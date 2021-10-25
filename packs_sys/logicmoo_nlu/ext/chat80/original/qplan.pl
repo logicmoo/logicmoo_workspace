@@ -25,7 +25,7 @@
 :- module(qplan,[qplan/2]).
 
 qplan((P:-Q),(P1:-Q1)) :- qplan(P,Q,P1,Q1), !.
-qplan(P,Q):- chat_80_icall(simplify80(P,Q)),!.
+qplan(P,Q):- parser_chat80:simplify80(P,Q),!.
 
 
 qplan(X0,P0,X,P) :-
@@ -320,3 +320,4 @@ disjoint(_W-V1,V2) :- !, V1 /\ V2 =:= 0.
 disjoint(V1,_W-V2) :- !, V1 /\ V2 =:= 0.
 disjoint(V1,V2) :- V1 /\ V2 =:= 0.
 
+:- fixup_exports.

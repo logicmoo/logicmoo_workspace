@@ -34,8 +34,8 @@ not_where(Where):- \+ c_r_l_l_s_cap_m(Where,_,_,_,_,_,_,_).
 
 
 % c_r_l_l_s_cap_m(Country,Region,Latitude,Longitude,
-%         Area/1000,Area mod 1000,
-%         Population/1000000,Population mod 1000000 / 1000,
+%         Area/1000,          % Area mod 1000,
+%         Population/1000000, % Population mod 1000000 / 1000,
 %         Capital,Currency)
 
 

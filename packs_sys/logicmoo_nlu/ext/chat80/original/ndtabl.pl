@@ -27,6 +27,14 @@
 :- discontiguous nd_costs/6.
 :- discontiguous nd_costs/7.
 
+:- dynamic nd_costs/3.
+:- dynamic nd_costs/4.
+:- dynamic nd_costs/5.
+:- dynamic nd_costs/6.
+:- dynamic nd_costs/7.
+
+end_of_file.
+
 nd_costs(<,99,51,51).
 nd_costs(=<,99,51,51).
 nd_costs(>,99,51,51).

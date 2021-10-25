@@ -20,6 +20,8 @@
 
 */
 
+:- op(400,xfy,&).
+
 % Data for the World Database.
 % ---------------------------
 
@@ -32,11 +34,29 @@ agentitive_symmetric_type(border,seamass).
 
 place_lex(place).
 
+like_type(geo,X,X).
+/*
+like_type(geo,circle_of_latitude,circle_of_latitude).
+like_type(geo,seamass,seamass).
+like_type(geo,continent,continent).
+like_type(geo,region,region).
+like_type(geo,country,country).
+%special_type(capital,city,capital_city).
+like_type(geo,city,city).
+like_type(geo,river,river).
+*/
+type_measure_pred(city,sizeP,population,units).
+type_measure_pred(city,sizeP,citizens,units).
+type_measure_pred(country,size,area,ksqmiles).
+type_measure_pred(region,position(x),longitude,degrees).
+type_measure_pred(region,position(y),latitude,degrees).
+unique_of_obj(geo,spatial,country,govern,capital,city,capital_city,nation_capital).
+
+
 ti_subclass(continent,place).
 ti_subclass(region,place).
 ti_subclass(seamass,place).
 ti_subclass(country,place).
-
 
 agentitive_trans_80(contain,africa,african).
 agentitive_trans_80(contain,america,american).

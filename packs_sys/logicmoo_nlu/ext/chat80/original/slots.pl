@@ -29,16 +29,16 @@
 :- dynamic(ditrans_db/13).
 
 i_sentence(q(S),question80([],P)) :-
-   i_s(S,P,[],0).
+   i_s(S,P,[],0),!.
 i_sentence(decl(S),assertion80(P)) :-
-   i_s(S,P,[],0).
+   i_s(S,P,[],0),!.
 i_sentence(whq(X,S),question80([X],P)) :-
    i_s(S,P,[],0),!.
 i_sentence(imp(U,Ve,s(_,Verb,VArgs,VMods)),imp(U,Ve,V,Args)) :-
    i_verb(Verb,V,_,active,posP,Slots0,[],transparent),
    i_verb_args(VArgs,[],[],Slots0,Slots,Args,Args0,Up,-0),
    append(Up,VMods,Mods),
-   i_verb_mods(Mods,_,[],Slots,Args0,Up,+0).
+   i_verb_mods(Mods,_,[],Slots,Args0,Up,+0),!.
 i_sentence(Dunno,dunno(Dunno)) :-!.
 
 i_np(there,Y,quantV(voidQ,_X,'`' true,'`' true,[],Y),[],_,_,XA,XA).

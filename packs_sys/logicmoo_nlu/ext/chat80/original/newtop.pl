@@ -89,7 +89,7 @@ inform1([H|T]) :- write(H), put(32), inform1(T).
    ---------------------------------------------------------------------- */
 
 
-system:test_chat80 :-  setenv('CMD',timeout), test_chat80(_,off).
+system:test_chat80 :-  setenv('CMD',timeout), test_chat80(_,on).
 
 :- share_mp(test_chat80/1).
 test_chat80(N):- test_chat80(N, on), !.
@@ -115,12 +115,14 @@ test_chat80(N, Sentence, OnOff, CorrectAnswer):-
 
 :- use_module(library(logicmoo_test)).
 
-baseKB_test_chat80_mpred(N, Sentence, OnOff, CorrectAnswer) :-
-    wotso(report_item0(print_test,Sentence)),!,
-	  wotso(process5(test,Sentence,CorrectAnswer,Status,Times)),!,
-	  wotso(show_results(N,Status,Times)),!,
+baseKB_test_chat80_mpred(N, Sentence, _OnOff, CorrectAnswer) :-
+    once(wotso(report_item(print_test,Sentence))),
+	  once(wotso(process5(test,Sentence,CorrectAnswer,Status,Times))),
+	  once(wotso(show_results(N,Status,Times))),!.
+
+baseKB_test_chat80_mpred(_, Sentence, OnOff, _CorrectAnswer) :-
     OnOff \= off,
-    tracing ~= OnOff,
+    tracing ~= OnOff,!,
     wotso(process(normal,Sentence)),!.
 
 % register so works in unit tests
@@ -406,7 +408,7 @@ process4(How,Sentence,Answer,Times) :-
     runtime(StartSem))),
    must_or_rtrace(mpred_test_mok(deepen_pos(i_sentence(E,E1)))),
    report(How,E1,'i_sentence',ParseTime,cmt),
-   mpred_test_mok(clausify80(E1,E2)),
+   mpred_test_mok(clausify80(E1,E2)),!,
    report(How,E2,'clausify80',ParseTime,cmt),
    simplify80(E2,E3),simplify80(E3,S))),
    runtime(StopSem),
@@ -505,6 +507,7 @@ reduce1(P,Q):- compound_name_arguments(P,F,A),
    compound_name_arguments(Q,F,AA).
 
 clausify_simplify80(QT,Plan):- clausify80(QT,UE),once((simplify80(UE,Query),qplan(Query,Plan))).
+
 simplify80(C,C0):-var(C),dmsg(var_simplify(C,C0)),!,fail.
 simplify80(C,(P:-R)) :- !,
    unequalise(C,(P:-Q)),
@@ -938,4 +941,4 @@ smerge_segsl:-
   smerge_segs(A,B,C),
   print_tree(C).
 
-
+:- fixup_exports.

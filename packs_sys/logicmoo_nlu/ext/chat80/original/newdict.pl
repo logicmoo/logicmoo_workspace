@@ -233,7 +233,6 @@ verb_form_aux(were,be,past+fin,_+pl).
 verb_form_aux(do,do,pres+fin,_+pl).
 verb_form_aux(did,do,past+fin,_).
 verb_form_aux(does,do,pres+fin,3+sg).
-verb_form_aux(can,can,pres+fin,3+sg).
 verb_form_aux(doing,do,pres+part,_).
 verb_form_aux(done,do,past+part,_).
 
@@ -242,7 +241,6 @@ verb_form_aux(would,will,past+fin,_).
 
 verb_form_aux(could,can,past+fin,_).
 verb_form_aux(can,can,pres+fin,3+sg).
-
 
 verb_form_aux(has,have,pres+fin,3+sg).
 verb_form_aux(have,have,pres+fin,_+pl).
@@ -438,3 +436,5 @@ comp_adv_lex(more).
 
 sup_adv_lex(least).
 sup_adv_lex(most).
+
+:- fixup_exports.

@@ -21,33 +21,9 @@
 
 :- op(400,xfy,&).
 
-
-
-like_type(geo,circle_of_latitude,circle_of_latitude).
-like_type(geo,seamass,seamass).
-like_type(geo,continent,continent).
-like_type(geo,region,region).
-like_type(geo,country,country).
-%special_type(capital,city,capital_city).
-like_type(geo,city,city).
-like_type(geo,river,river).
-type_measure_pred(city,sizeP,population,units).
-type_measure_pred(city,sizeP,citizens,units).
-type_measure_pred(country,size,area,ksqmiles).
-type_measure_pred(region,position(x),longitude,degrees).
-type_measure_pred(region,position(y),latitude,degrees).
-unique_of_obj(geo,spatial,country,govern,capital,city,capital_city,nation_capital).
 thing_LF(person,_,X,ti(person,X),[],_).
 trans_LF(contain,Spatial&_,X,Spatial&_,Y, trans_pred(Spatial,contain,X,Y),[],_,_).
-
-
-
-
-
-
-
-
-
+trans_LF(have,Spatial&_,X,Spatial&_,Y, trans_pred(Spatial,have,X,Y),[],_,_).
 
 
 thing_LF_access(Continent,Spatial&Geo&Continent,X,ti(Continent,X),[],_):- like_type(Geo,continent,Continent), spatial(Spatial).
