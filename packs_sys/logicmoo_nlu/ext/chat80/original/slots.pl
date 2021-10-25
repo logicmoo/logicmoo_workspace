@@ -65,20 +65,22 @@ held_arg(XA,XA,S,S,Id,Id).
 i_np_head0(np_head(Det,Adjs,Noun),X,T,Det,Head0,Pred0,Pred,Slots) :-
    i_adjs(Adjs,X,T,X,Head0,Head,Pred0,Pred),
    i_noun(Noun,X,Head,Slots).
+
 i_np_head0(np_head(int_det(V),Adjs,Noun),
       Type-X,Type-X,Det,'`'(true),Pred,Pred,
       [slot(prep(of),Type,X,_,comparator)]) :-
    comparator_LF(Noun,Type,V,Adjs,Det).
+
 i_np_head0(np_head(quantV(Op0,N),Adjs,Noun),
       Type-X,Type-X,voidQ,'`'(P),Pred,Pred,[]) :- 
    measure_LF(Noun,Type,Adjs,Units),
    pos_conversion_db(N,Op0,Type,V,Op),
    measure_op(Op,X,V--Units,P).
 % np(3+sg,nameOf(iran),[])
-% np(3+sg,pronoun(neut),[])
 i_np_head0(nameOf(Name), Type-Name,Type-Name,identityQ,'`'(true),Pred,Pred,[]) :- 
   name_template_LF(Name,Type),!.
 i_np_head0(wh(X),X,X,identityQ,'`'(true),Pred,Pred,[]):-!.
+% np(3+sg,pronoun(neut),[])
 i_np_head0(Else, Type-Name,Type-Name,identityQ,'`'(P),Pred,Pred,[]):- Else \= np_head(_,_,_),
   P = qualifiedBy(Name,Type,Else).
 

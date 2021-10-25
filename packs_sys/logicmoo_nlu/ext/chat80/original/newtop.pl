@@ -496,6 +496,7 @@ sent_to_prelogic(S0,S) :-
    simplify80(S2,S3),
    simplify80(S3,S).
 
+reduce1(P,P):-!.
 reduce1(P,Q):- \+ compound(P), Q=P.
 reduce1((P,Q),Q):- P ==Q,!.
 reduce1(Ex^(exceeds(Value1, Ex1) & exceeds(Value2, Ex2)),exceeds(Value2, Value1)):- Ex==Ex1, Ex1==Ex2,!.

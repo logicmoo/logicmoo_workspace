@@ -20,7 +20,7 @@
 */
 
 :- op(400, xfy, &).
-:- op(300, fx, '`'  ).
+% :- op(300, fx, '`'  ).
 
 
 clausify80(question80(V0, P),OUT) :- 
@@ -32,9 +32,51 @@ clausify80(assertion80(P),OUT) :-
 clausify80(P,OUT) :- 
   clausify80_qa([],P,V,B),!,
   OUT = (run80(V):-B).
-clausify80(P,clausify80(P)).
+clausify80(P,error_in_clausify80(P)):- dumpST.
+
+clausify80_qa(V0,P,V,BO):- 
+ print_tree_nl(p=P),
+ clausify80_qab(V0,P,V,B),
+ print_tree_nl(in=B),
+ code_smell(B,BO),!,
+ reguess_vars(V,B,BO,_VO).
  
-clausify80_qa(V0,P,V,B):-
+
+%reguess_vars(V,BO,VO):-
+reguess_vars(Vs,B,BO,Vs):- B==BO,!.
+reguess_vars(Vs,_B,BO,Bs):-
+   print_tree_nl(out=BO),
+  term_variables(Vs+BO,Bs).
+  
+
+code_smell(B,B):- var(B),!.
+code_smell(^(V,B),BO):- V==[],!,code_smell(B,BO).
+code_smell((A,B),BO):- !, code_sniff(A,B,BO).
+code_smell(B,B).
+
+code_sniff(A,B,BO):- A == true,!,code_smell(B,BO).
+code_sniff(B,A,BO):- A == true,!,code_smell(B,BO).
+code_sniff(P,setOf(A:_,B,L),setOf(AVs,Es^BOO,L)):-  
+  term_variables(P,Vs),
+  push_pull_variables(A,Vs,[L],AVs),
+  code_smell(B,BO),
+  code_sniff(P,BO,BOO),
+  term_variables(BOO,Ys),term_variables(AVs,Xs),remove_each_eq(Ys,Xs,Es).
+code_sniff(P,(Q,B),BO):- 
+  code_sniff(P,Q,PQ),
+  code_sniff(PQ,B,BO).
+code_sniff(A,B,(A,B)):- \+ contains_setOf(A), \+ contains_setOf(B),!.
+code_sniff(P,^(A,B),^(A,BO)):- !, code_sniff(P,B,BO).
+code_sniff(A,BB,(A,BB)).
+
+contains_setOf(B):-sub_term(E,B),compound(E),E=setOf(_,_,_).
+
+push_pull_variables(A,[],[],A):-!.
+push_pull_variables(A,[],[L|LL],AVs):- subst(A,L,[],AVs),!,push_pull_variables(A,[],LL,AVs),!.
+push_pull_variables(A,[V|Vs],L,AVs):- contains_var(V,A), !, push_pull_variables(A,Vs,L,AVs).
+push_pull_variables(A,[V|Vs],L,AVs):- push_pull_variables(A:V,Vs,L,AVs).
+ 
+clausify80_qab(V0,P,V,B):-
    quantify(P, Quants, [], R0),
    split_quants(question80(V0), Quants, HQuants, [], BQuants, []),
    chain_apply(BQuants, R0, R1),
@@ -68,7 +110,7 @@ quantify(pred(Subj, Op, Head, Args), Above, Right, P) :-
    chain_apply(Here,(P0, Head, P1), P2),
    op_apply(Op, P2, P).
 
-quantify('`'  P, Q, Q, P).
+quantify('`'(P), Q, Q, P).
 
 quantify(P&Q, Above, Right,(S, T)) :-
    quantify(Q, Right0, Right, T),
@@ -111,12 +153,12 @@ quantify_args([Arg|Args], Quants,(P, Q)) :-
    quantify(Arg, Quants, Quants0, P).
 
 
-pre_apply('`'  Head, set(I), X, P1, P2, Y, Quants, Quant) :-
+pre_apply('`'(Head), set(I), X, P1, P2, Y, Quants, Quant) :-
    indices(Quants, I, Indices, RestQ),
    chain_apply(RestQ,(Head, P1), P),
    setify(Indices, X,(P, P2), Y, Quant).
 
-pre_apply('`'  Head, Det, X, P1, P2, Y, Quants, quantV(Det, X,(P, P2), Y)) :-
+pre_apply('`'(Head), Det, X, P1, P2, Y, Quants, quantV(Det, X,(P, P2), Y)) :-
  ( unit_det(Det);
    index_det(Det, _)),
    chain_apply(Quants,(Head, P1), P).
@@ -126,12 +168,13 @@ pre_apply(apply80(F, P0), Det, X, P1, P2, Y,
    but_last(Quants0, quantV(lambda, Z, P0, Z), Quants),
    chain_apply(Quants,(F, P1), P3).
 
-pre_apply(aggr(F, Value, L, Head, Pred), Det, X, P1, P2, Y, Quants,
-      quantV(Det, X,
-            (S^(setOf(Range:Domain, P, S),
-                aggregate80(F, S, Value)), P2), Y)) :-
+pre_apply(aggr(F, Value, L, Head, Pred), Det, X, P1, P2, Y, Quants, Out) :- 
    close_tree(Pred, R),
-   complete_aggr(L, Head,(R, P1), Quants, P, Range, Domain).
+   complete_aggr(L, Head,(R, P1), Quants, P, Range, Domain),
+ Out =
+   quantV(Det, X,
+            (S^(setOf(Range:Domain, P, S),
+                aggregate80(F, S, Value)), P2), Y).
 
 
 but_last([X|L0], Y, L) :-
@@ -149,7 +192,7 @@ close_tree(T, P) :-
    chain_apply(Q, P0, P).
 
 
-meta_apply('`'  G, R, Q, G, R, Q).
+meta_apply('`'(G), R, Q, G, R, Q).
 
 meta_apply(apply80(F,(R, P)), R, Q0, F, true, Q) :-
    but_last(Q0, quantV(lambda, Z, P, Z), Q).
@@ -190,7 +233,7 @@ index_vars([quantV(index(_), _-X, P0, _-X)|Indices],
    index_vars(Indices, IndexV, P).
 
 
-complete_aggr([Att, X], '`'  G, R, Quants,(P, R), Att, X) :-
+complete_aggr([Att, X], '`'(G), R, Quants,(P, R), Att, X) :-
    chain_apply(Quants, G, P).
 
 complete_aggr([Att], Head, R0, Quants0,(P1, P2, R), Att, X) :-
@@ -198,7 +241,7 @@ complete_aggr([Att], Head, R0, Quants0,(P1, P2, R), Att, X) :-
    set_vars(Quants, X, Rest, P2),
    chain_apply(Rest, G, P1).
 
-complete_aggr([], '`'  G, R, [quantV(set, _-(X:Att), S:T, _)],
+complete_aggr([], '`'(G), R, [quantV(set, _-(X:Att), S:T, _)],
   (G, R, S, T), Att, X).
 
 

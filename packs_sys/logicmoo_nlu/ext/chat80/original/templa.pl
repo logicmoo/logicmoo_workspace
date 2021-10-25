@@ -321,7 +321,10 @@ database80(G):-  must(current_predicate(_,G)), call(G).
 
 :- style_check(+singleton).
 
-setOf(X,Y,Z):- setof(X,Y,Z).
+remove_each_eq(Ys,[],Ys).
+remove_each_eq(Ys,[X|Xs],Es):- exclude(==(X),Ys,Zs),remove_each_eq(Zs,Xs,Es).
+
+setOf(X,Y,Z):- term_variables(Y,Ys),term_variables(X,Xs),remove_each_eq(Ys,Xs,Es),!,(setof(X,Es^Y,Z)*->true;Z=[]).
 
 measure_pred(Spatial,Area,Where,Total) :- not_where(Where), 
  % ti(continent,Where),
@@ -335,6 +338,7 @@ measure_pred(Spatial,Area,Where,Total) :- not_where(Where),
 
 %exceeds(X--U,Y--U) :- !, X > Y.
 %exceeds(X1--U1,X2--U2) :- ratio(U1,U2,M1,M2), X1*M1 > X2*M2.
+exceeds(X,Y):- (var(Y)),!,X=Y.
 exceeds(X,Y):- term_variables(X-Y,Vars),freeze_until(Vars,exceeds0(X,Y)),!.
 
 freeze_until([],Goal):-!, term_variables(Goal, Vars),(Vars==[] -> Goal ; freeze_until(Vars,Goal)).
