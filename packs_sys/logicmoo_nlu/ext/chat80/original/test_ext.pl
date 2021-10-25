@@ -26,6 +26,7 @@
 
 %:- autoload_all.
 :- use_module(library(logicmoo_common)).
+:- use_module(library(logicmoo_nlu)).
 %:- xlisting(lock_predicate/1).
 %:- autoload_all.
 
@@ -33,21 +34,39 @@
 :- module(parser_chat80).
 :- '$set_source_module'(parser_chat80).
 
+
 process80(Text):- 
   cls, tracing ~= on,  
   any_to_string(Text,S),!,
-  time(process(debug,S)).
+  process81(S).
 
-add_process80(B):- any_to_string(B,S),add_history(process80(S)).
+process81(S):- 
+ mpred_test_mok(into_lexical_segs(S,U)),
+ forall(deepen_pos(sentence80(E,U,[],[],[])),dmsg(E)),
+ fail.
+process81(S):- time(process(debug,S)).
+
+add_process80(B):- any_to_string(B,S),add_history1(process80(S)).
 
 :- forall(chat_80_ed(_,B,_),add_process80(B)).
 :- add_process80("how many rivers are in poland ?").
 :- add_process80("iran is bordered by iraq?").
 :- add_process80("what city in africa has the greatest population?").
-   
+
+gp_africa(Result):-
+  setOf(Size:City, []^(       
+       database80(ti(city,City)),
+       database80(trans_pred(spatial,contain,africa,City)) ,
+       database80(count_pred(spatial,population,City,Size)),
+       database80(exceeds(Size,_Other))), List),
+   database80(aggregate80(max,List,Result)).
 
 :- add_process80("what is the total area of nations that are bordered by iraq?").
-:- add_history(ensure_loaded(geography/load_kb)).
+:- add_history1(ensure_loaded(geography/load_kb)).
 
-:- add_history(test_chat80).
+:- add_history1(test_chat80).
 :- fixup_exports.
+
+:- if(\+ prolog_load_context(reloading, true)).
+:- prolog.
+:- endif.

@@ -350,6 +350,7 @@ process(_,_).
 eng_to_logic(U,S):- sentence80(E,U,[],[],[]), sent_to_prelogic(E,S).
 
 
+qualifiedBy(_,_,_).
 
 into_lexical_segs(Sent,U):- notrace(into_chat80_segs0(Sent,U)),!.
 %into_lexical_segs(Sent,  WordsA):- enotrace((into_text80( Sent,  Words),into_combines(Words,WordsA))),!.
@@ -513,9 +514,9 @@ simplify80(C,(P:-R)) :- !,
    simplify80(Q,R,true).
 simplify80(C,C0,C1):-var(C),dmsg(var_simplify(C,C0,C1)),fail.
 simplify80(C,C,R):-var(C),!,R=C.
-simplify80(setof(X,P0,S),R,R0) :- !,
+simplify80(setOf(X,P0,S),R,R0) :- !,
    simplify80(P0,P,true),
-   revand(R0,setof(X,P,S),R).
+   revand(R0,setOf(X,P,S),R).
 
 simplify80(P,R,R0):-
   reduce1(P,Q)-> P\==Q, !,

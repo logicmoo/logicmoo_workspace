@@ -80,7 +80,7 @@ i_np_head0(nameOf(Name), Type-Name,Type-Name,identityQ,'`'(true),Pred,Pred,[]) :
   name_template_LF(Name,Type),!.
 i_np_head0(wh(X),X,X,identityQ,'`'(true),Pred,Pred,[]):-!.
 i_np_head0(Else, Type-Name,Type-Name,identityQ,'`'(P),Pred,Pred,[]):- Else \= np_head(_,_,_),
-  P = nop(qualifiedBy(Name,Type,Else)).
+  P = qualifiedBy(Name,Type,Else).
 
 %i_np_mods([],_,[],'`'(true),[],[],_,_).
 i_np_mods(Mods,_,[],'`'(true),[],Mods,_,_).
@@ -174,6 +174,9 @@ i_verb(verb(Root,Voice,Tense,_Aspect,Neg),
       P,Tense,Voice,Det,Slots,XArg,Meta) :-
    slot_verb_template(Root,P,Slots,XArg,Meta),
    i_neg(Neg,Det).
+
+maybe_negate_slot(negP, P, (P)):- !.
+maybe_negate_slot(_,P,P).
 
 reshape_pred(transparent,S,N,P,A,pred(S,N,P,A)).
 reshape_pred(have,Subj,Neg,Verb0,

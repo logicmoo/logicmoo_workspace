@@ -57,7 +57,7 @@ mark(P,[m(V,C,P)],Q,Q) :-
    variables(P,0,V),
    cost80(P,V,C).
 
-subquery(setof(X,P,S),setof(X,Q,S),X,P,S,Q).
+subquery(setOf(X,P,S),setOf(X,Q,S),X,P,S,Q).
 subquery(numberof(X,P,N),numberof(X,Q,N),X,P,N,Q).
 
 negate([],_,[]).

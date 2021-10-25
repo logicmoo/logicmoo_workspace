@@ -47,7 +47,7 @@ wt(E,_) :- write(E).
 header80([]).
 header80([X|H]) :- reply(X), tab(1), header80(H).
 
-decomp(setof(X,P,S),[S,=,setof,X],P).
+decomp(setOf(X,P,S),[S,=,setOf,X],P).
 decomp(\+(P),[\+],P) :- complex(P).
 decomp(numberof(X,P,N),[N,=,numberof,X],P).
 decomp(X^P,[exists,X|XX],P1) :- othervars(P,XX,P1).
@@ -57,7 +57,7 @@ othervars(P,[],P).
 
 complex((_,_)).
 complex({_}).
-complex(setof(_,_,_)).
+complex(setOf(_,_,_)).
 complex(numberof(_,_,_)).
 complex(_^_).
 complex(\+P) :- complex(P).
@@ -75,7 +75,7 @@ answer802((answer80([]):-E),[B]) :- !, holds_truthvalue(E,B).
 answer802((answer80([X]):-E),S) :- !, seto(X,E,S).
 answer802((answer80(X):-E),S) :- seto(X,E,S).
 
-/*seto(X,E,S) :- ground(X),
+seto1(X,E,S) :- ground(X),
 %	portray_clause(({X} :- E)),
 	phrase(satisfy80(E,G),Vars),
 	pprint_ecp_cmt(yellow,((X+Vars):-G)),!,
@@ -83,13 +83,13 @@ answer802((answer80(X):-E),S) :- seto(X,E,S).
 
 seto2(X,[],G,S):- !, (setof(X,G,S) -> ignore( S = [X] ) ;  S = []).
 seto2(X,Vars,G,S):- setof(X,Vars^G,S) -> ignore( S = [X]) ;  S = [].
-*/
+
 
 seto(X,E,S) :-
 %	portray_clause(({X} :- E)),
 	phrase(satisfy80(E,G),Vars),
 	pprint_ecp_cmt(yellow,((X+Vars):-G)),!,
-	(   setof(X,Vars^G,S)
+	(   setof(X,Vars^G,S) 
 	*->  true
 	;   S = []
 	).
@@ -117,7 +117,7 @@ reply(X) :- write(X).
 %	^/2-term to act as an existential quantification, this no longer
 %	works. Hence, we now compile the term   into  a goal and compute
 %	the existentially quantified variables.
-numberof(X,Vars^P,N):- setof(X,Vars^P,S),length(S,N).
+numberof(X,Vars^P,N):- setOf(X,Vars^P,S),length(S,N).
 
 %satisfy(X,Y):- satisfy80(X,Y).
 
@@ -132,8 +132,8 @@ satisfy80(numberof(X,P0,N), Out) --> !,
 satisfy80(numberof(X,P0,N), Out) --> !,
 	{ phrase(satisfy80(P0,P),Vars) },
 	[S], Vars,			% S is an internal variable!
-  {Out = (setof(X,Vars^P,S),length(S,N))}.
-satisfy80(setof(X,P0,S), setof(X,Vars^P,S)) --> !,
+  {Out = (setOf(X,Vars^P,S),length(S,N))}.
+satisfy80(setOf(X,P0,S), setOf(X,Vars^P,S)) --> !,
 	{ phrase(satisfy80(P0,P),Vars) },
 	Vars.
 satisfy80(+P0, \+ exceptionto(P)) --> !,

@@ -23,6 +23,11 @@
 
 :- public aggregate80/3, one_of/2, ratio/3, card/2.
 
+numberoid(V):- number(V),!.
+numberoid(V):- compound(V),arg(1,V,N),number(N),!.
+
+number_to_v(X:V,V,X):- (numberoid(V);atom(X)),!.
+number_to_v(V:X,V,X).
 
 aggregate80(Fn,Set,Val) :-
    dimensioned(Set), !,
@@ -42,9 +47,11 @@ i_aggr(max,Set,Val) :-
 i_aggr(min,Set,Val) :-
    i_mins(Set,List),
    one_of(List,Val).
-i_aggr(maximum,[V0:O|S],V) :-
+i_aggr(maximum,[V0O|S],V) :-
+   number_to_v(V0O,V0,O),
    i_maxs0(S,V0,[O],_,V).
-i_aggr(minimum,[V0:O|S],V) :-
+i_aggr(minimum,[V0O|S],V) :-
+   number_to_v(V0O,V0,O),
    i_mins0(S,V0,[O],_,V).
 
 u_aggr(average,Set,V--U) :-
@@ -59,42 +66,52 @@ u_aggr(max,Set,Val) :-
 u_aggr(min,Set,Val) :-
    u_mins(Set,List),
    one_of(List,Val).
-u_aggr(maximum,[V0:O|S],V) :-
+u_aggr(maximum,[V0O|S],V) :-
+   number_to_v(V0O,V0,O),
    u_maxs0(S,V0,[O],_,V).
-u_aggr(minimum,[V0:O|S],V) :-
+u_aggr(minimum,[V0O|S],V) :-
+   number_to_v(V0O,V0,O),
    u_mins0(S,V0,[O],_,V).
 
 i_total([],0).
-i_total([V:_|R],T) :-
+i_total([V_|R],T) :-
+   number_to_v(V_,V,_),
    i_total(R,T0),
    T is V+T0.
 
-i_maxs([V:X|Set],List) :-
+i_maxs([VX|Set],List) :-
+  number_to_v(VX,V,X),
    i_maxs0(Set,V,[X],List,_).
 
 i_maxs0([],V,L,L,V).
-i_maxs0([V0:X|R],V0,L0,L,V) :- !,
+i_maxs0([V0X|R],V0,L0,L,V) :- 
+   number_to_v(V0X,V0,X), !,
    i_maxs0(R,V0,[X|L0],L,V).
-i_maxs0([U:X|R],V,_,L,W) :-
+i_maxs0([UX|R],V,_,L,W) :-
+   number_to_v(UX,U,X),
    U>V, !,
    i_maxs0(R,U,[X],L,W).
 i_maxs0([_|R],V,L0,L,W) :-
    i_maxs0(R,V,L0,L,W).
 
-i_mins([V:X|Set],List) :-
+i_mins([VX|Set],List) :-
+   number_to_v(VX,V,X),
    i_mins0(Set,V,[X],List,_).
 
 i_mins0([],V,L,L,V).
-i_mins0([V:X|R],V,L0,L,W) :- !,
+i_mins0([VX|R],V,L0,L,W) :- 
+   number_to_v(VX,V,X), !,
    i_mins0(R,V,[X|L0],L,W).
-i_mins0([U:X|R],V,_,L,W) :-
+i_mins0([UX|R],V,_,L,W) :-
+   number_to_v(UX,U,X),
    U<V, !,
    i_mins0(R,U,[X],L,W).
 i_mins0([_|R],V,L0,L,W) :-
    i_mins0(R,V,L0,L,W).
 
 u_total([],0--_U).
-u_total([V:_|R],T) :- !,
+u_total([V_|R],T) :- 
+   number_to_v(V_,V,_), !,
    u_total(R,T0),
    u_sum(T0,V,T).
 u_total([V|R],T) :-
@@ -110,25 +127,31 @@ u_sum(X--U1,Y--U,Z--U) :-
    ratio(U,U1,M,M1), M>M1, !,
    Z is (X*M1)/M + Y.
 
-u_maxs([V:X|Set],List) :-
+u_maxs([VX|Set],List) :-
+   number_to_v(VX,V,X),
    u_maxs0(Set,V,[X],List,_).
 
 u_maxs0([],V,L,L,V).
-u_maxs0([V0:X|R],V0,L0,L,V) :- !,
+u_maxs0([V0X|R],V0,L0,L,V) :-
+   number_to_v(V0X,V0,X), !,
    u_maxs0(R,V0,[X|L0],L,V).
-u_maxs0([U:X|R],V,_,L,W) :-
+u_maxs0([UX|R],V,_,L,W) :-
+   number_to_v(UX,U,X),
    u_lt(V,U), !,
    u_maxs0(R,U,[X],L,W).
 u_maxs0([_|R],V,L0,L,W) :-
    u_maxs0(R,V,L0,L,W).
 
-u_mins([V:X|Set],List) :-
+u_mins([VX|Set],List) :-
+   number_to_v(VX,V,X),
    u_mins0(Set,V,[X],List,_).
 
 u_mins0([],V,L,L,V).
-u_mins0([V:X|R],V,L0,L,W) :- !,
+u_mins0([VX|R],V,L0,L,W) :- 
+   number_to_v(VX,V,X), !,
    u_mins0(R,V,[X|L0],L,W).
-u_mins0([U:X|R],V,_,L,W) :-
+u_mins0([UX|R],V,_,L,W) :-
+   number_to_v(UX,U,X),
    u_lt(U,V), !,
    u_mins0(R,U,[X],L,W).
 u_mins0([_|R],V,L0,L,W) :-

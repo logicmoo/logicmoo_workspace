@@ -21,7 +21,7 @@ chat80_test_q2([which,country,that,borders,the,mediterranean,borders,a,country,
     the,population,of,india,? ]).
 /* ----------------------------------------------------------------------
 	Simple questions
-	These question do not require setof/3 and are useful for early
+	These question do not require setOf/3 and are useful for early
 	testing of a system.
    ---------------------------------------------------------------------- */
 

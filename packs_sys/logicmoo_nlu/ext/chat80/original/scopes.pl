@@ -128,7 +128,7 @@ pre_apply(apply80(F, P0), Det, X, P1, P2, Y,
 
 pre_apply(aggr(F, Value, L, Head, Pred), Det, X, P1, P2, Y, Quants,
       quantV(Det, X,
-            (S^(setof(Range:Domain, P, S),
+            (S^(setOf(Range:Domain, P, S),
                 aggregate80(F, S, Value)), P2), Y)) :-
    close_tree(Pred, R),
    complete_aggr(L, Head,(R, P1), Quants, P, Range, Domain).
@@ -272,7 +272,7 @@ det_apply(quantV(Det, Type-X, P, _-Y), Q0, Q) :-
 apply80(generic, _, X, P, X, Q, X^(P, Q)).
 
 apply80(proportion(_Type-V), _, X, P, Y, Q,
-      S^(setof(X, P, S),
+      S^(setOf(X, P, S),
          N^(numberof(Y,(one_of(S, Y), Q), N),
             M^(card(S, M), ratio(N, M, V))))).
 
@@ -326,10 +326,10 @@ some_word(the(sg)).
 some_word(some).
 
 
-apply_set([], X, true:P, S, setof(X, P, S)).
+apply_set([], X, true:P, S, setOf(X, P, S)).
 
 apply_set([I|Is], X, Range:P, S,
-   setof([I|Is]:V,(Range, setof(X, P, V)), S)).
+   setOf([I|Is]:V,(Range, setOf(X, P, V)), S)).
 
 
 governs_lex(Det, set(J)) :-

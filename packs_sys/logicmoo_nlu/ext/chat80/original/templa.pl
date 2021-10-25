@@ -21,6 +21,21 @@
 
 :- op(400,xfy,&).
 
+
+
+spatial(spatial).
+%:- if(false).
+:- if(true).
+feature_path1(Spatial,CR,Spatial&CR):- spatial(Spatial).
+:- else.
+feature_path1(Spatial,CR,Spatial&geo&CR):- spatial(Spatial).
+:- endif.
+
+bfeature_path(Spatial,CR,CVT):-  feature_path1(Spatial,CR,TYPE), btype_conversion(TYPE,CVT).
+%bfeature_path(Spatial,_CR,_&_):-spatial(Spatial).
+
+
+
 thing_LF(person,_,X,ti(person,X),[],_).
 trans_LF(contain,Spatial&_,X,Spatial&_,Y, trans_pred(Spatial,contain,X,Y),[],_,_).
 trans_LF(have,Spatial&_,X,Spatial&_,Y, trans_pred(Spatial,have,X,Y),[],_,_).
@@ -65,8 +80,8 @@ trans_LF(Govern,SpatialCity,X,Spatial&Geo&Country,Y,specific_pred(Spatial,Nation
 
 ttribute_LF(populous,Spatial&_,X,measure&population/*citizens*/,Y,count_pred(Spatial,population/*citizens*/,Y,X)).
 
-attribute_LF(large,Spatial&_,X,measure&Area,Y,measure_pred(Spatial,Area,X,Y)):- type_measure_pred(_,size,Area,_).
-attribute_LF(small,Spatial&_,X,measure&Area,Y,measure_pred(Spatial,Area,X,Y)):- type_measure_pred(_,size,Area,_).
+attribute_LF(large,Spatial&_,X,measure&Area,Y,measure_pred(Spatial,Area,X,Y)):- spatial(Spatial), type_measure_pred(_,size,Area,_).
+attribute_LF(small,Spatial&_,X,measure&Area,Y,measure_pred(Spatial,Area,X,Y)):- spatial(Spatial), type_measure_pred(_,size,Area,_).
 attribute_LF(great,measure&Type,X,measure&Type,Y,exceeds(X,Y)).
 
 
@@ -103,7 +118,7 @@ property_LF(Capital,  SpatialCity,    X,Spatial&Geo&Country,Y,
    unique_of_obj(Geo,Spatial,Country,_Govern,Capital,City,_Capital_city,Nation_capital),
    feature_path1(Spatial,City,SpatialCity).
 
-property_LF(Area,     measure&Area,    X,Spatial&_,Y,  measure_pred(Spatial,Area,Y,X),[],_,_):- type_measure_pred(_,size,Area,_).
+property_LF(Area,     measure&Area,    X,Spatial&_,Y,  measure_pred(Spatial,Area,Y,X),[],_,_):- spatial(Spatial), type_measure_pred(_,size,Area,_).
 property_LF(Latitude, measure&position,X,Spatial&_,Y, position_pred(Spatial,Latitude,Y,X),[],_,_):- type_measure_pred(_Region,position(y),Latitude,_).
 property_LF(Longitude,measure&position,X,Spatial&_,Y, position_pred(Spatial,Longitude,Y,X),[],_,_):- type_measure_pred(_Region,position(x),Longitude,_).
 property_LF(Population, measure&Population/*citizens*/, X,Spatial&_,Y,    count_pred(Spatial,Population/*citizens*/,Y,X),[],_,_):-
@@ -111,7 +126,7 @@ property_LF(Population, measure&Population/*citizens*/, X,Spatial&_,Y,    count_
 
 synonymous_thing(nation,country).
 
-thing_LF_access(Area,measure&area,X,unit_format(Area,X),[],_):- type_measure_pred(_,size,Area,_).
+thing_LF_access(Area,measure&Area,X,unit_format(Area,X),[],_):- type_measure_pred(_,size,Area,_).
 
 thing_LF_access(Latitude,measure&position,X,unit_format(Latitude,X),[],_):- type_measure_pred(_Region,position(_Y),Latitude,_).
 
@@ -147,17 +162,6 @@ aggr_noun(sum,_,_,total).
 aggr_noun(total,_,_,total).
 
 meta_noun_LF(number,of,_,V,Spatial&_,X,P,numberof(X,P,V)):- spatial(Spatial).
-
-spatial(spatial).
-%:- if(false).
-:- if(true).
-feature_path1(Spatial,CR,Spatial&CR):- spatial(Spatial).
-:- else.
-feature_path1(Spatial,CR,Spatial&geo&CR):- spatial(Spatial).
-:- endif.
-
-%bfeature_path(Spatial,CR,CVT):-  feature_path1(Spatial,CR,TYPE), btype_conversion(TYPE,CVT).
-bfeature_path(Spatial,_CR,_&_):-spatial(Spatial).
 
 
 % thing_LF(geo,Spatial&_,X,ti(geo,X),[],_):- spatial(Spatial).
@@ -260,7 +264,7 @@ aggr_adj(maximum,_,_,maximum).
 
 /* Measure */
 
-units_db(large,measure&_).
+units_db(large,_Measure&_).
 units_db(small,measure&_).
 
 adj_sign_db(large,+).
@@ -296,7 +300,7 @@ database801(X=Y) :- X=Y.
 
 
 database801(unit_format(P,X)) :- unit_format(P,X).  % square miles
-database801(measure_pred(Type,P,X,Y)) :- measure_pred(Type,P,X,Y). % area of
+database801(measure_pred(_Type,P,X,Y)) :- measure_pred(_Type2,P,X,Y). % area of
 database801(count_pred(Type,P,X,Y)) :- count_pred(Type,P,X,Y). % population of 
 database801(position_pred(Type,P,X,Y)) :- position_pred(Type,P,X,Y). % latitude of
 database801(ordering_pred(Type,P,X,Y)) :- ordering_pred(Type,P,X,Y). % south of
@@ -317,10 +321,11 @@ database80(G):-  must(current_predicate(_,G)), call(G).
 
 :- style_check(+singleton).
 
+setOf(X,Y,Z):- setof(X,Y,Z).
 
 measure_pred(Spatial,Area,Where,Total) :- not_where(Where), 
  % ti(continent,Where),
- setof(Value:[Country],
+ setOf(Value:[Country],
                []^(database80(measure_pred(Spatial, Area, Country, Value)), 
                %database80(ti(country, Country)), 
                database80(trans_pred(Spatial,contain,Where,Country))),
