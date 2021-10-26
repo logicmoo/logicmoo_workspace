@@ -12,7 +12,7 @@
 |		Dept. of Architecture, University of Edinburgh,		  |
 |		20 Chambers St., Edinburgh EH1 1JZ, Scotland		  |
 |									  |
-|	This program may be used, copied, altered or ensure_loadedd in other	  |
+|	This program may Be used, copied, altered or ensure_loadedd in other	  |
 |	programs only for academic purposes and provided that the	  |
 |	authorship of the initial program is aknowledged.		  |
 |	Use for commercial purposes without the previous written 	  |
@@ -27,6 +27,7 @@
 %:- autoload_all.
 :- use_module(library(logicmoo_common)).
 :- use_module(library(logicmoo_nlu)).
+:- use_module(library(logicmoo_clif)).
 %:- xlisting(lock_predicate/1).
 %:- autoload_all.
 
@@ -61,10 +62,11 @@ gp_africa(Result):-
        database80(exceeds(Size,_Other))), List),
    database80(aggregate80(max,List,Result)).
 
-:- add_process80("what is the total area of nations that are bordered by iraq?").
 :- add_history1(ensure_loaded(geography/load_kb)).
-
 :- add_history1(test_chat80).
+:- add_process80("what is the total area of nations that are bordered by iraq?").
+:- add_process80("what ocean does not border any country ?").
+
 :- fixup_exports.
 
 :- if(\+ prolog_load_context(reloading, true)).

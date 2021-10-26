@@ -10,7 +10,7 @@
 |               Dept. of Architecture, University of Edinburgh,           |
 |               20 Chambers St., Edinburgh EH1 1JZ, Scotland              |
 |                                                                         |
-|       This program may be used, copied, altered or included in other    |
+|       This program may Be used, copied, altered or included in other    |
 |       programs only for academic purposes and provided that the         |
 |       authorship of the initial program is aknowledged.                 |
 |       Use for commercial purposes without the previous written          |
@@ -181,7 +181,7 @@ maybe_negate_slot(negP, P, (P)):- !.
 maybe_negate_slot(_,P,P).
 
 reshape_pred(transparent,S,N,P,A,pred(S,N,P,A)).
-reshape_pred(have,Subj,Neg,Verb0,
+reshape_pred(have(_MODAL),Subj,Neg,Verb0,
       [quantV(Det,X,Head0,Pred,QArgs,Y)|MRest],
       pred(Subj,Neg,Verb,[quantV(Det,X,Head,Pred,QArgs,Y)|MRest])) :-
    have_pred(Head0,Verb0,Head,Verb).
@@ -315,23 +315,24 @@ noun_template(Noun,TypeV,V,apply80(F,P),
       [slot(prep(Of),TypeX,X,_,apply)]) :-
    meta_noun_LF(Noun,Of,TypeV,V,TypeX,X,P,F).
 
-slot_verb_template(have,Y=Z,
+slot_verb_template(have(MODAL),Y=Z,
                 [slot(subj,TypeS,S,-Id,free),
                  slot(dir,TypeV,Y,_,free),
                  slot(prep(of),TypeV,Z,_,free)],
-                held_arg(poss,-(-(+Id)),TypeS-S), have).
-slot_verb_template(have,Y=Z,
+                held_arg(poss,-(-(+Id)),TypeS-S), have(MODAL)).
+slot_verb_template(have(MODAL),Y=Z,
         [slot(subj,TypeS,S,-(-(Id)),free),
          slot(dir,TypeV,Y,_,free),
          slot(prep(as),TypeV,Z,_,free)],
-        held_arg(poss,-(-(-(+Id))),TypeS-S), have).
+        held_arg(poss,-(-(-(+Id))),TypeS-S), have(MODAL)).
 slot_verb_template(Verb,Pred,
       [slot(subj,TypeS,S,_,free)|Slots],[],transparent) :-
    verb_type_lex(Verb,_+Kind),
    slot_verb_kind(Kind,Verb,TypeS,S,Pred,Slots).
 
-slot_verb_kind(be,_,TypeS,S,S=A,[slot(dir,TypeS,A,_,free)]).
-slot_verb_kind(be,_,TypeS,S,true,[slot(pred,TypeS,S,_,free)]).
+% BE
+slot_verb_kind(be(_MODAL),_,TypeS,S,S=A,[slot(dir,TypeS,A,_,free)]).
+slot_verb_kind(be(_MODAL),_,TypeS,S,true,[slot(pred,TypeS,S,_,free)]).
 slot_verb_kind(iv,Verb,TypeS,S,Pred,Slots) :-
    intrans_LF(Verb,TypeS,S,Pred,Slots,_).
 slot_verb_kind(tv,Verb,TypeS,S,Pred,

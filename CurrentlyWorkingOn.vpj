@@ -2783,7 +2783,6 @@
 			<F N="bin/lmoo"/>
 			<F N="bin/lmoo-ansi"/>
 			<F N="bin/lmoo-bfly"/>
-			<F N="bin/lmoo-clif"/>
 			<F N="bin/lmoo-eclipse"/>
 			<F N="bin/lmoo-emacs"/>
 			<F N="bin/lmoo-junit"/>
@@ -2999,6 +2998,55 @@
 		</Folder>
 		<Folder Name="packs_sys">
 			<Folder Name="logicmoo_nlu">
+				<Folder Name="ext">
+					<Folder Name="chat80">
+						<Folder Name="original">
+							<Folder Name="geography">
+								<F N="packs_sys/logicmoo_nlu/ext/chat80/original/geography/borders.pl"/>
+								<F N="packs_sys/logicmoo_nlu/ext/chat80/original/geography/cities.pl"/>
+								<F N="packs_sys/logicmoo_nlu/ext/chat80/original/geography/contain.pl"/>
+								<F N="packs_sys/logicmoo_nlu/ext/chat80/original/geography/countries.pl"/>
+								<F N="packs_sys/logicmoo_nlu/ext/chat80/original/geography/load_kb.pl"/>
+								<F N="packs_sys/logicmoo_nlu/ext/chat80/original/geography/rivers.pl"/>
+								<F N="packs_sys/logicmoo_nlu/ext/chat80/original/geography/world0.pl"/>
+							</Folder>
+							<Folder Name="mud_status">
+								<F N="packs_sys/logicmoo_nlu/ext/chat80/original/mud_status/borders.pl"/>
+								<F N="packs_sys/logicmoo_nlu/ext/chat80/original/mud_status/cities.pl"/>
+								<F N="packs_sys/logicmoo_nlu/ext/chat80/original/mud_status/contain.pl"/>
+								<F N="packs_sys/logicmoo_nlu/ext/chat80/original/mud_status/countries.pl"/>
+								<F N="packs_sys/logicmoo_nlu/ext/chat80/original/mud_status/load_kb.pl"/>
+								<F N="packs_sys/logicmoo_nlu/ext/chat80/original/mud_status/rivers.pl"/>
+								<F N="packs_sys/logicmoo_nlu/ext/chat80/original/mud_status/world0.pl"/>
+							</Folder>
+							<F N="packs_sys/logicmoo_nlu/ext/chat80/original/aggreg.pl"/>
+							<F N="packs_sys/logicmoo_nlu/ext/chat80/original/chat.pl"/>
+							<F N="packs_sys/logicmoo_nlu/ext/chat80/original/chat80.pl"/>
+							<F N="packs_sys/logicmoo_nlu/ext/chat80/original/chatops.pl"/>
+							<F N="packs_sys/logicmoo_nlu/ext/chat80/original/clone.xg"/>
+							<F N="packs_sys/logicmoo_nlu/ext/chat80/original/demo"/>
+							<F N="packs_sys/logicmoo_nlu/ext/chat80/original/lex.xg"/>
+							<F N="packs_sys/logicmoo_nlu/ext/chat80/original/load.pl"/>
+							<F N="packs_sys/logicmoo_nlu/ext/chat80/original/log"/>
+							<F N="packs_sys/logicmoo_nlu/ext/chat80/original/log.old"/>
+							<F N="packs_sys/logicmoo_nlu/ext/chat80/original/ndtabl.pl"/>
+							<F N="packs_sys/logicmoo_nlu/ext/chat80/original/newdict.pl"/>
+							<F N="packs_sys/logicmoo_nlu/ext/chat80/original/newtop.pl"/>
+							<F N="packs_sys/logicmoo_nlu/ext/chat80/original/ptree.pl"/>
+							<F N="packs_sys/logicmoo_nlu/ext/chat80/original/qplan.pl"/>
+							<F N="packs_sys/logicmoo_nlu/ext/chat80/original/read_atoms_lc.pl"/>
+							<F N="packs_sys/logicmoo_nlu/ext/chat80/original/readin.pl"/>
+							<F N="packs_sys/logicmoo_nlu/ext/chat80/original/README.TXT"/>
+							<F N="packs_sys/logicmoo_nlu/ext/chat80/original/scopes.pl"/>
+							<F N="packs_sys/logicmoo_nlu/ext/chat80/original/slots.pl"/>
+							<F N="packs_sys/logicmoo_nlu/ext/chat80/original/talkr.pl"/>
+							<F N="packs_sys/logicmoo_nlu/ext/chat80/original/templa.pl"/>
+							<F N="packs_sys/logicmoo_nlu/ext/chat80/original/test_ext.pl"/>
+							<F N="packs_sys/logicmoo_nlu/ext/chat80/original/xgproc.pl"/>
+							<F N="packs_sys/logicmoo_nlu/ext/chat80/original/xgrun.pl"/>
+						</Folder>
+					</Folder>
+				</Folder>
 				<Folder Name="prolog">
 					<Folder Name="logicmoo_nlu">
 						<Folder Name="e2c">

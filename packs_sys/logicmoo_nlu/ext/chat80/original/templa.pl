@@ -10,7 +10,7 @@
 |               Dept. of Architecture, University of Edinburgh,           |
 |               20 Chambers St., Edinburgh EH1 1JZ, Scotland              |
 |                                                                         |
-|       This program may be used, copied, altered or included in other    |
+|       This program may Be used, copied, altered or included in other    |
 |       programs only for academic purposes and provided that the         |
 |       authorship of the initial program is aknowledged.                 |
 |       Use for commercial purposes without the previous written          |
@@ -39,6 +39,7 @@ bfeature_path(Spatial,CR,CVT):-  feature_path1(Spatial,CR,TYPE), btype_conversio
 thing_LF(person,_,X,ti(person,X),[],_).
 trans_LF(contain,Spatial&_,X,Spatial&_,Y, trans_pred(Spatial,contain,X,Y),[],_,_).
 trans_LF(have,Spatial&_,X,Spatial&_,Y, trans_pred(Spatial,have,X,Y),[],_,_).
+trans_LF(have(_MODAL),Spatial&_,X,Spatial&_,Y, trans_pred(Spatial,have(_MODAL),X,Y),[],_,_).
 
 
 thing_LF_access(Continent,Spatial&Geo&Continent,X,ti(Continent,X),[],_):- like_type(Geo,continent,Continent), spatial(Spatial).

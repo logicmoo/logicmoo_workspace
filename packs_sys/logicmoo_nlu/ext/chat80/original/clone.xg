@@ -145,7 +145,7 @@ verb_lc(verb(Root,Voice,Time+fin,Aspect,Neg),Agmt,Type,Voice) --->
 
 subj(Subj,Agmt,O) ---> subj0(Subj,Agmt,O).
 
-subj0(there,Agmt,_+be) ---> theText80(there).
+subj0(there,Agmt,_+be(_MODAL)) ---> theText80(there).
 subj0(Subj,Agmt,_) --->
    {is_s_all(SAll), is_subj_case(Case)},
    np(Subj,Agmt,Case,_,subj,SAll,_).
@@ -274,7 +274,7 @@ verb_mods([],_,Mask,Mask) ---> noText.
 
 verb_mod(Adv,Set,Mask) ---> adv_phrase(Adv,Set,Mask).
 verb_mod(Adv,Set,Nil) --->
-   {is_adv(Set)},
+   {is_adv_bits(Set)},
    adverb(Adv),
    {is_empty_bits(Nil)}.
 verb_mod(PP,Set,Mask) ---> prep_phrase(PP,compl,Set,Mask).
@@ -398,7 +398,7 @@ reduced_rel(Agmt,reduced_rel(X,S),Mask) --->
 
 reduced_wh(Agmt,X),
    np(np(Agmt,wh(X),[]),Agmt,NPCase,_,_,Set0,Mask0),
-   verb_form80(be,pres+fin,Agmt,main),
+   verb_form80(be(_MODAL),pres+fin,Agmt,main),
    neg_opt(_,Neg), pred(Neg,Pred,Mask) 
      --->
    neg_opt(_,Neg), pred(Neg,Pred,Mask),
@@ -427,15 +427,15 @@ verb(verb(Root,Voice,Time+fin,Aspect,Neg),Agmt,Type,Voice) --->
 neg_opt(aux+_,negP) ---> theText80(not).
 neg_opt(_,posP) ---> noText.
 
-rest_verb(aux,have,Root,Voice,[perf|Aspect]) ---> verb_form80(Root0,past+part,_,_), have_vt(Root0,Root,Voice,Aspect).
-rest_verb(aux,be,Root,Voice,Aspect) ---> verb_form80(Root0,Tense0,_,_), be_vt(Tense0,Root0,Root,Voice,Aspect).
-rest_verb(aux,do,Root,active,[]) ---> verb_form80(Root,inf,_,_).
+rest_verb(aux,have(_MODAL),Root,Voice,[perf|Aspect]) ---> verb_form80(Root0,past+part,_,_), have_vt(Root0,Root,Voice,Aspect).
+rest_verb(aux,be(_MODAL),Root,Voice,Aspect) ---> verb_form80(Root0,Tense0,_,_), be_vt(Tense0,Root0,Root,Voice,Aspect).
+rest_verb(aux,do(_MODAL),Root,active,[]) ---> verb_form80(Root,inf,_,_).
 rest_verb(aux,can,Root,active,[]) ---> verb_form80(Root,inf,_,_).
 rest_verb(aux,will,Root,active,[]) ---> verb_form80(Root,inf,_,_).
 rest_verb(main,Root,Root,active,[]) ---> noText.
 
 
-have_vt(be,Root,Voice,Aspect) --->
+have_vt(be(_MODAL),Root,Voice,Aspect) --->
    verb_form80(Root0,Tense0,_,_),
    be_vt(Tense0,Root0,Root,Voice,Aspect).
 have_vt(Root,Root,active,[]) ---> noText.
@@ -444,7 +444,7 @@ be_vt(past+part,Root,Root,passive,[]) ---> noText.
 be_vt(pres+part,Root0,Root,Voice,[prog]) --->
    passive_vt(Root0,Root,Voice).
 
-passive_vt(be,Root,passive) --->
+passive_vt(be(_MODAL),Root,passive) --->
    verb_form80(Root,past+part,_,_),
    {verb_type_lex(Root,Type), passive_vt(Type)}.
 passive_vt(Root,Root,active) ---> noText.
@@ -475,11 +475,13 @@ verb_args(tv,active,[arg(dir,Dir)],_,Mask) --->
 verb_args(dv(_Prep),_,[arg(Case,NP)|X],_,Mask) --->
    verb_arg(np,NP,Mask0),
    object_opt(Case,X,Mask0,Mask).
-verb_args(be,_,[voidQ],Mask,Mask) ---> theText80(there).
-verb_args(be,_,[arg(pred,P)],_,Mask) --->
+% BE
+verb_args(be(_MODAL),_,[voidQ],Mask,Mask) ---> theText80(there).
+verb_args(be(_MODAL),_,[arg(pred,P)],_,Mask) --->
    pred_conj(_,P,Mask).
-verb_args(be,_,[arg(dir,P)],_,Mask) ---> verb_arg(np,P,Mask).
-verb_args(have,active,[arg(dir,P)],_,Mask) ---> verb_arg(np,P,Mask).
+verb_args(be(_MODAL),_,[arg(dir,P)],_,Mask) ---> verb_arg(np,P,Mask).
+% HAVE
+verb_args(have(_MODAL),active,[arg(dir,P)],_,Mask) ---> verb_arg(np,P,Mask).
 verb_args(Type,_,[],Mask,Mask) ---> {no_args_vt(Type)}.
 
 object_opt(Case,AdvArg,Mask0,Mask) --->
@@ -512,7 +514,7 @@ pred(_,Adv,Mask) --->
    adv_phrase(Adv,SAll,Mask).
 
 advs_opt([Adv|R0],R,Set) --->
-   {is_adv(Set)},
+   {is_adv_bits(Set)},
    adverb(Adv),
    advs_opt(R0,R,Set).
 advs_opt(R,R,_) ---> noText.
@@ -555,7 +557,7 @@ conj(conj(Conj,Ctx0),
 |               Dept. of Architecture, University of Edinburgh,           |
 |               20 Chambers St., Edinburgh EH1 1JZ, Scotland              |
 |                                                                         |
-|       This program may be used, copied, altered or included in other    |
+|       This program may Be used, copied, altered or included in other    |
 |       programs only for academic purposes and provided that the         |
 |       authorship of the initial program is aknowledged.                 |
 |       Use for commercial purposes without the previous written          |
@@ -571,7 +573,7 @@ is_pred(#(_,1,_,_)).
 
 is_trace(#(_,_,1,_)).
 
-is_adv(#(_,_,_,1)).
+is_adv_bits(#(_,_,_,1)).
 
 is_trace82(#(_,_,1,_),#(0,0,0,0)).
 
@@ -629,7 +631,7 @@ user:portray_bits('#'(PP,Pred,Trace,Adv)) :-
    portray_bit(prep_phrase,PP,S0,S1),
    portray_bit(pred,Pred,S1,S2),
    portray_bit(trace,Trace,S2,S3),
-   portray_bit(adv,Adv,S3,[]),
+   portray_bit(adverb,Adv,S3,[]),
    write(S0).
 
 portray_bit(Bit,Value,[?Bit|Bits],Bits) :- var(Value), !.

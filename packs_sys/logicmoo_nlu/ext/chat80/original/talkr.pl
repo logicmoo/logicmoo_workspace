@@ -10,7 +10,7 @@
 |               Dept. of Architecture, University of Edinburgh,           |
 |               20 Chambers St., Edinburgh EH1 1JZ, Scotland              |
 |                                                                         |
-|       This program may be used, copied, altered or included in other    |
+|       This program may Be used, copied, altered or included in other    |
 |       programs only for academic purposes and provided that the         |
 |       authorship of the initial program is aknowledged.                 |
 |       Use for commercial purposes without the previous written          |
@@ -113,7 +113,7 @@ reply(X) :- write(X).
 
 %%	satisfy80(+Term, -Goal)//
 %
-%	Originally, Term was meta-interpreted. If we   do not want every
+%	Originally, Term was meta-interpreted. If we   dont want every
 %	^/2-term to act as an existential quantification, this no longer
 %	works. Hence, we now compile the term   into  a goal and compute
 %	the existentially quantified variables.

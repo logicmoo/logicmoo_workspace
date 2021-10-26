@@ -160,7 +160,7 @@ int_pron(Case) --->
    theText80(Pron),
    {int_pron_lex(Pron,Case)}.
 
-adverb(adv(W)) --->
+adverb(adverb(W)) --->
    theText80(W),
    {adverb_lex(W)}.
 

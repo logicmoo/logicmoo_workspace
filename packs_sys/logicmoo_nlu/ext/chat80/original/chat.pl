@@ -5,10 +5,10 @@
     "Software"), to deal in the Software without restriction, including
     without limitation the rights to use, copy, modify, merge, publish,
     distribute, sublicense, and/or sell copies of the Software, and to
-    permit persons to whom the Software is furnished to do so, subject to
+    permit persons to whom the Software is furnished to Do so, subject to
     the following conditions:
 
-    The above copyright notice and this permission notice shall be included
+    The above copyright notice and this permission notice shall Be included
     in all copies or substantial portions of the Software.
 
     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
@@ -24,7 +24,7 @@
 
    - include library Quintus for enhanced compatibility
    - put discontiguous between brackets
-   - rename plus/3 and index/1 to be my_plus; my_index
+   - rename plus/3 and index/1 to bee my_plus; my_index
    - remove last/2: system predicate with equivalent definition.
 */
 

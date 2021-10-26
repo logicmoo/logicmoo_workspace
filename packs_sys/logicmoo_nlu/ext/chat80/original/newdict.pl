@@ -10,7 +10,7 @@
 |               Dept. of Architecture, University of Edinburgh,           |
 |               20 Chambers St., Edinburgh EH1 1JZ, Scotland              |
 |                                                                         |
-|       This program may be used, copied, altered or included in other    |
+|       This program may Be used, copied, altered or included in other    |
 |       programs only for academic purposes and provided that the         |
 |       authorship of the initial program is aknowledged.                 |
 |       Use for commercial purposes without the previous written          |
@@ -148,7 +148,7 @@ quantifier_pron_lex(something,some,thing).
 
 % NEW TRY regular_past_lex(Had,Have):- try_lex(regular_past_db(Had,Have)).
 
-%regular_past_db(chat80,had,have).
+%regular_past_db(chat80,had,have(_MODAL)).
 
 %superceeded regular_past_db(chat80,contained,contain).
 %superceeded regular_past_db(chat80,exceeded,exceed).
@@ -164,8 +164,8 @@ quantifier_pron_lex(something,some,thing).
 % superceeded regular_pres_db(chat80,govern).
 
 
-% superceeded regular_pres_db(chat80,do).
-% superceeded regular_pres_db(chat80,have).
+% superceeded regular_pres_db(chat80,do(_MODAL)).
+% superceeded regular_pres_db(chat80,have(_MODAL)).
 
 rel_pron_lex(which,undef).
 rel_pron_lex(who,subj).
@@ -213,29 +213,31 @@ try_lex(G):- first_lexicon(Which),try_lex(Which,G,CALL),copy_term(G,CopyG),
     ; (show_tries_except(_,true,CopyG),!, fail)).
 
 
-correct_root(do,do).
+%correct_root(do(MODAL),do(MODAL)).
 correct_root(R,R).
 
 verb_form_wlex(_,A,B,C,D):- verb_form_lex(A,B,C,D),!.
 verb_form_wlex(L,_,Root,_,_):- member(pos(V),L),atom_concat('vb',_,V),member(root(Root0),L),!,correct_root(Root0,Root).
-verb_form_aux(am,be,pres+fin,1+sg).
-verb_form_aux(are,be,pres+fin,2+sg).
-verb_form_aux(are,be,pres+fin,_+pl).
-verb_form_aux(been,be,past+part,_).
-verb_form_aux(be,be,inf,_).
-verb_form_aux(being,be,pres+part,_).
-verb_form_aux(is,be,pres+fin,3+sg).
-verb_form_aux(was,be,past+fin,1+sg).
-verb_form_aux(was,be,past+fin,3+sg).
-verb_form_aux(were,be,past+fin,2+sg).
-verb_form_aux(were,be,past+fin,_+pl).
 
+% BE
+verb_form_aux(am,be(_MODAL),pres+fin,1+sg).
+verb_form_aux(are,be(_MODAL),pres+fin,2+sg).
+verb_form_aux(are,be(_MODAL),pres+fin,_+pl).
+verb_form_aux(been,be(_MODAL),past+part,_).
+verb_form_aux(be,be(_MODAL),inf,_).
+verb_form_aux(being,be(_MODAL),pres+part,_).
+verb_form_aux(is,be(_MODAL),pres+fin,3+sg).
+verb_form_aux(was,be(_MODAL),past+fin,1+sg).
+verb_form_aux(was,be(_MODAL),past+fin,3+sg).
+verb_form_aux(were,be(_MODAL),past+fin,2+sg).
+verb_form_aux(were,be(_MODAL),past+fin,_+pl).
 
-verb_form_aux(do,do,pres+fin,_+pl).
-verb_form_aux(did,do,past+fin,_).
-verb_form_aux(does,do,pres+fin,3+sg).
-verb_form_aux(doing,do,pres+part,_).
-verb_form_aux(done,do,past+part,_).
+% DO
+verb_form_aux(do,do(_MODAL),pres+fin,_+pl).
+verb_form_aux(did,do(_MODAL),past+fin,_).
+verb_form_aux(does,do(_MODAL),pres+fin,3+sg).
+verb_form_aux(doing,do(_MODAL),pres+part,_).
+verb_form_aux(done,do(_MODAL),past+part,_).
 
 verb_form_aux(will,will,pres+fin,3+sg).
 verb_form_aux(would,will,past+fin,_).
@@ -243,10 +245,11 @@ verb_form_aux(would,will,past+fin,_).
 verb_form_aux(could,can,past+fin,_).
 verb_form_aux(can,can,pres+fin,3+sg).
 
-verb_form_aux(has,have,pres+fin,3+sg).
-verb_form_aux(have,have,pres+fin,_+pl).
-verb_form_aux(having,have,pres+part,_).
-verb_form_aux(had,have,past+part,_).
+% HAVE
+verb_form_aux(has,have(_MODAL),pres+fin,3+sg).
+verb_form_aux(have,have(_MODAL),pres+fin,_+pl).
+verb_form_aux(having,have(_MODAL),pres+part,_).
+verb_form_aux(had,have(_MODAL),past+part,_).
 
 verb_form_lex(A,B,C,D):- verb_form_aux(A,B,C,D).
 verb_form_lex(A,B,C,D):- \+ avoided_verb(A), try_lex(verb_form_db(A,B,C,D)).
@@ -273,7 +276,7 @@ verb_form_db(chat80,Verb,Verb,pres+fin,_+pl) :-  Verb = V, verb_type_lex(V,_).
 %verb_form_lex(Verb,Verb,inf,_) :-  Verb = V, verb_type_lex(V,_).
 % ... because [does,france,border,belgium,?] was not properly parsed
 % NEW TRY verb_form_lex(Verb,Inf,past+part,_) :- use_lexicon_80(chat80_extra), regular_past_lex(Verb,Inf).
-% ... because [is,france,bordered,by,belgium,?] was not properly parsed. Deduced from verb_form_db(chat80,done,do,past+part,_) bellow.
+% ... because [is,france,bordered,by,belgium,?] was not properly parsed. Deduced from verb_form_db(chat80,done,do(_MODAL),past+part,_) bellow.
 %verb_form_lex(A,A,C,D) :-
 %  writef("********************************** verb_form_db {0} failed", [[A,A,C,D]]).
 %  !,
@@ -281,9 +284,9 @@ verb_form_db(chat80,Verb,Verb,pres+fin,_+pl) :-  Verb = V, verb_type_lex(V,_).
 
 %verb_root_lex(Root):- use_lexicon_80(chat80), %verb_root_db(chat80,Root).
 %  verb_type_db(chat80,Root,_MainTv).
-%verb_root_lex(be).
-%verb_root_lex(do).
-%verb_root_lex(have).
+%verb_root_lex(be(_MODAL)).
+%verb_root_lex(do(_MODAL)).
+%verb_root_lex(have(_MODAL)).
 
 
 %superceeded verb_root_db(chat80,contain).
@@ -292,9 +295,9 @@ verb_form_db(chat80,Verb,Verb,pres+fin,_+pl) :-  Verb = V, verb_type_lex(V,_).
 
 %superceeded verb_root_db(chat80,govern).
 
-verb_type_lex(be,aux+be).
-verb_type_lex(do,aux+dv(_Prep)).
-verb_type_lex(have,aux+have).
+verb_type_lex(be(MODAL),aux+be(MODAL)).
+verb_type_lex(do(_MODAL),aux+dv(_Prep)).
+verb_type_lex(have(MODAL),aux+have(MODAL)).
 verb_type_lex(V,MainTv):- try_lex(verb_type_db(V,MainTv)).
 
 
@@ -364,7 +367,7 @@ hide_plur_root_noun(1,ares,are).
 hide_plur_root_noun(1,_Noes,No):-det_lex(No,_,_,_).
 hide_plur_root_noun(1,_Whats,What):- talkdb:talk_db(pronoun,What).
 %hide_plur_root_noun(1,does,doe).
-hide_plur_root_noun(2,Does,_):- atom(Does), verb_form_aux(Does,do,_Y,_Z).
+hide_plur_root_noun(2,Does,_):- atom(Does), verb_form_aux(Does,do(_MODAL),_Y,_Z).
 hide_plur_root_noun(N,_,River):- N\==0, atom(River), verb_form_lex(River,_,_,_).
 
 noun_plu_lex(ksqmiles,ksqmile).
