@@ -39,7 +39,9 @@ bfeature_path(Spatial,CR,CVT):-  feature_path1(Spatial,CR,TYPE), btype_conversio
 thing_LF(person,_,X,ti(person,X),[],_).
 trans_LF(contain,Spatial&_,X,Spatial&_,Y, trans_pred(Spatial,contain,X,Y),[],_,_).
 trans_LF(have,Spatial&_,X,Spatial&_,Y, trans_pred(Spatial,have,X,Y),[],_,_).
-trans_LF(have(_MODAL),Spatial&_,X,Spatial&_,Y, trans_pred(Spatial,have(_MODAL),X,Y),[],_,_).
+trans_LF(have(MODAL),Spatial&_,X,Spatial&_,Y, trans_pred(Spatial,have,X,Y),[],_,_):- var(MODAL),!.
+trans_LF(have(MODAL),Spatial&_,X,Spatial&_,Y, OUT, [],_,_):- append_term(MODAL,trans_pred(Spatial,have,X,Y),OUT).
+
 
 
 thing_LF_access(Continent,Spatial&Geo&Continent,X,ti(Continent,X),[],_):- like_type(Geo,continent,Continent), spatial(Spatial).

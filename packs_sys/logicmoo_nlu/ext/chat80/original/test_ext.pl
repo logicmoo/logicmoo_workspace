@@ -64,6 +64,7 @@ gp_africa(Result):-
 
 :- add_history1(ensure_loaded(geography/load_kb)).
 :- add_history1(test_chat80).
+:- add_process80("is the population of china greater than india's population?").
 :- add_process80("what is the total area of nations that are bordered by iraq?").
 :- add_process80("what ocean does not border any country ?").
 

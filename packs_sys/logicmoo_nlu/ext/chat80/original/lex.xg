@@ -139,7 +139,7 @@ rel_pron(Case) --->
    theText80(W),
    {rel_pron_lex(W,Case)}.
 
-verb_form80(Verb,Tense,Agmt,Role) --->
+verb_form80(Verb,Tense,Agmt,_Role) --->
    theText80_W2(W,L),
    {verb_form_wlex(L,W,Verb,Tense,Agmt)}.
 

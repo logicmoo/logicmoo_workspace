@@ -36,7 +36,7 @@ i_sentence(decl(S),assertion80(P)) :-
 i_sentence(whq(X,S),question80([X],P)) :-
    i_s(S,P,[],0),!.
 i_sentence(imp(U,Ve,s(_,Verb,VArgs,VMods)),imp(U,Ve,V,Args)) :-
-   i_verb(Verb,V,_,active,posP,Slots0,[],transparent),
+   i_verb(Verb,V,_,active,posP(_Modal),Slots0,[],transparent),
    i_verb_args(VArgs,[],[],Slots0,Slots,Args,Args0,Up,-0),
    append(Up,VMods,Mods),
    i_verb_mods(Mods,_,[],Slots,Args0,Up,+0),!.
@@ -175,10 +175,10 @@ i_s(s(Subj,Verb,VArgs,VMods),Pred,Up,Id) :-
 i_verb(verb(Root,Voice,Tense,_Aspect,Neg),
       P,Tense,Voice,Det,Slots,XArg,Meta) :-
    slot_verb_template(Root,P,Slots,XArg,Meta),
-   %(Neg\=posP(_)->trace;true),
+   %(Neg\=posP(_Modal)(_)->trace;true),
    i_neg(Neg,Det).
 
-maybe_negate_slot(negP, P, (P)):- !.
+maybe_negate_slot(negP(_Modal), P, (P)):- !.
 maybe_negate_slot(_,P,P).
 
 reshape_pred(transparent,S,N,P,A,pred(S,N,P,A)).
@@ -194,8 +194,8 @@ have_pred(Head,Verb,Head,Verb) :-
 meta_head(apply80(_,_)).
 meta_head(aggr(_,_,_,_,_)).
 
-i_neg(posP,identityQ).
-i_neg(negP,not).
+i_neg(posP(_Modal),identityQ).
+i_neg(negP(_Modal),not).
 
 i_subj(Voice,Subj,Slots0,Slots,Quant,Up,Id) :-
    (active_passive_subjcase(Voice,Case)*->true;true),
@@ -250,7 +250,7 @@ i_pred(AP,T,['`'(Head)&Pred|As],As,[],_) :-
 i_pred(value80(adj(Adj),wh(TypeY-Y)),Type-X,['`'(H)|As],As,[],_) :-
    attribute_LF(Adj,Type,X,TypeY,Y,H).
 
-i_pred(comp(more,adj(less),NP),X,P,As,Up,Id) :- !,
+i_pred(comp(more,adj(less),NP),X,P,As,Up,Id) :-
   i_pred(comp(less,adj(great),NP),X,P,As,Up,Id).
 
 i_pred(comp(Op0,adj(Adj),NP),X,[P1 & P2 & '`'(P3),Q|As],As,Up,Id) :-

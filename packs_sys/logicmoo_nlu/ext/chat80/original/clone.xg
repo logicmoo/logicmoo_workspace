@@ -131,7 +131,7 @@ s_vp(_Subj,Agmt,Type,Verb,Args,Mods,Mask) --->
 
 subj(Subj,Agmt,O) ---> subj0(Subj,Agmt,O).
 
-subj0(there,Agmt,_+be(_MODAL)) ---> theText80(there).
+subj0(there,_Agmt,_+be(_MODAL)) ---> theText80(there).
 subj0(Subj,Agmt,_) --->
    {is_s_all(SAll), is_subj_case(Case)},
    np(Subj,Agmt,Case,_,subj,SAll,_).
@@ -411,8 +411,8 @@ verb(verb(Root,Voice,Time+fin,Aspect,Neg),Agmt,Type,Voice) --->
    rest_verb(Role,Root0,Root,Voice,Aspect),
    {verb_type_lex(Root,Type)}.
 
-neg_opt(aux+_,negP) ---> theText80(not).
-neg_opt(_,posP) ---> noText.
+neg_opt(aux+_,negP(_Modal)) ---> theText80(not).
+neg_opt(_,posP(_Modal)) ---> noText.
 
 rest_verb(aux,have(_MODAL),Root,Voice,[perf|Aspect]) ---> verb_form80(Root0,past+part,_,_), have_vt(Root0,Root,Voice,Aspect).
 rest_verb(aux,be(_MODAL),Root,Voice,Aspect) ---> verb_form80(Root0,Tense0,_,_), be_vt(Tense0,Root0,Root,Voice,Aspect).
@@ -474,7 +474,7 @@ verb_args(have(_MODAL),active,[arg(dir,P)],_,Mask) ---> verb_arg(np,P,Mask).
 verb_args(Type,_,[],Mask,Mask) ---> {no_args_vt(Type)}.
 
 object_opt(Case,AdvArg,Mask0,Mask) --->
-   {is_adv_bits(Adv), minus_mask(Adv,Mask0,Mask1)},
+   {adv_bits(Adv), minus_mask(Adv,Mask0,Mask1)},
    advs_opt(AdvArg,X,Mask1),
    obj_opt(Case,X,Mask0,Mask).
 
@@ -495,7 +495,7 @@ verb_arg(np,NP,Mask) --->
    np(NP,_,VCase,_,compl,SAll,Mask).
 
 pred(_,Adj,Mask) ---> adj_phrase(Adj,Mask).
-pred(negP,PP,Mask) --->
+pred(negP(_Modal),PP,Mask) --->
    {is_s_all(SAll)},
    prep_phrase(PP,compl,SAll,Mask).
 pred(_,Adv,Mask) --->
@@ -568,7 +568,7 @@ is_trace82(#(_,_,1,_),#(0,0,0,0)).
 
 is_trace_bits(#(0,0,1,0)).
 
-is_adv_bits(#(0,0,0,1)).
+adv_bits(#(0,0,0,1)).
 
 is_empty_bits(#(0,0,0,0)).
 
@@ -628,7 +628,7 @@ portray_bit(Bit,1,[+Bit|Bits],Bits).
 portray_bit(Bit,0,[-Bit|Bits],Bits).
 portray_bit(Bit,What,[Bit=What|Bits],Bits).
 portray_bit(Bit,1,[Bit|Bits],Bits).
-portray_bit(Bit,0,Bits,Bits).
+portray_bit(_Bit,0,Bits,Bits).
 portray_bit(_,_,Bits,Bits).
 
 end_of_file.

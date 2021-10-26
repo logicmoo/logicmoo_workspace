@@ -83,6 +83,16 @@ load_minus_xg_file(CM,F) :-
    locally(tlxgproc:current_xg_module(CM),consume0(F,-)),
    seen.
 
+:- dynamic(xgproc:xgproc_f_m_p/3).
+
+asserta_src(M,P):- M:asserta(P),ignore((tlxgproc:current_xg_filename(F),asserta(xgproc:xgproc_f_m_p(F,M,P)))).
+assertz_src(M,P):- M:assertz(P),ignore((tlxgproc:current_xg_filename(F),assertz(xgproc:xgproc_f_m_p(F,M,P)))).
+abolish_xg_file(F):- forall(retract(xgproc:xgproc_f_m_p(F,M,P)),abolish_f_m_p(F,M,P)).
+find_same_clause_ref(M:H,B,Ref):- clause(M:H,B,Ref),clause(M:HH,BB,Ref), HH=@=H,BB=@=B, !.
+dif_clause_file(Ref,F):- clause_property(Ref,file(W)),!,W==F.
+abolish_f_m_p(F,M,(H:-B)):- !, find_same_clause_ref(M:H,B,Ref), \+ dif_clause_file(Ref,F), erase(Ref),!.
+abolish_f_m_p(F,M,H):- find_same_clause_ref(M:H,true,Ref), \+ dif_clause_file(Ref,F), erase(Ref),!.
+
 
 consume0(F0,Mode) :- 
    Stat_key = clauses,
@@ -91,6 +101,7 @@ consume0(F0,Mode) :-
     statistics(Stat_key,H0),
     absolute_file_name(F0,F),
    see(F),
+   abolish_xg_file(F),
    abolish_xg(xg_source=F),
    locally(tlxgproc:current_xg_filename(F),tidy_consume(F,Mode)),
  ( (seeing(User2),User2=user), !; seen ),
@@ -139,7 +150,7 @@ xg_process(P,Mode) :-
    new_pred(P),
    xg_assertz(P), !.
 
-xg_assertz(P):- flag(xg_assertions,A,A+1),must((tlxgproc:current_xg_module(M),nop(dmsg(M:xg_assertz(P))),M:assertz(P))),!.
+xg_assertz(P):- flag(xg_assertions,A,A+1),must((tlxgproc:current_xg_module(M),nop(dmsg(M:xg_assertz(P))),assertz_src(M,P))),!.
 
 xg_complete(_F) :-
    recorded('xg.usurped',P,R0), erase_safe(recorded('xg.usurped',P,R0),R0),
@@ -200,9 +211,10 @@ virtualrule(X) :-
    functor(X,F,N),
    functor(Y,F,N),
    tag(Y,S,S,Hx,Hy,P),
+   strip_module(P,M,_),
  ( clause(P,virtual(_,_,_)), !;
       new_pred(P),
-      asserta((P :- virtual(Y,Hx,Hy))) ).
+      asserta_src(M,(P :- virtual(Y,Hx,Hy))) ).
 
 expandrhs(X,S0,S,H0,H,Y) :- var(X),!,
    tag(X,S0,S,H0,H,Y).
