@@ -216,8 +216,8 @@ try_lex(G):- first_lexicon(Which),try_lex(Which,G,CALL),copy_term(G,CopyG),
 %correct_root(do(MODAL),do(MODAL)).
 correct_root(R,R).
 
-verb_form_wlex(_,A,B,C,D):- verb_form_lex(A,B,C,D),!.
-verb_form_wlex(L,_,Root,_,_):- member(pos(V),L),atom_concat('vb',_,V),member(root(Root0),L),!,correct_root(Root0,Root).
+verb_form_wlex(_,A,B,C,D):- verb_form_lex(A,B,C,D), !.
+verb_form_wlex(L,_,Root,_,_):- is_list(L),member(pos(V),L),atom_concat('vb',_,V),member(root(Root0),L),!,correct_root(Root0,Root).
 
 % BE
 verb_form_aux(am,be(_MODAL),pres+fin,1+sg).
@@ -239,11 +239,13 @@ verb_form_aux(does,do(_MODAL),pres+fin,3+sg).
 verb_form_aux(doing,do(_MODAL),pres+part,_).
 verb_form_aux(done,do(_MODAL),past+part,_).
 
+/*
 verb_form_aux(will,will,pres+fin,3+sg).
 verb_form_aux(would,will,past+fin,_).
 
 verb_form_aux(could,can,past+fin,_).
 verb_form_aux(can,can,pres+fin,3+sg).
+*/
 
 % HAVE
 verb_form_aux(has,have(_MODAL),pres+fin,3+sg).
@@ -254,9 +256,11 @@ verb_form_aux(had,have(_MODAL),past+part,_).
 %verb_form_aux(A,B,C,D):- modal_verb_form_aux(A,B,C,D).
 
 verb_form_lex(A,B,C,D):- verb_form_aux(A,B,C,D).
-verb_form_lex(A,B,C,D):- \+ avoided_verb(A), try_lex(verb_form_db(A,B,C,D)).
+verb_form_lex(A,B,C,D):- try_lex(verb_form_db(A,B,C,D)), \+ avoided_verb(A).
 
-avoided_verb(A):- freeze(A,clause(verb_form_aux(A,_,_,_),true)).
+avoided_verb(A):- var(A), freeze(A,avoided_verb(A)).
+avoided_verb(A):- clause(modal_verb_form_aux(A,_,_,_),true).
+avoided_verb(A):- clause(verb_form_aux(A,_,_,_),true).
 
 % TODO FIX THESE
 modal_verb_form_aux(should,should,pres+fin,3+sg).

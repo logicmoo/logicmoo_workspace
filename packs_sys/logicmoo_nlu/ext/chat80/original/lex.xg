@@ -64,6 +64,7 @@ theText80Penn(A) --->{atomic(A),!},theText80(A).
 theText80Penn(Cmp) --->{compound(Cmp),!},w001(Cmp).
 theText80Penn(w(W,L1)) ---> theText80_W2(W,L2),{L1=L2}.
 
+xg_with_text(G1,Text) ---> xg_and(G1,theText_cl(Text)).
 
 theText80(IC) ---> w1(W0),{assertion(nonvar(W0);nonvar(IC)),parser_e2c:the_text_unif(IC,W0)}.
 %theText80(IC) ---> {t_l:old_text,!},[W0],{parser_tokenize:any_nb_to_atom(W0,W1),downcase_atom(W1,DC),(var(IC)->IC=DC;downcase_atom(IC,DC))}.
@@ -84,6 +85,7 @@ theTextL80(DCG) ---> {dmsg(theText_DCG(DCG)),dtrace,nonvar(DCG)},DCG.
 theText_ol([W1,W2,W3]) ---> theText80(W1),theText80(W2),theText80(W3).
 theText_ol([W1,W2]) ---> theText80(W1),theText80(W2).
 theText_ol([W1]) ---> theText80(W1).
+%theText_ol(List) ---> {between(4,10,Len),length(List,Len)},theText_cl(List).
 
 theText_cl([]) ---> {!},[].
 theText_cl([W1|WL]) ---> theText80(W1),{!},theText_cl(WL).

@@ -41,6 +41,20 @@ gap([]).
 
 virtual(NT,x(_,nonterminal,NT,X),X).
 
+
+xg_and(G1,G2, B, C, D, E) :- phraseXG(G1, B, C, D, E), phraseXG(G2, B, C, D, E).
+
+phraseXG0((G1 ; G2), B, C, D, E) :- !, (phraseXG(G1, B, C, D, E); phraseXG(G2, B, C, D, E)).
+phraseXG0('&'(G1 , G2), B, C, D, E) :- !, xg_and(G1,G2, B, C, D, E).
+phraseXG0((A , B), C, D, E, F) :- !, phraseXG(A, C, G, E, H), phraseXG(B, G, D, H, F).
+
+phraseXGF((_ , _)).
+phraseXGF((_ ; _)).
+phraseXGF('&'(_ , _)).
+phraseXG(P,A1,A2,A3,A4):- var(P),!,throw(var_phraseXG(P,A1,A2,A3,A4)).
+phraseXG(P,A1,A2,A3,A4):- phraseXGF(P),!,phraseXG0(P,A1,A2,A3,A4).
+phraseXG(P,A1,A2,A3,A4):- !, apply(P,[A1,A2,A3,A4]).
+
 phraseXG(P,A1,A2,A3,A4):-
    safe_univ(P,[F|Args0]),
   % dtrace,

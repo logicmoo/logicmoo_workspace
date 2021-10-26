@@ -512,7 +512,7 @@ reduce1(P,Q):- compound_name_arguments(P,F,A),
 
 clausify_simplify80(QT,Plan):- clausify80(QT,UE),once((simplify80(UE,Query),qplan(Query,Plan))).
 
-simplify80(C,C0):-var(C),dmsg(var_simplify(C,C0)),!,fail.
+simplify80(C,C0):-var(C),dmsg(var_simplify(C,C0)),!,C=C0.
 simplify80(C,(P:-R)) :- !,
    unequalise(C,(P:-Q)),
    simplify80(Q,R,true).
