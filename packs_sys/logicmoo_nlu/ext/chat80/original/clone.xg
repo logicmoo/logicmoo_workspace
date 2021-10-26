@@ -435,6 +435,7 @@ rest_verb(aux,will,Root,active,[]) ---> verb_form80(Root,inf,_,_).
 rest_verb(main,Root,Root,active,[]) ---> noText.
 
 
+% BE
 have_vt(be(_MODAL),Root,Voice,Aspect) --->
    verb_form80(Root0,Tense0,_,_),
    be_vt(Tense0,Root0,Root,Voice,Aspect).
@@ -444,6 +445,7 @@ be_vt(past+part,Root,Root,passive,[]) ---> noText.
 be_vt(pres+part,Root0,Root,Voice,[prog]) --->
    passive_vt(Root0,Root,Voice).
 
+% BE
 passive_vt(be(_MODAL),Root,passive) --->
    verb_form80(Root,past+part,_,_),
    {verb_type_lex(Root,Type), passive_vt(Type)}.
