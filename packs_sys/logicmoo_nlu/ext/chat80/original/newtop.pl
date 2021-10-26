@@ -112,6 +112,9 @@ test_chat80(N, Sentence, OnOff, CorrectAnswer):-
   ignore((baseKB:test_chat80_mpred(N, Sentence, OnOff, CorrectAnswer))),!,
   kill_junit_tee.
 
+dumpST_ERR:- dump_st,!.
+dumpST_ERR:- dumpST,!.
+
 :- use_module(library(logicmoo_test)).
 
 baseKB_test_chat80_mpred(N, Sentence, _OnOff, CorrectAnswer) :-
@@ -148,7 +151,7 @@ rtest_chat(N) :-
 	  process5(test,Sentence,CorrectAnswer,Status,_Times),
 	  (   Status == true
 	  ->  true
-	  ;   format(user_error, 'Test ~w failed!~n', [N])
+	  ;   (format(user_error, 'Test ~w failed!~n', [N]),dumpST_ERR)
 	  ),
 	NN is N + 1,
 	rtest_chat(NN).
@@ -180,7 +183,7 @@ answer80((answer80(X):-E),S) :- seto(X,E,S).
 
 check_answer(_Sentence,A,B,true) :- close_answer(A,B),!.
 check_answer(Sentence,A,B,'wrong answer'):-
-  dumpST,
+  dumpST_ERR,
   pprint_ecp_cmt(red,check_answer(Sentence,A,B,'wrong answer')),  
   tracing ~= on,
   once(process(debug,Sentence)).
@@ -338,10 +341,10 @@ process5(How,Sentence,CorrectAnswer,Status,Times) :-
 	process4(How,Sentence,Answer,Times),
 	!,
 	check_answer(Sentence,Answer,CorrectAnswer,Status),!.
-process5(_How,_,_,failed,[0,0,0,0,0]).
+process5(_How,_,_,failed,[0,0,0,0,0]):- dumpST_ERR.
 
 process(How,Sentence) :-
-  process4(How,Sentence,Answer,_Times), !, Answer\==failed.
+  process4(How,Sentence,Answer,_Times), Answer\==failed, !.
 process(normal,U) :-
    nl, nl,
    write('I don''t understand! '+U), nl,fail.

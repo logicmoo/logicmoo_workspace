@@ -10,7 +10,7 @@
 |               Dept. of Architecture, University of Edinburgh,           |
 |               20 Chambers St., Edinburgh EH1 1JZ, Scotland              |
 |                                                                         |
-|       This program may Be used, copied, altered or included in other    |
+|       This program may be used, copied, altered or included in other    |
 |       programs only for academic purposes and provided that the         |
 |       authorship of the initial program is aknowledged.                 |
 |       Use for commercial purposes without the previous written          |
@@ -343,7 +343,7 @@ loc_pred_lex(of,west,prep(cp(west,of))).
 
 noun_form_wlex(L,Plu,Root,Agmt) :-
   noun_form_wlex0(L,Plu,Root,Agmt),!,
-  (Root==flow->(fail,dumpST,break);true).
+  (Root==flow->(fail,dumpST_ERR,break);true).
 
 noun_form_wlex0(_,Plu,Root,Agmt) :- noun_form_lex(Plu,Root,Agmt),!.
 noun_form_wlex0(L,_,Root,sg) :- member(pos(nn),L),member(root(Root),L),!.

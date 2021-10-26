@@ -127,21 +127,7 @@ s_vp(_Subj,Agmt,Type,Verb,Args,Mods,Mask) --->
    verb_args(Type,Voice,Args,Nil,Mask0),
    {minus_mask(SAll,Mask0,Set), plus_mask(SAll,Mask0,Mask1)},
    verb_mods(Mods,Set,Mask1,Mask).
-/*
-s_vp(_Subj,Agmt,Type,Verb,Args,Mods,Mask) --->
-   verb_lc(Verb,Agmt,Type,Voice),
-   {is_empty_bits(Nil), is_s_all(SAll)},
-   verb_args(Type,Voice,Args,Nil,Mask0),
-   {minus_mask(SAll,Mask0,Set), plus_mask(SAll,Mask0,Mask1)},
-   verb_mods(Mods,Set,Mask1,Mask).
 
-verb_lc(verb(Root,Voice,Time+fin,Aspect,Neg),Agmt,Type,Voice) --->
-   verb_form80(Root0,Time+fin,Agmt,Role),
-   {must(verb_type(Root0,Type0))},
-   neg_opt(Type0,Neg),
-   rest_verb(Role,Root0,Root,Voice,Aspect),
-   {must(verb_type(Root,Type)),!,verb_type_to_kind(Type,Kind)}.
-*/
 
 subj(Subj,Agmt,O) ---> subj0(Subj,Agmt,O).
 
@@ -186,7 +172,8 @@ np_compls(common,Agmt,Case,Mods,Set0,Mask) --->
 
 
 
-np_head0(nameOf(Name),3+sg,def+proper) ---> name_xg(Name).
+%np_head0(nameOf(Name),3+sg,def+proper) ---> number(Name,_Number).
+np_head0(nameOf(Number),3+sg,def+proper) ---> name_xg(Name).
 
 np_head0(Pronoun,Agmt,def+proper), gen_marker --->
    poss_pron(Pronoun,Agmt).

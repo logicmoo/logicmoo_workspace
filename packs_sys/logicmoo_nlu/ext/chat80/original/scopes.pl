@@ -32,7 +32,7 @@ clausify80(assertion80(P),OUT) :-
 clausify80(P,OUT) :- 
   clausify80_qa([],P,V,B),!,
   OUT = (run80(V):-B).
-clausify80(P,error_in_clausify80(P)):- dumpST.
+clausify80(P,error_in_clausify80(P)):- dumpST_ERR.
 
 clausify80_qa(V0,P,V,BO):- 
  print_tree_nl(p=P),
@@ -49,6 +49,7 @@ reguess_vars(Vs,_B,BO,Bs):-
   term_variables(Vs+BO,Bs).
   
 
+code_smell(B,B):- !.
 code_smell(B,B):- var(B),!.
 code_smell(^(V,B),BO):- V==[],!,code_smell(B,BO).
 code_smell((A,B),BO):- !, code_sniff(A,B,BO).

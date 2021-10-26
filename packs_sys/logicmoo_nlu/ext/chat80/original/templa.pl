@@ -325,7 +325,8 @@ database80(G):-  must(current_predicate(_,G)), call(G).
 remove_each_eq(Ys,[],Ys).
 remove_each_eq(Ys,[X|Xs],Es):- exclude(==(X),Ys,Zs),remove_each_eq(Zs,Xs,Es).
 
-setOf(X,Y,Z):- term_variables(Y,Ys),term_variables(X,Xs),remove_each_eq(Ys,Xs,Es),!,(setof(X,Es^Y,Z)*->true;Z=[]).
+setOf1(X,Y,Z):- term_variables(Y,Ys),term_variables(X,Xs),remove_each_eq(Ys,Xs,Es),!,(setof(X,Es^Y,Z)*->true;Z=[]).
+setOf(X,Y,Z):- setof(X,Y,Z).
 
 measure_pred(Spatial,Area,Where,Total) :- not_where(Where), 
  % ti(continent,Where),
