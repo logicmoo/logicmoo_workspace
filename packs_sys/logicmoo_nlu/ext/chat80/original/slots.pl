@@ -175,7 +175,6 @@ i_s(s(Subj,Verb,VArgs,VMods),Pred,Up,Id) :-
 i_verb(verb(Root,Voice,Tense,_Aspect,Neg),
       P,Tense,Voice,Det,Slots,XArg,Meta) :-
    slot_verb_template(Root,P,Slots,XArg,Meta),
-   %(Neg\=posP(_)->trace;true),
    i_neg(Neg,Det).
 
 maybe_negate_slot(negP, P, (P)):- !.

@@ -172,8 +172,7 @@ np_compls(common,Agmt,Case,Mods,Set0,Mask) --->
 
 
 
-%np_head0(nameOf(Name),3+sg,def+proper) ---> number(Name,_Number).
-np_head0(nameOf(Number),3+sg,def+proper) ---> name_xg(Name).
+np_head0(nameOf(Name),3+sg,def+proper) ---> name_xg(Name).
 
 np_head0(Pronoun,Agmt,def+proper), gen_marker --->
    poss_pron(Pronoun,Agmt).

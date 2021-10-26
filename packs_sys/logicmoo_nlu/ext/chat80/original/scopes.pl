@@ -32,7 +32,7 @@ clausify80(assertion80(P),OUT) :-
 clausify80(P,OUT) :- 
   clausify80_qa([],P,V,B),!,
   OUT = (run80(V):-B).
-clausify80(P,error_in_clausify80(P)):- dumpST_ERR.
+clausify80(P,error_in_clausify80(P)):- dumpST.
 
 clausify80_qa(V0,P,V,BO):- 
  print_tree_nl(p=P),
