@@ -247,7 +247,7 @@ ed1("iraq borders iran?").
 
 ed1("iraq does border iran?").
 ed1("iraq did border iran?").
-ed1("iraq will border iran?").
+%ed1("iraq will border iran?").
 
 ed1("iraq is bordering iran?").
 ed1("iraq was bordering iran?").
