@@ -175,6 +175,7 @@ i_s(s(Subj,Verb,VArgs,VMods),Pred,Up,Id) :-
 i_verb(verb(Root,Voice,Tense,_Aspect,Neg),
       P,Tense,Voice,Det,Slots,XArg,Meta) :-
    slot_verb_template(Root,P,Slots,XArg,Meta),
+   %(Neg\=posP(_)->trace;true),
    i_neg(Neg,Det).
 
 maybe_negate_slot(negP, P, (P)):- !.
@@ -248,6 +249,10 @@ i_pred(AP,T,['`'(Head)&Pred|As],As,[],_) :-
    i_adj(AP,T,_,_,Head,true,Pred,'`'(true)).
 i_pred(value80(adj(Adj),wh(TypeY-Y)),Type-X,['`'(H)|As],As,[],_) :-
    attribute_LF(Adj,Type,X,TypeY,Y,H).
+
+i_pred(comp(more,adj(less),NP),X,P,As,Up,Id) :- !,
+  i_pred(comp(less,adj(great),NP),X,P,As,Up,Id).
+
 i_pred(comp(Op0,adj(Adj),NP),X,[P1 & P2 & '`'(P3),Q|As],As,Up,Id) :-
    i_np(NP,Y,Q,Up,Id,unit,[],[]),
    adj_sign_db(Adj,Sign),

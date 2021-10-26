@@ -251,11 +251,22 @@ verb_form_aux(have,have(_MODAL),pres+fin,_+pl).
 verb_form_aux(having,have(_MODAL),pres+part,_).
 verb_form_aux(had,have(_MODAL),past+part,_).
 
+%verb_form_aux(A,B,C,D):- modal_verb_form_aux(A,B,C,D).
+
 verb_form_lex(A,B,C,D):- verb_form_aux(A,B,C,D).
 verb_form_lex(A,B,C,D):- \+ avoided_verb(A), try_lex(verb_form_db(A,B,C,D)).
 
 avoided_verb(A):- freeze(A,clause(verb_form_aux(A,_,_,_),true)).
 
+% TODO FIX THESE
+modal_verb_form_aux(should,should,pres+fin,3+sg).
+modal_verb_form_aux(must,should,pres+fin,3+sg).
+modal_verb_form_aux(shall,will,pres+fin,3+sg).
+
+modal_verb_form_aux(will,will,pres+fin,3+sg).
+modal_verb_form_aux(would,will,past+fin,_).
+modal_verb_form_aux(could,can,past+fin,_).
+modal_verb_form_aux(can,can,pres+fin,3+sg).
 
 
 /*
@@ -343,7 +354,7 @@ loc_pred_lex(of,west,prep(cp(west,of))).
 
 noun_form_wlex(L,Plu,Root,Agmt) :-
   noun_form_wlex0(L,Plu,Root,Agmt),!,
-  (Root==flow->(fail,dumpST,break);true).
+  (Root==flow->(fail,dumpST_ERR,break);true).
 
 noun_form_wlex0(_,Plu,Root,Agmt) :- noun_form_lex(Plu,Root,Agmt),!.
 noun_form_wlex0(L,_,Root,sg) :- member(pos(nn),L),member(root(Root),L),!.
