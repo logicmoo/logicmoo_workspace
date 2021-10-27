@@ -69,9 +69,10 @@ is_penn_long(S):-is_penn_tag(S),too_long(S).
 
 pre_tree(I,O):- \+ is_list(I),!,I=O.
 pre_tree([], []) :- !.
+% pre_tree(['PP'|I],O):- !, pre_tree(I, O).
 pre_tree(['VP',['NN',Border]|I],['VP',['VB',Border]|O]):-maplist(pre_tree,I,O).
 pre_tree([S|I], [TAG|O]) :-  is_penn_tag(S),s_c_code(S,TAG),!, maplist(pre_tree,I,O).
-pre_tree(I, O) :- maplist(pre_tree,I,O).
+pre_tree(I, O):- maplist(pre_tree,I,O).
 
 pre_tree_2(I,O):- \+ is_list(I),!,I=O.
 pre_tree_2([], []) :- !.
@@ -139,7 +140,7 @@ c81(S):-
   print_tree_nl(r=EUQ),
   compile_nl_tree(EUQ,E),
   dmsg(sentence=S),
-  print_tree_nl(s=E))),
+  in_color(yellow,print_tree_nl(s=E)))),
  fail.
 c81(_).
 

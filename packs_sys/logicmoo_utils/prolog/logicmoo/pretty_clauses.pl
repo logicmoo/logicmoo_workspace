@@ -924,6 +924,8 @@ system_portray(Tab,Term):- system_portray(Tab,Term,[]).
 
 system_portray(Tab,Term,Options):- recalc_tab(Tab, NewTab), !, system_portray(NewTab,Term,Options).
 
+%system_portray(Tab,Term,_Options) :-  ground(Term), Term = [tag(_,N),M], prefix_spaces(Tab),write([N,M]),!.
+%system_portray(Tab,Term,_Options) :-  ground(Term), Term = tag(_,N), prefix_spaces(Tab),write(N),!.
 system_portray(Tab,Term,_Options) :- 
   with_no_hrefs(t,(if_defined(rok_linkable(Term),fail),
     prefix_spaces(Tab),write_atom_link(Term))),!.
@@ -969,6 +971,7 @@ wots_pos(Pos,Goal):-
 
 maybe_reset_spaces(Pos):- ignore((current_output_line_position(PosNew), PosNew>Pos,  prefix_spaces(Pos))).
 
+print_tree(Term):- ansi_ansi,!,print_tree_with_final(Term,'.\n').
 print_tree(Term):- ansi_ansi,current_output_line_position(Pos),!,print_tree_with_final(Term,''), maybe_reset_spaces(Pos).
 print_tree(Term):-  print_tree00(Term).
 
@@ -1698,7 +1701,8 @@ as_is0(V):- var(V).
 as_is0(V) :- is_dict(V), !, fail.
 as_is0(A) :- is_arity_lt1(A), !.
 as_is0(A) :- functor(A,F,_), simple_f(F), !.
-
+as_is0(A) :- ground(A), A = [ tag(_,_), Atom],atomic(Atom),!.
+as_is0(A) :- ground(A), A =  tag(_,_),!.
 as_is0(A) :- is_list(A),length(A,L),L>4,!,fail.
 as_is0(A) :- is_list(A), maplist(is_arity_lt1,A),!.
 %as_is0([A]) :- is_list(A),length(A,L),on_x_ignore(L<2),!.
