@@ -14,7 +14,7 @@
 :- module(pretty_clauses,
           [ pprint_tree/2,        % +Term, +Options
            bfly_term//2,          % +Term, +Options
-   color_format_maybe/3,print_tree/1,print_as_tree/1,current_print_write_options/1,mort/1,print_tree_with_final/2]).
+   color_format_maybe/3,print_tree00/1,print_as_tree/1,current_print_write_options/1,mort/1,print_tree_with_final/2]).
 
 
 /** <module> Pretty Print Prolog terms in plain or HTML
@@ -80,15 +80,15 @@ etc.
 %:- thread_local(pretty_tl:in_pretty_tree_rec/0).
 
 %prolog_pprint_tree(Term):- \+ pretty_tl:in_pretty_tree, !,
-%  setup_call_cleanup(asserta(pretty_tl:in_pretty_tree, Ref), print_tree(Term), erase(Ref)).
+%  setup_call_cleanup(asserta(pretty_tl:in_pretty_tree, Ref), print_tree00(Term), erase(Ref)).
 %prolog_pprint_tree(Term):- \+ pretty_tl:in_pretty_tree_rec, !,
-%  setup_call_cleanup(asserta(pretty_tl:in_pretty_tree_rec, Ref), prolog_pprint(Term, [portray_goal(print_tree)]), erase(Ref)).
+%  setup_call_cleanup(asserta(pretty_tl:in_pretty_tree_rec, Ref), prolog_pprint(Term, [portray_goal(print_tree00)]), erase(Ref)).
 prolog_pprint_tree(Term):-  prolog_pprint(Term), !.
 
 
 user:test_pp:- 
   make,
-  print_tree(a(a{ a:b, = : -1 })),
+  print_tree00(a(a{ a:b, = : -1 })),
   %bfly_tests,
   %retractall(bfly_tl:bfly_setting(_,_)),
   % abolish(bfly_tl:bfly_setting,2),
@@ -117,7 +117,7 @@ test_pp(PP,Goal):-
   write('%====================================================\n'),
   format('% ?- ~p. ~n',[test_pp(PP,Goal)]),
   format('% ?- ~@. ~n',[print_tree_no_nl(test_pp(PP,Goal))]),
-  format('% ?- ~@. ~n',[print_tree(test_pp(PP,Goal))]),
+  format('% ?- ~@. ~n',[print_tree00(test_pp(PP,Goal))]),
   format('% ?- ~@ ~n', [print_tree_with_final(test_pp(PP,Goal),'.')]),
   write('%==================START====================\n==>\n'),
   with_pp(PP,\+ \+ Goal),
@@ -139,7 +139,7 @@ test_pp(G):-
 
 
 
-test_print_tree1(1):-   print_tree(( e2c_lexical_segs =   [  w(is,[pos(aux),loc(1),lnks(1),txt("is"),link(1,'S',r('S',seg(1,10)))]),      w(there,[pos(ex),loc(2),lnks(2),txt("there"),link(1,'NP',r('NP',seg(2,2))),link(2,'S',r('S',seg(1,10)))]),      w(a,         [  pos(dt),            loc(3),            lnks(3),            txt("a"),            link(1,'NP',r('NP',seg(3,4))),            link(2,'NP',r('NP',seg(3,9))),            link(3,'S',r('S',seg(1,10)))  ]),      w(the,         [  pos(dt),            loc(7),            lnks(6),            txt("the"),            link(1,'NP',r('NP',seg(7,9))),            link(2,'VP',r('VP',seg(6,9))),            link(3,'S',r('S',seg(6,9))),            link(4,'SBAR',r('SBAR',seg(5,9))),            link(5,'NP',r('NP',seg(3,9))),            link(6,'S',r('S',seg(1,10)))  ]),      w(greatest,         [  pos(jjs),            loc(8),            lnks(6),            txt("greatest"),            link(1,'NP',r('NP',seg(7,9))),            link(2,'VP',r('VP',seg(6,9))),            link(3,'S',r('S',seg(6,9))),            link(4,'SBAR',r('SBAR',seg(5,9))),            link(5,'NP',r('NP',seg(3,9))),            link(6,'S',r('S',seg(1,10)))  ]),      span( [  seg(6,9),               phrase('VP'),               size(4),               lnks(4),               #(r('VP',seg(6,9))),               txt(["becomes","the","greatest","tenor"]),               childs(1),               child(1,'NP',r('NP',seg(7,9))),               link(1,'S',r('S',seg(6,9))),               link(2,'SBAR',r('SBAR',seg(5,9))),               link(3,'NP',r('NP',seg(3,9))),               link(4,'S',r('S',seg(1,10)))  ]),      span( [  seg(1,10),               phrase('S'),               size(10),               lnks(0),               #(r('S',seg(1,10))),               txt(["is","there","a","man","who","becomes","the","greatest","tenor","?"]),               childs(2),               child(1,'NP',r('NP',seg(2,2))),               child(2,'NP',r('NP',seg(3,9)))  ])  ] )).
+test_print_tree1(1):-   print_tree00(( e2c_lexical_segs =   [  w(is,[pos(aux),loc(1),lnks(1),txt("is"),link(1,'S',r('S',seg(1,10)))]),      w(there,[pos(ex),loc(2),lnks(2),txt("there"),link(1,'NP',r('NP',seg(2,2))),link(2,'S',r('S',seg(1,10)))]),      w(a,         [  pos(dt),            loc(3),            lnks(3),            txt("a"),            link(1,'NP',r('NP',seg(3,4))),            link(2,'NP',r('NP',seg(3,9))),            link(3,'S',r('S',seg(1,10)))  ]),      w(the,         [  pos(dt),            loc(7),            lnks(6),            txt("the"),            link(1,'NP',r('NP',seg(7,9))),            link(2,'VP',r('VP',seg(6,9))),            link(3,'S',r('S',seg(6,9))),            link(4,'SBAR',r('SBAR',seg(5,9))),            link(5,'NP',r('NP',seg(3,9))),            link(6,'S',r('S',seg(1,10)))  ]),      w(greatest,         [  pos(jjs),            loc(8),            lnks(6),            txt("greatest"),            link(1,'NP',r('NP',seg(7,9))),            link(2,'VP',r('VP',seg(6,9))),            link(3,'S',r('S',seg(6,9))),            link(4,'SBAR',r('SBAR',seg(5,9))),            link(5,'NP',r('NP',seg(3,9))),            link(6,'S',r('S',seg(1,10)))  ]),      span( [  seg(6,9),               phrase('VP'),               size(4),               lnks(4),               #(r('VP',seg(6,9))),               txt(["becomes","the","greatest","tenor"]),               childs(1),               child(1,'NP',r('NP',seg(7,9))),               link(1,'S',r('S',seg(6,9))),               link(2,'SBAR',r('SBAR',seg(5,9))),               link(3,'NP',r('NP',seg(3,9))),               link(4,'S',r('S',seg(1,10)))  ]),      span( [  seg(1,10),               phrase('S'),               size(10),               lnks(0),               #(r('S',seg(1,10))),               txt(["is","there","a","man","who","becomes","the","greatest","tenor","?"]),               childs(2),               child(1,'NP',r('NP',seg(2,2))),               child(2,'NP',r('NP',seg(3,9)))  ])  ] )).
 
 %test_print_tree1(2):- nl,nl, test_rok,!.
 
@@ -147,20 +147,20 @@ test_print_tree1(2):-
  print_tree_with_final( a(b(c(e(7
      %,M.len() := Len :-Len is sqrt(M.x**2 + X.y**2)
     ),f), 
-   print_tree(a(b(c(e(7),f),d))), print_tree(a(b(c, X = point{x:1,y:2}.C1 , (e(X),f),d))),
-    [print_tree,a,_BE,'$VAR'('SEE'),C1,e,1.3,-7,`abcd`,"abcd",['a','b','c'],f,d, print_tree,a,b,c,e,7,f,d],
-    print_tree(a(b(c(e(7),f),d)))),x,y),'.').
+   print_tree00(a(b(c(e(7),f),d))), print_tree00(a(b(c, X = point{x:1,y:2}.C1 , (e(X),f),d))),
+    [print_tree00,a,_BE,'$VAR'('SEE'),C1,e,1.3,-7,`abcd`,"abcd",['a','b','c'],f,d, print_tree00,a,b,c,e,7,f,d],
+    print_tree00(a(b(c(e(7),f),d)))),x,y),'.').
 
 test_print_tree1(3):- 
- print_tree((print_tree_with_final( a(b(c(e(E7))))):- 
+ print_tree00((print_tree_with_final( a(b(c(e(E7))))):- 
  print_tree_with_final( point{x:1,y:2}, a(b(c(e(E7
      %,M.len() := Len :-Len is sqrt(M.x**2 + X.y**2)
     ),f), 
-   print_tree(a(b(c(e(7),f),d))), print_tree(a(b(c, X = point{x:1,y:2}.C1 , (e(X),f),d))),
-    [print_tree,a,_BE,'$VAR'('SEE'),C1,e,1.3,-7,`abcd`,"abcd",['a','b','c'],f,d, print_tree,a,b,c,e,7,f,d],
-    print_tree(a(b(c(e(7),f),d)))),x,y),'.'),!)),!.
+   print_tree00(a(b(c(e(7),f),d))), print_tree00(a(b(c, X = point{x:1,y:2}.C1 , (e(X),f),d))),
+    [print_tree00,a,_BE,'$VAR'('SEE'),C1,e,1.3,-7,`abcd`,"abcd",['a','b','c'],f,d, print_tree00,a,b,c,e,7,f,d],
+    print_tree00(a(b(c(e(7),f),d)))),x,y),'.'),!)),!.
 
-test_print_tree1(4):- forall(sample_pp_term(X), (nl,print_tree(X),nl)).
+test_print_tree1(4):- forall(sample_pp_term(X), (nl,print_tree00(X),nl)).
 
 %test_print_tree1(b):- forall(sample_pp_term(X), print_tree_cmt('hi',red,X)).
 
@@ -262,17 +262,17 @@ sample_pp_term(( e2c_lexical_segs =   [  w(is,[pos(aux),loc(1),lnks(1),txt("is")
 sample_pp_term((  a(b(c(e(7
      %,M.len() := Len :-Len is sqrt(M.x**2 + X.y**2)
     ),f), 
-   print_tree(a(b(c(e(7),f),d))), print_tree(a(b(c, X = point{x:1,y:2}.C1 , (e(X),f),d))),
-    [print_tree,a,_BE,'$VAR'('SEE'),C1,e,1.3,-7,`abcd`,"abcd",['a','b','c'],f,d, print_tree,a,b,c,e,7,f,d],
-    print_tree(a(b(c(e(7),f),d)))),x,y))).
+   print_tree00(a(b(c(e(7),f),d))), print_tree00(a(b(c, X = point{x:1,y:2}.C1 , (e(X),f),d))),
+    [print_tree00,a,_BE,'$VAR'('SEE'),C1,e,1.3,-7,`abcd`,"abcd",['a','b','c'],f,d, print_tree00,a,b,c,e,7,f,d],
+    print_tree00(a(b(c(e(7),f),d)))),x,y))).
 
 sample_pp_term(((print_tree_with_final( a(b(c(e(E7))))):- 
  print_tree_with_final( a(b(c(e(E7
      , M.len() := Len :-Len is sqrt(M.x**2 + X.y**2)
     ),f), 
-   print_tree(a(b(c(e(7),f),d))), print_tree(a(b(c, X = point{x:1,y:2}.C1 , (e(X),f),d))),
-    [print_tree,a,_BE,'$VAR'('SEE'),C1,e,1.3,-7,`abcd`,"abcd",['a','b','c'],f,d, print_tree,a,b,c,e,7,f,d],
-    print_tree(a(b(c(e(7),f),d)))),x,y),'.'),!))).
+   print_tree00(a(b(c(e(7),f),d))), print_tree00(a(b(c, X = point{x:1,y:2}.C1 , (e(X),f),d))),
+    [print_tree00,a,_BE,'$VAR'('SEE'),C1,e,1.3,-7,`abcd`,"abcd",['a','b','c'],f,d, print_tree00,a,b,c,e,7,f,d],
+    print_tree00(a(b(c(e(7),f),d)))),x,y),'.'),!))).
 
 sample_pp_term(( point{x:1,y:2})).
 
@@ -303,7 +303,7 @@ prolog_pprint(Term, Options):- \+ ground(Term),
 
 % prolog_pprint_0(Term, Options):- Options ==[], pprint_ecp_cmt(blue, Term), !.
 
-% prolog_pprint_0(Term, Options):- memberchk(portray(true), Options), \+ is_list(Term), \+ memberchk(portray_goal(_), Options), print_tree(Term, Options), !.
+% prolog_pprint_0(Term, Options):- memberchk(portray(true), Options), \+ is_list(Term), \+ memberchk(portray_goal(_), Options), print_tree00(Term, Options), !.
 prolog_pprint_0(Term, Options):- \+ memberchk(right_margin(_), Options), !, prolog_pprint_0(Term, [right_margin(0)|Options]).
 prolog_pprint_0(Term, Options):- \+ memberchk(portray(_), Options), !, prolog_pprint_0(Term, [portray(true)|Options]).
 prolog_pprint_0(Term, Options):- %fail,
@@ -498,7 +498,7 @@ print_tree_plpp(Term,Opts):- notrace(print_tree_loop(Term,Opts)).
  
 print_tree_loop(Term,Options):- \+ pretty_tl:in_pretty,!,
   setup_call_cleanup(asserta(pretty_tl:in_pretty,Ref),
-    print_tree(Term,Options),
+    print_tree00(Term,Options),
     erase(Ref)).
 print_tree_loop(Term, Options):- 
   with_current_line_position(simple_write_term(Term, Options)).
@@ -567,7 +567,7 @@ without_ec_portray_hook(Goal):- exact_ec_portray_hook(1000,Goal).
 
 %pc_portray(Term):- Term==[], !, color_format_maybe(hfg(blue),'~q',[[]]).
 %pc_portray(Term):- notrace(tracing),!,ec_portray_hook(Term).
-%pc_portray(X):- is_list(X),print_tree(X).
+%pc_portray(X):- is_list(X),print_tree00(X).
 
 pc_portray(Term):- var(Term),!,fail.
 pc_portray(Term):- atom(Term), exists_file_safe(Term),public_file_link(Term,Public),writeq(Public).
@@ -592,7 +592,7 @@ ec_portray(_,X):- as_is_cmpd(X),!,writeq(X).
 ec_portray(_,X):- atom(X),ansi_ansi,!,writeq(X).
 ec_portray(N,_):- N > 3,!,fail.
 ec_portray(_,Term):- (\+ compound(Term);Term='$VAR'(_)),!, ec_portray_now(Term).
-ec_portray(N,List):- N<2, is_list(List),!,print_tree(List).
+ec_portray(N,List):- N<2, is_list(List),!,print_tree00(List).
 %ec_portray(_,Term):- notrace(is_list(Term)),!,Term\==[], fail, notrace(catch(text_to_string(Term,Str),_,fail)),!,format('"~s"',[Str]).
 ec_portray(_,Term):- compound(Term), compound_name_arity(Term,F,A), uses_op(F,A), !, fail.
 %ec_portray(_,Term):- compound(Term),compound_name_arity(Term, F, 0), !,color_format([bold,hfg(red)],'~q()',[F]),!.
@@ -609,8 +609,8 @@ ec_portray_now(Term):- if_defined(rok_linkable(Term),fail),!, write_atom_link(Te
 ec_portray_now(Term):- atom(Term),!,color_format_maybe(hfg(blue),'~q',[Term]).
 ec_portray_now(Term):- \+ compound(Term),!, color_format_maybe(hfg(cyan),'~q',[Term]).
 %ec_portray_now(Term):- is_list(Term)
-%ec_portray_now(Term):- catch(print_tree(Term),_,fail),!.
-%ec_portray_now(Term):- N =0, \+ ansi_ansi,!, print_tree(Term), !.
+%ec_portray_now(Term):- catch(print_tree00(Term),_,fail),!.
+%ec_portray_now(Term):- N =0, \+ ansi_ansi,!, print_tree00(Term), !.
 %ec_portray_now(Term):- catch(pprint_ec_no_newline(green, Term),_,fail),!.
 
 will_need_space(_):- fail.
@@ -629,7 +629,7 @@ pprint_ec_no_newline(C, P):-
   real_ansi_format(C0, '~s', [S]))).
   
 
-print_e_to_string(P, S):-  notrace(with_output_to(string(S),print_tree(P))),!.
+print_e_to_string(P, S):-  notrace(with_output_to(string(S),print_tree00(P))),!.
 print_e_to_string(P, S):- 
   quietly(( must_det_l((
    pretty_numbervars(P, T),
@@ -861,7 +861,7 @@ print_tree_cmt(Mesg,C,P):-
   in_cmt(
     in_color(C,
     (format('~N~w: \n\n',[Mesg]),
-     print_tree(P),
+     print_tree00(P),
      echo_newline_if_needed))))))).
 
 :- export(in_color/2).
@@ -956,28 +956,9 @@ trim_ending_ws(S,S).
 ending_tag('</span>').
 last_tag(S,Tag):- ending_tag(Tag),string_concat(_,Tag,S).
 
-print_as_tree(Term):- print_tree(Term).
+print_as_tree(Term):- print_tree00(Term).
 
 ansi_ansi:- notrace((once(is_pp_set(ansi);\+ is_pp_set(_)),toplevel_pp(ansi))).
-
-maybe_reset_spaces(Pos):- ignore((current_output_line_position(PosNew), PosNew>Pos,  prefix_spaces(Pos))).
-
-print_tree(Term):- ansi_ansi,current_output_line_position(Pos),!,print_tab_term(Pos,Term), maybe_reset_spaces(Pos).
-  
-print_tree(Term):-
- current_output_line_position(Pos),
- ensure_pp((   
-  wots_pos(Pos, print_tree_with_final(Term, '', 
-  [ partial(true), numbervars(true), character_escapes(true),fullstop(false)])))).
-
-
-print_tree_nl(Term):- print_tree_with_final(Term,'\n').
-
-print_tree_no_nl(Term):-
- current_output_line_position(Pos),
- ensure_pp(( 
-  wots_pos(Pos, print_tree_with_final(Term, '', 
-  [ partial(true), numbervars(true), character_escapes(true),nl(false),fullstop(false)])))).
 
 wots_pos(Pos,Goal):-
  wots(S,Goal),
@@ -985,6 +966,32 @@ wots_pos(Pos,Goal):-
  with_output_to(string(White),print_spaces(Pos)),
  atomics_to_string(L,'\n',SS),
  print_each_prepended(White,L).
+
+maybe_reset_spaces(Pos):- ignore((current_output_line_position(PosNew), PosNew>Pos,  prefix_spaces(Pos))).
+
+print_tree(Term):- ansi_ansi,current_output_line_position(Pos),!,print_tree_with_final(Term,''), maybe_reset_spaces(Pos).
+print_tree(Term):-  print_tree00(Term).
+
+print_tree00(Term):-
+ current_output_line_position(Pos),
+ ensure_pp((
+  wots_pos(Pos, print_tree_with_final(Term, '', 
+  [ partial(true), numbervars(true), character_escapes(true),fullstop(false)])))).
+
+print_tree_nl(Term):- print_tree_with_final(Term,'.\n').
+
+print_tree_no_nl(Term):-
+ current_output_line_position(Pos),
+ ensure_pp(( 
+  wots_pos(Pos, print_tree_with_final(Term, '', 
+  [ partial(true), numbervars(true), character_escapes(true),nl(false),fullstop(false)])))).
+
+
+print_tree(Term, Options) :- select(fullstop(true),Options,OptionsNew), !, print_tree_with_final(Term, '.', [fullstop(false)|OptionsNew]).
+print_tree(Term, Options) :- print_tree_with_final(Term, '', Options).
+
+
+
 
 print_each_prepended(_White,[L]):- !, write(L).
 print_each_prepended(White,[L|More]):- write(L),!,nl,write(White),
@@ -994,9 +1001,6 @@ print_each_prepended(White,[L|More]):- write(L),!,nl,write(White),
 print_tree_with_final(Term, Final):-
    print_tree_with_final(Term, Final, [fullstop(false)]).
 
-
-print_tree(Term, Options) :- select(fullstop(true),Options,OptionsNew), !, print_tree_with_final(Term, '.', [fullstop(false)|OptionsNew]).
-print_tree(Term, Options) :- print_tree_with_final(Term, '', Options).
 
 print_tree_with_final(Term, Final, Options):- 
   select(variable_names(Vs),Options,NewOptions),!,
@@ -1371,7 +1375,7 @@ recalc_tab1(TabC,  Tab):- Tab is TabC.
 max_output(Tab,A160,T):- display_length(T,L), LL is Tab+L, on_x_ignore(LL<A160),!.
 
 print_atomf(F):- with_folding(f,print_tree_no_nl(F)).
-print_functor(F):- with_folding(f,print_tree(F)).
+print_functor(F):- with_folding(f,print_tree00(F)).
 
 pt_list_juncts(Tab,_OP,[T]):- print_tab_term(Tab,T).
 pt_list_juncts(_Tab,_OP,[]):- !.
@@ -1408,7 +1412,7 @@ pt1(_, Tab,Term) :-
 
 %t_l:printing_dict
 pt1(_FS,_Tab,(NPV)) :- NPV=..[OP,N,V], OP==(:), atomic(N),
-  writeq(N), pformat(' '), pformat(OP),pformat(' '), print_tree(V),!.
+  writeq(N), pformat(' '), pformat(OP),pformat(' '), print_tree00(V),!.
 
 pt1(_,_Tab,Term) :- Term=ref(_), !, writeq(Term),!.
 pt1(_,_Tab,Term) :- Term=element(_,_,List),List==[], !, writeq(Term),!.
@@ -1456,7 +1460,7 @@ pt1(_FS,Tab,T) :-
 
 %t_l:printing_dict
 pt1(_FS,_Tab,(NPV)) :- NPV=..[OP,N,V], is_colon_mark(OP), atomic(N),
-  writeq(N), pformat(' '), pformat(OP),pformat(' '), print_tree(V),!.
+  writeq(N), pformat(' '), pformat(OP),pformat(' '), print_tree00(V),!.
 
 
 pt1(FS,Tab,(NPV)) :- NPV=..[OP,N,V], is_colon_mark(OP), current_op(_,yfx,OP), !,
@@ -1469,7 +1473,7 @@ pt1(FS,Tab,(NPV)) :- NPV=..[OP,N,V], is_colon_mark(OP),
   pl_span_goal('functor', (
     pformat(' '), pformat(OP), pformat('  '))),
     (ansi_ansi->true; (pformat_ellipsis(V),prefix_spaces(Tab+5))),
-    pl_span_goal('args', (prefix_spaces(Tab+2), print_tree( V ))),!.
+    pl_span_goal('args', (prefix_spaces(Tab+2), print_tree00( V ))),!.
     
 
 pt1(_FS,Tab,T) :- fail,
@@ -1777,7 +1781,7 @@ merge_canonical_defaults(O,[],O):-!.
 
 :- system:use_module(library(logicmoo_startup)).
 
-% user:portray(Term):- in_pp(swish), print_tree(Term).
+% user:portray(Term):- in_pp(swish), print_tree00(Term).
 
 % user:portray(Term):- pc_portray(Term),!.
 
@@ -1872,7 +1876,7 @@ pprint_tree(Term, Options) :- select('variable_names'(Vs),Options,OptionsM),!,
   pprint_tree_1(TermO,['variable_names'(VsO)|OptionsM]).
 pprint_tree(Term, Options) :-  saneify_vars(Term,TermO), pprint_tree_1(TermO, Options).
 
-pprint_tree_1(Term, Options) :- prolog_pretty_print:print_tree(Term, Options).
+pprint_tree_1(Term, Options) :- prolog_pretty_print:print_tree00(Term, Options).
 %pprint_tree(Term, Options) :- \+ \+ pprint_tree_2(Term, Options).
 
 pprint_tree_2(Term, Options0) :-

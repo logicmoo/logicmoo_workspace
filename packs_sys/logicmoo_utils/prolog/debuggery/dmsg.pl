@@ -1027,18 +1027,30 @@ prepend_trim(S,O):- is_html_white_l(W),atom_concat(W,L,S),!,prepend_trim(L,O).
 prepend_trim(S,O):- is_html_white_r(W),atom_concat(L,W,S),!,prepend_trim(L,O).
 prepend_trim(O,O).
 
-%= 	 	 
+
+
+like_clause([S|Lines]):- (atom_contains(S,':-');atom_contains(S,'?-');(append(_,[E],Lines),atom_contains(E,'.'))),!.
 
 %% print_prepended_lines( ?Pre, :TermARG2) is det.
 %
 % Print Prepended Lines.
 %
-print_prepended_lines(Pre,List):-
-  print_prepended_lines0(Pre,List).
+
+print_prepended_lines(_,[]):- !.
+print_prepended_lines(X,[Line]):- (X==guess; X==(block); X==line), !, print_prepended_line('%~ ', Line).
+print_prepended_lines(guess,Lines):- !, 
+  (like_clause(Lines) -> print_prepended_lines(block,Lines);print_prepended_lines(line,Lines)).
+print_prepended_lines(X,Lines):- (X==line ; X == '%~ '), like_clause(Lines), print_prepended_lines0('%~ ',Lines).
+print_prepended_lines(block,[S|Lines]):- !, append(Mid,[E],Lines), % atom_contains(E,'.'),
+  format('~N/* '),write(S),
+  print_prepended_lines0('   ',Mid),
+  format('~N ~w  */ ~n',[E]).
+print_prepended_lines(Pre,A):- !, print_prepended_lines0(Pre,A).
 
 print_prepended_lines0(_Pre,[]).
 print_prepended_lines0(Pre,[H|T]):- print_prepended_line(Pre,H),
-  print_prepended_lines(Pre,T),!.
+  print_prepended_lines0(Pre,T),!.
+
 print_prepended_line(Pre,S):- prepend_trim(S,H),
   ignore((H\=="",
   line_pos(current_output,LPos1),new_line_if_needed,line_pos(current_output,LPos2),
@@ -1054,7 +1066,11 @@ print_prepended_line(Pre,S):- prepend_trim(S,H),
 
 % in_cmt(Goal):- tlbugger:no_slow_io,!,format('~N/*~n',[]),call_cleanup(Goal,format('~N*/~n',[])).
 % in_cmt(Goal):- use_html_styles,!, Goal.
-in_cmt(Goal):- maybe_bfly_html(prepend_each_line('%~ ',Goal)),!.
+
+in_cmt(Goal):- in_cmt(guess,Goal).
+
+in_cmt(line,Goal):- maybe_bfly_html(prepend_each_line('%~ ',Goal)),!.
+in_cmt(Block,Goal):- maybe_bfly_html(prepend_each_line(Block,Goal)),!.
 
 
 %= 	 	 
@@ -1273,7 +1289,7 @@ same_streams(TErr,Err):- stream_property(TErr,file_no(A)),stream_property(Err,fi
 % Wdmsg.
 %
 wdmsg(_):- notrace((current_prolog_flag(debug_level,0),current_prolog_flag(dmsg_level,never))),!.
-wdmsg(X):- likely_folded(wdmsg_goal(in_cmt(fmt(X)),dmsg(X))).
+wdmsg(X):- likely_folded(wdmsg_goal(in_cmt(line,fmt(X)),dmsg(X))).
 
 likely_folded(X):- dis_pp(bfly)->pretty_clauses:with_folding_depth(1,X);call(X).
 
@@ -1304,7 +1320,7 @@ wdmsg(F,X):- wdmsg_goal(in_cmt(fmt(F,X)),dmsg(F,X)).
 %
 % Wdmsg.
 %
-wdmsg(W,F,X):- wdmsg_goal(in_cmt(fmt(F,X)),dmsg(W,F,X)).
+wdmsg(W,F,X):- wdmsg_goal(in_cmt(line,fmt(F,X)),dmsg(W,F,X)).
 
 :- meta_predicate wdmsgl(1,+).
 :- meta_predicate wdmsgl(+,1,+).
@@ -1464,7 +1480,7 @@ mline_number.
 % Dmsg5.
 %
 
-dmsg5(Msg):- to_stderror(in_cmt(fmt9(Msg))).
+dmsg5(Msg):- to_stderror(in_cmt(line,fmt9(Msg))).
 
 %= 	 	 
 

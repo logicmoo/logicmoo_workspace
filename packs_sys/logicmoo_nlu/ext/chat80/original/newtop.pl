@@ -464,7 +464,7 @@ report_item0(tree,Item) :- print_tree_with_final(Item,'.'),!.
 report_item0(tree,Item) :- \+ \+ print_tree80(Item),!, nl.
 
 report_item0(cmt,Item) :-
-    in_color(yellow,in_cmt(print_tree(Item))),!,nl.
+    in_color(yellow,in_cmt(print_tree_with_final(Item,'.'))),!,nl.
 report_item0(cmt,Item) :-
     pprint_ecp_cmt(yellow,Item),!.
 report_item0(P,Item) :-

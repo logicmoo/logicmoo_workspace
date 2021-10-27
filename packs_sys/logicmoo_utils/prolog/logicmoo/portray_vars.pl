@@ -281,7 +281,7 @@ prologcase_name0(String,Nonvar):-nonvar(Nonvar),!,prologcase_name(String,Propose
 prologcase_name0(String,ProposedName):- 
   string_lower(String,In),string_codes(In,Was),!,filter_var_chars(Was,CS),!,name(ProposedName,CS),!.
 
-:- set_prolog_flag(no_pretty,true).
+:- create_prolog_flag(no_pretty,false,[keep(true)]).
 atom_trim_prefix(Root,Prefix,Result):- atom_concat_w_blobs(Prefix,Result,Root) -> true ; Result=Root.
 atom_trim_suffix(Root,Suffix,Result):- atom_concat_w_blobs(Result,Suffix,Root) -> true ; Result=Root.
 
@@ -847,10 +847,8 @@ portray_pretty_numbervars(Term):-
   \+ current_prolog_flag(no_pretty,true),  
   pretty_numbervars_here(Term,PrettyVarTerm),
   % Term \=@= PrettyVarTerm,
-  setup_call_cleanup(
-   set_prolog_flag(no_pretty,true),
-   print(PrettyVarTerm),
-   set_prolog_flag(no_pretty,false)).
+  locally(set_prolog_flag(no_pretty,true),
+   print(PrettyVarTerm)),!.
   %prolog_pretty_print:print_term(PrettyVarTerm, [output(current_output)]),!.
 
 :- multifile(user:portray/1).
