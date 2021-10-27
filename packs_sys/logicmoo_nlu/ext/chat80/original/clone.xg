@@ -7,7 +7,7 @@
 :-asserta(t_l:disable_px).
 
 :- ignore(( \+(t_l:disable_px),trace,throw((\+(t_l:disable_px))))).
-:-asserta(tlxgproc:do_xg_process_te).
+%:-asserta(tlxgproc:do_xg_process_te).
 
 /* Sentences */
 
@@ -98,11 +98,11 @@ yn_question(q(S)) --->
 
 
 fronted_verb(QCase,NPCase) ...
-      verb_form80(Root,Tense,Agmt,Role), neg_opt(_,Neg) --->
-   verb_form80(Root,Tense,Agmt,_),
+      verb_form88(MODAL,Root,Tense,Agmt,Role), neg_modal_opt(_,_,Neg) --->
+   verb_form88(MODAL,Root,Tense,Agmt,_),
    {verb_type_lex(Root,aux+_),
     is_to_role_case(QCase,Role,NPCase)},
-   neg_opt(_,Neg).
+   neg_modal_opt(MODAL,_,Neg).
 
 /* Imperative sentences */
 
@@ -111,9 +111,9 @@ imperative80(imp(_U,_V,You,V,S)) --->
    s80(S,_).
 
 imperative_verb(You,Root),
-   [you],
-   verb_form80(Root,imp+fin,2+sg,main) --->
-   verb_form80(Root,inf,_,_),{You=you}.
+   theText80(you),
+   verb_form88(MODAL,Root,imp+fin,2+sg,main) --->
+   verb_form88(MODAL,Root,inf,_,_),{You=you}.
 
 /* Basic sentence (actually, declarative sentence) */
 
@@ -222,7 +222,7 @@ quantV(Op,indef) --->
    theText80(than).
 
 % Measure is at least / most
-quant_opt(Op,indef) --->
+quantV(Op,indef) --->
    theText80(at),
    sup_adv(Adv),
    {sup_op(Adv,Op)}.
@@ -385,10 +385,10 @@ reduced_rel(Agmt,reduced_rel(X,S),Mask) --->
 
 reduced_wh(Agmt,X),
    np(np(Agmt,wh(X),[]),Agmt,NPCase,_,_,Set0,Mask0),
-   verb_form80(be(_MODAL),pres+fin,Agmt,main),
-   neg_opt(_,Neg), pred(Neg,Pred,Mask) 
+   verb_form88(MODAL,be(MODAL),pres+fin,Agmt,main),
+   neg_modal_opt(MODAL,_,Neg), pred(Neg,Pred,Mask) 
      --->
-   neg_opt(_,Neg), pred(Neg,Pred,Mask),
+   neg_modal_opt(MODAL,_,Neg), pred(Neg,Pred,Mask),
    {is_trace82(Set0,Mask0), is_subj_case(NPCase)}.
 reduced_wh(Agmt,X),
    np(np(Agmt,wh(X),[]),Agmt,NPCase,_,_,Set,Mask),
@@ -405,26 +405,42 @@ reduced_wh(AgmtX,X),
 /* Verb phrase (less the complements) */
 
 verb(verb(Root,Voice,Time+fin,Aspect,Neg),Agmt,Type,Voice) --->
-   verb_form80(Root0,Time+fin,Agmt,Role),
+   verb_form88(MODAL,Root0,Time+fin,Agmt,Role),
    {verb_type_lex(Root0,Type0)},
-   neg_opt(Type0,Neg),
+   neg_modal_opt(MODAL,Type0,Neg),
    rest_verb(Role,Root0,Root,Voice,Aspect),
    {verb_type_lex(Root,Type)}.
 
-neg_opt(aux+_,negP(_Modal)) ---> theText80(not).
-neg_opt(_,posP(_Modal)) ---> noText.
+neg_modal_opt(MODAL,Aux,Neg) --->
+   (maybe_modal(W,MODAL,ModalInfo);[]),
+   neg_modal_opt1(MODAL,Aux,Neg),
+   {maybe_apply_modal(W,MODAL,ModalInfo,Neg)}.
 
-rest_verb(aux,have(_MODAL),Root,Voice,[perf|Aspect]) ---> verb_form80(Root0,past+part,_,_), have_vt(Root0,Root,Voice,Aspect).
-rest_verb(aux,be(_MODAL),Root,Voice,Aspect) ---> verb_form80(Root0,Tense0,_,_), be_vt(Tense0,Root0,Root,Voice,Aspect).
-rest_verb(aux,do(_MODAL),Root,active,[]) ---> verb_form80(Root,inf,_,_).
-rest_verb(aux,can,Root,active,[]) ---> verb_form80(Root,inf,_,_).
-rest_verb(aux,will,Root,active,[]) ---> verb_form80(Root,inf,_,_).
+neg_modal_opt1(MODAL,aux+_,negP(MODAL1)) ---> theText80(not), {ignore(MODAL=MODAL1)}.
+neg_modal_opt1(MODAL,_,posP(MODAL1)) ---> noText, {ignore(MODAL=MODAL1)}.
+
+verb_form88(MODAL,RootVerb,Tense,Agmt,Role) --->
+   maybe_modal(W,MODAL,ModalInfo),!,
+   verb_form88(MODAL,RootVerb,Tense,Agmt,Role),
+  {maybe_apply_modal(W,MODAL,ModalInfo,RootVerb)}.
+verb_form88(_,RootVerb,Tense,Agmt,_Role) --->
+   theText80_W2(W,L),
+   {verb_form_wlex(L,W,RootVerb,Tense,Agmt)}.
+
+maybe_modal(W,MODAL,ModalInfo) ---> {modal_verb_form_aux(W,MODAL,_,_)},theText80(W),
+  {MODAL=ModalInfo}.
+
+rest_verb(aux,have(MODAL),Root,Voice,[perf|Aspect]) ---> verb_form88(MODAL,Root0,past+part,_,_), have_vt(Root0,Root,Voice,Aspect).
+rest_verb(aux,be(MODAL),Root,Voice,Aspect) ---> verb_form88(MODAL,Root0,Tense0,_,_), be_vt(Tense0,Root0,Root,Voice,Aspect).
+rest_verb(aux,do(MODAL),Root,active,[]) ---> verb_form88(MODAL,Root,inf,_,_).
+%rest_verb(aux,can,Root,active,[]) ---> verb_form88(MODAL,Root,inf,_,_).
+%rest_verb(aux,will,Root,active,[]) ---> verb_form88(MODAL,Root,inf,_,_).
 rest_verb(main,Root,Root,active,[]) ---> noText.
 
 
 % BE
-have_vt(be(_MODAL),Root,Voice,Aspect) --->
-   verb_form80(Root0,Tense0,_,_),
+have_vt(be(MODAL),Root,Voice,Aspect) --->
+   verb_form88(MODAL,Root0,Tense0,_,_),
    be_vt(Tense0,Root0,Root,Voice,Aspect).
 have_vt(Root,Root,active,[]) ---> noText.
 
@@ -433,14 +449,14 @@ be_vt(pres+part,Root0,Root,Voice,[prog]) --->
    passive_vt(Root0,Root,Voice).
 
 % BE
-passive_vt(be(_MODAL),Root,passive) --->
-   verb_form80(Root,past+part,_,_),
+passive_vt(be(MODAL),Root,passive) --->
+   verb_form88(MODAL,Root,past+part,_,_),
    {verb_type_lex(Root,Type), passive_vt(Type)}.
 passive_vt(Root,Root,active) ---> noText.
 
 participle_vt(verb(Root,Voice,inf,Aspect,Neg),Type,Voice) --->
-   neg_opt(_,Neg),
-   verb_form80(Root,Tense,_,_),
+   neg_modal_opt(MODAL,_,Neg),
+   verb_form88(MODAL,Root,Tense,_,_),
    {participle_vt(Tense,Voice,Aspect), verb_type_lex(Root,Type)}.
 
 passive_vt(_+tv).
@@ -522,13 +538,13 @@ conj(conj(Conj,Ctx0),
      conj(Conj,Left,Right)) --->
    conj(Conj,Ctx0,Ctx).
 
-:-retract(tlxgproc:do_xg_process_te).
+%:-retract(tlxgproc:do_xg_process_te).
 
 :-retract(t_l:disable_px).
 
 /* @(#)clotab.pl	24.1 2/23/88 */
 
-
+ 
 /* 
 	Copyright 1986, Fernando C.N. Pereira and David H.D. Warren,
 

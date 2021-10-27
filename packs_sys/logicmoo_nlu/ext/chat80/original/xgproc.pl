@@ -24,8 +24,11 @@ maybe_share_mp(M:F/A):-
    (M:public(MFA)), !. 
 maybe_share_mp(FA):- strip_module(FA,M,_),!,share_mp(M:FA).
 
- 
-new_pred(P):- must(tlxgproc:current_xg_module(M)),new_pred(M,P).
+sim_current_xg_module(M):- tlxgproc:current_xg_module(M),!.
+sim_current_xg_module(M):- strip_module(_,M,_),!.
+sim_current_xg_module(M):- xgproc:current_xg_pred(M,_,_,_),!.
+
+new_pred(P):- sim_current_xg_module(M),new_pred(M,P).
 new_pred(M,P0):- functor(P0,F,A),functor(P,F,A),new_pred(M,P,F,A),!.
 
 new_pred(M,_,F,A):- xgproc:current_xg_pred(M,F,A,_),!.
@@ -40,36 +43,48 @@ new_pred(M,P,F,A) :-
 :- module_transparent(new_pred/4).
 :- system:import(new_pred/4).
 
+gen_xg_heads(P):-gen_xg_heads(P,_).
+gen_xg_heads(P,PP):- xgproc:current_xg_pred(_,F,A,_),Am2 is A-4, Am2>1,functor(PP,F,A),functor(P,F,Am2).
+gen_xg_heads([A|B],[A|B]).
+gen_xg_clauses(P,PP,B):-gen_xg_heads(P,PP),clause(PP,B).
+
 is_file_ext(Ext):-prolog_load_context(file,F),file_name_extension(_,Ext,F).
 :-thread_local tlxgproc:do_xg_process_te/0.
 :-export(xg_process_te_clone5/5).
 
 processing_xg :- is_file_ext(xg),!.
-processing_xg :- tlxgproc:do_xg_process_te,!.
+%processing_xg :- tlxgproc:do_xg_process_te,!.
 
-xg_process_te_clone5(L,R,_Mode,P,Q):- expandlhs(L,S0,S,H0,H,P), expandrhs(R,S0,S,H0,H,Q).  %new_pred(P),usurping(Mode,P),!.
+xg_process_te_clone5(L,R,Mode,P,Q):- expandlhs(L,S0,S,H0,H,P), expandrhs(R,S0,S,H0,H,Q),!,new_pred(P),usurping(Mode,P),!.
+xg_process_te_clone5(L,R,Mode,P,Q):- throw(xg_process_te_clone5(L,R,Mode,P,Q)).
 
 :-export(xg_process_te_clone/3).
 xg_process_te_clone((H ... T --> R),Mode,((P :- Q))) :- !, xg_process_te_clone5((H ... T),R,Mode,P,Q).
 xg_process_te_clone((L ---> R),Mode,((P :- Q))) :- !,xg_process_te_clone5(L,R,Mode,P,Q).
-xg_process_te_clone((L --> R),Mode,PQ) :- wdmsg(warn(xg_process_te_clone((L --> R)))), !, xg_process_te_clone((L ---> R),Mode,PQ).
+xg_process_te_clone((L --> R),Mode,PQ) :- 
+  wdmsg(warn(xg_process_te_clone((L --> R)))), !,
+  xg_process_te_clone((L ---> R),Mode,PQ).
 
 %chat80_term_expansion(In,Out):- compound(In),functor(In,'-->',_),trace,  must(xg_process_te_clone(In,+,Out)).
-chat80_term_expansion((H ... T ---> R),((P :- Q))) :- must( xg_process_te_clone5((H ... T),R,+,P,Q)).
-chat80_term_expansion((L ---> R), ((P :- Q))) :- must(xg_process_te_clone5(L,R,+,P,Q)).
+%chat80_term_expansion((L1, L2R), ((P :- Q))) :- !, compound(L2R), L2R = (L2 ---> R), must(xg_process_te_clone5((L1, L2),R,+,P,Q)).
+%chat80_term_expansion((H ... TR),((P :- Q))) :- !, compound(TR), TR = (T ---> R), must( xg_process_te_clone5((H ... T),R,+,P,Q)).
 
-
-chat80_term_expansion_now(( :- ain(_)) ,_ ):-!,fail.
-%chat80_term_expansion_now(( :- _) ,_ ):-!,fail.
-chat80_term_expansion_now(H,Into):- chat80_term_expansion(H,O),!, Into = ( :- ain(O)).
-
-system:term_expansion(H, O):- (processing_xg->chat80_term_expansion_now(H,O)),!.
+%chat80_term_expansion_now(begin_of_file, (:- start_xg_file(F))):- !, processing_xg, prolog_load_context(source,F),!.
+chat80_term_expansion_now((L ---> R), ((P :- Q))) :- xg_process_te_clone5(L,R,+,P,Q),!.
+%chat80_term_expansion_now(H,Into):- chat80_term_expansion(H,Into),!. % Into = ( :- ain(O)).
 
 load_plus_xg_file(File):- strip_module(File,CM,F),must(load_plus_xg_file(CM,F)),!.
 
-load_plus_xg_file(CM,F) :- fail, 
+xg_ensure_loaded(CM,F):- CM:ensure_loaded(F),!.
+%xg_ensure_loaded(CM,F):- CM:ensure_loaded_no_mpreds(F).
+
+load_plus_xg_file(CM,F0) :- %fail, 
+ absolute_file_name(F0,F),
+ start_xg_file(F),
  locally(tlxgproc:current_xg_module(CM),
-   locally(tlxgproc:do_xg_process_te, CM:ensure_loaded_no_mpreds(F))),!.
+  locally(tlxgproc:current_xg_filename(F),
+   locally(tlxgproc:do_xg_process_te, 
+     xg_ensure_loaded(CM,F)))),!.
 
 % was +(F).
 load_plus_xg_file(CM,F) :-
@@ -93,16 +108,16 @@ dif_clause_file(Ref,F):- clause_property(Ref,file(W)),!,W==F.
 abolish_f_m_p(F,M,(H:-B)):- !, find_same_clause_ref(M:H,B,Ref), \+ dif_clause_file(Ref,F), erase(Ref),!.
 abolish_f_m_p(F,M,H):- find_same_clause_ref(M:H,true,Ref), \+ dif_clause_file(Ref,F), erase(Ref),!.
 
+start_xg_file(F0):- absolute_file_name(F0,F), abolish_xg_file(F), abolish_xg(xg_source=F).
 
 consume0(F0,Mode) :- 
+  absolute_file_name(F0,F),
+  start_xg_file(F),
    Stat_key = clauses,
    seeing(Old),
 %   statistics(heap,[H0,Hf0]),
     statistics(Stat_key,H0),
-    absolute_file_name(F0,F),
    see(F),
-   abolish_xg_file(F),
-   abolish_xg(xg_source=F),
    locally(tlxgproc:current_xg_filename(F),tidy_consume(F,Mode)),
  ( (seeing(User2),User2=user), !; seen ),
    see(Old),
@@ -150,7 +165,7 @@ xg_process(P,Mode) :-
    new_pred(P),
    xg_assertz(P), !.
 
-xg_assertz(P):- flag(xg_assertions,A,A+1),must((tlxgproc:current_xg_module(M),nop(dmsg(M:xg_assertz(P))),assertz_src(M,P))),!.
+xg_assertz(P):- flag(xg_assertions,A,A+1),must((sim_current_xg_module(M),nop(dmsg(M:xg_assertz(P))),assertz_src(M,P))),!.
 
 xg_complete(_F) :-
    recorded('xg.usurped',P,R0), erase_safe(recorded('xg.usurped',P,R0),R0),
@@ -226,6 +241,7 @@ expandrhs((X1;X2),S0,S,H0,H,(Y1;Y2)) :- !,
    expandor(X1,S0,S,H0,H,Y1),
    expandor(X2,S0,S,H0,H,Y2).
 expandrhs({X},S,S,H,H,X) :- !.
+expandrhs('!',S,S,H,H,'!') :- !.
 expandrhs(L,S0,S,H0,H,G) :- islist(L), !,
    expandlist(L,S0,S,H0,H,G).
 expandrhs(X,S0,S,H0,H,Y) :-
@@ -236,8 +252,9 @@ expandor(X,S0,S,H0,H,Y) :-
  ( S\==S0a, !, S0=S0a, Yb=Ya; and(S0=S0a,Ya,Yb) ),
  ( H\==H0a, !, H0=H0a, Y=Yb; and(H0=H0a,Yb,Y) ).
 
+expandlist(Var,S0,S,H0,H,(expandlist(Var,S0,S,H0,H,Y),call(Y))):- var(Var),!.
 expandlist([],S,S,H,H,true).
-expandlist([X],S0,S,H0,H,terminal(X,S0,S,H0,H) ) :- !.
+expandlist([X|L],S0,S,H0,H,terminal(X,S0,S,H0,H) ) :- L==[], !.
 expandlist([X|L],S0,S,H0,H,(terminal(X,S0,S1,H0,H1),Y)) :-
    expandlist(L,S1,S,H1,H,Y).
 
@@ -285,6 +302,8 @@ list_xg_clauses :-
    fail.
 list_xg_clauses.
 
+system:term_expansion(H,F,HO,FO):- notrace((nonvar(F),nonvar(H),prolog_load_context(term,T),T=@=H)), chat80_term_expansion_now(H,HO),F=FO,!.
+
 :-export(load_xg/0).
 
 load_xg:-
@@ -294,7 +313,8 @@ load_xg:-
 
 go_xg :- load_xg, xg_listing('newg.pl').
 
-:- fixup_exports.
 
+:- fixup_exports.
+:- assert(user:prolog_file_type(xg,prolog)).
 end_of_file.
 

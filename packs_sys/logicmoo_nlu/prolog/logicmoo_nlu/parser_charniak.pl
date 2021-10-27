@@ -7,7 +7,7 @@
   test_charniak_parse1/0,
   test_charniak_parse2/0,  
   charniak_stream/2,
-  charniak_pos/2,
+  text_to_charniak_pos/2,
   text_to_charniak/2,
   text_to_charniak_segs/2,
   charniak_parse/2]).
@@ -43,7 +43,7 @@ test_charniak_parse2 :-
 
 test_charniak_parse3 :-
   Text = "Can the can do the Can Can?",
-  charniak_pos(Text,Lines),
+  text_to_charniak_pos(Text,Lines),
   pprint_ecp_cmt(yellow,test_charniak_parse2=Lines).
 
 read_lines(Out, Result) :-
@@ -65,7 +65,7 @@ charniak_pos_info(Text,PosW2s,Info,LExpr):-
   tree_to_lexical_segs(LExpr,SegsF),
   segs_retain_w2(SegsF,Info,PosW2s),!.
   
-charniak_pos(Text,PosW2s):- charniak_pos_info(Text,PosW2s0,_Info,_LExpr),guess_pretty(PosW2s0),!,PosW2s=PosW2s0.
+text_to_charniak_pos(Text,PosW2s):- charniak_pos_info(Text,PosW2s0,_Info,_LExpr),guess_pretty(PosW2s0),!,PosW2s=PosW2s0.
 
 text_to_charniak_segs(Text,Segs):-
   text_to_charniak_tree(Text,LExpr),
@@ -116,7 +116,7 @@ test_charniak:- forall(test_charniak(X),test_charniak(X)).
 
 test_1charniak(Text):- 
   format('~N?- ~p.~n',[test_charniak(Text)]),
-  charniak_pos(Text,W),
+  text_to_charniak_pos(Text,W),
   print_tree(W),
   !.
 

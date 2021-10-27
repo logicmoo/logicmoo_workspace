@@ -21,6 +21,8 @@
 */
 
 
+
+
 /*
 :- op(1001,xfy,...).
 :- op(1101,xfx,'--->').
@@ -51,14 +53,44 @@ phraseXG0((A , B), C, D, E, F) :- !, phraseXG(A, C, G, E, H), phraseXG(B, G, D, 
 phraseXGF((_ , _)).
 phraseXGF((_ ; _)).
 phraseXGF('&'(_ , _)).
-phraseXG(P,A1,A2,A3,A4):- var(P),!,throw(var_phraseXG(P,A1,A2,A3,A4)).
+
+phraseXG(P,A1,A2,A3,A4):- var(P),!, freeze(P,phraseXG(P,A1,A2,A3,A4)).
 phraseXG(P,A1,A2,A3,A4):- phraseXGF(P),!,phraseXG0(P,A1,A2,A3,A4).
+phraseXG([A | B], C, D, E, F) :- !, phraseXGL([A | B], C, D, E, F).
+phraseXG([], X, X, Y, Y) :- !.
+phraseXG(R, S0,S,H0,H):- expandrhs(R,S0,S,H0,H,Q),!,call(Q).
 phraseXG(P,A1,A2,A3,A4):- !, apply(P,[A1,A2,A3,A4]).
 
+phraseXGL(Var,S0,S,H0,H):- var(Var),!, freeze(Var,phraseXGL(Var,S0,S,H0,H)).
+phraseXGL([], X, X, Y, Y).
+phraseXGL([A | B], C, D, E, F) :- !, terminal(A, C, G, E, H), phraseXGL(B, G, D, H, F).
+
+phraseXG(P,A1,A2):- (var(P)->gen_xg_heads(P);true),
+  swich_on_var(A1,(sync_w2_l(A1,W1),sync_w2_l(A2,W2)),phraseXG(P,W1,W2,Y,Y)).
+
+swich_on_var(A1,G1,G2):- nonvar(A1),!,call(G1),call(G2).
+swich_on_var(_, G1,G2):- call(G2),call(G1).
+
+%sync_w2_l(A,A):- !.
+sync_w2_l(A,B):- (A==[];B==[]),!,A=B.
+sync_w2_l(A,B):- var(A),var(B),!,freeze(A,sync_w2_l(A,B)),freeze(B,sync_w2_l(A,B)).
+sync_w2_l([A|AA],[W2|BB]):- sync_w2(A,W2),!, sync_w2_l(AA,BB).
+
+sync_w2(A,W2):- A==W2,!.
+sync_w2(A,W2):- var(A),var(W2),!,freeze(A,sync_w2(A,W2)),freeze(W2,sync_w2(A,W2)).
+sync_w2(A,W2):- atom(W2),!,W2=A.
+sync_w2(A,W2):- compound(A),!,W2=A.
+sync_w2(A,W2):- compound(W2),!,arg(1,W2,A).
+sync_w2(A,W2):- atom(A),!,W2=w(A,_).
+
+
+
+%sentence80(Tree,Question,[],[],[])
+/*
 phraseXG(P,A1,A2,A3,A4):-
    safe_univ(P,[F|Args0]),
   % dtrace,
    conc_gx(Args0,[A1,A2,A3,A4],Args),
    Q=..[F|Args], 
    call(Q).
-
+*/

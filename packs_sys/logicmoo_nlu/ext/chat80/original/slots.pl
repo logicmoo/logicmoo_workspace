@@ -173,13 +173,15 @@ i_s(s(Subj,Verb,VArgs,VMods),Pred,Up,Id) :-
    reshape_pred(Meta,QSubj,Neg,P,Args0,Pred).
 
 i_verb(verb(Root,Voice,Tense,_Aspect,Neg),
-      P,Tense,Voice,Det,Slots,XArg,Meta) :-
+      PP,Tense,Voice,Det,Slots,XArg,Meta) :-
    slot_verb_template(Root,P,Slots,XArg,Meta),
-   %(Neg\=posP(_Modal)(_)->trace;true),
-   i_neg(Neg,Det).
+   %(Neg\=posP(_)->trace;true),
+   i_neg(Neg,Det),
+   maybe_modalize(Neg,P,PP).
 
-maybe_negate_slot(negP(_Modal), P, (P)):- !.
-maybe_negate_slot(_,P,P).
+maybe_modalize(negP(Modal), P, PP):- atom(Modal),!,PP=..[Modal,P].
+maybe_modalize(posP(Modal), P, PP):- atom(Modal),!,PP=..[Modal,P].
+maybe_modalize(_,P,P).
 
 reshape_pred(transparent,S,N,P,A,pred(S,N,P,A)).
 reshape_pred(have(_MODAL),Subj,Neg,Verb0,
@@ -314,8 +316,10 @@ noun_template(Noun,TypeV,V,'`'(P),
 noun_template(Noun,TypeV,V,aggr(F,V,[],'`'(true),'`'(true)),
    [slot(prep(of),TypeS,_,_,free)]) :-
    aggr_noun(Noun,TypeV,TypeS,F).
+
 noun_template(Noun,Type,X,'`'(P),Slots) :-
    thing_LF_access(Noun,Type,X,P,Slots,_).
+
 noun_template(Noun,TypeV,V,apply80(F,P),
       [slot(prep(Of),TypeX,X,_,apply)]) :-
    meta_noun_LF(Noun,Of,TypeV,V,TypeX,X,P,F).

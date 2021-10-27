@@ -44,8 +44,11 @@ trans_LF(have(MODAL),Spatial&_,X,Spatial&_,Y, OUT, [],_,_):- append_term(MODAL,t
 
 
 
-thing_LF_access(Continent,Spatial&Geo&Continent,X,ti(Continent,X),[],_):- like_type(Geo,continent,Continent), spatial(Spatial).
-thing_LF(OceanOrSea,Path,X,ti(OceanOrSea,X),Nil,Any):- ti_subclass(OceanOrSea,Seamass), like_type(_Geo,seamass,Seamass), Seamass=seamass,
+thing_LF_access(Continent,Spatial&Geo&Continent,X,ti(Continent,X),[],_):- 
+  like_type(Geo,continent,Continent), spatial(Spatial).
+
+thing_LF(OceanOrSea,Path,X,ti(OceanOrSea,X),Nil,Any):- ti_subclass(OceanOrSea,Seamass), 
+   like_type(_Geo,seamass,Seamass), %Seamass=seamass,
    thing_LF(Seamass,Path,X,ti(Seamass,X),Nil,Any).
 
 thing_LF(City,SpatialCity,X,ti(City,X),[],_):- like_type(geo,city,City), spatial(Spatial), bfeature_path(Spatial,City,SpatialCity).
@@ -311,6 +314,9 @@ database801(symmetric_pred(Type,P,X,Y)) :- symmetric_pred(Type,P,X,Y). % border
 database801(specific_pred(Type,P,X,Y)) :- specific_pred(Type,P,X,Y). % capital 
 database801(trans_pred(Type,P,X,Y)) :- trans_pred(Type,P,X,Y). % contain 
 
+database801(should(X)):- database80(X).
+database801(can(X)):- database80(X).
+
 
 %database80(path_pred(begins(Flow),rises,river,X,Y)) :- path_pred(begins(Flow),rises,river,X,Y).
 %database80(path_pred(ends(Flow),drains,river,X,Y)) :- path_pred(ends(Flow),drains,river,X,Y).
@@ -318,8 +324,8 @@ database801(path_pred(PathSystemPart,ObjType,X,Y)) :- path_pred(PathSystemPart,O
 database801(path_pred_linkage(DirectPathSystem,ObjType,X,Y,Z)) :- path_pred_linkage(DirectPathSystem,ObjType,X,Y,Z).
 
 database80((A,B)):- nonvar(A),!,database80(A),database80(B).
-%database80(G):- \+ \+ clause(database801(G),G), !, database801(G).
-database80(G):-  must(current_predicate(_,G)), call(G).
+database80(G):-  clause(database801(G),B), !, call(B).
+database80(G):-  current_predicate(_,G), call(G).
 
 
 :- style_check(+singleton).

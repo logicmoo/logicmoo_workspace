@@ -70,7 +70,7 @@ word(Word) :- loc_pred_lex(_,Word,_).
 conj_lex(and).
 conj_lex(or).
 
-det_lex(a,sg,a,indef).
+det_lex(a,_Sg,a,indef).
 det_lex(all,pl,all,indef).
 det_lex(an,sg,a,indef).
 det_lex(any,_,any,indef).
@@ -88,8 +88,6 @@ int_pron_lex(who,subj).
 int_pron_lex(whom,compl).
 
 name_LF(Name) :- name_template_LF(Name,_).
-
-
 
 number_lex(W,I,Nb) :- 
         tr_number(W,I),
@@ -132,7 +130,7 @@ prep_db(chat80,through).
 prep_db(chat80,to).
 prep_db(chat80,with).
 
-prep_db(talkdb,X):- talkdb:talk_db(preposition, X).
+prep_db(talkdb,X):- talkdb:talk_db(preposition, X), X\==a.
 
 quantifier_pron_lex(anybody,any,person).
 quantifier_pron_lex(anyone,any,person).
@@ -216,8 +214,12 @@ try_lex(G):- first_lexicon(Which),try_lex(Which,G,CALL),copy_term(G,CopyG),
 %correct_root(do(MODAL),do(MODAL)).
 correct_root(R,R).
 
-verb_form_wlex(_,A,B,C,D):- verb_form_lex(A,B,C,D), !.
-verb_form_wlex(L,_,Root,_,_):- is_list(L),member(pos(V),L),atom_concat('vb',_,V),member(root(Root0),L),!,correct_root(Root0,Root).
+verb_form_wlex(L,W,RootVerb,Tense,Agmt):-
+  verb_form_wlex0(L,W,RootVerb,Tense,Agmt),
+  nop(wdmsg(verb_form_wlex(W,RootVerb,Tense,Agmt))).
+
+verb_form_wlex0(_,A,B,C,D):- verb_form_lex(A,B,C,D), !.
+verb_form_wlex0(L,_,Root,_,_):- is_list(L),member(pos(V),L),atom_concat('vb',_,V),member(root(Root0),L),!,correct_root(Root0,Root).
 
 % BE
 verb_form_aux(am,be(_MODAL),pres+fin,1+sg).
@@ -231,6 +233,9 @@ verb_form_aux(was,be(_MODAL),past+fin,1+sg).
 verb_form_aux(was,be(_MODAL),past+fin,3+sg).
 verb_form_aux(were,be(_MODAL),past+fin,2+sg).
 verb_form_aux(were,be(_MODAL),past+fin,_+pl).
+
+% CAN
+verb_form_aux(can,do(_),_,_).
 
 % DO
 verb_form_aux(do,do(_MODAL),pres+fin,_+pl).
@@ -256,6 +261,7 @@ verb_form_aux(had,have(_MODAL),past+part,_).
 %verb_form_aux(A,B,C,D):- modal_verb_form_aux(A,B,C,D).
 
 verb_form_lex(A,B,C,D):- verb_form_aux(A,B,C,D).
+%verb_form_lex(A,B,C,D):- modal_verb_form_aux(A,B,C,D).
 verb_form_lex(A,B,C,D):- try_lex(verb_form_db(A,B,C,D)), \+ avoided_verb(A).
 
 avoided_verb(A):- var(A), freeze(A,avoided_verb(A)).
@@ -263,16 +269,20 @@ avoided_verb(A):- clause(modal_verb_form_aux(A,_,_,_),true).
 avoided_verb(A):- clause(verb_form_aux(A,_,_,_),true).
 
 % TODO FIX THESE
-modal_verb_form_aux(should,should,pres+fin,3+sg).
-modal_verb_form_aux(must,should,pres+fin,3+sg).
 modal_verb_form_aux(shall,will,pres+fin,3+sg).
-
 modal_verb_form_aux(will,will,pres+fin,3+sg).
 modal_verb_form_aux(would,will,past+fin,_).
+modal_verb_form_aux(should,should,pres+fin,3+sg).
+modal_verb_form_aux(must,should,pres+fin,3+sg).
+modal_verb_form_aux(may,might,pres+fin,3+sg).
+modal_verb_form_aux(might,might,pres+fin,3+sg).
+modal_verb_form_aux(possibly,can,pres+fin,3+sg).
 modal_verb_form_aux(could,can,past+fin,_).
 modal_verb_form_aux(can,can,pres+fin,3+sg).
 
-
+maybe_apply_modal(_W,Modal9,_ModalInfo,RootVerb):- 
+   ignore((compound(RootVerb),
+      (arg(1,RootVerb,Modal9)->true;nb_arg(1,RootVerb,Modal9)))).
 /*
 verb_form_db(chat80,containing,contain,pres+part,_).
 verb_form_db(chat80,contains,contain,pres+fin,3+sg).

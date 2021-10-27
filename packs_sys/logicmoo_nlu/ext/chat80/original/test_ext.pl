@@ -35,24 +35,20 @@
 :- module(parser_chat80).
 :- '$set_source_module'(parser_chat80).
 
+add_c80(B):- any_to_string(B,S),add_history1(c80(S)).
 
-process80(Text):- 
+c80(B):- prolog_load_context(term,_), !,add_c80(B).
+c80(Text):-
   cls, tracing ~= on,  
   any_to_string(Text,S),!,
-  process81(S).
+  c81(S).
 
-process81(S):- 
+c81(S):- 
  mpred_test_mok(into_lexical_segs(S,U)),
  forall(deepen_pos(sentence80(E,U,[],[],[])),dmsg(E)),
  fail.
-process81(S):- time(process(debug,S)).
+c81(S):- locally(set_prolog_flag(gc,false),time(process(debug,S))).
 
-add_process80(B):- any_to_string(B,S),add_history1(process80(S)).
-
-:- forall(chat_80_ed(_,B,_),add_process80(B)).
-:- add_process80("how many rivers are in poland ?").
-:- add_process80("iran is bordered by iraq?").
-:- add_process80("what city in africa has the greatest population?").
 
 gp_africa(Result):-
   setOf(Size:City, []^(       
@@ -64,12 +60,21 @@ gp_africa(Result):-
 
 :- add_history1(ensure_loaded(geography/load_kb)).
 :- add_history1(test_chat80).
-:- add_process80("is the population of china greater than india's population?").
-:- add_process80("what is the total area of nations that are bordered by iraq?").
-:- add_process80("what ocean does not border any country ?").
 
+:- forall(chat_80_ed(_,B,_),add_c80(B)).
+:- c80("how many rivers are in poland ?").
+:- c80("iran is bordered by iraq?").
+:- c80("what city in africa has the greatest population?").
+:- c80("do oceans border any country?").
+:- c80("is the population of china greater than india's population?").
+:- c80("what is the total area of nations that can border iraq?").
+:- c80("what is the total area of nations that should border iraq?").
+:- c80("what is the total area of nations that are bordered by iraq?").
+:- c80("what ocean does not border any country ?").
+:- c80("what oceans should border any country?").
+:- c80("is china a country?").
 :- fixup_exports.
 
 :- if(\+ prolog_load_context(reloading, true)).
-:- prolog.
+:- initialization(prolog).
 :- endif.

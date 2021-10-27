@@ -309,7 +309,6 @@ multifile_dynamic_discontiguous(P):- multifile(P),dynamic(P),discontiguous(P).
 :-multifile_dynamic_discontiguous(verb_slot/9).
 :-multifile_dynamic_discontiguous(fill_verb/9).
 :-multifile_dynamic_discontiguous(thing_LF_access/6).
-:-multifile_dynamic_discontiguous(thing_LF/6).
 :-multifile_dynamic_discontiguous(intrans_LF/6).
 :-multifile_dynamic_discontiguous(adjunction_LF/4).
 :-multifile_dynamic_discontiguous(name_template_lf0/2).
@@ -437,7 +436,6 @@ multifile_dynamic_discontiguous(P):- multifile(P),dynamic(P),discontiguous(P).
 :-multifile_dynamic_discontiguous(name_template_lf0/2).
 :-multifile_dynamic_discontiguous(thing_LF_access/6).
 :-multifile_dynamic_discontiguous(trans_LF/9).
-:-multifile_dynamic_discontiguous(thing_LF/6).
 :-multifile_dynamic_discontiguous(c_r_l_l_s_cap_m/8).
 :-multifile_dynamic_discontiguous(not_where/1).
 :-multifile_dynamic_discontiguous(measure_pred/4).

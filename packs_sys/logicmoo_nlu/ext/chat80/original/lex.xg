@@ -1,3 +1,4 @@
+
 :- op(1001,xfy, ... ).
 :- op(1200,xfx,'--->').
 
@@ -6,13 +7,14 @@
 %theTextC(W1,CYCPOS,Y=W1)  ---> {t_l:old_text,!},[W1],{W1=Y}.
 % % DEAD theTextC(A,_,F=A,B,C,D,E) :- t_l:old_text, !,terminal(A, B, C, D, E),A=F, is_sane_nv(A).
 % % DEAD theTextC(A,_,F=A,B,C,D,E) :- !,terminal(w(A, _), B, C, D, E),A=F,is_sane_nv(A).
-theTextC(A,_,F=A,B,C,D,E) :- throw(theTextC(A,_,F=A,B,C,D,E)), !,terminal(W2A, B, C, D, E),w1(A,[W2A],[]),A=F,is_sane_nv(A).
-%theTextC(W1,CYCPOS,Y=W1)  ---> {!},[w(W1,_)],{W1=Y}.
+%theTextC(A,_,F=A,B,C,D,E) :- %throw(theTextC(A,_,F=A,B,C,D,E)), 
+%  !,terminal(W2A, B, C, D, E),w1(A,[W2A],[]),A=F,is_sane_nv(A).
+%theTextC(W1,CYCPOS,Y=W1)  ---> !,[w(W1,_)],{W1=Y}.
 %theTextC(W1,CYCPOS,WHY) ---> [W2],{memoize_pos_to_lex80(WHY,CYCPOS,W2,W1)}.
 %theTextC(H,F,A,B,C,D) :- fail, is_sane(C), terminal(G, A, B, C, D),memoize_pos_to_lex80(E, F, G, H),is_sane_nv(H).
 /*
 theTextC(W1,_CYCPOS,Y=W1) ---> {t_l:old_text,!},[W1],{W1=Y}.
-%theTextC(W1,_CYCPOS,Y=W1) ---> {!},[w(W1,_)],{W1=Y}.
+%theTextC(W1,_CYCPOS,Y=W1) ---> !,[w(W1,_)],{W1=Y}.
 theTextC(A,_,F=A,B,C,D,E) :- !,terminal(w(A, _), B, C, D, E),A=F,is_sane_nv(A).
 theTextC(W1,_CYCPOS,WHY) ---> {t_l:old_text,!},[W1],WHY.
 % theTextC(W1,CYCPOS,WHY) ---> {trace_or_throw(memoize_pos_to_lex(WHY,CYCPOS,W2,W1))},[W2],{memoize_pos_to_lex(WHY,CYCPOS,W2,W1)}.
@@ -20,21 +22,24 @@ theTextC(W1,_CYCPOS,WHY) ---> {t_l:old_text,!},[W1],WHY.
 
 
 
-:-asserta(tlxgproc:do_xg_process_te).
+%:-asserta(tlxgproc:do_xg_process_te).
 
 /* Parts of speech */
 /*
 the TextC(W1,CYCPOS,Y=W1)  ---> {t_l:old_text,!},[W1],{W1=Y}.
-the TextC(W1,CYCPOS,Y=W1)  ---> {!},[w(W1,_)],{W1=Y}.
+the TextC(W1,CYCPOS,Y=W1)  ---> !,[w(W1,_)],{W1=Y}.
 the TextC(W1,CYCPOS,WHY) ---> [W2],{memoize_pos_to_lex80(WHY,CYCPOS,W2,W1)}.
 see newdict.pl
 */
 
 % theTextL(W1,_CYCPOS,Y=W1)  ---> {t_l:old_text,!},theTextL80(W1),{W1=Y}.
-theTextL(W1,_CYCPOS,Y=W1)  ---> {!},theTextL80(W1),{W1=Y}.
+
+theTextL(W1,_CYCPOS,Y=W1)  ---> !,theTextL80(W1),{W1=Y}.
 theTextL(W1,_CYCPOS,WHY) ---> theTextL80(W1),{call(WHY)}.
 
-w001(Cmp)---> consume_spans_hack, next_as_word,{!},[Cmp],{assertion(nonvar(Cmp)),parser_e2c:add_prev_w2(Cmp)},consume_spans_hack.
+apw2(Cmp):- nop(assertion(nonvar(Cmp))),parser_e2c:add_prev_w2(Cmp).
+
+w001(Cmp)---> (consume_spans_hack;[]), next_as_word,!,[Cmp],{ignore(apw2(Cmp))},!,(consume_spans_hack;[]).
 
 theText80_W2(Text,L) ---> w001(Cmp),{compound(Cmp),!,Cmp=w(Text,L)}.
 
@@ -46,9 +51,9 @@ w01(Text) ---> theText80_W2(Text,_).
 
 w1(Text) ---> w01(Text).
 
-move_ahead_spans(S1,S2,G,G):- partition(\=(span(_)),S1,W,S),!,append(W,S,S2).
+move_ahead_spans(S1,S2,G,G):- is_list(S1), partition(\=(span(_)),S1,W,S),!,append(W,S,S2).
 
-next_as_word(S1,S2,G,G):- select(W2,S1,SM),compound(W2),W2=w(_,_),!,S2=[W2|SM].
+next_as_word(S1,S2,G,G):- is_list(S1),select(W2,S1,SM),compound(W2),W2=w(_,_),!,S2=[W2|SM].
 next_as_word(S1,S1,G,G).
 
 noText ---> consume_spans_hack.
@@ -87,12 +92,14 @@ theText_ol([W1,W2]) ---> theText80(W1),theText80(W2).
 theText_ol([W1]) ---> theText80(W1).
 %theText_ol(List) ---> {between(4,10,Len),length(List,Len)},theText_cl(List).
 
-theText_cl([]) ---> {!},[].
-theText_cl([W1|WL]) ---> theText80(W1),{!},theText_cl(WL).
+theText_cl([]) ---> !,[].
+theText_cl([W1|WL]) ---> theText80(W1),!,theText_cl(WL).
 
 
+/*
 optText1(_,_,_) ---> noText.
 optText1(W,POS,HOW) ---> theTextC(W,POS,HOW).
+*/
 
 optText1(_,_) ---> noText.
 optText1(W,POS) ---> theText80(W,POS).
@@ -202,4 +209,4 @@ loc_pred(Of,P) --->
    theText80(W), % north of
    {loc_pred_lex(Of,W,P)}.
 
-:-retract(tlxgproc:do_xg_process_te).
+%:-retract(tlxgproc:do_xg_process_te).
