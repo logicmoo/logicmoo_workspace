@@ -1048,6 +1048,7 @@ print_prepended_lines(block,[S|Lines]):- !, append(Mid,[E],Lines), % atom_contai
 print_prepended_lines(Pre,A):- !, print_prepended_lines0(Pre,A).
 
 print_prepended_lines0(_Pre,[]).
+print_prepended_lines0(_Pre,['']):-!.
 print_prepended_lines0(Pre,[H|T]):- print_prepended_line(Pre,H),
   print_prepended_lines0(Pre,T),!.
 
