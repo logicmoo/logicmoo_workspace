@@ -71,9 +71,20 @@ respond([A|L]) :- reply(A), replies(L).
 
 answer80(S1):- answer802(S1,S),respond(S).
 
+/*
 answer802((answer80([]):-E),[B]) :- !, holds_truthvalue(E,B).
 answer802((answer80([X]):-E),S) :- !, seto(X,E,S).
 answer802((answer80(X):-E),S) :- seto(X,E,S).
+*/
+answer802(X,Y):- answer803(X,Y,G),!,call802(G).
+
+answer803((answer80([]):-E),[B], holds_truthvalue(E,B)).
+answer803((answer80([X]):-E),S, seto(X,E,S)).
+answer803((answer80(X):-E), S, seto(X,E,S)).
+
+call802(holds_truthvalue(E,B)):- !, holds_truthvalue(E,B).
+call802(seto(X,E,S)):- !, seto(X,E,S).
+call802(G):- call(G).
 
 seto1(X,E,S) :- ground(X),
 %	portray_clause(({X} :- E)),

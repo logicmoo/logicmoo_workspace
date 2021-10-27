@@ -393,8 +393,9 @@ from_wordlist_atoms( Sentence,  Words):- enotrace((must_maplist(w2_to_t,Sentence
 
 %into_chat80_segs_pt2(Sentence,U):- check_words(Sentence,U).
 
-process4(How,Sentence,Answer,Times) :-
-   Times = [ParseTime,SemTime,TimePlan,TimeAns,TotalTime],
+
+process4a(How,Sentence,U,S1,Times) :- 
+  Times = [ParseTime,SemTime,TimePlan,_TimeAns,_TotalTime],
   quietly(( runtime(StartSeg),
    mpred_test_mok(into_lexical_segs(Sentence,U)),
    runtime(StopSeg),
@@ -423,8 +424,16 @@ process4(How,Sentence,Answer,Times) :-
    pprint_ecp_cmt(green,S),
    runtime(StopPlan),
    TimePlan is StopPlan - StartPlan,
-   (S\=@=S1->(S1R=S1,report(How,S1R,'Planning',TimePlan,expr));(_S1R=same)),
+   (S\=@=S1->(S1R=S1,report(How,S1R,'Planning',TimePlan,expr));(_S1R=same)))).
+
+process4(How,Sentence,Answer,Times) :-
+   process4a(How,Sentence,U,S1,Times), 
+   process4b(How,U,S1,Answer,Times).
+
+process4b(How,U,S1,Answer,Times) :-
+   Times = [ParseTime,SemTime,TimePlan,TimeAns,TotalTime],
    runtime(StartAns),
+   ((
    results80(S1,Answer), !,
    runtime(StopAns),
    TimeAns is StopAns - StartAns,
@@ -502,6 +511,8 @@ sent_to_prelogic(S0,S) :-
 %reduce1(P,P):-!.
 reduce1(P,Q):- \+ compound(P), Q=P.
 reduce1((P,Q),PQ):- P ==Q,!,reduce1(P,PQ).
+
+%reduce1(Ex^(ti(Type,Ex1),subsumed_by(Ex2,Inst)),Ex^(ti(Type,Inst)&Ex=Inst)):- Ex==Ex1, Ex1==Ex2,!.
 reduce1(Ex^(exceeds(Value1, Ex1) & exceeds(Value2, Ex2)),exceeds(Value2, Value1)):- Ex==Ex1, Ex1==Ex2,!.
 reduce1(Ex^(exceeds(Value1, Ex1), exceeds(Value2, Ex2)),exceeds(Value2, Value1)):- Ex==Ex1, Ex1==Ex2,!.
 reduce1(Ex^(exceeds(X,Y),exceeds(A,B)),exceeds(X,B)):- Ex==Y, Y==A,!.

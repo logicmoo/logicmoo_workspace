@@ -340,6 +340,7 @@ slot_verb_template(Verb,Pred,
    slot_verb_kind(Kind,Verb,TypeS,S,Pred,Slots).
 
 % BE
+% slot_verb_kind(be(_MODAL),_,TypeS,S,subsumed_by(A,S),[slot(dir,TypeS,A,_,free)]).
 slot_verb_kind(be(_MODAL),_,TypeS,S,S=A,[slot(dir,TypeS,A,_,free)]).
 slot_verb_kind(be(_MODAL),_,TypeS,S,true,[slot(pred,TypeS,S,_,free)]).
 slot_verb_kind(iv,Verb,TypeS,S,Pred,Slots) :-
