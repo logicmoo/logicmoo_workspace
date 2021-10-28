@@ -67,7 +67,7 @@ This module prevents infinite loops.
 
         % loop_check_term(0, ?, 0),no_loop_check_term(0, ?, 0),
         
-        transitive(2, +, -),
+        %transitive(2, +, -),
         transitive_except(+, 2, +, -),
         transitive_lc(2, +, -).
         
@@ -89,7 +89,15 @@ This module prevents infinite loops.
 %
 % Transitive.
 %
+transitive(XY,A,A):- XY=[],!.
+transitive(XY,A,B):- XY= [X|Y], !, transitive(X,A,M),!, transitive(Y,M,B).
 transitive(X,A,B):- once(on_x_debug(call(X,A,R)) -> ( R\=@=A -> transitive_lc(X,R,B) ; B=R); B=A),!.
+
+
+non_transitive(XY,A,A):- XY=[],!.
+non_transitive(XY,A,B):- XY= [X|Y], !, non_transitive(X,A,M),!, non_transitive(Y,M,B).
+non_transitive(X,A,B):- once(on_x_debug(call(X,A,B))),!.
+non_transitive(_,A,A).
 
 
 
@@ -98,6 +106,8 @@ transitive(X,A,B):- once(on_x_debug(call(X,A,R)) -> ( R\=@=A -> transitive_lc(X,
 %
 % Transitive Not Loop Checked.
 %
+transitive_lc(XY,A,A):- XY=[],!.
+transitive_lc(XY,A,B):- XY= [X|Y],!,transitive_except([],X,A,M),transitive_lc(Y,M,B).
 transitive_lc(X,A,B):-transitive_except([],X,A,B).
 
 

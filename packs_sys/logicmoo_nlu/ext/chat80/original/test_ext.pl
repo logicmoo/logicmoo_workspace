@@ -48,6 +48,14 @@ c80(Text):-
   add_c80(S),
   c81(S).
 
+c81(S):- once(c82(S)),fail. 
+c81(S):- 
+ time_once((mpred_test_mok(into_lexical_segs(S,U)),
+ forall(deepen_pos(sentence80(E,U,[],[],[])),dmsg(E)))),
+ fail.
+c81(S):- time_once(c83(S)),fail. 
+c81(_).
+
 
 /*
 
@@ -64,36 +72,58 @@ too_long('NML').
 too_long('FRAG').
 too_long(X):- atom_concat(_,'BAR',X).
 too_long(X):- atom_concat('S',_,X).
-is_penn_tag(S):- atom(S),upcase_atom(S,S), \+ downcase_atom(S,S), S\=='I'.
-is_penn_long(S):-is_penn_tag(S),too_long(S).
+is_penn_tag(_,S):- atom(S),upcase_atom(S,S), \+ downcase_atom(S,S), S\=='I'.
+is_penn_long(S):-is_penn_tag(_,S),too_long(S).
 
-pre_tree(I,O):- \+ is_list(I),!,I=O.
-pre_tree([], []) :- !.
-% pre_tree(['PP'|I],O):- !, pre_tree(I, O).
-pre_tree(['VP',['NN',Border]|I],['VP',['VB',Border]|O]):-maplist(pre_tree,I,O).
-pre_tree([S|I], [TAG|O]) :-  is_penn_tag(S),s_c_code(S,TAG),!, maplist(pre_tree,I,O).
-pre_tree(I, O):- maplist(pre_tree,I,O).
+pree_tree_done(I,O):- ( I==[] ;  \+ is_list(I) ),!,I=O.
+pree_tree_done([I],[O]):- ( I==[] ;  \+ is_list(I) ),!,I=O.
 
-pre_tree_2(I,O):- \+ is_list(I),!,I=O.
-pre_tree_2([], []) :- !.
-pre_tree_2([tag(_,'CORENLP'),Y],O):- !, pre_tree_2(Y,O).
-pre_tree_2([tag(_,FRAG)|Y],O):- too_long(FRAG),!, maplist(pre_tree_2,Y,O).
-pre_tree_2([tag(_,FRAG),Y],O):- too_long(FRAG),!, pre_tree_2(Y,O).
-pre_tree_2([tag('S',_)|Y],O):- !, maplist(pre_tree_2,Y,O).
-pre_tree_2([tag('S',_),Y],O):- !, pre_tree_2(Y,O).
-pre_tree_2([tag('I',_),Prep],prep(Prep)):- !.
-%pre_tree_2([tag(_,NP),[tag(_,NNP),Word]|More], [[tag('N',NNP),Word]|More]) :- NP=='NP',!.
-pre_tree_2([tag(N,NP),[tag(W,NNP),Word]|I],[tag(N,NNP),[tag(W,NNP),Word]|O]) :- NP\==NNP, nop(NP=='NP'),!,maplist(pre_tree_2,I,O).
-pre_tree_2(I, O) :- maplist(pre_tree_2,I,O).
+pree_tree_finish(G2,I,O) :- once(maplist(G2,I,O)),I\==O,!.
+pree_tree_finish(G2,[S|I],[S|O]) :- call(G2,I,O),!.
 
-%s_c_code(S,tag( C, S)):- atom_chars(S,[C]),!.
-%s_c_code(S,tag('S',S)):- atom_chars(S,['S'|_]),!.
-s_c_code(S,tag( C, S)):- atom_chars(S,[C|_]).
-compile_nl_tree(I,O):- \+ is_list(I),!,I=O.
-compile_nl_tree([[tag('N',_NP1)|S],[tag('V',VB)|V],[tag('N',_NP2)|O]|Rest],OUT):- !, vso_out([tag('V',VB)|V],S,O,Rest,OUT).
-compile_nl_tree([[tag('V',VB)|V],[tag('N',_NP1)|S],[tag('N',_NP2)|O]|Rest],OUT):- !, vso_out([tag('V',VB)|V],S,O,Rest,OUT).
-compile_nl_tree(I, O) :- maplist(compile_nl_tree,I,O).
+pre_tree_0(I,O):- pree_tree_done(I,O),!.
+pre_tree_0(['VP',['NN',Border]|I],O):- !, pre_tree_0(['VP',['VB',Border]|I],O).
+pre_tree_0([FRAG,I],O):- is_penn_long(FRAG),!, pre_tree_0(I,O).
+pre_tree_0([A,[FRAG|I]|B],O):- is_penn_long(FRAG),append([A|I],B,Y),!,pre_tree_0(Y,O).
+pre_tree_0([FRAG|I],O):- is_penn_long(FRAG),!, pre_tree_0(I,O).
+pre_tree_0(I,O):-  pree_tree_finish(pre_tree_0,I,O).
 
+pre_tree_1(I,O):- pree_tree_done(I,O),!.
+pre_tree_1(I,O):- pree_tree_finish(pre_tree_1,I,O).
+
+pre_tree_2(I,O):- pree_tree_done(I,O),!.
+pre_tree_2([S|I], [TAG|O]) :-  is_penn_tag(_,S),s_c_code(S,TAG),!, maplist(pre_tree_2,I,O).
+pre_tree_2([I,List],O):- maplist(is_list,[I,List|List]),!, pre_tree_2([I|List],O).
+%pre_tree_2([I,List|More],O):- maplist(is_list,[I,List|List]),!, pre_tree_2([I|List],O).
+pre_tree_2(I,O):- pree_tree_finish(pre_tree_2,I,O).
+
+pre_tree_3(I,O):- pree_tree_done(I,O),!.
+%pre_tree_3([I],O):- is_list(I),!, pre_tree_3(I,O).
+%pre_tree_3([tag(_,'I',_),Prep],prep(Prep)):- !.
+%pre_tree_3([tag(_,_,NP),[tag(_,_,NNP),Word]|More], [[tag(_,'N',NNP),Word]|More]) :- NP=='NP',!.
+pre_tree_3([tag(_,N,NP),[tag(_,W,NNP),Word]|I],O) :- NP\==NNP,!,pre_tree_3([tag(_,N,NNP),[tag(_,W,NNP),Word]|I],O).
+pre_tree_3(I,O):- pree_tree_finish(pre_tree_3,I,O).
+
+
+pre_tree_4(I,O):- pree_tree_done(I,O),!.
+pre_tree_4(I,O):- pree_tree_finish(pre_tree_4,I,O).
+pree_tree_call(G,X,Y):- pt_call(G,X,Y),ignore((X\==Y,in_cmt(print_tree_nl(G=Y)))),!.
+
+pt_call(_,X,Y):- pree_tree_done(X,Y),!.
+pt_call(G,X,Y):- call(G,X,Y).
+pt_call(G,X,Y):- pree_tree_finish(pt_call(G),X,Y),!.
+
+%s_c_code(S,tag(_, C, S)):- atom_chars(S,[C]),!.
+%s_c_code(S,tag(_,'S',S)):- atom_chars(S,['S'|_]),!.
+s_c_code(S,tag(_, C, S)):- atom_chars(S,[C|_]).
+
+words_of(I,Words):- flatten(I,Flat),include(atomic,Flat,Words).
+
+compile_nl_tree(I,O):- pree_tree_done(I,O),!.
+compile_nl_tree([[tag(_,'N',_NP1)|S],[tag(_,'V',VB)|V],[tag(_,'N',_NP2)|O]|Rest],OUT):- !, vso_out([tag(_,'V',VB)|V],S,O,Rest,OUT).
+compile_nl_tree([[tag(_,'V',VB)|V],[tag(_,'N',_NP1)|S],[tag(_,'N',_NP2)|O]|Rest],OUT):- !, vso_out([tag(_,'V',VB)|V],S,O,Rest,OUT).
+compile_nl_tree(I, O) :- once(maplist(compile_nl_tree,I,O)),I\==O,!.
+compile_nl_tree([tag(_,N,NP)|I], O):- N=='N', words_of(I,Words),debug_var(Words,V),make_out1([tag(_,N,NP)|I],Words,V,O),!.
 compile_nl_tree(O,O).
 
 %a few years ago i took an aiml dataset and converted it into dialog moves and deep logical form.. it turned out that 70% was just at best aiml tricks
@@ -111,38 +141,61 @@ rest_out(U,M,and(M,U)):-!.
 vso_out(V,S,O,OUT):-  OUT = decl(Group1 &Group2 & Group3 & pred(Act,Subj,Obj)),
   arg_group(V,Act,Group1), arg_group(S,Subj,Group2), arg_group(O,Obj,Group3).
 
-arg_group(List,V,Out):- flatten(List,Flat),include(atomic,Flat,NameL),debug_var(NameL,V),
-   make_out(List,NameL,V,Out).
+arg_group(List,V,Out):- flatten(List,Flat),include(atomic,Flat,Words),debug_var(Words,V),
+   make_out(List,Words,V,Out).
 
-make_out(List,_NameL,V,E):- append(Left,[[tag('C','CC'),'and']|Rest],List),
-  arg_group(Left,V1,Out1),
-  arg_group(Rest,V2,Out2),
-  Out3=both(V1,V2,V),
-  E = Out1&Out2&Out3,!.
-  
-make_out(_List,NameL,V,E):-
-   C80 = [what,is|NameL],
-   process4a(off,C80,_U,S1,_Times),
-   answer803(S1,V,E),!.
-make_out(List,_NameL,V,denotedBy(V,List)).
+c80_what_is(Words,V,E):- \+ last(Words,'?'),append(Words,['?'],WordsQ),!,c80_what_is(WordsQ,V,E).
+c80_what_is([what|Words],V,E):- !, c80_what_is(Words,V,E).
+c80_what_is(Words,V,E):-  C80 = [what,are|Words], wots(_,process4a(off,C80,_U,S1,_Times)), answer803(S1,V,E).
+c80_what_is(Words,V,E):-  C80 = Words, wots(_,process4a(off,C80,_U,S1,_Times)), answer803(S1,V,E).
 
-c81(S):- locally(set_prolog_flag(gc,false),time(process(debug,S))),fail.
-c81(S):- 
- mpred_test_mok(into_lexical_segs(S,U)),
- forall(deepen_pos(sentence80(E,U,[],[],[])),dmsg(E)),
- fail.
-c81(S):- 
-  mpred_test_mok(text_to_best_tree(S,U)),
-  once((print_tree_nl(p=U),
-  pre_tree(U,EU),
-  print_tree_nl(q=EU),
-  pre_tree_2(EU,EUQ),
-  print_tree_nl(r=EUQ),
-  compile_nl_tree(EUQ,E),
-  dmsg(sentence=S),
-  in_color(yellow,print_tree_nl(s=E)))),
- fail.
-c81(_).
+
+simplify_tree(I,O):- \+ compound(I),!,I=O.
+simplify_tree(I&true,O):- simplify_tree(I,O).
+simplify_tree(true&I,O):- simplify_tree(I,O).
+simplify_tree(seto(V,true,N),valueOf(V)):- N=V,!.
+simplify_tree(seto(V,True,N),True):- N=V,!.
+simplify_tree(V=N,true):- N==V,!.
+
+simplify_tree(I,O):- compound_name_arguments(I,N,A),maplist(simplify_tree,A,AO),compound_name_arguments(O,N,AO),!.
+simplify_tree(E,E).
+
+make_out1(_List,Words,V,E):- c80_what_is(Words,V,E),!.
+make_out1([List],Words,V,E):- is_list(List),!,make_out(List,Words,V,E).
+make_out1(List,_Words,V,E):- append(Left,[[tag(_,'C','CC'),'and']|Rest],List),
+  arg_group(Left,V1,Out1), arg_group(Rest,V2,Out2), Out3=both(V1,V2,V),
+  simplify_tree(Out1&Out2&Out3,E),!.
+
+make_out1([tag(V,'N',NNP),[tag(V,'N',NNP),Noun]],_Words,V,V=nounFn(Noun)).
+make_out1([tag(V,'W','WP'),Noun],_Words,V,stringValue(V,Noun)).
+make_out1([tag(V,'V',_),Verb],_Words,V,V=verbFn(Verb)):- ignore(V=verbFn(Verb)).
+
+make_out(List,Words,V,E):- make_out1(List,Words,V,E),!.
+make_out(List,Words,V,denotedBy(V,List,c80(Phrase))):- any_to_string([what,is|Words],Phrase).
+
+%text_to_best_tree80(I,O):-text_to_charniak_tree(I,O).
+text_to_best_tree80(I,O):-text_to_best_tree(I,O).
+
+time_once(G):- locally(set_prolog_flag(gc,false),time(once(G))).
+
+c82(S):- time_once(process(debug,S)).
+c83(S):-
+  mpred_test_mok(text_to_best_tree80(S,U)),
+  print_tree_nl(text_to_best_tree80=U),
+  transitive([
+       pree_tree_call(pre_tree_0),
+       pree_tree_call(pre_tree_1),
+       pree_tree_call(pre_tree_2),
+       pree_tree_call(pre_tree_3),
+       pree_tree_call(pre_tree_4)],U,EUQ),  
+  transitive(compile_nl_tree,EUQ,E),
+  transitive(simplify_tree,E,Simple),
+  dmsg(?-c80(S)),
+  add_c80(S),
+  in_color(blue,  print_tree_nl(e=E)),
+  in_color(yellow,print_tree_nl(s=Simple)),!.
+ 
+
 
 
 gp_africa(Result):-
@@ -171,6 +224,7 @@ gp_africa(Result):-
 :- add_c80("are china and japan a country?").
 :- add_c80("is china and japan a country?").
 :- add_c80("are china and japan countries?").
+:- add_c80("china is a country?").
 
 %~ decl( s( np(3+sg,nameOf(china),[]),
 %~          verb(make,active,past+fin,[],posP(PosP)),
