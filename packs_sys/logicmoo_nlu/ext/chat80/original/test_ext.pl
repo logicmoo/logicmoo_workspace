@@ -117,7 +117,8 @@ pt_call(G,X,Y):- pree_tree_finish(pt_call(G),X,Y),!.
 %s_c_code(S,tag(_,'S',S)):- atom_chars(S,['S'|_]),!.
 s_c_code(S,tag(_, C, S)):- atom_chars(S,[C|_]).
 
-words_of(I,Words):- flatten(I,Flat),include(atomic,Flat,Words).
+is_word80(X):- atomic(X), X\==[].
+words_of(I,Words):- flatten(I,Flat),include(is_word80,Flat,Words).
 
 compile_nl_tree(I,O):- pree_tree_done(I,O),!.
 compile_nl_tree([[tag(_,'N',_NP1)|S],[tag(_,'V',VB)|V],[tag(_,'N',_NP2)|O]|Rest],OUT):- !, vso_out([tag(_,'V',VB)|V],S,O,Rest,OUT).
