@@ -3,7 +3,7 @@
 % $ swipl -f none -g download_acetexts -t halt -s downloader.pl
 
 clex_remote_local('https://raw.github.com/Attempto/Clex/master/clex_lexicon.pl', 'clex_lexicon.pl').
-acetexts_remote_local('http://attempto.ifi.uzh.ch/cgi-bin/acetextset/get_acetexts.cgi', 'acetexts.pl').
+acetexts_remote_local('http://attempto.ifi.uzh.ch/cgi-bin/acetextset/get_acetexts.cgi', 'acetexts.nldata').
 
 %!  ensure_clex
 %

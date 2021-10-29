@@ -20,8 +20,13 @@
 		drs_pnf/3,
 		drs_fol_pnf/3,
 		drs_fol_pnf/4,
-		fol_to_folpp/2
+		fol_to_folpp/2,
+    old_fol/0
 	]).
+
+
+old_fol:- fail.
+
 
 /** <module> Transform DRSs into First-order Formulas and Their Prenex Normal Forms
 
@@ -173,15 +178,19 @@ drs_to_fol(drs([X|Referents],Conditions), World, exists(X,Formula)) :-
   !,
   drs_to_fol(drs(Referents,Conditions), World, Formula).
 
-cond_to_fol(-DRS, World, -Formula) :-
+
+
+	
+
+cond_to_fol(-DRS, World, -Formula) :- old_fol,
   !,
   drs_to_fol(DRS, World, Formula).
 
-cond_to_fol(question(DRS), World, Formula) :-
+cond_to_fol(question(DRS), World, Formula) :- old_fol,
   !,
   drs_to_fol(DRS, World, Formula).
 
-cond_to_fol(command(DRS), World, Formula) :-
+cond_to_fol(command(DRS), World, Formula) :- old_fol,
   !,
   drs_to_fol(DRS, World, Formula).
 
@@ -224,10 +233,17 @@ cond_to_fol(BasicCondition - Index, World, NewBasicCondition - Index) :-
   BasicCondition =.. [Functor|Arguments],
   NewBasicCondition =..[Functor|[World|Arguments]].
 
+cond_to_fol(Drs1, World, Drs2) :-
+	Drs1 =.. [Op, SubDrs1],
+  drs_ops:unary_drs_operator(Op),!,
+  drs_to_fol(SubDrs1, World, SubDrs2),
+	Drs2 =.. [Op, SubDrs2],!.
+
 cond_to_fol(Input, _World, _Formula) :-
    illegal_condition(Input),
    !,
    throw(error('Unsupported DRS construct', context(cond_to_fol/3, Input))).
+
 
 illegal_condition(~(_DRS)).
 illegal_condition(may(_DRS)).

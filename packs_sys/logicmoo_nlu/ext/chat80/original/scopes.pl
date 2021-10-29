@@ -35,7 +35,7 @@ clausify80(P,OUT) :-
 clausify80(P,error_in_clausify80(P)):- dumpST,!.
 
 clausify80_qa(V0,P,V,BO):- 
- print_tree_nl(p=P),
+ %print_tree_nl(p=P),
  clausify80_qab(V0,P,V,B),
  print_tree_nl(in=B),
  code_smell(B,BO),!,
@@ -44,7 +44,7 @@ clausify80_qa(V0,P,V,BO):-
 %reguess_vars(V,BO,VO):-
 reguess_vars(Vs,B,BO,Vs):- B==BO,!.
 reguess_vars(Vs,_B,BO,Bs):-
-   print_tree_nl(out=BO),
+  % print_tree_nl(out=BO),
   term_variables(Vs+BO,Bs).
   
 

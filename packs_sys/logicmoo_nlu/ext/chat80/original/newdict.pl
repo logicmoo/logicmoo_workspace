@@ -25,27 +25,35 @@
 ag_number(1,sg).
 ag_number(N,pl) :- N>1.
 
-chk_word(Word):- word(Word).
-word(Word) :- '`' (Word).
-word(Word) :- conj_lex(Word).
-word(Word) :- adverb_lex(Word).
-word(Word) :- sup_adj_lex(Word,_).
-word(Word) :- comp_adj_lex(Word,_).
-word(Word) :- adj_lex(Word,_).
-word(Word) :- name_LF(Word).
-word(Word) :- terminator_lex(Word,_).
-word(Word) :- pers_pron_lex(Word,_,_,_,_).
-word(Word) :- poss_pron_lex(Word,_,_,_).
-word(Word) :- rel_pron(Word,_).
+chk_word(Word):- word80(Word).
+
+word80(Word) :- '`' (Word).
+word80(Word) :- conj_lex(Word).
+word80(Word) :- adverb_lex(Word).
+word80(Word) :- sup_adj_lex(Word,_).
+word80(Word) :- comp_adj_lex(Word,_).
+word80(Word) :- adj_lex(Word,_).
+word80(Word) :- name_LF(Word).
+word80(Word) :- terminator_lex(Word,_).
+word80(Word) :- pers_pron_lex(Word,_,_,_,_).
+word80(Word) :- poss_pron_lex(Word,_,_,_).
+word80(Word) :- rel_pron_lex(Word,_).
+%word80(Word) :- noun_form_lex(Word,_,_).
+word80(Word) :- quantifier_pron_lex(Word,_,_).
+word80(Word) :- number_lex(Word,_,_).
+word80(Word) :- det_lex(Word,_,_,_).
+word80(Word) :- int_art_lex(Word,_,_,_).
+word80(Word) :- int_pron_lex(Word,_).
+word80(Word) :- loc_pred_lex(_,Word,_).
+word80(Word) :- verb_type_db(chat80,Word,_).
+word80(Word) :- word81(Word).
+
+word81(Word) :- verb_form_aux(Word,_,_,_).
+word81(Word) :- prep_db(chat80,Word).
+
+word(Word) :- word80(Word).
 word(Word) :- verb_form_lex(Word,_,_,_).
-word(Word) :- noun_form_lex(Word,_,_).
 word(Word) :- prep_lex(Word).
-word(Word) :- quantifier_pron_lex(Word,_,_).
-word(Word) :- number_lex(Word,_,_).
-word(Word) :- det_lex(Word,_,_,_).
-word(Word) :- int_art_lex(Word,_,_,_).
-word(Word) :- int_pron_lex(Word,_).
-word(Word) :- loc_pred_lex(_,Word,_).
 
 '`' how.
 '`' whose.

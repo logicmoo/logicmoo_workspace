@@ -112,6 +112,7 @@ test_chat80(N, Sentence, OnOff, CorrectAnswer):-
   ignore((baseKB:test_chat80_mpred(N, Sentence, OnOff, CorrectAnswer))),!,
   kill_junit_tee.
 
+dumpST_ERR:- !. %,fail.
 dumpST_ERR:- dump_st,!.
 dumpST_ERR:- dumpST,!.
 
@@ -401,6 +402,7 @@ process4a(How,Sentence,U,S1,Times) :-
    runtime(StopSeg),
    SegTime is StopSeg - StartSeg,
    report(How,U,'segs',SegTime,tree),
+   sleep(2),
    runtime(StartParse))),!,
  ((deepen_pos(sentence80(E,U,[],[],[])),
    notrace((runtime(StopParse),
