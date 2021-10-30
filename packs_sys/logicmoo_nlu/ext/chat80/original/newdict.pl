@@ -204,18 +204,18 @@ ctx_pron_lex(at,time,when).
 
 how_many_lex([how,many]).
 
-first_lexicon(X):- available_lexicon(X),!.
-available_lexicon(talkdb).
-available_lexicon(chat80).
-available_lexicon(clex).
-try_lex(How, G, CALL):- G=..[F|ARGS], CALL=..[F,How|ARGS].
+try_lex(G):- first_lexicon(Which),try_one_lex(Which,G).
+first_lexicon(X):- available_lexicon(_,X).
+available_lexicon(1,talkdb).
+available_lexicon(2,chat80):-!.
+available_lexicon(3,clex).
 show_tries_except(_Which,_TF,_G):- \+ tracing,!.
-show_tries_except(Which,TF,G):- !, forall((available_lexicon(Other),Other\==Which,try_lex(Other,G,CALL),clause(CALL,_)),warn_when(TF,CALL)).
+show_tries_except(Which,TF,G):- !, forall((available_lexicon(_,Other),Other\==Which,get_lex_call(Other,G,CALL),clause(CALL,_)),warn_when(TF,CALL)).
 warn_when(fail,G):- G -> true ; wdmsg(warn_when(failed,G)).
 warn_when(true,G):- G *-> wdmsg(warn_when(succeeded,G)) ; true.
-try_lex(G):- first_lexicon(Which),try_lex(Which,G).
-try_lex([E|Order],G):- nonvar(E), !, member(Which,[E|Order]),try_lex(Which,G).
-try_lex(Which,G):- try_lex(Which,G,CALL),
+get_lex_call(How, G, CALL):- G=..[F|ARGS], CALL=..[F,How|ARGS].
+try_lex_order(Order,G):-  member(Which,Order),get_lex_call(Which,G,CALL),call(CALL).
+try_one_lex(Which,G):- get_lex_call(Which,G,CALL),
  copy_term(G,CopyG),
  (CALL
     *-> show_tries_except(Which,fail,CopyG)
@@ -353,7 +353,7 @@ adj_lex( Baltic,restr):- agentitive_symmetric_type(_,Baltic).
 %adj_lex(African,Restr):-  adj_db(chat80,African,Restr).
 %adj_lex(African,Restr):-  adj_db(talkdb,African,Restr).
 %adj_lex(African,Restr):-  adj_db(clex,African,Restr).
-adj_lex(African,Restr):-  try_lex([chat80,clex,talkdb],adj_db(African,Restr)).
+adj_lex(African,Restr):-  try_lex_order([chat80,clex,talkdb],adj_db(African,Restr)).
 
 %adj_db(chat80,american,restr).
 %adj_db(chat80,asian,restr).
@@ -371,7 +371,7 @@ adj_db(chat80,average,restr).
 adj_db(chat80,maximum,restr).
 adj_db(chat80,minimum,restr).
 adj_db(chat80,total,restr).
-%adj_db(clex,Y,Z):- show_success(always,adj_db_clex(_,Y,Z)).
+adj_db(clex,Y,RestrOrQuantV):- show_success(always,adj_db_clex(_,Y,RestrOrQuantV)).
 
 %adj_db_clex(X,Y,quantV):- clex:adj_itr(X,Y).
 adj_db_clex(X,Y,restr):- clex:adj_itr(X,Y), \+ clex:adv(X,_).
@@ -486,7 +486,7 @@ sup_adj_db(chat80,smallest,small).
 
 
 % @TODO DMiles I thinnk this is backwards
-comp_adv_lex(Less):- try_lex(chat80,comp_adv_db(_Lesser, Less)).
+comp_adv_lex(Less):- try_one_lex(chat80,comp_adv_db(_Lesser, Less)).
 comp_adv_db(chat80,lesser,less).
 comp_adv_db(chat80,more,more).
 %comp_adv_db(talkdb,Smallest,Small):- talkdb:talk_db(comperl,Small,Smallest).
@@ -494,7 +494,7 @@ comp_adv_db(talkdb,Lesser, Less):- comp_adv_db(clex,Lesser, Less).
 comp_adv_db(clex,Lesser, Less):- clex:adv_comp(Lesser, Less).
 
 
-sup_adv_lex(Least):- try_lex(chat80,sup_adv_db(Least, _Less)).
+sup_adv_lex(Least):- try_one_lex(chat80,sup_adv_db(Least, _Less)).
 sup_adv_db(chat80,least,less).
 sup_adv_db(chat80,most,more).
 %sup_adv_db(talkdb,Smallest,Small):- talkdb:talk_db(superl,Small,Smallest).
