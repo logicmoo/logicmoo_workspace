@@ -258,7 +258,10 @@ trans_LF(exceed,measure&Type,X,measure&Type,Y,exceeds(X,Y),[],_,_).
 
 /* Adjectives */
 
+restriction_LF(Word,Spatial&_,X,ti_adj(Type,X)):- adj_db_clex(Type,Word,restr), spatial(Spatial).
 restriction_LF(African,Spatial&_,X,ti(African,X)):- adj_lex(African,restr), spatial(Spatial).
+
+
 %restriction_LF(american,Spatial&_,X,ti(american,X)).
 %restriction_LF(asian,Spatial&_,X,ti(asian,X)).
 %restriction_LF(european,Spatial&_,X,ti(european,X)).

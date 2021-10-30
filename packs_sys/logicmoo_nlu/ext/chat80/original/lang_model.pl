@@ -628,3 +628,4 @@ gp_africa(Result):-
 %:- forall(ti(country,Word),learn_penn_tag('NN',Word)).
 %:- listing(wt_replacement/4).
 
+:- test_chat80.

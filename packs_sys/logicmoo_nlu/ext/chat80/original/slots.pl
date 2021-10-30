@@ -66,6 +66,14 @@ held_arg(held_arg(Case,-Id,X),[],S0,S,Id,+Id) :-
    in_slot(S0,Case,X,Id,S,_).
 held_arg(XA,XA,S,S,Id,Id).
 
+% np(3+sg,nameOf(iran),[])
+i_np_head0(nameOf(Name), Type-Name,Type-Name,identityQ,'`'(true),Pred,Pred,[]) :- 
+  must80(name_template_LF(Name,Type)),!.
+i_np_head0(wh(X),X,X,identityQ,'`'(true),Pred,Pred,[]):-!.
+% np(3+sg,pronoun(neut),[])
+i_np_head0(Else, Type-Name,Type-Name,identityQ,'`'(P),Pred,Pred,[]):-  Else \= np_head(_,_,_), !,
+  P = qualifiedBy(Name,Type,Else).
+
 i_np_head0(np_head(Det,Adjs,Noun),X,T,Det,Head0,Pred0,Pred,Slots) :-
    i_adjs(Adjs,X,T,X,Head0,Head,Pred0,Pred),
    i_noun(Noun,X,Head,Slots).
@@ -80,12 +88,8 @@ i_np_head0(np_head(quantV(Op0,N),Adjs,Noun),
    must80((measure_LF(Noun,Type,Adjs,Units),
    pos_conversion_db(N,Op0,Type,V,Op),
    measure_op(Op,X,V--Units,P))).
-% np(3+sg,nameOf(iran),[])
-i_np_head0(nameOf(Name), Type-Name,Type-Name,identityQ,'`'(true),Pred,Pred,[]) :- 
-  name_template_LF(Name,Type),!.
-i_np_head0(wh(X),X,X,identityQ,'`'(true),Pred,Pred,[]):-!.
-% np(3+sg,pronoun(neut),[])
-i_np_head0(Else, Type-Name,Type-Name,identityQ,'`'(P),Pred,Pred,[]):- Else \= np_head(_,_,_),
+
+i_np_head0(Else, Type-Name,Type-Name,identityQ,'`'(P),Pred,Pred,[]):- fail, may_qualify(Else), % Else \= np_head(_,_,_),
   P = qualifiedBy(Name,Type,Else).
 must80(G):- \+ current_prolog_flag(debug_chat80,true),!, call(G).
 must80(G):- call(G)*->true;(trace,call(G)).

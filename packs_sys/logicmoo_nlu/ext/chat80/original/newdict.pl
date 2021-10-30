@@ -213,7 +213,10 @@ show_tries_except(_Which,_TF,_G):- \+ tracing,!.
 show_tries_except(Which,TF,G):- !, forall((available_lexicon(Other),Other\==Which,try_lex(Other,G,CALL),clause(CALL,_)),warn_when(TF,CALL)).
 warn_when(fail,G):- G -> true ; wdmsg(warn_when(failed,G)).
 warn_when(true,G):- G *-> wdmsg(warn_when(succeeded,G)) ; true.
-try_lex(G):- first_lexicon(Which),try_lex(Which,G,CALL),copy_term(G,CopyG),
+try_lex(G):- first_lexicon(Which),try_lex(Which,G).
+try_lex([E|Order],G):- nonvar(E), !, member(Which,[E|Order]),try_lex(Which,G).
+try_lex(Which,G):- try_lex(Which,G,CALL),
+ copy_term(G,CopyG),
  (CALL
     *-> show_tries_except(Which,fail,CopyG)
     ; (show_tries_except(_,true,CopyG),!, fail)).
@@ -347,8 +350,10 @@ verb_type_db(chat80,govern,main+tv).
 
 adj_lex(African,restr):- agentitive_trans(_,_,African).
 adj_lex( Baltic,restr):- agentitive_symmetric_type(_,Baltic).
-adj_lex(African,Restr):-  adj_db(chat80,African,Restr).
-adj_lex(African,Restr):-  fail,fail, try_lex(adj_db(African,Restr)).
+%adj_lex(African,Restr):-  adj_db(chat80,African,Restr).
+%adj_lex(African,Restr):-  adj_db(talkdb,African,Restr).
+%adj_lex(African,Restr):-  adj_db(clex,African,Restr).
+adj_lex(African,Restr):-  try_lex([chat80,clex,talkdb],adj_db(African,Restr)).
 
 %adj_db(chat80,american,restr).
 %adj_db(chat80,asian,restr).
@@ -366,9 +371,17 @@ adj_db(chat80,average,restr).
 adj_db(chat80,maximum,restr).
 adj_db(chat80,minimum,restr).
 adj_db(chat80,total,restr).
+%adj_db(clex,Y,Z):- show_success(always,adj_db_clex(_,Y,Z)).
 
-adverb_lex(tomorrow).
-adverb_lex(yesterday).
+%adj_db_clex(X,Y,quantV):- clex:adj_itr(X,Y).
+adj_db_clex(X,Y,restr):- clex:adj_itr(X,Y), \+ clex:adv(X,_).
+
+adverb_db(X):- try_lex(adverb_lex_db(X)).
+adverb_lex_db(chat80,tomorrow).
+adverb_lex_db(chat80,yesterday).
+adverb_lex_db(clex,X):- clex:adv(_,X), \+ clex:adj_itr(X,_).
+adverb_lex_db(talkdb,X):- talk_db(adv,X), \+ talk_db(adj,X).
+
 
 loc_pred_lex(of,east,prep(cp(east,of))).
 loc_pred_lex(of,north,prep(cp(north,of))).
@@ -460,6 +473,7 @@ comp_adj_db(chat80,smaller,small).
 
 
 sup_adj_lex(Smallest,Small):- try_lex(sup_adj_db(Smallest,Small)).
+
 sup_adj_db(talkdb,Smallest,Small):- talkdb:talk_db(superl,Small,Smallest).
 sup_adj_db(talkdb,Smallest,Small):- sup_adj_db(clex,Smallest,Small).
 sup_adj_db(clex,Smallest,Small):- clex:adj_itr_sup(Smallest, Small).
@@ -471,10 +485,20 @@ sup_adj_db(chat80,oldest,old).
 sup_adj_db(chat80,smallest,small).
 
 
-comp_adv_lex(less).
-comp_adv_lex(more).
+% @TODO DMiles I thinnk this is backwards
+comp_adv_lex(Less):- try_lex(chat80,comp_adv_db(_Lesser, Less)).
+comp_adv_db(chat80,lesser,less).
+comp_adv_db(chat80,more,more).
+%comp_adv_db(talkdb,Smallest,Small):- talkdb:talk_db(comperl,Small,Smallest).
+comp_adv_db(talkdb,Lesser, Less):- comp_adv_db(clex,Lesser, Less).
+comp_adv_db(clex,Lesser, Less):- clex:adv_comp(Lesser, Less).
 
-sup_adv_lex(least).
-sup_adv_lex(most).
+
+sup_adv_lex(Least):- try_lex(chat80,sup_adv_db(Least, _Less)).
+sup_adv_db(chat80,least,less).
+sup_adv_db(chat80,most,more).
+%sup_adv_db(talkdb,Smallest,Small):- talkdb:talk_db(superl,Small,Smallest).
+sup_adv_db(talkdb,Least,Less):- sup_adv_db(clex,Least,Less).
+sup_adv_db(clex,Least,Less):- clex:adv_sup(Least,Less).
 
 :- fixup_exports.
