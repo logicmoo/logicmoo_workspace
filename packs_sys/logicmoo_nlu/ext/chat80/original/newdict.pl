@@ -207,7 +207,7 @@ how_many_lex([how,many]).
 first_lexicon(X):- available_lexicon(X),!.
 available_lexicon(talkdb).
 available_lexicon(chat80).
-%available_lexicon(clex).
+available_lexicon(clex).
 try_lex(How, G, CALL):- G=..[F|ARGS], CALL=..[F,How|ARGS].
 show_tries_except(_Which,_TF,_G):- \+ tracing,!.
 show_tries_except(Which,TF,G):- !, forall((available_lexicon(Other),Other\==Which,try_lex(Other,G,CALL),clause(CALL,_)),warn_when(TF,CALL)).

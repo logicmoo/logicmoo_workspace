@@ -28,19 +28,23 @@
 :- op(300,fx,(('`'))).
 :- op(200,xfx,((--))).
 
+i_sentence(S,G):- i_sentence1(S,G) *-> true ; i_sentence2(S,G).
 
-i_sentence(q(S),question80([],P)) :-
-   i_s(S,P,[],0),!.
-i_sentence(decl(S),assertion80(P)) :-
-   i_s(S,P,[],0),!.
-i_sentence(whq(X,S),question80([X],P)) :-
-   i_s(S,P,[],0),!.
-i_sentence(imp(U,Ve,s(_,Verb,VArgs,VMods)),imp(U,Ve,V,Args)) :-
+i_sentence1(q(S),question80([],P)) :-
+   i_s(S,P,[],0).
+i_sentence1(decl(S),assertion80(P)) :-
+   i_s(S,P,[],0).
+i_sentence1(whq(X,S),question80([X],P)) :-
+   i_s(S,P,[],0).
+i_sentence1(imp(U,Ve,s(_,Verb,VArgs,VMods)),imp(U,Ve,V,Args)) :-
    i_verb(Verb,V,_,active,posP(_Modal),Slots0,[],transparent),
    i_verb_args(VArgs,[],[],Slots0,Slots,Args,Args0,Up,-0),
    append(Up,VMods,Mods),
-   i_verb_mods(Mods,_,[],Slots,Args0,Up,+0),!.
-i_sentence(Dunno,dunno(Dunno)) :-!.
+   i_verb_mods(Mods,_,[],Slots,Args0,Up,+0).
+
+% current_prolog_flag(debug_chat80,true)
+% i_sentence2(S,G):- locally(set_prolog_flag(debug_chat80,true), i_sentence1(S,G)),!.
+i_sentence2(Dunno,dunno(Dunno)).
 
 i_np(there,Y,quantV(voidQ,_X,'`'(true),'`'(true),[],Y),[],_,_,XA,XA).
 i_np(NP,Y,Q,Up,Id0,Index,XA0,XA) :-
@@ -69,13 +73,13 @@ i_np_head0(np_head(Det,Adjs,Noun),X,T,Det,Head0,Pred0,Pred,Slots) :-
 i_np_head0(np_head(int_det(V),Adjs,Noun),
       Type-X,Type-X,Det,'`'(true),Pred,Pred,
       [slot(prep(of),Type,X,_,comparator)]) :-
-   comparator_LF(Noun,Type,V,Adjs,Det).
+   must80(comparator_LF(Noun,Type,V,Adjs,Det)).
 
 i_np_head0(np_head(quantV(Op0,N),Adjs,Noun),
       Type-X,Type-X,voidQ,'`'(P),Pred,Pred,[]) :- 
-   measure_LF(Noun,Type,Adjs,Units),
+   must80((measure_LF(Noun,Type,Adjs,Units),
    pos_conversion_db(N,Op0,Type,V,Op),
-   measure_op(Op,X,V--Units,P).
+   measure_op(Op,X,V--Units,P))).
 % np(3+sg,nameOf(iran),[])
 i_np_head0(nameOf(Name), Type-Name,Type-Name,identityQ,'`'(true),Pred,Pred,[]) :- 
   name_template_LF(Name,Type),!.
