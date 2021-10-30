@@ -41,9 +41,9 @@
 :- ensure_loaded(ape(tests/acetexts)).
 training_data(Text,DRS):-  parser_ape:text_drs_eval(_Evaluation, _Id, Text, DRS, _LHSs, _Timestamp, _Author, _Comment).
 :- dynamic(c80:lf_trained/3).
-add_c80(B):- any_to_str(B,S),add_history1(c80(S)).
-add_c81(B):- any_to_str(B,S),add_c80(S),!, ignore(learn_c81(e2c,S)).
-add_c82(B):- any_to_str(B,S),add_c80(S),!, print_tree_nl(?-c81(S)).
+add_c80(B):- any_to_input_layer(B,S),add_history1(c80(S)).
+add_c81(B):- any_to_input_layer(B,S),add_c80(S),!, ignore(learn_full(e2c,S)).
+add_c82(B):- any_to_input_layer(B,S),add_c80(S),!, print_tree_nl(?-c81(S)).
 
 
 
@@ -66,7 +66,7 @@ repairs_of_tree(LHS,[E|LHSWords],DCLHS):-
 /*
 learn_c79(B,RHS):-
   parts_of(Type,B,Words),
-  any_to_str(Words,S),
+  any_to_input_layer(Words,S),
  ignore((
   \+ skip_text_to_tree(S),
   print_tree_nl(?-c81(S)),
@@ -75,14 +75,14 @@ learn_c79(B,RHS):-
   learn_can_become(Type,LHS,RHS))).
 */
 
-%learn_c81(Type,S):- known_lf(S,RHS),!,learn_c81(Type,S,RHS).
-learn_c81(S):- learn_c81(e2c,S).
-learn_c81(Type,S):- parts_of(Type,S,B), process4a(off,B,_,RHS,_Times),should_learn(RHS),learn_c83(Type,S,RHS),!.
-learn_c81(Type,S):- parts_of(Type,S,B), c85(B,RHS),should_learn(RHS),!,learn_c83(Type,S,RHS).
+%learn_full(Type,S):- known_lf(S,RHS),!,learn_full(Type,S,RHS).
+learn_full(S):- learn_full(e2c,S).
+learn_full(Type,S):- parts_of(Type,S,B), observe_system_full(B,RHS),should_learn(RHS),!,learn_full(Type,S,RHS).
 
-learn_c83(Type,B,RHS):-
+
+learn_full(Type,B,RHS):-
   parts_of(Type,B,Words),
-  any_to_str(Words,S),
+  any_to_input_layer(Words,S),
  ignore((
   \+ skip_text_to_tree(S),
   print_tree_nl(?-c81(S)),
@@ -105,7 +105,7 @@ should_learn(X):- \+ skip_learning(X).
 
 learn_can_become(Type,LHS,RHS):-
   ignore(( should_learn(LHS), should_learn(RHS),
-  %  parts_of(Type,LHS,LHSWords), any_to_str(LHSWords,S), print_tree_nl(?-c80(S)),
+  %  parts_of(Type,LHS,LHSWords), any_to_input_layer(LHSWords,S), print_tree_nl(?-c80(S)),
   parts_of(Type,RHS,RHSWords), 
   subst_words(RHSWords,LHS,[],RHS,NewLHS,AprioriHacks,NewRHS),
   learn_lf(NewLHS,AprioriHacks,NewRHS))).
@@ -152,7 +152,7 @@ add_lmr(LHS,Pre,RHS):-
 
 
   
-klf(B):- any_to_str(B,S),known_lf(S,RHS),print_tree_nl(RHS).
+klf(B):- any_to_input_layer(B,S),known_lf(S,RHS),print_tree_nl(RHS).
 
 learnedFrom(X,Name):- debug_var(Name,X).
 
@@ -207,9 +207,9 @@ skip_learn_contains("**/").
 skip_learn_contains("#").
 
 
-skip_text_to_tree(B):- any_to_str(B,S), skip_learn_contains(F),atom_contains(S,F),!.
+skip_text_to_tree(B):- any_to_input_layer(B,S), skip_learn_contains(F),atom_contains(S,F),!.
 maybe_learn_replacements(B):- 
-  any_to_str(B,S), \+ (skip_learn_contains(F),atom_contains(S,F)),
+  any_to_input_layer(B,S), \+ (skip_learn_contains(F),atom_contains(S,F)),
     text_to_tree(S,LHS), learn_tree_tags(LHS),print_tree_nl(learn_tree_tags(LHS)).
 
 
@@ -238,7 +238,7 @@ c80(B):- is_loading_file, !, add_c80(B).
 c80(Text):- 
   cls, make, 
   tracing ~= on,  
-  any_to_str(Text,S),!,
+  any_to_input_layer(Text,S),!,
   add_c80(S), 
   c81(S).
 
@@ -432,24 +432,24 @@ make_out1([tag(V,'W','WP'),Noun],_Words,V,stringValue(V,Noun)).
 make_out1([tag(V,'V',_),Verb],_Words,V,V=verbFn(Verb)):- ignore(V=verbFn(Verb)).
 
 make_out(List,Words,V,E):- make_out1(List,Words,V,E),!.
-make_out(List,Words,V,denotedBy(V,List,c80(Phrase))):- any_to_str([what,are,Words,'?'],Phrase).
+make_out(List,Words,V,denotedBy(V,List,c80(Phrase))):- any_to_input_layer([what,are,Words,'?'],Phrase).
 
-text_to_tree(I,O):- any_to_str(I,S),text_to_fav_tree(S,MM),!,pre_tree_0(MM,M),normalize_tree(M,O),!.
+text_to_tree(I,O):- any_to_input_layer(I,S),text_to_fav_tree(S,MM),!,pre_tree_0(MM,M),normalize_tree(M,O),!.
 
 :- ensure_loaded(library(logicmoo_nlu/parser_link_grammar)).
 
 text_to_fav_tree(I,O):- text_to_fav_tree(I,O,_).
 
-text_to_fav_tree(I,O,lgp):- text_to_lgp_tree(I,O).
-text_to_fav_tree(I,O,corenlp):- text_to_corenlp_tree(I,O).
-text_to_fav_tree(I,O,best):- text_to_best_tree(I,O).
-text_to_fav_tree(I,O,charniak):- text_to_charniak_tree(I,O).
-text_to_fav_tree(I,O,ace):- text_to_ace_tree(I,O).
-text_to_fav_tree(I,O,ape):- text_to_ape_tree(I,O).
-text_to_fav_tree(I,O,chat80):- text_to_chat80_tree(I,O).
+input_to_middle(I,O,lgp):- text_to_lgp_tree(I,O).
+input_to_middle(I,O,corenlp):- text_to_corenlp_tree(I,O).
+input_to_middle(I,O,best):- text_to_best_tree(I,O).
+input_to_middle(I,O,charniak):- text_to_charniak_tree(I,O).
+input_to_middle(I,O,ace):- text_to_ace_tree(I,O).
+input_to_middle(I,O,ape):- text_to_ape_tree(I,O).
+input_to_middle(I,O,chat80):- text_to_chat80_tree(I,O).
 
-learn_to_tree(B):- any_to_str(B,I),
-  findall(Type=O,text_to_fav_tree(I,O,Type),ResL), 
+learn_observe_trees(B):- any_to_input_layer(B,I),
+  findall(O,(input_to_middle(I,O,Named),print_tree_nl(Named=O)),ResL), 
   learn_equivalencies(e2c,[I|ResL]).
 
 
@@ -461,8 +461,8 @@ text_to_fav_tree(I):-
 
 time_once(G):- notrace(garbage_collect),notrace(locally(set_prolog_flag(gc,true),time(once(G)))).
 
-any_to_str(I,S):- \+ string(I), words_of(I,U), any_to_string(U,S),!.
-any_to_str(S,S).
+any_to_input_layer(I,S):- \+ string(I), words_of(I,U), any_to_string(U,S),!.
+any_to_input_layer(S,S).
   
 
 c82(S):- fail, time_once(process(debug,S)).
@@ -474,7 +474,7 @@ c84:-
 
 
 c84(Tit):- c84(Tit,Post), my_drs_to_fol(Post,FOL),exec_fol(FOL).
-c85(Tit):- c85(Tit,Post), my_drs_to_fol(Post,FOL),exec_fol(FOL).
+observe_system_full(Tit):- observe_system_full(Tit,Post), my_drs_to_fol(Post,FOL),exec_fol(FOL).
 
 c84(Tit,Post):-
   text_to_tree(Tit,Pre),
@@ -484,9 +484,9 @@ c84(Tit,Post):-
   c80:lf_trained(Pre,Mid,Post),
   maplist(call,Mid),
   ignore((print_tree_nl(using=lf_trained(Pre,Mid,Post)))).
-c84(I,O):- c85(I,O),!.
+c84(I,O):- observe_system_full(I,O),!.
 c84(I,O):- fail,
-  any_to_str(I,S),
+  any_to_input_layer(I,S),
   add_c82(S),
   mpred_test_mok(text_to_tree(S,UU)),
   print_tree_nl(text_to_tree=UU),
@@ -499,15 +499,12 @@ c84(I,O):- fail,
   add_c82(WordsR),!,
   c84(WordsR,RHS),
   replace_with_unlearned_words(chat80,RHS,O),
-  is_valid_for_result(O).
+  should_learn(O).
 %c84(I,O):- run_pipeline(I,[clausify80=O]).
 
-c85(I,O):- notrace(words_to_base_forms(I,M)),any_to_str(M,S),ace_to_drs:aceparagraph_to_drs(S,on,off,1,_Sentences,_Trees,_UnresolvedDrs,O,_Messages,_Time),O\==[],O\==drs([],[]),!.
-c85(I,O):- any_to_str(I,M),ace_to_drs:aceparagraph_to_drs(M,on,off,1,_Sentences,_Trees,_UnresolvedDrs,O,_Messages,_Time),O\==[],O\==drs([],[]),!.
-
-is_valid_for_result(O):- var(O),!,fail.
-is_valid_for_result(O):- O == [],!,fail.
-is_valid_for_result(O):- O \== drs([],[]),!.
+observe_system_full(I,O):- process4a(off,I,_,O,_Times).
+observe_system_full(I,O):- notrace(words_to_base_forms(I,M)),any_to_input_layer(M,S),ace_to_drs:aceparagraph_to_drs(S,on,off,1,_Sentences,_Trees,_UnresolvedDrs,O,_Messages,_Time),should_learn(O).
+observe_system_full(I,O):- any_to_input_layer(I,M),ace_to_drs:aceparagraph_to_drs(M,on,off,1,_Sentences,_Trees,_UnresolvedDrs,O,_Messages,_Time),should_learn(O).
 
 exec_fol(FOL):-print_tree_nl(exec_fol=FOL).
 
@@ -519,9 +516,9 @@ my_drs_to_fol(OI,OI).
 text_to_lf(B,FOL):- text_to_lf1(B,FOL)*->true;text_to_lf2(B,FOL)*->true;text_to_lf3(B,FOL).
 
 text_to_lf1(B,FOL):- 
- print_tree_nl(text_to_lf=B),
+ print_tree_nl(text_to_lf1=B),
  must_det_l((words_of(B,U),
- any_to_str(U,S),
+ any_to_input_layer(U,S),
  text_to_tree(S,LHS), 
  print_tree_nl(text_to_tree=LHS))),
  c80:lf_trained(LHS,AprioriHacks,RHS),maplist(ignore,AprioriHacks),my_drs_to_fol(RHS, FOL).
@@ -561,7 +558,7 @@ gp_africa(Result):-
 
 :- if(\+ prolog_load_context(reloading, true)).
 :- forall(chat_80_ed(_,B,_),ignore(time_once(add_c81(B)))).
-%:- forall(training_data(Sent,RHS),learn_c83(Type,Sent,RHS)).
+%:- forall(training_data(Sent,RHS),learn_full(Type,Sent,RHS)).
 
 :- add_c81("how many rivers are in poland ?").
 
