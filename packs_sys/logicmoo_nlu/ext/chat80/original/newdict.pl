@@ -348,6 +348,7 @@ verb_type_db(chat80,govern,main+tv).
 adj_lex(African,restr):- agentitive_trans(_,_,African).
 adj_lex( Baltic,restr):- agentitive_symmetric_type(_,Baltic).
 adj_lex(African,Restr):-  adj_db(chat80,African,Restr).
+adj_lex(African,Restr):-  fail,fail, try_lex(adj_db(African,Restr)).
 
 %adj_db(chat80,american,restr).
 %adj_db(chat80,asian,restr).
@@ -382,15 +383,17 @@ noun_form_wlex0(_,Plu,Root,Agmt) :- noun_form_lex(Plu,Root,Agmt),!.
 noun_form_wlex0(L,_,Root,sg) :- member(pos(nn),L),member(root(Root),L),!.
 noun_form_wlex0(L,_,Root,pl) :- member(pos(nns),L),member(root(Root),L),!.
 
-noun_form_lex(Word,Root,_) :- noun_sing_plu_lex(Word),!,Root=Word.
+noun_form_lex(Word,Root,_) :- noun_sing_plu_lex(chat80,Word),!,Root=Word.
+% fail,fail noun_form_lex(Word,Root,_) :- try_lex(noun_sing_plu_lex(Word)),!,Root=Word.
 noun_form_lex(Word,Root,Agmt) :- noun_plu_lex(Word,Sin),Root=Sin,!,(Word==Root-> Agmt=_;pl=Agmt).
 noun_form_lex(Word,Root,Agmt) :- noun_plu_lex(Plu,Word),Root=Word, (Plu==Root-> Agmt=_;sg=Agmt).
 
-noun_sing_plu_lex(proportion).
-noun_sing_plu_lex(percentage).
-noun_sing_plu_lex(million).
-noun_sing_plu_lex(thousand).
-noun_sing_plu_lex(fish).
+noun_sing_plu_lex(chat80,proportion).
+noun_sing_plu_lex(chat80,percentage).
+noun_sing_plu_lex(chat80,million).
+noun_sing_plu_lex(chat80,thousand).
+noun_sing_plu_lex(chat80,fish).
+%noun_sing_plu_lex(clex,Y):- clex:noun_mass(Y, _, _).
 
 hide_plur_root_noun(1,Millions,Million):- noun_sing_plu_lex(Million), !, Millions\==Million.
 hide_plur_root_noun(1,_Twos,Two):-tr_number(Two,_).

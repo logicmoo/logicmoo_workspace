@@ -147,3 +147,146 @@ set_clex_switch(Switch) :-
     must_be(oneof([on,off]), Switch),
     retractall(clex_switch(_)),
     assert(clex_switch(Switch)).
+
+:- '$set_source_module'(clex).
+
+some_of_name(Act,XD,Est,YD):- atom(XD),atom(YD),!,some_of_name(Act,X,Est,Y),atomic_list_concat([A,B|Rest],X,XD),atomic_list_concat([A,B|Rest],Y,YD),!.
+some_of_name(Act,XD,Est,YD):- atom(YD),!,once((some_of_name(Act,X,Est,Y),atomic_list_concat([A,B|Rest],Y,YD),atomic_list_concat([A,B|Rest],X,XD))).
+some_of_name(Act,XD,Est,YD):- atom(XD),!,once((some_of_name(Act,X,Est,Y),atomic_list_concat([A,B|Rest],X,XD),atomic_list_concat([A,B|Rest],Y,YD))).
+some_of_name(Act,X,Est,Y):- atom_concat(Act,Est,ActEst),en_gen(N),atom_concat(Act,N,X),
+  (atom_concat(X,Est,Y);atom_concat(ActEst,N,Y);(nonvar(Y),Est\=='',atom_concat(Est,N,Y))).
+
+en_gen('*').
+en_gen(N):- between(1,8,N).
+en_gen('').
+
+adj_itr(X, Y):- some_of_name('attrib',X,'',Y).
+adj_itr(X, Y):- some_of_name('type',X,'ish',Y).
+
+adj_itr_comp(Y, X):- some_of_name('attrib',X,'er',Y).
+adj_itr_comp(Y, X):- some_of_name('type',X,'isher',Y).
+
+adj_itr_sup(Y, X):- some_of_name('attrib',X,'est',Y).
+adj_itr_sup(Y, X):- some_of_name('type',X,'ishest',Y).
+
+adv(Y, X):- some_of_name('attrib',X,'',Y).
+adv(Y, X):- some_of_name('attrib',X,'ly',Y).
+adv(Y, X):- some_of_name('type',X,'ishly',Y).
+adv(Y, X):- some_of_name('type',X,'ly',Y).
+
+adv_comp(Y, X):- some_of_name('attrib',X,'er',Y).
+adv_comp(Y, X):- some_of_name('attrib',X,'lier',Y).
+adv_comp(Y, X):- some_of_name('type',X,'lier',Y).
+
+adv_sup(Y, X):- some_of_name('attrib',X,'est',Y).
+adv_sup(Y, X):- some_of_name('attrib',X,'liest',Y).
+adv_sup(Y, X):- some_of_name('type',X,'liest',Y).
+
+dv_pp(Y, X, ''):- some_of_name('action',X,'ed',Y).
+dv_pp(Y, X, 'as'):- some_of_name('action',X,'ed',Y).
+dv_pp(Y, X, 'to'):- some_of_name('action',X,'ed',Y).
+
+
+dv_finsg(Y, X, ''):- some_of_name('action',X,'s',Y).
+dv_infpl(Y, X, ''):- some_of_name('action',X,'',Y).
+iv_finsg(Y, X):- some_of_name('action',X,'s',Y).
+iv_infpl(Y, X):- some_of_name('action',X,'',Y).
+tv_finsg(Y, X):- some_of_name('action',X,'s',Y).
+tv_pp(Y, X):- some_of_name('action',X,'',Y).
+tv_pp(Y, X):- some_of_name('action',X,'ed',Y).
+
+noun_mass(Y, X, human):- some_of_name('agent',X,'',Y).
+noun_mass(Y, X, neutr):- some_of_name('object',X,'',Y).
+noun_mass(Y, X, neutr):- some_of_name('type',X,'',Y).
+noun_mass(Y, X, neutr):- some_of_name('attrib',X,'',Y).
+
+noun_pl(Y, X, Human):- some_of_type(Human,Agent),some_of_name(Agent,X,'s',Y).
+noun_sg(Y, X, Human):- some_of_type(Human,Agent),some_of_name(Agent,X,'',Y).
+
+some_of_type(Human,Agent):- some_of_type1(Human,Agent).
+some_of_type(human,'actioner').
+some_of_type(human,'group').
+some_of_type(neutr,'action').
+some_of_type(human,'type').
+some_of_type(neutr,'type').
+some_of_type1(human,'agent').
+some_of_type1(human,'actor').
+some_of_type1(neutr,'object').
+
+pn_sg(Y, X, Type):-  some_of_type1(Type,Agent),some_of_name(Agent,X,'',Y).
+pn_defsg(Y, X, Type):-  some_of_type1(Type,Agent),some_of_name(Agent,X,'',Y).
+pn_pl(Y, X, Type):-  some_of_type1(Type,Agent),some_of_name(Agent,X,'s',Y).
+pn_defpl(Y, X, Type):-  some_of_type1(Type,Agent),some_of_name(Agent,X,'s',Y).
+
+
+
+
+
+:- '$set_source_module'(clex_ape).
+
+some_of_name(Act,X,Est,Y):- clex:some_of_name(Act,X,Est,Y).
+
+adj_itr(X, Y):- some_of_name('attrib',X,'',Y).
+adj_itr(X, Y):- some_of_name('type',X,'ish',Y).
+
+adj_itr_comp(Y, X):- some_of_name('attrib',X,'er',Y).
+adj_itr_comp(Y, X):- some_of_name('type',X,'isher',Y).
+
+adj_itr_sup(Y, X):- some_of_name('attrib',X,'est',Y).
+adj_itr_sup(Y, X):- some_of_name('type',X,'ishest',Y).
+
+adv(Y, X):- some_of_name('attrib',X,'',Y).
+adv(Y, X):- some_of_name('attrib',X,'ly',Y).
+adv(Y, X):- some_of_name('type',X,'ishly',Y).
+adv(Y, X):- some_of_name('type',X,'ly',Y).
+
+adv_comp(Y, X):- some_of_name('attrib',X,'er',Y).
+adv_comp(Y, X):- some_of_name('attrib',X,'lier',Y).
+adv_comp(Y, X):- some_of_name('type',X,'lier',Y).
+
+adv_sup(Y, X):- some_of_name('attrib',X,'est',Y).
+adv_sup(Y, X):- some_of_name('attrib',X,'liest',Y).
+adv_sup(Y, X):- some_of_name('type',X,'liest',Y).
+
+dv_pp(Y, X, ''):- some_of_name('action',X,'ed',Y).
+dv_pp(Y, X, 'as'):- some_of_name('action',X,'ed',Y).
+dv_pp(Y, X, 'to'):- some_of_name('action',X,'ed',Y).
+
+
+dv_finsg(Y, X, ''):- some_of_name('action',X,'s',Y).
+dv_infpl(Y, X, ''):- some_of_name('action',X,'',Y).
+iv_finsg(Y, X):- some_of_name('action',X,'s',Y).
+iv_infpl(Y, X):- some_of_name('action',X,'',Y).
+tv_finsg(Y, X):- some_of_name('action',X,'s',Y).
+tv_pp(Y, X):- some_of_name('action',X,'',Y).
+tv_pp(Y, X):- some_of_name('action',X,'ed',Y).
+
+noun_mass(Y, X, human):- some_of_name('agent',X,'',Y).
+noun_mass(Y, X, neutr):- some_of_name('object',X,'',Y).
+noun_mass(Y, X, neutr):- some_of_name('type',X,'',Y).
+noun_mass(Y, X, neutr):- some_of_name('attrib',X,'',Y).
+
+noun_pl(Y, X, Human):- some_of_type(Human,Agent),some_of_name(Agent,X,'s',Y).
+noun_sg(Y, X, Human):- some_of_type(Human,Agent),some_of_name(Agent,X,'',Y).
+
+some_of_type(Human,Agent):- some_of_type1(Human,Agent).
+some_of_type(human,'actioner').
+some_of_type(human,'group').
+some_of_type(neutr,'action').
+some_of_type(human,'type').
+some_of_type(neutr,'type').
+some_of_type1(human,'agent').
+some_of_type1(human,'actor').
+some_of_type1(neutr,'object').
+
+pn_sg(Y, X, Type):-  some_of_type1(Type,Agent),some_of_name(Agent,X,'',Y).
+pn_defsg(Y, X, Type):-  some_of_type1(Type,Agent),some_of_name(Agent,X,'',Y).
+pn_pl(Y, X, Type):-  some_of_type1(Type,Agent),some_of_name(Agent,X,'s',Y).
+pn_defpl(Y, X, Type):-  some_of_type1(Type,Agent),some_of_name(Agent,X,'s',Y).
+
+
+
+
+
+
+

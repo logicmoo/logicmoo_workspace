@@ -112,9 +112,9 @@ test_chat80(N, Sentence, OnOff, CorrectAnswer):-
   ignore((baseKB:test_chat80_mpred(N, Sentence, OnOff, CorrectAnswer))),!,
   kill_junit_tee.
 
-dumpST_ERR:- !. %,fail.
-dumpST_ERR:- dump_st,!.
-dumpST_ERR:- dumpST,!.
+%dumpST_ERR:- !. %,fail.
+dumpST_ERR:- catch(dump_st,_,fail),!. 
+dumpST_ERR:- on_x_fail(dumpST),!.
 
 :- use_module(library(logicmoo_test)).
 
@@ -342,7 +342,7 @@ process5(How,Sentence,CorrectAnswer,Status,Times) :-
 	process4(How,Sentence,Answer,Times),
 	!,
 	check_answer(Sentence,Answer,CorrectAnswer,Status),!.
-process5(_How,_,_,failed,[0,0,0,0,0]):- dumpST_ERR.
+process5(_How,_,_,failed,[0,0,0,0,0]):- once(dumpST_ERR),!.
 
 process(How,Sentence) :-
   process4(How,Sentence,Answer,_Times), Answer\==failed, !.
@@ -405,7 +405,7 @@ process4a(How,Sentence,U,S1,Times) :-
    mpred_test_mok(into_lexical_segs(Sentence,U)),
    runtime(StopSeg),
    SegTime is StopSeg - StartSeg,
-   report(How,U,'segs',SegTime,tree),
+   nop(report(How,U,'segs',SegTime,tree)),
    
    runtime(StartParse))),!,
  ((deepen_pos(sentence80(E,U,[],[],[])),

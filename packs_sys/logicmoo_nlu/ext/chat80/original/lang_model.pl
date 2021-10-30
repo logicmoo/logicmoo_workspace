@@ -106,8 +106,8 @@ should_learn(X):- \+ skip_learning(X).
 learn_can_become(Type,LHS,RHS):-
   ignore(( should_learn(LHS), should_learn(RHS),
   %  parts_of(Type,LHS,LHSWords), any_to_input_layer(LHSWords,S), print_tree_nl(?-c80(S)),
-  parts_of(Type,RHS,RHSWords), 
-  subst_words(RHSWords,LHS,[],RHS,NewLHS,AprioriHacks,NewRHS),
+  parts_of(Type,RHS,RHSWords), !,
+  subst_words(RHSWords,LHS,[],RHS,NewLHS,AprioriHacks,NewRHS),!,
   learn_lf(NewLHS,AprioriHacks,NewRHS))).
 
 learn_lf(LHS,AprioriHacks,RHS):- push_model([set(tree,LHS),set(pre,AprioriHacks),set(drs,RHS),tree->drs]).
@@ -248,7 +248,7 @@ c81(S):- fail,
  forall(deepen_pos(sentence80(E,U,[],[],[])),print_tree_nl(E)))),
  fail.
 c81(S):- fail,time_once(c83(S)),fail.
-c81(S):- time_once(text_to_fav_tree(S)),fail.
+c81(S):- time_once(input_to_middle(S)),fail.
 c81(S):- time_once(c84(S)),fail.
 c81(_).
 
@@ -434,11 +434,11 @@ make_out1([tag(V,'V',_),Verb],_Words,V,V=verbFn(Verb)):- ignore(V=verbFn(Verb)).
 make_out(List,Words,V,E):- make_out1(List,Words,V,E),!.
 make_out(List,Words,V,denotedBy(V,List,c80(Phrase))):- any_to_input_layer([what,are,Words,'?'],Phrase).
 
-text_to_tree(I,O):- any_to_input_layer(I,S),text_to_fav_tree(S,MM),!,pre_tree_0(MM,M),normalize_tree(M,O),!.
+text_to_tree(I,O):- any_to_input_layer(I,S),input_to_middle(S,MM),!,pre_tree_0(MM,M),normalize_tree(M,O),!.
 
 :- ensure_loaded(library(logicmoo_nlu/parser_link_grammar)).
 
-text_to_fav_tree(I,O):- text_to_fav_tree(I,O,_).
+input_to_middle(I,O):- input_to_middle(I,O,_).
 
 input_to_middle(I,O,lgp):- text_to_lgp_tree(I,O).
 input_to_middle(I,O,corenlp):- text_to_corenlp_tree(I,O).
@@ -448,18 +448,20 @@ input_to_middle(I,O,ace):- text_to_ace_tree(I,O).
 input_to_middle(I,O,ape):- text_to_ape_tree(I,O).
 input_to_middle(I,O,chat80):- text_to_chat80_tree(I,O).
 
-learn_observe_trees(B):- any_to_input_layer(B,I),
+learn_middle(B):-learn_middle(e2c,B).
+learn_middle(Type,B):- any_to_input_layer(B,I),
+  parts_of(Type,I,II),
   findall(O,(input_to_middle(I,O,Named),print_tree_nl(Named=O)),ResL), 
-  learn_equivalencies(e2c,[I|ResL]).
+  learn_equivalencies(Type,[II|ResL]).
 
 
 
 
-text_to_fav_tree(I):-
-  forall(clause(text_to_fav_tree(I,O,Type),B),ignore((call(B),print_tree(Type=O)))).
+input_to_middle(I):-
+  forall(clause(input_to_middle(I,O,Named),B),ignore((call(B),print_tree(Named=O)))).
 
 
-time_once(G):- notrace(garbage_collect),notrace(locally(set_prolog_flag(gc,true),time(once(G)))).
+time_once(G):- notrace(garbage_collect),quietly(locally(set_prolog_flag(gc,true),time(once(show_call(always,G))))).
 
 any_to_input_layer(I,S):- \+ string(I), words_of(I,U), any_to_string(U,S),!.
 any_to_input_layer(S,S).
@@ -469,15 +471,15 @@ c82(S):- fail, time_once(process(debug,S)).
 
 
 c84:-
-  Tit= "how many rivers are in poland ?",
-  c84(Tit).
+  Text= "how many rivers are in poland ?",
+  c84(Text).
 
 
-c84(Tit):- c84(Tit,Post), my_drs_to_fol(Post,FOL),exec_fol(FOL).
-observe_system_full(Tit):- observe_system_full(Tit,Post), my_drs_to_fol(Post,FOL),exec_fol(FOL).
+c84(Text):- c84(Text,Post), my_drs_to_fol(Post,FOL),exec_fol(FOL).
+observe_system_full(Text):- observe_system_full(Text,Post), my_drs_to_fol(Post,FOL),exec_fol(FOL).
 
-c84(Tit,Post):-
-  text_to_tree(Tit,Pre),
+c84(Text,Post):-
+  text_to_tree(Text,Pre),
   % forall(c80:lf_trained(Pre,_Mid,_Post2),print_tree_nl(pre_db=Pre)),
   print_tree_nl(pre=Pre),
  % \+ \+ c80:lf_trained(Pre,_,_),!,
@@ -582,18 +584,21 @@ gp_africa(Result):-
 :- add_c80("is china and japan a country?").
 :- add_c80("are china and japan countries?").
 :- add_c81("china is a country?").
-:- add_c80("does joe like coffee?").
-:- add_c80("does joe drink water?").
+:- add_c80("does John like cars?").
+:- add_c80("does John drink water?").
 :- add_c80("does afganistan border china?").
 :- add_c80("Which rivers are not in asia?").
 :- endif.
 
+:- add_c81("If there is an animal X then X barks and it is false that there is a cat.").
+:- add_c81("If there is an animal X then X barks and it is false that X is a cat.").
+:- add_c81("If there is a dog X then X barks and it is false that there is a cat.").
 :- add_c81("If there is a dog then the dog barks and it is false that there is a cat.").
 :- add_c81("It is false that a man who waits or who eats runs or sleeps ,and barks.").
 :- add_c81("The man who talks or who walks or who sleeps eats.").
 
 :- add_history1((forall(test_e2c(X,_),dmsg(c80(X))))).
-:- add_history1((ape_test(_,X),text_to_fav_tree(X))).
+:- add_history1((ape_test(_,X),input_to_middle(X))).
 :- add_history1([test_ext]).
 %:- add_c80("does joe eat cake?").
 

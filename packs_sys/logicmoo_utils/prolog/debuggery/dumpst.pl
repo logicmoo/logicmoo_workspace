@@ -100,7 +100,7 @@
 %
 % Dump Stack Trace.
 %
-dump_st:- prolog_current_frame(Current),dumpST0(Current,10).
+dump_st:- prolog_current_frame(Current),dumpST0(Current,100),!.
 
 
 %= 	 	 

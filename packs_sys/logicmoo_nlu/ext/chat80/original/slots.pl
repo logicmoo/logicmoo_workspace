@@ -83,6 +83,10 @@ i_np_head0(wh(X),X,X,identityQ,'`'(true),Pred,Pred,[]):-!.
 % np(3+sg,pronoun(neut),[])
 i_np_head0(Else, Type-Name,Type-Name,identityQ,'`'(P),Pred,Pred,[]):- Else \= np_head(_,_,_),
   P = qualifiedBy(Name,Type,Else).
+must80(G):- \+ current_prolog_flag(debug_chat80,true),!, call(G).
+must80(G):- call(G)*->true;(trace,call(G)).
+
+may_qualify(Else):- wdmsg(may_qualify(Else)).
 
 %i_np_mods([],_,[],'`'(true),[],[],_,_).
 i_np_mods(Mods,_,[],'`'(true),[],Mods,_,_).
