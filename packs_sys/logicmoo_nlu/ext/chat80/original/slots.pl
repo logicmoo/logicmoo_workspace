@@ -42,8 +42,8 @@ i_sentence1(imp(U,Ve,s(_,Verb,VArgs,VMods)),imp(U,Ve,V,Args)) :-
    append(Up,VMods,Mods),
    i_verb_mods(Mods,_,[],Slots,Args0,Up,+0).
 
-% current_prolog_flag(debug_chat80,true)
-% i_sentence2(S,G):- locally(set_prolog_flag(debug_chat80,true), i_sentence1(S,G)),!.
+:- create_prolog_flag(debug_chat80,false,[keep(true)]).
+i_sentence2(S,G):- locally(set_prolog_flag(debug_chat80,true), i_sentence1(S,G)),!.
 i_sentence2(Dunno,dunno(Dunno)).
 
 i_np(there,Y,quantV(voidQ,_X,'`'(true),'`'(true),[],Y),[],_,_,XA,XA).
@@ -89,7 +89,7 @@ i_np_head0(np_head(quantV(Op0,N),Adjs,Noun),
    pos_conversion_db(N,Op0,Type,V,Op),
    measure_op(Op,X,V--Units,P))).
 
-i_np_head0(Else, Type-Name,Type-Name,identityQ,'`'(P),Pred,Pred,[]):- may_qualify(Else), % Else \= np_head(_,_,_),
+i_np_head0(Else, Type-Name,Type-Name,identityQ,'`'(P),Pred,Pred,[]):- may_qualify(Else),
   P = qualifiedBy(Name,Type,Else).
 
 must80(G):- \+ current_prolog_flag(debug_chat80,true),!, call(G).
