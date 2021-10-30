@@ -150,6 +150,7 @@ set_clex_switch(Switch) :-
 
 :- '$set_source_module'(clex).
 
+some_of_name(_Act,XD,_Est,YD):- (compound(XD);compound(YD)),!,fail.
 some_of_name(Act,XD,Est,YD):- atom(XD),atom(YD),!,some_of_name(Act,X,Est,Y),atomic_list_concat([A,B|Rest],X,XD),atomic_list_concat([A,B|Rest],Y,YD),!.
 some_of_name(Act,XD,Est,YD):- atom(YD),!,once((some_of_name(Act,X,Est,Y),atomic_list_concat([A,B|Rest],Y,YD),atomic_list_concat([A,B|Rest],X,XD))).
 some_of_name(Act,XD,Est,YD):- atom(XD),!,once((some_of_name(Act,X,Est,Y),atomic_list_concat([A,B|Rest],X,XD),atomic_list_concat([A,B|Rest],Y,YD))).

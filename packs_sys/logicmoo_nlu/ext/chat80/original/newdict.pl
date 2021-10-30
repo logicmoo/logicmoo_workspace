@@ -204,22 +204,33 @@ ctx_pron_lex(at,time,when).
 
 how_many_lex([how,many]).
 
-try_lex(G):- first_lexicon(Which),try_one_lex(Which,G).
-first_lexicon(X):- available_lexicon(_,X).
-available_lexicon(1,talkdb).
-available_lexicon(2,chat80):-!.
-available_lexicon(3,clex).
+
 show_tries_except(_Which,_TF,_G):- \+ tracing,!.
 show_tries_except(Which,TF,G):- !, forall((available_lexicon(_,Other),Other\==Which,get_lex_call(Other,G,CALL),clause(CALL,_)),warn_when(TF,CALL)).
 warn_when(fail,G):- G -> true ; wdmsg(warn_when(failed,G)).
 warn_when(true,G):- G *-> wdmsg(warn_when(succeeded,G)) ; true.
 get_lex_call(How, G, CALL):- G=..[F|ARGS], CALL=..[F,How|ARGS].
-try_lex_order(Order,G):-  member(Which,Order),get_lex_call(Which,G,CALL),call(CALL).
-try_one_lex(Which,G):- get_lex_call(Which,G,CALL),
+
+try_lex(G):- try_first_lex(G).
+
+try_first_lex(G):- first_lexicon(Which),!,try_only_lex(Which,G).
+first_lexicon(X):- available_lexicon(_,X).
+
+try_all_lex(G):- available_lexicon(_,Which),try_one_lex(Which,G).
+available_lexicon(1,talkdb).
+available_lexicon(3,clex).
+available_lexicon(2,chat80).
+
+try_lex_order(Order,G):-  member(Which,Order), try_one_lex(Which,G).
+
+try_one_lex(Which,G):- get_lex_call(Which,G,CALL),call(CALL).
+
+try_only_lex(Which,G):- get_lex_call(Which,G,CALL),
  copy_term(G,CopyG),
  (CALL
     *-> show_tries_except(Which,fail,CopyG)
     ; (show_tries_except(_,true,CopyG),!, fail)).
+
 
 
 %correct_root(do(MODAL),do(MODAL)).
