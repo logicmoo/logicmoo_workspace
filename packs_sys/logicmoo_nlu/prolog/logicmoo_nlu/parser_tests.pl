@@ -274,11 +274,11 @@ test_e2c("A man gives his word.", [ bratko]).
 test_e2c("A man of his word paints.", [ bratko]).
 test_e2c("A man paints.", [ bratko]).
 test_e2c("A man that paints paints.", [ bratko]).
-test_e2c("A man walks.", [ bratko]).
-test_e2c("A man that walks paints.", [ bratko]).
+test_e2c("A man waits.", [ bratko]).
+test_e2c("A man that waits paints.", [ bratko]).
 test_e2c("It halts.", [ bratko]).
 
-test_e2c("A man of his word that walks paints.", [ bratko]).
+test_e2c("A man of his word that waits paints.", [ bratko]).
 test_e2c("The cost of what the product is changes.", [ bratko]).
 
 

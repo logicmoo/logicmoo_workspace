@@ -44,7 +44,7 @@ mark((P1,P2),L,Q0,Q) :- !,
    mark(P1,L1,Q0,Q1),
    mark(P2,L2,Q1,Q),
    recombine(L1,L2,L).
-mark(\+P,L,Q,Q) :- !, mark(P,L0,0,Vl), negate(L0,Vl,L).
+mark(\+P,L,Q,Q) :- !, mark(P,L0,0,Vl), negate_mark(L0,Vl,L).
 mark(SQ,[m(V,C,SQ1)],Q0,Q0) :- subquery(SQ,SQ1,X,P,N,Q), !,
    mark(P,L,0,Vl),
    L=[Q],   % Too bad about the general case!
@@ -60,12 +60,12 @@ mark(P,[m(V,C,P)],Q,Q) :-
 subquery(setOf(X,P,S),setOf(X,Q,S),X,P,S,Q).
 subquery(numberof(X,P,N),numberof(X,Q,N),X,P,N,Q).
 
-negate([],_,[]).
-negate([P|L],Vl,[m(Vg,C,\+P)|L1]) :-
+negate_mark([],_,[]).
+negate_mark([P|L],Vl,[m(Vg,C,\+P)|L1]) :-
    freevars(P,V),
    setminus(V,Vl,Vg),
    negationcost(Vg,C),
-   negate(L,Vl,L1).
+   negate_mark(L,Vl,L1).
 
 negationcost(0,0) :- !.
 negationcost(_V,1000).
@@ -157,7 +157,7 @@ instantiate0((P1,P2),_,Vi,L) :-
 instantiate0(\+P,V,Vi,L) :- !,
    instantiate(P,Vi,L0),
    freevars(P,Vf), setminus(Vf,V,Vl),
-   negate(L0,Vl,L).
+   negate_mark(L0,Vl,L).
 instantiate0(SQ,Vg,Vi,[m(V,C,SQ1)]) :- subquery(SQ,SQ1,X,P,_,Q), !,
    instantiate(P,Vi,L),
    L=[Q],   % Too bad about the general case!

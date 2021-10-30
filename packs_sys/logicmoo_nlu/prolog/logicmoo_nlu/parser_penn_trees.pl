@@ -10,122 +10,122 @@
  penn_tree_to_segs/3,
  lxpr_to_segs/2,
  lxpr_to_list/2]).
-/*
 
-S - simple declarative clause, i.e. one that is not introduced by a (possible empty) subordinating conjunction or a wh-word and that does not exhibit subject-verb inversion.
-SBAR - Clause introduced by a (possibly empty) subordinating conjunction.
-SBARQ - Direct question introduced by a wh-word or a wh-phrase. Indirect questions and relative clauses should be bracketed as SBAR, not SBARQ.
-SINV - Inverted declarative sentence, i.e. one in which the subject follows the tensed verb or modal.
-SQ - Inverted yes/no question, or main clause of a wh-question, following the wh-phrase in SBARQ.
+is_penn_sent('S'). % simple declarative clause  i.e. one that is not introduced by a (possible empty) subordinating conjunction or a wh-word and that does not exhibit subject-verb inversion.
+is_penn_sent('SBAR'). % Clause introduced by a (possibly empty) subordinating conjunction.
+is_penn_sent('SBARQ'). % Direct question introduced by a wh-word or a wh-phrase. Indirect questions and relative clauses should be bracketed as SBAR  not SBARQ.
+is_penn_sent('SINV'). % Inverted declarative sentence  i.e. one in which the subject follows the tensed verb or modal.
+is_penn_sent('SQ'). %Inverted yes/no question  or main clause of a wh-question  following the wh-phrase in SBARQ.
+is_penn_sent('S1').
+is_penn_sent('S2').
+is_penn_sent(X):- atom(X), is_penn_sent(L), atom_concat(L,N,X), atom_number(N,_).
+%is_penn_sent(X):- atom_concat(_,'BAR',X).
 
-Phrase Level
-ADJP - Adjective Phrase.
-ADVP - Adverb Phrase.
-CONJP - Conjunction Phrase.
-FRAG - Fragment.
-INTJ - Interjection. Corresponds approximately to the part-of-speech tag UH.
-LST - List marker. Includes surrounding punctuation.
-NAC - Not a Constituent; used to show the scope of certain prenominal modifiers within an NP.
-NP - Noun Phrase.
-NX - Used within certain complex NPs to mark the head of the NP. Corresponds very roughly to N-bar level but used quite differently.
-PP - Prepositional Phrase.
-PRN - Parenthetical.
-PRT - Particle. Category for words that should be tagged RP.
-QP - Quantifier Phrase (i.e. complex measure/amount phrase); used within NP.
-RRC - Reduced Relative Clause.
-UCP - Unlike Coordinated Phrase.
-VP - Vereb Phrase.
-WHADJP - Wh-adjective Phrase. Adjectival phrase containing a wh-adverb, as in how hot.
-WHAVP - Wh-adverb Phrase. Introduces a clause with an NP gap. May be null (containing the 0 complementizer) or lexical, containing a wh-adverb such as how or why.
-WHNP - Wh-noun Phrase. Introduces a clause with an NP gap. May be null (containing the 0 complementizer) or lexical, containing some wh-word, e.g. who, which book, whose daughter, none of which, or how many leopards.
-WHPP - Wh-prepositional Phrase. Prepositional phrase containing a wh-noun phrase (such as of which or by whose authority) that either introduces a PP gap or is contained by a WHNP.
-X - Unknown, uncertain, or unbracketable. X is often used for bracketing typos and in bracketing the...the-constructions.
+% Phrase Level
+is_penn_ph('ADJP'). % Adjective Phrase.
+is_penn_ph('ADVP'). % Adverb Phrase.
+is_penn_ph('CONJP'). % Conjunction Phrase.
+is_penn_ph('FRAG'). % Fragment.
+is_penn_ph('INTJ'). % Interjection. Corresponds approximately to the part-of-speech tag UH.
+is_penn_ph('LST'). % List marker. Includes surrounding punctuation.
+is_penn_ph('NAC'). % Not a Constituent; used to show the scope of certain prenominal modifiers within an NP.
+is_penn_ph('NP'). % Noun Phrase.
+is_penn_ph('NX'). % Used within certain complex NPs to mark the head of the NP. Corresponds very roughly to N-bar level but used quite differently.
+is_penn_ph('PP'). % Prepositional Phrase.
+is_penn_ph('PRN'). % Parenthetical.
+is_penn_ph('PRT'). % Particle. Category for words that should be tagged RP.
+is_penn_ph('QP'). % Quantifier Phrase (i.e. complex measure/amount phrase); used within NP.
+is_penn_ph('RRC'). % Reduced Relative Clause.
+is_penn_ph('UCP'). % Unlike Coordinated Phrase.
+is_penn_ph('VP'). % Vereb Phrase.
+is_penn_ph('WHADJP'). % Wh-adjective Phrase. Adjectival phrase containing a wh-adverb  as in how hot.
+is_penn_ph('WHAVP'). % Wh-adverb Phrase. Introduces a clause with an NP gap. May be null (containing the 0 complementizer) or lexical  containing a wh-adverb such as how or why.
+is_penn_ph('WHNP'). % Wh-noun Phrase. Introduces a clause with an NP gap. May be null (containing the 0 complementizer) or lexical  containing some wh-word  e.g. who  which book  whose daughter  none of which  or how many leopards.
+is_penn_ph('WHPP'). % Wh-prepositional Phrase. Prepositional phrase containing a wh-noun phrase (such as of which or by whose authority) that either introduces a PP gap or is contained by a WHNP.
+is_penn_ph('X'). % Unknown  uncertain  or unbracketable. X is often used for bracketing typos and in bracketing the...the-constructions.
+is_penn_ph('NML').
 
-CC	coordinating conjunction	and, but, or, 
- & therefore times v. versus vs. whether yet
-CC conjunction, coordinating
-CD	cardinal number	1, three numeral,   mid-1890 nine-thirty forty-two one-tenth ten million 0.5 one forty-seven 1987 twenty '79 zero two 78-degrees eighty-four IX '60s .025 fifteen 271,124 dozen quintillion DM2,000 ...
-DT	determiner	the  all an another any both del each either every half la many much nary neither no some such that the them these this those
-EX	existential there	there is
-FW	foreign word	d'œuvre
-IN	preposition/subord. conj.	in,of,like,after,whether
-IN preposition or conjunction, subordinating     astride among uppon whether out inside pro despite on by throughout below within for towards near behind atop around if like until below next into if beside ... 
-IN/that	complementizer	that
-JJ	adjective	green or numeral, ordinal     third ill-mannered pre-war regrettable oiled calamitous first separable ectoplasmic battery-powered participatory fourth still-to-be-named multilingual multi-disciplinary ...
-JJR	adjective, comparative	greener  bleaker braver breezier briefer brighter brisker broader bumper busier calmer cheaper choosier cleaner clearer closer colder commoner costlier cozier creamier crunchier cuter ...
-JJS	adjective, superlative	greenest calmest cheapest choicest classiest cleanest clearest closest commonest corniest costliest crassest creepiest crudest cutest darkest deadliest dearest deepest densest dinkiest ...
-LS	list marker	(1),
-LS list item marker     A A. B B. C C. D E F First G H I J K One SP-44001 SP-44002 SP-44005
-MD	modal	could, will
-MD modal auxiliary     can cannot could couldn't dare may might must need ought shall should shouldn't will would
-Missing: '', (, ), ,, --, ., FW, NNPS, SYM, WP$, 
-NN	noun, singular or mass	table
-NN noun, common, singular or mass     common-carrier cabbage knuckle-duster Casino afghan shed thermostat investment slide humour falloff slick wind hyena override subhumanity machinist ...
-NNP noun, proper, singular     Motown Venneboerger Czestochwa Ranzer Conchita Trumplane Christos Oceanside Escobar Kreisler Sawyer Cougar Yvette Ervin ODI Darryl CTCA Shannon A.K.C. Meltex Liverpool ...
-NNS	noun plural	tables
-NNS noun, common, plural     undergraduates scotches bric-a-brac products bodyguards facets coasts divestitures storehouses designs clubs fragrances averages subjectivists apprehensions muses factory-jobs ...
-NP	proper noun, singular	John
-NPS	proper noun, plural	Vikings
-PDT	predeterminer	both the boys
-PDT pre-determiner     all both half many quite such sure this
-POS	possessive ending	friend's
-POS genitive marker     ' 's
-POS Tag	Description	Example
-PP	personal pronoun	I, he, it
-PP$	possessive pronoun	my, his
-PRP pronoun, personal     hers herself him himself hisself it itself me myself one oneself ours ourselves ownself self she thee theirs them themselves they thou thy us
-PRP$ pronoun, possessive     her his mine my our ours their thy your
-RB	adverb	however, usually, here, not occasionally unabatingly maddeningly adventurously professedly stirringly prominently technologically magisterially predominately swiftly fiscally pitilessly ...
-RBR	adverb, comparative	better further gloomier grander graver greater grimmer harder harsher healthier heavier higher however larger later leaner lengthier less- perfectly lesser lonelier longer louder lower more ...
-RBS	adverb, superlative	best biggest bluntest earliest farthest first furthest hardest heartiest highest largest least less most nearest second tightest worst
-RP	particle	give up  aboard about across along apart around aside at away back before behind by crop down ever fast for forth from go high i.e. in into just later low more off on open out over per pie raising start teeth that through under unto up up-pp upon whole with you 
-SENT	end punctuation	?, !, .
-SP-44007 Second Third Three Two * a b c d first five four one six three two
-SYM	symbol	@, +, *, ^, |, =
+is_penn_long(X):- \+ atom(X), !, fail.
+%is_penn_long(X):- atom(X), atom_concat(L,'-w',X),!,is_penn_long(L).
+is_penn_long(X):- is_penn_long_1(X).
+is_penn_long_1(X):- is_penn_sent(X).
+is_penn_long_1(X):- is_penn_ph(X).
+is_penn_long_1('CORENLP').
 
-TO "to" as preposition or infinitive marker     to  to	to go, to him
-UH	interjection	uhhuhhuhh
-UH interjection     Goodbye Goody Gosh Wow Jeepers Jee-sus Hubba Hey Kee-reist Oops amen huh howdy uh dammit whammo shucks heck anyways whodunnit honey golly man baby diddle hush sonuvabitch ...
-VB	verb be, base form	be
-VB verb, base form     ask assemble assess assign assume atone attention avoid bake balkanize bank begin behold believe bend benefit bevel beware bless boil bomb boost brace break bring broil brush build ... 
-VBD	verb be, past	was|were
-VBD verb, past tense     dipped pleaded swiped regummed soaked tidied convened halted registered cushioned exacted snubbed strode aimed adopted belied figgered speculated wore appreciated contemplated ...
-VBG	verb be, gerund/participle	being
-VBG verb, present participle or gerund     telegraphing stirring focusing angering judging stalling lactating hankerin' alleging veering capping approaching traveling besieging encrypting interrupting erasing wincing ...
-VBN	verb be, past participle	been
-VBN verb, past participle     multihulled dilapidated aerosolized chaired languished panelized used experimented flourished imitated reunifed factored condensed sheared unsettled primed dubbed desired ...
-VBP	verb be, pres non-3rd p.	am|are
-VBP verb, present tense, not 3rd person singular     predominate wrap resort sue twist spill cure lengthen brush terminate appear tend stray glisten obtain comprise detest tease attract emphasize mold postpone sever return wag ...
-VBZ	verb be, pres, 3rd p. sing	is
-VBZ  verb, present tense, 3rd person singular     bases reconstructs marks mixes displeases seals carps weaves snatches slumps stretches authorizes smolders pictures emerges stockpiles seduces fizzes uses bolsters slaps speaks pleads ...
-VD	verb do, base form	do
-VDD	verb do, past	did
-VDG	verb do gerund/participle	doing
-VDN	verb do, past participle	done
-VDP	verb do, pres, non-3rd per.	do
-VDZ	verb do, pres, 3rd per.sing	does
-VH	verb have, base form	have
-VHD	verb have, past	had
-VHG	verb have, gerund/participle	having
-VHN	verb have, past participle	had
-VHP	verb have, pres non-3rd per.	have
-VHZ	verb have, pres 3rd per.sing	has
-VV	verb, base form	take
-VVD	verb, past tense	took
-VVG	verb, gerund/participle	taking
-VVN	verb, past participle	taken
-VVP	verb, present, non-3rd p.	take
-VVZ	verb, present 3d p. sing.	takes
-WDT	wh-determiner	 that what whatever which whichever
-WP	wh-pronoun	who, what
-WP WH-pronoun     that what whatever whatsoever which who whom whosoever
-WP$	possessive wh-pronoun	whose
-WRB	wh-abverb	where, when how however whence whenever where whereby whereever wherein whereof why
-$	currency symbol	$, £
-& 'n and both but either et for less minus neither nor or plus so
-:	general joiner	;, -, --
+is_lgp_tag(X):- atom(X), atom_concat(_,'-w',X).
 
-*/
+is_penn_tag(X):- \+ var(X), \+ atom(X), !, fail.
+is_penn_tag(X):- is_penn_long_1(X).
+is_penn_tag(X):- is_lgp_tag(X).
+is_penn_tag(X):- is_penn_pos(X).
+
+is_penn_pos('CC'). % coordinating conjunctionand  but  or  & therefore times v. versus vs. whether yet'
+is_penn_pos('CD'). % cardinal number 1  three numeral    mid-1890 nine-thirty forty-two one-tenth ten million 0.5 one forty-seven 1987 twenty \'79 zero two 78-degrees eighty-four IX \'60s .025 fifteen 271 124 dozen quintillion DM2 000 ...'
+is_penn_pos('DT'). % determiner	the  all an another any both del each either every half la many much nary neither no some such that the them these this those'
+is_penn_pos('EX'). % existential there	there is'
+is_penn_pos('FW'). % foreign word	dœuvre'
+is_penn_pos('IN'). % preposition or conjunction  subordinating     astride among uppon whether out inside pro despite on by throughout below within for towards near behind atop around if like until below next into if beside ... '
+is_penn_pos('IN/that'). %	complementizer	that'
+is_penn_pos('JJ'). % adjective	green or numeral  ordinal     third ill-mannered pre-war regrettable oiled calamitous first separable ectoplasmic battery-powered participatory fourth still-to-be-named multilingual multi-disciplinary ...'
+is_penn_pos('JJR'). % adjective  comparative	greener  bleaker braver breezier briefer brighter brisker broader bumper busier calmer cheaper choosier cleaner clearer closer colder commoner costlier cozier creamier crunchier cuter ...'
+is_penn_pos('JJS'). % adjective  superlative	greenest calmest cheapest choicest classiest cleanest clearest closest commonest corniest costliest crassest creepiest crudest cutest darkest deadliest dearest deepest densest dinkiest ...'
+is_penn_pos('LS'). % list item marker     A A. B B. C C. D E F First G H I J K One SP-44001 SP-44002 SP-44005'
+is_penn_pos('MD'). % modal auxiliary     can cannot could couldn\'t dare may might must need ought shall should shouldn\'t will would Missing: ''  (  )     --  .  FW  NNPS  SYM  WP$  '
+is_penn_pos('NN'). % noun  common  singular or mass     common-carrier cabbage knuckle-duster Casino afghan shed thermostat investment slide humour falloff slick wind hyena override subhumanity machinist ...'
+is_penn_pos('NNP'). % noun  proper  singular     Motown Venneboerger Czestochwa Ranzer Conchita Trumplane Christos Oceanside Escobar Kreisler Sawyer Cougar Yvette Ervin ODI Darryl CTCA Shannon A.K.C. Meltex Liverpool ...'
+is_penn_pos('NNS'). % noun  common  plural     undergraduates scotches bric-a-brac products bodyguards facets coasts divestitures storehouses designs clubs fragrances averages subjectivists apprehensions muses factory-jobs ...'
+is_penn_pos('NP'). % proper noun  singular	John'
+is_penn_pos('NPS'). % proper noun  plural	Vikings'
+is_penn_pos('PDT'). % predeterminer	both the boys  all both half many quite such sure this'
+is_penn_pos('POS'). % possessive ending	friends genitive marker \'s'
+is_penn_pos('PP'). % personal pronoun	I  he  it'
+is_penn_pos('PP$'). % possessive pronoun	my  his'
+is_penn_pos('PRP'). % pronoun  personal     hers herself him himself hisself it itself me myself one oneself ours ourselves ownself self she thee theirs them themselves they thou thy us'
+is_penn_pos('PRP$'). % pronoun  possessive     her his mine my our ours their thy your'
+is_penn_pos('RB'). % adverb	however  usually  here  not occasionally unabatingly maddeningly adventurously professedly stirringly prominently technologically magisterially predominately swiftly fiscally pitilessly ...'
+is_penn_pos('RBR'). % adverb  comparative	better further gloomier grander graver greater grimmer harder harsher healthier heavier higher however larger later leaner lengthier less- perfectly lesser lonelier longer louder lower more ...'
+is_penn_pos('RBS'). % adverb  superlative	best biggest bluntest earliest farthest first furthest hardest heartiest highest largest least less most nearest second tightest worst'
+is_penn_pos('RP'). % particle	give up  aboard about across along apart around aside at away back before behind by crop down ever fast for forth from go high i.e. in into just later low more off on open out over per pie raising start teeth that through under unto up up-pp upon whole with you '
+is_penn_pos('SENT'). % end punctuation	?  !  .'
+is_penn_pos('SP-44007'). % Second Third Three Two * a b c d first five four one six three two'
+is_penn_pos('SYM'). % symbol	@  +  *  ^  |  ='
+
+is_penn_pos('TO'). % "to" as preposition or infinitive marker     to  to	to go  to him'
+is_penn_pos('UH'). % interjection     Goodbye Goody Gosh Wow Jeepers Jee-sus Hubba Hey Kee-reist Oops amen huh howdy uh dammit whammo shucks heck anyways whodunnit honey golly man baby diddle hush sonuvabitch ...'
+is_penn_pos('VB'). % verb  base form     ask assemble assess assign assume atone attention avoid bake balkanize bank begin behold believe bend benefit bevel beware bless boil bomb boost brace break bring broil brush build ... '
+is_penn_pos('VBD'). % verb  past tense     dipped pleaded swiped regummed soaked tidied convened halted registered cushioned exacted snubbed strode aimed adopted belied figgered speculated wore appreciated contemplated ...'
+is_penn_pos('VBG'). % verb  present participle or gerund     telegraphing stirring focusing angering judging stalling lactating hankerin alleging veering capping approaching traveling besieging encrypting interrupting erasing wincing ...'
+is_penn_pos('VBN'). % verb  past participle     multihulled dilapidated aerosolized chaired languished panelized used experimented flourished imitated reunifed factored condensed sheared unsettled primed dubbed desired ...'
+is_penn_pos('VBP'). % verb  present tense  not 3rd person singular     predominate wrap resort sue twist spill cure lengthen brush terminate appear tend stray glisten obtain comprise detest tease attract emphasize mold postpone sever return wag ...'
+is_penn_pos('VBZ'). %  verb  present tense  3rd person singular     bases reconstructs marks mixes displeases seals carps weaves snatches slumps stretches authorizes smolders pictures emerges stockpiles seduces fizzes uses bolsters slaps speaks pleads ...'
+is_penn_pos('VD'). % verb do  base form	do'
+is_penn_pos('VDD'). % verb do  past	did'
+is_penn_pos('VDG'). % verb do gerund/participle	doing'
+is_penn_pos('VDN'). % verb do  past participle	done'
+is_penn_pos('VDP'). % verb do  pres  non-3rd per.	do'
+is_penn_pos('VDZ'). % verb do  pres  3rd per.sing	does'
+is_penn_pos('VH'). % verb have  base form	have'
+is_penn_pos('VHD'). % verb have  past	had'
+is_penn_pos('VHG'). % verb have  gerund/participle	having'
+is_penn_pos('VHN'). % verb have  past participle	had'
+is_penn_pos('VHP'). % verb have  pres non-3rd per.	have'
+is_penn_pos('VHZ'). % verb have  pres 3rd per.sing	has'
+is_penn_pos('VV'). % verb  base form	take'
+is_penn_pos('VVD'). % verb  past tense	took'
+is_penn_pos('VVG'). % verb  gerund/participle	taking'
+is_penn_pos('VVN'). % verb  past participle	taken'
+is_penn_pos('VVP'). % verb  present  non-3rd p.	take'
+is_penn_pos('VVZ'). % verb  present 3d p. sing.	takes'
+is_penn_pos('WDT'). % wh-determiner	 that what whatever which whichever'
+is_penn_pos('WP'). % WH-pronoun     that what whatever whatsoever which who whom whosoever'
+is_penn_pos('WP$'). % possessive wh-pronoun	whose'
+is_penn_pos('WRB'). % wh-abverb	where  when how however whence whenever where whereby whereever wherein whereof why'
+
+is_penn_pos('$'). % currency symbol	$  £ & \'n and both but either et for less minus neither nor or plus so'
+is_penn_pos(':'). % general joiner	;  -  --').
+is_penn_pos('.'). % ! . ? 
+
+
 :- set_module(class(library)).
 :- set_module(base(system)).
 :- use_module(library(logicmoo/dcg_must)).
@@ -517,7 +517,16 @@ add_p_to_words(Var,P,Child,OUT):-
   [specification,[s,[np,[pname,'Bill']],[vp,[vbar,[],[vcompl,[v,sees], [np,[pname,'Mary']]],[]]]],'.']],Tree1)
 */
 
+text_to_ace_tree(I,O):- 
+  lower_first_word(I,AceTextL),  
+  text_to_ape_tree(AceTextL,SyntaxTrees),
+  ape_to_penn_tree(SyntaxTrees,O).
 
+text_to_ape_tree(AceText,SyntaxTrees):- sub_string(AceText,_,1,1,Last),upcase_atom(Last,UC), \+ downcase_atom(Last,UC),!, 
+  atom_concat(AceText,'?',AceTextP),!,text_to_ape_tree(AceTextP,SyntaxTrees).
+text_to_ape_tree(AceText,SyntaxTrees):-   
+  ace_to_drs:aceparagraph_to_drs(AceText, on, off, 1, _Sentences, SyntaxTrees, _UnresolvedDrsCopy, _Drs, _Messages, _Time), 
+  SyntaxTrees \== [].
 
 
 ape_to_penn_tree(A,[]):-A==[],!.
@@ -541,23 +550,25 @@ ape_pos_to_pen(nump,'CD').
 ape_pos_to_pen(n,'NN').
 ape_pos_to_pen(nbar,'NP').
 ape_pos_to_pen(adj,'JJ').
+ape_pos_to_pen(query,'SBARQ').
+ape_pos_to_pen(question,'SQ').
+ape_pos_to_pen(A,P):- upcase_atom(A,P), is_penn_tag(P).
+ape_pos_to_pen(A,P):- upcase_atom(A,P).
 
 ape_to_penn_tree(_,A,P):- (var(A);A==[]),!,P=A.
 ape_to_penn_tree(_,A,P):- ape_pos_to_pen(A,P),!.
-ape_to_penn_tree(_,A,P):- atom(A),upcase_atom(A,P).
-ape_to_penn_tree(_,A,PP):- \+ is_list(A),PP=A.
-
 ape_to_penn_tree(O,A,P):- maplist(is_list,A),!,maplist(ape_to_penn_tree(O),A,P).
-
+ape_to_penn_tree(_,A,PP):- \+ is_list(A),PP=A.
 
 %ape_to_penn_tree(O,A,PP):- is_list(A),append(L,[P,A2],A),atom(A2),!,
 %  append(L,[P,w('.',A2)],AA), ape_to_penn_tree(O,AA,PP).
 
-ape_to_penn_tree(O,A,P):- select(E,A,AA),E==[],!,ape_to_penn_tree(O,AA,P).
-ape_to_penn_tree(_O, [W],[]):- ape_pos(W), !.
+ape_to_penn_tree(_O, [genqu,[]],[]):- !.
 ape_to_penn_tree(_O, [W],['CD',W]):- number(W), !.
 ape_to_penn_tree(_O, [W],['.',W]):- atom(W), !.
-ape_to_penn_tree(O,[A,W],[P,W]):- atom(A),atom(W),!, ape_to_penn_tree(O,A,P).
+ape_to_penn_tree(_O,[A,W],[P,W]):- atom(A), ape_pos_to_pen(A,P),!.
+ape_to_penn_tree(O,A,P):- select(E,A,AA),E==[],!,ape_to_penn_tree(O,AA,P).
+ape_to_penn_tree(_O, [W],[]):- ape_pos(W), !.
 
 ape_to_penn_tree(O,A,P):- append(L,[A1,A2],A), \+ atom(A1),atom(A2),
  append(L,[A1,['.',A2]],LL),!, ape_to_penn_tree(O,LL,P).
@@ -571,6 +582,7 @@ ape_to_penn_tree(np,[nbar,A],P):- ape_to_penn_tree(np,A,P).
 ape_to_penn_tree(np,[nbar|A],P):- ape_to_penn_tree(np,A,P).
 ape_to_penn_tree(vp,[vbar,A],P):- ape_to_penn_tree(vp,A,P).
 ape_to_penn_tree(vp,[vbar|A],P):- ape_to_penn_tree(vp,A,P).
+ape_to_penn_tree(W,[question,V|A],P):- atom(V), ape_to_penn_tree(W,['SBARQ',['V',V]|A],P).
 ape_to_penn_tree(VP,[E,A],P):- eliminate_header(E),ape_to_penn_tree(VP,A,P).
 ape_to_penn_tree(VP,[E|A],P):- eliminate_header(E),ape_to_penn_tree(VP,A,P).
 
@@ -583,10 +595,12 @@ ape_to_penn_tree(O,AA,PP):- maplist(ape_to_penn_tree(O),AA,PP),!.
 
 ape_to_penn_list_tree(O,A,P):- ape_to_penn_tree(O,A,PP),listify(PP,P).
 
+ape_pos(X):- upcase_atom(X,U),is_penn_tag(U).
 ape_pos(aux).
 ape_pos(adv).
 ape_pos(vmod).
 ape_pos(adj).
+ape_pos(quant).
 ape_pos(v).
 ape_pos(n).
 ape_pos(X):- 

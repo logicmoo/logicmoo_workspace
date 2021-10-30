@@ -97,6 +97,10 @@ learn_lf(LHS,Middle,RHS):- push_model([set(tree,LHS),set(pre,Middle),set(drs,RHS
 
 normalize_tree(LHS,NLHS):- 
   words_of(LHS,[H|Words]),
+  repairs_of_tree(LHS,[dc(H)|Words],DCLHS),!,
+  pre_tree_0(DCLHS,NLHS).
+normalize_tree(LHS,NLHS):- 
+  words_of(LHS,[H|Words]),
   repairs_of_tree(LHS,[dc(H)|Words],DCLHS),
   flatten_tree(DCLHS,NLHS).
   %pre_tree_0(DCLHS,NLHS).
@@ -215,7 +219,7 @@ is_loading_file:- prolog_load_context(file,_), prolog_load_context(term,T), T\==
 
 c80(B):- is_loading_file, !, add_c80(B).
 c80(Text):- 
-  cls, % make, 
+  cls, make, 
   tracing ~= on,  
   any_to_str(Text,S),!,
   add_c80(S), 
@@ -227,6 +231,7 @@ c81(S):- fail,
  forall(deepen_pos(sentence80(E,U,[],[],[])),print_tree_nl(E)))),
  fail.
 c81(S):- fail,time_once(c83(S)),fail.
+c81(S):- time_once(text_to_fav_tree(S)),fail.
 c81(S):- time_once(c84(S)),fail.
 c81(_).
 
@@ -252,20 +257,10 @@ not_is_list(X):- \+ is_list(X).
 
 dont_flatten([_|L]):- sub_var('NP',L),!, fail.
 dont_flatten([S|_]):- is_penn_long(S),!, fail.
-dont_flatten([S|_]):- is_penn_tag(_,S).
+dont_flatten([S|_]):- is_penn_tag(S).
 
 contains_phrase(Ls):- sub_term(E,Ls),atom(E),(is_penn_long(E);E=='NP').
 contains_phrase(Ls):- member(E,Ls),is_list(E),member(Sl,E),is_list(Sl).
-
-too_long('CORENLP').
-too_long('VP').
-too_long('PP').
-too_long('NML').
-too_long('FRAG').
-too_long(X):- atom_concat(_,'BAR',X).
-too_long(X):- atom_concat('S',_,X).
-is_penn_tag(_,S):- atom(S),upcase_atom(S,S), \+ downcase_atom(S,S), S\=='I'.
-is_penn_long(S):-is_penn_tag(_,S),too_long(S).
 
 pree_tree_done(I,O):- ( I==[] ;  \+ is_list(I) ),!,I=O.
 pree_tree_done([I],[O]):- ( I==[] ;  \+ is_list(I) ),!,I=O.
@@ -275,12 +270,15 @@ pree_tree_finish(G2,[S|I],[S|O]) :- call(G2,I,O),!.
 
 pre_tree_0(I,O):- pree_tree_done(I,O),!.
 pre_tree_0(['VP',['NN',Border]|I],O):- !, pre_tree_0(['VP',['VB',Border]|I],O).
-pre_tree_0([FRAG,I],O):- is_penn_long(FRAG),!, pre_tree_0(I,O).
 pre_tree_0([A,[FRAG|I]|B],O):- is_penn_long(FRAG),append([A|I],B,Y),!, maplist(pre_tree_0,Y,O).
+pre_tree_0([FRAG,I],O):- is_penn_long(FRAG),!, pre_tree_0(I,O).
 pre_tree_0([FRAG|I],O):- is_penn_long(FRAG),!, maplist(pre_tree_0,I,O).
 pre_tree_0(I,O):-  pree_tree_finish(pre_tree_0,I,O).
 
 pre_tree_1(I,O):- pree_tree_done(I,O),!.
+pre_tree_1(['VP',['NN',Border]|I],O):- !, pre_tree_1(['VP',['VB',Border]|I],O).
+pre_tree_1([FRAG,I],O):- is_penn_long(FRAG),!, pre_tree_1(I,O).
+pre_tree_1([FRAG|I],O):- is_penn_long(FRAG),!, maplist(pre_tree_1,I,O).
 pre_tree_1(I,O):- pree_tree_finish(pre_tree_1,I,O).
 
 pre_tree_2(I,O):- pree_tree_done(I,O),!.
@@ -416,11 +414,22 @@ make_out1([tag(V,'V',_),Verb],_Words,V,V=verbFn(Verb)):- ignore(V=verbFn(Verb)).
 make_out(List,Words,V,E):- make_out1(List,Words,V,E),!.
 make_out(List,Words,V,denotedBy(V,List,c80(Phrase))):- any_to_str([what,are,Words,'?'],Phrase).
 
-%text_to_tree(I,O):-text_to_charniak_tree(I,O).
-text_to_tree(I,O):-text_to_corenlp_tree(I,M),normalize_tree(M,O),!.
-%text_to_tree(I,O):-text_to_best_tree(I,O).
+text_to_tree(I,O):- any_to_str(I,S),text_to_fav_tree(S,MM),!,pre_tree_0(MM,M),normalize_tree(M,O),!.
 
-time_once(G):- locally(set_prolog_flag(gc,false),time(once(G))).
+:- ensure_loaded(library(logicmoo_nlu/parser_link_grammar)).
+text_to_fav_tree(I,O):- text_to_lgp_tree(I,O).
+text_to_fav_tree(I,O):- text_to_corenlp_tree(I,O).
+text_to_fav_tree(I,O):- text_to_best_tree(I,O).
+text_to_fav_tree(I,O):- text_to_charniak_tree(I,O).
+text_to_fav_tree(I,O):- text_to_ace_tree(I,O).
+text_to_fav_tree(I,O):- text_to_ape_tree(I,O).
+text_to_fav_tree(I):-
+  forall(clause(text_to_fav_tree(I,_),B),ignore(show_call(always,B))).
+
+:- add_history1((forall(test_e2c(X,_),dmsg(c80(X))))).
+:- add_history1((ape_test(_,X),text_to_fav_tree(X))).
+
+time_once(G):- notrace(garbage_collect),notrace(locally(set_prolog_flag(gc,true),time(once(G)))).
 
 any_to_str(I,S):- \+ string(I), words_of(I,U), any_to_string(U,S),!.
 any_to_str(S,S).
@@ -435,20 +444,19 @@ c84:-
 
 
 c84(Tit):- c84(Tit,Post), my_drs_to_fol(Post,FOL),exec_fol(FOL).
+c85(Tit):- c85(Tit,Post), my_drs_to_fol(Post,FOL),exec_fol(FOL).
 
 c84(Tit,Post):-
   text_to_tree(Tit,Pre),
-  forall(c80:lf_trained(Pre,_Mid,_Post2),print_tree_nl(pre_db=Pre)),
+  % forall(c80:lf_trained(Pre,_Mid,_Post2),print_tree_nl(pre_db=Pre)),
   print_tree_nl(pre=Pre),
-  \+ \+ c80:lf_trained(Pre,_,_),!,
+ % \+ \+ c80:lf_trained(Pre,_,_),!,
   c80:lf_trained(Pre,Mid,Post),
-  maplist(ignore,Mid),
+  maplist(call,Mid),
   ignore((print_tree_nl(using=lf_trained(Pre,Mid,Post)))).
-
-c84(I,O):- words_to_base_forms(I,M),ace_to_drs:aceparagraph_to_drs(M,on,off,1,_Sentences,O,_UnresolvedDrs,O,_Messages,_Time),O\==[],O\==drs([],[]),!.
-c84(I,O):- text_to_lf(I,O),print_tree_nl(c84=O).
+c84(I,O):- c85(I,O),!.
 c84(I,O):- fail,
-  once((any_to_str(I,S),
+  any_to_str(I,S),
   add_c82(S),
   mpred_test_mok(text_to_tree(S,UU)),
   print_tree_nl(text_to_tree=UU),
@@ -460,8 +468,12 @@ c84(I,O):- fail,
   WordsI\==WordsR,
   add_c82(WordsR),!,
   c84(WordsR,RHS),
-  replace_with_unlearned_words(chat80,RHS,O),is_valid_for_result(O).
-c84(I,O):- run_pipeline(I,[clausify80=O]).
+  replace_with_unlearned_words(chat80,RHS,O),
+  is_valid_for_result(O).
+%c84(I,O):- run_pipeline(I,[clausify80=O]).
+
+c85(I,O):- notrace(words_to_base_forms(I,M)),any_to_str(M,S),ace_to_drs:aceparagraph_to_drs(S,on,off,1,_Sentences,_Trees,_UnresolvedDrs,O,_Messages,_Time),O\==[],O\==drs([],[]),!.
+c85(I,O):- any_to_str(I,M),ace_to_drs:aceparagraph_to_drs(M,on,off,1,_Sentences,_Trees,_UnresolvedDrs,O,_Messages,_Time),O\==[],O\==drs([],[]),!.
 
 is_valid_for_result(O):- var(O),!,fail.
 is_valid_for_result(O):- O == [],!,fail.
@@ -512,13 +524,13 @@ gp_africa(Result):-
        database80(exceeds(Size,_Other))), List),
    database80(aggregate80(max,List,Result)).
 
-:- add_history1(ensure_loaded(geography/load_kb)).
+%:- add_history1(ensure_loaded(geography/load_kb)).
 
 :- add_history1([test_ext]).
 
 :- if(\+ prolog_load_context(reloading, true)).
-:- forall(chat_80_ed(_,B,_),add_c81(B)).
-:- forall(training_data(Sent,RHS),learn_c81(Sent,RHS)).
+:- forall(chat_80_ed(_,B,_),ignore(time_once(add_c81(B)))).
+%:- forall(training_data(Sent,RHS),learn_c81(Sent,RHS)).
 
 :- add_c81("how many rivers are in poland ?").
 
@@ -574,5 +586,5 @@ gp_africa(Result):-
 :- retractall(wt_replacement(chat80,_,border,_)).
 
 %:- forall(ti(country,Word),learn_penn_tag('NN',Word)).
-:- listing(wt_replacement/4).
+%:- listing(wt_replacement/4).
 

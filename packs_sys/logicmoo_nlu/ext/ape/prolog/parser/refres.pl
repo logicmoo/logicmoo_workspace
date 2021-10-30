@@ -206,7 +206,7 @@ ape_numbervars(DRSCopy, Zero, N) :-
 :- op( 600, xfy, v).            % disjunction
 :- op( 650, xfy, =>).           % implication 
 
-:- use_module('../logger/error_logger', [add_error_message_once/4, add_warning_message_once/4]).
+:- use_module('../logger/error_logger', [add_error_message_once/4, add_werror_message_once/4, add_warning_message_once/4]).
 :- use_module('../lexicon/lexicon_interface', [noun_pl/3]).
 
 %-----------------------------------------------------------------------------------------------------------------------------------------------------------------
