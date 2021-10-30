@@ -42,7 +42,7 @@
 training_data(Text,DRS):-  parser_ape:text_drs_eval(_Evaluation, _Id, Text, DRS, _LHSs, _Timestamp, _Author, _Comment).
 :- dynamic(c80:lf_trained/3).
 add_c80(B):- any_to_str(B,S),add_history1(c80(S)).
-add_c81(B):- any_to_str(B,S),add_c80(S),!, ignore(learn_c81(words,S)).
+add_c81(B):- any_to_str(B,S),add_c80(S),!, ignore(learn_c81(e2c,S)).
 add_c82(B):- any_to_str(B,S),add_c80(S),!, print_tree_nl(?-c81(S)).
 
 
@@ -76,9 +76,9 @@ learn_c79(B,RHS):-
 */
 
 %learn_c81(Type,S):- known_lf(S,RHS),!,learn_c81(Type,S,RHS).
-learn_c81(S):- learn_c81(words,S).
-learn_c81(Type,S):- parts_of(Type,S,B), process4a(off,B,_,RHS,_Times),learn_c81(Type,S,RHS),!.
-learn_c81(Type,S):- parts_of(Type,S,B), c85(B,RHS),learn_c83(Type,S,RHS).
+learn_c81(S):- learn_c81(e2c,S).
+learn_c81(Type,S):- parts_of(Type,S,B), process4a(off,B,_,RHS,_Times),should_learn(RHS),learn_c83(Type,S,RHS),!.
+learn_c81(Type,S):- parts_of(Type,S,B), c85(B,RHS),should_learn(RHS),!,learn_c83(Type,S,RHS).
 
 learn_c83(Type,B,RHS):-
   parts_of(Type,B,Words),
@@ -90,9 +90,9 @@ learn_c83(Type,B,RHS):-
   learn_tree_tags(LHS),
   learn_can_become(Type,LHS,RHS))).
 
-parts_of(words,RHS,RHSWords):- words_of(RHS,RHSWords).
+parts_of(e2c,RHS,RHSWords):- words_of(RHS,RHSWords).
 
-learn_equality(Type,List):-
+learn_equivalencies(Type,List):-
  forall((
   select(I,List,Rest),
   member(Rest,O)),
@@ -101,9 +101,10 @@ learn_equality(Type,List):-
 skip_learning(X):- var(X),!.
 skip_learning([]).
 skip_learning(drs([],[])).
+should_learn(X):- \+ skip_learning(X).
 
 learn_can_become(Type,LHS,RHS):-
-  ignore(( \+ skip_learning(LHS), \+ skip_learning(RHS),
+  ignore(( should_learn(LHS), should_learn(RHS),
   %  parts_of(Type,LHS,LHSWords), any_to_str(LHSWords,S), print_tree_nl(?-c80(S)),
   parts_of(Type,RHS,RHSWords), 
   subst_words(RHSWords,LHS,[],RHS,NewLHS,AprioriHacks,NewRHS),
@@ -356,7 +357,7 @@ compile_nl_tree(I,O):- pree_tree_done(I,O),!.
 compile_nl_tree([[tag(_,'N',_NP1)|S],[tag(_,'V',VB)|V],[tag(_,'N',_NP2)|O]|Rest],OUT):- !, vso_out([tag(_,'V',VB)|V],S,O,Rest,OUT).
 compile_nl_tree([[tag(_,'V',VB)|V],[tag(_,'N',_NP1)|S],[tag(_,'N',_NP2)|O]|Rest],OUT):- !, vso_out([tag(_,'V',VB)|V],S,O,Rest,OUT).
 compile_nl_tree(I, O) :- once(maplist(compile_nl_tree,I,O)),I\==O,!.
-compile_nl_tree([tag(_,N,NP)|I], O):- N=='N', parts_of(words,I,Words),debug_var(Words,V),make_out1([tag(_,N,NP)|I],Words,V,O),!.
+compile_nl_tree([tag(_,N,NP)|I], O):- N=='N', parts_of(e2c,I,Words),debug_var(Words,V),make_out1([tag(_,N,NP)|I],Words,V,O),!.
 compile_nl_tree(O,O).
 
 replace_with_unlearned_words(Program,UU,U):- 
@@ -449,7 +450,7 @@ text_to_fav_tree(I,O,chat80):- text_to_chat80_tree(I,O).
 
 learn_to_tree(B):- any_to_str(B,I),
   findall(Type=O,text_to_fav_tree(I,O,Type),ResL), 
-  learn_equality(words,[I|ResL]).
+  learn_equivalencies(e2c,[I|ResL]).
 
 
 
@@ -491,9 +492,9 @@ c84(I,O):- fail,
   print_tree_nl(text_to_tree=UU),
   replace_with_learned_words(chat80,UU,U),
   print_tree_nl(replace_with_learned_words=U),
-  parts_of(words,U,WordsR),
+  parts_of(e2c,U,WordsR),
   print_tree_nl(words_of=WordsR),
-  parts_of(words,I,WordsI),
+  parts_of(e2c,I,WordsI),
   WordsI\==WordsR,
   add_c82(WordsR),!,
   c84(WordsR,RHS),
@@ -560,7 +561,7 @@ gp_africa(Result):-
 
 :- if(\+ prolog_load_context(reloading, true)).
 :- forall(chat_80_ed(_,B,_),ignore(time_once(add_c81(B)))).
-%:- forall(training_data(Sent,RHS),learn_c81(Type,Sent,RHS)).
+%:- forall(training_data(Sent,RHS),learn_c83(Type,Sent,RHS)).
 
 :- add_c81("how many rivers are in poland ?").
 
