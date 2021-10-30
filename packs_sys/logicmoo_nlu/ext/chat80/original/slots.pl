@@ -89,11 +89,13 @@ i_np_head0(np_head(quantV(Op0,N),Adjs,Noun),
    pos_conversion_db(N,Op0,Type,V,Op),
    measure_op(Op,X,V--Units,P))).
 
-i_np_head0(Else, Type-Name,Type-Name,identityQ,'`'(P),Pred,Pred,[]):- fail, may_qualify(Else), % Else \= np_head(_,_,_),
+i_np_head0(Else, Type-Name,Type-Name,identityQ,'`'(P),Pred,Pred,[]):- may_qualify(Else), % Else \= np_head(_,_,_),
   P = qualifiedBy(Name,Type,Else).
+
 must80(G):- \+ current_prolog_flag(debug_chat80,true),!, call(G).
 must80(G):- call(G)*->true;(trace,call(G)).
 
+may_qualify(np_head(det(each),[],_)):-!,fail.
 may_qualify(Else):- wdmsg(may_qualify(Else)).
 
 %i_np_mods([],_,[],'`'(true),[],[],_,_).

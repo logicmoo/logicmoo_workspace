@@ -150,11 +150,12 @@ set_clex_switch(Switch) :-
 
 :- '$set_source_module'(clex).
 
-some_of_name(_Act,XD,_Est,YD):- (compound(XD);compound(YD)),!,fail.
-some_of_name(Act,XD,Est,YD):- atom(XD),atom(YD),!,some_of_name(Act,X,Est,Y),atomic_list_concat([A,B|Rest],X,XD),atomic_list_concat([A,B|Rest],Y,YD),!.
-some_of_name(Act,XD,Est,YD):- atom(YD),!,once((some_of_name(Act,X,Est,Y),atomic_list_concat([A,B|Rest],Y,YD),atomic_list_concat([A,B|Rest],X,XD))).
-some_of_name(Act,XD,Est,YD):- atom(XD),!,once((some_of_name(Act,X,Est,Y),atomic_list_concat([A,B|Rest],X,XD),atomic_list_concat([A,B|Rest],Y,YD))).
-some_of_name(Act,X,Est,Y):- atom_concat(Act,Est,ActEst),en_gen(N),atom_concat(Act,N,X),
+some_of_name(Act,X,Est,Y):- quietly(some_name0(Act,X,Est,Y)).
+some_name0(_Act,XD,_Est,YD):- (compound(XD);compound(YD)),!,fail.
+some_name0(Act,XD,Est,YD):- atom(XD),atom(YD),!,some_name0(Act,X,Est,Y),atomic_list_concat([A,B|Rest],X,XD),atomic_list_concat([A,B|Rest],Y,YD),!.
+some_name0(Act,XD,Est,YD):- atom(YD),!,once((some_name0(Act,X,Est,Y),atomic_list_concat([A,B|Rest],Y,YD),atomic_list_concat([A,B|Rest],X,XD))).
+some_name0(Act,XD,Est,YD):- atom(XD),!,once((some_name0(Act,X,Est,Y),atomic_list_concat([A,B|Rest],X,XD),atomic_list_concat([A,B|Rest],Y,YD))).
+some_name0(Act,X,Est,Y):- atom_concat(Act,Est,ActEst),en_gen(N),atom_concat(Act,N,X),
   (atom_concat(X,Est,Y);atom_concat(ActEst,N,Y);(nonvar(Y),Est\=='',atom_concat(Est,N,Y))).
 
 en_gen('*').

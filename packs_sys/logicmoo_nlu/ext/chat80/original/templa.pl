@@ -539,11 +539,14 @@ trans_rel_lr(P1,P2,X,Y) :- call(P2,X,W), ( call(P1,W,Y) ; trans_rel_lr(P1,P2,W,Y
 trans_rel_rl(P1,P2,X,Y) :- call(P2,W,Y), ( call(P1,W,X) ; trans_rel_rl(P1,P2,X,W) ).
 
 
+% @TODO Dmiles maybe not cache these?
+trans_rel_cache_create(P1,P2):- Both = (P1,P2), \+ ground(Both),numbervars(Both),!,trans_rel_cache_create0(P1,P2).
+trans_rel_cache_create(P1,P2):- trans_rel_cache_create0(P1,P2).
 
-trans_rel_cache_create(P1,P2):- must_be(ground,(P1,P2)),
+trans_rel_cache_create0(P1,P2):- must_be(ground,(P1,P2)),
                                 tmp80:trans_rel_cache_created(P1,P2),!.
-trans_rel_cache_create(P1,P2):- tmp80:trans_rel_cache_creating(P1,P2),dmsg(looped(trans_rel_cache_create(P1,P2))),fail.
-trans_rel_cache_create(P1,P2):-
+trans_rel_cache_create0(P1,P2):- tmp80:trans_rel_cache_creating(P1,P2),dmsg(looped(trans_rel_cache_create(P1,P2))),fail.
+trans_rel_cache_create0(P1,P2):-
   asserta((tmp80:trans_rel_cache_creating(P1,P2)),Ref),
   dmsg(trans_rel_cache_creating(P1,P2)),
   forall(call(P2,XX,YY),
