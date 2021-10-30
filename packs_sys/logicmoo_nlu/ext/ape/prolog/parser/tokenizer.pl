@@ -531,5 +531,10 @@ expand_contracted_forms([shouldn, '\'', t | RestIn], [should, not | RestOut]) :-
 	!,
 	expand_contracted_forms(RestIn, RestOut).
 
+expand_contracted_forms(TextIn, AfterRestOut) :- freeze(A,(A==contractions;A==slang;A==mispellings)),dictionary(A,Before,After),
+  listify(Before,BeforeL),append(BeforeL,RestIn,TextIn), !,
+	expand_contracted_forms(RestIn, RestOut),
+  listify(After,AfterL),append(AfterL,RestOut,AfterRestOut).
+
 expand_contracted_forms([Token | TailIn], [Token | TailOut]) :-
 	expand_contracted_forms(TailIn, TailOut).

@@ -394,6 +394,10 @@ from_wordlist_atoms( Sentence,  Words):- enotrace((must_maplist(w2_to_t,Sentence
 
 %into_chat80_segs_pt2(Sentence,U):- check_words(Sentence,U).
 
+:- export(text_to_chat80_tree/2).
+text_to_chat80_tree(Sentence,Tree):-
+  into_lexical_segs(Sentence,U),
+  deepen_pos(sentence80(Tree,U,[],[],[])).
 
 process4a(How,Sentence,U,S1,Times) :- 
   Times = [ParseTime,SemTime,TimePlan,_TimeAns,_TotalTime],
@@ -402,7 +406,7 @@ process4a(How,Sentence,U,S1,Times) :-
    runtime(StopSeg),
    SegTime is StopSeg - StartSeg,
    report(How,U,'segs',SegTime,tree),
-   sleep(2),
+   
    runtime(StartParse))),!,
  ((deepen_pos(sentence80(E,U,[],[],[])),
    notrace((runtime(StopParse),

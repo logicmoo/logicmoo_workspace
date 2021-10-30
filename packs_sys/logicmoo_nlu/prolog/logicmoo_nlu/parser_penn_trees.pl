@@ -525,7 +525,8 @@ text_to_ace_tree(I,O):-
 text_to_ape_tree(AceText,SyntaxTrees):- sub_string(AceText,_,1,1,Last),upcase_atom(Last,UC), \+ downcase_atom(Last,UC),!, 
   atom_concat(AceText,'?',AceTextP),!,text_to_ape_tree(AceTextP,SyntaxTrees).
 text_to_ape_tree(AceText,SyntaxTrees):-   
-  ace_to_drs:aceparagraph_to_drs(AceText, on, off, 1, _Sentences, SyntaxTrees, _UnresolvedDrsCopy, _Drs, _Messages, _Time), 
+  ace_to_drs:aceparagraph_to_drs(AceText, on, off, 1, _Sentences, SyntaxTrees, _UnresolvedDrsCopy, _Drs, Messages, _Time), 
+  ignore((Messages\==[],SyntaxTrees==[],dmsg(Messages))),
   SyntaxTrees \== [].
 
 

@@ -42,7 +42,7 @@
 training_data(Text,DRS):-  parser_ape:text_drs_eval(_Evaluation, _Id, Text, DRS, _LHSs, _Timestamp, _Author, _Comment).
 :- dynamic(c80:lf_trained/3).
 add_c80(B):- any_to_str(B,S),add_history1(c80(S)).
-add_c81(B):- any_to_str(B,S),add_c80(S),!, learn_c81(S).
+add_c81(B):- any_to_str(B,S),add_c80(S),!, ignore(learn_c81(words,S)).
 add_c82(B):- any_to_str(B,S),add_c80(S),!, print_tree_nl(?-c81(S)).
 
 
@@ -62,38 +62,54 @@ repairs_of_tree(LHS,[E|LHSWords],DCLHS):-
   repairs_of_tree(MLHS,LHSWords,DCLHS).
 
 
-%learn_c81(S):- known_lf(S,RHS),!,learn_c81(S,RHS).
-learn_c81(S):- words_of(S,B), process4a(off,B,_,RHS,_Times),learn_c81(S,RHS).
 
 /*
 learn_c79(B,RHS):-
-  words_of(B,Words),
+  parts_of(Type,B,Words),
   any_to_str(Words,S),
  ignore((
   \+ skip_text_to_tree(S),
   print_tree_nl(?-c81(S)),
   text_to_tree(S,LHS),
   learn_tree_tags(LHS),
-  learn_c82(LHS,RHS))).
+  learn_can_become(Type,LHS,RHS))).
 */
 
-learn_c81(B,RHS):-
-  words_of(B,Words),
+%learn_c81(Type,S):- known_lf(S,RHS),!,learn_c81(Type,S,RHS).
+learn_c81(S):- learn_c81(words,S).
+learn_c81(Type,S):- parts_of(Type,S,B), process4a(off,B,_,RHS,_Times),learn_c81(Type,S,RHS),!.
+learn_c81(Type,S):- parts_of(Type,S,B), c85(B,RHS),learn_c83(Type,S,RHS).
+
+learn_c83(Type,B,RHS):-
+  parts_of(Type,B,Words),
   any_to_str(Words,S),
  ignore((
   \+ skip_text_to_tree(S),
   print_tree_nl(?-c81(S)),
   text_to_tree(S,LHS),
   learn_tree_tags(LHS),
-  learn_c82(LHS,RHS))).
+  learn_can_become(Type,LHS,RHS))).
 
-learn_c82(LHS,RHS):-
-  ignore((compound(RHS),RHS\==drs([],[]),  %  words_of(LHS,LHSWords), any_to_str(LHSWords,S), print_tree_nl(?-c80(S)),
-  words_of(RHS,RHSWords), 
-  subst_words(RHSWords,LHS,[],RHS,NewLHS,Middle,NewRHS),
-  learn_lf(NewLHS,Middle,NewRHS))).
+parts_of(words,RHS,RHSWords):- words_of(RHS,RHSWords).
 
-learn_lf(LHS,Middle,RHS):- push_model([set(tree,LHS),set(pre,Middle),set(drs,RHS),tree->drs]).
+learn_equality(Type,List):-
+ forall((
+  select(I,List,Rest),
+  member(Rest,O)),
+ learn_can_become(Type,I,O)).
+
+skip_learning(X):- var(X),!.
+skip_learning([]).
+skip_learning(drs([],[])).
+
+learn_can_become(Type,LHS,RHS):-
+  ignore(( \+ skip_learning(LHS), \+ skip_learning(RHS),
+  %  parts_of(Type,LHS,LHSWords), any_to_str(LHSWords,S), print_tree_nl(?-c80(S)),
+  parts_of(Type,RHS,RHSWords), 
+  subst_words(RHSWords,LHS,[],RHS,NewLHS,AprioriHacks,NewRHS),
+  learn_lf(NewLHS,AprioriHacks,NewRHS))).
+
+learn_lf(LHS,AprioriHacks,RHS):- push_model([set(tree,LHS),set(pre,AprioriHacks),set(drs,RHS),tree->drs]).
 
 normalize_tree(LHS,NLHS):- 
   words_of(LHS,[H|Words]),
@@ -118,9 +134,9 @@ push_model([E|More])--> !, push_model(E),push_model(More).
 push_model(X->Y) -->  get_from(X,LHS),get_from(Y,RHS), add_lr(LHS,RHS),set_from(ctx,LHS).
 push_model(->(Y)) -->  get_from(ctx,LHS),get_from(Y,RHS),add_lr(LHS,RHS).
 push_model((X->Y->Z)) -->  push_model([X->Y,Y->Z]).
-push_model(set(X,Middle)) --> set_from(X,Middle).
-push_model(get(X,Middle)) --> get_from(X,Middle).
-push_model(add(X,Middle)) --> add_from(X,Middle).
+push_model(set(X,AprioriHacks)) --> set_from(X,AprioriHacks).
+push_model(get(X,AprioriHacks)) --> get_from(X,AprioriHacks).
+push_model(add(X,AprioriHacks)) --> add_from(X,AprioriHacks).
 
 set_from(N,V,In,[N=V|In]).
 get_from(N,V,In,In):- (member(N=V,In);V=[]),!.
@@ -307,13 +323,16 @@ pt_call(G,X,Y):- pree_tree_finish(pt_call(G),X,Y),!.
 %s_c_code(S,tag(_,'S',S)):- atom_chars(S,['S'|_]),!.
 s_c_code(S,tag(_, C, S)):- atom_chars(S,[C|_]).
 
-is_word80(X):- (atom(X);string(X)),!, X\==[],X\==adv.
+is_word80(X):- (atom(X);string(X)),!, X\==[],X\==adv, \+ is_penn_tag(X).
+words_of(I,Words):- var(I),!,throw(var_words_of(I,Words)).
 words_of(I,Words):- I==[],!,Words=[].
-words_of(I,Words):- atomic(I),!,tokenize_atom(I,Flat),include(is_word80,Flat,Words).
-words_of(I,Words):- \+ is_list(I),!,findall(E,(sub_term(E,I),is_word80(E)),Words).
-words_of([FW|I],Words):- FW=tag(_,_,_),!,flatten([FW|I],Flat),include(is_word80,Flat,Words).
-words_of([FW|I],Words):- maplist(is_word80,[FW|I]),!,[FW|I]=Words.
-words_of([FW|I],Words):- tree_to_words([FW|I],Words).
+words_of(I,Words):- words_of0(I,Words0),tokenizer:expand_contracted_forms(Words0,Words),!.
+
+words_of0(I,Words):- atomic(I),!,tokenize_atom(I,Flat),include(is_word80,Flat,Words).
+words_of0(I,Words):- \+ is_list(I),!,findall(E,(sub_term(E,I),is_word80(E)),Words).
+words_of0([FW|I],Words):- FW=tag(_,_,_),!,flatten([FW|I],Flat),include(is_word80,Flat,Words).
+words_of0([FW|I],Words):- maplist(is_word80,[FW|I]),!,[FW|I]=Words.
+words_of0([FW|I],Words):- tree_to_words([FW|I],Words).
 
 tree_to_words([],[]):-!.
 tree_to_words(I,[O]):- is_w2(I),!,arg(1,I,O).
@@ -337,7 +356,7 @@ compile_nl_tree(I,O):- pree_tree_done(I,O),!.
 compile_nl_tree([[tag(_,'N',_NP1)|S],[tag(_,'V',VB)|V],[tag(_,'N',_NP2)|O]|Rest],OUT):- !, vso_out([tag(_,'V',VB)|V],S,O,Rest,OUT).
 compile_nl_tree([[tag(_,'V',VB)|V],[tag(_,'N',_NP1)|S],[tag(_,'N',_NP2)|O]|Rest],OUT):- !, vso_out([tag(_,'V',VB)|V],S,O,Rest,OUT).
 compile_nl_tree(I, O) :- once(maplist(compile_nl_tree,I,O)),I\==O,!.
-compile_nl_tree([tag(_,N,NP)|I], O):- N=='N', words_of(I,Words),debug_var(Words,V),make_out1([tag(_,N,NP)|I],Words,V,O),!.
+compile_nl_tree([tag(_,N,NP)|I], O):- N=='N', parts_of(words,I,Words),debug_var(Words,V),make_out1([tag(_,N,NP)|I],Words,V,O),!.
 compile_nl_tree(O,O).
 
 replace_with_unlearned_words(Program,UU,U):- 
@@ -417,17 +436,27 @@ make_out(List,Words,V,denotedBy(V,List,c80(Phrase))):- any_to_str([what,are,Word
 text_to_tree(I,O):- any_to_str(I,S),text_to_fav_tree(S,MM),!,pre_tree_0(MM,M),normalize_tree(M,O),!.
 
 :- ensure_loaded(library(logicmoo_nlu/parser_link_grammar)).
-text_to_fav_tree(I,O):- text_to_lgp_tree(I,O).
-text_to_fav_tree(I,O):- text_to_corenlp_tree(I,O).
-text_to_fav_tree(I,O):- text_to_best_tree(I,O).
-text_to_fav_tree(I,O):- text_to_charniak_tree(I,O).
-text_to_fav_tree(I,O):- text_to_ace_tree(I,O).
-text_to_fav_tree(I,O):- text_to_ape_tree(I,O).
-text_to_fav_tree(I):-
-  forall(clause(text_to_fav_tree(I,_),B),ignore(show_call(always,B))).
 
-:- add_history1((forall(test_e2c(X,_),dmsg(c80(X))))).
-:- add_history1((ape_test(_,X),text_to_fav_tree(X))).
+text_to_fav_tree(I,O):- text_to_fav_tree(I,O,_).
+
+text_to_fav_tree(I,O,lgp):- text_to_lgp_tree(I,O).
+text_to_fav_tree(I,O,corenlp):- text_to_corenlp_tree(I,O).
+text_to_fav_tree(I,O,best):- text_to_best_tree(I,O).
+text_to_fav_tree(I,O,charniak):- text_to_charniak_tree(I,O).
+text_to_fav_tree(I,O,ace):- text_to_ace_tree(I,O).
+text_to_fav_tree(I,O,ape):- text_to_ape_tree(I,O).
+text_to_fav_tree(I,O,chat80):- text_to_chat80_tree(I,O).
+
+learn_to_tree(B):- any_to_str(B,I),
+  findall(Type=O,text_to_fav_tree(I,O,Type),ResL), 
+  learn_equality(words,[I|ResL]).
+
+
+
+
+text_to_fav_tree(I):-
+  forall(clause(text_to_fav_tree(I,O,Type),B),ignore((call(B),print_tree(Type=O)))).
+
 
 time_once(G):- notrace(garbage_collect),notrace(locally(set_prolog_flag(gc,true),time(once(G)))).
 
@@ -462,9 +491,9 @@ c84(I,O):- fail,
   print_tree_nl(text_to_tree=UU),
   replace_with_learned_words(chat80,UU,U),
   print_tree_nl(replace_with_learned_words=U),
-  words_of(U,WordsR),
+  parts_of(words,U,WordsR),
   print_tree_nl(words_of=WordsR),
-  words_of(I,WordsI),
+  parts_of(words,I,WordsI),
   WordsI\==WordsR,
   add_c82(WordsR),!,
   c84(WordsR,RHS),
@@ -494,7 +523,7 @@ text_to_lf1(B,FOL):-
  any_to_str(U,S),
  text_to_tree(S,LHS), 
  print_tree_nl(text_to_tree=LHS))),
- c80:lf_trained(LHS,Middle,RHS),maplist(ignore,Middle),my_drs_to_fol(RHS, FOL).
+ c80:lf_trained(LHS,AprioriHacks,RHS),maplist(ignore,AprioriHacks),my_drs_to_fol(RHS, FOL).
 
 text_to_lf2(U,RHS):- 
   must_det_l((words_of(U,W),  
@@ -526,11 +555,12 @@ gp_africa(Result):-
 
 %:- add_history1(ensure_loaded(geography/load_kb)).
 
+
 :- add_history1([test_ext]).
 
 :- if(\+ prolog_load_context(reloading, true)).
 :- forall(chat_80_ed(_,B,_),ignore(time_once(add_c81(B)))).
-%:- forall(training_data(Sent,RHS),learn_c81(Sent,RHS)).
+%:- forall(training_data(Sent,RHS),learn_c81(Type,Sent,RHS)).
 
 :- add_c81("how many rivers are in poland ?").
 
@@ -557,8 +587,15 @@ gp_africa(Result):-
 :- add_c80("does joe like coffee?").
 :- add_c80("does joe drink water?").
 :- add_c80("does afganistan border china?").
+:- add_c80("Which rivers are not in asia?").
 :- endif.
 
+:- add_c81("If there is a dog then the dog barks and it is false that there is a cat.").
+:- add_c81("It is false that a man who waits or who eats runs or sleeps ,and barks.").
+:- add_c81("The man who talks or who walks or who sleeps eats.").
+
+:- add_history1((forall(test_e2c(X,_),dmsg(c80(X))))).
+:- add_history1((ape_test(_,X),text_to_fav_tree(X))).
 :- add_history1([test_ext]).
 %:- add_c80("does joe eat cake?").
 
