@@ -41,9 +41,9 @@
 :- ensure_loaded(ape(tests/acetexts)).
 training_data(Text,DRS):-  parser_ape:text_drs_eval(_Evaluation, _Id, Text, DRS, _LHSs, _Timestamp, _Author, _Comment).
 :- dynamic(c80:lf_trained/3).
-add_c80(B):- any_to_input_layer(B,S),add_history1(c80(S)).
-add_c81(B):- any_to_input_layer(B,S),add_c80(S),!, ignore(learn_full(e2c,S)).
-add_c82(B):- any_to_input_layer(B,S),add_c80(S),!, print_tree_nl(?-c81(S)).
+add_c80(B):- any_to_str(B,S),add_history1(c80(S)).
+add_c81(B):- any_to_str(B,S),add_c80(S),!, ignore(learn_full(e2c,S)).
+add_c82(B):- any_to_str(B,S),add_c80(S),!, print_tree_nl(?-c81(S)).
 
 
 
@@ -207,9 +207,9 @@ skip_learn_contains("**/").
 skip_learn_contains("#").
 
 
-skip_text_to_tree(B):- any_to_input_layer(B,S), skip_learn_contains(F),atom_contains(S,F),!.
+skip_text_to_tree(B):- any_to_str(B,S), skip_learn_contains(F),atom_contains(S,F),!.
 maybe_learn_replacements(B):- 
-  any_to_input_layer(B,S), \+ (skip_learn_contains(F),atom_contains(S,F)),
+  any_to_str(B,S), \+ (skip_learn_contains(F),atom_contains(S,F)),
     text_to_tree(S,LHS), learn_tree_tags(LHS),print_tree_nl(learn_tree_tags(LHS)).
 
 
@@ -463,8 +463,9 @@ input_to_middle(I):-
 
 time_once(G):- notrace(garbage_collect),quietly(locally(set_prolog_flag(gc,true),time(once(show_call(always,G))))).
 
-any_to_input_layer(I,S):- \+ string(I), words_of(I,U), any_to_string(U,S),!.
-any_to_input_layer(S,S).
+any_to_input_layer(I,S):- any_to_str(I,S).
+any_to_str(I,S):- \+ string(I), words_of(I,U), any_to_string(U,S),!.
+any_to_str(S,S).
   
 
 c82(S):- fail, time_once(process(debug,S)).
@@ -504,11 +505,20 @@ c84(I,O):- fail,
   should_learn(O).
 %c84(I,O):- run_pipeline(I,[clausify80=O]).
 
-observe_system_full(I,O):- process4a(off,I,_,O,_Times).
-observe_system_full(I,O):- notrace(words_to_base_forms(I,M)),any_to_input_layer(M,S),ace_to_drs:aceparagraph_to_drs(S,on,off,1,_Sentences,_Trees,_UnresolvedDrs,O,_Messages,_Time),should_learn(O).
-observe_system_full(I,O):- any_to_input_layer(I,M),ace_to_drs:aceparagraph_to_drs(M,on,off,1,_Sentences,_Trees,_UnresolvedDrs,O,_Messages,_Time),should_learn(O).
+observe_system_full(I,O):- any_to_input_layer(I,M),!,ping_each_system(I,M,O),should_learn(O).
+ping_each_system(_,M,O):- c88(M,O),should_learn(O).
+ping_each_system(I,_,O):- notrace(words_to_base_forms(I,M)),any_to_input_layer(M,S),try_ace_lf(S,O).
+ping_each_system(_,M,O):- try_ace_lf(M,O).
 
-exec_fol(FOL):-print_tree_nl(exec_fol=FOL).
+symm_test:- sentence80(S,[does,iran,border,iraq],[],[],[]),wdmsg(S).
+symm_test2:- sentence80(S,[does,iran,symmetric1,iraq],[],[],[]),wdmsg(S).
+symm_test3:- sentence80(S,[does,iran,symmetric1,iraq],[],[],[]),wdmsg(S).
+
+c88(M,O):- process4a(off,M,_,O,_Times).
+
+try_ace_lf(S,O):- ace_to_drs:aceparagraph_to_drs(S,on,off,1,_Sentences,_Trees,_UnresolvedDrs,O,_Messages,_Time),should_learn(O).
+
+exec_fol(FOL):-format('~N'), print_tree_nl(exec_fol=FOL).
 
 my_drs_to_fol(I,O):- on_x_fail(drs_fol(I,O)),!.
 my_drs_to_fol(OI,OI).
@@ -527,7 +537,7 @@ text_to_lf1(B,FOL):-
 
 text_to_lf2(U,RHS):- 
   must_det_l((words_of(U,W),  
-  process4a(off,W,_,RHS1,_Times),
+  process4a(on,W,_,RHS1,_Times),
   replace_with_unlearned_words(chat80,RHS1,RHS))).
 
 text_to_lf3(U,RHS):- %fail,

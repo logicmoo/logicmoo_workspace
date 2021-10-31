@@ -1419,6 +1419,7 @@ surface_det_x(sg, deep, _, countable, new, eq, 1, [a]) :- !.
 surface_det_x(sg, deep, _, mass, new, na, na, [some]).
 surface_det_x(sg, deep, _, mass, old, _, _, [the]).
 
+surface_det_x(sg, deep, _, mass, new, na, na, [any]).
 
 % There are John and Mary.
 surface_det_x(pl, top, BoxPrefix, _, _, dummy, dummy, [BoxPrefix, there, are]) :- !.

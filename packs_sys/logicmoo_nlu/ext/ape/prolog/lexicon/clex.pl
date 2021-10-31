@@ -18,6 +18,35 @@
 		set_clex_switch/1  % +Switch
 	]).
 :- format(user_error,"Renaming CLEX interface module from 'clex' to 'clex_ape' ",[]).
+%:- '$set_source_module'(clex_ape).
+adj_itr(Adj_itr,Itr):-clex:adj_itr(Adj_itr,Itr).
+adj_itr_comp(Adj_itr_comp,Comp):-clex:adj_itr_comp(Adj_itr_comp,Comp).
+adj_itr_sup(Adj_itr_sup,Sup):-clex:adj_itr_sup(Adj_itr_sup,Sup).
+adj_tr(Adj_tr1,Adj_tr,Tr):-clex:adj_tr(Adj_tr1,Adj_tr,Tr).
+adj_tr_comp(Adj_tr_comp1,Adj_tr_comp,Comp):-clex:adj_tr_comp(Adj_tr_comp1,Adj_tr_comp,Comp).
+adj_tr_sup(Adj_tr_sup1,Adj_tr_sup,Sup):-clex:adj_tr_sup(Adj_tr_sup1,Adj_tr_sup,Sup).
+adv(Adv,Adv1):-clex:adv(Adv,Adv1).
+adv_comp(Adv_comp,Comp):-clex:adv_comp(Adv_comp,Comp).
+adv_sup(Adv_sup,Sup):-clex:adv_sup(Adv_sup,Sup).
+dv_finsg(Dv_finsg1,Dv_finsg,Finsg):-clex:dv_finsg(Dv_finsg1,Dv_finsg,Finsg).
+dv_infpl(Dv_infpl1,Dv_infpl,Infpl):-clex:dv_infpl(Dv_infpl1,Dv_infpl,Infpl).
+dv_pp(Dv_pp1,Dv_pp,Pp):-clex:dv_pp(Dv_pp1,Dv_pp,Pp).
+iv_finsg(Iv_finsg,Finsg):-clex:iv_finsg(Iv_finsg,Finsg).
+iv_infpl(Iv_infpl,Infpl):-clex:iv_infpl(Iv_infpl,Infpl).
+mn_pl(Mn_pl,Pl):-clex:mn_pl(Mn_pl,Pl).
+mn_sg(Mn_sg,Sg):-clex:mn_sg(Mn_sg,Sg).
+noun_mass(Noun_mass1,Noun_mass,Mass):-clex:noun_mass(Noun_mass1,Noun_mass,Mass).
+noun_pl(Noun_pl1,Noun_pl,Pl):-clex:noun_pl(Noun_pl1,Noun_pl,Pl).
+noun_sg(Noun_sg1,Noun_sg,Sg):-clex:noun_sg(Noun_sg1,Noun_sg,Sg).
+pn_pl(Pn_pl1,Pn_pl,Pl):-clex:pn_pl(Pn_pl1,Pn_pl,Pl).
+pn_sg(Pn_sg1,Pn_sg,Sg):-clex:pn_sg(Pn_sg1,Pn_sg,Sg).
+pndef_pl(Pndef_pl1,Pndef_pl,Pl):-clex:pndef_pl(Pndef_pl1,Pndef_pl,Pl).
+pndef_sg(Pndef_sg1,Pndef_sg,Sg):-clex:pndef_sg(Pndef_sg1,Pndef_sg,Sg).
+prep(Prep,Prep1):-clex:prep(Prep,Prep1).
+tv_finsg(Tv_finsg,Finsg):-clex:tv_finsg(Tv_finsg,Finsg).
+tv_infpl(Tv_infpl,Infpl):-clex:tv_infpl(Tv_infpl,Infpl).
+tv_pp(Tv_pp,Pp):-clex:tv_pp(Tv_pp,Pp).
+
 :- else.
 :- module(clex, [
 		clex_switch/1,     % ?Switch
@@ -148,119 +177,123 @@ set_clex_switch(Switch) :-
     retractall(clex_switch(_)),
     assert(clex_switch(Switch)).
 
+
+
+
 :- '$set_source_module'(clex).
 
-some_of_name(Act,X,Est,Y):- quietly(mk_some_name(Act,X,Est,Y)).
-% clex:some_of_name('action',X,'', 'eating.action').
-% clex:some_of_name('action',X,'', 'eating.action5').
-% clex:some_of_name('action',X,'', 'action5.eating').
-% clex:some_of_name('action',X,'', 'action.eating').
-% clex:some_of_name('action',X,'', 'actiona.eating'). FALSE
-some_name_one(Act,XD):- var(XD),!,en_gen(any,N),atom_concat(Act,N,XD).
-some_name_one(Act,XD):- type_sep(Sep),atomic_list_concat([L,R],Sep,XD),!,some_name_one_l_r(Sep,Act,L,R).
-some_name_one(Act,XD):- atomic_list_concat([_,X|_],Act,XD), X\=='',type_sep(Sep),x_good(Sep,X),!.
+alc_s(L,S,A):- atomic_list_concat(L,S,A).
+alc_j(L,A):- atomic_list_concat(L,A).
+alc_jy(A,Act,Est,B,YR):- alc_j([A,Act,Est,B],YR).
+% alc_jy(A,Act,Est,B,YR):- alc_j([A,Act,B,Est],YR).
+x_good(Sep,X):-atom_chars(X,[C|_]), (Sep==C ; \+ char_type(C,alpha)),!.
+x_good(X):- atom_chars(X,[C|_]),  \+ char_type(C,alpha),!.
 
-x_good(Sep,X):- atom_chars(X,[C|_]), (Sep==C ; \+ char_type(C,alpha)),!.
+learned_pos(Act,X,Est,Y):- quietly(some_names_two(Act,X,Est,Y)),!.
+% clex:learned_pos('action',X,'', 'eating.action').
+% clex:learned_pos('action',X,'', 'eating.action5').
+% clex:learned_pos('action',X,'', 'action5.eating').
+% clex:learned_pos('action',X,'', 'action.eating').
+% clex:learned_pos('action',X,'', 'actiona.eating'). FALSE
+learned_as_name(Act,XD):- quietly(some_name1(Act,XD)),!.
+some_name1(_, XD):- compound(XD),!,fail.
+some_name1(Act,XD):- var(XD),!,en_gen(any,N),atom_concat(Act,N,XD).
+some_name1(Act,XD):- some_sep1(Sep),alc_s([L,R],Sep,XD),!,some_name1_l_r(Sep,Act,L,R).
+some_name1(Act,XD):- alc_s([_,X|_],Act,XD), X\=='',some_sep1(Sep),x_good(Sep,X),!.
 
-some_name_one_l_r(Sep,Act,L,_):-  atomic_list_concat([_,X],Act,L),!,(X=='';x_good(Sep,X)),!.
-some_name_one_l_r(Sep,Act,_,L):-  atomic_list_concat([_,X],Act,L),!,(X=='';x_good(Sep,X)),!.
+some_name1_l_r(Sep,Act,L,_):-  alc_s([_,B],Act,L),!,(B=='';x_good(Sep,B)),!.
+some_name1_l_r(Sep,Act,_,L):-  alc_s([_,B],Act,L),!,(B=='';x_good(Sep,B)),!.
 
-mk_some_name_a_v(Act,XD,Est,YD):- type_sep(Sep),atomic_list_concat([L,R],Sep,XD),!,mk_some_name_a_v_l_r(Sep,Act,Est,YD,L,R).
-mk_some_name_a_v(Act,XD,Est,YD):- atomic_list_concat([A,B],Act,XD), mk_some_namer(A,Act,Est,B,YD).
-mk_some_name_a_v_l_r(Sep,Act,Est,YD,L,R):- atomic_list_concat([A,B],Act,L),!,
-  mk_some_namer(A,Act,Est,B,YL), atomic_list_concat([YL,Sep,R,Est],YD).
-mk_some_name_a_v_l_r(Sep,Act,Est,YD,L,R):- atomic_list_concat([A,B],Act,R),!,
-  mk_some_namer(A,Act,Est,B,YR), atomic_list_concat([L,Est,Sep,YR],YD).
+some2_a_v(Act,XD,Est,YD):- some_sep1(Sep),alc_s([L,R],Sep,XD),!,some2_a_v_l_r(Sep,Act,Est,YD,L,R).
+some2_a_v(Act,XD,Est,YD):- alc_s([A,B],Act,XD), x_good(B), alc_jy(A,Act,Est,B,YD).
+some2_a_v_l_r(Sep,Act,Est,YD,L,R):- alc_s([A,B],Act,L),x_good(B),!,
+  alc_jy(A,Act,Est,B,YL), alc_j([YL,Sep,R,Est],YD).
+some2_a_v_l_r(Sep,Act,Est,YD,L,R):- alc_s([A,B],Act,R),x_good(B),!,
+  alc_jy(A,Act,Est,B,YR), alc_j([L,Est,Sep,YR],YD).
 
-mk_some_namer(A,Act,Est,B,YR):- atomic_list_concat([A,Act,Est,B],YR).
-% mk_some_namer(A,Act,Est,B,YR):- atomic_list_concat([A,Act,B,Est],YR).
+some2_v_a(Act,XD,Est,YD):- alc_s([A,EstB],Act,YD),alc_s([B1,B2|BN],Est,EstB),!,
+  alc_j([A,Act,B1,B2|BN],XD).
+some2_v_a(Act,XD,Est,YD):- some_sep1(Sep),alc_s([L,R],Sep,YD),!,some2_v_a_l_r(Sep,Act,Est,XD,L,R).
 
-mk_some_name_v_a(Act,XD,Est,YD):- atomic_list_concat([A,EstB],Act,YD),!,
-  atomic_list_concat([B1,B2|BN],Est,EstB),
-  atomic_list_concat([A,Act,B1,B2|BN],'',XD).
-mk_some_name_v_a(Act,XD,Est,YD):- type_sep(Sep),atomic_list_concat([L,R],Sep,YD),!,mk_some_name_v_a_l_r(Sep,Act,Est,XD,L,R).
-
-mk_some_name_v_a_l_r(Sep,Act,Est,XD,L,R):- atomic_list_concat([A,B],Act,L),
-  atomic_list_concat([AA,BB],Est,B),
-  maybe_chop(R,Est,RR),
-  atomic_list_concat([A,Act,AA,BB,Sep,RR],XD).
-mk_some_name_v_a_l_r(Sep,Act,Est,XD,L,R):- atomic_list_concat([A,B],Act,R),
-  atomic_list_concat([AA,BB],Est,B),
-  maybe_chop(L,Est,LL),
-  atomic_list_concat([LL,Sep,A,Act,AA,BB],XD).
+some2_v_a_l_r(Sep,Act,Est,XD,L,R):- alc_s([A,B],Act,L),
+  alc_s([AA,BB],Est,B),
+  some_chops(R,Est,RR),
+  alc_j([A,Act,AA,BB,Sep,RR],XD).
+some2_v_a_l_r(Sep,Act,Est,XD,L,R):- alc_s([A,B],Act,R),
+  alc_s([AA,BB],Est,B),
+  some_chops(L,Est,LL),
+  alc_j([LL,Sep,A,Act,AA,BB],XD).
   
-maybe_chop(L,Est,LL):- atom_concat(LL,Est,L),!.
-maybe_chop(L,_,L).
+some_chops(L,Est,LL):- atom_concat(LL,Est,L),!.
+some_chops(L,_,L).
 
 
-mk_some_name(_Act,XD,_Est,YD):- (compound(XD);compound(YD)),!,fail.
-mk_some_name(Act,XD,'',YD):-!,XD=YD,some_name_one(Act,XD).
-mk_some_name(Act,XD,Est,YD):- atom(XD),var(YD),!,mk_some_name_a_v(Act,XD,Est,YD).
-mk_some_name(Act,XD,Est,YD):- var(XD),atom(YD),!,mk_some_name_v_a(Act,XD,Est,YD).
-mk_some_name(Act,XD,Est,YD):- atom(XD),atom(YD),!,
-  atomic_list_concat([A,EstB],Act,YD),atomic_list_concat([B1,B2|BN],Est,EstB),!,
-  atomic_list_concat([A,Act,B1,B2|BN],'',XD).
-mk_some_name(Act,XD,Est,YD):- some_name2(Act,XD,Est,YD).
+some_names_two(_Act,XD,_Est,YD):- (compound(XD);compound(YD)),!,fail.
+some_names_two(Act,XD,'',YD):-!,XD=YD,learned_as_name(Act,XD).
+some_names_two(Act,XD,Est,YD):- atom(XD),var(YD),!,some2_a_v(Act,XD,Est,YD).
+some_names_two(Act,XD,Est,YD):- var(XD),atom(YD),!,some2_v_a(Act,XD,Est,YD).
+some_names_two(Act,XD,Est,YD):- atom(XD),atom(YD),!,
+  alc_s([A,EstB],Act,YD),x_good(EstB),alc_s([B1,B2|BN],Est,EstB),!,
+  alc_j([A,Act,B1,B2|BN],XD).
+some_names_two(Act,XD,Est,YD):- some_names2(Act,XD,Est,YD).
 /*
-some_name1(Act,XD,Est,YD):- atom(XD),atom(YD),!,some_name2(Act,X,Est,Y),atomic_list_concat([A,B|Rest],X,XD),atomic_list_concat([A,B|Rest],Y,YD),!.
-some_name1(Act,XD,Est,YD):- atom(YD),!,once((some_name2(Act,X,Est,Y),atomic_list_concat([A,B|Rest],Y,YD),atomic_list_concat([A,B|Rest],X,XD))).
-some_name1(Act,XD,Est,YD):- atom(XD),!,once((some_name2(Act,X,Est,Y),atomic_list_concat([A,B|Rest],X,XD),atomic_list_concat([A,B|Rest],Y,YD))).
-some_name1(Act,XD,Est,YD):- some_name2(Act,XD,Est,YD).
+some_name1(Act,XD,Est,YD):- atom(XD),atom(YD),!,some_names2(Act,X,Est,Y),alc_s([A,B|Rest],X,XD),alc_s([A,B|Rest],Y,YD),!.
+some_name1(Act,XD,Est,YD):- atom(YD),!,once((some_names2(Act,X,Est,Y),alc_s([A,B|Rest],Y,YD),alc_s([A,B|Rest],X,XD))).
+some_name1(Act,XD,Est,YD):- atom(XD),!,once((some_names2(Act,X,Est,Y),alc_s([A,B|Rest],X,XD),alc_s([A,B|Rest],Y,YD))).
+some_name1(Act,XD,Est,YD):- some_names2(Act,XD,Est,YD).
 */
-some_name2(Act,X,Est,Y):- atom_concat(Act,Est,ActEst), en_gen(any,N),some_name4(N,Act,ActEst,X,Est,Y).
+some_names2(Act,X,Est,Y):- atom_concat(Act,Est,ActEst), en_gen(any,N),some_names4(N,Act,ActEst,X,Est,Y).
 
-some_name4(N,Act,ActEst,X,Est,Y):- atom_concat(Act,N,X),
+some_names4(N,Act,ActEst,X,Est,Y):- atom_concat(Act,N,X),
   (atom_concat(X,Est,Y);(N\=='',atom_concat(ActEst,N,Y));(nonvar(Y),Est\=='',atom_concat(Est,N,Y))).
 
-type_sep('.').
-type_sep('$').
-type_sep('_').
+some_sep1('$').
+some_sep1('.').
+some_sep1('_').
 %en_gen(any,'*').
-en_gen(any,Sep):-type_sep(Sep).
+en_gen(any,Sep):-some_sep1(Sep).
 en_gen(any,N):- between(1,4,N).
 
-adj_itr(X, Y):- some_of_name('attrib',X,'',Y).
-adj_itr(X, Y):- some_of_name('type',X,'ish',Y).
+adj_itr(X, Y):- learned_pos('attrib',X,'',Y).
+adj_itr(X, Y):- learned_pos('type',X,'ish',Y).
 
-adj_itr_comp(Y, X):- some_of_name('attrib',X,'er',Y).
-adj_itr_comp(Y, X):- some_of_name('type',X,'isher',Y).
+adj_itr_comp(Y, X):- learned_pos('attrib',X,'er',Y).
+adj_itr_comp(Y, X):- learned_pos('type',X,'isher',Y).
 
-adj_itr_sup(Y, X):- some_of_name('attrib',X,'est',Y).
-adj_itr_sup(Y, X):- some_of_name('type',X,'ishest',Y).
+adj_itr_sup(Y, X):- learned_pos('attrib',X,'est',Y).
+adj_itr_sup(Y, X):- learned_pos('type',X,'ishest',Y).
 
-adv(Y, X):- some_of_name('attrib',X,'',Y).
-adv(Y, X):- some_of_name('attrib',X,'ly',Y).
-adv(Y, X):- some_of_name('type',X,'ishly',Y).
-adv(Y, X):- some_of_name('type',X,'ly',Y).
+adv(Y, X):- learned_pos('attrib',X,'',Y).
+adv(Y, X):- learned_pos('attrib',X,'ly',Y).
+adv(Y, X):- learned_pos('type',X,'ishly',Y).
+adv(Y, X):- learned_pos('type',X,'ly',Y).
 
-adv_comp(Y, X):- some_of_name('attrib',X,'er',Y).
-adv_comp(Y, X):- some_of_name('attrib',X,'lier',Y).
-adv_comp(Y, X):- some_of_name('type',X,'lier',Y).
+adv_comp(Y, X):- learned_pos('attrib',X,'er',Y).
+adv_comp(Y, X):- learned_pos('attrib',X,'lier',Y).
+adv_comp(Y, X):- learned_pos('type',X,'lier',Y).
 
-adv_sup(Y, X):- some_of_name('attrib',X,'est',Y).
-adv_sup(Y, X):- some_of_name('attrib',X,'liest',Y).
-adv_sup(Y, X):- some_of_name('type',X,'liest',Y).
+adv_sup(Y, X):- learned_pos('attrib',X,'est',Y).
+adv_sup(Y, X):- learned_pos('attrib',X,'liest',Y).
+adv_sup(Y, X):- learned_pos('type',X,'liest',Y).
 
-dv_pp(Y, X, ''):- some_of_name('action',X,'ed',Y).
-dv_pp(Y, X, 'as'):- some_of_name('action',X,'ed',Y).
-dv_pp(Y, X, 'to'):- some_of_name('action',X,'ed',Y).
+dv_pp(Y, X, ''):- learned_pos('action',X,'ed',Y).
+dv_pp(Y, X, 'as'):- learned_pos('action',X,'ed',Y).
+dv_pp(Y, X, 'to'):- learned_pos('action',X,'ed',Y).
+dv_finsg(Y, X, ''):- learned_pos('action',X,'s',Y).
+dv_infpl(Y, X, ''):- learned_pos('action',X,'',Y).
+iv_finsg(Y, X):- learned_pos('action',X,'s',Y).
+iv_infpl(Y, X):- learned_pos('action',X,'',Y).
+tv_finsg(Y, X):- learned_pos('action',X,'s',Y).
+tv_pp(Y, X):- learned_pos('action',X,'',Y).
+tv_pp(Y, X):- learned_pos('action',X,'ed',Y).
 
+noun_mass(Y, X, human):- learned_pos('agent',X,'',Y).
+noun_mass(Y, X, neutr):- learned_pos('object',X,'',Y).
+noun_mass(Y, X, neutr):- learned_pos('type',X,'',Y).
+noun_mass(Y, X, neutr):- learned_pos('attrib',X,'',Y).
 
-dv_finsg(Y, X, ''):- some_of_name('action',X,'s',Y).
-dv_infpl(Y, X, ''):- some_of_name('action',X,'',Y).
-iv_finsg(Y, X):- some_of_name('action',X,'s',Y).
-iv_infpl(Y, X):- some_of_name('action',X,'',Y).
-tv_finsg(Y, X):- some_of_name('action',X,'s',Y).
-tv_pp(Y, X):- some_of_name('action',X,'',Y).
-tv_pp(Y, X):- some_of_name('action',X,'ed',Y).
-
-noun_mass(Y, X, human):- some_of_name('agent',X,'',Y).
-noun_mass(Y, X, neutr):- some_of_name('object',X,'',Y).
-noun_mass(Y, X, neutr):- some_of_name('type',X,'',Y).
-noun_mass(Y, X, neutr):- some_of_name('attrib',X,'',Y).
-
-noun_pl(Y, X, Human):- some_of_type(Human,Agent),some_of_name(Agent,X,'s',Y).
-noun_sg(Y, X, Human):- some_of_type(Human,Agent),some_of_name(Agent,X,'',Y).
+noun_pl(Y, X, Human):- some_of_type(Human,Agent),learned_pos(Agent,X,'s',Y).
+noun_sg(Y, X, Human):- some_of_type(Human,Agent),learned_pos(Agent,X,'',Y).
 
 some_of_type(Human,Agent):- some_of_type1(Human,Agent).
 some_of_type(human,'actioner').
@@ -269,82 +302,13 @@ some_of_type(neutr,'action').
 some_of_type(human,'type').
 some_of_type(neutr,'type').
 some_of_type1(human,'agent').
-some_of_type1(human,'actor').
+some_of_type1(neutr,'actor').
 some_of_type1(neutr,'object').
 
-pn_sg(Y, X, Type):-  some_of_type1(Type,Agent),some_of_name(Agent,X,'',Y).
-pn_defsg(Y, X, Type):-  some_of_type1(Type,Agent),some_of_name(Agent,X,'',Y).
-pn_pl(Y, X, Type):-  some_of_type1(Type,Agent),some_of_name(Agent,X,'s',Y).
-pn_defpl(Y, X, Type):-  some_of_type1(Type,Agent),some_of_name(Agent,X,'s',Y).
-
-
-
-
-
-:- '$set_source_module'(clex_ape).
-
-some_of_name(Act,X,Est,Y):- clex:some_of_name(Act,X,Est,Y).
-
-adj_itr(X, Y):- some_of_name('attrib',X,'',Y).
-adj_itr(X, Y):- some_of_name('type',X,'ish',Y).
-
-adj_itr_comp(Y, X):- some_of_name('attrib',X,'er',Y).
-adj_itr_comp(Y, X):- some_of_name('type',X,'isher',Y).
-
-adj_itr_sup(Y, X):- some_of_name('attrib',X,'est',Y).
-adj_itr_sup(Y, X):- some_of_name('type',X,'ishest',Y).
-
-adv(Y, X):- some_of_name('attrib',X,'',Y).
-adv(Y, X):- some_of_name('attrib',X,'ly',Y).
-adv(Y, X):- some_of_name('type',X,'ishly',Y).
-adv(Y, X):- some_of_name('type',X,'ly',Y).
-
-adv_comp(Y, X):- some_of_name('attrib',X,'er',Y).
-adv_comp(Y, X):- some_of_name('attrib',X,'lier',Y).
-adv_comp(Y, X):- some_of_name('type',X,'lier',Y).
-
-adv_sup(Y, X):- some_of_name('attrib',X,'est',Y).
-adv_sup(Y, X):- some_of_name('attrib',X,'liest',Y).
-adv_sup(Y, X):- some_of_name('type',X,'liest',Y).
-
-dv_pp(Y, X, ''):- some_of_name('action',X,'ed',Y).
-dv_pp(Y, X, 'as'):- some_of_name('action',X,'ed',Y).
-dv_pp(Y, X, 'to'):- some_of_name('action',X,'ed',Y).
-
-
-dv_finsg(Y, X, ''):- some_of_name('action',X,'s',Y).
-dv_infpl(Y, X, ''):- some_of_name('action',X,'',Y).
-iv_finsg(Y, X):- some_of_name('action',X,'s',Y).
-iv_infpl(Y, X):- some_of_name('action',X,'',Y).
-tv_finsg(Y, X):- some_of_name('action',X,'s',Y).
-tv_pp(Y, X):- some_of_name('action',X,'',Y).
-tv_pp(Y, X):- some_of_name('action',X,'ed',Y).
-
-noun_mass(Y, X, human):- some_of_name('agent',X,'',Y).
-noun_mass(Y, X, neutr):- some_of_name('object',X,'',Y).
-noun_mass(Y, X, neutr):- some_of_name('type',X,'',Y).
-noun_mass(Y, X, neutr):- some_of_name('attrib',X,'',Y).
-
-noun_pl(Y, X, Human):- some_of_type(Human,Agent),some_of_name(Agent,X,'s',Y).
-noun_sg(Y, X, Human):- some_of_type(Human,Agent),some_of_name(Agent,X,'',Y).
-
-some_of_type(Human,Agent):- some_of_type1(Human,Agent).
-some_of_type(human,'actioner').
-some_of_type(human,'group').
-some_of_type(neutr,'action').
-some_of_type(human,'type').
-some_of_type(neutr,'type').
-some_of_type1(human,'agent').
-some_of_type1(human,'actor').
-some_of_type1(neutr,'object').
-
-pn_sg(Y, X, Type):-  some_of_type1(Type,Agent),some_of_name(Agent,X,'',Y).
-pn_defsg(Y, X, Type):-  some_of_type1(Type,Agent),some_of_name(Agent,X,'',Y).
-pn_pl(Y, X, Type):-  some_of_type1(Type,Agent),some_of_name(Agent,X,'s',Y).
-pn_defpl(Y, X, Type):-  some_of_type1(Type,Agent),some_of_name(Agent,X,'s',Y).
-
-
-
+pn_sg(Y, X, Type):-  some_of_type1(Type,Agent),learned_pos(Agent,X,'',Y).
+pn_defsg(Y, X, Type):-  some_of_type1(Type,Agent),learned_pos(Agent,X,'',Y).
+pn_pl(Y, X, Type):-  some_of_type1(Type,Agent),learned_pos(Agent,X,'s',Y).
+pn_defpl(Y, X, Type):-  some_of_type1(Type,Agent),learned_pos(Agent,X,'s',Y).
 
 
 

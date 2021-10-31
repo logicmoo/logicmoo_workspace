@@ -13,6 +13,9 @@
 
 :- export(sentence80/5).
 
+sentence80(S, A, B, C, D) :- is_list(A),member(w(_,_),A),
+    words_of(A,Ws), b_setval('$prev_w2s', []), b_setval('$prev_spans', []),!,
+    sentence801(S, Ws, B, C, D).
 sentence80(S) ---> {b_setval('$prev_w2s',[]),b_setval('$prev_spans',[])},sentence801(S).
 
 sentence801(_) ---> if_giveup_dcg,{!,fail}.

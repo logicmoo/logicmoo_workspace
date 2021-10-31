@@ -113,6 +113,8 @@ atom_capitalize(exactly, 'Exactly') :- !.
 atom_capitalize(some, 'Some') :- !.
 atom_capitalize(an, 'An') :- !.
 
+atom_capitalize(any, 'Any') :- !.
+
 atom_capitalize(there, 'There') :- !.
 atom_capitalize(if, 'If') :- !.
 atom_capitalize(it, 'It') :- !.

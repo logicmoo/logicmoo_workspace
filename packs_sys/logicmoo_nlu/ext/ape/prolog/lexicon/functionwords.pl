@@ -35,6 +35,9 @@ This module stores the different kinds of function words.
 
 %% functionword(?FunctionWord) is det.
 %
+functionword(any).
+
+
 
 functionword(whose).
 functionword(for).

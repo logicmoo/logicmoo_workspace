@@ -1289,13 +1289,13 @@ same_streams(TErr,Err):- stream_property(TErr,file_no(A)),stream_property(Err,fi
 %
 % Wdmsg.
 %
-wdmsg(_):- notrace((current_prolog_flag(debug_level,0),current_prolog_flag(dmsg_level,never))),!.
+wdmsg(_):- notrace((ttyflush,current_prolog_flag(debug_level,0),current_prolog_flag(dmsg_level,never))),!.
 wdmsg(X):- likely_folded(wdmsg_goal(in_cmt(line,fmt(X)),dmsg(X))).
 
 likely_folded(X):- dis_pp(bfly)->pretty_clauses:with_folding_depth(1,X);call(X).
 
 wdmsg_goal(G,G2):-  
-  quietly((ignore((with_all_dmsg(G2),  
+  quietly((ignore(((format('~N'),ttyflush,with_all_dmsg(G2),format('~N'),ttyflush),
   (fmt_visible_to_console -> true ;ignore(on_x_fail(with_output_to_main_error((G))))))))), !.
 
 fmt_visible_to_console:- 
@@ -1653,6 +1653,7 @@ woto(S,Goal):- use_tty(S,TTY),woto_tty(S,TTY,Goal).
 wots(S,Goal):- woto(string(S),Goal).
 
 :- meta_predicate(wotso(0)).
+wotso(Goal):- !, call(Goal).
 wotso(Goal):- wots(S,Goal), ignore((S\=="",write(S))).
 
 :- meta_predicate(weto(0)).

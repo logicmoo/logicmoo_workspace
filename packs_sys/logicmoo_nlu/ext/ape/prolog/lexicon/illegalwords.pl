@@ -29,6 +29,7 @@
 % Should we in ACE define a set of words that are not ACE function words and that can not
 % be ACE content words either.
 %
+is_illegalword(_,_):- !, fail.
 is_illegalword(any, 'The word \'any\' is not allowed. Did you mean \'every\', \'some\', or \'a\'?').
 is_illegalword('Any', 'The word \'Any\' is not allowed. Did you mean \'Every\', \'Some\',  or \'A\'?').
 is_illegalword(anybody, 'The word \'anybody\' is not allowed. Did you mean \'everybody\' or \'somebody\'?').
