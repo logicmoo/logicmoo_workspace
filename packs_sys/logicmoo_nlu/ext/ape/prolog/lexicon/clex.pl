@@ -150,17 +150,74 @@ set_clex_switch(Switch) :-
 
 :- '$set_source_module'(clex).
 
-some_of_name(Act,X,Est,Y):- quietly(some_name0(Act,X,Est,Y)).
-some_name0(_Act,XD,_Est,YD):- (compound(XD);compound(YD)),!,fail.
-some_name0(Act,XD,Est,YD):- atom(XD),atom(YD),!,some_name0(Act,X,Est,Y),atomic_list_concat([A,B|Rest],X,XD),atomic_list_concat([A,B|Rest],Y,YD),!.
-some_name0(Act,XD,Est,YD):- atom(YD),!,once((some_name0(Act,X,Est,Y),atomic_list_concat([A,B|Rest],Y,YD),atomic_list_concat([A,B|Rest],X,XD))).
-some_name0(Act,XD,Est,YD):- atom(XD),!,once((some_name0(Act,X,Est,Y),atomic_list_concat([A,B|Rest],X,XD),atomic_list_concat([A,B|Rest],Y,YD))).
-some_name0(Act,X,Est,Y):- atom_concat(Act,Est,ActEst),en_gen(N),atom_concat(Act,N,X),
-  (atom_concat(X,Est,Y);atom_concat(ActEst,N,Y);(nonvar(Y),Est\=='',atom_concat(Est,N,Y))).
+some_of_name(Act,X,Est,Y):- quietly(mk_some_name(Act,X,Est,Y)).
+% clex:some_of_name('action',X,'', 'eating.action').
+% clex:some_of_name('action',X,'', 'eating.action5').
+% clex:some_of_name('action',X,'', 'action5.eating').
+% clex:some_of_name('action',X,'', 'action.eating').
+% clex:some_of_name('action',X,'', 'actiona.eating'). FALSE
+some_name_one(Act,XD):- var(XD),!,en_gen(any,N),atom_concat(Act,N,XD).
+some_name_one(Act,XD):- type_sep(Sep),atomic_list_concat([L,R],Sep,XD),!,some_name_one_l_r(Sep,Act,L,R).
+some_name_one(Act,XD):- atomic_list_concat([_,X|_],Act,XD), X\=='',type_sep(Sep),x_good(Sep,X),!.
 
-en_gen('*').
-en_gen(N):- between(1,8,N).
-en_gen('').
+x_good(Sep,X):- atom_chars(X,[C|_]), (Sep==C ; \+ char_type(C,alpha)),!.
+
+some_name_one_l_r(Sep,Act,L,_):-  atomic_list_concat([_,X],Act,L),!,(X=='';x_good(Sep,X)),!.
+some_name_one_l_r(Sep,Act,_,L):-  atomic_list_concat([_,X],Act,L),!,(X=='';x_good(Sep,X)),!.
+
+mk_some_name_a_v(Act,XD,Est,YD):- type_sep(Sep),atomic_list_concat([L,R],Sep,XD),!,mk_some_name_a_v_l_r(Sep,Act,Est,YD,L,R).
+mk_some_name_a_v(Act,XD,Est,YD):- atomic_list_concat([A,B],Act,XD), mk_some_namer(A,Act,Est,B,YD).
+mk_some_name_a_v_l_r(Sep,Act,Est,YD,L,R):- atomic_list_concat([A,B],Act,L),!,
+  mk_some_namer(A,Act,Est,B,YL), atomic_list_concat([YL,Sep,R,Est],YD).
+mk_some_name_a_v_l_r(Sep,Act,Est,YD,L,R):- atomic_list_concat([A,B],Act,R),!,
+  mk_some_namer(A,Act,Est,B,YR), atomic_list_concat([L,Est,Sep,YR],YD).
+
+mk_some_namer(A,Act,Est,B,YR):- atomic_list_concat([A,Act,Est,B],YR).
+% mk_some_namer(A,Act,Est,B,YR):- atomic_list_concat([A,Act,B,Est],YR).
+
+mk_some_name_v_a(Act,XD,Est,YD):- atomic_list_concat([A,EstB],Act,YD),!,
+  atomic_list_concat([B1,B2|BN],Est,EstB),
+  atomic_list_concat([A,Act,B1,B2|BN],'',XD).
+mk_some_name_v_a(Act,XD,Est,YD):- type_sep(Sep),atomic_list_concat([L,R],Sep,YD),!,mk_some_name_v_a_l_r(Sep,Act,Est,XD,L,R).
+
+mk_some_name_v_a_l_r(Sep,Act,Est,XD,L,R):- atomic_list_concat([A,B],Act,L),
+  atomic_list_concat([AA,BB],Est,B),
+  maybe_chop(R,Est,RR),
+  atomic_list_concat([A,Act,AA,BB,Sep,RR],XD).
+mk_some_name_v_a_l_r(Sep,Act,Est,XD,L,R):- atomic_list_concat([A,B],Act,R),
+  atomic_list_concat([AA,BB],Est,B),
+  maybe_chop(L,Est,LL),
+  atomic_list_concat([LL,Sep,A,Act,AA,BB],XD).
+  
+maybe_chop(L,Est,LL):- atom_concat(LL,Est,L),!.
+maybe_chop(L,_,L).
+
+
+mk_some_name(_Act,XD,_Est,YD):- (compound(XD);compound(YD)),!,fail.
+mk_some_name(Act,XD,'',YD):-!,XD=YD,some_name_one(Act,XD).
+mk_some_name(Act,XD,Est,YD):- atom(XD),var(YD),!,mk_some_name_a_v(Act,XD,Est,YD).
+mk_some_name(Act,XD,Est,YD):- var(XD),atom(YD),!,mk_some_name_v_a(Act,XD,Est,YD).
+mk_some_name(Act,XD,Est,YD):- atom(XD),atom(YD),!,
+  atomic_list_concat([A,EstB],Act,YD),atomic_list_concat([B1,B2|BN],Est,EstB),!,
+  atomic_list_concat([A,Act,B1,B2|BN],'',XD).
+mk_some_name(Act,XD,Est,YD):- some_name2(Act,XD,Est,YD).
+/*
+some_name1(Act,XD,Est,YD):- atom(XD),atom(YD),!,some_name2(Act,X,Est,Y),atomic_list_concat([A,B|Rest],X,XD),atomic_list_concat([A,B|Rest],Y,YD),!.
+some_name1(Act,XD,Est,YD):- atom(YD),!,once((some_name2(Act,X,Est,Y),atomic_list_concat([A,B|Rest],Y,YD),atomic_list_concat([A,B|Rest],X,XD))).
+some_name1(Act,XD,Est,YD):- atom(XD),!,once((some_name2(Act,X,Est,Y),atomic_list_concat([A,B|Rest],X,XD),atomic_list_concat([A,B|Rest],Y,YD))).
+some_name1(Act,XD,Est,YD):- some_name2(Act,XD,Est,YD).
+*/
+some_name2(Act,X,Est,Y):- atom_concat(Act,Est,ActEst), en_gen(any,N),some_name4(N,Act,ActEst,X,Est,Y).
+
+some_name4(N,Act,ActEst,X,Est,Y):- atom_concat(Act,N,X),
+  (atom_concat(X,Est,Y);(N\=='',atom_concat(ActEst,N,Y));(nonvar(Y),Est\=='',atom_concat(Est,N,Y))).
+
+type_sep('.').
+type_sep('$').
+type_sep('_').
+%en_gen(any,'*').
+en_gen(any,Sep):-type_sep(Sep).
+en_gen(any,N):- between(1,4,N).
 
 adj_itr(X, Y):- some_of_name('attrib',X,'',Y).
 adj_itr(X, Y):- some_of_name('type',X,'ish',Y).
