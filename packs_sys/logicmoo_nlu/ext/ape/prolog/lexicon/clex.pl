@@ -18,34 +18,6 @@
 		set_clex_switch/1  % +Switch
 	]).
 :- format(user_error,"Renaming CLEX interface module from 'clex' to 'clex_ape' ",[]).
-%:- '$set_source_module'(clex_ape).
-adj_itr(Adj_itr,Itr):-clex:adj_itr(Adj_itr,Itr).
-adj_itr_comp(Adj_itr_comp,Comp):-clex:adj_itr_comp(Adj_itr_comp,Comp).
-adj_itr_sup(Adj_itr_sup,Sup):-clex:adj_itr_sup(Adj_itr_sup,Sup).
-adj_tr(Adj_tr1,Adj_tr,Tr):-clex:adj_tr(Adj_tr1,Adj_tr,Tr).
-adj_tr_comp(Adj_tr_comp1,Adj_tr_comp,Comp):-clex:adj_tr_comp(Adj_tr_comp1,Adj_tr_comp,Comp).
-adj_tr_sup(Adj_tr_sup1,Adj_tr_sup,Sup):-clex:adj_tr_sup(Adj_tr_sup1,Adj_tr_sup,Sup).
-adv(Adv,Adv1):-clex:adv(Adv,Adv1).
-adv_comp(Adv_comp,Comp):-clex:adv_comp(Adv_comp,Comp).
-adv_sup(Adv_sup,Sup):-clex:adv_sup(Adv_sup,Sup).
-dv_finsg(Dv_finsg1,Dv_finsg,Finsg):-clex:dv_finsg(Dv_finsg1,Dv_finsg,Finsg).
-dv_infpl(Dv_infpl1,Dv_infpl,Infpl):-clex:dv_infpl(Dv_infpl1,Dv_infpl,Infpl).
-dv_pp(Dv_pp1,Dv_pp,Pp):-clex:dv_pp(Dv_pp1,Dv_pp,Pp).
-iv_finsg(Iv_finsg,Finsg):-clex:iv_finsg(Iv_finsg,Finsg).
-iv_infpl(Iv_infpl,Infpl):-clex:iv_infpl(Iv_infpl,Infpl).
-mn_pl(Mn_pl,Pl):-clex:mn_pl(Mn_pl,Pl).
-mn_sg(Mn_sg,Sg):-clex:mn_sg(Mn_sg,Sg).
-noun_mass(Noun_mass1,Noun_mass,Mass):-clex:noun_mass(Noun_mass1,Noun_mass,Mass).
-noun_pl(Noun_pl1,Noun_pl,Pl):-clex:noun_pl(Noun_pl1,Noun_pl,Pl).
-noun_sg(Noun_sg1,Noun_sg,Sg):-clex:noun_sg(Noun_sg1,Noun_sg,Sg).
-pn_pl(Pn_pl1,Pn_pl,Pl):-clex:pn_pl(Pn_pl1,Pn_pl,Pl).
-pn_sg(Pn_sg1,Pn_sg,Sg):-clex:pn_sg(Pn_sg1,Pn_sg,Sg).
-pndef_pl(Pndef_pl1,Pndef_pl,Pl):-clex:pndef_pl(Pndef_pl1,Pndef_pl,Pl).
-pndef_sg(Pndef_sg1,Pndef_sg,Sg):-clex:pndef_sg(Pndef_sg1,Pndef_sg,Sg).
-prep(Prep,Prep1):-clex:prep(Prep,Prep1).
-tv_finsg(Tv_finsg,Finsg):-clex:tv_finsg(Tv_finsg,Finsg).
-tv_infpl(Tv_infpl,Infpl):-clex:tv_infpl(Tv_infpl,Infpl).
-tv_pp(Tv_pp,Pp):-clex:tv_pp(Tv_pp,Pp).
 
 :- else.
 :- module(clex, [
@@ -189,13 +161,13 @@ alc_jy(A,Act,Est,B,YR):- alc_j([A,Act,Est,B],YR).
 x_good(Sep,X):-atom_chars(X,[C|_]), (Sep==C ; \+ char_type(C,alpha)),!.
 x_good(X):- atom_chars(X,[C|_]),  \+ char_type(C,alpha),!.
 
-learned_pos(Act,X,Est,Y):- quietly(some_names_two(Act,X,Est,Y)),!.
+learned_pos(Act,X,Est,Y):- fail, quietly(some_names_two(Act,X,Est,Y)),!.
 % clex:learned_pos('action',X,'', 'eating.action').
 % clex:learned_pos('action',X,'', 'eating.action5').
 % clex:learned_pos('action',X,'', 'action5.eating').
 % clex:learned_pos('action',X,'', 'action.eating').
 % clex:learned_pos('action',X,'', 'actiona.eating'). FALSE
-learned_as_name(Act,XD):- quietly(some_name1(Act,XD)),!.
+learned_as_name(Act,XD):- fail, quietly(some_name1(Act,XD)),!.
 some_name1(_, XD):- compound(XD),!,fail.
 some_name1(Act,XD):- var(XD),!,en_gen(any,N),atom_concat(Act,N,XD).
 some_name1(Act,XD):- some_sep1(Sep),alc_s([L,R],Sep,XD),!,some_name1_l_r(Sep,Act,L,R).
@@ -312,4 +284,32 @@ pn_defpl(Y, X, Type):-  some_of_type1(Type,Agent),learned_pos(Agent,X,'s',Y).
 
 
 
+:- '$set_source_module'(clex_ape).
+adj_itr(Adj_itr,Itr):-clex:adj_itr(Adj_itr,Itr).
+adj_itr_comp(Adj_itr_comp,Comp):-clex:adj_itr_comp(Adj_itr_comp,Comp).
+adj_itr_sup(Adj_itr_sup,Sup):-clex:adj_itr_sup(Adj_itr_sup,Sup).
+adj_tr(Adj_tr1,Adj_tr,Tr):-clex:adj_tr(Adj_tr1,Adj_tr,Tr).
+adj_tr_comp(Adj_tr_comp1,Adj_tr_comp,Comp):-clex:adj_tr_comp(Adj_tr_comp1,Adj_tr_comp,Comp).
+adj_tr_sup(Adj_tr_sup1,Adj_tr_sup,Sup):-clex:adj_tr_sup(Adj_tr_sup1,Adj_tr_sup,Sup).
+adv(Adv,Adv1):-clex:adv(Adv,Adv1).
+adv_comp(Adv_comp,Comp):-clex:adv_comp(Adv_comp,Comp).
+adv_sup(Adv_sup,Sup):-clex:adv_sup(Adv_sup,Sup).
+dv_finsg(Dv_finsg1,Dv_finsg,Finsg):-clex:dv_finsg(Dv_finsg1,Dv_finsg,Finsg).
+dv_infpl(Dv_infpl1,Dv_infpl,Infpl):-clex:dv_infpl(Dv_infpl1,Dv_infpl,Infpl).
+dv_pp(Dv_pp1,Dv_pp,Pp):-clex:dv_pp(Dv_pp1,Dv_pp,Pp).
+iv_finsg(Iv_finsg,Finsg):-clex:iv_finsg(Iv_finsg,Finsg).
+iv_infpl(Iv_infpl,Infpl):-clex:iv_infpl(Iv_infpl,Infpl).
+mn_pl(Mn_pl,Pl):-clex:mn_pl(Mn_pl,Pl).
+mn_sg(Mn_sg,Sg):-clex:mn_sg(Mn_sg,Sg).
+noun_mass(Noun_mass1,Noun_mass,Mass):-clex:noun_mass(Noun_mass1,Noun_mass,Mass).
+noun_pl(Noun_pl1,Noun_pl,Pl):-clex:noun_pl(Noun_pl1,Noun_pl,Pl).
+noun_sg(Noun_sg1,Noun_sg,Sg):-clex:noun_sg(Noun_sg1,Noun_sg,Sg).
+pn_pl(Pn_pl1,Pn_pl,Pl):-clex:pn_pl(Pn_pl1,Pn_pl,Pl).
+pn_sg(Pn_sg1,Pn_sg,Sg):-clex:pn_sg(Pn_sg1,Pn_sg,Sg).
+pndef_pl(Pndef_pl1,Pndef_pl,Pl):-clex:pndef_pl(Pndef_pl1,Pndef_pl,Pl).
+pndef_sg(Pndef_sg1,Pndef_sg,Sg):-clex:pndef_sg(Pndef_sg1,Pndef_sg,Sg).
+prep(Prep,Prep1):-clex:prep(Prep,Prep1).
+tv_finsg(Tv_finsg,Finsg):-clex:tv_finsg(Tv_finsg,Finsg).
+tv_infpl(Tv_infpl,Infpl):-clex:tv_infpl(Tv_infpl,Infpl).
+tv_pp(Tv_pp,Pp):-clex:tv_pp(Tv_pp,Pp).
 

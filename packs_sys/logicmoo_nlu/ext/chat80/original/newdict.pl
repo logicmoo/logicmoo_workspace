@@ -232,7 +232,6 @@ try_only_lex(Which,G):- get_lex_call(Which,G,CALL),
     ; (show_tries_except(_,true,CopyG),!, fail)).
 
 
-
 %correct_root(do(MODAL),do(MODAL)).
 correct_root(R,R).
 
@@ -361,10 +360,9 @@ verb_type_db(chat80,govern,main+tv).
 
 adj_lex(African,restr):- agentitive_trans(_,_,African).
 adj_lex( Baltic,restr):- agentitive_symmetric_type(_,Baltic).
-%adj_lex(African,Restr):-  adj_db(chat80,African,Restr).
-%adj_lex(African,Restr):-  adj_db(talkdb,African,Restr).
-%adj_lex(African,Restr):-  adj_db(clex,African,Restr).
-adj_lex(African,Restr):-  try_lex_order([chat80,clex,talkdb],adj_db(African,Restr)).
+adj_lex(African,Restr):-  adj_db(chat80,African,Restr).
+adj_lex(African,Restr):-  adj_db(talkdb,African,Restr).
+adj_lex(African,Restr):-  adj_db(clex,African,Restr).
 
 %adj_db(chat80,american,restr).
 %adj_db(chat80,asian,restr).
@@ -382,7 +380,7 @@ adj_db(chat80,average,restr).
 adj_db(chat80,maximum,restr).
 adj_db(chat80,minimum,restr).
 adj_db(chat80,total,restr).
-adj_db(clex,Y,RestrOrQuantV):- show_success(always,adj_db_clex(_,Y,RestrOrQuantV)).
+adj_db(clex,Y,RestrOrQuantV):- fail, show_success(always,adj_db_clex(_,Y,RestrOrQuantV)).
 
 %adj_db_clex(X,Y,quantV):- clex:adj_itr(X,Y).
 adj_db_clex(X,Y,restr):- clex:adj_itr(X,Y), \+ clex:adv(X,_).
@@ -484,7 +482,6 @@ comp_adj_db(chat80,smaller,small).
 
 
 sup_adj_lex(Smallest,Small):- try_lex(sup_adj_db(Smallest,Small)).
-
 sup_adj_db(talkdb,Smallest,Small):- talkdb:talk_db(superl,Small,Smallest).
 sup_adj_db(talkdb,Smallest,Small):- sup_adj_db(clex,Smallest,Small).
 sup_adj_db(clex,Smallest,Small):- clex:adj_itr_sup(Smallest, Small).

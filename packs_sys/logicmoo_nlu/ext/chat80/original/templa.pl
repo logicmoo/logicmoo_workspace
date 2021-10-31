@@ -134,7 +134,7 @@ property_LF(Area,     measure&Area,    X,Spatial&_,Y, measure_pred(Spatial,Area,
 
 type_measure_pred(_AnyObjectType,MeasureType,Area,countV):- MeasureType\==size, MeasureType=Area, clex_attribute(Area).
 
-clex_attribute(Area):- freeze80(Area,clex:learned_as_name('attrib',Area)).
+clex_attribute(Area):-  freeze80(Area,clex:learned_as_name('attrib',Area)).
 
 synonymous_thing(nation,country).
 
@@ -187,6 +187,7 @@ thing_LF_access(Noun,Type2,X,P,Slots,_):-
 
 btype_conversion(_,_).
 type_conversion(Type1,Type2):- !, Type1=Type2.
+
 
 
 /* Verbs */
@@ -258,7 +259,6 @@ verb_form_db(talkdb,  Write,Write,      inf,_):-   talkdb_talk_db(_Transitive,Wr
 verb_form_db(talkdb,  Wrote,Write,past+fin,_):-    talkdb_talk_db(_Transitive,Write,_Writes, Wrote,_Writing,_Written).
 
 verb_form_db(talkdb,A,B,C,D):- verb_form_db(clex,A,B,C,D).
-
 
 :- import(clex_iface:clex_verb/4).
 clex_verb80(Looked,Look,VerbType,Form):- clex_iface:clex_verb(Looked,Look,VerbType,Form).
@@ -502,6 +502,7 @@ node_pairs_direct([_|L],X1,X2) :- node_pairs_direct(L,X1,X2).
 node_pairs_indirect(L,C2,C1):- 
   node_pairs_direct(L,C2,CM),
   (CM=C1;node_pairs_indirect(L,CM,C1)).
+
 
 
 

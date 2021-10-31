@@ -568,48 +568,52 @@ gp_africa(Result):-
 
 :- add_history1([test_ext]).
 
-:- if(\+ prolog_load_context(reloading, true)).
-:- forall(chat_80_ed(_,B,_),ignore(time_once(add_c81(B)))).
-%:- forall(training_data(Sent,RHS),learn_full(Type,Sent,RHS)).
+retrain:-
+  % loads 50 phrases for CAHT80
+  forall(chat_80_ed(_,B,_),ignore(time_once(add_c81(B)))),
+  % loads 4000 phrases from APE
+%  forall(training_data(Sent,RHS),learn_full(Type,Sent,RHS)),
 
-:- add_c81("how many rivers are in poland ?").
+  add_c81("how many rivers are in poland ?"),
 
-:- add_c80("iran is bordered by iraq?").
-:- add_c81("what city in africa has the greatest population?").
-:- add_c81("do oceans border any country?").
-:- add_c81("is the population of china greater than india's population?").
-:- add_c80("what is the total area of nations that can border iraq?").
-:- add_c81("how many countries does the danube flow through ?").
-:- add_c81("the danube flows through india?").
-:- add_c81("the danube flows to a seamass?").
-:- add_c81("where does the danube rise?").
-:- add_c81("where does the danube drain?").
-:- add_c80("what is the total area of nations that should border iraq?").
-:- add_c80("what is the total area of nations that are bordered by iraq?").
-:- add_c81("what ocean does not border any country ?").
-:- add_history1(test_chat80).
-:- add_c81("what oceans should border any country?").
-:- add_c81("is china a country?").
-:- add_c80("are china and japan a country?").
-:- add_c80("is china and japan a country?").
-:- add_c80("are china and japan countries?").
-:- add_c81("china is a country?").
-:- add_c80("does John like cars?").
-:- add_c80("does John drink water?").
-:- add_c80("does afganistan border china?").
-:- add_c80("Which rivers are not in asia?").
-:- endif.
+  add_c80("iran is bordered by iraq?"),
+  add_c81("what city in africa has the greatest population?"),
+  add_c81("do oceans border any country?"),
+  add_c81("is the population of china greater than india's population?"),
+  add_c80("what is the total area of nations that can border iraq?"),
+  add_c81("how many countries does the danube flow through ?"),
+  add_c81("the danube flows through india?"),
+  add_c81("the danube flows to a seamass?"),
+  add_c81("where does the danube rise?"),
+  add_c81("where does the danube drain?"),
+  add_c80("what is the total area of nations that should border iraq?"),
+  add_c80("what is the total area of nations that are bordered by iraq?"),
+  add_c81("what ocean does not border any country ?"),
+  add_history1(test_chat80),
+  add_c81("what oceans should border any country?"),
+  add_c81("is china a country?"),
+  add_c80("are china and japan a country?"),
+  add_c80("is china and japan a country?"),
+  add_c80("are china and japan countries?"),
+  add_c81("china is a country?"),
+  add_c80("does John like cars?"),
+  add_c80("does John drink water?"),
+  add_c80("does afganistan border china?"),
+  add_c80("Which rivers are not in asia?"),
+  retrain_2.
 
-:- add_c81("If there is an animal X then X barks and it is false that there is a cat.").
-:- add_c81("If there is an animal X then X barks and it is false that X is a cat.").
-:- add_c81("If there is a dog X then X barks and it is false that there is a cat.").
-:- add_c81("If there is a dog then the dog barks and it is false that there is a cat.").
-:- add_c81("It is false that a man who waits or who eats runs or sleeps ,and barks.").
-:- add_c81("The man who talks or who walks or who sleeps eats.").
+retrain_2:-
+  add_c81("If there is an animal X then X barks and it is false that there is a cat."),
+  add_c81("If there is an animal X then X barks and it is false that X is a cat."),
+  add_c81("If there is a dog X then X barks and it is false that there is a cat."),
+  add_c81("If there is a dog then the dog barks and it is false that there is a cat."),
+  add_c81("It is false that a man who waits or who eats runs or sleeps ,and barks."),
+  add_c81("The man who talks or who walks or who sleeps eats."),
+  add_history1((ape_test(_,X),input_to_middle(X))).
 
 :- add_history1((forall(test_e2c(X,_),dmsg(c80(X))))).
-:- add_history1((ape_test(_,X),input_to_middle(X))).
-:- add_history1([test_ext]).
+:- add_history1(reconsult(lang_model)).
+
 %:- add_c80("does joe eat cake?").
 
 
@@ -626,6 +630,8 @@ gp_africa(Result):-
 %~          [ arg(dir,np(3+sg,nameOf(japan),[]))],
 %~          []))
 
+:- if(\+ prolog_load_context(reloading, true)).
+:- endif.
 
 :- fixup_exports.
 
@@ -638,4 +644,4 @@ gp_africa(Result):-
 %:- forall(ti(country,Word),learn_penn_tag('NN',Word)).
 %:- listing(wt_replacement/4).
 
-:- test_chat80.
+:- add_history1(test_chat80).

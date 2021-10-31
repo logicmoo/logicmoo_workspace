@@ -356,12 +356,9 @@ eng_to_logic(U,S):- sentence80(E,U,[],[],[]), sent_to_prelogic(E,S).
 
 qualifiedBy(_,_,_).
 
-into_lexical_segs80(Sentence,U):- words_of(Sentence,U),!.
-%into_lexical_segs80(Sentence,U):- into_lexical_segs(Sentence,U),!.
-%into_lexical_segs80(Sent,U):- notrace(into_chat80_segs0(Sent,U)),!.
-%into_lexical_segs80(Sent,  WordsA):- enotrace((into_text80( Sent,  Words),into_combines(Words,WordsA))),!.
+into_lexical_segs(Sent,U):- notrace(into_chat80_segs0(Sent,U)),!.
+%into_lexical_segs(Sent,  WordsA):- enotrace((into_text80( Sent,  Words),into_combines(Words,WordsA))),!.
 
-into_chat80_segs0(Sent,Sent):- is_list(Sent),maplist(atom,Sent),!.
 into_chat80_segs0(Sent,Sent):- is_list(Sent),maplist(parser_penn_trees:is_word_or_span,Sent),!.
 into_chat80_segs0(Sent,UO):-  
  maplist(must_or_rtrace,
@@ -376,8 +373,8 @@ into_combines(Words,WordsO):- must_maplist(parser_tokenize:any_nb_to_atom, Words
 w2_to_t(w(Txt,_),Txt):-!.
 w2_to_t(Txt,Txt).
 
-/*into_lexical_segs80(Sentence, WordsA):-
-   into_lexical_segs80(Sentence, Words),
+/*into_lexical_segs(Sentence, WordsA):-
+   into_lexical_segs(Sentence, Words),
    must_maplist(any_to_atom, Words, WordsA), !.
 */
 
@@ -398,13 +395,13 @@ from_wordlist_atoms( Sentence,  Words):- enotrace((must_maplist(w2_to_t,Sentence
 %into_chat80_segs_pt2(Sentence,U):- check_words(Sentence,U).
 :- export(text_to_chat80_tree/2).
 text_to_chat80_tree(Sentence,Tree):-
-  into_lexical_segs80(Sentence,U),
+  into_lexical_segs(Sentence,U),
   deepen_pos(sentence80(Tree,U,[],[],[])).
 
 process4a(How,Sentence,U,S1,Times) :- 
   Times = [ParseTime,SemTime,TimePlan,_TimeAns,_TotalTime],
   quietly(( runtime(StartSeg),
-   mpred_test_mok(into_lexical_segs80(Sentence,U)),
+   mpred_test_mok(into_lexical_segs(Sentence,U)),
    runtime(StopSeg),
    SegTime is StopSeg - StartSeg,
    nop(report(How,U,'segs',SegTime,tree)),
