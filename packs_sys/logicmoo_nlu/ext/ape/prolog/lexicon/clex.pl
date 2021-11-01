@@ -219,14 +219,16 @@ some_names2(Act,X,Est,Y):- atom_concat(Act,Est,ActEst), en_gen(any,N),some_names
 some_names4(N,Act,ActEst,X,Est,Y):- atom_concat(Act,N,X),
   (atom_concat(X,Est,Y);(N\=='',atom_concat(ActEst,N,Y));(nonvar(Y),Est\=='',atom_concat(Est,N,Y))).
 
-some_sep1('$').
-some_sep1('-').
-some_sep1('.').
-some_sep1('_').
+%some_sep1('$').
+some_sep1('000').
+%some_sep1('-').
+%some_sep1('.').
+%some_sep1('_').
 %en_gen(any,'*').
 en_gen(any,Sep):-some_sep1(Sep).
 en_gen(any,N):- between(1,4,N).
 
+adj_itr(Y, X):- learned_as_type('adjective',X,'',Y).
 adj_itr(X, Y):- learned_as_type('attrib',X,'',Y).
 adj_itr(X, Y):- learned_as_type('type',X,'ish',Y).
 
@@ -237,6 +239,7 @@ adj_itr_sup(Y, X):- learned_as_type('attrib',X,'est',Y).
 adj_itr_sup(Y, X):- learned_as_type('type',X,'ishest',Y).
 
 adv(Y, X):- learned_as_type('attrib',X,'',Y).
+adv(Y, X):- learned_as_type('adverb',X,'',Y).
 adv(Y, X):- learned_as_type('attrib',X,'ly',Y).
 adv(Y, X):- learned_as_type('type',X,'ishly',Y).
 adv(Y, X):- learned_as_type('type',X,'ly',Y).
@@ -282,8 +285,9 @@ some_of_type(human,'group').
 some_of_type(neutr,'action').
 some_of_type(human,'type').
 some_of_type(neutr,'type').
+some_of_type(neutr,'group').
+some_of_type(neutr,'actioner'). % non base-form?
 some_of_type1(human,'agent').
-some_of_type1(neutr,'actioner'). % non base-form?
 some_of_type1(neutr,'object').
 
 pn_sg(Y, X, Type):-  some_of_type1(Type,Agent),learned_as_type(Agent,X,'',Y).

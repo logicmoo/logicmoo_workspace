@@ -132,13 +132,121 @@ is_penn_pos('.'). % ! . ?
 
 
 
-check_tree_quality(Srch,X,G1,G2,Total):-findall(Srch,(sub_term(Srch,X),G1,G2),Sols),length(Sols,Total).
+check_tree_quality(Srch,X,G1,G2,Total):- findall(Srch,(sub_term(Srch,X),G1,G2),Sols),length(Sols,Total).
 
-tree_quality(X,cmp(vs(G1),ps(G2),ats(G3),as(G4))):- 
-  check_tree_quality(Srch,X,atom(Srch),once(atom_concat('VB',_,Srch);atom_concat('E',_,Srch);atom_concat('AUX',_,Srch)),G1),
+count_sublists(P,0):- ( \+ compound(P) ; \+ is_list(P) ),!.
+count_sublists([A,T],Total):- atomic(A),!,count_sublists(T,Total).
+count_sublists([H],Total):-!, count_sublists(H,Total).
+count_sublists([A|T],Total):- atom(A),!,count_sublists(T,Total).
+%count_sublists([A,B,C,_,_|T],Total):- atom(A),!,maplist(count_sublists,[B,C|T],L),sumlist([(1)|L],Total).
+count_sublists([H|T],Total):- length([H|T],Total),!.
+/*
+count_sublists([H|T],Total):-
+  count_sublists(H,HT),
+  maplist(count_sublists,T,LT),
+  sumlist([1,HT|LT],Total).
+*/
+
+prefer(X,Y,R):- prefer_cvt(X,XX), prefer_cvt(Y,YY), prefer0(XX,YY,R),!. 
+prefer(X,_,R):- prefer_cvt(X,R).
+prefer0(X,Y,Y):- prefer(Y,X),!.
+prefer0(X,Y,X):- prefer(X,Y),!.
+prefer0(X,Y,R):- X @> Y, atomic_list_concat([X,'_',Y],R).
+prefer0(X,Y,R):- atomic_list_concat([Y,'_',X],R).
+
+prefer_cvt(Y,R):- atom_concat(R,'-w',Y).
+prefer_cvt(Y,R):- upcase_atom(Y,R).
+
+prefer(X,Y):- atom_contains(X,Y).
+prefer('NN','N').
+prefer('NN','S').
+prefer('IN','NN').
+prefer('V','NNS'). 
+prefer('POS',_).
+prefer(_,'NP').
+prefer(_,'VP').
+prefer(_,'POS'):-!,fail.
+prefer(_,'IN').
+prefer(_,'N').
+prefer(_,'S').
+prefer('A-C',_).
+prefer(_,'PP').
+prefer(_,'ADVP'):-!,fail.
+prefer(_,'JJS'):-!,fail.
+prefer(_,'AUX'):-!,fail.
+%prefer('WDT',_).
+prefer('RBS',_).
+prefer('VBD',_).
+prefer('VBN',_).
+prefer('VBG',_).
+prefer('VBZ',_).
+prefer('DT',_).
+prefer('MD',_).
+prefer('R',_).
+%prefer('NNP','V-D').
+prefer(A, B):- atom_length(A,AL),atom_length(B,BL),AL>BL.
+
+%prefer(A, B):- B @< A.
+debug_nop(_).
+
+tree_quality(X,cmp(vs(G1),list_depth(D),ps(G2),ats(G3),as(G4))):- 
+  count_sublists(X,D),
+  check_tree_quality(Srch,X,atom(Srch),once(atom_concat('VP',_,Srch);atom_concat('V-w',_,Srch);atom_concat('E',_,Srch);atom_concat('AUX',_,Srch)),GP),
+  check_tree_quality(Srch,X,true,once(Srch='S-w'),GN),
+  G1 is GP-GN,
   check_tree_quality(Srch,X,atom(Srch),once(atom_concat('NP',_,Srch);atom_concat('VP',_,Srch)),G2),
   check_tree_quality(Srch,X,true,once(atom(Srch)),G3),
   check_tree_quality(Srch,X,true,once(atomic(Srch)),G4),!.
+
+best_new_tree(Text,Tree):-
+  findall(O,(one_syntax_tree(Text,O,Named),debug_nop(print_tree_nl(Named=O))),ResL),
+  must(text_to_best_tree_real_old(Text,T)),!,
+  must(replace_pos_tree(ResL,T,Tree)).
+best_old_tree(Text,Tree):-
+  findall(O,(one_syntax_tree(Text,O,Named),debug_nop(print_tree_nl(Named=O))),ResL),  
+  must(pick_tree(ResL,T)),
+  must(replace_pos_tree(ResL,T,Tree)).
+best_new_tree(Text):- any_to_str(Text,S),dmsg(best_new_tree(S)), 
+  best_old_tree(S,O),!,print_tree_nl(old=O),
+  best_new_tree(S,N),!,print_tree_nl(new=N).
+best_new_tree:- best_new_tree("A man who is maried paints.").
+replace_pos_tree([],Tree,Tree):-!.
+replace_pos_tree([R|ResL],Tree,NewTree):-
+  tree_2_w2(R,RW2s),
+  replace_pos(Tree,MidTree,RW2s,_),
+  debug_nop((
+  tree_2_w2(Tree,TW2s),
+  tree_2_w2(MidTree,RTW2s),
+  maplist(writeln,[RW2s,TW2s,RTW2s]),nl)),
+  replace_pos_tree(ResL,MidTree,NewTree),!.
+
+replace_pos([Pos,Word],[NewPos,Word],Before,After):- 
+  atom(Pos),downcase_word(Word,W),select(w(W,[pos(OtherPos)]),Before,After),prefer(OtherPos,Pos,NewPos),!.
+replace_pos([H|T],[HH|TT],I,O):- !, replace_pos(H,HH,I,M), replace_pos(T,TT,M,O).
+replace_pos(A,A,WordL,WordL):-!.
+
+downcase_word(Word,Word):- number(Word),!.
+downcase_word(Word,W):- atom(Word),!,downcase_atom(Word,W).
+
+tree_2_w2([Pos,Word],[w(W,[pos(Pos)])]):- atom(Pos),downcase_word(Word,W),!.
+%tree_2_w2([Word],[w(Word,[])]):- atom(Word),!.
+tree_2_w2([],[]):-!.
+tree_2_w2([_],[]):-!.
+%tree_2_w2(Rest,W2s):- select([],Rest,Less),!,tree_2_w2(Less,W2s).
+tree_2_w2([_|Rest],W2s):- 
+  maplist(tree_2_w2,Rest,W2L),append(W2L,W2s).
+  
+   
+%one_syntax_tree(I,O,chat80):- text_to_chat80_tree(I,O).
+one_syntax_tree(I,O,lgp):- text_to_lgp_tree(I,O).
+one_syntax_tree(I,O,corenlp):- text_to_corenlp_tree(I,O).
+%one_syntax_tree(I,O,best):- text_to_best_tree(I,O).
+one_syntax_tree(I,O,charniak):- text_to_charniak_tree(I,O).
+%one_syntax_tree(I,O,ace):- text_to_ace_tree(I,O).
+%one_syntax_tree(I,O,ape):- text_to_ape_tree(I,O).
+
+pick_tree([T],T):-!.
+pick_tree([T1,T2|L],T):- pick_tree(T1,T2,Result,_Why,_Color),pick_tree([Result|L],T).
 
 pick_tree(XY,XY,XY,(==),white).
 pick_tree(XX,YY,XY,Why,Color):- tree_quality(XX,X),tree_quality(YY,Y),pick_tree_why(XX,X,YY,Y,XY,Why,Color).
@@ -165,7 +273,9 @@ text_to_best_tree(Text,Tree):- text_to_best_tree_real(Text,Tree),
   add_text_to_best_tree(tmp:cached_text_to_best_tree(Text,Tree)),!.
 
 
-text_to_best_tree_real(Text,Tree):- 
+text_to_best_tree_real(Text,Tree):- best_new_tree(Text,Tree), !.
+
+text_to_best_tree_real_old(Text,Tree):- 
  (callable(Tree) -> Format = Tree ; (Format = dont_format)),
   call(Format,'=================================\n',[]),
   call(Format,'Testing: ~w  \n',[Text]),

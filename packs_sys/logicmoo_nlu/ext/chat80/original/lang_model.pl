@@ -39,12 +39,13 @@
 
 % text_drs_eval(Evaluation, Id, Text, DRS, LHSs, Timestamp, Author, Comment).
 :- ensure_loaded(ape(tests/acetexts)).
-training_data(Text,DRS):-  parser_ape:text_drs_eval(_Evaluation, _Id, Text, DRS, _LHSs, _Timestamp, _Author, _Comment).
+training_data(Text,DRS):-  parser_ape:text_drs_eval(_Evaluation, _Id, Text, DRS, _LHSs, _Timestamp, _Author, _Comment), should_learn(DRS).
 :- dynamic(c80:lf_trained/3).
 add_c80(B):- any_to_str(B,S),add_history1(c80(S)).
 add_c81(B):- any_to_str(B,S),add_c80(S),!, ignore(learn_full(e2c,S)).
 add_c82(B):- any_to_str(B,S),add_c80(S),!, print_tree_nl(?-c81(S)).
 
+show_c80(B):- any_to_str(B,S),format(' %~~ ~q. ~n',[c80(S)]).
 
 
 is_pucnt80('.').
@@ -236,8 +237,11 @@ is_loading_file:- prolog_load_context(file,_), prolog_load_context(term,T), T\==
 
 c80(B):- is_loading_file, !, add_c80(B).
 c80(Text):- 
-  cls, make, 
-  tracing ~= on,  
+  %cls, 
+  make, 
+  tracing ~= on,
+  %s80,
+  show_c80(Text),
   any_to_input_layer(Text,S),!,
   add_c80(S), 
   c81(S).
@@ -366,13 +370,16 @@ replace_with_unlearned_words(Program,UU,U):-
 replace_with_unlearned_words(_Program,U,U).
 
 
-ok_replace_for(chat80,X):- !, \+ word80(X).
+ok_replace_for(chat80,X):- !, word80(X).
 ok_replace_for(_,_).
+
 may_replace(_Chat80,Word,_Tag,OWord):- \+ word81(OWord), \+ word81(Word).
 
+get_tag_and_word(E,Tag,Word):- is_list(E),E=[Tag,Word],is_word80(Word).
 
 replace_with_learned_words(Program,UU,U):- 
- sub_term(E,UU),is_list(E),E=[Tag,Word],is_word80(Word), ok_replace_for(Program,Word),
+ sub_term(E,UU),get_tag_and_word(E,Tag,Word), 
+  ok_replace_for(Program,Word),
  \+ wt_replacement(Program,_,Word,Tag),
   do_wt_replacement(Program,UU,U,Word,Tag),!.
 replace_with_learned_words(_Program,U,U).
@@ -453,8 +460,6 @@ learn_middle(Type,B):- any_to_input_layer(B,I),
   parts_of(Type,I,II),
   findall(O,(input_to_middle(I,O,Named),print_tree_nl(Named=O)),ResL), 
   learn_equivalencies(Type,[II|ResL]).
-
-
 
 
 input_to_middle(I):-
@@ -615,9 +620,17 @@ retrain_2:-
   add_c81("The man who talks or who walks or who sleeps eats."),
   add_history1((ape_test(_,X),input_to_middle(X))).
 
-:- add_history1((forall(test_e2c(X,_),dmsg(c80(X))))).
+:- add_history1(s81).
 :- add_history1(reconsult(lang_model)).
 
+
+s81:-s81(show_c80).
+s81(P):-
+  forall(ape_test(_,X),call(P,X)),
+  %forall(training_data(X,_),call(P,X)),
+  forall(test_e2c(X,_),call(P,X)),
+  forall(chat_80_ed(_,X,_),call(P,X)).
+  
 %:- add_c80("does joe eat cake?").
 
 
@@ -635,12 +648,13 @@ retrain_2:-
 %~          []))
 
 :- if(\+ prolog_load_context(reloading, true)).
+:- s81.
 :- endif.
 
 :- fixup_exports.
 
 :- if(\+ prolog_load_context(reloading, true)).
-:- initialization(prolog).
+:- initialization(prolog,main).
 :- endif.
 :- retractall(wt_replacement(chat80,_,country,_)).
 :- retractall(wt_replacement(chat80,_,border,_)).
@@ -649,3 +663,5 @@ retrain_2:-
 %:- listing(wt_replacement/4).
 
 :- add_history1(test_chat80).
+
+%:- test_chat80.

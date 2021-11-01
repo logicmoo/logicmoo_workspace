@@ -40,7 +40,7 @@ theTextL(W1,_CYCPOS,WHY) ---> theTextL80(W1),{call(WHY)}.
 % apw2(Cmp):- atom(Cmp),!,add_prev_w2(w(Cmp,unk)),!.
 apw2(Cmp):- nop(assertion(nonvar(Cmp))),parser_e2c:add_prev_w2(Cmp).
 
-w001(Cmp)---> (consume_spans_hack;[]), next_as_word,!,[Cmp],{ignore(apw2(Cmp))},!,(consume_spans_hack;[]).
+w001(Cmp)---> (consume_spans_hack;[]), next_as_word,!,[Cmp],{ignore(on_x_fail(apw2(Cmp)))},!,(consume_spans_hack;[]).
 
 % NEW theText80_W2(Text,L) ---> w001(Cmp),{compound(Cmp)->Cmp=w(Text,L);(atom(Cmp)-> (Text=Cmp,L=unk))}.
 theText80_W2(Text,L) ---> w001(Cmp),{compound(Cmp),!,Cmp=w(Text,L)}.
@@ -159,9 +159,9 @@ name_xg(Name) --->
    opt_the,
    name_lex_txt(Name).
 
-name_lex_txt(Name) ---> theText80(Name), {name_LF(Name),!}.
-name_lex_txt(Name) ---> theTextL80([W1,'_',W2]),{!,atomic(W1),atomic(W2),atomic_list_concat([W1,'_',W2],Name),name_LF(Name)}.
 name_lex_txt(Name) ---> theTextL80([W1,W2]),{atomic(W1),atomic(W2),atomic_list_concat([W1,'_',W2],Name),name_LF(Name)}.
+name_lex_txt(Name) ---> theTextL80([W1,'_',W2]),{!,atomic(W1),atomic(W2),atomic_list_concat([W1,'_',W2],Name),name_LF(Name)}.
+name_lex_txt(Name) ---> theText80(Name), {name_LF(Name),!}.
 
 int_art(X,pl,quantV(same,wh(X))) ---> {how_many_lex(HOWMANY)}, theTextL80(HOWMANY).
 int_art(X,Agmt,DX) --->

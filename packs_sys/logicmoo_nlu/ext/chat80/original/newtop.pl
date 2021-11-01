@@ -342,13 +342,13 @@ process5(How,Sentence,CorrectAnswer,Status,Times) :-
 	process4(How,Sentence,Answer,Times),
 	!,
 	check_answer(Sentence,Answer,CorrectAnswer,Status),!.
-process5(_How,_,_,failed,[0,0,0,0,0]):- once(dumpST_ERR),!.
+process5(_How,_,_,failed,[0,0,0,0,0]):- fail,once(dumpST_ERR),!.
 
 process(How,Sentence) :-
   process4(How,Sentence,Answer,_Times), Answer\==failed, !.
 process(normal,U) :-
    nl, nl,
-   write('I don''t understand! '+U), nl,fail.
+   write('I don''t understand! '+U), nl,on_x_fail(dumpST_ERR).
 process(_,_).
 
 eng_to_logic(U,S):- sentence80(E,U,[],[],[]), sent_to_prelogic(E,S).
