@@ -26,7 +26,7 @@
 % parse_descriptor_proto_dump.pl and extracting the contents. See also
 % descriptor_proto.pl
 
-:- use_module(protoc_gen_prolog_pb/google/protobuf/compiler/plugin_pb).
+:- use_module(gen_pb/google/protobuf/compiler/plugin_pb).
 
 main(Argv) :-
     with_output_to(string(Content), main2(Argv, FileName)),

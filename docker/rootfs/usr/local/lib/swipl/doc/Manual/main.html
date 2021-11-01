@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.5.0 Reference Manual: Section A.23</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.5.1 Reference Manual: Section A.23</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -314,6 +314,10 @@ options use <code>_</code> as <i>word separator</i>, user options may
 use either <code>_</code> or <code>-</code>. <var>Type</var> is one of:
 
 <dl class="latex">
+<dt><var><var>A</var></var> <strong><code>|</code></strong> <var><var>B</var></var></dt>
+<dd class="defbody">
+Disjunctive type.
+</dd>
 <dt><strong>boolean</strong>(<var>Default</var>)</dt>
 <dt><strong>boolean</strong></dt>
 <dd class="defbody">
@@ -371,8 +375,14 @@ application handles this as standard input or output.
 </dd>
 <dt><strong>term</strong></dt>
 <dd class="defbody">
-Parse option value to a Prolog term. Variable names for the <i>last</i> 
-term processed are available using <a class="pred" href="consulting.html#var_property/2">var_property/2</a>.
+Parse option value to a Prolog term.
+</dd>
+<dt><strong>term</strong>(<var>+Options</var>)</dt>
+<dd class="defbody">
+As <code>term</code>, but passes <var>Options</var> to <a class="pred" href="string.html#term_string/3">term_string/3</a>. 
+If the option
+<code>variable_names(Bindings)</code> is given the option value is set 
+to the <i>pair</i> <code>Term-Bindings</code>.
 </dd>
 </dl>
 
@@ -389,7 +399,12 @@ name</i>. This produces the <code>FILE</code> in e.g. <code>-f FILE</code>.
 </dd>
 </dl>
 
-</dd>
+<p>By default, <code>-h</code>, <code>-?</code> and <code>--help</code> 
+are bound to help. If
+<code>opt_type(Opt, help, boolean)</code> is true for some <var>Opt</var>, 
+the default help binding and help message are disabled and the normal 
+user rules apply. In particular, the user should also provide a rule for
+<code>opt_help(help, String)</code>.</dd>
 <dt class="pubdef"><span class="pred-tag">[det]</span><a id="argv_options/4"><strong>argv_options</strong>(<var>:Argv, 
 -Positional, -Options, +ParseOptions</var>)</a></dt>
 <dd class="defbody">
@@ -402,7 +417,15 @@ empty list to <var>ParseOptions</var>. <var>ParseOptions</var>:
 <dl class="latex">
 <dt><strong>on_error</strong>(<var>+Goal</var>)</dt>
 <dd class="defbody">
-If <var>Goal</var> is <code>halt(Code)</code>, exit with Code.
+If <var>Goal</var> is <code>halt(Code)</code>, exit with Code. Other 
+goals are currently not supported.
+</dd>
+<dt><strong>options_after_arguments</strong>(<var>+Boolean</var>)</dt>
+<dd class="defbody">
+If <code>false</code> (default <code>true</code>), stop parsing after 
+the first positional argument, returning options that follow this 
+argument as positional arguments. E.g, <code>-x file -y</code> results 
+in positional arguments <code>[file, '-y']</code>
 </dd>
 </dl>
 
@@ -412,20 +435,34 @@ If <var>Goal</var> is <code>halt(Code)</code>, exit with Code.
 Use <a class="pred" href="printmsg.html#print_message/2">print_message/2</a> 
 to print a usage message at <var>Level</var>. To print the message as 
 plain text indefault color, use <code>debug</code>. Other meaningful 
-options are <code>informational</code> or <code>warning</code>.
+options are <code>informational</code> or <code>warning</code>. The help 
+page consists of four sections, two of which are optional:
 
-<p>The default initial usage line is as below, where <var>&lt;</var>command<var>&gt;</var> 
-is an as good as possible approximation for running the script.
+<p>
+<ol class="latex">
+<li>The <b>header</b> is created from <code>opt_help(help(header), String)</code>. 
+It is optional.
+<li>The <b>usage</b> is added by default. The part behind
+<code>Usage: &lt;command&gt;</code> is by default <code>[options]</code> 
+and can be overruled using <code>opt_help(help(usage), String)</code>.
+<li>The actual option descriptions. The options are presented in the 
+order they are defined in <span class="pred-ext">opt_type/3</span>. 
+Subsequent options for the same <i>destination</i> (option name) are 
+joined with the first.
+<li>The <i>footer_</i> is created from <code>opt_help(help(footer), String)</code>. 
+It is optional.
+</ol>
+
+<p>The help provided by <code>help(header)</code>, <code>help(usage)</code> 
+and <code>help(footer)</code> are either a simple string or a list of 
+elements as defined by
+<a class="pred" href="printmsg.html#print_message_lines/3">print_message_lines/3</a>. 
+In the latter case, the construct <code>\Callable</code> can be used to 
+call a DCG rule in the module from which the user calls <a class="pred" href="main.html#argv_options/3">argv_options/3</a>. 
+For example, we can add a bold title using
 
 <pre class="code">
-Usage: &lt;command&gt; [options]
-</pre>
-
-<p>The usage line can be defined using <span class="pred-ext">opt_help/1</span>, 
-as illustrated below.
-
-<pre class="code">
-opt_help(usage, String).
+opt_help(help(header), [ansi(bold, '~w', ['My title'])]).
 </pre>
 
 </dd>

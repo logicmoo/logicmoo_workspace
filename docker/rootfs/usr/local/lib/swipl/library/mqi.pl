@@ -111,6 +111,16 @@ Redirects STDOUT and STDERR to the file path specified.  Useful for debugging th
 :- use_module(library(http/json_convert)).
 :- use_module(library(option)).
 :- use_module(library(term_to_json)).
+:- use_module(library(debug)).
+:- use_module(library(filesex)).
+:- use_module(library(gensym)).
+:- use_module(library(lists)).
+:- use_module(library(main)).
+:- use_module(library(make)).
+:- use_module(library(prolog_source)).
+:- use_module(library(time)).
+:- use_module(library(uuid)).
+
 % One for every Machine Query Interface running
 :- dynamic(mqi_thread/3).
 
@@ -174,23 +184,64 @@ mqi_start(Options) :-
                  ),
     start_server_thread(Run_Server_On_Thread, Server_Thread_ID, Server_Goal, Unix_Domain_Socket_Path, Unix_Domain_Socket_Path_And_File).
 
+opt_type(port,                      port,                      natural).
+opt_type(create_unix_domain_socket, create_unix_domain_socket, boolean).
+opt_type(unix_domain_socket,        unix_domain_socket,        file(write)).
+opt_type(password,                  password,                  string).
+opt_type(pending_connections,       pending_connections,       nonneg).
+opt_type(query_timeout,             query_timeout,             float).
+opt_type(run_server_on_thread,      run_server_on_thread,      boolean).
+opt_type(exit_main_on_failure,      exit_main_on_failure,      boolean).
+opt_type(write_connection_values,   write_connection_values,   boolean).
+opt_type(write_output_to_file,      write_output_to_file,      file(write)).
 
-%! mqi_start is semidet.
-%Main entry point for running the Machine Query Interface in ["Embedded Mode"](#mqi-embedded-mode) and designed to be called from the command line. Embedded Mode is used when launching the Machine Query Interface as an embedded part of another language (e.g. Python). Calling mqi_start/0 from Prolog interactively is not recommended as it depends on Prolog exiting to stop the MQI, instead use mqi_start/1 for interactive use.
+opt_help(port,                      "TCP/IP port for clients to connect to").
+opt_help(create_unix_domain_socket, "Create a Unix domain socket for clients to connect to").
+opt_help(unix_domain_socket,        "File path for the Unix domin socket").
+opt_help(password,                  "Connection password").
+opt_help(pending_connections,       "Max number of queued connections (5)").
+opt_help(query_timeout,             "Max query runtime in seconds (default infinite)").
+opt_help(run_server_on_thread,      "Run server in a background thread (true)").
+opt_help(exit_main_on_failure,      "Exit the process on a failure").
+opt_help(write_connection_values,   "Print info for clients to connect").
+opt_help(write_output_to_file,      "Write stdout and stderr to file").
+
+%!  mqi_start is semidet.
 %
-%To launch embedded mode:
+%  Main  entry  point  for  running  the   Machine  Query  Interface  in
+%  ["Embedded Mode"](#mqi-embedded-mode) and designed to  be called from
+%  the command line. Embedded Mode is   used  when launching the Machine
+%  Query Interface as  an  embedded  part   of  another  language  (e.g.
+%  Python).  Calling  mqi_start/0  from  Prolog   interactively  is  not
+%  recommended as it depends on Prolog exiting  to stop the MQI, instead
+%  use mqi_start/1 for interactive use.
 %
-%~~~
-%swipl --quiet -g mqi_start -t halt -- --write_connection_values=true
-%~~~
+%  To launch embedded mode:
 %
-%This will start SWI Prolog and invoke the mqi_start/0 predicate and exit the process when that predicate stops. Any command line arguments after the standalone `--` will be passed as Options. These are the same Options that mqi_start/1 accepts and are passed to it directly. Some options are expressed differently due to command line limitations, see mqi_start/1 Options for more information.
+%  ~~~
+%  swipl --quiet -g mqi_start -t halt -- --write_connection_values=true
+%  ~~~
 %
-%Any Option values that cause issues during command line parsing (such as spaces) should be passed with =|""|= like this:
+%  This will start SWI Prolog and   invoke the mqi_start/0 predicate and
+%  exit  the  process  when  that  predicate  stops.  Any  command  line
+%  arguments after the standalone `--` will  be passed as Options. These
+%  are the same Options that mqi_start/1 accepts   and  are passed to it
+%  directly. Some options are expressed differently  due to command line
+%  limitations, see mqi_start/1 Options for more information.
 %
-%~~~
-% swipl --quiet -g mqi_start -t halt -- --write_connection_values=true --password="HGJ SOWLWW WNDSJD"
-%~~~
+%  Any Option values that cause issues during command line parsing (such
+%  as spaces) should be passed with =|""|= like this:
+%
+%  ~~~
+%  swipl --quiet -g mqi_start -t halt -- --write_connection_values=true \
+%                                        --password="HGJ SOWLWW WNDSJD"
+%  ~~~
+%
+%  For help on commandline options run
+%
+%  ~~~
+%  swipl -g mqi_start -- --help
+%  ~~~
 
 
 % Turn off int signal when running in embedded mode so the client language
@@ -201,16 +252,16 @@ mqi_start(Options) :-
 % since it doesn't seem possible to pass create_unix_domain_socket=_ on the command line
 % and have it interpreted as a variable.
 mqi_start :-
-    current_prolog_flag(os_argv, Argv),
+    current_prolog_flag(argv, Argv),
     argv_options(Argv, _Args, Options),
-    append(Options, [exit_main_on_failure(true)], Options1),
+    merge_options(Options, [exit_main_on_failure(true)], Options1),
     select_option(create_unix_domain_socket(Create_Unix_Domain_Socket), Options1, Options2, false),
-    (   Create_Unix_Domain_Socket
-    ->  append(Options2, [unix_domain_socket(_)], FinalOptions)
+    (   Create_Unix_Domain_Socket == true
+    ->  merge_options(Options2, [unix_domain_socket(_)], FinalOptions)
     ;   FinalOptions = Options2
     ),
     option(run_server_on_thread(Run_Server_On_Thread), FinalOptions, true),
-    (   Run_Server_On_Thread
+    (   Run_Server_On_Thread == true
     ->  true
     ;   throw(domain_error(cannot_be_set_in_embedded_mode, run_server_on_thread))
     ),

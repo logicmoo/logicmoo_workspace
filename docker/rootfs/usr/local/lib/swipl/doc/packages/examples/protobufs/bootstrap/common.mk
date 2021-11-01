@@ -11,7 +11,7 @@ PROTOC_DOTDOT:=$(realpath $(dir $(shell which protoc))/..)
 PROTOC_INCLUDE=$(PROTOC_DOTDOT)/include
 PROTOC_LIB:=$(PROTOC_DOTDOT)/lib
 
-PROTOC_GEN_PROLOG_PB=protoc_gen_prolog_pb
+PROTOC_GEN_PROLOG_PB=gen_pb
 
 # If SHELL is bash, can use `type -p protoc` instead of `which protoc`
 # Requires having done "make" in ~/src/protobufs:

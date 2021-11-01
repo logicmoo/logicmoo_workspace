@@ -1223,7 +1223,14 @@ Options for more information.
 as spaces) should be passed with <code>""</code> like this:
 
 <pre class="code">
- swipl --quiet -g mqi_start -t halt -- --write_connection_values=true --password="HGJ SOWLWW WNDSJD"
+swipl --quiet -g mqi_start -t halt -- --write_connection_values=true \
+                                      --password="HGJ SOWLWW WNDSJD"
+</pre>
+
+<p>For help on commandline options run
+
+<pre class="code">
+swipl -g mqi_start -- --help
 </pre>
 
 </dd>

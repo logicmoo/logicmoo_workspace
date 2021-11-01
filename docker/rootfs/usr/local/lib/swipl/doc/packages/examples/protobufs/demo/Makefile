@@ -50,9 +50,10 @@ foo.o: pb_vector.pb.h foo.cpp
 # foo: foo.cpp pb_vector.pb.cc pb_vector.pb.h
 foo: pb_vector.pb.o foo.o
 	@# To run, you might require setting LD_LIBRARY_PATH or specify -static
-	@# for non-static: -Wl,-rpath=$(PROTOC_LIB)
-	$(CXX) -Wl,-rpath=$(PROTOC_LIB) -o $@ $^ $(CXXFLAGS) $(CPPFLAGS) $(LDFLAGS)
+	@# or for non-static: -Wl,-rpath=$(PROTOC_LIB)
+	@# $(CXX) -Wl,-rpath=$(PROTOC_LIB) -o $@ $^ $(CXXFLAGS) $(CPPFLAGS) $(LDFLAGS)
 	@# $(CXX) -static -o $@ $^ $(CXXFLAGS) $(CPPFLAGS) $(LDFLAGS)
+	$(CXX) -o $@ $^ $(CXXFLAGS) $(CPPFLAGS) $(LDFLAGS)
 
 tmp99.tmp: vector_demo.pl ../eventually_implies.pl
 	$(SWIPL) -s vector_demo.pl -g make_tmp99 --

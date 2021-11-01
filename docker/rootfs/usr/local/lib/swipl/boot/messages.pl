@@ -109,10 +109,11 @@ prolog:translate_message(Term) -->
 %   called from user and library definitions for message translation.
 
 translate_message(Term) -->
-    { nonvar(Term),
-      message_lang(Lang)
-    },
-    prolog:message(Lang, Term),
+    { nonvar(Term) },
+    (   { message_lang(Lang) },
+        prolog:message(Lang, Term)
+    ;   prolog:message(Term)
+    ),
     !.
 translate_message(Term) -->
     { nonvar(Term) },
@@ -178,6 +179,8 @@ term_message(Term) -->
 term_message(Term) -->
     [ 'Unknown error term: ~p'-[Term] ].
 
+iso_message(resource_error(c_stack)) -->
+    out_of_c_stack.
 iso_message(resource_error(Missing)) -->
     [ 'Not enough resources: ~w'-[Missing] ].
 iso_message(type_error(evaluable, Actual)) -->
@@ -1081,6 +1084,29 @@ resolve_overflow(enlarge) -->
       '?- set_prolog_flag(stack_limit, ~I). to double the limit.'-[NewLimit]
     ].
 
+%!  out_of_c_stack
+%
+%   The thread's C-stack limit was exceeded. Give  some advice on how to
+%   resolve this.
+
+out_of_c_stack -->
+    { statistics(c_stack, Limit), Limit > 0 },
+    !,
+    [ 'C-stack limit (~D bytes) exceeded.'-[Limit], nl ],
+    resolve_c_stack_overflow(Limit).
+out_of_c_stack -->
+    { statistics(c_stack, Limit), Limit > 0 },
+    [ 'C-stack limit exceeded.'-[Limit], nl ],
+    resolve_c_stack_overflow(Limit).
+
+resolve_c_stack_overflow(_Limit) -->
+    { thread_self(main) },
+    [ 'Use the shell command ' ], code('~w', 'ulimit -s size'),
+    [ ' to enlarge the limit.' ].
+resolve_c_stack_overflow(_Limit) -->
+    [ 'Use the ' ], code('~w', 'c_stack(KBytes)'),
+    [ ' option of '], code(thread_create/3), [' to enlarge the limit.' ].
+
 
                  /*******************************
                  *        MAKE/AUTOLOAD         *
@@ -1102,14 +1128,13 @@ prolog_message(autoload(read_index(Dir))) -->
 prolog_message(autoload(disabled(Loaded))) -->
     [ 'Disabled autoloading (loaded ~D files)'-[Loaded] ].
 prolog_message(autoload(already_defined(PI, From))) -->
-    [ ansi(code, '~p', [PI]) ],
+    code(PI),
     (   { '$pi_head'(PI, Head),
           predicate_property(Head, built_in)
         }
     ->  [' is a built-in predicate']
-    ;   [ ' is already imported from module ',
-          ansi(code, '~p', [From])
-        ]
+    ;   [ ' is already imported from module ' ],
+        code(From)
     ).
 
 swi_message(autoload(Msg)) -->
@@ -1804,21 +1829,38 @@ current_message_lang(Lang) :-
     (   current_prolog_flag(message_language, Lang0),
         Lang0 \== default
     ->  Lang = Lang0
-    ;   (   setlocale(messages, _, ''),
-            setlocale(messages, Lang0, Lang0)
-        ;   getenv('LANG', Lang0)
-        )
+    ;   os_user_lang(Lang0)
     ->  clean_encoding(Lang0, Lang1),
         set_prolog_flag(message_language, Lang1),
         Lang = Lang1
     ;   Lang = en
     ).
 
+os_user_lang(Lang) :-
+    current_prolog_flag(windows, true),
+    win_get_user_preferred_ui_languages(name, [Lang|_]).
+os_user_lang(Lang) :-
+    catch(setlocale(messages, _, ''), _, fail),
+    setlocale(messages, Lang, Lang).
+os_user_lang(Lang) :-
+    getenv('LANG', Lang).
+
+
 clean_encoding(Lang0, Lang) :-
     (   sub_atom(Lang0, A, _, _, '.')
     ->  sub_atom(Lang0, 0, A, _, Lang)
     ;   Lang = Lang0
     ).
+
+		 /*******************************
+		 *          PRIMITIVES		*
+		 *******************************/
+
+code(Term) -->
+    code('~p', Term).
+
+code(Format, Term) -->
+    [ ansi(code, Format, [Term]) ].
 
 
 		 /*******************************

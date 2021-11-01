@@ -148,14 +148,16 @@ PROTOC_LIB:=$(shell realpath $(PROTOC_DIR)/../lib)
 test_write: test.pb.o test_write.o
 	@# See comment about -static with "foo" rule in ../demo/Makefile
 	@# for non-static: -Wl,-rpath=$(PROTOC_LIB)
-	$(CXX) -static -o $@ $^ $(CXXFLAGS) $(CPPFLAGS) $(LDFLAGS)
+	@# $(CXX) -Wl,-rpath=$(PROTOC_LIB) -o $@ $^ $(CXXFLAGS) $(CPPFLAGS) $(LDFLAGS)
+	$(CXX) -o $@ $^ $(CXXFLAGS) $(CPPFLAGS) $(LDFLAGS)
 
 test_write.o: test.pb.h test.pb.cc test_write.cc
 
 test_read: test.pb.o test_read.o
 	@# See comment about -static with "foo" rule in ../demo/Makefile
 	@# for non-static: -Wl,-rpath=$(PROTOC_LIB)
-	$(CXX) -static -o $@ $^ $(CXXFLAGS) $(CPPFLAGS) $(LDFLAGS)
+	@# $(CXX) -Wl,-rpath=$(PROTOC_LIB) -o $@ $^ $(CXXFLAGS) $(CPPFLAGS) $(LDFLAGS)
+	$(CXX) -o $@ $^ $(CXXFLAGS) $(CPPFLAGS) $(LDFLAGS)
 
 test_read.o: test.pb.h test.pb.cc test_read.cc
 

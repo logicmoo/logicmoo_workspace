@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.5.0 Reference Manual: Section C.2</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.5.1 Reference Manual: Section C.2</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -279,7 +279,7 @@ XSB source files</span></a></h4>
 <p>SWI-Prolog's emulation of XSB depends on the XSB preferred file name 
 extension <code>.P</code>. This extension is used by
 <code>library(dialect/xsb/source)</code> to initiate a two phase loading 
-process based on <a id="idx:termexpansion2:2752"></a><a class="pred" href="consulting.html#term_expansion/2">term_expansion/2</a> 
+process based on <a id="idx:termexpansion2:2755"></a><a class="pred" href="consulting.html#term_expansion/2">term_expansion/2</a> 
 of the virtual term <code>begin_of_file</code>.
 
 <p>
@@ -287,7 +287,7 @@ of the virtual term <code>begin_of_file</code>.
 <li>In the first phase the file is read with XSB compatible operator 
 declarations and all directives (:- Term) are extracted. The directives 
 are used to determine that the file defines a module (iff the file 
-contains an <a id="idx:export1:2753"></a><a class="pred" href="altmoduleapi.html#export/1">export/1</a> 
+contains an <a id="idx:export1:2756"></a><a class="pred" href="altmoduleapi.html#export/1">export/1</a> 
 directive) and construct a SWI-Prolog compatible module declaration. As 
 XSB has a two phase compiler where SWI has a single phase compiler, this 
 is also used to move some directives to the start of the file.
@@ -306,7 +306,7 @@ write a SWI-Prolog loader in a <code>.pl</code> file that contains e.g.,
 :- [main_file].
 </pre>
 
-<p>It is also possible to put the able <a id="idx:usemodule1:2754"></a><a class="pred" href="import.html#use_module/1">use_module/1</a> 
+<p>It is also possible to put the able <a id="idx:usemodule1:2757"></a><a class="pred" href="import.html#use_module/1">use_module/1</a> 
 directive in your personal initialization file (see <a class="sec" href="initfile.html#sec:2.2">section 
 2.2</a>), after which XSB files can be loaded as normal SWI-Prolog files 
 using
@@ -315,11 +315,11 @@ using
 % swipl file.P
 </pre>
 
-<p><a id="idx:gppXSBproprocessor:2755"></a>XSB code may depend on the <b>gpp</b> 
+<p><a id="idx:gppXSBproprocessor:2758"></a>XSB code may depend on the <b>gpp</b> 
 preprocessor. We do not provide <b>gpp</b>. It is however possible to 
 send XSB source files through <b>gpp</b> by loading <code>library(library/dialect/xsb/gpp)</code>. 
 This require <b>gpp</b> to be accessible through the environment 
-variable <code>PATH</code> or the <a id="idx:filesearchpath2:2756"></a><a class="pred" href="consulting.html#file_search_path/2">file_search_path/2</a> 
+variable <code>PATH</code> or the <a id="idx:filesearchpath2:2759"></a><a class="pred" href="consulting.html#file_search_path/2">file_search_path/2</a> 
 alias <code>path</code>. We refer to the <code>gpp</code> library for 
 details.
 

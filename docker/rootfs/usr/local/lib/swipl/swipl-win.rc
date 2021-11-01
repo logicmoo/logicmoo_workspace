@@ -34,6 +34,7 @@
 */
 
 :- module(link_xpce, []).
+:- if(\+current_prolog_flag(xpce,false)).
 :- set_prolog_flag(generate_debug_info, true).
 
 /** <module> Associate XPCE with SWI-Prolog
@@ -133,3 +134,4 @@ pce_setup_ :-
 	asserta(pce_setup_done).
 
 :- initialization pce_setup_.
+:- endif. % \+ current_prolog_flag(xpce,false)

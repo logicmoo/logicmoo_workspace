@@ -122,9 +122,10 @@ MAKE=make
  rm -rf build
  mkdir -p build
  cd build
- cmake -DCMAKE_INSTALL_PREFIX=$LOGICMOO_WS -G "Unix Makefiles" ..
+ #cmake -DCMAKE_INSTALL_PREFIX=$LOGICMOO_WS -G "Unix Makefiles" ..
  #cmake -DBUILD_PDF_DOCUMENTATION=ON -DCMAKE_INSTALL_PREFIX=$LOGICMOO_WS -G "Unix Makefiles" ..
- # cmake -DCMAKE_INSTALL_PREFIX=$LOGICMOO_WS -G Ninja .. 
+ cmake -DCMAKE_INSTALL_PREFIX=$LOGICMOO_WS -G Ninja ..
+ ../scripts/pgo-compile.sh 
  $MAKE -j 40 
  ctest -j 40
 

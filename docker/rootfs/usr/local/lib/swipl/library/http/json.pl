@@ -3,9 +3,10 @@
     Author:        Jan Wielemaker
     E-mail:        J.Wielemaker@vu.nl
     WWW:           http://www.swi-prolog.org
-    Copyright (c)  2007-2020, University of Amsterdam
+    Copyright (c)  2007-2021, University of Amsterdam
                               VU University Amsterdam
                               CWI, Amsterdam
+                              SWI-Prolog Solutions b.v.
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -58,7 +59,8 @@
 :- use_foreign_library(foreign(json)).
 
 :- multifile
-    json_write_hook/4.                          % +Term, +Stream, +State, +Options
+    json_write_hook/4,                  % +Term, +Stream, +State, +Options
+    json_dict_pairs/2.                  % +Dict, -Pairs
 
 :- predicate_options(json_read/3, 3,
                      [ null(ground),
@@ -552,7 +554,10 @@ stream_error_context(Stream, stream(Stream, Line, LinePos, CharNo)) :-
 %   state and settings.  Future versions may provide documented access
 %   to these terms.  Currently it is adviced to ignore these arguments.
 
-
+%!  json_dict_pairs(+Dict, -Pairs) is semidet.
+%
+%   This hook may be used to order the   keys of an object. If it fails,
+%   dict_pairs/3 is used which produces an ordered list of keys.
 
 :- record json_write_state(indent:nonneg = 0,
                            step:positive_integer = 2,
@@ -576,9 +581,9 @@ json_write_term(json(Pairs), Stream, State, Options) :-
     !,
     json_write_object(Pairs, Stream, State, Options).
 json_write_term(Dict, Stream, State, Options) :-
-    is_dict(Dict),
+    is_dict(Dict, Tag),
     !,
-    dict_pairs(Dict, Tag, Pairs0),
+    json_pairs(Dict, Pairs0),
     (   nonvar(Tag),
         json_options_tag(Options, Name),
         Name \== ''
@@ -654,6 +659,12 @@ json_write_term(AnyTerm, Stream, State, _Options) :-
         json_write_string(Stream, String)
     ;   type_error(json_term, AnyTerm)
     ).
+
+json_pairs(Dict, Pairs) :-
+    json_dict_pairs(Dict, Pairs),
+    !.
+json_pairs(Dict, Pairs) :-
+    dict_pairs(Dict, _, Pairs).
 
 json_write_object(Pairs, Stream, State, Options) :-
     space_if_not_at_left_margin(Stream, State),

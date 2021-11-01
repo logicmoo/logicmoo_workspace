@@ -9,7 +9,7 @@ from test_pb2 import Scalars1, MyEnum, Repeated1, Packed1
 class TestScalar(unittest.TestCase):
 
     def test_scalar1_enum(self):
-        self.assertEqual(0, MyEnum.E1)
+        self.assertEqual(0, MyEnum.E1)  # crashes with 3.6.1 -- needs 3.8.0 or later
         self.assertEqual(1, MyEnum.Enum2)
         self.assertEqual(2, MyEnum.AnotherEnum)
 

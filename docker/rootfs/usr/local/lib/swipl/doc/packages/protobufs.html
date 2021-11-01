@@ -338,20 +338,20 @@ also specify it (e.g., <code>protoc -I. swipl_out=. foo.proto</code>).
 For example, when bootstrapping the "swipl" plugin, these are used:
 
 <pre class="code">
-protoc -I/usr/include --swipl_out=protoc_gen_prolog_pb google/include/descriptor.proto google/include/compiler/plugin.proto
+protoc -I/usr/include --swipl_out=gen_pb google/include/descriptor.proto google/include/compiler/plugin.proto
 </pre>
 
 <p>which creates these files:
 
 <pre class="code">
-protoc_gen_prolog_pb/google/protobuf/descriptor_pb.pl
-protoc_gen_prolog_pb/google/protobuf/compiler/plugin_pb.pl
+gen_pb/google/protobuf/descriptor_pb.pl
+gen_pb/google/protobuf/compiler/plugin_pb.pl
 </pre>
 
 <p>The <code>plugin_pb</code> is used by:
 
 <pre class="code">
-:- use_module(protoc_gen_prolog_pb/google/protobuf/compiler/plugin_pb)
+:- use_module(gen_pb/google/protobuf/compiler/plugin_pb)
 </pre>
 
 <p>which has this (import is relative to the current module):
