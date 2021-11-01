@@ -95,6 +95,7 @@ int_pron_lex(which,undef).
 int_pron_lex(who,subj).
 int_pron_lex(whom,compl).
 
+name_LF(Name) :- bind_pos('object',Name).
 name_LF(Name) :- name_template_LF(Name,_).
 
 number_lex(W,I,Nb) :- 
@@ -218,7 +219,7 @@ first_lexicon(X):- available_lexicon(_,X).
 
 try_all_lex(G):- available_lexicon(_,Which),try_one_lex(Which,G).
 available_lexicon(1,talkdb).
-%available_lexicon(3,clex).
+available_lexicon(3,clex).
 available_lexicon(2,chat80).
 
 try_lex_order(Order,G):-  member(Which,Order), try_one_lex(Which,G).
@@ -281,7 +282,7 @@ verb_form_aux(had,have(_MODAL),past+part,_).
 
 %verb_form_aux(A,B,C,D):- modal_verb_form_aux(A,B,C,D).
 
-verb_form_lex(A,B,C,D):- verb_form_aux(A,B,C,D).
+verb_form_lex(A,B,C,_):- verb_form_aux(A,B,C,_).
 %verb_form_lex(A,B,C,D):- modal_verb_form_aux(A,B,C,D).
 verb_form_lex(A,B,C,D):- try_lex(verb_form_db(A,B,C,D)), \+ avoided_verb(A).
 
@@ -493,13 +494,13 @@ sup_adj_db(chat80,oldest,old).
 sup_adj_db(chat80,smallest,small).
 
 
-% @TODO DMiles I thinnk this is backwards
 comp_adv_lex(Less):- try_one_lex(chat80,comp_adv_db(_Lesser, Less)).
+% @TODO DMiles I thinnk this is backwards
 comp_adv_db(chat80,lesser,less).
 comp_adv_db(chat80,more,more).
 %comp_adv_db(talkdb,Smallest,Small):- talkdb:talk_db(comperl,Small,Smallest).
-comp_adv_db(talkdb,Lesser, Less):- comp_adv_db(clex,Lesser, Less).
-comp_adv_db(clex,Lesser, Less):- clex:adv_comp(Lesser, Less).
+comp_adv_db(talkdb,Less,Lesser):- comp_adv_db(clex, Less, Lesser).
+comp_adv_db(clex,Less,Lesser):- clex:adv_comp(Lesser, Less).
 
 
 sup_adv_lex(Least):- try_one_lex(chat80,sup_adv_db(Least, _Less)).

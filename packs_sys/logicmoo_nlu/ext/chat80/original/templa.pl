@@ -61,7 +61,7 @@ name_template_lf0(X,Spatial&Circle_of_latitude) :- like_type(geo,circle_of_latit
 name_template_lf0(X,Spatial&Geo&Seamass) :- like_type(Geo,seamass,Seamass),spatial(Spatial), ti(Seamass,X).
 
 
-
+%like_type(geo,River,River):- bind_pos('type',River).
 
 
 
@@ -84,7 +84,15 @@ trans_LF(Govern,SpatialCity,X,Spatial&Geo&Country,Y,specific_pred(Spatial,Nation
   spatial(Spatial), bfeature_path(Spatial,City,SpatialCity).
 
 
-ttribute_LF(populous,Spatial&_,X,measure&population/*citizens*/,Y,count_pred(Spatial,population/*citizens*/,Y,X)).
+unique_of_obj(geo,spatial,Country,Govern,Capital,City,Capital_city,Nation_capital):-
+   maplist(bind_pos, 
+       ['type','action','attrib','type','attrib','attrib'],
+       [Country,Govern,Capital,City,Capital_city,Nation_capital]).
+
+
+  
+
+attribute_LF(populous,Spatial&_,X,measure&population/*citizens*/,Y,count_pred(Spatial,population/*citizens*/,Y,X)).
 
 attribute_LF(large,Spatial&_,X,measure&Area,Y,measure_pred(Spatial,Area,X,Y)):- spatial(Spatial), type_measure_pred(_,size,Area,_).
 attribute_LF(small,Spatial&_,X,measure&Area,Y,measure_pred(Spatial,Area,X,Y)):- spatial(Spatial), type_measure_pred(_,size,Area,_).
@@ -134,7 +142,8 @@ property_LF(Area,     measure&Area,    X,Spatial&_,Y, measure_pred(Spatial,Area,
 
 type_measure_pred(_AnyObjectType,MeasureType,Area,countV):- MeasureType\==size, MeasureType=Area, clex_attribute(Area).
 
-clex_attribute(Area):-  freeze80(Area,clex:learned_as_name('attrib',Area)).
+clex_attribute(Area):-  bind_pos('attrib',Area).
+clex_attribute(Area):-  bind_pos('type',Area).
 
 synonymous_thing(nation,country).
 
@@ -165,6 +174,8 @@ adjunction_LF(cp(south,of),Spatial&_-X,Spatial&_-Y,ordering_pred(Spatial,cp(sout
 
 /* Proper nouns */
 
+name_template_LF(X,Type2):- bind_pos('object',X), type_conversion(typeOfFn(X),Type2).
+name_template_LF(X,Type2):- bind_pos('type',X), type_conversion(X,Type2).
 name_template_LF(X,Type2):- name_template_lf0(X,Type1), type_conversion(Type1,Type2).
 
 
@@ -213,22 +224,28 @@ trans_LF(Border,Spatial&Geo&_,X,Spatial&Geo&_,Y,symmetric_pred(Spatial,Border,X,
    symmetric_verb(Spatial, Border).
 
 trans_LF(Border,Spatial&Geo&_,X,Spatial&Geo&_,Y,generic_pred(Spatial,Border,X,Y),[],_,_):-  
-   freeze80(Border,clex:learned_as_name('action',Border)),nop(spatial(Spatial)).
+   (bind_pos('action',Border)),nop(spatial(Spatial)).
 
 trans_LF(Border,Spatial&Geo&_,X,Spatial&Geo&_,Y,generic_pred(Spatial,Border,X,Y),[],_,_):-  
-  freeze80(Border,clex:learned_as_name('symmetric',Border)),spatial(Spatial).
+   (bind_pos('attrib',Border)),nop(spatial(Spatial)).
+
+
+bind_pos(Type,Var,Lex,Var2):- nonvar(Var),!,clex:learned_as_type(Type,Var,Lex,Var2).
+bind_pos(Type,Var,Lex,Var2):- freeze80(Var2,clex:learned_as_type(Type,Var,Lex,Var2)).
+bind_pos(Type,Var):- freeze80(Var,clex:learned_as_type(Type,Var)).
 
 freeze80(Var,Goal):- (nonvar(Var);(term_variables(Goal, Vars),Vars==[],trace)),!,call(Goal).
-freeze80(Var,Goal):- frozen(Var,OldGoals),nop(throw(OldGoals->Goal)),dumpST,throw(twice),!.
-freeze80(Var,Goal):- dumpST,trace,freeze(Var,freeze80(Var,Goal)).
+freeze80(Var,Goal):- freeze(Var,freeze80(Var,Goal)).
 
-verb_form_db(clex,Border,Border,A,B):- fail,verb_form_db_clex(Border,Border,A,B).
+verb_form_db(clex,Border,Border,A,B):- verb_form_db_clex(Border,Border,A,B).
 
-verb_form_db_clex(Bordering,Border,pres+part,_):- freeze80(Bordering,clex:learned_pos('action',Border,'ing',Bordering)).
-verb_form_db_clex(Bordered,Border,past+part,_):- freeze80(Bordered,clex:learned_pos('action',Border,'ed',Bordered)).
-verb_form_db_clex(Borders,Border,pres+fin,_):- freeze80(Borders,clex:learned_pos('action',Border,'s',Borders)).
-verb_form_db_clex(Border,Border,inf,_):- freeze80(Border,clex:learned_pos('action',Border,'',Border)).
-verb_form_db_clex(Border,Border,inf,_):- freeze80(Border,clex:learned_as_name('symmetric',Border)).
+verb_form_db_clex(Bordering,Border,pres+part,_):- (bind_pos('action',Border,'ing',Bordering)).
+verb_form_db_clex(Bordered,Border,past+part,_):- (bind_pos('action',Border,'ed',Bordered)).
+verb_form_db_clex(Borders,Border,pres+fin,_):- (bind_pos('action',Border,'s',Borders)).
+verb_form_db_clex(Border,Border,inf,_):- (bind_pos('action',Border,'',Border)).
+
+talkdb_talk_db(transitive,   Border,  Borders,  Bordered,  Bordering,  Bordered):-
+  (bind_pos('action',Border,'ing',Bordering), bind_pos('action',Border,'ed',Bordered), bind_pos('action',Border,'s',Borders)).
  
 %use_lexicon_80(_):- !, true.
 use_lexicon_80(chat80).
@@ -518,7 +535,7 @@ less_specific(end,   stop).
 %verb_type_db(chat80,Rise,main+iv):-  less_specific(Rise,  begin).
 %verb_type_db(chat80,Flow,main+iv):-  less_specific(Flow,  link).
 %verb_type_db(chat80,Drain,main+iv):- less_specific(Drain, end).
-verb_type_db(chat80,LessSpecific,main+_):-  freeze80(LessSpecific,clex:learned_as_name('action',LessSpecific)).
+verb_type_db(chat80,LessSpecific,main+_):-  (bind_pos('action',LessSpecific)).
 verb_type_db(chat80,LessSpecific,main+iv):- less_specific(_, LessSpecific).
 verb_type_db(chat80,MoreSpecific,main+iv):- less_specific(MoreSpecific, _).
 

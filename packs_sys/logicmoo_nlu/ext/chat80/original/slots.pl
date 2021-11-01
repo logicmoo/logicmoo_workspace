@@ -55,7 +55,7 @@ i_np(NP,Y,Q,Up,Id0,Index,XA0,XA) :-
 i_np_head(np(_,Kernel,_),Y,
       quantV(Det,T,Head,Pred0,QMods,Y),
       Det,Det0,X,Pred,QMods,Slots,_Id) :-
-   i_np_head0(Kernel,X,T,Det0,Head,Pred0,Pred,Slots),
+   must80(i_np_head0(Kernel,X,T,Det0,Head,Pred0,Pred,Slots)),
    Type-_=Y, Type-_=T.
 
 i_np_rest(np(_,_,Mods),Det,Det0,X,Pred,QMods,Slots,Up,Id,Index) :-
@@ -94,7 +94,7 @@ i_np_head0(Else, Type-Name,Type-Name,identityQ,'`'(P),Pred,Pred,[]):- may_qualif
 
 
 must80(G):- \+ current_prolog_flag(debug_chat80,true),!, call(G).
-must80(G):- call(G)*->true;(wdmsg(failed(G)),ignore(on_x_fail(ftrace(G))),wdmsg(failed(G)),call(G)).
+must80(G):- call(G)*->true;(nop((wdmsg(failed(G)),ignore(on_x_fail(ftrace(G))))),wdmsg(failed(G)),fail,call(G)).
 
 make_qualifiedBy(_,Name,Type,Else,P):- show_call(always,P = qualifiedBy(Name,Type,Else)).
 %may_qualify(_):- !,fail.
@@ -331,6 +331,7 @@ op_inverse(X,+,X).
 noun_template(Noun,TypeV,V,'`'(P),
       [slot(poss,TypeO,O,Os,index)|Slots]) :-
    property_LF(Noun,TypeV,V,TypeO,O,P,Slots,Os,_).
+
 noun_template(Noun,TypeV,V,aggr(F,V,[],'`'(true),'`'(true)),
    [slot(prep(of),TypeS,_,_,free)]) :-
    aggr_noun(Noun,TypeV,TypeS,F).
@@ -362,10 +363,10 @@ slot_verb_template(Verb,Pred,
 slot_verb_kind(be(_MODAL),_,TypeS,S,S=A,[slot(dir,TypeS,A,_,free)]).
 slot_verb_kind(be(_MODAL),_,TypeS,S,true,[slot(pred,TypeS,S,_,free)]).
 slot_verb_kind(iv,Verb,TypeS,S,Pred,Slots) :-
-   intrans_LF(Verb,TypeS,S,Pred,Slots,_).
+   must80(intrans_LF(Verb,TypeS,S,Pred,Slots,_)).
 slot_verb_kind(tv,Verb,TypeS,S,Pred,
       [slot(dir,TypeD,D,SlotD,free)|Slots]) :-
-   trans_LF(Verb,TypeS,S,TypeD,D,Pred,Slots,SlotD,_).
+   must80(trans_LF(Verb,TypeS,S,TypeD,D,Pred,Slots,SlotD,_)).
 slot_verb_kind(dv(Prep),Verb,TypeS,S,Pred,
       [slot(dir,TypeD,D,SlotD,free),
        slot(ind,TypeI,I,SlotI,free)|Slots]) :-

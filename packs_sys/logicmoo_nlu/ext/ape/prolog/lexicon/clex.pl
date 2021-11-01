@@ -161,13 +161,13 @@ alc_jy(A,Act,Est,B,YR):- alc_j([A,Act,Est,B],YR).
 x_good(Sep,X):-atom_chars(X,[C|_]), (Sep==C ; \+ char_type(C,alpha)),!.
 x_good(X):- atom_chars(X,[C|_]),  \+ char_type(C,alpha),!.
 
-learned_pos(Act,X,Est,Y):- fail, quietly(some_names_two(Act,X,Est,Y)),!.
-% clex:learned_pos('action',X,'', 'eating.action').
-% clex:learned_pos('action',X,'', 'eating.action5').
-% clex:learned_pos('action',X,'', 'action5.eating').
-% clex:learned_pos('action',X,'', 'action.eating').
-% clex:learned_pos('action',X,'', 'actiona.eating'). FALSE
-learned_as_name(Act,XD):- fail, quietly(some_name1(Act,XD)),!.
+learned_as_type(Act,X,Est,Y):-  quietly(some_names_two(Act,X,Est,Y)),!.
+% clex:learned_as_type('action',X,'', 'eating.action').
+% clex:learned_as_type('action',X,'', 'eating.action5').
+% clex:learned_as_type('action',X,'', 'action5.eating').
+% clex:learned_as_type('action',X,'', 'action.eating').
+% clex:learned_as_type('action',X,'', 'actiona.eating'). FALSE
+learned_as_type(Act,XD):-  quietly(some_name1(Act,XD)),!.
 some_name1(_, XD):- compound(XD),!,fail.
 some_name1(Act,XD):- var(XD),!,en_gen(any,N),atom_concat(Act,N,XD).
 some_name1(Act,XD):- some_sep1(Sep),alc_s([L,R],Sep,XD),!,some_name1_l_r(Sep,Act,L,R).
@@ -201,7 +201,7 @@ some_chops(L,_,L).
 
 
 some_names_two(_Act,XD,_Est,YD):- (compound(XD);compound(YD)),!,fail.
-some_names_two(Act,XD,'',YD):-!,XD=YD,learned_as_name(Act,XD).
+some_names_two(Act,XD,'',YD):-!,XD=YD,learned_as_type(Act,XD).
 some_names_two(Act,XD,Est,YD):- atom(XD),var(YD),!,some2_a_v(Act,XD,Est,YD).
 some_names_two(Act,XD,Est,YD):- var(XD),atom(YD),!,some2_v_a(Act,XD,Est,YD).
 some_names_two(Act,XD,Est,YD):- atom(XD),atom(YD),!,
@@ -220,52 +220,61 @@ some_names4(N,Act,ActEst,X,Est,Y):- atom_concat(Act,N,X),
   (atom_concat(X,Est,Y);(N\=='',atom_concat(ActEst,N,Y));(nonvar(Y),Est\=='',atom_concat(Est,N,Y))).
 
 some_sep1('$').
+some_sep1('-').
 some_sep1('.').
 some_sep1('_').
 %en_gen(any,'*').
 en_gen(any,Sep):-some_sep1(Sep).
 en_gen(any,N):- between(1,4,N).
 
-adj_itr(X, Y):- learned_pos('attrib',X,'',Y).
-adj_itr(X, Y):- learned_pos('type',X,'ish',Y).
+adj_itr(X, Y):- learned_as_type('attrib',X,'',Y).
+adj_itr(X, Y):- learned_as_type('type',X,'ish',Y).
 
-adj_itr_comp(Y, X):- learned_pos('attrib',X,'er',Y).
-adj_itr_comp(Y, X):- learned_pos('type',X,'isher',Y).
+adj_itr_comp(Y, X):- learned_as_type('attrib',X,'er',Y).
+adj_itr_comp(Y, X):- learned_as_type('type',X,'isher',Y).
 
-adj_itr_sup(Y, X):- learned_pos('attrib',X,'est',Y).
-adj_itr_sup(Y, X):- learned_pos('type',X,'ishest',Y).
+adj_itr_sup(Y, X):- learned_as_type('attrib',X,'est',Y).
+adj_itr_sup(Y, X):- learned_as_type('type',X,'ishest',Y).
 
-adv(Y, X):- learned_pos('attrib',X,'',Y).
-adv(Y, X):- learned_pos('attrib',X,'ly',Y).
-adv(Y, X):- learned_pos('type',X,'ishly',Y).
-adv(Y, X):- learned_pos('type',X,'ly',Y).
+adv(Y, X):- learned_as_type('attrib',X,'',Y).
+adv(Y, X):- learned_as_type('attrib',X,'ly',Y).
+adv(Y, X):- learned_as_type('type',X,'ishly',Y).
+adv(Y, X):- learned_as_type('type',X,'ly',Y).
 
-adv_comp(Y, X):- learned_pos('attrib',X,'er',Y).
-adv_comp(Y, X):- learned_pos('attrib',X,'lier',Y).
-adv_comp(Y, X):- learned_pos('type',X,'lier',Y).
+adv_comp(Y, X):- learned_as_type('attrib',X,'er',Y).
+adv_comp(Y, X):- learned_as_type('attrib',X,'lier',Y).
+adv_comp(Y, X):- learned_as_type('type',X,'lier',Y).
 
-adv_sup(Y, X):- learned_pos('attrib',X,'est',Y).
-adv_sup(Y, X):- learned_pos('attrib',X,'liest',Y).
-adv_sup(Y, X):- learned_pos('type',X,'liest',Y).
+adv_sup(Y, X):- learned_as_type('attrib',X,'est',Y).
+adv_sup(Y, X):- learned_as_type('attrib',X,'liest',Y).
+adv_sup(Y, X):- learned_as_type('type',X,'liest',Y).
 
-dv_pp(Y, X, ''):- learned_pos('action',X,'ed',Y).
-dv_pp(Y, X, 'as'):- learned_pos('action',X,'ed',Y).
-dv_pp(Y, X, 'to'):- learned_pos('action',X,'ed',Y).
-dv_finsg(Y, X, ''):- learned_pos('action',X,'s',Y).
-dv_infpl(Y, X, ''):- learned_pos('action',X,'',Y).
-iv_finsg(Y, X):- learned_pos('action',X,'s',Y).
-iv_infpl(Y, X):- learned_pos('action',X,'',Y).
-tv_finsg(Y, X):- learned_pos('action',X,'s',Y).
-tv_pp(Y, X):- learned_pos('action',X,'',Y).
-tv_pp(Y, X):- learned_pos('action',X,'ed',Y).
+dv_pp(Y, X, ''):- learned_as_type('action',X,'ed',Y).
+dv_pp(Y, X, 'as'):- learned_as_type('action',X,'ed',Y).
+dv_pp(Y, X, 'to'):- learned_as_type('action',X,'ed',Y).
+%dv_pp(Y, X, 'of'):- learned_as_type('attrib',X,'s',Y).
+dv_finsg(Y, X, ''):- learned_as_type('action',X,'s',Y).
+dv_infpl(Y, X, ''):- learned_as_type('action',X,'',Y).
 
-noun_mass(Y, X, human):- learned_pos('agent',X,'',Y).
-noun_mass(Y, X, neutr):- learned_pos('object',X,'',Y).
-noun_mass(Y, X, neutr):- learned_pos('type',X,'',Y).
-noun_mass(Y, X, neutr):- learned_pos('attrib',X,'',Y).
+iv_finsg(Y, X):- learned_as_type('action',X,'s',Y).
+iv_finsg(Y, X):- learned_as_type('action',X,'ing',Y).
+iv_infpl(Y, X):- learned_as_type('action',X,'',Y).
+iv_infpl(Y, X):- learned_as_type('action',X,'ing',Y).
 
-noun_pl(Y, X, Human):- some_of_type(Human,Agent),learned_pos(Agent,X,'s',Y).
-noun_sg(Y, X, Human):- some_of_type(Human,Agent),learned_pos(Agent,X,'',Y).
+tv_finsg(Y, X):- learned_as_type('action',X,'s',Y).
+tv_finsg(Y, X):- learned_as_type('attrib',X,'s',Y).
+tv_pp(Y, X):- learned_as_type('attrib',X,'ed',Y).
+tv_pp(Y, X):- learned_as_type('action',X,'ed',Y).
+tv_pp(Y, X):- learned_as_type('action',X,'',Y).
+
+
+noun_mass(Y, X, human):- learned_as_type('agent',X,'',Y).
+noun_mass(Y, X, neutr):- learned_as_type('object',X,'',Y).
+noun_mass(Y, X, neutr):- learned_as_type('type',X,'',Y).
+noun_mass(Y, X, neutr):- learned_as_type('attrib',X,'',Y).
+
+noun_pl(Y, X, Human):- some_of_type(Human,Agent),learned_as_type(Agent,X,'s',Y).
+noun_sg(Y, X, Human):- some_of_type(Human,Agent),learned_as_type(Agent,X,'',Y).
 
 some_of_type(Human,Agent):- some_of_type1(Human,Agent).
 some_of_type(human,'actioner').
@@ -274,13 +283,13 @@ some_of_type(neutr,'action').
 some_of_type(human,'type').
 some_of_type(neutr,'type').
 some_of_type1(human,'agent').
-some_of_type1(neutr,'actor').
+some_of_type1(neutr,'actioner'). % non base-form?
 some_of_type1(neutr,'object').
 
-pn_sg(Y, X, Type):-  some_of_type1(Type,Agent),learned_pos(Agent,X,'',Y).
-pn_defsg(Y, X, Type):-  some_of_type1(Type,Agent),learned_pos(Agent,X,'',Y).
-pn_pl(Y, X, Type):-  some_of_type1(Type,Agent),learned_pos(Agent,X,'s',Y).
-pn_defpl(Y, X, Type):-  some_of_type1(Type,Agent),learned_pos(Agent,X,'s',Y).
+pn_sg(Y, X, Type):-  some_of_type1(Type,Agent),learned_as_type(Agent,X,'',Y).
+pn_defsg(Y, X, Type):-  some_of_type1(Type,Agent),learned_as_type(Agent,X,'',Y).
+pn_pl(Y, X, Type):-  some_of_type1(Type,Agent),learned_as_type(Agent,X,'s',Y).
+pn_defpl(Y, X, Type):-  some_of_type1(Type,Agent),learned_as_type(Agent,X,'s',Y).
 
 
 

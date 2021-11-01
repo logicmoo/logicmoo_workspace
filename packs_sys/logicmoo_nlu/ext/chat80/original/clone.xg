@@ -427,8 +427,8 @@ verb_form88(_,RootVerb,Tense,Agmt,_Role) --->
    theText80_W2(W,L),
    {verb_form_wlex(L,W,RootVerb,Tense,Agmt)}.
 
-maybe_modal(W,MODAL,ModalInfo) ---> {modal_verb_form_aux(W,MODAL,_,_)},theText80(W),
-  {MODAL=ModalInfo}.
+maybe_modal(W,MODAL,ModalInfo) ---> {modal_verb_form_aux(W,MODAL1,_,_)},theText80(W),
+  {MODAL=ModalInfo,ignore(MODAL=MODAL1)}.
 
 rest_verb(aux,have(MODAL),Root,Voice,[perf|Aspect]) ---> verb_form88(MODAL,Root0,past+part,_,_), have_vt(Root0,Root,Voice,Aspect).
 rest_verb(aux,be(MODAL),Root,Voice,Aspect) ---> verb_form88(MODAL,Root0,Tense0,_,_), be_vt(Tense0,Root0,Root,Voice,Aspect).
