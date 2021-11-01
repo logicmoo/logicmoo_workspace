@@ -1317,7 +1317,7 @@ i(/(incr_invalidate_calls,1),"Invalidate all tables for subgoals of Goal as well
 i(/(incr_invalidate_call,1),"This is the XSB name, but the manual says incr_invalidate_calls/1 and the comment with the code suggests this is misnamed.",swi_man_manual('increval.html'),manual,6271).
 i(/(incr_table_update,0),"Updated all invalid tables",swi_man_manual('increval.html'),manual,6800).
 i(/(incr_propagate_calls,1),"Activate the monotonic answer propagation similarly to when a new fact is asserted for a monotonic dynamic predicate.",swi_man_manual('increval.html'),manual,6944).
-i(section(0,'0','Manual/index.html'),"SWI-Prolog 8.5.0 Reference Manual",swi_man_manual('index.html'),manual,3280).
+i(section(0,'0','Manual/index.html'),"SWI-Prolog 8.5.1 Reference Manual",swi_man_manual('index.html'),manual,3280).
 i(section(2,'2.2','sec:initfile'),"The user's initialisation file",swi_man_manual('initfile.html'),manual,3521).
 i(section(2,'2.3','sec:initgoal'),"Initialisation files and goals",swi_man_manual('initgoal.html'),manual,3515).
 i(section(2,'A.19','sec:intercept'),"library(intercept): Intercept and signal interface",swi_man_manual('intercept.html'),manual,3518).
@@ -1500,10 +1500,10 @@ i(/(current_locale,1),"True when Locale is the locale of the calling thread.",sw
 i(section(2,'A.23','sec:main'),"library(main): Provide entry point for scripts",swi_man_manual('main.html'),manual,3508).
 i(/(main,0),"Call main/1 using the passed command-line arguments.",swi_man_manual('main.html'),manual,4623).
 i(/(argv_options,3),"Parse command line arguments.",swi_man_manual('main.html'),manual,4972).
-i(/(argv_options,4),"As argv_options/3 in guided mode, Currently this version allows parsing argument options throwing an exception rather than calling halt/1 by passing an empty list to ParseOptions.",swi_man_manual('main.html'),manual,9468).
-i(/(argv_usage,1),"Use print_message/2 to print a usage message at Level.",swi_man_manual('main.html'),manual,10164).
-i(/(cli_parse_debug_options,2),"Parse certain commandline options for debugging and development purposes.",swi_man_manual('main.html'),manual,10980).
-i(/(cli_enable_development_system,0),"Re-enable the development environment.",swi_man_manual('main.html'),manual,12132).
+i(/(argv_options,4),"As argv_options/3 in guided mode, Currently this version allows parsing argument options throwing an exception rather than calling halt/1 by passing an empty list to ParseOptions.",swi_man_manual('main.html'),manual,10144).
+i(/(argv_usage,1),"Use print_message/2 to print a usage message at Level.",swi_man_manual('main.html'),manual,11240).
+i(/(cli_parse_debug_options,2),"Parse certain commandline options for debugging and development purposes.",swi_man_manual('main.html'),manual,13002).
+i(/(cli_enable_development_system,0),"Re-enable the development environment.",swi_man_manual('main.html'),manual,14154).
 i(section(2,'4.22','sec:manipatom'),"Analysing and Constructing Atoms",swi_man_manual('manipatom.html'),manual,3516).
 i(/(atom_codes,2),"Convert between an atom and a list of character codes (integers denoting characters).",swi_man_manual('manipatom.html'),manual,5644).
 i(/(atom_chars,2),"Similar to atom_codes/2, but CharList is a list of characters (atoms of length 1) rather than a list of character codes (integers denoting characters).",swi_man_manual('manipatom.html'),manual,6928).
@@ -2063,35 +2063,36 @@ i(/(getenv,2),"Get environment variable.",swi_man_manual('system.html'),manual,6
 i(/(setenv,2),"Set an environment variable.",swi_man_manual('system.html'),manual,6926).
 i(/(unsetenv,1),"Remove an environment variable from the environment.",swi_man_manual('system.html'),manual,7893).
 i(/(setlocale,3),"Set/Query the locale setting which tells the C library how to interpret text files, write numbers, dates, etc.",swi_man_manual('system.html'),manual,8275).
-i(section(3,'4.35.1','sec:winsystem'),"Windows-specific Operating System Interaction",swi_man_manual('system.html'),manual,9575).
-i(/(win_exec,2),"Windows only.",swi_man_manual('system.html'),manual,10378).
-i(/(win_shell,3),"Windows only.",swi_man_manual('system.html'),manual,11102).
-i(/(win_shell,2),"Same as win_shell(Operation, File, normal).",swi_man_manual('system.html'),manual,11909).
-i(/(win_registry_get_value,3),"Windows only.",swi_man_manual('system.html'),manual,12098).
-i(/(win_folder,2),"True if Name is the Windows‘CSIDL' of Directory.",swi_man_manual('system.html'),manual,13187).
-i(/(win_add_dll_directory,1),"This predicate adds a directory to the search path for dependent DLL files.",swi_man_manual('system.html'),manual,13895).
-i(/(win_add_dll_directory,2),"This predicate adds a directory to the search path for dependent DLL files.",swi_man_manual('system.html'),manual,14916).
-i(/(win_remove_dll_directory,1),"Remove a DLL search directory installed using win_add_dll_directory/2.",swi_man_manual('system.html'),manual,16618).
-i(/(win_process_modules,1),"This predicate is a wrapper around EnumProcessModules().",swi_man_manual('system.html'),manual,16944).
-i(section(3,'4.35.2','sec:timedate'),"Dealing with time and date",swi_man_manual('system.html'),manual,17879).
-i(section(4,'4.35.2.1','sec:dattimedata'),"Time and date data structures",swi_man_manual('system.html'),manual,20467).
-i(section(4,'4.35.2.2','sec:datimepreds'),"Time and date predicates",swi_man_manual('system.html'),manual,22401).
-i(/(get_time,1),"Return the current time as a TimeStamp.",swi_man_manual('system.html'),manual,22600).
-i(/(stamp_date_time,3),"Convert a TimeStamp to a DateTime in the given timezone.",swi_man_manual('system.html'),manual,22885).
-i(/(date_time_stamp,2),"Compute the timestamp from a date/9 term.",swi_man_manual('system.html'),manual,23456).
-i(/(date_time_value,3),"Extract values from a date/9 term.",swi_man_manual('system.html'),manual,25321).
-i(/(format_time,3),"Modelled after POSIX strftime(), using GNU extensions.",swi_man_manual('system.html'),manual,26560).
-i(/(format_time,4),"Format time given a specified Locale.",swi_man_manual('system.html'),manual,34167).
-i(/(parse_time,2),"Same as parse_time(Text, _Format, Stamp).",swi_man_manual('system.html'),manual,34871).
-i(/(parse_time,3),"Parse a textual time representation, producing a time-stamp.",swi_man_manual('system.html'),manual,35158).
-i(/(day_of_the_week,2),"Computes the day of the week for a given date.",swi_man_manual('system.html'),manual,36313).
-i(section(3,'4.35.3','sec:plwin'),"Controlling the swipl-win.exe console window",swi_man_manual('system.html'),manual,36696).
-i(/(window_title,2),"Unify Old with the title displayed in the console and change the title to New.",swi_man_manual('system.html'),manual,37213).
-i(/(win_window_pos,1),"Interface to the MS-Windows SetWindowPos() function, controlling size, position and stacking order of the window.",swi_man_manual('system.html'),manual,37593).
-i(/(win_window_color,2),"Change the color of the console window.",swi_man_manual('system.html'),manual,38830).
-i(/(win_has_menu,0),"True if win_insert_menu/2 and win_insert_menu_item/4 are present.",swi_man_manual('system.html'),manual,39338).
-i(/(win_insert_menu,2),"Insert a new entry (pulldown) in the menu.",swi_man_manual('system.html'),manual,39708).
-i(/(win_insert_menu_item,4),"Add an item to the named Pulldown menu.",swi_man_manual('system.html'),manual,40443).
+i(section(3,'4.35.1','sec:winsystem'),"Windows-specific Operating System Interaction",swi_man_manual('system.html'),manual,10037).
+i(/(win_exec,2),"Windows only.",swi_man_manual('system.html'),manual,10840).
+i(/(win_shell,3),"Windows only.",swi_man_manual('system.html'),manual,11564).
+i(/(win_shell,2),"Same as win_shell(Operation, File, normal).",swi_man_manual('system.html'),manual,12371).
+i(/(win_registry_get_value,3),"Windows only.",swi_man_manual('system.html'),manual,12560).
+i(/(win_folder,2),"True if Name is the Windows‘CSIDL' of Directory.",swi_man_manual('system.html'),manual,13649).
+i(/(win_add_dll_directory,1),"This predicate adds a directory to the search path for dependent DLL files.",swi_man_manual('system.html'),manual,14357).
+i(/(win_add_dll_directory,2),"This predicate adds a directory to the search path for dependent DLL files.",swi_man_manual('system.html'),manual,15378).
+i(/(win_remove_dll_directory,1),"Remove a DLL search directory installed using win_add_dll_directory/2.",swi_man_manual('system.html'),manual,17080).
+i(/(win_process_modules,1),"This predicate is a wrapper around EnumProcessModules().",swi_man_manual('system.html'),manual,17406).
+i(/(win_get_user_preferred_ui_languages,2),"Unifies Languages with a list of the user preferred languages (Windows Display Languages) in order of preference.",swi_man_manual('system.html'),manual,18330).
+i(section(3,'4.35.2','sec:timedate'),"Dealing with time and date",swi_man_manual('system.html'),manual,19175).
+i(section(4,'4.35.2.1','sec:dattimedata'),"Time and date data structures",swi_man_manual('system.html'),manual,21763).
+i(section(4,'4.35.2.2','sec:datimepreds'),"Time and date predicates",swi_man_manual('system.html'),manual,23697).
+i(/(get_time,1),"Return the current time as a TimeStamp.",swi_man_manual('system.html'),manual,23896).
+i(/(stamp_date_time,3),"Convert a TimeStamp to a DateTime in the given timezone.",swi_man_manual('system.html'),manual,24181).
+i(/(date_time_stamp,2),"Compute the timestamp from a date/9 term.",swi_man_manual('system.html'),manual,24752).
+i(/(date_time_value,3),"Extract values from a date/9 term.",swi_man_manual('system.html'),manual,26617).
+i(/(format_time,3),"Modelled after POSIX strftime(), using GNU extensions.",swi_man_manual('system.html'),manual,27856).
+i(/(format_time,4),"Format time given a specified Locale.",swi_man_manual('system.html'),manual,35463).
+i(/(parse_time,2),"Same as parse_time(Text, _Format, Stamp).",swi_man_manual('system.html'),manual,36167).
+i(/(parse_time,3),"Parse a textual time representation, producing a time-stamp.",swi_man_manual('system.html'),manual,36454).
+i(/(day_of_the_week,2),"Computes the day of the week for a given date.",swi_man_manual('system.html'),manual,37609).
+i(section(3,'4.35.3','sec:plwin'),"Controlling the swipl-win.exe console window",swi_man_manual('system.html'),manual,37992).
+i(/(window_title,2),"Unify Old with the title displayed in the console and change the title to New.",swi_man_manual('system.html'),manual,38509).
+i(/(win_window_pos,1),"Interface to the MS-Windows SetWindowPos() function, controlling size, position and stacking order of the window.",swi_man_manual('system.html'),manual,38889).
+i(/(win_window_color,2),"Change the color of the console window.",swi_man_manual('system.html'),manual,40126).
+i(/(win_has_menu,0),"True if win_insert_menu/2 and win_insert_menu_item/4 are present.",swi_man_manual('system.html'),manual,40634).
+i(/(win_insert_menu,2),"Insert a new entry (pulldown) in the menu.",swi_man_manual('system.html'),manual,41004).
+i(/(win_insert_menu_item,4),"Add an item to the named Pulldown menu.",swi_man_manual('system.html'),manual,41739).
 i(section(2,'A.48','sec:tables'),"library(tables): XSB interface to tables",swi_man_manual('tables.html'),manual,3530).
 i(/(tnot,1),"Tabled negation.",swi_man_manual('tables.html'),manual,4044).
 i(/(tfindall,3),"This predicate emerged in XSB in an attempt to provide a safer alternative to findall/3.",swi_man_manual('tables.html'),manual,4322).
@@ -3086,7 +3087,7 @@ i(section(4,'1.6.2','sec:mqi-messages'),"Machine Query Interface Messages Refere
 i(section(2,'2','sec:mqi'),"library(mqi)",swi_man_packages('mqi.html'),packages,40637).
 i(/(mqi_start,1),"Starts a Prolog Machine Query Interface ('MQI') using Options.",swi_man_packages('mqi.html'),packages,40796).
 i(/(mqi_start,0),"Main entry point for running the Machine Query Interface in \"Embedded Mode\" (section 1.4) and designed to be called from the command line.",swi_man_packages('mqi.html'),packages,48855).
-i(/(mqi_stop,1),"If Server_Thread_ID is a variable, stops all Machine Query Interfaces and associated threads.",swi_man_packages('mqi.html'),packages,50459).
+i(/(mqi_stop,1),"If Server_Thread_ID is a variable, stops all Machine Query Interfaces and associated threads.",swi_man_packages('mqi.html'),packages,50594).
 i(section(0,'0','packages/readline.html'),"SWI-Prolog binding to GNU readline",swi_man_packages('readline.html'),packages,2786).
 i(section(2,'1','sec:readline'),"library(readline): GNU readline interface",swi_man_packages('readline.html'),packages,3542).
 i(/(rl_read_init_file,1),"Read a GNU readline config file.",swi_man_packages('readline.html'),packages,4466).
@@ -3400,27 +3401,27 @@ i(section(2,'1','sec:protobufs-main'),"Google's Protocol Buffers",swi_man_packag
 i(section(3,'1.1','sec:protobufs-overview'),"Overview",swi_man_packages('protobufs.html'),packages,6795).
 i(section(3,'1.2','sec:protobufs-processing-with-prolog'),"Processing protobufs with Prolog",swi_man_packages('protobufs.html'),packages,8394).
 i(section(3,'1.3','sec:protobufs-protoc'),"protoc",swi_man_packages('protobufs.html'),packages,9090).
-i(section(4,'1.3.1','sec:protobufs-serialize-to-codes'),"protobuf_serialize_to_codes/3",swi_man_packages('protobufs.html'),packages,11846).
-i(section(4,'1.3.2','sec:protobufs-parse-from-codes'),"protobuf_parse_from_codes/3",swi_man_packages('protobufs.html'),packages,13502).
-i(section(4,'1.3.3','sec:protobufs-addressbook-example'),"addressbook example",swi_man_packages('protobufs.html'),packages,16241).
-i(section(3,'1.4','sec:protobufs-swipl'),"The low-level SWI-Prolog Implementation",swi_man_packages('protobufs.html'),packages,17012).
-i(section(4,'1.4.1','sec:protobufs-wire-types'),"Wiretypes",swi_man_packages('protobufs.html'),packages,21512).
-i(section(4,'1.4.2','sec:protobufs-tags'),"Tags (field numbers)",swi_man_packages('protobufs.html'),packages,27088).
-i(section(4,'1.4.3','sec:protobufs-basic-usage'),"Basic Usage",swi_man_packages('protobufs.html'),packages,27858).
-i(section(4,'1.4.4','sec:protobufs-aaee'),"Alternation, Aggregation, Encapsulation, and Enumeration",swi_man_packages('protobufs.html'),packages,31761).
-i(section(4,'1.4.5','sec:protobufs-groups'),"Groups (deprecated)",swi_man_packages('protobufs.html'),packages,39546).
-i(section(4,'1.4.6','sec:protobufs-advanced'),"Advanced Topics",swi_man_packages('protobufs.html'),packages,40140).
-i(section(2,'2','sec:protobufs-appendix'),"Appendix",swi_man_packages('protobufs.html'),packages,42367).
-i(section(3,'2.1','sec:protobufs-ex-xml'),"Example: A Simple XML Like Structure",swi_man_packages('protobufs.html'),packages,42536).
-i(section(3,'2.2','sec:protobufs-ex-vector-of-numbers'),"Example: Vectors of Numbers",swi_man_packages('protobufs.html'),packages,47076).
-i(section(3,'2.3','sec:protobufs-ex-heterogeneous'),"Example: Heterogeneous Collections",swi_man_packages('protobufs.html'),packages,49646).
-i(section(2,'3','sec:protobufs'),"library(protobufs): Google's Protocol Buffers (\"protobufs\")",swi_man_packages('protobufs.html'),packages,51812).
-i(/(protobuf_parse_from_codes,3),"Process bytes (list of int) that is the serialized form of a message (designated by MessageType), creating a Prolog term.",swi_man_packages('protobufs.html'),packages,57297).
-i(/(protobuf_serialize_to_codes,3),"Process a Prolog term into bytes (list of int) that is the serialized form of a message (designated by MessageType).",swi_man_packages('protobufs.html'),packages,61794).
-i(/(protobuf_message,2),"Marshals and unmarshals byte streams encoded using Google's Protobuf grammars.",swi_man_packages('protobufs.html'),packages,64508).
-i(/(protobuf_message,3),"Marshals and unmarshals byte streams encoded using Google's Protobuf grammars.",swi_man_packages('protobufs.html'),packages,64508).
-i(/(protobuf_field_is_map,2),"Succeeds if MessageType’s FieldName is defined as a map<...> in the .proto file.",swi_man_packages('protobufs.html'),packages,66224).
-i(/(protobuf_map_pairs,3),"Convert between a list of protobuf map entries (in the form DictTag{key:Key, value:Value} and a key-value list as described in library(pairs).",swi_man_packages('protobufs.html'),packages,66568).
+i(section(4,'1.3.1','sec:protobufs-serialize-to-codes'),"protobuf_serialize_to_codes/3",swi_man_packages('protobufs.html'),packages,11790).
+i(section(4,'1.3.2','sec:protobufs-parse-from-codes'),"protobuf_parse_from_codes/3",swi_man_packages('protobufs.html'),packages,13446).
+i(section(4,'1.3.3','sec:protobufs-addressbook-example'),"addressbook example",swi_man_packages('protobufs.html'),packages,16185).
+i(section(3,'1.4','sec:protobufs-swipl'),"The low-level SWI-Prolog Implementation",swi_man_packages('protobufs.html'),packages,16956).
+i(section(4,'1.4.1','sec:protobufs-wire-types'),"Wiretypes",swi_man_packages('protobufs.html'),packages,21456).
+i(section(4,'1.4.2','sec:protobufs-tags'),"Tags (field numbers)",swi_man_packages('protobufs.html'),packages,27032).
+i(section(4,'1.4.3','sec:protobufs-basic-usage'),"Basic Usage",swi_man_packages('protobufs.html'),packages,27802).
+i(section(4,'1.4.4','sec:protobufs-aaee'),"Alternation, Aggregation, Encapsulation, and Enumeration",swi_man_packages('protobufs.html'),packages,31705).
+i(section(4,'1.4.5','sec:protobufs-groups'),"Groups (deprecated)",swi_man_packages('protobufs.html'),packages,39490).
+i(section(4,'1.4.6','sec:protobufs-advanced'),"Advanced Topics",swi_man_packages('protobufs.html'),packages,40084).
+i(section(2,'2','sec:protobufs-appendix'),"Appendix",swi_man_packages('protobufs.html'),packages,42311).
+i(section(3,'2.1','sec:protobufs-ex-xml'),"Example: A Simple XML Like Structure",swi_man_packages('protobufs.html'),packages,42480).
+i(section(3,'2.2','sec:protobufs-ex-vector-of-numbers'),"Example: Vectors of Numbers",swi_man_packages('protobufs.html'),packages,47020).
+i(section(3,'2.3','sec:protobufs-ex-heterogeneous'),"Example: Heterogeneous Collections",swi_man_packages('protobufs.html'),packages,49590).
+i(section(2,'3','sec:protobufs'),"library(protobufs): Google's Protocol Buffers (\"protobufs\")",swi_man_packages('protobufs.html'),packages,51756).
+i(/(protobuf_parse_from_codes,3),"Process bytes (list of int) that is the serialized form of a message (designated by MessageType), creating a Prolog term.",swi_man_packages('protobufs.html'),packages,57241).
+i(/(protobuf_serialize_to_codes,3),"Process a Prolog term into bytes (list of int) that is the serialized form of a message (designated by MessageType).",swi_man_packages('protobufs.html'),packages,61738).
+i(/(protobuf_message,2),"Marshals and unmarshals byte streams encoded using Google's Protobuf grammars.",swi_man_packages('protobufs.html'),packages,64452).
+i(/(protobuf_message,3),"Marshals and unmarshals byte streams encoded using Google's Protobuf grammars.",swi_man_packages('protobufs.html'),packages,64452).
+i(/(protobuf_field_is_map,2),"Succeeds if MessageType’s FieldName is defined as a map<...> in the .proto file.",swi_man_packages('protobufs.html'),packages,66168).
+i(/(protobuf_map_pairs,3),"Convert between a list of protobuf map entries (in the form DictTag{key:Key, value:Value} and a key-value list as described in library(pairs).",swi_man_packages('protobufs.html'),packages,66512).
 i(section(0,'0','packages/redis.html'),"Redis -- a SWI-Prolog client for redis",swi_man_packages('redis.html'),packages,2790).
 i(section(2,'1','sec:redis-overview'),"About the SWI-Prolog Redis client",swi_man_packages('redis.html'),packages,4484).
 i(section(3,'1.1','sec:redis-threads'),"Redis and threads",swi_man_packages('redis.html'),packages,5362).
@@ -3841,38 +3842,39 @@ i(/(json_read,3),"Read next JSON value from Stream into a Prolog term.",swi_man_
 i(/(json_write,2),"Write a JSON term to Stream.",swi_man_packages('http.html'),packages,294738).
 i(/(json_write,3),"Write a JSON term to Stream.",swi_man_packages('http.html'),packages,294738).
 i(/(json_write_hook,4),"Hook that can be used to emit a JSON representation for Term to Stream.",swi_man_packages('http.html'),packages,297663).
-i(/(is_json_term,1),"True if Term is a json term.",swi_man_packages('http.html'),packages,298702).
-i(/(is_json_term,2),"True if Term is a json term.",swi_man_packages('http.html'),packages,298702).
-i(/(json_read_dict,2),"Read a JSON object, returning objects as a dicts.",swi_man_packages('http.html'),packages,299268).
-i(/(json_read_dict,3),"Read a JSON object, returning objects as a dicts.",swi_man_packages('http.html'),packages,299268).
-i(/(json_write_dict,2),"Write a JSON term, represented using dicts.",swi_man_packages('http.html'),packages,301714).
-i(/(json_write_dict,3),"Write a JSON term, represented using dicts.",swi_man_packages('http.html'),packages,301714).
-i(/(atom_json_dict,3),"Convert between textual representation and a JSON term represented as a dict.",swi_man_packages('http.html'),packages,302236).
-i(section(3,'7.2','sec:jsonconvert'),"library(http/json_convert): Convert between JSON terms and Prolog application terms",swi_man_packages('http.html'),packages,303002).
-i(/(current_json_object,3),"Multifile predicate computed from the json_object/1 declarations.",swi_man_packages('http.html'),packages,306470).
-i(/(json_object,1),"Declare a JSON object.",swi_man_packages('http.html'),packages,307064).
-i(/(prolog_bool_to_json,2),"JSON is the JSON boolean for Prolog.",swi_man_packages('http.html'),packages,308278).
-i(/(prolog_to_json,2),"Translate a Prolog application Term into a JSON object term.",swi_man_packages('http.html'),packages,308902).
-i(/(json_to_prolog,2),"Translate a JSON term into an application term.",swi_man_packages('http.html'),packages,309776).
-i(section(3,'7.3','sec:httpjson'),"library(http/http_json): HTTP JSON Plugin module",swi_man_packages('http.html'),packages,310632).
-i(/('http_client:http_convert_data',4),"Hook implementation that supports reading JSON documents.",swi_man_packages('http.html'),packages,313989).
-i(/(is_json_content_type,1),"True if ContentType is a header value (either parsed or as atom/string) that denotes a JSON value.",swi_man_packages('http.html'),packages,314624).
-i(/(json_type,1),"True if MediaType is a JSON media type.",swi_man_packages('http.html'),packages,314922).
-i(:(http,/(post_data_hook,3)),"Hook implementation that allows http_post_data/3 posting JSON objects using one of the forms below.",swi_man_packages('http.html'),packages,315476).
-i(/(http_read_json,2),"Extract JSON data posted to this HTTP request.",swi_man_packages('http.html'),packages,316551).
-i(/(http_read_json,3),"Extract JSON data posted to this HTTP request.",swi_man_packages('http.html'),packages,316551).
-i(/(http_read_json_dict,2),"Similar to http_read_json/2,3, but by default uses the version 7 extended datatypes.",swi_man_packages('http.html'),packages,317737).
-i(/(http_read_json_dict,3),"Similar to http_read_json/2,3, but by default uses the version 7 extended datatypes.",swi_man_packages('http.html'),packages,317737).
-i(/(reply_json,1),"Formulate a JSON HTTP reply.",swi_man_packages('http.html'),packages,318222).
-i(/(reply_json,2),"Formulate a JSON HTTP reply.",swi_man_packages('http.html'),packages,318222).
-i(/(reply_json_dict,1),"As reply_json/1 and reply_json/2, but assumes the new dict based data representation.",swi_man_packages('http.html'),packages,319553).
-i(/(reply_json_dict,2),"As reply_json/1 and reply_json/2, but assumes the new dict based data representation.",swi_man_packages('http.html'),packages,319553).
-i(section(2,'8','sec:http-mime'),"MIME support",swi_man_packages('http.html'),packages,320310).
-i(section(3,'8.1','sec:mimepack'),"library(http/mimepack): Create a MIME message",swi_man_packages('http.html'),packages,320463).
-i(/(mime_pack,3),"Pack a number of inputs into a MIME package using a specified or generated boundary.",swi_man_packages('http.html'),packages,321194).
-i(section(2,'9','sec:http-security'),"Security",swi_man_packages('http.html'),packages,324764).
-i(section(2,'10','sec:http-tips-and-tricks'),"Tips and tricks",swi_man_packages('http.html'),packages,327782).
-i(section(2,'11','sec:http-status'),"Status",swi_man_packages('http.html'),packages,329068).
+i(/(json_dict_pairs,2),"This hook may be used to order the keys of an object.",swi_man_packages('http.html'),packages,298702).
+i(/(is_json_term,1),"True if Term is a json term.",swi_man_packages('http.html'),packages,299052).
+i(/(is_json_term,2),"True if Term is a json term.",swi_man_packages('http.html'),packages,299052).
+i(/(json_read_dict,2),"Read a JSON object, returning objects as a dicts.",swi_man_packages('http.html'),packages,299618).
+i(/(json_read_dict,3),"Read a JSON object, returning objects as a dicts.",swi_man_packages('http.html'),packages,299618).
+i(/(json_write_dict,2),"Write a JSON term, represented using dicts.",swi_man_packages('http.html'),packages,302064).
+i(/(json_write_dict,3),"Write a JSON term, represented using dicts.",swi_man_packages('http.html'),packages,302064).
+i(/(atom_json_dict,3),"Convert between textual representation and a JSON term represented as a dict.",swi_man_packages('http.html'),packages,302586).
+i(section(3,'7.2','sec:jsonconvert'),"library(http/json_convert): Convert between JSON terms and Prolog application terms",swi_man_packages('http.html'),packages,303352).
+i(/(current_json_object,3),"Multifile predicate computed from the json_object/1 declarations.",swi_man_packages('http.html'),packages,306820).
+i(/(json_object,1),"Declare a JSON object.",swi_man_packages('http.html'),packages,307414).
+i(/(prolog_bool_to_json,2),"JSON is the JSON boolean for Prolog.",swi_man_packages('http.html'),packages,308628).
+i(/(prolog_to_json,2),"Translate a Prolog application Term into a JSON object term.",swi_man_packages('http.html'),packages,309252).
+i(/(json_to_prolog,2),"Translate a JSON term into an application term.",swi_man_packages('http.html'),packages,310126).
+i(section(3,'7.3','sec:httpjson'),"library(http/http_json): HTTP JSON Plugin module",swi_man_packages('http.html'),packages,310982).
+i(/('http_client:http_convert_data',4),"Hook implementation that supports reading JSON documents.",swi_man_packages('http.html'),packages,314339).
+i(/(is_json_content_type,1),"True if ContentType is a header value (either parsed or as atom/string) that denotes a JSON value.",swi_man_packages('http.html'),packages,314974).
+i(/(json_type,1),"True if MediaType is a JSON media type.",swi_man_packages('http.html'),packages,315272).
+i(:(http,/(post_data_hook,3)),"Hook implementation that allows http_post_data/3 posting JSON objects using one of the forms below.",swi_man_packages('http.html'),packages,315826).
+i(/(http_read_json,2),"Extract JSON data posted to this HTTP request.",swi_man_packages('http.html'),packages,316901).
+i(/(http_read_json,3),"Extract JSON data posted to this HTTP request.",swi_man_packages('http.html'),packages,316901).
+i(/(http_read_json_dict,2),"Similar to http_read_json/2,3, but by default uses the version 7 extended datatypes.",swi_man_packages('http.html'),packages,318087).
+i(/(http_read_json_dict,3),"Similar to http_read_json/2,3, but by default uses the version 7 extended datatypes.",swi_man_packages('http.html'),packages,318087).
+i(/(reply_json,1),"Formulate a JSON HTTP reply.",swi_man_packages('http.html'),packages,318572).
+i(/(reply_json,2),"Formulate a JSON HTTP reply.",swi_man_packages('http.html'),packages,318572).
+i(/(reply_json_dict,1),"As reply_json/1 and reply_json/2, but assumes the new dict based data representation.",swi_man_packages('http.html'),packages,319903).
+i(/(reply_json_dict,2),"As reply_json/1 and reply_json/2, but assumes the new dict based data representation.",swi_man_packages('http.html'),packages,319903).
+i(section(2,'8','sec:http-mime'),"MIME support",swi_man_packages('http.html'),packages,320660).
+i(section(3,'8.1','sec:mimepack'),"library(http/mimepack): Create a MIME message",swi_man_packages('http.html'),packages,320813).
+i(/(mime_pack,3),"Pack a number of inputs into a MIME package using a specified or generated boundary.",swi_man_packages('http.html'),packages,321544).
+i(section(2,'9','sec:http-security'),"Security",swi_man_packages('http.html'),packages,325114).
+i(section(2,'10','sec:http-tips-and-tricks'),"Tips and tricks",swi_man_packages('http.html'),packages,328132).
+i(section(2,'11','sec:http-status'),"Status",swi_man_packages('http.html'),packages,329418).
 i(section(0,'0','packages/pcre.html'),"SWI-Prolog Regular Expression library",swi_man_packages('pcre.html'),packages,2789).
 i(section(2,'1','sec:pcre-motivation'),"Motivation",swi_man_packages('pcre.html'),packages,3610).
 i(section(2,'2','sec:pcre'),"library(pcre): Perl compatible regular expression matching for SWI-Prolog",swi_man_packages('pcre.html'),packages,5231).

@@ -33,7 +33,12 @@
 % :- set_prolog_flag(optimise_debug, false). % ensure assertion/1 is executed
 
 test_read_main :-
-    run_tests.
+    run_tests. % ([ scalar,
+               %    repeated,
+               %    golden,
+               %    oneof,
+               %    map
+               %  ]).
 
 round_trip_serialize_parse(Term, MsgType, OutputPath) :-
     protobuf_serialize_to_codes(Term, MsgType, WireCodes),

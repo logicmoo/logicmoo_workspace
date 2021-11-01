@@ -7184,6 +7184,12 @@ provide documented access to these terms. Currently it is adviced to
 ignore these arguments. </td></tr>
 </table>
 </dd>
+<dt class="multidef"><span class="pred-tag">[semidet,multifile]</span><a id="json_dict_pairs/2"><strong>json_dict_pairs</strong>(<var>+Dict, 
+-Pairs</var>)</a></dt>
+<dd class="defbody">
+This hook may be used to order the keys of an object. If it fails,
+<span class="pred-ext">dict_pairs/3</span> is used which produces an 
+ordered list of keys.</dd>
 <dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="is_json_term/1"><strong>is_json_term</strong>(<var>@Term</var>)</a></dt>
 <dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="is_json_term/2"><strong>is_json_term</strong>(<var>@Term, 
 +Options</var>)</a></dt>
@@ -8166,6 +8172,7 @@ relevant. The XPCE based server is considered obsolete.
 <dt><a class="idx" href="#js_expression//1">js_expression//1</a></dt>
 <dt><a class="idx" href="#js_new//2">js_new//2</a></dt>
 <dt><a class="idx" href="#js_script//1">js_script//1</a></dt>
+<dt><a class="idx" href="#json_dict_pairs/2">json_dict_pairs/2</a></dt>
 <dt><a class="idx" href="#json_object/1">json_object/1</a></dt>
 <dt><a class="idx" href="#json_read/2">json_read/2</a></dt>
 <dt><a class="idx" href="#json_read/3">json_read/3</a></dt>

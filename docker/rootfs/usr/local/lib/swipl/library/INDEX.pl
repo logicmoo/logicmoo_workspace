@@ -875,6 +875,7 @@ index((trace), 1, prolog_trace, prolog_trace).
 index((trace), 2, prolog_trace, prolog_trace).
 index((tracing), 2, prolog_trace, prolog_trace).
 index((notraceall), 0, prolog_trace, prolog_trace).
+index((require_prolog_version), 2, prolog_versions, prolog_versions).
 index((wrap_predicate), 4, prolog_wrap, prolog_wrap).
 index((unwrap_predicate), 2, prolog_wrap, prolog_wrap).
 index((current_predicate_wrapper), 4, prolog_wrap, prolog_wrap).

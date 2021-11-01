@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.5.0 Reference Manual: Section B.7</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.5.1 Reference Manual: Section B.7</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -252,7 +252,7 @@ hooks in the future.
 :Closure, +Options</var>)</a></dt>
 <dd class="defbody">
 Call <var>Closure</var> if an event that matches <var>Channel</var> 
-happens inside Prolog. Possible choice points are pruned as by <a id="idx:once1:2685"></a><a class="pred" href="metacall.html#once/1">once/1</a>. 
+happens inside Prolog. Possible choice points are pruned as by <a id="idx:once1:2688"></a><a class="pred" href="metacall.html#once/1">once/1</a>. 
 Possible failure is ignored, but exceptions are propagated into the 
 environment. Multiple closures can be associated with the same channel. 
 Execution of the list of closures may be terminated by an exception. 
@@ -280,14 +280,14 @@ additional arguments to the given <var>Closure</var>.
 <dl class="latex">
 <dt><strong>abort</strong></dt>
 <dd class="defbody">
-Called by <a id="idx:abort0:2686"></a><a class="pred" href="toplevel.html#abort/0">abort/0</a>.</dd>
+Called by <a id="idx:abort0:2689"></a><a class="pred" href="toplevel.html#abort/0">abort/0</a>.</dd>
 <dt><strong>erase</strong>(<var>DbRef</var>)</dt>
 <dd class="defbody">
 Called on an erased recorded database reference or clause. Note that a 
 retracted clauses is not immediately removed. Clauses are reclaimed by
-<a id="idx:garbagecollectclauses0:2687"></a><a class="pred" href="memory.html#garbage_collect_clauses/0">garbage_collect_clauses/0</a>, 
+<a id="idx:garbagecollectclauses0:2690"></a><a class="pred" href="memory.html#garbage_collect_clauses/0">garbage_collect_clauses/0</a>, 
 which is normally executed automatially in the <code>gc</code> thread. 
-This specific channel is used by <a id="idx:clauseinfo5:2688"></a><span class="pred-ext">clause_info/5</span> 
+This specific channel is used by <a id="idx:clauseinfo5:2691"></a><span class="pred-ext">clause_info/5</span> 
 to reclaim source layout of reclaimed clauses. User applications should 
 typically use the <var>PredicateIndicator</var> channel.</dd>
 <dt><strong>break</strong>(<var>Action, ClauseRef, PCOffset</var>)</dt>
@@ -297,7 +297,7 @@ Traps events related to Prolog break points. See library
 <dt><strong>frame_finished</strong>(<var>FrameRef</var>)</dt>
 <dd class="defbody">
 Indicates that a stack frame that has been examined using
-<a id="idx:prologcurrentframe1:2689"></a><a class="pred" href="manipstack.html#prolog_current_frame/1">prolog_current_frame/1</a>, <a id="idx:prologframeattribute3:2690"></a><a class="pred" href="manipstack.html#prolog_frame_attribute/3">prolog_frame_attribute/3</a> 
+<a id="idx:prologcurrentframe1:2692"></a><a class="pred" href="manipstack.html#prolog_current_frame/1">prolog_current_frame/1</a>, <a id="idx:prologframeattribute3:2693"></a><a class="pred" href="manipstack.html#prolog_frame_attribute/3">prolog_frame_attribute/3</a> 
 and friends has been deleted. Used by the source level debugger to avoid 
 that the stack view references non-existing frames.</dd>
 <dt><strong>thread_exit</strong>(<var>Thread</var>)</dt>
@@ -312,7 +312,7 @@ thread initialization and before running the thread's goal.</dd>
 <dd class="defbody">
 Thread local version of the <code>thread_exit</code> channel that is 
 also used by the <code>at_exit(Closure)</code> option of
-<a id="idx:threadcreate3:2691"></a><a class="pred" href="threadcreate.html#thread_create/3">thread_create/3</a>.</dd>
+<a id="idx:threadcreate3:2694"></a><a class="pred" href="threadcreate.html#thread_create/3">thread_create/3</a>.</dd>
 <dt><strong>PredicateIndicator</strong>(<var>Action, Context</var>)</dt>
 <dd class="defbody">
 Track changes to a predicate. This notably allows tracking modifications 
@@ -351,14 +351,14 @@ added. If the hook fails the clause is removed.
 <dt><strong>retract</strong></dt>
 <dd class="defbody">
 A clause was retracted from the given predicate using either
-<a id="idx:retract1:2692"></a><a class="pred" href="db.html#retract/1">retract/1</a>, <a id="idx:erase1:2693"></a><a class="pred" href="db.html#erase/1">erase/1</a> 
-or <a id="idx:retractall1:2694"></a><a class="pred" href="db.html#retractall/1">retractall/1</a>. <var>Context</var> 
+<a id="idx:retract1:2695"></a><a class="pred" href="db.html#retract/1">retract/1</a>, <a id="idx:erase1:2696"></a><a class="pred" href="db.html#erase/1">erase/1</a> 
+or <a id="idx:retractall1:2697"></a><a class="pred" href="db.html#retractall/1">retractall/1</a>. <var>Context</var> 
 is a clause reference. The hook is called before the clause is removed. 
 If the hook fails, the clause is not removed.
 </dd>
 <dt><strong>retractall</strong></dt>
 <dd class="defbody">
-The begining and end of <a id="idx:retractall1:2695"></a><a class="pred" href="db.html#retractall/1">retractall/1</a> 
+The begining and end of <a id="idx:retractall1:2698"></a><a class="pred" href="db.html#retractall/1">retractall/1</a> 
 is indicated with the <var>Action</var> <code>retractall</code>. The 
 context argument is <code>start(Head)</code> or <code>end(Head)</code>.
 </dd>
@@ -367,8 +367,8 @@ context argument is <code>start(Head)</code> or <code>end(Head)</code>.
 Issued when rolling back (discarding) a transaction. <var>Action</var> 
 is the local action being reverted and is one of <code>asserta</code>,
 <code>assertz</code> or <code>retract</code>. Context is the involved 
-clause. See <a id="idx:transaction1:2696"></a><a class="pred" href="db.html#transaction/1">transaction/1</a> 
-and <a id="idx:snapshot1:2697"></a><a class="pred" href="db.html#snapshot/1">snapshot/1</a>.
+clause. See <a id="idx:transaction1:2699"></a><a class="pred" href="db.html#transaction/1">transaction/1</a> 
+and <a id="idx:snapshot1:2700"></a><a class="pred" href="db.html#snapshot/1">snapshot/1</a>.
 </dd>
 <dt><strong>new_answer</strong></dt>
 <dd class="defbody">
@@ -386,7 +386,7 @@ versions may also implement this for normal tabling. See <a class="sec" href="ta
 <dt class="pubdef"><a id="prolog_unlisten/2"><strong>prolog_unlisten</strong>(<var>+Channel, 
 :Closure</var>)</a></dt>
 <dd class="defbody">
-Remove matching closures registered with <a id="idx:prologlisten3:2698"></a><a class="pred" href="prolog-event.html#prolog_listen/3">prolog_listen/3</a>.
+Remove matching closures registered with <a id="idx:prologlisten3:2701"></a><a class="pred" href="prolog-event.html#prolog_listen/3">prolog_listen/3</a>.
 </dd>
 </dl>
 

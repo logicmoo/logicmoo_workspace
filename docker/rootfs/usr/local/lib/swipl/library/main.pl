@@ -51,7 +51,7 @@
 :- autoload(library(pairs), [pairs_keys/2, pairs_values/2]).
 :- autoload(library(prolog_code), [pi_head/2]).
 :- autoload(library(prolog_debug), [spy/1]).
-:- autoload(library(dcg/high_order), [sequence/5]).
+:- autoload(library(dcg/high_order), [sequence//3, sequence//2]).
 :- autoload(library(option), [option/2]).
 
 :- meta_predicate
@@ -151,6 +151,8 @@ interrupt(_Sig) :-
 %       use ``_`` as _word separator_, user options may use either ``_``
 %       or ``-``.  Type is one of:
 %
+%       - A|B
+%         Disjunctive type.
 %       - boolean(Default)
 %       - boolean
 %         Boolean options are special.  They do not take a value except
@@ -186,8 +188,11 @@ interrupt(_Sig) :-
 %         is not checked for access, assuming the application handles
 %         this as standard input or output.
 %       - term
-%         Parse option value to a Prolog term.  Variable names for
-%         the _last_ term processed are available using var_property/2.
+%         Parse option value to a Prolog term.
+%       - term(+Options)
+%         As `term`, but passes Options to term_string/3. If the option
+%         variable_names(Bindings) is given the option value is set to
+%         the _pair_ `Term-Bindings`.
 %
 %     - opt_help(Name, HelpString)
 %       Help string used by argv_usage/1.
@@ -197,6 +202,12 @@ interrupt(_Sig) :-
 %       in the help message.  The default is the uppercase version of
 %       the type _functor name_. This produces the ``FILE`` in e.g. ``-f
 %       FILE``.
+%
+%    By default, ``-h``, ``-?`` and  ``--help``   are  bound to help. If
+%    opt_type(Opt, help, boolean) is true for   some  `Opt`, the default
+%    help binding and help message  are   disabled  and  the normal user
+%    rules apply. In particular, the user should also provide a rule for
+%    opt_help(help, String).
 
 argv_options(M:Argv, Positional, Options) :-
     in(M:opt_type(_,_,_)),
@@ -212,18 +223,24 @@ argv_options(_:Argv, Positional, Options) :-
 %   halt/1 by passing an empty list to ParseOptions. ParseOptions:
 %
 %     - on_error(+Goal)
-%       If Goal is halt(Code), exit with Code.
+%       If Goal is halt(Code), exit with Code.  Other goals are
+%       currently not supported.
+%     - options_after_arguments(+Boolean)
+%       If `false` (default `true`), stop parsing after the first
+%       positional argument, returning options that follow this
+%       argument as positional arguments.  E.g, ``-x file -y``
+%       results in positional arguments `[file, '-y']`
 
 argv_options(Argv, Positional, Options, POptions) :-
     option(on_error(halt(Code)), POptions),
     !,
     E = error(_,_),
-    catch(opt_parse(Argv, Positional, Options), E,
+    catch(opt_parse(Argv, Positional, Options, POptions), E,
           ( print_message(error, E),
             halt(Code)
           )).
-argv_options(Argv, Positional, Options, _POptions) :-
-    opt_parse(Argv, Positional, Options).
+argv_options(Argv, Positional, Options, POptions) :-
+    opt_parse(Argv, Positional, Options, POptions).
 
 %!  argv_untyped_options(+Argv, -RestArgv, -Options) is det.
 %
@@ -270,7 +287,7 @@ canonical_name(Name, PlName) :-
     split_string(Name, "-_", "", Parts),
     atomic_list_concat(Parts, '_', PlName).
 
-%!  opt_parse(:Argv, -Positional, -Options) is det.
+%!  opt_parse(:Argv, -Positional, -Options, +POptions) is det.
 %
 %   Rules follow those of Python optparse:
 %
@@ -280,35 +297,50 @@ canonical_name(Name, PlName) :-
 %     - Long options can have "=value" or have the value in the
 %       next argument.
 
-opt_parse(M:Argv, _Positional, _Options) :-
-    opt_needs_help(Argv),
+opt_parse(M:Argv, _Positional, _Options, _POptions) :-
+    opt_needs_help(M:Argv),
+    !,
     argv_usage(M:debug),
     halt(0).
-opt_parse(M:Argv, Positional, Options) :-
-    opt_parse(Argv, Positional, Options, M).
+opt_parse(M:Argv, Positional, Options, POptions) :-
+    opt_parse(Argv, Positional, Options, M, POptions).
 
-opt_needs_help(['-h']).
-opt_needs_help(['-?']).
-opt_needs_help(['--help']).
-
-opt_parse([], [], [], _).
-opt_parse([--|T], T, [], _) :-
+opt_needs_help(M:[Arg]) :-
+    in(M:opt_type(_, help, boolean)),
+    !,
+    in(M:opt_type(Opt, help, boolean)),
+    (   short_opt(Opt)
+    ->  atom_concat(-, Opt, Arg)
+    ;   atom_concat(--, Opt, Arg)
+    ),
     !.
-opt_parse([H|T], Positional, Options, M) :-
-    atom_concat(--, Long, H),
-    !,
-    take_long(Long, T, Positional, Options, M).
-opt_parse([H|T], Positional, Options, M) :-
+opt_needs_help(_:['-h']).
+opt_needs_help(_:['-?']).
+opt_needs_help(_:['--help']).
+
+opt_parse([], Positional, Options, _, _) =>
+    Positional = [],
+    Options = [].
+opt_parse([--|T], Positional, Options, _, _) =>
+    Positional = T,
+    Options = [].
+opt_parse([H|T], Positional, Options, M, POptions), atom_concat(--, Long, H) =>
+    take_long(Long, T, Positional, Options, M, POptions).
+opt_parse([H|T], Positional, Options, M, POptions),
     H \== '-',
-    string_concat(-, Opts, H),
-    !,
+    string_concat(-, Opts, H) =>
     string_chars(Opts, Shorts),
-    take_shorts(Shorts, T, Positional, Options, M).
-opt_parse([H|T], [H|PT], Options, M) :-
-    opt_parse(T, PT, Options, M).
+    take_shorts(Shorts, T, Positional, Options, M, POptions).
+opt_parse(Argv, Positional, Options, _M, POptions),
+    option(options_after_arguments(false), POptions) =>
+    Positional = Argv,
+    Options = [].
+opt_parse([H|T], Positional, Options, M, POptions) =>
+    Positional = [H|PT],
+    opt_parse(T, PT, Options, M, POptions).
 
 
-take_long(Long, T, Positional, Options, M) :- % --long=Value
+take_long(Long, T, Positional, Options, M, POptions) :- % --long=Value
     sub_atom(Long, B, _, A, =),
     !,
     sub_atom(Long, 0, B, _, LName0),
@@ -318,20 +350,20 @@ take_long(Long, T, Positional, Options, M) :- % --long=Value
     ->  opt_value(Type, Long, VAtom, Value),
         Opt =.. [Name,Value],
         Options = [Opt|OptionsT],
-        opt_parse(T, Positional, OptionsT, M)
-    ;   opt_error(unknown_option(LName0))
+        opt_parse(T, Positional, OptionsT, M, POptions)
+    ;   opt_error(unknown_option(M:LName0))
     ).
-take_long(LName0, T, Positional, Options, M) :- % --long
+take_long(LName0, T, Positional, Options, M, POptions) :- % --long
     canonical_name(LName0, LName),
-    take_long_(LName, T, Positional, Options, M).
+    take_long_(LName, T, Positional, Options, M, POptions).
 
-take_long_(Long, T, Positional, Options, M) :- % --long
+take_long_(Long, T, Positional, Options, M, POptions) :- % --long
     opt_bool_type(Long, Name, Value, M),
     !,
     Opt =.. [Name,Value],
     Options = [Opt|OptionsT],
-    opt_parse(T, Positional, OptionsT, M).
-take_long_(Long, T, Positional, Options, M) :- % --no-long, --nolong
+    opt_parse(T, Positional, OptionsT, M, POptions).
+take_long_(Long, T, Positional, Options, M, POptions) :- % --no-long, --nolong
     (   atom_concat('no_', LName, Long)
     ;   atom_concat('no', LName, Long)
     ),
@@ -340,29 +372,29 @@ take_long_(Long, T, Positional, Options, M) :- % --no-long, --nolong
     negate(Value0, Value),
     Opt =.. [Name,Value],
     Options = [Opt|OptionsT],
-    opt_parse(T, Positional, OptionsT, M).
-take_long_(Long, T, Positional, Options, M) :- % --long
+    opt_parse(T, Positional, OptionsT, M, POptions).
+take_long_(Long, T, Positional, Options, M, POptions) :- % --long
     in(M:opt_type(Long, Name, Type)),
     !,
     (   T = [VAtom|T1]
     ->  opt_value(Type, Long, VAtom, Value),
         Opt =.. [Name,Value],
         Options = [Opt|OptionsT],
-        opt_parse(T1, Positional, OptionsT, M)
+        opt_parse(T1, Positional, OptionsT, M, POptions)
     ;   opt_error(missing_value(Long, Type))
     ).
-take_long_(Long, _, _, _, _) :-
-    opt_error(unknown_option(Long)).
+take_long_(Long, _, _, _, M, _) :-
+    opt_error(unknown_option(M:Long)).
 
-take_shorts([], T, Positional, Options, M) :-
-    opt_parse(T, Positional, Options, M).
-take_shorts([H|T], Argv, Positional, Options, M) :-
+take_shorts([], T, Positional, Options, M, POptions) :-
+    opt_parse(T, Positional, Options, M, POptions).
+take_shorts([H|T], Argv, Positional, Options, M, POptions) :-
     opt_bool_type(H, Name, Value, M),
     !,
     Opt =.. [Name,Value],
     Options = [Opt|OptionsT],
-    take_shorts(T, Argv, Positional, OptionsT, M).
-take_shorts([H|T], Argv, Positional, Options, M) :-
+    take_shorts(T, Argv, Positional, OptionsT, M, POptions).
+take_shorts([H|T], Argv, Positional, Options, M, POptions) :-
     in(M:opt_type(H, Name, Type)),
     !,
     (   T == []
@@ -370,17 +402,17 @@ take_shorts([H|T], Argv, Positional, Options, M) :-
         ->  opt_value(Type, H, VAtom, Value),
             Opt =.. [Name,Value],
             Options = [Opt|OptionsT],
-            take_shorts(T, ArgvT, Positional, OptionsT, M)
+            take_shorts(T, ArgvT, Positional, OptionsT, M, POptions)
         ;   opt_error(missing_value(H, Type))
         )
     ;   atom_chars(VAtom, T),
         opt_value(Type, H, VAtom, Value),
         Opt =.. [Name,Value],
         Options = [Opt|OptionsT],
-        take_shorts([], Argv, Positional, OptionsT, M)
+        take_shorts([], Argv, Positional, OptionsT, M, POptions)
     ).
-take_shorts([H|_], _, _, _, _) :-
-    opt_error(unknown_option(H)).
+take_shorts([H|_], _, _, _, M, _) :-
+    opt_error(unknown_option(M:H)).
 
 opt_bool_type(Opt, Name, Value, M) :-
     in(M:opt_type(Opt, Name, Type)),
@@ -404,6 +436,11 @@ opt_value(Type, Opt, VAtom, _) :-
 
 %!  opt_convert(+Type, +VAtom, -Value) is semidet.
 
+opt_convert(A|B, Spec, Value) :-
+    (   opt_convert(A, Spec, Value)
+    ->  true
+    ;   opt_convert(B, Spec, Value)
+    ).
 opt_convert(boolean, Spec, Value) :-
     to_bool(Spec, Value).
 opt_convert(boolean(_), Spec, Value) :-
@@ -447,8 +484,13 @@ opt_convert(file(Access), Spec, Value) :-
         )
     ).
 opt_convert(term, Spec, Value) :-
-    term_string(Value, Spec, [variable_names(Bindings)]),
-    b_setval('$variable_names', Bindings).
+    term_string(Value, Spec, []).
+opt_convert(term(Options), Spec, Value) :-
+    term_string(Term, Spec, Options),
+    (   option(variable_names(Bindings), Options)
+    ->  Value = Term-Bindings
+    ;   Value = Term
+    ).
 
 to_bool(true,    true).
 to_bool('True',  true).
@@ -467,17 +509,28 @@ to_bool('0',     false).
 %
 %   Use print_message/2 to print a usage message  at Level. To print the
 %   message as plain text indefault color, use `debug`. Other meaningful
-%   options are `informational` or `warning`.
+%   options are `informational` or `warning`. The  help page consists of
+%   four sections, two of which are optional:
 %
-%   The default initial usage line is as below, where <command> is an as
-%   good as possible approximation for running the script.
+%     1. The __header__ is created from opt_help(help(header), String).
+%        It is optional.
+%     2. The __usage__ is added by default.  The part behind
+%        ``Usage: <command>`` is by default ``[options]`` and can be
+%        overruled using opt_help(help(usage), String).
+%     3. The actual option descriptions.  The options are presented
+%        in the order they are defined in opt_type/3.  Subsequent
+%        options for the same _destination_ (option name) are joined
+%        with the first.
+%     4. The _footer__ is created from opt_help(help(footer), String).
+%        It is optional.
 %
-%       Usage: <command> [options]
+%   The help provided by help(header),  help(usage) and help(footer) are
+%   either a simple  string  or  a  list   of  elements  as  defined  by
+%   print_message_lines/3. In the latter case, the construct `\Callable`
+%   can be used to call a DCG  rule   in  the module from which the user
+%   calls argv_options/3.  For example, we can add a bold title using
 %
-%   The usage line can  be  defined   using  opt_help/1,  as illustrated
-%   below.
-%
-%       opt_help(usage, String).
+%       opt_help(help(header), [ansi(bold, '~w', ['My title'])]).
 
 argv_usage(M:Level) :-
     print_message(Level, opt_usage(M)).
@@ -489,14 +542,45 @@ prolog:message(opt_usage(M)) -->
     usage(M).
 
 usage(M) -->
+    usage_text(M:header),
     usage_line(M),
-    usage_options(M).
+    usage_options(M),
+    usage_text(M:footer).
+
+%!  usage_text(:Which)// is det.
+%
+%   Emit  a  user  element.  This  may    use  elements  as  defined  by
+%   print_message_lines/3 or can be a simple string.
+
+usage_text(M:Which) -->
+    { in(M:opt_help(help(Which), Help))
+    },
+    !,
+    (   {Which == header}
+    ->  user_text(M:Help), [nl]
+    ;   [nl], user_text(M:Help)
+    ).
+usage_text(_) -->
+    [].
+
+user_text(M:Entries) -->
+    { is_list(Entries) },
+    sequence(help_elem(M), Entries).
+user_text(_:Help) -->
+    [ '~w'-[Help] ].
+
+help_elem(M, \Callable) -->
+    { callable(Callable) },
+    call(M:Callable),
+    !.
+help_elem(_M, Elem) -->
+    [ Elem ].
 
 usage_line(M) -->
     [ ansi(comment, 'Usage: ', []) ],
     cmdline(M),
-    (   {in(M:opt_help(usage, Help))}
-    ->  [ ' ~w'-[Help] ]
+    (   {in(M:opt_help(help(usage), Help))}
+    ->  user_text(M:Help)
     ;   [ ' [options]'-[] ]
     ),
     [ nl, nl ].
@@ -641,6 +725,7 @@ options_width(opt(_Name, _Type, Short, Long, _Help, Meta), W) =>
 
 get_option(M, opt(help, boolean, [h,?], [help],
                   Help, -)) :-
+    \+ in(M:opt_type(_, help, boolean)),       % user defined help
     (   in(M:opt_help(help, Help))
     ->  true
     ;   Help = "Show this help message and exit"
@@ -704,17 +789,17 @@ opt_error(Error) :-
 prolog:error_message(opt_error(Error)) -->
     opt_error(Error).
 
-opt_error(unknown_option(Opt)) -->
+opt_error(unknown_option(M:Opt)) -->
     [ 'Unknown option: '-[] ],
     opt(Opt),
-    [ ' (-h for help)'-[] ].
+    hint_help(M).
 opt_error(missing_value(Opt, Type)) -->
     [ 'Option '-[] ],
     opt(Opt),
     [ ' requires an argument (of type ~p)'-[Type] ].
 opt_error(value_type(Opt, Type, Found)) -->
     [ 'Option '-[] ],
-    opt(Opt),
+    opt(Opt), [' requires'],
     type(Type),
     [ ' (found '-[], ansi(code, '~w', [Found]), ')'-[] ].
 opt_error(access_file(File, exist)) -->
@@ -732,6 +817,12 @@ access_verb(write,   writing).
 access_verb(append,  writing).
 access_verb(execute, executing).
 
+hint_help(M) -->
+    { in(M:opt_type(Opt, help, boolean)) },
+    !,
+    [ ' (' ], opt(Opt), [' for help)'].
+hint_help(_) -->
+    [ ' (-h for help)'-[] ].
 
 opt(Opt) -->
     { short_opt(Opt) },
@@ -740,21 +831,30 @@ opt(Opt) -->
 opt(Opt) -->
     [ ansi(bold, '--~w', [Opt]) ].
 
+type(A|B) -->
+    type(A), [' or'],
+    type(B).
+type(oneof([One])) -->
+    !,
+    [ ' ' ],
+    atom(One).
 type(oneof(List)) -->
     !,
-    [ ' requires one of '-[] ],
+    [ ' one of '-[] ],
     sequence(atom, [', '], List).
 type(between(Low, High)) -->
     !,
-    [ ' requires a number '-[],
+    [ ' a number '-[],
       ansi(code, '~w', [Low]), '..', ansi(code, '~w', [High])
     ].
 type(nonneg) -->
-    [ ' requires a non-negative integer'-[] ].
+    [ ' a non-negative integer'-[] ].
 type(natural) -->
-    [ ' requires a positive integer (>= 1)'-[] ].
+    [ ' a positive integer (>= 1)'-[] ].
+type(file(Access)) -->
+    [ ' a file with ~w access'-[Access] ].
 type(Type) -->
-    [ ' requires an argument of type '-[], ansi(code, '~w', [Type]) ].
+    [ ' an argument of type '-[], ansi(code, '~w', [Type]) ].
 
 atom(A) -->
     [ ansi(code, '~w', [A]) ].

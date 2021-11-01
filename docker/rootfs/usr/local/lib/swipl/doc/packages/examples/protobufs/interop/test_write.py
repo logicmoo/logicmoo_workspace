@@ -23,7 +23,7 @@ scalars1a = Scalars1(
     v_bool       = False,
     v_string     = "écran 網目錦蛇",
     v_bytes      = b"\xc3\x28",  # See https://stackoverflow.com/questions/1301402/example-invalid-utf8-string
-    v_enum       = MyEnum.E1,
+    v_enum       = MyEnum.E1,  # crashes with 3.6.1 -- needs 3.8.0 or later
     v_utf8_codes = "écran 網目錦蛇",
     v_key_value  = KeyValue(key="reticulated python", value="網目錦蛇"),
 )

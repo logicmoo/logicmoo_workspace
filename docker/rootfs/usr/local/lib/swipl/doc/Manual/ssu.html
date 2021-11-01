@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.5.0 Reference Manual: Section 5.6</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.5.1 Reference Manual: Section 5.6</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -238,7 +238,7 @@ Sided Unification rules</span></a></h2>
 
 <a id="sec:ssu"></a>
 
-<p><a id="idx:singlesidedunification:1910"></a><a id="idx:SSU:1911"></a><a id="idx:termsubsumption:1912"></a>For 
+<p><a id="idx:singlesidedunification:1913"></a><a id="idx:SSU:1914"></a><a id="idx:termsubsumption:1915"></a>For 
 the execution of a normal Prolog clause, the goal term is unified with 
 the head of the clause. This allows us to write facts such as below and 
 use this relation in all four possible <em>modes</em>. This is the basis 
@@ -270,9 +270,9 @@ X = 1 ;
 ERROR: Arguments are not sufficiently instantiated
 </pre>
 
-<p>The definition of <a id="idx:sumlist2:1913"></a><a class="pred" href="lists.html#sum_list/2">sum_list/2</a> 
+<p>The definition of <a id="idx:sumlist2:1916"></a><a class="pred" href="lists.html#sum_list/2">sum_list/2</a> 
 is it appears in library(lists) is below. This implementation can be 
-considered elegant. Note that <a id="idx:sumlist2:1914"></a><a class="pred" href="lists.html#sum_list/2">sum_list/2</a> 
+considered elegant. Note that <a id="idx:sumlist2:1917"></a><a class="pred" href="lists.html#sum_list/2">sum_list/2</a> 
 has only one meaningful mode: (+,-). A general (logical) implementation 
 would allow for a partial list or a list holding one or more variables, 
 With a proper list that holds a single variable we can still make a 
@@ -374,8 +374,8 @@ The last clause often does not need a cut.
 see this may lead to undesirable results such as sum_list(L,S) binding
 <var>L</var> to&lsquo;[]` and <var>S</var> to&lsquo;0` as well as loss 
 of <em>steadfastness</em>, causing max(5,2,2) to succeed. The first 
-requires additional <a id="idx:var1:1915"></a><a class="pred" href="typetest.html#var/1">var/1</a> 
-or <a id="idx:nonvar1:1916"></a><a class="pred" href="typetest.html#nonvar/1">nonvar/1</a> 
+requires additional <a id="idx:var1:1918"></a><a class="pred" href="typetest.html#var/1">var/1</a> 
+or <a id="idx:nonvar1:1919"></a><a class="pred" href="typetest.html#nonvar/1">nonvar/1</a> 
 tests. The second requires delaying unification until after the cut.
 </ul>
 
@@ -388,7 +388,7 @@ Head, Guard =&gt; Body.
 </pre>
 
 <p>This is semantically equivalent to the Prolog clause below. The
-<a id="idx:subsumesterm2:1917"></a><a class="pred" href="compare.html#subsumes_term/2">subsumes_term/2</a> 
+<a id="idx:subsumesterm2:1920"></a><a class="pred" href="compare.html#subsumes_term/2">subsumes_term/2</a> 
 guarantees the clause head is more <em>generic</em> than the goal term 
 and thus unifying the two does not affect any of the arguments of the 
 goal. This implies all output unification _must_ be done after the head 
@@ -418,7 +418,7 @@ error for a clause that does not use the same
 <li>Unlike Picat, it is an error if no clause matches.
 </ul>
 
-<p>Given <b>=&gt;/2</b> rules, we can rewrite <a id="idx:sumlist2:1918"></a><a class="pred" href="lists.html#sum_list/2">sum_list/2</a> 
+<p>Given <b>=&gt;/2</b> rules, we can rewrite <a id="idx:sumlist2:1921"></a><a class="pred" href="lists.html#sum_list/2">sum_list/2</a> 
 as below. The first clause can be written using <b>:-/2</b> or <b>=&gt;/2</b>. 
 As the head is the most general head and there is only one clause these 
 are fully equivalent. The sum_list/3 helper needs a small modification: 
@@ -446,7 +446,7 @@ existence_error(matching_rule, Head)
 
 <p>Should silent failure be desired if no rule matches, this is easily 
 encoding by adding a rule at the end using the most general head and
-<a id="idx:fail0:1919"></a><a class="pred" href="control.html#fail/0">fail/0</a> 
+<a id="idx:fail0:1922"></a><a class="pred" href="control.html#fail/0">fail/0</a> 
 as body:
 
 <pre class="code">
@@ -514,13 +514,13 @@ is currently implemented but not defined as an operator.</span></sup>
 Head ?=&gt; Guard, !, Body.
 </pre>
 
-<p>The main consequence is that <a id="idx:clause2:1920"></a><a class="pred" href="examineprog.html#clause/2">clause/2</a> 
+<p>The main consequence is that <a id="idx:clause2:1923"></a><a class="pred" href="examineprog.html#clause/2">clause/2</a> 
 cannot distinguish between a normal clause and a <b>=&gt;/2</b> clause. 
 In the current implementation it operates on both without distinguishing 
 the two. This implies e.g.,
 <em>cross referencing</em> still works. Meta interpretation however does 
-not work. In future versions <a id="idx:clause2:1921"></a><a class="pred" href="examineprog.html#clause/2">clause/2</a> 
-may fail on these rules. As an alternative we provide <a id="idx:rule2:1922"></a><a class="pred" href="ssu.html#rule/2">rule/2</a>,3.
+not work. In future versions <a id="idx:clause2:1924"></a><a class="pred" href="examineprog.html#clause/2">clause/2</a> 
+may fail on these rules. As an alternative we provide <a id="idx:rule2:1925"></a><a class="pred" href="ssu.html#rule/2">rule/2</a>,3.
 
 <dl class="latex">
 <dt class="pubdef"><a id="rule/2"><strong>rule</strong>(<var>:Head, 

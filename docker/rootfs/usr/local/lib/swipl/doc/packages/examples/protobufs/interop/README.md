@@ -22,8 +22,26 @@ make PROTOC=/path/to/protoc PYTHON=/path/to/python3 SWIPL=/path/to/swipl test
 
 The tests require the Python protobuf support. One way of installing it is:
 ```
-python3 -m pip install protobuf
+python3 -mpip install protobuf
 ```
+But you should check the version: it should be at least 3.18.1 (which you can check
+by: `python3 -mpip show protobuf`), although it's possible that anything after
+3.8.0  will work.
+You might be tempted to install using `sudo apt install python3-protobuf`,
+but its version (as of 2021-10-12) is 3.6.1, which is too old.
+
+You will also need the protobuf compiler. This can be installed on
+Debian (Ubuntu) by:
+```
+sudo apt install protobuf-compiler
+```
+Any version 3.6.1 or later should work, although it's best to get the
+latest one (3.18.1, as of 2021-10-12).
+
+If you install protoc other than in `/usr/bin` (which is where the Debian/Ubuntu
+package puts it), you might need to modify the tests that have C++ code (currently
+rules `test_read` and `test_write`, plus `foo` in `../demo/Makefile`).
+There are comments in the Makefiles.
 
 To trun these tests under the top-level SWI-Prolog `ctest` (assuming your
 sources are in `$HOME/src` and you install a local version to
