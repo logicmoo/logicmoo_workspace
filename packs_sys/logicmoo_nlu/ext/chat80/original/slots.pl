@@ -31,7 +31,12 @@
 must80(G):- \+ current_prolog_flag(debug_chat80,true),!, call(G).
 must80(G):- call(G)*->true;(nop((wdmsg(failed(G)),ignore(on_x_fail(ftrace(G))))),wdmsg(failed(G)),fail,call(G)).
 
-lf80(_Type,G):- must80(G).
+% logical form checker for chat80
+lf80(Conj,G):- compound(Conj), (Conj=(Type1-TypeS)),!,lf80(Type1,lf80(TypeS,G)).
+lf80(Type,G):- 
+  subst(G,Type,Type0,P),
+  must80(P),
+  must80(Type=Type0).
 
 i_sentence(S,G):- i_sentence1(S,G) *-> true ; i_sentence2(S,G).
 
