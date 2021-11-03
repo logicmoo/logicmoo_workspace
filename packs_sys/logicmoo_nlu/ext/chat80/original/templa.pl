@@ -44,29 +44,29 @@ trans_LF(have(MODAL),Spatial&_,X,Spatial&_,Y, OUT, [],_,_):- append_term(MODAL,t
 
 
 
-thing_LF_access(Continent,Spatial&Geo&Continent,X,ti(Continent,X),[],_):- 
-  like_type(Geo,continent,Continent), spatial(Spatial).
 
 thing_LF(OceanOrSea,Path,X,ti(OceanOrSea,X),Nil,Any):- ti_subclass(OceanOrSea,Seamass), 
    like_type(_Geo,seamass,Seamass), %Seamass=seamass,
    thing_LF(Seamass,Path,X,ti(Seamass,X),Nil,Any).
 
-thing_LF(City,SpatialCity,X,ti(City,X),[],_):- like_type(geo,city,City), spatial(Spatial), bfeature_path(Spatial,City,SpatialCity).
+thing_LF(City,_,X,ti(City,X),[],_):- like_type(geo,city,City).
 thing_LF(Seamass,Spatial&Geo&Seamass,X,ti(Seamass,X),[],_):- spatial(Spatial),like_type(Geo,seamass,Seamass).
+thing_LF_access(Continent,Spatial&Geo&Continent,X,ti(Continent,X),[],_):- like_type(Geo,continent,Continent), spatial(Spatial).
 
-name_template_lf0(X,SpatialCity) :-like_type(geo,city,City), ti(City,X), spatial(Spatial), bfeature_path(Spatial,City,SpatialCity).
-name_template_lf0(X,Spatial&Geo&Continent) :- like_type(Geo,continent,Continent), spatial(Spatial), ti(Continent,X).
-name_template_lf0(X,Spatial&Geo&Country) :- like_type(Geo,country,Country), spatial(Spatial), ti(Country,X).
+name_template_lf0(X,Spatial&City) :-like_type(geo,city,City), ti(City,X), spatial(Spatial), bfeature_path(Spatial,City,Spatial&City).
 name_template_lf0(X,Spatial&Circle_of_latitude) :- like_type(geo,circle_of_latitude,Circle_of_latitude), ti(Circle_of_latitude,X), spatial(Spatial).
+
 name_template_lf0(X,Spatial&Geo&Seamass) :- like_type(Geo,seamass,Seamass),spatial(Spatial), ti(Seamass,X).
+name_template_lf0(X,Spatial&Geo&Country) :- like_type(Geo,country,Country), spatial(Spatial), ti(Country,X).
+name_template_lf0(X,Spatial&Geo&Continent) :- like_type(Geo,continent,Continent), spatial(Spatial), ti(Continent,X).
 
 
 %like_type(geo,River,River):- bind_pos('type',River).
 
 
 
-thing_LF(river,SpatialRiver,X,ti(River,X),[],_):- like_type(geo,river,River),spatial(Spatial), bfeature_path(Spatial,River,SpatialRiver).
-name_template_lf0(X,SpatialRiver) :- like_type(_Geo,river,River), ti(River,X), spatial(Spatial), bfeature_path(Spatial,River,SpatialRiver).
+thing_LF(river,Spatial&River,X,ti(River,X),[],_):- like_type(geo,river,River),spatial(Spatial), bfeature_path(Spatial,River,Spatial&River).
+name_template_lf0(X,Spatial&River) :- like_type(_Geo,river,River), ti(River,X), spatial(Spatial), bfeature_path(Spatial,River,Spatial&River).
 name_template_lf0(X,Spatial&_) :- like_type(_Geo,region,Region),spatial(Spatial), ti(Region,X).
 
 
@@ -76,13 +76,13 @@ thing_LF(Place,  Spatial&_,          X,ti(Place,X),  [],_):- spatial(Spatial), p
 thing_LF(Region, Spatial&_,          X,ti(Region,X), [],_):- spatial(Spatial),like_type(_Geo,region,Region).
 thing_LF(Country,Spatial&Geo&Country,X,ti(Country,X),[],_):- spatial(Spatial),like_type(Geo,country,Country).
 
-thing_LF(Capital,SpatialCity,X,ti(Capital_city,X),[],_):- 
+thing_LF(Capital,Spatial&City,X,ti(Capital_city,X),[],_):- 
    unique_of_obj(_Geo,Spatial,_Country,_Govern,Capital,City,Capital_city,_Nation_capital),
-   spatial(Spatial), bfeature_path(Spatial,City,SpatialCity).
+   spatial(Spatial), bfeature_path(Spatial,City,Spatial&City).
 
-trans_LF(Govern,SpatialCity,X,Spatial&Geo&Country,Y,specific_pred(Spatial,Nation_capital,Y,X),[],_,_):-
+trans_LF(Govern,Spatial&City,X,Spatial&Geo&Country,Y,specific_pred(Spatial,Nation_capital,Y,X),[],_,_):-
   unique_of_obj(Geo,Spatial,Country,Govern,_Capital,City,_Capital_city,Nation_capital),
-  spatial(Spatial), bfeature_path(Spatial,City,SpatialCity).
+  spatial(Spatial), bfeature_path(Spatial,City,Spatial&City).
 
 
 unique_of_obj(geo,spatial,Country,Govern,Capital,City,Capital_city,Nation_capital):-
@@ -128,10 +128,10 @@ ordering_pred(spatial,cp(west,of),X1,X2) :- type_measure_pred(_Region,position(x
 
 /* Nouns */
 
-property_LF(Capital,  SpatialCity,    X,Spatial&Geo&Country,Y,  
+property_LF(Capital,  SpatialMustCity,    X,Spatial&Geo&Country,Y,  
  specific_pred(Spatial,Nation_capital,Y,X),[],_,_):- 
    unique_of_obj(Geo,Spatial,Country,_Govern,Capital,City,_Capital_city,Nation_capital),
-   feature_path1(Spatial,City,SpatialCity).
+   feature_path1(Spatial,City,SpatialMustCity).
   
 
 property_LF(Area,     measure&Area,    X,Spatial&_,Y,  measure_pred(Spatial,Area,Y,X),[],_,_):- spatial(Spatial), type_measure_pred(_,size,Area,_).
