@@ -252,6 +252,7 @@ adj(populous,quant).
 
 rel_adj(greater,great).
 rel_adj(less,small).
+rel_adj(lesser,small).
 rel_adj(bigger,big).
 rel_adj(smaller,small).
 rel_adj(larger,large).

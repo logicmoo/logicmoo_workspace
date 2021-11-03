@@ -78,7 +78,7 @@ held_arg(XA,XA,S,S,Id,Id).
 
 % np(3+sg,nameOf(iran),[])
 i_np_head0(nameOf(Name), Type-Name,Type-Name,identityQ,'`'(true),Pred,Pred,[]) :- 
-  lf80(Type,name_template_LF(Name,Type)),!.
+  ignore(lf80(Type,name_template_LF(Name,Type))),!.
 i_np_head0(wh(X),X,X,identityQ,'`'(true),Pred,Pred,[]):-!.
 % np(3+sg,pronoun(neut),[])
 i_np_head0(Else, Type-Name,Type-Name,identityQ,'`'(P),Pred,Pred,[]):-  Else \= np_head(_,_,_), !,
@@ -98,6 +98,9 @@ i_np_head0(np_head(quantV(Op0,N),Adjs,Noun),
    lf80(Type,measure_LF(Noun,Type,Adjs,Units)),
    lf80(Type,pos_conversion_db(N,Op0,Type,V,Op)),
    must80(measure_op(Op,X,V--Units,P)).
+
+i_np_head0(np_head(generic,[],Value), Type-X,Type-X,voidQ,'`'(X=Value),Pred,Pred,[]) :- !.
+
 
 i_np_head0(Else, Type-Name,Type-Name,identityQ,'`'(P),Pred,Pred,[]):- may_qualify(Else),
    lf80(Type,make_qualifiedBy(i_np_head0,Name,Type,Else,P)).
@@ -323,6 +326,7 @@ i_sup_op(most, max).
 
 pos_conversion_db(wh(Type-X),same,Type,X,identityQ).
 pos_conversion_db(N,Op,_,N,Op):- number(N).
+pos_conversion_db(N,Op,_,N,Op):- bind_pos('value',N).
 
 measure_op(identityQ, X,X,    true).
 measure_op(same,      X,Y,    X=Y).

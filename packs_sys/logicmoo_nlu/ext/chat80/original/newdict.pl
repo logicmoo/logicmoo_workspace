@@ -478,6 +478,7 @@ comp_adj_db(clex,Smaller,Small):- clex:adj_itr_comp(Smaller, Small).
 comp_adj_db(chat80,bigger,big).
 comp_adj_db(chat80,greater,great).
 comp_adj_db(chat80,larger,large).
+comp_adj_db(chat80,lesser,small).
 comp_adj_db(chat80,less,small).
 comp_adj_db(chat80,newer,new).
 comp_adj_db(chat80,older,old).
