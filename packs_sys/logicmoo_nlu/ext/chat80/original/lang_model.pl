@@ -247,12 +247,12 @@ c80(Text):-
   c81(S).
 
 c81(S):- fail, once(c82(S)),fail. 
-c81(S):- fail,
+c81(S):-
  time_once((mpred_test_mok(into_lexical_segs(S,U)),
  forall(deepen_pos(sentence80(E,U,[],[],[])),print_tree_nl(E)))),
  fail.
 c81(S):- fail,time_once(c83(S)),fail.
-c81(S):- time_once(input_to_middle(S)),fail.
+c81(S):- fail, time_once(input_to_middle(S)),fail.
 c81(S):- time_once(c84(S)),fail.
 c81(_).
 
@@ -482,7 +482,6 @@ c84:-
 
 
 c84(Text):- c84(Text,Post), my_drs_to_fol(Post,FOL),exec_fol(FOL).
-observe_system_full(Text):- observe_system_full(Text,Post), my_drs_to_fol(Post,FOL),exec_fol(FOL).
 
 c84(Text,Post):-
   text_to_tree(Text,Pre),
@@ -510,10 +509,13 @@ c84(I,O):- fail,
   should_learn(O).
 %c84(I,O):- run_pipeline(I,[clausify80=O]).
 
+observe_system_full(Text):- observe_system_full(Text,Post), my_drs_to_fol(Post,FOL),exec_fol(FOL).
+
 observe_system_full(I,O):- any_to_input_layer(I,M),!,ping_each_system(I,M,O),should_learn(O).
+
 ping_each_system(_,M,O):- c88(M,O),should_learn(O).
+ping_each_system(_,M,O):- try_ace_lf(M,O),should_learn(O),!.
 ping_each_system(I,_,O):- notrace(words_to_base_forms(I,M)),any_to_input_layer(M,S),try_ace_lf(S,O).
-ping_each_system(_,M,O):- try_ace_lf(M,O).
 
 symm_test:- s80([does,iran,border,iraq]).
 symm_test2:- cls, symm_test, s80([does,iran,action1,iraq]).
@@ -540,7 +542,7 @@ text_to_lf1(B,FOL):-
  print_tree_nl(text_to_lf1=B),
  must_det_l((words_of(B,U),
  any_to_input_layer(U,S),
- text_to_tree(S,LHS), 
+ text_to_tree(S,LHS),
  print_tree_nl(text_to_tree=LHS))),
  c80:lf_trained(LHS,AprioriHacks,RHS),maplist(ignore,AprioriHacks),my_drs_to_fol(RHS, FOL).
 

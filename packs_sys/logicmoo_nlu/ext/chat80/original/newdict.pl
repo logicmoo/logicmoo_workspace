@@ -219,8 +219,8 @@ first_lexicon(X):- available_lexicon(_,X).
 
 try_all_lex(G):- available_lexicon(_,Which),try_one_lex(Which,G).
 available_lexicon(1,talkdb).
-available_lexicon(3,clex).
 available_lexicon(2,chat80).
+available_lexicon(3,clex).
 
 try_lex_order(Order,G):-  member(Which,Order), try_one_lex(Which,G).
 

@@ -48,6 +48,7 @@ variable_q(X,Agmt,QCase,NPCase) ...
       np(NP,Agmt,NPCase,_,_,Set,Mask) --->
    whq(X,Agmt,NP,QCase),
    {is_trace82(Set,Mask)}.
+
 variable_q(X,Agmt,compl,CCase) ...
  prep_phrase(prep_phrase(Prep,NP),compl,Set,Mask) --->
    prep(Prep),

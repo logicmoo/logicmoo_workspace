@@ -202,14 +202,18 @@ best_new_tree(Text,Tree):-
   findall(O,(one_syntax_tree(Text,O,Named),debug_nop(print_tree_nl(Named=O))),ResL),
   must(text_to_best_tree_real_old(Text,T)),!,
   must(replace_pos_tree(ResL,T,Tree)).
+
 best_old_tree(Text,Tree):-
   findall(O,(one_syntax_tree(Text,O,Named),debug_nop(print_tree_nl(Named=O))),ResL),  
   must(pick_tree(ResL,T)),
   must(replace_pos_tree(ResL,T,Tree)).
+
 best_new_tree(Text):- any_to_str(Text,S),dmsg(best_new_tree(S)), 
   best_old_tree(S,O),!,print_tree_nl(old=O),
   best_new_tree(S,N),!,print_tree_nl(new=N).
+
 best_new_tree:- best_new_tree("A man who is maried paints.").
+
 replace_pos_tree([],Tree,Tree):-!.
 replace_pos_tree([R|ResL],Tree,NewTree):-
   tree_2_w2(R,RW2s),

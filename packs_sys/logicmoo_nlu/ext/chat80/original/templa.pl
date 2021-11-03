@@ -75,6 +75,7 @@ name_template_lf0(X,Spatial&_) :- like_type(_Geo,region,Region),spatial(Spatial)
 thing_LF(Place,  Spatial&_,          X,ti(Place,X),  [],_):- spatial(Spatial), place_lex(Place).
 thing_LF(Region, Spatial&_,          X,ti(Region,X), [],_):- spatial(Spatial),like_type(_Geo,region,Region).
 thing_LF(Country,Spatial&Geo&Country,X,ti(Country,X),[],_):- spatial(Spatial),like_type(Geo,country,Country).
+
 thing_LF(Capital,SpatialCity,X,ti(Capital_city,X),[],_):- 
    unique_of_obj(_Geo,Spatial,_Country,_Govern,Capital,City,Capital_city,_Nation_capital),
    spatial(Spatial), bfeature_path(Spatial,City,SpatialCity).
@@ -131,6 +132,7 @@ property_LF(Capital,  SpatialCity,    X,Spatial&Geo&Country,Y,
  specific_pred(Spatial,Nation_capital,Y,X),[],_,_):- 
    unique_of_obj(Geo,Spatial,Country,_Govern,Capital,City,_Capital_city,Nation_capital),
    feature_path1(Spatial,City,SpatialCity).
+  
 
 property_LF(Area,     measure&Area,    X,Spatial&_,Y,  measure_pred(Spatial,Area,Y,X),[],_,_):- spatial(Spatial), type_measure_pred(_,size,Area,_).
 property_LF(Latitude, measure&position,X,Spatial&_,Y, position_pred(Spatial,Latitude,Y,X),[],_,_):- type_measure_pred(_Region,position(y),Latitude,_).
