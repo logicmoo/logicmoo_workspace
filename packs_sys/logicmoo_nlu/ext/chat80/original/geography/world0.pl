@@ -26,7 +26,7 @@
 % ---------------------------
 
 
-%ti(Sea,X) :- Sea\==seamass,Sea\==ocean,Sea\==sea, agentitive_symmetric_type(Borders,Sea), (symmetric_pred(spatial,Borders,Sea,X)).
+%ti(Sea,X) :- Sea\==seamass,Sea\==ocean,Sea\==sea, agentitive_symmetric_type(Borders,Sea), (symmetric_pred(thing,Borders,Sea,X)).
 %agentitive_symmetric_type(border,Baltic):- ti(seamass,Baltic).
 % allows "baltic country" "pacific countries"   
 agentitive_symmetric_type(border,seamass).
@@ -50,7 +50,7 @@ type_measure_pred(city,sizeP,citizens,countV).
 type_measure_pred(country,size,area,ksqmiles).
 type_measure_pred(region,position(x),longitude,degrees).
 type_measure_pred(region,position(y),latitude,degrees).
-unique_of_obj(geo,spatial,country,govern,capital,city,capital_city,nation_capital).
+unique_of_obj(geo,thing,country,govern,capital,city,capital_city,nation_capital).
 
 
 ti_subclass(continent,place).
@@ -64,7 +64,7 @@ agentitive_trans_80(contain,asia,asian).
 agentitive_trans_80(contain,europe,european).
 
 ti(circle_of_latitude,C):- circle_latitude(C,_).
-position_pred(spatial,latitude,C,L):- circle_latitude(C,L).
+position_pred(thing,latitude,C,L):- circle_latitude(C,L).
 circle_latitude(equator,0--degrees).
 circle_latitude(tropic_of_cancer,23--degrees).
 circle_latitude(tropic_of_capricorn,(-23)--degrees).

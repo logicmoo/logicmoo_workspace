@@ -38,7 +38,7 @@ continent(europe).
 
 % Inversion of the 'in' relation.
 % ------------------------------
-trans_direct(spatial,contain,R1,R2):- geo_contains(R1,R2).
+trans_direct(thing,contain,R1,R2):- geo_contains(R1,R2).
 
 
 geo_contains(Continent,Region):- continent_contains_region(Continent,Region).
@@ -476,7 +476,7 @@ country_contains_thing(zambia,congo_river).
 country_contains_thing(zambia,zambesi).
 
 country_contains_thing(Country,City) :- clause(city_country_popu(City,Country,_),true).
-country_contains_thing(Country,City) :- specific_pred(spatial,nation_capital,Country,City).
+country_contains_thing(Country,City) :- specific_pred(thing,nation_capital,Country,City).
 
 :- fixup_exports.
 

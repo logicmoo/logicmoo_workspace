@@ -23,7 +23,7 @@
 
 
 
-spatial(spatial).
+spatial(thing).
 %:- if(false).
 :- if(true).
 feature_path1(Spatial,CR,Spatial&CR):- spatial(Spatial).
@@ -85,7 +85,7 @@ trans_LF(Govern,Spatial&City,X,Spatial&Geo&Country,Y,specific_pred(Spatial,Natio
   spatial(Spatial), bfeature_path(Spatial,City,Spatial&City).
 
 
-unique_of_obj(geo,spatial,Country,Govern,Capital,City,Capital_city,Nation_capital):-
+unique_of_obj(geo,thing,Country,Govern,Capital,City,Capital_city,Nation_capital):-
    maplist(bind_pos, 
        ['type','action','attrib','type','attrib','attrib'],
        [Country,Govern,Capital,City,Capital_city,Nation_capital]).
@@ -120,10 +120,10 @@ verb_type_db(chat80,border,main+tv).
 symmetric_verb(Spatial,border):- spatial(Spatial).
 
 
-ordering_pred(spatial,cp(east,of),X1,X2) :- type_measure_pred(_Region,position(x),Longitude,_), position_pred(spatial,Longitude,X1,L1), position_pred(spatial,Longitude,X2,L2), exceeds(L2,L1).
-ordering_pred(spatial,cp(north,of),X1,X2) :- type_measure_pred(_Region,position(y),Latitude,_),  position_pred(spatial,Latitude,X1,L1), position_pred(spatial,Latitude,X2,L2), exceeds(L1,L2).
-ordering_pred(spatial,cp(south,of),X1,X2) :- type_measure_pred(_Region,position(y),Latitude,_),  position_pred(spatial,Latitude,X1,L1), position_pred(spatial,Latitude,X2,L2), exceeds(L2,L1).
-ordering_pred(spatial,cp(west,of),X1,X2) :- type_measure_pred(_Region,position(x),Longitude,_), position_pred(spatial,Longitude,X1,L1), position_pred(spatial,Longitude,X2,L2), exceeds(L1,L2).
+ordering_pred(thing,cp(east,of),X1,X2) :- type_measure_pred(_Region,position(x),Longitude,_), position_pred(thing,Longitude,X1,L1), position_pred(thing,Longitude,X2,L2), exceeds(L2,L1).
+ordering_pred(thing,cp(north,of),X1,X2) :- type_measure_pred(_Region,position(y),Latitude,_),  position_pred(thing,Latitude,X1,L1), position_pred(thing,Latitude,X2,L2), exceeds(L1,L2).
+ordering_pred(thing,cp(south,of),X1,X2) :- type_measure_pred(_Region,position(y),Latitude,_),  position_pred(thing,Latitude,X1,L1), position_pred(thing,Latitude,X2,L2), exceeds(L2,L1).
+ordering_pred(thing,cp(west,of),X1,X2) :- type_measure_pred(_Region,position(x),Longitude,_), position_pred(thing,Longitude,X1,L1), position_pred(thing,Longitude,X2,L2), exceeds(L1,L2).
 
 
 /* Nouns */
@@ -147,7 +147,7 @@ type_measure_pred(_AnyObjectType,MeasureType,Area,countV):- MeasureType\==size, 
 clex_attribute(Area):-  bind_pos('attrib',Area).
 clex_attribute(Area):-  bind_pos('type',Area).
 
-synonymous_thing(nation,country).
+synonymous_spatial(nation,country).
 
 thing_LF_access(Area,measure&Area,X,unit_format(Area,X),[],_):- type_measure_pred(_,size,Area,_).
 
@@ -191,7 +191,7 @@ meta_noun_LF(number,of,_,V,Spatial&_,X,P,numberof(X,P,V)):- spatial(Spatial).
 
 % thing_LF(geo,Spatial&_,X,ti(geo,X),[],_):- spatial(Spatial).
 
-thing_LF(Nation,Path,X,LF,Slots,Other):- synonymous_thing(Nation,Country), thing_LF(Country,Path,X,LF,Slots,Other).
+thing_LF(Nation,Path,X,LF,Slots,Other):- synonymous_spatial(Nation,Country), thing_LF(Country,Path,X,LF,Slots,Other).
 
 
 thing_LF_access(Noun,Type2,X,P,Slots,_):-
@@ -427,7 +427,7 @@ ti(NewType,X) :- agentitive_symmetric_type(Pred,SuperType), fail,
   % get the type names
   ti(SuperType,NewType), 
   % find the instances 
-  symmetric_pred(spatial,Pred,NewType,X),
+  symmetric_pred(thing,Pred,NewType,X),
   % dont find instances already of the super type
   \+ ti(SuperType,X).
 
@@ -436,7 +436,7 @@ ti(SC,X) :- ti_subclass(C,SC),ti(C,X).
 
 
 % if X is contained in africa then X is african.
-ti(An,X) :- agentitive_trans(Contains,Af,An), (trans_pred(spatial,Contains,Af,X);Af=X).
+ti(An,X) :- agentitive_trans(Contains,Af,An), (trans_pred(thing,Contains,Af,X);Af=X).
 
 agentitive_trans(Contains,Af,An):- agentitive_trans_80(Contains,Af,An).
 
@@ -564,7 +564,7 @@ symmetric_direct(Spatial,B,X,C) :- direct_ss(Spatial,B,C,X).
 add_ss(Spatial,B,X,C):- X @> C, !, add_ss(Spatial,B,C,X).
 add_ss(Spatial,B,X,C):- direct_ss(Spatial,B, X,C), !.
 add_ss(Spatial,B,X,C):- assertz(direct_ss(Spatial,B, X,C)), !.
-%:- add_ss(spatial,border,Albania,Greece).
+%:- add_ss(thing,border,Albania,Greece).
 
 :- abolish(tmp80:trans_rel_cache_creating,2).
 :- abolish(tmp80:trans_rel_cache_created,2).
@@ -615,8 +615,8 @@ trans_rel_cache_create0(P1,P2):-
   !.
 
 
-%contain(X,Y) :- trans_direct(spatial,contain,X,Y).
-%contain(X,Y) :- trans_direct(spatial,contain,X,W), contain(W,Y).
+%contain(X,Y) :- trans_direct(thing,contain,X,Y).
+%contain(X,Y) :- trans_direct(thing,contain,X,W), contain(W,Y).
 
 
 trans_pred(Spatial,Contain,X,Y) :- trans_rel(=,trans_direct(Spatial,Contain),X,Y).

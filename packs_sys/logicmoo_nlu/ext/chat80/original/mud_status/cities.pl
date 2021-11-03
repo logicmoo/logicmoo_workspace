@@ -21,19 +21,19 @@
 */
 :-op(500,xfy,--).
 
-ti(capital_city,Cap) :- c_r_l_l_s_cap_m(_,_,_,_,_,_,Cap,_). % specific_pred(spatial,nation_capital,_X,C).
+ti(capital_city,Cap) :- c_r_l_l_s_cap_m(_,_,_,_,_,_,Cap,_). % specific_pred(thing,nation_capital,_X,C).
 %ti(city,C) :- ti(capital_city,C).
 %ti(city,C) :- clause(city_country_popu(C,_,_), true).
 ti(city,C) :- country_contains_thing(_,C), \+ ti(river,C).
 ti(country,C) :- c_r_l_l_s_cap_m(C,_,_,_,_,_,_,_).
 
-count_pred(spatial,population,C,P--thousand) :- city_country_popu(C,_,P).
+count_pred(thing,population,C,P--thousand) :- city_country_popu(C,_,P).
 
 % Facts about cities.
 % ------------------
 madeup_city_country_popu(C,Nat,PopOut):- fail,
   ti(city,C), \+ clause(city_country_popu(C,_,_), true),
-  once((trans_direct(spatial,contain,Nat,C), 
+  once((trans_direct(thing,contain,Nat,C), 
   c_r_l_l_s_cap_m(Nat,_,_,_,_,Pop,_,_))),  
   % estimate at least a quarter of country population
   A is integer(Pop/4000000), 

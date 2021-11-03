@@ -419,7 +419,7 @@ multifile_dynamic_discontiguous(P):- multifile(P),dynamic(P),discontiguous(P).
 :-multifile_dynamic_discontiguous(btype_conversion/2).
 :-multifile_dynamic_discontiguous(bfeature_path/3).
 :-multifile_dynamic_discontiguous(feature_path1/3).
-:-multifile_dynamic_discontiguous(spatial/1).
+:-multifile_dynamic_discontiguous(thing/1).
 :-multifile_dynamic_discontiguous(meta_noun_LF/8).
 :-multifile_dynamic_discontiguous(aggr_noun/4).
 :-multifile_dynamic_discontiguous(name_template_LF/2).

@@ -27,7 +27,7 @@
 
 % Facts about Europe.
 % ------------------
-add_border(Albania,Greece):- add_ss(spatial,border,Albania,Greece).
+add_border(Albania,Greece):- add_ss(thing,border,Albania,Greece).
 
 :-add_border(albania,greece).
 :-add_border(albania,yugoslavia).
