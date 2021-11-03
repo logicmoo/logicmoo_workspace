@@ -165,21 +165,24 @@ i_adjs([Adj|Adjs],X,T,T0,Head0,Head,Pred0,Pred) :-
    must80(i_adj(Adj,X,T,T1,Head0,Head1,Pred0,Pred1)),
    i_adjs(Adjs,X,T1,T0,Head1,Head,Pred1,Pred).
 
-i_adj(adj(Adj),Type-X,T,T,Head,Head,'`'(P)&Pred,Pred) :-
-   restriction_LF(Adj,Type,X,P).
-i_adj(adj(Adj),TypeX-X,TypeV-V,_,
-   aggr(F,V,[X],Head,Pred),Head,'`'(true),Pred) :-
-   aggr_adj(Adj,TypeV,TypeX,F).
+
 i_adj(sup(Op0,adj(Adj)),Type-X,Type-V,_,
       aggr(F,V,[Y,X],Head,'`'(P)&Pred),Head,'`'(true),Pred) :-
    adj_sign_db(Adj,Sign),
    op_inverse(Op0,Sign,Op),
    i_sup_op(Op,F),
    attribute_LF(Adj,Type,X,_,Y,P).
+
+i_adj(adj(Adj),Type-X,T,T,Head,Head,'`'(P)&Pred,Pred) :-
+   restriction_LF(Adj,Type,X,P).
+i_adj(adj(Adj),TypeX-X,TypeV-V,_,
+   aggr(F,V,[X],Head,Pred),Head,'`'(true),Pred) :-
+   aggr_adj(Adj,TypeV,TypeX,F).
 i_adj(adj(Adj),TypeX-X,T,T,_,
       Head,Head,quantV(voidQ,TypeX-Y,'`'(P),'`'(Q)&Pred,[],_),Pred) :-
    attribute_LF(Adj,TypeX,X,_,Y,P),
    standard_adj_db(Adj,TypeX,Y,Q).
+
 
 i_s(s(Subj,Verb,VArgs,VMods),Pred,Up,Id) :-
    i_verb(Verb,P,Tense,Voice,Neg,Slots0,XA0,Meta),

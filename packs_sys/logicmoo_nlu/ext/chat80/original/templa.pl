@@ -81,8 +81,7 @@ thing_LF(Capital,Spatial&City,X,ti(Capital_city,X),[],_):-
    spatial(Spatial), bfeature_path(Spatial,City,Spatial&City).
 
 trans_LF(Govern,Spatial&City,X,Spatial&Geo&Country,Y,specific_pred(Spatial,Nation_capital,Y,X),[],_,_):-
-  unique_of_obj(Geo,Spatial,Country,Govern,_Capital,City,_Capital_city,Nation_capital),
-  spatial(Spatial), bfeature_path(Spatial,City,Spatial&City).
+  unique_of_obj(Geo,Spatial,Country,Govern,_Capital,City,_Capital_city,Nation_capital).
 
 
 unique_of_obj(geo,thing,Country,Govern,Capital,City,Capital_city,Nation_capital):-
@@ -128,10 +127,10 @@ ordering_pred(thing,cp(west,of),X1,X2) :- type_measure_pred(_Region,position(x),
 
 /* Nouns */
 
-property_LF(Capital,  SpatialMustCity,    X,Spatial&Geo&Country,Y,  
+property_LF(Capital,  Spatial & City,    X,Spatial&Geo&Country,Y,  
  specific_pred(Spatial,Nation_capital,Y,X),[],_,_):- 
-   unique_of_obj(Geo,Spatial,Country,_Govern,Capital,City,_Capital_city,Nation_capital),
-   feature_path1(Spatial,City,SpatialMustCity).
+   unique_of_obj(Geo,Spatial,Country,_Govern,Capital,City,_Capital_city,Nation_capital).
+   
   
 
 property_LF(Area,     measure&Area,    X,Spatial&_,Y,  measure_pred(Spatial,Area,Y,X),[],_,_):- spatial(Spatial), type_measure_pred(_,size,Area,_).
@@ -405,7 +404,7 @@ measure_pred(Spatial,Area,Where,Total) :- not_where(Where),
 exceeds(X,Y):- (var(Y)),!,X=Y.
 exceeds(X,Y):- term_variables(X-Y,Vars),freeze_until(Vars,exceeds0(X,Y)),!.
 
-freeze_until([],Goal):-!, term_variables(Goal, Vars),(Vars==[] -> Goal ; freeze_until(Vars,Goal)).
+freeze_until([],Goal):-!, term_variables(Goal, Vars),(Vars==[] -> call(Goal) ; freeze_until(Vars,Goal)).
 freeze_until([V|Vars],Goal):- freeze(V,freeze_until(Vars,Goal)),!.
 
 exceeds0(X--U,Y--U) :- !, X > Y.
