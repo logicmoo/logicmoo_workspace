@@ -508,8 +508,8 @@ multifile_dynamic_discontiguous(P):- multifile(P),dynamic(P),discontiguous(P).
 :-multifile_dynamic_discontiguous(pers_pron_lex/5).
 :-multifile_dynamic_discontiguous(number_lex/3).
 :-multifile_dynamic_discontiguous(name_LF/1).
-:-multifile_dynamic_discontiguous(int_pron_lex/2).
-:-multifile_dynamic_discontiguous(int_art_lex/4).
+:-multifile_dynamic_discontiguous(wh_pron_lex/2).
+:-multifile_dynamic_discontiguous(wh_art_lex/4).
 :-multifile_dynamic_discontiguous(det_lex/4).
 :-multifile_dynamic_discontiguous(conj_lex/1).
 :-multifile_dynamic_discontiguous('`'/1).

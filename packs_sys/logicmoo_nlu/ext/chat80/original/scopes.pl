@@ -217,7 +217,7 @@ setify([Index|Indices], X, P, Y, Quant) :-
    pipe(Index, Indices, X, P, Y, Quant).
 
 
-pipe(quantV(int_det(_, Z), Z, P1, Z),
+pipe(quantV(wh_det(_, Z), Z, P1, Z),
       Indices, X, P0, Y, quantV(det(a), X, P, Y)) :-
    chain_apply(Indices,(P0, P1), P).
 
@@ -294,7 +294,7 @@ open_quant(quantV(Det, X, P, Y), Det, X, P, Y).
 % Determiner Properties
 
 index_det(index(I), I).
-index_det(int_det(I, _), I).
+index_det(wh_det(I, _), I).
 
 unit_det(set).
 unit_det(lambda).
@@ -305,7 +305,7 @@ unit_det(identityQ).
 unit_det(voidQ).
 unit_det(not).
 unit_det(generic).
-unit_det(int_det(_)).
+unit_det(wh_det(_)).
 unit_det(proportion(_)).
 
 det_apply(quantV(Det, Type-X, P, _-Y), Q0, Q) :-
@@ -326,7 +326,7 @@ apply80(voidQ, _, X, P, X, Q, X^(P, Q)).
 apply80(set, _, Index:X, P0, S, Q, S^(P, Q)) :-
    apply_set(Index, X, P0, S, P).
 
-apply80(int_det(Type-X), Type, X, P, X, Q,(P, Q)).
+apply80(wh_det(Type-X), Type, X, P, X, Q,(P, Q)).
 
 apply80(index(_), _, X, P, X, Q, X^(P, Q)).
 
@@ -412,9 +412,9 @@ weak(det(Det)) :-
    weak_det(Det).
 weak(quantV(_, _)).
 weak(index(_)).
-weak(int_det(_, _)).
+weak(wh_det(_, _)).
 weak(set(_)).
-weak(int_det(_)).
+weak(wh_det(_)).
 weak(generic).
 weak(proportion(_)).
 

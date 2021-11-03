@@ -501,7 +501,7 @@ quote80(nameOf(_)).
 quote80(prep(_)).
 quote80(det(_)).
 quote80(quantV(_,_)).
-quote80(int_det(_)).
+quote80(wh_det(_)).
 
 quote_amp(F):- compound(F), compound_name_arity(F,'$VAR',1),!.
 quote_amp(R) :-

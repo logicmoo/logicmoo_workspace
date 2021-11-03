@@ -109,7 +109,7 @@ seto(X,E,S) :-
 
 holds_truthvalue(E,True) :-
 	phrase(satisfy80(E, G), _),
-	(   pprint_ecp_cmt(yellow,G),
+	(   %pprint_ecp_cmt(yellow,G),
       call(G)
 	->  True = true
 	;   True = false
@@ -128,7 +128,9 @@ reply(X) :- write(X).
 %	^/2-term to act as an existential quantification, this no longer
 %	works. Hence, we now compile the term   into  a goal and compute
 %	the existentially quantified variables.
-numberof(X,Vars^P,N):- setOf(X,Vars^P,S),length(S,N).
+
+%numberof(X,Vars^P,N):- !, setOf(X,Vars^P,S),length(S,N).
+numberof(X,P,N):- setOf(X,P,S),length(S,N).
 
 %satisfy(X,Y):- satisfy80(X,Y).
 

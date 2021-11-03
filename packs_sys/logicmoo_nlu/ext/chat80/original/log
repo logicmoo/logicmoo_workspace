@@ -70,7 +70,7 @@ whq
       np
          3+plu
          np_head
-            int_det(B)
+            wh_det(B)
             []
             river
          []
@@ -193,7 +193,7 @@ whq
                $VAR
                   2
                np_head
-                  int_det(B)
+                  wh_det(B)
                   []
                   place
                []
@@ -235,7 +235,7 @@ whq
       np
          3+plu
          np_head
-            int_det(B)
+            wh_det(B)
             []
             country
          []
@@ -279,7 +279,7 @@ whq
             np
                3+sin
                np_head
-                  int_det(B)
+                  wh_det(B)
                   []
                   country
                []
@@ -582,7 +582,7 @@ whq
       np
          3+plu
          np_head
-            int_det(B)
+            wh_det(B)
             []
             country
          []
@@ -1125,7 +1125,7 @@ whq
       np
          3+sin
          np_head
-            int_det(B)
+            wh_det(B)
             []
             country
          reduced_rel
@@ -1249,7 +1249,7 @@ whq
       np
          3+plu
          np_head
-            int_det(B)
+            wh_det(B)
             []
             country
          []
@@ -1313,7 +1313,7 @@ whq
       np
          3+plu
          np_head
-            int_det(B)
+            wh_det(B)
             []
             country
          pp
@@ -1383,7 +1383,7 @@ whq
       np
          3+plu
          np_head
-            int_det(B)
+            wh_det(B)
             []
             percentage
          pp
@@ -1450,7 +1450,7 @@ whq
       np
          3+plu
          np_head
-            int_det(B)
+            wh_det(B)
             []
             country
          []

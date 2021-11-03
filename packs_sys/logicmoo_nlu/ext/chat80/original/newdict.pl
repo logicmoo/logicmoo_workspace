@@ -42,8 +42,8 @@ word80(Word) :- rel_pron_lex(Word,_).
 word80(Word) :- quantifier_pron_lex(Word,_,_).
 word80(Word) :- number_lex(Word,_,_).
 word80(Word) :- det_lex(Word,_,_,_).
-word80(Word) :- int_art_lex(Word,_,_,_).
-word80(Word) :- int_pron_lex(Word,_).
+word80(Word) :- wh_art_lex(Word,_,_,_).
+word80(Word) :- wh_pron_lex(Word,_).
 word80(Word) :- loc_pred_lex(_,Word,_).
 word80(Word) :- verb_type_db(chat80,Word,_).
 word80(Word) :- word81(Word).
@@ -88,12 +88,12 @@ det_lex(no,_,no,indef).
 det_lex(some,_,some,indef).
 det_lex(the,No,the(No),def).
 
-int_art_lex(what,X,_,int_det(X)).
-int_art_lex(which,X,_,int_det(X)).
-int_pron_lex(what,undef).
-int_pron_lex(which,undef).
-int_pron_lex(who,subj).
-int_pron_lex(whom,compl).
+wh_art_lex(what,X,_,wh_det(X)).
+wh_art_lex(which,X,_,wh_det(X)).
+wh_pron_lex(what,undef).
+wh_pron_lex(which,undef).
+wh_pron_lex(who,subj).
+wh_pron_lex(whom,compl).
 
 name_LF(Name) :- bind_pos('object',Name).
 name_LF(Name) :- name_template_LF(Name,_).

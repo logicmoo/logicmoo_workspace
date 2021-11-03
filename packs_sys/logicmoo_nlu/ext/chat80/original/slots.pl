@@ -78,7 +78,7 @@ i_np_head0(np_head(Det,Adjs,Noun),X,T,Det,Head0,Pred0,Pred,Slots) :-
    i_adjs(Adjs,X,T,X,Head0,Head,Pred0,Pred),
    i_noun(Noun,X,Head,Slots).
 
-i_np_head0(np_head(int_det(V),Adjs,Noun),
+i_np_head0(np_head(wh_det(V),Adjs,Noun),
       Type-X,Type-X,Det,'`'(true),Pred,Pred,
       [slot(prep(of),Type,X,_,comparator)]) :-
    must80(comparator_LF(Noun,Type,V,Adjs,Det)).
@@ -391,7 +391,7 @@ index_slot(apply,_,apply).
 index_slot(comparator,_,comparator).
 
 index_args(det(the(pl)),unit,I,set(I),index(I)) :- !.
-index_args(int_det(X),index(I),_,int_det(I,X),unit) :- !.
+index_args(wh_det(X),index(I),_,wh_det(I,X),unit) :- !.
 index_args(generic,apply,_,lambda,unit) :-!.
 index_args(D,comparator,_,identityQ,unit) :-
  ( indexable_arg(D); D=generic), !.

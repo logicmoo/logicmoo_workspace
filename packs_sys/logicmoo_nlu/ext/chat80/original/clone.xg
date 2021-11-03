@@ -58,7 +58,7 @@ variable_q(X,Agmt,compl,VCase) ...
       adv_phrase(prep_phrase(Prep,
                   np(Agmt,
                    np_head(
-                    int_det(X),[],Noun),[])),
+                    wh_det(X),[],Noun),[])),
                  Set,Mask) --->
    context_pron(Prep,Noun),
    {is_trace82(Set,Mask), is_verb_case(VCase)}.
@@ -69,13 +69,13 @@ variable_q(X,_,compl,VCase) ...
    {is_empty_bits(Mask), is_verb_case(VCase)}.
 
 whq(X,Agmt,NP,undef) --->
-   int_det(X,Agmt),
+   wh_det(X,Agmt),
    {is_s_all(SAll)},
    np(NP,Agmt,_,_,subj,SAll,_).
 whq(X,3+No,np(3+No,wh(X),[]),Case) ---> int_pron(Case).
 
-int_det(X,3+Agmt) ---> whose(X,Agmt).
-int_det(X,3+Agmt) ---> int_art_6(X,Agmt).
+wh_det(X,3+Agmt) ---> whose(X,Agmt).
+wh_det(X,3+Agmt) ---> wh_art_6(X,Agmt).
 
 whose(X,Agmt), np_head0(wh(X),Agmt,proper), gen_marker ---> theText80(whose).
 
@@ -86,7 +86,7 @@ question80(QCase,NPCase,S) --->
    fronted_verb(QCase,NPCase),
    s80(S,_).
 
-int_art_6(X,Agmt), det(DX,Agmt,def) ---> int_art(X,Agmt,DX).
+wh_art_6(X,Agmt), det(DX,Agmt,def) ---> int_art(X,Agmt,DX).
 
 subj_question(subj).
 subj_question(undef).
