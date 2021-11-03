@@ -34,7 +34,7 @@ agentitive_symmetric_type(border,seamass).
 
 place_lex(place).
 
-like_type(_,X,X).
+like_type(geo,X,X).
 /*
 like_type(geo,circle_of_latitude,circle_of_latitude).
 like_type(geo,seamass,seamass).

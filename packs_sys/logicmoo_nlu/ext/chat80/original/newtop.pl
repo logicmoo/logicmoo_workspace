@@ -416,7 +416,7 @@ process4a(How,Sentence,U,S1,Times) :-
     % !, %%%%%%%%%%%%%%%% added by JPO but breaks "london"
     runtime(StartSem))),
    must_or_rtrace(mpred_test_mok(deepen_pos(i_sentence(E,E1)))),
-   report(How,E1,'i_sentence',ParseTime,cmt),
+   report(always,E1,'i_sentence',ParseTime,cmt),
    mpred_test_mok(clausify80(E1,E2)),!,
    report(How,E2,'clausify80',ParseTime,cmt),
    simplify80(E2,E3),simplify80(E3,S))),
