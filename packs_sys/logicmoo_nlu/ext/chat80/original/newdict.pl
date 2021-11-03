@@ -470,7 +470,7 @@ noun_plu_db(chat80,times,time).
 noun_plu_db(chat80,totals,total).
 
 
-comp_adj_lex(Smaller,Small):- try_lex(comp_adj_db(Smaller,Small)).
+comp_adj_lex(Smaller,Small):- try_lex_order([chat80,clex,talkdb],comp_adj_db(Smaller,Small)).
 comp_adj_db(talkdb,Smaller,Small):- talkdb:talk_db(comp,Small,Smaller).
 comp_adj_db(talkdb,Smaller,Small):- comp_adj_db(clex,Smaller,Small).
 comp_adj_db(clex,Smaller,Small):- clex:adj_itr_comp(Smaller, Small).
@@ -497,13 +497,14 @@ sup_adj_db(chat80,oldest,old).
 sup_adj_db(chat80,smallest,small).
 
 
-comp_adv_lex(Less):- try_one_lex(chat80,comp_adv_db(_Lesser, Less)).
-% @TODO DMiles I thinnk this is backwards
+comp_adv_lex(Lesser):- try_one_lex(chat80,comp_adv_db(Lesser,_Less)).
+% @TODO DMiles I thinnk this was backwards (So i left it that way) "less than"
+comp_adv_lex(Less):- comp_adv_db(chat80,_,Less).
 comp_adv_db(chat80,lesser,less).
 comp_adv_db(chat80,more,more).
 %comp_adv_db(talkdb,Smallest,Small):- talkdb:talk_db(comperl,Small,Smallest).
-comp_adv_db(talkdb,Less,Lesser):- comp_adv_db(clex, Less, Lesser).
-comp_adv_db(clex,Less,Lesser):- clex:adv_comp(Lesser, Less).
+comp_adv_db(talkdb,Lesser,Less):- clex:adv_comp(Lesser, Less).
+comp_adv_db(clex,Lesser,Less):- clex:adv_comp(Lesser, Less).
 
 
 sup_adv_lex(Least):- try_one_lex(chat80,sup_adv_db(Least, _Less)).
