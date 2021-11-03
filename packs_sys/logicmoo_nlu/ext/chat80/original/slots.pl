@@ -37,10 +37,10 @@ i_sentence1(decl(S),assertion80(P)) :-
 i_sentence1(whq(X,S),question80([X],P)) :-
    i_s(S,P,[],0).
 i_sentence1(imp(U,Ve,s(_,Verb,VArgs,VMods)),imp(U,Ve,V,Args)) :-
-   i_verb(Verb,V,_,active,posP(_Modal),Slots0,[],transparent),
-   i_verb_args(VArgs,[],[],Slots0,Slots,Args,Args0,Up,-0),
+   must80(i_verb(Verb,V,_,active,posP(_Modal),Slots0,[],transparent)),
+   must80(i_verb_args(VArgs,[],[],Slots0,Slots,Args,Args0,Up,-0)),
    append(Up,VMods,Mods),
-   i_verb_mods(Mods,_,[],Slots,Args0,Up,+0).
+   must80(i_verb_mods(Mods,_,[],Slots,Args0,Up,+0)).
 
 :- create_prolog_flag(debug_chat80,false,[keep(true)]).
 i_sentence2(S,G):- locally(set_prolog_flag(debug_chat80,true), i_sentence1(S,G)),!.
@@ -85,8 +85,8 @@ i_np_head0(np_head(wh_det(V),Adjs,Noun),
 
 i_np_head0(np_head(quantV(Op0,N),Adjs,Noun),
       Type-X,Type-X,voidQ,'`'(P),Pred,Pred,[]) :- 
-   must80((measure_LF(Noun,Type,Adjs,Units),
-   pos_conversion_db(N,Op0,Type,V,Op),
+   must80(measure_LF(Noun,Type,Adjs,Units)),
+   must80((pos_conversion_db(N,Op0,Type,V,Op),
    measure_op(Op,X,V--Units,P))).
 
 i_np_head0(Else, Type-Name,Type-Name,identityQ,'`'(P),Pred,Pred,[]):- may_qualify(Else),
@@ -171,17 +171,17 @@ i_adj(sup(Op0,adj(Adj)),Type-X,Type-V,_,
    adj_sign_db(Adj,Sign),
    op_inverse(Op0,Sign,Op),
    i_sup_op(Op,F),
-   attribute_LF(Adj,Type,X,_,Y,P).
+   must80(attribute_LF(Adj,Type,X,_,Y,P)).
 
 i_adj(adj(Adj),Type-X,T,T,Head,Head,'`'(P)&Pred,Pred) :-
-   restriction_LF(Adj,Type,X,P).
+   must80(restriction_LF(Adj,Type,X,P)).
 i_adj(adj(Adj),TypeX-X,TypeV-V,_,
    aggr(F,V,[X],Head,Pred),Head,'`'(true),Pred) :-
    aggr_adj(Adj,TypeV,TypeX,F).
 i_adj(adj(Adj),TypeX-X,T,T,_,
       Head,Head,quantV(voidQ,TypeX-Y,'`'(P),'`'(Q)&Pred,[],_),Pred) :-
-   attribute_LF(Adj,TypeX,X,_,Y,P),
-   standard_adj_db(Adj,TypeX,Y,Q).
+   must80(attribute_LF(Adj,TypeX,X,_,Y,P)),
+   must80(standard_adj_db(Adj,TypeX,Y,Q)).
 
 
 i_s(s(Subj,Verb,VArgs,VMods),Pred,Up,Id) :-
@@ -271,32 +271,32 @@ i_pred(conj(Conj,Left,Right),X,
 i_pred(AP,T,['`'(Head)&Pred|As],As,[],_) :-
    i_adj(AP,T,_,_,Head,true,Pred,'`'(true)).
 i_pred(value80(adj(Adj),wh(TypeY-Y)),Type-X,['`'(H)|As],As,[],_) :-
-   attribute_LF(Adj,Type,X,TypeY,Y,H).
+   must80(attribute_LF(Adj,Type,X,TypeY,Y,H)).
 
 i_pred(comp(more,adj(less),NP),X,P,As,Up,Id) :-
   i_pred(comp(less,adj(great),NP),X,P,As,Up,Id).
 
 i_pred(comp(Op0,adj(Adj),NP),X,[P1 & P2 & '`'(P3),Q|As],As,Up,Id) :-
    i_np(NP,Y,Q,Up,Id,unit,[],[]),
-   adj_sign_db(Adj,Sign),
+   must80(adj_sign_db(Adj,Sign)),
    i_measure(X,Adj,Type,U,P1),
    i_measure(Y,Adj,Type,V,P2),
    op_inverse(Op0,Sign,Op),
    measure_op(Op,U,V,P3).
 i_pred(prep_phrase(prep(Prep),NP),X,['`'(H),Q|As],As,Up,Id) :-
    i_np(NP,Y,Q,Up,Id,unit,[],[]),
-   adjunction_LF(Prep,X,Y,H).
+   must80(adjunction_LF(Prep,X,Y,H)).
 
 i_adjoin(with,TS-S,TV-Y,[slot(prep(of),TV,Z,_,free)],
         held_arg(poss,-_Id,TS-S),
         Y=Z).
 i_adjoin(Prep,X,Y,[],[],P) :-
-   adjunction_LF(Prep,X,Y,P).
+   must80(adjunction_LF(Prep,X,Y,P)).
 
 i_measure(Type-X,Adj,Type,X,'`'(true)) :-
-   units_db(Adj,Type).
+   must80(units_db(Adj,Type)).
 i_measure(TypeX-X,Adj,TypeY,Y,quantV(voidQ,TypeY-Y,'`'(P),'`'(true),[],_)) :-
-   attribute_LF(Adj,TypeX,X,TypeY,Y,P).
+   must80(attribute_LF(Adj,TypeX,X,TypeY,Y,P)).
 
 i_verb_mods(Mods,_,XA,Slots0,Args0,Up,Id) :-
    fill_verb(Mods,XA,[],Slots0,Slots,Args0,Args,Up,-Id),
@@ -333,14 +333,14 @@ op_inverse(X,+,X).
 
 noun_template(Noun,TypeV,V,'`'(P),
       [slot(poss,TypeO,O,Os,index)|Slots]) :-
-   property_LF(Noun,TypeV,V,TypeO,O,P,Slots,Os,_).
+   must80(property_LF(Noun,TypeV,V,TypeO,O,P,Slots,Os,_)).
 
 noun_template(Noun,TypeV,V,aggr(F,V,[],'`'(true),'`'(true)),
    [slot(prep(of),TypeS,_,_,free)]) :-
    aggr_noun(Noun,TypeV,TypeS,F).
 
 noun_template(Noun,Type,X,'`'(P),Slots) :-
-   thing_LF_access(Noun,Type,X,P,Slots,_).
+   must80(thing_LF_access(Noun,Type,X,P,Slots,_)).
 
 noun_template(Noun,TypeV,V,apply80(F,P),
       [slot(prep(Of),TypeX,X,_,apply)]) :-
@@ -358,7 +358,7 @@ slot_verb_template(have(MODAL),Y=Z,
         held_arg(poss,-(-(-(+Id))),TypeS-S), have(MODAL)).
 slot_verb_template(Verb,Pred,
       [slot(subj,TypeS,S,_,free)|Slots],[],transparent) :-
-   verb_type_lex(Verb,_+Kind),
+   must80(verb_type_lex(Verb,_+Kind)),
    slot_verb_kind(Kind,Verb,TypeS,S,Pred,Slots).
 
 % BE

@@ -34,7 +34,7 @@ agentitive_symmetric_type(border,seamass).
 
 place_lex(place).
 
-like_type(geo,X,X).
+like_type(_,X,X).
 /*
 like_type(geo,circle_of_latitude,circle_of_latitude).
 like_type(geo,seamass,seamass).
@@ -50,7 +50,7 @@ type_measure_pred(city,sizeP,citizens,countV).
 type_measure_pred(country,size,area,ksqmiles).
 type_measure_pred(region,position(x),longitude,degrees).
 type_measure_pred(region,position(y),latitude,degrees).
-unique_of_obj(geo,thing,country,govern,capital,city,capital_city,nation_capital).
+unique_of_obj(_,thing,country,govern,capital,city,capital_city,nation_capital).
 
 
 ti_subclass(continent,place).
