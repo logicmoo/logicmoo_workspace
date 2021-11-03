@@ -23,7 +23,8 @@
 % General Dictionary
 
 ag_number(1,sg).
-ag_number(N,pl) :- N>1.
+ag_number(N,_):- bind_pos('value',N).
+ag_number(N,pl) :- number(N), N>1.
 
 chk_word(Word):- word80(Word).
 
@@ -37,7 +38,7 @@ word80(Word) :- name_LF(Word).
 word80(Word) :- terminator_lex(Word,_).
 word80(Word) :- pers_pron_lex(Word,_,_,_,_).
 word80(Word) :- poss_pron_lex(Word,_,_,_).
-word80(Word) :- rel_pron_lex(Word,_).
+word80(Word) :- wh_rel_pron_lex(Word,_).
 %word80(Word) :- noun_form_lex(Word,_,_).
 word80(Word) :- quantifier_pron_lex(Word,_,_).
 word80(Word) :- number_lex(Word,_,_).
@@ -174,9 +175,9 @@ quantifier_pron_lex(something,some,thing).
 % superceeded regular_pres_db(chat80,do(_MODAL)).
 % superceeded regular_pres_db(chat80,have(_MODAL)).
 
-rel_pron_lex(which,undef).
-rel_pron_lex(who,subj).
-rel_pron_lex(whom,compl).
+wh_rel_pron_lex(which,undef).
+wh_rel_pron_lex(who,subj).
+wh_rel_pron_lex(whom,compl).
 
 % wordt niet gebruikt:
 root_form(1+pl).
@@ -199,6 +200,7 @@ tr_number(six,6).
 tr_number(ten,10).
 tr_number(three,3).
 tr_number(two,2).
+tr_number(X,X):- bind_pos('value',X).
 
 ctx_pron_lex(in,place,where).
 ctx_pron_lex(at,time,when).

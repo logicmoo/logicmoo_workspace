@@ -500,7 +500,7 @@ multifile_dynamic_discontiguous(P):- multifile(P),dynamic(P),discontiguous(P).
 :-multifile_dynamic_discontiguous(tr_number/2).
 :-multifile_dynamic_discontiguous(terminator_lex/2).
 :-multifile_dynamic_discontiguous(root_form/1).
-:-multifile_dynamic_discontiguous(rel_pron_lex/2).
+:-multifile_dynamic_discontiguous(wh_rel_pron_lex/2).
 :-multifile_dynamic_discontiguous(quantifier_pron_lex/3).
 :-multifile_dynamic_discontiguous(prep_db/2).
 :-multifile_dynamic_discontiguous(prep_lex/1).

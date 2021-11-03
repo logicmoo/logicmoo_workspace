@@ -229,8 +229,9 @@ en_gen(any,Sep):-some_sep1(Sep).
 en_gen(any,N):- between(1,4,N).
 
 adj_itr(Y, X):- learned_as_type('adjective',X,'',Y).
-adj_itr(X, Y):- learned_as_type('attrib',X,'',Y).
-adj_itr(X, Y):- learned_as_type('type',X,'ish',Y).
+adj_itr(Y, X):- learned_as_type('attrib',X,'',Y).
+adj_itr(Y, X):- learned_as_type('value',X,'',Y).
+adj_itr(Y, X):- learned_as_type('type',X,'ish',Y).
 
 adj_itr_comp(Y, X):- learned_as_type('attrib',X,'er',Y).
 adj_itr_comp(Y, X):- learned_as_type('type',X,'isher',Y).

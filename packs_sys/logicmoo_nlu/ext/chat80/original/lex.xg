@@ -147,9 +147,9 @@ comp_adv(W) ---> theText80(W),{comp_adv_lex(W)}.
 sup_adv(W) ---> theText80(W),{sup_adv_lex(W)}.
 
 
-rel_pron(Case) --->
+wh_rel_pron(Case) --->
    theText80(W),
-   {rel_pron_lex(W,Case)}.
+   {wh_rel_pron_lex(W,Case)}.
 
 verb_form80(Verb,Tense,Agmt,_Role) --->
    theText80_W2(W,L),
@@ -163,12 +163,12 @@ name_lex_txt(Name) ---> theTextL80([W1,'_',W2]),{!,atomic(W1),atomic(W2),atomic_
 name_lex_txt(Name) ---> theText80(Name), {name_LF(Name),!}.
 name_lex_txt(Name) ---> theTextL80([W1,W2]),{atomic(W1),atomic(W2),atomic_list_concat([W1,'_',W2],Name),name_LF(Name)}.
 
-int_art(X,pl,quantV(same,wh(X))) ---> {how_many_lex(HOWMANY)}, theTextL80(HOWMANY).
-int_art(X,Agmt,DX) --->
+wh_art(X,pl,quantV(same,wh(X))) ---> {how_many_lex(HOWMANY)}, theTextL80(HOWMANY).
+wh_art(X,Agmt,DX) --->
    theText80(Art),
    {wh_art_lex(Art,X,Agmt,DX)}.
 
-int_pron(Case) --->
+wh_pron(Case) --->
    theText80(Pron),
    {wh_pron_lex(Pron,Case)}.
 
@@ -189,7 +189,6 @@ quantifier_pron(Det,Noun) --->
    {quantifier_pron_lex(W,Det,Noun)}.
 
 context_pron(prep(In),Place) ---> {ctx_pron_lex(In,Place,Where)}, theText80(Where).
-
 
 number(I,Number) ---> theText80(W), {!,number_lex(W,I,Number)}.
 
