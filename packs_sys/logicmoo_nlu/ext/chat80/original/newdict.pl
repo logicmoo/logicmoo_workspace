@@ -99,9 +99,9 @@ wh_pron_lex(whom,compl).
 name_LF(Name) :- bind_pos('object',Name).
 name_LF(Name) :- name_template_LF(Name,_).
 
-number_lex(W,I,Nb) :- 
+number_lex(W,I,PlOrSg) :- 
         tr_number(W,I),
-        ag_number(I,Nb).
+        ag_number(I,PlOrSg).
 
 pers_pron_lex(he,masc,3,sg,subj).
 pers_pron_lex(her,fem,3,sg,compl(_)).

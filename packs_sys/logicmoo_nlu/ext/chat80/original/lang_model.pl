@@ -216,7 +216,7 @@ maybe_learn_replacements(B):-
 
 
 :- dynamic(wt_replacement/4).
-:- dynamic(used_wt_replacement/5).
+:- dynamic(tmp:used_wt_replacement/5).
 
 learn_wt_replacement(chat80,_,Word,_):-  word81(Word),!.
 learn_wt_replacement(chat80,X,Word,Tag):- 
@@ -328,7 +328,7 @@ pt_call(G,X,Y):- pree_tree_finish(pt_call(G),X,Y),!.
 %s_c_code(S,tag(_,'S',S)):- atom_chars(S,['S'|_]),!.
 s_c_code(S,tag(_, C, S)):- atom_chars(S,[C|_]).
 
-is_word80(X):- (atom(X);string(X)),!, X\==[],X\==adv, \+ is_penn_tag(X).
+is_word80(X):- (atom(X);string(X);number(X)),!, X\==[],X\==adv, \+ is_penn_tag(X).
 words_of(I,Words):- var(I),!,throw(var_words_of(I,Words)).
 words_of(I,Words):- I==[],!,Words=[].
 words_of(I,Words):- words_of0(I,Words0),tokenizer:expand_contracted_forms(Words0,Words),!.
@@ -365,7 +365,7 @@ compile_nl_tree([tag(_,N,NP)|I], O):- N=='N', parts_of(e2c,I,Words),debug_var(Wo
 compile_nl_tree(O,O).
 
 replace_with_unlearned_words(Program,UU,U):- 
- retract(used_wt_replacement(Program,_X,E,_Tag,Word)),
+ retract(tmp:used_wt_replacement(Program,_X,E,_Tag,Word)),
  notrace(subst_ci(UU,E,Word,MU)),replace_with_unlearned_words(Program,MU,U).
 replace_with_unlearned_words(_Program,U,U).
 
@@ -389,8 +389,8 @@ do_wt_replacement(Program,UU,U,Word,Tag):-
    warn_failure(wt_replacement(Program,X,OWord,Tag)),
    warn_failure(may_replace(Program,Word,Tag,OWord)),
    notrace(subst_ci(UU,[Tag,Word],[Tag,OWord],MU)),
-   ignore(retract(used_wt_replacement(Program,X,_,_,_))),
-   assert(used_wt_replacement(Program,X,OWord,Tag,Word)),
+   ignore(retract(tmp:used_wt_replacement(Program,X,_,_,_))),
+   assert(tmp:used_wt_replacement(Program,X,OWord,Tag,Word)),
  replace_with_learned_words(Program,MU,U).
 do_wt_replacement(Program,U,U,Word,Tag):- print_tree_nl(warn(throw(cant_wt_replacement(Program,Word,Tag)))).
 
@@ -626,7 +626,7 @@ retrain_2:-
 :- add_history1(reconsult(lang_model)).
 
 
-s81:-s81(show_c80).
+s81:- make,s81(show_c80),s81(cvt_to_objecteese).
 s81(P):-
   forall(ape_test(_,X),call(P,X)),
   %forall(training_data(X,_),call(P,X)),
@@ -649,7 +649,116 @@ s81(P):-
 %~          [ arg(dir,np(3+sg,nameOf(japan),[]))],
 %~          []))
 
+
+
+%map_penn('NN',type,'').
+map_penn('african',type,'ish').
+map_penn('address',attrib,'').
+map_penn('american',object,'ian').
+map_penn('area',attrib,'').
+map_penn('areas',attrib,'s').
+map_penn('asian',type,ian).
+map_penn('atlantic',object,'').
+map_penn('baltic',object,'').
+%map_penn('JJ',adjective,'').
+map_penn('VB_NN',action,'').
+map_penn('bordered',action,'ed').
+map_penn('borders',action,'s').
+map_penn('border',action,'').
+map_penn('capital',property,'').
+map_penn('china',object,'').
+map_penn('continent','large type','').
+map_penn('country',type,'').
+map_penn('equator',object,'').
+map_penn('flow',action,'').
+map_penn('flows',action,'s').
+map_penn('kingdom',type,'').
+map_penn('likes',action,'s').
+map_penn('largest',adjective,'est').
+map_penn('man','type','').
+map_penn('million','','').
+map_penn('million',' type','').
+map_penn('new','a adjective','').
+map_penn('NN_JJ','adjective','').
+map_penn('NNP',object,'').
+map_penn('NNS',type,'s').
+map_penn('ocean',type,'').
+map_penn('population',attrib,'').
+map_penn('rhine',object,'').
+map_penn('river',type,'').
+map_penn('smallest',type,'liest').
+map_penn('south',adverb,'').
+map_penn('united','action','ed').
+map_penn('volta',object,'').
+map_penn('VB',action,'').
+map_penn('VBN',action,'ed').
+map_penn('VBD',action,'ed').
+map_penn('VBG',action,'ing').
+map_penn('VBZ',action,'s').
+
+map_penn2(Wives,agent,'s'):- clex:noun_pl(Wives, _, human).
+map_penn2(Wife,agent,''):- clex:noun_pl(_, Wife, human).
+map_penn2(Clerk,agent,''):- clex:noun_sg(Clerk, _, human).
+map_penn2(Wives,type,'s'):- clex:noun_pl(Wives, _, neutr).
+map_penn2(Wife,type,''):- clex:noun_pl(_, Wife, neutr).
+map_penn2(Clerk,type,''):- clex:noun_sg(Clerk, _, neutr).
+%map_penn(Y,'adjective','est'):-  talkdb:talk_db(superl,_,Y).
+map_penn2(Y,'adjective','er'):-  talkdb:talk_db(comp,_,Y).
+%map_penn(Y,'adjective',''):- talkdb:talk_db(adj,Y).
+%map_penn('VBZ',attrib,' is ').
+
+map_penn(W,POS,N,S):- map_penn(W,N,S)*-> true ; map_penn(POS,N,S) *-> true ; map_penn2(W,N,S).
+
+may_debug(G):-!, call(G).
+may_debug(G):- ignore((current_prolog_flag(debug,true),!,on_x_fail(in_cmt(call(G))))).
+
+:- dynamic(tmp:dont_change/1).
+never_change(X):- det_lex(X,_,_,_).
+never_change(X):- loc_pred_lex(_,X,_).
+never_change(X):- modal_verb_form_aux(X,_,_,_).
+never_change(X):- number_lex(X,_,_).
+never_change(X):- pers_pron_lex(X,_,_,_,_).
+never_change(X):- poss_pron_lex(X,_,_,_).
+never_change(X):- prep_lex(X).
+never_change(not).
+never_change(no).
+never_change(X):- quantifier_pron_lex(X,_,_).
+never_change(X):- terminator_lex(X,_).
+never_change(X):- verb_form_aux(X,_,_,_).
+never_change(X):- wh_art_lex(X,_,_,_).
+never_change(X):- wh_pron_lex(X,_).
+never_change(X):- wh_rel_pron_lex(X,_).
+never_change(X):- tmp:dont_change(X).
+tmp:dont_change(exceeds).
+:- forall(retract((tmp:dont_change(_):-true)),true).
+
+:- dynamic(tmp:replacement_4_wrd/2).
+use_replacement_4_wrd(I,'SYM',O):- upcase_atom(I,O).
+use_replacement_4_wrd(I,_,O):- number_lex(I,O,_).
+use_replacement_4_wrd(I,_,O):- tmp:replacement_4_wrd(I,O).
+:- forall(retract((tmp:replacement_4_wrd(_,_):-true)),true).
+
+word2jecteese(_,_):- flag('$sentence_word',X,X+1),fail.
+word2jecteese(w(W,P),Y):- use_replacement_4_wrd(W,P,Y),!.
+word2jecteese(w(W,_),W):- never_change(W),!.
+word2jecteese(w(W,[pos(POS)]),Y):- 
+  findall(N-S,map_penn(W,POS,N,S),L),L\==[],!,random_member(N-S,L), 
+  (N==''->Y='';( flag('$objecteese_word',X,X+1),atomic_list_concat([N,X,S/*,@,W*/],Y))),
+  assert(tmp:replacement_4_wrd(W,Y)).
+word2jecteese(w(W,_),W):- assert(tmp:dont_change(W)).
+
+cvt_to_objecteese(X):- nl,show_c80(X), cvt_to_objecteese(X,Y),show_c80(Y),nl.
+
+:- dynamic(tmp:cached_cvt_to_w2/2).
+cvt_to_w2(X,W2):- \+ is_list(X),!, words_of(X,W), !, cvt_to_w2(W,W2).
+cvt_to_w2(X,W2):- tmp:cached_cvt_to_w2(X,W2),!.
+cvt_to_w2(X,W2):- text_to_best_tree_real_old(X,T),may_debug(dmsg(T)),tree_2_w2(T,W2), assert(tmp:cached_cvt_to_w2(X,W2)),dmsg(X).
+
+:-  flag('$objecteese_word',_,1).
+cvt_to_objecteese(X,Y):- flag('$sentence_word',_,1), cvt_to_w2(X,W2), may_debug(writeln(W2)), maplist(word2jecteese,W2,Y).
+
 :- if(\+ prolog_load_context(reloading, true)).
+:- forall(chat80_test(X),cvt_to_objecteese(X)).
 :- s81.
 :- endif.
 
