@@ -765,8 +765,29 @@ sent_to_jecteese([W|WL],[Y|YY]):-!, word2jecteese(W,Y), sent_to_jecteese(WL,YY).
 :- dynamic(tmp:cached_cvt_to_w2/2).
 cvt_to_w2(X,W2):- \+ is_list(X),!, words_of(X,W), !, cvt_to_w2(W,W2).
 cvt_to_w2(X,W2):- tmp:cached_cvt_to_w2(X,W2),!.
-cvt_to_w2(X,W2):- spacy_pos(X,W2),!.
-%cvt_to_w2(X,W2):- text_to_best_tree_real_old(X,T),may_debug(dmsg(T)),tree_s_w2(T,W2), assert(tmp:cached_cvt_to_w2(X,W2)),dmsg(X).
+%cvt_to_w2(X,W2):- spacy_pos(X,W2),!.
+cvt_to_w2(X,W222):- text_to_best_tree_real_old(X,T),may_debug(dmsg(T)),
+ tree_s_w2(T,W2),
+ spacy_pos(X,W22),
+ merge_w2s(W2,W22,W222),
+ nop(assert(tmp:cached_cvt_to_w2(X,W222))),dmsg(X).
+
+merge_w2s(W2,[],W2):-!.
+merge_w2s(W21,[W2|L2],W222):- 
+  must_or_rtrace(merge_w2(W21,W2,W22)),
+  merge_w2s(W22,L2,W222).
+
+merge_w2(W21,seg(_),W21):- !.
+merge_w2(W21,w(W,WL),W21):- 
+ downcase_word_4_match(W,WB1),
+ ignore((member(W20, W21),
+  W20=w(Word,WASL),
+  downcase_word_4_match(Word,WB2),
+  WB1==WB2,
+  \+ member(node(_),WASL),
+  nb_set_add(WASL,WL))),!.
+  
+  
 
 :-  flag('$objecteese_word',_,1).
 cvt_to_objecteese(X,Y):- flag('$sentence_word',_,1), cvt_to_w2(X,W2), may_debug(writeln(W2)), flatten(W2,W2F),sent_to_jecteese(W2F,Y).

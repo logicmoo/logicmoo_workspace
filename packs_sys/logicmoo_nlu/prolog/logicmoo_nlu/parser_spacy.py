@@ -36,12 +36,16 @@ def tense(str):
 def nodestr(tokenhead):
   return qt(""+str(tokenhead.lower_) +'_' + str(tokenhead.i+1))
 
+def maybe_prob(prob):
+  if prob== -20.0: return "" # the default
+  return "prob(" + str(- (prob/20))+")"
+
 def do_spacy(text0):
  text0 = text0.strip(' \t\n\r')
  doc = nlp(text0)    
- print("w2spacey([",  end='',  flush=False)
+ print("w2spacy([",  end='',  flush=False)
  for token in doc:
-  print(f"w({qt(token.lower_)},[pos({qt(token.tag_)}),loc({token.i+1}),sem({qt(token.lemma_)}),{tense(token.tag_)}txt({dqt(token.text)}),prob({((- token.prob)/20)}),node({nodestr(token)})]),", end='',  flush=False)
+  print(f"w({qt(token.lower_)},[pos({qt(token.tag_)}),loc({token.i+1}),sem({qt(token.lemma_)}),{tense(token.tag_)}txt({dqt(token.text)}),{maybe_prob(token.prob)}node({nodestr(token)})]),", end='',  flush=False)
  print("seg([", end='',  flush=False)
  for token in doc:
   print(f"dep_tree({(token.dep_.lower())},{nodestr(token.head)},{nodestr(token)}), " , end='',  flush=False) # ,{tense(token.head.tag_)},{qt(token.head.lemma_)},{qt(token.lemma_)}

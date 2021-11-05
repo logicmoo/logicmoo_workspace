@@ -187,7 +187,9 @@ prefer('R',_).
 prefer(A, B):- atom_length(A,AL),atom_length(B,BL),AL>BL.
 
 %prefer(A, B):- B @< A.
+%debug_nop(G):- call(G),!.
 debug_nop(_).
+
 
 tree_quality(X,cmp(vs(G1),list_depth(D),ps(G2),ats(G3),as(G4))):- 
   count_sublists(X,D),
@@ -217,15 +219,20 @@ best_new_tree:- best_new_tree("A man who is maried paints.").
 replace_pos_tree([],Tree,Tree):-!.
 replace_pos_tree([R|ResL],Tree,NewTree):-
   tree_s_w2(R,RW2s),
+  replace_pos_tree_w2(RW2s,Tree,MidTree),!,
+  replace_pos_tree(ResL,MidTree,NewTree),!.
+
+replace_pos_tree_w2(RW2s,Tree,MidTree):- 
   replace_pos(Tree,MidTree,RW2s,_),
   debug_nop((
   tree_s_w2(Tree,TW2s),
   tree_s_w2(MidTree,RTW2s),
-  maplist(writeln,[RW2s,TW2s,RTW2s]),nl)),
-  replace_pos_tree(ResL,MidTree,NewTree),!.
+  maplist(writeln,[RW2s,TW2s,RTW2s]),nl)),!.
+
 
 replace_pos([Pos,Word],[NewPos,Word],Before,After):- 
-  atom(Pos),downcase_word(Word,W),select(w(W,[pos(OtherPos)]),Before,After),prefer(OtherPos,Pos,NewPos),!.
+  atom(Pos),downcase_word_4_match(Word,W),select(w(W,WL),Before,After),
+  member(pos(OtherPos),WL), prefer(OtherPos,Pos,NewPos),!.
 replace_pos([H|T],[HH|TT],I,O):- !, replace_pos(H,HH,I,M), replace_pos(T,TT,M,O).
 replace_pos(A,A,WordL,WordL):-!.
 
@@ -233,6 +240,10 @@ downcase_word(Word,Word):- number(Word),!.
 downcase_word(Word,W):- atom(Word),!,=(Word,W),!.
 downcase_word(Word,W):- atom(Word),!,downcase_atom(Word,W).
 downcase_word(W,W).
+
+downcase_word_4_match(Word,Word):- number(Word),!.
+downcase_word_4_match(Word,W):- atom(Word),!,downcase_atom(Word,W).
+downcase_word_4_match(W,W).
 
 tree_s_w2([Rest],W2L):- !, tree_s_w2(Rest,W2L).
 tree_s_w2([Pos,Word],[w(W,[pos(Pos)])]):- atom(Pos),\+ is_list(Word),!, downcase_word(Word,W),!.
@@ -319,7 +330,11 @@ text_to_best_tree(Text,Tree):- tmp:cached_text_to_best_tree(Text,Tree),!.
 text_to_best_tree(Text,Tree):- text_to_best_tree_real(Text,Tree),
   add_text_to_best_tree(tmp:cached_text_to_best_tree(Text,Tree)),!.
 
-text_to_best_tree_real(Text,Tree):- text_to_best_tree_real_old(Text,Tree), !.
+text_to_best_tree_real(Text,TreeO):- text_to_best_tree_real_old(Text,Tree), !,
+  spacy_pos(Text,Pos),include(is_w2,Pos,RW2s),
+  debug_nop(writeln(spacy=RW2s)),
+  replace_pos_tree_w2(RW2s,Tree,TreeO),!.
+
 text_to_best_tree_real(Text,Tree):- best_new_tree(Text,Tree), !.
 
 text_to_best_tree_real_old(Text,Tree):- 

@@ -88,20 +88,20 @@ text_to_spacy(Text,Sent):-
 spacy_segs_to_sentences(Segs,sentence(0,W2,Info)):-
   segs_retain_w2(Segs,Info,W2).
 
-read_spacy_lines(Out, Result):- is_stream(Out),!,read_term(Out,Term,[]),read_spacy_lines(Out, Result).
-read_spacy_lines(w2spacy(List),ListO):- !, read_spacy_lines(List,ListO).
+read_spacy_lines(Out, Result):- spacy_to_w2(Out, Result),!.
 
 text_to_spacy_tree(Text,LExpr):-
-  spacy_parse(Text, Term),
+  spacy_parse(Text, String),
   nop(dmsg(spacy_parse=String)),  
   spacy_to_w2(String,LExpr),
   nop(print_tree_nl(spacy=LExpr)).
 
 %spacy_to_w2((Word,POS),[POS,Word]).
-spacy_to_w2(Text,ListO):- \+ compound(Text), on_x_fail(atom_to_term(Text,Term,_)),!,spacy_to_w2(Term,ListO).
-spacy_to_w2(Text,_ListO):- \+ compound(Text), nl,writeq(Text),nl,!,fail.
+spacy_to_w2(Out, Result):- is_stream(Out),!,read_term(Out,Term,[]),spacy_to_w2(Term, Result).
 spacy_to_w2(List,ListO):- is_list(List),!,include(compound,List,ListO).
 spacy_to_w2(w2spacy(List),ListO):- !, spacy_to_w2(List,ListO).
+spacy_to_w2(Text,ListO):- \+ compound(Text), on_x_fail(atom_to_term(Text,Term,_)),!,spacy_to_w2(Term,ListO).
+spacy_to_w2(Text,_ListO):- \+ compound(Text), nl,writeq(Text),nl,!,fail.
 
 is_upper_spacy_letters_atom(S):- atom(S),upcase_atom(S,S), \+ downcase_atom(S,S).
 
