@@ -22,11 +22,11 @@
 :- volatile(tmp:existing_spacy_stream/3).
 spacy_stream(In,Out):- tmp:existing_spacy_stream(_,In,Out),!,clear_spacy_pending(Out).
 spacy_stream(In,Out):-
-  process_create(path('link-parser'), ['-verbosity=0','-graphics=0','-morphology=1','-walls=1','-constituents=1'],
-    [ stdin(pipe(In)),stdout(pipe(Out)), stderr(null), process(FFid)]),
-  assert(tmp:existing_spacy_stream(FFid,In,Out)),
-  writeln(In,'Test 1 2 3'),
-  clear_spacy_pending(Out).
+  lmconfig:space_py_dir(Dir),
+  sformat(S,'python3 parser_spacy.py -nc -cmdloop ',[]),
+  nop(writeln(S)),
+    process_create(path(bash), ['-c', S], [ cwd(Dir),  stdin(pipe(In)),stdout(pipe(Out)), stderr(null), process(FFid)]),!,
+  assert(tmp:existing_spacy_stream(FFid,In,Out)).
 
 clear_spacy_pending(Out):- read_pending_codes(Out,Codes,[]),dmsg(clear_spacy_pending=Codes).
 
@@ -67,21 +67,6 @@ test_spacy_parse3 :-
   spacy_pos(Text,Lines),
   pprint_ecp_cmt(yellow,test_spacy_parse2=Lines).
 
-read_spacy_lines(Out, Result) :-
-  read_line_to_string(Out, StringIn),
-  read_spacy_lines(StringIn, Out, Lines),
-  into_spacy_result(Lines,Result).
-
-into_spacy_result(Lines,Result):- sub_string(Lines,B,1,_,'(') -> B>2, sub_string(Lines,B,_,0,After),!,into_spacy_result(After,Result).
-%into_spacy_result(Lines,Result):- sub_string(Lines,B,_,_,'\nBye.\n'), sub_string(Lines,0,B,_,After),!,string(After)=Result.
-into_spacy_result(Lines,Result):- sub_string(Lines,_,_, A,')\n\n')-> A>0, sub_string(Lines,0,_,A,After),!,into_spacy_result(After,Result).
-into_spacy_result(Lines,Result):- string(Lines)=Result,!.
-
-read_spacy_lines(end_of_file, _, "") :- !.
-read_spacy_lines(StringIn, Out, AllCodes) :-  
-  read_line_to_string(Out, Line2),
-  read_spacy_lines(Line2, Out, Lines),
-  atomics_to_string([StringIn,'\n',Lines],AllCodes).
 
    
 spacy_pos_info(Text,PosW2s,Info,LExpr):-
@@ -103,8 +88,11 @@ text_to_spacy(Text,Sent):-
 spacy_segs_to_sentences(Segs,sentence(0,W2,Info)):-
   segs_retain_w2(Segs,Info,W2).
 
+read_spacy_lines(Out, Result):- is_stream(Out),!,read_term(Out,Term,[]),read_spacy_lines(Out, Result).
+read_spacy_lines(w2spacy(List),ListO):- !, read_spacy_lines(List,ListO).
+
 text_to_spacy_tree(Text,LExpr):-
-  spacy_parse(Text, string(String)),
+  spacy_parse(Text, Term),
   nop(dmsg(spacy_parse=String)),  
   spacy_to_w2(String,LExpr),
   nop(print_tree_nl(spacy=LExpr)).
