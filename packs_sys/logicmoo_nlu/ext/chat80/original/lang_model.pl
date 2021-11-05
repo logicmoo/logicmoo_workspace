@@ -328,12 +328,18 @@ pt_call(G,X,Y):- pree_tree_finish(pt_call(G),X,Y),!.
 %s_c_code(S,tag(_,'S',S)):- atom_chars(S,['S'|_]),!.
 s_c_code(S,tag(_, C, S)):- atom_chars(S,[C|_]).
 
-is_word80(X):- (atom(X);string(X);number(X)),!, X\==[],X\==adv, \+ is_penn_tag(X).
+is_word80(X):- (string(X);number(X)),!.
+is_word80(X):- \+ atom(X),!,fail.
+is_word80(X):- atom_length(X,1),!.
+is_word80(X):- X\==[], X\==adv, \+ is_penn_tag(X).
+
 words_of(I,Words):- var(I),!,throw(var_words_of(I,Words)).
 words_of(I,Words):- I==[],!,Words=[].
 words_of(I,Words):- words_of0(I,Words0),tokenizer:expand_contracted_forms(Words0,Words),!.
 
-words_of0(I,Words):- atomic(I),!,tokenize_atom(I,Flat),include(is_word80,Flat,Words).
+my_tokenize_atom(I,Flat):- atom_contains(I,' ?'),!,atomic_list_concat(Flat,' ',I).
+my_tokenize_atom(I,Flat):- tokenize_atom(I,Flat).
+words_of0(I,Words):- atomic(I),!,my_tokenize_atom(I,Flat),include(is_word80,Flat,Words).
 words_of0(I,Words):- \+ is_list(I),!,findall(E,(sub_term(E,I),is_word80(E)),Words).
 words_of0([FW|I],Words):- FW=tag(_,_,_),!,flatten([FW|I],Flat),include(is_word80,Flat,Words).
 words_of0([FW|I],Words):- maplist(is_word80,[FW|I]),!,[FW|I]=Words.
@@ -739,27 +745,36 @@ use_replacement_4_wrd(I,_,O):- tmp:replacement_4_wrd(I,O).
 :- forall(retract((tmp:replacement_4_wrd(_,_):-true)),true).
 
 word2jecteese(_,_):- flag('$sentence_word',X,X+1),fail.
-word2jecteese(w(W,P),Y):- use_replacement_4_wrd(W,P,Y),!.
+word2jecteese(X,''):- X \= w(_,_),!. % Y=X,!.
+word2jecteese(w(W,L),Y):- member(pos(P),L), use_replacement_4_wrd(W,P,Y),!.
 word2jecteese(w(W,_),W):- never_change(W),!.
-word2jecteese(w(W,[pos(POS)]),Y):- 
+word2jecteese(w(W,LPOS),Y):- member(pos(POS),LPOS),
   findall(N-S,map_penn(W,POS,N,S),L),L\==[],!,random_member(N-S,L), 
   (N==''->Y='';( flag('$objecteese_word',X,X+1),atomic_list_concat([N,X,S/*,@,W*/],Y))),
   assert(tmp:replacement_4_wrd(W,Y)).
 word2jecteese(w(W,_),W):- assert(tmp:dont_change(W)).
 
-cvt_to_objecteese(X):- nl,show_c80(X), cvt_to_objecteese(X,Y),show_c80(Y),nl.
+cvt_to_objecteese(X):- nl,show_c80(X), cvt_to_objecteese(X,Y),show_c80(Y),nl,!.
+
+combined_w2s(w(W1,[pos('NNP')]),w(W2,[pos('NNP')]),w(W3,[pos('NNP')])):- atomic_list_concat([W1,' ',W2],W3).
+
+sent_to_jecteese([],[]).
+sent_to_jecteese([W1,W2|WL],YY):- combined_w2s(W1,W2,W3),!, sent_to_jecteese([W3|WL],YY).
+sent_to_jecteese([W|WL],[Y|YY]):-!, word2jecteese(W,Y), sent_to_jecteese(WL,YY).
 
 :- dynamic(tmp:cached_cvt_to_w2/2).
 cvt_to_w2(X,W2):- \+ is_list(X),!, words_of(X,W), !, cvt_to_w2(W,W2).
 cvt_to_w2(X,W2):- tmp:cached_cvt_to_w2(X,W2),!.
-cvt_to_w2(X,W2):- text_to_best_tree_real_old(X,T),may_debug(dmsg(T)),tree_2_w2(T,W2), assert(tmp:cached_cvt_to_w2(X,W2)),dmsg(X).
+cvt_to_w2(X,W2):- spacy_pos(X,W2),!.
+%cvt_to_w2(X,W2):- text_to_best_tree_real_old(X,T),may_debug(dmsg(T)),tree_s_w2(T,W2), assert(tmp:cached_cvt_to_w2(X,W2)),dmsg(X).
 
 :-  flag('$objecteese_word',_,1).
-cvt_to_objecteese(X,Y):- flag('$sentence_word',_,1), cvt_to_w2(X,W2), may_debug(writeln(W2)), maplist(word2jecteese,W2,Y).
+cvt_to_objecteese(X,Y):- flag('$sentence_word',_,1), cvt_to_w2(X,W2), may_debug(writeln(W2)), flatten(W2,W2F),sent_to_jecteese(W2F,Y).
+
 
 :- if(\+ prolog_load_context(reloading, true)).
-:- forall(chat80_test(X),cvt_to_objecteese(X)).
-:- s81.
+%:- forall(chat80_test(X),cvt_to_objecteese(X)).
+%:- s81.
 :- endif.
 
 :- fixup_exports.

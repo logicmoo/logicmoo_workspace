@@ -216,11 +216,11 @@ best_new_tree:- best_new_tree("A man who is maried paints.").
 
 replace_pos_tree([],Tree,Tree):-!.
 replace_pos_tree([R|ResL],Tree,NewTree):-
-  tree_2_w2(R,RW2s),
+  tree_s_w2(R,RW2s),
   replace_pos(Tree,MidTree,RW2s,_),
   debug_nop((
-  tree_2_w2(Tree,TW2s),
-  tree_2_w2(MidTree,RTW2s),
+  tree_s_w2(Tree,TW2s),
+  tree_s_w2(MidTree,RTW2s),
   maplist(writeln,[RW2s,TW2s,RTW2s]),nl)),
   replace_pos_tree(ResL,MidTree,NewTree),!.
 
@@ -230,16 +230,59 @@ replace_pos([H|T],[HH|TT],I,O):- !, replace_pos(H,HH,I,M), replace_pos(T,TT,M,O)
 replace_pos(A,A,WordL,WordL):-!.
 
 downcase_word(Word,Word):- number(Word),!.
+downcase_word(Word,W):- atom(Word),!,=(Word,W),!.
 downcase_word(Word,W):- atom(Word),!,downcase_atom(Word,W).
+downcase_word(W,W).
 
-tree_2_w2([Pos,Word],[w(W,[pos(Pos)])]):- atom(Pos),downcase_word(Word,W),!.
-%tree_2_w2([Word],[w(Word,[])]):- atom(Word),!.
-tree_2_w2([],[]):-!.
-tree_2_w2([_],[]):-!.
-%tree_2_w2(Rest,W2s):- select([],Rest,Less),!,tree_2_w2(Less,W2s).
-tree_2_w2([_|Rest],W2s):- 
-  maplist(tree_2_w2,Rest,W2L),append(W2L,W2s).
-  
+tree_s_w2([Rest],W2L):- !, tree_s_w2(Rest,W2L).
+tree_s_w2([Pos,Word],[w(W,[pos(Pos)])]):- atom(Pos),\+ is_list(Word),!, downcase_word(Word,W),!.
+%tree_s_w2([Word],[w(Word,[])]):- atom(Word),!.
+tree_s_w2(['NP'|Rest],W2s):- \+ ( sub_term(E,Rest), E == 'NP'), !, tree_np_w2(Rest,W2s).
+tree_s_w2([_|Rest],W2s):- maplist(tree_s_w2,Rest,W2L),!,flatten([W2L],W2s).
+tree_s_w2(X,L):- listify(X,L).
+
+is_nn(NN):- atom(NN),atom_concat('NN',_,NN).
+is_vb(NN,N):- atom(NN),atom_concat('VB',N,NN).
+is_nnps(NN):- atom(NN), atom_concat('NN',PS,NN),(atom_contains(PS,'P');atom_contains(PS,'S')),!.
+
+is_oops_verb(P):- clex:iv_finsg(P,_), \+ is_still_noun(P).
+is_oops_verb(P):- clex:iv_finsg(_,P), \+ is_still_noun(P).
+is_oops_verb(P):- clex:tv_finsg(P,_), \+ is_still_noun(P).
+is_oops_verb(P):- clex:tv_finsg(_,P), \+ is_still_noun(P).
+is_still_noun(P):-  clex:noun_pl(_,P,_).
+
+combine_np('NNP','JJ').
+combine_np('NN','NN').
+combine_np('NNP','NNP').
+combine_np(NN,NNS):- is_nn(NN), is_nnps(NNS).
+tree_np_each([],[]).
+tree_np_each([[NN,X],[NN2,Y]],O):-  is_nn(NN), is_nn(NN2), atom(Y), is_oops_verb(Y), !,tree_np_each([[NN,X],['VBM',Y]],O).
+tree_np_each([['QP' |STUFF]|MORE],O):- append(STUFF,MORE,MOREA),!,tree_np_each(MOREA,O).
+tree_np_each([['NNP',X],['NNS',Y],M|ORE],O):-  is_oops_verb(Y),!,tree_np_each([['NNP',X],['VBM',Y],M|ORE],O).
+tree_np_each([['ADJP'|STUFF]|MORE],O):- tree_adj_each(STUFF,STUFFO), append(STUFFO,MORE,MOREA),!,tree_np_each(MOREA,O).
+tree_np_each([[VB,X],[NN,Y]|MORE],O):- atom(X),atom(Y),is_vb(VB,N),is_nn(NN), atom_concat('JJ',N,JJN),tree_np_each([[JJN,X],[NN,Y]|MORE],O).
+tree_np_each([[NN,X],[NNS,Y]|MORE],O):- atom(X),atom(Y), \+ is_oops_verb(X), combine_np(NN,NNS),atomic_list_concat([X,' ',Y],XY),!,tree_np_each([[NNS,XY]|MORE],O).
+tree_np_each([[NN,ACEVAR]],[['SYM',ACEVAR]]):- is_nn(NN), is_ace_var(ACEVAR),!.
+tree_np_each([['DT','A']],[['SYM','A']]):- !.
+%tree_np_each([['JJ',X]|MORE],[['JJ',X]|MOREO]):- !, tree_np_each(MORE,MOREO).
+tree_np_each([X|MORE],[X|MOREO]):- !, tree_np_each(MORE,MOREO).
+tree_np_each(MORE,MORE).
+
+tree_adj_each([['RB',Fairly],['JJ',Large]|T],[['RB',Fairly],['JJ',Large]|TT]):- !, tree_adj_each(T,TT).
+tree_adj_each([['VBG',X]|T],TT):- !, tree_adj_each([['JJG',X]|T],TT).
+tree_adj_each([['VBN',X]|T],TT):- !, tree_adj_each([['JJN',X]|T],TT).
+tree_adj_each([H|T],[H|TT]):- !, tree_adj_each(T,TT).
+tree_adj_each(X,X).
+
+is_ace_var(UC):- atom(UC),upcase_atom(UC,UC), \+ downcase_atom(UC,UC), atom_length(UC,1).
+
+tree_np_w2([['QP'|A]|B],O):-!,tree_s_w2([['QP'|A]|B],O).
+tree_np_w2([A|MORE],O):- tree_np_each([A|MORE],MOREO),
+  [A|MORE]\==MOREO, in_color(green,writeq([A|MORE]-->MOREO)),nl,!, tree_np_w2(MOREO,O).
+tree_np_w2([X2],W2s):- is_list(X2),!, tree_s_w2(X2,W2s).
+tree_np_w2([Pt1|Rest],_):-ignore((Rest\==[], in_color(yellow,(write(' % %~ '),writeq(tree_np_w2([Pt1|Rest],'$VAR'('O'))))),nl)),fail.
+tree_np_w2([Pt1|Rest],W2sO):- maplist(tree_s_w2,[Pt1|Rest],W2s), juggle_np_w2s(W2s,W2sO).
+juggle_np_w2s(W2s,W2F):- flatten(W2s,W2F).
    
 %one_syntax_tree(I,O,chat80):- text_to_chat80_tree(I,O).
 one_syntax_tree(I,O,lgp):- text_to_lgp_tree(I,O).
@@ -276,7 +319,7 @@ text_to_best_tree(Text,Tree):- tmp:cached_text_to_best_tree(Text,Tree),!.
 text_to_best_tree(Text,Tree):- text_to_best_tree_real(Text,Tree),
   add_text_to_best_tree(tmp:cached_text_to_best_tree(Text,Tree)),!.
 
-
+text_to_best_tree_real(Text,Tree):- text_to_best_tree_real_old(Text,Tree), !.
 text_to_best_tree_real(Text,Tree):- best_new_tree(Text,Tree), !.
 
 text_to_best_tree_real_old(Text,Tree):- 

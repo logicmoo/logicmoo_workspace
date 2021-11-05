@@ -17,42 +17,43 @@
 :- use_module(library(logicmoo_utils)).
 :- use_module(library(logicmoo_nlu/parser_penn_trees)).
 :- use_module(library(logicmoo_nlu/parser_tokenize)).
+:- use_module(library(logicmoo_nlu/parser_spacy)).
 
 :- dynamic(tmp:existing_lgp_stream/3).
 :- volatile(tmp:existing_lgp_stream/3).
-lgp_stream(In,Out):- tmp:existing_lgp_stream(_,In,Out),!,clear_pending(Out).
+lgp_stream(In,Out):- tmp:existing_lgp_stream(_,In,Out),!,clear_lgp_pending(Out).
 lgp_stream(In,Out):-
   process_create(path('link-parser'), ['-verbosity=0','-graphics=0','-morphology=1','-walls=1','-constituents=1'],
     [ stdin(pipe(In)),stdout(pipe(Out)), stderr(null), process(FFid)]),
   assert(tmp:existing_lgp_stream(FFid,In,Out)),
   writeln(In,'Test 1 2 3'),
-  clear_pending(Out).
+  clear_lgp_pending(Out).
 
-clear_pending(Out):- read_pending_codes(Out,Codes,[]),dmsg(clear_pending=Codes).
+clear_lgp_pending(Out):- read_pending_codes(Out,Codes,[]),dmsg(clear_lgp_pending=Codes).
 
-tokenize_text_string(Text,Str):- 
+tokenize_lgp_string(Text,Str):- 
   parser_tokenize:into_acetext(Text,String),
   tokenize_atom(String,Toks),
   atomics_to_string(Toks,' ',Str),!.
 
 lgp_parse(Text, Lines) :-
-  tokenize_text_string(Text,String),
+  tokenize_lgp_string(Text,String),
   sformat(S,'echo ~q | link-parser -verbosity=0 -graphics=0 -morphology=0 -walls=0 -constituents=1 ',[String]),
   nop(writeln(S)),
     process_create(path(bash), ['-c', S], [ stdout(pipe(Out))]),!,
-  read_lines(Out, Lines).
+  read_lgp_lines(Out, Lines).
 
 lgp_parse(Text, Lines) :-
-  tokenize_text_string(Text,String),
+  tokenize_lgp_string(Text,String),
   lgp_stream(In,Out),
   format(In,'~w\n',[String]),
-  read_lines(Out, Lines),!.
+  read_lgp_lines(Out, Lines),!.
 
 test_lgp_parse1_broken :-
  Text = "Can the can do the Can Can?",
   lgp_stream(In,Out),
   format(In,'~w\n',[Text]),
-  read_lines(Out, Lines),
+  read_lgp_lines(Out, Lines),
   pprint_ecp_cmt(yellow,test_lgp_parse1=Lines).
 
 test_lgp_parse2 :-
@@ -65,20 +66,20 @@ test_lgp_parse3 :-
   lgp_pos(Text,Lines),
   pprint_ecp_cmt(yellow,test_lgp_parse2=Lines).
 
-read_lines(Out, Result) :-
+read_lgp_lines(Out, Result) :-
   read_line_to_string(Out, StringIn),
-  read_lines(StringIn, Out, Lines),
-  into_result(Lines,Result).
+  read_lgp_lines(StringIn, Out, Lines),
+  into_lgp_result(Lines,Result).
 
-into_result(Lines,Result):- sub_string(Lines,B,1,_,'(') -> B>2, sub_string(Lines,B,_,0,After),!,into_result(After,Result).
-%into_result(Lines,Result):- sub_string(Lines,B,_,_,'\nBye.\n'), sub_string(Lines,0,B,_,After),!,string(After)=Result.
-into_result(Lines,Result):- sub_string(Lines,_,_, A,')\n\n')-> A>0, sub_string(Lines,0,_,A,After),!,into_result(After,Result).
-into_result(Lines,Result):- string(Lines)=Result,!.
+into_lgp_result(Lines,Result):- sub_string(Lines,B,1,_,'(') -> B>2, sub_string(Lines,B,_,0,After),!,into_lgp_result(After,Result).
+%into_lgp_result(Lines,Result):- sub_string(Lines,B,_,_,'\nBye.\n'), sub_string(Lines,0,B,_,After),!,string(After)=Result.
+into_lgp_result(Lines,Result):- sub_string(Lines,_,_, A,')\n\n')-> A>0, sub_string(Lines,0,_,A,After),!,into_lgp_result(After,Result).
+into_lgp_result(Lines,Result):- string(Lines)=Result,!.
 
-read_lines(end_of_file, _, "") :- !.
-read_lines(StringIn, Out, AllCodes) :-  
+read_lgp_lines(end_of_file, _, "") :- !.
+read_lgp_lines(StringIn, Out, AllCodes) :-  
   read_line_to_string(Out, Line2),
-  read_lines(Line2, Out, Lines),
+  read_lgp_lines(Line2, Out, Lines),
   atomics_to_string([StringIn,'\n',Lines],AllCodes).
 
    
@@ -107,14 +108,14 @@ text_to_lgp_tree(Text,LExpr):-
   nop(print_tree(lgp=LExpr0)),
   correct_lgp_tree(LExpr0,LExpr).
 
-is_upper_letters_atom(S):- atom(S),upcase_atom(S,S), \+ downcase_atom(S,S).
+is_upper_lgp_letters_atom(S):- atom(S),upcase_atom(S,S), \+ downcase_atom(S,S).
 
 correct_lgp_tree(I,O):- correct_lgp_tree('LGP',I,O).
 
 correct_lgp_tree(P,LExpr,LExprO):- atom(LExpr), correct_lgp_atom(P,LExpr,LExprM),!,
   (LExpr==LExprM-> LExpr=LExprO ; correct_lgp_tree(P,LExprM,LExprO)).
 correct_lgp_tree(P,[S|LExpr],LExprO):- select(E,[S|LExpr],LExprM),unused_lgp(E),!,correct_lgp_tree(P,LExprM,LExprO).
-correct_lgp_tree(_,[S|LExpr],[S|LExprO]):- is_upper_letters_atom(S), !, maplist(correct_lgp_tree(S),LExpr,LExprO).
+correct_lgp_tree(_,[S|LExpr],[S|LExprO]):- is_upper_lgp_letters_atom(S), !, maplist(correct_lgp_tree(S),LExpr,LExprO).
 correct_lgp_tree(_,LExpr,LExpr).
 
 unused_lgp('{\'}').
