@@ -2,6 +2,7 @@ import spacy
 import sys
 import select
 from nltk import Tree
+# from pybart.api import *
 
 def to_nltk_tree(node):
     if node.n_lefts + node.n_rights > 0:
@@ -34,7 +35,10 @@ def tense(str):
  return "" # "unused('"+str+"'),"
 
 def nodestr(tokenhead):
-  return qt(""+str(tokenhead.lower_) +'_' + str(tokenhead.i+1))
+  return "n("+qt(str(tokenhead.lemma_))+ ","+ str(tokenhead.i+1)+")"
+
+def nodestr2(tokenhead):
+  return qt(str(tokenhead.lower_) +'_' + str(tokenhead.i+1))
 
 def maybe_prob(prob):
   if prob== -20.0: return "" # the default
@@ -45,11 +49,14 @@ def do_spacy(text0):
  doc = nlp(text0)    
  print("w2spacy([",  end='',  flush=False)
  for token in doc:
-  print(f"w({qt(token.lower_)},[pos({qt(token.tag_)}),loc({token.i+1}),sem({qt(token.lemma_)}),{tense(token.tag_)}txt({dqt(token.text)}),{maybe_prob(token.prob)}node({nodestr(token)})]),", end='',  flush=False)
- print("seg([", end='',  flush=False)
+  print(f"w({qt(token.lower_)},[pos({qt(token.tag_)}),loc({token.i+1}),root({qt(token.lemma_)}),{tense(token.tag_)}txt({dqt(token.text)}),{maybe_prob(token.prob)}node({nodestr(token)})]),", end='',  flush=False)
+ print("span([", end='',  flush=False)
  for token in doc:
   print(f"dep_tree({(token.dep_.lower())},{nodestr(token.head)},{nodestr(token)}), " , end='',  flush=False) # ,{tense(token.head.tag_)},{qt(token.head.lemma_)},{qt(token.lemma_)}
- #if 1==0: for chunk in doc.noun_chunks: print(f"vp_{chunk.root.dep_}({qt(chunk.root.head.text)},{qt(chunk.root.text)},\"{chunk}\"),")
+ print("")
+ for chunk in doc.noun_chunks: 
+  print(f"span([seg({chunk.start+1},{chunk.end}),phrase('NP'),size({chunk.end-chunk.start}),childs(0),type({qt(chunk.root.dep_)}),head({nodestr(chunk.root.head)}),target({nodestr(chunk.root)}),text({dqt(chunk.text)})]),")
+
  print("[]])", end='',  flush=False)
  if show_comment==1:
   print(',comment("')
@@ -67,11 +74,16 @@ print("")
 sysargv = sys.argv
 sysargv.pop(0)
 
+
 model = "en_core_web_lg"
+#model = "en_ud_model_sm"
+#model = "en_ud_model_trf"
 if len(sysargv) > 0 and sysargv[0]=='-m':
   sysargv.pop(0)
   model = sysargv.pop(0);
 nlp = spacy.load(model)
+# Add BART converter to spaCy's pipeline
+#nlp.add_pipe("pybart_spacy_pipe", last="True", config={'remove_extra_info':True}) # you can pass an empty config for default behavior, this is just an example
 
 verbose = 0
 if len(sysargv) > 0 and sysargv[0]=='-v':

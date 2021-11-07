@@ -357,6 +357,7 @@ eng_to_logic(U,S):- sentence80(E,U,[],[],[]), sent_to_prelogic(E,S).
 qualifiedBy(_,_,_).
 
 into_lexical_segs(Sent,U):- notrace(into_chat80_segs0(Sent,U)),!.
+old_into_lexical_segs(Sent,U):- notrace(into_chat80_segs0(Sent,U)),!.
 %into_lexical_segs(Sent,  WordsA):- enotrace((into_text80( Sent,  Words),into_combines(Words,WordsA))),!.
 
 into_chat80_segs0(Sent,Sent):- is_list(Sent),maplist(parser_penn_trees:is_word_or_span,Sent),!.
@@ -400,6 +401,7 @@ text_to_chat80_tree(Sentence,Tree):-
 
 process4a(How,Sentence,U,S1,Times) :- 
   Times = [ParseTime,SemTime,TimePlan,_TimeAns,_TotalTime],
+  report(How,Sentence,'Sentence',0,tree),
   quietly(( runtime(StartSeg),
    mpred_test_mok(into_lexical_segs(Sentence,U)),
    runtime(StopSeg),
@@ -410,7 +412,6 @@ process4a(How,Sentence,U,S1,Times) :-
  ((deepen_pos(sentence80(E,U,[],[],[])),
    notrace((runtime(StopParse),
 
-
     ParseTime is StopParse - StartParse,
     report(How,E,'Parse',ParseTime,tree),
     % !, %%%%%%%%%%%%%%%% added by JPO but breaks "london"
@@ -418,18 +419,20 @@ process4a(How,Sentence,U,S1,Times) :-
    must_or_rtrace(mpred_test_mok(deepen_pos(i_sentence(E,E1)))),
    report(always,E1,'i_sentence',ParseTime,cmt),
    mpred_test_mok(clausify80(E1,E2)),!,
-   report(How,E2,'clausify80',ParseTime,cmt),
+  % report(How,E2,'clausify80',ParseTime,cmt),
    simplify80(E2,E3),simplify80(E3,S))),
    runtime(StopSem),
    SemTime is StopSem - StartSem,
-   report(How,S,'Semantics',SemTime,expr),
-   runtime(StartPlan),
+   %report(How,S,'Semantics',SemTime,expr),
+   runtime(_StartPlan),
   ((
    qplan(S,S1),
-   pprint_ecp_cmt(green,S),
+   %pprint_ecp_cmt(green,S),
    runtime(StopPlan),
-   TimePlan is StopPlan - StartPlan,
-   (S\=@=S1->(S1R=S1,report(How,S1R,'Planning',TimePlan,expr));(_S1R=same)))).
+   TimePlan is StopPlan - StartSem,
+
+   report(How,S1,'Planning',TimePlan,expr),
+   !)).
 
 process4(How,Sentence,Answer,Times) :-
    process4a(How,Sentence,U,S1,Times), 
@@ -437,6 +440,7 @@ process4(How,Sentence,Answer,Times) :-
 
 process4b(How,U,S1,Answer,Times) :-
    Times = [ParseTime,SemTime,TimePlan,TimeAns,TotalTime],
+   report(How,S1,'Planning',TimePlan,expr),
    runtime(StartAns),
    ((
    results80(S1,Answer), !,
@@ -450,18 +454,18 @@ results80(S1,Results):-
   nonvar(S1),
   findall(Res,deepen_pos((answer802(S1,Res),Res\=[])),Results).
 
-report(How,Item,Label,Time,Mode):- wotso(report0(How,Item,Label,Time,Mode)).
+report(How,Item,Label,Time,Mode):- wotso(report0(How,Item,Label,Time,Mode)),!.
 
 report0(none,_,_,_,_):- !.
 report0(test,_,_,_,_):- !.
 report0(How,Item,Label,Time,Mode) :-
    ((tracing =: on); How==debug; How==always), !,
-   nl, write(Label), write(': '), write(Time), write('msec.'), nl,
-   \+ \+ report_item(Mode,Item),!.
+   nl, in_cmt(block, (nl, write(Label), write(': '), write(Time), write('msec.'), nl,nl,
+   \+ \+ report_item(Mode,Item))),nl,!.
 report0(_,_,_,_,_).
 
 report_item(none,_).
-report_item(Tree,Item):- copy_term(Item,Nat), wotso(report_item0(Tree,Nat)),fail.
+report_item(Tree,Item):- copy_term(Item,Nat), guess_pretty(Nat),report_item0(Tree,Nat),!.
 report_item(_,_).
 
 %report_item(_,Item):- pprint_ecp_cmt(yellow,Item),!.
@@ -469,18 +473,21 @@ report_item0(respond,Item) :- !,
    respond(Item), nl.
 report_item0(print_test,Item) :- !,
    write('?- test_chat80("'),print_test(Item),write('").'), nl.
+
+report_item0(_,Item) :- print_tree_with_final(Item,'.'),!.
+
 report_item0(expr,Item) :- !,
-   \+ \+ write_tree(Item), nl.
+  \+ \+ print_tree80(Item), nl.
+   % \+ \+ write_tree(Item), nl.
 
 %report_item0(_,Item) :- !, \+ \+ write_tree(Item), nl.
 
-report_item0(tree,Item) :- print_tree_with_final(Item,'.'),!.
+report_item0(_,Item) :- print_tree_with_final(Item,'.'),!.
 report_item0(tree,Item) :- \+ \+ print_tree80(Item),!, nl.
 
 report_item0(cmt,Item) :-
-    in_color(yellow,in_cmt(print_tree_with_final(Item,'.'))),!,nl.
-report_item0(cmt,Item) :-
-    pprint_ecp_cmt(yellow,Item),!.
+    in_color(yellow, print_tree_with_final(Item,'.')),!,nl.
+report_item0(cmt,Item) :- pprint_ecp_cmt(yellow,Item),!.
 report_item0(P,Item) :-
    must_or_rtrace(call(P,Item)),!.
 

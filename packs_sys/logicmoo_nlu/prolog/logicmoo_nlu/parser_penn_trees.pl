@@ -330,8 +330,11 @@ text_to_best_tree(Text,Tree):- tmp:cached_text_to_best_tree(Text,Tree),!.
 text_to_best_tree(Text,Tree):- text_to_best_tree_real(Text,Tree),
   add_text_to_best_tree(tmp:cached_text_to_best_tree(Text,Tree)),!.
 
+is_w2(W2):- is_functor(w,2,W2).
+is_functor(F,A,P):- compound(P),compound_name_arity(P,F,A),!.
+
 text_to_best_tree_real(Text,TreeO):- text_to_best_tree_real_old(Text,Tree), !,
-  spacy_pos(Text,Pos),include(is_w2,Pos,RW2s),
+  text_to_spacy_pos(Text,Pos),include(is_w2,Pos,RW2s),
   debug_nop(writeln(spacy=RW2s)),
   replace_pos_tree_w2(RW2s,Tree,TreeO),!.
 

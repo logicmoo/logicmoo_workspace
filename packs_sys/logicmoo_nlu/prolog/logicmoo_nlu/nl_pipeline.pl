@@ -70,6 +70,8 @@
 :- shared_parser_data(talkdb:talk_db/3).
 :- shared_parser_data(talkdb:talk_db/6).
 
+:- load_parser_interface(parser_spacy).
+:- load_parser_interface(parser_link_grammar).
 
 % ================================================================================================
 :- if(load_parser_interface(parser_e2c)).

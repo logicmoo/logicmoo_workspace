@@ -7,8 +7,8 @@
   test_lgp_parse1_broken/0,
   test_lgp_parse2/0,  
   lgp_stream/2,
-  lgp_pos/2,
-  text_to_lgp/2,
+  text_to_lgp_pos/2,
+  text_to_lgp_sents/2,
   text_to_lgp_segs/2,
   lgp_parse/2]).
 
@@ -63,7 +63,7 @@ test_lgp_parse2 :-
 
 test_lgp_parse3 :-
   Text = "Can the can do the Can Can?",
-  lgp_pos(Text,Lines),
+  text_to_lgp_pos(Text,Lines),
   pprint_ecp_cmt(yellow,test_lgp_parse2=Lines).
 
 read_lgp_lines(Out, Result) :-
@@ -84,17 +84,17 @@ read_lgp_lines(StringIn, Out, AllCodes) :-
 
    
 lgp_pos_info(Text,PosW2s,Info,LExpr):-
-  text_to_lgp(Text,LExpr),
+  text_to_lgp_sents(Text,LExpr),
   tree_to_lexical_segs(LExpr,SegsF),
   segs_retain_w2(SegsF,Info,PosW2s),!.
   
-lgp_pos(Text,PosW2s):- lgp_pos_info(Text,PosW2s0,_Info,_LExpr),guess_pretty(PosW2s0),!,PosW2s=PosW2s0.
+text_to_lgp_pos(Text,PosW2s):- lgp_pos_info(Text,PosW2s0,_Info,_LExpr),guess_pretty(PosW2s0),!,PosW2s=PosW2s0.
 
 text_to_lgp_segs(Text,Segs):-
   text_to_lgp_tree(Text,LExpr),
   tree_to_lexical_segs(LExpr,Segs).
 
-text_to_lgp(Text,Sent):-
+text_to_lgp_sents(Text,Sent):-
   text_to_lgp_segs(Text,Segs),!,
   lgp_segs_to_sentences(Segs,Sent),!.
 

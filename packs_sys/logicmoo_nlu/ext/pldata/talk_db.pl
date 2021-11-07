@@ -181,6 +181,8 @@ talk_db_pos(String,POSVV,POS,F,N):- length(List,N),Search=[_|List],C=..[talk_db,
 
 use_new_morefile:- fail.
 
+check_marker(_,_):-!, fail.
+
 check_marker(Type,Possibles):- 
   notrace(\+ compound(Type)), !,
   notrace((member(W, Possibles), atom(W), 

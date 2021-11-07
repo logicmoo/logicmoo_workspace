@@ -26,6 +26,10 @@ nb_set_has(Set, F):- functor(Set,_, A),
   ((arg(N, Set, E), N < A, E=@=F) -> true;
    (arg(A,Set,T), ((T==[];var(T)) -> (!,fail) ; nb_set_has(T, F)))).
 
+nb_set_unify(Set, F):- functor(Set,_, A), 
+  ((arg(N, Set, E), N < A, E=F) -> true;
+   (arg(A,Set,T), ((T==[];var(T)) -> (!,fail) ; nb_set_replace(T, F)))).
+
 nb_set_add(Set, List):- is_list(List), !, maplist(nb_set_add1(Set),List).
 nb_set_add(Set, E):- nb_set_add1(Set,E), !.
 
@@ -40,8 +44,10 @@ nb_set_rem1(Set, F):- functor(Set,_, A),
   ((arg(N, Set, E), N < A, E=@=F) -> throw(cant_remove(arg(N, Set, E))) ;
    (arg(A,Set,T), ((T==[];var(T)) -> true ; nb_set_rem1(T, F)))).
 
-remove_el_via_setarg(List,Value):- [_|T] = List, [_,Was|_] = List,
-  (Was=Value -> nb_setarg(2,List,T) ;  remove_el_via_setarg([Was|T],Value)).
+
+nb_remove_first(List):- List = [_|Second],compound(Second),arg(1,Second,NewFirst),arg(2,Second,NewRest),nb_setarg(1,List,NewFirst),nb_setarg(2,List,NewRest),!.
+remove_el_via_setarg(List,Value):- [Value,_|_] = List, !, nb_remove_first(List).
+remove_el_via_setarg([_|List],Value):- remove_el_via_setarg(List,Value).
 
 append_el_via_setarg(List,Value):- List = [_|T], (T==[] -> setarg(2,List,[Value]) ; append_el_via_setarg(T,Value)).
 

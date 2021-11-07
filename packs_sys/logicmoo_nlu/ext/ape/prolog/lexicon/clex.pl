@@ -234,7 +234,7 @@ adj_itr(Y, X):- learned_as_type('value',X,'',Y).
 adj_itr(Y, X):- learned_as_type('type',X,'ish',Y).
 
 adj_itr_comp(Y, X):- learned_as_type('attrib',X,'er',Y).
-adj_itr_comp(Y, X):- learned_as_type('type',X,'isher',Y).
+adj_itr_comp(Y, X):- learned_as_type('type',X,'lier',Y).
 
 adj_itr_sup(Y, X):- learned_as_type('attrib',X,'est',Y).
 adj_itr_sup(Y, X):- learned_as_type('type',X,'ishest',Y).

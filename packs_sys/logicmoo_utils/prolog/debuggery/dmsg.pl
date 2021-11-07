@@ -1052,6 +1052,7 @@ print_prepended_lines0(_Pre,['']):-!.
 print_prepended_lines0(Pre,[H|T]):- print_prepended_line(Pre,H),
   print_prepended_lines0(Pre,T),!.
 
+print_prepended_line(line,S):- !, print_prepended_line('%~ ',S).
 print_prepended_line(Pre,S):- prepend_trim(S,H),
   ignore((H\=="",
   line_pos(current_output,LPos1),new_line_if_needed,line_pos(current_output,LPos2),
@@ -1070,7 +1071,7 @@ print_prepended_line(Pre,S):- prepend_trim(S,H),
 
 in_cmt(Goal):- in_cmt(guess,Goal).
 
-in_cmt(line,Goal):- maybe_bfly_html(prepend_each_line('%~ ',Goal)),!.
+in_cmt(line,Goal):- !, maybe_bfly_html(prepend_each_line('%~ ',Goal)),!.
 in_cmt(Block,Goal):- maybe_bfly_html(prepend_each_line(Block,Goal)),!.
 
 

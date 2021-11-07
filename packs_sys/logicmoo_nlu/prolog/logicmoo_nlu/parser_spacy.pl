@@ -7,8 +7,8 @@
   test_spacy_parse1_broken/0,
   test_spacy_parse2/0,  
   spacy_stream/2,
-  spacy_pos/2,
-  text_to_spacy/2,
+  text_to_spacy_pos/2,
+  text_to_spacy_sents/2,
   text_to_spacy_segs/2,
   spacy_parse/2]).
 
@@ -18,42 +18,79 @@
 :- use_module(library(logicmoo_nlu/parser_penn_trees)).
 :- use_module(library(logicmoo_nlu/parser_tokenize)).
 
-:- dynamic(tmp:existing_spacy_stream/3).
-:- volatile(tmp:existing_spacy_stream/3).
-spacy_stream(In,Out):- tmp:existing_spacy_stream(_,In,Out),!,clear_spacy_pending(Out).
+:- dynamic(tmp:existing_spacy_stream/4).
+:- volatile(tmp:existing_spacy_stream/4).
+spacy_stream(In,Out):- thread_self(Self),tmp:existing_spacy_stream(Self,_,In,Out),!,clear_spacy_pending(Out).
 spacy_stream(In,Out):-
   lmconfig:space_py_dir(Dir),
+  thread_self(Self),
   sformat(S,'python3 parser_spacy.py -nc -cmdloop ',[]),
   nop(writeln(S)),
     process_create(path(bash), ['-c', S], [ cwd(Dir),  stdin(pipe(In)),stdout(pipe(Out)), stderr(null), process(FFid)]),!,
-  assert(tmp:existing_spacy_stream(FFid,In,Out)).
+  assert(tmp:existing_spacy_stream(Self,FFid,In,Out)).
 
-clear_spacy_pending(Out):- read_pending_codes(Out,Codes,[]),dmsg(clear_spacy_pending=Codes).
+clear_spacy_pending(Out):- nop((read_pending_codes(Out,Codes,[]),dmsg(clear_spacy_pending=Codes))).
 
 :- prolog_load_context(directory,Dir), assert(lmconfig:space_py_dir(Dir)).
-tokenize_spacy_string(Text,StrO):- 
-  any_to_string(Text,Str),
-  atomic_list_concat(List,'\n',Str),
-  atomics_to_string(List,' ',StrO).
 
-spacy_parse(Text, Lines) :-
+tokenize_spacy_string(Text,StrO):- any_to_string(Text,StrO).
+/*
+tokenize_spacy_string(Text,StrO):- any_to_string(Text,Str), replace_in_string(['\\'='\\\\','\''='\\\''],Str,StrM),
+  atomics_to_string(["'",StrM,"'"],StrO).
+*/
+spacy_lexical_segs(I,O):- into_lexical_segs(I,O).
+into_lexical_segs(I,O):-
+  old_into_lexical_segs(I,M),
+  spacy_parse(I,S),
+  merge_spacy(S,M,O).
+
+merge_spacy([],O,O):-!.
+merge_spacy([H|T],I,O):- !, merge_spacy(H,I,M), merge_spacy(T,M,O).
+merge_spacy(w(W,L),O,O):- member(w(W,OL),O), \+ member(spacy,OL),!,    
+  select(pos(Pos),L,ML), 
+  downcase_atom(Pos,DPos),
+  ignore((member(pos(OLD),OL), OLD\==DPos, remove_el_via_setarg(OL,pos(OLD)), nb_set_add(OL,old_pos(OLD)))),
+  nb_set_add(OL,[spacy,pos(DPos)|ML]), !.
+merge_spacy(span(List),I,O):- member(dep_tree(_,_,_),List),!,
+  merge_spacy(List,I,O),!.
+merge_spacy(span(List),O,O):- 
+  member(seg(S,E),List), member(span(Other),O), member(seg(S,E),Other),
+  nb_set_add(Other,[spacy|List]).
+merge_spacy(dep_tree(Type,R,Arg),O,O):- 
+  member(w(_,Other),O),member(node(R),Other),
+  nb_set_add(Other,dep_tree(Type,R,Arg)).
+merge_spacy(S,I,O):- append(I,[S],O).
+
+
+
+
+spacy_parse(Text, Lines) :- 
   tokenize_spacy_string(Text,String),
+  spacy_parse2(String, Lines).
+
+spacy_parse2(_String, _Lines) :-
+  spacy_stream(In,Out),
+  once(catch(flush_output(In),_,retract(tmp:existing_spacy_stream(_,_,In,Out)))),fail.
+spacy_parse2(_String, _Lines) :-
+  spacy_stream(In,Out),
+  once(catch(flush_output(In),_,retract(tmp:existing_spacy_stream(_,_,In,Out)))),fail.
+spacy_parse2(String, Lines) :-
+  spacy_stream(In,Out),
+  once(catch((format(In,'~w\n',[String]),
+  flush_output(In),
+  read_spacy_lines(Out, Lines)),_,fail)),!.
+spacy_parse2(String, Lines) :- 
   lmconfig:space_py_dir(Dir),
   sformat(S,'python3 parser_spacy.py -nc ~q ',[String]),
   nop(writeln(S)),
     process_create(path(bash), ['-c', S], [ cwd(Dir), stdout(pipe(Out))]),!,
   read_spacy_lines(Out, Lines).
 
-spacy_parse(Text, Lines) :-
-  tokenize_spacy_string(Text,String),
-  spacy_stream(In,Out),
-  format(In,'~w\n',[String]),
-  read_spacy_lines(Out, Lines),!.
-
 test_spacy_parse1_broken :-
  Text = "Can the can do the Can Can?",
   spacy_stream(In,Out),
   format(In,'~w\n',[Text]),
+  flush_output(In),
   read_spacy_lines(Out, Lines),
   pprint_ecp_cmt(yellow,test_spacy_parse1=Lines).
 
@@ -64,31 +101,31 @@ test_spacy_parse2 :-
 
 test_spacy_parse3 :-
   Text = "Can the can do the Can Can?",
-  spacy_pos(Text,Lines),
+  text_to_spacy_pos(Text,Lines),
   pprint_ecp_cmt(yellow,test_spacy_parse2=Lines).
 
 
    
 spacy_pos_info(Text,PosW2s,Info,LExpr):-
-  text_to_spacy(Text,LExpr),
+  text_to_spacy_sents(Text,LExpr),
   tree_to_lexical_segs(LExpr,SegsF),
   segs_retain_w2(SegsF,Info,PosW2s),!.
 
-spacy_pos(Text,PosW2s):- text_to_spacy_tree(Text,PosW2s),!.
-spacy_pos(Text,PosW2s):- spacy_pos_info(Text,PosW2s0,_Info,_LExpr),guess_pretty(PosW2s0),!,PosW2s=PosW2s0.
+text_to_spacy_pos(Text,PosW2s):- spacy_parse(Text,PosW2s),!.
+text_to_spacy_pos(Text,PosW2s):- spacy_pos_info(Text,PosW2s0,_Info,_LExpr),guess_pretty(PosW2s0),!,PosW2s=PosW2s0.
   
 text_to_spacy_segs(Text,Segs):-
   text_to_spacy_tree(Text,LExpr),
   tree_to_lexical_segs(LExpr,Segs).
 
-text_to_spacy(Text,Sent):-
+text_to_spacy_sents(Text,Sent):-
   text_to_spacy_segs(Text,Segs),!,
   spacy_segs_to_sentences(Segs,Sent),!.
 
 spacy_segs_to_sentences(Segs,sentence(0,W2,Info)):-
   segs_retain_w2(Segs,Info,W2).
 
-read_spacy_lines(Out, Result):- spacy_to_w2(Out, Result),!.
+read_spacy_lines(Out, Result):- read_term(Out,Term,[]),spacy_to_w2(Term, Result),!.
 
 text_to_spacy_tree(Text,LExpr):-
   spacy_parse(Text, String),
@@ -104,6 +141,26 @@ spacy_to_w2(Text,ListO):- \+ compound(Text), on_x_fail(atom_to_term(Text,Term,_)
 spacy_to_w2(Text,_ListO):- \+ compound(Text), nl,writeq(Text),nl,!,fail.
 
 is_upper_spacy_letters_atom(S):- atom(S),upcase_atom(S,S), \+ downcase_atom(S,S).
+
+/*
+
+
+dep_tree_to_tree([W2|W2Segs],Tree):-
+  arg(2,W2,List),member(node(N1),List),
+  partition(is_w2,W2Segs,W2Only,Excluded),
+  findall(dep_tree(P,S,O),(member(seg(L),Excluded),member(dep_tree(P,S,O))),List),
+  make_tree(W2Only,[],List,Tree).
+
+make_tree(N1,L,Rest,Tree):- 
+  select(dep_tree(P,PN,N1),Rest,Todo),!,
+  append(L,[[PN,N1]],LL),
+  make_tree(N1,LL,Todo,Tree).
+
+make_tree(N1,L,Rest,Tree):- 
+  make_tree(N1,[],Rest,Tree),
+  append(L,[[PN,N1]],LL),
+  make_tree(N1,LL,Todo,Tree).
+*/
 
 
 unused_spacy('{\'}').

@@ -66,7 +66,7 @@ thing_LF(Country,Spatial&Geo& /*_Neo&*/ Country,X,ti(Country,X),[],_):- spatial(
 
 unique_of_obj(geo,thing,Country,Govern,Capital,City,Capital_city,Nation_Capital):-
    maplist(bind_pos, 
-       ['type','action','attrib','type','attrib','attrib'],
+       ['type','action','type','type','property','property'],
        [Country,Govern,Capital,City,Capital_city,Nation_Capital]).
 
 

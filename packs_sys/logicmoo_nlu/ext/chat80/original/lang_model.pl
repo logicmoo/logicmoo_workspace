@@ -361,8 +361,6 @@ tree_to_words([I|E],O):- E\==[], \+ is_list(I),!,tree_to_words(E,O).
 tree_to_words([FW|I],Words):- maplist(tree_to_words,[FW|I],WordsL),flatten([WordsL],Words).
 tree_to_words(_,[]).
 
-is_w2(W2):- compound(W2),compound_name_arity(W2,w,2).
-
 compile_nl_tree(I,O):- pree_tree_done(I,O),!.
 compile_nl_tree([[tag(_,'N',_NP1)|S],[tag(_,'V',VB)|V],[tag(_,'N',_NP2)|O]|Rest],OUT):- !, vso_out([tag(_,'V',VB)|V],S,O,Rest,OUT).
 compile_nl_tree([[tag(_,'V',VB)|V],[tag(_,'N',_NP1)|S],[tag(_,'N',_NP2)|O]|Rest],OUT):- !, vso_out([tag(_,'V',VB)|V],S,O,Rest,OUT).
@@ -472,7 +470,7 @@ input_to_middle(I):-
   forall(clause(input_to_middle(I,O,Named),B),ignore((call(B),print_tree(Named=O)))).
 
 
-time_once(G):- notrace(garbage_collect),quietly(locally(set_prolog_flag(gc,true),time(once(show_call(always,G))))).
+time_once(G):- notrace(garbage_collect),quietly(locally(set_prolog_flag(gc,true),time(once(show_failure(always,G))))).
 
 any_to_input_layer(I,S):- any_to_str(I,S).
 any_to_str(I,S):- \+ string(I), words_of(I,U), any_to_string(U,S),!.
@@ -491,10 +489,10 @@ c84(Text):- c84(Text,Post), my_drs_to_fol(Post,FOL),exec_fol(FOL).
 
 c84(Text,Post):-
   text_to_tree(Text,Pre),
-  % forall(c80:lf_trained(Pre,_Mid,_Post2),print_tree_nl(pre_db=Pre)),
-  print_tree_nl(pre=Pre),
+  % forall(c80:lf_trained(Pre,_Mid,_Post2),print_tree_nl(pre_db=Pre)),  
  % \+ \+ c80:lf_trained(Pre,_,_),!,
   c80:lf_trained(Pre,Mid,Post),
+  %print_tree_nl(pre=Pre),
   maplist(call,Mid),
   ignore((print_tree_nl(using=lf_trained(Pre,Mid,Post)))).
 c84(I,O):- observe_system_full(I,O),!.
@@ -531,6 +529,7 @@ s80(S):-
  ((mpred_test_mok(into_lexical_segs(S,U)),
  (deepen_pos(sentence80(E,U,[],[],[])),(print_tree_nl(sentence80=E),i_sentence(E,T),print_tree_nl(i_sentence=T))))).
 
+c88(M):- c88(M,O),dmsg(O).
 c88(M,O):- process4a(off,M,_,O,_Times).
 
 try_ace_lf(S,O):- ace_to_drs:aceparagraph_to_drs(S,on,off,1,_Sentences,_Trees,_UnresolvedDrs,O,_Messages,_Time),should_learn(O).
@@ -584,10 +583,13 @@ gp_africa(Result):-
 
 
 :- add_history1([test_ext]).
+%:- forall(chat80_tests(X),cvt_to_objecteese(X))
+%:- forall(chat80_tests(X),cvt_to_objecteese(X))
+
 
 retrain:-
   % loads 50 phrases for CAHT80
-  forall(chat_80_ed(_,B,_),ignore(time_once(add_c81(B)))),
+  forall(chat_80_ed(_,B,_),ignore(time_once(cvt_to_objecteese(B)))),
   % loads 4000 phrases from APE
 %  forall(training_data(Sent,RHS),learn_full(Type,Sent,RHS)),
 
@@ -632,11 +634,17 @@ retrain_2:-
 :- add_history1(reconsult(lang_model)).
 
 
-s81:- make,s81(show_c80),s81(cvt_to_objecteese).
-s81(P):-
-  forall(ape_test(_,X),call(P,X)),
+
+s81:- make,s811(show_c80),s811(p1(cvt_to_objecteese)).
+
+p1(P2,X):- atom(P2), \+ current_predicate(P2/1),  current_predicate(P2/2),!, 
+  any_to_string(X,S),nl,dmsg(?-p1(P2,S)),call(P2,S,Y),wdmsg(Y),nl,!.
+p1(P1,X):- any_to_string(X,S),append_term(P1,S,G),nl,dmsg(?-G),call(G),nl,!.
+s81(P):- s811(p1(P)).
+s811(P):-
+  %forall(ape_test(_,X),call(P,X)),
   %forall(training_data(X,_),call(P,X)),
-  forall(test_e2c(X,_),call(P,X)),
+  %forall(test_e2c(X,_),call(P,X)),
   forall(chat_80_ed(_,X,_),call(P,X)).
   
 %:- add_c80("does joe eat cake?").
@@ -657,63 +665,75 @@ s81(P):-
 
 
 
-%map_penn('NN',type,'').
-map_penn('african',type,'ish').
-map_penn('address',attrib,'').
-map_penn('american',object,'ian').
-map_penn('area',attrib,'').
-map_penn('areas',attrib,'s').
-map_penn('asian',type,ian).
-map_penn('atlantic',object,'').
-map_penn('baltic',object,'').
-%map_penn('JJ',adjective,'').
-map_penn('VB_NN',action,'').
-map_penn('bordered',action,'ed').
-map_penn('borders',action,'s').
-map_penn('border',action,'').
-map_penn('capital',property,'').
-map_penn('china',object,'').
-map_penn('continent','large type','').
-map_penn('country',type,'').
-map_penn('equator',object,'').
-map_penn('flow',action,'').
-map_penn('flows',action,'s').
-map_penn('kingdom',type,'').
-map_penn('likes',action,'s').
-map_penn('largest',adjective,'est').
-map_penn('man','type','').
-map_penn('million','','').
-map_penn('million',' type','').
-map_penn('new','a adjective','').
-map_penn('NN_JJ','adjective','').
-map_penn('NNP',object,'').
-map_penn('NNS',type,'s').
-map_penn('ocean',type,'').
-map_penn('population',attrib,'').
-map_penn('rhine',object,'').
-map_penn('river',type,'').
-map_penn('smallest',type,'liest').
-map_penn('south',adverb,'').
-map_penn('united','action','ed').
-map_penn('volta',object,'').
-map_penn('VB',action,'').
-map_penn('VBN',action,'ed').
-map_penn('VBD',action,'ed').
-map_penn('VBG',action,'ing').
-map_penn('VBZ',action,'s').
+%map_ees_tag('NN',type,'').
+map_ees_word('asian',type,ian).
+map_ees_word('american',object,'ian').
+map_ees_word('flow',action,'').
+map_ees_word('flows',action,'s').
+map_ees_word('kingdom',type,'').
+map_ees_word('african',type,'ish').
+map_ees_word('million','','').
+map_ees_word('million',' type','').
+map_ees_word('volta',object,'').
+map_ees_word('country',type,'').
+map_ees_word('equator',object,'').
+/*
+map_ees_word('address',attrib,'').
+map_ees_word('area',attrib,'').
+map_ees_word('areas',attrib,'s').
+map_ees_word('atlantic',object,'').
+map_ees_word('baltic',object,'').
+map_ees_word('bordered',action,'ed').
+map_ees_word('borders',action,'s').
+map_ees_word('border',action,'').
+map_ees_word('capital',property,'').
+map_ees_word('china',object,'').
+map_ees_word('continent','large type','').
+map_ees_word('likes',action,'s').
+map_ees_word('largest',adjective,'est').
+map_ees_word('man','type','').
+map_ees_word('new','a adjective','').
+map_ees_word('ocean',type,'').
+map_ees_word('population',attrib,'').
+map_ees_word('rhine',object,'').
+map_ees_word('river',type,'').
+map_ees_word('smallest',type,'liest').
+map_ees_word('south',adverb,'').
+map_ees_word('united','action','ed').
+*/
+/*
+red = value
+happy = 
+*/
+map_ees_tag('JJR',value,'er').
+map_ees_tag('JJS',value,'est').
+map_ees_tag('JJ',value,'').
+map_ees_tag('RBR',value,'lier').
+map_ees_tag('RBS',value,'liest').
+map_ees_tag('RB',value,'').
+map_ees_tag('VB_NN',action,'').
+map_ees_tag('NN_JJ','adjective','').
+map_ees_tag('NNP',object,'').
+map_ees_tag('NNPS',object,'s').
+map_ees_tag('NNS',type,'s').
+map_ees_tag('NN',type,'').
+map_ees_tag('VB',action,'').
+map_ees_tag('VBN',action,'ed').
+map_ees_tag('VBD',action,'ed').
+map_ees_tag('VBG',action,'ing').
+map_ees_tag('VBZ',action,'s').
 
-map_penn2(Wives,agent,'s'):- clex:noun_pl(Wives, _, human).
-map_penn2(Wife,agent,''):- clex:noun_pl(_, Wife, human).
-map_penn2(Clerk,agent,''):- clex:noun_sg(Clerk, _, human).
-map_penn2(Wives,type,'s'):- clex:noun_pl(Wives, _, neutr).
-map_penn2(Wife,type,''):- clex:noun_pl(_, Wife, neutr).
-map_penn2(Clerk,type,''):- clex:noun_sg(Clerk, _, neutr).
-%map_penn(Y,'adjective','est'):-  talkdb:talk_db(superl,_,Y).
-map_penn2(Y,'adjective','er'):-  talkdb:talk_db(comp,_,Y).
-%map_penn(Y,'adjective',''):- talkdb:talk_db(adj,Y).
-%map_penn('VBZ',attrib,' is ').
+noun_var(neutr,type).
+noun_var(human,agent).
+map_ees_lex(Wives,Var,'s'):- clex:noun_pl(Wives, _, Type),noun_var(Type,Var).
+map_ees_lex(Wife,Var,''):-   clex:noun_pl(_, Wife, Type),noun_var(Type,Var).
+map_ees_lex(Clerk,Var,''):-  clex:noun_sg(Clerk, _, Type),noun_var(Type,Var).
+%map_ees_tag(Y,'adjective','est'):-  talkdb:talk_db(superl,_,Y).
+%map_ees_lex(Y,'adjective','er'):-  talkdb:talk_db(comp,_,Y).
+%map_ees_tag(Y,'adjective',''):- talkdb:talk_db(adj,Y).
+%map_ees_tag('VBZ',attrib,' is ').
 
-map_penn(W,POS,N,S):- map_penn(W,N,S)*-> true ; map_penn(POS,N,S) *-> true ; map_penn2(W,N,S).
+map_ees(W,POS,N,S):- map_ees_word(W,N,S)*-> true ; map_ees_tag(POS,N,S) *-> true ; map_ees_lex(W,N,S).
 
 may_debug(G):-!, call(G).
 may_debug(G):- ignore((current_prolog_flag(debug,true),!,on_x_fail(in_cmt(call(G))))).
@@ -740,23 +760,26 @@ tmp:dont_change(exceeds).
 
 :- dynamic(tmp:replacement_4_wrd/2).
 use_replacement_4_wrd(I,'SYM',O):- upcase_atom(I,O).
+use_replacement_4_wrd(I,_,O):- upcase_atom(I,I),O=I.
 use_replacement_4_wrd(I,_,O):- number_lex(I,O,_).
 use_replacement_4_wrd(I,_,O):- tmp:replacement_4_wrd(I,O).
 :- forall(retract((tmp:replacement_4_wrd(_,_):-true)),true).
 
 word2jecteese(_,_):- flag('$sentence_word',X,X+1),fail.
+word2jecteese(X,X):- \+ compound(X).
 word2jecteese(X,''):- X \= w(_,_),!. % Y=X,!.
-word2jecteese(w(W,L),Y):- member(pos(P),L), use_replacement_4_wrd(W,P,Y),!.
 word2jecteese(w(W,_),W):- never_change(W),!.
+word2jecteese(w(W,L),Y):- member(pos(P),L), use_replacement_4_wrd(W,P,Y),!.
 word2jecteese(w(W,LPOS),Y):- member(pos(POS),LPOS),
-  findall(N-S,map_penn(W,POS,N,S),L),L\==[],!,random_member(N-S,L), 
+  findall(N-S,map_ees(W,POS,N,S),L),L\==[],!,random_member(N-S,L), 
   (N==''->Y='';( flag('$objecteese_word',X,X+1),atomic_list_concat([N,X,S/*,@,W*/],Y))),
   assert(tmp:replacement_4_wrd(W,Y)).
 word2jecteese(w(W,_),W):- assert(tmp:dont_change(W)).
 
-cvt_to_objecteese(X):- nl,show_c80(X), cvt_to_objecteese(X,Y),show_c80(Y),nl,!.
+cvt_to_objecteese(X):- show_c80(X),cvt_to_objecteese(X,Y),!,c80(Y),nl,!.
 
-combined_w2s(w(W1,[pos('NNP')]),w(W2,[pos('NNP')]),w(W3,[pos('NNP')])):- atomic_list_concat([W1,' ',W2],W3).
+combined_w2s(w(W1,L1),w(W2,L2),w(W3,L3)):- POS='NNP', member(pos(POS),L1),member(pos(POS),L2),
+ duplicate_term(L2,L3),nb_set_add(L3,L1),atomic_list_concat([W1,' ',W2],W3).
 
 sent_to_jecteese([],[]).
 sent_to_jecteese([W1,W2|WL],YY):- combined_w2s(W1,W2,W3),!, sent_to_jecteese([W3|WL],YY).
@@ -765,12 +788,13 @@ sent_to_jecteese([W|WL],[Y|YY]):-!, word2jecteese(W,Y), sent_to_jecteese(WL,YY).
 :- dynamic(tmp:cached_cvt_to_w2/2).
 cvt_to_w2(X,W2):- \+ is_list(X),!, words_of(X,W), !, cvt_to_w2(W,W2).
 cvt_to_w2(X,W2):- tmp:cached_cvt_to_w2(X,W2),!.
-%cvt_to_w2(X,W2):- spacy_pos(X,W2),!.
-cvt_to_w2(X,W222):- text_to_best_tree_real_old(X,T),may_debug(dmsg(T)),
- tree_s_w2(T,W2),
- spacy_pos(X,W22),
- merge_w2s(W2,W22,W222),
- nop(assert(tmp:cached_cvt_to_w2(X,W222))),dmsg(X).
+cvt_to_w2(X,W2):- text_to_spacy_pos(X,W2),!.
+cvt_to_w2(X,W2):- spacy_lexical_segs(X,W2),!.
+cvt_to_w2(X,W2):- text_to_best_tree_real_old(X,T),may_debug(dmsg(T)),
+ tree_s_w2(T,WTwo),
+ text_to_spacy_pos(X,W22),
+ merge_w2s(WTwo,W22,W2),
+ nop(assert(tmp:cached_cvt_to_w2(X,W2))),dmsg(X).
 
 merge_w2s(W2,[],W2):-!.
 merge_w2s(W21,[W2|L2],W222):- 

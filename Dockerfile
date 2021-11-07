@@ -165,7 +165,11 @@ RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | s
  && apt update \
  && apt install -g gh
 
-RUN pip3 install junit2html
+RUN pip3 install junit2html spacy nltk \
+ && python3 -m pip install boto3     joblib     jsonschema     pandas     numpy     scikit-learn    spacy     flask \
+ && pip3 install click --upgrade \
+ && python -m spacy download en_core_web_lg \
+ && python -m spacy download en_core_web_sm
 
 
 

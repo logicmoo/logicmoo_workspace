@@ -364,6 +364,8 @@ e2c(Sentence, Options, Reply):-
  call_residue_vars(e2c_0(Sentence, Reply)))),!.
 :-system:import(e2c/2).
 
+call_residue_vars(X):- call_residue_vars(X,Vars),dmsg(call_residue_vars=Vars).
+
 set_e2c_options(Options):- nb_setval('$e2c_options', Options).
 
 :-export(e2c_0/2).
