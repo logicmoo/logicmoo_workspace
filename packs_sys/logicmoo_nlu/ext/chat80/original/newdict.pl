@@ -420,7 +420,7 @@ noun_sing_plu_lex(chat80,thousand).
 noun_sing_plu_lex(chat80,fish).
 %noun_sing_plu_lex(clex,Y):- clex:noun_mass(Y, _, _).
 
-hide_plur_root_noun(1,Millions,Million):- noun_sing_plu_lex(Million), !, Millions\==Million.
+%hide_plur_root_noun(1,Millions,Million):- noun_sing_plu_lex(Million), !, Millions\==Million.
 hide_plur_root_noun(1,_Twos,Two):-tr_number(Two,_).
 hide_plur_root_noun(1,_Ins,In):- notrace(prep_lex(In)).
 hide_plur_root_noun(1,_Mores,More):- comp_adv_lex(More).
@@ -442,7 +442,8 @@ which_var(_,_,0).
 noun_plu_db(talkdb,Rivers,River):- which_var(Rivers,River,N),talkdb:talk_db(noun1,River,Rivers),  \+ hide_plur_root_noun(N,Rivers,River).
 noun_plu_db(talkdb,Rivers,River):- noun_plu_db(clex,Rivers,River).
 noun_plu_db(clex,Rivers,River):- which_var(Rivers,River,N), clex:noun_pl(Rivers,River,_), 
-  \+ (hide_plur_root_noun(N,Rivers,River),nop(dmsg(warn(hide_plur_root_noun(N,Rivers,River)))),
+  \+ (hide_plur_root_noun(N,Rivers,River),
+  nop(dmsg(warn(hide_plur_root_noun(N,Rivers,River)))),
   nop(rtrace(hide_plur_root_noun(N,Rivers,River)))).
 
 noun_plu_db(chat80,areas,area).
@@ -464,6 +465,7 @@ noun_plu_db(chat80,places,place).
 noun_plu_db(chat80,populations,population).
 noun_plu_db(chat80,regions,region).
 noun_plu_db(chat80,rivers,river).
+noun_plu_db(chat80,Types,Type):- bind_pos('type',Type,'s',Types).
 noun_plu_db(chat80,seas,sea).
 noun_plu_db(chat80,sums,sum).
 noun_plu_db(chat80,times,time).

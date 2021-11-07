@@ -142,7 +142,10 @@ chat80_test("iran is bordered by iraq?").
 
 
 % text_drs_eval(Evaluation, Id, Text, DRS, LHSs, Timestamp, Author, Comment).
+:- if(exists_source(ape(tests/acetexts))).
 :- ensure_loaded(ape(tests/acetexts)).
+:- endif.
+
 training_data(Text,DRS):-  parser_ape:text_drs_eval(_Evaluation, _Id, Text, DRS, _LHSs, _Timestamp, _Author, _Comment), should_learn(DRS).
 :- dynamic(c80:lf_trained/3).
 add_c80(B):- any_to_str(B,S),add_history1(c80(S)).
@@ -441,8 +444,17 @@ words_of(I,Words):- var(I),!,throw(var_words_of(I,Words)).
 words_of(I,Words):- I==[],!,Words=[].
 words_of(I,Words):- words_of0(I,Words0),tokenizer:expand_contracted_forms(Words0,Words),!.
 
-my_tokenize_atom(I,Flat):- atom_contains(I,' ?'),!,atomic_list_concat(Flat,' ',I).
-my_tokenize_atom(I,Flat):- tokenize_atom(I,Flat).
+finish_tokenize(I,O):- maplist(any_to_atom,I,O).
+append_all_but_last(_End,[],[]):- !.
+append_all_but_last(_End,[I],[I]):-!.
+append_all_but_last(End,[H|T],[HH|TT]):- !, append(H,[End],HH), append_all_but_last(End,T,TT).
+
+
+my_tokenize_atom('',[]):- !.
+my_tokenize_atom(I,O):- member(Sep,['\n','.','?','!']),atom_contains(I,Sep),atomic_list_concat(List0,Sep,I),
+  maplist(my_tokenize_atom,List0,List1),append_all_but_last(Sep,List1,List2),append(List2,O),!.
+my_tokenize_atom(I,O):- atom_contains(I,' ?'),!,split_string(I, " \s\t\n", " \s\t\n", Flat),finish_tokenize(Flat,O).
+my_tokenize_atom(I,O):- tokenize_atom(I,Flat),finish_tokenize(Flat,O).
 words_of0(I,Words):- atomic(I),!,my_tokenize_atom(I,Flat),include(is_word80,Flat,Words).
 words_of0(I,Words):- \+ is_list(I),!,findall(E,(sub_term(E,I),is_word80(E)),Words).
 words_of0([FW|I],Words):- FW=tag(_,_,_),!,flatten([FW|I],Flat),include(is_word80,Flat,Words).
@@ -918,7 +930,7 @@ merge_w2(W21,w(W,WL),W21):-
   
 
 :-  flag('$objecteese_word',_,1).
-cvt_to_objecteese(X,Y):- flag('$sentence_word',_,1), cvt_to_w2(X,W2), may_debug(writeln(W2)), flatten(W2,W2F),sent_to_jecteese(W2F,Y).
+cvt_to_objecteese(X,Y):- flag('$sentence_word',_,1), cvt_to_w2(X,W2), may_debug(dmsg(W2)), flatten(W2,W2F),sent_to_jecteese(W2F,Y).
 
 
 :- if(\+ prolog_load_context(reloading, true)).

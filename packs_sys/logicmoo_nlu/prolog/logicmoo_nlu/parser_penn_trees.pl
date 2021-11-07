@@ -296,7 +296,7 @@ tree_np_w2([Pt1|Rest],W2sO):- maplist(tree_s_w2,[Pt1|Rest],W2s), juggle_np_w2s(W
 juggle_np_w2s(W2s,W2F):- flatten(W2s,W2F).
    
 %one_syntax_tree(I,O,chat80):- text_to_chat80_tree(I,O).
-one_syntax_tree(I,O,lgp):- text_to_lgp_tree(I,O).
+%one_syntax_tree(I,O,lgp):- text_to_lgp_tree(I,O).
 one_syntax_tree(I,O,corenlp):- text_to_corenlp_tree(I,O).
 %one_syntax_tree(I,O,best):- text_to_best_tree(I,O).
 one_syntax_tree(I,O,charniak):- text_to_charniak_tree(I,O).

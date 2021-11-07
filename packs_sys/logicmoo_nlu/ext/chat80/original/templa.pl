@@ -23,7 +23,7 @@
 
 
 spatial(thing).
-
+feat(Feat):- debug_var(feat,Feat),dif(Feat,geo).
 
 thing_LF(person,_,X,ti(person,X),[],_).
 trans_LF(contain,Spatial&_,X,Spatial&_,Y, trans_pred(Spatial,contain,X,Y),[],_,_).
@@ -36,12 +36,12 @@ thing_LF(OceanOrSea,Path,X,ti(OceanOrSea,X),Nil,Any):- ti_subclass(OceanOrSea,Se
    like_type(_Geo,seamass,Seamass), %Seamass=seamass,
    thing_LF(Seamass,Path,X,ti(Seamass,X),Nil,Any).
 
-thing_LF(City,Spatial& feat& City,X,ti(City,X),[],_):- spatial(Spatial),like_type(geo,city,City).
+thing_LF(City,Spatial& Feat& City,X,ti(City,X),[],_):- feat(Feat), spatial(Spatial),like_type(geo,city,City).
 thing_LF(Seamass,Spatial&Geo& /*_Neo&*/ Seamass,X,ti(Seamass,X),[],_):- spatial(Spatial),like_type(Geo,seamass,Seamass).
 thing_LF_access(Continent,Spatial&Geo& /*_Neo&*/ Continent,X,ti(Continent,X),[],_):- like_type(Geo,continent,Continent), spatial(Spatial).
 
-name_template_lf0(X,Spatial& feat& City) :-like_type(geo,city,City), ti(City,X), spatial(Spatial).
-name_template_lf0(X,Spatial& feat& Circle_of_latitude) :- like_type(geo,circle_of_latitude,Circle_of_latitude), ti(Circle_of_latitude,X), spatial(Spatial).
+name_template_lf0(X,Spatial& Feat& City) :-like_type(geo,city,City), ti(City,X),feat(Feat), spatial(Spatial).
+name_template_lf0(X,Spatial& Feat& Circle_of_latitude) :- like_type(geo,circle_of_latitude,Circle_of_latitude), feat(Feat), ti(Circle_of_latitude,X), spatial(Spatial).
 
 name_template_lf0(X,Spatial&Geo& /*_Neo&*/ Seamass) :- like_type(Geo,seamass,Seamass),spatial(Spatial), ti(Seamass,X).
 name_template_lf0(X,Spatial&Geo& /*_Neo&*/ Country) :- like_type(Geo,country,Country), spatial(Spatial), ti(Country,X).
@@ -52,8 +52,10 @@ name_template_lf0(X,Spatial&Geo& /*_Neo&*/ Continent) :- like_type(Geo,continent
 
 
 
-thing_LF(River,Spatial& feat& River,X,ti(River,X),[],_):- like_type(geo,river,River),spatial(Spatial).
-name_template_lf0(X,Spatial& feat& River) :- like_type(_Geo,river,River), ti(River,X), spatial(Spatial).
+thing_LF(River,Spatial& Feat& River,X,ti(River,X),[],_):- feat(Feat),like_type(geo,river,River),spatial(Spatial).
+thing_LF(Type,Spatial& Feat & Type,X,ti(Type,X),[],_):- feat(Feat),bind_pos('type',Type),spatial(Spatial).
+thing_LF(Types,Spatial& Feat & Type,X,ti(Type,X),[],_):- feat(Feat),bind_pos('type',Type,'s',Types),spatial(Spatial).
+name_template_lf0(X,Spatial& Feat& River) :- feat(Feat),like_type(_Geo,river,River), ti(River,X), spatial(Spatial).
 name_template_lf0(X,Spatial&_) :- like_type(_Geo,region,Region),spatial(Spatial), ti(Region,X).
 
 
@@ -66,7 +68,7 @@ thing_LF(Country,Spatial&Geo& /*_Neo&*/ Country,X,ti(Country,X),[],_):- spatial(
 
 unique_of_obj(geo,thing,Country,Govern,Capital,City,Capital_city,Nation_Capital):-
    maplist(bind_pos, 
-       ['type','action','type','type','property','property'],
+       ['type','action','subtype','type','property','property'],
        [Country,Govern,Capital,City,Capital_city,Nation_Capital]).
 
 
@@ -108,14 +110,18 @@ ordering_pred(thing,cp(west,of),X1,X2) :- type_measure_pred( _Region,position(x)
 
 /* Nouns */
 
-property_LF(Capital,Spatial& feat& City,X,Spatial&Geo& /*_Neo&*/ Country,Y,specific_pred(Spatial,Nation_capital,Y,X),[],_,_):- 
+property_LF(Capital,Spatial& Feat& City,X,Spatial&Geo& /*_Neo&*/ Country,Y,specific_pred(Spatial,Nation_capital,Y,X),[],_,_):-  
+%   fail,
+   feat(Feat),
    unique_of_obj(Geo,Spatial,Country,_Govern,Capital,City,_Capital_city,Nation_capital).
 
-trans_LF(    Govern,Spatial& feat& City,X,Spatial&Geo& /*_Neo&*/ Country,Y,specific_pred(Spatial,Nation_capital,Y,X),[],_,_):-
+trans_LF(    Govern,Spatial& Feat& City,X,Spatial&Geo& /*_Neo&*/ Country,Y,specific_pred(2,Spatial,Nation_capital,Y,X),[],_,_):-
+  feat(Feat),
   unique_of_obj(Geo,Spatial,Country,Govern,_Capital,City,_Capital_city,Nation_capital).
    
 
-thing_LF(Capital,Spatial& feat& City,X,ti(Capital_city,X),[],_):- 
+thing_LF(Capital,Spatial& Feat& City,X,ti(Capital_city,X),[],_):- 
+  feat(Feat),
    unique_of_obj(_Geo,Spatial,_Country,_Govern,Capital,City,Capital_city,_Nation_capital),
    spatial(Spatial).
 
@@ -132,7 +138,7 @@ property_LF(Area,     value&size&Area,    X,Spatial&_,Y, measure_pred(Spatial,Ar
 type_measure_pred(_AnyObjectType,MeasureType,Area,countV):- MeasureType\==size, MeasureType=Area, clex_attribute(Area).
 
 clex_attribute(Area):-  bind_pos('attrib',Area).
-clex_attribute(Area):-  bind_pos('type',Area).
+%clex_attribute(Area):-  bind_pos('type',Area).
 
 synonymous_spatial(nation,country).
 
@@ -361,23 +367,26 @@ agentitive_trans(Contains,Af,An):- agentitive_trans_80(Contains,Af,An).
 % % chat80("where does the rhine rise?") -> [switzerland]
 % chat80("the rhine rises in switzerland ?      ").
 % @TODO: X begins from Begin
-intrans_LF(Start,Spatial & feat& Type,X, LF,
+intrans_LF(Start,Spatial & Feat& Type,X, LF,
    [slot(prep(In),Spatial&_,Begin,_,free)],_):- 
+ feat(Feat),
  type_begins_thru_ends(Type, PathSystem, Start, _Continue, _Stop),
  spatial(Spatial),member(In,[in,from,at]),
  LF = path_pred(begins(PathSystem),Type,X,Begin).
 
 % X drains into End
-intrans_LF(Stop,Spatial & feat& Type,X, LF, 
+intrans_LF(Stop,Spatial & Feat& Type,X, LF, 
    [slot(prep(Into),Spatial&_,End,_,free)],_):- 
+ feat(Feat),
  type_begins_thru_ends(Type, PathSystem, _Start, _Continue, Stop),
  spatial(Spatial),member(Into,[into,in,to,at]),
  LF = path_pred(ends(PathSystem),Type,X,End).
 
 
-intrans_LF(Continue,Spatial & feat& Type,X,LF,
+intrans_LF(Continue,Spatial & Feat& Type,X,LF,
    [slot(prep(Into),Spatial&_,Dest,_,free),
     slot(prep(From),Spatial&_,Origin,_,free)],_):- 
+ feat(Feat),
  type_begins_thru_ends(Type, PathSystem, _Start, Continue, _Stop),
  spatial(Spatial),
  member(Into,[into,to,through,in,at]),
@@ -387,8 +396,9 @@ intrans_LF(Continue,Spatial & feat& Type,X,LF,
 
 % X flows through Begin
 /*
-intrans_LF(Continue,Spatial & feat& Type,X,LF,
+intrans_LF(Continue,Spatial & Feat& Type,X,LF,
    [slot(prep(Through),Spatial&_,Link,_,free)],_):- 
+ feat(Feat),
  type_begins_thru_ends(Type, PathSystem, _Start, Continue, _Stop),
  spatial(Spatial),member(Through,[through,in]),
  LF = path_pred(thru_from(PathSystem),Type,X,Link).
@@ -616,4 +626,4 @@ freeze_until([V|Vars],Goal):- freeze(V,freeze_until(Vars,Goal)),!.
 exceeds0('--'(X,U),'--'(Y,U)) :- !, X > Y.
 exceeds0('--'(X1,U1),'--'(X2,U2)) :- once((ratio(U1,U2,M1,M2), X1*M1 > X2*M2)).
 
-
+:- fixup_exports.
