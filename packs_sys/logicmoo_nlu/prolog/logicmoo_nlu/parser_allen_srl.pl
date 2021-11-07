@@ -39,9 +39,8 @@ tokenize_allen_srl_string(Text,StrO):- any_to_string(Text,StrO).
 tokenize_allen_srl_string(Text,StrO):- any_to_string(Text,Str), replace_in_string(['\\'='\\\\','\''='\\\''],Str,StrM),
   atomics_to_string(["'",StrM,"'"],StrO).
 */
-allen_srl_lexical_segs(I,O):- into_lexical_segs(I,O).
-into_lexical_segs(I,O):-
-  old_into_lexical_segs(I,M),
+allen_srl_lexical_segs(I,O):-
+  spacy_lexical_segs(I,M),
   allen_srl_parse(I,S),
   merge_allen_srl(S,M,O).
 

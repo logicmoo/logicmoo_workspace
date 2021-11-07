@@ -38,8 +38,7 @@ tokenize_allen_string(Text,StrO):- any_to_string(Text,StrO).
 tokenize_allen_string(Text,StrO):- any_to_string(Text,Str), replace_in_string(['\\'='\\\\','\''='\\\''],Str,StrM),
   atomics_to_string(["'",StrM,"'"],StrO).
 */
-allen_lexical_segs(I,O):- into_lexical_segs(I,O).
-into_lexical_segs(I,O):-
+allen_lexical_segs(I,O):-
   old_into_lexical_segs(I,M),
   allen_parse(I,S),
   merge_allen(S,M,O).
