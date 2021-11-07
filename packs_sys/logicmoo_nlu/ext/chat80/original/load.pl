@@ -776,6 +776,8 @@ multifile_dynamic_discontiguous(P):- multifile(P),dynamic(P),discontiguous(P).
 
 :- ensure_loaded(newtop).	% top level
 
+:- ensure_loaded(lang_model).
+
 :- fixup_exports.
 
 list_chat80_preds:- 
