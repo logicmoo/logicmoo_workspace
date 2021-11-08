@@ -356,8 +356,8 @@ eng_to_logic(U,S):- sentence80(E,U,[],[],[]), sent_to_prelogic(E,S).
 
 qualifiedBy(_,_,_).
 
-into_lexical_segs(I,O):- into_text80_string(I, Text80), spacy_lexical_segs(Text80,O).
-%into_lexical_segs(I,O):- into_text80_string(I, Text80), allen_srl_lexical_segs(Text80,O).
+%into_lexical_segs(I,O):- into_text80_string(I, Text80), spacy_lexical_segs(Text80,O).
+into_lexical_segs(I,O):- into_text80_string(I, Text80), allen_srl_lexical_segs(Text80,O).
 old_into_lexical_segs(Sent,U):- notrace(into_chat80_segs0(Sent,U)),!.
 %into_lexical_segs(Sent,  WordsA):- enotrace((into_text80( Sent,  Words),into_combines(Words,WordsA))),!.
 
@@ -403,11 +403,13 @@ text_to_chat80_tree(Sentence,Tree):-
 process4a(How,Sentence,U,S1,Times) :- 
   Times = [ParseTime,SemTime,TimePlan,_TimeAns,_TotalTime],
   report(How,Sentence,'Sentence',0,tree),
+  ignore((into_text80_string(Sentence,Text80),try_ace_lf(Text80,LF),dmsg(LF))),
+
   quietly(( runtime(StartSeg),
    mpred_test_mok(into_lexical_segs(Sentence,U)),
    runtime(StopSeg),
    SegTime is StopSeg - StartSeg,
-   (report(How,U,'segs',SegTime,tree)),
+   (report(always,U,'segs',SegTime,print_tree_nl)),
    
    runtime(StartParse))),!,
  ((deepen_pos(sentence80(E,U,[],[],[])),

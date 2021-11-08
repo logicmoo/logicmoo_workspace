@@ -4,7 +4,7 @@
   test_allen_srl/1,
   test_allen_srl/2,
   test_allen_srl/1,
-  test_allen_srl_parse1_broken/0,
+  test_allen_srl_parse1/0,
   test_allen_srl_parse2/0,  
   foc_allen_srl_stream/2,
   text_to_allen_srl_pos/2,
@@ -53,7 +53,7 @@ merge_allen_srl(srl(Verb,List),O,O):- member(w(Verb,OL),O), \+ member(allen_srl,
   include('\\='(o('O',_)),List,NList),
   set_pos(2,'vb',OL),
   nb_set_add(OL,[allen_srl,srl(Verb,NList)]), !.
-merge_allen_srl(S,I,O):- append(I,[S],O),!.
+%merge_allen_srl(S,I,O):- append(I,[S],O),!.
 merge_allen_srl(_,O,O).
 
 
@@ -136,6 +136,7 @@ text_to_allen_srl_tree(Text,LExpr):-
 
 %allen_srl_to_w2((Word,POS),[POS,Word]).
 allen_srl_to_w2(w2allen_srl(I),O):- !, allen_srl_to_w2(I,O).
+allen_srl_to_w2(Out, _Result):- Out==end_of_file,!,throw(allen_srl_to_w2(Out)).
 allen_srl_to_w2(Out, Result):- is_stream(Out),!,read_term(Out,Term,[]),allen_srl_to_w2(Term, Result).
 %allen_srl_to_w2(Out, Result):- is_stream(Out),!,json_read(Out,Term,[]),allen_srl_to_w2(Term, Result).
 %allen_srl_to_w2(List,ListO):- is_list(List),!,include(compound,List,ListO).

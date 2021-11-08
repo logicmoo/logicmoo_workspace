@@ -1707,6 +1707,17 @@ as_is0(A) :- is_list(A),length(A,L),L>4,!,fail.
 as_is0(A) :- is_list(A), maplist(is_arity_lt1,A),!.
 %as_is0([A]) :- is_list(A),length(A,L),on_x_ignore(L<2),!.
 as_is0([A|L]) :- L==[],!, as_is0(A).
+
+as_is0(P):- \+ is_list(P), compound_name_arguments(P,N,[A,B]),current_op(_,_,N),as_is0(A),as_is0(B),!.
+/*
+as_is0(A&B) :- as_is0(A),as_is0(B),!.
+as_is0(A:B) :- as_is0(A),as_is0(B),!.
+as_is0(A=B) :- as_is0(A),as_is0(B),!.
+as_is0(A-B) :- as_is0(A),as_is0(B),!.
+as_is0(A/B) :- as_is0(A),as_is0(B),!.
+as_is0(A*B) :- as_is0(A),as_is0(B),!.
+as_is0(A+B) :- as_is0(A),as_is0(B),!.
+*/
 as_is0(A) :- functor(A,F,2), simple_fs(F),arg(2,A,One),atomic(One),!.
 as_is0(A):- \+ is_list(A), compound_name_arguments(A,_,L),as_is0(L),!.
 as_is0('_'(_)) :- !.
