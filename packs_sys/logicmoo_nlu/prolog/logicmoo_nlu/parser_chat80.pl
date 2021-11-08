@@ -256,11 +256,11 @@ chat80("How many asian countries have a population exceeding 10 million?", 20).
 chat80("How many countries have a population exceeding 10 million?", 50).
 chat80("How many countries have a population greater than 10 million?", 50).
 % These are too clow for the Unit Tests
-%chat80("What are the continents in which no country contains more than 3 cities?", [africa, antarctica, australasia, europe], slow).
-%chat80("What are the continents containing a country in which contains more than 3 cities?", [america, asia, europe], slow).
+chat80("What are the continents in which no country contains more than 3 cities?", [africa, antarctica, australasia, europe], slow).
+chat80("What are the continents containing a country in which contains more than 3 cities?", [america, asia, europe], slow).
 chat80("What are the continents not containing a country?", [antarctica]).
-chat80("What are the continents containing no countries?", [antarctica]).
-chat80("What are the continents containing no country?", [antarctica]).
+%chat80("What are the continents containing no countries?", [antarctica]).
+%chat80("What are the continents containing no country?", [antarctica]).
 
 chat80("What are the continents no country in which contains more than two cities whose population exceeds 1 million ?", [africa, antarctica, australasia]).
 chat80("What are the continents in which no country contains more than two cities whose population exceeds 1 million?", [africa, antarctica, australasia]).
@@ -270,7 +270,7 @@ chat80("What are the continents in which no country contains more than two citie
 %TODO chat80("What are the continents with a country containing at least two cities whose population each exceeds 1 million ?", [africa, antarctica, australasia]).
 chat80("What are the continents containing a country in which contains more than two cities whose population exceeds 1 million?", [america, asia, europe]).
 
-
+/*
 chat80("does afghanistan border china?").
 chat80("what is the capital of upper_volta?").
 chat80("where is the largest country?").
@@ -292,7 +292,7 @@ chat80("which countries have a population exceeding 10 million?").
 chat80("which countries with a population exceeding 10 million border the atlantic?").
 chat80("what percentage of countries border each ocean?").
 chat80("what countries are there in europe?").
-
+*/
 
 chat80_tests:-
   forall(chat80(X, Y, Z), chat80(X, Y, Z)).
