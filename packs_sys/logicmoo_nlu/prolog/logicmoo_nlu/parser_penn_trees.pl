@@ -359,6 +359,8 @@ text_to_best_tree_real_old(Text,Tree):-
    call(Format,"~w",[S]))).
 
 % calls text_to_best_tree/2
+into_chat80_merged_segs("",[]):-!.
+into_chat80_merged_segs('',[]):-!.
 into_chat80_merged_segs(Text80,U):- 
  mort((
   parser_stanford:text_to_corenlp_w2(Text80,U2),
