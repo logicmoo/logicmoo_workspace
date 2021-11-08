@@ -453,7 +453,8 @@ append_all_but_last(End,[H|T],[HH|TT]):- !, append(H,[End],HH), append_all_but_l
 my_tokenize_atom('',[]):- !.
 my_tokenize_atom(I,O):- member(Sep,['\n','.','?','!']),atom_contains(I,Sep),atomic_list_concat(List0,Sep,I),
   maplist(my_tokenize_atom,List0,List1),append_all_but_last(Sep,List1,List2),append(List2,O),!.
-my_tokenize_atom(I,O):- atom_contains(I,' ?'),!,split_string(I, " \s\t\n", " \s\t\n", Flat),finish_tokenize(Flat,O).
+my_tokenize_atom(I,O):- atom_contains(I,' ?'),!,split_string(I, " \s\t\n_", " \s\t\n", Flat),finish_tokenize(Flat,O).
+%my_tokenize_atom(I,O):- !,split_string(I, " \s\t\n_", " \s\t\n", Flat),finish_tokenize(Flat,O).
 my_tokenize_atom(I,O):- tokenize_atom(I,Flat),finish_tokenize(Flat,O).
 words_of0(I,Words):- atomic(I),!,my_tokenize_atom(I,Flat),include(is_word80,Flat,Words).
 words_of0(I,Words):- \+ is_list(I),!,findall(E,(sub_term(E,I),is_word80(E)),Words).
@@ -582,7 +583,7 @@ learn_middle(Type,B):- any_to_input_layer(B,I),
   learn_equivalencies(Type,[II|ResL]).
 
 
-input_to_middle(I):-
+text_to_all_trees(I):-
   forall(clause(input_to_middle(I,O,Named),B),ignore((call(B),print_tree(Named=O)))).
 
 
@@ -904,6 +905,7 @@ sent_to_jecteese([W|WL],[Y|YY]):-!, word2jecteese(W,Y), sent_to_jecteese(WL,YY).
 :- dynamic(tmp:cached_cvt_to_w2/2).
 cvt_to_w2(X,W2):- \+ is_list(X),!, words_of(X,W), !, cvt_to_w2(W,W2).
 cvt_to_w2(X,W2):- tmp:cached_cvt_to_w2(X,W2),!.
+cvt_to_w2(X,W2):- into_lexical_segs(X,W2),!.
 cvt_to_w2(X,W2):- spacy_lexical_segs(X,W2),!.
 cvt_to_w2(X,W2):- text_to_spacy_pos(X,W2),!.
 cvt_to_w2(X,W2):- text_to_best_tree_real_old(X,T),may_debug(dmsg(T)),

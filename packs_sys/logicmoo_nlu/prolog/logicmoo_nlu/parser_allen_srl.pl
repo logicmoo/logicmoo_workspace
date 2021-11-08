@@ -6,7 +6,7 @@
   test_allen_srl/1,
   test_allen_srl_parse1_broken/0,
   test_allen_srl_parse2/0,  
-  allen_srl_stream/2,
+  foc_allen_srl_stream/2,
   text_to_allen_srl_pos/2,
   text_to_allen_srl_sents/2,
   text_to_allen_srl_segs/2,
@@ -21,8 +21,8 @@
 
 :- dynamic(tmp:existing_allen_srl_stream/4).
 :- volatile(tmp:existing_allen_srl_stream/4).
-allen_srl_stream(In,Out):- thread_self(Self),tmp:existing_allen_srl_stream(Self,_,In,Out),!,clear_allen_srl_pending(Out).
-allen_srl_stream(In,Out):-
+foc_allen_srl_stream(In,Out):- thread_self(Self),tmp:existing_allen_srl_stream(Self,_,In,Out),!,clear_allen_srl_pending(Out).
+foc_allen_srl_stream(In,Out):-
   lmconfig:space_py_dir(Dir),
   thread_self(Self),
   sformat(S,'python3 parser_allen_srl.py -nc -cmdloop ',[]),
@@ -34,7 +34,7 @@ clear_allen_srl_pending(Out):- nop((read_pending_codes(Out,Codes,[]),dmsg(clear_
 
 :- prolog_load_context(directory,Dir), assert(lmconfig:space_py_dir(Dir)).
 
-tokenize_allen_srl_string(Text,StrO):- any_to_string(Text,StrO).
+tokenize_allen_srl_string(Text,StrO):- any_to_string(Text,Str),  replace_in_string('\n',' ',Str,StrO).
 /*
 tokenize_allen_srl_string(Text,StrO):- any_to_string(Text,Str), replace_in_string(['\\'='\\\\','\''='\\\''],Str,StrM),
   atomics_to_string(["'",StrM,"'"],StrO).
@@ -46,20 +46,15 @@ allen_srl_lexical_segs(I,O):-
 
 merge_allen_srl([],O,O):-!.
 merge_allen_srl([H|T],I,O):- !, merge_allen_srl(H,I,M), merge_allen_srl(T,M,O).
-merge_allen_srl(w(W,L),O,O):- member(w(W,OL),O), \+ member(allen_srl,OL),!,    
-  select(pos(Pos),L,ML), 
-  downcase_atom(Pos,DPos),
-  ignore((member(pos(OLD),OL), OLD\==DPos, remove_el_via_setarg(OL,pos(OLD)), nb_set_add(OL,old_pos(OLD)))),
-  nb_set_add(OL,[allen_srl,pos(DPos)|ML]), !.
-merge_allen_srl(span(List),I,O):- member(dep_tree(_,_,_),List),!,
-  merge_allen_srl(List,I,O),!.
-merge_allen_srl(span(List),O,O):- 
-  member(seg(S,E),List), member(span(Other),O), member(seg(S,E),Other),
-  nb_set_add(Other,[allen_srl|List]).
-merge_allen_srl(dep_tree(Type,R,Arg),O,O):- 
-  member(w(_,Other),O),member(node(R),Other),
-  nb_set_add(Other,dep_tree(Type,R,Arg)).
-merge_allen_srl(S,I,O):- append(I,[S],O).
+merge_allen_srl(v(List),I,O):- select(o('V',Verb),List,Rest), !, merge_allen_srl(srl(Verb,Rest),I,O).
+merge_allen_srl(v(_),I,I):-!. 
+merge_allen_srl(srl([Verb],List),I,O):- !,merge_allen_srl(srl(Verb,List),I,O).
+merge_allen_srl(srl(Verb,List),O,O):- member(w(Verb,OL),O), \+ member(allen_srl,OL),!,    
+  include('\\='(o('O',_)),List,NList),
+  set_pos(2,'vb',OL),
+  nb_set_add(OL,[allen_srl,srl(Verb,NList)]), !.
+merge_allen_srl(S,I,O):- append(I,[S],O),!.
+merge_allen_srl(_,O,O).
 
 
 
@@ -67,44 +62,51 @@ allen_srl_parse(Text, Lines) :-
   tokenize_allen_srl_string(Text,String),
   allen_srl_parse2(String, Lines).
 
-allen_srl_parse2(_String, _Lines) :-
-  allen_srl_stream(In,Out),
-  once(catch(flush_output(In),_,retract(tmp:existing_allen_srl_stream(_,_,In,Out)))),fail.
-allen_srl_parse2(_String, _Lines) :-
-  allen_srl_stream(In,Out),
-  once(catch(flush_output(In),_,retract(tmp:existing_allen_srl_stream(_,_,In,Out)))),fail.
-allen_srl_parse2(String, Lines) :-
-  allen_srl_stream(In,Out),
-  format(In,'~w\n',[String]),flush_output(In),
+allen_srl_parse2(String, Lines):-
+  once(allen_srl_parse3(String, Lines)
+      ;allen_srl_parse4(String, Lines)).
+
+try_allen_stream(In,Write):- once(catch((flush_output(In),format(In,'~w',[Write])),_,
+  (retract(tmp:existing_allen_srl_stream(_,_,In,_)),fail))).
+
+% Clears if there is a dead one
+allen_srl_parse3(_String, _Lines) :-
+  foc_allen_srl_stream(In,_Out),
+  try_allen_stream(In,''),fail.
+% Reuses or Creates
+allen_srl_parse3(String, Lines) :-
+  foc_allen_srl_stream(In,Out),
+  try_allen_stream(In,String),
+  try_allen_stream(In,'\n'),
+  try_allen_stream(In,''),!,
   read_term(Out,Term,[]),!,
   read_allen_srl_lines(Term, Lines).
-allen_srl_parse2(String, Lines) :- 
+
+% Very slow version
+allen_srl_parse4(String, Lines) :- 
   lmconfig:space_py_dir(Dir),
   sformat(S,'python3 parser_allen_srl.py -nc ~q ',[String]),
   nop(writeln(S)),
     process_create(path(bash), ['-c', S], [ cwd(Dir), stdout(pipe(Out))]),!,
-  read_allen_srl_lines(Out, Lines).
+  read_term(Out,Term,[]),!,
+  read_allen_srl_lines(Term, Lines).
 
-test_allen_srl_parse1_broken :-
- Text = "Can the can do the Can Can?",
-  allen_srl_stream(In,Out),
-  format(In,'~w\n',[Text]),
-  flush_output(In),
-  read_allen_srl_lines(Out, Lines),
+test_allen_srl_parse1 :-
+  String = "Can the can do the Can Can?",
+  allen_srl_parse3(String, Lines),
   pprint_ecp_cmt(yellow,test_allen_srl_parse1=Lines).
 
 test_allen_srl_parse2 :-
   Text = "Can the can do the Can Can?",
-  allen_srl_parse(Text,Lines),
+  allen_srl_parse4(Text,Lines),
   pprint_ecp_cmt(yellow,test_allen_srl_parse2=Lines).
 
 test_allen_srl_parse3 :-
   Text = "Can the can do the Can Can?",
-  text_to_allen_srl_pos(Text,Lines),
-  pprint_ecp_cmt(yellow,test_allen_srl_parse2=Lines).
+  allen_srl_parse2(Text,Lines),
+  pprint_ecp_cmt(yellow,test_allen_srl_parse3=Lines).
 
 
-   
 allen_srl_pos_info(Text,PosW2s,Info,LExpr):-
   text_to_allen_srl_sents(Text,LExpr),
   tree_to_lexical_segs(LExpr,SegsF),
@@ -179,45 +181,6 @@ allen_srl_to_data((A,B),O):-!,allen_srl_to_data(A,AA),allen_srl_to_data(B,BB),fl
 allen_srl_to_data((A:B),A:O):- !,allen_srl_to_data(B,BB),flatten([BB],AB),allen_srl_to_data(AB,O),!.
 allen_srl_to_data(Text,ListO):- Text=ListO,!.
 
-is_upper_allen_srl_letters_atom(S):- atom(S),upcase_atom(S,S), \+ downcase_atom(S,S).
-
-/*
-
-
-dep_tree_to_tree([W2|W2Segs],Tree):-
-  arg(2,W2,List),member(node(N1),List),
-  partition(is_w2,W2Segs,W2Only,Excluded),
-  findall(dep_tree(P,S,O),(member(seg(L),Excluded),member(dep_tree(P,S,O))),List),
-  make_tree(W2Only,[],List,Tree).
-
-make_tree(N1,L,Rest,Tree):- 
-  select(dep_tree(P,PN,N1),Rest,Todo),!,
-  append(L,[[PN,N1]],LL),
-  make_tree(N1,LL,Todo,Tree).
-
-make_tree(N1,L,Rest,Tree):- 
-  make_tree(N1,[],Rest,Tree),
-  append(L,[[PN,N1]],LL),
-  make_tree(N1,LL,Todo,Tree).
-*/
-
-
-unused_allen_srl('{\'}').
-unused_allen_srl('{!}').
-unused_allen_srl('}').
-unused_allen_srl('{').
-
-correct_allen_srl_atom(S,A,O):- \+ atom(A),!,correct_allen_srl_tree(S,A,O).
-correct_allen_srl_atom(S,A,O):- correct_allen_srl_atom0(S,A,M),correct_allen_srl_atom1(S,M,O).
-%correct_allen_srl_atom(S,A,[UP,WordO]):- atomic_list_concat([Word,POS],'.',A),atomic_list_concat([S,POS],'-',U),upcase_atom(U,UP),correct_allen_srl_sub_atom(POS,Word,WordO).
-correct_allen_srl_atom0(_,A,[UP,WordO]):- atomic_list_concat([Word,POS],'.',A),Word\=='',POS\=='',upcase_atom(POS,UP0),atomic_list_concat([UP0,'w'],'-',UP),correct_allen_srl_sub_atom(POS,Word,WordO).
-correct_allen_srl_atom0(PT,A,[UP,WordO]):- atomic_list_concat([PT,'w'],'-',UP),correct_allen_srl_sub_atom(PT,A,WordO).
-
-correct_allen_srl_atom1(_,['S-w','.'],['.','.']):-!.
-correct_allen_srl_atom1(_,O,O).
-
-correct_allen_srl_sub_atom(POS,Word,WordO):- unused_allen_srl(X),atomic_list_concat([W1,W2|Ws],X,Word),atomic_list_concat([W1,W2|Ws],'',WordM),WordM\=='',correct_allen_srl_sub_atom(POS,WordM,WordO).
-correct_allen_srl_sub_atom(_POS,Word,Word).
 
 :- if( \+ getenv('keep_going','-k')).
 :- use_module(library(editline)).

@@ -303,6 +303,10 @@ one_syntax_tree(I,O,charniak):- text_to_charniak_tree(I,O).
 %one_syntax_tree(I,O,ace):- text_to_ace_tree(I,O).
 %one_syntax_tree(I,O,ape):- text_to_ape_tree(I,O).
 
+set_pos(DPos,OL):- ignore((member(pos(OLD),OL), OLD\==DPos, remove_el_via_setarg(OL,pos(OLD)), nb_set_add(OL,old_pos(OLD)),nb_set_add(OL,pos(DPos)))).
+set_pos(N,DPos,OL):- ignore((member(pos(OLD),OL),sub_atom(DPos,0,N,_,LP),sub_atom(OLD,0,N,_,RP), LP\==RP, remove_el_via_setarg(OL,pos(OLD)), nb_set_add(OL,old_pos(OLD)),nb_set_add(OL,pos(DPos)))).
+
+
 pick_tree([T],T):-!.
 pick_tree([T1,T2|L],T):- pick_tree(T1,T2,Result,_Why,_Color),pick_tree([Result|L],T).
 
