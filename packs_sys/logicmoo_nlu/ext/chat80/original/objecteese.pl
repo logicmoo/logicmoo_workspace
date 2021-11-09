@@ -261,7 +261,7 @@ never_change(X):- number_lex(X,_,_).
 never_change(X):- pers_pron_lex(X,_,_,_,_).
 never_change(X):- poss_pron_lex(X,_,_,_).
 never_change(X):- prep_lex(X).
-never_change(X):- determiners:semlex_det(X,_,_,Z),Z\=@=lam(B, lam(C, merge(merge(D:drs([D:X:E], []), app(B, E)), app(C, E)))).
+never_change(X):- determiners:semlex_det(X,_,_,Z),Z\=lam(B, lam(C, merge(merge(D:drs([D:X:E], []), app(B, E)), app(C, E)))).
 never_change(not).  
 never_change(no).
 never_change(X):- sub_var(X,v(quantity,
