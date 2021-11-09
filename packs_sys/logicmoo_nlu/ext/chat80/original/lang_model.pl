@@ -762,7 +762,7 @@ s811(P):-
   %forall(ape_test(_,X),call(P,X)),
   %forall(training_data(X,_),call(P,X)),
   %forall(test_e2c(X,_),call(P,X)),
-  forall(chat_80_ed(_,X,_),call(P,X)).
+  forall(chat80_all(X,_,_),call(P,X)).
   
 %:- add_c80("does joe eat cake?").
 
@@ -822,6 +822,7 @@ map_ees_word('united','action','ed').
 red = value
 happy = 
 */
+
 map_ees_tag('JJR',value,'er').
 map_ees_tag('JJS',value,'est').
 map_ees_tag('JJ',value,'').
@@ -850,7 +851,7 @@ map_ees_lex(Clerk,Var,''):-  clex:noun_sg(Clerk, _, Type),noun_var(Type,Var).
 %map_ees_tag(Y,'adjective',''):- talkdb:talk_db(adj,Y).
 %map_ees_tag('VBZ',attrib,' is ').
 
-map_ees(W,POS,N,S):- map_ees_word(W,N,S)*-> true ; map_ees_tag(POS,N,S) *-> true ; map_ees_lex(W,N,S).
+map_ees(W,Pos,N,S):- upcase_atom(Pos,POS), (map_ees_word(W,N,S)*-> true ; map_ees_tag(POS,N,S) *-> true ; map_ees_lex(W,N,S)).
 
 may_debug(G):-!, call(G).
 may_debug(G):- ignore((current_prolog_flag(debug,true),!,on_x_fail(in_cmt(call(G))))).
@@ -893,19 +894,22 @@ word2jecteese(w(W,LPOS),Y):- member(pos(POS),LPOS),
   assert(tmp:replacement_4_wrd(W,Y)).
 word2jecteese(w(W,_),W):- assert(tmp:dont_change(W)).
 
-cvt_to_objecteese(X):- show_c80(X),cvt_to_objecteese(X,Y),!,c80(Y),nl,!.
 
 combined_w2s(w(W1,L1),w(W2,L2),w(W3,L3)):- POS='NNP', member(pos(POS),L1),member(pos(POS),L2),
  duplicate_term(L2,L3),nb_set_add(L3,L1),atomic_list_concat([W1,' ',W2],W3).
 
+:-  flag('$objecteese_word',_,1).
+cvt_to_objecteese(X):- cvt_to_objecteese(X,Y),!,show_c80(Y),nl,!.
+cvt_to_objecteese(X,Y):- flag('$sentence_word',_,1), cvt_to_w2(X,W2), may_debug(dmsg(W2)), flatten(W2,W2F),sent_to_jecteese(W2F,Y).
 sent_to_jecteese([],[]).
 sent_to_jecteese([W1,W2|WL],YY):- combined_w2s(W1,W2,W3),!, sent_to_jecteese([W3|WL],YY).
 sent_to_jecteese([W|WL],[Y|YY]):-!, word2jecteese(W,Y), sent_to_jecteese(WL,YY).
 
 :- dynamic(tmp:cached_cvt_to_w2/2).
-cvt_to_w2(X,W2):- \+ is_list(X),!, words_of(X,W), !, cvt_to_w2(W,W2).
-cvt_to_w2(X,W2):- tmp:cached_cvt_to_w2(X,W2),!.
+cvt_to_w2(X,W2):- \+ (is_list(X) ; (X=[H|_],is_w2(H))),!, words_of(X,W), !, cvt_to_w2(W,W2).
+%cvt_to_w2(X,W2):- tmp:cached_cvt_to_w2(X,W2),!.
 cvt_to_w2(X,W2):- into_lexical_segs(X,W2),!.
+/*
 cvt_to_w2(X,W2):- spacy_lexical_segs(X,W2),!.
 cvt_to_w2(X,W2):- text_to_spacy_pos(X,W2),!.
 cvt_to_w2(X,W2):- text_to_best_tree_real_old(X,T),may_debug(dmsg(T)),
@@ -913,6 +917,7 @@ cvt_to_w2(X,W2):- text_to_best_tree_real_old(X,T),may_debug(dmsg(T)),
  text_to_spacy_pos(X,W22),
  merge_w2s(WTwo,W22,W2),
  nop(assert(tmp:cached_cvt_to_w2(X,W2))),dmsg(X).
+*/
 
 merge_w2s(W2,[],W2):-!.
 merge_w2s(W21,[W2|L2],W222):- 
@@ -931,8 +936,6 @@ merge_w2(W21,w(W,WL),W21):-
   
   
 
-:-  flag('$objecteese_word',_,1).
-cvt_to_objecteese(X,Y):- flag('$sentence_word',_,1), cvt_to_w2(X,W2), may_debug(dmsg(W2)), flatten(W2,W2F),sent_to_jecteese(W2F,Y).
 
 
 :- if(\+ prolog_load_context(reloading, true)).

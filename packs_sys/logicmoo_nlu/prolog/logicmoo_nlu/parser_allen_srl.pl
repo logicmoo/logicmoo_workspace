@@ -41,12 +41,12 @@ tokenize_allen_srl_string(Text,StrO):- any_to_string(Text,Str), replace_in_strin
 */
 allen_srl_lexical_segs(I,O):-
   spacy_lexical_segs(I,M),
-  allen_srl_parse(I,S),
+  allen_srl_parse(I, S),
   merge_allen_srl(S,M,O).
 
 merge_allen_srl([],O,O):-!.
 merge_allen_srl([H|T],I,O):- !, merge_allen_srl(H,I,M), merge_allen_srl(T,M,O).
-merge_allen_srl(v(List),I,O):- select(o('V',Verb),List,Rest), !, merge_allen_srl(srl(Verb,Rest),I,O).
+merge_allen_srl(v(List),I,O):- select(o('V',Verb),List,_), !, merge_allen_srl(srl(Verb,List),I,O).
 merge_allen_srl(v(_),I,I):-!. 
 merge_allen_srl(srl([Verb],List),I,O):- !,merge_allen_srl(srl(Verb,List),I,O).
 merge_allen_srl(srl(Verb,List),O,O):- member(w(Verb,OL),O), \+ member(allen_srl,OL),!,    
@@ -58,9 +58,45 @@ merge_allen_srl(_,O,O).
 
 
 
-allen_srl_parse(Text, Lines) :- 
+allen_srl_parse(Text, LinesO) :- 
+  allen_srl_parse1(Text, Lines),
+  ((maybe_redo_allen_srl_parse(Text, Lines, LinesM) , LinesM\==[] ) 
+    -> LinesM=LinesO ;  Lines=LinesO).
+
+
+maybe_redo_allen_srl_parse(_, [One,Two|Rest], [One,Two|Rest]):-!.
+maybe_redo_allen_srl_parse(Text, _, LinesO):- 
+  words_of(Text,[CAN,_|II]), CAN==cAn,!,
+  allen_srl_parse(II,LinesO).
+maybe_redo_allen_srl_parse(Text, _, LinesO):- 
+  words_of(Text,[_|II]),
+  allen_srl_parse(II,LinesO).
+maybe_redo_allen_srl_parse(Text, _, LinesO):- 
+  words_of(Text,II),
+  allen_srl_parseC([cAn|II],LinesO).
+
+
+allen_srl_parseC(Text,Lines):-
+ allen_srl_parse1(Text,LinesI),
+ remove_cans(LinesI,Lines).
+ 
+remove_cans([],[]).
+remove_cans([srl([cAn],_)|Rest],O):- !, remove_cans(Rest,O).
+remove_cans([srl(Vs,Stuff)|Rest],[srl(Vs,StuffO)|O]):-
+  remove_cans(Stuff,StuffO),
+  remove_cans(Rest,O).
+remove_cans([o('ARGM-MOD', [cAn])|Rest],O):-!, remove_cans(Rest,O).
+remove_cans([o(Vs,Stuff)|Rest],[o(Vs,StuffO)|O]):-
+  remove_cans(Stuff,StuffO),
+  remove_cans(Rest,O).
+remove_cans([S|Rest],[S|O]):- remove_cans(Rest,O).
+
+
+
+  
+allen_srl_parse1(Text, LinesO):- 
   tokenize_allen_srl_string(Text,String),
-  allen_srl_parse2(String, Lines).
+  allen_srl_parse2(String, LinesO).
 
 allen_srl_parse2(String, Lines):-
   once(allen_srl_parse3(String, Lines)
@@ -153,14 +189,16 @@ allen_srl_to_tree(List,O) :- is_list(List),member( words : Words, List),member( 
 allen_srl_to_tree(Text,ListO):- Text=ListO,!.
 
 allen_srl_get_roles([],_,[]):-!.
-allen_srl_get_roles(List,Words,[M|O]):- is_list(List), select(tags:Tags,List,NewList), M=v([o('O',[])]),!,allen_srl_get_1role('O',Tags,Words,M),
+allen_srl_get_roles(List,Words,[M|O]):- is_list(List),select(verb:Verb,List,NewList1), select(tags:Tags,NewList1,NewList), M=srl(Verb,[o('O',[])]),!,allen_srl_get_1role('O',Tags,Words,M),
+  allen_srl_get_roles(NewList,Words,O).
+allen_srl_get_roles(List,Words,[M|O]):- is_list(List),select(tags:Tags,List,NewList), M=v([o('O',[])]),!,allen_srl_get_1role('O',Tags,Words,M),
   allen_srl_get_roles(NewList,Words,O).
 allen_srl_get_roles([V|Verbs],Words,O):- allen_srl_get_roles(V,Words,I), allen_srl_get_roles(Verbs,Words,M), flatten([I,M],O).
 allen_srl_get_roles(_,_,[]).
 
 append_store_current(Store,Type,W):- nb_set_unify(Store,o(Type,Values),OTV),append(Values,[W],NewValues),nb_setarg(2,OTV,NewValues),!.
-append_store_current(v(Store),Type,W):- last(Store,E),nb_set_unify(E,o(Type,_),OTV),nb_set_add(OTV,W),!.
-append_store_current(v(Store),Type,W):- last(Store,E),nb_set_unify(E,o(Type,Values),OTV),append(Values,[W],NewValues),nb_setarg(2,OTV,NewValues),!.
+%append_store_current(v(Store),Type,W):- last(Store,E),nb_set_unify(E,o(Type,_),OTV),nb_set_add(OTV,W),!.
+%append_store_current(v(Store),Type,W):- last(Store,E),nb_set_unify(E,o(Type,Values),OTV),append(Values,[W],NewValues),nb_setarg(2,OTV,NewValues),!.
 append_store_current(Store,Type,W):- nb_set_add(Store,o(Type,[W])),!.
 
 append_store(Store,Type,W):- nb_set_add(Store,o(Type,[W])),!.
