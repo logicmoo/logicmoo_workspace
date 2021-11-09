@@ -170,83 +170,84 @@ chat80_test("iran is bordered by iraq?").
 
 
 
-%map_ees_tag('NN',type,'').
-map_ees_word('country',type,'').
+%map_ees_tag2('NN',type,'').
+map_ees_word1('country',type,'').
 /*
-map_ees_word('asian',type,ian).
-map_ees_word('american',object,'ian').
-map_ees_word('flow',action,'').
-map_ees_word('flows',action,'s').
-map_ees_word('kingdom',type,'').
-map_ees_word('african',type,'ish').
-map_ees_word('million','','').
-map_ees_word('million',' type','').
-map_ees_word('volta',object,'').
-map_ees_word('equator',object,'').
+map_ees_word1('asian',type,ian).
+map_ees_word1('american',object,'ian').
+map_ees_word1('flow',action,'').
+map_ees_word1('flows',action,'s').
+map_ees_word1('kingdom',type,'').
+map_ees_word1('african',type,'ish').
+map_ees_word1('million','','').
+map_ees_word1('million',' type','').
+map_ees_word1('volta',object,'').
+map_ees_word1('equator',object,'').
 */
 /*
-map_ees_word('address',attrib,'').
-map_ees_word('area',attrib,'').
-map_ees_word('areas',attrib,'s').
-map_ees_word('atlantic',object,'').
-map_ees_word('baltic',object,'').
-map_ees_word('bordered',action,'ed').
-map_ees_word('borders',action,'s').
-map_ees_word('border',action,'').
-map_ees_word('capital',property,'').
-map_ees_word('china',object,'').
-map_ees_word('continent','large type','').
-map_ees_word('likes',action,'s').
-map_ees_word('largest',adjective,'est').
-map_ees_word('man','type','').
-map_ees_word('new','a adjective','').
-map_ees_word('ocean',type,'').
-map_ees_word('population',attrib,'').
-map_ees_word('rhine',object,'').
-map_ees_word('river',type,'').
-map_ees_word('smallest',type,'liest').
-map_ees_word('south',adverb,'').
-map_ees_word('united','action','ed').
+map_ees_word1('address',attrib,'').
+map_ees_word1('area',attrib,'').
+map_ees_word1('areas',attrib,'s').
+map_ees_word1('atlantic',object,'').
+map_ees_word1('baltic',object,'').
+map_ees_word1('bordered',action,'ed').
+map_ees_word1('borders',action,'s').
+map_ees_word1('border',action,'').
+map_ees_word1('capital',property,'').
+map_ees_word1('china',object,'').
+map_ees_word1('continent','large type','').
+map_ees_word1('likes',action,'s').
+map_ees_word1('largest',adjective,'est').
+map_ees_word1('man','type','').
+map_ees_word1('new','a adjective','').
+map_ees_word1('ocean',type,'').
+map_ees_word1('population',attrib,'').
+map_ees_word1('rhine',object,'').
+map_ees_word1('river',type,'').
+map_ees_word1('smallest',type,'liest').
+map_ees_word1('south',adverb,'').
+map_ees_word1('united','action','ed').
 */
 /*
 red = value
 happy = 
 */
 
-map_ees_tag('JJR',value,'er').
-map_ees_tag('JJS',value,'est').
-map_ees_tag('JJ',value,'').
-map_ees_tag('RBR',value,'lier').
-map_ees_tag('RBS',value,'liest').
-map_ees_tag('RB',value,'').
-map_ees_tag('VB_NN',action,'').
-map_ees_tag('NN_JJ','adjective','').
-map_ees_tag('NNP',object,'').
-map_ees_tag('NNPS',object,'s').
-map_ees_tag('NNS',type,'s').
-map_ees_tag('NN',type,'').
-map_ees_tag('VB',action,'').
-map_ees_tag('VBN',action,'ed').
-map_ees_tag('VBD',action,'ed').
-map_ees_tag('VBG',action,'ing').
-map_ees_tag('VBZ',action,'s').
+map_ees_tag2('JJR',value,'er').
+map_ees_tag2('JJS',value,'est').
+map_ees_tag2('JJ',value,'').
+map_ees_tag2('RBR',value,'lier').
+map_ees_tag2('RBS',value,'liest').
+map_ees_tag2('RB',value,'').
+map_ees_tag2('VB_NN',action,'').
+map_ees_tag2('NN_JJ','adjective','').
+map_ees_tag2('NNP',object,'').
+map_ees_tag2('NNPS',object,'s').
+map_ees_tag2('NNS',type,'s').
+map_ees_tag2('NN',type,'').
+map_ees_tag2('VB',action,'').
+map_ees_tag2('VBN',action,'ed').
+map_ees_tag2('VBD',action,'ed').
+map_ees_tag2('VBP',action,''). % verb prep
+map_ees_tag2('VBG',action,'ing').
+map_ees_tag2('VBZ',action,'s').
 
 noun_var(neutr,type).
 noun_var(human,agent).
 
-map_ees_lex(Wives,Var,'s'):- clex:noun_pl(Wives, _, Type),noun_var(Type,Var).
-map_ees_lex(Wife,Var,''):-   clex:noun_pl(_, Wife, Type),noun_var(Type,Var).
-map_ees_lex(Clerk,Var,''):-  clex:noun_sg(Clerk, _, Type),noun_var(Type,Var).
-%map_ees_tag(Y,'adjective','est'):-  talkdb:talk_db(superl,_,Y).
-%map_ees_lex(Y,'adjective','er'):-  talkdb:talk_db(comp,_,Y).
-%map_ees_tag(Y,'adjective',''):- talkdb:talk_db(adj,Y).
-%map_ees_tag('VBZ',attrib,' is ').
+map_ees_lex3(Wives,Var,'s'):- clex:noun_pl(Wives, _, Type),noun_var(Type,Var).
+map_ees_lex3(Wife,Var,''):-   clex:noun_pl(_, Wife, Type),noun_var(Type,Var).
+map_ees_lex3(Clerk,Var,''):-  clex:noun_sg(Clerk, _, Type),noun_var(Type,Var).
+%map_ees_tag2(Y,'adjective','est'):-  talkdb:talk_db(superl,_,Y).
+%map_ees_lex3(Y,'adjective','er'):-  talkdb:talk_db(comp,_,Y).
+%map_ees_tag2(Y,'adjective',''):- talkdb:talk_db(adj,Y).
+%map_ees_tag2('VBZ',attrib,' is ').
 
 
 map_ees(_,LPOS,'object',S):- member(ner('COUNTRY'),LPOS),!,(member(form(pl),LPOS)->S='s';S='').
 map_ees(_,LPOS,'attrib',S):- member(dep_child(prep,n(of,_)),LPOS),!,(member(form(pl),LPOS)->S='s';S='').
 map_ees(W,LPOS,N,S):- ((member(pos(Pos),LPOS),upcase_atom(Pos,POS))->true;POS='unk'), 
- (map_ees_word(W,N,S)*-> true ; map_ees_tag(POS,N,S) *-> true ; map_ees_lex(W,N,S)).
+ (map_ees_word1(W,N,S)*-> true ; map_ees_tag2(POS,N,S) *-> true ; map_ees_lex3(W,N,S)).
 
 % may_debug(G):- !, call(G).
 may_debug(G):- ignore((current_prolog_flag(debug,true),!,on_x_fail(in_cmt(call(G))))).
@@ -260,9 +261,15 @@ never_change(X):- number_lex(X,_,_).
 never_change(X):- pers_pron_lex(X,_,_,_,_).
 never_change(X):- poss_pron_lex(X,_,_,_).
 never_change(X):- prep_lex(X).
-never_change(X):- determiners:semlex_det(X,_,_,Z),Z\=lam(B, lam(C, merge(merge(D:drs([D:X:E], []), app(B, E)), app(C, E)))).
+never_change(X):- determiners:semlex_det(X,_,_,Z),Z\=@=lam(B, lam(C, merge(merge(D:drs([D:X:E], []), app(B, E)), app(C, E)))).
 never_change(not).  
 never_change(no).
+never_change(X):- sub_var(X,v(quantity,
+      'n\'t', never, non, half, total, false, true, firstly, different, certain, average, years, days,
+      but, and, or, nor, almost, another, second, seconds, secondly, percent, percentage, multitude,
+      also, except, excluding, including, many,most,few,least,
+      always, currently, exactly, instead, now,
+      only, plenty, probably, so, then, too)).
 never_change(X):- flexicon(numcompare,_,Z), sub_var(X,Z).
 never_change(X):- flexicon(det,_,Z), sub_var(X,Z).
 never_change(X):- quantifier_pron_lex(X,_,_).
@@ -271,10 +278,14 @@ never_change(X):- verb_form_aux(X,_,_,_).
 never_change(X):- wh_art_lex(X,_,_,_).
 never_change(X):- wh_pron_lex(X,_).
 never_change(X):- wh_rel_pron_lex(X,_).
-never_change(X):- tmp:dont_change(X).
-never_change(X):- string2digit:s2d(X,_).
+never_change(X):- tmp:dont_change(X). 
+never_change(X):- string2digit:s2d(X,_). % million
 tmp:dont_change(exceeds).
 :- forall(retract((tmp:dont_change(_):-true)),true).
+
+compound_wrds([A,B]):- relations : nn(A,B,_Of), \+ is_adjective(A). % only non-composable compounds
+
+is_adjective(X):- framenet_pos(X,adjective).
 
 :- dynamic(tmp:replacement_4_wrd/3).
 use_replacement_4_wrd(I,'SYM',O):- upcase_atom(I,O).

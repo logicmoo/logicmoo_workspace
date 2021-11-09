@@ -39,6 +39,17 @@ frels(Relation_type, Frame1, Frame2, FE_frame1, FE_frame2).
 :- consult('Prolog_FNet/frame_to_frame.txt'). % frel/3
 :- consult('Prolog_FNet/fe_to_fe.txt'). % frels/5
 
+framenet_pos(X,POS):- fn_pos(P,POS),framenet:fsr(X-P,_,_).
+
+multiclass_word(X):- framenet_pos(X,POS),framenet_pos(X,POS2),POS\==POS2.
+fn_pos(adv,adverb).
+fn_pos(v,verb).
+fn_pos(a,adjective).
+fn_pos(n,noun).
+
+
+
+
 %fn_verb_frame1(Doer,Verb,ISA, fnpattern(Verb, _, ISA, [ Arg1Type : Arg1, Arg2Type: Arg2]).
 
 %fn_verb_frame1(Doer,Verb,ISA, fnpattern(Verb, _, ISA, [ 'agent' : Doer, Arg2Type: Arg2]).

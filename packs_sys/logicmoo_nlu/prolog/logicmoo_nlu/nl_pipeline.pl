@@ -73,7 +73,9 @@
 :- load_parser_interface(parser_spacy).
 :- load_parser_interface(parser_link_grammar).
 :- load_parser_interface(parser_allen_srl).
-:- load_parser_interface(parser_allen).
+%:- load_parser_interface(parser_allen).
+:- load_parser_interface(parser_flair).
+:- load_parser_interface(parser_deep_srl).
 
 % ================================================================================================
 :- if(load_parser_interface(parser_e2c)).
