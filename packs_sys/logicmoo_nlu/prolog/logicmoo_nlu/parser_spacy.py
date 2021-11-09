@@ -35,7 +35,7 @@ def tense(str):
  return "" # "unused('"+str+"'),"
 
 def nodestr(tokenhead):
-  return "n("+qt(str(tokenhead.lemma_))+ ","+ str(tokenhead.i+1)+")"
+  return "n("+qt(str(tokenhead.lower_))+ ","+ str(tokenhead.i+1)+")"
 
 def nodestr2(tokenhead):
   return qt(str(tokenhead.lower_) +'_' + str(tokenhead.i+1))
@@ -49,11 +49,12 @@ def do_spacy(text0):
  doc = nlp(text0)    
  print("w2spacy([",  end='',  flush=False)
  for token in doc:
-  print(f"w({qt(token.lower_)},[pos({qt(token.tag_)}),loc({token.i+1}),root({qt(token.lemma_)}),{tense(token.tag_)}txt({dqt(token.text)}),{maybe_prob(token.prob)}node({nodestr(token)})]),", end='',  flush=False)
+  print(f"w({qt(token.lower_)},[pos({qt(token.tag_)}),loc({token.i+1}),root({qt(token.lemma_)}),{tense(token.tag_)}txt({dqt(token.text)}),{maybe_prob(token.prob)}", end='',  flush=False)
+  for child in doc:
+   if child.head==token:
+    print(f"dep_child({(child.dep_.lower())},{nodestr(child)}), " , end='',  flush=False) # ,{tense(token.head.tag_)},{qt(token.head.lemma_)},{qt(token.lemma_)}
+  print(f"dep_parent({(token.dep_.lower())},{nodestr(token.head)}),node({nodestr(token)})]),", end='',  flush=False)
  print("span([", end='',  flush=False)
- for token in doc:
-  print(f"dep_tree({(token.dep_.lower())},{nodestr(token.head)},{nodestr(token)}), " , end='',  flush=False) # ,{tense(token.head.tag_)},{qt(token.head.lemma_)},{qt(token.lemma_)}
- print("")
  for chunk in doc.noun_chunks: 
   print(f"span([seg({chunk.start+1},{chunk.end}),phrase('NP'),size({chunk.end-chunk.start}),childs(0),type({qt(chunk.root.dep_)}),head({nodestr(chunk.root.head)}),target({nodestr(chunk.root)}),text({dqt(chunk.text)})]),")
 

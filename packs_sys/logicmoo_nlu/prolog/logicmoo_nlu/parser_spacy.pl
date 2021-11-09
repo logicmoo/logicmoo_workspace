@@ -4,9 +4,9 @@
   test_spacy/1,
   test_spacy/2,
   test_spacy/1,
-  test_spacy_parse1_broken/0,
+  test_spacy_parse1/0,
   test_spacy_parse2/0,  
-  spacy_stream/2,
+  foc_spacy_stream/2,
   text_to_spacy_pos/2,
   text_to_spacy_sents/2,
   text_to_spacy_segs/2,
@@ -20,20 +20,20 @@
 
 :- dynamic(tmp:existing_spacy_stream/4).
 :- volatile(tmp:existing_spacy_stream/4).
-spacy_stream(In,Out):- thread_self(Self),tmp:existing_spacy_stream(Self,_,In,Out),!,clear_spacy_pending(Out).
-spacy_stream(In,Out):-
+foc_spacy_stream(Out,In):- thread_self(Self),tmp:existing_spacy_stream(Self,_,Out,In),!,clear_spacy_pending(In).
+foc_spacy_stream(Out,In):-
   lmconfig:space_py_dir(Dir),
   thread_self(Self),
   sformat(S,'python3 parser_spacy.py -nc -cmdloop ',[]),
   nop(writeln(S)),
-    process_create(path(bash), ['-c', S], [ cwd(Dir),  stdin(pipe(In)),stdout(pipe(Out)), stderr(null), process(FFid)]),!,
-  assert(tmp:existing_spacy_stream(Self,FFid,In,Out)).
+    process_create(path(bash), ['-c', S], [ cwd(Dir),  stdin(pipe(Out)),stdout(pipe(In)), stderr(null), process(FFid)]),!,
+  assert(tmp:existing_spacy_stream(Self,FFid,Out,In)).
 
-clear_spacy_pending(Out):- nop((read_pending_codes(Out,Codes,[]),dmsg(clear_spacy_pending=Codes))).
+clear_spacy_pending(In):- nop((read_pending_codes(In,Codes,[]),dmsg(clear_spacy_pending=Codes))).
 
 :- prolog_load_context(directory,Dir), assert(lmconfig:space_py_dir(Dir)).
 
-tokenize_spacy_string(Text,StrO):- any_to_string(Text,StrO).
+tokenize_spacy_string(Text,StrO):- any_to_string(Text,Str),  replace_in_string('\n',' ',Str,StrO).
 /*
 tokenize_spacy_string(Text,StrO):- any_to_string(Text,Str), replace_in_string(['\\'='\\\\','\''='\\\''],Str,StrM),
   atomics_to_string(["'",StrM,"'"],StrO).
@@ -66,42 +66,49 @@ spacy_parse(Text, Lines) :-
   tokenize_spacy_string(Text,String),
   spacy_parse2(String, Lines).
 
-spacy_parse2(_String, _Lines) :-
-  spacy_stream(In,Out),
-  once(catch(flush_output(In),_,retract(tmp:existing_spacy_stream(_,_,In,Out)))),fail.
-spacy_parse2(_String, _Lines) :-
-  spacy_stream(In,Out),
-  once(catch(flush_output(In),_,retract(tmp:existing_spacy_stream(_,_,In,Out)))),fail.
-spacy_parse2(String, Lines) :-
-  spacy_stream(In,Out),
-  once(catch((format(In,'~w\n',[String]),
-  flush_output(In),
-  read_spacy_lines(Out, Lines)),_,fail)),!.
 spacy_parse2(String, Lines) :- 
+  once(spacy_parse3(String, Lines)
+      ;spacy_parse4(String, Lines)).
+
+try_spacy_stream(Out,Write):- once(catch((flush_output(Out),format(Out,'~w',[Write])),_,
+  (retract(tmp:existing_spacy_stream(_,_,Out,_)),fail))).
+
+% Clears if there is a dead one
+spacy_parse3(_String, _Lines) :-
+  foc_spacy_stream(Out,_In),
+  try_spacy_stream(Out,''),fail.
+% Reuses or Creates
+spacy_parse3(String, Lines) :-
+  foc_spacy_stream(Out,In),
+  try_spacy_stream(Out,String),
+  try_spacy_stream(Out,'\n'),
+  try_spacy_stream(Out,''),!,
+  read_term(In,Term,[]),!,
+  read_spacy_lines(Term, Lines).
+
+% Very slow version
+spacy_parse4(String, Lines) :- 
   lmconfig:space_py_dir(Dir),
   sformat(S,'python3 parser_spacy.py -nc ~q ',[String]),
   nop(writeln(S)),
-    process_create(path(bash), ['-c', S], [ cwd(Dir), stdout(pipe(Out))]),!,
-  read_spacy_lines(Out, Lines).
+    process_create(path(bash), ['-c', S], [ cwd(Dir), stdout(pipe(In))]),!,
+  read_term(In,Term,[]),!,
+  read_spacy_lines(Term, Lines).
 
-test_spacy_parse1_broken :-
- Text = "Can the can do the Can Can?",
-  spacy_stream(In,Out),
-  format(In,'~w\n',[Text]),
-  flush_output(In),
-  read_spacy_lines(Out, Lines),
+test_spacy_parse1 :-
+  String = "Can the can do the Can Can?",
+  spacy_parse3(String, Lines),
   pprint_ecp_cmt(yellow,test_spacy_parse1=Lines).
 
 test_spacy_parse2 :-
   Text = "Can the can do the Can Can?",
-  spacy_parse(Text,Lines),
+  spacy_parse4(Text,Lines),
   pprint_ecp_cmt(yellow,test_spacy_parse2=Lines).
 
 test_spacy_parse3 :-
   Text = "Can the can do the Can Can?",
-  text_to_spacy_pos(Text,Lines),
-  pprint_ecp_cmt(yellow,test_spacy_parse2=Lines).
-
+  spacy_parse2(Text,Lines),
+  pprint_ecp_cmt(yellow,test_spacy_parse3=Lines).
 
    
 spacy_pos_info(Text,PosW2s,Info,LExpr):-
@@ -123,7 +130,7 @@ text_to_spacy_sents(Text,Sent):-
 spacy_segs_to_sentences(Segs,sentence(0,W2,Info)):-
   segs_retain_w2(Segs,Info,W2).
 
-read_spacy_lines(Out, Result):- read_term(Out,Term,[]),spacy_to_w2(Term, Result),!.
+read_spacy_lines(In, Result):- spacy_to_w2(In, Result),!.
 
 text_to_spacy_tree(Text,LExpr):-
   spacy_parse(Text, String),
@@ -132,51 +139,12 @@ text_to_spacy_tree(Text,LExpr):-
   nop(print_tree_nl(spacy=LExpr)).
 
 %spacy_to_w2((Word,POS),[POS,Word]).
-spacy_to_w2(Out, Result):- is_stream(Out),!,read_term(Out,Term,[]),spacy_to_w2(Term, Result).
+spacy_to_w2(In, Result):- is_stream(In),!,read_term(In,Term,[]),spacy_to_w2(Term, Result).
 spacy_to_w2(List,ListO):- is_list(List),!,include(compound,List,ListO).
 spacy_to_w2(w2spacy(List),ListO):- !, spacy_to_w2(List,ListO).
 spacy_to_w2(Text,ListO):- \+ compound(Text), on_x_fail(atom_to_term(Text,Term,_)),!,spacy_to_w2(Term,ListO).
 spacy_to_w2(Text,_ListO):- \+ compound(Text), nl,writeq(Text),nl,!,fail.
 
-is_upper_spacy_letters_atom(S):- atom(S),upcase_atom(S,S), \+ downcase_atom(S,S).
-
-/*
-
-
-dep_tree_to_tree([W2|W2Segs],Tree):-
-  arg(2,W2,List),member(node(N1),List),
-  partition(is_w2,W2Segs,W2Only,Excluded),
-  findall(dep_tree(P,S,O),(member(seg(L),Excluded),member(dep_tree(P,S,O))),List),
-  make_tree(W2Only,[],List,Tree).
-
-make_tree(N1,L,Rest,Tree):- 
-  select(dep_tree(P,PN,N1),Rest,Todo),!,
-  append(L,[[PN,N1]],LL),
-  make_tree(N1,LL,Todo,Tree).
-
-make_tree(N1,L,Rest,Tree):- 
-  make_tree(N1,[],Rest,Tree),
-  append(L,[[PN,N1]],LL),
-  make_tree(N1,LL,Todo,Tree).
-*/
-
-
-unused_spacy('{\'}').
-unused_spacy('{!}').
-unused_spacy('}').
-unused_spacy('{').
-
-correct_spacy_atom(S,A,O):- \+ atom(A),!,correct_spacy_tree(S,A,O).
-correct_spacy_atom(S,A,O):- correct_spacy_atom0(S,A,M),correct_spacy_atom1(S,M,O).
-%correct_spacy_atom(S,A,[UP,WordO]):- atomic_list_concat([Word,POS],'.',A),atomic_list_concat([S,POS],'-',U),upcase_atom(U,UP),correct_spacy_sub_atom(POS,Word,WordO).
-correct_spacy_atom0(_,A,[UP,WordO]):- atomic_list_concat([Word,POS],'.',A),Word\=='',POS\=='',upcase_atom(POS,UP0),atomic_list_concat([UP0,'w'],'-',UP),correct_spacy_sub_atom(POS,Word,WordO).
-correct_spacy_atom0(PT,A,[UP,WordO]):- atomic_list_concat([PT,'w'],'-',UP),correct_spacy_sub_atom(PT,A,WordO).
-
-correct_spacy_atom1(_,['S-w','.'],['.','.']):-!.
-correct_spacy_atom1(_,O,O).
-
-correct_spacy_sub_atom(POS,Word,WordO):- unused_spacy(X),atomic_list_concat([W1,W2|Ws],X,Word),atomic_list_concat([W1,W2|Ws],'',WordM),WordM\=='',correct_spacy_sub_atom(POS,WordM,WordO).
-correct_spacy_sub_atom(_POS,Word,Word).
 
 :- if( \+ getenv('keep_going','-k')).
 :- use_module(library(editline)).

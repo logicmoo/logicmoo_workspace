@@ -57,22 +57,27 @@ merge_allen_srl(srl(Verb,List),O,O):- member(w(Verb,OL),O), \+ member(allen_srl,
 merge_allen_srl(_,O,O).
 
 
+allen_srl_parse(Text, LinesO):- 
+  locally(alt_l:min_expected(2),allen_srl_parse0(Text, LinesO)).
 
-allen_srl_parse(Text, LinesO) :- 
+allen_srl_parse0(Text, LinesO) :- 
   allen_srl_parse1(Text, Lines),
   ((maybe_redo_allen_srl_parse(Text, Lines, LinesM) , LinesM\==[] ) 
     -> LinesM=LinesO ;  Lines=LinesO).
 
 
-maybe_redo_allen_srl_parse(_, [One,Two|Rest], [One,Two|Rest]):-!.
-maybe_redo_allen_srl_parse(Text, _, LinesO):- 
+maybe_redo_allen_srl_parse(_, LinesO, LinesO):- (length(LinesO,L),alt_l:min_expected(N)) -> L>=N,!. 
+maybe_redo_allen_srl_parse(Text, _, LinesO):-
+  II=[_,_|_],
   words_of(Text,[CAN,_|II]), CAN==cAn,!,
-  allen_srl_parse(II,LinesO).
+  locally(alt_l:min_expected(1),allen_srl_parse0(II,LinesO)).
 maybe_redo_allen_srl_parse(Text, _, LinesO):- 
+  II=[_,_|_],
   words_of(Text,[_|II]),
-  allen_srl_parse(II,LinesO).
+  locally(alt_l:min_expected(1),allen_srl_parse0(II,LinesO)).
 maybe_redo_allen_srl_parse(Text, _, LinesO):- 
   words_of(Text,II),
+  II=[_,_|_],
   allen_srl_parseC([cAn|II],LinesO).
 
 
