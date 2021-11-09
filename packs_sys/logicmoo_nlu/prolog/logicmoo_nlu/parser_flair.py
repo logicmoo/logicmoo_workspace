@@ -45,7 +45,7 @@ def do_flair(s):
  sep="";
  for i in sentence:
     print(sep, end='',  flush=False)
-    print(f"w({qt(i.text.lower())},[upos({qt(i.labels[0].value.lower())}),fner({qt(i.labels[1].value.lower())}),fn({qt(i.labels[2].value.lower())}),neg({qt(i.labels[3].value.lower())}),text({dqt(i.text)})])", end='', flush=False)
+    print(f"w({qt(i.text.lower())},[upos({qt(i.labels[0].value.lower())}),fner({qt(i.labels[1].value.lower())}),fn({qt(i.labels[2].value.lower())}),neg({qt(i.labels[3].value.lower())}),txt({dqt(i.text)})])", end='', flush=False)
     sep=","
  print("]).\n", end='', flush=False)
  print("", end='',  flush=True)

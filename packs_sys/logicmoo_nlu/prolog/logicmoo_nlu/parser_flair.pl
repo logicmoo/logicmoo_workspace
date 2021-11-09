@@ -21,6 +21,11 @@
 :- dynamic(tmp:existing_flair_stream/4).
 :- volatile(tmp:existing_flair_stream/4).
 foc_flair_stream(Out,In):- thread_self(Self),tmp:existing_flair_stream(Self,_,Out,In),!,clear_flair_pending(In).
+foc_flair_stream(Out,In):- tmp:existing_flair_stream(OldThread,FFid,Out,In), \+ thread_property(OldThread,running),!,
+  retract(tmp:existing_flair_stream(OldThread,FFid,Out,In)),
+  thread_self(Self),
+  assert(tmp:existing_flair_stream(Self,FFid,Out,In)),!.
+
 foc_flair_stream(Out,In):-
   lmconfig:space_py_dir(Dir),
   thread_self(Self),
@@ -33,10 +38,11 @@ foc_flair_stream(Out,In):-
   set_stream(Out,close_on_abort(false)),
   set_stream(In,eof_action(eof_code)),
   set_stream(Out,eof_action(eof_code)),
+  sleep(1.0),
   read_until_flair_notice(In,"cmdloop_Ready."),!,
   assert(tmp:existing_flair_stream(Self,FFid,Out,In)).
 
-read_until_flair_notice(In,Txt):- repeat,read_line_to_string(In,Str),atom_contains(Str,Txt),!.
+read_until_flair_notice(In,Txt):- repeat,read_line_to_string(In,Str),(Str==end_of_file;atom_contains(Str,Txt)),!.
 
 clear_flair_pending(In):- nop((read_pending_codes(In,Codes,[]),dmsg(clear_flair_pending=Codes))).
 
@@ -48,27 +54,24 @@ tokenize_flair_string(Text,StrO):- any_to_string(Text,Str), replace_in_string(['
   atomics_to_string(["'",StrM,"'"],StrO).
 */
 flair_lexical_segs(I,O):-
-  old_into_lexical_segs(I,M),
+  allen_srl_lexical_segs(I,M),
   flair_parse(I,S),
   merge_flair(S,M,O).
 
 merge_flair([],O,O):-!.
 merge_flair([H|T],I,O):- !, merge_flair(H,I,M), merge_flair(T,M,O).
 merge_flair(w(W,L),O,O):- member(w(W,OL),O), \+ member(flair,OL),!,    
-  select(pos(Pos),L,ML), 
-  downcase_atom(Pos,DPos),
-  set_pos(DPos,OL),
-  nb_set_add(OL,[flair|ML]), !.
-merge_flair(span(List),I,O):- member(dep_tree(_,_,_),List),!,
-  merge_flair(List,I,O),!.
-merge_flair(span(List),O,O):- 
-  member(seg(S,E),List), member(span(Other),O), member(seg(S,E),Other),
-  nb_set_add(Other,[flair|List]).
-merge_flair(dep_tree(Type,R,Arg),O,O):- 
-  member(w(_,Other),O),member(node(R),Other),
-  nb_set_add(Other,dep_tree(Type,R,Arg)).
+  ignore((member(upos(Pos),L),downcase_atom(Pos,DPos),upos_to_penn_pos(DPos,Penn),set_pos(2,Penn,OL))),
+  nb_set_add(OL,[flair|L]), !.
 merge_flair(_,I,I):-!.
-merge_flair(S,I,O):- append(I,[S],O).
+
+upos_to_penn_pos(verb,vb).
+%upos_to_penn_pos(adv,rb). other systems produce better specilizations
+upos_to_penn_pos(adj,jj).
+upos_to_penn_pos(propn,nnp).
+%upos_to_penn_pos(noun,nn). other systems might detect a verb this one doesnt (so we dont overwrite)
+upos_to_penn_pos(cconj,cc).
+
 
 
 flair_parse(Text, Lines) :- 
@@ -155,12 +158,15 @@ flair_to_w2(Text,ListO):- \+ compound(Text), on_x_fail(atom_to_term(Text,Term,_)
 flair_to_w2(Text,_ListO):- \+ compound(Text), nl,writeq(Text),nl,!,fail.
 
 flair_stream_to_w2(In,_, Result):- peek_string(In,10,S),atom_contains(S,"w2flair("),!,read_term(In,Term,[]),flair_to_w2(Term, Result).
+
+flair_stream_to_w2(_,S, Result):- atom_contains(S,"w2flair([])."),!,Result=[].
 flair_stream_to_w2(In,S, Result):- atom_contains(S,"w2flair("),!,read_term_from_atom_rest(In,S,Term),flair_to_w2(Term, Result).
 flair_stream_to_w2(In,S, Result):- at_end_of_stream(In),!,flair_to_w2(S, Result).
 flair_stream_to_w2(In,_, Result):- repeat, read_pending_codes(In,Codes,[]),
  (Codes==[]->(sleep(0.1),fail);true),sformat(S,'~s',[Codes]),
  flair_stream_to_w2(In,S, Result).
 
+read_term_from_atom_rest(_,S, Result):- atom_contains(S,"w2flair([])."),!,Result=[].
 read_term_from_atom_rest(In,S,Term):- atom_concat(L,'\n',S),!,read_term_from_atom_rest(In,L,Term).
 read_term_from_atom_rest(In,S,Term):- atom_concat(L,' ',S),!,read_term_from_atom_rest(In,L,Term).
 read_term_from_atom_rest(_,S,Term):-  atom_concat(_,'.',S),!,read_term_from_atom(S,Term,[]).

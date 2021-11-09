@@ -363,7 +363,8 @@ eng_to_logic(U,S):- sentence80(E,U,[],[],[]), sent_to_prelogic(E,S).
 qualifiedBy(_,_,_).
 
 %into_lexical_segs(I,O):- into_text80_string(I, Text80), spacy_lexical_segs(Text80,O).
-into_lexical_segs(I,O):- into_text80_string(I, Text80), allen_srl_lexical_segs(Text80,O).
+into_lexical_segs(I,O):- into_text80_string(I, Text80), flair_lexical_segs(Text80,O).
+%into_lexical_segs(I,O):- into_text80_string(I, Text80), allen_srl_lexical_segs(Text80,O).
 old_into_lexical_segs(Sent,U):- notrace(into_chat80_segs0(Sent,U)),!.
 %into_lexical_segs(Sent,  WordsA):- enotrace((into_text80( Sent,  Words),into_combines(Words,WordsA))),!.
 
