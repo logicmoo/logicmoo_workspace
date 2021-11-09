@@ -49,7 +49,7 @@ def do_spacy(text0):
  doc = nlp(text0)    
  print("w2spacy([",  end='',  flush=False)
  for token in doc:
-  print(f"w({qt(token.lower_)},[pos({qt(token.tag_)}),loc({token.i+1}),root({qt(token.lemma_)}),{tense(token.tag_)}txt({dqt(token.text)}),{maybe_prob(token.prob)}", end='',  flush=False)
+  print(f"w({qt(token.lower_)},[spos({qt(token.tag_.lower())}),loc({token.i+1}),root({qt(token.lemma_)}),{tense(token.tag_)}txt({dqt(token.text)}),{maybe_prob(token.prob)}", end='',  flush=False)
   for child in doc:
    if child.head==token:
     print(f"dep_child({(child.dep_.lower())},{nodestr(child)}), " , end='',  flush=False) # ,{tense(token.head.tag_)},{qt(token.head.lemma_)},{qt(token.lemma_)}

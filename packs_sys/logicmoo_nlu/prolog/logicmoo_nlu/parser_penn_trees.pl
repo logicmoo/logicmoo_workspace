@@ -304,7 +304,9 @@ one_syntax_tree(I,O,charniak):- text_to_charniak_tree(I,O).
 %one_syntax_tree(I,O,ape):- text_to_ape_tree(I,O).
 
 set_pos(DPos,OL):- (member(pos(OLD),OL) -> ignore((member(pos(OLD),OL), OLD\==DPos, remove_el_via_setarg(OL,pos(OLD)), nb_set_add(OL,old_pos(OLD)),nb_set_add(OL,pos(DPos))));nb_set_add(OL,pos(DPos))).
-set_pos(N,DPos,OL):- (member(pos(OLD),OL) -> ignore((member(pos(OLD),OL),sub_atom(DPos,0,N,_,LP),sub_atom(OLD,0,N,_,RP), LP\==RP, remove_el_via_setarg(OL,pos(OLD)), nb_set_add(OL,old_pos(OLD)),nb_set_add(OL,pos(DPos)))); nb_set_add(OL,pos(DPos))).
+set_pos(N,DPos,OL):- (member(pos(OLD),OL) -> ignore((member(pos(OLD),OL),sub_atom(DPos,0,N,_,LP),sub_atom(OLD,0,N,_,RP), 
+  (LP\==RP ;( atom_length(DPos,L1),atom_length(OLD,L2), L1>L2)),
+  remove_el_via_setarg(OL,pos(OLD)), nb_set_add(OL,old_pos(OLD)),nb_set_add(OL,pos(DPos)))); nb_set_add(OL,pos(DPos))).
 
 
 pick_tree([T],T):-!.
