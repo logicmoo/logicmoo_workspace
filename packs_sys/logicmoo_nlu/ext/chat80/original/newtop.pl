@@ -193,6 +193,10 @@ close_answer(A,A).
 close_answer(A,B):- number(A),number(B),!, X is integer(A*100),Y is integer(A*100),!, X=Y.
 close_answer([A],B):- !, close_answer(A,B).
 close_answer(A,[B]):- !, close_answer(A,B).
+close_answer(X,Y):- X=@=Y, !.
+close_answer(X,Y):- string(X), words_of(X,XX), !, close_answer(XX,Y).
+close_answer(X,Y):- string(Y), words_of(Y,YY), !, close_answer(X,YY).
+close_answer(X,Y):- is_list(X),is_list(Y),maplist(close_answer,X,Y),!.
 close_answer(A,B):- is_list(A), sort(A,AA), A\==AA, !, close_answer(AA,B).
 close_answer(B,A):- is_list(A), sort(A,AA), A\==AA, !, close_answer(B,AA).
 close_answer(A,B):- 
@@ -200,6 +204,8 @@ close_answer(A,B):-
   compound_name_arguments(A,AA,AAA),
   compound_name_arguments(B,AA,BBB),!,
   maplist(close_answer,AAA,BBB).
+close_answer(B,A):- atom(B), atom_downcase(B,BB),B\==BB, close_answer(BB,A).
+close_answer(A,B):- atom(B), atom_downcase(B,BB),B\==BB, close_answer(A,BB).
 
 /* ----------------------------------------------------------------------
 	Top level for runtime version, and interactive demonstrations
