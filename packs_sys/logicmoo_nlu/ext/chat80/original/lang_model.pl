@@ -632,7 +632,7 @@ p1(P1,X):- any_to_string(X,S),append_term(P1,S,G),nl,dmsg(?-G),call(G),nl,!.
 s81(P):- s811(p1(P)).
 s811(P):-
   %forall(ape_test(_,X),call(P,X)),
-  forall(training_data(X,_),call(P,X)),
+  %forall(training_data(X,_),call(P,X)),
   forall(test_e2c(X,_),call(P,X)),
   forall(chat80_all(X,_,_),call(P,X)).
   

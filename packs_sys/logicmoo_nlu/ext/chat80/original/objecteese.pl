@@ -33,7 +33,7 @@ test_objecteese:-
 
 
 test_objecteese(X,Z):- locally(set_prolog_flag(debug,false),cvt_to_objecteese(X,Y)), 
-  show_failure(always,check_answer(X,Y,Z,true))-> true ; locally(set_prolog_flag(debug,true),cvt_to_objecteese(X,Y)).
+  (show_failure(always,check_answer(X,Y,Z,true))-> true ; locally(set_prolog_flag(debug,true),cvt_to_objecteese(X,_))).
 
 do_objecteese_test(X):- cvt_to_objecteese(X,Y),!,nl,any_to_string(Y,Z),
   format('~N test_objecteese(~n   ~q,~n  ~q).~n',[X,Z]),!.
@@ -313,7 +313,7 @@ sent_to_jecteese([W|WL],[Y|YY]):-!, word2jecteese(W,Y), sent_to_jecteese(WL,YY).
 :- dynamic(tmp:cached_cvt_to_w2/2).
 cvt_to_w2(X,W2):- \+ (is_list(X) ; (X=[H|_],is_w2(H))),!, words_of(X,W), !, cvt_to_w2(W,W2).
 %cvt_to_w2(X,W2):- tmp:cached_cvt_to_w2(X,W2),!.
-cvt_to_w2(X,W2):- with_output_to(string(_), into_lexical_segs(X,W2Segs),include(is_w2,W2Segs,W2).
+cvt_to_w2(X,W2):- into_lexical_segs(X,W2Segs),include(is_w2,W2Segs,W2).
 /*
 cvt_to_w2(X,W2):- spacy_lexical_segs(X,W2),!.
 cvt_to_w2(X,W2):- text_to_spacy_pos(X,W2),!.
