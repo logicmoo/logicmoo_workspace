@@ -96,7 +96,7 @@ explanation of $G$ given $C$. Called after {\ttfamily explain$(G,C)$}.
 \item[{\btt check$(G)$.}] 
 checks for disjoint rules in the explanations of $G$.
  Called after {\ttfamily explain$(G,C)$.}.
-\item[{\btt check\_disj$(G_1,G_2)$.}] 
+\item[{\btt icl_check\_disj$(G_1,G_2)$.}] 
 checks for cases in which $G_1$ and $G_2$ are both true.
  Called after {\ttfamily explain$(G_1,C)$} and {\ttfamily explain$(G_2,C)$}.
 \item[{\btt recap$(G).$}] 
@@ -105,7 +105,7 @@ recaps the explanations of $G$, with posterior probabilities of each
  Called after {\ttfamily explain$(G,C)$}.
 \item[{\btt recap.}] 
 gives the prior probabilities of every goal explained.
-\item[{\btt check\_undef.}] checks for undefined atoms --- those atoms
+\item[{\btt icl_check\_undef.}] checks for undefined atoms --- those atoms
 in the body of rules for which there is no corresponding definition.
 \item[{\btt clear.}] clears the knowledge base. This should be done_icl before reloading clauses.
 \end{description}
@@ -630,7 +630,7 @@ how(G,C,R,N).','
 diff(G,C,N,M) ','
    prints difference in the proof tree for the Nth and Mth explanation','
    of G given C.','
-check(G,C).','
+icl_check(G,C).','
    checks for disjoint rules in the explanations of G given C.','
 recap(G). ','
    recaps the explanations of G, with posterior probabilities (given G).','
@@ -865,19 +865,19 @@ immdiff(A,if(_,_)) :-
 /* \end{verbatim}
 
 \subsection{Check}
-\[check(G,C,R)\]\index{check} 
+\[icl_check(G,C,R)\]\index{icl_check} 
 checks the explanations of $G$ given controllables $C$ and randoms $R$ 
 for rules which violate the disjoint
 assumptions assumption. The two rules which are not disjoint are returned.
 
 \begin{verbatim} */
-check :- 
-   check(_,_,_).
-check(G) :-
-   check(G,_,_).
-check(G,C) :-
-   check(G,C,_).
-check(G,C,R) :-
+icl_check :- 
+   icl_check(_,_,_).
+icl_check(G) :-
+   icl_check(G,_,_).
+icl_check(G,C) :-
+   icl_check(G,C,_).
+icl_check(G,C,R) :-
    done_icl(G,C,R,Done,_),
    check_done(Done).
 
@@ -894,7 +894,7 @@ check_done([_|D]) :-
 /* \end{verbatim}
 
 \subsection{Check Disjoint Explanations}
-\[check\_disj(G0,G1)\] \index{check\_disj}
+\[icl_check\_disj(G0,G1)\] \index{icl_check\_disj}
 checks whether explanations of $G0$ and $G1$ are disjoint. This is useful when $G0$ and $G1$ should be incompatible.
 \begin{verbatim} */
 check_disj(G0,G1):-

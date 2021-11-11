@@ -11,19 +11,10 @@
 
 :-module(parser_lexical, [ ]).
 
-
 :- set_module(class(library)).
 :- set_module(base(system)).
 
 % ?- use_module(library(logicmoo_nlu/parser_lexical)).
-
-:- multifile(check:list_undefined/1).
-:- dynamic(check:list_undefined/1).
-:- use_module(library(make)), use_module(library(check)), redefine_system_predicate(check:list_undefined/1).
-%:- abolish(check:list_undefined/1).
-:- asserta((check:list_undefined(Stuff):- Stuff==[], wdmsg(list_undefined(Stuff)),!)).
-:- listing(check:list_undefined).
-% :- break.
 
 
 %:- use_module(library(pfc_lib)).
@@ -34,14 +25,6 @@
 %:- nop(module( baseKB)).
 %:- expects_dialect(pfc).
 
-:- share_mp(common_logic_kb_hooks:cyckb_t/1).
-:- share_mp(common_logic_kb_hooks:cyckb_t/2).
-:- share_mp(common_logic_kb_hooks:cyckb_t/3).
-:- share_mp(common_logic_kb_hooks:cyckb_t/4).
-:- share_mp(common_logic_kb_hooks:cyckb_t/5).
-:- share_mp(common_logic_kb_hooks:cyckb_t/6).
-:- share_mp(common_logic_kb_hooks:cyckb_t/7).
-:- forall(between(1, 8, N), share_mp(common_logic_kb_hooks:cyckb_t/N)).
 
 :- system:use_module(parser_stanford).
 
@@ -49,42 +32,7 @@
 %:- share_mp(nlf:f/4).
 
 :- use_module(parser_lexical_gen). 
-
-guess_strip_module(M:F,M,F):- !.
-guess_strip_module(MF,M,MF):- atom(MF), functor(P,MF,2),!,guess_strip_module(P,M,_).
-guess_strip_module(MF,M,MF):- predicate_module(MF,M).
-guess_strip_module(MF,M,F):- strip_module(MF,M,F).
-
-connect_preds(HMF, BMF):- 
- guess_strip_module(HMF,HM,HF),
- guess_strip_module(BMF,BM,BF),
- forall(between(1, 13, N),
- ( length(ARGS, N),
-   share_mp(BM:BF/N),multifile(HM:HF/N),dynamic(HM:HF/N),
-   H=..[HF|ARGS],
-   B=..[BF|ARGS],
-   multifile(BM:BF/N),dynamic(BM:BF/N),   
-   asserta_if_new(HM:(H:- BM:B)))).
-
-
-common_logic_kb_hooks:cyckb_t(A, B, C):- cyckb_p2(A, [B, C]).
-common_logic_kb_hooks:cyckb_t(A, B, C, D):- cyckb_p2(A, [B, C, D]).
-common_logic_kb_hooks:cyckb_t(A, B, C, D, E):- cyckb_p2(A, [B, C, D, E]).
-common_logic_kb_hooks:cyckb_t(A, B, C, D, E, F):- cyckb_p2(A, [B, C, D, E, F]).
-
-:- connect_preds(common_logic_kb_hooks:cyckb_t, cyckb_h).
-:- connect_preds(cyckb_h, kb0988:ac).
-%:- connect_preds(ac, t).
-
-cyckb_p2(A, BC):- \+ is_list(BC), !, between(2, 10, N), length(BC, N), cyckb_p2(A, BC).
-cyckb_p2(A, [B, C|D]):- atom(C), downcase_atom(C, C), cvt_to_real_string(C, S), cyckb_p3(A, B, [S|D]).
-cyckb_p2(A, [B, B1, C|D]):- atom(C), downcase_atom(C, C), cvt_to_real_string(C, S), cyckb_p3(A, B, [B1, S|D]).
-cyckb_p2(A, [B, C|D]):- string(C), into_text100_atoms(C, O), O\=[_], maplist(cvt_to_real_string, O, S), ST=..[s|S], cyckb_p3(A, B, [ST|D]).
-cyckb_p2(A, [B, B1, C|D]):- string(C), into_text100_atoms(C, O), O\=[_], maplist(cvt_to_real_string, O, S), ST=..[s|S], cyckb_p3(A, B, [B1, ST|D]).
-%cyckb_p2(A, [B, C|D]):- \+ ((arg(_, v(B, C), X), compound(X))), between(2, 10, N), functor(S, s, N), arg(_, cyckb_h(B, C), S), cyckb_p3(A, B, [C|D]).
-%cyckb_p2(A, [B, C|D]):- cyckb_p3(A, B, [C|D]).
-
-cyckb_p3(A, B, [H|T]):- apply(cyckb_h(A, B), [H|T]).
+:- use_module(parser_lexical_plkb).
 
 is_synset_id(X):- integer(X), X > 100001739.
 
@@ -106,7 +54,7 @@ concat_missing(Named, [Name|More], Out):- atom_contains(Named, Name)
  ;(atomic_list_concat([Named, '-', Name], M), concat_missing(M, More, Out)).
 concat_missing(Named, [], Out):- Named=Out.
 
-%synset_to_words(X, S, Set):- findall(SK, ((nonvar(S)->true;member(S, [5, 4, 3, 2, 1])), wnframes:sk(X, S, SK)), List), list_to_set(List, Set), Set\==[], !.
+%synset_to_words(X, S, Set):- findall_set(SK, ((nonvar(S)->true;member(S, [5, 4, 3, 2, 1])), wnframes:sk(X, S, SK)), List), list_to_set(List, Set), Set\==[], !.
 
 english_some(X, Words):- is_synset_id(X), synset_to_words(X, _, Words), !.
 english_some(X, Y):- \+ compound(X), !, Y=X.
@@ -151,20 +99,6 @@ lex_frivilous_col(tIndividual).
 :- add_e2c('"You look like the cat that swallowed the canary, " he said, giving her a puzzled look.', [quotes]).
 :- add_e2c("The monkey heard about the very next ship which is yellow and green.").
 
-%lex_mws(genTemplateConstrained).
-%lex_mws(genTemplate).
-lex_mws(headMedialString).
-lex_mws(compoundString).
-
-lex_mws(prepCollocation).
-lex_mws(abbreviationForMultiWordString).
-lex_mws(multiWordStringDenotesArgInReln).
-lex_mws(compoundSemTrans).
-lex_mws(multiWordSemTrans).
-lex_mws(multiWordString).
-lex_mws(mws).
-lex_mws(xPPCompFrameFn).
-lex_mws(hyphenString).
 
 
 %is_word(W):- atom(W), guess_arg_type(X, W), !, X==text(a).
@@ -249,51 +183,6 @@ add_todo_list([M|MoreS], Todo, Done, NewTodo):- add_if_new(Todo, [M], TodoM), !,
 first_clause_only(Head):- Found=fnd(0), nth_clause(Head, Nth, Cl), Found==fnd(0),
    Nth\==1, clause(Head, Body, Cl), call(Body), nb_setarg(1, Found, Nth).
 
-
-text_to_cycword(String, P, C, How):- !, first_clause_only(text_to_cycword(String, P, C, How)).
-text_to_cycword(String, P, C, How):- \+ string(String), cvt_to_real_string(String, RealString), !, text_to_cycword(RealString, P, C, How).
-text_to_cycword(String, P, C, cyckb_h(P, C, String)):- base_to_cycword(String, P, C).
-text_to_cycword(String, P, C, How):- string_lower(String, DCString), DCString\==String, !, text_to_cycword(DCString, P, C, How).
-text_to_cycword(String, Pos, C, (to_base_form(String, Pos, BaseWord), cyckb_h(Pred, C, BaseWord))):- fail,
-  to_base_form(String, Pos, BaseWord), BaseWord\==String,
-  base_to_cycword(BaseWord, Pred, C).
-
-text_to_cycword(String, Pos, C, cyckb_h(Pred, C, BaseWord)):-
-  to_base_form(String, Pos, BaseWord), BaseWord\==String,
-  base_to_cycword(BaseWord, Pred, C).
-
-to_base_form(String, Used, BaseWord):- \+ atom(String), string_to_atom(String, Atom), !, to_base_form(Atom, Used, BaseWord).
-to_base_form(String, Used, BaseWord):- call_lex_arg_type(text(a), text(base), String, BaseWord, Used).
-to_base_form(String, 'xtAgentitiveNoun', BaseWord):- morph_stem(String, BaseWord, 'er').
-to_base_form(String, 'xtAdverb', BaseWord):- morph_stem(String, BaseWord, 'ly').
-to_base_form(String, 'xtUn', BaseWord):- morph_stem(String, 'un', BaseWord).
-
-morph_stem(String, Base, Suffix):- atom_concat(Base, Suffix, String).
-morph_stem(String, Base, Suffix):- pronto_morph_engine:morph_atoms(String, [[Base, -Suffix]]).
-
-base_to_cycword(String, Pos, C):- ac(partOfSpeech, C, Pos, String).
-base_to_cycword(String, P, C):-
-  nonvar(String), cvt_to_real_string(String, QAString), cyckb_h(P, C, QAString),
-  ok_speech_part_pred(P).
-
-%morph_atoms(causer, [[W, -er]]). W = cause
-
-string_to_info(String, P):- fail,
- catch(downcase_atom(String, Atom), _, fail),
- atom_length(Atom, Len), Len > 1,
- term_to_info(Atom, P). % , functor(P, F, _), guess_pred_pos(P, String, Pos).
-
-% string_to_pos(String, Pos):- atom_ string(Atom, String), term_to_info(Atom, P), guess_pred_pos(P, String, Pos).
-
-guess_pred_pos(P, _String, Pos):- arg(_, P, Pos), nonvar(Pos), member(Pos, [n, a, s, v, a, j, r, jj, adv, adj, nn, pp, prep]), !.
-guess_pred_pos(P, String, Pos):- arg(_, P, Pos), nonvar(Pos), Pos \== String, !.
-%guess_pred_pos(P, _, Pos):- functor(P, Pos, _).
-
-ok_speech_part_pred(P):-
- P\==firstNameInitial, P\==middleNameInitial,
- (
- cyckb_h(isa, P, rtSpeechPartPredicate); \+ cyckb_h(isa, P, _)), !.
-
 subtype_index(_, +(_), _, _Value, _CArg, _PreCall, _PostCall):- !, fail.
 subtype_index(_, W, W, Value, CArg, PreCall, PostCall):- PreCall = (CArg = Value), PostCall = true.
 subtype_index(_, W, W- _Pos, Value, CArg, PreCall, PostCall):- PreCall = (CArg = (Value-_)), PostCall = (true;true).
@@ -343,8 +232,8 @@ baseKB:sanity_test:- forall(get_test_verbs(V), lex_info(V)).
 
 :- export(lex_winfo/1).
 lex_winfo(Value):- 
-  lex_winfo(Value,R),
-  maplist(wdmsg, R).
+  lex_winfo0(Value,R),
+  wdmsg(R).
 
 merge_lists(L,R):- (L==[] ; R ==[]),!.
 merge_lists(L,R):- nb_set_add(L,R),nb_set_add(R,L).
@@ -359,9 +248,12 @@ lex_winfo0(W2,W2O):- W2 = w(Word,Had),W2=W2O,!,lex_winfo1(Word,Had,W2O),!.
 lex_winfo0(Word,W2):- lex_winfo_r(Word,Had),  W2 = w(Word, [lex_winfo|Had]),!.
 lex_winfo0(W,W):-!.
 
-lex_winfo1(_, Had, _):- is_list(Had),member(lex_winfo,Had).
-lex_winfo1(Word,_,W2):- lex_winfo_r(Word,R), R\==[],unlevelize(R,R2),nb_set_add(W2,[lex_winfo|R2]).
-lex_winfo1(_, Had,W2):- member(txt(Text),Had), trace, lex_winfo_r(Text,R),unlevelize(R,R2),nb_set_add(W2,[lex_winfo|R2]).
+:- thread_local(tmplex:had/1).
+
+lex_winfo1(_, Had, _):- is_list(Had),member(lex_winfo,Had),!.
+lex_winfo1(Word, Had,W2):- is_list(Had),member(truecase('UPPER'),Had),toPropercase(Word,PWord),Word\==PWord,!,lex_winfo1(PWord,Had,W2).
+lex_winfo1(Word, Had,W2):- locally(tmplex:had(Had),lex_winfo_r(Word,R)), R\==[],unlevelize(R,R2),nb_set_add(W2,[lex_winfo|R2]).
+lex_winfo1(_, Had,W2):- member(txt(Text),Had), trace, locally(tmplex:had(Had),lex_winfo_r(Text,R)),unlevelize(R,R2),nb_set_add(W2,[lex_winfo|R2]).
 
 lex_winfo_r(Word,R):- is_list(Word),!,maplist(lex_winfo_r,Word,Rs),append(Rs,R).
 lex_winfo_r(Word,R):- string(Word),atom_string(Text,Word),!,lex_winfo_r(Text,R).
@@ -370,7 +262,7 @@ lex_winfo_r(Word,R):- lex_tinfo(text(a), Word, R).
 
 :- export(lex_tinfo/3).
 lex_tinfo(Type, Value,DatumF):-
- findall(Datum, get_info_about_type(_All, 0, Type, Value, Datum), DatumL),
+ findall_set(Datum, get_info_about_type(_All, 0, Type, Value, Datum), DatumL),
    correct_dos(DatumL, DatumF),
    nop(maplist(wdmsg, DatumF)), !.
 
@@ -382,11 +274,12 @@ unlevelize(X,X).
 
 unlevelize0(level(_, 0, _, X, _),X):- !.
 unlevelize0(level(_, _, _, X, _),X):- !.
-unlevelize0(text_to_cycword(_, _,_,X),X):-!.
-unlevelize0(todo(_, cycpred,X), cycpred):-  atom(X),!.
-unlevelize0(todo(_, cycpred,Y),Y):-!.
-unlevelize0(todo(_, X,Y),Z):- atom(X),append_term(X,Y,Z).
+unlevelize0(text_to_cycinfo(_,_,_,X),X):- compound(X),!.
+%unlevelize0(todo(_, cycPosPred,X), X):-  callable(X),!.
+%unlevelize0(todo(_, cycPosPred,Y),Y):-!.
+unlevelize0(todo(_, X,Y),Z):- callable(X),append_term(X,Y,Z),!.
 unlevelize0(todo(_, X,Y),eq(X,Y)):-!.
+unlevelize0(nop(X),X):-!.
 %unlevelize0(todo(_, X,Y),Z):- append_term(X,Y,Z).
 
 
@@ -432,10 +325,11 @@ get_info_about_type0(Kind, Level, Type, Value, MoreF):-
    ) , wdmsg(( P:Level -> (C, PostCall))))),
    matcher_to_data_args(=(Matcher), data, P),
   % wdmsg(M:get_info_about_type(Kind, Level, Type, Value, P->C, PostCall)),
-  once((findall([level(Kind, Level, Type, C, Value)|Extra], ((call(M:C)), call(PostCall),
+  once((findall_set([level(Kind, Level, Type, C, Value)|Extra], ((call(M:C)), call(PostCall),
                          P=..[_|PRest], C=..[_|CRest],
                          make_new_todos(Kind, Type, Level2, CRest, PRest, [], Extra)), More1),
   flatten(More1, MoreF))).
+
 
 
 make_new_todos(_Kind, _Was, _Level, [], [], InOut, InOut):- !.
@@ -453,10 +347,6 @@ make_new_todos(Kind, Was, Level, [C|CRest], [P|PRest], In, Out):-
   (Was==text(base), P==text(base))), !,
  make_new_todos(Kind, Was, Level, CRest, PRest, In, Out).
 
-
-:- forall((clause(ac(_, xBadTheWord, _, _, TakingABath), true, R);clause(ac(_, xBadTheWord, _, _, _, TakingABath), true, R)),
-  ignore((member(X, [actTakingABath, tGroupedSpa, tObjectHotTub]), sub_var(X, TakingABath),
-   erase(R)))).
 
 
 make_new_todos(Kind, Was, Level, [C|CRest], [P|PRest], In, Out):-
@@ -543,43 +433,6 @@ segment(N, M, Len, StringW, Ace):-
   append(Left, StringW, Words).
 
 
-% ((nlfw(N, N, cycpos(xtWHDeterminer, _, _), Ace)/M is N+1) ==>nlfw(M, M, xclude(xtWHDeterminer,
-/*
-:- (prolog_load_context(reloading, true)
-      -> (prolog_load_context(source, File), mpred_remove_file_support(File))
-     ; true).
-
-
-((nlfw(_N, _M, text80(Words), Ace)/nth0(NM, Words, W), maybe_text(W, WW))==> nlfw(NM, NM, WW, Ace)).
-((do_e2c_fwd(String, ID)/text_into_wall(String, ID, Ace, WalledWords, M, N)) ==> (nlfw(M, N, ace_text(Ace), ID), nlfw(M, N, text80(WalledWords), ID))).
-:- ain((nlfw(M, N, cycpos(xtPreposition, C, W), Ace)==> nlfw(M, N, xclude(xtAdverb, C, W), Ace))).
-:- ain((nlfw(M, N, cycpos(xtAdjectiveGradable, C, W), Ace)==> nlfw(M, N, xclude(xtClosedClassWord, C, W), Ace))).
-:- ain((nlfw(M, N, cycpos(xtAdjectiveGradable, C, W), Ace)==> nlfw(M, N, xclude(xtNoun, C, W), Ace))).
-:- ain((nlfw(M, N, cycpos(xtPronoun, C, W), Ace)==> nlfw(M, N, xclude(xtDeterminer, C, W), Ace))).
-:- ain((nlfw(M, N, cycpos(xtDeterminer, C, W), Ace)==> nlfw(M, N, xclude(xtAdverb, C, W), Ace))).
-:- ain((nlfw(M, N, cycpos(xtDeterminer, C, W), Ace)==> nlfw(M, N, xclude(xtAdjective, C, W), Ace))).
-
-
-((later_on, nlfw(M, N, txt(W), Ace)/member(Pos, [xtNoun, xtVerb, xtAdjective, xtAdverb, xtPronoun, xtPreposition, xtDeterminer]))
-  ==> nlfw(M, N, maybe_pos(Pos, W), Ace)).
-((nlfw(M, N, txt(W), Ace)/text_to_cycword(W, P, C, _Why)) ==> nlfw(M, N, cycword(P, C, W), Ace)).
-((nlfw(M, N, txt(W), Ace)/clex_word(P, W, C, T)) ==> nlfw(M, N, clex_word(P, clexFn(C), T, W), Ace)).
-%((nlfw(M, N, cycword(P, C, W), Ace)/cycpred_to_cycpos(P, Pos) ==> nlfw(M, N, cycpos(Pos, C, W), Ace))).
-((
-   nlfw(M, N, cycpos(Pos, C, W), Ace),
-   \+ nlfw(M, N, xclude(Pos, C, W), Ace),
- %  nlfw(M, N, cycword(_, C, W), Ace),
-  {ac(denotation, C, Pos, _, Subj)})==> nlfw(M, N, value(Subj, C, W), Ace)).
-
-:- ain((nlfw(M, N, cycword(PosL, C, W), Ace)/(pos_inherit(PosL, PosH), \+ notInheritPos(PosH)))==>nlfw(M, N, cycpos(PosH, C, W), Ace)).
-:- ain((nlfw(M, N, cycpos(PosL, C, W), Ace)/(pos_inherit(PosL, PosH), \+ notInheritPos(PosH)))==>nlfw(M, N, cycpos(PosH, C, W), Ace)).
-:- ain((nlfw(M, N, xclude(PosL, C, W), Ace)/(pos_inherit(PosH, PosL)))==>nlfw(M, N, xclude(PosH, C, W), Ace)).
-:- ain((nlfw(M, N, xclude(Pos, C, W), Ace))==> \+ nlfw(M, N, cycpos(Pos, C, W), Ace)).
-%:- ain((nlfw(M, N, xclude(Pos, C, W), Ace))==> \+ nlfw(M, N, cycword(Pos, C, W), Ace)).
-%:- ain((nlfw(M, N, cycpos(Pos, C, W), Ace))==> \+ nlfw(M, N, xclude(Pos, C, W), Ace)).
-*/
-
-
 
 :- export(lex_info/3).
 lex_info(Kind, String, Out):-
@@ -590,7 +443,7 @@ lex_info(Kind, String, Out):-
  maplist(print_reply_colored,Todo), print_reply_colored("==============================================================="),
  Level = 0,
  ignore((Todo=[])),
- findall(sentence(N,WS,Info),member(sentence(N,WS,Info),Todo),Sents),
+ findall_set(sentence(N,WS,Info),member(sentence(N,WS,Info),Todo),Sents),
  maplist(remove_broken_corefs(Sents),Todo,NewTodo),
  lex_info(Kind, Level, NewTodo, [text80(Words)], Datum),
  % maplist(lex_winfo(Kind, Level, Words), Words, Datums),append(Datums, Datum),
@@ -615,7 +468,7 @@ lex_info(_Kind, Level, Todo, Done, Out) :- Level > 3, !, maplist(didnt_do, Todo,
 lex_info(Kind, Level, Todo, Done, Out):- must(lex_info_loop(Kind, Level, Todo, Done, Out)).
 
 lex_info_loop(Kind, Level, [M:Did|Todo], Done, Out):- atom(M), !, lex_info(Kind, Level, [Did|Todo], Done, Out).
-lex_info_loop(Kind, Level, Todo, Done, Out):- lex_info_impl(Kind, Level, Todo, Done, Out), !.
+lex_info_loop(Kind, Level, Todo, Done, Out):- lex_info_impl_1(Kind, Level, Todo, Done, Out), !.
 lex_info_loop(Kind, Level, [Did|Todo], Done, Out):-
  Did =..[T, F|RestP],
  member(T, [acnl, cyckb_h, t, talk_db]),
@@ -626,7 +479,7 @@ lex_info_loop(Kind, Level, [Did|Todo], Done, Out):-
  lex_info(Kind, Level, [Do|Todo], Done, Out).
 lex_info_loop(Kind, Level, [Did|Todo], Done, Out):-
  compound(Did), functor(Did, F, A),
- findall(Arg, (arg(_, Did, Arg), nonvar(Arg), searches_arg(F, A, Arg)), List),
+ findall_set(Arg, (arg(_, Did, Arg), nonvar(Arg), searches_arg(F, A, Arg)), List),
  List\==[],
  maplist(add_search_arg, List, DoNow),
  add_do_more(DoNow, Todo, Done, NewTodo),
@@ -636,7 +489,8 @@ lex_info_loop(Kind, Level, [Did|Todo], Done, Out):-
  lex_info(Kind, Level, Todo, NewDone, Out).
 
 
-
+lex_info_impl_1(Kind, Level, Todo, Done, Out):- %break,
+  lex_info_impl(Kind, Level, Todo, Done, Out).
 
 lex_info_impl(Kind, Level, Todo, Done, Out):- 
    findall(sentence(N,Words,Info),member(sentence(N,Words,Info),Todo),Sents), Sents\==[],
@@ -658,19 +512,16 @@ lex_info_impl(Kind, _Lev__, [todo(Level, DoType, Value)| Todo], Done, Out):-
  doable_type(Level, DoType, Type),
  Doing = todo( /*_Agent,*/ Level, Type, Value),
  add_if_new(Done, Doing, NewDone),
- findall(Info, get_info_about_type(Kind, Level, Type, Value, Info), More),
+ findall_set(Info, get_info_about_type(Kind, Level, Type, Value, Info), More),
  add_do_more(More, Todo, NewDone, NewTodo),
  lex_info(Kind, Level, NewTodo, NewDone, Out), !.
 
-lex_info_impl(Kind, Level, [cycWord(P, CycWord)|Todo], Done, Out):-
- findall(concept(Subj), cycword_to_cycconcept(P, CycWord, Subj), More1),
- findall(Info, term_to_infolist(CycWord, Info), More2),
- add_if_new(Done, cycWord(P, CycWord), NewDone),
- add_do_more([More1, More2], Todo, NewDone, NewTodo),
- lex_info(Kind, Level, NewTodo, NewDone, Out).
+lex_info_impl(Kind, Level, Todo, Done, Out):-
+  parser_lexical_plkb:lex_info_impl_cyc_hook(Kind, Level, Todo, Done, Out).
+
 
 lex_info_impl(Kind, Level, [concept(C)|Todo], Done, Out):- fail,
- findall(Info, term_to_infolist(C, Info), More2),
+ findall_set(Info, term_to_infolist(C, Info), More2),
  add_if_new(Done, concept(C), NewDone),
    add_do_more(More2, Todo, NewDone, NewTodo),
    lex_info(Kind, Level, NewTodo, NewDone, Out).
@@ -681,26 +532,6 @@ lex_info_impl(Kind, Level, [Sent|Todo], Done, Out):-
    % append(Done,[Sent],NewDone),     
    add_do_more([Words, do_mws(N,Words)], Todo, Done, NewTodo),
    lex_info(Kind, Level, NewTodo, Done, Out).
-
-lex_info_impl(Kind, Level, [TOK|Todo], Done, Out):- 
- TOK = tok(Index,PennPos,_Base,String, Info), !,
- functor(TOK,_,A),
-  must_or_rtrace((   
-   findall_set(CPos,extend_brillPos(PennPos,CPos),CPosSet),
-   POSINFO = [PennPos|CPosSet],
-   append(Info,POSINFO,PropsTOK),
-   nb_setarg(A,TOK,PropsTOK),
-   findall_set(How, (text_pos_cycword(String, POSINFO, How)), CycWordInfo),
-   nb_set_add(PropsTOK,CycWordInfo),   
-   append(Done,Todo,AllInfo),
-   findall_set(How, (find_coref(Index, AllInfo, How)), CorefInfo),
-   nb_set_add(PropsTOK,CorefInfo),
-   forall(member(cycWord(CycWord),PropsTOK),
-   (findall_set(How, (cycword_sem(CycWord, PropsTOK, How)), CycSem),
-    nb_set_add(PropsTOK,CycSem))),
-   sort(PropsTOK,PropsTOKS),
-   nb_setarg(A,TOK,PropsTOKS),     
-   lex_info(Kind, Level, Todo, Done, Out))).
 
 find_coref(Index, AllInfo, [coREF(CRN,RefNum),A,B,C,D]):- 
   member(coref( _, seg(Index-_), RefNum, Words,
@@ -720,114 +551,14 @@ find_coref(Index, AllInfo, [coREF(CRN,RefNum)]):-
 findall_set(Temp,Goal,Set):-   
    findall(Temp,Goal,List),flatten(List,Flat),list_to_set(Flat,Set),!.
 
-text_pos_cycword(String, MorePos, [cycWord(C)|Out]):- 
-  cvt_to_atom(String,AString),text_to_cycword(AString, P, C, How), 
-  (not_violate_pos(MorePos,[P,How])
-    ->Out=[P]
-     ;(Out=[y_violate(How)])). 
 
-cycword_sem(CycWord, MorePos, Out):- 
-  term_to_info(CycWord, Info),
-  (y_skip(Info,Why) -> Out=y_skip(Why);
-   (not_violate_pos(MorePos,Info)
-    ->Out=Info
-     ;(Out=y_skip(violate),dmsg(y_violate(Info))))).
+term_to_infolist(C, _Info):- number(C), \+ (C > 100001739 ; C < - 100000), !, fail.
+term_to_infolist(C, Info):-
+ findall_set(P, term_to_info(C, P), L),
+ correct_dos(L, Info).
 
-% :- forall(ac(mostSpeechPartPreds, B, C), retract(ac(speechPartPreds, B, C))).
-cycpred_to_cycpos(Pred, Pos):- atom(Pred), pos_inherit(Pred, M),atom(M),atom_concat(xt,_,M),M\==xtNLWordForm,
-  Pred\==M,(M=Pos;cycpred_to_cycpos(M, Pos)),atom(Pos).
-
-cycpred_to_cycpos_1(Pred, Pos):- nonvar(Pred),
- ac(speechPartPreds, Pos, Pred), \+ ac(mostSpeechPartPreds, Pos, _), \+ ac(mostSpeechPartPreds, _, Pred).
-
-
-
-
-filter_lex(OutS,[PennPos|MorePos],OutF):-
- include(not_violate_pos([PennPos|MorePos]),OutS,OutF).
-
-%not_violate_pos(_,_):-!.
-not_violate_pos(_MorePos,Var):- var(Var),!.
-not_violate_pos(_MorePos,[]):-!.
-not_violate_pos(MorePos,[H|T]):- !, not_violate_pos(MorePos,H),not_violate_pos(MorePos,T).
-not_violate_pos(MorePos,OutS):- violate_pos(MorePos,OutS),!,fail.
-not_violate_pos(_MorePos,_OutS).
-
-violate_pos(MorePos,OutS):- \+ compound(OutS), !, violate_pos1(MorePos,OutS).
-violate_pos(MorePos,Did):- Did =..[T, F|Rest], member(T, [acnl, cyckb_h, t, talk_db]),
- atom(F), Do =..[F|Rest], !,                                     
- violate_pos(MorePos,Do).
-% violate_pos(MorePos,OutS):- functor(OutS,F,_),violate_pos1(MorePos,F),!.
-violate_pos(MorePos,OutS):- functor(OutS,F,_),pos_inherit(F, Pos),violate_pos1(MorePos,Pos).
-violate_pos(MorePos,OutS):- arg(_,OutS,E), atom(E), violate_pos1(MorePos,E),!.
-violate_pos(MorePos,OutS):- violate_pos1(MorePos,OutS).
-
-pos_list([xtCoordinatingConjunction,xtVerb,xtAdjective,xtAdverb,xtPreposition,xtPunctuationSP]).
-         
-
-incompatible_pos(Pos1,Pos2):- pos_list(PosList),member(Pos2,PosList),member(Pos1,PosList),Pos1\==Pos2.
-incompatible_pos(Pos1,Pos2):- pos_list(PosList),member(PosA,PosList),member(PosB,[xtDeterminer,xtNoun,xtPronoun]),
-  ((Pos1=PosA,Pos2=PosB);(Pos1=PosB,Pos2=PosA)).
-
-% cyckb_h(denotation,xUseTheWord,xtMassNoun,0,actUsingAnObject)
-
-violate_pos1(MorePos,OutS):- incompatible_pos(XtNoun,XtVerb),member(XtNoun,MorePos),pos_inherit(OutS,XtVerb),
-  dmsg(incompatible_pos(XtVerb,XtNoun,MorePos)).
-violate_pos1(_,todo).
-violate_pos1(_,txt).
-violate_pos1(_,comment).
-violate_pos1(_,flexicon).
-violate_pos1(_,M):- atom(M),member(M,[mws,flexicon,fsr]).
-%violate_pos(MorePos,OutS,OutF).
-
-
-notInheritPos(xtSententialConstituent).
-notInheritPos(xtWHAdverb).
-notInheritPos(xtWHWord).
-notInheritPos(tIndividual).
-notInheritPos(tThing).
-notInheritPos(xtNLWordForm).
-
-pos_upwards(N,xtAdjective):- member(N,[adjSemTrans,xRegularAdjFrame,xtAdjectiveGradable]).
-pos_upwards(N,xtVerb):- 
- member(N,[verbSemTrans,
-  verbSemTransCanonical,
-  templateExpressionForVerbWRTClassAndFrame,
-  sententialPhraseForVerbWithFrameGeneric,
-  verbSenseGuessedFromVerbClass]).
-pos_upwards(N,xtNoun):- member(N,[nounSemTrans,agentiveNounSemTrans]).
-pos_upwards(PosL, PosH):- ac(genls, PosL, PosH).
-
-
-
-pos_inherit_u(PosL, PosH):- pennSyntacticTags(PosL, PosH).
-pos_inherit_u(Pred,  Pos):- ac(speechPartPreds, Pos, Pred).
-pos_inherit_u(PosL, PosH):- pos_upwards(PosL, PosH).
-pos_inherit_u(PosL, PosH):- ac(syntacticCategoryTags,PosH,PosL).
-
-
-pos_inherit_d(PosL, PosH):- ac(syntacticCategoryTags,PosH,PosL).
-pos_inherit_d(PosL, PosH):- pos_upwards(PosL, PosH).
-pos_inherit_d(Pred,  Pos):- ac(speechPartPreds, Pos, Pred).
-pos_inherit_d(PosL, PosH):- pennSyntacticTags(PosL, PosH).
-
-pos_inherit_all(Pos, Pos).
-pos_inherit_all(Pred, PosO):- nonvar(PosO),!, pos_inherit_d(Mid, PosO), pos_inherit_all(Pred, Mid).
-pos_inherit_all(Pred, PosO):- var(Pred),pos_list(List),!,member(PosH,[xtDeterminer,xtNoun,xtPronoun|List]), pos_inherit_all(PosO, PosH), pos_inherit_all(Pred, PosO).
-pos_inherit_all(Pred, PosO):- pos_inherit_u(Pred, Pos), \+ notInheritPos(Pos), pos_inherit_all(Pos, PosO).
-
-pos_inherit(Pred, PosO):- no_repeats(pos_inherit_all(Pred, PosO)).
-
-
-
-extend_brillPos(In,[Out]):- freeze(cvt_to_real_string(In,Str)),ac(pennTagString,Out,Str).
-extend_brillPos('PRP$',['Possessive','xtNoun']):- !.
-extend_brillPos('PRP$',['Possessive'|Rest]):- extend_brillPos('PRP',Rest).
-%extend_brillPos('PRP',['SpecialDeterminer','xtDeterminer','second']).
-extend_brillPos(In,Out):- bposToCPos(In,Out).
-extend_brillPos(In,form(Out)):- bposToCPosForm(In,Out).
-extend_brillPos(In,Out):- brillPos([In|Out]) *-> true 
- ; (freeze(In,downcase_atom(In,DC)),freeze(DC,upcase_atom(DC,In)),In\==DC,brillPos([DC|Out])).
+%term_to_info(C, P):- gen_preds_atomic(C, P).
+term_to_info(Term, Info):- parser_lexical_plkb:cyc_term_to_info_hook(Term, Info).
 
 
 add_search_arg(Arg, concept(Arg)).
@@ -850,13 +581,12 @@ searches_arg(_F, _A, Arg):- atom_length(Arg, Len), Len<4, !, fail.
 prolog:make_hook(after, _Reload):- abolish(tmp:saved_denote_lex/3),dynamic(tmp:saved_denote_lex/3),fail.
 
 %get_lex_info(Kind, text(a), String, Out):- catch(downcase_atom(String, DCAtom), _, fail), DCAtom\==String, !, get_lex_info(Kind, text(a), DCAtom, Out).
-get_lex_info(_Kind, Type, DCAtom, Out):- tmp:saved_denote_lex(Type, DCAtom, Out), !.
-get_lex_info(Kind, Type, DCAtom, Out):- do_lex_info(Kind, Type, DCAtom, Out), asserta(tmp:saved_denote_lex(Type, DCAtom, Out)), !.
-
+% %  get_lex_info(_Kind, Type, DCAtom, Out):- tmp:saved_denote_lex(Type, DCAtom, Out), !.
+get_lex_info(Kind, Type, DCAtom, Out):- do_lex_info(Kind, Type, DCAtom, Out), nop(asserta(tmp:saved_denote_lex(Type, DCAtom, Out))), !.
 
 
 do_lex_info(Kind, text(Type), AString, OutS):-
- notrace((findall([cycWord(P, C), Kind], text_to_cycword(AString, P, C, Kind), More1))),
+ ((findall_set([cycWord(P, C), Info], text_to_cycinfo(AString, P, C, Info), More1))),
  NewDone = [txt(AString)],
  cvt_to_atom(AString, Atom),
  Level = 0,
@@ -879,40 +609,16 @@ ignore_level(R, C1, C2):- compare(R, C1, C2), !.
 
 
 
-%term_to_info(C, P):- gen_preds_atomic(C, P).
-%term_to_info(C, P):- between(2, 12, A), functor(P, cyckb_h, A), call(P), sub_term(X, P), X==C.
-term_to_infolist(C, _Info):- number(C), \+ (C > 100001739 ; C < - 100000), !, fail.
-term_to_infolist(C, Info):-
- findall(P, term_to_info(C, P), L),
- correct_dos(L, Info).
-
-%term_to_info(Term, Info):- in_call(Term, Info, Template, cyckb_h('genTemplate', _, Template)).
-%term_to_info(Term, Info):- in_call(Term, Info, Template, cyckb_h('genTemplateConstrained', _, _, Template)).
-term_to_info(Term, Info):- Info=cyckb_h(_Pred, Cont), call(Info), sub_var(Term, Cont).
-term_to_info(Term, Info):- Info=cyckb_h(_Pred, Term, S), call(Info), \+ string(S).
-term_to_info(Term, Info):- Info=cyckb_h(_Pred, Term, _, S), call(Info), \+ string(S).
-term_to_info(Term, Info):- between(5, 12, A), functor(Info, cyckb_h, A), arg(N, Info, Term), N>1, call(Info).
-
-%term_to_info(C, P):- ac_nl_info_1(C, Results), member(P, Results).
-%term_to_info(C, P):- between(3, 12, A), functor(P, acnl, A), arg(N, P, C), N<A, N>1, call(P).
-
-in_call(C, P, Template, Call):- P=Call, call(P), once(sub_var(C, Template)).
-
-
-cycword_to_cycconcept(Pred, C, Subj):- ac(speechPartPreds, Pos, Pred), ac(denotation, C, Pos, _, Subj).
-% cycword_to_cycconcept(_P, C, Subj):- acnl(denotation, C, _, _, Subj, _).
-
+text_to_cycinfo(String, P, C, How):- parser_lexical_plkb:text_to_cycinfo_hook(String, P, C, How).
 
 :- dynamic(lex_arg_type/4).
 
 lex_arg_type( _, _, M, P):- nonvar(P), skip_lex_arg_type(M, P), !.
+lex_arg_type( syn, 0, parser_lexical, text_to_cycinfo(text(a), data, cycWord, data)).
 
-
-
-lex_arg_type( syn, 0, parser_lexical, text_to_cycword(text(a), cycpred, cycword, data)).
-%lex_arg_type( syn, _, parser_lexical, cycpred_to_cycpos(cycpred, cycpos)).
-lex_arg_type( syn, _, parser_lexical, cycword_to_cycconcept(-cycpred, -cycword, value)).
-
+%lex_arg_type( syn, 0, parser_lexical, cyckb_lex(+(speechPartPreds),cycPos,-cycPosPred)).
+%lex_arg_type( syn, _, parser_lexical, cycpred_to_cycpos(cycPosPred, cycpos)).
+%lex_arg_type( syn, _, parser_lexical, cycword_to_cycconcept(cycPosPred, cycWord, cycTerm)).
 
 lex_arg_type( syn, 0, clex, clex_word(pos, text(a), text(base), data)).
 

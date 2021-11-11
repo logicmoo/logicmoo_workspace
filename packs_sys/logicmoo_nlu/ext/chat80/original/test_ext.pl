@@ -47,10 +47,15 @@
 %:- xlisting(lock_predicate/1).
 %:- autoload_all.
 
+:- ensure_plkb0988_kb.
+
+:- add_history1(xlisting(xBikeTheWord)).
 
 %:- module(baseKB).
 
 %:- include(load).
+:- add_history1((cls,debug,s82)).
+:- add_history1(cyc_lex("I saw two books sitting on the shelf by the fire")).
 
 
 :- fixup_exports.

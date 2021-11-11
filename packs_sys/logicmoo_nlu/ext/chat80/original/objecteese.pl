@@ -33,7 +33,8 @@ test_objecteese:-
 
 
 test_objecteese(X,Z):- locally(set_prolog_flag(debug,false),cvt_to_objecteese(X,Y)), 
-  (show_failure(always,check_answer(X,Y,Z,true))-> true ; locally(set_prolog_flag(debug,true),cvt_to_objecteese(X,_))).
+  (show_failure(always,check_answer(X,Y,Z,true))-> true ; 
+    (current_prolog_flag(debug,true)-> false ; locally(set_prolog_flag(debug,true),cvt_to_objecteese(X,_)))).
 
 do_objecteese_test(X):- cvt_to_objecteese(X,Y),!,nl,any_to_string(Y,Z),
   format('~N test_objecteese(~n   ~q,~n  ~q).~n',[X,Z]),!.
@@ -213,16 +214,16 @@ red = value
 happy = 
 */
 
-map_ees_tag2('JJR',value,'er').
+map_ees_tag2('JJR',value,'ier').
 map_ees_tag2('JJS',value,'est').
-map_ees_tag2('JJ',value,'').
+map_ees_tag2('JJ',value,'ish').
 map_ees_tag2('RBR',value,'lier').
 map_ees_tag2('RBS',value,'liest').
-map_ees_tag2('RB',value,'').
+map_ees_tag2('RB',value,'ly').
 map_ees_tag2('VB_NN',action,'').
-map_ees_tag2('NN_JJ','adjective','').
-map_ees_tag2('NNP',object,'').
-map_ees_tag2('NNPS',object,'s').
+map_ees_tag2('NN_JJ','value','ish').
+map_ees_tag2('NNP','Object','').
+map_ees_tag2('NNPS','Object','s').
 map_ees_tag2('NNS',type,'s').
 map_ees_tag2('NN',type,'').
 map_ees_tag2('VB',action,'').
@@ -261,7 +262,7 @@ never_change(X):- number_lex(X,_,_).
 never_change(X):- pers_pron_lex(X,_,_,_,_).
 never_change(X):- poss_pron_lex(X,_,_,_).
 never_change(X):- prep_lex(X).
-never_change(X):- determiners:semlex_det(X,_,_,Z),Z\=lam(B, lam(C, merge(merge(D:drs([D:X:E], []), app(B, E)), app(C, E)))).
+never_change(X):- determiners:semlex_det(X,_,_,Z)->Z\=lam(B, lam(C, merge(merge(D:drs([D:X:E], []), app(B, E)), app(C, E)))).
 never_change(not).  
 never_change(no).
 never_change(X):- sub_var(X,v(quantity,
@@ -351,7 +352,7 @@ merge_w2(W21,w(W,WL),W21):-
   nb_set_add(WASL,WL))),!.
 
 
-s82:- make, s811(p1(do_objecteese_test)).
+s82:- make, locally(set_prolog_flag(debug,true),s811(p1(do_objecteese_test))).
 
-:- add_history1((cls,s82)).
+:- add_history1((cls,debug,s82)).
 

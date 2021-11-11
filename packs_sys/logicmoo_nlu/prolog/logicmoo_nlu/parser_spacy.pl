@@ -48,10 +48,10 @@ merge_spacy([H|T],I,O):- !, merge_spacy(H,I,M), merge_spacy(T,M,O).
 merge_spacy(w(W,L),O,O):- member(w(W,OL),O), \+ member(spacy,OL),!,    
   ignore((member(spos(Pos),L),  downcase_atom(Pos,DPos), set_pos(2,DPos,OL))), 
   nb_set_add(OL,[spacy|L]), !.
-merge_spacy(span(List),I,O):- member(dep_tree(_,_,_),List),!,
+merge_spacy(span(List),I,O):- member(span(_),List),!,
   merge_spacy(List,I,O),!.
 merge_spacy(span(List),O,O):- 
-  member(seg(S,E),List), member(span(Other),O), member(seg(S,E),Other),
+  member(seg(S,E),List), member(span(Other),O), member(seg(S,E),Other),!,
   nb_set_add(Other,[spacy|List]).
 merge_spacy(dep_tree(Type,R,Arg),O,O):- 
   member(w(_,Other),O),member(node(R),Other),
