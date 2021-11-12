@@ -157,9 +157,8 @@ flair_to_w2(In, Result):- is_stream(In),!,flair_stream_to_w2(In,'', Result).
 flair_to_w2(Text,ListO):- \+ compound(Text), on_x_fail(atom_to_term(Text,Term,_)),!,flair_to_w2(Term,ListO).
 flair_to_w2(Text,_ListO):- \+ compound(Text), nl,writeq(Text),nl,!,fail.
 
+flair_stream_to_w2(_, S, Result):- atom_contains(S,"w2flair([])."),!,Result=[].
 flair_stream_to_w2(In,_, Result):- peek_string(In,10,S),atom_contains(S,"w2flair("),!,read_term(In,Term,[]),flair_to_w2(Term, Result).
-
-flair_stream_to_w2(_,S, Result):- atom_contains(S,"w2flair([])."),!,Result=[].
 flair_stream_to_w2(In,S, Result):- atom_contains(S,"w2flair("),!,read_term_from_atom_rest(In,S,Term),flair_to_w2(Term, Result).
 flair_stream_to_w2(In,S, Result):- at_end_of_stream(In),!,flair_to_w2(S, Result).
 flair_stream_to_w2(In,_, Result):- repeat, read_pending_codes(In,Codes,[]),

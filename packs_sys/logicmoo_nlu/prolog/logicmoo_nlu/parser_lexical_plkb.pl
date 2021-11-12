@@ -299,8 +299,7 @@ compat_spp(P):- had_info(pos(Pos)),!,check_compat_spp(P,Pos),!.
 compat_spp(_).
 
 
-:- discontiguous incompat_spp/2.
-%~ trace_break.
+:- style_check(-discontiguous).
 
 compat_spp(X,Y):- compat_only(X,S),!,atom_concat(S,_,Y).
 
@@ -315,6 +314,11 @@ compat_spp(xtDeterminerIndefinite,dt).
 compat_spp(pronounStrings,p_).
 compat_spp(pronounStrings,w_).
 compat_spp(regularAdverb,wdt).
+
+
+
+compat_spp(adverbSemTrans,rb).
+compat_spp(lightVerbTransitivesemtrans,vb).
 
 compat_spp(xtPreposition,in).
 compat_spp(regularAdverb,in).
@@ -337,24 +341,17 @@ compat_spp(xtMassNoun,nn).
 compat_spp(compoundString,_).
 compat_spp(compoundSemTrans,_).
 compat_spp(relationAllInstance,_).
+compat_spp(determinerSemTrans,dt).
 
-
-
-% absolute_file_name('./src~/pldata0988.nldata','/opt/logicmoo_workspace/packs_sys/logicmoo_nlu/ext/chat80/original/src~/pldata0988.nldata').
-% /opt/logicmoo_workspace/packs_sys/logicmoo_nlu/ext/pldata/plkb0988/plkb0988_kb loaded into kb0988 2.88 sec, 0 clauses
-
-/*
-verb_only('VNSubcatFrame-BasicTransitive').
-verb_only('VNSubcatFrame-Dative').
-verb_only('VNSubcatFrame-NP-ADVP-PREDhere-there-away').
-verb_only('VNSubcatFrame-NP-PP-PPSource-PPGoal-PP').
-verb_only('VNSubcatFrame-NP-PPGoal-PP').
-verb_only('VNSubcatFrame-NP-PPSource-PP').
-verb_only(templateExpressionForVerbWRTClassAndFrame).
-*/
 verb_only(sententialPhraseForVerbWithFrameGeneric).
 verb_only(infinitive).
+
 verb_only(pastTenseUniversal).
+verb_only(firstPersonSgPast).
+verb_only(thirdPersonSgPast).
+verb_only(thirdPersonSgPresent).
+verb_only(nonCompositionalVerbSemTrans).
+
 verb_only(verbSemTrans).
 verb_only(verbSemTransCanonical).
 verb_only(verbSemTransPartial).
@@ -393,6 +390,8 @@ compat_only(Verb,v):- verb_only(Verb).
 compat_only(adjSemTrans,jj).
 compat_only(regularDegree,jj).
 compat_only(adjectiveOfGenericValue,jj).
+compat_only(massNumber,nn).
+compat_only(xtCountNoun,nn).
 
 incompat_spp(xGenitiveFrame,v_).
 incompat_spp(xRegularAdjFrame,nn).
@@ -401,8 +400,6 @@ incompat_spp(xRegularAdjFrame,v_).
 
 incompat_spp(nounPrep,in).
 incompat_spp(verbPrepTransitivetemplate,in).
-
-incompat_spp(Form,in):- \+ atom(Form).
 
 incompat_spp(hasVerbAsMember,nn).
 incompat_spp(verbClassCoversVerbSense,nn).
@@ -426,6 +423,11 @@ incompat_spp(xtCountNoun,cd).
 incompat_spp(xtCountNoun,v_).
 incompat_spp(xtPronoun,cd).
 incompat_spp(xtVerb,n_).
+
+:- style_check(+discontiguous).
+
+incompat_spp(ppCompFrameForTypeAndWord,_).
+incompat_spp(Form,in):- \+ atom(Form).
 incompat_spp(Atom,_):- atom(Atom),atom_concat('act',_,Atom).
 incompat_spp(Atom,_):- number(Atom).
 incompat_spp(Atom,_):- atom(Atom),atom_concat(_,'TheWord',Atom).
@@ -436,6 +438,7 @@ compat_spp_tf(P,Pos,true):- compat_spp(P,Pos),!.
 
 
 check_compat_spp(P,aux):-!, check_compat_spp(P,vb).
+%check_compat_spp(P,wdt):-!, check_compat_spp(P,dt).
 check_compat_spp(P,Pos):- compat_spp_tf(P,Pos,TF),!,TF==true.
 check_compat_spp(P,Pos):- dash_atom(Pos,Pos_),compat_spp_tf(P,Pos_,TF),!,TF==true.
 check_compat_spp(P,Pos):- wdmsg(compat_spp(P,Pos)),!.

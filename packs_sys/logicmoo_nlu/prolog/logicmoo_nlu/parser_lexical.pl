@@ -283,8 +283,7 @@ unlevelize0(cyc_nop(X),X):-!.
 unlevelize0(I,O):- compound_name_arguments(I,cyckb_lex,M),compound_name_arguments(O,ac,M).
 
 %unlevelize0(todo(_, X,Y),Z):- append_term(X,Y,Z).
-
-cyc_nop(X).
+cyc_nop(_).
 
 call_lex_arg_type(TypeIn, TypeOut, Value, Result, C):-
   find_lex_arg_type( _, _, M, P),
