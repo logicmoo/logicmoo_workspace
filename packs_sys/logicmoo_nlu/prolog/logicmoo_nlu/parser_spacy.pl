@@ -39,9 +39,9 @@ tokenize_spacy_string(Text,StrO):- any_to_string(Text,Str), replace_in_string(['
   atomics_to_string(["'",StrM,"'"],StrO).
 */
 spacy_lexical_segs(I,O):-
-  old_into_lexical_segs(I,M),
-  spacy_parse(I,S),
-  merge_spacy(S,M,O).
+  old_into_lexical_segs(I,M),!,
+  spacy_parse(I,S),!,
+  merge_spacy(S,M,O),!.
 
 merge_spacy([],O,O):-!.
 merge_spacy([H|T],I,O):- !, merge_spacy(H,I,M), merge_spacy(T,M,O).

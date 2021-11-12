@@ -151,6 +151,7 @@ text_to_flair_tree(Text,LExpr):-
 
 %flair_to_w2((Word,POS),[POS,Word]).
 flair_to_w2(In, Result):- var(In),!,throw(var_flair_to_w2(In, Result)).
+flair_to_w2('', Result):-!, Result=[],!.
 flair_to_w2(w2flair(List),ListO):- !, flair_to_w2(List,ListO).
 flair_to_w2(List,ListO):- is_list(List),!,include(compound,List,ListO).
 flair_to_w2(In, Result):- is_stream(In),!,flair_stream_to_w2(In,'', Result).
@@ -218,6 +219,9 @@ test_flair(X):- test_flair(_,X),nop(lex_info(X)).
 test_flair(_,X):- nonvar(X), !, once(test_1flair(X)).
 
 test_flair(1,".\nThe Norwegian lives in the first house.\n.").
+test_flair(1,"").
+test_flair(1,".").
+test_flair(1,"\n").
 
 test_flair(1,"Rydell used his straw to stir the foam and ice remaining at the bottom of his tall plastic cup, as though he were hoping to find a secret prize.").
 

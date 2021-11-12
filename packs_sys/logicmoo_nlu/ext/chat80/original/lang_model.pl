@@ -22,7 +22,7 @@
 
 training_data(Text,DRS):-  parser_ape:text_drs_eval(_Evaluation, _Id, Text, DRS, _LHSs, _Timestamp, _Author, _Comment), should_learn(DRS).
 :- dynamic(c80:lf_trained/3).
-add_c80(B):- any_to_str(B,S),add_history1(c80(S)).
+add_c80(B):- any_to_str(B,S),add_history(c80(S)).
 add_c81(B):- any_to_str(B,S),add_c80(S),!, ignore(learn_full(e2c,S)).
 add_c82(B):- any_to_str(B,S),add_c80(S),!, print_tree_nl(?-c81(S)).
 
@@ -328,13 +328,18 @@ my_tokenize_atom('',[]):- !.
 my_tokenize_atom(I,O):- member(Sep,['\n','.','?','!']),atom_contains(I,Sep),atomic_list_concat(List0,Sep,I),
   maplist(my_tokenize_atom,List0,List1),append_all_but_last(Sep,List1,List2),append(List2,O),!.
 my_tokenize_atom(I,O):- atom_contains(I,' ?'),!,split_string(I, " \s\t\n_", " \s\t\n", Flat),finish_tokenize(Flat,O).
+my_tokenize_atom(I,O):- atom_contains(I,' .'),!,split_string(I, " \s\t\n_", " \s\t\n", Flat),finish_tokenize(Flat,O).
 %my_tokenize_atom(I,O):- !,split_string(I, " \s\t\n_", " \s\t\n", Flat),finish_tokenize(Flat,O).
 my_tokenize_atom(I,O):- tokenize_atom(I,Flat),finish_tokenize(Flat,O).
 words_of0(I,Words):- atomic(I),!,my_tokenize_atom(I,Flat),include(is_word80,Flat,Words).
 words_of0(I,Words):- \+ is_list(I),!,findall(E,(sub_term(E,I),is_word80(E)),Words).
 words_of0([FW|I],Words):- FW=tag(_,_,_),!,flatten([FW|I],Flat),include(is_word80,Flat,Words).
 words_of0([FW|I],Words):- maplist(is_word80,[FW|I]),!,[FW|I]=Words.
+words_of0([FW|I],Words):- is_w2(FW),!,maplist(w2_as_w,[FW|I],Words).
 words_of0([FW|I],Words):- tree_to_words([FW|I],Words).
+
+w2_as_w(Cmp,Txt):- compound(Cmp),!,arg(1,Cmp,Txt).
+w2_as_w(Txt,Txt).
 
 tree_to_words([],[]):-!.
 tree_to_words(I,[O]):- is_w2(I),!,arg(1,I,O).
@@ -523,14 +528,30 @@ s80(S):-
 c88(M):- c88(M,O),dmsg(O).
 c88(M,O):- process4a(off,M,_,O,_Times).
 
-try_ace_lf(S,O):- ace_to_drs:aceparagraph_to_drs(S,on,off,1,_Sentences,_Trees,_UnresolvedDrs,O,_Messages,_Time),should_learn(O).
+try_ace_lf(I,O):- words_of(I,M),tokenizer:expand_contracted_forms(_All,M,MS),any_to_str(MS,S), ace_to_drs:aceparagraph_to_drs(S,on,off,1,_Sentences,_Trees,UnresolvedDrs,O,Messages,_Time),
+   nop(wdmsg(UnresolvedDrs=Messages)),
+   should_learn(O).
+try_ace_lf(I):- make,try_ace_lf(I,O),exec_fol(I=O).
 
-exec_fol(FOL):-format('~N'), print_tree_nl(exec_fol=FOL).
+exec_fol(X=I):- !, nonvar(I),my_drs_to_fol_kif(I,O), format('~N'),  print_tree_nl(X=O).
+exec_fol(FOL):- exec_fol(exec_fol=FOL),!.
 
+my_drs_to_fol_kif(I,O):- my_drs_to_fol(I,M),my_fol_kif(M,O).
 my_drs_to_fol(I,O):- on_x_fail(drs_fol(I,O)),!.
 my_drs_to_fol(OI,OI).
 
-:- add_history1(c84).
+
+
+my_fol_kif(Var,O):- var(Var),!,Var=O,!. %freeze(Var,my_fol_kif(Var,O)).
+my_fol_kif(I,O):- is_list(I),!,maplist(my_fol_kif,I,O).
+my_fol_kif(I-_,O):-!,my_fol_kif(I,O).
+my_fol_kif(I,O):- compound(I), compound_name_arguments(I,N,A),maplist(my_fol_kif,A,AO),compound_name_arguments(O,N,AO),!.
+my_fol_kif(I,O):- I=O.
+
+s83:- forall(training_data(Sent,M),(my_drs_to_fol_kif(M,O),in_cmt(block,print_tree_nl(Sent=O)))).
+
+
+:- add_history(c84).
 
 text_to_lf(B,FOL):- text_to_lf1(B,FOL)*->true;text_to_lf2(B,FOL)*->true;text_to_lf3(B,FOL).
 
@@ -570,10 +591,10 @@ gp_africa(Result):-
        database80(exceeds(Size,_Other))), List),
    database80(aggregate80(max,List,Result)).
 
-%:- add_history1(ensure_loaded(geography/load_kb)).
+%:- add_history(ensure_loaded(geography/load_kb)).
 
 
-:- add_history1([test_ext]).
+:- add_history([test_ext]).
 %:- forall(chat80_tests(X),cvt_to_objecteese(X))
 %:- forall(chat80_tests(X),cvt_to_objecteese(X))
 
@@ -599,7 +620,7 @@ retrain:-
   add_c80("what is the total area of nations that should border iraq?"),
   add_c80("what is the total area of nations that are bordered by iraq?"),
   add_c81("what ocean does not border any country ?"),
-  add_history1(test_chat80),
+  add_history(test_chat80),
   add_c81("what oceans should border any country?"),
   add_c81("is china a country?"),
   add_c80("are china and japan a country?"),
@@ -619,9 +640,9 @@ retrain_2:-
   add_c81("If there is a dog then the dog barks and it is false that there is a cat."),
   add_c81("It is false that a man who waits or who eats runs or sleeps ,and barks."),
   add_c81("The man who talks or who walks or who sleeps eats."),
-  add_history1((ape_test(_,X),input_to_middle(X))).
+  add_history((ape_test(_,X),input_to_middle(X))).
 
-:- add_history1(s81).
+:- add_history(s81).
 
 
 s81:- make,s811(show_c80),s811(p1(cvt_to_objecteese)).
@@ -630,11 +651,14 @@ p1(P2,X):- atom(P2), \+ current_predicate(P2/1),  current_predicate(P2/2),!,
   any_to_string(X,S),nl,dmsg(?-p1(P2,S)),call(P2,S,Y),wdmsg(Y),nl,!.
 p1(P1,X):- any_to_string(X,S),append_term(P1,S,G),nl,dmsg(?-G),call(G),nl,!.
 s81(P):- s811(p1(P)).
+
+
 s811(P):-
   %forall(ape_test(_,X),call(P,X)),
-  %forall(training_data(X,_),call(P,X)),
-  forall(test_e2c(X,_),call(P,X)),
-  forall(chat80_all(X,_,_),call(P,X)).
+  forall(training_data(X,_),call(P,X)),
+  %forall(test_e2c(X,_),call(P,X)),
+  %forall(chat80_all(X,_,_),call(P,X)),
+  !.
   
 %:- add_c80("does joe eat cake?").
 
@@ -671,6 +695,6 @@ s811(P):-
 %:- forall(ti(country,Word),learn_penn_tag('NN',Word)).
 %:- listing(wt_replacement/4).
 
-:- add_history1(test_chat80).
+:- add_history(test_chat80).
 
 %:- test_chat80.

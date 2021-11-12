@@ -48,7 +48,7 @@ w_to_w2(S,w(A,[])):-atomic(S),atom_string(A,S),!.
 w_to_w2(U,w(U,[])):-compound(U),!.
 w_to_w2(X,w(X,[])):-!.
 
-w2_to_w(w(Txt,_),Txt):-!.
+w2_to_w(Cmp,Txt):- compound(Cmp),!,arg(1,Cmp,Txt).
 w2_to_w(Txt,Txt).
 
 %theTextC(W1,CYCPOS,Y=W1)  ---> {t_l:old_text,!},[W1],{W1=Y}.

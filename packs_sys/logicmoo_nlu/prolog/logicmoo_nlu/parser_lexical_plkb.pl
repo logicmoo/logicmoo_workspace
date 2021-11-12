@@ -216,6 +216,8 @@ cyc_mine_compat(P,C,cyc_nop(cycTerm(Subj,Col1,Col2))):- cycword_to_cycconcept(P,
    (ac(isa,Subj,Col), (dist_to_thing(Col,N) -> true; N= -1)),
    L),sort([0-ttThing,0-tThing|L],LL),maplist(arg(2),LL,LLL),reverse(LLL,LR),LR=[Col1,Col2|_])).
 
+cyc_mine_compat(_,_,_):-!,fail.
+% @TODO dmiles do something less slow 
 cyc_mine_compat(_,W,cyc_nop((P))):- between(1,4,N),length(List,N), 
    P =.. [cyckb_lex,A,B,C|List], call(P), ok_pred_for_lex(A),
    once((contains_dirrectly(P,W), some_pos([A,B,C|List],Pos),Pos\==C, \+ string(Pos),compat_spp(Pos))).
@@ -441,7 +443,7 @@ check_compat_spp(P,aux):-!, check_compat_spp(P,vb).
 %check_compat_spp(P,wdt):-!, check_compat_spp(P,dt).
 check_compat_spp(P,Pos):- compat_spp_tf(P,Pos,TF),!,TF==true.
 check_compat_spp(P,Pos):- dash_atom(Pos,Pos_),compat_spp_tf(P,Pos_,TF),!,TF==true.
-check_compat_spp(P,Pos):- wdmsg(compat_spp(P,Pos)),!.
+check_compat_spp(P,Pos):- if_debug_module(dmsg(compat_spp(P,Pos))),!.
 
 dash_atom(Pos,Pos_):- \+ atom_chars(Pos,[_,'_'|_]), atom_chars(Pos,[P|_]),atom_chars(Pos_,[P,'_']).
 

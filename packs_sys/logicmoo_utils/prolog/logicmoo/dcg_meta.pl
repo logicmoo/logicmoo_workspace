@@ -463,7 +463,7 @@ cwhite --> {notrace(nb_current('$dcgm_whitespace',preserve))}, !, {fail}.
 
 cspace --> [C], {nonvar(C),charvar(C),!,C\==10,bx(C =< 32)}.
 
-charvar(C):- integer(C)-> true; (writeln(charvar(C)),only_debug(break),fail).
+charvar(C):- integer(C)-> true; (writeln(charvar(C)),dumpST,writeln(charvar(C)),only_debug(break),fail).
 
 one_blank --> [C],!,{C =< 32}.
 

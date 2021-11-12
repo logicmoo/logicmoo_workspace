@@ -18,13 +18,15 @@ write_cyan(P):- color_format(hfg(cyan),'<~w>',[P]).
 
 user:portray(X):- notrace((tracing,compound(X),write_simple_seg(X))),!.
 
+optional_w2(X) --> X,!.
+optional_w2(_) --> [].
 
 utterance(Type, LF, Sentence, E):- (into_lexical_segs(Sentence,Segs)->Sentence\==Segs),!,utterance(Type, LF, Segs, E).
 utterance(Type, LF, Segs, E):-  var(Type), is_list(Segs), partition_segs(Segs,W2s,_Spans), last(W2s,Char),
   char_type_sentence(Char, Type),
   select(Char,Segs,_First),!,
   utterance(Type, LF, Segs, UE),
-  phrase(optional(Char),UE,E).
+  phrase(optional_w2(theText1(Char)),UE,E).
 
 utterance(Type, LFOut, Sentence, E):- 
  (grab_primary_segs(0,Sentence,Segs,true,Primary)->Sentence\==Segs),!,

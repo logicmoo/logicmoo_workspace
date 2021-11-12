@@ -167,16 +167,25 @@ remove_punctuation(W2, W2).
 %:- install_converter(parser_lexical:into_lexical_segs(+text80, -e2c_lexical_segs)).
 :- use_module(library(logicmoo_nlu/parser_penn_trees)).
 
+
+:- install_converter(parser_chat80:into_lexical_segs(+text80, -merged_lexical_segs)).
+
+:- install_converter(parser_chat80:cvt_to_objecteese(w2, +merged_lexical_segs, -objecteese)).
+:- install_converter(parser_chat80:cvt_to_ace_pos(+objecteese, -ace_objecteese)).
+
+/*
 :- install_converter(parser_penn_trees:text_to_best_tree(+text80, -e2c_syntaxTree)).
 :- install_converter(parser_penn_trees:tree_to_lexical_segs(+e2c_syntaxTree, -e2c_lexical_segs)).
 
 :- install_converter(parser_penn_trees:tree_to_lexical_segs(+ape_penn_syntaxTree, -ape_penn_segs)).
 :- install_converter(parser_penn_trees:ape_to_penn_tree(+syntaxTrees, -ape_penn_syntaxTree)).
 :- install_converter(parser_penn_trees:smerge_segs(ape, +e2c_lexical_segs, +ape_penn_segs, -merged_lexical_segs)).
+*/
 
 :- parser_pipeline:asserta((
- default_pipeline_opts([lf, clause, combined_info, simplify80, results80, clause_e2c, 
-   reply_e2c, ape_penn_syntaxTree, ape_penn_segs, merged_lexical_segs]))).
+ default_pipeline_opts([lf, clause, objecteese, combined_info, simplify80, results80, clause_e2c, 
+   reply_e2c, % ape_penn_syntaxTree, ape_penn_segs, 
+     merged_lexical_segs]))).
 
 
 % ================================================================================================

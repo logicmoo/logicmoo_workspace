@@ -13,34 +13,6 @@
 :- '$set_source_module'(parser_chat80).
 
 
-test_objecteese:-
- test_objecteese(
-   "A man who is happy or who is sad waits.",
-  "a type1 who is value53 or who is value70 action54s ."),
- test_objecteese(
-   "John eats or John drinks.",
-   "object19 action44s or object19 action15s ."),
- test_objecteese(
-   "Some men wait. They talk.",
-  "some type17s action54 . they action16 ."),
- test_objecteese(
-   "For each of 2 tables 2 girls lift it.",
-  "for each of 2 type240s 2 type238s action17 it ."),
- test_objecteese(
-   "A man X waits. X sleeps.",
-  "a type1 X action54s. X action10s .").
-
-
-
-test_objecteese(X,Z):- locally(set_prolog_flag(debug,false),cvt_to_objecteese(X,Y)), 
-  (show_failure(always,check_answer(X,Y,Z,true))-> true ; 
-    (current_prolog_flag(debug,true)-> false ; locally(set_prolog_flag(debug,true),cvt_to_objecteese(X,_)))).
-
-do_objecteese_test(X):- cvt_to_objecteese(X,Y),!,nl,any_to_string(Y,Z),
-  format('~N test_objecteese(~n   ~q,~n  ~q).~n',[X,Z]),!.
-
-
-
 sample_set80([ does, object6, action5, object7, ? ]).
 sample_set80([ is, object7, in, object6, ? ]).
 sample_set80([ does, mexico, action1, the, united_states, ? ]).
@@ -226,12 +198,31 @@ map_ees_tag2('NNP','Object','').
 map_ees_tag2('NNPS','Object','s').
 map_ees_tag2('NNS',type,'s').
 map_ees_tag2('NN',type,'').
+
 map_ees_tag2('VB',action,'').
 map_ees_tag2('VBN',action,'ed').
 map_ees_tag2('VBD',action,'ed').
 map_ees_tag2('VBP',action,''). % verb prep
 map_ees_tag2('VBG',action,'ing').
 map_ees_tag2('VBZ',action,'s').
+
+
+
+map_ees_tag2a(VBG,Action,S):- 
+ map_ees_tag2(VBG,Type,ING),
+ map_ees_tag2b(VBG,Type,ING,Action,S).
+
+map_ees_tag2b(VBG,action,ING,Action,S):-!,
+  flag(action_num,X,X+1),
+  Y is X mod 6,
+  nth0(Y,[like,hate,own,ride,admire,eat],Action),
+  map_ees_tag2c(VBG,ING,S).  
+map_ees_tag2b(_VBG,A,B,A,B).
+
+map_ees_tag2c(_,'','').
+map_ees_tag2c(_,'s','s').
+map_ees_tag2c(_,'ed','s').
+map_ees_tag2c(_,'ing','s').
 
 noun_var(neutr,type).
 noun_var(human,agent).
@@ -248,10 +239,10 @@ map_ees_lex3(Clerk,Var,''):-  clex:noun_sg(Clerk, _, Type),noun_var(Type,Var).
 map_ees(_,LPOS,'object',S):- member(ner('COUNTRY'),LPOS),!,(member(form(pl),LPOS)->S='s';S='').
 map_ees(_,LPOS,'attrib',S):- member(dep_child(prep,n(of,_)),LPOS),!,(member(form(pl),LPOS)->S='s';S='').
 map_ees(W,LPOS,N,S):- ((member(pos(Pos),LPOS),upcase_atom(Pos,POS))->true;POS='unk'), 
- (map_ees_word1(W,N,S)*-> true ; map_ees_tag2(POS,N,S) *-> true ; map_ees_lex3(W,N,S)).
+ (map_ees_word1(W,N,S)*-> true ; map_ees_tag2a(POS,N,S) *-> true ; map_ees_lex3(W,N,S)).
 
 % may_debug(G):- !, call(G).
-may_debug(G):- ignore((current_prolog_flag(debug,true),!,on_x_fail(in_cmt(call(G))))).
+%may_debug(G):- ignore((current_prolog_flag(debug,true),!,on_x_fail(in_cmt(call(G))))).
 may_debug(_).
 
 :- dynamic(tmp:dont_change/1). 
@@ -288,16 +279,88 @@ compound_wrds([A,B]):- relations : nn(A,B,_Of), \+ is_adjective(A). % only non-c
 
 is_adjective(X):- framenet_pos(X,adjective).
 
-:- dynamic(tmp:replacement_4_wrd/3).
+:- dynamic(tmp:replacement_4_wrd/4).
 use_replacement_4_wrd(I,'SYM',O):- upcase_atom(I,O).
 use_replacement_4_wrd(I,_,O):- upcase_atom(I,I),O=I.
 use_replacement_4_wrd(I,_,O):- number_lex(I,O,_).
-use_replacement_4_wrd(I,P,O):- tmp:replacement_4_wrd(I,P,O).
-:- forall(retract((tmp:replacement_4_wrd(_,_,_):-true)),true).
+use_replacement_4_wrd(I,P,O):- tmp:replacement_4_wrd(I,P,_,O).
+:- forall(retract((tmp:replacement_4_wrd(_,_,_,_):-true)),true).
 
-word2jecteese(X,X):- \+ compound(X).
-word2jecteese(X,''):- X \= w(_,_),!.
-word2jecteese(w(W,L),S):- member(pos(P),L),upcase_atom(P,POS),lex2jecteese(W,POS,L,S).
+word2jecteese(_,X,X):- \+ compound(X).
+word2jecteese(_,X,''):- X \= w(_,_),!.
+word2jecteese(Type,w(W,L),Out):- !, word2jecteese4(Type,W,L,Out).
+
+word2jecteese4(w2,W,L,w(S,L)):- !, word2jecteese3(W,L,S).
+word2jecteese4(_,W,L,S):-word2jecteese3(W,L,S).
+
+word2jecteese3(W,L,S):- member(pos(P),L),upcase_atom(P,POS),lex2jecteese(W,POS,L,S).
+
+cvt_to_ace_pos(Var,O):- var(Var),!,freeze(Var,cvt_to_ace_pos(Var,O)).
+cvt_to_ace_pos(I,O):- is_list(I), maplist(cvt_to_ace_pos,I,O).
+cvt_to_ace_pos(w(I,L),O):-  member(pos(P),L),!,cvt_to_ace_pos(wp(I,P,L),O).
+cvt_to_ace_pos(w(I,_),O):-  !, cvt_to_ace_pos(I,O).
+cvt_to_ace_pos(wp(I,P,L),O):- ensure_ace_knows_l(L,I,P,O),!.
+cvt_to_ace_pos(wp(I,_,_),O):- !, cvt_to_ace_pos(I,O).
+cvt_to_ace_pos(I,I):- functionwords:functionword(I),!.
+cvt_to_ace_pos(I,O):- I=O.
+
+
+test_objecteese:-
+ test_objecteese(
+   "A man who is happy or who is sad waits.",
+  "a type1 who is value53 or who is value70 action54s ."),
+ test_objecteese(
+   "John eats or John drinks.",
+   "object19 action44s or object19 action15s ."),
+ test_objecteese(
+   "Some men wait. They talk.",
+  "some type17s action54 . they action16 ."),
+ test_objecteese(
+   "For each of 2 tables 2 girls lift it.",
+  "for each of 2 type240s 2 type238s action17 it ."),
+ test_objecteese(
+   "A man X waits. X sleeps.",
+  "a type1 X action54s. X action10s .").
+
+
+
+test_objecteese(X,Z):- locally(set_prolog_flag(debug,false),cvt_to_objecteese(X,Y)), 
+  (show_failure(always,check_answer(X,Y,Z,true))-> true ; 
+    (current_prolog_flag(debug,true)-> false ; locally(set_prolog_flag(debug,true),cvt_to_objecteese(X,_)))).
+
+%do_objecteese_test(X):- try_ace_lf(X),!.
+do_objecteese_test(X):- 
+  try_ace_lf(X),
+  cvt_to_objecteese_ace(X,Y),!,nl,any_to_string(Y,Z),
+  format('~N test_objecteese(~n   ~q,~n  ~q).~n',[X,Z]),!,  
+  %ignore((try_ace_lf(X,XX),exec_fol(ace=XX))),
+  ignore((try_ace_lf(Z,A),(replace_back_words(A,B)->exec_fol(replace=(B));exec_fol(A)))).
+
+
+
+replace_back_words(Var,O):- var(Var),!,O=Var. %freeze(Var,replace_back_words(Var,O)).
+replace_back_words(I,O):- tmp:replacement_4_wrd(_,_,L,I),member(root(O),L).
+replace_back_words(I,O):- tmp:replacement_4_wrd(O,_,_,I).
+replace_back_words(I,O):- is_list(I),!,maplist(replace_back_words,I,O).
+replace_back_words(I,O):- compound(I), compound_name_arguments(I,N,A),maplist(replace_back_words,A,AO),compound_name_arguments(O,N,AO),!.
+replace_back_words(I,O):- I=O.
+
+
+ensure_ace_knows_l(L,_,_,O):- member(truecase('UPPER'),L),member(txt(Text),L),!,upcase_atom(Text,O).
+ensure_ace_knows_l(_,I,P,O):- ensure_ace_knows(I,P,O),!.
+
+ensure_ace_knows(I,'.',I):-!.
+ensure_ace_knows(I,I,I):-!.
+ensure_ace_knows(I,'sym',O):-!,upcase_atom(I,O).
+ensure_ace_knows(I,P,O):- atom_length(P,1),!,atomic_list_concat([P,':',I],'',O).
+ensure_ace_knows(I,_,I):- functionwords:functionword(I),!.
+ensure_ace_knows(I,P,O):- atom_concat('n',_,P),!,ensure_ace_knows(I,'n',O).
+ensure_ace_knows(I,P,O):- atom_concat('v',_,P),!,ensure_ace_knows(I,'v',O).
+ensure_ace_knows(I,P,O):- atom_concat('j',_,P),!,ensure_ace_knows(I,'a',O).
+ensure_ace_knows(I,P,O):- atom_concat('rbr',_,P),!,ensure_ace_knows(I,'a',O).
+ensure_ace_knows(I,P,O):- atom_concat('rbs',_,P),!,ensure_ace_knows(I,'a',O).
+%ensure_ace_knows(I,P,O):- atom_concat('r',_,P),!,ensure_ace_knows(I,'a',O).
+% C:\opt\logicmoo_workspace\packs_sys\logicmoo_utils\prolog\ ;C:\opt\logicmoo_workspace\packs_sys\logicmoo_nlu\prolog\;C:\opt\logicmoo_workspace\packs_sys\logicmoo_nlu\ext\ape\;C:\opt\logicmoo_workspace\packs_sys\logicmoo_nlu\ext\chat80\original\;<Buffers>
 
 lex2jecteese(_,_,_,_):- flag('$sentence_word',X,X+1),fail.
 lex2jecteese(X,_,_,X):- \+ atom(X).
@@ -306,7 +369,7 @@ lex2jecteese(W,P,_,S):- use_replacement_4_wrd(W,P,S),!.
 lex2jecteese(W,P,LPOS,Y):-
   findall(N-S,map_ees(W,LPOS,N,S),L),L\==[],!,random_member(N-S,L), 
   (N==''->Y='';( flag('$objecteese_word',X,X+1),atomic_list_concat([N,X,S/*,@,W*/],Y))),!,
-  assert(tmp:replacement_4_wrd(W,P,Y)).
+  assert(tmp:replacement_4_wrd(W,P,LPOS,Y)).
 lex2jecteese(W,_,_,W):- assert(tmp:dont_change(W)).
 
 
@@ -317,10 +380,12 @@ combined_w2s([w(W1,L1),w(W2,L2),w(W3,L3)|More],[w(W12,L12),w(W3,L3)|More]):-
 
 :-  flag('$objecteese_word',_,1).
 
-cvt_to_objecteese(X,Y):- flag('$sentence_word',_,1), cvt_to_w2(X,W2), may_debug(dmsg(W2)), flatten(W2,W2F),sent_to_jecteese(W2F,Y).
-sent_to_jecteese([],[]).
-sent_to_jecteese(WLs,YY):- combined_w2s(WLs,W2s),!, sent_to_jecteese(W2s,YY).
-sent_to_jecteese([W|WL],[Y|YY]):-!, word2jecteese(W,Y), sent_to_jecteese(WL,YY).
+cvt_to_objecteese(X,Y):- cvt_to_objecteese(w2,X,W2),maplist(arg(1),W2,Y).
+cvt_to_objecteese_ace(X,Y):- cvt_to_objecteese(w2,X,W2),cvt_to_ace_pos(W2,Y).
+cvt_to_objecteese(Type,X,Y):- flag('$sentence_word',_,1), cvt_to_w2(X,W2), may_debug(dmsg(W2)), flatten(W2,W2F),sent_to_jecteese(Type,W2F,Y).
+sent_to_jecteese(_,[],[]).
+sent_to_jecteese(Type,WLs,YY):- combined_w2s(WLs,W2s),!, sent_to_jecteese(Type,W2s,YY).
+sent_to_jecteese(Type,[W|WL],[Y|YY]):-!, word2jecteese(Type,W,Y), sent_to_jecteese(Type,WL,YY).
 
 :- dynamic(tmp:cached_cvt_to_w2/2).
 cvt_to_w2(X,W2):- \+ (is_list(X) ; (X=[H|_],is_w2(H))),!, words_of(X,W), !, cvt_to_w2(W,W2).

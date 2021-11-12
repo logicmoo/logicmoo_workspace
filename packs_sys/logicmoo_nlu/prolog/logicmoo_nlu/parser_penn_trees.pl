@@ -847,12 +847,12 @@ into_loc_sort(span(List),Key):- member(seg(S,E),List),
 into_loc_sort(span(L1),Key):- member(List,L1),member(seg(_,_),List),into_loc_sort(span(List),Key).
 into_loc_sort(A,Key):- A=..[_|AA], findnsols(4,T, ((sub_term(T,AA),compound(T),arg(1,T,N),number(N));T=AA),Key).
 
-tree_to_lexical_segs(LExpr,Sorted):-
-  penn_tree_to_segs(1,LExpr,Sorted),!.
+tree_to_lexical_segs(LExpr,O):-
+  penn_tree_to_segs(1,LExpr,U),!,include(is_w2,U,O).
 
 penn_tree_to_segs(_Start,LExpr,[]):- LExpr==[],!.
-penn_tree_to_segs(Start,LExpr,Sorted):- 
- if_debug_module(print_tree(penn_tree_to_segs(LExpr,_))),
+penn_tree_to_segs(Start,LExpr,Sorted):-
+ if_debug_module(print_tree(penn_tree_to_segs(LExpr,_))),!,
  with_reset_flag('word',1,
   with_reset_segs(Start,lxpr_to_segs(LExpr,CSegs))),
  into_segs(CSegs,Sorted),!.

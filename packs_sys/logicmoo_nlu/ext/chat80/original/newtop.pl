@@ -362,13 +362,20 @@ eng_to_logic(U,S):- sentence80(E,U,[],[],[]), sent_to_prelogic(E,S).
 
 qualifiedBy(_,_,_).
 
+
+%is_lexical_segs(Sent,Sent):- is_list(Sent),maplist(parser_penn_trees:is_word_or_span,Sent),!.
+is_lexical_segs([I|_Rest]):- is_w2(I),!.
+
 %into_lexical_segs(I,O):- into_text80_string(I, Text80), spacy_lexical_segs(Text80,O).
-into_lexical_segs(I,O):- into_text80_string(I, Text80), flair_lexical_segs(Text80,O).
+into_lexical_segs(I,I):- is_lexical_segs(I).
+into_lexical_segs(I,O):- into_text80_string(I, Text80), flair_lexical_segs(Text80,OM),include(is_w2,OM,O).
 %into_lexical_segs(I,O):- into_text80_string(I, Text80), allen_srl_lexical_segs(Text80,O).
-old_into_lexical_segs(Sent,U):- notrace(into_chat80_segs0(Sent,U)),!.
+
+old_into_lexical_segs(I,I):- is_lexical_segs(I).
+old_into_lexical_segs(Sent,O):- notrace(into_chat80_segs0(Sent,U)),include(is_w2,U,O).
 %into_lexical_segs(Sent,  WordsA):- enotrace((into_text80( Sent,  Words),into_combines(Words,WordsA))),!.
 
-into_chat80_segs0(Sent,Sent):- is_list(Sent),maplist(parser_penn_trees:is_word_or_span,Sent),!.
+into_chat80_segs0(I,I):- is_lexical_segs(I).
 into_chat80_segs0(Sent,UO):-  
  maplist(must_or_rtrace,
   [into_text80_string(Sent, Text80),

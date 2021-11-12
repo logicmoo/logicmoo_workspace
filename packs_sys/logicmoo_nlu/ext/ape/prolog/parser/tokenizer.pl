@@ -13,7 +13,8 @@
 % Parsing Engine (APE). If not, see http://www.gnu.org/licenses/.
 
 :- module(tokenizer, [
-		tokenize/2
+		tokenize/2,
+    expand_contracted_forms/3
 	]).
 :- use_module(library(error)).
 
@@ -129,7 +130,7 @@ tokenize_NEW(Codes, Tokens) :-
 %
 codes_to_tokens(Codes, Tokens) :-
 	get_atomics(Codes, Atomics),
-	expand_contracted_forms(Atomics, Tokens).
+	expand_contracted_forms0(Atomics, Tokens).
 
 
 %% get_atomics(+Codes:list, -Tokens:list) is det.
@@ -489,52 +490,147 @@ get_whitespace_and_comments([47, 42 | Cs], Newline_Count, Final_Remaining, Final
 get_whitespace_and_comments([C | Cs], Newline_Count, [C | Cs], Newline_Count).
 
 
+ensure_punct(X,X):- last(X,Punct),is_punct_char(Punct),!.
+ensure_punct(X,M):- append(X,['.'],M),!.
+
+
+do_idiomatic_replacements(Allowed,X,Y):- do_idiomatic_replaces(Allowed,[],X,Y).
+replace_once(X,Find,Replace,M):- append(Find,Right,NowFind), append(Left,NowFind,X),append([Left,Replace,Right],M),!.
+replace_once([XX|XXX],Find,Replace,M):- downcase_atom(XX,XD),XD\==XX,!,replace_once([XD|XXX],Find,Replace,M).
+
+do_idiomatic_replaces(Allowed,Except,X,Y):- idiomatic_replacement_shorter(IsAllowed,Find,Replace), \+ \+ memberchk(IsAllowed,Allowed),
+  replace_once(X,Find,Replace,M), do_idiomatic_replaces(Allowed,Except,M,Y).
+do_idiomatic_replaces(Allowed,Except,X,Y):- idiomatic_replacement(IsAllowed,Find,Replace), \+ member(f(Find),Except), \+ \+ memberchk(IsAllowed,Allowed),
+  replace_once(X,Find,Replace,M), do_idiomatic_replaces(Allowed,[f(Find)|Except],M,Y).
+do_idiomatic_replaces(Allowed,Except,X,Y):- idiomatic_replacement(IsAllowed,Find,Replace),\+ member(f2(Find),Except), \+ \+ memberchk(IsAllowed,Allowed),
+  replace_once(X,Find,Replace,M), do_idiomatic_replaces(Allowed,[f2(Find)|Except],M,Y).
+do_idiomatic_replaces(Allowed,Except,X,Y):- idiomatic_replacement_extends(IsAllowed,Find,Replace,Lastly),\+ member(f3(Find),Except), \+ \+ memberchk(IsAllowed,Allowed),
+  replace_once(X,Find,Replace,M1),freeze(Punct,is_punct_char(Punct)),append(Lastly,[Punct],LastlyPunct),
+  replace_once(M1,[Punct],LastlyPunct,M), do_idiomatic_replaces(Allowed,[f3(Find)|Except],M,Y).
+do_idiomatic_replaces(Allowed,Except,X,Y):- idiomatic_replacement_extends(IsAllowed,Find,Replace,Lastly),\+ member(f4(Find),Except), \+ \+ memberchk(IsAllowed,Allowed),
+  replace_once(X,Find,Replace,M1),freeze(Punct,is_punct_char(Punct)),append(Lastly,[Punct],LastlyPunct),
+  replace_once(M1,[Punct],LastlyPunct,M), do_idiomatic_replaces(Allowed,[f4(Find)|Except],M,Y).
+do_idiomatic_replaces(_,_,X,X).
+
+is_punct_char(Punct):- atom(Punct), atom_length(Punct,1), char_type(Punct,punct).
+
+idiomatic_replacement_shorter(tense,[is,is],[is]).
+idiomatic_replacement_shorter(tense,[is,being],[is]).
+idiomatic_replacement_shorter(tense,[is,be],[is]).
+idiomatic_replacement_shorter(tense,[some,of,some],[some]).
+idiomatic_replacement_shorter(acetoks,[-,B],[AB]):- freeze(B,atomic_list_concat([-,B],AB)).
+idiomatic_replacement_shorter(acetoks,[A,:,B],[AB]):- is_prefix(A), freeze(B,atomic_list_concat([A,:,B],AB)).
+idiomatic_replacement_shorter(acetoks,Atoms,[AB]):- recombine(Atom), atom_chars(Atom,Atoms),atom_chars(AB,Atoms).
+idiomatic_replacement_shorter(tense,[Is,Verbing],[VerbR]):- freeze(Verbing,ing_to_active_verb(Verbing,Verb,Verbs)),
+  freeze(Is,member(Is-VerbR,[is-Verbs,am-Verbs,are-Verb])).
+
+ing_to_active_verb(Verbing,Verb,Verbs):- verb_forms(Verb,Verbs,_,Verbing,_).
+
+recombine('/*').
+recombine('*/').
+%recombine("'s").
+recombine('""').
+recombine("''").
+
+is_prefix(A):- functionwords:( noun_prefix(A,_); propername_prefix(A,_); verb_prefix(A); modif_prefix(A)).
+
+
+idiomatic_replacement(tense,[he],[somebody,that,is,male]).
+idiomatic_replacement(tense,[him],[somebody,that,is,male]).
+idiomatic_replacement(tense,[himself],[somebody,that,is,male]).
+idiomatic_replacement(tense,[she],[somebody,that,is,female]).
+idiomatic_replacement(tense,[herself],[somebody,that,is,female]).
+idiomatic_replacement(tense,[her],[somebody,that,is,female]).
+idiomatic_replacement(tense,[it],[something,that,is,genderless]).
+idiomatic_replacement(tense,[you],[somebody,that,is,the,hearer]).
+idiomatic_replacement(tense,[yourself],[somebody,that,is,the,hearer]).
+idiomatic_replacement(tense,['i'],[somebody,that,is,the,speaker]).
+idiomatic_replacement(tense,['myself'],[somebody,that,is,the,speaker]).
+idiomatic_replacement(tense,['me'],[somebody,that,is,the,speaker]).
+idiomatic_replacement(tense,[we],[some,'persons-we']).
+idiomatic_replacement(tense,[ourself],[some,'persons-we']).
+idiomatic_replacement(tense,[ourselves],[some,'persons-we']).
+idiomatic_replacement(tense,[us],[some,'persons-we']).
+idiomatic_replacement(tense,[they],[some,'those-they']).
+idiomatic_replacement(tense,[them],[some,'those-they']).
+idiomatic_replacement(tense,[does,some],[is,doing]).
+idiomatic_replacement(tense,[does],[is,doing]).
+idiomatic_replacement(tense,[wont],[will,not]).
+%idiomatic_replacement(tense,[was],[that,is,in,the,past,that,is]).
+%idiomatic_replacement(tense,[will],[that,is,in,the,future,that]).
+idiomatic_replacement_extends(tense,[has,done],[is,doing],[in,the,past]).
+idiomatic_replacement_extends(tense,[did,do],[is,doing],[in,the,past]).
+idiomatic_replacement_extends(tense,[was],[is],[in,the,past]).
+idiomatic_replacement_extends(tense,[were],[are],[in,the,past]).
+idiomatic_replacement_extends(tense,[did],[is,doing],[in,the,past]).
+idiomatic_replacement_extends(tense,[Ate],[Eat],[in,the,past]):- 
+  freeze(Ate,verb_forms(Eat,_Eats,Ate,_Eating,_Eaten)).
+idiomatic_replacement_extends(tense,[will,have,Eaten],[Eat],[in,the,future]):- 
+  freeze(Eaten,verb_forms(Eat,_Eats,_Ate,_Eating,Eaten)).
+idiomatic_replacement_extends(tense,[have,Eaten],[Eat],[in,the,past]):-
+  freeze(Eaten,verb_forms(Eat,_Eats,_Ate,_Eating,Eaten)).
+idiomatic_replacement_extends(tense,[will,do],[is,doing],[in,the,future]).
+%idiomatic_replacement_extends(tense,[do],[doing],[in,the,future]).
+idiomatic_replacement_extends(tense,[will],[do],[in,the,future]).
+
+verb_forms(Eat,Eats,Ate,Eating,Eaten):- talk_db(_,Eat,Eats,Ate,Eating,Eaten),
+  Eat\==do,Eat\==be,
+  %\+ verbs:aux_modal_verb(Eat).
+  true.
+
 %% expand_contracted_forms(+TokenListIn:list, -TokenListOut:list) is det.
 %
 % @bug: `cannot' could be instead handled during (pronoun) splitting
 %
-expand_contracted_forms([], []).
 
-expand_contracted_forms(['No', one | RestIn], ['No', '-one' | RestOut]) :-
+expand_contracted_forms(I,O):- expand_contracted_forms0(I,M),show_failure(do_idiomatic_replacements([acetoks],M,O)).
+expand_contracted_forms(MayDo,I,O):- expand_contracted_forms0(I,M),show_failure(do_idiomatic_replacements(MayDo,M,O)).
+
+expand_contracted_forms0([], []).
+
+expand_contracted_forms0(['No', one | RestIn], ['No', '-one' | RestOut]) :-
 	!,
-	expand_contracted_forms(RestIn, RestOut).
+	expand_contracted_forms0(RestIn, RestOut).
 
-expand_contracted_forms([no, one | RestIn], [no, '-one' | RestOut]) :-
+expand_contracted_forms0([no, one | RestIn], [no, '-one' | RestOut]) :-
 	!,
-	expand_contracted_forms(RestIn, RestOut).
+	expand_contracted_forms0(RestIn, RestOut).
 
-expand_contracted_forms([isn, '\'', t | RestIn], [is, not | RestOut]) :-
+expand_contracted_forms0([isn, '\'', t | RestIn], [is, not | RestOut]) :-
 	!,
-	expand_contracted_forms(RestIn, RestOut).
+	expand_contracted_forms0(RestIn, RestOut).
 
-expand_contracted_forms([aren, '\'', t | RestIn], [are, not | RestOut]) :-
+expand_contracted_forms0([aren, '\'', t | RestIn], [are, not | RestOut]) :-
 	!,
-	expand_contracted_forms(RestIn, RestOut).
+	expand_contracted_forms0(RestIn, RestOut).
 
-expand_contracted_forms([doesn, '\'', t | RestIn], [does, not | RestOut]) :-
+expand_contracted_forms0([doesn, '\'', t | RestIn], [does, not | RestOut]) :-
 	!,
-	expand_contracted_forms(RestIn, RestOut).
+	expand_contracted_forms0(RestIn, RestOut).
 
-expand_contracted_forms([don, '\'', t | RestIn], [do, not | RestOut]) :-
+expand_contracted_forms0([don, '\'', t | RestIn], [do, not | RestOut]) :-
 	!,
-	expand_contracted_forms(RestIn, RestOut).
+	expand_contracted_forms0(RestIn, RestOut).
 
-expand_contracted_forms([can, '\'', t | RestIn], [can, not | RestOut]) :-
+expand_contracted_forms0([can, '\'', t | RestIn], [can, not | RestOut]) :-
 	!,
-	expand_contracted_forms(RestIn, RestOut).
+	expand_contracted_forms0(RestIn, RestOut).
 
-expand_contracted_forms([cannot | RestIn], [can, not | RestOut]) :-
+expand_contracted_forms0([cannot | RestIn], [can, not | RestOut]) :-
 	!,
-	expand_contracted_forms(RestIn, RestOut).
+	expand_contracted_forms0(RestIn, RestOut).
 
-expand_contracted_forms([shouldn, '\'', t | RestIn], [should, not | RestOut]) :-
+expand_contracted_forms0([shouldn, '\'', t | RestIn], [should, not | RestOut]) :-
 	!,
-	expand_contracted_forms(RestIn, RestOut).
+	expand_contracted_forms0(RestIn, RestOut).
 
-expand_contracted_forms(TextIn, AfterRestOut) :- freeze(A,(A==contractions;A==slang;A==mispellings)),dictionary(A,Before,After),
+expand_contracted_forms0(TextIn, AfterRestOut) :- freeze(A,(A==contractions;A==slang;A==mispellings)),dictionary(A,Before,After),
   listify(Before,BeforeL),append(BeforeL,RestIn,TextIn), !,
-	expand_contracted_forms(RestIn, RestOut),
+	expand_contracted_forms0(RestIn, RestOut),
   listify(After,AfterL),append(AfterL,RestOut,AfterRestOut).
 
-expand_contracted_forms([Token | TailIn], [Token | TailOut]) :-
-	expand_contracted_forms(TailIn, TailOut).
+expand_contracted_forms0([Token | TailIn], [Token | TailOut]) :-
+	expand_contracted_forms0(TailIn, TailOut).
+
+
+

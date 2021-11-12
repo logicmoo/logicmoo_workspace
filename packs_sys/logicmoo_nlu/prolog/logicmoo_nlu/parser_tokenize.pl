@@ -31,7 +31,8 @@ tokens_to_acetext0([T,P|Tokens],AceText):- atomic_list_concat([T,P],' ',TP),!,to
 
 
 into_text80(I,O):- into_text80_atoms(I,O).
-   
+
+into_text80_atoms([I|Rest],O):- is_w2(I),!,any_to_str([I|Rest],Str),!,into_text80_atoms(Str,O).
 into_text80_atoms(I,O):- nonvar(I), parser_tokenize:(init_to_tokens(I,T),!,fast_break_atom_symbols(T,O)),!.
 
 into_text80_string_list(I,O):- into_text80_atoms(I,M),maplist(any_to_string,M,O),!.

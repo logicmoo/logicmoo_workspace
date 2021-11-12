@@ -42,6 +42,16 @@
 :- multifile(tv_infpl/2).
 :- multifile(tv_pp/2).
 
+adj_itr('without-gear', gearless).
+adj_itr(earless, 'without-ear').
+adj_itr('genderless', 'genderless').
+
+noun_mass('those-they', 'those-they',neutr).
+noun_mass('person-self', 'person-self',human).
+noun_mass('persons-we', 'persons-we',human).
+noun_mass('person-self','person-self',human).
+noun_mass('person-you','person-you',human).
+
 adj_itr('grown-up', 'grown-up').
 adj_itr(accepted, accepted).
 adj_itr(active, active).
@@ -2055,3 +2065,5 @@ prep(alongside, alongside).
 prep(via, via).
 prep(with, with).
 prep(during, during).
+
+:- include(ape(tests/clex_lexicon)).
