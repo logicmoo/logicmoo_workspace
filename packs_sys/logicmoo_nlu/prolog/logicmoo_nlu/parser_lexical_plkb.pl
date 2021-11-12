@@ -80,24 +80,18 @@ connect_preds(HMF, BMF):-
    asserta_if_new(HM:(H:- BM:B)))).
 
 
+:- connect_preds(cyckb_h, kb0988:ac).
+:- connect_preds(common_logic_kb_hooks:cyckb_t, cyckb_h).
+:- connect_preds(parser_lexical_plkb:cyckb_lex,common_logic_kb_hooks:cyckb_t).
+
 common_logic_kb_hooks:cyckb_t(A, B, C):- cyckb_p2(A, [B, C]).
 common_logic_kb_hooks:cyckb_t(A, B, C, D):- cyckb_p2(A, [B, C, D]).
 common_logic_kb_hooks:cyckb_t(A, B, C, D, E):- cyckb_p2(A, [B, C, D, E]).
 common_logic_kb_hooks:cyckb_t(A, B, C, D, E, F):- cyckb_p2(A, [B, C, D, E, F]).
 
-cyckb_lex1(A,B,C):- common_logic_kb_hooks:cyckb_t(A,B,C).
-cyckb_lex1(A,B,C,D):- common_logic_kb_hooks:cyckb_t(A,B,C,D).
-cyckb_lex1(A,B,C,D,E):- common_logic_kb_hooks:cyckb_t(A,B,C,D,E).
-
 trace_break:- nop(dmsg(trace_break)),!.
 %trace_break:- trace,break.
 
-cyckb_lex(A,B,C):- trace_break,cyckb_lex1(A,B,C).
-cyckb_lex(A,B,C,D):- trace_break,cyckb_lex1(A,B,C,D).
-cyckb_lex(A,B,C,D,E):- trace_break,cyckb_lex1(A,B,C,D,E).
-
-:- connect_preds(common_logic_kb_hooks:cyckb_t, cyckb_h).
-:- connect_preds(cyckb_h, kb0988:ac).
 %:- connect_preds(ac, t).
 
 cyckb_p2(A, BC):- \+ is_list(BC), !, between(2, 10, N), length(BC, N), cyckb_p2(A, BC).
@@ -113,6 +107,7 @@ cyckb_p3(A, B, [H|T]):- apply(cyckb_h(A, B), [H|T]).
 
 %lex_mws(genTemplateConstrained).
 %lex_mws(genTemplate).
+/*
 lex_mws(headMedialString).
 lex_mws(compoundString).
 
@@ -122,7 +117,10 @@ lex_mws(multiWordStringDenotesArgInReln).
 lex_mws(compoundSemTrans).
 lex_mws(multiWordSemTrans).
 lex_mws(multiWordString).
+*/
 lex_mws(mws).
+
+
 lex_mws(xPPCompFrameFn).
 lex_mws(hyphenString).
 
@@ -208,18 +206,29 @@ text_to_cycword0(String, Pos, C, ac(Pred, C, BaseWord)):-
   base_to_cycword(BaseWord, Pred, C).
 
 base_to_cycword_out(String, P, C, ac(P, C, String)).
-base_to_cycword_out(_, P, C, Out):- cyc_mine_compat(P,C,Out),call(Out).
+base_to_cycword_out(String, P, C, Out):- \+ skip_word(String),\+ skip_word(C),cyc_mine_compat(P,C,Out),call(Out).
 
-cyc_mine_compat(P,C,nop(cycTerm(Subj,Col))):- cycword_to_cycconcept(P, C, Subj),compat_spp(P),
+skip_word(xBeTheWord).
+skip_word(xDoTheWord).
+
+cyc_mine_compat(P,C,cyc_nop(cycTerm(Subj,Col1,Col2))):- cycword_to_cycconcept(P, C, Subj),compat_spp(P),
   once((findall(N-Col,
    (ac(isa,Subj,Col), (dist_to_thing(Col,N) -> true; N= -1)),
-   L),sort(L,LL),last(LL,_-Col))).
+   L),sort([0-ttThing,0-tThing|L],LL),maplist(arg(2),LL,LLL),reverse(LLL,LR),LR=[Col1,Col2|_])).
 
-cyc_mine_compat(_,C,nop(fooooooooooooooooooooooooooo(P))):- between(1,4,N),length(List,N), 
-   P =.. [ac,A,B,C|List], call(P), ok_pred_for_lex(A),
-   once((contains_dirrectly(P,C), some_pos([A,B,C|List],Pos),compat_spp(Pos))).
+cyc_mine_compat(_,W,cyc_nop((P))):- between(1,4,N),length(List,N), 
+   P =.. [cyckb_lex,A,B,C|List], call(P), ok_pred_for_lex(A),
+   once((contains_dirrectly(P,W), some_pos([A,B,C|List],Pos),Pos\==C, \+ string(Pos),compat_spp(Pos))).
 
-ok_pred_for_lex(multiWordString):-!,fail.
+skip_pred_for_lex(compoundString).
+skip_pred_for_lex(multiWordString).
+skip_pred_for_lex(headMedialString).
+skip_pred_for_lex(collectionIntersection2).
+skip_pred_for_lex(numberOfResultsThatSupportBinding).
+skip_pred_for_lex(subcollectionOfWithRelationTo).
+skip_pred_for_lex(relationAllInstance).
+
+ok_pred_for_lex(X):- skip_pred_for_lex(X), !,fail.
 ok_pred_for_lex(_).
 
 is_pos_term(Pos):- \+ atom(Pos),!,fail.
@@ -227,14 +236,20 @@ is_pos_term(Pos):- is_pos_term0(Pos),!.
 is_pos_term0(Pos):- atom_concat('xt',_,Pos).
 is_pos_term0(Pos):- atom_contains(Pos,'SemTrans').
 is_pos_term0(Pos):- atom_contains(Pos,'Frame').
-some_pos(List,Pos):- (member(Pos,List),is_pos_term(Pos))*->true;some_pos2(List,Pos).
-some_pos2(List,Pos):- member(Pos,List).
+
+search_only(nounSemTrans,3).
+search_only(compoundSemTrans,3).
+
+some_pos([P|List],Pos):- search_only(P,N),nth1(N,List,Pos),!.
+some_pos(List,Pos):- (member(Pos,List),is_pos_term(Pos))->true;some_pos2(List,Pos).
+some_pos2([Pos|_List],Pos). 
+%some_pos2(List,Pos):- member(Pos,List).
 %cyc_mine_compat(P2,C,cyckb_h(_,C,P,_,_)):- cyckb_h(genls,P,P2).
 
 dist_to_thing(Col,N):- dist_to_thing([Col],Col,N),!.
-dist_to_thing(_,Col,1):- ac(genls,Col,tThing),!.
+dist_to_thing(_,Col,1):- cyckb_lex(genls,Col,tThing),!.
 dist_to_thing(_,Col,0):- Col==tThing,!.
-dist_to_thing(NotIn,Col,N):- ac(genls,Col,Super),\+ member(Super,NotIn),dist_to_thing([Super|NotIn],Super,M),N is M+1.
+dist_to_thing(NotIn,Col,N):- cyckb_lex(genls,Col,Super),\+ member(Super,NotIn),dist_to_thing([Super|NotIn],Super,M),N is M+1.
 had_info(Info):- tmplex:had(Had),member(Info,Had).
 
 to_base_form(String, Used, BaseWord):- \+ atom(String), string_to_atom(String, Atom), !, to_base_form(Atom, Used, BaseWord).
@@ -252,7 +267,7 @@ base_to_cycword(String, P, C):-
   base_to_cycword_string(QAString, P, C).
 
 base_to_cycword_string(QAString, P, C):- 
-  cyckb_h(P, C, QAString),
+  cyckb_lex(P, C, QAString),
   ok_speech_part_pred(P).
 base_to_cycword_string(QAString, Plural, C):- 
   string_concat(Str,"s",QAString),!,
@@ -277,43 +292,117 @@ guess_pred_pos(P, String, Pos):- arg(_, P, Pos), nonvar(Pos), Pos \== String, !.
 ok_speech_part_pred(P):-
  P\==firstNameInitial, P\==middleNameInitial,
  (
- cyckb_h(isa, P, rtSpeechPartPredicate); \+ cyckb_h(isa, P, _)),!,
+ cyckb_lex(isa, P, rtSpeechPartPredicate); \+ cyckb_lex(isa, P, _)),!,
  compat_spp(P),!.
 
 compat_spp(P):- had_info(pos(Pos)),!,check_compat_spp(P,Pos),!.
 compat_spp(_).
 
+
+:- discontiguous incompat_spp/2.
 %~ trace_break.
 
+compat_spp(X,Y):- compat_only(X,S),!,atom_concat(S,_,Y).
 
 compat_spp(determinerStrings,cd).
 compat_spp(determinerStrings,dt).
-compat_spp(determinerStrings,wdt).
-compat_spp(infinitive,v_).
-compat_spp(pastTenseUniversal,v_).
-compat_spp(plural,n_).
-compat_spp(prepositionStrings,in).
-compat_spp(pronounStrings,p_).
-compat_spp(pronounStrings,wdt).
-compat_spp(regularAdverb,in).
-compat_spp(regularAdverb,wdt).
-compat_spp(singular,n_).
-compat_spp(xtCountNoun,n_).
+compat_spp(determinerStrings,prp).
+compat_spp(determinerStrings,w_).
+compat_spp(whDeterminerSemTrans,w_).
+compat_spp(xtDeterminerDefinite,dt).
 compat_spp(xtDeterminerDefinite,wdt).
 compat_spp(xtDeterminerIndefinite,dt).
-compat_spp(xtNumberSP,cd).
-compat_spp(xtPreposition,in).
-compat_spp(xtPrepositionDirectionalTelic,in).
-compat_spp(xtSubjectPronoun,prp).
-compat_spp(xtVerb,v_).
-compat_spp(xtGerundiveNoun,nn).
-compat_spp(xtProperCountNoun,nns).
+compat_spp(pronounStrings,p_).
+compat_spp(pronounStrings,w_).
+compat_spp(regularAdverb,wdt).
 
+compat_spp(xtPreposition,in).
+compat_spp(regularAdverb,in).
+compat_spp(prepositionStrings,in).
+compat_spp(xtPrepositionDirectionalTelic,in).
+
+compat_spp(plural,n_).
+compat_spp(singular,n_).
+compat_spp(xtCountNoun,n_).
+compat_spp(xtNumberSP,cd).
+compat_spp(xtSubjectPronoun,prp).
+
+compat_spp(xtGerundiveNoun,nn).
+
+compat_spp(xtProperCountNoun,nns).
 compat_spp(massNumber,nn).
-compat_spp(nounPrep,in).
-compat_spp(verbPrepTransitivetemplate,in).
 compat_spp(xtGerundiveCountNoun,nn).
 compat_spp(xtMassNoun,nn).
+
+compat_spp(compoundString,_).
+compat_spp(compoundSemTrans,_).
+compat_spp(relationAllInstance,_).
+
+
+
+% absolute_file_name('./src~/pldata0988.nldata','/opt/logicmoo_workspace/packs_sys/logicmoo_nlu/ext/chat80/original/src~/pldata0988.nldata').
+% /opt/logicmoo_workspace/packs_sys/logicmoo_nlu/ext/pldata/plkb0988/plkb0988_kb loaded into kb0988 2.88 sec, 0 clauses
+
+/*
+verb_only('VNSubcatFrame-BasicTransitive').
+verb_only('VNSubcatFrame-Dative').
+verb_only('VNSubcatFrame-NP-ADVP-PREDhere-there-away').
+verb_only('VNSubcatFrame-NP-PP-PPSource-PPGoal-PP').
+verb_only('VNSubcatFrame-NP-PPGoal-PP').
+verb_only('VNSubcatFrame-NP-PPSource-PP').
+verb_only(templateExpressionForVerbWRTClassAndFrame).
+*/
+verb_only(sententialPhraseForVerbWithFrameGeneric).
+verb_only(infinitive).
+verb_only(pastTenseUniversal).
+verb_only(verbSemTrans).
+verb_only(verbSemTransCanonical).
+verb_only(verbSemTransPartial).
+verb_only(verbSemTransTemplate).
+verb_only(xDitransitiveNPBareInfinitiveFrame).
+verb_only(xDitransitiveNPGerundPhraseFrame).
+verb_only(xDitransitiveNPInfinitivePhraseFrame).
+verb_only(xDitransitiveNPNPFrame).
+verb_only(templateExpressionForVerbWRTClassAndFrame).
+verb_only(xtVerb).
+
+verb_only(xIntransitiveVerbFrame).
+/*
+compat_spp(adjSemTrans,jj).
+incompat_spp(compoundSemTrans,in).
+incompat_spp(iSubjectivePronounFrame,prp).
+incompat_spp(nounSemTrans,in).
+incompat_spp(nounSemTrans,nn).
+incompat_spp(nounSemTrans,v_).
+incompat_spp(ppCompFrameForTypeAndWord,in).
+incompat_spp(prepositionForLocation,in).
+incompat_spp(prepSemTrans,in).
+incompat_spp(relationAllInstance,in).
+incompat_spp(semTransLiteralForPrepAndFrame,in).
+*/
+incompat_spp(X,Y):- compat_only(X,S),!, \+ atom_concat(S,_,Y).
+%incompat_spp(_,Y):- atom_concat('v',_,Y).
+incompat_spp(subcatFrame,_).
+incompat_spp(subcatFrameDependentConstraint,_).
+incompat_spp(subcatFrameDependentKeyword,_).
+
+compat_only(semTransLiteralForPrepAndFrame,in).
+compat_only('VNSubcatFrame-NP-PPInducedActionwithaccompaniedmotionpath-PP',in).
+compat_only(prepSemTrans,in).
+compat_only(Verb,v):- verb_only(Verb).
+compat_only(adjSemTrans,jj).
+compat_only(regularDegree,jj).
+compat_only(adjectiveOfGenericValue,jj).
+
+incompat_spp(xGenitiveFrame,v_).
+incompat_spp(xRegularAdjFrame,nn).
+incompat_spp(xRegularAdjFrame,nns).
+incompat_spp(xRegularAdjFrame,v_).
+
+incompat_spp(nounPrep,in).
+incompat_spp(verbPrepTransitivetemplate,in).
+
+incompat_spp(Form,in):- \+ atom(Form).
 
 incompat_spp(hasVerbAsMember,nn).
 incompat_spp(verbClassCoversVerbSense,nn).
@@ -346,9 +435,10 @@ compat_spp_tf(P,Pos,false):- incompat_spp(P,Pos),!.
 compat_spp_tf(P,Pos,true):- compat_spp(P,Pos),!.
 
 
+check_compat_spp(P,aux):-!, check_compat_spp(P,vb).
 check_compat_spp(P,Pos):- compat_spp_tf(P,Pos,TF),!,TF==true.
 check_compat_spp(P,Pos):- dash_atom(Pos,Pos_),compat_spp_tf(P,Pos_,TF),!,TF==true.
-check_compat_spp(P,Pos):- wdmsg(compat_spp(P,Pos)),!,fail.
+check_compat_spp(P,Pos):- wdmsg(compat_spp(P,Pos)),!.
 
 dash_atom(Pos,Pos_):- \+ atom_chars(Pos,[_,'_'|_]), atom_chars(Pos,[P|_]),atom_chars(Pos_,[P,'_']).
 
@@ -411,7 +501,7 @@ incompatible_pos(Pos1,Pos2):- pos_list(PosList),member(Pos2,PosList),member(Pos1
 incompatible_pos(Pos1,Pos2):- pos_list(PosList),member(PosA,PosList),member(PosB,[xtDeterminer,xtNoun,xtPronoun]),
   ((Pos1=PosA,Pos2=PosB);(Pos1=PosB,Pos2=PosA)).
 
-% cyckb_h(denotation,xUseTheWord,xtMassNoun,0,actUsingAnObject)
+% cyckb_lex(denotation,xUseTheWord,xtMassNoun,0,actUsingAnObject)
 
 violate_pos1(MorePos,OutS):- incompatible_pos(XtNoun,XtVerb),member(XtNoun,MorePos),pos_inherit(OutS,XtVerb),
   dmsg(incompatible_pos(XtVerb,XtNoun,MorePos)).
@@ -450,24 +540,24 @@ lex_info_impl_cyc_hook(Kind, Level, [TOK|Todo], Done, Out):-
    (findall_set(How, (cycword_sem(CycWord, _UnusedPropsTOK, How)), CycSem),
     nb_set_add(PropsTOK,CycSem))),
    sort(PropsTOK,PropsTOKS),
-   nb_setarg(A,TOK,PropsTOKS),     
+   nb_setarg(A,TOK,PropsTOKS),  
    lex_info(Kind, Level, Todo, Done, Out))).
 
-%cyc_term_to_info(C, P):- between(2, 12, A), functor(P, cyckb_h, A), call(P), sub_term(X, P), X==C.
+%cyc_term_to_info(C, P):- between(2, 12, A), functor(P, cyckb_lex, A), call(P), sub_term(X, P), X==C.
 cyc_term_to_info_hook(Term, Info):- cyc_term_to_info(Term, Info).
 %cyc_term_to_info(C, P):- ac_nl_info_1(C, Results), member(P, Results).
 %cyc_term_to_info(C, P):- between(3, 12, A), functor(P, acnl, A), arg(N, P, C), N<A, N>1, call(P).
-%cyc_term_to_info(Term, Info):- in_call(Term, Info, Template, cyckb_h('genTemplate', _, Template)).
-%cyc_term_to_info(Term, Info):- in_call(Term, Info, Template, cyckb_h('genTemplateConstrained', _, _, Template)).
-cyc_term_to_info(Term, Info):- Info=cyckb_h(_Pred, Cont), call(Info), sub_var(Term, Cont).
-cyc_term_to_info(Term, Info):- Info=cyckb_h(_Pred, Term, S), call(Info), \+ string(S).
-cyc_term_to_info(Term, Info):- Info=cyckb_h(_Pred, Term, _, S), call(Info), \+ string(S).
-cyc_term_to_info(Term, Info):- between(5, 12, A), functor(Info, cyckb_h, A), arg(N, Info, Term), N>1, call(Info).
+%cyc_term_to_info(Term, Info):- in_call(Term, Info, Template, cyckb_lex('genTemplate', _, Template)).
+%cyc_term_to_info(Term, Info):- in_call(Term, Info, Template, cyckb_lex('genTemplateConstrained', _, _, Template)).
+cyc_term_to_info(Term, Info):- Info=cyckb_lex(_Pred, Cont), call(Info), sub_var(Term, Cont).
+cyc_term_to_info(Term, Info):- Info=cyckb_lex(_Pred, Term, S), call(Info), \+ string(S).
+cyc_term_to_info(Term, Info):- Info=cyckb_lex(_Pred, Term, _, S), call(Info), \+ string(S).
+cyc_term_to_info(Term, Info):- between(5, 12, A), functor(Info, cyckb_lex, A), arg(N, Info, Term), N>1, call(Info).
 
 in_call(C, P, Template, Call):- P=Call, call(P), once(sub_var(C, Template)).
 
 cyc_lex:- cyc_lex("I saw two books sitting on the shelf by the fire").
-cyc_lex(W):- cls,debug,make,into_lexical_segs(W,X),wdmsg(X).
+cyc_lex(W):- cls,debug,make,into_lexical_segs(W,X),include(is_w2,X,Y),wdmsg(Y).
 
 :- system:import(parser_lexical_plkb:cyc_lex/1).
 :- system:import(cyc_lex/0).

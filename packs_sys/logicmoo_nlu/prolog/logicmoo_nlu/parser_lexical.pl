@@ -269,7 +269,7 @@ lex_tinfo(Type, Value,DatumF):-
 
 
 unlevelize(R1,R2):- is_list(R1),!,maplist(unlevelize,R1,R2).
-unlevelize(X,Y):- unlevelize0(X,M),!,unlevelize(M,Y).
+unlevelize(X,Y):- compound(X),unlevelize0(X,M),!,unlevelize(M,Y).
 unlevelize(X,X).
 
 unlevelize0(level(_, 0, _, X, _),X):- !.
@@ -279,9 +279,12 @@ unlevelize0(text_to_cycinfo(_,_,_,X),X):- compound(X),!.
 %unlevelize0(todo(_, cycPosPred,Y),Y):-!.
 unlevelize0(todo(_, X,Y),Z):- callable(X),append_term(X,Y,Z),!.
 unlevelize0(todo(_, X,Y),eq(X,Y)):-!.
-unlevelize0(nop(X),X):-!.
+unlevelize0(cyc_nop(X),X):-!.
+unlevelize0(I,O):- compound_name_arguments(I,cyckb_lex,M),compound_name_arguments(O,ac,M).
+
 %unlevelize0(todo(_, X,Y),Z):- append_term(X,Y,Z).
 
+cyc_nop(X).
 
 call_lex_arg_type(TypeIn, TypeOut, Value, Result, C):-
   find_lex_arg_type( _, _, M, P),
