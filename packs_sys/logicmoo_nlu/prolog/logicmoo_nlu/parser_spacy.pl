@@ -18,26 +18,21 @@
 :- use_module(library(logicmoo_nlu/parser_penn_trees)).
 :- use_module(library(logicmoo_nlu/parser_tokenize)).
 
-:- dynamic(tmp:existing_spacy_stream/4).
-:- volatile(tmp:existing_spacy_stream/4).
-foc_spacy_stream(Out,In):- thread_self(Self),tmp:existing_spacy_stream(Self,_,Out,In),!,clear_spacy_pending(In).
-foc_spacy_stream(Out,In):-
-  lmconfig:space_py_dir(Dir),
-  thread_self(Self),
-  sformat(S,'python3 parser_spacy.py -nc -cmdloop ',[]),
-  nop(writeln(S)),
-    process_create(path(bash), ['-c', S], [ cwd(Dir),  stdin(pipe(Out)),stdout(pipe(In)), stderr(null), process(FFid)]),!,
-  assert(tmp:existing_spacy_stream(Self,FFid,Out,In)).
+read_spacy_lines(In, Result):- spacy_to_w2(In, Result),!.
 
-clear_spacy_pending(In):- nop((read_pending_codes(In,Codes,[]),dmsg(clear_spacy_pending=Codes))).
+text_to_spacy_tree(Text,LExpr):-
+  spacy_parse(Text, String),
+  nop(dmsg(spacy_parse=String)),  
+  spacy_to_w2(String,LExpr),
+  nop(print_tree_nl(spacy=LExpr)).
 
-:- prolog_load_context(directory,Dir), assert(lmconfig:space_py_dir(Dir)).
+%spacy_to_w2((Word,POS),[POS,Word]).
+spacy_to_w2(In, Result):- is_stream(In),!,read_term(In,Term,[]),spacy_to_w2(Term, Result).
+spacy_to_w2(List,ListO):- is_list(List),!,include(compound,List,ListO).
+spacy_to_w2(w2spacy(List),ListO):- !, spacy_to_w2(List,ListO).
+spacy_to_w2(Text,ListO):- \+ compound(Text), on_x_fail(atom_to_term(Text,Term,_)),!,spacy_to_w2(Term,ListO).
+spacy_to_w2(Text,_ListO):- \+ compound(Text), nl,writeq(Text),nl,!,fail.
 
-tokenize_spacy_string(Text,StrO):- any_to_string(Text,Str),  replace_in_string('\n',' ',Str,StrO).
-/*
-tokenize_spacy_string(Text,StrO):- any_to_string(Text,Str), replace_in_string(['\\'='\\\\','\''='\\\''],Str,StrM),
-  atomics_to_string(["'",StrM,"'"],StrO).
-*/
 spacy_lexical_segs(I,O):-
   old_into_lexical_segs(I,M),!,
   spacy_parse(I,S),!,
@@ -58,6 +53,51 @@ merge_spacy(dep_tree(Type,R,Arg),O,O):-
   nb_set_add(Other,dep_tree(Type,R,Arg)).
 merge_spacy(_,I,I):-!.
 merge_spacy(S,I,O):- append(I,[S],O).
+
+spacy_stream_to_w2(_, S, Result):- atom_contains(S,"w2spacy([])."),!,Result=[].
+spacy_stream_to_w2(In,_, Result):- peek_string(In,10,S),atom_contains(S,"w2spacy("),!,read_term(In,Term,[]),spacy_to_w2(Term, Result).
+spacy_stream_to_w2(In,S, Result):- atom_contains(S,"w2spacy("),!,read_term_from_atom_rest(In,S,Term),spacy_to_w2(Term, Result).
+spacy_stream_to_w2(In,S, Result):- at_end_of_stream(In),!,spacy_to_w2(S, Result).
+spacy_stream_to_w2(In,_, Result):- repeat, read_pending_codes(In,Codes,[]),
+ (Codes==[]->(sleep(0.1),fail);true),sformat(S,'~s',[Codes]),
+ spacy_stream_to_w2(In,S, Result).
+
+
+:- dynamic(tmp:existing_spacy_stream/4).
+:- volatile(tmp:existing_spacy_stream/4).
+foc_spacy_stream(Out,In):- thread_self(Self),tmp:existing_spacy_stream(Self,_,Out,In),!,clear_spacy_pending(In).
+foc_spacy_stream(Out,In):- tmp:existing_spacy_stream(OldThread,FFid,Out,In), \+ thread_property(OldThread,running),!,
+  retract(tmp:existing_spacy_stream(OldThread,FFid,Out,In)),
+  thread_self(Self),
+  assert(tmp:existing_spacy_stream(Self,FFid,Out,In)),!.
+
+foc_spacy_stream(Out,In):-
+  lmconfig:space_py_dir(Dir),
+  thread_self(Self),
+  sformat(S,'python3 parser_spacy.py -nc -cmdloop ',[]),
+  nop(writeln(S)),
+    process_create(path(bash), ['-c', S], [ cwd(Dir),  stdin(pipe(Out)),stdout(pipe(In)), stderr(null), process(FFid)]),!,
+  set_stream(In,close_on_exec(false)),
+  set_stream(Out,close_on_exec(false)),
+  set_stream(In,close_on_abort(false)),
+  set_stream(Out,close_on_abort(false)),
+  set_stream(In,eof_action(eof_code)),
+  set_stream(Out,eof_action(eof_code)),
+  sleep(1.0),
+  read_until_spacy_notice(In,"cmdloop_Ready."),!,
+  assert(tmp:existing_spacy_stream(Self,FFid,Out,In)).
+
+read_until_spacy_notice(In,Txt):- repeat,read_line_to_string(In,Str),(Str==end_of_file;atom_contains(Str,Txt)),!.
+
+clear_spacy_pending(In):- nop((read_pending_codes(In,Codes,[]),dmsg(clear_spacy_pending=Codes))).
+
+:- prolog_load_context(directory,Dir), assert(lmconfig:space_py_dir(Dir)).
+
+tokenize_spacy_string(Text,StrO):- any_to_string(Text,Str),  replace_in_string('\n',' ',Str,StrO).
+/*
+tokenize_spacy_string(Text,StrO):- any_to_string(Text,Str), replace_in_string(['\\'='\\\\','\''='\\\''],Str,StrM),
+  atomics_to_string(["'",StrM,"'"],StrO).
+*/
 
 
 spacy_parse(Text, Lines) :- 
@@ -81,8 +121,7 @@ spacy_parse3(String, Lines) :-
   try_spacy_stream(Out,String),
   try_spacy_stream(Out,'\n'),
   try_spacy_stream(Out,''),!,
-  read_term(In,Term,[]),!,
-  read_spacy_lines(Term, Lines).
+  read_spacy_lines(In, Lines).
 
 % Very slow version
 spacy_parse4(String, Lines) :- 
@@ -90,8 +129,8 @@ spacy_parse4(String, Lines) :-
   sformat(S,'python3 parser_spacy.py -nc ~q ',[String]),
   nop(writeln(S)),
     process_create(path(bash), ['-c', S], [ cwd(Dir), stdout(pipe(In))]),!,
-  read_term(In,Term,[]),!,
-  read_spacy_lines(Term, Lines).
+  read_until_spacy_notice(In,"cmdloop_Ready."),!,
+  read_spacy_lines(In, Lines).
 
 test_spacy_parse1 :-
   String = "Can the can do the Can Can?",
@@ -127,21 +166,6 @@ text_to_spacy_sents(Text,Sent):-
 
 spacy_segs_to_sentences(Segs,sentence(0,W2,Info)):-
   segs_retain_w2(Segs,Info,W2).
-
-read_spacy_lines(In, Result):- spacy_to_w2(In, Result),!.
-
-text_to_spacy_tree(Text,LExpr):-
-  spacy_parse(Text, String),
-  nop(dmsg(spacy_parse=String)),  
-  spacy_to_w2(String,LExpr),
-  nop(print_tree_nl(spacy=LExpr)).
-
-%spacy_to_w2((Word,POS),[POS,Word]).
-spacy_to_w2(In, Result):- is_stream(In),!,read_term(In,Term,[]),spacy_to_w2(Term, Result).
-spacy_to_w2(List,ListO):- is_list(List),!,include(compound,List,ListO).
-spacy_to_w2(w2spacy(List),ListO):- !, spacy_to_w2(List,ListO).
-spacy_to_w2(Text,ListO):- \+ compound(Text), on_x_fail(atom_to_term(Text,Term,_)),!,spacy_to_w2(Term,ListO).
-spacy_to_w2(Text,_ListO):- \+ compound(Text), nl,writeq(Text),nl,!,fail.
 
 
 :- if( \+ getenv('keep_going','-k')).
@@ -189,6 +213,9 @@ test_spacy(X):- test_spacy(_,X),nop(lex_info(X)).
 test_spacy(_,X):- nonvar(X), !, once(test_1spacy(X)).
 
 test_spacy(1,".\nThe Norwegian lives in the first house.\n.").
+test_spacy(1,"").
+test_spacy(1,".").
+test_spacy(1,"\n").
 
 test_spacy(1,"Rydell used his straw to stir the foam and ice remaining at the bottom of his tall plastic cup, as though he were hoping to find a secret prize.").
 

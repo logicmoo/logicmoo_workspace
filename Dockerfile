@@ -165,14 +165,15 @@ RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | s
  && apt update \
  && apt install -y gh
 
-RUN pip3 install allennlp allennlp-models blis junit2html spacy nltk \
- && python3 -m pip install boto3   flair  joblib     jsonschema     pandas     numpy     scikit-learn    spacy     flask \
- && pip3 install click --upgrade \
- && python3 -m spacy download en_core_web_lg \
- && python3 -m spacy download en_core_web_sm \
- && pip3 install -r $LOGICMOO_WS/packs_sys/logicmoo_nlu/requirements.txt
+RUN pip3 uninstall nbconvert Pygments pygments
+RUN apt remove -y python3-pygments python3-h5py python3-packaging # python3-requests # python3-six 
+COPY packs_sys/logicmoo_nlu/requirements.txt /tmp/requirements.txt
+RUN pip3 install -r /tmp/requirements.txt
+RUN python3 -m spacy download en_core_web_lg \
+ && python3 -m spacy download en_core_web_sm
 
 
+EXPOSE 4095
 
 #CMD $LOGICMOO_WS/StartLogicmoo.sh
 #ENTRYPOINT ["/startup_logicmoo.sh"]

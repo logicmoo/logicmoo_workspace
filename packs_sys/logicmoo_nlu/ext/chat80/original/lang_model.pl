@@ -529,29 +529,6 @@ s80(S):-
 c88(M):- c88(M,O),dmsg(O).
 c88(M,O):- process4a(off,M,_,O,_Times).
 
-
-any_to_ace_str(I,S):- words_of(I,M),tokenizer:expand_contracted_forms(_All,M,MS),any_to_str(MS,S).
-
-try_ace_lf(I,O):- any_to_ace_str(I,S), ace_to_drs:aceparagraph_to_drs(S,on,off,1,_Sentences,_Trees,UnresolvedDrs,O,Messages,_Time),
-   nop(wdmsg(UnresolvedDrs=Messages)),
-   should_learn(O).
-try_ace_lf(I):- make,try_ace_lf(I,O),exec_fol(I=O).
-
-exec_fol(X=I):- !, nonvar(I),my_drs_to_fol_kif(I,O), format('~N'),  print_tree_nl(X=O).
-exec_fol(FOL):- exec_fol(exec_fol=FOL),!.
-
-my_drs_to_fol_kif(I,O):- my_drs_to_fol(I,M),my_fol_kif(M,O).
-my_drs_to_fol(I,O):- on_x_fail(drs_fol(I,O)),!.
-my_drs_to_fol(OI,OI).
-
-
-
-my_fol_kif(Var,O):- var(Var),!,Var=O,!. %freeze(Var,my_fol_kif(Var,O)).
-my_fol_kif(I,O):- is_list(I),!,maplist(my_fol_kif,I,O).
-my_fol_kif(I-_,O):-!,my_fol_kif(I,O).
-my_fol_kif(I,O):- compound(I), compound_name_arguments(I,N,A),maplist(my_fol_kif,A,AO),compound_name_arguments(O,N,AO),!.
-my_fol_kif(I,O):- I=O.
-
 s83:- forall(training_data(Sent,M),(my_drs_to_fol_kif(M,O),in_cmt(block,print_tree_nl(Sent=O)))).
 
 

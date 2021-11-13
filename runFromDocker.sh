@@ -131,7 +131,7 @@ if [ "${push}" == "1" ]; then
 fi
 
 
-export PORTS="-p 4000-4004:4000-4004 -p 4021-4025:4021-4025 -p 4090:4090 -p 4243:443 -p 4280:80 -p 4020:3020  -p 3020:3020 -p 4222:22 -p 4220:3020 -p 4200:5900 -p 4201:9001 -p 4290:4090 -p 6079-6081:6079-6081"
+export PORTS="-p 4000-4004:4000-4004 -p 4021-4025:4021-4025 -p 4090:4090 -p 4095:4095 -p 4243:443 -p 4280:80 -p 4020:3020  -p 3020:3020 -p 4222:22 -p 4220:3020 -p 4200:5900 -p 4201:9001 -p 4290:4090 -p 6079-6081:6079-6081"
 
 export LM_VOLUMES="-v /opt/logicmoo_workspace:/opt/logicmoo_workspace"
 export DOCKER_RUN="--name logicmoo --privileged=true --no-healthcheck $LM_VOLUMES --rm -it ${PORTS} ${EXTRA} logicmoo/logicmoo_workspace:latest"

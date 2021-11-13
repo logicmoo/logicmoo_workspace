@@ -18,6 +18,58 @@
 :- use_module(library(logicmoo_nlu/parser_penn_trees)).
 :- use_module(library(logicmoo_nlu/parser_tokenize)).
 
+read_flair_lines(In, Result):- flair_to_w2(In, Result),!.
+
+text_to_flair_tree(Text,LExpr):-
+  flair_parse(Text, String),
+  nop(dmsg(flair_parse=String)),  
+  flair_to_w2(String,LExpr),
+  nop(print_tree_nl(flair=LExpr)).
+
+%flair_to_w2((Word,POS),[POS,Word]).
+flair_to_w2(In, Result):- var(In),!,throw(var_flair_to_w2(In, Result)).
+flair_to_w2('', Result):-!, Result=[],!.
+flair_to_w2(w2flair(List),ListO):- !, flair_to_w2(List,ListO).
+flair_to_w2(List,ListO):- is_list(List),!,include(compound,List,ListO).
+flair_to_w2(In, Result):- is_stream(In),!,flair_stream_to_w2(In,'', Result).
+flair_to_w2(Text,ListO):- \+ compound(Text), on_x_fail(atom_to_term(Text,Term,_)),!,flair_to_w2(Term,ListO).
+flair_to_w2(Text,_ListO):- \+ compound(Text), nl,writeq(Text),nl,!,fail.
+
+flair_stream_to_w2(_, S, Result):- atom_contains(S,"w2flair([])."),!,Result=[].
+flair_stream_to_w2(In,_, Result):- peek_string(In,10,S),atom_contains(S,"w2flair("),!,read_term(In,Term,[]),flair_to_w2(Term, Result).
+flair_stream_to_w2(In,S, Result):- atom_contains(S,"w2flair("),!,read_term_from_atom_rest(In,S,Term),flair_to_w2(Term, Result).
+flair_stream_to_w2(In,S, Result):- at_end_of_stream(In),!,flair_to_w2(S, Result).
+flair_stream_to_w2(In,_, Result):- repeat, read_pending_codes(In,Codes,[]),
+flair_lexical_segs(I,O):-
+  allen_srl_lexical_segs(I,M),
+  flair_parse(I,S),
+  merge_flair(S,M,O).
+
+merge_flair([],O,O):-!.
+merge_flair([H|T],I,O):- !, merge_flair(H,I,M), merge_flair(T,M,O).
+merge_flair(w(W,L),O,O):- member(w(W,OL),O), \+ member(flair,OL),!,    
+  ignore((member(upos(Pos),L),downcase_atom(Pos,DPos),upos_to_penn_pos(DPos,Penn),set_pos(2,Penn,OL))),
+  nb_set_add(OL,[flair|L]), !.
+merge_flair(_,I,I):-!.
+
+upos_to_penn_pos(verb,vb).
+%upos_to_penn_pos(adv,rb). other systems produce better specilizations
+upos_to_penn_pos(adj,jj).
+upos_to_penn_pos(propn,nnp).
+%upos_to_penn_pos(noun,nn). other systems might detect a verb this one doesnt (so we dont overwrite)
+upos_to_penn_pos(cconj,cc).
+ (Codes==[]->(sleep(0.1),fail);true),sformat(S,'~s',[Codes]),
+ flair_stream_to_w2(In,S, Result).
+
+read_term_from_atom_rest(_,S, Result):- atom_contains(S,"w2flair([])."),!,Result=[].
+read_term_from_atom_rest(In,S,Term):- atom_concat(L,'\n',S),!,read_term_from_atom_rest(In,L,Term).
+read_term_from_atom_rest(In,S,Term):- atom_concat(L,' ',S),!,read_term_from_atom_rest(In,L,Term).
+read_term_from_atom_rest(_,S,Term):-  atom_concat(_,'.',S),!,read_term_from_atom(S,Term,[]).
+read_term_from_atom_rest(In,S,Term):- read_pending_codes(In,Codes,[]),
+  (Codes==[]->(sleep(0.1),fail);true),sformat(S2,'~s~s',[S,Codes]),
+  read_term_from_atom_rest(In,S2,Term).
+
+
 :- dynamic(tmp:existing_flair_stream/4).
 :- volatile(tmp:existing_flair_stream/4).
 foc_flair_stream(Out,In):- thread_self(Self),tmp:existing_flair_stream(Self,_,Out,In),!,clear_flair_pending(In).
@@ -53,25 +105,6 @@ tokenize_flair_string(Text,StrO):- any_to_string(Text,Str),  replace_in_string('
 tokenize_flair_string(Text,StrO):- any_to_string(Text,Str), replace_in_string(['\\'='\\\\','\''='\\\''],Str,StrM),
   atomics_to_string(["'",StrM,"'"],StrO).
 */
-flair_lexical_segs(I,O):-
-  allen_srl_lexical_segs(I,M),
-  flair_parse(I,S),
-  merge_flair(S,M,O).
-
-merge_flair([],O,O):-!.
-merge_flair([H|T],I,O):- !, merge_flair(H,I,M), merge_flair(T,M,O).
-merge_flair(w(W,L),O,O):- member(w(W,OL),O), \+ member(flair,OL),!,    
-  ignore((member(upos(Pos),L),downcase_atom(Pos,DPos),upos_to_penn_pos(DPos,Penn),set_pos(2,Penn,OL))),
-  nb_set_add(OL,[flair|L]), !.
-merge_flair(_,I,I):-!.
-
-upos_to_penn_pos(verb,vb).
-%upos_to_penn_pos(adv,rb). other systems produce better specilizations
-upos_to_penn_pos(adj,jj).
-upos_to_penn_pos(propn,nnp).
-%upos_to_penn_pos(noun,nn). other systems might detect a verb this one doesnt (so we dont overwrite)
-upos_to_penn_pos(cconj,cc).
-
 
 
 flair_parse(Text, Lines) :- 
@@ -141,38 +174,6 @@ text_to_flair_sents(Text,Sent):-
 flair_segs_to_sentences(Segs,sentence(0,W2,Info)):-
   segs_retain_w2(Segs,Info,W2).
 
-read_flair_lines(In, Result):- flair_to_w2(In, Result),!.
-
-text_to_flair_tree(Text,LExpr):-
-  flair_parse(Text, String),
-  nop(dmsg(flair_parse=String)),  
-  flair_to_w2(String,LExpr),
-  nop(print_tree_nl(flair=LExpr)).
-
-%flair_to_w2((Word,POS),[POS,Word]).
-flair_to_w2(In, Result):- var(In),!,throw(var_flair_to_w2(In, Result)).
-flair_to_w2('', Result):-!, Result=[],!.
-flair_to_w2(w2flair(List),ListO):- !, flair_to_w2(List,ListO).
-flair_to_w2(List,ListO):- is_list(List),!,include(compound,List,ListO).
-flair_to_w2(In, Result):- is_stream(In),!,flair_stream_to_w2(In,'', Result).
-flair_to_w2(Text,ListO):- \+ compound(Text), on_x_fail(atom_to_term(Text,Term,_)),!,flair_to_w2(Term,ListO).
-flair_to_w2(Text,_ListO):- \+ compound(Text), nl,writeq(Text),nl,!,fail.
-
-flair_stream_to_w2(_, S, Result):- atom_contains(S,"w2flair([])."),!,Result=[].
-flair_stream_to_w2(In,_, Result):- peek_string(In,10,S),atom_contains(S,"w2flair("),!,read_term(In,Term,[]),flair_to_w2(Term, Result).
-flair_stream_to_w2(In,S, Result):- atom_contains(S,"w2flair("),!,read_term_from_atom_rest(In,S,Term),flair_to_w2(Term, Result).
-flair_stream_to_w2(In,S, Result):- at_end_of_stream(In),!,flair_to_w2(S, Result).
-flair_stream_to_w2(In,_, Result):- repeat, read_pending_codes(In,Codes,[]),
- (Codes==[]->(sleep(0.1),fail);true),sformat(S,'~s',[Codes]),
- flair_stream_to_w2(In,S, Result).
-
-read_term_from_atom_rest(_,S, Result):- atom_contains(S,"w2flair([])."),!,Result=[].
-read_term_from_atom_rest(In,S,Term):- atom_concat(L,'\n',S),!,read_term_from_atom_rest(In,L,Term).
-read_term_from_atom_rest(In,S,Term):- atom_concat(L,' ',S),!,read_term_from_atom_rest(In,L,Term).
-read_term_from_atom_rest(_,S,Term):-  atom_concat(_,'.',S),!,read_term_from_atom(S,Term,[]).
-read_term_from_atom_rest(In,S,Term):- read_pending_codes(In,Codes,[]),
-  (Codes==[]->(sleep(0.1),fail);true),sformat(S2,'~s~s',[S,Codes]),
-  read_term_from_atom_rest(In,S2,Term).
 
 :- if( \+ getenv('keep_going','-k')).
 :- use_module(library(editline)).

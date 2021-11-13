@@ -141,7 +141,8 @@ chat80_test("iraq is bordering iran?").
 chat80_test("iraq was bordering iran?").
 chat80_test("iran is bordered by iraq?").
 
-test_aceese("They know everything that he owns.").
+
+
 
 %map_ees_tag2('NN',type,'').
 map_ees_word1('country',type,'').
@@ -424,7 +425,7 @@ s84:- make,s81(s84).
 s84(X):- any_to_ace_str(X,S),string_codes(S,Codes), Out = current_output,
 	catch(
 		run_acerules:(
-      debug,
+      no_debug,
 			generate_output(Codes, court, [], _, _, Trace, _),
 			member(final(InferenceSteps, _), Trace),
 			verbalize_trace(Trace, VerbTrace),
@@ -434,17 +435,20 @@ s84(X):- any_to_ace_str(X,S),string_codes(S,Codes), Out = current_output,
 		format(Out, 'ERROR: ~w\n', ErrorMessage)).
 
 s85(X):- any_to_ace_str(X,S),string_codes(S,Codes), Out = current_output,
-	catch(
+	ignore((catch(
 		run_acerules:( % court, stable, or stable_strong.
                   debug,
       Semantics = court,
-			generate_output(Codes, Semantics, [maxanswers=10], Rules, Answersets, _, AnswerTexts),
+			generate_output(Codes, Semantics, [maxanswers=10], Rules, Answersets, Trace, AnswerTexts),
 			simple_rules(Rules, SimpleRules),
+      verbalize_trace(Trace, VerbTrace),
+      member(final(InferenceSteps, _), Trace),
+      print_ace_trace(Out, 0, InferenceSteps, VerbTrace),
 			print_normal(Out, Codes, Rules, SimpleRules, Answersets, AnswerTexts)
 		),
 		error(_, ErrorMessage),
 		format(Out, 'ERROR: ~w\n', ErrorMessage)
-	),!.
+	))),!.
 
 :- add_history((cls,debug,s82)).
 
