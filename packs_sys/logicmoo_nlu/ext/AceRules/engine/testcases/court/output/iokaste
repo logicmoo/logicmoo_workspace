@@ -1,0 +1,52 @@
+
+INPUT TEXT:
+Iokaste is a parent of Oedipus.
+Iokaste is a parent of Polyneikes.
+Oedipus is a parent of Polyneikes.
+Polyneikes is a parent of Thersandros.
+Oedipus is a patricide.
+Thersandros is not a patricide.
+Everybody who is a parent of a patricide who is a parent of somebody who is not a patricide is an answer.
+
+RULES:
+-group([ object(named('Thersandros'),patricides,countable,na,eq,1)]).
+group([ object(Parent_Answer,answer,countable,na,eq,1)]) <- [group([ object(Relation_Object_Parent_Patricides,patricides,countable,na,eq,1)]), of_relation(object(Relation_Object_Parent_Patricides,parent,countable,na,eq,1),Relation_Patricides_Object1059), of_relation(object(Parent_Answer,parent,countable,na,eq,1),Relation_Object_Parent_Patricides), object(Relation_Patricides_Object1059,ObjectObject10591065,ObjectObject10591064,ObjectObject10591063,ObjectObject1059,Object1074), object(Parent_Answer,ObjectParent_Answer1069,ObjectParent_Answer1068,ObjectParent_Answer1067,ObjectParent_Answer,Object1075), -group([ object(Relation_Patricides_Object1059,patricides,countable,na,eq,1)])].
+group([ object(named('Oedipus'),patricides,countable,na,eq,1)]).
+of_relation(object(named('Iokaste'),parent,countable,na,eq,1),named('Oedipus')).
+of_relation(object(named('Iokaste'),parent,countable,na,eq,1),named('Polyneikes')).
+of_relation(object(named('Oedipus'),parent,countable,na,eq,1),named('Polyneikes')).
+of_relation(object(named('Polyneikes'),parent,countable,na,eq,1),named('Thersandros')).
+object(named('Iokaste'),'Iokaste',named,na,eq,1).
+object(named('Oedipus'),'Oedipus',named,na,eq,1).
+object(named('Polyneikes'),'Polyneikes',named,na,eq,1).
+object(named('Thersandros'),'Thersandros',named,na,eq,1).
+
+SIMPLE RULES:
+-patricides(named('Thersandros')).
+answer(Something_Answer_Parent1085) <- [patricides(Of_Patricides_Parent1084), of(parent,Of_Patricides_Parent1084,Patricides_Something_Of1088), of(parent,Something_Answer_Parent1085,Of_Patricides_Parent1084), something(Patricides_Something_Of1088), something(Something_Answer_Parent1085), -patricides(Patricides_Something_Of1088)].
+patricides(named('Oedipus')).
+of(parent,named('Iokaste'),named('Oedipus')).
+of(parent,named('Iokaste'),named('Polyneikes')).
+of(parent,named('Oedipus'),named('Polyneikes')).
+of(parent,named('Polyneikes'),named('Thersandros')).
+
+ANSWERSET #1:
+-group([ object(named('Thersandros'),patricides,countable,na,eq,1)]).
+group([ object(named('Oedipus'),patricides,countable,na,eq,1)]).
+of_relation(object(named('Iokaste'),parent,countable,na,eq,1),named('Oedipus')).
+of_relation(object(named('Iokaste'),parent,countable,na,eq,1),named('Polyneikes')).
+of_relation(object(named('Oedipus'),parent,countable,na,eq,1),named('Polyneikes')).
+of_relation(object(named('Polyneikes'),parent,countable,na,eq,1),named('Thersandros')).
+object(named('Iokaste'),'Iokaste',named,na,eq,1).
+object(named('Oedipus'),'Oedipus',named,na,eq,1).
+object(named('Polyneikes'),'Polyneikes',named,na,eq,1).
+object(named('Thersandros'),'Thersandros',named,na,eq,1).
+
+ANSWERTEXT #1:
+Oedipus is a patricide.
+Polyneikes is a parent of Thersandros.
+Oedipus is a parent of Polyneikes.
+Iokaste is a parent of Polyneikes.
+Iokaste is a parent of Oedipus.
+It is false that Thersandros is a patricide.
+

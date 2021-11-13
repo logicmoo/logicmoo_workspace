@@ -1,0 +1,292 @@
+
+INPUT TEXT:
+# husband/wife:
+If someone X is a husband of someone then X is male.
+If someone X is a husband of someone Y then Y is a wife of X.
+If someone X is a wife of someone then X is female.
+# father/mother:
+If someone X is a father of someone then X is male.
+If someone X is a father of someone Y then X is a parent of Y.
+If someone X is a mother of someone then X is female.
+If someone X is a mother of someone Y then X is a parent of Y.
+# parent/child:
+If someone X is a parent of someone Y then Y is a child of X.
+# son/daughter:
+If someone X is a son of someone then X is male.
+If someone X is a son of someone Y then X is a child of Y.
+If someone X is a daughter of someone then X is female.
+If someone X is a daughter of someone Y then X is a child of Y.
+# ancestor/descendant:
+If someone X is a parent of someone who is a parent of someone Y then X is an ancestor of Y.
+If someone X is an ancestor of someone Y then Y is a descendant of X.
+# sibling:
+SiblingRule1: If someone X is a child of someone P and someone Y is a child of P then X is a sibling of Y.
+SiblingRule2: Everyone is not a sibling of himself.
+SiblingRule2 overrides SiblingRule1.
+# brother/sister:
+If someone X is a male sibling of someone Y then X is a brother of Y.
+If someone X is a female sibling of someone Y then X is a sister of Y.
+# kid:
+Everyone who is a parent of someone is not a kid.
+# only-child:
+Everyone who is a sibling of someone is not an n:only-child.
+# facts:
+Mary is a daughter of John.
+Bob is a husband of Mary.
+Bill is a son of Mary.
+Bob is a father of Mary.
+Tom is a son of Mary.
+Bob is a father of Tom.
+Anne is a daughter of Mary.
+Bob is a father of Anne.
+Jeff is a son of John.
+Tom is a kid.
+Jenny is a daughter of John.
+Sue is a wife of John.
+Dan is a husband of Jenny.
+Angie is a daughter of Jenny.
+Jenny is a mother of Moe.
+Moe is a male kid.
+
+RULES:
+-group([ object(Parent_Kid,kid,countable,na,eq,1)]) <- [group([ of_relation(object(Parent_Kid,parent,countable,na,eq,1),Relation_Object388)]), object(Relation_Object388,ObjectObject388393,ObjectObject388392,ObjectObject388391,ObjectObject388,Object670), object(Parent_Kid,ObjectParent_Kid397,ObjectParent_Kid396,ObjectParent_Kid395,ObjectParent_Kid,Object671)].
+-group([ object(Relation_Object_Sibling_Only_child,'only-child',countable,na,eq,1)]) <- [group([ of_relation( 
+                                                                                                    object(Relation_Object_Sibling_Only_child,sibling,countable,na,eq,1), 
+                                                                                                    Relation_Object_Sibling_Only_child)]), object(Relation_Object_Sibling_Only_child,ObjectObject_Sibling_Only_child407,ObjectObject_Sibling_Only_child406,ObjectObject_Sibling_Only_child405,ObjectObject_Sibling_Only_child,Object673), object(Relation_Object_Sibling_Only_child,ObjectObject_Sibling_Only_child411,ObjectObject_Sibling_Only_child410,ObjectObject_Sibling_Only_child409,ObjectObject_Sibling_Only_child408,Object674)].
+group([ of_relation(object(Relation_Object_Wife,wife,countable,na,eq,1),Relation_Husband_Object414)]) <- [of_relation(object(Relation_Husband_Object414,husband,countable,na,eq,1),Relation_Object_Wife), object(Relation_Object_Wife,ObjectObject_Wife421,ObjectObject_Wife420,ObjectObject_Wife419,ObjectObject_Wife,Object677), object(Relation_Husband_Object414,ObjectHusband_Object414425,ObjectHusband_Object414424,ObjectHusband_Object414423,ObjectHusband_Object414,Object678)].
+group([ of_relation(object(Father_Parent,parent,countable,na,eq,1),Relation_Object428)]) <- [of_relation(object(Father_Parent,father,countable,na,eq,1),Relation_Object428), object(Relation_Object428,ObjectObject428434,ObjectObject428433,ObjectObject428432,ObjectObject428,Object680), object(Father_Parent,ObjectFather_Parent438,ObjectFather_Parent437,ObjectFather_Parent436,ObjectFather_Parent,Object681)].
+group([ of_relation(object(Mother_Parent440,parent,countable,na,eq,1),Relation_Object441)]) <- [of_relation(object(Mother_Parent440,mother,countable,na,eq,1),Relation_Object441), object(Relation_Object441,ObjectObject441447,ObjectObject441446,ObjectObject441445,ObjectObject441,Object683), object(Mother_Parent440,ObjectMother_Parent440451,ObjectMother_Parent440450,ObjectMother_Parent440449,ObjectMother_Parent440,Object684)].
+group([ of_relation(object(Relation_Object_Child,child,countable,na,eq,1),Relation_Parent_Object454)]) <- [group([ of_relation(object(Relation_Parent_Object454,parent,countable,na,eq,1),Relation_Object_Child)]), object(Relation_Object_Child,ObjectObject_Child462,ObjectObject_Child461,ObjectObject_Child460,ObjectObject_Child,Object687), object(Relation_Parent_Object454,ObjectParent_Object454466,ObjectParent_Object454465,ObjectParent_Object454464,ObjectParent_Object454,Object688)].
+group([ of_relation(object(Son_Child468,child,countable,na,eq,1),Relation_Object469)]) <- [of_relation(object(Son_Child468,son,countable,na,eq,1),Relation_Object469), object(Relation_Object469,ObjectObject469475,ObjectObject469474,ObjectObject469473,ObjectObject469,Object690), object(Son_Child468,ObjectSon_Child468479,ObjectSon_Child468478,ObjectSon_Child468477,ObjectSon_Child468,Object691)].
+group([ of_relation(object(Daughter_Child481,child,countable,na,eq,1),Relation_Object482)]) <- [of_relation(object(Daughter_Child481,daughter,countable,na,eq,1),Relation_Object482), object(Relation_Object482,ObjectObject482488,ObjectObject482487,ObjectObject482486,ObjectObject482,Object693), object(Daughter_Child481,ObjectDaughter_Child481492,ObjectDaughter_Child481491,ObjectDaughter_Child481490,ObjectDaughter_Child481,Object694)].
+group([ of_relation(object(Parent_Ancestor,ancestor,countable,na,eq,1),Relation_Object495)]) <- [group([ of_relation(object(Parent_Ancestor,parent,countable,na,eq,1),Relation_Parent_Object498)]), group([ of_relation(object(Relation_Parent_Object498,parent,countable,na,eq,1),Relation_Object495)]), object(Relation_Object495,ObjectObject495505,ObjectObject495504,ObjectObject495503,ObjectObject495,Object697), object(Relation_Parent_Object498,ObjectParent_Object498509,ObjectParent_Object498508,ObjectParent_Object498507,ObjectParent_Object498,Object698), object(Parent_Ancestor,ObjectParent_Ancestor513,ObjectParent_Ancestor512,ObjectParent_Ancestor511,ObjectParent_Ancestor,Object699)].
+group([ of_relation( 
+           object(Relation_Object_Descendant,descendant,countable,na,eq,1), 
+           Relation_Ancestor_Object516)]) <- [group([ of_relation( 
+                                                         object(Relation_Ancestor_Object516,ancestor,countable,na,eq,1), 
+                                                         Relation_Object_Descendant)]), object(Relation_Object_Descendant,ObjectObject_Descendant524,ObjectObject_Descendant523,ObjectObject_Descendant522,ObjectObject_Descendant,Object702), object(Relation_Ancestor_Object516,ObjectAncestor_Object516528,ObjectAncestor_Object516527,ObjectAncestor_Object516526,ObjectAncestor_Object516,Object703)].
+group([ of_relation( 
+           object(Relation_Sibling_Male_Object_Brother,brother,countable,na,eq,1), 
+           Relation_Sibling_Male_Object_Brother)]) <- [group([property(Relation_Sibling_Male_Object_Brother,male,pos)]), group([ of_relation( 
+                                                                                                                                    object(Relation_Sibling_Male_Object_Brother,sibling,countable,na,eq,1), 
+                                                                                                                                    Relation_Sibling_Male_Object_Brother)]), object(Relation_Sibling_Male_Object_Brother,ObjectSibling_Male_Object_Brother540,ObjectSibling_Male_Object_Brother539,ObjectSibling_Male_Object_Brother538,ObjectSibling_Male_Object_Brother,Object705), object(Relation_Sibling_Male_Object_Brother,ObjectSibling_Male_Object_Brother544,ObjectSibling_Male_Object_Brother543,ObjectSibling_Male_Object_Brother542,ObjectSibling_Male_Object_Brother541,Object706)].
+group([ of_relation( 
+           object(Relation_Sibling_Female_Object_Sister,sister,countable,na,eq,1), 
+           Relation_Sibling_Female_Object_Sister)]) <- [group([property(Relation_Sibling_Female_Object_Sister,female,pos)]), group([ of_relation( 
+                                                                                                                                        object(Relation_Sibling_Female_Object_Sister,sibling,countable,na,eq,1), 
+                                                                                                                                        Relation_Sibling_Female_Object_Sister)]), object(Relation_Sibling_Female_Object_Sister,ObjectSibling_Female_Object_Sister556,ObjectSibling_Female_Object_Sister555,ObjectSibling_Female_Object_Sister554,ObjectSibling_Female_Object_Sister,Object708), object(Relation_Sibling_Female_Object_Sister,ObjectSibling_Female_Object_Sister560,ObjectSibling_Female_Object_Sister559,ObjectSibling_Female_Object_Sister558,ObjectSibling_Female_Object_Sister557,Object709)].
+group([ of_relation(object(named('Sue'),wife,countable,na,eq,1),named('John'))]).
+group([property(Husband_Male,male,pos)]) <- [of_relation(object(Husband_Male,husband,countable,na,eq,1),Relation_Object565), object(Relation_Object565,ObjectObject565569,ObjectObject565568,ObjectObject565567,ObjectObject565,Object711), object(Husband_Male,ObjectHusband_Male573,ObjectHusband_Male572,ObjectHusband_Male571,ObjectHusband_Male,Object712)].
+group([property(Wife_Female,female,pos)]) <- [group([ of_relation(object(Wife_Female,wife,countable,na,eq,1),Relation_Object578)]), object(Relation_Object578,ObjectObject578583,ObjectObject578582,ObjectObject578581,ObjectObject578,Object714), object(Wife_Female,ObjectWife_Female587,ObjectWife_Female586,ObjectWife_Female585,ObjectWife_Female,Object715)].
+group([property(Father_Male589,male,pos)]) <- [of_relation(object(Father_Male589,father,countable,na,eq,1),Relation_Object592), object(Relation_Object592,ObjectObject592596,ObjectObject592595,ObjectObject592594,ObjectObject592,Object717), object(Father_Male589,ObjectFather_Male589600,ObjectFather_Male589599,ObjectFather_Male589598,ObjectFather_Male589,Object718)].
+group([property(Mother_Female602,female,pos)]) <- [of_relation(object(Mother_Female602,mother,countable,na,eq,1),Relation_Object605), object(Relation_Object605,ObjectObject605609,ObjectObject605608,ObjectObject605607,ObjectObject605,Object720), object(Mother_Female602,ObjectMother_Female602613,ObjectMother_Female602612,ObjectMother_Female602611,ObjectMother_Female602,Object721)].
+group([property(Son_Male615,male,pos)]) <- [of_relation(object(Son_Male615,son,countable,na,eq,1),Relation_Object618), object(Relation_Object618,ObjectObject618622,ObjectObject618621,ObjectObject618620,ObjectObject618,Object723), object(Son_Male615,ObjectSon_Male615626,ObjectSon_Male615625,ObjectSon_Male615624,ObjectSon_Male615,Object724)].
+group([property(Daughter_Female628,female,pos)]) <- [of_relation(object(Daughter_Female628,daughter,countable,na,eq,1),Relation_Object631), object(Relation_Object631,ObjectObject631635,ObjectObject631634,ObjectObject631633,ObjectObject631,Object726), object(Daughter_Female628,ObjectDaughter_Female628639,ObjectDaughter_Female628638,ObjectDaughter_Female628637,ObjectDaughter_Female628,Object727)].
+group([ property(named('Moe'),male,pos)]).
+group([ object(named('Moe'),kid,countable,na,eq,1)]).
+group([ object(named('Tom'),kid,countable,na,eq,1)]).
+of_relation(object(named('Angie'),daughter,countable,na,eq,1),named('Jenny')).
+of_relation(object(named('Anne'),daughter,countable,na,eq,1),named('Mary')).
+of_relation(object(named('Bill'),son,countable,na,eq,1),named('Mary')).
+of_relation(object(named('Bob'),father,countable,na,eq,1),named('Anne')).
+of_relation(object(named('Bob'),father,countable,na,eq,1),named('Mary')).
+of_relation(object(named('Bob'),father,countable,na,eq,1),named('Tom')).
+of_relation(object(named('Bob'),husband,countable,na,eq,1),named('Mary')).
+of_relation(object(named('Dan'),husband,countable,na,eq,1),named('Jenny')).
+of_relation(object(named('Jeff'),son,countable,na,eq,1),named('John')).
+of_relation(object(named('Jenny'),daughter,countable,na,eq,1),named('John')).
+of_relation(object(named('Jenny'),mother,countable,na,eq,1),named('Moe')).
+of_relation(object(named('Mary'),daughter,countable,na,eq,1),named('John')).
+of_relation(object(named('Tom'),son,countable,na,eq,1),named('Mary')).
+object(named('Angie'),'Angie',named,na,eq,1).
+object(named('Anne'),'Anne',named,na,eq,1).
+object(named('Bill'),'Bill',named,na,eq,1).
+object(named('Bob'),'Bob',named,na,eq,1).
+object(named('Dan'),'Dan',named,na,eq,1).
+object(named('Jeff'),'Jeff',named,na,eq,1).
+object(named('Jenny'),'Jenny',named,na,eq,1).
+object(named('John'),'John',named,na,eq,1).
+object(named('Mary'),'Mary',named,na,eq,1).
+object(named('Moe'),'Moe',named,na,eq,1).
+object(named('Sue'),'Sue',named,na,eq,1).
+object(named('Tom'),'Tom',named,na,eq,1).
+'SiblingRule1':: group([ of_relation( 
+                            object(Relation_Child_Object_Sibling,sibling,countable,na,eq,1), 
+                            Relation_Child_Object_Sibling)]) <- [group([ of_relation(object(Relation_Child_Object_Sibling,child,countable,na,eq,1),Relation_Object645)]), group([ of_relation(object(Relation_Child_Object_Sibling,child,countable,na,eq,1),Relation_Object645)]), object(Relation_Child_Object_Sibling,ObjectChild_Object_Sibling651,ObjectChild_Object_Sibling650,ObjectChild_Object_Sibling649,ObjectChild_Object_Sibling,Object730), object(Relation_Object645,ObjectObject645655,ObjectObject645654,ObjectObject645653,ObjectObject645,Object731), object(Relation_Child_Object_Sibling,ObjectChild_Object_Sibling659,ObjectChild_Object_Sibling658,ObjectChild_Object_Sibling657,ObjectChild_Object_Sibling656,Object732)].
+'SiblingRule2':: -group([ of_relation( 
+                             object(Relation_Object_Sibling661,sibling,countable,na,eq,1), 
+                             Relation_Object_Sibling661)]) <- [object(Relation_Object_Sibling661,ObjectObject_Sibling661667,ObjectObject_Sibling661666,ObjectObject_Sibling661665,ObjectObject_Sibling661,Object734)].
+overrides('SiblingRule2','SiblingRule1').
+
+SIMPLE RULES:
+-kid(Something_Kid_Parent851) <- [of(parent,Something_Kid_Parent851,Something_Of), something(Something_Of), something(Something_Kid_Parent851)].
+-'only-child'(Only_child_Only_child_Something_Of_Only_child_Sibling853) <- [of(sibling,Only_child_Only_child_Something_Of_Only_child_Sibling853,Only_child_Only_child_Something_Of_Only_child_Sibling853), something(Only_child_Only_child_Something_Of_Only_child_Sibling853), something(Only_child_Only_child_Something_Of_Only_child_Sibling853)].
+of(wife,Something_Of_Wife855,Something_Of_Husband) <- [of(husband,Something_Of_Husband,Something_Of_Wife855), something(Something_Of_Wife855), something(Something_Of_Husband)].
+of(parent,Something_Father_Parent858,Something_Of914) <- [of(father,Something_Father_Parent858,Something_Of914), something(Something_Of914), something(Something_Father_Parent858)].
+of(parent,Something_Mother_Parent861,Something_Of917) <- [of(mother,Something_Mother_Parent861,Something_Of917), something(Something_Of917), something(Something_Mother_Parent861)].
+of(child,Something_Of_Child864,Something_Of_Parent865) <- [of(parent,Something_Of_Parent865,Something_Of_Child864), something(Something_Of_Child864), something(Something_Of_Parent865)].
+of(child,Something_Son_Child867,Something_Of924) <- [of(son,Something_Son_Child867,Something_Of924), something(Something_Of924), something(Something_Son_Child867)].
+of(child,Something_Daughter_Child870,Something_Of927) <- [of(daughter,Something_Daughter_Child870,Something_Of927), something(Something_Of927), something(Something_Daughter_Child870)].
+of(ancestor,Something_Parent_Ancestor873,Something_Of930) <- [of(parent,Something_Parent_Ancestor873,Something_Of_Parent875), of(parent,Something_Of_Parent875,Something_Of930), something(Something_Of930), something(Something_Of_Parent875), something(Something_Parent_Ancestor873)].
+of(descendant,Something_Of_Descendant877,Something_Of_Ancestor878) <- [of(ancestor,Something_Of_Ancestor878,Something_Of_Descendant877), something(Something_Of_Descendant877), something(Something_Of_Ancestor878)].
+of(brother,Something_Male_Of_Sibling_Brother880,Something_Male_Of_Sibling_Brother880) <- [male(Something_Male_Of_Sibling_Brother880), of(sibling,Something_Male_Of_Sibling_Brother880,Something_Male_Of_Sibling_Brother880), something(Something_Male_Of_Sibling_Brother880), something(Something_Male_Of_Sibling_Brother880)].
+of(sister,Something_Female_Of_Sibling_Sister883,Something_Female_Of_Sibling_Sister883) <- [female(Something_Female_Of_Sibling_Sister883), of(sibling,Something_Female_Of_Sibling_Sister883,Something_Female_Of_Sibling_Sister883), something(Something_Female_Of_Sibling_Sister883), something(Something_Female_Of_Sibling_Sister883)].
+of(wife,named('Sue'),named('John')).
+male(Something_Male_Husband886) <- [of(husband,Something_Male_Husband886,Something_Of946), something(Something_Of946), something(Something_Male_Husband886)].
+female(Something_Female_Wife888) <- [of(wife,Something_Female_Wife888,Something_Of950), something(Something_Of950), something(Something_Female_Wife888)].
+male(Something_Male_Father) <- [of(father,Something_Male_Father,Something_Of954), something(Something_Of954), something(Something_Male_Father)].
+female(Something_Female_Mother) <- [of(mother,Something_Female_Mother,Something_Of958), something(Something_Of958), something(Something_Female_Mother)].
+male(Something_Male_Son) <- [of(son,Something_Male_Son,Something_Of962), something(Something_Of962), something(Something_Male_Son)].
+female(Something_Female_Daughter) <- [of(daughter,Something_Female_Daughter,Something_Of966), something(Something_Of966), something(Something_Female_Daughter)].
+male(named('Moe')).
+kid(named('Moe')).
+kid(named('Tom')).
+of(daughter,named('Angie'),named('Jenny')).
+of(daughter,named('Anne'),named('Mary')).
+of(son,named('Bill'),named('Mary')).
+of(father,named('Bob'),named('Anne')).
+of(father,named('Bob'),named('Mary')).
+of(father,named('Bob'),named('Tom')).
+of(husband,named('Bob'),named('Mary')).
+of(husband,named('Dan'),named('Jenny')).
+of(son,named('Jeff'),named('John')).
+of(daughter,named('Jenny'),named('John')).
+of(mother,named('Jenny'),named('Moe')).
+of(daughter,named('Mary'),named('John')).
+of(son,named('Tom'),named('Mary')).
+'SiblingRule1':: of(sibling,Something_Of_Child_Sibling898,Something_Of_Child_Sibling898) <- [of(child,Something_Of_Child_Sibling898,Something_Of970), of(child,Something_Of_Child_Sibling898,Something_Of970), something(Something_Of_Child_Sibling898), something(Something_Of970), something(Something_Of_Child_Sibling898)].
+'SiblingRule2':: -of(sibling,Something_Of_Sibling901,Something_Of_Sibling901) <- [something(Something_Of_Sibling901)].
+overrides('SiblingRule2','SiblingRule1').
+
+ANSWERSET #1:
+-group([ of_relation(object(named('Angie'),sibling,countable,na,eq,1),named('Angie'))]).
+-group([ of_relation(object(named('Anne'),sibling,countable,na,eq,1),named('Anne'))]).
+-group([ of_relation(object(named('Bill'),sibling,countable,na,eq,1),named('Bill'))]).
+-group([ of_relation(object(named('Bob'),sibling,countable,na,eq,1),named('Bob'))]).
+-group([ of_relation(object(named('Dan'),sibling,countable,na,eq,1),named('Dan'))]).
+-group([ of_relation(object(named('Jeff'),sibling,countable,na,eq,1),named('Jeff'))]).
+-group([ of_relation(object(named('Jenny'),sibling,countable,na,eq,1),named('Jenny'))]).
+-group([ of_relation(object(named('John'),sibling,countable,na,eq,1),named('John'))]).
+-group([ of_relation(object(named('Mary'),sibling,countable,na,eq,1),named('Mary'))]).
+-group([ of_relation(object(named('Moe'),sibling,countable,na,eq,1),named('Moe'))]).
+-group([ of_relation(object(named('Sue'),sibling,countable,na,eq,1),named('Sue'))]).
+-group([ of_relation(object(named('Tom'),sibling,countable,na,eq,1),named('Tom'))]).
+-group([ object(named('Bob'),kid,countable,na,eq,1)]).
+-group([ object(named('Jenny'),kid,countable,na,eq,1)]).
+group([ of_relation(object(named('Angie'),child,countable,na,eq,1),named('Jenny'))]).
+group([ of_relation(object(named('Anne'),child,countable,na,eq,1),named('Bob'))]).
+group([ of_relation(object(named('Anne'),child,countable,na,eq,1),named('Mary'))]).
+group([ of_relation(object(named('Bill'),child,countable,na,eq,1),named('Mary'))]).
+group([ of_relation(object(named('Bob'),parent,countable,na,eq,1),named('Anne'))]).
+group([ of_relation(object(named('Bob'),parent,countable,na,eq,1),named('Mary'))]).
+group([ of_relation(object(named('Bob'),parent,countable,na,eq,1),named('Tom'))]).
+group([ of_relation(object(named('Jeff'),child,countable,na,eq,1),named('John'))]).
+group([ of_relation(object(named('Jenny'),child,countable,na,eq,1),named('John'))]).
+group([ of_relation(object(named('Jenny'),parent,countable,na,eq,1),named('Moe'))]).
+group([ of_relation(object(named('Jenny'),wife,countable,na,eq,1),named('Dan'))]).
+group([ of_relation(object(named('Mary'),child,countable,na,eq,1),named('Bob'))]).
+group([ of_relation(object(named('Mary'),child,countable,na,eq,1),named('John'))]).
+group([ of_relation(object(named('Mary'),wife,countable,na,eq,1),named('Bob'))]).
+group([ of_relation(object(named('Moe'),child,countable,na,eq,1),named('Jenny'))]).
+group([ of_relation(object(named('Sue'),wife,countable,na,eq,1),named('John'))]).
+group([ of_relation(object(named('Tom'),child,countable,na,eq,1),named('Bob'))]).
+group([ of_relation(object(named('Tom'),child,countable,na,eq,1),named('Mary'))]).
+group([ property(named('Angie'),female,pos)]).
+group([ property(named('Anne'),female,pos)]).
+group([ property(named('Bill'),male,pos)]).
+group([ property(named('Bob'),male,pos)]).
+group([ property(named('Dan'),male,pos)]).
+group([ property(named('Jeff'),male,pos)]).
+group([ property(named('Jenny'),female,pos)]).
+group([ property(named('Mary'),female,pos)]).
+group([ property(named('Moe'),male,pos)]).
+group([ property(named('Sue'),female,pos)]).
+group([ property(named('Tom'),male,pos)]).
+group([ object(named('Moe'),kid,countable,na,eq,1)]).
+group([ object(named('Tom'),kid,countable,na,eq,1)]).
+of_relation(object(named('Angie'),daughter,countable,na,eq,1),named('Jenny')).
+of_relation(object(named('Anne'),daughter,countable,na,eq,1),named('Mary')).
+of_relation(object(named('Bill'),son,countable,na,eq,1),named('Mary')).
+of_relation(object(named('Bob'),father,countable,na,eq,1),named('Anne')).
+of_relation(object(named('Bob'),father,countable,na,eq,1),named('Mary')).
+of_relation(object(named('Bob'),father,countable,na,eq,1),named('Tom')).
+of_relation(object(named('Bob'),husband,countable,na,eq,1),named('Mary')).
+of_relation(object(named('Dan'),husband,countable,na,eq,1),named('Jenny')).
+of_relation(object(named('Jeff'),son,countable,na,eq,1),named('John')).
+of_relation(object(named('Jenny'),daughter,countable,na,eq,1),named('John')).
+of_relation(object(named('Jenny'),mother,countable,na,eq,1),named('Moe')).
+of_relation(object(named('Mary'),daughter,countable,na,eq,1),named('John')).
+of_relation(object(named('Tom'),son,countable,na,eq,1),named('Mary')).
+object(named('Angie'),'Angie',named,na,eq,1).
+object(named('Anne'),'Anne',named,na,eq,1).
+object(named('Bill'),'Bill',named,na,eq,1).
+object(named('Bob'),'Bob',named,na,eq,1).
+object(named('Dan'),'Dan',named,na,eq,1).
+object(named('Jeff'),'Jeff',named,na,eq,1).
+object(named('Jenny'),'Jenny',named,na,eq,1).
+object(named('John'),'John',named,na,eq,1).
+object(named('Mary'),'Mary',named,na,eq,1).
+object(named('Moe'),'Moe',named,na,eq,1).
+object(named('Sue'),'Sue',named,na,eq,1).
+object(named('Tom'),'Tom',named,na,eq,1).
+
+ANSWERTEXT #1:
+Tom is male.
+Sue is female.
+Moe is male.
+Mary is female.
+Jenny is female.
+Jeff is male.
+Dan is male.
+Bob is male.
+Bill is male.
+Anne is female.
+Angie is female.
+Tom is a kid.
+Moe is a kid.
+Tom is a son of Mary.
+Mary is a daughter of John.
+Jenny is a mother of Moe.
+Jenny is a daughter of John.
+Jeff is a son of John.
+Dan is a husband of Jenny.
+Bob is a husband of Mary.
+Bob is a father of Tom.
+Bob is a father of Mary.
+Bob is a father of Anne.
+Bill is a son of Mary.
+Anne is a daughter of Mary.
+Angie is a daughter of Jenny.
+Tom is a child of Mary.
+Tom is a child of Bob.
+Sue is a wife of John.
+Moe is a child of Jenny.
+Mary is a wife of Bob.
+Mary is a child of John.
+Mary is a child of Bob.
+Jenny is a wife of Dan.
+Jenny is a parent of Moe.
+Jenny is a child of John.
+Jeff is a child of John.
+Bob is a parent of Tom.
+Bob is a parent of Mary.
+Bob is a parent of Anne.
+Bill is a child of Mary.
+Anne is a child of Mary.
+Anne is a child of Bob.
+Angie is a child of Jenny.
+It is false that Angie is a sibling of Angie.
+It is false that Anne is a sibling of Anne.
+It is false that Bill is a sibling of Bill.
+It is false that Bob is a sibling of Bob.
+It is false that Dan is a sibling of Dan.
+It is false that Jeff is a sibling of Jeff.
+It is false that Jenny is a sibling of Jenny.
+It is false that John is a sibling of John.
+It is false that Mary is a sibling of Mary.
+It is false that Moe is a sibling of Moe.
+It is false that Sue is a sibling of Sue.
+It is false that Tom is a sibling of Tom.
+It is false that Bob is a kid.
+It is false that Jenny is a kid.
+

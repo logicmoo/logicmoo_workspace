@@ -1,0 +1,47 @@
+# husband/wife:
+If someone X is a husband of someone then X is male.
+If someone X is a husband of someone Y then Y is a wife of X.
+If someone X is a wife of someone then X is female.
+# father/mother:
+If someone X is a father of someone then X is male.
+If someone X is a father of someone Y then X is a parent of Y.
+If someone X is a mother of someone then X is female.
+If someone X is a mother of someone Y then X is a parent of Y.
+# parent/child:
+If someone X is a parent of someone Y then Y is a child of X.
+# son/daughter:
+If someone X is a son of someone then X is male.
+If someone X is a son of someone Y then X is a child of Y.
+If someone X is a daughter of someone then X is female.
+If someone X is a daughter of someone Y then X is a child of Y.
+# ancestor/descendant:
+If someone X is a parent of someone who is a parent of someone Y then X is an ancestor of Y.
+If someone X is an ancestor of someone Y then Y is a descendant of X.
+# sibling:
+SiblingRule1: If someone X is a child of someone P and someone Y is a child of P then X is a sibling of Y.
+SiblingRule2: Everyone is not a sibling of himself.
+SiblingRule2 overrides SiblingRule1.
+# brother/sister:
+If someone X is a male sibling of someone Y then X is a brother of Y.
+If someone X is a female sibling of someone Y then X is a sister of Y.
+# kid:
+Everyone who is a parent of someone is not a kid.
+# only-child:
+Everyone who is a sibling of someone is not an n:only-child.
+# facts:
+Mary is a daughter of John.
+Bob is a husband of Mary.
+Bill is a son of Mary.
+Bob is a father of Mary.
+Tom is a son of Mary.
+Bob is a father of Tom.
+Anne is a daughter of Mary.
+Bob is a father of Anne.
+Jeff is a son of John.
+Tom is a kid.
+Jenny is a daughter of John.
+Sue is a wife of John.
+Dan is a husband of Jenny.
+Angie is a daughter of Jenny.
+Jenny is a mother of Moe.
+Moe is a male kid.

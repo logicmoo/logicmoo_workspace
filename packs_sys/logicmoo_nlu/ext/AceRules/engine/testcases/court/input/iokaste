@@ -1,0 +1,7 @@
+Iokaste is a parent of Oedipus.
+Iokaste is a parent of Polyneikes.
+Oedipus is a parent of Polyneikes.
+Polyneikes is a parent of Thersandros.
+Oedipus is a patricide.
+Thersandros is not a patricide.
+Everybody who is a parent of a patricide who is a parent of somebody who is not a patricide is an answer.
