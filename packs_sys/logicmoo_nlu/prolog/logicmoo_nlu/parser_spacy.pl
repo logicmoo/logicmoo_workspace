@@ -72,6 +72,20 @@ foc_spacy_stream(Out,In):- tmp:existing_spacy_stream(OldThread,FFid,Out,In), \+ 
   assert(tmp:existing_spacy_stream(Self,FFid,Out,In)),!.
 
 foc_spacy_stream(Out,In):-
+  thread_self(Self),
+  tcp_socket(Socket),
+  catch((tcp_connect(Socket, '127.0.0.1':4096),
+  tcp_open_socket(Socket, StreamPair)),_,fail),
+  StreamPair = In, StreamPair = Out,
+  set_stream(In,close_on_exec(false)),
+  set_stream(Out,close_on_exec(false)),
+  set_stream(In,close_on_abort(false)),
+  set_stream(Out,close_on_abort(false)),
+  set_stream(In,eof_action(eof_code)),
+  set_stream(Out,eof_action(eof_code)),
+  assert(tmp:existing_spacy_stream(Self,_,Out,In)),!.
+
+foc_spacy_stream(Out,In):-
   lmconfig:space_py_dir(Dir),
   thread_self(Self),
   sformat(S,'python3 parser_spacy.py -nc -cmdloop ',[]),

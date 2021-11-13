@@ -40,6 +40,18 @@ flair_stream_to_w2(In,_, Result):- peek_string(In,10,S),atom_contains(S,"w2flair
 flair_stream_to_w2(In,S, Result):- atom_contains(S,"w2flair("),!,read_term_from_atom_rest(In,S,Term),flair_to_w2(Term, Result).
 flair_stream_to_w2(In,S, Result):- at_end_of_stream(In),!,flair_to_w2(S, Result).
 flair_stream_to_w2(In,_, Result):- repeat, read_pending_codes(In,Codes,[]),
+ (Codes==[]->(sleep(0.1),fail);true),sformat(S,'~s',[Codes]),
+ flair_stream_to_w2(In,S, Result).
+
+read_term_from_atom_rest(_,S, Result):- atom_contains(S,"w2flair([])."),!,Result=[].
+read_term_from_atom_rest(In,S,Term):- atom_concat(L,'\n',S),!,read_term_from_atom_rest(In,L,Term).
+read_term_from_atom_rest(In,S,Term):- atom_concat(L,' ',S),!,read_term_from_atom_rest(In,L,Term).
+read_term_from_atom_rest(_,S,Term):-  atom_concat(_,'.',S),!,read_term_from_atom(S,Term,[]).
+read_term_from_atom_rest(In,S,Term):- read_pending_codes(In,Codes,[]),
+  (Codes==[]->(sleep(0.1),fail);true),sformat(S2,'~s~s',[S,Codes]),
+  read_term_from_atom_rest(In,S2,Term).
+
+
 flair_lexical_segs(I,O):-
   allen_srl_lexical_segs(I,M),
   flair_parse(I,S),
@@ -58,16 +70,7 @@ upos_to_penn_pos(adj,jj).
 upos_to_penn_pos(propn,nnp).
 %upos_to_penn_pos(noun,nn). other systems might detect a verb this one doesnt (so we dont overwrite)
 upos_to_penn_pos(cconj,cc).
- (Codes==[]->(sleep(0.1),fail);true),sformat(S,'~s',[Codes]),
- flair_stream_to_w2(In,S, Result).
 
-read_term_from_atom_rest(_,S, Result):- atom_contains(S,"w2flair([])."),!,Result=[].
-read_term_from_atom_rest(In,S,Term):- atom_concat(L,'\n',S),!,read_term_from_atom_rest(In,L,Term).
-read_term_from_atom_rest(In,S,Term):- atom_concat(L,' ',S),!,read_term_from_atom_rest(In,L,Term).
-read_term_from_atom_rest(_,S,Term):-  atom_concat(_,'.',S),!,read_term_from_atom(S,Term,[]).
-read_term_from_atom_rest(In,S,Term):- read_pending_codes(In,Codes,[]),
-  (Codes==[]->(sleep(0.1),fail);true),sformat(S2,'~s~s',[S,Codes]),
-  read_term_from_atom_rest(In,S2,Term).
 
 
 :- dynamic(tmp:existing_flair_stream/4).
@@ -77,6 +80,20 @@ foc_flair_stream(Out,In):- tmp:existing_flair_stream(OldThread,FFid,Out,In), \+ 
   retract(tmp:existing_flair_stream(OldThread,FFid,Out,In)),
   thread_self(Self),
   assert(tmp:existing_flair_stream(Self,FFid,Out,In)),!.
+
+foc_flair_stream(Out,In):-
+  thread_self(Self),
+  tcp_socket(Socket),
+  catch((tcp_connect(Socket, '127.0.0.1':4095),
+  tcp_open_socket(Socket, StreamPair)),_,fail),
+  StreamPair = In, StreamPair = Out,
+  set_stream(In,close_on_exec(false)),
+  set_stream(Out,close_on_exec(false)),
+  set_stream(In,close_on_abort(false)),
+  set_stream(Out,close_on_abort(false)),
+  set_stream(In,eof_action(eof_code)),
+  set_stream(Out,eof_action(eof_code)),
+  assert(tmp:existing_flair_stream(Self,_,Out,In)),!.
 
 foc_flair_stream(Out,In):-
   lmconfig:space_py_dir(Dir),

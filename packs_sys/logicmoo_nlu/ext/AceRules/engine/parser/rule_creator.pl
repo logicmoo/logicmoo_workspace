@@ -74,6 +74,15 @@ create([Cond|RestConds], LabelMap, [(Label, - Then, IfConditionsT)|RestRules]) :
 	create(RestConds, LabelMap, RestRules))).
 
 create([Cond|RestConds], LabelMap, Out) :-
+  Cond = (drs(V1, IfConditions) => drs([], [-drs(_, [More])])),
+  More=[drs(V3,DRS1)=>drs(V4,DRS2)],
+  NMore=[drs(V3,DRS1) , -drs(V4,DRS2)],
+  NCond = (drs(V1, IfConditions) => drs([], [drs(_, [NMore])])),!,
+  create([NCond|RestConds], LabelMap, Out).
+
+
+
+create([Cond|RestConds], LabelMap, Out) :-
 	Cond = (drs(V1, IfConditions) => drs(V2, [Then-N|More])),
   create([(drs(V1, IfConditions) => drs(V2, [Then-N]))|RestConds], LabelMap, Out1),
   create([(drs(V1, IfConditions) => drs(V2, More))|RestConds], LabelMap, Out2),

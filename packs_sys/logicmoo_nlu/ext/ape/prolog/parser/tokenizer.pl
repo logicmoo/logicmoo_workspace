@@ -494,21 +494,22 @@ ensure_punct(_,X,X).
 ensure_punct2(X,X):- last(X,Punct),is_punct_char(Punct),!.
 ensure_punct2(X,M):- append(X,['.'],M),!.
 
+chk_is_allowed(IsAllowed,Allowed):- \+ \+ memberchk(IsAllowed,Allowed),  IsAllowed \== unsafe.
 
 do_idiomatic_replacements(Allowed,X,O):- do_idiomatic_replaces(Allowed,[],X,Y), ensure_punct(Allowed,Y,O).
 replace_once(X,Find,Replace,M):- append(Find,Right,NowFind), append(Left,NowFind,X),append([Left,Replace,Right],M),!.
 replace_once([XX|XXX],Find,Replace,M):- downcase_atom(XX,XD),XD\==XX,!,replace_once([XD|XXX],Find,Replace,M).
 
-do_idiomatic_replaces(Allowed,Except,X,Y):- idiomatic_replacement_shorter(IsAllowed,Find,Replace), \+ \+ memberchk(IsAllowed,Allowed),
+do_idiomatic_replaces(Allowed,Except,X,Y):- idiomatic_replacement_shorter(IsAllowed,Find,Replace), chk_is_allowed(IsAllowed,Allowed),
   replace_once(X,Find,Replace,M), do_idiomatic_replaces(Allowed,Except,M,Y).
-do_idiomatic_replaces(Allowed,Except,X,Y):- idiomatic_replacement(IsAllowed,Find,Replace), \+ member(f(Find),Except), \+ \+ memberchk(IsAllowed,Allowed),
+do_idiomatic_replaces(Allowed,Except,X,Y):- idiomatic_replacement(IsAllowed,Find,Replace), \+ member(f(Find),Except), chk_is_allowed(IsAllowed,Allowed),
   replace_once(X,Find,Replace,M), do_idiomatic_replaces(Allowed,[f(Find)|Except],M,Y).
-do_idiomatic_replaces(Allowed,Except,X,Y):- idiomatic_replacement(IsAllowed,Find,Replace),\+ member(f2(Find),Except), \+ \+ memberchk(IsAllowed,Allowed),
+do_idiomatic_replaces(Allowed,Except,X,Y):- idiomatic_replacement(IsAllowed,Find,Replace),\+ member(f2(Find),Except), chk_is_allowed(IsAllowed,Allowed),
   replace_once(X,Find,Replace,M), do_idiomatic_replaces(Allowed,[f2(Find)|Except],M,Y).
-do_idiomatic_replaces(Allowed,Except,X,Y):- idiomatic_replacement_extends(IsAllowed,Find,Replace,Lastly),\+ member(f3(Find),Except), \+ \+ memberchk(IsAllowed,Allowed),
+do_idiomatic_replaces(Allowed,Except,X,Y):- idiomatic_replacement_extends(IsAllowed,Find,Replace,Lastly),\+ member(f3(Find),Except), chk_is_allowed(IsAllowed,Allowed),
   replace_once(X,Find,Replace,M1),freeze(Punct,is_punct_char(Punct)),append(Lastly,[Punct],LastlyPunct),
   replace_once(M1,[Punct],LastlyPunct,M), do_idiomatic_replaces(Allowed,[f3(Find)|Except],M,Y).
-do_idiomatic_replaces(Allowed,Except,X,Y):- idiomatic_replacement_extends(IsAllowed,Find,Replace,Lastly),\+ member(f4(Find),Except), \+ \+ memberchk(IsAllowed,Allowed),
+do_idiomatic_replaces(Allowed,Except,X,Y):- idiomatic_replacement_extends(IsAllowed,Find,Replace,Lastly),\+ member(f4(Find),Except), chk_is_allowed(IsAllowed,Allowed),
   replace_once(X,Find,Replace,M1),freeze(Punct,is_punct_char(Punct)),append(Lastly,[Punct],LastlyPunct),
   replace_once(M1,[Punct],LastlyPunct,M), do_idiomatic_replaces(Allowed,[f4(Find)|Except],M,Y).
 do_idiomatic_replaces(_,_,X,X).
@@ -563,8 +564,8 @@ idiomatic_replacement(tense,[these],[some,'those-they']).
 idiomatic_replacement(tense,[their],['those-they','''',s]).
 idiomatic_replacement(tense,[they],[some,'those-they']).
 idiomatic_replacement(tense,[them],[some,'those-they']).
-idiomatic_replacement(tense,[does,some],[is,doing]).
-idiomatic_replacement(tense,[does],[is,doing]).
+idiomatic_replacement(unsafe,[does,some],[is,doing]).
+idiomatic_replacement(unsafe,[does],[is,doing]).
 idiomatic_replacement(tense,[wont],[will,not]).
 idiomatic_replacement(tense,['"',Eat],['"',Eats]):- freeze(Eat,verb_forms(Eat,Eats,_Ate,_Eating,_Eaten)).
 %idiomatic_replacement(tense,[was],[that,is,in,the,past,that,is]).
@@ -573,7 +574,8 @@ idiomatic_replacement(tense,['"',Eat],['"',Eats]):- freeze(Eat,verb_forms(Eat,Ea
 idiomatic_replacement_prepends(tense,Before,After,[if,the,statement,is,Old,statement,then]):-
   idiomatic_replacement_prepends(tense,Before,After,[in,the,Past]),
    (Past == past -> Old = old ; Old = new).
-  
+
+
 idiomatic_replacement_extends(tense,[has,done],[is,doing],[in,the,past]).
 idiomatic_replacement_extends(tense,[did,do],[is,doing],[in,the,past]).
 idiomatic_replacement_extends(tense,[was],[is],[in,the,past]).

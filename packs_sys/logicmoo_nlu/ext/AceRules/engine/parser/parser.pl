@@ -94,7 +94,7 @@ parse(InputCodes, Rules, Guess) :-
 	% --- STEP 3 ---
 	% First check of the structure of the DRS (Level 1).
 	log('parser.check-drs-1'),
-	check_drs(DRS1, 1),
+	%check_drs(DRS1, 1),
 	% --- STEP 4 ---
 	% Transformation of double implications.
 	log('parser.double_implication'),

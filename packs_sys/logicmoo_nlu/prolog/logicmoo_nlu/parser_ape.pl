@@ -121,9 +121,39 @@ my_drs_to_fol_kif2(I,O):- my_drs_to_fol(I,M),my_fol_kif(M,O),!.
 my_drs_to_fol(I,O):- on_x_fail(drs_fol(I,O)),!.
 my_drs_to_fol(OI,OI).
 
+
+their_drs_to_coreace(DRS1,X):- drs_to_coreace:drs_to_coreace(DRS1,X),good_coreace(X).
+
+good_coreace(X):- nonvar(X), X\==[],X\==['ERROR'].
+my_drs_to_coreace(O,unk(O)):- \+ compound(O),!.
+my_drs_to_coreace(DRS1,O):- their_drs_to_coreace(DRS1,O),good_coreace(O),!. 
+my_drs_to_coreace(IsList,O):- is_list(IsList),!,maplist(my_drs_to_coreace,IsList,O).
+my_drs_to_coreace(drs([],Y),O):- term_variables(Y,[V|_]),my_drs_to_coreace(drs(V,Y),O),!.
+my_drs_to_coreace(drs(X,Y),acedrs(X,O)):- !, my_drs_to_coreace(Y,O),!.
+my_drs_to_coreace(NV,O):- NV=..[X,Y], my_drs_to_coreace(Y,M),!,O=..[X,M].
+my_drs_to_coreace(T-N/A,aceo(O)):- term_variables(T,[V|_]), their_drs_to_coreace(drs([V],[T-N/A]),O),!.
+my_drs_to_coreace(T,O):- functor(T,_,A),A>2,!,my_drs_to_coreace(T-0/1,O).
+my_drs_to_coreace(O,unk(O)):-!.
+
+/*
+object(B,reason,countable,na,eq,1)
+predicate(Wait_In_Usually_For,wait,named('John'))
+ predicate/3
+ modifier_pp/4
+ modifier_pp
+*/
+
+% John in no park usually for every reason waits.
+% 'If there is a park X1 
+%   then it is false that
+%     if there is a reason X2 
+%       then John waits usually for the reason X2 in the park X1.'
 drs_to_sk(DRS1,DRS1):- copy_term(DRS1,DRS5),numbervars(DRS5,0,_),!,
-  drs_to_sk1(DRS5,_DRS7),ignore((drs_to_coreace:drs_to_coreace(DRS1,List),maplist(wdmsg,List))).
-drs_to_sk1(DRS1,DRS5):-
+  drs_to_sk1(DRS5,_DRS7),ignore((my_drs_to_coreace(DRS1,List),maplist(wdmsg,List))).
+
+drs_to_sk1(DRS1,DRS5):- notrace(catch(drs_to_sk11(DRS1,DRS5),_,fail)),!.
+drs_to_sk1(DRS1,DRS1).
+drs_to_sk11(DRS1,DRS5):-
  parser:(
   %generate_drs:generate_drs(
   %meta_preprocess(InputCodes, PlainText, LabelMap, OverridesPre),
@@ -138,7 +168,7 @@ drs_to_sk1(DRS1,DRS5):-
 	% --- STEP 3 ---
 	% First check of the structure of the DRS (Level 1).
 	%log('parser.check-drs-1'),
-	check_drs(DRS1, 1),
+	%check_drs(DRS1, 1),
 	% --- STEP 4 ---
 	% Transformation of double implications.
 	%log('parser.double_implication'),

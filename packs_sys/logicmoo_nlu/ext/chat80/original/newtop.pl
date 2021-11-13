@@ -417,7 +417,7 @@ text_to_chat80_tree(Sentence,Tree):-
 process4a(How,Sentence,U,S1,Times) :- 
   Times = [ParseTime,SemTime,TimePlan,_TimeAns,_TotalTime],
   report(How,Sentence,'Sentence',0,tree),
-  ignore((into_text80_string(Sentence,Text80),try_ace_lf(Text80,LF),dmsg(LF))),
+  ignore(on_x_fail((into_text80_string(Sentence,Text80),try_ace_lf(Text80)))),
 
   quietly(( runtime(StartSeg),
    mpred_test_mok(into_lexical_segs(Sentence,U)),

@@ -103,7 +103,7 @@ valid_conditions_1([drs(_, IfConditions) => drs([], [-drs(_, NegThenConditions)]
 % error
 valid_conditions_1([drs(_, IfConditions) => drs([], [-drs(_, _)])|_]) :-
 	wide_literals(IfConditions),
-	!,
+	!, fail,
 	throw(ar_error('parser.drs-check-1.NotFlatInsideOfNeg', 'Negation can not be applied on complex structures (such as other negations or if-then-structures).')).
 
 % error

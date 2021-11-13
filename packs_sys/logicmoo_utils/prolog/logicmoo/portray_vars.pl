@@ -545,6 +545,7 @@ append_varname(R,Var):- ignore((p_n_atom(R,RR),append_varname1(RR,Var))),!.
 append_varname1(R,_Var):- is_letterless(R),!. % ignore
 
 append_varname1(R,Var):- get_var_name(Var,Prev), contains_atom_ci(Prev,R),!.
+append_varname1(_,Var):- get_var_name(Var,Prev), contains_atom_ci(Prev,'_'),!.
 
 append_varname1(R,Var):- get_var_name(Var,Prev),!,
   ignore(( \+ contains_atom_ci(Prev,R), \+ contains_atom_ci(R,Prev), atomic_list_concat([Prev,'_',R],RS),

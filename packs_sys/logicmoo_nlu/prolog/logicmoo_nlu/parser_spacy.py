@@ -65,23 +65,24 @@ def do_nlp_proc(text0):
  doc = nlp(text0)    
  output = "w2spacy(["
  for token in doc:
-  output = output + f"w({qt(token.lower_)},[spos({qt(token.tag_.lower())}),loc({token.i+1}),root({qt(token.lemma_)}),{tense(token.tag_)}txt({dqt(token.text)}),{maybe_prob(token.prob)}"
-  for child in doc:
-   if child.head==token:
-    output = output + f"dep_child({(child.dep_.lower())},{nodestr(child)}), "  # ,{tense(token.head.tag_)},{qt(token.head.lemma_)},{qt(token.lemma_)}
- output = output + f"dep_parent({(token.dep_.lower())},{nodestr(token.head)}),node({nodestr(token)})]),"
+      output = output + f"w({qt(token.lower_)},[spos({qt(token.tag_.lower())}),loc({token.i+1}),root({qt(token.lemma_)}),{tense(token.tag_)}txt({dqt(token.text)}),{maybe_prob(token.prob)}"
+      for child in doc:
+           if child.head==token:
+              output = output + f"dep_child({(child.dep_.lower())},{nodestr(child)}), "  # ,{tense(token.head.tag_)},{qt(token.head.lemma_)},{qt(token.lemma_)}
+      output = output + f"dep_parent({(token.dep_.lower())},{nodestr(token.head)}),node({nodestr(token)})]),"
+ # now for spans
  output = output + "span(["
  for chunk in doc.noun_chunks: 
   output = output + f"span([seg({chunk.start+1},{chunk.end}),phrase('NP'),size({chunk.end-chunk.start}),childs(0),type({qt(chunk.root.dep_)}),head({nodestr(chunk.root.head)}),target({nodestr(chunk.root)}),text({dqt(chunk.text)})]),"
 
  output = output + "[]])"
  if show_comment==1:
-  output = output + ',comment("'
-  try: 
-   [to_nltk_tree(sent.root).pretty_print() for sent in doc.sents]
-  except Exception as e:
-   output = output + 'An exception occurred: {}'.format(e)
-  output = output + '")'
+      output = output + ',comment("'
+      try: 
+       [to_nltk_tree(sent.root).pretty_print() for sent in doc.sents]
+      except Exception as e:
+       output = output + 'An exception occurred: {}'.format(e)
+      output = output + '")'
  output = output + ']).'
  return output
 

@@ -12,33 +12,14 @@
   text_to_allen_srl_segs/2,
   allen_srl_parse/2]).
 
-:- use_module(library(http/json)).
 :- set_module(class(library)).
 :- set_module(base(system)).
 :- use_module(library(logicmoo_utils)).
 :- use_module(library(logicmoo_nlu/parser_penn_trees)).
 :- use_module(library(logicmoo_nlu/parser_tokenize)).
 
-:- dynamic(tmp:existing_allen_srl_stream/4).
-:- volatile(tmp:existing_allen_srl_stream/4).
-foc_allen_srl_stream(In,Out):- thread_self(Self),tmp:existing_allen_srl_stream(Self,_,In,Out),!,clear_allen_srl_pending(Out).
-foc_allen_srl_stream(In,Out):-
-  lmconfig:space_py_dir(Dir),
-  thread_self(Self),
-  sformat(S,'python3 parser_allen_srl.py -nc -cmdloop ',[]),
-  nop(writeln(S)),
-    process_create(path(bash), ['-c', S], [ cwd(Dir),  stdin(pipe(In)),stdout(pipe(Out)), stderr(null), process(FFid)]),!,
-  assert(tmp:existing_allen_srl_stream(Self,FFid,In,Out)).
+read_allen_srl_lines(Term, Result):- show_failure(always,allen_srl_to_w2(Term, Result)).
 
-clear_allen_srl_pending(Out):- nop((read_pending_codes(Out,Codes,[]),dmsg(clear_allen_srl_pending=Codes))).
-
-:- prolog_load_context(directory,Dir), assert(lmconfig:space_py_dir(Dir)).
-
-tokenize_allen_srl_string(Text,StrO):- any_to_string(Text,Str),  replace_in_string('\n',' ',Str,StrO).
-/*
-tokenize_allen_srl_string(Text,StrO):- any_to_string(Text,Str), replace_in_string(['\\'='\\\\','\''='\\\''],Str,StrM),
-  atomics_to_string(["'",StrM,"'"],StrO).
-*/
 allen_srl_lexical_segs(I,O):-
   spacy_lexical_segs(I,M),
   allen_srl_parse(I, S),
@@ -56,9 +37,6 @@ merge_allen_srl(srl(Verb,List),O,O):- member(w(Verb,OL),O), \+ member(allen_srl,
 %merge_allen_srl(S,I,O):- append(I,[S],O),!.
 merge_allen_srl(_,O,O).
 
-
-allen_srl_parse(Text, LinesO):- 
-  locally(alt_l:min_expected(2),allen_srl_parse0(Text, LinesO)).
 
 allen_srl_parse0(Text, LinesO) :- 
   allen_srl_parse1(Text, Lines),
@@ -80,11 +58,14 @@ maybe_redo_allen_srl_parse(Text, _, LinesO):-
   II=[_,_|_],
   allen_srl_parseC([cAn|II],LinesO).
 
+allen_srl_parse1(Text, LinesO):- 
+  tokenize_allen_srl_string(Text,String),
+  allen_srl_parse2(String, LinesO).
 
 allen_srl_parseC(Text,Lines):-
  allen_srl_parse1(Text,LinesI),
  remove_cans(LinesI,Lines).
- 
+
 remove_cans([],[]).
 remove_cans([srl([cAn],_)|Rest],O):- !, remove_cans(Rest,O).
 remove_cans([srl(Vs,Stuff)|Rest],[srl(Vs,StuffO)|O]):-
@@ -96,78 +77,6 @@ remove_cans([o(Vs,Stuff)|Rest],[o(Vs,StuffO)|O]):-
   remove_cans(Rest,O).
 remove_cans([S|Rest],[S|O]):- remove_cans(Rest,O).
 
-
-
-  
-allen_srl_parse1(Text, LinesO):- 
-  tokenize_allen_srl_string(Text,String),
-  allen_srl_parse2(String, LinesO).
-
-allen_srl_parse2(String, Lines):-
-  once(allen_srl_parse3(String, Lines)
-      ;allen_srl_parse4(String, Lines)).
-
-try_allen_stream(In,Write):- once(catch((flush_output(In),format(In,'~w',[Write])),_,
-  (retract(tmp:existing_allen_srl_stream(_,_,In,_)),fail))).
-
-% Clears if there is a dead one
-allen_srl_parse3(_String, _Lines) :-
-  foc_allen_srl_stream(In,_Out),
-  try_allen_stream(In,''),fail.
-% Reuses or Creates
-allen_srl_parse3(String, Lines) :-
-  foc_allen_srl_stream(In,Out),
-  try_allen_stream(In,String),
-  try_allen_stream(In,'\n'),
-  try_allen_stream(In,''),!,
-  read_term(Out,Term,[]),!,
-  read_allen_srl_lines(Term, Lines).
-
-% Very slow version
-allen_srl_parse4(String, Lines) :- 
-  lmconfig:space_py_dir(Dir),
-  sformat(S,'python3 parser_allen_srl.py -nc ~q ',[String]),
-  nop(writeln(S)),
-    process_create(path(bash), ['-c', S], [ cwd(Dir), stdout(pipe(Out))]),!,
-  read_term(Out,Term,[]),!,
-  read_allen_srl_lines(Term, Lines).
-
-test_allen_srl_parse1 :-
-  String = "Can the can do the Can Can?",
-  allen_srl_parse3(String, Lines),
-  pprint_ecp_cmt(yellow,test_allen_srl_parse1=Lines).
-
-test_allen_srl_parse2 :-
-  Text = "Can the can do the Can Can?",
-  allen_srl_parse4(Text,Lines),
-  pprint_ecp_cmt(yellow,test_allen_srl_parse2=Lines).
-
-test_allen_srl_parse3 :-
-  Text = "Can the can do the Can Can?",
-  allen_srl_parse2(Text,Lines),
-  pprint_ecp_cmt(yellow,test_allen_srl_parse3=Lines).
-
-
-allen_srl_pos_info(Text,PosW2s,Info,LExpr):-
-  text_to_allen_srl_sents(Text,LExpr),
-  tree_to_lexical_segs(LExpr,SegsF),
-  segs_retain_w2(SegsF,Info,PosW2s),!.
-
-text_to_allen_srl_pos(Text,PosW2s):- allen_srl_parse(Text,PosW2s),!.
-text_to_allen_srl_pos(Text,PosW2s):- allen_srl_pos_info(Text,PosW2s0,_Info,_LExpr),guess_pretty(PosW2s0),!,PosW2s=PosW2s0.
-  
-text_to_allen_srl_segs(Text,Segs):-
-  text_to_allen_srl_tree(Text,LExpr),
-  tree_to_lexical_segs(LExpr,Segs).
-
-text_to_allen_srl_sents(Text,Sent):-
-  text_to_allen_srl_segs(Text,Segs),!,
-  allen_srl_segs_to_sentences(Segs,Sent),!.
-
-allen_srl_segs_to_sentences(Segs,sentence(0,W2,Info)):-
-  segs_retain_w2(Segs,Info,W2).
-
-read_allen_srl_lines(Term, Result):- show_failure(always,allen_srl_to_w2(Term, Result)).
 
 text_to_allen_srl_tree(Text,LExpr):-
   allen_srl_parse(Text, String),
@@ -224,6 +133,122 @@ allen_srl_to_data({I},O):-!,allen_srl_to_data(I,O).
 allen_srl_to_data((A,B),O):-!,allen_srl_to_data(A,AA),allen_srl_to_data(B,BB),flatten([AA,BB],AB),allen_srl_to_data(AB,O),!.
 allen_srl_to_data((A:B),A:O):- !,allen_srl_to_data(B,BB),flatten([BB],AB),allen_srl_to_data(AB,O),!.
 allen_srl_to_data(Text,ListO):- Text=ListO,!.
+:- dynamic(tmp:existing_allen_srl_stream/4).
+:- volatile(tmp:existing_allen_srl_stream/4).
+foc_allen_srl_stream(Out,In):- thread_self(Self),tmp:existing_allen_srl_stream(Self,_,Out,In),!,clear_allen_srl_pending(In).
+foc_allen_srl_stream(Out,In):- tmp:existing_allen_srl_stream(OldThread,FFid,Out,In), \+ thread_property(OldThread,running),!,
+  retract(tmp:existing_allen_srl_stream(OldThread,FFid,Out,In)),
+  thread_self(Self),
+  assert(tmp:existing_allen_srl_stream(Self,FFid,Out,In)),!.
+
+foc_allen_srl_stream(Out,In):-
+  thread_self(Self),
+  tcp_socket(Socket),
+  catch((tcp_connect(Socket, '127.0.0.1':4097),
+  tcp_open_socket(Socket, StreamPair)),_,fail),
+  StreamPair = In, StreamPair = Out,
+  set_stream(In,close_on_exec(false)),
+  set_stream(Out,close_on_exec(false)),
+  set_stream(In,close_on_abort(false)),
+  set_stream(Out,close_on_abort(false)),
+  set_stream(In,eof_action(eof_code)),
+  set_stream(Out,eof_action(eof_code)),
+  assert(tmp:existing_allen_srl_stream(Self,_,Out,In)),!.
+
+foc_allen_srl_stream(Out,In):-
+  lmconfig:space_py_dir(Dir),
+  thread_self(Self),
+  sformat(S,'python3 parser_allen_srl.py -nc -cmdloop ',[]),
+  nop(writeln(S)),
+    process_create(path(bash), ['-c', S], [ cwd(Dir),  stdin(pipe(Out)),stdout(pipe(In)), stderr(null), process(FFid)]),!,
+  set_stream(In,close_on_exec(false)),
+  set_stream(Out,close_on_exec(false)),
+  set_stream(In,close_on_abort(false)),
+  set_stream(Out,close_on_abort(false)),
+  set_stream(In,eof_action(eof_code)),
+  set_stream(Out,eof_action(eof_code)),
+  sleep(1.0),
+  read_until_allen_srl_notice(In,"cmdloop_Ready."),!,
+  assert(tmp:existing_allen_srl_stream(Self,FFid,Out,In)).
+
+read_until_allen_srl_notice(In,Txt):- repeat,read_line_to_string(In,Str),(Str==end_of_file;atom_contains(Str,Txt)),!.
+
+clear_allen_srl_pending(In):- nop((read_pending_codes(In,Codes,[]),dmsg(clear_allen_srl_pending=Codes))).
+
+:- prolog_load_context(directory,Dir), assert(lmconfig:space_py_dir(Dir)).
+tokenize_allen_srl_string(Text,StrO):- any_to_string(Text,Str),  replace_in_string('\n',' ',Str,StrO).
+/*
+tokenize_allen_srl_string(Text,StrO):- any_to_string(Text,Str), replace_in_string(['\\'='\\\\','\''='\\\''],Str,StrM),
+  atomics_to_string(["'",StrM,"'"],StrO).
+*/
+
+
+allen_srl_parse(Text, LinesO):- 
+  locally(alt_l:min_expected(2),allen_srl_parse0(Text, LinesO)).
+
+allen_srl_parse2(String, Lines) :- 
+  once(allen_srl_parse3(String, Lines)
+      ;allen_srl_parse4(String, Lines)).
+
+try_allen_srl_stream(Out,Write):- once(catch((flush_output(Out),format(Out,'~w',[Write])),_,
+  (retract(tmp:existing_allen_srl_stream(_,_,Out,_)),fail))).
+
+% Clears if there is a dead one
+allen_srl_parse3(_String, _Lines) :-
+  foc_allen_srl_stream(Out,_In),
+  try_allen_srl_stream(Out,''),fail.
+% Reuses or Creates
+allen_srl_parse3(String, Lines) :-
+  foc_allen_srl_stream(Out,In),
+  try_allen_srl_stream(Out,String),
+  try_allen_srl_stream(Out,'\n'),
+  try_allen_srl_stream(Out,''),!,
+  read_allen_srl_lines(In, Lines).
+
+% Very slow version
+allen_srl_parse4(String, Lines) :- 
+  lmconfig:space_py_dir(Dir),
+  sformat(S,'python3 parser_allen_srl.py -nc ~q ',[String]),
+  nop(writeln(S)),
+    process_create(path(bash), ['-c', S], [ cwd(Dir), stdout(pipe(In))]),!,
+  read_until_allen_srl_notice(In,"cmdloop_Ready."),!,
+  read_allen_srl_lines(In, Lines).
+
+test_allen_srl_parse1 :-
+  String = "Can the can do the Can Can?",
+  allen_srl_parse3(String, Lines),
+  pprint_ecp_cmt(yellow,test_allen_srl_parse1=Lines).
+
+test_allen_srl_parse2 :-
+  Text = "Can the can do the Can Can?",
+  allen_srl_parse4(Text,Lines),
+  pprint_ecp_cmt(yellow,test_allen_srl_parse2=Lines).
+
+test_allen_srl_parse3 :-
+  Text = "Can the can do the Can Can?",
+  allen_srl_parse2(Text,Lines),
+  pprint_ecp_cmt(yellow,test_allen_srl_parse3=Lines).
+
+
+allen_srl_pos_info(Text,PosW2s,Info,LExpr):-
+  text_to_allen_srl_sents(Text,LExpr),
+  tree_to_lexical_segs(LExpr,SegsF),
+  segs_retain_w2(SegsF,Info,PosW2s),!.
+
+text_to_allen_srl_pos(Text,PosW2s):- allen_srl_parse(Text,PosW2s),!.
+text_to_allen_srl_pos(Text,PosW2s):- allen_srl_pos_info(Text,PosW2s0,_Info,_LExpr),guess_pretty(PosW2s0),!,PosW2s=PosW2s0.
+  
+text_to_allen_srl_segs(Text,Segs):-
+  text_to_allen_srl_tree(Text,LExpr),
+  tree_to_lexical_segs(LExpr,Segs).
+
+text_to_allen_srl_sents(Text,Sent):-
+  text_to_allen_srl_segs(Text,Segs),!,
+  allen_srl_segs_to_sentences(Segs,Sent),!.
+
+allen_srl_segs_to_sentences(Segs,sentence(0,W2,Info)):-
+  segs_retain_w2(Segs,Info,W2).
+
 
 
 :- if( \+ getenv('keep_going','-k')).
@@ -271,6 +296,9 @@ test_allen_srl(X):- test_allen_srl(_,X),nop(lex_info(X)).
 test_allen_srl(_,X):- nonvar(X), !, once(test_1allen_srl(X)).
 
 test_allen_srl(1,".\nThe Norwegian lives in the first house.\n.").
+test_allen_srl(1,"").
+test_allen_srl(1,".").
+test_allen_srl(1,"\n").
 
 test_allen_srl(1,"Rydell used his straw to stir the foam and ice remaining at the bottom of his tall plastic cup, as though he were hoping to find a secret prize.").
 
