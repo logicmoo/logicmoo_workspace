@@ -165,6 +165,8 @@ RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | s
  && apt update \
  && apt install -y gh
 
+# Python NLP Stuff
+EXPOSE 4095 4096 4097 4098 4099
 RUN pip3 uninstall nbconvert Pygments pygments
 RUN apt remove -y python3-pygments python3-h5py python3-packaging # python3-requests # python3-six 
 COPY packs_sys/logicmoo_nlu/requirements.txt /tmp/requirements.txt
@@ -172,8 +174,6 @@ RUN pip3 install -r /tmp/requirements.txt
 RUN python3 -m spacy download en_core_web_lg \
  && python3 -m spacy download en_core_web_sm
 
-
-EXPOSE 4095
 
 #CMD $LOGICMOO_WS/StartLogicmoo.sh
 #ENTRYPOINT ["/startup_logicmoo.sh"]
