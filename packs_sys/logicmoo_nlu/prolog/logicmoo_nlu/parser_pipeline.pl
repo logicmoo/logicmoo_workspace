@@ -314,8 +314,8 @@ run_pipeline(Text):-
   must_be(nonvar,Text),
   default_pipeline_opts(DefaultOpts),
   locally(set_prolog_flag(gc,false),
-  (run_pipeline(Text, DefaultOpts, O), 
-  show_kvs(O))).
+  (run_pipeline(Text, DefaultOpts, O), !,
+  show_kvs(O))),!.
 
 ensure_pipline_spec(_Default,X=Value, [X=Value]):- nonvar(Value), !.
 ensure_pipline_spec(_Default,NVPairs,Flat):- is_list(NVPairs), flatten(NVPairs,Flat),member(_=Value,Flat),nonvar(Value),!.

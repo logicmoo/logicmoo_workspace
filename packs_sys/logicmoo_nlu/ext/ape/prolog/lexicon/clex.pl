@@ -30,6 +30,8 @@
 	
 :- use_module(library(error)).
 
+:- use_module(library(logicmoo_utils)).
+
 /** <module> Common Lexicon Interface
 
 This module contains the predicates for the management of the common lexicon that is compiled into
@@ -128,8 +130,10 @@ clex_file(clex_lexicon):- exists_source(clex_lexicon_small).
 
 :- endif.
 
-
+:- if(exists_source(clex_lexicon)).
 :- include(clex_lexicon).
+:- endif.
+
 
 %% clex_switch(?Switch)
 %

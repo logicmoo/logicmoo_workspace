@@ -96,5 +96,7 @@
 
 :- ensure_loaded(ape('../AceRules/engine/run_acerules')).
 :- ensure_loaded(ape('../AceRules/engine/run_testcases')).
+:- ensure_loaded(ape('../AceRules/engine/acerules_processor')).
+
 
 %:- reexport(ape('utils/owlswrl/get_owl_output')).

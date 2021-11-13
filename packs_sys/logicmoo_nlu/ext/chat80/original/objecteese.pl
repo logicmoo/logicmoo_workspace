@@ -419,5 +419,5 @@ merge_w2(W21,w(W,WL),W21):-
 
 s82:- make, locally(set_prolog_flag(debug,true),s811(p1(do_objecteese_test))).
 
-:- add_history1((cls,debug,s82)).
+:- add_history((cls,debug,s82)).
 

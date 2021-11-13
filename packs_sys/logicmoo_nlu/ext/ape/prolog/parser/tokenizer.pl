@@ -623,12 +623,12 @@ expand_contracted_forms0([cannot | RestIn], [can, not | RestOut]) :-
 expand_contracted_forms0([shouldn, '\'', t | RestIn], [should, not | RestOut]) :-
 	!,
 	expand_contracted_forms0(RestIn, RestOut).
-
+/*
 expand_contracted_forms0(TextIn, AfterRestOut) :- freeze(A,(A==contractions;A==slang;A==mispellings)),dictionary(A,Before,After),
   listify(Before,BeforeL),append(BeforeL,RestIn,TextIn), !,
 	expand_contracted_forms0(RestIn, RestOut),
   listify(After,AfterL),append(AfterL,RestOut,AfterRestOut).
-
+*/
 expand_contracted_forms0([Token | TailIn], [Token | TailOut]) :-
 	expand_contracted_forms0(TailIn, TailOut).
 

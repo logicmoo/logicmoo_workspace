@@ -173,6 +173,9 @@ remove_punctuation(W2, W2).
 :- install_converter(parser_chat80:cvt_to_objecteese(w2, +merged_lexical_segs, -objecteese)).
 :- install_converter(parser_chat80:cvt_to_ace_pos(+objecteese, -ace_objecteese)).
 
+:- install_converter(parser_chat80:try_ace_lf(+ace_objecteese, -ace_fol)).
+
+
 /*
 :- install_converter(parser_penn_trees:text_to_best_tree(+text80, -e2c_syntaxTree)).
 :- install_converter(parser_penn_trees:tree_to_lexical_segs(+e2c_syntaxTree, -e2c_lexical_segs)).
@@ -185,6 +188,7 @@ remove_punctuation(W2, W2).
 :- parser_pipeline:asserta((
  default_pipeline_opts([lf, clause, objecteese, combined_info, simplify80, results80, clause_e2c, 
    reply_e2c, % ape_penn_syntaxTree, ape_penn_segs, 
+   ace_fol,
      merged_lexical_segs]))).
 
 

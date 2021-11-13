@@ -2066,4 +2066,8 @@ prep(via, via).
 prep(with, with).
 prep(during, during).
 
-:- include(ape(tests/clex_lexicon)).
+%:- if(exists_source('..'/tests/clex_lexicon)).
+:- include('/opt/logicmoo_workspace/packs_sys/logicmoo_nlu/ext/ape/tests/clex_lexicon.pl').
+%:- endif.
+
+
