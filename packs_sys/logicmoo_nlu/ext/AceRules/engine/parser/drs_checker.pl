@@ -127,12 +127,12 @@ valid_conditions_1([drs(_, IfConditions) => drs(_, ThenConditions)|Rest]) :-
 
 % error
 valid_conditions_1([drs(_, IfConditions) => drs(_, _)|_]) :-
-	wide_literals(IfConditions),
+	wide_literals(IfConditions), 
 	!,
-	throw(ar_error('parser.drs-check-1.NotFlatInThen', 'The "then"-part of a rule is not allowed to contain complex structures (such as negations or if-then-structures).')).
+	nop(throw(ar_error('parser.drs-check-1.NotFlatInThen', 'The "then"-part of a rule is not allowed to contain complex structures (such as negations or if-then-structures).'))).
 
 % error
-valid_conditions_1([drs(_, _) => drs(_, _)|_]) :-
+valid_conditions_1([drs(_, _) => drs(_, _)|_]) :- fail,
 	!,
 	throw(ar_error('parser.drs-check-1.NotLiteralsInIf', 'The "if"-part of a rule is not allowed to contain complex structures other than unnested negations.')).
 

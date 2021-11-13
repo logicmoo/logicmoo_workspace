@@ -93,7 +93,7 @@ group_shallow(PredList, PredList).
 group(ListIn, [group(Target)-N/0|ListOut]) :-
 	copy_term(ListIn, ListInSk),
 	transform_vars_1(ListInSk, ListInT),
-	group_template(Template),
+	acetmp:group_template(Template),
 	match_template(ListIn, ListInT, Template, ListOut, Target, N).
 
 

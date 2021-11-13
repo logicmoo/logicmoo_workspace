@@ -8,29 +8,47 @@ John is a man.
 John has a house.
 
 RULES:
--group([pred_mod(have,A,gv(0),[]),object(gv(0),dog,countable,na,eq,1)]) <- [group([pred_mod(have,A,gv(4),[]),object(gv(4),bike,countable,na,eq,1)]), object(A,man,countable,na,eq,1)].
--group([pred_mod(have,A,gv(1),[]),object(gv(1),cat,countable,na,eq,1)]) <- [group([pred_mod(have,A,gv(3),[]),object(gv(3),car,countable,na,eq,1)]), object(A,man,countable,na,eq,1), -group([pred_mod(have,A,gv(0),[]),object(gv(0),dog,countable,na,eq,1)])].
-group([pred_mod(have,A,gv(4),[]),object(gv(4),bike,countable,na,eq,1)]) <- [object(A,man,countable,na,eq,1)].
-group([pred_mod(have,A,gv(3),[]),object(gv(3),car,countable,na,eq,1)]) <- [pred_mod(have,A,B,[]), object(A,man,countable,na,eq,1), object(B,house,countable,na,eq,1)].
+-group([ pred_mod(have,Man_Have997,gv(0),[]), 
+         object(gv(0),dog,countable,na,eq,1)]) <- [group([ pred_mod(have,Man_Have997,gv(4),[]), 
+                                                           object(gv(4),bike,countable,na,eq,1)]), object(Man_Have997,man,countable,na,eq,1)].
+-group([ pred_mod(have,Man_Have1002,gv(1),[]), 
+         object(gv(1),cat,countable,na,eq,1)]) <- [group([ pred_mod(have,Man_Have1002,gv(3),[]), 
+                                                           object(gv(3),car,countable,na,eq,1)]), object(Man_Have1002,man,countable,na,eq,1), -group([ pred_mod(have,Man_Have1002,gv(0),[]), 
+                                                                                                                                                       object(gv(0),dog,countable,na,eq,1)])].
+group([ pred_mod(have,Man_Have1007,gv(4),[]), 
+        object(gv(4),bike,countable,na,eq,1)]) <- [object(Man_Have1007,man,countable,na,eq,1)].
+group([ pred_mod(have,Man_Have1011,gv(3),[]), 
+        object(gv(3),car,countable,na,eq,1)]) <- [pred_mod(have,Man_Have1011,House_Pred_mod1013,[]), object(Man_Have1011,man,countable,na,eq,1), object(House_Pred_mod1013,house,countable,na,eq,1)].
 pred_mod(have,named('John'),v(0),[]).
 object(named('John'),'John',named,na,eq,1).
 object(named('John'),man,countable,na,eq,1).
 object(v(0),house,countable,na,eq,1).
 
 SIMPLE RULES:
--group([have(A,gv(0),[]),dog(gv(0))]) <- [group([have(A,gv(4),[]),bike(gv(4))]), man(A)].
--group([have(A,gv(1),[]),cat(gv(1))]) <- [group([have(A,gv(3),[]),car(gv(3))]), man(A), -group([have(A,gv(0),[]),dog(gv(0))])].
-group([have(A,gv(4),[]),bike(gv(4))]) <- [man(A)].
-group([have(A,gv(3),[]),car(gv(3))]) <- [have(A,B,[]), man(A), house(B)].
+-group([ have(Man_Gv1038,gv(0),[]), 
+         dog(gv(0))]) <- [group([ have(Man_Gv1038,gv(4),[]), 
+                                  bike(gv(4))]), man(Man_Gv1038)].
+-group([ have(Man_Gv1040,gv(1),[]), 
+         cat(gv(1))]) <- [group([ have(Man_Gv1040,gv(3),[]), 
+                                  car(gv(3))]), man(Man_Gv1040), -group([ have(Man_Gv1040,gv(0),[]), 
+                                                                          dog(gv(0))])].
+group([ have(Man_Gv1041,gv(4),[]), 
+        bike(gv(4))]) <- [man(Man_Gv1041)].
+group([ have(Man_Gv1043,gv(3),[]), 
+        car(gv(3))]) <- [have(Man_Gv1043,House_HaveGv1043,[]), man(Man_Gv1043), house(House_HaveGv1043)].
 have(named('John'),v(0),[]).
 man(named('John')).
 house(v(0)).
 
 ANSWERSET #1:
--group([pred_mod(have,named('John'),gv(0),[]),object(gv(0),dog,countable,na,eq,1)]).
--group([pred_mod(have,named('John'),gv(1),[]),object(gv(1),cat,countable,na,eq,1)]).
-group([pred_mod(have,named('John'),gv(3),[]),object(gv(3),car,countable,na,eq,1)]).
-group([pred_mod(have,named('John'),gv(4),[]),object(gv(4),bike,countable,na,eq,1)]).
+-group([ pred_mod(have,named('John'),gv(0),[]), 
+         object(gv(0),dog,countable,na,eq,1)]).
+-group([ pred_mod(have,named('John'),gv(1),[]), 
+         object(gv(1),cat,countable,na,eq,1)]).
+group([ pred_mod(have,named('John'),gv(3),[]), 
+        object(gv(3),car,countable,na,eq,1)]).
+group([ pred_mod(have,named('John'),gv(4),[]), 
+        object(gv(4),bike,countable,na,eq,1)]).
 pred_mod(have,named('John'),v(0),[]).
 object(named('John'),'John',named,na,eq,1).
 object(named('John'),man,countable,na,eq,1).

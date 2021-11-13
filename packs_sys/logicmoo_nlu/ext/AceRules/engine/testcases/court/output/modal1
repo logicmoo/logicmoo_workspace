@@ -9,11 +9,15 @@ Bill cannot wait.
 No customer must buy a car.
 
 RULES:
--group([can([pred_mod(wait,named('Bill'),[])])]).
--group([must([pred_mod(buy,A,gv(0),[]),object(gv(0),car,countable,na,eq,1)])]) <- [object(A,customer,countable,na,eq,1)].
-can([pred_mod(have,named('John'),v(0),[]),object(v(0),card,countable,na,eq,1)]).
-group([must([pred_mod(wait,A,[])])]) <- [can([pred_mod(have,A,B,[]),object(B,card,countable,na,eq,1)]), object(A,C,D,E,F,G), object(A,customer,countable,na,eq,1)].
-group([must([pred_mod(have,A,gv(1),[]),object(gv(1),card,countable,na,eq,1)])]) <- [object(A,clerk,countable,na,eq,1)].
+-group([ can( [ pred_mod(wait,named('Bill'),[])])]).
+-group([ must( [ pred_mod(buy,Customer_Buy,gv(0),[]), 
+                 object(gv(0),car,countable,na,eq,1)])]) <- [object(Customer_Buy,customer,countable,na,eq,1)].
+can([ pred_mod(have,named('John'),v(0),[]), 
+      object(v(0),card,countable,na,eq,1)]).
+group([must([pred_mod(wait,Customer_Have_Wait1272,[])])]) <- [can([ pred_mod(have,Customer_Have_Wait1272,Size_Pred_mod1276,[]), 
+                                                                    object(Size_Pred_mod1276,card,countable,na,eq,1)]), object(Customer_Have_Wait1272,ObjectHave_Wait12721282,ObjectHave_Wait12721281,ObjectHave_Wait12721280,ObjectHave_Wait1272,Object1290), object(Customer_Have_Wait1272,customer,countable,na,eq,1)].
+group([ must( [ pred_mod(have,Clerk_Have1285,gv(1),[]), 
+                object(gv(1),card,countable,na,eq,1)])]) <- [object(Clerk_Have1285,clerk,countable,na,eq,1)].
 object(named('Bill'),'Bill',named,na,eq,1).
 object(named('Bill'),clerk,countable,na,eq,1).
 object(named('John'),'John',named,na,eq,1).
@@ -21,19 +25,26 @@ object(named('John'),customer,countable,na,eq,1).
 
 SIMPLE RULES:
 -can(wait(named('Bill'),[])).
--must([buy(A,gv(0),[]),car(gv(0))]) <- [customer(A)].
-can([have(named('John'),v(0),[]),card(v(0))]).
-must(wait(A,[])) <- [can([have(A,B,[]),card(B)]), something(A), customer(A)].
-must([have(A,gv(1),[]),card(gv(1))]) <- [clerk(A)].
+-must([ buy(Customer_Gv1313,gv(0),[]), 
+        car(gv(0))]) <- [customer(Customer_Gv1313)].
+can([ have(named('John'),v(0),[]), 
+      card(v(0))]).
+must(wait(Customer_Something_Wait1315,[])) <- [can([ have(Customer_Something_Wait1315,Size_HaveWait1315,[]), 
+                                                     card(Size_HaveWait1315)]), something(Customer_Something_Wait1315), customer(Customer_Something_Wait1315)].
+must([ have(Clerk_Gv1319,gv(1),[]), 
+       card(gv(1))]) <- [clerk(Clerk_Gv1319)].
 clerk(named('Bill')).
 customer(named('John')).
 
 ANSWERSET #1:
--group([can([pred_mod(wait,named('Bill'),[])])]).
--group([must([pred_mod(buy,named('John'),gv(0),[]),object(gv(0),car,countable,na,eq,1)])]).
-can([pred_mod(have,named('John'),v(0),[]),object(v(0),card,countable,na,eq,1)]).
-group([must([pred_mod(wait,named('John'),[])])]).
-group([must([pred_mod(have,named('Bill'),gv(1),[]),object(gv(1),card,countable,na,eq,1)])]).
+-group([ can( [ pred_mod(wait,named('Bill'),[])])]).
+-group([ must( [ pred_mod(buy,named('John'),gv(0),[]), 
+                 object(gv(0),car,countable,na,eq,1)])]).
+can([ pred_mod(have,named('John'),v(0),[]), 
+      object(v(0),card,countable,na,eq,1)]).
+group([ must( [ pred_mod(wait,named('John'),[])])]).
+group([ must( [ pred_mod(have,named('Bill'),gv(1),[]), 
+                object(gv(1),card,countable,na,eq,1)])]).
 object(named('Bill'),'Bill',named,na,eq,1).
 object(named('Bill'),clerk,countable,na,eq,1).
 object(named('John'),'John',named,na,eq,1).

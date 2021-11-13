@@ -9,27 +9,27 @@ John is a shoplifter.
 John is not a teenager.
 
 RULES:
--group([object(named('John'),teenager,countable,na,eq,1)]).
-group([property(A,trustworthy,pos)]) <- [object(A,B,C,D,E,F), ~group([object(A,criminal,countable,na,eq,1)])].
-group([object(A,customer,countable,na,eq,1)]) <- [group([property(A,trustworthy,pos)]), object(A,B,C,D,E,F)].
-group([object(A,criminal,countable,na,eq,1)]) <- [group([object(A,thief,countable,na,eq,1)])].
-group([object(A,teenager,countable,na,eq,1)]) <- [object(A,shoplifter,countable,na,eq,1)].
-group([object(A,thief,countable,na,eq,1)]) <- [object(A,shoplifter,countable,na,eq,1)].
+-group([ object(named('John'),teenager,countable,na,eq,1)]).
+group([property(Criminal_Trustworthy1483,trustworthy,pos)]) <- [object(Criminal_Trustworthy1483,ObjectTrustworthy14831488,ObjectTrustworthy14831487,ObjectTrustworthy14831486,ObjectTrustworthy1483,Object1513), ~(group([ object(Criminal_Trustworthy1483,criminal,countable,na,eq,1)]))].
+group([ object(Trustworthy_Customer1491,customer,countable,na,eq,1)]) <- [group([property(Trustworthy_Customer1491,trustworthy,pos)]), object(Trustworthy_Customer1491,ObjectTrustworthy_Customer14911498,ObjectTrustworthy_Customer14911497,ObjectTrustworthy_Customer14911496,ObjectTrustworthy_Customer1491,Object1514)].
+group([ object(Thief_Criminal1500,criminal,countable,na,eq,1)]) <- [group([ object(Thief_Criminal1500,thief,countable,na,eq,1)])].
+group([ object(Shoplifter_Teenager,teenager,countable,na,eq,1)]) <- [object(Shoplifter_Teenager,shoplifter,countable,na,eq,1)].
+group([ object(Shoplifter_Thief1509,thief,countable,na,eq,1)]) <- [object(Shoplifter_Thief1509,shoplifter,countable,na,eq,1)].
 object(named('John'),'John',named,na,eq,1).
 object(named('John'),shoplifter,countable,na,eq,1).
 
 SIMPLE RULES:
 -teenager(named('John')).
-trustworthy(A) <- [something(A), ~criminal(A)].
-customer(A) <- [trustworthy(A), something(A)].
-criminal(A) <- [thief(A)].
-teenager(A) <- [shoplifter(A)].
-thief(A) <- [shoplifter(A)].
+trustworthy(Criminal_Something_Trustworthy1546) <- [something(Criminal_Something_Trustworthy1546), ~(criminal(Criminal_Something_Trustworthy1546))].
+customer(Something_Trustworthy_Customer1549) <- [trustworthy(Something_Trustworthy_Customer1549), something(Something_Trustworthy_Customer1549)].
+criminal(Thief_Criminal1552) <- [thief(Thief_Criminal1552)].
+teenager(Shoplifter_Teenager1554) <- [shoplifter(Shoplifter_Teenager1554)].
+thief(Shoplifter_Thief1556) <- [shoplifter(Shoplifter_Thief1556)].
 shoplifter(named('John')).
 
 ANSWERSET #1:
-group([object(named('John'),criminal,countable,na,eq,1)]).
-group([object(named('John'),thief,countable,na,eq,1)]).
+group([ object(named('John'),criminal,countable,na,eq,1)]).
+group([ object(named('John'),thief,countable,na,eq,1)]).
 object(named('John'),'John',named,na,eq,1).
 object(named('John'),shoplifter,countable,na,eq,1).
 

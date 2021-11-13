@@ -142,14 +142,19 @@ process(In, Out, court, ace_trace) :-
 process(_, Out, _, ace_trace) :-
     write(Out, 'ERROR: ACE-trace is not available for this mode.\n').
 
+unnumbervars_pretty2(A,B):- unnumbervars(A,B),guess_pretty(B).
 
-print_normal(Out, InputCodes, Rules, SimpleRules, Answersets, AnswerTexts) :-
+print_normal(Out, InputCodes, Rules0, SimpleRules0, Answersets0, AnswerTexts0) :-
     atom_codes(InputText, InputCodes),
     format(Out, '\nINPUT TEXT:\n~w\nRULES:\n', InputText),
+  unnumbervars_pretty2(Rules0,Rules),
 	write_rules(Out, Rules),
 	write(Out, '\nSIMPLE RULES:\n'),
+  unnumbervars_pretty2(SimpleRules0,SimpleRules),
 	write_rules(Out, SimpleRules), nl(Out),
+  unnumbervars_pretty2(Answersets0,Answersets),
 	write_answersets(Out, Answersets, 1),
+  unnumbervars_pretty2(AnswerTexts0,AnswerTexts),
 	write_answertexts(Out, AnswerTexts, 1).
 
 

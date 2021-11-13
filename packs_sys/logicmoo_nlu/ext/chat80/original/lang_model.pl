@@ -331,6 +331,7 @@ my_tokenize_atom(I,O):- atom_contains(I,' ?'),!,split_string(I, " \s\t\n_", " \s
 my_tokenize_atom(I,O):- atom_contains(I,' .'),!,split_string(I, " \s\t\n_", " \s\t\n", Flat),finish_tokenize(Flat,O).
 %my_tokenize_atom(I,O):- !,split_string(I, " \s\t\n_", " \s\t\n", Flat),finish_tokenize(Flat,O).
 my_tokenize_atom(I,O):- tokenize_atom(I,Flat),finish_tokenize(Flat,O).
+
 words_of0(I,Words):- atomic(I),!,my_tokenize_atom(I,Flat),include(is_word80,Flat,Words).
 words_of0(I,Words):- \+ is_list(I),!,findall(E,(sub_term(E,I),is_word80(E)),Words).
 words_of0([FW|I],Words):- FW=tag(_,_,_),!,flatten([FW|I],Flat),include(is_word80,Flat,Words).
@@ -528,7 +529,10 @@ s80(S):-
 c88(M):- c88(M,O),dmsg(O).
 c88(M,O):- process4a(off,M,_,O,_Times).
 
-try_ace_lf(I,O):- words_of(I,M),tokenizer:expand_contracted_forms(_All,M,MS),any_to_str(MS,S), ace_to_drs:aceparagraph_to_drs(S,on,off,1,_Sentences,_Trees,UnresolvedDrs,O,Messages,_Time),
+
+any_to_ace_str(I,S):- words_of(I,M),tokenizer:expand_contracted_forms(_All,M,MS),any_to_str(MS,S).
+
+try_ace_lf(I,O):- any_to_ace_str(I,S), ace_to_drs:aceparagraph_to_drs(S,on,off,1,_Sentences,_Trees,UnresolvedDrs,O,Messages,_Time),
    nop(wdmsg(UnresolvedDrs=Messages)),
    should_learn(O).
 try_ace_lf(I):- make,try_ace_lf(I,O),exec_fol(I=O).

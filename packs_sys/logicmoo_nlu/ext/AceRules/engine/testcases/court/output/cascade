@@ -10,30 +10,30 @@ Every worker is a wage-earner.
 Every wage-earner is not a customer.
 
 RULES:
--group([object(A,customer,countable,na,eq,1)]) <- [group([object(A,'wage-earner',countable,na,eq,1)])].
-group([property(A,external,pos)]) <- [group([object(A,buyer,countable,na,eq,1)])].
-group([object(A,buyer,countable,na,eq,1)]) <- [group([object(A,customer,countable,na,eq,1)])].
-group([object(A,employee,countable,na,eq,1)]) <- [object(A,manager,countable,na,eq,1)].
-group([object(A,worker,countable,na,eq,1)]) <- [group([object(A,employee,countable,na,eq,1)])].
-group([object(A,'wage-earner',countable,na,eq,1)]) <- [group([object(A,worker,countable,na,eq,1)])].
-group([object(named('John'),customer,countable,na,eq,1)]).
+-group([ object(Wage_earner_Customer,customer,countable,na,eq,1)]) <- [group([ object(Wage_earner_Customer,'wage-earner',countable,na,eq,1)])].
+group([property(Buyer_External,external,pos)]) <- [group([ object(Buyer_External,buyer,countable,na,eq,1)])].
+group([ object(Customer_Buyer,buyer,countable,na,eq,1)]) <- [group([ object(Customer_Buyer,customer,countable,na,eq,1)])].
+group([ object(Manager_Employee,employee,countable,na,eq,1)]) <- [object(Manager_Employee,manager,countable,na,eq,1)].
+group([ object(Employee_Worker,worker,countable,na,eq,1)]) <- [group([ object(Employee_Worker,employee,countable,na,eq,1)])].
+group([ object(Worker_Wage_earner,'wage-earner',countable,na,eq,1)]) <- [group([ object(Worker_Wage_earner,worker,countable,na,eq,1)])].
+group([ object(named('John'),customer,countable,na,eq,1)]).
 object(named('John'),'John',named,na,eq,1).
 object(named('John'),manager,countable,na,eq,1).
 
 SIMPLE RULES:
--customer(A) <- ['wage-earner'(A)].
-external(A) <- [buyer(A)].
-buyer(A) <- [customer(A)].
-employee(A) <- [manager(A)].
-worker(A) <- [employee(A)].
-'wage-earner'(A) <- [worker(A)].
+-customer(Wage_earner_Wage_earner_Customer126) <- ['wage-earner'(Wage_earner_Wage_earner_Wage_earner_Customer126)].
+external(Buyer_External128) <- [buyer(Buyer_External128)].
+buyer(Customer_Buyer130) <- [customer(Customer_Buyer130)].
+employee(Manager_Employee132) <- [manager(Manager_Employee132)].
+worker(Employee_Worker134) <- [employee(Employee_Worker134)].
+'wage-earner'(Wage_earner_Wage_earner_Worker_Wage_earner136) <- [worker(Wage_earner_Wage_earner_Worker_Wage_earner136)].
 customer(named('John')).
 manager(named('John')).
 
 ANSWERSET #1:
-group([object(named('John'),employee,countable,na,eq,1)]).
-group([object(named('John'),'wage-earner',countable,na,eq,1)]).
-group([object(named('John'),worker,countable,na,eq,1)]).
+group([ object(named('John'),employee,countable,na,eq,1)]).
+group([ object(named('John'),'wage-earner',countable,na,eq,1)]).
+group([ object(named('John'),worker,countable,na,eq,1)]).
 object(named('John'),'John',named,na,eq,1).
 object(named('John'),manager,countable,na,eq,1).
 

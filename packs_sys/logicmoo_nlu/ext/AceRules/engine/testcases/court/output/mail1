@@ -14,10 +14,10 @@ Message116 is a message and is from FaveCo.
 Message211 is a message and is from BabyCo.
 
 RULES:
-pred_mod(be,named('Message110'),[modifier_pp(from,named('ParisCo'))]).
-pred_mod(be,named('Message116'),[modifier_pp(from,named('FaveCo'))]).
-pred_mod(be,named('Message211'),[modifier_pp(from,named('BabyCo'))]).
-pred_mod(await,named('Karen'),v(0),[modifier_pp(from,named('ParisCo'))]).
+pred_mod(be,named('Message110'),[ modifier_pp(from,named('ParisCo'))]).
+pred_mod(be,named('Message116'),[ modifier_pp(from,named('FaveCo'))]).
+pred_mod(be,named('Message211'),[ modifier_pp(from,named('BabyCo'))]).
+pred_mod(await,named('Karen'),v(0),[ modifier_pp(from,named('ParisCo'))]).
 object(named('BabyCo'),'BabyCo',named,na,eq,1).
 object(named('BabyCo'),retailer,countable,na,eq,1).
 object(named('FaveCo'),'FaveCo',named,na,eq,1).
@@ -32,9 +32,9 @@ object(named('Message211'),message,countable,na,eq,1).
 object(named('ParisCo'),'ParisCo',named,na,eq,1).
 object(named('ParisCo'),retailer,countable,na,eq,1).
 object(v(0),delivery,countable,na,eq,1).
-'Delivery-Rule':: group([property(A,important,pos)]) <- [pred_mod(await,named('Karen'),B,[modifier_pp(from,C)]), pred_mod(be,A,[modifier_pp(from,C)]), object(C,D,E,F,G,H), object(A,message,countable,na,eq,1), object(B,delivery,countable,na,eq,1)].
-'FaveCo-Rule':: group([property(A,important,pos)]) <- [pred_mod(be,A,[modifier_pp(from,named('FaveCo'))]), object(A,message,countable,na,eq,1)].
-'Junk-Rule':: -group([property(A,important,pos)]) <- [pred_mod(be,A,[modifier_pp(from,B)]), object(A,message,countable,na,eq,1), object(B,retailer,countable,na,eq,1)].
+'Delivery-Rule':: group([property(Message_Be_Important1093,important,pos)]) <- [pred_mod(await,named('Karen'),Delivery_Named1097,[modifier_pp(from,Pp_From)]), pred_mod(be,Message_Be_Important1093,[modifier_pp(from,Pp_From)]), object(Pp_From,ObjectFrom1103,ObjectFrom1102,ObjectFrom1101,ObjectFrom,Object1121), object(Message_Be_Important1093,message,countable,na,eq,1), object(Delivery_Named1097,delivery,countable,na,eq,1)].
+'FaveCo-Rule':: group([property(Message_Be_Important1107,important,pos)]) <- [pred_mod(be,Message_Be_Important1107,[ modifier_pp(from,named('FaveCo'))]), object(Message_Be_Important1107,message,countable,na,eq,1)].
+'Junk-Rule':: -group([property(Message_Be_Important1112,important,pos)]) <- [pred_mod(be,Message_Be_Important1112,[modifier_pp(from,Pp_Retailer_From1114)]), object(Message_Be_Important1112,message,countable,na,eq,1), object(Pp_Retailer_From1114,retailer,countable,na,eq,1)].
 overrides('Delivery-Rule','Junk-Rule').
 overrides('FaveCo-Rule','Junk-Rule').
 
@@ -50,20 +50,20 @@ message(named('Message116')).
 message(named('Message211')).
 retailer(named('ParisCo')).
 delivery(v(0)).
-'Delivery-Rule':: important(A) <- [await(named('Karen'),B,[from(C)]), be(A,[from(C)]), something(C), message(A), delivery(B)].
-'FaveCo-Rule':: important(A) <- [be(A,[from(named('FaveCo'))]), message(A)].
-'Junk-Rule':: -important(A) <- [be(A,[from(B)]), message(A), retailer(B)].
+'Delivery-Rule':: important(Message_Important1150) <- [await(named('Karen'),Delivery_Named1144,[from(Something_From1151)]), be(Message_Important1150,[from(Something_From1151)]), something(Something_From1151), message(Message_Important1150), delivery(Delivery_Named1144)].
+'FaveCo-Rule':: important(Message_Important1155) <- [be(Message_Important1155,[from(named('FaveCo'))]), message(Message_Important1155)].
+'Junk-Rule':: -important(Message_Important1157) <- [be(Message_Important1157,[from(Retailer_From1158)]), message(Message_Important1157), retailer(Retailer_From1158)].
 overrides('Delivery-Rule','Junk-Rule').
 overrides('FaveCo-Rule','Junk-Rule').
 
 ANSWERSET #1:
--group([property(named('Message211'),important,pos)]).
-group([property(named('Message110'),important,pos)]).
-group([property(named('Message116'),important,pos)]).
-pred_mod(be,named('Message110'),[modifier_pp(from,named('ParisCo'))]).
-pred_mod(be,named('Message116'),[modifier_pp(from,named('FaveCo'))]).
-pred_mod(be,named('Message211'),[modifier_pp(from,named('BabyCo'))]).
-pred_mod(await,named('Karen'),v(0),[modifier_pp(from,named('ParisCo'))]).
+-group([ property(named('Message211'),important,pos)]).
+group([ property(named('Message110'),important,pos)]).
+group([ property(named('Message116'),important,pos)]).
+pred_mod(be,named('Message110'),[ modifier_pp(from,named('ParisCo'))]).
+pred_mod(be,named('Message116'),[ modifier_pp(from,named('FaveCo'))]).
+pred_mod(be,named('Message211'),[ modifier_pp(from,named('BabyCo'))]).
+pred_mod(await,named('Karen'),v(0),[ modifier_pp(from,named('ParisCo'))]).
 object(named('BabyCo'),'BabyCo',named,na,eq,1).
 object(named('BabyCo'),retailer,countable,na,eq,1).
 object(named('FaveCo'),'FaveCo',named,na,eq,1).

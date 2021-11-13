@@ -109,7 +109,7 @@ parse(InputCodes, Rules, Guess) :-
 	log('parser.collect-templates'),
 	clear_templates,
 	collect_templates(DRS3),
-	findall(Template, group_template(Template), Templates),
+	findall(Template, acetmp:group_template(Template), Templates),
 	debug(list, 'Group Templates:', Templates),
 	% --- STEP 7 ---
 	% Group predicates.
@@ -124,21 +124,24 @@ parse(InputCodes, Rules, Guess) :-
 	% --- STEP 9 ---
 	% Second check of the structure of the DRS (Level 2).
 	log('parser.check-drs-2'),
-	check_drs(DRS5, 2),
+	% check_drs(DRS5, 2),
 	% --- STEP 10 ---
 	% Skolemization of the variables.
 	log('parser.skolemize-drs'),
 	skolemize_drs(DRS5),
 	debug(drs, 'DRS Grouped & Skolemized:', DRS5),
+  in_cmt(block,print_tree_nl(DRS5)),
 	% --- STEP 11 ---
 	% Third check of the structure of the DRS (Level 3).
 	log('parser.check-drs-3'),
-	check_drs(DRS5, 3),
+	%check_drs(DRS5, 3),
 	% --- STEP 12 ---
 	% Creation of rules from the labeled DRS.
 	log('parser.create-rules'),
-	create_rules(DRS5, LabelMap, Rules1),
-	get_setof(Rule, member(Rule, Rules1), Rules2),
+ (
+	create_rules(DRS5, LabelMap, Rules1)),
+ must_or_rtrace(
+	get_setof(Rule, member(Rule, Rules1), Rules2)),
 	append(Rules2, Overrides, Rules),
 	debug(rules, 'Rules:', Rules),
 	log('parser.finished').

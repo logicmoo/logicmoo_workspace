@@ -232,6 +232,15 @@ some_sep1('000').
 en_gen(any,Sep):-some_sep1(Sep).
 en_gen(any,N):- between(1,4,N).
 
+
+noun_pl('those-they', 'those-they',human).
+noun_pl('person-self', 'person-self',human).
+noun_pl('persons-we', 'persons-we',human).
+noun_sg('person-you','person-you',human).
+
+adj_itr('without-gear', gearless).
+adj_itr(earless, 'without-ear').
+adj_itr('genderless', 'genderless').
 adj_itr(Y, X):- learned_as_type('adjective',X,'',Y).
 adj_itr(Y, X):- learned_as_type('attrib',X,'',Y).
 adj_itr(Y, X):- learned_as_type('value',X,'',Y).

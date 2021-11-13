@@ -13,38 +13,53 @@ Every platypus has a bill.
 John is a platypus.
 
 RULES:
-group([pred_mod(have,A,gv(2),[]),object(gv(2),fur,mass,na,na,na)]) <- [object(A,platypus,countable,na,eq,1)].
-group([pred_mod(have,A,gv(0),[]),object(gv(0),bill,countable,na,eq,1)]) <- [object(A,platypus,countable,na,eq,1)].
-group([pred_mod(lay,A,gv(1),[]),object(gv(1),egg,countable,na,geq,2)]) <- [object(A,platypus,countable,na,eq,1)].
-group([object(A,monotreme,countable,na,eq,1)]) <- [object(A,platypus,countable,na,eq,1)].
+group([ pred_mod(have,Platypus_Have1743,gv(2),[]), 
+        object(gv(2),fur,mass,na,na,na)]) <- [object(Platypus_Have1743,platypus,countable,na,eq,1)].
+group([ pred_mod(have,Platypus_Have1747,gv(0),[]), 
+        object(gv(0),bill,countable,na,eq,1)]) <- [object(Platypus_Have1747,platypus,countable,na,eq,1)].
+group([ pred_mod(lay,Platypus_Lay,gv(1),[]), 
+        object(gv(1),egg,countable,na,geq,2)]) <- [object(Platypus_Lay,platypus,countable,na,eq,1)].
+group([ object(Platypus_Monotreme,monotreme,countable,na,eq,1)]) <- [object(Platypus_Monotreme,platypus,countable,na,eq,1)].
 object(named('John'),'John',named,na,eq,1).
 object(named('John'),platypus,countable,na,eq,1).
-'R1':: group([object(A,mammal,countable,na,eq,1)]) <- [group([object(A,monotreme,countable,na,eq,1)])].
-'R2':: group([object(A,mammal,countable,na,eq,1)]) <- [group([pred_mod(have,A,gv(2),[]),object(gv(2),fur,mass,na,na,na)]), object(A,B,C,D,E,F)].
-'R3':: -group([object(A,mammal,countable,na,eq,1)]) <- [group([pred_mod(lay,A,gv(1),[]),object(gv(1),egg,countable,na,geq,2)]), object(A,B,C,D,E,F)].
-'R4':: -group([object(A,mammal,countable,na,eq,1)]) <- [group([pred_mod(have,A,gv(0),[]),object(gv(0),bill,countable,na,eq,1)]), object(A,B,C,D,E,F)].
+'R1':: group([ object(Monotreme_Mammal,mammal,countable,na,eq,1)]) <- [group([ object(Monotreme_Mammal,monotreme,countable,na,eq,1)])].
+'R2':: group([ object(Have_Mammal1764,mammal,countable,na,eq,1)]) <- [group([ pred_mod(have,Have_Mammal1764,gv(2),[]), 
+                                                                              object(gv(2),fur,mass,na,na,na)]), object(Have_Mammal1764,ObjectHave_Mammal17641771,ObjectHave_Mammal17641770,ObjectHave_Mammal17641769,ObjectHave_Mammal1764,Object1791)].
+'R3':: -group([ object(Lay_Mammal1773,mammal,countable,na,eq,1)]) <- [group([ pred_mod(lay,Lay_Mammal1773,gv(1),[]), 
+                                                                              object(gv(1),egg,countable,na,geq,2)]), object(Lay_Mammal1773,ObjectLay_Mammal17731780,ObjectLay_Mammal17731779,ObjectLay_Mammal17731778,ObjectLay_Mammal1773,Object1792)].
+'R4':: -group([ object(Have_Mammal1782,mammal,countable,na,eq,1)]) <- [group([ pred_mod(have,Have_Mammal1782,gv(0),[]), 
+                                                                               object(gv(0),bill,countable,na,eq,1)]), object(Have_Mammal1782,ObjectHave_Mammal17821789,ObjectHave_Mammal17821788,ObjectHave_Mammal17821787,ObjectHave_Mammal1782,Object1793)].
 overrides('R1','R3').
 overrides('R2','R4').
 
 SIMPLE RULES:
-group([have(A,gv(2),[]),fur(gv(2))]) <- [platypus(A)].
-group([have(A,gv(0),[]),bill(gv(0))]) <- [platypus(A)].
-group([lay(A,gv(1),[]),egg(gv(1))]) <- [platypus(A)].
-monotreme(A) <- [platypus(A)].
+group([ have(Platypus_Gv1836,gv(2),[]), 
+        fur(gv(2))]) <- [platypus(Platypus_Gv1836)].
+group([ have(Platypus_Gv1838,gv(0),[]), 
+        bill(gv(0))]) <- [platypus(Platypus_Gv1838)].
+group([ lay(Platypus_Gv1840,gv(1),[]), 
+        egg(gv(1))]) <- [platypus(Platypus_Gv1840)].
+monotreme(Platypus_Monotreme1853) <- [platypus(Platypus_Monotreme1853)].
 platypus(named('John')).
-'R1':: mammal(A) <- [monotreme(A)].
-'R2':: mammal(A) <- [group([have(A,gv(2),[]),fur(gv(2))]), something(A)].
-'R3':: -mammal(A) <- [group([lay(A,gv(1),[]),egg(gv(1))]), something(A)].
-'R4':: -mammal(A) <- [group([have(A,gv(0),[]),bill(gv(0))]), something(A)].
+'R1':: mammal(Monotreme_Mammal1855) <- [monotreme(Monotreme_Mammal1855)].
+'R2':: mammal(Something_Mammal_Gv1844) <- [group([ have(Something_Mammal_Gv1844,gv(2),[]), 
+                                                   fur(gv(2))]), something(Something_Mammal_Gv1844)].
+'R3':: -mammal(Something_Mammal_Gv1846) <- [group([ lay(Something_Mammal_Gv1846,gv(1),[]), 
+                                                    egg(gv(1))]), something(Something_Mammal_Gv1846)].
+'R4':: -mammal(Something_Mammal_Gv1848) <- [group([ have(Something_Mammal_Gv1848,gv(0),[]), 
+                                                    bill(gv(0))]), something(Something_Mammal_Gv1848)].
 overrides('R1','R3').
 overrides('R2','R4').
 
 ANSWERSET #1:
-group([pred_mod(have,named('John'),gv(0),[]),object(gv(0),bill,countable,na,eq,1)]).
-group([pred_mod(have,named('John'),gv(2),[]),object(gv(2),fur,mass,na,na,na)]).
-group([pred_mod(lay,named('John'),gv(1),[]),object(gv(1),egg,countable,na,geq,2)]).
-group([object(named('John'),mammal,countable,na,eq,1)]).
-group([object(named('John'),monotreme,countable,na,eq,1)]).
+group([ pred_mod(have,named('John'),gv(0),[]), 
+        object(gv(0),bill,countable,na,eq,1)]).
+group([ pred_mod(have,named('John'),gv(2),[]), 
+        object(gv(2),fur,mass,na,na,na)]).
+group([ pred_mod(lay,named('John'),gv(1),[]), 
+        object(gv(1),egg,countable,na,geq,2)]).
+group([ object(named('John'),mammal,countable,na,eq,1)]).
+group([ object(named('John'),monotreme,countable,na,eq,1)]).
 object(named('John'),'John',named,na,eq,1).
 object(named('John'),platypus,countable,na,eq,1).
 

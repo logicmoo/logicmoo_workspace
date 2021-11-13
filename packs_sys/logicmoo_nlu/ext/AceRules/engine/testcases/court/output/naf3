@@ -10,12 +10,12 @@ John waits.
 Bill is a n:criminal_x.
 
 RULES:
--group([object(A,criminal,countable,na,eq,1)]) <- [object(A,B,C,D,E,F), ~group([object(A,criminal_x,countable,na,eq,1)])].
--group([object(A,criminal_x,countable,na,eq,1)]) <- [group([property(A,religious,pos)]), object(A,B,C,D,E,F)].
-group([property(A,religious,pos)]) <- [object(A,catholic,countable,na,eq,1)].
-group([object(A,criminal,countable,na,eq,1)]) <- [group([object(A,criminal_x,countable,na,eq,1)])].
-group([object(named('Bill'),criminal_x,countable,na,eq,1)]).
-group([object(named('Mary'),criminal_x,countable,na,eq,1)]).
+-group([ object(Criminal_x_Criminal1562,criminal,countable,na,eq,1)]) <- [object(Criminal_x_Criminal1562,ObjectCriminal15621567,ObjectCriminal15621566,ObjectCriminal15621565,ObjectCriminal1562,Object1588), ~(group([ object(Criminal_x_Criminal1562,criminal_x,countable,na,eq,1)]))].
+-group([ object(Religious_Criminal_x,criminal_x,countable,na,eq,1)]) <- [group([property(Religious_Criminal_x,religious,pos)]), object(Religious_Criminal_x,ObjectReligious_Criminal_x1577,ObjectReligious_Criminal_x1576,ObjectReligious_Criminal_x1575,ObjectReligious_Criminal_x,Object1589)].
+group([property(Catholic_Religious,religious,pos)]) <- [object(Catholic_Religious,catholic,countable,na,eq,1)].
+group([ object(Criminal_x_Criminal1583,criminal,countable,na,eq,1)]) <- [group([ object(Criminal_x_Criminal1583,criminal_x,countable,na,eq,1)])].
+group([ object(named('Bill'),criminal_x,countable,na,eq,1)]).
+group([ object(named('Mary'),criminal_x,countable,na,eq,1)]).
 pred_mod(wait,named('John'),[]).
 object(named('Bill'),'Bill',named,na,eq,1).
 object(named('John'),'John',named,na,eq,1).
@@ -23,21 +23,21 @@ object(named('Mary'),'Mary',named,na,eq,1).
 object(named('Mary'),catholic,countable,na,eq,1).
 
 SIMPLE RULES:
--criminal(A) <- [something(A), ~criminal_x(A)].
--criminal_x(A) <- [religious(A), something(A)].
-religious(A) <- [catholic(A)].
-criminal(A) <- [criminal_x(A)].
+-criminal(Something_Criminal1614) <- [something(Something_Criminal1614), ~(criminal_x(Something_Criminal1614))].
+-criminal_x(Something_Religious_X) <- [religious(Something_Religious_X), something(Something_Religious_X)].
+religious(Catholic_Religious1619) <- [catholic(Catholic_Religious1619)].
+criminal(Criminal1621) <- [criminal_x(Criminal1621)].
 criminal_x(named('Bill')).
 criminal_x(named('Mary')).
 wait(named('John'),[]).
 catholic(named('Mary')).
 
 ANSWERSET #1:
--group([object(named('John'),criminal,countable,na,eq,1)]).
--group([object(named('Mary'),criminal,countable,na,eq,1)]).
-group([property(named('Mary'),religious,pos)]).
-group([object(named('Bill'),criminal,countable,na,eq,1)]).
-group([object(named('Bill'),criminal_x,countable,na,eq,1)]).
+-group([ object(named('John'),criminal,countable,na,eq,1)]).
+-group([ object(named('Mary'),criminal,countable,na,eq,1)]).
+group([ property(named('Mary'),religious,pos)]).
+group([ object(named('Bill'),criminal,countable,na,eq,1)]).
+group([ object(named('Bill'),criminal_x,countable,na,eq,1)]).
 pred_mod(wait,named('John'),[]).
 object(named('Bill'),'Bill',named,na,eq,1).
 object(named('John'),'John',named,na,eq,1).

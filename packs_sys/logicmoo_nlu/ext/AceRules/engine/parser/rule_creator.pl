@@ -29,7 +29,12 @@ used for AceRules.
 @version 2007-02-07
 */
 
-
+murt((X,Y)):-!, must_or_rtrace(X),murt(Y).
+murt(X):- call(X),!.
+murt(X):- wdmsg(?-call(X)),fail.
+murt(X):- rtrace(X).
+murt(X):- nl,nl,writeq(?-call(X)),nl,nl,fail.
+murt(X):- trace,X.
 %% create_rules(+DRS, +LabelMap, -Rules)
 %
 % Creates the rule representation on the basis of the DRS and the label map. The label map was
@@ -38,48 +43,68 @@ used for AceRules.
 % @see meta_preprocess.pl
 
 create_rules(drs(_, Conds), LabelMap, Rules) :-
-	create(Conds, LabelMap, Rules).
+	show_failure(always,create(Conds, LabelMap, Rules)).
 
 
 create([], _, []).
 
 create([Cond-N/_|RestConds], LabelMap, [(Label, Cond, [])|RestRules]) :-
 	!,
-	member(N-Label, LabelMap),
-	create(RestConds, LabelMap, RestRules).
+	murt((member(N-Label, LabelMap),
+	create(RestConds, LabelMap, RestRules))).
 
 create([NegCond|RestConds], LabelMap, [(Label, - Cond, [])|RestRules]) :-
 	NegCond = (-drs(_, [Cond-N/_])),
 	!,
-	member(N-Label, LabelMap),
-	create(RestConds, LabelMap, RestRules).
+	murt((member(N-Label, LabelMap),
+	create(RestConds, LabelMap, RestRules))).
 
 create([Cond|RestConds], LabelMap, [(Label, Then, IfConditionsT)|RestRules]) :-
 	Cond = (drs(_, IfConditions) => drs(_, [Then-N/_])),
 	!,
-	member(N-Label, LabelMap),
+	murt((member(N-Label, LabelMap),
 	transform_cond(IfConditions, IfConditionsT),
-	create(RestConds, LabelMap, RestRules).
+	create(RestConds, LabelMap, RestRules))).
 
 create([Cond|RestConds], LabelMap, [(Label, - Then, IfConditionsT)|RestRules]) :-
 	Cond = (drs(_, IfConditions) => drs([], [-drs(_, [Then-N/_])])),
 	!,
-	member(N-Label, LabelMap),
+	murt((member(N-Label, LabelMap),
 	transform_cond(IfConditions, IfConditionsT),
-	create(RestConds, LabelMap, RestRules).
+	create(RestConds, LabelMap, RestRules))).
+
+create([Cond|RestConds], LabelMap, Out) :-
+	Cond = (drs(V1, IfConditions) => drs(V2, [Then-N|More])),
+  create([(drs(V1, IfConditions) => drs(V2, [Then-N]))|RestConds], LabelMap, Out1),
+  create([(drs(V1, IfConditions) => drs(V2, More))|RestConds], LabelMap, Out2),
+  append(Out1,Out2,Out),!.
+
+ 
+create([Cond|RestConds], LabelMap, Out) :-
+	Cond = (drs(V1, IfConditions) => drs(_V2, [Then-N|More])),
+  More=[drs(V3,DRS1)=>drs(V4,DRS2)],
+  append(V1,V3,V13),
+  transform_cond(IfConditions, IfConditionsT),
+  append(IfConditionsT,DRS1,DRS1If),
+  NewCond = (drs(V13,DRS1If)=>drs(V4,[Then-N|DRS2])),
+  murt(create([NewCond|RestConds], LabelMap, Out)),!.
+
 
 
 transform_cond([], []).
 
 transform_cond([Term-_|Rest], [Term|RestT]) :-
-	transform_cond(Rest, RestT).
+	murt(transform_cond(Rest, RestT)).
 
 transform_cond([-drs(_, [Term-_])|Rest], [- Term|RestT]) :-
-	transform_cond(Rest, RestT).
+	murt(transform_cond(Rest, RestT)).
 
-transform_cond([~drs(_, [-drs(_, [Term-_])])|Rest], [~ (- Term)|RestT]) :-
-    !,
-	transform_cond(Rest, RestT).
+transform_cond([~drs(_, [-drs(_, [Term-_])])|Rest], [~ (- Term)|RestT]) :- !,
+	murt(transform_cond(Rest, RestT)).
 
 transform_cond([~drs(_, [Term-_])|Rest], [~ Term|RestT]) :-
-	transform_cond(Rest, RestT).
+	murt(transform_cond(Rest, RestT)).
+
+transform_cond([Term|Rest], [Term|RestT]) :-
+	murt(transform_cond(Rest, RestT)).
+

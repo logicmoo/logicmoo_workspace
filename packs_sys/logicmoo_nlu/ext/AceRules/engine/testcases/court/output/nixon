@@ -10,19 +10,19 @@ RULES:
 object(named('Nixon'),'Nixon',named,na,eq,1).
 object(named('Nixon'),quaker,countable,na,eq,1).
 object(named('Nixon'),republican,countable,na,eq,1).
-'Quaker-Rule':: group([object(A,pacifist,countable,na,eq,1)]) <- [object(A,quaker,countable,na,eq,1)].
-'Republican-Rule':: -group([object(A,pacifist,countable,na,eq,1)]) <- [object(A,republican,countable,na,eq,1)].
+'Quaker-Rule':: group([ object(Quaker_Pacifist,pacifist,countable,na,eq,1)]) <- [object(Quaker_Pacifist,quaker,countable,na,eq,1)].
+'Republican-Rule':: -group([ object(Republican_Pacifist1629,pacifist,countable,na,eq,1)]) <- [object(Republican_Pacifist1629,republican,countable,na,eq,1)].
 overrides('Republican-Rule','Quaker-Rule').
 
 SIMPLE RULES:
 quaker(named('Nixon')).
 republican(named('Nixon')).
-'Quaker-Rule':: pacifist(A) <- [quaker(A)].
-'Republican-Rule':: -pacifist(A) <- [republican(A)].
+'Quaker-Rule':: pacifist(Quaker_Pacifist1642) <- [quaker(Quaker_Pacifist1642)].
+'Republican-Rule':: -pacifist(Republican_Pacifist1644) <- [republican(Republican_Pacifist1644)].
 overrides('Republican-Rule','Quaker-Rule').
 
 ANSWERSET #1:
--group([object(named('Nixon'),pacifist,countable,na,eq,1)]).
+-group([ object(named('Nixon'),pacifist,countable,na,eq,1)]).
 object(named('Nixon'),'Nixon',named,na,eq,1).
 object(named('Nixon'),quaker,countable,na,eq,1).
 object(named('Nixon'),republican,countable,na,eq,1).

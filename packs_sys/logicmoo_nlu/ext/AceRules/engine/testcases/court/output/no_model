@@ -1,0 +1,45 @@
+
+INPUT TEXT:
+John is a manager.
+John is a customer.
+Every customer is a buyer.
+Every buyer is external.
+Every manager is an employee.
+Every employee is a worker.
+Every worker is a wage-earner.
+Every wage-earner is not a customer.
+
+RULES:
+-group([ object(Wage_earner_Customer1648,customer,countable,na,eq,1)]) <- [group([ object(Wage_earner_Customer1648,'wage-earner',countable,na,eq,1)])].
+group([property(Buyer_External1653,external,pos)]) <- [group([ object(Buyer_External1653,buyer,countable,na,eq,1)])].
+group([ object(Customer_Buyer1658,buyer,countable,na,eq,1)]) <- [group([ object(Customer_Buyer1658,customer,countable,na,eq,1)])].
+group([ object(Manager_Employee1663,employee,countable,na,eq,1)]) <- [object(Manager_Employee1663,manager,countable,na,eq,1)].
+group([ object(Employee_Worker1667,worker,countable,na,eq,1)]) <- [group([ object(Employee_Worker1667,employee,countable,na,eq,1)])].
+group([ object(Worker_Wage_earner1672,'wage-earner',countable,na,eq,1)]) <- [group([ object(Worker_Wage_earner1672,worker,countable,na,eq,1)])].
+group([ object(named('John'),customer,countable,na,eq,1)]).
+object(named('John'),'John',named,na,eq,1).
+object(named('John'),manager,countable,na,eq,1).
+
+SIMPLE RULES:
+-customer(Wage_earner_Wage_earner_Customer1721) <- ['wage-earner'(Wage_earner_Wage_earner_Wage_earner_Customer1721)].
+external(Buyer_External1723) <- [buyer(Buyer_External1723)].
+buyer(Customer_Buyer1725) <- [customer(Customer_Buyer1725)].
+employee(Manager_Employee1727) <- [manager(Manager_Employee1727)].
+worker(Employee_Worker1729) <- [employee(Employee_Worker1729)].
+'wage-earner'(Wage_earner_Wage_earner_Worker_Wage_earner1731) <- [worker(Wage_earner_Wage_earner_Worker_Wage_earner1731)].
+customer(named('John')).
+manager(named('John')).
+
+ANSWERSET #1:
+group([ object(named('John'),employee,countable,na,eq,1)]).
+group([ object(named('John'),'wage-earner',countable,na,eq,1)]).
+group([ object(named('John'),worker,countable,na,eq,1)]).
+object(named('John'),'John',named,na,eq,1).
+object(named('John'),manager,countable,na,eq,1).
+
+ANSWERTEXT #1:
+John is a manager.
+John is a worker.
+John is a wage-earner.
+John is an employee.
+

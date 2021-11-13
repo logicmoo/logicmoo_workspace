@@ -1,0 +1,40 @@
+
+INPUT TEXT:
+John is a man.
+Bill is a customer.
+Mary is an employee.
+Every customer is important.
+If someone X is not a customer then X is an employee.
+
+RULES:
+group([property(Customer_Important1956,important,pos)]) <- [group([ object(Customer_Important1956,customer,countable,na,eq,1)])].
+group([ object(Customer_Employee1961,employee,countable,na,eq,1)]) <- [object(Customer_Employee1961,ObjectEmployee19611966,ObjectEmployee19611965,ObjectEmployee19611964,ObjectEmployee1961,Object1969), -group([ object(Customer_Employee1961,customer,countable,na,eq,1)])].
+group([ object(named('Bill'),customer,countable,na,eq,1)]).
+group([ object(named('Mary'),employee,countable,na,eq,1)]).
+object(named('Bill'),'Bill',named,na,eq,1).
+object(named('John'),'John',named,na,eq,1).
+object(named('John'),man,countable,na,eq,1).
+object(named('Mary'),'Mary',named,na,eq,1).
+
+SIMPLE RULES:
+important(Customer_Important1983) <- [customer(Customer_Important1983)].
+employee(Customer_Something_Employee1985) <- [something(Customer_Something_Employee1985), -customer(Customer_Something_Employee1985)].
+customer(named('Bill')).
+employee(named('Mary')).
+man(named('John')).
+
+ANSWERSET #1:
+group([ property(named('Bill'),important,pos)]).
+group([ object(named('Bill'),customer,countable,na,eq,1)]).
+group([ object(named('Mary'),employee,countable,na,eq,1)]).
+object(named('Bill'),'Bill',named,na,eq,1).
+object(named('John'),'John',named,na,eq,1).
+object(named('John'),man,countable,na,eq,1).
+object(named('Mary'),'Mary',named,na,eq,1).
+
+ANSWERTEXT #1:
+Bill is important.
+John is a man.
+Mary is an employee.
+Bill is a customer.
+

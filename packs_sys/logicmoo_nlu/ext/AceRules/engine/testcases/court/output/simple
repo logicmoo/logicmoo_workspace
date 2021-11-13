@@ -8,11 +8,19 @@ John is a person and has a house.
 Mary is a person and has a cat.
 
 RULES:
--group([pred_mod(have,A,gv(0),[]),object(gv(0),dog,countable,na,eq,1)]) <- [group([pred_mod(have,A,gv(4),[]),object(gv(4),bike,countable,na,eq,1)]), object(A,person,countable,na,eq,1)].
--group([pred_mod(have,A,gv(1),[]),object(gv(1),cat,countable,na,eq,1)]) <- [group([pred_mod(have,A,gv(3),[]),object(gv(3),car,countable,na,eq,1)]), object(A,person,countable,na,eq,1), -group([pred_mod(have,A,gv(0),[]),object(gv(0),dog,countable,na,eq,1)])].
-group([pred_mod(have,A,gv(4),[]),object(gv(4),bike,countable,na,eq,1)]) <- [object(A,person,countable,na,eq,1)].
-group([pred_mod(have,A,gv(3),[]),object(gv(3),car,countable,na,eq,1)]) <- [pred_mod(have,A,B,[]), object(A,person,countable,na,eq,1), object(B,house,countable,na,eq,1)].
-group([pred_mod(have,named('Mary'),gv(1),[]),object(gv(1),cat,countable,na,eq,1)]).
+-group([ pred_mod(have,Person_Have1887,gv(0),[]), 
+         object(gv(0),dog,countable,na,eq,1)]) <- [group([ pred_mod(have,Person_Have1887,gv(4),[]), 
+                                                           object(gv(4),bike,countable,na,eq,1)]), object(Person_Have1887,person,countable,na,eq,1)].
+-group([ pred_mod(have,Person_Have1892,gv(1),[]), 
+         object(gv(1),cat,countable,na,eq,1)]) <- [group([ pred_mod(have,Person_Have1892,gv(3),[]), 
+                                                           object(gv(3),car,countable,na,eq,1)]), object(Person_Have1892,person,countable,na,eq,1), -group([ pred_mod(have,Person_Have1892,gv(0),[]), 
+                                                                                                                                                             object(gv(0),dog,countable,na,eq,1)])].
+group([ pred_mod(have,Person_Have1897,gv(4),[]), 
+        object(gv(4),bike,countable,na,eq,1)]) <- [object(Person_Have1897,person,countable,na,eq,1)].
+group([ pred_mod(have,Person_Have1901,gv(3),[]), 
+        object(gv(3),car,countable,na,eq,1)]) <- [pred_mod(have,Person_Have1901,House_Pred_mod1903,[]), object(Person_Have1901,person,countable,na,eq,1), object(House_Pred_mod1903,house,countable,na,eq,1)].
+group([ pred_mod(have,named('Mary'),gv(1),[]), 
+        object(gv(1),cat,countable,na,eq,1)]).
 pred_mod(have,named('John'),v(0),[]).
 object(named('John'),'John',named,na,eq,1).
 object(named('John'),person,countable,na,eq,1).
@@ -21,24 +29,39 @@ object(named('Mary'),person,countable,na,eq,1).
 object(v(0),house,countable,na,eq,1).
 
 SIMPLE RULES:
--group([have(A,gv(0),[]),dog(gv(0))]) <- [group([have(A,gv(4),[]),bike(gv(4))]), person(A)].
--group([have(A,gv(1),[]),cat(gv(1))]) <- [group([have(A,gv(3),[]),car(gv(3))]), person(A), -group([have(A,gv(0),[]),dog(gv(0))])].
-group([have(A,gv(4),[]),bike(gv(4))]) <- [person(A)].
-group([have(A,gv(3),[]),car(gv(3))]) <- [have(A,B,[]), person(A), house(B)].
-group([have(named('Mary'),gv(1),[]),cat(gv(1))]).
+-group([ have(Person_Gv1928,gv(0),[]), 
+         dog(gv(0))]) <- [group([ have(Person_Gv1928,gv(4),[]), 
+                                  bike(gv(4))]), person(Person_Gv1928)].
+-group([ have(Person_Gv1930,gv(1),[]), 
+         cat(gv(1))]) <- [group([ have(Person_Gv1930,gv(3),[]), 
+                                  car(gv(3))]), person(Person_Gv1930), -group([ have(Person_Gv1930,gv(0),[]), 
+                                                                                dog(gv(0))])].
+group([ have(Person_Gv1931,gv(4),[]), 
+        bike(gv(4))]) <- [person(Person_Gv1931)].
+group([ have(Person_Gv1933,gv(3),[]), 
+        car(gv(3))]) <- [have(Person_Gv1933,House_HaveGv1933,[]), person(Person_Gv1933), house(House_HaveGv1933)].
+group([ have(named('Mary'),gv(1),[]), 
+        cat(gv(1))]).
 have(named('John'),v(0),[]).
 person(named('John')).
 person(named('Mary')).
 house(v(0)).
 
 ANSWERSET #1:
--group([pred_mod(have,named('John'),gv(0),[]),object(gv(0),dog,countable,na,eq,1)]).
--group([pred_mod(have,named('John'),gv(1),[]),object(gv(1),cat,countable,na,eq,1)]).
--group([pred_mod(have,named('Mary'),gv(0),[]),object(gv(0),dog,countable,na,eq,1)]).
-group([pred_mod(have,named('John'),gv(3),[]),object(gv(3),car,countable,na,eq,1)]).
-group([pred_mod(have,named('John'),gv(4),[]),object(gv(4),bike,countable,na,eq,1)]).
-group([pred_mod(have,named('Mary'),gv(1),[]),object(gv(1),cat,countable,na,eq,1)]).
-group([pred_mod(have,named('Mary'),gv(4),[]),object(gv(4),bike,countable,na,eq,1)]).
+-group([ pred_mod(have,named('John'),gv(0),[]), 
+         object(gv(0),dog,countable,na,eq,1)]).
+-group([ pred_mod(have,named('John'),gv(1),[]), 
+         object(gv(1),cat,countable,na,eq,1)]).
+-group([ pred_mod(have,named('Mary'),gv(0),[]), 
+         object(gv(0),dog,countable,na,eq,1)]).
+group([ pred_mod(have,named('John'),gv(3),[]), 
+        object(gv(3),car,countable,na,eq,1)]).
+group([ pred_mod(have,named('John'),gv(4),[]), 
+        object(gv(4),bike,countable,na,eq,1)]).
+group([ pred_mod(have,named('Mary'),gv(1),[]), 
+        object(gv(1),cat,countable,na,eq,1)]).
+group([ pred_mod(have,named('Mary'),gv(4),[]), 
+        object(gv(4),bike,countable,na,eq,1)]).
 pred_mod(have,named('John'),v(0),[]).
 object(named('John'),'John',named,na,eq,1).
 object(named('John'),person,countable,na,eq,1).

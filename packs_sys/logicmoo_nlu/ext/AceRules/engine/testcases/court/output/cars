@@ -20,11 +20,11 @@ RULES:
 of_relation(object(named('John-Miller'),customer,countable,na,eq,1),string('R101')).
 of_relation(object(string('14'),day,countable,na,eq,1),string('R101')).
 of_relation(object(string('Zurich'),branch,countable,na,eq,1),string('R101')).
-pred_mod(be,string('BMW 1'),[modifier_pp(at,string('Zurich'))]).
-pred_mod(be,string('BMW 2'),[modifier_pp(at,string('Geneva'))]).
-pred_mod(be,string('Toyota 1'),[modifier_pp(at,string('Basel'))]).
-pred_mod(be,string('Toyota 2'),[modifier_pp(at,string('Zurich'))]).
-pred_mod(be,string('VW 1'),[modifier_pp(at,string('Geneva'))]).
+pred_mod(be,string('BMW 1'),[ modifier_pp(at,string('Zurich'))]).
+pred_mod(be,string('BMW 2'),[ modifier_pp(at,string('Geneva'))]).
+pred_mod(be,string('Toyota 1'),[ modifier_pp(at,string('Basel'))]).
+pred_mod(be,string('Toyota 2'),[ modifier_pp(at,string('Zurich'))]).
+pred_mod(be,string('VW 1'),[ modifier_pp(at,string('Geneva'))]).
 property(string('VW 1'),red,pos).
 property(string('BMW 2'),fast,comp_than,string('VW 1')).
 object(named('John-Miller'),'John-Miller',named,na,eq,1).
@@ -63,11 +63,11 @@ ANSWERSET #1:
 of_relation(object(named('John-Miller'),customer,countable,na,eq,1),string('R101')).
 of_relation(object(string('14'),day,countable,na,eq,1),string('R101')).
 of_relation(object(string('Zurich'),branch,countable,na,eq,1),string('R101')).
-pred_mod(be,string('BMW 1'),[modifier_pp(at,string('Zurich'))]).
-pred_mod(be,string('BMW 2'),[modifier_pp(at,string('Geneva'))]).
-pred_mod(be,string('Toyota 1'),[modifier_pp(at,string('Basel'))]).
-pred_mod(be,string('Toyota 2'),[modifier_pp(at,string('Zurich'))]).
-pred_mod(be,string('VW 1'),[modifier_pp(at,string('Geneva'))]).
+pred_mod(be,string('BMW 1'),[ modifier_pp(at,string('Zurich'))]).
+pred_mod(be,string('BMW 2'),[ modifier_pp(at,string('Geneva'))]).
+pred_mod(be,string('Toyota 1'),[ modifier_pp(at,string('Basel'))]).
+pred_mod(be,string('Toyota 2'),[ modifier_pp(at,string('Zurich'))]).
+pred_mod(be,string('VW 1'),[ modifier_pp(at,string('Geneva'))]).
 property(string('VW 1'),red,pos).
 property(string('BMW 2'),fast,comp_than,string('VW 1')).
 object(named('John-Miller'),'John-Miller',named,na,eq,1).

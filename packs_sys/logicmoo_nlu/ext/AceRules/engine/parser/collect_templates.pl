@@ -15,7 +15,7 @@
 
 :- module(collect_templates, [
 			    clear_templates/0,
-			    group_template/1,     % -Template
+			    %acetmp:group_template/1,     % -Template
 			    collect_templates/1   % +DRS
 			   ]).
 
@@ -38,18 +38,18 @@ For the background of the predicate grouping, see grouping_background.txt.
 */
 
 
-%% group_template(-Template)
+%% acetmp:group_template(-Template)
 %
 % Stores the templates that have been collected.
 
-:- dynamic(group_template/1).
+:- dynamic(acetmp:group_template/1).
 
 %% clear_templates
 %
 % Removes all the stored templates.
 
 clear_templates :-
-    retractall(group_template(_)).
+    retractall(acetmp:group_template(_)).
 
 
 %% collect_templates(+DRS)
@@ -100,7 +100,7 @@ collect_from_condlist([drs(_, IfConditions) => drs(_, ThenConditions)|Rest]) :-
 
 %% assert_group_template(Template)
 %
-% Stores the template using the dynamic predicate group_template/1.
+% Stores the template using the dynamic predicate acetmp:group_template/1.
 
 %assert_group_template([_-_]) :-
 %    % group with one predicate: ignore!
@@ -116,7 +116,7 @@ assert_group_template(Group1) :-
        true
     ;
        transform_vars_2(Group5, Group6),
-       assert(group_template(Group6))
+       assert(acetmp:group_template(Group6))
     ).
 
 
@@ -131,7 +131,7 @@ sort_predicates(X, X).
 
 
 is_group_template(CondList) :-
-    group_template(GroupTemplate),
+    acetmp:group_template(GroupTemplate),
     CondList == GroupTemplate.
 
 

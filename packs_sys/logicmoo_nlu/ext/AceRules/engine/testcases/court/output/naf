@@ -7,9 +7,9 @@ Bill is a thief.
 Mary is rich.
 
 RULES:
-group([property(A,trustworthy,pos)]) <- [object(A,B,C,D,E,F), ~group([object(A,criminal,countable,na,eq,1)])].
-group([object(A,criminal,countable,na,eq,1)]) <- [object(A,thief,countable,na,eq,1)].
-group([object(named('John'),criminal,countable,na,eq,1)]).
+group([property(Criminal_Trustworthy1454,trustworthy,pos)]) <- [object(Criminal_Trustworthy1454,ObjectTrustworthy14541459,ObjectTrustworthy14541458,ObjectTrustworthy14541457,ObjectTrustworthy1454,Object1466), ~(group([ object(Criminal_Trustworthy1454,criminal,countable,na,eq,1)]))].
+group([ object(Thief_Criminal1462,criminal,countable,na,eq,1)]) <- [object(Thief_Criminal1462,thief,countable,na,eq,1)].
+group([ object(named('John'),criminal,countable,na,eq,1)]).
 property(named('Mary'),rich,pos).
 object(named('Bill'),'Bill',named,na,eq,1).
 object(named('Bill'),thief,countable,na,eq,1).
@@ -17,16 +17,16 @@ object(named('John'),'John',named,na,eq,1).
 object(named('Mary'),'Mary',named,na,eq,1).
 
 SIMPLE RULES:
-trustworthy(A) <- [something(A), ~criminal(A)].
-criminal(A) <- [thief(A)].
+trustworthy(Criminal_Something_Trustworthy1477) <- [something(Criminal_Something_Trustworthy1477), ~(criminal(Criminal_Something_Trustworthy1477))].
+criminal(Thief_Criminal1480) <- [thief(Thief_Criminal1480)].
 criminal(named('John')).
 rich(named('Mary')).
 thief(named('Bill')).
 
 ANSWERSET #1:
-group([property(named('Mary'),trustworthy,pos)]).
-group([object(named('Bill'),criminal,countable,na,eq,1)]).
-group([object(named('John'),criminal,countable,na,eq,1)]).
+group([ property(named('Mary'),trustworthy,pos)]).
+group([ object(named('Bill'),criminal,countable,na,eq,1)]).
+group([ object(named('John'),criminal,countable,na,eq,1)]).
 property(named('Mary'),rich,pos).
 object(named('Bill'),'Bill',named,na,eq,1).
 object(named('Bill'),thief,countable,na,eq,1).

@@ -46,10 +46,13 @@ Some utility predicates.
 %
 % Removes the sentence numbers from the flat condition list.
 
-remove_sentence_nr([], []).
+remove_sentence_nr(Var,O):- var(Var),!,Var=O,!. %freeze(Var,remove_sentence_nr(Var,O)).
+remove_sentence_nr(I,O):- is_list(I),!,maplist(remove_sentence_nr,I,O).
+%remove_sentence_nr(I-NR,O):- compound(NR),(NR=(S/E)),number(S),number(E),!,remove_sentence_nr(I,O).
+remove_sentence_nr(I-_,O):- !,remove_sentence_nr(I,O).
+remove_sentence_nr(I,O):- compound(I), compound_name_arguments(I,N,A),maplist(remove_sentence_nr,A,AO),compound_name_arguments(O,N,AO),!.
+remove_sentence_nr(I,O):- I=O.
 
-remove_sentence_nr([Cond-_|RestIn], [Cond|RestOut]) :-
-    remove_sentence_nr(RestIn, RestOut).
 
 
 %% extract_vars(+Term, -VarList) is det
@@ -105,9 +108,10 @@ write_terms(Out, [Term|Rest]) :-
 % Writes the term onto the stream. Variables are pretty-printed.
 
 print_term(Out, Term) :-
-	copy_term(Term, Copy),
-	numbervars(Copy, 0, _),
-	write_term(Out, Copy, [quoted(true), module(op_defs), numbervars(true)]).
+  
+	unnumbervars_pretty(Term, Copy),
+	% numbervars(Copy, 0, _),
+	write_term(Out, Copy, [quoted(true), module(op_defs), portray(true)]).
 
 
 %% write_rules(+OutStream, +Rules) is det
@@ -133,8 +137,8 @@ write_rules(Out, [(Label, Fact, [])|Rest]) :-
 
 write_rules(Out, [('', Head, Body)|Rest]) :-
     !,
-    copy_term((Head, Body), (HeadC, BodyC)),
-    numbervars((HeadC, BodyC), 0, _),
+    unnumbervars_pretty((Head, Body), (HeadC, BodyC)),
+    %numbervars((HeadC, BodyC), 0, _),
     print_term(Out, HeadC),
     write(Out, ' <- ['),
     write_body(Out, BodyC),
@@ -143,8 +147,8 @@ write_rules(Out, [('', Head, Body)|Rest]) :-
 
 write_rules(Out, [(Label, Head, Body)|Rest]) :-
     !,
-    copy_term((Head, Body), (HeadC, BodyC)),
-    numbervars((HeadC, BodyC), 0, _),
+    unnumbervars_pretty((Head, Body), (HeadC, BodyC)),
+    %numbervars((HeadC, BodyC), 0, _),
     write(Out, '\''),
     write(Out, Label),
     write(Out, '\':: '),
@@ -159,6 +163,7 @@ write_rules(Out, [Term|Rest]) :-
     write(Out, '.\n'),
     write_rules(Out, Rest).
 
+unnumbervars_pretty(A,B):- unnumbervars(A,B),guess_pretty(B).
 
 %% write_body(+OutStream, +RuleBody) is det
 %

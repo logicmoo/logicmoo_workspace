@@ -489,12 +489,13 @@ get_whitespace_and_comments([47, 42 | Cs], Newline_Count, Final_Remaining, Final
 
 get_whitespace_and_comments([C | Cs], Newline_Count, [C | Cs], Newline_Count).
 
+ensure_punct(Allowed,X,M):- \+ \+ memberchk(punct,Allowed), !, ensure_punct2(X,M).
+ensure_punct(_,X,X).
+ensure_punct2(X,X):- last(X,Punct),is_punct_char(Punct),!.
+ensure_punct2(X,M):- append(X,['.'],M),!.
 
-ensure_punct(X,X):- last(X,Punct),is_punct_char(Punct),!.
-ensure_punct(X,M):- append(X,['.'],M),!.
 
-
-do_idiomatic_replacements(Allowed,X,Y):- do_idiomatic_replaces(Allowed,[],X,Y).
+do_idiomatic_replacements(Allowed,X,O):- do_idiomatic_replaces(Allowed,[],X,Y), ensure_punct(Allowed,Y,O).
 replace_once(X,Find,Replace,M):- append(Find,Right,NowFind), append(Left,NowFind,X),append([Left,Replace,Right],M),!.
 replace_once([XX|XXX],Find,Replace,M):- downcase_atom(XX,XD),XD\==XX,!,replace_once([XD|XXX],Find,Replace,M).
 
@@ -519,7 +520,7 @@ idiomatic_replacement_shorter(tense,[is,being],[is]).
 idiomatic_replacement_shorter(tense,[is,be],[is]).
 idiomatic_replacement_shorter(tense,[some,of,some],[some]).
 idiomatic_replacement_shorter(acetoks,[-,B],[AB]):- freeze(B,atomic_list_concat([-,B],AB)).
-idiomatic_replacement_shorter(acetoks,[A,:,B],[AB]):- is_prefix(A), freeze(B,atomic_list_concat([A,:,B],AB)).
+idiomatic_replacement_shorter(acetoks,[A,:,B],[AB]):- nop(is_prefix(A)), freeze(B,atomic_list_concat([A,:,B],AB)).
 idiomatic_replacement_shorter(acetoks,Atoms,[AB]):- recombine(Atom), atom_chars(Atom,Atoms),atom_chars(AB,Atoms).
 idiomatic_replacement_shorter(tense,[Is,Verbing],[VerbR]):- freeze(Verbing,ing_to_active_verb(Verbing,Verb,Verbs)),
   freeze(Is,member(Is-VerbR,[is-Verbs,am-Verbs,are-Verb])).
@@ -537,34 +538,49 @@ is_prefix(A):- functionwords:( noun_prefix(A,_); propername_prefix(A,_); verb_pr
 
 idiomatic_replacement(tense,[he],[somebody,that,is,male]).
 idiomatic_replacement(tense,[him],[somebody,that,is,male]).
+idiomatic_replacement(tense,[his],[somebody,that,is,male,'''',s]).
 idiomatic_replacement(tense,[himself],[somebody,that,is,male]).
 idiomatic_replacement(tense,[she],[somebody,that,is,female]).
 idiomatic_replacement(tense,[herself],[somebody,that,is,female]).
 idiomatic_replacement(tense,[her],[somebody,that,is,female]).
+%idiomatic_replacement(tense,[her],[somebody,that,is,female,'''',s]).
+idiomatic_replacement(tense,[hers],[something,of,her]).
 idiomatic_replacement(tense,[it],[something,that,is,genderless]).
 idiomatic_replacement(tense,[you],[somebody,that,is,the,hearer]).
+idiomatic_replacement(tense,[your],[somebody,that,is,the,hearer,'''',s]).
 idiomatic_replacement(tense,[yourself],[somebody,that,is,the,hearer]).
 idiomatic_replacement(tense,['i'],[somebody,that,is,the,speaker]).
+%idiomatic_replacement(tense,['I'],[somebody,that,is,the,speaker]).
 idiomatic_replacement(tense,['myself'],[somebody,that,is,the,speaker]).
 idiomatic_replacement(tense,['me'],[somebody,that,is,the,speaker]).
+idiomatic_replacement(tense,[my],[somebody,that,is,the,speaker,'''',s]).
 idiomatic_replacement(tense,[we],[some,'persons-we']).
 idiomatic_replacement(tense,[ourself],[some,'persons-we']).
 idiomatic_replacement(tense,[ourselves],[some,'persons-we']).
 idiomatic_replacement(tense,[us],[some,'persons-we']).
+idiomatic_replacement(tense,[those],[some,'those-they']).
+idiomatic_replacement(tense,[these],[some,'those-they']).
+idiomatic_replacement(tense,[their],['those-they','''',s]).
 idiomatic_replacement(tense,[they],[some,'those-they']).
 idiomatic_replacement(tense,[them],[some,'those-they']).
 idiomatic_replacement(tense,[does,some],[is,doing]).
 idiomatic_replacement(tense,[does],[is,doing]).
 idiomatic_replacement(tense,[wont],[will,not]).
+idiomatic_replacement(tense,['"',Eat],['"',Eats]):- freeze(Eat,verb_forms(Eat,Eats,_Ate,_Eating,_Eaten)).
 %idiomatic_replacement(tense,[was],[that,is,in,the,past,that,is]).
 %idiomatic_replacement(tense,[will],[that,is,in,the,future,that]).
+
+idiomatic_replacement_prepends(tense,Before,After,[if,the,statement,is,Old,statement,then]):-
+  idiomatic_replacement_prepends(tense,Before,After,[in,the,Past]),
+   (Past == past -> Old = old ; Old = new).
+  
 idiomatic_replacement_extends(tense,[has,done],[is,doing],[in,the,past]).
 idiomatic_replacement_extends(tense,[did,do],[is,doing],[in,the,past]).
 idiomatic_replacement_extends(tense,[was],[is],[in,the,past]).
 idiomatic_replacement_extends(tense,[were],[are],[in,the,past]).
 idiomatic_replacement_extends(tense,[did],[is,doing],[in,the,past]).
-idiomatic_replacement_extends(tense,[Ate],[Eat],[in,the,past]):- 
-  freeze(Ate,verb_forms(Eat,_Eats,Ate,_Eating,_Eaten)).
+idiomatic_replacement_extends(tense,[Ate],[Eats],[in,the,past]):- 
+  freeze(Ate,verb_forms(_Eat,Eats,Ate,_Eating,_Eaten)).
 idiomatic_replacement_extends(tense,[will,have,Eaten],[Eat],[in,the,future]):- 
   freeze(Eaten,verb_forms(Eat,_Eats,_Ate,_Eating,Eaten)).
 idiomatic_replacement_extends(tense,[have,Eaten],[Eat],[in,the,past]):-
@@ -574,17 +590,22 @@ idiomatic_replacement_extends(tense,[will,do],[is,doing],[in,the,future]).
 idiomatic_replacement_extends(tense,[will],[do],[in,the,future]).
 
 verb_forms(Eat,Eats,Ate,Eating,Eaten):- talk_db(_,Eat,Eats,Ate,Eating,Eaten),
-  Eat\==do,Eat\==be,
+  \+ skip_verb(Eat), \+ skip_verb(Eats), \+ skip_verb(Ate), \+ skip_verb(Eating), \+ skip_verb(Eaten),  
   %\+ verbs:aux_modal_verb(Eat).
   true.
+
+skip_verb(do).
+skip_verb(be).
+skip_verb(is).
+skip_verb(named).
 
 %% expand_contracted_forms(+TokenListIn:list, -TokenListOut:list) is det.
 %
 % @bug: `cannot' could be instead handled during (pronoun) splitting
 %
 
-expand_contracted_forms(I,O):- expand_contracted_forms0(I,M),show_failure(do_idiomatic_replacements([acetoks],M,O)).
-expand_contracted_forms(MayDo,I,O):- expand_contracted_forms0(I,M),show_failure(do_idiomatic_replacements(MayDo,M,O)).
+expand_contracted_forms(I,O):- expand_contracted_forms0(I,M),show_failure(always,do_idiomatic_replacements([acetoks],M,O)).
+expand_contracted_forms(MayDo,I,O):- expand_contracted_forms0(I,M),show_failure(always,do_idiomatic_replacements(MayDo,M,O)).
 
 expand_contracted_forms0([], []).
 

@@ -1,0 +1,48 @@
+
+INPUT TEXT:
+John can have a card.
+John is a customer.
+If someone can have a card and is a customer then he/she must wait.
+Every clerk must have a card.
+Bill is a clerk.
+
+RULES:
+can([ pred_mod(have,named('John'),v(0),[]), 
+      object(v(0),card,countable,na,eq,1)]).
+group([must([pred_mod(wait,Customer_Have_Wait1332,[])])]) <- [can([ pred_mod(have,Customer_Have_Wait1332,Size_Pred_mod1336,[]), 
+                                                                    object(Size_Pred_mod1336,card,countable,na,eq,1)]), object(Customer_Have_Wait1332,ObjectHave_Wait13321342,ObjectHave_Wait13321341,ObjectHave_Wait13321340,ObjectHave_Wait1332,Object1350), object(Customer_Have_Wait1332,customer,countable,na,eq,1)].
+group([ must( [ pred_mod(have,Clerk_Have1345,gv(0),[]), 
+                object(gv(0),card,countable,na,eq,1)])]) <- [object(Clerk_Have1345,clerk,countable,na,eq,1)].
+object(named('Bill'),'Bill',named,na,eq,1).
+object(named('Bill'),clerk,countable,na,eq,1).
+object(named('John'),'John',named,na,eq,1).
+object(named('John'),customer,countable,na,eq,1).
+
+SIMPLE RULES:
+can([ have(named('John'),v(0),[]), 
+      card(v(0))]).
+must(wait(Customer_Something_Wait1368,[])) <- [can([ have(Customer_Something_Wait1368,Size_HaveWait1368,[]), 
+                                                     card(Size_HaveWait1368)]), something(Customer_Something_Wait1368), customer(Customer_Something_Wait1368)].
+must([ have(Clerk_Gv1372,gv(0),[]), 
+       card(gv(0))]) <- [clerk(Clerk_Gv1372)].
+clerk(named('Bill')).
+customer(named('John')).
+
+ANSWERSET #1:
+can([ pred_mod(have,named('John'),v(0),[]), 
+      object(v(0),card,countable,na,eq,1)]).
+group([ must( [ pred_mod(wait,named('John'),[])])]).
+group([ must( [ pred_mod(have,named('Bill'),gv(0),[]), 
+                object(gv(0),card,countable,na,eq,1)])]).
+object(named('Bill'),'Bill',named,na,eq,1).
+object(named('Bill'),clerk,countable,na,eq,1).
+object(named('John'),'John',named,na,eq,1).
+object(named('John'),customer,countable,na,eq,1).
+
+ANSWERTEXT #1:
+John is a customer.
+Bill is a clerk.
+It is possible that John has a card.
+It is necessary that John waits.
+It is necessary that Bill has a card.
+

@@ -1,0 +1,8 @@
+John is a manager.
+John is a customer.
+Every customer is a buyer.
+Every buyer is external.
+Every manager is an employee.
+Every employee is a worker.
+Every worker is a wage-earner.
+Every wage-earner is not a customer.

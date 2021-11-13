@@ -1,0 +1,30 @@
+
+INPUT TEXT:
+John is a man.
+Bill is a customer.
+Every customer is important.
+
+RULES:
+group([property(Customer_Important1944,important,pos)]) <- [object(Customer_Important1944,customer,countable,na,eq,1)].
+object(named('Bill'),'Bill',named,na,eq,1).
+object(named('Bill'),customer,countable,na,eq,1).
+object(named('John'),'John',named,na,eq,1).
+object(named('John'),man,countable,na,eq,1).
+
+SIMPLE RULES:
+important(Customer_Important1953) <- [customer(Customer_Important1953)].
+customer(named('Bill')).
+man(named('John')).
+
+ANSWERSET #1:
+group([ property(named('Bill'),important,pos)]).
+object(named('Bill'),'Bill',named,na,eq,1).
+object(named('Bill'),customer,countable,na,eq,1).
+object(named('John'),'John',named,na,eq,1).
+object(named('John'),man,countable,na,eq,1).
+
+ANSWERTEXT #1:
+Bill is important.
+John is a man.
+Bill is a customer.
+

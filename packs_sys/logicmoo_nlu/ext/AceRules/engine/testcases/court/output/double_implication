@@ -7,8 +7,8 @@ Bill is a customer. Mary is a customer.
 Sue is a clerk.
 
 RULES:
--group([pred_mod(wait,A,[])]) <- [pred_mod(have,B,C,[]), object(B,D,E,F,G,H), object(C,code,countable,na,eq,1), object(A,clerk,countable,na,eq,1)].
-group([pred_mod(wait,A,[])]) <- [pred_mod(have,B,C,[]), object(B,D,E,F,G,H), object(C,card,countable,na,eq,1), object(A,customer,countable,na,eq,1)].
+-group([pred_mod(wait,Clerk_Wait,[])]) <- [pred_mod(have,Have,Code_Pred_mod341,[]), object(Have,ObjectHave345,ObjectHave344,ObjectHave343,ObjectHave,Object360), object(Code_Pred_mod341,code,countable,na,eq,1), object(Clerk_Wait,clerk,countable,na,eq,1)].
+group([pred_mod(wait,Customer_Wait349,[])]) <- [pred_mod(have,Have351,Size_Pred_mod352,[]), object(Have351,ObjectHave351356,ObjectHave351355,ObjectHave351354,ObjectHave351,Object361), object(Size_Pred_mod352,card,countable,na,eq,1), object(Customer_Wait349,customer,countable,na,eq,1)].
 pred_mod(have,named('John'),v(0),[]).
 pred_mod(have,named('John'),v(1),[]).
 object(named('Bill'),'Bill',named,na,eq,1).
@@ -22,8 +22,8 @@ object(v(0),code,countable,na,eq,1).
 object(v(1),card,countable,na,eq,1).
 
 SIMPLE RULES:
--wait(A,[]) <- [have(B,C,[]), something(B), code(C), clerk(A)].
-wait(A,[]) <- [have(B,C,[]), something(B), card(C), customer(A)].
+-wait(Clerk_Wait369,[]) <- [have(Something_Have371,Code_Have370,[]), something(Something_Have371), code(Code_Have370), clerk(Clerk_Wait369)].
+wait(Customer_Wait373,[]) <- [have(Something_Have375,Size_Have374,[]), something(Something_Have375), card(Size_Have374), customer(Customer_Wait373)].
 have(named('John'),v(0),[]).
 have(named('John'),v(1),[]).
 customer(named('Bill')).
@@ -33,9 +33,9 @@ code(v(0)).
 card(v(1)).
 
 ANSWERSET #1:
--group([pred_mod(wait,named('Sue'),[])]).
-group([pred_mod(wait,named('Bill'),[])]).
-group([pred_mod(wait,named('Mary'),[])]).
+-group([ pred_mod(wait,named('Sue'),[])]).
+group([ pred_mod(wait,named('Bill'),[])]).
+group([ pred_mod(wait,named('Mary'),[])]).
 pred_mod(have,named('John'),v(0),[]).
 pred_mod(have,named('John'),v(1),[]).
 object(named('Bill'),'Bill',named,na,eq,1).

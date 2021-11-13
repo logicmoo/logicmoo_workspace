@@ -15,13 +15,13 @@ Item115 is a message that is from Daisy.
 Item115 is a message that is a notification of an illness of Daisy.
 
 RULES:
-group([object(A,emergency,countable,na,eq,1)]) <- [of_relation(object(B,family,countable,na,eq,1),named('Fred')), of_relation(object(A,illness,countable,na,eq,1),C), pred_mod('belong-to',C,B,[]), object(C,D,E,F,G,H)].
+group([ object(Illness_Emergency,emergency,countable,na,eq,1)]) <- [of_relation(object(Family,family,countable,na,eq,1),named('Fred')), of_relation(object(Illness_Emergency,illness,countable,na,eq,1),Relation_Belong_to_Object1177), pred_mod('belong-to',Relation_Belong_to_Object1177,Family,[]), object(Relation_Belong_to_Object1177,ObjectBelong_to_Object11771182,ObjectBelong_to_Object11771181,ObjectBelong_to_Object11771180,ObjectBelong_to_Object1177,Object1211)].
 of_relation(object(named('Item115'),notification,countable,na,eq,1),v(0)).
 of_relation(object(v(0),illness,countable,na,eq,1),named('Daisy')).
 of_relation(object(v(1),family,countable,na,eq,1),named('Fred')).
-pred_mod(be,named('Item115'),[modifier_pp(from,named('Daisy'))]).
-pred_mod(be,named('Item19'),[modifier_pp(from,named('Betty'))]).
-pred_mod(be,named('Item20'),[modifier_pp(from,named('Daisy'))]).
+pred_mod(be,named('Item115'),[ modifier_pp(from,named('Daisy'))]).
+pred_mod(be,named('Item19'),[ modifier_pp(from,named('Betty'))]).
+pred_mod(be,named('Item20'),[ modifier_pp(from,named('Daisy'))]).
 pred_mod('belong-to',named('Betty'),v(1),[]).
 pred_mod('belong-to',named('Daisy'),v(1),[]).
 object(named('Betty'),'Betty',named,na,eq,1).
@@ -33,15 +33,15 @@ object(named('Item19'),'Item19',named,na,eq,1).
 object(named('Item19'),message,countable,na,eq,1).
 object(named('Item20'),'Item20',named,na,eq,1).
 object(named('Item20'),message,countable,na,eq,1).
-'Daisy-Rule':: -group([property(A,important,pos)]) <- [pred_mod(be,A,[modifier_pp(from,named('Daisy'))]), object(A,message,countable,na,eq,1)].
-'Emergency-Rule':: group([property(A,important,pos)]) <- [group([object(B,emergency,countable,na,eq,1)]), of_relation(object(A,notification,countable,na,eq,1),B), object(A,message,countable,na,eq,1)].
-'Family-Rule':: group([property(A,important,pos)]) <- [of_relation(object(B,family,countable,na,eq,1),named('Fred')), pred_mod('belong-to',C,B,[]), pred_mod(be,A,[modifier_pp(from,C)]), object(C,D,E,F,G,H), object(A,message,countable,na,eq,1)].
+'Daisy-Rule':: -group([property(Message_Be_Important1184,important,pos)]) <- [pred_mod(be,Message_Be_Important1184,[ modifier_pp(from,named('Daisy'))]), object(Message_Be_Important1184,message,countable,na,eq,1)].
+'Emergency-Rule':: group([property(Message_Notification_Important1189,important,pos)]) <- [group([ object(Relation_Object_Emergency1191,emergency,countable,na,eq,1)]), of_relation(object(Message_Notification_Important1189,notification,countable,na,eq,1),Relation_Object_Emergency1191), object(Message_Notification_Important1189,message,countable,na,eq,1)].
+'Family-Rule':: group([property(Message_Be_Important1197,important,pos)]) <- [of_relation(object(Family1199,family,countable,na,eq,1),named('Fred')), pred_mod('belong-to',Pp_From_Belong_to,Family1199,[]), pred_mod(be,Message_Be_Important1197,[modifier_pp(from,Pp_From_Belong_to)]), object(Pp_From_Belong_to,ObjectFrom_Belong_to1207,ObjectFrom_Belong_to1206,ObjectFrom_Belong_to1205,ObjectFrom_Belong_to,Object1214), object(Message_Be_Important1197,message,countable,na,eq,1)].
 overrides('Daisy-Rule','Family-Rule').
 overrides('Emergency-Rule','Daisy-Rule').
 overrides('Emergency-Rule','Family-Rule').
 
 SIMPLE RULES:
-emergency(A) <- [of(family,B,named('Fred')), of(illness,A,C), 'belong-to'(C,B,[]), something(C)].
+emergency(Emergency_Illness) <- [of(family,Family1236,named('Fred')), of(illness,Emergency_Illness,Something_Of_Belong_to1238), 'belong-to'(Something_Of_Belong_to1238,Family1236,[]), something(Something_Of_Belong_to1238)].
 of(notification,named('Item115'),v(0)).
 of(illness,v(0),named('Daisy')).
 of(family,v(1),named('Fred')).
@@ -53,24 +53,24 @@ be(named('Item20'),[from(named('Daisy'))]).
 message(named('Item115')).
 message(named('Item19')).
 message(named('Item20')).
-'Daisy-Rule':: -important(A) <- [be(A,[from(named('Daisy'))]), message(A)].
-'Emergency-Rule':: important(A) <- [emergency(B), of(notification,A,B), message(A)].
-'Family-Rule':: important(A) <- [of(family,B,named('Fred')), 'belong-to'(C,B,[]), be(A,[from(C)]), something(C), message(A)].
+'Daisy-Rule':: -important(Message_Important1250) <- [be(Message_Important1250,[from(named('Daisy'))]), message(Message_Important1250)].
+'Emergency-Rule':: important(Message_Important_Notification) <- [emergency(Of_Emergency1253), of(notification,Message_Important_Notification,Of_Emergency1253), message(Message_Important_Notification)].
+'Family-Rule':: important(Message_Important1256) <- [of(family,Family1243,named('Fred')), 'belong-to'(Something_From_Belong_to1244,Family1243,[]), be(Message_Important1256,[from(Something_From_Belong_to1244)]), something(Something_From_Belong_to1244), message(Message_Important1256)].
 overrides('Daisy-Rule','Family-Rule').
 overrides('Emergency-Rule','Daisy-Rule').
 overrides('Emergency-Rule','Family-Rule').
 
 ANSWERSET #1:
--group([property(named('Item20'),important,pos)]).
-group([property(named('Item115'),important,pos)]).
-group([property(named('Item19'),important,pos)]).
-group([object(v(0),emergency,countable,na,eq,1)]).
+-group([ property(named('Item20'),important,pos)]).
+group([ property(named('Item115'),important,pos)]).
+group([ property(named('Item19'),important,pos)]).
+group([ object(v(0),emergency,countable,na,eq,1)]).
 of_relation(object(named('Item115'),notification,countable,na,eq,1),v(0)).
 of_relation(object(v(0),illness,countable,na,eq,1),named('Daisy')).
 of_relation(object(v(1),family,countable,na,eq,1),named('Fred')).
-pred_mod(be,named('Item115'),[modifier_pp(from,named('Daisy'))]).
-pred_mod(be,named('Item19'),[modifier_pp(from,named('Betty'))]).
-pred_mod(be,named('Item20'),[modifier_pp(from,named('Daisy'))]).
+pred_mod(be,named('Item115'),[ modifier_pp(from,named('Daisy'))]).
+pred_mod(be,named('Item19'),[ modifier_pp(from,named('Betty'))]).
+pred_mod(be,named('Item20'),[ modifier_pp(from,named('Daisy'))]).
 pred_mod('belong-to',named('Betty'),v(1),[]).
 pred_mod('belong-to',named('Daisy'),v(1),[]).
 object(named('Betty'),'Betty',named,na,eq,1).
