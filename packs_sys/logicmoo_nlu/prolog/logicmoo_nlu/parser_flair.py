@@ -71,8 +71,8 @@ def do_nlp_proc(s):
  output = "w2flair(["
  sep="";
  for i in sentence:
-    output = output + sep
-    output = output + f"w({qt(i.text.lower())},[upos({qt(i.labels[0].value.lower())}),fner({qt(i.labels[1].value.lower())}),fn({qt(i.labels[2].value.lower())}),neg({qt(i.labels[3].value.lower())}),txt({dqt(i.text)})])"
+    output = output + sep  # ,neg({qt(i.labels[3].value.lower())}),
+    output = output + f"w({qt(i.text.lower())},[upos({qt(i.labels[0].value.lower())}),fner({qt(i.labels[1].value.lower())}),fn({qt(i.labels[2].value.lower())}),txt({dqt(i.text)})])"
     sep=","
  output = output + "])."
  return output
