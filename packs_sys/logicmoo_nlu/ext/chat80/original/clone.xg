@@ -213,8 +213,9 @@ gen_marker ---> theText80('\''), an_s.
 
 an_s ---> textOpt([s]).
 
-:- dynamic(lctmp:in_sent801/0).
-:- dynamic(lctmp:in_sent802/0).
+:- thread_local(lctmp:in_sent801/0).
+:- thread_local(lctmp:in_sent802/0).
+:-thread_local(lctmp:in_sent803/0).
 
 np_objbody(vGood,_,_)---> theText80(vgood).
 np_objbody((Name),3+sg,def+proper) ---> name_xg(Name).

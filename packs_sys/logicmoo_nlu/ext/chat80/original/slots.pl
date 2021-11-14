@@ -380,7 +380,7 @@ slot_verb_kind(iv,Verb,TypeS,S,Pred,Slots) :-
    lf80(TypeS,intrans_LF(Verb,TypeS,S,Pred,Slots,_)).
 slot_verb_kind(tv,Verb,TypeS,S,Pred,
       [slot(dirO(_ArgInfo),TypeD,D,SlotD,free)|Slots]) :-
-   lf80(TypeS-TypeD,trans_LF(Verb,TypeS,S,TypeD,D,Pred,Slots,SlotD,_)).
+   lf80(TypeS-TypeD,trans_LF12(Verb,TypeS,S,TypeD,D,Pred,Slots,SlotD,_)).
 slot_verb_kind(dv(Prep),Verb,TypeS,S,Pred,
       [slot(dirO(_ArgInfo1),TypeD,D,SlotD,free),
        slot(indO(_ArgInfo2),TypeI,I,SlotI,free)|Slots]) :-

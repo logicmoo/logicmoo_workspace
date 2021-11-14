@@ -26,6 +26,12 @@ spatial(thing).
 feat(Feat):- debug_var(feat,Feat),dif(Feat,geo).
 
 thing_LF(person,_,X,ti(person,X),[],_).
+
+trans_LF12(Verb,TypeS,S,TypeD,D,Pred,Slots,SlotD,R):- 
+ trans_LF(Verb,TypeS,S,TypeD,D,Pred,Slots,SlotD,R)
+ *->true
+ ;trans_LF1(Verb,TypeS,S,TypeD,D,Pred,Slots,SlotD,R).
+
 trans_LF(contain,Spatial&_,X,Spatial&_,Y, trans_pred(Spatial,contain,X,Y),[],_,_).
 trans_LF(have,Spatial&_,X,Spatial&_,Y, trans_pred(Spatial,have,X,Y),[],_,_).
 trans_LF(have(MODAL),Spatial&_,X,Spatial&_,Y, trans_pred(Spatial,have,X,Y),[],_,_):- var(MODAL),!.
@@ -286,7 +292,7 @@ trans_LF(Assign,feature&_,X,dbase_t(Assign,X,Y), [slot(prep(To),feature&_,Y,_,fr
 %trans_LF(Look,feature&_,X,dbase_t(Look,X,Y), [slot(prep(At),feature&_,Y,_,free)],_):- (tv_infpl(S,S);tv_finsg(S,S)), atomic_list_concat([Look,At],'-',S).
 
 trans_LF(exceed,value&Measure&Type,X,value&Measure&Type,Y,exceeds(X,Y),[],_,_).
-trans_LF(Trans,_,X,_,Y, trans_pred(_Spatial,Trans,X,Y),[],_,_):- if_search_expanded.
+trans_LF1(Trans,_,X,_,Y, generic_pred(_Spatial,Trans,X,Y),[],_,_).
 
 if_search_expanded:- fail.
 
