@@ -129,11 +129,11 @@ det(generic(ArgInfo2),_,generic(ArgInfo2)) ---> noText.
 adj(Type,adj(Adj)) --->
    theText80(Adj),
    {adj_lex(Adj,Type)}.
-
+/*
 prep(prep(cp(Prep1,Prep2))) --->
    theText80(Prep1),theText80(Prep2),
-   { prep_lex(Prep1),prep_lex(Prep2)}.
-
+   { fail, prep_lex(Prep1),prep_lex(Prep2)}.
+*/
 prep(prep(Prep)) --->
    theText80(Prep),
    {prep_lex(Prep)}.
