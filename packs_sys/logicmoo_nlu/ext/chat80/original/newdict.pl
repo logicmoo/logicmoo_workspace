@@ -93,7 +93,7 @@ wh_art_lex(what,X,_,wh_det(X)).
 wh_art_lex(which,X,_,wh_det(X)).
 wh_pron_lex(what,undef).
 wh_pron_lex(which,undef).
-wh_pron_lex(who,subj).
+wh_pron_lex(who,subJ(_ArgInfo1)).
 wh_pron_lex(whom,compl).
 
 name_LF(Name) :- bind_pos('object',Name).
@@ -103,20 +103,20 @@ number_lex(W,I,PlOrSg) :-
         tr_number(W,I),
         ag_number(I,PlOrSg).
 
-pers_pron_lex(he,masc,3,sg,subj).
+pers_pron_lex(he,masc,3,sg,subJ(_ArgInfo1)).
 pers_pron_lex(her,fem,3,sg,compl(_)).
 pers_pron_lex(him,masc,3,sg,compl(_)).
-pers_pron_lex(i,_,1,sg,subj).
+pers_pron_lex(i,_,1,sg,subJ(_ArgInfo1)).
 pers_pron_lex(it,neut,3,sg,_).
 pers_pron_lex(me,_,1,sg,compl(_)).
 pers_pron_lex(myself,_,1,sg,_).
-pers_pron_lex(she,fem,3,sg,subj).
+pers_pron_lex(she,fem,3,sg,subJ(_ArgInfo1)).
 pers_pron_lex(them,_,3,pl,compl(_)).
-pers_pron_lex(they,_,3,pl,subj).
-pers_pron_lex(those,neut,3,pl,subj).
-pers_pron_lex(them,_,3,pl,subj).
+pers_pron_lex(they,_,3,pl,subJ(_ArgInfo1)).
+pers_pron_lex(those,neut,3,pl,subJ(_ArgInfo1)).
+pers_pron_lex(them,_,3,pl,subJ(_ArgInfo1)).
 pers_pron_lex(us,_,1,pl,compl(_)).
-pers_pron_lex(we,_,1,pl,subj).
+pers_pron_lex(we,_,1,pl,subJ(_ArgInfo1)).
 pers_pron_lex(you,_,2,_,_).
 pers_pron_lex(yourself,_,2,_,_).
 
@@ -180,7 +180,7 @@ quantifier_pron_lex(something,some,thing).
 % superceeded regular_pres_db(chat80,have(_MODAL)).
 
 wh_rel_pron_lex(which,undef).
-wh_rel_pron_lex(who,subj).
+wh_rel_pron_lex(who,subJ(_ArgInfo1)).
 wh_rel_pron_lex(whom,compl).
 
 % wordt niet gebruikt:

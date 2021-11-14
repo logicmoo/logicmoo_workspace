@@ -77,11 +77,11 @@ held_arg(held_arg(Case,-Id,X),[],S0,S,Id,+Id) :-
 held_arg(XA,XA,S,S,Id,Id).
 
 % np(3+sg,nameOf(iran),[])
-i_np_head0(nameOf(Name), Type-Name,Type-Name,identityQ,'`'(true),Pred,Pred,[]) :- 
+i_np_head0(nameOf(Name), Type-Name,Type-Name,identityQ(_ArgInfo),'`'(true),Pred,Pred,[]) :- 
   ignore(lf80(Type,name_template_LF(Name,Type))),!.
-i_np_head0(wh(X),X,X,identityQ,'`'(true),Pred,Pred,[]):-!.
+i_np_head0(wh(X),X,X,identityQ(_ArgInfo),'`'(true),Pred,Pred,[]):-!.
 % np(3+sg,pronoun(neut),[])
-i_np_head0(Else, Type-Name,Type-Name,identityQ,'`'(P),Pred,Pred,[]):-  Else \= np_head(_,_,_), !,
+i_np_head0(Else, Type-Name,Type-Name,identityQ(_ArgInfo),'`'(P),Pred,Pred,[]):-  Else \= np_head(_,_,_), !,
   lf80(Type,make_qualifiedBy(i_np_head0,Name,Type,Else,P)).
 
 i_np_head0(np_head(Det,Adjs,Noun),X,T,Det,Head0,Pred0,Pred,Slots) :-
@@ -102,7 +102,7 @@ i_np_head0(np_head(quantV(Op0,N),Adjs,Noun),
 i_np_head0(np_head(generic(ArgInfo),[],Value), Type-X,Type-X,voidQ(ArgInfo),'`'(X=Value),Pred,Pred,[]) :- !.
 
 
-i_np_head0(Else, Type-Name,Type-Name,identityQ,'`'(P),Pred,Pred,[]):- may_qualify(Else),
+i_np_head0(Else, Type-Name,Type-Name,identityQ(_ArgInfo),'`'(P),Pred,Pred,[]):- may_qualify(Else),
    lf80(Type,make_qualifiedBy(i_np_head0,Name,Type,Else,P)).
 
 
@@ -227,8 +227,8 @@ have_pred(Head,Verb,Head,Verb) :-
 meta_head(apply80(_,_)).
 meta_head(aggr(_,_,_,_,_)).
 
-i_neg(posP(_Modal),identityQ).
-i_neg(negP(_Modal),not).
+i_neg(posP(_Modal),identityQ(_ArgInfo)).
+i_neg(negP(_Modal),notP).
 
 i_subj(Voice,Subj,Slots0,Slots,Quant,Up,Id) :-
    (active_passive_subjcase(Voice,Case)*->true;true),
@@ -237,8 +237,8 @@ i_subj(Voice,Subj,Slots0,Slots,Quant,Up,Id) :-
 i_verb_args(VArgs,XA0,XA,Slots0,Slots,Args0,Args,Up,Id) :-
    must80(fill_verb(VArgs,XA0,XA,Slots0,Slots,Args0,Args,Up,Id)).
 
-active_passive_subjcase(active,subj).
-active_passive_subjcase(passive,s_subj).
+active_passive_subjcase(active,subJ(_ArgInfo1)).
+active_passive_subjcase(passive,s_subj(_ArgInfo)).
 
 fill_verb([],XA,XA,Slots,Slots,Args,Args,[],_).
 fill_verb([Node|Nodes0],XA0,XA,Slots0,Slots,Args0,Args,Up,Id) :-
@@ -298,7 +298,7 @@ i_pred(prep_phrase(prep(Prep),NP),X,['`'(H),Q|As],As,Up,Id) :-
    lf80(X-Y,adjunction_LF(Prep,X,Y,H)).
 
 i_adjoin(with,TS-S,TV-Y,[slot(prep(of),TV,Z,_,free)],
-        held_arg(poss,-_Id,TS-S),
+        held_arg(poss(_ArgInfoP),-_Id,TS-S),
         Y=Z).
 i_adjoin(Prep,X,Y,[],[],P) :-
    lf80(X-Y,adjunction_LF(Prep,X,Y,P)).
@@ -316,24 +316,24 @@ nominal_slot(slot(Kind,Type,X,Id,_),Type-X,Id) :-
    nominal_kind(Kind).
 
 nominal_kind(prep(_)).
-nominal_kind(poss).
-nominal_kind(subj).
+nominal_kind(poss(_ArgInfoP)).
+nominal_kind(subJ(_ArgInfo1)).
 nominal_kind(dirO(_ArgInfo)).
 nominal_kind(indO(_ArgInfo)).
 
 i_sup_op(least,min).
 i_sup_op(most, max).
 
-pos_conversion_db(wh(Type-X),same,Type,X,identityQ).
+pos_conversion_db(wh(Type-X),same,Type,X,identityQ(_ArgInfo)).
 pos_conversion_db(N,Op,_,N,Op):- number(N).
 pos_conversion_db(N,Op,_,N,Op):- bind_pos('value',N).
 
-measure_op(identityQ, X,X,    true).
+measure_op(identityQ(_ArgInfo), X,X,    true).
 measure_op(same,      X,Y,    X=Y).
 measure_op(less,      X,Y,    exceeds(Y,X)).
-measure_op(not+less,  X,Y, \+ exceeds(Y,X)).
+measure_op(notP+less,  X,Y, \+ exceeds(Y,X)).
 measure_op(more,      X,Y,    exceeds(X,Y)).
-measure_op(not+more,  X,Y, \+ exceeds(X,Y)).
+measure_op(notP+more,  X,Y, \+ exceeds(X,Y)).
 
 op_inverse(most,-,least).
 op_inverse(least,-,most).
@@ -343,7 +343,7 @@ op_inverse(more,-,less).
 op_inverse(X,+,X).
 
 noun_template(Noun,TypeV,V,'`'(P),
-      [slot(poss,TypeO,O,Os,index)|Slots]) :-
+      [slot(poss(_ArgInfoP),TypeO,O,Os,index)|Slots]) :-
    lf80(TypeV-TypeO,property_LF(Noun,TypeV,V,TypeO,O,P,Slots,Os,_)).
 
 noun_template(Noun,TypeV,V,aggr(F,V,[],'`'(true),'`'(true)),
@@ -358,17 +358,17 @@ noun_template(Noun,TypeV,V,apply80(F,P),
    lf80(TypeV,meta_noun_LF(Noun,Of,TypeV,V,TypeX,X,P,F)).
 
 slot_verb_template(have(MODAL),Y=Z,
-                [slot(subj,TypeS,S,-Id,free),
+                [slot(subJ(_ArgInfo1),TypeS,S,-Id,free),
                  slot(dirO(_ArgInfo),TypeV,Y,_,free),
                  slot(prep(of),TypeV,Z,_,free)],
-                held_arg(poss,-(-(+Id)),TypeS-S), have(MODAL)).
+                held_arg(poss(_ArgInfoP),-(-(+Id)),TypeS-S), have(MODAL)).
 slot_verb_template(have(MODAL),Y=Z,
-        [slot(subj,TypeS,S,-(-(Id)),free),
-         slot(dirO(_ArgInfo),TypeV,Y,_,free),
+        [slot(subJ(_ArgInfo1),TypeS,S,-(-(Id)),free),
+         slot(dirO(_ArgInfoO),TypeV,Y,_,free),
          slot(prep(as),TypeV,Z,_,free)],
-        held_arg(poss,-(-(-(+Id))),TypeS-S), have(MODAL)).
+        held_arg(poss(_ArgInfoP),-(-(-(+Id))),TypeS-S), have(MODAL)).
 slot_verb_template(Verb,Pred,
-      [slot(subj,TypeS,S,_,free)|Slots],[],transparent) :-
+      [slot(subJ(_ArgInfo1),TypeS,S,_,free)|Slots],[],transparent) :-
    must80(verb_type_lex(Verb,_+Kind)),
    slot_verb_kind(Kind,Verb,TypeS,S,Pred,Slots).
 
@@ -389,11 +389,11 @@ slot_verb_kind(dv(Prep),Verb,TypeS,S,Pred,
    % see no_repeats_dc(DC0,subj_obj_indirect_slots_LF(ditrans,verb_prep(Verb,Prep),TypeS,S,TypeD,D,TypeI,I,Pred,Slots,SlotI,SlotD,DC0)).
 
 deepen_case(prep(at),time).
-deepen_case(s_subj,dirO(_ArgInfo)).
-deepen_case(s_subj,indO(_ArgInfo)).
-deepen_case(prep(by),subj).
+deepen_case(s_subj(ArgInfo),dirO(ArgInfo)).
+deepen_case(s_subj(ArgInfo),indO(ArgInfo)).
+deepen_case(prep(by),subJ(_ArgInfo1)).
 deepen_case(prep(to),indO(_ArgInfo)).
-deepen_case(prep(of),poss).
+deepen_case(prep(of),poss(_ArgInfoP)).
 deepen_case(X,X).
 
 % ================================================================
@@ -406,9 +406,9 @@ index_slot(comparator,_,comparator).
 
 index_args(det(the(pl)),unit,I,set(I),index(I)) :- !.
 index_args(wh_det(X),index(I),_,wh_det(I,X),unit) :- !.
-index_args(generic(_ArgInfo),apply,_,lambda,unit) :-!.
-index_args(D,comparator,_,identityQ,unit) :-
- ( indexable_arg(D); D=generic(_ArgInfo)), !.
+index_args(generic(_ArgInfoG),apply,_,lambdaV(_ArgInfoL),unit) :-!.
+index_args(D,comparator,_,identityQ(ArgInfo),unit) :-
+ ( indexable_arg(D); D=generic(ArgInfo)), !.
 index_args(D,unit,_,D,unit) :- !.
 index_args(det(D),I,_,I,I) :-
    indexable_arg(D),

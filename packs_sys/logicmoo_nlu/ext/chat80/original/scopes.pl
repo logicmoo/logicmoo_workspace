@@ -165,7 +165,7 @@ pre_apply('`'(Head), Det, X, P1, P2, Y, Quants, quantV(Det, X,(P, P2), Y)) :-
 
 pre_apply(apply80(F, P0), Det, X, P1, P2, Y,
       Quants0, quantV(Det, X,(P3, P2), Y)) :-
-   but_last(Quants0, quantV(lambda, Z, P0, Z), Quants),
+   but_last(Quants0, quantV(lambdaV(_ArgInfo), Z, P0, Z), Quants),
    chain_apply(Quants,(F, P1), P3).
 
 pre_apply(aggr(F, Value, L, Head, Pred), Det, X, P1, P2, Y, Quants, Out) :- 
@@ -195,7 +195,7 @@ close_tree(T, P) :-
 meta_apply('`'(G), R, Q, G, R, Q).
 
 meta_apply(apply80(F,(R, P)), R, Q0, F, true, Q) :-
-   but_last(Q0, quantV(lambda, Z, P, Z), Q).
+   but_last(Q0, quantV(lambdaV(_ArgInfo), Z, P, Z), Q).
 
 
 indices([], _, [], []).
@@ -297,13 +297,13 @@ index_det(index(I), I).
 index_det(wh_det(I, _), I).
 
 unit_det(set_ov(_ArgInfo)).
-unit_det(lambda).
+unit_det(lambdaV(_ArgInfo)).
 unit_det(quantV(_, _)).
 unit_det(det(_)).
 unit_det(question80(_)).
-unit_det(identityQ).
+unit_det(identityQ(_ArgInfo)).
 unit_det(voidQ(_ArgInfo)).
-unit_det(not).
+unit_det(notP).
 unit_det(generic(_ArgInfo)).
 unit_det(wh_det(_)).
 unit_det(proportion(_)).
@@ -319,7 +319,7 @@ apply80(proportion(_Type-V), _, X, P, Y, Q,
          N^(numberof(Y,(one_of(S, Y), Q), N),
             M^(card(S, M), ratio(N, M, V))))).
 
-apply80(identityQ, _, X, P, X, Q,(P, Q)).
+apply80(identityQ(_ArgInfo), _, X, P, X, Q,(P, Q)).
 
 apply80(voidQ(_ArgInfo), _, X, P, X, Q, X^(P, Q)).
 
@@ -351,8 +351,8 @@ apply0(notall, X, P, X, Q, X^(P, \+Q)).
 quant_op(same, X, X, P, P).
 quant_op(Op, X, Y, P, X^(P, F)) :-
    quant_op(Op, X, Y, F).
-quant_op(not+more, X, Y, X=<Y).
-quant_op(not+less, X, Y, X>=Y).
+quant_op(notP+more, X, Y, X=<Y).
+quant_op(notP+less, X, Y, X>=Y).
 quant_op(less, X, Y, X<Y).
 quant_op(more, X, Y, X>Y).
 
@@ -386,11 +386,11 @@ governs_lex(Det0, Det) :-
    Det=quantV(_, _)).
 
 governs_lex(_, voidQ(_ArgInfo)).
-governs_lex(_, lambda).
-governs_lex(_, identityQ).
+governs_lex(_, lambdaV(_ArgInfo)).
+governs_lex(_, identityQ(_ArgInfo)).
 governs_lex(det(each), question80([_|_])).
 governs_lex(det(each), det(each)).
-governs_lex(det(any), not).
+governs_lex(det(any), notP).
 
 governs_lex(quantV(same, wh(_)), Det) :-
    weak(Det).
@@ -439,10 +439,10 @@ setifiable(det(all)).
 % =================================================================
 % Operators (currently, identity, negation and 'and')
 
-op_apply(identityQ, P, P).
-op_apply(not, P, \+P).
+op_apply(identityQ(_ArgInfo), P, P).
+op_apply(notP, P, \+P).
 
-bubble(not, det(any), det(every)) :- !.
+bubble(notP, det(any), det(every)) :- !.
 bubble(_, D, D).
 
 conj_apply(and, P, Q,(P, Q)).

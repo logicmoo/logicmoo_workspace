@@ -71,7 +71,7 @@ variable_q(X,_,compl,VCase) ...
 whq(X,Agmt,NP,undef) --->
    wh_det(X,Agmt),
    {is_s_all(SAll)},
-   np(NP,Agmt,_,_,subj,SAll,_).
+   np(NP,Agmt,_,_,subJ(_ArgInfo1),SAll,_).
 whq(X,3+No,np(3+No,wh(X),[]),Case) ---> wh_pron(Case).
 
 wh_det(X,3+Agmt) ---> whose(X,Agmt).
@@ -80,7 +80,7 @@ wh_det(X,3+Agmt) ---> wh_art_6(X,Agmt).
 whose(X,Agmt), np_head0(wh(X),Agmt,proper), gen_marker ---> theText80(whose).
 
 question80(QCase,NPCase,S) --->
-   {subj_question(QCase), is_to_role_case(subj,_,NPCase)},
+   {subj_question(QCase), is_to_role_case(subJ(_ArgInfo1),_,NPCase)},
    s80(S,_).
 question80(QCase,NPCase,S) --->
    fronted_verb(QCase,NPCase),
@@ -88,7 +88,7 @@ question80(QCase,NPCase,S) --->
 
 wh_art_6(X,Agmt), det(DX,Agmt,def) ---> wh_art(X,Agmt,DX).
 
-subj_question(subj).
+subj_question(subJ(_ArgInfo1)).
 subj_question(undef).
 
 /* Yes-no questions */
@@ -135,7 +135,7 @@ subj(Subj,Agmt,O) ---> subj0(Subj,Agmt,O).
 subj0(there,_Agmt,_+be(_MODAL)) ---> theText80(there).
 subj0(Subj,Agmt,_) --->
    {is_s_all(SAll), is_subj_case(Case)},
-   np(Subj,Agmt,Case,_,subj,SAll,_).
+   np(Subj,Agmt,Case,_,subJ(_ArgInfo1),SAll,_).
 
 /* Noun Phrase */
 
@@ -190,7 +190,7 @@ possessive(Kernel0,Agmt0,_,[],Mods0,
    gen_case,
    np_head0(Kernel1,Agmt1,Type1),
    possessive(Kernel1,Agmt1,Type1,PostMods1,
-              [prep_phrase(poss,np(Agmt0,Kernel0,Mods0))|PostMods1],
+              [prep_phrase(poss(_ArgInfoP),np(Agmt0,Kernel0,Mods0))|PostMods1],
               Kernel,Agmt,Type,PostMods,Mods).
 possessive(Kernel,Agmt,Type,PostMods,Mods,
            Kernel,Agmt,Type,PostMods,Mods) ---> noText.
@@ -265,11 +265,11 @@ quantV(Op,indef) --->
 quantV(the,def) ---> theText80(the).
 quantV(same,indef) ---> noText.
 
-neg_adv_opt(Adv,not+Adv) ---> theText80(not).
+neg_adv_opt(Adv,notP+Adv) ---> theText80(not).
 neg_adv_opt(Adv,Adv) ---> noText.
 
-sup_op(least,not+less).
-sup_op(most,not+more).
+sup_op(least,notP+less).
+sup_op(most,notP+more).
 
 /* Noun phrase modifiers */
 
@@ -312,7 +312,7 @@ adjs_opt([Adj|Adjs]) --->
 adjs_opt([]) ---> noText.
 
 pre_adj(Adj) ---> adj(_,Adj).
-% TODO WHY pre_adj(poss(Pronoun,Agreement)) ---> poss_pron(Pronoun,Agreement).
+% TODO WHY pre_adj(poss(_ArgInfoP)(Pronoun,Agreement)) ---> poss_pron(Pronoun,Agreement).
 pre_adj(Adj) --->  sup_phrase(Adj).
 
 sup_phrase(sup(most,Adj)) ---> sup_adj(Adj).
@@ -393,7 +393,7 @@ wh(X,Agmt0,np(Agmt,Kernel,[prep_phrase(Prep,NP)]),Agmt,_) --->
 wh(X,Agmt0,NP,Agmt,Case) --->
    whose(X,Agmt0),
    {is_s_all(SAll)},
-   np(NP,Agmt,Case,def,subj,SAll,_).
+   np(NP,Agmt,Case,def,subJ(_ArgInfo1),SAll,_).
 
 /* Reduced relative clause */
 
@@ -433,7 +433,7 @@ reduced_wh(AgmtX,X),
    np(Subj,Agmt,SCase,Def,_,Set0,Mask0) ...
    np(np(AgmtX,wh(X),[]),AgmtX,VCase,_,_,Set,Mask) --->
    {is_s_all(SAll), is_subj_case(SCase), is_verb_case(VCase)},
-   np(Subj,Agmt,_,Def,subj,SAll,_),
+   np(Subj,Agmt,_,Def,subJ(_ArgInfo1),SAll,_),
    {is_trace82(Set0,Mask0), is_trace82(Set,Mask)}.
 
 /* Verb phrase (less the complements) */
@@ -651,7 +651,7 @@ anot_xmask(_X,1,0).
 
 % Noun phrase position features
 
-is_to_role_case(subj,_,#(1,0,0)).
+is_to_role_case(subJ(_ArgInfo1),_,#(1,0,0)).
 is_to_role_case(compl,_,#(0,_,_)).
 is_to_role_case(undef,main,#(_,0,_)).
 is_to_role_case(undef,aux,#(0,_,_)).
