@@ -286,7 +286,8 @@ verb_form_db(clex,Looks,Look,pres+fin,3+sg):-  clex_verb80(Looks,Look,_,finsg).
 verb_form_db(clex,LookPL,Look,pres+fin,3+pl):- clex_verb80(LookPL,Look,_,infpl).
 verb_type_db(clex,Look,main+ITDV):- clex_verb80(_Formed,Look,ITDV,_Finsg).
 
-trans_LF(Assign,feature&_,X,dbase_t(Assign,X,Y), [slot(prep(To),feature&_,Y,_,free)],_):- clex_verb80(_Assigned, Assign, dv(To),_).
+intrans_LF(Assign,feature&_,X,dbase_t(Assign,X,Y), [slot(prep(To),feature&_,Y,_,free)],_):-
+  clex_verb80(_Assigned, Assign, dv(To),_).
 
 
 %trans_LF(Look,feature&_,X,dbase_t(Look,X,Y), [slot(prep(At),feature&_,Y,_,free)],_):- (tv_infpl(S,S);tv_finsg(S,S)), atomic_list_concat([Look,At],'-',S).
@@ -404,7 +405,8 @@ intrans_LF(Continue,Spatial & Feat& Type,X,LF,
 
 
 intrans_LF(Continue,Spatial& _Feat& _Type,X,intrans_pred(_Spatial,Continue,X,Y),
-   [slot(prep(dirO(is_arginf(o))),Spatial&_,Y,_,free)],_):- if_search_expanded,
+   [slot(prep(dirO(_ArgInfo)),Spatial&_,Y,_,free)],_):- 
+   % if_search_expanded,
    clex:iv_infpl(Continue,_).
 
 % X flows through Begin

@@ -120,12 +120,16 @@ imperative_verb(You,Root),
 
 s80(s(Subj,Verb,Args,Mods),Mask) ---> s_vp_800(Subj,Verb,Args,Mods,Mask).
 
-s_vp_800(Subj,Verb,[arg(dirO(is_arginf(o)),S)|Args],Mods,Mask) --->  
-     theText80(if),!,
-     s80(S,_), theText80(then), s_vp_800(Subj,Verb,Args,Mods,Mask).
-s_vp_800(Subj,Verb,Args,Mods,Mask) ---> s_vp_80(Subj,Verb,Args,Mods,Mask).
+if_then(if,then).
+if_then(when,do).
 
-s_vp_80(Subj,Verb,Args,Mods,Mask) ---> s_vp_801(Subj,Verb,Args,Mods,Mask).
+if_cond(If,S,Then) ---> theText80(If),{if_then(If,Then)},s80(S,_),peek_phraseXG(theText80(Then)).
+
+then_cond(Then, Subj,Verb,Args,Mods,Mask) ---> theText80(Then), s_vp_80(Subj,Verb,Args,Mods,Mask).
+
+s_vp_800(Subj,Verb,[if(IF,S,Then)|Args],Mods,Mask) --->
+     if_cond(IF,S,Then), then_cond(Then,Subj,Verb,Args,Mods,Mask).
+s_vp_800(Subj,Verb,Args,Mods,Mask) ---> s_vp_801(Subj,Verb,Args,Mods,Mask).
 
 
 s_vp_801(Subj,Verb,Args,Mods,Mask) --->
@@ -222,9 +226,9 @@ np_objbody((Name),3+sg,def+proper) ---> name_xg(Name).
 np_objbody((num(Int)),3+sg,def+proper) ---> theText80(Value),{tr_number(Value,Int)}.
 np_objbody((adj(VGood)),_,_) ---> theText80(Good), {clex:adj_itr(Good,VGood)}.
 np_objbody(X, Y, Z, A, B, C, D) :-
-    \+ lctmp:in_sent801,
+    \+ lctmp:in_sent801, !, 
      locally(lctmp:in_sent801,np_objbody0(X, Y, Z, A, B, C, D)).
-np_objbody(X, Y, Z, A, B, C, D) :- fail,
+np_objbody(X, Y, Z, A, B, C, D) :-
     \+ lctmp:in_sent802,
      locally(lctmp:in_sent802,np_objbody0(X, Y, Z, A, B, C, D)).
 
@@ -235,7 +239,6 @@ np_objbody0(Det,Number,Def)--->theText80(that),!,np_objbody1(Det,Number,Def).
 
 
 np_objbody1((sent0(S)),_,_) --->  s80(S,_).
-np_objbody1((sentI(S)),_,_) --->  mark_island, s80(S,_), mark_dnalsi.
 %rel(Agmt,rel(X,S),Mask) 
 np_objbody1((sent2(X,S)),Agmt,_) --->
    mark_island,

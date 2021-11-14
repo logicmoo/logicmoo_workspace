@@ -43,6 +43,7 @@ gap([]).
 
 virtual(NT,x(_,nonterminal,NT,X),X).
 
+peek_phraseXG(P,A1,A1,A3,A3):- phraseXG(P,A1,_A2,A3,_A4).
 
 xg_and(G1,G2, B, C, D, E) :- phraseXG(G1, B, C, D, E), phraseXG(G2, B, C, D, E).
 
