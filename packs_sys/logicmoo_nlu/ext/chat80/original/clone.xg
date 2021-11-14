@@ -118,7 +118,17 @@ imperative_verb(You,Root),
 
 /* Basic sentence (actually, declarative sentence) */
 
-s80(s(Subj,Verb,Args,Mods),Mask) --->
+s80(s(Subj,Verb,Args,Mods),Mask) ---> s_vp_800(Subj,Verb,Args,Mods,Mask).
+
+s_vp_800(Subj,Verb,[arg(dirO(is_arginf(o)),S)|Args],Mods,Mask) --->  
+     theText80(if),!,
+     s80(S,_), theText80(then), s_vp_800(Subj,Verb,Args,Mods,Mask).
+s_vp_800(Subj,Verb,Args,Mods,Mask) ---> s_vp_80(Subj,Verb,Args,Mods,Mask).
+
+s_vp_80(Subj,Verb,Args,Mods,Mask) ---> s_vp_801(Subj,Verb,Args,Mods,Mask).
+
+
+s_vp_801(Subj,Verb,Args,Mods,Mask) --->
    subj(Subj,Agmt,Type),
    s_vp(Subj,Agmt,Type,Verb,Args,Mods,Mask).
 
@@ -213,17 +223,13 @@ np_objbody((adj(VGood)),_,_) ---> theText80(Good), {clex:adj_itr(Good,VGood)}.
 np_objbody(X, Y, Z, A, B, C, D) :-
     \+ lctmp:in_sent801,
      locally(lctmp:in_sent801,np_objbody0(X, Y, Z, A, B, C, D)).
-np_objbody(X, Y, Z, A, B, C, D) :-
+np_objbody(X, Y, Z, A, B, C, D) :- fail,
     \+ lctmp:in_sent802,
      locally(lctmp:in_sent802,np_objbody0(X, Y, Z, A, B, C, D)).
 
-np_objbody0(_,_,_,_,_,_,_):- !, fail.
-
+np_objbody0(Det,Number,Def)--->theText80(that),!,np_objbody1(Det,Number,Def).
 %np_objbody0((var(X)),3+sg,def+proper) ---> variable_q(X,_,_QCase,_NPCase).
-
-/*
-*/
-%np_objbody0(Det,Number,Def)--->theText80(that),!,np_objbody1(Det,Number,Def).
+%np_objbody0(_,_,_,_,_,_,_):- !, fail.
 %np_objbody0(Det,Number,Def)--->np_objbody1(Det,Number,Def).
 
 
