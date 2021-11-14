@@ -251,11 +251,11 @@ verb_slot(prep_phrase(Prep,NP),
    i_np(NP,X,Q,Up,Id,unit,XArg0,XArg),
    in_slot(Slots0,Case,X,Id,Slots,_),
    deepen_case(Prep,Case).
-verb_slot(voidQ(_ArgInfo),XA,XA,Slots,Slots,Args,Args,[],_) :-
-   in_slot(Slots,pred,_,_,_,_).
+verb_slot(voidQ(ArgInfo),XA,XA,Slots,Slots,Args,Args,[],_) :-
+   in_slot(Slots,arg_pred(ArgInfo),_,_,_,_).
 verb_slot(prep_phrase(prep(Prep),NP),
       TXArg,TXArg,Slots0,Slots,[Q& '`'(P)|Args],Args,Up,Id0) :-
-   in_slot(Slots0,pred,X,Id0,Slots1,_),
+   in_slot(Slots0,arg_pred(_ArgInfo),X,Id0,Slots1,_),
    i_adjoin(Prep,X,Y,PSlots,XArg,P),
    i_np_head(NP,Y,Q,LDet,LDet0,LX,LPred,LQMods,LSlots0,Id0),
    held_arg(XArg,[],LSlots0,LSlots,Id0,Id),
@@ -269,8 +269,8 @@ verb_slot(arg(SCase,NP),
 verb_slot(adverb(Adv),XA,XA,Slots0,Slots,['`'(P)|Args],Args,[],Id) :-
    adv_template_db(Adv,Case,X,P),
    in_slot(Slots0,Case,X,Id,Slots,_).
-verb_slot(arg(pred,AP),XA,XA,Slots0,Slots,Args0,Args,Up,Id) :-
-   in_slot(Slots0,pred,X,Id,Slots,_),
+verb_slot(arg(arg_pred(ArgInfo),AP),XA,XA,Slots0,Slots,Args0,Args,Up,Id) :-
+   in_slot(Slots0,arg_pred(ArgInfo),X,Id,Slots,_),
    must80(i_pred(AP,X,Args0,Args,Up,Id)).
 
 i_pred(conj(Conj,Left,Right),X,
@@ -375,7 +375,7 @@ slot_verb_template(Verb,Pred,
 % BE
 % slot_verb_kind(be(_MODAL),_,TypeS,S,subsumed_by(A,S),[slot(dir,TypeS,A,_,free)]).
 slot_verb_kind(be(_MODAL),_,TypeS,S,S=A,[slot(dir,TypeS,A,_,free)]).
-slot_verb_kind(be(_MODAL),_,TypeS,S,true,[slot(pred,TypeS,S,_,free)]).
+slot_verb_kind(be(_MODAL),_,TypeS,S,true,[slot(arg_pred(_ArgInfo),TypeS,S,_,free)]).
 slot_verb_kind(iv,Verb,TypeS,S,Pred,Slots) :-
    lf80(TypeS,intrans_LF(Verb,TypeS,S,Pred,Slots,_)).
 slot_verb_kind(tv,Verb,TypeS,S,Pred,
