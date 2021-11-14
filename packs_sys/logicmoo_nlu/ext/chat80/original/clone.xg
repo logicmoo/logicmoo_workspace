@@ -219,18 +219,11 @@ an_s ---> textOpt([s]).
 
 :- thread_local(lctmp:in_sent801/0).
 :- thread_local(lctmp:in_sent802/0).
-:-thread_local(lctmp:in_sent803/0).
-
-doubleQuotes ---> theText80('``').
-doubleQuotes ---> theText80('''''').
-doubleQuotes ---> theText80('"').
-
-w2_until(   [],G) ---> G,!.
-w2_until([H|T],G) ---> theText80(H), w2_until(T,G).
+:- thread_local(lctmp:in_sent803/0).
 
 np_objbody(vGood,_,_)---> theText80(vgood).
 np_objbody((Name),3+sg,def+proper) ---> name_xg(Name).
-np_objbody(string(List),3+sg,def+proper) ---> doubleQuotes, w2_until(List,doubleQuotes).
+np_objbody(string(List),3+sg,def+proper) ---> w2_quoted(List).
 
 np_objbody((num(Int)),3+sg,def+proper) ---> theText80(Value),{tr_number(Value,Int)}.
 np_objbody((adj(VGood)),_,_) ---> theText80(Good), {clex:adj_itr(Good,VGood)}.

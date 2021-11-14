@@ -43,7 +43,7 @@ apw2(Cmp):- nop(assertion(nonvar(Cmp))),parser_e2c:add_prev_w2(Cmp).
 w001(Cmp)---> (consume_spans_hack;[]), next_as_word,!,[Cmp],{ignore(on_x_fail(apw2(Cmp)))},!,(consume_spans_hack;[]).
 
 % NEW theText80_W2(Text,L) ---> w001(Cmp),{compound(Cmp)->Cmp=w(Text,L);(atom(Cmp)-> (Text=Cmp,L=unk))}.
-theText80_W2(Text,L) ---> w001(Cmp),{compound(Cmp),!,Cmp=w(Text,L)}.
+theText80_W2(Text,L) ---> w001(Cmp),{compound(Cmp)->Cmp=w(Text,L);(Text=Cmp,L=[])}.
 
 w01(Text) ---> w001(A), {atomic(A),!,A=Text}.
 w01(Text) ---> theText80_W2(Text,_).
@@ -74,6 +74,8 @@ theText80Penn(A) --->{atomic(A),!},theText80(A).
 theText80Penn(Cmp) --->{compound(Cmp),!},w001(Cmp).
 theText80Penn(w(W,L1)) ---> theText80_W2(W,L2),{L1=L2}.
 
+theText80_Text(S)---> theText80_W2(W,L2),{member(txt(T),L2)->atom_string(S,T);W=S}.
+
 xg_with_text(G1,Text) ---> xg_and(G1,theText_cl(Text)).
 
 theText80(IC) ---> w1(W0),{assertion(nonvar(W0);nonvar(IC)),parser_e2c:the_text_unif(IC,W0)}.
@@ -100,6 +102,17 @@ theText_ol([W1]) ---> theText80(W1).
 theText_cl([]) ---> !,[].
 theText_cl([W1|WL]) ---> theText80(W1),!,theText_cl(WL).
 
+startSingleQuotes ---> theText80('`').
+singleQuotes ---> theText80('''').
+endSingleQuotes ---> singleQuotes.
+startDoubleQuotes1 ---> theText80('``').
+endDoubleQuotes1 ---> theText80('''''').
+doubleQuotes ---> theText80('"').
+w2_until(   [],G) ---> G,!.
+w2_until([H|T],G) ---> theText80_Text(H), w2_until(T,G).
+w2_quoted(List) ---> startDoubleQuotes1, w2_until(List,endDoubleQuotes1).
+w2_quoted(List) ---> doubleQuotes, w2_until(List,doubleQuotes).
+w2_quoted(List)--> singleQuotes, w2_until(List,singleQuotes).
 
 /*
 optText1(_,_,_) ---> noText.
