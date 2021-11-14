@@ -318,8 +318,8 @@ nominal_slot(slot(Kind,Type,X,Id,_),Type-X,Id) :-
 nominal_kind(prep(_)).
 nominal_kind(poss).
 nominal_kind(subj).
-nominal_kind(dir).
-nominal_kind(ind).
+nominal_kind(dirO(_ArgInfo)).
+nominal_kind(indO(_ArgInfo)).
 
 i_sup_op(least,min).
 i_sup_op(most, max).
@@ -359,12 +359,12 @@ noun_template(Noun,TypeV,V,apply80(F,P),
 
 slot_verb_template(have(MODAL),Y=Z,
                 [slot(subj,TypeS,S,-Id,free),
-                 slot(dir,TypeV,Y,_,free),
+                 slot(dirO(_ArgInfo),TypeV,Y,_,free),
                  slot(prep(of),TypeV,Z,_,free)],
                 held_arg(poss,-(-(+Id)),TypeS-S), have(MODAL)).
 slot_verb_template(have(MODAL),Y=Z,
         [slot(subj,TypeS,S,-(-(Id)),free),
-         slot(dir,TypeV,Y,_,free),
+         slot(dirO(_ArgInfo),TypeV,Y,_,free),
          slot(prep(as),TypeV,Z,_,free)],
         held_arg(poss,-(-(-(+Id))),TypeS-S), have(MODAL)).
 slot_verb_template(Verb,Pred,
@@ -373,26 +373,26 @@ slot_verb_template(Verb,Pred,
    slot_verb_kind(Kind,Verb,TypeS,S,Pred,Slots).
 
 % BE
-% slot_verb_kind(be(_MODAL),_,TypeS,S,subsumed_by(A,S),[slot(dir,TypeS,A,_,free)]).
-slot_verb_kind(be(_MODAL),_,TypeS,S,S=A,[slot(dir,TypeS,A,_,free)]).
+% slot_verb_kind(be(_MODAL),_,TypeS,S,subsumed_by(A,S),[slot(dirO(_ArgInfo),TypeS,A,_,free)]).
+slot_verb_kind(be(_MODAL),_,TypeS,S,S=A,[slot(dirO(_ArgInfo),TypeS,A,_,free)]).
 slot_verb_kind(be(_MODAL),_,TypeS,S,true,[slot(arg_pred(_ArgInfo),TypeS,S,_,free)]).
 slot_verb_kind(iv,Verb,TypeS,S,Pred,Slots) :-
    lf80(TypeS,intrans_LF(Verb,TypeS,S,Pred,Slots,_)).
 slot_verb_kind(tv,Verb,TypeS,S,Pred,
-      [slot(dir,TypeD,D,SlotD,free)|Slots]) :-
+      [slot(dirO(_ArgInfo),TypeD,D,SlotD,free)|Slots]) :-
    lf80(TypeS-TypeD,trans_LF(Verb,TypeS,S,TypeD,D,Pred,Slots,SlotD,_)).
 slot_verb_kind(dv(Prep),Verb,TypeS,S,Pred,
-      [slot(dir,TypeD,D,SlotD,free),
-       slot(ind,TypeI,I,SlotI,free)|Slots]) :-
+      [slot(dirO(_ArgInfo1),TypeD,D,SlotD,free),
+       slot(indO(_ArgInfo2),TypeI,I,SlotI,free)|Slots]) :-
    fail,fail,fail,fail,
    lf80(TypeS+TypeD+TypeI,ditrans_lex80(Verb,Prep,TypeS,S,TypeD,D,TypeI,I,Pred,Slots,SlotD,SlotI,_)).
    % see no_repeats_dc(DC0,subj_obj_indirect_slots_LF(ditrans,verb_prep(Verb,Prep),TypeS,S,TypeD,D,TypeI,I,Pred,Slots,SlotI,SlotD,DC0)).
 
 deepen_case(prep(at),time).
-deepen_case(s_subj,dir).
-deepen_case(s_subj,ind).
+deepen_case(s_subj,dirO(_ArgInfo)).
+deepen_case(s_subj,indO(_ArgInfo)).
 deepen_case(prep(by),subj).
-deepen_case(prep(to),ind).
+deepen_case(prep(to),indO(_ArgInfo)).
 deepen_case(prep(of),poss).
 deepen_case(X,X).
 

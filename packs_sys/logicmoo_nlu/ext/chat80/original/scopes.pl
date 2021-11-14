@@ -211,7 +211,7 @@ indices([Q|Quants], I, Indices, [Q|Rest]) :-
    indices(Quants, I, Indices, Rest).
 
 
-setify([], Type-X, P, Y, quantV(set, Type-([]:X), true:P, Y)).
+setify([], Type-X, P, Y, quantV(set_ov(_ArgInfo), Type-([]:X), true:P, Y)).
 
 setify([Index|Indices], X, P, Y, Quant) :-
    pipe(Index, Indices, X, P, Y, Quant).
@@ -222,7 +222,7 @@ pipe(quantV(wh_det(_, Z), Z, P1, Z),
    chain_apply(Indices,(P0, P1), P).
 
 pipe(quantV(index(_), _-Z, P0, _-Z), Indices, Type-X, P, Y,
-      quantV(set, Type-([Z|IndexV]:X),(P0, P1):P, Y)) :-
+      quantV(set_ov(_ArgInfo), Type-([Z|IndexV]:X),(P0, P1):P, Y)) :-
    index_vars(Indices, IndexV, P1).
 
 
@@ -241,11 +241,11 @@ complete_aggr([Att], Head, R0, Quants0,(P1, P2, R), Att, X) :-
    set_vars(Quants, X, Rest, P2),
    chain_apply(Rest, G, P1).
 
-complete_aggr([], '`'(G), R, [quantV(set, _-(X:Att), S:T, _)],
+complete_aggr([], '`'(G), R, [quantV(set_ov(_ArgInfo), _-(X:Att), S:T, _)],
   (G, R, S, T), Att, X).
 
 
-set_vars([quantV(set, _-(I:X), P:Q, _-X)], [X|I], [],(P, Q)).
+set_vars([quantV(set_ov(_ArgInfo), _-(I:X), P:Q, _-X)], [X|I], [],(P, Q)).
 
 set_vars([], [], [], true).
 
@@ -296,7 +296,7 @@ open_quant(quantV(Det, X, P, Y), Det, X, P, Y).
 index_det(index(I), I).
 index_det(wh_det(I, _), I).
 
-unit_det(set).
+unit_det(set_ov(_ArgInfo)).
 unit_det(lambda).
 unit_det(quantV(_, _)).
 unit_det(det(_)).
@@ -323,7 +323,7 @@ apply80(identityQ, _, X, P, X, Q,(P, Q)).
 
 apply80(voidQ(_ArgInfo), _, X, P, X, Q, X^(P, Q)).
 
-apply80(set, _, Index:X, P0, S, Q, S^(P, Q)) :-
+apply80(set_ov(_ArgInfo), _, Index:X, P0, S, Q, S^(P, Q)) :-
    apply_set(Index, X, P0, S, P).
 
 apply80(wh_det(Type-X), Type, X, P, X, Q,(P, Q)).
