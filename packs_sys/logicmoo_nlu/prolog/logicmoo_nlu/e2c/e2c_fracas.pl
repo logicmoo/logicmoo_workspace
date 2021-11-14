@@ -1359,7 +1359,7 @@ Here's the breakdown by topic:
 /*
 
   Definite plurals can often be non-anaphoric and behave like universally
-  quantified noun phrases (90). However, as with (generic) bare plurals, the
+  quantified noun phrases (90). However, as with generic bare plurals, the
   force of the quantification can also be less than universal (91). Whether this
   lessening of quantificational force is due to the noun phrase or to the
   predicate of which the NP is an argument is unclear (92, 93).
@@ -1413,7 +1413,7 @@ Here's the breakdown by topic:
 
 /*
  Closely related to this, plural definites can have a
-collective/institutional or even generic interpretation:
+collective/institutional or even generic(_ArgInfo2) interpretation:
 
 */
 
@@ -1452,7 +1452,7 @@ collective/institutional or even generic interpretation:
 
 
 /*
- Bare plurals can exhibit existential, (quasi) universal, generic or
+ Bare plurals can exhibit existential, (quasi) universal, generic(_ArgInfo2) or
 dependent plural behaviour.
 
 */

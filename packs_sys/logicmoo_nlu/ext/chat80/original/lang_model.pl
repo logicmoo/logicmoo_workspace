@@ -227,14 +227,13 @@ c80(Text):-
   add_c80(S), 
   c81(S).
 
-c81(S):- fail, once(c82(S)),fail. 
-c81(S):-
- time_once((mpred_test_mok(into_lexical_segs(S,U)),
+c81(S):- time_once(try_ace_lf(S)),fail.
+c81(S):- time_once((mpred_test_mok(into_lexical_segs(S,U)),
  forall(deepen_pos(sentence80(E,U,[],[],[])),print_tree_nl(E)))),
  fail.
 c81(S):- fail,time_once(c83(S)),fail.
 c81(S):- fail, time_once(input_to_middle(S)),fail.
-c81(S):- time_once(c84(S)),fail.
+c81(S):- time_once(p1(c84,S)),fail.
 c81(_).
 
  
@@ -474,7 +473,8 @@ any_to_str(I,S):- \+ string(I), words_of(I,U), any_to_string(U,S),!.
 any_to_str(S,S).
   
 
-c82(S):- fail, time_once(process(debug,S)).
+
+c83(Text):- time_once(do_objecteese_test(Text)).
 
 
 c84:-
@@ -482,7 +482,6 @@ c84:-
   c84(Text).
 
 
-c84(Text):- c84(Text,Post), my_drs_to_fol(Post,FOL),exec_fol(FOL).
 
 c84(Text,Post):-
   text_to_tree(Text,Pre),
@@ -633,12 +632,31 @@ p1(P2,X):- atom(P2), \+ current_predicate(P2/1),  current_predicate(P2/2),!,
 p1(P1,X):- any_to_string(X,S),append_term(P1,S,G),nl,dmsg(?-G),call(G),nl,!.
 s81(P):- s811(p1(P)).
 
+for_n(N,From,Call):- 
+  forall(limit(N,From),ignore(show_failure(always, Call))).
 
-s811(P):-
-  %forall(ape_test(_,X),call(P,X)),
-  forall(training_data(X,_),call(P,X)),
-  %forall(test_e2c(X,_),call(P,X)),
-  %forall(chat80_all(X,_,_),call(P,X)),
+/*
+for_n(N,From,Call):- 
+ ignore((findall(Call,From,Calls),
+  forall((between(0,N,Nth),nth0(Nth,Calls,Call)),ignore(show_failure(always, Call))))).
+for_n(N,From,Call):- 
+ ignore((findall(Call,From,Calls),length(Calls,L),
+  Start is random(L-N-1),
+  End is Start+N,
+  wdmsg(End/L is Start+N),
+ %forall((between(0,N,I),Nth is I*X,nth0(Nth,Calls,Call)),show_failure(always,Call)).
+  forall((between(Start,End,Nth),nth0(Nth,Calls,Call)),ignore(show_failure(always, Call))))).*/
+s811(P):- s811(10,P).
+s811(N,P):- make,call(s8111(N,P)).
+s8111(N,P):-
+  for_n(N,training_data(X,_),call(P,X)),
+  for_n(N,parser_e2c:fracas_test_problem(X),call(P,X)),
+  for_n(N,ape_test(_,X),call(P,X)),
+  forall(test_aceese(X),call(P,X)),
+  for_n(N,sample_set80(X),call(P,X)),
+  for_n(N,test_e2c(X,_),call(P,X)),
+  for_n(N,parser_chat80:chat80_all(X,_,_),call(P,X)),
+  forall(sample_set80(X),call(P,X)),
   !.
   
 %:- add_c80("does joe eat cake?").
@@ -646,15 +664,15 @@ s811(P):-
 
 %~ decl( s( np(3+sg,nameOf(china),[]),
 %~          verb(make,active,past+fin,[],posP(PosP)),
-%~          [ arg(dir,np(3+sg,np_head(generic,[],peace),[prep_phrase(prep(with),np(3+sg,nameOf(japan),[]))]))],
+%~          [ arg(dirO(is_arginf(o)),np(3+sg,np_head(generic(is_arginf(o)),[],peace),[prep_phrase(prep(with),np(3+sg,nameOf(japan),[]))]))],
 %~          []))
 %~ decl( s( np(3+sg,nameOf(china),[]),
 %~          verb(make,active,past+fin,[],posP(PosP)),
-%~          [ arg(dir,np(3+sg,np_head(generic,[],peace),[prep_phrase(prep(with),np(3+sg,nameOf(japan),[]))]))],
+%~          [ arg(dirO(is_arginf(o)),np(3+sg,np_head(generic(is_arginf(o)),[],peace),[prep_phrase(prep(with),np(3+sg,nameOf(japan),[]))]))],
 %~          []))
 %~ decl( s( np(3+sg,nameOf(china),[]),
 %~          verb(talk,active,Fin+fin,[],posP(PosP)),
-%~          [ arg(dir,np(3+sg,nameOf(japan),[]))],
+%~          [ arg(dirO(is_arginf(o)),np(3+sg,nameOf(japan),[]))],
 %~          []))
   
 

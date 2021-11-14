@@ -111,7 +111,12 @@ try_ace_lf(I,O):- any_to_ace_str(I,S),!,
    \+ \+ should_learn(O).
 try_ace_lf(I):- make,try_ace_lf(I,O), \+ \+ exec_fol(I=O).
 
-exec_fol(X=I):- !, nonvar(I),my_drs_to_fol_kif(I,O), my_drs_to_fol_kif2(O,M), format('~N'), print_tree_nl(m=M),  print_tree_nl(X=O).
+exec_fol(X=I):- !, nonvar(I),
+  my_drs_to_fol_kif(I,O), 
+  my_drs_to_fol_kif2(O,M), format('~N~n'), print_tree_nl(m=M),  
+  format('~N~n'),
+  print_tree_nl(X),write(' == '),
+  print_tree_nl(I).
 exec_fol(FOL):- exec_fol(exec_fol=FOL),!.
 
 
@@ -234,6 +239,14 @@ test_aceese("They know everything that he owns.").
 test_aceese("John sees two books that sit on the shelf by the fire").
 test_aceese("John sees two books that sit on the shelf that is burning").
 test_aceese("John sees two books that sit on the shelf and they are burning").
+
+test_aceese('A curiously carved table is a supporter in the Library.').
+test_aceese('A rosewood bench is a supporter in the laboratory. "A rosewood bench, scarred and burned by years of incantations, fills half of the room."').
+test_aceese('An iron crucible is an open container on the rosewood bench. "Bob''s crucible bubbles merrily on the bench."').
+test_aceese('A cupboard is a closed openable container in the laboratory. "A cupboard of great antiquity quietly blends into the corner shadows."').
+test_aceese('A plastic bag is a closed transparent portable openable container on the carved table.').
+test_aceese('A Chinese puzzle box is a locked lockable closed openable portable container in the plastic bag.').
+test_aceese('A pinch of ginger is a portable thing in the puzzle box.').
 
 :- fixup_exports.
 

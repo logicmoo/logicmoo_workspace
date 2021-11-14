@@ -356,6 +356,7 @@ ensure_ace_knows(I,I,I):-!.
 ensure_ace_knows(I,'sym',O):-!,upcase_atom(I,O).
 ensure_ace_knows(I,P,O):- atom_length(P,1),!,atomic_list_concat([P,':',I],'',O).
 ensure_ace_knows(I,_,I):- functionwords:functionword(I),!.
+ensure_ace_knows(I,_,I):- !.
 ensure_ace_knows(I,P,O):- atom_concat('n',_,P),!,ensure_ace_knows(I,'n',O).
 ensure_ace_knows(I,P,O):- atom_concat('v',_,P),!,ensure_ace_knows(I,'v',O).
 ensure_ace_knows(I,P,O):- atom_concat('j',_,P),!,ensure_ace_knows(I,'a',O).
@@ -451,4 +452,4 @@ s85(X):- any_to_ace_str(X,S),string_codes(S,Codes), Out = current_output,
 	))),!.
 
 :- add_history((cls,debug,s82)).
-
+:- fixup_exports.

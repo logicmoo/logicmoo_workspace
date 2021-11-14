@@ -249,7 +249,7 @@ lex_winfo0(Word,W2):- lex_winfo_r(Word,Had),  W2 = w(Word, [lex_winfo|Had]),!.
 lex_winfo0(W,W):-!.
 
 :- thread_local(tmplex:had/1).
-
+lex_winfo1(_, _, _):- use_penn_links(false),!.
 lex_winfo1(_, Had, _):- is_list(Had),member(lex_winfo,Had),!.
 lex_winfo1(Word, Had,W2):- is_list(Had),member(truecase('UPPER'),Had),toPropercase(Word,PWord),Word\==PWord,!,lex_winfo1(PWord,Had,W2).
 lex_winfo1(Word, Had,W2):- locally(tmplex:had(Had),lex_winfo_r(Word,R)), R\==[],unlevelize(R,R2),nb_set_add(W2,[lex_winfo|R2]).

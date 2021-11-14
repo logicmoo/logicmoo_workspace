@@ -690,12 +690,13 @@ add_p_to_words(Var,P,Child,OUT):-
      find_subterm(Child,lnks(OldN),Holder),    
      LinkNum is OldN + 1,
      nb_setarg(1,Holder,LinkNum),    
-     nb_set_add(Child,link(LinkNum,Type,ID))))),
+     use_penn_links(nb_set_add(Child,link(LinkNum,Type,ID)))))),
 
   OUT=Child,!,
   ignore(((ChildType=w,find_subterm(Child,txt(W)), nb_set_add1(Txt,W)))))).
   %[Child,partOf(X,Y)]
 
+use_penn_links(G):- nop(G).
 /*
 ?- ape_to_penn_tree(
 [ [specification,[s,[np,[pname,'John']],[vp,[vbar,[],[vcompl,[v,likes],[np,[pname,'Mary']]],[]]]],'.'],

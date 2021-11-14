@@ -112,10 +112,14 @@ pers_pron_lex(me,_,1,sg,compl(_)).
 pers_pron_lex(myself,_,1,sg,_).
 pers_pron_lex(she,fem,3,sg,subj).
 pers_pron_lex(them,_,3,pl,compl(_)).
+pers_pron_lex(they,_,3,pl,subj).
+pers_pron_lex(those,neut,3,pl,subj).
 pers_pron_lex(them,_,3,pl,subj).
 pers_pron_lex(us,_,1,pl,compl(_)).
 pers_pron_lex(we,_,1,pl,subj).
 pers_pron_lex(you,_,2,_,_).
+pers_pron_lex(yourself,_,2,_,_).
+
 
 poss_pron_lex(her,fem,3,sg).
 poss_pron_lex(his,masc,3,sg).

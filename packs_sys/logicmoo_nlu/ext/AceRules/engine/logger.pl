@@ -42,4 +42,4 @@ log(Text) :-
 	retractall(last_log_message(_)),
 	assert(last_log_message(Text)),
 	get_time(X),
-	format(user_error, '~4f ~w~n', [X, Text]).
+	nop(format(user_error, '~4f ~w~n', [X, Text])).
