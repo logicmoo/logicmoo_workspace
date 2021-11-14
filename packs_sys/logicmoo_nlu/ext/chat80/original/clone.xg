@@ -208,6 +208,18 @@ gen_marker ---> theText80('\''), an_s.
 
 an_s ---> textOpt([s]).
 
+:- dynamic(lctmp:in_sent801/0).
+:- dynamic(lctmp:in_sent802/0).
+
+np_objbody(X, Y, Z, A, B, C, D) :-
+    \+ lctmp:in_sent801,
+     locally(lctmp:in_sent801,np_objbody0(X, Y, Z, A, B, C, D)).
+np_objbody(X, Y, Z, A, B, C, D) :-
+    \+ lctmp:in_sent802,
+     locally(lctmp:in_sent802,np_objbody0(X, Y, Z, A, B, C, D)).
+
+np_objbody0(vGood,_,_)---> theText80(vgood).
+np_objbody0((Name),3+sg,def+proper) ---> name_xg(Name).
 
 /* Determiners */
 
@@ -485,7 +497,7 @@ verb_args(dv(_Prep),_,[arg(Case,NP)|X],_,Mask) --->
    verb_arg(np,NP,Mask0),
    object_opt(Case,X,Mask0,Mask).
 % BE
-verb_args(be(_MODAL),_,[voidQ],Mask,Mask) ---> theText80(there).
+verb_args(be(_MODAL),_,[voidQ(_ArgInfo)],Mask,Mask) ---> theText80(there).
 verb_args(be(_MODAL),_,[arg(pred,P)],_,Mask) --->
    pred_conj(_,P,Mask).
 verb_args(be(_MODAL),_,[arg(dir,P)],_,Mask) ---> verb_arg(np,P,Mask).

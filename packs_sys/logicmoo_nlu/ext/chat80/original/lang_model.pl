@@ -664,11 +664,11 @@ s8111(N,P):-
 
 %~ decl( s( np(3+sg,nameOf(china),[]),
 %~          verb(make,active,past+fin,[],posP(PosP)),
-%~          [ arg(dirO(is_arginf(o)),np(3+sg,np_head(generic(is_arginf(o)),[],peace),[prep_phrase(prep(with),np(3+sg,nameOf(japan),[]))]))],
+%~          [ arg(dirO(is_arginf(o)),np(3+sg,np_head(generic(_ArgInfo)(is_arginf(o)),[],peace),[prep_phrase(prep(with),np(3+sg,nameOf(japan),[]))]))],
 %~          []))
 %~ decl( s( np(3+sg,nameOf(china),[]),
 %~          verb(make,active,past+fin,[],posP(PosP)),
-%~          [ arg(dirO(is_arginf(o)),np(3+sg,np_head(generic(is_arginf(o)),[],peace),[prep_phrase(prep(with),np(3+sg,nameOf(japan),[]))]))],
+%~          [ arg(dirO(is_arginf(o)),np(3+sg,np_head(generic(_ArgInfo)(is_arginf(o)),[],peace),[prep_phrase(prep(with),np(3+sg,nameOf(japan),[]))]))],
 %~          []))
 %~ decl( s( np(3+sg,nameOf(china),[]),
 %~          verb(talk,active,Fin+fin,[],posP(PosP)),

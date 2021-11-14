@@ -443,7 +443,9 @@ process4a(How,Sentence,U,S1,Times) :-
    %report(How,S,'Semantics',SemTime,expr),
    runtime(_StartPlan),
   ((
+   guess_pretty(S),
    qplan(S,S1),
+   guess_pretty(S1),
    %pprint_ecp_cmt(green,S),
    runtime(StopPlan),
    TimePlan is StopPlan - StartSem,

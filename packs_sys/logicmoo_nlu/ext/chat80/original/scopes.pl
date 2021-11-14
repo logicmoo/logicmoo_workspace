@@ -302,9 +302,9 @@ unit_det(quantV(_, _)).
 unit_det(det(_)).
 unit_det(question80(_)).
 unit_det(identityQ).
-unit_det(voidQ).
+unit_det(voidQ(_ArgInfo)).
 unit_det(not).
-unit_det(generic).
+unit_det(generic(_ArgInfo)).
 unit_det(wh_det(_)).
 unit_det(proportion(_)).
 
@@ -312,7 +312,7 @@ det_apply(quantV(Det, Type-X, P, _-Y), Q0, Q) :-
    apply80(Det, Type, X, P, Y, Q0, Q).
 
 
-apply80(generic, _, X, P, X, Q, X^(P, Q)).
+apply80(generic(_ArgInfo), _, X, P, X, Q, X^(P, Q)).
 
 apply80(proportion(_Type-V), _, X, P, Y, Q,
       S^(setOf(X, P, S),
@@ -321,7 +321,7 @@ apply80(proportion(_Type-V), _, X, P, Y, Q,
 
 apply80(identityQ, _, X, P, X, Q,(P, Q)).
 
-apply80(voidQ, _, X, P, X, Q, X^(P, Q)).
+apply80(voidQ(_ArgInfo), _, X, P, X, Q, X^(P, Q)).
 
 apply80(set, _, Index:X, P0, S, Q, S^(P, Q)) :-
    apply_set(Index, X, P0, S, P).
@@ -385,7 +385,7 @@ governs_lex(Det0, Det) :-
    Det=det(_);
    Det=quantV(_, _)).
 
-governs_lex(_, voidQ).
+governs_lex(_, voidQ(_ArgInfo)).
 governs_lex(_, lambda).
 governs_lex(_, identityQ).
 governs_lex(det(each), question80([_|_])).
@@ -415,7 +415,7 @@ weak(index(_)).
 weak(wh_det(_, _)).
 weak(set(_)).
 weak(wh_det(_)).
-weak(generic).
+weak(generic(_ArgInfo)).
 weak(proportion(_)).
 
 weak_det(no).
@@ -431,7 +431,7 @@ lower(question80(_), Q, quantV(det(a), X, P, Y)) :-
    open_quant(Q, det(any), X, P, Y), !.
 lower(_, Q, Q).
 
-setifiable(generic).
+setifiable(generic(_ArgInfo)).
 setifiable(det(a)).
 setifiable(det(all)).
 
