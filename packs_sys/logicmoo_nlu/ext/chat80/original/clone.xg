@@ -221,8 +221,17 @@ an_s ---> textOpt([s]).
 :- thread_local(lctmp:in_sent802/0).
 :-thread_local(lctmp:in_sent803/0).
 
+doubleQuotes ---> theText80('``').
+doubleQuotes ---> theText80('''''').
+doubleQuotes ---> theText80('"').
+
+w2_until(   [],G) ---> G,!.
+w2_until([H|T],G) ---> theText80(H), w2_until(T,G).
+
 np_objbody(vGood,_,_)---> theText80(vgood).
 np_objbody((Name),3+sg,def+proper) ---> name_xg(Name).
+np_objbody(string(List),3+sg,def+proper) ---> doubleQuotes, w2_until(List,doubleQuotes).
+
 np_objbody((num(Int)),3+sg,def+proper) ---> theText80(Value),{tr_number(Value,Int)}.
 np_objbody((adj(VGood)),_,_) ---> theText80(Good), {clex:adj_itr(Good,VGood)}.
 np_objbody(X, Y, Z, A, B, C, D) :-
@@ -237,6 +246,12 @@ np_objbody0(Det,Number,Def)--->theText80(that),!,np_objbody1(Det,Number,Def).
 %np_objbody0(_,_,_,_,_,_,_):- !, fail.
 %np_objbody0(Det,Number,Def)--->np_objbody1(Det,Number,Def).
 
+np_objbody0(X, Y, Z, A, B, C, D) :-
+    if_search_expanded(2),
+    \+ lctmp:in_sent803,
+     locally(lctmp:in_sent803,np_objbody1(X, Y, Z, A, B, C, D)).
+
+% test_chat80("How many countries does the danube flow through ?").
 
 np_objbody1((sent0(S)),_,_) --->  s80(S,_).
 %rel(Agmt,rel(X,S),Mask) 

@@ -54,7 +54,7 @@ i_sentence1(imp(U,Ve,s(_,Verb,VArgs,VMods)),imp(U,Ve,V,Args)) :-
 
 :- create_prolog_flag(debug_chat80,false,[keep(true)]).
 i_sentence2(S,G):- locally(set_prolog_flag(debug_chat80,true), i_sentence1(S,G)),!.
-i_sentence2(Dunno,dunno(Dunno)).
+% i_sentence2(Dunno,dunno(Dunno)).
 
 i_np(there,Y,quantV(voidQ(_ArgInfo),_X,'`'(true),'`'(true),[],Y),[],_,_,XA,XA).
 i_np(NP,Y,Q,Up,Id0,Index,XA0,XA) :-

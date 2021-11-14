@@ -69,8 +69,12 @@ t_l:useAltPOS:- fail.
 :- export(deepen_pos/1).
 :-meta_predicate(deepen_pos(0)).
 % temp hack
-deepen_pos(Call):- !, call(Call).
-deepen_pos(Call):- Call *-> true ; deepen_pos_0(Call) *->  true ; locally(t_l:useAltPOS,deepen_pos_0(Call)).
+deepen_pos_old(Call):- (Call *-> true ; (deepen_pos_0(Call) *->  true ; locally(t_l:useAltPOS,deepen_pos_0(Call)))).
+
+deepen_pos(Call):- flag(pos_depth,N,N),N>0,!,call(Call).
+deepen_pos(Call):- (Call *-> true ; call_cleanup(deepen_pos(10,Call),flag(pos_depth,_,0))).
+deepen_pos(Upto,Call):- flag(pos_depth,N,N+1),
+  ((N>Upto) -> (!,fail) ; (call(Call)*->true; deepen_pos(Upto,Call))).
 
 :- share_mp(deepen_pos_0/1).
 :-meta_predicate(deepen_pos_0(0)).
