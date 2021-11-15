@@ -226,6 +226,7 @@ theTextC(W1,_CYCPOS,WHY) ---> {t_l:old_text,!},[W1],WHY.
 
 % any_to_string("How many countries are there?",X),splt_words(X,Y,Z),vars_to_ucase(Y,Z),maplist(call,Z)
 
+:- system:ensure_loaded(library(logicmoo_nlu/parser_deepening)).
 
 :-share_mp(process_run_real/5).
 process_run_real(Callback,StartParse,UIn,MUSTP,WTIME) :-

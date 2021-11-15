@@ -32,6 +32,9 @@ the TextC(W1,CYCPOS,WHY) ---> [W2],{memoize_pos_to_lex80(WHY,CYCPOS,W2,W1)}.
 see newdict.pl
 */
 
+the_w2_list([H|T])---> [H],!,the_w2_list(T).
+the_w2_list([])---> [].
+
 % theTextL(W1,_CYCPOS,Y=W1)  ---> {t_l:old_text,!},theTextL80(W1),{W1=Y}.
 
 theTextL(W1,_CYCPOS,Y=W1)  ---> !,theTextL80(W1),{W1=Y}.
@@ -40,7 +43,8 @@ theTextL(W1,_CYCPOS,WHY) ---> theTextL80(W1),{call(WHY)}.
 % apw2(Cmp):- atom(Cmp),!,add_prev_w2(w(Cmp,unk)),!.
 apw2(Cmp):- nop(assertion(nonvar(Cmp))),parser_e2c:add_prev_w2(Cmp).
 
-w001(Cmp)---> (consume_spans_hack;[]), next_as_word,!,[Cmp],{ignore(on_x_fail(apw2(Cmp)))},!,(consume_spans_hack;[]).
+%w001(Cmp)---> (consume_spans_hack;[]), next_as_word,!,[Cmp],{ignore(on_x_fail(apw2(Cmp)))},!,(consume_spans_hack;[]).
+w001(Cmp)---> [Cmp],{!, ignore(on_x_fail(apw2(Cmp)))}.
 
 % NEW theText80_W2(Text,L) ---> w001(Cmp),{compound(Cmp)->Cmp=w(Text,L);(atom(Cmp)-> (Text=Cmp,L=unk))}.
 theText80_W2(Text,L) ---> w001(Cmp),{compound(Cmp)->Cmp=w(Text,L);(Text=Cmp,L=[])}.
@@ -75,15 +79,36 @@ theText80Penn(Cmp) --->{compound(Cmp),!},w001(Cmp).
 theText80Penn(w(W,L1)) ---> theText80_W2(W,L2),{L1=L2}.
 
 theText80_Text(S)---> theText80_W2(W,L2),{member(txt(T),L2)->atom_string(S,T);W=S}.
+has_trait(S)---> theText80_W2(_,L2),{member(S,L2)}.
 
 xg_with_text(G1,Text) ---> xg_and(G1,theText_cl(Text)).
 
-theText80(IC) ---> w1(W0),{assertion(nonvar(W0);nonvar(IC)),parser_e2c:the_text_unif(IC,W0)}.
+%theText80(IC) ---> w1(W0),{assertion(nonvar(W0);nonvar(IC)),parser_e2c:the_text_unif(IC,W0)}.
+
+theText80(_IC, A, B, C, D) :- A==[],!,fail,B=[],C=D.
+theText80(A, B, B, C, D) :-
+    virtual(theText80(A), C, D).
+
+theText80(IC, A, B, C, D) :- !,
+    w1(W0, A, B, C, D),
+    ((   nonvar(W0)
+              ;   nonvar(IC)
+              )),
+    parser_e2c:the_text_unif(IC, W0).
+
+theText80(IC, A, B, C, D) :-
+    w1(W0, A, B, C, D),
+    assertion((   nonvar(W0)
+              ;   nonvar(IC)
+              )),
+    parser_e2c:the_text_unif(IC, W0).
+
 %theText80(IC) ---> {t_l:old_text,!},[W0],{parser_tokenize:any_nb_to_atom(W0,W1),downcase_atom(W1,DC),(var(IC)->IC=DC;downcase_atom(IC,DC))}.
 %theText80(Text) ---> [w(Text,_)].
 
 % OLD theText80(W1,_CYCPOS) --->{t_l:old_text,!},[W1], {nop((compatible_pos_lex80(CW,CYCPOS),cw_lex80(W1,CW)))}.
 theText80(W1,_CYCPOS) ---> theText80(W1). %  {nop((compatible_pos_lex80(CW,CYCPOS),cw_lex80(W1,CW)))}.
+
 
 theTextL80(Text) ---> {var(Text),dmsg(theText_DCG_VAR(Text)),!},theText_ol(Text).
 theTextL80(Text) ---> {is_list(Text),!},theText_cl(Text).
@@ -102,17 +127,24 @@ theText_ol([W1]) ---> theText80(W1).
 theText_cl([]) ---> !,[].
 theText_cl([W1|WL]) ---> theText80(W1),!,theText_cl(WL).
 
-startSingleQuotes ---> theText80('`').
+% normal single quotes
 singleQuotes ---> theText80('''').
+% stylistic single quotes
+startSingleQuotes ---> theText80('`').
 endSingleQuotes ---> singleQuotes.
-startDoubleQuotes1 ---> theText80('``').
-endDoubleQuotes1 ---> theText80('''''').
+% normal double quotes
 doubleQuotes ---> theText80('"').
-w2_until(   [],G) ---> G,!.
-w2_until([H|T],G) ---> theText80_Text(H), w2_until(T,G).
-w2_quoted(List) ---> startDoubleQuotes1, w2_until(List,endDoubleQuotes1).
-w2_quoted(List) ---> doubleQuotes, w2_until(List,doubleQuotes).
-w2_quoted(List)--> singleQuotes, w2_until(List,singleQuotes).
+% stylistic double quotes
+startDoubleQuotes ---> theText80('``').
+endDoubleQuotes ---> theText80('''''').
+
+w2_txt_until(   [],G) ---> G,!.
+w2_txt_until([H|T],G) ---> theText80_Text(H), w2_txt_until(T,G).
+
+w2_quoted(List)---> startDoubleQuotes, w2_txt_until(List,endDoubleQuotes).
+w2_quoted(List)---> startSingleQuotes, w2_txt_until(List,endSingleQuotes).
+w2_quoted(List)---> doubleQuotes, w2_txt_until(List,doubleQuotes).
+w2_quoted(List)---> singleQuotes, w2_txt_until(List,singleQuotes).
 
 /*
 optText1(_,_,_) ---> noText.

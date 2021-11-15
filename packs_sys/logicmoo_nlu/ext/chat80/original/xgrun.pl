@@ -47,9 +47,12 @@ peek_phraseXG(P,A1,A1,A3,A3):- phraseXG(P,A1,_A2,A3,_A4).
 
 xg_and(G1,G2, B, C, D, E) :- phraseXG(G1, B, C, D, E), phraseXG(G2, B, C, D, E).
 
+
+
 phraseXG0((G1 ; G2), B, C, D, E) :- !, (phraseXG(G1, B, C, D, E); phraseXG(G2, B, C, D, E)).
 phraseXG0('&'(G1 , G2), B, C, D, E) :- !, xg_and(G1,G2, B, C, D, E).
 phraseXG0((A , B), C, D, E, F) :- !, phraseXG(A, C, G, E, H), phraseXG(B, G, D, H, F).
+
 
 phraseXGF((_ , _)).
 phraseXGF((_ ; _)).
@@ -84,8 +87,39 @@ sync_w2(A,W2):- compound(A),!,W2=A.
 sync_w2(A,W2):- compound(W2),!,arg(1,W2,A).
 sync_w2(A,W2):- atom(A),!,W2=w(A,_).
 
+xg_any(S2, _S1, [], S2, []).
 
+xg_right_associative(A, B, C, D, E, F) :-
+    phraseXG(B, G, D, H, F),
+    phraseXG(A, C, G, E, H).
 
+xg_left_associative(A, B, C, D, E, F) :-
+    phraseXG(A, C, G, E, H),
+    phraseXG(B, G, D, H, F).
+
+'{}'(G,X,X,Y,Y):- call(G).
+
+% c_r_l(R,L):- !, call(L),call(R).
+c_r_l(L,R):- call(L),call(R).
+xg_from_right(DCG_Left, DCG_Right,  S, E, S1, []) :- 
+    ignore(E = []),
+    append_from_right(Left,Right,S),
+    c_r_l(phraseXG(DCG_Right,Right,E,M1,[]),
+    phraseXG(DCG_Left,Left,[],S1,M1)).
+/*
+xg_from_right(DCG_Left, DCG_Right,  S1, [], S, E) :- 
+    ignore(E = []), !,
+    append_from_right(Left,Right,S),
+    c_r_l(phraseXG(DCG_Right,M1,[],Right,E),
+    phraseXG(DCG_Left,S1,M1,Left,[])).
+*/
+
+append_from_right(Left,Right,S):- 
+    assertion(is_list(S)),
+    length(S, L),Lm1 is L -1,
+    between(0, Lm1, RL),
+    length(Right, RL),
+    append(Left,Right,S).
 %sentence80(Tree,Question,[],[],[])
 /*
 phraseXG(P,A1,A2,A3,A4):-

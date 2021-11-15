@@ -225,12 +225,13 @@ c80(Text):-
   show_c80(Text),
   any_to_input_layer(Text,S),!,
   add_c80(S), 
-  c81(S).
+  c88(S).
 
 c81(S):- time_once(try_ace_lf(S)),fail.
-c81(S):- time_once((mpred_test_mok(into_lexical_segs(S,U)),
- forall(deepen_pos(sentence80(E,U,[],[],[])),print_tree_nl(E)))),
- fail.
+/*
+c81(S):- time_once((mpred_test_mok(into_lexical_segs(S,U)))),
+ forall(deepen_pos(sentence80(E,U,[],[],[])),print_tree_nl(E)),!.
+*/
 c81(S):- fail,time_once(c83(S)),fail.
 c81(S):- fail, time_once(input_to_middle(S)),fail.
 c81(S):- time_once(p1(c84,S)),fail.
@@ -466,7 +467,7 @@ text_to_all_trees(I):-
   forall(clause(input_to_middle(I,O,Named),B),ignore((call(B),print_tree(Named=O)))).
 
 
-time_once(G):- notrace(garbage_collect),quietly(locally(set_prolog_flag(gc,true),time(once(show_failure(always,G))))).
+time_once(G):- notrace(garbage_collect),quietly(locally(set_prolog_flag(gc,false),time(once(show_failure(always,G))))).
 
 any_to_input_layer(I,S):- any_to_str(I,S).
 any_to_str(I,S):- \+ string(I), words_of(I,U), any_to_string(U,S),!.

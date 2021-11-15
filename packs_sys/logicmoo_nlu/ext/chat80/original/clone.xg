@@ -15,13 +15,19 @@
 
 sentence80(S) ---> {b_setval('$prev_w2s',[]),b_setval('$prev_spans',[])},sentence801(S).
 
-sentence801(_) ---> if_giveup_dcg,{!,fail}.
-sentence801(S) ---> question80(S), ((terminator('?'),{!}); noText).
-sentence801(S) ---> imperative80(S), ((terminator('!'),{!}); noText).
-%sentence80(S) ---> declarative(S), ((terminator('.'),{!})).
-sentence801(QS) ---> s80(S,_),(theText80(Punct);(noText,{Punct=missing})),{!,punct_to_sent_type(Punct,S,QS)},{!}.
+:- dynamic(if_giveup_dcg/0).
+sentence801(_) ---> {if_giveup_dcg,!,fail}.
+sentence801(S) ---> xg_from_right(the_w2_list(List),theText80(Last)),{arg(_,v('?','!','.'),Last)},!,{sentence_typed(Last,S,List)}.
+sentence801(S) ---> sentence802(S).
+
+sentence802(S) ---> question80(S).
+sentence802(S) ---> imperative80(S),{!}.
+sentence80(S) ---> declarative(S),{!}.
 %sentence801(decl(S)) ---> s80(S,_).
 
+sentence_typed('?',S,List):- question80(S,List,[],[],[]).
+sentence_typed(Punct,Out,List):- s80(S,_,List,[],[],[]),punct_to_sent_type(Punct,S,Out),!.
+sentence_typed(_,S,List):- imperative80(S,List,[],[],[]),!.
 
 punct_to_sent_type((?),S,q(S)).
 punct_to_sent_type((.),S,decl(S)).
@@ -151,6 +157,7 @@ subj0(Subj,Agmt,_) --->
    {is_s_all(SAll), is_subj_case(Case)},
    np(Subj,Agmt,Case,_,subJ(_ArgInfo1),SAll,_).
 
+
 /* Noun Phrase */
 
 np(AgmtKernelMods,Agmt,Case,Def,Role,Set,Mask) ---> np0(AgmtKernelMods,Agmt,Case,Def,Role,Set,Mask).
@@ -185,13 +192,16 @@ np_compls(common,Agmt,Case,Mods,Set0,Mask) --->
 
 /* Nuclear noun phrase */
 
+np_head0(_,_,_)---> has_trait(pos('.')),!,{fail}.
+np_head0(nameOf(items(AndOr,List)),Agmt,Def)---> {if_search_expanded(2)}, nl_list_of_items(AndOr,np_head1(Agmt,Def),List).
+np_head0(H,Agmt,Def)---> np_head1(H,Agmt,Def).
 
-np_head0(nameOf(O),Agmt,Def) ---> np_objbody(O,Agmt,Def).
-np_head0(Pronoun,Agmt,def+proper), gen_marker --->
+np_head1(nameOf(O),Agmt,Def) ---> np_objbody(O,Agmt,Def).
+np_head1(Pronoun,Agmt,def+proper), gen_marker --->
    poss_pron(Pronoun,Agmt).
-np_head0(np_head(Det,[],Noun),3+sg,indef+common) --->
+np_head1(np_head(Det,[],Noun),3+sg,indef+common) --->
    quantifier_pron(Det,Noun).
-np_head0(np_head(Det,Adjs,Head),3+Number,Def+common) --->
+np_head1(np_head(Det,Adjs,Head),3+Number,Def+common) --->
    determiner(Det,Number,Def),
    adjs_opt(Adjs),
    noun(Head,Number).
@@ -220,10 +230,16 @@ an_s ---> textOpt([s]).
 :- thread_local(lctmp:in_sent801/0).
 :- thread_local(lctmp:in_sent802/0).
 :- thread_local(lctmp:in_sent803/0).
+:- thread_local(lctmp:in_sent804/0). 
+
+of_type(P,H) ---> {P=..[F|List],PH=..[F,H|List]},PH.
+maybeComma ---> (theText80(',');[]),!.
+nl_list_of_items(AndOr,P, [H,T])---> of_type(P,H), maybeComma, {member(AndOr,[and,or])}, theText80(AndOr), of_type(P,T).
+nl_list_of_items(AndOr,P, [H|T])---> of_type(P,H), maybeComma, nl_list_of_items(AndOr,P, T).
 
 np_objbody(vGood,_,_)---> theText80(vgood).
 np_objbody((Name),3+sg,def+proper) ---> name_xg(Name).
-np_objbody(string(List),3+sg,def+proper) ---> w2_quoted(List).
+np_objbody(string(List),3+sg,def+proper) ---> w2_quoted(List),!.
 
 np_objbody((num(Int)),3+sg,def+proper) ---> theText80(Value),{tr_number(Value,Int)}.
 np_objbody((adj(VGood)),_,_) ---> theText80(Good), {clex:adj_itr(Good,VGood)}.
@@ -676,6 +692,7 @@ is_to_role_case(undef,aux,#(0,_,_)).
 is_to_role_case(undef,decl,_).
 is_to_role_case(nil,_,_).
 
+is_any_case(#(_,_,_)).
 is_subj_case(#(1,0,0)).
 is_verb_case(#(0,1,0)).
 is_prep_case(#(0,0,1)).

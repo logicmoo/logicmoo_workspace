@@ -402,8 +402,6 @@ intrans_LF(Continue,Spatial & Feat& Type,X,LF,
  dif(From,Into),
  LF = path_pred_linkage(direct(PathSystem),Type,X,Origin,Dest).
 
-if_search_expanded(N):- flag(pos_depth,W,W), W>N.
-
 intrans_LF(Continue,Spatial& _Feat& _Type,X,intrans_pred(_Spatial,Continue,X,Y),
    [slot(prep(dirO(_ArgInfo)),Spatial&_,Y,_,free)],_):- 
    if_search_expanded(2),

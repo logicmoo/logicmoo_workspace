@@ -28,15 +28,18 @@
 :- op(300,fx,(('`'))).
 :- op(200,xfx,((--))).
 
-must80(G):- \+ current_prolog_flag(debug_chat80,true),!, call(G).
-must80(G):- call(G)*->true;(nop((wdmsg(failed(G)),ignore(on_x_fail(ftrace(G))))),wdmsg(failed(G)),fail,call(G)).
+% must80(G):- \+ current_prolog_flag(debug_chat80,true),!, call(G).
+must80(G):- call(G)*->true;(
+  nop((wdmsg(failed(G)),ignore(on_x_fail(ftrace(G))))),
+  G \= lf80(_,_),
+  wdmsg(failed(G)),fail,call(G)).
 
 % logical form checker for chat80
 lf80(Conj,G):- compound(Conj), (Conj=(Type1-TypeS)),!,lf80(Type1,lf80(TypeS,G)).
 lf80(Type,G):- 
   subst(G,Type,Type0,P),
   must80(P),
-  ((var(Type0);var(Type)) -> Type0=Type ; writeln(Type0=Type),must80(Type=Type0)).
+  ((var(Type0);var(Type)) -> Type0=Type ; (nop(writeln(Type0=Type)),must80(Type=Type0))).
 
 i_sentence(S,G):- i_sentence1(S,G) *-> true ; i_sentence2(S,G).
 
@@ -79,6 +82,7 @@ held_arg(XA,XA,S,S,Id,Id).
 % np(3+sg,nameOf(iran),[])
 i_np_head0(nameOf(Name), Type-Name,Type-Name,identityQ(_ArgInfo),'`'(true),Pred,Pred,[]) :- 
   ignore(lf80(Type,name_template_LF(Name,Type))),!.
+
 i_np_head0(wh(X),X,X,identityQ(_ArgInfo),'`'(true),Pred,Pred,[]):-!.
 % np(3+sg,pronoun(neut),[])
 i_np_head0(Else, Type-Name,Type-Name,identityQ(_ArgInfo),'`'(P),Pred,Pred,[]):-  Else \= np_head(_,_,_), !,
@@ -355,7 +359,7 @@ noun_template(Noun,Type,X,'`'(P),Slots) :-
 
 noun_template(Noun,TypeV,V,apply80(F,P),
       [slot(prep(Of),TypeX,X,_,apply)]) :-
-   lf80(TypeV,meta_noun_LF(Noun,Of,TypeV,V,TypeX,X,P,F)).
+   lf80(TypeV-TypeX,meta_noun_LF(Noun,Of,TypeV,V,TypeX,X,P,F)).
 
 slot_verb_template(have(MODAL),Y=Z,
                 [slot(subJ(_ArgInfo1),TypeS,S,-Id,free),

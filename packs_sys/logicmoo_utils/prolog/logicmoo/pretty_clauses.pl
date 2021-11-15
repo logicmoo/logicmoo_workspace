@@ -1626,13 +1626,13 @@ write_ar_simple(Sep1, _Tab,Sep,[A|R]):-
 %
 %	Similar to between/3, but can count down if Start > End.
 
-between_down(Start, Count, End) :-
+between_down(Start, End, Count) :-
 	Start =< End, !,
 	between(Start, End, Count).
-between_down(Start, Count, End) :-
+between_down(Start, End, Count) :-
 	nonvar(Count), !,
 	between(End, Start, Count).
-between_down(Start, Count, End) :-
+between_down(Start, End, Count) :-
 	Range is Start-End,
 	between(0, Range, X),
 	Count is Start-X.
