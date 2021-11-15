@@ -1375,7 +1375,7 @@ recalc_tab1(A-B,   Tab):- !, recalc_tab1(A, AA), recalc_tab1(B, BB), Tab is AA-B
 recalc_tab1(now,   Tab):- !, current_output_line_position(Tab).
 recalc_tab1(TabC,  Tab):- Tab is TabC.
 
-max_output(Tab,A160,T):- display_length(T,L), LL is Tab+L, on_x_ignore(LL<A160),!.
+max_output(Tab,W120,T):- display_length(T,L), LL is Tab+L, on_x_ignore(LL<W120),!.
 
 print_atomf(F):- with_folding(f,print_tree_no_nl(F)).
 print_functor(F):- with_folding(f,print_tree00(F)).
@@ -1385,6 +1385,7 @@ pt_list_juncts(_Tab,_OP,[]):- !.
 pt_list_juncts(Tab,OP,[T|List]):- 
     print_tab_term(Tab,T), pformat(' '),pformat(OP),pformat(' '),
     pt_list_juncts(Tab,OP,List).
+
 
 print_tree_width( RM ):- current_print_write_options(Options), memberchk(right_margin(RM), Options),!.
 print_tree_width(W120):- W120=120.
@@ -1421,9 +1422,17 @@ pt1(_,_Tab,Term) :- Term=ref(_), !, writeq(Term),!.
 pt1(_,_Tab,Term) :- Term=element(_,_,List),List==[], !, writeq(Term),!.
    
 
-pt1(_, Tab,Term) :- 
+pt1(_, Tab,Term) :- fail,
    as_is(Term), !,
    system_portray(Tab,Term).
+
+pt1(_FS,Tab,T) :- % fail,
+   %print_tree_width(W120),
+   W120 = 120,
+   as_is(T),
+   max_output(Tab,W120,T),!,
+   prefix_spaces(Tab), print(T).
+   %system_portray(Tab,T),!.
    
 % pt1(_FS,_Tab,Term) :- is_dict(Term), ansi_ansi,!,sys:plpp(Term),!.
 pt1(FS,Tab,Term) :- 
@@ -1479,7 +1488,7 @@ pt1(FS,Tab,(NPV)) :- NPV=..[OP,N,V], is_colon_mark(OP),
     pl_span_goal('args', (prefix_spaces(Tab+2), print_tree00( V ))),!.
     
 
-pt1(_FS,Tab,T) :- fail,
+pt1(_FS,Tab,T) :- % fail,
    print_tree_width(W120),
    max_output(Tab,W120,T),!,
    prefix_spaces(Tab), print(T).
@@ -1519,7 +1528,7 @@ pt1(_FS,Tab,T1) :-
    system_portray(Tab+3,T,[right_margin(100)])),
   pformat(') )'), !.
 
-pt1(_FS,Tab,T) :- % fail,
+pt1(_FS,Tab,T) :- 
    print_tree_width(W120), \+ using_folding_depth,
    max_output(Tab,W120,T),!,
    system_portray(Tab,T),!.

@@ -321,12 +321,27 @@ chat80_all("Which country bordering the mediterranean borders a country that is 
 chat80_all("Which country's capital is london ?",[united_kingdom],6).
 chat80_all("Which is the largest african country ?",[sudan],7).
 chat80_all("Which rivers are not in asia ?",_,318).
-chat80_all("What are the cities in countries bordering the baltic ?",Baltic_Cities,_):- baltic_cities(Baltic_Cities).
-chat80_all("What are the rivers that flow through each country bordering the baltic ?",Baltic_Cities,_):- baltic_rivers(Baltic_Cities).
-chat80_all("What are the rivers that flow through the countries bordering the baltic ?",Baltic_Cities,_):- baltic_rivers(Baltic_Cities).
-chat80_all_broken("What cities do the countries bordering the baltic contain ?",Baltic_Cities,_):- baltic_cities(Baltic_Cities).
+chat80_all("What rivers are in countries bordering the baltic ?",_,666).
+chat80_all("What are the cities of the countries bordering the baltic ?",Baltic_Cities,667):- baltic_cities_real(Baltic_Cities).
+chat80_all("What are the rivers of the countries bordering the baltic ?",Baltic_Rivers,668):- baltic_rivers_real(Baltic_Rivers).
+chat80_all("What are the cities in countries bordering the baltic ?",Baltic_Cities,669):- baltic_cities(Baltic_Cities).
+chat80_all("What are the rivers in countries bordering the baltic ?",Baltic_Rivers,670):- baltic_rivers(Baltic_Rivers).
+chat80_all("What are the rivers that flow through each country bordering the baltic ?",Baltic_Rivers,671):- baltic_rivers(Baltic_Rivers).
+chat80_all("What are the rivers that flow through the countries bordering the baltic ?",Baltic_Rivers,672):- baltic_rivers(Baltic_Rivers).
+chat80_all_broken("What cities do the countries bordering the baltic contain ?",Baltic_Cities,673):- baltic_cities(Baltic_Cities).
 
 baltic_rivers(_):-!.
-baltic_rivers([[denmark]:_,[east_germany]:_,[finland]:_,[poland]:_,[soviet_union]:_,[sweden]:_,[west_germany]:_]).
+baltic_rivers_real([[[[east_germany]:[elbe],
+                  [poland]:[oder,vistula],
+                  [soviet_union] :[ amu_darya, amur,don,lena,ob,volga,yenisei],
+                  [west_germany]:[danube,elbe,rhine]]]]).
+
 baltic_cities(_):-!.
-baltic_cities([[denmark]:_,[east_germany]:_,[finland]:_,[poland]:_,[soviet_union]:_,[sweden]:_,[west_germany]:_]).
+baltic_cities_real([[ [[denmark]:[copenhagen],
+                  [east_germany]:[berlin,east_berlin],
+                  [finland]:[helsinki],
+                  [poland]:[warsaw],
+                  [soviet_union]:[kiev,leningrad,moscow],
+                  [sweden]:[stockholm],
+                  [west_germany]:[bonn,hamburg]]]]).
+

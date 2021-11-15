@@ -426,35 +426,35 @@ process4a(How,Sentence,U,S1,Times) :-
    (report(always,U,'segs',SegTime,print_tree_nl)),
    
    runtime(StartParse))),!,
- ((must80(deepen_pos(sentence80(E,U,[],[],[]))),
+ ((debug_chat80_if_fail(deepen_pos(sentence80(E,U,[],[],[]))),
    notrace((runtime(StopParse),
 
     ParseTime is StopParse - StartParse,
-    report(How,E,'Parse',ParseTime,print_tree_nl),
+    report(always,E,'Parse',ParseTime,print_tree_nl),
     % !, %%%%%%%%%%%%%%%% added by JPO but breaks "london"
     runtime(StartSem))),
-   must80(mpred_test_mok(deepen_pos(i_sentence(E,E1)))),
+   debug_chat80_if_fail(mpred_test_mok(deepen_pos(i_sentence(E,E1)))),
    report(always,E1,'i_sentence',ParseTime,cmt),
-   must80(clausify80(E1,E2)),!,
+   debug_chat80_if_fail(clausify80(E1,E2)),!,
   % report(How,E2,'clausify80',ParseTime,cmt),
-   must80((simplify80(E2,E3),simplify80(E3,S))))),
+   debug_chat80_if_fail((simplify80(E2,E3),simplify80(E3,S))))),
    runtime(StopSem),
    SemTime is StopSem - StartSem,
    %report(How,S,'Semantics',SemTime,expr),
    runtime(_StartPlan),
   ((
    guess_pretty(S),
-   must80(qplan(S,S1)),
+   debug_chat80_if_fail(qplan(S,S1)),
    guess_pretty(S1),
    %pprint_ecp_cmt(green,S),
    runtime(StopPlan),
    TimePlan is StopPlan - StartSem,
 
-   report(How,S1,'Planning',TimePlan,expr),
+   report(always,Sentence+S1,'Planning',TimePlan,expr),
    !)).
 
 process4(How,Sentence,Answer,Times) :-
-   process4a(How,Sentence,U,S1,Times), 
+   process4a(How,Sentence,U,S1,Times),!, 
    process4b(How,U,S1,Answer,Times).
 
 process4b(How,U,S1,Answer,Times) :-
@@ -462,12 +462,12 @@ process4b(How,U,S1,Answer,Times) :-
    report(How,S1,'Planning',TimePlan,expr),
    runtime(StartAns),
    ((
-   must80(results80(S1,Answer)), !,
+   debug_chat80_if_fail(results80(S1,Answer)), !,
    runtime(StopAns),
    TimeAns is StopAns - StartAns,
    TotalTime is ParseTime+SemTime+TimePlan+TimeAns,
    report(How,U,'Question',TotalTime,print_test),
-   ignore((How\==test, report(always,Answer,'Reply',TimeAns,respond))))),!.
+   ignore((report(always,Answer,'Reply',TimeAns,print_tree_nl))))),!.
    
 results80(S1,Results):- 
   nonvar(S1),

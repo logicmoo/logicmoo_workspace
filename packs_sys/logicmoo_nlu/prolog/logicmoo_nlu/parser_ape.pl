@@ -109,6 +109,7 @@ try_ace_lf(I,O):- any_to_ace_str(I,S),!,
    ace_to_drs:aceparagraph_to_drs(S,on,off,1,_Sentences,_Trees,UnresolvedDrs,O,Messages,_Time),
    \+ \+ nop(wdmsg(UnresolvedDrs=Messages)),
    \+ \+ should_learn(O).
+
 try_ace_lf(I):- make,try_ace_lf(I,O), \+ \+ exec_fol(I=O).
 
 exec_fol(X=I):- !, nonvar(I),

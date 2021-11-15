@@ -20,10 +20,11 @@ sentence801(_) ---> {if_giveup_dcg,!,fail}.
 sentence801(S) ---> xg_from_right(the_w2_list(List),theText80(Last)),{arg(_,v('?','!','.'),Last)},!,{sentence_typed(Last,S,List)}.
 sentence801(S) ---> sentence802(S).
 
+sentence802(S) ---> declarative(S),{!}.
 sentence802(S) ---> question80(S).
 sentence802(S) ---> imperative80(S),{!}.
-sentence80(S) ---> declarative(S),{!}.
-%sentence801(decl(S)) ---> s80(S,_).
+sentence802(np(Subj)) ---> subj(Subj,_Agmt,_Type).
+%sentence801(decl(S)) ---> s80(S,_).+
 
 sentence_typed('?',S,List):- question80(S,List,[],[],[]).
 sentence_typed(Punct,Out,List):- s80(S,_,List,[],[],[]),punct_to_sent_type(Punct,S,Out),!.
@@ -150,7 +151,7 @@ s_vp(_Subj,Agmt,Type,Verb,Args,Mods,Mask) --->
    verb_mods(Mods,Set,Mask1,Mask).
 
 
-subj(Subj,Agmt,O) ---> subj0(Subj,Agmt,O).
+subj(Subj,Agmt,Type) ---> subj0(Subj,Agmt,Type).
 
 subj0(there,_Agmt,_+be(_MODAL)) ---> theText80(there).
 subj0(Subj,Agmt,_) --->
@@ -234,15 +235,20 @@ an_s ---> textOpt([s]).
 
 of_type(P,H) ---> {P=..[F|List],PH=..[F,H|List]},PH.
 maybeComma ---> (theText80(',');[]),!.
-nl_list_of_items(AndOr,P, [H,T])---> of_type(P,H), maybeComma, {member(AndOr,[and,or])}, theText80(AndOr), of_type(P,T).
-nl_list_of_items(AndOr,P, [H|T])---> of_type(P,H), maybeComma, nl_list_of_items(AndOr,P, T).
+nl_list_of_items(AndOr,P, [H,T])---> xg_peek([_,_,_]), of_type(P,H), maybeComma, {member(AndOr,[and,or])}, theText80(AndOr), of_type(P,T),!.
+nl_list_of_items(AndOr,P, [H|T])---> xg_peek([_,_,_,_]), of_type(P,H), maybeComma, !, nl_list_of_items(AndOr,P, T).
 
 np_objbody(vGood,_,_)---> theText80(vgood).
 np_objbody((Name),3+sg,def+proper) ---> name_xg(Name).
 np_objbody(string(List),3+sg,def+proper) ---> w2_quoted(List),!.
 
+np_objbody((prep_obj(X,S)),Agmt,Type) --->
+   prep(X),
+   subj(S,Agmt,Type).
+
 np_objbody((num(Int)),3+sg,def+proper) ---> theText80(Value),{tr_number(Value,Int)}.
 np_objbody((adj(VGood)),_,_) ---> theText80(Good), {clex:adj_itr(Good,VGood)}.
+/*
 np_objbody(X, Y, Z, A, B, C, D) :-
     \+ lctmp:in_sent801, !, 
      locally(lctmp:in_sent801,np_objbody0(X, Y, Z, A, B, C, D)).
@@ -262,14 +268,14 @@ np_objbody0(X, Y, Z, A, B, C, D) :-
 
 % test_chat80("How many countries does the danube flow through ?").
 
-np_objbody1((sent0(S)),_,_) --->  s80(S,_).
+np_objbody1((sent0(S)),_,_) ---> xg_peek([_,_]),s80(S,_).
 %rel(Agmt,rel(X,S),Mask) 
-np_objbody1((sent2(X,S)),Agmt,_) --->
+np_objbody1((sent2(X,S)),_Agmt,_) ---> xg_peek([_,_]),
    mark_island,
-   variable(Agmt,X),
+   prep(X),
    s80(S,_),   
    mark_dnalsi.
-
+*/
 %np_objbody(X,Y,Z) ---> quant_phrase(X,Y,Z).
 %np_objbody0(quantV(Op,Quant),Number,Def) ---> quantV(Op,Def), number(Quant,Number).
 

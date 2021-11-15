@@ -43,7 +43,7 @@ gap([]).
 
 virtual(NT,x(_,nonterminal,NT,X),X).
 
-peek_phraseXG(P,A1,A1,A3,A3):- phraseXG(P,A1,_A2,A3,_A4).
+xg_peek(P,A1,A1,A3,A3):- phraseXG(P,A1,_A2,A3,_A4),!.
 
 xg_and(G1,G2, B, C, D, E) :- phraseXG(G1, B, C, D, E), phraseXG(G2, B, C, D, E).
 
@@ -70,7 +70,8 @@ phraseXGL([], X, X, Y, Y).
 phraseXGL([A | B], C, D, E, F) :- !, terminal(A, C, G, E, H), phraseXGL(B, G, D, H, F).
 
 phraseXG(P,A1,A2):- (var(P)->gen_xg_heads(P);true),
-  swich_on_var(A1,(sync_w2_l(A1,W1),sync_w2_l(A2,W2)),phraseXG(P,W1,W2,Y,Y)).
+  swich_on_var(A1,(sync_w2_l(A1,W1),sync_w2_l(A2,W2)),
+  phraseXG(P,W1,W2,Y,Y)).
 
 swich_on_var(A1,G1,G2):- nonvar(A1),!,call(G1),call(G2).
 swich_on_var(_, G1,G2):- call(G2),call(G1).

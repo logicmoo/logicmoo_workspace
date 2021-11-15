@@ -208,6 +208,12 @@ tr_number(X,X):- bind_pos('value',X).
 
 ctx_pron_lex(in,place,where).
 ctx_pron_lex(at,time,when).
+ctx_pron_lex(because,condition,why).
+ctx_pron_lex(for,agent,who).
+ctx_pron_lex(to,movement,what).
+ctx_pron_lex(by,manner,how).
+
+% prepositions of time, place, movement, manner, agent, measure, source and possession.
 
 how_many_lex([how,many]).
 

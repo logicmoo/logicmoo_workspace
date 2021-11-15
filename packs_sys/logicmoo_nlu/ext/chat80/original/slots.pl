@@ -28,11 +28,11 @@
 :- op(300,fx,(('`'))).
 :- op(200,xfx,((--))).
 
-% must80(G):- \+ current_prolog_flag(debug_chat80,true),!, call(G).
+must80(G):- \+ current_prolog_flag(debug_chat80,true),!, call(G).
 must80(G):- call(G)*->true;(
   nop((wdmsg(failed(G)),ignore(on_x_fail(ftrace(G))))),
   G \= lf80(_,_),
-  wdmsg(failed(G)),fail,call(G)).
+  fmt(failed(G)),fail,call(G)).
 
 % logical form checker for chat80
 lf80(Conj,G):- compound(Conj), (Conj=(Type1-TypeS)),!,lf80(Type1,lf80(TypeS,G)).
@@ -41,23 +41,20 @@ lf80(Type,G):-
   must80(P),
   ((var(Type0);var(Type)) -> Type0=Type ; (nop(writeln(Type0=Type)),must80(Type=Type0))).
 
-i_sentence(S,G):- i_sentence1(S,G) *-> true ; i_sentence2(S,G).
+i_sentence(S,G):- i_sentence1(S,G).
 
-i_sentence1(q(S),question80([],P)) :-
-   i_s(S,P,[],0).
+i_sentence1(q(S),question80([],P)) :- 
+   must80(i_s(S,P,[],0)).
 i_sentence1(decl(S),assertion80(P)) :-
-   i_s(S,P,[],0).
+   must80(i_s(S,P,[],0)).
 i_sentence1(whq(X,S),question80([X],P)) :-
-   i_s(S,P,[],0).
+   must80(i_s(S,P,[],0)).
 i_sentence1(imp(U,Ve,s(_,Verb,VArgs,VMods)),imp(U,Ve,V,Args)) :-
    must80(i_verb(Verb,V,_,active,posP(_Modal),Slots0,[],transparent)),
    must80(i_verb_args(VArgs,[],[],Slots0,Slots,Args,Args0,Up,-0)),
    append(Up,VMods,Mods),
    must80(i_verb_mods(Mods,_,[],Slots,Args0,Up,+0)).
 
-:- create_prolog_flag(debug_chat80,false,[keep(true)]).
-i_sentence2(S,G):- locally(set_prolog_flag(debug_chat80,true), i_sentence1(S,G)),!.
-% i_sentence2(Dunno,dunno(Dunno)).
 
 i_np(there,Y,quantV(voidQ(_ArgInfo),_X,'`'(true),'`'(true),[],Y),[],_,_,XA,XA).
 i_np(NP,Y,Q,Up,Id0,Index,XA0,XA) :-
@@ -86,7 +83,7 @@ i_np_head0(nameOf(Name), Type-Name,Type-Name,identityQ(_ArgInfo),'`'(true),Pred,
 i_np_head0(wh(X),X,X,identityQ(_ArgInfo),'`'(true),Pred,Pred,[]):-!.
 % np(3+sg,pronoun(neut),[])
 i_np_head0(Else, Type-Name,Type-Name,identityQ(_ArgInfo),'`'(P),Pred,Pred,[]):-  Else \= np_head(_,_,_), !,
-  lf80(Type,make_qualifiedBy(i_np_head0,Name,Type,Else,P)).
+  if_search_expanded(1), lf80(Type,make_qualifiedBy(i_np_head0,Name,Type,Else,P)).
 
 i_np_head0(np_head(Det,Adjs,Noun),X,T,Det,Head0,Pred0,Pred,Slots) :-
    i_adjs(Adjs,X,T,X,Head0,Head,Pred0,Pred),
@@ -106,7 +103,8 @@ i_np_head0(np_head(quantV(Op0,N),Adjs,Noun),
 i_np_head0(np_head(generic(ArgInfo),[],Value), Type-X,Type-X,voidQ(ArgInfo),'`'(X=Value),Pred,Pred,[]) :- !.
 
 
-i_np_head0(Else, Type-Name,Type-Name,identityQ(_ArgInfo),'`'(P),Pred,Pred,[]):- may_qualify(Else),
+i_np_head0(Else, Type-Name,Type-Name,identityQ(_ArgInfo),'`'(P),Pred,Pred,[]):- 
+   if_search_expanded(1), may_qualify(Else),
    lf80(Type,make_qualifiedBy(i_np_head0,Name,Type,Else,P)).
 
 
@@ -236,44 +234,47 @@ i_neg(negP(_Modal),notP).
 
 i_subj(Voice,Subj,Slots0,Slots,Quant,Up,Id) :-
    (active_passive_subjcase(Voice,Case)*->true;true),
-   must80(verb_slot(arg(Case,Subj),[],[],Slots0,Slots,[Quant],[],Up,Id)).
+   verb_slot(arg(Case,Subj),[],[],Slots0,Slots,[Quant],[],Up,Id).
 
 i_verb_args(VArgs,XA0,XA,Slots0,Slots,Args0,Args,Up,Id) :-
-   must80(fill_verb(VArgs,XA0,XA,Slots0,Slots,Args0,Args,Up,Id)).
+   fill_verb(VArgs,XA0,XA,Slots0,Slots,Args0,Args,Up,Id).
 
 active_passive_subjcase(active,subJ(_ArgInfo1)).
 active_passive_subjcase(passive,s_subj(_ArgInfo)).
 
 fill_verb([],XA,XA,Slots,Slots,Args,Args,[],_).
 fill_verb([Node|Nodes0],XA0,XA,Slots0,Slots,Args0,Args,Up,Id) :-
-   must80(verb_slot(Node,XA0,XA1,Slots0,Slots1,Args0,Args1,Up0,-Id)),
+   verb_slot(Node,XA0,XA1,Slots0,Slots1,Args0,Args1,Up0,-Id),
    append(Up0,Nodes0,Nodes),
    fill_verb(Nodes,XA1,XA,Slots1,Slots,Args1,Args,Up,+Id).
 
-verb_slot(prep_phrase(Prep,NP),
+verb_slot(Node,XA0,XA1,Slots0,Slots1,Args0,Args1,Up0,Id):- 
+   must80(verb_slot0(Node,XA0,XA1,Slots0,Slots1,Args0,Args1,Up0,Id)).
+
+verb_slot0(prep_phrase(Prep,NP),
       XArg0,XArg,Slots0,Slots,[Q|Args],Args,Up,Id) :-
    i_np(NP,X,Q,Up,Id,unit,XArg0,XArg),
    in_slot(Slots0,Case,X,Id,Slots,_),
    deepen_case(Prep,Case).
-verb_slot(voidQ(ArgInfo),XA,XA,Slots,Slots,Args,Args,[],_) :-
-   in_slot(Slots,arg_pred(ArgInfo),_,_,_,_).
-verb_slot(prep_phrase(prep(Prep),NP),
-      TXArg,TXArg,Slots0,Slots,[Q& '`'(P)|Args],Args,Up,Id0) :-
+verb_slot0(prep_phrase(prep(Prep),NP),
+      TXArg,TXArg,Slots0,Slots,[Q& '`'(P)|Args],Args,Up,Id0) :- !,
    in_slot(Slots0,arg_pred(_ArgInfo),X,Id0,Slots1,_),
    i_adjoin(Prep,X,Y,PSlots,XArg,P),
    i_np_head(NP,Y,Q,LDet,LDet0,LX,LPred,LQMods,LSlots0,Id0),
    held_arg(XArg,[],LSlots0,LSlots,Id0,Id),
    i_np_rest(NP,LDet,LDet0,LX,LPred,LQMods,LSlots,Up,Id,free),
    append(PSlots,Slots1,Slots).
-verb_slot(arg(SCase,NP),
+verb_slot0(voidQ(_ArgInfo2),XA,XA,Slots,Slots,Args,Args,[],_) :-
+   in_slot(Slots,arg_pred(_ArgInfo1),_,_,_,_).
+verb_slot0(adverb(Adv),XA,XA,Slots0,Slots,['`'(P)|Args],Args,[],Id) :-
+   adv_template_db(Adv,Case,X,P),
+   in_slot(Slots0,Case,X,Id,Slots,_).
+verb_slot0(arg(SCase,NP),
       XArg0,XArg,Slots0,Slots,[Q|Args],Args,Up,Id) :-
    i_np(NP,X,Q,Up,Id,unit,XArg0,XArg),
    in_slot(Slots0,Case,X,Id,Slots,_),
    deepen_case(SCase,Case).
-verb_slot(adverb(Adv),XA,XA,Slots0,Slots,['`'(P)|Args],Args,[],Id) :-
-   adv_template_db(Adv,Case,X,P),
-   in_slot(Slots0,Case,X,Id,Slots,_).
-verb_slot(arg(arg_pred(ArgInfo),AP),XA,XA,Slots0,Slots,Args0,Args,Up,Id) :-
+verb_slot0(arg(arg_pred(ArgInfo),AP),XA,XA,Slots0,Slots,Args0,Args,Up,Id) :-
    in_slot(Slots0,arg_pred(ArgInfo),X,Id,Slots,_),
    must80(i_pred(AP,X,Args0,Args,Up,Id)).
 

@@ -12,6 +12,7 @@
 :-module(parser_deepening,[
             deepen_pos/1,
             call_until_failed/1,
+            debug_chat80_if_fail/1,
             if_search_expanded/1]).
 
 
@@ -19,6 +20,7 @@ if_search_expanded(N):- flag(pos_depth,W,W), W>N,!.
 if_search_expanded(_):- flag(pos_depth_skipped,W,W+1),fail.
 
 :-meta_predicate(call_until_failed(0)).
+:-meta_predicate(debug_chat80_if_fail(0)).
 
 
 call_until_failed([H,(!)|T]):- !,call_until_failed([(H,!)|T]).
@@ -45,9 +47,20 @@ deepen_local_0(Local, Call):-
 deepen_pos_old(Call):- (Call *-> true ; (deepen_pos_0(Call) *->  true ; locally(t_l:useAltPOS,deepen_pos_0(Call)))).
 
 % Dont use this recursively
-deepen_pos(Call):- flag(pos_depth,N,N),N>0,wdmsg(recursive(deepen_pos(Call))),!,call(Call).
+deepen_pos(Call):- flag(pos_depth,N,N),N>0, dmsg(recursive(deepen_pos(Call))),!,call(Call).
 % starting fresh from here
-deepen_pos(Call):- flag(pos_depth_skipped,_,0), (Call *-> true ; call_cleanup(deepen_pos_pt2(10,Call),flag(pos_depth,_,0))).
+deepen_pos(Call):- deepen_pos_fresh(Call).
+
+:- create_prolog_flag(debug_chat80,true,[keep(true)]).
+
+debug_chat80_if_fail(Call):- current_prolog_flag(debug_chat80,true),!,must80(Call).
+debug_chat80_if_fail(Call):- call(Call)*->true;locally(set_prolog_flag(debug_chat80,true),must80(Call)).
+
+deepen_pos_fresh(Call):- 
+     flag(pos_depth_skipped,Was1,0),flag(pos_depth,Was2,0), 
+   call_cleanup((Call *-> true ; deepen_pos_pt2(10,Call)),
+     (flag(pos_depth_skipped,_,Was1),flag(pos_depth,_,Was2))).
+
 % this must be used *atfer* Call has been tried
 deepen_pos_pt2(Upto,Call):- flag(pos_depth,N,N+1),
   flag(pos_depth_skipped,EN,EN), EN\==0,

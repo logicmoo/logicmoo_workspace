@@ -87,16 +87,16 @@ chat_parse(Question, Tree) :-
 %   Translate the NLP parse tree into a Prolog query.
 
 chat_semantics(Tree, Query) :-
-    i_sentence(Tree,QT),
-    clausify80(QT,UE),
-    simplify80(UE,Query).
+    debug_chat80_if_fail(deepen_pos(i_sentence(Tree,QT))),
+    debug_chat80_if_fail(deepen_pos(clausify80(QT,UE))),
+    debug_chat80_if_fail(deepen_pos(simplify80(UE,Query))).
 
 %!  chat_optimize(+QueryIn, -Query)
 %
 %   Optimize a query
 
 chat_optimize(QueryIn, Query) :-
-    qplan(QueryIn, Query).
+    debug_chat80_if_fail(deepen_pos(qplan(QueryIn, Query))).
 
 %!  chat_answer(+Query, -Answer)
 %

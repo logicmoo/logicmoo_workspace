@@ -23,7 +23,7 @@
 
 
 spatial(thing).
-feat(Feat):- debug_var(feat,Feat),dif(Feat,geo).
+feat(Feat):- dif(Feat,geo). % debug_var(feat,Feat),
 
 thing_LF(person,_,X,ti(person,X),[],_).
 
@@ -115,6 +115,14 @@ ordering_pred(thing,cp(west,of),X1,X2) :- type_measure_pred( _Region,position(x)
 
 
 /* Nouns */
+/*
+  */ 
+property_LF(River,Spatial& Feat& River,X,Spatial&Geo& /*_Neo&*/ Country,Y,
+ (generic_pred(Spatial,any,Y,X),ti(River,X)),[],_,_):-  
+   if_search_expanded(2),
+   feat(Feat),spatial(Spatial),Geo=geo,
+   once(ti(River,_)),
+   once(ti(Country,_)).
 
 property_LF(Capital,Spatial& Feat& City,X,Spatial&Geo& /*_Neo&*/ Country,Y,specific_pred(Spatial,Nation_capital,Y,X),[],_,_):-  
 %   fail,
@@ -131,11 +139,14 @@ thing_LF(Capital,Spatial& Feat& City,X,ti(Capital_city,X),[],_):-
    unique_of_obj(_Geo,Spatial,_Country,_Govern,Capital,City,Capital_city,_Nation_capital),
    spatial(Spatial).
 
+/*
+thing_LF(River,Spatial& Feat& River,X,ti(River,X),[],_):- 
+  feat(Feat), once(ti(River,_)), spatial(Spatial).
+*/
   
-
 property_LF(Area,     value&size&Area,    X,Spatial&_,Y,  measure_pred(Spatial,Area,Y,X),[],_,_):- spatial(Spatial), type_measure_pred(_,size,Area,_).
-property_LF(Latitude, value&position&y,X,Spatial&_,Y, position_pred(Spatial,Latitude,Y,X),[],_,_):- type_measure_pred(_Region,position(y),Latitude,_).
-property_LF(Longitude,value&position&x,X,Spatial&_,Y, position_pred(Spatial,Longitude,Y,X),[],_,_):- type_measure_pred(_Region,position(x),Longitude,_).
+property_LF(Latitude, value&position&XY,X,Spatial&_,Y, position_pred(Spatial,Latitude,Y,X),[],_,_):- type_measure_pred(_Region,position(XY),Latitude,_).
+%property_LF(Longitude,value&position&x,X,Spatial&_,Y, position_pred(Spatial,Longitude,Y,X),[],_,_):- type_measure_pred(_Region,position(x),Longitude,_).
 property_LF(Population, value&units&Population/*citizens*/, X,Spatial&_,Y,    count_pred(Spatial,Population/*citizens*/,Y,X),[],_,_):-
   type_measure_pred(_City,units,Population,countV).
 
@@ -159,18 +170,8 @@ thing_LF_access(Population,value&units&Population/*citizens*/,X,unit_format(Popu
 /* Prepositions */
 
 adjunction_LF(in,Spatial&_-X,Spatial&_-Y,trans_pred(Spatial,contain,Y,X)).
+adjunction_LF(Any,Spatial&_-X,Spatial&_-Y,generic_pred(Spatial,matches_prep(Any),Y,X)):- if_search_expanded(2).
 adjunction_LF(cp(East,Of),Spatial&_-X,Spatial&_-Y,ordering_pred(Spatial,cp(East,Of),X,Y)).
-/*
-adjunction_LF(cp(east,of),Spatial&_-X,Spatial&_-Y,ordering_pred(Spatial,cp(east,of),X,Y)).
-adjunction_LF(cp(west,of),Spatial&_-X,Spatial&_-Y,ordering_pred(Spatial,cp(west,of),X,Y)).
-adjunction_LF(cp(north,of),Spatial&_-X,Spatial&_-Y,ordering_pred(Spatial,cp(north,of),X,Y)).
-adjunction_LF(cp(south,of),Spatial&_-X,Spatial&_-Y,ordering_pred(Spatial,cp(south,of),X,Y)).
-*/
-
-
-
-
-
 
 
 /* Proper nouns */
@@ -178,7 +179,6 @@ adjunction_LF(cp(south,of),Spatial&_-X,Spatial&_-Y,ordering_pred(Spatial,cp(sout
 name_template_LF(X,Type2):- bind_pos('object',X), type_conversion(typeOfFn(X),Type2).
 name_template_LF(X,Type2):- bind_pos('type',X), type_conversion(X,Type2).
 name_template_LF(X,Type2):- name_template_lf0(X,Type1), type_conversion(Type1,Type2).
-
 
 
 aggr_noun_LF(average,_,_,average).
@@ -376,10 +376,10 @@ agentitive_trans(Contains,Af,An):- agentitive_trans_80(Contains,Af,An).
 % chat80("the rhine rises in switzerland ?      ").
 % @TODO: X begins from Begin
 intrans_LF(Start,Spatial & Feat& Type,X, LF,
-   [slot(prep(In),Spatial&_,Begin,_,free)],_):- 
+   [slot(prep(From),Spatial&_,Begin,_,free)],_):- 
  feat(Feat),
  type_begins_thru_ends(Type, PathSystem, Start, _Continue, _Stop),
- spatial(Spatial),member(In,[in,from,at]),
+ spatial(Spatial),member(From,[in,from,at]),debug_var(From,Begin),
  LF = path_pred(begins(PathSystem),Type,X,Begin).
 
 % X drains into End
@@ -387,7 +387,7 @@ intrans_LF(Stop,Spatial & Feat& Type,X, LF,
    [slot(prep(Into),Spatial&_,End,_,free)],_):- 
  feat(Feat),
  type_begins_thru_ends(Type, PathSystem, _Start, _Continue, Stop),
- spatial(Spatial),member(Into,[into,in,to,at]),
+ spatial(Spatial),member(Into,[into,in,to,at]),debug_var(Into,End),
  LF = path_pred(ends(PathSystem),Type,X,End).
 
 
@@ -400,7 +400,24 @@ intrans_LF(Continue,Spatial & Feat& Type,X,LF,
  member(Into,[into,to,through,in,at]),
  member(From,[from,through,in,at]), 
  dif(From,Into),
+ debug_var(Into,Dest),
+ debug_var(From,Origin),
  LF = path_pred_linkage(direct(PathSystem),Type,X,Origin,Dest).
+
+
+intrans_LF(Run,Spatial & Feat& Type,X,LF,
+   [slot(prep(Into),Spatial&_,Dest,_,free),
+    slot(prep(From),Spatial&_,Origin,_,free)],_):- 
+ feat(Feat),
+ instrans_verb(Run),
+ spatial(Spatial),
+ member(Into,[into,to,through,in,at]),
+ member(From,[from,through,in,at]), 
+ dif(From,Into),
+ LF = path_pred_linkage(direct(_PathSystem),Type,X,Origin,Dest).
+
+instrans_verb(run).
+instrans_verb(Y):- clex:iv_finsg(_,Y).
 
 intrans_LF(Continue,Spatial& _Feat& _Type,X,intrans_pred(_Spatial,Continue,X,Y),
    [slot(prep(dirO(_ArgInfo)),Spatial&_,Y,_,free)],_):- 
@@ -611,13 +628,16 @@ database80((A,B)):- nonvar(A),!,database80(A),database80(B).
 database80(G):-  clause(database801(G),B), !, call(B).
 database80(G):-  current_predicate(_,G), call(G).
 
+trans_pred_type(Type,P):- tmp80:trans_rel_cache_created(=, trans_direct(Type,P)).
+trans_pred_type(thing,contain).
+generic_pred(Type,P,X,Y) :- P == any,!, generic_pred(Type,_,X,Y).
+generic_pred(Type,P,X,Y) :- trans_pred_type(Type,P), ground(Type+P),trans_pred(Type,P,X,Y). % contain 
 generic_pred(Type,P,X,Y) :- measure_pred(Type,P,X,Y). % area of
 generic_pred(Type,P,X,Y) :- count_pred(Type,P,X,Y). % population of 
 generic_pred(Type,P,X,Y) :- position_pred(Type,P,X,Y). % latitude of
 generic_pred(Type,P,X,Y) :- ordering_pred(Type,P,X,Y). % south of
 generic_pred(Type,P,X,Y) :- symmetric_pred(Type,P,X,Y). % border
 generic_pred(Type,P,X,Y) :- specific_pred(Type,P,X,Y). % capital 
-generic_pred(Type,P,X,Y) :- trans_pred(Type,P,X,Y). % contain 
 
 
 :- style_check(+singleton).

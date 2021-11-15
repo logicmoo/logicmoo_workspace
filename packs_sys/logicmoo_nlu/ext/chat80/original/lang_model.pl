@@ -221,11 +221,11 @@ c80(Text):-
   %cls, 
   make, 
   tracing ~= on,
-  %s80,
+  %c88,
   show_c80(Text),
   any_to_input_layer(Text,S),!,
   add_c80(S), 
-  c88(S).
+  time_once(c88(S)).
 
 c81(S):- time_once(try_ace_lf(S)),fail.
 /*
@@ -518,16 +518,34 @@ ping_each_system(_,M,O):- c88(M,O),should_learn(O).
 ping_each_system(_,M,O):- try_ace_lf(M,O),should_learn(O),!.
 ping_each_system(I,_,O):- notrace(words_to_base_forms(I,M)),any_to_input_layer(M,S),try_ace_lf(S,O).
 
-symm_test:- s80([does,iran,border,iraq]).
-symm_test2:- cls, symm_test, s80([does,iran,action1,iraq]).
-symm_test3:- s80([does,iran,symmetric1,iraq]).
+symm_test:- c88([does,iran,border,iraq]).
+symm_test2:- cls, symm_test, c88([does,iran,action1,iraq]).
+symm_test3:- c88([does,iran,symmetric1,iraq]).
 
-s80(S):- 
- ((mpred_test_mok(into_lexical_segs(S,U)),
- (deepen_pos(sentence80(E,U,[],[],[])),(print_tree_nl(sentence80=E),i_sentence(E,T),print_tree_nl(i_sentence=T))))).
+sentence80(U,E):- sentence80(E,U,[],[],[]).
+
+try_chat_80(G):- G=..[F,Tree,QT],try_chat_80(F,Tree,QT).
+try_chat_80(F,Tree,QT):- 
+ ignore((
+  nonvar(Tree),
+  debug_chat80_if_fail(deepen_pos(call(F,Tree,QT))),
+  print_tree_nl(F=QT))).
+
+
+c88(S,O):-
+ try_chat_80(into_lexical_segs(S,Lex)),
+ ignore((try_ace_lf(S,Ace),\+ \+ exec_fol(try_ace_lf=Ace))),
+ try_chat_80(sentence80(Lex,Tree)),
+ try_chat_80(i_sentence(Tree,QT)),
+ try_chat_80(clausify80(QT,UE)), 
+ try_chat_80(simplify80(UE,Query)),
+ try_chat_80(results80(Query,_Answer)),
+ member(O,[Query,UE,Ace,QT,Tree,S]),
+ nonvar(O),!.
+%c88(M,O):- process4a(off,M,_,O,_Times).
+
 
 c88(M):- c88(M,O),dmsg(O).
-c88(M,O):- process4a(off,M,_,O,_Times).
 
 s83:- forall(training_data(Sent,M),(my_drs_to_fol_kif(M,O),in_cmt(block,print_tree_nl(Sent=O)))).
 
