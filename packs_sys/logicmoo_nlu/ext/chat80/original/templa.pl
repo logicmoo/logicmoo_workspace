@@ -115,14 +115,18 @@ ordering_pred(thing,cp(west,of),X1,X2) :- type_measure_pred( _Region,position(x)
 
 
 /* Nouns */
-/*
-  */ 
 property_LF(River,Spatial& Feat& River,X,Spatial&Geo& /*_Neo&*/ Country,Y,
  (generic_pred(Spatial,any,Y,X),ti(River,X)),[],_,_):-  
    if_search_expanded(2),
    feat(Feat),spatial(Spatial),Geo=geo,
-   once(ti(River,_)),
-   once(ti(Country,_)).
+   chat80_type(River),
+   chat80_type(Country).
+
+chat80_type(dog).
+chat80_type(person).
+chat80_type(country).
+chat80_type(river).
+chat80_type(TI):-ti(TI,_),!.
 
 property_LF(Capital,Spatial& Feat& City,X,Spatial&Geo& /*_Neo&*/ Country,Y,specific_pred(Spatial,Nation_capital,Y,X),[],_,_):-  
 %   fail,
@@ -141,7 +145,7 @@ thing_LF(Capital,Spatial& Feat& City,X,ti(Capital_city,X),[],_):-
 
 /*
 thing_LF(River,Spatial& Feat& River,X,ti(River,X),[],_):- 
-  feat(Feat), once(ti(River,_)), spatial(Spatial).
+  feat(Feat), chat80_type(River), spatial(Spatial).
 */
   
 property_LF(Area,     value&size&Area,    X,Spatial&_,Y,  measure_pred(Spatial,Area,Y,X),[],_,_):- spatial(Spatial), type_measure_pred(_,size,Area,_).
@@ -196,6 +200,7 @@ thing_LF(Nation,Path,X,LF,Slots,Other):- synonymous_spatial(Nation,Country), thi
 thing_LF_access(Noun,Type2,X,P,Slots,_):-
   thing_LF(Noun,Type1,X,P,Slots,_),
   btype_conversion(Type1,Type2).
+thing_LF_access(Person,_,X,ti(Person,X),[],_):-  if_search_expanded(4).
 
 btype_conversion(_,_).
 type_conversion(Type1,Type2):- !, Type1=Type2.
@@ -404,6 +409,13 @@ intrans_LF(Continue,Spatial & Feat& Type,X,LF,
  debug_var(From,Origin),
  LF = path_pred_linkage(direct(PathSystem),Type,X,Origin,Dest).
 
+
+intrans_LF(Run,Spatial & Feat& Type,X,LF,
+   [],_):- 
+ feat(Feat),
+ instrans_verb(Run),
+ spatial(Spatial),
+ LF = intrans_pred(Spatial,Type,Run,X).
 
 intrans_LF(Run,Spatial & Feat& Type,X,LF,
    [slot(prep(Into),Spatial&_,Dest,_,free),
