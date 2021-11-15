@@ -35,16 +35,29 @@ rexport_qlf(Module, Name):-
 
 module_reexport(Module,File):- (\+ atom(File) ; \+ exists_file(File)),!,
   absolute_file_name(File,Name,[access(read),extensions(['qlf','pl',''])]),!,
-  module_reexport(Module,Name).
+  exists_file(Name),
+  module_reexport(Module,Name),!.
 
 module_reexport(Module,File):-
+ dmsg(module_reexport(Module,File)),
  (file_name_extension(_,'pl',File)-> Format=source ; Format=qlf),
+  unload_file(File),
+  dmsg(unload_file(File)),
+  setup_call_cleanup(open(File,read,In),
+  load_files(s,[% derived_from(Module),
+   if(true),redefine_module(false),module(Module),format(Format),stream(In),register(false)]),
+  close(In)),!.
+
+module_reexport(Module,File):- fail,
+ (file_name_extension(_,'pl',File)-> Format=source ; Format=qlf),
+ dmsg(module_reexport(Module,File)),
  setup_call_cleanup(
   open(File,read,In),
-  load_files([],[derived_from('/dev/null'),stream(In),modified(0),
-   if(true),must_be_module(false),format(Format),module(Module),optimise(true),redefine_module(false),register(false)]),
+  load_files(File,[% derived_from(Module),
+    stream(In),
+   if(true),must_be_module(false),format(Format),module(Module),redefine_module(false),register(false)]),
   close(In)),!.
-module_reexport(Module,File):-  Module:ensure_loaded(File).
+module_reexport(Module,File):-  Module:ensure_loaded(File),!.
 %module_reexport(Module,File):- Module:reexport(File).
 
 rexport_qlf(Module, _Name, _PLF, QLF):-  exists_source(QLF),

@@ -256,6 +256,17 @@ verb_slot0(prep_phrase(Prep,NP),
    i_np(NP,X,Q,Up,Id,unit,XArg0,XArg),
    in_slot(Slots0,Case,X,Id,Slots,_),
    deepen_case(Prep,Case).
+
+verb_slot0(prep_phrase(poss(_ArgInfoPrep),NP),
+      TXArg,TXArg,Slots0,Slots,[Q& '`'(P)|Args],Args,Up,Id0) :- 
+   Prep=of,
+   in_slot(Slots0,arg_pred(_ArgInfo),X,Id0,Slots1,_),
+   i_adjoin(Prep,X,Y,PSlots,XArg,P),
+   i_np_head(NP,Y,Q,LDet,LDet0,LX,LPred,LQMods,LSlots0,Id0),
+   held_arg(XArg,[],LSlots0,LSlots,Id0,Id),
+   i_np_rest(NP,LDet,LDet0,LX,LPred,LQMods,LSlots,Up,Id,free),
+   append(PSlots,Slots1,Slots).
+
 verb_slot0(prep_phrase(prep(Prep),NP),
       TXArg,TXArg,Slots0,Slots,[Q& '`'(P)|Args],Args,Up,Id0) :- !,
    in_slot(Slots0,arg_pred(_ArgInfo),X,Id0,Slots1,_),
@@ -269,7 +280,7 @@ verb_slot0(voidQ(_ArgInfo2),XA,XA,Slots,Slots,Args,Args,[],_) :-
 verb_slot0(adverb(Adv),XA,XA,Slots0,Slots,['`'(P)|Args],Args,[],Id) :-
    adv_template_db(Adv,Case,X,P),
    in_slot(Slots0,Case,X,Id,Slots,_).
-verb_slot0(arg(SCase,NP),
+verb_slot0(arg(SCase,NP), 
       XArg0,XArg,Slots0,Slots,[Q|Args],Args,Up,Id) :-
    i_np(NP,X,Q,Up,Id,unit,XArg0,XArg),
    in_slot(Slots0,Case,X,Id,Slots,_),
@@ -356,7 +367,8 @@ noun_template(Noun,TypeV,V,aggr(F,V,[],'`'(true),'`'(true)),
    lf80(TypeV-TypeS,aggr_noun_LF(Noun,TypeV,TypeS,F)).
 
 noun_template(Noun,Type,X,'`'(P),Slots) :-
-   lf80(Type,thing_LF_access(Noun,Type,X,P,Slots,_)).
+   %lf80(Type,thing_LF_access(Noun,Type,X,P,Slots,_)).
+   thing_LF_access(Noun,Type,X,P,Slots,_).
 
 noun_template(Noun,TypeV,V,apply80(F,P),
       [slot(prep(Of),TypeX,X,_,apply)]) :-

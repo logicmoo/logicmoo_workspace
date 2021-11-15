@@ -360,7 +360,7 @@ process(_,_).
 eng_to_logic(U,S):- sentence80(E,U,[],[],[]), sent_to_prelogic(E,S).
 
 
-qualifiedBy(V,_,np_head(det(_),[],Ti)):- debug_var(Ti,V).
+qualifiedBy(V,_,np_head(det(_),[],Ti)):- !, debug_var(Ti,V).
 qualifiedBy(_,_,_).
 
 
