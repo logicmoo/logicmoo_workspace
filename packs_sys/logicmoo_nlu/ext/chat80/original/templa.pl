@@ -630,15 +630,18 @@ database80(G):-  current_predicate(_,G), call(G).
 
 trans_pred_type(Type,P):- tmp80:trans_rel_cache_created(=, trans_direct(Type,P)).
 trans_pred_type(thing,contain).
-generic_pred(Type,P,X,Y) :- P == any,!, generic_pred(Type,_,X,Y).
-generic_pred(Type,P,X,Y) :- trans_pred_type(Type,P), ground(Type+P),trans_pred(Type,P,X,Y). % contain 
-generic_pred(Type,P,X,Y) :- measure_pred(Type,P,X,Y). % area of
-generic_pred(Type,P,X,Y) :- count_pred(Type,P,X,Y). % population of 
-generic_pred(Type,P,X,Y) :- position_pred(Type,P,X,Y). % latitude of
-generic_pred(Type,P,X,Y) :- ordering_pred(Type,P,X,Y). % south of
-generic_pred(Type,P,X,Y) :- symmetric_pred(Type,P,X,Y). % border
-generic_pred(Type,P,X,Y) :- specific_pred(Type,P,X,Y). % capital 
+generic_pred(Type,P,X,Y) :- P == any,!, generic_pred0(Type,_,X,Y).
+generic_pred(Type,P,X,Y) :- generic_pred0(Type,P,X,Y)*->true;generic_pred1(Type,P,X,Y).
 
+generic_pred0(Type,P,X,Y) :- trans_pred_type(Type,P), ground(Type+P),trans_pred(Type,P,X,Y). % contain 
+generic_pred0(Type,P,X,Y) :- measure_pred(Type,P,X,Y). % area of
+generic_pred0(Type,P,X,Y) :- count_pred(Type,P,X,Y). % population of 
+generic_pred0(Type,P,X,Y) :- position_pred(Type,P,X,Y). % latitude of
+generic_pred0(Type,P,X,Y) :- ordering_pred(Type,P,X,Y). % south of
+generic_pred0(Type,P,X,Y) :- symmetric_pred(Type,P,X,Y). % border
+generic_pred0(Type,P,X,Y) :- specific_pred(Type,P,X,Y). % capital 
+
+generic_pred1(Type,P,X,Y) :- var(Type), nop(generic_pred1(Type,P,X,Y)).
 
 :- style_check(+singleton).
 

@@ -910,10 +910,12 @@ prolog_pretty_print_term(A,Options):-
   my_merge_options(Options,[portray(true), output(current_output)], OptionsNew),
   \+ \+ pprint_tree(A, OptionsNew).
 
-simple_write_term(A,_Options):- compound(A),compound_name_arity(A,_,0),writeq(A),!.
-simple_write_term(A,_Options):- atomic(A), \+ atom(A), \+ string(A), writeq(A),!.
+%simple_write_term(A):- compound(A),compound_name_arity(A,_,0),writeq(A),!.
+%simple_write_term(A):- atomic(A), \+ atom(A), \+ string(A), !, writeq(A).
 % @TODO comment out the next line
-simple_write_term(A,_Options):- !, with_no_hrefs(t,(if_defined(rok_writeq(A),writeq(A)))),!.
+%simple_write_term(A):- !, with_no_hrefs(t,(if_defined(rok_writeq(A),writeq(A)))),!.
+simple_write_term(A):- writeq(A).
+simple_write_term(A,Options):- Options==[], !, simple_write_term(A).
 simple_write_term(A,Options):-  without_ec_portray_hook(\+ \+ write_term(A,Options)),!.
 
 %simple_write_term(A,Options):-  write_term(A,[portray_goal(pretty_clauses:pprint_tree)|Options]).
@@ -1410,8 +1412,8 @@ pt1(_FS,Tab,[H|T]) :- is_codelist([H|T]), !,
    sformat(S, '`~s`', [[H|T]]),
    pformat([ps(Tab),S]).
 
-pt1(_, Tab,Term) :- 
-   (is_arity_lt1(Term); \+ compound_gt(Term, 0)), !, 
+pt1(_, Tab,Term) :-
+   use_system_portray(Term), !, 
    system_portray(Tab,Term).
 
 %t_l:printing_dict
@@ -1431,7 +1433,7 @@ pt1(_FS,Tab,T) :- % fail,
    W120 = 120,
    as_is(T),
    max_output(Tab,W120,T),!,
-   prefix_spaces(Tab), print(T).
+   prefix_spaces(Tab), writeq(T).
    %system_portray(Tab,T),!.
    
 % pt1(_FS,_Tab,Term) :- is_dict(Term), ansi_ansi,!,sys:plpp(Term),!.
@@ -1702,6 +1704,9 @@ as_is_cmpd(Term) :- \+ compound(Term),!,fail.
 as_is_cmpd(Term) :- \+ ground(Term),!,fail.
 as_is_cmpd(Term) :- Term=ref(_),!.
 as_is_cmpd(Term) :- Term=element(_,_,List),List==[],!.
+
+use_system_portray(Term):- (( \+ compound(Term)); is_arity_lt1(Term); functor(Term,'$VAR',_); \+ compound_gt(Term, 0)),!.
+use_system_portray(A=B):- use_system_portray(A),use_system_portray(B),!. 
 
 
 as_is(V):-notrace(as_is0(V)).

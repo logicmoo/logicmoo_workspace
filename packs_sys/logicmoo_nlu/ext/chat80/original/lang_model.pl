@@ -644,28 +644,23 @@ retrain_2:-
 :- add_history(s81).
 
 
-s81:- make,s811(show_c80),s811(p1(cvt_to_objecteese)).
+slice_n(Lower, Sliced, Upper, X) :-
+    Step is max(1, floor((Upper - Lower) // Sliced)),    
+    Sliced0 is Sliced - 1,
+    between(0, Sliced0, Y),
+    X is Lower + (Y * Step),
+    X =< Upper.
+
+for_n(N,From,Call):- 
+ ignore((findall(Call,From,Calls),
+  forall((length(Calls,S),slice_n(0, N, S, Nth),nth0(Nth,Calls,Call)),ignore(show_failure(always, Call))))).
 
 p1(P2,X):- atom(P2), \+ current_predicate(P2/1),  current_predicate(P2/2),!, 
   any_to_string(X,S),nl,dmsg(?-p1(P2,S)),call(P2,S,Y),wdmsg(Y),nl,!.
 p1(P1,X):- any_to_string(X,S),append_term(P1,S,G),nl,dmsg(?-G),call(G),nl,!.
+s81:- make,s811(show_c80),s811(p1(cvt_to_objecteese)).
 s81(P):- s811(p1(P)).
-
-for_n(N,From,Call):- 
-  forall(limit(N,From),ignore(show_failure(always, Call))).
-
-/*
-for_n(N,From,Call):- 
- ignore((findall(Call,From,Calls),
-  forall((between(0,N,Nth),nth0(Nth,Calls,Call)),ignore(show_failure(always, Call))))).
-for_n(N,From,Call):- 
- ignore((findall(Call,From,Calls),length(Calls,L),
-  Start is random(L-N-1),
-  End is Start+N,
-  wdmsg(End/L is Start+N),
- %forall((between(0,N,I),Nth is I*X,nth0(Nth,Calls,Call)),show_failure(always,Call)).
-  forall((between(Start,End,Nth),nth0(Nth,Calls,Call)),ignore(show_failure(always, Call))))).*/
-s811(P):- s811(10,P).
+s811(P):- s811(15,P).
 s811(N,P):- make,call(s8111(N,P)).
 s8111(N,P):-
   for_n(N,training_data(X,_),call(P,X)),
