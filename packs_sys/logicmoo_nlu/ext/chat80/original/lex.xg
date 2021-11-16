@@ -190,16 +190,16 @@ comp_adj(adj(Adj)) --->
    {comp_adj_lex(RAdj,Adj)}.
 
 sup_adj(adj(Adj)) --->
-   theText80(SAdj),
-   {sup_adj_lex(SAdj,Adj)}.
+   theText80_W2(SAdj,W2),
+   {sup_adj_lex_w2(SAdj,W2,Adj)}.
 
 
 
-comp_adv(W) ---> theText80(W),{comp_adv_lex(W)}.
-%comp_adv(Adv) ---> theText80_W2(W,W2),{comp_adv_lex_w2(W,W2,Adv)}.
+%comp_adv(W) ---> theText80(W),{comp_adv_lex(W)}.
+comp_adv(Adv) ---> theText80_W2(W,W2),{comp_adv_lex_w2(W,W2,Adv)}.
 
-sup_adv(W) ---> theText80(W),{sup_adv_lex(W)}.
-%sup_adv(Adv) ---> theText80_W2(W,W2),{sup_adv_lex_w2(W,W2,Adv)}.
+%sup_adv(W) ---> theText80(W),{sup_adv_lex(W)}.
+sup_adv(Adv) ---> theText80_W2(W,W2),{sup_adv_lex_w2(W,W2,Adv)}.
 
 
 wh_rel_pron(Case) --->

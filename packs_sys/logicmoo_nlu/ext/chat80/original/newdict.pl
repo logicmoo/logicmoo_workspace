@@ -535,20 +535,20 @@ sup_adj_db(chat80,oldest,old).
 sup_adj_db(chat80,smallest,small).
 
 
-comp_adv_lex_w2(_,W2,_):- is_list(W2), \+ member(pos(rbr),W2), \+ member(pos(rb),W2),!,fail.
-comp_adv_lex_w2(Smaller,_,Small):- must(comp_adv_lex(Smaller,Small)).
-comp_adv_lex(Lesser):- try_one_lex(chat80,comp_adv_db(Lesser,_Less)).
+comp_adv_lex_w2(_,W2,Small):- must_member(pos(rbr),W2),!,must(member(root(Small),W2)).
+comp_adv_lex_w2(Smaller,_,Small):- comp_adv_lex(Smaller,Small).
+comp_adv_lex(Lesser, Less):- try_one_lex(chat80,comp_adv_db(Lesser, Less)).
 % @TODO DMiles I thinnk this was backwards (So i left it that way) "less than"
-comp_adv_lex(Less):- comp_adv_db(chat80,_,Less).
+comp_adv_db(Least, Less):- try_one_lex(chat80,sup_adv_db(Least, Less)).
 comp_adv_db(chat80,lesser,less).
 comp_adv_db(chat80,more,more).
 %comp_adv_db(talkdb,Smallest,Small):- talkdb:talk_db(comperl,Small,Smallest).
 comp_adv_db(talkdb,Lesser,Less):- clex:adv_comp(Lesser, Less).
 comp_adv_db(clex,Lesser,Less):- clex:adv_comp(Lesser, Less).
 
-sup_adv_lex_w2(_,W2,_):- is_list(W2), \+ member(pos(rbs),W2), \+ member(pos(rb),W2),!,fail.
-sup_adv_lex_w2(Smaller,_,Small):- must(sup_adv_lex(Smaller,Small)).
-sup_adv_lex(Least):- try_one_lex(chat80,sup_adv_db(Least, _Less)).
+sup_adv_lex_w2(_,W2,Small):- must_member(pos(rbs),W2),!,must(member(root(Small),W2)).
+sup_adv_lex_w2(Smaller,_,Small):- sup_adv_lex(Smaller,Small).
+sup_adv_lex(Least, Less):- try_one_lex(chat80,sup_adv_db(Least, Less)).
 sup_adv_db(chat80,least,less).
 sup_adv_db(chat80,most,more).
 %sup_adv_db(talkdb,Smallest,Small):- talkdb:talk_db(superl,Small,Smallest).
