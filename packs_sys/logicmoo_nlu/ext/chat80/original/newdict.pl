@@ -457,7 +457,7 @@ noun_sing_plu_lex(chat80,fish).
 %hide_plur_root_noun(1,Millions,Million):- noun_sing_plu_lex(Million), !, Millions\==Million.
 hide_plur_root_noun(1,_Twos,Two):-tr_number(Two,_).
 hide_plur_root_noun(1,_Ins,In):- notrace(prep_lex(In)).
-hide_plur_root_noun(1,_Mores,More):- comp_adv_lex(More).
+hide_plur_root_noun(1,_Mores,More):- comp_adv_lex(More,_).
 hide_plur_root_noun(1,ares,are).
 hide_plur_root_noun(1,_Noes,No):-det_lex(No,_,_,_).
 hide_plur_root_noun(1,_Whats,What):- talkdb:talk_db(pronoun,What).

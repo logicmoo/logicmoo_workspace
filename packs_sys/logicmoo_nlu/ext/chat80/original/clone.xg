@@ -368,19 +368,19 @@ comp_phrase(comp(Comp,Adj,Arg),Mask) --->
 
 % Measure is Numerically More
 comp(Comp,Adj) --->
-   comp_adv(Comp),
+   comp_adv(Comp), % greater
    adj(quantV,Adj),
    theText80(than).
 
 % Measure is NON-Numerically More
 comp(more,Adj) --->
-   comp_adj(Adj),
+   comp_adj(Adj), % faster
    theText80(than).
    
 % Measure is same = "as big as"  ?
 comp(same,Adj) --->
    theText80(as),
-   adj(quantV,Adj),
+   adj(quantV,Adj), % lean
    theText80(as).
 
 /* Prepositional Phrase */
