@@ -35,6 +35,8 @@ must80(G):- call(G)*->true;(
   nop(fmt(failed(G))),fail,call(G)).
 
 % logical form checker for chat80
+
+lf80(_Typ,G):- !,must80(G).
 lf80(Conj,G):- compound(Conj), (Conj=(Type1-TypeS)),!,lf80(Type1,lf80(TypeS,G)).
 lf80(Type,G):- 
   subst(G,Type,Type0,P),
@@ -83,7 +85,7 @@ i_np_head0(nameOf(Name), Type-Name,Type-Name,identityQ(_ArgInfo),'`'(true),Pred,
 i_np_head0(wh(X),X,X,identityQ(_ArgInfo),'`'(true),Pred,Pred,[]):-!.
 % np(3+sg,pronoun(neut),[])
 i_np_head0(Else, Type-Name,Type-Name,identityQ(_ArgInfo),'`'(P),Pred,Pred,[]):-  Else \= np_head(_,_,_), !,
-  if_search_expanded(1), lf80(Type,make_qualifiedBy(i_np_head0,Name,Type,Else,P)).
+  if_search_expanded(1),fail, lf80(Type,make_qualifiedBy(i_np_head0,Name,Type,Else,P)).
 
 i_np_head0(np_head(Det,Adjs,Noun),X,T,Det,Head0,Pred0,Pred,Slots) :-
    i_adjs(Adjs,X,T,X,Head0,Head,Pred0,Pred),
@@ -108,7 +110,7 @@ i_np_head0(Else, Type-Name,Type-Name,identityQ(_ArgInfo),'`'(P),Pred,Pred,[]):-
    lf80(Type,make_qualifiedBy(i_np_head0,Name,Type,Else,P)).
 
 
-make_qualifiedBy(_,Name,Type,Else,P):- show_call(always,P = qualifiedBy(Name,Type,Else)).
+make_qualifiedBy(_,Name,Type,Else,P):- fail, if_search_expanded(3), P = qualifiedBy(Name,Type,Else).
 %may_qualify(_):- !,fail.
 may_qualify(np_head(det(each),[],_)):-!,fail.
 may_qualify(np_head(_,[],Act)):- atom(Act),atom_concat('actioned',_,Act), !,fail.
@@ -124,6 +126,8 @@ i_np_mods([Mod|Mods],X,Slots0,Pred0,QMods0,Up,Id,Index) :-
 i_np_mods(Mods,_,[Slot|Slots],'`'(true),QMods,Mods,Id,_) :-
    i_voids([Slot|Slots],QMods,Id).
 
+
+i_voids(V,_,_):- (var(V);(stack_depth(D),D>1000)),!,ignore((dumpST,break)),fail.
 i_voids([],[],_).
 i_voids([Slot|Slots],[quantV(voidQ(_ArgInfo),X,'`'(true),'`'(true),[],_)|QMods],Id) :-
    nominal_slot(Slot,X,-Id), !,
@@ -249,7 +253,15 @@ fill_verb([Node|Nodes0],XA0,XA,Slots0,Slots,Args0,Args,Up,Id) :-
    fill_verb(Nodes,XA1,XA,Slots1,Slots,Args1,Args,Up,+Id).
 
 verb_slot(Node,XA0,XA1,Slots0,Slots1,Args0,Args1,Up0,Id):- 
-   must80(verb_slot0(Node,XA0,XA1,Slots0,Slots1,Args0,Args1,Up0,Id)).
+  must80(verb_slot0(Node,XA0,XA1,Slots0,Slots1,Args0,Args1,Up0,Id)).
+
+verb_slot1(Node,XA0,XA1,Slots0,Slots1,Args0,Args1,Up0,Id):- 
+  G  = verb_slot0(Node,XA0,XA1,Slots0,Slots1,Args0,Args1,Up0,Id),
+  G2 = verb_slot0(Node,XA0,_,Slots0,_,Args0,_,Up0,_),
+  copy_term(G,G2),
+  call(G),
+  ignore((var(Slots1),trace,G2)).
+ 
 
 verb_slot0(prep_phrase(Prep,NP),
       XArg0,XArg,Slots0,Slots,[Q|Args],Args,Up,Id) :-

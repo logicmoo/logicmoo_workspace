@@ -196,8 +196,10 @@ sup_adj(adj(Adj)) --->
 
 
 comp_adv(W) ---> theText80(W),{comp_adv_lex(W)}.
+%comp_adv(Adv) ---> theText80_W2(W,W2),{comp_adv_lex_w2(W,W2,Adv)}.
 
 sup_adv(W) ---> theText80(W),{sup_adv_lex(W)}.
+%sup_adv(Adv) ---> theText80_W2(W,W2),{sup_adv_lex_w2(W,W2,Adv)}.
 
 
 wh_rel_pron(Case) --->
@@ -212,9 +214,17 @@ name_xg(Name) --->
    opt_the,
    name_lex_txt(Name).
 
-name_lex_txt(Name) ---> theTextL80([W1,'_',W2]),{!,atomic(W1),atomic(W2),atomic_list_concat([W1,'_',W2],Name),name_LF(Name)}.
-name_lex_txt(Name) ---> theText80(Name), {name_LF(Name),!}.
-name_lex_txt(Name) ---> theTextL80([W1,W2]),{atomic(W1),atomic(W2),atomic_list_concat([W1,'_',W2],Name),name_LF(Name)}.
+
+name_lex_txt(acevar(Name,AceVar)) ---> name_lex_txt0(Name),ace_var(AceVar).
+name_lex_txt(Name) ---> name_lex_txt0(Name).
+name_lex_txt(Name) ---> ace_var(Name).
+
+name_lex_txt0(Name) ---> thePos80((nnp;nnps),W1),thePos80((nnp;nnps),W2),{atomic(W1),atomic(W2),atomic_list_concat([W1,'_',W2],Name),name_LF(Name)}.
+name_lex_txt0(Name) ---> theTextL80([W1,W2]),{atomic(W1),atomic(W2),atomic_list_concat([W1,'_',W2],Name),name_LF(Name)}.
+name_lex_txt0(Name) ---> theTextL80([W1,'_',W2]),{!,atomic(W1),atomic(W2),atomic_list_concat([W1,'_',W2],Name),name_LF(Name)}.
+name_lex_txt0(Name) ---> theText80(Name), {name_LF(Name),!}.
+
+ace_var(AceVar) ---> theText80(AceVar), {ace_varname(AceVar),!}.
 
 wh_art(X,pl,quantV(same,wh(X))) ---> {how_many_lex(HOWMANY)}, theTextL80(HOWMANY).
 wh_art(X,Agmt,DX) --->
@@ -261,7 +271,7 @@ conj(Conj,list,end) --->
    {conj_lex(Conj)}.
 
 loc_pred(Of,P) --->
-   theText80(W), % north of
+   theText80(W), % north 
    {loc_pred_lex(Of,W,P)}.
 
 %:-retract(tlxgproc:do_xg_process_te).
