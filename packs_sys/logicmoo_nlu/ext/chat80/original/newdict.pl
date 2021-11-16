@@ -505,8 +505,9 @@ noun_plu_db(chat80,sums,sum).
 noun_plu_db(chat80,times,time).
 noun_plu_db(chat80,totals,total).
 
-comp_adj_lex_w2(_,W2,Small):- must_member(pos(jjr),W2),!,must(must_member(root(Small),W2)).
-comp_adj_lex_w2(Smaller,_,Small):- comp_adj_lex(Smaller,Small).
+comp_adj_lex_w2(_,W2,_):-  is_list(W2), \+ member(pos(jjr),W2), \+ member(pos(jj),W2),!,fail.
+comp_adj_lex_w2(Smaller,_,Small):- must(comp_adj_lex(Smaller,Small)),!.
+comp_adj_lex_w2(_,W2,Root):-  is_list(W2), member(root(Root),W2),!.
 comp_adj_lex(Smaller,Small):- try_lex_order([chat80,clex,talkdb],comp_adj_db(Smaller,Small)).
 comp_adj_db(talkdb,Smaller,Small):- talkdb:talk_db(comp,Small,Smaller).
 comp_adj_db(talkdb,Smaller,Small):- comp_adj_db(clex,Smaller,Small).

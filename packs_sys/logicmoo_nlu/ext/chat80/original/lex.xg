@@ -174,8 +174,8 @@ det(det(Det),Number,Def) --->
 det(generic(ArgInfo2),_,generic(ArgInfo2)) ---> noText.
 
 adj(Type,adj(Adj)) --->
-   theText80(Adj),
-   {adj_lex(Adj,Type)}.
+   theText80_W2(W,W2),
+   {adj_lex_w2(W,W2,Adj,Type)}.
 /*
 prep(prep(cp(Prep1,Prep2))) --->
    theText80(Prep1),theText80(Prep2),
@@ -186,8 +186,8 @@ prep(prep(Prep)) --->
    {prep_lex(Prep)}.
 
 comp_adj(adj(Adj)) --->
-   theText80(RAdj),
-   {comp_adj_lex(RAdj,Adj)}.
+   theText80_W2(RAdj,W2),
+   {comp_adj_lex_w2(RAdj,W2,Adj)}.
 
 sup_adj(adj(Adj)) --->
    theText80_W2(SAdj,W2),
