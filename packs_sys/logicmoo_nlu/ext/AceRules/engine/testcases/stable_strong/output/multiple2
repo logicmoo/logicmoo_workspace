@@ -1,1 +1,69 @@
-ERROR: Program has no answer.
+
+INPUT TEXT:
+Everybody who is not provably a customer is a clerk.
+Everybody who is not provably a clerk is a customer.
+Everybody who is not provably a worker is a manager.
+Everybody who is not provably a manager is a worker.
+Nobody who is not provably a clerk is important.
+Everybody who is not provably a worker is important.
+Every manager who is not provably healthy and who is a customer is healthy.
+John is a man.
+
+RULES:
+-group([property(A, important, pos)]) <- [object(A, B, C, D, E, F), ~group([object(A, clerk, countable, na, eq, 1)])].
+group([property(A, important, pos)]) <- [object(A, B, C, D, E, F), ~group([object(A, worker, countable, na, eq, 1)])].
+group([property(A, healthy, pos)]) <- [group([object(A, manager, countable, na, eq, 1)]), group([object(A, customer, countable, na, eq, 1)]), ~group([property(A, healthy, pos)])].
+group([object(A, clerk, countable, na, eq, 1)]) <- [object(A, B, C, D, E, F), ~group([object(A, customer, countable, na, eq, 1)])].
+group([object(A, customer, countable, na, eq, 1)]) <- [object(A, B, C, D, E, F), ~group([object(A, clerk, countable, na, eq, 1)])].
+group([object(A, manager, countable, na, eq, 1)]) <- [object(A, B, C, D, E, F), ~group([object(A, worker, countable, na, eq, 1)])].
+group([object(A, worker, countable, na, eq, 1)]) <- [object(A, B, C, D, E, F), ~group([object(A, manager, countable, na, eq, 1)])].
+object(named('John'), 'John', named, na, eq, 1).
+object(named('John'), man, countable, na, eq, 1).
+
+SIMPLE RULES:
+-important(A) <- [something(A), ~clerk(A)].
+important(A) <- [something(A), ~worker(A)].
+healthy(A) <- [manager(A), customer(A), ~healthy(A)].
+clerk(A) <- [something(A), ~customer(A)].
+customer(A) <- [something(A), ~clerk(A)].
+manager(A) <- [something(A), ~worker(A)].
+worker(A) <- [something(A), ~manager(A)].
+man(named('John')).
+
+ANSWERSET #1:
+object(named('John'), 'John', named, na, eq, 1).
+object(named('John'), man, countable, na, eq, 1).
+group([property(named('John'), important, pos)]).
+group([object(named('John'), clerk, countable, na, eq, 1)]).
+group([object(named('John'), manager, countable, na, eq, 1)]).
+
+ANSWERSET #2:
+object(named('John'), 'John', named, na, eq, 1).
+object(named('John'), man, countable, na, eq, 1).
+group([object(named('John'), worker, countable, na, eq, 1)]).
+group([object(named('John'), clerk, countable, na, eq, 1)]).
+
+ANSWERSET #3:
+object(named('John'), 'John', named, na, eq, 1).
+object(named('John'), man, countable, na, eq, 1).
+group([object(named('John'), worker, countable, na, eq, 1)]).
+group([object(named('John'), customer, countable, na, eq, 1)]).
+-group([property(named('John'), important, pos)]).
+
+ANSWERTEXT #1:
+John is important.
+John is a manager.
+John is a clerk.
+John is a man.
+
+ANSWERTEXT #2:
+John is a clerk.
+John is a worker.
+John is a man.
+
+ANSWERTEXT #3:
+John is a customer.
+John is a worker.
+John is a man.
+It is false that John is important.
+

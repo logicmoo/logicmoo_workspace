@@ -1,0 +1,10 @@
+John drives in the countryside.
+Mary drives in the countryside.
+Suzy drives in the countryside.
+There is a red car.
+If John drives in the countryside then it is usual that John drives in the red car.
+If Mary drives in the countryside then it is usual that Mary drives in the red car.
+If Suzy drives in the countryside then it is usual that Suzy drives in the red car.
+If John drives in the red car and Mary drives in the red car then Suzy does not drive in the red car.
+If John drives in the red car and Suzy drives in the red car then Mary does not drive in the red car.
+If Suzy drives in the red car and Mary drives in the red car then John does not drive in the red car.

@@ -1,1 +1,37 @@
-ERROR: Program has no answer.
+
+INPUT TEXT:
+John is not a customer.
+If someone X is a employee then X is not a customer.
+Mary is an employee.
+Bill is a man.
+
+RULES:
+-group([object(A, customer, countable, na, eq, 1)]) <- [object(A, B, C, D, E, F), object(A, employee, countable, na, eq, 1)].
+-group([object(named('John'), customer, countable, na, eq, 1)]).
+object(named('Bill'), 'Bill', named, na, eq, 1).
+object(named('Bill'), man, countable, na, eq, 1).
+object(named('John'), 'John', named, na, eq, 1).
+object(named('Mary'), 'Mary', named, na, eq, 1).
+object(named('Mary'), employee, countable, na, eq, 1).
+
+SIMPLE RULES:
+-customer(A) <- [something(A), employee(A)].
+-customer(named('John')).
+man(named('Bill')).
+employee(named('Mary')).
+
+ANSWERSET #1:
+object(named('Bill'), 'Bill', named, na, eq, 1).
+object(named('Bill'), man, countable, na, eq, 1).
+object(named('John'), 'John', named, na, eq, 1).
+object(named('Mary'), 'Mary', named, na, eq, 1).
+object(named('Mary'), employee, countable, na, eq, 1).
+-group([object(named('Mary'), customer, countable, na, eq, 1)]).
+-group([object(named('John'), customer, countable, na, eq, 1)]).
+
+ANSWERTEXT #1:
+Mary is an employee.
+Bill is a man.
+It is false that Mary is a customer.
+It is false that John is a customer.
+

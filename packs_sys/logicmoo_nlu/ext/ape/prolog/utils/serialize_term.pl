@@ -40,7 +40,7 @@ TODO:
 
 * test how \= (ACE non-equality) is serialized, maybe check character_escapes(bool, changeable)
 * find a way to print terms which contain variables so that the output
-has nice variable names (A vs _G123) but without the detour of ape_numbervars,
+has nice variable names (A vs _G123) but without the detour of numbervars,
 maybe check: print, portray
 * should we serialize singletons as '_'
 * we make an extra effort to locally undefine some operators, there must be a cleaner way

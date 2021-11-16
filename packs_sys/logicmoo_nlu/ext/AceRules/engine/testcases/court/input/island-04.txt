@@ -1,0 +1,20 @@
+Every island is a n:land-mass.
+If X is an island then it is usual that a n:body-of-water surrounds X.
+
+If X is a n:tied-island then it is usual that X is an island.
+If X is a n:tied-island then it is usual that X attaches-to a n:land-mass.
+
+Mainland-Shetland is an island. 
+
+St-Ninians-Isle is a n:tied-island.
+St-Ninians-Isle is a part of the Shetland-Islands. 
+
+It is usual that St-Ninians-Isle attaches-to Mainland-Shetland.
+
+
+If St-Ninians-Isle attaches-to Mainland-Shetland then St-Ninians-Isle is a part of Mainland-Shetland.
+
+
+
+If a n:body-of-water surrounds X then it is false that X attaches-to a n:land-mass.
+If X attaches-to a n:land-mass then it is false that a n:body-of-water surrounds X.

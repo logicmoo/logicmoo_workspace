@@ -25,7 +25,7 @@
 	]).
 
 
-old_fol:- fail.
+old_fol:- true.
 
 
 /** <module> Transform DRSs into First-order Formulas and Their Prenex Normal Forms
@@ -215,6 +215,7 @@ cond_to_fol(drs([X|Referents],Conditions) => DRS2, World, forall(X,Formula)) :-
 cond_to_fol(can(DRS), World1, exists(World2, (accessibility_relation(World1,World2) - accessibility_relation/0) & Formula)) :-
   !,
   drs_to_fol(DRS, World2, Formula).
+% HS TODO: introduce rule dealing with usual(DRS)
 
 cond_to_fol(must(DRS), World1, forall(World2, (accessibility_relation(World1,World2) - accessibility_relation/0) => Formula)) :-
   !,
@@ -248,7 +249,8 @@ cond_to_fol(Input, _World, _Formula) :-
 illegal_condition(~(_DRS)).
 illegal_condition(may(_DRS)).
 illegal_condition(must(_DRS)).
-
+% HS addition: usual
+illegal_condition(usual(_DRS)).
 
 %% transform_list(+List, +World, -NewList)
 %

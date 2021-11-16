@@ -166,8 +166,14 @@ handle_condition(-drs(Dom, Conds), -drs(Dom, CondsPruned)) :-
 handle_condition(Label:drs(Dom, Conds), Label:drs(Dom, CondsPruned)) :-
 	list_of_conds_and_anaphors(Conds, CondsPruned, _).
 
+% begin HS
+% duplicate the following rule for the "usual" DRS
 handle_condition(can(drs(Dom, Conds)), can(drs(Dom, CondsPruned))) :-
 	list_of_conds_and_anaphors(Conds, CondsPruned, _).
+% here is the duplicate
+handle_condition(usual(drs(Dom, Conds)), usual(drs(Dom, CondsPruned))) :-
+	list_of_conds_and_anaphors(Conds, CondsPruned, _).
+% end HS
 
 handle_condition(must(drs(Dom, Conds)), must(drs(Dom, CondsPruned))) :-
 	list_of_conds_and_anaphors(Conds, CondsPruned, _).

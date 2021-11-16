@@ -1619,6 +1619,8 @@ embeds_drs(v(_, _)).
 embeds_drs(-(_)).
 embeds_drs(~(_)).
 embeds_drs(can(_)).
+% HS addition: DRS constructor 'usual'
+embeds_drs(usual(_)).
 embeds_drs(must(_)).
 embeds_drs(should(_)).
 embeds_drs(may(_)).

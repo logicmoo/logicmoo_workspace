@@ -187,6 +187,7 @@ some(Narrative) - SequencesTo - some(Goal)
 some(Narrative) - SequencesTo - some(Narrative)
 some(Narrative) - SequencesTo - some(Percept)
 some(Narrative) - SequencesTo - some(State)
+
 some(Percept) - Contains - some(Action)
 some(Percept) - Contains - some(Goal)
 some(Percept) - Contains - some(Narrative)

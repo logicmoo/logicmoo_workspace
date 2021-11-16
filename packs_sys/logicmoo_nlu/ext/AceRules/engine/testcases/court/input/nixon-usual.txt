@@ -1,0 +1,4 @@
+Nixon is a n:republican. Nixon is a n:quaker. If X is a n:republican then it is usual that X is not a n:pacifist. If X is a n:quaker then it is usual that X is a n:pacifist.
+
+
+

@@ -22,6 +22,8 @@
 */
 
 
+:- system:ensure_loaded(library(logicmoo_nlu/parser_deepening)).
+
 :- ensure_loaded(xgrun).	% XG runtimes
 
 :- ensure_loaded(xgproc).
@@ -476,7 +478,7 @@ multifile_dynamic_discontiguous(P):- multifile(P),dynamic(P),discontiguous(P).
 :-multifile_dynamic_discontiguous(noun_sing_plu_lex/1).
 :-multifile_dynamic_discontiguous(noun_form_lex/3).
 :-multifile_dynamic_discontiguous(noun_form_wlex0/4).
-:-multifile_dynamic_discontiguous(noun_form_wlex/4).
+:-multifile_dynamic_discontiguous(noun_w2/4).
 :-multifile_dynamic_discontiguous(loc_pred_lex/3).
 :-multifile_dynamic_discontiguous(adverb_lex/1).
 :-multifile_dynamic_discontiguous(adj_db/3).

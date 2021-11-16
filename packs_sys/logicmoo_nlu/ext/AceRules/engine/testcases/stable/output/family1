@@ -1,1 +1,139 @@
-ERROR: Program has no answer.
+
+INPUT TEXT:
+If someone X is a relative of someone Y then Y is a relative of X.
+If someone X is a child of someone Y then Y is a parent of X.
+If someone X is a parent of someone Y then Y is a child of X.
+If someone X is a parent of someone Y then X is a relative of Y.
+If someone X is a male child of someone Y then X is a son of Y.
+If someone X is a female child of someone Y then X is a daughter of Y.
+If someone X is a male parent of someone Y then X is the father of Y.
+If someone X is a female parent of someone Y then X is the mother of Y.
+
+John is male.
+Mary is female.
+Bill is male.
+Tom is male.
+Bob is male.
+Sue is female.
+
+John is a child of Mary.
+Bill is a parent of John.
+Sue is a child of Tom.
+Bob is a parent of Mary.
+
+RULES:
+group([of_relation(object(A, relative, countable, na, eq, 1), B)]) <- [group([of_relation(object(B, relative, countable, na, eq, 1), A)]), object(A, C, D, E, F, G), object(B, H, I, J, K, L)].
+group([of_relation(object(A, parent, countable, na, eq, 1), B)]) <- [group([of_relation(object(B, child, countable, na, eq, 1), A)]), object(A, C, D, E, F, G), object(B, H, I, J, K, L)].
+group([of_relation(object(A, child, countable, na, eq, 1), B)]) <- [group([of_relation(object(B, parent, countable, na, eq, 1), A)]), object(A, C, D, E, F, G), object(B, H, I, J, K, L)].
+group([of_relation(object(A, relative, countable, na, eq, 1), B)]) <- [group([of_relation(object(A, parent, countable, na, eq, 1), B)]), object(B, C, D, E, F, G), object(A, H, I, J, K, L)].
+group([of_relation(object(A, son, countable, na, eq, 1), B)]) <- [group([of_relation(object(A, child, countable, na, eq, 1), B)]), object(B, C, D, E, F, G), object(A, H, I, J, K, L), property(A, male, pos)].
+group([of_relation(object(A, daughter, countable, na, eq, 1), B)]) <- [group([of_relation(object(A, child, countable, na, eq, 1), B)]), object(B, C, D, E, F, G), object(A, H, I, J, K, L), property(A, female, pos)].
+group([of_relation(object(A, father, countable, na, eq, 1), B)]) <- [group([of_relation(object(A, parent, countable, na, eq, 1), B)]), object(B, C, D, E, F, G), object(A, H, I, J, K, L), property(A, male, pos)].
+group([of_relation(object(A, mother, countable, na, eq, 1), B)]) <- [group([of_relation(object(A, parent, countable, na, eq, 1), B)]), object(B, C, D, E, F, G), object(A, H, I, J, K, L), property(A, female, pos)].
+group([of_relation(object(named('Bill'), parent, countable, na, eq, 1), named('John'))]).
+group([of_relation(object(named('Bob'), parent, countable, na, eq, 1), named('Mary'))]).
+group([of_relation(object(named('John'), child, countable, na, eq, 1), named('Mary'))]).
+group([of_relation(object(named('Sue'), child, countable, na, eq, 1), named('Tom'))]).
+property(named('Bill'), male, pos).
+property(named('Bob'), male, pos).
+property(named('John'), male, pos).
+property(named('Mary'), female, pos).
+property(named('Sue'), female, pos).
+property(named('Tom'), male, pos).
+object(named('Bill'), 'Bill', named, na, eq, 1).
+object(named('Bob'), 'Bob', named, na, eq, 1).
+object(named('John'), 'John', named, na, eq, 1).
+object(named('Mary'), 'Mary', named, na, eq, 1).
+object(named('Sue'), 'Sue', named, na, eq, 1).
+object(named('Tom'), 'Tom', named, na, eq, 1).
+
+SIMPLE RULES:
+of(relative, A, B) <- [of(relative, B, A), something(A), something(B)].
+of(parent, A, B) <- [of(child, B, A), something(A), something(B)].
+of(child, A, B) <- [of(parent, B, A), something(A), something(B)].
+of(relative, A, B) <- [of(parent, A, B), something(B), something(A)].
+of(son, A, B) <- [of(child, A, B), something(B), something(A), male(A)].
+of(daughter, A, B) <- [of(child, A, B), something(B), something(A), female(A)].
+of(father, A, B) <- [of(parent, A, B), something(B), something(A), male(A)].
+of(mother, A, B) <- [of(parent, A, B), something(B), something(A), female(A)].
+of(parent, named('Bill'), named('John')).
+of(parent, named('Bob'), named('Mary')).
+of(child, named('John'), named('Mary')).
+of(child, named('Sue'), named('Tom')).
+male(named('Bill')).
+male(named('Bob')).
+male(named('John')).
+female(named('Mary')).
+female(named('Sue')).
+male(named('Tom')).
+
+ANSWERSET #1:
+object(named('Bill'), 'Bill', named, na, eq, 1).
+object(named('Bob'), 'Bob', named, na, eq, 1).
+object(named('John'), 'John', named, na, eq, 1).
+object(named('Mary'), 'Mary', named, na, eq, 1).
+object(named('Sue'), 'Sue', named, na, eq, 1).
+object(named('Tom'), 'Tom', named, na, eq, 1).
+property(named('Bill'), male, pos).
+property(named('Bob'), male, pos).
+property(named('John'), male, pos).
+property(named('Mary'), female, pos).
+property(named('Sue'), female, pos).
+property(named('Tom'), male, pos).
+group([of_relation(object(named('John'), relative, countable, na, eq, 1), named('Bill'))]).
+group([of_relation(object(named('Bill'), relative, countable, na, eq, 1), named('John'))]).
+group([of_relation(object(named('Mary'), relative, countable, na, eq, 1), named('Bob'))]).
+group([of_relation(object(named('Bob'), relative, countable, na, eq, 1), named('Mary'))]).
+group([of_relation(object(named('John'), relative, countable, na, eq, 1), named('Mary'))]).
+group([of_relation(object(named('Mary'), relative, countable, na, eq, 1), named('John'))]).
+group([of_relation(object(named('Sue'), relative, countable, na, eq, 1), named('Tom'))]).
+group([of_relation(object(named('Tom'), relative, countable, na, eq, 1), named('Sue'))]).
+group([of_relation(object(named('Mary'), parent, countable, na, eq, 1), named('John'))]).
+group([of_relation(object(named('John'), child, countable, na, eq, 1), named('Mary'))]).
+group([of_relation(object(named('Tom'), parent, countable, na, eq, 1), named('Sue'))]).
+group([of_relation(object(named('Sue'), child, countable, na, eq, 1), named('Tom'))]).
+group([of_relation(object(named('Bill'), parent, countable, na, eq, 1), named('John'))]).
+group([of_relation(object(named('John'), child, countable, na, eq, 1), named('Bill'))]).
+group([of_relation(object(named('Bob'), parent, countable, na, eq, 1), named('Mary'))]).
+group([of_relation(object(named('Mary'), child, countable, na, eq, 1), named('Bob'))]).
+group([of_relation(object(named('John'), son, countable, na, eq, 1), named('Mary'))]).
+group([of_relation(object(named('John'), son, countable, na, eq, 1), named('Bill'))]).
+group([of_relation(object(named('Sue'), daughter, countable, na, eq, 1), named('Tom'))]).
+group([of_relation(object(named('Mary'), daughter, countable, na, eq, 1), named('Bob'))]).
+group([of_relation(object(named('Bill'), father, countable, na, eq, 1), named('John'))]).
+group([of_relation(object(named('Bob'), father, countable, na, eq, 1), named('Mary'))]).
+group([of_relation(object(named('Tom'), father, countable, na, eq, 1), named('Sue'))]).
+group([of_relation(object(named('Mary'), mother, countable, na, eq, 1), named('John'))]).
+
+ANSWERTEXT #1:
+Tom is male.
+Sue is female.
+Mary is female.
+John is male.
+Bob is male.
+Bill is male.
+Mary is a mother of John.
+Tom is a father of Sue.
+Bob is a father of Mary.
+Bill is a father of John.
+Mary is a daughter of Bob.
+Sue is a daughter of Tom.
+John is a son of Bill.
+John is a son of Mary.
+Mary is a child of Bob.
+Bob is a parent of Mary.
+John is a child of Bill.
+Bill is a parent of John.
+Sue is a child of Tom.
+Tom is a parent of Sue.
+John is a child of Mary.
+Mary is a parent of John.
+Tom is a relative of Sue.
+Sue is a relative of Tom.
+Mary is a relative of John.
+John is a relative of Mary.
+Bob is a relative of Mary.
+Mary is a relative of Bob.
+Bill is a relative of John.
+John is a relative of Bill.
+

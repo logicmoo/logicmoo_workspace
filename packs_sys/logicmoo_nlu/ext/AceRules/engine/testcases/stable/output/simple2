@@ -1,1 +1,42 @@
-ERROR: Program has no answer.
+
+INPUT TEXT:
+John is a man.
+Bill is a customer.
+Mary is an employee.
+Every customer is important.
+If someone X is not a customer then X is an employee.
+
+RULES:
+group([property(A, important, pos)]) <- [group([object(A, customer, countable, na, eq, 1)])].
+group([object(A, employee, countable, na, eq, 1)]) <- [object(A, B, C, D, E, F), -group([object(A, customer, countable, na, eq, 1)])].
+group([object(named('Bill'), customer, countable, na, eq, 1)]).
+group([object(named('Mary'), employee, countable, na, eq, 1)]).
+object(named('Bill'), 'Bill', named, na, eq, 1).
+object(named('John'), 'John', named, na, eq, 1).
+object(named('John'), man, countable, na, eq, 1).
+object(named('Mary'), 'Mary', named, na, eq, 1).
+
+SIMPLE RULES:
+important(A) <- [customer(A)].
+employee(A) <- [something(A), -customer(A)].
+customer(named('Bill')).
+employee(named('Mary')).
+man(named('John')).
+
+ANSWERSET #1:
+object(named('Bill'), 'Bill', named, na, eq, 1).
+object(named('John'), 'John', named, na, eq, 1).
+object(named('John'), man, countable, na, eq, 1).
+object(named('Mary'), 'Mary', named, na, eq, 1).
+group([property(named('Bill'), important, pos)]).
+group([object(named('Bill'), customer, countable, na, eq, 1)]).
+group([object(named('John'), employee, countable, na, eq, 1)]).
+group([object(named('Mary'), employee, countable, na, eq, 1)]).
+
+ANSWERTEXT #1:
+Bill is important.
+Mary is an employee.
+John is an employee.
+Bill is a customer.
+John is a man.
+

@@ -167,13 +167,17 @@ remove_punctuation(W2, W2).
 %:- install_converter(parser_lexical:into_lexical_segs(+text80, -e2c_lexical_segs)).
 :- use_module(library(logicmoo_nlu/parser_penn_trees)).
 
-
+:- install_converter(parser_chat80:acetext_to_text80(+paraphrase_set, -text80)).
 :- install_converter(parser_chat80:into_lexical_segs(+text80, -merged_lexical_segs)).
 
 :- install_converter(parser_chat80:cvt_to_objecteese(w2, +merged_lexical_segs, -objecteese)).
 :- install_converter(parser_chat80:cvt_to_ace_pos(+objecteese, -ace_objecteese)).
 
-:- install_converter(parser_chat80:try_ace_lf(+ace_objecteese, -ace_fol)).
+:- install_converter(parser_chat80:try_ace_drs(+ace_objecteese, -drs0)).
+:- install_converter(parser_chat80:try_ace_drs(+text80, -drs0)).
+
+:- install_converter(parser_chat80:try_ace_fol(+drs0, -ace_fol)).
+:- install_converter(parser_chat80:try_ace_eng(+drs0, -paraphrase_set)).
 
 
 /*
@@ -188,7 +192,7 @@ remove_punctuation(W2, W2).
 :- parser_pipeline:asserta((
  default_pipeline_opts([lf, clause, objecteese, combined_info, simplify80, results80, clause_e2c, 
    reply_e2c, % ape_penn_syntaxTree, ape_penn_segs, 
-   ace_fol,
+   ace_fol,text80,
      merged_lexical_segs]))).
 
 

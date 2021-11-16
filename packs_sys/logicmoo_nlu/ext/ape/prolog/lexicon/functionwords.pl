@@ -90,6 +90,9 @@ functionword(but).
 functionword(true).
 functionword(false).
 functionword(possible).
+% begin HS
+functionword(usual).
+% end HS
 functionword(necessary).
 functionword(recommended).
 functionword(admissible).

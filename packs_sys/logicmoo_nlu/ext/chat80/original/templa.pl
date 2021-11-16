@@ -205,7 +205,7 @@ thing_LF_access(Person,_,X,ti(Person,X),[],_):-  if_search_expanded(4).
 btype_conversion(_,_).
 type_conversion(Type1,Type2):- !, Type1=Type2.
 
-
+check_slots(Slots):- ignore((var(Slots),trace,break)).
 
 /* Verbs */
 
@@ -298,7 +298,7 @@ intrans_LF(Assign,feature&_,X,dbase_t(Assign,X,Y), [slot(prep(To),feature&_,Y,_,
 %trans_LF(Look,feature&_,X,dbase_t(Look,X,Y), [slot(prep(At),feature&_,Y,_,free)],_):- (tv_infpl(S,S);tv_finsg(S,S)), atomic_list_concat([Look,At],'-',S).
 
 trans_LF(exceed,value&Measure&Type,X,value&Measure&Type,Y,exceeds(X,Y),[],_,_).
-trans_LF1(Trans,_,X,_,Y, generic_pred(_Spatial,Trans,X,Y),[],_,_):- if_search_expanded(1).
+trans_LF1(Trans,_,X,_,Y, generic_pred(_Spatial,Trans,X,Y),[],_,_):- fail, if_search_expanded(1).
 
 
 /* Adjectives */
@@ -410,31 +410,39 @@ intrans_LF(Continue,Spatial & Feat& Type,X,LF,
  LF = path_pred_linkage(direct(PathSystem),Type,X,Origin,Dest).
 
 
-intrans_LF(Run,Spatial & Feat& Type,X,LF,
-   [],_):- 
+intrans_LF(Run,Spatial & Feat& Type,X,LF, [],_):- 
  feat(Feat),
- instrans_verb(Run),
+ intrans_verb(Run),
  spatial(Spatial),
  LF = intrans_pred(Spatial,Type,Run,X).
 
 intrans_LF(Run,Spatial & Feat& Type,X,LF,
-   [slot(prep(Into),Spatial&_,Dest,_,free),
-    slot(prep(From),Spatial&_,Origin,_,free)],_):- 
+ [slot(prep(Into),Spatial&_,Dest,_,free)],_):- 
  feat(Feat),
- instrans_verb(Run),
+ %\+ chat80_type(Run),
+ intrans_verb(Run),
  spatial(Spatial),
- member(Into,[into,to,through,in,at]),
- member(From,[from,through,in,at]), 
- dif(From,Into),
- LF = path_pred_linkage(direct(_PathSystem),Type,X,Origin,Dest).
+ LF = intrans_pred_prep(Spatial,Type,Run,X,Into,Dest).
+intrans_LF(Continue,Spatial& _Feat& Type,X,LF,
+  [slot(prep(dirO(ArgInfo)),Spatial&_,Y,_,free)],_):- 
+  if_search_expanded(2),
+  intrans_verb(Continue),
+  LF = intrans_pred_direct(_Spatial,Continue,Type,X,dirO(ArgInfo),Y).
 
-instrans_verb(run).
-instrans_verb(Y):- clex:iv_finsg(_,Y).
+intrans_LF(Run,Spatial & Feat& Type,X,LF, Slots,_):- 
+ feat(Feat), fail,
+ %\+ chat80_type(Run),
+ intrans_verb(Run),
+ if_search_expanded(4),
+ spatial(Spatial),
+ LF = intrans_pred_slots(Spatial,Type,Run,X,Slots).
 
-intrans_LF(Continue,Spatial& _Feat& _Type,X,intrans_pred(_Spatial,Continue,X,Y),
-   [slot(prep(dirO(_ArgInfo)),Spatial&_,Y,_,free)],_):- 
-   if_search_expanded(2),
-   clex:iv_infpl(Continue,_).
+
+intrans_verb(Run):- clex:iv_infpl(Run,_).
+intrans_verb(run).
+intrans_verb(wait).
+intrans_verb(Y):- clex:iv_finsg(_,Y).
+
 
 % X flows through Begin
 /*

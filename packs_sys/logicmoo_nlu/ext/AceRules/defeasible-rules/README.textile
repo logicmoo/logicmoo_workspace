@@ -1,0 +1,37 @@
+h1. Direct semantics for defeasible theories
+
+h2. An implementation in (disjunctive) answer set programming
+
+h3. Contents
+
+The implementation consists of three ASP encodings:
+
+* stable_sets.lp implementing the stable-set semantics
+* possible_sets.lp implementing the possible-set semantics
+* derivations.lp for computing all possible derivations from a given defeasible theory
+
+h3. Input syntax
+
+An input defeasible theory is encoded as a logic program.
+
+* Defeasible theories are specified by giving for each rule a head literal and body literals.
+* A literal is either positive (a term) or negative (neg(T) where T is a term).
+* Rules are represented by terms.
+* To say that a literal L is the head of a rule R, use head(R, L).
+* To say that a literal L occurs in the body of a rule R, use body(R, L).
+* A rule is considered strict unless specified otherwise.
+* To say that a rule R is defeasible, use def(R).
+
+h3. Usage
+
+* To compute the stable sets of a defeasible theories encoded in a file theory.lp, call clingo with both encodings:
+
+** clingo 0 stable_sets.lp theory.lp
+
+* To compute the possible sets of a defeasible theory, do likewise:
+
+** clingo 0 possible_sets.lp theory.lp
+
+* The same holds for computing all derivations of a defeasible theory:
+
+** clingo 0 derivations.lp theory.lp

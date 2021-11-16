@@ -1,0 +1,1 @@
+Tweety is a bird. If X is a bird then it is usual that X flies. If X is a penguin then it is false that X flies. If X is a penguin then X is a bird. Tux is a penguin.

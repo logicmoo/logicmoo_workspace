@@ -1372,6 +1372,8 @@ generalised_quantor(
 %	it is necessary | it is not necessary | it is not provable | it is true |
 %	it is not false
 %
+% HS addition: "it is usual"
+%
 % Example: it is false [that ...]
 % Example: it is not true [that ...]
 % Example: it is possible [that ...]
@@ -1423,6 +1425,10 @@ sentence_init(
 	word_noninitial(not),
 	word_noninitial(true).
 
+% begin HS
+
+% the following rule is duplicated for "it is usual"
+
 sentence_init(
 		display!tree![poss, 'it is possible'] &
 		drs!in!drs(Dom, Conds) &
@@ -1433,6 +1439,21 @@ sentence_init(
 	word_capitalize(it, 'It'),
 	word_noninitial(is),
 	word_noninitial(possible).
+
+% here comes the duplicate
+
+sentence_init(
+		display!tree![norm, 'it is usual'] &
+		drs!in!drs(Dom, Conds) &
+		drs!out!drs(Dom, [usual(ScopeOut)|Conds]) &
+		drs!scope!in!drs([], []) &
+		drs!scope!out!ScopeOut
+	) -->
+	word_capitalize(it, 'It'),
+	word_noninitial(is),
+	word_noninitial(usual).
+
+% end HS
 
 sentence_init(
 		display!tree![impossibility, 'it is not possible'] &

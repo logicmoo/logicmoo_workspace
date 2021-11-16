@@ -1351,6 +1351,7 @@ ignore_not_not(G):- ignore((catch((( \+ \+ (ignore(once(G))))),_,fail))),!.
 make_historial(M:O,A):- (M==user),!, make_historial(O,A).
 make_historial(whenever_flag_permits(_,O),A):-!,make_historial(O,A).
 make_historial(add_history(O),A):-!,make_historial(O,A).
+make_historial(O,A):- string(O),A=O.
 make_historial(O,A):-ground(O),
   without_color(format(string(A), '~W', [O, [fullstop(true),portrayed(true),quoted(true),numbervars(true)]])),!.
 make_historial(O,A):-
@@ -1375,22 +1376,61 @@ default_history_file(File):-
             (print_message(warning, E),fail)),!.
  
 :- set_prolog_flag(history, 5000).
+:- dynamic(histtmp:history_data/1).
 
-carelessly(G):- ignore(notrace(catch(G,E,(nop(dmsg(E)),!,fail)))).
+string_trim1(X,Y):- string_concat(M,"\\040",X),!,string_trim1(M,Y).
+string_trim1(X,Y):- string_concat(M,"\040",X),!,string_trim1(M,Y).
+string_trim1(X,Y):- string_concat(M," ",X),!,string_trim1(M,Y).
+string_trim1(X,Y):- string_concat(M,"\n",X),!,string_trim1(M,Y).
+string_trim1(X,Y):- current_predicate(string_trim/2),!,string_trim(X,Y).
+string_trim1(X,X).
+
+carelessly(G):- ignore(notrace(catch(G,E,((dmsg(E)),!,fail)))).
 add_history0(_):- notrace(app_argv('--no-history')),!.
-add_history0(A):-
+add_history0(S):- 
+  forall(clause('$history':'$history'(_,W),true,_Ref),carelessly(add_history00(W))),
+  carelessly(add_history00(S)),!.
+
+add_history00(A):- \+ string(A), make_historial(A,S),!,add_history00(S).
+add_history00(A):- string_trim1(A,S),add_history01(S).
+add_history01(A):- histtmp:history_data(A),!.
+add_history01(A):- assert(histtmp:history_data(A)), 
+   default_history_file(File),
+   carelessly(setup_call_cleanup(open(File,append,Out),format(Out,'~w~n',[A]),close(Out))),
+   (current_prolog_flag(readline,editline) -> User_input = libedit_input; User_input = user_input),
+   prolog:history(User_input, load(File)).
+
+add_history02(A):- clause('$history':'$history'(N,_),true,_Ref), !, N1 is N + 1, add_history0(N1,A).
+add_history02(A):- add_history0(1,A),!.
+add_history02(N,A):-
    carelessly(prolog_history:prolog_history(enable)),
    current_input(S),
-   (current_prolog_flag(readline,editline) -> User_input = libedit_input; User_input = user_input),
-   forall(retract('$history':'$history'(_,A)),true),
-                  carelessly(prolog:history(S,add(A))),
-                  ignore((
-                     stream_property(UI,file_no(0)),
-                     ( \+ same_streams(S,UI)),
-                        forall(retract('$history':'$history'(_,A)),true),
-                        carelessly(prolog:history(User_input,add(A))))),!,
-   carelessly((default_history_file(File),prolog:history(User_input, save(File)))).
+   asserta('$history':'$history'(N,A)),
+   (current_prolog_flag(readline,editline) -> User_input = libedit_input; User_input = user_input),  
+   carelessly(prolog:history(S,add(A))),   
+      ignore((
+         stream_property(UI,file_no(0)),
+         ( \+ same_streams(S,UI)),                      
+            carelessly(prolog:history(User_input,add(A))))),!,
+   nop(carelessly((default_history_file(File),prolog:history(User_input, save(File))))).
 
+add_history2(X):- assert(histtmp:history_data(X)).
+
+load_history_from_file(File):- 
+ setup_call_cleanup(
+  open(File,read,In), 
+   (repeat, read_line_to_string(In,String), (String=end_of_file -> ! ; (string_trim1(String,S),assert_if_new(histtmp:history_data(S)), fail))),
+   close(In)).
+
+load_history:- 
+ carelessly(prolog_history:prolog_history(enable)),
+ default_history_file(File),show_call(always,load_history_from_file(File)),!,
+ %(current_prolog_flag(readline,editline) -> User_input = libedit_input; User_input = user_input),
+ %prolog:history(User_input, load(File)),
+ listing('$history':'$history'/2),
+ listing(histtmp:history_data/1),
+ !.
+  
 
 
 nb_linkval_current(N,V):-duplicate_term(V,VV),V=VV,nb_linkval(N,VV),nb_current(N,V).
@@ -1799,7 +1839,7 @@ qsave_bin_now(Clif):-
 %= Register a hook
 %:- initialization(init_why(runtime,main),main).
 
-
+:- now_and_later(load_history).
 :- fixup_exports.
 
 

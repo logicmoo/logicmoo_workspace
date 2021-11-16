@@ -130,9 +130,9 @@ s80(s(Subj,Verb,Args,Mods),Mask) ---> s_vp_800(Subj,Verb,Args,Mods,Mask).
 if_then(if,then).
 if_then(when,do).
 
-if_cond(If,S,Then) ---> theText80(If),{if_then(If,Then)},s80(S,_),peek_phraseXG(theText80(Then)).
+if_cond(If,S,Then) ---> theText80(If),{if_then(If,Then)},s80(S,_),xg_peek(theText80(Then)).
 
-then_cond(Then, Subj,Verb,Args,Mods,Mask) ---> theText80(Then), s_vp_80(Subj,Verb,Args,Mods,Mask).
+then_cond(Then, Subj,Verb,Args,Mods,Mask) ---> theText80(Then), s_vp_801(Subj,Verb,Args,Mods,Mask).
 
 s_vp_800(Subj,Verb,[if(IF,S,Then)|Args],Mods,Mask) --->
      if_cond(IF,S,Then), then_cond(Then,Subj,Verb,Args,Mods,Mask).

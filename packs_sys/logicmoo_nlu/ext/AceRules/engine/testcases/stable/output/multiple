@@ -1,1 +1,77 @@
-ERROR: Program has no answer.
+
+INPUT TEXT:
+If someone X is not provably a customer then X is an employee.
+If someone X is not provably an employee then X is a customer.
+John waits.
+Mary is a manager.
+
+RULES:
+group([object(A, employee, countable, na, eq, 1)]) <- [object(A, B, C, D, E, F), ~group([object(A, customer, countable, na, eq, 1)])].
+group([object(A, customer, countable, na, eq, 1)]) <- [object(A, B, C, D, E, F), ~group([object(A, employee, countable, na, eq, 1)])].
+pred_mod(wait, named('John'), []).
+object(named('John'), 'John', named, na, eq, 1).
+object(named('Mary'), 'Mary', named, na, eq, 1).
+object(named('Mary'), manager, countable, na, eq, 1).
+
+SIMPLE RULES:
+employee(A) <- [something(A), ~customer(A)].
+customer(A) <- [something(A), ~employee(A)].
+wait(named('John'), []).
+manager(named('Mary')).
+
+ANSWERSET #1:
+object(named('John'), 'John', named, na, eq, 1).
+object(named('Mary'), 'Mary', named, na, eq, 1).
+object(named('Mary'), manager, countable, na, eq, 1).
+pred_mod(wait, named('John'), []).
+group([object(named('John'), customer, countable, na, eq, 1)]).
+group([object(named('Mary'), employee, countable, na, eq, 1)]).
+
+ANSWERSET #2:
+object(named('John'), 'John', named, na, eq, 1).
+object(named('Mary'), 'Mary', named, na, eq, 1).
+object(named('Mary'), manager, countable, na, eq, 1).
+pred_mod(wait, named('John'), []).
+group([object(named('John'), employee, countable, na, eq, 1)]).
+group([object(named('Mary'), employee, countable, na, eq, 1)]).
+
+ANSWERSET #3:
+object(named('John'), 'John', named, na, eq, 1).
+object(named('Mary'), 'Mary', named, na, eq, 1).
+object(named('Mary'), manager, countable, na, eq, 1).
+pred_mod(wait, named('John'), []).
+group([object(named('John'), employee, countable, na, eq, 1)]).
+group([object(named('Mary'), customer, countable, na, eq, 1)]).
+
+ANSWERSET #4:
+object(named('John'), 'John', named, na, eq, 1).
+object(named('Mary'), 'Mary', named, na, eq, 1).
+object(named('Mary'), manager, countable, na, eq, 1).
+pred_mod(wait, named('John'), []).
+group([object(named('John'), customer, countable, na, eq, 1)]).
+group([object(named('Mary'), customer, countable, na, eq, 1)]).
+
+ANSWERTEXT #1:
+Mary is an employee.
+John is a customer.
+Mary is a manager.
+John waits.
+
+ANSWERTEXT #2:
+Mary is an employee.
+John is an employee.
+Mary is a manager.
+John waits.
+
+ANSWERTEXT #3:
+Mary is a customer.
+John is an employee.
+Mary is a manager.
+John waits.
+
+ANSWERTEXT #4:
+Mary is a customer.
+John is a customer.
+Mary is a manager.
+John waits.
+

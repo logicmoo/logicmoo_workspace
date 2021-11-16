@@ -105,16 +105,16 @@
 
 any_to_ace_str(I,S):- words_of(I,M),tokenizer:expand_contracted_forms(_All,M,MS),any_to_str(MS,S).
 
-try_ace_lf(I,O):- any_to_ace_str(I,S),!,
+try_ace_drs(I,O):- any_to_ace_str(I,S),!,
    ace_to_drs:aceparagraph_to_drs(S,on,off,1,_Sentences,_Trees,UnresolvedDrs,O,Messages,_Time),
    \+ \+ nop(wdmsg(UnresolvedDrs=Messages)),
    \+ \+ should_learn(O).
 
-try_ace_lf(I):- make,try_ace_lf(I,O), \+ \+ exec_fol(I=O).
+try_ace_drs(I):- make, try_ace_drs(I,O), \+ \+ exec_fol(I=O).
 
 exec_fol(X=I):- !, nonvar(I),
   my_drs_to_fol_kif(I,O), 
-  my_drs_to_fol_kif2(O,M), format('~N~n'), print_tree_nl(m=M),  
+  try_ace_fol(O,M), format('~N~n'), print_tree_nl(m=M),  
   format('~N~n'),
   print_tree_nl(X),write(' == '),
   print_tree_nl(I).
@@ -122,8 +122,8 @@ exec_fol(FOL):- exec_fol(exec_fol=FOL),!.
 
 
 my_drs_to_fol_kif(DRS1,DRS5):- drs_to_sk(DRS1,DRS5).
-%my_drs_to_fol_kif2(IO,IO):-!.
-my_drs_to_fol_kif2(I,O):- my_drs_to_fol(I,M),my_fol_kif(M,O),!.
+
+try_ace_fol(I,O):- my_drs_to_fol(I,M),my_fol_kif(M,O),!.
 my_drs_to_fol(I,O):- on_x_fail(drs_fol(I,O)),!.
 my_drs_to_fol(OI,OI).
 
@@ -131,15 +131,15 @@ my_drs_to_fol(OI,OI).
 their_drs_to_coreace(DRS1,X):- drs_to_coreace:drs_to_coreace(DRS1,X),good_coreace(X).
 
 good_coreace(X):- nonvar(X), X\==[],X\==['ERROR'].
-my_drs_to_coreace(O,unk(O)):- \+ compound(O),!.
-my_drs_to_coreace(DRS1,O):- their_drs_to_coreace(DRS1,O),good_coreace(O),!. 
-my_drs_to_coreace(IsList,O):- is_list(IsList),!,maplist(my_drs_to_coreace,IsList,O).
-my_drs_to_coreace(drs([],Y),O):- term_variables(Y,[V|_]),my_drs_to_coreace(drs(V,Y),O),!.
-my_drs_to_coreace(drs(X,Y),acedrs(X,O)):- !, my_drs_to_coreace(Y,O),!.
-my_drs_to_coreace(NV,O):- NV=..[X,Y], my_drs_to_coreace(Y,M),!,O=..[X,M].
-my_drs_to_coreace(T-N/A,aceo(O)):- term_variables(T,[V|_]), their_drs_to_coreace(drs([V],[T-N/A]),O),!.
-my_drs_to_coreace(T,O):- functor(T,_,A),A>2,!,my_drs_to_coreace(T-0/1,O).
-my_drs_to_coreace(O,unk(O)):-!.
+try_ace_eng(O,unk(O)):- \+ compound(O),!.
+try_ace_eng(DRS1,O):- their_drs_to_coreace(DRS1,O),good_coreace(O),!. 
+try_ace_eng(IsList,O):- is_list(IsList),!,maplist(try_ace_eng,IsList,O).
+try_ace_eng(drs([],Y),O):- term_variables(Y,[V|_]),try_ace_eng(drs(V,Y),O),!.
+try_ace_eng(drs(X,Y),acedrs(X,O)):- !, try_ace_eng(Y,O),!.
+try_ace_eng(NV,O):- NV=..[X,Y], try_ace_eng(Y,M),!,O=..[X,M].
+try_ace_eng(T-_,aceo(O)):- term_variables(T,[V|_]), their_drs_to_coreace(drs([V],[T-1/2]),O),!.
+try_ace_eng(T,O):- functor(T,_,A),A>2,!,try_ace_eng((T - (0/1)), O).
+try_ace_eng(O,unk(O)):-!.
 
 /*
 object(B,reason,countable,na,eq,1)
@@ -155,7 +155,7 @@ predicate(Wait_In_Usually_For,wait,named('John'))
 %     if there is a reason X2 
 %       then John waits usually for the reason X2 in the park X1.'
 drs_to_sk(DRS1,DRS1):- copy_term(DRS1,DRS5),numbervars(DRS5,0,_),!,
-  drs_to_sk1(DRS5,_DRS7),ignore((my_drs_to_coreace(DRS1,List),maplist(wdmsg,List))).
+  drs_to_sk1(DRS5,_DRS7),ignore((try_ace_eng(DRS1,List),maplist(wdmsg,List))).
 
 drs_to_sk1(DRS1,DRS5):- notrace(catch(drs_to_sk11(DRS1,DRS5),_,fail)),!.
 drs_to_sk1(DRS1,DRS1).

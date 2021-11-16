@@ -250,7 +250,7 @@ ed( N, W, _):-
 
 
 chat80_all("Does afghanistan border china ?",[true],2).
-chat80_all("Does america contain new york ?",_,_).
+chat80_all("Does america contain New York ?",_,_).
 chat80_all("Does Mexico border the United States ?",_,_).
 chat80_all("Does the atlantic border spain ?",_,_).
 chat80_all("Does the population of china exceed 1000 million ?",_,_).
@@ -269,7 +269,7 @@ chat80_all("Iraq does border iran ?",_,101).
 chat80_all("Iraq is bordering iran ?",_,104).
 chat80_all("Iraq was bordering iran ?",_,105).
 chat80_all("Iraq will border iran ?",_,103).
-chat80_all("Is new york in america ?",_,_).
+chat80_all("Is New York in america ?",_,_).
 chat80_all("Is spain bordered by the pacific ?",_,_).
 chat80_all("Is the population of china 840 million ?",_,_).
 chat80_all("Is the population of china greater than 200 million ?",_,_).

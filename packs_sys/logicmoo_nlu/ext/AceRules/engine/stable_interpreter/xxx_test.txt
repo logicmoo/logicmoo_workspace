@@ -1,0 +1,4 @@
+object(named(xxx_084119101101116121),xxx_084119101101116121,named,na,xxx_eq,1).
+object(named(xxx_084119101101116121),bird,countable,na,xxx_eq,1).
+group(xxx_list(pred_mod(fly,named(xxx_084119101101116121),xxx_emptylist))) <- [object(named(xxx_084119101101116121),xxx_084119101101116121,named,na,xxx_eq,1), object(named(xxx_084119101101116121),bird,countable,na,xxx_eq,1)].
+group(xxx_list(pred_mod(fly,named(xxx_084119101101116121),xxx_emptylist))) <- [object(named(xxx_084119101101116121),bird,countable,na,xxx_eq,1), object(named(xxx_084119101101116121),bird,countable,na,xxx_eq,1)].

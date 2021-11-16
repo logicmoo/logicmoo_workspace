@@ -85,6 +85,8 @@ xg_with_text(G1,Text) ---> xg_and(G1,theText_cl(Text)).
 
 %theText80(IC) ---> w1(W0),{assertion(nonvar(W0);nonvar(IC)),parser_e2c:the_text_unif(IC,W0)}.
 
+thePos80(Pos,W) ---> theText80_W2(W,L),{match_pos(Pos,L)}.
+
 theText80(_IC, A, B, C, D) :- A==[],!,fail,B=[],C=D.
 theText80(A, B, B, C, D) :-
     virtual(theText80(A), C, D).
@@ -164,7 +166,7 @@ textOpt(_Text) ---> noText.
 
 noun(Noun,Agmt) --->
    theText80_W2(W,L), 
-   {noun_form_wlex(L,W,Noun,Agmt)}.
+   {noun_w2(L,W,Noun,Agmt)}.
 
 det(det(Det),Number,Def) --->
    theText80(W),

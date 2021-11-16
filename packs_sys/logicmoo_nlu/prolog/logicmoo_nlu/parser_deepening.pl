@@ -13,11 +13,18 @@
             deepen_pos/1,
             call_until_failed/1,
             debug_chat80_if_fail/1,
+            if_search_expanded/2,
+            if_search_expanded_ge/2,
             if_search_expanded/1]).
 
 
-if_search_expanded(N):- flag(pos_depth,W,W), W>N,!.
-if_search_expanded(_):- flag(pos_depth_skipped,W,W+1),fail.
+:- dynamic(pdtmp:search_expands/3).
+:- thread_local(pdtmp:expand_enabled/3).
+
+if_search_expanded(N):- if_search_expanded(N,unknown).
+if_search_expanded(N,_Name):- flag(pos_depth,W,W), W>N,!.
+if_search_expanded(N,Name):- flag(pos_depth_skipped,W,W+1),
+  nop(dmsg(skipped(if_search_expanded(N,Name)))), fail.
 
 :-meta_predicate(call_until_failed(0)).
 :-meta_predicate(debug_chat80_if_fail(0)).
@@ -79,5 +86,20 @@ deepen_pos_0(Call):-
        one_must(Call,locally(t_l:usePlTalk,Call)), 
         asserta(t_l:usePlTalk)))).
 */
+source_loc_key(O):- prolog_load_context(term,Term),term_loc_atom(Term,T),!,gensym(T,O).
+source_loc_key(O):- source_location(S,_),gensym(S,O).
+source_loc_key(O):- gensym(source_loc_key,O).
+
+term_loc_atom(T,T):- atom(T).
+term_loc_atom(T,A):- \+ compound(T), term_to_atom(T,A).
+term_loc_atom(_:H,T):- !, term_loc_atom(H,T).
+term_loc_atom(H:-_,T):- !, term_loc_atom(H,T).
+term_loc_atom(P,F):- functor(P,F,_).
+
+if_search_expanded_ge(if_search_expanded(N),if_search_expanded(N,T)):- 
+  source_loc_key(T),!,source_location(S,L),
+  assert_if_new(pdtmp:search_expands(T,S,L)).
+
+system:goal_expansion(G,O,GE,O):- compound(G),if_search_expanded_ge(G,GE).
 
 

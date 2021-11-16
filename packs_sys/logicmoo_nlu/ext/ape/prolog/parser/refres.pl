@@ -326,6 +326,9 @@ resolve_all_anaphors(drs(ReferentsIn, [Condition|Conditions]), ConditionsAllIn, 
     ;
       % possibility
       Condition = can(drs(ReferentsNIn, ConditionsNIn))
+    ; % HS: added a possibility duplicate for normality ("it is usual that")
+      % normality
+      Condition = usual(drs(ReferentsNIn, ConditionsNIn))
     ;
       % necessity
       Condition = must(drs(ReferentsNIn, ConditionsNIn))
@@ -1223,6 +1226,13 @@ match_elements([Element|Elements], Set) :-
     Element = can(drs(_Referents1, Conditions1))
     ->
     member(can(drs(_Referents2, Conditions2)), Set),
+    match_elements(Conditions1, Conditions2),
+    match_elements(Conditions2, Conditions1)
+  ; % HS: added a duplicate of possibility for normality
+    % complex condition: normality
+    Element = usual(drs(_Referents1, Conditions1))
+    ->
+    member(usual(drs(_Referents2, Conditions2)), Set),
     match_elements(Conditions1, Conditions2),
     match_elements(Conditions2, Conditions1)
   ;

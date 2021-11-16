@@ -1,1 +1,67 @@
-ERROR: Program has no answer.
+
+INPUT TEXT:
+Every customer is important.
+John is a customer.
+If someone X is not a customer then X is an employee.
+Mary is an employee.
+Ted is a man.
+Moe has a car.
+Billy is a customer.
+If someone X is important then X has a car.
+
+RULES:
+group([property(A, important, pos)]) <- [group([object(A, customer, countable, na, eq, 1)])].
+group([pred_mod(have, A, gv(0), []), object(gv(0), car, countable, na, eq, 1)]) <- [group([property(A, important, pos)]), object(A, B, C, D, E, F)].
+group([pred_mod(have, named('Moe'), gv(0), []), object(gv(0), car, countable, na, eq, 1)]).
+group([object(A, employee, countable, na, eq, 1)]) <- [object(A, B, C, D, E, F), -group([object(A, customer, countable, na, eq, 1)])].
+group([object(named('Billy'), customer, countable, na, eq, 1)]).
+group([object(named('John'), customer, countable, na, eq, 1)]).
+group([object(named('Mary'), employee, countable, na, eq, 1)]).
+object(named('Billy'), 'Billy', named, na, eq, 1).
+object(named('John'), 'John', named, na, eq, 1).
+object(named('Mary'), 'Mary', named, na, eq, 1).
+object(named('Moe'), 'Moe', named, na, eq, 1).
+object(named('Ted'), 'Ted', named, na, eq, 1).
+object(named('Ted'), man, countable, na, eq, 1).
+
+SIMPLE RULES:
+important(A) <- [customer(A)].
+group([have(A, gv(0), []), car(gv(0))]) <- [important(A), something(A)].
+group([have(named('Moe'), gv(0), []), car(gv(0))]).
+employee(A) <- [something(A), -customer(A)].
+customer(named('Billy')).
+customer(named('John')).
+employee(named('Mary')).
+man(named('Ted')).
+
+ANSWERSET #1:
+object(named('Billy'), 'Billy', named, na, eq, 1).
+object(named('John'), 'John', named, na, eq, 1).
+object(named('Mary'), 'Mary', named, na, eq, 1).
+object(named('Moe'), 'Moe', named, na, eq, 1).
+object(named('Ted'), 'Ted', named, na, eq, 1).
+object(named('Ted'), man, countable, na, eq, 1).
+group([property(named('Billy'), important, pos)]).
+group([object(named('Billy'), customer, countable, na, eq, 1)]).
+group([property(named('John'), important, pos)]).
+group([object(named('John'), customer, countable, na, eq, 1)]).
+group([pred_mod(have, named('Billy'), gv(0), []), object(gv(0), car, countable, na, eq, 1)]).
+group([pred_mod(have, named('John'), gv(0), []), object(gv(0), car, countable, na, eq, 1)]).
+group([pred_mod(have, named('Moe'), gv(0), []), object(gv(0), car, countable, na, eq, 1)]).
+group([object(named('Mary'), employee, countable, na, eq, 1)]).
+group([object(named('Moe'), employee, countable, na, eq, 1)]).
+group([object(named('Ted'), employee, countable, na, eq, 1)]).
+
+ANSWERTEXT #1:
+John is important.
+Billy is important.
+Ted is an employee.
+Moe is an employee.
+Mary is an employee.
+John is a customer.
+Billy is a customer.
+Ted is a man.
+Moe has a car.
+John has a car.
+Billy has a car.
+

@@ -98,8 +98,8 @@ sample_set80("the object9 action1s at object11swis?").
 sample_set80("the object9 action1s through object11swis?").
 
 
-chat80_test("does america contain new york ?").
-chat80_test("is new york in america ?").
+chat80_test("does america contain New York ?").
+chat80_test("is New York in america ?").
 chat80_test("does mexico border the united states ?").
 chat80_test("the population of china greater than 200 million ?").
 chat80_test("the population of china exceed 1000 million ?").
@@ -330,13 +330,13 @@ test_objecteese(X,Z):- locally(set_prolog_flag(debug,false),cvt_to_objecteese(X,
   (show_failure(always,check_answer(X,Y,Z,true))-> true ; 
     (current_prolog_flag(debug,true)-> false ; locally(set_prolog_flag(debug,true),cvt_to_objecteese(X,_)))).
 
-%do_objecteese_test(X):- try_ace_lf(X),!.
+%do_objecteese_test(X):- try_ace_drs(X),!.
 do_objecteese_test(X):- 
-  try_ace_lf(X),
+  try_ace_drs(X),
   cvt_to_objecteese_ace(X,Y),!,nl,any_to_string(Y,Z),
   format('~N test_objecteese(~n   ~q,~n  ~q).~n',[X,Z]),!,  
-  %ignore((try_ace_lf(X,XX),exec_fol(ace=XX))),
-  ignore((try_ace_lf(Z,A),(replace_back_words(A,B)->exec_fol(replace=(B));exec_fol(A)))).
+  %ignore((try_ace_drs(X,XX),exec_fol(ace=XX))),
+  ignore((try_ace_drs(Z,A),(replace_back_words(A,B)->exec_fol(replace=(B));exec_fol(A)))).
 
 
 

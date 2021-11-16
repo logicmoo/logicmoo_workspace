@@ -142,10 +142,20 @@ write_cond(~DRS, Indent, [(NewIndent,'NAF') | PP]) :-
 	NewIndent is Indent+1,
 	write_drs(DRS, NewIndent, PP).
 
+% begin HS
+% duplicate the followin for normality, usual(DRS)
+
 write_cond(can(DRS), Indent, [(NewIndent, 'CAN') | PP]) :-
 	!,
 	NewIndent is Indent+1,
 	write_drs(DRS, NewIndent, PP).
+
+% here is the duplicate
+write_cond(usual(DRS), Indent, [(NewIndent, 'USUAL') | PP]) :-
+	!,
+	NewIndent is Indent+1,
+	write_drs(DRS, NewIndent, PP).
+% end HS
 
 write_cond(must(DRS), Indent, [(NewIndent, 'MUST') | PP]) :-
 	!,

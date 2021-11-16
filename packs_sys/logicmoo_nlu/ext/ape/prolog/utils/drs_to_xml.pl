@@ -122,9 +122,16 @@ convert_conds([~ DRSIn|RestIn], [element('NAF', [], [DRSOut])|RestOut]) :-
     drs_to_xmlterm(DRSIn, DRSOut),
     convert_conds(RestIn, RestOut).
 
+% begin HS
+% duplicate the following possibility rule for normality
 convert_conds([can(DRSIn)|RestIn], [element('Possibility', [], [DRSOut])|RestOut]) :-
     drs_to_xmlterm(DRSIn, DRSOut),
     convert_conds(RestIn, RestOut).
+% here is the duplicate
+convert_conds([usual(DRSIn)|RestIn], [element('Normality', [], [DRSOut])|RestOut]) :-
+    drs_to_xmlterm(DRSIn, DRSOut),
+    convert_conds(RestIn, RestOut).
+% end HS
 
 convert_conds([must(DRSIn)|RestIn], [element('Necessity', [], [DRSOut])|RestOut]) :-
     drs_to_xmlterm(DRSIn, DRSOut),

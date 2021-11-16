@@ -216,6 +216,27 @@ is_loading_file:- prolog_load_context(reloading, true),!.
 is_loading_file:- prolog_load_context(file,_), prolog_load_context(term,T), T\==[].
 
 
+s61:- 
+   training_data(Eng,DRS),should_learn(DRS),
+   once((
+   wdmsg('=============='),
+   wdmsg(?-s61(Eng)),
+   ignore((try_ace_drs(Eng,O),
+     wdmsg('--------------'),
+     s62(live,O))),
+
+   (O=DRS -> wdmsg('*****************');
+    ((wdmsg('+++++++++++++++++'),
+      once(s62(test,DRS))))),
+   wdmsg('=============='),nl,nl)),
+   fail.
+s61.
+s61(Eng):- try_ace_drs(Eng,O),s62(O).
+s62(A,DRS):- in_cmt(print_tree_nl(drs(A) = (DRS))),fail.
+s62(A,DRS):- try_ace_eng(DRS,FOL), in_cmt(print_tree_nl(eng(A)=FOL)),fail.
+s62(A,DRS):- try_ace_fol(DRS,FOL),in_cmt(print_tree_nl(kif(A)=FOL)),!.
+
+  
 c80(B):- is_loading_file, !, add_c80(B).
 c80(Text):- 
   %cls, 
@@ -224,10 +245,9 @@ c80(Text):-
   %c88,
   show_c80(Text),
   any_to_input_layer(Text,S),!,
-  add_c80(S), 
   time_once(c88(S)).
 
-c81(S):- time_once(try_ace_lf(S)),fail.
+c81(S):- time_once(try_ace_drs(S)),fail.
 /*
 c81(S):- time_once((mpred_test_mok(into_lexical_segs(S,U)))),
  forall(deepen_pos(sentence80(E,U,[],[],[])),print_tree_nl(E)),!.
@@ -467,7 +487,7 @@ text_to_all_trees(I):-
   forall(clause(input_to_middle(I,O,Named),B),ignore((call(B),print_tree(Named=O)))).
 
 
-time_once(G):- notrace(garbage_collect),quietly(locally(set_prolog_flag(gc,false),time(once(show_failure(always,G))))).
+time_once(G):- notrace(garbage_collect),quietly(locally(set_prolog_flag(gc,true),time(once(show_failure(always,G))))).
 
 any_to_input_layer(I,S):- any_to_str(I,S).
 any_to_str(I,S):- \+ string(I), words_of(I,U), any_to_string(U,S),!.
@@ -515,12 +535,18 @@ observe_system_full(Text):- observe_system_full(Text,Post), my_drs_to_fol(Post,F
 observe_system_full(I,O):- any_to_input_layer(I,M),!,ping_each_system(I,M,O),should_learn(O).
 
 ping_each_system(_,M,O):- c88(M,O),should_learn(O).
-ping_each_system(_,M,O):- try_ace_lf(M,O),should_learn(O),!.
-ping_each_system(I,_,O):- notrace(words_to_base_forms(I,M)),any_to_input_layer(M,S),try_ace_lf(S,O).
+ping_each_system(_,M,O):- try_ace_drs(M,O),should_learn(O),!.
+ping_each_system(I,_,O):- notrace(words_to_base_forms(I,M)),any_to_input_layer(M,S),try_ace_drs(S,O).
 
 symm_test:- c88([does,iran,border,iraq]).
 symm_test2:- cls, symm_test, c88([does,iran,action1,iraq]).
 symm_test3:- c88([does,iran,symmetric1,iraq]).
+
+
+acetext_to_text80(List,Text80):- atom(List),into_tex80(List,Text80).
+acetext_to_text80(List,Each):- is_list(List),maplist(atom,List),!,member(Each,List).
+acetext_to_text80(List,Out):- is_list(List),member(E,List),acetext_to_text80(E,Out).
+
 
 sentence80(U,E):- sentence80(E,U,[],[],[]).
 
@@ -529,23 +555,27 @@ try_chat_80(F,Tree,QT):-
  ignore((
   nonvar(Tree),
   debug_chat80_if_fail(deepen_pos(call(F,Tree,QT))),
-  print_tree_nl(F=QT))).
+  in_cmt(print_tree_nl(F=QT)))).
 
 
 c88(S,O):-
+ make,
  try_chat_80(into_lexical_segs(S,Lex)),
- ignore((try_ace_lf(S,Ace),\+ \+ exec_fol(try_ace_lf=Ace))),
+ try_chat_80(try_ace_drs(S,Ace)),
+ try_chat_80(try_ace_eng(Ace,_Eng)),
+ try_chat_80(try_ace_fol(Ace,FOL)),
  try_chat_80(sentence80(Lex,Tree)),
  try_chat_80(i_sentence(Tree,QT)),
- try_chat_80(clausify80(QT,UE)), 
+ try_chat_80(clausify80(QT,UE)),  
  try_chat_80(simplify80(UE,Query)),
  try_chat_80(results80(Query,_Answer)),
- member(O,[Query,UE,Ace,QT,Tree,S]),
+ ignore((var(QT),add_c80(S))),
+ member(O,[Query,UE,FOL,Ace,QT,Tree,S]),
  nonvar(O),!.
 %c88(M,O):- process4a(off,M,_,O,_Times).
 
 
-c88(M):- c88(M,O),dmsg(O).
+c88(M):- try_chat_80(c88(M,_)).
 
 s83:- forall(training_data(Sent,M),(my_drs_to_fol_kif(M,O),in_cmt(block,print_tree_nl(Sent=O)))).
 

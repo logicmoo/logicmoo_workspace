@@ -1,3 +1,5 @@
+% File modified by MD: quick and dirty hack to allow separation of rule generator and verabilser.
+
 % This file is part of AceRules.
 % Copyright 2008-2012, Tobias Kuhn, http://www.tkuhn.ch
 %
@@ -14,6 +16,8 @@
 
 
 :- module(acerules_processor, [
+                generate_output_answers/6, % MD
+                generate_output_rules/4, % MD
 		generate_output/7,  % +Input, +Semantics, +Options, -Rules, -Answersets, -Trace, -AnswerTexts
 		generate_rules/3,   % +Input, +Options, -Rules
 		verbalize_trace/2   % +Trace, -VerbTrace
@@ -48,6 +52,85 @@ for input and output.
 
 @see run_acerules.pl
 */
+
+
+%% MD: Modification of generate_output to just generate answer sets  
+
+
+generate_output_answers(InputCodes, Semantics, Options, Rules, Answersets, AnswerTexts) :-
+	catch(
+		generate_output_x_answers(InputCodes, Semantics, Options, Rules, Answersets, AnswerTexts),
+		ar_error(ErrorCode, ErrorText),
+		( log(ErrorCode), throw(error(ErrorCode, ErrorText)) )
+	),
+	!.
+
+generate_output(_, _, _, '', '', '') :-
+    last_log_message(LogText),
+    atom_concat(LogText, '.Unexpected', ErrorCode),
+    concat_list(['Unexpected error in ', LogText, '.'], ErrorText),
+    log(ErrorCode),
+    throw(error(ErrorCode, ErrorText)).
+
+
+
+
+generate_output_x_answers(InputCodes, court, Options, Rules, [Answerset], [AnswerText]) :-
+	reset_skolemizer,
+	( member(guess=Guess, Options) ; Guess = off ), !,
+	parse(InputCodes, Rules, Guess), !,
+%%	court_interpreter(Rules, Answerset, Trace), !,
+	verbalize(Answerset, AnswerText), !.
+
+ generate_output_x_answers(InputCodes, Semantics, Options, Rules, Answersets, AnswerTexts) :-
+    is_member(Semantics, [stable, stable_strong]),
+	reset_skolemizer,
+	( member(guess=Guess, Options) ; Guess = off ), !,
+	parse(InputCodes, Rules, Guess), !,
+%%	( member(maxanswers=MaxAnswers, Options) ; MaxAnswers = 1 ), !,
+%%	stable_interpreter(Rules, Semantics, Answersets, MaxAnswers), !,
+	verbalize_list(Answersets, AnswerTexts), !.
+
+
+
+%% MD: Modification of generate_output to just generate rules  
+
+
+generate_output_rules(InputCodes, Semantics, Options, Rules) :-
+	catch(
+		generate_output_x_rules(InputCodes, Semantics, Options, Rules),
+		ar_error(ErrorCode, ErrorText),
+		( log(ErrorCode), throw(error(ErrorCode, ErrorText)) )
+	),
+	!.
+
+generate_output_rules(_, _, _, '') :-
+    last_log_message(LogText),
+    atom_concat(LogText, '.Unexpected', ErrorCode),
+    concat_list(['Unexpected error in ', LogText, '.'], ErrorText),
+    log(ErrorCode),
+    throw(error(ErrorCode, ErrorText)).
+
+
+generate_output_x_rules(InputCodes, court, Options, Rules) :-
+	reset_skolemizer,
+	( member(guess=Guess, Options) ; Guess = off ), !,
+	parse(InputCodes, Rules, Guess), !.
+%,
+%	court_interpreter(Rules, Answerset, Trace), !,
+%	verbalize(Answerset, AnswerText), !.
+
+generate_output_x_rules(InputCodes, Semantics, Options, Rules) :-
+    is_member(Semantics, [stable, stable_strong]),
+	reset_skolemizer,
+	( member(guess=Guess, Options) ; Guess = off ), !,
+	parse(InputCodes, Rules, Guess), !.
+
+%,
+%	( member(maxanswers=MaxAnswers, Options) ; MaxAnswers = 1 ), !,
+%	stable_interpreter(Rules, Semantics, Answersets, MaxAnswers), !,
+%	verbalize_list(Answersets, AnswerTexts), !.
+
 
 
 %% generate_output(+Input, +Semantics, +Options, -Rules, -Answersets, -Trace, -AnswerTexts) is det
@@ -139,6 +222,7 @@ generate_rules_x(InputCodes, Options, Rules) :-
 verbalize_list([], []).
 
 verbalize_list([Answerset|AnswersetsRest], [AnswerText|AnswertextsRest]) :-
+write(Answerset+"\n"),
     verbalize(Answerset, AnswerText),
     verbalize_list(AnswersetsRest, AnswertextsRest).
 
