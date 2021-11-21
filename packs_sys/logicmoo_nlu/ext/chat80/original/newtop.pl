@@ -88,7 +88,7 @@ inform1([H|T]) :- write(H), put(32), inform1(T).
    ---------------------------------------------------------------------- */
 
 
-system:test_chat80 :-  setenv('CMD',timeout), test_chat80(_,on).
+system:test_chat80 :- make, setenv('CMD',timeout), test_chat80(_,on),!,show_results80.
 
 :- share_mp(test_chat80/1).
 test_chat80(N):- test_chat80(N, on), !.
@@ -101,7 +101,7 @@ test_chat80(U):- nonvar(U), \+ number(U),
               ignore(control80(U)))))).
 
 test_chat80(N, OnOff) :- (number(N);var(N)),!,
-	(var(N)->show_title ;true),
+	(var(N)->show_title80 ;true),
 	forall(chat_80_ed(N,Sentence,CorrectAnswer),
    ignore(mpred_test(baseKB:test_chat80_mpred(N, Sentence, OnOff, CorrectAnswer)))).
 
@@ -121,7 +121,8 @@ dumpST_ERR:- on_x_fail(dumpST),!.
 baseKB_test_chat80_mpred(N, Sentence, _OnOff, CorrectAnswer) :-
     once(wotso(report_item(print_test,Sentence))),
 	  once(wotso(process5(test,Sentence,CorrectAnswer,Status,Times))),
-	  once(wotso(show_results(N,Status,Times))),!.
+    assert(tmp:chat80results(N,Sentence,Status,Times)),
+	  once(wotso(show_results80(N,Sentence,Status,Times))),!.
 
 baseKB_test_chat80_mpred(_, Sentence, OnOff, _CorrectAnswer) :-
     OnOff \= off,
@@ -158,22 +159,25 @@ rtest_chat(N) :-
 	rtest_chat(NN).
 rtest_chat(_).
 
-show_title :-
+show_title80 :-
 	format('Chat Natural Language Question Anwering Test~n~n',[]),
 	show_format(F),
-	format(F, ['Test','Parse','Semantics','Planning','Reply','TOTAL']),
+	format(F, ['Test','Passed','Parse','Semantics','Planning','Reply','TOTAL','Sentence']),
 	nl.
 
-show_results(N,Status,Times) :-
+show_results80:- show_title80,forall(tmp:chat80results(N,Sentence,Status,Times),show_results80(N,Sentence,Status,Times)),show_title80.
+:- dynamic(tmp:chat80results/4).
+show_results80(N,Sentence,Status,Times) :-  
 	show_format(F),
-	format(F, [N|Times]),
+  append([N,Status|Times],[Sentence],Args),
+	format(F, Args),
 	( Status = true ->
 		nl
 	; true ->
 		tab(2), write(Status), nl
 	).
 
-show_format( '~t~w~10+ |~t~w~12+~t~w~10+~t~w~10+~t~w~10+~t~w~10+' ).
+show_format( '~N~t~w~10+|~t~w~10+~t~w~12+~t~w~10+~t~w~10+~t~w~10+~t ~w~10+~t | ~t~w~10+' ).
 
 
 

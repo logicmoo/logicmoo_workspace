@@ -61,8 +61,11 @@
 */
 
 % debug_var(_A,_Var):-!.
+debug_var(_,_):- current_prolog_flag(no_pretty,true),!.
 debug_var(X,Y):-  mort(debug_var0(X,Y)).
 debug_var(Sufix,X,Y):- quietly((flatten([X,Sufix],XS),debug_var(XS,Y))).
+
+maybe_debug_var(_,_):- current_prolog_flag(no_pretty,true),!.
 maybe_debug_var(X,Y):- mort(may_debug_var(X,Y)).
 
 p_n_atom(Cmpd,UPO):- p_n_atom1(Cmpd,UP),toProperCamelAtom(UP,UPO),!.

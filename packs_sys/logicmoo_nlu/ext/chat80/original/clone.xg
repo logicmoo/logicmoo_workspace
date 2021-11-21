@@ -12,12 +12,17 @@
 /* Sentences */
 
 :- export(sentence80/5).
+:- thread_local(tlclone:np_in_case/1).
 
-sentence80(S, A, B, C, D) :-
-    b_setval('$prev_w2s', []),
-    b_setval('$prev_spans', []),
-    sentence801(S, A, B, C, D).
+sentence80(S) ---> {b_setval('$prev_w2s', []),b_setval('$prev_spans', [])}, 
+    sentence801(S).
+    %sentence800(S1),!,sentence801s(S1,S).
 
+sentence800(S) ---> startQuotesEnding(E),!,sentence801(S),E,!.
+sentence800(S) ---> sentence801(S).
+
+sentence801s(S1,(S1,S2)) ---> xg_peek([_,_]), sentence801(S2),!.
+sentence801s(S1, S1) ---> [].
 
 :- dynamic(if_giveup_dcg/0).
 sentence801(_) ---> {if_giveup_dcg,!,fail}.
@@ -28,7 +33,6 @@ sentence802(S) ---> declarative(S),{!}.
 sentence802(S) ---> question80(S).
 sentence802(S) ---> imperative80(S),{!}.
 sentence802(np(Subj)) ---> subj(Subj,_Agmt,_Type).
-%sentence801(decl(S)) ---> s80(S,_).+
 
 sentence_typed('?',S,List):- question80(S,List,[],[],[]).
 sentence_typed(Punct,Out,List):- s80(S,_,List,[],[],[]),punct_to_sent_type(Punct,S,Out),!.
@@ -144,7 +148,8 @@ s_vp_800(Subj,Verb,Args,Mods,Mask) ---> s_vp_801(Subj,Verb,Args,Mods,Mask).
 
 
 s_vp_801(Subj,Verb,Args,Mods,Mask) --->
-   subj(Subj,Agmt,Type),
+  {is_subj_case(Case)},
+   locally(tlclone:np_in_case(Case),subj(Subj,Agmt,Type)),
    s_vp(Subj,Agmt,Type,Verb,Args,Mods,Mask).
 
 s_vp(_Subj,Agmt,Type,Verb,Args,Mods,Mask) --->
@@ -165,7 +170,9 @@ subj0(Subj,Agmt,_) --->
 
 /* Noun Phrase */
 
-np(AgmtKernelMods,Agmt,Case,Def,Role,Set,Mask) ---> np0(AgmtKernelMods,Agmt,Case,Def,Role,Set,Mask).
+np(AgmtKernelMods,Agmt,Case,Def,Role,Set,Mask) --->
+  locally(tlclone:np_in_case(Case),
+    np0(AgmtKernelMods,Agmt,Case,Def,Role,Set,Mask)).
 
 np0(np(Agmt,Pronoun,[]),Agmt,NPCase,def,_,Set,Nil) --->
    {is_pp(Set)},
@@ -242,13 +249,22 @@ maybeComma ---> (theText80(',');[]),!.
 nl_list_of_items(AndOr,P, [H,T])---> xg_peek([_,_,_]), of_type(P,H), maybeComma, {member(AndOr,[and,or])}, theText80(AndOr), of_type(P,T),!.
 nl_list_of_items(AndOr,P, [H|T])---> xg_peek([_,_,_,_]), of_type(P,H), maybeComma, !, nl_list_of_items(AndOr,P, T).
 
-np_objbody(vGood,_,_)---> theText80(vgood).
+link_s(S) --->
+ xg_peek(theText80_W2(_,L)),{member(loc(N),L),
+ member(link(_,'S',r('S',seg(N,M))),L),Len is M-N+1, Len>1,
+ length(Words,Len)},xg_w2_len(Len,Words),!,{sentence80(S,Words,[],[],[])}.
+
+%np_objbody(Det,Number,Def) ---> {if_search_expanded(2)}, np_objbody(Det,Number,Def).
 np_objbody((Name),3+sg,def+proper) ---> name_xg(Name).
+
+np_objbody(S,_,_)--->  {if_search_expanded(6)}, {tlclone:np_in_case(Case), \+ is_subj_case(Case)}, link_s(S).
 np_objbody(string(List),3+sg,def+proper) ---> w2_quoted(List),!.
 
 np_objbody((prep_obj(X,S)),Agmt,Type) --->
+  {if_search_expanded(5)},
    prep(X),
-   subj(S,Agmt,Type).
+ {is_prep_case(Case)},
+  locally(tlclone:np_in_case(Case),subj(S,Agmt,Type)).
 
 np_objbody((num(Int)),3+sg,def+proper) ---> theText80(Value),{tr_number(Value,Int)}.
 np_objbody((adj(VGood)),_,_) ---> theText80(Good), {clex:adj_itr(Good,VGood)}.

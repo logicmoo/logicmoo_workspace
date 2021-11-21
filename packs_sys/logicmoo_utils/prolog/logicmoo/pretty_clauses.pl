@@ -1004,7 +1004,7 @@ print_each_prepended(White,[L|More]):- write(L),!,nl,write(White),
 
 
 print_tree_with_final(Term, Final):-
-   print_tree_with_final(Term, Final, [fullstop(false)]).
+    locally(set_prolog_flag(no_pretty,false),print_tree_with_final(Term, Final, [fullstop(false)])).
 
 
 print_tree_with_final(Term, Final, Options):- 

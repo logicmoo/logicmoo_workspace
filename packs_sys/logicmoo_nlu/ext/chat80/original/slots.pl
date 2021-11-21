@@ -34,7 +34,7 @@ must80(G):- \+ current_prolog_flag(debug_chat80,true),!, call(G).
 must80(G):- call(G)*->true;(
   nop((wdmsg(failed(G)),ignore(on_x_fail(ftrace(G))))),
   G \= lf80(_,_),
-  fail,fmt(failed(G)),fail,call(G)).
+  fmt(failed(G)),fail,call(G)).
 
 % logical form checker for chat80
 

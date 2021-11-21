@@ -74,6 +74,9 @@ consume_spans_hack ---> [span(NV)],{nonvar(NV),!,parser_e2c:add_prev_span(span(N
 consume_spans_hack ---> [].
 
 
+xg_gather(Call,[H|T])---> [H],{\+ \+ call(Call,H)},!,xg_gather(T).
+xg_gather(_,[])--->[].
+
 theText80Penn(A) --->{atomic(A),!},theText80(A).
 theText80Penn(Cmp) --->{compound(Cmp),!},w001(Cmp).
 theText80Penn(w(W,L1)) ---> theText80_W2(W,L2),{L1=L2}.
@@ -130,7 +133,7 @@ theText_cl([]) ---> !,[].
 theText_cl([W1|WL]) ---> theText80(W1),!,theText_cl(WL).
 
 % normal single quotes
-singleQuotes ---> theText80('''').
+singleQuotes ---> theText80(''''), \+ xg_peek(theText80_Text("s")).
 % stylistic single quotes
 startSingleQuotes ---> theText80('`').
 endSingleQuotes ---> singleQuotes.
@@ -143,10 +146,13 @@ endDoubleQuotes ---> theText80('''''').
 w2_txt_until(   [],G) ---> G,!.
 w2_txt_until([H|T],G) ---> theText80_Text(H), w2_txt_until(T,G).
 
-w2_quoted(List)---> startDoubleQuotes, w2_txt_until(List,endDoubleQuotes).
-w2_quoted(List)---> startSingleQuotes, w2_txt_until(List,endSingleQuotes).
-w2_quoted(List)---> doubleQuotes, w2_txt_until(List,doubleQuotes).
-w2_quoted(List)---> singleQuotes, w2_txt_until(List,singleQuotes).
+w2_quoted(List)---> startQuotesEnding(End), w2_txt_until(List,End).
+
+startQuotesEnding(Ending)---> theText80(','), !, startQuotesEnding(Ending).
+startQuotesEnding(endSingleQuotes)--->startSingleQuotes,!.
+startQuotesEnding(endDoubleQuotes)--->startDoubleQuotes,!.
+startQuotesEnding(doubleQuotes)--->doubleQuotes,!.
+startQuotesEnding(singleQuotes)---> singleQuotes, !.
 
 /*
 optText1(_,_,_) ---> noText.
