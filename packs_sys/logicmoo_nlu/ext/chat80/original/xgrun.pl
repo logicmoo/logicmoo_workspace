@@ -50,10 +50,6 @@ xg_and(G1,G2, B, C, D, E) :- phraseXG(G1, B, C, D, E), phraseXG(G2, B, C, D, E).
 
 locally(P,G,A,B,C,D):- locally(P,call(G,A,B,C,D)).
 
-xg_w2_len(0,[])---> !, [].
-xg_w2_len(1,[W])---> [W], !.
-xg_w2_len(1,[])---> !, []. %% missing puncts
-xg_w2_len(N,[W|L])---> [W], {N>1, M is N -1},!,xg_w2_len(M,L).
 
 phraseXG0((G1 ; G2), B, C, D, E) :- !, (phraseXG(G1, B, C, D, E); phraseXG(G2, B, C, D, E)).
 phraseXG0('&'(G1 , G2), B, C, D, E) :- !, xg_and(G1,G2, B, C, D, E).

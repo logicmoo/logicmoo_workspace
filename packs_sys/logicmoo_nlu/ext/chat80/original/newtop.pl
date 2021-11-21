@@ -165,8 +165,13 @@ show_title80 :-
 	format(F, ['Test','Passed','Parse','Semantics','Planning','Reply','TOTAL','Sentence']),
 	nl.
 
-show_results80:- show_title80,forall(tmp:chat80results(N,Sentence,Status,Times),show_results80(N,Sentence,Status,Times)),show_title80.
 :- dynamic(tmp:chat80results/4).
+show_results80:- 
+ show_title80,
+ forall(tmp:chat80results(N,Sentence,Status,Times),
+   show_results80(N,Sentence,Status,Times)),
+ show_title80.
+
 show_results80(N,Sentence,Status,Times) :-  
 	show_format(F),
   append([N,Status|Times],[Sentence],Args),
@@ -208,8 +213,8 @@ close_answer(A,B):-
   compound_name_arguments(A,AA,AAA),
   compound_name_arguments(B,AA,BBB),!,
   maplist(close_answer,AAA,BBB).
-close_answer(B,A):- atom(B), atom_downcase(B,BB),B\==BB, close_answer(BB,A).
-close_answer(A,B):- atom(B), atom_downcase(B,BB),B\==BB, close_answer(A,BB).
+close_answer(B,A):- atom(B), downcase_atom(B,BB),B\==BB, close_answer(BB,A).
+close_answer(A,B):- atom(B), downcase_atom(B,BB),B\==BB, close_answer(A,BB).
 
 /* ----------------------------------------------------------------------
 	Top level for runtime version, and interactive demonstrations

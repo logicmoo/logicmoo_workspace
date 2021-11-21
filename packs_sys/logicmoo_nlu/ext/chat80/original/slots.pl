@@ -220,7 +220,7 @@ i_s(s(Subj,Verb,VArgs,VMods),Pred,Up,Id) :-
    i_verb_mods(Mods,Tense,XA,Slots,Args,Up,+Id),
    reshape_pred(Meta,QSubj,Neg,P,Args0,Pred).
 
-i_verb(verb(Root,Voice,Tense,_Aspect,Neg),
+i_verb(verb(_VerbType,Root,Voice,Tense,_Aspect,Neg),
       PP,Tense,Voice,Det,Slots,XArg,Meta) :-
    slot_verb_template(Root,P,Slots,XArg,Meta),
    %(Neg\=posP(_)->trace;true),
@@ -264,7 +264,8 @@ fill_verb([Node|Nodes0],XA0,XA,Slots0,Slots,Args0,Args,Up,Id) :-
    fill_verb(Nodes,XA1,XA,Slots1,Slots,Args1,Args,Up,+Id).
 
 verb_slot(Node,XA0,XA1,Slots0,Slots1,Args0,Args1,Up0,Id):- 
-  must80(verb_slot0(Node,XA0,XA1,Slots0,Slots1,Args0,Args1,Up0,Id)).
+  debug_chat80_if_fail((clause(verb_slot0(Node,XA0,XA1,Slots0,Slots1,Args0,Args1,Up0,Id),Body),
+   Body)).
 
 verb_slot1(Node,XA0,XA1,Slots0,Slots1,Args0,Args1,Up0,Id):- 
   G  = verb_slot0(Node,XA0,XA1,Slots0,Slots1,Args0,Args1,Up0,Id),
@@ -298,6 +299,9 @@ verb_slot0(prep_phrase(prep(Prep),NP),
    held_arg(XArg,[],LSlots0,LSlots,Id0,Id),
    i_np_rest(NP,LDet,LDet0,LX,LPred,LQMods,LSlots,Up,Id,free),
    append(PSlots,Slots1,Slots).
+
+
+
 verb_slot0(voidQ(_ArgInfo2),XA,XA,Slots,Slots,Args,Args,[],_) :-
    in_slot(Slots,arg_pred(_ArgInfo1),_,_,_,_).
 verb_slot0(adverb(Adv),XA,XA,Slots0,Slots,['`'(P)|Args],Args,[],Id) :-

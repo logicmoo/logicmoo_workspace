@@ -62,11 +62,11 @@
 
 % debug_var(_A,_Var):-!.
 debug_var(_,_):- current_prolog_flag(no_pretty,true),!.
-debug_var(X,Y):-  mort(debug_var0(X,Y)).
+debug_var(X,Y):-  mortvar(debug_var0(X,Y)).
 debug_var(Sufix,X,Y):- quietly((flatten([X,Sufix],XS),debug_var(XS,Y))).
 
 maybe_debug_var(_,_):- current_prolog_flag(no_pretty,true),!.
-maybe_debug_var(X,Y):- mort(may_debug_var(X,Y)).
+maybe_debug_var(X,Y):- mortvar(may_debug_var(X,Y)).
 
 p_n_atom(Cmpd,UPO):- p_n_atom1(Cmpd,UP),toProperCamelAtom(UP,UPO),!.
 
@@ -148,7 +148,7 @@ reduce_atomLR(L,L).
 %p_n_atom0(Atom,UP):- simpler_textname(Atom,M),Atom\==M,!,p_n_atom0(M,UP).
 p_n_atom0(Atom,UP):- atom(Atom),!, reduce_atomLR(Atom,AtomR), p_n_atom_filter_var_chars(AtomR,UP).
 p_n_atom0(String,UP):- string(String),!,string_to_atom(String,Atom),!,p_n_atom0(Atom,UP).
-p_n_atom0([C|S],UP):- !,notrace(catch(atom_codes_w_blobs(Atom,[C|S]),_,fail)),!,p_n_atom0(Atom,UP).
+p_n_atom0([C|S],UP):- !,moretrace(catch(atom_codes_w_blobs(Atom,[C|S]),_,fail)),!,p_n_atom0(Atom,UP).
 
 p_n_atom_filter_var_chars(AtomR,UP):- name(AtomR,Chars),filter_var_chars(Chars,[C|Was]),to_upper(C,U),name(UP,[U|Was]).
 % p_n_atom_filter_var_chars(AtomR,UP):- name(AtomR,[C|Was]),to_upper(C,U),filter_var_chars([U|Was],CS),name(UP,CS).
@@ -162,7 +162,7 @@ debug_var0(_,NonVar):-nonvar(NonVar),!.
 debug_var0(Var,TwoVars):- var(Var),var(TwoVars),!, ignore((get_var_name(Var,Name),debug_var0(Name,TwoVars))).
 debug_var0(Var,_):- var(Var),!.
 debug_var0([C|S],Var):- \+ ground(C+S),!,afix_varname('List',Var).
-debug_var0([C|S],Var):- notrace(catch(atom_codes_w_blobs(Atom,[C|S]),_,fail)),!,afix_varname(Atom,Var).
+debug_var0([C|S],Var):- moretrace(catch(atom_codes_w_blobs(Atom,[C|S]),_,fail)),!,afix_varname(Atom,Var).
 debug_var0([AtomI|Rest],Var):-!,toProperCamelAtom([AtomI|Rest], NAME),afix_varname(NAME,Var),!.
 debug_var0(Atom,Var):- debug_var1(Atom,Var).
 
@@ -178,6 +178,7 @@ debug_var2(Atom,Var):- afix_varname(Atom,Var).
 afix_varname(Suffix,Var):- var(Var), get_var_name(Var,Prev),atomic(Prev),afix_varname_w_prev(Prev,Suffix,Var).
 afix_varname(Suffix,Var):- add_var_to_env_trimed(Suffix,Var).
 
+afix_varname_w_prev(Suffix,Prev,Var):- var(Prev),!,add_var_to_env_trimed(Suffix,Var).
 afix_varname_w_prev(Suffix,Prev,Var):- atom_concat_w_blobs('_',NewFix,Suffix),!,afix_varname_w_prev(Prev,NewFix,Var).
 afix_varname_w_prev(Suffix,Prev,Var):- atom_concat_w_blobs(NewFix,'_',Suffix),!,afix_varname_w_prev(NewFix,Prev,Var).
 afix_varname_w_prev(Afix,Prev,Var):- atom_concat_w_blobs('_',NewPreFix,Prev),!,afix_varname_w_prev(Afix,NewPreFix,Var).
@@ -226,13 +227,14 @@ bad_varname(UP):-
   nl,writeq(check_varname(UP)),nl,
   break, throw(check_varname(UP)).
 
-% mort(G):- must_or_rtrace(G),!.
+% mortvar(G):- must_or_rtrace(G),!.
 
-mort((G1,G2)):- !, mort(G1),mort(G2).
-%mort(G):- notrace(catch(w_o_c(error,G),E,(nl,display(mort_error(E)),nl,fail))),!.
-mort(G):- catch(G,E,(nl,display(mort_error(E)),nl,throw(E))),!.
-%mort(G):- tracing,display(failed_mort1(G)),!,break,(G).
-%mort(G):- nortrace,notrace,display(failed_mort2(G)),throw(G),trace,rtrace(G),notrace,trace,break.
+mort(G):- mortvar(G).
+mortvar((G1,G2)):- !, mortvar(G1),mortvar(G2).
+%mortvar(G):- moretrace(catch(w_o_c(error,G),E,(nl,display(mort_error(E)),nl,fail))),!.
+mortvar(G):- catch(G,E,(nl,display(mort_error(E)),nl,throw(E))),!.
+%mortvar(G):- tracing,display(failed_mort1(G)),!,break,(G).
+%mortvar(G):- nortrace,moretrace,display(failed_mort2(G)),throw(G),trace,rtrace(G),moretrace,trace,break.
 
 to_var_or_name(L,LL):- var(L),!,LL=L.
 to_var_or_name('~','Not').
@@ -261,14 +263,18 @@ to_var_or_name_2('\\+','Fail').
 to_var_or_name_2('$','doLLar').
 to_var_or_name_2('&','AND').
 
+atom_concat_safety(A,B,C):- term_variables(A+B+C,Vs),Vs\=[_,_|_],!,atom_concat(A,B,C).
+atom_concat_safety(A,B,C):- break,
+ show_call(always,atom_concat(A,B,C)).
+
 atom_concat_w_blobs(L,R,LR):- to_var_or_name(L,LL),to_var_or_name(R,RR),to_var_or_name(LR,LLRR),
-  atom_concat(LL,RR,LLRR).
+  atom_concat_safety(LL,RR,LLRR).
 
 resolve_char_codes('','_').
 resolve_char_codes('pf','%').
-%resolve_char_codes(C48,C):- notrace(catch((name(C48,[99|Codes]),number_codes(N,Codes),name(C,[N])),_,fail)),!,fail.
-resolve_char_codes(C48,_):- notrace(catch((name(C48,[99|Codes]),number_codes(_,Codes)),_,fail)),!,fail.
-resolve_char_codes(D1,N):- atom_concat_w_blobs('d',N,D1),notrace(catch(atom_number(N,_),_,fail)),!.
+%resolve_char_codes(C48,C):- moretrace(catch((name(C48,[99|Codes]),number_codes(N,Codes),name(C,[N])),_,fail)),!,fail.
+resolve_char_codes(C48,_):- moretrace(catch((name(C48,[99|Codes]),number_codes(_,Codes)),_,fail)),!,fail.
+resolve_char_codes(D1,N):- atom_concat_w_blobs('d',N,D1),moretrace(catch(atom_number(N,_),_,fail)),!.
 resolve_char_codes(C,CC):- atom_concat_w_blobs(C,'-',CC).
 
 into_symbol_name(Atom,UPPER):- atomic(Atom),atomic_list_concat([Pkg|HC],'_',Atom),!,into_symbol_name([Pkg|HC],UPPER).
@@ -305,7 +311,7 @@ pretty_numbervars_ground(TermIn, TermOut):-  % the new
    guess_pretty(Term),
    term_varnames(Term,Vs,_),   
    copy_term(Term+Vs,TermOut+Vs2, _),
-   notrace(implode_varnames_pred(to_var_dollar, Vs2)))),!.
+   moretrace(implode_varnames_pred(to_var_dollar, Vs2)))),!.
 
 pretty_numbervars_unground(TermIn, TermOut):- pretty_numbervars_g(TermIn, TermOut),!.
 pretty_numbervars_unground(TermIn, TermOut):-  % the old
@@ -316,7 +322,7 @@ pretty_numbervars_unground(TermIn, TermOut):-  % the old
   source_variables_lwv(Term,Vs),
   Together=Term,
   copy_term(Term+Vs,TermOut+Vs2, _),
-  notrace(implode_varnames_pred(to_var_dollar, Vs2)))),!.
+  moretrace(implode_varnames_pred(to_var_dollar, Vs2)))),!.
 
 replace_variables(_,Term,TermO):- ground(Term),!,duplicate_term(Term,TermO).
 replace_variables(Vs,Term,TermO):- var(Term), !, ignore(( member(N=V,Vs), V==Term, TermO='$VAR'(N))).
@@ -358,14 +364,14 @@ vees_to_varname_list([V|Vs],[N=V|NewVs]):-
   vees_to_varname_list(Vs,NewVs).
 
 guess_pretty(_):- current_prolog_flag(no_pretty,true),!.
-guess_pretty(O):- mort((copy_term(O,C),guess_pretty1(O),O=@=C)).
+guess_pretty(O):- mortvar((copy_term(O,C),guess_pretty1(O),O=@=C)).
 
 maybe_xfr_varname(CV,V):- get_var_name(CV,Name),may_debug_var(Name,V).
 
 guess_pretty1(H):- pretty_enough(H), !.
 %guess_pretty1(H):- term_variables(H,Vs),copy_term(H+Vs,CH+CVs),try_get_varname_cache(CH),CVs\=@=Vs,maplist(maybe_xfr_varname,CVs,Vs),!.
 %guess_pretty1(_):- !. % dmiles to undo
-guess_pretty1(O):- mort(( ignore(pretty1(O)),ignore(pretty_two(O)),ignore(pretty_three(O)),ignore(pretty_final(O)))),!.
+guess_pretty1(O):- mortvar(( ignore(pretty1(O)),ignore(pretty_two(O)),ignore(pretty_three(O)),ignore(pretty_final(O)))),!.
 %make_pretty(I,O):- is_user_output,!,shrink_naut_vars(I,O), pretty1(O),pretty_three(O),pretty_final(O).
 %make_pretty(I,O):- I=O, pretty1(O),pretty_three(O),pretty_final(O).
 
@@ -444,7 +450,9 @@ may_debug_var(_,V):- var(V), variable_name(V,IsGood),is_good_name(IsGood),!.
 %may_debug_var(R,V):- var(V), variable_name(V,_), atom(R), \+ is_good_name(R).
 may_debug_var(R,V):- debug_var(R,V).
 
-pretty_enough(H):- notrace(pretty_enough0(H)),!.
+moretrace(G):- once(G).
+
+pretty_enough(H):- moretrace(pretty_enough0(H)),!.
 
 pretty_enough0(H):- \+ compound(H),!.
 pretty_enough0(H):- ground(H), !.
@@ -517,9 +525,9 @@ atomic_list_concat_goodnames([H|T],Sep,Res):-
 
 bad_vname(H):- \+ atom(H),!.
 bad_vname(H):- atom_number(H,_).
-bad_vname(H):- atom_concat('c',N,H),bad_vname(N).
-bad_vname(H):- atom_concat('C',N,H),bad_vname(N).
-bad_vname(H):- atom_concat('Num',_,H).
+bad_vname(H):- atom_concat_safety('c',N,H),bad_vname(N).
+bad_vname(H):- atom_concat_safety('C',N,H),bad_vname(N).
+bad_vname(H):- atom_concat_safety('Num',_,H).
 bad_vname(H):- var(H),!.
 bad_vname(H):- number(H),!.
 bad_vname(H):- is_letterless(H).
@@ -537,9 +545,9 @@ pretty_fname_or_var(_,Else,Name):- !, ignore(p_n_atom(Else,Name)).
 
 
 is_comparison(OP):- \+ atom(OP),!.
-is_comparison(OP):- atom_concat(_,'=',OP).
-is_comparison(OP):- atom_concat('cg_',_,OP).
-is_comparison(OP):- atom_concat('$',_,OP).
+is_comparison(OP):- atom_concat_safety(_,'=',OP).
+is_comparison(OP):- atom_concat_safety('cg_',_,OP).
+is_comparison(OP):- atom_concat_safety('$',_,OP).
 
 contains_atom_ci(A1,A2):- upcase_atom(A1,U1),upcase_atom(A2,U2),contains_atom(U1,U2).
 
@@ -592,10 +600,10 @@ reduce_fname(M,N):- atom_codes(M,[C|R]), \+ code_type(C,alpha), atom_codes(N0,R)
 reduce_fname(M,N):- atom_codes(M,Codes), append(R,[C],Codes), \+ code_type(C,alnum), atom_codes(N0,R),reduce_fname(N0,N).
 
 reduce_fname(L,R):- reduce_single_letter(L,LL), reduce_fname(LL,R).
-reduce_fname(M,N):-atom_concat_w_blobs(N0,'_pred',M),reduce_fname(N0,N).
-reduce_fname(M,N):-atom_concat('trans_',N0,M),reduce_fname(N0,N).
-reduce_fname(M,N):-atom_concat('symmetric_',N0,M),reduce_fname(N0,N).
-reduce_fname(M,N):-atom_concat('predicate_',N0,M),reduce_fname(N0,N).
+reduce_fname(M,N):- atom_concat_w_blobs(N0,'_pred',M),reduce_fname(N0,N).
+reduce_fname(M,N):- atom_concat_safety('trans_',N0,M),reduce_fname(N0,N).
+reduce_fname(M,N):- atom_concat_safety('symmetric_',N0,M),reduce_fname(N0,N).
+reduce_fname(M,N):- atom_concat_safety('predicate_',N0,M),reduce_fname(N0,N).
 reduce_fname(L,R):- atom_concat_some_left('v',LL,L),name(LL,[UC,LC|_]),char_type(UC,upper),char_type(LC,lower),reduce_fname(LL,R).
 reduce_fname(L,R):- atom_concat_some_left('Cl_',LL,L),reduce_fname(LL,R).
 reduce_fname(L,R):- atom_concat_some_left('U_',LL,L),reduce_fname(LL,R).
@@ -855,7 +863,7 @@ pretty_numbervars_here(Term,PrettyVarTerm):- pretty_numbervars(Term,PrettyVarTer
 
 %portray_pretty_numbervars0(Term):- get_var_name(Term,Name), !, write(Name).
 portray_pretty_numbervars(Term):-
-  notrace(\+ tracing), % fail,
+  moretrace(\+ tracing), % fail,
   \+ (nb_current('$inprint_message', Messages), Messages\==[]),
   \+ ground(Term),
   \+ current_prolog_flag(no_pretty,true),  

@@ -796,9 +796,9 @@ was_s_l(B,L):- retractall(ec_reader:o_s_l(_,_)),asserta(ec_reader:o_s_l(B,L)), o
 
 e_source_location(F,L):- nb_current('$ec_input_stream',Ins), any_line_count(Ins,L), any_stream(F,Ins),!.
 e_source_location(F,L):- nb_current('$ec_input_file',FS), absolute_file_name(FS,F), any_stream(F,Ins), any_line_count(Ins,L),!.
-e_source_location(F,L):- current_stream(F, read, S), atom(F), atom_concat(_,'.e',F), any_line_count(S,L),!.
-e_source_location(F,L):- stream_property_s(S, file_name(F)),stream_property_s(S, input), atom_concat(_,'.e',F), any_line_count(S,L),!.
-e_source_location(F,L):- stream_property_s(S, file_name(F)),atom_concat(_,'.e',F), any_line_count(S,L),!.
+e_source_location(F,L):- current_stream(F, read, S), atom(F), atom_concat_safety(_,'.e',F), any_line_count(S,L),!.
+e_source_location(F,L):- stream_property_s(S, file_name(F)),stream_property_s(S, input), atom_concat_safety(_,'.e',F), any_line_count(S,L),!.
+e_source_location(F,L):- stream_property_s(S, file_name(F)),atom_concat_safety(_,'.e',F), any_line_count(S,L),!.
 
 :- export(s_l/2).
 s_l(F,L):- notrace(on_x_fail(e_source_location(B,L2))), !, L is L2-1, absolute_file_name(B,F).
@@ -1630,7 +1630,7 @@ pt_args_arglist(FS,Tab,S,M,E,[H|T]):-
 
 write_ar_simple(Sep1, _Tab,Sep,[A|R]):- 
  pformat(Sep1),
- ( (wots(S,writeq([A|R])),atom_concat('[',MR,S),atom_concat(M,']',MR), write(M))->true
+ ( (wots(S,writeq([A|R])),atom_concat_safety('[',MR,S),atom_concat_safety(M,']',MR), write(M))->true
  ; (write_simple(A), write_simple_each(Sep,R))).
 
 %%	between_down(+Start, ?Count, +End) is nondet.
@@ -1971,7 +1971,7 @@ bind_non_cycles([V=Term|T], I, L) :-
     bind_non_cycles(T, I, L).
 bind_non_cycles([H|T0], I, [H|T]) :-
     H = ('$VAR'(Name)=_),
-    atom_concat('_S', I, Name),
+    atom_concat_safety('_S', I, Name),
     I2 is I + 1,
     bind_non_cycles(T0, I2, T).
 

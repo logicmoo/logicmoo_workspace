@@ -14,6 +14,12 @@
 :- export(sentence80/5).
 :- thread_local(tlclone:np_in_case/1).
 
+xg_w2_len(0,[])---> !, [].
+xg_w2_len(1,[W])---> [W], !.
+xg_w2_len(1,[])---> !, []. %% missing puncts
+xg_w2_len(N,[W|L])---> [W], {N>1, M is N -1},!,xg_w2_len(M,L).
+
+
 sentence80(S) ---> {b_setval('$prev_w2s', []),b_setval('$prev_spans', [])}, 
     sentence801(S).
     %sentence800(S1),!,sentence801s(S1,S).
@@ -250,6 +256,10 @@ nl_list_of_items(AndOr,P, [H,T])---> xg_peek([_,_,_]), of_type(P,H), maybeComma,
 nl_list_of_items(AndOr,P, [H|T])---> xg_peek([_,_,_,_]), of_type(P,H), maybeComma, !, nl_list_of_items(AndOr,P, T).
 
 link_s(S) --->
+ { \+ lctmp:in_sent804 }, !, 
+     locally(lctmp:in_sent804,link_s_1(S)).
+
+link_s_1(S) --->
  xg_peek(theText80_W2(_,L)),{member(loc(N),L),
  member(link(_,'S',r('S',seg(N,M))),L),Len is M-N+1, Len>1,
  length(Words,Len)},xg_w2_len(Len,Words),!,{sentence80(S,Words,[],[],[])}.
@@ -260,7 +270,7 @@ np_objbody((Name),3+sg,def+proper) ---> name_xg(Name).
 np_objbody(S,_,_)--->  {if_search_expanded(6)}, {tlclone:np_in_case(Case), \+ is_subj_case(Case)}, link_s(S).
 np_objbody(string(List),3+sg,def+proper) ---> w2_quoted(List),!.
 
-np_objbody((prep_obj(X,S)),Agmt,Type) --->
+np_objbody((prep_obj(X,S)),Agmt,Type) ---> {fail},
   {if_search_expanded(5)},
    prep(X),
  {is_prep_case(Case)},
@@ -499,7 +509,7 @@ reduced_wh(AgmtX,X),
 
 /* Verb phrase (less the complements) */
 
-verb(verb(Root,Voice,Time+fin,Aspect,Neg),Agmt,Type,Voice) --->
+verb(verb(Type,Root,Voice,Time+fin,Aspect,Neg),Agmt,Type,Voice) --->
    verb_form88(MODAL,Root0,Time+fin,Agmt,Role),
    {verb_type_lex(Root0,Type0)},
    neg_modal_opt(MODAL,Type0,Neg),
@@ -549,7 +559,7 @@ passive_vt(be(MODAL),Root,passive) --->
    {verb_type_lex(Root,Type), passive_vt(Type)}.
 passive_vt(Root,Root,active) ---> noText.
 
-participle_vt(verb(Root,Voice,inf,Aspect,Neg),Type,Voice) --->
+participle_vt(verb(Type,Root,Voice,inf,Aspect,Neg),Type,Voice) --->
    neg_modal_opt(MODAL,_,Neg),
    verb_form88(MODAL,Root,Tense,_,_),
    {participle_vt(Tense,Voice,Aspect), verb_type_lex(Root,Type)}.

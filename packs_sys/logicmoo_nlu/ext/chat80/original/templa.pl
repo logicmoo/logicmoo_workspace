@@ -38,13 +38,14 @@ trans_LF(have(MODAL),Spatial&_,X,Spatial&_,Y, trans_pred(Spatial,have,X,Y),[],_,
 trans_LF(have(MODAL),Spatial&_,X,Spatial&_,Y, OUT, [],_,_):- append_term(MODAL,trans_pred(Spatial,have,X,Y),OUT).
 
 
-thing_LF(OceanOrSea,Path,X,ti(OceanOrSea,X),Nil,Any):- ti_subclass(OceanOrSea,Seamass), 
+thing_LF(OceanOrSea,Path,X,ti(OceanOrSea,X),Nil,Any):-  ti_subclass(OceanOrSea,Seamass), 
    like_type(_Geo,seamass,Seamass), %Seamass=seamass,
-   thing_LF(Seamass,Path,X,ti(Seamass,X),Nil,Any).
+   thing_LF(Seamass,Path,X,ti(Seamass,X),Nil,Any),
+    concrete_type(Seamass).
 
-thing_LF(City,Spatial& Feat& City,X,ti(City,X),[],_):- feat(Feat), spatial(Spatial),like_type(geo,city,City).
-thing_LF(Seamass,Spatial&Geo& /*_Neo&*/ Seamass,X,ti(Seamass,X),[],_):- spatial(Spatial),like_type(Geo,seamass,Seamass).
-thing_LF_access(Continent,Spatial&Geo& /*_Neo&*/ Continent,X,ti(Continent,X),[],_):- like_type(Geo,continent,Continent), spatial(Spatial).
+thing_LF(City,Spatial& Feat& City,X,ti(City,X),[],_):- concrete_type(City), feat(Feat), spatial(Spatial),like_type(geo,city,City).
+thing_LF(Seamass,Spatial&Geo& /*_Neo&*/ Seamass,X,ti(Seamass,X),[],_):- concrete_type(Seamass), spatial(Spatial),like_type(Geo,seamass,Seamass).
+thing_LF_access(Continent,Spatial&Geo& /*_Neo&*/ Continent,X,ti(Continent,X),[],_):- concrete_type(Continent), like_type(Geo,continent,Continent), spatial(Spatial).
 
 name_template_lf0(X,Spatial& Feat& City) :-like_type(geo,city,City), ti(City,X),feat(Feat), spatial(Spatial).
 name_template_lf0(X,Spatial& Feat& Circle_of_latitude) :- like_type(geo,circle_of_latitude,Circle_of_latitude), feat(Feat), ti(Circle_of_latitude,X), spatial(Spatial).
@@ -54,6 +55,7 @@ name_template_lf0(X,Spatial&Geo& /*_Neo&*/ Country) :- like_type(Geo,country,Cou
 name_template_lf0(X,Spatial&Geo& /*_Neo&*/ Continent) :- like_type(Geo,continent,Continent), spatial(Spatial), ti(Continent,X).
 
 
+concrete_type(Type):- Type\==million.
 %like_type(geo,River,River):- bind_pos('type',River).
 
 
@@ -200,7 +202,7 @@ thing_LF(Nation,Path,X,LF,Slots,Other):- synonymous_spatial(Nation,Country), thi
 thing_LF_access(Noun,Type2,X,P,Slots,_):-
   thing_LF(Noun,Type1,X,P,Slots,_),
   btype_conversion(Type1,Type2).
-thing_LF_access(Person,_,X,ti(Person,X),[],_):-  if_search_expanded(4).
+thing_LF_access(Person,_,X,ti(Person,X),[],_):-  if_search_expanded(4), concrete_type(Person).
 
 btype_conversion(_,_).
 type_conversion(Type1,Type2):- !, Type1=Type2.
@@ -251,9 +253,9 @@ talkdb_talk_db(transitive,   Border,  Borders,  Bordered,  Bordering,  Bordered)
   (bind_pos('action',Border,'ing',Bordering), bind_pos('action',Border,'ed',Bordered), bind_pos('action',Border,'s',Borders)).
  
 %use_lexicon_80(_):- !, true.
-use_lexicon_80(chat80).
-use_lexicon_80(chat80_extra).
-use_lexicon_80(talkdb_verb(X)):- verb_type_db(chat80,X,_).
+%us e_lexicon_80(cha t80).
+%use _lexicon_80(chat 80_extra).
+%use_lexicon_80(talkd b_verb(X)):- verb _type_db(chat80,X,_).
 % use_lexicon_80(_):- fail.
 
 :- import(talkdb:talk_db/6).
@@ -263,8 +265,11 @@ talkdb_talk_db(  Transitive, Write,   Writes,   Wrote,     Writing,    Written):
   talkdb:talk_db(Transitive, Write,   Writes,   Wrote,     Writing,    Written).
 
 %verb_root_lex(Write):-            talkdb_talk_db(_Transitive,Write,_Writes,_Wrote,_Writing,_Written).
-verb_type_db(talkdb,Write,main+tv):-   \+ avoided_verb(Write), talkdb_talk_db( transitive,Write,_Writes,_Wrote,_Writing,_Written).
-verb_type_db(talkdb,Write,main+iv):-  \+ avoided_verb(Write),   talkdb_talk_db( intransitive,Write,_Writes,_Wrote,_Writing,_Written).
+verb_type_db(talkdb,Write,main+tv):-   talkdb_talk_db( transitive,Write,_Writes,_Wrote,_Writing,_Written), \+ avoided_verb(Write).
+verb_type_db(talkdb,Write,main+iv):-    
+   talkdb_talk_db( intransitive,Write,_Writes,_Wrote,_Writing,_Written), 
+ % \+ talkdb_talk_db( transitive,Write,_Writes2,_Wrote2,_Writing2,_Written2),
+  \+ avoided_verb(Write).
 %regular_past_lex(Wrote,Write):-   talkdb_talk_db(_Transitive,Write,_Writes, Wrote,_Writing,_Written).
 % superceeded regular_pres_lex(Write):-         talkdb_talk_db(_Transitive,Write,_Writes,_Wrote,_Writing,_Written).
 
@@ -281,14 +286,15 @@ verb_form_db(talkdb,  Wrote,Write,past+fin,_):-    talkdb_talk_db(_Transitive,Wr
 verb_form_db(talkdb,A,B,C,D):- verb_form_db(clex,A,B,C,D).
 
 :- import(clex_iface:clex_verb/4).
-clex_verb80(Looked,Look,VerbType,Form):- clex_iface:clex_verb(Looked,Look,VerbType,Form).
+clex_verb80(Looked,Look,VerbType,Form):- \+ compound(Looked),\+ compound(Look), 
+  clex_iface:clex_verb(Looked,Look,VerbType,Form).
 %% superceeded regular_pres_lex(Look):- no_loop_check(verb_root_lex(Look)).
 %verb_form_lex(Looking,Look,pres+part,_):- (atom(Looking)->atom_concat(Look,'ing',Looking);var(Looking)),
 %  no_loop_check(verb_root_lex(Look)),atom(Look),atom_concat(Look,'ing',Looking).
 % NEW TRY verb_root_lex(Look):- clex_verb80(_Formed,Look,_Iv,_Finsg).
 % regular_past_lex(Looked,Look):- clex_verb80(Looked,Look,_Iv,prep_phrase).
-verb_form_db(clex,Looks,Look,pres+fin,3+sg):-  clex_verb80(Looks,Look,_,finsg).
-verb_form_db(clex,LookPL,Look,pres+fin,3+pl):- clex_verb80(LookPL,Look,_,infpl).
+verb_form_db(clex,Looks,Look,pres+fin,3+sg):- clex_verb80(Looks,Look,_,finsg).
+verb_form_db(clex,LookPL,Look,pres+fin,3+pl):-  clex_verb80(LookPL,Look,_,infpl).
 verb_type_db(clex,Look,main+ITDV):- clex_verb80(_Formed,Look,ITDV,_Finsg).
 
 intrans_LF(Assign,feature&_,X,dbase_t(Assign,X,Y), [slot(prep(To),feature&_,Y,_,free)],_):-

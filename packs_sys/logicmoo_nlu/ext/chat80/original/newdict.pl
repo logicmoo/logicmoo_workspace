@@ -237,8 +237,8 @@ try_first_lex(G):- first_lexicon(Which),try_only_lex(Which,G).
 first_lexicon(X):- available_lexicon(_,X).
 
 try_all_lex(G):- available_lexicon(_,Which),try_one_lex(Which,G).
-available_lexicon(2,chat80).
 available_lexicon(1,talkdb).
+available_lexicon(2,chat80).
 available_lexicon(3,clex).
 
 try_lex_order(Order,G):-  member(Which,Order), try_one_lex(Which,G).
@@ -305,7 +305,7 @@ verb_form_lex(A,B,C,_):- verb_form_aux(A,B,C,_).
 %verb_form_lex(A,B,C,D):- modal_verb_form_aux(A,B,C,D).
 verb_form_lex(A,B,C,D):- try_lex(verb_form_db(A,B,C,D)), \+ avoided_verb(A).
 
-avoided_verb(A):- var(A), freeze(A,avoided_verb(A)).
+avoided_verb(A):- var(A),!, freeze(A,avoided_verb(A)).
 avoided_verb(A):- clause(modal_verb_form_aux(A,_,_,_),true).
 avoided_verb(A):- clause(verb_form_aux(A,_,_,_),true).
 
@@ -364,8 +364,14 @@ verb_form_db(chat80,Verb,Verb,pres+fin,_+pl) :-  Verb = V, verb_type_lex(V,_).
 verb_type_lex(be(MODAL),aux+be(MODAL)).
 verb_type_lex(do(_MODAL),aux+dv(_Prep)).
 verb_type_lex(have(MODAL),aux+have(MODAL)).
-verb_type_lex(V,MainTv):- try_lex(verb_type_db(V,MainTv)).
+verb_type_lex(V,MainTv):- no_repeats(V+MainTv,try_lex(verb_type_db0(V,MainTv))).
 
+
+verb_type_db0(Sys,Border,MainTv):- verb_type_db(Sys,Border,MainTv),
+  (incompatable_verb_type(Sys,MainTv,Incompatible)->
+  (dif(chat80,Sys),dif(Sys2,chat80), \+ verb_type_db(Sys,Border,Incompatible), \+ verb_type_db(Sys2,Border,Incompatible)); true).
+
+incompatable_verb_type(W,Main+Iv,Main+tv):- fail, W\==chat80, Iv==iv,!.
 
 verb_type_db(chat80,contain,main+tv).
 verb_type_db(chat80,exceed,main+tv).
@@ -379,9 +385,11 @@ must_member(E,L):- must80(member(E,L)).
 % =================================================================
 % Specialised Dictionary
 
+never_adj(More):- More==more.
 jj_adj_type(jj,restr).
 jj_adj_type(jj,quantV).
 
+adj_lex_w2(More,_,_,_):- never_adj(More),!,fail.
 adj_lex_w2(_,W2,Adj,Type):- must_member(pos(JJ),W2),must_member(root(Adj),W2),jj_adj_type(JJ,Type),!.
 adj_lex_w2(Adj,_,Adj,Type):- adj_lex(Adj,Type).
 adj_lex(African,restr):- agentitive_trans(_,_,African).
@@ -509,6 +517,7 @@ noun_plu_db(chat80,sums,sum).
 noun_plu_db(chat80,times,time).
 noun_plu_db(chat80,totals,total).
 
+comp_adj_lex_w2(More,_,_):- never_adj(More),!,fail.
 comp_adj_lex_w2(_,W2,_):-  is_list(W2), \+ member(pos(jjr),W2),!,fail.
 comp_adj_lex_w2(Smaller,_,Small):- must80(comp_adj_lex(Smaller,Small)),!.
 comp_adj_lex_w2(_,W2,Root):-  is_list(W2), member(root(Root),W2),!.
@@ -526,6 +535,7 @@ comp_adj_db(chat80,newer,new).
 comp_adj_db(chat80,older,old).
 comp_adj_db(chat80,smaller,small).
 
+sup_adj_lex_w2(More,_,_):- never_adj(More),!,fail.
 sup_adj_lex_w2(_,W2,_):- is_list(W2), \+ member(pos(jjs),W2),!,fail.
 sup_adj_lex_w2(Smaller,_,Small):- must80(sup_adj_lex(Smaller,Small)).
 % @TODO DMILES Cant also be adverb specifically "more"
