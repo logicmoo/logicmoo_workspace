@@ -58,10 +58,22 @@ deepen_pos(Call):- flag(pos_depth,N,N),N>0, dmsg(recursive(deepen_pos(Call))),!,
 % starting fresh from here
 deepen_pos(Call):- deepen_pos_fresh(Call).
 
-:- create_prolog_flag(debug_chat80,true,[keep(true)]).
+:- create_prolog_flag(debug_chat80,false,[keep(true)]).
 
-debug_chat80_if_fail(Call):- current_prolog_flag(debug_chat80,true),!,must80(Call).
-debug_chat80_if_fail(Call):- call(Call)*->true;locally(set_prolog_flag(debug_chat80,true),must80(Call)).
+debug_chat80_if_fail(MG):- strip_module(MG,M,G), debug_chat80_if_fail(Fail,IsCut,6,M,G),(IsCut==!->!;true),(Fail\==fail).
+
+debug_chat80_if_fail(Fail2,_,_,_,_):- Fail2==fail,!.
+debug_chat80_if_fail(_,!,_,_,!):-!.
+debug_chat80_if_fail(Fail,IsCut,N,M,(G1,G2)):- !, debug_chat80_if_fail(Fail,IsCut,N,M,G1), debug_chat80_if_fail(Fail,IsCut,N,M,G2).
+debug_chat80_if_fail(Fail2,IsCut,N,M,G):- 
+ \+ current_prolog_flag(debug_chat80,true),!, 
+  (call(M:G)*->true;
+    locally(set_prolog_flag(debug_chat80,true), 
+      (debug_chat80_if_fail(Fail,IsCut,N,M,G)*->Fail\==fail;Fail2=fail))).
+debug_chat80_if_fail(Fail,_,N,M,G):- N>0, predicate_property(M:G,number_of_clause(_)), O is N -1, !, 
+  (clause(M:G,Body),debug_chat80_if_fail(Fail,IsCut,O,M,Body),(IsCut==!->!;true),Fail\==fail).
+debug_chat80_if_fail(Fail,_IsCut,_,M,G):-  must80(M:G)*->true;Fail=fail.
+
 
 deepen_pos_fresh(Call):- 
      flag(pos_depth_skipped,Was1,0),flag(pos_depth,Was2,0), 

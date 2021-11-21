@@ -117,12 +117,16 @@ pers_pron_lex(she,fem,3,sg,subJ(_ArgInfo1)).
 pers_pron_lex(them,_,3,pl,compl(_)).
 pers_pron_lex(they,_,3,pl,subJ(_ArgInfo1)).
 pers_pron_lex(those,neut,3,pl,subJ(_ArgInfo1)).
+pers_pron_lex(that,neut,3,sg,subJ(_ArgInfo1)).
 pers_pron_lex(them,_,3,pl,subJ(_ArgInfo1)).
 pers_pron_lex(us,_,1,pl,compl(_)).
 pers_pron_lex(we,_,1,pl,subJ(_ArgInfo1)).
-pers_pron_lex(you,_,2,_,_).
-pers_pron_lex(yourself,_,2,_,_).
+pers_pron_lex(you,_,2,Sg,_):- pl_or_sg(Sg).
+pers_pron_lex(yourself,_,2,sg,_).
+pers_pron_lex(yourselves,_,2,pl,_).
 
+pl_or_sg(sg).
+pl_or_sg(pl).
 
 poss_pron_lex(her,fem,3,sg).
 poss_pron_lex(his,masc,3,sg).
@@ -211,10 +215,10 @@ tr_number(X,X):- bind_pos('value',X).
 
 ctx_pron_lex(in,place,where).
 ctx_pron_lex(at,time,when).
-ctx_pron_lex(because,condition,why).
-ctx_pron_lex(for,agent,who).
-ctx_pron_lex(to,movement,what).
-ctx_pron_lex(by,manner,how).
+ctx_pron_lex(cp(because,why),condition,why).
+ctx_pron_lex(cp(for,who),agent,who).
+ctx_pron_lex(cp(by,what),thing,what).
+ctx_pron_lex(cp(by,how),manner,how).
 
 % prepositions of time, place, movement, manner, agent, measure, source and possession.
 
@@ -369,8 +373,8 @@ verb_type_db(chat80,govern,main+tv).
 
 
 
-must_member(P,L):- compound(P),P=pos(E),!, must(member(pos(E2),L)),!,E=E2.
-must_member(E,L):- must(member(E,L)).
+must_member(P,L):- compound(P),P=pos(E),!, must80(member(pos(E2),L)),!,E=E2.
+must_member(E,L):- must80(member(E,L)).
 
 % =================================================================
 % Specialised Dictionary
@@ -505,8 +509,8 @@ noun_plu_db(chat80,sums,sum).
 noun_plu_db(chat80,times,time).
 noun_plu_db(chat80,totals,total).
 
-comp_adj_lex_w2(_,W2,_):-  is_list(W2), \+ member(pos(jjr),W2), \+ member(pos(jj),W2),!,fail.
-comp_adj_lex_w2(Smaller,_,Small):- must(comp_adj_lex(Smaller,Small)),!.
+comp_adj_lex_w2(_,W2,_):-  is_list(W2), \+ member(pos(jjr),W2),!,fail.
+comp_adj_lex_w2(Smaller,_,Small):- must80(comp_adj_lex(Smaller,Small)),!.
 comp_adj_lex_w2(_,W2,Root):-  is_list(W2), member(root(Root),W2),!.
 comp_adj_lex(Smaller,Small):- try_lex_order([chat80,clex,talkdb],comp_adj_db(Smaller,Small)).
 comp_adj_db(talkdb,Smaller,Small):- talkdb:talk_db(comp,Small,Smaller).
@@ -522,9 +526,10 @@ comp_adj_db(chat80,newer,new).
 comp_adj_db(chat80,older,old).
 comp_adj_db(chat80,smaller,small).
 
-sup_adj_lex_w2(_,W2,_):- is_list(W2), \+ member(pos(jjs),W2), \+ member(pos(jj),W2),!,fail.
-sup_adj_lex_w2(Smaller,_,Small):- must(sup_adj_lex(Smaller,Small)).
-%sup_adj_lex_w2(_,W2,Root):-  is_list(W2), member(root(Root),W2),!.
+sup_adj_lex_w2(_,W2,_):- is_list(W2), \+ member(pos(jjs),W2),!,fail.
+sup_adj_lex_w2(Smaller,_,Small):- must80(sup_adj_lex(Smaller,Small)).
+% @TODO DMILES Cant also be adverb specifically "more"
+sup_adj_lex_w2(_,W2,Root):-  is_list(W2), member(root(Root),W2),Root\==more.
 sup_adj_lex(Smallest,Small):- try_lex(sup_adj_db(Smallest,Small)).
 sup_adj_db(talkdb,Smallest,Small):- talkdb:talk_db(superl,Small,Smallest).
 sup_adj_db(talkdb,Smallest,Small):- sup_adj_db(clex,Smallest,Small).
@@ -537,8 +542,15 @@ sup_adj_db(chat80,oldest,old).
 sup_adj_db(chat80,smallest,small).
 
 
-comp_adv_lex_w2(_,W2,Small):- must_member(pos(rbr),W2),!,must(member(root(Small),W2)).
+:- if(false).
+comp_adv_lex_w2(_,W2,_):- is_list(W2), \+ must_member(pos(rbr),W2), !, fail.
 comp_adv_lex_w2(Smaller,_,Small):- comp_adv_lex(Smaller,Small).
+comp_adv_lex_w2(_,W2,Root):-  is_list(W2), must_member(root(Root),W2),!.
+:- else.
+comp_adv_lex_w2(_,W2,Small):- must_member(pos(rbr),W2),!,must_member(root(Small),W2).
+comp_adv_lex_w2(Smaller,_,Small):- comp_adv_lex(Smaller,Small).
+%comp_adv_lex_w2(_,W2,Root):-  is_list(W2), member(root(Root),W2),!.
+:- endif.
 comp_adv_lex(Lesser, Less):- try_one_lex(chat80,comp_adv_db(Lesser, Less)).
 % @TODO DMiles I thinnk this was backwards (So i left it that way) "less than"
 comp_adv_db(Least, Less):- try_one_lex(chat80,sup_adv_db(Least, Less)).
@@ -548,7 +560,7 @@ comp_adv_db(chat80,more,more).
 comp_adv_db(talkdb,Lesser,Less):- clex:adv_comp(Lesser, Less).
 comp_adv_db(clex,Lesser,Less):- clex:adv_comp(Lesser, Less).
 
-sup_adv_lex_w2(_,W2,_):- is_list(W2), \+ must_member(pos(rbs),W2),  \+ must_member(pos(rb),W2), !, fail.
+sup_adv_lex_w2(_,W2,_):- is_list(W2), \+ must_member(pos(rbs),W2),\+ must_member(pos(rb),W2), !, fail.
 sup_adv_lex_w2(Smaller,_,Small):- sup_adv_lex(Smaller,Small).
 sup_adv_lex_w2(_,W2,Root):-  is_list(W2), member(root(Root),W2),!.
 sup_adv_lex(Least, Less):- try_one_lex(chat80,sup_adv_db(Least, Less)).

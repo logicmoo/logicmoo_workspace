@@ -393,7 +393,7 @@ sent_to_jecteese(Type,[W|WL],[Y|YY]):-!, word2jecteese(Type,W,Y), sent_to_jectee
 :- dynamic(tmp:cached_cvt_to_w2/2).
 cvt_to_w2(X,W2):- \+ (is_list(X) ; (X=[H|_],is_w2(H))),!, words_of(X,W), !, cvt_to_w2(W,W2).
 %cvt_to_w2(X,W2):- tmp:cached_cvt_to_w2(X,W2),!.
-cvt_to_w2(X,W2):- into_lexical_segs(X,W2Segs),include(is_w2,W2Segs,W2).
+cvt_to_w2(X,W2):- into_lexical_segs(X,W2Segs),include_is_w2(W2Segs,W2).
 /*
 cvt_to_w2(X,W2):- spacy_lexical_segs(X,W2),!.
 cvt_to_w2(X,W2):- text_to_spacy_pos(X,W2),!.

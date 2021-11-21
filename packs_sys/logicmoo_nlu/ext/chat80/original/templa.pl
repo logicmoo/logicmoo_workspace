@@ -225,7 +225,7 @@ verb_form_db(chat80,bordered,border,past+part,_). % :- regular_past_db(chat80,bo
 
 :- style_check(+singleton).
 
-trans_LF(Border,Spatial&Super&_,X,Spatial&Super&_,Y,symmetric_pred(Spatial,Border,X,Y),[],_,_):- 
+trans_LF(Border,Spatial&Super&_,X,Spatial&Super&_,Y,generic_pred(Spatial,Border,X,Y),[],_,_):- 
    verb_type_lex(Border,main+tv),
    symmetric_verb(Spatial, Border).
 
@@ -298,8 +298,11 @@ intrans_LF(Assign,feature&_,X,dbase_t(Assign,X,Y), [slot(prep(To),feature&_,Y,_,
 %trans_LF(Look,feature&_,X,dbase_t(Look,X,Y), [slot(prep(At),feature&_,Y,_,free)],_):- (tv_infpl(S,S);tv_finsg(S,S)), atomic_list_concat([Look,At],'-',S).
 
 trans_LF(exceed,value&Measure&Type,X,value&Measure&Type,Y,exceeds(X,Y),[],_,_).
-trans_LF1(Trans,_,X,_,Y, generic_pred(_Spatial,Trans,X,Y),[],_,_):- fail, if_search_expanded(1).
+trans_LF1(Trans,_,X,_,Y, generic_pred(_Spatial,Trans,X,Y),[],_,_):- if_search_expanded(4).
 
+qualifiedBy_LF(_FType,Name,_Type,pronoun(_,1+sg),isa(Name,vTheVarFn("I"))).
+qualifiedBy_LF(_FType,Name,_Type,pronoun(_,1+pl),isa(Name,vTheVarFn("US"))).
+qualifiedBy_LF(FType,Name,Type,Else,P):- nop(qualifiedBy_LF(FType,Name,Type,Else,P)),fail.
 
 /* Adjectives */
 

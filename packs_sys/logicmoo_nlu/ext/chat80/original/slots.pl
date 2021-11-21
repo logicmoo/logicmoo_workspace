@@ -28,11 +28,13 @@
 :- op(300,fx,(('`'))).
 :- op(200,xfx,((--))).
 
+must80(M:G):- !, M:must80(G).
+must80((G1,G2)):- !, must80(G1), must80(G2).
 must80(G):- \+ current_prolog_flag(debug_chat80,true),!, call(G).
 must80(G):- call(G)*->true;(
   nop((wdmsg(failed(G)),ignore(on_x_fail(ftrace(G))))),
   G \= lf80(_,_),
-  nop(fmt(failed(G))),fail,call(G)).
+  fail,fmt(failed(G)),fail,call(G)).
 
 % logical form checker for chat80
 
@@ -85,7 +87,7 @@ i_np_head0(nameOf(Name), Type-Name,Type-Name,identityQ(_ArgInfo),'`'(true),Pred,
 i_np_head0(wh(X),X,X,identityQ(_ArgInfo),'`'(true),Pred,Pred,[]):-!.
 % np(3+sg,pronoun(neut),[])
 i_np_head0(Else, Type-Name,Type-Name,identityQ(_ArgInfo),'`'(P),Pred,Pred,[]):-  Else \= np_head(_,_,_), !,
-  if_search_expanded(1),fail, lf80(Type,make_qualifiedBy(i_np_head0,Name,Type,Else,P)).
+  if_search_expanded(1), lf80(Type,make_qualifiedBy(i_np_head0,Name,Type,Else,P)).
 
 i_np_head0(np_head(Det,Adjs,Noun),X,T,Det,Head0,Pred0,Pred,Slots) :-
    i_adjs(Adjs,X,T,X,Head0,Head,Pred0,Pred),
@@ -118,7 +120,8 @@ i_np_head1(np_head(Det,Adjs,Noun),X,T,DetO,Head0,Pred0,Pred,Slots):-
 
 xform_det(_Det,_DetO):- !.
 
-make_qualifiedBy(_,Name,Type,Else,P):- fail, if_search_expanded(3), P = qualifiedBy(Name,Type,Else).
+make_qualifiedBy(PType,Name,Type,Else,P):- if_search_expanded(3), qualifiedBy_LF(PType,Name,Type,Else,P).
+make_qualifiedBy(_,Name,Type,Else,P):- if_search_expanded(3), P = qualifiedBy(Name,Type,Else).
 %may_qualify(_):- !,fail.
 may_qualify(np_head(det(each),[],_)):-!,fail.
 may_qualify(np_head(_,[],Act)):- atom(Act),atom_concat('actioned',_,Act), !,fail.
@@ -421,7 +424,7 @@ slot_verb_kind(tv,Verb,TypeS,S,Pred,
 slot_verb_kind(dv(Prep),Verb,TypeS,S,Pred,
       [slot(dirO(_ArgInfo1),TypeD,D,SlotD,free),
        slot(indO(_ArgInfo2),TypeI,I,SlotI,free)|Slots]) :-
-   fail,fail,fail,fail,
+   %fail,fail,fail,fail,
    lf80(TypeS+TypeD+TypeI,ditrans_lex80(Verb,Prep,TypeS,S,TypeD,D,TypeI,I,Pred,Slots,SlotD,SlotI,_)).
    % see no_repeats_dc(DC0,subj_obj_indirect_slots_LF(ditrans,verb_prep(Verb,Prep),TypeS,S,TypeD,D,TypeI,I,Pred,Slots,SlotI,SlotD,DC0)).
 

@@ -1397,7 +1397,7 @@ add_history01(A):- histtmp:history_data(A),!.
 add_history01(A):- assert(histtmp:history_data(A)), 
    default_history_file(File),
    carelessly(setup_call_cleanup(open(File,append,Out),format(Out,'~w~n',[A]),close(Out))),
-   (current_prolog_flag(readline,editline) -> User_input = libedit_input; User_input = user_input),
+   ((fail,current_prolog_flag(readline,editline)) -> User_input = libedit_input; User_input = user_input),
    prolog:history(User_input, load(File)).
 
 add_history02(A):- clause('$history':'$history'(N,_),true,_Ref), !, N1 is N + 1, add_history0(N1,A).

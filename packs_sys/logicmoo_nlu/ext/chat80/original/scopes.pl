@@ -88,31 +88,31 @@ clausify80_qab(V0,P,V,B):-
 :- system:import(clausify80/2).
 
 quantify(quantV(Det, X, Head, Pred, Args, Y), Above, Right, true) :-
-   close_tree(Pred, P2),
+   debug_chat80_if_fail((close_tree(Pred, P2),
    quantify_args(Args, AQuants, P1),
    split_quants(Det, AQuants, Above, [Q|Right], Below, []),
-   pre_apply(Head, Det, X, P1, P2, Y, Below, Q).
+   pre_apply(Head, Det, X, P1, P2, Y, Below, Q))).
 
 quantify(conj(Conj, LPred, LArgs, RPred, RArgs), Up, Up, P) :-
-   close_tree(LPred, LP0),
+   debug_chat80_if_fail((close_tree(LPred, LP0),
    quantify_args(LArgs, LQs, LP1),
    chain_apply(LQs,(LP0, LP1), LP),
    close_tree(RPred, RP0),
    quantify_args(RArgs, RQs, RP1),
    chain_apply(RQs,(RP0, RP1), RP),
-   conj_apply(Conj, LP, RP, P).
+   conj_apply(Conj, LP, RP, P))).
 
 quantify(pred(Subj, Op, Head, Args), Above, Right, P) :-
-   quantify(Subj, SQuants, [], P0),
+   debug_chat80_if_fail((quantify(Subj, SQuants, [], P0),
    quantify_args(Args, AQuants, P1),
    split_quants(Op, AQuants, Up, Right, Here, []),
    append(SQuants, Up, Above),
    chain_apply(Here,(P0, Head, P1), P2),
-   op_apply(Op, P2, P).
+   op_apply(Op, P2, P))).
 
 quantify('`'(P), Q, Q, P).
 
-quantify(P&Q, Above, Right,(S, T)) :-
+quantify(P&Q, Above, Right,(S, T)) :- !,
    quantify(Q, Right0, Right, T),
    quantify(P, Above, Right0, S).
 
@@ -148,29 +148,38 @@ chain_apply0([Q|Quants], P0, P) :-
 
 quantify_args([], [], true).
 
-quantify_args([Arg|Args], Quants,(P, Q)) :-
+quantify_args([Arg|Args], Quants,Out) :- !,
    quantify_args(Args, Quants0, Q),
-   quantify(Arg, Quants, Quants0, P).
-
+   quantify(Arg, Quants, Quants0, P),
+   Out = (P, Q).
 
 pre_apply('`'(Head), set(I), X, P1, P2, Y, Quants, Quant) :-
-   indices(Quants, I, Indices, RestQ),
+   debug_chat80_if_fail((indices(Quants, I, Indices, RestQ),
    chain_apply(RestQ,(Head, P1), P),
-   setify(Indices, X,(P, P2), Y, Quant).
+   setify(Indices, X,(P, P2), Y, Quant))).
 
-pre_apply('`'(Head), Det, X, P1, P2, Y, Quants, quantV(Det, X,(P, P2), Y)) :-
- ( unit_det(Det);
-   index_det(Det, _)),
-   chain_apply(Quants,(Head, P1), P).
+pre_apply('`'(Head), Det, X, P1, P2, Y, Quants, Out) :- 
+ 
+ (unit_det(Det);
+   index_det(Det, _)),!,
+ debug_chat80_if_fail(( chain_apply(Quants,(Head, P1), P))),
+   Out = quantV(Det, X,(P, P2), Y).
+
+pre_apply('`'(Head), Det, X, P1, P2, Y, Quants, Out) :- !,
+ debug_chat80_if_fail((
+   chain_apply(Quants,(Head, P1), P))),
+   Out = quantV(Det, X,(P, P2), Y).
 
 pre_apply(apply80(F, P0), Det, X, P1, P2, Y,
-      Quants0, quantV(Det, X,(P3, P2), Y)) :-
-   but_last(Quants0, quantV(lambdaV(_ArgInfo), Z, P0, Z), Quants),
-   chain_apply(Quants,(F, P1), P3).
+      Quants0, Out) :-
+  debug_chat80_if_fail(( but_last(Quants0, quantV(lambdaV(_ArgInfo), Z, P0, Z), Quants),
+   chain_apply(Quants,(F, P1), P3))),
+   Out = quantV(Det, X,(P3, P2), Y).
 
 pre_apply(aggr(F, Value, L, Head, Pred), Det, X, P1, P2, Y, Quants, Out) :- 
+ debug_chat80_if_fail((
    close_tree(Pred, R),
-   complete_aggr(L, Head,(R, P1), Quants, P, Range, Domain),
+   complete_aggr(L, Head,(R, P1), Quants, P, Range, Domain))),
  Out =
    quantV(Det, X,
             (S^(setOf(Range:Domain, P, S),
@@ -188,8 +197,8 @@ but_last0([X|L0], Y, Z, [Y|L]) :-
 
 
 close_tree(T, P) :-
-   quantify(T, Q, [], P0),
-   chain_apply(Q, P0, P).
+   debug_chat80_if_fail((quantify(T, Q, [], P0),
+   chain_apply(Q, P0, P))).
 
 
 meta_apply('`'(G), R, Q, G, R, Q).
@@ -307,6 +316,7 @@ unit_det(notP).
 unit_det(generic(_ArgInfo)).
 unit_det(wh_det(_)).
 unit_det(proportion(_)).
+% unit_det(some).
 
 det_apply(quantV(Det, Type-X, P, _-Y), Q0, Q) :-
    apply80(Det, Type, X, P, Y, Q0, Q).

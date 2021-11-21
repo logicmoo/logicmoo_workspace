@@ -369,11 +369,11 @@ is_lexical_segs([I|_Rest]):- is_w2(I),!.
 
 %into_lexical_segs(I,O):- into_text80_string(I, Text80), spacy_lexical_segs(Text80,O).
 into_lexical_segs(I,I):- is_lexical_segs(I).
-into_lexical_segs(I,O):- into_text80_string(I, Text80), flair_lexical_segs(Text80,OM),include(is_w2,OM,O).
+into_lexical_segs(I,O):- into_text80_string(I, Text80), flair_lexical_segs(Text80,OM),include_is_w2(OM,O).
 %into_lexical_segs(I,O):- into_text80_string(I, Text80), allen_srl_lexical_segs(Text80,O).
 
 old_into_lexical_segs(I,I):- is_lexical_segs(I).
-old_into_lexical_segs(Sent,O):- notrace(into_chat80_segs0(Sent,U)),include(is_w2,U,O).
+old_into_lexical_segs(Sent,O):- notrace(into_chat80_segs0(Sent,U)),include_is_w2(U,O).
 %into_lexical_segs(Sent,  WordsA):- enotrace((into_text80( Sent,  Words),into_combines(Words,WordsA))),!.
 
 into_chat80_segs0(I,I):- is_lexical_segs(I).
@@ -427,7 +427,7 @@ process4a(How,Sentence,U,S1,Times) :-
    (report(always,U,'segs',SegTime,print_tree_nl)),
    
    runtime(StartParse))),!,
- ((debug_chat80_if_fail(deepen_pos(sentence80(E,U,[],[],[]))),
+ ((debug_chat80_if_fail(deepen_pos(no_repeats(E,sentence80(E,U,[],[],[])))),
    notrace((runtime(StopParse),
 
     ParseTime is StopParse - StartParse,

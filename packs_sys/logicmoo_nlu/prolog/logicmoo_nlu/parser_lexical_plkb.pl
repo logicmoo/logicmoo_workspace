@@ -562,7 +562,7 @@ cyc_term_to_info(Term, Info):- between(5, 12, A), functor(Info, cyckb_lex, A), a
 in_call(C, P, Template, Call):- P=Call, call(P), once(sub_var(C, Template)).
 
 cyc_lex:- cyc_lex("I saw two books sitting on the shelf by the fire").
-cyc_lex(W):- cls,debug,make,into_lexical_segs(W,X),include(is_w2,X,Y),wdmsg(Y).
+cyc_lex(W):- cls,debug,make,into_lexical_segs(W,X),include_is_w2(X,Y),wdmsg(Y).
 
 :- system:import(parser_lexical_plkb:cyc_lex/1).
 :- system:import(cyc_lex/0).

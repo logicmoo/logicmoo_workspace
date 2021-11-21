@@ -239,11 +239,11 @@ adverb(adverb(W)) --->
    theText80(W),
    {adverb_lex(W)}.
 
-poss_pron(pronoun(Gender),Person+Number) --->
+poss_pron(pronoun(Gender,Person+Number),Person+Number) --->
    theText80(W),
    {poss_pron_lex(W,Gender,Person,Number)}.
 
-pers_pron(pronoun(Gender),Person+Number,Case) --->
+pers_pron(pronoun(Gender,Person+Number),Person+Number,Case) --->
    theText80(W),
    {pers_pron_lex(W,Gender,Person,Number,Case)}.
 

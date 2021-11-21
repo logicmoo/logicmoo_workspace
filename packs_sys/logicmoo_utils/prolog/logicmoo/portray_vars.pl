@@ -623,6 +623,12 @@ arg_type_decl_name(happens,2,2,when).
 arg_type_decl_name(EC23,2,2,time_at):- ec_timed(EC23).
 arg_type_decl_name(EC23,3,2,time_from):- ec_timed(EC23).
 arg_type_decl_name(EC23,3,3,time_until):- ec_timed(EC23).
+
+arg_type_decl_name(object,7,1,event).
+arg_type_decl_name(predicate,5,1,event).
+
+arg_type_decl_name(F,A,N,C):- on_x_fail(call_u(argIsa(F, N, C))),A>1.
+
 arg_type_decl_name(at,2,2,tloc).
 arg_type_decl_name(satisfy_each1,2,1,ctx).
 arg_type_decl_name('~',1,1,neg).

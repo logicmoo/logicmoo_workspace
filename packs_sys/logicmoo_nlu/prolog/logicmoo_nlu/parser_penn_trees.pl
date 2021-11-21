@@ -341,8 +341,21 @@ text_to_best_tree(Text,Tree):- text_to_best_tree_real(Text,Tree),
 is_w2(W2):- is_functor(w,2,W2).
 is_functor(F,A,P):- compound(P),compound_name_arity(P,F,A),!.
 
+add_spans_to_w2(RW2s,[],RW2s):-!.
+add_spans_to_w2(RW2s,[S|Spans],RW2sO):- !,
+  add_spans_to_w2(RW2s,Spans,RW2M),
+  add_spans_to_w2(RW2M,S,RW2sO).
+add_spans_to_w2(RW2s,Span,RW2so):- Span = span(List),
+  member(seg(N,_),List),member(w(_,W2),RW2s),member(loc(N),W2),!,
+  nb_set_add1(W2,Span),
+  RW2so = RW2s. 
+add_spans_to_w2(RW2s,Span,RW2s):- wdmsg(missed(Span)).
+
+include_is_w2(Pos,RW2s):- must(partition(is_w2,Pos,RW2Ms,Spans)),!,must(add_spans_to_w2(RW2Ms,Spans,RW2s)).
+%include_is_w2(Pos,RW2s):-include(is_w2,Pos,RW2s).
+
 text_to_best_tree_real(Text,TreeO):- text_to_best_tree_real_old(Text,Tree), !,
-  text_to_spacy_pos(Text,Pos),include(is_w2,Pos,RW2s),
+  text_to_spacy_pos(Text,Pos),include_is_w2(Pos,RW2s),
   debug_nop(writeln(spacy=RW2s)),
   replace_pos_tree_w2(RW2s,Tree,TreeO),!.
 
@@ -696,6 +709,7 @@ add_p_to_words(Var,P,Child,OUT):-
   ignore(((ChildType=w,find_subterm(Child,txt(W)), nb_set_add1(Txt,W)))))).
   %[Child,partOf(X,Y)]
 
+use_penn_links(G):- call(G),!.
 use_penn_links(G):- nop(G).
 /*
 ?- ape_to_penn_tree(
@@ -849,7 +863,7 @@ into_loc_sort(span(L1),Key):- member(List,L1),member(seg(_,_),List),into_loc_sor
 into_loc_sort(A,Key):- A=..[_|AA], findnsols(4,T, ((sub_term(T,AA),compound(T),arg(1,T,N),number(N));T=AA),Key).
 
 tree_to_lexical_segs(LExpr,O):-
-  penn_tree_to_segs(1,LExpr,U),!,include(is_w2,U,O).
+  penn_tree_to_segs(1,LExpr,U),!,include_is_w2(U,O).
 
 penn_tree_to_segs(_Start,LExpr,[]):- LExpr==[],!.
 penn_tree_to_segs(Start,LExpr,Sorted):-

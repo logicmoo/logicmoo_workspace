@@ -13,7 +13,11 @@
 
 :- export(sentence80/5).
 
-sentence80(S) ---> {b_setval('$prev_w2s',[]),b_setval('$prev_spans',[])},sentence801(S).
+sentence80(S, A, B, C, D) :-
+    b_setval('$prev_w2s', []),
+    b_setval('$prev_spans', []),
+    sentence801(S, A, B, C, D).
+
 
 :- dynamic(if_giveup_dcg/0).
 sentence801(_) ---> {if_giveup_dcg,!,fail}.
@@ -356,10 +360,10 @@ pre_adj(Adj) ---> adj(_,Adj).
 % TODO WHY pre_adj(poss(_ArgInfoP)(Pronoun,Agreement)) ---> poss_pron(Pronoun,Agreement).
 
 
-sup_phrase(sup(most,Adj)) ---> sup_adj(Adj).
 sup_phrase(sup(Op,Adj)) --->
    sup_adv(Op), % @DMILES why was Adv ?
    adj(quantV,Adj).
+sup_phrase(sup(most,Adj)) ---> sup_adj(Adj).
 
 comp_phrase(comp(Comp,Adj,Arg),Mask) --->
    comp(Comp,Adj),
