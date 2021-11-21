@@ -93,7 +93,7 @@ i_np_head0(np_head(Det,Adjs,Noun),X,T,Det,Head0,Pred0,Pred,Slots) :-
    i_adjs(Adjs,X,T,X,Head0,Head,Pred0,Pred),
    i_noun(Noun,X,Head,Slots).
 
-i_np_head0(np_head(wh_det(V),Adjs,Noun),
+i_np_head0(np_head(wh_det(_Kind,V),Adjs,Noun),
       Type-X,Type-X,Det,'`'(true),Pred,Pred,
       [slot(prep(of),Type,X,_,comparator)]) :-
    lf80(Type,comparator_LF(Noun,Type,V,Adjs,Det)).
@@ -420,9 +420,9 @@ slot_verb_template(Verb,Pred,
 % slot_verb_kind(be(_MODAL),_,TypeS,S,subsumed_by(A,S),[slot(dirO(_ArgInfo),TypeS,A,_,free)]).
 slot_verb_kind(be(_MODAL),_,TypeS,S,S=A,[slot(dirO(_ArgInfo),TypeS,A,_,free)]).
 slot_verb_kind(be(_MODAL),_,TypeS,S,true,[slot(arg_pred(_ArgInfo),TypeS,S,_,free)]).
-slot_verb_kind(iv,Verb,TypeS,S,Pred,Slots) :-
+slot_verb_kind(_Iv,Verb,TypeS,S,Pred,Slots) :-
    lf80(TypeS,intrans_LF(Verb,TypeS,S,Pred,Slots,_)).
-slot_verb_kind(tv,Verb,TypeS,S,Pred,
+slot_verb_kind(_Tv,Verb,TypeS,S,Pred,
       [slot(dirO(_ArgInfo),TypeD,D,SlotD,free)|Slots]) :-
    lf80(TypeS-TypeD,trans_LF12(Verb,TypeS,S,TypeD,D,Pred,Slots,SlotD,_)).
 slot_verb_kind(dv(Prep),Verb,TypeS,S,Pred,
@@ -449,7 +449,7 @@ index_slot(apply,_,apply).
 index_slot(comparator,_,comparator).
 
 index_args(det(the(pl)),unit,I,set(I),index(I)) :- !.
-index_args(wh_det(X),index(I),_,wh_det(I,X),unit) :- !.
+index_args(wh_det(Kind,X),index(I),_,wh_det(Kind,I,X),unit) :- !.
 index_args(generic(_ArgInfoG),apply,_,lambdaV(_ArgInfoL),unit) :-!.
 index_args(D,comparator,_,identityQ(ArgInfo),unit) :-
  ( indexable_arg(D); D=generic(ArgInfo)), !.

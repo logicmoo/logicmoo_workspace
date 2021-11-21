@@ -232,10 +232,10 @@ name_lex_txt0(Name) ---> theText80(Name), {name_LF(Name),!}.
 
 ace_var(AceVar) ---> theText80(AceVar), {ace_varname(AceVar),!}.
 
-wh_art(X,pl,quantV(same,wh(X))) ---> {how_many_lex(HOWMANY)}, theTextL80(HOWMANY).
-wh_art(X,Agmt,DX) --->
+wh_art(_Kind,X,pl,quantV(same,wh(X))) ---> {how_many_lex(HOWMANY)}, theTextL80(HOWMANY).
+wh_art(Kind,X,Agmt,DX) --->
    theText80(Art),
-   {wh_art_lex(Art,X,Agmt,DX)}.
+   {wh_art_lex(Kind,Art,X,Agmt,DX)}.
 
 wh_pron(Case) --->
    theText80(Pron),

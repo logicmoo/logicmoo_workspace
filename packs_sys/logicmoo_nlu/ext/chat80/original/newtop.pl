@@ -166,7 +166,12 @@ show_title80 :-
 	nl.
 
 :- dynamic(tmp:chat80results/4).
+:- dynamic(tmp:test80_result/3).
 show_results80:- 
+ listing(tmp:test80_result/3),
+ tell('CHAT80.txt'),
+ listing(tmp:test80_result/3),
+ told,
  show_title80,
  forall(tmp:chat80results(N,Sentence,Status,Times),
    show_results80(N,Sentence,Status,Times)),
@@ -431,12 +436,14 @@ process4a(How,Sentence,U,S1,Times) :-
 
   quietly(( runtime(StartSeg),
    mpred_test_mok(into_lexical_segs(Sentence,U)),!,
+   assert(tmp:test80_result(Sentence,into_lexical_segs,U)),
    runtime(StopSeg),
    SegTime is StopSeg - StartSeg,
    (report(always,U,'segs',SegTime,print_tree_nl)),
    
    runtime(StartParse))),!,
  ((debug_chat80_if_fail(deepen_pos(no_repeats(E,sentence80(E,U,[],[],[])))),
+    
    notrace((runtime(StopParse),
 
     ParseTime is StopParse - StartParse,
@@ -444,6 +451,7 @@ process4a(How,Sentence,U,S1,Times) :-
     % !, %%%%%%%%%%%%%%%% added by JPO but breaks "london"
     runtime(StartSem))),
    debug_chat80_if_fail(mpred_test_mok(deepen_pos(i_sentence(E,E1)))),
+
    report(always,E1,'i_sentence',ParseTime,cmt),
    debug_chat80_if_fail(clausify80(E1,E2)),!,
   % report(How,E2,'clausify80',ParseTime,cmt),
@@ -456,6 +464,9 @@ process4a(How,Sentence,U,S1,Times) :-
    guess_pretty(S),
    debug_chat80_if_fail(qplan(S,S1)),
    guess_pretty(S1),
+   assert(tmp:test80_result(Sentence,sentence80,E)),
+   assert(tmp:test80_result(Sentence,i_sentence,E1)),
+   assert(tmp:test80_result(Sentence,qplan,S1)),
    %pprint_ecp_cmt(green,S),
    runtime(StopPlan),
    TimePlan is StopPlan - StartSem,
@@ -537,7 +548,7 @@ quote80(nameOf(_)).
 quote80(prep(_)).
 quote80(det(_)).
 quote80(quantV(_,_)).
-quote80(wh_det(_)).
+quote80(wh_det(_Kind,_)).
 
 quote_amp(F):- compound(F), compound_name_arity(F,'$VAR',1),!.
 quote_amp(R) :-

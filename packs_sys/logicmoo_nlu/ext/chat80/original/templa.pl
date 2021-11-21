@@ -54,8 +54,6 @@ name_template_lf0(X,Spatial&Geo& /*_Neo&*/ Seamass) :- like_type(Geo,seamass,Sea
 name_template_lf0(X,Spatial&Geo& /*_Neo&*/ Country) :- like_type(Geo,country,Country), spatial(Spatial), ti(Country,X).
 name_template_lf0(X,Spatial&Geo& /*_Neo&*/ Continent) :- like_type(Geo,continent,Continent), spatial(Spatial), ti(Continent,X).
 
-
-concrete_type(Type):- Type\==million.
 %like_type(geo,River,River):- bind_pos('type',River).
 
 
@@ -118,17 +116,19 @@ ordering_pred(thing,cp(west,of),X1,X2) :- type_measure_pred( _Region,position(x)
 
 /* Nouns */
 property_LF(River,Spatial& Feat& River,X,Spatial&Geo& /*_Neo&*/ Country,Y,
- (generic_pred(Spatial,any,Y,X),ti(River,X)),[],_,_):-  
+ (GP,ti(River,X)),[],_,_):-  
    if_search_expanded(2),
+   make_generic_pred(Spatial,any,Y,X,GP),
    feat(Feat),spatial(Spatial),Geo=geo,
-   chat80_type(River),
-   chat80_type(Country).
+   concrete_type(River),
+   concrete_type(Country).
 
-chat80_type(dog).
-chat80_type(person).
-chat80_type(country).
-chat80_type(river).
-chat80_type(TI):-ti(TI,_),!.
+concrete_type(Type):- Type==million,!,fail.
+concrete_type(dog).
+concrete_type(person).
+concrete_type(country).
+concrete_type(river).
+concrete_type(TI):-ti(TI,_),!.
 
 property_LF(Capital,Spatial& Feat& City,X,Spatial&Geo& /*_Neo&*/ Country,Y,specific_pred(Spatial,Nation_capital,Y,X),[],_,_):-  
 %   fail,
@@ -147,7 +147,7 @@ thing_LF(Capital,Spatial& Feat& City,X,ti(Capital_city,X),[],_):-
 
 /*
 thing_LF(River,Spatial& Feat& River,X,ti(River,X),[],_):- 
-  feat(Feat), chat80_type(River), spatial(Spatial).
+  feat(Feat), concrete_type(River), spatial(Spatial).
 */
   
 property_LF(Area,     value&size&Area,    X,Spatial&_,Y,  measure_pred(Spatial,Area,Y,X),[],_,_):- spatial(Spatial), type_measure_pred(_,size,Area,_).
@@ -176,7 +176,7 @@ thing_LF_access(Population,value&units&Population/*citizens*/,X,unit_format(Popu
 /* Prepositions */
 
 adjunction_LF(in,Spatial&_-X,Spatial&_-Y,trans_pred(Spatial,contain,Y,X)).
-adjunction_LF(Any,Spatial&_-X,Spatial&_-Y,generic_pred(Spatial,matches_prep(Any),Y,X)):- if_search_expanded(2).
+adjunction_LF(Any,Spatial&_-X,Spatial&_-Y,GP):- if_search_expanded(2),make_generic_pred(Spatial,matches_prep(Any),Y,X,GP).
 adjunction_LF(cp(East,Of),Spatial&_-X,Spatial&_-Y,ordering_pred(Spatial,cp(East,Of),X,Y)).
 
 
@@ -227,12 +227,13 @@ verb_form_db(chat80,bordered,border,past+part,_). % :- regular_past_db(chat80,bo
 
 :- style_check(+singleton).
 
-trans_LF(Border,Spatial&Super&_,X,Spatial&Super&_,Y,generic_pred(Spatial,Border,X,Y),[],_,_):- 
+trans_LF(Border,Spatial&Super&_,X,Spatial&Super&_,Y,GP,[],_,_):-  make_generic_pred(Spatial,Border,X,Y,GP),
    verb_type_lex(Border,main+tv),
    symmetric_verb(Spatial, Border).
 
-trans_LF(Border,Spatial&Super&_,X,Spatial&Super&_,Y,generic_pred(Spatial,Border,X,Y),[],_,_):-  
-   (bind_pos('action',Border);bind_pos('attrib',Border)),nop(spatial(Spatial)).
+trans_LF(Border,Spatial&Super&_,X,Spatial&Super&_,Y,GP,[],_,_):-  
+   (bind_pos('action',Border);bind_pos('attrib',Border)),nop(spatial(Spatial)),
+   make_generic_pred(Spatial,Border,X,Y,GP).
 
 
 bind_pos(Type,Var,Lex,Var2):- nonvar(Var),!,clex:learned_as_type(Type,Var,Lex,Var2).
@@ -304,8 +305,13 @@ intrans_LF(Assign,feature&_,X,dbase_t(Assign,X,Y), [slot(prep(To),feature&_,Y,_,
 %trans_LF(Look,feature&_,X,dbase_t(Look,X,Y), [slot(prep(At),feature&_,Y,_,free)],_):- (tv_infpl(S,S);tv_finsg(S,S)), atomic_list_concat([Look,At],'-',S).
 
 trans_LF(exceed,value&Measure&Type,X,value&Measure&Type,Y,exceeds(X,Y),[],_,_).
-trans_LF1(Trans,_,X,_,Y, generic_pred(_Spatial,Trans,X,Y),[],_,_):- if_search_expanded(4).
+trans_LF1(Trans,_,X,_,Y,P ,[],_,_):- if_search_expanded(4),
+  make_generic_pred(Spatial,Trans,X,Y,P),spatial(Spatial).
 
+make_generic_pred(Spatial,matches_prep(AT),X,Y,generic_pred(Spatial,prep(AT),Y,X)):-!.
+make_generic_pred(Spatial,(AT),X,Y,generic_pred(Spatial,(AT),X,Y)):-!.
+
+qualifiedBy_LF(_FType, X,Base&Thing,np_head(wh_det(Kind,Kind-_23246),[],Type),(ti(Thing,X),ti(Base,X),ti(Type,X))).
 qualifiedBy_LF(_FType,Name,_Type,pronoun(_,1+sg),isa(Name,vTheVarFn("I"))).
 qualifiedBy_LF(_FType,Name,_Type,pronoun(_,1+pl),isa(Name,vTheVarFn("US"))).
 qualifiedBy_LF(FType,Name,Type,Else,P):- nop(qualifiedBy_LF(FType,Name,Type,Else,P)),fail.
@@ -428,7 +434,7 @@ intrans_LF(Run,Spatial & Feat& Type,X,LF, [],_):-
 intrans_LF(Run,Spatial & Feat& Type,X,LF,
  [slot(prep(Into),Spatial&_,Dest,_,free)],_):- 
  feat(Feat),
- %\+ chat80_type(Run),
+ %\+ concrete_type(Run),
  intrans_verb(Run),
  spatial(Spatial),
  LF = intrans_pred_prep(Spatial,Type,Run,X,Into,Dest).
@@ -440,7 +446,7 @@ intrans_LF(Continue,Spatial& _Feat& Type,X,LF,
 
 intrans_LF(Run,Spatial & Feat& Type,X,LF, Slots,_):- 
  feat(Feat), fail,
- %\+ chat80_type(Run),
+ %\+ concrete_type(Run),
  intrans_verb(Run),
  if_search_expanded(4),
  spatial(Spatial),

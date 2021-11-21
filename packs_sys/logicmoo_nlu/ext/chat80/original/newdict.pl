@@ -43,7 +43,7 @@ word80(Word) :- wh_rel_pron_lex(Word,_).
 word80(Word) :- quantifier_pron_lex(Word,_,_).
 word80(Word) :- number_lex(Word,_,_).
 word80(Word) :- det_lex(Word,_,_,_).
-word80(Word) :- wh_art_lex(Word,_,_,_).
+word80(Word) :- wh_art_lex(_,Word,_,_,_).
 word80(Word) :- wh_pron_lex(Word,_).
 word80(Word) :- loc_pred_lex(_,Word,_).
 word80(Word) :- verb_type_db(chat80,Word,_).
@@ -89,11 +89,12 @@ det_lex(no,_,no,indef).
 det_lex(some,_,some,indef).
 det_lex(the,No,the(No),def).
 
-wh_art_lex(what,X,_,wh_det(X)).
-wh_art_lex(which,X,_,wh_det(X)).
+wh_art_lex(Kind,what,X,_,wh_det(Kind,X)).
+wh_art_lex(Kind,which,X,_,wh_det(Kind,X)).
+
 wh_pron_lex(what,undef).
 wh_pron_lex(which,undef).
-wh_pron_lex(who,subJ(_ArgInfo1)).
+wh_pron_lex(hoo,subJ(_ArgInfo1)).
 wh_pron_lex(whom,compl).
 
 
@@ -187,7 +188,7 @@ quantifier_pron_lex(something,some,thing).
 % superceeded regular_pres_db(chat80,have(_MODAL)).
 
 wh_rel_pron_lex(which,undef).
-wh_rel_pron_lex(who,subJ(_ArgInfo1)).
+%wh_rel_pron_lex(who,subJ(_ArgInfo1)).
 wh_rel_pron_lex(whom,compl).
 
 % wordt niet gebruikt:
@@ -215,9 +216,9 @@ tr_number(X,X):- bind_pos('value',X).
 
 ctx_pron_lex(in,place,where).
 ctx_pron_lex(at,time,when).
-ctx_pron_lex(cp(because,why),condition,why).
-ctx_pron_lex(cp(for,who),agent,who).
-ctx_pron_lex(cp(by,what),thing,what).
+ctx_pron_lex(because,condition,why).
+ctx_pron_lex(poss,agent,who).
+%ctx_pron_lex(isa,type,what).
 ctx_pron_lex(cp(by,how),manner,how).
 
 % prepositions of time, place, movement, manner, agent, measure, source and possession.

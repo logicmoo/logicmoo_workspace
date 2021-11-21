@@ -79,24 +79,24 @@ variable_q(X,Agmt,compl,VCase) ...
       adv_phrase(prep_phrase(Prep,
                   np(Agmt,
                    np_head(
-                    wh_det(X),[],Noun),[])),
+                    wh_det(_Kind,X),[],Noun),[])),
                  Set,Mask) --->
    context_pron(Prep,Noun),
    {is_trace82(Set,Mask), is_verb_case(VCase)}.
 variable_q(X,_,compl,VCase) ...
       pred(adj,value80(Adj,wh(X)),Mask) --->
-   theText80(how),
+   theText80(how),  % how big
    adj(quantV,Adj),
    {is_empty_bits(Mask), is_verb_case(VCase)}.
 
 whq(X,Agmt,NP,undef) --->
-   wh_det(X,Agmt),
+   wh_det(_Kind,X,Agmt),
    {is_s_all(SAll)},
    np(NP,Agmt,_,_,subJ(_ArgInfo1),SAll,_).
 whq(X,3+No,np(3+No,wh(X),[]),Case) ---> wh_pron(Case).
 
-wh_det(X,3+Agmt) ---> whose(X,Agmt).
-wh_det(X,3+Agmt) ---> wh_art_6(X,Agmt).
+wh_det(_Kind,X,3+Agmt) ---> whose(X,Agmt).
+wh_det(Kind,X,3+Agmt) ---> wh_art_6(Kind,X,Agmt).
 
 whose(X,Agmt), np_head0(wh(X),Agmt,proper), gen_marker ---> theText80(whose).
 
@@ -107,7 +107,7 @@ question80(QCase,NPCase,S) --->
    fronted_verb(QCase,NPCase),
    s80(S,_).
 
-wh_art_6(X,Agmt), det(DX,Agmt,def) ---> wh_art(X,Agmt,DX).
+wh_art_6(Kind,X,Agmt), det(DX,Agmt,def) ---> wh_art(Kind,X,Agmt,DX).
 
 subj_question(subJ(_ArgInfo1)).
 subj_question(undef).
@@ -219,10 +219,14 @@ np_head1(Pronoun,Agmt,def+proper), gen_marker --->
    poss_pron(Pronoun,Agmt).
 np_head1(np_head(Det,[],Noun),3+sg,indef+common) --->
    quantifier_pron(Det,Noun).
-np_head1(np_head(Det,Adjs,Head),3+Number,Def+common) --->
+np_head1(np_head(Det,AdjsO,Head),3+Number,Def+common) --->
    determiner(Det,Number,Def),
    adjs_opt(Adjs),
-   noun(Head,Number).
+   noun(Head,Number),
+   maybe_variable(Adjs,AdjsO).
+
+maybe_variable(Adjs,[ace_var(AceVar)|Adjs])---> ace_var(AceVar),!.
+maybe_variable(Adjs,Adjs)---> [].
 
 
 /* Possessive construction */
