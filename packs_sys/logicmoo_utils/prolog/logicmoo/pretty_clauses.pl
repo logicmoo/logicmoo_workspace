@@ -1905,7 +1905,8 @@ pprint_tree(Term, Options) :- select('variable_names'(Vs),Options,OptionsM),!,
   pprint_tree_1(TermO,['variable_names'(VsO)|OptionsM]).
 pprint_tree(Term, Options) :-  saneify_vars(Term,TermO), pprint_tree_1(TermO, Options).
 
-pprint_tree_1(Term, Options) :- prolog_pretty_print:print_tree00(Term, Options).
+%pprint_tree_1(Term, Options) :- prolog_pretty_print:pprint_tree_2(Term, Options).
+pprint_tree_1(Term, Options) :- prolog_pretty_print:pprint_tree_2(Term, Options).
 %pprint_tree(Term, Options) :- \+ \+ pprint_tree_2(Term, Options).
 
 pprint_tree_2(Term, Options0) :-

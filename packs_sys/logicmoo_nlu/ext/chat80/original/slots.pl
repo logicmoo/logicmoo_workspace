@@ -45,6 +45,7 @@ lf80(Type,G):-
   must80(P),
   ((var(Type0);var(Type)) -> Type0=Type ; (nop(writeln(Type0=Type)),must80(Type=Type0))).
 
+i_sentence((S1,S2),(G1,G2)):- !, i_sentence(S1,G1), i_sentence(S2,G2).
 i_sentence(S,G):- i_sentence1(S,G).
 
 i_sentence1(q(S),question80([],P)) :- 
@@ -81,8 +82,9 @@ held_arg(held_arg(Case,-Id,X),[],S0,S,Id,+Id) :-
 held_arg(XA,XA,S,S,Id,Id).
 
 % np(3+sg,nameOf(iran),[])
-i_np_head0(nameOf(Name), Type-Name,Type-Name,identityQ(_ArgInfo),'`'(true),Pred,Pred,[]) :- 
-  ignore(lf80(Type,name_template_LF(Name,Type))),!.
+i_np_head0(nameOf(Name,Adjs),Type-X,Type-X,identityQ(_ArgInfo),Head,Pred0,Pred,[]) :- 
+  ignore(lf80(Type,name_template_LF(Name,Type))),!,
+  ignore(must80((i_adjs(Adjs,Type-X,Type-X,_,'`'(named(X,Name)),Head,Pred0,Pred)))).
 
 i_np_head0(wh(X),X,X,identityQ(_ArgInfo),'`'(true),Pred,Pred,[]):-!.
 % np(3+sg,pronoun(neut),[])
@@ -109,9 +111,9 @@ i_np_head0(np_head(generic(ArgInfo),[],Value), Type-X,Type-X,voidQ(ArgInfo),'`'(
 i_np_head0(np_head(Det,Adjs,Noun),X,T,Det0,Head0,Pred0,Pred,Slots) :- 
   must80(i_np_head1(np_head(Det,Adjs,Noun),X,T,Det0,Head0,Pred0,Pred,Slots)).
 
-i_np_head0(Else, Type-Name,Type-Name,identityQ(_ArgInfo),'`'(P),Pred,Pred,[]):- 
-   if_search_expanded(1), may_qualify(Else),
-   lf80(Type,make_qualifiedBy(i_np_head0,Name,Type,Else,P)).
+i_np_head0(Else, Type-X,Type-X,identityQ(_ArgInfo),'`'(P),Pred,Pred,[]):- 
+   if_search_expanded(1),
+   lf80(Type,make_qualifiedBy(i_np_head0,X,Type,Else,P)).
 
 i_np_head1(np_head(Det,Adjs,Noun),X,T,DetO,Head0,Pred0,Pred,Slots):-
    i_adjs(Adjs,X,T,X,Head0,Head,Pred0,Pred),
@@ -121,7 +123,7 @@ i_np_head1(np_head(Det,Adjs,Noun),X,T,DetO,Head0,Pred0,Pred,Slots):-
 xform_det(_Det,_DetO):- !.
 
 make_qualifiedBy(PType,Name,Type,Else,P):- if_search_expanded(3), qualifiedBy_LF(PType,Name,Type,Else,P).
-make_qualifiedBy(_,Name,Type,Else,P):- if_search_expanded(3), P = qualifiedBy(Name,Type,Else).
+make_qualifiedBy(_,Name,Type,Else,P):- if_search_expanded(3),may_qualify(Else), P = qualifiedBy(Name,Type,Else).
 %may_qualify(_):- !,fail.
 may_qualify(np_head(det(each),[],_)):-!,fail.
 may_qualify(np_head(_,[],Act)):- atom(Act),atom_concat('actioned',_,Act), !,fail.
@@ -263,10 +265,13 @@ fill_verb([Node|Nodes0],XA0,XA,Slots0,Slots,Args0,Args,Up,Id) :-
    append(Up0,Nodes0,Nodes),
    fill_verb(Nodes,XA1,XA,Slots1,Slots,Args1,Args,Up,+Id).
 
+
 verb_slot(Node,XA0,XA1,Slots0,Slots1,Args0,Args1,Up0,Id):- 
+  (((verb_slot0(Node,XA0,XA1,Slots0,Slots1,Args0,Args1,Up0,Id)))).
+/*verb_slot(Node,XA0,XA1,Slots0,Slots1,Args0,Args1,Up0,Id):- 
   debug_chat80_if_fail((clause(verb_slot0(Node,XA0,XA1,Slots0,Slots1,Args0,Args1,Up0,Id),Body),
    Body)).
-
+*/
 verb_slot1(Node,XA0,XA1,Slots0,Slots1,Args0,Args1,Up0,Id):- 
   G  = verb_slot0(Node,XA0,XA1,Slots0,Slots1,Args0,Args1,Up0,Id),
   G2 = verb_slot0(Node,XA0,_,Slots0,_,Args0,_,Up0,_),
@@ -418,7 +423,7 @@ slot_verb_template(Verb,Pred,
 
 % BE
 % slot_verb_kind(be(_MODAL),_,TypeS,S,subsumed_by(A,S),[slot(dirO(_ArgInfo),TypeS,A,_,free)]).
-slot_verb_kind(be(_MODAL),_,TypeS,S,S=A,[slot(dirO(_ArgInfo),TypeS,A,_,free)]).
+slot_verb_kind(be(_MODAL),_,TypeS,S,subsumed_by(S,A),[slot(dirO(_ArgInfo),TypeS,A,_,free)]).
 slot_verb_kind(be(_MODAL),_,TypeS,S,true,[slot(arg_pred(_ArgInfo),TypeS,S,_,free)]).
 slot_verb_kind(_Iv,Verb,TypeS,S,Pred,Slots) :-
    lf80(TypeS,intrans_LF(Verb,TypeS,S,Pred,Slots,_)).

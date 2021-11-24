@@ -82,6 +82,7 @@ learn_equivalencies(Type,List):-
 
 skip_learning(X):- var(X),!.
 skip_learning([]).
+skip_learning(error(_)).
 skip_learning(drs([],[])).
 should_learn(X):- \+ skip_learning(X).
 
@@ -550,32 +551,36 @@ acetext_to_text80(List,Out):- is_list(List),member(E,List),acetext_to_text80(E,O
 
 sentence80(U,E):- sentence80(E,U,[],[],[]).
 
-try_chat_80(G):- G=..[F,Tree,QT],try_chat_80(F,Tree,QT).
-try_chat_80(F,Tree,QT):- 
+try_chat_80(S,G):- G=..[F,Tree,QT],try_chat_80(S,F,Tree,QT).
+try_chat_80(S,F,Tree,QT):- 
  ignore((
   nonvar(Tree),
-  debug_chat80_if_fail(deepen_pos(call(F,Tree,QT))),
-  in_cmt(print_tree_nl(F=QT)))).
+  ((debug_chat80_if_fail(deepen_pos(call(F,Tree,QT))),should_learn(QT)) -> 
+  (assert(tmp:test80_result(S,F,QT)),in_cmt(print_tree_nl(F=QT)))
+  ;(assert(tmp:test80_result(S,F,failed)),in_cmt(print_tree_nl(F=failed)))))).
 
 
-c88(S,O):-
+c88(B,O):-
+ any_to_string(B,S),
  make,
- try_chat_80(into_lexical_segs(S,Lex)),
- try_chat_80(try_ace_drs(S,Ace)),
- try_chat_80(try_ace_eng(Ace,_Eng)),
- try_chat_80(try_ace_fol(Ace,FOL)),
- try_chat_80(sentence80(Lex,Tree)),
- try_chat_80(i_sentence(Tree,QT)),
- try_chat_80(clausify80(QT,UE)),  
- try_chat_80(simplify80(UE,Query)),
- try_chat_80(results80(Query,_Answer)),
+ try_chat_80(S,into_lexical_segs(S,Lex)),
+ try_chat_80(S,try_ace_drs(S,Ace)),
+ try_chat_80(S,try_ace_eng(Ace,_Eng)),
+ try_chat_80(S,try_ace_fol(Ace,FOL)),
+ try_chat_80(S,sentence80(Lex,Tree)),
+ try_chat_80(S,i_sentence(Tree,QT)),
+ try_chat_80(S,clausify80(QT,UE)),  
+ try_chat_80(S,simplify80(UE,Query)),
+ try_chat_80(S,results80(Query,_Answer)),
  ignore((var(QT),add_c80(S))),
  member(O,[Query,UE,FOL,Ace,QT,Tree,S]),
  nonvar(O),!.
 %c88(M,O):- process4a(off,M,_,O,_Times).
 
 
-c88(M):- try_chat_80(c88(M,_)).
+c88(B):- 
+   any_to_string(B,S),
+   try_chat_80(S,c88(S,_)).
 
 s83:- forall(training_data(Sent,M),(my_drs_to_fol_kif(M,O),in_cmt(block,print_tree_nl(Sent=O)))).
 

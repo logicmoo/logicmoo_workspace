@@ -1382,7 +1382,7 @@ string_trim1(X,Y):- string_concat(M,"\\040",X),!,string_trim1(M,Y).
 string_trim1(X,Y):- string_concat(M,"\040",X),!,string_trim1(M,Y).
 string_trim1(X,Y):- string_concat(M," ",X),!,string_trim1(M,Y).
 string_trim1(X,Y):- string_concat(M,"\n",X),!,string_trim1(M,Y).
-string_trim1(X,Y):- current_predicate(string_trim/2),!,string_trim(X,Y).
+string_trim1(X,Y):- current_predicate(string_trim/2),!,call(call,string_trim,X,Y).
 string_trim1(X,X).
 
 carelessly(G):- ignore(notrace(catch(G,E,((dmsg(E)),!,fail)))).
@@ -1400,8 +1400,8 @@ add_history01(A):- assert(histtmp:history_data(A)),
    ((fail,current_prolog_flag(readline,editline)) -> User_input = libedit_input; User_input = user_input),
    prolog:history(User_input, load(File)).
 
-add_history02(A):- clause('$history':'$history'(N,_),true,_Ref), !, N1 is N + 1, add_history0(N1,A).
-add_history02(A):- add_history0(1,A),!.
+add_history02(A):- clause('$history':'$history'(N,_),true,_Ref), !, N1 is N + 1, add_history02(N1,A).
+add_history02(A):- add_history02(1,A),!.
 add_history02(N,A):-
    carelessly(prolog_history:prolog_history(enable)),
    current_input(S),

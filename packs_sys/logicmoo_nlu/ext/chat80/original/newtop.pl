@@ -90,6 +90,13 @@ inform1([H|T]) :- write(H), put(32), inform1(T).
 
 system:test_chat80 :- make, setenv('CMD',timeout), test_chat80(_,on),!,show_results80.
 
+
+system:test_c80 :- make, setenv('CMD',timeout),
+	forall(chat_80_ed(N,Sentence,CorrectAnswer),
+    baseKB_test_chat80_mpred(N, Sentence, on, CorrectAnswer)),
+  show_results80.
+
+
 :- share_mp(test_chat80/1).
 test_chat80(N):- test_chat80(N, on), !.
 %test_chat80(L):- ignore(control80(L)).
@@ -101,7 +108,7 @@ test_chat80(U):- nonvar(U), \+ number(U),
               ignore(control80(U)))))).
 
 test_chat80(N, OnOff) :- (number(N);var(N)),!,
-	(var(N)->show_title80 ;true),
+	(var(N)->show_title80_title ;true),
 	forall(chat_80_ed(N,Sentence,CorrectAnswer),
    ignore(mpred_test(baseKB:test_chat80_mpred(N, Sentence, OnOff, CorrectAnswer)))).
 
@@ -121,10 +128,10 @@ dumpST_ERR:- on_x_fail(dumpST),!.
 baseKB_test_chat80_mpred(N, Sentence, _OnOff, CorrectAnswer) :-
     once(wotso(report_item(print_test,Sentence))),
 	  once(wotso(process5(test,Sentence,CorrectAnswer,Status,Times))),
-    assert(tmp:chat80results(N,Sentence,Status,Times)),
+    assert(tmp:chat80results(N,Sentence,Status,Times)),!,
 	  once(wotso(show_results80(N,Sentence,Status,Times))),!.
 
-baseKB_test_chat80_mpred(_, Sentence, OnOff, _CorrectAnswer) :-
+baseKB_test_chat80_mpred_missing(_, Sentence, OnOff, _CorrectAnswer) :-
     OnOff \= off,
     tracing ~= OnOff,!,
     wotso(process(normal,Sentence)),!.
@@ -159,20 +166,32 @@ rtest_chat(N) :-
 	rtest_chat(NN).
 rtest_chat(_).
 
+show_title80_title:-
+  format('Chat Natural Language Question Anwering Test~n~n',[]),
+  show_title80.
+  
 show_title80 :-
-	format('Chat Natural Language Question Anwering Test~n~n',[]),
 	show_format(F),
 	format(F, ['Test','Passed','Parse','Semantics','Planning','Reply','TOTAL','Sentence']),
 	nl.
 
 :- dynamic(tmp:chat80results/4).
 :- dynamic(tmp:test80_result/3).
+test80_results:- 
+ forall(tmp:test80_result(A,into_lexical_segs,_), 
+  (nl,
+   format('=========================================================~n'),
+   forall(tmp:test80_result(A,B,C),(print_tree_nl(tmp:test80_result(A,B,C)),nl)),
+   show_title80,
+   forall(tmp:chat80results(N,A,Status,Times), 
+     show_results80(N,A,Status,Times)))).
+
 show_results80:- 
- listing(tmp:test80_result/3),
+ test80_results,
  tell('CHAT80.txt'),
- listing(tmp:test80_result/3),
+ test80_results,
  told,
- show_title80,
+ show_title80_title,
  forall(tmp:chat80results(N,Sentence,Status,Times),
    show_results80(N,Sentence,Status,Times)),
  show_title80.
@@ -374,7 +393,7 @@ process(_,_).
 eng_to_logic(U,S):- sentence80(E,U,[],[],[]), sent_to_prelogic(E,S).
 
 
-qualifiedBy(V,_,np_head(det(_),[],Ti)):- !, debug_var(Ti,V).
+qualifiedBy(V,_,np_head(det(A),_Adjs,Ti)):- !, debug_var0([A,Ti],V).
 qualifiedBy(_,_,_).
 
 
@@ -476,15 +495,16 @@ process4a(How,Sentence,U,S1,Times) :-
 
 process4(How,Sentence,Answer,Times) :-
    process4a(How,Sentence,U,S1,Times),!, 
-   process4b(How,U,S1,Answer,Times).
+   process4b(How,Sentence,U,S1,Answer,Times).
 
-process4b(How,U,S1,Answer,Times) :-
+process4b(How,Sentence,U,S1,Answer,Times) :-
    Times = [ParseTime,SemTime,TimePlan,TimeAns,TotalTime],
    report(How,S1,'Planning',TimePlan,expr),
    runtime(StartAns),
    ((
-   debug_chat80_if_fail(results80(S1,Answer)), !,
+   debug_chat80_if_fail(results80(S1,Answer)), !,   
    runtime(StopAns),
+   assert(tmp:test80_result(Sentence,results80,Answer)),
    TimeAns is StopAns - StartAns,
    TotalTime is ParseTime+SemTime+TimePlan+TimeAns,
    report(How,U,'Question',TotalTime,print_test),

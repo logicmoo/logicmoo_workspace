@@ -126,6 +126,8 @@ property_LF(River,Spatial& Feat& River,X,Spatial&Geo& /*_Neo&*/ Country,Y,
 concrete_type(Type):- Type==million,!,fail.
 concrete_type(dog).
 concrete_type(person).
+concrete_type(man).
+concrete_type(island).
 concrete_type(country).
 concrete_type(river).
 concrete_type(TI):-ti(TI,_),!.
@@ -259,6 +261,9 @@ talkdb_talk_db(transitive,   Border,  Borders,  Bordered,  Bordering,  Bordered)
 %use_lexicon_80(talkd b_verb(X)):- verb _type_db(chat80,X,_).
 % use_lexicon_80(_):- fail.
 
+subsumed_by(X,X).
+named(X,X).
+
 :- import(talkdb:talk_db/6).
 %                         nonfinite,  pres+fin, past+fin,  pres+part    past+part,
 talkdb_talk_db(transitive,   border,  borders,  bordered,  bordering,  bordered).
@@ -320,6 +325,7 @@ qualifiedBy_LF(FType,Name,Type,Else,P):- nop(qualifiedBy_LF(FType,Name,Type,Else
 
 restriction_LF(Word,Spatial&_,X,ti_adj(Type,X)):- adj_db_clex(Type,Word,restr), spatial(Spatial).
 restriction_LF(African,Spatial&_,X,ti(African,X)):- adj_lex(African,restr), spatial(Spatial).
+restriction_LF(Word,_,X,Out):- compound(Word),subst(Word,self,X,Out).
 
 
 %restriction_LF(american,Spatial&_,X,ti(american,X)).
