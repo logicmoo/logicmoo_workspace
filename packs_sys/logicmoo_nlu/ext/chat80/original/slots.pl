@@ -404,19 +404,25 @@ noun_template(Noun,TypeV,V,apply80(F,P),
    lf80(TypeV-TypeX,meta_noun_LF(Noun,Of,TypeV,V,TypeX,X,P,F)).
 
 slot_verb_template(have(MODAL),Y=Z,
+                Slots,
+                held_arg(poss(_ArgInfoP),-(-(+Id)),TypeS-S), have(MODAL)):-
+  select_slots(Slots,
                 [slot(subJ(_ArgInfo1),TypeS,S,-Id,free),
                  slot(dirO(_ArgInfo),TypeV,Y,_,free),
-                 slot(prep(of),TypeV,Z,_,free)],
-                held_arg(poss(_ArgInfoP),-(-(+Id)),TypeS-S), have(MODAL)).
+                 slot(prep(of),TypeV,Z,_,free)]).
 slot_verb_template(have(MODAL),Y=Z,
+        Slots,
+        held_arg(poss(_ArgInfoP),-(-(-(+Id))),TypeS-S), have(MODAL)):-
+  select_slots(Slots,
         [slot(subJ(_ArgInfo1),TypeS,S,-(-(Id)),free),
          slot(dirO(_ArgInfoO),TypeV,Y,_,free),
-         slot(prep(as),TypeV,Z,_,free)],
-        held_arg(poss(_ArgInfoP),-(-(-(+Id))),TypeS-S), have(MODAL)).
-slot_verb_template(Verb,Pred,
-      [slot(subJ(_ArgInfo1),TypeS,S,_,free)|Slots],[],transparent) :-
+         slot(prep(as),TypeV,Z,_,free)]).
+
+slot_verb_template(Verb,Pred, Slots,[],transparent) :-
+   select_slots(Slots,[slot(subJ(_ArgInfo1),TypeS,S,_,free)],SlotsRemaining),
    must80(verb_type_lex(Verb,_+Kind)),
-   slot_verb_kind(Kind,Verb,TypeS,S,Pred,Slots).
+   slot_verb_kind(Kind,Verb,TypeS,S,Pred,SlotsRemaining).
+
 select_slots(Ss,Slots):- select_slots(Ss,Slots,[]).
 select_slots(X,[],X):-!.
 select_slots(X,[Slot|Slots],Remaining):- fail,
@@ -427,16 +433,19 @@ select_slots([Slot|X],[Slot|Slots],Remaining):-
 
 % BE
 % slot_verb_kind(be(_MODAL),_,TypeS,S,subsumed_by(A,S),[slot(dirO(_ArgInfo),TypeS,A,_,free)]).
-slot_verb_kind(be(_MODAL),_,TypeS,S,S=A,[slot(dirO(_ArgInfo),TypeS,A,_,free)]).
-slot_verb_kind(be(_MODAL),_,TypeS,S,true,[slot(arg_pred(_ArgInfo),TypeS,S,_,free)]).
+slot_verb_kind(be(_MODAL),_,TypeS,S,subsumed_by(S,A),AllSlots):-
+   select_slots(AllSlots, [slot(dirO(_ArgInfo),TypeS,A,_,free)]).
+slot_verb_kind(be(_MODAL),_,TypeS,S,true,AllSlots):- 
+   select_slots(AllSlots, [slot(arg_pred(_ArgInfo),TypeS,S,_,free)]).
 slot_verb_kind(_Iv,Verb,TypeS,S,Pred,Slots) :-
    lf80(TypeS,intrans_LF(Verb,TypeS,S,Pred,Slots,_)).
-slot_verb_kind(_Tv,Verb,TypeS,S,Pred,
-      [slot(dirO(_ArgInfo),TypeD,D,SlotD,free)|Slots]) :-
+slot_verb_kind(_Tv,Verb,TypeS,S,Pred,AllSlots) :-
+   select_slots(AllSlots,[slot(dirO(_ArgInfo),TypeD,D,SlotD,free)],Slots),
    lf80(TypeS-TypeD,trans_LF12(Verb,TypeS,S,TypeD,D,Pred,Slots,SlotD,_)).
-slot_verb_kind(dv(Prep),Verb,TypeS,S,Pred,
-      [slot(dirO(_ArgInfo1),TypeD,D,SlotD,free),
-       slot(indO(_ArgInfo2),TypeI,I,SlotI,free)|Slots]) :-
+
+slot_verb_kind(dv(Prep),Verb,TypeS,S,Pred,AllSlots):- 
+   select_slots(AllSlots, [slot(dirO(_ArgInfo1),TypeD,D,SlotD,free),
+       slot(indO(_ArgInfo2),TypeI,I,SlotI,free)],Slots),
    %fail,fail,fail,fail,
    lf80(TypeS+TypeD+TypeI,ditrans_lex80(Verb,Prep,TypeS,S,TypeD,D,TypeI,I,Pred,Slots,SlotD,SlotI,_)).
    % see no_repeats_dc(DC0,subj_obj_indirect_slots_LF(ditrans,verb_prep(Verb,Prep),TypeS,S,TypeD,D,TypeI,I,Pred,Slots,SlotI,SlotD,DC0)).
