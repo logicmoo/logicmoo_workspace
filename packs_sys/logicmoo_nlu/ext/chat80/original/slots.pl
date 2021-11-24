@@ -222,7 +222,7 @@ i_s(s(Subj,Verb,VArgs,VMods),Pred,Up,Id) :-
 
 i_verb(verb(_VerbType,Root,Voice,Tense,_Aspect,Neg),
       PP,Tense,Voice,Det,Slots,XArg,Meta) :-
-   slot_verb_template(Root,P,Slots,XArg,Meta),
+   must80(slot_verb_template(Root,P,Slots,XArg,Meta)),
    %(Neg\=posP(_)->trace;true),
    i_neg(Neg,Det),
    maybe_modalize(Neg,P,PP).
@@ -263,6 +263,8 @@ fill_verb([Node|Nodes0],XA0,XA,Slots0,Slots,Args0,Args,Up,Id) :-
    append(Up0,Nodes0,Nodes),
    fill_verb(Nodes,XA1,XA,Slots1,Slots,Args1,Args,Up,+Id).
 
+verb_slot(Node,XA0,XA1,Slots0,Slots1,Args0,Args1,Up0,Id):- !, 
+  verb_slot0(Node,XA0,XA1,Slots0,Slots1,Args0,Args1,Up0,Id).
 verb_slot(Node,XA0,XA1,Slots0,Slots1,Args0,Args1,Up0,Id):- 
   debug_chat80_if_fail((clause(verb_slot0(Node,XA0,XA1,Slots0,Slots1,Args0,Args1,Up0,Id),Body),
    Body)).
@@ -415,6 +417,13 @@ slot_verb_template(Verb,Pred,
       [slot(subJ(_ArgInfo1),TypeS,S,_,free)|Slots],[],transparent) :-
    must80(verb_type_lex(Verb,_+Kind)),
    slot_verb_kind(Kind,Verb,TypeS,S,Pred,Slots).
+select_slots(Ss,Slots):- select_slots(Ss,Slots,[]).
+select_slots(X,[],X):-!.
+select_slots(X,[Slot|Slots],Remaining):- fail,
+  select(Slot,X,Mid),!,
+  select_slots(Mid,Slots,Remaining).
+select_slots([Slot|X],[Slot|Slots],Remaining):- 
+  select_slots(X,Slots,Remaining).
 
 % BE
 % slot_verb_kind(be(_MODAL),_,TypeS,S,subsumed_by(A,S),[slot(dirO(_ArgInfo),TypeS,A,_,free)]).
