@@ -45,6 +45,7 @@ lf80(Type,G):-
   must80(P),
   ((var(Type0);var(Type)) -> Type0=Type ; (nop(writeln(Type0=Type)),must80(Type=Type0))).
 
+i_sentence((S1,S2),(G1,G2)):- !, i_sentence(S1,G1), i_sentence(S2,G2).
 i_sentence(S,G):- i_sentence1(S,G).
 
 i_sentence1(q(S),question80([],P)) :- 
@@ -81,6 +82,10 @@ held_arg(held_arg(Case,-Id,X),[],S0,S,Id,+Id) :-
 held_arg(XA,XA,S,S,Id,Id).
 
 % np(3+sg,nameOf(iran),[])
+i_np_head0(nameOf(Name,Adjs),Type-X,Type-X,identityQ(_ArgInfo),Head,Pred0,Pred,[]) :- 
+  ignore(lf80(Type,name_template_LF(Name,Type))),!,
+  ignore(must80((i_adjs(Adjs,Type-X,Type-X,_,'`'(named(X,Name)),Head,Pred0,Pred)))).
+
 i_np_head0(nameOf(Name), Type-Name,Type-Name,identityQ(_ArgInfo),'`'(true),Pred,Pred,[]) :- 
   ignore(lf80(Type,name_template_LF(Name,Type))),!.
 
