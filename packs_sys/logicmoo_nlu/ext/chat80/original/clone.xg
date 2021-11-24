@@ -21,13 +21,13 @@ xg_w2_len(N,[W|L])---> [W], {N>1, M is N -1},!,xg_w2_len(M,L).
 
 
 sentence80(S) ---> {b_setval('$prev_w2s', []),b_setval('$prev_spans', [])}, 
-    %sentence800(S).
-    link_s(S1),!,sentence801s(S1,S).
+    sentence801(S).
+    %sentence800(S1),!,sentence801s(S1,S).
 
 sentence800(S) ---> startQuotesEnding(E),!,sentence801(S),E,!.
 sentence800(S) ---> sentence801(S).
 
-sentence801s(S1,(S1,S2)) ---> xg_peek([_,_]), sentence80(S2),!.
+sentence801s(S1,(S1,S2)) ---> xg_peek([_,_]), sentence801(S2),!.
 sentence801s(S1, S1) ---> [].
 
 :- dynamic(if_giveup_dcg/0).
@@ -35,8 +35,6 @@ sentence801(_) ---> {if_giveup_dcg,!,fail}.
 sentence801(S) ---> xg_from_right(the_w2_list(List),theText80(Last)),{arg(_,v('?','!','.'),Last)},!,{sentence_typed(Last,S,List)}.
 sentence801(S) ---> sentence802(S).
 
-%sentence802(np(Subj)) ---> theText80(there),thePos80(root(be)),subj(Subj,_Agmt,_Type).
-%sentence802(np(Subj)) ---> theText80(there),thePos80(root(exist)),subj(Subj,_Agmt,_Type).
 sentence802(S) ---> declarative(S),{!}.
 sentence802(S) ---> question80(S).
 sentence802(S) ---> imperative80(S),{!}.
@@ -178,11 +176,9 @@ subj0(Subj,Agmt,_) --->
 
 /* Noun Phrase */
 
-np(AgmtKernelModsO,Agmt,Case,Def,Role,Set,Mask) --->
+np(AgmtKernelMods,Agmt,Case,Def,Role,Set,Mask) --->
   locally(tlclone:np_in_case(Case),
-    np0(AgmtKernelMods,Agmt,Case,Def,Role,Set,Mask)),
-    maybe_variable(AgmtKernelMods,AgmtKernelModsO).
-
+    np0(AgmtKernelMods,Agmt,Case,Def,Role,Set,Mask)).
 
 np0(np(Agmt,Pronoun,[]),Agmt,NPCase,def,_,Set,Nil) --->
    {is_pp(Set)},
@@ -215,31 +211,23 @@ np_compls(common,Agmt,Case,Mods,Set0,Mask) --->
 /* Nuclear noun phrase */
 
 np_head0(_,_,_)---> has_trait(pos('.')),!,{fail}.
-np_head0(nameOf(items(AndOr,List),[]),Agmt,Def)---> {if_search_expanded(2)}, nl_list_of_items(AndOr,np_head1(Agmt,Def),List).
+np_head0(nameOf(items(AndOr,List)),Agmt,Def)---> {if_search_expanded(2)}, nl_list_of_items(AndOr,np_head1(Agmt,Def),List).
 np_head0(H,Agmt,Def)---> np_head1(H,Agmt,Def).
 
-np_head1(nameOf(O,[]),Agmt,Def) ---> np_objbody(O,Agmt,Def).
+np_head1(nameOf(O),Agmt,Def) ---> np_objbody(O,Agmt,Def).
 np_head1(Pronoun,Agmt,def+proper), gen_marker --->
    poss_pron(Pronoun,Agmt).
 np_head1(np_head(Det,[],Noun),3+sg,indef+common) --->
    quantifier_pron(Det,Noun).
-np_head1(np_head(Det,Adjs,Head),3+Number,Def+common) --->
+np_head1(np_head(Det,AdjsO,Head),3+Number,Def+common) --->
    determiner(Det,Number,Def),
    adjs_opt(Adjs),
-   noun(Head,Number).
+   noun(Head,Number),
+   maybe_variable(Adjs,AdjsO).
 
-   
-
-maybe_variable(AdjIn,AdjsOut)---> ace_var(AceVar),!,{append_np_mods(AdjIn,(adj(ace_var(self,AceVar))),AdjsOut)}.
+maybe_variable(Adjs,[ace_var(AceVar)|Adjs])---> ace_var(AceVar),!.
 maybe_variable(Adjs,Adjs)---> [].
 
-
-append_np_mods(List,W,[W|List]):- is_list(List),!.
-append_np_mods(Comp,W,Comp):- sub_term(Head,Comp),compound(Head),(functor(Head,F,_),member(F,[np_head,nameOf])),
-  arg(2,Head,List),is_list(List),!,append_np_mods(List,W,Arg),nb_setarg(2,Head,Arg).
-append_np_mods(Comp,_,Comp):-!.
-
-ace_var(_,_).
 
 /* Possessive construction */
 
@@ -275,19 +263,10 @@ link_s(S) --->
  { \+ lctmp:in_sent804 }, !, 
      locally(lctmp:in_sent804,link_s_1(S)).
 
-link_s_1(S) ---> link_t_1('S',Words), !,{sentence801(S,Words,[],[],[])}.
-
-link_t_1(Type,[w(S,L)|Words], [w(S,L)|A], B, X, X) :-
-  member(loc(N),L),
-  select(link(_, Type, r(Type, seg(N, M))),L,L2),
-  \+ member(link(_, Type, r(Type, seg(N, _))),L2),
-   Len is M-N,
-   length(Words,Len),
-   append(Words,B,A).
-  
-
-
-
+link_s_1(S) --->
+ xg_peek(theText80_W2(_,L)),{member(loc(N),L),
+ member(link(_,'S',r('S',seg(N,M))),L),Len is M-N+1, Len>1,
+ length(Words,Len)},xg_w2_len(Len,Words),!,{sentence80(S,Words,[],[],[])}.
 
 %np_objbody(Det,Number,Def) ---> {if_search_expanded(2)}, np_objbody(Det,Number,Def).
 np_objbody((Name),3+sg,def+proper) ---> name_xg(Name).

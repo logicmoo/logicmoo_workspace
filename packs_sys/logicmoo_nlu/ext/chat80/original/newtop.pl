@@ -128,7 +128,7 @@ dumpST_ERR:- on_x_fail(dumpST),!.
 baseKB_test_chat80_mpred(N, Sentence, _OnOff, CorrectAnswer) :-
     once(wotso(report_item(print_test,Sentence))),
 	  once(wotso(process5(test,Sentence,CorrectAnswer,Status,Times))),
-    assert(tmp:chat80results(N,Sentence,Status,Times)),!,
+    assert_if_new(tmp:chat80results(N,Sentence,Status,Times)),!,
 	  once(wotso(show_results80(N,Sentence,Status,Times))),!.
 
 baseKB_test_chat80_mpred_missing(_, Sentence, OnOff, _CorrectAnswer) :-
@@ -167,7 +167,7 @@ rtest_chat(N) :-
 rtest_chat(_).
 
 show_title80_title:-
-  format('Chat Natural Language Question Anwering Test~n~n',[]),
+	format('Chat Natural Language Question Anwering Test~n~n',[]),
   show_title80.
   
 show_title80 :-
@@ -455,7 +455,7 @@ process4a(How,Sentence,U,S1,Times) :-
 
   quietly(( runtime(StartSeg),
    mpred_test_mok(into_lexical_segs(Sentence,U)),!,
-   assert(tmp:test80_result(Sentence,into_lexical_segs,U)),
+   assert_if_new(tmp:test80_result(Sentence,into_lexical_segs,U)),
    runtime(StopSeg),
    SegTime is StopSeg - StartSeg,
    (report(always,U,'segs',SegTime,print_tree_nl)),
@@ -483,9 +483,9 @@ process4a(How,Sentence,U,S1,Times) :-
    guess_pretty(S),
    debug_chat80_if_fail(qplan(S,S1)),
    guess_pretty(S1),
-   assert(tmp:test80_result(Sentence,sentence80,E)),
-   assert(tmp:test80_result(Sentence,i_sentence,E1)),
-   assert(tmp:test80_result(Sentence,qplan,S1)),
+   assert_if_new(tmp:test80_result(Sentence,sentence80,E)),
+   assert_if_new(tmp:test80_result(Sentence,i_sentence,E1)),
+   assert_if_new(tmp:test80_result(Sentence,qplan,S1)),
    %pprint_ecp_cmt(green,S),
    runtime(StopPlan),
    TimePlan is StopPlan - StartSem,
@@ -502,9 +502,9 @@ process4b(How,Sentence,U,S1,Answer,Times) :-
    report(How,S1,'Planning',TimePlan,expr),
    runtime(StartAns),
    ((
-   debug_chat80_if_fail(results80(S1,Answer)), !,   
+   debug_chat80_if_fail(results80(S1,Answer)), !,
    runtime(StopAns),
-   assert(tmp:test80_result(Sentence,results80,Answer)),
+   assert_if_new(tmp:test80_result(Sentence,results80,Answer)),
    TimeAns is StopAns - StartAns,
    TotalTime is ParseTime+SemTime+TimePlan+TimeAns,
    report(How,U,'Question',TotalTime,print_test),
@@ -561,7 +561,7 @@ quote80(A&R) :-
 quote80(_-_).
 quote80(_--_).
 quote80(_+_).
-quote80(verb(_,_,_,_,_)).
+quote80(verb(_,_,_ExtraMods,_,_,_)).
 quote80(wh(_)).
 quote80(name(_)).
 quote80(nameOf(_)).

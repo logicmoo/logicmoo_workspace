@@ -360,12 +360,14 @@ words_of0([FW|I],Words):- maplist(is_word80,[FW|I]),!,[FW|I]=Words.
 words_of0([FW|I],Words):- is_w2(FW),!,maplist(w2_as_w,[FW|I],Words).
 words_of0([FW|I],Words):- tree_to_words([FW|I],Words).
 
-w2_as_w(Cmp,Txt):- compound(Cmp),!,arg(1,Cmp,Txt).
-w2_as_w(Txt,Txt).
+w2_as_w(Cmp,Txt):- \+ compound(Cmp),!,Cmp=Txt.
+w2_as_w(w(_,Cmp),Txt):- is_list(Cmp),member(txt(Txt),Cmp),!.
+w2_as_w(w(Txt,_),Txt):-!.
+w2_as_w(Cmp,Txt):- is_list(Cmp),!,member(txt(Txt),Cmp).
 
 tree_to_words([],[]):-!.
-tree_to_words(I,[O]):- is_w2(I),!,arg(1,I,O).
-tree_to_words([I],[O]):- is_w2(I),!,arg(1,I,O).
+tree_to_words(I,[O]):- is_w2(I),!,w2_as_w(I,O).
+tree_to_words([I],[O]):- is_w2(I),!,w2_as_w(I,O).
 tree_to_words(I,[I]):-  \+ is_list(I),!.
 %tree_to_words([cp|I],O):- !, maplist(tree_to_words,I,WordsL),flatten([WordsL],O).
 %tree_to_words([vbar|I],O):- !, maplist(tree_to_words,I,WordsL),flatten([WordsL],O).
@@ -556,12 +558,12 @@ try_chat_80(S,F,Tree,QT):-
  ignore((
   nonvar(Tree),
   ((debug_chat80_if_fail(deepen_pos(call(F,Tree,QT))),should_learn(QT)) -> 
-  (assert(tmp:test80_result(S,F,QT)),in_cmt(print_tree_nl(F=QT)))
-  ;(assert(tmp:test80_result(S,F,failed)),in_cmt(print_tree_nl(F=failed)))))).
+  (assert_if_new(tmp:test80_result(S,F,QT)),in_cmt(print_tree_nl(F=QT)))
+  ;(assert_if_new(tmp:test80_result(S,F,failed)),in_cmt(print_tree_nl(F=failed)))))).
 
 
 c88(B,O):-
- any_to_string(B,S),
+ any_to_str(B,S),
  make,
  try_chat_80(S,into_lexical_segs(S,Lex)),
  try_chat_80(S,try_ace_drs(S,Ace)),
@@ -579,7 +581,7 @@ c88(B,O):-
 
 
 c88(B):- 
-   any_to_string(B,S),
+   any_to_str(B,S),
    try_chat_80(S,c88(S,_)).
 
 s83:- forall(training_data(Sent,M),(my_drs_to_fol_kif(M,O),in_cmt(block,print_tree_nl(Sent=O)))).
@@ -692,7 +694,7 @@ for_n(N,From,Call):-
 
 p1(P2,X):- atom(P2), \+ current_predicate(P2/1),  current_predicate(P2/2),!, 
   any_to_string(X,S),nl,dmsg(?-p1(P2,S)),call(P2,S,Y),wdmsg(Y),nl,!.
-p1(P1,X):- any_to_string(X,S),append_term(P1,S,G),nl,dmsg(?-G),call(G),nl,!.
+p1(P1,X):- any_to_str(X,S),append_term(P1,S,G),nl,dmsg(?-G),call(G),nl,!.
 s81:- make,s811(show_c80),s811(p1(cvt_to_objecteese)).
 s81(P):- s811(p1(P)).
 s811(P):- s811(15,P).

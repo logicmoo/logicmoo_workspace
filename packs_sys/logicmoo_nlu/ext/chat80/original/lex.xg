@@ -179,7 +179,6 @@ det(det(Det),Number,Def) --->
    {det_lex(W,Number,Det,Def)}.
 det(generic(ArgInfo2),_,generic(ArgInfo2)) ---> noText.
 
-adj(restr,adj(make_var(Out))) ---> link_t_1('ADJP',Words),{s88(['something','X1','is'|Words],Out)}.
 adj(Type,adj(Adj)) --->
    theText80_W2(W,W2),
    {adj_lex_w2(W,W2,Adj,Type)}.
@@ -222,14 +221,16 @@ name_xg(Name) --->
    name_lex_txt(Name).
 
 
+name_lex_txt(acevar(Name,AceVar)) ---> name_lex_txt0(Name),ace_var(AceVar).
 name_lex_txt(Name) ---> name_lex_txt0(Name).
+name_lex_txt(Name) ---> ace_var(Name).
 
 name_lex_txt0(Name) ---> thePos80((nnp;nnps),W1),thePos80((nnp;nnps),W2),{atomic(W1),atomic(W2),atomic_list_concat([W1,'_',W2],Name),name_LF(Name)}.
 name_lex_txt0(Name) ---> theTextL80([W1,W2]),{atomic(W1),atomic(W2),atomic_list_concat([W1,'_',W2],Name),name_LF(Name)}.
 name_lex_txt0(Name) ---> theTextL80([W1,'_',W2]),{!,atomic(W1),atomic(W2),atomic_list_concat([W1,'_',W2],Name),name_LF(Name)}.
 name_lex_txt0(Name) ---> theText80(Name), {name_LF(Name),!}.
 
-ace_var(AceVar) ---> theText80_Text(AceVar), {ace_varname(AceVar),!}.
+ace_var(AceVar) ---> theText80(AceVar), {ace_varname(AceVar),!}.
 
 wh_art(_Kind,X,pl,quantV(same,wh(X))) ---> {how_many_lex(HOWMANY)}, theTextL80(HOWMANY).
 wh_art(Kind,X,Agmt,DX) --->
