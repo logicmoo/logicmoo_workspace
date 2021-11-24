@@ -433,6 +433,7 @@ talkdb_adj(Adj):- fail, talkdb:talk_db(adj,Adj), (\+ talkdb:talk_db(adv,Adj);if_
 %adj_db_clex(X,Y,quantV):- clex:adj_itr(X,Y).
 adj_db_clex(X,Y,restr):- clex:adj_itr(X,Y), (\+ clex:adv(X,_);if_search_expanded(2)).
 
+adv_lex_w2(Adv,W2,Adv):- adv_lex_w2(Adv,W2).
 adv_lex_w2(_,W2):- must_member(pos(rb),W2).
 adv_lex_w2(Adv,_):- adverb_db(Adv).
 adverb_db(X):- try_lex(adverb_lex_db(X)).

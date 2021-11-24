@@ -263,10 +263,19 @@ link_s(S) --->
  { \+ lctmp:in_sent804 }, !, 
      locally(lctmp:in_sent804,link_s_1(S)).
 
-link_s_1(S) --->
- xg_peek(theText80_W2(_,L)),{member(loc(N),L),
- member(link(_,'S',r('S',seg(N,M))),L),Len is M-N+1, Len>1,
- length(Words,Len)},xg_w2_len(Len,Words),!,{sentence80(S,Words,[],[],[])}.
+link_s_1(S) ---> link_t_1('S',Words), !,{sentence801(S,Words,[],[],[])}.
+
+link_t_1(Type,[w(S,L)|Words], [w(S,L)|A], B, X, X) :-
+  member(loc(N),L),
+  select(link(_, Type, r(Type, seg(N, M))),L,L2),
+  \+ member(link(_, Type, r(Type, seg(N, _))),L2),
+   Len is M-N,
+   length(Words,Len),
+   append(Words,B,A).
+  
+
+
+
 
 %np_objbody(Det,Number,Def) ---> {if_search_expanded(2)}, np_objbody(Det,Number,Def).
 np_objbody((Name),3+sg,def+proper) ---> name_xg(Name).
@@ -636,7 +645,7 @@ advs_opt(R,R,_) ---> noText.
 adj_phrase(P,Nil) ---> adj(_,P), { is_empty_bits(Nil) }.
 adj_phrase(P,Mask) --->  comp_phrase(P,Mask).
 
-adverb(Adv) --> theText80_W2(W,W2), {adv_lex_w2(W,W2,Adv)}.
+adverb(Adv) ---> theText80_W2(W,W2), {adv_lex_w2(W,W2,Adv)}.
 
 no_args_vt(tv).
 no_args_vt(dv(_Prep)).

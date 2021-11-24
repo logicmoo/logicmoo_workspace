@@ -220,6 +220,11 @@ i_s(s(Subj,Verb,VArgs,VMods),Pred,Up,Id) :-
    i_verb_mods(Mods,Tense,XA,Slots,Args,Up,+Id),
    reshape_pred(Meta,QSubj,Neg,P,Args0,Pred).
 
+i_verb(verb(VerbType,Root,_ExtraMods,Voice,Tense,Aspect,Neg),
+      PP,Tense,Voice,Det,Slots,XArg,Meta) :-
+       i_verb(verb(VerbType,Root,Voice,Tense,Aspect,Neg),
+      PP,Tense,Voice,Det,Slots,XArg,Meta).
+      
 i_verb(verb(_VerbType,Root,Voice,Tense,_Aspect,Neg),
       PP,Tense,Voice,Det,Slots,XArg,Meta) :-
    must80(slot_verb_template(Root,P,Slots,XArg,Meta)),
