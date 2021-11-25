@@ -33,7 +33,7 @@ must80((G1,G2)):- !, must80(G1), must80(G2).
 must80(G):- \+ current_prolog_flag(debug_chat80,true),!, call(G).
 must80(G):- call(G)*->true;(
   nop((wdmsg(failed(G)),ignore(on_x_fail(ftrace(G))))),
-  G \= lf80(_,_),
+  G \= lf80(_,_), fail,
   fmt(failed(G)),fail,call(G)).
 
 % logical form checker for chat80
@@ -225,8 +225,9 @@ i_s(s(Subj,Verb,VArgs,VMods),Pred,Up,Id) :-
    i_verb_mods(Mods,Tense,XA,Slots,Args,Up,+Id),
    reshape_pred(Meta,QSubj,Neg,P,Args0,Pred).
 
-i_verb(verb(VerbType,Root,_ExtraMods,Voice,Tense,Aspect,Neg),
+i_verb(verb(VerbType,Root,ExtraMods,Voice,Tense,Aspect,Neg),
       PP,Tense,Voice,Det,Slots,XArg,Meta) :-
+       ignore((ExtraMods\==[],wdmsg(extra_mods(ExtraMods)))),
        i_verb(verb(VerbType,Root,Voice,Tense,Aspect,Neg),
       PP,Tense,Voice,Det,Slots,XArg,Meta).
       

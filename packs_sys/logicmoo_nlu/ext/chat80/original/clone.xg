@@ -20,27 +20,49 @@ xg_w2_len(1,[])---> !, []. %% missing puncts
 xg_w2_len(N,[W|L])---> [W], {N>1, M is N -1},!,xg_w2_len(M,L).
 
 
+link_s(S) --->
+ { \+ lctmp:in_sent804 }, !, 
+     locally(lctmp:in_sent804,link_s_1(S)),
+     xg_peek(link_s_w(_)).
+
+link_s_w(Words) ---> link_t_1('S',Words),!.
+link_s_w(Words) ---> link_t_1('SBAR',Words),!.
+
+link_s_1(S) ---> link_s_w(Words), !,{sentence801(S,Words,[],[],[])}.
+
+link_t_1(Type,[w(S,L)|Words], [w(S,L)|A], B, X, X) :-
+  member(loc(N),L),
+  select(link(_, Type, r(Type, seg(N, M))),L,L2),
+  \+ member(link(_, Type, r(Type, seg(N, _))),L2),
+   Len is M-N,
+   (length(Words,Len),append(Words,B,A)),!.
+
+
 sentence80(S) ---> {b_setval('$prev_w2s', []),b_setval('$prev_spans', [])},
-    %sentence801(S1),!,sentence801s(S1,S).
-    sentence801(S).
+    sentence800(S1),sentence801s(S1,S).
 
-sentence800(S) ---> startQuotesEnding(E),!,sentence801(S),E,!.
-sentence800(S) ---> sentence801(S).
+sentence800(S) ---> sentence801(S)*->{true};(link_s(S)*->{true};q_sentence800(S)).
 
-sentence801s(S1,(S1,S2)) ---> xg_peek([_,_]), sentence80(S2),!.
-sentence801s(S1, S1) ---> [].
+q_sentence800(S) ---> startQuotesEnding(E),!,sentence801(S),E,!.
+
+
+sentence801s(S1,(S1,S2)) ---> xg_peek([_]), !, sentence80(S2).
+sentence801s(S1, S1) ---> noText,!.
 
 :- dynamic(if_giveup_dcg/0).
 sentence801(_) ---> {if_giveup_dcg,!,fail}.
 sentence801(S) ---> xg_from_right(the_w2_list(List),theText80(Last)),{arg(_,v('?','!','.'),Last)},!,{sentence_typed(Last,S,List)}.
 sentence801(S) ---> sentence802(S).
 
+sentence802(S) ---> sentence803(S) *-> {true} ; sentence804(S).
+
 %sentence802(np(Subj)) ---> theText80(there),thePos80(root(be)),subj(Subj,_Agmt,_Type).
 %sentence802(np(Subj)) ---> theText80(there),thePos80(root(exist)),subj(Subj,_Agmt,_Type).
-sentence802(S) ---> declarative(S),{!}.
-sentence802(S) ---> question80(S).
-sentence802(S) ---> imperative80(S),{!}.
-sentence802(np(Subj)) ---> subj(Subj,_Agmt,_Type).
+sentence803(S) ---> declarative(S),{!}.
+sentence803(S) ---> question80(S).
+sentence803(S) ---> imperative80(S),{!}.
+
+sentence804(np(Subj)) ---> subj(Subj,_Agmt,_Type).
 
 sentence_typed('?',S,List):- question80(S,List,[],[],[]).
 sentence_typed(Punct,Out,List):- s80(S,_,List,[],[],[]),punct_to_sent_type(Punct,S,Out),!.
@@ -271,21 +293,6 @@ of_type(P,H) ---> {P=..[F|List],PH=..[F,H|List]},PH.
 maybeComma ---> (theText80(',');[]),!.
 nl_list_of_items(AndOr,P, [H,T])---> xg_peek([_,_,_]), of_type(P,H), maybeComma, {member(AndOr,[and,or])}, theText80(AndOr), of_type(P,T),!.
 nl_list_of_items(AndOr,P, [H|T])---> xg_peek([_,_,_,_]), of_type(P,H), maybeComma, !, nl_list_of_items(AndOr,P, T).
-
-link_s(S) --->
- { \+ lctmp:in_sent804 }, !, 
-     locally(lctmp:in_sent804,link_s_1(S)).
-
-link_s_1(S) ---> link_t_1('S',Words), !,{sentence801(S,Words,[],[],[])}.
-
-link_t_1(Type,[w(S,L)|Words], [w(S,L)|A], B, X, X) :-
-  member(loc(N),L),
-  select(link(_, Type, r(Type, seg(N, M))),L,L2),
-  \+ member(link(_, Type, r(Type, seg(N, _))),L2),
-   Len is M-N,
-   length(Words,Len),
-   append(Words,B,A).
-  
 
 
 

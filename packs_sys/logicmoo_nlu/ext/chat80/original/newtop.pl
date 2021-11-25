@@ -510,6 +510,7 @@ process4b(How,Sentence,U,S1,Answer,Times) :-
    report(How,U,'Question',TotalTime,print_test),
    ignore((report(always,Answer,'Reply',TimeAns,print_tree_nl))))),!.
    
+results80((S1,S2),(G1,G2)):- !, results80(S1,G1), results80(S2,G2).
 results80(S1,Results):- 
   nonvar(S1),
   findall(Res,deepen_pos((answer802(S1,Res),Res\=[])),Results).

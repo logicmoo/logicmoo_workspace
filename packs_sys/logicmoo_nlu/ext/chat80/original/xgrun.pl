@@ -104,10 +104,11 @@ xg_left_associative(A, B, C, D, E, F) :-
 
 % c_r_l(R,L):- !, call(L),call(R).
 c_r_l(L,R):- call(L),call(R).
-xg_from_right(DCG_Left, DCG_Right,  S, E, S1, []) :- 
-    ignore(E = []),
+xg_from_right(DCG_Left, DCG_Right,  S, E, S1, E1) :- 
+    ignore(E = []), 
+    ignore(E1 = []),   
     append_from_right(Left,Right,S),
-    c_r_l(phraseXG(DCG_Right,Right,E,M1,[]),
+    c_r_l(phraseXG(DCG_Right,Right,E,M1,E1),
     phraseXG(DCG_Left,Left,[],S1,M1)).
 /*
 xg_from_right(DCG_Left, DCG_Right,  S1, [], S, E) :- 

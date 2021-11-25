@@ -76,6 +76,7 @@ answer802((answer80([]):-E),[B]) :- !, holds_truthvalue(E,B).
 answer802((answer80([X]):-E),S) :- !, seto(X,E,S).
 answer802((answer80(X):-E),S) :- seto(X,E,S).
 */
+answer802((S1,S2),(G1,G2)):- !, answer802(S1,G1), answer802(S2,G2).
 answer802(X,Y):- answer803(X,Y,G),!,call802(G).
 
 answer803((answer80([]):-E), [B], holds_truthvalue(E,B)).

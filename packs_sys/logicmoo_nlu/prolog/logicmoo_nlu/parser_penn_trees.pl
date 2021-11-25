@@ -329,7 +329,7 @@ cached_text_to_best_tree:- ignore((F= '/tmp/text_to_best_tree.tmp', exists_file(
 :- now_and_later(cached_text_to_best_tree).
 add_text_to_best_tree(P):-
   ignore(on_x_fail(ignore((
-    \+ P, assert(P),
+    \+ P, asserta(P),
     open('/tmp/text_to_best_tree.tmp',append,Out),
     writeq(Out,P),writeln(Out,'.'),
     close(Out))))).
@@ -363,6 +363,9 @@ text_to_best_tree_real(Text,TreeO):- text_to_best_tree_real_old(Text,Tree), !,
 text_to_best_tree_real(Text,Tree):- best_new_tree(Text,Tree), !.
 
 text_to_best_tree_real_old(Text,Tree):- 
+  notrace(parser_stanford:text_to_corenlp_tree(Text,Tree)),!.
+
+text_to_best_tree_real_old(Text,Tree):- 
  (callable(Tree) -> Format = Tree ; (Format = dont_format)),
   call(Format,'=================================\n',[]),
   call(Format,'Testing: ~w  \n',[Text]),
@@ -379,6 +382,7 @@ text_to_best_tree_real_old(Text,Tree):-
 % calls text_to_best_tree/2
 into_chat80_merged_segs("",[]):-!.
 into_chat80_merged_segs('',[]):-!.
+%into_chat80_merged_segs(Text80,U):- text_to_best_tree(Text80,U),!. 
 into_chat80_merged_segs(Text80,U):- 
  mort((
   parser_stanford:text_to_corenlp_w2(Text80,U2),

@@ -32,6 +32,7 @@ clausify80(assertion80(P),OUT) :-
 clausify80(P,OUT) :- 
   clausify80_qa([],P,V,B),!,
   OUT = (run80(V):-B).
+clausify80((S1,S2),(G1,G2)):- !, clausify80(S1,G1), clausify80(S2,G2).
 clausify80(P,error_in_clausify80(P)):- nop(dumpST),!,fail.
 
 clausify80_qa(V0,P,V,BO):- 

@@ -237,13 +237,32 @@ expandrhs( ','(X1,X2),S0,S,H0,H,Y) :- !,
    expandrhs(X1,S0,S1,H0,H1,Y1),
    expandrhs(X2,S1,S,H1,H,Y2),
    and(Y1,Y2,Y).
+
+expandrhs((X1*->X2;X3),S0,S,H0,H,(Y1*->Y2;Y3)) :- !,
+   expandor(X1*->X2,S0,S,H0,H,Y1*->Y2),
+   expandor(X3,S0,S,H0,H,Y3).
+expandrhs((X1->X2;X3),S0,S,H0,H,(Y1->Y2;Y3)) :- !,
+   expandor(X1*->X2,S0,S,H0,H,Y1*->Y2),
+   expandor(X3,S0,S,H0,H,Y3).
+
+expandrhs((X1->X2),S0,S,H0,H,(Y1->Y2)) :- !,
+   expandrhs(X1,S0,S1,H0,H1,Y1),
+   expandrhs(X2,S1,S,H1,H,Y2).
+expandrhs((X1*->X2),S0,S,H0,H,(Y1*->Y2)) :- !,
+   expandrhs(X1,S0,S1,H0,H1,Y1),
+   expandrhs(X2,S1,S,H1,H,Y2).
+
 expandrhs((X1;X2),S0,S,H0,H,(Y1;Y2)) :- !,
    expandor(X1,S0,S,H0,H,Y1),
    expandor(X2,S0,S,H0,H,Y2).
+
 expandrhs({X},S,S,H,H,X) :- !.
 expandrhs('!',S,S,H,H,'!') :- !.
 expandrhs(L,S0,S,H0,H,G) :- islist(L), !,
    expandlist(L,S0,S,H0,H,G).
+
+%expandrhs(\+ P,A1,A2,A3,A4, \+ Q) :- !, expandrhs(P,A1,A2,A3,A4,Q).
+
 expandrhs(X,S0,S,H0,H,Y) :-
    tag(X,S0,S,H0,H,Y).
 
@@ -263,7 +282,7 @@ tag(P,A1,A2,A3,A4,QQ) :- var(P),!,
 
 tag(P,A1,A2,A3,A4,Q) :-
    P=..[F|Args0],
-   conc_gx(Args0,[A1,A2,A3,A4],Args),
+   conc_gx(Args0,[A1,A2,A3,A4],Args), !,
    Q=..[F|Args].
 
 and(true,P,P) :- !.
