@@ -109,7 +109,8 @@ i_np_head0(np_head(quantV(Op0,N),Adjs,Noun),
    lf80(Type,pos_conversion_db(N,Op0,Type,V,Op)),
    must80(measure_op(Op,X,V--Units,P)).
 
-i_np_head0(np_head(generic(ArgInfo),[],Value), Type-X,Type-X,voidQ(ArgInfo),'`'(X=Value),Pred,Pred,[]) :- !.
+i_np_head0(np_head(generic(_ArgInfo1),[],Value), Type-X,Type-V,voidQ(_ArgInfo2),
+  '`'(same_objects(generic(Type-X-V),X,Value)),Pred,Pred,[]) :- !.
 
 i_np_head0(np_head(Det,Adjs,Noun),X,T,Det0,Head0,Pred0,Pred,Slots) :- 
   must80(i_np_head1(np_head(Det,Adjs,Noun),X,T,Det0,Head0,Pred0,Pred,Slots)).
@@ -214,6 +215,8 @@ i_adj(adj(Adj),TypeX-X,T,T,_,
       Head,Head,quantV(voidQ(_ArgInfo),TypeX-Y,'`'(P),'`'(Q)&Pred,[],_),Pred) :-
    lf80(TypeX,attribute_LF(Adj,TypeX,X,_,Y,P)),
    lf80(TypeX,standard_adj_db(Adj,TypeX,Y,Q)).
+i_adj(adj(Adj),_Type-X,T,T,Head,Head,'`'(P)&Pred,Pred) :-
+   compound(Adj),subst(Adj,self,X,P),P\==Adj,!.
 
 
 i_s(s(Subj,Verb,VArgs,VMods),Pred,Up,Id) :-
@@ -227,7 +230,7 @@ i_s(s(Subj,Verb,VArgs,VMods),Pred,Up,Id) :-
 
 i_verb(verb(VerbType,Root,ExtraMods,Voice,Tense,Aspect,Neg),
       PP,Tense,Voice,Det,Slots,XArg,Meta) :-
-       ignore((ExtraMods\==[],wdmsg(extra_mods(ExtraMods)))),
+       ignore((ExtraMods\==[],wdmsg(extra_mods(ExtraMods)),break)),
        i_verb(verb(VerbType,Root,Voice,Tense,Aspect,Neg),
       PP,Tense,Voice,Det,Slots,XArg,Meta).
       
@@ -384,8 +387,14 @@ pos_conversion_db(wh(Type-X),same,Type,X,identityQ(_ArgInfo)).
 pos_conversion_db(N,Op,_,N,Op):- number(N).
 pos_conversion_db(N,Op,_,N,Op):- bind_pos('value',N).
 
-measure_op(identityQ(_ArgInfo), X,X,    true).
-measure_op(same,      X,Y,    X=Y).
+same_value(X,X).
+same_objects(X,X).
+same_objects(_,X,X).
+same_values(X,X).
+
+%measure_op(identityQ(_ArgInfo), X,X,    true).
+measure_op(identityQ(_ArgInfo), X,Y,    same_value(X,Y)).
+measure_op(same,      X,Y,    same_values(X,Y)).
 measure_op(less,      X,Y,    exceeds(Y,X)).
 measure_op(notP+less,  X,Y, \+ exceeds(Y,X)).
 measure_op(more,      X,Y,    exceeds(X,Y)).

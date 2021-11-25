@@ -98,7 +98,7 @@ wh_pron_lex(hoo,subJ(_ArgInfo1)).
 wh_pron_lex(whom,compl).
 
 
-ace_varname(Name) :- upcase_atom(Name,Name),Name\=='I'.
+ace_varname(Name) :- upcase_atom(Name,Name), \+ downcase_atom(Name,Name), Name\=='I'.
 name_LF(Name) :- ace_varname(Name).
 name_LF(Name) :- bind_pos('object',Name).
 name_LF(Name) :- name_template_LF(Name,_).

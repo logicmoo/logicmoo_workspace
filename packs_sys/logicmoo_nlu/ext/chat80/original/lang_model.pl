@@ -557,10 +557,9 @@ try_chat_80(S,G):- G=..[F,Tree,QT],try_chat_80(S,F,Tree,QT).
 try_chat_80(S,F,Tree,QT):- 
  ignore((
   nonvar(Tree),
-  ((debug_chat80_if_fail(deepen_pos(call(F,Tree,QT))),should_learn(QT)) -> 
+  ((debug_chat80_if_fail(deepen_pos(call(F,Tree,QT))),should_learn(QT)) *-> 
   (assert_if_new(tmp:test80_result(S,F,QT)),in_cmt(print_tree_nl(F=QT)))
   ;(assert_if_new(tmp:test80_result(S,F,failed)),in_cmt(print_tree_nl(F=failed)))))).
-
 
 c88(B,O):-
  any_to_str(B,S),
