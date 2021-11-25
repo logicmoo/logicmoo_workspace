@@ -325,6 +325,7 @@ qualifiedBy_LF(FType,Name,Type,Else,P):- nop(qualifiedBy_LF(FType,Name,Type,Else
 
 restriction_LF(Word,Spatial&_,X,ti_adj(Type,X)):- adj_db_clex(Type,Word,restr), spatial(Spatial).
 restriction_LF(African,Spatial&_,X,ti(African,X)):- adj_lex(African,restr), spatial(Spatial).
+restriction_LF(Word,_,X,Out):- compound(Word),subst(Word,self,X,Out), Word\==Out.
 
 
 
