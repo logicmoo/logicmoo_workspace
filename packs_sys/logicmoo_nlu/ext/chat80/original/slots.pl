@@ -114,9 +114,9 @@ i_np_head0(np_head(generic(ArgInfo),[],Value), Type-X,Type-X,voidQ(ArgInfo),'`'(
 i_np_head0(np_head(Det,Adjs,Noun),X,T,Det0,Head0,Pred0,Pred,Slots) :- 
   must80(i_np_head1(np_head(Det,Adjs,Noun),X,T,Det0,Head0,Pred0,Pred,Slots)).
 
-i_np_head0(Else, Type-Name,Type-Name,identityQ(_ArgInfo),'`'(P),Pred,Pred,[]):- 
-   if_search_expanded(1), may_qualify(Else),
-   lf80(Type,make_qualifiedBy(i_np_head0,Name,Type,Else,P)).
+i_np_head0(Else, Type-X,Type-X,identityQ(_ArgInfo),'`'(P),Pred,Pred,[]):- 
+   if_search_expanded(1),
+   lf80(Type,make_qualifiedBy(i_np_head0,X,Type,Else,P)).
 
 i_np_head1(np_head(Det,Adjs,Noun),X,T,DetO,Head0,Pred0,Pred,Slots):-
    i_adjs(Adjs,X,T,X,Head0,Head,Pred0,Pred),
@@ -126,7 +126,7 @@ i_np_head1(np_head(Det,Adjs,Noun),X,T,DetO,Head0,Pred0,Pred,Slots):-
 xform_det(_Det,_DetO):- !.
 
 make_qualifiedBy(PType,Name,Type,Else,P):- if_search_expanded(3), qualifiedBy_LF(PType,Name,Type,Else,P).
-make_qualifiedBy(_,Name,Type,Else,P):- if_search_expanded(3), P = qualifiedBy(Name,Type,Else).
+make_qualifiedBy(_,Name,Type,Else,P):- if_search_expanded(3),may_qualify(Else), P = qualifiedBy(Name,Type,Else).
 %may_qualify(_):- !,fail.
 may_qualify(np_head(det(each),[],_)):-!,fail.
 may_qualify(np_head(_,[],Act)):- atom(Act),atom_concat('actioned',_,Act), !,fail.

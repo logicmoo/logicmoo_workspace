@@ -179,6 +179,7 @@ det(det(Det),Number,Def) --->
    {det_lex(W,Number,Det,Def)}.
 det(generic(ArgInfo2),_,generic(ArgInfo2)) ---> noText.
 
+%adj(restr,adj(from_adjp(Out))) ---> link_t_1('ADJP',Words),{c88(['something','X1','is'|Words],Out)}.
 adj(Type,adj(Adj)) --->
    theText80_W2(W,W2),
    {adj_lex_w2(W,W2,Adj,Type)}.
@@ -221,9 +222,7 @@ name_xg(Name) --->
    name_lex_txt(Name).
 
 
-name_lex_txt(acevar(Name,AceVar)) ---> name_lex_txt0(Name),ace_var(AceVar).
 name_lex_txt(Name) ---> name_lex_txt0(Name).
-name_lex_txt(Name) ---> ace_var(Name).
 
 name_lex_txt0(Name) ---> thePos80((nnp;nnps),W1),thePos80((nnp;nnps),W2),{atomic(W1),atomic(W2),atomic_list_concat([W1,'_',W2],Name),name_LF(Name)}.
 name_lex_txt0(Name) ---> theTextL80([W1,W2]),{atomic(W1),atomic(W2),atomic_list_concat([W1,'_',W2],Name),name_LF(Name)}.

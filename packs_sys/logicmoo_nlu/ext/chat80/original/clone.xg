@@ -176,9 +176,11 @@ subj0(Subj,Agmt,_) --->
 
 /* Noun Phrase */
 
-np(AgmtKernelMods,Agmt,Case,Def,Role,Set,Mask) --->
+np(AgmtKernelModsO,Agmt,Case,Def,Role,Set,Mask) --->
   locally(tlclone:np_in_case(Case),
-    np0(AgmtKernelMods,Agmt,Case,Def,Role,Set,Mask)).
+    np0(AgmtKernelMods,Agmt,Case,Def,Role,Set,Mask)),
+    maybe_variable(AgmtKernelMods,AgmtKernelModsO).
+
 
 np0(np(Agmt,Pronoun,[]),Agmt,NPCase,def,_,Set,Nil) --->
    {is_pp(Set)},
