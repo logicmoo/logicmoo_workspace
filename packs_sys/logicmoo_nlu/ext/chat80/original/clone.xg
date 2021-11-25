@@ -20,14 +20,14 @@ xg_w2_len(1,[])---> !, []. %% missing puncts
 xg_w2_len(N,[W|L])---> [W], {N>1, M is N -1},!,xg_w2_len(M,L).
 
 
-sentence80(S) ---> {b_setval('$prev_w2s', []),b_setval('$prev_spans', [])}, 
+sentence80(S) ---> {b_setval('$prev_w2s', []),b_setval('$prev_spans', [])},
+    %sentence801(S1),!,sentence801s(S1,S).
     sentence801(S).
-    %sentence800(S1),!,sentence801s(S1,S).
 
 sentence800(S) ---> startQuotesEnding(E),!,sentence801(S),E,!.
 sentence800(S) ---> sentence801(S).
 
-sentence801s(S1,(S1,S2)) ---> xg_peek([_,_]), sentence801(S2),!.
+sentence801s(S1,(S1,S2)) ---> xg_peek([_,_]), sentence80(S2),!.
 sentence801s(S1, S1) ---> [].
 
 :- dynamic(if_giveup_dcg/0).
@@ -215,21 +215,23 @@ np_compls(common,Agmt,Case,Mods,Set0,Mask) --->
 /* Nuclear noun phrase */
 
 np_head0(_,_,_)---> has_trait(pos('.')),!,{fail}.
-np_head0(nameOf(items(AndOr,List)),Agmt,Def)---> {if_search_expanded(2)}, nl_list_of_items(AndOr,np_head1(Agmt,Def),List).
+np_head0(nameOf(items(AndOr,List),[]),Agmt,Def)---> {if_search_expanded(2)}, nl_list_of_items(AndOr,np_head1(Agmt,Def),List).
 np_head0(H,Agmt,Def)---> np_head1(H,Agmt,Def).
 
-np_head1(nameOf(O),Agmt,Def) ---> np_objbody(O,Agmt,Def).
+np_head1(nameOf(O,[]),Agmt,Def) ---> np_objbody(O,Agmt,Def).
 np_head1(Pronoun,Agmt,def+proper), gen_marker --->
    poss_pron(Pronoun,Agmt).
 np_head1(np_head(Det,[],Noun),3+sg,indef+common) --->
    quantifier_pron(Det,Noun).
-np_head1(np_head(Det,AdjsO,Head),3+Number,Def+common) --->
+np_head1(np_head(Det,Adjs,Head),3+Number,Def+common) --->
    determiner(Det,Number,Def),
    adjs_opt(Adjs),
-   noun(Head,Number),
-   maybe_variable(Adjs,AdjsO).
+   noun(Head,Number).
+%np_head1(nameOf(_,[adj(ace_var(self,AceVar))]),_,_) ---> ace_var(AceVar).
 
-maybe_variable(Adjs,[ace_var(AceVar)|Adjs])---> ace_var(AceVar),!.
+   
+
+maybe_variable(AdjIn,AdjsOut)---> ace_var(AceVar),!,{append_np_mods(AdjIn,(adj(ace_var(self,AceVar))),AdjsOut)}.
 maybe_variable(Adjs,Adjs)---> [].
 
 
