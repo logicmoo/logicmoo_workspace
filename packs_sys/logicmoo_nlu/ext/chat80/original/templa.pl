@@ -115,14 +115,15 @@ ordering_pred(thing,cp(west,of),X1,X2) :- type_measure_pred( _Region,position(x)
 
 
 /* Nouns */
-property_LF(River,Spatial& Feat& River,X,Spatial&Geo& /*_Neo&*/ Country,Y,
+property_LF(River,Spatial& Feat& River,X,Spatial&Geo& /*_Neo&*/ _Country,Y,
  (GP,ti(River,X)),[],_,_):-  
    if_search_expanded(2),
    make_generic_pred(Spatial,any,Y,X,GP),
    feat(Feat),spatial(Spatial),Geo=geo,
-   concrete_type(River),
-   concrete_type(Country).
+   %concrete_type(Country),
+   concrete_type(River).
 
+concrete_type(Type):- var(Type),dumpST,break,!,fail.
 concrete_type(Type):- Type==million,!,fail.
 concrete_type(dog).
 concrete_type(person).
@@ -317,14 +318,17 @@ make_generic_pred(Spatial,matches_prep(AT),X,Y,generic_pred(Spatial,prep(AT),Y,X
 make_generic_pred(Spatial,(AT),X,Y,generic_pred(Spatial,(AT),X,Y)):-!.
 
 % qualifiedBy
+qualifiedBy_LF(_FType,_Name,_Type,_Else,_P):-  \+ if_search_expanded(2),!, fail.
+%qualifiedBy_LF( FType,X,Type,Else,P):- nop(qualifiedBy_LF(FType,X,Type,Else,P)),fail.
 qualifiedBy_LF(_FType, X,Base&Thing,np_head(wh_det(Kind,Kind-_23246),[],Type),(ti(Thing,X),ti(Base,X),ti(Type,X))).
 qualifiedBy_LF(FType, X, BaseAndThing,np_head(det(the(sg)),Adjs,Table),Head):- qualifiedBy_LF(FType, X, BaseAndThing,np_head(det(a),Adjs,Table),Head),!.
 qualifiedBy_LF(_FType, X,_,np_head(det(a),[],Table),ti(Table,X)). 
-qualifiedBy_LF(_FType,Name,_Type,pronoun(_,1+sg),isa(Name,vTheVarFn("I"))).
-qualifiedBy_LF(_FType,Name,_Type,pronoun(_,1+pl),isa(Name,vTheVarFn("US"))).
-qualifiedBy_LF(FType,Name,Type,Else,P):- nop(qualifiedBy_LF(FType,Name,Type,Else,P)),fail.
+qualifiedBy_LF(_FType,X,_Type,pronoun(_,1+sg),isa(X,vTheVarFn("I"))).
+qualifiedBy_LF(_FType,X,_Type,pronoun(_,1+pl),isa(X,vTheVarFn("US"))).
+qualifiedBy_LF(_FType,X,Type,np_head(generic(_),Adjs,Table),Pred):-
+  must(i_adjs(Adjs,Type-X,Type-X,_,Head,Head,Pred,ti(Table,X))).
+qualifiedBy_LF(_FType,X,Type,np_head(det(a),Adjs,Table),Pred):- 
 
-qualifiedBy_LF(_FType, X,Type,np_head(det(a),Adjs,Table),Pred):- %fail,
   must(i_adjs(Adjs,Type-X,Type-X,_,Head,Head,Pred,ti(Table,X))).
 
 

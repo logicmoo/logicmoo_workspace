@@ -173,7 +173,7 @@ i_np_mod(prep_phrase(Prep,NP),
 i_np_mod(Mod,X,Slots,Slots,Pred0,Pred,QMods0,QMods,Up,Id,_) :-
    i_rel(Mod,X,Pred0,Pred,QMods0,QMods,Up,Id).
 
-i_noun(Noun,Type-X,P,Slots) :-
+i_noun(Noun,Type-X,P,Slots) :- nonvar(Noun),
    lf80(Type,noun_template(Noun,Type,X,P,Slots)).
 
 i_bind(Prep,Slots0,Slots,_,X,Id,arg,P,[],[]) :-

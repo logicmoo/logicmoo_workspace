@@ -545,7 +545,17 @@ symm_test:- c88([does,iran,border,iraq]).
 symm_test2:- cls, symm_test, c88([does,iran,action1,iraq]).
 symm_test3:- c88([does,iran,symmetric1,iraq]).
 
+abn("
+rules: 
+If X1 is asleep then X1 does not see anything.
+If X1 is looking at X2 and the area near X2 is visible then X1 sees X2.
 
+The area X3 is near X2. X3 is lit.
+X3 is the area near X2. 
+
+
+
+").
 acetext_to_text80(List,Text80):- atom(List),into_tex80(List,Text80).
 acetext_to_text80(List,Each):- is_list(List),maplist(atom,List),!,member(Each,List).
 acetext_to_text80(List,Out):- is_list(List),member(E,List),acetext_to_text80(E,Out).
