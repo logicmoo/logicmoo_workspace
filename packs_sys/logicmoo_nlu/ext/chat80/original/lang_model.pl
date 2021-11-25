@@ -564,18 +564,23 @@ try_chat_80(S,F,Tree,QT):-
 c88(B,O):-
  any_to_str(B,S),
  make,
+ locally(set_prolog_flag(gc,false),
+((
+ try_chat_80(S,text_to_corenlp_tree(S,_)),
  try_chat_80(S,into_lexical_segs(S,Lex)),
- try_chat_80(S,try_ace_drs(S,Ace)),
- try_chat_80(S,try_ace_eng(Ace,_Eng)),
- try_chat_80(S,try_ace_fol(Ace,FOL)),
+ try_chat_80(S,any_to_ace_str(S,SACE)),
+ try_chat_80(S,try_ace_drs(SACE,Ace)),
  try_chat_80(S,sentence80(Lex,Tree)),
  try_chat_80(S,i_sentence(Tree,QT)),
  try_chat_80(S,clausify80(QT,UE)),  
  try_chat_80(S,simplify80(UE,Query)),
+ try_chat_80(S,try_ace_fol(Ace,FOL)),
  try_chat_80(S,results80(Query,_Answer)),
+ try_chat_80(S,any_to_ace_str(S,SACE)),
+ try_chat_80(S,try_ace_eng(Ace,_Eng)),
  ignore((var(QT),add_c80(S))),
  member(O,[Query,UE,FOL,Ace,QT,Tree,S]),
- nonvar(O),!.
+ nonvar(O)))),!.
 %c88(M,O):- process4a(off,M,_,O,_Times).
 
 

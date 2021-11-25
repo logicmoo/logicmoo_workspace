@@ -103,7 +103,10 @@
 
 
 
-any_to_ace_str(I,S):- words_of(I,M),tokenizer:expand_contracted_forms(_All,M,MS),any_to_str(MS,S).
+any_to_ace_str(I,S):- words_of(I,M),
+  tokenizer:expand_contracted_forms(_All,M,MS),
+ % ignore((M\==MS,dmsg(expand_contracted_forms(M,MS)))),
+  any_to_str(MS,S).
 
 try_ace_drs(I,O):- any_to_ace_str(I,S),!,
    ace_to_drs:aceparagraph_to_drs(S,on,off,1,_Sentences,_Trees,UnresolvedDrs,O,Messages,_Time),

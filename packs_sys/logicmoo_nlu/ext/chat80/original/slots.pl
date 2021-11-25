@@ -205,7 +205,8 @@ i_adj(sup(Op0,adj(Adj)),Type-X,Type-V,_,
    op_inverse(Op0,Sign,Op),
    i_sup_op(Op,F),
    lf80(Type,attribute_LF(Adj,Type,X,_,Y,P)).
-
+i_adj(adj(Adj),_Type-X,T,T,Head,Head,'`'(P)&Pred,Pred) :-
+   compound(Adj),subst(Adj,self,X,P),P\==Adj,!.
 i_adj(adj(Adj),Type-X,T,T,Head,Head,'`'(P)&Pred,Pred) :-
    lf80(Type,restriction_LF(Adj,Type,X,P)).
 i_adj(adj(Adj),TypeX-X,TypeV-V,_,
@@ -215,8 +216,6 @@ i_adj(adj(Adj),TypeX-X,T,T,_,
       Head,Head,quantV(voidQ(_ArgInfo),TypeX-Y,'`'(P),'`'(Q)&Pred,[],_),Pred) :-
    lf80(TypeX,attribute_LF(Adj,TypeX,X,_,Y,P)),
    lf80(TypeX,standard_adj_db(Adj,TypeX,Y,Q)).
-i_adj(adj(Adj),_Type-X,T,T,Head,Head,'`'(P)&Pred,Pred) :-
-   compound(Adj),subst(Adj,self,X,P),P\==Adj,!.
 
 
 i_s(s(Subj,Verb,VArgs,VMods),Pred,Up,Id) :-

@@ -395,6 +395,9 @@ eng_to_logic(U,S):- sentence80(E,U,[],[],[]), sent_to_prelogic(E,S).
 
 qualifiedBy(V,_,np_head(det(A),_Adjs,Ti)):- !, debug_var0([A,Ti],V).
 qualifiedBy(_,_,_).
+intrans_pred_prep(thing,_Thing1,Wait,_X,For,Y):- fail,
+ debug_var([prep,For],Y),
+ debug_var([intrans],Wait).
 
 
 %is_lexical_segs(Sent,Sent):- is_list(Sent),maplist(parser_penn_trees:is_word_or_span,Sent),!.

@@ -197,7 +197,7 @@ subj0(Subj,Agmt,_) --->
    {is_s_all(SAll), is_subj_case(Case)},
    np(Subj,Agmt,Case,_,subJ(_ArgInfo1),SAll,_).
 
-subj0(np_head(generic(any),[adj(ace_var(self,AceVar))],[any]),_,_) ---> ace_var(AceVar).
+subj0(np_head(generic(_),[adj(ace_var(self,AceVar))],[any]),_,_) ---> ace_var(AceVar).
 
 
 /* Noun Phrase */

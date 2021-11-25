@@ -506,19 +506,32 @@ do_idiomatic_replaces(Allowed,Except,X,Y):- idiomatic_replacement(IsAllowed,Find
   replace_once(X,Find,Replace,M), do_idiomatic_replaces(Allowed,[f(Find)|Except],M,Y).
 do_idiomatic_replaces(Allowed,Except,X,Y):- idiomatic_replacement(IsAllowed,Find,Replace),\+ member(f2(Find),Except), chk_is_allowed(IsAllowed,Allowed),
   replace_once(X,Find,Replace,M), do_idiomatic_replaces(Allowed,[f2(Find)|Except],M,Y).
-do_idiomatic_replaces(Allowed,Except,X,Y):- idiomatic_replacement_extends(IsAllowed,Find,Replace,Lastly),\+ member(f3(Find),Except), chk_is_allowed(IsAllowed,Allowed),
-  replace_once(X,Find,Replace,M1),freeze(Punct,is_punct_char(Punct)),append(Lastly,[Punct],LastlyPunct),
-  replace_once(M1,[Punct],LastlyPunct,M), do_idiomatic_replaces(Allowed,[f3(Find)|Except],M,Y).
-do_idiomatic_replaces(Allowed,Except,X,Y):- idiomatic_replacement_extends(IsAllowed,Find,Replace,Lastly),\+ member(f4(Find),Except), chk_is_allowed(IsAllowed,Allowed),
-  replace_once(X,Find,Replace,M1),freeze(Punct,is_punct_char(Punct)),append(Lastly,[Punct],LastlyPunct),
-  replace_once(M1,[Punct],LastlyPunct,M), do_idiomatic_replaces(Allowed,[f4(Find)|Except],M,Y).
+
 do_idiomatic_replaces(_,_,X,X).
 
 is_punct_char(Punct):- atom(Punct), atom_length(Punct,1), char_type(Punct,punct).
 
+
+have_do(have,pl).
+have_do(has,sg).
+have_do(do,pl).
+have_do(does,sg).
+have_do(be,_).
+have_do(are,pl).
+have_do(is,sg).
+have_do(HD):- have_do(HD,_).
+
 idiomatic_replacement_shorter(tense,[is,is],[is]).
 idiomatic_replacement_shorter(tense,[is,being],[is]).
 idiomatic_replacement_shorter(tense,[is,be],[is]).
+idiomatic_replacement_shorter(tense,[will,have],[has]).
+idiomatic_replacement_shorter(tense,[will,not,have],[has,not]).
+idiomatic_replacement_shorter(tense,[in,the,Past,in,the,Past],[in,the,Past]).
+
+idiomatic_replacement_shorter(tense,[in,the,Past,HaveDo,in,the,Past],[in,the,Past]):- have_do(HaveDo).
+idiomatic_replacement_shorter(tense,[HaveDo,in,the,Past],[in,the,Past]):- have_do(HaveDo).
+idiomatic_replacement_shorter(tense,[in,the,Past,HaveDo],[in,the,Past]):- have_do(HaveDo).
+
 idiomatic_replacement_shorter(tense,[some,of,some],[some]).
 idiomatic_replacement_shorter(acetoks,[-,B],[AB]):- freeze(B,atomic_list_concat([-,B],AB)).
 idiomatic_replacement_shorter(acetoks,[A,:,B],[AB]):- nop(is_prefix(A)), freeze(B,atomic_list_concat([A,:,B],AB)).
@@ -564,32 +577,59 @@ idiomatic_replacement(tense,[these],[some,'those-they']).
 idiomatic_replacement(tense,[their],['those-they','''',s]).
 idiomatic_replacement(tense,[they],[some,'those-they']).
 idiomatic_replacement(tense,[them],[some,'those-they']).
-idiomatic_replacement(unsafe,[does,some],[is,doing]).
-idiomatic_replacement(unsafe,[does],[is,doing]).
+%idiomatic_replacement(unsafe,[does,some],[is,doing]).
+%idiomatic_replacement(unsafe,[does],[is,doing]).
 idiomatic_replacement(tense,[wont],[will,not]).
 idiomatic_replacement(tense,['"',Eat],['"',Eats]):- freeze(Eat,verb_forms(Eat,Eats,_Ate,_Eating,_Eaten)).
 %idiomatic_replacement(tense,[was],[that,is,in,the,past,that,is]).
 %idiomatic_replacement(tense,[will],[that,is,in,the,future,that]).
 
+%idiomatic_replacement(C,F,R):- idiomatic_replacement(C,F,R2,R1),append(R1,R2,R).
+/*
 idiomatic_replacement_prepends(tense,Before,After,[if,the,statement,is,Old,statement,then]):-
   idiomatic_replacement_prepends(tense,Before,After,[in,the,Past]),
    (Past == past -> Old = old ; Old = new).
+*/
 
+idiomatic_replacement(tense,[was],[in,the,past,is]).
+idiomatic_replacement(tense,[were],[in,the,past,are]).
 
-idiomatic_replacement_extends(tense,[has,done],[is,doing],[in,the,past]).
-idiomatic_replacement_extends(tense,[did,do],[is,doing],[in,the,past]).
-idiomatic_replacement_extends(tense,[was],[is],[in,the,past]).
-idiomatic_replacement_extends(tense,[were],[are],[in,the,past]).
-idiomatic_replacement_extends(tense,[did],[is,doing],[in,the,past]).
-idiomatic_replacement_extends(tense,[Ate],[Eats],[in,the,past]):- 
-  freeze(Ate,verb_forms(_Eat,Eats,Ate,_Eating,_Eaten)).
-idiomatic_replacement_extends(tense,[will,have,Eaten],[Eat],[in,the,future]):- 
-  freeze(Eaten,verb_forms(Eat,_Eats,_Ate,_Eating,Eaten)).
-idiomatic_replacement_extends(tense,[have,Eaten],[Eat],[in,the,past]):-
-  freeze(Eaten,verb_forms(Eat,_Eats,_Ate,_Eating,Eaten)).
-idiomatic_replacement_extends(tense,[will,do],[is,doing],[in,the,future]).
-%idiomatic_replacement_extends(tense,[do],[doing],[in,the,future]).
-idiomatic_replacement_extends(tense,[will],[do],[in,the,future]).
+idiomatic_replacement(tense,[did],[in,the,past]).
+idiomatic_replacement(tense,[will],[in,the,future]).
+
+idiomatic_replacement(tense,[could],[in,the,past,can]).
+
+idiomatic_replacement(tense,[has],[in,the,past,have]).
+idiomatic_replacement(tense,[had],[in,the,past,have]).
+idiomatic_replacement(tense,[has,done],[in,the,past,have]).
+
+/*
+
+idiomatic_replacement(tense,[Eat],[VEat]):-
+  freeze(Eat,(verb_forms(Eat,_Eats,_Ate,_Eating,_Eaten),atom_concat('v:',Eat,VEat))).
+
+idiomatic_replacement(tense,[Eats],[VEat]):-
+  freeze(Eats,(verb_forms(Eat,Eats,_Ate,_Eating,_Eaten),atom_concat('v:',Eat,VEat))).
+
+idiomatic_replacement(tense,[Eating],[VEat]):-
+  freeze(Eating,(verb_forms(Eat,_Eats,_Ate, Eating,_Eaten),atom_concat('v:',Eat,VEat))).
+*/
+
+idiomatic_replacement(tense,[Eaten],[in,the,past,Eating]):-
+  freeze(Eaten,(verb_forms(_Eat,_Eats,_Ate,Eating,Eaten))).
+
+idiomatic_replacement(tense,[Ate],[in,the,past,Eating]):-
+  freeze(Ate,(verb_forms(_Eat,_Eats,Ate,Eating,_Eaten))).
+
+idiomatic_replacement(tense,[Past,Verb],[Past,Verbing]):- past_or_future(Past),
+  freeze(Verb,any_verb_form(Verb,Verbing)).
+
+past_or_future(past).
+past_or_future(future).
+
+any_verb_form(Verb,Verbing):- 
+  arg(_,verb_forms(Eat,Eats,Ate,Eaten),Verb), 
+        verb_forms(Eat,Eats,Ate,Verbing,Eaten).
 
 verb_forms(Eat,Eats,Ate,Eating,Eaten):- talk_db(_,Eat,Eats,Ate,Eating,Eaten),
   \+ skip_verb(Eat), \+ skip_verb(Eats), \+ skip_verb(Ate), \+ skip_verb(Eating), \+ skip_verb(Eaten),  
@@ -599,6 +639,11 @@ verb_forms(Eat,Eats,Ate,Eating,Eaten):- talk_db(_,Eat,Eats,Ate,Eating,Eaten),
 skip_verb(do).
 skip_verb(be).
 skip_verb(is).
+skip_verb(in).
+skip_verb(can).
+%skip_verb(X):- clex:noun_pl(_,X,_).
+%skip_verb(X):- clex:noun_sg(_,X,_).
+skip_verb(have).
 skip_verb(named).
 
 %% expand_contracted_forms(+TokenListIn:list, -TokenListOut:list) is det.
