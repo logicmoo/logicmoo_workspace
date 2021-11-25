@@ -395,7 +395,7 @@ eng_to_logic(U,S):- sentence80(E,U,[],[],[]), sent_to_prelogic(E,S).
 
 qualifiedBy(V,_,np_head(det(A),_Adjs,Ti)):- !, debug_var0([A,Ti],V).
 qualifiedBy(_,_,_).
-intrans_pred_prep(thing,_Thing1,Wait,_X,For,Y):- fail,
+intrans_pred_prep(thing,_Thing1,Wait,_X,For,Y):- 
  debug_var([prep,For],Y),
  debug_var([intrans],Wait).
 
@@ -585,8 +585,13 @@ sent_to_prelogic(S0,S) :-
    simplify80(S3,S).
 
 %reduce1(P,P):-!.
-reduce1(P,Q):- \+ compound(P), Q=P.
-reduce1((P,Q),PQ):- P ==Q,!,reduce1(P,PQ).
+reduce1(P,Q):- \+ compound(P),!, Q=P.
+reduce1((P,Q),PQ):- P == Q,!,reduce1(P,PQ).
+
+reduce1((P,Q),PQ):- '`'(true) == Q,!,reduce1(P,PQ).
+reduce1((Q,P),PQ):- '`'(true) == Q,!,reduce1(P,PQ).
+
+reduce1(qualifiedBy(X,P,S),R):- qualifiedBy_LF(reduce1,X,P,S,R),!.
 
 %reduce1(Ex^(ti(Type,Ex1),subsumed_by(Ex2,Inst)),Ex^(ti(Type,Inst)&Ex=Inst)):- Ex==Ex1, Ex1==Ex2,!.
 reduce1(Ex^(exceeds(Value1, Ex1) & exceeds(Value2, Ex2)),exceeds(Value2, Value1)):- Ex==Ex1, Ex1==Ex2,!.
@@ -605,6 +610,7 @@ simplify80(C,(P:-R)) :- !,
    simplify80(Q,R,true).
 simplify80(C,C0,C1):-var(C),dmsg(var_simplify(C,C0,C1)),fail.
 simplify80(C,C,R):-var(C),!,R=C.
+
 simplify80(setOf(X,P0,S),R,R0) :- !,
    simplify80(P0,P,true),
    revand(R0,setOf(X,P,S),R).
@@ -623,6 +629,7 @@ simplify80(X^P0,R,R0) :- !,
 simplify80(numberof(X,P0,Y),R,R0) :- !,
    simplify80(P0,P,true),
    revand(R0,numberof(X,P,Y),R).
+
 simplify80(\+P0,R,R0) :- !,
    simplify80(P0,P1,true),
    simplify_not(P1,P),

@@ -126,7 +126,7 @@ i_np_head1(np_head(Det,Adjs,Noun),X,T,DetO,Head0,Pred0,Pred,Slots):-
 
 xform_det(_Det,_DetO):- !.
 
-make_qualifiedBy(PType,Name,Type,Else,P):- if_search_expanded(3), qualifiedBy_LF(PType,Name,Type,Else,P).
+make_qualifiedBy(PType,Name,Type,Else,P):- qualifiedBy_LF(PType,Name,Type,Else,P).
 make_qualifiedBy(_,Name,Type,Else,P):- if_search_expanded(3),may_qualify(Else), P = qualifiedBy(Name,Type,Else).
 %may_qualify(_):- !,fail.
 may_qualify(np_head(det(each),[],_)):-!,fail.
@@ -194,7 +194,12 @@ in_slot([Slot|Slots0],Case,X,Id,[Slot|Slots],F) :-
 slot_match(slot(Case,Type,X,Id,F),Case,Type-X,Id,F).
 
 i_adjs([],_X,T,T,Head,Head,Pred,Pred).
-i_adjs([Adj|Adjs],X,T,T0,Head0,Head,Pred0,Pred) :-
+i_adjs([Adj|Adjs],X,T,T0,Head0,Head,Pred0,Pred):- 
+  nop(dmsg(inn(i_adjs0([Adj|Adjs],X,T,T0,Head0,Head,Pred0,Pred)))),
+  i_adjs0([Adj|Adjs],X,T,T0,Head0,Head,Pred0,Pred),
+  nop(dmsg(out(i_adjs0([Adj|Adjs],X,T,T0,Head0,Head,Pred0,Pred)))).
+
+i_adjs0([Adj|Adjs],X,T,T0,Head0,Head,Pred0,Pred) :-
    lf80(T-T1,i_adj(Adj,X,T,T1,Head0,Head1,Pred0,Pred1)),
    i_adjs(Adjs,X,T1,T0,Head1,Head,Pred1,Pred).
 
@@ -205,13 +210,16 @@ i_adj(sup(Op0,adj(Adj)),Type-X,Type-V,_,
    op_inverse(Op0,Sign,Op),
    i_sup_op(Op,F),
    lf80(Type,attribute_LF(Adj,Type,X,_,Y,P)).
+
 i_adj(adj(Adj),_Type-X,T,T,Head,Head,'`'(P)&Pred,Pred) :-
    compound(Adj),subst(Adj,self,X,P),P\==Adj,!.
+
 i_adj(adj(Adj),Type-X,T,T,Head,Head,'`'(P)&Pred,Pred) :-
    lf80(Type,restriction_LF(Adj,Type,X,P)).
 i_adj(adj(Adj),TypeX-X,TypeV-V,_,
    aggr(F,V,[X],Head,Pred),Head,'`'(true),Pred) :-
    lf80(TypeV+TypeX,aggr_adj_LF(Adj,TypeV,TypeX,F)).
+
 i_adj(adj(Adj),TypeX-X,T,T,_,
       Head,Head,quantV(voidQ(_ArgInfo),TypeX-Y,'`'(P),'`'(Q)&Pred,[],_),Pred) :-
    lf80(TypeX,attribute_LF(Adj,TypeX,X,_,Y,P)),

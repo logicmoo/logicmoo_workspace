@@ -316,10 +316,17 @@ trans_LF1(Trans,_,X,_,Y,P ,[],_,_):- if_search_expanded(4),
 make_generic_pred(Spatial,matches_prep(AT),X,Y,generic_pred(Spatial,prep(AT),Y,X)):-!.
 make_generic_pred(Spatial,(AT),X,Y,generic_pred(Spatial,(AT),X,Y)):-!.
 
+% qualifiedBy
 qualifiedBy_LF(_FType, X,Base&Thing,np_head(wh_det(Kind,Kind-_23246),[],Type),(ti(Thing,X),ti(Base,X),ti(Type,X))).
+qualifiedBy_LF(FType, X, BaseAndThing,np_head(det(the(sg)),Adjs,Table),Head):- qualifiedBy_LF(FType, X, BaseAndThing,np_head(det(a),Adjs,Table),Head),!.
+qualifiedBy_LF(_FType, X,_,np_head(det(a),[],Table),ti(Table,X)). 
 qualifiedBy_LF(_FType,Name,_Type,pronoun(_,1+sg),isa(Name,vTheVarFn("I"))).
 qualifiedBy_LF(_FType,Name,_Type,pronoun(_,1+pl),isa(Name,vTheVarFn("US"))).
 qualifiedBy_LF(FType,Name,Type,Else,P):- nop(qualifiedBy_LF(FType,Name,Type,Else,P)),fail.
+
+qualifiedBy_LF(_FType, X,Type,np_head(det(a),Adjs,Table),Pred):- %fail,
+  must(i_adjs(Adjs,Type-X,Type-X,_,Head,Head,Pred,ti(Table,X))).
+
 
 /* Adjectives */
 
