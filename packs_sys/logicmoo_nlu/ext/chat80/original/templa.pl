@@ -135,16 +135,16 @@ concrete_type(TI):-ti(TI,_),!.
 
 property_LF(Capital,Spatial& Feat& City,X,Spatial&Geo& /*_Neo&*/ Country,Y,specific_pred(Spatial,Nation_capital,Y,X),[],_,_):-  
 %   fail,
-   feat(Feat),
+   feat(Feat), assertion(nonvar(Capital)),
    unique_of_obj(Geo,Spatial,Country,_Govern,Capital,City,_Capital_city,Nation_capital).
 
 trans_LF(    Govern,Spatial& Feat& City,X,Spatial&Geo& /*_Neo&*/ Country,Y,specific_pred(2,Spatial,Nation_capital,Y,X),[],_,_):-
-  feat(Feat),
+  feat(Feat), assertion(nonvar(Govern)),
   unique_of_obj(Geo,Spatial,Country,Govern,_Capital,City,_Capital_city,Nation_capital).
    
 
 thing_LF(Capital,Spatial& Feat& City,X,ti(Capital_city,X),[],_):- 
-  feat(Feat),
+  feat(Feat), assertion(nonvar(Capital)),
    unique_of_obj(_Geo,Spatial,_Country,_Govern,Capital,City,Capital_city,_Nation_capital),
    spatial(Spatial).
 
@@ -159,7 +159,7 @@ property_LF(Latitude, value&position&XY,X,Spatial&_,Y, position_pred(Spatial,Lat
 property_LF(Population, value&units&Population/*citizens*/, X,Spatial&_,Y,    count_pred(Spatial,Population/*citizens*/,Y,X),[],_,_):-
   type_measure_pred(_City,units,Population,countV).
 
-property_LF(Area,     value&size&Area,    X,Spatial&_,Y, measure_pred(Spatial,Area,Y,X),[],_,_):- spatial(Spatial), clex_attribute(Area).
+property_LF(Area,     value&size&Area,    X,Spatial&_,Y, measure_pred(Spatial,Area,Y,X),[],_,_):- assertion(nonvar(Area)),spatial(Spatial), clex_attribute(Area).
 
 type_measure_pred(_AnyObjectType,MeasureType,Area,countV):- MeasureType\==size, MeasureType=Area, clex_attribute(Area).
 
@@ -168,12 +168,12 @@ clex_attribute(Area):-  bind_pos('attrib',Area).
 
 synonymous_spatial(nation,country).
 
-thing_LF_access(Area,value&size&Area,X,unit_format(Area,X),[],_):- type_measure_pred(_,size,Area,_).
+thing_LF_access(Area,value&size&Area,X,unit_format(Area,X),[],_):- assertion(nonvar(Area)), type_measure_pred(_,size,Area,_).
 
-thing_LF_access(Latitude,value&position,X,unit_format(Latitude,X),[],_):- type_measure_pred(_Region,position(_Y),Latitude,_).
+thing_LF_access(Latitude,value&position,X,unit_format(Latitude,X),[],_):- assertion(nonvar(Latitude)), type_measure_pred(_Region,position(_Y),Latitude,_).
 
 %thing_LF_access(Longitude,value&position,X,unit_format(Longitude,X),[],_):- type_measure_pred(_Region,position(x),Longitude,_).
-thing_LF_access(Population,value&units&Population/*citizens*/,X,unit_format(Population,X),[],_):- type_measure_pred(_,units,Population,_).
+thing_LF_access(Population,value&units&Population/*citizens*/,X,unit_format(Population,X),[],_):- assertion(nonvar(Population)), type_measure_pred(_,units,Population,_).
 
 
 /* Prepositions */

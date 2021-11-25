@@ -206,12 +206,6 @@ np(AgmtKernelModsO,Agmt,Case,Def,Role,Set,Mask) --->
   locally(tlclone:np_in_case(Case),
     np0(AgmtKernelMods,Agmt,Case,Def,Role,Set,Mask)),
     maybe_ace_variable(AgmtKernelMods,AgmtKernelModsO).
-np(AgmtKernelModsO,Agmt,Case,Def,Role,Set,Mask) --->
-  locally(tlclone:np_in_case(Case),
-    np0(AgmtKernelMods,Agmt,Case,Def,Role,Set,Mask)),
-    maybe_ace_variable(AgmtKernelMods,AgmtKernelModsO).
-
-
 
 
 np0(np(Agmt,Pronoun,[]),Agmt,NPCase,def,_,Set,Nil) --->
@@ -248,6 +242,7 @@ np_head0(_,_,_)---> has_trait(pos('.')),!,{fail}.
 np_head0(nameOf(items(AndOr,List),[]),Agmt,Def)---> {if_search_expanded(2)}, nl_list_of_items(AndOr,np_head1(Agmt,Def),List).
 np_head0(H,Agmt,Def)---> np_head1(H,Agmt,Def).
 
+np_head1(np_head(generic(_),[adj(ace_var(self,AceVar))],anything),_,_) ---> ace_var(AceVar).
 np_head1(nameOf(O,[]),Agmt,Def) ---> np_objbody(O,Agmt,Def).
 np_head1(Pronoun,Agmt,def+proper), gen_marker --->
    poss_pron(Pronoun,Agmt).
