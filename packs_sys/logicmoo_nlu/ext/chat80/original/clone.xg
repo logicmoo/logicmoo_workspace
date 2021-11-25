@@ -179,10 +179,20 @@ s_vp_800(Subj,Verb,Args,Mods,Mask) ---> s_vp_801(Subj,Verb,Args,Mods,Mask).
 
 s_vp_801(Subj,Verb,Args,Mods,Mask) --->
   {is_subj_case(Case)},
-   locally(tlclone:np_in_case(Case),subj(Subj,Agmt,Type)),
+   locally(tlclone:np_in_case(Case),
+   subj(Subj,Agmt,Type)),
    s_vp(Subj,Agmt,Type,Verb,Args,Mods,Mask).
 
-s_vp(_Subj,Agmt,Type,Verb,Args,Mods,Mask) --->
+s_vp(Subj,Agmt,Type,Verb,Args,Mods,Mask) --->
+  s_vp1(Subj,Agmt,Type0,Verb0,Args0,Mods0,Mask0),
+  more_s_vp1(Subj,Agmt,Type0,Verb0,Args0,Mods0,Mask0,Type,Verb,Args,Mods,Mask).
+/*
+more_s_vp1(Subj,Agmt,Type0,Verb0,Args0,Mods0,Mask0,
+                     Type,Verb,Args,Mods,Mask) ---> 
+   s_vp1(Subj,Agmt,Type1,Verb1,Args1,Mods1,Mask1).
+*/
+more_s_vp1(_Subj,_Agmt,Type,Verb,Args,Mods,Mask,Type,Verb,Args,Mods,Mask) ---> noText.
+s_vp1(_Subj,Agmt,Type,Verb,Args,Mods,Mask) --->
    verb(Verb,Agmt,Type,Voice),
    {is_empty_bits(Nil), is_s_all(SAll)},
    verb_args(Type,Voice,Args,Nil,Mask0),
@@ -197,7 +207,6 @@ subj0(Subj,Agmt,_) --->
    {is_s_all(SAll), is_subj_case(Case)},
    np(Subj,Agmt,Case,_,subJ(_ArgInfo1),SAll,_).
 
-subj0(np_head(generic(_),[adj(ace_var(self,AceVar))],[any]),_,_) ---> ace_var(AceVar).
 
 
 /* Noun Phrase */
