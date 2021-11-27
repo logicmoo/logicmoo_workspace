@@ -173,7 +173,7 @@ textOpt(Text) ---> theTextL80(Text).
 textOpt(_Text) ---> noText.
 
 
-noun(anything,Adjs,[adj(ace_var(self,AceVar))|Adjs],_Agmt) ---> 
+noun(noun_thing,Adjs,[adj(ace_var(self,AceVar))|Adjs],_Agmt) ---> 
    ace_var(AceVar),!.
 noun(Noun,Adjs,Adjs,Agmt) --->
    theText80_W2(W,L), 

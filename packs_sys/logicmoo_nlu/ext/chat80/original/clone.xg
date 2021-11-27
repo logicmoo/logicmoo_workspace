@@ -341,7 +341,7 @@ np_objbody((prep_obj(X,S)),Agmt,Type) ---> {fail},
   locally(tlclone:np_in_case(Case),subj(S,Agmt,Type)).
 
 np_objbody((num(Int)),3+sg,def+proper) ---> theText80(Value),{tr_number(Value,Int)}.
-np_objbody((adj(VGood)),_,_) --->   {if_search_expanded(6)},theText80(Good), {clex:adj_itr(Good,VGood)}.
+%np_objbody((adj(VGood)),_,_) --->   {if_search_expanded(6)},theText80(Good), {clex:adj_itr(Good,VGood)}.
 /*
 np_objbody(X, Y, Z, A, B, C, D) :-
     \+ lctmp:in_sent801, !, 
@@ -665,8 +665,8 @@ verb_args(dv(_Prep),_,[arg(Case,NP)|X],_,Mask) --->
    object_opt(Case,X,Mask0,Mask).
 % BE
 verb_args(be(_MODAL),_,[voidQ(_ArgInfo)],Mask,Mask) ---> theText80(there).
-verb_args(be(_MODAL),_,[arg(arg_pred(_ArgInfo),P)],_,Mask) --->
-   pred_conj(_,P,Mask).
+verb_args(be(_MODAL),_,[arg(arg_pred(Conj),P)],_,Mask) --->
+   pred_conj(Conj,P,Mask).
 verb_args(be(_MODAL),_,[arg(dirO(_ArgInfo),P)],_,Mask) ---> verb_arg(np,P,Mask).
 % HAVE
 verb_args(have(_MODAL),active,[arg(dirO(_ArgInfo),P)],_,Mask) ---> verb_arg(np,P,Mask).

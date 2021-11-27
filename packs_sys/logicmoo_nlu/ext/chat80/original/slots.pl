@@ -45,12 +45,6 @@ lf80(Type,G):-
   must80(P),
   ((var(Type0);var(Type)) -> Type0=Type ; (nop(writeln(Type0=Type)),must80(Type=Type0))).
 
-i_sentence((S1,S2),(G1,G2)):- !, i_sentence(S1,G1), i_sentence(S2,G2).
-i_sentence(S,G):- i_sentence1(S,G).
-
-i_sentence1(I,O):- i_sentence2(I,O).
-%i_sentence1(I,O):- i_subst(i_sentence2,I,O).
-
 sub_term_setarg(_,Term,_,_):- \+ compound(Term),!, fail.
 sub_term_setarg(Arg, Term, N,Term) :- arg(N, Term, Arg).
 sub_term_setarg(X, Term, O1, O2) :- arg(_, Term, Arg), sub_term_setarg(X, Arg, O1, O2).
@@ -70,12 +64,18 @@ i_subst(P2,I):-
   i_subst(P2,I).
 i_subst(_,_).
 
-i_sentence2(q(S),question80([],P)) :- 
-   must80(i_s(S,P,[],0)).
-i_sentence2(decl(S),assertion80(P)) :-
-   must80(i_s(S,P,[],0)).
-i_sentence2(whq(X,S),question80([X],P)) :-
-   must80(i_s(S,P,[],0)).
+
+i_sentence(S,(G1,G2)):- compound(S), S= (S1,S2), !, i_sentence(S1,G1), i_sentence(S2,G2).
+i_sentence(S,G):- i_sentence2(S,G).
+%i_sentence(S,G):- i_sentence0(S,G).
+
+i_sentence0(S,G):- i_sentence1(S,M),i_subst(i_s,M,G).
+
+i_sentence1(I,O):- i_sentence2(I,O)*->true;i_subst(i_sentence2,I,O).
+
+i_sentence2(q(S),question80([],P)) :- i_s(S,P).
+i_sentence2(decl(S),assertion80(P)) :- i_s(S,P). 
+i_sentence2(whq(X,S),question80([X],P)) :- i_s(S,P).
 i_sentence2(imp(U,Ve,s(_,Verb,VArgs,VMods)),imp(U,Ve,V,Args)) :-
    must80(i_verb(Verb,V,_,active,posP(_Modal),Slots0,[],transparent)),
    must80(i_verb_args(VArgs,[],[],Slots0,Slots,Args,Args0,Up,-0)),
