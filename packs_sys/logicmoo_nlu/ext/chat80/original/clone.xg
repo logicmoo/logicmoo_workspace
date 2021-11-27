@@ -250,7 +250,7 @@ np0(np(Agmt,Kernel,Mods),Agmt,_Case,Def,Role,Set,Mask) --->
 % many of, one of
 np0(part(Det,NP),3+Number,_,indef,Role,Set,Mask) --->
    {is_pp(Set)},
-   determiner(Det,Number,indef),
+   determiner(Det,Number,indef), {Det\=generic(_)},
    theText80(of),
    {is_s_all(SAll), is_prep_case(Case)},
    np(NP,3+pl,Case,def,Role,SAll,Mask).
@@ -277,11 +277,11 @@ np_head1(Pronoun,Agmt,def+proper), gen_marker --->
    poss_pron(Pronoun,Agmt).
 np_head1(np_head(Det,[],Noun),3+sg,indef+common) --->
    quantifier_pron(Det,Noun).
-np_head1(np_head(Det,Adjs,Head),3+Number,Def+common) --->
+np_head1(np_head(Det,AdjsO,Head),3+Number,Def+common) --->
    determiner(Det,Number,Def),
    adjs_opt(Adjs),
-   noun(Head,Number).
-np_head1(np_head(generic(_),[adj(ace_var(self,AceVar))],anything),_,_) ---> ace_var(AceVar).
+   noun(Head,Adjs,AdjsO,Number).
+
    
 
 maybe_ace_variable(AdjIn,AdjsOut)---> ace_var(AceVar),!,{append_np_mods(AdjIn,(adj(ace_var(self,AceVar))),AdjsOut)}.

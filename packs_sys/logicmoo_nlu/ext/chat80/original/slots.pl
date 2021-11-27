@@ -110,6 +110,9 @@ i_np_head0(np_head(quantV(Op0,N),Adjs,Noun),
    lf80(Type,pos_conversion_db(N,Op0,Type,V,Op)),
    must80(measure_op(Op,X,V--Units,P)).
 
+%i_np_head0(np_head(generic(_ArgInfo1),[],Value), Type-X,Type-V,voidQ(_ArgInfo2),
+%  '`'(=(X,Value)),Pred,Pred,[]) :- !.
+
 i_np_head0(np_head(generic(_ArgInfo1),[],Value), Type-X,Type-V,voidQ(_ArgInfo2),
   '`'(same_objects(generic(Type-X-V),X,Value)),Pred,Pred,[]) :- !.
 
