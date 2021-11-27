@@ -545,17 +545,57 @@ symm_test:- c88([does,iran,border,iraq]).
 symm_test2:- cls, symm_test, c88([does,iran,action1,iraq]).
 symm_test3:- c88([does,iran,symmetric1,iraq]).
 
-abn("
+abn('
 rules: 
 If X1 is asleep then X1 does not see anything.
 If X1 is looking at X2 and the area near X2 is visible then X1 sees X2.
 
-The area X3 is near X2. X3 is lit.
 X3 is the area near X2. 
+The area X3 is near X2. X3 is lit.
+
+A program is a type of thing.
+
+LM489 is a running Program.
+ 
+
+"manipulates" is a verb.
+The verb requires an agent.
+A statement is a kind of thing.
+
+
+Joe opened a door
+ means:
+   set statement''s verb as open,
+     means:
+      "open" is a verb.
+   set statement''s agent as Joe,
+   set statement''s object as a door,
+   set statement''s tense as past,
+   create Joe as agent,
+   create a door as object,
+   set the door as not opened,
+   Joe manipulates the door,
+   set the door as opened.
+ 
+Joe touches the door means:
+ create Joe as agent,
+ create a door as something,
+ set the door as accessable,
+ Joe accesses the door,
+ set the door as opened.
+ 
+
+Door1 is a door.
+means create Door1 as door.
+
+Door1 is usually closed
+means Set Door1 as closed.
+
+Set door1 as open
 
 
 
-").
+').
 acetext_to_text80(List,Text80):- atom(List),into_tex80(List,Text80).
 acetext_to_text80(List,Each):- is_list(List),maplist(atom,List),!,member(Each,List).
 acetext_to_text80(List,Out):- is_list(List),member(E,List),acetext_to_text80(E,Out).

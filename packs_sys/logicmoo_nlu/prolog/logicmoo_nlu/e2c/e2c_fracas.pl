@@ -1413,7 +1413,7 @@ Here's the breakdown by topic:
 
 /*
  Closely related to this, plural definites can have a
-collective/institutional or even generic(_ArgInfo2) interpretation:
+collective/institutional or even generic interpretation:
 
 */
 

@@ -38,16 +38,29 @@ link_t_1(Type,[w(S,L)|Words], [w(S,L)|A], B, X, X) :-
    (length(Words,Len),append(Words,B,A)),!.
 
 
-sentence80(S) ---> {b_setval('$prev_w2s', []),b_setval('$prev_spans', [])},
-    sentence800(S1),sentence801s(S1,S).
+
+sentence80(S) ---> {b_setval('$prev_w2s', []),b_setval('$prev_spans', [])},!, sentence80e(S).
+sentence80e(S) ---> sentence800(S).
+%sentence80e(S) ---> sentence800(S1)*->sentence801s(sentence80,S1,S).
 
 sentence800(S) ---> sentence801(S)*->{true};(link_s(S)*->{true};q_sentence800(S)).
 
 q_sentence800(S) ---> startQuotesEnding(E),!,sentence801(S),E,!.
 
+\+ (X) ---> (X -> {fail} ; {true}).
 
-sentence801s(S1,(S1,S2)) ---> xg_peek([_]), !, sentence80(S2).
-sentence801s(S1, S1) ---> noText,!.
+sentence801s(_,S1, S1, W, W, C, C) :- W==[], !.
+sentence801s(_,S1, \+ (S1)) ---> theText80(is),theText80(false).
+sentence801s(_,S1, (S1)) ---> theText80(is),theText80(true).
+sentence801s(P,S1,Out) ---> theText80(Means),{join_over_s(S1,Means,S2,Out)},!,call(P,S2).
+sentence801s(P,S1,(S1,S2)) --->  !,call(P,S2).
+
+
+join_over_s(S1,implies,S2,(S1=>S2)).
+join_over_s(S1,means,S2,Out):- !, join_over_s(S1,implies,S2,Out).
+join_over_s(S1,if,S2,Out):- !, join_over_s(S2,implies,S1,Out).
+join_over_s(S1,whenever,S2,Out):- !, join_over_s(S2,implies,S1,Out).
+join_over_s(S1,then,S2,Out):- !, join_over_s(S1,implies,S2,Out).
 
 :- dynamic(if_giveup_dcg/0).
 sentence801(_) ---> {if_giveup_dcg,!,fail}.
@@ -58,15 +71,15 @@ sentence802(S) ---> sentence803(S) *-> {true} ; sentence804(S).
 
 %sentence802(np(Subj)) ---> theText80(there),thePos80(root(be)),subj(Subj,_Agmt,_Type).
 %sentence802(np(Subj)) ---> theText80(there),thePos80(root(exist)),subj(Subj,_Agmt,_Type).
-sentence803(S) ---> declarative(S),{!}.
+sentence803(S) ---> declarative(S).
 sentence803(S) ---> question80(S).
-sentence803(S) ---> imperative80(S),{!}.
+sentence803(S) ---> imperative80(S).
 
-sentence804(np(Subj)) ---> subj(Subj,_Agmt,_Type).
+sentence804(np(Subj)) ---> {fail}, subj(Subj,_Agmt,_Type).
 
 sentence_typed('?',S,List):- question80(S,List,[],[],[]).
-sentence_typed(Punct,Out,List):- s80(S,_,List,[],[],[]),punct_to_sent_type(Punct,S,Out),!.
-sentence_typed(_,S,List):- imperative80(S,List,[],[],[]),!.
+sentence_typed(Punct,Out,List):- s80(S,_,List,[],[],[]),punct_to_sent_type(Punct,S,Out).
+sentence_typed(_,S,List):- imperative80(S,List,[],[],[]).
 
 punct_to_sent_type((?),S,q(S)).
 punct_to_sent_type((.),S,decl(S)).
@@ -81,7 +94,7 @@ question80(S)--->yn_question(S).
 
 /* Declarative sentence */
 
-declarative(decl(S)) ---> s80(S,_).
+declarative(decl(S)) ---> s80(S). % ,sentence801s(s80,S1,S).
 
 /* Wh-questions */
 
@@ -126,10 +139,10 @@ whose(X,Agmt), np_head0(wh(X),Agmt,proper), gen_marker ---> theText80(whose).
 
 question80(QCase,NPCase,S) --->
    {subj_question(QCase), is_to_role_case(subJ(_ArgInfo1),_,NPCase)},
-   s80(S,_).
+   s80(S).
 question80(QCase,NPCase,S) --->
    fronted_verb(QCase,NPCase),
-   s80(S,_).
+   s80(S).
 
 wh_art_6(Kind,X,Agmt), det(DX,Agmt,def) ---> wh_art(Kind,X,Agmt,DX).
 
@@ -140,7 +153,7 @@ subj_question(undef).
 
 yn_question(q(S)) --->
    fronted_verb(nil,_),
-   s80(S,_).
+   s80(S).
 
 
 fronted_verb(QCase,NPCase) ...
@@ -154,7 +167,7 @@ fronted_verb(QCase,NPCase) ...
 
 imperative80(imp(_U,_V,You,V,S)) --->
    imperative_verb(You,V),
-   s80(S,_).
+   s80(S).
 
 imperative_verb(You,Root),
    theText80(you),
@@ -163,15 +176,17 @@ imperative_verb(You,Root),
 
 /* Basic sentence (actually, declarative sentence) */
 
-s80(s(Subj,Verb,Args,Mods),Mask) ---> s_vp_800(Subj,Verb,Args,Mods,Mask).
+s80(P) --->  s80(P,_).
+
+s80(s(Subj,Verb,Args,Mods),Mask) ---> s_vp_801(Subj,Verb,Args,Mods,Mask).
+
 
 if_then(if,then).
 if_then(when,do).
 
-if_cond(If,S,Then) ---> theText80(If),{if_then(If,Then)},s80(S,_),xg_peek(theText80(Then)).
+if_cond(If,S,Then) ---> theText80(If),{if_then(If,Then)},s80(S),xg_peek(theText80(Then)).
 
 then_cond(Then, Subj,Verb,Args,Mods,Mask) ---> theText80(Then), s_vp_801(Subj,Verb,Args,Mods,Mask).
-
 s_vp_800(Subj,Verb,[if(IF,S,Then)|Args],Mods,Mask) --->
      if_cond(IF,S,Then), then_cond(Then,Subj,Verb,Args,Mods,Mask).
 s_vp_800(Subj,Verb,Args,Mods,Mask) ---> s_vp_801(Subj,Verb,Args,Mods,Mask).
@@ -181,9 +196,9 @@ s_vp_801(Subj,Verb,Args,Mods,Mask) --->
   {is_subj_case(Case)},
    locally(tlclone:np_in_case(Case),
    subj(Subj,Agmt,Type)),
-   s_vp(Subj,Agmt,Type,Verb,Args,Mods,Mask).
+   just_vp(Subj,Agmt,Type,Verb,Args,Mods,Mask).
 
-s_vp(Subj,Agmt,Type,Verb,Args,Mods,Mask) --->
+just_vp(Subj,Agmt,Type,Verb,Args,Mods,Mask) --->
   s_vp1(Subj,Agmt,Type0,Verb0,Args0,Mods0,Mask0),
   more_s_vp1(Subj,Agmt,Type0,Verb0,Args0,Mods0,Mask0,Type,Verb,Args,Mods,Mask).
 /*
@@ -197,7 +212,11 @@ s_vp1(_Subj,Agmt,Type,Verb,Args,Mods,Mask) --->
    {is_empty_bits(Nil), is_s_all(SAll)},
    verb_args(Type,Voice,Args,Nil,Mask0),
    {minus_mask(SAll,Mask0,Set), plus_mask(SAll,Mask0,Mask1)},
-   verb_mods(Mods,Set,Mask1,Mask).
+   verb_mods(Mods,Set,Mask1,Mask),
+   no_new_obj.
+
+no_new_obj ---> noText,!.
+no_new_obj ---> xg_peek(\+ subj(_,_,_)).
 
 
 subj(Subj,Agmt,Type) ---> subj0(Subj,Agmt,Type).
@@ -221,11 +240,13 @@ np0(np(Agmt,Pronoun,[]),Agmt,NPCase,def,_,Set,Nil) --->
    {is_pp(Set)},
    pers_pron(Pronoun,Agmt,Case),
    {is_empty_bits(Nil), is_to_role_case(Case,decl,NPCase)}.
+
 np0(np(Agmt,Kernel,Mods),Agmt,_Case,Def,Role,Set,Mask) --->
    {is_pp(Set)},
    np_head(Kernel,Agmt,Def+Type,PostMods,Mods),
    {is_np_all(NPAll)},
    np_compls(Type,Agmt,Role,PostMods,NPAll,Mask).
+
 % many of, one of
 np0(part(Det,NP),3+Number,_,indef,Role,Set,Mask) --->
    {is_pp(Set)},
@@ -236,14 +257,14 @@ np0(part(Det,NP),3+Number,_,indef,Role,Set,Mask) --->
 
 np_head(Kernel,Agmt,Type,PostMods,Mods) --->
    np_head0(Kernel0,Agmt0,Type0),
-   possessive(Kernel0,Agmt0,Type0,Mods0,Mods0,
+   optional_possessive(Kernel0,Agmt0,Type0,Mods0,Mods0,
               Kernel,Agmt,Type,PostMods,Mods).
 
 np_compls(proper,_,_,[],_,Nil) ---> {is_empty_bits(Nil)}.
 np_compls(common,Agmt,Case,Mods,Set0,Mask) --->
    {is_np_all(NPAll)},
    np_mods(Agmt,Case,Rel,Mods,Set0,Set,NPAll,Mask0),
-   relative(Agmt,Rel,Set,Mask0,Mask).
+   optional_relative(Agmt,Rel,Set,Mask0,Mask).
 
 /* Nuclear noun phrase */
 
@@ -251,7 +272,6 @@ np_head0(_,_,_)---> has_trait(pos('.')),!,{fail}.
 np_head0(nameOf(items(AndOr,List),[]),Agmt,Def)---> {if_search_expanded(2)}, nl_list_of_items(AndOr,np_head1(Agmt,Def),List).
 np_head0(H,Agmt,Def)---> np_head1(H,Agmt,Def).
 
-np_head1(np_head(generic(_),[adj(ace_var(self,AceVar))],anything),_,_) ---> ace_var(AceVar).
 np_head1(nameOf(O,[]),Agmt,Def) ---> np_objbody(O,Agmt,Def).
 np_head1(Pronoun,Agmt,def+proper), gen_marker --->
    poss_pron(Pronoun,Agmt).
@@ -261,6 +281,7 @@ np_head1(np_head(Det,Adjs,Head),3+Number,Def+common) --->
    determiner(Det,Number,Def),
    adjs_opt(Adjs),
    noun(Head,Number).
+np_head1(np_head(generic(_),[adj(ace_var(self,AceVar))],anything),_,_) ---> ace_var(AceVar).
    
 
 maybe_ace_variable(AdjIn,AdjsOut)---> ace_var(AceVar),!,{append_np_mods(AdjIn,(adj(ace_var(self,AceVar))),AdjsOut)}.
@@ -276,14 +297,14 @@ ace_var(_,_).
 
 /* Possessive construction */
 
-possessive(Kernel0,Agmt0,_,[],Mods0,
+optional_possessive(Kernel0,Agmt0,_,[],Mods0,
            Kernel,Agmt,Type,PostMods,Mods) --->
    gen_case,
    np_head0(Kernel1,Agmt1,Type1),
-   possessive(Kernel1,Agmt1,Type1,PostMods1,
+   optional_possessive(Kernel1,Agmt1,Type1,PostMods1,
               [prep_phrase(poss(_ArgInfoP),np(Agmt0,Kernel0,Mods0))|PostMods1],
               Kernel,Agmt,Type,PostMods,Mods).
-possessive(Kernel,Agmt,Type,PostMods,Mods,
+optional_possessive(Kernel,Agmt,Type,PostMods,Mods,
            Kernel,Agmt,Type,PostMods,Mods) ---> noText.
 
 gen_case, theText80(the) ---> gen_marker.
@@ -343,12 +364,14 @@ np_objbody0(X, Y, Z, A, B, C, D) :-
 
 np_objbody1((sent0(S)),_,_) ---> xg_peek([_,_]),s80(S,_).
 %rel(Agmt,rel(X,S),Mask) 
+
 np_objbody1((sent2(X,S)),_Agmt,_) ---> xg_peek([_,_]),
    mark_island,
    prep(X),
    s80(S,_),   
    mark_dnalsi.
 */
+
 %np_objbody(X,Y,Z) ---> quant_phrase(X,Y,Z).
 %np_objbody0(quantV(Op,Quant),Number,Def) ---> quantV(Op,Def), number(Quant,Number).
 
@@ -469,10 +492,10 @@ prep_phrase(prep_phrase(Prep,Arg),Case,Set,Mask) --->
 
 /* Relative clause */
 
-relative(Agmt,[Rel],Set,_,Mask) --->
+optional_relative(Agmt,[Rel],Set,_,Mask) --->
    {is_pred(Set)},
    rel_conj(Agmt,_Conj,Rel,Mask).
-relative(_,[],_,Mask,Mask) ---> noText.
+optional_relative(_,[],_,Mask,Mask) ---> noText.
 
 rel_conj(Agmt,Conj,Rel,Mask) --->
    rel(Agmt,Rel0,Mask0),
@@ -527,6 +550,12 @@ reduced_rel_rest(Agmt,Conj0,Rel0,Rel,_,Mask) --->
    conj(Conj0,Conj,Rel0,Rel1,Rel),
    reduced_rel_conj(Agmt,Conj,Rel1,Mask).
 reduced_rel_rest(_,_,Rel,Rel,Mask,Mask) ---> noText.
+
+reduced_rel(_Agmt,reduced_rel(X,decl(s( np(3+sg,np_head(generic(_),[],X),[]),
+                         verb(main+tv,name,[],active,past+fin,[],posP(_PosP)),
+                         [ arg(dirO(_),np(3+sg,np_head(generic(_),[],Name),[]))],
+                       []))),_Mask) ---> 
+   theText80(named), name_xg(Name).
 
 reduced_rel(Agmt,reduced_rel(X,S),Mask) --->
    mark_island,

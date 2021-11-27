@@ -15,7 +15,7 @@
 :- style_check(-singleton).
 
 
-do_ss(A,B):-do_ss,!, must(do_ss0(A,B)).
+do_ss(A,B):- do_ss,!, must(do_ss0(A,B)).
 do_ss(A,A).
 
 do_ss0(A,B):- \+ compound(A), !, B=A.

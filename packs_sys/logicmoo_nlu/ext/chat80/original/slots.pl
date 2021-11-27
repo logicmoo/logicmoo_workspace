@@ -48,13 +48,14 @@ lf80(Type,G):-
 i_sentence((S1,S2),(G1,G2)):- !, i_sentence(S1,G1), i_sentence(S2,G2).
 i_sentence(S,G):- i_sentence1(S,G).
 
-i_sentence1(q(S),question80([],P)) :- 
+i_sentence1(I,O):- i_sentence2(I,O).
+i_sentence2(q(S),question80([],P)) :- 
    must80(i_s(S,P,[],0)).
-i_sentence1(decl(S),assertion80(P)) :-
+i_sentence2(decl(S),assertion80(P)) :-
    must80(i_s(S,P,[],0)).
-i_sentence1(whq(X,S),question80([X],P)) :-
+i_sentence2(whq(X,S),question80([X],P)) :-
    must80(i_s(S,P,[],0)).
-i_sentence1(imp(U,Ve,s(_,Verb,VArgs,VMods)),imp(U,Ve,V,Args)) :-
+i_sentence2(imp(U,Ve,s(_,Verb,VArgs,VMods)),imp(U,Ve,V,Args)) :-
    must80(i_verb(Verb,V,_,active,posP(_Modal),Slots0,[],transparent)),
    must80(i_verb_args(VArgs,[],[],Slots0,Slots,Args,Args0,Up,-0)),
    append(Up,VMods,Mods),
