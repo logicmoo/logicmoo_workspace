@@ -127,6 +127,8 @@ concrete_type(Type):- var(Type),dumpST,break,!,fail.
 concrete_type(Type):- Type==million,!,fail.
 concrete_type(dog).
 concrete_type(person).
+concrete_type(statement).
+concrete_type(noun_thing).
 concrete_type(man).
 concrete_type(island).
 concrete_type(country).
@@ -328,8 +330,9 @@ qualifiedBy_LF(_FType,X,_Type,pronoun(_,1+pl),isa(X,vTheVarFn("US"))).
 qualifiedBy_LF(_FType,X,Type,np_head(generic(_),Adjs,Table),Pred):-
   must(i_adjs(Adjs,Type-X,Type-X,_,Head,Head,Pred,ti(Table,X))).
 qualifiedBy_LF(_FType,X,Type,np_head(det(a),Adjs,Table),Pred):- 
-
   must(i_adjs(Adjs,Type-X,Type-X,_,Head,Head,Pred,ti(Table,X))).
+qualifiedBy_LF(_FType,Name,Type,Else,P):- P = qualifiedBy(Name,Type,Else),!.
+qualifiedBy_LF(FType,Name,Type,Else,P):- wdmsg(missed(qualifiedBy_LF(FType,Name,Type,Else,P))),fail.
 
 
 /* Adjectives */

@@ -82,6 +82,7 @@ i_sentence2(imp(U,Ve,s(_,Verb,VArgs,VMods)),imp(U,Ve,V,Args)) :-
    append(Up,VMods,Mods),
    must80(i_verb_mods(Mods,_,[],Slots,Args0,Up,+0)).
 
+i_s(s(Subj,Verb,VArgs,VMods),P):- must80(i_s(s(Subj,Verb,VArgs,VMods),P,[],0)).
 
 i_np(there,Y,quantV(voidQ(_ArgInfo),_X,'`'(true),'`'(true),[],Y),[],_,_,XA,XA).
 i_np(NP,Y,Q,Up,Id0,Index,XA0,XA) :-
@@ -250,6 +251,20 @@ i_adj(adj(Adj),TypeX-X,T,T,_,
    lf80(TypeX,attribute_LF(Adj,TypeX,X,_,Y,P)),
    lf80(TypeX,standard_adj_db(Adj,TypeX,Y,Q)).
 
+i_s(s(Subj,Verb,VArgs,VMods),Pred,Up,Id) :-
+  select(cond(true),VArgs,NewVargs), !,
+  i_s(s(Subj,Verb,NewVargs,VMods),Pred,Up,Id).
+
+i_s(s(Subj,Verb,VArgs,VMods),Pred,Up,Id) :-
+  select(cond(_),VArgs,NewVargs), !,
+  i_s(s(Subj,Verb,NewVargs,VMods),Pred,Up,Id).
+
+i_s(s(Subj,Verb,VArgs,VMods),Pred,Up,Id) :-
+  select(cond(IF,S2),VArgs,NewVargs), !,
+  S1 = s(Subj,Verb,NewVargs,VMods),
+  i_s(S1,Pred1),
+  i_s(S2,Pred2,Up,Id),
+  Pred= pred(IF,Pred1,Pred2,IF).
 
 i_s(s(Subj,Verb,VArgs,VMods),Pred,Up,Id) :-
    i_verb(Verb,P,Tense,Voice,Neg,Slots0,XA0,Meta),
@@ -262,9 +277,10 @@ i_s(s(Subj,Verb,VArgs,VMods),Pred,Up,Id) :-
 
 i_verb(verb(VerbType,Root,ExtraMods,Voice,Tense,Aspect,Neg),
       PP,Tense,Voice,Det,Slots,XArg,Meta) :-
-       ignore((ExtraMods\==[],wdmsg(extra_mods(ExtraMods)),break)),
+       ignore((ExtraMods\==[],wdmsg(extra_mods(ExtraMods)),nop((dumpST,break)))),
+       append(ExtraMods,XArg,ModXArgs),!,
        i_verb(verb(VerbType,Root,Voice,Tense,Aspect,Neg),
-      PP,Tense,Voice,Det,Slots,XArg,Meta).
+      PP,Tense,Voice,Det,Slots,ModXArgs,Meta).
       
 i_verb(verb(_VerbType,Root,Voice,Tense,_Aspect,Neg),
       PP,Tense,Voice,Det,Slots,XArg,Meta) :-
