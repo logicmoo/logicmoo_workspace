@@ -23,9 +23,21 @@
 % :- op(300, fx, '`'  ).
 
 
+commbine(if,_,_,LHSB,RHSB,LHSB=>RHSB).
+commbine(then,_,_,LHSB,RHSB,RHSB=>LHSB).
+
 clausify80(question80(V0, P),OUT) :- 
   clausify80_qa(V0,P,V,B),!,
   OUT = (answer80(V):-B).
+
+clausify80(assertion80(cond_pred(IF,LHSP,RHSP)),OUT) :- 
+ clausify80_qa([],LHSP,LHSV,LHSB),
+ clausify80_qa([],RHSP,RHSV,RHSB),
+ nop(ignore(LHSV=RHSV)),
+ commbine(IF,LHSP,RHSP,LHSB,RHSB,OUT),!.
+
+
+ 
 clausify80(assertion80(P),OUT) :- 
   clausify80_qa([],P,V,B),!,
   OUT = (answer80(V):-B).

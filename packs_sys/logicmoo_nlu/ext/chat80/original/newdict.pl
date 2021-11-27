@@ -265,6 +265,7 @@ verb_form_wlex0(L,_,Root,_,_):- is_list(L),member(pos(V),L),atom_concat('vb',_,V
 
 % BE
 verb_form_aux(am,be(_MODAL),pres+fin,1+sg).
+verb_form_aux(as,be(_MODAL),pres+fin,3+_).
 verb_form_aux(are,be(_MODAL),pres+fin,2+sg).
 verb_form_aux(are,be(_MODAL),pres+fin,_+pl).
 verb_form_aux(been,be(_MODAL),past+part,_).

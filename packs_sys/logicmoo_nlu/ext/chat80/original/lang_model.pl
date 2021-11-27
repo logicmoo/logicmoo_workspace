@@ -550,6 +550,13 @@ rules:
 If X1 is asleep then X1 does not see anything.
 If X1 is looking at X2 and the area near X2 is visible then X1 sees X2.
 
+
+if IF1 then THEN2 else ELSE3.
+THEN1 if IF2 else ELSE3.
+
+if IF1 then THEN2 else if ELSE3 then THEN4 else ELSE5.
+
+
 X3 is the area near X2. 
 The area X3 is near X2. X3 is lit.
 

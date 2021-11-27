@@ -255,16 +255,16 @@ i_s(s(Subj,Verb,VArgs,VMods),Pred,Up,Id) :-
   select(cond(true),VArgs,NewVargs), !,
   i_s(s(Subj,Verb,NewVargs,VMods),Pred,Up,Id).
 
-i_s(s(Subj,Verb,VArgs,VMods),Pred,Up,Id) :-
+/*i_s(s(Subj,Verb,VArgs,VMods),Pred,Up,Id) :-
   select(cond(_),VArgs,NewVargs), !,
   i_s(s(Subj,Verb,NewVargs,VMods),Pred,Up,Id).
-
+*/
 i_s(s(Subj,Verb,VArgs,VMods),Pred,Up,Id) :-
   select(cond(IF,S2),VArgs,NewVargs), !,
   S1 = s(Subj,Verb,NewVargs,VMods),
   i_s(S1,Pred1),
   i_s(S2,Pred2,Up,Id),
-  Pred= pred(IF,Pred1,Pred2,IF).
+  Pred= cond_pred(IF,Pred1,Pred2).
 
 i_s(s(Subj,Verb,VArgs,VMods),Pred,Up,Id) :-
    i_verb(Verb,P,Tense,Voice,Neg,Slots0,XA0,Meta),

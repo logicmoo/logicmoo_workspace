@@ -176,36 +176,41 @@ imperative_verb(You,Root),
 
 /* Basic sentence (actually, declarative sentence) */
 
-s80(P) --->  s80(P,_).
 
-s80(s(Subj,Verb,Args,Mods),Mask) ---> s_vp_800(Subj,Verb,Args,Mods,Mask).
+
 
 logical_s_word(Var):- var(Var),!,freeze(Var,logical_s_word(Var)).
-logical_s_word(if).
-logical_s_word(then).
-logical_s_word(else).
-logical_s_word(when).
-logical_s_word(whenever).
-logical_s_word(after).
-logical_s_word(before).
-logical_s_word(durring).
-logical_s_word(eigther).
-logical_s_word(anyways).
-logical_s_word(already).
-logical_s_word(therefore).
-logical_s_word(also).
-logical_s_word(but).
-%logical_s_word(and).
-logical_s_word(or).
-logical_s_word(unless).
-logical_s_word(otherwise).
-logical_s_word(implies).
-logical_s_word(because).
-logical_s_word(for).
-logical_s_word(wanted).
-logical_s_word(when).
-%logical_s_word(not).
-logical_n_word(except).
+logical_s_word(X):- logical_s_word(_,_,X).
+logical_s_word(X):- if_search_expanded(5), logical_n_word(X).
+
+logical_s_word(r,c,durring).
+logical_s_word(r,c,after).
+logical_s_word(r,c,before).
+logical_s_word(r,c,because).
+logical_s_word(r,c,when).
+logical_s_word(r,c,whenever).
+logical_s_word(r,c,unless).
+
+logical_s_word(r,c,[else,if]).
+logical_s_word(r,c,if).
+logical_s_word(c,c,also).
+logical_s_word(c,c,eigther).
+logical_s_word(c,r,then).
+logical_s_word(c,r,else).
+logical_s_word(c,r,implies).
+logical_s_word(c,r,otherwise).
+logical_s_word(c,r,therefore).
+
+     logical_n_word(and).
+     logical_n_word(or).
+     logical_n_word(not).
+     logical_n_word(except).
+%logical_s_word(already).
+%logical_s_word(but).
+%logical_s_word(for).
+%logical_s_word(anyways).
+%logical_s_word(wanted).
+
 
 % adp
 is_sent_adverb(X):- member(X,[actually, apparently, basically, briefly, certainly, clearly, conceivably, confidentially,
@@ -218,15 +223,24 @@ if_then(when,do).
 if_then(If,Then):- logical_s_word(If),logical_s_word(Then).
 
 %if_cond(If,S,Then) ---> theText80(If),{if_then(If,Then)},s80(S),theText80(Then).
-if_cond(If,S) ---> theText80(If),{logical_s_word(If)},s80(S).
+if_cond(If,S,Mask) ---> theText80(If),{logical_s_word(If)},!,s_vp_801(S,Mask).
+if_cond(true,S,Mask) ---> s_vp_801(S,Mask).
 
-s_vp_800(Subj,Verb,Args,Mods,Mask) ---> 
- if_cond(IF,S),!, s_vp_800s(IF,S,Subj,Verb,Args,Mods,Mask).
+s80(P) --->  s80(P,_).
 
-s_vp_800(Subj,Verb,Args,Mods,Mask) --->  
- s_vp_801(Subj0,Verb0,Args0,Mods0,_Mask), 
- s_vp_800s(true,s(Subj0,Verb0,Args0,Mods0), 
-   Subj,Verb,Args,Mods,Mask).
+s80(P,Mask) ---> s_vp_800(P,Mask).
+
+s_vp_800(SO,Mask) ---> if_cond(IF,S,Mask), s_vp_800s(IF,S,SO,Mask).
+
+s_vp_800s(true,S,SO,Mask) ---> !, from_true(S,SO,Mask).
+s_vp_800s(IF,S,SO,Mask) ---> from_if(IF,S,SO,Mask).
+
+from_if(IF,S,SO,Mask) --->  theText80(Then),{logical_s_word(Then)},!,
+  s80(S1,Mask),{S=s(Subj,Verb,Args,Mods),append_cond(Args,IF-Then,S1,ArgsO),SO=s(Subj,Verb,ArgsO,Mods)}.
+
+from_true(S,S,_Mask)---> xg_peek(theText80(LW)),{ \+ logical_s_word(LW)},!.
+from_true(S,SO,Mask)---> from_if(true,S,SO,Mask).
+from_true(S,S,_Mask)---> [].
 
 append_cond(Args,true,S,ArgsO):- append(Prev,[(IF)],Args),logical_s_word(IF),!,append(Prev,[cond(IF,S)],ArgsO).
 append_cond(Args,true,S,ArgsO):- append(Prev,[cond(IF)],Args),logical_s_word(IF), !,append(Prev,[cond(IF,S)],ArgsO).
@@ -237,16 +251,14 @@ append_cond(Args,true,S,ArgsO):-
   append(Args,[cond(IF,SS)],ArgsO).
 append_cond(Args,IF,S,ArgsO):- append(Args,[cond(IF,S)],ArgsO).
 
-s_vp_800s(IF,S,Subj,Verb,ArgsO,Mods,Mask) ---> s_vp_800(Subj,Verb,Args,Mods,Mask),!,{append_cond(Args,IF,S,ArgsO)}.
-s_vp_800s(IF,s(Subj,Verb,Args,Mods),Subj,Verb,ArgsO,Mods,_) ---> {IF\==true -> append(Args,[cond(IF)],ArgsO) ; append(Args,[],ArgsO)}.
 
-s_vp_801(Subj,Verb,Args,Mods,Mask) --->
+s_vp_801(s(Subj,Verb,Args,Mods),Mask) --->
   {is_subj_case(Case)},
    locally(tlclone:np_in_case(Case),
    subj(Subj,Agmt,Type)),
    just_vp(Subj,Agmt,Type,Verb,Args,Mods,Mask).
 
-s_vp_801(NP,Verb,[],[],_) --->  ace_var(AceVar), !,
+s_vp_801(s(NP,Verb,[],[]),_) --->  ace_var(AceVar), !,
    {Verb = verb(main+iv,action1,[],active,pres+fin,[],posP(_)),
     NP= np(3+sg,np_head(generic(_),[adj(ace_var(self,AceVar)),adj(ti(statement,self))],statement),[])}.
 
