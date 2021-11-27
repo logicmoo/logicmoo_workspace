@@ -178,19 +178,67 @@ imperative_verb(You,Root),
 
 s80(P) --->  s80(P,_).
 
-s80(s(Subj,Verb,Args,Mods),Mask) ---> s_vp_801(Subj,Verb,Args,Mods,Mask).
+s80(s(Subj,Verb,Args,Mods),Mask) ---> s_vp_800(Subj,Verb,Args,Mods,Mask).
 
+logical_s_word(Var):- var(Var),!,freeze(Var,logical_s_word(Var)).
+logical_s_word(if).
+logical_s_word(then).
+logical_s_word(else).
+logical_s_word(when).
+logical_s_word(whenever).
+logical_s_word(after).
+logical_s_word(before).
+logical_s_word(durring).
+logical_s_word(eigther).
+logical_s_word(anyways).
+logical_s_word(already).
+logical_s_word(therefore).
+logical_s_word(also).
+logical_s_word(but).
+%logical_s_word(and).
+logical_s_word(or).
+logical_s_word(unless).
+logical_s_word(otherwise).
+logical_s_word(implies).
+logical_s_word(because).
+logical_s_word(for).
+logical_s_word(wanted).
+logical_s_word(when).
+%logical_s_word(not).
+logical_n_word(except).
+
+% adp
+is_sent_adverb(X):- member(X,[actually, apparently, basically, briefly, certainly, clearly, conceivably, confidentially,
+  curiously, evidently, fortunately, hopefully, however, ideally, incidentally, indeed, 
+  interestingly, ironically, naturally, predictably, presumably, regrettably, seriously, strangely,
+   surprisingly, thankfully, theoretically, therefore, truthfully, ultimately, wisely]).
 
 if_then(if,then).
 if_then(when,do).
+if_then(If,Then):- logical_s_word(If),logical_s_word(Then).
 
-if_cond(If,S,Then) ---> theText80(If),{if_then(If,Then)},s80(S),xg_peek(theText80(Then)).
+%if_cond(If,S,Then) ---> theText80(If),{if_then(If,Then)},s80(S),theText80(Then).
+if_cond(If,S) ---> theText80(If),{logical_s_word(If)},s80(S).
 
-then_cond(Then, Subj,Verb,Args,Mods,Mask) ---> theText80(Then), s_vp_801(Subj,Verb,Args,Mods,Mask).
-s_vp_800(Subj,Verb,[if(IF,S,Then)|Args],Mods,Mask) --->
-     if_cond(IF,S,Then), then_cond(Then,Subj,Verb,Args,Mods,Mask).
-s_vp_800(Subj,Verb,Args,Mods,Mask) ---> s_vp_801(Subj,Verb,Args,Mods,Mask).
+s_vp_800(Subj,Verb,Args,Mods,Mask) ---> 
+ if_cond(IF,S),!, s_vp_800s(IF,S,Subj,Verb,Args,Mods,Mask).
 
+s_vp_800(Subj,Verb,Args,Mods,Mask) --->  
+ s_vp_801(Subj0,Verb0,Args0,Mods0,_Mask), 
+ s_vp_800s(true,s(Subj0,Verb0,Args0,Mods0), 
+   Subj,Verb,Args,Mods,Mask).
+
+append_cond(Args,true,S,ArgsO):- append(Prev,[(IF)],Args),logical_s_word(IF),!,append(Prev,[cond(IF,S)],ArgsO).
+append_cond(Args,true,S,ArgsO):- append(Prev,[cond(IF)],Args),logical_s_word(IF), !,append(Prev,[cond(IF,S)],ArgsO).
+append_cond(Args,true,S,ArgsO):- 
+   S = s(Subj,Verb,SArgs,Mods), 
+  append(Prev,[(IF)],SArgs),logical_s_word(IF),!,
+  SS = s(Subj,Verb,Prev,Mods), 
+  append(Args,[cond(IF,SS)],ArgsO).
+append_cond(Args,IF,S,ArgsO):- append(Args,[cond(IF,S)],ArgsO).
+
+s_vp_800s(IF,S,Subj,Verb,ArgsO,Mods,Mask) ---> s_vp_800(Subj,Verb,Args,Mods,Mask),!,{append_cond(Args,IF,S,ArgsO)}.
+s_vp_800s(IF,s(Subj,Verb,Args,Mods),Subj,Verb,ArgsO,Mods,_) ---> {IF\==true -> append(Args,[cond(IF)],ArgsO) ; append(Args,[],ArgsO)}.
 
 s_vp_801(Subj,Verb,Args,Mods,Mask) --->
   {is_subj_case(Case)},
@@ -198,6 +246,19 @@ s_vp_801(Subj,Verb,Args,Mods,Mask) --->
    subj(Subj,Agmt,Type)),
    just_vp(Subj,Agmt,Type,Verb,Args,Mods,Mask).
 
+s_vp_801(NP,Verb,[],[],_) --->  ace_var(AceVar), !,
+   {Verb = verb(main+iv,action1,[],active,pres+fin,[],posP(_)),
+    NP= np(3+sg,np_head(generic(_),[adj(ace_var(self,AceVar)),adj(ti(statement,self))],statement),[])}.
+
+/*
+s_vp_801(NP,Verb,[],[],_) --->  ace_var(AceVar), !,
+   {Verb = verb(main+iv,'action1:tell',[],active,pres+fin,[],posP(_)),
+    NP= np(3+sg,np_head(generic(_),[adj(ace_var(self,AceVar)),adj(ti(statement,self))],statement),[])}.
+
+s_vp_801(NP,Verb,[],[],_) --->  [],!,
+   {Verb = verb(main+iv,tell,[],active,pres+fin,[],posP(_)),
+    NP= np(3+sg,np_head(generic(_),[adj(ti(statement,self))],statement),[])}.
+*/
 just_vp(Subj,Agmt,Type,Verb,Args,Mods,Mask) --->
   s_vp1(Subj,Agmt,Type0,Verb0,Args0,Mods0,Mask0),
   more_s_vp1(Subj,Agmt,Type0,Verb0,Args0,Mods0,Mask0,Type,Verb,Args,Mods,Mask).
