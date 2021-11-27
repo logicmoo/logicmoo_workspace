@@ -49,6 +49,27 @@ i_sentence((S1,S2),(G1,G2)):- !, i_sentence(S1,G1), i_sentence(S2,G2).
 i_sentence(S,G):- i_sentence1(S,G).
 
 i_sentence1(I,O):- i_sentence2(I,O).
+%i_sentence1(I,O):- i_subst(i_sentence2,I,O).
+
+sub_term_setarg(_,Term,_,_):- \+ compound(Term),!, fail.
+sub_term_setarg(Arg, Term, N,Term) :- arg(N, Term, Arg).
+sub_term_setarg(X, Term, O1, O2) :- arg(_, Term, Arg), sub_term_setarg(X, Arg, O1, O2).
+
+
+i_subst(P2,I,O):- duplicate_term(io(I),IO),i_subst(P2,IO),!,IO=io(O).
+
+i_subst(P2,I):- 
+  append_term(P2,CCmp,P2_I),
+  append_term(P2_I,R,P2_I_O),
+  clause(P2_I_O,Body),sub_term_setarg(Cmp,I,N,Term),
+  compound(Cmp),CCmp=Cmp,
+  call(Body),
+  arg(N,Term,Old),
+  Old\=@=R,!,
+  nb_setarg(N,Term,R),
+  i_subst(P2,I).
+i_subst(_,_).
+
 i_sentence2(q(S),question80([],P)) :- 
    must80(i_s(S,P,[],0)).
 i_sentence2(decl(S),assertion80(P)) :-
