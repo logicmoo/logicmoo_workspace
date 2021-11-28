@@ -19,11 +19,16 @@
 :- use_module(library(logicmoo_nlu/parser_tokenize)).
 
 read_allen_srl_lines(Term, Result):- show_failure(always,allen_srl_to_w2(Term, Result)).
+/*
+allen_srl_lexical_segs not working on Deb 10 VMs (works on Deb 11 VMs)
 
 allen_srl_lexical_segs(I,O):-
   spacy_lexical_segs(I,M),
   allen_srl_parse(I, S),
   merge_allen_srl(S,M,O).
+*/
+allen_srl_lexical_segs(I,O):-
+  spacy_lexical_segs(I,O).
 
 merge_allen_srl([],O,O):-!.
 merge_allen_srl([H|T],I,O):- !, merge_allen_srl(H,I,M), merge_allen_srl(T,M,O).

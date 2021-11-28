@@ -191,7 +191,6 @@ logical_s_word(r,c,when).
 logical_s_word(r,c,whenever).
 logical_s_word(r,c,unless).
 
-logical_s_word(r,c,[else,if]).
 logical_s_word(r,c,if).
 logical_s_word(c,c,also).
 logical_s_word(c,c,eigther).
@@ -200,6 +199,8 @@ logical_s_word(c,r,else).
 logical_s_word(c,r,implies).
 logical_s_word(c,r,otherwise).
 logical_s_word(c,r,therefore).
+
+logical_s_word2(r,c,[else,if]).
 
      logical_n_word(and).
      logical_n_word(or).

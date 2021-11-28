@@ -569,9 +569,23 @@ LM489 is a running Program.
 The verb requires an agent.
 A statement is a kind of thing.
 
+S:AGENT1 PROPERTY2s a OBJECT3
+   R:+1:create AGENT1 as agent,             create_from_exemplar(AGENT1,agent),
+   R:+2:create a OBJECT3 as object,         create_from_exemplar(AGENT1,phys_object),
+   R:+3:set the OBJECT3 as not PROPERTY2ed, set_property(OBJECT3,PROPERTY2ed,false),
+   R:+4:AGENT1 Start animates the OBJECT3,  animates_control_object(AGENT1,OBJECT3,true).
+   R:+5:set the OBJECT3 as PROPERTY2ed,     set_property(OBJECT3,PROPERTY2ed,false),
+   R:+6:AGENT1 Stop animates the OBJECT3,   animates_control_object(AGENT1,OBJECT3,false).
 
-Joe opened a door
- means:
+S:Joe opened a door
+   R:+1:create Joe as agent,
+   R:+2:create a door as object,
+   R:+3:set the door as not opened,
+   R:+4:Joe Start animates the door,
+   R:+5:set the door as opened,
+   R:+6:Joe Stop animates the door.
+
+
    set statement''s verb as open,
      means:
       "open" is a verb.
