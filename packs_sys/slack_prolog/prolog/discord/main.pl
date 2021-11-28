@@ -23,7 +23,9 @@ find_token:- exists_file('.discord_auth.pl'), consult('.discord_auth.pl'), !.
 find_token:- getenv('DISCORD_API_TOKEN',Was), asserta(tmp:discord_token(Was)), !.
 % 4th - Checks users config directory for file called ".discord_auth.pl"  tmp:discord_token/1 as above
 find_token:- expand_file_name('~/.discord_auth.pl',[X]), exists_file(X), consult(X), !.
-find_token:- throw(missing(tmp:discord_token(_))).
+
+find_token_or_throw:- find_token,!.
+find_token_or_throw:- find_token:- throw(missing(tmp:discord_token(_))).
 
 :- find_token.
 

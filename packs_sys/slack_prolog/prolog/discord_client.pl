@@ -23,6 +23,7 @@ discord_restore_0:-
 :- initialization(discord_restore_0).
 
 disable_gateway:- false.  % true for when websocket code is borken
+disable_gateway:- \+ find_token,!.
 
 :- dynamic(tmp:discord_token/1).
 
