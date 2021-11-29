@@ -8,7 +8,7 @@
 :-op(600,xfy,'.').
 :-op(901,xfy,:).
 :-op(904,xfy,=>).
-:-op(904,xfy,'<>').
+:-op(904,xfy,')(').
 
 compile(Tree,Code) :-
   compileTree(Tree,true,1,Code).
@@ -64,20 +64,20 @@ load(Model) :-
 
    new(_), /* clear machine */
    for_each(thread(Thread,Tree), /* for all threads */
-     from(threads('Model'(Fiber))), /* from model fibers */
+     from(threads(Model(Fiber))), /* from model fibers */
      do((compile(Tree,Code), /* compile tree */
        forall(member(P,Code),
-       insert('Model'(Fiber<>Thread),P))))), /* load code */
+       insert(Model(Fiber)(Thread),P))))), /* load code */
 
    for_each(thread(Thread,Tree), /* for all threads */
      from(threads(Model)), /* from model */
      do((compile(Tree,Code), /* compile kernel */
      forall(member(P,Code),
-       insert('Model'(_<>Thread),P))))), /* load kernel */
+       insert(Model(_)(Thread),P))))), /* load kernel */
 
    for_each([Weight,Thread1,Thread2|X]),
-     from(weights('Model'(Fiber))), /* load weights */
-     do(insert('Model'(Fiber),
+     from(weights(Model(Fiber))), /* load weights */
+     do(insert(Model(Fiber),
      [Weight(Thread1,Thread2|X)))).
 
 run(Model) :- 
@@ -86,164 +86,164 @@ run(Model) :-
            reflect(Model))). /* reflect */
 
 sense(Model) :- if(interrupt(Stream(Interrupt)), /* if interrupt */
-    then((remove('Model'(Stream<>_),[clock|_]), /*    then clear stream */
-  remove('Model'(Stream<>_),[excite|_]),
-  remove('Model'(Stream<>_),[inhibit|_]),
-  remove('Model'(Stream<>_),[signal|_]),
+    then((remove(Model(Stream)(_),[clock|_]), /*    then clear stream */
+  remove(Model(Stream)(_),[excite|_]),
+  remove(Model(Stream)(_),[inhibit|_]),
+  remove(Model(Stream)(_),[signal|_]),
  for_each([sensor|X], /* for each */
  such_that(member([sensor|X],Interrupt)), /* instruction */
- do((set('Model'(Stream<>[sense|X]),clock(1)), /* fire sensor */
+ do((set(Model(Stream)([sense|X]),clock(1)), /* fire sensor */
   write(0:[sense|X]:[sensor|X]),nl))),
-  set('Model'(Stream),seq(1)), /* reset stream */
-  remove('Model'(Stream),_:_:_)))). /* clear synchro */
+  set(Model(Stream),seq(1)), /* reset stream */
+  remove(Model(Stream),_:_:_)))). /* clear synchro */
 
 react(Model) :- for_each((Stream(Thread),T:Instruction), /* for each */
- such_that(ist('Model'(Stream<>Thread), /* instruction */
+ such_that(ist(Model(Stream)(Thread), /* instruction */
  (clock(T), T:Instruction))), /* retrieve */
- do('Model'(Stream<>Thread).(T:Instruction))). /* interpret */
+ do(Model(Stream)(Thread).(T:Instruction))). /* interpret */
 
 reflect(Model):-for_each((Stream,I:Thread:Stimulus), /* for each stimulus */
- such_that(ist('Model'(Stream),I:Thread:Stimulus)), /* retrieve synchro */
- do('Model'(Stream).(I:Thread:Stimulus))). /* report synchro */
+ such_that(ist(Model(Stream),I:Thread:Stimulus)), /* retrieve synchro */
+ do(Model(Stream).(I:Thread:Stimulus))). /* report synchro */
 
 /* virtual machine stream reports */
-'Model'(Stream).(I:Thread:Stimulus) :-
+Model(Stream).(I:Thread:Stimulus) :-
  write(I:Thread:Stimulus),nl,
- remove('Model'(Stream),I:Thread:Stimulus).
+ remove(Model(Stream),I:Thread:Stimulus).
 
 /* virtual machine thread instructions */
-'Model'(Stream<>[P|X]).(T:fire([Q|Y])) :- /* fire thread [Q|Y] */
+Model(Stream)([P|X]).(T:fire([Q|Y])) :- /* fire thread [Q|Y] */
  T1 is T+1,
- set('Model'(Stream<>[Q|Y]),clock(1)), /* reset [Q|Y] clock */
- set('Model'(Stream<>[P|X]),clock(T1)) . /* set [P|X] clock */
+ set(Model(Stream)([Q|Y]),clock(1)), /* reset [Q|Y] clock */
+ set(Model(Stream)([P|X]),clock(T1)) . /* set [P|X] clock */
 
-'Model'(Stream<>[P|X]).(T:resume([P|X])) :- /* reenter thread */
- set('Model'(Stream<>[P|X]),clock(1)). /* reset [P|X] clock */
+Model(Stream)([P|X]).(T:resume([P|X])) :- /* reenter thread */
+ set(Model(Stream)([P|X]),clock(1)). /* reset [P|X] clock */
 
-'Model'(Stream<>[P|X]).(T:end) :- /* end active thread */
- remove('Model'(Stream<>[P|X]),clock(T)). /* deactive thread */
+Model(Stream)([P|X]).(T:end) :- /* end active thread */
+ remove(Model(Stream)([P|X]),clock(T)). /* deactive thread */
 
-'Model'(Stream<>[P|X]).(T:send([Q|Y])) :- /* send to [Q|Y] */
+Model(Stream)([P|X]).(T:send([Q|Y])) :- /* send to [Q|Y] */
  T1 is T+1,
- if_not(ist('Model'(Stream<>[Q|Y]),clock(_)), /* if not active */
-      then(set('Model'(Stream<>[Q|Y]),clock(1)))), /*    then fire [Q|Y] */
- if_not(ist('Model'(Stream),weight([P|X],[Q|Y]<>W)), /* if no weight */
-        then(if(ist('Model'(Stream),initial([P|X],[Q|Y]<>W)), /*    then if weight */
-            then(set('Model'(Stream),weight([P|X],[Q|Y]<>W))), /*    then attach */
-            else(set('Model'(Stream),weight([P|X],[Q|Y]<>0)))))), /*    else inhibit */
+ if_not(ist(Model(Stream)([Q|Y]),clock(_)), /* if not active */
+      then(set(Model(Stream)([Q|Y]),clock(1)))), /*    then fire [Q|Y] */
+ if_not(ist(Model(Stream),weight([P|X],[Q|Y])(W)), /* if no weight */
+        then(if(ist(Model(Stream),initial([P|X],[Q|Y])(W)), /*    then if weight */
+            then(set(Model(Stream),weight([P|X],[Q|Y])(W))), /*    then attach */
+            else(set(Model(Stream),weight([P|X],[Q|Y])(0)))))), /*    else inhibit */
 
- if_not(ist('Model'(Stream<>[P|X]),signal(send([Q|Y]))), /* if no send signal */
-        then(insert('Model'(Stream<>[P|X]),signal(send([Q|Y]))))), /*    then post signal */
- set('Model'(Stream<>[P|X]),clock(T1)). /* set clock */
+ if_not(ist(Model(Stream)([P|X]),signal(send([Q|Y]))), /* if no send signal */
+        then(insert(Model(Stream)([P|X]),signal(send([Q|Y]))))), /*    then post signal */
+ set(Model(Stream)([P|X]),clock(T1)). /* set clock */
 
-'Model'(Stream<>[P|X]).(T:receive([Q|Y])) :- /* receive from [Q|Y]*/
+Model(Stream)([P|X]).(T:receive([Q|Y])) :- /* receive from [Q|Y]*/
  T1 is T+1,
- if(ist('Model'(Stream<>[Q|Y]),signal(send([P|X]))), /* if signal posted */
-    then(if((ist('Model'(Stream),weight([Q|Y],[P|X]<>K)),K>0), /*    then if threshold */
-         then(set('Model'(Stream<>[P|X]),clock(T1)))))). /*    then clock */
+ if(ist(Model(Stream)([Q|Y]),signal(send([P|X]))), /* if signal posted */
+    then(if((ist(Model(Stream),weight([Q|Y],[P|X])(K)),K>0), /*    then if threshold */
+         then(set(Model(Stream)([P|X]),clock(T1)))))). /*    then clock */
 
-'Model'(Stream<>[P|X]).(T:merge([Q|Y])) :- /* merge with [Q|Y] */
+Model(Stream)([P|X]).(T:merge([Q|Y])) :- /* merge with [Q|Y] */
  T1 is T+1,
- if_not(ist('Model'(Stream<>[P|X]),signal(merge([Q|Y]))), /* if no signal */
-    then(insert('Model'(Stream<>[P|X]),signal(merge([Q|Y]))))), /*    then post signal */
- set('Model'(Stream<>[P|X]),clock(T1)). /* set clock */
+ if_not(ist(Model(Stream)([P|X]),signal(merge([Q|Y]))), /* if no signal */
+    then(insert(Model(Stream)([P|X]),signal(merge([Q|Y]))))), /*    then post signal */
+ set(Model(Stream)([P|X]),clock(T1)). /* set clock */
 
-'Model'(Stream<>[P|X]).(T:join([Q|Y])) :- /* join [Q|Y] */
+Model(Stream)([P|X]).(T:join([Q|Y])) :- /* join [Q|Y] */
  T1 is T+1,
- if(ist('Model'(Stream<>[Q|Y]),signal(merge([P|X]))), /* if signal */
-    then(set('Model'(Stream<>[P|X]),clock(T1)))). /*    then set clock */
+ if(ist(Model(Stream)([Q|Y]),signal(merge([P|X]))), /* if signal */
+    then(set(Model(Stream)([P|X]),clock(T1)))). /*    then set clock */
 
-'Model'(Stream<>Thread).(T:increment(weight([P,[F,X]],[Q,Y]))) :- /* increment weight */
+Model(Stream)(Thread).(T:increment(weight([P,[F,X]],[Q,Y]))) :- /* increment weight */
  T1 is T+1,
- ist('Model'(Stream),seq(I)), /* get global time */
+ ist(Model(Stream),seq(I)), /* get global time */
 
- if_not(ist('Model'(Stream),weight([P,[F,X]],[Q,Y]<>W)), /* if no weight */
-     then(if(ist('Model'(Stream),initial([P,[F,X]],[Q,Y]<>W)), /*    then if initial */
-          then(set('Model'(Stream),weight([P,[F,X]],[Q,Y]<>W))), /*    then attach */
-          else(set('Model'(Stream),weight([P,[F,X]],[Q,Y]<>0)))))), /*    else inhibit */
+ if_not(ist(Model(Stream),weight([P,[F,X]],[Q,Y])(W)), /* if no weight */
+     then(if(ist(Model(Stream),initial([P,[F,X]],[Q,Y])(W)), /*    then if initial */
+          then(set(Model(Stream),weight([P,[F,X]],[Q,Y])(W))), /*    then attach */
+          else(set(Model(Stream),weight([P,[F,X]],[Q,Y])(0)))))), /*    else inhibit */
 
- if((ist('Model'(Stream),weight([P,[F,X]],[Q,Y]<>W)),W<1), /* if no threshold */
+ if((ist(Model(Stream),weight([P,[F,X]],[Q,Y])(W)),W<1), /* if no threshold */
     then((W1 is W+1, /*    then increment */
-       insert('Model'(Stream),I:Thread:weight([P,[F,_]],[Q,Y]<>W1)), /* report */
-       set('Model'(Stream),weight([P,[F,_]],[Q,Y]<>W1))))), /* attach */
- set('Model'(Stream<>Thread),clock(T1)). /* set clock */
+       insert(Model(Stream),I:Thread:weight([P,[F,_]],[Q,Y])(W1)), /* report */
+       set(Model(Stream),weight([P,[F,_]],[Q,Y])(W1))))), /* attach */
+ set(Model(Stream)(Thread),clock(T1)). /* set clock */
 
-'Model'(Stream<>Thread).(T:decrement(weight([P,[F,X]],[Q,Y]))) :- /* decrement weight */
+Model(Stream)(Thread).(T:decrement(weight([P,[F,X]],[Q,Y]))) :- /* decrement weight */
  T1 is T+1,
- ist('Model'(Stream),seq(I)), /* get global time */
- if_not(ist('Model'(Stream),weight([P,[F,X]],[Q,Y]<>W)), /* if no weight */
-      then(if(ist('Model'(Stream),initial([P,[F,X]],[Q,Y]<>W)), /*    then if weight */
-            then(set('Model'(Stream),weight([P,[F,X]],[Q,Y]<>W))), /*    then attach */
-            else(set('Model'(Stream),weight([P,[F,X]],[Q,Y]<>0)))))), /*    else inhibit */
- if((ist('Model'(Stream),weight([P,[F,X]],[Q,Y]<>W)),W>0), /* if no threshold */
+ ist(Model(Stream),seq(I)), /* get global time */
+ if_not(ist(Model(Stream),weight([P,[F,X]],[Q,Y])(W)), /* if no weight */
+      then(if(ist(Model(Stream),initial([P,[F,X]],[Q,Y])(W)), /*    then if weight */
+            then(set(Model(Stream),weight([P,[F,X]],[Q,Y])(W))), /*    then attach */
+            else(set(Model(Stream),weight([P,[F,X]],[Q,Y])(0)))))), /*    else inhibit */
+ if((ist(Model(Stream),weight([P,[F,X]],[Q,Y])(W)),W>0), /* if no threshold */
         then((W1 is W-1, /*    then decrement */
-           insert('Model'(Stream),I:Thread:weight([P,[F,_]],[Q,Y]<>W1)), /* report */
-           set('Model'(Stream),weight([P,[F,_]],[Q,Y]<>W1))))), /* attach */
- set('Model'(Stream<>Thread),clock(T1)). /* set clock */
+           insert(Model(Stream),I:Thread:weight([P,[F,_]],[Q,Y])(W1)), /* report */
+           set(Model(Stream),weight([P,[F,_]],[Q,Y])(W1))))), /* attach */
+ set(Model(Stream)(Thread),clock(T1)). /* set clock */
 
-'Model'(Stream<>Thread).(T:step(Y)) :- /* step */
+Model(Stream)(Thread).(T:step(Y)) :- /* step */
  T1 is T+1,
- ist('Model'(Stream),seq(I)), /* get global time */
+ ist(Model(Stream),seq(I)), /* get global time */
  if(Y=forward,              /* get direction */
     then(F=right),
     else(F=left)),
- if(ist('Model'(_),at([F,X])), /* get position */
+ if(ist(Model(_),at([F,X])), /* get position */
     then(X1 is X+1),
     else(X1 is 1)),
  if(X1<8, /* if not limit */
-    then(set('Model'(_),at([F,X1])))), /*    then advance */
-    else(remove('Model'(_),at(_)))), /*    else stop */
+    then(set(Model(_),at([F,X1])))), /*    then advance */
+    else(remove(Model(_),at(_)))), /*    else stop */
  I1 is I+1,
- set('Model'(Stream),seq(I1)),
- set('Model'(Stream<>Thread),clock(T1)). /* set clock */
+ set(Model(Stream),seq(I1)),
+ set(Model(Stream)(Thread),clock(T1)). /* set clock */
 
-'Model'(Stream<>Thread).(T:on(X)) :- /* detect */
+Model(Stream)(Thread).(T:on(X)) :- /* detect */
  T1 is T+1,
- if(ist('Model'(_),at(X)), /* if position */
-    then(set('Model'(Stream),on(X))), /*    then found */
-      else(remove('Model'(Stream),on(_)))), /*    else not found */
- set('Model'(Stream<>Thread),clock(T1)). /* set clock */
+ if(ist(Model(_),at(X)), /* if position */
+    then(set(Model(Stream),on(X))), /*    then found */
+      else(remove(Model(Stream),on(_)))), /*    else not found */
+ set(Model(Stream)(Thread),clock(T1)). /* set clock */
 
-'Model'(Stream<>Thread).(T:choice(X)) :- /* random selection */
+Model(Stream)(Thread).(T:choice(X)) :- /* random selection */
  T1 is T+1,
- ist('Model'(Stream),seq(I)), /* get global time */
+ ist(Model(Stream),seq(I)), /* get global time */
  random(R,X),
- set('Model'(Stream<>Thread),fetch(R)), /* set fetch */
- insert('Model'(Stream),I:Thread:fetch(R)),
- set('Model'(Stream<>Thread),clock(T1)). /* set clock */
+ set(Model(Stream)(Thread),fetch(R)), /* set fetch */
+ insert(Model(Stream),I:Thread:fetch(R)),
+ set(Model(Stream)(Thread),clock(T1)). /* set clock */
 
-'Model'(Stream<>Thread).(T:check([P|X])) :- /* check if [P|X] */
+Model(Stream)(Thread).(T:check([P|X])) :- /* check if [P|X] */
  T1 is T+1,
- ist('Model'(Stream),seq(I)), /* get global time */
- remove('Model'(Stream<>Thread),excite([P|X])),
- remove('Model'(Stream<>Thread),inhibit([P|X])),
- if(ist('Model'(Stream),[P|X]), /* if [P|X] */
-    then((set('Model'(Stream<>Thread),excite([P|X])), /*    then set excite */
+ ist(Model(Stream),seq(I)), /* get global time */
+ remove(Model(Stream)(Thread),excite([P|X])),
+ remove(Model(Stream)(Thread),inhibit([P|X])),
+ if(ist(Model(Stream),[P|X]), /* if [P|X] */
+    then((set(Model(Stream)(Thread),excite([P|X])), /*    then set excite */
            insert(Model,Stream(I):Thread:excite([P|X])), /* synchronize */
-           insert('Model'(Stream),I:Thread:excite([P|X])))), /* report */
-    else((set('Model'(Stream<>Thread),inhibit([P|X])),
-           insert('Model'(Stream),I:Thread:inhibit([P|X])),
+           insert(Model(Stream),I:Thread:excite([P|X])))), /* report */
+    else((set(Model(Stream)(Thread),inhibit([P|X])),
+           insert(Model(Stream),I:Thread:inhibit([P|X])),
 
 insert(Model,Stream(I):Thread:inhibit([P|X]))))), /*    else set inhibit */
- set('Model'(Stream<>Thread),clock(T1)). /* set clock */
+ set(Model(Stream)(Thread),clock(T1)). /* set clock */
 
 
-'Model'(Stream<>Thread).(T:scan(detect([F,X]),move(Y))) :- /* scan synchro */
+Model(Stream)(Thread).(T:scan(detect([F,X]),move(Y))) :- /* scan synchro */
  T1 is T+1,
- ist('Model'(Stream),seq(I)), /* get global time */
- remove('Model'(Stream<>Thread),sync(detect([F,X]),move(Y))), /* remove synchro */
+ ist(Model(Stream),seq(I)), /* get global time */
+ remove(Model(Stream)(Thread),sync(detect([F,X]),move(Y))), /* remove synchro */
  if((ist(Model,Stream(I1):detect([F,X]):excite(on([F,X]))), /* if synchro */
      ist(Model,Stream(I2):move(Y):excite(at([F,X]))), I1=I2),
-    then((set('Model'(Stream<>Thread),sync(detect([F,X]),move(Y))), /* set synchro */
-          insert('Model'(Stream),I:Thread:sync(detect([F,X]),move(Y)))))), /* report synchro */
- set('Model'(Stream<>Thread),clock(T1)). /* set clock */
+    then((set(Model(Stream)(Thread),sync(detect([F,X]),move(Y))), /* set synchro */
+          insert(Model(Stream),I:Thread:sync(detect([F,X]),move(Y)))))), /* report synchro */
+ set(Model(Stream)(Thread),clock(T1)). /* set clock */
 
 
-'Model'(Stream<>Thread).(T:effector(P)) :- /* virtual effector */
+Model(Stream)(Thread).(T:effector(P)) :- /* virtual effector */
  T1 is T+1,
- ist('Model'(Stream),seq(I)), /* get global time */
- insert('Model'(Stream),I:Thread:effector(P)),
- set('Model'(Stream<>Thread),clock(T1)). /* set clock */
+ ist(Model(Stream),seq(I)), /* get global time */
+ insert(Model(Stream),I:Thread:effector(P)),
+ set(Model(Stream)(Thread),clock(T1)). /* set clock */
 
 
 
