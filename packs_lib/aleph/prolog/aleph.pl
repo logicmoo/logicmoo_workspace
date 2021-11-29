@@ -109,7 +109,7 @@ please contact Ashwin Srinivasan first.                                 %
 inf(1e10).
 :-set_prolog_flag(unknown,warning).
 :- dynamic aleph_input_mod/1.
-aleph_module(aleph).
+
 :- meta_predicate induce(:).
 :- meta_predicate induce_tree(:).
 :- meta_predicate induce_max(:).
@@ -158,6 +158,8 @@ system:term_expansion((:- aleph), []) :-
   assert(aleph_input_mod(M)),!,
   initialize(M).
 
+aleph_module(M):-aleph_input_mod(M),!.
+aleph_module(aleph).
 initialize(M):-
 	% nl, nl,
 	% write('A L E P H'), nl,
