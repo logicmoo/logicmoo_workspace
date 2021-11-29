@@ -97,7 +97,7 @@ argument_types:-
    different_predicates(Elist,Elist1),      % Elist1 = [[E1,..,Em],...]
                                             % list of lists of pos examples with
                                             % the same predicate symbol
-   argument_types(Elist1).
+   argument_types(Elist1),!.
 
 
 argument_types([]).

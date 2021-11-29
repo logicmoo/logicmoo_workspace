@@ -51,9 +51,8 @@ column(X):- block(X), standing(X), is_on(X,Y), column(Y).
 end_of_file.
 
 
-?- do_full_kb('examples/ex2.pl').
-
-try      
+% ?- do_full_kb('examples/ex2.pl').
+ /*  
 
 | ?- clear_kb, init_kb('examples/ex2.pl').
 | ?- show_kb.
@@ -79,7 +78,7 @@ try
 | ?- clear_kb, init_kb('examples/ex2.pl').
 | ?- rlgg(5,6,J),show_clause(J).
 
-X-MILES Protocol:
+%X-MILES Protocol:
 
 :- clear_kb.
 % knowledgebase cleared.

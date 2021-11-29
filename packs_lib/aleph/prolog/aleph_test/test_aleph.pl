@@ -16,6 +16,7 @@ test(induce,[true(Program =
   parent(dad(dad(bob)), mum(bob))])]):-
   induce(Program).
 
+
 :- end_tests(abduce).
 
 :- begin_tests(animals, []).

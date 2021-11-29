@@ -190,6 +190,8 @@ atom_contains_ci(Left,Right):- downcase_atom(Left,LeftDC),downcase_atom(Right,Ri
 
 afix_ordered_varname(Left,Right,_Var):- atom_contains_ci(Left,Right),!.
 afix_ordered_varname(Left,Right,_Var):- atom_contains_ci(Right,Left),!.
+afix_ordered_varname(_Left,Right, _Var):- atomic_list_concat(Dashes,'_',Right),length(Dashes,L),L>2,!.
+%afix_ordered_varname(Left,Right, Var):- wdmsg(Left+Right),fail.
 afix_ordered_varname(Left,Right, Var):- atomic_list_concat([Left,'_',Right],New),
   add_var_to_env_trimed(New,Var).
 
@@ -556,6 +558,7 @@ append_varname(R,Var):- ignore((p_n_atom(R,RR),append_varname1(RR,Var))),!.
 append_varname1(R,_Var):- is_letterless(R),!. % ignore
 
 append_varname1(R,Var):- get_var_name(Var,Prev), contains_atom_ci(Prev,R),!.
+append_varname1(R,Var):- get_var_name(Var,Prev), contains_atom_ci(R,Prev),!.
 append_varname1(_,Var):- get_var_name(Var,Prev), contains_atom_ci(Prev,'_'),!.
 
 append_varname1(R,Var):- get_var_name(Var,Prev),!,

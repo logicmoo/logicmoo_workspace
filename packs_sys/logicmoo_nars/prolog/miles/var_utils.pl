@@ -175,7 +175,7 @@ terms(0,_,L,L):- !.
 terms(N,T,L,L2):-
    N1 is N - 1,
    terms(N1,T,L,L1),
-   arg(N,T,Tn),
+   arg_quintus(N,T,Tn),
    terms(Tn,L1,L2).
 
 
@@ -282,13 +282,13 @@ do_replace1( T1,S,T2 ):-
 do_replace1(0,_,_,_).
 
 do_replace1(N,T1,T2,S):-
-      arg(N,T1,A),
-      arg(N,T2,B),
+      arg_quintus(N,T1,A),
+      arg_quintus(N,T2,B),
       do_replace1(A,S,B),
       M is N - 1,
       do_replace1(M,T1,T2,S).
 
-
+arg_quintus(N,C,E):- compound(C),arg(N,C,E).
 
 
 %***********************************************************************
@@ -335,15 +335,15 @@ do_inv_replace1( T1,S,T2 ):-
 do_inv_replace1(0,_,_,_).
 
 do_inv_replace1(N,T1,T2,S):-
-      arg(N,T1,A),
-      arg(N,T2,B),
+      arg_quintus(N,T1,A),
+      arg_quintus(N,T2,B),
       do_inv_replace1(A,S,B),
       M is N - 1,
       do_inv_replace1(M,T1,T2,S).
 
 
 do_inv_replace1(2,[T],T2,S) :-
-	arg(2,T2,[]),
+	arg_quintus(2,T2,[]),
 	do_inv_replace1(1,[T],T2,S).
 
 
@@ -379,7 +379,7 @@ term_size(Term, Size) :-
 term_size(N, NonVar, SoFar, Size) :-
     (	N =:= 0 ->
 	Size is SoFar
-    ;   arg(N, NonVar, Arg),
+    ;   arg_quintus(N, NonVar, Arg),
 	term_size(Arg, ArgSize),
 	Accum is SoFar+ArgSize,
 	M is N-1,
@@ -589,7 +589,7 @@ do_isub1(_,[],Var,_,Var).
 do_isub1(T,[P|R],V,C,C1):-
    functor(C,F,N),functor(C1,F,N),
    do_isub_copy(N,P,C,C1),
-   arg(P,C1,C1p),arg(P,C,Cp),
+   arg_quintus(P,C1,C1p),arg_quintus(P,C,Cp),
    do_isub1(T,R,V,Cp,C1p).
 
 do_isub_copy(0,_,_,_):- !.
@@ -598,7 +598,7 @@ do_isub_copy(N,P,C,C1):-
    do_isub_copy(N1,P,C,C1),
    (   N == P ->
        true
-   ;   arg(N,C,Cn),arg(N,C1,Cn)
+   ;   arg_quintus(N,C,Cn),arg_quintus(N,C1,Cn)
    ).
 
 
@@ -641,8 +641,8 @@ skolemize(T1,S1,S2,T2):-
         skolemize(N,T1,S1,S2,T2).
 skolemize(0,_,S,S,_).
 skolemize(N,T,S1,S2,U):-
-        arg(N,T,Tn),
-        arg(N,U,Un),
+        arg_quintus(N,T,Tn),
+        arg_quintus(N,U,Un),
         skolemize(Tn,S1,S3,Un),
         M is N - 1,
         skolemize(M,T,S3,S2,U).
@@ -700,7 +700,7 @@ deskolemize(Sk_Atom,S,Var):-
 	skolem_covered(Sk_Atom,S,Var),
 	!.
 deskolemize(Atom,_,Atom):-
-	atom(Atom),
+	atomic(Atom),
 	!.
 deskolemize(Var,_S,Var):-
 	var(Var),
@@ -711,8 +711,8 @@ deskolemize(T1,S,T2):-
 	deskolemize(N,T1,S,T2).
 deskolemize(0,_,_,_).
 deskolemize(N,T,S,U):-
-	arg(N,T,Tn),
-	arg(N,U,Un),
+	arg_quintus(N,T,Tn),
+	arg_quintus(N,U,Un),
 	deskolemize(Tn,S,Un),
 	M is N - 1,
 	deskolemize(M,T,S,U).
@@ -762,10 +762,12 @@ skolem_covered(Sk_Atom, [ _| S ], Var):-
 
 skolems(Term,Skolems):-
         setof( Skolem, Len^( sub_term(Skolem,Term),atom(Skolem),
-                             substring(Skolem,sk_atom,0,Len)
+                            % q_substring(Skolem,sk_atom,0,Len)
+                             (atom_concat(sk_atom,Rest,Skolem),atom_length(Rest,Len))
                          ), 
                 Skolems),!.
 skolems(_,[]).
+
 
 
 %***********************************************************************
@@ -885,11 +887,11 @@ findargs([Lit1:_|Rest],Accu,Result) :-
 
 allarg(0,_,Accu,Accu) :- !.
 allarg(N,Lit,Args,Result) :-
-	arg(N,Lit,Arg1),
+	arg_quintus(N,Lit,Arg1),
 	M is N - 1,
-	nonmember(Arg1,Args) ->
+	(nonmember(Arg1,Args) ->
 	allarg(M,Lit,[Arg1|Args],Result);
-	allarg(M,Lit,Args,Result).
+	allarg(M,Lit,Args,Result)).
 
 
 %************************************************************************

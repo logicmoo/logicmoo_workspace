@@ -109,7 +109,7 @@ please contact Ashwin Srinivasan first.                                 %
 inf(1e10).
 :-set_prolog_flag(unknown,warning).
 :- dynamic aleph_input_mod/1.
-
+aleph_module(aleph).
 :- meta_predicate induce(:).
 :- meta_predicate induce_tree(:).
 :- meta_predicate induce_max(:).
@@ -398,6 +398,7 @@ prolog_type(yap):-
 	predicate_property(yap_flag(_,_),built_in), !.
 prolog_type(swi).
 
+:- if(prolog_type(yap)).
 init(yap):-
 	source,
 	system_predicate(false,false), hide(false),
@@ -418,6 +419,7 @@ init(yap):-
 				((P = static); (P = dynamic); (P = built_in)), !)),
 	(predicate_property(delete_file(_),built_in) -> true;
 		assert_static(delete_file(_))).
+:- endif.
 
 init(swi,M):-
 	%redefine_system_predicate(false),
@@ -471,7 +473,7 @@ aleph_manual('http://www.comlab.ox.ac.uk/oucl/groups/machlearn/Aleph/index.html'
 :- multifile prune/1.
 :- multifile refine/2.
 :- multifile cost/3.
-:- multifile prove/2.
+:- multifile prove/3.
 :- multifile redundant/2.
 :- multifile text/2.
 
@@ -651,7 +653,7 @@ update_equivs(Equivs,Depth,M):-
 update_equivs(Equivs,Depth,M):-
 	Depth1 is Depth - 1,
 	get_equivs(Depth1,Eq1,M),
-	update_equiv_lists(Equivs,Eq1,Eq2,M),
+	update_equiv_lists(Equivs,Eq1,Eq2),
 	asserta(M:'$aleph_sat_varsequiv'(Depth,Eq2)).
 
 update_equiv_lists([],E,E):- !.
@@ -923,7 +925,7 @@ neg_reduce(_,_,_,_,_,_M).
 neg_reduce([],_,_,N,_,_,_,N).
 neg_reduce([L1|Lits],C,TV,N,Neg,ProofFlags,Noise,LastLit,M):-
 	get_pclause([L1],TV,Lit1,TV1,_,_,M),
-	extend_clause(C,Lit1,Clause,M),
+	extend_clause(C,Lit1,Clause),
         prove(ProofFlags,neg,Clause,Neg,NegCover,Count,M),
 	Count > Noise, !,
 	N1 is N + 1,
@@ -935,7 +937,8 @@ neg_reduce(_,_,_,N,_,_,_,N,_M).
 	% aleph_remove_n(Last,[1|Lits],Prefix,Suffix),
 	% aleph_append([LastLit|Suffix],Prefix,Lits1).
 
-insert_lastlit(LastLit,Lits,Lits1,M):-
+insert_lastlit(LastLit,Lits,Lits1):-
+  aleph_module(M),
 	get_predecessors([LastLit],Prefix,M),
 	aleph_delete_list(Prefix,Lits,Suffix),
 	aleph_append([LastLit|Suffix],Prefix,Lits1).
@@ -1028,10 +1031,10 @@ rm_commutative(_,_,M):-
 	fail.
 rm_commutative(Last,N,M):-
 	M:'$aleph_local'(marked,_), !,
-	get_marked(1,Last,Lits),
+	get_marked(1,Last,Lits,M),
 	length(Lits,N),
 	p1_message('commutative literals'), p_message(N/Last),
-	remove_lits(Lits).
+	remove_lits(Lits,M).
 rm_commutative(_,0,_M).
 
 % recursive marking of literals that do not contribute to establishing
@@ -1134,7 +1137,7 @@ get_successes(Literal,*,Mo,M):-
 get_successes(Literal,N,Mo,M):-
 	integer(N),
 	N > 1,
-	reset_succ,
+	reset_succ(M),
 	get_nsuccesses(Literal,N,Mo,M).
 
 % get at most N matches for a literal
@@ -1214,7 +1217,7 @@ split_vars(Depth,FAtom,I,O,C,SplitAtom,IVars,OVars,Equivs,M):-
 		functor(SplitAtom,Name,Arity),
 		copy_args(FAtom,SplitAtom,I),
 		copy_args(FAtom,SplitAtom,C),
-		rename_ovars(O,Depth,FAtom,SplitAtom,Equivs0,Equivs),
+		rename_ovars(O,Depth,FAtom,SplitAtom,Equivs0,Equivs,M),
 		get_argterms(SplitAtom,O,[],OVars)).
 	% write('splitting: '), write(FAtom), write(' to: '), write(SplitAtom), nl.
 split_vars(_,FAtom,I,O,_,FAtom,IVars,OVars,[],_M):-
@@ -1249,19 +1252,19 @@ get_repeats([_|Vars],Ref,L):-
 
 % rename all output vars that are co-references
 % updates vars database and return equivalent class of variables
-rename_ovars([],_,_,_,L,L).
-rename_ovars([ArgNo|Args],Depth,Old,New,CoRefs,Equivalences):-
+rename_ovars([],_,_,_,L,L,_).
+rename_ovars([ArgNo|Args],Depth,Old,New,CoRefs,Equivalences,M):-
 	(ArgNo = Pos/_ -> true; Pos = ArgNo),
 	tparg(Pos,Old,OldVar),
 	aleph_delete(OldVar/Equiv,CoRefs,Rest), !,
-	copy_var(OldVar,NewVar,Depth),
+	copy_var(OldVar,NewVar,Depth,M),
 	tparg(Pos,New,NewVar),
-	rename_ovars(Args,Depth,Old,New,[OldVar/[NewVar|Equiv]|Rest],Equivalences).
-rename_ovars([ArgNo|Args],Depth,Old,New,CoRefs,Equivalences):-
+	rename_ovars(Args,Depth,Old,New,[OldVar/[NewVar|Equiv]|Rest],Equivalences,M).
+rename_ovars([ArgNo|Args],Depth,Old,New,CoRefs,Equivalences,M):-
 	(ArgNo = Pos/_ -> true; Pos = ArgNo),
 	tparg(Pos,Old,OldVar),
 	tparg(Pos,New,OldVar),
-	rename_ovars(Args,Depth,Old,New,CoRefs,Equivalences).
+	rename_ovars(Args,Depth,Old,New,CoRefs,Equivalences,M).
 
 % create new  equalities to  allow co-references to re-appear in search
 insert_eqs([],_,L,L,_M).
@@ -1280,7 +1283,7 @@ add_eqs([],_,_,_,L,L,_M).
 add_eqs([Var2|Rest],Depth,Var1,Type,Last,NewLast,M):-
 	(Depth = 0 -> 
 		add_lit(Last,false,(Var1=Var2),[1/Type],[2/Type],[Var1],[Var2],Last1,M);
-		add_lit(Last,false,(Var1=Var2),[1/Type,2/Type],[],[Var1,Var2],[],Last1),M),
+		add_lit(Last,false,(Var1=Var2),[1/Type,2/Type],[],[Var1,Var2],[],Last1,M)),
 	add_eqs(Rest,Depth,Var1,Type,Last1,NewLast,M).
 	
 
@@ -1453,8 +1456,8 @@ theorysearch(S,Nodes,M):-
         next_node(_,M), !,
         M:'$aleph_global'(atoms,atoms(pos,Pos)),
         M:'$aleph_global'(atoms,atoms(neg,Neg)),
-        interval_count(Pos,P,M),
-        interval_count(Neg,N,M),
+        interval_count(Pos,P),
+        interval_count(Neg,N),
         repeat,
         next_node(NodeRef,M),
 	M:'$aleph_search_node'(NodeRef,Theory,_,_,_,_,_,_),
@@ -1516,7 +1519,7 @@ get_search_settings(S,M):-
 	setting(searchtime,Time,M), arg(36,S,Time),
 	setting(optimise_clauses,Optim,M), arg(37,S,Optim),
 	setting(newvars,NewV,M), arg(38,S,NewV),
-	(setting(rls_type,RlsType,M) -> arg(39,S,RlsType);arg(39,S,false,M)),
+	(setting(rls_type,RlsType,M) -> arg(39,S,RlsType);arg(39,S,false)),
 	setting(minposfrac,MinPosFrac,M), arg(40,S,MinPosFrac),
 	(setting(recursion,_Recursion,M) -> true; _Recursion = false),
 	prolog_type(Prolog), arg(41,S,Prolog),
@@ -1608,8 +1611,8 @@ get_sample_cover(S,PosCover,NegCover,M):-
 	arg(46,S,SSample),
 	(SSample = false -> PosCover = PCover, NegCover = NCover;
 		arg(47,S,SampleSize),
-		interval_sample(SampleSize,PCover,PosCover,M),
-		interval_sample(SampleSize,NCover,NegCover,M)).
+		interval_sample(SampleSize,PCover,PosCover),
+		interval_sample(SampleSize,NCover,NegCover)).
 
 get_ovars([],_,V,V,_M).
 get_ovars([LitNum|Lits],K,VarsSoFar,Vars,M):-
@@ -1916,7 +1919,7 @@ get_theory_gain1(S,Theory,Last,Best,Pos,Neg,P,N,Best1,M):-
 	Contradiction = false,
         Node1 is Last + 1,
 	arg(32,S,Lang),
-	theory_lang_ok(Theory,Lang,M),
+	theory_lang_ok(Theory,Lang),
 	arg(38,S,NewVars),
 	theory_newvars_ok(Theory,NewVars),
 	arg(14,S,Depth),
@@ -2269,8 +2272,8 @@ match_mode(Loc,CLit,M):-
 		M:'$aleph_global'(modeb,modeb(_,Mode))),
         split_args(Mode,Mode,I,O,C,M),
         (Loc = head ->
-		update_atoms(CLit,mode(Mode,O,I,C));
-		update_atoms(CLit,mode(Mode,I,O,C))),
+		update_atoms(CLit,mode(Mode,O,I,C),M);
+		update_atoms(CLit,mode(Mode,I,O,C),M)),
 	fail.
 match_mode(_,_,_M).
 
@@ -2279,8 +2282,8 @@ flatten_matched_atoms(Loc,M):-
         (retract(M:'$aleph_sat'(botsize,BSize))-> true;  BSize = 0),
         (retract(M:'$aleph_sat'(lastlit,Last))-> true ; Last = 0),
         (Loc = head ->
-                flatten(0,IVal,BSize,BSize1);
-                flatten(0,IVal,Last,BSize1)),
+                flatten(0,IVal,BSize,BSize1,M);
+                flatten(0,IVal,Last,BSize1,M)),
         asserta(M:'$aleph_sat'(botsize,BSize1)),
 	(Last < BSize1 -> 
         	asserta(M:'$aleph_sat'(lastlit,BSize1));
@@ -2292,7 +2295,7 @@ flatten_matched_atoms(_,_M).
 integrate_head_lit(HeadOVars,M):-
         example_saturated(Example,M),
 	split_args(Example,_,_,Output,_,M),
-	integrate_args(unknown,Example,Output),
+	integrate_args(unknown,Example,Output,M),
         match_mode(head,Example,M),
 	flatten_matched_atoms(head,M),
         get_ivars1(false,1,HeadOVars,M), !.
@@ -2441,6 +2444,8 @@ complete_label(EvalFn,_,[P,N,L],[P,N,L,Val],M):-
 complete_label(_,_,_,_,_M):-
 	p_message1('error'), p_message('incorrect evaluation/cost function'),
 	fail.
+
+p_message1(_).
 
 % estimate label based on subsampling
 estimate_label(Sample,[P,N|Rest],[P1,N1|Rest],M):-
@@ -2866,7 +2871,7 @@ prove_cache(exact,S,Type,Entry,Clause,Intervals,IList,Count,M):-
 		IList = Intervals,
 		interval_count(IList,Count)),
         arg(8,S,Caching),
-        (Caching = true -> add_cache(Entry,Type,IList); true).
+        (Caching = true -> add_cache(Entry,Type,IList,M); true).
 prove_cache(upper,S,Type,Entry,Clause,Intervals,IList,Count,M):-
         arg(8,S,Caching),
         Caching = true, !,
@@ -2935,7 +2940,7 @@ prove_cache(exact,S,Type,Entry,Clause,Intervals,Max,IList,Count,M):-
 		IList = Intervals,
 		interval_count(Intervals,Count)),
         arg(8,S,Caching),
-        (Caching = true -> add_cache(Entry,Type,IList); true).
+        (Caching = true -> add_cache(Entry,Type,IList,M); true).
 prove_cache(upper,S,Type,Entry,Clause,Intervals,Max,IList,Count,M):-
         arg(8,S,Caching),
         Caching = true, !,
@@ -3061,7 +3066,7 @@ prove(Flags,Type,Clause,[Interval|Intervals],IList,Count,M):-
 prove2([],_,_,_,Count,[],Count,_M).
 prove2([Current-Finish|Intervals],Depth/Time/Proof,Type,(Head:-Body),InCount,Sofar,OutCount,M) :-
 	M:example(Current,Type,Example),
-	\+ prove1(Proof,Depth/Time,Example,(Head:-Body,M)), %uncovered
+	\+ prove1(Proof,Depth/Time,Example,(Head:-Body),M), %uncovered
         !,
         (Current>=Finish ->
             prove2(Intervals,Depth/Time/Proof,Type,(Head:-Body),InCount,Sofar,OutCount,M);
@@ -4157,7 +4162,7 @@ sat(_,_,M):-
  */
 reduce(M:Cl):-
 	setting(search,Search,M), 
-	catch(reduce(Search,Cl,M),abort,reinstate_values), !.
+	catch(reduce(Search,Cl,M),abort,reinstate_values(M)), !.
 
 reduce(Search,M):-
 	reduce(Search,_Cl,M).
@@ -4218,8 +4223,8 @@ reduce(ibs,RClause,M):-
 	p_message('ibs best clause'),
 	pp_dclause(RClause,M),
 	show_stats(Evalfn,BestLabel),
-	record_search_stats(RClause,Nodes,Time),
-	reinstate_values([openlist,caching,explore]).
+	record_search_stats(RClause,Nodes,Time,M),
+	reinstate_values([openlist,caching,explore],M).
 
 % iterative deepening search
 reduce(id,RClause,M):-
@@ -4813,7 +4818,7 @@ kill_worker(Queue, Worker) :-
 worker(Queue, Master,M) :-
 	thread_get_message(Queue, Message),
 	work(Message, Master,M),
-	worker(Queue, Master).
+	worker(Queue, Master,M).
 
 work(rls_restart(R, SearchStrat, Label), Master,M) :-
 	statistics(cputime, CPU0),
@@ -4947,7 +4952,7 @@ copy_theory_eval(0,_,Label,M):-
 	extract_count(pos,Label,PC),
 	extract_count(neg,Label,NC),
 	extract_length(Label,L),
-	label_print_eval([PC,NC,L]),
+	label_print_eval([PC,NC,L],M),
 	nl.
 copy_theory_eval(ClauseNum,Program,_,M):-
 	integer(ClauseNum),
@@ -5020,8 +5025,8 @@ induce_max1(Finish,M):-
         repeat,
         retract(M:'$aleph_local'(counter,Start)),
 	gen_sample(Resample,pos,Start),
-	get_besthyp(false),
-        update_coverset(pos,Start),
+	get_besthyp(false,M),
+        update_coverset(pos,Start,M),
         Next is Start+1,
         assertz(M:'$aleph_local'(counter,Next)),
         Next > Finish, !,
@@ -7228,7 +7233,7 @@ count_frequency([Entry|T],X,N):-
 % 	estimate total number of legal clauses in space
 %	bounded by bot
 estimate_numbers(Total,M):- 
-	(M:'$aleph_sat'(example,example(_,_)) -> true; rsat),
+	(M:'$aleph_sat'(example,example(_,_)) -> true; rsat(M)),
 	setting(clauselength,CL,M),
 	estimate_numbers(CL,1,400,Total,M).
 
@@ -9448,7 +9453,12 @@ read_all(M:Prefix):-
 % read_all/2 and read_all/3 largely
 % provided by Stasinos Konstantopoulos and Mark Reid
 read_all(BPrefix,EPrefix):-
+
 	read_all(BPrefix,EPrefix,EPrefix).
+
+read_all(Back,Pos,Neg):- 
+  aleph_module(M),
+  read_all(Back,Pos,Neg,M).
 
 read_all(Back,Pos,Neg,M):-
 	clean_up(M),
@@ -9605,7 +9615,7 @@ store(searchstate,M):-
 store(bottom,M):-
 	!,
 	(M:'$aleph_global'(store_bottom,set(store_bottom,true)) ->
-		store_bottom;
+		store_bottom(M);
 		true).
 
 store(Parameter,M):-
@@ -10359,7 +10369,7 @@ add_bottom(Bottom,M):-
 		M:example(Num,Type,Example),
 		retract(M:'$aleph_global'(hypothesis,hypothesis(_,_,_,_))),
 		setting(evalfn,Evalfn,M),
-		complete_label(Evalfn,Example,[1,0,1],Label1),
+		complete_label(Evalfn,Example,[1,0,1],Label1,M),
 		asserta(M:'$aleph_global'(hypothesis,hypothesis(Label1,(Example:-true),[Num-Num],[])))).
 
 	
@@ -10640,7 +10650,7 @@ in(false,_,_M):-
 in(bottom,Lit,M):-
 	!,
         M:'$aleph_sat'(lastlit,Last),
-        get_clause(1,Last,[],FlatClause),
+        get_clause(1,Last,[],FlatClause,M),
 	aleph_member(Lit,FlatClause).
 in((Head:-true),Head,_M):- !.
 in((Head:-Body),L,M):-
@@ -11384,5 +11394,50 @@ sandbox:safe_meta(aleph:rmhyp_i(_), []).
 sandbox:safe_meta(aleph:addgcws_i(_), []).
 sandbox:safe_meta(aleph:good_clauses(_), []).
 
+missing_pred(G):- dynamic(G).
+:- missing_pred(depth_bound_call/3).
+:- missing_pred(exists/1).
+:- missing_pred(system/1).
+:- missing_pred(example/3).
+:- missing_pred(profile_data/3).
+:- missing_pred('$aleph_sat'/2).
+:- missing_pred('$aleph_sat_ivars'/2).
+:- missing_pred('$aleph_sat_litinfo'/6).
+:- missing_pred('$aleph_sat_ovars'/2).
 
-
+/*
+Fixed these
+:- missing_pred(add_cache/3).
+:- missing_pred(add_lit/8).
+:- missing_pred(arg/4).
+:- missing_pred(assert_static/1).
+:- missing_pred(complete_label/4).
+:- missing_pred(copy_var/3).
+:- missing_pred(extend_clause/4).
+%:- missing_pred(flatten/4).
+:- missing_pred(get_besthyp/1).
+:- missing_pred(get_clause/4).
+:- missing_pred(get_marked/3).
+:- missing_pred(hide/1).
+:- missing_pred(insert_lastlit/3).
+:- missing_pred(integrate_args/3).
+:- missing_pred(interval_count/3).
+:- missing_pred(interval_sample/4).
+:- missing_pred(label_print_eval/1).
+:- missing_pred(p_message1/1).
+:- missing_pred(prove/3).
+:- missing_pred(prove1/4).
+:- missing_pred(read_all/3).
+:- missing_pred(record_search_stats/3).
+:- missing_pred(reinstate_values/0).
+:- missing_pred(remove_lits/1).
+:- missing_pred(reset_succ/0).
+:- missing_pred(rsat/0).
+:- missing_pred(source/0).
+:- missing_pred(store_bottom/0).
+:- missing_pred(system_predicate/2).
+:- missing_pred(theory_lang_ok/3).
+:- missing_pred(update_atoms/2).
+:- missing_pred(update_coverset/2).
+:- missing_pred(update_equiv_lists/4).
+:- missing_pred(worker/2).*/

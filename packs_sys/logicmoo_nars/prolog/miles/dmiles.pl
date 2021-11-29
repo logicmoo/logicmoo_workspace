@@ -119,8 +119,8 @@ prompt(X):- format('~N~w ',[X]).
 
 do_full_kb(KB):- 
  clear_kb, init_kb(KB),
- nth_clause(do_full_kb1,Index,_),
- do_full_kb(_,Index).
+ forall(nth_clause(do_full_kb1,Index,_),
+ do_full_kb(_,Index)).
 
 do_full_kb(KB,Index):-
  nth_clause(do_full_kb1,Index,Ref),
