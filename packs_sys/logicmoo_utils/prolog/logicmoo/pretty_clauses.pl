@@ -306,11 +306,12 @@ prolog_pprint(Term, Options):- \+ ground(Term),
 % prolog_pprint_0(Term, Options):- memberchk(portray(true), Options), \+ is_list(Term), \+ memberchk(portray_goal(_), Options), print_tree00(Term, Options), !.
 prolog_pprint_0(Term, Options):- \+ memberchk(right_margin(_), Options), !, prolog_pprint_0(Term, [right_margin(0)|Options]).
 prolog_pprint_0(Term, Options):- \+ memberchk(portray(_), Options), !, prolog_pprint_0(Term, [portray(true)|Options]).
+prolog_pprint_0(Term, Options):- \+ memberchk(quoted(_), Options), !, prolog_pprint_0(Term, [quoted(true)|Options]).
 prolog_pprint_0(Term, Options):- %fail,
   mort((guess_pretty(Term), pretty_clauses:pprint_tree(Term, [output(current_output)|Options]))).
 
 prolog_pretty_pprint_tree(A,Options):- 
-  my_merge_options(Options,[portray(true), output(current_output)], OptionsNew),
+  my_merge_options(Options,[portray(true), quoted(true), output(current_output)], OptionsNew),
   pretty_clauses:pprint_tree(A, OptionsNew).
 
 
@@ -907,7 +908,7 @@ portray_with_vars1(A,Options):-
 :- thread_local(pretty_tl:in_pretty/0).
 
 prolog_pretty_print_term(A,Options):- 
-  my_merge_options(Options,[portray(true), output(current_output)], OptionsNew),
+  my_merge_options(Options,[portray(true),quoted(true), output(current_output)], OptionsNew),
   \+ \+ pprint_tree(A, OptionsNew).
 
 %simple_write_term(A):- compound(A),compound_name_arity(A,_,0),writeq(A),!.
@@ -1190,7 +1191,7 @@ pformat_string(Fmt,S):- \+ compound(Fmt),!,any_to_string(Fmt,S).
 pformat_string(Fmt,S):- wots(S,pformat(Fmt)).
 
 pformat_write(Codes):- catch(text_to_string(Codes,Str),_,fail),!,write(Str).
-pformat_write(Str):- write(Str).
+\(Str):- write(Str).
 
 pformat_std(_,List):- is_codelist(List),string_codes(Str,List),!,pformat_write(Str).
 pformat_std(P,List):- is_list(List),!,maplist(P,List).
@@ -1493,7 +1494,7 @@ pt1(FS,Tab,(NPV)) :- NPV=..[OP,N,V], is_colon_mark(OP),
 pt1(_FS,Tab,T) :- % fail,
    print_tree_width(W120),
    max_output(Tab,W120,T),!,
-   prefix_spaces(Tab), print(T).
+   prefix_spaces(Tab), writeq(T).
    %system_portray(Tab,T),!.
 
 pt1(FS,Tab,{Prolog}) :- 
