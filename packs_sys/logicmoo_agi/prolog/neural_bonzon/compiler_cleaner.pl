@@ -8,7 +8,7 @@
 :-op(600,xfy,'.').
 :-op(901,xfy,:).
 :-op(904,xfy,=>).
-:-op(904,xfy,')(').
+% :-op(904,xfy,')(').
 
 compile(Tree,Code) :-
   compileTree(Tree,true,1,Code).
