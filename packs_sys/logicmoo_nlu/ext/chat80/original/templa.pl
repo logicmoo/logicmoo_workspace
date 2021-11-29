@@ -323,7 +323,7 @@ make_generic_pred(Spatial,(AT),X,Y,generic_pred(Spatial,(AT),X,Y)):-!.
 qualifiedBy_LF(_FType,_Name,_Type,_Else,_P):-  \+ if_search_expanded(2),!, fail.
 %qualifiedBy_LF( FType,X,Type,Else,P):- nop(qualifiedBy_LF(FType,X,Type,Else,P)),fail.
 qualifiedBy_LF(_FType, X,Base&Thing,np_head(_Var,wh_det(Kind,Kind-_23246),[],Type),(ti(Thing,X),ti(Base,X),ti(Type,X))).
-qualifiedBy_LF(FType, X, BaseAndThing,np_head(_Var,det(the(sg)),Adjs,Table),Head):- qualifiedBy_LF(FType, X, BaseAndThing,np_head(_Var,det(a),Adjs,Table),Head),!.
+qualifiedBy_LF(FType, X, BaseAndThing,np_head(Var,det(the(sg)),Adjs,Table),Head):- qualifiedBy_LF(FType, X, BaseAndThing,np_head(Var,det(a),Adjs,Table),Head),!.
 qualifiedBy_LF(_FType, X,_,np_head(_Var,det(a),[],Table),ti(Table,X)). 
 qualifiedBy_LF(_FType,X,_Type,pronoun(_,1+sg),isa(X,vTheVarFn("I"))).
 qualifiedBy_LF(_FType,X,_Type,pronoun(_,1+pl),isa(X,vTheVarFn("US"))).
@@ -334,6 +334,7 @@ qualifiedBy_LF(_FType,X,Type,np_head(_Var,det(a),Adjs,Table),Pred):-
 qualifiedBy_LF(_FType,Name,Type,Else,P):- P = qualifiedBy(Name,Type,Else),!.
 qualifiedBy_LF(FType,Name,Type,Else,P):- wdmsg(missed(qualifiedBy_LF(FType,Name,Type,Else,P))),fail.
 
+adv_template_LF(RefVar,Adv,Case,X,pred_adv(RefVar,Adv,Case,X)).
 
 /* Adjectives */
 

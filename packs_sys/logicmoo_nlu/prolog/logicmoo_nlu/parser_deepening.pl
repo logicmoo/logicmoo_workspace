@@ -75,17 +75,17 @@ deepen_pos_0(Call):- deepen_local_0(t_l:usePlTalk,Call).
 :- create_prolog_flag(debug_chat80,false,[keep(true)]).
 :-meta_predicate(debug_chat80_if_fail(0)).
 %debug_chat80_if_fail(MG):- !, must80(MG).
-debug_chat80_if_fail(MG):- set_prolog_flag(debug_chat80,false), strip_module(MG,M,G), locally(set_prolog_flag(no_pretty,true),debug_chat80_if_fail(M,G)).
+debug_chat80_if_fail(MG):-  strip_module(MG,M,G), locally(set_prolog_flag(no_pretty,true),debug_chat80_if_fail(M,G)).
 
 %debug_chat80_if_fail(M,G):- current_prolog_flag(debug_chat80,true),!, debug_chat80_if_fail(Fail,IsCut,6,M,G),(IsCut==!->!;true),(Fail\==fail).
 
 debug_chat80_if_fail(M,(G1,G2)):- !, debug_chat80_if_fail(M:G1),debug_chat80_if_fail(M,G2).
 debug_chat80_if_fail(M,G):-   
   \+ current_prolog_flag(debug_chat80,true),!,
+  flag(chat80_reports,_,0), 
   (call(M:G)*->true;
     (locally(set_prolog_flag(debug_chat80,true), must80(M:G)))).
-debug_chat80_if_fail(M,G):-must80(M:G).
-
+debug_chat80_if_fail(M,G):- must80(M:G).
 
 
 

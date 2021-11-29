@@ -331,7 +331,12 @@ np0(part(Det,NP),3+Number,_,indef,Role,Set,Mask) --->
    determiner(Det,Number,indef), {Det\=generic(_)},
    theText80(of),
    {is_s_all(SAll), is_prep_case(Case)},
-   np(NP,3+pl,Case,def,Role,SAll,Mask).
+   np_expand(NP,3+pl,Case,def,Role,SAll,Mask).
+
+np_expand(NP,A3+Apl,Case,def,Role,SAll,Mask) --->
+  np(NP,A3+Apl,Case,def,Role,SAll,Mask).
+np_expand(NP,_,_Case,def,Role,SAll,Mask) ---> {if_search_expanded(3)},
+  np(NP,_,_,def,Role,SAll,Mask).
 
 np_head(_Var,Kernel,Agmt,Type,PostMods,Mods) --->
    np_head0(Kernel0,Agmt0,Type0),
@@ -563,15 +568,20 @@ comp(same,Adj) --->
 
 /* Prepositional Phrase */
 
-xg_prep_phrase(_PPAlowed,prep_phrase(_PPType,Prep,imp(You,V,S)),_Case,_Set,_Mask) --->
-   prep(Prep),
-   {is_prep_case(_NPCase)},
-   imperative80(imp(You,V,S)).
+prep_arg_vp(vact(V,A,S)) --->
+   imperative_verb808(_,_),
+   s80(s(_,V,A,S)).
 
-xg_prep_phrase(_PPAlowed,prep_phrase(_PPType,Prep,imp(You,V,S)),_Case,_Set,_Mask) --->
+imperative_verb808(You,Root),
+   theText80(you),
+   verb_form88(MODAL,Root,imp+fin,2+sg,main) --->
+   verb_form88(MODAL,Root,inf,_,_),
+   {You=you}.
+
+xg_prep_phrase(_PPAlowed,prep_phrase(_PPType,Prep,Arg),_Case,_Set,_Mask) --->
    prep(Prep),
    {is_prep_case(_NPCase)},
-   imperative80(imp(You,V,S)).
+   prep_arg_vp(Arg).
 
 xg_prep_phrase(_PPAlowed,prep_phrase(_PPType,Prep,Arg),Case,Set,Mask) --->
    prep(Prep),
@@ -803,7 +813,8 @@ advs_opt(R,R,_) ---> noText.
 adj_phrase(P,Nil) ---> adj(_,P), { is_empty_bits(Nil) }.
 adj_phrase(P,Mask) --->  comp_phrase(P,Mask).
 
-adverb(Adv) ---> theText80_W2(W,W2), {adv_lex_w2(W,W2,Adv)}.
+adverb(adv(Adv)) ---> theText80_W2(W,W2), {adv_lex_w2(W,W2,Adv)}.
+adverb(adj(Adj)) ---> {if_search_expanded(3)},theText80_W2(W,W2), {adj_lex_w2(W,W2,Adj,_Type)}.
 
 no_args_vt(tv).
 no_args_vt(dv(_Prep)).

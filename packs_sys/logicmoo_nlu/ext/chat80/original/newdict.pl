@@ -374,6 +374,7 @@ verb_type_lex(be(MODAL),aux+be(MODAL)).
 verb_type_lex(do(_MODAL),aux+dv(_Prep)).
 verb_type_lex(have(MODAL),aux+have(MODAL)).
 verb_type_lex(V,MainTv):- no_repeats(V+MainTv,try_lex(verb_type_db0(V,MainTv))).
+%verb_type_lex(V,MainTv):- nonvar(V),nonvar(MainTv).
 
 
 verb_type_db0(Sys,Border,MainTv):- verb_type_db(Sys,Border,MainTv),

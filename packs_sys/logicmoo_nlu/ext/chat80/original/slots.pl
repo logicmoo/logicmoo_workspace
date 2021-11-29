@@ -34,7 +34,9 @@ must80(G):- \+ current_prolog_flag(debug_chat80,true),!, call(G).
 must80(G):- call(G)*->true;(
   nop((wdmsg(failed(G)),ignore(on_x_fail(ftrace(G))))),
   G \= lf80(_,_), fail,
-  fmt(failed(G)),fail,call(G)).
+  %flag(chat80_reports,N,N+1), N < 5,
+  set_prolog_flag(debug_chat80,false), % so we only get one report
+  dmsg(failed(G)),fail,call(G)).
 
 % logical form checker for chat80
 
@@ -78,9 +80,9 @@ i_sentence2(decl(S),assertion80(P)) :- i_s(S,P).
 i_sentence2(whq(X,S),question80([X],P)) :- i_s(S,P).
 i_sentence2(imp(U,Ve,s(_,Verb,VArgs,VMods)),imp80(U,Ve,V,Args)) :-
    must80(i_verb(Verb,V,_,active,posP(_Modal),Slots0,[],transparent)),
-   must80(i_verb_args(VArgs,[],[],Slots0,Slots,Args,Args0,Up,-0)),
+   must80(i_verb_args(RefVar,VArgs,[],[],Slots0,Slots,Args,Args0,Up,-0)),
    append(Up,VMods,Mods),
-   must80(i_verb_mods(Mods,_,[],Slots,Args0,Up,+0)).
+   must80(i_verb_mods(RefVar,Mods,_,[],Slots,Args0,Up,+0)).
 
 i_s(s(Subj,Verb,VArgs,VMods),P):- must80(i_s(s(Subj,Verb,VArgs,VMods),P,[],0)).
 
@@ -250,7 +252,7 @@ i_adj(adj(Adj),TypeX-X,TypeV-V,_,
 i_adj(adj(Adj),TypeX-X,T,T,_,
       Head,Head,quantV(voidQ(_ArgInfo),TypeX-Y,'`'(P),'`'(Q)&Pred,[],_),Pred) :-
    lf80(TypeX,attribute_LF(Adj,TypeX,X,_,Y,P)),
-   lf80(TypeX,standard_adj_db(Adj,TypeX,Y,Q)).
+   lf80(TypeX,standard_adj_LF(Adj,TypeX,Y,Q)).
 
 /*i_s(s(Subj,Verb,VArgs,VMods),Pred,Up,Id) :-
   select(cond(_),VArgs,NewVargs), !,
@@ -264,18 +266,20 @@ i_s(s(Subj,Verb,VArgs,VMods),Pred,Up,Id) :-
   Pred= cond_pred(IF,Pred1,Pred2).
 
 i_s(s(Subj,Verb,VArgs,VMods),Pred,Up,Id) :-
+ debug_chat80_if_fail((
    i_verb(Verb,P,Tense,Voice,Neg,Slots0,XA0,Meta),
-   i_subj(Voice,Subj,Slots0,Slots1,QSubj,SUp,'-'('-'(Id))),
+   i_subj(RefVar,Voice,Subj,Slots0,Slots1,QSubj,SUp,'-'('-'(Id))),
    append(SUp,VArgs,TArgs),
-   i_verb_args(TArgs,XA0,XA,Slots1,Slots,Args0,Args,Up0,+(-Id)),
+   i_verb_args(RefVar,TArgs,XA0,XA,Slots1,Slots,Args0,Args,Up0,+(-Id)),
    append(Up0,VMods,Mods),
-   i_verb_mods(Mods,Tense,XA,Slots,Args,Up,+Id),
-   reshape_pred(Meta,QSubj,Neg,P,Args0,Pred).
+   i_verb_mods(RefVar,Mods,Tense,XA,Slots,Args,Up,+Id),
+   reshape_pred(Meta,QSubj,Neg,P,Args0,Pred))).
 
 i_verb(verb(VerbType,Root,ExtraMods,Voice,Tense,Aspect,Neg),
       PP,Tense,Voice,Det,Slots,XArg,Meta) :-
        ignore((ExtraMods\==[],wdmsg(extra_mods(ExtraMods)),nop((dumpST,break)))),
        append(ExtraMods,XArg,ModXArgs),!,
+       %append(Slots,ExtraMods,XSlots),!,
        i_verb(verb(VerbType,Root,Voice,Tense,Aspect,Neg),
       PP,Tense,Voice,Det,Slots,ModXArgs,Meta).
       
@@ -306,43 +310,44 @@ meta_head(aggr(_,_,_,_,_)).
 i_neg(posP(_Modal),identityQ(_ArgInfo)).
 i_neg(negP(_Modal),notP).
 
-i_subj(Voice,Subj,Slots0,Slots,Quant,Up,Id) :-
+i_subj(RefVar,Voice,Subj,Slots0,Slots,Quant,Up,Id) :-
    (active_passive_subjcase(Voice,Case)*->true;true),
-   verb_slot(arg(Case,Subj),[],[],Slots0,Slots,[Quant],[],Up,Id).
+   verb_slot(RefVar,arg(Case,Subj),[],[],Slots0,Slots,[Quant],[],Up,Id).
 
-i_verb_args(VArgs,XA0,XA,Slots0,Slots,Args0,Args,Up,Id) :-
-   fill_verb(VArgs,XA0,XA,Slots0,Slots,Args0,Args,Up,Id).
+i_verb_args(RefVar,VArgs,XA0,XA,Slots0,Slots,Args0,Args,Up,Id) :-
+   fill_verb(RefVar,VArgs,XA0,XA,Slots0,Slots,Args0,Args,Up,Id).
 
 active_passive_subjcase(active,subJ(_ArgInfo1)).
 active_passive_subjcase(passive,s_subj(_ArgInfo)).
 
-fill_verb([],XA,XA,Slots,Slots,Args,Args,[],_).
-fill_verb([Node|Nodes0],XA0,XA,Slots0,Slots,Args0,Args,Up,Id) :-
-   verb_slot(Node,XA0,XA1,Slots0,Slots1,Args0,Args1,Up0,-Id),
+fill_verb(_RefVar,[],XA,XA,Slots,Slots,Args,Args,[],_).
+fill_verb(RefVar,[Node|Nodes0],XA0,XA,Slots0,Slots,Args0,Args,Up,Id) :-
+ debug_chat80_if_fail((
+   verb_slot(RefVar,Node,XA0,XA1,Slots0,Slots1,Args0,Args1,Up0,-Id),
    append(Up0,Nodes0,Nodes),
-   fill_verb(Nodes,XA1,XA,Slots1,Slots,Args1,Args,Up,+Id).
+   fill_verb(RefVar,Nodes,XA1,XA,Slots1,Slots,Args1,Args,Up,+Id))).
 
-verb_slot(Node,XA0,XA1,Slots0,Slots1,Args0,Args1,Up0,Id):- !, 
-  verb_slot0(Node,XA0,XA1,Slots0,Slots1,Args0,Args1,Up0,Id).
-verb_slot(Node,XA0,XA1,Slots0,Slots1,Args0,Args1,Up0,Id):- 
-  debug_chat80_if_fail((clause(verb_slot0(Node,XA0,XA1,Slots0,Slots1,Args0,Args1,Up0,Id),Body),
+verb_slot(RefVar,Node,XA0,XA1,Slots0,Slots1,Args0,Args1,Up0,Id):- !, 
+  verb_slot0(RefVar,Node,XA0,XA1,Slots0,Slots1,Args0,Args1,Up0,Id).
+verb_slot(RefVar,Node,XA0,XA1,Slots0,Slots1,Args0,Args1,Up0,Id):- 
+  debug_chat80_if_fail((clause(verb_slot0(RefVar,Node,XA0,XA1,Slots0,Slots1,Args0,Args1,Up0,Id),Body),
    Body)).
 
 verb_slot1(Node,XA0,XA1,Slots0,Slots1,Args0,Args1,Up0,Id):- 
-  G  = verb_slot0(Node,XA0,XA1,Slots0,Slots1,Args0,Args1,Up0,Id),
-  G2 = verb_slot0(Node,XA0,_,Slots0,_,Args0,_,Up0,_),
+  G  = verb_slot0(RefVar,Node,XA0,XA1,Slots0,Slots1,Args0,Args1,Up0,Id),
+  G2 = verb_slot0(RefVar,Node,XA0,_,Slots0,_,Args0,_,Up0,_),
   copy_term(G,G2),
   call(G),
   ignore((var(Slots1),trace,G2)).
  
 
-verb_slot0(prep_phrase(_PPType,Prep,NP),
+verb_slot0(_RefVar,prep_phrase(_PPType,Prep,NP),
       XArg0,XArg,Slots0,Slots,[Q|Args],Args,Up,Id) :-
    i_np(NP,X,Q,Up,Id,unit,XArg0,XArg),
    in_slot(Slots0,Case,X,Id,Slots,_),
    deepen_case(Prep,Case).
 
-verb_slot0(prep_phrase(_PPType,poss(_ArgInfoPrep),NP),
+verb_slot0(_RefVar,prep_phrase(_PPType,poss(_ArgInfoPrep),NP),
       TXArg,TXArg,Slots0,Slots,[Q& '`'(P)|Args],Args,Up,Id0) :- 
    Prep=of,
    in_slot(Slots0,arg_pred(_ArgInfo),X,Id0,Slots1,_),
@@ -352,7 +357,7 @@ verb_slot0(prep_phrase(_PPType,poss(_ArgInfoPrep),NP),
    i_np_rest(NP,LDet,LDet0,LX,LPred,LQMods,LSlots,Up,Id,free),
    append(PSlots,Slots1,Slots).
 
-verb_slot0(prep_phrase(_PPType,prep(Prep),NP),
+verb_slot0(_RefVar,prep_phrase(_PPType,prep(Prep),NP),
       TXArg,TXArg,Slots0,Slots,[Q& '`'(P)|Args],Args,Up,Id0) :- !,
    in_slot(Slots0,arg_pred(_ArgInfo),X,Id0,Slots1,_),
    i_adjoin(Prep,X,Y,PSlots,XArg,P),
@@ -363,41 +368,46 @@ verb_slot0(prep_phrase(_PPType,prep(Prep),NP),
 
 
 
-verb_slot0(voidQ(_ArgInfo2),XA,XA,Slots,Slots,Args,Args,[],_) :-
+verb_slot0(_RefVar,voidQ(_ArgInfo2),XA,XA,Slots,Slots,Args,Args,[],_) :- !,
    in_slot(Slots,arg_pred(_ArgInfo1),_,_,_,_).
-verb_slot0(adverb(Adv),XA,XA,Slots0,Slots,['`'(P)|Args],Args,[],Id) :-
-   adv_template_db(Adv,Case,X,P),
-   in_slot(Slots0,Case,X,Id,Slots,_).
-verb_slot0(arg(SCase,NP), 
+verb_slot0(RefVar,adv(Adv),XA,XA,Slots0,Slots,['`'(P)|Args],Args,[],Id) :- !,
+   must80(adv_template_LF(RefVar,Adv,Case,X,P)),
+   must80(in_slot(Slots0,Case,X,Id,Slots,_)).
+verb_slot0(_RefVar,arg(SCase,NP), 
       XArg0,XArg,Slots0,Slots,[Q|Args],Args,Up,Id) :-
    i_np(NP,X,Q,Up,Id,unit,XArg0,XArg),
    in_slot(Slots0,Case,X,Id,Slots,_),
    deepen_case(SCase,Case).
-verb_slot0(arg(arg_pred(ArgInfo),AP),XA,XA,Slots0,Slots,Args0,Args,Up,Id) :-
+verb_slot0(RefVar,arg(ArgPred,AP),XA,XA,Slots0,Slots,Args0,Args,Up,Id) :- !, ArgPred=arg_pred(ArgInfo),
    in_slot(Slots0,arg_pred(ArgInfo),X,Id,Slots,_),
-   must80(i_pred(AP,X,Args0,Args,Up,Id)).
+   must80(i_pred(RefVar,AP,X,Args0,Args,Up,Id)).
+/*
+verb_slot0(RefVar,(Adv),XA,XA,Slots0,Slots,['`'(P)|Args],Args,[],Id) :-
+   must80(adv_template_LF(RefVar,Adv,Case,X,P)),
+   in_slot(Slots0,Case,X,Id,Slots,_).
+*/
 
-i_pred(conj(Conj,Left,Right),X,
+i_pred(RefVar,conj(Conj,Left,Right),X,
       [conj(Conj,'`'(true),LQMods,'`'(true),RQMods)|QMods],
       QMods,Up,Id) :-
-   i_pred(Left,X,LQMods,[],[],-Id),
-   i_pred(Right,X,RQMods,[],Up,+Id).
-i_pred(AP,T,['`'(Head)&Pred|As],As,[],_) :-
+   i_pred(RefVar,Left,X,LQMods,[],[],-Id),
+   i_pred(RefVar,Right,X,RQMods,[],Up,+Id).
+i_pred(_RefVar,AP,T,['`'(Head)&Pred|As],As,[],_) :-
    i_adj(AP,T,_,_,Head,true,Pred,'`'(true)).
-i_pred(value80(adj(Adj),wh(TypeY-Y)),Type-X,['`'(H)|As],As,[],_) :-
+i_pred(_RefVar,value80(adj(Adj),wh(TypeY-Y)),Type-X,['`'(H)|As],As,[],_) :-
    lf80(Type,attribute_LF(Adj,Type,X,TypeY,Y,H)).
 
-i_pred(comp(more,adj(less),NP),X,P,As,Up,Id) :-
-  i_pred(comp(less,adj(great),NP),X,P,As,Up,Id).
+i_pred(RefVar,comp(more,adj(less),NP),X,P,As,Up,Id) :-
+  i_pred(RefVar,comp(less,adj(great),NP),X,P,As,Up,Id).
 
-i_pred(comp(Op0,adj(Adj),NP),X,[P1 & P2 & '`'(P3),Q|As],As,Up,Id) :-
+i_pred(_RefVar,comp(Op0,adj(Adj),NP),X,[P1 & P2 & '`'(P3),Q|As],As,Up,Id) :-
    i_np(NP,Y,Q,Up,Id,unit,[],[]),
    must80(adj_sign_LF(Adj,Sign)),
    lf80(Type,i_measure(X,Adj,Type,U,P1)),
    lf80(Type,i_measure(Y,Adj,Type,V,P2)),
    op_inverse(Op0,Sign,Op),
    measure_op(Op,U,V,P3).
-i_pred(prep_phrase(_PPType,prep(Prep),NP),X,['`'(H),Q|As],As,Up,Id) :-
+i_pred(_RefVar,prep_phrase(_PPType,prep(Prep),NP),X,['`'(H),Q|As],As,Up,Id) :-
    i_np(NP,Y,Q,Up,Id,unit,[],[]),
    lf80(X-Y,adjunction_LF(Prep,X,Y,H)).
 
@@ -412,8 +422,8 @@ i_measure(Type-X,Adj,Type,X,'`'(true)) :-
 i_measure(TypeX-X,Adj,TypeY,Y,quantV(voidQ(_ArgInfo),TypeY-Y,'`'(P),'`'(true),[],_)) :-
    lf80(TypeX+TypeY,attribute_LF(Adj,TypeX,X,TypeY,Y,P)).
 
-i_verb_mods(Mods,_,XA,Slots0,Args0,Up,Id) :-
-   fill_verb(Mods,XA,[],Slots0,Slots,Args0,Args,Up,-Id),
+i_verb_mods(RefVar,Mods,_,XA,Slots0,Args0,Up,Id) :-
+   fill_verb(RefVar,Mods,XA,[],Slots0,Slots,Args0,Args,Up,-Id),
    i_voids(Slots,Args,+Id).
 
 nominal_slot(slot(Kind,Type,X,Id,_),Type-X,Id) :-
@@ -488,13 +498,14 @@ slot_verb_template(Verb,Pred, Slots,[],transparent) :-
    must80(verb_type_lex(Verb,_+Kind)),
    slot_verb_kind(Kind,Verb,TypeS,S,Pred,SlotsRemaining).
 
-select_slots(Ss,Slots):- select_slots(Ss,Slots,[]).
+select_slots(Ss,Slots):- select_slots(Ss,Slots,[]),!.
+%select_slots(Ss,Slots):- select_slots(Ss,Slots,_).
 select_slots(X,[],X):-!.
+select_slots([Slot|X],[Slot|Slots],Remaining):- 
+  select_slots(X,Slots,Remaining).
 select_slots(X,[Slot|Slots],Remaining):- fail,
   select(Slot,X,Mid),!,
   select_slots(Mid,Slots,Remaining).
-select_slots([Slot|X],[Slot|Slots],Remaining):- 
-  select_slots(X,Slots,Remaining).
 
 % BE
 % slot_verb_kind(be(_MODAL),_,TypeS,S,subsumed_by(A,S),[slot(dirO(_ArgInfo),TypeS,A,_,free)]).
@@ -502,6 +513,7 @@ slot_verb_kind(be(_MODAL),_,TypeS,S,subsumed_by(S,A),AllSlots):-
    select_slots(AllSlots, [slot(dirO(_ArgInfo),TypeS,A,_,free)]).
 slot_verb_kind(be(_MODAL),_,TypeS,S,true,AllSlots):- 
    select_slots(AllSlots, [slot(arg_pred(_ArgInfo),TypeS,S,_,free)]).
+
 slot_verb_kind(_Iv,Verb,TypeS,S,Pred,Slots) :-
    lf80(TypeS,intrans_LF(Verb,TypeS,S,Pred,Slots,_)).
 slot_verb_kind(_Tv,Verb,TypeS,S,Pred,AllSlots) :-
