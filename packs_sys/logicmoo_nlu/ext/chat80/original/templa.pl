@@ -301,7 +301,7 @@ clex_verb80(Looked,Look,VerbType,Form):- \+ compound(Looked),\+ compound(Look),
 %verb_form_lex(Looking,Look,pres+part,_):- (atom(Looking)->atom_concat(Look,'ing',Looking);var(Looking)),
 %  no_loop_check(verb_root_lex(Look)),atom(Look),atom_concat(Look,'ing',Looking).
 % NEW TRY verb_root_lex(Look):- clex_verb80(_Formed,Look,_Iv,_Finsg).
-% regular_past_lex(Looked,Look):- clex_verb80(Looked,Look,_Iv,prep_phrase).
+% regular_past_lex(Looked,Look):- clex_verb80(Looked,Look,_Iv,pp).
 verb_form_db(clex,Looks,Look,pres+fin,3+sg):- clex_verb80(Looks,Look,_,finsg).
 verb_form_db(clex,LookPL,Look,pres+fin,3+pl):-  clex_verb80(LookPL,Look,_,infpl).
 verb_type_db(clex,Look,main+ITDV):- clex_verb80(_Formed,Look,ITDV,_Finsg).
@@ -309,8 +309,8 @@ verb_type_db(clex,Look,main+ITDV):- clex_verb80(_Formed,Look,ITDV,_Finsg).
 intrans_LF(Assign,feature&_,X,dbase_t(Assign,X,Y), [slot(prep(To),feature&_,Y,_,free)],_):-
   clex_verb80(_Assigned, Assign, dv(To),_).
 
-
-%trans_LF(Look,feature&_,X,dbase_t(Look,X,Y), [slot(prep(At),feature&_,Y,_,free)],_):- (tv_infpl(S,S);tv_finsg(S,S)), atomic_list_concat([Look,At],'-',S).
+trans_LF(Look,feature&_,X,dbase_t(Look,X,Y), [slot(prep(At),feature&_,Y,_,free)],_):- 
+  (tv_infpl(S,_);tv_finsg(S,_)), atomic_list_concat([Look,At],'-',S).
 
 trans_LF(exceed,value&Measure&Type,X,value&Measure&Type,Y,exceeds(X,Y),[],_,_).
 trans_LF1(Trans,_,X,_,Y,P ,[],_,_):- if_search_expanded(4),
@@ -322,14 +322,14 @@ make_generic_pred(Spatial,(AT),X,Y,generic_pred(Spatial,(AT),X,Y)):-!.
 % qualifiedBy
 qualifiedBy_LF(_FType,_Name,_Type,_Else,_P):-  \+ if_search_expanded(2),!, fail.
 %qualifiedBy_LF( FType,X,Type,Else,P):- nop(qualifiedBy_LF(FType,X,Type,Else,P)),fail.
-qualifiedBy_LF(_FType, X,Base&Thing,np_head(wh_det(Kind,Kind-_23246),[],Type),(ti(Thing,X),ti(Base,X),ti(Type,X))).
-qualifiedBy_LF(FType, X, BaseAndThing,np_head(det(the(sg)),Adjs,Table),Head):- qualifiedBy_LF(FType, X, BaseAndThing,np_head(det(a),Adjs,Table),Head),!.
-qualifiedBy_LF(_FType, X,_,np_head(det(a),[],Table),ti(Table,X)). 
+qualifiedBy_LF(_FType, X,Base&Thing,np_head(_Var,wh_det(Kind,Kind-_23246),[],Type),(ti(Thing,X),ti(Base,X),ti(Type,X))).
+qualifiedBy_LF(FType, X, BaseAndThing,np_head(_Var,det(the(sg)),Adjs,Table),Head):- qualifiedBy_LF(FType, X, BaseAndThing,np_head(_Var,det(a),Adjs,Table),Head),!.
+qualifiedBy_LF(_FType, X,_,np_head(_Var,det(a),[],Table),ti(Table,X)). 
 qualifiedBy_LF(_FType,X,_Type,pronoun(_,1+sg),isa(X,vTheVarFn("I"))).
 qualifiedBy_LF(_FType,X,_Type,pronoun(_,1+pl),isa(X,vTheVarFn("US"))).
-qualifiedBy_LF(_FType,X,Type,np_head(generic(_),Adjs,Table),Pred):-
+qualifiedBy_LF(_FType,X,Type,np_head(_Var,generic(_),Adjs,Table),Pred):-
   must(i_adjs(Adjs,Type-X,Type-X,_,Head,Head,Pred,ti(Table,X))).
-qualifiedBy_LF(_FType,X,Type,np_head(det(a),Adjs,Table),Pred):- 
+qualifiedBy_LF(_FType,X,Type,np_head(_Var,det(a),Adjs,Table),Pred):- 
   must(i_adjs(Adjs,Type-X,Type-X,_,Head,Head,Pred,ti(Table,X))).
 qualifiedBy_LF(_FType,Name,Type,Else,P):- P = qualifiedBy(Name,Type,Else),!.
 qualifiedBy_LF(FType,Name,Type,Else,P):- wdmsg(missed(qualifiedBy_LF(FType,Name,Type,Else,P))),fail.
@@ -459,6 +459,7 @@ intrans_LF(Run,Spatial & Feat& Type,X,LF,
  intrans_verb(Run),
  spatial(Spatial),
  LF = intrans_pred_prep(Spatial,Type,Run,X,Into,Dest).
+
 intrans_LF(Continue,Spatial& _Feat& Type,X,LF,
   [slot(prep(dirO(ArgInfo)),Spatial&_,Y,_,free)],_):- 
   if_search_expanded(2),

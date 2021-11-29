@@ -108,14 +108,14 @@ variable_q(X,Agmt,QCase,NPCase) ...
    {is_trace82(Set,Mask)}.
 
 variable_q(X,Agmt,compl,CCase) ...
- prep_phrase(prep_phrase(Prep,NP),compl,Set,Mask) --->
+ xg_prep_phrase(_PPAlowed,prep_phrase(_PPType,Prep,NP),compl,Set,Mask) --->
    prep(Prep),
    whq(X,Agmt,NP,_),
    {is_trace82(Set,Mask), is_compl_case(CCase)}.
 variable_q(X,Agmt,compl,VCase) ...
-      adv_phrase(prep_phrase(Prep,
+      adv_phrase(post,prep_phrase(_PPType,Prep,
                   np(Agmt,
-                   np_head(
+                   np_head(_Var,
                     wh_det(_Kind,X),[],Noun),[])),
                  Set,Mask) --->
    context_pron(Prep,Noun),
@@ -165,14 +165,15 @@ fronted_verb(QCase,NPCase) ...
 
 /* Imperative sentences */
 
-imperative80(imp(_U,_V,You,V,S)) --->
+imperative80(imp(You,V,S)) --->
    imperative_verb(You,V),
    s80(S).
 
 imperative_verb(You,Root),
    theText80(you),
    verb_form88(MODAL,Root,imp+fin,2+sg,main) --->
-   verb_form88(MODAL,Root,inf,_,_),{You=you}.
+   verb_form88(MODAL,Root,inf,_,_),
+   {You=you}.
 
 /* Basic sentence (actually, declarative sentence) */
 
@@ -229,6 +230,9 @@ if_cond(true,S,Mask) ---> s_vp_801(S,Mask).
 
 s80(P) --->  s80(P,_).
 
+s80(s(NP,verb(main+iv,E,[],active,_+fin,[],posP(_PosP)),[],[]),Mask) ---> 
+   theText80(there),theText80_W2(_,L),{member(root(E),L),member(upos(verb),L)},verb_arg(np,NP,Mask).
+
 s80(P,Mask) ---> s_vp_800(P,Mask).
 
 s_vp_800(SO,Mask) ---> if_cond(IF,S,Mask), s_vp_800s(IF,S,SO,Mask).
@@ -261,16 +265,16 @@ s_vp_801(s(Subj,Verb,Args,Mods),Mask) --->
 
 s_vp_801(s(NP,Verb,[],[]),_) --->  ace_var(AceVar), !,
    {Verb = verb(main+iv,action1,[],active,pres+fin,[],posP(_)),
-    NP= np(3+sg,np_head(generic(_),[adj(ace_var(self,AceVar)),adj(ti(statement,self))],statement),[])}.
+    NP= np(3+sg,np_head(_Var,generic(_),[adj(ace_var(self,AceVar)),adj(ti(statement,self))],statement),[])}.
 
 /*
 s_vp_801(NP,Verb,[],[],_) --->  ace_var(AceVar), !,
    {Verb = verb(main+iv,'action1:tell',[],active,pres+fin,[],posP(_)),
-    NP= np(3+sg,np_head(generic(_),[adj(ace_var(self,AceVar)),adj(ti(statement,self))],statement),[])}.
+    NP= np(3+sg,np_head(_Var,generic(_),[adj(ace_var(self,AceVar)),adj(ti(statement,self))],statement),[])}.
 
 s_vp_801(NP,Verb,[],[],_) --->  [],!,
    {Verb = verb(main+iv,tell,[],active,pres+fin,[],posP(_)),
-    NP= np(3+sg,np_head(generic(_),[adj(ti(statement,self))],statement),[])}.
+    NP= np(3+sg,np_head(_Var,generic(_),[adj(ti(statement,self))],statement),[])}.
 */
 just_vp(Subj,Agmt,Type,Verb,Args,Mods,Mask) --->
   s_vp1(Subj,Agmt,Type0,Verb0,Args0,Mods0,Mask0),
@@ -286,7 +290,7 @@ s_vp1(_Subj,Agmt,Type,Verb,Args,Mods,Mask) --->
    {is_empty_bits(Nil), is_s_all(SAll)},
    verb_args(Type,Voice,Args,Nil,Mask0),
    {minus_mask(SAll,Mask0,Set), plus_mask(SAll,Mask0,Mask1)},
-   verb_mods(Mods,Set,Mask1,Mask),
+   verb_mods(post,Mods,Set,Mask1,Mask),
    no_new_obj.
 
 no_new_obj ---> noText,!.
@@ -317,7 +321,7 @@ np0(np(Agmt,Pronoun,[]),Agmt,NPCase,def,_,Set,Nil) --->
 
 np0(np(Agmt,Kernel,Mods),Agmt,_Case,Def,Role,Set,Mask) --->
    {is_pp(Set)},
-   np_head(Kernel,Agmt,Def+Type,PostMods,Mods),
+   np_head(_Var,Kernel,Agmt,Def+Type,PostMods,Mods),
    {is_np_all(NPAll)},
    np_compls(Type,Agmt,Role,PostMods,NPAll,Mask).
 
@@ -329,7 +333,7 @@ np0(part(Det,NP),3+Number,_,indef,Role,Set,Mask) --->
    {is_s_all(SAll), is_prep_case(Case)},
    np(NP,3+pl,Case,def,Role,SAll,Mask).
 
-np_head(Kernel,Agmt,Type,PostMods,Mods) --->
+np_head(_Var,Kernel,Agmt,Type,PostMods,Mods) --->
    np_head0(Kernel0,Agmt0,Type0),
    optional_possessive(Kernel0,Agmt0,Type0,Mods0,Mods0,
               Kernel,Agmt,Type,PostMods,Mods).
@@ -343,15 +347,15 @@ np_compls(common,Agmt,Case,Mods,Set0,Mask) --->
 /* Nuclear noun phrase */
 
 np_head0(_,_,_)---> has_trait(pos('.')),!,{fail}.
-np_head0(nameOf(items(AndOr,List),[]),Agmt,Def)---> {if_search_expanded(2)}, nl_list_of_items(AndOr,np_head1(Agmt,Def),List).
+np_head0(nameOf(_Var,items(AndOr,List),[]),Agmt,Def)---> {if_search_expanded(2)}, nl_list_of_items(AndOr,np_head1(Agmt,Def),List).
 np_head0(H,Agmt,Def)---> np_head1(H,Agmt,Def).
 
-np_head1(nameOf(O,[]),Agmt,Def) ---> np_objbody(O,Agmt,Def).
 np_head1(Pronoun,Agmt,def+proper), gen_marker --->
    poss_pron(Pronoun,Agmt).
-np_head1(np_head(Det,[],Noun),3+sg,indef+common) --->
+np_head1(np_head(_Var,Det,[],Noun),3+sg,indef+common) --->
    quantifier_pron(Det,Noun).
-np_head1(np_head(Det,AdjsO,Head),3+Number,Def+common) --->
+np_head1(nameOf(_Var,O,[]),Agmt,Def) ---> np_objbody(O,Agmt,Def).
+np_head1(np_head(_Var,Det,AdjsO,Head),3+Number,Def+common) --->
    determiner(Det,Number,Def),
    adjs_opt(Adjs),
    noun(Head,Adjs,AdjsO,Number).
@@ -364,7 +368,7 @@ maybe_ace_variable(Adjs,Adjs)---> [].
 append_np_mods(List,W,List):- is_list(List),member(E,List),W=@=E,!.
 append_np_mods(List,W,[W|List]):- is_list(List),!.
 append_np_mods(Comp,W,Comp):- sub_term(Head,Comp),compound(Head),(functor(Head,F,_),member(F,[np_head,nameOf])),
-  arg(2,Head,List),is_list(List),!,append_np_mods(List,W,Arg),nb_setarg(2,Head,Arg).
+  N = 3, arg(N,Head,List),is_list(List),!,append_np_mods(List,W,Arg),nb_setarg(N,Head,Arg).
 append_np_mods(Comp,_,Comp):-!.
 
 ace_var(_,_).
@@ -376,7 +380,7 @@ optional_possessive(Kernel0,Agmt0,_,[],Mods0,
    gen_case,
    np_head0(Kernel1,Agmt1,Type1),
    optional_possessive(Kernel1,Agmt1,Type1,PostMods1,
-              [prep_phrase(poss(_ArgInfoP),np(Agmt0,Kernel0,Mods0))|PostMods1],
+              [prep_phrase(_PPType,poss(_ArgInfoP),np(Agmt0,Kernel0,Mods0))|PostMods1],
               Kernel,Agmt,Type,PostMods,Mods).
 optional_possessive(Kernel,Agmt,Type,PostMods,Mods,
            Kernel,Agmt,Type,PostMods,Mods) ---> noText.
@@ -490,33 +494,33 @@ np_mods(Agmt,Case,Mods0,[Mod|Mods],Set0,Set,_,Mask) --->
    np_mods(Agmt,Case,Mods0,Mods,Set1,Set,Mask2,Mask).
 np_mods(_,_,Mods,Mods,Set,Set,Mask,Mask) ---> noText.
 
-np_mod(_,Case,PP,Set,Mask) ---> prep_phrase(PP,Case,Set,Mask).
+np_mod(_,Case,PP,Set,Mask) ---> xg_prep_phrase(_PPAlowed,PP,Case,Set,Mask).
 np_mod(Agmt,_Case,WH,Set,Mask) --->
    reduced_relative(Agmt,WH,Set,Mask).
 
 /* Verb modifiers */
 
-maybe_verb_mods([],_Set,_Mask0,_Mask1)---> noText.
-maybe_verb_mods(ExtraMods,Set,Mask0,Mask1)--->
-  verb_mods(ExtraMods,Set,Mask0,Mask1).
+maybe_verb_pre_mods(ExtraMods,Set,Mask0,Mask1)--->
+  verb_mods(pre,ExtraMods,Set,Mask0,Mask1).
+maybe_verb_pre_mods([],_Set,_Mask0,_Mask1)---> noText.
   
-verb_mods([Mod|Mods],Set0,_,Mask) --->
-   verb_mod(Mod,Set0,Mask0),
+verb_mods(PrePost,[Mod|Mods],Set0,_,Mask) --->
+   verb_mod(PrePost,Mod,Set0,Mask0),
    {is_trace_bits(Trace), plus_mask(Trace,Mask0,Mask1), minus_mask(Set0,Mask1,Set1),
     plus_mask(Mask0,Set0,Mask2)},
-   verb_mods(Mods,Set1,Mask2,Mask).
-verb_mods([],_,Mask,Mask) ---> noText.
+   verb_mods(PrePost,Mods,Set1,Mask2,Mask).
+verb_mods(_,[],_,Mask,Mask) ---> noText.
 
-verb_mod(Adv,Set,Mask) ---> adv_phrase(Adv,Set,Mask).
-verb_mod(Adv,Set,Nil) --->
+verb_mod(PrePost,Adv,Set,Mask) ---> adv_phrase(PrePost,Adv,Set,Mask).
+verb_mod(_,Adv,Set,Nil) --->
    {is_adv_bits(Set)},
    adverb(Adv),
    {is_empty_bits(Nil)}.
-verb_mod(PP,Set,Mask) ---> prep_phrase(PP,compl,Set,Mask).
+verb_mod(post,PP,Set,Mask) ---> xg_prep_phrase(_PPAlowed,PP,compl,Set,Mask).
 
-adv_phrase(prep_phrase(Prep,NP),Set,Mask) --->
+adv_phrase(post,prep_phrase(PPType,Prep,NP),Set,Mask) --->
    loc_pred(Of,Prep),
-   prep_phrase(prep_phrase(prep(Of),NP),compl,Set,Mask).
+   xg_prep_phrase(_PPAlowed,prep_phrase(PPType,prep(Of),NP),compl,Set,Mask).
 
 /* Adjectival Constructions */
 
@@ -559,10 +563,25 @@ comp(same,Adj) --->
 
 /* Prepositional Phrase */
 
-prep_phrase(prep_phrase(Prep,Arg),Case,Set,Mask) --->
+xg_prep_phrase(_PPAlowed,prep_phrase(_PPType,Prep,imp(You,V,S)),_Case,_Set,_Mask) --->
+   prep(Prep),
+   {is_prep_case(_NPCase)},
+   imperative80(imp(You,V,S)).
+
+xg_prep_phrase(_PPAlowed,prep_phrase(_PPType,Prep,imp(You,V,S)),_Case,_Set,_Mask) --->
+   prep(Prep),
+   {is_prep_case(_NPCase)},
+   imperative80(imp(You,V,S)).
+
+xg_prep_phrase(_PPAlowed,prep_phrase(_PPType,Prep,Arg),Case,Set,Mask) --->
    prep(Prep),
    {is_prep_case(NPCase)},
    np(Arg,_,NPCase,_,Case,Set,Mask).
+
+
+xg_prep_phrase(_PPAlowed,prep_phrase(_PPType,Prep,Arg),_Case,_Set,_Mask) --->
+   prep(Prep),noText,
+   {Arg=np_head(_Var,generic(_),[],_)}.
 
 /* Relative clause */
 
@@ -588,12 +607,12 @@ rel(Agmt,rel(X,S),Mask) --->
    mark_dnalsi.
 
 variable(Agmt,X) ... np(np(Agmt,wh(X),[]),Agmt,_,_,_,Set,Mask) --->
-   theText80(that),
+   (theText80(that);theText80(this)),
    {is_trace82(Set,Mask)}.
 variable(Agmt0,X) ... np(NP,Agmt,NPCase,_,_,Set,Mask) --->
    wh(X,Agmt0,NP,Agmt,NPCase),
    {is_trace82(Set,Mask)}.
-variable(Agmt0,X) ... prep_phrase(prep_phrase(Prep,NP),compl,Set,Mask) --->
+variable(Agmt0,X) ... xg_prep_phrase(_PPAlowed,prep_phrase(_PPType,Prep,NP),compl,Set,Mask) --->
    prep(Prep),
    wh(X,Agmt0,NP,_Agmt,Case),
    {is_trace82(Set,Mask), is_compl_case(Case)}.
@@ -601,7 +620,7 @@ variable(Agmt0,X) ... prep_phrase(prep_phrase(Prep,NP),compl,Set,Mask) --->
 wh(X,Agmt,np(Agmt,wh(X),[]),Agmt,NPCase) --->
    wh_rel_pron(Case),
    {is_to_role_case(Case,decl,NPCase)}.
-wh(X,Agmt0,np(Agmt,Kernel,[prep_phrase(Prep,NP)]),Agmt,_) --->
+wh(X,Agmt0,np(Agmt,Kernel,[prep_phrase(_PPType,Prep,NP)]),Agmt,_) --->
    np_head0(Kernel,Agmt,_+common),
    prep(Prep),
    wh(X,Agmt0,NP,_,_).
@@ -625,9 +644,9 @@ reduced_rel_rest(Agmt,Conj0,Rel0,Rel,_,Mask) --->
    reduced_rel_conj(Agmt,Conj,Rel1,Mask).
 reduced_rel_rest(_,_,Rel,Rel,Mask,Mask) ---> noText.
 
-reduced_rel(_Agmt,reduced_rel(X,decl(s( np(3+sg,np_head(generic(_),[],X),[]),
+reduced_rel(_Agmt,reduced_rel(X,decl(s( np(3+sg,np_head(X,generic(_),[],X),[]),
                          verb(main+tv,name,[],active,past+fin,[],posP(_PosP)),
-                         [ arg(dirO(_),np(3+sg,np_head(generic(_),[],Name),[]))],
+                         [ arg(dirO(_),np(3+sg,np_head(_Var,generic(_),[],Name),[]))],
                        []))),_Mask) ---> 
    theText80(named), name_xg(Name).
 
@@ -661,7 +680,7 @@ reduced_wh(AgmtX,X),
 
 verb(verb(Type,Root,ExtraMods,Voice,Time+fin,Aspect,Neg),Agmt,Type,Voice) --->
      % {is_empty_bits(Nil), is_s_all(SAll)},      
-   maybe_verb_mods(ExtraMods,_Set,_Mask0,_Mask1),
+   maybe_verb_pre_mods(ExtraMods,_Set,_Mask0,_Mask1),
    verb_form88(MODAL,Root0,Time+fin,Agmt,Role),
    {verb_type_lex(Root0,Type0)},
    neg_modal_opt(MODAL,Type0,Neg),
@@ -770,10 +789,10 @@ verb_arg(np,NP,Mask) --->
 pred(_,Adj,Mask) ---> adj_phrase(Adj,Mask).
 pred(negP(_Modal),PP,Mask) --->
    {is_s_all(SAll)},
-   prep_phrase(PP,compl,SAll,Mask).
+   xg_prep_phrase(_PPAlowed,PP,compl,SAll,Mask).
 pred(_,Adv,Mask) --->
    {is_s_all(SAll)},
-   adv_phrase(Adv,SAll,Mask).
+   adv_phrase(post,Adv,SAll,Mask).
 
 advs_opt([Adv|R0],R,Set) --->
    {is_adv_bits(Set)},

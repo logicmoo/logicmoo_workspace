@@ -88,6 +88,9 @@ det_lex(every,sg,every,indef).
 det_lex(no,_,no,indef).
 det_lex(some,_,some,indef).
 det_lex(the,No,the(No),def).
+det_lex(this,No,the(No),def).
+det_lex(that,No,the(No),def).
+
 
 wh_art_lex(Kind,what,X,_,wh_det(Kind,X)).
 wh_art_lex(Kind,which,X,_,wh_det(Kind,X)).
@@ -117,14 +120,18 @@ pers_pron_lex(myself,_,1,sg,_).
 pers_pron_lex(she,fem,3,sg,subJ(_ArgInfo1)).
 pers_pron_lex(them,_,3,pl,compl(_)).
 pers_pron_lex(they,_,3,pl,subJ(_ArgInfo1)).
-pers_pron_lex(those,neut,3,pl,subJ(_ArgInfo1)).
-pers_pron_lex(that,neut,3,sg,subJ(_ArgInfo1)).
+
 pers_pron_lex(them,_,3,pl,subJ(_ArgInfo1)).
 pers_pron_lex(us,_,1,pl,compl(_)).
 pers_pron_lex(we,_,1,pl,subJ(_ArgInfo1)).
 pers_pron_lex(you,_,2,Sg,_):- pl_or_sg(Sg).
 pers_pron_lex(yourself,_,2,sg,_).
 pers_pron_lex(yourselves,_,2,pl,_).
+pers_pron_lex(A,B,C,D):- det_pron_lex(A,B,C,D).
+
+det_pron_lex(those,neut,3,pl,subJ(_ArgInfo1)).
+det_pron_lex(that,neut,3,sg,_).
+det_pron_lex(this,neut,3,sg,_).
 
 pl_or_sg(sg).
 pl_or_sg(pl).

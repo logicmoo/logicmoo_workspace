@@ -393,7 +393,7 @@ process(_,_).
 eng_to_logic(U,S):- sentence80(E,U,[],[],[]), sent_to_prelogic(E,S).
 
 
-qualifiedBy(V,_,np_head(det(A),_Adjs,Ti)):- !, debug_var0([A,Ti],V).
+qualifiedBy(V,_,np_head(_Var,det(A),_Adjs,Ti)):- !, debug_var0([A,Ti],V).
 qualifiedBy(_,_,_).
 intrans_pred_prep(thing,_Thing1,Wait,_X,For,Y):- 
  debug_var([prep,For],Y),
@@ -568,7 +568,7 @@ quote80(_+_).
 quote80(verb(_,_,_ExtraMods,_,_,_)).
 quote80(wh(_)).
 quote80(name(_)).
-quote80(nameOf(_)).
+quote80(nameOf(_Var,_)).
 quote80(prep(_)).
 quote80(det(_)).
 quote80(quantV(_,_)).

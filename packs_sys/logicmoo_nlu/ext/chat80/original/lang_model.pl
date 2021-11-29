@@ -547,8 +547,6 @@ symm_test3:- c88([does,iran,symmetric1,iraq]).
 
 abn('
 rules: 
-If X1 is asleep then X1 does not see anything.
-If X1 is looking at X2 and the area near X2 is visible then X1 sees X2.
 
 
 if IF1 then THEN2 else ELSE3.
@@ -560,9 +558,6 @@ if IF1 then THEN2 else if ELSE3 then THEN4 else ELSE5.
 X3 is the area near X2. 
 The area X3 is near X2. X3 is lit.
 
-A program is a type of thing.
-
-LM489 is a running Program.
  
 
 "manipulates" is a verb.
@@ -577,13 +572,14 @@ S:AGENT1 PROPERTY2s a OBJECT3
    R:+5:set the OBJECT3 as PROPERTY2ed,     set_property(OBJECT3,PROPERTY2ed,false),
    R:+6:AGENT1 Stop animates the OBJECT3,   animates_control_object(AGENT1,OBJECT3,false).
 
-S:Joe opened a door
-   R:+1:create Joe as agent,
-   R:+2:create a door as object,
-   R:+3:set the door as not opened,
-   R:+4:Joe Start animates the door,
-   R:+5:set the door as opened,
-   R:+6:Joe Stop animates the door.
+Joe opened a door 
+ means:
+   create Joe as agent,
+   create a door as object,
+   the door was not open,
+   Joe Start animates the door,
+   set the door as opened,
+   Joe Stop animates the door.
 
 
    set statement''s verb as open,

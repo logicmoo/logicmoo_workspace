@@ -218,6 +218,10 @@ wh_rel_pron(Case) --->
    theText80(W),
    {wh_rel_pron_lex(W,Case)}.
 
+verb_form80(Verb,Tense,Agmt,_Role) ---> theText80_W2(W1,L),theText80(W2),
+  {atomic(W1),atomic(W2),atomic_list_concat([W1,'-',W2],W),
+   verb_form_wlex(L,W,Verb,Tense,Agmt)}.
+
 verb_form80(Verb,Tense,Agmt,_Role) --->
    theText80_W2(W,L),
    {verb_form_wlex(L,W,Verb,Tense,Agmt)}.
@@ -248,6 +252,10 @@ wh_pron(Case) --->
 adverb(adverb(W)) --->
    theText80(W),
    {adverb_lex(W)}.
+adverb(adverb(t(A,B,C))) --->
+   theText80(W),
+   {modal_verb_form_aux(W,A,B,C)}.
+
 
 poss_pron(pronoun(Gender,Person+Number),Person+Number) --->
    theText80(W),

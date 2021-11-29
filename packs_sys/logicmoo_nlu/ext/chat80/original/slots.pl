@@ -76,7 +76,7 @@ i_sentence1(I,O):- i_sentence2(I,O)*->true;i_subst(i_sentence2,I,O).
 i_sentence2(q(S),question80([],P)) :- i_s(S,P).
 i_sentence2(decl(S),assertion80(P)) :- i_s(S,P). 
 i_sentence2(whq(X,S),question80([X],P)) :- i_s(S,P).
-i_sentence2(imp(U,Ve,s(_,Verb,VArgs,VMods)),imp(U,Ve,V,Args)) :-
+i_sentence2(imp(U,Ve,s(_,Verb,VArgs,VMods)),imp80(U,Ve,V,Args)) :-
    must80(i_verb(Verb,V,_,active,posP(_Modal),Slots0,[],transparent)),
    must80(i_verb_args(VArgs,[],[],Slots0,Slots,Args,Args0,Up,-0)),
    append(Up,VMods,Mods),
@@ -86,11 +86,11 @@ i_s(s(Subj,Verb,VArgs,VMods),P):- must80(i_s(s(Subj,Verb,VArgs,VMods),P,[],0)).
 
 i_np(there,Y,quantV(voidQ(_ArgInfo),_X,'`'(true),'`'(true),[],Y),[],_,_,XA,XA).
 i_np(NP,Y,Q,Up,Id0,Index,XA0,XA) :-
-   i_np_head(NP,Y,Q,Det,Det0,X,Pred,QMods,Slots0,Id0),
+   i_np_head(_Var,NP,Y,Q,Det,Det0,X,Pred,QMods,Slots0,Id0),
    held_arg(XA0,XA,Slots0,Slots,Id0,Id),
    i_np_rest(NP,Det,Det0,X,Pred,QMods,Slots,Up,Id,Index).
 
-i_np_head(np(_,Kernel,_),Y,
+i_np_head(_Var,np(_,Kernel,_),Y,
       quantV(Det,T,Head,Pred0,QMods,Y),
       Det,Det0,X,Pred,QMods,Slots,_Id) :-
    lf80(Type,i_np_head0(Kernel,X,T,Det0,Head,Pred0,Pred,Slots)),
@@ -104,48 +104,49 @@ held_arg(held_arg(Case,-Id,X),[],S0,S,Id,+Id) :-
    in_slot(S0,Case,X,Id,S,_).
 held_arg(XA,XA,S,S,Id,Id).
 
-% np(3+sg,nameOf(iran),[])
-i_np_head0(nameOf(Name,Adjs),Type-X,Type-X,identityQ(_ArgInfo),Head,Pred0,Pred,[]) :- 
+% np(3+sg,nameOf(_Var,iran),[])
+i_np_head0(nameOf(_Var,Name,Adjs),Type-X,Type-X,identityQ(_ArgInfo),Head,Pred0,Pred,[]) :- 
   ignore(lf80(Type,name_template_LF(Name,Type))),!,
   ignore(must80((i_adjs(Adjs,Type-X,Type-X,_,'`'(named(X,Name)),Head,Pred0,Pred)))).
 
-i_np_head0(nameOf(Name), Type-Name,Type-Name,identityQ(_ArgInfo),'`'(true),Pred,Pred,[]) :- 
+i_np_head0(nameOf(_Var,Name), Type-Name,Type-Name,identityQ(_ArgInfo),'`'(true),Pred,Pred,[]) :- 
   ignore(lf80(Type,name_template_LF(Name,Type))),!.
 
 i_np_head0(wh(X),X,X,identityQ(_ArgInfo),'`'(true),Pred,Pred,[]):-!.
 % np(3+sg,pronoun(neut),[])
-i_np_head0(Else, Type-Name,Type-Name,identityQ(_ArgInfo),'`'(P),Pred,Pred,[]):-  Else \= np_head(_,_,_), !,
+i_np_head0(Else, Type-Name,Type-Name,identityQ(_ArgInfo),'`'(P),Pred,Pred,[]):-  Else \= np_head(_Var,_,_,_), !,
   if_search_expanded(1), lf80(Type,make_qualifiedBy(i_np_head0,Name,Type,Else,P)).
 
-i_np_head0(np_head(Det,Adjs,Noun),X,T,Det,Head0,Pred0,Pred,Slots) :-
+i_np_head0(np_head(_Var,Det,Adjs,Noun),X,T,Det,Head0,Pred0,Pred,Slots) :-
    i_adjs(Adjs,X,T,X,Head0,Head,Pred0,Pred),
    i_noun(Noun,X,Head,Slots).
 
-i_np_head0(np_head(wh_det(_Kind,V),Adjs,Noun),
+i_np_head0(np_head(_Var,wh_det(_Kind,V),Adjs,Noun),
       Type-X,Type-X,Det,'`'(true),Pred,Pred,
       [slot(prep(of),Type,X,_,comparator)]) :-
    lf80(Type,comparator_LF(Noun,Type,V,Adjs,Det)).
 
-i_np_head0(np_head(quantV(Op0,N),Adjs,Noun),
+i_np_head0(np_head(_Var,quantV(Op0,N),Adjs,Noun),
       Type-X,Type-X,voidQ(_ArgInfo),'`'(P),Pred,Pred,[]) :- 
    lf80(Type,measure_LF(Noun,Type,Adjs,Units)),
    lf80(Type,pos_conversion_db(N,Op0,Type,V,Op)),
    must80(measure_op(Op,X,V--Units,P)).
 
-%i_np_head0(np_head(generic(_ArgInfo1),[],Value), Type-X,Type-V,voidQ(_ArgInfo2),
-%  '`'(=(X,Value)),Pred,Pred,[]) :- !.
-
-i_np_head0(np_head(generic(_ArgInfo1),[],Value), Type-X,Type-V,voidQ(_ArgInfo2),
+i_np_head0(np_head(_Var,generic(_ArgInfo1),[],Value), Type-X,Type-X,voidQ(_ArgInfo2),
+  '`'(=(X,Value)),Pred,Pred,[]) :- !.
+/*
+i_np_head0(np_head(_Var,generic(_ArgInfo1),[],Value), Type-X,Type-V,voidQ(_ArgInfo2),
   '`'(same_objects(generic(Type-X-V),X,Value)),Pred,Pred,[]) :- !.
+*/
 
-i_np_head0(np_head(Det,Adjs,Noun),X,T,Det0,Head0,Pred0,Pred,Slots) :- 
-  must80(i_np_head1(np_head(Det,Adjs,Noun),X,T,Det0,Head0,Pred0,Pred,Slots)).
+i_np_head0(np_head(Var,Det,Adjs,Noun),X,T,Det0,Head0,Pred0,Pred,Slots) :- 
+  must80(i_np_head1(np_head(Var,Det,Adjs,Noun),X,T,Det0,Head0,Pred0,Pred,Slots)).
 
 i_np_head0(Else, Type-X,Type-X,identityQ(_ArgInfo),'`'(P),Pred,Pred,[]):- 
    if_search_expanded(1),
    lf80(Type,make_qualifiedBy(i_np_head0,X,Type,Else,P)).
 
-i_np_head1(np_head(Det,Adjs,Noun),X,T,DetO,Head0,Pred0,Pred,Slots):-
+i_np_head1(np_head(_Var,Det,Adjs,Noun),X,T,DetO,Head0,Pred0,Pred,Slots):-
    i_adjs(Adjs,X,T,X,Head0,Head,Pred0,Pred),
    i_noun(Noun,X,Head,Slots),
    xform_det(Det,DetO).
@@ -155,8 +156,8 @@ xform_det(_Det,_DetO):- !.
 make_qualifiedBy(PType,Name,Type,Else,P):- qualifiedBy_LF(PType,Name,Type,Else,P).
 make_qualifiedBy(_,Name,Type,Else,P):- if_search_expanded(3),may_qualify(Else), P = qualifiedBy(Name,Type,Else).
 %may_qualify(_):- !,fail.
-may_qualify(np_head(det(each),[],_)):-!,fail.
-may_qualify(np_head(_,[],Act)):- atom(Act),atom_concat('actioned',_,Act), !,fail.
+may_qualify(np_head(_Var,det(each),[],_)):-!,fail.
+may_qualify(np_head(_Var,_,[],Act)):- atom(Act),atom_concat('actioned',_,Act), !,fail.
 may_qualify(Else):- nop(wdmsg(may_qualify(Else))).
 
 %i_np_mods([],_,[],'`'(true),[],[],_,_).
@@ -188,9 +189,9 @@ i_rel(conj(Conj,Left,Right),X,
    i_rel(Left,X,LPred,'`'(true),LQMods,[],[],-Id),
    i_rel(Right,X,RPred,'`'(true),RQMods,[],Up,+Id).
 
-i_np_mod(prep_phrase(Prep,NP),
+i_np_mod(prep_phrase(_PPType,Prep,NP),
       X,Slots0,Slots,Pred,Pred,[QMod|QMods],QMods,Up,Id0,Index0) :-
-   i_np_head(NP,Y,Q,LDet,LDet0,LX,LPred,LQMods,LSlots0,Id0),
+   i_np_head(_Var,NP,Y,Q,LDet,LDet0,LX,LPred,LQMods,LSlots0,Id0),
    i_bind(Prep,Slots0,Slots1,X,Y,Id0,Function,P,PSlots,XArg),
    append(PSlots,Slots1,Slots),
    i_np_modify(Function,P,Q,QMod,Index0,Index),
@@ -250,10 +251,6 @@ i_adj(adj(Adj),TypeX-X,T,T,_,
       Head,Head,quantV(voidQ(_ArgInfo),TypeX-Y,'`'(P),'`'(Q)&Pred,[],_),Pred) :-
    lf80(TypeX,attribute_LF(Adj,TypeX,X,_,Y,P)),
    lf80(TypeX,standard_adj_db(Adj,TypeX,Y,Q)).
-
-i_s(s(Subj,Verb,VArgs,VMods),Pred,Up,Id) :-
-  select(cond(true),VArgs,NewVargs), !,
-  i_s(s(Subj,Verb,NewVargs,VMods),Pred,Up,Id).
 
 /*i_s(s(Subj,Verb,VArgs,VMods),Pred,Up,Id) :-
   select(cond(_),VArgs,NewVargs), !,
@@ -339,27 +336,27 @@ verb_slot1(Node,XA0,XA1,Slots0,Slots1,Args0,Args1,Up0,Id):-
   ignore((var(Slots1),trace,G2)).
  
 
-verb_slot0(prep_phrase(Prep,NP),
+verb_slot0(prep_phrase(_PPType,Prep,NP),
       XArg0,XArg,Slots0,Slots,[Q|Args],Args,Up,Id) :-
    i_np(NP,X,Q,Up,Id,unit,XArg0,XArg),
    in_slot(Slots0,Case,X,Id,Slots,_),
    deepen_case(Prep,Case).
 
-verb_slot0(prep_phrase(poss(_ArgInfoPrep),NP),
+verb_slot0(prep_phrase(_PPType,poss(_ArgInfoPrep),NP),
       TXArg,TXArg,Slots0,Slots,[Q& '`'(P)|Args],Args,Up,Id0) :- 
    Prep=of,
    in_slot(Slots0,arg_pred(_ArgInfo),X,Id0,Slots1,_),
    i_adjoin(Prep,X,Y,PSlots,XArg,P),
-   i_np_head(NP,Y,Q,LDet,LDet0,LX,LPred,LQMods,LSlots0,Id0),
+   i_np_head(_Var,NP,Y,Q,LDet,LDet0,LX,LPred,LQMods,LSlots0,Id0),
    held_arg(XArg,[],LSlots0,LSlots,Id0,Id),
    i_np_rest(NP,LDet,LDet0,LX,LPred,LQMods,LSlots,Up,Id,free),
    append(PSlots,Slots1,Slots).
 
-verb_slot0(prep_phrase(prep(Prep),NP),
+verb_slot0(prep_phrase(_PPType,prep(Prep),NP),
       TXArg,TXArg,Slots0,Slots,[Q& '`'(P)|Args],Args,Up,Id0) :- !,
    in_slot(Slots0,arg_pred(_ArgInfo),X,Id0,Slots1,_),
    i_adjoin(Prep,X,Y,PSlots,XArg,P),
-   i_np_head(NP,Y,Q,LDet,LDet0,LX,LPred,LQMods,LSlots0,Id0),
+   i_np_head(_Var,NP,Y,Q,LDet,LDet0,LX,LPred,LQMods,LSlots0,Id0),
    held_arg(XArg,[],LSlots0,LSlots,Id0,Id),
    i_np_rest(NP,LDet,LDet0,LX,LPred,LQMods,LSlots,Up,Id,free),
    append(PSlots,Slots1,Slots).
@@ -400,7 +397,7 @@ i_pred(comp(Op0,adj(Adj),NP),X,[P1 & P2 & '`'(P3),Q|As],As,Up,Id) :-
    lf80(Type,i_measure(Y,Adj,Type,V,P2)),
    op_inverse(Op0,Sign,Op),
    measure_op(Op,U,V,P3).
-i_pred(prep_phrase(prep(Prep),NP),X,['`'(H),Q|As],As,Up,Id) :-
+i_pred(prep_phrase(_PPType,prep(Prep),NP),X,['`'(H),Q|As],As,Up,Id) :-
    i_np(NP,Y,Q,Up,Id,unit,[],[]),
    lf80(X-Y,adjunction_LF(Prep,X,Y,H)).
 
