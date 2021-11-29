@@ -16,7 +16,7 @@
 
 bonzon_bi(lpa_call_sense/1).
 bonzon_bi(lpa_call/1). bonzon_bi(apply/2). bonzon_bi(wdmsg/1).
-
+bonzon_bi(new/1).
 bonzon_bi((->)/2). bonzon_bi(!/1). bonzon_bi(('[|]')/2). bonzon_bi(('|')/2). bonzon_bi(('$VAR')/1). bonzon_bi((,)/2).
 bonzon_bi((:::)/2). bonzon_bi((;)/2). bonzon_bi((=)/2).
 bonzon_bi((>>>)/2). bonzon_bi((\+)/1). bonzon_bi(assert/1).
@@ -31,6 +31,17 @@ bonzon_bi(from/1). bonzon_bi(do/1). bonzon_bi(new/1). bonzon_bi(nth0/3). bonzon_
 bonzon_bi(random_e/2). bonzon_bi(react/1). bonzon_bi(read/1). bonzon_bi(reflect/1). bonzon_bi(remove/2). 
 bonzon_bi(retractall/1). bonzon_bi(run/1). bonzon_bi(such_that/1). bonzon_bi(set/2).
 bonzon_bi(then/1). bonzon_bi(write/1). 
+bonzon_bi(copy_term/2).
+bonzon_bi(format/1).
+bonzon_bi(lpa_expansion/2).
+bonzon_bi(lpa_implode_varnames/1).
+bonzon_bi(maplist/2).
+bonzon_bi(nop/1).
+bonzon_bi(pc/1).
+bonzon_bi(prolog_load_context/2).
+bonzon_bi(pterm_to_sterm/2).
+bonzon_bi(term_variables/2).
+bonzon_bi(unnumbervars/2).
 
 bonzon_builtin(F/A):- nonvar(F),bonzon_bi(F/A),!.
 bonzon_builtin(F/A):- current_predicate(system:F/A), format('%~~ ~N~q.~n',[bonzon_bi(F/A)]).
@@ -46,35 +57,45 @@ lpa_implode_varnames([NV|Vs]) :- lpa_implode_varnames(Vs),
 
 
 user:portray(P):- is_list(P),writeq(P).
-lpa_expansion(I,O):- \+ compound(I) ; I=(:- _),!,I=O.
+lpa_expansion(I,O):- ( \+ compound(I) ; I=(:- _)), !,I=O.
 %lpa_expansion(I,O):- sub_term(E,I),is_list(E), !,I=O.
-lpa_expansion(I,O):- 
-  prolog_load_context(variable_names,Vs),copy_term(I:Vs,II:VVs),
-  lpa_implode_varnames(VVs),
+lpa_expansion(I,OOO):- 
+  lpa_expansion2(I,OOO),!.
+lpa_expansion(I,I).
+
+%lpa_expand_vars(I,I):-!.
+lpa_expand_vars(I,II):- prolog_load_context(variable_names,Vs),copy_term(I:Vs,II:VVs),lpa_implode_varnames(VVs),!.
+
+lpa_expansion2(I,OOO):-
+  lpa_expand_vars(I,II),
   term_variables(II,TVs),
-  maplist(=('$VAR'('_')),TVs),
+  maplist(no_bind,TVs),
+  %maplist(=('$VAR'('_')),TVs),
   %prolog_load_context(variable_names,Vs),
-  %pterm_to_sterm(I,O),
+  %pterm_to_sterm(G,I,O),
   %I=O,
-  pterm_to_sterm(II,OO),
-  unnumbervars(OO,O),
-  nop(II\==OO-> wdmsg(II); true), format('~N'),pc(OO),!.
-
+  pterm_to_sterm(hb,II,OO),!,
+  unnumbervars(OO,O),!,
+  nop(II\==OO-> wdmsg(II); true), format('~N'),pc(O),!,
+  OOO=O.
+no_bind(A):- freeze(A,var(A)).
 %pc(O):- print(O),writeln('.'),!.
-pc(O):- prolog_listing:portray_clause(O).
-pc(O):- prolog_listing:portray_body(O, 0, indent, 1199, current_output, [portray(true),quoted(true), output(current_output)]).
-pc(O):- print_tree(O).
+pc(O):- prolog_listing:portray_clause(O),!.
+pc(O):- prolog_listing:portray_body(O, 0, indent, 1199, current_output, [portray(true),quoted(true), output(current_output)]),!.
+pc(O):- print_tree(O),!.
 
-pterm_to_sterm(In,In):-  \+ compound(In),!.
-pterm_to_sterm('$VAR'(In),'$VAR'(In)):-!.
-pterm_to_sterm(In,Out):-  is_list(In), !, maplist(pterm_to_sterm,In,Out).
-%pterm_to_sterm(In,Out):- sub_term(E,In),is_list(E), !, In=Out.
-pterm_to_sterm(In,Out):- 
+pterm_to_sterm(_,In,In):-  \+ compound(In),!.
+pterm_to_sterm(G,(A,B),(AA,BB)):- !,pterm_to_sterm(G,A,AA),!,pterm_to_sterm(G,B,BB).
+pterm_to_sterm(_,(A:-B),(AA:-BB)):- !,pterm_to_sterm(h,A,AA),!,pterm_to_sterm(b,B,BB).
+pterm_to_sterm(_,'$VAR'(In),'$VAR'(In)):-!.
+pterm_to_sterm(G,In,Out):-  is_list(In), !, maplist(pterm_to_sterm(G),In,Out).
+%pterm_to_sterm(G,In,Out):- sub_term(E,In),is_list(E), !, In=Out.
+pterm_to_sterm(_,In,Out):- 
  compound_name_arguments(In,N,A),
  functor(In,N,Ar),
- maplist(pterm_to_sterm,A,AA),
+ maplist(pterm_to_sterm(a),A,AA),
  lis_to_pterm(Ar,[N|AA],Mid),
- maybe_fix_list(Mid,Out).
+ maybe_fix_list(Mid,Out),!.
 
 maybe_fix_list(Mid,Out):- maybe_fix_list_0(Mid,Out),ignore((Mid=[A|_],atom(A),assert_if_new(bonzon_mach:bonzon_op(A)))).
 maybe_fix_list_0(Mid,Out):- \+ compound(Mid), Out= Mid.
@@ -86,10 +107,11 @@ maybe_fix_list_0([H|T],[H|TT]):- maybe_fix_list_0(T,TT).
 maybe_var(A,_):- \+ atom(A),!,fail.
 maybe_var(A,AA):- downcase_atom(A,A),!,AA=A.
 maybe_var(A,AA):- AA='$VAR'(A).
+lis_to_pterm(_,X,true):-X==[],!.
 lis_to_pterm(_,X,X):- \+ compound(X),!.
 lis_to_pterm(_,X,X):- \+ is_list(X),!.
 %lis_to_pterm(_,[N|A],Y):- maplist(pterm_to_sterm,A,AA),A\==AA,!,lis_to_pterm(_,[N|AA],Y).
-lis_to_pterm(_,[N|A],Y):- atom(N),upcase_atom(N,N),downcase_atom(N,N),is_list(A),compound_name_arguments(Y,N,A).
+lis_to_pterm(_,[N|A],Y):- atom(N),upcase_atom(N,N),downcase_atom(N,N),is_list(A),!,compound_name_arguments(Y,N,A).
 lis_to_pterm(_,[A,@(B)],[AA|B]):-!,maybe_var(A,AA).
 lis_to_pterm(_,[A,@,B],[A|B]):-!.
 lis_to_pterm(_,['$VAR',A],['$VAR'(A)]):-!.

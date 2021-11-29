@@ -1,4 +1,13 @@
-:- module(bonzon_mach,[]).
+/*:- module(bonzon_mach,[
+  compile/2,
+  sense/1,
+  op(800,xfy,'>>>'),op(901,xfy,':::')]).
+*/
+:-op(600,fx,'@').
+:-op(800,xfy,'>>>').
+:-op(700,xfy,'o').
+:-op(901,xfy,':::').
+:-op(904,xfy,'=>').
 
 :- include('lpa_emu.pl').
 
@@ -51,18 +60,21 @@ bonzon_op(threads).
 bonzon_op(weight).
 bonzon_op(weights).
 
+compile(Header:::Tree,(Header:-Code)):- 
+  compile(Tree,Code).
+
 compile(Tree,Code) :-
   compileTree(Tree,true,1,Code).
 
 compileTree([],Guard,T,[Guard => T:::end]).
 compileTree(Sequence,Guard,T,Code) :-
-  compileSequence(Sequence,Guard,T,Code).
+  must(compileSequence(Sequence,Guard,T,Code)).
 compileTree([Alternative],Guard,T,Code) :-
   compileAlternative(Alternative,Guard,T,Code).
 
 compileSequence([Instruction|Tree],Guard,T,Code) :-
   T1 is T+1,
-  compileInstruction(Instruction,Guard,T,P1),
+  compileInstruction(Instruction,Guard,T,P1),!,
   compileTree(Tree,Guard,T1,P2),
   append(P1,P2,Code).
 
@@ -79,11 +91,12 @@ compileBranch((Guard1| Tree), Guard2, T, Code) :-
     compileTree(Tree, Guard, T, Code).
 
 
-lpa_functor(PX,F,A):- is_list(PX),PX=[F|Len],length(Len,A).
+lpa_functor(PX,F,A):- is_list(PX),!, PX=[F|Len],length(Len,A).
 lpa_functor(PX,F,A):- functor(PX,F,A).
 
 % compileInstruction(P(@X), Guard, T, [Guard => T ::: P(@X)] ) :- \+ atom(PX), lpa_functor(PX,F), instruction(F).
-compileInstruction(PX, Guard, T, [Guard => T ::: PX] ) :- \+ atom(PX), lpa_functor(PX,F,_), instruction(F).
+compileInstruction(PX, Guard, T, 
+ [Guard => T ::: PX] ) :- assertion(\+ atom(PX)), lpa_functor(PX,F,_), ignore(instruction(F)).
 
 
 			/*
@@ -105,12 +118,10 @@ instruction(choice).
 instruction(check).
 instruction(scan).
 instruction(effector).
+%instruction(sync).
 
 
-
-
-
-			/* machine_cleaner */
+/* machine_cleaner */
 
 :- set_prolog_flag(allow_variable_name_as_functor,true).
 
@@ -138,7 +149,8 @@ run(Model) :- loop((sense(Model), 		/* loop sense */
                 react(Model), 			  /* react */
                  reflect(Model))). 		/* reflect */
 
-lpa_call_sense(Model) :- if(interrupt(Stream(Interrupt)), 			/* if interrupt */
+lpa_call_sense(Model) :- 
+ if(interrupt(Stream(Interrupt)), 			/* if interrupt */
     then((remove(Model(Stream)o(_),clock(@(_))), 			/*   then clear stream */
   remove(Model(Stream)o(_),excite(@_)), 
   remove(Model(Stream)o(_),inhibit(@_)), 
@@ -150,6 +162,8 @@ lpa_call_sense(Model) :- if(interrupt(Stream(Interrupt)), 			/* if interrupt */
   set(Model(Stream),seq(1)), 			              /* reset stream */
   remove(Model(Stream),_:::_:::_)))). 			    /* clear synchro */
 
+:- asserta_if_new((sense(Model):- lpa_call_sense(Model))).
+
 react(Model) :- for_each((Stream(Thread),T:::Instruction), 			/* for each */
  such_that(ist(Model(Stream)o(Thread), 			                    /* instruction */
 (clock(T), T:::Instruction))), 			                            /* retrieve */
@@ -158,6 +172,50 @@ react(Model) :- for_each((Stream(Thread),T:::Instruction), 			/* for each */
 reflect(Model):-for_each((Stream,I:::Thread:::Stimulus), 			/* for each stimulus */
  such_that(ist(Model(Stream),I:::Thread:::Stimulus)), 			  /* retrieve synchro */
  do(Model(Stream)>>>(I:::Thread:::Stimulus))). 			          /* report synchro */
+
+
+
+			/* data types and macro instructions */
+
+:- dynamic(instance/2). 
+
+new(C) :- retractall(instance(C,_)).
+
+insert(C,P) :- assert(instance(C,P)).
+
+remove(C,P) :- retractall(instance(C,P)).
+
+set(C,F(@(X))) :- remove(C,F(@ _)), insert(C,F(@X)).
+
+ist(_C,true).
+ist(C,P) :- instance(C,P); instance(C,Q=>P),ist(C,Q).
+ist(C,(P,Q)) :- ist(C,P), ist(C,Q).
+
+loop(P) :- repeat, call((lpa_call(P),!)),fail.
+
+interrupt(P):-get_single_char(C),(C=13->nl,read(R);false),lpa_expansion(R,P).
+
+lpa_call((G1,G2)):- !, lpa_call(G1),lpa_call(G2).
+lpa_call((G1;G2)):- !, lpa_call(G1);lpa_call(G2).
+lpa_call(G):- % wdmsg(lpa_call(G)),
+  (is_list(G)->apply(call,G);call(G)).
+
+if(P,then(Q)):-lpa_call(P)->lpa_call(Q);true.
+
+if_not(P,then(Q)):-lpa_call(P)->true;lpa_call(Q).
+
+if(P,then(Q),else(R)):-lpa_call(P)->lpa_call(Q);lpa_call(R).
+
+
+for_each(X, such_that(F), do(P)) :-
+    findall(X, lpa_call(F), L),
+    forall(member(X, L), P).
+for_each(X, from(F), do(P)) :- %trace,
+    forall(must(lpa_call(F:::L)), 
+       must(forall(member(X, L), lpa_call(P)))).
+
+random_e(X,L):-length(L,N),K is random(N),nth0(K,L,X).
+                                                   
 
 /* virtual machine stream reports */ 
 
@@ -308,44 +366,6 @@ Model(Stream)o(Thread)>>>(T:::effector(P)) :- 			/* virtual effector */
  set(Model(Stream)o(Thread),clock(T1)). 			/* set clock */
 
 
-			/* data types and macro instructions */
-
-:- dynamic(instance/2). 
-
-new(C) :- retractall(instance(C,_)).
-
-insert(C,P) :- assert(instance(C,P)).
-
-remove(C,P) :- retractall(instance(C,P)).
-
-set(C,F(@(X))) :- remove(C,F(@ _)), insert(C,F(@X)).
-
-ist(_C,true).
-ist(C,P) :- instance(C,P); instance(C,Q=>P),ist(C,Q).
-ist(C,(P,Q)) :- ist(C,P), ist(C,Q).
-
-loop(P) :- repeat, call((lpa_call(P),!)),fail.
-
-interrupt(P):-get_code(C),(C=13->nl,read(P);false).
-
-lpa_call(G):- wdmsg(lpa_call(G)),
-  (is_list(G)->apply(call,G);call(G)).
-
-if(P,then(Q)):-lpa_call(P)->lpa_call(Q);true.
-
-if_not(P,then(Q)):-lpa_call(P)->true;lpa_call(Q).
-
-if(P,then(Q),else(R)):-lpa_call(P)->lpa_call(Q);lpa_call(R).
-
-
-for_each(X, such_that(F), do(P)) :-
-    findall(X, lpa_call(F), L),
-    forall(member(X, L), P).
-for_each(X, from(F), do(P)) :-
-    forall(lpa_call(F:::L), forall(member(X, L), lpa_call(P))).
-
-random_e(X,L):-length(L,N),K is random(N),nth0(K,L,X).
-                                                   
 
 
 
@@ -422,8 +442,7 @@ random_e(X,L):-length(L,N),K is random(N),nth0(K,L,X).
   [ initial(sense(_),learn(_))o 1,
     initial(recall(_),do(_))o 1]).
 
-
-			/* example run
+/* example run
 consult(cleaner).
 load(robot).
 run(robot).
@@ -553,5 +572,6 @@ cleaner(forward,backward)o([sensor(left(1))]).
 9 : move(backward) : effector(stop(backward))
 */
 
-:- set_prolog_flag(allow_variable_name_as_functor,false).
+%:- set_prolog_flag(allow_variable_name_as_functor,false).
 %:- listing(bonzon_op/1).
+:- fixup_exports.

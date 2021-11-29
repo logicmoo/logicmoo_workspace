@@ -542,7 +542,8 @@ check_variable_names(I,O):- (\+ (member(N=_,I),var(N)) -> O=I ;
 % Unnumbervars And Save.
 %
 
-unnumbervars_and_save(X,YO):- must(zotrace(unnumbervars4(X,[],_,YO))),!.
+%unnumbervars_and_save(X,YO):- must(zotrace(unnumbervars4(X,[],_,YO))),!.
+unnumbervars_and_save(X,YO):- unnumbervars4(X,[],_,YO),!.
 % unnumbervars_and_save(X,YO):- \+ ((sub_term(V,X),compound(V),'$VAR'(_)=V)),!,YO=X.
 
 /*
@@ -560,17 +561,19 @@ unnumbervars_and_save(X,YO):-
 %
 % Unnumbervars And Save.
 %
-
+unnumbervars4(Var,Vs,Vs,OVar):- nonvar(OVar),!,dumpST,throw(unnumbervars4(Var,Vs,Vs,OVar)).
 unnumbervars4(Var,Vs,Vs,Var):- \+ compound(Var), !.
+unnumbervars4([],Vs,Vs,[]):-!.
+unnumbervars4([I|TermIn],VsIn,NewVs,[O|TermOut]):- !,unnumbervars4(I,VsIn,VsM,O),unnumbervars4(TermIn,VsM,NewVs,TermOut).
 unnumbervars4(Var,Vs,Vs,Var):- compound_name_arity(Var,_,0), !.
 unnumbervars4((I,TermIn),VsIn,NewVs,(O,TermOut)):- !,unnumbervars4(I,VsIn,VsM,O),unnumbervars4(TermIn,VsM,NewVs,TermOut).
 unnumbervars4((I:TermIn),VsIn,NewVs,(O:TermOut)):- !,unnumbervars4(I,VsIn,VsM,O),unnumbervars4(TermIn,VsM,NewVs,TermOut).
-unnumbervars4([I|TermIn],VsIn,NewVs,[O|TermOut]):- !,unnumbervars4(I,VsIn,VsM,O),unnumbervars4(TermIn,VsM,NewVs,TermOut).
 unnumbervars4('$VAR'(Name),VsIn,NewVs,Var):- nonvar(Name),!, (member(Name=Var,VsIn)->NewVs=VsIn;NewVs=[Name=Var|VsIn]),!,
   put_attr(Var,vn,Name).
-unnumbervars4(PTermIn,VsIn,NewVs,PTermOut):- compound_name_arguments(PTermIn,F,TermIn),
+unnumbervars4(PTermIn,VsIn,NewVs,PTermOutO):- compound(PTermIn),!, compound_name_arguments(PTermIn,F,TermIn),
   unnumbervars4(TermIn,VsIn,NewVs,TermOut),
-  compound_name_arguments(PTermOut,F,TermOut).
+  compound_name_arguments(PTermOut,F,TermOut),
+  PTermOutO=PTermOut.
 
 
 oc_sub_term(X, X).
