@@ -240,9 +240,10 @@ trans_LF(Border,Spatial&Super&_,X,Spatial&Super&_,Y,GP,[],_,_):-
    (bind_pos('action',Border);bind_pos('attrib',Border)),nop(spatial(Spatial)),
    make_generic_pred(Spatial,Border,X,Y,GP).
 
-
+bind_pos(_,_,_,_):- !,fail.
 bind_pos(Type,Var,Lex,Var2):- nonvar(Var),!,clex:learned_as_type(Type,Var,Lex,Var2).
 bind_pos(Type,Var,Lex,Var2):- freeze80(Var2,clex:learned_as_type(Type,Var,Lex,Var2)).
+bind_pos(_,_):- !,fail.
 bind_pos(Type,Var):- freeze80(Var,clex:learned_as_type(Type,Var)).
 
 freeze80(Var,Goal):- (nonvar(Var);(term_variables(Goal, Vars),Vars==[],trace)),!,call(Goal).

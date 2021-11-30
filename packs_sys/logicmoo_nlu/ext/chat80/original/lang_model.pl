@@ -20,9 +20,12 @@
 :- ensure_loaded(ape(tests/acetexts)).
 :- endif.
 
+any_to_str_or_atom(B,S):- any_to_str(B,M), (atom_contains(M,'"') -> atom_string(S,M) ; S=M).
+
 training_data(Text,DRS):-  parser_ape:text_drs_eval(_Evaluation, _Id, Text, DRS, _LHSs, _Timestamp, _Author, _Comment), should_learn(DRS).
 :- dynamic(c80:lf_trained/3).
-add_c80(B):- any_to_str(B,S),add_history(c80(S)).
+add_c80(B):- add_c80(c80,B).
+add_c80(P,B):- any_to_str_or_atom(B,S),append_term(P,S,C80),add_history(C80).
 add_c81(B):- any_to_str(B,S),add_c80(S),!, ignore(learn_full(e2c,S)).
 add_c82(B):- any_to_str(B,S),add_c80(S),!, print_tree_nl(?-c81(S)).
 
@@ -628,6 +631,40 @@ try_chat_80(S,F,Tree,QT):-
   (assert_if_new(tmp:test80_result(S,F,QT)),in_cmt(print_tree_nl(F=QT)))
   ;(assert_if_new(tmp:test80_result(S,F,failed)),in_cmt(print_tree_nl(F=failed)))))).
 
+
+
+c2(B):- c2(B,_).
+c2(B,O):-
+ any_to_str(B,S),
+ make,
+ locally(set_prolog_flag(gc,false),
+((
+ try_chat_80(S,any_to_ace_str(S,SACE)),
+ try_chat_80(S,try_ace_drs(SACE,Ace)),
+ try_chat_80(S,try_ace_fol(Ace,FOL)),
+ try_chat_80(S,any_to_ace_str(S,SACE)),
+ try_chat_80(S,try_ace_eng(Ace,_Eng)),
+ member(O,[FOL,Ace]),
+ ignore((var(O),add_c80(c2,S))),
+ nonvar(O)))),!.
+
+c8(B):- c8(B,_).
+c8(B,O):-
+ any_to_str(B,S),
+ make,
+ locally(set_prolog_flag(gc,false),
+((
+ try_chat_80(S,text_to_corenlp_tree(S,_)),
+ try_chat_80(S,into_lexical_segs(S,Lex)),
+ try_chat_80(S,sentence80(Lex,Tree)),
+ try_chat_80(S,i_sentence(Tree,QT)),
+ try_chat_80(S,clausify80(QT,UE)),  
+ try_chat_80(S,simplify80(UE,Query)),
+ try_chat_80(S,results80(Query,_Answer)),
+ member(O,[Query,UE,QT,Tree,S]),
+ ignore((var(O),add_c80(c8,S))), 
+ nonvar(O)))),!.
+
 c88(B,O):-
  any_to_str(B,S),
  make,
@@ -645,8 +682,8 @@ c88(B,O):-
  try_chat_80(S,results80(Query,_Answer)),
  try_chat_80(S,any_to_ace_str(S,SACE)),
  try_chat_80(S,try_ace_eng(Ace,_Eng)),
- ignore((var(QT),add_c80(S))),
  member(O,[Query,UE,FOL,Ace,QT,Tree,S]),
+ ignore((var(O),add_c80(c88,S))),
  nonvar(O)))),!.
 %c88(M,O):- process4a(off,M,_,O,_Times).
 
@@ -780,7 +817,9 @@ s8111(N,P):-
   for_n(N,parser_chat80:chat80_all(X,_,_),call(P,X)),
   forall(sample_set80(X),call(P,X)),
   !.
-  
+
+chat80_all(P):- make,
+  forall(chat80_all(X,_,_),ignore(p1(P,X))).
 %:- add_c80("does joe eat cake?").
 
 

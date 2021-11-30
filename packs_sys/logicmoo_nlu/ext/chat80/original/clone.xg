@@ -240,8 +240,11 @@ s_vp_800(SO,Mask) ---> if_cond(IF,S,Mask), s_vp_800s(IF,S,SO,Mask).
 s_vp_800s(true,S,SO,Mask) ---> !, from_true(S,SO,Mask).
 s_vp_800s(IF,S,SO,Mask) ---> from_if(IF,S,SO,Mask).
 
+s80lf(S1,SLF):- sent_to_prelogic(S1,SLF),!.
+s80lf(S1,S1).
+
 from_if(IF,S,SO,Mask) --->  theText80(Then),{logical_s_word(Then)},!,
-  s80(S1,Mask),{S=s(Subj,Verb,Args,Mods),append_cond(Args,IF-Then,S1,ArgsO),SO=s(Subj,Verb,ArgsO,Mods)}.
+  s80(S1,Mask),{s80lf(S1,SLF),  S=s(Subj,Verb,Args,Mods),append_cond(Args,IF-Then,SLF,ArgsO),SO=s(Subj,Verb,ArgsO,Mods)}.
 
 from_true(S,S,_Mask)---> xg_peek(theText80(LW)),{ \+ logical_s_word(LW)},!.
 from_true(S,SO,Mask)---> from_if(true,S,SO,Mask).

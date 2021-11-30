@@ -57,7 +57,7 @@ i_subst(P2,I,O):- duplicate_term(io(I),IO),i_subst(P2,IO),!,IO=io(O).
 i_subst(P2,I):- 
   append_term(P2,CCmp,P2_I),
   append_term(P2_I,R,P2_I_O),
-  clause(P2_I_O,Body),sub_term_setarg(Cmp,I,N,Term),
+  parser_chat80:clause(P2_I_O,Body),sub_term_setarg(Cmp,I,N,Term),
   compound(Cmp),CCmp=Cmp,
   call(Body),
   arg(N,Term,Old),
@@ -68,16 +68,16 @@ i_subst(_,_).
 
 
 i_sentence(S,(G1,G2)):- compound(S), S= (S1,S2), !, i_sentence(S1,G1), i_sentence(S2,G2).
-i_sentence(S,G):- i_sentence2(S,G).
+%i_sentence(S,G):- i_sentence1(S,G).
 %i_sentence(S,G):- i_sentence0(S,G).
+i_sentence(S,G):- i_sentence1(S,M),i_subst(i_sentence2,M,G),i_subst(i_s,M,G).
 
-i_sentence0(S,G):- i_sentence1(S,M),i_subst(i_s,M,G).
-
-i_sentence1(I,O):- i_sentence2(I,O)*->true;i_subst(i_sentence2,I,O).
+i_sentence1(I,O):- i_sentence2(I,O)*->true;I=O. %i_subst(i_sentence2,I,O).
+%i_sentence1(I,O):- i_sentence2(I,O),!.
 
 i_sentence2(q(S),question80([],P)) :- i_s(S,P).
 i_sentence2(decl(S),assertion80(P)) :- i_s(S,P). 
-i_sentence2(whq(X,S),question80([X],P)) :- i_s(S,P).
+i_sentence2(whq(X,S),question80([X],P)) :- !, i_s(S,P).
 i_sentence2(imp(U,Ve,s(_,Verb,VArgs,VMods)),imp80(U,Ve,V,Args)) :-
    must80(i_verb(Verb,V,_,active,posP(_Modal),Slots0,[],transparent)),
    must80(i_verb_args(RefVar,VArgs,[],[],Slots0,Slots,Args,Args0,Up,-0)),
