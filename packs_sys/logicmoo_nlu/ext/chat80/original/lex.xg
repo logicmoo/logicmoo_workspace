@@ -91,7 +91,10 @@ xg_with_text(G1,Text) ---> xg_and(G1,theText_cl(Text)).
 
 %theText80(IC) ---> w1(W0),{assertion(nonvar(W0);nonvar(IC)),parser_e2c:the_text_unif(IC,W0)}.
 
+is_prpername--->thePos80((nnp;nnps)).%upos(propn),_).
+
 thePos80(Pos,W) ---> theText80_W2(W,L),{match_pos(Pos,L)}.
+thePos80(Pos) ---> theText80_W2(W,L),{match_pos(Pos,[word(W)|L])}.
 
 theText80(_IC, A, B, C, D) :- A==[],!,fail,B=[],C=D.
 theText80(A, B, B, C, D) :-
@@ -249,12 +252,7 @@ wh_pron(Case) --->
    theText80(Pron),
    {wh_pron_lex(Pron,Case)}.
 
-adverb(adverb(W)) --->
-   theText80(W),
-   {adverb_lex(W)}.
-adverb(adverb(t(A,B,C))) --->
-   theText80(W),
-   {modal_verb_form_aux(W,A,B,C)}.
+
 
 
 poss_pron(pronoun(Gender,Person+Number),Person+Number) --->

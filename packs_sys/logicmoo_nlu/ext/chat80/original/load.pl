@@ -779,6 +779,7 @@ multifile_dynamic_discontiguous(P):- multifile(P),dynamic(P),discontiguous(P).
 :- ensure_loaded(newtop).	% top level
 
 :- ensure_loaded(lang_model).
+:- use_module(library(nars/nars)).
 
 :- fixup_exports.
 

@@ -818,7 +818,9 @@ adj_phrase(P,Mask) --->  comp_phrase(P,Mask).
 
 adverb(adv(Adv)) ---> theText80_W2(W,W2), {adv_lex_w2(W,W2,Adv)}.
 adverb(adj(Adj)) ---> {if_search_expanded(3)},theText80_W2(W,W2), {adj_lex_w2(W,W2,Adj,_Type)}.
-
+adverb(adv(W)) ---> theText80(W), {adverb_lex(W)}.
+adverb(adv(t(A,B,C))) ---> theText80(W), {modal_verb_form_aux(W,A,B,C)}.
+   
 no_args_vt(tv).
 no_args_vt(dv(_Prep)).
 no_args_vt(iv).

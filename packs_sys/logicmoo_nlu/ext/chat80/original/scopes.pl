@@ -23,8 +23,8 @@
 % :- op(300, fx, '`'  ).
 
 
-commbine(if,_,_,LHSB,RHSB,LHSB=>RHSB).
-commbine(then,_,_,LHSB,RHSB,RHSB=>LHSB).
+commbine(if-then,_,_,LHSB,RHSB,LHSB=>RHSB).
+commbine(true-if,_,_,LHSB,RHSB,RHSB=>LHSB).
 
 clausify80(question80(V0, P),OUT) :- 
   clausify80_qa(V0,P,V,B),!,
