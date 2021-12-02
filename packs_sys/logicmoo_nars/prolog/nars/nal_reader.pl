@@ -1,7 +1,9 @@
 % nal_reader.pl
 % Read Non_Axiomatic Logic from Prolog
 :-module(nal_reader,[
-            nal_test/0,
+            nal_tests/0,
+            nars_tests/0,
+            nal_test_files/0,
             nal_test/1,
             nal_read_clause/2,
            % nal_test/2,
@@ -15,6 +17,7 @@
 :- use_module(library(logicmoo_common)).
 
 :- use_module(library(logicmoo/dcg_meta)).
+:- use_module(library(logicmoo/dcg_must)).
 :- use_module(library(narsese)).
 
 
@@ -114,11 +117,13 @@ nal_sentence(X,S,T,O)--> nal_statement(S), nal_post_statement(X,T,O).
 nal_post_statement(X,T,O)--> 
           /*nal_statement(S),*/ nal_o(`.` ,X, judgement)-> optional(T,nal_tense)-> optional(O,nal_truth),!   % judgement to be absorbed into beliefs 
         ; /*nal_statement(S),*/ nal_o(`?` ,X, question_truth)-> optional(T,nal_tense)-> optional(O,nal_truth),! % question on truth_value to be answered 
-        ; /*nal_statement(S),*/ nal_o(`!` ,X, goal), optional(O,nal_desire)                  % goal to be realized by operations 
-        ; /*nal_statement(S),*/ nal_o(`@` ,X, question_desire), optional(O,nal_desire)       % question on desire_value to be answered 
+        ; /*nal_statement(S),*/ nal_o(`!` ,X, goal)-> optional(T,nal_tense)-> optional(O,nal_desire)             % goal to be realized by operations 
+        ; /*nal_statement(S),*/ nal_o(`@` ,X, question_desire)-> optional(T,nal_tense)-> optional(O,nal_desire)       % question on desire_value to be answered 
         .
 
+% nal_statement(nal_word(S))--> nal_word(S). 
 nal_statement(S)--> mw(nal_statement_0(S)),!.
+nal_statement_0(S)--> cwhite,nal_statement_0(S).
 nal_statement_0(S)--> 
         mw(`<`) ,!, nal_term(A), nal_copula(R), nal_term(B), mw(`>`) ,   {S=..[R,A,B]}   % two, terms related to each other 
       ;  nal_l_paren, `^` , nal_term_list_comma(L), nal_paren_r,       {S= exec(L)}            % an operation to be executed 
@@ -126,7 +131,7 @@ nal_statement_0(S)-->
       ;  nal_word(A), nal_l_paren, nal_term_list_comma(L), nal_paren_r,    {S= exec([A|L])}        % an operation to be executed, new notation 
       ;  nal_term_1(X),             {S= nal_named_statement(X)}                       % a, term, can name a statement(S) 
       .
-         
+%nal_statement_0(S)-->nal_rsymbol(S).
 
 nal_copula(X) -->      
             nal_o(`-->` ,X,                          inheritance )
@@ -240,6 +245,7 @@ nal_tense(X) -->
    ;  nal_o(`:|:`, X, present)                       % present event 
    ;  nal_o(`:\\:`, X, past)                         % :\: past event 
    .
+
 nal_tense('t!'(X)) --> `:!`, number(X), `:`.
 nal_tense('t'(X)) --> `:`, nal_term_1(X), `:`.
 
@@ -248,6 +254,7 @@ nal_desire(D)-->nal_truth(D).
 % Truth is two numbers in [0,1]x(0,1) 
 nal_truth([F,C])--> `%`, !, nal_frequency(F), optional((`;`, nal_confidence(C))), `%`.	                
 nal_truth([F,C])--> `{`, !, nal_frequency(F), nal_confidence(C), `}`.	                
+nal_truth([F,C])--> `Truth:`,read_nal_expected_truth(F,C).
 % Budget is three numbers in optional(O,0,1]x(0,1)x[0,1] 
 nal_budget(nal_budget_pdq(P,D,Q))--> `$`,!, nal_priority(P), optional(( `;`, nal_durability(D))), optional((`;`, nal_quality(Q))), `$`.  
 
@@ -257,7 +264,15 @@ nal_word(E) --> mw(nal_word_0(E)).
 nal_word_0('+'(E)) --> `+`,dcg_basics:integer(E),!.
 nal_word_0(E) --> dcg_basics:number(E),!.
 nal_word_0(E) --> quoted_string(E),!.
-nal_word_0(E) --> dcg_peek([C]),{char_type(C,alpha)},!, nal_rsymbol([],E),!.
+nal_word_0(E) --> nal_word_str(E).
+
+% nal_rsymbol(Chars,E) --> [C], {notrace(nal_sym_char(C))},!, nal_sym_continue(S), {append(Chars,[C|S],AChars),string_to_atom(AChars,E)},!.
+
+nal_word_str(MaybeArray) --> dcg_peek([C]),{char_type(C,alpha)},!, nal_rsymbol(E),!,maybe_plus_array(E,MaybeArray).
+
+
+maybe_plus_array(E,E) --> \+ dcg_peek(`[`),!.
+maybe_plus_array(E,idxOf(E,Ar)) --> `[`,owhite,nal_term_list_comma(Ar),owhite,`]`.
 
 
   nal_priority(F) --> nal_float_inclusive(0,1,F).           %  0 <= x <= 1       
@@ -275,22 +290,24 @@ nal_float_exclusive(L,H,F)--> mw((dcg_basics:number(F) -> {nal_warn_if_strict((L
 
 
 nal_warn_if_strict(G):- call(G),!.
-nal_warn_if_strict(G):- dmsg(nal_warn_if_strict(G)),!.
+nal_warn_if_strict(G):- nal_dmsg(nal_warn_if_strict(G)),!.
 
-:- set_dcg_meta_reader_options(file_comment_reader, nal_comment_expr).
+:- set_dcg_meta_reader_options(file_comment_reader, nal_comment_expr_unused).
 
+nal_comment_expr_unused(_) --> {!,fail}.
 
 nal_comment_expr(X) --> cspace,!,nal_comment_expr(X).
 nal_comment_expr('$COMMENT'(Expr,I,CP)) --> nal_comment_expr_3(Expr,I,CP),!.
 
 nal_comment_expr_3(T,N,CharPOS) --> `/*`, !, my_lazy_list_location(file(_,_,N,CharPOS)),!, zalwayz(read_string_until_no_esc(S,`*/`)),!,
   {text_to_string_safe(S,T)},!.
-nal_comment_expr_3(T,N,CharPOS) -->  {nal_cmt_until_eoln(Text)},Text,!, my_lazy_list_location(file(_,_,N,CharPOS)),!,zalwayz(read_string_until_no_esc(S,eoln)),!,
+nal_comment_expr_3(T,N,CharPOS) -->  {nal_cmt_until_eoln(Text)},phrase(Text),!, 
+  my_lazy_list_location(file(_,_,N,CharPOS)),!,zalwayz(read_string_until_no_esc(S,eoln)),!,
  {text_to_string_safe(S,T)},!.
 
 
-nal_cmt_until_eoln(`//`).
-nal_cmt_until_eoln(`'`).
+nal_cmt_until_eoln((`//`, \+ dcg_peek(`expected:`))).
+nal_cmt_until_eoln((`'`, \+ dcg_peek(`'outputMustContain`), dcg_peek(\+ `' Answer `))).
 nal_cmt_until_eoln(`**`).
 
 
@@ -301,7 +318,7 @@ nal_paren_r --> mw(`)`).
 nal_term_list_white([H|T], Sep) --> nal_term_0(H), ( (Sep,owhite) ->  nal_term_list_white(T, Sep) ; ({T=[]},owhite)).
 nal_term_list_comma([H|T]) --> nal_term(H), ( nal_comma ->  nal_term_list_comma(T) ; {T=[]} ).
 
-
+nal_rsymbol(E)--> nal_rsymbol([],E).
 nal_rsymbol(Chars,E) --> [C], {notrace(nal_sym_char(C))},!, nal_sym_continue(S), {append(Chars,[C|S],AChars),string_to_atom(AChars,E)},!.
 nal_sym_continue([]) --> nal_peek_symbol_breaker,!.
 nal_sym_continue([H|T]) --> [H], {nal_sym_char(H)},!, nal_sym_continue(T).
@@ -320,49 +337,59 @@ nal_sym_char(C):- nal_never_symbol_char(NeverSymbolList),memberchk(C,NeverSymbol
 %nal_sym_char(C):- nb_current('$maybe_string',t),memberchk(C,`,.:;!%`),!,fail.
 nal_sym_char(_):- !.
 
-nal_never_symbol_char(`";()~'[]<>``{},=\\^`).
+nal_never_symbol_char(`";()~'[]!<>``{},=\\^`).
 
 
 nal_rsymbol_cont(Prepend,E) --> nal_sym_continue(S), {append(Prepend,S,AChars),string_to_atom(AChars,E)},!.
 
 
-nal_is_test_file(X):-filematch('../../nal-tests/**/*',X), \+ nal_non_file(X). 
-nal_is_test_file(X):-filematch('../../examples/**/*',X), \+ nal_non_file(X). 
+nal_is_test_file(X):-filematch(library('../nal-tests/**/*'),X), \+ nal_non_file(X). 
+nal_is_test_file(X):-filematch(library('../examples/**/*'),X),atom_contains(X,nars), \+ nal_non_file(X). 
 nal_non_file(X):- downcase_atom(X,DC),X\==DC,!,nal_non_file(DC).
 nal_non_file(X):- atom_concat(readme,_,X).
 nal_non_file(X):- atom_concat(_,'.pl',X).
 
-nal_test_file:- 
+nal_test_files:- 
  make,
  catch((
-   forall(nal_is_test_file(X),((dmsg(file_begin(X)),ignore(nal_test_file(X)),dmsg(file_end(X)))))),
+   forall(nal_is_test_file(X),((nal_dmsg(file_begin(X)),ignore(nal_test_file(X)),nal_dmsg(file_end(X)))))),
     '$aborted',true).
 
-nal_test_file(File):- (\+ atom(File); \+ is_absolute_file_name(File)),
-  absolute_file_name(File,Absolute), !, nal_test_file(Absolute).
+nal_test_file(File):- (\+ atom(File); \+ is_absolute_file_name(File); \+ exists_file(File)),
+  filematch(File,Absolute), !, nal_test_file(Absolute).
 nal_test_file(File):- open(File,read,In),
   nal_read_clauses(In, Expr),!,
   must_or_rtrace(nal_call(nal_test_file,Expr,OutL)),!,
   flatten([OutL],Out),
-  maplist(wdmsg,Out),!.
+  maplist(nal_dmsg,Out),!.
+
+nal_dmsg(O):- is_list(O),!,in_cmt(maplist(print_tree_nl,O)).
+nal_dmsg(O):- print_tree_nl(O).
 
 % NAL file reader
+nal_file(CMT) --> {retract(t_l:'$last_comment'(CMT))},!.
 nal_file(end_of_file) --> file_eof,!.
 nal_file(O) --> cspace, !, nal_file(O).
 nal_file([]) -->  \+ dcg_peek([_]), !.
-nal_file(Comment) --> nal_comment_expr(Comment).
-nal_file(O) --> nal_file_element(O), !, owhite.
+nal_file(O) --> nal_file_element(O), owhite, !.
+nal_file(O) --> read_string_until_no_esc(Str,eoln), 
+  {phrase(nal_file_element(O),Str),!}.
 % fallback to english in a file
-nal_file(unk_english(Text)) --> read_string_until_no_esc(Str,eoln), 
-  {atom_string(Str,Text)},!. %split_string(Str, "", "\s\t\r\n", Text).
+nal_file(unk_english(Text)) -->  read_string_until_no_esc(Str,eoln), 
+  {atom_string(Str,TextStr),{statistics,nal_dmsg(TextStr)},split_string(TextStr, "", "\s\t\r\n", Text)}.
 
 % nal_file(planStepLPG(Name,Expr,Value)) --> owhite,sym_or_num(Name),`:`,owhite, nal(Expr),owhite, `[`,sym_or_num(Value),`]`,owhite.  %   0.0003:   (PICK-UP ANDY IBM-R30 CS-LOUNGE) [0.1000]
 % nal_file(Term,Left,Right):- eoln(EOL),append(LLeft,[46,EOL|Right],Left),read_term_from_codes(LLeft,Term,[double_quotes(string),syntax_errors(fail)]),!.
 % nal_file(Term,Left,Right):- append(LLeft,[46|Right],Left), ( \+ member(46,Right)),read_term_from_codes(LLeft,Term,[double_quotes(string),syntax_errors(fail)]),!.
 
 % non-standard
-nal_file_element(outputMustContain(O)) --> `''outputMustContain('`, !, trace, read_string_until(Str,`')`),{fmt(Str),phrase(nal_task(O),Str,[])}. 
-nal_file_element('1Answer'(O) ) --> `' Answer `, read_string_until(Str,(`{`,read_string_until(_,eoln))),{phrase(nal_task(O),Str,[])}. 
+nal_file_element(O) --> cspace, !, nal_file_element(O).
+nal_file_element(expected(O) ) --> `//expected:`, read_string_until(Str,(eoln)),!,{phrase(read_nal_expected(O),Str)}. 
+nal_file_element(outputMustContain(O)) --> `''outputMustContain('`, !, read_string_until(Str,`')`),{fmt(Str),phrase(nal_task(O),Str,[])}. 
+nal_file_element('oneAnswer'(O) ) --> `' Answer `, read_string_until(Str,(`{`,eoln)),{phrase(nal_task(O),Str,[])}. 
+
+nal_file_element(Comment) --> nal_comment_expr(Comment),!.
+
 nal_file_element(N=V          ) -->  `*`, nal_word(N), mw(`=`), nal_term(V).
 nal_file_element(nal_in(H,V3))  -->  `IN:`,   nal_task(H), optional(nal_three_vals(V3)).
 nal_file_element(nal_out(H,V3)) -->  `OUT:`,  nal_task(H), optional(nal_three_vals(V3)).
@@ -372,6 +399,20 @@ nal_file_element(H) --> nal_task(H).
 nal_file_element(nal_term(H)) --> nal_term(H).
 % nal_read_clause("'the detective claims that tim lives in graz",A)
 
+read_nal_expected(O) --> cspace, !, read_nal_expected(O).
+read_nal_expected([H|T]) --> read_nal_expected_ele(H),read_nal_expected(T).
+read_nal_expected([]) --> [].
+read_nal_expected_ele(O) --> cspace, !, read_nal_expected_ele(O).
+read_nal_expected_ele(answer(O) ) --> `Answer:`, nal_file_element(O).
+read_nal_expected_ele(truth(F,C) ) --> `Truth:`,read_nal_expected_truth(F,C).
+
+read_nal_expected_truth(F,C) --> cspace, !, read_nal_expected_truth(F,C).
+read_nal_expected_truth(_,_) --> `.`,!.
+read_nal_expected_truth(_,_) -->  \+ dcg_peek([_]), !.
+read_nal_expected_truth(F,C) --> read_nal_expected_truth_ele(F,C), !, read_nal_expected_truth(F,C).
+read_nal_expected_truth_ele(F,C) --> (cspace;`,`), !, read_nal_expected_truth_ele(F,C).
+read_nal_expected_truth_ele(F,_) --> `frequency=`,nal_frequency(F).
+read_nal_expected_truth_ele(_,C) --> `confidence=`,nal_confidence(C).
 
 % {1 : 4;3} 
 nal_three_vals(V3)--> `{`, read_string_until_no_esc(Str,(`}`;eoln)), 
@@ -383,9 +424,12 @@ nal_three_vals(V3)--> `{`, read_string_until_no_esc(Str,(`}`;eoln)),
 
 :- thread_local(t_l:sreader_options/2).
 
+nars_tests:-
+  nal_tests,
+  nal_test_files.
 
 
-nal_test:- fmt('\nNAL TEST'), forall(nal_is_test(_,Test),nal_test(Test)).
+nal_tests:- make, fmt('\nNAL TEST'), nal_reader:forall(nal_is_test(_,Test),nal_test(Test)).
 
 
 :- use_module(library(dcg/basics)).
@@ -395,7 +439,7 @@ nal_test(Test):-
   fmt("\n-----------------------------\n"),
   fmt(Test), 
   fmt("-----------------------------\n"),
-  nal_call('dmsg',Test,Out),dmsg(Out).
+  nal_call('nal_dmsg',Test,Out),nal_dmsg(Out).
 
 
 nal_zave_varname(N,V):- debug_var(N,V),!.
@@ -412,7 +456,7 @@ nal_read_clauses( Text, Out):-
  findall(Cl,nal_read_clause(Text, Cl), OutL),
  flatten([OutL],Out).
 
-nal_read_clause( NonStream, Out):- \+ is_stream(NonStream), !, % wdmsg(NonStream),
+nal_read_clause( NonStream, Out):- \+ is_stream(NonStream), !, % nal_dmsg(NonStream),
   must_or_rtrace((open_string(NonStream,Stream), nal_read_clause(Stream, Out))).
 
 nal_read_clause(Stream, Out):-
@@ -427,7 +471,8 @@ nal_read_clause(Stream, Out):-
  op(601, xfx, input:(/)),
  op(601, xfx, input:(\\)),
  (at_end_of_stream(Stream)-> Out=[]; 
-   (nal_read_term(Stream, Term),
+   (retractall(t_l:'$last_comment'(_)),
+     nal_read_term(Stream, Term),
     (Term == end_of_file -> Out=[];
       (Term = (:- Exec) -> (input:call(Exec), Out=More) ; Out = [Term|More]),
        nal_read_clause(Stream, More)))).
@@ -436,13 +481,18 @@ nal_read_term(In,Expr):-
  notrace(( is_stream(In), 
   remove_pending_buffer_codes(In,Codes), 
   read_codes_from_pending_input(In,Text), Text\==[])), !,
-  call_cleanup(parse_meta_ascii(nal_file, Text,Expr),
+  call_cleanup(parse_meta_ascii_nal(nal_file, Text,Expr),
     append_buffer_codes(In,Codes)).
 nal_read_term(Text,Expr):- 
  notrace(( =( ascii_,In),
   remove_pending_buffer_codes(In,Codes))),   
-  call_cleanup(parse_meta_ascii(nal_file, Text,Expr),
+  call_cleanup(parse_meta_ascii_nal(nal_file, Text,Expr),
     append_buffer_codes(In,Codes)).
+
+parse_meta_ascii_nal(nal_file, Text,Expr):-   
+  parse_meta_ascii(nal_file, Text,Expr),
+  retractall(t_l:'$last_comment'(_)).
+
 
 % Expand Stream or String
 nal_call(Ctx, Stream, Out):- \+ compound(Stream),
@@ -455,7 +505,7 @@ nal_call(Ctx, InnerCtx=json(List), Out):- !,  nal_call([InnerCtx|Ctx], List, Out
 nal_call(Ctx, List, Out):- 
    sub_term(Sub, List), nonvar(Sub), 
    nal_rule_rewrite(Ctx, Sub, NewSub),
-   % ignore((NewSub=='$',wdmsg(nal_rule_rewrite(_Ctx, Sub, NewSub)))),
+   % ignore((NewSub=='$',nal_dmsg(nal_rule_rewrite(_Ctx, Sub, NewSub)))),
    nonvar(NewSub), Sub\==NewSub,
    subst(List, Sub, NewSub, NewList), 
    List\==NewList, !, 
@@ -520,6 +570,7 @@ nal_is_test(read, "(\\,eat,_,tiger)").
 nal_is_test(read, "(eat \\2 tiger)").
 nal_is_test(read, "(\\,eat,tiger,_)").
 
+
 % 
 nal_is_test(exec, "'Revision ------
 
@@ -542,12 +593,6 @@ nal_is_test(exec, "
  OUT: <bird --> swimmer>. %0.87;0.91% {1 : 1;2} 
 ").
 
-nal_is_test(exec, "********** deduction
-  IN: <bird --> animal>. %1.00;0.90% {0 : 1} 
-  IN: <robin --> bird>. %1.00;0.90% {0 : 2} 
-1
- OUT: <robin --> animal>. %1.00;0.81% {1 : 2;1} 
- OUT: <animal --> robin>. %1.00;0.45% {1 : 2;1} ").
 
 nal_is_test(exec, "
 ********** abduction
@@ -782,3 +827,177 @@ nal_is_test(read, "
 <chocolate --> (/,eat,{Tom},_)>.
 ").
 
+nal_is_test(read, "
+*volume=0
+*motorbabbling=false
+<corridor --> in>. :|:
+<({SELF} * kitchen) --> ^go>. :|:
+<({cat} * kitchen) --> in>. :|:
+100
+<corridor --> in>. :|:
+<({SELF} * bedroom) --> ^go>. :|:
+<({cat} * bedroom) --> in>. :|:
+100
+<corridor --> in>. :|:
+<({SELF} * livingroom) --> ^go>. :|:
+//no cat this time, it doesn't like the livingroom :)
+100
+<corridor --> in>. :|:
+<({SELF} * bedroom) --> ^go>. :|:
+<({cat} * bedroom) --> in>. :|:
+100
+//Ok you are in corridor now
+<corridor --> in>. :|:
+").
+
+nal_is_test(read, "
+//NARS, where is the cat?
+//Passive question <({cat} * ?where) --> in>? :|: wouldn't trigger a decision
+//Active question however does:
+<(<({cat} * #where) --> in> &/ <({SELF} * #where) --> ^say>) =/> G>.
+G! :|:
+100
+//expected: ^go executed with args ({SELF} * bedroom)
+").
+
+nal_is_test(read, "
+//ok, feedback of NARS going to the bedroom, the cat is there!
+<({cat} * bedroom) --> in>. :|:
+G! :|:
+10
+//expected: ^say executed with args ({SELF} * bedroom)
+").
+
+nal_is_test(read, "
+*volume=0
+G! :|:
+").
+
+nal_is_test(read, "//Jonas has asthma?
+<{jonas} --> [asthma]>?
+//expected: Answer: <{jonas} --> [asthma]>. Truth: frequency=1.000000, confidence=0.801900
+//Angelika has asthma?
+<{angelika} --> [asthma]>?
+//expected: Answer: <{angelika} --> [asthma]>. Truth: frequency=1.000000, confidence=0.810000").
+
+
+nal_is_test(read, "
+'********** [08 + 09 -> 10]:
+
+'The robot is holding key001. 
+<(*,Self,key001) --> hold>. :|: %1.00;0.81% 
+
+1
+
+'The robot is holding key001. 
+<(*,Self,key001) --> hold>. :|:
+
+5
+
+'The robot is holding key001. 
+''outputMustContain('<(*,Self,key001) --> hold>. :!1: %1.00;0.93%') 
+").
+
+
+nal_is_test(read, "
+'********** compound composition, two premises
+
+'Sport is a type of competition. 
+<sport --> competition>. %0.90% 
+
+'Chess is a type of competition. 
+<chess --> competition>. %0.80%  
+
+16
+
+'If something is either chess or sport, then it is a competition.
+''outputMustContain('<(|,chess,sport) --> competition>. %0.72;0.81%')
+
+'If something is both chess and sport, then it is a competition.
+''outputMustContain('<(&,chess,sport) --> competition>. %0.98;0.81%')
+").
+
+
+nal_is_test(read, "
+********** [07 + 09 -> 11]:
+  IN: <(*,key001) --> ^pick>. :|: %1.00;0.90% {0 : 0 : 1} 
+
+1
+
+  IN: <(*,Self,key001) --> hold>. :|: %1.00;0.90% {1 : 1 : 2} 
+
+1
+
+ OUT: <<(*,Self,key001) --> hold> =\\> <(*,key001) --> ^pick>>. :\\: %1.00;0.45% {2 : 1 : 1;2} 
+
+ OUT: <<(*,key001) --> ^pick> =/> <(*,Self,key001) --> hold>>. :\\: %1.00;0.45% {2 : 1 : 1;2} 
+
+ OUT: <<(*,key001) --> ^pick> </> <(*,Self,key001) --> hold>>. :\\: %1.00;0.45% {2 : 1 : 1;2} 
+
+ OUT: <key001 --> (/,^pick,_)>. :\\: %1.00;0.90% {2 : 0 : 1} 
+").
+
+nal_is_test(exec, "********** deduction
+  IN: <bird --> animal>. %1.00;0.90% {0 : 1} 
+  IN: <robin --> bird>. %1.00;0.90% {0 : 2} 
+1
+ OUT: <robin --> animal>. %1.00;0.81% {1 : 2;1} 
+ OUT: <animal --> robin>. %1.00;0.45% {1 : 2;1} ").
+
+nal_is_test(exec, "********** deduction
+'the detective claims that tim lives in graz
+'<{tim} --> (/,livingIn,_,{graz})>.
+'and lawyer claims that this is not the case
+<{tim} --> (/,livingIn,_,{graz})>. %0%
+100
+'the first deponent, a psychologist,
+'claims that people with sunglasses are more aggressive
+<<(*,$1,sunglasses) --> own> ==> <$1 --> [aggressive]>>.
+'the third deponent claims, that he has seen tom with sunglasses on:
+<(*,{tom},sunglasses) --> own>.
+'the teacher claims, that people who are aggressive tend to be murders
+<<$1 --> [aggressive]> ==> <$1 --> murder>>.
+'the second deponent claims, that if the person lives in Graz, he is surely the murder
+<<$1 --> (/,livingIn,_,{graz})> ==> <$1 --> murder>>.
+'who is the murder?
+<{?who} --> murder>?
+''outputMustContain('<{tom} --> murder>. %1.00;0.73%')").
+
+nal_is_test(exec, "
+//First: Input diamond:
+// |    ██    |
+// |  ██  ██  |
+// |██      ██|
+// |  ██  ██  |
+// |    ██    |:
+<{M1[-1.0,0.0]} --> [BRIGHT]>.
+<{M1[1.0,0.0]} --> [BRIGHT]>.
+<{M1[0.0,1.0]} --> [BRIGHT]>.
+<{M1[0.0,-1.0]} --> [BRIGHT]>.
+<{M1[0.5,0.5]} --> [BRIGHT]>.
+<{M1[-0.5,0.5]} --> [BRIGHT]>.
+<{M1[0.5,-0.5]} --> [BRIGHT]>.
+<{M1[-0.5,-0.5]} --> [BRIGHT]>.
+<{M1} --> (/,called,_,circle)>.
+
+//Re-observe imperfectly
+// |▒▒  ██    |
+// |  ██  ▒▒  |
+// |▒▒      ██|
+// |  ██  ▒▒▒▒|
+// |          |:
+<{M3[-1.0,1.0]} --> [BRIGHT]>. %0.5%
+<{M3[0.0,1.0]} --> [BRIGHT]>.
+<{M3[-0.5,0.5]} --> [BRIGHT]>.
+<{M3[0.5,0.5]} --> [BRIGHT]>. %0.5%
+<{M3[-1.0,0.0]} --> [BRIGHT]>. %0.5%
+<{M3[1.0,0.0]} --> [BRIGHT]>.
+<{M3[-0.5,-0.5]} --> [BRIGHT]>.
+<{M3[0.5,-0.5]} --> [BRIGHT]>. %0.5%
+<{M3[1.0,-0.5]} --> [BRIGHT]>. %0.5%
+
+50000
+//What was observed?
+<{M3} --> (/,called,_,?what)>?
+//A circle
+''outputMustContain('<{M3} --> (/,called,_,circle)>. %0.83;0.36%')").

@@ -5,60 +5,11 @@
 <alternative> ::= <branch> ||(<branch>;<alternative>)
 <branch> ::=(<guard>|<tree>)
 */
-:- use_module(library(apply),[maplist/3]).
-:- use_module(library(logicmoo_utils)).
-:- cls.
+
 :-op(600,fx,'|').
 :-op(600,xfy,'.').
 :-op(901,xfy,':').
 :-op(904,xfy,'=>').
-
-bonzon_bi((:)/2).
-bonzon_bi((.)/2).
-bonzon_bi(compile/2).
-bonzon_bi(compileAlternative/4).
-bonzon_bi(compileBranch/4).
-bonzon_bi(compileInstruction/4).
-bonzon_bi(compileSequence/4).
-bonzon_bi(compileTree/4).
-bonzon_bi(for_each/3).
-bonzon_bi(if/2).
-bonzon_bi(if/3).
-bonzon_bi(if_not/2).
-bonzon_bi(insert/2).
-bonzon_bi(instance/2).
-bonzon_bi(instruction/1).
-bonzon_bi(interrupt/1).
-bonzon_bi(ist/2).
-bonzon_bi(load/1).
-bonzon_bi(loop/1).
-bonzon_bi(new/1).
-bonzon_bi(random/2).
-bonzon_bi(react/1).
-bonzon_bi(reflect/1).
-bonzon_bi(remove/2).
-bonzon_bi(run/1).
-bonzon_bi(sense/1).
-bonzon_bi(set/2).
-
-lpa_expansion(I,O):- \+ compound(I) ; I=(:- _),!,I=O.
-lpa_expansion(I,O):- pterm_to_sterm(I,O), (I\==O-> wdmsg(I); true), print_tree_nl(O),!.
-
-pterm_to_sterm(X,X):-  \+ compound(X),!.
-pterm_to_sterm(X,Y):- is_list(X), !, X=Y.
-pterm_to_sterm(X,Y):- 
- compound_name_arguments(X,N,A),
- maplist(pterm_to_sterm,A,AA),
- lis_to_pterm([N|AA],Y).
-
-
-lis_to_pterm(X,X):- \+ compound(X).
-lis_to_pterm([N|A],Y):- atom(N),is_list(A),compound_name_arguments(Y,N,A).
-lis_to_pterm(NA,t(NA)).
-
-
-term_expansion(I,O):- compound(I),
-  lpa_expansion(I,O),!.
 
 
 compile(Tree,Code) :-
@@ -88,7 +39,6 @@ compileBranch((Guard1| Tree), Guard2, T, Code) :-
     ( Guard2=true ->  Guard=Guard1 ;   Guard=(Guard1, Guard2)),
     compileTree(Tree, Guard, T, Code).
 
-:- set_prolog_flag(allow_variable_name_as_functor,true).
 
 compileInstruction(P(|X), Guard, T, [Guard => T : P( |(X))] ) :- instruction(P).
 
@@ -124,19 +74,19 @@ load(Model) :- new(_), /* clear machine */
      from(threads(Model(Fiber))), /* from model fibers */
      do((compile(Tree,Code), /* compile tree */
        forall(member(P,Code),
-       insert(Model(Fiber)o(Thread),P))))), /* load code */
+       insert(Model(Fiber)(Thread),P))))), /* load code */
 
    for_each(thread(Thread,Tree), /* for all threads */
      from(threads(Model)), /* from model */
      do((compile(Tree,Code), /* compile kernel */
      forall(member(P,Code),
-       insert(Model(_)o(Thread),P))))), /* load kernel */
+       insert(Model(_)(Thread),P))))), /* load kernel */
 
  
- for_each(Weight(Thread1,Thread2)o(|X), 
+ for_each(Weight(Thread1,Thread2)(|X), 
      from(weights(Model(Fiber))), /* load weights */
      do(insert(Model(Fiber),
- Weight(Thread1,Thread2)o(|X)))).
+ Weight(Thread1,Thread2)(|X)))).
 
 run(Model) :- loop((sense(Model), /* loop sense */
            react(Model), /* react */
@@ -144,21 +94,21 @@ run(Model) :- loop((sense(Model), /* loop sense */
  /* reflect */
 
 sense(Model) :- if(interrupt(Stream(Interrupt)), /* if interrupt */
-    then((remove(Model(Stream)o(_),clock(|_)), /*   then clear stream */
-  remove(Model(Stream)o(_),excite(|_)), 
-  remove(Model(Stream)o(_),inhibit(|_)), 
-  remove(Model(Stream)o(_),signal(|_)),   
+    then((remove(Model(Stream)(_),clock(|_)), /*   then clear stream */
+  remove(Model(Stream)(_),excite(|_)), 
+  remove(Model(Stream)(_),inhibit(|_)), 
+  remove(Model(Stream)(_),signal(|_)),   
   for_each(sensor(|X), /* for each */
   such_that(member(sensor(|X),Interrupt)), /* instruction */
-  do((set(Model(Stream)o(sense(|X)),clock(1)), /* fire sensor */
+  do((set(Model(Stream)(sense(|X)),clock(1)), /* fire sensor */
   write(0:sense(|X):sensor(|X)),nl))), 
   set(Model(Stream),seq(1)), /* reset stream */
   remove(Model(Stream),_:_:_)))). /* clear synchro */
 
 react(Model) :- for_each((Stream(Thread),T:Instruction), /* for each */
- such_that(ist(Model(Stream)o(Thread), /* instruction */
+ such_that(ist(Model(Stream)(Thread), /* instruction */
 (clock(T), T:Instruction))), /* retrieve */
- do(Model(Stream)o(Thread).(T:Instruction))). /* interpret */
+ do(Model(Stream)(Thread).(T:Instruction))). /* interpret */
 
 reflect(Model):-for_each((Stream,I:Thread:Stimulus), /* for each stimulus */
  such_that(ist(Model(Stream),I:Thread:Stimulus)), /* retrieve synchro */
@@ -172,84 +122,84 @@ Model(Stream).(I:Thread:Stimulus) :-
 
 /* virtual machine thread instructions */
   
-Model(Stream)o(P(|X)).(T:fire(Q(|Y))) :- /* fire thread Q(|Y) */
+Model(Stream)(P(|X)).(T:fire(Q(|Y))) :- /* fire thread Q(|Y) */
  T1 is T+1,
- set(Model(Stream)o(Q(|Y)),clock(1)), /* reset Q(|Y) clock */
-  set(Model(Stream)o(P(|X)),clock(T1)) . /* set P(|X) clock */
+ set(Model(Stream)(Q(|Y)),clock(1)), /* reset Q(|Y) clock */
+  set(Model(Stream)(P(|X)),clock(T1)) . /* set P(|X) clock */
 
-Model(Stream)o(P(|X)).(T:resume(P(|X))) :- /* reenter thread */
-  set(Model(Stream)o(P(|X)),clock(1)). /* reset P(|X) clock */
+Model(Stream)(P(|X)).(T:resume(P(|X))) :- /* reenter thread */
+  set(Model(Stream)(P(|X)),clock(1)). /* reset P(|X) clock */
 
-Model(Stream)o(P(|X)).(T:end) :- /* end active thread */
-  remove(Model(Stream)o(P(|X)),clock(T)). /* deactive thread */
+Model(Stream)(P(|X)).(T:end) :- /* end active thread */
+  remove(Model(Stream)(P(|X)),clock(T)). /* deactive thread */
 
-Model(Stream)o(P(|X)).(T:send(Q(|Y))) :- /* send to Q(|Y) */
+Model(Stream)(P(|X)).(T:send(Q(|Y))) :- /* send to Q(|Y) */
  T1 is T+1,
- if_not(ist(Model(Stream)o(Q(|Y)),clock(_)), /* if not active */
-    then(set(Model(Stream)o(Q(|Y)),clock(1)))), /*   then fire Q(|Y) */
+ if_not(ist(Model(Stream)(Q(|Y)),clock(_)), /* if not active */
+    then(set(Model(Stream)(Q(|Y)),clock(1)))), /*   then fire Q(|Y) */
  
- if_not(ist(Model(Stream),weight(P(|X),Q(|Y))o(W)), /* if no weight */
-    then(if(ist(Model(Stream),initial(P(|X),Q(|Y))o(W)), /*   then if weight */
-      then(set(Model(Stream),weight(P(|X),Q(|Y))o(W))), /*   then attach */
-      else(set(Model(Stream),weight(P(|X),Q(|Y))o(0)))))), /*     else inhibit */
+ if_not(ist(Model(Stream),weight(P(|X),Q(|Y))(W)), /* if no weight */
+    then(if(ist(Model(Stream),initial(P(|X),Q(|Y))(W)), /*   then if weight */
+      then(set(Model(Stream),weight(P(|X),Q(|Y))(W))), /*   then attach */
+      else(set(Model(Stream),weight(P(|X),Q(|Y))(0)))))), /*     else inhibit */
 
- if_not(ist(Model(Stream)o(P(|X)),signal(send(Q(|Y)))), /* if no send signal */
-    then(insert(Model(Stream)o(P(|X)),signal(send(Q(|Y)))))), /*   then post signal */
+ if_not(ist(Model(Stream)(P(|X)),signal(send(Q(|Y)))), /* if no send signal */
+    then(insert(Model(Stream)(P(|X)),signal(send(Q(|Y)))))), /*   then post signal */
 
- set(Model(Stream)o(P(|X)),clock(T1)). /* set clock */
+ set(Model(Stream)(P(|X)),clock(T1)). /* set clock */
  
-Model(Stream)o(P(|X)).(T:receive(Q(|Y))) :- /* receive from Q(|Y)*/
+Model(Stream)(P(|X)).(T:receive(Q(|Y))) :- /* receive from Q(|Y)*/
  T1 is T+1,
- if(ist(Model(Stream)o(Q(|Y)),signal(send(P(|X)))), /* if signal posted */
-    then(if((ist(Model(Stream),weight(Q(|Y),P(|X))o(K)),K>0), /*   then if threshold */
-    then(set(Model(Stream)o(P(|X)),clock(T1)))))).
+ if(ist(Model(Stream)(Q(|Y)),signal(send(P(|X)))), /* if signal posted */
+    then(if((ist(Model(Stream),weight(Q(|Y),P(|X))(K)),K>0), /*   then if threshold */
+    then(set(Model(Stream)(P(|X)),clock(T1)))))).
  /*   then clock */
 
-Model(Stream)o(P(|X)).(T:merge(Q(|Y))) :- /* merge with Q(|Y) */
+Model(Stream)(P(|X)).(T:merge(Q(|Y))) :- /* merge with Q(|Y) */
  T1 is T+1,
- if_not(ist(Model(Stream)o(P(|X)),signal(merge(Q(|Y)))), /* if no signal */
-    then(insert(Model(Stream)o(P(|X)),signal(merge(Q(|Y)))))), /*   then post signal */
+ if_not(ist(Model(Stream)(P(|X)),signal(merge(Q(|Y)))), /* if no signal */
+    then(insert(Model(Stream)(P(|X)),signal(merge(Q(|Y)))))), /*   then post signal */
  
- set(Model(Stream)o(P(|X)),clock(T1)). /* set clock */
+ set(Model(Stream)(P(|X)),clock(T1)). /* set clock */
 
-Model(Stream)o(P(|X)).(T:join(Q(|Y))) :- /* join Q(|Y) */
+Model(Stream)(P(|X)).(T:join(Q(|Y))) :- /* join Q(|Y) */
  T1 is T+1,
- if(ist(Model(Stream)o(Q(|Y)),signal(merge(P(|X)))), /* if signal */
-    then(set(Model(Stream)o(P(|X)),clock(T1)))).  /*   then set clock */
+ if(ist(Model(Stream)(Q(|Y)),signal(merge(P(|X)))), /* if signal */
+    then(set(Model(Stream)(P(|X)),clock(T1)))).  /*   then set clock */
 
-Model(Stream)o(Thread).(T:increment(weight(P(F(X)),Q(Y)))) :- /* increment weight */
+Model(Stream)(Thread).(T:increment(weight(P(F(X)),Q(Y)))) :- /* increment weight */
  T1 is T+1,
  ist(Model(Stream),seq(I)), /* get global time */
 
- if_not(ist(Model(Stream),weight(P(F(X)),Q(Y))o(W)), /* if no weight */
-     then(if(ist(Model(Stream),initial(P(F(X)),Q(Y))o(W)), /*   then if initial */
-    then(set(Model(Stream),weight(P(F(X)),Q(Y))o(W))), /*   then attach */
-     else(set(Model(Stream),weight(P(F(X)),Q(Y))o(0)))))), /*     else inhibit */
+ if_not(ist(Model(Stream),weight(P(F(X)),Q(Y))(W)), /* if no weight */
+     then(if(ist(Model(Stream),initial(P(F(X)),Q(Y))(W)), /*   then if initial */
+    then(set(Model(Stream),weight(P(F(X)),Q(Y))(W))), /*   then attach */
+     else(set(Model(Stream),weight(P(F(X)),Q(Y))(0)))))), /*     else inhibit */
 
- if((ist(Model(Stream),weight(P(F(X)),Q(Y))o(W)),W<1), /* if no threshold */
+ if((ist(Model(Stream),weight(P(F(X)),Q(Y))(W)),W<1), /* if no threshold */
       then((W1 is W+1, /*      then increment */
-  insert(Model(Stream),I:Thread:weight(P(F(_)),Q(Y))o(W1)), /* report */
-  set(Model(Stream),weight(P(F(_)),Q(Y))o(W1))))), /* attach */
+  insert(Model(Stream),I:Thread:weight(P(F(_)),Q(Y))(W1)), /* report */
+  set(Model(Stream),weight(P(F(_)),Q(Y))(W1))))), /* attach */
  
- set(Model(Stream)o(Thread),clock(T1)). /* set clock */
+ set(Model(Stream)(Thread),clock(T1)). /* set clock */
 
-Model(Stream)o(Thread).(T:decrement(weight(P(F(X)),Q(Y)))) :- /* decrement weight */
+Model(Stream)(Thread).(T:decrement(weight(P(F(X)),Q(Y)))) :- /* decrement weight */
  T1 is T+1,
  ist(Model(Stream),seq(I)), /* get global time */
  
- if_not(ist(Model(Stream),weight(P(F(X)),Q(Y))o(W)), /* if no weight */
-    then(if(ist(Model(Stream),initial(P(F(X)),Q(Y))o(W)), /*   then if weight */
-    then(set(Model(Stream),weight(P(F(X)),Q(Y))o(W))), /*   then attach */
-      else(set(Model(Stream),weight(P(F(X)),Q(Y))o(0)))))), /*     else inhibit */
+ if_not(ist(Model(Stream),weight(P(F(X)),Q(Y))(W)), /* if no weight */
+    then(if(ist(Model(Stream),initial(P(F(X)),Q(Y))(W)), /*   then if weight */
+    then(set(Model(Stream),weight(P(F(X)),Q(Y))(W))), /*   then attach */
+      else(set(Model(Stream),weight(P(F(X)),Q(Y))(0)))))), /*     else inhibit */
  
- if((ist(Model(Stream),weight(P(F(X)),Q(Y))o(W)),W>0), /* if no threshold */
+ if((ist(Model(Stream),weight(P(F(X)),Q(Y))(W)),W>0), /* if no threshold */
           then((W1 is W-1, /*      then decrement */
-  insert(Model(Stream),I:Thread:weight(P(F(_)),Q(Y))o(W1)), /* report */
-  set(Model(Stream),weight(P(F(_)),Q(Y))o(W1))))), /* attach */
+  insert(Model(Stream),I:Thread:weight(P(F(_)),Q(Y))(W1)), /* report */
+  set(Model(Stream),weight(P(F(_)),Q(Y))(W1))))), /* attach */
  
- set(Model(Stream)o(Thread),clock(T1)). /* set clock */
+ set(Model(Stream)(Thread),clock(T1)). /* set clock */
 
-Model(Stream)o(Thread).(T:step(Y)) :- /* step */
+Model(Stream)(Thread).(T:step(Y)) :- /* step */
  T1 is T+1,
  ist(Model(Stream),seq(I)), /* get global time */
  if(Y=forward,              /* get direction */
@@ -263,54 +213,54 @@ Model(Stream)o(Thread).(T:step(Y)) :- /* step */
         else(remove(Model(_),at(_)))), /*        else stop */
  I1 is I+1,
  set(Model(Stream),seq(I1)),
- set(Model(Stream)o(Thread),clock(T1)). /* set clock */
+ set(Model(Stream)(Thread),clock(T1)). /* set clock */
 
-Model(Stream)o(Thread).(T:on(X)) :- /* detect */
+Model(Stream)(Thread).(T:on(X)) :- /* detect */
  T1 is T+1,
  if(ist(Model(_),at(X)), /* if position */
       then(set(Model(Stream),on(X))), /*      then found */
           else(remove(Model(Stream),on(_)))), /*        else not found */
- set(Model(Stream)o(Thread),clock(T1)). /* set clock */
+ set(Model(Stream)(Thread),clock(T1)). /* set clock */
 
-Model(Stream)o(Thread).(T:choice(X)) :- /* random selection */
+Model(Stream)(Thread).(T:choice(X)) :- /* random selection */
  T1 is T+1,
  ist(Model(Stream),seq(I)), /* get global time */
  random(R,X),
- set(Model(Stream)o(Thread),fetch(R)), /* set fetch */
+ set(Model(Stream)(Thread),fetch(R)), /* set fetch */
  insert(Model(Stream),I:Thread:fetch(R)),
- set(Model(Stream)o(Thread),clock(T1)). /* set clock */
+ set(Model(Stream)(Thread),clock(T1)). /* set clock */
 
-Model(Stream)o(Thread).(T:check(P(|X))) :- /* check if P(|X) */
+Model(Stream)(Thread).(T:check(P(|X))) :- /* check if P(|X) */
  T1 is T+1,
  ist(Model(Stream),seq(I)), /* get global time */
-  remove(Model(Stream)o(Thread),excite(P(|X))), 
- remove(Model(Stream)o(Thread),inhibit(P(|X))), 
+  remove(Model(Stream)(Thread),excite(P(|X))), 
+ remove(Model(Stream)(Thread),inhibit(P(|X))), 
  if(ist(Model(Stream),P(|X)), /* if P(|X) */
-    then((set(Model(Stream)o(Thread),excite(P(|X))), /*   then set excite */
+    then((set(Model(Stream)(Thread),excite(P(|X))), /*   then set excite */
 
  insert(Model,Stream(I):Thread:excite(P(|X))), /* synchronize */
   insert(Model(Stream),I:Thread:excite(P(|X))))), /* report */
-      else((set(Model(Stream)o(Thread),inhibit(P(|X))), 
+      else((set(Model(Stream)(Thread),inhibit(P(|X))), 
  insert(Model(Stream),I:Thread:inhibit(P(|X))), 
 insert(Model,Stream(I):Thread:inhibit(P(|X)))))), /*     else set inhibit */
-  set(Model(Stream)o(Thread),clock(T1)).
+  set(Model(Stream)(Thread),clock(T1)).
  /* set clock */
 
-Model(Stream)o(Thread).(T:scan(detect(F(X)),move(Y))) :- /* scan synchro */
+Model(Stream)(Thread).(T:scan(detect(F(X)),move(Y))) :- /* scan synchro */
  T1 is T+1,
  ist(Model(Stream),seq(I)), /* get global time */
-  remove(Model(Stream)o(Thread),sync(detect(F(X)),move(Y))), /* remove synchro */
+  remove(Model(Stream)(Thread),sync(detect(F(X)),move(Y))), /* remove synchro */
   if((ist(Model,Stream(I1):detect(F(X)):excite(on(F(X)))), /* if synchro */
   ist(Model,Stream(I2):move(Y):excite(at(F(X)))), I1=I2), 
-   then((set(Model(Stream)o(Thread),sync(detect(F(X)),move(Y))), /* set synchro */
+   then((set(Model(Stream)(Thread),sync(detect(F(X)),move(Y))), /* set synchro */
   insert(Model(Stream),I:Thread:sync(detect(F(X)),move(Y)))))), /* report synchro */
- set(Model(Stream)o(Thread),clock(T1)).  /* set clock */
+ set(Model(Stream)(Thread),clock(T1)).  /* set clock */
 
-Model(Stream)o(Thread).(T:effector(P)) :- /* virtual effector */
+Model(Stream)(Thread).(T:effector(P)) :- /* virtual effector */
  T1 is T+1,
  ist(Model(Stream),seq(I)), /* get global time */
  insert(Model(Stream),I:Thread:effector(P)),
- set(Model(Stream)o(Thread),clock(T1)). /* set clock */
+ set(Model(Stream)(Thread),clock(T1)). /* set clock */
 
 
 /* data types and macro instructions */
@@ -331,7 +281,11 @@ ist(C,(P,Q)) :- ist(C,P), ist(C,Q).
 
 loop(P) :- repeat, call((P,!)),fail.
 
-interrupt(P) :- get_code(C),(C=13 -> nl, read(P); false).
+interrupt(P) :- grab(C), 
+ (C=13 
+ -> nl, 
+ read(P); 
+ false).  
 
 if(P, then(Q)) :-(P->Q;true).
 
@@ -345,12 +299,9 @@ for_each(X, such_that(F), do(P)) :-
 for_each(X, from(F), do(P)) :-
     forall(F:L, forall(member(X, L), P)).
 
-random(X,L) :- length(L,N), K is random(N), nth0(K,L,X).
-
-
-
-
-
+random(X,L) :- length(L,N), 
+ K is int(rand(N))+1, 
+ member(X,L,K).
 
 
 /* cleaner  
@@ -388,41 +339,50 @@ random(X,L) :- length(L,N), K is random(N), nth0(K,L,X).
 
  %:-consult(machine_cleaner).
  
- threads(robot(cleaner(_,_))) :
-  [ thread( sense(F(X)), [
-      merge(ltd(sense(F(X)),learn(F))),
-      merge(ltp(sense(F(X)),recall(Y))), send(learn(F)),fire(detect(F(X))),
-      send(recall(Y))]),
-    thread( detect(F(X)), [
-      on(F(X)),
-      check(on(F(_))),
-      ( ( excite(on(F(_))) |
-          [ effector(clear(F(X))),
-            fire(synchro(detect(F(_)),move(_)))]) ;
-        inhibit(on(F(_)))|[resume(detect(F(_)))])]),
-    thread( learn(F), [
-      receive(sense(F(X))),
-      choice([_,_]),
-      (fetch(_)|[fire(move(_))]);(fetch(_)|[fire(move(_))])]),
-    thread(
-       synchro(detect(F(X)),move(Y)),
-       [ scan(detect(F(X)),move(Y)),
-         sync(detect(F(_)),move(_))|[fire(ltp(sense(F(_)),recall(_)))]]),
-    thread( recall(Y), [
-      receive(sense(F(X))), fire(ltd(sense(F(_)),learn(_))),fire(move(_))]),
-    thread( move(Y), [
-      step(Y),
-      check(at(F(_))),
-      ( excite(at(F(_)))|[resume(move(_))] ;
-        inhibit(at(F(_)))|[effector(stop(_))])])].
+threads(robot(cleaner(A,B))):  
+[thread(sense(F(X)), 
+ [merge(ltd(sense(F(X)), 
+ learn(F))),  
+ merge(ltp(sense(F(X)), 
+ recall(Y))), 
+  
+ send(learn(F)),  
+ fire(detect(F(X))), 
+ send(recall(Y))]), 
+thread(detect(F(X)),  
+ [on(F(X)), 
+ check(on(F(X))), 
+ ((excite(on(F(X))) | [effector(clear(F(X))), 
+ fire(synchro(detect(F(X)),move(Y)))]);  
+ (inhibit(on(F(X))) | [resume(detect(F(X)))]))]),  
+thread(learn(F),  
+ [receive(sense(F(X))),  
+ choice([A,B]), 
+ ((fetch(A) | [fire(move(A))]);  
+ (fetch(B) | [fire(move(B))]))]), 
+thread(synchro(detect(F(X)),move(Y)), 
+ [scan(detect(F(X)),move(Y)), 
+ ((sync(detect(F(X)),move(Y)) | [fire(ltp(sense(F(X)),recall(Y)))]))]),  
+thread(recall(Y), 
+ [receive(sense(F(X))), 
+ fire(ltd(sense(F(X)),learn(F))), 
+ fire(move(Y))]),  
+thread(move(Y), 
+ [step(Y), 
+ check(at(F(_))),  
+ ((excite(at(F(_))) | [resume(move(Y))]); 
+ (inhibit(at(F(_))) | [effector(stop(Y))]))])]. 
+threads(robot): 
+[thread(ltp(Q,R), 
+ [join(Q), 
+ increment(weight(Q,R))]), 
+thread(ltd(Q,R), 
+ [join(Q), 
+ decrement(weight(Q,R))])]. 
+weights(robot(cleaner(A,B))): 
+[initial(sense(_),learn(_))(1), 
+initial(recall(_),do(_))(1)].
 
- threads(robot):
-  [ thread(ltp(Q,R),[join(Q),increment(weight(Q,R))]),
-    thread(ltd(_,_),[join(_),decrement(weight(_,_))])].
-
- weights(robot(cleaner(_,_))):
-  [ initial(sense(Sense),learn(Learn))o 1,
-    initial(recall(_),do(_))o 1].
 
 
 /* example run
@@ -430,7 +390,7 @@ consult(cleaner).
 load(robot).
 run(robot).
 
-cleaner(forward,backward)o([sensor(right(3))]).
+cleaner(forward,backward)([sensor(right(3))]).
 
 0 : sense(right(3)) : sensor(right(3))
 1 : learn(right) : fetch(backward)
@@ -455,7 +415,7 @@ cleaner(forward,backward)o([sensor(right(3))]).
 9 : detect(right(3)) : inhibit(on(right(3)))
 9 : detect(right(3)) : inhibit(on(right(3)))
 ...
-cleaner(forward,backward)o([sensor(right(3))]).
+cleaner(forward,backward)([sensor(right(3))]).
 0 : sense(right(3)) : sensor(right(3))
 1 : learn(right) : fetch(forward)
 1 : detect(right(3)) : inhibit(on(right(3)))
@@ -469,13 +429,13 @@ cleaner(forward,backward)o([sensor(right(3))]).
 5 : move(forward) : excite(at(right(4)))
 5 : synchro(detect(right(3)),move(forward)) : sync(detect(right(3)),move(forward))
 6 : move(forward) : excite(at(right(5)))
-6 : ltp(sense(right(3)),recall(forward)) : weight(sense(right(_14222)),recall(forward))o(1)
+6 : ltp(sense(right(3)),recall(forward)) : weight(sense(right(_14222)),recall(forward))(1)
 7 : move(forward) : excite(at(right(6)))
-7 : ltd(sense(right(3)),learn(right)) : weight(sense(right(_38444)),learn(right))o(0)
+7 : ltd(sense(right(3)),learn(right)) : weight(sense(right(_38444)),learn(right))(0)
 8 : move(forward) : excite(at(right(7)))
 9 : move(forward) : inhibit(at(_42122(_42128)))
 9 : move(forward) : effector(stop(forward))
-cleaner(forward,backward)o([sensor(right(3))]).
+cleaner(forward,backward)([sensor(right(3))]).
    
 0 : sense(right(3)) : sensor(right(3))
 1 : detect(right(3)) : inhibit(on(right(3)))
@@ -494,7 +454,7 @@ cleaner(forward,backward)o([sensor(right(3))]).
 8 : move(forward) : excite(at(right(7)))
 9 : move(forward) : inhibit(at(_22894(_22900)))
 9 : move(forward) : effector(stop(forward))
-cleaner(forward,backward)o([sensor(right(2))]).
+cleaner(forward,backward)([sensor(right(2))]).
   
 0 : sense(right(2)) : sensor(right(2))
 1 : detect(right(2)) : inhibit(on(right(2)))
@@ -512,7 +472,7 @@ cleaner(forward,backward)o([sensor(right(2))]).
 8 : move(forward) : excite(at(right(7)))
 9 : move(forward) : inhibit(at(_41294(_41300)))
 9 : move(forward) : effector(stop(forward))
-cleaner(forward,backward)o([sensor(left(2))]).
+cleaner(forward,backward)([sensor(left(2))]).
 0 : sense(left(2)) : sensor(left(2))
 1 : learn(left) : fetch(forward)
 1 : detect(left(2)) : inhibit(on(left(2)))
@@ -535,7 +495,7 @@ cleaner(forward,backward)o([sensor(left(2))]).
 9 : detect(left(2)) : inhibit(on(left(2)))
 9 : detect(left(2)) : inhibit(on(left(2)))
 9 : detect(left(2)) : inhibit(on(left(2)))
-cleaner(forward,backward)o([sensor(left(1))]).
+cleaner(forward,backward)([sensor(left(1))]).
 0 : sense(left(1)) : sensor(left(1))
 1 : learn(left) : fetch(backward)
 1 : detect(left(1)) : inhibit(on(left(1)))
@@ -545,9 +505,9 @@ cleaner(forward,backward)o([sensor(left(1))]).
 3 : move(backward) : excite(at(left(2)))
 3 : synchro(detect(left(1)),move(backward)) : sync(detect(left(1)),move(backward))
 4 : move(backward) : excite(at(left(3)))
-4 : ltp(sense(left(1)),recall(backward)) : weight(sense(left(_37664)),recall(backward))o(1)
+4 : ltp(sense(left(1)),recall(backward)) : weight(sense(left(_37664)),recall(backward))(1)
 5 : move(backward) : excite(at(left(4)))
-5 : ltd(sense(left(1)),learn(left)) : weight(sense(left(_14100)),learn(left))o(0)
+5 : ltd(sense(left(1)),learn(left)) : weight(sense(left(_14100)),learn(left))(0)
 6 : move(backward) : excite(at(left(5)))
 7 : move(backward) : excite(at(left(6)))
 8 : move(backward) : excite(at(left(7)))
@@ -555,5 +515,4 @@ cleaner(forward,backward)o([sensor(left(1))]).
 9 : move(backward) : effector(stop(backward))
 */
 
-:- set_prolog_flag(allow_variable_name_as_functor,false).
 

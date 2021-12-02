@@ -376,7 +376,8 @@ enumerate_m_files(M, Mask,File1):- enumerate_files0(Mask,File1)*->true;enumerate
 %
 enumerate_m_files_mscoped(M, Mask,File1):- 
   findall(t_l:search_first_dir(Dir),
-   (((M\=user,user:file_search_path(M,SP),expand_file_search_path(SP,Dir));((module_property(M, file(File)),directory_file_path(Dir,_,File)))),
+   (((M\=user,user:file_search_path(M,SP),expand_file_search_path(SP,Dir));
+     ((module_property(M, file(File)),directory_file_path(Dir,_,File)))),
    exists_directory(Dir)),List),
   list_to_set(List,Set),
   locally(Set,enumerate_files0(Mask,File1)).

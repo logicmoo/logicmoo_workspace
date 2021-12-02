@@ -3,7 +3,52 @@
 % Version: 1.1, September 2012
 % GNU Lesser General Public License
 % Author: Pei Wang/Pat Hammer/Douglas Miles
+/*
+User's Guide of NAL
+Input/Output Language
+In this demonstration, NAL implements the following formal language, Narsese. The input and output of the system are Narsese judgments.
+           <judgment> ::= [<statement> [frequency-value, confidence-value]]
+          <statement> ::= <relation>(<term>, <term>)
+                        | <compound-statement>
+                        | <term>
+               <term> ::= <word>
+                        | <variable>
+                        | <compound-term>
+                        | <statement>
+           <variable> ::= <independent-variable>
+                        | <dependent-variable>(<independent-variable>*)
+           <relation> ::= inheritance
+                        | similarity
+                        | implication
+                        | equivalence
+                        | instance
+                        | property
+                        | inst_prop                                // instance-property
+ <compound-statement> ::= negation(<statement>)
+                        | conjunction([<statement>, <statement>+]) 
+                        | disjunction([<statement>, <statement>+]) 
+      <compound-term> ::= ext_set([<term>+])                       // extensional set
+                        | int_set([<term>+])                       // intensional set
+                        | ext_intersection([<term>, <term>+])      // extensional intersection
+                        | int_intersection([<term>, <term>+])      // intensional intersection
+                        | ext_difference(<term>, <term>)           // extensional difference
+                        | int_difference(<term>, <term>)           // intensional difference
+                        | product([<term>, <term>+])
+                        | ext_image(<term>, <term>)                // extensional image
+                        | int_image(<term>, <term>)                // intensional image
+The frequency-value is a real number in [0, 1]; the confidence-value a real number in (0, 1).
+User Interface
+The program can be invoked in the following ways:
+revision(J1, J2, J).
+Judgment J is the result of a revision between judgments J1 and J2. The three judgments all have the same statement in them.
+choice(J1, J2, J).
+Judgment J is the result of a choice between judgments J1 and J2.
+inference(J1, J2, J).
+Judgment J is the conclusion derived from judgments J1 and J2 as premises.
+inference(J1, J).
+Judgment J is the conclusion derived from judgment J1 as single premise.
 
+*/
 :- module(nars, [nars_main/1,nars_main/0]).
 
 :- set_module(class(library)).
