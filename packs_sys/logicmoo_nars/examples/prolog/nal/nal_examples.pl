@@ -12,6 +12,8 @@
 
 :- module(nal_examples,[nal_example_test/2]).
 
+:- [library(nars/nars)].
+
 % ----- NAL-1 ----- %
 
 %= revision
@@ -74,7 +76,9 @@ nal_example_test(
 %= inheritance to similarity
 
 nal_example_test(
-  inference([inheritance(swan, robin), [0.9, 0.8]], [inheritance(robin, swan), [0.9, 0.8]], [similarity(swan, robin), T]) ,
+  inference([inheritance(swan, robin), [0.9, 0.8]], 
+            [inheritance(robin, swan), [0.9, 0.8]], 
+            [similarity(swan, robin), T]) ,
  [ T = [0.81, 0.64] ]). 
 
 
@@ -85,7 +89,9 @@ nal_example_test(
  [ T = [1, 0.45] ]). 
 
 nal_example_test(
-  inference([inheritance(sport, competition), [1, 0.9]], [inheritance(chess, competition), [1, 0.9]], [similarity(chess, sport), T]) ,
+  inference([inheritance(sport, competition), [1, 0.9]],  
+            [inheritance(chess, competition), [1, 0.9]], 
+            [similarity(chess, sport), T]) ,
  [ T = [1, 0.45] ]). 
 
 
@@ -384,7 +390,8 @@ nal_example_test(
    R = [inheritance(ext_set([earth]), ext_set([venus, mars])), [0.27, 0.64]] ]). 
 
 nal_example_test(
-  inference([inheritance(int_set([red, green, blue]), int_set([colorful])), [0.9, 0.8]], [inheritance(int_set([purple, green]), int_set([colorful])), [0.7, 0.8]], R) ,
+  inference([inheritance(int_set([red, green, blue]), int_set([colorful])), [0.9, 0.8]], 
+            [inheritance(int_set([purple, green]), int_set([colorful])), [0.7, 0.8]], R) ,
  [ R = [inheritance(int_set([green]), int_set([colorful])), [0.63, 0.64]] ;
    R = [inheritance(int_set([red, blue, purple, green]), int_set([colorful])), [0.97, 0.64]] ;
    R = [inheritance(int_set([red, blue]), int_set([colorful])), [0.271, 0.64]] ]). 

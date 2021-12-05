@@ -61,14 +61,24 @@ narz_ground(G):-  ground(G).
 
 nars_string(Name):- atom(Name) ; string(Name).
 
+
+
+
+
+
+
+
+
 do_nars_example_tests:- 
-  use_module(library('nars/../../examples/prolog/nal_examples'),[nal_example_test/2]),
-  add_history(run_nars_example_tests),
   run_nars_example_tests.
 
 run_nars_example_tests:-
+ make,
+  use_module(library('../examples/prolog/nal/nal_examples'),[nal_example_test/2]),
+  add_history(run_nars_example_tests),
   forall(nal_examples:nal_example_test(Goal, Results),
-         do_nars_example_test(Goal, Results)).
+         take_nal_example_test(Goal, Results)).
+
 
 baseKB:sanity_test:- do_nars_example_tests.
 
@@ -82,31 +92,148 @@ baseKB:feature_test:- run_nars_example_tests.
 @@ text in purple (and bold)@@
 ```
 */
-do_nars_example_test(Goal, ResultsExpected):-   
-  format('~N~n```prolog~nTEST: ?- ~q.~n```',[Goal]),
+%take_nal_example_test(_,_):- make, fail.
+nal_into_prolog:- 
+  make,
+  forall((nal_is_test(Type, Text),
+  Type == into_prolog),
+  nal_do_exec_test(Type,Text)).
+
+
+nal_do_exec_test(_Type,Text):- nal_do_exec_test_text(Text).
+
+nal_do_exec_test_text(Text):-
+  nal_read_clauses(Text,Clauses),
+  nars_exec_ex(in,Clauses).
+
+nars_exec_ex(Clauses):-
+  nars_exec_ex(in,Clauses).
+
+nars_exec_ex(_,[]):-!.
+nars_exec_ex(IO,[C|Clauses]):- !,
+  nars_exec_ex(IO,C),
+  nars_exec_ex(IO,Clauses).
+nars_exec_ex(IO,C):- nal_to_prolog(IO,C,P),!,nars_exec_ex1(IO,P).
+nars_exec_ex(IO,C):- nars_exec_ex1(IO,C).
+
+
+nars_exec_ex1(_,[]):-!.
+nars_exec_ex1(IO,[C|Clauses]):- !,
+  nars_exec_ex1(IO,C),
+  nars_exec_ex1(IO,Clauses).
+nars_exec_ex1(IO,nop(C)):-!,nars_exec_ex1(IO,C).
+nars_exec_ex1(_,nal_in(C,_V3)):-!,nars_exec_ex1(in,C).
+nars_exec_ex1(_,nal_out(C,_V3)):-!,nars_exec_ex1(out,C).
+nars_exec_ex1(_,outputMustContain(C)):- !, nars_exec_ex1(out,C).
+nars_exec_ex1(_,write(C)):- !, nars_exec_ex1(cmt,C).
+%nars_exec_ex1(IO,C):- dmsg(IO=C),fail.
+nars_exec_ex1(_,do_steps(N)):- !, forall(between(1,N,_),nop(inference_step(_))),!.
+nars_exec_ex1(_,expected(C)):- !, nars_exec_ex1(out,C).
+%nars_exec_ex1(IO,task(judgement,C,_,TV,_)):- !, nars_exec_ex1(IO,C).
+nars_exec_ex1(in,C):- assert(nars_db(C)), nop(derive_event(C)),!.
+nars_exec_ex1(_,_).
+
+
+nal_exec_tests:- make,
+  forall((nal_reader:nal_is_test(Type, Text), 
+         Type \== read),
+  nal_do_exec_test(Type,Text)).
+
+
+nal_clauses_to_test(Clauses,Goal,[ResultsExpected]):-
+  nal_clauses_to_test(Clauses,true,Goal,true,ResultsExpected).
+
+nal_clauses_to_test([],Goal,Goal,InOut,InOut):- !.
+nal_clauses_to_test([C|Cs],Goal,PGoal,In,Out):-!,
+  nal_clauses_to_test(C,Goal,MGoal,In,Mid),!,
+  nal_clauses_to_test(Cs,MGoal,PGoal,Mid,Out).
+nal_clauses_to_test(expected(C),Goal,Goal,In,Out):- !,
+  nal_to_prolog(out,C,P),conjoin_op(';',In,P,Out).
+nal_clauses_to_test(outputMustContain(C),Goal,Goal,In,Out):- !,
+  nal_to_prolog(out,C,P),conjoin_op(';',In,P,Out).
+nal_clauses_to_test(nal_out(C,W),Goal,Goal,In,Out):- !,
+  nal_to_prolog(out,nal_out(C,W),P),conjoin(In,P,Out).
+nal_clauses_to_test(nal_in(C,W),Goal,PGoal,InOut,InOut):- !,
+  nal_to_prolog(in,nal_in(C,W),P),conjoin(Goal,P,PGoal).
+nal_clauses_to_test(CMT,Goal,Goal,In,Out):- In\==true, CMT = '$COMMENT'(_,_,_),!,
+  nal_to_prolog(out,CMT,P),conjoin(In,P,Out).
+nal_clauses_to_test(C,Goal,PGoal,InOut,InOut):- nal_to_prolog(in,C,P),conjoin(Goal,P,PGoal),!.
+
+% nal_to_prolog(IO,'$COMMENT'(C,_,_),writeln(C)):- !.
+%nal_to_prolog(IO,'$COMMENT'(_,_,_),true):- !.
+nal_to_prolog(IO,'$COMMENT'(C,_,_),M):- !,nal_to_prolog(IO,write(C),M).
+nal_to_prolog(IO,nal_in(C,_),M):- !,nal_to_prolog(IO,C,M).
+nal_to_prolog(IO,nal_out(C,_),M):- !,nal_to_prolog(IO,C,M).
+nal_to_prolog(IO,task(X,S,T,O,B),M):- \+ ground(O),
+  O = [C,F],
+  ignore(C=1.0),
+  ignore(F=1.0),
+  nal_to_prolog(IO,task(X,S,T,O,B),M).
+nal_to_prolog(IO,task(X,S,T,O,B),M):- var(T), T = present, nal_to_prolog(IO,task(X,S,T,O,B),M).
+nal_to_prolog(IO,task(judgement,S,_,FC,_),O):- append_term(S,FC,M),nal_to_prolog(IO,M,O).
+nal_to_prolog(in,X,nop(X)).
+nal_to_prolog(out,X,nop(expected(X))).
+
+
+take_nal_example_test(Goal, ResultsExpected):-
+  Failed = _,
+  wots(S, ignore((take_nal_example_test_node(Goal, ResultsExpected, Failed)))),
+  (Failed==failed->ansifmt([red],S);ansifmt([green],S)).
+
+take_nal_example_test_node(Goal, [Results;Expected],Failed):- !,
+   take_nal_example_test_node(Goal, [Results],Failed),
+   take_nal_example_test_node(Goal, [Expected],Failed).
+
+take_nal_example_test_node(Goal, ResultsExpected, Failed):-   
+ guess_pretty(take_nal_example_test(Goal, ResultsExpected)),
+ format('~N~n```prolog~nTEST: ?- ~@~n```',[print_tree(Goal)]),
   % term_variables(Goal,Vs),
-  maplist([R]>>format('~NEXPECTED: `~q`',[R]), ResultsExpected),
-  ((call(Goal),narz_check_results(ResultsExpected))
-    -> format('~N~n```diff~n+SUCCESS!~n```',[])
-     ; format('~N~n```diff~n-FAILED!~n```',[])
-     ), !,
-  format('~n~n```prolog',[]),
-  mu:dbug1(ResultsExpected),
-  format('```~n~n',[]).
+  maplist([R]>>format('~NEXPECTED: `~@`',[print_tree(R)]), ResultsExpected),
+  take_nal_example_test_result(Goal, ResultsExpected, Failed).
 
-narz_check_results([R1;R2]):- !, narz_check_results(R1) ; narz_check_results(R2).
-narz_check_results([R1|RS]):- !, narz_check_results(R1), !, narz_check_results(RS).
-narz_check_results([]):-!.
-narz_check_results(R):- call(R),!.
-narz_check_results(R=V):- nars_close_enough(R,V).
+take_nal_example_test_result(Goal, ResultsExpected, Failed):-
+  Failed = _,
+ (( \+ \+ (nars_call_ex(Goal),narz_check_results(ResultsExpected)))
+    -> (format('~N~n```diff~n+SUCCESS!~n```',[]))
+     ; format('~N~n```diff~n-FAILED!~n```',[]),Failed=failed),!,
+  format('~n~n```prolog ',[]),
+  mu:print_tree_nl(ResultsExpected),
+  format('```~n~n',[]),!.
 
-nars_close_enough(R,V):- number(R),number(V),!, RV is abs(R-V), RV < 0.02 .
-nars_close_enough(R,V):- (\+ compound(R) ; \+ compound(V)),!, R==V, !.
+  
+
+
+
+nars_call_ex((X,Y)):- !, nars_call_ex(X), nars_call_ex(Y).
+nars_call_ex((X;Y)):- !, nars_call_ex(X); nars_call_ex(Y).
+%nars_call_ex(X=Y):- !, nars_close_enough(X,Y). %-> true; (print_tree(failure(X=Y)),!,fail).
+nars_call_ex(L):- is_list(L),!, maplist(nars_call_ex,L).
+nars_call_ex(X):- call(X)*-> true ; nop(print_tree_nl(failed_nars_call_ex(X))),fail.
+
+
+narz_check_results(L):- is_list(L),!, maplist(narz_check_results,L).
+narz_check_results((R1;R2)):- !, narz_check_results(R1); narz_check_results(R2).
+narz_check_results((R1,RS)):- !, narz_check_results(R1), narz_check_results(RS).
+narz_check_results(R=V):- !, R=V*->true;nars_close_enough(R,V).
+narz_check_results(X):- call(X)*-> true ; (fail, print_tree(test_failed(X)),fail).
+
+nars_close_enough(R,V):- R=@=V, !.
+nars_close_enough(R,V):- number(R),number(V),!, RV is abs(R-V), RV < 0.03 .
+nars_close_enough(R,V):- (\+ compound(R) ; \+ compound(V)),!, R==V.
 nars_close_enough([R|RT],[V|VT]):- !, nars_close_enough(R,V),nars_close_enough(RT,VT).
 nars_close_enough(R,V):- 
   compound_name_arguments(R,F,RA),
-  compound_name_arguments(V,F,VA),
+  compound_name_arguments(V,F,VA), !,
   maplist(nars_close_enough,RA,VA).
+
+
+
+
+
+
+
+
+
 
 %like to distinguish "eaten by tiger" from "eating tiger" (/, eat, tiger, _) vs. (/, eat, _, tiger)
 %now: (eat /2 tiger) vs. (eat /1 tiger)
@@ -267,7 +394,12 @@ infer(T1, T):- nars_infer(T1, T).
 
 nars_infer(T1, T):-  nars_ctx(Ctx), nars_inference(Ctx, [T1, [1, 0.9]], T).
 
-nars_infer(inheritance(W1, ext_image(ext_image(represent, [nil, inheritance(product([X, T2]), R)]), [nil, W2, W3])), inheritance(W1, ext_image(represent, [nil, X])), [inheritance(ext_image(represent, [nil, Y]), ext_image(ext_image(represent, [nil, inheritance(product([Y, T2]), R)]), [nil, W2, W3])), V]):-
+nars_infer(
+          inheritance(W1, ext_image(ext_image(represent, [nil, inheritance(product([X, T2]), R)]), [nil, W2, W3])), 
+          inheritance(W1, ext_image(represent, [nil, X])), 
+             [inheritance(ext_image(represent, [nil, Y]), 
+                          ext_image(ext_image(represent, [nil, inheritance(product([Y, T2]), R)]), [nil, W2, W3])),
+           V]):-
    narz_f_ind([1, 0.9], [1, 0.9], V), !.
 
 nars_infer(inheritance(W3, ext_image(ext_image(represent, [nil, inheritance(product([T1, X]), R)]), [W1, W2, nil])), inheritance(W3, ext_image(represent, [nil, X])), [inheritance(ext_image(represent, [nil, Y]), ext_image(ext_image(represent, [nil, inheritance(product([T1, Y]), R)]), [W1, W2, nil])), V]):-
@@ -454,9 +586,9 @@ nars_inference(_Ctx, [S, T1], [disjunction(L), T2], [P, T]):-
 %% multi-conditional syllogism
 
 nars_inference(_Ctx, [implication(conjunction(L), C), T1], [M, T2], [implication(P, C), T]):-
- 	nonvar(L), member(M, L), subtract(L, [M], A), A \= [], narz_reduce(conjunction(A), P), narz_f_ded(T1, T2, T).
+ 	nonvar(L), member(M, L), nars_subtract(L, [M], A), A \= [], narz_reduce(conjunction(A), P), narz_f_ded(T1, T2, T).
 nars_inference(_Ctx, [implication(conjunction(L), C), T1], [implication(P, C), T2], [M, T]):-
- 	narz_ground(L), member(M, L), subtract(L, [M], A), A \= [], narz_reduce(conjunction(A), P), narz_f_abd(T1, T2, T).
+ 	narz_ground(L), member(M, L), nars_subtract(L, [M], A), A \= [], narz_reduce(conjunction(A), P), narz_f_abd(T1, T2, T).
 nars_inference(_Ctx, [implication(conjunction(L), C), T1], [M, T2], [S, T]):-
  	S == implication(conjunction([M|L]), C), narz_f_ind(T1, T2, T).
 
@@ -489,26 +621,26 @@ nars_inference(_Ctx, [implication(A, inheritance(M1, P)), T1], [inheritance(M2, 
 nars_inference(_Ctx, [implication(A, inheritance(M1, P)), T1], [inheritance(M2, S), T2], [conjunction([implication(A, inheritance(var(Y, []), P)), inheritance(var(Y, []), S)]), T]):-
  	S \= P, M1 == M2, A \= inheritance(M2, S), narz_f_int(T1, T2, T).
 nars_inference(_Ctx, [conjunction(L1), T1], [inheritance(M, S), T2], [implication(inheritance(Y, S), conjunction([inheritance(Y, P2)|L3])), T]):-
- 	subtract(L1, [inheritance(M, P)], L2), L1 \= L2, S \= P, narz_dependant(P, Y, P2), narz_dependant(L2, Y, L3), narz_f_ind(T1, T2, T).
+ 	nars_subtract(L1, [inheritance(M, P)], L2), L1 \= L2, S \= P, narz_dependant(P, Y, P2), narz_dependant(L2, Y, L3), narz_f_ind(T1, T2, T).
 nars_inference(_Ctx, [conjunction(L1), T1], [inheritance(M, S), T2], [conjunction([inheritance(var(Y, []), S), inheritance(var(Y, []), P)|L2]), T]):-
- 	subtract(L1, [inheritance(M, P)], L2), L1 \= L2, S \= P, narz_f_int(T1, T2, T).
+ 	nars_subtract(L1, [inheritance(M, P)], L2), L1 \= L2, S \= P, narz_f_int(T1, T2, T).
 
 nars_inference(_Ctx, [implication(A, inheritance(P, M1)), T1], [inheritance(S, M2), T2], [implication(conjunction([A, inheritance(P, X)]), inheritance(S, X)), T]):-
  	S \= P, M1 == M2, A \= inheritance(S, M2), narz_f_abd(T1, T2, T).
 nars_inference(_Ctx, [implication(A, inheritance(P, M1)), T1], [inheritance(S, M2), T2], [conjunction([implication(A, inheritance(P, var(Y, []))), inheritance(S, var(Y, []))]), T]):-
  	S \= P, M1 == M2, A \= inheritance(S, M2), narz_f_int(T1, T2, T).
 nars_inference(_Ctx, [conjunction(L1), T1], [inheritance(S, M), T2], [implication(inheritance(S, Y), conjunction([inheritance(P2, Y)|L3])), T]):-
- 	subtract(L1, [inheritance(P, M)], L2), L1 \= L2, S \= P, narz_dependant(P, Y, P2), narz_dependant(L2, Y, L3), narz_f_abd(T1, T2, T).
+ 	nars_subtract(L1, [inheritance(P, M)], L2), L1 \= L2, S \= P, narz_dependant(P, Y, P2), narz_dependant(L2, Y, L3), narz_f_abd(T1, T2, T).
 nars_inference(_Ctx, [conjunction(L1), T1], [inheritance(S, M), T2], [conjunction([inheritance(S, var(Y, [])), inheritance(P, var(Y, []))|L2]), T]):-
- 	subtract(L1, [inheritance(P, M)], L2), L1 \= L2, S \= P, narz_f_int(T1, T2, T).
+ 	nars_subtract(L1, [inheritance(P, M)], L2), L1 \= L2, S \= P, narz_f_int(T1, T2, T).
 
 %% dependant variable elimination
 
 nars_inference(_Ctx, [conjunction(L1), T1], [inheritance(M, S), T2], [C, T]):-
- 	subtract(L1, [inheritance(var(N, D), S)], L2), L1 \= L2,
+ 	nars_subtract(L1, [inheritance(var(N, D), S)], L2), L1 \= L2,
  	replace_var(L2, var(N, D), L3, M), narz_reduce(conjunction(L3), C), narz_f_cnv(T2, T0), narz_f_ana(T1, T0, T).
 nars_inference(_Ctx, [conjunction(L1), T1], [inheritance(S, M), T2], [C, T]):-
- 	subtract(L1, [inheritance(S, var(N, D))], L2), L1 \= L2,
+ 	nars_subtract(L1, [inheritance(S, var(N, D))], L2), L1 \= L2,
  	replace_var(L2, var(N, D), L3, M), narz_reduce(conjunction(L3), C), narz_f_cnv(T2, T0), narz_f_ana(T1, T0, T).
 
 replace_var([], _, [], _).
@@ -719,31 +851,31 @@ narz_reduce(int_intersection([T]), T):-
  	!.
 
 narz_reduce(ext_intersection([ext_intersection(L1), ext_intersection(L2)]), ext_intersection(L)):-
- 	union(L1, L2, L), !.
+ 	nars_union(L1, L2, L), !.
 narz_reduce(ext_intersection([ext_intersection(L1), L2]), ext_intersection(L)):-
- 	union(L1, [L2], L), !.
+ 	nars_union(L1, [L2], L), !.
 narz_reduce(ext_intersection([L1, ext_intersection(L2)]), ext_intersection(L)):-
- 	union([L1], L2, L), !.
+ 	nars_union([L1], L2, L), !.
 narz_reduce(ext_intersection([ext_set(L1), ext_set(L2)]), ext_set(L)):-
  	intersection(L1, L2, L), !.
 narz_reduce(ext_intersection([int_set(L1), int_set(L2)]), int_set(L)):-
- 	union(L1, L2, L), !.
+ 	nars_union(L1, L2, L), !.
 
 narz_reduce(int_intersection([int_intersection(L1), int_intersection(L2)]), int_intersection(L)):-
- 	union(L1, L2, L), !.
+ 	nars_union(L1, L2, L), !.
 narz_reduce(int_intersection([int_intersection(L1), L2]), int_intersection(L)):-
- 	union(L1, [L2], L), !.
+ 	nars_union(L1, [L2], L), !.
 narz_reduce(int_intersection([L1, int_intersection(L2)]), int_intersection(L)):-
- 	union([L1], L2, L), !.
+ 	nars_union([L1], L2, L), !.
 narz_reduce(int_intersection([int_set(L1), int_set(L2)]), int_set(L)):-
  	intersection(L1, L2, L), !.
 narz_reduce(int_intersection([ext_set(L1), ext_set(L2)]), ext_set(L)):-
- 	union(L1, L2, L), !.
+ 	nars_union(L1, L2, L), !.
 
 narz_reduce(ext_difference(ext_set(L1), ext_set(L2)), ext_set(L)):-
- 	subtract(L1, L2, L), !.
+ 	nars_subtract(L1, L2, L), !.
 narz_reduce(int_difference(int_set(L1), int_set(L2)), int_set(L)):-
- 	subtract(L1, L2, L), !.
+ 	nars_subtract(L1, L2, L), !.
 
 narz_reduce(product(product(L), T), product(L1)):-
  	append(L, [T], L1), !.
@@ -762,21 +894,26 @@ narz_reduce(disjunction([T]), T):-
  	!.
 
 narz_reduce(conjunction([conjunction(L1), conjunction(L2)]), conjunction(L)):-
- 	union(L1, L2, L), !.
+ 	nars_union(L1, L2, L), !.
 narz_reduce(conjunction([conjunction(L1), L2]), conjunction(L)):-
- 	union(L1, [L2], L), !.
+ 	nars_union(L1, [L2], L), !.
 narz_reduce(conjunction([L1, conjunction(L2)]), conjunction(L)):-
- 	union([L1], L2, L), !.
+ 	nars_union([L1], L2, L), !.
 
 narz_reduce(disjunction(disjunction(L1), disjunction(L2)), disjunction(L)):-
- 	union(L1, L2, L), !.
+ 	nars_union(L1, L2, L), !.
 narz_reduce(disjunction(disjunction(L1), L2), disjunction(L)):-
- 	union(L1, [L2], L), !.
+ 	nars_union(L1, [L2], L), !.
 narz_reduce(disjunction(L1, disjunction(L2)), disjunction(L)):-
- 	union([L1], L2, L), !.
+ 	nars_union([L1], L2, L), !.
 
 narz_reduce(X, X).
 
+
+%nars_union(X,Y,Z):- (nonvar(X);nonvar(Z)), catch(union(X,Y,Z),_,fail).
+nars_union(X,Y,Z):- catch(union(X,Y,Z),_,fail).
+%nars_subtract(X,Y,Z):- (nonvar(X);nonvar(Z)), catch(subtract(X,Y,Z),_,fail).
+nars_subtract(X,Y,Z):- catch(subtract(X,Y,Z),_,fail).
 
 %%% Argument processing
 
@@ -791,7 +928,7 @@ narz_same_set(L1, L2):-
 
 narz_same([], []).
 narz_same(L, [H|T]):-
- 	member(H, L), subtract(L, [H], L1), narz_same(L1, T).
+ 	member(H, L), nars_subtract(L, [H], L1), narz_same(L1, T).
 
 narz_include(L1, L2):-
  	narz_ground(L2), include1(L1, L2), L1 \== [], L1 \== L2.
@@ -938,6 +1075,9 @@ u_w2c(W, C):-
  	K = 1, C is (W / (W + K)), !.
 
 
+
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %memory.pl
 
@@ -980,6 +1120,10 @@ nars_main(T) :- read_nal(X),
 
 % read_nal(X):- read(X).
 read_nal(X):- nal_read_clause(current_input, X).
+
+:- if( prolog_load_context(reload,false)).
+:- create_heap(belief_events_queue).
+:- endif.
 
 %test:
 %nars_main.

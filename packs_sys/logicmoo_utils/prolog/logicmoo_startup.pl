@@ -1416,7 +1416,8 @@ add_history02(N,A):-
 
 add_history2(X):- assert(histtmp:history_data(X)).
 
-load_history_from_file(File):- 
+load_history_from_file(File):- \+ exists_file(File),!.
+load_history_from_file(File):-
  setup_call_cleanup(
   open(File,read,In), 
    (repeat, read_line_to_string(In,String), (String=end_of_file -> ! ; (string_trim1(String,S),assert_if_new(histtmp:history_data(S)), fail))),

@@ -1304,6 +1304,7 @@ fmt_visible_to_console:-
   stream_property(Where,alias(current_output)),!,
   fmt_visible_to_console(Where).
 
+fmt_visible_to_console(Where):- stream_property(Where,tty(true)),!.
 fmt_visible_to_console(Where):- stream_property(Stderr,file_no(2)), same_streams(Where,Stderr),!.
 fmt_visible_to_console(Where):- stream_property(StdOut,file_no(1)), same_streams(Where,StdOut),!.
 
