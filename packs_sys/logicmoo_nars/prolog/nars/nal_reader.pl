@@ -330,6 +330,14 @@ nal_paren_r --> amw(`)`).
 nal_term_list_white([H|T], Sep) --> nal_term_0(H), ( (Sep,owhite) ->  nal_term_list_white(T, Sep) ; ({T=[]},owhite)).
 nal_term_list_comma([H|T]) --> nal_term(H), ( nal_comma ->  nal_term_list_comma(T) ; {T=[]} ).
 
+builtin_symbol('_').
+builtin_symbol('--').
+builtin_symbol('~').
+builtin_symbol('*').
+builtin_symbol(key_101).
+
+
+nal_rsymbol(S)--> {builtin_symbol(S),name(S,Str)},Str,!.
 nal_rsymbol(E)--> nal_rsymbol([],E).
 nal_rsymbol(Chars,E) --> [C], {notrace(nal_sym_char(C))},!, nal_sym_continue(S), {append(Chars,[C|S],AChars),string_to_atom(AChars,E)},!.
 nal_sym_continue([]) --> nal_peek_symbol_breaker,!.
@@ -342,6 +350,7 @@ nal_peek_symbol_breaker --> dcg_peek(one_blank).
 nal_peek_symbol_breaker --> dcg_peek([C]),{\+ nal_sym_char(C)},!.
 
 nal_sym_char(C):- \+ integer(C),!,char_code(C,D),!,nal_sym_char(D).
+nal_sym_char(C):- [C]=`_`,!.
 nal_sym_char(C):- bx(C =<  32),!,fail.
 %nal_sym_char(44). % allow comma in middle of symbol
 % word is: #"[^\ ]+"   %  unicode string     
@@ -349,44 +358,8 @@ nal_sym_char(C):- nal_never_symbol_char(NeverSymbolList),memberchk(C,NeverSymbol
 %nal_sym_char(C):- nb_current('$maybe_string',t),memberchk(C,`,.:;!%`),!,fail.
 nal_sym_char(_):- !.
 
-nal_never_symbol_char(`";()~'[]!<>``{},=\\^`).
+nal_never_symbol_char(`";()~'[]!<>``{},=.\\^`).
 
-/*
-builtin_symbol('_').
-builtin_symbol('--').
-builtin_symbol('~').
-
-nal_rsymbol(S)--> {builtin_symbol(S),name(S,Str)},Str.
-nal_rsymbol(E)--> nal_rsymbol([],E).
-nal_rsymbol(Chars,E) --> [C], {notrace(nal_sym_char_start(C))},!, nal_sym_continue(S), {append(Chars,[C|S],AChars),string_to_atom(AChars,E)},!.
-nal_sym_continue([]) --> nal_peek_symbol_breaker,!.
-nal_sym_continue([H|T]) --> [H], {nal_sym_char(H)},!, nal_sym_continue(T).
-nal_sym_continue([]) --> [].
-
-nal_sym_char_start(C):- nal_sym_char(C), C\=='_'.
-
-/*
-nal_peek_symbol_breaker --> dcg_peek(`--`).
-nal_peek_symbol_breaker --> dcg_peek(`-`),!,{fail}.
-nal_peek_symbol_breaker --> dcg_peek(`_`),!,{fail}.
-*/
-nal_peek_symbol_breaker --> dcg_peek(one_blank).
-nal_peek_symbol_breaker --> dcg_peek([C]),{\+ nal_sym_char(C)},!.
-
-nal_sym_char(C):- nal_allow_symbol_char(Lst),memberchk(C,Lst),!.
-nal_sym_char(C):- \+ integer(C),!,char_code(C,D),!,nal_sym_char(D).
-nal_sym_char(C):- bx(C =<  32),!,fail.
-%nal_sym_char(44). % allow comma in middle of symbol
-% word is: #"[^\ ]+"   %  unicode string     
-nal_sym_char(C):- nal_never_symbol_char(NeverSymbolList),memberchk(C,NeverSymbolList),!,fail.  % maybe 44 ? nal_comma
-%nal_sym_char(C):- nb_current('$maybe_string',t),memberchk(C,`,.:;!%`),!,fail.
-nal_sym_char(_):- !.
-
-nal_never_symbol_char(`"./;()~'[]!<>``{},=\\^`).
-
-nal_allow_symbol_char(`_`).
-
-*/
 
 nal_rsymbol_cont(Prepend,E) --> nal_sym_continue(S), {append(Prepend,S,AChars),string_to_atom(AChars,E)},!.
 
@@ -428,7 +401,7 @@ nal_dmsg(O):- format('~N'), in_cmt(print_tree_nl(O)).
 amw(A)--> cspace,!,amw(A).
 amw(A)--> A,more_cspace(chspace).
 
-chspace--> `,`,dcg_peek(chspace),!.
+%chspace--> `,`,dcg_peek(chspace),!.
 chspace--> cspace.
 /*
 chspace--> `,`,!.
