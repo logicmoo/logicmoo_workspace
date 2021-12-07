@@ -691,7 +691,7 @@ reduced_wh(AgmtX,X),
 
 /* Verb phrase (less the complements) */
 
-verb(verb(Type,Root,ExtraMods,Voice,Time+fin,Aspect,Neg),Agmt,Type,Voice) --->
+verb(verb(Type,Root,Voice,Time+fin,Aspect,Neg),Agmt,Type,Voice) --->
      % {is_empty_bits(Nil), is_s_all(SAll)},      
    maybe_verb_pre_mods(ExtraMods,_Set,_Mask0,_Mask1),
    verb_form88(ExtraMods,Root0,Time+fin,Agmt,Role),
@@ -719,22 +719,23 @@ verb_form88(_,RootVerb,Tense,Agmt,_Role) --->
 maybe_modal(W,ExtraMods,ModalInfo) ---> {modal_verb_form_aux(W,MODAL1,_,_)},theText80(W),
   {ExtraMods=ModalInfo,ignore(ExtraMods=MODAL1)}.
 
-rest_verb(ExtraMods,aux,have(_),Root,Voice,[perf|Aspect]) ---> verb_form88(ExtraMods,Root0,past+part,_,_), have_vt(ExtraMods,Root0,Root,Voice,Aspect).
-rest_verb(ExtraMods,aux,be(_),Root,Voice,Aspect) ---> verb_form88(ExtraMods,Root0,Tense0,_,_), be_vt(Tense0,Root0,Root,Voice,Aspect).
+rest_verb(ExtraMods,aux,have(_),Root,Voice,[perf|Aspect]) ---> verb_form88(ExtraMods1,Root0,past+part,_,_), have_vt(ExtraMods2,Root0,Root,Voice,Aspect),{append(ExtraMods1,ExtraMods2,ExtraMods)}.
+rest_verb(ExtraMods,aux,be(_),Root,Voice,Aspect) ---> verb_form88(ExtraMods1,Root0,Tense0,_,_), be_vt(ExtraMods2,Tense0,Root0,Root,Voice,Aspect),{append(ExtraMods1,ExtraMods2,ExtraMods)}.
 rest_verb(ExtraMods,aux,do(_),Root,active,[]) ---> verb_form88(ExtraMods,Root,inf,_,_).
 %rest_verb(ExtraMods,aux,can,Root,active,[]) ---> verb_form88(ExtraMods,Root,inf,_,_).
 %rest_verb(ExtraMods,aux,will,Root,active,[]) ---> verb_form88(ExtraMods,Root,inf,_,_).
-rest_verb(ExtraMods,main,Root,Root,active,[]) ---> noText.
+rest_verb([],main,Root,Root,active,[]) ---> noText.
 
 
 % BE
 have_vt(ExtraMods,be(_),Root,Voice,Aspect) --->
-   verb_form88(ExtraMods,Root0,Tense0,_,_),
-   be_vt(Tense0,Root0,Root,Voice,Aspect).
-have_vt(ExtraMods,Root,Root,active,[]) ---> noText.
+   verb_form88(ExtraMods1,Root0,Tense0,_,_),
+   be_vt(ExtraMods2,Tense0,Root0,Root,Voice,Aspect),
+   {append(ExtraMods1,ExtraMods2,ExtraMods)}.
+have_vt([],Root,Root,active,[]) ---> noText.
 
-be_vt(past+part,Root,Root,passive,[]) ---> noText.
-be_vt(pres+part,Root0,Root,Voice,[prog]) --->
+be_vt([],past+part,Root,Root,passive,[]) ---> noText.
+be_vt(ExtraMods,pres+part,Root0,Root,Voice,[prog]) --->
    passive_vt(ExtraMods,Root0,Root,Voice).
 
 % BE
