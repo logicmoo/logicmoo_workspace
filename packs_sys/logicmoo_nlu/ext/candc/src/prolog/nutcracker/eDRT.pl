@@ -1,13 +1,14 @@
 
+% eDRT
 /*========================================================================
    File Search Paths
 ========================================================================*/
-
-file_search_path(semlib,     'src/prolog/lib').
-file_search_path(nutcracker, 'src/prolog/nutcracker').
-file_search_path(boxer,      'src/prolog/boxer').
-file_search_path(knowledge,  'src/prolog/boxer/knowledge').
-
+/*
+file_search_path(semlib,     candc('src/prolog/lib')).
+file_search_path(nutcracker, candc('src/prolog/nutcracker')).
+file_search_path(boxer,      candc('src/prolog/boxer')).
+file_search_path(knowledge,  candc('src/prolog/boxer/knowledge')).
+*/
 /*========================================================================
    Load other libraries
 ========================================================================*/
@@ -15,7 +16,7 @@ file_search_path(knowledge,  'src/prolog/boxer/knowledge').
 :- use_module(library(lists),[select/3,append/3]).
 :- use_module(boxer(slashes)).
 :- use_module(boxer(printDrs),[printDrs/2]).
-:- use_module(nutcracker(callInference),[callTPandMB/7]).
+:- use_module(nutcracker(callInference),[callTPandMB/8]).
 :- use_module(semlib(options),[candc_option/2,parseOptions/2,setOption/3,
                                showOptions/1,setDefaultOptions/1]).
 
@@ -107,6 +108,7 @@ example(42, [a,man,smokes,slowly,'.']).
 example(43, [every,man,smokes,slowly,'.']).
 example(44, [mia,saw,a,man,slowly,'.']).
 example(45, [every,woman,saw,a,man,slowly,'.']).
+% example(46, [lou,and,andy,saw,a,woman,who,smokes,'.']).
 
 example(101,[smokes,mia,'.']).
 example(102,[mia,saw,every,man,'.']).
@@ -284,7 +286,8 @@ inference(FOL):-
 
    BK = and(A1,and(A2,and(A3,and(A4,and(A5,A6))))),
    F = and(BK,FOL),
-   callTPandMB([],not(F),F,1,MaxDomSize,Model,Engine),
+   absolute_file_name(candc('.'),Dir),
+   callTPandMB(Dir,[],not(F),F,1,MaxDomSize,Model,Engine),
 
    write(engine:Engine),nl,
    printModel(Model,user_output),nl.

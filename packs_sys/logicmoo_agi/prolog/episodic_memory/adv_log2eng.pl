@@ -199,7 +199,7 @@ logic2eng(Obj, HWestFromTo_At, [ Ago | Info]):-
 logic2eng( Obj, ~(Type), ['(', 'logically', 'not', '(', Out, '))']):- must_mw1(logic2eng(Obj, Type, Out)), !.
 
 logic2eng(_Context, time_passes(Agent), ['Time passes for', Agent, '']).
-logic2eng(_Context, attempts(Agent, Doing), [anglify(Agent, Agent), 'attempts to', anglify(Agent, Doing)]).
+logic2eng(_Context, attempts(Agent, Doing), [anglify(Agent, Agent), 'attempts to', anglify(Agent, Doing)]):- make.
 logic2eng(Context, act3('go__dir',Agent,[ How, Dir]), [ How, Dir]):- Context=Agent.
 logic2eng(_Context,act3('go__dir',Agent,[ How, Dir]), [ Agent, How, Dir]).
 logic2eng(_Context, Doing, [Agent, does, Did|More]):- is_type_functor(action, Doing), Doing=..[Did, Agent|More].
@@ -289,8 +289,8 @@ logic2eng(_Agent, memories(Object, PropList), ['\n\n', the(Object), ' remembers:
 logic2eng(_Agent, perceptq(Object, PropList), ['\n\n', the(Object), ' notices:\n'|English] ) :-
  list2eng([', '=', \n'], Object, PropList, English).
 
-logic2eng(_Context, event3('depart', [ In, Actor, Where], [How, Dir]), [ Actor, was, In, Where, but, then, ing(How), Dir] ) :- !.
-logic2eng(_Context, event3('arrive', [ In, Actor, Where], [How, Dir]), [ Actor, came, ing(How), Dir, In, Where] ) :- !.
+logic2eng(_Context, event3('depart', [ In, Actor, Where], [How, Dir]), [ Actor, was, In, Where, but, then, did, How, Dir] ) :- !.
+logic2eng(_Context, event3('arrive', [ In, Actor, Where], [How, Dir]), [ Actor, came, by,' "' , ing(How),'" ' , Dir, In, Where] ) :- !.
 
 logic2eng(Context, did(Action
  ), ['did happen: '|English] ) :- !, logic2eng(Context, Action, English ).
@@ -458,7 +458,8 @@ logic2eng_now(Obj, [Prop|Tail], Text) :- nonvar(Prop), !,
  append_if_new(Text1, Text2, Text))), !.
 logic2eng_now(A,B,C):- logic2eng(A,B,C),!.
 
-:- thread_local(tl_loop:in_logic2english/1).
+:- thread_local(tl_loop:(in_logic2english/1)).
+
 logic2english(_Doer, Logic, Text):- atomic(Logic), !, Text=Logic, !.
 logic2english(_Doer, Logic, Text):- \+ \+ tl_loop:in_logic2english(Logic), !, term_to_atom(Logic, Text).
 logic2english( Doer, Logic, Text):- locally(tl_loop:in_logic2english(Logic),

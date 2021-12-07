@@ -11,7 +11,7 @@ security_of(_Agent, wizard) :- true. % Potential to really muck up game.
 
 extra.
 
-:- ensure_loaded('poor_bugger.pl').
+:- ensure_loaded(library(logicmoo_utils)).
 :- use_module('adv_io.pl').
 :- ensure_loaded('adv_util.pl').
 :- ensure_loaded('adv_debug.pl').

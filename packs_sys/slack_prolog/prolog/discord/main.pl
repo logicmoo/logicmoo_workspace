@@ -25,7 +25,7 @@ find_token:- getenv('DISCORD_API_TOKEN',Was), asserta(tmp:discord_token(Was)), !
 find_token:- expand_file_name('~/.discord_auth.pl',[X]), exists_file(X), consult(X), !.
 
 find_token_or_throw:- find_token,!.
-find_token_or_throw:- find_token:- throw(missing(tmp:discord_token(_))).
+find_token_or_throw:- throw(missing(tmp:discord_token(_))).
 
 :- find_token.
 

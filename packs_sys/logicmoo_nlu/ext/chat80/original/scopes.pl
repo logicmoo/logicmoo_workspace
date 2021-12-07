@@ -25,19 +25,13 @@
 
 commbine(if-then,_,_,LHSB,RHSB,LHSB=>RHSB).
 commbine(true-if,_,_,LHSB,RHSB,RHSB=>LHSB).
+commbine(Preds,_,_,LHSB,RHSB,cond_pred80(Preds,LHSB,RHSB)).
 
 clausify80(question80(V0, P),OUT) :- 
   clausify80_qa(V0,P,V,B),!,
   OUT = (answer80(V):-B).
 
-clausify80(assertion80(cond_pred(IF,LHSP,RHSP)),OUT) :- 
- clausify80_qa([],LHSP,LHSV,LHSB),
- clausify80_qa([],RHSP,RHSV,RHSB),
- nop(ignore(LHSV=RHSV)),
- commbine(IF,LHSP,RHSP,LHSB,RHSB,OUT),!.
 
-
- 
 clausify80(assertion80(P),OUT) :- 
   clausify80_qa([],P,V,B),!,
   OUT = (answer80(V):-B).
@@ -89,6 +83,12 @@ push_pull_variables(A,[],[L|LL],AVs):- subst(A,L,[],AVs),!,push_pull_variables(A
 push_pull_variables(A,[V|Vs],L,AVs):- contains_var(V,A), !, push_pull_variables(A,Vs,L,AVs).
 push_pull_variables(A,[V|Vs],L,AVs):- push_pull_variables(A:V,Vs,L,AVs).
  
+
+clausify80_qab(V0,cond_pred(IF,LHSP,RHSP),V2,OUT) :- 
+ clausify80_qa(V0,LHSP,V1,LHSB),
+ clausify80_qa(V1,RHSP,V2,RHSB),
+ commbine(IF,LHSP,RHSP,LHSB,RHSB,OUT),!.
+
 clausify80_qab(V0,P,V,B):-
    quantify(P, Quants, [], R0),
    split_quants(question80(V0), Quants, HQuants, [], BQuants, []),

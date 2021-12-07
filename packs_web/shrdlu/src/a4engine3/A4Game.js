@@ -866,9 +866,9 @@ var A4Game = /** @class */ (function () {
                     var ty = Math.floor(mouse_y / this.tileHeight);
                     var vr = map.visibilityRegion(tx, ty);
                     //  map.drawRegion(mapx, mapy, this.zoom, screen_width, screen_height, vr, this);							 
-                    console.log("map.drawRegion(" + mapx + ", " + mapy + ", " + this.zoom + ", " + screen_width + ", " + screen_height + ", " + vr + ", this);");
+                    console.log("map.drawRegion(".concat(mapx, ", ").concat(mapy, ", ").concat(this.zoom, ", ").concat(screen_width, ", ").concat(screen_height, ", ").concat(vr, ", this);"));
                 }
-                console.log("mouse_x/y= " + (mouse_x - this.currentPlayer.x) + "/" + (mouse_y - this.currentPlayer.y) + " = " + button + " ");
+                console.log("mouse_x/y= ".concat(mouse_x - this.currentPlayer.x, "/").concat(mouse_y - this.currentPlayer.y, " = ").concat(button, " "));
             }
         }
         if (mouse_x >= PIXEL_SIZE * 8 * 27 &&

@@ -159,14 +159,20 @@ baseKB:agent_call_command_now(Agent,CMD  ):- \+ where_atloc(Agent,_),!, baseKB:a
 baseKB:agent_call_command_now(Agent,CMD  ):- where_atloc(Agent,Where),
    % start event
    must(raise_location_event(Where,actNotice(reciever,begin(Agent,CMD)))),
-   (call(on_x_debug(baseKB:agent_call_command_now_2(Agent,CMD)) ->
+   (call(/*on_x_debug*/(baseKB:agent_call_command_now_2(Agent,CMD)) ->
    % event done
      send_command_completed_message(Agent,Where,done,CMD);
    % event fail
      send_command_completed_message(Agent,Where,failed,CMD))),!.
 
-baseKB:agent_call_command_now_2(Agent,CMD):- loop_check((baseKB:agent_call_command_now_3(Agent,CMD)),dmsg(looped(baseKB:agent_call_command_now_2(Agent,CMD)))).
-baseKB:agent_call_command_now_3(Agent,CMD):-
+baseKB:agent_call_command_now_2(Agent,CMD):- 
+  loop_check((baseKB:agent_call_command_now_3(Agent,CMD)),
+   dmsg(looped(baseKB:agent_call_command_now_2(Agent,CMD)))).
+
+baseKB:agent_call_command_now_3(Agent,CMD):- 
+  once(baseKB:agent_call_command_now_4(Agent,CMD)).
+
+baseKB:agent_call_command_now_4(Agent,CMD):-
    with_agent(Agent,
      locally(t_l:side_effect_ok,
      locally(t_l:agent_current_action(Agent,CMD),

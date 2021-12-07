@@ -125,10 +125,10 @@ nars_exec_ex1(IO,nop(C)):-!,nars_exec_ex1(IO,C).
 nars_exec_ex1(_,nal_in(C,_V3)):-!,nars_exec_ex1(in,C).
 nars_exec_ex1(_,nal_out(C,_V3)):-!,nars_exec_ex1(out,C).
 nars_exec_ex1(_,outputMustContain(C)):- !, nars_exec_ex1(out,C).
-nars_exec_ex1(_,write(C)):- !, nars_exec_ex1(cmt,C).
-%nars_exec_ex1(IO,C):- dmsg(IO=C),fail.
-nars_exec_ex1(_,do_steps(N)):- !, forall(between(1,N,_),nop(inference_step(_))),!.
 nars_exec_ex1(_,expected(C)):- !, nars_exec_ex1(out,C).
+nars_exec_ex1(_,write(C)):- !, nars_exec_ex1(cmt,C).
+nars_exec_ex1(IO,C):- dmsg(IO=C),fail.
+nars_exec_ex1(_,do_steps(N)):- !, forall(between(1,N,_),nop(inference_step(_))),!.
 %nars_exec_ex1(IO,task(judgement,C,_,TV,_)):- !, nars_exec_ex1(IO,C).
 nars_exec_ex1(in,C):- assert(nars_db(C)), nop(derive_event(C)),!.
 nars_exec_ex1(_,_).

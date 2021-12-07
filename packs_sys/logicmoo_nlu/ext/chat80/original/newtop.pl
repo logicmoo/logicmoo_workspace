@@ -582,7 +582,8 @@ sent_to_prelogic(S0,S) :-
    i_sentence(S0,S1),
    clausify80(S1,S2),
    simplify80(S2,S3),
-   simplify80(S3,S).
+   simplify80(S3,S4),
+   reduce1(S4,S).
 
 %reduce1(P,P):-!.
 reduce1(P,Q):- \+ compound(P),!, Q=P.
@@ -590,8 +591,18 @@ reduce1((P,Q),PQ):- P == Q,!,reduce1(P,PQ).
 
 reduce1((P,Q),PQ):- '`'(true) == Q,!,reduce1(P,PQ).
 reduce1((Q,P),PQ):- '`'(true) == Q,!,reduce1(P,PQ).
+reduce1((P,Q),PQ):- (true) == Q,!,reduce1(P,PQ).
+reduce1((Q,P),PQ):- (true) == Q,!,reduce1(P,PQ).
+
+reduce1('&'(Q,P),PQ):- reduce1((Q,P),PQ).
+
+reduce1(np_head(X,generic(Generic6),[adj(ace_var(self,Name))],A),O):- var(Generic6),
+  reduce1(resultFn(X,(ti(A,X),ace_var(X,Name))),O).
 
 reduce1(qualifiedBy(X,P,S),R):- qualifiedBy_LF(reduce1,X,P,S,R),!.
+
+reduce1('`'(A),R):- reduce1(A,R).
+reduce1(ace_var(C,N),true):- var(C),nonvar(N),C='$VAR'(N),!.
 
 %reduce1(Ex^(ti(Type,Ex1),subsumed_by(Ex2,Inst)),Ex^(ti(Type,Inst)&Ex=Inst)):- Ex==Ex1, Ex1==Ex2,!.
 reduce1(Ex^(exceeds(Value1, Ex1) & exceeds(Value2, Ex2)),exceeds(Value2, Value1)):- Ex==Ex1, Ex1==Ex2,!.
@@ -605,9 +616,10 @@ reduce1(P,Q):- compound_name_arguments(P,F,A),
 clausify_simplify80(QT,Plan):- clausify80(QT,UE),once((simplify80(UE,Query),qplan(Query,Plan))).
 
 simplify80(C,C0):-var(C),dmsg(var_simplify(C,C0)),!,C=C0.
-simplify80(C,(P:-R)) :- !,
+simplify80(C,(P:-RR)) :- !,
    unequalise(C,(P:-Q)),
-   simplify80(Q,R,true).
+   simplify80(Q,R,true),
+   reduce1(R,RR).
 simplify80(C,C0,C1):-var(C),dmsg(var_simplify(C,C0,C1)),fail.
 simplify80(C,C,R):-var(C),!,R=C.
 
@@ -618,6 +630,9 @@ simplify80(setOf(X,P0,S),R,R0) :- !,
 simplify80(P,R,R0):-
   reduce1(P,Q)-> P\==Q, !,
   simplify80(Q,R,R0).
+simplify80(R,P,R0):-
+  reduce1(P,Q)-> P\==Q, !,
+  simplify80(R,Q,R0).
 
 simplify80((P,Q),R,R0) :-
    simplify80(Q,R1,R0),

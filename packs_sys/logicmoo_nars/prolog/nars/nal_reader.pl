@@ -105,33 +105,30 @@
 
 
 nal_task(S)--> chspace,!,nal_task(S),!.
-
-nal_task(OUT)--> nal_task(X,S,T,O,B),!,{TASK=task(X,S,T,O,B)},
+nal_task(OUT)--> nal_task_0(TASK),
    (nal_three_vals(V3) -> {OUT = nal_in(TASK,V3)} ; {OUT = TASK}).
 
-nal_task_no_v3(nal_task(X,S,T,O,B))--> nal_task(X,S,T,O,B),!.
-
-nal_task(X,S,T,O,B) --> optional(B, nal_budget),!, nal_sentence(X,S,T,O).  % task to be processed 
+nal_task_0(nal_task(X,S,T,O,B)) --> optional(B, nal_budget),!, nal_sentence(X,S,T,O).  % task to be processed 
 
 
 nal_sentence(X,S,T,O)--> nal_statement(S), nal_post_statement(X,T,O).
 
 nal_post_statement(X,T,O)--> 
-          /*nal_statement(S),*/ nal_o(`.` ,X, judgement)-> optional(T,nal_tense)-> optional(O,nal_truth),!   % judgement to be absorbed into beliefs 
+          /*nal_statement(S),*/ nal_o(`.` ,X, judgement)-> optional(T,nal_tense)-> optional(O,nal_truth),!      % judgement to be absorbed into beliefs 
         ; /*nal_statement(S),*/ nal_o(`?` ,X, question_truth)-> optional(T,nal_tense)-> optional(O,nal_truth),! % question on truth_value to be answered 
-        ; /*nal_statement(S),*/ nal_o(`!` ,X, goal)-> optional(T,nal_tense)-> optional(O,nal_desire)             % goal to be realized by operations 
-        ; /*nal_statement(S),*/ nal_o(`@` ,X, question_desire)-> optional(T,nal_tense)-> optional(O,nal_desire)       % question on desire_value to be answered 
+        ; /*nal_statement(S),*/ nal_o(`!` ,X, goal)-> optional(T,nal_tense)-> optional(O,nal_desire)            % goal to be realized by operations 
+        ; /*nal_statement(S),*/ nal_o(`@` ,X, question_desire)-> optional(T,nal_tense)-> optional(O,nal_desire) % question on desire_value to be answered 
         .
 
 % nal_statement(nal_word(S))--> nal_word(S). 
 nal_statement(S)--> amw(nal_statement_0(S)),!.
 nal_statement_0(S)--> cwhite,nal_statement_0(S).
 nal_statement_0(S)--> 
-        amw(`<`) ,!, nal_term(A), nal_copula(R), nal_term(B), amw(`>`) ,   {S=..[R,A,B]}   % two, terms related to each other 
-      ;  nal_l_paren, `^` , nal_term_list_comma(L), nal_paren_r,       {S= exec(L)}            % an operation to be executed 
-      ;  nal_l_paren, nal_term(A), nal_copula(R), nal_term(B), nal_paren_r,  {S=..[R,A,B]}       % two, terms related to each other, new notation 
-      ;  nal_word(A), nal_l_paren, nal_term_list_comma(L), nal_paren_r,    {S= exec([A|L])}        % an operation to be executed, new notation 
-      ;  nal_term_1(X),             {S= nal_named_statement(X)}                       % a, term, can name a statement(S) 
+        amw(`<`) ,!, nal_term(A), nal_copula(R), nal_term(B), amw(`>`) ,   {S=..[R,A,B]}   % two terms related to each other 
+      ;  nal_l_paren, `^` , nal_term_list_comma(L), nal_paren_r,       {S= exec(L)}        % an operation to be executed 
+      ;  nal_l_paren, nal_term(A), nal_copula(R), nal_term(B), nal_paren_r,  {S=..[R,A,B]} % two terms related to each other, new notation 
+      ;  nal_word(A), nal_l_paren, nal_term_list_comma(L), nal_paren_r,    {S= exec([A|L])}% an operation to be executed, new notation 
+      ;  nal_term_1(X),             {S= nal_named_statement(X)}                       % a term can name a statement(S) 
       .
 %nal_statement_0(S)-->nal_rsymbol(S).
 
@@ -148,23 +145,17 @@ nal_copula(X) -->
          ;  nal_o(`<=>` ,X,                          equiv )
          ;  nal_o(`</>` ,X,                          predictive_equiv )
          ;  nal_o(`<|>` ,X,                          concurrent_equiv )
-         ;  nal_o(`=>` ,X,                           unknown_impl )
+         ;  nal_o(`=>` ,X,                           unknown_implication )% dmiles added
+         ;  nal_o(`|-` ,X,                           prolog_implication ) % dmiles added
          .
 
 nal_term(N) --> nal_term_old(O), {old_to_new(O,N)}.
 nal_term_old(S)
        --> nal_word(S)                         % an atomic constant, term,         
         ;  nal_variable(S)                     % an atomic variable, term, 
-        ;  nal_compound_term(S)                % a, term, with internal structure 
-        ;  nal_statement(S)                    % a statement can serve as a, term, 
-        ;  odd_term(S)                    % a statement can serve as a, term, 
+        ;  nal_compound_term(S)                % a term with internal structure 
+        ;  nal_statement(S)                    % a statement can serve as a term, 
         .
-
-
-odd_term([H|T])--> `(`, nal_rsymbol(H),!,odd_term_cont(T).
-
-odd_term_cont([])--> `)`,!.
-odd_term_cont([H|T])--> nal_comma, nal_term(H),!,odd_term_cont(T).
 
 
 nal_term_0(N) --> nal_term_0_old(O), {old_to_new(O,N)}.
@@ -263,7 +254,7 @@ nal_tense('t'(X)) --> `:`, nal_term_1(X), `:`.
 % Desire is same format of Truth, but different interpretations 
 nal_desire(D)-->nal_truth(D).									
 % Truth is two numbers in [0,1]x(0,1) 
-nal_truth([F,C])--> `%`, !, nal_frequency(F), optional((`;`, nal_confidence(C))), `%`,!.	                
+nal_truth([F,C])--> `%`, !, nal_frequency(F), optional((`;`, nal_confidence(C))), optional(`%`),!.	                
 nal_truth([F,C])--> `{`, dcg_basics:number(F),!,{is_float_0_1(F)}, chspace, dcg_basics:number(C),{is_float_0_1(F)},`}`,!.
 nal_truth([F,C])--> `Truth:`,read_nal_expected_truth(F,C).
 % Budget is three numbers in optional(O,0,1]x(0,1)x[0,1] 
@@ -440,8 +431,8 @@ nal_file_element('oneAnswer'(O) ) --> `' Answer `, read_string_until(Str,(`{`,eo
 nal_file_element(Comment) --> nal_comment_expr(Comment),!.
 
 nal_file_element(N=V          ) -->  `*`, nal_word(N), amw(`=`), nal_term(V).
-nal_file_element(nal_in(H,V3))  -->  `IN:`,   nal_task_no_v3(H), optional(nal_three_vals(V3)).
-nal_file_element(nal_out(H,V3)) -->  `OUT:`,  nal_task_no_v3(H), optional(nal_three_vals(V3)).
+nal_file_element(nal_in(H,V3))  -->  `IN:`,   nal_task_0(H), optional(nal_three_vals(V3)).
+nal_file_element(nal_out(H,V3)) -->  `OUT:`,  nal_task_0(H), optional(nal_three_vals(V3)).
 % standard
 nal_file_element(do_steps(N)) --> dcg_basics:number(N),!.
 nal_file_element(H) --> nal_task(H),!.
@@ -1188,8 +1179,7 @@ nal_is_test(read,X):-
 
 
 
-nal_is_test(read,X):-
- atomic_list_concat(List,'\n',"
+nal_is_test(read,X):-atomic_list_concat(List,'\n',"
   ''outputMustContain('')
   ''outputMustContain('(&/,(^go-to,{t003}),(^pick,{t002}),(^go-to,{t001}),(^open,{t001}))! %1.00;0.43%')
   ''outputMustContain('(^go-to,{t001})! %1.00;0.81%')
@@ -1344,12 +1334,43 @@ nal_is_test(read,X):-
 <Tom {-- (/, taller_than, _, boy)>?
 (--, <David {-- (/, taller_than, {Tom}, _)>).
 <Karl {-- (/, taller_than, {Tom}, _)>.
- <(~,swimmer, swan) --> bird>?
- OUT: <(~,swimmer, swan) --> bird>. %0.10;0.73%
- <(|, boy, girl) --> youth>. %0.90%
- <(~, boy, girl) --> [strong]>. %0.90%
- <(&&,<$x --> flyer>,<$x --> [chirping]>, <(*, $x, worms) --> food>) ==> <$x --> bird>>.
+<(~,swimmer, swan) --> bird>?
+OUT: <(~,swimmer, swan) --> bird>. %0.10;0.73%
+<(|, boy, girl) --> youth>. %0.90%
+<(~, boy, girl) --> [strong]>. %0.90%
+<(&&,<$x --> flyer>,<$x --> [chirping]>, <(*, $x, worms) --> food>) ==> <$x --> bird>>.
 IN: <(*, John, key_101) --> hold>. :/:
 
+''outputMustContain('<bird <-> swan>. %0.10')
 
-    nars hears a boom"),member(X,List),X\=="",X\==''.
+nars hears a boom"),member(X,List),X\=="",X\==''.
+
+
+nal_is_test(exec,"'********** conversions between inheritance and similarity
+
+'Swan is a type of bird. 
+<swan --> bird>. 
+
+'Bird is not a type of swan. 
+<bird --> swan>. %0.10% 
+
+1
+
+'Bird is different from swan.  
+''outputMustContain('<bird <-> swan>.')
+''outputMustContain('<bird <-> swan>. %0.10')
+''outputMustContain('<bird <-> swan>. %0.10;0.81%')
+
+").
+
+nal_is_test(read,"
+<{a, b} |- (&/,a,b)>.").
+
+nal_is_test(read,"
+<{a, b, after(a,b)} |- <a =/> b>>.").
+
+nal_is_test(read,"
+<{ b! , <a =/> b>} |- a! >").
+
+
+% {Event a., Implication <a =/> b>.} |- Event b.

@@ -342,10 +342,20 @@ simplify80(C,(P:-R)) :- !,
 
 simplify80(C,C0,C1):-var(C),dmsg(var_simplify(C,C0,C1)),fail.
 simplify80(C,C,R):-var(C),!,R=C.
+
+simplify80('`'(A),B,R):-!,simplify80(B,A,R).
+simplify80(A,'`'(A),R):-!,simplify80(B,A,R).
+
+simplify80(R,ace_var(C,N),R):- var(C),nonvar(N),C='$VAR'(N),!.
+simplify80(ace_var(C,N),R,R):- var(C),nonvar(N),C='$VAR'(N),!.
+
 simplify80(setof(X,P0,S),R,R0) :- !,
    simplify80(P0,P,true),
    revand(R0,setof(X,P,S),R).
 simplify80((P,Q),R,R0) :-
+   simplify80(Q,R1,R0),
+   simplify80(P,R,R1).
+simplify80((P&Q),R,R0) :-
    simplify80(Q,R1,R0),
    simplify80(P,R,R1).
 simplify80(true,R,R) :- !.

@@ -192,6 +192,7 @@ axiom_Recalc_e( attempts(Agent, act3('go__obj',Agent,[ Walk, Object])), RECALC) 
 % ==============
 %  GOTO PANTRY
 % ==============
+% X1 goes by action1ing (A1) to a place X2 
 aXiom_p1( attempts(Agent, act3('go__loc',Agent,[ _Walk, There]))) ==>> % go some room
   has_rel(fn(exit, _), There),
   eVent(Agent, make_true(Agent, h(spatial, in, Agent, There))).
