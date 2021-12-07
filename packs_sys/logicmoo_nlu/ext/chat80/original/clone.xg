@@ -708,9 +708,9 @@ neg_modal_opt1(ExtraMods,aux+_,negP(ExtraMods)) ---> theText80(not).
 neg_modal_opt1(ExtraMods,_,posP(ExtraMods)) ---> noText .
 
 verb_form88(ExtraMods,RootVerb,Tense,Agmt,Role) --->
-   maybe_modal(W,[],ModalInfo),!,
-   verb_form88(ExtraMods,RootVerb,Tense,Agmt,Role),
-  {maybe_apply_modal(W,ExtraMods,ModalInfo,RootVerb)}.
+   maybe_modal(Tense2,[],ExtraMods1),!,
+   verb_form88(ExtraMods2,RootVerb,Tense,Agmt,Role),
+  {append(ExtraMods1,ExtraMods2,ExtraMods),ignore(Tense2=Tense)}.
 verb_form88([],RootVerb,Tense,Agmt,_Role) --->
    theText80_W2(W,L),
    {verb_form_wlex(L,W,RootVerb,Tense,Agmt)}.
