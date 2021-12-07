@@ -322,6 +322,7 @@ avoided_verb(A):- clause(verb_form_aux(A,_,_,_),true).
 modal_verb_form_aux(shall,will,pres+fin,3+sg).
 modal_verb_form_aux(will,will,pres+fin,3+sg).
 modal_verb_form_aux(would,will,past+fin,_).
+modal_verb_form_aux(wont,[will,not],past+fin,_).
 modal_verb_form_aux(should,should,pres+fin,3+sg).
 modal_verb_form_aux(must,should,pres+fin,3+sg).
 modal_verb_form_aux(may,might,pres+fin,3+sg).
@@ -329,6 +330,8 @@ modal_verb_form_aux(might,might,pres+fin,3+sg).
 modal_verb_form_aux(possibly,can,pres+fin,3+sg).
 modal_verb_form_aux(could,can,past+fin,_).
 modal_verb_form_aux(can,can,pres+fin,3+sg).
+modal_verb_form_aux(cannot,[can,not],pres+fin,3+sg).
+%modal_verb_form_aux(not,not,_+_,_+_).
 
 maybe_apply_modal(_W,Modal9,_ModalInfo,RootVerb):- 
    ignore((compound(RootVerb),
@@ -411,7 +414,8 @@ adj_lex(African,Restr):-  adj_db(chat80,African,Restr).
 
 expands_pos(Var,O):- var(Var), !, fail, O = Var.
 expands_pos(List,O):- is_list(List),!,member(E,List),expands_pos(E,O).
-expands_pos(I,O):- atom(I), !, O= pos(I).
+expands_pos(I,pos(O)):- atom(I),atom_concat(L,'_',I), !, freeze(O,(atom(O),atom_concat(L,_,O))).
+expands_pos(I,pos(I)):- atom(I), !.
 expands_pos(A;B,O):-!, expands_pos(A,O);expands_pos(B,O).
 
 match_pos(L,L):-!.

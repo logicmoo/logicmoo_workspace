@@ -81,7 +81,7 @@ i_sentence2(decl(S),assertion80(P)) :- !, i_s(S,P).
 i_sentence2(whq(X,S),question80([X],P)) :- !, i_s(S,P).
 i_sentence2(s(S),s80(P)) :- !, i_s(s(S),P). 
 i_sentence2(imp(U,Ve,s(_,Verb,VArgs,VMods)),imp80(U,Ve,V,Args)) :-
-   must80(i_verb(Verb,V,_,active,posP(_Modal),Slots0,[],transparent)),
+   must80(i_verb(Verb,V,_,active,posP([]),Slots0,[],transparent)),
    must80(i_verb_args(RefVar,VArgs,[],[],Slots0,Slots,Args,Args0,Up,-0)),
    append(Up,VMods,Mods),
    must80(i_verb_mods(RefVar,Mods,_,[],Slots,Args0,Up,+0)).
@@ -108,13 +108,20 @@ held_arg(held_arg(Case,-Id,X),[],S0,S,Id,+Id) :-
    in_slot(S0,Case,X,Id,S,_).
 held_arg(XA,XA,S,S,Id,Id).
 
+expand_named(Name,Name):- \+ compound(Name),!.
+expand_named(items(and, List),List):- !.
+expand_named(Name,Name):- !.
+
+% ?- c88("If an agent A1 touches the chair O2 and A1 is awake then A1 is aware that O2 is existing.").
+
 % np(3+sg,nameOf(_Var,iran),[])
 i_np_head0(nameOf(_Var,Name,Adjs),Type-X,Type-X,identityQ(_ArgInfo),Head,Pred0,Pred,[]) :- 
   ignore(lf80(Type,name_template_LF(Name,Type))),!,
-  ignore(must80((i_adjs(Adjs,Type-X,Type-X,_,'`'(named(X,Name)),Head,Pred0,Pred)))).
+  expand_named(Name,Named),
+  ignore(must80((i_adjs(Adjs,Type-X,Type-X,_,'`'(named(X,Named)),Head,Pred0,Pred)))).
 
-i_np_head0(nameOf(_Var,Name), Type-Name,Type-Name,identityQ(_ArgInfo),'`'(true),Pred,Pred,[]) :- 
-  ignore(lf80(Type,name_template_LF(Name,Type))),!.
+i_np_head0(nameOf(Var,Name), Type1Name,Type2Name,Ident,True,Pred0,Pred,List) :- !,
+  i_np_head0(nameOf(Var,Name,[]), Type1Name,Type2Name,Ident,True,Pred0,Pred,List).
 
 i_np_head0(wh(X),X,X,identityQ(_ArgInfo),'`'(true),Pred,Pred,[]):-!.
 % np(3+sg,pronoun(neut),[])
@@ -269,7 +276,8 @@ i_s(s(Subj,Verb,VArgs,VMods),Pred,Up,Id) :-
 
 i_s(s(Subj,Verb,VArgs,VMods),Pred,Up,Id) :-
  debug_chat80_if_fail((
-   i_verb(Verb,P,Tense,Voice,Neg,Slots0,XA0,Meta),
+   i_verb(Verb,P,Tense,Voice,Neg0,Slots0,XA0,Meta),
+   fix_mneg(Neg0,Neg),
    i_subj(RefVar,Voice,Subj,Slots0,Slots1,QSubj,SUp,'-'('-'(Id))),
    append(SUp,VArgs,TArgs),
    i_verb_args(RefVar,TArgs,XA0,XA,Slots1,Slots,Args0,Args,Up0,+(-Id)),
@@ -277,29 +285,48 @@ i_s(s(Subj,Verb,VArgs,VMods),Pred,Up,Id) :-
    i_verb_mods(RefVar,Mods,Tense,XA,Slots,Args,Up,+Id),
    reshape_pred(Meta,QSubj,Neg,P,Args0,Pred))).
 
-i_verb(verb(VerbType,Root,ExtraMods,Voice,Tense,Aspect,Neg),
+
+      i_verb(verb(VerbType,Root,[],Voice,Tense,Aspect,Neg),
+      PP,Tense,Voice,Det,Slots,XArg,Meta) :-
+      i_verb(verb(VerbType,Root,Voice,Tense,Aspect,Neg),
+      PP,Tense,Voice,Det,Slots,XArg,Meta).
+
+
+/*i_verb(verb(VerbType,Root,Voice,Tense,Aspect,Neg),
       PP,Tense,Voice,Det,Slots,XArg,Meta) :-
        ignore((ExtraMods\==[],wdmsg(extra_mods(ExtraMods)),nop((dumpST,break)))),
        append(ExtraMods,XArg,ModXArgs),!,
        %append(Slots,ExtraMods,XSlots),!,
        i_verb(verb(VerbType,Root,Voice,Tense,Aspect,Neg),
       PP,Tense,Voice,Det,Slots,ModXArgs,Meta).
-      
-i_verb(verb(_VerbType,Root,Voice,Tense,_Aspect,Neg),
-      PP,Tense,Voice,Det,Slots,XArg,Meta) :-
+*/      
+i_verb(verb(_VerbType,Root,Voice,Tense,_Aspect,Neg0),
+      PP,Tense,Voice,NegDet,Slots,XArg,Meta) :-
    must80(slot_verb_template(Root,P,Slots,XArg,Meta)),
    %(Neg\=posP(_)->trace;true),
-   i_neg(Neg,Det),
+   fix_mneg(Neg0,Neg),
+   i_neg(Neg,NegDet),
    maybe_modalize(Neg,P,PP).
 
-maybe_modalize(negP(Modal), P, PP):- atom(Modal),!,PP=..[Modal,P].
-maybe_modalize(posP(Modal), P, PP):- atom(Modal),!,PP=..[Modal,P].
+fix_mneg(posP(Modal),O):- var(Modal),!,fix_mneg(posP([]),O).
+fix_mneg(negP(Modal),O):- var(Modal),!,fix_mneg(negP([]),O).
+fix_mneg(posP(Modal),O):- flatten([Modal],ModalF),ModalF\==Modal,!,fix_mneg(posP(ModalF),O).
+fix_mneg(negP(Modal),O):- flatten([Modal],ModalF),ModalF\==Modal,!,fix_mneg(negP(ModalF),O).
+fix_mneg(posP(Modal),O):- assertion(is_list(Modal)),select(not,Modal,ModalP),!,fix_mneg(negP(ModalP),O).
+fix_mneg(negP(Modal),O):- assertion(is_list(Modal)),select(not,Modal,ModalP),!,fix_mneg(posP(ModalP),O).
+fix_mneg(O,O).
+  
+maybe_modalize(PN,P,PP):- arg(1,PN,L),!,maybe_modalize0(L,P,PP).
 maybe_modalize(_,P,P).
+maybe_modalize0([PN|L],P,PP):- nonvar(PN), !, maybe_modalize0(PN,P,PM), maybe_modalize0(L,PM,PP).
+maybe_modalize0(Modal, P, PP):- atom(Modal),!,PP=..[Modal,P].
+maybe_modalize0(_,P,P).
 
 reshape_pred(transparent,S,N,P,A,pred(S,N,P,A)).
-reshape_pred(have(_MODAL),Subj,Neg,Verb0,
+reshape_pred(have(_MODAL),Subj,Neg0,Verb0,
       [quantV(Det,X,Head0,Pred,QArgs,Y)|MRest],
       pred(Subj,Neg,Verb,[quantV(Det,X,Head,Pred,QArgs,Y)|MRest])) :-
+   fix_mneg(Neg0,Neg),
    have_pred(Head0,Verb0,Head,Verb).
 
 have_pred('`'(Head),Verb,'`'(true),(Head,Verb)).
