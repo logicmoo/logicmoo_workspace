@@ -609,9 +609,11 @@ reduce1(Ex^(exceeds(Value1, Ex1) & exceeds(Value2, Ex2)),exceeds(Value2, Value1)
 reduce1(Ex^(exceeds(Value1, Ex1), exceeds(Value2, Ex2)),exceeds(Value2, Value1)):- Ex==Ex1, Ex1==Ex2,!.
 reduce1(Ex^(exceeds(X,Y),exceeds(A,B)),exceeds(X,B)):- Ex==Y, Y==A,!.
 reduce1(Ex^(exceeds(A,B),exceeds(X,Y)),exceeds(X,B)):- Ex==Y, Y==A,!.
-reduce1(P,Q):- compound_name_arguments(P,F,A),
+reduce1(P,Q):- compound_name_arguments(P,F,A), \+ dont_reduce1(F),
    maplist(reduce1,A,AA), 
    compound_name_arguments(Q,F,AA).
+
+dont_reduce1(qualifiedBy).
 
 clausify_simplify80(QT,Plan):- clausify80(QT,UE),once((simplify80(UE,Query),qplan(Query,Plan))).
 

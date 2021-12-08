@@ -548,6 +548,7 @@ symm_test:- c88([does,iran,border,iraq]).
 symm_test2:- cls, symm_test, c88([does,iran,action1,iraq]).
 symm_test3:- c88([does,iran,symmetric1,iraq]).
 
+% c88("Which countries with a population exceeding 10 million border the atlantic ?").
 abn('
 rules: 
 

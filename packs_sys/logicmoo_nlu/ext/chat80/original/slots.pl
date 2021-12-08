@@ -143,6 +143,11 @@ i_np_head0(np_head(_Var,quantV(Op0,N),Adjs,Noun),
    lf80(Type,pos_conversion_db(N,Op0,Type,V,Op)),
    must80(measure_op(Op,X,V--Units,P)).
 
+
+i_np_head0(np_head(_Var,generic(_ArgInfo1),[],Value), Type-X,Type-X,voidQ(_ArgInfo2),
+  '`'(subsumedBy(X,Value)),Pred,Pred,[]) :- !.
+
+
 i_np_head0(np_head(_Var,generic(_ArgInfo1),[],Value), Type-X,Type-X,voidQ(_ArgInfo2),
   '`'(=(X,Value)),Pred,Pred,[]) :- !.
 /*
@@ -267,6 +272,11 @@ i_adj(adj(Adj),TypeX-X,T,T,_,
   select(cond(_),VArgs,NewVargs), !,
   i_s(s(Subj,Verb,NewVargs,VMods),Pred,Up,Id).
 */
+i_s(s(Subj,verb(Mainiv,be(_),[],Active,Fin+fin,[],Neg),VArgs,VMods),Pred,Up,Id) :- !,
+   i_s(s(Subj,verb(Mainiv,exist,[],Active,Fin+fin,[],Neg),VArgs,VMods),Pred,Up,Id).
+i_s(s(Subj,verb(Mainiv,be,[],Active,Fin+fin,[],Neg),VArgs,VMods),Pred,Up,Id) :- !,
+   i_s(s(Subj,verb(Mainiv,exist,[],Active,Fin+fin,[],Neg),VArgs,VMods),Pred,Up,Id).
+
 i_s(s(Subj,Verb,VArgs,VMods),Pred,Up,Id) :-
   select(cond(IF,S2),VArgs,NewVargs), !,
   S1 = s(Subj,Verb,NewVargs,VMods),
