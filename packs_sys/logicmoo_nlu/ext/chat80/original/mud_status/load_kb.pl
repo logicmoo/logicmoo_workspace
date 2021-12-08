@@ -248,7 +248,10 @@ ed( N, W, _):-
 %ed1("iraq has border iran?").
 %ed1("iraq has a border china").
 
-
+chat80_all("What is the total area of countries south of the equator and not in australasia ?",[--(10228,ksqmiles)],13).
+chat80_all("Which countries with a population exceeding 10 million border the atlantic ?",[argentina,brazil,canada,colombia,france,mexico,morocco,netherlands,nigeria,south_africa,spain,united_kingdom,united_states,venezuela,west_germany,zaire],21).
+chat80_all("Which country bordering the mediterranean borders a country that is bordered by a country whose population exceeds the population of india ?",[turkey],19).
+chat80_all("What percentage of countries border each ocean ?",[[arctic_ocean,2],[atlantic,35],[indian_ocean,14],[pacific,20]],22).
 chat80_all("Does afghanistan border china ?",[true],2).
 chat80_all("Does america contain new York ?",_,_).
 chat80_all("Does Mexico border the United States ?",_,_).
@@ -302,8 +305,6 @@ chat80_all("What is a river ?",_,316).
 chat80_all("What is the average area of the countries in each continent ?",[[africa,--(233,ksqmiles)],[america,--(496,ksqmiles)],[asia,--(485,ksqmiles)],[australasia,--(543,ksqmiles)],[europe,--(58,ksqmiles)]],14).
 chat80_all("What is the capital of upper volta ?",[ouagadougou],3).
 chat80_all("What is the ocean that borders african countries and that borders asian countries ?",[indian_ocean],9).
-chat80_all("What is the total area of countries south of the equator and not in australasia ?",[--(10228,ksqmiles)],13).
-chat80_all("What percentage of countries border each ocean ?",[[arctic_ocean,2],[atlantic,35],[indian_ocean,14],[pacific,20]],22).
 chat80_all("What rivers are there ?",[amazon,amu_darya,amur,brahmaputra,colorado,congo_river,cubango,danube,don,elbe,euphrates,ganges,hwang_ho,indus,irrawaddy,lena,limpopo,mackenzie,mekong,mississippi,murray,niger_river,nile,ob,oder,orange,orinoco,parana,rhine,rhone,rio_grande,salween,seine,senegal_river,tagus,vistula,volga,volta,yangtze,yenisei,yukon,zambesi],1).
 chat80_all("Where is the largest country ?",[asia,northern_asia],4).
 chat80_all("Which asian countries have a population exceeding 10 million ?",_,314).
@@ -316,8 +317,6 @@ chat80_all("Which countries contain a city ?",_,308).
 chat80_all("Which countries contain more than 2 cities ?",_,312).
 chat80_all("Which countries contain more than 3 cities ?",_,311).
 chat80_all("Which countries have a population exceeding 10 million ?",[afghanistan,algeria,argentina,australia,bangladesh,brazil,burma,canada,china,colombia,czechoslovakia,east_germany,egypt,ethiopia,france,india,indonesia,iran,italy,japan,kenya,malaysia,mexico,morocco,nepal,netherlands,nigeria,north_korea,pakistan,peru,philippines,poland,south_africa,south_korea,soviet_union,spain,sri_lanka,sudan,taiwan,tanzania,thailand,turkey,uganda,united_kingdom,united_states,venezuela,vietnam,west_germany,yugoslavia,zaire],20).
-chat80_all("Which countries with a population exceeding 10 million border the atlantic ?",[argentina,brazil,canada,colombia,france,mexico,morocco,netherlands,nigeria,south_africa,spain,united_kingdom,united_states,venezuela,west_germany,zaire],21).
-chat80_all("Which country bordering the mediterranean borders a country that is bordered by a country whose population exceeds the population of india ?",[turkey],19).
 chat80_all("Which country's capital is london ?",[united_kingdom],6).
 chat80_all("Which is the largest african country ?",[sudan],7).
 chat80_all("Which rivers are not in asia ?",_,318).

@@ -532,7 +532,7 @@ verb_mod(_,Adv,Set,Nil) --->
 verb_mod(post,PP,Set,Mask) ---> xg_prep_phrase(_PPAlowed,PP,compl,Set,Mask).
 
 adv_phrase(post,prep_phrase(PPType,Prep,NP),Set,Mask) --->
-   loc_pred(Of,Prep),
+   loc_pred(Of,Prep), % north of
    xg_prep_phrase(_PPAlowed,prep_phrase(PPType,prep(Of),NP),compl,Set,Mask).
 
 /* Adjectival Constructions */
