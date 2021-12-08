@@ -751,6 +751,7 @@ verb_form88(ExtraMods,RootVerb,Tense,Agmt,_Role) --->
 */
 
 one_modal(_Tense1,MODAL1) ---> theText80(W),{modal_verb_form_aux(W,MODAL1,_Tense2,_)}.
+one_modal(_Tense1,Modal) ---> thePos80([pos(md),root(Modal)]).
 one_modal(_,not) ---> theText80(not).
 
 maybe_modal(Tense,In,[M|Out]) ---> one_modal(Tense,M),maybe_modal0(Tense,In,Out).

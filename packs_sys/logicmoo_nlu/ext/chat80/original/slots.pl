@@ -118,7 +118,7 @@ expand_named(Name,Name):- !.
 i_np_head0(nameOf(_Var,Name,Adjs),Type-X,Type-X,identityQ(_ArgInfo),Head,Pred0,Pred,[]) :- 
   ignore(lf80(Type,name_template_LF(Name,Type))),!,
   expand_named(Name,Named),
-  ignore(must80((i_adjs(Adjs,Type-X,Type-X,_,'`'(named(X,Named)),Head,Pred0,Pred)))).
+  ignore(must80((i_adjs(Adjs,Type-X,Type-X,_,'`'(bE(named,X,Named)),Head,Pred0,Pred)))).
 
 i_np_head0(nameOf(Var,Name), Type1Name,Type2Name,Ident,True,Pred0,Pred,List) :- !,
   i_np_head0(nameOf(Var,Name,[]), Type1Name,Type2Name,Ident,True,Pred0,Pred,List).
@@ -145,12 +145,12 @@ i_np_head0(np_head(_Var,quantV(Op0,N),Adjs,Noun),
 
 
 i_np_head0(np_head(_Var,generic(_ArgInfo1),[],Value), Type-X,Type-X,voidQ(_ArgInfo2),
-  '`'(subsumedBy(X,Value)),Pred,Pred,[]) :- !.
+  '`'(bE(same,X,Value)),Pred,Pred,[]) :- !.
 
 
+/*
 i_np_head0(np_head(_Var,generic(_ArgInfo1),[],Value), Type-X,Type-X,voidQ(_ArgInfo2),
   '`'(=(X,Value)),Pred,Pred,[]) :- !.
-/*
 i_np_head0(np_head(_Var,generic(_ArgInfo1),[],Value), Type-X,Type-V,voidQ(_ArgInfo2),
   '`'(same_objects(generic(Type-X-V),X,Value)),Pred,Pred,[]) :- !.
 */
@@ -550,8 +550,8 @@ select_slots(X,[Slot|Slots],Remaining):- fail,
   select_slots(Mid,Slots,Remaining).
 
 % BE
-% slot_verb_kind(be(_MODAL),_,TypeS,S,subsumed_by(A,S),[slot(dirO(_ArgInfo),TypeS,A,_,free)]).
-slot_verb_kind(be(_MODAL),_,TypeS,S,subsumed_by(S,A),AllSlots):-
+% slot_verb_kind(be(_MODAL),_,TypeS,S,bE(is,A,S),[slot(dirO(_ArgInfo),TypeS,A,_,free)]).
+slot_verb_kind(be(_MODAL),_,TypeS,S,bE(is,S,A),AllSlots):-
    select_slots(AllSlots, [slot(dirO(_ArgInfo),TypeS,A,_,free)]).
 slot_verb_kind(be(_MODAL),_,TypeS,S,true,AllSlots):- 
    select_slots(AllSlots, [slot(arg_pred(_ArgInfo),TypeS,S,_,free)]).

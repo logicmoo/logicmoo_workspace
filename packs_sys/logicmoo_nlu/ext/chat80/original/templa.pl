@@ -135,12 +135,14 @@ concrete_type(country).
 concrete_type(river).
 concrete_type(TI):-ti(TI,_),!.
 
+ti(noun_thing,_).
+
 property_LF(Capital,Spatial& Feat& City,X,Spatial&Geo& /*_Neo&*/ Country,Y,specific_pred(Spatial,Nation_capital,Y,X),[],_,_):-  
 %   fail,
    feat(Feat), assertion(nonvar(Capital)),
    unique_of_obj(Geo,Spatial,Country,_Govern,Capital,City,_Capital_city,Nation_capital).
 
-trans_LF(    Govern,Spatial& Feat& City,X,Spatial&Geo& /*_Neo&*/ Country,Y,specific_pred(2,Spatial,Nation_capital,Y,X),[],_,_):-
+trans_LF(    Govern,Spatial& Feat& City,X,Spatial&Geo& /*_Neo&*/ Country,Y,specific_pred(Spatial,Nation_capital,Y,X),[],_,_):-
   feat(Feat), assertion(nonvar(Govern)),
   unique_of_obj(Geo,Spatial,Country,Govern,_Capital,City,_Capital_city,Nation_capital).
    
@@ -265,7 +267,7 @@ talkdb_talk_db(transitive,   Border,  Borders,  Bordered,  Bordering,  Bordered)
 %use_lexicon_80(talkd b_verb(X)):- verb _type_db(chat80,X,_).
 % use_lexicon_80(_):- fail.
 
-subsumed_by(X,X).
+bE(_,X,X).
 named(X,X).
 
 :- import(talkdb:talk_db/6).

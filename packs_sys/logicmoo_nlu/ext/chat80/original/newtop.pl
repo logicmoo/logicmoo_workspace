@@ -93,7 +93,7 @@ system:test_chat80 :- make, setenv('CMD',timeout), test_chat80(_,on),!,show_resu
 
 system:test_c80 :- make, setenv('CMD',timeout),
 	forall(chat_80_ed(N,Sentence,CorrectAnswer),
-    baseKB_test_chat80_mpred(N, Sentence, on, CorrectAnswer)),
+    ignore(baseKB_test_chat80_mpred(N, Sentence, on, CorrectAnswer))),
   show_results80.
 
 
@@ -176,18 +176,46 @@ show_title80 :-
 	nl.
 
 :- dynamic(tmp:chat80results/4).
-:- dynamic(tmp:test80_result/3).
+:- dynamic(tmp:test80_result/4).
 test80_results:- 
- forall(tmp:test80_result(A,into_lexical_segs,_), 
+ forall(tmp:test80_result(A,into_lexical_segs,_,_), 
   (nl,
    format('=========================================================~n'),
-   forall(tmp:test80_result(A,B,C),(print_tree_nl(tmp:test80_result(A,B,C)),nl)),
+   findall(r(A,B,C,D),tmp:test80_result(A,B,C,D),L),
+   predsort(test80_r_sort,L,S),
+   forall(member(E,S),(print_test80_result(E),nl)),
    show_title80,
    forall(tmp:chat80results(N,A,Status,Times), 
      show_results80(N,A,Status,Times)))).
 
+test80_r_sort(O,r(A1,B1,C1,D1),r(A2,B2,C2,D2)):- 
+ ((compare(O,A1,A2),O \== (=) );
+  (compare_test_key(O,B1,B2),O \== (=) ) ; 
+  (clause_num(tmp:test80_result(A1,B1,C1,D1),CN1),
+   clause_num(tmp:test80_result(A2,B2,C2,D2),CN2),
+   compare(O,CN1,CN2)); 
+    compare(O,r(A1,B1,C1,D1),r(A2,B2,C2,D2))),!.
+
+test_keyn(1,text_to_corenlp_tree). % (SS,_)),
+test_keyn(2,into_lexical_segs). % (SS,Lex)),
+test_keyn(3,sentence80). % (Lex,Tree)),
+test_keyn(4,i_sentence). % (Tree,QT)),
+test_keyn(5,clausify80). % (QT,UE)),  
+test_keyn(6,simplify80). % (UE,Query)),
+test_keyn(7,qplan). % (UE,Query)),
+test_keyn(8,results80). % (Query,Answer)),
+test_keyn(a,any_to_ace_str). % (S,SACE)),
+test_keyn(b,try_ace_drs). % (SACE,Ace)),
+test_keyn(c,try_ace_fol).
+test_keyn(d,try_ace_eng). % (Ace,_Eng)),
+
+compare_test_key(O,B1,B2):- test_keyn(A1,B1),test_keyn(A2,B2),!,compare(O,A1,A2).
+clause_num(Cl,CN):- copy_term(Cl,Cl1),clause(Cl1,true,Ref),clause(ClC,true,Ref),ClC=@=Cl,!,nth_clause(ClC,CN,Ref).
+
+print_test80_result(E):- sub_var(failure,E), !, ansicall(red,print_tree_nl(E)).
+print_test80_result(E):- print_tree_nl(E),!.
 show_results80:- 
- %test80_results,
+ test80_results,
  %tell('CHAT80.txt'),test80_results,told,
  show_title80_title,
  forall(tmp:chat80results(N,Sentence,Status,Times),
@@ -456,9 +484,9 @@ process4a(How,Sentence,U,S1,Times) :-
 
   quietly(( runtime(StartSeg),
    mpred_test_mok(into_lexical_segs(Sentence,U)),!,
-   assert_if_new(tmp:test80_result(Sentence,into_lexical_segs,U)),
    runtime(StopSeg),
    SegTime is StopSeg - StartSeg,
+   assert_if_new(tmp:test80_result(Sentence,into_lexical_segs,U,SegTime)),
    (report(always,U,'segs',SegTime,print_tree_nl)))),!,
  
  ((runtime(StartParse),   
@@ -473,7 +501,9 @@ process4a(How,Sentence,U,S1,Times) :-
     )))),
    runtime(StartSem),
    debug_chat80_if_fail(mpred_test_mok(deepen_pos(i_sentence(E,E1)))),
-   report(always,E1,'i_sentence',ParseTime,cmt),
+   runtime(EndI),
+   TotalI is EndI - StartSem,
+   report(always,E1,'i_sentence',TotalI,cmt),
    debug_chat80_if_fail(mpred_test_mok(deepen_pos(clausify80(E1,E2)))))),
    !,
   % report(How,E2,'clausify80',ParseTime,cmt),
@@ -485,16 +515,26 @@ process4a(How,Sentence,U,S1,Times) :-
   ((
    guess_pretty(S),
    debug_chat80_if_fail(qplan(S,S1)),
+   assert_if_new(tmp:test80_result(Sentence,sentence80,E,ParseTime)),
+   assert_if_new(tmp:test80_result(Sentence,i_sentence,E1,TotalI)),
+   assert_if_new(tmp:test80_result(Sentence,clausify80,E2,SemTime)),
+   assert_if_new(tmp:test80_result(Sentence,qplan,S1,SemTime)),
    guess_pretty(S1),
-   assert_if_new(tmp:test80_result(Sentence,sentence80,E)),
-   assert_if_new(tmp:test80_result(Sentence,i_sentence,E1)),
-   assert_if_new(tmp:test80_result(Sentence,qplan,S1)),
    %pprint_ecp_cmt(green,S),
    runtime(StopPlan),
    TimePlan is StopPlan - StartSem,
 
    report(always,Sentence+S1,'Planning',TimePlan,expr),
    !)).
+
+process4(How,Sentence,Answer,Times):- (How == test;How==on),
+  Times = [_ParseTime,_SemTime,_TimePlan,_TimeAns,TotalTime],
+  runtime(StartAns),
+  c8(Sentence,Answer),
+  runtime(EndAns),
+  TotalTime is EndAns - StartAns,
+  %should_learn(Answer),
+  (is_list(Answer)->!;Answer \== failure).
 
 process4(How,Sentence,Answer,Times) :-
    process4a(How,Sentence,U,S1,Times),!, 
@@ -507,8 +547,8 @@ process4b(How,Sentence,U,S1,Answer,Times) :-
    ((
    debug_chat80_if_fail(results80(S1,Answer)), !,
    runtime(StopAns),
-   assert_if_new(tmp:test80_result(Sentence,results80,Answer)),
    TimeAns is StopAns - StartAns,
+   assert_if_new(tmp:test80_result(Sentence,results80,Answer,TimeAns)),
    TotalTime is ParseTime+SemTime+TimePlan+TimeAns,
    report(How,U,'Question',TotalTime,print_test),
    ignore((report(always,Answer,'Reply',TimeAns,print_tree_nl))))),!.
@@ -604,7 +644,7 @@ reduce1(qualifiedBy(X,P,S),R):- qualifiedBy_LF(reduce1,X,P,S,R),!.
 reduce1('`'(A),R):- reduce1(A,R).
 reduce1(ace_var(C,N),true):- var(C),nonvar(N),C='$VAR'(N),!.
 
-%reduce1(Ex^(ti(Type,Ex1),subsumed_by(Ex2,Inst)),Ex^(ti(Type,Inst)&Ex=Inst)):- Ex==Ex1, Ex1==Ex2,!.
+%reduce1(Ex^(ti(Type,Ex1),bE(is,Ex2,Inst)),Ex^(ti(Type,Inst)&Ex=Inst)):- Ex==Ex1, Ex1==Ex2,!.
 reduce1(Ex^(exceeds(Value1, Ex1) & exceeds(Value2, Ex2)),exceeds(Value2, Value1)):- Ex==Ex1, Ex1==Ex2,!.
 reduce1(Ex^(exceeds(Value1, Ex1), exceeds(Value2, Ex2)),exceeds(Value2, Value1)):- Ex==Ex1, Ex1==Ex2,!.
 reduce1(Ex^(exceeds(X,Y),exceeds(A,B)),exceeds(X,B)):- Ex==Y, Y==A,!.
