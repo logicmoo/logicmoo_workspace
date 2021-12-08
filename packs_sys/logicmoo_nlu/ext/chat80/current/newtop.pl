@@ -336,7 +336,8 @@ sent_to_prelogic(S0,S) :-
    clausify80(S1,S))),!.
 
 simplify80(C,C0):-var(C),dmsg(var_simplify(C,C0)),!,fail.
-simplify80(C,(P:-R)) :- !,
+simplify80(C0,(P:-R)) :- !,
+   unnumbervars(C0,C),
    unequalise(C,(P:-Q)),
    simplify80(Q,R,true).
 
@@ -379,7 +380,8 @@ revand(true,P,P) :- !.
 revand(P,true,P) :- !.
 revand(P,Q,(Q,P)).
 
-unequalise(C0,C) :-
+unequalise(C00,C) :-
+   unnumbervars(C00,C0),
    numbervars80(C0,1,N),
    functor(V,v,N),
    functor(M,v,N),

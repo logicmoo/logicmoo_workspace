@@ -24,9 +24,10 @@
 
 :- module(qplan,[qplan/2]).
 
-qplan((P:-Q),(P1:-Q1)) :- qplan(P,Q,P1,Q1), !.
-qplan(P,Q):- parser_chat80:simplify80(P,Q),!.
-qplan((S1,S2),(G1,G2)):- !, qplan(S1,G1), qplan(S2,G2).
+qplan(P0,Q):- unnumbervars(P0,P),qplan0(P,Q).
+qplan0((P:-Q),(P1:-Q1)) :- qplan(P,Q,P1,Q1), !.
+qplan0(P,Q):- parser_chat80:simplify80(P,Q),!.
+qplan0((S1,S2),(G1,G2)):- !, qplan(S1,G1), qplan(S2,G2).
 
 
 qplan(X0,P0,X,P) :-

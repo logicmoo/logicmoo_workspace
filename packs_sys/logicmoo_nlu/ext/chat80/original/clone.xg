@@ -314,7 +314,7 @@ subj0(Subj,Agmt,_) --->
 np(AgmtKernelModsO,Agmt,Case,Def,Role,Set,Mask) --->
   locally(tlclone:np_in_case(Case),
     np0(AgmtKernelMods,Agmt,Case,Def,Role,Set,Mask)),
-    maybe_ace_variable(AgmtKernelMods,AgmtKernelModsO).
+    extend_np(AgmtKernelMods,AgmtKernelModsO).
 
 
 np0(np(Agmt,Pronoun,[]),Agmt,NPCase,def,_,Set,Nil) --->
@@ -358,20 +358,25 @@ np_head0(_,_,_)---> has_trait(pos('.')),!,{fail}.
 np_head0(nameOf(_Var,items(AndOr,List),[]),Agmt,Def)---> {if_search_expanded(2)}, nl_list_of_items(AndOr,np_head1(Agmt,Def),List).
 np_head0(H,Agmt,Def)---> np_head1(H,Agmt,Def).
 
-np_head1(Pronoun,Agmt,def+proper), gen_marker --->
+np_head1(H,Agmt,Def)--->np_head2(H,Agmt,Def).
+
+np_head2(Pronoun,Agmt,def+proper), gen_marker --->
    poss_pron(Pronoun,Agmt).
-np_head1(np_head(_Var,Det,[],Noun),3+sg,indef+common) --->
+np_head2(np_head(_Var,Det,[],Noun),3+sg,indef+common) --->
    quantifier_pron(Det,Noun).
-np_head1(nameOf(_Var,O,[]),Agmt,Def) ---> np_objbody(O,Agmt,Def).
-np_head1(np_head(_Var,Det,AdjsO,Head),3+Number,Def+common) --->
+np_head2(nameOf(_Var,O,[]),Agmt,Def) ---> np_objbody(O,Agmt,Def).
+np_head2(np_head(_Var,Det,AdjsO,Head),3+Number,Def+common) --->
    determiner(Det,Number,Def),
    adjs_opt(Adjs),
    noun(Head,Adjs,AdjsO,Number).
 
-   
 
-maybe_ace_variable(AdjIn,AdjsOut)---> ace_var(AceVar),!,{append_np_mods(AdjIn,(adj(ace_var(self,AceVar))),AdjsOut)}.
-maybe_ace_variable(Adjs,Adjs)---> [].
+extend_np(I,O) ---> np_amend(V), {append_np_mods(I,V,M)},!, extend_np(M,O).
+extend_np(IO,IO)---> [].
+
+np_amend(adj(ace_var(self,AceVar))) ---> ace_var(AceVar),!.
+np_amend(adj(s_vp(self,Subj,Verb,Args,Mods,Mask))) ---> theText80(that),!,just_vp(Subj,_Agmt,_Type,Verb,Args,Mods,Mask).
+
 
 append_np_mods(List,W,List):- is_list(List),member(E,List),W=@=E,!.
 append_np_mods(List,W,[W|List]):- is_list(List),!.
@@ -696,10 +701,21 @@ verb(verb(Type,Root,Voice,Time+fin,Aspect,Neg),Agmt,Type,Voice) --->
    maybe_verb_pre_mods(ExtraMods,_Set,_Mask0,_Mask1),
    verb_form88(ExtraMods,Root0,Time+fin,Agmt,Role),
    {verb_type_lex(Root0,Type0)},
-   neg_modal_opt(Tense,ExtraMods,Type0,Neg),
+   neg_modal_opt(_Tense,ExtraMods,Type0,Neg),
    rest_verb(ExtraMods,Role,Root0,Root,Voice,Aspect),
    {verb_type_lex(Root,Type)}.
-
+   
+verb(verb(Type,Root,Voice,Time+fin,Aspect,Neg),Agmt,Type,Voice) --->
+     % {is_empty_bits(Nil), is_s_all(SAll)},      
+   maybe_verb_pre_mods(ExtraMods1,_Set,_Mask0,_Mask1),
+   verb_form88(ExtraMods2,Root0,Time+fin,Agmt,Role),
+   {ignore(ExtraMods2=[])},
+   {verb_type_lex(Root0,Type0)},
+   neg_modal_opt1(ExtraMods,Type0,Neg),
+   rest_verb(ExtraMods3,Role,Root0,Root,Voice,Aspect),
+   {verb_type_lex(Root,Type),
+    append([ExtraMods1,ExtraMods2,ExtraMods3],ExtraMods)}.
+    
 neg_modal_opt(Tense,ExtraMods,Aux,Neg) --->
   maybe_modal0(Tense,ExtraMods,ModalInfo),
   neg_modal_opt1(ModalInfo,Aux,Neg).

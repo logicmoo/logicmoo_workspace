@@ -660,7 +660,8 @@ revand(true,P,P) :- !.
 revand(P,true,P) :- !.
 revand(P,Q,(Q,P)).
 
-unequalise(C0,C) :-
+unequalise(C00,C) :-
+   unnumbervars(C00,C0),
    numbervars80(C0,1,N),
    functor(V,v,N),
    functor(M,v,N),
