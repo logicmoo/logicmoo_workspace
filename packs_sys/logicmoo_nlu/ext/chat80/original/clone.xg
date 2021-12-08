@@ -625,7 +625,7 @@ rel(Agmt,rel(X,S),Mask) --->
    mark_dnalsi.
 
 variable(Agmt,X) ... np(np(Agmt,wh(X),[]),Agmt,_,_,_,Set,Mask) --->
-   (theText80(that);theText80(this)),
+    (theText80(that);theText80(this);theText80(who)),
    {is_trace82(Set,Mask)}.
 variable(Agmt0,X) ... np(NP,Agmt,NPCase,_,_,Set,Mask) --->
    wh(X,Agmt0,NP,Agmt,NPCase),
