@@ -109,7 +109,7 @@ variable_q(X,Agmt,QCase,NPCase) ...
 
 variable_q(X,Agmt,compl,CCase) ...
  xg_prep_phrase(_PPAlowed,prep_phrase(_PPType,Prep,NP),compl,Set,Mask) --->
-   prep(Prep),
+   prep_not_of(Prep),
    whq(X,Agmt,NP,_),
    {is_trace82(Set,Mask), is_compl_case(CCase)}.
 variable_q(X,Agmt,compl,VCase) ...
@@ -293,8 +293,8 @@ s_vp1(_Subj,Agmt,Type,Verb,Args,Mods,Mask) --->
    {is_empty_bits(Nil), is_s_all(SAll)},
    verb_args(Type,Voice,Args,Nil,Mask0),
    {minus_mask(SAll,Mask0,Set), plus_mask(SAll,Mask0,Mask1)},
-   verb_mods(post,Mods,Set,Mask1,Mask),
-   no_new_obj.
+   verb_mods(post,Mods,Set,Mask1,Mask).
+   %no_new_obj.
 
 no_new_obj ---> noText,!.
 no_new_obj ---> xg_peek(\+ subj(_,_,_)).
@@ -308,28 +308,28 @@ subj0(Subj,Agmt,_) --->
    np(Subj,Agmt,Case,_,subJ(_ArgInfo1),SAll,_).
 
 
-
 /* Noun Phrase */
 
 np(AgmtKernelModsO,Agmt,Case,Def,Role,Set,Mask) --->
   locally(tlclone:np_in_case(Case),
-    np0(AgmtKernelMods,Agmt,Case,Def,Role,Set,Mask)),
-    extend_np(AgmtKernelMods,AgmtKernelModsO).
+    np0(AgmtKernelMods,Agmt,Case,Def,Role,Set,Mask)),    
+    extend_np([],AgmtKernelMods,AgmtKernelModsO),!.
 
+np0(AgmtKernelModsO,Agmt,Case,Def,Role,Set,Mask) ---> np1(AgmtKernelModsO,Agmt,Case,Def,Role,Set,Mask),!.
 
-np0(np(Agmt,Pronoun,[]),Agmt,NPCase,def,_,Set,Nil) --->
+np1(np(Agmt,Pronoun,[]),Agmt,NPCase,def,_,Set,Nil) --->
    {is_pp(Set)},
    pers_pron(Pronoun,Agmt,Case),
    {is_empty_bits(Nil), is_to_role_case(Case,decl,NPCase)}.
 
-np0(np(Agmt,Kernel,Mods),Agmt,_Case,Def,Role,Set,Mask) --->
+np1(np(Agmt,Kernel,Mods),Agmt,_Case,Def,Role,Set,Mask) --->
    {is_pp(Set)},
    np_head(_Var,Kernel,Agmt,Def+Type,PostMods,Mods),
    {is_np_all(NPAll)},
    np_compls(Type,Agmt,Role,PostMods,NPAll,Mask).
 
 % many of, one of
-np0(part(Det,NP),3+Number,_,indef,Role,Set,Mask) --->
+np1(part(Det,NP),3+Number,_,indef,Role,Set,Mask) --->
    {is_pp(Set)},
    determiner(Det,Number,indef), {Det\=generic(_)},
    theText80(of),
@@ -341,10 +341,11 @@ np_expand(NP,A3+Apl,Case,def,Role,SAll,Mask) --->
 np_expand(NP,_,_Case,def,Role,SAll,Mask) ---> {if_search_expanded(3)},
   np(NP,_,_,def,Role,SAll,Mask).
 
-np_head(_Var,Kernel,Agmt,Type,PostMods,Mods) --->
+np_head(_Var,KernelMods,Agmt,Type,PostMods,Mods) --->
    np_head0(Kernel0,Agmt0,Type0),
    optional_possessive(Kernel0,Agmt0,Type0,Mods0,Mods0,
-              Kernel,Agmt,Type,PostMods,Mods).
+              Kernel,Agmt,Type,PostMods,Mods),
+   maybe_ace_variable(Kernel,KernelMods).
 
 np_compls(proper,_,_,[],_,Nil) ---> {is_empty_bits(Nil)}.
 np_compls(common,Agmt,Case,Mods,Set0,Mask) --->
@@ -371,11 +372,19 @@ np_head2(np_head(_Var,Det,AdjsO,Head),3+Number,Def+common) --->
    noun(Head,Adjs,AdjsO,Number).
 
 
-extend_np(I,O) ---> np_amend(V), {append_np_mods(I,V,M)},!, extend_np(M,O).
-extend_np(IO,IO)---> [].
+maybe_ace_variable(AdjIn,AdjsOut)---> ace_var(AceVar),!,{append_np_mods(AdjIn,(adj(ace_var(self,AceVar))),AdjsOut)}.
+maybe_ace_variable(Adjs,Adjs)---> [].
 
-np_amend(adj(ace_var(self,AceVar))) ---> ace_var(AceVar),!.
-np_amend(adj(s_vp(self,Subj,Verb,Args,Mods,Mask))) ---> theText80(that),!,just_vp(Subj,_Agmt,_Type,Verb,Args,Mods,Mask).
+extend_np(Except,I,O) ---> {fail},np_amend1(Except,V), {append_np_mods(I,V,M)},!, extend_np([V|Except],M,O).
+extend_np(_,IO,IO)---> [].
+
+np_amend1(_,adj(sings(self))) ---> theText80(that),theText80(sings),!.
+np_amend1(_,adj(s(self,Verb,Verb,Args,Mods))) ---> theText80(that),
+   verb(Verb,_Agmt,Type,Voice),
+   {is_empty_bits(Nil), is_s_all(SAll)},
+   verb_args(Type,Voice,Args,Nil,Mask0),
+   {minus_mask(SAll,Mask0,Set), plus_mask(SAll,Mask0,Mask1)},
+   verb_mods(post,Mods,Set,Mask1,_Mask).
 
 
 append_np_mods(List,W,List):- is_list(List),member(E,List),W=@=E,!.
@@ -427,7 +436,7 @@ np_objbody(string(List),3+sg,def+proper) ---> w2_quoted(List),!.
 
 np_objbody((prep_obj(X,S)),Agmt,Type) ---> {fail},
   {if_search_expanded(5)},
-   prep(X),
+   prep_not_of(X),
  {is_prep_case(Case)},
   locally(tlclone:np_in_case(Case),subj(S,Agmt,Type)).
 
@@ -458,7 +467,7 @@ np_objbody1((sent0(S)),_,_) ---> xg_peek([_,_]),s80(S,_).
 
 np_objbody1((sent2(X,S)),_Agmt,_) ---> xg_peek([_,_]),
    mark_island,
-   prep(X),
+   prep_not_of(X),
    s80(S,_),   
    mark_dnalsi.
 */
@@ -532,7 +541,7 @@ verb_mod(_,Adv,Set,Nil) --->
 verb_mod(post,PP,Set,Mask) ---> xg_prep_phrase(_PPAlowed,PP,compl,Set,Mask).
 
 adv_phrase(post,prep_phrase(PPType,Prep,NP),Set,Mask) --->
-   loc_pred(Of,Prep),
+   loc_pred(Of,Prep), % north of
    xg_prep_phrase(_PPAlowed,prep_phrase(PPType,prep(Of),NP),compl,Set,Mask).
 
 /* Adjectival Constructions */
@@ -587,19 +596,21 @@ imperative_verb808(You,Root),
    {You=you}.
 
 xg_prep_phrase(_PPAlowed,prep_phrase(_PPType,Prep,Arg),_Case,_Set,_Mask) --->
-   prep(Prep),
+   prep_not_of(Prep),
    {is_prep_case(_NPCase)},
    prep_arg_vp(Arg).
 
 xg_prep_phrase(_PPAlowed,prep_phrase(_PPType,Prep,Arg),Case,Set,Mask) --->
-   prep(Prep),
+   prep_not_of(Prep),
    {is_prep_case(NPCase)},
    np(Arg,_,NPCase,_,Case,Set,Mask).
 
 
 xg_prep_phrase(_PPAlowed,prep_phrase(_PPType,Prep,Arg),_Case,_Set,_Mask) --->
-   prep(Prep),noText,
+   prep_not_of(Prep),noText,
    {Arg=np_head(_Var,generic(_),[],_)}.
+
+prep_not_of(Prep)--->prep(Prep), {Prep\==of}.
 
 /* Relative clause */
 
@@ -624,23 +635,23 @@ rel(Agmt,rel(X,S),Mask) --->
    {is_trace_bits(Trace), minus_mask(Mask0,Trace,Mask)},
    mark_dnalsi.
 
-variable(Agmt,X) ... np(np(Agmt,wh(X),[]),Agmt,_,_,_,Set,Mask) --->
-   (theText80(that);theText80(this)),
-   {is_trace82(Set,Mask)}.
 variable(Agmt0,X) ... np(NP,Agmt,NPCase,_,_,Set,Mask) --->
    wh(X,Agmt0,NP,Agmt,NPCase),
    {is_trace82(Set,Mask)}.
 variable(Agmt0,X) ... xg_prep_phrase(_PPAlowed,prep_phrase(_PPType,Prep,NP),compl,Set,Mask) --->
-   prep(Prep),
+   prep_not_of(Prep),
    wh(X,Agmt0,NP,_Agmt,Case),
    {is_trace82(Set,Mask), is_compl_case(Case)}.
+variable(Agmt,X) ... np(np(Agmt,wh(X),[]),Agmt,_,_,_,Set,Mask) --->
+   (theText80(that);theText80(this);theText80(who)),
+   {is_trace82(Set,Mask)}.
 
 wh(X,Agmt,np(Agmt,wh(X),[]),Agmt,NPCase) --->
    wh_rel_pron(Case),
    {is_to_role_case(Case,decl,NPCase)}.
 wh(X,Agmt0,np(Agmt,Kernel,[prep_phrase(_PPType,Prep,NP)]),Agmt,_) --->
    np_head0(Kernel,Agmt,_+common),
-   prep(Prep),
+   prep_not_of(Prep),
    wh(X,Agmt0,NP,_,_).
 wh(X,Agmt0,NP,Agmt,Case) --->
    whose(X,Agmt0),

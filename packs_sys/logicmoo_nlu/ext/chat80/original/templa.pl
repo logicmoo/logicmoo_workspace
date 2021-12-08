@@ -476,11 +476,11 @@ intrans_LF(Run,Spatial & Feat& Type,X,LF, Slots,_):-
  spatial(Spatial),
  LF = intrans_pred_slots(Spatial,Type,Run,X,Slots).
 
-
-intrans_verb(Run):- clex:iv_infpl(Run,_).
-intrans_verb(run).
-intrans_verb(wait).
-intrans_verb(Y):- clex:iv_finsg(_,Y).
+intrans_verb(Y):- once(intrans_verb0(Y)).
+intrans_verb0(Run):- clex:iv_infpl(Run,_).
+intrans_verb0(run).
+intrans_verb0(wait).
+intrans_verb0(Y):- clex:iv_finsg(_,Y).
 
 
 % X flows through Begin

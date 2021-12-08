@@ -288,6 +288,6 @@ conj(Conj,list,end) --->
 
 loc_pred(Of,P) --->
    theText80(W), % north 
-   {loc_pred_lex(Of,W,P)}.
+   {loc_pred_lex(Of,W,P)}.  %loc_pred_lex(of,north,prep(cp(north,of))).
 
 %:-retract(tlxgproc:do_xg_process_te).

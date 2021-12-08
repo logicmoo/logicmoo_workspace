@@ -195,7 +195,7 @@ quantifier_pron_lex(something,some,thing).
 % superceeded regular_pres_db(chat80,have(_MODAL)).
 
 wh_rel_pron_lex(which,undef).
-%wh_rel_pron_lex(who,subJ(_ArgInfo1)).
+wh_rel_pron_lex(who,subJ(_ArgInfo1)):- if_search_expanded(4).
 wh_rel_pron_lex(whom,compl).
 
 % wordt niet gebruikt:

@@ -1344,17 +1344,25 @@ add_history(_):- prolog_load_context(reloading, true),!.
 add_history(O):- add_history1(O).
 add_history1(O):- is_list(O), member(E,O), compound(E), !, maplist(add_history,O).
 %add_history(O):- !, wdmsg(not_add_history(O)),!.
-add_history1(O):- ignore_not_not((nonvar(O),make_historial(O,A),add_history0(A))),!.
+add_history1(O):- ignore_not_not((nonvar(O),make_historical(O,A),add_history0(A))),!.
 
 ignore_not_not(G):- ignore((catch((( \+ \+ (ignore(once(G))))),_,fail))),!.
 
-make_historial(M:O,A):- (M==user),!, make_historial(O,A).
-make_historial(whenever_flag_permits(_,O),A):-!,make_historial(O,A).
-make_historial(add_history(O),A):-!,make_historial(O,A).
-make_historial(O,A):- string(O),A=O.
-make_historial(O,A):-ground(O),
+ensure_period_at_end(A,A):- string_concat(_,'.',A),!.
+ensure_period_at_end(A,O):- string_concat(A,'.',O).
+
+make_historical(O,PO):-
+  make_historical0(O,A),
+  string_trim1(A,A1),
+  ensure_period_at_end(A1,PO),!.
+
+make_historical0(M:O,A):- (M==user),!, make_historical0(O,A).
+make_historical0(whenever_flag_permits(_,O),A):-!,make_historical0(O,A).
+make_historical0(add_history(O),A):-!,make_historical(O,A).
+make_historical0(O,A):- string(O),A=O.
+make_historical0(O,A):- ground(O),
   without_color(format(string(A), '~W', [O, [fullstop(true),portrayed(true),quoted(true),numbervars(true)]])),!.
-make_historial(O,A):-
+make_historical0(O,A):-
     prolog_load_context(variable_names, Bindings),
     without_color(format(string(A), '~W', [O, [fullstop(true),portray(true),quoted(true),variable_names(Bindings)]])).
 
@@ -1380,6 +1388,8 @@ default_history_file(File):-
 
 string_trim1(X,Y):- string_concat(M,"\\040",X),!,string_trim1(M,Y).
 string_trim1(X,Y):- string_concat(M,"\040",X),!,string_trim1(M,Y).
+string_trim1(X,Y):- string_concat(XM,".\\040.",X),string_concat(XM,".",M),!,string_trim1(M,Y).
+string_trim1(X,Y):- string_concat(XM,". .",X),string_concat(XM,".",M),!,string_trim1(M,Y).
 string_trim1(X,Y):- string_concat(M," ",X),!,string_trim1(M,Y).
 string_trim1(X,Y):- string_concat(M,"\n",X),!,string_trim1(M,Y).
 string_trim1(X,Y):- current_predicate(string_trim/2),!,call(call,string_trim,X,Y).
@@ -1391,8 +1401,7 @@ add_history0(S):-
   forall(clause('$history':'$history'(_,W),true,_Ref),carelessly(add_history00(W))),
   carelessly(add_history00(S)),!.
 
-add_history00(A):- \+ string(A), make_historial(A,S),!,add_history00(S).
-add_history00(A):- string_trim1(A,S),add_history01(S).
+add_history00(A):- make_historical(A,S),!,add_history01(S).
 add_history01(A):- histtmp:history_data(A),!.
 add_history01(A):- assert(histtmp:history_data(A)), 
    default_history_file(File),
@@ -1400,11 +1409,14 @@ add_history01(A):- assert(histtmp:history_data(A)),
    ((fail,current_prolog_flag(readline,editline)) -> User_input = libedit_input; User_input = user_input),
    prolog:history(User_input, load(File)).
 
-add_history02(A):- clause('$history':'$history'(N,_),true,_Ref), !, N1 is N + 1, add_history02(N1,A).
-add_history02(A):- add_history02(1,A),!.
-add_history02(N,A):-
+get_hist_next_num(N1):- clause('$history':'$history'(N,_),true,_Ref), !, N1 is N + 1.
+get_hist_next_num(1).
+
+add_history02(A0):-
+   make_historical(A0,A),
    carelessly(prolog_history:prolog_history(enable)),
    current_input(S),
+   get_hist_next_num(N),
    asserta('$history':'$history'(N,A)),
    (current_prolog_flag(readline,editline) -> User_input = libedit_input; User_input = user_input),  
    carelessly(prolog:history(S,add(A))),   
@@ -1414,13 +1426,13 @@ add_history02(N,A):-
             carelessly(prolog:history(User_input,add(A))))),!,
    nop(carelessly((default_history_file(File),prolog:history(User_input, save(File))))).
 
-add_history2(X):- assert(histtmp:history_data(X)).
+add_history2(X):- make_historical(X,H),assertz_new(histtmp:history_data(H)).
 
 load_history_from_file(File):- \+ exists_file(File),!.
 load_history_from_file(File):-
  setup_call_cleanup(
   open(File,read,In), 
-   (repeat, read_line_to_string(In,String), (String=end_of_file -> ! ; (string_trim1(String,S),assert_if_new(histtmp:history_data(S)), fail))),
+   (repeat, read_line_to_string(In,String), (String=end_of_file -> ! ; (add_history2(String), fail))),
    close(In)).
 
 load_history:- 
