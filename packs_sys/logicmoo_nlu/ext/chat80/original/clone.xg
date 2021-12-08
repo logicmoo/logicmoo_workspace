@@ -1,7 +1,7 @@
 
 :- op(1001,xfy, ('...' )).
 :- op(1200,xfx, ('--->')).
-
+:- include(xgproc).
 %:- push_def(t_l:disable_px).
 
 :-asserta(t_l:disable_px).
@@ -159,8 +159,7 @@ yn_question(q(S)) --->
 fronted_verb(QCase,NPCase) ...
       verb_form88(ExtraMods,Root,Tense,Agmt,Role), neg_modal_opt(Tense,_,_,Neg) --->
    verb_form88(ExtraMods,Root,Tense,Agmt,_),
-   {verb_type_lex(Root,aux+_),
-    is_to_role_case(QCase,Role,NPCase)},
+   {verb_type_lex(Root,aux+_), is_to_role_case(QCase,Role,NPCase)},
    neg_modal_opt(Tense,ExtraMods,_,Neg).
 
 /* Imperative sentences */
@@ -708,25 +707,14 @@ reduced_wh(AgmtX,X),
 
 /* Verb phrase (less the complements) */
 
-verb(verb(Type,Root,Voice,Time+fin,Aspect,Neg),Agmt,Type,Voice) --->
+verb(verb(Type,Root,Voice,Time+fin,Aspect,Neg),Agmt,Type,Voice) ---> 
      % {is_empty_bits(Nil), is_s_all(SAll)},      
    maybe_verb_pre_mods(ExtraMods,_Set,_Mask0,_Mask1),
    verb_form88(ExtraMods,Root0,Time+fin,Agmt,Role),
    {verb_type_lex(Root0,Type0)},
-   neg_modal_opt(_Tense,ExtraMods,Type0,Neg),
+   neg_modal_opt(Tense,ExtraMods,Type0,Neg),
    rest_verb(ExtraMods,Role,Root0,Root,Voice,Aspect),
    {verb_type_lex(Root,Type)}.
-   
-verb(verb(Type,Root,Voice,Time+fin,Aspect,Neg),Agmt,Type,Voice) --->
-     % {is_empty_bits(Nil), is_s_all(SAll)},      
-   maybe_verb_pre_mods(ExtraMods1,_Set,_Mask0,_Mask1),
-   verb_form88(ExtraMods2,Root0,Time+fin,Agmt,Role),
-   {ignore(ExtraMods2=[])},
-   {verb_type_lex(Root0,Type0)},
-   neg_modal_opt1(ExtraMods,Type0,Neg),
-   rest_verb(ExtraMods3,Role,Root0,Root,Voice,Aspect),
-   {verb_type_lex(Root,Type),
-    append([ExtraMods1,ExtraMods2,ExtraMods3],ExtraMods)}.
     
 neg_modal_opt(Tense,ExtraMods,Aux,Neg) --->
   maybe_modal0(Tense,ExtraMods,ModalInfo),
@@ -735,20 +723,39 @@ neg_modal_opt(Tense,ExtraMods,Aux,Neg) --->
 neg_modal_opt1(ExtraMods,aux+_,negP(ExtraMods)) ---> theText80(not).
 neg_modal_opt1(ExtraMods,_,posP(ExtraMods)) ---> noText .
 
-verb_form88(ExtraMods,RootVerb,Tense,Agmt,Role) --->
-   maybe_modal(Tense2,[],ExtraMods1),!,
+verb_form88(ExtraMods,RootVerb,Tense,Agmt,Role) ---> 
+   maybe_modal(_Tense1,[],ExtraMods1), !,
    verb_form88(ExtraMods2,RootVerb,Tense,Agmt,Role),
-  {append(ExtraMods1,ExtraMods2,ExtraMods),ignore(Tense2=Tense)}.
+   {append(ExtraMods1,ExtraMods2,ExtraMods)}.
+
+
+
+/*
+verb_form88(ExtraMods,RootVerb,Tense,Agmt,Role) --->
+   maybe_modal(_,[],ModalInfo),!,
+   verb_form88(ExtraMods,RootVerb,Tense,Agmt,Role),
+  {maybe_apply_modal(W,ExtraMods,ModalInfo,RootVerb)}.
+*/
 verb_form88([],RootVerb,Tense,Agmt,_Role) --->
    theText80_W2(W,L),
    {verb_form_wlex(L,W,RootVerb,Tense,Agmt)}.
+/*
 
-one_modal(Tense,MODAL1) ---> theText80(W),{modal_verb_form_aux(W,MODAL1,Tense,_)}.
-% one_modal(_,not) ---> theText80(not).
+verb_form88(ExtraMods,RootVerb,Tense,Agmt,_Role) --->
+   maybe_modal0(_Tense1,[],ExtraMods1),
+   theText80_W2(W,L),
+   {verb_form_wlex(L,W,RootVerb,Tense,Agmt)},
+   maybe_modal0(_Tense2,[],ExtraMods2),
+   {append(ExtraMods1,[root|ExtraMods2],ExtraMods)}.
+
+*/
+
+one_modal(_Tense1,MODAL1) ---> theText80(W),{modal_verb_form_aux(W,MODAL1,_Tense2,_)}.
+one_modal(_,not) ---> theText80(not).
 
 maybe_modal(Tense,In,[M|Out]) ---> one_modal(Tense,M),maybe_modal0(Tense,In,Out).
 
-maybe_modal0(Tense,In,[M|Out]) ---> one_modal(Tense,M),maybe_modal(Tense,In,Out).
+maybe_modal0(Tense,In,[M|Out]) ---> one_modal(Tense,M),maybe_modal0(Tense,In,Out).
 maybe_modal0(_,ExtraMods, ExtraMods) ---> [].
 
 rest_verb(ExtraMods,aux,have(_),Root,Voice,[perf|Aspect]) ---> verb_form88(ExtraMods1,Root0,past+part,_,_), have_vt(ExtraMods2,Root0,Root,Voice,Aspect),{append(ExtraMods1,ExtraMods2,ExtraMods)}.
@@ -852,7 +859,7 @@ adj_phrase(P,Mask) --->  comp_phrase(P,Mask).
 adverb(adv(Adv)) ---> theText80_W2(W,W2), {adv_lex_w2(W,W2,Adv)}.
 adverb(adj(Adj)) ---> {if_search_expanded(3)},theText80_W2(W,W2), {adj_lex_w2(W,W2,Adj,_Type)}.
 adverb(adv(W)) ---> theText80(W), {adverb_lex(W)}.
-adverb(adv(t(A,B,C))) ---> theText80(W), {modal_verb_form_aux(W,A,B,C)}.
+%adverb(adv(t(A,B,C))) ---> theText80(W), {modal_verb_form_aux(W,A,B,C)}.
    
 no_args_vt(tv).
 no_args_vt(dv(_Prep)).

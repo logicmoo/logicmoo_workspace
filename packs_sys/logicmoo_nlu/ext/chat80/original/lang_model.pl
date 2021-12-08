@@ -649,7 +649,7 @@ c2(B,O):-
  ignore((var(O),add_c80(c2,S))),
  nonvar(O)))),!.
 
-c8(B):- c8(B,_).
+c8(B):- make, c8(B,_).
 c8(B,O):-
  any_to_str(B,S),
  make,

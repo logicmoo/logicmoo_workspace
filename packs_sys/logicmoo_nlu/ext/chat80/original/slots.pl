@@ -329,6 +329,7 @@ fix_mneg(O,O).
 maybe_modalize(PN,P,PP):- arg(1,PN,L),!,maybe_modalize0(L,P,PP).
 maybe_modalize(_,P,P).
 maybe_modalize0([PN|L],P,PP):- nonvar(PN), !, maybe_modalize0(PN,P,PM), maybe_modalize0(L,PM,PP).
+maybe_modalize0(root, P, P):-!.
 maybe_modalize0(adv(Modal), P, PP):- !, maybe_modalize0(Modal, P, PP).
 maybe_modalize0(t(Modal,_,_), P, PP):- !, maybe_modalize0(Modal, P, PP).
 maybe_modalize0(Modal, P, PP):- atom(Modal),!,PP=..[Modal,P].

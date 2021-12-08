@@ -2,6 +2,7 @@
 :- op(1001,xfy, ... ).
 :- op(1200,xfx,'--->').
 
+:- include(xgproc).
 
 
 %theTextC(W1,CYCPOS,Y=W1)  ---> {t_l:old_text,!},[W1],{W1=Y}.

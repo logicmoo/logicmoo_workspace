@@ -26,7 +26,7 @@
 
 :- ensure_loaded(xgrun).	% XG runtimes
 
-:- ensure_loaded(xgproc).
+:- reconsult(xgproc).
 :- ensure_loaded(library(logicmoo_common)).
 
 :- multifile( rel_spatial/3 ).
@@ -781,9 +781,9 @@ multifile_dynamic_discontiguous(P):- multifile(P),dynamic(P),discontiguous(P).
 :- ensure_loaded(lang_model).
 :- use_module(library(nars/nars)).
 
-:- fixup_exports.
-
 list_chat80_preds:- 
  forall((source_file(P,Y),atom(Y),atom_contains(Y,'chat80'),atom_contains(Y,'original'),
    compound(P)),(compound_name_arity(P,F,A),format('~q.~n',[:-multifile_dynamic_discontiguous(F/A)]))).
+
+:- fixup_exports.
 

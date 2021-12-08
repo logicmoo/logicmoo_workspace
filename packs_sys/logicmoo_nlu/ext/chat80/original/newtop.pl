@@ -459,23 +459,25 @@ process4a(How,Sentence,U,S1,Times) :-
    assert_if_new(tmp:test80_result(Sentence,into_lexical_segs,U)),
    runtime(StopSeg),
    SegTime is StopSeg - StartSeg,
-   (report(always,U,'segs',SegTime,print_tree_nl)),
+   (report(always,U,'segs',SegTime,print_tree_nl)))),!,
+ 
+ ((runtime(StartParse),   
    
-   runtime(StartParse))),!,
- ((debug_chat80_if_fail(deepen_pos(no_repeats(E,sentence80(E,U,[],[],[])))),
+   ((debug_chat80_if_fail(deepen_pos(no_repeats(E,sentence80(E,U,[],[],[])))),
     
    notrace((runtime(StopParse),
 
     ParseTime is StopParse - StartParse,
-    report(always,E,'Parse',ParseTime,print_tree_nl),
+    report(always,E,'Parse',ParseTime,print_tree_nl)
     % !, %%%%%%%%%%%%%%%% added by JPO but breaks "london"
-    runtime(StartSem))),
+    )))),
+   runtime(StartSem),
    debug_chat80_if_fail(mpred_test_mok(deepen_pos(i_sentence(E,E1)))),
-
    report(always,E1,'i_sentence',ParseTime,cmt),
-   debug_chat80_if_fail(clausify80(E1,E2)),!,
+   debug_chat80_if_fail(mpred_test_mok(deepen_pos(clausify80(E1,E2)))))),
+   !,
   % report(How,E2,'clausify80',ParseTime,cmt),
-   debug_chat80_if_fail((simplify80(E2,E3),simplify80(E3,S))))),
+   debug_chat80_if_fail((simplify80(E2,E3),simplify80(E3,S))),
    runtime(StopSem),
    SemTime is StopSem - StartSem,
    %report(How,S,'Semantics',SemTime,expr),

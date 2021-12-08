@@ -323,8 +323,9 @@ modal_verb_form_aux(shall,will,pres+fin,3+sg).
 modal_verb_form_aux(will,will,pres+fin,3+sg).
 modal_verb_form_aux(would,will,past+fin,_).
 modal_verb_form_aux(wont,[will,not],past+fin,_).
-modal_verb_form_aux(should,should,pres+fin,3+sg).
-modal_verb_form_aux(must,should,pres+fin,3+sg).
+modal_verb_form_aux(should,ought,pres+fin,3+sg).
+%modal_verb_form_aux(ought,ought,pres+fin,3+sg).
+modal_verb_form_aux(must,ought,pres+fin,3+sg).
 modal_verb_form_aux(may,might,pres+fin,3+sg).
 modal_verb_form_aux(might,might,pres+fin,3+sg).
 modal_verb_form_aux(possibly,can,pres+fin,3+sg).

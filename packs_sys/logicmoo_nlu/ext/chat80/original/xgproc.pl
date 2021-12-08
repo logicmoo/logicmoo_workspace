@@ -3,6 +3,7 @@
 :- op(1001,xfy,( ... )).
 :- op(1200,xfx,( '--->')).
 
+:- if( (prolog_load_context(source,X),prolog_load_context(file,X))).
 
 :-thread_local tlxgproc:current_xg_module/1.
 :-thread_local tlxgproc:current_xg_filename/1.
@@ -197,7 +198,7 @@ retractrule(Q,B) :- retract((Q :- B)), !.
 expandlhs(T,S0,S,H0,H1,Q) :-
    xg_flatten0(T,[P|L],[]),
    front(L,H1,H),
-   tag(P,S0,S,H0,H,Q).
+   tag(lhs,P,S0,S,H0,H,Q).
 
 xg_flatten0(X,L0,L) :- nonvar(X),!,
    xg_flatten(X,L0,L).
@@ -225,14 +226,14 @@ case(Nt,K,H,x(K,nonterminal,Nt,H)) :- virtualrule(Nt).
 virtualrule(X) :-
    functor(X,F,N),
    functor(Y,F,N),
-   tag(Y,S,S,Hx,Hy,P),
+   tag(lhs,Y,S,S,Hx,Hy,P),
    strip_module(P,M,_),
  ( clause(P,virtual(_,_,_)), !;
       new_pred(P),
       asserta_src(M,(P :- virtual(Y,Hx,Hy))) ).
 
 expandrhs(X,S0,S,H0,H,Y) :- var(X),!,
-   tag(X,S0,S,H0,H,Y).
+   tag(rhs,X,S0,S,H0,H,Y).
 expandrhs( ','(X1,X2),S0,S,H0,H,Y) :- !,
    expandrhs(X1,S0,S1,H0,H1,Y1),
    expandrhs(X2,S1,S,H1,H,Y2),
@@ -256,7 +257,7 @@ expandrhs((X1;X2),S0,S,H0,H,(Y1;Y2)) :- !,
    expandor(X1,S0,S,H0,H,Y1),
    expandor(X2,S0,S,H0,H,Y2).
 
-expandrhs({X},S,S,H,H,X) :- !.
+expandrhs({X},S,S,H,H,Y) :- !, as_memo_g(X,Y).
 expandrhs('!',S,S,H,H,'!') :- !.
 expandrhs(L,S0,S,H0,H,G) :- islist(L), !,
    expandlist(L,S0,S,H0,H,G).
@@ -264,7 +265,7 @@ expandrhs(L,S0,S,H0,H,G) :- islist(L), !,
 %expandrhs(\+ P,A1,A2,A3,A4, \+ Q) :- !, expandrhs(P,A1,A2,A3,A4,Q).
 
 expandrhs(X,S0,S,H0,H,Y) :-
-   tag(X,S0,S,H0,H,Y).
+   tag(rhs,X,S0,S,H0,H,Y).
 
 expandor(X,S0,S,H0,H,Y) :-
    expandrhs(X,S0a,S,H0a,H,Ya),
@@ -277,17 +278,45 @@ expandlist([X|L],S0,S,H0,H,terminal(X,S0,S,H0,H) ) :- L==[], !.
 expandlist([X|L],S0,S,H0,H,(terminal(X,S0,S1,H0,H1),Y)) :-
    expandlist(L,S1,S,H1,H,Y).
 
-tag(P,A1,A2,A3,A4,QQ) :- var(P),!,
- QQ = phraseXG(P,A1,A2,A3,A4).
+tag(_,P,A1,A2,A3,A4,QQ) :- var(P),!,
+ as_memo_x([A1|P],phraseXG(P,A1,A2,A3,A4),QQ).
 
-tag(P,A1,A2,A3,A4,Q) :-
+tag(lhs,P,A1,A2,A3,A4,Q) :-
    P=..[F|Args0],
    conc_gx(Args0,[A1,A2,A3,A4],Args), !,
    Q=..[F|Args].
+tag(rhs,P,A1,A2,A3,A4,QQ) :-
+   term_variables(P,QVs),
+   tag(lhs,P,A1,A2,A3,A4,Q),
+   as_memo_x([A1|QVs],Q,QQ).
 
-and(true,P,P) :- !.
-and(P,true,P) :- !.
+and(True,P,P) :- True == true,!.
+and(P,True,P) :- True == true,!.
 and(P,Q, ','(P,Q)).
+
+as_memo_g(A,A):- ground(A),!.
+as_memo_g(A,A):- \+ compound(A),!.
+%as_memo_g((A;B),(AA;BB)):-!,as_memo_g(A,AA),as_memo_g(B,BB).
+%as_memo_g(A,A):- compound(A),!.
+as_memo_g((A,B),(AA,BB)):-!,as_memo_g(A,AA),as_memo_g(B,BB).
+%as_memo_g(X, in_memo_g(Vs,X)):- term_variables(X,Vs).
+as_memo_g(X, in_memo_g(_,X)):- term_variables(X,_Vs).
+
+as_memo_x(_,A,A):- \+ compound(A),!.
+as_memo_x(_,A,A):- is_list(A),!.
+%as_memo_x(QVs,(A,B),(AA,BB)):-!,as_memo_x(QVs,A,AA),as_memo_x(QVs,B,BB).
+as_memo_x(QVs,(A;B),(AA;BB)):-!,as_memo_x(QVs,A,AA),as_memo_x(QVs,B,BB).
+as_memo_x(_,A,A):- compound(A),!.
+as_memo_x(QVs,A,in_memo_x(QVs,A)).
+
+%in_memo_g(_Vs,A):- copy_term(A,B,_),numbervars(B,0,N,[]),!,in_memo_key(B,N,A).
+in_memo_g(_Vs,A):- call(A).
+in_memo_x(_Vs,A):- call(A).
+
+:- dynamic(tmpmemo:memo_saved/3).
+ 
+in_memo_key(Key,N,A):- tmpmemo:memo_saved(Key,N,AL),!,member(A,AL).
+in_memo_key(Key,N,A):- findall(A,once(A),AL),asserta(tmpmemo:memo_saved(Key,N,AL)),member(A,AL).
 
 islist([_|_]).
 islist([]).
@@ -335,5 +364,8 @@ go_xg :- load_xg, xg_listing('newg.pl').
 
 :- fixup_exports.
 :- assert(user:prolog_file_type(xg,prolog)).
+
+:- endif.
+
 end_of_file.
 

@@ -321,7 +321,7 @@ chat80_all("Is the population of china greater than 200 million ?",_,_00).
 chat80_all("Is the population of china 840 million ?",_,_00).
 chat80_all("Is spain bordered by the pacific ?",_,_00).
 chat80_all("Is New York in america ?",_,_00).
-chat80_all("Iraq will border iran ?",_,10300).
+%chat80_all("Iraq will border iran ?",_,10300).
 chat80_all("Iraq was bordering iran ?",_,10500).
 chat80_all("Iraq is bordering iran ?",_,10400).
 chat80_all("Iraq does border iran ?",_,10100).
