@@ -188,9 +188,7 @@ test80_results:-
 
 show_results80:- 
  test80_results,
- tell('CHAT80.txt'),
- test80_results,
- told,
+ %tell('CHAT80.txt'),test80_results,told,
  show_title80_title,
  forall(tmp:chat80results(N,Sentence,Status,Times),
    show_results80(N,Sentence,Status,Times)),

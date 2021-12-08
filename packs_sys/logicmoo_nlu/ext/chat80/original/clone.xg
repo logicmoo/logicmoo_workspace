@@ -314,22 +314,24 @@ subj0(Subj,Agmt,_) --->
 np(AgmtKernelModsO,Agmt,Case,Def,Role,Set,Mask) --->
   locally(tlclone:np_in_case(Case),
     np0(AgmtKernelMods,Agmt,Case,Def,Role,Set,Mask)),
-    extend_np(AgmtKernelMods,AgmtKernelModsO).
+    extend_np(_,AgmtKernelMods,AgmtKernelModsO).
 
+np0(AgmtKernelModsO,Agmt,Case,Def,Role,Set,Mask) 
+ ---> np1(AgmtKernelModsO,Agmt,Case,Def,Role,Set,Mask).
 
-np0(np(Agmt,Pronoun,[]),Agmt,NPCase,def,_,Set,Nil) --->
+np1(np(Agmt,Pronoun,[]),Agmt,NPCase,def,_,Set,Nil) --->
    {is_pp(Set)},
    pers_pron(Pronoun,Agmt,Case),
    {is_empty_bits(Nil), is_to_role_case(Case,decl,NPCase)}.
 
-np0(np(Agmt,Kernel,Mods),Agmt,_Case,Def,Role,Set,Mask) --->
+np1(np(Agmt,Kernel,Mods),Agmt,_Case,Def,Role,Set,Mask) --->
    {is_pp(Set)},
    np_head(_Var,Kernel,Agmt,Def+Type,PostMods,Mods),
    {is_np_all(NPAll)},
    np_compls(Type,Agmt,Role,PostMods,NPAll,Mask).
 
 % many of, one of
-np0(part(Det,NP),3+Number,_,indef,Role,Set,Mask) --->
+np1(part(Det,NP),3+Number,_,indef,Role,Set,Mask) --->
    {is_pp(Set)},
    determiner(Det,Number,indef), {Det\=generic(_)},
    theText80(of),
@@ -341,10 +343,11 @@ np_expand(NP,A3+Apl,Case,def,Role,SAll,Mask) --->
 np_expand(NP,_,_Case,def,Role,SAll,Mask) ---> {if_search_expanded(3)},
   np(NP,_,_,def,Role,SAll,Mask).
 
-np_head(_Var,Kernel,Agmt,Type,PostMods,Mods) --->
+np_head(_Var,KernelMods,Agmt,Type,PostMods,Mods) --->
    np_head0(Kernel0,Agmt0,Type0),
    optional_possessive(Kernel0,Agmt0,Type0,Mods0,Mods0,
-              Kernel,Agmt,Type,PostMods,Mods).
+              Kernel,Agmt,Type,PostMods,Mods),
+      maybe_ace_variable(Kernel,KernelMods).
 
 np_compls(proper,_,_,[],_,Nil) ---> {is_empty_bits(Nil)}.
 np_compls(common,Agmt,Case,Mods,Set0,Mask) --->
@@ -371,11 +374,20 @@ np_head2(np_head(_Var,Det,AdjsO,Head),3+Number,Def+common) --->
    noun(Head,Adjs,AdjsO,Number).
 
 
-extend_np(I,O) ---> np_amend(V), {append_np_mods(I,V,M)},!, extend_np(M,O).
-extend_np(IO,IO)---> [].
+maybe_ace_variable(AdjIn,AdjsOut)---> ace_var(AceVar),!,{append_np_mods(AdjIn,(adj(ace_var(self,AceVar))),AdjsOut)}.
+maybe_ace_variable(Adjs,Adjs)---> [].
 
-np_amend(adj(ace_var(self,AceVar))) ---> ace_var(AceVar),!.
-np_amend(adj(s_vp(self,Subj,Verb,Args,Mods,Mask))) ---> theText80(that),!,just_vp(Subj,_Agmt,_Type,Verb,Args,Mods,Mask).
+extend_np(X,I,O) ---> np_amend1(X,V), {append_np_mods(I,V,M)},!, extend_np(X,M,O).
+extend_np(_,IO,IO)---> [].
+
+np_amend1(X,adj(ace_var(self,AceVar))) ---> {(\+ \+ X=ace_var),dif(X,ace_var)}, ace_var(AceVar),!.
+np_amend1(X,adj(s_vp(self,_Subj,Verb,Args,Mods))) ---> {fail},
+ {( \+ \+ X=s_vp),dif(X,s_vp)}, theText80(that),
+   verb(Verb,_Agmt,Type,Voice),
+   {is_empty_bits(Nil), is_s_all(SAll)},
+   verb_args(Type,Voice,Args,Nil,Mask0),
+   {minus_mask(SAll,Mask0,Set), plus_mask(SAll,Mask0,Mask1)},
+   verb_mods(post,Mods,Set,Mask1,_Mask).
 
 
 append_np_mods(List,W,List):- is_list(List),member(E,List),W=@=E,!.
