@@ -380,7 +380,7 @@ maybe_ace_variable(Adjs,Adjs)---> [].
 extend_np(X,I,O) ---> np_amend1(X,V), {append_np_mods(I,V,M)},!, extend_np(X,M,O).
 extend_np(_,IO,IO)---> [].
 
-np_amend1(X,adj(ace_var(self,AceVar))) ---> {(\+ \+ X=ace_var),dif(X,ace_var)}, ace_var(AceVar),!.
+np_amend1(X,adj(ace_var(self,AceVar))) ---> {fail},{(\+ \+ X=ace_var),dif(X,ace_var)}, ace_var(AceVar),!.
 np_amend1(X,adj(s_vp(self,_Subj,Verb,Args,Mods))) ---> {fail},
  {( \+ \+ X=s_vp),dif(X,s_vp)}, theText80(that),
    verb(Verb,_Agmt,Type,Voice),

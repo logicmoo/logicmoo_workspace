@@ -256,8 +256,6 @@ chat80_all("What is the total area of countries south of the equator and in aust
 chat80_all("Which country bordering the mediterranean borders a country that is bordered by a country whose population exceeds the population of india ?",[turkey],1900).
 chat80_all("Which countries with a population exceeding 10 million border the atlantic ?",[argentina,brazil,canada,colombia,france,mexico,morocco,netherlands,nigeria,south_africa,spain,united_kingdom,united_states,venezuela,west_germany,zaire],2100).
 chat80_all("Which countries have a population exceeding 10 million ?",[afghanistan,algeria,argentina,australia,bangladesh,brazil,burma,canada,china,colombia,czechoslovakia,east_germany,egypt,ethiopia,france,india,indonesia,iran,italy,japan,kenya,malaysia,mexico,morocco,nepal,netherlands,nigeria,north_korea,pakistan,peru,philippines,poland,south_africa,south_korea,soviet_union,spain,sri_lanka,sudan,taiwan,tanzania,thailand,turkey,uganda,united_kingdom,united_states,venezuela,vietnam,west_germany,yugoslavia,zaire],2000).
-chat80_all("What are the continents containing a country in which contains more than two cities whose population exceeds 1 million ?",[america,asia,europe],211).
-chat80_all("What are the continents no country in which contains more than two cities whose population exceeds 1 million ?",[[africa,antarctica,australasia]],18).
 chat80_all("Which rivers are not in asia ?",_,31800).
 chat80_all("How many rivers flow to west germany ?",_,21301).
 chat80_all("How many rivers flow to switzerland ?",_,21901).
@@ -343,6 +341,9 @@ chat80_all("Does the atlantic border spain ?",_,_00).
 chat80_all("Does Mexico border the United States ?",_,_00).
 chat80_all("Does america contain new York ?",_,_00).
 chat80_all("Does afghanistan border china ?",[true],200).
+chat80_all("What are the continents containing a country in which contains more than two cities whose population exceeds 1 million ?",[america,asia,europe],211).
+          chat80_all("What are the continents no country in which contains more than two cities whose population exceeds 1 million ?",[[africa,antarctica,australasia]],18).
+chat80_all("What are the continents no country in which contains more than two cities that have a population exceeding 1 million ?",[[africa,antarctica,australasia]],18).
 
 baltic_rivers(_):-!.
 baltic_rivers_real([[[[east_germany]:[elbe],
