@@ -284,12 +284,6 @@ i_s(s(Subj,verb(VerbType,Root,Voice,Tense,Aspect,Neg0),VArgs,VMods),Pred,Up,Id) 
   append([],Aspect,NewAspect),
   i_s(s(Subj,verb(VerbType,Root,Voice,Tense,NewAspect,FNewNeg),NewVArgs,VMods),Pred,Up,Id).
 
-add_extra_to_neg(Neg0,IntoNegs,FNewNeg):- 
-  fix_mneg(Neg0,Neg),Neg=..[F,L],
-  append(IntoNegs,L,NewIntoNegs),
-  NewNeg=..[F,NewIntoNegs],
-  fix_mneg(NewNeg,FNewNeg).
-
 
 i_s(s(Subj,verb(Mainiv,be(_),[],Active,Fin+fin,[],Neg),VArgs,VMods),Pred,Up,Id) :- !,
    i_s(s(Subj,verb(Mainiv,exist,[],Active,Fin+fin,[],Neg),VArgs,VMods),Pred,Up,Id).
@@ -336,6 +330,12 @@ i_verb(verb(_VerbType,Root,Voice,Tense,_Aspect,Neg0),
    fix_mneg(Neg0,Neg),
    i_neg(Neg,NegDet),
    maybe_modalize(Neg,P,PP).
+
+add_extra_to_neg(Neg0,IntoNegs,FNewNeg):- 
+  fix_mneg(Neg0,Neg),Neg=..[F,L],
+  append(IntoNegs,L,NewIntoNegs),
+  NewNeg=..[F,NewIntoNegs],
+  fix_mneg(NewNeg,FNewNeg).
 
 fix_mneg(posP(Modal),O):- var(Modal),!,fix_mneg(posP([]),O).
 fix_mneg(negP(Modal),O):- var(Modal),!,fix_mneg(negP([]),O).
