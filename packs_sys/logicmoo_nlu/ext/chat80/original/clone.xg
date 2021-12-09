@@ -525,8 +525,9 @@ np_mod(Agmt,_Case,WH,Set,Mask) --->
 /* Verb modifiers */
 
 maybe_verb_pre_mods(ExtraMods,Set,Mask0,Mask1)--->
-  verb_mods(pre,ExtraMods,Set,Mask0,Mask1).
-maybe_verb_pre_mods([],_Set,_Mask0,_Mask1)---> noText.
+  verb_mods(pre,ExtraMods,Set,Mask0,Mask1),!.
+maybe_verb_pre_mods(ExtraMods,_Set,_Mask0,_Mask1)---> maybe_modal0(_,[],ExtraMods),!.
+maybe_verb_pre_mods([],_Set,_Mask0,_Mask1)---> [].
   
 verb_mods(PrePost,[Mod|Mods],Set0,_,Mask) --->
    verb_mod(PrePost,Mod,Set0,Mask0),
@@ -536,10 +537,10 @@ verb_mods(PrePost,[Mod|Mods],Set0,_,Mask) --->
 verb_mods(_,[],_,Mask,Mask) ---> noText.
 
 verb_mod(PrePost,Adv,Set,Mask) ---> adv_phrase(PrePost,Adv,Set,Mask).
-verb_mod(_,Adv,Set,Nil) --->
-   {is_adv_bits(Set)},
+verb_mod(PrePost,Adv,Set,Nil) --->
+   {once(is_adv_bits(Set);PrePost==pre)},
    adverb(Adv),
-   {is_empty_bits(Nil)}.
+   {once(is_empty_bits(Nil);PrePost==pre)}.
 verb_mod(post,PP,Set,Mask) ---> xg_prep_phrase(_PPAlowed,PP,compl,Set,Mask).
 
 adv_phrase(post,prep_phrase(PPType,Prep,NP),Set,Mask) --->
@@ -709,26 +710,39 @@ reduced_wh(AgmtX,X),
 
 verb(verb(Type,Root,Voice,Time+fin,Aspect,Neg),Agmt,Type,Voice) ---> 
      % {is_empty_bits(Nil), is_s_all(SAll)},      
-   maybe_verb_pre_mods(ExtraMods,_Set,_Mask0,_Mask1),
-   verb_form88(ExtraMods,Root0,Time+fin,Agmt,Role),
+   maybe_verb_pre_mods(ExtraMods1,_Set,_Mask0,_Mask1),
+   verb_form88(ExtraMods2,Root0,Time+fin,Agmt,Role),
    {verb_type_lex(Root0,Type0)},
-   neg_modal_opt(Tense,ExtraMods,Type0,Neg),
-   rest_verb(ExtraMods,Role,Root0,Root,Voice,Aspect),
-   {verb_type_lex(Root,Type)}.
+   neg_modal_opt(_Tense1,[],Type0,NegI),
+   rest_verb(ExtraMods3,Role,Root0,Root,Voice,Aspect),
+
+   
+   {append([ExtraMods1,ExtraMods2,ExtraMods3],ExtraMods),
+    add_extra_to_neg(NegI,ExtraMods,Neg),
+    verb_type_lex(Root,Type)}.
     
 neg_modal_opt(Tense,ExtraMods,Aux,Neg) --->
-  maybe_modal0(Tense,ExtraMods,ModalInfo),
+  (maybe_modal0(Tense,ExtraMods,ModalInfo);{ExtraMods=ModalInfo}),!,
   neg_modal_opt1(ModalInfo,Aux,Neg).
 
 neg_modal_opt1(ExtraMods,aux+_,negP(ExtraMods)) ---> theText80(not).
 neg_modal_opt1(ExtraMods,_,posP(ExtraMods)) ---> noText .
+
+
+verb_form88(Mods,RootVerb,Tense,_Agmt1,_Role) ---> % {fail},
+   theText80(W),
+   {verb_form_aux(W,RootVerb,Tense,_Agmt2),flatten([RootVerb],Mods)}.
 
 verb_form88(ExtraMods,RootVerb,Tense,Agmt,Role) ---> 
    maybe_modal(_Tense1,[],ExtraMods1), !,
    verb_form88(ExtraMods2,RootVerb,Tense,Agmt,Role),
    {append(ExtraMods1,ExtraMods2,ExtraMods)}.
 
+verb_form88([],RootVerb,Tense,Agmt,_Role) ---> 
+   theText80_W2(W,L),
+   {verb_form_wlex(L,W,RootVerb,Tense,Agmt)}.
 
+%verb_form88([],do([]),Tense,Agmt,_Role) ---> xg_peek(theText80(will)).
 
 /*
 verb_form88(ExtraMods,RootVerb,Tense,Agmt,Role) --->
@@ -736,9 +750,6 @@ verb_form88(ExtraMods,RootVerb,Tense,Agmt,Role) --->
    verb_form88(ExtraMods,RootVerb,Tense,Agmt,Role),
   {maybe_apply_modal(W,ExtraMods,ModalInfo,RootVerb)}.
 */
-verb_form88([],RootVerb,Tense,Agmt,_Role) --->
-   theText80_W2(W,L),
-   {verb_form_wlex(L,W,RootVerb,Tense,Agmt)}.
 /*
 
 verb_form88(ExtraMods,RootVerb,Tense,Agmt,_Role) --->
@@ -754,17 +765,17 @@ one_modal(_Tense1,MODAL1) ---> theText80(W),{modal_verb_form_aux(W,MODAL1,_Tense
 one_modal(_Tense1,Modal) ---> thePos80([pos(md),root(Modal)]).
 one_modal(_,not) ---> theText80(not).
 
-maybe_modal(Tense,In,[M|Out]) ---> one_modal(Tense,M),maybe_modal0(Tense,In,Out).
+maybe_modal(Tense,In,[M|Out]) ---> one_modal(Tense,M),!,maybe_modal0(Tense,In,Out).
 
-maybe_modal0(Tense,In,[M|Out]) ---> one_modal(Tense,M),maybe_modal0(Tense,In,Out).
+maybe_modal0(Tense,In,[M|Out]) ---> one_modal(Tense,M),!,maybe_modal0(Tense,In,Out).
 maybe_modal0(_,ExtraMods, ExtraMods) ---> [].
 
-rest_verb(ExtraMods,aux,have(_),Root,Voice,[perf|Aspect]) ---> verb_form88(ExtraMods1,Root0,past+part,_,_), have_vt(ExtraMods2,Root0,Root,Voice,Aspect),{append(ExtraMods1,ExtraMods2,ExtraMods)}.
-rest_verb(ExtraMods,aux,be(_),Root,Voice,Aspect) ---> verb_form88(ExtraMods1,Root0,Tense0,_,_), be_vt(ExtraMods2,Tense0,Root0,Root,Voice,Aspect),{append(ExtraMods1,ExtraMods2,ExtraMods)}.
-rest_verb(ExtraMods,aux,do(_),Root,active,[]) ---> verb_form88(ExtraMods,Root,inf,_,_).
-%rest_verb(ExtraMods,aux,can,Root,active,[]) ---> verb_form88(ExtraMods,Root,inf,_,_).
-%rest_verb(ExtraMods,aux,will,Root,active,[]) ---> verb_form88(ExtraMods,Root,inf,_,_).
-rest_verb([],main,Root,Root,active,[]) ---> noText.
+rest_verb(ExtraMods,aux,have(ExtraMods1),Root,Voice,[perf|Aspect]) ---> verb_form88(ExtraMods2,Root0,past+part,_,_), have_vt(ExtraMods3,Root0,Root,Voice,Aspect),{append([ExtraMods1,ExtraMods2,ExtraMods3],ExtraMods)}.
+rest_verb(ExtraMods,aux,be(ExtraMods1),Root,Voice,Aspect) ---> verb_form88(ExtraMods2,Root0,Tense0,_,_), be_vt(ExtraMods3,Tense0,Root0,Root,Voice,Aspect),{append([ExtraMods1,ExtraMods2,ExtraMods3],ExtraMods)}.
+rest_verb(ExtraMods,aux,do(ExtraMods1),Root,active,[]) ---> verb_form88(ExtraMods2,Root,inf,_,_),{append([ExtraMods1,ExtraMods2],ExtraMods)}.
+%rest_verb(ExtraMods,aux,Can,Root,active,[]) ---> {modal_verb_form_aux(_,Can,_,_)},verb_form88(ExtraMods1,Root,inf,_,_),{append([[Can],ExtraMods1],ExtraMods)}.
+%rest_verb(ExtraMods,aux,Wont,Root,active,[]) ---> {modal_verb_form_aux(Wont,List,_,_),flatten([List],ListF)},verb_form88(ExtraMods1,Root,inf,_,_),{append([ListF,ExtraMods1],ExtraMods)}.
+rest_verb([root],main,Root,Root,active,[]) ---> noText.
 
 
 % BE
@@ -860,7 +871,7 @@ adj_phrase(P,Mask) --->  comp_phrase(P,Mask).
 adverb(adv(Adv)) ---> theText80_W2(W,W2), {adv_lex_w2(W,W2,Adv)}.
 adverb(adj(Adj)) ---> {if_search_expanded(3)},theText80_W2(W,W2), {adj_lex_w2(W,W2,Adj,_Type)}.
 adverb(adv(W)) ---> theText80(W), {adverb_lex(W)}.
-%adverb(adv(t(A,B,C))) ---> theText80(W), {modal_verb_form_aux(W,A,B,C)}.
+adverb(adv(t(A,B,C))) ---> theText80(W), {modal_verb_form_aux(W,A,B,C)}.
    
 no_args_vt(tv).
 no_args_vt(dv(_Prep)).

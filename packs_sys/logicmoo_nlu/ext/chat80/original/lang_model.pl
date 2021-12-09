@@ -626,7 +626,7 @@ acetext_to_text80(List,Out):- is_list(List),member(E,List),acetext_to_text80(E,O
 sentence80(U,E):- no_repeats(E,sentence80(E,U,[],[],[])).
 
 try_chat_80(S,G):- G=..[F,Tree,QT],!,try_chat_80(S,F,Tree,QT).
-try_chat_80(S,F,Tree,QT):-   
+try_chat_80(S,F,Tree,QT):- 
   statistics(runtime,[Start,_]),
   ((should_learn(Tree),catch(debug_chat80_if_fail(deepen_pos(call(F,Tree,QT))),E,QT=error(E))) *-> true ; QT = failure),
   statistics(runtime,[End,_]),
@@ -671,7 +671,7 @@ c8(B,O):-
  should_learn(Tree),
  try_chat_80(S,i_sentence(Tree,QT)),
  should_learn(QT),
- try_chat_80(S,clausify80(QT,UE)),
+ try_chat_80(S,clausify80(QT,UE)),  
  should_learn(UE),!, 
  try_chat_80(S,simplify80(UE,Query)),
  try_chat_80(S,results80(Query,Answer)),!,

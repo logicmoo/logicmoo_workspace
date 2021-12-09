@@ -272,6 +272,25 @@ i_adj(adj(Adj),TypeX-X,T,T,_,
   select(cond(_),VArgs,NewVargs), !,
   i_s(s(Subj,Verb,NewVargs,VMods),Pred,Up,Id).
 */
+
+unslotted_v_args(List,NewVArgs,IntoNegs):- partition(functor_is(arg),List,NewVArgs,IntoNegs).
+
+functor_is(F,P):- compound(P),compound_name_arity(P,F,_).
+
+i_s(S,Pred,Up,Id):- dmsg(i_s(S,Pred,Up,Id)),fail.
+i_s(s(Subj,verb(VerbType,Root,Voice,Tense,Aspect,Neg0),VArgs,VMods),Pred,Up,Id) :-
+  unslotted_v_args(VArgs,NewVArgs,IntoNegs), IntoNegs\==[],
+  add_extra_to_neg(Neg0,IntoNegs,FNewNeg),
+  append([],Aspect,NewAspect),
+  i_s(s(Subj,verb(VerbType,Root,Voice,Tense,NewAspect,FNewNeg),NewVArgs,VMods),Pred,Up,Id).
+
+add_extra_to_neg(Neg0,IntoNegs,FNewNeg):- 
+  fix_mneg(Neg0,Neg),Neg=..[F,L],
+  append(IntoNegs,L,NewIntoNegs),
+  NewNeg=..[F,NewIntoNegs],
+  fix_mneg(NewNeg,FNewNeg).
+
+
 i_s(s(Subj,verb(Mainiv,be(_),[],Active,Fin+fin,[],Neg),VArgs,VMods),Pred,Up,Id) :- !,
    i_s(s(Subj,verb(Mainiv,exist,[],Active,Fin+fin,[],Neg),VArgs,VMods),Pred,Up,Id).
 i_s(s(Subj,verb(Mainiv,be,[],Active,Fin+fin,[],Neg),VArgs,VMods),Pred,Up,Id) :- !,
@@ -295,13 +314,13 @@ i_s(s(Subj,Verb,VArgs,VMods),Pred,Up,Id) :-
    i_verb_mods(RefVar,Mods,Tense,XA,Slots,Args,Up,+Id),
    reshape_pred(Meta,QSubj,Neg,P,Args0,Pred))).
 
-
+/*
       i_verb(verb(VerbType,Root,[],Voice,Tense,Aspect,Neg),
       PP,Tense,Voice,Det,Slots,XArg,Meta) :-
       i_verb(verb(VerbType,Root,Voice,Tense,Aspect,Neg),
       PP,Tense,Voice,Det,Slots,XArg,Meta).
 
-
+*/
 /*i_verb(verb(VerbType,Root,Voice,Tense,Aspect,Neg),
       PP,Tense,Voice,Det,Slots,XArg,Meta) :-
        ignore((ExtraMods\==[],wdmsg(extra_mods(ExtraMods)),nop((dumpST,break)))),
@@ -320,12 +339,17 @@ i_verb(verb(_VerbType,Root,Voice,Tense,_Aspect,Neg0),
 
 fix_mneg(posP(Modal),O):- var(Modal),!,fix_mneg(posP([]),O).
 fix_mneg(negP(Modal),O):- var(Modal),!,fix_mneg(negP([]),O).
-fix_mneg(posP(Modal),O):- flatten([Modal],ModalF),ModalF\==Modal,!,fix_mneg(posP(ModalF),O).
-fix_mneg(negP(Modal),O):- flatten([Modal],ModalF),ModalF\==Modal,!,fix_mneg(negP(ModalF),O).
+fix_mneg(posP(Modal),O):- fix_modal_list(Modal,ModalF),Modal\==ModalF,fix_mneg(posP(ModalF),O).
+fix_mneg(negP(Modal),O):- fix_modal_list(Modal,ModalF),Modal\==ModalF,fix_mneg(negP(ModalF),O).
 fix_mneg(posP(Modal),O):- assertion(is_list(Modal)),select(not,Modal,ModalP),!,fix_mneg(negP(ModalP),O).
 fix_mneg(negP(Modal),O):- assertion(is_list(Modal)),select(not,Modal,ModalP),!,fix_mneg(posP(ModalP),O).
 fix_mneg(O,O).
   
+fix_modal_list(Modal,O):- flatten([Modal],ModalF),fix_modal_list0(ModalF,O).
+fix_modal_list0(O,O):- \+ compound(O),!.
+fix_modal_list0([H|T],[HH|TT]):- fix_modal_list0(H,HH), fix_modal_list0(T,TT).
+fix_modal_list0(adv(M),O):-!,fix_modal_list0(M,O).
+
 maybe_modalize(PN,P,PP):- arg(1,PN,L),!,maybe_modalize0(L,P,PP).
 maybe_modalize(_,P,P).
 maybe_modalize0([PN|L],P,PP):- nonvar(PN), !, maybe_modalize0(PN,P,PM), maybe_modalize0(L,PM,PP).

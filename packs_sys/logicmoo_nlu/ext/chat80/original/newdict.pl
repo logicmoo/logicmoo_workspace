@@ -175,7 +175,7 @@ quantifier_pron_lex(something,some,thing).
 
 % NEW TRY regular_past_lex(Had,Have):- try_lex(regular_past_db(Had,Have)).
 
-%regular_past_db(chat80,had,have(_MODAL)).
+%regular_past_db(chat80,had,have([])).
 
 %superceeded regular_past_db(chat80,contained,contain).
 %superceeded regular_past_db(chat80,exceeded,exceed).
@@ -191,8 +191,8 @@ quantifier_pron_lex(something,some,thing).
 % superceeded regular_pres_db(chat80,govern).
 
 
-% superceeded regular_pres_db(chat80,do(_MODAL)).
-% superceeded regular_pres_db(chat80,have(_MODAL)).
+% superceeded regular_pres_db(chat80,do([])).
+% superceeded regular_pres_db(chat80,have([])).
 
 wh_rel_pron_lex(which,undef).
 wh_rel_pron_lex(who,subJ(_ArgInfo1)):- if_search_expanded(4).
@@ -271,31 +271,32 @@ verb_form_wlex0(_,A,B,C,D):- verb_form_lex(A,B,C,D), !.
 verb_form_wlex0(L,_,Root,_,_):- is_list(L),member(pos(V),L),atom_concat('vb',_,V),member(root(Root0),L),!,correct_root(Root0,Root).
 
 % BE
-verb_form_aux(am,be(_MODAL),pres+fin,1+sg).
-verb_form_aux(as,be(_MODAL),pres+fin,3+_).
-verb_form_aux(are,be(_MODAL),pres+fin,2+sg).
-verb_form_aux(are,be(_MODAL),pres+fin,_+pl).
-verb_form_aux(been,be(_MODAL),past+part,_).
-verb_form_aux(be,be(_MODAL),inf,_).
-verb_form_aux(being,be(_MODAL),pres+part,_).
-verb_form_aux(is,be(_MODAL),pres+fin,3+sg).
-verb_form_aux(was,be(_MODAL),past+fin,1+sg).
-verb_form_aux(was,be(_MODAL),past+fin,3+sg).
-verb_form_aux(were,be(_MODAL),past+fin,2+sg).
-verb_form_aux(were,be(_MODAL),past+fin,_+pl).
+verb_form_aux(am,be([]),pres+fin,1+sg).
+verb_form_aux(as,be([]),pres+fin,3+_).
+verb_form_aux(are,be([]),pres+fin,2+sg).
+verb_form_aux(are,be([]),pres+fin,_+pl).
+verb_form_aux(been,be([]),past+part,_).
+verb_form_aux(be,be([]),inf,_).
+verb_form_aux(being,be([]),pres+part,_).
+verb_form_aux(is,be([]),pres+fin,3+sg).
+verb_form_aux(was,be([]),past+fin,1+sg).
+verb_form_aux(was,be([]),past+fin,3+sg).
+verb_form_aux(were,be([]),past+fin,2+sg).
+verb_form_aux(were,be([]),past+fin,_+pl).
 
 % CAN
-verb_form_aux(can,do(_),_,_).
+verb_form_aux(can,do([can]),_,_).
 
 % DO
-verb_form_aux(do,do(_MODAL),pres+fin,_+pl).
-verb_form_aux(did,do(_MODAL),past+fin,_).
-verb_form_aux(does,do(_MODAL),pres+fin,3+sg).
-verb_form_aux(doing,do(_MODAL),pres+part,_).
-verb_form_aux(done,do(_MODAL),past+part,_).
+verb_form_aux(do,do([]),pres+fin,_+pl).
+verb_form_aux(did,do([]),past+fin,_).
+verb_form_aux(can,do([can]),pres+fin,_).
+verb_form_aux(does,do([]),pres+fin,3+sg).
+verb_form_aux(doing,do([]),pres+part,_).
+verb_form_aux(done,do([]),past+part,_).
 
-/*
 verb_form_aux(will,will,pres+fin,3+sg).
+/*
 verb_form_aux(would,will,past+fin,_).
 
 verb_form_aux(could,can,past+fin,_).
@@ -303,12 +304,12 @@ verb_form_aux(can,can,pres+fin,3+sg).
 */
 
 % HAVE
-verb_form_aux(has,have(_MODAL),pres+fin,3+sg).
-verb_form_aux(have,have(_MODAL),pres+fin,_+pl).
-verb_form_aux(having,have(_MODAL),pres+part,_).
-verb_form_aux(had,have(_MODAL),past+part,_).
+verb_form_aux(has,have([]),pres+fin,3+sg).
+verb_form_aux(have,have([]),pres+fin,_+pl).
+verb_form_aux(having,have([]),pres+part,_).
+verb_form_aux(had,have([]),past+part,_).
 
-%verb_form_aux(A,B,C,D):- modal_verb_form_aux(A,B,C,D).
+verb_form_aux(A,B,C,D):- modal_verb_form_aux(A,B,C,D).
 
 verb_form_lex(A,B,C,_):- verb_form_aux(A,B,C,_).
 %verb_form_lex(A,B,C,D):- modal_verb_form_aux(A,B,C,D).
@@ -324,7 +325,7 @@ modal_verb_form_aux(will,will,pres+fin,3+sg).
 modal_verb_form_aux(would,will,past+fin,_).
 modal_verb_form_aux(wont,[will,not],past+fin,_).
 modal_verb_form_aux(should,ought,pres+fin,3+sg).
-%modal_verb_form_aux(ought,ought,pres+fin,3+sg).
+modal_verb_form_aux(ought,ought,pres+fin,3+sg).
 modal_verb_form_aux(must,ought,pres+fin,3+sg).
 modal_verb_form_aux(may,might,pres+fin,3+sg).
 modal_verb_form_aux(might,might,pres+fin,3+sg).
@@ -332,7 +333,7 @@ modal_verb_form_aux(possibly,can,pres+fin,3+sg).
 modal_verb_form_aux(could,can,past+fin,_).
 modal_verb_form_aux(can,can,pres+fin,3+sg).
 modal_verb_form_aux(cannot,[can,not],pres+fin,3+sg).
-%modal_verb_form_aux(not,not,_+_,_+_).
+modal_verb_form_aux(not,not,_+_,_+_).
 
 maybe_apply_modal(_W,Modal9,_ModalInfo,RootVerb):- 
    ignore((compound(RootVerb),
@@ -355,7 +356,7 @@ verb_form_db(chat80,Verb,Verb,pres+fin,_+pl) :-  Verb = V, verb_type_lex(V,_).
 %verb_form_lex(Verb,Verb,inf,_) :-  Verb = V, verb_type_lex(V,_).
 % ... because [does,france,border,belgium,?] was not properly parsed
 % NEW TRY verb_form_lex(Verb,Inf,past+part,_) :- use_lexicon_80(chat80_extra), regular_past_lex(Verb,Inf).
-% ... because [is,france,bordered,by,belgium,?] was not properly parsed. Deduced from verb_form_db(chat80,done,do(_MODAL),past+part,_) bellow.
+% ... because [is,france,bordered,by,belgium,?] was not properly parsed. Deduced from verb_form_db(chat80,done,do([]),past+part,_) bellow.
 %verb_form_lex(A,A,C,D) :-
 %  writef("********************************** verb_form_db {0} failed", [[A,A,C,D]]).
 %  !,
@@ -363,9 +364,9 @@ verb_form_db(chat80,Verb,Verb,pres+fin,_+pl) :-  Verb = V, verb_type_lex(V,_).
 
 %verb_root_lex(Root):- use_lexicon_80(chat80), %verb_root_db(chat80,Root).
 %  verb_type_db(chat80,Root,_MainTv).
-%verb_root_lex(be(_MODAL)).
-%verb_root_lex(do(_MODAL)).
-%verb_root_lex(have(_MODAL)).
+%verb_root_lex(be([])).
+%verb_root_lex(do([])).
+%verb_root_lex(have([])).
 
 
 %superceeded verb_root_db(chat80,contain).
@@ -377,6 +378,9 @@ verb_form_db(chat80,Verb,Verb,pres+fin,_+pl) :-  Verb = V, verb_type_lex(V,_).
 verb_type_lex(be(MODAL),aux+be(MODAL)).
 verb_type_lex(do(_MODAL),aux+dv(_Prep)).
 verb_type_lex(have(MODAL),aux+have(MODAL)).
+verb_type_lex(Aux,aux+dv(_Prep)):- modal_verb_form_aux(_,Aux,_,_).
+verb_type_lex(Aux,main+tv):- modal_verb_form_aux(_,Aux,_,_).
+verb_type_lex(Aux,aux+Aux):- modal_verb_form_aux(_,Aux,_,_).
 verb_type_lex(V,MainTv):- no_repeats(V+MainTv,try_lex(verb_type_db0(V,MainTv))).
 %verb_type_lex(V,MainTv):- nonvar(V),nonvar(MainTv).
 
@@ -490,7 +494,7 @@ hide_plur_root_noun(1,ares,are).
 hide_plur_root_noun(1,_Noes,No):-det_lex(No,_,_,_).
 hide_plur_root_noun(1,_Whats,What):- talkdb:talk_db(pronoun,What).
 %hide_plur_root_noun(1,does,doe).
-hide_plur_root_noun(2,Does,_):- atom(Does), verb_form_aux(Does,do(_MODAL),_Y,_Z).
+hide_plur_root_noun(2,Does,_):- atom(Does), verb_form_aux(Does,do(_),_Y,_Z).
 hide_plur_root_noun(N,_,River):- N\==0, atom(River), verb_form_lex(River,_,_,_).
 
 noun_plu_lex(ksqmiles,ksqmile).

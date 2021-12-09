@@ -491,7 +491,7 @@ process4a(How,Sentence,U,S1,Times) :-
  
  ((runtime(StartParse),   
    
-   ((debug_chat80_if_fail(deepen_pos(no_repeats(E,sentence80(E,U,[],[],[])))),
+ ((debug_chat80_if_fail(deepen_pos(no_repeats(E,sentence80(E,U,[],[],[])))),
     
    notrace((runtime(StopParse),
 
