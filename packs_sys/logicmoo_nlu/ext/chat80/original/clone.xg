@@ -157,9 +157,14 @@ yn_question(q(S)) --->
 
 
 fronted_verb(QCase,NPCase) ...
-      verb_form88(ExtraMods,Root,Tense,Agmt,Role), neg_modal_opt(Tense,_,_,Neg) --->
-   verb_form88(ExtraMods,Root,Tense,Agmt,_),
-   {verb_type_lex(Root,aux+_), is_to_role_case(QCase,Role,NPCase)},
+      verb_form88(ExtraMods,Root,Tense,Agmt,Role), 
+         neg_modal_opt(Tense,ExtraMods,_,Neg) --->
+      verb_form88(ExtraMods,Root,Tense,Agmt,_), {verb_type_lex(Root,aux+_), is_to_role_case(QCase,Role,NPCase)},
+         neg_modal_opt(Tense,ExtraMods,_,Neg).
+
+% Can Iran border iraq ?
+fronted_verb(_QCase,_NPCase) ...
+      neg_modal_opt(Tense,ExtraMods,_,Neg) --->
    neg_modal_opt(Tense,ExtraMods,_,Neg).
 
 /* Imperative sentences */
