@@ -22,6 +22,7 @@
 :- thread_local(pdtmp:expand_enabled/3).
 
 if_search_expanded(N):- if_search_expanded(N,unknown).
+%if_search_expanded(_,_):- !, fail.
 if_search_expanded(N,_Name):- flag(pos_depth,W,W), W>N,!.
 if_search_expanded(N,Name):- flag(pos_depth_skipped,W,W+1),
   nop(dmsg(skipped(if_search_expanded(N,Name)))), fail.
@@ -62,8 +63,11 @@ deepen_pos_fresh(Call):-
      (flag(pos_depth_skipped,_,Was1),flag(pos_depth,_,Was2))).
 
 % this must be used *atfer* Call has been tried
-deepen_pos_pt2(Upto,Call):- flag(pos_depth,N,N+1),
+deepen_pos_pt2(Upto,Call):- 
   flag(pos_depth_skipped,EN,EN), EN\==0,
+  flag(pos_depth,N,N+1),
+  flag(pos_depth_skipped,_,0),
+  dmsg(pos_depth=N+1),  
   ((N>Upto) -> (!,fail) ; (call(Call)*->true; deepen_pos_pt2(Upto,Call))).
 
 :- share_mp(deepen_pos_0/1).

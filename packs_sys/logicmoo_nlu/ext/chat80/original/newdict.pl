@@ -321,6 +321,7 @@ avoided_verb(A):- clause(verb_form_aux(A,_,_,_),true).
 
 % TODO FIX THESE
 modal_verb_form_aux(shall,will,pres+fin,3+sg).
+modal_verb_form_aux(shalt,will,pres+fin,3+sg).
 modal_verb_form_aux(will,will,pres+fin,3+sg).
 modal_verb_form_aux(would,will,past+fin,_).
 modal_verb_form_aux(wont,[will,not],past+fin,_).
@@ -333,7 +334,7 @@ modal_verb_form_aux(possibly,can,pres+fin,3+sg).
 modal_verb_form_aux(could,can,past+fin,_).
 modal_verb_form_aux(can,can,pres+fin,3+sg).
 modal_verb_form_aux(cannot,[can,not],pres+fin,3+sg).
-modal_verb_form_aux(not,not,_+_,_+_).
+%modal_verb_form_aux(not,not,_+_,_+_):- if_search_expanded(1).
 
 maybe_apply_modal(_W,Modal9,_ModalInfo,RootVerb):- 
    ignore((compound(RootVerb),

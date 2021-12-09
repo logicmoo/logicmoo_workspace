@@ -544,14 +544,15 @@ noun_template(Noun,TypeV,V,apply80(F,P),
       [slot(prep(Of),TypeX,X,_,apply)]) :-
    lf80(TypeV-TypeX,meta_noun_LF(Noun,Of,TypeV,V,TypeX,X,P,F)).
 
-slot_verb_template(have(MODAL),Y=Z,
+slot_verb_template(have(MODAL),(Y=Z,have(S,Y)),
                 Slots,
                 held_arg(poss(_ArgInfoP),-(-(+Id)),TypeS-S), have(MODAL)):-
   select_slots(Slots,
                 [slot(subJ(_ArgInfo1),TypeS,S,-Id,free),
                  slot(dirO(_ArgInfo),TypeV,Y,_,free),
                  slot(prep(of),TypeV,Z,_,free)]).
-slot_verb_template(have(MODAL),Y=Z,
+
+slot_verb_template(have(MODAL),(Y=Z,have(S,Y)),
         Slots,
         held_arg(poss(_ArgInfoP),-(-(-(+Id))),TypeS-S), have(MODAL)):-
   select_slots(Slots,

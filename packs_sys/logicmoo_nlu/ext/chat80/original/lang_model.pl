@@ -628,7 +628,9 @@ sentence80(U,E):- no_repeats(E,sentence80(E,U,[],[],[])).
 try_chat_80(S,G):- G=..[F,Tree,QT],!,try_chat_80(S,F,Tree,QT).
 try_chat_80(S,F,Tree,QT):- 
   statistics(runtime,[Start,_]),
-  ((should_learn(Tree),catch(debug_chat80_if_fail(deepen_pos(call(F,Tree,QT))),E,QT=error(E))) *-> true ; QT = failure),
+  locally(set_prolog_flag(gc,false),
+ ((
+  ((should_learn(Tree),catch(debug_chat80_if_fail(deepen_pos(call(F,Tree,QT))),E,QT=error(E))) *-> true ; QT = failure)))),
   statistics(runtime,[End,_]),
   Total is (End - Start)/1000,
   answer_color(QT,Color),
@@ -646,7 +648,7 @@ c2(B):- c2(B,_).
 c2(B,O):-
  any_to_str(B,SS),
  make,
- locally(set_prolog_flag(gc,false),
+ locally(set_prolog_flag(gc,true),
 ((
  S = c2(SS),
  try_chat_80(S,any_to_ace_str(SS,SACE)),
@@ -663,8 +665,8 @@ c8(B,O):-
  any_to_str(B,SS),
  S = c8(SS),
  make,
- locally(set_prolog_flag(gc,false),
-((
+  locally(set_prolog_flag(gc,true),
+ ((
  try_chat_80(S,text_to_corenlp_tree(SS,_)),
  try_chat_80(S,into_lexical_segs(SS,Lex)),
  try_chat_80(S,sentence80(Lex,Tree)),
