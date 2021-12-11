@@ -112,10 +112,10 @@ git remote add --track master github https://github.com/logicmoo/logicmoo_worksp
 git remote add --track master gitlab https://logicmoo.org/gitlab/logicmoo/logicmoo_workspace.git 2>/dev/null ; /bin/true
 
 echo "git submodule update --init"
-git submodule update --init
+#git submodule update --init
 #git submodule foreach --recursive bash -c "git fetch --unshallow ; /bin/true"
 #git submodule foreach --recursive bash -c "git lfs pull ; /bin/true"
-git pull --recurse-submodules
+#git pull --recurse-submodules
 
 if [ -f "/.dockerenv" ]; then
 
