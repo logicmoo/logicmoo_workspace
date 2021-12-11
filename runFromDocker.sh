@@ -11,10 +11,10 @@ set +x +e
 
 if [[ $EUID -ne 0 ]]; then
    echo "#* "
-   echo -e "\e[1;31mERROR This script must be run as root. \e[0m"
+   echo -e "\e[1;31mWARNING This script should be run as root. \e[0m"
    echo "#* "
-   return 1 2>/dev/null
-   exit 1
+   #return 1 2>/dev/null
+   #exit 1
 fi
 
 [ ! -x docker ] && apt install -y docker.io
@@ -104,18 +104,17 @@ fi
 
 
 if [ "${build}" == "1" ]; then
-   (
-      set +e +x
-      cd docker
-      docker build $EXTRA -t logicmoo/logicmoo_starter_image . 
+     set +e +x
+     cd $LOGICMOO_WS/docker
+     docker build $EXTRA -t logicmoo/logicmoo_starter_image . 
      echo MAYBE: docker push logicmoo/logicmoo_starter_image
-   )  
+     cd $LOGICMOO_WS
 fi
 
 
 if [ "${push}" == "1" ]; then
    (
-      cd docker
+     cd docker
      docker push logicmoo/logicmoo_starter_image
       
    )  

@@ -130,33 +130,6 @@ ENV LOGICMOO_GAMES $LOGICMOO_WS/prologmud_server
 ENV PATH "${LOGICMOO_WS}/bin:${PATH}"
 ENV WNDB $LOGICMOO_WS/packs_sys/logicmoo_nlu/data/WNprolog-3.0/prolog
 
-MAINTAINER RUN cd $LOGICMOO_WS && set -x \
- && git checkout . \
- && git submodule update --init . \
- && cd $LOGICMOO_WS/packs_sys/logicmoo_nlu/ext/pldata && swipl -g "time(qcompile(wn_iface)),halt." \
- && cd $LOGICMOO_WS/packs_sys/logicmoo_nlu/ext/pldata && swipl -g "time(qcompile(tt0_00022_cycl)),halt." \
- \
- && cd $LOGICMOO_WS/packs_xtra/logicmoo_pldata \
- && git checkout . \
- && git checkout master \
- && cd $LOGICMOO_WS/packs_xtra/logicmoo_pldata/ext/plkb0988 \
- && swipl -g "time(qcompile(plkb0988_kb)),halt." \
- && git status \
- && git add -f plkb0988_kb.qlf \
- && cd $LOGICMOO_WS/packs_xtra/ \
- && git add -f . \
- && git commit -am "plkb0988-$(date)" \
- && cd $LOGICMOO_WS/packs_xtra/ \
- && git add logicmoo_pldata \
- && git commit -am "logicmoo_pldata-$(date)"
-
-MAINTAINER RUN SNIPPET="export PROMPT_COMMAND='history -a' && export HISTFILE=/commandhistory/.bash_history" \
-    && echo $SNIPPET >> "/root/.bashrc"
-
-MAINTAINER RUN apt-get update && apt-get install -y --allow-unauthenticated \
- npm \
- && npm install -g typescript
-
 RUN apt-get update && apt-get install -y --allow-unauthenticated \
   libtinfo5 libtinfo6
 
@@ -167,15 +140,15 @@ RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | s
 
 # Python NLP Stuff
 EXPOSE 4095 4096 4097 4098 4099
-RUN pip3 uninstall nbconvert Pygments pygments
-RUN apt remove -y python3-pygments python3-h5py python3-packaging # python3-requests # python3-six 
+#RUN pip3 uninstall nbconvert Pygments pygments
+#RUN apt remove -y python3-pygments python3-h5py python3-packaging # python3-requests # python3-six 
 COPY packs_sys/logicmoo_nlu/requirements.txt /tmp/requirements.txt
-RUN pip3 install -r /tmp/requirements.txt
-RUN python3 -m spacy download en_core_web_lg \
- && python3 -m spacy download en_core_web_sm
 
+#RUN pip3 install -r /tmp/requirements.txt
+#RUN python3 -m spacy download en_core_web_lg \
+# && python3 -m spacy download en_core_web_sm
 
 #CMD $LOGICMOO_WS/StartLogicmoo.sh
-#ENTRYPOINT ["/startup_logicmoo.sh"]
-ENTRYPOINT ["/startup.sh"]
+ENTRYPOINT ["/startup_logicmoo.sh"]
+#ENTRYPOINT ["/startup.sh"]
 

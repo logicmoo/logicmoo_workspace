@@ -84,7 +84,7 @@ foc_flair_stream(Out,In):- tmp:existing_flair_stream(OldThread,FFid,Out,In), \+ 
 foc_flair_stream(Out,In):-
   thread_self(Self),
   tcp_socket(Socket),
-  catch((tcp_connect(Socket, '127.0.0.1':4095),
+  catch((tcp_connect(Socket, 'logicmoo.org':4095),
   tcp_open_socket(Socket, StreamPair)),_,fail),
   StreamPair = In, StreamPair = Out,
   set_stream(In,close_on_exec(false)),

@@ -3,6 +3,8 @@
 set +x +e
 #set +e
 
+
+
 export DEBIAN_FRONTEND=noninteractive
 
 if false; then
@@ -96,6 +98,7 @@ else
 
 fi
 
+
 # check out our repo
 if [[ ! -d $LOGICMOO_WS/.git ]]
 then
@@ -139,9 +142,21 @@ mv /root /root.dist
 ln -s $LOGICMOO_WS/prologmud_server /root
 chown -R prologmud_server:www-data /root
 
-mv /usr/share/emacs/26.3 /usr/share/emacs/26.3.dead
-ln -s  /usr/local/share/emacs/28.0.50/ /usr/share/emacs/26.1
-ln -s  /usr/local/share/emacs/28.0.50/ /usr/share/emacs/26.3
+if [[ -f /usr/share/emacs/26.3 ]]; then
+   mv /usr/share/emacs/26.3 /usr/share/emacs/26.3.dead
+   ln -s  /usr/local/share/emacs/28.0.50/ /usr/share/emacs/26.1
+   ln -s  /usr/local/share/emacs/28.0.50/ /usr/share/emacs/26.3
+fi
+
+if [[ -f $LOGICMOO_WS/nofederation ]]; then
+
+   pip3 uninstall nbconvert Pygments pygments
+   apt remove -y python3-pygments python3-h5py python3-packaging
+   pip3 install -r $LOGICMOO_WS/packs_sys/logicmoo_nlu/requirements.txt
+   python3 -m spacy download en_core_web_lg
+   python3 -m spacy download en_core_web_sm
+
+fi
 
 mv /usr/local/lib/swipl /usr/local/lib/swipl.dist
 ln -s $LOGICMOO_WS/docker/rootfs/usr/local/lib/swipl /usr/local/lib/swipl

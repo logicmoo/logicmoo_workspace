@@ -33,7 +33,7 @@ foc_nlp_shared_stream(Py,Out,In):- tmp:existing_nlp_shared_stream(Py,OldThread,F
 foc_nlp_shared_stream(Py,Out,In):-
   thread_self(Self),
     tcp_socket(Socket),
-    tcp_connect(Socket, '127.0.0.1':4097),
+    tcp_connect(Socket, 'logicmoo.org':4097),
     tcp_open_socket(Socket, StreamPair),
     StreamPair = In, StreamPair = Out,
   set_stream(In,close_on_exec(false)),

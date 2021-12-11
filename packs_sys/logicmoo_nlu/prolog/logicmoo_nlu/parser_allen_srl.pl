@@ -149,7 +149,7 @@ foc_allen_srl_stream(Out,In):- tmp:existing_allen_srl_stream(OldThread,FFid,Out,
 foc_allen_srl_stream(Out,In):-
   thread_self(Self),
   tcp_socket(Socket),
-  catch((tcp_connect(Socket, '127.0.0.1':4097),
+  catch((tcp_connect(Socket, 'logicmoo.org':4097),
   tcp_open_socket(Socket, StreamPair)),_,fail),
   StreamPair = In, StreamPair = Out,
   set_stream(In,close_on_exec(false)),
