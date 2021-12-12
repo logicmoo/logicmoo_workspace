@@ -7,9 +7,10 @@ set +x +e
 
 export DEBIAN_FRONTEND=noninteractive
 
+apt update
+
 if false; then
 
-echo apt update
 echo apt-get install -y --allow-unauthenticated \
   nginx-common nginx nginx-core  libnginx-mod-http-geoip libnginx-mod-http-image-filter \
   libnginx-mod-http-xslt-filter libnginx-mod-mail libnginx-mod-stream \
