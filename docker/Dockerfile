@@ -10,6 +10,8 @@ RUN apt-get update && apt-get install -y --no-upgrade --allow-unauthenticated \
   libnginx-mod-http-xslt-filter libnginx-mod-mail libnginx-mod-stream \
   supervisor apache2 nmap x11-apps vim eggdrop default-jdk default-jre \
   iproute2 libgd3 libgeoip1 libmnl0 libwebp6 libxslt1.1 \
+  libtcmalloc-minimal4 \
+  psmisc \
  junit junit4 \
  python3-gevent \
  python3-flask-api \
