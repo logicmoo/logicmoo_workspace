@@ -40,6 +40,7 @@ fi
 
 # ls logicmoo_workspace
 cd logicmoo_workspace
+export LOGICMOO_WS=`pwd`
 
 git pull -f --recursive
 git status -s
