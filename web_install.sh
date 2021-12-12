@@ -40,10 +40,8 @@ if [ ! -d "logicmoo_workspace" ]; then
   getcode="$(awk '/_warning_/ {print $NF}' /tmp/gcokie)"
   curl -Lb /tmp/gcokie "${ggURL}&confirm=${getcode}&id=${ggID}" -o "${filename}"
   tar xfvz "${filename}" -C .git/modules/prologmud_server
-  git remote rename origin github
-  git remote add origin https://logicmoo.org/gitlab/logicmoo/logicmoo_workspace.git
-  git pull origin master
-  git checkout .
+  git checkout origin/master
+  git checkout master
   git submodule update --init
 fi
 
