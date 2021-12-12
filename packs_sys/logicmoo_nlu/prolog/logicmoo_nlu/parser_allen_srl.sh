@@ -10,10 +10,12 @@ echo skip_parser_allen_srl=$grep_return_code
 
 while [ 1==1 ]
    do
-      if [ grep_return_code == "0" ]; then
+      if (( $grep_return_code == 0 )); then
          python3 ./parser_allen_srl.py -port 4097
       else 
-         sleep 10000
+         echo parser_allen_srl in federated mode
+         sleep 1000
+
       fi
    done
 
