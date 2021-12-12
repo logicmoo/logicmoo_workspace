@@ -32,17 +32,17 @@ if [ ! -d "logicmoo_workspace" ]; then
   curl -Lb /tmp/gcokie "${ggURL}&confirm=${getcode}&id=${ggID}" -o "${filename}"
   tar xfvz "${filename}" -C .git/modules/prologmud_server
   rm -f "${filename}"
+  git checkout origin/master
+  git checkout master
+  git submodule update --init --recursive
   )
 fi
 
 # ls logicmoo_workspace
 cd logicmoo_workspace
 export LOGICMOO_WS=`pwd`
-git checkout origin/master
-git checkout master
-git submodule update --init --recursive
-git submodule update --recursive --remote
 git pull -f
+git submodule update --recursive --remote
 git status -s
 
 source ./INSTALL.md
