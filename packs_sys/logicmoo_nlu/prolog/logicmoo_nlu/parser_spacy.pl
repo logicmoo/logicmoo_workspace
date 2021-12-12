@@ -85,7 +85,7 @@ foc_spacy_stream(Out,In):-
   set_stream(Out,eof_action(eof_code)),
   assert(tmp:existing_spacy_stream(Self,_,Out,In)),!.
 
-foc_spacy_stream(Out,In):- prolog_current_flag(python_local,true),
+foc_spacy_stream(Out,In):- current_prolog_flag(python_local,true),
   lmconfig:space_py_dir(Dir),
   thread_self(Self),
   sformat(S,'python3 parser_spacy.py -nc -cmdloop ',[]),
@@ -138,7 +138,7 @@ spacy_parse3(String, Lines) :-
   read_spacy_lines(In, Lines).
 
 % Very slow version
-spacy_parse4(String, Lines) :- prolog_current_flag(python_local,true),
+spacy_parse4(String, Lines) :- current_prolog_flag(python_local,true),
   lmconfig:space_py_dir(Dir),
   sformat(S,'python3 parser_spacy.py -nc ~q ',[String]),
   nop(writeln(S)),
