@@ -42,7 +42,7 @@ fi
 cd logicmoo_workspace
 export LOGICMOO_WS=`pwd`
 
-git pull -f --recursive
+git pull -f
 git status -s
 
 source ./INSTALL.md
