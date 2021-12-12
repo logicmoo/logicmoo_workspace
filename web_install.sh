@@ -16,7 +16,7 @@ echo ""
 fi
 
 mkdir -p /opt
-(
+
 cd /opt
 if [ ! -d "logicmoo_workspace" ]; then
   export SSLWAS=$(git config --global http.sslVerify)
@@ -49,4 +49,4 @@ source ./INSTALL.md
 echo -e "\e[1;32m If Docker is installed: $LOGICMOO_WS/runFromDocker.sh
          (otherwise: source $LOGICMOO_WS/StartLogicmoo.sh)\e[0m"
 
-)
+
