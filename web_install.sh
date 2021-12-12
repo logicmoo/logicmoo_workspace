@@ -38,13 +38,13 @@ if [ ! -d "logicmoo_workspace" ]; then
   )
 fi
 
-ls logicmoo_workspace
+# ls logicmoo_workspace
 cd logicmoo_workspace
 
 git pull -f --recursive
 git status -s
 
-(source ./INSTALL.md)
+source ./INSTALL.md
 
 echo -e "\e[1;32m If Docker is installed: $LOGICMOO_WS/runFromDocker.sh
          (otherwise: source $LOGICMOO_WS/StartLogicmoo.sh)\e[0m"
