@@ -245,7 +245,7 @@ s62(A,DRS):- try_ace_fol(DRS,FOL),in_cmt(print_tree_nl(kif(A)=FOL)),!.
 c80(B):- is_loading_file, !, add_c80(B).
 c80(Text):- 
   %cls, 
-  make, 
+  c8_make, 
   tracing ~= on,
   %c88,
   show_c80(Text),
@@ -644,6 +644,8 @@ answer_color(failure,red):-!.
 answer_color(QT,green):- should_learn(QT),!.
 answer_color(_,yellow).
 
+c8_make:- make.
+
 c2(B):- c2(B,_).
 c2(B,O):-
  any_to_str(B,SS),
@@ -664,7 +666,7 @@ c8(B):- c8(B,_).
 c8(B,O):-
  any_to_str(B,SS),
  S = c8(SS),
- make,
+ c8_make,
   locally(set_prolog_flag(gc,true),
  ((
  try_chat_80(S,text_to_corenlp_tree(SS,_)),
@@ -683,7 +685,7 @@ c8(B,O):-
 
 c88(B,O):-
  any_to_str(B,SS),
- make,
+ c8_make,
  S = c2(SS),
  locally(set_prolog_flag(gc,false),
 ((
@@ -820,10 +822,10 @@ for_n(N,From,Call):-
 p1(P2,X):- atom(P2), \+ current_predicate(P2/1),  current_predicate(P2/2),!, 
   any_to_string(X,S),nl,dmsg(?-p1(P2,S)),call(P2,S,Y),wdmsg(Y),nl,!.
 p1(P1,X):- any_to_str(X,S),append_term(P1,S,G),nl,dmsg(?-G),call(G),nl,!.
-s81:- make,s811(show_c80),s811(p1(cvt_to_objecteese)).
+s81:- c8_make,s811(show_c80),s811(p1(cvt_to_objecteese)).
 s81(P):- s811(p1(P)).
 s811(P):- s811(15,P).
-s811(N,P):- make,call(s8111(N,P)).
+s811(N,P):- c8_make,call(s8111(N,P)).
 s8111(N,P):-
   for_n(N,training_data(X,_),call(P,X)),
   for_n(N,parser_e2c:fracas_test_problem(X),call(P,X)),
@@ -835,7 +837,7 @@ s8111(N,P):-
   forall(sample_set80(X),call(P,X)),
   !.
 
-chat80_all(P):- make,
+chat80_all(P):- c8_make,
   forall(chat80_all(X,_,_),ignore(p1(P,X))).
 %:- add_c80("does joe eat cake?").
 
