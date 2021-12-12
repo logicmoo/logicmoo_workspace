@@ -67,7 +67,7 @@ echo apt-get install -y --allow-unauthenticated \
 
 fi
 
-sudo apt-get install \
+sudo apt-get install -y \
         build-essential cmake ninja-build pkg-config \
         ncurses-dev libreadline-dev libedit-dev \
         libgoogle-perftools-dev \
