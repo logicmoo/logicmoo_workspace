@@ -75,6 +75,25 @@ map_of(spider_1st_person,"
 %                              %
 %         Q3  N6          S2 Q1%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%").
+
+extract_objects(Str,Objs):- atom_chars(Str,Chars),extract_objects(Chars,0,0,Objs).
+
+extract_objects([],_,_,[]):-  !.
+extract_objects([10|Str],X,Y,Objs):-  !,
+  Y2 is Y+1, extract_objects(Str,0,Y2,Objs).
+
+extract_objects([S,S1|Str],X,Y,Objs):- 
+   extract_object([S,S1],X,Y,Os),
+   X2 is X+1, extract_objects([S1|Str],X2,Y,OOs),
+   appends(Os,OOs,Objs).
+
+extract_object([' '|_],_,_,[]):-!.
+extract_object(['%'|_],X,Y,[obj(wall,X,Y)]):-!.
+extract_object([S,N],X,Y,[obj(Var,X,Y)]):- \+ char_type(S,digit), atom_concat(S,N,Var).
+extract_object(_,_,_,[]):-!.
+
+:- forall(map_of(W,Map),(extract_objects(Map,Objs),dmsg(Objs))).
+
 exmaple_mentalese(spider_1st_person, "
 S1 is me.
 E1 is here.
