@@ -33,11 +33,17 @@ if [ ! -d "logicmoo_workspace" ]; then
   git config --global http.sslVerify false
   git clone --no-remote-submodules https://github.com/logicmoo/logicmoo_workspace.git
   git config --global http.sslVerify $SSLWAS
+  cd logicmoo_workspace
   ggID='1KhXSv4vq_a82ctGg74GcVBO4fArldVou'
   ggURL='https://drive.google.com/uc?export=download'
   filename="$(curl -sc /tmp/gcokie "${ggURL}&id=${ggID}" | grep -o '="uc-name.*</span>' | sed 's/.*">//;s/<.a> .*//')"
   getcode="$(awk '/_warning_/ {print $NF}' /tmp/gcokie)"
   curl -Lb /tmp/gcokie "${ggURL}&confirm=${getcode}&id=${ggID}" -o "${filename}"
+  tar xfvz "${filename}" -C .git/modules/prologmud_server
+  git remote rename origin github
+  git remote add origin https://logicmoo.org/gitlab/logicmoo/logicmoo_workspace.git
+  git pull origin master
+  git submodule update --init
 fi
 
 ls logicmoo_workspace
