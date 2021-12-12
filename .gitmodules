@@ -1,3 +1,6 @@
 [submodule "rocksdb"]
 	path = packs_lib/rocksdb/rocksdb
 	url = https://github.com/facebook/rocksdb
+[submodule "prologmud_server"]
+	path = prologmud_server
+	url = https://logicmoo.org:2082/gitlab/logicmoo/prologmud_server.git/
