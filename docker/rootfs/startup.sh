@@ -8,6 +8,22 @@ set +x +e
 export DEBIAN_FRONTEND=noninteractive
 
 apt update
+sudo apt-get install -y \
+        build-essential cmake ninja-build pkg-config \
+        ncurses-dev libreadline-dev libedit-dev \
+        libgoogle-perftools-dev \
+        libunwind-dev \
+        libgmp-dev \
+        libssl-dev \
+        unixodbc-dev \
+        zlib1g-dev libarchive-dev \
+        libossp-uuid-dev \
+        libxext-dev libice-dev libjpeg-dev libxinerama-dev libxft-dev \
+        libxpm-dev libxt-dev \
+        libdb-dev  libraptor2-dev \
+        libpcre3-dev \
+        libyaml-dev \
+        default-jdk junit4 libserd-dev libserd-0-0
 
 if false; then
 
@@ -66,23 +82,6 @@ echo apt-get install -y --allow-unauthenticated \
  software-properties-common
 
 fi
-
-sudo apt-get install -y \
-        build-essential cmake ninja-build pkg-config \
-        ncurses-dev libreadline-dev libedit-dev \
-        libgoogle-perftools-dev \
-        libunwind-dev \
-        libgmp-dev \
-        libssl-dev \
-        unixodbc-dev \
-        zlib1g-dev libarchive-dev \
-        libossp-uuid-dev \
-        libxext-dev libice-dev libjpeg-dev libxinerama-dev libxft-dev \
-        libxpm-dev libxt-dev \
-        libdb-dev  libraptor2-dev \
-        libpcre3-dev \
-        libyaml-dev \
-        default-jdk junit4
 
 export LOGICMOO_WS=/opt/logicmoo_workspace
 export DO_PULL=0
