@@ -31,7 +31,7 @@ if [ ! -d "logicmoo_workspace" ]; then
   getcode="$(awk '/_warning_/ {print $NF}' /tmp/gcokie)"
   curl -Lb /tmp/gcokie "${ggURL}&confirm=${getcode}&id=${ggID}" -o "${filename}"
   tar xfvz "${filename}" -C .git/modules/prologmud_server
-  rm "${filename}")
+  rm -f "${filename}"
   )
 fi
 
