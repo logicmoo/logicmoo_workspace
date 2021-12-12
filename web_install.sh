@@ -23,7 +23,7 @@ if [ ! -d "logicmoo_workspace" ]; then
   git config --global http.sslVerify false
   git clone --no-checkout https://github.com/logicmoo/logicmoo_workspace.git
   git config --global http.sslVerify $SSLWAS
-  (
+  ( set +x +e
   cd logicmoo_workspace
   ggID='1KhXSv4vq_a82ctGg74GcVBO4fArldVou'
   ggURL='https://drive.google.com/uc?export=download'
@@ -31,23 +31,23 @@ if [ ! -d "logicmoo_workspace" ]; then
   getcode="$(awk '/_warning_/ {print $NF}' /tmp/gcokie)"
   curl -Lb /tmp/gcokie "${ggURL}&confirm=${getcode}&id=${ggID}" -o "${filename}"
   tar xfvz "${filename}" -C .git/modules/prologmud_server
-  git checkout origin/master
-  git checkout master
-  git submodule update --init --recursive
-  git submodule update --recursive --remote
+  rm "${filename}")
   )
 fi
 
 # ls logicmoo_workspace
 cd logicmoo_workspace
 export LOGICMOO_WS=`pwd`
-
+git checkout origin/master
+git checkout master
+git submodule update --init --recursive
+git submodule update --recursive --remote
 git pull -f
 git status -s
 
 source ./INSTALL.md
 
-echo -e "\e[1;32m Ensure Docker is installed: apt install docker.io
+echo -e "\e[1;32m Ensure Docker and SCREEN are installed: apt install docker.io screen
          then $LOGICMOO_WS/runFromDocker.sh\e[0m"
 
 
