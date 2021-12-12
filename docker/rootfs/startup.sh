@@ -79,7 +79,7 @@ sudo apt-get install -y \
         libossp-uuid-dev \
         libxext-dev libice-dev libjpeg-dev libxinerama-dev libxft-dev \
         libxpm-dev libxt-dev \
-        libdb-dev \
+        libdb-dev  libraptor2-dev \
         libpcre3-dev \
         libyaml-dev \
         default-jdk junit4

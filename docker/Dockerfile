@@ -12,7 +12,6 @@ RUN apt-get update && apt-get install -y --no-upgrade --allow-unauthenticated \
   iproute2 libgd3 libgeoip1 libmnl0 libwebp6 libxslt1.1 \
   libtcmalloc-minimal4 \
   psmisc \
- junit junit4 \
  python3-gevent \
  python3-flask-api \
  iputils-ping \
@@ -53,4 +52,21 @@ RUN apt-get update && apt-get install -y --no-upgrade --allow-unauthenticated \
  #software-properties-common \
  screen \
  rsync \
- rlwrap
+ rlwrap \
+ libraptor2-dev			 \
+	build-essential cmake ninja-build pkg-config \
+	ncurses-dev libreadline-dev libedit-dev \
+	libgoogle-perftools-dev \
+	libunwind-dev \
+	libgmp-dev \
+	libssl-dev \
+	unixodbc-dev \
+	zlib1g-dev libarchive-dev \
+	libossp-uuid-dev \
+	libxext-dev libice-dev libjpeg-dev libxinerama-dev libxft-dev \
+	libxpm-dev libxt-dev \
+	libdb-dev \
+	libpcre3-dev \
+	libyaml-dev \
+	default-jdk junit4
+
