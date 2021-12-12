@@ -4,16 +4,6 @@
 #   source <(curl -sS https://logicmoo.org/gitlab/logicmoo/logicmoo_workspace/-/raw/master/web_install.sh)
 #   source <(curl -sS https://raw.githubusercontent.com/logicmoo/logicmoo_workspace/master/web_install.sh)
 
-if [[ $EUID -ne 0 ]]; then
-   echo ""
-   echo -e "\e[1;31mERROR This script must be run as root. \e[0m"
-   echo ""
-   return 1 2>/dev/null
-   exit 1
-fi
-
-apt install -y git screen docker docker.io
-
 if git --version &>/dev/null; then
    echo "Found Git"; 
 else
@@ -33,6 +23,7 @@ if [ ! -d "logicmoo_workspace" ]; then
   git config --global http.sslVerify false
   git clone --no-checkout https://github.com/logicmoo/logicmoo_workspace.git
   git config --global http.sslVerify $SSLWAS
+  (
   cd logicmoo_workspace
   ggID='1KhXSv4vq_a82ctGg74GcVBO4fArldVou'
   ggURL='https://drive.google.com/uc?export=download'
@@ -42,12 +33,15 @@ if [ ! -d "logicmoo_workspace" ]; then
   tar xfvz "${filename}" -C .git/modules/prologmud_server
   git checkout origin/master
   git checkout master
-  git submodule update --init
+  git submodule update --init --recursive
+  git submodule update --recursive --remote
+  )
 fi
 
 ls logicmoo_workspace
 cd logicmoo_workspace
-git pull -f
+
+git pull -f --recursive
 git status -s
 
 (source ./INSTALL.md)
