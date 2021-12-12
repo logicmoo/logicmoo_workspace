@@ -31,7 +31,7 @@ cd /opt
 if [ ! -d "logicmoo_workspace" ]; then
   export SSLWAS=$(git config --global http.sslVerify)
   git config --global http.sslVerify false
-  git clone --no-remote-submodules https://github.com/logicmoo/logicmoo_workspace.git
+  git clone --no-checkout https://github.com/logicmoo/logicmoo_workspace.git
   git config --global http.sslVerify $SSLWAS
   cd logicmoo_workspace
   ggID='1KhXSv4vq_a82ctGg74GcVBO4fArldVou'
@@ -43,6 +43,7 @@ if [ ! -d "logicmoo_workspace" ]; then
   git remote rename origin github
   git remote add origin https://logicmoo.org/gitlab/logicmoo/logicmoo_workspace.git
   git pull origin master
+  git checkout .
   git submodule update --init
 fi
 
