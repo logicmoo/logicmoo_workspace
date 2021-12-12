@@ -65,6 +65,7 @@ echo apt-get install -y --allow-unauthenticated \
  software-properties-common
 
 fi
+apt install -y libarchive
 
 export LOGICMOO_WS=/opt/logicmoo_workspace
 export DO_PULL=0
