@@ -44,7 +44,7 @@ foc_nlp_shared_stream(Py,Out,In):-
   set_stream(Out,eof_action(eof_code)),
   assert(tmp:existing_nlp_shared_stream(Py,Self,_,Out,In)),!.
 
-foc_nlp_shared_stream(Py,Out,In):-
+foc_nlp_shared_stream(Py,Out,In):- prolog_current_flag(python_local,true),
   lmconfig:space_py_dir(Dir),
   thread_self(Self),
   sformat(S,'python3 parser_~w.py -nc -cmdloop ',[Py]),
@@ -92,7 +92,7 @@ nlp_shared_parse3(Py,String, Lines) :-
   read_nlp_shared_lines(Py,In, Lines).
 
 % Very slow version
-nlp_shared_parse4(Py,String, Lines) :- 
+nlp_shared_parse4(Py,String, Lines) :- prolog_current_flag(python_local,true),
   lmconfig:space_py_dir(Dir),
   sformat(S,'python3 parser_~w.py -nc ~q ',[Py,String]),
   nop(writeln(S)),
