@@ -19,14 +19,15 @@
 :- '$set_source_module'(mu).
 :- ensure_loaded(adv_loader).
 
+map_of(spider_2nd_person,"
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%P1           L1             P2%
+%P1 S1        L1             P2%
 %     L4                L2     %
 %L3                            %
 %             P5             L5%
 %                              %
 %P3           L6             P4%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%" ).
 exmaple_mentalese(spider_2nd_person,"
 S2 is an examplar.
 E2 is an environment.
@@ -53,10 +54,30 @@ W2 is built.
 P5 is built.
 S2 go to P5. ").
 
+exmaple_mentalese(spider_autobiography, "
+S1 sees map spider_1st_person.
+S1 imagines spider_2nd_person. 
+;; S1 cant see map of spider_2nd_person.
+;; S2 cant see map of spider_1st_person.
+
+
+").
+
+% real world
+map_of(spider_1st_person,"
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Q4           N1               %
+%     N4         Q2            %
+%                              %
+%             Q5               %
+%N3         %%%%%%%%%%         %
+%      S1                  N5  %
+%                              %
+%         Q3  N6          S2 Q1%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%").
 exmaple_mentalese(spider_1st_person, "
 S1 is me.
 E1 is here.
-S1 imagines spider_2nd_person.
 E1 is simular to E2.
 ; S1 sees E1 as E2.
 ;   Therefore E1 has a place Q1, Q2, Q3, and Q4 that is for building a web W1.
@@ -65,6 +86,9 @@ W1 is simular to W2.
 W1 is a thing.
 W1 is a spider web.
 W1 is unbuilt.
+
+;; the rest below has to be guessed by system
+
 S1 does attach W1 to Q1.
 W1 is attached to Q1.
 W1 has begun being built.
@@ -83,30 +107,3 @@ W1 is built.
 S1 go to Q5.
 ").
 
-
-
-
-W2 is a spider web.
-
-S1 is a spider.
-S2 is like S1.
-S2 is crafting W2.
-S1 is crafting W1.
-E1 is an environment.
-S1 is doing spider_1st_person.
-S1 sees environment_imperfect_web.
-S2 is doing spider_2nd_person.
-S2 sees environment E2.
-
-
-I S1 would like to do what i think is right.
-I am imagining a spider_2nd_person S2 as an examplar.
-S2 is crafting a perfect web W2.
-S1 is crafting a web W1 like W2.
-
-
-
-
-
-
-").
