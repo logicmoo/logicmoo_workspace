@@ -31,8 +31,13 @@ cd /opt
 if [ ! -d "logicmoo_workspace" ]; then
   export SSLWAS=$(git config --global http.sslVerify)
   git config --global http.sslVerify false
-  git clone https://github.com/logicmoo/logicmoo_workspace.git
+  git clone --no-remote-submodules https://github.com/logicmoo/logicmoo_workspace.git
   git config --global http.sslVerify $SSLWAS
+  ggID='1KhXSv4vq_a82ctGg74GcVBO4fArldVou'
+  ggURL='https://drive.google.com/uc?export=download'
+  filename="$(curl -sc /tmp/gcokie "${ggURL}&id=${ggID}" | grep -o '="uc-name.*</span>' | sed 's/.*">//;s/<.a> .*//')"
+  getcode="$(awk '/_warning_/ {print $NF}' /tmp/gcokie)"
+  curl -Lb /tmp/gcokie "${ggURL}&confirm=${getcode}&id=${ggID}" -o "${filename}"
 fi
 
 ls logicmoo_workspace
