@@ -66,7 +66,7 @@ spacy_stream_to_w2(In,_, Result):- repeat, read_pending_codes(In,Codes,[]),
 :- dynamic(tmp:existing_spacy_stream/4).
 :- volatile(tmp:existing_spacy_stream/4).
 foc_spacy_stream(Out,In):- thread_self(Self),tmp:existing_spacy_stream(Self,_,Out,In),clear_spacy_pending(In).
-foc_spacy_stream(Out,In):- tmp:existing_spacy_stream(OldThread,FFid,Out,In), \+ thread_property(OldThread,running),!,
+foc_spacy_stream(Out,In):- tmp:existing_spacy_stream(OldThread,FFid,Out,In), \+ thread_property(OldThread,status(running)),!,
   retract(tmp:existing_spacy_stream(OldThread,FFid,Out,In)),
   thread_self(Self),
   assert(tmp:existing_spacy_stream(Self,FFid,Out,In)),!.

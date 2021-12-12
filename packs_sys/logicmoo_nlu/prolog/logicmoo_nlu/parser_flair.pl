@@ -76,7 +76,7 @@ upos_to_penn_pos(cconj,cc).
 :- dynamic(tmp:existing_flair_stream/4).
 :- volatile(tmp:existing_flair_stream/4).
 foc_flair_stream(Out,In):- thread_self(Self),tmp:existing_flair_stream(Self,_,Out,In),!,clear_flair_pending(In).
-foc_flair_stream(Out,In):- tmp:existing_flair_stream(OldThread,FFid,Out,In), \+ thread_property(OldThread,running),!,
+foc_flair_stream(Out,In):- tmp:existing_flair_stream(OldThread,FFid,Out,In), \+ thread_property(OldThread,status(running)),!,
   retract(tmp:existing_flair_stream(OldThread,FFid,Out,In)),
   thread_self(Self),
   assert(tmp:existing_flair_stream(Self,FFid,Out,In)),!.

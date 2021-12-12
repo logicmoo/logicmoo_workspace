@@ -141,7 +141,7 @@ allen_srl_to_data(Text,ListO):- Text=ListO,!.
 :- dynamic(tmp:existing_allen_srl_stream/4).
 :- volatile(tmp:existing_allen_srl_stream/4).
 foc_allen_srl_stream(Out,In):- thread_self(Self),tmp:existing_allen_srl_stream(Self,_,Out,In),!,clear_allen_srl_pending(In).
-foc_allen_srl_stream(Out,In):- tmp:existing_allen_srl_stream(OldThread,FFid,Out,In), \+ thread_property(OldThread,running),!,
+foc_allen_srl_stream(Out,In):- tmp:existing_allen_srl_stream(OldThread,FFid,Out,In), \+ thread_property(OldThread,status(running)),!,
   retract(tmp:existing_allen_srl_stream(OldThread,FFid,Out,In)),
   thread_self(Self),
   assert(tmp:existing_allen_srl_stream(Self,FFid,Out,In)),!.
