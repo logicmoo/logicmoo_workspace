@@ -9,7 +9,7 @@ if git --version &>/dev/null; then
 else
 echo ""
    echo ""
-   echo -e "\e[1;31mERROR Require git but it's not installed.  Aborting. \e[0m"
+   echo -e "\e[1;31mERROR Require git but it's not installed. use: apt install git   Aborting. \e[0m"
    echo ""
    return 1 2>/dev/null
    exit 1
@@ -47,7 +47,7 @@ git status -s
 
 source ./INSTALL.md
 
-echo -e "\e[1;32m If Docker is installed: $LOGICMOO_WS/runFromDocker.sh
-         (otherwise: source $LOGICMOO_WS/StartLogicmoo.sh)\e[0m"
+echo -e "\e[1;32m Ensure Docker is installed: apt install docker.io
+         then $LOGICMOO_WS/runFromDocker.sh\e[0m"
 
 
