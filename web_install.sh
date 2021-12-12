@@ -42,9 +42,8 @@ fi
 cd logicmoo_workspace
 export LOGICMOO_WS=`pwd`
 git pull -f --verbose
-git submodule update --recursive --remote
-git status -s
-
+echo maybe: git submodule update --recursive --remote
+#git status -s
 echo source ./INSTALL.md
 source ./INSTALL.md
 
