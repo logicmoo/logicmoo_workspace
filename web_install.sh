@@ -42,9 +42,10 @@ fi
 cd logicmoo_workspace
 export LOGICMOO_WS=`pwd`
 git pull -f --verbose
-git submodule update --recursive --remote --verbose
+git submodule update --recursive --remote
 git status -s
 
+echo source ./INSTALL.md
 source ./INSTALL.md
 
 echo -e "\e[1;32m Ensure Docker and SCREEN are installed: apt install docker.io screen
