@@ -275,6 +275,7 @@ node_pairs_indirect(L,C2,C1):-
 freeze80(Var,Goal):- (nonvar(Var);(term_variables(Goal, Vars),Vars==[],trace)),!,call(Goal).
 freeze80(Var,Goal):- freeze(Var,freeze80(Var,Goal)).
 
+aux(have,_,_).
 have(_,_).
 
 %contain(X,Y) :- trans_direct(thing,contain,X,Y).

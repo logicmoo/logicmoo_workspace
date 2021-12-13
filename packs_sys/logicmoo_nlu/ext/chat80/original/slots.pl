@@ -277,6 +277,9 @@ unslotted_v_args(List,NewVArgs,IntoNegs):- partition(functor_is(arg),List,NewVAr
 
 functor_is(F,P):- compound(P),compound_name_arity(P,F,_).
 
+time_of(Past+Fin,Time):- Past==past,Fin\==part,Time=in_past.
+time_of(_PastFin,_Time):- fail.
+
 i_s(S,Pred,Up,Id):- dmsg(i_s(S,Pred,Up,Id)),fail.
 i_s(s(Subj,verb(VerbType,Root,Voice,Tense,Aspect,Neg0),VArgs,VMods),Pred,Up,Id) :-
   unslotted_v_args(VArgs,NewVArgs,IntoNegs), IntoNegs\==[],
@@ -288,11 +291,12 @@ i_s(s(Subj,verb(VerbType,Root,Voice,Tense,Aspect,Neg0),VArgs,VMods),Pred,Up,Id) 
   once(must(fix_mneg(Neg0,Neg))), Neg\==Neg0,
   i_s(s(Subj,verb(VerbType,Root,Voice,Tense,Aspect,Neg),VArgs,VMods),Pred,Up,Id).
 
-i_s(s(Subj,verb(VerbType,Root,Voice,past+Fin,Aspect,Neg),VArgs,VMods),Pred,Up,Id) :-
-  \+ contains_var(past,Neg),
-  i_s(s(Subj,verb(VerbType,Root,Voice,past+Fin,Aspect,[past|Neg]),VArgs,VMods),Pred,Up,Id).
+i_s(s(Subj,verb(VerbType,Root,Voice,PastFin,Aspect,Neg),VArgs,VMods),Pred,Up,Id) :- 
+  time_of(PastFin,Time),
+  \+ contains_var(Time,Neg),
+  i_s(s(Subj,verb(VerbType,Root,Voice,PastFin,Aspect,[Time|Neg]),VArgs,VMods),Pred,Up,Id).
 
-i_s(s(Subj,verb(Mainiv,be(_),[],Active,Fin+fin,[],Neg),VArgs,VMods),Pred,Up,Id) :- !,
+i_s(s(Subj,verb(Mainiv,aux(be,_),[],Active,Fin+fin,[],Neg),VArgs,VMods),Pred,Up,Id) :- !,
    i_s(s(Subj,verb(Mainiv,exist,[],Active,Fin+fin,[],Neg),VArgs,VMods),Pred,Up,Id).
 i_s(s(Subj,verb(Mainiv,be,[],Active,Fin+fin,[],Neg),VArgs,VMods),Pred,Up,Id) :- !,
    i_s(s(Subj,verb(Mainiv,exist,[],Active,Fin+fin,[],Neg),VArgs,VMods),Pred,Up,Id).
@@ -358,19 +362,18 @@ fix_modal_list0(P,O):- arg(1,P,M),!,fix_modal_list0(M,O).
 
 maybe_modalize(PN,P,PP):- maybe_modalize0(PN,P,PP),!.
 maybe_modalize(_,P,P).
+maybe_modalize0(V,P,P):- var(V),!.
 maybe_modalize0([PN|L],P,PP):- nonvar(PN), !, maybe_modalize0(PN,P,PM), maybe_modalize0(L,PM,PP).
 maybe_modalize0(root, P, P):-!.
 maybe_modalize0(notP, P, P):- !.
 maybe_modalize0(adv(Modal), P, PP):- !, maybe_modalize0(Modal, P, PP).
-maybe_modalize0(do(Modal), P, PP):- !, maybe_modalize0(Modal, P, PP).
-maybe_modalize0(have(Modal), P, PP):- !, maybe_modalize0(Modal, P, PP).
-maybe_modalize0(be(Modal), P, PP):- !, maybe_modalize0(Modal, P, PP).
+maybe_modalize0(aux(_,Modal), P, PP):- !, maybe_modalize0(Modal, P, PP).
 maybe_modalize0(t(Modal,_,_), P, PP):- !, maybe_modalize0(Modal, P, PP).
 maybe_modalize0(Modal, P, PP):- atom(Modal),!,PP=..[Modal,P].
 maybe_modalize0(_,P,P).
 
 reshape_pred(transparent,S,N,P,A,pred(S,N,P,A)).
-reshape_pred(have(_MODAL),Subj,DetPosNeg,Verb0,
+reshape_pred(aux(have,_MODAL),Subj,DetPosNeg,Verb0,
       [quantV(Det,X,Head0,Pred,QArgs,Y)|MRest],
       pred(Subj,DetPosNeg,Verb,[quantV(Det,X,Head,Pred,QArgs,Y)|MRest])) :-
    have_pred(Head0,Verb0,Head,Verb).
@@ -555,17 +558,17 @@ noun_template(Noun,TypeV,V,apply80(F,P),
       [slot(prep(Of),TypeX,X,_,apply)]) :-
    lf80(TypeV-TypeX,meta_noun_LF(Noun,Of,TypeV,V,TypeX,X,P,F)).
 
-slot_verb_template(have(MODAL),(Y=Z,have(S,Y)),
+slot_verb_template(aux(have,MODAL),(Y=Z,aux(have,S,Y)),
                 Slots,
-                held_arg(poss(_ArgInfoP),-(-(+Id)),TypeS-S), have(MODAL)):-
+                held_arg(poss(_ArgInfoP),-(-(+Id)),TypeS-S), aux(have,MODAL)):-
   select_slots(Slots,
                 [slot(subJ(_ArgInfo1),TypeS,S,-Id,free),
                  slot(dirO(_ArgInfo),TypeV,Y,_,free),
                  slot(prep(of),TypeV,Z,_,free)]).
 
-slot_verb_template(have(MODAL),(Y=Z,have(S,Y)),
+slot_verb_template(aux(have,MODAL),(Y=Z,aux(have,S,Y)),
         Slots,
-        held_arg(poss(_ArgInfoP),-(-(-(+Id))),TypeS-S), have(MODAL)):-
+        held_arg(poss(_ArgInfoP),-(-(-(+Id))),TypeS-S), aux(have,MODAL)):-
   select_slots(Slots,
         [slot(subJ(_ArgInfo1),TypeS,S,-(-(Id)),free),
          slot(dirO(_ArgInfoO),TypeV,Y,_,free),
@@ -586,10 +589,10 @@ select_slots(X,[Slot|Slots],Remaining):- fail,
   select_slots(Mid,Slots,Remaining).
 
 % BE
-% slot_verb_kind(be(_MODAL),_,TypeS,S,bE(is,A,S),[slot(dirO(_ArgInfo),TypeS,A,_,free)]).
-slot_verb_kind(be(_MODAL),_,TypeS,S,bE(is,S,A),AllSlots):-
+% slot_verb_kind(aux(be,_MODAL),_,TypeS,S,bE(is,A,S),[slot(dirO(_ArgInfo),TypeS,A,_,free)]).
+slot_verb_kind(aux(be,_MODAL),_,TypeS,S,bE(is,S,A),AllSlots):-
    select_slots(AllSlots, [slot(dirO(_ArgInfo),TypeS,A,_,free)]).
-slot_verb_kind(be(_MODAL),_,TypeS,S,true,AllSlots):- 
+slot_verb_kind(aux(be,_MODAL),_,TypeS,S,true,AllSlots):- 
    select_slots(AllSlots, [slot(arg_pred(_ArgInfo),TypeS,S,_,free)]).
 
 slot_verb_kind(_Iv,Verb,TypeS,S,Pred,Slots) :-

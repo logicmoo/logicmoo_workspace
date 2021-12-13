@@ -306,7 +306,7 @@ no_new_obj ---> xg_peek(\+ subj(_,_,_)).
 
 subj(Subj,Agmt,Type) ---> subj0(Subj,Agmt,Type).
 
-subj0(there,_Agmt,_+be(_)) ---> theText80(there).
+subj0(there,_Agmt,_+aux(be,_)) ---> theText80(there).
 subj0(Subj,Agmt,_) --->
    {is_s_all(SAll), is_subj_case(Case)},
    np(Subj,Agmt,Case,_,subJ(_ArgInfo1),SAll,_).
@@ -694,7 +694,7 @@ reduced_rel(Agmt,reduced_rel(X,S),Mask) --->
 
 reduced_wh(Agmt,X),
    np(np(Agmt,wh(X),[]),Agmt,NPCase,_,_,Set0,Mask0),
-   verb_form88(ExtraMods,be(_),pres+fin,Agmt,main),
+   verb_form88(ExtraMods,aux(be,_),pres+fin,Agmt,main),
    neg_modal_opt(Tense,ExtraMods,_,Neg), pred(Neg,Pred,Mask) 
      --->
    neg_modal_opt(Tense,ExtraMods,_,Neg), pred(Neg,Pred,Mask),
@@ -747,7 +747,7 @@ verb_form88([],RootVerb,Tense,Agmt,_Role) --->
    theText80_W2(W,L),
    {verb_form_wlex(L,W,RootVerb,Tense,Agmt)}.
 
-%verb_form88([],do([]),Tense,Agmt,_Role) ---> xg_peek(theText80(will)).
+%verb_form88([],aux(do,[]),Tense,Agmt,_Role) ---> xg_peek(theText80(will)).
 
 /*
 verb_form88(ExtraMods,RootVerb,Tense,Agmt,Role) --->
@@ -779,16 +779,16 @@ maybe_modal(Tense,In,[M|Out]) ---> one_modal(Tense,M),!,maybe_modal0(Tense,In,Ou
 maybe_modal0(Tense,In,[M|Out]) ---> one_modal(Tense,M),!,maybe_modal0(Tense,In,Out).
 maybe_modal0(_,ExtraMods, ExtraMods) ---> [].
 
-rest_verb(ExtraMods,aux,have(ExtraMods1),Root,Voice,[perf|Aspect]) ---> verb_form88(ExtraMods2,Root0,past+part,_,_), have_vt(ExtraMods3,Root0,Root,Voice,Aspect),{append_mods([ExtraMods1,ExtraMods2,ExtraMods3],ExtraMods)}.
-rest_verb(ExtraMods,aux,be(ExtraMods1),Root,Voice,Aspect) ---> verb_form88(ExtraMods2,Root0,Tense0,_,_), be_vt(ExtraMods3,Tense0,Root0,Root,Voice,Aspect),{append_mods([ExtraMods1,ExtraMods2,ExtraMods3],ExtraMods)}.
-rest_verb(ExtraMods,aux,do(ExtraMods1),Root,active,[]) ---> verb_form88(ExtraMods2,Root,inf,_,_),{append_mods([ExtraMods1,ExtraMods2],ExtraMods)}.
+rest_verb(ExtraMods,aux,aux(have,ExtraMods1),Root,Voice,[perf|Aspect]) ---> verb_form88(ExtraMods2,Root0,past+part,_,_), have_vt(ExtraMods3,Root0,Root,Voice,Aspect),{append_mods([ExtraMods1,ExtraMods2,ExtraMods3],ExtraMods)}.
+rest_verb(ExtraMods,aux,aux(be,ExtraMods1),Root,Voice,Aspect) ---> verb_form88(ExtraMods2,Root0,Tense0,_,_), be_vt(ExtraMods3,Tense0,Root0,Root,Voice,Aspect),{append_mods([ExtraMods1,ExtraMods2,ExtraMods3],ExtraMods)}.
+rest_verb(ExtraMods,aux,aux(do,ExtraMods1),Root,active,[]) ---> verb_form88(ExtraMods2,Root,inf,_,_),{append_mods([ExtraMods1,ExtraMods2],ExtraMods)}.
 %rest_verb(ExtraMods,aux,Can,Root,active,[]) ---> {modal_verb_form_aux(_,Can,_,_)},verb_form88(ExtraMods1,Root,inf,_,_),{append([[Can],ExtraMods1],ExtraMods)}.
 %rest_verb(ExtraMods,aux,Wont,Root,active,[]) ---> {modal_verb_form_aux(Wont,List,_,_),flatten([List],ListF)},verb_form88(ExtraMods1,Root,inf,_,_),{append([ListF,ExtraMods1],ExtraMods)}.
 rest_verb([root],main,Root,Root,active,[]) ---> noText.
 
 
 % BE
-have_vt(ExtraMods,be(_),Root,Voice,Aspect) --->
+have_vt(ExtraMods,aux(be,_),Root,Voice,Aspect) --->
    verb_form88(ExtraMods1,Root0,Tense0,_,_),
    be_vt(ExtraMods2,Tense0,Root0,Root,Voice,Aspect),
    {append_mods([ExtraMods1,ExtraMods2],ExtraMods)}.
@@ -799,7 +799,7 @@ be_vt(ExtraMods,pres+part,Root0,Root,Voice,[prog]) --->
    passive_vt(ExtraMods,Root0,Root,Voice).
 
 % BE
-passive_vt(ExtraMods,be(_),Root,passive) --->
+passive_vt(ExtraMods,aux(be,_),Root,passive) --->
    verb_form88(ExtraMods1,Root,past+part,_,_),
    {verb_type_lex(Root,Type), passive_vt(ExtraMods2,Type), append_mods([ExtraMods1,ExtraMods2],ExtraMods)}.
 passive_vt([],Root,Root,active) ---> noText.
@@ -831,12 +831,12 @@ verb_args(dv(_Prep),_,[arg(Case,NP)|X],_,Mask) --->
    verb_arg(np,NP,Mask0),
    object_opt(Case,X,Mask0,Mask).
 % BE
-verb_args(be(_),_,[voidQ(_ArgInfo)],Mask,Mask) ---> theText80(there).
-verb_args(be(_),_,[arg(arg_pred(Conj),P)],_,Mask) --->
+verb_args(aux(be,_),_,[voidQ(_ArgInfo)],Mask,Mask) ---> theText80(there).
+verb_args(aux(be,_),_,[arg(arg_pred(Conj),P)],_,Mask) --->
    pred_conj(Conj,P,Mask).
-verb_args(be(_),_,[arg(dirO(_ArgInfo),P)],_,Mask) ---> verb_arg(np,P,Mask).
+verb_args(aux(be,_),_,[arg(dirO(_ArgInfo),P)],_,Mask) ---> verb_arg(np,P,Mask).
 % HAVE
-verb_args(have(_),active,[arg(dirO(_ArgInfo),P)],_,Mask) ---> verb_arg(np,P,Mask).
+verb_args(aux(have,_),active,[arg(dirO(_ArgInfo),P)],_,Mask) ---> verb_arg(np,P,Mask).
 verb_args(Type,_,[],Mask,Mask) ---> {no_args_vt(Type)}.
 
 object_opt(Case,AdvArg,Mask0,Mask) --->
