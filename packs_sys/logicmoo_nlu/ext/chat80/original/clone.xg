@@ -234,7 +234,7 @@ if_cond(true,S,Mask) ---> s_vp_801(S,Mask).
 
 s80(P) --->  s80(P,_).
 
-s80(s(NP,verb(main+iv,E,[],active,_+fin,[],posP([])),[],[]),Mask) ---> 
+s80(s(NP,verb(main+iv,E,[],active,_+fin,[],([])),[],[]),Mask) ---> 
    theText80(there),theText80_W2(_,L),{member(root(E),L),member(upos(verb),L)},verb_arg(np,NP,Mask).
 
 s80(P,Mask) ---> s_vp_800(P,Mask).
@@ -271,16 +271,16 @@ s_vp_801(s(Subj,Verb,Args,Mods),Mask) --->
    just_vp(Subj,Agmt,Type,Verb,Args,Mods,Mask).
 
 s_vp_801(s(NP,Verb,[],[]),_) --->  ace_var(AceVar), !,
-   {Verb = verb(main+iv,action1,[],active,pres+fin,[],posP([])),
+   {Verb = verb(main+iv,action1,[],active,pres+fin,[],([])),
     NP= np(3+sg,np_head(_Var,generic(_),[adj(ace_var(self,AceVar)),adj(ti(statement,self))],statement),[])}.
 
 /*
 s_vp_801(NP,Verb,[],[],_) --->  ace_var(AceVar), !,
-   {Verb = verb(main+iv,'action1:tell',[],active,pres+fin,[],posP(_)),
+   {Verb = verb(main+iv,'action1:tell',[],active,pres+fin,[],(_)),
     NP= np(3+sg,np_head(_Var,generic(_),[adj(ace_var(self,AceVar)),adj(ti(statement,self))],statement),[])}.
 
 s_vp_801(NP,Verb,[],[],_) --->  [],!,
-   {Verb = verb(main+iv,tell,[],active,pres+fin,[],posP(_)),
+   {Verb = verb(main+iv,tell,[],active,pres+fin,[],(_)),
     NP= np(3+sg,np_head(_Var,generic(_),[adj(ti(statement,self))],statement),[])}.
 */
 just_vp(Subj,Agmt,Type,Verb,Args,Mods,Mask) --->
@@ -680,7 +680,7 @@ reduced_rel_rest(Agmt,Conj0,Rel0,Rel,_,Mask) --->
 reduced_rel_rest(_,_,Rel,Rel,Mask,Mask) ---> noText.
 
 reduced_rel(_Agmt,reduced_rel(X,decl(s( np(3+sg,np_head(X,generic(_),[],X),[]),
-                         verb(main+tv,name,[],active,past+fin,[],posP([])),
+                         verb(main+tv,name,[],active,past+fin,[],([])),
                          [ arg(dirO(_),np(3+sg,np_head(_Var,generic(_),[],Name),[]))],
                        []))),_Mask) ---> 
    theText80(named), name_xg(Name).
@@ -731,7 +731,7 @@ neg_modal_opt(Tense,ExtraMods,Aux,Neg) --->
   neg_modal_opt1(ModalInfo,Aux,Neg).
 
 neg_modal_opt1(ExtraMods,aux+_,negP(ExtraMods)) ---> theText80(not).
-neg_modal_opt1(ExtraMods,_,posP(ExtraMods)) ---> noText .
+neg_modal_opt1(ExtraMods,_,(ExtraMods)) ---> noText .
 
 
 verb_form88(ExtraMods,RootVerb,Tense,_Agmt1,_Role) ---> % {fail},

@@ -136,16 +136,13 @@ else
    echo "Skipping pull"
 fi
 
-ln -sf `which swipl` /usr/bin/swipl
-
-#chmod a+w -R /tmp/
-
 rsync -ra $LOGICMOO_WS/docker/rootfs/. /.
 
 
 echo "Starting . $LOGICMOO_WS/INSTALL.md"
 cd $LOGICMOO_WS
 bash -x $LOGICMOO_WS/INSTALL.md
+
 
 mv /etc/apache2/conf-available /etc/apache2/conf-available.dist
 ln -s $LOGICMOO_WS/docker/rootfs/etc/apache2/conf-available /etc/apache2/conf-available 
@@ -159,6 +156,19 @@ mv /root /root.dist
 ln -s $LOGICMOO_WS/prologmud_server /root
 chown -R prologmud_server:www-data /root
 
+mv /usr/local/lib/swipl /usr/local/lib/swipl.dist
+ln -s $LOGICMOO_WS/docker/rootfs/usr/local/lib/swipl /usr/local/lib/swipl
+
+rm -rf /opt/logicmoo_workspace/docker/rootfs/usr/local/lib/python3.6
+find $LOGICMOO_WS/docker/rootfs/ -type f -printf "ln -sf '%p' '/%P' 2>/dev/null \n" | xargs -I{} bash -c "{}"
+find $LOGICMOO_WS/docker/rootfs/usr/local/bin -type f -exec bash -c " ln -svf {} /usr/local/bin/ " \;
+
+
+ln -sf `which swipl` /usr/bin/swipl
+
+#chmod a+w -R /tmp/
+
+
 if [[ -f /usr/share/emacs/26.3 ]]; then
    mv /usr/share/emacs/26.3 /usr/share/emacs/26.3.dead
    ln -s  /usr/local/share/emacs/28.0.50/ /usr/share/emacs/26.1
@@ -167,20 +177,14 @@ fi
 
 if [[ -f $LOGICMOO_WS/nofederation ]]; then
 
-   pip3 uninstall nbconvert Pygments pygments
-   apt remove -y python3-pygments python3-h5py python3-packaging
+   #pip3 uninstall nbconvert Pygments pygments   
+   #apt remove -y python3-pygments python3-h5py python3-packaging python3-nbconvert # python3-requests # python3-six 
+   pip3 install filelock==3.4 importlib-metadata==4.4
    pip3 install -r $LOGICMOO_WS/packs_sys/logicmoo_nlu/requirements.txt
    python3 -m spacy download en_core_web_lg
    python3 -m spacy download en_core_web_sm
 
 fi
-
-mv /usr/local/lib/swipl /usr/local/lib/swipl.dist
-ln -s $LOGICMOO_WS/docker/rootfs/usr/local/lib/swipl /usr/local/lib/swipl
-
-rm -rf /opt/logicmoo_workspace/docker/rootfs/usr/local/lib/python3.6
-find $LOGICMOO_WS/docker/rootfs/ -type f -printf "ln -sf '%p' '/%P' 2>/dev/null \n" | xargs -I{} bash -c "{}"
-find $LOGICMOO_WS/docker/rootfs/usr/local/bin -type f -exec bash -c " ln -svf {} /usr/local/bin/ " \;
 
 
 if [ -n "$VNC_PASSWORD" ]; then
@@ -256,5 +260,6 @@ fi
 PASSWORD=
 HTTP_PASSWORD=
 
-exec /bin/tini -w -vv -- /usr/bin/supervisord -n -c /etc/supervisor/supervisord.conf
 
+exec /bin/tini -w -vv -- /usr/bin/supervisord -n -c /etc/supervisor/supervisord.conf
+ 

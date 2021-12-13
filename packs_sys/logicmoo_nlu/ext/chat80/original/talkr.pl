@@ -181,7 +181,6 @@ pick(X,X).
 
 
 
-
 % Logical Rules
 % ------------------
 qualifiedBy(V,_,np_head(_Var,det(A),_Adjs,Ti)):- !, debug_var0([A,Ti],V).
@@ -329,7 +328,10 @@ database801(trans_pred(Type,P,X,Y)) :- trans_pred(Type,P,X,Y). % contain
 database801(ought(X)):- database80(X).
 database801(can(X)):- database80(X).
 database801(will(X)):- database80(X).
-
+database801(past(X)):- database80(X).
+database801(not(X)):-  \+ database80(X).
+%database801(notP(X)):-  database80(X).
+database801(generic_pred(thing,any,_X,_Y)):- true.
 
 %database80(path_pred(begins(Flow),rises,river,X,Y)) :- path_pred(begins(Flow),rises,river,X,Y).
 %database80(path_pred(ends(Flow),drains,river,X,Y)) :- path_pred(ends(Flow),drains,river,X,Y).

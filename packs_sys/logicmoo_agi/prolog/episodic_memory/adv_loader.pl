@@ -24,7 +24,7 @@
 
 % :- user:ensure_loaded(library(parser_sharing)).
 
-
+:- ensure_loaded(library(episodic_memory/adv_spider)).
 :- ensure_loaded(adv_debug).
 :- ensure_loaded(adv_help).
 :- ensure_loaded(adv_util).

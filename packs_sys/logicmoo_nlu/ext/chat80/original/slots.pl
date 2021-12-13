@@ -81,7 +81,7 @@ i_sentence2(decl(S),assertion80(P)) :- !, i_s(S,P).
 i_sentence2(whq(X,S),question80([X],P)) :- !, i_s(S,P).
 i_sentence2(s(S),s80(P)) :- !, i_s(s(S),P). 
 i_sentence2(imp(U,Ve,s(_,Verb,VArgs,VMods)),imp80(U,Ve,V,Args)) :-
-   must80(i_verb(Verb,V,_,active,posP([]),Slots0,[],transparent)),
+   must80(i_verb(Verb,V,_,active,([]),Slots0,[],transparent)),
    must80(i_verb_args(RefVar,VArgs,[],[],Slots0,Slots,Args,Args0,Up,-0)),
    append(Up,VMods,Mods),
    must80(i_verb_mods(RefVar,Mods,_,[],Slots,Args0,Up,+0)).
@@ -284,6 +284,13 @@ i_s(s(Subj,verb(VerbType,Root,Voice,Tense,Aspect,Neg0),VArgs,VMods),Pred,Up,Id) 
   append([],Aspect,NewAspect),
   i_s(s(Subj,verb(VerbType,Root,Voice,Tense,NewAspect,FNewNeg),NewVArgs,VMods),Pred,Up,Id).
 
+i_s(s(Subj,verb(VerbType,Root,Voice,Tense,Aspect,Neg0),VArgs,VMods),Pred,Up,Id) :-
+  once(must(fix_mneg(Neg0,Neg))), Neg\==Neg0,
+  i_s(s(Subj,verb(VerbType,Root,Voice,Tense,Aspect,Neg),VArgs,VMods),Pred,Up,Id).
+
+i_s(s(Subj,verb(VerbType,Root,Voice,past+Fin,Aspect,Neg),VArgs,VMods),Pred,Up,Id) :-
+  \+ contains_var(past,Neg),
+  i_s(s(Subj,verb(VerbType,Root,Voice,past+Fin,Aspect,[past|Neg]),VArgs,VMods),Pred,Up,Id).
 
 i_s(s(Subj,verb(Mainiv,be(_),[],Active,Fin+fin,[],Neg),VArgs,VMods),Pred,Up,Id) :- !,
    i_s(s(Subj,verb(Mainiv,exist,[],Active,Fin+fin,[],Neg),VArgs,VMods),Pred,Up,Id).
@@ -299,14 +306,13 @@ i_s(s(Subj,Verb,VArgs,VMods),Pred,Up,Id) :-
 
 i_s(s(Subj,Verb,VArgs,VMods),Pred,Up,Id) :-
  debug_chat80_if_fail((
-   i_verb(Verb,P,Tense,Voice,Neg0,Slots0,XA0,Meta),
-   fix_mneg(Neg0,Neg),
+   i_verb(Verb,P,Tense,Voice,DetPosNeg,Slots0,XA0,Meta),
    i_subj(RefVar,Voice,Subj,Slots0,Slots1,QSubj,SUp,'-'('-'(Id))),
    append(SUp,VArgs,TArgs),
    i_verb_args(RefVar,TArgs,XA0,XA,Slots1,Slots,Args0,Args,Up0,+(-Id)),
    append(Up0,VMods,Mods),
    i_verb_mods(RefVar,Mods,Tense,XA,Slots,Args,Up,+Id),
-   reshape_pred(Meta,QSubj,Neg,P,Args0,Pred))).
+   reshape_pred(Meta,QSubj,DetPosNeg,P,Args0,Pred))).
 
 /*
       i_verb(verb(VerbType,Root,[],Voice,Tense,Aspect,Neg),
@@ -324,46 +330,49 @@ i_s(s(Subj,Verb,VArgs,VMods),Pred,Up,Id) :-
       PP,Tense,Voice,Det,Slots,ModXArgs,Meta).
 */      
 i_verb(verb(_VerbType,Root,Voice,Tense,_Aspect,Neg0),
-      PP,Tense,Voice,NegDet,Slots,XArg,Meta) :-
+      PP,Tense,Voice,DetPosNeg,Slots,XArg,Meta) :-
    must80(slot_verb_template(Root,P,Slots,XArg,Meta)),
-   %(Neg\=posP(_)->trace;true),
    fix_mneg(Neg0,Neg),
-   i_neg(Neg,NegDet),
+   i_neg(Neg,DetPosNeg),
    maybe_modalize(Neg,P,PP).
 
 add_extra_to_neg(Neg0,IntoNegs,FNewNeg):- 
-  fix_mneg(Neg0,Neg),Neg=..[F,L],
+  fix_mneg(Neg0,Neg),Neg=L,
   append(IntoNegs,L,NewIntoNegs),
-  NewNeg=..[F,NewIntoNegs],
+  NewNeg=NewIntoNegs,
   fix_mneg(NewNeg,FNewNeg).
 
-fix_mneg(posP(Modal),O):- var(Modal),!,fix_mneg(posP([]),O).
-fix_mneg(negP(Modal),O):- var(Modal),!,fix_mneg(negP([]),O).
-fix_mneg(posP(Modal),O):- fix_modal_list(Modal,ModalF),Modal\==ModalF,fix_mneg(posP(ModalF),O).
-fix_mneg(negP(Modal),O):- fix_modal_list(Modal,ModalF),Modal\==ModalF,fix_mneg(negP(ModalF),O).
-fix_mneg(posP(Modal),O):- assertion(is_list(Modal)),select(not,Modal,ModalP),!,fix_mneg(negP(ModalP),O).
-fix_mneg(negP(Modal),O):- assertion(is_list(Modal)),select(not,Modal,ModalP),!,fix_mneg(posP(ModalP),O).
-fix_mneg(O,O).
+%fix_mneg(Modal,O):- var(Modal),!,O=Modal.
+%fix_mneg(/*negP*/(Modal),O):- fix_modal_list(Modal,ModalF),Modal\==ModalF,fix_mneg((ModalF),O).
+% fix_mneg(O,O):- is_list(Modal),select(not,Modal,ModalP),!,fix_mneg([notP|ModalP],O).
+fix_mneg(I,O):- subst(I,not,notP,O),ignore((O=identityQ(_),dumpST)).
   
+fix_modal_list(Modal,O):- is_list(Modal),!,flatten(Modal,ModalF),fix_modal_list0(ModalF,O).
 fix_modal_list(Modal,O):- flatten([Modal],ModalF),fix_modal_list0(ModalF,O).
-fix_modal_list0(O,O):- \+ compound(O),!.
-fix_modal_list0([H|T],[HH|TT]):- fix_modal_list0(H,HH), fix_modal_list0(T,TT).
-fix_modal_list0(adv(M),O):-!,fix_modal_list0(M,O).
 
-maybe_modalize(PN,P,PP):- arg(1,PN,L),!,maybe_modalize0(L,P,PP).
+fix_modal_list0(O,[]):- O == [].
+fix_modal_list0(O,[O]):- \+ compound(O),!.
+fix_modal_list0([H|T],[HH|TT]):- !, fix_modal_list0(H,HH), fix_modal_list0(T,TT).
+fix_modal_list0(adv(M),O):-!,fix_modal_list0(M,O).
+fix_modal_list0(P,O):- arg(1,P,M),!,fix_modal_list0(M,O).
+
+maybe_modalize(PN,P,PP):- maybe_modalize0(PN,P,PP),!.
 maybe_modalize(_,P,P).
 maybe_modalize0([PN|L],P,PP):- nonvar(PN), !, maybe_modalize0(PN,P,PM), maybe_modalize0(L,PM,PP).
 maybe_modalize0(root, P, P):-!.
+maybe_modalize0(notP, P, P):- !.
 maybe_modalize0(adv(Modal), P, PP):- !, maybe_modalize0(Modal, P, PP).
+maybe_modalize0(do(Modal), P, PP):- !, maybe_modalize0(Modal, P, PP).
+maybe_modalize0(have(Modal), P, PP):- !, maybe_modalize0(Modal, P, PP).
+maybe_modalize0(be(Modal), P, PP):- !, maybe_modalize0(Modal, P, PP).
 maybe_modalize0(t(Modal,_,_), P, PP):- !, maybe_modalize0(Modal, P, PP).
 maybe_modalize0(Modal, P, PP):- atom(Modal),!,PP=..[Modal,P].
 maybe_modalize0(_,P,P).
 
 reshape_pred(transparent,S,N,P,A,pred(S,N,P,A)).
-reshape_pred(have(_MODAL),Subj,Neg0,Verb0,
+reshape_pred(have(_MODAL),Subj,DetPosNeg,Verb0,
       [quantV(Det,X,Head0,Pred,QArgs,Y)|MRest],
-      pred(Subj,Neg,Verb,[quantV(Det,X,Head,Pred,QArgs,Y)|MRest])) :-
-   fix_mneg(Neg0,Neg),
+      pred(Subj,DetPosNeg,Verb,[quantV(Det,X,Head,Pred,QArgs,Y)|MRest])) :-
    have_pred(Head0,Verb0,Head,Verb).
 
 have_pred('`'(Head),Verb,'`'(true),(Head,Verb)).
@@ -373,8 +382,10 @@ have_pred(Head,Verb,Head,Verb) :-
 meta_head(apply80(_,_)).
 meta_head(aggr(_,_,_,_,_)).
 
-i_neg(posP(_Modal),identityQ(_ArgInfo)).
-i_neg(negP(_Modal),notP).
+i_neg(Info,notP):- contains_var(notP,Info),!.
+i_neg(Info,notP):- contains_var(not,Info),!.
+i_neg(Info,notP):- sub_term(V,Info),compound(V),V=negP(_).
+i_neg(_,identityQ(_ArgInfo)).
 
 i_subj(RefVar,Voice,Subj,Slots0,Slots,Quant,Up,Id) :-
    (active_passive_subjcase(Voice,Case)*->true;true),

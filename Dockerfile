@@ -113,6 +113,25 @@ MAINTAINER RUN apt-get update && apt-get install -y --allow-unauthenticated \
  rsync \
  rlwrap
 
+
+RUN apt update \
+ && apt-get install -y \
+        build-essential cmake ninja-build pkg-config \
+        ncurses-dev libreadline-dev libedit-dev \
+        libgoogle-perftools-dev \
+        libunwind-dev \
+        libgmp-dev \
+        libssl-dev \
+        unixodbc-dev \
+        zlib1g-dev libarchive-dev \
+        libossp-uuid-dev \
+        libxext-dev libice-dev libjpeg-dev libxinerama-dev libxft-dev \
+        libxpm-dev libxt-dev \
+        libdb-dev  libraptor2-dev \
+        libpcre3-dev \
+        libyaml-dev \
+        default-jdk junit4 libserd-dev libserd-0-0
+
 RUN a2dismod mpm_event \
  && a2enmod macro access_compat alias auth_basic authn_core authn_file authz_core authz_host authz_user autoindex deflate dir env \
  filter headers http2 mime mpm_prefork negotiation  php7.4 proxy proxy_ajp proxy_balancer proxy_connect proxy_express \
@@ -138,15 +157,7 @@ RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | s
  && apt update \
  && apt install -y gh
 
-# Python NLP Stuff
-EXPOSE 4095 4096 4097 4098 4099
-#RUN pip3 uninstall nbconvert Pygments pygments
-#RUN apt remove -y python3-pygments python3-h5py python3-packaging # python3-requests # python3-six 
 COPY packs_sys/logicmoo_nlu/requirements.txt /tmp/requirements.txt
-
-#RUN pip3 install -r /tmp/requirements.txt
-#RUN python3 -m spacy download en_core_web_lg \
-# && python3 -m spacy download en_core_web_sm
 
 #CMD $LOGICMOO_WS/StartLogicmoo.sh
 ENTRYPOINT ["/startup_logicmoo.sh"]

@@ -297,7 +297,7 @@ and(P,Q, ','(P,Q)).
 as_memo_g(A,A):- ground(A),!.
 as_memo_g(A,A):- \+ compound(A),!.
 %as_memo_g((A;B),(AA;BB)):-!,as_memo_g(A,AA),as_memo_g(B,BB).
-%as_memo_g(A,A):- compound(A),!.
+as_memo_g(A,A):- compound(A),!.
 as_memo_g((A,B),(AA,BB)):-!,as_memo_g(A,AA),as_memo_g(B,BB).
 %as_memo_g(X, in_memo_g(Vs,X)):- term_variables(X,Vs).
 as_memo_g(X, in_memo_g(_,X)):- term_variables(X,_Vs).

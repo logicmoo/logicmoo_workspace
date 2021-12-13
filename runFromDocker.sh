@@ -7,7 +7,7 @@ if [ -f "/.dockerenv" ]; then
    exit 0
 fi
 
-set +x +e
+#set +x +e
 
 if [[ $EUID -ne 0 ]]; then
    echo "#* "
@@ -111,7 +111,6 @@ if [ "${build}" == "1" ]; then
      cd $LOGICMOO_WS
 fi
 
-
 if [ "${push}" == "1" ]; then
    (
      cd docker
@@ -129,6 +128,13 @@ if [ "${push}" == "1" ]; then
    docker push logicmoo/logicmoo_workspace
 fi
 
+if [ "${build}" == "1" ]; then
+     set +e +x
+     cd $LOGICMOO_WS/serv
+     docker build $EXTRA -t logicmoo/logicmoo_server_32gb . 
+     echo MAYBE: docker push logicmoo/logicmoo_server_32gb
+     cd $LOGICMOO_WS
+fi
 
 export PORTS="-p 4000-4004:4000-4004 -p 4021-4025:4021-4025 -p 4090-4099:4090-4099 -p 4243:443 -p 4280:80 -p 4020:3020  -p 3020:3020 -p 4222:22 -p 4220:3020 -p 4200:5900 -p 4201:9001 -p 4290:4090 -p 6079-6081:6079-6081"
 
@@ -136,12 +142,23 @@ export LM_VOLUMES="-v /opt/logicmoo_workspace:/opt/logicmoo_workspace"
 export DOCKER_RUN="--name logicmoo --privileged=true --no-healthcheck $LM_VOLUMES --rm -it ${PORTS} ${EXTRA} logicmoo/logicmoo_workspace:latest"
 export DOCKER_UP=""
 
+if [ "$run" == "1" ]; then
+      #set +x -e
+      docker kill logicmoo 2>/dev/null ; /bin/true
+      docker container rm logicmoo 2>/dev/null ; /bin/true
+      docker kill logicmoo 2>/dev/null ; /bin/true
+      docker container rm logicmoo 2>/dev/null ; /bin/true
+      docker kill logicmoo 2>/dev/null ; /bin/true
+      docker ps
+fi
+
 if [ "$(hostname -d)" == "logicmoo.org" ]; then
-   DOCKER_RUN="$DOCKER_RUN --add-host logicmoo.org:10.0.0.194"
+  export DOCKER_RUN="--name logicmoo --privileged=true --no-healthcheck $LM_VOLUMES --rm -it ${PORTS} ${EXTRA} logicmoo/logicmoo_server_32gb:latest"
+  DOCKER_RUN="$DOCKER_RUN --add-host logicmoo.org:10.0.0.194"
    echo "locally testing on logicmoo.org"
   # docker run --name logicmoo --privileged=true --no-healthcheck --add-host logicmoo.org:10.0.0.194 --rm -it -p 4000-4199:4000-4199 -p 4243:443 -p 4280:80 -p 3020:3020 -p 4222:22 -p 4220:3020 -p 4200:5900 -p 4201:9001 -p 4290:4090 -p 6079-6081:6079-6081  logicmoo/logicmoo_workspace:latest
-  # return 0 2>/dev/null
-  # exit 0
+  #return 0 2>/dev/null
+  #exit 0
 fi
 
 if [ "$run" == "1" ]; then

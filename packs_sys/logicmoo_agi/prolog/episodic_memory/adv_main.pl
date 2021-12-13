@@ -22,7 +22,7 @@
 :- '$set_source_module'(mu).
 :- ensure_loaded(adv_loader).
 
-
+:- ensure_loaded(library(episodic_memory/adv_spider)).
 /*
 :- if(\+ exists_source(library(poor_bugger))).
 :- prolog_load_context(file, File),

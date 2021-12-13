@@ -11,12 +11,12 @@
  lxpr_to_segs/2,
  lxpr_to_list/2]).
 
-is_penn_sent('S'). % simple declarative clause  i.e. one that is not introduced by a (possible empty) subordinating conjunction or a wh-word and that does not exhibit subject-verb inversion.
+is_penn_sent('SsS'). % simple declarative clause  i.e. one that is not introduced by a (possible empty) subordinating conjunction or a wh-word and that does not exhibit subject-verb inversion.
 is_penn_sent('SBAR'). % Clause introduced by a (possibly empty) subordinating conjunction.
 is_penn_sent('SBARQ'). % Direct question introduced by a wh-word or a wh-phrase. Indirect questions and relative clauses should be bracketed as SBAR  not SBARQ.
 is_penn_sent('SINV'). % Inverted declarative sentence  i.e. one in which the subject follows the tensed verb or modal.
 is_penn_sent('SQ'). %Inverted yes/no question  or main clause of a wh-question  following the wh-phrase in SBARQ.
-is_penn_sent('S1').
+is_penn_sent('S111111111').
 is_penn_sent('S2').
 is_penn_sent(X):- atom(X), is_penn_sent(L), atom_concat(L,N,X), atom_number(N,_).
 %is_penn_sent(X):- atom_concat(_,'BAR',X).
@@ -159,7 +159,7 @@ prefer_cvt(Y,R):- upcase_atom(Y,R).
 
 prefer(X,Y):- atom_contains(X,Y).
 prefer('NN','N').
-prefer('NN','S').
+prefer('NN','SsS').
 prefer('IN','NN').
 prefer('V','NNS'). 
 prefer('POS',_).
@@ -168,7 +168,7 @@ prefer(_,'VP').
 prefer(_,'POS'):-!,fail.
 prefer(_,'IN').
 prefer(_,'N').
-prefer(_,'S').
+prefer(_,'SsS').
 prefer('A-C',_).
 prefer(_,'PP').
 prefer(_,'ADVP'):-!,fail.
@@ -254,7 +254,7 @@ tree_s_w2(X,L):- listify(X,L).
 
 is_nn(NN):- atom(NN),atom_concat('NN',_,NN).
 is_vb(NN,N):- atom(NN),atom_concat('VB',N,NN).
-is_nnps(NN):- atom(NN), atom_concat('NN',PS,NN),(atom_contains(PS,'P');atom_contains(PS,'S')),!.
+is_nnps(NN):- atom(NN), atom_concat('NN',PS,NN),(atom_contains(PS,'P');atom_contains(PS,'SsS')),!.
 
 is_oops_verb(P):- clex:iv_finsg(P,_), \+ is_still_noun(P).
 is_oops_verb(P):- clex:iv_finsg(_,P), \+ is_still_noun(P).
@@ -406,10 +406,10 @@ marked_segs([
  'SQ'-'SQ',
  'PP'-'PP',
  % 'VP'-'VPhrase',
-  'S1'-'ROOT',
+  'S11111'-'ROOT',
   'SBAR'-'Thing','NP'-'Obj',
   'NP-TMP'-'NP-TMP',
-  'S'-'Situation','S1'-'Event','NML'-'NML','ADJP'-'tCol','FRAG'-'FRAG']).
+  'SsS'-'Situation','S11111'-'Event','NML'-'NML','ADJP'-'tCol','FRAG'-'FRAG']).
 %marked_seg_type(Mark,Type):- marked_segs(S),member(Mark-Type,S).
 with_reset_segs(Start,G):- marked_segs(Segs), with_reset_segs(Start,Segs,G).
 with_reset_segs(_Start,[],G):-!,call(G).
@@ -424,9 +424,9 @@ fix_c2s(A,D):- with_reset_flag('word',1,fix_c2s0(A,D)).
 fix_c2s0(A,D):- fix_c2s1(A,B),fix_c2s1(B,D).
 fix_c2s1(A,D):- fix_tree_ses(A,B),fix_tree_ses(B,C),fix_tree_vps(C,D),!.
 
-%fix_tree_ses(['S1',['S'|MORE]],OUT):- fix_tree_ses(['S1'|MORE],OUT).
-%fix_tree_ses(['S',['S1'|MORE]],OUT):- fix_tree_ses(['S'|MORE],OUT).
-%fix_tree_ses(['S',MORE],OUT):- !, fix_tree_ses(MORE,OUT).
+%fix_tree_ses(['S11111',['SsS'|MORE]],OUT):- fix_tree_ses(['S11111'|MORE],OUT).
+%fix_tree_ses(['SsS',['S11111'|MORE]],OUT):- fix_tree_ses(['SsS'|MORE],OUT).
+%fix_tree_ses(['SsS',MORE],OUT):- !, fix_tree_ses(MORE,OUT).
 fix_tree_ses_1(['SBAR',MORE],OUT):- fix_tree_ses(MORE,OUT).
 fix_tree_ses_1(['RB',there],OUT):- fix_tree_ses(['EX',there],OUT).
 /*
@@ -463,10 +463,10 @@ fix_tree_ses(S,S):-!.
 
 replace_seg_name(B,A):- atom(B),marked_segs_replace(B,A).
 marked_segs_replace(w(W,[  pos(POS)|_]),w(W,[pos(POS)])).
-marked_segs_replace('S1','ROOT').
+marked_segs_replace('S11111','ROOT').
 marked_segs_replace('WHNP','NP').
 marked_segs_replace('VBP','VB').
-%marked_segs_replace('SBAR','S').
+%marked_segs_replace('SBAR','SsS').
 %marked_segs_replace('SBARQ','SBAR').
 marked_segs_replace(SQ,S):- atom_concat(S,'Q',SQ).
 /* 'VP'-'Situation',
@@ -476,7 +476,7 @@ marked_segs_replace(SQ,S):- atom_concat(S,'Q',SQ).
  'SQ'-'SQ',
  'PP'-'PP',
  % 'VP'-'VPhrase',
-  'S1'-'ROOT').
+  'S11111'-'ROOT').
 */
 
 fix_tree_w2s(WORD,POS):- is_pos(WORD,POS),!. 
@@ -543,20 +543,20 @@ smerge_segsl(F,[span(List)|U1],U2,[span([Seg|NewList])|U3]):-
    smerge_segsl(F,U1,NewU2,U3),!.
 */
 smerge_segsl(F,U1,U2,Out):-
-   select(span(S1),U1,NewU1),
+   select(span(S11111),U1,NewU1),
    Seg=seg(_,_),
-   select(Seg,S1,List1),
+   select(Seg,S11111,List1),
    select(span(S2),U2,NewU2),
    select(Seg,S2,List2),
   find_subterm(List1,phrase(Type1)),
   find_subterm(List2,phrase(Type2)),
   prefered_span_type(Type1,Type2),!,
-  smerge_segsl(F,[span(S2)|NewU1],[span(S1)|NewU2],Out).
+  smerge_segsl(F,[span(S2)|NewU1],[span(S11111)|NewU2],Out).
 
 smerge_segsl(F,U1,U2,[Out|U3]):-
-   select(span(S1),U1,NewU1),
+   select(span(S11111),U1,NewU1),
    Seg=seg(_,_),
-   select(Seg,S1,List1),
+   select(Seg,S11111,List1),
    select(span(S2),U2,NewU2),
    select(Seg,S2,List2),
   find_subterm(List1,phrase(Type1)),
@@ -646,7 +646,7 @@ incr_ht(HT,Name,V,V1):-
 
 
 %add_p_to_words(_Var,_,[],[]):-!.
-% create_coref('S',MORES,MORES):- !.
+% create_coref('SsS',MORES,MORES):- !.
 create_coref('ROOT',MORES,MORES):- !.
 create_coref(NP,MORES,Out):- atom(NP), % marked_segs(Segs),%member(NP-Type,Segs),
   %notrace(incr_ht(HT,NP,N,N+1)),
