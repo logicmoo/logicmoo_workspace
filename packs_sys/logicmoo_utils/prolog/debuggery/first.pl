@@ -561,6 +561,9 @@ unnumbervars_and_save(X,YO):-
 %
 % Unnumbervars And Save.
 %
+
+unnumbervars4(PTermIn,VsIn,NewVs,PTermOutO):- nonvar(PTermOutO),!,unnumbervars4(PTermIn,VsIn,NewVs,Var),!,
+  must(PTermOutO=Var),!.
 unnumbervars4(Var,Vs,Vs,OVar):- nonvar(OVar),!,dumpST,throw(unnumbervars4(Var,Vs,Vs,OVar)).
 unnumbervars4(Var,Vs,Vs,Var):- \+ compound(Var), !.
 unnumbervars4([],Vs,Vs,[]):-!.

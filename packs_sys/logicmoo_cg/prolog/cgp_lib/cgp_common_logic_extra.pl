@@ -1,5 +1,5 @@
 :- module(cgp_common_logic_extra, 
-  [run_tests/0, 
+  [%run_tests/0, 
    convert_clif_to_cg/2]).
 
 

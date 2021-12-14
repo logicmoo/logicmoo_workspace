@@ -30,8 +30,15 @@ push_frame_concept(C,Frame,S,S):-push_frame_concept(C,Frame).
 nb_set_add(X,Y,S,S):- must(nb_set_add(X,Y)).
 
 
-cg_demo :- make, forall((cg_test_data(TstAtts,X), \+ memberchk(failing,TstAtts)),must(do_cg_test(TstAtts,X))).
-cg_reader_tests :- make, forall(cg_test_data(TstAtts,X), must(do_cg_test(TstAtts,X))).
+load_cg_test_data:- ensure_loaded(library('../test/cgp_lib/cg_reader_test_data.plt')).
+
+get_cg_test_data(T,D):- load_cg_test_data, cg_test_data(T,D).
+
+cg_demo :- make,
+  forall((get_cg_test_data(TstAtts,X), \+ memberchk(failing,TstAtts)),must(do_cg_test(TstAtts,X))).
+
+cg_reader_tests :- make,
+   forall(get_cg_test_data(TstAtts,X), must(do_cg_test(TstAtts,X))).
 
 do_cg_test( TstAtts,_):- memberchk(skip,TstAtts),!.
 do_cg_test( TstAtts,X):- select(cg_dialect(What),TstAtts,NewTstAtts),!, 

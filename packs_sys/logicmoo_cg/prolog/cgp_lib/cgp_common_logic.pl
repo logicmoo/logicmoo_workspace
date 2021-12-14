@@ -1,5 +1,6 @@
 :- module(cgp_common_logic, 
   [%run_tests/0, 
+   test_logicmoo_cg_clif/0,
    convert_clif_to_cg/2]).
 
 :- use_module(library(logicmoo_common)).
@@ -56,58 +57,61 @@ listify_h(L1, L2):- flatten([L1], L2), !.
 listify_h(L1, L2):- listify(L1, L2), !.
 
 % ==========================================================================
-% chop_up/2 - chops up and replaces CLIF into CG
+% chop_up_clif/2 - chops up and replaces CLIF into CG
 % ==========================================================================
-chop_up(Stuff, Out):-
-   chop_up(+, Stuff, Out).
+
+chop_up_clif(Stuff, Out):- chop_up_clif(Stuff,Stuff, Out).
+
+chop_up_clif(OF, Stuff, Out):-
+   chop_up_clif(OF, +, Stuff, Out).
 
 
 
 % ==========================================================================
-% chop_up/3 - Like chop_up/2 (chops up and replaces CLIF into CG) but takes a +/-
+% chop_up_clif/3 - Like chop_up_clif/2 (chops up and replaces CLIF into CG) but takes a +/-
 % ==========================================================================
-chop_up(Mode, [ExistsOrForall, VarList, Stuff], Out):-
+chop_up_clif(OF, Mode, [ExistsOrForall, VarList, Stuff], Out):-
    member(ExistsOrForall, [exists, forall]), 
    do_varaibles(Mode, ExistsOrForall, VarList, Out1, NewVars), 
    subst_each(Stuff, NewVars, NewStuff), 
-   chop_up(Mode, NewStuff, Out2), 
+   chop_up_clif(OF, Mode, NewStuff, Out2), 
    unchop(Out1, Out2, Out).
 
-chop_up(Mode, ['implies'|Stuff], Out) :- chop_up(Mode, ['=>'|Stuff], Out).
-chop_up(Mode, ['if'|Stuff], Out) :- chop_up(Mode, ['=>'|Stuff], Out).
+chop_up_clif(OF, Mode, ['implies'|Stuff], Out) :- chop_up_clif(OF, Mode, ['=>'|Stuff], Out).
+chop_up_clif(OF, Mode, ['if'|Stuff], Out) :- chop_up_clif(OF, Mode, ['=>'|Stuff], Out).
 
-chop_up(_Mode, ['#'(quote), Mary], '#'(Mary)).
-chop_up(_Mode, '$STRING'(S), S).
-
-
-chop_up(+, [not, Stuff], Out) :- chop_up(-, Stuff, Out).
-chop_up(-, [not, Stuff], Out) :- chop_up(+, Stuff, Out).
-
-chop_up(Mode, [Type, Arg], Out) :- chop_up(Mode, ['Type', Arg, Type], Out).
-
-chop_up(+, [and|Stuff],    Out )  :- chop_up_list(+, Stuff, Out).
-chop_up(-, [and|Stuff], or(Out))  :- chop_up_list(-, Stuff, Out).
-chop_up(+, [or|Stuff],  or(Out))  :- chop_up_list(+, Stuff, Out).
-chop_up(-, [or|Stuff],     Out )  :- chop_up_list(-, Stuff, Out).
+chop_up_clif(_OF, _Mode, ['#'(quote), Mary], '#'(Mary)).
+chop_up_clif(_OF, _Mode, '$STRING'(S), S).
 
 
-chop_up(Mode, ['=>', Arg1, Arg2], Out):-
-  chop_up(Mode, Arg1, F1),flatten([F1],Out1),
-  chop_up(Mode, Arg2, F2),flatten([F2],Out2),
+chop_up_clif(OF, +, [not, Stuff], Out) :- chop_up_clif(OF, -, Stuff, Out).
+chop_up_clif(OF, -, [not, Stuff], Out) :- chop_up_clif(OF, +, Stuff, Out).
+
+chop_up_clif(OF, Mode, [Type, Arg], Out) :- chop_up_clif(OF, Mode, ['Type', Arg, Type], Out).
+
+chop_up_clif(OF, +, [and|Stuff],    Out )  :- chop_up_list(OF, +, Stuff, Out).
+chop_up_clif(OF, -, [and|Stuff], or(Out))  :- chop_up_list(OF, -, Stuff, Out).
+chop_up_clif(OF, +, [or|Stuff],  or(Out))  :- chop_up_list(OF, +, Stuff, Out).
+chop_up_clif(OF, -, [or|Stuff],     Out )  :- chop_up_list(OF, -, Stuff, Out).
+
+
+chop_up_clif(OF, Mode, ['=>', Arg1, Arg2], Out):-
+  chop_up_clif(OF, Mode, Arg1, F1),flatten([F1],Out1),
+  chop_up_clif(OF, Mode, Arg2, F2),flatten([F2],Out2),
   Out =.. ['cg_implies', Out1, Out2], !.
 
 
-chop_up(Mode, [Name, Arg1, Arg2], Out):- is_cg_pred(Name, Pred), !, 
-  chop_up(Mode, Arg1, Out1), 
-  chop_up(Mode, Arg2, Out2),  
+chop_up_clif(OF, Mode, [Name, Arg1, Arg2], Out):- is_cg_pred(Name, Pred), !, 
+  chop_up_clif(OF, Mode, Arg1, Out1), 
+  chop_up_clif(OF, Mode, Arg2, Out2),  
   Out =.. [Pred, Out1, Out2], !.
 
-chop_up(Mode, [Pred|Args], Out):-  
-  chop_up_list(+, Args, ArgsO), 
+chop_up_clif(OF, Mode, [Pred|Args], Out):-  
+  chop_up_list(OF, +, Args, ArgsO), 
   (HOLDS =.. [cg_holds, Pred|ArgsO]), 
   add_mode(Mode, HOLDS, Out).
 
-chop_up(_Mode, O, O).
+chop_up_clif(_OF, _Mode, O, O).
 
 
 is_cg_pred(Name, _):- \+ atom(Name), !, fail.
@@ -120,9 +124,9 @@ add_mode(-, A, -A).
 add_mode(_, A, A).
 
 % ==========================================================================
-% chop_up_list/3 is the maplist version of chop_up/3
+% chop_up_list/3 is the maplist version of chop_up_clif/3
 % ==========================================================================
-chop_up_list(Mode, Stuff, Out):- maplist(chop_up(Mode), Stuff, Out). 
+chop_up_list(OF, Mode, Stuff, Out):- maplist(chop_up_clif(OF, Mode), Stuff, Out). 
 
 
 % ==========================================================================
@@ -145,11 +149,14 @@ run_1_test(String):-
   pprint_ecp(magenta, (?- run_1_test(String))), 
   pprint_ecp(yellow, clif=Clif), 
   mpred_test(mort(cgp_common_logic:convert_clif_to_cg(Clif, CG))),
-   pprint_ecp(cyan, cg(CG)), 
+   pprint_ecp(cyan, cg=(CG)), 
    dmsg("================================================="), !.
 
-test_logicmoo_cg_clif:- % notrace(update_changed_files),
+test_logicmoo_cg_clif:- notrace(update_changed_files),
+  
   forall(cl_example(String), run_1_test(String)).
+
+:- system:import(test_logicmoo_cg_clif/0).
 
 :- public(test_logicmoo_cg_clif/0).
 
@@ -175,11 +182,76 @@ qvar_to_vvar(I, O):-
 %% convert_clif_to_cg(+Clif, -CG)
 %  Redoes Clif forms into CG forms
 % ==========================================================================
-convert_clif_to_cg(In, Out):-
-  chop_up(In, Mid), 
+convert_clif_to_cg(In, FVOut):-
+  chop_up_clif(In, Mid), 
   qvar_to_vvar(Mid, Mid2), 
-  unnumbervars(Mid2, Out).
+  unnumbervars(Mid2, Out),!,  
+  to_out_cg(Out,OutCG),
+  ensure_fvars(OutCG,FVOut).
 
+ensure_fvars(OutCG,FVOut):- \+ compound(OutCG),!,OutCG=FVOut.
+ensure_fvars(OutCG,FVOut):- arg(1,OutCG,O),is_frmvar(O),!,OutCG=FVOut.
+ensure_fvars(OutCG,FVOut):- is_cg_frame_var(OutCG,_),OutCG=FVOut.
+ensure_fvars(OutCG,FVOut):- make_fv(FV), frame_to_db(FV,OutCG,FVOut).
+
+is_frmvar(O):- is_ftVar(O),!.
+%is_frmvar(O):- is_cg_frame(O),!.
+
+make_fv(FV):-
+  gensym('CGIF_',Sym),
+  %debug_var(Sym,FV).
+  %FV='$VAR'(Sym).
+  FV='cgf'(Sym).
+
+to_out_cg(Out,OutCG):- var(Out),!,OutCG = cg(Out).
+to_out_cg(cg(Out),(Out)):-!.
+to_out_cg((Out),(Out)):- nonvar(Out),!.
+
+frame_to_db(FV,OutCG,FVOut):- frame_to_db(FV,0,OutCG,FVOut).
+
+frame_to_db(_FV,_,P,P):- var(P).
+frame_to_db(_,_,cgf(P),cgf(P)):-!.
+frame_to_db(_,_,'$VAR'(P),'$VAR'(P)):-!.
+frame_to_db(_,_,CGP,cg(FV,FVP)):- compound(CGP),CGP=cg(FV,FVP),!.
+frame_to_db(FV,C,CGP,cg(FV,FVP)):- compound(CGP),CGP=cg(P),!, frame_to_db(FV,C,P,FVP).
+%frame_to_db(FV,_,P,cg(FV,P)):- is_list(P),!.
+%frame_to_db(FV,C,P,(FVP)):- is_list(P),!,maplist(frame_to_db(FV,C),P,FVP).
+frame_to_db(FV,C,P,CJS):- is_list(P),!,maplist(frame_to_db(FV,C),P,FVP),list_to_conjuncts(',',FVP,CJS).
+frame_to_db(FV,C,P,FVP):- number(C),C\==0,!,frame_to_db(FV,0,P,FVP).
+frame_to_db(FV,:,P,FVP):- !, frame_to_db(FV,0,P,FVP).
+frame_to_db(_,-,P,P):-!.
+frame_to_db(_,+,P,P):-!.
+frame_to_db(_,?,P,P):-!.
+frame_to_db(FV,0,P,in_frame(FV,P)):- var(P).
+frame_to_db(_, _,P,FVP):- \+ compound(P),!,FVP=P.
+frame_to_db(FV,C,P,FVP):- compound(C),compound(P),compound_name_arity(C,_,A),compound_name_arity(P,F,A),!,
+  compound_name_arguments(C,F,Ns),compound_name_arguments(P,F,As),
+  maplist(frame_to_db(FV),Ns,As,FVPs), compound_name_arguments(FVP,F,FVPs).
+frame_to_db(FV,_,P,FVP):- predicate_property(P,meta_predicate(Template)),!,frame_to_db(FV,Template,P,FVP).
+frame_to_db(_, _,P,FVP):- predicate_property(P,builtin),!,FVP=P.
+frame_to_db(FV,_,P,FVP):- contains_var(FV,P),!,FVP=P.
+
+frame_to_db(FV,C,P,FVPO):- arg(_,P,E),is_cg_frame(E),nonvar(E),E\=cgf(_),
+  once(is_cg_frame_var(E,F);make_fv(F)),into_cgvar(F,CGVAR),!,
+  subst(P,E,CGVAR,M),frame_to_db(FV,C,M,FVP),
+  frame_to_db(F,C,E,FVPE),
+  conjoin(FVP,FVPE,FVPO).
+
+frame_to_db(FV,_,P,FVP):- compound_name_arguments(P,F,FVPs), 
+  maplist(frame_to_db(FV),FVPs,FVPsO),
+  compound_name_arguments(FVP,F,[FV|FVPsO]),!.
+frame_to_db(_, _,P,FVP):- FVP=P.
+
+into_cgvar(F,CGVAR):- var(F),CGVAR=cgf(F).
+into_cgvar(cgf(F),cgf(F)):-!.
+is_cg_frame(E):- var(E),!,fail.
+is_cg_frame(E):- is_list(E),!.
+is_cg_frame(cg(_)):-!.
+is_cg_frame(cgf(_)):-!.
+is_cg_frame(cg(_,_)):-!.
+is_cg_frame_var(E,_):- var(E),!,fail.
+is_cg_frame_var(cgf(V),V):-!.
+is_cg_frame_var(cg(V,_),V):-!.
 
 % ==========================================================================
 %% compound_name_arguments_sAfe(?Compound, ?Name ?Arguments)
