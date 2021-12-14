@@ -461,15 +461,17 @@ pretty_enough0(H):- ground(H), !.
 pretty_enough0('$VAR'(_)):- !.
 pretty_enough0(H):- compound_name_arity(H,_,0), !.
 
+name_one(V,R):- var(V), nonvar(R),!, name_one(R,V).
 name_one(R,V):- is_dict(V), dict_pairs(V,VV,_), !, name_one(R,VV).
 name_one(V,R):- is_dict(V), dict_pairs(V,VV,_), !, name_one(VV,R).
 name_one(R,V):- nonvar(R),var(V),!, name_one_var(R,V).
-name_one(V,R):- var(V), nonvar(R),!, name_one(R,V).
-name_one(_,_).
+name_one(_,_):- fail.
+
+:- thread_local(t_l:dont_append_var/0).
 
 name_one_var([_|_],V):- debug_var('List',V),!.
-name_one_var(R,V):- nonvar(R),var(V),p_n_atom(R,RN),debug_var(RN,V),!.
-name_one_var(R,V):- debug_var(R,V),!.
+name_one_var(R,V):- nonvar(R),var(V),p_n_atom(R,RN), locally(t_l:dont_append_var,debug_var(RN,V)),!.
+name_one_var(R,V):- locally(t_l:dont_append_var,debug_var(R,V)),!.
 
 pretty_element(NV):- ignore((NV=..[_,N,V],ignore(pretty1(N=V)))).
 
@@ -492,6 +494,7 @@ pretty1(Env=List):- compound(List),var(Env),List=[H|_],compound(H),H=bv(_,_), ma
 pretty1(debug_var(R,V)):- may_debug_var(R,V).
 pretty1(bv(R,V)):- name_one(V,R).
 pretty1(isa(V,R)):- name_one(V,R).
+pretty1(bE(_,V,R)):- name_one(V,R).
 pretty1(iza(V,R)):- name_one(V,R).
 pretty1(cg_name(V,R)):- name_one(V,R).
 pretty1(cg_type(V,R)):- name_one(V,R).
@@ -551,17 +554,23 @@ is_comparison(OP):- atom_concat_safety(_,'=',OP).
 is_comparison(OP):- atom_concat_safety('cg_',_,OP).
 is_comparison(OP):- atom_concat_safety('$',_,OP).
 
-contains_atom_ci(A1,A2):- upcase_atom(A1,U1),upcase_atom(A2,U2),contains_atom(U1,U2).
+
+length_gt0(U2):- atom_length(U2,L),L>0.
+
+get_var_name_for_append(_,''):- t_l:dont_append_var,!.
+get_var_name_for_append(V,N):- get_var_name(V,N),!.
+
+contains_atom_ci(A1,A2):- upcase_atom(A1,U1),upcase_atom(A2,U2),length_gt0(U1),length_gt0(U2),!,contains_atom(U1,U2).
 
 append_varname(R,Var):- ignore((p_n_atom(R,RR),append_varname1(RR,Var))),!.
 
 append_varname1(R,_Var):- is_letterless(R),!. % ignore
 
-append_varname1(R,Var):- get_var_name(Var,Prev), contains_atom_ci(Prev,R),!.
-append_varname1(R,Var):- get_var_name(Var,Prev), contains_atom_ci(R,Prev),!.
-append_varname1(_,Var):- get_var_name(Var,Prev), contains_atom_ci(Prev,'_'),!.
+append_varname1(R,Var):- get_var_name_for_append(Var,Prev), contains_atom_ci(Prev,R),!.
+append_varname1(R,Var):- get_var_name_for_append(Var,Prev), contains_atom_ci(R,Prev),!.
+append_varname1(_,Var):- get_var_name_for_append(Var,Prev), contains_atom_ci(Prev,'_'),!.
 
-append_varname1(R,Var):- get_var_name(Var,Prev),!,
+append_varname1(R,Var):- get_var_name_for_append(Var,Prev),!,
   ignore(( \+ contains_atom_ci(Prev,R), \+ contains_atom_ci(R,Prev), atomic_list_concat([Prev,'_',R],RS),
   % writeln(add_var_to_env_now(RS,Var)),
   add_var_to_env_now(RS,Var))),!.

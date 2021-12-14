@@ -325,7 +325,7 @@ unit_det(det(_)).
 unit_det(question80(_)).
 unit_det(identityQ(_ArgInfo)).
 unit_det(voidQ(_ArgInfo)).
-unit_det(notP).
+unit_det(notP(_Modalz)).
 unit_det(generic(_ArgInfo)).
 unit_det(wh_det(_Kind,_)).
 unit_det(proportion(_)).
@@ -371,13 +371,17 @@ apply0(no, X, P, X, Q, \+X^(P, Q)).
 apply0(notall, X, P, X, Q, X^(P, \+Q)).
 
 
-quant_op(same, X, X, P, P).
+
+quant_op(same, X, X, P, P). %:- X = Y.
 quant_op(Op, X, Y, P, X^(P, F)) :-
-   quant_op(Op, X, Y, F).
-quant_op(notP+more, X, Y, X=<Y).
-quant_op(notP+less, X, Y, X>=Y).
-quant_op(less, X, Y, X<Y).
-quant_op(more, X, Y, X>Y).
+   measure_op(Op, X, Y, F).
+/*
+
+quant_op4(notP(Modalz)+more, X, Y, X=<Y).
+quant_op4(notP(Modalz)+less, X, Y, X>=Y).
+quant_op4(less, X, Y, X<Y).
+quant_op4(more, X, Y, X>Y).
+*/
 
 value80(wh(Type-X), Type, X).
 value80((X), _, X):- number(X).
@@ -413,7 +417,7 @@ governs_lex(_, lambdaV(_ArgInfo)).
 governs_lex(_, identityQ(_ArgInfo)).
 governs_lex(det(each), question80([_|_])).
 governs_lex(det(each), det(each)).
-governs_lex(det(any), notP).
+governs_lex(det(any), notP(_Modalz)).
 
 governs_lex(quantV(same, wh(_)), Det) :-
    weak(Det).
@@ -462,10 +466,11 @@ setifiable(det(all)).
 % =================================================================
 % Operators (currently, identity, negation and 'and')
 
-op_apply(identityQ(_ArgInfo), P, P).
-op_apply(notP, P, \+P).
+%op_apply(identityQ(_ArgInfo), P, P).
+%op_apply(notP(Modalz), P, \+P).
+op_apply(M,P,PP):- maybe_modalize(scope,M,P,PP).
 
-bubble(notP, det(any), det(every)) :- !.
+bubble(notP(_Modalz), det(any), det(every)) :- !.
 bubble(_, D, D).
 
 conj_apply(and, P, Q,(P, Q)).

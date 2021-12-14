@@ -270,49 +270,54 @@ verb_form_wlex(L,W,RootVerb,Tense,Agmt):-
 verb_form_wlex0(_,A,B,C,D):- verb_form_lex(A,B,C,D), !.
 verb_form_wlex0(L,_,Root,_,_):- is_list(L),member(pos(V),L),atom_concat('vb',_,V),member(root(Root0),L),!,correct_root(Root0,Root).
 
- :- discontiguous verb_form_aux_lex/4.
+ :- discontiguous verb_aux_form_db/4.
 
-verb_form_aux(Word,aux(BeDoHave,[]),Tense,Number):- 
-  verb_form_aux_lex(Word,BeDoHave,Tense,Number).
+verb_form_aux(Word,aux(BeDoHave,List),Tense,Number):- 
+  verb_aux_form_db(Word,BeDoHave,Tense,Number), some_to_list(Tense,List).
+
+some_to_list(Tense,List):- var(Tense),!,List=[].
+some_to_list(Tense,List):- listify(Tense,List).
 
 % BE
-verb_form_aux_lex(am,be,pres+fin,1+sg).
-verb_form_aux_lex(as,be,pres+fin,3+_).
-verb_form_aux_lex(are,be,pres+fin,2+sg).
-verb_form_aux_lex(are,be,pres+fin,_+pl).
-verb_form_aux_lex(been,be,past+part,_).
-verb_form_aux_lex(be,be,inf,_).
-verb_form_aux_lex(being,be,pres+part,_).
-verb_form_aux_lex(is,be,pres+fin,3+sg).
-verb_form_aux_lex(was,be,past+fin,1+sg).
-verb_form_aux_lex(was,be,past+fin,3+sg).
-verb_form_aux_lex(were,be,past+fin,2+sg).
-verb_form_aux_lex(were,be,past+fin,_+pl).
+verb_aux_form_db(A,be,C,D):- verb_aux_form_be(A,C,D).
+verb_aux_form_db(A,be,_,_):- verb_aux_form_be(A,_,_).
+verb_aux_form_be(am,pres+fin,1+sg).
+verb_aux_form_be(as,pres+fin,3+_).
+verb_aux_form_be(are,pres+fin,2+sg).
+verb_aux_form_be(are,pres+fin,_+pl).
+verb_aux_form_be(been,past+part,_).
+verb_aux_form_be(be,inf,_).
+verb_aux_form_be(being,pres+part,_).
+verb_aux_form_be(is,pres+fin,3+sg).
+verb_aux_form_be(was,past+fin,3+sg).
+verb_aux_form_be(was,past+fin,1+sg).
+verb_aux_form_be(were,past+fin,2+sg).
+verb_aux_form_be(were,past+fin,_+pl).
+
+% DO
+verb_aux_form_db(do,do,pres+fin,_+pl).
+verb_aux_form_db(did,do,past+fin,_).
+%verb_aux_form_db(can,do([can]),pres+fin,_).
+verb_aux_form_db(does,do,pres+fin,3+sg).
+verb_aux_form_db(doing,do,pres+part,_).
+verb_aux_form_db(done,do,past+part,_).
 
 % CAN
 verb_form_aux(can,aux(do,[can]),_,_).
-
-% DO
-verb_form_aux_lex(do,do,pres+fin,_+pl).
-verb_form_aux_lex(did,do,past+fin,_).
-%verb_form_aux_lex(can,do([can]),pres+fin,_).
-verb_form_aux_lex(does,do,pres+fin,3+sg).
-verb_form_aux_lex(doing,do,pres+part,_).
-verb_form_aux_lex(done,do,past+part,_).
-
-verb_form_aux_lex(will,will,pres+fin,3+sg).
+% will
+%verb_form_aux(will,aux(do,[will]),_,_).
 /*
-verb_form_aux_lex(would,will,past+fin,_).
+verb_aux_form_db(would,will,past+fin,_).
 
-verb_form_aux_lex(could,can,past+fin,_).
-verb_form_aux_lex(can,can,pres+fin,3+sg).
+verb_aux_form_db(could,can,past+fin,_).
+verb_aux_form_db(can,can,pres+fin,3+sg).
 */
 
 % HAVE
-verb_form_aux_lex(has,have,pres+fin,3+sg).
-verb_form_aux_lex(have,have,pres+fin,_+pl).
-verb_form_aux_lex(having,have,pres+part,_).
-verb_form_aux_lex(had,have,past+part,_).
+verb_aux_form_db(has,have,pres+fin,3+sg).
+verb_aux_form_db(have,have,pres+fin,_+pl).
+verb_aux_form_db(having,have,pres+part,_).
+verb_aux_form_db(had,have,past+part,_).
 
 verb_form_aux(A,B,C,D):- modal_verb_form_aux(A,B,C,D).
 
@@ -322,7 +327,7 @@ verb_form_lex(A,B,C,D):- try_lex(verb_form_db(A,B,C,D)), \+ avoided_verb(A).
 
 avoided_verb(A):- var(A),!, freeze(A,avoided_verb(A)).
 avoided_verb(A):- clause(modal_verb_form_aux(A,_,_,_),true).
-avoided_verb(A):- clause(verb_form_aux_lex(A,_,_,_),true).
+avoided_verb(A):- clause(verb_aux_form_db(A,_,_,_),true).
 
 % TODO FIX THESE
 modal_verb_form_aux(shall,will,pres+fin,3+sg).

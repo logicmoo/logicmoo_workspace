@@ -144,8 +144,8 @@ i_np_head0(np_head(_Var,quantV(Op0,N),Adjs,Noun),
    must80(measure_op(Op,X,V--Units,P)).
 
 
-i_np_head0(np_head(_Var,generic(_ArgInfo1),[],Value), Type-X,Type-X,voidQ(_ArgInfo2),
-  '`'(bE(same,X,Value)),Pred,Pred,[]) :- !.
+i_np_head0(np_head(Var,generic(_ArgInfo1),[],Value), Type-X,Type-X,voidQ(_ArgInfo2),
+  '`'(bE(same,X,Value)),Pred,Pred,[]) :- !,Var=X.
 
 
 /*
@@ -279,8 +279,51 @@ functor_is(F,P):- compound(P),compound_name_arity(P,F,_).
 
 time_of(Past+Fin,Time):- Past==past,Fin\==part,Time=in_past.
 time_of(_PastFin,_Time):- fail.
+/*
 
-i_s(S,Pred,Up,Id):- dmsg(i_s(S,Pred,Up,Id)),fail.
+c8("What are the continents containing a country in which contains more than two cities whose population exceeds 1 million ?")
+
+ _92085454+[_92085460,_92085470,_92085468,_92085464,_92085462,_92085456] :-
+       setOf( _92085458,
+         ^( [ _92085460, _92085470,_92085468,_92085464,_92085462],
+            ( database80(ti(continent,_92085458))  ,
+              database80(trans_pred(thing,contain,_92085458,_92085460)) ,
+              database80(ti(country,_92085462)) ,
+              database80(trans_pred(thing,contain,_92085458,_92085462)) ,
+              numberof( _92085466,
+                ^( [_92085470,_92085468],
+                  ( database80(ti(city,_92085466))  ,
+                    database80(count_pred(thing,population,_92085466,_92085468)) ,
+                    database80(same_values(_92085470,--(1,million))) ,
+                    database80(exceeds(_92085468,_92085470)) ,
+                    database80(trans_pred(thing,contain,_92085462,_92085466)))),
+                _92085464) ,
+              database80(exceeds(92085464,2)))),
+         _92085456) ,
+       database80(bE(is,_92085454,_92085456)).
+
+
+        _32372516+[_32372522,_32372532,_32372530,_32372526,_32372524,_32372518] :-
+       setOf( _32372520,
+         ^( [ _32372522, _32372532,_32372530,_32372526,_32372524],
+            ( database80(ti(continent,_32372520))  ,
+              database80(trans_pred(thing,contain,_32372520,_32372522)) ,
+              database80(ti(country,_32372524)) ,
+              database80(trans_pred(thing,contain,_32372520,_32372524)) ,
+              numberof( _32372528,
+                ^( [_32372532,_32372530],
+                  ( database80(ti(city,_32372528))  ,
+                    database80(count_pred(thing,population,_32372528,_32372530)) ,
+                    database80(same_values(_32372532,--(1,million))) ,
+                    database80(exceeds(_32372530,_32372532)) ,
+                    database80(trans_pred(thing,contain,_32372524,_32372528)))),
+                _32372526) ,
+              database80(exceeds(_32372526,2)))),
+         _32372518) ,
+       database80(bE(is,_32372516,_32372518)).
+
+*/
+%i_s(S,Pred,Up,Id):- dmsg(i_s(S,Pred,Up,Id)),fail.
 i_s(s(Subj,verb(VerbType,Root,Voice,Tense,Aspect,Neg0),VArgs,VMods),Pred,Up,Id) :-
   unslotted_v_args(VArgs,NewVArgs,IntoNegs), IntoNegs\==[],
   add_extra_to_neg(Neg0,IntoNegs,FNewNeg),
@@ -337,8 +380,8 @@ i_verb(verb(_VerbType,Root,Voice,Tense,_Aspect,Neg0),
       PP,Tense,Voice,DetPosNeg,Slots,XArg,Meta) :-
    must80(slot_verb_template(Root,P,Slots,XArg,Meta)),
    fix_mneg(Neg0,Neg),
-   i_neg(Neg,DetPosNeg),
-   maybe_modalize(Neg,P,PP).
+   i_neg(Neg,DetPosNeg,E),
+   maybe_modalize(slot,E,P,PP).
 
 add_extra_to_neg(Neg0,IntoNegs,FNewNeg):- 
   fix_mneg(Neg0,Neg),Neg=L,
@@ -348,8 +391,9 @@ add_extra_to_neg(Neg0,IntoNegs,FNewNeg):-
 
 %fix_mneg(Modal,O):- var(Modal),!,O=Modal.
 %fix_mneg(/*negP*/(Modal),O):- fix_modal_list(Modal,ModalF),Modal\==ModalF,fix_mneg((ModalF),O).
-% fix_mneg(O,O):- is_list(Modal),select(not,Modal,ModalP),!,fix_mneg([notP|ModalP],O).
-fix_mneg(I,O):- subst(I,not,notP,O),ignore((O=identityQ(_),dumpST)).
+% fix_mneg(O,O):- is_list(Modal),select(not,Modal,ModalP),!,fix_mneg([notP(Modalz)|ModalP],O).
+%dfix_mneg(I,O):- subst(I,not,true,M),I\==M,!,O=notP(M).
+fix_mneg(O,O).
   
 fix_modal_list(Modal,O):- is_list(Modal),!,flatten(Modal,ModalF),fix_modal_list0(ModalF,O).
 fix_modal_list(Modal,O):- flatten([Modal],ModalF),fix_modal_list0(ModalF,O).
@@ -360,17 +404,23 @@ fix_modal_list0([H|T],[HH|TT]):- !, fix_modal_list0(H,HH), fix_modal_list0(T,TT)
 fix_modal_list0(adv(M),O):-!,fix_modal_list0(M,O).
 fix_modal_list0(P,O):- arg(1,P,M),!,fix_modal_list0(M,O).
 
-maybe_modalize(PN,P,PP):- maybe_modalize0(PN,P,PP),!.
-maybe_modalize(_,P,P).
-maybe_modalize0(V,P,P):- var(V),!.
-maybe_modalize0([PN|L],P,PP):- nonvar(PN), !, maybe_modalize0(PN,P,PM), maybe_modalize0(L,PM,PP).
-maybe_modalize0(root, P, P):-!.
-maybe_modalize0(notP, P, P):- !.
-maybe_modalize0(adv(Modal), P, PP):- !, maybe_modalize0(Modal, P, PP).
-maybe_modalize0(aux(_,Modal), P, PP):- !, maybe_modalize0(Modal, P, PP).
-maybe_modalize0(t(Modal,_,_), P, PP):- !, maybe_modalize0(Modal, P, PP).
-maybe_modalize0(Modal, P, PP):- atom(Modal),!,PP=..[Modal,P].
-maybe_modalize0(_,P,P).
+maybe_modalize(slot,_,P,P):-!.
+maybe_modalize(Scope,PN,P,PP):-  maybe_modalize0(Scope,P,PN,P,PP),!.
+maybe_modalize(Scope,U,P, maybe_modalize_failed(Scope,U,P)).
+
+not_true_or_qtrue(O):- O\==true, O\=='`'(true).
+
+maybe_modalize0(_Scope,O,V,P,P):- var(V),!,not_true_or_qtrue(O).
+maybe_modalize0(Scope,O,[PN|L],P,PP):- nonvar(PN), !, maybe_modalize0(Scope,O,PN,P,PM), maybe_modalize0(Scope,O,L,PM,PP).
+maybe_modalize0(_Scope,_,true, P, P):-!.
+maybe_modalize0(_Scope,_,root, P, P):-!.
+maybe_modalize0(scope,O,notP(Modal), P, \+ PP):- !, not_true_or_qtrue(O),!,maybe_modalize0(scope,O,Modal, P, PP).
+maybe_modalize0(slot,O,notP(Modal), P, PP):- !, not_true_or_qtrue(O),!,maybe_modalize0(slot,O,Modal, P, PP).
+maybe_modalize0(Scope,O,adv(Modal), P, PP):- !, maybe_modalize0(Scope,O,Modal, P, PP).
+maybe_modalize0(Scope,O,aux(_,Modal), P, PP):- !, maybe_modalize0(Scope,O,Modal, P, PP).
+maybe_modalize0(Scope,O,t(Modal,_,_), P, PP):- !, maybe_modalize0(Scope,O,Modal, P, PP).
+maybe_modalize0(_Scope,O,Modal, P, PP):- not_true_or_qtrue(O), atom(Modal),!,PP=..[Modal,P].
+maybe_modalize0(_Scope,_,_,P,P).
 
 reshape_pred(transparent,S,N,P,A,pred(S,N,P,A)).
 reshape_pred(aux(have,_MODAL),Subj,DetPosNeg,Verb0,
@@ -385,10 +435,14 @@ have_pred(Head,Verb,Head,Verb) :-
 meta_head(apply80(_,_)).
 meta_head(aggr(_,_,_,_,_)).
 
-i_neg(Info,notP):- contains_var(notP,Info),!.
-i_neg(Info,notP):- contains_var(not,Info),!.
-i_neg(Info,notP):- sub_term(V,Info),compound(V),V=negP(_).
-i_neg(_,identityQ(_ArgInfo)).
+i_neg(I,O,P):- i_neg(I,O),P=O.
+
+i_neg(notP(X),notP(X)):-!.
+i_neg(Info,notP(Modalz)):- contains_var(not,Info),subst(Info,not,true,Modalz),!.
+i_neg(Info,notP(Modalz)):- sub_term(V,Info),compound(V),V=notP(X),subst(Info,V,X,Modalz),!.
+i_neg(Info,notP(Modalz)):- sub_term(V,Info),compound(V),V=negP(X),subst(Info,V,X,Modalz),!.
+i_neg(identityQ(Info),identityQ(Info)):-!.
+i_neg(Info,identityQ(Info)).
 
 i_subj(RefVar,Voice,Subj,Slots0,Slots,Quant,Up,Id) :-
    (active_passive_subjcase(Voice,Case)*->true;true),
@@ -528,12 +582,12 @@ same_objects(_,X,X).
 same_values(X,X).
 
 %measure_op(identityQ(_ArgInfo), X,X,    true).
-measure_op(identityQ(_ArgInfo), X,Y,    same_value(X,Y)).
+measure_op(identityQ(ArgInfo), X,Y,  P):- maybe_modalize(scope,identityQ(ArgInfo),same_value(X,Y), P).
 measure_op(same,      X,Y,    same_values(X,Y)).
 measure_op(less,      X,Y,    exceeds(Y,X)).
-measure_op(notP+less,  X,Y, \+ exceeds(Y,X)).
+measure_op(notP(Modalz)+less,  X,Y, P):- maybe_modalize(scope,notP(Modalz), exceeds(Y,X), P).
 measure_op(more,      X,Y,    exceeds(X,Y)).
-measure_op(notP+more,  X,Y, \+ exceeds(X,Y)).
+measure_op(notP(Modalz)+more,  X,Y, P):- maybe_modalize(scope,notP(Modalz),  exceeds(X,Y), P).
 
 op_inverse(most,-,least).
 op_inverse(least,-,most).

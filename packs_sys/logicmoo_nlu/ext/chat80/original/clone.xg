@@ -508,11 +508,11 @@ quantV(Op,indef) --->
 quantV(the,def) ---> theText80(the).
 quantV(same,indef) ---> noText.
 
-neg_adv_opt(Adv,notP+Adv) ---> theText80(not).
+neg_adv_opt(Adv,notP([])+Adv) ---> theText80(not).
 neg_adv_opt(Adv,Adv) ---> noText.
 
-sup_op(least,notP+less).
-sup_op(most,notP+more).
+sup_op(least,notP([])+less).
+sup_op(most,notP([])+more).
 
 /* Noun phrase modifiers */
 
