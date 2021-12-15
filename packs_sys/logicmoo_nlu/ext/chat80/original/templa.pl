@@ -330,7 +330,7 @@ adv_template_LF(RefVar,Adv,Case,X,pred_adv(RefVar,Adv,Case,X)).
 
 /* Adjectives */
 
-restriction_LF(Word,Spatial&_,X,property(X,Type,pos)):- adj_db_clex(Type,Word,restr), spatial(Spatial).
+restriction_LF(Word,Spatial&_,X,property(X,Type,adj)):- adj_db_clex(Type,Word,restr), spatial(Spatial).
 restriction_LF(African,Spatial&_,X,ti(African,X)):- adj_lex(African,restr), spatial(Spatial).
 restriction_LF(Word,_,X,Out):- compound(Word),subst(Word,self,X,Out), Word\==Out.
 restriction_LF(Type,_Spatial&_,X,property(X,Type,pos)):- if_search_expanded(2).

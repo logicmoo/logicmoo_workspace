@@ -331,7 +331,6 @@ database801(can(X)):- database80(X).
 database801(will(X)):- database80(X).
 database801(past(X)):- database80(X).
 database801(not(X)):-  \+ database80(X).
-%database801(notP(X)):-  database80(X).
 database801(generic_pred(thing,any,_X,_Y)):- true.
 
 %database80(path_pred(begins(Flow),rises,river,X,Y)) :- path_pred(begins(Flow),rises,river,X,Y).
@@ -354,6 +353,7 @@ setOf(X,Y,Z):- setof(X,Y,Z).
 
 %exceeds(X--U,Y--U) :- !, X > Y.
 %exceeds(X1--U1,X2--U2) :- ratio(U1,U2,M1,M2), X1*M1 > X2*M2.
+exceeds(X,Y):- number(Y),!,X>Y.
 exceeds(X,Y):- (var(Y)),!,X=Y.
 exceeds(X,Y):- term_variables(X-Y,Vars),freeze_until(Vars,exceeds0(X,Y)),!.
   freeze_until([],Goal):-!, term_variables(Goal, Vars),(Vars==[] -> call(Goal) ; freeze_until(Vars,Goal)).
@@ -370,7 +370,7 @@ ordering_pred(thing,cp(west,of),X1,X2) :- type_measure_pred( _Region,position(x)
 
 
 
-
+generic_pred(Type,in,X,Y):- generic_pred(Type,contain,Y,X).
 generic_pred(Type,P,X,Y) :- P == any,!, generic_pred0(Type,_,X,Y).
 generic_pred(Type,P,X,Y) :- generic_pred0(Type,P,X,Y)*->true;generic_pred1(Type,P,X,Y).
 
