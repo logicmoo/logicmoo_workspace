@@ -2,6 +2,8 @@
 :- ensure_loaded(library(cgp_lib/cgp_swipl)).
 :- ensure_loaded(library(pfc_lib)).
 
+:- '$set_source_module'(cg_reader_test_data).
+
 :- multifile_data(cg_test_data/2). 
 
 cg_test_data([cg_dialect([df,plcg])], "
@@ -110,6 +112,7 @@ cg_test_data([xcall,easy,cg_dialect([df])], "[?x] -(Attrib)-> [Color #1]").
 cg_test_data([xcall,easy,cg_dialect([df])], "[?x]-(On)->[Mat #1]-(Attrib)->[Color #1]").
 cg_test_data([xcall,easy,cg_dialect([df])], "[Mat ?x]-(Attrib)->[Color #1]").
 cg_test_data([xcall, group(0)], "[Cat: ?x]-(On)->[Mat #1]-(Attrib)->[Color #2]").
+
 
 cg_test_data([cg_dialect([df]), group(3)], "[a] - (belives) -> [statement: [Cat: @every]->(On)->[Mat] ]").
 cg_test_data([cg_dialect([df]), group(3)], "[a] - (belives) -> [statement2= [Cat: @every]->(On)->[Mat] ]").
@@ -314,10 +317,6 @@ Mammal::[Animal : x]-isA->[Mammal] :-
    	Fact::[Animal : x]-poss->[Hair].
 ").
 
-cg_test_data([cg_dialect([lf,sowa]), group(1)], "
-Carnivorous::[Animal : x]-isA->[Carnivorous] :-
-   Fact::[Animal : x]<-agnt-[Eat]-obj->[Meat].
-").
 
 cg_test_data([cg_dialect([lf,sowa]), group(1)], "
 Carnivorous::[Animal : x]-isA->[Carnivorous] :-
@@ -330,11 +329,34 @@ Carnivorous::[Animal : x]-isA->[Carnivorous] :-
 cg_test_data([cg_dialect([lf,sowa]), group(1)], "
 Fact::[Animal : Yala]-
             <-pat-[BelongTo]-bnfcre->[Man : Robert],
-            -colorOf->[Color]-attr->[Wild],
+            -colorOf->[Color],-attr->[Wild],
             -poss->[Teeth]-attr->[Sharp],
             -has->[Eyes]-attr->[Forward].
 ").
 
+cg_test_data([cg_dialect([lf,sowa]), group(1)], "
+Fact::[Animal : Yala]-
+            <-pat-[BelongTo]-bnfcre->[Man : Robert],
+            -colorOf->[Color]-attr->[Wild],
+            -poss->[Teeth]-attr->[Sharp],
+             -has->[LeftEye]-attr->[Forward],
+             -has->[RightEye]-attr->[Forward].
+").
+
+cg_test_data([cg_dialect([lf,sowa]), group(1)], "
+Fact::[Animal : Yala]-
+            <-pat-[BelongTo]-bnfcre->[Man : Robert],
+            -colorOf->[Color]-attr->[:Wild],
+            -poss->[Teeth]-attr->[:Sharp],
+             -has->[LeftEye1]-attr->[:Forward],
+             -has->[RightEye1]-attr->[:Forward].
+").
+
 cg_test_data([cg_dialect([lf,sowa]), group(1)], "Fact::[Animal : Yala]-poss->[Claw].").
+
+cg_test_data([cg_dialect([lf,sowa]), group(1)], "
+Carnivorous::[Animal : x]-isA->[Carnivorous] :-
+   Fact::[Animal : x]<-agnt-[Eat]-obj->[Meat].
+").
 
 % cg_reader_tests

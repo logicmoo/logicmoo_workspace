@@ -23,6 +23,7 @@
 
 %:- module(baseKB,[]).
 
+
 :- use_module(library(statistics)).
 
 %:- autoload_all.
@@ -33,6 +34,7 @@
 :- endif.
 %:- xlisting(lock_predicate/1).
 %:- autoload_all.
+:- ensure_loaded(library(episodic_memory/adv_spider)).
 
 :- module(parser_chat80).
 :- '$set_source_module'(parser_chat80).

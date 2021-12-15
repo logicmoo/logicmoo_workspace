@@ -10,7 +10,7 @@
 
 :- multifile_data(cg_test_data/2). 
 %:- multifile_data(skip_cg_test_data/2). 
-:- multifile_data(cg/2).
+:- multifile_data(id_cg/2).
 
 %:- current_op(X,Y,'->'),push_operators([op(X,Y,'<-')]).
 
@@ -30,10 +30,10 @@ push_frame_concept(C,Frame,S,S):-push_frame_concept(C,Frame).
 nb_set_add(X,Y,S,S):- must(nb_set_add(X,Y)).
 
 
-load_cg_test_data:- ensure_loaded(library('../test/cgp_lib/cg_reader_test_data.plt')).
+load_cg_test_data:- cg_reader_test_data:ensure_loaded(library('../test/cgp_lib/cg_reader_test_data.plt')).
 
 get_cg_test_data(T,D):- load_cg_test_data, cg_test_data(T,D).
-
+get_cg_test_data(T,D):- cg_reader_test_data:cg_test_data(T,D).
 cg_demo :- make,
   forall((get_cg_test_data(TstAtts,X), \+ memberchk(failing,TstAtts)),must(do_cg_test(TstAtts,X))).
 
@@ -43,15 +43,18 @@ cg_reader_tests :- make,
 do_cg_test( TstAtts,_):- memberchk(skip,TstAtts),!.
 do_cg_test( TstAtts,X):- select(cg_dialect(What),TstAtts,NewTstAtts),!, 
   locally_setval(cg_dialect,What,do_cg_test( NewTstAtts,X)).
-do_cg_test( TstAtts,X):- memberchk(xcall,TstAtts),!, must(ignore(call_cg(cg_text(X)))).
-do_cg_test(_TstAtts,X):- must(ignore(assert_cg(cg_text(X)))).
+do_cg_test( TstAtts,X):- memberchk(xcall,TstAtts),!, 
+                         must(ignore(call_cg(cg_text(X)))).
+
+do_cg_test(_TstAtts,X):- must(ignore(assert_cg(cg_text(X)))), 
+                         must(ignore(call_cg(cg_text(X)))).
 
 subset_loose(S1,S2):- \+ is_list(S2),!,member(S2,S1),!.
 subset_loose(S1,S2):- subset(S1,S2).
 
 cg_test_data(TstAtts,X):- nonvar(TstAtts), var(X), !,
   forall((cg_test_data(WasTstAtts,X),subset_loose(WasTstAtts,TstAtts)),
-     cg_test_data( WasTstAtts,X)).
+     do_cg_test( WasTstAtts,X)).
 cg_test_data(TstAtts,X):- nonvar(TstAtts), nonvar(X), !, 
    exclude(=(skip),TstAtts,NTstAtts),
    do_cg_test(NTstAtts,X).
@@ -65,7 +68,7 @@ assert_cg_real_now(X):- nb_current_no_nil(named_graph,Id),  assert_cg_real_now(I
 
 assert_cg_real_now(anonymous(_),[named_graph(Id,X)]):- nonvar(Id), !, assert_cg_real_now(Id,X).
 %assert_cg_real_now(anonymous(Id),X):- nonvar(Id), !, assert_cg_real_now(Id,X).
-assert_cg_real_now(Id,X):- frmprint(named_graph(Id, X)), ain(cg(Id,X)).
+assert_cg_real_now(Id,X):- frmprint(named_graph(Id, X)), ain(id_cg(Id,X)).
 
 assert_cg_real(X):- assert_cg_real_now(X),!.
 assert_cg_real(X):- is_list(X),list_to_conjuncts(X,J),!,wdmsg(J).
@@ -79,6 +82,37 @@ call_cg_real(X):- is_list(X),list_to_conjuncts(X,J),!,wdmsg(J).
 
 locally_setval(A,B,C,S,E):- locally_setval(A,B,phrase(C,S,E)).
 
+sub_compound_term(C,T):- sub_term(E,T),compound(E),E=C.
+
+cg_resolved_names(CG0,CG):-
+   cg_name(V,N)=T,
+   sub_compound_term(T,CG0),
+   subst(CG0,T,true,CG1),
+   subst(CG1,V,N,CG2),
+   CG1\==CG2,!,
+   cg_resolved_names(CG2,CG).
+
+cg_resolved_names(CG0,CG):- 
+   cg_holds(P,_,V)=T,
+   sub_compound_term(T,CG0),
+   (P==attr;P=='Attr';P==isA),
+   sub_compound_term(cg_type(VV,Color),CG0),
+   VV==V,
+   subst(CG0,cg_type(VV,Color),true,CG1),
+   subst(CG1,V,Color,CG2),   
+   CG1\==CG2,!,
+   cg_resolved_names(CG2,CG).
+cg_resolved_names(CG,CG).
+   
+
+parse_toks_cg(Toks,CG):-parse_ncg(CG0,Toks,[]),
+  cleanup_cg(CG0,CG).
+
+cleanup_cg(CG0,CG):- cg_resolved_names(CG0,CG1),remove_trues(CG1,CG).
+
+remove_trues(CG1,CG):- sub_compound_term([H|T],CG1),is_list([H|T]),select(true,[H|T],WOT),
+  subst(CG1,[H|T],WOT,CG2),remove_trues(CG2,CG).
+remove_trues(CG,CG).
 
 pred_cg(Pred, Error):- var(Error),!, trace_or_throw(pred_cg(Pred, Error)).
 pred_cg(Pred, X):- string(X),!,pred_cg(Pred, cg_text(X)).
@@ -91,7 +125,7 @@ pred_cg(Pred, cg_text(A)):- any_to_string(A,X),
   format("~N```~n",[])))),!.
 
 
-pred_cg(Pred, tOkS(Toks)):- !, (parse_ncg(CG,Toks,[])-> pred_cg(Pred, cg(CG)) ; (format("
+pred_cg(Pred, tOkS(Toks)):- !, (parse_toks_cg(Toks,CG)-> pred_cg(Pred, cg(CG)) ; (format("
 % Failed Parse
 ?- rtrace( 
     ~q  
@@ -206,7 +240,8 @@ parse_ncg(CG)--> parse_ncg(CG0),!,{push_frame_info(CG0,CG)}.
 
 parse_cg(StopAt,CG) --> parse_cg0(StopAt,CG).
 
-parse_cg0(StopAt,CG,S,E) :- var(CG), \+ attvar(CG), !,cg_new(CG), must( \+ ((var(CG), \+ attvar(CG)))),!,locally_setval(cgframe,CG,parse_cg0(StopAt,CG,S,E)).
+parse_cg0(StopAt,CG,S,E) :- var(CG), \+ attvar(CG), !,
+  cg_new(CG), must( \+ ((var(CG), \+ attvar(CG)))),!,locally_setval(cgframe,CG,parse_cg0(StopAt,CG,S,E)).
 
 
 parse_cg0(_StopAt,CG)--> [':-'], !, parse_cg_list([','],PCG), { merge_simular_graph_vars(CG,PCG), 
@@ -331,21 +366,22 @@ cvalue('?'(W))--> [?(W)],!.
 % #?Quotient
 cvalue('='(W))--> cic('#'), [?(W)], {atomic(W)}.
 cvalue('#'(W))--> cic('#'), [W].
-% cvalue(cg_count(W,W))--> cic('@'), [W], { number(W) },!.
+% cvalue(cg_count_min_max(W,W))--> cic('@'), [W], { number(W) },!.
 cvalue('@'(W))--> cic('@'), cw(W).
-cvalue(cg_count(0,0))--> cic('{'),  cic('}'),!.
+cvalue(cg_count_min_max(0,0))--> cic('{'),  cic('}'),!.
 cvalue(TstAtts)--> cic('{'), {TstAtts=['@'(set)]}, dcg_list_of(cic,Atts), cic('}'), !, {into_set(Atts,TstAtts)}.
 cvalue(cg_name(W))--> cw(H), cvalue_cont(T), {maplist(term_to_unquoted_atom,[H|T],HT),atomic_list_concat(HT,'_',W)}.
 
-into_set(['*'],TstAtts):- nb_set_add(TstAtts,cg_count(1,_)),!.
-into_set(Atts,TstAtts):- append(List,['*'],Atts),length(List,Count), nb_set_add(TstAtts,cg_count(Count,_)),nb_set_add(TstAtts,cg_values(List)).
-into_set(List,TstAtts):- length(List,Count), nb_set_add(TstAtts,cg_count(Count,_)),nb_set_add(TstAtts,cg_values(List)).
+into_set(['*'],TstAtts):- nb_set_add(TstAtts,cg_count_min_max(1,_)),!.
+into_set(Atts,TstAtts):- append(List,['*'],Atts),length(List,Count), nb_set_add(TstAtts,cg_count_min_max(Count,_)),nb_set_add(TstAtts,cg_values(List)).
+into_set(List,TstAtts):- length(List,Count), nb_set_add(TstAtts,cg_count_min_max(Count,_)),nb_set_add(TstAtts,cg_values(List)).
 
 
 term_to_unquoted_atom(Atom,Atom):- atom(Atom),!.
 term_to_unquoted_atom(Term,Atom):- term_to_atom(Term,Atom).
 
 concept_innerds([cg_type(C)|Cont]) --> cw(C),cic(','),!, concept_innerds(Cont).
+concept_innerds(Cont) -->  cic(':'),!,concept_innerds_cont(Cont).
 concept_innerds([cg_type(C)|Cont]) --> cw(C), dcgOptional(cic(':')),!,concept_innerds_cont(Cont).
 concept_innerds(Cont) --> concept_innerds_cont(Cont).
 

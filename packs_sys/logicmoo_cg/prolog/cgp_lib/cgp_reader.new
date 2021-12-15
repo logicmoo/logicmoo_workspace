@@ -1,4 +1,4 @@
-
+:- throw(cgp_common_logic_extra).
 
 :- use_module(library(logicmoo/dcg_meta)).
 :- use_module(library(logicmoo/util_bb_frame)).

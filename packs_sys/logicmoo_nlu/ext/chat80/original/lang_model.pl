@@ -656,8 +656,8 @@ c2(B,O):-
  try_chat_80(S,any_to_ace_str(SS,SACE)),
  try_chat_80(S,try_ace_drs(SACE,Ace)),
  try_chat_80(S,try_ace_fol(Ace,FOL)),
- try_chat_80(S,any_to_ace_str(S,SACE)),
- try_chat_80(S,try_ace_eng(Ace,_Eng)),
+% try_chat_80(S,any_to_ace_str(S,SACE)),
+ try_chat_80(S,try_ace_eng(Ace,_Eng)),!,
  member(O,[FOL,Ace]),
  ignore((var(O),add_c80(c2,S))),
  nonvar(O)))),!.
@@ -681,12 +681,26 @@ c8(B,O):-
  try_chat_80(S,results80(Query,Answer)),!,
  ignore((\+ should_learn(Query),add_c80(c8,SS))),
  member(O,[Answer,Query,UE,QT,Tree,SS]),should_learn(O)))),!.
- 
+
+
+into_cg(CLIF,CG):- cgp_common_logic:convert_clif_to_cg(CLIF,CG),!.
 
 c88(B,O):-
- any_to_str(B,SS),
  c8_make,
- S = c2(SS),
+ any_to_str(B,SS),!,
+ c88s(SS,O),!.
+
+c88s(SS,O):- into_string_sents(SS,ListS),
+  exclude(=(''),ListS,List),
+  (List=[_,_|_] -> maplist(c88t,List,O); c88t(SS,O)).
+
+into_string_sents(SS,ListS):- atom_contains(SS,'.\n'),atomic_list_concat(ListS,'\n',SS),!.
+into_string_sents(SS,ListS):- atomic_list_concat(ListS,'\n',SS),!.
+into_string_sents(SS,[SS]).
+
+c88t(B,OO):-
+ any_to_str(B,SS),
+ S = c88(SS),
  locally(set_prolog_flag(gc,false),
 ((
  try_chat_80(S,text_to_corenlp_tree(SS,_)),
@@ -698,12 +712,19 @@ c88(B,O):-
  try_chat_80(S,clausify80(QT,UE)),  
  try_chat_80(S,simplify80(UE,Query)),
  try_chat_80(S,try_ace_fol(Ace,FOL)),
- try_chat_80(S,results80(Query,Answer)),
- try_chat_80(S,any_to_ace_str(S,SACE)),
+ try_chat_80(S,results80(Query,_Answer)),
+ try_chat_80(S,any_to_ace_str(S,_SACE2)),
  try_chat_80(S,try_ace_eng(Ace,_Eng)),
- member(O,[Answer,Query,UE,FOL,Ace,QT,Tree,S]),
+ 
+ member(O,[Query,UE,FOL,Ace,QT,Tree,(?- S)]),
  ignore((\+ should_learn(O),add_c80(c80,SS))), 
- should_learn(O)))),!.
+ should_learn(O),
+ ignore(into_cg(O,CG)),
+
+ member(OO,[CG,O]),
+ should_learn(OO)))).
+
+
 %c88(M,O):- process4a(off,M,_,O,_Times).
 
 
@@ -849,6 +870,8 @@ chat80_all(P):- c8_make,
 %:- s81.
 :- endif.
 
+example_mentalese:- cls, c8_make, forall(mu:example_mentalese(N,V), (dmsg(example_mentalese=N),c88(V))).
+
 :- fixup_exports.
 
 :- if(\+ prolog_load_context(reloading, true)).
@@ -861,5 +884,6 @@ chat80_all(P):- c8_make,
 %:- listing(wt_replacement/4).
 
 :- add_history(test_chat80).
+
 
 %:- test_chat80.

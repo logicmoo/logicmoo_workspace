@@ -114,13 +114,20 @@ do_eval_or_same(G, G).
 
 get_frame_vars(Frame,FVs):-
   get_frame(Frame,List), 
+  setof(Var,(sub_term(Var,List),compound(Var),functor(Var,frame_var,_)),FVs),!.
+get_frame_vars(Frame,FVs):-
+  get_frame(Frame,List), 
   setof(frame_var(Var, RealVar),frame_var(Var,List,RealVar),FVs),!.
 get_frame_vars(_Frame,[]).
 
 
 
 merge_simular_graph_vars(CG,PCG):- 
-  get_frame_vars(CG,FV), get_frame_vars(PCG,PFV),
+  get_frame_vars(CG,FV),
+  get_frame_vars(PCG,PFV),
+  combine_gvars(FV,FV),
+  combine_gvars(PFV,PFV),
+  combine_gvars(PFV,FV),
   combine_gvars(FV,PFV),!.
 
 combine_gvars([],_):-!.
@@ -251,13 +258,16 @@ frame_arg_to_slot(FrameArg, Name=NewArg):-
 
 frmprint(Frame) :- get_frame(Frame,GFrame),frmprint0(GFrame).
 frmprint0(Frame) :- \+ is_list(Frame),!,frmprint_e(Frame).
-frmprint0(Frame) :-
-    %catch(make_pretty(I, O), _, I=O),
+frmprint0(I) :-
+    catch(make_pretty(I, Frame), _, I=Frame),
     guess_pretty(Frame),
     predsort(frcmp, Frame, FrameA),
     reverse(FrameA, FrameO),
     frmprint_e(FrameO).
-frmprint_e(Frame) :- with_output_to(atom(A),print_tree(Frame)), format('~N~w~n', [A]).
+frmprint_e(I) :- 
+catch(make_pretty(I, Frame), _, I=Frame),
+    guess_pretty(Frame),
+ with_output_to(atom(A),print_tree_nl(Frame)), format('~N~w~n', [A]).
 
 sortDeref(P, PP):- \+ compound(P), !, P=PP.
 %sortDeref(isa(X, Y), visa(X, Y)):-!.

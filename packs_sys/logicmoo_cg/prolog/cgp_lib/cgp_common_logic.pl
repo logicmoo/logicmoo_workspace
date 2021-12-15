@@ -70,7 +70,11 @@ chop_up_clif(OF, Stuff, Out):-
 % ==========================================================================
 % chop_up_clif/3 - Like chop_up_clif/2 (chops up and replaces CLIF into CG) but takes a +/-
 % ==========================================================================
-chop_up_clif(OF, Mode, [ExistsOrForall, VarList, Stuff], Out):-
+
+chop_up_clif(_OF, _Mode, Var, Out):- is_ftVar(Var),!, Out = Var.
+chop_up_clif(OF, Mode, [Var|Stuff], Out):- var(Var),!,chop_up_clif(OF, Mode, [holds,Var|Stuff], Out).
+chop_up_clif(OF, Mode, [ExistsOrForall, VarList, Stuff], Out):- 
+   nonvar(ExistsOrForall),
    member(ExistsOrForall, [exists, forall]), 
    do_varaibles(Mode, ExistsOrForall, VarList, Out1, NewVars), 
    subst_each(Stuff, NewVars, NewStuff), 
@@ -80,8 +84,32 @@ chop_up_clif(OF, Mode, [ExistsOrForall, VarList, Stuff], Out):-
 chop_up_clif(OF, Mode, ['implies'|Stuff], Out) :- chop_up_clif(OF, Mode, ['=>'|Stuff], Out).
 chop_up_clif(OF, Mode, ['if'|Stuff], Out) :- chop_up_clif(OF, Mode, ['=>'|Stuff], Out).
 
+chop_up_clif(OF, Mode, ^(X,Y), Out):- !,
+  chop_up_clif(OF, Mode, exists(X,Y), Out).
+
+chop_up_clif(OF, Mode, object(_Frame,Var,Type,countable,na,eq,1), Out):- 
+  Type \== '?',!,
+  chop_up_clif(OF, Mode, isA(Var,Type), Out).
+
+chop_up_clif(OF, Mode, [predicate,_Frame,_Exists_Be,Verb|Args], Out):- !,
+  chop_up_clif(OF, Mode, [Verb|Args], Out).
+
+
+
+chop_up_clif(OF, Mode, :-(X,Y), Out):- !,
+  chop_up_clif(OF, Mode, if(Y,X), Out).
+
+chop_up_clif(OF, Mode, relation(_Frame,X,of,Y), Out):- !,
+  chop_up_clif(OF, Mode, of(X,Y), Out).
+
+chop_up_clif(OF, Mode, (X,Y), Out):- !,  conjuncts_to_list((X,Y),List),
+  chop_up_clif(OF, Mode,[and|List], Out).
+
+
+
 chop_up_clif(_OF, _Mode, ['#'(quote), Mary], '#'(Mary)).
 chop_up_clif(_OF, _Mode, '$STRING'(S), S).
+chop_up_clif(_OF, _Mode, 'named'(S), S).
 
 
 chop_up_clif(OF, +, [not, Stuff], Out) :- chop_up_clif(OF, -, Stuff, Out).
@@ -111,7 +139,12 @@ chop_up_clif(OF, Mode, [Pred|Args], Out):-
   (HOLDS =.. [cg_holds, Pred|ArgsO]), 
   add_mode(Mode, HOLDS, Out).
 
+chop_up_clif(OF, Mode, C, Out):- compound(C), \+ is_list(C), compound_name_arguments(C,F,A),
+  chop_up_clif(OF, Mode, [F|A], Out).
+
 chop_up_clif(_OF, _Mode, O, O).
+
+  
 
 
 is_cg_pred(Name, _):- \+ atom(Name), !, fail.
@@ -150,6 +183,9 @@ run_1_test(String):-
   pprint_ecp(yellow, clif=Clif), 
   mpred_test(mort(cgp_common_logic:convert_clif_to_cg(Clif, CG))),
    pprint_ecp(cyan, cg=(CG)), 
+   ensure_fvars(CG,FVOut),
+   nl,
+   pprint_ecp(cyan, cgflat=(FVOut)), 
    dmsg("================================================="), !.
 
 test_logicmoo_cg_clif:- notrace(update_changed_files),
@@ -171,23 +207,37 @@ test_logicmoo_cg_clif:- notrace(update_changed_files),
 
 % Convert all  ?(Name)  into  '$VAR'(UPPER)
 qvar_to_vvar(I, O):- \+ compound(I), !, I=O.
-qvar_to_vvar('?'(Name), '$VAR'(UPPER)):- upcase_atom(Name, UPPER), !.
+qvar_to_vvar('?'(Name), '$VAR'(UPPER)):- atomic(Name), upcase_atom(Name, UPPER), !.
 qvar_to_vvar(I, O):-
   compound_name_arguments(I, F, ARGS), 
   maplist(qvar_to_vvar, ARGS, ArgsO), 
   compound_name_arguments(O, F, ArgsO).
 
+renumbervars_with_names_l(In0,In):- 
+  guess_varnames(In0),
+  term_variables(In0,Vs),
+  logicmoo_util_terms:pred_subst(cgp_common_logic:var_q_var(Vs),In0,In).
+
+var_q_var(_Vs,V,'$VAR'(Name)):- var(V),!,get_var_name(V,Name).
+var_q_var(_Vs,'$VAR'(V),'$VAR'(V)):- !.
+var_q_var(_Vs,'?'(V),'$VAR'(V)):- !.
+
+var_k_var(Var):- get_var_name(Var,Name),(Var = ('?'(Name))). 
 
 % ==========================================================================
 %% convert_clif_to_cg(+Clif, -CG)
 %  Redoes Clif forms into CG forms
 % ==========================================================================
-convert_clif_to_cg(In, FVOut):-
+convert_clif_to_cg(In0, CG):-
+  nl,
+  renumbervars_with_names_l(In0,In),
+  display(renumbervars_with_names(In0,In)),
+  nl,
   chop_up_clif(In, Mid), 
   qvar_to_vvar(Mid, Mid2), 
   unnumbervars(Mid2, Out),!,  
   to_out_cg(Out,OutCG),
-  ensure_fvars(OutCG,FVOut).
+  cleanup_cg(OutCG,CG).
 
 ensure_fvars(OutCG,FVOut):- \+ compound(OutCG),!,OutCG=FVOut.
 ensure_fvars(OutCG,FVOut):- arg(1,OutCG,O),is_frmvar(O),!,OutCG=FVOut.
@@ -224,6 +274,9 @@ frame_to_db(_,+,P,P):-!.
 frame_to_db(_,?,P,P):-!.
 frame_to_db(FV,0,P,in_frame(FV,P)):- var(P).
 frame_to_db(_, _,P,FVP):- \+ compound(P),!,FVP=P.
+frame_to_db(_, _,P,FVP):- compound_name_arity(P,_,0),!,FVP=P.
+frame_to_db(FV,C,-P,CJS):- !, frame_to_db(FV,C,P,CJS).
+frame_to_db(FV,C,P,CJS):- P=..[F,E],frame_to_db(FV,C,E,M),!, CJS=..[F,M].
 frame_to_db(FV,C,P,FVP):- compound(C),compound(P),compound_name_arity(C,_,A),compound_name_arity(P,F,A),!,
   compound_name_arguments(C,F,Ns),compound_name_arguments(P,F,As),
   maplist(frame_to_db(FV),Ns,As,FVPs), compound_name_arguments(FVP,F,FVPs).

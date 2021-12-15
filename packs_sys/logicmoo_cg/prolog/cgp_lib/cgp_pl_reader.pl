@@ -1,6 +1,8 @@
 /*:- current_op(X,Y,'->'),cginput:op(X,Y,'<-').
 :- current_op(X,Y,'->'),cginput:op(X,Y,'-').
 */
+:- throw(cgp_common_logic_extra).
+
 :- forall(current_op(X,Y,(+)),op(X,Y,(*))).
 :- forall(current_op(X,Y,(+)),op(X,Y,(?))).
 :- forall(current_op(X,Y,(+)),op(X,Y,(@))).

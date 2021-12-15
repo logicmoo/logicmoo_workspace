@@ -72,6 +72,7 @@ is_proof/1,
 is_true/1,
 is_src_true/1,
 lastMember2/2,
+pred_subst/3,
 list_retain/3,
 list_to_conjuncts/2,
 list_to_conjuncts/3,
@@ -729,8 +730,16 @@ nd_pred_subst2(_, _X, _Sk, L, L ).
 pred_subst( Pred, P,       X,Sk,       P1    ) :- call(Pred,P,X),!,must( Sk=P1),!.
 pred_subst(_Pred, P,       _,_ ,       P1    ) :- is_ftVar(P),!, must(P1=P),!.
 pred_subst( Pred,[P|Args], X,Sk,    [P1|ArgS]) :- !, pred_subst(Pred,P,X,Sk,P1),!, must(pred_subst( Pred, Args,X, Sk, ArgS )),!.
-pred_subst( Pred, P,       X,Sk,       P1    ) :- compound(P),!, P =..Args, pred_subst( Pred, Args,X, Sk, ArgS ),!, must(P1 =..ArgS),!.
+pred_subst( Pred, P,       X,Sk,       P1    ) :- compound(P),!, compound_name_arguments(P,F,Args), pred_subst( Pred, [F|Args],X, Sk, [Fs|ArgS] ),!, compound_name_arguments(P1,Fs,ArgS),!.
 pred_subst(_Pred ,P,       _, _,       P     ).
+
+:- meta_predicate(pred_subst(2,+,-)).
+pred_subst( Pred, P,   X    ) :- call(Pred,P,X),!.
+pred_subst(_Pred, P,   P1    ) :- is_ftVar(P),!, must(P1=P),!.
+pred_subst( Pred,[P|Args], [P1|ArgS]) :- !, pred_subst(Pred,P,P1),!, must(pred_subst( Pred, Args, ArgS )),!.
+pred_subst( Pred, P,   P1    ) :- compound(P),!, compound_name_arguments(P,F,Args), pred_subst( Pred, [F|Args], [Fs|ArgS] ),!, compound_name_arguments(P1,Fs,ArgS),!.
+pred_subst(_Pred ,P,   P     ).
+
 
 % dcgPredicate(M,F,A,P).
 
