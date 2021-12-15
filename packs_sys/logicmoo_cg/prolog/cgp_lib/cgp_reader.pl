@@ -85,20 +85,20 @@ locally_setval(A,B,C,S,E):- locally_setval(A,B,phrase(C,S,E)).
 sub_compound_term(C,T):- sub_term(E,T),compound(E),E=C.
 
 cg_resolved_names(CG0,CG):-
-   cg_name(V,N)=T,
-   sub_compound_term(T,CG0),
-   subst(CG0,T,true,CG1),
+   CGT = cg_name(V,N),
+   sub_compound_term(CGT,CG0),
+   subst(CG0,CGT,true,CG1),
    subst(CG1,V,N,CG2),
    CG1\==CG2,!,
    cg_resolved_names(CG2,CG).
 
 cg_resolved_names(CG0,CG):- 
-   cg_holds(P,_,V)=T,
-   sub_compound_term(T,CG0),
+   sub_compound_term(cg_holds(P,_,V),CG0),
    (P==attr;P=='Attr';P==isA),
-   sub_compound_term(cg_type(VV,Color),CG0),
+   CGT = cg_type(VV,Color),
+   sub_compound_term(CGT,CG0),
    VV==V,
-   subst(CG0,cg_type(VV,Color),true,CG1),
+   subst(CG0,CGT,true,CG1),
    subst(CG1,V,Color,CG2),   
    CG1\==CG2,!,
    cg_resolved_names(CG2,CG).

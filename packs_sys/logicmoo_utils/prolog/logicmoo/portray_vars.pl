@@ -434,7 +434,7 @@ is_good_name(_IsGood).
 
 
 may_debug_var(_,_,V):- nonvar(V),!.
-may_debug_var(L,_,_):- is_letterless(L),!.
+may_debug_var(L,_,_):- bad_vname(L),!.
 may_debug_var(L,R,V):- atom(L),atom_concat_w_blobs('f_',LL,L), may_debug_var(LL,R,V).
 may_debug_var(L,R,V):- atom(L),atomic_list_concat([_A1,A2,A3|AS],'_',L),atomic_list_concat([A2,A3|AS],'_',LL),may_debug_var(LL,R,V).
 may_debug_var(L,R,V):- debug_var([L,R],V).
@@ -528,14 +528,19 @@ atomic_list_concat_goodnames([H|T],Sep,Res):-
   atomic_list_concat_goodnames(T,Sep,Last),
   append_good_name(Sep,H,Last,Res).
 
+bad_vname(H):- var(H),!.
+bad_vname(H):- number(H),!.
+bad_vname(H):- string(H),!,atom_string(A,H),!,bad_vname(A).
 bad_vname(H):- \+ atom(H),!.
+bad_vname(H):- is_letterless(H),!.
+bad_vname(exists).
 bad_vname(H):- atom_number(H,_).
 bad_vname(H):- atom_concat_safety('c',N,H),bad_vname(N).
 bad_vname(H):- atom_concat_safety('C',N,H),bad_vname(N).
 bad_vname(H):- atom_concat_safety('Num',_,H).
-bad_vname(H):- var(H),!.
-bad_vname(H):- number(H),!.
-bad_vname(H):- is_letterless(H).
+
+bad_vname_f(H):- bad_vname(H).
+bad_vname_f(predicate).
 
 append_good_name(_,H,Last,Res):- bad_vname(H),!,Res=Last.
 append_good_name(Sep,H,Last,Res):- atomic_list_concat([H,Sep,Last],Res).
@@ -564,11 +569,11 @@ contains_atom_ci(A1,A2):- upcase_atom(A1,U1),upcase_atom(A2,U2),length_gt0(U1),l
 
 append_varname(R,Var):- ignore((p_n_atom(R,RR),append_varname1(RR,Var))),!.
 
-append_varname1(R,_Var):- is_letterless(R),!. % ignore
 
 append_varname1(R,Var):- get_var_name_for_append(Var,Prev), contains_atom_ci(Prev,R),!.
 append_varname1(R,Var):- get_var_name_for_append(Var,Prev), contains_atom_ci(R,Prev),!.
 append_varname1(_,Var):- get_var_name_for_append(Var,Prev), contains_atom_ci(Prev,'_'),!.
+append_varname1(R,_Var):- bad_vname(R),!. % ignore
 
 append_varname1(R,Var):- get_var_name_for_append(Var,Prev),!,
   ignore(( \+ contains_atom_ci(Prev,R), \+ contains_atom_ci(R,Prev), atomic_list_concat([Prev,'_',R],RS),
@@ -633,7 +638,7 @@ reduce_fname(card,size).
 reduce_fname(partOf,'').
 reduce_fname(N,N):-!.
 maybe_nameable_arg(F,A,N,E):- compound(E)-> pretty_two(E) ; 
- ((var(E),arg_type_decl_name(F,A,N,T),\+ is_letterless(T))-> afix_varname(T,E) ; true).
+ ((var(E),arg_type_decl_name(F,A,N,T),\+ bad_vname_f(T))-> afix_varname(T,E) ; true).
 
 ec_timed(EC23):- member(EC23,[holds_at,holds,releasedAt,happens]).
 
@@ -664,8 +669,10 @@ arg_type_decl_name(h,4,1,dom).
 arg_type_decl_name(h,4,2,prep).
 arg_type_decl_name(h,4,3,source).
 arg_type_decl_name(h,4,4,target).
-arg_type_decl_name(F,A,A,Use):- atomic_list_concat([_,E2|Rest],'_',F),last([E2|Rest],Use), \+ is_letterless(Use), !.
-arg_type_decl_name(F,A,A,F):- \+ is_letterless(F).
+arg_type_decl_name(F,A,A,Use):- atomic_list_concat([_,E2|Rest],'_',F),last([E2|Rest],Use), \+ bad_vname(Use), !.
+arg_type_decl_name(F,A,A,F):- \+ bad_vname_f(F).
+
+
 
 
 :- meta_predicate(maplist_not_tail(1,*)).

@@ -30,14 +30,14 @@ do_one_var(Mode, EoF, X, Var, Asserts, Fixes):- \+ is_list(Var), !,
 
 do_one_var(Mode, EoF, X, [VarName| Types], [Grok|Asserts], [Fix|Fixes]):-
   \+ number(VarName),
-  var(X), cg_var_name(VarName, X, Fix),
-  add_mode(Mode, cg_quantz(EoF, ?(X)), Grok),
+  var(X), cg_var_name(VarName, X, Fix), 
+  add_mode(Mode, cg_quantz(EoF, X), Grok), 
   do_one_var(Mode, EoF, X, Types, Asserts, Fixes).
 do_one_var(Mode, EoF, X, [Number| Types], [Grok|Asserts], Fixes):-
   number(Number),
-  add_mode(Mode, cg_quantz_num(EoF,Number,?(X)), Grok),
+  add_mode(Mode, cg_quantz_num(EoF,Number,'?'(X)), Grok),
   do_one_var(Mode, EoF, X, Types, Asserts, Fixes).
-do_one_var(Mode, EoF, X, [Type| Types], [cg_type(?(X),Type)|Asserts], Fixes):-
+do_one_var(Mode, EoF, X, [Type| Types], [cg_type('?'(X),Type)|Asserts], Fixes):-
   do_one_var(Mode, EoF, X, Types, Asserts, Fixes).
 do_one_var(_Mode, _EoF, _X, [], [], []).
 
@@ -66,12 +66,19 @@ chop_up_clif(OF, Stuff, Out):-
    chop_up_clif(OF, +, Stuff, Out).
 
 
+is_var_with_name(X,N):- var(X),!,get_var_name(X,N).
+is_var_with_name('$VAR'(Var),N):-!, is_var_with_name(Var,N).
+is_var_with_name('?'(Var),N):-is_var_with_name(Var,N).
+is_var_with_name(N,N).
 
 % ==========================================================================
 % chop_up_clif/3 - Like chop_up_clif/2 (chops up and replaces CLIF into CG) but takes a +/-
 % ==========================================================================
 
-chop_up_clif(_OF, _Mode, Var, Out):- is_ftVar(Var),!, Out = Var.
+chop_up_clif(_OF, _Mode, (Var), '$VAR'(Name)):- is_ftVar(Var), is_var_with_name(Var,Name),!.
+chop_up_clif(_OF, _Mode, Var, Out):- var(Var),!, Out = Var.
+chop_up_clif(_OF, _Mode, '$VAR'(Name), '$VAR'(Name)):-!.
+chop_up_clif(OF, Mode, '?'(Var), Out):- !, chop_up_clif(OF, Mode, '$VAR'(Var), Out).
 chop_up_clif(OF, Mode, [Var|Stuff], Out):- var(Var),!,chop_up_clif(OF, Mode, [holds,Var|Stuff], Out).
 chop_up_clif(OF, Mode, [ExistsOrForall, VarList, Stuff], Out):- 
    nonvar(ExistsOrForall),
@@ -91,6 +98,30 @@ chop_up_clif(OF, Mode, object(_Frame,Var,Type,countable,na,eq,1), Out):-
   Type \== '?',!,
   chop_up_clif(OF, Mode, isA(Var,Type), Out).
 
+   
+chop_up_clif(OF, Mode, intrans_pred(Type1,Type2,Pred,Arg1), Out):- 
+  chop_up_clif(OF, Mode, (isA(Arg1,Type1),isA(Arg1,Type2),[Pred,Arg1]), Out).
+
+chop_up_clif(OF, Mode, generic_pred(Type,Pred,Arg1,Arg2), Out):- 
+  chop_up_clif(OF, Mode, (isA(Arg1,Type),[Pred,Arg1,Arg2]), Out).
+
+chop_up_clif(OF, Mode, property(Var,Type,adj), Out):- 
+  Type \== '?',!,
+  chop_up_clif(OF, Mode, property(Var,Type), Out).
+
+chop_up_clif(OF, Mode, object(_Frame,Var,Type,dom,na,na,na), Out):- 
+  Type \== '?',!,
+  chop_up_clif(OF, Mode, isA(Var,Type), Out).
+
+chop_up_clif(OF, Mode, isa(Var,Type), Out):- 
+   chop_up_clif(OF, Mode, isA(Var,Type), Out).
+
+chop_up_clif(OF, Mode, ti(Type,Var), Out):- 
+   chop_up_clif(OF, Mode, isA(Var,Type), Out).
+
+chop_up_clif(OF, Mode, isA(Var,Type), Out):- 
+  chop_up_clif(OF, Mode, cg_type(Var,Type), Out).
+
 chop_up_clif(OF, Mode, [predicate,_Frame,_Exists_Be,Verb|Args], Out):- !,
   chop_up_clif(OF, Mode, [Verb|Args], Out).
 
@@ -102,7 +133,10 @@ chop_up_clif(OF, Mode, :-(X,Y), Out):- !,
 chop_up_clif(OF, Mode, relation(_Frame,X,of,Y), Out):- !,
   chop_up_clif(OF, Mode, of(X,Y), Out).
 
-chop_up_clif(OF, Mode, (X,Y), Out):- !,  conjuncts_to_list((X,Y),List),
+chop_up_clif(OF, Mode, (X,Y), Out):- !,  pred_juncts_to_list(',',(X,Y),List),
+  chop_up_clif(OF, Mode,[and|List], Out).
+
+chop_up_clif(OF, Mode, '&'(X,Y), Out):- !,  pred_juncts_to_list('&',(X,Y),List),
   chop_up_clif(OF, Mode,[and|List], Out).
 
 
@@ -115,7 +149,7 @@ chop_up_clif(_OF, _Mode, 'named'(S), S).
 chop_up_clif(OF, +, [not, Stuff], Out) :- chop_up_clif(OF, -, Stuff, Out).
 chop_up_clif(OF, -, [not, Stuff], Out) :- chop_up_clif(OF, +, Stuff, Out).
 
-chop_up_clif(OF, Mode, [Type, Arg], Out) :- chop_up_clif(OF, Mode, ['Type', Arg, Type], Out).
+chop_up_clif(OF, Mode, [Type, Arg], Out) :- var(Arg), nonvar(Type), chop_up_clif(OF, Mode, ['Type', Arg, Type], Out).
 
 chop_up_clif(OF, +, [and|Stuff],    Out )  :- chop_up_list(OF, +, Stuff, Out).
 chop_up_clif(OF, -, [and|Stuff], or(Out))  :- chop_up_list(OF, -, Stuff, Out).
@@ -205,7 +239,7 @@ test_logicmoo_cg_clif:- notrace(update_changed_files),
 % ?- compound(1).  % No 
 
 
-% Convert all  ?(Name)  into  '$VAR'(UPPER)
+% Convert all  '?'(Name)  into  '$VAR'(UPPER)
 qvar_to_vvar(I, O):- \+ compound(I), !, I=O.
 qvar_to_vvar('?'(Name), '$VAR'(UPPER)):- atomic(Name), upcase_atom(Name, UPPER), !.
 qvar_to_vvar(I, O):-
@@ -230,6 +264,7 @@ var_k_var(Var):- get_var_name(Var,Name),(Var = ('?'(Name))).
 % ==========================================================================
 convert_clif_to_cg(In0, CG):-
   nl,
+  guess_varnames(In0),
   renumbervars_with_names_l(In0,In),
   display(renumbervars_with_names(In0,In)),
   nl,

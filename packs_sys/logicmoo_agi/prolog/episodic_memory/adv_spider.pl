@@ -16,8 +16,8 @@
 % Main file.
 %
 */
-:- '$set_source_module'(mu).
 :- ensure_loaded(adv_loader).
+:- '$set_source_module'(mu).
 
 :- discontiguous map_of/2.
 
@@ -64,7 +64,7 @@ there exists scene A1P.
 there exists scene A2P.
 A1P contains spider_1st_person.
 A2P contains spider_2nd_person.
-
+ 
 A1 can see map of A1P.
 A2 can see map of A2P.
 A1 can not see map of A2P.

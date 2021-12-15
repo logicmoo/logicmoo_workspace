@@ -434,7 +434,9 @@ on_own_line(X):- format('~N'),X,format('~N').
 
 :- export(sort_term_size/2).
 sort_term_size(List,Sorted):- notrace((predsort(by_word_term_size,List,S),reverse(S,Sorted))).
+
 by_word_term_size(R,A,B):-into_term_size_sort(A,AK),into_term_size_sort(B,BK),compare(RK,AK,BK), (RK == (=) -> compare(R,A,B) ; R = RK).
+
 into_term_size_sort(seg(List),Key):- member(seg(S,E),List),member(lnks(L),List),member(size(W),List),RS is 100-W, Key = seg(S,RS,L,E),!.
 into_term_size_sort(I,0):- cyclic_term(I),!.
 into_term_size_sort(w(_,AA),Key):- findnsols(2,T, ((sub_term(T,AA),compound(T),arg(1,T,N),number(N));T=AA),Key),!.

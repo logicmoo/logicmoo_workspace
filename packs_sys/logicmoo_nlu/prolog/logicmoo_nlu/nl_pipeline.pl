@@ -435,7 +435,9 @@ pipeline_file_loading:-
 :- if( \+ getenv('keep_going','-k')).
 :- use_module(library(editline)).
 :- add_history((call(make),call(pipeline_file_loading))).
-:- findnsols(6,X,(chat80(X),add_history((call(make),call(run_pipeline(X))))),_).
+
+%:- findnsols(6,X,(chat80(X),add_history((call(make),call(run_pipeline(X))))),_).
+
 :- endif.
 
 :- fixup_exports.
