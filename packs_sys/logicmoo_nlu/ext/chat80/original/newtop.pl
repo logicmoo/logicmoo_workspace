@@ -524,7 +524,7 @@ process4a(How,Sentence,U,S1,Times) :-
 process4(How,Sentence,Answer,Times):- (How == test;How==on),
   Times = [_ParseTime,_SemTime,_TimePlan,_TimeAns,TotalTime],
   runtime(StartAns),
-  c8(Sentence,Answer),
+  c8_test(Sentence,Answer),
   runtime(EndAns),
   TotalTime is EndAns - StartAns,
   %should_learn(Answer),

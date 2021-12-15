@@ -369,8 +369,8 @@ ordering_pred(thing,cp(south,of),X1,X2) :- type_measure_pred(_Region,position(y)
 ordering_pred(thing,cp(west,of),X1,X2) :- type_measure_pred( _Region,position(x),Longitude,_), position_pred(thing,Longitude,X1,L1), position_pred(thing,Longitude,X2,L2), exceeds(L1,L2).
 
 
-
-generic_pred(Type,in,X,Y):- generic_pred(Type,contain,Y,X).
+generic_pred(Type,mg(P),X,Y):- nonvar(P),!,generic_pred(Type,P,X,Y).
+generic_pred(Type,P,X,Y):- P==in,!, generic_pred0(Type,contain,Y,X).
 generic_pred(Type,P,X,Y) :- P == any,!, generic_pred0(Type,_,X,Y).
 generic_pred(Type,P,X,Y) :- generic_pred0(Type,P,X,Y)*->true;generic_pred1(Type,P,X,Y).
 
