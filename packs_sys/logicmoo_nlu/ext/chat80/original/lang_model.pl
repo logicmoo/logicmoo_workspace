@@ -628,7 +628,7 @@ sentence80(U,E):- no_repeats(E,sentence80(E,U,[],[],[])).
 try_chat_80(S,G):- G=..[F,Tree,QT],!,try_chat_80(S,F,Tree,QT).
 try_chat_80(S,F,Tree,QT):- 
   statistics(runtime,[Start,_]),
-  locally(set_prolog_flag(gc,false),
+  locally(set_prolog_flag(gc,true),
  ((
   ((should_learn(Tree),catch(debug_chat80_if_fail(deepen_pos(call(F,Tree,QT))),E,QT=error(E))) *-> true ; QT = failure)))),
   statistics(runtime,[End,_]),

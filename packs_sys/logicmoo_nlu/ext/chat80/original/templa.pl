@@ -311,7 +311,7 @@ trans_LF1(Trans,_,X,_,Y,P ,[],_,_):- if_search_expanded(4),
   make_generic_pred(Spatial,Trans,X,Y,P),spatial(Spatial).
 
 make_generic_pred(Spatial,matches_prep(AT),X,Y,generic_pred(Spatial,prep(AT),Y,X)):-!.
-make_generic_pred(Spatial,(AT),X,Y,generic_pred(Spatial,(AT),X,Y)):-!.
+make_generic_pred(Spatial,(AT),X,Y,generic_pred(Spatial,mg(AT),X,Y)):-!.
 
 % qualifiedBy
 qualifiedBy_LF(_FType,_Name,_Type,_Else,_P):-  \+ if_search_expanded(2),!, fail.
