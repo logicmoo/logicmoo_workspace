@@ -734,6 +734,11 @@ neg_modal_opt1(ExtraMods,aux+_,negP(ExtraMods)) ---> theText80(not).
 neg_modal_opt1(ExtraMods,_,(ExtraMods)) ---> noText .
 
 
+verb_form88([],adj_prep(P,ToFrom),_Tense,_Agmt,_Role) ---> 
+   % {if_search_expanded(0)},
+   {fail},
+   adj_phrase(P,_Mask),prep(ToFrom).
+
 verb_form88(ExtraMods,RootVerb,Tense,_Agmt1,_Role) ---> % {fail},
    theText80(W),
    {verb_form_aux(W,RootVerb,Tense,_Agmt2),flatten([RootVerb],ExtraMods)}.

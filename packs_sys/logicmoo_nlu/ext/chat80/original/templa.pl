@@ -105,6 +105,8 @@ measure_LF(Degree,value&position&Axis,[],Degrees):- type_measure_pred(_Region, p
 measure_LF(thousand,value&units&Population/*citizens*/,[],thousand):-  type_measure_pred(_City,units,Population,countV).
 measure_LF(million, value&units&Population/*citizens*/,[], million):-  type_measure_pred(_City,units,Population,countV).
 
+
+verb_type_db(chat80,adj_prep(A,P),main+tv):- nonvar(A),nonvar(P),!.
 verb_type_db(chat80,border,main+tv).
 symmetric_verb(Spatial,border):- spatial(Spatial).
 

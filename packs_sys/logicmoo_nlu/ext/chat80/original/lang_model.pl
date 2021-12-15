@@ -695,7 +695,7 @@ c8(B,O):-
  member(O,[Query,UE,QT,Tree,SS]),
  should_learn(O),
  copy_term(O,OO),
- try_chat_80(S,into_cg(OO,_))))),!.
+ (try_chat_80(S,into_cg(OO,_)))))),!.
 
  
 into_cg(CLIF,CG):-cgp_common_logic:convert_clif_to_cg(CLIF,CG),!.
