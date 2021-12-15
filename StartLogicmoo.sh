@@ -17,7 +17,8 @@ export LOGICMOO_GAMES=$LOGICMOO_WS/prologmud_server
    if [ ! -f /.dockerenv ]; then
       container_name=logicmoo
       if docker ps -a --format '{{.Names}}' | grep -Eq "^${container_name}\$"; then
-         docker exec -it logicmoo screen -rx LogicmooServer
+         export SCREEN_CMD="sudo -u prologmud_server -- screen"
+         docker exec -it logicmoo $SCREEN_CMD -rx LogicmooServer
       else
          bash ./runFromDocker.sh
       fi
