@@ -60,6 +60,7 @@ fi
 
  if [ $COUNTER -gt 30 ]; then  
   echo "MAYBE (IN OTHER TERMINAL): " $(green "docker exec -it logicmoo $SCREEN_CMD -rx LogicmooServer")
+  echo "Make sure whichever user you run the docker command they are the docker group: " $(green "sudo usermod -a -G docker user777 ")
   echo "OR (Bash IN OTHER TERMINAL): " $(green "docker exec -it logicmoo bash ")
   COUNTER=0
  fi
