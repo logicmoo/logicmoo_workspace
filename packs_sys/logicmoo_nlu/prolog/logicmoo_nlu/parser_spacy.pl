@@ -65,24 +65,22 @@ spacy_stream_to_w2(In,_, Result):- repeat, read_pending_codes(In,Codes,[]),
 
 :- dynamic(tmp:existing_spacy_stream/4).
 :- volatile(tmp:existing_spacy_stream/4).
-foc_spacy_stream(Out,In):- thread_self(Self),tmp:existing_spacy_stream(Self,_,Out,In),clear_spacy_pending(In).
+foc_spacy_stream(Out,In):- thread_self(Self),tmp:existing_spacy_stream(Self,_,Out,In),!,clear_spacy_pending(In).
+/*
 foc_spacy_stream(Out,In):- tmp:existing_spacy_stream(OldThread,FFid,Out,In), \+ thread_property(OldThread,status(running)),!,
   retract(tmp:existing_spacy_stream(OldThread,FFid,Out,In)),
   thread_self(Self),
   assert(tmp:existing_spacy_stream(Self,FFid,Out,In)),!.
-
+*/
 foc_spacy_stream(Out,In):-
   thread_self(Self),
   tcp_socket(Socket),
   catch((tcp_connect(Socket, 'logicmoo.org':4096),
-  tcp_open_socket(Socket, StreamPair)),_,fail),
+  tcp_open_socket(Socket, StreamPair)),_,fail),!,
   StreamPair = In, StreamPair = Out,
   set_stream(In,close_on_exec(false)),
-  set_stream(Out,close_on_exec(false)),
   set_stream(In,close_on_abort(false)),
-  set_stream(Out,close_on_abort(false)),
   set_stream(In,eof_action(eof_code)),
-  set_stream(Out,eof_action(eof_code)),
   assert(tmp:existing_spacy_stream(Self,_,Out,In)),!.
 
 foc_spacy_stream(Out,In):- current_prolog_flag(python_local,true),
@@ -122,11 +120,11 @@ spacy_parse2(String, Lines) :-
   once(spacy_parse3(String, Lines)
       ;spacy_parse4(String, Lines)).
 
-try_spacy_stream(Out,Write):- once(catch((flush_output(Out),format(Out,'~w',[Write])),_,
+try_spacy_stream(Out,Write):- once(catch((format(Out,'~w',[Write])),_,
   (retract(tmp:existing_spacy_stream(_,_,Out,_)),fail))).
 
 % Clears if there is a dead one
-spacy_parse3(_String, _Lines) :-
+spacy_parse3(_String, _Lines) :- fail,
   foc_spacy_stream(Out,_In),
   try_spacy_stream(Out,''),fail.
 % Reuses or Creates
@@ -134,7 +132,7 @@ spacy_parse3(String, Lines) :-
   foc_spacy_stream(Out,In),
   try_spacy_stream(Out,String),
   try_spacy_stream(Out,'\n'),
-  try_spacy_stream(Out,''),!,
+  flush_output(Out),
   read_spacy_lines(In, Lines).
 
 % Very slow version

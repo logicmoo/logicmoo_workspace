@@ -129,6 +129,8 @@ quantify(P&Q, Above, Right,(S, T)) :- !,
    quantify(Q, Right0, Right, T),
    quantify(P, Above, Right0, S).
 
+quantify(P, Q, Q, P).
+
 
 head_vars([], P, P, L, L0) :-
    strip_types(L0, L).
@@ -324,9 +326,9 @@ unit_det(quantV(_, _)).
 unit_det(det(_)).
 unit_det(question80(_)).
 unit_det(identityQ(_ArgInfo)).
-unit_det(voidQ(_ArgInfo)).
+unit_det(voidQ).
 unit_det(notP(_Modalz)).
-unit_det(generic(_ArgInfo)).
+unit_det(generic).
 unit_det(wh_det(_Kind,_)).
 unit_det(proportion(_)).
 % unit_det(some).
@@ -335,16 +337,16 @@ det_apply(quantV(Det, Type-X, P, _-Y), Q0, Q) :-
    apply80(Det, Type, X, P, Y, Q0, Q).
 
 
-apply80(generic(_ArgInfo), _, X, P, X, Q, X^(P, Q)).
+apply80(generic, _, X, P, X, Q, X^(P, Q)).
 
 apply80(proportion(_Type-V), _, X, P, Y, Q,
       S^(setOf(X, P, S),
          N^(numberof(Y,(one_of(S, Y), Q), N),
             M^(card(S, M), ratio(N, M, V))))).
 
-apply80(identityQ(_ArgInfo), _, X, P, X, Q,(P, Q)).
+apply80(identityQ(Modalz), _, X, P, X, Q, PQ):- maybe_modalize(scope, Modalz, (P, Q), PQ).
 
-apply80(voidQ(_ArgInfo), _, X, P, X, Q, X^(P, Q)).
+apply80(voidQ, _, X, P, X, Q, X^(P, Q)).
 
 apply80(set_ov(_ArgInfo), _, Index:X, P0, S, Q, S^(P, Q)) :-
    apply_set(Index, X, P0, S, P).
@@ -412,7 +414,7 @@ governs_lex(Det0, Det) :-
    Det=det(_);
    Det=quantV(_, _)).
 
-governs_lex(_, voidQ(_ArgInfo)).
+governs_lex(_, voidQ).
 governs_lex(_, lambdaV(_ArgInfo)).
 governs_lex(_, identityQ(_ArgInfo)).
 governs_lex(det(each), question80([_|_])).
@@ -442,7 +444,7 @@ weak(index(_)).
 weak(wh_det(_Kind,_, _)).
 weak(set(_)).
 weak(wh_det(_Kind,_)).
-weak(generic(_ArgInfo)).
+weak(generic).
 weak(proportion(_)).
 
 weak_det(no).
@@ -458,7 +460,7 @@ lower(question80(_), Q, quantV(det(a), X, P, Y)) :-
    open_quant(Q, det(any), X, P, Y), !.
 lower(_, Q, Q).
 
-setifiable(generic(_ArgInfo)).
+setifiable(generic).
 setifiable(det(a)).
 setifiable(det(all)).
 

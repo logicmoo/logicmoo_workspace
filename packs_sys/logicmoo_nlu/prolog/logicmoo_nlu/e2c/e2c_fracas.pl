@@ -1452,7 +1452,7 @@ collective/institutional or even generic interpretation:
 
 
 /*
- Bare plurals can exhibit existential, (quasi) universal, generic(_ArgInfo2) or
+ Bare plurals can exhibit existential, (quasi) universal, generic or
 dependent plural behaviour.
 
 */

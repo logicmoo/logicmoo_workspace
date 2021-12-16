@@ -621,7 +621,9 @@ sent_to_prelogic(S0,S) :-
 
 %reduce1(P,P):-!.
 reduce1(P,Q):- \+ compound(P),!, Q=P.
+reduce1(slot(Syntax,_Type,Var,_Mode,_SlotI),slot_i(Syntax,Var)):-!.
 reduce1((P,Q),PQ):- P == Q,!,reduce1(P,PQ).
+
 
 reduce1((P,Q),PQ):- '`'(true) == Q,!,reduce1(P,PQ).
 reduce1((Q,P),PQ):- '`'(true) == Q,!,reduce1(P,PQ).
@@ -630,7 +632,7 @@ reduce1((Q,P),PQ):- (true) == Q,!,reduce1(P,PQ).
 
 reduce1('&'(Q,P),PQ):- reduce1((Q,P),PQ).
 
-reduce1(np_head(X,generic(Generic6),[adj(ace_var(self,Name))],A),O):- var(Generic6),
+reduce1(np_head(X,generic,[adj(ace_var(self,Name))],A),O):-
   reduce1(resultFn(X,(ti(A,X),ace_var(X,Name))),O).
 
 reduce1(qualifiedBy(X,P,S),R):- qualifiedBy_LF(reduce1,X,P,S,R),!.

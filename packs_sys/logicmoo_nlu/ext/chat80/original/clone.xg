@@ -270,18 +270,19 @@ s_vp_801(s(Subj,Verb,Args,Mods),Mask) --->
    subj(Subj,Agmt,Type)),
    just_vp(Subj,Agmt,Type,Verb,Args,Mods,Mask).
 
-s_vp_801(s(NP,Verb,[],[]),_) --->  ace_var(AceVar), !,
-   {Verb = verb(main+iv,action1,[],active,pres+fin,[],([])),
-    NP= np(3+sg,np_head(_Var,generic(_),[adj(ace_var(self,AceVar)),adj(ti(statement,self))],statement),[])}.
+s_vp_801(s(NP,Verb,[],[ arg(arg_pred,adj(true))]),_) --->  ace_var(AceVar), !,
+   {Verb = verb(aux+aux(be,[]), aux(be,[]),active,pres+fin,[],[ aux(be,[pres+fin]),
+                              root]),
+    NP= np(3+sg,np_head(_Var,generic,[adj(ace_var(self,AceVar)),adj(ti(statement,self))],statement),[])}.
 
 /*
 s_vp_801(NP,Verb,[],[],_) --->  ace_var(AceVar), !,
    {Verb = verb(main+iv,'action1:tell',[],active,pres+fin,[],(_)),
-    NP= np(3+sg,np_head(_Var,generic(_),[adj(ace_var(self,AceVar)),adj(ti(statement,self))],statement),[])}.
+    NP= np(3+sg,np_head(_Var,generic,[adj(ace_var(self,AceVar)),adj(ti(statement,self))],statement),[])}.
 
 s_vp_801(NP,Verb,[],[],_) --->  [],!,
    {Verb = verb(main+iv,tell,[],active,pres+fin,[],(_)),
-    NP= np(3+sg,np_head(_Var,generic(_),[adj(ti(statement,self))],statement),[])}.
+    NP= np(3+sg,np_head(_Var,generic,[adj(ti(statement,self))],statement),[])}.
 */
 just_vp(Subj,Agmt,Type,Verb,Args,Mods,Mask) --->
   s_vp1(Subj,Agmt,Type0,Verb0,Args0,Mods0,Mask0),
@@ -337,7 +338,7 @@ np1(np(Agmt,Kernel,Mods),Agmt,_Case,Def,Role,Set,Mask) --->
 % many of, one of
 np1(part(Det,NP),3+Number,_,indef,Role,Set,Mask) --->
    {is_pp(Set)},
-   determiner(Det,Number,indef), {Det\=generic(_)},
+   determiner(Det,Number,indef), {Det\=generic},
    theText80(of),
    {is_s_all(SAll), is_prep_case(Case)},
    np_expand(NP,3+pl,Case,def,Role,SAll,Mask).
@@ -616,7 +617,7 @@ xg_prep_phrase(_PPAlowed,prep_phrase(_PPType,Prep,Arg),Case,Set,Mask) --->
 
 xg_prep_phrase(_PPAlowed,prep_phrase(_PPType,Prep,Arg),_Case,_Set,_Mask) --->
    prep(Prep),noText,
-   {Arg=np_head(_Var,generic(_),[],_)}.
+   {Arg=np_head(_Var,generic,[],_)}.
 
 /* Relative clause */
 
@@ -679,9 +680,9 @@ reduced_rel_rest(Agmt,Conj0,Rel0,Rel,_,Mask) --->
    reduced_rel_conj(Agmt,Conj,Rel1,Mask).
 reduced_rel_rest(_,_,Rel,Rel,Mask,Mask) ---> noText.
 
-reduced_rel(_Agmt,reduced_rel(X,decl(s( np(3+sg,np_head(X,generic(_),[],X),[]),
+reduced_rel(_Agmt,reduced_rel(X,decl(s( np(3+sg,np_head(X,generic,[],X),[]),
                          verb(main+tv,name,[],active,past+fin,[],([])),
-                         [ arg(dirO(_),np(3+sg,np_head(_Var,generic(_),[],Name),[]))],
+                         [ arg(dirO(_),np(3+sg,np_head(_Var,generic,[],Name),[]))],
                        []))),_Mask) ---> 
    theText80(named), name_xg(Name).
 
@@ -734,11 +735,6 @@ neg_modal_opt1(ExtraMods,aux+_,negP(ExtraMods)) ---> theText80(not).
 neg_modal_opt1(ExtraMods,_,(ExtraMods)) ---> noText .
 
 
-verb_form88([],adj_prep(P,ToFrom),_Tense,_Agmt,_Role) ---> 
-   % {if_search_expanded(0)},
-   {fail},
-   adj_phrase(P,_Mask),prep(ToFrom).
-
 verb_form88(ExtraMods,RootVerb,Tense,_Agmt1,_Role) ---> % {fail},
    theText80(W),
    {verb_form_aux(W,RootVerb,Tense,_Agmt2),flatten([RootVerb],ExtraMods)}.
@@ -752,7 +748,14 @@ verb_form88([],RootVerb,Tense,Agmt,_Role) --->
    theText80_W2(W,L),
    {verb_form_wlex(L,W,RootVerb,Tense,Agmt)}.
 
+verb_form88([],adj_prep(P,ToFrom),_Tense,_Agmt,_Role) --->
+   %{if_search_expanded(1)},
+   pre_prep_adj(P),prep(ToFrom).
 %verb_form88([],aux(do,[]),Tense,Agmt,_Role) ---> xg_peek(theText80(will)).
+
+pre_prep_adj(P) ---> theText80(W),{(clex:adj_itr(W,P);
+ (negprefix:negprefix(a,W1,un,W2),(W=W1;W=W2),P=W);(wnframes:opposite(a,W1,W2,_),(W=W1;W=W2),P=W);clex:tv_pp(W,P))}.
+pre_prep_adj(P) ---> adj_phrase(P,_Mask),!.
 
 /*
 verb_form88(ExtraMods,RootVerb,Tense,Agmt,Role) --->
@@ -836,9 +839,9 @@ verb_args(dv(_Prep),_,[arg(Case,NP)|X],_,Mask) --->
    verb_arg(np,NP,Mask0),
    object_opt(Case,X,Mask0,Mask).
 % BE
-verb_args(aux(be,_),_,[voidQ(_ArgInfo)],Mask,Mask) ---> theText80(there).
-verb_args(aux(be,_),_,[arg(arg_pred(Conj),P)],_,Mask) --->
-   pred_conj(Conj,P,Mask).
+verb_args(aux(be,_),_,[voidQ],Mask,Mask) ---> theText80(there).
+verb_args(aux(be,_),_,[arg(arg_pred,P)],_,Mask) --->
+   pred_conj(_,P,Mask).
 verb_args(aux(be,_),_,[arg(dirO(_ArgInfo),P)],_,Mask) ---> verb_arg(np,P,Mask).
 % HAVE
 verb_args(aux(have,_),active,[arg(dirO(_ArgInfo),P)],_,Mask) ---> verb_arg(np,P,Mask).

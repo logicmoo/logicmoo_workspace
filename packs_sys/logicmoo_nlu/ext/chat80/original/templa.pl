@@ -321,7 +321,7 @@ qualifiedBy_LF(FType, X, BaseAndThing,np_head(Var,det(the(sg)),Adjs,Table),Head)
 qualifiedBy_LF(_FType, X,_,np_head(_Var,det(a),[],Table),ti(Table,X)). 
 qualifiedBy_LF(_FType,X,_Type,pronoun(_,1+sg),isa(X,vTheVarFn("I"))).
 qualifiedBy_LF(_FType,X,_Type,pronoun(_,1+pl),isa(X,vTheVarFn("US"))).
-qualifiedBy_LF(_FType,X,Type,np_head(_Var,generic(_),Adjs,Table),Pred):-
+qualifiedBy_LF(_FType,X,Type,np_head(_Var,generic,Adjs,Table),Pred):-
   must(i_adjs(Adjs,Type-X,Type-X,_,Head,Head,Pred,ti(Table,X))).
 qualifiedBy_LF(_FType,X,Type,np_head(_Var,det(a),Adjs,Table),Pred):- 
   must(i_adjs(Adjs,Type-X,Type-X,_,Head,Head,Pred,ti(Table,X))).

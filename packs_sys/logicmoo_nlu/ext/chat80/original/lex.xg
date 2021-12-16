@@ -186,7 +186,7 @@ noun(Noun,Adjs,Adjs,Agmt) --->
 det(det(Det),Number,Def) --->
    theText80(W),
    {det_lex(W,Number,Det,Def)}.
-det(generic(ArgInfo2),_,generic(ArgInfo2)) ---> noText.
+det(generic,_,generic) ---> noText.
 
 %adj(restr,adj(from_adjp(Out))) ---> link_t_1('ADJP',Words),{c88(['something','X1','is'|Words],Out)}.
 adj(Type,adj(Adj)) --->

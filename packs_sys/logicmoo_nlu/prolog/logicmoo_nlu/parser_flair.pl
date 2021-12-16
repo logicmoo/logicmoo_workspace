@@ -95,7 +95,7 @@ foc_flair_stream(Out,In):-
   set_stream(Out,eof_action(eof_code)),
   assert(tmp:existing_flair_stream(Self,_,Out,In)),!.
 
-foc_flair_stream(Out,In):-
+foc_flair_stream(Out,In):- current_prolog_flag(python_local,true),
   lmconfig:space_py_dir(Dir),
   thread_self(Self),
   sformat(S,'python3 parser_flair.py -nc -cmdloop ',[]),
@@ -132,11 +132,11 @@ flair_parse2(String, Lines) :-
   once(flair_parse3(String, Lines)
       ;flair_parse4(String, Lines)).
 
-try_flair_stream(Out,Write):- once(catch((flush_output(Out),format(Out,'~w',[Write])),_,
-  (retract(tmp:existing_flair_stream(_,_,Out,_)),fail))).
+try_flair_stream(Out,Write):- 
+ once(catch((format(Out,'~w',[Write])),_, (retract(tmp:existing_flair_stream(_,_,Out,_)),fail))).
 
 % Clears if there is a dead one
-flair_parse3(_String, _Lines) :-
+flair_parse3(_String, _Lines) :- fail,
   foc_flair_stream(Out,_In),
   try_flair_stream(Out,''),fail.
 % Reuses or Creates
@@ -145,10 +145,11 @@ flair_parse3(String, Lines) :-
   try_flair_stream(Out,String),
   try_flair_stream(Out,'\n'),
   try_flair_stream(Out,''),!,
+  flush_output(Out),
   read_flair_lines(In, Lines).
 
 % Very slow version
-flair_parse4(String, Lines) :- 
+flair_parse4(String, Lines) :- current_prolog_flag(python_local,true),
   lmconfig:space_py_dir(Dir),
   sformat(S,'python3 parser_flair.py -nc ~q ',[String]),
   nop(writeln(S)),

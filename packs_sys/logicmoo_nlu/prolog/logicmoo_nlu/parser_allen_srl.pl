@@ -195,7 +195,7 @@ allen_srl_parse2(String, Lines) :-
   once(allen_srl_parse3(String, Lines)
       ;allen_srl_parse4(String, Lines)).
 
-try_allen_srl_stream(Out,Write):- once(catch((flush_output(Out),format(Out,'~w',[Write])),_,
+try_allen_srl_stream(Out,Write):- once(catch((format(Out,'~w',[Write])),_,
   (retract(tmp:existing_allen_srl_stream(_,_,Out,_)),fail))).
 
 % Clears if there is a dead one
@@ -207,7 +207,7 @@ allen_srl_parse3(String, Lines) :-
   foc_allen_srl_stream(Out,In),
   try_allen_srl_stream(Out,String),
   try_allen_srl_stream(Out,'\n'),
-  try_allen_srl_stream(Out,''),!,
+  flush_output(Out),
   read_allen_srl_lines(In, Lines).
 
 % Very slow version
