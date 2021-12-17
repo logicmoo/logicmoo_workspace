@@ -126,14 +126,14 @@ i_np_head0(nameOf(_Var,Name,Adjs),Type-X,Type-X,identityQ(_QModal),Head,Pred0,Pr
 i_np_head0(nameOf(Var,Name), Type1Name,Type2Name,Ident,True,Pred0,Pred,List) :- !,
   i_np_head0(nameOf(Var,Name,[]), Type1Name,Type2Name,Ident,True,Pred0,Pred,List).
 
-i_np_head0(wh(X),X,X,identityQ(_QModal),'`'(true),Pred,Pred,[]):-!.
+i_np_head0(wh(TypeX_X),TypeX_X,TypeX_X,identityQ(_QModal),'`'(true),Pred,Pred,[]):-!.
 % np(3+sg,pronoun(neut),[])
 i_np_head0(Else, Type-Name,Type-Name,identityQ(_QModal),'`'(P),Pred,Pred,[]):-  Else \= np_head(_Var,_,_,_), !,
    lf80(Type,make_qualifiedBy(i_np_head0,Name,Type,Else,P)).
 
-i_np_head0(np_head(_Var,Det,Adjs,Noun),X,T,Det,Head0,Pred0,Pred,Slots) :-
-   i_adjs(Adjs,X,T,X,Head0,Head,Pred0,Pred),
-   i_noun(Noun,X,Head,Slots).
+i_np_head0(np_head(_Var,Det,Adjs,Noun),TypeX_X,T,Det,Head0,Pred0,Pred,Slots) :-
+   i_adjs(Adjs,TypeX_X,T,TypeX_X,Head0,Head,Pred0,Pred),
+   i_noun(Noun,TypeX_X,Head,Slots).
 
 i_np_head0(np_head(_Var,wh_det(_Kind,V),Adjs,Noun),
       Type-X,Type-X,Det,'`'(true),Pred,Pred,
@@ -169,6 +169,7 @@ i_np_head1(np_head(_Var,Det,Adjs,Noun),X,T,DetO,Head0,Pred0,Pred,Slots):-
    i_noun(Noun,X,Head,Slots),
    xform_det(Det,DetO).
 
+xform_det(Det,Det):- !.
 xform_det(_Det,_DetO):- !.
 
 make_qualifiedBy(PType,Name,Type,Else,P):- qualifiedBy_LF(PType,Name,Type,Else,P).

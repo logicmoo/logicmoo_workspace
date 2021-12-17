@@ -282,8 +282,8 @@ terminator(Type) --->
 opt_the ---> noText.
 opt_the ---> theText80(the).
 
-conj(_,list,list) ---> theText80(',').
-conj(Conj,list,end) --->
+conj_xg(_,list,list) ---> theText80(',').
+conj_xg(Conj,list,end) --->
    theText80(Conj),
    {conj_lex(Conj)}.
 
