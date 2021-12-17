@@ -190,7 +190,7 @@ i_np_mods(Mods,_,[Slot|Slots],'`'(true),QMods,Mods,Id,_) :-
    i_voids([Slot|Slots],QMods,Id).
 
 
-i_voids(V,_,_):- (var(V);(stack_depth(D),D>1000)),!,ignore((dumpST,break)),fail.
+%i_voids(V,_,_):- ((stack_depth(D),D>1000)),!,ignore((dumpST,break)),fail.
 i_voids([],[],_).
 i_voids([Slot|Slots],[quantS(voidQ,X,'`'(true),'`'(true),[],_)|QMods],Id) :-
    nominal_slot(Slot,X,-Id), !,
@@ -668,12 +668,11 @@ slot_verb_kind(aux(Be,_MODAL),_,TypeS,S,bE(is,S,A),AllSlots):- Be == be,
 slot_verb_kind(aux(Be,_MODAL),_,TypeS,S,true,AllSlots):- Be == be, !,
    select_slots(AllSlots, [slot(arg_pred,TypeS,S,_,free)]).
 
-slot_verb_kind(Type,Verb,TypeS,S,Pred,AllSlots):-
-  lazy_pred_LF(Type,Verb,TypeS,S,AllSlots,Pred),!.
-
 slot_verb_kind(_Tv,Verb,TypeS,S,Pred,AllSlots) :-
    select_slots(AllSlots,[slot(dirO,TypeD,D,SlotD,free)],Slots),
    lf80(TypeS-TypeD,trans_LF(Verb,TypeS,S,TypeD,D,Pred,Slots,SlotD,_)).
+
+slot_verb_kind(Type,Verb,TypeS,S,Pred,AllSlots):- fail, lazy_pred_LF(Type,Verb,TypeS,S,AllSlots,Pred),!.
 
 slot_verb_kind(_Iv,Verb,TypeS,S,Pred,Slots) :-
    lf80(TypeS,intrans_LF(Verb,TypeS,S,Pred,Slots,_)).

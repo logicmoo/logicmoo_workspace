@@ -346,12 +346,14 @@ chat80_all("What are the continents containing a country in which contains more 
 chat80_all("What are the continents no country in which contains more than two cities that have a population exceeding 1 million ?",[[africa,antarctica,australasia]],18).
 
 baltic_rivers(_):-!.
+baltic_rivers_real(_):-!.
 baltic_rivers_real([[[[east_germany]:[elbe],
                   [poland]:[oder,vistula],
                   [soviet_union] :[ amu_darya, amur,don,lena,ob,volga,yenisei],
                   [west_germany]:[danube,elbe,rhine]]]]).
 
 baltic_cities(_):-!.
+baltic_cities_real(_):-!.
 baltic_cities_real([[ [[denmark]:[copenhagen],
                   [east_germany]:[berlin,east_berlin],
                   [finland]:[helsinki],

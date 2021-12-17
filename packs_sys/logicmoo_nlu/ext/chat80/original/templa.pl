@@ -113,8 +113,8 @@ symmetric_verb(Spatial,border):- spatial(Spatial).
 
 /* Nouns */
 property_LF(River,Spatial& Feat& River,X,Spatial&Geo& /*_Neo&*/ _Country,Y,
- (GP,ti(River,X)),[],_,_):-  
-   if_search_expanded(2),
+ (GP,ti(River,X)),[],_,_):-  fail,
+   if_search_expanded(7),
    make_generic_pred(Spatial,any,Y,X,GP),
    feat(Feat),spatial(Spatial),Geo=geo,
    %concrete_type(Country),

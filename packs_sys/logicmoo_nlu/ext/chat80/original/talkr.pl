@@ -380,6 +380,7 @@ ordering_pred(thing,cp(west,of),X1,X2) :- type_measure_pred( _Region,position(x)
 
 
 generic_pred(Type,mg(P),X,Y):- nonvar(P),!,generic_pred(Type,P,X,Y).
+generic_pred(Type,prep(Of),X,Y):- Of == of, generic_pred0(Type,_,Y,X).
 generic_pred(Type,P,X,Y):- P==in,!, generic_pred0(Type,contain,Y,X).
 generic_pred(Type,P,X,Y) :- P == any,!, generic_pred0(Type,_,X,Y).
 generic_pred(Type,P,X,Y) :- generic_pred0(Type,P,X,Y)*->true;generic_pred1(Type,P,X,Y).
@@ -388,19 +389,21 @@ trans_pred_type(Type,P):- tmp80:trans_rel_cache_created(=, trans_direct(Type,P))
 trans_pred_type(thing,contain).
 
 generic_pred0(Type,P,X,Y) :- trans_pred_type(Type,P), nonvar(P),trans_pred(Type,P,X,Y). % contain 
-generic_pred0(Type,P,X,Y) :- measure_pred(Type,P,X,Y). % area of
-generic_pred0(Type,P,X,Y) :- count_pred(Type,P,X,Y). % population of 
-generic_pred0(Type,P,X,Y) :- position_pred(Type,P,X,Y). % latitude of
-generic_pred0(Type,P,X,Y) :- ordering_pred(Type,P,X,Y). % south of
-generic_pred0(Type,P,X,Y) :- symmetric_pred(Type,P,X,Y). % border
+generic_pred0(Type,P,X,Y) :- nonvar(P), measure_pred(Type,P,X,Y). % area of
+generic_pred0(Type,P,X,Y) :- nonvar(P), count_pred(Type,P,X,Y). % population of 
+generic_pred0(Type,P,X,Y) :- nonvar(P), position_pred(Type,P,X,Y). % latitude of
+generic_pred0(Type,P,X,Y) :- nonvar(P), ordering_pred(Type,P,X,Y). % south of
+generic_pred0(Type,P,X,Y) :- nonvar(P), symmetric_pred(Type,P,X,Y). % border
 generic_pred0(Type,P,X,Y) :- specific_pred(Type,P,X,Y). % capital 
 
 generic_pred1(Type,P,X,Y) :- var(Type), nop(generic_pred1(Type,P,X,Y)).
 
-lazy_pred(Type,Verb,TypeS,S,AllSlots):- dmsg(lazy_pred(Type,Verb,TypeS,S,AllSlots)).
+lazy_pred(Type,Verb,TypeS,S,AllSlots):- dmsg(lazy_pred(Type,Verb,TypeS,S,AllSlots)),break.
 
-lazy_pred_LF(Type,Verb,TypeS,S,AllSlots,lazy_pred(Type,Verb,TypeS,S,AllSlots)):- 
-   if_search_expanded(7),
-   dmsg(lazy_pred_LF(Type,Verb,TypeS,S,AllSlots)),!.
+lazy_pred_LF(Type,Verb,TypeS,S,AllSlots,P):-  
+   %if_search_expanded(0),
+   dmsg(lazy_pred_LF(Type,Verb,TypeS,S,AllSlots)),!,
+   % nonvar(AllSlots), 
+   P = lazy_pred(Type,Verb,TypeS,S,AllSlots).
 
 
