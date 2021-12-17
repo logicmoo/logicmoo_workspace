@@ -397,3 +397,10 @@ generic_pred0(Type,P,X,Y) :- specific_pred(Type,P,X,Y). % capital
 
 generic_pred1(Type,P,X,Y) :- var(Type), nop(generic_pred1(Type,P,X,Y)).
 
+lazy_pred(Type,Verb,TypeS,S,AllSlots):- dmsg(lazy_pred(Type,Verb,TypeS,S,AllSlots)).
+
+lazy_pred_LF(Type,Verb,TypeS,S,AllSlots,lazy_pred(Type,Verb,TypeS,S,AllSlots)):- 
+   if_search_expanded(7),
+   dmsg(lazy_pred_LF(Type,Verb,TypeS,S,AllSlots)),!.
+
+

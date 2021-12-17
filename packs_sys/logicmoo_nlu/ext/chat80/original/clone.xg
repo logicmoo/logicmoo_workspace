@@ -271,8 +271,7 @@ s_vp_801(s(Subj,Verb,Args,Mods),Mask) --->
    just_vp(Subj,Agmt,Type,Verb,Args,Mods,Mask).
 
 s_vp_801(s(NP,Verb,[],[ arg(arg_pred,adj(true))]),_) --->  ace_var(AceVar), !,
-   {Verb = verb(aux+aux(be,[]), aux(be,[]),active,pres+fin,[],[ aux(be,[pres+fin]),
-                              root]),
+   {Verb = verb(aux+aux(be,[]), aux(be,[]),active,pres+fin,[],[ aux(be,[pres+fin]), root]),
     NP= np(3+sg,np_head(_Var,generic,[adj(ace_var(self,AceVar)),adj(ti(statement,self))],statement),[])}.
 
 /*

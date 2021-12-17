@@ -35,8 +35,8 @@ trans_LF12(Verb,TypeS,S,TypeD,D,Pred,Slots,SlotD,R):-
 
 trans_LF(contain,Spatial&_,X,Spatial&_,Y, trans_pred(Spatial,contain,X,Y),[],_,_).
 trans_LF(have,Spatial&_,X,Spatial&_,Y, trans_pred(Spatial,have,X,Y),[],_,_).
-trans_LF(aux(have,MODAL),Spatial&_,X,Spatial&_,Y, trans_pred(Spatial,have,X,Y),[],_,_):- var(MODAL),!.
-trans_LF(aux(have,MODAL),Spatial&_,X,Spatial&_,Y, OUT, [],_,_):- append_term(MODAL,trans_pred(Spatial,have,X,Y),OUT).
+trans_LF(aux(have,MODAL),Spatial&_,X,Spatial&_,Y, OUT, [],_,_):- 
+  P=trans_pred(Spatial,have,X,Y), maybe_modalize(scope,MODAL,P,OUT).
 
 
 thing_LF(OceanOrSea,Path,X,ti(OceanOrSea,X),Nil,Any):-  ti_subclass(OceanOrSea,Seamass), 

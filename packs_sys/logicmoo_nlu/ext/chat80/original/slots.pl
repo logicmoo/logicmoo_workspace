@@ -648,7 +648,7 @@ slot_verb_template(aux(have,MODAL),(Y=Z,aux(have,S,Y)),
 
 slot_verb_template(Verb,Pred, Slots,[],transparent) :-
    select_slots(Slots,[slot(subjA,TypeS,S,_,free)],SlotsRemaining),
-   must80(verb_type_lex(Verb,_+Kind)),
+   ignore(must80(verb_type_lex(Verb,_+Kind))),
    slot_verb_kind(Kind,Verb,TypeS,S,Pred,SlotsRemaining).
 
 select_slots(Ss,Slots):- select_slots(Ss,Slots,[]),!.
@@ -660,12 +660,16 @@ select_slots(X,[Slot|Slots],Remaining):- fail,
   select(Slot,X,Mid),!,
   select_slots(Mid,Slots,Remaining).
 
+
 % BE
 % slot_verb_kind(aux(be,_MODAL),_,TypeS,S,bE(is,A,S),[slot(dirO,TypeS,A,_,free)]).
-slot_verb_kind(aux(be,_MODAL),_,TypeS,S,bE(is,S,A),AllSlots):-
+slot_verb_kind(aux(Be,_MODAL),_,TypeS,S,bE(is,S,A),AllSlots):- Be == be,
    select_slots(AllSlots, [slot(dirO,TypeS,A,_,free)]).
-slot_verb_kind(aux(be,_MODAL),_,TypeS,S,true,AllSlots):- 
+slot_verb_kind(aux(Be,_MODAL),_,TypeS,S,true,AllSlots):- Be == be, !,
    select_slots(AllSlots, [slot(arg_pred,TypeS,S,_,free)]).
+
+slot_verb_kind(Type,Verb,TypeS,S,Pred,AllSlots):-
+  lazy_pred_LF(Type,Verb,TypeS,S,AllSlots,Pred),!.
 
 slot_verb_kind(_Tv,Verb,TypeS,S,Pred,AllSlots) :-
    select_slots(AllSlots,[slot(dirO,TypeD,D,SlotD,free)],Slots),
