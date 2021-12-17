@@ -79,26 +79,26 @@ word(Word) :- prep_lex(Word).
 conj_lex(and).
 conj_lex(or).
 
-det_lex(a,_Sg,a,indef).
-det_lex(all,pl,all,indef).
-det_lex(an,sg,a,indef).
-det_lex(any,_,any,indef).
-det_lex(each,sg,each,indef).
-det_lex(every,sg,every,indef).
-det_lex(no,_,no,indef).
-det_lex(some,_,some,indef).
-det_lex(the,No,the(No),def).
-det_lex(this,No,the(No),def).
-det_lex(that,No,the(No),def).
+det_lex(a,_Sg,a,indefA).
+det_lex(all,pl,all,indefA).
+det_lex(an,sg,a,indefA).
+det_lex(any,_,any,indefA).
+det_lex(each,sg,each,indefA).
+det_lex(every,sg,every,indefA).
+det_lex(no,_,no,indefA).
+det_lex(some,_,some,indefA).
+det_lex(the,No,the(No),defA).
+det_lex(this,No,the(No),defA).
+det_lex(that,No,the(No),defA).
 
 
 wh_art_lex(Kind,what,X,_,wh_det(Kind,X)).
 wh_art_lex(Kind,which,X,_,wh_det(Kind,X)).
 
-wh_pron_lex(what,undef).
-wh_pron_lex(which,undef).
-wh_pron_lex(hoo,subJ(_ArgInfo1)).
-wh_pron_lex(whom,compl).
+wh_pron_lex(what,unDef).
+wh_pron_lex(which,unDef).
+wh_pron_lex(hoo,subjA).
+wh_pron_lex(whom,compL).
 
 
 ace_varname(Name) :- upcase_atom(Name,Name), \+ downcase_atom(Name,Name), Name\=='I',Name\=='A'.
@@ -110,26 +110,26 @@ number_lex(W,I,PlOrSg) :-
         tr_number(W,I),
         ag_number(I,PlOrSg).
 
-pers_pron_lex(he,masc,3,sg,subJ(_ArgInfo1)).
-pers_pron_lex(her,fem,3,sg,compl(_)).
-pers_pron_lex(him,masc,3,sg,compl(_)).
-pers_pron_lex(i,_,1,sg,subJ(_ArgInfo1)).
+pers_pron_lex(he,masc,3,sg,subjA).
+pers_pron_lex(her,fem,3,sg,comp).
+pers_pron_lex(him,masc,3,sg,comp).
+pers_pron_lex(i,_,1,sg,subjA).
 pers_pron_lex(it,neut,3,sg,_).
-pers_pron_lex(me,_,1,sg,compl(_)).
+pers_pron_lex(me,_,1,sg,comp).
 pers_pron_lex(myself,_,1,sg,_).
-pers_pron_lex(she,fem,3,sg,subJ(_ArgInfo1)).
-pers_pron_lex(them,_,3,pl,compl(_)).
-pers_pron_lex(they,_,3,pl,subJ(_ArgInfo1)).
+pers_pron_lex(she,fem,3,sg,subjA).
+pers_pron_lex(them,_,3,pl,comp).
+pers_pron_lex(they,_,3,pl,subjA).
 
-pers_pron_lex(them,_,3,pl,subJ(_ArgInfo1)).
-pers_pron_lex(us,_,1,pl,compl(_)).
-pers_pron_lex(we,_,1,pl,subJ(_ArgInfo1)).
+pers_pron_lex(them,_,3,pl,subjA).
+pers_pron_lex(us,_,1,pl,comp).
+pers_pron_lex(we,_,1,pl,subjA).
 pers_pron_lex(you,_,2,Sg,_):- pl_or_sg(Sg).
 pers_pron_lex(yourself,_,2,sg,_).
 pers_pron_lex(yourselves,_,2,pl,_).
 pers_pron_lex(A,B,C,D):- det_pron_lex(A,B,C,D).
 
-det_pron_lex(those,neut,3,pl,subJ(_ArgInfo1)).
+det_pron_lex(those,neut,3,pl,subjA).
 det_pron_lex(that,neut,3,sg,_).
 det_pron_lex(this,neut,3,sg,_).
 
@@ -194,9 +194,9 @@ quantifier_pron_lex(something,some,thing).
 % superceeded regular_pres_db(chat80,do([])).
 % superceeded regular_pres_db(chat80,have).
 
-wh_rel_pron_lex(which,undef).
-wh_rel_pron_lex(who,subJ(_ArgInfo1)):- if_search_expanded(4).
-wh_rel_pron_lex(whom,compl).
+wh_rel_pron_lex(which,unDef).
+wh_rel_pron_lex(who,subjA):- if_search_expanded(4).
+wh_rel_pron_lex(whom,compL).
 
 % wordt niet gebruikt:
 root_form(1+pl).
@@ -224,7 +224,7 @@ tr_number(X,X):- bind_pos('value',X).
 ctx_pron_lex(in,place,where).
 ctx_pron_lex(at,time,when).
 ctx_pron_lex(because,condition,why).
-ctx_pron_lex(poss,agent,who).
+ctx_pron_lex(poSS,agent,who).
 %ctx_pron_lex(isa,type,what).
 ctx_pron_lex(cp(by,how),manner,how).
 
@@ -416,7 +416,7 @@ must_member(E,L):- must80(member(E,L)).
 
 never_adj(More):- More==more.
 jj_adj_type(jj,restr).
-jj_adj_type(jj,quantV).
+jj_adj_type(jj,quantA).
 
 adj_lex_w2(More,_,_,_):- never_adj(More),!,fail.
 adj_lex_w2(_,W2,Adj,Type):- must_member(pos(JJ),W2),must_member(root(Adj),W2),jj_adj_type(JJ,Type),!.
@@ -442,13 +442,13 @@ match_pos(Pos,L):- expands_pos(Pos,PosA),expands_pos(L,PosB),match_pos(PosA,PosB
 %adj_db(chat80,asian,restr).
 %adj_db(chat80,european,restr).
 
-adj_db(chat80,big,quantV).
-adj_db(chat80,great,quantV).
-adj_db(chat80,great,quantV).
-adj_db(chat80,large,quantV).
-%adj_db(chat80,new,quantV).
-adj_db(chat80,old,quantV).
-adj_db(chat80,small,quantV).
+adj_db(chat80,big,quantA).
+adj_db(chat80,great,quantA).
+adj_db(chat80,great,quantA).
+adj_db(chat80,large,quantA).
+%adj_db(chat80,new,quantA).
+adj_db(chat80,old,quantA).
+adj_db(chat80,small,quantA).
 
 adj_db(chat80,average,restr).
 adj_db(chat80,maximum,restr).
@@ -459,7 +459,7 @@ adj_db(talkdb,Adj,restr):- if_search_expanded(1),show_success(always,(talkdb_adj
 
 talkdb_adj(Adj):- fail, talkdb:talk_db(adj,Adj), (\+ talkdb:talk_db(adv,Adj);if_search_expanded(2)).
 
-%adj_db_clex(X,Y,quantV):- clex:adj_itr(X,Y).
+%adj_db_clex(X,Y,quantA):- clex:adj_itr(X,Y).
 adj_db_clex(X,Y,restr):- clex:adj_itr(X,Y), (\+ clex:adv(X,_);if_search_expanded(2)).
 
 adv_lex_w2(Adv,W2,Adv):- adv_lex_w2(Adv,W2).

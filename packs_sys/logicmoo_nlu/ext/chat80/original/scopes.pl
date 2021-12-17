@@ -100,7 +100,7 @@ clausify80_qab(V0,P,V,B):-
 :- export(clausify80/2).
 :- system:import(clausify80/2).
 
-quantify(quantV(Det, X, Head, Pred, Args, Y), Above, Right, true) :-
+quantify(quantS(Det, X, Head, Pred, Args, Y), Above, Right, true) :-
    debug_chat80_if_fail((close_tree(Pred, P2),
    quantify_args(Args, AQuants, P1),
    split_quants(Det, AQuants, Above, [Q|Right], Below, []),
@@ -146,7 +146,7 @@ strip_types([_-X|L0], [X|L]) :-
    strip_types(L0, L).
 
 
-extract_var(quantV(_, _-X, P, _-X), P, X).
+extract_var(quantU(_, _-X, P, _-X), P, X).
 
 
 chain_apply(Q0, P0, P) :-
@@ -178,25 +178,25 @@ pre_apply('`'(Head), Det, X, P1, P2, Y, Quants, Out) :-
  (unit_det(Det);
    index_det(Det, _)),!,
  debug_chat80_if_fail(( chain_apply(Quants,(Head, P1), P))),
-   Out = quantV(Det, X,(P, P2), Y).
+   Out = quantU(Det, X,(P, P2), Y).
 
 pre_apply('`'(Head), Det, X, P1, P2, Y, Quants, Out) :- !,
  debug_chat80_if_fail((
    chain_apply(Quants,(Head, P1), P))),
-   Out = quantV(Det, X,(P, P2), Y).
+   Out = quantU(Det, X,(P, P2), Y).
 
 pre_apply(apply80(F, P0), Det, X, P1, P2, Y,
       Quants0, Out) :-
-  debug_chat80_if_fail(( but_last(Quants0, quantV(lambdaV(_ArgInfo), Z, P0, Z), Quants),
+  debug_chat80_if_fail(( but_last(Quants0, quantU(lambdaV, Z, P0, Z), Quants),
    chain_apply(Quants,(F, P1), P3))),
-   Out = quantV(Det, X,(P3, P2), Y).
+   Out = quantU(Det, X,(P3, P2), Y).
 
 pre_apply(aggr(F, Value, L, Head, Pred), Det, X, P1, P2, Y, Quants, Out) :- 
  debug_chat80_if_fail((
    close_tree(Pred, R),
    complete_aggr(L, Head,(R, P1), Quants, P, Range, Domain))),
  Out =
-   quantV(Det, X,
+   quantU(Det, X,
             (S^(setOf(Range:Domain, P, S),
                 aggregate80(F, S, Value)), P2), Y).
 
@@ -219,7 +219,7 @@ close_tree(T, P) :-
 meta_apply('`'(G), R, Q, G, R, Q).
 
 meta_apply(apply80(F,(R, P)), R, Q0, F, true, Q) :-
-   but_last(Q0, quantV(lambdaV(_ArgInfo), Z, P, Z), Q).
+   but_last(Q0, quantU(lambdaV, Z, P, Z), Q).
 
 
 indices([], _, [], []).
@@ -235,24 +235,24 @@ indices([Q|Quants], I, Indices, [Q|Rest]) :-
    indices(Quants, I, Indices, Rest).
 
 
-setify([], Type-X, P, Y, quantV(set_ov(_ArgInfo), Type-([]:X), true:P, Y)).
+setify([], Type-X, P, Y, quantU(set_ov, Type-([]:X), true:P, Y)).
 
 setify([Index|Indices], X, P, Y, Quant) :-
    pipe(Index, Indices, X, P, Y, Quant).
 
 
-pipe(quantV(wh_det(_Kind,_, Z), Z, P1, Z),
-      Indices, X, P0, Y, quantV(det(a), X, P, Y)) :-
+pipe(quantU(wh_det(_Kind,_, Z), Z, P1, Z),
+      Indices, X, P0, Y, quantU(det(a), X, P, Y)) :-
    chain_apply(Indices,(P0, P1), P).
 
-pipe(quantV(index(_), _-Z, P0, _-Z), Indices, Type-X, P, Y,
-      quantV(set_ov(_ArgInfo), Type-([Z|IndexV]:X),(P0, P1):P, Y)) :-
+pipe(quantU(index(_), _-Z, P0, _-Z), Indices, Type-X, P, Y,
+      quantU(set_ov, Type-([Z|IndexV]:X),(P0, P1):P, Y)) :-
    index_vars(Indices, IndexV, P1).
 
 
 index_vars([], [], true).
 
-index_vars([quantV(index(_), _-X, P0, _-X)|Indices],
+index_vars([quantU(index(_), _-X, P0, _-X)|Indices],
       [X|IndexV],(P0, P)) :-
    index_vars(Indices, IndexV, P).
 
@@ -265,11 +265,11 @@ complete_aggr([Att], Head, R0, Quants0,(P1, P2, R), Att, X) :-
    set_vars(Quants, X, Rest, P2),
    chain_apply(Rest, G, P1).
 
-complete_aggr([], '`'(G), R, [quantV(set_ov(_ArgInfo), _-(X:Att), S:T, _)],
+complete_aggr([], '`'(G), R, [quantU(set_ov, _-(X:Att), S:T, _)],
   (G, R, S, T), Att, X).
 
 
-set_vars([quantV(set_ov(_ArgInfo), _-(I:X), P:Q, _-X)], [X|I], [],(P, Q)).
+set_vars([quantU(set_ov, _-(I:X), P:Q, _-X)], [X|I], [],(P, Q)).
 
 set_vars([], [], [], true).
 
@@ -302,7 +302,7 @@ split_quants(Det0, [Quant|Quants], Above, Above0, Below, Below0) :-
    split_quants(Det0, Quants, Above1, Above0, Below1, Below0).
 
 
-compare_dets(Det0, Q, [quantV(Det, X, P, Y)|Above], Above, Below, Below) :-
+compare_dets(Det0, Q, [quantU(Det, X, P, Y)|Above], Above, Below, Below) :-
    open_quant(Q, Det1, X, P, Y),
    governs_lex(Det1, Det0), !,
    bubble(Det0, Det1, Det).
@@ -311,7 +311,7 @@ compare_dets(Det0, Q0, Above, Above, [Q|Below], Below) :-
    lower(Det0, Q0, Q).
 
 
-open_quant(quantV(Det, X, P, Y), Det, X, P, Y).
+open_quant(quantU(Det, X, P, Y), Det, X, P, Y).
 
 
 % =================================================================
@@ -320,12 +320,12 @@ open_quant(quantV(Det, X, P, Y), Det, X, P, Y).
 index_det(index(I), I).
 index_det(wh_det(_Kind,I, _), I).
 
-unit_det(set_ov(_ArgInfo)).
-unit_det(lambdaV(_ArgInfo)).
+unit_det(set_ov).
+unit_det(lambdaV).
 unit_det(quantV(_, _)).
 unit_det(det(_)).
 unit_det(question80(_)).
-unit_det(identityQ(_ArgInfo)).
+unit_det(identityQ(_Modalz)).
 unit_det(voidQ).
 unit_det(notP(_Modalz)).
 unit_det(generic).
@@ -333,7 +333,7 @@ unit_det(wh_det(_Kind,_)).
 unit_det(proportion(_)).
 % unit_det(some).
 
-det_apply(quantV(Det, Type-X, P, _-Y), Q0, Q) :-
+det_apply(quantU(Det, Type-X, P, _-Y), Q0, Q) :-
    apply80(Det, Type, X, P, Y, Q0, Q).
 
 
@@ -348,7 +348,7 @@ apply80(identityQ(Modalz), _, X, P, X, Q, PQ):- maybe_modalize(scope, Modalz, (P
 
 apply80(voidQ, _, X, P, X, Q, X^(P, Q)).
 
-apply80(set_ov(_ArgInfo), _, Index:X, P0, S, Q, S^(P, Q)) :-
+apply80(set_ov, _, Index:X, P0, S, Q, S^(P, Q)) :-
    apply_set(Index, X, P0, S, P).
 
 apply80(wh_det(Type,Type-X), Type, X, P, X, Q,(P, Q)).
@@ -415,8 +415,8 @@ governs_lex(Det0, Det) :-
    Det=quantV(_, _)).
 
 governs_lex(_, voidQ).
-governs_lex(_, lambdaV(_ArgInfo)).
-governs_lex(_, identityQ(_ArgInfo)).
+governs_lex(_, lambdaV).
+governs_lex(_, identityQ(_Modalz)).
 governs_lex(det(each), question80([_|_])).
 governs_lex(det(each), det(each)).
 governs_lex(det(any), notP(_Modalz)).
@@ -456,7 +456,7 @@ weak_det(the(sg)).
 weak_det(notall).
 
 
-lower(question80(_), Q, quantV(det(a), X, P, Y)) :-
+lower(question80(_), Q, quantU(det(a), X, P, Y)) :-
    open_quant(Q, det(any), X, P, Y), !.
 lower(_, Q, Q).
 
@@ -468,7 +468,7 @@ setifiable(det(all)).
 % =================================================================
 % Operators (currently, identity, negation and 'and')
 
-%op_apply(identityQ(_ArgInfo), P, P).
+%op_apply(identityQ(_Modalz), P, P).
 %op_apply(notP(Modalz), P, \+P).
 op_apply(M,P,PP):- maybe_modalize(scope,M,P,PP).
 

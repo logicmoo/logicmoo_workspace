@@ -424,10 +424,10 @@ intrans_LF(Run,Spatial & Feat& Type,X,LF,
  LF = intrans_pred_prep(Spatial,Type,Run,X,Into,Dest).
 
 intrans_LF(Continue,Spatial& _Feat& Type,X,LF,
-  [slot(prep(dirO(ArgInfo)),Spatial&_,Y,_,free)],_):- 
+  [slot(prep(dirO),Spatial&_,Y,_,free)],_):- 
   if_search_expanded(2),
   intrans_verb(Continue),
-  LF = intrans_pred_direct(_Spatial,Continue,Type,X,dirO(ArgInfo),Y).
+  LF = intrans_pred_direct(_Spatial,Continue,Type,X,dirO,Y).
 
 intrans_LF(Run,Spatial & Feat& Type,X,LF, Slots,_):- 
  feat(Feat), fail,
