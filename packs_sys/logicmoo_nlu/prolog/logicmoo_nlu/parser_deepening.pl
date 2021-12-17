@@ -83,6 +83,8 @@ debug_chat80_if_fail(MG):-  strip_module(MG,M,G), locally(set_prolog_flag(no_pre
 
 %debug_chat80_if_fail(M,G):- current_prolog_flag(debug_chat80,true),!, debug_chat80_if_fail(Fail,IsCut,6,M,G),(IsCut==!->!;true),(Fail\==fail).
 
+debug_chat80_if_fail(M,G):- !, M:call(G).
+
 debug_chat80_if_fail(M,(G1,G2)):- !, debug_chat80_if_fail(M:G1),debug_chat80_if_fail(M,G2).
 debug_chat80_if_fail(M,G):-   
   \+ current_prolog_flag(debug_chat80,true),!,

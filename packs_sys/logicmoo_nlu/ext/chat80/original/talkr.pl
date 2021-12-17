@@ -233,6 +233,15 @@ ti(An,X) :- agentitive_trans(Contains,Af,An), (trans_pred(thing,Contains,Af,X);A
 
 agentitive_trans(Contains,Af,An):- agentitive_trans_80(Contains,Af,An).
 
+intrans_pred_slots(Spatial,_Type,P,X,[slot_i(dirO,Y)]):- 
+  generic_pred(Spatial,P,X,Y).
+
+intrans_pred_slots(thing,Type,_Flow,X,[slot_i(prep(through),Origin)]):-
+  path_pred_linkage(direct(_PathSystem),Type,X,Origin,_Dest).
+
+intrans_pred_slots(thing,Type,_Flow,X,[slot_i(prep(into),Dest)]):-
+  path_pred_linkage(direct(_PathSystem),Type,X,_Origin,Dest).
+
 ti(Type,Inst) :- 
  type_specific_bte(Type, PathSystem,_Start,_Continue, _Stop),
  path_nodes(PathSystem,Type,Inst,_L).
@@ -323,6 +332,7 @@ database801(position_pred(Type,P,X,Y)) :- position_pred(Type,P,X,Y). % latitude 
 database801(ordering_pred(Type,P,X,Y)) :- ordering_pred(Type,P,X,Y). % south of
 database801(symmetric_pred(Type,P,X,Y)) :- symmetric_pred(Type,P,X,Y). % border
 database801(specific_pred(Type,P,X,Y)) :- specific_pred(Type,P,X,Y). % capital 
+%database801(generic_pred(thing,any,_X,_Y)):- true.
 database801(generic_pred(Type,P,X,Y)) :- generic_pred(Type,P,X,Y). % capital 
 database801(trans_pred(Type,P,X,Y)) :- trans_pred(Type,P,X,Y). % contain 
 
@@ -331,7 +341,7 @@ database801(can(X)):- database80(X).
 database801(will(X)):- database80(X).
 database801(past(X)):- database80(X).
 database801(not(X)):-  \+ database80(X).
-database801(generic_pred(thing,any,_X,_Y)):- true.
+database801(there(X)):- database80(X).
 
 %database80(path_pred(begins(Flow),rises,river,X,Y)) :- path_pred(begins(Flow),rises,river,X,Y).
 %database80(path_pred(ends(Flow),drains,river,X,Y)) :- path_pred(ends(Flow),drains,river,X,Y).

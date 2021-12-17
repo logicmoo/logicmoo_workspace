@@ -667,11 +667,12 @@ slot_verb_kind(aux(be,_MODAL),_,TypeS,S,bE(is,S,A),AllSlots):-
 slot_verb_kind(aux(be,_MODAL),_,TypeS,S,true,AllSlots):- 
    select_slots(AllSlots, [slot(arg_pred,TypeS,S,_,free)]).
 
-slot_verb_kind(_Iv,Verb,TypeS,S,Pred,Slots) :-
-   lf80(TypeS,intrans_LF(Verb,TypeS,S,Pred,Slots,_)).
 slot_verb_kind(_Tv,Verb,TypeS,S,Pred,AllSlots) :-
    select_slots(AllSlots,[slot(dirO,TypeD,D,SlotD,free)],Slots),
-   lf80(TypeS-TypeD,trans_LF12(Verb,TypeS,S,TypeD,D,Pred,Slots,SlotD,_)).
+   lf80(TypeS-TypeD,trans_LF(Verb,TypeS,S,TypeD,D,Pred,Slots,SlotD,_)).
+
+slot_verb_kind(_Iv,Verb,TypeS,S,Pred,Slots) :-
+   lf80(TypeS,intrans_LF(Verb,TypeS,S,Pred,Slots,_)).
 
 slot_verb_kind(dv(Prep),Verb,TypeS,S,Pred,AllSlots):- 
    select_slots(AllSlots, [slot(dirO,TypeD,D,SlotD,free),
@@ -679,6 +680,11 @@ slot_verb_kind(dv(Prep),Verb,TypeS,S,Pred,AllSlots):-
    %fail,fail,fail,fail,
    lf80(TypeS+TypeD+TypeI,ditrans_lex80(Verb,Prep,TypeS,S,TypeD,D,TypeI,I,Pred,Slots,SlotD,SlotI,_)).
    % see no_repeats_dc(DC0,subj_obj_indirect_slots_LF(ditrans,verb_prep(Verb,Prep),TypeS,S,TypeD,D,TypeI,I,Pred,Slots,SlotI,SlotD,DC0)).
+
+slot_verb_kind(_Tv,Verb,TypeS,S,Pred,AllSlots) :-
+   select_slots(AllSlots,[slot(dirO,TypeD,D,SlotD,free)],Slots),
+   lf80(TypeS-TypeD,trans_LF1(Verb,TypeS,S,TypeD,D,Pred,Slots,SlotD,_)).
+
 
 deepen_case(prep(at),time).
 deepen_case(subjP,dirO).
