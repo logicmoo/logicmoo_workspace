@@ -1,0 +1,6 @@
+log/* linguist-vendored
+gym_vgdl/* linguist-vendored
+py-vgdl/* linguist-vendored
+result_pkl/* linguist-vendored
+old/* linguist-vendored
+report/* linguist-vendored
