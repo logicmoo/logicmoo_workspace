@@ -1,4 +1,5 @@
 README.md
+setup.py
 vgdl/__init__.py
 vgdl/ai.py
 vgdl/core.py

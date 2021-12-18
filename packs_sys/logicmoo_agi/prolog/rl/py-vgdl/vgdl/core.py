@@ -625,8 +625,11 @@ class BasicGame:
         # Update Keypresses
         # Agents are updated during the update routine in their ontology files, this demends on BasicGame.keystate
         self.keystate = [0]* len(pygame.key.get_pressed())
-        for key in action.keys:
-            self.keystate[key] = 1
+        for key in action.keys:  
+           try: 
+              self.keystate[key] = 0
+           except:
+              a = 1
 
         # Update Sprites
         for s in self:

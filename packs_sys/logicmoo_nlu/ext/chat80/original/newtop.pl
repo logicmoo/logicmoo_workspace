@@ -497,8 +497,9 @@ process4a(How,Sentence,U,S1,Times) :-
    debug_chat80_if_fail(mpred_test_mok(deepen_pos(i_sentence(E,E1)))),
    runtime(EndI),
    TotalI is EndI - StartSem,
+   debug_chat80_if_fail((simplify80(E1,E11),simplify80(E11,E12))),
    report(always,E1,'i_sentence',TotalI,cmt),
-   debug_chat80_if_fail(mpred_test_mok(deepen_pos(clausify80(E1,E2)))))),
+   debug_chat80_if_fail(mpred_test_mok(deepen_pos(clausify80(E12,E2)))))),
    !,
   % report(How,E2,'clausify80',ParseTime,cmt),
    debug_chat80_if_fail((simplify80(E2,E3),simplify80(E3,S))),
@@ -617,7 +618,8 @@ sent_to_prelogic(S0,S) :-
    clausify80(S1,S2),
    simplify80(S2,S3),
    simplify80(S3,S4),
-   reduce1(S4,S).
+   reduce1(S4,S5),
+   reduce1(S5,S).
 
 %reduce1(P,P):-!.
 reduce1(P,Q):- \+ compound(P),!, Q=P.
@@ -625,12 +627,15 @@ reduce1(slot(Syntax,_Type,Var,_Mode,_SlotI),slot_i(Syntax,Var)):-!.
 reduce1((P,Q),PQ):- P == Q,!,reduce1(P,PQ).
 
 
-reduce1((P,Q),PQ):- '`'(true) == Q,!,reduce1(P,PQ).
-reduce1((Q,P),PQ):- '`'(true) == Q,!,reduce1(P,PQ).
+
 reduce1((P,Q),PQ):- (true) == Q,!,reduce1(P,PQ).
 reduce1((Q,P),PQ):- (true) == Q,!,reduce1(P,PQ).
+reduce1(mg(Q),Q):- !.
+reduce1(bE(_,Q,P),true):- P=Q.
+reduce1(same_values(Q,P),true):- P=Q.
 
-reduce1('&'(Q,P),PQ):- reduce1((Q,P),PQ).
+reduce1('^'(Q,P),P):- ground(Q).
+reduce1('&'(Q,P),PQ):- compound(Q),compound(P), reduce1((Q,P),PQ).
 
 reduce1(np_head(X,generic,[adj(ace_var(self,Name))],A),O):-
   reduce1(resultFn(X,(ti(A,X),ace_var(X,Name))),O).
@@ -651,7 +656,7 @@ reduce1(P,Q):- compound_name_arguments(P,F,A), \+ dont_reduce1(F),
 
 dont_reduce1(qualifiedBy).
 
-clausify_simplify80(QT,Plan):- clausify80(QT,UE),once((simplify80(UE,Query),qplan(Query,Plan))).
+clausify_simplify80(QT,Plan):- simplify80(QT,QT0), clausify80(QT0,UE),once((simplify80(UE,Query),qplan(Query,Plan))).
 
 simplify80(C,C0):-var(C),dmsg(var_simplify(C,C0)),!,C=C0.
 simplify80(C,(P:-RR)) :- !,

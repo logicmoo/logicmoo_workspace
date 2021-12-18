@@ -695,7 +695,7 @@ c8(B,O):-
  member(O,[Query,UE,QT,Tree,SS]),
  should_learn(O),
  copy_term(O,OO),
- (try_chat_80(S,into_cg(OO,_)))))),!.
+ nop(try_chat_80(S,into_cg(OO,_)))))),!.
 
  
 into_cg(CLIF,CG):-cgp_common_logic:convert_clif_to_cg(CLIF,CG),!.
@@ -734,7 +734,7 @@ c88t(B,OO):-
  member(O,[Query,UE,FOL,Ace,QT,Tree,(?- S)]),
  ignore((\+ should_learn(O),add_c80(c80,SS))), 
  should_learn(O),
- ignore(into_cg(O,CG)),
+ nop(ignore(into_cg(O,CG))),
 
  ignore((member(OO,[CG,O]),
  should_learn(OO)))))).

@@ -142,7 +142,9 @@ def q_learning(env, num_episodes, discount_factor=1, alpha=0.5, epsilon=0.1):
         run_experiment(env, Q, stats_test, i_episode, width, cf.TIME_RANGE)
     return Q, stats, stats_test
 
-env = gym.make('vgdl_experiment3_after-v0')
+#env = gym.make('vgdl_experiment3_after-v0')
+env = gym.make('vgdl_experiment4_after-v0')
+# env = gym.make('vgdl_experiment1-v0')
 # env = gym.make('vgdl_experiment1-v0')
 temp_dir = os.path.join(base_dir, "result_pkl/experiment3_q_q")
 # import ipdb; ipdb.set_trace()

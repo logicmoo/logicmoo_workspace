@@ -260,8 +260,9 @@ def k_learning(env, num_episodes, epsilon=0.1, record_prefix=None, is_link=False
 
     return stats, stats_test,stats_ilasp
 
-env = gym.make('vgdl_experiment4_after-v0')
-# env = gym.make('vgdl_experiment1-v0')
+# env = gym.make('vgdl_experiment4_after-v0')
+env = gym.make('vgdl_experiment1-v0')
+#env = gym.make('vgdl_experiment3_after-v0')
 
 temp_dir = os.path.join(cf.BASE_DIR, "result_pkl/experiment4_after_TL")
 
