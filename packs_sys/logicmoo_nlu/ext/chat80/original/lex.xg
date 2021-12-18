@@ -270,6 +270,7 @@ quantifier_pron(Det,Noun) --->
 
 context_pron(prep(In),Place) ---> {ctx_pron_lex(In,Place,Where)}, theText80(Where).
 
+number(N,Number) ---> theText80('-'),!, number(I,Number),{N is -I}.
 number(I,Number) ---> theText80(W), {!,number_lex(W,I,Number)}.
 
 

@@ -674,12 +674,22 @@ c8_test(B,O):-
   try_chat_80(S,results80(Query,O)),!.
 
 
-c8(B):- \+ string(B), any_to_str(B,S),!,c8(S).
-c8(S):- try_chat_80(S,c8(S,_)).
-c8(B,O):-
- any_to_str(B,SS),
+c8(S):- c8_make, try_chat_80(S,c8(S,_)).
+
+break_apart(C8,B,O):- is_list(B), !, maplist(break_apart(C8),B,O).
+break_apart(C8,B,O):- \+ string(B), any_to_str(B,S),!,break_apart(C8,S,O).
+break_apart(C8,B,O):- into_string_sents(B,L),L=[_,_|_],!,break_apart(C8,L,O).
+break_apart(C8,B,O):- call(C8,B,O).
+
+into_string_sents(SS,ListS):- atom_contains(SS,'.\n'),atomic_list_concat(ListS,'\n',SS),!.
+into_string_sents(SS,ListS):- atom_contains(SS,' . '),atomic_list_concat(ListS,' . ',SS),!.
+into_string_sents(SS,ListS):- atomic_list_concat(ListS,'\n',SS),!.
+
+
+
+c8(SS,O):- break_apart(c8111,SS,O),!.
+c8111(SS,O):-
  S = c8(SS),
- c8_make,
   locally(set_prolog_flag(gc,true),
  ((
  try_chat_80(S,text_to_corenlp_tree(SS,_)),
@@ -700,20 +710,9 @@ c8(B,O):-
  
 into_cg(CLIF,CG):-cgp_common_logic:convert_clif_to_cg(CLIF,CG),!.
 
-c88(B,O):-
- c8_make,
- any_to_str(B,SS),!,
- c88s(SS,O),!.
 
-c88s(SS,O):- into_string_sents(SS,ListS),
-  exclude(=(''),ListS,List),
-  (List=[_,_|_] -> maplist(c88t,List,O); c88t(SS,O)).
-
-into_string_sents(SS,ListS):- atom_contains(SS,'.\n'),atomic_list_concat(ListS,'\n',SS),!.
-into_string_sents(SS,ListS):- atomic_list_concat(ListS,'\n',SS),!.
-into_string_sents(SS,[SS]).
-
-c88t(B,OO):-
+c88(SS,O):- break_apart(c881,SS,O),!.
+c881(B,OO):-
  any_to_str(B,SS),
  S = c88(SS),
  locally(set_prolog_flag(gc,false),
@@ -742,10 +741,7 @@ c88t(B,OO):-
 
 %c88(M,O):- process4a(off,M,_,O,_Times).
 
-
-c88(B):- 
-   any_to_str(B,S),
-   try_chat_80(S,c88(S,_)).
+c88(S):- c8_make, try_chat_80(S,c88(S,_)).
 
 s83:- forall(training_data(Sent,M),(my_drs_to_fol_kif(M,O),in_cmt(block,print_tree_nl(Sent=O)))).
 

@@ -54,8 +54,12 @@ read_term_from_atom_rest(In,S,Term):- read_pending_codes(In,Codes,[]),
 
 flair_lexical_segs(I,O):-
   allen_srl_lexical_segs(I,M),
-  flair_parse(I,S),
-  merge_flair(S,M,O).
+  flair_parse_or_skip(I,S),
+  merge_flair(S,M,O),!.
+
+flair_parse_or_skip(I,O):- catch(flair_parse(I,O),_,fail),nonvar(O),!.
+flair_parse_or_skip(_,[]).
+
 
 merge_flair([],O,O):-!.
 merge_flair([H|T],I,O):- !, merge_flair(H,I,M), merge_flair(T,M,O).

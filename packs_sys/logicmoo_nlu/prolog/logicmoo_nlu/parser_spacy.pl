@@ -35,8 +35,11 @@ spacy_to_w2(Text,_ListO):- \+ compound(Text), nl,writeq(Text),nl,!,fail.
 
 spacy_lexical_segs(I,O):-
   old_into_lexical_segs(I,M),!,
-  spacy_parse(I,S),!,
+  spacy_parse_or_skip(I,S),!,
   merge_spacy(S,M,O),!.
+
+spacy_parse_or_skip(I,O):- catch(spacy_parse(I,O),_,fail),nonvar(O),!.
+spacy_parse_or_skip(_,[]).
 
 merge_spacy([],O,O):-!.
 merge_spacy([H|T],I,O):- !, merge_spacy(H,I,M), merge_spacy(T,M,O).

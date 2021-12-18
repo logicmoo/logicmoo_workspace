@@ -22,6 +22,8 @@
 :- dynamic(adv_template_db/4).
 :- dynamic(ditrans_lex80/13).
 :- dynamic(standard_adj_db/4).
+:- thread_local(t_l:current_vv/1).
+
 
 :- op(450,xfy,((:))).
 :- op(400,xfy,((&))).
@@ -350,11 +352,16 @@ i_s(s(Subj,verb(Mainiv,be,[],Active,Fin+fin,[],Neg),VArgs,VMods),Pred,Up,Id) :- 
 i_s(s(Subj,Verb,VArgs,VMods),Pred,Up,Id) :-
   select(cond(IF,S2),VArgs,NewVargs), !,
   S1 = s(Subj,Verb,NewVargs,VMods),
-  i_s_must(S1,Pred1),
+  i_s(S1,Pred1),
   i_s(S2,Pred2,Up,Id),
   Pred= cond_pred(IF,Pred1,Pred2).
 
 i_s(s(Subj,Verb,VArgs,VMods),Pred,Up,Id) :-
+  gensym(frame_,X),
+  locally(t_l:current_vv(X),
+   i_s_0(s(Subj,Verb,VArgs,VMods),Pred,Up,Id)).
+
+i_s_0(s(Subj,Verb,VArgs,VMods),Pred,Up,Id) :-
  debug_chat80_if_fail((
    i_verb(Verb,P,Tense,Voice,DetPosNeg,Slots0,XA0,Meta),
    i_subj(RefVar,Voice,Subj,Slots0,Slots1,QSubj,SUp,'-'('-'(Id))),
@@ -499,14 +506,15 @@ verb_slot0(_RefVar,prep_phrase(_PPType,Prep,NP),
    deepen_case(Prep,Case).
 
 verb_slot0(_RefVar,prep_phrase(_PPType,poSS,NP),
-      TXArg,TXArg,Slots0,Slots,[Q& '`'(P)|Args],Args,Up,Id0) :- 
+      TXArg,TXArg,Slots0,Slots,[Q& '`'(P)|Args],Args,Up,Id0) :-  
    Prep=of,
-   in_slot(Slots0,arg_pred,X,Id0,Slots1,_),
+   (((
+   in_slot(Slots0,_Arg_pred,X,Id0,Slots1,_),
    i_adjoin(Prep,X,Y,PSlots,XArg,P),
    i_np_head(_Var,NP,Y,Q,LDet,LDet0,LX,LPred,LQMods,LSlots0,Id0),
    held_arg(XArg,[],LSlots0,LSlots,Id0,Id),
    i_np_rest(NP,LDet,LDet0,LX,LPred,LQMods,LSlots,Up,Id,free),
-   append(PSlots,Slots1,Slots).
+   append(PSlots,Slots1,Slots)))).
 
 verb_slot0(_RefVar,prep_phrase(_PPType,prep(Prep),NP),
       TXArg,TXArg,Slots0,Slots,[Q& '`'(P)|Args],Args,Up,Id0) :- !,

@@ -310,8 +310,8 @@ trans_LF(exceed,value&Measure&Type,X,value&Measure&Type,Y,exceeds(X,Y),[],_,_).
 trans_LF1(Trans,_,X,_,Y,P ,[],_,_):- if_search_expanded(4),
   make_generic_pred(Spatial,Trans,X,Y,P),spatial(Spatial).
 
-make_generic_pred(Spatial,matches_prep(AT),X,Y,generic_pred(Spatial,prep(AT),Y,X)):-!.
-make_generic_pred(Spatial,(AT),X,Y,generic_pred(Spatial,mg(AT),X,Y)):-!.
+make_generic_pred(Spatial,matches_prep(AT),X,Y,generic_pred(VV,Spatial,prep(AT),Y,X)):- t_l:current_vv(VV),!.
+make_generic_pred(Spatial,(AT),X,Y,generic_pred(VV,Spatial,mg(AT),X,Y)):-t_l:current_vv(VV),!.
 
 % qualifiedBy
 qualifiedBy_LF(_FType,_Name,_Type,_Else,_P):-  \+ if_search_expanded(2),!, fail.

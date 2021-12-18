@@ -234,7 +234,7 @@ ti(An,X) :- agentitive_trans(Contains,Af,An), (trans_pred(thing,Contains,Af,X);A
 agentitive_trans(Contains,Af,An):- agentitive_trans_80(Contains,Af,An).
 
 intrans_pred_slots(Spatial,_Type,P,X,[slot_i(dirO,Y)]):- 
-  generic_pred(Spatial,P,X,Y).
+  generic_pred(_VV,Spatial,P,X,Y).
 
 intrans_pred_slots(thing,Type,_Flow,X,[slot_i(prep(through),Origin)]):-
   path_pred_linkage(direct(_PathSystem),Type,X,Origin,_Dest).
@@ -332,8 +332,8 @@ database801(position_pred(Type,P,X,Y)) :- position_pred(Type,P,X,Y). % latitude 
 database801(ordering_pred(Type,P,X,Y)) :- ordering_pred(Type,P,X,Y). % south of
 database801(symmetric_pred(Type,P,X,Y)) :- symmetric_pred(Type,P,X,Y). % border
 database801(specific_pred(Type,P,X,Y)) :- specific_pred(Type,P,X,Y). % capital 
-%database801(generic_pred(thing,any,_X,_Y)):- true.
-database801(generic_pred(Type,P,X,Y)) :- generic_pred(Type,P,X,Y). % capital 
+%database801(generic_pred(VV,thing,any,_X,_Y)):- true.
+database801(generic_pred(VV,Type,P,X,Y)) :- generic_pred(VV,Type,P,X,Y). % capital 
 database801(trans_pred(Type,P,X,Y)) :- trans_pred(Type,P,X,Y). % contain 
 
 database801(ought(X)):- database80(X).
@@ -379,22 +379,22 @@ ordering_pred(thing,cp(south,of),X1,X2) :- type_measure_pred(_Region,position(y)
 ordering_pred(thing,cp(west,of),X1,X2) :- type_measure_pred( _Region,position(x),Longitude,_), position_pred(thing,Longitude,X1,L1), position_pred(thing,Longitude,X2,L2), exceeds(L1,L2).
 
 
-generic_pred(Type,mg(P),X,Y):- nonvar(P),!,generic_pred(Type,P,X,Y).
-generic_pred(Type,prep(Of),X,Y):- Of == of, generic_pred0(Type,_,Y,X).
-generic_pred(Type,P,X,Y):- P==in,!, generic_pred0(Type,contain,Y,X).
-generic_pred(Type,P,X,Y) :- P == any,!, generic_pred0(Type,_,X,Y).
-generic_pred(Type,P,X,Y) :- generic_pred0(Type,P,X,Y)*->true;generic_pred1(Type,P,X,Y).
+generic_pred(VV,Type,mg(P),X,Y):- nonvar(P),!,generic_pred(VV,Type,P,X,Y).
+generic_pred(VV,Type,prep(Of),X,Y):- Of == of, generic_pred0(VV,Type,_,Y,X).
+generic_pred(VV,Type,P,X,Y):- P==in,!, generic_pred0(VV,Type,contain,Y,X).
+generic_pred(VV,Type,P,X,Y) :- P == any,!, generic_pred0(VV,Type,_,X,Y).
+generic_pred(VV,Type,P,X,Y) :- generic_pred0(VV,Type,P,X,Y)*->true;generic_pred1(Type,P,X,Y).
 
 trans_pred_type(Type,P):- tmp80:trans_rel_cache_created(=, trans_direct(Type,P)).
 trans_pred_type(thing,contain).
 
-generic_pred0(Type,P,X,Y) :- trans_pred_type(Type,P), nonvar(P),trans_pred(Type,P,X,Y). % contain 
-generic_pred0(Type,P,X,Y) :- nonvar(P), measure_pred(Type,P,X,Y). % area of
-generic_pred0(Type,P,X,Y) :- nonvar(P), count_pred(Type,P,X,Y). % population of 
-generic_pred0(Type,P,X,Y) :- nonvar(P), position_pred(Type,P,X,Y). % latitude of
-generic_pred0(Type,P,X,Y) :- nonvar(P), ordering_pred(Type,P,X,Y). % south of
-generic_pred0(Type,P,X,Y) :- nonvar(P), symmetric_pred(Type,P,X,Y). % border
-generic_pred0(Type,P,X,Y) :- specific_pred(Type,P,X,Y). % capital 
+generic_pred0(_VV,Type,P,X,Y) :- trans_pred_type(Type,P), nonvar(P),trans_pred(Type,P,X,Y). % contain 
+generic_pred0(_VV,Type,P,X,Y) :- nonvar(P), measure_pred(Type,P,X,Y). % area of
+generic_pred0(_VV,Type,P,X,Y) :- nonvar(P), count_pred(Type,P,X,Y). % population of 
+generic_pred0(_VV,Type,P,X,Y) :- nonvar(P), position_pred(Type,P,X,Y). % latitude of
+generic_pred0(_VV,Type,P,X,Y) :- nonvar(P), ordering_pred(Type,P,X,Y). % south of
+generic_pred0(_VV,Type,P,X,Y) :- nonvar(P), symmetric_pred(Type,P,X,Y). % border
+generic_pred0(_VV,Type,P,X,Y) :- specific_pred(Type,P,X,Y). % capital 
 
 generic_pred1(Type,P,X,Y) :- var(Type), nop(generic_pred1(Type,P,X,Y)).
 
