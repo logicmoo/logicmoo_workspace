@@ -46,8 +46,10 @@ chmod 777 ${BINARY} $LOGICMOO_WS/bin/lmoo-pfc
 #COMPILE="cd $LOGICMOO_WS/prologmud_server && swipl --pce=false -x ${BINARY} compile_mud_server.pl"
 COMPILE="cd $LOGICMOO_WS/prologmud_server && swipl --pce=false compile_mud_server.pl"
 echo "$COMPILE $VERBOSITY" 
-echo SKIPPING eval "$COMPILE $VERBOSITY"
-echo SKIPPING chmod 777 $LOGICMOO_WS/bin/lmoo-swipl $LOGICMOO_WS/bin/lmoo-mud 
+#echo SKIPPING 
+eval "$COMPILE $VERBOSITY"
+# echo SKIPPING 
+chmod 777 $LOGICMOO_WS/bin/lmoo-swipl $LOGICMOO_WS/bin/lmoo-mud 
 )
 
 )

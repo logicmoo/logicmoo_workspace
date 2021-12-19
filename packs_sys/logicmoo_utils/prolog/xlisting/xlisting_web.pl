@@ -1874,7 +1874,7 @@ bok((pkif :-
 
 
 %make_here:- ttyflush,notrace(ignore(weto(wo_messages((make_here0,ttyflush))))).
-
+make_here:- !.
 make_here:-  notrace(make_here0).
 make_here0:- with_output_to(string(_),weto(ignore(make))),!.
 make_here0:- with_output_to(string(_),make),!.

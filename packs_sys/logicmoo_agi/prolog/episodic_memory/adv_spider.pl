@@ -60,11 +60,11 @@ P5 is built.
 A2 goes to P5. ").
 
 example_mentalese(startup_act_1, "
-there exists scene A1P.
-there exists scene A2P.
-A1P contains spider_1st_person.
+there exists a scene A1P.
+there exists a scene A2P.
+A1P contains a script named spider_1st_person.
 A2P contains spider_2nd_person.
- 
+
 A1 can see map of A1P.
 A2 can see map of A2P.
 A1 can not see map of A2P.
