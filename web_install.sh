@@ -48,6 +48,7 @@ fi
 # ls logicmoo_workspace
 cd logicmoo_workspace
 export LOGICMOO_WS=`pwd`
+git fetch --recurse-submodules
 git pull -f --verbose
 echo maybe: git submodule update --recursive --remote
 #git status -s
