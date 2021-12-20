@@ -37,8 +37,9 @@ if [[ ! -d ".git/modules/prologmud_server/" ]]; then
    tar xfvz "${filename}" -C tmp/
    mv tmp/.git .git/modules/prologmud_server
    rmdir tmp
-   git checkout origin/master
+   git checkout origin/master .
    git checkout master
+   git fetch --recurse-submodules
    git submodule update --init --recursive
 )
 fi
