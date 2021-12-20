@@ -490,7 +490,7 @@ i_verb_args(RefVar,VArgs,XA0,XA,Slots0,Slots,Args0,Args,Up,Id) :-
 active_passive_subjcase(active,subjA).
 active_passive_subjcase(passive,subjP).
 
-fill_verb(_RefVar,[],XA,XA,Slots,Slots,Args,Args,[],_).
+fill_verb(_RefVar,[],XA,XA,Slots,Slots,Args,Args,[],_):-!.
 fill_verb(RefVar,[Node|Nodes0],XA0,XA,Slots0,Slots,Args0,Args,Up,Id) :-
    verb_slot(RefVar,Node,XA0,XA1,Slots0,Slots1,Args0,Args1,Up0,-Id),
    append(Up0,Nodes0,Nodes),

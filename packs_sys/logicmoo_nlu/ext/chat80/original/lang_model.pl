@@ -720,23 +720,23 @@ c881(B,OO):-
  S = c88(SS),
  locally(set_prolog_flag(gc,false),
 ((
- ignore((
  try_chat_80(S,text_to_corenlp_tree(SS,_)),
+ ignore((
  try_chat_80(S,into_lexical_segs(SS,Lex)),
- try_chat_80(S,any_to_ace_str(S,SACE)),
- try_chat_80(S,try_ace_drs(SACE,Ace)),
  try_chat_80(S,sentence80(Lex,Tree)),
  try_chat_80(S,i_sentence(Tree,QT)),
  try_chat_80(S,clausify80(QT,UE)),
  should_learn(UE))),
+ try_chat_80(S,any_to_ace_str(SS,SACE)),
+ try_chat_80(S,try_ace_drs(SACE,Ace)),
  try_chat_80(S,simplify80(UE,Query)),
  try_chat_80(S,try_ace_fol(Ace,FOL)),
- try_chat_80(S,compile80(Query,Prolog)),
- try_chat_80(S,capture80(Prolog,_)),
  try_chat_80(S,results80(Query,_Answer)),
  try_chat_80(S,any_to_ace_str(S,_SACE2)),
  try_chat_80(S,try_ace_eng(Ace,_Eng)),
  
+ try_chat_80(S,compile80(Query,Prolog)),
+ try_chat_80(S,capture80(Prolog,_)),
  member(O,[Query,UE,FOL,Ace,QT,Tree,(?- S)]),
  ignore((\+ should_learn(O),add_c80(c80,SS))), 
  should_learn(O),
@@ -745,7 +745,7 @@ c881(B,OO):-
  ignore((member(OO,[CG,O]),
  should_learn(OO)))))).
 
-capture80(G,Text):- wots(Text,with_pp(plain,ignore(G))).
+capture80(G,Text):- wots(Text,with_pp(plain,ignore(\+ G))).
 
 %c88(M,O):- process4a(off,M,_,O,_Times).
 

@@ -103,6 +103,10 @@ seto2(X,Vars,G,S):- setof(X,Vars^G,S) -> ignore( S = [X]) ;  S = [].
 */
 
 expand_setos(O,O):- \+ compound(O),!.
+expand_setos(holds_truthvalue(E,S),O):-
+	phrase(satisfy80(E,G),_Vars),
+	%pprint_ecp_cmt(yellow,((X+Vars):-G)),!,
+	O=(G->S=true;S=false),!.
 expand_setos(seto(X,E,S),O):-
 	phrase(satisfy80(E,G),Vars),
 	%pprint_ecp_cmt(yellow,((X+Vars):-G)),!,
@@ -113,8 +117,11 @@ expand_setos(I, O):-
   expand_setos(qvar_to_vvar, ARGS, ArgsO), 
   compound_name_arguments(O, F, ArgsO).
 
+named_eq(X,X).
 
 setof_oR_nil(X,G,S):- setof(X,G,S)*->true;S=[].
+
+:- system:import(parser_chat80:setof_oR_nil/3).
 
 seto(X,E,S) :-
 %	portray_clause(({X} :- E)),
@@ -135,9 +142,10 @@ holds_truthvalue(E,True) :-
 	;   True = false
 	).
 	
-replies([]) :- reply('.').
-replies([A]) :- reply(' and '), reply(A), reply('.').
-replies([A|X]) :- reply(', '), reply(A), replies(X).
+replies(Nil) :- Nil == [],!, reply('.').
+replies([A]) :- !, reply(' and '), reply(A), reply('.').
+replies([A|X]) :- is_list(X),!, reply(', '), reply(A), replies(X).
+replies(A):- reply(A).
 
 reply(N--U) :- !, write(N), write(' '), write(U).
 reply(X) :- write(X).
@@ -175,6 +183,7 @@ satisfy80(X<Y, X<Y) --> !.
 satisfy80(X=<Y, X=<Y) --> !.
 satisfy80(X>=Y, X>=Y) --> !.
 satisfy80(X>Y, X>Y) --> !.
+satisfy80(database80(P), database80(P)) --> !.
 satisfy80(P, database80(P)) --> [].
 
 exceptionto(P) :-
@@ -355,6 +364,7 @@ database801(specific_pred(Type,P,X,Y)) :- specific_pred(Type,P,X,Y). % capital
 database801(generic_pred(VV,Type,P,X,Y)) :- generic_pred(VV,Type,P,X,Y). % capital 
 database801(trans_pred(Type,P,X,Y)) :- trans_pred(Type,P,X,Y). % contain 
 
+database801(modalize(_,X)):- database80(X).
 database801(ought(X)):- database80(X).
 database801(can(X)):- database80(X).
 database801(will(X)):- database80(X).
