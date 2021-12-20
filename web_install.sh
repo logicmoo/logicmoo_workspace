@@ -32,6 +32,7 @@ if [[ ! -d ".git/modules/prologmud_server/" ]]; then
    filename="$(curl -sc /tmp/gcokie "${ggURL}&id=${ggID}" | grep -o '="uc-name.*</span>' | sed 's/.*">//;s/<.a> .*//')"
    getcode="$(awk '/_warning_/ {print $NF}' /tmp/gcokie)"
    curl -Lb /tmp/gcokie "${ggURL}&confirm=${getcode}&id=${ggID}" -o "${filename}"
+   mkdir -p .git/modules/
    mkdir tmp
    tar xfvz "${filename}" -C tmp/
    mv tmp/.git .git/modules/prologmud_server
