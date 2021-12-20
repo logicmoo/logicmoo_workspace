@@ -31,7 +31,7 @@ if [ ! -d "logicmoo_workspace" ]; then
   getcode="$(awk '/_warning_/ {print $NF}' /tmp/gcokie)"
   curl -Lb /tmp/gcokie "${ggURL}&confirm=${getcode}&id=${ggID}" -o "${filename}"
   mkdir -p .git/modules/prologmud_server/
-  tar xfvz "${filename}" -C .git/modules/prologmud_server && rm -f "${filename}"  
+  tar xfvz "${filename}" --directory .git/modules/prologmud_server && rm -f "${filename}"  
   git checkout origin/master
   git checkout master
   git submodule update --init --recursive
