@@ -197,13 +197,13 @@ remove_punctuation(W2, W2).
 
 
 % ================================================================================================
-% CHAT80:  acetext, text_no_punct, pos_sents_pre, parsed80, simplify80, qplan
+% CHAT80:  acetext, text_no_punct, pos_sents_pre, sentence80, simplify80, qplan
 :-  if(load_parser_interface(parser_chat80)).
 % ================================================================================================
 % TEMP DISABLE :- install_converter(parser_chat80:smerge_segs(+charniak_segs, +corenlp_segs,-e2c_segs)).
-:- install_converter(parser_chat80:sent_to_parsed(+merged_lexical_segs, -parsed80)).
-:- install_converter(parser_chat80:i_sentence(+parsed80, -sent80)).
-:- install_converter(parser_chat80:clausify_simplify80(+sent80, -clausify80)).
+:- install_converter(parser_chat80:sent_to_parsed(+merged_lexical_segs, -sentence80)).
+:- install_converter(parser_chat80:i_sentence(+sentence80, -i_sentence)).
+:- install_converter(parser_chat80:clausify_simplify80(+i_sentence, -clausify80)).
 %:- install_converter(parser_chat80:simplify80(+clausify80, -simplify80)).
 %:- install_converter(parser_chat80:qplan(+clausify80, -qplan80)).
 :- install_converter(parser_chat80:results80(+clausify80, -results80)).

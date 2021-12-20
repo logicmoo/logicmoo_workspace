@@ -67,15 +67,19 @@ complex(\+P) :- complex(P).
 respond(true) :- reply('Yes.').
 respond(false) :- reply('No.').
 respond([]) :- reply('Nothing satisfies your question.'), nl.
-respond([A|L]) :- reply(A), replies(L).
+respond([A|L]) :- !, reply(A), replies(L).
+respond(A) :- reply(A).
 
-answer80(S1):- answer802(S1,S),respond(S).
+answer80(S1):- answer8o2_g(S1,G,S),call(G),respond(S).
 
 /*
 answer802((answer80([]):-E),[B]) :- !, holds_truthvalue(E,B).
 answer802((answer80([X]):-E),S) :- !, seto(X,E,S).
 answer802((answer80(X):-E),S) :- seto(X,E,S).
 */
+answer8o2_g((S1,S2),(G1,G2),S):- !, answer8o2_g(S1,G1,S), answer8o2_g(S2,G2,S).
+answer8o2_g(X,G,Y):- answer803(X,Y,G0),expand_setos(G0,G).
+
 answer802((S1,S2),(G1,G2)):- !, answer802(S1,G1), answer802(S2,G2).
 answer802(X,Y):- answer803(X,Y,G),!,call802(G).
 
@@ -87,6 +91,7 @@ call802(holds_truthvalue(E,B)):- !, holds_truthvalue(E,B).
 call802(seto(X,E,S)):- !, seto(X,E,S).
 call802(G):- call(G).
 
+/*
 seto1(X,E,S) :- ground(X),
 %	portray_clause(({X} :- E)),
 	phrase(satisfy80(E,G),Vars),
@@ -95,7 +100,21 @@ seto1(X,E,S) :- ground(X),
 
 seto2(X,[],G,S):- !, (setof(X,G,S) -> ignore( S = [X] ) ;  S = []).
 seto2(X,Vars,G,S):- setof(X,Vars^G,S) -> ignore( S = [X]) ;  S = [].
+*/
 
+expand_setos(O,O):- \+ compound(O),!.
+expand_setos(seto(X,E,S),O):-
+	phrase(satisfy80(E,G),Vars),
+	%pprint_ecp_cmt(yellow,((X+Vars):-G)),!,
+	O=setof_oR_nil(X,Vars^G,S).
+expand_setos(I, O):- phrase(satisfy80(I,O),_Vars),!. 
+expand_setos(I, O):-
+  compound_name_arguments(I, F, ARGS), 
+  expand_setos(qvar_to_vvar, ARGS, ArgsO), 
+  compound_name_arguments(O, F, ArgsO).
+
+
+setof_oR_nil(X,G,S):- setof(X,G,S)*->true;S=[].
 
 seto(X,E,S) :-
 %	portray_clause(({X} :- E)),

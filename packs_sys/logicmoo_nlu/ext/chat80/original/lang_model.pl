@@ -669,8 +669,8 @@ c2(B,O):-
 
 c8_test(B,O):-
   any_to_str(B,SS),
-  S = c8_test(SS),
-  try_chat_80(S,c8(SS,Query)),!,
+  S = c8_test(SS,O),
+  try_chat_80(S,c88(SS,Query)),!,
   try_chat_80(S,results80(Query,O)),!.
 
 
@@ -688,6 +688,7 @@ into_string_sents(SS,ListS):- atomic_list_concat(ListS,'\n',SS),!.
 
 
 c8(SS,O):- break_apart(c8111,SS,O),!.
+c8111(SS,O):- atom_length(SS,L),L<3,!,O= true.
 c8111(SS,O):-
  S = c8(SS),
   locally(set_prolog_flag(gc,true),
@@ -701,6 +702,7 @@ c8111(SS,O):-
  try_chat_80(S,clausify80(QT,UE)),  
  should_learn(UE),!, 
  try_chat_80(S,simplify80(UE,Query)),
+ try_chat_80(S,results80(Query,_Answer)),
  ignore((\+ should_learn(Query),add_c80(c8,SS))),
  member(O,[Query,UE,QT,Tree,SS]),
  should_learn(O),
@@ -712,20 +714,25 @@ into_cg(CLIF,CG):-cgp_common_logic:convert_clif_to_cg(CLIF,CG),!.
 
 
 c88(SS,O):- break_apart(c881,SS,O),!.
+c881(SS,O):- atom_length(SS,L),L<3,!,O= true.
 c881(B,OO):-
  any_to_str(B,SS),
  S = c88(SS),
  locally(set_prolog_flag(gc,false),
 ((
+ ignore((
  try_chat_80(S,text_to_corenlp_tree(SS,_)),
  try_chat_80(S,into_lexical_segs(SS,Lex)),
  try_chat_80(S,any_to_ace_str(S,SACE)),
  try_chat_80(S,try_ace_drs(SACE,Ace)),
  try_chat_80(S,sentence80(Lex,Tree)),
  try_chat_80(S,i_sentence(Tree,QT)),
- try_chat_80(S,clausify80(QT,UE)),  
+ try_chat_80(S,clausify80(QT,UE)),
+ should_learn(UE))),
  try_chat_80(S,simplify80(UE,Query)),
  try_chat_80(S,try_ace_fol(Ace,FOL)),
+ try_chat_80(S,compile80(Query,Prolog)), 
+ ignore(Prolog),
  try_chat_80(S,results80(Query,_Answer)),
  try_chat_80(S,any_to_ace_str(S,_SACE2)),
  try_chat_80(S,try_ace_eng(Ace,_Eng)),

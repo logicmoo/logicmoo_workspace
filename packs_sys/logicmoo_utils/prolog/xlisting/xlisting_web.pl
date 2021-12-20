@@ -783,11 +783,12 @@ nop_format(G):- nop(format(G)).
 :- create_prolog_flag(retry_undefined,default,[type(term),keep(true)]).
 
 
-write_expandable(Showing,Goal):- %ensure_colapsable_styles,
+write_expandable(Showing,Goal):- %ensure_colapable_styles,
  (Showing -> PX='128'; PX='0'),
+ (Showing -> Exp=''; Exp='colapsed'),
  inline_html_format([
    '<pre><button type="button" class="collapsible">',writeq(Goal),' (click to un/expand)</button>',
-   '<div class="colapsed" style="max-height: ',PX,'px">',
+   '<div class="',write(Exp),'" style="max-height: ',PX,'px">',
     weto(ignore(Goal)),
    '</div></pre>']).
 
@@ -877,6 +878,7 @@ handler_logicmoo_cyclone000(Request):-
   ((ignore( \+ ((  
     get_param_req(cmd,Call),
     url_decode_term(Call,Prolog),
+    current_predicate(_,Prolog),
     dmsg(cmd=Prolog),
     ignore((nonvar(Prolog),asserta_new(offer_testcase(Prolog)))), 
      weto(write_expandable(true,Prolog))))))),
@@ -2275,6 +2277,8 @@ find_cl_ref(H,Ref):- clause(H,true,Ref),clause(HH,true,Ref),H=@=HH,!.
 
 
 
+:- dynamic('$si$':'$was_imported_kb_content$'/2).
+
 
 %% find_ref( :TermARG1, ?ARG2) is det.
 %
@@ -2572,6 +2576,7 @@ locally_pp_i2tml_now(C):-on_x_fail(writeq(C)),!.
 %
 % Functor Converted To Color.
 %
+
 functor_to_color(wid(_,_,G),C):-!,functor_to_color(G,C).
 functor_to_color(G,C):-compound(G),functor(G,F,A),functor_to_color(G,F,A,C),!.
 functor_to_color(_G,green):-!.
@@ -2703,12 +2708,17 @@ must_run0(Goal):- tracing,!,
   ((Goal) *-> true ; wdmsg(assertion_failed(fail, Goal))),
   flush_output_safe.
 must_run0((G1,G2)):- !, call_cleanup(must_run0(G1),must_run0(G2)),!.
+
+%must_run0(Goal):- ignore(catch(no_undefined_preds(Goal),_,true)),!.
 must_run0(Goal):- flush_output_safe, 
-  (catch(must_or_rtrace(Goal),E,(dumpST,display(E=Goal),fail)) -> true ; wdmsg(assertion_failed(fail, Goal))),
+  (catch(must_or_rtrace(no_undefined_preds(Goal)),E,(wdmsg(E),www_dumpST,wdmsg(E=Goal),fail)) -> true ; wdmsg(assertion_failed(fail, Goal))),
   flush_output_safe.
 
+no_undefined_preds(G):- locally(set_prolog_flag(unknown,fail),G).
 
-
+:- multifile(prolog_debug:assertion/1).
+:- abolish(prolog_debug:assertion/1).
+:- asserta(prolog_debug:assertion(_)).
 
 %% call_for_terms( ?ARG1) is det.
 %
@@ -2772,8 +2782,9 @@ fast_and_mean:- true.
 
 try_or_rtrace(G):- tracing,!,dmsg(try(G)),call(G).
 try_or_rtrace(G):- fast_and_mean, !, with_no_xdbg(G).
-try_or_rtrace(G):- catch(G,E,(E==time_limit_exceeded->throw(time_limit_exceeded);(ignore((dmsg(G=E),dumpST,dmsg(G=E),thread_self(main),rtrace(G),dumpST,dmsg(G=E),break))))).
+try_or_rtrace(G):- catch(G,E,(E==time_limit_exceeded->throw(time_limit_exceeded);(ignore((dmsg(G=E),www_dumpST,dmsg(G=E),thread_self(main),rtrace(G),www_dumpST,dmsg(G=E),break))))).
 
+www_dumpST:- write('<pre>'),dumpST,write('</pre>').
 % :- prolog_xref:assert_default_options(register_called(all)).
 
 %i2tml_hbr_trace(H,B,R):- rtrace(i2tml_hbr(H,B,R)).

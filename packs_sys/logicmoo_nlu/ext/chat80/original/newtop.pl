@@ -549,6 +549,10 @@ process4b(How,Sentence,U,S1,Answer,Times) :-
    ignore((report(always,Answer,'Reply',TimeAns,print_tree_nl))))),!.
    
 results80((S1,S2),(G1,G2)):- !, results80(S1,G1), results80(S2,G2).
+
+compile80(S1,G,S):- answer8o2_g(S1,G,S).
+compile80(S1,(G,respond(S))):- compile80(S1,G,S).
+
 results80(S1,Results):- 
   nonvar(S1),
   findall(Res,deepen_pos((answer802(S1,Res),Res\=[])),Results).
@@ -633,7 +637,7 @@ reduce1((Q,P),PQ):- (true) == Q,!,reduce1(P,PQ).
 reduce1(mg(Q),Q):- !.
 
 reduce1(bE(named,Q,P),true):- P=Q, !.
-reduce1(bE(_,Q,P),true):- var(P),var(Q),P=Q, !.
+%reduce1(bE(_,Q,P),true):- var(P),var(Q),P=Q, !.
 reduce1(same_values(Q,P),true):- P=Q,!.
 
 reduce1('^'(Q,P),P):- ground(Q).
