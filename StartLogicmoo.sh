@@ -22,7 +22,7 @@ export LOGICMOO_GAMES=$LOGICMOO_WS/prologmud_server
 
    # this is ran from inside the container
 
-   ./logicmoo_env.sh
+   . ./logicmoo_env.sh
    echo LOGICMOO_GAMES=$LOGICMOO_GAMES
    echo LOGICMOO_WS=$LOGICMOO_WS
    # export SCREEN_CMD='sudo -u prologmud_server -- screen"
