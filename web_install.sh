@@ -24,7 +24,7 @@ if [[ ! -d "logicmoo_workspace" ]]; then
   git clone --no-checkout https://github.com/logicmoo/logicmoo_workspace.git
   git config --global http.sslVerify $SSLWAS
 fi
-cd logicmoo_workspace
+(cd logicmoo_workspace
 if [[ ! -d ".git/modules/prologmud_server/" ]]; then
    ( set +x +e
    ggID='1KhXSv4vq_a82ctGg74GcVBO4fArldVou'
@@ -34,11 +34,12 @@ if [[ ! -d ".git/modules/prologmud_server/" ]]; then
    curl -Lb /tmp/gcokie "${ggURL}&confirm=${getcode}&id=${ggID}" -o "${filename}"
    mkdir -p .git/modules/prologmud_server/
    tar xfvz "${filename}" --directory .git/modules/prologmud_server && rm -f "${filename}"  
-   git checkout origin/master
-   git checkout master
-   git submodule update --init --recursive
+     git checkout origin/master
+     git checkout master
+     git submodule update --init --recursive
 )
 fi
+)
 
 # ls logicmoo_workspace
 cd logicmoo_workspace
