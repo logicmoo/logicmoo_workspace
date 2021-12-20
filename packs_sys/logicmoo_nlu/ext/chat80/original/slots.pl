@@ -86,7 +86,9 @@ i_sentence2(imp(U,Ve,s(_,Verb,VArgs,VMods)),imp80(U,Ve,V,Args)) :-
    must80(i_verb(Verb,V,_,active,([]),Slots0,[],transparent)),
    must80(i_verb_args(RefVar,VArgs,[],[],Slots0,Slots,Args,Args0,Up,-0)),
    append(Up,VMods,Mods),
-   must80(i_verb_mods(RefVar,Mods,_,[],Slots,Args0,Up,+0)).
+   must80(i_verb_mods(RefVar,Mods,_,[],Slots,Args0,Up,+0)),!.
+i_sentence2(imp(U,Ve,S),imp80(U,Ve,P)) :-  i_s(S,P).
+
 
 i_s(s(Subj,Verb,VArgs,VMods),P):- must80(i_s(s(Subj,Verb,VArgs,VMods),P,[],0)),!.
 
@@ -362,6 +364,12 @@ i_s(s(Subj,Verb,VArgs,VMods),Pred,Up,Id) :-
    i_s_0(s(Subj,Verb,VArgs,VMods),Pred,Up,Id)).
 
 i_s_0(s(Subj,Verb,VArgs,VMods),Pred,Up,Id) :-
+  i_s_1(s(Subj,Verb,VArgs,VMods),Pred,Up,Id)*-> true; i_s_2(s(Subj,Verb,VArgs,VMods),Pred,Up,Id).
+  
+i_s_2(s(Subj,Verb,VArgs,VMods),PredO,Up,Id):- fail, VMods\==[], i_s_1(s(Subj,Verb,VArgs,[]),Pred,Up,Id),
+  mabye_modalize(scope,VMods,Pred,PredO).
+
+i_s_1(s(Subj,Verb,VArgs,VMods),Pred,Up,Id) :-
  debug_chat80_if_fail((
    i_verb(Verb,P,Tense,Voice,DetPosNeg,Slots0,XA0,Meta),
    i_subj(RefVar,Voice,Subj,Slots0,Slots1,QSubj,SUp,'-'('-'(Id))),
@@ -426,9 +434,12 @@ maybe_modalize1(Scope,_,V,P,PP):- PP = failed_modalize(Scope,V,P),!.
 
 maybe_modalize0(_Scope,O, V,P,P):- var(V),!,not_true_or_qtrue(O).
 maybe_modalize0(Scope,O, PN+L,P,PP):- nonvar(PN), !, maybe_modalize1(Scope,O,PN,P,PM), maybe_modalize1(Scope,O,L,PM,PP).
-maybe_modalize0(Scope,O,[PN|L],P,PP):- nonvar(PN), !, maybe_modalize1(Scope,O,PN,P,PM), maybe_modalize1(Scope,O,L,PM,PP).
+maybe_modalize0(Scope,O,[L|PN],P,PP):- nonvar(PN), !, maybe_modalize1(Scope,O,PN,P,PM), maybe_modalize1(Scope,O,L,PM,PP).
+maybe_modalize0(Scope,O, negP(X),P,PP):-!, maybe_modalize0(Scope,O,[negP|X],P,PP).
 maybe_modalize0(_Scope,_,Past, P, P):- atom(Past),functor(P,Past,_).
 maybe_modalize0(_Scope,_,true, P, P):-!.
+maybe_modalize0(_Scope,_,negP, P, \+ P):-!.
+maybe_modalize0(_Scope,_,not,  P, \+ P).
 maybe_modalize0(_Scope,_,root, P, P):-!.
 maybe_modalize0(_Scope,_,pres, P, P):-!.
 maybe_modalize0(_Scope,_,fin, P, P):-!.
@@ -441,8 +452,8 @@ maybe_modalize0(Scope,O,identityQ(Modal), P, PP):- !, maybe_modalize1(Scope,O,Mo
 maybe_modalize0(Scope,O,adv(Modal), P, PP):- !, maybe_modalize1(Scope,O,Modal, P, PP).
 maybe_modalize0(Scope,O,aux(_,Modal), P, PP):- !, maybe_modalize1(Scope,O,Modal, P, PP).
 maybe_modalize0(Scope,O,t(Modal,_,_), P, PP):- !, maybe_modalize1(Scope,O,Modal, P, PP).
-maybe_modalize0(_Scope,O,Modal, P, PP):- not_true_or_qtrue(O), atom(Modal),!,PP=..[Modal,P].
 maybe_modalize0(_Scope,_,[],P,P).
+%maybe_modalize0(_Scope,O,Modal, P, PP):- not_true_or_qtrue(O), atom(Modal),!,PP=..[Modal,P].
 maybe_modalize0(_Scope,_,M,P,modalized(M,P)).
 
 make_pred(S,N,P,A,PRED):- pred(S,N,P,A) = PRED.
@@ -655,9 +666,17 @@ slot_verb_template(aux(have,MODAL),(Y=Z,aux(have,S,Y)),
          slot(prep(as),TypeV,Z,_,free)]).
 
 slot_verb_template(Verb,Pred, Slots,[],transparent) :-
+  slot_verb_template_transparent(Verb,Pred, Slots).
+
+slot_verb_template_transparent(Verb,Pred, Slots) :-
    select_slots(Slots,[slot(subjA,TypeS,S,_,free)],SlotsRemaining),
    ignore(must80(verb_type_lex(Verb,_+Kind))),
    slot_verb_kind(Kind,Verb,TypeS,S,Pred,SlotsRemaining).
+
+slot_verb_template_transparent(Verb,Pred, Slots) :- % fail,
+   select_slots(_,[slot(subjA,TypeS,S,_,free)],_SlotsRemaining),
+   ignore(must80(verb_type_lex(Verb,_+Kind))),
+   slot_verb_kind(Kind,Verb,TypeS,S,Pred,Slots).
 
 select_slots(Ss,Slots):- select_slots(Ss,Slots,[]),!.
 %select_slots(Ss,Slots):- select_slots(Ss,Slots,_).
@@ -675,6 +694,9 @@ slot_verb_kind(aux(Be,_MODAL),_,TypeS,S,bE(is,S,A),AllSlots):- Be == be,
    select_slots(AllSlots, [slot(dirO,TypeS,A,_,free)]).
 slot_verb_kind(aux(Be,_MODAL),_,TypeS,S,true,AllSlots):- Be == be, !,
    select_slots(AllSlots, [slot(arg_pred,TypeS,S,_,free)]).
+
+
+slot_verb_kind(Main+More,Verb,TypeS,S,Pred,AllSlots):- nonvar(Main),!,slot_verb_kind(More,Verb,TypeS,S,Pred,AllSlots).
 
 slot_verb_kind(_Tv,Verb,TypeS,S,Pred,AllSlots) :-
    select_slots(AllSlots,[slot(dirO,TypeD,D,SlotD,free)],Slots),
@@ -695,6 +717,9 @@ slot_verb_kind(dv(Prep),Verb,TypeS,S,Pred,AllSlots):-
 slot_verb_kind(_Tv,Verb,TypeS,S,Pred,AllSlots) :-
    select_slots(AllSlots,[slot(dirO,TypeD,D,SlotD,free)],Slots),
    lf80(TypeS-TypeD,trans_LF1(Verb,TypeS,S,TypeD,D,Pred,Slots,SlotD,_)).
+
+ditrans_lex80(Verb,Prep,TypeS,S,TypeD,D,TypeI,I,Pred,Slots,SlotD,SlotI,_):-
+  Pred = ditrans_call(Verb,Prep,TypeS,S,TypeD,D,TypeI,I,Slots,SlotD,SlotI).
 
 
 deepen_case(prep(at),time).

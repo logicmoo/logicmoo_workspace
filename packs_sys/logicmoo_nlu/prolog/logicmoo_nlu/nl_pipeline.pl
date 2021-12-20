@@ -170,8 +170,8 @@ remove_punctuation(W2, W2).
 :- install_converter(parser_chat80:acetext_to_text80(+paraphrase_set, -text80)).
 :- install_converter(parser_chat80:into_lexical_segs(+text80, -merged_lexical_segs)).
 
-:- install_converter(parser_chat80:cvt_to_objecteese(w2, +merged_lexical_segs, -objecteese)).
-:- install_converter(parser_chat80:cvt_to_ace_pos(+objecteese, -ace_objecteese)).
+%:- install_converter(parser_chat80:cvt_to_objecteese(w2, +merged_lexical_segs, -objecteese)).
+%:- install_converter(parser_chat80:cvt_to_ace_pos(+objecteese, -ace_objecteese)).
 
 :- install_converter(parser_chat80:try_ace_drs(+ace_objecteese, -drs0)).
 :- install_converter(parser_chat80:try_ace_drs(+text80, -drs0)).
@@ -190,7 +190,7 @@ remove_punctuation(W2, W2).
 */
 
 :- parser_pipeline:asserta((
- default_pipeline_opts([lf, clause, objecteese, combined_info, simplify80, results80, clause_e2c, 
+ default_pipeline_opts([lf, clause, objecteese, combined_info, simplify80, results_80, clause_e2c, 
    reply_e2c, % ape_penn_syntaxTree, ape_penn_segs, 
    ace_fol,text80,
      merged_lexical_segs]))).
@@ -203,10 +203,10 @@ remove_punctuation(W2, W2).
 % TEMP DISABLE :- install_converter(parser_chat80:smerge_segs(+charniak_segs, +corenlp_segs,-e2c_segs)).
 :- install_converter(parser_chat80:sent_to_parsed(+merged_lexical_segs, -sentence80)).
 :- install_converter(parser_chat80:i_sentence(+sentence80, -i_sentence)).
-:- install_converter(parser_chat80:clausify_simplify80(+i_sentence, -clausify80)).
+:- install_converter(parser_chat80:clausify_simplify80(+i_sentence, -clausify_80)).
 %:- install_converter(parser_chat80:simplify80(+clausify80, -simplify80)).
 %:- install_converter(parser_chat80:qplan(+clausify80, -qplan80)).
-:- install_converter(parser_chat80:results80(+clausify80, -results80)).
+:- install_converter(parser_chat80:results80(+clausify_80, -results_80)).
 :- asserta((parser_chat80:type(SET):- call_u(tSet(SET)))).
 :- endif.
 :- '$set_source_module'(nl_pipeline).
@@ -406,7 +406,7 @@ baseKB:feature_test:- run_pipeline("What countries are there in north america ?"
 baseKB:feature_test(must_test_80):-
   forall(must_test_80(U, R, O),
     (ignore(\+ \+ process_run_diff(report, U, R, O)),
-     ignore(\+ \+ (run_pipeline([input=U], [results80=_], OL), show_kvs(OL))))).
+     ignore(\+ \+ (run_pipeline([input=U], [results_80=_], OL), show_kvs(OL))))).
 */
 
 baseKB:list_tests:- dmsg(call((

@@ -548,14 +548,14 @@ process4b(How,Sentence,U,S1,Answer,Times) :-
    report(How,U,'Question',TotalTime,print_test),
    ignore((report(always,Answer,'Reply',TimeAns,print_tree_nl))))),!.
    
-results80((S1,S2),(G1,G2)):- !, results80(S1,G1), results80(S2,G2).
-
-compile80(S1,G,S):- answer8o2_g(S1,G,S).
+compile80(S1,G,S):- answer8o2_g(S1,G,S),!.
 compile80(S1,(G,respond(S))):- compile80(S1,G,S).
 
+results80(X,_):- var(X),!,fail.
+results80((S1,S2),(G1,G2)):- !,nonvar(S1), results80(S1,G1), results80(S2,G2).
 results80(S1,Results):- 
   nonvar(S1),
-  findall(Res,deepen_pos((answer802(S1,Res),Res\=[])),Results).
+  findall(Res,deepen_pos((answer802(S1,Res),Res\=[])),Results),!.
 
 report(How,Item,Label,Time,Mode):- wotso(report0(How,Item,Label,Time,Mode)),!.
 
@@ -665,7 +665,10 @@ reduce1(P,Q):- compound_name_arguments(P,F,A), \+ dont_reduce1(F),
 
 dont_reduce1(qualifiedBy).
 
-clausify_simplify80(QT,Plan):- simplify80(QT,QT0), clausify80(QT0,UE),once((simplify80(UE,Query),qplan(Query,Plan))).
+clausify_simplify80(QT,Plan):- 
+  simplify80(QT,QT0), clausify80(QT0,UE),!,should_learn(UE),
+  once((simplify80(UE,Query),qplan(Query,Plan))),
+  should_learn(Plan),!.
 
 simplify80(C,C0):-var(C),dmsg(var_simplify(C,C0)),!,C=C0.
 simplify80(C,(P:-RR)) :- !,
@@ -700,9 +703,9 @@ simplify80(numberof(X,P0,Y),R,R0) :- !,
 simplify80(\+P0,R,R0) :- !,
    simplify80(P0,P1,true),
    simplify_not(P1,P),
-   revand(R0,P,R).
+   revand(R0,P,R),!.
 simplify80(P,R,R0) :-
-   revand(R0,P,R).
+   revand(R0,P,R),!.
 
 simplify_not(P,\+P):- var(P),!.
 simplify_not(\+P,P) :- !.
@@ -717,9 +720,9 @@ unequalise(C00,C) :-
    numbervars80(C0,1,N),
    functor(V,v,N),
    functor(M,v,N),
-   inv_map_enter(C0,V,M,C).
+   inv_map_enter(C0,V,M,C),!.
 
-inv_map_enter(C0,V,M,C):- catch(inv_map(C0,V,M,C),too_deep(Why),(dmsg(Why),dtrace(inv_map(C0,V,M,C)))).
+inv_map_enter(C0,V,M,C):- catch(inv_map(C0,V,M,C),too_deep(Why),(dmsg(Why),dtrace(inv_map(C0,V,M,C)))),!.
 
 inv_map(Var,V,M,T) :- stack_depth(X), X> 400, throw(too_deep(inv_map(Var,V,M,T))).
 inv_map(Var,V,M,T) :- stack_check(500), var(Var),dmsg(var_inv_map(Var,V,M,T)),!,Var==T.

@@ -67,7 +67,7 @@ deepen_pos_pt2(Upto,Call):-
   flag(pos_depth_skipped,EN,EN), EN\==0,
   flag(pos_depth,N,N+1),
   flag(pos_depth_skipped,_,0),
-  dmsg(pos_depth=N+1),  
+ % dmsg(pos_depth=N+1),  
   ((N>Upto) -> (!,fail) ; (call(Call)*->true; deepen_pos_pt2(Upto,Call))).
 
 :- share_mp(deepen_pos_0/1).

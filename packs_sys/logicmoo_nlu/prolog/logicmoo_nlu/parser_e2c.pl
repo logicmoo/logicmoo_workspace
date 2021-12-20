@@ -187,7 +187,9 @@ add_e2c(S, W):- nonvar(S), \+ source_location(_,_),!,run_e2c_test(S, [requested|
 add_e2c(S, W):-  clause(test_e2c(S, W), true), !.
 add_e2c(S, W):- listify(W, L), assertz(test_e2c(S, L)).
 
-sent_to_parsed(U,E):- deepen_pos(parser_chat80:sentence80(E,U,[],[],[])).
+sent_to_parsed(U,E):- deepen_pos(parser_chat80:sentence80(U,E)),should_learn(E),
+                      deepen_pos(parser_chat80:i_sentence(E,I)),should_learn(I),
+                      deepen_pos(parser_chat80:clausify80(I,O)),should_learn(O),!.
 
 :- export(test_e2c/1).
 :- export(test_e2c/2).
