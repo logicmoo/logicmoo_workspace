@@ -731,8 +731,8 @@ c881(B,OO):-
  should_learn(UE))),
  try_chat_80(S,simplify80(UE,Query)),
  try_chat_80(S,try_ace_fol(Ace,FOL)),
- try_chat_80(S,compile80(Query,Prolog)), 
- ignore(Prolog),
+ try_chat_80(S,compile80(Query,Prolog)),
+ try_chat_80(S,capture80(Prolog,_)),
  try_chat_80(S,results80(Query,_Answer)),
  try_chat_80(S,any_to_ace_str(S,_SACE2)),
  try_chat_80(S,try_ace_eng(Ace,_Eng)),
@@ -745,6 +745,7 @@ c881(B,OO):-
  ignore((member(OO,[CG,O]),
  should_learn(OO)))))).
 
+capture80(G,Text):- wots(Text,with_pp(plain,ignore(G))).
 
 %c88(M,O):- process4a(off,M,_,O,_Times).
 
@@ -890,6 +891,7 @@ chat80_all(P):- c8_make,
 
 example_mentalese:- cls, c8_make, forall(mu:example_mentalese(N,V), (dmsg(example_mentalese=N),c88(V))).
 
+
 :- fixup_exports.
 
 :- if(\+ prolog_load_context(reloading, true)).
@@ -904,3 +906,6 @@ example_mentalese:- cls, c8_make, forall(mu:example_mentalese(N,V), (dmsg(exampl
 :- add_history(test_chat80).
 
 %:- test_chat80.
+
+
+

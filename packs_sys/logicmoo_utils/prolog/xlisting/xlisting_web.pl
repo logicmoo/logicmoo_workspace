@@ -3132,7 +3132,7 @@ term_to_pretty_string(H,Vs,HS):- with_output_to(string(HS),print_pretty_string(H
 print_pretty_string(H,_):- \+ compound(H),!,write(H).
 print_pretty_string(H,Vs):- into_textarea(print_tree(H,[variable_names(Vs),right_margin(40)])).
 
-into_textarea(G):- with_pp(ansi,locally_tl(print_mode(plain),G)). 
+into_textarea(G):- with_pp(plain,G).
 
 
 

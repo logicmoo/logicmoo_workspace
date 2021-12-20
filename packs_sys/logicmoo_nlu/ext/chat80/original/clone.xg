@@ -186,7 +186,6 @@ imperative_verb(You,Root),
 
 logical_s_word(Var):- var(Var),!,freeze(Var,logical_s_word(Var)).
 logical_s_word(Word):- logical_s_word(_,_,Word).
-logical_s_word(Word):- if_search_expanded(5), logical_n_word(Word).
 
 logical_s_word(r,c,durring).
 logical_s_word(r,c,after).
@@ -204,6 +203,7 @@ logical_s_word(c,r,else).
 logical_s_word(c,r,implies).
 logical_s_word(c,r,otherwise).
 logical_s_word(c,r,therefore).
+logical_s_word(X,X,W):- logical_n_word(W).
 
 logical_s_word2(r,c,[else,if]).
 
@@ -247,9 +247,13 @@ s_vp_800s(IF,S,SO,Mask) ---> from_if(IF,S,SO,Mask).
 s80lf(S1,SLF):- sent_to_prelogic(S1,SLF),!.
 s80lf(S1,S1).
 
-from_if(IF,S,SO,Mask) --->  theText80(Then),{logical_s_word(Then)},!,
-  s80(S1,Mask),{s80lf(S1,SLF),  S=s(Subj,Verb,Args,Mods),append_cond(Args,IF-Then,SLF,ArgsO),SO=s(Subj,Verb,ArgsO,Mods)}.
+from_if(IF,S,SO,_Mask) --->  theText80(Then),{logical_s_word(Then)},!,
+  sentence803(S1),{
+    s80lf(S1,SLF),  
+    S=s(Subj,Verb,Args,Mods),
+    append_cond(Args,IF-Then,SLF,ArgsO),SO=s(Subj,Verb,ArgsO,Mods)}.
 
+%from_true(S,SO,_)---> theText80(LW),{logical_s_word(LW)},!, from_if(LW,S,SO,_).
 from_true(S,S,_Mask)---> xg_peek(theText80(LW)),{ \+ logical_s_word(LW)},!.
 from_true(S,SO,Mask)---> from_if(true,S,SO,Mask).
 from_true(S,S,_Mask)---> [].
@@ -543,9 +547,9 @@ verb_mods(_,[],_,Mask,Mask) ---> noText.
 
 verb_mod(PrePost,Adv,Set,Mask) ---> adv_phrase(PrePost,Adv,Set,Mask).
 verb_mod(PrePost,Adv,Set,Nil) --->
-   {once(is_adv_bits(Set);PrePost==pre)},
+   {(is_adv_bits(Set);PrePost==pre)->true},
    adverb(Adv),
-   {once(is_empty_bits(Nil);PrePost==pre)}.
+   {(is_empty_bits(Nil);PrePost==pre)->true}.
 verb_mod(post,PP,Set,Mask) ---> xg_prep_phrase(_PPAlowed,PP,compL,Set,Mask).
 
 adv_phrase(post,prep_phrase(PPType,Prep,NP),Set,Mask) --->
@@ -884,10 +888,13 @@ advs_opt(R,R,_) ---> noText.
 adj_phrase(P,Nil) ---> adj(_,P), { is_empty_bits(Nil) }.
 adj_phrase(P,Mask) --->  comp_phrase(P,Mask).
 
-adverb(adv(Adv)) ---> theText80_W2(W,W2), {adv_lex_w2(W,W2,Adv)}.
+adverb(adv(Adv)) ---> theText80_W2(W,W2), {adv_lex_w2(W,W2,Adv)}, may_adverb(W).
 adverb(adj(Adj)) ---> {if_search_expanded(3)},theText80_W2(W,W2), {adj_lex_w2(W,W2,Adj,_Type)}.
-adverb(adv(W)) ---> theText80(W), {adverb_lex(W)}.
-adverb(adv(t(A,B,C))) ---> theText80(W), {modal_verb_form_aux(W,A,B,C)}.
+adverb(adv(W)) ---> theText80(W), {adverb_lex(W)}, may_adverb(W).
+adverb(adv(t(A,B,C))) ---> theText80(W), {modal_verb_form_aux(W,A,B,C)}, may_adverb(W).
+
+may_adverb(W)---> {\+ logical_s_word(W),\+ logical_n_word(W)}.
+may_adverb(_)---> xg_peek( \+ [_]).
    
 no_args_vt(tv).
 no_args_vt(dv(_Prep)).

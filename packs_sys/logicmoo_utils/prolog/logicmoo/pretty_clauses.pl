@@ -1077,6 +1077,7 @@ should_print_mode_html(_).
 %with_pp(swish,Goal):- toplevel_pp(swish),!,with_pp(bfly,Goal).
 %with_pp(http,Goal):- toplevel_pp(swish),!,with_pp(bfly,Goal).
 
+with_pp(plain,Goal):- !, with_pp(ansi,locally_tl(print_mode(plain),Goal)).
 with_pp(Mode,Goal):- quietly(with_pp0(Mode,Goal)).
 
 with_pp0(ansi,Goal):- \+ t_l:print_mode(plain), !, locally_tl(print_mode(plain),with_pp0(ansi,Goal)).
