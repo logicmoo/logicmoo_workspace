@@ -18,7 +18,7 @@ fi
 mkdir -p /opt
 
 cd /opt
-if [ ! -d "logicmoo_workspace" ]; then
+if [[ ! -d "logicmoo_workspace" ]]; then
   export SSLWAS=$(git config --global http.sslVerify)
   git config --global http.sslVerify false
   git clone --no-checkout https://github.com/logicmoo/logicmoo_workspace.git
@@ -33,7 +33,7 @@ if [ ! -d "logicmoo_workspace" ]; then
   )
 fi
 cd logicmoo_workspace
-if [ ! -d ".git/modules/prologmud_server/" ]; then
+if [[ ! -d ".git/modules/prologmud_server/" ]]; then
 (
    mkdir -p .git/modules/prologmud_server/
    tar xfvz "${filename}" --directory .git/modules/prologmud_server && rm -f "${filename}"  
