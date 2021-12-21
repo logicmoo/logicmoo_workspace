@@ -121,6 +121,11 @@ pers_pron_lex(she,fem,3,sg,subjA).
 pers_pron_lex(them,_,3,pl,compL).
 pers_pron_lex(they,_,3,pl,subjA).
 
+%pers_pron_lex(which,neut,3,_,subjA).
+%pers_pron_lex(what,neut,3,_,subjA).
+pers_pron_lex(whom,neut,3,_,subjA).
+pers_pron_lex(who,agent,3,_,subjA).
+
 pers_pron_lex(them,_,3,pl,subjA).
 pers_pron_lex(us,_,1,pl,compL).
 pers_pron_lex(we,_,1,pl,subjA).
@@ -222,9 +227,9 @@ tr_number(two,2).
 tr_number(X,X):- bind_pos('value',X).
 
 ctx_pron_lex(in,place,where).
-ctx_pron_lex(at,time,when).
+ctx_pron_lex(at_time,time,when).
 ctx_pron_lex(because,condition,why).
-ctx_pron_lex(poSS,agent,who).
+ctx_pron_lex(agent_of,agent,who).
 %ctx_pron_lex(isa,type,what).
 ctx_pron_lex(cp(by,how),manner,how).
 

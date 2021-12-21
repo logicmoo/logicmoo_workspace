@@ -40,10 +40,10 @@ baseKB:sanity_test:- test_corenlp.
 :- use_module(library(http/http_open)).
 
 get_post_reply(HOST,URL, PostData, Reply):- 
-   atom_concat(HOST,URL,PARAMS), 
+   ((atom_concat(HOST,URL,PARAMS), 
    http_post(PARAMS, % atom works for both Strings and Atoms
      atom('application/x-www-form-urlencoded', PostData), 
-      json(Reply), []),!.
+      json(Reply), []))),!.
 
 /*
 get_post_reply(_Host,URL, PostData, Reply):-
@@ -110,18 +110,18 @@ my_stream_to_codes(EOC,C, Read, [C|T], Tail) :-
 
 text_to_corenlp_segs(Text,Segs):-
   text_to_corenlp(Text,_Options, CoreNLP),!,
-  into_segs(CoreNLP,Segs).
+  quietly(into_segs(CoreNLP,Segs)).
 
 text_to_corenlp_w2(Text,W2s):- 
   text_to_corenlp_segs(Text, Segs),
-  segs_retain_w2(Segs,_Info, W2s).
+  quietly(segs_retain_w2(Segs,_Info, W2s)).
 
 text_to_corenlp(Text,CoreNLP):-
   text_to_corenlp(Text,_Options, CoreNLP).
 
 text_to_corenlp(English, OptionsIn, Out):-
-   text_to_corenlp_low(English, OptionsIn, Reply),   
-   parse_reply([reply], Reply, Out),!.
+   notrace(quietly(text_to_corenlp_low(English, OptionsIn, Reply))),!,
+   quietly(parse_reply([reply], Reply, Out)),!.
 
 text_to_corenlp_low(English, OptionsIn, ReplyO):-
  must_or_rtrace((
@@ -158,9 +158,9 @@ text_to_corenlp_low(English, OptionsIn, ReplyO):-
 */
 
 text_to_corenlp_tree(Text,['CORENLP'|LExpr]):-
-  mort((text_to_corenlp_low(Text,_Options, Reply),
+ (( mort((text_to_corenlp_low(Text,_Options, Reply),
   findall(String,(sub_term(E,Reply), nonvar(E), E=(parse=String)),StringL),
-  maplist(lxpr_to_list,StringL, LExpr))),!.
+  maplist(lxpr_to_list,StringL, LExpr))))),!.
   
 :- export(text_to_corenlp_tree/2).
 :- system:import(text_to_corenlp_tree/2).

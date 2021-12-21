@@ -155,6 +155,13 @@ yn_question(q(S)) --->
    fronted_verb(nil,_),
    s80(S).
 
+:- thread_local(unloop_l:looped_1/1).
+
+%unloop(X):- once(unloop1(b(X));unloop1(c(X))).
+unloop(X):- once(unloop1(a(X))),!.
+unloop1(X):- \+ unloop_l:looped_1(X), !, assert(unloop_l:looped_1(X),R), undo(erase(R)),!.
+test_unloop:- unloop(test_unloop), writeln(doing(test_unloop)), test_unloop.
+
 
 fronted_verb(QCase,NPCase) ...
       verb_form88(ExtraMods,Root,Tense,Agmt,Role), 

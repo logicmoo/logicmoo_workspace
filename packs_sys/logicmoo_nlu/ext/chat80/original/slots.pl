@@ -668,25 +668,23 @@ slot_verb_template(aux(have,MODAL),(Y=Z,aux(have,S,Y)),
 slot_verb_template(Verb,Pred, Slots,[],transparent) :-
   slot_verb_template_transparent(Verb,Pred, Slots).
 
+
 slot_verb_template_transparent(Verb,Pred, Slots) :-
-   select_slots(Slots,[slot(subjA,TypeS,S,_,free)],SlotsRemaining),
    ignore(must80(verb_type_lex(Verb,_+Kind))),
+   (select_slots(Slots,[slot(subjA,TypeS,S,_,free)],SlotsRemaining);SlotsRemaining=Slots),   
    slot_verb_kind(Kind,Verb,TypeS,S,Pred,SlotsRemaining).
 
-slot_verb_template_transparent(Verb,Pred, Slots) :- % fail,
-   select_slots(_,[slot(subjA,TypeS,S,_,free)],_SlotsRemaining),
-   ignore(must80(verb_type_lex(Verb,_+Kind))),
-   slot_verb_kind(Kind,Verb,TypeS,S,Pred,Slots).
 
 select_slots(Ss,Slots):- select_slots(Ss,Slots,[]),!.
 %select_slots(Ss,Slots):- select_slots(Ss,Slots,_).
 select_slots(X,[],X):-!.
 select_slots([Slot|X],[Slot|Slots],Remaining):- 
   select_slots(X,Slots,Remaining).
+/*
 select_slots(X,[Slot|Slots],Remaining):- fail,
   select(Slot,X,Mid),!,
   select_slots(Mid,Slots,Remaining).
-
+*/
 
 % BE
 % slot_verb_kind(aux(be,_MODAL),_,TypeS,S,bE(is,A,S),[slot(dirO,TypeS,A,_,free)]).
@@ -707,19 +705,21 @@ slot_verb_kind(Type,Verb,TypeS,S,Pred,AllSlots):- fail, lazy_pred_LF(Type,Verb,T
 slot_verb_kind(_Iv,Verb,TypeS,S,Pred,Slots) :-
    lf80(TypeS,intrans_LF(Verb,TypeS,S,Pred,Slots,_)).
 
+slot_verb_kind(_Tv,Verb,TypeS,S,Pred,AllSlots) :-
+   select_slots(AllSlots,[slot(dirO,TypeD,D,SlotD,free)],Slots),
+   lf80(TypeS-TypeD,trans_LF1(Verb,TypeS,S,TypeD,D,Pred,Slots,SlotD,_)).
+
 slot_verb_kind(dv(Prep),Verb,TypeS,S,Pred,AllSlots):- 
    select_slots(AllSlots, [slot(dirO,TypeD,D,SlotD,free),
        slot(indO,TypeI,I,SlotI,free)],Slots),
    %fail,fail,fail,fail,
    lf80(TypeS+TypeD+TypeI,ditrans_lex80(Verb,Prep,TypeS,S,TypeD,D,TypeI,I,Pred,Slots,SlotD,SlotI,_)).
+   
    % see no_repeats_dc(DC0,subj_obj_indirect_slots_LF(ditrans,verb_prep(Verb,Prep),TypeS,S,TypeD,D,TypeI,I,Pred,Slots,SlotI,SlotD,DC0)).
 
-slot_verb_kind(_Tv,Verb,TypeS,S,Pred,AllSlots) :-
-   select_slots(AllSlots,[slot(dirO,TypeD,D,SlotD,free)],Slots),
-   lf80(TypeS-TypeD,trans_LF1(Verb,TypeS,S,TypeD,D,Pred,Slots,SlotD,_)).
-
-ditrans_lex80(Verb,Prep,TypeS,S,TypeD,D,TypeI,I,Pred,Slots,SlotD,SlotI,_):-
-  Pred = ditrans_call(Verb,Prep,TypeS,S,TypeD,D,TypeI,I,Slots,SlotD,SlotI).
+ditrans_lex80(Verb,Prep,TypeS,S,TypeD,D,TypeI,I,Pred,Slots,SlotD,SlotI,_):- 
+  Pred = ditrans_call(Verb,prep(Prep),subjType(TypeS),subj(S),dirType(TypeD),dirO(D),indType(TypeI),
+   indO(I),slots(Slots),slot_d(SlotD),slot_i(SlotI)).
 
 
 deepen_case(prep(at),time).

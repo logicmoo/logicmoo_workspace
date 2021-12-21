@@ -126,7 +126,7 @@ setof_oR_nil(X,G,S):- setof(X,G,S)*->true;S=[].
 seto(X,E,S) :-
 %	portray_clause(({X} :- E)),
 	phrase(satisfy80(E,G),Vars),
-	pprint_ecp_cmt(yellow,((X+Vars):-G)),!,
+	%pprint_ecp_cmt(yellow,((X+Vars):-G)),!,
 	(   setof(X,Vars^G,S) 
 	*->  true
 	;   S = []

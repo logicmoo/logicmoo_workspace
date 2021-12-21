@@ -355,10 +355,14 @@ add_spans_to_w2(RW2s,Span,RW2s):- wdmsg(missed(Span)).
 %include_is_w2(Pos,RW2s):- must(partition(is_w2,Pos,RW2Ms,Spans)),!,must(add_spans_to_w2(RW2Ms,Spans,RW2s)).
 include_is_w2(Pos,RW2s):-include(is_w2,Pos,RW2s).
 
-text_to_best_tree_real(Text,TreeO):- text_to_best_tree_real_old(Text,Tree), !,
-  text_to_spacy_pos(Text,Pos),include_is_w2(Pos,RW2s),
+add_spacy_text_to_best_tree_real(Text,Tree,TreeO):- 
+  notrace(text_to_spacy_pos(Text,Pos)), include_is_w2(Pos,RW2s),
   debug_nop(writeln(spacy=RW2s)),
   replace_pos_tree_w2(RW2s,Tree,TreeO),!.
+add_spacy_text_to_best_tree_real(_Text,Tree,Tree).
+
+text_to_best_tree_real(Text,TreeO):- text_to_best_tree_real_old(Text,Tree), !,
+  add_spacy_text_to_best_tree_real(Text,Tree,TreeO).
 
 text_to_best_tree_real(Text,Tree):- best_new_tree(Text,Tree), !.
 
