@@ -57,7 +57,7 @@ flair_lexical_segs(I,O):-
   flair_parse_or_skip(I,S),
   merge_flair(S,M,O),!.
 
-flair_parse_or_skip(I,O):- catch(flair_parse(I,O),_,fail),nonvar(O),!.
+%flair_parse_or_skip(I,O):- catch(flair_parse(I,O),_,fail),nonvar(O),!.
 flair_parse_or_skip(_,[]).
 
 

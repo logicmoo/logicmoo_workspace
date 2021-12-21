@@ -38,7 +38,7 @@ spacy_lexical_segs(I,O):-
   spacy_parse_or_skip(I,S),!,
   merge_spacy(S,M,O),!.
 
-spacy_parse_or_skip(I,O):- catch(spacy_parse(I,O),_,fail),nonvar(O),!.
+%spacy_parse_or_skip(I,O):- catch(spacy_parse(I,O),_,fail),nonvar(O),!.
 spacy_parse_or_skip(_,[]).
 
 merge_spacy([],O,O):-!.
