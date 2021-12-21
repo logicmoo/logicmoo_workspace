@@ -439,9 +439,13 @@ maybe_modalize0(Scope,O, PN+L,P,PP):- nonvar(PN), !, maybe_modalize1(Scope,O,PN,
 maybe_modalize0(Scope,O,[L|PN],P,PP):- nonvar(PN), !, maybe_modalize1(Scope,O,PN,P,PM), maybe_modalize1(Scope,O,L,PM,PP).
 maybe_modalize0(Scope,O, negP(X),P,PP):-!, maybe_modalize0(Scope,O,[negP|X],P,PP).
 maybe_modalize0(Scope,O, past, P, PP):-!,maybe_modalize0(Scope,O,in_past, P, PP).
-maybe_modalize0(_Scope,_,Past, P, P):- sub_term(E,Past),compound(E), E=modalize(Past,_),!.
+maybe_modalize0(_Scope,_,Past, P, P):- sub_term(E,P),compound(E), E=modalized(Past,_),!.
+maybe_modalize0(_Scope,_,part,  P, P).
+maybe_modalize0(_Scope,_,sg,  P, P).
+maybe_modalize0(_Scope,_,pl,  P, P).
 maybe_modalize0(_Scope,_,true, P, P):-!.
 maybe_modalize0(_Scope,_,negP, P, \+ P):-!.
+
 maybe_modalize0(_Scope,_,not,  P, \+ P).
 maybe_modalize0(_Scope,_,root, P, P):-!.
 maybe_modalize0(_Scope,_,pres, P, P):-!.

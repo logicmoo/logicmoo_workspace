@@ -181,16 +181,23 @@ imperative80(imp(You,V,S)) --->
    s80(S).
 
 imperative_verb(You,Root),
-   theText80(you),
-   verb_form88(ExtraMods,Root,imp+fin,2+sg,main) --->
-   verb_form88(ExtraMods,Root,inf,_,_),
-   {You=you}.
+   theText80(You),
+   verb_form88([Inf,SgOrPl|ExtraMods],Root,imp+fin,Pers+SgOrPl,Main) --->
+   verb_form88(ExtraMods,Root,Inf,Pers+SgOrPl,Main),
+   {pers_pron_lex(You,_,Pers,SgOrPl,_)}.
 
 imperative_verb(You,Root),
-   theText80(you),
-   verb_form88([X,Y,Z|ExtraMods],Root,imp+fin,2+sg,main) --->
+   theText80(You),
+   verb_form88([Inf,SgOrPl|ExtraMods],Root,imp+fin,Pers+SgOrPl,Main) --->
+   verb_form88(ExtraMods,Root,Inf,Pers+SgOrPl,Main),
+   {ignore(pers_pron_lex(You,_,Pers,SgOrPl,_)),ignore(You=they)}.
+
+
+imperative_verb(You,Root),
+   theText80(You),
+   verb_form88([X,Y,Z|ExtraMods],Root,imp+fin,X,main) --->
    verb_form88(ExtraMods,Root,X,Y,Z),
-   {You=you}.
+   {ignore(You=they)}.
 
 
 
@@ -219,13 +226,13 @@ logical_s_word(c,r,implies).
 logical_s_word(c,r,implied).
 logical_s_word(c,r,otherwise).
 logical_s_word(c,r,therefore).
-%logical_s_word(X,X,W):-  if_search_expanded(5), logical_n_word(W).
+logical_s_word(X,X,W):-  if_search_expanded(5), logical_n_word(W).
 logical_s_word(X,X,W):-is_sent_adverb(W).
 logical_s_word2(r,c,[else,if]).
 
      logical_n_word(and).
      logical_n_word(or).
-     logical_n_word(not).
+     logical_n_word(not):- if_search_expanded(7).
      logical_n_word(except).
      
 %logical_s_word(already).

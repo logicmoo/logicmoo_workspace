@@ -110,16 +110,16 @@ number_lex(W,I,PlOrSg) :-
         tr_number(W,I),
         ag_number(I,PlOrSg).
 
+pers_pron_lex(it,neut,3,sg,_).
+pers_pron_lex(they,_,3,pl,subjA).
 pers_pron_lex(he,masc,3,sg,subjA).
 pers_pron_lex(her,fem,3,sg,compL).
 pers_pron_lex(him,masc,3,sg,compL).
 pers_pron_lex(i,_,1,sg,subjA).
-pers_pron_lex(it,neut,3,sg,_).
 pers_pron_lex(me,_,1,sg,compL).
 pers_pron_lex(myself,_,1,sg,_).
 pers_pron_lex(she,fem,3,sg,subjA).
 pers_pron_lex(them,_,3,pl,compL).
-pers_pron_lex(they,_,3,pl,subjA).
 
 %pers_pron_lex(which,neut,3,_,subjA).
 %pers_pron_lex(what,neut,3,_,subjA).
