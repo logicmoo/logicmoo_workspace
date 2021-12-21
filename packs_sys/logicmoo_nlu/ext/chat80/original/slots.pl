@@ -191,11 +191,20 @@ i_np_mods([Mod|Mods],X,Slots0,Pred0,QMods0,Up,Id,Index) :-
    append(Up0,Mods,Mods0),
    i_np_mods(Mods0,X,Slots,Pred,QMods,Up,+Id,Index).
 i_np_mods(Mods,_,[Slot|Slots],'`'(true),QMods,Mods,Id,_) :-
-   i_voids([Slot|Slots],QMods,Id).
+   i_voids_limited([Slot|Slots],QMods,Id).
 
+proper_len(X,X,0):- \+ compound(X),!.
+proper_len([_|X],O,N):- proper_len(X,O,M), N is M + 1.
 
-%i_voids(V,_,_):- ((stack_depth(D),D>1000)),!,ignore((dumpST,break)),fail.
+%i_voids_limited(A,_,_):- proper_len(A,_,L),L>10,!,fail.
+i_voids_limited(A,B,C):- proper_len(A,P,L),L>8,!,P=[],!,i_voids_limited0(A,B,C).
+i_voids_limited(A,B,C):- i_voids_limited0(A,B,C).
+%i_voids_limited(A,B,C):- stack_depth(D),D>500,dmsg(stack_depth(D)=i_voids(A,B,C)),!,fail,ignore((dumpST,break)),fail.
+i_voids_limited0(Slots,QMods,Id):- 
+  i_voids(Slots,QMods,Id),length(Slots,SL), ((SL > 20) -> (!, fail);true).
+
 i_voids([],[],_).
+i_voids(A,B,C):- ((stack_depth(D),D>1000)),!,fail,dmsg(stack_depth(D)),!,fail,ignore((dumpST,break)),fail.
 i_voids([Slot|Slots],[quantS(voidQ,X,'`'(true),'`'(true),[],_)|QMods],Id) :-
    nominal_slot(Slot,X,-Id), !,
    i_voids(Slots,QMods,+Id).
@@ -603,7 +612,7 @@ i_measure(TypeX-X,Adj,TypeY,Y,quantS(voidQ,TypeY-Y,'`'(P),'`'(true),[],_)) :-
 
 i_verb_mods(RefVar,Mods,_,XA,Slots0,Args0,Up,Id) :-
    fill_verb(RefVar,Mods,XA,[],Slots0,Slots,Args0,Args,Up,-Id),
-   i_voids(Slots,Args,+Id).
+   i_voids_limited(Slots,Args,+Id).
 
 nominal_slot(slot(Kind,Type,X,Id,_),Type-X,Id) :-
    nominal_kind(Kind).
