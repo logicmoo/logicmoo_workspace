@@ -431,7 +431,7 @@ lazy_pred(Type,Verb,TypeS,S,AllSlots):- dmsg(lazy_pred(Type,Verb,TypeS,S,AllSlot
 
 lazy_pred_LF(Type,Verb,TypeS,S,AllSlots,P):-  
    %if_search_expanded(0),
-   dmsg(lazy_pred_LF(Type,Verb,TypeS,S,AllSlots)),!,
+   %dmsg(lazy_pred_LF(Type,Verb,TypeS,S,AllSlots)),!,
    % nonvar(AllSlots), 
    P = lazy_pred(Type,Verb,TypeS,S,AllSlots).
 

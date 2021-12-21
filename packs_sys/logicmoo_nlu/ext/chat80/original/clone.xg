@@ -186,6 +186,14 @@ imperative_verb(You,Root),
    verb_form88(ExtraMods,Root,inf,_,_),
    {You=you}.
 
+imperative_verb(You,Root),
+   theText80(you),
+   verb_form88([X,Y,Z|ExtraMods],Root,imp+fin,2+sg,main) --->
+   verb_form88(ExtraMods,Root,X,Y,Z),
+   {You=you}.
+
+
+
 /* Basic sentence (actually, declarative sentence) */
 
 
@@ -208,16 +216,18 @@ logical_s_word(c,c,eigther).
 logical_s_word(c,r,then).
 logical_s_word(c,r,else).
 logical_s_word(c,r,implies).
+logical_s_word(c,r,implied).
 logical_s_word(c,r,otherwise).
 logical_s_word(c,r,therefore).
-logical_s_word(X,X,W):- logical_n_word(W).
-
+%logical_s_word(X,X,W):-  if_search_expanded(5), logical_n_word(W).
+logical_s_word(X,X,W):-is_sent_adverb(W).
 logical_s_word2(r,c,[else,if]).
 
      logical_n_word(and).
      logical_n_word(or).
      logical_n_word(not).
      logical_n_word(except).
+     
 %logical_s_word(already).
 %logical_s_word(but).
 %logical_s_word(for).

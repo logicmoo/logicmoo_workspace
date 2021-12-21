@@ -149,8 +149,11 @@ poss_pron_lex(our,_,1,pl).
 poss_pron_lex(their,_,3,pl).
 poss_pron_lex(your,_,2,_).
 
-prep_lex(X):- prep_db(chat80,X).
-prep_lex(X):- try_lex(prep_db(X)).
+prep_lex(X):- prep_db(chat80,X), \+ never_prep(X).
+prep_lex(X):- try_lex(prep_db(X)), \+ never_prep(X).
+
+never_prep(a).
+never_prep(or).
 
 prep_db(chat80,as).
 prep_db(chat80,at).

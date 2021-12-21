@@ -249,7 +249,7 @@ lex_winfo0(Word,W2):- lex_winfo_r(Word,Had),  W2 = w(Word, [lex_winfo|Had]),!.
 lex_winfo0(W,W):-!.
 
 :- thread_local(tmplex:had/1).
-lex_winfo1(_, _, _):- use_penn_links(false),!.
+%lex_winfo1(_, _, _):- use_penn_links(false),!.
 lex_winfo1(_, Had, _):- is_list(Had),member(lex_winfo,Had),!.
 lex_winfo1(Word, Had,W2):- is_list(Had),member(truecase('UPPER'),Had),toPropercase(Word,PWord),Word\==PWord,!,lex_winfo1(PWord,Had,W2).
 lex_winfo1(Word, Had,W2):- locally(tmplex:had(Had),lex_winfo_r(Word,R)), R\==[],unlevelize(R,R2),nb_set_add(W2,[lex_winfo|R2]).
@@ -261,10 +261,20 @@ lex_winfo_r(Word,R):- lex_tinfo(text(a), Word, R).
 
 
 :- export(lex_tinfo/3).
-lex_tinfo(Type, Value,DatumF):-
+lex_tinfo(Type, Value,DatumO):-
  findall_set(Datum, get_info_about_type(_All, 0, Type, Value, Datum), DatumL),
    correct_dos(DatumL, DatumF),
-   nop(maplist(wdmsg, DatumF)), !.
+   nop(maplist(wdmsg, DatumF)),
+   exclude(filter_more,DatumF,DatumO).
+
+filter_more(level(_,_,_,A,_)):-!,filter_more(A).
+filter_more(A):- var(A),fail.
+filter_more(s(_,_,_, _,_,_)).
+filter_more(id(_)).
+filter_more(todo(_,A,_)):-!,filter_more(A).
+%filter_more(W):- writeq(W),nl,fail.
+
+filter_more(id(wn,_)).
 
 
 
@@ -454,6 +464,8 @@ lex_info(Kind, String, Out):-
 lex_winfo(Kind, Level, Words, String, Datum):-
  cvt_to_atom(String, AString),
  lex_info(Kind, Level, txt(AString), [text80(Words)], Datum).
+
+
 
 %into_dm(String, txt(AString)):- cvt_to_atom(String, AString).
 
@@ -654,7 +666,7 @@ lex_arg_type( sem, 0, framenet, frels(+(see_also), concept(fn2), concept(fn2), d
 lex_arg_type( sem, 0, framenet, frels(+(subframe), concept(fn2), concept(fn2), data, data)).
 lex_arg_type( sem, 0, framenet, frels(+(using), concept(fn2), data, /* concept(fn2), */ data, data)).
 
-%lex_arg_type( syn, 0, framenet, fsr(text(a)-pos, concept(fn), data)).
+lex_arg_type( syn, 0, framenet, fsr(text(a)-pos, concept(fn), data)).
 lex_arg_type( sem, 0, framenet, semtype(concept(fn), data, data)).
 lex_arg_type( syn, 0, mu, thetaRole(text(a), data, concept(tt2), data, data, concept(tt2), text(str), text(str), data)).
 

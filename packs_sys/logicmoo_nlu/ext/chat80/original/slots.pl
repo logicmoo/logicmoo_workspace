@@ -330,6 +330,15 @@ c8("What are the continents containing a country in which contains more than two
        database80(bE(is,_32372516,_32372518)).
 
 */
+
+i_s(s(Subj,Verb,VArgs,VMods),Pred,Up,Id) :-
+  select(cond(IF,S2),VArgs,NewVargs),
+  S1 = s(Subj,Verb,NewVargs,VMods),
+  i_s(S1,Pred1,Up,Id),!,
+  s80lf(S2,Pred2),arg(2,Pred2,LF),
+  Pred= cond_pred(IF,Pred1,LF).
+
+
 %i_s(S,Pred,Up,Id):- dmsg(i_s(S,Pred,Up,Id)),fail.
 i_s(s(Subj,verb(VerbType,Root,Voice,Tense,Aspect,Neg0),VArgs,VMods),Pred,Up,Id) :-
   unslotted_v_args(VArgs,NewVArgs,IntoNegs), IntoNegs\==[],
@@ -350,13 +359,6 @@ i_s(s(Subj,verb(Mainiv,aux(be,_),[],Active,Fin+fin,[],Neg),VArgs,VMods),Pred,Up,
    i_s(s(Subj,verb(Mainiv,exist,[],Active,Fin+fin,[],Neg),VArgs,VMods),Pred,Up,Id).
 i_s(s(Subj,verb(Mainiv,be,[],Active,Fin+fin,[],Neg),VArgs,VMods),Pred,Up,Id) :- !,
    i_s(s(Subj,verb(Mainiv,exist,[],Active,Fin+fin,[],Neg),VArgs,VMods),Pred,Up,Id).
-
-i_s(s(Subj,Verb,VArgs,VMods),Pred,Up,Id) :-
-  select(cond(IF,S2),VArgs,NewVargs), !,
-  S1 = s(Subj,Verb,NewVargs,VMods),
-  i_s(S1,Pred1),
-  i_s(S2,Pred2,Up,Id),
-  Pred= cond_pred(IF,Pred1,Pred2).
 
 i_s(s(Subj,Verb,VArgs,VMods),Pred,Up,Id) :-
   gensym(frame_,X),
@@ -436,7 +438,8 @@ maybe_modalize0(_Scope,O, V,P,P):- var(V),!,not_true_or_qtrue(O).
 maybe_modalize0(Scope,O, PN+L,P,PP):- nonvar(PN), !, maybe_modalize1(Scope,O,PN,P,PM), maybe_modalize1(Scope,O,L,PM,PP).
 maybe_modalize0(Scope,O,[L|PN],P,PP):- nonvar(PN), !, maybe_modalize1(Scope,O,PN,P,PM), maybe_modalize1(Scope,O,L,PM,PP).
 maybe_modalize0(Scope,O, negP(X),P,PP):-!, maybe_modalize0(Scope,O,[negP|X],P,PP).
-maybe_modalize0(_Scope,_,Past, P, P):- atom(Past),functor(P,Past,_).
+maybe_modalize0(Scope,O, past, P, PP):-!,maybe_modalize0(Scope,O,in_past, P, PP).
+maybe_modalize0(_Scope,_,Past, P, P):- sub_term(E,Past),compound(E), E=modalize(Past,_),!.
 maybe_modalize0(_Scope,_,true, P, P):-!.
 maybe_modalize0(_Scope,_,negP, P, \+ P):-!.
 maybe_modalize0(_Scope,_,not,  P, \+ P).
@@ -447,7 +450,7 @@ maybe_modalize0(_Scope,_,voidQ, P, P):-!.
 
 maybe_modalize0(scope,_,cond( Because, S), P, cond_pred(Because,P,SP)):- i_s(S,SP),!.
 maybe_modalize0(scope,O,notP(Modal), P, \+ PP):- !, not_true_or_qtrue(O),!,maybe_modalize1(scope,O,Modal, P, PP).
-maybe_modalize0(slot,O,notP(Modal), P, PP):- !, not_true_or_qtrue(O),!,maybe_modalize1(slot,O,Modal, P, PP).
+maybe_modalize0(slot, O,notP(Modal), P, PP):- !, not_true_or_qtrue(O),!,maybe_modalize1(slot,O,Modal, P, PP).
 maybe_modalize0(Scope,O,identityQ(Modal), P, PP):- !, maybe_modalize1(Scope,O,Modal, P, PP).
 maybe_modalize0(Scope,O,adv(Modal), P, PP):- !, maybe_modalize1(Scope,O,Modal, P, PP).
 maybe_modalize0(Scope,O,aux(_,Modal), P, PP):- !, maybe_modalize1(Scope,O,Modal, P, PP).
@@ -456,12 +459,14 @@ maybe_modalize0(_Scope,_,[],P,P).
 %maybe_modalize0(_Scope,O,Modal, P, PP):- not_true_or_qtrue(O), atom(Modal),!,PP=..[Modal,P].
 maybe_modalize0(_Scope,_,M,P,modalized(M,P)).
 
+% make_pred(S,notP(M),P,A,PRED):- !, make_pred(S,identityQ(M),\+ P,A,PRED).
 make_pred(S,N,P,A,PRED):- pred(S,N,P,A) = PRED.
 
 reshape_pred(transparent,S,N,P,A,PRED):- make_pred(S,N,P,A,PRED).
-reshape_pred(aux(have,_MODAL),Subj,DetPosNeg,Verb0,
-      [quantS(Det,X,Head0,Pred,QArgs,Y)|MRest],
-      pred(Subj,DetPosNeg,Verb,[quantS(Det,X,Head,Pred,QArgs,Y)|MRest])) :-
+reshape_pred(aux(have,_MODAL),Subj,DetPosNeg,Verb0, [QUANT|MRest], OUT) :-
+   QUANT = quantS(Det,X,Head0,Pred,QArgs,Y),
+    QOUT = quantS(Det,X, Head,Pred,QArgs,Y),
+   make_pred(Subj,DetPosNeg,Verb,[QOUT|MRest],OUT),
    have_pred(Head0,Verb0,Head,Verb).
 
 have_pred('`'(Head),Verb,'`'(true),(Head,Verb)).
