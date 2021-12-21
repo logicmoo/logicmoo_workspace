@@ -436,16 +436,21 @@ adj_lex(African,Restr):-  adj_db(chat80,African,Restr).
 %adj_lex(African,Restr):-  adj_db(talkdb,African,Restr).
 %adj_lex(African,Restr):-  adj_db(clex,African,Restr).
 
+%expands_pos(I,O):- nonvar(O),expands_pos(I,M),!,O=M.
 expands_pos(Var,O):- var(Var), !, fail, O = Var.
+%expands_pos(A;B,O):-!, expands_pos(A,O);expands_pos(B,O).
 expands_pos(List,O):- is_list(List),!,member(E,List),expands_pos(E,O).
 expands_pos(I,pos(O)):- atom(I),atom_concat(L,'_',I), !, freeze(O,(atom(O),atom_concat(L,_,O))).
 expands_pos(I,pos(I)):- atom(I), !.
-expands_pos(A;B,O):-!, expands_pos(A,O);expands_pos(B,O).
+expands_pos(X,X):- compound(X),!.
 
-match_pos(L,L):-!.
-match_pos(A+B,O):-!,match_pos(A,O),match_pos(B,O).
-match_pos(A;B,O):-!,match_pos(A,O);match_pos(B,O).
+match_pos(V,L):- compound(V),!,match_pos_c(V,L).
 match_pos(Pos,L):- expands_pos(Pos,PosA),expands_pos(L,PosB),match_pos(PosA,PosB).
+match_pos_c(A+B,O):-!,match_pos(A,O),match_pos(B,O).
+match_pos_c(A;B,O):-!,match_pos(A,O);match_pos(B,O).
+match_pos_c(V,V):-!.
+match_pos_c(Pos,L):- expands_pos(L,PosB),L\==PosB,match_pos_c(Pos,PosB).
+%match_pos(V,L):- var(V),!,V=L.
 %adj_db(chat80,american,restr).
 %adj_db(chat80,asian,restr).
 %adj_db(chat80,european,restr).

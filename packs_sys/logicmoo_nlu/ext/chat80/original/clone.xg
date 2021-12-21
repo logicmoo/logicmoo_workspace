@@ -187,13 +187,7 @@ imperative_verb(You,Root),
    {pers_pron_lex(You,_,Pers,SgOrPl,_)}.
 
 imperative_verb(You,Root),
-   theText80(You),
-   verb_form88([Inf,SgOrPl|ExtraMods],Root,imp+fin,Pers+SgOrPl,Main) --->
-   verb_form88(ExtraMods,Root,Inf,Pers+SgOrPl,Main),
-   {ignore(pers_pron_lex(You,_,Pers,SgOrPl,_)),ignore(You=they)}.
-
-
-imperative_verb(You,Root),
+   {freeze(You,\+ logical_s_word(You))},
    theText80(You),
    verb_form88([X,Y,Z|ExtraMods],Root,imp+fin,X,main) --->
    verb_form88(ExtraMods,Root,X,Y,Z),
@@ -226,14 +220,14 @@ logical_s_word(c,r,implies).
 logical_s_word(c,r,implied).
 logical_s_word(c,r,otherwise).
 logical_s_word(c,r,therefore).
-logical_s_word(X,X,W):-  if_search_expanded(5), logical_n_word(W).
+logical_s_word(X,X,W):-  if_search_expanded(5), logical_o_word(W).
 logical_s_word(X,X,W):-is_sent_adverb(W).
 logical_s_word2(r,c,[else,if]).
 
-     logical_n_word(and).
-     logical_n_word(or).
-     logical_n_word(not):- if_search_expanded(7).
-     logical_n_word(except).
+     logical_o_word(and).
+     logical_o_word(or).
+     logical_o_word(not):- if_search_expanded(7).
+     logical_o_word(except).
      
 %logical_s_word(already).
 %logical_s_word(but).
@@ -248,13 +242,11 @@ is_sent_adverb(Word):- member(Word,[actually, apparently, basically, briefly, ce
   interestingly, ironically, naturally, predictably, presumably, regrettably, seriously, strangely,
    surprisingly, thankfully, theoretically, therefore, truthfully, ultimately, wisely]).
 
-if_then(if,then).
-if_then(when,do).
-if_then(If,Then):- logical_s_word(If),logical_s_word(Then).
-
-%if_cond(If,S,Then) ---> theText80(If),{if_then(If,Then)},s80(S),theText80(Then).
-if_cond(If,S,Mask) ---> theText80(If),{logical_s_word(If)},!,s_vp_801(S,Mask).
+if_cond(If,S,Mask) ---> optional_comma, theText80(If),{logical_s_word(If)},!,s_vp_801(S,Mask).
 if_cond(true,S,Mask) ---> s_vp_801(S,Mask).
+
+optional_comma ---> theText80(','),!.
+optional_comma ---> [].
 
 s80(P) --->  s80(P,_).
 
@@ -311,6 +303,10 @@ s_vp_801(NP,Verb,[],[],_) --->  [],!,
    {Verb = verb(main+iv,tell,[],active,pres+fin,[],(_)),
     NP= np(3+sg,np_head(_Var,generic,[adj(ti(statement,self))],statement),[])}.
 */
+just_vp(Subj,Agmt,Type,Verb,[ARG],Mods,Mask) --> theText80('did'),!,
+  {Verb = verb(main+tv,performed,[],active,past+fin,[],[]),
+    ARG = arg(dirO,np(3+sg,np_head(_Var2,generic,[],action),[]))}.
+
 just_vp(Subj,Agmt,Type,Verb,Args,Mods,Mask) --->
   s_vp1(Subj,Agmt,Type0,Verb0,Args0,Mods0,Mask0),
   more_s_vp1(Subj,Agmt,Type0,Verb0,Args0,Mods0,Mask0,Type,Verb,Args,Mods,Mask).
@@ -356,6 +352,8 @@ np1(np(Agmt,Pronoun,[]),Agmt,NPCase,defA,_,Set,Nil) --->
    pers_pron(Pronoun,Agmt,Case),
    {is_empty_bits(Nil), is_to_role_case(Case,decl,NPCase)}.
 
+
+np1(_AgmtKernelModsO,_Agmt,_Case,_Def,_Role,_Set,_Mask) ---> theText80(W), {logical_o_word(W),!,fail}.
 np1(np(Agmt,Kernel,Mods),Agmt,_Case,Def,Role,Set,Mask) --->
    {is_pp(Set)},
    np_head(_Var,Kernel,Agmt,Def+Type,PostMods,Mods),
@@ -622,6 +620,10 @@ comp_6(same,Adj) --->
 /* Prepositional Phrase */
 
 prep_arg_vp(vact(V,A,S)) --->
+      imperative_verb(_,_),
+      s80(s(_,V,A,S)).
+/*
+prep_arg_vp(vact(V,A,S)) ---> prep_arg_vp(vact(V,A,S)).
    imperative_verb808(_,_),
    s80(s(_,V,A,S)).
 
@@ -630,6 +632,7 @@ imperative_verb808(You,Root),
    verb_form88(ExtraMods,Root,imp+fin,2+sg,main) --->
    verb_form88(ExtraMods,Root,inf,_,_),
    {You=you}.
+*/
 
 xg_prep_phrase(_PPAlowed,prep_phrase(_PPType,Prep,Arg),_Case,_Set,_Mask) --->
    prep(Prep),
@@ -917,7 +920,7 @@ adverb(adj(Adj)) ---> {if_search_expanded(3)},theText80_W2(W,W2), {adj_lex_w2(W,
 adverb(adv(W)) ---> theText80(W), {adverb_lex(W)}, may_adverb(W).
 adverb(adv(t(A,B,C))) ---> theText80(W), {modal_verb_form_aux(W,A,B,C)}, may_adverb(W).
 
-may_adverb(W)---> {\+ logical_s_word(W),\+ logical_n_word(W)}.
+may_adverb(W)---> {\+ logical_s_word(W),\+ logical_o_word(W)}.
 may_adverb(_)---> xg_peek( \+ [_]).
    
 no_args_vt(tv).

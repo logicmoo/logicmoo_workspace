@@ -185,6 +185,7 @@ noun(Noun,Adjs,Adjs,Agmt) --->
 
 det(det(Det),Number,Def) --->
    theText80(W),
+   {freeze(W,\+ logical_o_word(W))},
    {det_lex(W,Number,Det,Def)}.
 det(generic,_,generic) ---> noText.
 
@@ -230,17 +231,20 @@ verb_form80(Verb,Tense,Agmt,_Role) --->
    theText80_W2(W,L),
    {verb_form_wlex(L,W,Verb,Tense,Agmt)}.
 
-name_xg(Name) --->
-   opt_the,
-   name_lex_txt(Name).
 
+name_xg('Billy') ---> theText80(bill),!.
+name_xg('Billy') ---> theText80(bob),!.
+name_xg(Name) ---> opt_the, name_lex_txt(Name),!.
+name_xg(Name) ---> theText80(a),!,name_xg(Name).
+name_xg(Name) ---> thePos80((nnp;nnps;ner('PERSON')),Name),!.
+name_xg('Billy') ---> theText80(bo),!.
 
-name_lex_txt(Name) ---> name_lex_txt0(Name).
+name_lex_txt(Name) ---> theTextL80([W1,'_',W2]),{!,is_w_w_name(W1,W2,Name)}.
+name_lex_txt(Name) ---> theTextL80([W1,W2]),{is_w_w_name(W1,W2,Name),name_LF(Name)}.
+name_lex_txt(Name) ---> theText80(Name), {name_LF(Name)},!.
+name_lex_txt(Name) ---> thePos80((nnp;nnps),W1),thePos80((nnp;nnps),W2),{atomic_list_concat([W1,'_',W2],Name)}.
 
-name_lex_txt0(Name) ---> thePos80((nnp;nnps),W1),thePos80((nnp;nnps),W2),{atomic(W1),atomic(W2),atomic_list_concat([W1,'_',W2],Name),name_LF(Name)}.
-name_lex_txt0(Name) ---> theTextL80([W1,W2]),{atomic(W1),atomic(W2),atomic_list_concat([W1,'_',W2],Name),name_LF(Name)}.
-name_lex_txt0(Name) ---> theTextL80([W1,'_',W2]),{!,atomic(W1),atomic(W2),atomic_list_concat([W1,'_',W2],Name),name_LF(Name)}.
-name_lex_txt0(Name) ---> theText80(Name), {name_LF(Name),!}.
+is_w_w_name(W1,W2,Name):- atomic(W1),atomic(W2),atomic_list_concat([W1,'_',W2],Name),!.
 
 ace_var(AceVar) ---> theText80_Text(AceVar), {ace_varname(AceVar),!}.
 
@@ -280,8 +284,8 @@ terminator(Type) --->
 
 %opt_the ---> optText1(the,'Determiner').
 %opt_the ---> optTextC(The,'Determiner',The=the).
+opt_the ---> theText80(the),!.
 opt_the ---> noText.
-opt_the ---> theText80(the).
 
 conj_xg(_,list,list) ---> theText80(',').
 conj_xg(Conj,list,end) --->
