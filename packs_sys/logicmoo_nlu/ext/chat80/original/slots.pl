@@ -700,7 +700,6 @@ slot_verb_kind(_Tv,Verb,TypeS,S,Pred,AllSlots) :-
    select_slots(AllSlots,[slot(dirO,TypeD,D,SlotD,free)],Slots),
    lf80(TypeS-TypeD,trans_LF(Verb,TypeS,S,TypeD,D,Pred,Slots,SlotD,_)).
 
-slot_verb_kind(Type,Verb,TypeS,S,Pred,AllSlots):- fail, lazy_pred_LF(Type,Verb,TypeS,S,AllSlots,Pred),!.
 
 slot_verb_kind(_Iv,Verb,TypeS,S,Pred,Slots) :-
    lf80(TypeS,intrans_LF(Verb,TypeS,S,Pred,Slots,_)).
@@ -709,13 +708,17 @@ slot_verb_kind(_Tv,Verb,TypeS,S,Pred,AllSlots) :-
    select_slots(AllSlots,[slot(dirO,TypeD,D,SlotD,free)],Slots),
    lf80(TypeS-TypeD,trans_LF1(Verb,TypeS,S,TypeD,D,Pred,Slots,SlotD,_)).
 
-slot_verb_kind(dv(Prep),Verb,TypeS,S,Pred,AllSlots):- 
-   select_slots(AllSlots, [slot(dirO,TypeD,D,SlotD,free),
+slot_verb_kind((Prep),Verb,TypeS,S,Pred,AllSlots):- if_search_expanded(4), 
+   select_slots(AllSlots, 
+       [slot(dirO,TypeD,D,SlotD,free),
        slot(indO,TypeI,I,SlotI,free)],Slots),
    %fail,fail,fail,fail,
    lf80(TypeS+TypeD+TypeI,ditrans_lex80(Verb,Prep,TypeS,S,TypeD,D,TypeI,I,Pred,Slots,SlotD,SlotI,_)).
    
-   % see no_repeats_dc(DC0,subj_obj_indirect_slots_LF(ditrans,verb_prep(Verb,Prep),TypeS,S,TypeD,D,TypeI,I,Pred,Slots,SlotI,SlotD,DC0)).
+slot_verb_kind(Type,Verb,TypeS,S,Pred,AllSlots):- if_search_expanded(5), 
+   lazy_pred_LF(Type,Verb,TypeS,S,AllSlots,Pred),!.
+
+ % see no_repeats_dc(DC0,subj_obj_indirect_slots_LF(ditrans,verb_prep(Verb,Prep),TypeS,S,TypeD,D,TypeI,I,Pred,Slots,SlotI,SlotD,DC0)).
 
 ditrans_lex80(Verb,Prep,TypeS,S,TypeD,D,TypeI,I,Pred,Slots,SlotD,SlotI,_):- 
   Pred = ditrans_call(Verb,prep(Prep),subjType(TypeS),subj(S),dirType(TypeD),dirO(D),indType(TypeI),

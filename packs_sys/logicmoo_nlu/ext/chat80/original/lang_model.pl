@@ -718,7 +718,7 @@ c881(SS,O):- atom_length(SS,L),L<3,!,O= true.
 c881(B,OO):-
  any_to_str(B,SS),
  S = c88(SS),
- locally(set_prolog_flag(gc,false),
+ locally(set_prolog_flag(gc,true),
 ((
  try_chat_80(S,text_to_corenlp_tree(SS,_)),
  ignore((
