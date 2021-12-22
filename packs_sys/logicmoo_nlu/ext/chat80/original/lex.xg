@@ -185,7 +185,6 @@ noun(Noun,Adjs,Adjs,Agmt) --->
 
 det(det(Det),Number,Def) --->
    theText80(W),
-   {freeze(W,\+ logical_o_word(W))},
    {det_lex(W,Number,Det,Def)}.
 det(generic,_,generic) ---> noText.
 

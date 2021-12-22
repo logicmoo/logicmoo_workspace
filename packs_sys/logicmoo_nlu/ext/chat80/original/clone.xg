@@ -187,7 +187,6 @@ imperative_verb(You,Root),
    {pers_pron_lex(You,_,Pers,SgOrPl,_)}.
 
 imperative_verb(You,Root),
-   {freeze(You,\+ logical_s_word(You))},
    theText80(You),
    verb_form88([X,Y,Z|ExtraMods],Root,imp+fin,X,main) --->
    verb_form88(ExtraMods,Root,X,Y,Z),
@@ -303,9 +302,13 @@ s_vp_801(NP,Verb,[],[],_) --->  [],!,
    {Verb = verb(main+iv,tell,[],active,pres+fin,[],(_)),
     NP= np(3+sg,np_head(_Var,generic,[adj(ti(statement,self))],statement),[])}.
 */
+
+no_more_words ---> \+ [_].
+
 just_vp(Subj,Agmt,Type,Verb,[ARG],Mods,Mask) --> theText80('did'),!,
   {Verb = verb(main+tv,performed,[],active,past+fin,[],[]),
-    ARG = arg(dirO,np(3+sg,np_head(_Var2,generic,[],action),[]))}.
+    ARG = arg(dirO,np(3+sg,np_head(_Var2,generic,[],action),[]))},
+    no_more_words.
 
 just_vp(Subj,Agmt,Type,Verb,Args,Mods,Mask) --->
   s_vp1(Subj,Agmt,Type0,Verb0,Args0,Mods0,Mask0),
@@ -338,6 +341,11 @@ subj0(Subj,Agmt,_) --->
 
 
 /* Noun Phrase */
+% to buy a car
+% @TODO DMILES
+np_11(np(Agmt,nameOf(_Var,link_s(SO),[]),_Mods),Agmt,_Case,_IndefA,_Role,_Set,_Mask) 
+  ---> theText80(to),!,
+   imperative80(S),!,{s80lf(S,SO)}.
 
 np_11(AgmtKernelModsO,Agmt,Case,Def,Role,Set,Mask) --->
   locally(tlclone:np_in_case(Case),
@@ -619,7 +627,7 @@ comp_6(same,Adj) --->
 
 /* Prepositional Phrase */
 
-prep_arg_vp(vact(V,A,S)) --->
+prep_arg_vp(vact(V,A,S)) ---> {if_search_expanded(5)},
       imperative_verb(_,_),
       s80(s(_,V,A,S)).
 /*
@@ -774,9 +782,11 @@ verb_form88(ExtraMods,RootVerb,Tense,Agmt,Role) --->
    verb_form88(ExtraMods2,RootVerb,Tense,Agmt,Role),
    {append_mods([ExtraMods1,ExtraMods2],ExtraMods)}.
 
-verb_form88([],RootVerb,Tense,Agmt,_Role) ---> 
+verb_form88(ExtraMods,RootVerbO,Tense,Agmt,_Role) ---> 
    theText80_W2(W,L),
-   {verb_form_wlex(L,W,RootVerb,Tense,Agmt)}.
+   {verb_form_wlex(L,W,RootVerb,Tense,Agmt)},
+   maybe_verb_prep(RootVerb,RootVerbO,ExtraMods).
+
 
 verb_form88([],adj_prep(P,ToFrom),_Tense,_Agmt,_Role) --->
    %{if_search_expanded(1)},
@@ -787,6 +797,9 @@ pre_prep_adj(P) ---> theText80(W),{(clex:adj_itr(W,P);
  (negprefix:negprefix(a,W1,un,W2),(W=W1;W=W2),P=W);(wnframes:opposite(a,W1,W2,_),(W=W1;W=W2),P=W);clex:tv_pp(W,P))}.
 pre_prep_adj(P) ---> adj_phrase(P,_Mask),!.
 
+maybe_verb_prep(RootVerb,RootVerb,[])--->[].
+maybe_verb_prep(RootVerb,RootVerb,[prep(Prep)]) ---> {if_search_expanded(7)}, prep(Prep).
+maybe_verb_prep(RootVerb,verb_prep(RootVerb,Prep),[]) ---> {if_search_expanded(6)}, prep(Prep).
 /*
 verb_form88(ExtraMods,RootVerb,Tense,Agmt,Role) --->
    maybe_modal(_,[],ModalInfo),!,
