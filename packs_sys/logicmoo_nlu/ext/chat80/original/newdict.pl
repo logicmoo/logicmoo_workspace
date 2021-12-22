@@ -131,6 +131,11 @@ pers_pron_lex(us,_,1,pl,compL).
 pers_pron_lex(we,_,1,pl,subjA).
 pers_pron_lex(you,_,2,Sg,_):- pl_or_sg(Sg).
 pers_pron_lex(yourself,_,2,sg,_).
+pers_pron_lex(itself,neut,3,sg,compL).
+pers_pron_lex(herself,fem,3,sg,compL).
+pers_pron_lex(himself,masc,3,sg,compL).
+pers_pron_lex(themself,agent,3,pl,compL).
+pers_pron_lex(themelves,_,3,pl,_).
 pers_pron_lex(yourselves,_,2,pl,_).
 pers_pron_lex(A,B,C,D):- det_pron_lex(A,B,C,D).
 
