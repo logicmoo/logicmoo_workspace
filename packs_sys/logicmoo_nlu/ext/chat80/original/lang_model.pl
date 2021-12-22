@@ -634,8 +634,8 @@ try_chat_80(S,F,Tree,QT):-
   statistics(runtime,[End,_]),
   Total is (End - Start)/1000,
   answer_color(QT,Color),
-  ansicall(fg(Color),in_cmt(print_tree_nl(F is runtime(Total)))),
-  ansicall(fg(cyan),in_cmt(writeq(?-S))), 
+  (Total>1.0 -> ansicall(fg(Color),in_cmt(print_tree_nl(F is runtime(Total)))) ; true),
+  (\+ string(S) -> ansicall(fg(cyan),in_cmt((write('?- '),writeq(S)))) ; true),
   (compound(S)->arg(1,S,SS);S=SS),
   assert_if_new(tmp:test80_result(SS,F,QT,Total)),
   ansicall(hfg(Color),in_cmt(print_tree_nl(F=QT))).
@@ -685,16 +685,17 @@ into_string_sents(SS,ListS):- atom_contains(SS,'.\n'),atomic_list_concat(ListS,'
 into_string_sents(SS,ListS):- atom_contains(SS,' . '),atomic_list_concat(ListS,' . ',SS),!.
 into_string_sents(SS,ListS):- atomic_list_concat(ListS,'\n',SS),!.
 
+c80:- test_c80.
 
-
-c8(SS,O):- break_apart(c8111,SS,O),!.
-c8111(SS,O):- atom_length(SS,L),L<3,!,O= true.
-c8111(SS,O):-
+c8:- s81(c8).
+c8(SS,O):- break_apart(c8_A,SS,O),!.
+c8_A(SS,O):- atom_length(SS,L),L<3,!,O= true.
+c8_A(SS,O):-
  S = c8(SS),
   locally(set_prolog_flag(gc,true),
  ((
- try_chat_80(S,text_to_corenlp_tree(SS,_)),
- try_chat_80(S,into_lexical_segs(SS,Lex)),
+ notrace((try_chat_80(S,text_to_corenlp_tree(SS,_)),
+ try_chat_80(S,into_lexical_segs(SS,Lex)))),
  try_chat_80(S,sentence80(Lex,Tree)),
  should_learn(Tree),
  try_chat_80(S,i_sentence(Tree,QT)),
@@ -710,12 +711,33 @@ c8111(SS,O):-
  nop(try_chat_80(S,into_cg(OO,_)))))),!.
 
  
+s8:- s81(s8).
+s8(B):- \+ string(B), any_to_str(B,S),!,s8(S).
+s8(S):- s8(S,_).
+s8(SS,O):- break_apart(s8_A,SS,O),!.
+s8_A(SS,O):- atom_length(SS,L),L<3,!,O= true.
+s8_A(SS,O):-
+ S = s8(SS),
+  locally(set_prolog_flag(gc,true),
+ ((
+ notrace((
+ %try_chat_80(S,text_to_corenlp_tree(SS,_)),
+ into_lexical_segs(SS,Lex))),
+ try_chat_80(S,sentence80(Lex,Tree)),
+ %should_learn(Tree),
+ %try_chat_80(S,i_sentence(Tree,QT)),
+ %should_learn(QT),
+ %try_chat_80(S,clausify80(QT,UE)),
+ O=Tree))),!.
+
+
 into_cg(CLIF,CG):-cgp_common_logic:convert_clif_to_cg(CLIF,CG),!.
 
-
-c88(SS,O):- break_apart(c881,SS,O),!.
-c881(SS,O):- atom_length(SS,L),L<3,!,O= true.
-c881(B,OO):-
+c88:- s81(c88).
+c88(S):- c8_make, try_chat_80(S,c88(S,_)).
+c88(SS,O):- break_apart(c88_A,SS,O),!.
+c88_A(SS,O):- atom_length(SS,L),L<3,!,O= true.
+c88_A(B,OO):-
  any_to_str(B,SS),
  S = c88(SS),
  locally(set_prolog_flag(gc,true),
@@ -749,7 +771,6 @@ capture80(G,Text):- wots(Text,with_pp(plain,ignore(\+ G))).
 
 %c88(M,O):- process4a(off,M,_,O,_Times).
 
-c88(S):- c8_make, try_chat_80(S,c88(S,_)).
 
 s83:- forall(training_data(Sent,M),(my_drs_to_fol_kif(M,O),in_cmt(block,print_tree_nl(Sent=O)))).
 
@@ -862,11 +883,11 @@ for_n(N,From,Call):-
 p1(P2,X):- atom(P2), \+ current_predicate(P2/1),  current_predicate(P2/2),!, 
   any_to_string(X,S),nl,dmsg(?-p1(P2,S)),call(P2,S,Y),wdmsg(Y),nl,!.
 p1(P1,X):- any_to_str(X,S),append_term(P1,S,G),nl,dmsg(?-G),call(G),nl,!.
-s81:- c8_make,s811(show_c80),s811(p1(cvt_to_objecteese)).
-s81(P):- s811(p1(P)).
-s811(P):- s811(15,P).
-s811(N,P):- c8_make,call(s8111(N,P)).
-s8111(N,P):-
+s81:- c8_make,s81_A(show_c80),s81_A(p1(cvt_to_objecteese)).
+s81(P):- s81_A(p1(P)).
+s81_A(P):- s81_A(15,P).
+s81_A(N,P):- c8_make,call(s81_B(N,P)).
+s81_B(N,P):-
   for_n(N,training_data(X,_),call(P,X)),
   for_n(N,parser_e2c:fracas_test_problem(X),call(P,X)),
   for_n(N,ape_test(_,X),call(P,X)),

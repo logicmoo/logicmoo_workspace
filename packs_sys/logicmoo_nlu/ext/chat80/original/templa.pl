@@ -245,7 +245,7 @@ bind_pos(_,_):- !,fail.
 bind_pos(Type,Var):- freeze80(Var,clex:learned_as_type(Type,Var)).
 
 
-verb_form_db(clex,Border,Border,A,B):- verb_form_db_clex(Border,Border,A,B).
+verb_form_db(clex,Borders,Border,A,B):- verb_form_db_clex(Borders,Border,A,B).
 
 verb_form_db_clex(Bordering,Border,pres+part,_):- (bind_pos('action',Border,'ing',Bordering)).
 verb_form_db_clex(Bordered,Border,past+part,_):- (bind_pos('action',Border,'ed',Bordered)).

@@ -510,7 +510,10 @@ noun_sing_plu_lex(chat80,thousand).
 noun_sing_plu_lex(chat80,fish).
 %noun_sing_plu_lex(clex,Y):- clex:noun_mass(Y, _, _).
 
+:- ignore((clause(talk_db(X,W),true,R),X==adv,\+ atom_concat(_,'ly',W),erase(R),fail)).
+
 %hide_plur_root_noun(1,Millions,Million):- noun_sing_plu_lex(Million), !, Millions\==Million.
+hide_plur_root_noun(_,_,_):-  if_search_expanded(3), !,fail.
 hide_plur_root_noun(1,_Twos,Two):-tr_number(Two,_).
 hide_plur_root_noun(1,_Ins,In):- notrace(prep_lex(In)).
 hide_plur_root_noun(1,_Mores,More):- comp_adv_lex(More,_).
@@ -561,7 +564,7 @@ noun_plu_db(chat80,sums,sum).
 noun_plu_db(chat80,times,time).
 noun_plu_db(chat80,totals,total).
 
-comp_adj_lex_w2(More,_,_):- never_adj(More),!,fail.
+%comp_adj_lex_w2(More,_,_):- never_adj(More),!,fail.
 comp_adj_lex_w2(_,W2,_):-  is_list(W2), \+ member(pos(jjr),W2),!,fail.
 comp_adj_lex_w2(Smaller,_,Small):- must80(comp_adj_lex(Smaller,Small)),!.
 comp_adj_lex_w2(_,W2,Root):-  is_list(W2), member(root(Root),W2),!.

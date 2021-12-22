@@ -564,7 +564,7 @@ multifile_dynamic_discontiguous(P):- multifile(P),dynamic(P),discontiguous(P).
 %:-multifile_dynamic_discontiguous(i_np/8).
 %:-multifile_dynamic_discontiguous(i_sentence/2).
 :-multifile_dynamic_discontiguous(ditrans_lex80/13).
-:-multifile_dynamic_discontiguous(standard_adj_LF/5).
+:-multifile_dynamic_discontiguous(standard_adj_LF/4).
 :-multifile_dynamic_discontiguous(adv_template_LF/5).
 :-multifile_dynamic_discontiguous(conj_apply/4).
 :-multifile_dynamic_discontiguous(bubble/3).
