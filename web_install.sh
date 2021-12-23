@@ -1,9 +1,9 @@
-#!/bin/bash
+#!/bin/bash -x
 
 # Installs with 
 #   source <(curl -sS https://logicmoo.org/gitlab/logicmoo/logicmoo_workspace/-/raw/master/web_install.sh)
 #   source <(curl -sS https://raw.githubusercontent.com/logicmoo/logicmoo_workspace/master/web_install.sh)
-
+#   https://colab.research.google.com/drive/12HyHjC-1tIWqkfKkelH3YZzGA7yBK-mW#scrollTo=rTF_JGGrA9lJ
 if git --version &>/dev/null; then
    echo "Found Git"; 
 else
@@ -21,25 +21,35 @@ cd /opt
 if [[ ! -d "logicmoo_workspace" ]]; then
   export SSLWAS=$(git config --global http.sslVerify)
   git config --global http.sslVerify false
-  git clone --no-checkout https://github.com/logicmoo/logicmoo_workspace.git
+  git clone --no-checkout https://github.com/logicmoo/logicmoo_workspace.git  
   git config --global http.sslVerify $SSLWAS
 fi
 (cd logicmoo_workspace
 if [[ ! -d ".git/modules/prologmud_server/" ]]; then
-   ( set +x +e
+   ( set +x
    ggID='1KhXSv4vq_a82ctGg74GcVBO4fArldVou'
    ggURL='https://drive.google.com/uc?export=download'
    filename="$(curl -sc /tmp/gcokie "${ggURL}&id=${ggID}" | grep -o '="uc-name.*</span>' | sed 's/.*">//;s/<.a> .*//')"
    getcode="$(awk '/_warning_/ {print $NF}' /tmp/gcokie)"
    curl -Lb /tmp/gcokie "${ggURL}&confirm=${getcode}&id=${ggID}" -o "${filename}"
    mkdir -p .git/modules/
-   mkdir tmp
-   tar xfvz "${filename}" -C tmp/
-   mv tmp/.git .git/modules/prologmud_server
-   rmdir tmp
-   git checkout origin/master .
+   mkdir -p /opt/logicmoo_workspace/prologmud_server
+   tar xfz "${filename}" -C /opt/logicmoo_workspace/prologmud_server
+   cd /opt/logicmoo_workspace/prologmud_server
+   # git remote add origin https://logicmoo.org:2082/gitlab/logicmoo/prologmud_server.git
+   echo "Checking out master"
+   git checkout master .
+   echo "Switching to master"   
    git checkout master
-   git fetch --recurse-submodules
+   echo "Pulling changes from https://logicmoo.org:2082/gitlab/logicmoo/prologmud_server.git"
+   git pull https://logicmoo.org:2082/gitlab/logicmoo/prologmud_server.git master
+   echo "Now moving prologmud_server into submodule"
+   mv /opt/logicmoo_workspace/prologmud_server/.git /opt/logicmoo_workspace/.git/modules/prologmud_server
+   echo "Back into logicmoo_workspace..."
+   cd /opt/logicmoo_workspace/
+   git checkout master .
+   git checkout master
+   git pull --recurse-submodules
    git submodule update --init --recursive
 )
 fi
