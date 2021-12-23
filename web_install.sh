@@ -36,15 +36,16 @@ if [[ ! -d ".git/modules/prologmud_server/" ]]; then
    mkdir -p /opt/logicmoo_workspace/prologmud_server
    tar xfz "${filename}" -C /opt/logicmoo_workspace/prologmud_server
    cd /opt/logicmoo_workspace/prologmud_server
-   git remote add origin https://logicmoo.org:2082/gitlab/logicmoo/prologmud_server.git
-   git checkout origin/master .
+   # git remote add origin https://logicmoo.org:2082/gitlab/logicmoo/prologmud_server.git
+   echo "Checking out master"
    git checkout master .
+   echo "Switching to master"   
    git checkout master
-   git fetch --recurse-submodules
-   git pull
-   git submodule update --init --recursive
-   # Now moving prologmud_server into submodule
+   echo "Pulling changes from https://logicmoo.org:2082/gitlab/logicmoo/prologmud_server.git"
+   git pull https://logicmoo.org:2082/gitlab/logicmoo/prologmud_server.git master
+   echo "Now moving prologmud_server into submodule"
    mv /opt/logicmoo_workspace/prologmud_server/.git /opt/logicmoo_workspace/.git/modules/prologmud_server
+   echo "Back into logicmoo_workspace..."
    cd /opt/logicmoo_workspace/
    git checkout master .
    git checkout master
