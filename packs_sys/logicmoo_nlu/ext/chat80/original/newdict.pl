@@ -182,8 +182,6 @@ prep_db(talkdb,X):- talkdb:talk_db(preposition, X), X\==a.
 
 quantifier_pron_lex(anybody,any,person).
 quantifier_pron_lex(anyone,any,person).
-quantifier_pron_lex(here,some,place_here).
-%quantifier_pron_lex(there,some,place_there).
 quantifier_pron_lex(anything,any,thing).
 quantifier_pron_lex(everybody,every,person).
 quantifier_pron_lex(everyone,every,person).
@@ -301,7 +299,7 @@ some_to_list(Tense,List):- listify(Tense,List).
 
 % BE
 verb_aux_form_db(A,be,C,D):- verb_aux_form_be(A,C,D).
-%verb_aux_form_db(A,be,_,_):- verb_aux_form_be(A,_,_).
+verb_aux_form_db(A,be,_,_):- verb_aux_form_be(A,_,_).
 verb_aux_form_be(am,pres+fin,1+sg).
 verb_aux_form_be(as,pres+fin,3+_).
 verb_aux_form_be(are,pres+fin,2+sg).
