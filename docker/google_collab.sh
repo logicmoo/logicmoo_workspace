@@ -423,18 +423,18 @@ apt-get install -y -q --no-install-recommends \
 
 
 # install our Butterfly websockets (telnet server over httpd)
-pip install --upgrade pip ; python3 -m pip install --upgrade pip \
- # && python3 -m pip uninstall setuptools ; pip install setuptools \
- && python3 -m pip install --upgrade setuptools wheel \
- && python3 -m pip install tornado asyncio \
- && python3 -m pip install butterfly \
- && python3 -m pip install butterfly[themes] # If you want to use themes \
- && python3 -m pip install butterfly[systemd] # If you want to use systemd \
- && cd /etc/systemd/system \
- && curl -O https://raw.githubusercontent.com/paradoxxxzero/butterfly/master/butterfly.service \
- && curl -O https://raw.githubusercontent.com/paradoxxxzero/butterfly/master/butterfly.socket \
- && echo Maybe remember to: systemctl enable butterfly.socket \
- && echo Maybe remember to: systemctl start butterfly.socket
+pip install --upgrade pip ; python3 -m pip install --upgrade pip
+python3 -m pip uninstall setuptools ; pip install setuptools
+ python3 -m pip install --upgrade setuptools wheel
+ python3 -m pip install tornado asyncio
+ python3 -m pip install butterfly
+ python3 -m pip install butterfly[themes] # If you want to use themes
+ python3 -m pip install butterfly[systemd] # If you want to use systemd 
+ cd /etc/systemd/system
+ curl -O https://raw.githubusercontent.com/paradoxxxzero/butterfly/master/butterfly.service
+ curl -O https://raw.githubusercontent.com/paradoxxxzero/butterfly/master/butterfly.socket
+ systemctl enable butterfly.socket
+ systemctl start butterfly.socket
 
 
 
