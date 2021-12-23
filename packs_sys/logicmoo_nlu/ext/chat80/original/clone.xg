@@ -236,7 +236,7 @@ logical_s_word(c,r,therefore).
 logical_s_word(X,X,W):- 
   %if_search_expanded(5), 
   logical_o_word(W).
-logical_s_word(X,X,W):-is_sent_adverb(W).
+%logical_s_word(X,X,W):-is_sent_adverb(W).
 logical_s_word2(r,c,[else,if]).
 
      logical_o_word(and).
@@ -252,10 +252,6 @@ logical_s_word2(r,c,[else,if]).
 
 
 % adp
-is_sent_adverb(Word):- member(Word,[actually, apparently, basically, briefly, certainly, clearly, conceivably, confidentially,
-  curiously, evidently, fortunately, hopefully, however, ideally, incidentally, indeed, 
-  interestingly, ironically, naturally, predictably, presumably, regrettably, seriously, strangely,
-   surprisingly, thankfully, theoretically, therefore, truthfully, ultimately, wisely]).
 
 if_cond(If,S,Mask) ---> logical_word(If),!,s_vp_801(S,Mask).
 if_cond(true,S,Mask) ---> s_vp_801(S,Mask).
@@ -268,7 +264,8 @@ s80(P) --->  s80(P,_).
 s80(s(NP,verb(main+iv,E,[],active,_+fin,[],([])),[],[]),Mask) ---> 
    theText80(there),theText80_W2(_,L),{member(root(E),L),member(upos(verb),L)},verb_arg(np,NP,Mask).
 
-s80(P,Mask) ---> s_vp_800(P,Mask).
+s80(P,Mask) ---> % {retractall(t_l:was_sentence_level(_))},
+ s_vp_800(P,Mask).
 
 s_vp_800(SO,Mask) ---> if_cond(IF,S,Mask), s_vp_800s(IF,S,SO,Mask).
 
@@ -812,14 +809,14 @@ verb_m(M) ---> thePos80((aux;vb_;rbr;rbs),M).
 
 verb_form883(ExtraMods,RootVerb,Tense,_Agmt1,_Role) ---> % {fail},
    theText80(W),
-   {verb_form_aux(W,RootVerb,Tense,_Agmt2),flatten([RootVerb,Tense],ExtraMods)}.
+   {verb_form_aux(W,RootVerb,Tense,_Agmt2),flatten([RootVerb,tense(RootVerb,Tense)],ExtraMods)}.
 
 verb_form883(ExtraMods,RootVerb,Tense,Agmt,Role) ---> {unloop(maybe_verb_pre_mods,2)},
    maybe_modal([],ExtraMods1), !,
    verb_form883(ExtraMods2,RootVerb,Tense,Agmt,Role),
-   {append_mods([ExtraMods1,ExtraMods2],ExtraMods)}.
+   {append_mods([tense(RootVerb,Tense),ExtraMods1,ExtraMods2],ExtraMods)}.
 
-verb_form883(ExtraMods,RootVerbO,Tense,Agmt,_Role) ---> 
+verb_form883([tense(Tense,RootVerb)|ExtraMods],RootVerbO,Tense,Agmt,_Role) ---> 
    theText80_W2(W,L),
    {verb_form_wlex(L,W,RootVerb,Tense,Agmt)},
    maybe_verb_prep(RootVerb,RootVerbO,ExtraMods).
