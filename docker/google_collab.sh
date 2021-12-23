@@ -29,44 +29,6 @@ function RUN {
 
 export DEBIAN_FRONTEND=noninteractive
 
-FROM ubuntu:18.04 AS ccls
-MAINTAINER RUN apt-get update \
-	&& apt-get install -y build-essential cmake clang libclang-dev zlib1g-dev git wget \
-	&& git clone --depth=1 --recursive https://github.com/MaskRay/ccls \
-	&& cd ccls \
-	&& wget -c http://releases.llvm.org/8.0.0/clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-18.04.tar.xz \
-	&& tar xf clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-18.04.tar.xz \
-	&& cmake -H. -BRelease -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=$PWD/clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-18.04 \
-	&& cmake --build Release \
-	 && echo apt autoclean -y \
-	 && echo apt autoremove -y \
-	 && echo rm -rf /var/lib/apt/lists/* 
-
-MAINTAINER FROM ubuntu:18.04 AS go
-MAINTAINER RUN apt-get update -y \
-	&& apt-get install -y wget \
-	&& export LATEST_VERSION=`wget -qO- https://golang.org/dl | grep -oE go[0-9]+\.[0-9]+\.[0-9]+\.linux-amd64\.tar\.gz | head -n 1` \
-	&& wget -c https://dl.google.com/go/$LATEST_VERSION \
-	&& tar -xzf $LATEST_VERSION
-
-# C-Family
-MAINTAINER COPY --from=ccls /ccls /ccls
-MAINTAINER RUN ln -s /ccls/Release/ccls /usr/bin/ccls \
-	&& ln -s /ccls/clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-18.04/bin/clangd /usr/bin/clangd
-
-# Go
-MAINTAINER MAINTAINER COPY --from=go /go /go
-MAINTAINER export PATH "${PATH}:/go/bin:/root/go/bin"
-MAINTAINER RUN /go/bin/go get -u golang.org/x/tools/gopls
-
-
-# Python
-FROM tiryoh/ros-desktop-vnc:noetic as noetic
-RUN apt-get update && apt-get install -y python3-pip \
-	&& pip3 install 'python-language-server[all]' \
-	 && echo apt autoclean -y \
-	 && echo apt autoremove -y \
-	 && echo rm -rf /var/lib/apt/lists/* 
 #
 # from root@debian10:/opt/logicmoo_workspace
 # we run..
@@ -85,34 +47,28 @@ export LOGICMOO_WS=/opt/logicmoo_workspace
 export LOGICMOO_GAMES=$LOGICMOO_WS/prologmud_server
 
 
-RUN mkdir -p /usr/share/man/man1 \
+mkdir -p /usr/share/man/man1 \
  && apt update \
  && apt install -y apt-utils curl \
  && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 4F4EA0AAE5267A6C \
  && sh -c 'echo "deb [trusted=yes] http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list' \
  && curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | sudo apt-key add - \
- # && apt update \
- # && apt remove -y apache2 nginx-common \
- # && apt purge -y apache2 nginx-common \
  && apt-get update \
  && apt-get upgrade -y \ 
  && apt-get install -y locales -qq \
  && locale-gen en_AU \
  && locale-gen en_AU.UTF-8 \
  && dpkg-reconfigure locales \
- # && locale-gen C.UTF-8 \
- && dpkg-reconfigure locales \ 
- # --no-install-recommends
+ && locale-gen C.UTF-8 \
+ && dpkg-reconfigure locales
 
 apt-get install -y --allow-unauthenticated \
   nginx-common nginx nginx-core  libnginx-mod-http-geoip libnginx-mod-http-image-filter \
   libnginx-mod-http-xslt-filter libnginx-mod-mail libnginx-mod-stream \
   supervisor apache2 nmap x11-apps vim eggdrop default-jdk default-jre \
   iproute2 libgd3 libgeoip1 libmnl0 libwebp6 libxslt1.1 \
-  # Emacs PreReqs (added this when Emacs was ~28.0.50) \
   build-essential git autoconf texinfo libgnutls28-dev libxml2-dev libncurses5-dev libjansson-dev \
   libxpm-dev libjpeg-dev libpng-dev libgif-dev libtiff-dev libjson*-dev libxf*-dev libwebkit2gtk-4.0-dev \
- \
  python-is-python3 \
  python-dev-is-python3 \
  python3-gevent \
@@ -140,7 +96,6 @@ apt-get install -y --allow-unauthenticated \
  zlib1g \
  zip \
  yarn \
- #xvnc4viewer \
  xvfb \
  xtrans-dev \
  xterm \
@@ -162,7 +117,6 @@ apt-get install -y --allow-unauthenticated \
  unixodbc \
  unattended-upgrades \
  tightvncserver \
- # tini \
  texlive-extra-utils \
  tdsodbc \
  supervisor \
@@ -172,8 +126,6 @@ apt-get install -y --allow-unauthenticated \
  rsync \
  rlwrap \
  r-cran-xtable \
- #r-cran-xfun \
- #r-cran-tinytex \
  r-cran-tikzdevice \
  r-cran-testit \
  r-cran-sourcetools \
@@ -187,9 +139,7 @@ apt-get install -y --allow-unauthenticated \
  r-base-dev \
  r-base \
  qt5-default \
- #python-virtualenv \
  python-setuptools \
- #python-dev \
  python3-pip \
  python3-dev \
  python-pip-whl \
@@ -201,14 +151,12 @@ apt-get install -y --allow-unauthenticated \
  pandoc-data \
  pandoc \
  openssh-server \
- # openjdk-8-jdk \
  openjdk-11-jdk \
  odbc-postgresql \
  odbcinst1debian2 \
  odbcinst \
  nodejs-doc \
  ninja-build \
- #nginx-full \
  nginx-core \
  net-tools \
  netbase \
@@ -246,18 +194,15 @@ apt-get install -y --allow-unauthenticated \
  libxdmcp-dev \
  libxcb1-dev \
  libxau-dev \
- #libx265-165
  libx11-dev \
  libx11-6 \
  libwebpmux3 \
  libuv1-dev \
  libunwind-dev \
- #libunbound8 \
  libudunits2-dev \
  libubsan1 \
  libtsan0 \
  libtool \
- #libtinfo6 \
  libtinfo5 \
  libtiff-dev \
  libtcmalloc-minimal4 \
@@ -274,8 +219,6 @@ apt-get install -y --allow-unauthenticated \
  librhash0 \
  libreoffice \
  libreadline-dev \
- #libreadline7 \
- #libraptor2-dev \
  libraptor2-0 \
  libpthread-stubs0-dev \
  libpng-dev \
@@ -284,30 +227,18 @@ apt-get install -y --allow-unauthenticated \
  libpcre32-3 \
  libpcre3 \
  libpcre16-3 \
- #libotf0 \
  libossp-uuid-dev \
  libossp-uuid16 \
  libopenmpi-dev \
  libodbc1 \
- #libntlm0 \
- #libnode-dev \
- #libnode64 \
  libnet-nslookup-perl \
  libncurses-dev \
- #libncurses6 \
  libmpx2 \
- #libmariadb3 \
- #libmailutils5 \
- #libmagickwand-6.q16-6
- #libmagickcore-6.q16-6 \
- #libm17n-0 \
  liblzma-dev \
  liblua5.1-0 \
  libltdl-dev \
  libltdl7 \
  liblsan0 \
- #liblqr-1-0 \
- #libkyotocabinet16v5 \
  libjs-twitter-bootstrap-datepicker \
  libjs-sifter.js \
  libjs-prettify \
@@ -325,7 +256,6 @@ apt-get install -y --allow-unauthenticated \
  libjs-d3 \
  libjpeg-turbo-progs \
  libjpeg-dev \
- #libjpeg62-turbo \
  libjpeg62 \
  libitm1 \
  libice-dev \
@@ -358,7 +288,6 @@ apt-get install -y --allow-unauthenticated \
  libdb5.3-dev \
  libdb5.3 \
  libcurl4-openssl-dev \
- #libcurl4-gnutls-dev \
  libc-dev-bin \
  libcc1-0 \
  libc-ares2 \
@@ -443,38 +372,24 @@ apt-get install -y --allow-unauthenticated \
  apache2-data \
  apache2-bin \
  apache2 \
- analog \
- \
- # odd deps we missed for SWI-Prolog (world build version) \
- # libcurl4-openssl-dev libgazebo9-dev libignition-fuel-tools1-dev \
- # ros-dashing-desktop ros-dashing-gazebo-dev ros-dashing-gazebo-plugins \
- # ros-dashing-gazebo-ros ros-dashing-gazebo-ros-pkgs \
- # ros-dashing-libcurl-vendor ros-dashing-resource-retriever \
- # ros-dashing-rviz-common ros-dashing-rviz-default-plugins \
- # ros-dashing-rviz-rendering ros-dashing-rviz2 \
- && apt install ros-noetic-desktop-full \
- && apt remove -y swi-prolog-* \
- && echo apt autoclean -y \
- && echo apt autoremove -y \
- && echo rm -rf /var/lib/apt/lists/* 
+ analog
+# && apt install ros-noetic-desktop-full 
 
-RUN mkdir -p /var/lock/apache2 /var/run/apache2 /var/run/sshd /var/log/supervisor
+apt remove -y swi-prolog-*
 
-#RUN cp /etc/ssh/sshd_config /etc/ssh/sshd_config.original
-#RUN chmod a-w /etc/ssh/sshd_config.original
-RUN echo 'root:ubuntu' | chpasswd
-RUN sed -i 's/PermitRootLogin without-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+mkdir -p /var/lock/apache2 /var/run/apache2 /var/run/sshd /var/log/supervisor
+
+cp /etc/ssh/sshd_config /etc/ssh/sshd_config.original
+chmod a-w /etc/ssh/sshd_config.original
+echo 'root:ubuntu' | chpasswd
+sed -i 's/PermitRootLogin without-password/PermitRootLogin yes/' /etc/ssh/sshd_config
 #COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 ##EXPOSE 22 80
 #CMD [“/usr/bin/supervisord”]
-export USER ubuntu
+export USER=ubuntu
 RUN useradd --create-home --home-dir /home/ubuntu --shell /bin/bash --user-group --groups adm,sudo ubuntu && \
     echo ubuntu:ubuntu | chpasswd && \
     echo "ubuntu ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
-#COPY rootfs/ros-eloquent-desktop.sh /ros-eloquent-desktop.sh
-MAINTAINER RUN mkdir -p /tmp/ros_setup_scripts_ubuntu && mv /ros-eloquent-desktop.sh /tmp/ros_setup_scripts_ubuntu/ && \
-    ( gosu ubuntu /tmp/ros_setup_scripts_ubuntu/ros-eloquent-desktop.sh ; /bin/true) && \
-    echo rm -rf /var/lib/apt/lists/*
 
 export USER=root
 export HOME=/root
@@ -491,7 +406,7 @@ export HOME=/root
 
 
 # required for apt upgrade (which is requested in EMACS LSP DOCKER)
-MAINTAINER RUN apt-get update \
+apt-get update \
         ; mv /etc/apache2 /etc/apache2.logicmoo \
 	; mv /var/www /var/www.logicmoo \
 	; apt purge -y apache2 gitweb \
@@ -504,25 +419,13 @@ MAINTAINER RUN apt-get update \
 	; mv /var/www.logicmoo /var/www ; /bin/true
 
 
-# Emacs
-MAINTAINER RUN git clone --depth=1 git://git.sv.gnu.org/emacs.git /emacs \
-	&& cd /emacs && ./autogen.sh \
-	&& ./configure --with-modules --with-json --with-xwidgets \
-	&& make -j4 && make install
-
-
-#########################
-# EMACS LSP SUPPORT END #
-#########################
-
-
-export TINI_VERSION v0.19.0
+export TINI_VERSION=v0.19.0
 wget https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini -o /bin/tini
-RUN chmod +x /bin/tini
+chmod +x /bin/tini
 #RUN chmod +x run.sh
 #RUN chmod 777 docker-entrypoint.sh
 
-RUN apt-get update && apt-get install -y software-properties-common curl gnupg2 && \
+apt-get update && apt-get install -y software-properties-common curl gnupg2 && \
   curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add - && \
   apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main" && \
   apt-get update && apt-get install -y \
@@ -530,7 +433,7 @@ RUN apt-get update && apt-get install -y software-properties-common curl gnupg2 
   setcap cap_ipc_lock= /usr/bin/vault
 
 # Phase two in case we forgot any above
-MAINTAINER RUN echo add-apt-repository -y ppa:ondrej/php \
+echo add-apt-repository -y ppa:ondrej/php \
  && apt-get update \
 # && apt-get install -y -q --no-install-recommends libapache2-mod-php libapache2-mod-proxy-uwsgi
 # && apt-get install -y -q --no-install-recommends libapache2-mod-php7.4  ; /bin/true \
@@ -543,13 +446,11 @@ MAINTAINER RUN echo add-apt-repository -y ppa:ondrej/php \
  php7.4-gd php7.4-imagick php7.4-cli php7.4-dev php7.4-imap php7.4-mbstring \
  php7.4-opcache php7.4-soap php7.4-zip php7.4-intl  \
  # && echo apt autoclean -y \
- # && echo apt autoremove -y \
- # && echo rm -rf /var/lib/apt/lists/*
+ # && echo apt autoremove -y
 
 
 # install our Butterfly websockets (telnet server over httpd)
-RUN \
- pip install --upgrade pip ; python3 -m pip install --upgrade pip \
+pip install --upgrade pip ; python3 -m pip install --upgrade pip \
  # && python3 -m pip uninstall setuptools ; pip install setuptools \
  && python3 -m pip install --upgrade setuptools wheel \
  && python3 -m pip install tornado asyncio \
@@ -599,36 +500,27 @@ export HOME=/root \
 
 #COPY rootfs /
 
-RUN echo "Set disable_coredump false" >> /etc/sudo.conf
+echo "Set disable_coredump false" >> /etc/sudo.conf
 # RUN useradd --create-home --home-dir /home/ubuntu --shell /bin/bash --user-group --groups adm,sudo ubuntu && \
-RUN echo ubuntu:ubuntu | chpasswd 
-RUN echo "ubuntu ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+echo ubuntu:ubuntu | chpasswd 
+echo "ubuntu ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
 export USER=ubuntu
 
-#COPY ./noetic/ros-noetic-desktop.sh /
-RUN mkdir -p /tmp/ros_setup_scripts_ubuntu && cp /ros-noetic-desktop.sh /tmp/ros_setup_scripts_ubuntu/
-
-MAINTAINER RUN /tmp/ros_setup_scripts_ubuntu/ros-noetic-desktop.sh ; /bin/true
-
-#COPY ./noetic-testing/ros-noetic-desktop-testing.sh /
-MAINTAINER RUN /ros-noetic-desktop-testing.sh ; /bin/true
-
-RUN wget -O /tmp/google-chrome-stable_current_amd64.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
+wget -O /tmp/google-chrome-stable_current_amd64.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
  && apt update && apt install -y /tmp/google-chrome-stable_current_amd64.deb \
  && apt autoclean -y \
- && echo apt autoremove -y \
- && echo rm -rf /var/lib/apt/lists/*
+ && echo apt autoremove -y
 
-MAINTAINER RUN apt-get update \
+apt-get update \
     && export DEBIAN_FRONTEND=noninteractive \
     && apt-get -y install --no-install-recommends apt-utils dialog 2>&1
 
-RUN apt update \
+apt update \
   && apt install -y npm \
   && npm install -g typescript
 
-RUN apt update \
+apt update \
   && apt install -y mono-complete mono-4.0-gac mono-tools-devel
   
 
