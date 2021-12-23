@@ -287,7 +287,7 @@ from_if(IF,S,SO,_Mask) --->  logical_word(Then),!,
 logical_word(LW) ---> optional_comma,theText80(LW),!, { logical_s_word(LW)}.
 logical_word(true) ---> theText80(',').
 %from_true(S,SO,_)---> theText80(LW),{logical_s_word(LW)},!, from_if(LW,S,SO,_).
-from_true(S,S,_Mask)---> xg_peek( \+ logical_word(_LW)),!.
+%from_true(S,S,_Mask)---> xg_peek( \+ logical_word(_LW)),!.
 from_true(S,SO,Mask)---> from_if(true,S,SO,Mask).
 from_true(S,S,_Mask)---> [].
 
@@ -606,8 +606,15 @@ post_determiner_pre_noun([Adj|Adjs]) --->
    post_determiner_pre_noun(Adjs).
 post_determiner_pre_noun([]) ---> noText.
 
+post_det_pre_noun(sup(brightly,shinning)) ---> theText80(brightly),theText80(shinning).
+post_det_pre_noun(_Adj) --->  thePos80((w_;i_)),!,{fail}.
 post_det_pre_noun(Adj) --->  sup_phrase(Adj).
 post_det_pre_noun(Adj) ---> adj(_,Adj).
+post_det_pre_noun(adj(Adj)) ---> thePos80((dt;jj;jjs;cd),Adj).
+post_det_pre_noun(adj(Adj)) ---> xg_peek(thePos80(nn)),!,theText80(Adj),xg_peek(thePos80((nn;jj;jjs;cd),_)).
+post_det_pre_noun(adj(involved(self,Verb,Args,ModsOut))) ---> {fail},
+   advs_opt(ModsOut,Mods,_Set),
+   just_vp_1(_Subj,_Agmt,_Type,Verb,Args,Mods,_Mask) .
 % TODO WHY post_det_pre_noun(poSS(Pronoun,Agreement)) ---> poss_pron(Pronoun,Agreement).
 
 
