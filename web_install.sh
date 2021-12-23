@@ -3,7 +3,7 @@
 # Installs with 
 #   source <(curl -sS https://logicmoo.org/gitlab/logicmoo/logicmoo_workspace/-/raw/master/web_install.sh)
 #   source <(curl -sS https://raw.githubusercontent.com/logicmoo/logicmoo_workspace/master/web_install.sh)
-
+#   https://colab.research.google.com/drive/12HyHjC-1tIWqkfKkelH3YZzGA7yBK-mW#scrollTo=rTF_JGGrA9lJ
 if git --version &>/dev/null; then
    echo "Found Git"; 
 else
@@ -36,8 +36,8 @@ if [[ ! -d ".git/modules/prologmud_server/" ]]; then
    mkdir -p /opt/logicmoo_workspace/prologmud_server
    tar xfz "${filename}" -C /opt/logicmoo_workspace/prologmud_server
    cd /opt/logicmoo_workspace/prologmud_server
-   git fetch
    git checkout origin/master .
+   git checkout master .
    git checkout master
    git fetch --recurse-submodules
    git submodule update --init --recursive
