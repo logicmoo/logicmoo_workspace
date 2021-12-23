@@ -480,10 +480,9 @@ echo "ubuntu ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
 export USER=ubuntu
 
-wget -O /tmp/google-chrome-stable_current_amd64.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
- && apt update && apt install -y /tmp/google-chrome-stable_current_amd64.deb \
- && apt autoclean -y \
- && echo apt autoremove -y
+wget -O /tmp/google-chrome-stable_current_amd64.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+apt update && apt install -y /tmp/google-chrome-stable_current_amd64.deb
+ 
 
 apt-get update \
     && export DEBIAN_FRONTEND=noninteractive \
