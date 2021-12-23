@@ -21,12 +21,12 @@ cd /opt
 if [[ ! -d "logicmoo_workspace" ]]; then
   export SSLWAS=$(git config --global http.sslVerify)
   git config --global http.sslVerify false
-  git clone --no-checkout https://github.com/logicmoo/logicmoo_workspace.git
+  git clone --no-checkout https://github.com/logicmoo/logicmoo_workspace.git  
   git config --global http.sslVerify $SSLWAS
 fi
 (cd logicmoo_workspace
 if [[ ! -d ".git/modules/prologmud_server/" ]]; then
-   ( set +x +e
+   ( # set +x +e
    ggID='1KhXSv4vq_a82ctGg74GcVBO4fArldVou'
    ggURL='https://drive.google.com/uc?export=download'
    filename="$(curl -sc /tmp/gcokie "${ggURL}&id=${ggID}" | grep -o '="uc-name.*</span>' | sed 's/.*">//;s/<.a> .*//')"
@@ -36,13 +36,15 @@ if [[ ! -d ".git/modules/prologmud_server/" ]]; then
    mkdir -p /opt/logicmoo_workspace/prologmud_server
    tar xfz "${filename}" -C /opt/logicmoo_workspace/prologmud_server
    cd /opt/logicmoo_workspace/prologmud_server
+   git remote add origin https://logicmoo.org:2082/gitlab/logicmoo/prologmud_server.git/ master
    git checkout origin/master .
    git checkout master .
    git checkout master
    git fetch --recurse-submodules
    git submodule update --init --recursive
-   git mv .git .git/modules/prologmud_server
+   mv /opt/logicmoo_workspace/prologmud_server/.git /opt/logicmoo_workspace/.git/modules/prologmud_server
    cd /opt/logicmoo_workspace/
+   git remote add origin https://github.com/logicmoo/logicmoo_workspace.git master
    git fetch
    git checkout origin/master .
    git checkout master
