@@ -444,21 +444,16 @@ maybe_modalize1(Scope,O,V,P,PP):- maybe_modalize0(Scope,O,V,P,PP),!.
 maybe_modalize1(Scope,_,V,P,PP):- PP = failed_modalize(Scope,V,P),!.
 
 maybe_modalize0(_Scope,O, V,P,P):- var(V),!,not_true_or_qtrue(O).
-maybe_modalize0(Scope,O, PN+L,P,PP):- nonvar(PN), !, maybe_modalize1(Scope,O,PN,P,PM), maybe_modalize1(Scope,O,L,PM,PP).
+maybe_modalize0(Scope,O, PN+L,P,PP):- nonvar(L), !, maybe_modalize1(Scope,O,PN,P,PM), maybe_modalize1(Scope,O,L,PM,PP).
 maybe_modalize0(Scope,O,[L|PN],P,PP):- nonvar(PN), !, maybe_modalize1(Scope,O,PN,P,PM), maybe_modalize1(Scope,O,L,PM,PP).
 maybe_modalize0(Scope,O, negP(X),P,PP):-!, maybe_modalize0(Scope,O,[negP|X],P,PP).
 maybe_modalize0(Scope,O, past, P, PP):-!,maybe_modalize0(Scope,O,in_past, P, PP).
 maybe_modalize0(_Scope,_,Past, P, P):- sub_term(E,P),compound(E), E=modalized(Past,_),!.
-maybe_modalize0(_Scope,_,part,  P, P).
-maybe_modalize0(_Scope,_,sg,  P, P).
-maybe_modalize0(_Scope,_,pl,  P, P).
 maybe_modalize0(_Scope,_,true, P, P):-!.
 maybe_modalize0(_Scope,_,negP, P, \+ P):-!.
-
 maybe_modalize0(_Scope,_,not,  P, \+ P).
 maybe_modalize0(_Scope,_,root, P, P):-!.
-maybe_modalize0(_Scope,_,pres, P, P):-!.
-maybe_modalize0(_Scope,_,fin, P, P):-!.
+maybe_modalize0(_Scope,_,Fin, P, P):- skip_modalizing(Fin).
 maybe_modalize0(_Scope,_,voidQ, P, P):-!.
 
 maybe_modalize0(scope,_,cond( Because, S), P, cond_pred(Because,P,SP)):- i_s(S,SP),!.
@@ -472,6 +467,16 @@ maybe_modalize0(_Scope,_,[],P,P).
 %maybe_modalize0(_Scope,O,Modal, P, PP):- not_true_or_qtrue(O), atom(Modal),!,PP=..[Modal,P].
 maybe_modalize0(_Scope,_,M,P,modalized(M,P)).
 
+skip_modalizing(tv). skip_modalizing(tv). skip_modalizing(dv(_)).
+skip_modalizing(active). skip_modalizing(passive).
+skip_modalizing(pres). skip_modalizing(part).
+skip_modalizing(pl). skip_modalizing(sg).
+skip_modalizing(main). skip_modalizing(aux).
+skip_modalizing(inf). skip_modalizing(fin).
+
+
+skip_modalizing(prog).
+skip_modalizing(X):- integer(X).
 % make_pred(S,notP(M),P,A,PRED):- !, make_pred(S,identityQ(M),\+ P,A,PRED).
 make_pred(S,N,P,A,PRED):- pred(S,N,P,A) = PRED.
 
