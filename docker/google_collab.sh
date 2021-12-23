@@ -37,7 +37,7 @@ export DEBIAN_FRONTEND=noninteractive
 #
 
 export DEBIAN_FRONTEND=noninteractive
-export --security-opt seccomp:unconfined
+#export --security-opt seccomp:unconfined
 # who/where
 export LANG=C.UTF-8
 export LANGUAGE=C.UTF-8
@@ -54,13 +54,9 @@ mkdir -p /usr/share/man/man1 \
  && sh -c 'echo "deb [trusted=yes] http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list' \
  && curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | sudo apt-key add - \
  && apt-get update \
- && apt-get upgrade -y \ 
- && apt-get install -y locales -qq \
- && locale-gen en_AU \
- && locale-gen en_AU.UTF-8 \
- && dpkg-reconfigure locales \
- && locale-gen C.UTF-8 \
- && dpkg-reconfigure locales
+ && apt-get upgrade -y
+
+# apt-get install -y locales -qq && locale-gen en_AU \&& locale-gen en_AU.UTF-8 \ && dpkg-reconfigure locales \ && locale-gen C.UTF-8 \ && dpkg-reconfigure locales
 
 apt-get install -y --allow-unauthenticated \
   nginx-common nginx nginx-core  libnginx-mod-http-geoip libnginx-mod-http-image-filter \
