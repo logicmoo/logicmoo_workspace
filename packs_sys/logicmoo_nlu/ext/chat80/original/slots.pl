@@ -204,7 +204,7 @@ i_voids_limited0(Slots,QMods,Id):-
   i_voids(Slots,QMods,Id),length(Slots,SL), ((SL > 20) -> (!, fail);true).
 
 i_voids([],[],_).
-i_voids(A,B,C):- ((stack_depth(D),D>1000)),!,fail,dmsg(stack_depth(D)),!,fail,ignore((dumpST,break)),fail.
+i_voids(_,_,_):- ((stack_depth(D),D>1000)),!,fail,dmsg(stack_depth(D)),!,fail,ignore((dumpST,break)),fail.
 i_voids([Slot|Slots],[quantS(voidQ,X,'`'(true),'`'(true),[],_)|QMods],Id) :-
    nominal_slot(Slot,X,-Id), !,
    i_voids(Slots,QMods,+Id).
@@ -732,8 +732,9 @@ slot_verb_kind((Prep),Verb,TypeS,S,Pred,AllSlots):- if_search_expanded(4),
        slot(indO,TypeI,I,SlotI,free)],Slots),
    %fail,fail,fail,fail,
    lf80(TypeS+TypeD+TypeI,ditrans_lex80(Verb,Prep,TypeS,S,TypeD,D,TypeI,I,Pred,Slots,SlotD,SlotI,_)).
-   
-slot_verb_kind(Type,Verb,TypeS,S,Pred,AllSlots):- if_search_expanded(5), 
+
+% slows the system way down like the danube
+slot_verb_kind(Type,Verb,TypeS,S,Pred,AllSlots):- fail,if_search_expanded(4), 
    lazy_pred_LF(Type,Verb,TypeS,S,AllSlots,Pred),!.
 
  % see no_repeats_dc(DC0,subj_obj_indirect_slots_LF(ditrans,verb_prep(Verb,Prep),TypeS,S,TypeD,D,TypeI,I,Pred,Slots,SlotI,SlotD,DC0)).

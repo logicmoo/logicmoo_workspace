@@ -640,7 +640,7 @@ comp_6(same,Adj) --->
 
 /* Prepositional Phrase */
 
-prep_arg_vp(vact(V,A,S)) ---> {if_search_expanded(5)},
+prep_arg_vp(vact(V,A,S)) ---> {if_search_expanded(4)},
       imperative_verb(_,_),
       s80(s(_,V,A,S)).
 /*
@@ -831,10 +831,11 @@ append_mods([], []).
 append_mods([L|Ls], As) :- (var(L)->L1=[];L1=L),!, append(L1, Ws, As), append_mods(Ls, Ws).
 
 %one_modal(_Tense1,_MODAL1) ---> !,{fail}.
-one_modal(_Tense1,_MODAL1) ---> {\+ if_search_expanded(1),!,fail}.
+one_modal(_,not) ---> theText80(not), xg_peek(thePos80(vb_)).
+one_modal(_Tense1,_MODAL1) ---> {\+ if_search_expanded(2),!,fail}.
 one_modal(_Tense1,MODAL1) ---> theText80(W),{modal_verb_form_aux(W,MODAL1,_Tense2,_)}.
 one_modal(_Tense1,Modal) ---> thePos80([pos(md),root(Modal)]).
-one_modal(_,not) ---> theText80(not).
+
 
 maybe_modal(Tense,In,[M|Out]) ---> one_modal(Tense,M),!,maybe_modal0(Tense,In,Out).
 
