@@ -603,11 +603,11 @@ post_determiner_pre_noun([Adj|Adjs]) --->
 post_determiner_pre_noun([]) ---> noText.
 
 post_det_pre_noun(sup(brightly,shinning)) ---> theText80(brightly),theText80(shinning).
-post_det_pre_noun(_Adj) --->  thePos80((w_;i_)),!,{fail}.
+post_det_pre_noun(_Adj) --->  thePos80((d_;w_;i_)),!,{fail}.
 post_det_pre_noun(Adj) --->  sup_phrase(Adj).
 post_det_pre_noun(Adj) ---> adj(_,Adj).
-post_det_pre_noun(adj(Adj)) ---> thePos80((dt;jj;jjs;cd),Adj).
-post_det_pre_noun(adj(Adj)) ---> xg_peek(thePos80(nn)),!,theText80(Adj),xg_peek(thePos80((nn;jj;jjs;cd),_)).
+post_det_pre_noun(adj(Adj)) ---> thePos80((jj;jjs;cd),Adj).
+post_det_pre_noun(adj(Adj)) ---> xg_peek(thePos80(nn_)),!,theText80(Adj),xg_peek(thePos80((nn_;pn_;jj;jjs),_)).
 post_det_pre_noun(adj(involved(self,Verb,Args,ModsOut))) ---> {fail},
    advs_opt(ModsOut,Mods,_Set),
    just_vp_1(_Subj,_Agmt,_Type,Verb,Args,Mods,_Mask) .
