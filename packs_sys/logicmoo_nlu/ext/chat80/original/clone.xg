@@ -847,8 +847,9 @@ maybe_verb_prep(RootVerb,verb_prep(RootVerb,Prep),[]) ---> {if_search_expanded(6
 
 
 append_mods([], []).
-append_mods([L|Ls], As) :- (var(L)->L1=[];L1=L),!, append(L1, Ws, As), append_mods(Ls, Ws).
+append_mods([L|Ls], As) :- (var(L)->L1=[];flatten([L],L1)),!, append(L1, Ws, As), append_mods(Ls, Ws).
 
+one_modal(_,not) ---> theText80(not), xg_peek(thePos80(vb_)).
 %one_modal(_Tense1,_MODAL1) ---> !,{fail}.
 one_modal(_,not) ---> theText80(not), xg_peek(thePos80(vb_)).
 one_modal(_Tense1,_MODAL1) ---> {\+ if_search_expanded(2),!,fail}.
