@@ -40,6 +40,7 @@ if [[ ! -d ".git/modules/prologmud_server/" ]]; then
    git checkout origin/master .
    git checkout master .
    git checkout master
+   git pull
    git fetch --recurse-submodules
    git submodule update --init --recursive
    mv /opt/logicmoo_workspace/prologmud_server/.git /opt/logicmoo_workspace/.git/modules/prologmud_server
