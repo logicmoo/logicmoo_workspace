@@ -33,10 +33,17 @@ if [[ ! -d ".git/modules/prologmud_server/" ]]; then
    getcode="$(awk '/_warning_/ {print $NF}' /tmp/gcokie)"
    curl -Lb /tmp/gcokie "${ggURL}&confirm=${getcode}&id=${ggID}" -o "${filename}"
    mkdir -p .git/modules/
-   mkdir tmp
-   tar xfz "${filename}" -C tmp/
-   mv tmp/.git .git/modules/prologmud_server
-   rmdir tmp
+   mkdir -p /opt/logicmoo_workspace/prologmud_server
+   tar xfz "${filename}" -C /opt/logicmoo_workspace/prologmud_server
+   cd /opt/logicmoo_workspace/prologmud_server
+   git fetch
+   git checkout origin/master .
+   git checkout master
+   git fetch --recurse-submodules
+   git submodule update --init --recursive
+   git mv .git .git/modules/prologmud_server
+   cd /opt/logicmoo_workspace/
+   git fetch
    git checkout origin/master .
    git checkout master
    git fetch --recurse-submodules
