@@ -399,22 +399,6 @@ export HOME=/root
 
 
 
-
-
-# required for apt upgrade (which is requested in EMACS LSP DOCKER)
-apt-get update \
-        ; mv /etc/apache2 /etc/apache2.logicmoo \
-	; mv /var/www /var/www.logicmoo \
-	; apt purge -y apache2 gitweb \
-	; apt install -y apache2 gitweb \
-      # ; apt install -y gir1.2-harfbuzz-0.0 libgraphite2-dev libharfbuzz-dev libharfbuzz-gobject0 libicu-le-hb-dev libicu-le-hb0 libiculx60 \
-      	; apt-get upgrade -y \
-	; mv /etc/apache2 /etc/apache2.dead \
-	; mv /var/www /var/www.logicmoo.dead \
-	; mv /etc/apache2.logicmoo /etc/apache2  \
-	; mv /var/www.logicmoo /var/www ; /bin/true
-
-
 export TINI_VERSION=v0.19.0
 wget https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini -o /bin/tini
 chmod +x /bin/tini
@@ -428,21 +412,14 @@ apt-get update && apt-get install -y software-properties-common curl gnupg2 && \
   vault bash && \
   setcap cap_ipc_lock= /usr/bin/vault
 
-# Phase two in case we forgot any above
-echo add-apt-repository -y ppa:ondrej/php \
- && apt-get update \
-# && apt-get install -y -q --no-install-recommends libapache2-mod-php libapache2-mod-proxy-uwsgi
-# && apt-get install -y -q --no-install-recommends libapache2-mod-php7.4  ; /bin/true \
-  && apt-get install -y -q --no-install-recommends libapache2-mod-wsgi ; /bin/true \
-  && apt-get install -y -q --no-install-recommends libapache2-mod-proxy-uwsgi  ; /bin/true \
-  && apt-get install -y -q --no-install-recommends iputils-ping net-tools \
-# && apt-get install -y -q --no-install-recommends php7.4-dev php7.4-common php7.4 \
-  && apt-get install -y -q --no-install-recommends \
+
+apt-get install -y -q --no-install-recommends libapache2-mod-wsgi ; /bin/true 
+apt-get install -y -q --no-install-recommends libapache2-mod-proxy-uwsgi  ; /bin/true 
+apt-get install -y -q --no-install-recommends iputils-ping net-tools 
+apt-get install -y -q --no-install-recommends \
  php7.4-mysql php7.4-xml php7.4-xmlrpc php7.4-curl \
  php7.4-gd php7.4-imagick php7.4-cli php7.4-dev php7.4-imap php7.4-mbstring \
- php7.4-opcache php7.4-soap php7.4-zip php7.4-intl  \
- # && echo apt autoclean -y \
- # && echo apt autoremove -y
+ php7.4-opcache php7.4-soap php7.4-zip php7.4-intl
 
 
 # install our Butterfly websockets (telnet server over httpd)
