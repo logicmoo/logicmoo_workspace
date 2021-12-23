@@ -578,16 +578,16 @@ np_mod(Agmt,_Case,WH,Set,Mask) --->
 
 maybe_verb_pre_mods(ExtraMods,Set,Mask0,Mask1)--->
   verb_mods(pre,ExtraMods,Set,Mask0,Mask1),!.
-maybe_verb_pre_mods(ExtraMods,_Set,_Mask0,_Mask1)---> maybe_modal0(_,[],ExtraMods),!.
-maybe_verb_pre_mods([],_Set,_Mask0,_Mask1)---> [].
   
 verb_mods(PrePost,[Mod|Mods],Set0,_,Mask) --->
    verb_mod(PrePost,Mod,Set0,Mask0),
-   {is_trace_bits(Trace), plus_mask(Trace,Mask0,Mask1), minus_mask(Set0,Mask1,Set1),
-    plus_mask(Mask0,Set0,Mask2)},
+   {ignore((is_trace_bits(Trace), plus_mask(Trace,Mask0,Mask1), minus_mask(Set0,Mask1,Set1),
+    plus_mask(Mask0,Set0,Mask2)))},
    verb_mods(PrePost,Mods,Set1,Mask2,Mask).
 verb_mods(_,[],_,Mask,Mask) ---> noText.
 
+verb_mod(pre,ExtraMods,_Set,_Mask0)---> maybe_modal(_,[],ExtraMods),!.
+verb_mod(pre,Adv,_Set,_Mask) ---> adverb(Adv).
 verb_mod(PrePost,Adv,Set,Mask) ---> adv_phrase(PrePost,Adv,Set,Mask).
 verb_mod(PrePost,Adv,Set,Nil) --->
    {(is_adv_bits(Set);PrePost==pre)->true},
