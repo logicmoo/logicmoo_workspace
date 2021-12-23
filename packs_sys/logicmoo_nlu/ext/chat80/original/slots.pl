@@ -723,7 +723,8 @@ slot_verb_kind(aux(Be,_MODAL),_,TypeS,S,true,AllSlots):- Be == be, !,
    select_slots(AllSlots, [slot(arg_pred,TypeS,S,_,free)]).
 
 
-slot_verb_kind(Main+More,Verb,TypeS,S,Pred,AllSlots):- nonvar(Main),!,slot_verb_kind(More,Verb,TypeS,S,Pred,AllSlots).
+slot_verb_kind(Main+More,Verb,TypeS,S,Pred,AllSlots):- 
+ nonvar(Main),!,slot_verb_kind(More,Verb,TypeS,S,Pred,AllSlots).
 
 slot_verb_kind(_Tv,Verb,TypeS,S,Pred,AllSlots) :-
    select_slots(AllSlots,[slot(dirO,TypeD,D,SlotD,free)],Slots),
@@ -745,8 +746,7 @@ slot_verb_kind((Prep),Verb,TypeS,S,Pred,AllSlots):- if_search_expanded(4),
    lf80(TypeS+TypeD+TypeI,ditrans_lex80(Verb,Prep,TypeS,S,TypeD,D,TypeI,I,Pred,Slots,SlotD,SlotI,_)).
 
 % slows the system way down like the danube
-slot_verb_kind(Type,Verb,TypeS,S,Pred,AllSlots):- fail,if_search_expanded(4), 
-   lazy_pred_LF(Type,Verb,TypeS,S,AllSlots,Pred),!.
+% slot_verb_kind(Type,Verb,TypeS,S,Pred,AllSlots):- fail,if_search_expanded(4),  lazy_pred_LF(Type,Verb,TypeS,S,AllSlots,Pred),!.
 
  % see no_repeats_dc(DC0,subj_obj_indirect_slots_LF(ditrans,verb_prep(Verb,Prep),TypeS,S,TypeD,D,TypeI,I,Pred,Slots,SlotI,SlotD,DC0)).
 

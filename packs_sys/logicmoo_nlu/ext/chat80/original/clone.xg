@@ -232,11 +232,12 @@ logical_s_word(c,r,else).
 logical_s_word(c,r,implies).
 logical_s_word(c,r,implied).
 logical_s_word(c,r,otherwise).
+logical_s_word(c,r,however).
 logical_s_word(c,r,therefore).
 logical_s_word(X,X,W):- 
   %if_search_expanded(5), 
   logical_o_word(W).
-logical_s_word(X,X,W):-is_sent_adverb(W).
+%logical_s_word(X,X,W):-is_sent_adverb(W).
 logical_s_word2(r,c,[else,if]).
 
      logical_o_word(and).
@@ -252,23 +253,18 @@ logical_s_word2(r,c,[else,if]).
 
 
 % adp
-is_sent_adverb(Word):- member(Word,[actually, apparently, basically, briefly, certainly, clearly, conceivably, confidentially,
-  curiously, evidently, fortunately, hopefully, however, ideally, incidentally, indeed, 
-  interestingly, ironically, naturally, predictably, presumably, regrettably, seriously, strangely,
-   surprisingly, thankfully, theoretically, therefore, truthfully, ultimately, wisely]).
 
 if_cond(If,S,Mask) ---> logical_word(If),!,s_vp_801(S,Mask).
 if_cond(true,S,Mask) ---> s_vp_801(S,Mask).
 
-optional_comma ---> theText80(','),!.
-optional_comma ---> [].
 
 s80(P) --->  s80(P,_).
 
 s80(s(NP,verb(main+iv,E,[],active,_+fin,[],([])),[],[]),Mask) ---> 
    theText80(there),theText80_W2(_,L),{member(root(E),L),member(upos(verb),L)},verb_arg(np,NP,Mask).
 
-s80(P,Mask) ---> s_vp_800(P,Mask).
+s80(P,Mask) ---> % {retractall(t_l:was_sentence_level(_))},
+ s_vp_800(P,Mask).
 
 s_vp_800(SO,Mask) ---> if_cond(IF,S,Mask), s_vp_800s(IF,S,SO,Mask).
 

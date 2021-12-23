@@ -424,7 +424,7 @@ apt-get install -y -q --no-install-recommends \
 
 # install our Butterfly websockets (telnet server over httpd)
 pip install --upgrade pip ; python3 -m pip install --upgrade pip
-python3 -m pip uninstall setuptools ; pip install setuptools
+python3 -m pip uninstall -y setuptools ; pip install setuptools
  python3 -m pip install --upgrade setuptools wheel
  python3 -m pip install tornado asyncio
  python3 -m pip install butterfly

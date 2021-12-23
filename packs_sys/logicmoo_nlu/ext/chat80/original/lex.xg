@@ -45,14 +45,49 @@ theTextL(W1,_CYCPOS,WHY) ---> theTextL80(W1),{call(WHY)}.
 apw2(Cmp):- nop(assertion(nonvar(Cmp))),parser_e2c:add_prev_w2(Cmp).
 
 %w001(Cmp)---> (consume_spans_hack;[]), next_as_word,!,[Cmp],{ignore(on_x_fail(apw2(Cmp)))},!,(consume_spans_hack;[]).
-w001(Cmp)---> [Cmp],{!, ignore(on_x_fail(apw2(Cmp)))}.
+w001(Cmp)---> 
+  %maybe_pull_sentence_level,
+ [Cmp],{!, nop(ignore(on_x_fail(apw2(Cmp))))}.
 
 % NEW theText80_W2(Text,L) ---> w001(Cmp),{compound(Cmp)->Cmp=w(Text,L);(atom(Cmp)-> (Text=Cmp,L=unk))}.
-theText80_W2(Text,L) ---> w001(Cmp),{compound(Cmp)->Cmp=w(Text,L);(Text=Cmp,L=[])}.
+theText80_W2(Text,L) ---> %maybe_pull_sentence_level,
+ w001(Cmp),{compound(Cmp)->Cmp=w(Text,L);(Text=Cmp,L=[])}.
 
 %w1(Text) ---> w001(A), {atomic(A),!,A=Text}.
 w1(Text) ---> theText80_W2(Text,_).
 
+:- thread_local(t_l:in_sentence_level/0).
+:- thread_local(t_l:was_sentence_level/1).
+
+%maybe_pull_sentence_level ---> !.
+maybe_pull_sentence_level ---> \+ [_], !.
+maybe_pull_sentence_level ---> !.
+maybe_pull_sentence_level ---> { nb_current('$in_sentence_level',T),T\==[]},!.
+maybe_pull_sentence_level ---> { t_l:in_sentence_level},!.
+maybe_pull_sentence_level ---> {unloop(maybe_pull_sentence_level)},!,
+  locally(t_l:in_sentence_level,
+   locally(nb_setval('$in_sentence_level',[t]),do_sentence_level)).
+maybe_pull_sentence_level ---> [].
+
+maybeComma ---> (theText80(',');[]),!.
+
+%do_sentence_level ---> [w('.',_)],!.
+do_sentence_level ---> 
+  maybeComma,sentence_level(W),
+  {(t_l:was_sentence_level(W) -> true ; (assert(t_l:was_sentence_level(W),R),
+    writeln(W),nop(undo(ignore(catch(erase(R),_,true))))))},
+  maybeComma,
+  do_sentence_level.
+do_sentence_level ---> [].
+
+sentence_level(adv(W)) ---> thePos80(ner('DATE'),W).
+sentence_level(adv(W)) ---> theText80(W),!,{is_sent_adverb(W)}.
+
+is_sent_adverb(Word):- member(Word,[actually, apparently, basically, briefly, certainly, clearly, conceivably, confidentially,
+  curiously, evidently, fortunately, hopefully,   
+  ideally, incidentally, indeed, 
+  interestingly, ironically, naturally, predictably, presumably, regrettably, seriously, strangely,
+   surprisingly, thankfully, theoretically, truthfully, ultimately, wisely]).
 
 
 move_ahead_spans(S1,S2,G,G):- is_list(S1), partition(\=(span(_)),S1,W,S),!,append(W,S,S2).
@@ -98,20 +133,20 @@ theText80(_IC, A, B, C, D) :- A==[],!,fail,B=[],C=D.
 theText80(A, B, B, C, D) :-
     virtual(theText80(A), C, D).
 
-theText80(IC, A, B, C, D) :- !,
+theText80(IC, A, B, C, D) :- 
     w1(W0, A, B, C, D),
     ((   nonvar(W0)
               ;   nonvar(IC)
-              )),
-    parser_e2c:the_text_unif(IC, W0).
-
+              )),!,
+    parser_e2c:the_text_unif(IC, W0),!.
+/*
 theText80(IC, A, B, C, D) :-
     w1(W0, A, B, C, D),
     assertion((   nonvar(W0)
               ;   nonvar(IC)
               )),
     parser_e2c:the_text_unif(IC, W0).
-
+*/
 %theText80(IC) ---> {t_l:old_text,!},[W0],{parser_tokenize:any_nb_to_atom(W0,W1),downcase_atom(W1,DC),(var(IC)->IC=DC;downcase_atom(IC,DC))}.
 %theText80(Text) ---> [w(Text,_)].
 
