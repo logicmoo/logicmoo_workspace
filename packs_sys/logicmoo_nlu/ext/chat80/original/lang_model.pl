@@ -886,19 +886,38 @@ for_n(N,From,Call):-
 p1(P2,X):- atom(P2), \+ current_predicate(P2/1),  current_predicate(P2/2),!, 
   any_to_string(X,S),nl,dmsg(?-p1(P2,S)),call(P2,S,Y),wdmsg(Y),nl,!.
 p1(P1,X):- any_to_str(X,S),append_term(P1,S,G),nl,dmsg(?-G),call(G),nl,!.
-s81:- c8_make,s81_A(show_c80),s81_A(p1(cvt_to_objecteese)).
+
+s81:- c8_make,s81_A(show_c80),s81_A(p1(c88)).
 s81(P):- s81_A(p1(P)).
-s81_A(P):- s81_A(16,P).
+s81_A(P):- s81_A(20,P).
 s81_A(N,P):- c8_make,call(s81_B(N,P)).
 s81_B(N,P):-
   for_n(N,training_data(X,_),call(P,X)),
-  for_n(N,parser_e2c:fracas_test_problem(X),call(P,X)),
+  %for_n(N,parser_e2c:fracas_test_problem(X),call(P,X)),
   for_n(N,ape_test(_,X),call(P,X)),
-  forall(test_aceese(X),call(P,X)),
+  forall(parser_e2c:fracas_test_problem(X),call(P,X)),
+  %forall(test_aceese(X),call(P,X)),
   for_n(N,sample_set80(X),call(P,X)),
   for_n(N,test_e2c(X,_),call(P,X)),
   for_n(N,parser_chat80:chat80_all(X,_,_),call(P,X)),
   forall(sample_set80(X),call(P,X)),
+  !.
+
+s82:- c8_make,s82_A(show_c80),s82_A(p1(c88)).
+s82(P):- s82_A(p1(P)).
+s82_A(P):- s82_A(20,P).
+s82_A(N,P):- c8_make,call(s82_B(N,P)).
+s82_B(N,P):-
+  for_n(N,training_data(X,_),call(P,X)),
+  %for_n(N,parser_e2c:fracas_test_problem(X),call(P,X)),
+  for_n(N,ape_test(_,X),call(P,X)),
+  forall(parser_e2c:fracas_test_problem(X),call(P,X)),
+  %forall(test_aceese(X),call(P,X)),
+  for_n(N,sample_set80(X),call(P,X)),
+  for_n(N,test_e2c(X,_),call(P,X)),
+  for_n(N,parser_chat80:chat80_all(X,_,_),call(P,X)),
+  forall(sample_set80(X),call(P,X)),
+  example_mentalese,
   !.
 
 chat80_all(P):- c8_make,

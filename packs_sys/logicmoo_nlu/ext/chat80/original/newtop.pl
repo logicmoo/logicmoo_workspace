@@ -648,7 +648,10 @@ reduce1('&'(Q,P),PQ):- compound(Q),compound(P), reduce1((Q,P),PQ).
 reduce1(qualifiedBy(Num,_&_,V),true):- (atom(V);atom(Num)), V=Num,!.
 reduce1(np_head(X,generic,[adj(ace_var(self,Name))],A),O):-
   reduce1(resultFn(X,(ti(A,X),ace_var(X,Name))),O).
-
+/*
+reduce1(qualifiedBy(BE_QualifiedBy,_Np_head,np_head(_Some,Some,[],Place_here)),ti(Place_here,BE_QualifiedBy)):-
+  Some==some.
+*/
 reduce1(qualifiedBy(X,P,S),R):- qualifiedBy_LF(reduce1,X,P,S,R),!.
 
 reduce1('`'(A),R):- reduce1(A,R).

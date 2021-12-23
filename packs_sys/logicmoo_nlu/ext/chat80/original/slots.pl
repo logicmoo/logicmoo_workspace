@@ -445,9 +445,15 @@ maybe_modalize1(Scope,_,V,P,PP):- PP = failed_modalize(Scope,V,P),!.
 
 maybe_modalize0(_Scope,O, V,P,P):- var(V),!,not_true_or_qtrue(O).
 maybe_modalize0(Scope,O, PN+L,P,PP):- maybe_modalize1(Scope,O,PN,P,PM), maybe_modalize1(Scope,O,L,PM,PP).
+maybe_modalize0(Scope,O,tense(L,_),P,PP):- !, maybe_modalize1(Scope,O,L,P,PP).
 maybe_modalize0(Scope,O,[L|PN],P,PP):- nonvar(PN), !, maybe_modalize1(Scope,O,PN,P,PM), maybe_modalize1(Scope,O,L,PM,PP).
 maybe_modalize0(Scope,O, negP(X),P,PP):-!, maybe_modalize0(Scope,O,[negP|X],P,PP).
 maybe_modalize0(Scope,O, past, P, PP):-!,maybe_modalize0(Scope,O,in_past, P, PP).
+maybe_modalize0(Scope,O, being, P, PP):-!,maybe_modalize0(Scope,O,currently, P, PP).
+maybe_modalize0(_Scope,_,will, P, PP):- subst(P,in_past,will,PP),PP\==P,!.
+maybe_modalize0(_Scope,_,aux(_,[pres+fin]), P, PP):- subst(P,in_past,currently,PP),PP\==P,!.
+
+maybe_modalize0(_Scope,_,in_past, P, P):- (Past=will;Past=currently),sub_term(E,P),compound(E), E=modalized(Past,_),!.
 maybe_modalize0(_Scope,_,Past, P, P):- sub_term(E,P),compound(E), E=modalized(Past,_),!.
 maybe_modalize0(_Scope,_,true, P, P):-!.
 maybe_modalize0(_Scope,_,negP, P, \+ P):-!.

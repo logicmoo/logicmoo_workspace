@@ -420,10 +420,10 @@ merge_w2(W21,w(W,WL),W21):-
   nb_set_add(WASL,WL))),!.
 
 
-s82:- make, locally(set_prolog_flag(debug,true),s811(p1(do_objecteese_test))).
+o85:- make, locally(set_prolog_flag(debug,true),o811(p1(do_objecteese_test))).
 
-s84:- make,s81(s84).
-s84(X):- any_to_ace_str(X,S),string_codes(S,Codes), Out = current_output,
+o84:- make,o81(o84).
+o84(X):- any_to_ace_str(X,S),string_codes(S,Codes), Out = current_output,
 	catch(
 		run_acerules:(
       no_debug,
@@ -435,7 +435,7 @@ s84(X):- any_to_ace_str(X,S),string_codes(S,Codes), Out = current_output,
 		error(_, ErrorMessage),
 		format(Out, 'ERROR: ~w\n', ErrorMessage)).
 
-s85(X):- any_to_ace_str(X,S),string_codes(S,Codes), Out = current_output,
+o85(X):- any_to_ace_str(X,S),string_codes(S,Codes), Out = current_output,
 	ignore((catch(
 		run_acerules:( % court, stable, or stable_strong.
                   debug,
@@ -451,5 +451,5 @@ s85(X):- any_to_ace_str(X,S),string_codes(S,Codes), Out = current_output,
 		format(Out, 'ERROR: ~w\n', ErrorMessage)
 	))),!.
 
-:- add_history((cls,debug,s82)).
+:- add_history((cls,debug,o82)).
 :- fixup_exports.
