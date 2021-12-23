@@ -317,7 +317,7 @@ have(_,_).
 
 %contain(X,Y) :- trans_direct(thing,contain,X,Y).
 %contain(X,Y) :- trans_direct(thing,contain,X,W), contain(W,Y).
-
+trans_pred(Spatial,Have,X,Y) :- Have == have, trans_pred(Spatial,contain,X,Y).
 
 trans_pred(Spatial,Contain,X,Y) :- trans_rel(=,trans_direct(Spatial,Contain),X,Y).
 %contain(X,X).
@@ -364,7 +364,7 @@ database801(specific_pred(Type,P,X,Y)) :- specific_pred(Type,P,X,Y). % capital
 database801(generic_pred(VV,Type,P,X,Y)) :- generic_pred(VV,Type,P,X,Y). % capital 
 database801(trans_pred(Type,P,X,Y)) :- trans_pred(Type,P,X,Y). % contain 
 
-database801(modalize(_,X)):- database80(X).
+database801(modalized(_,X)):- database80(X).
 database801(ought(X)):- database80(X).
 database801(can(X)):- database80(X).
 database801(will(X)):- database80(X).

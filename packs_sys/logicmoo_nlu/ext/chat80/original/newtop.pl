@@ -652,7 +652,7 @@ reduce1(np_head(X,generic,[adj(ace_var(self,Name))],A),O):-
 reduce1(qualifiedBy(X,P,S),R):- qualifiedBy_LF(reduce1,X,P,S,R),!.
 
 reduce1('`'(A),R):- reduce1(A,R).
-reduce1(ace_var(C,N),true):- var(C),nonvar(N),C='$VAR'(N),!.
+%reduce1(ace_var(C,N),true):- var(C),nonvar(N),C='$VAR'(N),!.
 
 %reduce1(Ex^(ti(Type,Ex1),bE(is,Ex2,Inst)),Ex^(ti(Type,Inst)&Ex=Inst)):- Ex==Ex1, Ex1==Ex2,!.
 reduce1(Ex^(exceeds(Value1, Ex1) & exceeds(Value2, Ex2)),exceeds(Value2, Value1)):- Ex==Ex1, Ex1==Ex2,!.

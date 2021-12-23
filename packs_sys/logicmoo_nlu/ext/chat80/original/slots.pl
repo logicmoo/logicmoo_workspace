@@ -444,7 +444,7 @@ maybe_modalize1(Scope,O,V,P,PP):- maybe_modalize0(Scope,O,V,P,PP),!.
 maybe_modalize1(Scope,_,V,P,PP):- PP = failed_modalize(Scope,V,P),!.
 
 maybe_modalize0(_Scope,O, V,P,P):- var(V),!,not_true_or_qtrue(O).
-maybe_modalize0(Scope,O, PN+L,P,PP):- nonvar(L), !, maybe_modalize1(Scope,O,PN,P,PM), maybe_modalize1(Scope,O,L,PM,PP).
+maybe_modalize0(Scope,O, PN+L,P,PP):- maybe_modalize1(Scope,O,PN,P,PM), maybe_modalize1(Scope,O,L,PM,PP).
 maybe_modalize0(Scope,O,[L|PN],P,PP):- nonvar(PN), !, maybe_modalize1(Scope,O,PN,P,PM), maybe_modalize1(Scope,O,L,PM,PP).
 maybe_modalize0(Scope,O, negP(X),P,PP):-!, maybe_modalize0(Scope,O,[negP|X],P,PP).
 maybe_modalize0(Scope,O, past, P, PP):-!,maybe_modalize0(Scope,O,in_past, P, PP).
