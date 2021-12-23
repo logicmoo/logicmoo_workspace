@@ -69,14 +69,14 @@ maybe_pull_sentence_level ---> {unloop(maybe_pull_sentence_level)},!,
    locally(nb_setval('$in_sentence_level',[t]),do_sentence_level)).
 maybe_pull_sentence_level ---> [].
 
-optional_comma1 ---> (theText80(',');[]),!.
+maybeComma ---> (theText80(',');[]),!.
 
 %do_sentence_level ---> [w('.',_)],!.
 do_sentence_level ---> 
-  optional_comma1,sentence_level(W),
+  maybeComma,sentence_level(W),
   {(t_l:was_sentence_level(W) -> true ; (assert(t_l:was_sentence_level(W),R),
     writeln(W),nop(undo(ignore(catch(erase(R),_,true))))))},
-  optional_comma1,
+  maybeComma,
   do_sentence_level.
 do_sentence_level ---> [].
 
