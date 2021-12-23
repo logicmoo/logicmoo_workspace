@@ -34,7 +34,7 @@ if [[ ! -d ".git/modules/prologmud_server/" ]]; then
    curl -Lb /tmp/gcokie "${ggURL}&confirm=${getcode}&id=${ggID}" -o "${filename}"
    mkdir -p .git/modules/
    mkdir tmp
-   tar xfvz "${filename}" -C tmp/
+   tar xfz "${filename}" -C tmp/
    mv tmp/.git .git/modules/prologmud_server
    rmdir tmp
    git checkout origin/master .
