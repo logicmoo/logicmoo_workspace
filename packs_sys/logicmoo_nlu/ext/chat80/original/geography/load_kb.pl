@@ -251,9 +251,9 @@ ed( N, W, _):-
 
 chat80_all_broken("What cities do the countries bordering the baltic contain ?",Baltic_Cities,673):- baltic_cities(Baltic_Cities).
 %chat80_all("What is the total area of countries south of the equator and are not in australasia ?",[--(10228,ksqmiles)],1302).
+chat80_all("What are the continents not containing a country ?",[antarctica],208).
 chat80_all("What is the total area of countries south of the equator and not in australasia ?",[--(10228,ksqmiles)],1300).
 chat80_all("What is the total area of countries south of the equator and in australasia ?",[--(3263.6419999999994,ksqmiles)],1301).
-chat80_all("Which country bordering the mediterranean borders a country that is bordered by a country whose population exceeds the population of india ?",[turkey],1900).
 chat80_all("Which countries with a population exceeding 10 million border the atlantic ?",[argentina,brazil,canada,colombia,france,mexico,morocco,netherlands,nigeria,south_africa,spain,united_kingdom,united_states,venezuela,west_germany,zaire],2100).
 chat80_all("Which countries have a population exceeding 10 million ?",[afghanistan,algeria,argentina,australia,bangladesh,brazil,burma,canada,china,colombia,czechoslovakia,east_germany,egypt,ethiopia,france,india,indonesia,iran,italy,japan,kenya,malaysia,mexico,morocco,nepal,netherlands,nigeria,north_korea,pakistan,peru,philippines,poland,south_africa,south_korea,soviet_union,spain,sri_lanka,sudan,taiwan,tanzania,thailand,turkey,uganda,united_kingdom,united_states,venezuela,vietnam,west_germany,yugoslavia,zaire],2000).
 chat80_all("Which rivers are not in asia ?",_,31800).
@@ -292,7 +292,6 @@ chat80_all("What are the rivers that flow through each country bordering the bal
 chat80_all("What are the rivers of the countries bordering the baltic ?",Baltic_Rivers,668):- baltic_rivers_real(Baltic_Rivers).
 chat80_all("What are the rivers in countries bordering the baltic ?",Baltic_Rivers,670):- baltic_rivers(Baltic_Rivers).
 chat80_all("What are the countries from which a river flows into the black sea ?",[[romania,soviet_union]],17).
-chat80_all("What are the continents not containing a country ?",[antarctica],208).
 chat80_all("What are the cities of the countries bordering the baltic ?",Baltic_Cities,667):- baltic_cities_real(Baltic_Cities).
 chat80_all("What are the cities in countries bordering the baltic ?",Baltic_Cities,669):- baltic_cities(Baltic_Cities).
 chat80_all("What are the capitals of the countries bordering the baltic ?",[[[denmark]:[copenhagen],[east_germany]:[east_berlin],[finland]:[helsinki],[poland]:[warsaw],[soviet_union]:[moscow],[sweden]:[stockholm],[west_germany]:[bonn]]],10).
@@ -334,7 +333,6 @@ chat80_all("How many countries have a population greater than 10 million ?",50,2
 chat80_all("How many countries have a population exceeding 10 million ?",50,20600).
 chat80_all("How many asian countries have a population exceeding 10 million ?",20,20500).
 chat80_all("How large is the smallest american country ?",[--(0,ksqmiles)],800).
-chat80_all("Does the population of china exceed the population of india ?",_,_00).
 chat80_all("Does the population of china exceed 1000 million ?",_,_00).
 chat80_all("Does the atlantic border spain ?",_,_00).
 chat80_all("Does Mexico border the United States ?",_,_00).
@@ -343,6 +341,8 @@ chat80_all("Does afghanistan border china ?",[true],200).
 chat80_all("What are the continents no country in which contains more than two cities that have a population exceeding 1 million ?",[[africa,antarctica,australasia]],18).
       chat80_all("What are the continents no country in which contains more than two cities whose population exceeds 1 million ?",[[africa,antarctica,australasia]],18).
 chat80_all("How many countries does the danube flow through ?",[6],1200).
+chat80_all("Does the population of china exceed the population of india ?",_,_00).
+chat80_all("Which country bordering the mediterranean borders a country that is bordered by a country whose population exceeds the population of india ?",[turkey],1900).
 chat80_all("What are the continents containing a country in which contains more than two cities whose population exceeds 1 million ?",[america,asia,europe],211).
 
 baltic_rivers(_):-!.

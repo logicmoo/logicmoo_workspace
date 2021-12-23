@@ -22,6 +22,7 @@
 :- thread_local(pdtmp:expand_enabled/3).
 
 if_search_expanded(N):- if_search_expanded(N,unknown).
+if_search_expanded(N,_):- N>1, !, fail.
 %if_search_expanded(_,_):- !, fail.
 if_search_expanded(N,_Name):- flag(pos_depth,W,W), W>N,!.
 if_search_expanded(N,Name):- flag(pos_depth_skipped,W,W+1),

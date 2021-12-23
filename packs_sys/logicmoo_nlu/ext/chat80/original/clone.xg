@@ -233,7 +233,9 @@ logical_s_word(c,r,implies).
 logical_s_word(c,r,implied).
 logical_s_word(c,r,otherwise).
 logical_s_word(c,r,therefore).
-logical_s_word(X,X,W):-  if_search_expanded(5), logical_o_word(W).
+logical_s_word(X,X,W):- 
+  %if_search_expanded(5), 
+  logical_o_word(W).
 logical_s_word(X,X,W):-is_sent_adverb(W).
 logical_s_word2(r,c,[else,if]).
 
@@ -255,7 +257,7 @@ is_sent_adverb(Word):- member(Word,[actually, apparently, basically, briefly, ce
   interestingly, ironically, naturally, predictably, presumably, regrettably, seriously, strangely,
    surprisingly, thankfully, theoretically, therefore, truthfully, ultimately, wisely]).
 
-if_cond(If,S,Mask) ---> optional_comma, theText80(If),{logical_s_word(If)},!,s_vp_801(S,Mask).
+if_cond(If,S,Mask) ---> logical_word(If),!,s_vp_801(S,Mask).
 if_cond(true,S,Mask) ---> s_vp_801(S,Mask).
 
 optional_comma ---> theText80(','),!.
@@ -276,14 +278,16 @@ s_vp_800s(IF,S,SO,Mask) ---> from_if(IF,S,SO,Mask).
 s80lf(S1,SLF):- sent_to_prelogic(S1,SLF),!.
 s80lf(S1,S1).
 
-from_if(IF,S,SO,_Mask) --->  theText80(Then),{logical_s_word(Then)},!,
-  sentence803(S1),{
+from_if(IF,S,SO,_Mask) --->  logical_word(Then),!,
+  sentence801(S1),{
     s80lf(S1,SLF),  
     S=s(Subj,Verb,Args,Mods),
     append_cond(Args,IF-Then,SLF,ArgsO),SO=s(Subj,Verb,ArgsO,Mods)}.
 
+logical_word(LW) ---> optional_comma,theText80(LW),!, { logical_s_word(LW)}.
+logical_word(true) ---> theText80(',').
 %from_true(S,SO,_)---> theText80(LW),{logical_s_word(LW)},!, from_if(LW,S,SO,_).
-from_true(S,S,_Mask)---> xg_peek(theText80(LW)),{ \+ logical_s_word(LW)},!.
+from_true(S,S,_Mask)---> xg_peek( \+ logical_word(_LW)),!.
 from_true(S,SO,Mask)---> from_if(true,S,SO,Mask).
 from_true(S,S,_Mask)---> [].
 
@@ -825,8 +829,9 @@ verb_form88(ExtraMods,RootVerb,Tense,Agmt,_Role) --->
 
 append_mods([], []).
 append_mods([L|Ls], As) :- (var(L)->L1=[];L1=L),!, append(L1, Ws, As), append_mods(Ls, Ws).
- 
-one_modal(_Tense1,_MODAL1) ---> {\+ if_search_expanded(3),!,fail}.
+
+%one_modal(_Tense1,_MODAL1) ---> !,{fail}.
+one_modal(_Tense1,_MODAL1) ---> {\+ if_search_expanded(1),!,fail}.
 one_modal(_Tense1,MODAL1) ---> theText80(W),{modal_verb_form_aux(W,MODAL1,_Tense2,_)}.
 one_modal(_Tense1,Modal) ---> thePos80([pos(md),root(Modal)]).
 one_modal(_,not) ---> theText80(not).
