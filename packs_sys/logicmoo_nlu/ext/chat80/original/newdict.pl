@@ -124,7 +124,7 @@ pers_pron_lex(them,_,3,pl,compL).
 %pers_pron_lex(which,neut,3,_,subjA).
 %pers_pron_lex(what,neut,3,_,subjA).
 pers_pron_lex(whom,neut,3,_,subjA).
-pers_pron_lex(who,agent,3,_,subjA).
+pers_pron_lex(who,agent,3,_,SubjA):- if_search_expanded(3)-> SubjA= _ ; SubjA = subjA.
 
 pers_pron_lex(them,_,3,pl,subjA).
 pers_pron_lex(us,_,1,pl,compL).
@@ -137,6 +137,11 @@ pers_pron_lex(himself,masc,3,sg,compL).
 pers_pron_lex(themself,agent,3,pl,compL).
 pers_pron_lex(themelves,_,3,pl,_).
 pers_pron_lex(yourselves,_,2,pl,_).
+
+%name_LF(there).
+%name_LF(here).
+
+
 pers_pron_lex(A,B,C,D):- det_pron_lex(A,B,C,D).
 
 det_pron_lex(those,neut,3,pl,subjA).
@@ -149,10 +154,11 @@ pl_or_sg(pl).
 poss_pron_lex(her,fem,3,sg).
 poss_pron_lex(his,masc,3,sg).
 poss_pron_lex(its,neut,3,sg).
-poss_pron_lex(my,_,1,sg).
-poss_pron_lex(our,_,1,pl).
-poss_pron_lex(their,_,3,pl).
-poss_pron_lex(your,_,2,_).
+poss_pron_lex(whose,agent,3,sg).
+poss_pron_lex(my,agent,1,sg).
+poss_pron_lex(our,agent,1,pl).
+poss_pron_lex(their,agent,3,pl).
+poss_pron_lex(your,agent,2,_).
 
 prep_lex(X):- prep_db(chat80,X), \+ never_prep(X).
 prep_lex(X):- try_lex(prep_db(X)), \+ never_prep(X).
@@ -300,6 +306,7 @@ verb_aux_form_be(are,pres+fin,2+sg).
 verb_aux_form_be(are,pres+fin,_+pl).
 verb_aux_form_be(been,past+part,_).
 verb_aux_form_be(be,inf,_).
+verb_aux_form_be(',',inf,_).
 verb_aux_form_be(being,pres+part,_).
 verb_aux_form_be(is,pres+fin,3+sg).
 verb_aux_form_be(was,past+fin,3+sg).
@@ -309,6 +316,9 @@ verb_aux_form_be(were,past+fin,_+pl).
 
 % DO
 verb_aux_form_db(do,do,pres+fin,_+pl).
+
+verb_aux_form_db(',',do,pres+fin,_+pl).
+
 verb_aux_form_db(did,do,past+fin,_).
 %verb_aux_form_db(can,do([can]),pres+fin,_).
 verb_aux_form_db(does,do,pres+fin,3+sg).

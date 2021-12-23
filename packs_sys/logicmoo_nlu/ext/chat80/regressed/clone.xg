@@ -429,8 +429,7 @@ verb(verb(Root,Voice,Time+fin,Aspect,Neg,Kind),Agmt,Type,Voice) --->
    {must(verb_type(Root0,Type0))},
    neg_opt(Type0,Neg),
    rest_verb(Role,Root0,Root,Voice,Aspect),
-   {must(verb_type(Root,Type))
-    ,!,verb_type_to_kind(Type,Kind)}.
+   {must(verb_type(Root,Type)),!,verb_type_to_kind(Type,Kind)}.
 
 neg_opt(aux+_,neg(WhyNot)) ---> theText80(Not),{txt_not(Not,WhyNot)}.
 neg_opt(_,pos(_)) ---> noText.

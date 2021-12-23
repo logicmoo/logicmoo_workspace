@@ -635,7 +635,7 @@ try_chat_80(S,F,Tree,QT):-
   Total is (End - Start)/1000,
   answer_color(QT,Color),
   (Total>1.0 -> ansicall(fg(Color),in_cmt(print_tree_nl(F is runtime(Total)))) ; true),
-  (\+ string(S) -> ansicall(fg(cyan),in_cmt((write('?- '),writeq(S)))) ; true),
+  (\+ string(S) -> ansicall(fg(cyan),in_cmt((write('?- '),writeq(S),write('.')))) ; true),
   (compound(S)->arg(1,S,SS);S=SS),
   assert_if_new(tmp:test80_result(SS,F,QT,Total)),
   ansicall(hfg(Color),in_cmt(print_tree_nl(F=QT))).
@@ -674,7 +674,6 @@ c8_test(B,O):-
   try_chat_80(S,results80(Query,O)),!.
 
 
-c8(S):- c8_make, try_chat_80(S,c8(S,_)).
 
 break_apart(C8,B,O):- is_list(B), !, maplist(break_apart(C8),B,O).
 break_apart(C8,B,O):- \+ string(B), any_to_str(B,S),!,break_apart(C8,S,O).
@@ -688,6 +687,7 @@ into_string_sents(SS,ListS):- atomic_list_concat(ListS,'\n',SS),!.
 c80:- test_c80.
 
 c8:- s81(c8).
+c8(S):- c8_make, try_chat_80(S,c8(S,_)).
 c8(SS,O):- break_apart(c8_A,SS,O),!.
 c8_A(SS,O):- atom_length(SS,L),L<3,!,O= true.
 c8_A(SS,O):-
@@ -713,7 +713,7 @@ c8_A(SS,O):-
  
 s8:- s81(s8).
 s8(B):- \+ string(B), any_to_str(B,S),!,s8(S).
-s8(S):- s8(S,_).
+s8(S):- c8_make, catch(s8(S,_),'$aborted',trace).
 s8(SS,O):- break_apart(s8_A,SS,O),!.
 s8_A(SS,O):- atom_length(SS,L),L<3,!,O= true.
 s8_A(SS,O):-
@@ -721,8 +721,10 @@ s8_A(SS,O):-
   locally(set_prolog_flag(gc,true),
  ((
  notrace((
- %try_chat_80(S,text_to_corenlp_tree(SS,_)),
+ try_chat_80(S,text_to_corenlp_tree(SS,_)),
  into_lexical_segs(SS,Lex))),
+ %wdmsg(Lex),
+ (\+ string(S) -> ansicall(fg(cyan),in_cmt((write('?- '),writeq(S),write('.')))) ; true),
  try_chat_80(S,sentence80(Lex,Tree)),
  %should_learn(Tree),
  %try_chat_80(S,i_sentence(Tree,QT)),
@@ -885,7 +887,7 @@ p1(P2,X):- atom(P2), \+ current_predicate(P2/1),  current_predicate(P2/2),!,
 p1(P1,X):- any_to_str(X,S),append_term(P1,S,G),nl,dmsg(?-G),call(G),nl,!.
 s81:- c8_make,s81_A(show_c80),s81_A(p1(cvt_to_objecteese)).
 s81(P):- s81_A(p1(P)).
-s81_A(P):- s81_A(15,P).
+s81_A(P):- s81_A(16,P).
 s81_A(N,P):- c8_make,call(s81_B(N,P)).
 s81_B(N,P):-
   for_n(N,training_data(X,_),call(P,X)),

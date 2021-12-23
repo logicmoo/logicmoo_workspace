@@ -50,13 +50,10 @@ w001(Cmp)---> [Cmp],{!, ignore(on_x_fail(apw2(Cmp)))}.
 % NEW theText80_W2(Text,L) ---> w001(Cmp),{compound(Cmp)->Cmp=w(Text,L);(atom(Cmp)-> (Text=Cmp,L=unk))}.
 theText80_W2(Text,L) ---> w001(Cmp),{compound(Cmp)->Cmp=w(Text,L);(Text=Cmp,L=[])}.
 
-w01(Text) ---> w001(A), {atomic(A),!,A=Text}.
-w01(Text) ---> theText80_W2(Text,_).
+%w1(Text) ---> w001(A), {atomic(A),!,A=Text}.
+w1(Text) ---> theText80_W2(Text,_).
 
 
-%w01(Text) ---> w001(A), {Text=A}.
-
-w1(Text) ---> w01(Text).
 
 move_ahead_spans(S1,S2,G,G):- is_list(S1), partition(\=(span(_)),S1,W,S),!,append(W,S,S2).
 
@@ -231,12 +228,12 @@ verb_form80(Verb,Tense,Agmt,_Role) --->
    {verb_form_wlex(L,W,Verb,Tense,Agmt)}.
 
 
-name_xg('Billy') ---> theText80(bill),!.
-name_xg('Billy') ---> theText80(bob),!.
+%name_xg('Billy') ---> theText80(bill),!.
+%name_xg('Billy') ---> theText80(bob),!.
 name_xg(Name) ---> opt_the, name_lex_txt(Name),!.
 name_xg(Name) ---> theText80(a),!,name_xg(Name).
 name_xg(Name) ---> thePos80((nnp;nnps;ner('PERSON')),Name),!.
-name_xg('Billy') ---> theText80(bo),!.
+%name_xg('Billy') ---> theText80(bo),!.
 
 name_lex_txt(Name) ---> theTextL80([W1,'_',W2]),{!,is_w_w_name(W1,W2,Name)}.
 name_lex_txt(Name) ---> theTextL80([W1,W2]),{is_w_w_name(W1,W2,Name),name_LF(Name)}.

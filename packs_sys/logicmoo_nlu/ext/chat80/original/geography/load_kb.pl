@@ -332,7 +332,6 @@ chat80_all("How many rivers are not in asia ?",25,20300).
 chat80_all("How many rivers are in asia ?",16,20400).
 chat80_all("How many countries have a population greater than 10 million ?",50,20700).
 chat80_all("How many countries have a population exceeding 10 million ?",50,20600).
-chat80_all("How many countries does the danube flow through ?",[6],1200).
 chat80_all("How many asian countries have a population exceeding 10 million ?",20,20500).
 chat80_all("How large is the smallest american country ?",[--(0,ksqmiles)],800).
 chat80_all("Does the population of china exceed the population of india ?",_,_00).
@@ -341,9 +340,10 @@ chat80_all("Does the atlantic border spain ?",_,_00).
 chat80_all("Does Mexico border the United States ?",_,_00).
 chat80_all("Does america contain new York ?",_,_00).
 chat80_all("Does afghanistan border china ?",[true],200).
-chat80_all("What are the continents containing a country in which contains more than two cities whose population exceeds 1 million ?",[america,asia,europe],211).
-          chat80_all("What are the continents no country in which contains more than two cities whose population exceeds 1 million ?",[[africa,antarctica,australasia]],18).
 chat80_all("What are the continents no country in which contains more than two cities that have a population exceeding 1 million ?",[[africa,antarctica,australasia]],18).
+      chat80_all("What are the continents no country in which contains more than two cities whose population exceeds 1 million ?",[[africa,antarctica,australasia]],18).
+chat80_all("How many countries does the danube flow through ?",[6],1200).
+chat80_all("What are the continents containing a country in which contains more than two cities whose population exceeds 1 million ?",[america,asia,europe],211).
 
 baltic_rivers(_):-!.
 baltic_rivers_real(_):-!.

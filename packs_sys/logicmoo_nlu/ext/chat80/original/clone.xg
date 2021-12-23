@@ -75,7 +75,17 @@ sentence803(S) ---> declarative(S).
 sentence803(S) ---> question80(S).
 sentence803(S) ---> imperative80(S).
 
-sentence804(np(Subj)) ---> {fail}, subj(Subj,_Agmt,_Type).
+sentence804(decl(S)) ---> subj_decl(S).
+sentence804(decl(S)) ---> pp_decl(S).
+
+subj_decl( ( s( Subj, verb(main+iv,exist,active,pres+fin,[],[]), [],[]))) ---> subj(Subj,_Agmt,_Type).
+
+pp_decl( ( s( np(_,np_head(_,generic,[adj(info(self,PP))],current_thing),[]),
+                         verb(main+iv,exist,active,pres+fin,[],[]),
+                         [],
+                       [ PP ]))) --->
+   xg_prep_phrase(_PPAlowed,PP,_Case,_Set,_Mask).
+
 
 sentence_typed('?',S,List):- question80(S,List,[],[],[]).
 sentence_typed(Punct,Out,List):- s80(S,_,List,[],[],[]),punct_to_sent_type(Punct,S,Out).
@@ -214,6 +224,7 @@ logical_s_word(r,c,whenever).
 logical_s_word(r,c,unless).
 
 logical_s_word(r,c,if).
+logical_s_word(_,_,for).
 logical_s_word(c,c,also).
 logical_s_word(c,c,eigther).
 logical_s_word(c,r,then).
@@ -288,26 +299,18 @@ append_cond(Args,IF,S,ArgsO):- append(Args,[cond(IF,S)],ArgsO).
 
 s_vp_801(s(Subj,Verb,Args,Mods),Mask) --->
   {is_subj_case(Case)},
-   locally(tlclone:np_in_case(Case),
-   subj(Subj,Agmt,Type)),
+   locally(tlclone:np_in_case(Case),subj(Subj,Agmt,Type)),
    just_vp(Subj,Agmt,Type,Verb,Args,Mods,Mask).
 
 s_vp_801(s(NP,Verb,[],[ arg(arg_pred,adj(true))]),_) --->  ace_var(AceVar), !,
    {Verb = verb(aux+aux(be,[]), aux(be,[]),active,pres+fin,[],[ aux(be,[pres+fin]), root]),
     NP= np(3+sg,np_head(_Var,generic,[adj(ace_var(self,AceVar)),adj(ti(statement,self))],statement),[])}.
 
-/*
-s_vp_801(NP,Verb,[],[],_) --->  ace_var(AceVar), !,
-   {Verb = verb(main+iv,'action1:tell',[],active,pres+fin,[],(_)),
-    NP= np(3+sg,np_head(_Var,generic,[adj(ace_var(self,AceVar)),adj(ti(statement,self))],statement),[])}.
 
-s_vp_801(NP,Verb,[],[],_) --->  [],!,
-   {Verb = verb(main+iv,tell,[],active,pres+fin,[],(_)),
-    NP= np(3+sg,np_head(_Var,generic,[adj(ti(statement,self))],statement),[])}.
-*/
 
 no_more_words ---> \+ [_].
 
+% did
 just_vp(_Subj,Agmt,_Type,Verb,[ARG],_Mods,_Mask) ---> 
   theText80(W),
   {verb_aux_form_db(W,do,Pastfin,Agmt)},
@@ -317,16 +320,16 @@ just_vp(_Subj,Agmt,_Type,Verb,[ARG],_Mods,_Mask) --->
     no_more_words.
 
 just_vp(Subj,Agmt,Type,Verb,Args,Mods,Mask) --->
-  s_vp1(Subj,Agmt,Type0,Verb0,Args0,Mods0,Mask0),
+  just_vp_1(Subj,Agmt,Type0,Verb0,Args0,Mods0,Mask0),
   more_s_vp1(Subj,Agmt,Type0,Verb0,Args0,Mods0,Mask0,Type,Verb,Args,Mods,Mask).
 /*
 more_s_vp1(Subj,Agmt,Type0,Verb0,Args0,Mods0,Mask0,
                      Type,Verb,Args,Mods,Mask) ---> 
-   s_vp1(Subj,Agmt,Type1,Verb1,Args1,Mods1,Mask1).
+   just_vp_1(Subj,Agmt,Type1,Verb1,Args1,Mods1,Mask1).
 */
 more_s_vp1(_Subj,_Agmt,Type,Verb,Args,Mods,Mask,Type,Verb,Args,Mods,Mask) ---> noText.
-s_vp1(_Subj,Agmt,Type,Verb,Args,Mods,Mask) --->
-   verb(Verb,Agmt,Type,Voice),
+just_vp_1(_Subj,Agmt,Type,Verb,Args,Mods,Mask) --->
+   verb_with_rest(Verb,Agmt,Type,Voice),
    {is_empty_bits(Nil), is_s_all(SAll)},
    verb_args(Type,Voice,Args,Nil,Mask0),
    {minus_mask(SAll,Mask0,Set), plus_mask(SAll,Mask0,Mask1)},
@@ -414,7 +417,7 @@ np_head2(np_head(_Var,Det,[],Noun),3+sg,indefA+common) --->
 np_head2(nameOf(_Var,O,[]),Agmt,Def) ---> np_objbody(O,Agmt,Def).
 np_head2(np_head(_Var,Det,AdjsO,Head),3+Number,Def+common) --->
    determiner(Det,Number,Def),
-   adjs_opt(Adjs),
+   post_determiner_pre_noun(Adjs),
    noun(Head,Adjs,AdjsO,Number).
 
 
@@ -427,7 +430,7 @@ extend_np(_,IO,IO)---> [].
 np_amend1(Type_X,adj(ace_var(self,AceVar))) ---> {fail},{(\+ \+ Type_X=ace_var),dif(Type_X,ace_var)}, ace_var(AceVar),!.
 np_amend1(Type_X,adj(s_vp(self,_Subj,Verb,Args,Mods))) ---> {fail},
  {( \+ \+ Type_X=s_vp),dif(Type_X,s_vp)}, theText80(that),
-   verb(Verb,_Agmt,Type,Voice),
+   verb_with_rest(Verb,_Agmt,Type,Voice),
    {is_empty_bits(Nil), is_s_all(SAll)},
    verb_args(Type,Voice,Args,Nil,Mask0),
    {minus_mask(SAll,Mask0,Set), plus_mask(SAll,Mask0,Mask1)},
@@ -594,14 +597,14 @@ adv_phrase(post,prep_phrase(PPType,Prep,NP),Set,Mask) --->
 
 /* Adjectival Constructions */
 
-adjs_opt([Adj|Adjs]) --->
-   pre_adj(Adj),
-   adjs_opt(Adjs).
-adjs_opt([]) ---> noText.
+post_determiner_pre_noun([Adj|Adjs]) --->
+   post_det_pre_noun(Adj),
+   post_determiner_pre_noun(Adjs).
+post_determiner_pre_noun([]) ---> noText.
 
-pre_adj(Adj) --->  sup_phrase(Adj).
-pre_adj(Adj) ---> adj(_,Adj).
-% TODO WHY pre_adj(poSS(Pronoun,Agreement)) ---> poss_pron(Pronoun,Agreement).
+post_det_pre_noun(Adj) --->  sup_phrase(Adj).
+post_det_pre_noun(Adj) ---> adj(_,Adj).
+% TODO WHY post_det_pre_noun(poSS(Pronoun,Agreement)) ---> poss_pron(Pronoun,Agreement).
 
 
 sup_phrase(sup(Op,Adj)) --->
@@ -746,7 +749,7 @@ reduced_wh(Agmt,Type_X),
    {is_trace82(Set0,Mask0), is_subj_case(NPCase)}.
 reduced_wh(Agmt,Type_X),
    np_11(np(Agmt,wh(Type_X),[]),Agmt,NPCase,_,_,Set,Mask),
-   verb(Verb,_,Type,Voice) --->
+   verb_with_rest(Verb,_,Type,Voice) --->
    participle_vt(Verb,Type,Voice),
    {is_trace82(Set,Mask), is_subj_case(NPCase)}.
 reduced_wh(AgmtX,Type_X),
@@ -758,15 +761,13 @@ reduced_wh(AgmtX,Type_X),
 
 /* Verb phrase (less the complements) */
 
-verb(verb(Type,Root,Voice,Time+fin,Aspect,Neg),Agmt,Type,Voice) ---> 
+verb_with_rest(verb(Type,Root,Voice,Time+fin,Aspect,Neg),Agmt,Type,Voice) ---> 
      % {is_empty_bits(Nil), is_s_all(SAll)},      
    maybe_verb_pre_mods(ExtraMods1,_Set,_Mask0,_Mask1),
    verb_form88(ExtraMods2,Root0,Time+fin,Agmt,Role),
    {verb_type_lex(Root0,Type0)},
    neg_modal_opt(_Tense1,[],Type0,NegI),
    rest_verb(ExtraMods3,Role,Root0,Root,Voice,Aspect),
-
-   
    {append_mods([ExtraMods1,ExtraMods2,ExtraMods3],ExtraMods),
     add_extra_to_neg(NegI,ExtraMods,Neg),
     verb_type_lex(Root,Type)}.
@@ -793,8 +794,7 @@ verb_form88(ExtraMods,RootVerbO,Tense,Agmt,_Role) --->
    {verb_form_wlex(L,W,RootVerb,Tense,Agmt)},
    maybe_verb_prep(RootVerb,RootVerbO,ExtraMods).
 
-
-verb_form88([],adj_prep(P,ToFrom),_Tense,_Agmt,_Role) --->
+verb_form883([],adj_prep(P,ToFrom),_Tense,_Agmt,_Role) --->
    {if_search_expanded(2)},
    pre_prep_adj(P),prep(ToFrom).
 %verb_form88([],aux(do,[]),Tense,Agmt,_Role) ---> xg_peek(theText80(will)).
@@ -934,6 +934,7 @@ advs_opt(R,R,_) ---> noText.
 adj_phrase(P,Nil) ---> adj(_,P), { is_empty_bits(Nil) }.
 adj_phrase(P,Mask) --->  comp_phrase(P,Mask).
 
+adverb(adv(W)) ---> theText80(W), {atom(W),atom_concat(_,'ly',W)}.
 adverb(adv(Adv)) ---> theText80_W2(W,W2), {adv_lex_w2(W,W2,Adv)}, may_adverb(W).
 adverb(adj(Adj)) ---> {if_search_expanded(3)},theText80_W2(W,W2), {adj_lex_w2(W,W2,Adj,_Type)}.
 adverb(adv(W)) ---> theText80(W), {adverb_lex(W)}, may_adverb(W).
