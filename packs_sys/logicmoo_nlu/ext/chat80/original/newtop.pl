@@ -637,6 +637,7 @@ reduce1((Q,P),PQ):- (true) == Q,!,reduce1(P,PQ).
 reduce1(mg(Q),Q):- !.
 
 reduce1(bE(named,Q,P),true):- P=Q, !.
+reduce1(bE(is,Q,P),bE(is,Q,P)).
 %reduce1(bE(_,Q,P),true):- var(P),var(Q),P=Q, !.
 reduce1(same_values(Q,P),true):- P=Q,!.
 
@@ -645,14 +646,17 @@ reduce1('&'(Q,P),PQ):- compound(Q),compound(P), reduce1((Q,P),PQ).
 
 %reduce1(( bE(_,Num_Num10,N) , P), Q):- var(Num_Num10),subst(P,Num_Num10,N,Q).
 
-reduce1(qualifiedBy(Num,_&_,V),true):- (atom(V);atom(Num)), V=Num,!.
+%reduce1(qualifiedBy(Var,Num,_&_,V),true):- (atom(V);atom(Num)), V=Num,!.
 reduce1(np_head(X,generic,[adj(ace_var(self,Name))],A),O):-
   reduce1(resultFn(X,(ti(A,X),ace_var(X,Name))),O).
 /*
-reduce1(qualifiedBy(BE_QualifiedBy,_Np_head,np_head(_Some,Some,[],Place_here)),ti(Place_here,BE_QualifiedBy)):-
+reduce1(qualifiedBy(Var,BE_QualifiedBy,_Np_head,np_head(Var,Some,[],Place_here)),ti(Place_here,Var)):-
   Some==some.
 */
-reduce1(qualifiedBy(X,P,S),R):- qualifiedBy_LF(reduce1,X,P,S,R),!.
+
+reduce1(qualifiedBy(Var,_,_,S),R):- sub_term(E,S), compound(E), E = np_head(Var,_,_,_), R= E.
+reduce1(qualifiedBy(Var,X,P,S),R):- fail, OR = qualifiedBy(Var,X,P,S), qualifiedBy_LF2(Var,xxx,X,P,S,R)-> OR\==R,!.
+reduce1(qualifiedBy(Var,X,P,S),R):- qualifiedBy_LF(Var,reduce1,X,P,S,R),!.
 
 reduce1('`'(A),R):- reduce1(A,R).
 %reduce1(ace_var(C,N),true):- var(C),nonvar(N),C='$VAR'(N),!.

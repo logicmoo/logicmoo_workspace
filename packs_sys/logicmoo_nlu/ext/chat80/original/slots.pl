@@ -133,7 +133,7 @@ i_np_head0(nameOf(Var,Name), Type1Name,Type2Name,Ident,True,Pred0,Pred,List) :- 
 i_np_head0(wh(TypeX_X),TypeX_X,TypeX_X,identityQ(_QModal),'`'(true),Pred,Pred,[]):-!.
 % np(3+sg,pronoun(neut),[])
 i_np_head0(Else, Type-Name,Type-Name,identityQ(_QModal),'`'(P),Pred,Pred,[]):-  Else \= np_head(_Var,_,_,_), !,
-   lf80(Type,make_qualifiedBy(i_np_head0,Name,Type,Else,P)).
+   lf80(Type,make_qualifiedBy(_Var,i_np_head0,Name,Type,Else,P)).
 
 i_np_head0(np_head(_Var,Det,Adjs,Noun),TypeX_X,T,Det,Head0,Pred0,Pred,Slots) :-
    i_adjs(Adjs,TypeX_X,T,TypeX_X,Head0,Head,Pred0,Pred),
@@ -166,7 +166,7 @@ i_np_head0(np_head(Var,Det,Adjs,Noun),X,T,Det0,Head0,Pred0,Pred,Slots) :-
   must80(i_np_head1(np_head(Var,Det,Adjs,Noun),X,T,Det0,Head0,Pred0,Pred,Slots)).
 
 i_np_head0(Else, Type-X,Type-X,identityQ(_QModal),'`'(P),Pred,Pred,[]):- 
-   lf80(Type,make_qualifiedBy(i_np_head0,X,Type,Else,P)).
+   lf80(Type,make_qualifiedBy(Var,i_np_head0,X,Type,Else,P)).
 
 i_np_head1(np_head(_Var,Det,Adjs,Noun),X,T,DetO,Head0,Pred0,Pred,Slots):-
    i_adjs(Adjs,X,T,X,Head0,Head,Pred0,Pred),
@@ -176,8 +176,8 @@ i_np_head1(np_head(_Var,Det,Adjs,Noun),X,T,DetO,Head0,Pred0,Pred,Slots):-
 xform_det(Det,Det):- !.
 xform_det(_Det,_DetO):- !.
 
-make_qualifiedBy(PType,Name,Type,Else,P):- qualifiedBy_LF(PType,Name,Type,Else,P).
-make_qualifiedBy(_,Name,Type,Else,P):- may_qualify(Else), P = qualifiedBy(Name,Type,Else).
+make_qualifiedBy(Var,PType,Name,Type,Else,P):- qualifiedBy_LF(Var,PType,Name,Type,Else,P).
+make_qualifiedBy(Var,_,Name,Type,Else,P):- may_qualify(Else), P = qualifiedBy(Var,Name,Type,Else).
 %may_qualify(_):- !,fail.
 may_qualify(np_head(_Var,det(each),[],_)):-!,fail.
 may_qualify(np_head(_Var,_,[],Act)):- atom(Act),atom_concat('actioned',_,Act), !,fail.
@@ -695,14 +695,17 @@ slot_verb_template(aux(have,MODAL),(Y=Z,aux(have,S,Y)),
          slot(prep(as),TypeV,Z,_,free)]).
 
 slot_verb_template(Verb,Pred, Slots,[],transparent) :-
-  slot_verb_template_transparent(Verb,Pred, Slots).
+  slot_verb_template_transparent1(Verb,Pred, Slots);slot_verb_template_transparent2(Verb,Pred, Slots).
 
 
-slot_verb_template_transparent(Verb,Pred, Slots) :-
-   ignore(must80(verb_type_lex(Verb,_+Kind))),
+slot_verb_template_transparent1(Verb,Pred, Slots) :-
+   must80(verb_type_lex(Verb,Kind);true),
    (select_slots(Slots,[slot(subjA,TypeS,S,_,free)],SlotsRemaining);SlotsRemaining=Slots),   
    slot_verb_kind(Kind,Verb,TypeS,S,Pred,SlotsRemaining).
 
+slot_verb_template_transparent2(Verb,Pred, Slots) :- fail,
+   (SlotsRemaining=Slots),   
+   slot_verb_kind(_Kind,Verb,TypeS,S,Pred,SlotsRemaining).
 
 select_slots(Ss,Slots):- select_slots(Ss,Slots,[]),!.
 %select_slots(Ss,Slots):- select_slots(Ss,Slots,_).

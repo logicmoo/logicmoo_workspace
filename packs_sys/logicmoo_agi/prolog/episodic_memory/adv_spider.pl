@@ -74,6 +74,19 @@ A1 imagines A2P.
 
 ").
 
+example_mentalese(sort_for_the_ideal_tool, "
+S1 makes a 2x2 growing writable grid.
+S1 writes a list of tools in column 1 of the grid.
+S1 writes in column 2, to the right of each tool name, how well that tool has helped in the past.
+S1 sorts the grid by column 2.
+S1 gets the name of the tool from column 1 row 1 and finds a tool with the same name to offer the user.
+").
+
+example_mentalese(translating_english_to_event_calc, "
+
+").
+
+
 % real world
 map_of(spider_1st_person,
 "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

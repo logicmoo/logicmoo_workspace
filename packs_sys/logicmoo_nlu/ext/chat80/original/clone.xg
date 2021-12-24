@@ -20,17 +20,15 @@ xg_w2_len(1,[])---> !, []. %% missing puncts
 xg_w2_len(N,[W|L])---> [W], {N>1, M is N -1},!,xg_w2_len(M,L).
 
 
-link_s(S) --->
- { \+ lctmp:in_sent804 }, !, 
-     locally(lctmp:in_sent804,link_s_1(S)),
-     xg_peek(link_s_w(_)).
+span_s(S) ---> span_as_xg('SBAR',s80,S).
+span_s(S) ---> span_as_xg('S',s80,S).
+span_vp(S) ---> span_as_xg('VP',imperative80,S).
 
-link_s_w(Words) ---> link_t_1('S',Words),!.
-link_s_w(Words) ---> link_t_1('SBAR',Words),!.
+span_as_xg(Type,P,S) --->  {\+ lctmp:in_sent804(Type+P)}, locally(lctmp:in_sent804(Type+P),span_call_xg(Type,P,S)).
 
-link_s_1(S) ---> link_s_w(Words), !,{sentence801(S,Words,[],[],[])}.
+span_call_xg(Type,P,S) ---> span_as_1(Type,Words),{call(P,S,Words,[],[],[])}.
 
-link_t_1(Type,[w(S,L)|Words], [w(S,L)|A], B, Type_X, Type_X) :-
+span_as_1(Type,[w(S,L)|Words], [w(S,L)|A], B, Type_X, Type_X) :-
   member(loc(N),L),
   select(link(_, Type, r(Type, seg(N, M))),L,L2),
   \+ member(link(_, Type, r(Type, seg(N, _))),L2),
@@ -43,7 +41,7 @@ sentence80(S) ---> {b_setval('$prev_w2s', []),b_setval('$prev_spans', [])},!, se
 sentence80e(S) ---> sentence800(S).
 %sentence80e(S) ---> sentence800(S1)*->sentence801s(sentence80,S1,S).
 
-sentence800(S) ---> sentence801(S)*->{true};(link_s(S)*->{true};q_sentence800(S)).
+sentence800(S) ---> sentence801(S)*->{true};(span_s(S)*->{true};q_sentence800(S)).
 
 q_sentence800(S) ---> startQuotesEnding(E),!,sentence801(S),E,!.
 
@@ -64,7 +62,8 @@ join_over_s(S1,then,S2,Out):- !, join_over_s(S1,implies,S2,Out).
 
 :- dynamic(if_giveup_dcg/0).
 sentence801(_) ---> {if_giveup_dcg,!,fail}.
-sentence801(S) ---> xg_from_right(the_w2_list(List),theText80(Last)),{arg(_,v('?','!','.'),Last)},!,{sentence_typed(Last,S,List)}.
+sentence801(S) ---> xg_from_right(the_w2_list(List),theText80(Last)),
+  {arg(_,v('?','!','.'),Last)},!,{sentence_typed(Last,S,List)}.
 sentence801(S) ---> sentence802(S).
 
 sentence802(S) ---> sentence803(S) *-> {true} ; sentence804(S).
@@ -90,6 +89,7 @@ pp_decl( ( s( np(_,np_head(_,generic,[adj(info(self,PP))],current_thing),[]),
 sentence_typed('?',S,List):- question80(S,List,[],[],[]).
 sentence_typed(Punct,Out,List):- s80(S,_,List,[],[],[]),punct_to_sent_type(Punct,S,Out).
 sentence_typed(_,S,List):- imperative80(S,List,[],[],[]).
+sentence_typed(_,S,List):- sentence804(S,List,[],[],[]).
 
 punct_to_sent_type((?),S,q(S)).
 punct_to_sent_type((.),S,decl(S)).
@@ -350,10 +350,22 @@ subj0(Subj,Agmt,_) --->
 
 
 
-/* Noun Phrase */
+np_11(np(3+sg,np_head(_Var,generic,[adj(ace_var(self,AceVar)),adj(ti(thing,self))],thing),[]),
+    _Agmt,_Case,_IndefA,_Role,_Set,_Mask)
+  --->   ace_var(AceVar),!,{O=AceVar,nop(freeze(O, \+ ground(O)))}.
+
+np_11(np(Agmt,nameOf(_Var,span_vp(SO),[]),_Mods),Agmt,_Case,_IndefA,_Role,_Set,_Mask) 
+  ---> {if_search_expanded(4)}, span_vp(S),{s80lf(S,SO)}.
+
+np_11(np(Agmt,nameOf(_Var,span_s(SO),[]),_Mods),Agmt,_Case,_IndefA,_Role,_Set,_Mask) 
+  ---> {if_search_expanded(3)}, span_s(S),{s80lf(S,SO)}.
+
+
+   /* Noun Phrase */
 % to buy a car
 % @TODO DMILES
-np_11(np(Agmt,nameOf(_Var,link_s(SO),[]),_Mods),Agmt,_Case,_IndefA,_Role,_Set,_Mask) 
+
+np_11(np(Agmt,nameOf(_Var,span_s(SO),[]),_Mods),Agmt,_Case,_IndefA,_Role,_Set,_Mask) 
   ---> theText80(to),!,
    imperative80(S),!,{s80lf(S,SO)}.
 
@@ -469,20 +481,20 @@ an_s ---> textOpt([s]).
 :- thread_local(lctmp:in_sent801/0).
 :- thread_local(lctmp:in_sent802/0).
 :- thread_local(lctmp:in_sent803/0).
-:- thread_local(lctmp:in_sent804/0). 
+:- thread_local(lctmp:in_sent804/1). 
 
 of_type(P,H) ---> {P=..[F|List],PH=..[F,H|List]},PH.
 nl_list_of_items(AndOr,P, [H,T])---> xg_peek([_,_,_]), of_type(P,H), maybeComma, {member(AndOr,[and,or])}, theText80(AndOr), of_type(P,T),!.
 nl_list_of_items(AndOr,P, [H|T])---> xg_peek([_,_,_,_]), of_type(P,H), maybeComma, !, nl_list_of_items(AndOr,P, T).
 
 
+np_objbody(string(List),3+sg,defA+proper) ---> w2_quoted(List),!.
 
+np_objbody(S,_,_)--->   span_s(S).
 
 %np_objbody(Det,Number,Def) ---> {if_search_expanded(2)}, np_objbody(Det,Number,Def).
 np_objbody((Name),3+sg,defA+proper) ---> name_xg(Name).
 
-np_objbody(S,_,_)--->  {if_search_expanded(6)}, {tlclone:np_in_case(Case), \+ is_subj_case(Case)}, link_s(S).
-np_objbody(string(List),3+sg,defA+proper) ---> w2_quoted(List),!.
 
 np_objbody((prep_obj(Word,S)),Agmt,Type) ---> {fail},
   {if_search_expanded(5)},
@@ -603,7 +615,7 @@ post_determiner_pre_noun([Adj|Adjs]) --->
 post_determiner_pre_noun([]) ---> noText.
 
 post_det_pre_noun(sup(brightly,shinning)) ---> theText80(brightly),theText80(shinning).
-post_det_pre_noun(_Adj) --->  thePos80((d_;w_;i_)),!,{fail}.
+post_det_pre_noun(_Adj) --->  (thePos80((d_;w_;i_));ace_var(_); name_xg(_Name)),!,{fail}.
 post_det_pre_noun(Adj) --->  sup_phrase(Adj).
 post_det_pre_noun(Adj) ---> adj(_,Adj).
 post_det_pre_noun(adj(Adj)) ---> thePos80((jj;jjs;cd),Adj).

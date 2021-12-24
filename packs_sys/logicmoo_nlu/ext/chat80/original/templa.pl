@@ -314,19 +314,34 @@ make_generic_pred(Spatial,matches_prep(AT),X,Y,generic_pred(VV,Spatial,prep(AT),
 make_generic_pred(Spatial,(AT),X,Y,generic_pred(VV,Spatial,mg(AT),X,Y)):-t_l:current_vv(VV),!.
 
 % qualifiedBy
-qualifiedBy_LF(_FType,_Name,_Type,_Else,_P):-  \+ if_search_expanded(2),!, fail.
-%qualifiedBy_LF( FType,X,Type,Else,P):- nop(qualifiedBy_LF(FType,X,Type,Else,P)),fail.
-qualifiedBy_LF(_FType, X,Base&Thing,np_head(_Var,wh_det(Kind,Kind-_23246),[],Type),(ti(Thing,X),ti(Base,X),ti(Type,X))).
-qualifiedBy_LF(FType, X, BaseAndThing,np_head(Var,det(the(sg)),Adjs,Table),Head):- qualifiedBy_LF(FType, X, BaseAndThing,np_head(Var,det(a),Adjs,Table),Head),!.
-qualifiedBy_LF(_FType, X,_,np_head(_Var,det(a),[],Table),ti(Table,X)). 
-qualifiedBy_LF(_FType,X,_Type,pronoun(_,1+sg),isa(X,vTheVarFn("I"))).
-qualifiedBy_LF(_FType,X,_Type,pronoun(_,1+pl),isa(X,vTheVarFn("US"))).
-qualifiedBy_LF(_FType,X,Type,np_head(_Var,generic,Adjs,Table),Pred):-
+qualifiedBy_LF2(Var,FType,Name,Type,Else,P):-
+  qf(Var,true,qualifiedBy(Var,FType,Name,Type,Else),_,P).
+qualifiedBy_LF(_Var,_FType,_Name,_Type,_Else,_P):-  \+ if_search_expanded(2),!, fail.
+qualifiedBy_LF(Var,FType,Name,Type,Else,PO):-  qualifiedBy_LF0(Var,FType,Name,Type,Else,P),
+   (var(Name)->(Var=Name,P=PO) ; conjoin(P,var_name(Var,Name),PO)).
+
+qf(Var,PIn,I,Out,POut):- sub_term(E,I),nonvar(E),pl_qualified(E,R),subst(R,self,Var,RP),subst(I,E,xxx,MM),!,
+  conjoin(PIn,RP,PMid),qf(Var,PMid,MM,Out,POut).
+qf(_Var,POut,_,_,POut).
+
+pl_qualified(Atom,ti(Atom,self)):- atom(Atom), Atom\==xxx.
+pl_qualified(det(the(sg)),count(self,eq,1)).
+pl_qualified(det(the(pl)),count(self,gt,1)).
+pl_qualified(det(some),exists(self)).
+
+%qualifiedBy_LF(Var, FType,X,Type,Else,P):- nop(qualifiedBy_LF(Var,FType,X,Type,Else,P)),fail.
+qualifiedBy_LF0(Var,_FType, X,Base&Thing,np_head(Var,wh_det(Kind,Kind-_23246),[],Type),(ti(Thing,X),ti(Base,X),ti(Type,X))).
+qualifiedBy_LF0(Var,FType, X, BaseAndThing,np_head(Var,det(the(sg)),Adjs,Table),Head):- qualifiedBy_LF(Var,FType, X, BaseAndThing,np_head(Var,det(a),Adjs,Table),Head),!.
+qualifiedBy_LF0(Var,_FType, X,_,np_head(Var,det(a),[],Table),ti(Table,X)).
+qualifiedBy_LF0(Var,_FType,X,_Type,pronoun(Var,_,1+sg),isa(X,vTheVarFn("I"))).
+qualifiedBy_LF0(Var,_FType,X,_Type,pronoun(Var,_,1+pl),isa(X,vTheVarFn("US"))).
+qualifiedBy_LF0(Var,_FType,X,Type,np_head(Var,generic,Adjs,Table),Pred):-
   must(i_adjs(Adjs,Type-X,Type-X,_,Head,Head,Pred,ti(Table,X))).
-qualifiedBy_LF(_FType,X,Type,np_head(_Var,det(a),Adjs,Table),Pred):- 
+qualifiedBy_LF0(Var,_FType,X,Type,np_head(Var,det(a),Adjs,Table),Pred):- 
   must(i_adjs(Adjs,Type-X,Type-X,_,Head,Head,Pred,ti(Table,X))).
-qualifiedBy_LF(_FType,Name,Type,Else,P):- P = qualifiedBy(Name,Type,Else),!.
-qualifiedBy_LF(FType,Name,Type,Else,P):- wdmsg(missed(qualifiedBy_LF(FType,Name,Type,Else,P))),fail.
+qualifiedBy_LF0(Var,_FType,Name,Type,Else,P):- P = qualifiedBy(Var,Name,Type,Else),!.
+qualifiedBy_LF0(Var,FType,Name,Type,Else,P):- wdmsg(missed(qualifiedBy_LF(Var,FType,Name,Type,Else,P))),fail.
+
 
 adv_template_LF(RefVar,Adv,Case,X,pred_adv(RefVar,Adv,Case,X)).
 

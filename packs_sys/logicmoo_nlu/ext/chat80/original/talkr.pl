@@ -211,8 +211,8 @@ pick(X,X).
 
 % Logical Rules
 % ------------------
-qualifiedBy(V,_,np_head(_Var,det(A),_Adjs,Ti)):- !, debug_var0([A,Ti],V).
-qualifiedBy(_,_,_).
+qualifiedBy(Var,V,_,np_head(Var,det(A),_Adjs,Ti)):- !, debug_var0([A,Ti],V).
+qualifiedBy(_Var,_,_,_).
 intrans_pred_prep(thing,_Thing1,Wait,_X,For,Y):- 
  debug_var([prep,For],Y),
  debug_var([intrans],Wait).
@@ -236,7 +236,7 @@ measure_pred(Spatial,Area,Where,Total) :- not_where(Where),
          database80(aggregate80(total, Setof, Total)).
 
 
-
+bE(is,I,T):- nonvar(T),ti(T,I).
 bE(_,X,X).
 named(X,X).
 

@@ -54,7 +54,7 @@ deepen_local_0(Local, Call):-
 deepen_pos_old(Call):- (Call *-> true ; (deepen_pos_0(Call) *->  true ; locally(t_l:useAltPOS,deepen_pos_0(Call)))).
 
 % Dont use this recursively
-deepen_pos(Call):- flag(pos_depth,N,N),N>0, dmsg(recursive(deepen_pos(Call))),!,call(Call).
+deepen_pos(Call):- flag(pos_depth,N,N),N>0, nop(dmsg(recursive(deepen_pos(Call)))),!,call(Call).
 % starting fresh from here
 deepen_pos(Call):- deepen_pos_fresh(Call).
 
