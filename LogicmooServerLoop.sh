@@ -30,8 +30,9 @@ let COUNTER+=1
 
 export SCREEN_CMD="sudo -u prologmud_server -- screen"
 
-if pgrep -x "screen" > /dev/nulli="0"
-then
+IS_RUNNING=$(ps ax | grep "SCREEN -mdS LogicmooServer" | grep -v grep)
+
+if [ ! -z "$IS_RUNNING" ]; then
   if [ "$needs_message_update" != "0" ]; then
     echo "Screen Already Running"
     needs_message_update="0"
@@ -44,8 +45,8 @@ else
     sleep 2
     echo "Screen Started"
 
-     if  pgrep -f "StartLogicmoo" > /dev/nulli="0"
-      then
+      if  pgrep -f "StartLogicmoo" > /dev/nulli="0"
+       then
          if [ "$needs_message_update" != "0" ]; then
           echo "Looks like StartLogicmoo is running!"
           needs_message_update="0"
@@ -68,4 +69,5 @@ fi
 sleep 1
 
 done
+
 
