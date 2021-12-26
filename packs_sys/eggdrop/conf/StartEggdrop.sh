@@ -1,5 +1,9 @@
 #!/bin/bash
 
+if [ -f "/tmp/is_google_collab" ]; then
+ sleep 6000
+fi
+
 if pgrep -x "eggdrop" > /dev/null
 then
     echo "Running"
