@@ -368,7 +368,7 @@ prolog:message(rdf(unexpected(Tag, Parser))) -->
     { get_sgml_parser(Parser, file(File)),
       get_sgml_parser(Parser, line(Line))
     },
-    [ 'RDF: ~w:~d: Unexpected element ~w'-[File, Line, Tag] ].
+    [ 'RDF: ', url(File:Line), ': Unexpected element ~w'-[Tag] ].
 
 
                  /*******************************

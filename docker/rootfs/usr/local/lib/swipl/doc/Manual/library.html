@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.5.1 Reference Manual: Section F.2</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.5.4 Reference Manual: Section F.2</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -265,8 +265,14 @@ free variables in bagof/setof template.</td></tr>
 text with ANSI attributes.</td></tr>
 <tr><td><a class="pred" href="ansiterm.html#ansi_get_color/2">ansi_get_color/2</a></td><td>Obtain 
 the RGB color for an ANSI color parameter.</td></tr>
+<tr><td><a class="pred" href="ansiterm.html#ansi_hyperlink/2">ansi_hyperlink/2</a></td><td>Create 
+a hyperlink for a terminal emulator.</td></tr>
+<tr><td><a class="pred" href="ansiterm.html#ansi_hyperlink/3">ansi_hyperlink/3</a></td><td>Create 
+a hyperlink for a terminal emulator.</td></tr>
 <tr><td><span class="pred-ext">console_color/2</span></td><td>Hook that 
 allows for mapping abstract terms to concrete ANSI attributes.</td></tr>
+<tr><td><a class="pred" href="ansiterm.html#hyperlink/2">hyperlink/2</a></td><td>Multifile 
+hook that may be used to redefine ansi_hyperlink/2,3.</td></tr>
 </table>
 
 <p><h3 id="sec:summary-lib-apply"><a id="sec:F.2.3"><span class="sec-nr">F.2.3</span> <span class="sec-title">library(apply)</span></a></h3>
@@ -862,7 +868,20 @@ the user that Culprit is not of the expected ValidType.</td></tr>
 argument is over-instantiated.</td></tr>
 </table>
 
-<p><h3 id="sec:summary-lib-explain"><a id="sec:F.2.17"><span class="sec-nr">F.2.17</span> <span class="sec-title">library(explain)</span></a></h3>
+<p><h3 id="sec:summary-lib-fastrw"><a id="sec:F.2.17"><span class="sec-nr">F.2.17</span> <span class="sec-title">library(fastrw)</span></a></h3>
+
+<a id="sec:summary-lib-fastrw"></a>
+<table>
+<tr><td><a class="pred" href="fastrw.html#fast_read/1">fast_read/1</a></td><td>The 
+next term is read from current standard input and is unified with Term.</td></tr>
+<tr><td><a class="pred" href="fastrw.html#fast_write/1">fast_write/1</a></td><td>Output 
+Term in a way that fast_read/1 and fast_read/2 will be able to read it 
+back.</td></tr>
+<tr><td><a class="pred" href="fastrw.html#fast_write_to_string/3">fast_write_to_string/3</a></td><td>Perform 
+a fast-write to the difference-slist String<code>\</code>Tail.</td></tr>
+</table>
+
+<p><h3 id="sec:summary-lib-explain"><a id="sec:F.2.18"><span class="sec-nr">F.2.18</span> <span class="sec-title">library(explain)</span></a></h3>
 
 <a id="sec:summary-lib-explain"></a>
 <table>
@@ -872,7 +891,7 @@ an explanation on Term.</td></tr>
 when Explanation is an explanation of Term.</td></tr>
 </table>
 
-<p><h3 id="sec:summary-lib-help"><a id="sec:F.2.18"><span class="sec-nr">F.2.18</span> <span class="sec-title">library(help)</span></a></h3>
+<p><h3 id="sec:summary-lib-help"><a id="sec:F.2.19"><span class="sec-nr">F.2.19</span> <span class="sec-title">library(help)</span></a></h3>
 
 <a id="sec:summary-lib-help"></a>
 <table>
@@ -886,28 +905,42 @@ help for What.</td></tr>
 called to display the extracted HTML document.</td></tr>
 </table>
 
-<p><h3 id="sec:summary-lib-increval"><a id="sec:F.2.19"><span class="sec-nr">F.2.19</span> <span class="sec-title">library(increval)</span></a></h3>
+<p><h3 id="sec:summary-lib-gensym"><a id="sec:F.2.20"><span class="sec-nr">F.2.20</span> <span class="sec-title">library(gensym)</span></a></h3>
+
+<a id="sec:summary-lib-gensym"></a>
+<h3 id="sec:summary-lib-summaries.d-gensym.tex"><a id="sec:F.2.21"><span class="sec-nr">F.2.21</span> <span class="sec-title">library(summaries.d/gensym.tex)</span></a></h3>
+
+<a id="sec:summary-lib-summaries.d-gensym.tex"></a>
+
+<p><h3 id="sec:summary-lib-heaps"><a id="sec:F.2.22"><span class="sec-nr">F.2.22</span> <span class="sec-title">library(heaps)</span></a></h3>
+
+<a id="sec:summary-lib-heaps"></a>
+<h3 id="sec:summary-lib-summaries.d-heaps.tex"><a id="sec:F.2.23"><span class="sec-nr">F.2.23</span> <span class="sec-title">library(summaries.d/heaps.tex)</span></a></h3>
+
+<a id="sec:summary-lib-summaries.d-heaps.tex"></a>
+
+<p><h3 id="sec:summary-lib-increval"><a id="sec:F.2.24"><span class="sec-nr">F.2.24</span> <span class="sec-title">library(increval)</span></a></h3>
 
 <a id="sec:summary-lib-increval"></a>
-<h3 id="sec:summary-lib-summaries.d-increval.tex"><a id="sec:F.2.20"><span class="sec-nr">F.2.20</span> <span class="sec-title">library(summaries.d/increval.tex)</span></a></h3>
+<h3 id="sec:summary-lib-summaries.d-increval.tex"><a id="sec:F.2.25"><span class="sec-nr">F.2.25</span> <span class="sec-title">library(summaries.d/increval.tex)</span></a></h3>
 
 <a id="sec:summary-lib-summaries.d-increval.tex"></a>
 
-<p><h3 id="sec:summary-lib-intercept"><a id="sec:F.2.21"><span class="sec-nr">F.2.21</span> <span class="sec-title">library(intercept)</span></a></h3>
+<p><h3 id="sec:summary-lib-intercept"><a id="sec:F.2.26"><span class="sec-nr">F.2.26</span> <span class="sec-title">library(intercept)</span></a></h3>
 
 <a id="sec:summary-lib-intercept"></a>
-<h3 id="sec:summary-lib-summaries.d-intercept.tex"><a id="sec:F.2.22"><span class="sec-nr">F.2.22</span> <span class="sec-title">library(summaries.d/intercept.tex)</span></a></h3>
+<h3 id="sec:summary-lib-summaries.d-intercept.tex"><a id="sec:F.2.27"><span class="sec-nr">F.2.27</span> <span class="sec-title">library(summaries.d/intercept.tex)</span></a></h3>
 
 <a id="sec:summary-lib-summaries.d-intercept.tex"></a>
 
-<p><h3 id="sec:summary-lib-iostream"><a id="sec:F.2.23"><span class="sec-nr">F.2.23</span> <span class="sec-title">library(iostream)</span></a></h3>
+<p><h3 id="sec:summary-lib-iostream"><a id="sec:F.2.28"><span class="sec-nr">F.2.28</span> <span class="sec-title">library(iostream)</span></a></h3>
 
 <a id="sec:summary-lib-iostream"></a>
-<h3 id="sec:summary-lib-summaries.d-iostream.tex"><a id="sec:F.2.24"><span class="sec-nr">F.2.24</span> <span class="sec-title">library(summaries.d/iostream.tex)</span></a></h3>
+<h3 id="sec:summary-lib-summaries.d-iostream.tex"><a id="sec:F.2.29"><span class="sec-nr">F.2.29</span> <span class="sec-title">library(summaries.d/iostream.tex)</span></a></h3>
 
 <a id="sec:summary-lib-summaries.d-iostream.tex"></a>
 
-<p><h3 id="sec:summary-lib-listing"><a id="sec:F.2.25"><span class="sec-nr">F.2.25</span> <span class="sec-title">library(listing)</span></a></h3>
+<p><h3 id="sec:summary-lib-listing"><a id="sec:F.2.30"><span class="sec-nr">F.2.30</span> <span class="sec-title">library(listing)</span></a></h3>
 
 <a id="sec:summary-lib-listing"></a>
 <table>
@@ -925,7 +958,7 @@ on the current output stream.</td></tr>
 on the current output stream.</td></tr>
 </table>
 
-<p><h3 id="sec:summary-lib-lists"><a id="sec:F.2.26"><span class="sec-nr">F.2.26</span> <span class="sec-title">library(lists)</span></a></h3>
+<p><h3 id="sec:summary-lib-lists"><a id="sec:F.2.31"><span class="sec-nr">F.2.31</span> <span class="sec-title">library(lists)</span></a></h3>
 
 <a id="sec:summary-lib-lists"></a>
 <table>
@@ -1004,7 +1037,7 @@ is the result of adding all numbers in List.</td></tr>
 if Set3 unifies with the union of the lists Set1 and Set2.</td></tr>
 </table>
 
-<p><h3 id="sec:summary-lib-main"><a id="sec:F.2.27"><span class="sec-nr">F.2.27</span> <span class="sec-title">library(main)</span></a></h3>
+<p><h3 id="sec:summary-lib-main"><a id="sec:F.2.32"><span class="sec-nr">F.2.32</span> <span class="sec-title">library(main)</span></a></h3>
 
 <a id="sec:summary-lib-main"></a>
 <table>
@@ -1024,7 +1057,7 @@ certain commandline options for debugging and development purposes.</td></tr>
 main/1 using the passed command-line arguments.</td></tr>
 </table>
 
-<p><h3 id="sec:summary-lib-occurs"><a id="sec:F.2.28"><span class="sec-nr">F.2.28</span> <span class="sec-title">library(occurs)</span></a></h3>
+<p><h3 id="sec:summary-lib-occurs"><a id="sec:F.2.33"><span class="sec-nr">F.2.33</span> <span class="sec-title">library(occurs)</span></a></h3>
 
 <a id="sec:summary-lib-occurs"></a>
 <table>
@@ -1049,7 +1082,7 @@ that also appear outside Sub in Term.</td></tr>
 (on backtracking) all subterms (<code>==</code>) of Term.</td></tr>
 </table>
 
-<p><h3 id="sec:summary-lib-option"><a id="sec:F.2.29"><span class="sec-nr">F.2.29</span> <span class="sec-title">library(option)</span></a></h3>
+<p><h3 id="sec:summary-lib-option"><a id="sec:F.2.34"><span class="sec-nr">F.2.34</span> <span class="sec-title">library(option)</span></a></h3>
 
 <a id="sec:summary-lib-option"></a>
 <table>
@@ -1069,7 +1102,7 @@ and remove Option from an option list.</td></tr>
 and remove Option with default value.</td></tr>
 </table>
 
-<p><h3 id="sec:summary-lib-optparse"><a id="sec:F.2.30"><span class="sec-nr">F.2.30</span> <span class="sec-title">library(optparse)</span></a></h3>
+<p><h3 id="sec:summary-lib-optparse"><a id="sec:F.2.35"><span class="sec-nr">F.2.35</span> <span class="sec-title">library(optparse)</span></a></h3>
 
 <a id="sec:summary-lib-optparse"></a>
 <table>
@@ -1085,7 +1118,7 @@ the arguments Args (as list of atoms) according to OptsSpec.</td></tr>
 to parse option text Codes to an object of type Type.</td></tr>
 </table>
 
-<p><h3 id="sec:summary-lib-ordsets"><a id="sec:F.2.31"><span class="sec-nr">F.2.31</span> <span class="sec-title">library(ordsets)</span></a></h3>
+<p><h3 id="sec:summary-lib-ordsets"><a id="sec:F.2.36"><span class="sec-nr">F.2.36</span> <span class="sec-title">library(ordsets)</span></a></h3>
 
 <a id="sec:summary-lib-ordsets"></a>
 <table>
@@ -1131,7 +1164,7 @@ is the union of Set1 and Set2.</td></tr>
 iff ord_union(Set1, Set2, Union) and ord_subtract(Set2, Set1, New).</td></tr>
 </table>
 
-<p><h3 id="sec:summary-lib-persistency"><a id="sec:F.2.32"><span class="sec-nr">F.2.32</span> <span class="sec-title">library(persistency)</span></a></h3>
+<p><h3 id="sec:summary-lib-persistency"><a id="sec:F.2.37"><span class="sec-nr">F.2.37</span> <span class="sec-title">library(persistency)</span></a></h3>
 
 <a id="sec:summary-lib-persistency"></a>
 <table>
@@ -1158,7 +1191,7 @@ all registered databases.</td></tr>
 dynamic database terms.</td></tr>
 </table>
 
-<p><h3 id="sec:summary-lib-portraytext"><a id="sec:F.2.33"><span class="sec-nr">F.2.33</span> <span class="sec-title">library(portraytext)</span></a></h3>
+<p><h3 id="sec:summary-lib-portraytext"><a id="sec:F.2.38"><span class="sec-nr">F.2.38</span> <span class="sec-title">library(portraytext)</span></a></h3>
 
 <a id="sec:summary-lib-portraytext"></a>
 <table>
@@ -1173,7 +1206,7 @@ options for portraying.</td></tr>
 options for portraying.</td></tr>
 </table>
 
-<p><h3 id="sec:summary-lib-predicate_options"><a id="sec:F.2.34"><span class="sec-nr">F.2.34</span> <span class="sec-title">library(predicate_options)</span></a></h3>
+<p><h3 id="sec:summary-lib-predicate_options"><a id="sec:F.2.39"><span class="sec-nr">F.2.39</span> <span class="sec-title">library(predicate_options)</span></a></h3>
 
 <a id="sec:summary-lib-predicate_options"></a>
 <table>
@@ -1201,7 +1234,7 @@ that the predicate PI processes options on Arg.</td></tr>
 all dynamically (derived) predicate options.</td></tr>
 </table>
 
-<p><h3 id="sec:summary-lib-prologdebug"><a id="sec:F.2.35"><span class="sec-nr">F.2.35</span> <span class="sec-title">library(prologdebug)</span></a></h3>
+<p><h3 id="sec:summary-lib-prologdebug"><a id="sec:F.2.40"><span class="sec-nr">F.2.40</span> <span class="sec-title">library(prologdebug)</span></a></h3>
 
 <a id="sec:summary-lib-prologdebug"></a>
 <table>
@@ -1221,7 +1254,7 @@ spy-points.</td></tr>
 a trap on error(Formal, Context) exceptions that unify with Exception.</td></tr>
 </table>
 
-<p><h3 id="sec:summary-lib-prologjiti"><a id="sec:F.2.36"><span class="sec-nr">F.2.36</span> <span class="sec-title">library(prologjiti)</span></a></h3>
+<p><h3 id="sec:summary-lib-prologjiti"><a id="sec:F.2.41"><span class="sec-nr">F.2.41</span> <span class="sec-title">library(prologjiti)</span></a></h3>
 
 <a id="sec:summary-lib-prologjiti"></a>
 <table>
@@ -1231,14 +1264,12 @@ the JITI (Just In Time Indexes) of selected predicates.</td></tr>
 the JITI (Just In Time Indexes) of selected predicates.</td></tr>
 </table>
 
-<p><h3 id="sec:summary-lib-prologpack"><a id="sec:F.2.37"><span class="sec-nr">F.2.37</span> <span class="sec-title">library(prologpack)</span></a></h3>
+<p><h3 id="sec:summary-lib-prologpack"><a id="sec:F.2.42"><span class="sec-nr">F.2.42</span> <span class="sec-title">library(prologpack)</span></a></h3>
 
 <a id="sec:summary-lib-prologpack"></a>
 <table>
 <tr><td><a class="pred" href="prologpack.html#atom_version/2">atom_version/2</a></td><td>Translate 
 between atomic version representation and term representation.</td></tr>
-<tr><td><a class="pred" href="prologpack.html#environment/2">environment/2</a></td><td>Hook 
-to define the environment for building packs.</td></tr>
 <tr><td><a class="pred" href="prologpack.html#pack_attach/2">pack_attach/2</a></td><td>Attach 
 a single package in Dir.</td></tr>
 <tr><td><a class="pred" href="prologpack.html#pack_info/1">pack_info/1</a></td><td>Print 
@@ -1269,7 +1300,7 @@ if File is a unique id for the referenced pack and version.</td></tr>
 we accept all certificates.</td></tr>
 </table>
 
-<p><h3 id="sec:summary-lib-prologxref"><a id="sec:F.2.38"><span class="sec-nr">F.2.38</span> <span class="sec-title">library(prologxref)</span></a></h3>
+<p><h3 id="sec:summary-lib-prologxref"><a id="sec:F.2.43"><span class="sec-nr">F.2.43</span> <span class="sec-title">library(prologxref)</span></a></h3>
 
 <a id="sec:summary-lib-prologxref"></a>
 <table>
@@ -1293,7 +1324,7 @@ defined by source</td></tr>
 analysis of source</td></tr>
 </table>
 
-<p><h3 id="sec:summary-lib-pairs"><a id="sec:F.2.39"><span class="sec-nr">F.2.39</span> <span class="sec-title">library(pairs)</span></a></h3>
+<p><h3 id="sec:summary-lib-pairs"><a id="sec:F.2.44"><span class="sec-nr">F.2.44</span> <span class="sec-title">library(pairs)</span></a></h3>
 
 <a id="sec:summary-lib-pairs"></a>
 <table>
@@ -1311,10 +1342,10 @@ the keys from a list of Key-Value pairs.</td></tr>
 Key-Value to Value-Key.</td></tr>
 </table>
 
-<p><h3 id="sec:summary-lib-pio"><a id="sec:F.2.40"><span class="sec-nr">F.2.40</span> <span class="sec-title">library(pio)</span></a></h3>
+<p><h3 id="sec:summary-lib-pio"><a id="sec:F.2.45"><span class="sec-nr">F.2.45</span> <span class="sec-title">library(pio)</span></a></h3>
 
 <a id="sec:summary-lib-pio"></a>
-<h4 id="sec:summary-lib-pure-input"><a id="sec:F.2.40.1"><span class="sec-nr">F.2.40.1</span> <span class="sec-title">library(pure_input)</span></a></h4>
+<h4 id="sec:summary-lib-pure-input"><a id="sec:F.2.45.1"><span class="sec-nr">F.2.45.1</span> <span class="sec-title">library(pure_input)</span></a></h4>
 
 <a id="sec:summary-lib-pure-input"></a>
 <table>
@@ -1334,7 +1365,7 @@ current (error) location in a lazy list.</td></tr>
 the syntax error Error at the current location of the input.</td></tr>
 </table>
 
-<p><h3 id="sec:summary-lib-random"><a id="sec:F.2.41"><span class="sec-nr">F.2.41</span> <span class="sec-title">library(random)</span></a></h3>
+<p><h3 id="sec:summary-lib-random"><a id="sec:F.2.46"><span class="sec-nr">F.2.46</span> <span class="sec-title">library(random)</span></a></h3>
 
 <a id="sec:summary-lib-random"></a>
 <table>
@@ -1354,12 +1385,17 @@ a random integer or float in a range.</td></tr>
 R to a random integer in [L,U] (i.e., including both L and U).</td></tr>
 <tr><td><a class="pred" href="random.html#random_member/2">random_member/2</a></td><td>X 
 is a random member of List.</td></tr>
+<tr><td><a class="pred" href="random.html#random_numlist/4">random_numlist/4</a></td><td>Unify 
+List with an ascending list of integers between L and U (inclusive).</td></tr>
 <tr><td><a class="pred" href="random.html#random_perm2/4">random_perm2/4</a></td><td>Does 
 X=A,Y=B or X=B,Y=A with equal probability.</td></tr>
 <tr><td><a class="pred" href="random.html#random_permutation/2">random_permutation/2</a></td><td>Permutation 
 is a random permutation of List.</td></tr>
 <tr><td><a class="pred" href="random.html#random_select/3">random_select/3</a></td><td>Randomly 
 select or insert an element.</td></tr>
+<tr><td><a class="pred" href="random.html#random_subseq/3">random_subseq/3</a></td><td>Selects 
+a random subsequence Subseq of List, with Complement containing all 
+elements of List that were not selected.</td></tr>
 <tr><td><a class="pred" href="random.html#randseq/3">randseq/3</a></td><td>S 
 is a list of K unique random integers in the range 1..N.</td></tr>
 <tr><td><a class="pred" href="random.html#randset/3">randset/3</a></td><td>S 
@@ -1368,7 +1404,88 @@ is a sorted list of K unique random integers in the range 1..N.</td></tr>
 the state of the random generator.</td></tr>
 </table>
 
-<p><h3 id="sec:summary-lib-readutil"><a id="sec:F.2.42"><span class="sec-nr">F.2.42</span> <span class="sec-title">library(readutil)</span></a></h3>
+<p><h3 id="sec:summary-lib-rbtrees"><a id="sec:F.2.47"><span class="sec-nr">F.2.47</span> <span class="sec-title">library(rbtrees)</span></a></h3>
+
+<a id="sec:summary-lib-rbtrees"></a>
+<table>
+<tr><td><a class="pred" href="rbtrees.html#is_rbtree/1">is_rbtree/1</a></td><td>True 
+if Term is a valid Red-Black tree.</td></tr>
+<tr><td><a class="pred" href="rbtrees.html#list_to_rbtree/2">list_to_rbtree/2</a></td><td>Tree 
+is the red-black tree corresponding to the mapping in List, which should 
+be a list of Key-Value pairs.</td></tr>
+<tr><td><a class="pred" href="rbtrees.html#ord_list_to_rbtree/2">ord_list_to_rbtree/2</a></td><td>Tree 
+is the red-black tree corresponding to the mapping in list List, which 
+should be a list of Key-Value pairs.</td></tr>
+<tr><td><a class="pred" href="rbtrees.html#rb_apply/4">rb_apply/4</a></td><td>If 
+the value associated with key Key is Val0 in Tree, and if 
+call(G,Val0,ValF) holds, then NewTree differs from Tree only in that Key 
+is associated with value ValF in tree NewTree.</td></tr>
+<tr><td><a class="pred" href="rbtrees.html#rb_clone/3">rb_clone/3</a></td><td>&lsquo;Clone' 
+the red-back tree TreeIn into a new tree TreeOut with the same keys as 
+the original but with all values set to unbound values.</td></tr>
+<tr><td><a class="pred" href="rbtrees.html#rb_del_max/4">rb_del_max/4</a></td><td>Delete 
+the largest element from the tree Tree, returning the key Key, the value 
+Val associated with the key and a new tree NewTree.</td></tr>
+<tr><td><a class="pred" href="rbtrees.html#rb_del_min/4">rb_del_min/4</a></td><td>Delete 
+the least element from the tree Tree, returning the key Key, the value 
+Val associated with the key and a new tree NewTree.</td></tr>
+<tr><td><a class="pred" href="rbtrees.html#rb_delete/3">rb_delete/3</a></td><td>Delete 
+element with key Key from the tree Tree, returning the value Val 
+associated with the key and a new tree NewTree.</td></tr>
+<tr><td><a class="pred" href="rbtrees.html#rb_delete/4">rb_delete/4</a></td><td>Same 
+as rb_delete(Tree, Key, NewTree), but also unifies Val with the value 
+associated with Key in Tree.</td></tr>
+<tr><td><a class="pred" href="rbtrees.html#rb_empty/1">rb_empty/1</a></td><td>Succeeds 
+if Tree is an empty Red-Black tree.</td></tr>
+<tr><td><a class="pred" href="rbtrees.html#rb_fold/4">rb_fold/4</a></td><td>Fold 
+the given predicate over all the key-value pairs in Tree, starting with 
+initial state State0 and returning the final state State.</td></tr>
+<tr><td><a class="pred" href="rbtrees.html#rb_in/3">rb_in/3</a></td><td>True 
+when Key-Value is a key-value pair in red-black tree Tree.</td></tr>
+<tr><td><a class="pred" href="rbtrees.html#rb_insert/4">rb_insert/4</a></td><td>Add 
+an element with key Key and Value to the tree Tree creating a new 
+red-black tree NewTree.</td></tr>
+<tr><td><a class="pred" href="rbtrees.html#rb_insert_new/4">rb_insert_new/4</a></td><td>Add 
+a new element with key Key and Value to the tree Tree creating a new 
+red-black tree NewTree.</td></tr>
+<tr><td><a class="pred" href="rbtrees.html#rb_keys/2">rb_keys/2</a></td><td>Keys 
+is unified with an ordered list of all keys in the Red-Black tree Tree.</td></tr>
+<tr><td><a class="pred" href="rbtrees.html#rb_lookup/3">rb_lookup/3</a></td><td>True 
+when Value is associated with Key in the Red-Black tree Tree.</td></tr>
+<tr><td><a class="pred" href="rbtrees.html#rb_map/2">rb_map/2</a></td><td>True 
+if call(Goal, Value) is true for all nodes in T.</td></tr>
+<tr><td><a class="pred" href="rbtrees.html#rb_map/3">rb_map/3</a></td><td>For 
+all nodes Key in the tree Tree, if the value associated with key Key is 
+Val0 in tree Tree, and if call(G,Val0,ValF) holds, then the value 
+associated with Key in NewTree is ValF.</td></tr>
+<tr><td><a class="pred" href="rbtrees.html#rb_max/3">rb_max/3</a></td><td>Key 
+is the maximal key in Tree, and is associated with Val.</td></tr>
+<tr><td><a class="pred" href="rbtrees.html#rb_min/3">rb_min/3</a></td><td>Key 
+is the minimum key in Tree, and is associated with Val.</td></tr>
+<tr><td><a class="pred" href="rbtrees.html#rb_new/1">rb_new/1</a></td><td>Create 
+a new Red-Black tree Tree.</td></tr>
+<tr><td><a class="pred" href="rbtrees.html#rb_next/4">rb_next/4</a></td><td>Next 
+is the next element after Key in Tree, and is associated with Val.</td></tr>
+<tr><td><a class="pred" href="rbtrees.html#rb_partial_map/4">rb_partial_map/4</a></td><td>For 
+all nodes Key in Keys, if the value associated with key Key is Val0 in 
+tree Tree, and if call(G,Val0,ValF) holds, then the value associated 
+with Key in NewTree is ValF, otherwise it is the value associated with 
+the key in Tree.</td></tr>
+<tr><td><a class="pred" href="rbtrees.html#rb_previous/4">rb_previous/4</a></td><td>Previous 
+is the previous element after Key in Tree, and is associated with Val.</td></tr>
+<tr><td><a class="pred" href="rbtrees.html#rb_size/2">rb_size/2</a></td><td>Size 
+is the number of elements in Tree.</td></tr>
+<tr><td><a class="pred" href="rbtrees.html#rb_update/4">rb_update/4</a></td><td>Tree 
+NewTree is tree Tree, but with value for Key associated with NewVal.</td></tr>
+<tr><td><a class="pred" href="rbtrees.html#rb_update/5">rb_update/5</a></td><td>Same 
+as =<code>|</code>rb_update(Tree, Key, NewVal, NewTree)<code>|</code>= 
+but also unifies OldVal with the value associated with Key in Tree.</td></tr>
+<tr><td><a class="pred" href="rbtrees.html#rb_visit/2">rb_visit/2</a></td><td>Pairs 
+is an infix visit of tree Tree, where each element of Pairs is of the 
+form Key-Value.</td></tr>
+</table>
+
+<p><h3 id="sec:summary-lib-readutil"><a id="sec:F.2.48"><span class="sec-nr">F.2.48</span> <span class="sec-title">library(readutil)</span></a></h3>
 
 <a id="sec:summary-lib-readutil"></a>
 <table>
@@ -1390,7 +1507,7 @@ input from Stream to a list of character codes.</td></tr>
 input from Stream to a list of character codes.</td></tr>
 </table>
 
-<p><h3 id="sec:summary-lib-record"><a id="sec:F.2.43"><span class="sec-nr">F.2.43</span> <span class="sec-title">library(record)</span></a></h3>
+<p><h3 id="sec:summary-lib-record"><a id="sec:F.2.49"><span class="sec-nr">F.2.49</span> <span class="sec-title">library(record)</span></a></h3>
 
 <a id="sec:summary-lib-record"></a>
 <table>
@@ -1398,7 +1515,7 @@ input from Stream to a list of character codes.</td></tr>
 named fields in a term</td></tr>
 </table>
 
-<p><h3 id="sec:summary-lib-registry"><a id="sec:F.2.44"><span class="sec-nr">F.2.44</span> <span class="sec-title">library(registry)</span></a></h3>
+<p><h3 id="sec:summary-lib-registry"><a id="sec:F.2.50"><span class="sec-nr">F.2.50</span> <span class="sec-title">library(registry)</span></a></h3>
 
 <a id="sec:summary-lib-registry"></a>
 
@@ -1422,11 +1539,11 @@ DDE action</td></tr>
 Prolog</td></tr>
 </table>
 
-<p><h3 id="sec:summary-lib-settings"><a id="sec:F.2.45"><span class="sec-nr">F.2.45</span> <span class="sec-title">library(settings)</span></a></h3>
+<p><h3 id="sec:summary-lib-settings"><a id="sec:F.2.51"><span class="sec-nr">F.2.51</span> <span class="sec-title">library(settings)</span></a></h3>
 
 <a id="sec:summary-lib-settings"></a>
 
-<p><h3 id="sec:summary-lib-simplex"><a id="sec:F.2.46"><span class="sec-nr">F.2.46</span> <span class="sec-title">library(simplex)</span></a></h3>
+<p><h3 id="sec:summary-lib-simplex"><a id="sec:F.2.52"><span class="sec-nr">F.2.52</span> <span class="sec-title">library(simplex)</span></a></h3>
 
 <a id="sec:summary-lib-simplex"></a> 
 <table>
@@ -1454,11 +1571,41 @@ transportation problem</td></tr>
 value of variable in solved state</td></tr>
 </table>
 
-<p><h3 id="sec:summary-lib-terms"><a id="sec:F.2.47"><span class="sec-nr">F.2.47</span> <span class="sec-title">library(terms)</span></a></h3>
+<p><h3 id="sec:summary-lib-statistics"><a id="sec:F.2.53"><span class="sec-nr">F.2.53</span> <span class="sec-title">library(statistics)</span></a></h3>
+
+<a id="sec:summary-lib-statistics"></a>
+<table>
+<tr><td><a class="pred" href="statistics.html#call_time/2">call_time/2</a></td><td>Call 
+Goal as call/1, unifying Time with a dict that provides information on 
+the resource usage.</td></tr>
+<tr><td><a class="pred" href="statistics.html#call_time/3">call_time/3</a></td><td>Call 
+Goal as call/1, unifying Time with a dict that provides information on 
+the resource usage.</td></tr>
+<tr><td><a class="pred" href="profile.html#profile/1">profile/1</a></td><td>Run 
+Goal under the execution profiler.</td></tr>
+<tr><td><a class="pred" href="profile.html#profile/2">profile/2</a></td><td>Run 
+Goal under the execution profiler.</td></tr>
+<tr><td><a class="pred" href="statistics.html#profile_data/1">profile_data/1</a></td><td>Gather 
+all relevant data from profiler.</td></tr>
+<tr><td><a class="pred" href="statistics.html#profile_procedure_data/2">profile_procedure_data/2</a></td><td>Collect 
+data for Pred.</td></tr>
+<tr><td><a class="pred" href="profile.html#show_profile/1">show_profile/1</a></td><td>Display 
+last collected profiling data.</td></tr>
+<tr><td><a class="pred" href="statistics.html#statistics/0">statistics/0</a></td><td>Print 
+information about resource usage using print_message/2.</td></tr>
+<tr><td><a class="pred" href="statistics.html#statistics/1">statistics/1</a></td><td>Stats 
+is a dict representing the same information as statistics/0.</td></tr>
+<tr><td><a class="pred" href="statistics.html#thread_statistics/2">thread_statistics/2</a></td><td>Obtain 
+statistical information about a single thread.</td></tr>
+<tr><td><a class="pred" href="statistics.html#time/1">time/1</a></td><td>Execute 
+Goal, reporting statistics to the user.</td></tr>
+</table>
+
+<p><h3 id="sec:summary-lib-terms"><a id="sec:F.2.54"><span class="sec-nr">F.2.54</span> <span class="sec-title">library(terms)</span></a></h3>
 
 <a id="sec:summary-lib-terms"></a>
 
-<p><h3 id="sec:summary-lib-ugraphs"><a id="sec:F.2.48"><span class="sec-nr">F.2.48</span> <span class="sec-title">library(ugraphs)</span></a></h3>
+<p><h3 id="sec:summary-lib-ugraphs"><a id="sec:F.2.55"><span class="sec-nr">F.2.55</span> <span class="sec-title">library(ugraphs)</span></a></h3>
 
 <a id="sec:summary-lib-ugraphs"></a>
 <table>
@@ -1497,7 +1644,7 @@ all reachable vertices</td></tr>
 of two graphs</td></tr>
 </table>
 
-<p><h3 id="sec:summary-lib-url"><a id="sec:F.2.49"><span class="sec-nr">F.2.49</span> <span class="sec-title">library(url)</span></a></h3>
+<p><h3 id="sec:summary-lib-url"><a id="sec:F.2.56"><span class="sec-nr">F.2.56</span> <span class="sec-title">library(url)</span></a></h3>
 
 <a id="sec:summary-lib-url"></a>
 <table>
@@ -1523,7 +1670,7 @@ between a URL, encoding in US-ASCII and an IRI.</td></tr>
 to/from application/x-www-form-encoded.</td></tr>
 </table>
 
-<p><h3 id="sec:summary-lib-www_browser"><a id="sec:F.2.50"><span class="sec-nr">F.2.50</span> <span class="sec-title">library(www_browser)</span></a></h3>
+<p><h3 id="sec:summary-lib-www_browser"><a id="sec:F.2.57"><span class="sec-nr">F.2.57</span> <span class="sec-title">library(www_browser)</span></a></h3>
 
 <a id="sec:summary-lib-www_browser"></a>
 <table>
@@ -1531,7 +1678,7 @@ to/from application/x-www-form-encoded.</td></tr>
 a web-page in a browser</td></tr>
 </table>
 
-<p><h3 id="sec:summary-lib-solution_sequences"><a id="sec:F.2.51"><span class="sec-nr">F.2.51</span> <span class="sec-title">library(solution_sequences)</span></a></h3>
+<p><h3 id="sec:summary-lib-solution_sequences"><a id="sec:F.2.58"><span class="sec-nr">F.2.58</span> <span class="sec-title">library(solution_sequences)</span></a></h3>
 
 <a id="sec:summary-lib-solution_sequences"></a>
 <table>
@@ -1559,7 +1706,7 @@ to distinct/1, but does not guarantee unique results in return for using
 a limited amount of memory.</td></tr>
 </table>
 
-<p><h3 id="sec:summary-lib-thread"><a id="sec:F.2.52"><span class="sec-nr">F.2.52</span> <span class="sec-title">library(thread)</span></a></h3>
+<p><h3 id="sec:summary-lib-thread"><a id="sec:F.2.59"><span class="sec-nr">F.2.59</span> <span class="sec-title">library(thread)</span></a></h3>
 
 <a id="sec:summary-lib-thread"></a>
 <table>
@@ -1585,7 +1732,7 @@ version of maplist/2.</td></tr>
 alternative solvers concurrently, returning the first answer.</td></tr>
 </table>
 
-<p><h3 id="sec:summary-lib-thread_pool"><a id="sec:F.2.53"><span class="sec-nr">F.2.53</span> <span class="sec-title">library(thread_pool)</span></a></h3>
+<p><h3 id="sec:summary-lib-thread_pool"><a id="sec:F.2.60"><span class="sec-nr">F.2.60</span> <span class="sec-title">library(thread_pool)</span></a></h3>
 
 <a id="sec:summary-lib-thread_pool"></a>
 <table>
@@ -1607,7 +1754,7 @@ closing down the process because the manager was killed before the
 worker.</td></tr>
 </table>
 
-<p><h3 id="sec:summary-lib-varnumbers"><a id="sec:F.2.54"><span class="sec-nr">F.2.54</span> <span class="sec-title">library(varnumbers)</span></a></h3>
+<p><h3 id="sec:summary-lib-varnumbers"><a id="sec:F.2.61"><span class="sec-nr">F.2.61</span> <span class="sec-title">library(varnumbers)</span></a></h3>
 
 <a id="sec:summary-lib-varnumbers"></a>
 <table>
@@ -1626,7 +1773,7 @@ replaced by a fresh variable and Bindings is a list&lsquo;X = Var`,
 relating the&lsquo;X` terms with the variable it is mapped to.</td></tr>
 </table>
 
-<p><h3 id="sec:summary-lib-yall"><a id="sec:F.2.55"><span class="sec-nr">F.2.55</span> <span class="sec-title">library(yall)</span></a></h3>
+<p><h3 id="sec:summary-lib-yall"><a id="sec:F.2.62"><span class="sec-nr">F.2.62</span> <span class="sec-title">library(yall)</span></a></h3>
 
 <a id="sec:summary-lib-yall"></a>
 <table>

@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.5.1 Reference Manual: Section 2.22</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.5.4 Reference Manual: Section 2.22</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -243,7 +243,7 @@ first of all attempts to maintain <em>source code</em> compatibility
 between versions. Data and programs can often be represented in binary 
 form. This touches a number of interfaces with varying degrees of 
 compatibility. The relevant version numbers and signatures are made 
-available by <a class="func" href="foreigninclude.html#PL_version()">PL_version()</a>, 
+available by <a class="func" href="foreigninclude.html#PL_version_info()">PL_version_info()</a>, 
 the
 <strong>--abi-version</strong> and the Prolog flag
 <a class="flag" href="flags.html#flag:abi_version">abi_version</a>.
@@ -261,7 +261,7 @@ form, notably for platforms on which compilation is complicated (e.g.,
 Windows). This compatibility is therefore high on the priority list, but 
 must infrequently be compromised.
 
-<p><a class="func" href="foreigninclude.html#PL_version()">PL_version()</a>: <code>PL_VERSION_FLI</code>, <a class="flag" href="flags.html#flag:abi_version">abi_version</a> 
+<p><a class="func" href="foreigninclude.html#PL_version_info()">PL_version_info()</a>: <code>PL_VERSION_FLI</code>, <a class="flag" href="flags.html#flag:abi_version">abi_version</a> 
 key:
 <code>foreign_interface</code></dd>
 <dt><b>Binary terms</b></dt>
@@ -273,7 +273,7 @@ As these formats are used for storing binary terms in databases or
 communicate terms between Prolog processes in binary form, great care is 
 taken to maintain compatibility.
 
-<p><a class="func" href="foreigninclude.html#PL_version()">PL_version()</a>: <code>PL_VERSION_REC</code>, <a class="flag" href="flags.html#flag:abi_version">abi_version</a> 
+<p><a class="func" href="foreigninclude.html#PL_version_info()">PL_version_info()</a>: <code>PL_VERSION_REC</code>, <a class="flag" href="flags.html#flag:abi_version">abi_version</a> 
 key:
 <code>record</code></dd>
 <dt><b>QLF files</b></dt>
@@ -284,7 +284,7 @@ clauses as sequences of <em>virtual machine</em> (VM) instructions.
 Their compatibility relies on the QLF file format and the ABI of the VM. 
 Some care is taken to maintain compatibility.
 
-<p><a class="func" href="foreigninclude.html#PL_version()">PL_version()</a>: <code>PL_VERSION_QLF</code>, <code>PL_VERSION_QLF_LOAD</code> 
+<p><a class="func" href="foreigninclude.html#PL_version_info()">PL_version_info()</a>: <code>PL_VERSION_QLF</code>, <code>PL_VERSION_QLF_LOAD</code> 
 and
 <code>PL_VERSION_VM</code>, <a class="flag" href="flags.html#flag:abi_version">abi_version</a> 
 key: <code>qlf</code>,
@@ -303,7 +303,7 @@ level releases in the <em>stable branch</em> will as much as possible
 maintain compatibility.
 
 <p>The relevant ABI version keys are the same as for QLF files with one 
-addition: <a class="func" href="foreigninclude.html#PL_version()">PL_version()</a>: <code>PL_VERSION_BUILT_IN</code>, <a class="flag" href="flags.html#flag:abi_version">abi_version</a> 
+addition: <a class="func" href="foreigninclude.html#PL_version_info()">PL_version_info()</a>: <code>PL_VERSION_BUILT_IN</code>, <a class="flag" href="flags.html#flag:abi_version">abi_version</a> 
 key: <code>built_in</code>
 </dd>
 </dl>

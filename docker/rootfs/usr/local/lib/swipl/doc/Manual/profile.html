@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.5.1 Reference Manual: Section 4.42</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.5.4 Reference Manual: Section 4.42</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -261,19 +261,19 @@ predicates</span></a></h3>
 <dl class="latex">
 <dt class="pubdef"><a id="profile/1"><strong>profile</strong>(<var>:Goal</var>)</a></dt>
 <dd class="defbody">
-Execute <var>Goal</var> just like <a id="idx:once1:1803"></a><a class="pred" href="metacall.html#once/1">once/1</a>, 
+Execute <var>Goal</var> just like <a id="idx:once1:1804"></a><a class="pred" href="metacall.html#once/1">once/1</a>, 
 collecting profiling statistics, and call <code>show_profile(<code>[]</code>)</code>. 
 With XPCE installed this opens a graphical interface to examine the 
 collected profiling data.</dd>
 <dt class="pubdef"><a id="profile/2"><strong>profile</strong>(<var>:Goal, 
 +Options</var>)</a></dt>
 <dd class="defbody">
-Execute <var>Goal</var> just like <a id="idx:once1:1804"></a><a class="pred" href="metacall.html#once/1">once/1</a>. 
-Collect profiling statistics according to <var>Options</var> and call <a id="idx:showprofile1:1805"></a><a class="pred" href="profile.html#show_profile/1">show_profile/1</a> 
+Execute <var>Goal</var> just like <a id="idx:once1:1805"></a><a class="pred" href="metacall.html#once/1">once/1</a>. 
+Collect profiling statistics according to <var>Options</var> and call <a id="idx:showprofile1:1806"></a><a class="pred" href="profile.html#show_profile/1">show_profile/1</a> 
 with <var>Options</var>. The default collects CPU profiling and opens a 
 graphical interface when provided, printing the&lsquo;plain' time usage 
 of the top 25 predicates as a ballback. Options are described below. 
-Remaining options are passed to <a id="idx:showprofile1:1806"></a><a class="pred" href="profile.html#show_profile/1">show_profile/1</a>.
+Remaining options are passed to <a id="idx:showprofile1:1807"></a><a class="pred" href="profile.html#show_profile/1">show_profile/1</a>.
 
 <dl class="latex">
 <dt><strong>time</strong>(<var>+Which</var>)</dt>
@@ -288,7 +288,7 @@ calls blocking system calls.
 </dd>
 <dt class="pubdef"><a id="show_profile/1"><strong>show_profile</strong>(<var>+Options</var>)</a></dt>
 <dd class="defbody">
-This predicate first calls <a id="idx:prologshowprofilehook1:1807"></a><span class="pred-ext">prolog:show_profile_hook/1</span>. 
+This predicate first calls <a id="idx:prologshowprofilehook1:1808"></a><span class="pred-ext">prolog:show_profile_hook/1</span>. 
 If XPCE is loaded, this hook is used to activate a GUI interface to 
 visualise the profile results. If not, a report is printed to the 
 terminal according to <var>Options</var>:
@@ -338,7 +338,7 @@ statistics.</dd>
 Declares the predicate <var>Name</var>/<var>Arity</var> to be invisible 
 to the profiler. The time spent in the named predicate is added to the 
 caller, and the callees are linked directly to the caller. This is 
-particularly useful for simple meta-predicates such as <a id="idx:call1:1808"></a><a class="pred" href="metacall.html#call/1">call/1</a>, <a id="idx:ignore1:1809"></a><a class="pred" href="metacall.html#ignore/1">ignore/1</a>, <a id="idx:catch3:1810"></a><a class="pred" href="exception.html#catch/3">catch/3</a>, 
+particularly useful for simple meta-predicates such as <a id="idx:call1:1809"></a><a class="pred" href="metacall.html#call/1">call/1</a>, <a id="idx:ignore1:1810"></a><a class="pred" href="metacall.html#ignore/1">ignore/1</a>, <a id="idx:catch3:1811"></a><a class="pred" href="exception.html#catch/3">catch/3</a>, 
 etc.
 </dd>
 </dl>
@@ -373,7 +373,7 @@ detail window to the given caller or callee, showing the documentation
 
 <p><a id="fig:profnode"></a><div style="text-align:center"><img src="profnode.png"></div>
 <div class="caption"><b>Figure 4 : </b> Execution profiler showing the 
-activity of the predicate <a id="idx:chatinvmaplist5:1811"></a><span class="pred-ext">chat:inv_map_list/5</span>.</div>
+activity of the predicate <a id="idx:chatinvmaplist5:1812"></a><span class="pred-ext">chat:inv_map_list/5</span>.</div>
 
 <p>The statistics shown in the report field of <a class="fig" href="profile.html#fig:profnode">figure 
 4</a> show the following information:
@@ -428,8 +428,8 @@ profRedo() pass the profiling node where execution resumes.
 to recursion. For this reason the system performs detection of 
 recursion. In the simplest case, recursive procedures increment the&lsquo;recursive' 
 count on the current node. Mutual recursion, however, is not easily 
-detected. For example, <a id="idx:call1:1812"></a><a class="pred" href="metacall.html#call/1">call/1</a> 
-can call a predicate that uses <a id="idx:call1:1813"></a><a class="pred" href="metacall.html#call/1">call/1</a> 
+detected. For example, <a id="idx:call1:1813"></a><a class="pred" href="metacall.html#call/1">call/1</a> 
+can call a predicate that uses <a id="idx:call1:1814"></a><a class="pred" href="metacall.html#call/1">call/1</a> 
 itself. This can be viewed as a recursive invocation, but this is 
 generally not desirable. Recursion is currently assumed if the same 
 predicate <em>with the same parent</em> appears higher in the 

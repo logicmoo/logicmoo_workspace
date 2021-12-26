@@ -485,6 +485,6 @@ doc_clean(Module) :-
     prolog:message//1.
 
 prolog:message(pldoc(invalid_comment(File:Line, Comment))) -->
-    [ '~w:~d: PlDoc: failed to process structured comment:~n~s~n'-
-            [File, Line, Comment]
+    [ url(File:Line), ': PlDoc: failed to process structured comment:~n~s~n'-
+            [Comment]
     ].

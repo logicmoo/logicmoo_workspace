@@ -66,6 +66,14 @@ attempt to call the Prolog defined trace interceptor.
 '$:-'('$boot_message'('Loading boot file ...~n', [])).
 
 
+%!  memberchk(?E, ?List) is semidet.
+%
+%   Semantically equivalent to once(member(E,List)).   Implemented in C.
+%   If List is partial though we need to   do  the work in Prolog to get
+%   the proper constraint behavior. Needs  to   be  defined early as the
+%   boot code uses it.
+
+
                 /********************************
                 *          DIRECTIVES           *
                 *********************************/
@@ -644,7 +652,7 @@ catch_with_backtrace(Goal, Ball, Recover) :-
 %   can only be changed together with the kernel.
 
 setup_call_catcher_cleanup(Setup, _Goal, _Catcher, _Cleanup) :-
-    '$sig_atomic'(Setup),
+    sig_atomic(Setup),
     '$call_cleanup'.
 
 setup_call_cleanup(Setup, Goal, Cleanup) :-
@@ -1024,6 +1032,9 @@ user:file_search_path(swi, Home) :-
 user:file_search_path(library, app_config(lib)).
 user:file_search_path(library, swi(library)).
 user:file_search_path(library, swi(library/clp)).
+user:file_search_path(foreign, swi(ArchLib)) :-
+    current_prolog_flag(apple_universal_binary, true),
+    ArchLib = 'lib/fat-darwin'.
 user:file_search_path(foreign, swi(ArchLib)) :-
     \+ current_prolog_flag(windows, true),
     current_prolog_flag(arch, Arch),
@@ -2493,18 +2504,18 @@ load_files(Module:Files, Options) :-
 '$mt_load_file'(File, FullFile, Module, Options) :-
     current_prolog_flag(threads, true),
     !,
-    '$sig_atomic'(setup_call_cleanup(
-                      with_mutex('$load_file',
-                                 '$mt_start_load'(FullFile, Loading, Options)),
-                      '$mt_do_load'(Loading, File, FullFile, Module, Options),
-                      '$mt_end_load'(Loading))).
+    sig_atomic(setup_call_cleanup(
+                   with_mutex('$load_file',
+                              '$mt_start_load'(FullFile, Loading, Options)),
+                   '$mt_do_load'(Loading, File, FullFile, Module, Options),
+                   '$mt_end_load'(Loading))).
 '$mt_load_file'(File, FullFile, Module, Options) :-
     '$option'(if(If), Options, true),
     '$noload'(If, FullFile, Options),
     !,
     '$already_loaded'(File, FullFile, Module, Options).
 '$mt_load_file'(File, FullFile, Module, Options) :-
-    '$sig_atomic'('$qdo_load_file'(File, FullFile, Module, Options)).
+    sig_atomic('$qdo_load_file'(File, FullFile, Module, Options)).
 
 '$mt_start_load'(FullFile, queue(Queue), _) :-
     '$loading_file'(FullFile, Queue, LoadThread),
@@ -4000,10 +4011,18 @@ compile_aux_clauses(Clauses) :-
 '$member_'([H|T], El, _) :-
     '$member_'(T, El, H).
 
-
 '$append'([], L, L).
 '$append'([H|T], L, [H|R]) :-
     '$append'(T, L, R).
+
+'$append'(ListOfLists, List) :-
+    '$must_be'(list, ListOfLists),
+    '$append_'(ListOfLists, List).
+
+'$append_'([], []).
+'$append_'([L|Ls], As) :-
+    '$append'(L, Ws, As),
+    '$append_'(Ls, Ws).
 
 '$select'(X, [X|Tail], Tail).
 '$select'(Elem, [Head|Tail], [Head|Rest]) :-

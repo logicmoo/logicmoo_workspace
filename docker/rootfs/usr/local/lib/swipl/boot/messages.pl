@@ -485,18 +485,17 @@ swi_message(format_argument_type(Fmt, Arg)) -->
     [ 'Illegal argument to format sequence ~~~w: ~p'-[Fmt, Arg] ].
 swi_message(format(Msg)) -->
     [ 'Format error: ~w'-[Msg] ].
-swi_message(conditional_compilation_error(unterminated, Where)) -->
-    [ 'Unterminated conditional compilation from '-[] ],
-    cond_location(Where).
+swi_message(conditional_compilation_error(unterminated, File:Line)) -->
+    [ 'Unterminated conditional compilation from '-[], url(File:Line) ].
 swi_message(conditional_compilation_error(no_if, What)) -->
     [ ':- ~w without :- if'-[What] ].
 swi_message(duplicate_key(Key)) -->
     [ 'Duplicate key: ~p'-[Key] ].
 swi_message(initialization_error(failed, Goal, File:Line)) -->
     !,
-    [ '~w:~w: ~p: false'-[File, Line, Goal] ].
+    [ url(File:Line), ': ~p: false'-[Goal] ].
 swi_message(initialization_error(Error, Goal, File:Line)) -->
-    [ '~w:~w: ~p '-[File, Line, Goal] ],
+    [ url(File:Line), ': ~p '-[Goal] ],
     translate_message(Error).
 swi_message(determinism_error(PI, det, Found, property)) -->
     (   { '$pi_head'(user:PI, Head),
@@ -525,10 +524,6 @@ det_error(fail) -->
     [ ' failed'- [] ].
 
 
-cond_location(File:Line) -->
-    { file_base_name(File, Base) },
-    [ '~w:~d'-[Base, Line] ].
-
 %!  swi_location(+Term)// is det.
 %
 %   Print location information for error(Formal,   ImplDefined) from the
@@ -551,9 +546,9 @@ swi_location(context(Caller, _Msg)) -->
     caller(Caller).
 swi_location(file(Path, Line, -1, _CharNo)) -->
     !,
-    [ '~w:~d: '-[Path, Line] ].
+    [ url(Path:Line), ': ' ].
 swi_location(file(Path, Line, LinePos, _CharNo)) -->
-    [ '~w:~d:~d: '-[Path, Line, LinePos] ].
+    [ url(Path:Line:LinePos), ': ' ].
 swi_location(stream(Stream, Line, LinePos, CharNo)) -->
     (   { is_stream(Stream),
           stream_property(Stream, file_name(File))
@@ -562,7 +557,7 @@ swi_location(stream(Stream, Line, LinePos, CharNo)) -->
     ;   [ 'Stream ~w:~d:~d '-[Stream, Line, LinePos] ]
     ).
 swi_location(autoload(File:Line)) -->
-    [ '~w:~w: '-[File, Line] ].
+    [ url(File:Line), ': ' ].
 swi_location(_) -->
     [].
 
@@ -679,7 +674,7 @@ prolog_message(unhandled_exception(E)) -->
 
 prolog_message(initialization_error(_, E, File:Line)) -->
     !,
-    [ '~w:~d: '-[File, Line],
+    [ url(File:Line),
       'Initialization goal raised exception:', nl
     ],
     translate_message(E).
@@ -688,7 +683,7 @@ prolog_message(initialization_error(Goal, E, _)) -->
     translate_message(E).
 prolog_message(initialization_failure(_Goal, File:Line)) -->
     !,
-    [ '~w:~d: '-[File, Line],
+    [ url(File:Line),
       'Initialization goal failed'-[]
     ].
 prolog_message(initialization_failure(Goal, _)) -->
@@ -703,10 +698,10 @@ prolog_message(init_goal_syntax(Error, Text)) -->
     translate_message(Error).
 prolog_message(init_goal_failed(failed, @(Goal,File:Line))) -->
     !,
-    [ '~w:~w: ~p: false'-[File, Line, Goal] ].
+    [ url(File:Line), ': ~p: false'-[Goal] ].
 prolog_message(init_goal_failed(Error, @(Goal,File:Line))) -->
     !,
-    [ '~w:~w: ~p '-[File, Line, Goal] ],
+    [ url(File:Line), ': ~p '-[Goal] ],
     translate_message(Error).
 prolog_message(init_goal_failed(failed, Text)) -->
     !,
@@ -876,7 +871,7 @@ defined_definition(Message, Spec) -->
       predicate_property(M:Head, line_count(Line))
     },
     !,
-    [ nl, '~w at ~w:~d'-[Message, File,Line] ].
+    [ nl, '~w at '-[Message], url(File:Line) ].
 defined_definition(_, _) --> [].
 
 used_search([]) -->
@@ -925,7 +920,7 @@ current_definition(Proc, Prefix) -->
       predicate_property(Head, file(File)),
       predicate_property(Head, line_count(Line))
     },
-    [ '~w~w:~d'-[Prefix,File,Line], nl ].
+    [ '~w'-[Prefix], url(File:Line), nl ].
 current_definition(_, _) --> [].
 
 pi_uhead(Module:Name/Arity, Module:Head) :-
@@ -1312,11 +1307,11 @@ query_result(more(Bindings, Delays, Residuals)) -->
     result(Bindings, Delays, Residuals),
     prompt(more, Bindings, Delays, Residuals).
 query_result(help) -->
-    [ nl, 'Actions:'-[], nl, nl,
-      '; (n, r, space, TAB): redo    t:          trace & redo'-[], nl,
-      'b:                    break   c (a, RET): exit'-[], nl,
-      'w:                    write   p           print'-[], nl,
-      'h (?):                help'-[],
+    [ ansi(bold, '  Possible actions:', []), nl,
+      '  ; (n,r,space,TAB): redo              | t:         trace&redo'-[], nl,
+      '  *:                 show choicepoint  | c (a,RET): stop'-[], nl,
+      '  w:                 write             | p:         print'-[], nl,
+      '  b:                 break             | h (?):     help'-[],
       nl, nl
     ].
 query_result(action) -->
@@ -1991,13 +1986,13 @@ print_system_message(Term, Kind, Lines) :-
     Term \= error(syntax_error(_), _),
     msg_property(Kind, location_prefix(File:Line, LocPrefix, LinePrefix)),
     !,
+    to_list(LocPrefix, LocPrefixL),
     insert_prefix(Lines, LinePrefix, Ctx, PrefixLines),
-    '$append'([ begin(Kind, Ctx),
-                LocPrefix,
-                nl
-              | PrefixLines
-              ],
-              [ end(Ctx)
+    '$append'([ [begin(Kind, Ctx)],
+                LocPrefixL,
+                [nl],
+                PrefixLines,
+                [end(Ctx)]
               ],
               AllLines),
     msg_property(Kind, stream(Stream)),
@@ -2012,6 +2007,12 @@ print_system_message(Term, Kind, Lines) :-
 print_system_message(_, Kind, Lines) :-
     msg_property(Kind, stream(Stream)),
     print_message_lines(Stream, kind(Kind), Lines).
+
+to_list(ListIn, List) :-
+    is_list(ListIn),
+    !,
+    List = ListIn.
+to_list(NonList, [NonList]).
 
 :- multifile
     user:message_property/2.
@@ -2029,12 +2030,10 @@ msg_property(error, tag('ERROR')).
 msg_property(warning, tag('Warning')).
 msg_property(Level,
              location_prefix(File:Line,
-                             Prefix1-[File,Line],
-                             PrefixC)) :-
+                             ['~N~w: '-[Tag], url(File:Line), ':'],
+                             '~N~w:    '-[Tag])) :-
     include_msg_location(Level),
-    msg_property(Level, tag(Tag)),
-    atomics_to_string(['~N', Tag, ': ~w:~d:'], Prefix1),
-    atomics_to_string(['~N', Tag, ':    '  ], PrefixC).
+    msg_property(Level, tag(Tag)).
 msg_property(error,   wait(0.1)) :- !.
 
 include_msg_location(warning).
@@ -2177,10 +2176,28 @@ line_element(S, ansi(_, Fmt, Args)) :-
 line_element(S, ansi(_, Fmt, Args, _Ctx)) :-
     !,
     safe_format(S, Fmt, Args).
+line_element(S, url(URL)) :-
+    !,
+    print_link(S, URL).
+line_element(S, url(_URL, Fmt-Args)) :-
+    !,
+    safe_format(S, Fmt, Args).
+line_element(S, url(_URL, Fmt)) :-
+    !,
+    safe_format(S, Fmt, []).
 line_element(_, begin(_Level, _Ctx)) :- !.
 line_element(_, end(_Ctx)) :- !.
 line_element(S, Fmt) :-
     safe_format(S, Fmt, []).
+
+print_link(S, File:Line:Column) :-
+    !,
+    safe_format(S, '~w:~d:~d', [File, Line, Column]).
+print_link(S, File:Line) :-
+    !,
+    safe_format(S, '~w:~d', [File, Line]).
+print_link(S, File) :-
+    safe_format(S, '~w', [File]).
 
 %!  safe_format(+Stream, +Format, +Args) is det.
 
@@ -2226,6 +2243,14 @@ actions_to_format([ansi(_Attrs, Fmt0, Args0)|Tail], Fmt, Args) :-
     actions_to_format(Tail, Fmt1, Args1),
     atom_concat(Fmt0, Fmt1, Fmt),
     append_args(Args0, Args1, Args).
+actions_to_format([url(Pos)|Tail], Fmt, Args) :-
+    !,
+    actions_to_format(Tail, Fmt1, Args1),
+    url_actions_to_format(url(Pos), Fmt1, Args1, Fmt, Args).
+actions_to_format([url(URL, Label)|Tail], Fmt, Args) :-
+    !,
+    actions_to_format(Tail, Fmt1, Args1),
+    url_actions_to_format(url(URL, Label), Fmt1, Args1, Fmt, Args).
 actions_to_format([Fmt0-Args0|Tail], Fmt, Args) :-
     !,
     actions_to_format(Tail, Fmt1, Args1),
@@ -2249,6 +2274,24 @@ action_skip(at_same_line).
 action_skip(flush).
 action_skip(begin(_Level, _Ctx)).
 action_skip(end(_Ctx)).
+
+url_actions_to_format(url(File:Line:Column), Fmt1, Args1, Fmt, Args) :-
+    !,
+    atom_concat('~w:~d:~d', Fmt1, Fmt),
+    append_args([File,Line,Column], Args1, Args).
+url_actions_to_format(url(File:Line), Fmt1, Args1, Fmt, Args) :-
+    !,
+    atom_concat('~w:~d', Fmt1, Fmt),
+    append_args([File,Line], Args1, Args).
+url_actions_to_format(url(File), Fmt1, Args1, Fmt, Args) :-
+    !,
+    atom_concat('~w', Fmt1, Fmt),
+    append_args([File], Args1, Args).
+url_actions_to_format(url(_URL, Label), Fmt1, Args1, Fmt, Args) :-
+    !,
+    atom_concat('~w', Fmt1, Fmt),
+    append_args([Label], Args1, Args).
+
 
 append_args(M:Args0, Args1, M:Args) :-
     !,

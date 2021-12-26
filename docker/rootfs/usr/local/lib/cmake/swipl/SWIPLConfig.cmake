@@ -11,8 +11,8 @@ get_filename_component(PACKAGE_PREFIX_DIR "${CMAKE_CURRENT_LIST_DIR}/../../../" 
 set(SWIPL_VERSION_COUNT 3)
 set(SWIPL_VERSION_MAJOR 8)
 set(SWIPL_VERSION_MINOR 5)
-set(SWIPL_VERSION_PATCH 0)
-set(SWIPL_VERSION_STRING 8.5.0)
+set(SWIPL_VERSION_PATCH 4)
+set(SWIPL_VERSION_STRING 8.5.4)
 
 # Location suitable for passing to PL_initialise() as argv[0]
 set(SWIPL_EXECUTABLE "${PACKAGE_PREFIX_DIR}/lib/swipl/bin/x86_64-linux/swipl")

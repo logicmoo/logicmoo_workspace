@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.5.1 Reference Manual: Section A.2</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.5.4 Reference Manual: Section A.2</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -254,8 +254,25 @@ provides the following:
 <li><a class="pred" href="ansiterm.html#ansi_format/3">ansi_format/3</a> 
 allows writing messages to the terminal with ansi attributes.
 <li>It defines the hook <a class="pred" href="printmsg.html#prolog:message_line_element/2">prolog:message_line_element/2</a>, 
-which provides ansi attributes for <a class="pred" href="printmsg.html#print_message/2">print_message/2</a>.
+which provides ansi attributes and hyperlinks for <a class="pred" href="printmsg.html#print_message/2">print_message/2</a>.
 </ul>
+
+<p>The behavior of this library is controlled by two Prolog flags:
+
+<dl class="latex">
+<dt><strong><code>[|]</code></strong>(<var>99, 
+[111,108,111,114,95,116,101,114,109]</var>)</dt>
+<dd class="defbody">
+When <code>true</code>, activate the color output for this library. 
+Otherwise simply call <a class="pred" href="format.html#format/3">format/3</a>.
+</dd>
+<dt><strong><code>[|]</code></strong>(<var>104, 
+[121,112,101,114,108,105,110,107,95,116,101,114,109]</var>)</dt>
+<dd class="defbody">
+Emit terminal hyperlinks for <code>url(Location)</code> and <code>url(URL, Label)</code> 
+elements of Prolog messages.
+</dd>
+</dl>
 
 <dl class="latex">
 <dt class="pubdef"><span class="pred-tag">[det]</span><a id="ansi_format/3"><strong>ansi_format</strong>(<var>+ClassOrAttributes, 
@@ -337,6 +354,41 @@ values used by the system messages.
 <dd class="defbody">
 Hook implementation that deals with <code>ansi(+Attr, +Fmt, +Args)</code> 
 in message specifications.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="ansi_hyperlink/2"><strong>ansi_hyperlink</strong>(<var>+Stream, 
++Location</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="ansi_hyperlink/3"><strong>ansi_hyperlink</strong>(<var>+Stream, 
++URL, +Label</var>)</a></dt>
+<dd class="defbody">
+Create a hyperlink for a terminal emulator. The file is fairly easy, but 
+getting the line and column across is not as there seems to be no 
+established standard. The current implementation emits, i.e., inserting 
+a capital <code>L</code> before the line.
+
+<pre class="code">
+``file://AbsFileName[#LLine[:Column]]``
+</pre>
+
+<dl class="tags">
+<dt class="tag">See also</dt>
+<dd>
+<a class="url" href="https://gist.github.com/egmontkob/eb114294efbcd5adb1944c9f3cb5feda">https://gist.github.com/egmontkob/eb114294efbcd5adb1944c9f3cb5feda</a>
+</dd>
+</dl>
+
+</dd>
+<dt class="multidef"><span class="pred-tag">[semidet,multifile]</span><a id="hyperlink/2"><strong>hyperlink</strong>(<var>+Stream, 
++Spec</var>)</a></dt>
+<dd class="defbody">
+Multifile hook that may be used to redefine <a class="pred" href="ansiterm.html#ansi_hyperlink/2">ansi_hyperlink/2</a>,3. 
+If this predicate succeeds the system assumes the link has been written 
+to <var>Stream</var>.
+<table class="arglist">
+<tr><td><var>Spec</var> </td><td>is either <code>url(Location)</code> or <code>url(URL, Label)</code>. 
+See
+<a class="pred" href="ansiterm.html#ansi_hyperlink/2">ansi_hyperlink/2</a>,3 
+for details. </td></tr>
+</table>
+</dd>
 <dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="ansi_get_color/2"><strong>ansi_get_color</strong>(<var>+Which, 
 -RGB</var>)</a></dt>
 <dd class="defbody">

@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.5.1 Reference Manual: Section 2.12</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.5.4 Reference Manual: Section 2.12</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -372,21 +372,32 @@ portray(true), max_depth(10), attributes(portray)]</code>.</dd>
 system is MacOSX. Defined if the C compiler used to compile this version 
 of SWI-Prolog defines
 <code>__APPLE__</code>. Note that the <a class="flag" href="flags.html#flag:unix">unix</a> 
-is also defined for MacOSX.</dd>
+is also defined for MacOSX.
+
+<p><a class="flag" href="flags.html#flag:apple_universal_binary">apple_universal_binary</a>boolr 
+If present and <code>true</code>, SWI-Prolog has been build as a
+<em>universal binary</em>. Universal binaries contain native executable 
+code for multiple architectures. Currently the supported architectures 
+are <code>x86_64</code> and <code>arm64</code>. The archirecture prefix 
+for components is <code>fat-darwin</code> while the </dd>
+<dt class="pubdef"><a id="flag:arch"><strong>arch</strong>(<var>d</var>, changeable)</a></dt>
+<dd class="defbody">
+pends on the actual CPU type.</dd>
 <dt class="pubdef"><a id="flag:arch"><strong>arch</strong>(<var>atom</var>)</a></dt>
 <dd class="defbody">
 Identifier for the hardware and operating system SWI-Prolog is running 
 on. Used to select foreign files for the right architecture. See also
-<a class="sec" href="foreignlink.html#sec:12.2.3">section 12.2.3</a> and <a id="idx:filesearchpath2:79"></a><a class="pred" href="consulting.html#file_search_path/2">file_search_path/2</a>.</dd>
-<dt class="pubdef"><a id="flag:argv"><strong>argv</strong>(<var>list</var>, changeable)</a></dt>
+<a class="sec" href="foreignlink.html#sec:12.2.3">section 12.2.3</a> and <a id="idx:filesearchpath2:79"></a><a class="pred" href="consulting.html#file_search_path/2">file_search_path/2</a>. 
+For Apple, see also
+</dd>
+<dt class="pubdef"><a id="flag:apple_universal_binary"><strong>apple_universal_binary</strong>(<var>.</var>, changeable)</a></dt>
 <dd class="defbody">
-List is a list of atoms representing the application command line 
-arguments. Application command line arguments are those that have
+argvlistrw List is a list of atoms representing the application command 
+line arguments. Application command line arguments are those that have
 <em>not</em> been processed by Prolog during its initialization. Note 
 that Prolog's argument processing stops at <code>--</code> or the first 
 non-option argument. See also <a class="flag" href="flags.html#flag:os_argv">os_argv</a>.<sup class="fn">17<span class="fn-text">Prior 
-to version 6.5.2, <a class="flag" href="flags.html#flag:argv">argv</a> 
-was defined as <a class="flag" href="flags.html#flag:os_argv">os_argv</a> 
+to version 6.5.2, <b>argv</b> was defined as <a class="flag" href="flags.html#flag:os_argv">os_argv</a> 
 is now. The change was made for compatibility reasons and because the 
 current definition is more practical.</span></sup></dd>
 <dt class="pubdef"><a id="flag:associated_file"><strong>associated_file</strong>(<var>atom</var>)</a></dt>
@@ -512,6 +523,10 @@ If <code>true</code> (default), <a id="idx:write1:91"></a><a class="pred" href="
 and friends write escaped characters using the <code>\uXXXX</code> or <code>\UXXXXXXXX</code> 
 syntax rather than the ISO Prolog <code>\x&lt;hex&gt;\</code> syntax. 
 SWI-Prolog reads both.</dd>
+<dt class="pubdef"><a id="flag:cmake_build_type"><strong>cmake_build_type</strong>(<var>atom</var>, changeable)</a></dt>
+<dd class="defbody">
+Provides the <a class="url" href="https://cmake.org/">cmake</a> <em>build 
+type</em> used to build this version of SWI-Prolog.</dd>
 <dt class="pubdef"><a id="flag:colon_sets_calling_context"><strong>colon_sets_calling_context</strong>(<var>bool</var>, changeable)</a></dt>
 <dd class="defbody">
 Using the construct &lt;<var>module</var>&gt;:&lt;<var>goal</var>&gt; 
@@ -1066,8 +1081,7 @@ yet handled properly by the source-level debugger. See <a class="sec" href="jiti
 <dd class="defbody">
 List is a list of atoms representing the command line arguments used to 
 invoke SWI-Prolog. Please note that <b>all</b> arguments are included in 
-the list returned. See <a class="flag" href="flags.html#flag:argv">argv</a> 
-to get the application options.</dd>
+the list returned. See <b>argv</b> to get the application options.</dd>
 <dt class="pubdef"><a id="flag:packs"><strong>packs</strong>(<var>bool</var>)</a></dt>
 <dd class="defbody">
 If <code>true</code>, extension packs (add-ons) are attached. Can be set 

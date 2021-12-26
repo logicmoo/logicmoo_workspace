@@ -197,7 +197,7 @@ opt_type(write_output_to_file,      write_output_to_file,      file(write)).
 
 opt_help(port,                      "TCP/IP port for clients to connect to").
 opt_help(create_unix_domain_socket, "Create a Unix domain socket for clients to connect to").
-opt_help(unix_domain_socket,        "File path for the Unix domin socket").
+opt_help(unix_domain_socket,        "File path for the Unix domain socket").
 opt_help(password,                  "Connection password").
 opt_help(pending_connections,       "Max number of queued connections (5)").
 opt_help(query_timeout,             "Max query runtime in seconds (default infinite)").

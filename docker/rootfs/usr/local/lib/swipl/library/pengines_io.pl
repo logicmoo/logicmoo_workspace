@@ -326,9 +326,26 @@ message_lines([ansi(Attributes, Fmt, Args)|T]) -->
     },
     html(HTML),
     message_lines(T).
+message_lines([url(Pos)|T]) -->
+    !,
+    location(Pos),
+    message_lines(T).
+message_lines([url(HREF, Label)|T]) -->
+    !,
+    html(a(href(HREF),Label)),
+    message_lines(T).
 message_lines([H|T]) -->
     html(H),
     message_lines(T).
+
+location(File:Line:Column) -->
+    !,
+    html([File, :, Line, :, Column]).
+location(File:Line) -->
+    !,
+    html([File, :, Line]).
+location(File) -->
+    html([File]).
 
 style(bold, Content, b(Content)) :- !.
 style(fg(default), Content, span(style('color: black'), Content)) :- !.

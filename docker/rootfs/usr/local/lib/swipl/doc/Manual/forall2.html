@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.5.1 Reference Manual: Section 4.31</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.5.4 Reference Manual: Section 4.31</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -251,12 +251,12 @@ wrong.
                  Result =:= Formula).
 </pre>
 
-<p>The predicate <a id="idx:forall2:1595"></a><a class="pred" href="forall2.html#forall/2">forall/2</a> 
+<p>The predicate <a id="idx:forall2:1596"></a><a class="pred" href="forall2.html#forall/2">forall/2</a> 
 is implemented as <code>\+ ( Cond, \+ Action)</code>, i.e., <i>There is 
 no instantiation of <var>Cond</var> for which <var>Action</var> is 
 false.</i>. The use of double negation implies that
-<a id="idx:forall2:1596"></a><a class="pred" href="forall2.html#forall/2">forall/2</a> <em>does 
-not change any variable bindings</em>. It proves a relation. The <a id="idx:forall2:1597"></a><a class="pred" href="forall2.html#forall/2">forall/2</a> 
+<a id="idx:forall2:1597"></a><a class="pred" href="forall2.html#forall/2">forall/2</a> <em>does 
+not change any variable bindings</em>. It proves a relation. The <a id="idx:forall2:1598"></a><a class="pred" href="forall2.html#forall/2">forall/2</a> 
 control structure can be used for its side-effects. E.g., the following 
 asserts relations in a list into the dynamic database:
 
@@ -265,7 +265,7 @@ asserts relations in a list into the dynamic database:
           assertz(child_of(Child, Parent))).
 </pre>
 
-<p>Using <a id="idx:forall2:1598"></a><a class="pred" href="forall2.html#forall/2">forall/2</a> 
+<p>Using <a id="idx:forall2:1599"></a><a class="pred" href="forall2.html#forall/2">forall/2</a> 
 as <code>forall(Generator, SideEffect)</code> is preferred over the 
 classical <em>failure driven loop</em> as shown below because it makes 
 it explicit which part of the construct is the generator and which part 
@@ -283,10 +283,10 @@ erroneous result.
         )
 </pre>
 
-<p>If your intent is to create variable bindings, the <a id="idx:forall2:1599"></a><a class="pred" href="forall2.html#forall/2">forall/2</a> 
-control structure is inadequate. Possibly you are looking for <a id="idx:maplist2:1600"></a><a class="pred" href="apply.html#maplist/2">maplist/2</a>,
-<a id="idx:findall3:1601"></a><a class="pred" href="allsolutions.html#findall/3">findall/3</a> 
-or <a id="idx:foreach2:1602"></a><a class="pred" href="aggregate.html#foreach/2">foreach/2</a>.
+<p>If your intent is to create variable bindings, the <a id="idx:forall2:1600"></a><a class="pred" href="forall2.html#forall/2">forall/2</a> 
+control structure is inadequate. Possibly you are looking for <a id="idx:maplist2:1601"></a><a class="pred" href="apply.html#maplist/2">maplist/2</a>,
+<a id="idx:findall3:1602"></a><a class="pred" href="allsolutions.html#findall/3">findall/3</a> 
+or <a id="idx:foreach2:1603"></a><a class="pred" href="aggregate.html#foreach/2">foreach/2</a>.
 </dd>
 </dl>
 

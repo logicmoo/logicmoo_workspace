@@ -66,6 +66,21 @@ attempt to call the Prolog defined trace interceptor.
 '$:-'('$boot_message'('Loading boot file ...~n', [])).
 
 
+%!  memberchk(?E, ?List) is semidet.
+%
+%   Semantically equivalent to once(member(E,List)).   Implemented in C.
+%   If List is partial though we need to   do  the work in Prolog to get
+%   the proper constraint behavior. Needs  to   be  defined early as the
+%   boot code uses it.
+
+memberchk(E, List) :-
+    '$memberchk'(E, List, Tail),
+    (   nonvar(Tail)
+    ->  true
+    ;   Tail = [_|_],
+        memberchk(E, Tail)
+    ).
+
                 /********************************
                 *          DIRECTIVES           *
                 *********************************/
@@ -1024,6 +1039,9 @@ user:file_search_path(swi, Home) :-
 user:file_search_path(library, app_config(lib)).
 user:file_search_path(library, swi(library)).
 user:file_search_path(library, swi(library/clp)).
+user:file_search_path(foreign, swi(ArchLib)) :-
+    current_prolog_flag(apple_universal_binary, true),
+    ArchLib = 'lib/fat-darwin'.
 user:file_search_path(foreign, swi(ArchLib)) :-
     \+ current_prolog_flag(windows, true),
     current_prolog_flag(arch, Arch),
@@ -4000,10 +4018,18 @@ compile_aux_clauses(Clauses) :-
 '$member_'([H|T], El, _) :-
     '$member_'(T, El, H).
 
-
 '$append'([], L, L).
 '$append'([H|T], L, [H|R]) :-
     '$append'(T, L, R).
+
+'$append'(ListOfLists, List) :-
+    '$must_be'(list, ListOfLists),
+    '$append_'(ListOfLists, List).
+
+'$append_'([], []).
+'$append_'([L|Ls], As) :-
+    '$append'(L, Ws, As),
+    '$append_'(Ls, Ws).
 
 '$select'(X, [X|Tail], Tail).
 '$select'(Elem, [Head|Tail], [Head|Rest]) :-

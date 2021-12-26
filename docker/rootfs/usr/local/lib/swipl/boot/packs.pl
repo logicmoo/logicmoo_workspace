@@ -48,9 +48,6 @@
 :- dynamic
     pack_dir/3,                             % Pack, Type, Dir
     pack/2.                                 % Pack, BaseDir
-:- volatile
-    pack_dir/3,
-    pack/2.
 
 user:file_search_path(pack, app_data(pack)).
 
@@ -236,17 +233,24 @@ update_autoload(PrologDir) :-
     ).
 
 foreign_dir(Pack, PackDir, ForeignDir) :-
-    current_prolog_flag(arch, Arch),
     atomic_list_concat([PackDir, '/lib'], ForeignBaseDir),
     exists_directory(ForeignBaseDir),
     !,
-    atomic_list_concat([PackDir, '/lib/', Arch], ForeignDir),
-    (   exists_directory(ForeignDir)
+    (   arch(Arch),
+	atomic_list_concat([PackDir, '/lib/', Arch], ForeignDir),
+        exists_directory(ForeignDir)
     ->  assertz(pack_dir(Pack, foreign, ForeignDir))
-    ;   print_message(warning, pack(no_arch(Pack, Arch))),
+    ;   findall(Arch, arch(Arch), Archs),
+	print_message(warning, pack(no_arch(Pack, Archs))),
         fail
     ).
 foreign_dir(_, _, (-)).
+
+arch(Arch) :-
+    current_prolog_flag(apple_universal_binary, true),
+    Arch = 'fat-darwin'.
+arch(Arch) :-
+    current_prolog_flag(arch, Arch).
 
 ensure_slash(Dir, SDir) :-
     (   sub_atom(Dir, _, _, 0, /)

@@ -473,7 +473,11 @@ expand(test(Name, _Options), _) :-
 
 system:term_expansion(Term, Expanded) :-
     (   loading_unit(_, _, File, _)
-    ->  source_location(File, _),
+    ->  source_location(ThisFile, _),
+        (   File == ThisFile
+        ->  true
+        ;   source_file_property(ThisFile, included_in(File, _))
+        ),
         expand(Term, Expanded)
     ).
 
@@ -1461,7 +1465,7 @@ message_level(Level) :-
 
 locationprefix(File:Line) -->
     !,
-    [ '~w:~d:\n\t'-[File,Line]].
+    [ url(File:Line), ':\n\t' ].
 locationprefix(test(Unit,_Test,Line)) -->
     !,
     { unit_file(Unit, File) },
@@ -1594,7 +1598,7 @@ message(plunit(failed_assertion(Unit, Name, Line, AssertLoc,
 assertion_location(File:Line, File) -->
     [ ' at line ~w'-[Line] ].
 assertion_location(File:Line, _) -->
-    [ ' at ~w:~w'-[File, Line] ].
+    [ ' at ', url(File:Line) ].
 assertion_location(unknown, _) -->
     [].
 
@@ -1690,7 +1694,7 @@ det(false) -->
 
 running(running(Unit:Test, File:Line, STO, Thread)) -->
     thread(Thread),
-    [ '~q:~q at ~w:~d'-[Unit, Test, File, Line] ],
+    [ '~q:~q at '-[Unit, Test], url(File:Line) ],
     current_sto(STO).
 running([H|T]) -->
     ['\t'], running(H),

@@ -2,12 +2,12 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.5.1 Reference Manual: Section A.40</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.5.4 Reference Manual: Section A.42</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
 <link rel="previous" href="quasiquotations.html">
-<link rel="next" href="readutil.html">
+<link rel="next" href="rbtrees.html">
 
 <style type="text/css">
 
@@ -231,9 +231,9 @@ table.frame-box
 <a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
 <a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
 <a class="nav" href="quasiquotations.html"><img src="prev.gif" alt="Previous"></a>
-<a class="nav" href="readutil.html"><img src="next.gif" alt="Next"></a>
+<a class="nav" href="rbtrees.html"><img src="next.gif" alt="Next"></a>
 </div>
-<h2 id="sec:random"><a id="sec:A.40"><span class="sec-nr">A.40</span> <span class="sec-title">library(random): 
+<h2 id="sec:random"><a id="sec:A.42"><span class="sec-nr">A.42</span> <span class="sec-title">library(random): 
 Random numbers</span></a></h2>
 
 <p><a id="sec:random"></a>
@@ -379,6 +379,34 @@ Quintus and SICStus libraries.
 </dl>
 
 </dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="random_subseq/3"><strong>random_subseq</strong>(<var>+List, 
+-Subseq, -Complement</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="random_subseq/3"><strong>random_subseq</strong>(<var>-List, 
++Subseq, +Complement</var>)</a></dt>
+<dd class="defbody">
+Selects a random subsequence <var>Subseq</var> of <var>List</var>, with <var>Complement</var> 
+containing all elements of <var>List</var> that were not selected. Each 
+element of <var>List</var> is included with equal probability in either <var>Subseq</var> 
+or
+<var>Complement</var>.
+
+<p><a class="pred" href="random.html#random_subseq/3">random_subseq/3</a> 
+may also be called with <var>Subseq</var> and <var>Complement</var> 
+bound and <var>List</var> unbound, which will recreate <var>List</var> 
+by randomly interleaving
+<var>Subseq</var> and <var>Complement</var>. This mode may fail 
+randomly, matching SICStus behavior. The failure probability corresponds 
+to the probability of the "forward" mode selecting a <var>Subseq</var>/<var>Complement</var> 
+combination with different lengths.
+
+<dl class="tags">
+<dt class="tag">Compatibility</dt>
+<dd>
+SICStus 4
+</dd>
+</dl>
+
+</dd>
 <dt class="pubdef"><span class="pred-tag">[det]</span><a id="randset/3"><strong>randset</strong>(<var>+K:int, 
 +N:int, -S:list(int)</var>)</a></dt>
 <dd class="defbody">
@@ -439,6 +467,21 @@ The predicate is symmetric.
 <dt class="tag">Errors</dt>
 <dd>
 instantiation_error, <code>type_error(list, _)</code>.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="random_numlist/4"><strong>random_numlist</strong>(<var>+P, 
++L, +U, -List</var>)</a></dt>
+<dd class="defbody">
+Unify <var>List</var> with an ascending list of integers between <var>L</var> 
+and <var>U</var> (inclusive). Each integer in the range <var>L</var>..<var>U</var> 
+is included with probability <var>P</var>.
+
+<dl class="tags">
+<dt class="tag">Compatibility</dt>
+<dd>
+SICStus 4
 </dd>
 </dl>
 

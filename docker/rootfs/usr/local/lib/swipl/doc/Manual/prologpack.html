@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.5.1 Reference Manual: Section A.37</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.5.4 Reference Manual: Section A.39</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -233,7 +233,7 @@ table.frame-box
 <a class="nav" href="prologjiti.html"><img src="prev.gif" alt="Previous"></a>
 <a class="nav" href="prologxref.html"><img src="next.gif" alt="Next"></a>
 </div>
-<h2 id="sec:prologpack"><a id="sec:A.37"><span class="sec-nr">A.37</span> <span class="sec-title">library(prolog_pack): 
+<h2 id="sec:prologpack"><a id="sec:A.39"><span class="sec-nr">A.39</span> <span class="sec-title">library(prolog_pack): 
 A package manager for Prolog</span></a></h2>
 
 <p><a id="sec:prologpack"></a>
@@ -331,7 +331,7 @@ Install a package. <var>Spec</var> is one of
 for the version. In this case pack_install asks for the directory 
 content and selects the latest version.
 <li>GIT URL (not well supported yet)
-<li>A local directory name given as <code>file://</code> URL.
+<li>A local directory name given as <code>file://</code> URL or <code>'.'</code>
 <li>A package name. This queries the package repository at <a class="url" href="http://www.swi-prolog.org">http://www.swi-prolog.org</a>
 </ul>
 
@@ -367,10 +367,29 @@ messages.
 If <code>true</code> (default <code>false</code>), upgrade package if it 
 is already installed.
 </dd>
+<dt><strong>rebuild</strong>(<var>Condition</var>)</dt>
+<dd class="defbody">
+Rebuild the foreign components. <var>Condition</var> is one of
+<code>if_absent</code> (default, do nothing if the directory with 
+foreign resources exists), <code>make</code> (run <code>make</code>) or <code>true</code> 
+(run&lsquo;make distclean` followed by the default configure and build 
+steps).
+</dd>
+<dt><strong>test</strong>(<var>Boolean</var>)</dt>
+<dd class="defbody">
+If <code>true</code> (default), run the pack tests.
+</dd>
 <dt><strong>git</strong>(<var>+Boolean</var>)</dt>
 <dd class="defbody">
 If <code>true</code> (default <code>false</code> unless <var>URL</var> 
 ends with =.git=), assume the URL is a GIT repository.
+</dd>
+<dt><strong>link</strong>(<var>+Boolean</var>)</dt>
+<dd class="defbody">
+Can be used if the installation source is a local directory and the file 
+system supports symbolic links. In this case the system adds the current 
+directory to the pack registration using a symbolic link and performs 
+the local installation steps.
 </dd>
 </dl>
 
@@ -396,27 +415,6 @@ Rebuilt possible foreign components of <var>Pack</var>.</dd>
 <dt class="pubdef"><span class="pred-tag">[det]</span><a id="pack_rebuild/0"><strong>pack_rebuild</strong></a></dt>
 <dd class="defbody">
 Rebuild foreign components of all packages.</dd>
-<dt class="multidef"><span class="pred-tag">[nondet,multifile]</span><a id="environment/2"><strong>environment</strong>(<var>-Name, 
--Value</var>)</a></dt>
-<dd class="defbody">
-Hook to define the environment for building packs. This Multifile hook 
-extends the process environment for building foreign extensions. A value 
-provided by this hook overrules defaults provided by <span class="pred-ext">def_environment/2</span>. 
-In addition to changing the environment, this may be used to pass 
-additional values to the environment, as in:
-
-<pre class="code">
-prolog_pack:environment('USER', User) :-
-    getenv('USER', User).
-</pre>
-
-<table class="arglist">
-<tr><td><var>Name</var> </td><td>is an atom denoting a valid variable 
-name </td></tr>
-<tr><td><var>Value</var> </td><td>is either an atom or number 
-representing the value of the variable. </td></tr>
-</table>
-</dd>
 <dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="pack_upgrade/1"><strong>pack_upgrade</strong>(<var>+Pack</var>)</a></dt>
 <dd class="defbody">
 Try to upgrade the package <var>Pack</var>.

@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.5.1 Reference Manual: Section A.4</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.5.4 Reference Manual: Section A.4</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -391,8 +391,8 @@ association lists</span></a></h3>
 +Assoc0, +Value, -Assoc</var>)</a></dt>
 <dd class="defbody">
 <var>Assoc</var> is <var>Assoc0</var>, except that <var>Key</var> is 
-associated with
-<var>Value</var>. This can be used to insert and change associations.</dd>
+associated with <var>Value</var>. This can be used to insert and change 
+associations.</dd>
 <dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="del_assoc/4"><strong>del_assoc</strong>(<var>+Key, 
 +Assoc0, ?Value, -Assoc</var>)</a></dt>
 <dd class="defbody">
@@ -403,18 +403,18 @@ is <var>Assoc0</var> with
 ?Key, ?Val, -Assoc</var>)</a></dt>
 <dd class="defbody">
 True if <var>Key</var>-Value is in <var>Assoc0</var> and <var>Key</var> 
-is the smallest key.
-<var>Assoc</var> is <var>Assoc0</var> with <var>Key</var>-Value removed. 
-Warning: This will succeed with <i>no</i> bindings for <var>Key</var> or <var>Val</var> 
-if <var>Assoc0</var> is empty.</dd>
+is the smallest key. <var>Assoc</var> is
+<var>Assoc0</var> with <var>Key</var>-Value removed. Warning: This will 
+succeed with <i>no</i> bindings for <var>Key</var> or <var>Val</var> if <var>Assoc0</var> 
+is empty.</dd>
 <dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="del_max_assoc/4"><strong>del_max_assoc</strong>(<var>+Assoc0, 
 ?Key, ?Val, -Assoc</var>)</a></dt>
 <dd class="defbody">
 True if <var>Key</var>-Value is in <var>Assoc0</var> and <var>Key</var> 
-is the greatest key.
-<var>Assoc</var> is <var>Assoc0</var> with <var>Key</var>-Value removed. 
-Warning: This will succeed with <i>no</i> bindings for <var>Key</var> or <var>Val</var> 
-if <var>Assoc0</var> is empty.
+is the greatest key. <var>Assoc</var> is
+<var>Assoc0</var> with <var>Key</var>-Value removed. Warning: This will 
+succeed with <i>no</i> bindings for <var>Key</var> or <var>Val</var> if <var>Assoc0</var> 
+is empty.
 </dd>
 </dl>
 
@@ -431,7 +431,8 @@ possible with:
 -Pairs</var>)</a></dt>
 <dd class="defbody">
 Translate <var>Assoc</var> to a list <var>Pairs</var> of Key-Value 
-pairs. The keys in <var>Pairs</var> are sorted in ascending order.</dd>
+pairs. The keys in
+<var>Pairs</var> are sorted in ascending order.</dd>
 <dt class="pubdef"><span class="pred-tag">[det]</span><a id="assoc_to_keys/2"><strong>assoc_to_keys</strong>(<var>+Assoc, 
 -Keys</var>)</a></dt>
 <dd class="defbody">
@@ -460,7 +461,9 @@ are:
 True if <var>Assoc</var> is an association list. This predicate checks 
 that the structure is valid, elements are in order, and tree is balanced 
 to the extent guaranteed by AVL trees. I.e., branches of each subtree 
-differ in depth by at most 1.</dd>
+differ in depth by at most 1. Does <i>not</i> validate that keys are 
+sufficiently instantiated to ensure the tree remains valid if a key is 
+further instantiated.</dd>
 <dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="map_assoc/2"><strong>map_assoc</strong>(<var>:Pred, 
 +Assoc</var>)</a></dt>
 <dd class="defbody">

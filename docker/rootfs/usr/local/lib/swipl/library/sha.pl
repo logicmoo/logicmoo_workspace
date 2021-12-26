@@ -149,3 +149,14 @@ bytes_hex([H|T]) -->
     },
     [C0,C1],
     bytes_hex(T).
+
+
+		 /*******************************
+		 *            SANDBOX		*
+		 *******************************/
+
+:- multifile sandbox:safe_primitive/1.
+
+sandbox:safe_primitive(crypto_hash:sha_hash(_,_,_)).
+sandbox:safe_primitive(crypto_hash:hmac_sha(_,_,_,_)).
+sandbox:safe_primitive(crypto_hash:hash_atom(_,_)).

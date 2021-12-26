@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.5.1 Reference Manual: Section 4.11</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.5.4 Reference Manual: Section 4.11</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -382,6 +382,18 @@ This message may be intercepted by means of the hook
 The library <code>library(ansi_term)</code> implements this hook to 
 achieve coloured output. If it is not intercepted it invokes <code>format(Stream, 
 Format, Args)</code>.
+</dd>
+<dt><strong>url</strong>(<var>Location</var>)</dt>
+<dd class="defbody">
+Print a source location. <var>Location</var> is one of the terms
+<code>File:Line:Column</code>, <code>File:Line</code> or <code>File</code>. 
+When using library <code>library(ansi_term)</code>, this is translated 
+into a hyperlink for modern terminals.
+</dd>
+<dt><strong>url</strong>(<var>URL, Label</var>)</dt>
+<dd class="defbody">
+Print <var>Label</var>. When using library <code>library(ansi_term)</code>, 
+this is translated into a hyperlink for modern terminals.
 </dd>
 <dt><strong>nl</strong></dt>
 <dd class="defbody">

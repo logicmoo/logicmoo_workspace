@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.5.1 Reference Manual: Section 2.7</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.5.4 Reference Manual: Section 2.7</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -410,7 +410,8 @@ describes the predicate as well as possible references to it. See also <a class=
 <dt class="pubdef"><span class="pred-tag">[nondet]</span><a id="explain/2"><strong>explain</strong>(<var>@Term, 
 -Explanation</var>)</a></dt>
 <dd class="defbody">
-True when <var>Explanation</var> is an explanation of <var>Term</var>.
+True when <var>Explanation</var> is an explanation of <var>Term</var>. 
+The explaination is a list of elements that is printed using <code>print_message(information, explain(Explanation))</code>.
 </dd>
 </dl>
 

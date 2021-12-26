@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.5.1 Reference Manual: Section 4.4</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.5.4 Reference Manual: Section 4.4</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -280,9 +280,13 @@ class, XPCE method, etc.</dd>
 <dt class="pubdef"><a id="edit/0"><strong>edit</strong></a></dt>
 <dd class="defbody">
 Edit the&lsquo;default' file using <a id="idx:edit1:665"></a><a class="pred" href="edit.html#edit/1">edit/1</a>. 
-The default file is the file loaded with the command line option <strong>-s</strong> 
-or, in Windows, the file loaded by double-clicking from the Windows 
-shell.
+The default file is either the first <code>.pl</code> file from the 
+commandline (the <em>associated</em> file, see the Prolog flag <a class="flag" href="flags.html#flag:associated_file">associated_file</a> 
+or the first script file specified using the <strong>-s</strong> or <strong>-l</strong> 
+command line option. When using the Windows shell while SWI-Prolog is 
+associated with the <code>.pl</code> extension this is the file loaded 
+by double-clicking a <code>.pl</code> file. See also <a class="sec" href="compilation.html#sec:2.11.2.1">section 
+2.11.2.1</a>.
 </dd>
 </dl>
 

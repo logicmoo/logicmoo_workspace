@@ -68,7 +68,7 @@ extern "C" {
 /* PLVERSION_TAG: a string, normally "", but for example "rc1" */
 
 #ifndef PLVERSION
-#define PLVERSION 80501
+#define PLVERSION 80504
 #endif
 #ifndef PLVERSION_TAG
 #define PLVERSION_TAG ""
@@ -950,34 +950,35 @@ PL_EXPORT(IOSTREAM *)*_PL_streams(void);	/* base of streams */
 #define Scurrent_output (_PL_streams()[4])
 #endif
 
-#define PL_WRT_QUOTED		0x01	/* quote atoms */
-#define PL_WRT_IGNOREOPS	0x02	/* ignore list/operators */
-#define PL_WRT_NUMBERVARS	0x04	/* print $VAR(N) as a variable */
-#define PL_WRT_PORTRAY		0x08	/* call portray */
-#define PL_WRT_CHARESCAPES	0x10	/* Output ISO escape sequences */
-#define PL_WRT_BACKQUOTED_STRING 0x20	/* Write strings as `...` */
-					/* Write attributed variables */
-#define PL_WRT_ATTVAR_IGNORE	0x040	/* Default: just write the var */
-#define PL_WRT_ATTVAR_DOTS	0x080	/* Write as Var{...} */
-#define PL_WRT_ATTVAR_WRITE	0x100	/* Write as Var{Attributes} */
-#define PL_WRT_ATTVAR_PORTRAY	0x200	/* Use Module:portray_attrs/2 */
+#define PL_WRT_QUOTED		       0x01 /* quote atoms */
+#define PL_WRT_IGNOREOPS	       0x02 /* ignore list/operators */
+#define PL_WRT_NUMBERVARS	       0x04 /* print $VAR(N) as a variable */
+#define PL_WRT_PORTRAY		       0x08 /* call portray */
+#define PL_WRT_CHARESCAPES	       0x10 /* Output ISO escape sequences */
+#define PL_WRT_BACKQUOTED_STRING       0x20 /* Write strings as `...` */
+					    /* Write attributed variables */
+#define PL_WRT_ATTVAR_IGNORE	      0x040 /* Default: just write the var */
+#define PL_WRT_ATTVAR_DOTS	      0x080 /* Write as Var{...} */
+#define PL_WRT_ATTVAR_WRITE	      0x100 /* Write as Var{Attributes} */
+#define PL_WRT_ATTVAR_PORTRAY	      0x200 /* Use Module:portray_attrs/2 */
 #define PL_WRT_ATTVAR_MASK \
 	(PL_WRT_ATTVAR_IGNORE | \
 	 PL_WRT_ATTVAR_DOTS | \
 	 PL_WRT_ATTVAR_WRITE | \
 	 PL_WRT_ATTVAR_PORTRAY)
-#define PL_WRT_BLOB_PORTRAY	0x400	/* Use portray to emit non-text blobs */
-#define PL_WRT_NO_CYCLES	0x800	/* Never emit @(Template,Subst) */
-#define PL_WRT_NEWLINE	       0x2000	/* Add a newline */
-#define PL_WRT_VARNAMES	       0x4000	/* Internal: variable_names(List)  */
-#define PL_WRT_BACKQUOTE_IS_SYMBOL 0x8000 /* ` is a symbol char */
-#define PL_WRT_DOTLISTS	       0x10000	/* Write lists as .(A,B) */
-#define PL_WRT_BRACETERMS      0x20000	/* Write {A} as {}(A) */
-#define PL_WRT_NODICT	       0x40000	/* Do not write dicts in pretty syntax */
-#define PL_WRT_NODOTINATOM     0x80000	/* never write a.b unquoted */
-#define PL_WRT_NO_LISTS	       0x100000	/* Do not write lists as [...] */
-#define PL_WRT_RAT_NATURAL     0x200000	/* Write rationals as 1/3 */
-#define PL_WRT_CHARESCAPES_UNICODE 0x400000 /* Output escape sequences as \uXXXX */
+#define PL_WRT_BLOB_PORTRAY	      0x400 /* Use portray for non-text blobs */
+#define PL_WRT_NO_CYCLES	      0x800 /* Never emit @(Template,Subst) */
+#define PL_WRT_NEWLINE	             0x2000 /* Add a newline */
+#define PL_WRT_VARNAMES	             0x4000 /* Internal: variable_names(List) */
+#define PL_WRT_BACKQUOTE_IS_SYMBOL   0x8000 /* ` is a symbol char */
+#define PL_WRT_DOTLISTS	            0x10000 /* Write lists as .(A,B) */
+#define PL_WRT_BRACETERMS           0x20000 /* Write {A} as {}(A) */
+#define PL_WRT_NODICT	            0x40000 /* Do not write dicts pretty */
+#define PL_WRT_NODOTINATOM          0x80000 /* never write a.b unquoted */
+#define PL_WRT_NO_LISTS	           0x100000 /* Do not write lists as [...] */
+#define PL_WRT_RAT_NATURAL         0x200000 /* Write rationals as 1/3 */
+#define PL_WRT_CHARESCAPES_UNICODE 0x400000 /* Use \uXXXX escapes */
+#define PL_WRT_QUOTE_NON_ASCII	   0x800000 /* Quote atoms containing non-ascii */
 
 PL_EXPORT(int)	PL_write_term(IOSTREAM *s,
 			     term_t term,
@@ -1158,7 +1159,8 @@ PL_EXPORT(int)	PL_current_prolog_flag(atom_t name, int type, void *ptr);
 #define PL_VERSION_VM		6	/* VM signature */
 #define PL_VERSION_BUILT_IN	7	/* Built-in predicate signature */
 
-PL_EXPORT(unsigned int) PL_version(int which);
+#define PL_version(id) PL_version_info(id)
+PL_EXPORT(unsigned int) PL_version_info(int which);
 
 
 		/********************************
@@ -1271,7 +1273,9 @@ typedef struct
 { int	(*unify)(term_t t, void *handle);	/* implementation --> Prolog */
   int   (*get)(term_t t, void **handle);	/* Prolog --> implementation */
   void	(*activate)(int active);		/* (de)activate */
-  intptr_t	magic;					/* PROFTYPE_MAGIC */
+  void  (*release)(void *handle);		/* Release handle */
+  void *dummy[4];				/* reserved */
+  intptr_t	magic;				/* PROFTYPE_MAGIC */
 } PL_prof_type_t;
 
 PL_EXPORT(int)		PL_register_profile_type(PL_prof_type_t *type);

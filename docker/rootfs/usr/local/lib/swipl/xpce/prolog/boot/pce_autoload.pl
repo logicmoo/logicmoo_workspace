@@ -50,9 +50,9 @@
            ]).
 
 :- dynamic
-    autoload/2.
+    autoload_decl/2.
 :- public
-    autoload/2.
+    autoload_decl/2.
 
 %!  pce_autoload(+ClassName, +FileSpec)
 %
@@ -63,14 +63,14 @@
 pce_autoload(Class, PathAlias) :-       % trap library(), demo(), contrib(), ..
     functor(PathAlias, _, 1),
     !,
-    retractall(autoload(Class, _)),
-    assert(autoload(Class, PathAlias)).
+    retractall(autoload_decl(Class, _)),
+    assert(autoload_decl(Class, PathAlias)).
 pce_autoload(Class, Abs) :-
     is_absolute_file_name(Abs),
     !,
     absolute_file_name(Abs, Canonical),
-    retractall(autoload(Class, _)),
-    assert(autoload(Class, Canonical)).
+    retractall(autoload_decl(Class, _)),
+    assert(autoload_decl(Class, Canonical)).
 pce_autoload(Class, Local) :-
     prolog_load_context(directory, Dir),
     atomic_list_concat([Dir, /, Local], File),
@@ -79,8 +79,8 @@ pce_autoload(Class, Local) :-
                        [ extensions(Exts),
                          access(exist)
                        ], Abs),
-    retractall(autoload(Class, _)),
-    assert(autoload(Class, Abs)).
+    retractall(autoload_decl(Class, _)),
+    assert(autoload_decl(Class, Abs)).
 
 %!  pce_autoload_all
 %
@@ -88,7 +88,7 @@ pce_autoload(Class, Local) :-
 %   directive.  Useful for debugging purposes.
 
 pce_autoload_all :-
-    autoload(Class, File),
+    autoload_decl(Class, File),
     \+ get(@classes, member, Class, _),
     \+ pce_prolog_class(Class),
     ensure_loaded(user:File),
@@ -115,7 +115,7 @@ do_trap_autoload(Class) :-
     pce_realise_class(Class),
     !.
 do_trap_autoload(Class) :-
-    autoload(Class, File),
+    autoload_decl(Class, File),
     load_files(user:File,
                [ autoload(true)
                ]),

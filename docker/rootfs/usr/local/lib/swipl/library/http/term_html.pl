@@ -80,7 +80,8 @@ term(Term, Options) -->
                     Options1),
       dict_options(Dict, Options1)
     },
-    any(Term, Dict).
+    any(Term, Dict),
+    finalize_term(Term, Dict).
 
 
 any(_, Options) -->
@@ -576,6 +577,24 @@ primitive_class('pl-atom', Atom, String, Class) :-
     !,
     Class = 'pl-quoted-atom'.
 primitive_class(Class, _, _, Class).
+
+
+%!  finalize_term(+Term, +Dict)// is det.
+%
+%   Handle the full_stop(Bool) and nl(Bool) options.
+
+finalize_term(Term, Dict) -->
+    (   { true == Dict.get(full_stop) }
+    ->  space(Term, '.', Dict, Dict),
+        (   { true == Dict.get(nl) }
+        ->  html(['.', br([])])
+        ;   html('. ')
+        )
+    ;   (   { true == Dict.get(nl) }
+        ->  html(br([]))
+        ;   []
+        )
+    ).
 
 
                  /*******************************

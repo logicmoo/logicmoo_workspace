@@ -1,9 +1,10 @@
 /*  Part of XPCE --- The SWI-Prolog GUI toolkit
 
     Author:        Jan Wielemaker and Anjo Anjewierden
-    E-mail:        jan@swi.psy.uva.nl
-    WWW:           http://www.swi.psy.uva.nl/projects/xpce/
-    Copyright (c)  1985-2002, University of Amsterdam
+    E-mail:        jan@swi-prolog.org
+    WWW:           https://www.swi-prolog.org
+    Copyright (c)  1985-2021, University of Amsterdam
+			      SWI-Prolog Solutions b.v.
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -257,7 +258,7 @@ check_pce_types :-
 no_autoload_class(ClassName) :-
     pce_prolog_class(ClassName), !, fail.
 no_autoload_class(ClassName) :-
-    pce_autoload:autoload(ClassName, _), !, fail.
+    pce_autoload:autoload_decl(ClassName, _), !, fail.
 no_autoload_class(_).
 
 

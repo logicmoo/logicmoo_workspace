@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.5.1 Reference Manual: Section 12.4</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.5.4 Reference Manual: Section 12.4</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -1232,21 +1232,21 @@ and
 <a class="func" href="foreigninclude.html#PL_open_query()">PL_open_query()</a>.
 
 <dl class="latex">
-<dt class="pubdef"><a id="PL_put_variable()"><var>void</var> <strong>PL_put_variable</strong>(<var>term_t 
+<dt class="pubdef"><a id="PL_put_variable()"><var>int</var> <strong>PL_put_variable</strong>(<var>term_t 
 -t</var>)</a></dt>
 <dd class="defbody">
 Put a fresh variable in the term, resetting the term reference to its 
 initial state.<sup class="fn">203<span class="fn-text">Older versions 
 created a variable on the global stack.</span></sup>
 </dd>
-<dt class="pubdef"><a id="PL_put_atom()"><var>void</var> <strong>PL_put_atom</strong>(<var>term_t 
+<dt class="pubdef"><a id="PL_put_atom()"><var>int</var> <strong>PL_put_atom</strong>(<var>term_t 
 -t, atom_t a</var>)</a></dt>
 <dd class="defbody">
 Put an atom in the term reference from a handle. See also
 <a class="func" href="foreigninclude.html#PL_new_atom()">PL_new_atom()</a> 
 and <a class="func" href="foreigninclude.html#PL_atom_chars()">PL_atom_chars()</a>.
 </dd>
-<dt class="pubdef"><a id="PL_put_bool()"><var>void</var> <strong>PL_put_bool</strong>(<var>term_t 
+<dt class="pubdef"><a id="PL_put_bool()"><var>int</var> <strong>PL_put_bool</strong>(<var>term_t 
 -t, int val</var>)</a></dt>
 <dd class="defbody">
 Put one of the atoms <code>true</code> or <code>false</code> in the term 
@@ -3573,13 +3573,17 @@ initialised.
 </dl>
 
 </dd>
-<dt class="pubdef"><a id="PL_version()"><var>unsigned int</var> <strong>PL_version</strong>(<var>int 
+<dt class="pubdef"><a id="PL_version_info()"><var>unsigned int</var> <strong>PL_version_info</strong>(<var>int 
 key</var>)</a></dt>
 <dd class="defbody">
 Query version information. This function may be called before
 <a class="func" href="foreigninclude.html#PL_initialise()">PL_initialise()</a>. 
 If the key is unknown the function returns 0. See <a class="sec" href="abi-versions.html#sec:2.22">section 
-2.22</a> for a more in-depth discussion on binary compatibility. Defined 
+2.22</a> for a more in-depth discussion on binary compatibility. 
+Versions upto SWI-Prolog 8.5.2 defined this function as <b>PL_version()</b>. 
+It was renamed to avoid a conflict with Perl affecting
+<a class="url" href="https://github.com/salva/p5-Language-Prolog-Yaswi">Yaswi</a>.
+<b>PL_version()</b> is provided as a macro for compatibility. Defined 
 keys are:
 
 <dl class="latex">

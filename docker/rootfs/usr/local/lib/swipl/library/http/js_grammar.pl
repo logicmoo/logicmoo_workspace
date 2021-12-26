@@ -195,20 +195,20 @@ regex_chars --> regex_char, !, regex_chars.
 regex_chars --> [].
 
 regex_first_char -->
+    regex_backslash_sequence.
+regex_first_char -->
     regex_non_terminator(C),
     !,
     { \+ memberchk(C, "*\\/[") }.
 regex_first_char -->
-    regex_backslash_sequence.
-regex_first_char -->
     regex_class.
 
+regex_char -->
+    regex_backslash_sequence.
 regex_char -->
     regex_non_terminator(C),
     !,
     { \+ memberchk(C, "\\/[") }.
-regex_char -->
-    regex_backslash_sequence.
 regex_char -->
     regex_class.
 

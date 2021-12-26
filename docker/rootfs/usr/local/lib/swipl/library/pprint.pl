@@ -72,58 +72,78 @@ etc.
 %
 %   Pretty print a Prolog term. The following options are processed:
 %
-%     * output(+Stream)
-%     Define the output stream.  Default is =user_output=
-%     * right_margin(+Integer)
-%     Width of a line.  Default is 72 characters.
-%     * left_margin(+Integer)
-%     Left margin for continuation lines.  Default is 0.
-%     * tab_width(+Integer)
-%     Distance between tab-stops.  Default is 8 characters.
-%     * indent_arguments(+Spec)
-%     Defines how arguments of compound terms are placed.  Defined
-%     values are:
-%       $ =false= :
+%     - output(+Stream)
+%       Define the output stream.  Default is `user_output`
+%     - right_margin(?Column)
+%       Width of a line. If the output is a _tty_ and tty_size/2
+%       can produce a size the default is the number of columns
+%       minus 8.  Otherwise the default is 72 characters.  If the
+%       Column is unbound it is unified with the computed value.
+%     - left_margin(+Integer)
+%       Left margin for continuation lines.  Default is 0.
+%     - tab_width(+Integer)
+%       Distance between tab-stops.  Default is 8 characters.
+%     - indent_arguments(+Spec)
+%       Defines how arguments of compound terms are placed.  Defined
+%       values are:
+%       $ `false` :
 %       Simply place them left to right (no line-breaks)
-%       $ =true= :
+%       $ `true` :
 %       Place them vertically, aligned with the open bracket (not
 %       implemented)
-%       $ =auto= (default) :
+%       $ `auto` (default) :
 %       As horizontal if line-width is not exceeded, vertical
 %       otherwise.
 %       $ An integer :
 %       Place them vertically aligned, <N> spaces to the right of
 %       the beginning of the head.
-%     * operators(+Boolean)
-%     This is the inverse of the write_term/3 option =ignore_ops=.
-%     Default is to respect them.
-%     * write_options(+List)
-%     List of options passed to write_term/3 for terms that are
-%     not further processed.  Default:
-%       ==
+%     - operators(+Boolean)
+%       This is the inverse of the write_term/3 option `ignore_ops`.
+%       Default is to respect them.
+%     - write_options(+List)
+%       List of options passed to write_term/3 for terms that are
+%       not further processed.  Default:
+%
+%       ```
 %           [ numbervars(true),
 %             quoted(true),
 %             portray(true)
 %           ]
-%       ==
+%       ```
+%     - fullstop(Boolean)
+%       If `true` (default `false`), add a full stop (.) to the output.
+%     - nl(Boolean)
+%       If `true` (default `false`), add a newline to the output.
 
 print_term(Term, Options) :-
-    \+ \+ print_term_2(Term, Options).
-
-print_term_2(Term, Options0) :-
-    prepare_term(Term, Template, Cycles, Constraints),
     defaults(Defs0),
     select_option(write_options(WrtDefs), Defs0, Defs),
-    select_option(write_options(WrtUser), Options0, Options1, []),
+    select_option(write_options(WrtUser), Options, Options1, []),
     merge_options(WrtUser, WrtDefs, WrtOpts),
     merge_options(Options1, Defs, Options2),
+    Options3 = [write_options(WrtOpts)|Options2],
+    default_margin(Options3, Options4),
+    \+ \+ print_term_2(Term, Options4).
+
+print_term_2(Term, Options) :-
+    prepare_term(Term, Template, Cycles, Constraints),
+    option(write_options(WrtOpts), Options),
     option(max_depth(MaxDepth), WrtOpts, infinite),
-    Options = [write_options(WrtOpts)|Options2],
 
     dict_create(Context, #, [max_depth(MaxDepth)|Options]),
     pp(Template, Context, Options),
     print_extra(Cycles, Context, 'where', Options),
-    print_extra(Constraints, Context, 'with constraints', Options).
+    print_extra(Constraints, Context, 'with constraints', Options),
+    (   option(fullstop(true), Options)
+    ->  option(output(Out), Options),
+        put_char(Out, '.')
+    ;   true
+    ),
+    (   option(nl(true), Options)
+    ->  option(output(Out), Options),
+        nl(Out)
+    ;   true
+    ).
 
 print_extra([], _, _, _) :- !.
 print_extra(List, Context, Comment, Options) :-
@@ -180,7 +200,6 @@ bind_non_cycles([H|T0], I, [H|T]) :-
 
 defaults([ output(user_output),
            left_margin(0),
-           right_margin(72),
            depth(0),
            indent(0),
            indent_arguments(auto),
@@ -192,6 +211,25 @@ defaults([ output(user_output),
                          ]),
            priority(1200)
          ]).
+
+default_margin(Options0, Options) :-
+    option(right_margin(Margin), Options0),
+    !,
+    (   var(Margin)
+    ->  tty_right_margin(Options0, Margin)
+    ;   true
+    ),
+    Options = Options0.
+default_margin(Options0, [right_margin(Margin)|Options0]) :-
+    tty_right_margin(Options0, Margin).
+
+tty_right_margin(Options, Margin) :-
+    option(output(Output), Options),
+    stream_property(Output, tty(true)),
+    catch(tty_size(_Rows, Columns), error(_,_), fail),
+    !,
+    Margin is Columns - 8.
+tty_right_margin(_, 72).
 
 
                  /*******************************
@@ -250,12 +288,11 @@ pp(List, Ctx, Options) :-
     ;   format(Out, '[ ', []),
         Nindent is Indent + 2,
         NDepth is Depth + 1,
-        modify_context(Ctx, [indent=Nindent, depth=NDepth], NCtx),
+        modify_context(Ctx, [indent=Nindent, depth=NDepth, priority=999], NCtx),
         pp_list_elements(List, NCtx, Options),
         indent(Out, Indent, Options),
         format(Out, ']', [])
     ).
-:- if(current_predicate(is_dict/1)).
 pp(Dict, Ctx, Options) :-
     is_dict(Dict),
     !,
@@ -290,7 +327,6 @@ pp(Dict, Ctx, Options) :-
         indent(Out, BraceIndent, Options),
         write(Out, '}')
     ).
-:- endif.
 pp(Term, Ctx, Options) :-               % handle operators
     compound(Term),
     compound_name_arity(Term, Name, Arity),
@@ -350,28 +386,57 @@ pp(Term, Ctx, Options) :-               % handle operators
             pp(Arg, Ctx3, Options),
             format(Out, '~w~w)', [Space,QName])
         )
-    ;   arg(1, Term, Arg1),
+    ;   arg(1, Term, Arg1),             % Infix operators
         arg(2, Term, Arg2),
-        (   (   space_op(Name)
-            ;   need_space(Arg1, Name, LeftOptions, FuncOptions)
-            ;   need_space(Name, Arg2, FuncOptions, RightOptions)
+        (   print_width(Term, Width, Options),
+            option(right_margin(RM), Options),
+            Indent + Width < RM
+        ->  ToWide = false,
+            (   (   space_op(Name)
+                ;   need_space(Arg1, Name, LeftOptions, FuncOptions)
+                ;   need_space(Name, Arg2, FuncOptions, RightOptions)
+                )
+            ->  Space = ' '
+            ;   Space = ''
             )
-        ->  Space = ' '
-        ;   Space = ''
+        ;   ToWide = true,
+            (   (   is_solo(Name)
+                ;   space_op(Name)
+                )
+            ->  Space = ''
+            ;   Space = ' '
+            )
         ),
         (   CPrec >= Prec
-        ->  modify_context(Ctx2, [priority=Left], Ctx3),
-            pp(Arg1, Ctx3, Options),
-            format(Out, '~w~w~w', [Space,QName,Space]),
-            modify_context(Ctx2, [priority=Right], Ctx4),
-            pp(Arg2, Ctx4, Options)
-        ;   format(Out, '(', []),
+        ->  (   ToWide == false
+            ->  modify_context(Ctx2, [priority=Left], Ctx3),
+                pp(Arg1, Ctx3, Options),
+                format(Out, '~w~w~w', [Space,QName,Space]),
+                modify_context(Ctx2, [priority=Right], Ctx4),
+                pp(Arg2, Ctx4, Options)
+            ;   infix_list(Term, Name, List),
+                Pri is min(Left,Right),
+                modify_context(Ctx2, [space=Space, priority=Pri], Ctx3),
+                pp_infix_list(List, QName, 2, Ctx3, Options)
+            )
+        ;   ToWide == false
+        ->  format(Out, '(', []),
             NIndent is Indent + 1,
             modify_context(Ctx2, [indent=NIndent, priority=Left], Ctx3),
             pp(Arg1, Ctx3, Options),
             format(Out, '~w~w~w', [Space,QName,Space]),
             modify_context(Ctx2, [priority=Right], Ctx4),
             pp(Arg2, Ctx4, Options),
+            format(Out, ')', [])
+        ;   infix_list(Term, Name, List),
+            Pri is min(Left,Right),
+            format(Out, '( ', []),
+            NIndent is Indent + 2,
+            modify_context(Ctx2,
+                           [space=Space, indent=NIndent, priority=Pri],
+                           Ctx3),
+            pp_infix_list(List, QName, 0, Ctx3, Options),
+            indent(Out, Indent, Options),
             format(Out, ')', [])
         )
     ).
@@ -400,7 +465,9 @@ pp(Term, Ctx, Options) :-               % compound
         ),
         context(Ctx, depth, Depth),
         NDepth is Depth + 1,
-        modify_context(Ctx, [indent=Nindent, depth=NDepth], NCtx0),
+        modify_context(Ctx,
+                       [indent=Nindent, depth=NDepth, priority=999],
+                       NCtx0),
         dec_depth(NCtx0, NCtx),
         pp_compound_args(Args, NCtx, Options),
         write(Out, ')')
@@ -413,6 +480,55 @@ quoted_op(Op, Atom) :-
     Atom = Op.
 quoted_op(Op, Q) :-
     format(atom(Q), '~q', [Op]).
+
+%!  infix_list(+Term, ?Op, -List) is semidet.
+%
+%   True when List is a list of subterms  of Term that are the result of
+%   the nested infix operator  Op.  Deals   both  with  `xfy`  and `yfx`
+%   operators.
+
+infix_list(Term, Op, List) :-
+    phrase(infix_list(Term, Op), List).
+
+infix_list(Term, Op) -->
+    { compound(Term),
+      compound_name_arity(Term, Op, 2)
+    },
+    (   {current_op(_Pri, xfy, Op)}
+    ->  { arg(1, Term, H),
+          arg(2, Term, Term2)
+        },
+        [H],
+        infix_list(Term2, Op)
+    ;   {current_op(_Pri, yfx, Op)}
+    ->  { arg(1, Term, Term2),
+          arg(2, Term, T)
+        },
+        infix_list(Term2, Op),
+        [T]
+    ).
+infix_list(Term, Op) -->
+    {atom(Op)},                      % we did something before
+    [Term].
+
+pp_infix_list([H|T], QName, IncrIndent, Ctx, Options) =>
+    pp(H, Ctx, Options),
+    context(Ctx, space, Space),
+    (   T == []
+    ->  true
+    ;   option(output(Out), Options),
+        format(Out, '~w~w', [Space,QName]),
+        context(Ctx, indent, Indent),
+        NIndent is Indent+IncrIndent,
+        indent(Out, NIndent, Options),
+        modify_context(Ctx, [indent=NIndent], Ctx2),
+        pp_infix_list(T, QName, 0, Ctx2, Options)
+    ).
+
+
+%!  pp_list_elements(+List, +Ctx, +Options) is det.
+%
+%   Print the elements of a possibly open list as a vertical list.
 
 pp_list_elements(_, Ctx, Options) :-
     context(Ctx, max_depth, 0),
@@ -512,7 +628,8 @@ indent(Out, Indent, Options) :-
 
 print_width(Term, W, Options) :-
     option(right_margin(RM), Options),
-    (   write_length(Term, W, [max_length(RM)|Options])
+    option(write_options(WOpts), Options),
+    (   write_length(Term, W, [max_length(RM)|WOpts])
     ->  true
     ;   W = RM
     ).

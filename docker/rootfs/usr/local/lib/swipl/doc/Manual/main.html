@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.5.1 Reference Manual: Section A.23</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.5.4 Reference Manual: Section A.25</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -233,7 +233,7 @@ table.frame-box
 <a class="nav" href="lists.html"><img src="prev.gif" alt="Previous"></a>
 <a class="nav" href="nb_set.html"><img src="next.gif" alt="Next"></a>
 </div>
-<h2 id="sec:main"><a id="sec:A.23"><span class="sec-nr">A.23</span> <span class="sec-title">library(main): 
+<h2 id="sec:main"><a id="sec:A.25"><span class="sec-nr">A.25</span> <span class="sec-title">library(main): 
 Provide entry point for scripts</span></a></h2>
 
 <p><a id="sec:main"></a>
@@ -279,7 +279,19 @@ Call <span class="pred-ext">main/1</span> using the passed command-line
 arguments. Before calling
 <span class="pred-ext">main/1</span> this predicate installs a signal 
 handler for <code>SIGINT</code> (Control-C) that terminates the process 
-with status 1.</dd>
+with status 1.
+
+<p>When <a class="pred" href="main.html#main/0">main/0</a> is called 
+interactively it simply calls <span class="pred-ext">main/1</span> with 
+the arguments. This allows for debugging scripts as follows:
+
+<pre class="code">
+$ swipl -l script.pl -- arg ...
+?- gspy(suspect/1).		% setup debugging
+?- main.			% run program
+</pre>
+
+</dd>
 <dt class="pubdef"><span class="pred-tag">[det]</span><a id="argv_options/3"><strong>argv_options</strong>(<var>:Argv, 
 -Positional, -Options</var>)</a></dt>
 <dd class="defbody">
@@ -344,6 +356,10 @@ As <code>integer</code>. Requires value <code>&gt;=</code> 0.
 <dt><strong>natural</strong></dt>
 <dd class="defbody">
 As <code>integer</code>. Requires value <code>&gt;=</code> 1.
+</dd>
+<dt><strong>number</strong></dt>
+<dd class="defbody">
+Any number (integer, float, rational).
 </dd>
 <dt><strong>between</strong>(<var>Low, High</var>)</dt>
 <dd class="defbody">

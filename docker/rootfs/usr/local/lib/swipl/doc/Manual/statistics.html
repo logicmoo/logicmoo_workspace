@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.5.1 Reference Manual: Section 4.41</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.5.4 Reference Manual: Section A.48</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -233,140 +233,191 @@ table.frame-box
 <a class="nav" href="debug-determinism.html"><img src="prev.gif" alt="Previous"></a>
 <a class="nav" href="profile.html"><img src="next.gif" alt="Next"></a>
 </div>
-<h2 id="sec:statistics"><a id="sec:4.41"><span class="sec-nr">4.41</span> <span class="sec-title">Obtaining 
-Runtime Statistics</span></a></h2>
+<h2 id="sec:statistics"><a id="sec:A.48"><span class="sec-nr">A.48</span> <span class="sec-title">library(statistics): 
+Get information about resource usage</span></a></h2>
 
-<a id="sec:statistics"></a>
+<p><a id="sec:statistics"></a>
+
+<p>This library provides predicates to obtain information about resource 
+usage by your program. The predicates of this library are for human use 
+at the toplevel: information is <i>printed</i>. All predicates obtain 
+their information using public low-level primitives. These primitives 
+can be use to obtain selective statistics during execution.
 
 <dl class="latex">
-<dt class="pubdef"><a id="statistics/2"><strong>statistics</strong>(<var>+Key, 
--Value</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="statistics/0"><strong>statistics</strong></a></dt>
 <dd class="defbody">
-Unify system statistics determined by <var>Key</var> with <var>Value</var>. 
-The possible keys are given in the <a class="tab" href="statistics.html#tab:statistics">table 
-6</a>. This predicate supports additional keys for compatibility 
-reasons. These keys are described in <a class="tab" href="statistics.html#tab:qpstatistics">table 
-7</a>.
+Print information about resource usage using <a class="pred" href="printmsg.html#print_message/2">print_message/2</a>.
 
-<p><table class="latex frame-box center">
-<tr><td colspan=2 align=center>Native keys (times as float in seconds)</tr>
-<tr class="hline"><td>agc</td><td>Number of atom garbage collections 
-performed </td></tr>
-<tr><td>agc_gained</td><td>Number of atoms removed </td></tr>
-<tr><td>agc_time</td><td>Time spent in atom garbage collections </td></tr>
-<tr><td>atoms</td><td>Total number of defined atoms </td></tr>
-<tr><td>atom_space</td><td>Bytes used to represent atoms </td></tr>
-<tr><td>c_stack</td><td>System (C-) stack limit. 0 if not known. </td></tr>
-<tr><td>cgc</td><td>Number of clause garbage collections performed </td></tr>
-<tr><td>cgc_gained</td><td>Number of clauses reclaimed </td></tr>
-<tr><td>cgc_time</td><td>Time spent in clause garbage collections </td></tr>
-<tr><td>clauses</td><td>Total number of clauses in the program </td></tr>
-<tr><td>codes</td><td>Total size of (virtual) executable code in words </td></tr>
-<tr><td>cputime</td><td>(User) <span style="font-variant:small-caps">CPU</span> 
-time since thread was started in seconds </td></tr>
-<tr><td>epoch</td><td>Time stamp when thread was started </td></tr>
-<tr><td>errors</td><td>Number of error mesages printed </td></tr>
-<tr><td>functors</td><td>Total number of defined name/arity pairs </td></tr>
-<tr><td>functor_space</td><td>Bytes used to represent functors </td></tr>
-<tr><td>global</td><td>Allocated size of the global stack in bytes </td></tr>
-<tr><td>globalused</td><td>Number of bytes in use on the global stack </td></tr>
-<tr><td>globallimit</td><td>Size to which the global stack is allowed to 
-grow </td></tr>
-<tr><td>global_shifts</td><td>Number of global stack expansions </td></tr>
-<tr><td>heapused</td><td>Bytes of heap in use by Prolog (0 if not 
-maintained) </td></tr>
-<tr><td>inferences</td><td>Total number of passes via the call and redo 
-ports since Prolog was started </td></tr>
-<tr><td>modules</td><td>Total number of defined modules </td></tr>
-<tr><td>local</td><td>Allocated size of the local stack in bytes </td></tr>
-<tr><td>local_shifts</td><td>Number of local stack expansions </td></tr>
-<tr><td>locallimit</td><td>Size to which the local stack is allowed to 
-grow </td></tr>
-<tr><td>localused</td><td>Number of bytes in use on the local stack </td></tr>
-<tr><td>table_space_used</td><td>Amount of bytes in use by the thread's 
-answer tables </td></tr>
-<tr><td>trail</td><td>Allocated size of the trail stack in bytes </td></tr>
-<tr><td>trail_shifts</td><td>Number of trail stack expansions </td></tr>
-<tr><td>traillimit</td><td>Size to which the trail stack is allowed to 
-grow </td></tr>
-<tr><td>trailused</td><td>Number of bytes in use on the trail stack </td></tr>
-<tr><td>shift_time</td><td>Time spent in stack-shifts </td></tr>
-<tr><td>stack</td><td>Total memory in use for stacks in all threads </td></tr>
-<tr><td>predicates</td><td>Total number of predicates. This includes 
-predicates that are undefined or not yet resolved. </td></tr>
-<tr><td>indexes_created</td><td>Number of clause index tables creates. </td></tr>
-<tr><td>indexes_destroyed</td><td>Number of clause index tables 
-destroyed. </td></tr>
-<tr><td>process_epoch</td><td>Time stamp when Prolog was started </td></tr>
-<tr><td>process_cputime</td><td>(User) <span style="font-variant:small-caps">CPU</span> 
-time since Prolog was started in seconds </td></tr>
-<tr><td>thread_cputime</td><td>MT-version: Seconds CPU time used by <b>finished</b> 
-threads. The implementation requires non-portable functionality. 
-Currently works on Linux, MacOSX, Windows and probably some more. </td></tr>
-<tr><td>threads</td><td>MT-version: number of active threads </td></tr>
-<tr><td>threads_created</td><td>MT-version: number of created threads </td></tr>
-<tr><td>engines</td><td>MT-version: number of existing engines </td></tr>
-<tr><td>engines_created</td><td>MT-version: number of created engines </td></tr>
-<tr><td>threads_peak</td><td>MT-version: highest id handed out. This is 
-a fair but possibly not 100% accurate value for the highest number of 
-threads since the process was created. </td></tr>
-<tr><td>warnings</td><td>Number of warning mesages printed </td></tr>
-</table>
-<div class="caption"><b>Table 6 : </b>Keys for <a id="idx:statistics2:1799"></a><a class="pred" href="statistics.html#statistics/2">statistics/2</a>. 
-Space is expressed in bytes. Time is expressed in seconds, represented 
-as a floating point number.</div>
-<a id="tab:statistics"></a>
-
-<p><table class="latex frame-box center">
-<tr><td colspan=2 align=center>Compatibility keys (times in 
-milliseconds)</tr>
-<tr class="hline"><td>runtime</td><td>[ CPU time, CPU time since last ] 
-(milliseconds, excluding time spent in garbage collection) </td></tr>
-<tr><td>system_time</td><td>[ System CPU time, System CPU time since 
-last ] (milliseconds)</td></tr>
-<tr><td>real_time</td><td>[ Wall time, Wall time since last ] (integer 
-seconds. See <a id="idx:gettime1:1800"></a><a class="pred" href="system.html#get_time/1">get_time/1</a>) </td></tr>
-<tr><td>walltime</td><td>[ Wall time since start, Wall time since last] 
-(milliseconds, SICStus compatibility) </td></tr>
-<tr><td>memory</td><td>[ Total unshared data, free memory ] (Used is 
-based on <code>ru_idrss</code> from getrusage(). Free is based on <code>RLIMIT_DATA</code> 
-from getrlimit(). Both are reported as zero if the OS lacks support. 
-Free is -1 if getrlimit() is supported but returns infinity.) </td></tr>
-<tr><td>stacks</td><td>[ global use, local use ] </td></tr>
-<tr><td>program</td><td>[ heap use, 0 ] </td></tr>
-<tr><td>global_stack</td><td>[ global use, global free ] </td></tr>
-<tr><td>local_stack</td><td>[ local use, local free ] </td></tr>
-<tr><td>trail</td><td>[ trail use, trail free ] </td></tr>
-<tr><td>garbage_collection</td><td>[ number of GC, bytes gained, time 
-spent, bytes left ] The last column is a SWI-Prolog extension. It 
-contains the sum of the memory left after each collection, which can be 
-divided by the count to find the average working set size after GC. Use <code>[Count, 
-Gained, Time|_]</code> for compatibility. </td></tr>
-<tr><td>stack_shifts</td><td>[ global shifts, local shifts, time spent ] </td></tr>
-<tr><td>atoms</td><td>[ number, memory use, 0 ] </td></tr>
-<tr><td>atom_garbage_collection</td><td>[ number of AGC, bytes gained, 
-time spent ] </td></tr>
-<tr><td>clause_garbage_collection</td><td>[ number of CGC, clauses 
-gained, time spent ] </td></tr>
-<tr><td>core</td><td>Same as memory </td></tr>
-</table>
-<div class="caption"><b>Table 7 : </b>Compatibility keys for <a id="idx:statistics2:1801"></a><a class="pred" href="statistics.html#statistics/2">statistics/2</a>. 
-Time is expressed in milliseconds.</div>
-<a id="tab:qpstatistics"></a>
+<dl class="tags">
+<dt class="tag">See also</dt>
+<dd>
+All statistics printed are obtained through <a class="pred" href="statistics.html#statistics/2">statistics/2</a>.
 </dd>
-<dt class="pubdef"><a id="statistics/0"><strong>statistics</strong></a></dt>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="statistics/1"><strong>statistics</strong>(<var>-Stats:dict</var>)</a></dt>
 <dd class="defbody">
-Display a table of system statistics on the stream <code>user_error</code>.</dd>
-<dt class="pubdef"><a id="time/1"><strong>time</strong>(<var>:Goal</var>)</a></dt>
+<var>Stats</var> is a dict representing the same information as
+<a class="pred" href="statistics.html#statistics/0">statistics/0</a>. 
+This convience function is primarily intended to pass statistical 
+information to e.g., a web client. Time critical code that wishes to 
+collect statistics typically only need a small subset and should use <a class="pred" href="statistics.html#statistics/2">statistics/2</a> 
+to obtain exactly the data they need.</dd>
+<dt class="pubdef"><span class="pred-tag">[nondet]</span><a id="thread_statistics/2"><strong>thread_statistics</strong>(<var>?Thread, 
+-Stats:dict</var>)</a></dt>
 <dd class="defbody">
-Execute <var>Goal</var> just like <a id="idx:call1:1802"></a><a class="pred" href="metacall.html#call/1">call/1</a> 
-and print time used, number of logical inferences and the average number 
-of <var>lips</var> (logical inferences per second). Note that SWI-Prolog 
-counts the actual executed number of inferences rather than the number 
-of passes through the call and redo ports of the theoretical 4-port 
-model. If <var>Goal</var> is non-deterministic, print statistics for 
-each solution, where the reported values are relative to the previous 
-answer.
+Obtain statistical information about a single thread. Fails silently of 
+the <var>Thread</var> is no longer alive.
+<table class="arglist">
+<tr><td><var>Stats</var> </td><td>is a dict containing status, time and 
+stack-size information about <var>Thread</var>. </td></tr>
+</table>
+</dd>
+<dt class="pubdef"><span class="pred-tag">[nondet]</span><a id="time/1"><strong>time</strong>(<var>:Goal</var>)</a></dt>
+<dd class="defbody">
+Execute <var>Goal</var>, reporting statistics to the user. If <var>Goal</var> 
+succeeds non-deterministically, retrying reports the statistics for 
+providing the next answer.
+
+<p>Statistics are retrieved using <a class="pred" href="thmonitor.html#thread_statistics/3">thread_statistics/3</a> 
+on the calling thread. Note that not all systems support thread-specific 
+CPU time. Notable, this is lacking on MacOS X.
+
+<dl class="tags">
+<dt class="mtag">See also</dt>
+<dd>
+- <a class="pred" href="statistics.html#statistics/2">statistics/2</a> 
+for obtaining statistics in your program and understanding the reported 
+values. <br>
+- <a class="pred" href="statistics.html#call_time/2">call_time/2</a>, <a class="pred" href="statistics.html#call_time/3">call_time/3</a> 
+to obtain the timing in a dict.
+</dd>
+<dt class="tag">bug</dt>
+<dd>
+Inference statistics are often a few off.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><a id="call_time/2"><strong>call_time</strong>(<var>:Goal, 
+-Time:dict</var>)</a></dt>
+<dt class="pubdef"><a id="call_time/3"><strong>call_time</strong>(<var>:Goal, 
+-Time:dict, -Result</var>)</a></dt>
+<dd class="defbody">
+Call <var>Goal</var> as <a class="pred" href="metacall.html#call/1">call/1</a>, 
+unifying <var>Time</var> with a dict that provides information on the 
+resource usage. Currently <var>Time</var> contains the keys below. 
+Future versions may provide additional keys.
+
+<p>
+<ul class="compact">
+<li>wall:Seconds
+<li>cpu:Seconds
+<li>inferences:Count
+</ul>
+<table class="arglist">
+<tr><td><var>Result</var> </td><td>is one of <code>true</code> or <code>false</code> 
+depending on whether or not the goal succeeded. </td></tr>
+</table>
+</dd>
+<dt class="pubdef"><a id="profile/1"><strong>profile</strong>(<var>:Goal</var>)</a></dt>
+<dt class="pubdef"><a id="profile/2"><strong>profile</strong>(<var>:Goal, 
++Options</var>)</a></dt>
+<dd class="defbody">
+Run <var>Goal</var> under the execution profiler. Defined options are:
+
+<dl class="latex">
+<dt><strong>time</strong>(<var>Which</var>)</dt>
+<dd class="defbody">
+Profile <code>cpu</code> or <code>wall</code> time. The default is CPU 
+time.
+</dd>
+<dt><strong>top</strong>(<var>N</var>)</dt>
+<dd class="defbody">
+When generating a textual report, show the top <var>N</var> predicates.
+</dd>
+<dt><strong>cumulative</strong>(<var>Bool</var>)</dt>
+<dd class="defbody">
+If <code>true</code> (default <code>false</code>), show cumulative 
+output in a textual report.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><a id="show_profile/1"><strong>show_profile</strong>(<var>+Options</var>)</a></dt>
+<dd class="defbody">
+Display last collected profiling data. <var>Options</var> are
+
+<dl class="latex">
+<dt><strong>top</strong>(<var>N</var>)</dt>
+<dd class="defbody">
+When generating a textual report, show the top <var>N</var> predicates.
+</dd>
+<dt><strong>cumulative</strong>(<var>Bool</var>)</dt>
+<dd class="defbody">
+If <code>true</code> (default <code>false</code>), show cumulative 
+output in a textual report.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="profile_data/1"><strong>profile_data</strong>(<var>-Data</var>)</a></dt>
+<dd class="defbody">
+Gather all relevant data from profiler. This predicate may be called 
+while profiling is active in which case it is suspended while collecting 
+the data. <var>Data</var> is a dict providing the following fields:
+
+<dl class="latex">
+<dt><var><code>summary</code></var><strong><code>:</code></strong><var><var>Dict</var></var></dt>
+<dd class="defbody">
+Overall statistics providing
+
+<p>
+<ul class="latex">
+<li>samples:Count: Times the statistical profiler was called
+<li>ticks:Count Virtual ticks during profiling
+<li>accounting:Count Tick spent on accounting
+<li>time:Seconds Total time sampled
+<li>nodes:Count Nodes in the call graph.
+</ul>
+</dd>
+<dt><strong>nodes</strong></dt>
+<dd class="defbody">
+List of nodes. Each node provides:
+
+<p>
+<ul class="compact">
+<li>predicate:PredicateIndicator
+<li>ticks_self:Count
+<li>ticks_siblings:Count
+<li>call:Count
+<li>redo:Count
+<li>exit:Count
+<li>callers:<code>list_of(Relative)</code>
+<li>callees:<code>list_of(Relative)</code>
+</ul>
+</dd>
+</dl>
+
+<p><i>Relative</i> is a term of the shape below that represents a caller 
+or callee. Future versions are likely to use a dict instead.
+
+<pre class="code">
+node(PredicateIndicator, CycleID, Ticks, TicksSiblings,
+     Calls, Redos, Exits)
+</pre>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[nondet]</span><a id="profile_procedure_data/2"><strong>profile_procedure_data</strong>(<var>?Pred, 
+-Data:dict</var>)</a></dt>
+<dd class="defbody">
+Collect data for <var>Pred</var>. If <var>Pred</var> is unbound data for 
+each predicate that has profile data available is returned. <var>Data</var> 
+is described in
+<a class="pred" href="statistics.html#profile_data/1">profile_data/1</a> 
+as an element of the <code>nodes</code> key.
 </dd>
 </dl>
 

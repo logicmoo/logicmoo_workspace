@@ -409,8 +409,28 @@ txt_message_lines([FmtArgs|T]) -->
 dcg_format(Fmt-Args, List, Tail) :-
     !,
     format(codes(List,Tail), Fmt, Args).
+dcg_format(ansi(_Style, Fmt,Args), List, Tail) :-
+    !,
+    format(codes(List,Tail), Fmt, Args).
+dcg_format(url(Pos), List, Tail) :-
+    !,
+    dcg_url(Pos, List, Tail).
+dcg_format(url(_URL, Label), List, Tail) :-
+    !,
+    format(codes(List,Tail), '~w', [Label]).
 dcg_format(Fmt, List, Tail) :-
     format(codes(List,Tail), Fmt, []).
+
+dcg_url(File:Line:Column, List, Tail) :-
+    !,
+    format(codes(List,Tail), '~w:~d:~d', [File, Line, Column]).
+dcg_url(File:Line, List, Tail) :-
+    !,
+    format(codes(List,Tail), '~w:~d', [File, Line]).
+dcg_url(File, List, Tail) :-
+    !,
+    format(codes(List,Tail), '~w', [File]).
+
 
 %!  prefer_json(+Accept)
 %

@@ -85,14 +85,18 @@ xsdp_uri_type(URI, Type) :-
 %
 %   True if Type is a (transitive) subtype of Super.
 
-xsdp_subtype_of(Type, Type).
+xsdp_subtype_of(Type, Type) :-
+    subtype_of(Type, _).
 xsdp_subtype_of(Type, Super) :-
     (   nonvar(Type)
     ->  subtype_of(Type, Super0),
         Super0 \== (-),
         xsdp_subtype_of(Super0, Super)
-    ;   subtype_of(Sub0, Super),
+    ;   nonvar(Super)
+    ->  subtype_of(Sub0, Super),
         xsdp_subtype_of(Type, Sub0)
+    ;   subtype_of(Type, _),
+        xsdp_subtype_of(Type, Super)
     ).
 
 subtype_of(anyType,            -).
