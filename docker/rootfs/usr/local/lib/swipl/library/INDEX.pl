@@ -13,6 +13,8 @@ index((ansi_format), 3, ansi_term, ansi_term).
 index((ansi_get_color), 2, ansi_term, ansi_term).
 index((ansi_hyperlink), 2, ansi_term, ansi_term).
 index((ansi_hyperlink), 3, ansi_term, ansi_term).
+index((expand_phrase), 2, apply_macros, apply_macros).
+index((expand_phrase), 4, apply_macros, apply_macros).
 index((include), 3, apply, apply).
 index((exclude), 3, apply, apply).
 index((partition), 4, apply, apply).
@@ -30,8 +32,6 @@ index((scanl), 4, apply, apply).
 index((scanl), 5, apply, apply).
 index((scanl), 6, apply, apply).
 index((scanl), 7, apply, apply).
-index((expand_phrase), 2, apply_macros, apply_macros).
-index((expand_phrase), 4, apply_macros, apply_macros).
 index((archive_open), 3, archive, archive).
 index((archive_open), 4, archive, archive).
 index((archive_create), 3, archive, archive).
@@ -175,6 +175,13 @@ index((open_chars_stream), 2, charsio, charsio).
 index((with_output_to_chars), 2, charsio, charsio).
 index((with_output_to_chars), 3, charsio, charsio).
 index((with_output_to_chars), 4, charsio, charsio).
+index((check_installation), 0, check_installation, check_installation).
+index((check_installation), 1, check_installation, check_installation).
+index((check_config_files), 0, check_installation, check_installation).
+index((update_config_files), 0, check_installation, check_installation).
+index((test_installation), 0, check_installation, check_installation).
+index((test_installation), 1, check_installation, check_installation).
+index((check_old_last), 0, checklast, checklast).
 index((check), 0, check, check).
 index((list_undefined), 0, check, check).
 index((list_undefined), 1, check, check).
@@ -191,13 +198,6 @@ index((list_strings), 0, check, check).
 index((list_strings), 1, check, check).
 index((list_rationals), 0, check, check).
 index((list_rationals), 1, check, check).
-index((check_installation), 0, check_installation, check_installation).
-index((check_installation), 1, check_installation, check_installation).
-index((check_config_files), 0, check_installation, check_installation).
-index((update_config_files), 0, check_installation, check_installation).
-index((test_installation), 0, check_installation, check_installation).
-index((test_installation), 1, check_installation, check_installation).
-index((check_old_last), 0, checklast, checklast).
 index((check_old_select), 0, checkselect, checkselect).
 index((chr_show_store), 1, chr, chr).
 index((find_chr_constraint), 1, chr, chr).
@@ -217,7 +217,6 @@ index((with_output_to_codes), 2, codesio, codesio).
 index((with_output_to_codes), 3, codesio, codesio).
 index((with_output_to_codes), 4, codesio, codesio).
 index((coinductive), 1, coinduction, coinduction).
-index((crypt), 2, crypt, crypt).
 index((crypto_n_random_bytes), 2, crypto, crypto).
 index((crypto_data_hash), 3, crypto, crypto).
 index((crypto_file_hash), 3, crypto, crypto).
@@ -247,6 +246,7 @@ index((crypto_name_curve), 2, crypto, crypto).
 index((crypto_curve_order), 2, crypto, crypto).
 index((crypto_curve_generator), 2, crypto, crypto).
 index((crypto_curve_scalar_mult), 4, crypto, crypto).
+index((crypt), 2, crypt, crypt).
 index((csv), 3, csv, csv).
 index((csv), 4, csv, csv).
 index((csv_read_file), 2, csv, csv).
@@ -331,8 +331,6 @@ index((reconsult), 1, edinburgh, edinburgh).
 index((debug), 0, edinburgh, edinburgh).
 index((nodebug), 0, edinburgh, edinburgh).
 index((fileerrors), 2, edinburgh, edinburgh).
-index((edit), 1, prolog_edit, edit).
-index((edit), 0, prolog_edit, edit).
 index((el_wrap), 0, editline, editline).
 index((el_wrap), 4, editline, editline).
 index((el_wrapped), 1, editline, editline).
@@ -349,6 +347,8 @@ index((el_history_events), 2, editline, editline).
 index((el_add_history), 2, editline, editline).
 index((el_write_history), 2, editline, editline).
 index((el_read_history), 2, editline, editline).
+index((edit), 1, prolog_edit, edit).
+index((edit), 0, prolog_edit, edit).
 index((instantiation_error), 1, error, error).
 index((uninstantiation_error), 1, error, error).
 index((type_error), 2, error, error).
@@ -369,8 +369,6 @@ index((fast_write), 1, fastrw, fastrw).
 index((fast_read), 2, fastrw, fastrw).
 index((fast_write), 2, fastrw, fastrw).
 index((fast_write_to_string), 3, fastrw, fastrw).
-index((can_open_file), 2, files, files).
-index((chdir), 1, files, files).
 index((set_time_file), 3, files_ex, filesex).
 index((link_file), 3, files_ex, filesex).
 index((chmod), 2, files_ex, filesex).
@@ -382,6 +380,8 @@ index((make_directory_path), 1, files_ex, filesex).
 index((copy_directory), 2, files_ex, filesex).
 index((delete_directory_and_contents), 1, files_ex, filesex).
 index((delete_directory_contents), 1, files_ex, filesex).
+index((can_open_file), 2, files, files).
+index((chdir), 1, files, files).
 index((reset_gensym), 0, gensym, gensym).
 index((reset_gensym), 1, gensym, gensym).
 index((gensym), 2, gensym, gensym).
@@ -1029,16 +1029,16 @@ index((ord_list_to_rbtree), 2, rbtrees, rbtrees).
 index((is_rbtree), 1, rbtrees, rbtrees).
 index((rb_size), 2, rbtrees, rbtrees).
 index((rb_in), 3, rbtrees, rbtrees).
-index((load_rdf), 2, rdf, rdf).
-index((load_rdf), 3, rdf, rdf).
-index((xml_to_rdf), 3, rdf, rdf).
-index((process_rdf), 3, rdf, rdf).
 index((rdf_diagram_from_file), 1, rdf_diagram, rdf_diagram).
 index((xml_to_plrdf), 3, rdf_parser, rdf_parser).
 index((element_to_plrdf), 3, rdf_parser, rdf_parser).
 index((make_rdf_state), 3, rdf_parser, rdf_parser).
 index((rdf_modify_state), 3, rdf_parser, rdf_parser).
 index((rdf_name_space), 1, rdf_parser, rdf_parser).
+index((load_rdf), 2, rdf, rdf).
+index((load_rdf), 3, rdf, rdf).
+index((xml_to_rdf), 3, rdf, rdf).
+index((process_rdf), 3, rdf, rdf).
 index((rdf_triples), 2, rdf_triple, rdf_triple).
 index((rdf_triples), 3, rdf_triple, rdf_triple).
 index((rdf_reset_ids), 0, rdf_triple, rdf_triple).
@@ -1312,8 +1312,6 @@ index((prefix_string), 3, table, table).
 index((prefix_string), 4, table, table).
 index((sub_string), 3, table, table).
 index((table_version), 2, table, table).
-index((sort_table), 2, table_util, table_util).
-index((verify_table_order), 1, table_util, table_util).
 index((abolish_all_tables), 0, tables, tables).
 index((abolish_module_tables), 1, tables, tables).
 index((abolish_table_pred), 1, tables, tables).
@@ -1332,6 +1330,8 @@ index((get_returns_for_call), 2, tables, tables).
 index((get_residual), 2, tables, tables).
 index((set_pil_on), 0, tables, tables).
 index((set_pil_off), 0, tables, tables).
+index((sort_table), 2, table_util, table_util).
+index((verify_table_order), 1, table_util, table_util).
 index((term_hash), 2, terms, terms).
 index((term_hash), 4, terms, terms).
 index((term_size), 2, terms, terms).

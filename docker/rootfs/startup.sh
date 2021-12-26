@@ -1,8 +1,22 @@
 #!/bin/bash
 
-set +x +e
+set +x
+
 #set +e
 
+if [ -f "/tmp/is_google_collab" ]; then
+ if [ "${TERM}" == "screen" ]; then
+   echo "#* "
+   echo "Good we are already in screen"
+   echo "#* "
+ else
+   echo "#* "
+   screen -list
+   echo "#* "
+  screen -m ${BASH_SOURCE[0]} $*
+  return 0 2>/dev/null ; exit 0
+ fi
+fi
 
 
 export DEBIAN_FRONTEND=noninteractive
@@ -86,6 +100,7 @@ fi
 export LOGICMOO_WS=/opt/logicmoo_workspace
 export DO_PULL=0
 
+if [[ ! -d $LOGICMOO_WS/ ]]; then
 if grep -qs "$LOGICMOO_WS" /proc/mounts; then
      echo "$LOGICMOO_WS already mounted."
      DO_PULL=0
@@ -114,7 +129,7 @@ else
    fi
 
 fi
-
+fi
 
 # check out our repo
 if [[ ! -d $LOGICMOO_WS/.git ]]
@@ -261,5 +276,6 @@ PASSWORD=
 HTTP_PASSWORD=
 
 
-exec /bin/tini -w -vv -- /usr/bin/supervisord -n -c /etc/supervisor/supervisord.conf
- 
+exec tini -w -vv -- /usr/bin/supervisord -n -c /etc/supervisor/supervisord.conf
+
+
