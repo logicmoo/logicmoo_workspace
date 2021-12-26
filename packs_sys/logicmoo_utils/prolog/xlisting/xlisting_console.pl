@@ -1443,8 +1443,29 @@ remove_undef_search:- ((
 
 % :- remove_undef_search.
 
+was_check:list_void_declarations :-
+    P=_:_,
+    (   predicate_property(P, undefined),
+        (   '$get_predicate_attribute'(P, meta_predicate, Pattern),
+            print_message(warning,
+                          check(void_declaration(P,
+                                                 (meta_predicate Pattern))))
+        ;   void_attribute(Attr),
+            '$get_predicate_attribute'(P, Attr, 1),
+            print_message(warning, check(void_declaration(P, Attr)))
+        ),
+        fail
+    ;   predicate_property(P, discontiguous),
+        \+ ( predicate_property(P, number_of_clauses(N)),
+             N>0
+           ),
+        print_message(warning, check(void_declaration(P, discontiguous))),
+        fail
+    ;   true
+    ).
 
-
+:- abolish(check:list_void_declarations/0).
+:- asserta(check:list_void_declarations).
 %= 	 	 
 
 %% mp( ?M, ?P, ?MP) is semidet.
