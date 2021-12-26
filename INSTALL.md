@@ -84,6 +84,8 @@ if [ ! -z "$LOGICMOO_EXTRAS" ];
 
 fi
 
+apt install -y libserd-dev
+
 #apt-add-repository -y ppa:swi-prolog/devel && apt-get install -y swi-prolog elpa-ediprolog swi-prolog-java swi-prolog-odbc swi-prolog-bdb
 
 # check out our repo

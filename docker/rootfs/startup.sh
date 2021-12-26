@@ -86,6 +86,7 @@ fi
 export LOGICMOO_WS=/opt/logicmoo_workspace
 export DO_PULL=0
 
+if [[ ! -d $LOGICMOO_WS/ ]]; then
 if grep -qs "$LOGICMOO_WS" /proc/mounts; then
      echo "$LOGICMOO_WS already mounted."
      DO_PULL=0
@@ -114,7 +115,7 @@ else
    fi
 
 fi
-
+fi
 
 # check out our repo
 if [[ ! -d $LOGICMOO_WS/.git ]]
