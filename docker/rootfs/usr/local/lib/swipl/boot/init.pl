@@ -73,13 +73,8 @@ attempt to call the Prolog defined trace interceptor.
 %   the proper constraint behavior. Needs  to   be  defined early as the
 %   boot code uses it.
 
-memberchk(E, List) :-
-    '$memberchk'(E, List, Tail),
-    (   nonvar(Tail)
-    ->  true
-    ;   Tail = [_|_],
-        memberchk(E, Tail)
-    ).
+memberchk(X,Y):- '$member'(X,Y),!.
+
 
                 /********************************
                 *          DIRECTIVES           *
