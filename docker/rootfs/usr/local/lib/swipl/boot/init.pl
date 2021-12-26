@@ -73,7 +73,7 @@ attempt to call the Prolog defined trace interceptor.
 %   the proper constraint behavior. Needs  to   be  defined early as the
 %   boot code uses it.
 
-memberchk(X,Y):- '$member'(X,Y),!.
+memberchk(E,L):- '$member'(E,L),!.
 
 
                 /********************************

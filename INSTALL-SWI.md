@@ -129,7 +129,7 @@ MAKE=ninja
  #cmake -DCMAKE_INSTALL_PREFIX=$LOGICMOO_WS -G "Unix Makefiles" ..
  #cmake -DBUILD_PDF_DOCUMENTATION=ON -DCMAKE_INSTALL_PREFIX=$LOGICMOO_WS -G "Unix Makefiles" ..
  cmake -DCMAKE_INSTALL_PREFIX=$LOGICMOO_WS -G Ninja ..
- ../scripts/pgo-compile.sh 
+ #../scripts/pgo-compile.sh 
  $MAKE -j 40 
  ctest -j 40
 
@@ -142,15 +142,12 @@ MAKE=ninja
 
  $MAKE install
 
- 
-
  # rm -rf swipl-devel/build
 )
 
-
 (
-cd packs_sys/swicli
-./make-linux.sh
+#cd packs_sys/swicli
+#./make-linux.sh
 )
 
 find packs_* -name "*.qlf"
@@ -159,10 +156,8 @@ find packs_* -name "*.qlf"
 stty sane
 echo "#* MAYBE cat .swiplrc >> ~/.config/swi-prolog/init.pl"
 
-
 #mkdir -p bin/
 #mkdir .local/share/swi-prolog/pack -p
 #chmod 555 .local/share/swi-prolog/pack
-
 )
 stty sane
