@@ -1,0 +1,86 @@
+// Interoperability test1
+
+syntax = "proto2";
+package test;
+
+enum MyEnum {
+  E1 = 0;
+  Enum2 = 1;
+  AnotherEnum = 2;
+  NegEnum = -1; // For testing
+}
+
+message KeyValue {
+  optional string key = 15;
+  optional string value = 128;
+}
+
+message Scalars1 {
+  // .proto types (from https://developers.google.com/protocol-buffers/docs/overview#scalar)
+  // The field # is in strictly increasing order, so that the wire formats are the same
+  // (by default, the C++ and Python implementations output in field # order)
+  // The field #s are high, to exercise the varints used to encode field #s
+  optional double   v_double     =    1;
+  optional float    v_float      =    2;
+  optional int32    v_int32      =  103; // variable-length encoding; inefficient for negative
+  optional int64    v_int64      =  127; // variable-length encoding; inefficient for negative
+  optional uint32   v_uint32     =  128; // variable-length encoding
+  optional uint64   v_uint64     =  666; // variable-length encoding
+  optional sint32   v_sint32     =  777; // variable-length encoding; efficient for negative
+  optional sint64   v_sint64     =  888; // variable-length encoding; efficient for negative
+  optional fixed32  v_fixed32    =  999; // unsigned (always 4 bytes)
+  optional fixed64  v_fixed64    = 1010; // unsigned (always 8 bytes)
+  optional sfixed32 v_sfixed32   = 1011; // (always 4 bytes)
+  optional sfixed64 v_sfixed64   = 1012; // (always 8 byts)
+  optional bool     v_bool       = 1013;
+  optional string   v_string     = 1014; // UTF8
+  optional bytes    v_bytes      = 1015; // blob
+  optional MyEnum   v_enum       = 1016; // same as int32
+  optional string   v_utf8_codes = 1017; // same as v_string
+  optional KeyValue v_key_value  = 9999;
+}
+
+message Repeated1 {
+  // similar to Scalars1, but each item is repeated, and different field numbers
+  // (packed=false is the default, but being explicit because proto3's default is packed=true)
+  repeated double   v_double     =     1 [packed=false];
+  repeated float    v_float      =    12 [packed=false];
+  repeated int32    v_int32      =  1103 [packed=false];
+  repeated int64    v_int64      =  1127 [packed=false];
+  repeated uint32   v_uint32     =  1128 [packed=false];
+  repeated uint64   v_uint64     =  1666 [packed=false];
+  repeated sint32   v_sint32     =  1777 [packed=false];
+  repeated sint64   v_sint64     =  1888 [packed=false];
+  repeated fixed32  v_fixed32    =  1999 [packed=false];
+  repeated fixed64  v_fixed64    = 11010 [packed=false];
+  repeated sfixed32 v_sfixed32   = 11011 [packed=false];
+  repeated sfixed64 v_sfixed64   = 11012 [packed=false];
+  repeated bool     v_bool       = 11013 [packed=false];
+  repeated string   v_string     = 11014 [packed=false];
+  repeated bytes    v_bytes      = 11015 [packed=false];
+  repeated MyEnum   v_enum       = 11016 [packed=false];
+  repeated string   v_utf8_codes = 11017 [packed=false];
+  repeated KeyValue v_key_value  = 99999 [packed=false];
+}
+
+message Packed1 {
+  // similar to Repeated1, but each item is packed where possible
+  repeated double   v_double     =     1 [packed=true];
+  repeated float    v_float      =    12 [packed=true];
+  repeated int32    v_int32      =  1103 [packed=true];
+  repeated int64    v_int64      =  1127 [packed=true];
+  repeated uint32   v_uint32     =  1128 [packed=true];
+  repeated uint64   v_uint64     =  1666 [packed=true];
+  repeated sint32   v_sint32     =  1777 [packed=true];
+  repeated sint64   v_sint64     =  1888 [packed=true];
+  repeated fixed32  v_fixed32    =  1999 [packed=true];
+  repeated fixed64  v_fixed64    = 11010 [packed=true];
+  repeated sfixed32 v_sfixed32   = 11011 [packed=true];
+  repeated sfixed64 v_sfixed64   = 11012 [packed=true];
+  repeated bool     v_bool       = 11013 [packed=true];
+  repeated string   v_string     = 11014 [packed=false];
+  repeated bytes    v_bytes      = 11015 [packed=false];
+  repeated MyEnum   v_enum       = 11016 [packed=true];
+  repeated string   v_utf8_codes = 11017 [packed=false];
+  repeated KeyValue v_key_value  = 99999 [packed=false];
+}

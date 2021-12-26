@@ -1,0 +1,534 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog Unicode library</title>
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white"> 
+<div class="title">SWI-Prolog Unicode library</div>
+<div class="author">Jan Wielemaker <br>
+VU University, Amsterdam <br>
+The Netherlands <br>
+E-mail: <a class="url" href="mailto:J.Wielemaker@cs.vu.nl">J.Wielemaker@cs.vu.nl</a></div>
+<div class="abstract">
+<div class="abstract-title">Abstract</div> This package wraps
+<a class="url" href="http://www.public-software-group.org/utf8proc">utf8proc</a> 
+unicode routines. This library provides the four unicode normalization 
+forms (NFC, NFD, NFKC, NFKD) as well as access to the Unicode character 
+properties.
+</div>
+
+<h1><a id="document-contents">Table of Contents</a></h1>
+
+<div class="toc">
+<div class="toc-h2"><a class="sec" href="#sec:1"><span class="sec-nr">1</span> <span class="sec-title">library(unicode): 
+Unicode string handling</span></a></div>
+<div class="toc-h2"><a class="sec" href="#sec:2"><span class="sec-nr">2</span> <span class="sec-title">License</span></a></div>
+</div>
+
+<p><h2 id="sec:unicode"><a id="sec:1"><span class="sec-nr">1</span> <span class="sec-title">library(unicode): 
+Unicode string handling</span></a></h2>
+
+<p><a id="sec:unicode"></a>
+
+<dl class="tags">
+<dt class="tag">See also</dt>
+<dd>
+<a class="url" href="http://www.public-software-group.org/utf8proc">http://www.public-software-group.org/utf8proc</a>
+</dd>
+</dl>
+
+<p>This library is a wrapper around the
+<a class="url" href="http://www.public-software-group.org/utf8proc">utf8proc</a> 
+library, providing information about Unicode code-points and performing 
+operations (mappings) on Unicode atoms. The central predicate is
+<a class="pred" href="#unicode_map/3">unicode_map/3</a>, mapping a 
+Unicode atom to another Unicode atom using a sequence of operations. The 
+predicates <a class="pred" href="#unicode_nfd/2">unicode_nfd/2</a>, <a class="pred" href="#unicode_nfc/2">unicode_nfc/2</a>,
+<a class="pred" href="#unicode_nfkd/2">unicode_nfkd/2</a> and <a class="pred" href="#unicode_nfkc/2">unicode_nfkc/2</a> 
+implement the four standard Unicode normalization forms.
+
+<p>Lump handling:
+
+<pre class="code">
+U+0020      &lt;-- all space characters (general category Zs)
+U+0027  '   &lt;-- left/right single quotation mark U+2018..2019,
+                modifier letter apostrophe U+02BC,
+                modifier letter vertical line U+02C8
+U+002D  -   &lt;-- all dash characters (general category Pd),
+                minus U+2212
+U+002F  /   &lt;-- fraction slash U+2044,
+                division slash U+2215
+U+003A  :   &lt;-- ratio U+2236
+U+003C  &lt;   &lt;-- single left-pointing angle quotation mark U+2039,
+                left-pointing angle bracket U+2329,
+                left angle bracket U+3008
+U+003E  &gt;   &lt;-- single right-pointing angle quotation mark U+203A,
+                right-pointing angle bracket U+232A,
+                right angle bracket U+3009
+U+005C  \   &lt;-- set minus U+2216
+U+005E  ^   &lt;-- modifier letter up arrowhead U+02C4,
+                modifier letter circumflex accent U+02C6,
+                caret U+2038,
+                up arrowhead U+2303
+U+005F  _   &lt;-- all connector characters (general category Pc),
+                modifier letter low macron U+02CD
+U+0060  `   &lt;-- modifier letter grave accent U+02CB
+U+007C  |   &lt;-- divides U+2223
+U+007E  ~   &lt;-- tilde operator U+223C
+</pre>
+
+<dl class="latex">
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="unicode_map/3"><strong>unicode_map</strong>(<var>+In, 
+-Out, +Options</var>)</a></dt>
+<dd class="defbody">
+Perform unicode normalization operations. <var>Options</var> is a list 
+of operations. Defined operations are:
+
+<dl class="latex">
+<dt><strong>stable</strong></dt>
+<dd class="defbody">
+Unicode Versioning Stability has to be respected.
+</dd>
+<dt><strong>compat</strong></dt>
+<dd class="defbody">
+Compatiblity decomposition (i.e. formatting information is lost)
+</dd>
+<dt><strong>compose</strong></dt>
+<dd class="defbody">
+Return a result with composed characters.
+</dd>
+<dt><strong>decompose</strong></dt>
+<dd class="defbody">
+Return a result with decomposed characters.
+</dd>
+<dt><strong>ignore</strong></dt>
+<dd class="defbody">
+Strip "default ignorable characters"
+</dd>
+<dt><strong>rejectna</strong></dt>
+<dd class="defbody">
+Return an error, if the input contains unassigned code points.
+</dd>
+<dt><strong>nlf2ls</strong></dt>
+<dd class="defbody">
+Indicating that NLF-sequences (LF, CRLF, CR, NEL) are representing a 
+line break, and should be converted to the unicode character for line 
+separation (LS).
+</dd>
+<dt><strong>nlf2ps</strong></dt>
+<dd class="defbody">
+Indicating that NLF-sequences are representing a paragraph break, and 
+should be converted to the unicode character for paragraph separation 
+(PS).
+</dd>
+<dt><strong>nlf2lf</strong></dt>
+<dd class="defbody">
+Indicating that the meaning of NLF-sequences is unknown.
+</dd>
+<dt><strong>stripcc</strong></dt>
+<dd class="defbody">
+Strips and/or convers control characters. NLF-sequences are transformed 
+into space, except if one of the NLF2LS/PS/LF options is given. 
+HorizontalTab (HT) and FormFeed (FF) are treated as a NLF-sequence in 
+this case. All other control characters are simply removed.
+</dd>
+<dt><strong>casefold</strong></dt>
+<dd class="defbody">
+Performs unicode case folding, to be able to do a case-insensitive 
+string comparison.
+</dd>
+<dt><strong>charbound</strong></dt>
+<dd class="defbody">
+Inserts 0xFF bytes at the beginning of each sequence which is 
+representing a single grapheme cluster (see UAX#29).
+</dd>
+<dt><strong>lump</strong></dt>
+<dd class="defbody">
+(e.g. HYPHEN U+2010 and MINUS U+2212 to ASCII "-"). (See module header 
+for details.) If NLF2LF is set, this includes a transformation of 
+paragraph and line separators to ASCII line-feed (LF).
+</dd>
+<dt><strong>stripmark</strong></dt>
+<dd class="defbody">
+Strips all character markings (non-spacing, spacing and enclosing) (i.e. 
+accents) NOTE: this option works only with <code>compose</code> or <code>decompose</code>.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="unicode_nfd/2"><strong>unicode_nfd</strong>(<var>+In, 
+-Out</var>)</a></dt>
+<dd class="defbody">
+Characters are decomposed by canonical equivalence.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="unicode_nfc/2"><strong>unicode_nfc</strong>(<var>+In, 
+-Out</var>)</a></dt>
+<dd class="defbody">
+Characters are decomposed and then recomposed by canonical equivalence. 
+It is possible for the result to be a different sequence of characters 
+than the original.
+
+<dl class="tags">
+<dt class="tag">See also</dt>
+<dd>
+<a class="url" href="http://en.wikipedia.org/wiki/Unicode_equivalence#Normal_forms">http://en.wikipedia.org/wiki/Unicode_equivalence#Normal_forms</a>
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="unicode_nfkd/2"><strong>unicode_nfkd</strong>(<var>+In, 
+-Out</var>)</a></dt>
+<dd class="defbody">
+Characters are decomposed by compatibility equivalence.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="unicode_nfkc/2"><strong>unicode_nfkc</strong>(<var>+In, 
+-Out</var>)</a></dt>
+<dd class="defbody">
+Characters are decomposed by compatibility equivalence, then recomposed 
+by canonical equivalence.</dd>
+<dt class="pubdef"><span class="pred-tag">[nondet]</span><a id="unicode_property/2"><strong>unicode_property</strong>(<var>?Char, 
+?Property</var>)</a></dt>
+<dd class="defbody">
+True if <var>Property</var> is defined for <var>Char</var>. <var>Property</var> 
+is a term Name(Value). Defined property-names are:
+
+<dl class="latex">
+<dt><strong>category</strong>(<var>atom</var>)</dt>
+<dd class="defbody">
+Unicode code category of <var>Char</var>. This is one of Cc, Cf, Cn, Co, 
+Cs, Ll, Lm, Lo, Lt, Lu, Mc, Me, Mn, Nd, Nl, No, Pc, Pd, Pe, Pf, Pi, Po, 
+Ps, Sc, Sk, Sm, So, Zl, Zp, Zs. When testing, a single letter stands for 
+all its subcategories. E.g. to test form a letter, you can use
+
+<pre class="code">
+unicode_property(C, category('L'))
+</pre>
+
+</dd>
+<dt><strong>combining_class</strong>(<var>integer</var>)</dt>
+<dt><strong>bidi_class</strong>(<var>atom</var>)</dt>
+<dt><strong>decomp_type</strong>(<var>atom</var>)</dt>
+<dt><strong>decomp_mapping</strong>(<var>list(code)</var>)</dt>
+<dt><strong>bidi_mirrored</strong>(<var>bool</var>)</dt>
+<dt><strong>uppercase_mapping</strong>(<var>code</var>)</dt>
+<dt><strong>lowercase_mapping</strong>(<var>code</var>)</dt>
+<dt><strong>titlecase_mapping</strong>(<var>code</var>)</dt>
+<dt><strong>comb1st_index</strong>(<var>code</var>)</dt>
+<dt><strong>comb2nd_index</strong>(<var>code</var>)</dt>
+<dt><strong>comp_exclusion</strong>(<var>bool</var>)</dt>
+<dt><strong>ignorable</strong>(<var>bool</var>)</dt>
+<dt><strong>control_boundary</strong>(<var>bool</var>)</dt>
+<dt><strong>extend</strong>(<var>bool</var>)</dt>
+<dt><strong>casefold_mapping</strong>(<var>list(code)</var>)</dt>
+<dd class="defbody">
+</dd>
+</dl>
+
+<dl class="tags">
+<dt class="tag">To be done</dt>
+<dd>
+Complete documentation
+</dd>
+</dl>
+
+</dd>
+</dl>
+
+<p><h2 id="sec:utf8proc-license"><a id="sec:2"><span class="sec-nr">2</span> <span class="sec-title">License</span></a></h2>
+
+<a id="sec:utf8proc-license"></a>
+
+<p>Copyright (c) 2009 Public Software Group e. V., Berlin, Germany
+
+<p>Permission is hereby granted, free of charge, to any person obtaining 
+a copy of this software and associated documentation files (the 
+"Software"), to deal in the Software without restriction, including 
+without limitation the rights to use, copy, modify, merge, publish, 
+distribute, sublicense, and/or sell copies of the Software, and to 
+permit persons to whom the Software is furnished to do so, subject to 
+the following conditions:
+
+<p>The above copyright notice and this permission notice shall be 
+included in all copies or substantial portions of the Software.
+
+<p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, 
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
+CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, 
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE 
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+<p>This software distribution contains derived data from a modified 
+version of the Unicode data files. The following license applies to that 
+data:
+
+<p>COPYRIGHT AND PERMISSION NOTICE
+
+<p>Copyright (c) 1991-2007 Unicode, Inc. All rights reserved. 
+Distributed under the Terms of Use in 
+http://www.unicode.org/copyright.html.
+
+<p>Permission is hereby granted, free of charge, to any person obtaining 
+a copy of the Unicode data files and any associated documentation (the 
+"Data Files") or Unicode software and any associated documentation (the 
+"Software") to deal in the Data Files or Software without restriction, 
+including without limitation the rights to use, copy, modify, merge, 
+publish, distribute, and/or sell copies of the Data Files or Software, 
+and to permit persons to whom the Data Files or Software are furnished 
+to do so, provided that (a) the above copyright notice(s) and this 
+permission notice appear with all copies of the Data Files or Software, 
+(b) both the above copyright notice(s) and this permission notice appear 
+in associated documentation, and (c) there is clear notice in each 
+modified Data File or in the Software as well as in the documentation 
+associated with the Data File(s) or Software that the data or software 
+has been modified.
+
+<p>THE DATA FILES AND SOFTWARE ARE PROVIDED "AS IS", WITHOUT WARRANTY OF 
+ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE 
+WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND 
+NONINFRINGEMENT OF THIRD PARTY RIGHTS. IN NO EVENT SHALL THE COPYRIGHT 
+HOLDER OR HOLDERS INCLUDED IN THIS NOTICE BE LIABLE FOR ANY CLAIM, OR 
+ANY SPECIAL INDIRECT OR CONSEQUENTIAL DAMAGES, OR ANY DAMAGES WHATSOEVER 
+RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF 
+CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN 
+CONNECTION WITH THE USE OR PERFORMANCE OF THE DATA FILES OR SOFTWARE.
+
+<p>Except as contained in this notice, the name of a copyright holder 
+shall not be used in advertising or otherwise to promote the sale, use 
+or other dealings in these Data Files or Software without prior written 
+authorization of the copyright holder.
+
+<p>Unicode and the Unicode logo are trademarks of Unicode, Inc., and may 
+be registered in some jurisdictions. All other trademarks and registered 
+trademarks mentioned herein are the property of their respective owners.
+
+<h1><a id="document-index">Index</a></h1>
+
+<dl>
+<dt class="index-sep">?</dt>
+<dt><a class="idx" href="#unicode_map/3">unicode_map/3</a></dt>
+<dt><a class="idx" href="#unicode_nfc/2">unicode_nfc/2</a></dt>
+<dt><a class="idx" href="#unicode_nfd/2">unicode_nfd/2</a></dt>
+<dt><a class="idx" href="#unicode_nfkc/2">unicode_nfkc/2</a></dt>
+<dt><a class="idx" href="#unicode_nfkd/2">unicode_nfkd/2</a></dt>
+<dt><a class="idx" href="#unicode_property/2">unicode_property/2</a></dt>
+<dd>
+</dd>
+</dl>
+
+</body></html>

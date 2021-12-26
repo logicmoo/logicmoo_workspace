@@ -1,0 +1,709 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog RDF parser</title>
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="title">SWI-Prolog RDF parser</div>
+<div class="author">Jan Wielemaker <br>
+HCS, <br>
+University of Amsterdam <br>
+The Netherlands <br>
+E-mail: <a class="url" href="mailto:jan@swi-prolog.org">jan@swi-prolog.org</a></div>
+<div class="abstract">
+<div class="abstract-title">Abstract</div>
+<a class="url" href="http://www.w3.org/RDF/">RDF</a> (<b>R</b>esource <b>D</b>escription <b>F</b>ormat) 
+is a <a class="url" href="http://www.w3.org/">W3C</a> standard for 
+expressing meta-data about web-resources. It has two representations 
+providing the same semantics. RDF documents are normally transferred as 
+XML documents using the RDF-XML syntax. This format is unsuitable for 
+processing. The parser defined here converts an RDF-XML document into 
+the <em>triple</em> notation. The library <code>library(rdf_write)</code> 
+creates an RDF/XML document from a list of triples.
+</div>
+
+<h1><a id="document-contents">Table of Contents</a></h1>
+
+<div class="toc">
+<div class="toc-h2"><a class="sec" href="#sec:1"><span class="sec-nr">1</span> <span class="sec-title">Introduction</span></a></div>
+<div class="toc-h2"><a class="sec" href="#sec:2"><span class="sec-nr">2</span> <span class="sec-title">Parsing 
+RDF in Prolog</span></a></div>
+<div class="toc-h2"><a class="sec" href="#sec:3"><span class="sec-nr">3</span> <span class="sec-title">Predicates 
+for parsing RDF/XML</span></a></div>
+<div class="toc-h3"><a class="sec" href="#sec:3.1"><span class="sec-nr">3.1</span> <span class="sec-title">RDF 
+Object representation</span></a></div>
+<div class="toc-h3"><a class="sec" href="#sec:3.2"><span class="sec-nr">3.2</span> <span class="sec-title">Name 
+spaces</span></a></div>
+<div class="toc-h3"><a class="sec" href="#sec:3.3"><span class="sec-nr">3.3</span> <span class="sec-title">Low-level 
+access</span></a></div>
+<div class="toc-h2"><a class="sec" href="#sec:4"><span class="sec-nr">4</span> <span class="sec-title">Writing 
+RDF graphs</span></a></div>
+<div class="toc-h2"><a class="sec" href="#sec:5"><span class="sec-nr">5</span> <span class="sec-title">Testing 
+the RDF translator</span></a></div>
+<div class="toc-h2"><a class="sec" href="#sec:6"><span class="sec-nr">6</span> <span class="sec-title">Metrics</span></a></div>
+</div>
+
+<p><h2 id="sec:rdfxml-intro"><a id="sec:1"><span class="sec-nr">1</span> <span class="sec-title">Introduction</span></a></h2>
+
+<a id="sec:rdfxml-intro"></a>
+
+<p>RDF is a promising standard for representing meta-data about 
+documents on the web as well as exchanging frame-based data (e.g. 
+ontologies). RDF is often associated with&lsquo;semantics on the web'. 
+It consists of a formal data-model defined in terms of <em>triples</em>. 
+In addition, a
+<em>graph</em> model is defined for visualisation and an XML application 
+is defined for exchange.
+
+<p>&lsquo;Semantics on the web' is also associated with the Prolog 
+programming language. It is assumed that Prolog is a suitable vehicle to 
+reason with the data expressed in RDF models. Most of the related 
+web-infra structure (e.g. XML parsers, DOM implementations) are defined 
+in Java, Perl, C or C+<code>+</code>.
+
+<p>Various routes are available to the Prolog user. Low-level XML 
+parsing is due to its nature best done in C or C+<code>+</code>. These 
+languages produce fast code. As XML/SGML are at the basis of most of the 
+other web-related formats we will benefit most here. XML and SGML, being 
+very stable specifications, make fast compiled languages even more 
+attractive.
+
+<p>But what about RDF? RDF-XML is defined in XML, and provided with a 
+Prolog term representing the XML document processing it according to the 
+RDF syntax is quick and easy in Prolog. The alternative, getting yet 
+another library and language attached to the system, is getting less 
+attractive. In this document we explore the suitability of Prolog for 
+processing XML documents in general and into RDF in particular.
+
+<p><h2 id="sec:rdfxml-parser"><a id="sec:2"><span class="sec-nr">2</span> <span class="sec-title">Parsing 
+RDF in Prolog</span></a></h2>
+
+<a id="sec:rdfxml-parser"></a>
+
+<p>We realised an RDF compiler in Prolog on top of the <b>sgml2pl</b> 
+package (providing a name-space sensitive XML parser). The 
+transformation is realised in two passes.
+
+<p>The first pass rewrites the XML term into a Prolog term conveying the 
+same information in a more friendly manner. This transformation is 
+defined in a high-level pattern matching language defined on top of 
+Prolog with properties similar to DCG (Definite Clause Grammar).
+
+<p>The source of this translation is very close to the BNF notation used 
+by the <a class="url" href="http://www.w3.org/TR/REC-rdf-syntax/">specification</a>, 
+so correctness is&lsquo;obvious'. Below is a part of the definition for 
+RDF containers. Note that XML elements are represented using a term of 
+the format:
+<blockquote>
+<code>element(Name, [AttrName = Value...], [Content ...])</code>
+</blockquote>
+
+<pre class="code">
+memberElt(LI) ::=
+        \referencedItem(LI).
+memberElt(LI) ::=
+        \inlineItem(LI).
+
+referencedItem(LI) ::=
+        element(\rdf(li),
+                [ \resourceAttr(LI) ],
+                []).
+
+inlineItem(literal(LI)) ::=
+        element(\rdf(li),
+                [ \parseLiteral ],
+                LI).
+inlineItem(description(description, _, _, Properties)) ::=
+        element(\rdf(li),
+                [ \parseResource ],
+                \propertyElts(Properties)).
+inlineItem(LI) ::=
+        element(\rdf(li),
+                [],
+                [\rdf_object(LI)]), !.  % inlined object
+inlineItem(literal(LI)) ::=
+        element(\rdf(li),
+                [],
+                [LI]).                  % string value
+</pre>
+
+<p>Expression in the rule that are prefixed by the <code>\</code> 
+operator acts as invocation of another rule-set. The body-term is 
+converted into a term where all rule-references are replaced by 
+variables. The resulting term is matched and translation of the 
+arguments is achieved by calling the appropriate rule. Below is the 
+Prolog code for the
+<b>referencedItem</b> rule:
+
+<pre class="code">
+referencedItem(A, element(B, [C], [])) :-
+        rdf(li, B),
+        resourceAttr(A, C).
+</pre>
+
+<p>Additional code can be added using a notation close to the Prolog DCG 
+notation. Here is the rule for a description, producing properties both 
+using <b>propAttrs</b> and <b>propertyElts</b>.
+
+<pre class="code">
+description(description, About, BagID, Properties) ::=
+        element(\rdf('Description'),
+                \attrs([ \?idAboutAttr(About),
+                         \?bagIdAttr(BagID)
+                       | \propAttrs(PropAttrs)
+                       ]),
+                \propertyElts(PropElts)),
+        { !, append(PropAttrs, PropElts, Properties)
+        }.
+</pre>
+
+<p><h2 id="sec:rdfxml-predicates"><a id="sec:3"><span class="sec-nr">3</span> <span class="sec-title">Predicates 
+for parsing RDF/XML</span></a></h2>
+
+<a id="sec:rdfxml-predicates"></a>
+
+<p>The parser is designed to operate in various environments and 
+therefore provides interfaces at various levels. First we describe the 
+top level defined in <code>library(rdf)</code>, simply parsing a RDF-XML 
+file into a list of triples. Please note these are <em>not</em> asserted 
+into the database because it is not necessarily the final format the 
+user wishes to reason with and it is not clean how the user wants to 
+deal with multiple RDF documents. Some options are using global URI's in 
+one pool, in Prolog modules or using an additional argument.
+
+<dl class="latex">
+<dt class="pubdef"><a id="load_rdf/2"><strong>load_rdf</strong>(<var>+File, 
+-Triples</var>)</a></dt>
+<dd class="defbody">
+Same as <code>load_rdf(File, Triples,[])</code>.</dd>
+<dt class="pubdef"><a id="load_rdf/3"><strong>load_rdf</strong>(<var>+File, 
+-Triples, +Options</var>)</a></dt>
+<dd class="defbody">
+Read the RDF-XML file <var>File</var> and return a list of <var>Triples</var>.
+<var>Options</var> defines additional processing options. Currently 
+defined options are:
+
+<dl class="latex">
+<dt><strong>base_uri</strong>(<var>BaseURI</var>)</dt>
+<dd class="defbody">
+If provided local identifiers and identifier-references are globalised 
+using this URI. If omited or the atom <code>[]</code>, local identifiers 
+are not tagged.</dd>
+<dt><strong>blank_nodes</strong>(<var>Mode</var>)</dt>
+<dd class="defbody">
+If <var>Mode</var> is <code>share</code> (default), blank-node 
+properties (i.e. complex properties without identifier) are reused if 
+they result in exactly the same triple-set. Two descriptions are shared 
+if their intermediate description is the same. This means they should 
+produce the same set of triples in the same order. The value <code>noshare</code> 
+creates a new resource for each blank node.</dd>
+<dt><strong>expand_foreach</strong>(<var>Boolean</var>)</dt>
+<dd class="defbody">
+If <var>Boolean</var> is <code>true</code>, expand <code>rdf:aboutEach</code> 
+into a set of triples. By default the parser generates
+<code>rdf(each(Container), Predicate, Subject)</code>.</dd>
+<dt><strong>lang</strong>(<var>Lang</var>)</dt>
+<dd class="defbody">
+Define the initial language (i.e. pretend there is an <code>xml:lang</code> 
+declaration in an enclosing element).</dd>
+<dt><strong>ignore_lang</strong>(<var>Bool</var>)</dt>
+<dd class="defbody">
+If <code>true</code>, <code>xml:lang</code> declarations in the document 
+are ignored. This is mostly for compatibility with older versions of 
+this library that did not support language identifiers.</dd>
+<dt><strong>convert_typed_literal</strong>(<var>:ConvertPred</var>)</dt>
+<dd class="defbody">
+If the parser finds a literal with the <code>rdf:datatype</code>=<var>Type</var> 
+attribute, call <code>ConvertPred(+Type, +Content, -Literal)</code>.
+<var>Content</var> is the XML element contentas returned by the XML 
+parser (a list). The predicate must unify <var>Literal</var> with a 
+Prolog representation of <var>Content</var> according to
+<var>Type</var> or throw an exception if the conversion cannot be made.
+
+<p>This option servers two purposes. First of all it can be used to 
+ignore type declarations for backward compatibility of this library. 
+Second it can be used to convert typed literals to a meaningful Prolog 
+representation. E.g. convert&rsquo;42' to the Prolog integer 42 if the 
+type is <code>xsd:int</code> or a related type.</dd>
+<dt><strong>namespaces</strong>(<var>-List</var>)</dt>
+<dd class="defbody">
+Unify <var>List</var> with a list of <var>NS</var>=<var>URL</var> for 
+each encountered <code>xmlns</code>:<var>NS</var>=<var>URL</var> 
+declaration found in the source.</dd>
+<dt><strong>entity</strong>(<var>+Name, +Value</var>)</dt>
+<dd class="defbody">
+Overrule entity declaration in file. As it is common practice to declare 
+namespaces using entities in RDF/XML, this option allows for changing 
+the namespace without changing the file. Multiple of these options are 
+allowed.
+</dd>
+</dl>
+
+<p>The <var>Triples</var> list is a list of <code>rdf(Subject, 
+Predicate, Object)</code> triples. <var>Subject</var> is either a plain 
+resource (an atom), or one of the terms <code>each(URI)</code> or <code>prefix(URI)</code> 
+with the obvious meaning. <var>Predicate</var> is either a plain atom 
+for explicitely non-qualified names or a term
+<var>NameSpace</var><b>:</b><var>Name</var>. If <var>NameSpace</var> is 
+the defined RDF name space it is returned as the atom <code>rdf</code>. 
+Finally, <var>Object</var> is a URI, a <var>Predicate</var> or a term of 
+the format <code>literal(Value)</code> for literal values. <var>Value</var> 
+is either a plain atom or a parsed XML term (list of atoms and 
+elements).
+</dd>
+</dl>
+
+<p><h3 id="sec:rdfobject"><a id="sec:3.1"><span class="sec-nr">3.1</span> <span class="sec-title">RDF 
+Object representation</span></a></h3>
+
+<a id="sec:rdfobject"></a>
+
+<p>The <em>Object</em> (3rd) part of a triple can have several different 
+types. If the object is a resource it is returned as either a plain atom 
+or a term <var>NameSpace</var><b>:</b><var>Name</var>. If it is a 
+literal it is returned as <code>literal(Value)</code>, where <var>Value</var> 
+takes one of the formats defined below.
+
+<p>
+<ul class="latex">
+<li><i>An atom</i><br>
+If the literal <var>Value</var> is a plain atom is a literal value not 
+subject to a datatype or <code>xml:lang</code> qualifier.
+
+<p>
+<li><i><code>lang(LanguageID, Atom)</code></i><br>
+If the literal is subject to an <code>xml:lang</code> qualifier
+<var>LanguageID</var> specifies the language and <var>Atom</var> the 
+actual text.
+
+<p>
+<li><i>A list</i><br>
+If the literal is an XML literal as created by parseType="Literal" , the 
+raw output of the XML parser for the content of the element is returned. 
+This content is a list of
+<code>element(Name, Attributes, Content)</code> and atoms for CDATA 
+parts as described with the SWI-Prolog
+<a class="url" href="http://www.swi-prolog.org/packages/sgml2pl.html">SGML/XML 
+parser</a>.
+
+<p>
+<li><i><code>type(Type, StringValue)</code></i><br>
+If the literal has an <code>rdf:datatype=</code><var>Type</var> a term 
+of this format is returned.
+</ul>
+
+<p><h3 id="sec:rdfxml-name-spaces"><a id="sec:3.2"><span class="sec-nr">3.2</span> <span class="sec-title">Name 
+spaces</span></a></h3>
+
+<a id="sec:rdfxml-name-spaces"></a>
+
+<p>XML name spaces are identified using a URI. Unfortunately various 
+URI's are in common use to refer to RDF. The <code>rdf_parser.pl</code> 
+module therefore defines the namespace as a <a id="idx:multifile1:1"></a><span class="pred-ext">multifile/1</span> 
+predicate, that can be extended by the user. For example, to parse the
+<a class="url" href="http://www.mozilla.org/rdf/doc/inference.html">Netscape 
+OpenDirectory</a>
+<code>structure.rdf</code> file, the following declarations are used:
+
+<pre class="code">
+:- multifile
+        rdf_parser:rdf_name_space/1.
+
+rdf_parser:rdf_name_space('http://www.w3.org/TR/RDF/').
+rdf_parser:rdf_name_space('http://directory.mozilla.org/rdf').
+rdf_parser:rdf_name_space('http://dmoz.org/rdf').
+</pre>
+
+<p>The initial definition of this predicate is given below.
+
+<pre class="code">
+rdf_name_space('http://www.w3.org/1999/02/22-rdf-syntax-ns#').
+rdf_name_space('http://www.w3.org/TR/REC-rdf-syntax').
+</pre>
+
+<p><h3 id="sec:rdfxml-low-level"><a id="sec:3.3"><span class="sec-nr">3.3</span> <span class="sec-title">Low-level 
+access</span></a></h3>
+
+<a id="sec:rdfxml-low-level"></a>
+
+<p>The above defined <a id="idx:loadrdf23:2"></a><a class="pred" href="#load_rdf/2">load_rdf/[2,3]</a> 
+is not always suitable. For example, it cannot deal with documents where 
+the RDF statement is embedded in an XML document. It also cannot deal 
+with really large documents (e.g. the Netscape OpenDirectory project, 
+currently about 90 MBytes), without huge amounts of memory.
+
+<p>For really large documents, the <b>sgml2pl</b> parser can be 
+programmed to handle the content of a specific element (i.e. <code>&lt;rdf:RDF&gt;</code>) 
+element-by-element. The parsing primitives defined in this section can 
+be used to process these one-by-one.
+
+<dl class="latex">
+<dt class="pubdef"><a id="xml_to_rdf/3"><strong>xml_to_rdf</strong>(<var>+XML, 
++BaseURI, -Triples</var>)</a></dt>
+<dd class="defbody">
+Process an XML term produced by <a id="idx:loadstructure3:3"></a><span class="pred-ext">load_structure/3</span> 
+using the
+<code>dialect(xmlns)</code> output option. <var>XML</var> is either a 
+complete <code>&lt;rdf:RDF&gt;</code> element, a list of RDF-objects 
+(container or description) or a single description of container.</dd>
+<dt class="pubdef"><a id="process_rdf/3"><strong>process_rdf</strong>(<var>+Input, 
+:OnTriples, +Options</var>)</a></dt>
+<dd class="defbody">
+
+<p>Exploits the call-back interface of <b>sgml2pl</b>, calling
+<code><var>OnTriples</var>(Triples, File:Line)</code> with the list of 
+triples resulting from a single top level RDF object for each RDF 
+element in the input as well as the source-location where the 
+description started.
+<var>Input</var> is either a file name or term <code>stream(Stream)</code>. 
+When using a stream all triples are associated to the value of the
+<code>base_uri</code> option. This predicate can be used to process 
+arbitrary large RDF files as the file is processed object-by-object. The 
+example below simply asserts all triples into the database:
+
+<pre class="code">
+assert_list([], _).
+assert_list([H|T], Source) :-
+        assert(H),
+        assert_list(T, Source).
+
+?- process_rdf('structure,rdf', assert_list, []).
+</pre>
+
+<p><var>Options</var> are described with <a id="idx:loadrdf3:4"></a><a class="pred" href="#load_rdf/3">load_rdf/3</a>. 
+The option
+<code>expand_foreach</code> is not supported as the container may be in 
+a different description. Additional it provides <code>embedded</code>:
+
+<dl class="latex">
+<dt><strong>embedded</strong>(<var>Boolean</var>)</dt>
+<dd class="defbody">
+The predicate <a id="idx:processrdf3:5"></a><a class="pred" href="#process_rdf/3">process_rdf/3</a> 
+processes arbitrary XML documents, only interpreting the content of <code>rdf:RDF</code> 
+elements. If this option is <code>false</code> (default), it gives a 
+warning on elements that are not processed. The option <code>embedded(true)</code> 
+can be used to process RDF embedded in <em>xhtml</em> without warnings.
+</dd>
+</dl>
+
+<p></dd>
+</dl>
+
+<p><h2 id="sec:rdfxml-write"><a id="sec:4"><span class="sec-nr">4</span> <span class="sec-title">Writing 
+RDF graphs</span></a></h2>
+
+<a id="sec:rdfxml-write"></a>
+
+<p>The library <code>library(rdf_write)</code> provides the inverse of <a id="idx:loadrdf2:6"></a><a class="pred" href="#load_rdf/2">load_rdf/2</a> 
+using the predicate <a id="idx:rdfwritexml2:7"></a><a class="pred" href="#rdf_write_xml/2">rdf_write_xml/2</a>. 
+In most cases the RDF parser is used in combination with the Semweb 
+package providing <code>library(semweb/rdf_db)</code>. This library 
+defines <a id="idx:rdfsave2:8"></a><span class="pred-ext">rdf_save/2</span> 
+to save a named RDF graph from the database to a file. This library 
+writes a list of rdf terms to a stream. It has been developed for the 
+SeRQL server which computes an RDF graph that needs to be transmitted in 
+an HTTP request. As we see this as a typical use-case scenario the 
+library only provides writing to a stream.
+
+<dl class="latex">
+<dt class="pubdef"><a id="rdf_write_xml/2"><strong>rdf_write_xml</strong>(<var>+Stream, 
++Triples</var>)</a></dt>
+<dd class="defbody">
+Write an RDF/XML document to <var>Stream</var> from the list of <var>Triples</var>.
+<var>Stream</var> must use one of the following Prolog stream encodings:
+<code>ascii</code>, <code>iso_latin_1</code> or <code>utf8</code>. 
+Characters that cannot be represented in the encoding are represented as 
+XML entities. Using ASCII is a good idea for documents that can be 
+represented almost completely in ASCII. For more international documents 
+using UTF-8 creates a more compact document that is easier to read.
+
+<pre class="code">
+rdf_write(File, Triples) :-
+        open(File, write, Out, [encoding(utf8)]),
+        call_cleanup(rdf_write_xml(Out, Triples),
+                     close(Out)).
+</pre>
+
+<p></dd>
+</dl>
+
+<p><h2 id="sec:rdfxml-tests"><a id="sec:5"><span class="sec-nr">5</span> <span class="sec-title">Testing 
+the RDF translator</span></a></h2>
+
+<a id="sec:rdfxml-tests"></a>
+
+<p>A test-suite and driver program are provided by <code>rdf_test.pl</code> 
+in the source directory. To run these tests, load this file into Prolog 
+in the distribution directory. The test files are in the directory
+<code>suite</code> and the proper output in <code>suite/ok</code>. 
+Predicates provided by <code>rdf_test.pl</code>:
+
+<dl class="latex">
+<dt class="pubdef"><a id="suite/1"><strong>suite</strong>(<var>+N</var>)</a></dt>
+<dd class="defbody">
+Run test <var>N</var> using the file <code>suite/tN.rdf</code> and 
+display the RDF source, the intermediate Prolog representation and the 
+resulting triples.
+</dd>
+<dt class="pubdef"><a id="passed/1"><strong>passed</strong>(<var>+N</var>)</a></dt>
+<dd class="defbody">
+Process <code>suite/tN.rdf</code> and store the resulting triples in
+<code>suite/ok/tN.pl</code> for later validation by <a id="idx:test0:9"></a><a class="pred" href="#test/0">test/0</a>.
+</dd>
+<dt class="pubdef"><a id="test/0"><strong>test</strong></a></dt>
+<dd class="defbody">
+Run all tests and classify the result.
+</dd>
+</dl>
+
+<p><h2 id="sec:rdfxml-metrics"><a id="sec:6"><span class="sec-nr">6</span> <span class="sec-title">Metrics</span></a></h2>
+
+<a id="sec:rdfxml-metrics"></a>
+
+<p>It took three days to write and one to document the Prolog RDF 
+parser. A significant part of the time was spent understanding the RDF 
+specification.
+
+<p>The size of the source (including comments) is given in the table 
+below.
+
+<p><table class="latex frame-box center">
+<tr><td align=right><b>lines</b></td><td align=right><b>words</b></td><td align=right><b>bytes</b></td><td><b>file</b></td><td><b>function </b></td></tr>
+<tr class="hline"><td align=right>109</td><td align=right>255</td><td align=right>2663</td><td>rdf.pl</td><td>Driver 
+program </td></tr>
+<tr><td align=right>312</td><td align=right>649</td><td align=right>6416</td><td>rdf_parser.pl</td><td>1-st 
+phase parser </td></tr>
+<tr><td align=right>246</td><td align=right>752</td><td align=right>5852</td><td>rdf_triple.pl</td><td>2-nd 
+phase parser </td></tr>
+<tr><td align=right>126</td><td align=right>339</td><td align=right>2596</td><td>rewrite.pl</td><td>rule-compiler </td></tr>
+<tr class="hline"><td align=right>793</td><td align=right>1995</td><td align=right>17527</td><td>total</td><td></td></tr>
+</table>
+
+<p>We also compared the performance using an RDF-Schema file generated 
+by
+<a class="url" href="http://www.smi.stanford.edu/projects/protege/">Protege-2000</a> 
+and interpreted as RDF. This file contains 162 descriptions in 50 
+Kbytes, resulting in 599 triples. Environment: Intel Pentium-II/450 with 
+384 Mbytes memory running SuSE Linux 6.3.
+
+<p>The parser described here requires 0.15 seconds excluding 0.13 
+seconds Prolog startup time to process this file. The
+<a class="url" href="http://www.pro-solutions.com/rdfdemo/">Pro 
+Solutions</a> parser (written in Perl) requires 1.5 seconds exluding 
+0.25 seconds startup time.</body></html>

@@ -1,0 +1,1036 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.5.4 Reference Manual: Section 2.10</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="topvars.html">
+<link rel="next" href="compilation.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="topvars.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="compilation.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:debugoverview"><a id="sec:2.10"><span class="sec-nr">2.10</span> <span class="sec-title">Overview 
+of the Debugger</span></a></h2>
+
+<a id="sec:debugoverview"></a>
+
+<p>Imperative languages like C++, Python or JavaScript execute mostly 
+linear code with some branching and subroutine calls. Their debuggers 
+support stepping through the code and pausing on each line, or running 
+the program until it hits a breakpoint and pauses. When paused, the user 
+can inspect the current program state or give the debugger commands.
+
+<p>Prolog has a logical execution model that involves attempting to 
+prove logical predicates and needs a different debugging approach. 
+SWI-Prolog uses the traditional Prolog "Byrd Box Model" or "4 Port 
+Model" debugging approach described by <cite><a class="cite" href="Bibliography.html#byrd:80">Byrd, 
+1980</a>, <a class="cite" href="Bibliography.html#Clocksin:87">Clocksin &amp; 
+Melish, 1987</a></cite> with a couple of extensions to implement its 
+command line debugger. There are two other debuggers available that 
+build on this infrastructure: a <a class="url" href="https://www.swi-prolog.org/gtrace.html">graphical 
+debugger</a> and remote debugging in the web interface provided by <a class="url" href="https://swish.swi-prolog.org/">SWISH</a>.
+
+<p>Reference information to all predicates available for manipulating 
+the debugger is in the debugger section (<a class="sec" href="debugger.html#sec:4.39">section 
+4.39</a>).
+
+<p><h3 id="sec:byrd-box-model"><a id="sec:2.10.1"><span class="sec-nr">2.10.1</span> <span class="sec-title">The 
+Byrd Box Model And Ports</span></a></h3>
+
+<p><a id="sec:byrd-box-model"></a>
+
+<p>Standard Prolog debugging tools are built around the so-called "Byrd 
+Box Model" or "4 Port Model" which models each predicate in a Prolog 
+program as a state machine ("box") that transitions through states 
+("ports") as a program is evaluated. The developer can ask the engine to 
+pause for program inspection when it reaches specific ports or 
+predicates.
+
+<p>As we go through this overview, remember that a "port" is just 
+another word for a "state" in the state machine that each predicate 
+transitions through during evaluation. The state machine is called a 
+"box" because it is drawn like this:
+
+<pre class="code">
+                *--------------------------------------*
+         Call   |                                      |   Exit
+     ---------&gt; +  descendant(X,Y) :- offspring(X,Y).  + ---------&gt;
+                |                                      |
+                |  descendant(X,Z) :-                  |
+     &lt;--------- +     offspring(X,Y), descendant(Y,Z). + &lt;---------
+         Fail   |                                      |   Redo
+                *--------------------------------------*
+</pre>
+
+<p>The standard ports are: <code>call</code>, <code>redo</code>, <code>exit</code> 
+and <code>fail</code>. SWI-Prolog extends this with two more: <code>unify</code> 
+and <code>exception</code>. Each trace happens at a particular phase of 
+predicate resolution. Recall that when resolving or "proving" a 
+predicate, the Prolog engine:
+
+<p>
+<ol class="latex">
+<li>Collects all rules that <b>might</b> match by having a head with the 
+same name and number of arguments
+
+<p>
+<ul class="latex">
+<li><code>call</code> is traced, once, if <b>any</b> rules might match.
+<li><code>redo</code> is also traced when the engine backtracks to find 
+the next matching rule.
+</ul>
+
+<p>
+<li>Finds the next matching rule whose head can be unified with the 
+predicate
+
+<p>
+<ul class="latex">
+<li><code>unify</code> is traced with the results of unification if one 
+is found.
+<li><code>fail</code> is traced if no rule heads can be unified.
+</ul>
+
+<p>
+<li>Applies variable assignments from unification to clauses in the rule 
+body and continues at #1 with the updated clauses
+<li>After <b>all</b> of the body clauses of the matched rule have either 
+succeeded, failed, or thrown an exception:
+
+<p>
+<ul class="latex">
+<li><code>exit</code> is traced if all of them succeeded (meaning this 
+rule is true).
+<li><code>fail</code> is traced if any of them failed (meaning this rule 
+is false).
+<li><code>exception</code> is traced if any of them threw an exception.
+</ul>
+
+<p>This means there can be <b>a lot</b> of traces between the initial <code>call</code> 
+and the end of tracing for a particular predicate.
+</ol>
+
+<p><h3 id="sec:trace-example"><a id="sec:2.10.2"><span class="sec-nr">2.10.2</span> <span class="sec-title">Trace 
+Mode Example</span></a></h3>
+
+<p><a id="sec:trace-example"></a>
+
+<p>The <a class="pred" href="debugger.html#trace/0">trace/0</a> 
+predicate turns on "trace mode", which, by default, produces a trace and 
+pauses at every port of every predicate to allow inspection of the state 
+of the program. This is normally done from the Prolog console window, 
+but for embedded Prolog systems or when Prolog runs as a daemon it can 
+also be done by getting a prompt via the
+<a class="url" href="https://www.swi-prolog.org/pack/list?p=libssh">libssh</a> 
+package.
+<blockquote> Note: If the native graphics plugin (XPCE) is available, 
+the commands <a class="pred" href="guitracer.html#gtrace/0">gtrace/0</a> 
+and <a class="pred" href="guitracer.html#gspy/1">gspy/1</a> activate the 
+graphical debugger while <a class="pred" href="thutil.html#tdebug/0">tdebug/0</a> 
+and <a class="pred" href="thutil.html#tspy/1">tspy/1</a> allow debugging 
+of arbitrary threads.
+</blockquote>
+
+<p>Each goal is printed using the Prolog predicate <a class="pred" href="termrw.html#write_term/2">write_term/2</a>. 
+The style is defined by the Prolog flag <a class="flag" href="flags.html#flag:debugger_write_options">debugger_write_options</a> 
+and can be modified using this flag or using the <code>w</code>, <code>p</code> 
+and <code>d</code> commands of the tracer (<a class="sec" href="debugoverview.html#sec:2.10.4.3">section 
+2.10.4.3</a>).
+
+<p>Here's an example debugging session that shows the basic flow. The
+<code>unify</code> port is off by default since it doesn't add a lot of 
+information in most cases for the command line debugger.
+
+<pre class="code">
+is_a(rock1, rock).
+is_a(rock2, rock).
+color(rock1, red).
+
+noun(X, Type) :- is_a(X, Type).
+adjective(X, color, Value) :- color(X, Value).
+</pre>
+
+<pre class="code">
+?- trace.
+true.
+
+[trace]  ?- noun(X, rock), adjective(X, color, red).
+   Call: (11) noun(_9774, rock) ? creep
+</pre>
+
+<p>The <a class="pred" href="debugger.html#trace/0">trace/0</a> 
+predicate turned on trace mode, which is now indicated at every prompt 
+by <code>[trace] ?-</code>. The initial query provided by the user was
+<code>noun(X, rock), adjective(X, color, red)</code> which is asking to 
+find a "red rock". Finally: the first port triggered was a <var>Call</var> 
+to the first predicate in the initial query, indicating the engine is 
+about to look for the first rule that matches <code>noun(_9774, rock)</code>.
+
+<p>Pressing <code>spacebar</code>, <code>c</code>, or <code>enter</code> 
+caused the tracer to print <code>creep</code> followed by the next 
+trace. There are many additional commands available that are described 
+later in the overview.
+
+<pre class="code">
+is_a(rock1, rock).
+is_a(rock2, rock).
+color(rock1, red).
+
+noun(X, Type) :- is_a(X, Type).
+adjective(X, color, Value) :- color(X, Value).
+</pre>
+
+<pre class="code">
+[trace]  ?- noun(X, rock), adjective(X, color, red).
+...
+   Call: (12) is_a(_9774, rock) ? creep
+   Exit: (12) is_a(rock1, rock) ? creep
+   Exit: (11) noun(rock1, rock) ? creep
+...
+</pre>
+
+<p>Next, the first clause of noun/2 gets a <code>call</code> trace since 
+the engine is trying to find the next rule that matches <code>is_a(_9774, rock)</code>. 
+Since there <b>is</b> a fact that can unify: <code>is_a(rock1, rock)</code>, 
+the trace shows <code>exit</code> (i.e. succeeded) along with that 
+value. Since that was the final predicate in the body of noun/2 , noun/2 
+also gets an
+<code>exit</code> trace that shows the unified value of its head:
+<code>noun(rock1, rock)</code>.
+
+<pre class="code">
+is_a(rock1, rock).
+is_a(rock2, rock).
+color(rock1, red).
+
+noun(X, Type) :- is_a(X, Type).
+adjective(X, color, Value) :- color(X, Value).
+</pre>
+
+<pre class="code">
+[trace]  ?- noun(X, rock), adjective(X, color, red).
+...
+   Call: (11) adjective(rock1, color, red) ? creep
+   Call: (12) color(rock1, red) ? creep
+   Exit: (12) color(rock1, red) ? creep
+   Exit: (11) adjective(rock1, color, red) ? creep
+   X = rock1 ;
+...
+</pre>
+
+<p>Prolog then moved to the next predicate in the initial query: 
+adjective/3 and solved it in a similar way. Since that was the last 
+predicate in the query, an answer was returned. Pressing <code>;</code> 
+requested the next answer and began Prolog backtracking.
+
+<pre class="code">
+is_a(rock1, rock).
+is_a(rock2, rock).
+color(rock1, red).
+
+noun(X, Type) :- is_a(X, Type).
+adjective(X, color, Value) :- color(X, Value).
+</pre>
+
+<pre class="code">
+[trace]  ?- noun(X, rock), adjective(X, color, red).
+...
+   Redo: (12) is_a(_9774, rock) ? creep
+   Exit: (12) is_a(rock2, rock) ? creep
+   Exit: (11) noun(rock2, rock) ? creep
+   Call: (11) adjective(rock2, color, red) ? creep
+   Call: (12) color(rock2, red) ? creep
+   Fail: (12) color(rock2, red) ? creep
+   Fail: (11) adjective(rock2, color, red) ? creep
+false.
+</pre>
+
+<p>The only choice point to <code>redo</code> (i.e. backtrack over) was 
+the is_a/2 clause of noun/2 since there was one potential match left to 
+attempt to unify: <code>is_a(rock2, rock)</code>. This succeeds with an <code>exit</code> 
+trace since it does unify with the <code>redo</code> predicate and 
+causes <code>noun(rock2, rock)</code> to also succeed with <code>exit</code> 
+just as above.
+
+<p>As the traces continue, you can see the <code>fail</code> port get 
+activated for
+<code>color(rock2, red)</code> since there is no way to prove that 
+predicate and thus the whole query returns <code>false</code>.
+
+<p>Tracing will continue for every query you pose until you enter
+<code>notrace.</code> to turn off trace mode.
+
+<p><h3 id="sec:trace-options"><a id="sec:2.10.3"><span class="sec-nr">2.10.3</span> <span class="sec-title">Trace 
+Mode Options: leash/1 and visible/1</span></a></h3>
+
+<p><a id="sec:trace-options"></a>
+
+<p>When you enable trace mode with <a class="pred" href="debugger.html#trace/0">trace/0</a>, 
+the tracer will, by default, pause and wait for a command at every port 
+it hits on every predicate. The <a class="pred" href="debugger.html#leash/1">leash/1</a> 
+predicate can be used to modify the ports to pause at. This is a global 
+setting, so changes will remain until they are changed again or 
+SWI-Prolog is restarted. Disabling the tracer via <a class="pred" href="debugger.html#notrace/0">notrace/0</a> 
+doesn't affect which ports are leashed.
+
+<p>The <a class="pred" href="debugger.html#leash/1">leash/1</a> argument 
+must start with <code>+</code> to add, or <code>-</code> to remove, 
+followed by the name of a port such as <code>call</code>, <code>exit</code>, 
+etc. There are special terms like <code>all</code> which can be used 
+instead of manually adding or removing every port.
+
+<p>To stop only at the fail port, use <a class="pred" href="debugger.html#leash/1">leash/1</a> 
+like this:
+
+<pre class="code">
+?- leash(-all).
+true.
+
+?- leash(+fail).
+true.
+
+?- trace.
+true.
+
+[trace]  ?- noun(X, rock), adjective(X, color, red).
+   Call: (11) noun(_3794, rock)
+   Call: (12) is_a(_3794, rock)
+   Exit: (12) is_a(rock1, rock)
+   Exit: (11) noun(rock1, rock)
+   Call: (11) adjective(rock1, color, red)
+   Call: (12) color(rock1, red)
+   Exit: (12) color(rock1, red)
+   Exit: (11) adjective(rock1, color, red)
+X = rock1 ;
+   Redo: (12) is_a(_3794, rock)
+   Exit: (12) is_a(rock2, rock)
+   Exit: (11) noun(rock2, rock)
+   Call: (11) adjective(rock2, color, red)
+   Call: (12) color(rock2, red)
+   Fail: (12) color(rock2, red) ? creep
+   Fail: (11) adjective(rock2, color, red) ? creep
+false.
+</pre>
+
+<p>Now, only the lines that start with "Fail:" have "creep" after them 
+because that was the only time the tracer paused for a command. To never 
+pause and just see all the traces, use <code>leash(-all)</code> and 
+don't turn any ports back on.
+
+<p>The default ports are still printed out because a different setting,
+<a class="pred" href="debugger.html#visible/1">visible/1</a>, controls 
+which ports are printed. <a class="pred" href="debugger.html#visible/1">visible/1</a> 
+takes the same form of argument as <a class="pred" href="debugger.html#leash/1">leash/1</a>. 
+To only stop and show the <code>fail</code> port, use
+<a class="pred" href="debugger.html#leash/1">leash/1</a> and <a class="pred" href="debugger.html#visible/1">visible/1</a> 
+like this:
+
+<pre class="code">
+?- leash(-all).
+true.
+
+?- leash(+fail).
+true.
+
+?- visible(-all).
+true.
+
+?- visible(+fail).
+true.
+
+?- trace.
+true.
+
+[trace]  ?- noun(X, rock), adjective(X, color, red).
+X = rock1 ;
+   Fail: (12) color(rock2, red) ? creep
+   Fail: (11) adjective(rock2, color, red) ? creep
+false.
+</pre>
+
+<p><h3 id="sec:trace-commands"><a id="sec:2.10.4"><span class="sec-nr">2.10.4</span> <span class="sec-title">Trace 
+Mode Commands When Paused</span></a></h3>
+
+<p><a id="sec:trace-commands"></a>
+
+<p>You can do way more than just press <code>spacebar</code> when the 
+tracer is paused at a port. All actions are single-character commands 
+which are executed
+<b>without</b> waiting for a return (unless the command line option
+<code>--no-tty</code> is active). Pressing <code>?</code> or <code>h</code> 
+when paused will print out a list of these commands as well.
+
+<p><h4 id="sec:trace-control-flow-commands"><a id="sec:2.10.4.1"><span class="sec-nr">2.10.4.1</span> <span class="sec-title">Control 
+Flow Commands</span></a></h4>
+
+<p><a id="sec:trace-control-flow-commands"></a>
+<blockquote>
+<table class="latex frame-box">
+<tr><td><b>Abort</b> </td><td>a</td><td>Abort Prolog execution (see <a class="pred" href="toplevel.html#abort/0">abort/0</a>) </td></tr>
+<tr><td><b>Break</b> </td><td>b</td><td>Enter a Prolog break environment 
+(see <a class="pred" href="toplevel.html#break/0">break/0</a>) </td></tr>
+<tr><td><b>Creep</b> </td><td>c</td><td>Continue execution, stop at next 
+port. (Also <code>return</code>, <code>space</code>) </td></tr>
+<tr><td><b>Exit</b> </td><td>e</td><td>Terminate Prolog (see <a class="pred" href="toplevel.html#halt/0">halt/0</a>) </td></tr>
+<tr><td><b>Fail</b> </td><td>f</td><td>Force failure of the current goal </td></tr>
+<tr><td><b>Find</b> </td><td>/</td><td>Search for a port (see below for 
+the description of this command (<a class="sec" href="debugoverview.html#sec:2.10.4.1">section 
+2.10.4.1</a>)) </td></tr>
+<tr><td><b>Ignore</b> </td><td>i</td><td>Ignore the current goal, 
+pretending it succeeded </td></tr>
+<tr><td><b>Leap</b> </td><td>l</td><td>Continue execution, stop at next 
+spy point </td></tr>
+<tr><td><b>No debug</b> </td><td>n</td><td>Continue execution in&rsquo;no 
+debug' mode </td></tr>
+<tr><td><b>Repeat find</b> </td><td>.</td><td>Repeat the last find 
+command (see&rsquo;Find' (<a class="sec" href="debugoverview.html#sec:2.10.4.1">section 
+2.10.4.1</a>)) </td></tr>
+<tr><td><b>Retry</b> </td><td>r</td><td>Undo all actions (except for 
+database and I/O actions) back to the <code>call</code> port of the 
+current goal and resume execution at the <code>call</code> port </td></tr>
+<tr><td><b>Skip</b> </td><td>s</td><td>Continue execution, stop at the 
+next port of <b>this</b> goal (thus skipping all calls to children of 
+this goal) </td></tr>
+<tr><td><b>Spy</b> </td><td>+</td><td>Set a spy point (see <a class="pred" href="debugger.html#spy/1">spy/1</a>) 
+on the current predicate. Spy points are described later in the overview 
+(<a class="sec" href="debugoverview.html#sec:2.10.6">section 2.10.6</a>). </td></tr>
+<tr><td><b>No spy</b> </td><td>-</td><td>Remove the spy point (see <a class="pred" href="debugger.html#nospy/1">nospy/1</a>) 
+from the current predicate. Spy points are described later in the 
+overview (<a class="sec" href="debugoverview.html#sec:2.10.6">section 
+2.10.6</a>). </td></tr>
+<tr><td><b>Up</b> </td><td>u</td><td>Continue execution, stop at the 
+next port of <b>the parent</b> goal (thus skipping this goal and all 
+calls to children of this goal). This option is useful to stop tracing a 
+failure driven loop. </td></tr>
+</table>
+</blockquote>
+
+<p><b>Find (<code><code>/</code></code>) Description and Examples</b> <a id="sec:trace-find-command"></a>
+
+<p>The Find (<code>/</code>) command continues execution until a port 
+matching a find pattern is found. After the <code>/</code>, the user can 
+enter a line to specify the port to search for. This line consists of a 
+set of letters indicating the port type, followed by an optional term, 
+that should unify with the goal run by the port. If no term is specified 
+it is taken as a variable, searching for any port of the specified type. 
+If an atom is given, any goal whose functor has a name equal to that 
+atom matches. Examples:
+<blockquote>
+<table class="latex frame-box">
+<tr><td>/f</td><td>Search for any <code>fail</code> port </td></tr>
+<tr><td>/fe solve</td><td>Search for a <code>fail</code> or <code>exit</code> 
+port of any goal with name <code>solve</code> </td></tr>
+<tr><td>/c <code>solve(a, _)</code> </td><td>Search for a call to <span class="pred-ext">solve/2</span> 
+whose first argument is a variable or the atom <code>a</code> </td></tr>
+<tr><td>/a <code>member(_, _)</code> </td><td>Search for any port on <a class="pred" href="lists.html#member/2">member/2</a>. 
+This is equivalent to setting a spy point on <a class="pred" href="lists.html#member/2">member/2</a>. </td></tr>
+</table>
+</blockquote>
+
+<p><h4 id="sec:trace-information-commands"><a id="sec:2.10.4.2"><span class="sec-nr">2.10.4.2</span> <span class="sec-title">Informational 
+Commands</span></a></h4>
+
+<p><a id="sec:trace-information-commands"></a>
+<blockquote>
+<table class="latex frame-box">
+<tr><td><b>Alternatives</b> </td><td>A</td><td>Show all goals that have 
+alternatives </td></tr>
+<tr><td><b>Goals</b> </td><td>g</td><td>Show the list of parent goals 
+(the execution stack). Note that due to tail recursion optimization a 
+number of parent goals might not exist any more. </td></tr>
+<tr><td><b>Help</b> </td><td>h</td><td>Show available options (also <code>?</code>) </td></tr>
+<tr><td><b>Listing</b> </td><td>L</td><td>List the current predicate 
+with <a class="pred" href="listing.html#listing/1">listing/1</a> </td></tr>
+</table>
+</blockquote>
+
+<p><h4 id="sec:trace-formatting-commands"><a id="sec:2.10.4.3"><span class="sec-nr">2.10.4.3</span> <span class="sec-title">Formatting 
+Commands</span></a></h4>
+
+<p><a id="sec:trace-formatting-commands"></a>
+<blockquote>
+<table class="latex frame-box">
+<tr><td><b>Context</b> </td><td>C</td><td>Toggle&rsquo;Show Context'. If <code>on</code>, 
+the context module of the goal is displayed between square brackets (see 
+modules section (<a class="sec" href="modules.html#sec:6">section 6</a>)). 
+Default is <code>off</code>. </td></tr>
+<tr><td><b>Display</b> </td><td>d</td><td>Set the <code>max_depth(Depth)</code> 
+option of debugger_write_options (<a class="sec" href="flags.html#sec:2.12">section 
+2.12</a>), limiting the depth to which terms are printed. See also the <code>w</code> 
+and <code>p</code> options. </td></tr>
+<tr><td><b>Print</b> </td><td>p</td><td>Set the Prolog flag <a class="flag" href="flags.html#flag:debugger_write_options">debugger_write_options</a> 
+to <code>[quoted(true), portray(true), max_depth(10), priority(699)]</code>. 
+This is the default. </td></tr>
+<tr><td><b>Write</b> </td><td>w</td><td>Set the Prolog flag <a class="flag" href="flags.html#flag:debugger_write_options">debugger_write_options</a> 
+to <code>[quoted(true), attributes(write), priority(699)]</code>, 
+bypassing <a class="pred" href="termrw.html#portray/1">portray/1</a>, 
+etc. </td></tr>
+</table>
+</blockquote>
+
+<p><h3 id="sec:trace-mode-vs-point"><a id="sec:2.10.5"><span class="sec-nr">2.10.5</span> <span class="sec-title">Trace 
+Mode vs. Trace Point</span></a></h3>
+
+<p><a id="sec:trace-mode-vs-point"></a>
+
+<p>A slight detour is useful to describe some related predicates that 
+can be confusing: To only trace a single or select set of predicates, 
+the
+<a class="pred" href="debugger.html#trace/1">trace/1</a> or <a class="pred" href="debugger.html#trace/2">trace/2</a> 
+predicates can be used to set a <b>trace point</b>. Even though they use 
+the same base predicate name <code>trace</code>, these predicates ignore 
+the <a class="pred" href="debugger.html#leash/1">leash/1</a> and <a class="pred" href="debugger.html#visible/1">visible/1</a> 
+global settings and don't pause when they trace a port. They really are 
+a different feature that also happens to do tracing.
+
+<p>A <b>trace point</b> is set on a particular predicate and traces the 
+ports of that predicate <b>whether or not you are in <a class="pred" href="debugger.html#trace/0">trace/0</a> 
+trace mode</b>. Each trace point can trace different ports if the <a class="pred" href="debugger.html#trace/2">trace/2</a> 
+variant is used.
+
+<pre class="code">
+?- trace(is_a/2).
+%         is_a/2: [all]
+true.
+
+?- noun(X, rock), adjective(X, color, red).
+ T Call: is_a(_25702, rock)
+ T Exit: is_a(rock1, rock)
+X = rock1 ;
+ T Redo: is_a(rock1, rock)
+ T Exit: is_a(rock2, rock)
+false.
+</pre>
+
+<p>Notice that <b>trace mode</b> did not have to be turned on using <a class="pred" href="debugger.html#trace/0">trace/0</a>
+<b>and</b> that this only traced out the ports hit while executing 
+is_a/2
+<b>and</b> that the program was not ever paused.
+
+<p>In fact, if trace mode is turned on while using a trace point, things 
+get very confusing because the trace point infrastructure itself will be 
+traced!
+
+<pre class="code">
+?- trace(is_a/2).
+%         is_a/2: [all]
+true.
+
+?- trace.
+true.
+
+[trace]  ?- noun(X, rock), adjective(X, color, red).
+   Call: (11) noun(_29318, rock) ? creep
+   Call: (12) is_a(_29318, rock) ? creep
+   Call: (13) print_message(debug, frame(user:is_a(_29318, rock), trace(call))) ? creep
+   Call: (18) push_msg(frame(user:is_a(_29318, rock), trace(call))) ? creep
+   Call: (21) exception(undefined_global_variable, '$inprint_message', _30046) ? creep
+   Fail: (21) exception(undefined_global_variable, '$inprint_message', _30090) ? creep
+   Exit: (18) push_msg(frame(user:is_a(_29318, rock), trace(call))) ? creep
+   Call: (19) prolog:message(frame(user:is_a(_29318, rock), trace(call)), _30140, _30142) ? creep
+   Fail: (19) prolog:message(frame(user:is_a(_29318, rock), trace(call)), _30140, _30142) ? creep
+   Call: (19) message_property(debug, stream(_30192)) ? creep
+   Fail: (19) message_property(debug, stream(_30192)) ? creep
+   Call: (20) message_property(debug, prefix(_30200)) ? creep
+   Fail: (20) message_property(debug, prefix(_30200)) ? creep
+ T Call: is_a(_29318, rock)
+   Call: (17) pop_msg ? creep
+   Exit: (17) pop_msg ? creep
+   ...Lots more after this...
+</pre>
+
+<p>So, trace <b>points</b> are a confusingly named and separate feature 
+from trace <b>mode</b>.
+
+<p><h3 id="sec:spy-points-debug-mode"><a id="sec:2.10.6"><span class="sec-nr">2.10.6</span> <span class="sec-title">Spy 
+Points and Debug Mode</span></a></h3>
+
+<p><a id="sec:spy-points-debug-mode"></a>
+
+<p>Back to trace mode features: Because the tracing output of a Prolog 
+program can often be quite large, sometimes it is useful to start trace 
+mode at a particular point deep in the program. This is what a <b>spy 
+point</b> is for. It specifies a predicate that should turn on trace 
+mode.
+
+<p>A spy point is enabled like this: <code>spy(mypredicate/2)</code>. 
+After that command, the first time mypredicate/2 is encountered, trace 
+mode will turn on and work just like it does normally. This includes 
+paying attention to the global <a class="pred" href="debugger.html#leash/1">leash/1</a> 
+and <a class="pred" href="debugger.html#visible/1">visible/1</a> 
+settings. The spy point can be removed using <a class="pred" href="debugger.html#nospy/1">nospy/1</a> 
+or <a class="pred" href="debugger.html#nospyall/0">nospyall/0</a>.
+
+<pre class="code">
+is_a(rock1, rock).
+is_a(rock2, rock).
+color(rock1, red).
+
+noun(X, Type) :- is_a(X, Type).
+adjective(X, color, Value) :- color(X, Value).
+</pre>
+
+<pre class="code">
+?- spy(is_a/2).
+% Spy point on is_a/2
+true.
+
+[debug]  ?- noun(X, rock), adjective(X, color, red).
+ * Call: (12) is_a(_1858, rock) ? creep
+ * Exit: (12) is_a(rock1, rock) ? creep
+   Exit: (11) noun(rock1, rock) ? creep
+   Call: (11) adjective(rock1, color, red) ? creep
+   Call: (12) color(rock1, red) ? creep
+   Exit: (12) color(rock1, red) ? creep
+   Exit: (11) adjective(rock1, color, red) ? creep
+X = rock1 ;
+ * Redo: (12) is_a(_1858, rock) ? creep
+ * Exit: (12) is_a(rock2, rock) ? creep
+   Exit: (11) noun(rock2, rock) ? creep
+   Call: (11) adjective(rock2, color, red) ? creep
+   Call: (12) color(rock2, red) ? creep
+   Fail: (12) color(rock2, red) ? creep
+   Fail: (11) adjective(rock2, color, red) ? creep
+false.
+</pre>
+
+<p>After the spy point is hit, the output above is identical to the 
+traces generated by running <a class="pred" href="debugger.html#trace/0">trace/0</a> 
+with the initial query, but is obviously missing all of the traces 
+before the spy point.
+
+<p>Note that after <a class="pred" href="debugger.html#spy/1">spy/1</a> 
+is called, there is a new tag in front of <code>?-</code>, the <code>[debug]</code> 
+tag:
+
+<pre class="code">
+?- spy(is_a/2).
+% Spy point on is_a/2
+true.
+
+[debug] ?-
+</pre>
+
+<p>This means the system is in "debug mode". Debug mode does two things: 
+it tells the system to watch for spy points and it turns off some 
+optimizations that would make the traces confusing. The ideal 4-port 
+model (<cite><a class="cite" href="Bibliography.html#byrd:80">Byrd, 1980</a></cite>) 
+as described in many Prolog books (<cite><a class="cite" href="Bibliography.html#Clocksin:87">Clocksin &amp; 
+Melish, 1987</a></cite>) is not visible in many Prolog implementations 
+because code optimisation removes part of the choice and exit points. 
+Backtrack points are not shown if either the goal succeeded 
+deterministically or its alternatives were removed using the cut. When 
+running in debug mode, choice points are only destroyed when removed by 
+the cut and last call optimisation is switched off. [Note: This implies 
+the system can run out of stack in debug mode, while no problems arise 
+when running in non-debug mode.]
+
+<p>Debug mode can be turned off again using <a class="pred" href="debugger.html#nodebug/0">nodebug/0</a>, 
+but then the spy point will be ignored (but remembered). Turning debug 
+mode back on via
+<a class="pred" href="debugger.html#debug/0">debug/0</a> will hit the 
+spy point again.
+
+<pre class="code">
+is_a(rock1, rock).
+is_a(rock2, rock).
+color(rock1, red).
+
+noun(X, Type) :- is_a(X, Type).
+adjective(X, color, Value) :- color(X, Value).
+</pre>
+
+<pre class="code">
+?-  spy(is_a/2).
+% Spy point on is_a/2
+true.
+
+[debug]  ?- nodebug.
+true.
+
+?- noun(X, rock).
+X = rock1 ;
+X = rock2.
+
+?- debug.
+true.
+
+[debug]  ?- noun(X, rock).
+ * Call: (11) is_a(_47826, rock) ? creep
+ * Exit: (11) is_a(rock1, rock) ? creep
+   Exit: (10) noun(rock1, rock) ? creep
+X = rock1 ;
+ * Redo: (11) is_a(_47826, rock) ? creep
+ * Exit: (11) is_a(rock2, rock) ? creep
+   Exit: (10) noun(rock2, rock) ? creep
+X = rock2.
+</pre>
+
+<p>So, debug mode allows Prolog to watch for spy points and enable trace 
+mode when it hits one. The <a class="pred" href="debugger.html#tracing/0">tracing/0</a> 
+and <a class="pred" href="debugger.html#debugging/0">debugging/0</a> 
+predicates will report if the system is in either of those modes.
+
+<p><h3 id="sec:trace-breakpoints"><a id="sec:2.10.7"><span class="sec-nr">2.10.7</span> <span class="sec-title">Breakpoints</span></a></h3>
+
+<p><a id="sec:trace-breakpoints"></a>
+
+<p>Sometimes even spy points aren't enough. There may be a predicate 
+that is used in many different places and it would be helpful to turn on 
+tracing mode only when <b>one particular</b> call to it is made.
+<b>Breakpoints</b> allow for turning on trace mode when a specific 
+source file, line number, and character in that line are hit. The 
+predicates used are <span class="pred-ext">set_breakpoint/4</span> and <span class="pred-ext">set_breakpoint/5</span>. 
+Many breakpoints can be active at a time.
+
+<p>Note that the interface provided by these predicates is not intended 
+for end-users. The built-in PceEmacs editor that is also embedded in the 
+graphical debugger allow setting break points based on the cursor 
+position.
+
+<p><code>Example.pl</code> has now been modified to have multiple calls 
+to noun/2 :
+
+<pre class="code">
+is_a(rock1, rock).
+is_a(rock2, rock).
+color(rock1, red).
+
+noun(X, Type) :- is_a(X, Type).
+adjective(X, color, Value) :- color(X, Value).
+test_noun1(X, Type) :- noun(X, Type).
+test_noun2(X, Type) :- noun(X, Type).
+</pre>
+
+<p>To enable tracing just when noun/2 is called from test_noun2/2 ,
+<span class="pred-ext">set_breakpoint/4</span> can be used like this:
+
+<pre class="code">
+?- set_breakpoint('/...path.../Example.pl', 8, 24, ID).
+% Breakpoint 1 in 1-st clause of test_noun2/2 at Example.pl:8
+ID = 1.
+
+?- debug.
+true.
+
+[debug]  ?- noun(X, rock).
+X = rock1 .
+
+[debug]  ?- test_noun1(X, rock).
+X = rock1 .
+
+[debug]  ?- test_noun2(X, rock).
+   Call: (11) noun(_44982, rock) ? creep
+   Call: (12) is_a(_44982, rock) ? creep
+   Exit: (12) is_a(rock1, rock) ? creep
+   Exit: (11) noun(rock1, rock) ? creep
+   Exit: (10) test_noun2(rock1, rock) ? creep
+X = rock1 .
+
+[trace]  ?- notrace.
+true.
+
+[debug]  ?-
+</pre>
+
+<p>The call to <span class="pred-ext">set_breakpoint/4</span> had to 
+specify the source file ("<code>Example.pl</code>"), the line number 
+(8), and the character within that line (24) to precisely specify what 
+clause should turn on trace mode (this is much easier using the 
+graphical debugger because it shows source code).
+
+<p>The breakpoint won't get triggered if the system isn't in debug mode 
+but, unlike setting a spy point, <span class="pred-ext">set_breakpoint/4</span> 
+does <b>not</b> do this automatically. So, it was turned on manually 
+using <a class="pred" href="debugger.html#debug/0">debug/0</a>.
+
+<p>The output shows that only the call to test_noun2/2 (where the 
+breakpoint was set) actually turned on trace mode. Note that the
+<code>[Trace] ?-</code> at the end shows that trace mode is left on 
+after being triggered. It can be turned off again via <a class="pred" href="debugger.html#notrace/0">notrace/0</a>, 
+which will leave the system in debug mode. All debugging modes can be 
+shut off at once by calling <a class="pred" href="debugger.html#nodebug/0">nodebug/0</a> 
+since shutting off debug mode automatically turns off trace mode.
+
+<p><h3 id="sec:trace-summary"><a id="sec:2.10.8"><span class="sec-nr">2.10.8</span> <span class="sec-title">Command 
+Line Debugger Summary</span></a></h3>
+
+<p><a id="sec:trace-summary"></a>
+
+<p>In summary, there are really two distinct "tracing" features: trace
+<b>mode</b> and trace <b>points</b>. Both write traces to the console 
+using the "Byrd Box Model" but that's where similarity ends.
+
+<p><h4 id="sec:trace-summary-trace-mode"><a id="sec:2.10.8.1"><span class="sec-nr">2.10.8.1</span> <span class="sec-title">Trace 
+Mode</span></a></h4>
+
+<p><a id="sec:trace-summary-trace-mode"></a>
+
+<p>Trace mode is the main Prolog command line debugger that allows for 
+tracing the transitions through the resolution states of predicates 
+represented by ports in the "Byrd Box Model" and optionally pausing for 
+a command when certain ports are hit.
+
+<p>It can be turned on manually via <a class="pred" href="debugger.html#trace/0">trace/0</a>, 
+or (when put into debug mode using <a class="pred" href="debugger.html#debug/0">debug/0</a>) 
+when a specific predicate is encountered via <a class="pred" href="debugger.html#spy/1">spy/1</a>, 
+or when a specific call to a predicate is encountered via <span class="pred-ext">set_breakpoint/4</span> 
+or <span class="pred-ext">set_breakpoint/5</span>.
+
+<p>When in trace mode, <a class="pred" href="debugger.html#visible/1">visible/1</a> 
+controls which ports are written to the console, and <a class="pred" href="debugger.html#leash/1">leash/1</a> 
+controls which ports cause execution to pause to allow program 
+inspection.
+
+<p>When execution is paused, there are many commands that can be used to 
+inspect the state of the program, cause goals to fail or succeed, etc.
+
+<p>Trace mode is turned off via <a class="pred" href="debugger.html#notrace/0">notrace/0</a> 
+and debug mode is turned off via
+<a class="pred" href="debugger.html#nodebug/0">nodebug/0</a>.
+
+<p><h4 id="sec:trace-summary-trace-points"><a id="sec:2.10.8.2"><span class="sec-nr">2.10.8.2</span> <span class="sec-title">Trace 
+Points</span></a></h4>
+
+<p><a id="sec:trace-summary-trace-points"></a>
+
+<p>Trace <b>points</b> are a separate feature from trace <b>mode</b> 
+that allow writing specified ports to the console when a predicate is 
+being evaluated. It does not ever pause program execution and does not 
+need to be in trace or debug mode to work.
+
+<p>They are turned on via <a class="pred" href="debugger.html#trace/1">trace/1</a> 
+and <a class="pred" href="debugger.html#trace/2">trace/2</a>.
+
+<p>They don't pay attention to <a class="pred" href="debugger.html#visible/1">visible/1</a> 
+(because the ports shown are set in <a class="pred" href="debugger.html#trace/2">trace/2</a>) 
+or <a class="pred" href="debugger.html#leash/1">leash/1</a> (because 
+they don't pause execution).
+
+<p>They can be turned off via <a class="pred" href="debugger.html#trace/2">trace/2</a>.
+
+<p></body></html>

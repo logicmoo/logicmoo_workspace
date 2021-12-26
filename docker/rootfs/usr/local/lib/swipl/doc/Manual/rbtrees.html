@@ -1,0 +1,521 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.5.4 Reference Manual: Section A.43</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="random.html">
+<link rel="next" href="readutil.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="random.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="readutil.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:rbtrees"><a id="sec:A.43"><span class="sec-nr">A.43</span> <span class="sec-title">library(rbtrees): 
+Red black trees</span></a></h2>
+
+<p><a id="sec:rbtrees"></a>
+
+<dl class="tags">
+<dt class="tag">author</dt>
+<dd>
+Vitor Santos Costa, Jan Wielemaker, Samer Abdallah, Peter Ludemann.</dd>
+<dt class="mtag">See also</dt>
+<dd>
+- <code>library(pairs)</code>, <code>library(assoc)</code> <br>
+- "Introduction to Algorithms", Second Edition Cormen, Leiserson, 
+Rivest, and Stein, MIT Press
+</dd>
+</dl>
+
+<p>Red-Black trees are balanced search binary trees. They are named 
+because nodes can be classified as either red or black. The code we 
+include is based on "Introduction to Algorithms", second edition, by 
+Cormen, Leiserson, Rivest and Stein. The library includes routines to 
+insert, lookup and delete elements in the tree.
+
+<p>A Red black tree is represented as a term <code>t(Nil, Tree)</code>, 
+where Nil is the Nil-node, a node shared for each nil-node in the tree. 
+Any node has the form <code>colour(Left, Key, Value, Right)</code>, 
+where <i>colour</i> is one of <code>red</code> or
+<code>black</code>.
+
+<p><b>Warning: instantiation of keys</b>
+
+<p>Red-Black trees depend on the Prolog <i>standard order of terms</i> 
+to organize the keys as a (balanced) binary tree. This implies that any 
+term may be used as a key. The tree may produce wrong results, such as 
+not being able to find a key, if the ordering of keys changes after the 
+key has been inserted into the tree. The user is responsible to ensure 
+that variables used as keys or appearing in a term used as key that may 
+affect ordering are not unified, with the exception of unification 
+against new fresh variables. For this reason, <i>ground</i> terms are 
+safe keys. When using non-ground terms, either make sure the variables 
+appear in places that do not affect the standard order relative to other 
+keys in the tree or make sure to not unify against these variables as 
+long as the tree is being used.
+
+<dl class="latex">
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="rb_new/1"><strong>rb_new</strong>(<var>-Tree</var>)</a></dt>
+<dd class="defbody">
+Create a new Red-Black tree <var>Tree</var>.
+
+<dl class="tags">
+<dt class="tag">deprecated</dt>
+<dd>
+Use <a class="pred" href="rbtrees.html#rb_empty/1">rb_empty/1</a>.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="rb_empty/1"><strong>rb_empty</strong>(<var>?Tree</var>)</a></dt>
+<dd class="defbody">
+Succeeds if <var>Tree</var> is an empty Red-Black tree.</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="rb_lookup/3"><strong>rb_lookup</strong>(<var>+Key, 
+-Value, +Tree</var>)</a></dt>
+<dd class="defbody">
+True when <var>Value</var> is associated with <var>Key</var> in the 
+Red-Black tree <var>Tree</var>. The given <var>Key</var> may include 
+variables, in which case the RB tree is searched for a key with 
+equivalent variables (using (<code>==</code>)/2). Time complexity is 
+O(log N) in the number of elements in the tree.
+
+<dl class="tags">
+<dt class="tag">See also</dt>
+<dd>
+<a class="pred" href="rbtrees.html#rb_in/3">rb_in/3</a> for backtracking 
+over keys.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="rb_min/3"><strong>rb_min</strong>(<var>+Tree, 
+-Key, -Value</var>)</a></dt>
+<dd class="defbody">
+<var>Key</var> is the minimum key in <var>Tree</var>, and is associated 
+with Val.</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="rb_max/3"><strong>rb_max</strong>(<var>+Tree, 
+-Key, -Value</var>)</a></dt>
+<dd class="defbody">
+<var>Key</var> is the maximal key in <var>Tree</var>, and is associated 
+with Val.</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="rb_next/4"><strong>rb_next</strong>(<var>+Tree, 
++Key, -Next, -Value</var>)</a></dt>
+<dd class="defbody">
+<var>Next</var> is the next element after <var>Key</var> in <var>Tree</var>, 
+and is associated with Val. Fails if <var>Key</var> isn't in <var>Tree</var> 
+or if <var>Key</var> is the maximum key.</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="rb_previous/4"><strong>rb_previous</strong>(<var>+Tree, 
++Key, -Previous, -Value</var>)</a></dt>
+<dd class="defbody">
+<var>Previous</var> is the previous element after <var>Key</var> in <var>Tree</var>, 
+and is associated with Val. Fails if <var>Key</var> isn't in <var>Tree</var> 
+or if <var>Key</var> is the minimum key.</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="rb_update/4"><strong>rb_update</strong>(<var>+Tree, 
++Key, ?NewVal, -NewTree</var>)</a></dt>
+<dd class="defbody">
+<var>Tree</var> <var>NewTree</var> is tree <var>Tree</var>, but with 
+value for <var>Key</var> associated with
+<var>NewVal</var>. Fails if <var>Key</var> is not in <var>Tree</var> 
+(using (<code>==</code>)/2). This predicate may fail or give unexpected 
+results if <var>Key</var> is not sufficiently instantiated.
+
+<dl class="tags">
+<dt class="tag">See also</dt>
+<dd>
+<a class="pred" href="rbtrees.html#rb_in/3">rb_in/3</a> for backtracking 
+over keys.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="rb_update/5"><strong>rb_update</strong>(<var>+Tree, 
++Key, -OldVal, ?NewVal, -NewTree</var>)</a></dt>
+<dd class="defbody">
+Same as <code>rb_update(Tree, Key, NewVal, NewTree)</code> but also 
+unifies
+<var>OldVal</var> with the value associated with <var>Key</var> in <var>Tree</var>.</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="rb_apply/4"><strong>rb_apply</strong>(<var>+Tree, 
++Key, :G, -NewTree</var>)</a></dt>
+<dd class="defbody">
+If the value associated with key <var>Key</var> is Val0 in <var>Tree</var>, 
+and if
+<code>call(G,Val0,ValF)</code> holds, then <var>NewTree</var> differs 
+from <var>Tree</var> only in that
+<var>Key</var> is associated with value ValF in tree <var>NewTree</var>. 
+Fails if it cannot find <var>Key</var> in <var>Tree</var>, or if <code>call(G,Val0,ValF)</code> 
+is not satisfiable.</dd>
+<dt class="pubdef"><span class="pred-tag">[nondet]</span><a id="rb_in/3"><strong>rb_in</strong>(<var>?Key, 
+?Value, +Tree</var>)</a></dt>
+<dd class="defbody">
+True when <var>Key</var>-<var>Value</var> is a key-value pair in 
+red-black tree <var>Tree</var>. Same as below, but does not materialize 
+the pairs.
+
+<pre class="code">
+rb_visit(Tree, Pairs), member(Key-Value, Pairs)
+</pre>
+
+<p>Leaves a choicepoint even if <var>Key</var> is instantiated; to avoid 
+a choicepoint, use <a class="pred" href="rbtrees.html#rb_lookup/3">rb_lookup/3</a>.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="rb_insert/4"><strong>rb_insert</strong>(<var>+Tree, 
++Key, ?Value, -NewTree</var>)</a></dt>
+<dd class="defbody">
+Add an element with key <var>Key</var> and <var>Value</var> to the tree <var>Tree</var> 
+creating a new red-black tree <var>NewTree</var>. If <var>Key</var> is a 
+key in <var>Tree</var>, the associated value is replaced by <var>Value</var>. 
+See also <a class="pred" href="rbtrees.html#rb_insert_new/4">rb_insert_new/4</a>. 
+Does <i>not</i> validate that <var>Key</var> is sufficiently 
+instantiated to ensure the tree remains valid if a key is further 
+instantiated.</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="rb_insert_new/4"><strong>rb_insert_new</strong>(<var>+Tree, 
++Key, ?Value, -NewTree</var>)</a></dt>
+<dd class="defbody">
+Add a new element with key <var>Key</var> and <var>Value</var> to the 
+tree <var>Tree</var> creating a new red-black tree <var>NewTree</var>. 
+Fails if <var>Key</var> is a key in <var>Tree</var>. Does
+<i>not</i> validate that <var>Key</var> is sufficiently instantiated to 
+ensure the tree remains valid if a key is further instantiated.</dd>
+<dt class="pubdef"><a id="rb_delete/3"><strong>rb_delete</strong>(<var>+Tree, 
++Key, -NewTree</var>)</a></dt>
+<dd class="defbody">
+Delete element with key <var>Key</var> from the tree <var>Tree</var>, 
+returning the value Val associated with the key and a new tree <var>NewTree</var>. 
+Fails if <var>Key</var> is not in <var>Tree</var> (using (<code>==</code>)/2).
+
+<dl class="tags">
+<dt class="tag">See also</dt>
+<dd>
+<a class="pred" href="rbtrees.html#rb_in/3">rb_in/3</a> for backtracking 
+over keys.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><a id="rb_delete/4"><strong>rb_delete</strong>(<var>+Tree, 
++Key, -Val, -NewTree</var>)</a></dt>
+<dd class="defbody">
+Same as <code>rb_delete(Tree, Key, NewTree)</code>, but also unifies <var>Val</var> 
+with the value associated with <var>Key</var> in <var>Tree</var>.</dd>
+<dt class="pubdef"><a id="rb_del_min/4"><strong>rb_del_min</strong>(<var>+Tree, 
+-Key, -Val, -NewTree</var>)</a></dt>
+<dd class="defbody">
+Delete the least element from the tree <var>Tree</var>, returning the 
+key <var>Key</var>, the value <var>Val</var> associated with the key and 
+a new tree <var>NewTree</var>. Fails if <var>Tree</var> is empty.</dd>
+<dt class="pubdef"><a id="rb_del_max/4"><strong>rb_del_max</strong>(<var>+Tree, 
+-Key, -Val, -NewTree</var>)</a></dt>
+<dd class="defbody">
+Delete the largest element from the tree <var>Tree</var>, returning the 
+key
+<var>Key</var>, the value <var>Val</var> associated with the key and a 
+new tree <var>NewTree</var>. Fails if <var>Tree</var> is empty.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="rb_visit/2"><strong>rb_visit</strong>(<var>+Tree, 
+-Pairs</var>)</a></dt>
+<dd class="defbody">
+<var>Pairs</var> is an infix visit of tree <var>Tree</var>, where each 
+element of <var>Pairs</var> is of the form Key-Value.</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="rb_map/2"><strong>rb_map</strong>(<var>+T, 
+:Goal</var>)</a></dt>
+<dd class="defbody">
+True if <code>call(Goal, Value)</code> is true for all nodes in <var>T</var>.</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="rb_map/3"><strong>rb_map</strong>(<var>+Tree, 
+:G, -NewTree</var>)</a></dt>
+<dd class="defbody">
+For all nodes Key in the tree <var>Tree</var>, if the value associated 
+with key Key is Val0 in tree <var>Tree</var>, and if <code>call(G,Val0,ValF)</code> 
+holds, then the value associated with Key in <var>NewTree</var> is ValF. 
+Fails if
+<code>call(G,Val0,ValF)</code> is not satisfiable for all Val0. If <var>G</var> 
+is non-deterministic, <a class="pred" href="rbtrees.html#rb_map/3">rb_map/3</a> 
+will backtrack over all possible values from <code>call(G,Val0,ValF)</code>. 
+You should not depend on the order of tree traversal (currently: key 
+order).</dd>
+<dt class="pubdef"><a id="rb_fold/4"><strong>rb_fold</strong>(<var>:Goal, 
++Tree, +State0, -State</var>)</a></dt>
+<dd class="defbody">
+Fold the given predicate over all the key-value pairs in <var>Tree</var>, 
+starting with initial state <var>State0</var> and returning the final 
+state
+<var>State</var>. Pred is called as
+
+<pre class="code">
+call(Pred, Key-Value, State1, State2)
+</pre>
+
+<p>Determinism depends on <var>Goal</var>.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="rb_clone/3"><strong>rb_clone</strong>(<var>+TreeIn, 
+-TreeOut, -Pairs</var>)</a></dt>
+<dd class="defbody">
+&lsquo;Clone' the red-back tree <var>TreeIn</var> into a new tree <var>TreeOut</var> 
+with the same keys as the original but with all values set to unbound 
+values.
+<var>Pairs</var> is a list containing all new nodes as pairs K-V.</dd>
+<dt class="pubdef"><a id="rb_partial_map/4"><strong>rb_partial_map</strong>(<var>+Tree, 
++Keys, :G, -NewTree</var>)</a></dt>
+<dd class="defbody">
+For all nodes Key in <var>Keys</var>, if the value associated with key 
+Key is Val0 in tree <var>Tree</var>, and if <code>call(G,Val0,ValF)</code> 
+holds, then the value associated with Key in <var>NewTree</var> is ValF, 
+otherwise it is the value associated with the key in <var>Tree</var>. 
+Fails if Key isn't in <var>Tree</var> or if
+<code>call(G,Val0,ValF)</code> is not satisfiable for all Val0 in <var>Keys</var>. 
+Assumes keys are sorted and not repeated (fails if this is not true).</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="rb_keys/2"><strong>rb_keys</strong>(<var>+Tree, 
+-Keys</var>)</a></dt>
+<dd class="defbody">
+<var>Keys</var> is unified with an ordered list of all keys in the 
+Red-Black tree <var>Tree</var>.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="list_to_rbtree/2"><strong>list_to_rbtree</strong>(<var>+List, 
+-Tree</var>)</a></dt>
+<dd class="defbody">
+<var>Tree</var> is the red-black tree corresponding to the mapping in <var>List</var>, 
+which should be a list of Key-Value pairs. <var>List</var> should not 
+contain more than one entry for each distinct key, but this is not 
+validated by <a class="pred" href="rbtrees.html#list_to_rbtree/2">list_to_rbtree/2</a>.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="ord_list_to_rbtree/2"><strong>ord_list_to_rbtree</strong>(<var>+List, 
+-Tree</var>)</a></dt>
+<dd class="defbody">
+<var>Tree</var> is the red-black tree corresponding to the mapping in 
+list
+<var>List</var>, which should be a list of Key-Value pairs. <var>List</var> 
+should not contain more than one entry for each distinct key, but this 
+is not validated by <a class="pred" href="rbtrees.html#ord_list_to_rbtree/2">ord_list_to_rbtree/2</a>. <var>List</var> 
+is assumed to be sorted according to the standard order of terms.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="rb_size/2"><strong>rb_size</strong>(<var>+Tree, 
+-Size</var>)</a></dt>
+<dd class="defbody">
+<var>Size</var> is the number of elements in <var>Tree</var>.</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="is_rbtree/1"><strong>is_rbtree</strong>(<var>@Term</var>)</a></dt>
+<dd class="defbody">
+True if <var>Term</var> is a valid Red-Black tree. Processes the entire 
+tree, checking the coloring of the nodes, the balance and the ordering 
+of keys. Does <i>not</i> validate that keys are sufficiently 
+instantiated to ensure the tree remains valid if a key is further 
+instantiated.
+</dd>
+</dl>
+
+<p></body></html>

@@ -1,0 +1,1754 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>Google's Protocol Buffers Library</title>
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white"> 
+<div class="title">Google's Protocol Buffers Library</div>
+<div class="author">Jeffrey Rosenwald <br>
+E-mail: <a class="url" href="mailto:JeffRose@acm.org">JeffRose@acm.org</a></div>
+<div class="abstract">
+<div class="abstract-title">Abstract</div> Protocol Buffers are Google's 
+language-neutral, platform-neutral, extensible mechanism for serializing 
+structured data -- think XML, but smaller, faster, and simpler. You 
+define how you want your data to be structured once. This takes the form 
+of a template that describes the data structure. You use this template 
+to encode/decode your data structure to/from wire-streams that may be 
+sent-to or read-from your peers. The underlying wire stream is platform 
+independent, lossless, and may be used to interwork with a variety of 
+languages and systems regardless of word size or endianness.
+</div>
+
+<h1><a id="document-contents">Table of Contents</a></h1>
+
+<div class="toc">
+<div class="toc-h2"><a class="sec" href="#sec:1"><span class="sec-nr">1</span> <span class="sec-title">Google's 
+Protocol Buffers</span></a></div>
+<div class="toc-h3"><a class="sec" href="#sec:1.1"><span class="sec-nr">1.1</span> <span class="sec-title">Overview</span></a></div>
+<div class="toc-h3"><a class="sec" href="#sec:1.2"><span class="sec-nr">1.2</span> <span class="sec-title">Processing 
+protobufs with Prolog</span></a></div>
+<div class="toc-h3"><a class="sec" href="#sec:1.3"><span class="sec-nr">1.3</span> <span class="sec-title">protoc</span></a></div>
+<div class="toc-h4"><a class="sec" href="#sec:1.3.1"><span class="sec-nr">1.3.1</span> <span class="sec-title">protobuf_serialize_to_codes/3</span></a></div>
+<div class="toc-h4"><a class="sec" href="#sec:1.3.2"><span class="sec-nr">1.3.2</span> <span class="sec-title">protobuf_parse_from_codes/3</span></a></div>
+<div class="toc-h4"><a class="sec" href="#sec:1.3.3"><span class="sec-nr">1.3.3</span> <span class="sec-title">addressbook 
+example</span></a></div>
+<div class="toc-h3"><a class="sec" href="#sec:1.4"><span class="sec-nr">1.4</span> <span class="sec-title">The 
+low-level SWI-Prolog Implementation</span></a></div>
+<div class="toc-h4"><a class="sec" href="#sec:1.4.1"><span class="sec-nr">1.4.1</span> <span class="sec-title">Wiretypes</span></a></div>
+<div class="toc-h4"><a class="sec" href="#sec:1.4.2"><span class="sec-nr">1.4.2</span> <span class="sec-title">Tags 
+(field numbers)</span></a></div>
+<div class="toc-h4"><a class="sec" href="#sec:1.4.3"><span class="sec-nr">1.4.3</span> <span class="sec-title">Basic 
+Usage</span></a></div>
+<div class="toc-h4"><a class="sec" href="#sec:1.4.4"><span class="sec-nr">1.4.4</span> <span class="sec-title">Alternation, 
+Aggregation, Encapsulation, and Enumeration</span></a></div>
+<div class="toc-h4"><a class="sec" href="#sec:1.4.5"><span class="sec-nr">1.4.5</span> <span class="sec-title">Groups 
+(deprecated)</span></a></div>
+<div class="toc-h4"><a class="sec" href="#sec:1.4.6"><span class="sec-nr">1.4.6</span> <span class="sec-title">Advanced 
+Topics</span></a></div>
+<div class="toc-h2"><a class="sec" href="#sec:2"><span class="sec-nr">2</span> <span class="sec-title">Appendix</span></a></div>
+<div class="toc-h3"><a class="sec" href="#sec:2.1"><span class="sec-nr">2.1</span> <span class="sec-title">Example: 
+A Simple XML Like Structure</span></a></div>
+<div class="toc-h3"><a class="sec" href="#sec:2.2"><span class="sec-nr">2.2</span> <span class="sec-title">Example: 
+Vectors of Numbers</span></a></div>
+<div class="toc-h3"><a class="sec" href="#sec:2.3"><span class="sec-nr">2.3</span> <span class="sec-title">Example: 
+Heterogeneous Collections</span></a></div>
+<div class="toc-h2"><a class="sec" href="#sec:3"><span class="sec-nr">3</span> <span class="sec-title">library(protobufs): 
+Google's Protocol Buffers ("protobufs")</span></a></div>
+</div>
+
+<p><h2 id="sec:protobufs-main"><a id="sec:1"><span class="sec-nr">1</span> <span class="sec-title">Google's 
+Protocol Buffers</span></a></h2>
+
+<p><a id="sec:protobufs-main"></a>
+
+<p><h3 id="sec:protobufs-overview"><a id="sec:1.1"><span class="sec-nr">1.1</span> <span class="sec-title">Overview</span></a></h3>
+
+<p><a id="sec:protobufs-overview"></a>
+
+<p>Protocol Buffers ("protobufs") are Google's language-neutral, 
+platform-neutral, extensible mechanism for serializing structured data 
+-- think XML, but smaller, faster, and simpler. You define how you want 
+your data to be structured once. This takes the form of a template that 
+describes the data structure. You use this template to encode your data 
+structure into wire-streams that may be sent-to or read-from your peers. 
+The underlying wire stream is platform independent, lossless, and may be 
+used to interwork with a variety of languages and systems regardless of 
+word size or endianness. Techniques exist to safely extend your data 
+structure without breaking deployed programs that are compiled against 
+the "old" format.
+
+<p>See <a class="url" href="https://developers.google.com/protocol-buffers">https://developers.google.com/protocol-buffers</a>
+
+<p>The idea behind Google's Protocol Buffers is that you define your 
+structured messages using a domain-specific language. This takes the 
+form of a ".proto" source file. You pass this file through a Google 
+provided tool that generates source code for a target language, creating 
+an interpreter that can encode/decode your structured data. You then 
+compile and build this interpreter into your application program. 
+Depending on the platform, the underlying runtime support is provided by 
+a Google supplied library that is also bound into your program.
+
+<p><h3 id="sec:protobufs-processing-with-prolog"><a id="sec:1.2"><span class="sec-nr">1.2</span> <span class="sec-title">Processing 
+protobufs with Prolog</span></a></h3>
+
+<p><a id="sec:protobufs-processing-with-prolog"></a>
+
+<p>There are two ways you can use protobufs in Prolog: with a compiled 
+".proto" file and <a class="pred" href="#protobuf_parse_from_codes/3">protobuf_parse_from_codes/3</a> 
+and
+<a class="pred" href="#protobuf_serialize_to_codes/3">protobuf_serialize_to_codes/3</a>; 
+or with a lower-level interface
+<a class="pred" href="#protobuf_message/2">protobuf_message/2</a>, which 
+allows you to define your own domain-specific language for parsing and 
+serliazing protobufs.
+
+<p><h3 id="sec:protobufs-protoc"><a id="sec:1.3"><span class="sec-nr">1.3</span> <span class="sec-title">protoc</span></a></h3>
+
+<p><a id="sec:protobufs-protoc"></a>
+
+<p>A protobuf ".proto" file can be processed by the protobuf compiler (<code>protoc</code>), 
+using a Prolog specific plugin. You can do this by either adding <code>/usr/lib/swi-prolog/library/protobufs</code> 
+to your <code>PATH</code> or by specifying the option
+<code>--plugin=protoc-gen-swipl=/usr/lib/swi-prolog/library/protobufs/protoc-gen-swipl</code>. 
+You specify where the generated files go with the <code>--swipl_out</code> 
+option, which must be an existing directory.
+
+<p>When using <code>protoc</code>, it's important to specify the <code>--protopath</code> 
+(or
+<code>-I</code>) and files correctly. The idea of <code>protopath</code> 
+is that it gives a list of source "roots", and the files are specified 
+relative to that. If you want to include the current directory, you must 
+also specify it (e.g., <code>protoc -I. swipl_out=. foo.proto</code>). 
+For example, when bootstrapping the "swipl" plugin, these are used:
+
+<pre class="code">
+protoc -I/usr/include --swipl_out=gen_pb google/include/descriptor.proto google/include/compiler/plugin.proto
+</pre>
+
+<p>which creates these files:
+
+<pre class="code">
+gen_pb/google/protobuf/descriptor_pb.pl
+gen_pb/google/protobuf/compiler/plugin_pb.pl
+</pre>
+
+<p>The <code>plugin_pb</code> is used by:
+
+<pre class="code">
+:- use_module(gen_pb/google/protobuf/compiler/plugin_pb)
+</pre>
+
+<p>which has this (import is relative to the current module):
+
+<pre class="code">
+:- use_module('../descriptor_pb').
+</pre>
+
+<p>Each <code>X.proto</code> file generates a <code>X_pb.pl</code> file 
+in the directory specified by <code>--swipl_out</code>. The file 
+contains a module name <code>X</code>, some debugging information, and 
+meta-data facts that go into the
+<code>protobufs</code> module (all the facts start with "<code>proto_meta_</code>") 
+--
+<a class="pred" href="#protobuf_parse_from_codes/3">protobuf_parse_from_codes/3</a> 
+uses these facts to parse the wire form of the message into a Prolog 
+term and <a class="pred" href="#protobuf_serialize_to_codes/3">protobuf_serialize_to_codes/3</a> 
+uses them to serialize the data to wire form.
+
+<p>The generated code does not rely on any Google-supplied code.
+
+<p>You must compile all the ".proto" files separately but you only need 
+to load the top-level generated file -- it contains the necessary load 
+directives for things that it uses. You can find out the dependencies 
+for a .proto file by running
+<code>PATH="$PATH:/usr/lib/swipl/library/protobufs" protoc -I... --dependency_out=FILE --swipl_out=. SRC.proto</code>
+
+<p><h4 id="sec:protobufs-serialize-to-codes"><a id="sec:1.3.1"><span class="sec-nr">1.3.1</span> <span class="sec-title">protobuf_serialize_to_codes/3</span></a></h4>
+
+<p><a id="sec:protobufs-serialize-to-codes"></a>
+
+<p>The Prolog term corresponding to a protobuf <code>message</code> is a
+<a class="url" href="/pldoc/man?section=bidicts">dict</a>, with the keys 
+corresponding to the field names in the <code>message</code> (the dict 
+tag is treated as a comment). Repeated fields are represented as lists; 
+enums are looked up and converted to atoms; bools are represented by
+<code>false</code> and <code>true</code>; strings are represented by 
+Prolog strings or atoms; bytes are represented by lists of codes.
+
+<p><code>TODO</code>: Add an option to omit default values (this is the <code>proto3</code> 
+behavior).
+
+<p>When serializing, the dict tag is treated as a comment and is 
+ignored. So, you can use any dict tags when creating data for output. 
+For example, both of these will generate the same output:
+
+<pre class="code">
+protobuf_serialize_to_codes(_{people:[_{id:1234,name:"John Doe"}]}, 'tutorial.AddressBook', WireCodes).
+protobuf_serialize_to_codes('tutorial.AddressBook'{people:['tutorial.Person'{name:"John Doe",id:1234}]}, 'tutorial.AddressBook', WireCodes).
+</pre>
+
+<p>NOTE: if the wire codes can't be parsed, <a class="pred" href="#protobuf_parse_from_codes/3">protobuf_parse_from_codes/3</a> 
+fails. One common cause is if you give an incorrect field name. 
+Typically, this shows up in a call to <span class="pred-ext">protobufs:field_segment/3</span>, 
+when
+<span class="pred-ext">protobufs:proto_meta_field_name/4</span> fails.
+
+<p><h4 id="sec:protobufs-parse-from-codes"><a id="sec:1.3.2"><span class="sec-nr">1.3.2</span> <span class="sec-title">protobuf_parse_from_codes/3</span></a></h4>
+
+<p><a id="sec:protobufs-parse-from-codes"></a>
+
+<p>This is the inverse of <a class="pred" href="#protobuf_serialize_to_codes/3">protobuf_serialize_to_codes/3</a> 
+-- it takes a wire stream (list of codes) and creates a
+<a class="url" href="/pldoc/man?section=bidicts">dict</a>. The dict tags 
+are the fully qualified names of the messages. Repeated fields that 
+aren't in the wire stream get set to the value <code>[]</code>; other 
+fields that aren't in the wire stream get their default value (typically 
+the empty string or zero, depending on type). Embedded messages and 
+groups are omitted if not in the wire stream; you can test for their 
+presence using
+<span class="pred-ext">get_dict/3</span>. Enums are looked up and 
+converted to atoms; bools are represented by
+<code>false</code> and <code>true</code>; strings are represented by 
+Prolog strings (not atoms); bytes are represented by lists of codes.
+
+<p>There is no mechanism for determining whether a field was in the wire 
+stream or not (that is, there is no equivalent of the Python 
+implementation's <code>HasField</code>).
+
+<p>The "oneof" feature causes a slightly different behavior. Only the 
+field that's in the wire stream gets set; the other fields are omitted. 
+And if none of the fields in the "oneof" are set, then none of the 
+fields appears. You can check which field is set by using <span class="pred-ext">get_dict/3</span>.
+
+<p>Currently, there is no special support for the protobuf "map" 
+feature. It is treated as an ordinary message field. The convenience 
+predicates <span class="pred-ext">protobuf_field_is_map/3</span> and <a class="pred" href="#protobuf_map_pairs/3">protobuf_map_pairs/3</a> 
+can be used to convert between a "map" field and a key-value list, which 
+gives you the freedom to use any kind of association list for the map. 
+See also <a class="url" href="https://github.com/SWI-Prolog/contrib-protobufs/issues/12">Issue #12</a> 
+For example:
+
+<pre class="code">
+message MapMessage {
+  map&lt;string, sint64&gt; number_ints = 5;
+}
+</pre>
+
+<p>is treated as if it is
+
+<pre class="code">
+message MapMessage {
+  message KeyValue {
+    optional string  Key = 1;
+    optional sint64  Value = 2;
+  }
+  repeated KeyValue number_ints = 5;
+}
+</pre>
+
+<p>You can handle this on input by
+
+<pre class="code">
+protobuf_parse_from_codes(WireCodes, 'MapMessage', Term),
+protobuf_map_pairs(Term.number_ints, _, Pairs).
+</pre>
+
+<p>and on output by
+
+<pre class="code">
+protobuf_map_pairs(TermNnumberInts, _, Pairs),
+protobuf_serialize_to_codes(_{number_ints:TermNumberInts}, WireCodes).
+</pre>
+
+<p><h4 id="sec:protobufs-addressbook-example"><a id="sec:1.3.3"><span class="sec-nr">1.3.3</span> <span class="sec-title">addressbook 
+example</span></a></h4>
+
+<p><a id="sec:protobufs-addressbook-example"></a>
+
+<p>The Google documentation has a tutorial example of a simple 
+addressbook:
+<a class="url" href="https://developers.google.com/protocol-buffers/docs/tutorials">https://developers.google.com/protocol-buffers/docs/tutorials</a> 
+The Prolog equivalent is in
+<code>/usr/lib/swi-prolog/oc/packages/examples/protobufs/interop/addressbook.pl</code> 
+and you can run it by <code>make run_addressbook</code>, which will run <code>protoc</code> 
+to generate the _<code>pb.pl</code> files and then run the example. The 
+resulting file is <code>addressbook.wire</code>.
+
+<p><h3 id="sec:protobufs-swipl"><a id="sec:1.4"><span class="sec-nr">1.4</span> <span class="sec-title">The 
+low-level SWI-Prolog Implementation</span></a></h3>
+
+<p><a id="sec:protobufs-swipl"></a>
+
+<p>For most users, <a class="pred" href="#protobuf_serialize_to_codes/3">protobuf_serialize_to_codes/3</a> 
+and
+<a class="pred" href="#protobuf_parse_from_codes/3">protobuf_parse_from_codes/3</a> 
+suffice. However, if you need greater control, or wish to define your 
+own domain-specific language that maps to protobufs, you can use <a class="pred" href="#protobuf_message/2">protobuf_message/2</a>.
+
+<p>The wire stream interpreter is embodied in the form of a Definite 
+Clause Grammar (DCG). It has a small underlying C-support library that 
+loads when the Prolog module loads. This implementation does not depend 
+on any code that is provided by Google and thus is not bound by its 
+license terms.
+
+<p>On the Prolog side, you define your message template as a list of 
+predefined Prolog terms that correspond to production rules in the DCG. 
+The process is not unlike specifiying the format of a regular 
+expression. To encode a message, <code>X</code>, to wire-stream, <code>Y</code>, 
+you pass a grounded template, <code>X</code>, and a variable, <code>Y</code>, 
+to <a class="pred" href="#protobuf_message/2">protobuf_message/2</a>. To 
+decode a wire-stream, <code>Y</code>, to template, <code>X</code>, you 
+pass an ungrounded template, <code>X</code>, along with a grounded 
+wire-stream, <code>Y</code>, to
+<a class="pred" href="#protobuf_message/2">protobuf_message/2</a>. The 
+interpreter will unify the unbound variables in the template with values 
+decoded from the wire-stream.
+
+<p>An example template is:
+
+<pre class="code">
+protobuf([
+        unsigned(1, 100),
+        string(2, "abcd"),
+        repeated(3, atom([foo, bar])),
+        boolean(4, true),
+        embedded(5, protobuf([integer(1, -666), string(2, "negative 666")])),
+        repeated(6, embedded([
+            protobuf([integer(1, 1234), string(2, "onetwothreefour")]),
+            protobuf([integer(1, 2222), string(2, "four twos")])])),
+        repeated(7, integer([1,2,3,4])),
+        packed(8, integer([5,6,7,8]))
+    ])
+</pre>
+
+<p>This corresponds to a message created with this .proto definition 
+(using proto2 syntax):
+
+<pre class="code">
+syntax = "proto2";
+package my.protobuf;
+message SomeMessage {
+  optional int32 first = 1;  // example template also works with int64, uint32, uint64
+  optional string second = 2;
+  repeated string third = 3;
+  optional bool fourth = 4;
+  message NestedMessage {
+    optional sint32 value = 1;
+    optional string text = 2;
+  }
+  optional NestedMessage fifth = 5;
+  repeated NestedMessage sixth = 6;
+  repeated sint32 seventh = 7;
+  repeated sint32 eighth = 8 [packed=true];
+}
+</pre>
+
+<p>The wire format message can be displayed:
+
+<pre class="code">
+$ protoc --decode=my.protobuf.SomeMessage some_message.proto &lt;some_message.wire
+first: 100
+second: "abcd"
+third: "foo"
+third: "bar"
+fourth: true
+fifth {
+  value: -666
+  text: "negative 666"
+}
+sixth {
+  value: 1234
+  text: "onetwothreefour"
+}
+sixth {
+  value: 2222
+  text: "four twos"
+}
+seventh: 1
+seventh: 2
+seventh: 3
+seventh: 4
+eighth: 100
+eighth: -200
+eighth: 1000
+</pre>
+
+<p>and the actual message would be created in Python by code similar to 
+this:
+
+<pre class="code">
+import some_message_pb2
+
+msg = some_message_pb2.SomeMessage()
+msg.first = 100
+msg.second = "abcd"
+msg.third[:] = ["foo", "bar"]
+msg.fourth = True
+msg.fifth.value = -666
+msg.fifth.text = "negative 666"
+
+m1 = msg.sixth.add()
+m1.value = 1234
+m1.text = "onetwothreefour"
+msg.sixth.append(msg.NestedMessage(value=2222, text="four twos"))
+msg.seventh.extend([1,2,3,4])
+msg.eighth.extend([100,-200,1000])
+</pre>
+
+<p>or
+
+<pre class="code">
+msg2 = some_message_pb2.SomeMessage(
+    first = 100,
+    second = "abcd",
+    third = ["foo", "bar"],
+    fourth = True,
+    fifth = some_message_pb2.SomeMessage.NestedMessage(value=-666, text="negative 666"),
+    sixth = [some_message_pb2.SomeMessage.NestedMessage(value=1234, text="onetwothreefour"),
+             some_message_pb2.SomeMessage.NestedMessage(value=2222, text="four twos")],
+    seventh = [1,2,3,4],
+    eighth = [100,-200,1000],
+    )
+</pre>
+
+<p>Note that the fields can be in any order (they are disambiguated by 
+their tags) and if there is no value for a field, it would be simply 
+omitted in the template. The field names and message names can be 
+changed without any change to the wire format.
+
+<p><h4 id="sec:protobufs-wire-types"><a id="sec:1.4.1"><span class="sec-nr">1.4.1</span> <span class="sec-title">Wiretypes</span></a></h4>
+
+<p><a id="sec:protobufs-wire-types"></a>
+
+<p>The wire-stream consists of six primitive payload types, two of which 
+have been deprecated. A primitive in the wire-stream is a multi-byte 
+string that provides three pieces of information: a wire-type, a 
+user-specified tag (field number), and the raw payload. Except for the 
+tag and its wire-type, protobuf payloads are not instantaneously 
+recognizable because the wire-stream contains no payload type 
+information. The interpreter uses the tag to associate the raw payload 
+with a local host type specified by the template. Hence, the message can 
+only be properly decoded using the template that was used to encode it. 
+Note also that the primitive is interpreted according to the needs of a 
+local host. Local word-size and endianness are dealt with at this level.
+
+<p>The following table shows the association between the types in the 
+.proto file and the primitives used in the wire-stream. For how these 
+correspond to other programming languages, such as C++, Java, etc. see <a class="url" href="https://developers.google.com/protocol-buffers/docs/overview#scalar">Protocol 
+Buffers Scalar Value Types</a>, which also has advice on how to choose 
+between the various integer types. (Python3 types are also given here, 
+because Python is used in some of the interoperability tests.)
+<blockquote>
+<table class="latex frame-box">
+<tr><td><b>Prolog</b> </td><td><b>Wirestream</b> </td><td><b>.proto file</b> </td><td><b>C++</b> </td><td><b>Python3</b> </td><td><b>Notes</b> </td></tr>
+<tr><td>double</td><td>fixed64</td><td>double</td><td>double</td><td>float</td><td></td></tr>
+<tr><td>unsigned64</td><td>fixed64</td><td>fixed64</td><td>uint64</td><td>int</td><td></td></tr>
+<tr><td>integer64</td><td>fixed64</td><td>sfixed64</td><td>int64</td><td></td><td></td></tr>
+<tr><td>float</td><td>fixed32</td><td>float</td><td>float</td><td>float</td><td></td></tr>
+<tr><td>unsigned32</td><td>fixed32</td><td>fixed32</td><td>uint32</td><td>int</td><td></td></tr>
+<tr><td>integer32</td><td>fixed32</td><td>sfixed32</td><td>int32</td><td></td><td></td></tr>
+<tr><td>integer</td><td>varint</td><td>sint32</td><td>int32</td><td>int</td><td>1, 
+2, 9 </td></tr>
+<tr><td>integer</td><td>varint</td><td>sint64</td><td>int64</td><td>int</td><td>1, 
+2, 9 </td></tr>
+<tr><td>signed32</td><td>varint</td><td>int32</td><td>int32</td><td>int</td><td>2, 
+3, 10 </td></tr>
+<tr><td>signed64</td><td>varint</td><td>int64</td><td>int64</td><td>int</td><td>2, 
+3, 10 </td></tr>
+<tr><td>unsigned</td><td>varint</td><td>uint32</td><td>uint32</td><td>int</td><td>2, 
+3 </td></tr>
+<tr><td>unsigned</td><td>varint</td><td>uint64</td><td>uint64</td><td>int</td><td>2, 
+3 </td></tr>
+<tr><td>boolean</td><td>varint</td><td>bool</td><td>bool</td><td>bool</td><td>2, 
+8 </td></tr>
+<tr><td>enum</td><td>varint</td><td>(enum)</td><td>(enum)</td><td>(enum)</td><td></td></tr>
+<tr><td>atom</td><td>length delimited</td><td>string</td><td></td><td>str 
+(unicode)</td><td></td></tr>
+<tr><td>codes</td><td>length delimited</td><td>bytes</td><td></td><td>bytes</td><td></td></tr>
+<tr><td>utf8_codes</td><td>length delimited</td><td>string</td><td></td><td>str 
+(unicode)</td><td></td></tr>
+<tr><td>string</td><td>length delimited</td><td>string</td><td>string</td><td>str 
+(unicode)</td><td></td></tr>
+<tr><td>embedded</td><td>length delimited</td><td>message</td><td></td><td>(class)</td><td>5 </td></tr>
+<tr><td>repeated</td><td>length delimited</td><td>repeated</td><td></td><td>(list)</td><td>6 </td></tr>
+<tr><td>repeated_embedded</td><td>length delimited</td><td>repeated</td><td></td><td>(list)</td><td>11 </td></tr>
+<tr><td>packed</td><td>length delimited</td><td>packed repeated</td><td></td><td>(list)</td><td></td></tr>
+</table>
+</blockquote>
+
+<p><b>Notes:</b>
+
+<p>
+<ol class="latex">
+<li>Encoded using a compression technique known as zig-zagging, which is 
+more efficient for negative values, but which is slightly less efficient 
+if you know the values will always be non-negative.
+<li>Encoded as a modulo 128 string. Its length is proportional to its 
+magnitude. The intrinsic word length is decoupled between parties. If 
+zig-zagging is not used (see note 1), negative numbers become maximum 
+length.
+<li>SWI-Prolog has unbounded integers, so an unsigned integer isn't a 
+special case (it is range-checked and an exception thrown if its 
+representation would require more than 32 or 64 bits).
+<li>Encoded as UTF8 in the wire-stream.
+<li>Specified as <code>embedded(Tag,protobuf([...]))</code>.
+<li>Specified as <code>repeated(Tag,Type([...,...]))</code>, where Type 
+is =unsigned, <code>integer</code>, <code>string</code>, etc.
+<li><code>repeated ... [packed=true]</code> in proto2. Can not contain 
+"length delimited" types.
+<li>Prolog <code>boolean(Tag,false)</code> maps to 0 and
+<code>boolean(Tag,true)</code> maps to 1.
+<li>Uses "zig-zag" encoding, which is more space-efficient for negative 
+numbers.
+<li>The documentation says that this doesn't use "zig-zag" encoding, so 
+it's less space-efficient for negative numbers. In particular, both C++ 
+and Python encode negative numbers as 10 bytes, and this implementation 
+does the same for wire-stream compatibility (note that SWI-Prolog 
+typically uses 64-bit integers anyway). Therefore, signed64 is used for 
+both .proto types <code>int32</code> and
+<code>int64</code>.
+<li>Specified as <code>repeated_embedded(Tag,protobuf([...]),Fields)</code>
+</ol>
+
+<p><h4 id="sec:protobufs-tags"><a id="sec:1.4.2"><span class="sec-nr">1.4.2</span> <span class="sec-title">Tags 
+(field numbers)</span></a></h4>
+
+<p><a id="sec:protobufs-tags"></a>
+
+<p>A tag (or field number) is a small integer that is present in every 
+wire-stream primitive. The tag is the only means that the interpreter 
+has to synchronize the wire-stream with its template. Tags are user 
+defined for each term in each message of the wire-stream. The protobuf 
+specification requires that each field within a message has a unique 
+field number; the protobuf compiler (<code>protoc</code>) will produce 
+an error if a field number is reused (field numbers are unique only 
+within a message; an embedded message can use the same field numbers 
+without ambigituity).
+
+<p><h4 id="sec:protobufs-basic-usage"><a id="sec:1.4.3"><span class="sec-nr">1.4.3</span> <span class="sec-title">Basic 
+Usage</span></a></h4>
+
+<p><a id="sec:protobufs-basic-usage"></a>
+
+<p>A protobuf wire-stream is a byte string that is comprised of zero or 
+more of the above multi-byte wire-stream primitives. Templates are lists 
+of Prolog terms. Each term corresponds to a production rule in the DCG. 
+The purpose of the template is to provide a recipe and value set for 
+encoding and decoding a particular message. Each term in the template 
+has an arity of two. The term's functor is the local "host type". 
+Argument 1 is its tag (field number), which must always be ground, and 
+argument 2 is its associated value, which may or may not be ground.
+
+<p>A protobuf "message" is a list of fields and is encoded in the 
+template as
+<code>protobufs([Field1, Field2, ...])</code>, where each field is of 
+the form <code>Type(Tag,Value</code> and <code>Type</code> can be any 
+scalar or compound type.
+
+<p>Scalar fields are encoded as <code>Type(Tag,Value)</code>. For 
+example, if a field is defined in a .proto file by
+<code>optional string some_field = 10</code>, then it could be encoded 
+by
+<code>string(10,"some field's contents")</code> or by
+<code>atom(10, 'some field\'s contents')</code>.
+
+<p>Repeated fields are done by
+<code>repeated(Tag,Type([Value1,Value2,...])</code>, where <code>Type</code> 
+is any type.
+
+<p>Embedded messages are done by
+<code>embedded(Tag,protobuf([Field1,Field2,...]))</code> (this is the 
+same =<code>protobuf(...)</code>= as is used at the top level).
+
+<p>Repeated embedded messages are done by
+<code>repeated_embedded(Tag,protobuf([Field1,Field2,...]),Fields)</code>, 
+which gets repeated items and combines them into a list. For example,
+<code>repeated_embedded(Tag, protobuf([string(1,_Key),string(2,_Value)]), Fields)</code> 
+could unify <code>Fields</code> to <code>[protobuf([string(1,"key1"),string(2,"value1")]), protobuf([string(1,"key2"),string(2,"value2")])]</code>. 
+Note that the variables in the <code>protobuf</code> part of the term do 
+not get instantiated: they are similar to the <code>Template</code> in <span class="pred-ext">findall/3</span> 
+and similar.
+
+<p><b>Note:</b> It is an error to attempt to encode a message using a 
+template that is not ground. Decoding a message into a template that has 
+unbound variables has the effect of unifying the variables with their 
+corresponding values in the wire-stream.
+
+<p>Assume a .proto definition:
+
+<pre class="code">
+message Command {
+  optional string msg_type = 1;
+  optional string command  = 2;
+  optional int32  x        = 3;
+  optional int32  y        = 4;
+}
+</pre>
+
+<p>Map a Prolog structure to a Protocol Buffer:
+
+<pre class="code">
+%! command(+Term, -Proto) is det.
+% Map a Prolog term to a corresponding protobuf term.
+command(add(X,Y), Proto) :-
+   freeze(X, must_be(integer, X)),  % for debugging
+   freeze(Y, must_be(integer, Y)),  % for debugging
+   Proto = protobuf([atom(1, command),
+                     atom(2, add),
+                     integer(3, X),
+                     integer(4, Y)
+                    ]).
+</pre>
+
+<p>Later on:
+
+<pre class="code">
+   ... prepare X, Y for command/2 ...
+
+   command(add(X,Y), Proto),
+   protobuf_message(Proto, WireCodes),
+
+   % send the message
+   open('filename', write, Stream, [encoding(octet),type(binary)]),
+   format(Stream, '~s', [WireCodes]),
+   close(Stream)
+</pre>
+
+<p><code>Proto</code> is the protobuf template. Each template describes 
+exactly one message. <code>WireCodes</code> is the wire-stream, which 
+encodes bytes (values between 0 and 255 inclusive). If you are 
+interworking with other systems and languages, then the protobuf 
+templates that you supply to
+<a class="pred" href="#protobuf_message/2">protobuf_message/2</a> must 
+be equivalent to those described in the .proto file that is used on the 
+other side.
+
+<p><h4 id="sec:protobufs-aaee"><a id="sec:1.4.4"><span class="sec-nr">1.4.4</span> <span class="sec-title">Alternation, 
+Aggregation, Encapsulation, and Enumeration</span></a></h4>
+
+<p><a id="sec:protobufs-aaee"></a><b>Alternation</b> <a id="sec:protobufs-alternation"></a>
+
+<p>The protobuf grammar provides a reserved word, <code>optional</code>, 
+that indicates that the production rule that it refers to may appear 
+once or not at all in a protobuf message. Since Prolog has its own means 
+of alternation, this reserved word is not supported on the Prolog side. 
+It is anticipated that customary Prolog mechanisms for nondeterminism 
+(e.g. backtracking) will be used to generate and test alternatives.
+
+<p>Note that <code>required</code> and <code>optional</code> have been 
+removed from the proto3 specification, making all fields optional. This 
+has been partially revised in releases 3.12 and later. In general, you 
+should not expect any field to exist, nor can you expect a repeated 
+field to have at least one item.
+
+<p>Also note that the handling of missing fields is slightly different 
+in proto2 and proto3 -- proto2 allows specifying a default value but 
+proto3 uses 0 and =""= as defaults for numbers and strings and omits 
+encoding any field that has one of those default values.
+
+<p><code>TODO</code>: determine correct behvaior for <code>oneof</code> 
+with a default field value.<b>Aggregation</b> <a id="sec:protobufs-aggregation"></a>
+
+<p>It is possible to specify homogeneous vectors of things (e.g. lists 
+of numbers) using the <code>repeated</code> attribute. You specify a 
+repeated field as follows:
+
+<pre class="code">
+    repeated(22, float([1,2,3,4])),
+    repeated(23, enum(tank_state([empty, half_full, full]))).
+</pre>
+
+<p>The first clause above will cause all four items in the list to be 
+encoded in the wire-stream as IEEE-754 32-bit floating point numbers, 
+all with tag 22. The decoder will aggregate all items in the wire-stream 
+with tag 22 into a list as above. Likewise, all the items listed in the 
+second clause will be encoded in the wire-stream according to the 
+mapping defined in an enumeration (described below) <span class="pred-ext">tank_state/2</span>, 
+each with tag 23.
+
+<p>You can also encode vectors of embedded messages using <code>repeated_embedded</code>. 
+This uses a "template" for the individual messages and a list of 
+messages in the wire stream. For example: <code>repeated_embedded(Tag, protobuf([string(1,_Key),string(2,_Value)]), Fields)</code> 
+where <code>Fields</code> gets a list (possibly empty), with each item 
+of the form
+<code>protobuf([string(1,_Key),string(2,_Value)])</code>.
+
+<p><b>Notes:</b>
+
+<p>Beware that there is no explicit means to encode an empty set. The 
+protobuf specification provides that a <code>repeated</code> field may 
+match a tag zero or more times. The empty set, while legal, produces no 
+output on encode. While decoding a <code>repeated</code> term, failure 
+to match the specified tag will yield an empty set of the specified host 
+type.
+
+<p>An omitted <code>optional</code> field is handled the same way as a <code>repeated</code> 
+field with an empty set.
+
+<p>The protobuf grammar provides a variant of the <code>repeated</code> 
+field known as "packed." This is represented similar to <code>repeated</code>, 
+e.g.:
+
+<pre class="code">
+    packed(22, float([1,2,3,4])),
+    packed(23, enum(tank_state([empty, half_full, full]))).
+</pre>
+
+<p><b>Handling missing fields</b> <a id="sec:protobufs-missing"></a>
+
+<p>For input, you can wrap fields in <code>repeated</code>, so that if a 
+field is there, it gets a length-1 list and if it's missing, an empty 
+list:
+
+<pre class="code">
+?- Codes = [82,9,105,110,112,117,116,84,121,112,101],
+   protobuf_message(protobuf([embedded(10, protobuf([repeated(13, integer64(I))]))]),  Codes),
+   protobuf_message(protobuf([embedded(10, protobuf([repeated(13, double(D))]))]),  Codes),
+   protobuf_message(protobuf([repeated(10, string(S))]), Codes).
+I = [7309475598860382318],
+D = [4.272430685433854e+180],
+S = ["inputType"].
+</pre>
+
+<pre class="code">
+?- Codes = [82,9,105,110,112,117,116,84,121,112,101],
+      protobuf_message(protobuf([repeated(10, string(S)),
+                                 repeated(11, integer64(I))]), Codes).
+S = ["inputType"],
+I = [].
+</pre>
+
+<p>This technique can also be used for output - a missing field simply 
+produces nothing in the wire format:
+
+<pre class="code">
+?- protobuf_message(protobuf([repeated(10, string([]))]), Codes).
+Codes = [].
+?- protobuf_message(protobuf([repeated(10, string(S))]), []).
+S = [].
+</pre>
+
+<p><b>Encapsulation and Enumeration</b> <a id="sec:protobufs-encapsulation"></a>
+
+<p>It is possible to embed one protocol buffer specification inside 
+another using the <code>embedded</code> term. The following example 
+shows a vector of numbers being placed in an envelope that contains a 
+command enumeration.
+
+<p>Enumerations are a compact method of sending tokens from one system 
+to another. Most occupy only two bytes in the wire-stream. An 
+enumeration requires that you specify a callable predicate like <span class="pred-ext">commands/2</span>, 
+below. The first argument is an atom specifying the name of token, and 
+the second is an integer that specifies the token's value. These must of 
+course, match a corresponding enumeration in the .proto file.
+
+<p><b>Note:</b> You must expose this predicate to the protobufs module 
+by assigning it explicitly.
+
+<pre class="code">
+protobufs:commands(Key, Value) :-
+    commands(Key, Value).
+
+commands(square, 1).
+commands(decimate, 2).
+commands(transform, 3).
+commands(inverse_transform, 4).
+
+basic_vector(Type, Proto) :-
+    vector_type(Type, Tag),
+    Proto = protobuf([ repeated(Tag, Type) ]).
+
+send_command(Command, Vector, WireCodes) :-
+    basic_vector(Vector, Proto1),
+    Proto = protobuf([enum(1, commands(Command)),
+                      embedded(2, Proto1)]),
+    protobuf_message(Proto, WireCodes).
+</pre>
+
+<p>Use it as follows:
+
+<pre class="code">
+?- send_command(square, double([1,22,3,4]), WireCodes).
+WireCodes = [8, 1, 18, 36, 17, 0, 0, 0, 0, 0, 0, 240, 63, 17, 0, 0, 0, 0, 0,
+0, 54, 64, 17, 0, 0, 0, 0, 0, 0, 8, 64, 17, 0, 0, 0, 0, 0, 0, 16, 64].
+
+?- send_command(Cmd, V, $WireCodes).
+Cmd = square,
+V = double([1.0, 22.0, 3.0, 4.0]).
+</pre>
+
+<p><b>Compatibility Note:</b> The protobuf grammar (protobuf-2.1.0) 
+permits enumerations to assume negative values. This requires them to be 
+encoded as integers. Google's own Golden Message unit-test framework has 
+enumerations encoded as regular integers, without the "zigzag" encoding. 
+Therefore, negative values are space-inefficient, but they are allowed.
+
+<p>An earlier version of <a class="pred" href="#protobuf_message/2">protobuf_message/2</a> 
+assumed that enumeration values could not be zero, and there might still 
+be incorrect assumptions in the code, resulting in either exceptions or 
+silent failure.<b>Heterogeneous Collections</b> <a id="sec:protobufs-heterogeneous"></a>
+
+<p>Using Protocol Buffers, it is easy to specify fixed data structures 
+and homogeneous vectors like one might find in languages like C++ and 
+Java. It is however, quite another matter to interwork with these 
+languages when requirements call for working with compound structures, 
+arrays of compound structures, or unstructured collections (e.g. bags) 
+of data.
+
+<p>At bottom, a wire-stream is nothing more than a concatenated stream 
+of primitive wire type strings. As long as you can associate a tag with 
+its host type in advance, you will have no difficulty in decoding the 
+message. You do this by supplying the <i>structure</i>. Tell the parser 
+what is possible and let the parser figure it out on its own, one 
+production at a time. An example may be found in the appendix.
+
+<p><h4 id="sec:protobufs-groups"><a id="sec:1.4.5"><span class="sec-nr">1.4.5</span> <span class="sec-title">Groups 
+(deprecated)</span></a></h4>
+
+<p><a id="sec:protobufs-groups"></a>
+
+<p>Protocol Buffer Groups provide a means for constructing unitary 
+messages consisting of ad-hoc lists of terms. The following protobuf 
+fragment shows the definition of a group carrying a complex number.
+
+<pre class="code">
+     Proto = group(2, [ double(1, Real_part), double(2, Img_part) ]).
+</pre>
+
+<p>Groups have been replaced by <i>embedded</i> messages, which are 
+slightly less expensive to encode.
+
+<p><h4 id="sec:protobufs-advanced"><a id="sec:1.4.6"><span class="sec-nr">1.4.6</span> <span class="sec-title">Advanced 
+Topics</span></a></h4>
+
+<p><a id="sec:protobufs-advanced"></a><b>Precompiled Messages</b> <a id="sec:protobufs-precompiled"></a>
+
+<p>Performance can be improved using a strategy of precompiling the 
+constant portions of your message. Enumerations for example, are 
+excellent candidates for precompilation. Using
+<a class="pred" href="#protobuf_message/3">protobuf_message/3</a>, the 
+precompiled portion of the message is inserted directly in the 
+wire-stream on encode, and is unified with, and removed from the 
+wire-stream on decode. The following shows how the "send_command" 
+example above, can be converted to precompiled form:
+
+<pre class="code">
+send_precompiled_command(Command, Vector, WireCodes) :-
+    basic_vector(Vector, Proto1),
+    % precompiled_message/3 is created by term_expansion
+    precompiled_message(commands(Command), WireCodes, Tail),
+    protobuf_message(protobuf([embedded(3, Proto1)]), Tail).
+
+term_expansion(precompile_commands, Clauses) :-
+    findall(precompiled_message(commands(Key), WireCodes, Tail),
+            (   protobufs:commands(Key, _),
+                Proto = protobuf([atom(1, command),
+                                  enum(2, commands(Key))]),
+                protobuf_message(Proto, WireCodes, Tail)
+            ),
+            Clauses).
+
+*
+*
+*
+precompile_commands.  % Trigger the term-expansion precompilation
+</pre>
+
+<p><b>Supplying Your Own Host Type Message Sequences</b> <a id="sec:protobufs-user-types"></a>
+
+<p>You can extend the parser to support your own compound host types. 
+These are treated as first class entities by the parser. That is they 
+can be used either by themselves, or in <code>repeated</code> and <code>embedded</code> 
+clauses just as any other host type would be. You do this by hooking 
+into the parser and adding your own <code>message_sequence</code> 
+productions. Your hook eventually calls back into the parser with your 
+substitution/expansion protobuf, which is then embedded in the wire 
+stream. Recursive structures can be defined this way. A simple example 
+of a recursive XML like structure is shown in the appendix.
+
+<p><h2 id="sec:protobufs-appendix"><a id="sec:2"><span class="sec-nr">2</span> <span class="sec-title">Appendix</span></a></h2>
+
+<p><a id="sec:protobufs-appendix"></a>
+
+<p><h3 id="sec:protobufs-ex-xml"><a id="sec:2.1"><span class="sec-nr">2.1</span> <span class="sec-title">Example: 
+A Simple XML Like Structure</span></a></h3>
+
+<p><a id="sec:protobufs-ex-xml"></a>
+
+<p>This is an example of using the low-level interface for implementing 
+a domain-specific language that maps to protobufs.
+
+<p>In this example we demonstrate managing a recursive structure like 
+XML. The structure shown in <span class="pred-ext">xml_proto/1</span> 
+below, is similar to the structure returned by <span class="pred-ext">load_xml_file/2</span>, 
+which is part of the SGML library. We supply three <code>message_sequence</code> 
+decorators: <code>kv_pair</code>, <code>xml_element</code>, and <code>aux_xml_element</code>. 
+These are treated as first class host types.
+
+<pre class="code">
+:- multifile protobufs:message_sequence//3.
+
+protobufs:message_sequence(Type, Tag, Value)  --&gt;
+    { my_message_sequence(Type, Value, Proto) },
+    protobufs:message_sequence(embedded, Tag, Proto), !.
+%
+% On encode, the value type determines the tag. And on decode
+% the tag to determines the value type.
+%
+
+guard(Type, Value) :-
+    ( nonvar(Value) -&gt; is_of_type(Type, Value); true ).
+
+my_message_sequence(kv_pair, Key=Value, Proto) :-
+    Proto = protobuf([atom(30, Key), X]),
+    ( ( guard(integer, Value), X = integer(31, Value) )
+    ; ( guard(float, Value),   X = double(32,  Value) )
+    ; ( guard(atom, Value),    X = atom(33,    Value)) ).
+
+my_message_sequence(xml_element,
+                    element(Name, Attributes, Contents), Proto) :-
+    Proto = protobuf([ atom(21, Name),
+                       repeated(22, kv_pair(Attributes)),
+                       repeated(23, aux_xml_element(Contents))]).
+
+my_message_sequence(aux_xml_element, Contents, Proto) :-
+    Contents = element(_Name, _Attributes, _ElementContents),
+    Proto = protobuf([xml_element(40, Contents)]).
+
+my_message_sequence(aux_xml_element, Contents, Proto) :-
+    Proto = protobuf([atom(43, Contents)]).
+
+xml_proto([element(space1,
+                   [foo='1', bar='2'],
+                   [fum,
+                    bar,
+                    element(space2,
+                            [fum=3.1415, bum= -14],
+                            ['more stuff for you']),
+                    element(space2b,
+                            [],
+                            [this, is, embedded, also]),
+                    to,
+                    you])]).
+
+test_xml(X, Y) :-
+    Proto = protobuf([repeated(20, xml_element(X))]),
+
+    protobuf_message(Proto, Y).
+
+% And test it:
+
+?- xml_proto(X), test_xml(X,Y), test_xml(Z,Y), Z == X.
+X = Z,
+Z = [element(space1,
+             [foo='1', bar='2'],
+             [fum,
+              bar,
+              element(space2,
+                      [fum=3.1415, bum= -14],
+                      ['more stuff for you']
+                    ),
+              element(space2b,
+                      [],
+                      [this, is|...]
+                     ),
+              to,
+              you])],
+Y = [162, 1, 193, 1, 170, 1, 6, 115, 112|...],
+</pre>
+
+<p>A protobuf description that is compatible with the above wire stream 
+follows:
+
+<pre class="code">
+message kv_pair {
+  required string key = 30;
+  optional sint64  int_value = 31;
+  optional double float_value  = 32;
+  optional string atom_value = 33;
+}
+
+message aux_xml_element {
+  optional string atom = 43;
+  optional xml_element element = 40;
+}
+
+message xml_element {
+  required string name = 21;
+  repeated kv_pair attributes = 22;
+  repeated aux_xml_element contents = 23;
+}
+
+message XMLFile {
+  repeated xml_element elements = 20;
+}
+</pre>
+
+<p>Verify the wire stream using the protobuf compiler's decoder:
+
+<pre class="code">
+$ protoc --decode=XMLFile pb_vector.proto &lt;tmp98.tmp
+elements {
+  name: "space1"
+  attributes {
+    key: "foo"
+    atom_value: "1"
+  }
+  attributes {
+    key: "bar"
+    atom_value: "2"
+  }
+  contents {
+    atom: "fum"
+  }
+  contents {
+    atom: "bar"
+  }
+  contents {
+    element {
+      name: "space2"
+      attributes {
+        key: "fum"
+        float_value: 3.1415
+      }
+      attributes {
+        key: "bum"
+        int_value: -14
+      }
+      contents {
+        atom: "more stuff for you"
+      }
+    }
+  }
+  contents {
+    element {
+      name: "space2b"
+      contents {
+        atom: "this"
+      }
+      contents {
+        atom: "is"
+      }
+      contents {
+        atom: "embedded"
+      }
+      contents {
+        atom: "also"
+      }
+    }
+  }
+  contents {
+    atom: "to"
+  }
+  contents {
+    atom: "you"
+  }
+}
+</pre>
+
+<p><h3 id="sec:protobufs-ex-vector-of-numbers"><a id="sec:2.2"><span class="sec-nr">2.2</span> <span class="sec-title">Example: 
+Vectors of Numbers</span></a></h3>
+
+<p><a id="sec:protobufs-ex-vector-of-numbers"></a>
+
+<p>This is an example of using the low-level interface.
+
+<p>In the Prolog client:
+
+<pre class="code">
+vector_type(double(_List), 2).
+vector_type(float(_List), 3).
+vector_type(integer(_List), 4).
+vector_type(integer64(_List), 5).
+vector_type(integer32(_List), 6).
+vector_type(unsigned(_List), 7).
+vector_type(codes(_List), 8).
+vector_type(atom(_List), 9).
+vector_type(string(_List), 10).
+
+vector(Type, B):-
+    vector_type(Type, Tag),
+    Proto = protobuf([ repeated(Tag, Type) ]),
+    protobuf_message(Proto, B).
+</pre>
+
+<p>A protobuf description that is compatible with the above wire stream 
+follows:
+
+<pre class="code">
+  message Vector {
+  repeated double double_values     = 2;
+  repeated float float_values       = 3;
+  repeated sint32 integer_values    = 4;
+  repeated fixed64 integer64_values = 5;
+  repeated fixed32 integer32_values = 6;
+  repeated uint32 unsigned_values   = 7;
+  repeated bytes bytes_values       = 8;
+  repeated string atom_values       = 9;
+  repeated string string_values     = 10;
+  }
+</pre>
+
+<p>A typical application might consist of an abstract adapter class 
+along with a collection of concrete subclasses that refine an abstract 
+behavior in order to hide the interaction with the underlying protobuf 
+interpreter. An example of such a class written in C++ may be found in 
+the demos.
+
+<p>On the Prolog side:
+
+<pre class="code">
+  :- meta_predicate ~&gt;(0,0).
+  :- op(950, xfy, ~&gt;).
+
+  ~&gt;(P, Q) :-
+    setup_call_cleanup(P, (true; fail), assertion(Q)).
+
+  write_as_proto(Vector) :-
+    vector(Vector, WireStream),
+    open('tmp99.tmp', write, S, [encoding(octet),type(binary)])
+      ~&gt; close(S),
+    format(S, '~s', [WireStream]), !.
+
+  testv1(V) :-
+    read_file_to_codes('tmp99.tmp', Codes, [encoding(octet),type(binary)]),
+    vector(V, Codes).
+</pre>
+
+<p>Run the Prolog side:
+
+<pre class="code">
+?- X is pi,
+   write_as_proto(double([-2.2212, -7.6675, X, 0, 1.77e-9, 2.54e222])).
+X = 3.14159.
+
+?- testv1(Vector).
+Vector = double([-2.2212, -7.6675, 3.14159, 0.0, 1.77e-09, 2.54e+222])
+?-
+</pre>
+
+<p>Verify the wire stream using the protobuf compiler's decoder:
+
+<pre class="code">
+$ protoc --decode=Vector pb_vector.proto &lt;tmp99.tmp
+double_values: -2.2212
+double_values: -7.6675
+double_values: 3.1415926535897931
+double_values: 0
+double_values: 1.77e-09
+double_values: 2.5400000000000002e+222
+</pre>
+
+<p><h3 id="sec:protobufs-ex-heterogeneous"><a id="sec:2.3"><span class="sec-nr">2.3</span> <span class="sec-title">Example: 
+Heterogeneous Collections</span></a></h3>
+
+<p><a id="sec:protobufs-ex-heterogeneous"></a>
+
+<p>This is an example of using the low-level interface.
+
+<p>The following example shows how one can specify a Protocol Buffer 
+message that can deal with variable-length, unstructured bags of 
+numbers:
+
+<pre class="code">
+compound_protobuf(complex(Real, Img), group(12, [double(1, Real), double(2, Img)])).
+compound_protobuf(float(Val), float(13, Val)).
+compound_protobuf(double(Val), double(14, Val)).
+compound_protobuf((Num rdiv Den), group(15, [integer(1, Num), integer(2, Den)])).
+compound_protobuf(integer(Val), integer(16, Val)).
+
+protobuf_bag([], []).
+
+protobuf_bag([ Type | More], WireCodes) :-
+    compound_protobuf(Type, X),
+    Proto = protobuf([embedded(1, protobuf([X]))]),
+    protobuf_message(Proto, WireCodes, WireCodes1),
+    protobuf_bag(More, WireCodes1), !.
+</pre>
+
+<p>Use it as follows:
+
+<pre class="code">
+?- protobuf_bag([complex(2,3), complex(4,5),
+                 complex(6,7), 355 rdiv -113, integer(11)], X).
+
+X = [10, 20, 99, 9, 0, 0, 0, 0, 0|...].
+
+?- protobuf_bag(Y, $X).
+Y = [complex(2.0, 3.0), complex(4.0, 5.0),
+     complex(6.0, 7.0), 355 rdiv -113, integer(11)].
+</pre>
+
+<p>A protobuf description that is compatible with the above wire stream 
+follows:
+
+<pre class="code">
+message compound_protobuf {
+optional group Complex = 12 {
+    required double real = 1;
+    required double img = 2;
+};
+optional group Fraction = 15 {
+    required sint64 num = 1;
+    required sint64 den = 2;
+};
+optional float float = 13;
+optional double double = 14;
+optional sint32 integer = 16;
+}
+
+message protobuf_bag {
+    repeated compound_protobuf bag = 1;
+</pre>
+
+<p>Verify the wire stream using the protobuf compiler's decoder:
+
+<pre class="code">
+$ protoc --decode=protobuf_bag pb_vector.proto &lt;tmp96.tmp
+bag {
+  Complex {
+    real: 2
+    img: 3
+  }
+}
+bag {
+  Complex {
+    real: 4
+    img: 5
+  }
+}
+bag {
+  Complex {
+    real: 6
+    img: 7
+  }
+}
+bag {
+  Fraction {
+    num: 355
+    den: -113
+  }
+}
+bag {
+  integer: 11
+}
+</pre>
+
+<p><h2 id="sec:protobufs"><a id="sec:3"><span class="sec-nr">3</span> <span class="sec-title">library(protobufs): 
+Google's Protocol Buffers ("protobufs")</span></a></h2>
+
+<p><a id="sec:protobufs"></a>
+
+<dl class="tags">
+<dt class="mtag">author</dt>
+<dd>
+- Jeffrey Rosenwald (JeffRose@acm.org) <br>
+- Peter Ludemann (peter.ludemann@gmail.org)</dd>
+<dt class="mtag">See also</dt>
+<dd>
+- <a class="url" href="https://developers.google.com/protocol-buffers">https://developers.google.com/protocol-buffers</a> <br>
+- <a class="url" href="https://developers.google.com/protocol-buffers/docs/encoding">https://developers.google.com/protocol-buffers/docs/encoding</a>
+</dd>
+<dt class="tag">Compatibility</dt>
+<dd>
+SWI-Prolog
+</dd>
+</dl>
+
+<p>Protocol buffers are Google's language-neutral, platform-neutral, 
+extensible mechanism for serializing structured data -- think XML, but 
+smaller, faster, and simpler. You define how you want your data to be 
+structured once. This takes the form of a template that describes the 
+data structure. You use this template to encode and decode your data 
+structure into wire-streams that may be sent-to or read-from your peers. 
+The underlying wire stream is platform independent, lossless, and may be 
+used to interwork with a variety of languages and systems regardless of 
+word size or endianness. Techniques exist to safely extend your data 
+structure without breaking deployed programs that are compiled against 
+the "old" format.
+
+<p>The idea behind Google's Protocol Buffers is that you define your 
+structured messages using a domain-specific language and tool set. 
+Further documentation on this is at
+<a class="url" href="https://developers.google.com/protocol-buffers">https:<code>//</code>developers.google.com/protocol-buffers</a>.
+
+<p>There are two ways you can use protobufs in Prolog:
+
+<p>
+<ul class="latex">
+<li>with a compiled <code>.proto</code> file: <a class="pred" href="#protobuf_parse_from_codes/3">protobuf_parse_from_codes/3</a> 
+and
+<a class="pred" href="#protobuf_serialize_to_codes/3">protobuf_serialize_to_codes/3</a>.
+<li>with a lower-level interface <a class="pred" href="#protobuf_message/2">protobuf_message/2</a>, 
+which allows you to define your own domain-specific language for parsing 
+and serializing protobufs.
+</ul>
+
+<p>The <a class="pred" href="#protobuf_parse_from_codes/3">protobuf_parse_from_codes/3</a> 
+and <a class="pred" href="#protobuf_serialize_to_codes/3">protobuf_serialize_to_codes/3</a> 
+interface translates between a "wire stream" and a Prolog term. This 
+interface takes advantage of SWI-Prolog's
+<a class="url" href="/pldoc/man?section=bidicts">dict</a>. There is a <code>protoc</code> 
+plugin (<code>protoc-gen-swipl</code>) that generates a Prolog file of 
+meta-information that captures the <code>.proto</code> file's definition 
+in the <code>protobufs</code> module:
+
+<p>
+<ul class="compact">
+<li><code>proto_meta_normalize(Unnormalized, Normalized)</code>
+<li><code>proto_meta_package(Package, FileName, Options)</code>
+<li><code>proto_meta_message_type( Fqn, Package, Name)</code>
+<li><code>proto_meta_message_type_map_entry( Fqn)</code>
+<li><code>proto_meta_field_name( Fqn, FieldNumber, FieldName, FqnName)</code>
+<li><code>proto_meta_field_json_name( FqnName, JsonName)</code>
+<li><code>proto_meta_field_label( FqnName, LabelRepeatOptional) % 'LABEL_OPTIONAL', 'LABEL_REQUIRED', 'LABEL_REPEATED'</code>
+<li><code>proto_meta_field_type( FqnName, Type) % 'TYPE_INT32', 'TYPE_MESSAGE', etc</code>
+<li><code>proto_meta_field_type_name( FqnName, TypeName)</code>
+<li><code>proto_meta_field_default_value( FqnName, DefaultValue)</code>
+<li><code>proto_meta_field_option_packed( FqnName)</code>
+<li><code>proto_meta_enum_type( FqnName, Fqn, Name)</code>
+<li><code>proto_meta_enum_value( FqnName, Name, Number)</code>
+<li><code>proto_meta_field_oneof_index( FqnName, Index)</code>
+<li><code>proto_meta_oneof( FqnName, Index, Name)</code>
+</ul>
+
+<p>The <a class="pred" href="#protobuf_message/2">protobuf_message/2</a> 
+interface allows you to define your message template as a list of 
+predefined Prolog terms that correspond to production rules in the 
+Definite Clause Grammar (DCG) that realizes the interpreter. Each 
+production rule has an equivalent rule in the protobuf grammar. The 
+process is not unlike specifiying the format of a regular expression. To 
+encode a template to a wire-stream, you pass a grounded template, <code>X</code>, 
+and variable, <code>Y</code>, to
+<a class="pred" href="#protobuf_message/2">protobuf_message/2</a>. To 
+decode a wire-stream, <code>Y</code>, you pass an ungrounded template, <code>X</code>, 
+along with a grounded wire-stream, <code>Y</code>, to
+<a class="pred" href="#protobuf_message/2">protobuf_message/2</a>. The 
+interpreter will unify the unbound variables in the template with values 
+decoded from the wire-stream.
+
+<p>For an overview and tutorial with examples, see
+<code>library(protobufs)</code>: Google's Protocol Buffers (<a class="sec" href="#sec:1">section 
+1</a>) Examples of usage may also be found by inspecting
+<a class="url" href="https://github.com/SWI-Prolog/contrib-protobufs/blob/master/test_protobufs.pl">test_protobufs.pl</a> 
+and the
+<a class="url" href="https://github.com/SWI-Prolog/contrib-protobufs/tree/master/demo">demo</a> 
+directory, or by looking at the "addressbook" example that is typically 
+installed at /usr/lib/swi-<code>prolog/doc/packages/examples/protobufs/interop/addressbook.pl</code>
+
+<dl class="latex">
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="protobuf_parse_from_codes/3"><strong>protobuf_parse_from_codes</strong>(<var>+WireCodes:list(int), 
++MessageType:atom, -Term</var>)</a></dt>
+<dd class="defbody">
+Process bytes (list of int) that is the serialized form of a message 
+(designated by <code>MessageType</code>), creating a Prolog term.
+
+<p><code>Protoc</code> must have been run (with the <code>--swipl_out=</code> 
+option and the resulting top-level _<code>pb.pl</code> file loaded. For 
+more details, see the "protoc" section of the overview documentation.
+
+<p>Fails if the message can't be parsed or if the appropriate meta-data 
+from <code>protoc</code> hasn't been loaded.
+
+<p>All fields that are omitted from the <code>WireCodes</code> are set 
+to their default values (typically the empty string or 0, depending on 
+the type; or <code>[]</code> for repeated groups). There is no way of 
+testing whether a value was specified in <code>WireCodes</code> or given 
+its default value (that is, there is no equivalent of the Python 
+implementation's =HasField`). Optional embedded messages and groups do 
+not have any default value -- you must check their existence by using <span class="pred-ext">get_dict/3</span> 
+or similar. If a field is part of a "oneof" set, then none of the other 
+fields is set. You can determine which field had a value by using <span class="pred-ext">get_dict/3</span>.
+<table class="arglist">
+<tr><td><var>WireCodes</var> </td><td>Wire format of the message from 
+e.g., <span class="pred-ext">read_stream_to_codes/2</span>. (The stream 
+should have options <code>encoding(octet)</code> and <code>type(binary)</code>, 
+either as options to <span class="pred-ext">read_file_to_codes/3</span> 
+or by calling <span class="pred-ext">set_stream/2</span> on the stream 
+to <span class="pred-ext">read_stream_to_codes/2</span>.) </td></tr>
+<tr><td><var>MessageType</var> </td><td>Fully qualified message name 
+(from the <code>.proto</code> file's <code>package</code> and <code>message</code>). 
+For example, if the <code>package</code> is <code>google.protobuf</code> 
+and the message is <code>FileDescriptorSet</code>, then you would use
+<code>'.google.protobuf.FileDescriptorSet'</code> or <code>'google.protobuf.FileDescriptorSet'</code>. 
+If there's no package name, use e.g.: <code>'MyMessage</code> or <code>'.MyMessage'</code>. 
+You can see the packages by looking at
+<code>protobufs:proto_meta_package(Pkg,File,_)</code> and the message 
+names and fields by
+<code>protobufs:proto_meta_field_name('.google.protobuf.FileDescriptorSet', FieldNumber, FieldName, FqnName)</code> 
+(the initial&rsquo;.' is not optional for these facts, only for the 
+top-level name given to <a class="pred" href="#protobuf_serialize_to_codes/3">protobuf_serialize_to_codes/3</a>). </td></tr>
+<tr><td><var>Term</var> </td><td>The generated term, as nested <a class="url" href="/pldoc/man?section=bidicts">dict</a>s. </td></tr>
+</table>
+
+<dl class="tags">
+<dt class="tag">Errors</dt>
+<dd>
+<code>version_error(Module-Version)</code> you need to recompile the <code>Module</code> 
+with a newer version of <code>protoc</code>.
+</dd>
+<dt class="tag">See also</dt>
+<dd>
+<code>library(protobufs)</code>: Google's Protocol Buffers (<a class="sec" href="#sec:1.3.1">section 
+1.3.1</a>)</dd>
+<dt class="mtag">bug</dt>
+<dd>
+- Ignores <code>.proto</code> <a class="url" href="https://developers.google.com/protocol-buffers/docs/proto#extensions">extensions</a>. <br>
+- <code>map</code> fields don't get special treatment (but see <a class="pred" href="#protobuf_map_pairs/3">protobuf_map_pairs/3</a>). <br>
+- Generates fields in a different order from the C++, Python, Java 
+implementations, which use the field number to determine field order 
+whereas currently this implementation uses field name. (This isn't 
+stricly speaking a bug, because it's allowed by the specification; but 
+it might cause some surprise.)</dd>
+<dt class="mtag">To be done</dt>
+<dd>
+- document the generated terms (see <code>library(http/json)</code> and <span class="pred-ext">json_read_dict/3</span>) <br>
+- add options such as <code>true</code> and <code>value_string_as</code> 
+(similar to <span class="pred-ext">json_read_dict/3</span>) <br>
+- add option for form of the <a class="url" href="/pldoc/man?section=bidicts">dict</a> 
+tags (fully qualified or not) <br>
+- add option for outputting fields in the C++/Python/Java order (by 
+field number rather than by field name).
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="protobuf_serialize_to_codes/3"><strong>protobuf_serialize_to_codes</strong>(<var>+Term:dict, 
+-MessageType:atom, -WireCodes:list(int)</var>)</a></dt>
+<dd class="defbody">
+Process a Prolog term into bytes (list of int) that is the serialized 
+form of a message (designated by <code>MessageType</code>).
+
+<p><code>Protoc</code> must have been run (with the <code>--swipl_out=</code> 
+option and the resulting top-level _<code>pb.pl</code> file loaded. For 
+more details, see the "protoc" section of the overview documentation.
+
+<p>Fails if the term isn't of an appropriate form or if the appropriate 
+meta-data from <code>protoc</code> hasn't been loaded, or if a field 
+name is incorrect (and therefore nothing in the meta-data matches it).
+<table class="arglist">
+<tr><td><var>Term</var> </td><td>The Prolog form of the data, as nested <a class="url" href="/pldoc/man?section=bidicts">dict</a>s. </td></tr>
+<tr><td><var>MessageType</var> </td><td>Fully qualified message name 
+(from the <code>.proto</code> file's <code>package</code> and <code>message</code>). 
+For example, if the <code>package</code> is <code>google.protobuf</code> 
+and the message is <code>FileDescriptorSet</code>, then you would use
+<code>'.google.protobuf.FileDescriptorSet'</code> or <code>'google.protobuf.FileDescriptorSet'</code>. 
+If there's no package name, use e.g.: <code>'MyMessage</code> or <code>'.MyMessage'</code>. 
+You can see the packages by looking at
+<code>protobufs:proto_meta_package(Pkg,File,_)</code> and the message 
+names and fields by
+<code>protobufs:proto_meta_field_name('.google.protobuf.FileDescriptorSet', FieldNumber, FieldName, FqnName)</code> 
+(the initial&rsquo;.' is not optional for these facts, only for the 
+top-level name given to <a class="pred" href="#protobuf_serialize_to_codes/3">protobuf_serialize_to_codes/3</a>). </td></tr>
+<tr><td><var>WireCodes</var> </td><td>Wire format of the message, which 
+can be output using
+<code>format('~s', [WireCodes])</code>. </td></tr>
+</table>
+
+<dl class="tags">
+<dt class="mtag">Errors</dt>
+<dd>
+- <code>version_error(Module-Version)</code> you need to recompile the <code>Module</code> 
+with a newer version of <code>protoc</code>. <br>
+- existence_error if a field can't be found in the meta-data
+</dd>
+<dt class="tag">See also</dt>
+<dd>
+<code>library(protobufs)</code>: Google's Protocol Buffers (<a class="sec" href="#sec:1.3.1">section 
+1.3.1</a>)</dd>
+<dt class="mtag">bug</dt>
+<dd>
+- <code>map</code> fields don't get special treatment (but see <a class="pred" href="#protobuf_map_pairs/3">protobuf_map_pairs/3</a>). <br>
+- <code>oneof</code> is not checked for validity.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="protobuf_message/2"><strong>protobuf_message</strong>(<var>?Template, 
+?WireStream</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[nondet]</span><a id="protobuf_message/3"><strong>protobuf_message</strong>(<var>?Template, 
+?WireStream, ?Rest</var>)</a></dt>
+<dd class="defbody">
+Marshals and unmarshals byte streams encoded using Google's Protobuf 
+grammars. <a class="pred" href="#protobuf_message/2">protobuf_message/2</a> 
+provides a bi-directional parser that marshals a Prolog structure to <var>WireStream</var>, 
+according to rules specified by <var>Template</var>. It can also 
+unmarshal <var>WireStream</var> into a Prolog structure according to the 
+same grammar.
+<a class="pred" href="#protobuf_message/3">protobuf_message/3</a> 
+provides a difference list version.
+<table class="arglist">
+<tr><td><var>Template</var> </td><td>is a protobuf grammar 
+specification. On decode, unbound variables in the <var>Template</var> 
+are unified with their respective values in the <var>WireStream</var>. 
+On encode, <var>Template</var> must be ground. </td></tr>
+<tr><td><var>WireStream</var> </td><td>is a code list that was generated 
+by a protobuf encoder using an equivalent template. </td></tr>
+</table>
+
+<dl class="tags">
+<dt class="tag">bug</dt>
+<dd>
+The protobuf specification states that the wire-stream can have the 
+fields in any order and that unknown fields are to be ignored. This 
+implementation assumes that the fields are in the exact order of the 
+definition and match exactly. If you use
+<a class="pred" href="#protobuf_parse_from_codes/3">protobuf_parse_from_codes/3</a>, 
+you can avoid this problem.o
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="protobuf_field_is_map/2"><strong>protobuf_field_is_map</strong>(<var>+MessageType, 
++FieldName</var>)</a></dt>
+<dd class="defbody">
+Succeeds if <code>MessageType</code>&rsquo;s <code>FieldName</code> is 
+defined as a map<var>&lt;</var>...<var>&gt;</var> in the .proto file.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="protobuf_map_pairs/3"><strong>protobuf_map_pairs</strong>(<var>+ProtobufTermList:list, 
+?DictTag:atom, ?Pairs</var>)</a></dt>
+<dd class="defbody">
+Convert between a list of protobuf map entries (in the form
+<code>DictTag{key:Key, value:Value}</code> and a key-value list as 
+described in <code>library(pairs)</code>. At least one of <code>ProtobufTermList</code> 
+and <code>Pairs</code> must be instantiated; <code>DictTag</code> can be 
+uninstantiated. If
+<code>ProtobufTermList</code> is from a term created by
+<a class="pred" href="#protobuf_parse_from_codes/3">protobuf_parse_from_codes/3</a>, 
+the ordering of the items is undefined; you can order them by using <span class="pred-ext">keysort/2</span> 
+(or by a predicate such as
+<span class="pred-ext">dict_pairs/3</span>, <span class="pred-ext">list_to_assoc/2</span>, 
+or <span class="pred-ext">list_to_rbtree/2</span>.
+</dd>
+</dl>
+
+<h1><a id="document-index">Index</a></h1>
+
+<dl>
+<dt class="index-sep">?</dt>
+<dt><a class="idx" href="#protobuf_field_is_map/2">protobuf_field_is_map/2</a></dt>
+<dt><a class="idx" href="#protobuf_map_pairs/3">protobuf_map_pairs/3</a></dt>
+<dt><a class="idx" href="#protobuf_message/2">protobuf_message/2</a></dt>
+<dt><a class="idx" href="#protobuf_message/3">protobuf_message/3</a></dt>
+<dt><a class="idx" href="#protobuf_parse_from_codes/3">protobuf_parse_from_codes/3</a></dt>
+<dt><a class="idx" href="#protobuf_serialize_to_codes/3">protobuf_serialize_to_codes/3</a></dt>
+<dd>
+</dd>
+</dl>
+
+</body></html>

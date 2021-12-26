@@ -1,0 +1,318 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.5.4 Reference Manual: Section A.20</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="heaps.html">
+<link rel="next" href="intercept.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="heaps.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="intercept.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:increval"><a id="sec:A.20"><span class="sec-nr">A.20</span> <span class="sec-title">library(increval): 
+Incremental dynamic predicate modification</span></a></h2>
+
+<p><a id="sec:increval"></a>
+
+<dl class="tags">
+<dt class="tag">Compatibility</dt>
+<dd>
+XSB
+</dd>
+</dl>
+
+<p>This module emulates the XSB module <code>increval</code>. This 
+module serves two goals: (1) provide alternatives for the dynamic clause 
+manipulation predicates that propagate into the incremental tables and 
+(2) query the dynamically maintained <i>Incremental Depency Graph</i> 
+(IDG).
+
+<p>The change propagation for incremental dynamic predicates. SWI-Prolog 
+relies in <a class="pred" href="prolog-event.html#prolog_listen/2">prolog_listen/2</a> 
+to forward any change to dynamic predicates to the table IDG and <span class="pred-ext">incr_assert/1</span> 
+and friends thus simply call the corresponding database update.
+
+<dl class="latex">
+<dt class="pubdef"><span class="pred-tag">[nondet]</span><a id="is_incremental_subgoal/1"><strong>is_incremental_subgoal</strong>(<var>?SubGoal</var>)</a></dt>
+<dd class="defbody">
+This predicate non-deterministically unifies Subgoal with incrementally 
+tabled subgoals that are currently table entries.</dd>
+<dt class="pubdef"><span class="pred-tag">[nondet]</span><a id="incr_directly_depends/2"><strong>incr_directly_depends</strong>(<var>:Goal1, 
+:Goal2</var>)</a></dt>
+<dd class="defbody">
+True if <var>Goal1</var> depends on <var>Goal2</var> in the IDG.
+
+<dl class="tags">
+<dt class="tag">Compatibility</dt>
+<dd>
+: In XSB, at least one of Goal 1 or Goal 2 must be bound. This 
+implementation may be used with both arguments unbound.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[nondet]</span><a id="incr_trans_depends/2"><strong>incr_trans_depends</strong>(<var>:Goal1, 
+Goal2</var>)</a></dt>
+<dd class="defbody">
+True for each pair in the transitive closure of
+<code>incr_directly_depends(G1, G2)</code>.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="incr_invalid_subgoals/1"><strong>incr_invalid_subgoals</strong>(<var>-List</var>)</a></dt>
+<dd class="defbody">
+<var>List</var> is a sorted list (set) of the incremental subgoals that 
+are currently invalid.</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="incr_is_invalid/1"><strong>incr_is_invalid</strong>(<var>:Subgoal</var>)</a></dt>
+<dd class="defbody">
+True when <var>Subgoal</var>&rsquo;s table is marked as invalid.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="incr_invalidate_calls/1"><strong>incr_invalidate_calls</strong>(<var>:Goal</var>)</a></dt>
+<dd class="defbody">
+Invalidate all tables for subgoals of <var>Goal</var> as well as tables 
+that are affected by these.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="incr_invalidate_call/1"><strong>incr_invalidate_call</strong>(<var>:Goal</var>)</a></dt>
+<dd class="defbody">
+This is the XSB name, but the manual says <a class="pred" href="increval.html#incr_invalidate_calls/1">incr_invalidate_calls/1</a> 
+and the comment with the code suggests this is misnamed.
+
+<dl class="tags">
+<dt class="tag">deprecated</dt>
+<dd>
+Use <a class="pred" href="increval.html#incr_invalidate_calls/1">incr_invalidate_calls/1</a>.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><a id="incr_table_update/0"><strong>incr_table_update</strong></a></dt>
+<dd class="defbody">
+Updated all invalid tables</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="incr_propagate_calls/1"><strong>incr_propagate_calls</strong>(<var>:Answer</var>)</a></dt>
+<dd class="defbody">
+Activate the monotonic answer propagation similarly to when a new fact 
+is asserted for a monotonic dynamic predicate. The <var>Answer</var> 
+term must match a monotonic dynamic predicate.
+</dd>
+</dl>
+
+<p></body></html>

@@ -1,0 +1,424 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.5.4 Reference Manual: Section A.48</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="debug-determinism.html">
+<link rel="next" href="profile.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="debug-determinism.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="profile.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:statistics"><a id="sec:A.48"><span class="sec-nr">A.48</span> <span class="sec-title">library(statistics): 
+Get information about resource usage</span></a></h2>
+
+<p><a id="sec:statistics"></a>
+
+<p>This library provides predicates to obtain information about resource 
+usage by your program. The predicates of this library are for human use 
+at the toplevel: information is <i>printed</i>. All predicates obtain 
+their information using public low-level primitives. These primitives 
+can be use to obtain selective statistics during execution.
+
+<dl class="latex">
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="statistics/0"><strong>statistics</strong></a></dt>
+<dd class="defbody">
+Print information about resource usage using <a class="pred" href="printmsg.html#print_message/2">print_message/2</a>.
+
+<dl class="tags">
+<dt class="tag">See also</dt>
+<dd>
+All statistics printed are obtained through <a class="pred" href="statistics.html#statistics/2">statistics/2</a>.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="statistics/1"><strong>statistics</strong>(<var>-Stats:dict</var>)</a></dt>
+<dd class="defbody">
+<var>Stats</var> is a dict representing the same information as
+<a class="pred" href="statistics.html#statistics/0">statistics/0</a>. 
+This convience function is primarily intended to pass statistical 
+information to e.g., a web client. Time critical code that wishes to 
+collect statistics typically only need a small subset and should use <a class="pred" href="statistics.html#statistics/2">statistics/2</a> 
+to obtain exactly the data they need.</dd>
+<dt class="pubdef"><span class="pred-tag">[nondet]</span><a id="thread_statistics/2"><strong>thread_statistics</strong>(<var>?Thread, 
+-Stats:dict</var>)</a></dt>
+<dd class="defbody">
+Obtain statistical information about a single thread. Fails silently of 
+the <var>Thread</var> is no longer alive.
+<table class="arglist">
+<tr><td><var>Stats</var> </td><td>is a dict containing status, time and 
+stack-size information about <var>Thread</var>. </td></tr>
+</table>
+</dd>
+<dt class="pubdef"><span class="pred-tag">[nondet]</span><a id="time/1"><strong>time</strong>(<var>:Goal</var>)</a></dt>
+<dd class="defbody">
+Execute <var>Goal</var>, reporting statistics to the user. If <var>Goal</var> 
+succeeds non-deterministically, retrying reports the statistics for 
+providing the next answer.
+
+<p>Statistics are retrieved using <a class="pred" href="thmonitor.html#thread_statistics/3">thread_statistics/3</a> 
+on the calling thread. Note that not all systems support thread-specific 
+CPU time. Notable, this is lacking on MacOS X.
+
+<dl class="tags">
+<dt class="mtag">See also</dt>
+<dd>
+- <a class="pred" href="statistics.html#statistics/2">statistics/2</a> 
+for obtaining statistics in your program and understanding the reported 
+values. <br>
+- <a class="pred" href="statistics.html#call_time/2">call_time/2</a>, <a class="pred" href="statistics.html#call_time/3">call_time/3</a> 
+to obtain the timing in a dict.
+</dd>
+<dt class="tag">bug</dt>
+<dd>
+Inference statistics are often a few off.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><a id="call_time/2"><strong>call_time</strong>(<var>:Goal, 
+-Time:dict</var>)</a></dt>
+<dt class="pubdef"><a id="call_time/3"><strong>call_time</strong>(<var>:Goal, 
+-Time:dict, -Result</var>)</a></dt>
+<dd class="defbody">
+Call <var>Goal</var> as <a class="pred" href="metacall.html#call/1">call/1</a>, 
+unifying <var>Time</var> with a dict that provides information on the 
+resource usage. Currently <var>Time</var> contains the keys below. 
+Future versions may provide additional keys.
+
+<p>
+<ul class="compact">
+<li>wall:Seconds
+<li>cpu:Seconds
+<li>inferences:Count
+</ul>
+<table class="arglist">
+<tr><td><var>Result</var> </td><td>is one of <code>true</code> or <code>false</code> 
+depending on whether or not the goal succeeded. </td></tr>
+</table>
+</dd>
+<dt class="pubdef"><a id="profile/1"><strong>profile</strong>(<var>:Goal</var>)</a></dt>
+<dt class="pubdef"><a id="profile/2"><strong>profile</strong>(<var>:Goal, 
++Options</var>)</a></dt>
+<dd class="defbody">
+Run <var>Goal</var> under the execution profiler. Defined options are:
+
+<dl class="latex">
+<dt><strong>time</strong>(<var>Which</var>)</dt>
+<dd class="defbody">
+Profile <code>cpu</code> or <code>wall</code> time. The default is CPU 
+time.
+</dd>
+<dt><strong>top</strong>(<var>N</var>)</dt>
+<dd class="defbody">
+When generating a textual report, show the top <var>N</var> predicates.
+</dd>
+<dt><strong>cumulative</strong>(<var>Bool</var>)</dt>
+<dd class="defbody">
+If <code>true</code> (default <code>false</code>), show cumulative 
+output in a textual report.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><a id="show_profile/1"><strong>show_profile</strong>(<var>+Options</var>)</a></dt>
+<dd class="defbody">
+Display last collected profiling data. <var>Options</var> are
+
+<dl class="latex">
+<dt><strong>top</strong>(<var>N</var>)</dt>
+<dd class="defbody">
+When generating a textual report, show the top <var>N</var> predicates.
+</dd>
+<dt><strong>cumulative</strong>(<var>Bool</var>)</dt>
+<dd class="defbody">
+If <code>true</code> (default <code>false</code>), show cumulative 
+output in a textual report.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="profile_data/1"><strong>profile_data</strong>(<var>-Data</var>)</a></dt>
+<dd class="defbody">
+Gather all relevant data from profiler. This predicate may be called 
+while profiling is active in which case it is suspended while collecting 
+the data. <var>Data</var> is a dict providing the following fields:
+
+<dl class="latex">
+<dt><var><code>summary</code></var><strong><code>:</code></strong><var><var>Dict</var></var></dt>
+<dd class="defbody">
+Overall statistics providing
+
+<p>
+<ul class="latex">
+<li>samples:Count: Times the statistical profiler was called
+<li>ticks:Count Virtual ticks during profiling
+<li>accounting:Count Tick spent on accounting
+<li>time:Seconds Total time sampled
+<li>nodes:Count Nodes in the call graph.
+</ul>
+</dd>
+<dt><strong>nodes</strong></dt>
+<dd class="defbody">
+List of nodes. Each node provides:
+
+<p>
+<ul class="compact">
+<li>predicate:PredicateIndicator
+<li>ticks_self:Count
+<li>ticks_siblings:Count
+<li>call:Count
+<li>redo:Count
+<li>exit:Count
+<li>callers:<code>list_of(Relative)</code>
+<li>callees:<code>list_of(Relative)</code>
+</ul>
+</dd>
+</dl>
+
+<p><i>Relative</i> is a term of the shape below that represents a caller 
+or callee. Future versions are likely to use a dict instead.
+
+<pre class="code">
+node(PredicateIndicator, CycleID, Ticks, TicksSiblings,
+     Calls, Redos, Exits)
+</pre>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[nondet]</span><a id="profile_procedure_data/2"><strong>profile_procedure_data</strong>(<var>?Pred, 
+-Data:dict</var>)</a></dt>
+<dd class="defbody">
+Collect data for <var>Pred</var>. If <var>Pred</var> is unbound data for 
+each predicate that has profile data available is returned. <var>Data</var> 
+is described in
+<a class="pred" href="statistics.html#profile_data/1">profile_data/1</a> 
+as an element of the <code>nodes</code> key.
+</dd>
+</dl>
+
+<p></body></html>

@@ -1,0 +1,401 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.5.4 Reference Manual: Section A.53</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="tables.html">
+<link rel="next" href="thread.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="tables.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="thread.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:terms"><a id="sec:A.53"><span class="sec-nr">A.53</span> <span class="sec-title">library(terms): 
+Term manipulation</span></a></h2>
+
+<p><a id="sec:terms"></a>
+
+<dl class="tags">
+<dt class="tag">Compatibility</dt>
+<dd>
+YAP, SICStus, Quintus. Not all versions of this library define exactly 
+the same set of predicates, but defined predicates are compatible.
+</dd>
+</dl>
+
+<p>Compatibility library for term manipulation predicates. Most 
+predicates in this library are provided as SWI-Prolog built-ins.
+
+<dl class="latex">
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="term_size/2"><strong>term_size</strong>(<var>@Term, 
+-Size</var>)</a></dt>
+<dd class="defbody">
+True if <var>Size</var> is the size in <i>cells</i> occupied by <var>Term</var> 
+on the global (term) stack. A <i>cell</i> is 4 bytes on 32-bit machines 
+and 8 bytes on 64-bit machines. The calculation does take <i>sharing</i> 
+into account. For example:
+
+<pre class="code">
+?- A = a(1,2,3), term_size(A,S).
+S = 4.
+?- A = a(1,2,3), term_size(a(A,A),S).
+S = 7.
+?- term_size(a(a(1,2,3), a(1,2,3)), S).
+S = 11.
+</pre>
+
+<p>Note that small objects such as atoms and small integers have a size 
+0. Space is allocated for floats, large integers, strings and compound 
+terms.</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="variant/2"><strong>variant</strong>(<var>@Term1, 
+@Term2</var>)</a></dt>
+<dd class="defbody">
+Same as SWI-Prolog <code>Term1 =@= Term2</code>.</dd>
+<dt class="pubdef"><a id="subsumes_chk/2"><strong>subsumes_chk</strong>(<var>@Generic, 
+@Specific</var>)</a></dt>
+<dd class="defbody">
+True if <var>Generic</var> can be made equivalent to <var>Specific</var> 
+without changing <var>Specific</var>.
+
+<dl class="tags">
+<dt class="tag">deprecated</dt>
+<dd>
+Replace by <a class="pred" href="compare.html#subsumes_term/2">subsumes_term/2</a>.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><a id="subsumes/2"><strong>subsumes</strong>(<var>+Generic, 
+@Specific</var>)</a></dt>
+<dd class="defbody">
+True if <var>Generic</var> is unified to <var>Specific</var> without 
+changing
+<var>Specific</var>.
+
+<dl class="tags">
+<dt class="tag">deprecated</dt>
+<dd>
+It turns out that calls to this predicate almost always should have used <a class="pred" href="compare.html#subsumes_term/2">subsumes_term/2</a>. 
+Also the name is misleading. In case this is really needed, one is 
+adviced to follow <a class="pred" href="compare.html#subsumes_term/2">subsumes_term/2</a> 
+with an explicit unification.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="term_subsumer/3"><strong>term_subsumer</strong>(<var>+Special1, 
++Special2, -General</var>)</a></dt>
+<dd class="defbody">
+<var>General</var> is the most specific term that is a generalisation of
+<var>Special1</var> and <var>Special2</var>. The implementation can 
+handle cyclic terms.
+
+<dl class="tags">
+<dt class="tag">author</dt>
+<dd>
+Inspired by LOGIC.PRO by Stephen Muggleton
+</dd>
+<dt class="tag">Compatibility</dt>
+<dd>
+SICStus
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><a id="term_factorized/3"><strong>term_factorized</strong>(<var>+Term, 
+-Skeleton, -Substiution</var>)</a></dt>
+<dd class="defbody">
+Is true when <var>Skeleton</var> is <var>Term</var> where all subterms 
+that appear multiple times are replaced by a variable and Substitution 
+is a list of Var=Value that provides the subterm at the location Var. 
+I.e., After unifying all substitutions in Substiutions, <var>Term</var> <code>==</code>
+<var>Skeleton</var>. <var>Term</var> may be cyclic. For example:
+
+<pre class="code">
+?- X = a(X), term_factorized(b(X,X), Y, S).
+Y = b(_G255, _G255),
+S = [_G255=a(_G255)].
+</pre>
+
+</dd>
+<dt class="pubdef"><a id="mapargs/3"><strong>mapargs</strong>(<var>:Goal, 
+?Term1, ?Term2</var>)</a></dt>
+<dd class="defbody">
+<var>Term1</var> and <var>Term2</var> have the same functor (name/arity) 
+and for each matching pair of arguments <code>call(Goal, A1, A2)</code> 
+is true.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="mapsubterms/3"><strong>mapsubterms</strong>(<var>:Goal, 
++Term1, -Term2</var>)</a></dt>
+<dd class="defbody">
+Recursively map sub terms of <var>Term1</var> into subterms of <var>Term2</var> 
+for every pair for which <code>call(Goal, ST1, ST2)</code> succeeds. 
+Procedurably, the mapping for each (sub) term pair <code>T1/T2</code> is 
+defined as:
+
+<p>
+<ul class="latex">
+<li>If <var>T1</var> is a variable, Unify <var>T2</var> with <var>T1</var>.
+<li>If <code>call(Goal, T1, T2)</code> succeeds we are done. Note that 
+the mapping does not continue in <var>T2</var>. If this is desired, <var>Goal</var> 
+must call <a class="pred" href="terms.html#mapsubterms/3">mapsubterms/3</a> 
+explicitly as part of it conversion.
+<li>If <var>T1</var> is a dict, map all values, i.e., the <i>tag</i> and <i>keys</i> 
+are left untouched.
+<li>If <var>T1</var> is a list, map all elements, i.e., the list 
+structure is left untouched.
+<li>If <var>T1</var> is a compound, use <a class="pred" href="terms.html#same_functor/3">same_functor/3</a> 
+to instantiate <var>T2</var> and recurse over the term arguments left to 
+right.
+<li>Otherwise <var>T2</var> is unified with <var>T1</var>.
+</ul>
+</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="same_functor/2"><strong>same_functor</strong>(<var>?Term1, 
+?Term2</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="same_functor/3"><strong>same_functor</strong>(<var>?Term1, 
+?Term2, -Arity</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="same_functor/4"><strong>same_functor</strong>(<var>?Term1, 
+?Term2, ?Name, ?Arity</var>)</a></dt>
+<dd class="defbody">
+True when <var>Term1</var> and <var>Term2</var> are terms that have the 
+same functor (<var>Name</var>/<var>Arity</var>). The arguments must be 
+sufficiently instantiated, which means either <var>Term1</var> or <var>Term2</var> 
+must be bound or both <var>Name</var> and <var>Arity</var> must be 
+bound.
+
+<p>If <var>Arity</var> is 0, <var>Term1</var> and <var>Term2</var> are 
+unified with <var>Name</var> for compatibility.
+
+<dl class="tags">
+<dt class="tag">Compatibility</dt>
+<dd>
+SICStus
+</dd>
+</dl>
+
+</dd>
+</dl>
+
+<p></body></html>

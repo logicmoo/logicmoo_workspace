@@ -1,0 +1,11 @@
+// For testing imports of imports
+
+syntax = "proto2";
+package tutorial;
+
+import "google/protobuf/timestamp.proto"; // This is also in adressbook.proto
+
+message TimeStamps {
+  optional google.protobuf.Timestamp last_updated = 1;
+  repeated google.protobuf.Timestamp updates = 2;
+}

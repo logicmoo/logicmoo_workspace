@@ -1,0 +1,1686 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog Source Documentation Version 2</title>
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white"> 
+<div class="title">SWI-Prolog Source Documentation Version 2</div>
+<div class="author">Jan Wielemaker <br>
+VU University, Amsterdam <br>
+The Netherlands <br>
+E-mail: <a class="url" href="mailto:J.Wielemaker@vu.nl">J.Wielemaker@vu.nl</a></div>
+<div class="abstract">
+<div class="abstract-title">Abstract</div> This document presents PlDoc, 
+the SWI-Prolog source-code documentation infrastructure. PlDoc is 
+loosely based on JavaDoc, using structured comments to mix documentation 
+with source-code. SWI-Prolog's PlDoc is entirely written in Prolog and 
+well integrated into the environment. It can create HTML+CSS and LaTeX 
+documentation files as well as act as a web-server for the loaded 
+project during program development.
+
+<p>The SWI-Prolog website (<a class="url" href="http:www.swi-prolog.org">http:www.swi-prolog.org</a>) 
+is written in Prolog and integrates PlDoc to provide a comprehensive 
+searchable
+<a class="url" href="http://www.swi-prolog.org/pldoc/index.html">online 
+manual</a>.
+
+<p>Version&nbsp;2 of PlDoc extends the syntax with
+<a class="url" href="http://en.wikipedia.org/wiki/Markdown">Markdown</a> 
+markup as specified by <a class="url" href="http://www.stack.nl/~dimitri/doxygen/">Doxygen</a>. 
+Based on experience with version&nbsp;1, PlDoc&nbsp;2 both tightens some 
+rules to avoid misinterpretations and relaxes others that were 
+considered too conservative.
+</div>
+
+<h1><a id="document-contents">Table of Contents</a></h1>
+
+<div class="toc">
+<div class="toc-h2"><a class="sec" href="#sec:1"><span class="sec-nr">1</span> <span class="sec-title">Introduction</span></a></div>
+<div class="toc-h2"><a class="sec" href="#sec:2"><span class="sec-nr">2</span> <span class="sec-title">Overview</span></a></div>
+<div class="toc-h2"><a class="sec" href="#sec:3"><span class="sec-nr">3</span> <span class="sec-title">Structured 
+comments</span></a></div>
+<div class="toc-h2"><a class="sec" href="#sec:4"><span class="sec-nr">4</span> <span class="sec-title">File 
+(module) comments</span></a></div>
+<div class="toc-h2"><a class="sec" href="#sec:5"><span class="sec-nr">5</span> <span class="sec-title">Type, 
+mode and determinism declaration headers</span></a></div>
+<div class="toc-h2"><a class="sec" href="#sec:6"><span class="sec-nr">6</span> <span class="sec-title">Tags: <code>@</code>see, 
+etc.</span></a></div>
+<div class="toc-h2"><a class="sec" href="#sec:7"><span class="sec-nr">7</span> <span class="sec-title">Wiki 
+notation</span></a></div>
+<div class="toc-h3"><a class="sec" href="#sec:7.1"><span class="sec-nr">7.1</span> <span class="sec-title">Structuring 
+conventions</span></a></div>
+<div class="toc-h3"><a class="sec" href="#sec:7.2"><span class="sec-nr">7.2</span> <span class="sec-title">Text 
+markup: fonts and links</span></a></div>
+<div class="toc-h4"><a class="sec" href="#sec:7.2.1"><span class="sec-nr">7.2.1</span> <span class="sec-title">Emphasizing 
+text</span></a></div>
+<div class="toc-h4"><a class="sec" href="#sec:7.2.2"><span class="sec-nr">7.2.2</span> <span class="sec-title">Inline 
+code</span></a></div>
+<div class="toc-h4"><a class="sec" href="#sec:7.2.3"><span class="sec-nr">7.2.3</span> <span class="sec-title">Links</span></a></div>
+<div class="toc-h3"><a class="sec" href="#sec:7.3"><span class="sec-nr">7.3</span> <span class="sec-title">Images</span></a></div>
+<div class="toc-h2"><a class="sec" href="#sec:8"><span class="sec-nr">8</span> <span class="sec-title">Directory 
+indices</span></a></div>
+<div class="toc-h2"><a class="sec" href="#sec:9"><span class="sec-nr">9</span> <span class="sec-title">Documentation 
+files</span></a></div>
+<div class="toc-h2"><a class="sec" href="#sec:10"><span class="sec-nr">10</span> <span class="sec-title">Running 
+the documentation system</span></a></div>
+<div class="toc-h3"><a class="sec" href="#sec:10.1"><span class="sec-nr">10.1</span> <span class="sec-title">During 
+development</span></a></div>
+<div class="toc-h3"><a class="sec" href="#sec:10.2"><span class="sec-nr">10.2</span> <span class="sec-title">As 
+a manual server</span></a></div>
+<div class="toc-h3"><a class="sec" href="#sec:10.3"><span class="sec-nr">10.3</span> <span class="sec-title">Using 
+the browser interface</span></a></div>
+<div class="toc-h4"><a class="sec" href="#sec:10.3.1"><span class="sec-nr">10.3.1</span> <span class="sec-title">Searching</span></a></div>
+<div class="toc-h4"><a class="sec" href="#sec:10.3.2"><span class="sec-nr">10.3.2</span> <span class="sec-title">Views</span></a></div>
+<div class="toc-h4"><a class="sec" href="#sec:10.3.3"><span class="sec-nr">10.3.3</span> <span class="sec-title">Editing</span></a></div>
+<div class="toc-h3"><a class="sec" href="#sec:10.4"><span class="sec-nr">10.4</span> <span class="sec-title">library(doc_files): 
+Create stand-alone documentation files</span></a></div>
+<div class="toc-h3"><a class="sec" href="#sec:10.5"><span class="sec-nr">10.5</span> <span class="sec-title">Including 
+PlDoc in a LaTeX document</span></a></div>
+<div class="toc-h4"><a class="sec" href="#sec:10.5.1"><span class="sec-nr">10.5.1</span> <span class="sec-title">Predicate 
+reference for the LaTeX backend</span></a></div>
+<div class="toc-h2"><a class="sec" href="#sec:11"><span class="sec-nr">11</span> <span class="sec-title">Motivation 
+of choices</span></a></div>
+<div class="toc-h2"><a class="sec" href="#sec:12"><span class="sec-nr">12</span> <span class="sec-title">Compatibility 
+and standards</span></a></div>
+</div>
+
+<p><h2 id="sec:pldoc-intro"><a id="sec:1"><span class="sec-nr">1</span> <span class="sec-title">Introduction</span></a></h2>
+
+<a id="sec:pldoc-intro"></a>
+
+<p>When developing Prolog source that has to be maintained for a longer 
+period or is developed by a ---possibly distributed--- team some basic 
+quality mechanisms need to be adopted. A shared and well designed 
+codingstyle <cite><a class="cite" href="#DBLP:dblpjournals/tplp/CovingtonBOWP12">Covington <em>et 
+al.</em>, 2012</a></cite> is one of them. In addition, documentation of 
+source-files and their primary interfaces as well as a testing framework 
+must be established.
+
+<p>In our view, hitherto existing documentation and testing frameworks 
+fell short realising the basic needs in a lightweight and easy to adopt 
+system. To encourage consistent style, well commented code and 
+test-assisted development, we make sure that
+
+<p>
+<ul class="compact">
+<li>The documentation and testing framework requires a minimum of work 
+and learning.
+<li>The framework is immediately rewarding to the individual programmer 
+as well as the team,
+</ul>
+
+<p>First, we describe the documentation system we developed for 
+SWI-Prolog. In <a class="sec" href="#sec:11">section 11</a> we motivate 
+our main choices.
+
+<p><h2 id="sec:pldoc-overview"><a id="sec:2"><span class="sec-nr">2</span> <span class="sec-title">Overview</span></a></h2>
+
+<a id="sec:pldoc-overview"></a>
+
+<p>Like JavaDoc, the PlDoc infrastructure is based on <em>structured 
+comments</em>. Using comments, no changes have to be made to Prolog to 
+load the documented source. If the <code>library(pldoc)</code> library 
+is loaded, Prolog will not only load the source, but also parse all 
+structured comments. It processes the mode-declarations inside the 
+comments and stores these as annotations in the Prolog database to 
+support the test framework and other runtime and compiletime analysis 
+tools that may be developed in the future.
+
+<p>Documentation for all or some of the loaded files can be written to 
+file in either HTML+CSS or LaTeX (see <a class="sec" href="#sec:10.5">section 
+10.5</a>) format. Each source file is documented in a single file. In 
+addition, the documentation generator will generate an index file that 
+can be used as an index for a browser or input file for LaTeX for 
+producing nicely typeset document.
+
+<p>To support the developer, the documentation system can be asked to 
+start a web-server that can be used to browse the documentation.
+
+<p><h2 id="sec:pldoc-comments"><a id="sec:3"><span class="sec-nr">3</span> <span class="sec-title">Structured 
+comments</span></a></h2>
+
+<a id="sec:pldoc-comments"></a>
+
+<p>Structured comments come in two flavours, the line-comment (%) based 
+one, seen mostly in the Prolog community and the block-comment (<code>/*</code>...<code>*/</code>) 
+based one, commonly seen in the Java and C domains. As we cannot 
+determine the argument names, type and modes from following (predicate) 
+source itself, we must supply this in the comment.<sup class="fn">1<span class="fn-text">See <a class="sec" href="#sec:11">section 
+11</a>.</span></sup> The overall structure of the comment therefore is:
+
+<p>
+<ul class="compact">
+<li>Semi-formal type- and mode-description, see <a class="sec" href="#sec:5">section 
+5</a>
+<li>Wiki-style documentation body, see <a class="sec" href="#sec:7">section 
+7</a>
+<li>JavaDoc style tags (<code>@</code>keyword value, see <a class="sec" href="#sec:6">section 
+6</a>)
+</ul>
+
+<p>The <code>/*</code>...<code>*/</code> style comment starts with
+<code>/**</code>&lt;<var>white</var>&gt;. The type and mode declarations 
+start at the first non-blank line and are ended by a blank line.
+
+<p>The <code>%</code>-style line comments start with <code>%!</code>&lt;<var>white</var>&gt; 
+or, for compatibility reasons, with <code>%%</code>&lt;<var>white</var>&gt;.<sup class="fn">2<span class="fn-text">The <code>%%</code> 
+leader was considered to give too many false positives on arbitrary 
+source code. It is still accepted, but invalid comments are silently 
+ignored, while invalid comments that start with <code>%!</code> result 
+in a warning.</span></sup> The type and mode declaration is ended by the 
+first line that starts with a single %. E.g., the following two 
+fragments are identical wrt. PlDoc. Skipping blank-lines in <code>/**</code> 
+comments allows to start the comment on the second line.
+
+<pre class="code">
+%!      predicate(-Arg:type) is nondet
+%       Predicate ...
+</pre>
+
+<pre class="code">
+/**
+ * predicate(-Arg:type) is nondet
+ *
+ * Predicate ...
+ */
+</pre>
+
+<p>The JavaDoc style keyword list starts at the first line starting with 
+@&lt;<var>word</var>&gt;.
+
+<p><h2 id="sec:sectioncomments"><a id="sec:4"><span class="sec-nr">4</span> <span class="sec-title">File 
+(module) comments</span></a></h2>
+
+<a id="sec:sectioncomments"></a>
+
+<p>An important aspect is documentation of the file or module as a 
+whole, explaining its design, purpose and relation to other modules. In 
+JavaDoc this is the comment that preceeds the class definition. The 
+Prolog equivalent would be to put the module comment in front of the 
+module declaration. The module declaration itself however is an 
+important index to the content of the file and is therefore best kept 
+first.
+
+<p>The general comment-structure for module comments is to use a type 
+identifier between angled brackets, followed by the title of the 
+section. Currently the only type provided is <code>module</code>. Other 
+types may be added later.
+
+<h3>Example</h3>
+
+<pre class="code">
+/** &lt;module&gt; Prolog documentation processor
+
+This module processes structured comments and generates both formal
+mode declarations from them as well as documentation in the form of
+HTML or LaTeX.
+
+@author Jan Wielemaker
+@license GPL
+*/
+</pre>
+
+<p><h2 id="sec:modes"><a id="sec:5"><span class="sec-nr">5</span> <span class="sec-title">Type, 
+mode and determinism declaration headers</span></a></h2>
+
+<a id="sec:modes"></a>
+
+<p>Many predicates can sensibly be called in different ways, e.g. with a 
+specific argument as input or as output. The header of the documentation 
+of a predicate consists of one or more <em>templates</em>, each 
+representing a specific way of calling the predicate.
+
+<p>A template can contain information about types, argument 
+instantiation patterns, determinism and more. The syntax is informally 
+described below:
+
+<p><table class="latex frame-hsides center">
+<tr><td>&lt;<var>template</var>&gt; </td><td align=right>::=</td><td>&lt;<var>head</var>&gt;['//']&rsquo;is' &lt;<var>determinism</var>&gt; </td></tr>
+<tr><td></td><td align=right>|</td><td>&lt;<var>head</var>&gt;['//'] </td></tr>
+<tr><td>&lt;<var>determinism</var>&gt; </td><td align=right>::=</td><td>&rsquo;det' </td></tr>
+<tr><td></td><td align=right>|</td><td>&rsquo;semidet' </td></tr>
+<tr><td></td><td align=right>|</td><td>&rsquo;failure' </td></tr>
+<tr><td></td><td align=right>|</td><td>&rsquo;nondet' </td></tr>
+<tr><td></td><td align=right>|</td><td>&rsquo;multi' </td></tr>
+<tr><td></td><td align=right>|</td><td>&rsquo;undefined' </td></tr>
+<tr><td>&lt;<var>head</var>&gt; </td><td align=right>::=</td><td>&lt;<var>functor</var>&gt;&rsquo;('&lt;<var>argspec</var>&gt; &rsquo;,' &lt;<var>argspec</var>&gt;&rsquo;)' </td></tr>
+<tr><td></td><td align=right>|</td><td>&lt;<var>functor</var>&gt; </td></tr>
+<tr><td>&lt;<var>argspec</var>&gt; </td><td align=right>::=</td><td>[&lt;<var>instantiation</var>&gt;]&lt;<var>argname</var>&gt;[':'&lt;<var>type</var>&gt;] </td></tr>
+<tr><td>&lt;<var>instantiation</var>&gt; </td><td align=right>::=</td><td>&rsquo;++' <var>|</var> &rsquo;+' <var>|</var> &rsquo;-' <var>|</var> &rsquo;--' <var>|</var> &rsquo;?'
+<var>|</var> &rsquo;:' <var>|</var> &rsquo;@' <var>|</var> &rsquo;!' </td></tr>
+<tr><td>&lt;<var>type</var>&gt; </td><td align=right>::=</td><td>&lt;<var>term</var>&gt; </td></tr>
+</table>
+
+<p>The <em>determinism</em> values originate from Mercury. Their meaning 
+is explained in the table below. Informally, <code>det</code> is used 
+for deterministic transformations (e.g. arithmetic), <code>semidet</code> 
+for tests, <code>nondet</code> and <code>multi</code> for <em>generators</em>. 
+The
+<code>failure</code> indicator is rarely used. It mostly appears in 
+hooks or the recovery goal of <a id="idx:catch3:1"></a><span class="pred-ext">catch/3</span>.
+
+<p><table class="latex frame-hsides center">
+<tr><td><b>Determinism</b></td><td><b>Predicate behaviour </b></td></tr>
+<tr class="hline"><td><code>det</code> </td><td>Succeeds exactly once 
+without a choice point </td></tr>
+<tr><td><code>semidet</code> </td><td>Fails or Succeeds exactly once 
+without a choice-point </td></tr>
+<tr><td><code>failure</code> </td><td>Always fails </td></tr>
+<tr><td><code>nondet</code> </td><td>No constraints on the number of 
+times the predicate succeeds and whether or not it leaves choice-points 
+on the last success. </td></tr>
+<tr><td><code>multi</code> </td><td>As <code>nondet</code>, but succeeds 
+at least one time. </td></tr>
+<tr><td><code>undefined</code> </td><td>Well founded semantics third 
+value. See <a id="idx:undefined0:2"></a><span class="pred-ext">undefined/0</span>. </td></tr>
+</table>
+
+<p>The meanings of the <em>instantiation patterns</em> for individual 
+arguments are:
+
+<p><table class="latex frame-hsides center">
+<tr><td>++</td><td>Argument is ground at call-time, i.e., the argument 
+does not contain a variable anywhere. </td></tr>
+<tr><td>+</td><td>Argument is fully instantiated at call-time, to a term 
+that satisfies the type. This is not necessarily <em>ground</em>, e.g., 
+the term
+<code>[_]</code> is a <em>list</em>, although its only member is 
+unbound. </td></tr>
+<tr><td>-</td><td>Argument is an <em>output</em> argument. It may be 
+unbound at call-time, or it may be bound to a term. In the latter case, 
+the predicate behaves as if the argument was unbound, and then unified 
+with that term after the goal succeeds. For example, the goal <code>findall(X, 
+Goal, [T])</code> is good style and equivalent to <code>findall(X, Goal, 
+Xs), Xs = [T]</code><sup class="fn">3<span class="fn-text">The ISO 
+standard dictates that <code>findall(X, Goal, 1)</code> raises a <code>type_error</code> 
+exception, breaking this semantic relation. SWI-Prolog does not follow 
+the standard here.</span></sup> Determinism declarations assume that the 
+argument is a free variable at call-time. For the case where the 
+argument is bound or involved in constraints,
+<code>det</code> effectively becomes <code>semidet</code>, and <code>multi</code> 
+effectively becomes <code>nondet</code>.</td></tr>
+<tr><td>--</td><td>Argument is unbound at call-time. Typically used by 
+predicates that create&lsquo;something' and return a handle to the 
+created object, such as <a id="idx:open3:3"></a><span class="pred-ext">open/3</span> 
+which creates a <em>stream</em>. </td></tr>
+<tr><td>?</td><td>Argument is bound to a <em>partial term</em> of the 
+indicated type at call-time. Note that a variable is a partial term for 
+any type. </td></tr>
+<tr><td>:</td><td>Argument is a meta-argument. Implies <code><code>+</code></code>. </td></tr>
+<tr><td>@</td><td>Argument will not be further instantiated than it is 
+at call-time. Typically used for type tests. </td></tr>
+<tr><td>!</td><td>Argument contains a mutable structure that may be 
+modified using
+<a id="idx:setarg3:4"></a><span class="pred-ext">setarg/3</span> or <a id="idx:nbsetarg3:5"></a><span class="pred-ext">nb_setarg/3</span>. </td></tr>
+</table>
+
+<p>Users should be aware that calling a predicate with arguments 
+instantiated in a way other than specified by one of the templates may 
+result in errors or unexpected behavior.
+
+<p>Developers should ensure that predicates are <em>steadfast</em> with 
+respect to output arguments (marked - in the template). This means that 
+instantiation of output arguments at call-time does not change the 
+semantics of the goal (it may be used for optimization, though). If this 
+steadfast behavior cannot be guaranteed, -- should be used instead.
+
+<p>In the current version, argument <em>types</em> are represented by an 
+arbitrary term without formal semantics. In future versions we may adopt 
+a formal type system that allows for runtime verification and static 
+type analysis
+<cite><a class="cite" href="#DBLP:conf/cl/Hermenegildo00">Hermenegildo, 
+2000</a>, <a class="cite" href="#DBLP:journals/ai/MycroftO84">Mycroft &amp; 
+O'Keefe, 1984</a>, <a class="cite" href="#DBLP:conf/acsc/JefferyHS00">Jeffery <em>et 
+al.</em>, 2000</a></cite>
+
+<h3>Examples</h3>
+
+<pre class="code">
+%!      length(+List:list, -Length:int) is det.
+%!      length(?List:list, -Length:int) is nondet.
+%!      length(?List:list, +Length:int) is det.
+%
+%       True if List is a list of length Length.
+%
+%       @compat iso
+</pre>
+
+<p><h2 id="sec:tags"><a id="sec:6"><span class="sec-nr">6</span> <span class="sec-title">Tags: <code>@</code>see, 
+etc.</span></a></h2>
+
+<a id="sec:tags"></a>
+
+<p>Optionally, the description may be followed by one or more <em>tags</em>. 
+Our tag convention is strongly based on the conventions used by javaDoc. 
+It is adviced to place tags in the order they are described below.
+
+<dl class="latex">
+<dt><b><code>@</code>arg <i>Name Description</i></b></dt>
+<dd class="defbody">
+Defines the predicate arguments. Each argument has its own <code>@arg</code> 
+tag. The first word is the name of the argument. The remainder of the 
+tag is the description. Arguments declarations normally appear in order 
+used by the predicate.</dd>
+<dt><b><code>@</code>param <i>Name Description</i></b></dt>
+<dd class="defbody">
+This is a synonym for <code>@arg</code>, using the JavaDoc tag name.</dd>
+<dt><b><code>@</code>throws <i>Term Description</i></b></dt>
+<dd class="defbody">
+Error condition. First Prolog term is the error term. Remainder is the 
+description.</dd>
+<dt><b><code>@</code>error <i>Error Description</i></b></dt>
+<dd class="defbody">
+As <code>@</code>throws, but the exception is embedded in <code>error(Error, 
+Context)</code>.</dd>
+<dt><b><code>@</code>author <i>Name</i></b></dt>
+<dd class="defbody">
+Author of the module or predicate. Multiple entries are used if there 
+are multiple authors.</dd>
+<dt><b><code>@</code>version <i>Version</i></b></dt>
+<dd class="defbody">
+Version of the module. There is no formal versioning system.</dd>
+<dt><b><code>@</code>see <i>Text</i></b></dt>
+<dd class="defbody">
+Point to related material. Often contains links to predicates or files.</dd>
+<dt><b><code>@</code>deprecated <i>Alternative</i></b></dt>
+<dd class="defbody">
+The predicate or module is deprecated. The description specifies what to 
+use in new code.</dd>
+<dt><b><code>@</code>compat <i>Standards and systems</i></b></dt>
+<dd class="defbody">
+When implementing libraries or externally defined interfaces this tag 
+describes to which standard the interface is compatible.</dd>
+<dt><b><code>@</code>copyright <i>Copyright holder</i></b></dt>
+<dd class="defbody">
+Copyright notice.</dd>
+<dt><b><code>@</code>license <i>License conditions</i></b></dt>
+<dd class="defbody">
+License conditions that apply to the source.</dd>
+<dt><b><code>@</code>bug <i>Bug description</i></b></dt>
+<dd class="defbody">
+Known problems with the interface or implementation.</dd>
+<dt><b><code>@</code>tbd <i>Work to be done</i></b></dt>
+<dd class="defbody">
+Not yet realised behaviour that is enticipated in future versions.
+</dd>
+</dl>
+
+<p><h2 id="sec:wiki"><a id="sec:7"><span class="sec-nr">7</span> <span class="sec-title">Wiki 
+notation</span></a></h2>
+
+<a id="sec:wiki"></a>
+
+<p>Structured comments that provide part of the documentation are 
+written in Wiki notation, based on <a class="url" href="http://www.twiki.org">TWiki</a>, 
+with some Prolog specific additions.
+
+<p><h3 id="sec:pldoc-comment-structure"><a id="sec:7.1"><span class="sec-nr">7.1</span> <span class="sec-title">Structuring 
+conventions</span></a></h3>
+
+<a id="sec:pldoc-comment-structure"></a>
+
+<dl class="latex">
+<dt><b>Paragraphs</b></dt>
+<dd>
+Paragraphs are separated by a blank line. Paragraphs that are indented 
+in the source-code <em>after</em> normalising the left-margin with at 
+least 16 spaces are <em>centered</em>. Paragraphs where all the lines 
+start with &ldquo;<code>&gt; </code>&rdquo; (greater than followed by a 
+blank) are rendered in the HTML backend using a <code>blockquote</code> 
+element and in LaTeX using the <code>quote</code> environment.</dd>
+<dt><b>General lists</b></dt>
+<dd>
+The wiki knows three types of lists: <em>bullet lists</em> (HTML
+<code>ul</code>), <em>numbered lists</em> (HTML <code>ol</code>) and
+<em>description lists</em> (HTML <code>dl</code>). Each list environment 
+is headed by an empty line and each list-item has a special symbol at 
+the start, followed by a space. Each subsequent item must be indented at 
+exactly the same column. Lists may be nested by starting a new list at a 
+higher level of indentation. The list prefixes are:
+
+<p><table class="latex frame-void center">
+<tr><td><code>*</code></td><td>Bulleted list item </td></tr>
+<tr><td><code>1.</code></td><td>Numbered list item. Any number from 1..9 
+is allowed, which allows for proper numbering in the source. Actual 
+numbers in the HTML or LaTeX however are re-generated, starting at 1. </td></tr>
+<tr><td><code>$ Title : Item</code></td><td>Description list item.</td></tr>
+</table>
+</dd>
+<dt><b>Term lists</b></dt>
+<dd>
+Especially when describing option lists or different accepted types, it 
+is common to describe the behaviour on different terms. Such lists must 
+be written as below. &lt;<var>Term1</var>&gt;, etc. must be valid Prolog 
+terms and end in the newline. The Wiki adds <code>' . '</code> to the 
+text and reads it using the operator definitions also used to read the 
+mode terms. See <a class="sec" href="#sec:5">section 5</a>. Variable 
+names encountered in the <var>Term</var> are used for indentifying 
+variables in the following
+<var>Description</var>. At least one <var>Description</var> must be 
+non-empty to avoid confusion with a simple item list.
+
+<pre class="code">
+   * Term1
+     Description
+   * Term2
+     Description
+</pre>
+
+</dd>
+<dt><b>Predicate description lists</b></dt>
+<dd>
+Especially for processing Wiki files, the Wiki notation allows for 
+including the description of a predicate&lsquo;in-line', where the 
+documentation is extracted from a loaded source file. For example:
+
+<pre class="code">
+The following predicates are considered Prolog's prime list processing
+primitives:
+
+    * [[member/2]]
+    * [[append/3]]
+</pre>
+
+</dd>
+<dt><b>Tables</b></dt>
+<dd>
+The Wiki provides only for limited support for tables. A table-row is 
+started by a <code><code>|</code></code> sign and the cells are 
+separated by the same character. The last cell must be ended with <code><code>|</code></code>. 
+Multiple lines that parse into a table-row together form a table. 
+Example:
+
+<pre class="code">
+        | Algorithm    | Time (sec) |
+        | Depth first  | 1.0        |
+        | Breath first | 0.7        |
+        | A*           | 0.3        |
+</pre>
+
+</dd>
+<dt><b>Section Headers</b></dt>
+<dd>
+Section headers are creates using one of the constructs below taken from 
+TWiki. Section headers are normally not used in the source-code, but can 
+be useful inside README and TODO files. See <a class="sec" href="#sec:8">section 
+8</a>.
+
+<pre class="code">
+---+ Section level 1
+---++ Section level 2
+---+++ Section level 3
+---++++ Section level 4
+</pre>
+
+<p>In addition, PlDoc recognises the <em>markdown</em> syntax, including 
+named sections as defined by <b>doxygen</b>. A section is named 
+(labeled) using an optional sequence <code>{\#</code><i>name</i><code>}</code>. 
+The three code sections below provide examples. Note that <code>#</code> 
+section headers should be positioned at the left margin and the
+<code>#</code> must be followed by blank space. If the header is 
+underlined, the underline is a line that only contains <code><code>=</code></code> 
+or
+<code><code>-</code></code> characters. There must be a minimum of three<sup class="fn">4<span class="fn-text">Markdown 
+demands two, but this results in ambiguities with the <code><code>==</code></code> 
+fence for code blocks.</span></sup> of such characters.
+
+<pre class="code">
+Section level 1
+===============
+
+Section level 2
+---------------
+</pre>
+
+<pre class="code">
+# Section level 1
+## Section level 2
+### Section level 3
+#### Section level 4
+</pre>
+
+<pre class="code">
+Section level 1         {#label}
+===============
+
+# Section level 1       {#label}
+</pre>
+
+</dd>
+<dt><b>Code blocks</b></dt>
+<dd>
+There are two ways to write a code block. The first one is
+<em>fenced</em>. Here, the block is preceeded and followed by a fence 
+line. The traditional PlDoc fence line is <code>==</code>. Doxygen fence 
+lines are also accepted. They contain at least three tilde (<code><code>~</code></code>) 
+characters, where the opening fence line may be followed by a file 
+extension between curly brackets. In all cases, the code is indented 
+relative to the indentation of the fence line. Below are two examples, 
+the first being the traditional PlDoc style. The second is the Doxygen 
+style, showing a code block that is indented (because it is a body 
+fragment) and that is flagged as Prolog source. Note that the
+<code>{.pl}</code> is optional.
+
+<pre class="code">
+  ==
+  small(X) :-
+     X &lt; 2.
+  ==
+</pre>
+
+<pre class="code">
+  ~~~{.pl}
+    ...,
+    format('Hello ~w~n', [World]),
+    ...,
+  ~~~
+</pre>
+
+<p>The second form of code blocks are <em>indented blocks</em>. Such a 
+block must be indented between 4 and 8 characters, relative to the 
+indentation of the last preceeding non-blank line. The block is opened 
+with a blank line and closed by a blank line or a line that is indented 
+less than the indentation of the initial line. It is allowed to have a 
+single blank line in the middle of a code block, provided that the next 
+line is again indented at least as much as the initial line. The initial 
+line as well as a line that follows a blank line may not be a valid list 
+opening line or a table row, i.e., it may not start with one of
+<code>*-</code> followed by a space or <code>|</code>.</dd>
+<dt><b>Rulers</b></dt>
+<dd>
+PlDoc accepts both the original PlDoc and markdown conventions for 
+rulers. A PlDoc ruler is a line with at least two dashes (-) that starts 
+at the left-most column. A markdown ruler holds at least three ruler 
+characters and any number of spaces. The ruler characters are the dash 
+(-), underscore (<code>_</code>) or asterisk (<code>*</code>). Below are 
+three examples, the last two of which are valid markdown.
+
+<pre class="code">
+--
+***
+                - - -
+</pre>
+
+</dd>
+<dt><b>Line breaks</b></dt>
+<dd>
+A line break may be added by <em>ending</em> the physical line with the 
+HTML linebreak, <code>&lt;br&gt;</code> or <code>&lt;br/&gt;</code>.<sup class="fn">5<span class="fn-text">The 
+markdown conventions are (original) two spaces at the of the physical 
+line and (GitHub) a physical line break. Neither fit well with source 
+code. Doxygen supports restricted HTML and allows for <code>&lt;br&gt;</code>.</span></sup>
+</dd>
+</dl>
+
+<p><h3 id="sec:pldoc-markup"><a id="sec:7.2"><span class="sec-nr">7.2</span> <span class="sec-title">Text 
+markup: fonts and links</span></a></h3>
+
+<a id="sec:pldoc-markup"></a>
+
+<p><h4 id="sec:emph"><a id="sec:7.2.1"><span class="sec-nr">7.2.1</span> <span class="sec-title">Emphasizing 
+text</span></a></h4>
+
+<a id="sec:emph"></a>
+
+<p>Text emphasis is a combination of old plaintext conventions in Usenet 
+and E-mail and the doxygen version of markdown. <a class="tab" href="#tab:fonts">Table 
+1</a> shows the font-changing constructions. The phrase <em>limited 
+context</em> means that
+
+<p>
+<ul class="latex">
+<li>The opening <code><code>*</code></code> or <code>_</code> must be 
+preceeded by white space or a character from the set <code>&lt;{([,:;</code> 
+and must be followed by an alphanumerical character.
+<li>The closing <code><code>*</code></code> or <code>_</code> may not be 
+followed by an alphanumerical character and may not be preceeded by 
+white space or a character from the set <code>({[&lt;=+-\@</code>.
+<li>The scope of these operations is always limited to the identified 
+structure (paragraph, list item, etc.)
+</ul>
+
+<p>Note that <code>=</code>&lt;<var>identifier</var>&gt;<code>=</code> 
+is limited to a an
+<em>identifier</em>, such as a file name, XML name, etc. Identifiers 
+must start and end with an alphanumerical character, while characters 
+from the set <code>.-/:</code> may appear internally. Note that this set 
+explicitly does not allow for white space in code spans delimited by a 
+single <code><code>=</code></code>. This markup is specifically meant to 
+deal with code that is either not Prolog code or invalid Prolog code. 
+Valid Prolog code should use the backtick as described in <a class="sec" href="#sec:7.2.2">section 
+7.2.2</a>.
+
+<p><table class="latex frame-box center">
+<tr><td><code>*bold*</code></td><td>Typeset text in <b>bold</b> for 
+limited content (see running text). </td></tr>
+<tr><td><code>*|bold|*</code></td><td>Typeset text in <b>bold</b>. 
+Content can be long. </td></tr>
+<tr><td><code>_emphasize_</code></td><td>Typeset text as <em>emphasize</em> 
+for limited content (see running text). </td></tr>
+<tr><td><code>_|emphasize|_</code></td><td>Typeset text as <em>emphasize</em>. 
+Content can be long. </td></tr>
+<tr><td><code>=code=</code></td><td>Typeset text <code>fixed</code> font 
+for identifiers (see running text). </td></tr>
+<tr><td><code>=|code|=</code></td><td>Typeset text <code>fixed</code> 
+font. Content can be long. </td></tr>
+<tr><td><code>Word</code></td><td>Capitalised words that appear as 
+argument-name are written in <var>Italic</var> </td></tr>
+</table>
+<div class="caption"><b>Table 1 : </b>Wiki constructs to change the font</div>
+<a id="tab:fonts"></a>
+
+<p><h4 id="sec:inlinecode"><a id="sec:7.2.2"><span class="sec-nr">7.2.2</span> <span class="sec-title">Inline 
+code</span></a></h4>
+
+<a id="sec:inlinecode"></a>
+
+<p>Inline code can be realised using the <code>=</code> switch described 
+in
+<a class="sec" href="#sec:7.2.1">section 7.2.1</a> or the markdown 
+backtick. In addition, it can use the mardown/Doxygen <em>backtick</em> 
+(<code>`</code>) convention: a string that is delimited by backticks is 
+considered code, provided:
+
+<p>
+<ul class="latex">
+<li>An internal double backtick is translated into a single backtick.
+<li>Inline code is limited to the current structure (paragraph, table 
+cell, list item, etc.
+<li>The content of the code block is valid Prolog syntax. Note that in 
+Doxygen, the syntax is not validated and a single quote cancels the 
+recognition as code. The latter is a problematic in Prolog because 
+single quotes are often required.
+</ul>
+
+<p>Currently,&lsquo;Var` is typeset as a variable (italics) and other 
+terms are typeset using a fixed-width code font.
+
+<p>In addition, compound terms in canonical notation (i.e.,
+<i>functor</i><code>(</code>,<i>...args...</i><code>)</code> that can be 
+parsed are first verified as a file-specification for
+<a id="idx:absolutefilename3:6"></a><span class="pred-ext">absolute_file_name/3</span> 
+and otherwise rendered as <em>code</em>.
+
+<p><h4 id="sec:pldoc-links"><a id="sec:7.2.3"><span class="sec-nr">7.2.3</span> <span class="sec-title">Links</span></a></h4>
+
+<a id="sec:pldoc-links"></a>
+
+<p><a class="tab" href="#tab:links">Table 2</a> shows the constructs for 
+creating links.
+
+<p><table class="latex frame-box center">
+<tr><td><code>name/arity</code></td><td>Create a link to a predicate </td></tr>
+<tr><td><code>`name/arity`</code> </td><td>Create a link to a predicate </td></tr>
+<tr><td><code>``name/arity``</code> </td><td>Predicate indicator that 
+does not create a link </td></tr>
+<tr><td><code>name//arity</code></td><td>Create a link to a DCG rule </td></tr>
+<tr><td><code>`name//arity`</code> </td><td>Create a link to a DCG rule </td></tr>
+<tr><td><code>``name//arity``</code> </td><td>DCG indicator that does 
+not create a link </td></tr>
+<tr><td>flag <code>`name`</code> </td><td>Create a link to the Prolog 
+flag <var>name</var> if this flag exists. </td></tr>
+<tr><td><code>name.ext</code></td><td>If &lt;<var>name</var>&gt;.&lt;<var>ext</var>&gt; 
+is the name of an existing file and &lt;<var>ext</var>&gt; is one of <code>.pl</code>, <code>.txt</code>,
+<code>.md</code>, <code>.png</code>, <code>.gif</code>, <code>.jpeg</code>,
+<code>.jpg</code> or <code>.svg</code>, create a link to the file. </td></tr>
+<tr><td><code>prot<code>://</code>url</code></td><td>If &lt;<var>prot</var>&gt; 
+is one of <code>http</code>, <code>https</code> or <code>ftp</code>, 
+create a link. </td></tr>
+<tr><td><code><code><code>&lt;</code></code>url<code><code>&gt;</code></code> </code></td><td>Create 
+a hyperlink to URL. This construct supports the <a id="idx:expandurlpath2:7"></a><span class="pred-ext">expand_url_path/2</span> 
+using the construct
+&lt;<var>alias</var>&gt;:&lt;<var>local</var>&gt;. &lt;<var>local</var>&gt; 
+can be empty. </td></tr>
+<tr><td><code><code>[[</code>label<code>][</code>link<code>]]</code> </code></td><td>Create 
+a link using the given &lt;<var>label</var>&gt;. Label can be text or a 
+reference to an image file. Additional arguments can be supplied as
+<code><code>;</code></code>&lt;<var>name</var>&gt;=<code>"</code>&lt;<var>value</var>&gt;<code>"</code>. 
+More arguments are separated by commas. &lt;<var>link</var>&gt; must be 
+a filename as above or a url. </td></tr>
+<tr><td><code><code>[</code>label<code>](</code>link<code>)</code> </code></td><td>The 
+markdown version of the above. </td></tr>
+<tr><td><code><code>[</code>@cite<code>]</code> </code></td><td>Include 
+LaTeX citation. Multiple citations can be saparated using <code><code>;</code></code>. 
+No white space is allowed.
+</td></tr>
+</table>
+<div class="caption"><b>Table 2 : </b>Wiki constructs that create links</div>
+<a id="tab:links"></a>
+
+<p><h3 id="sec:pldoc-images"><a id="sec:7.3"><span class="sec-nr">7.3</span> <span class="sec-title">Images</span></a></h3>
+
+<a id="sec:pldoc-images"></a>
+
+<p>Images can be included in the documentation by referencing an image 
+file using one of the extensions <code>.gif</code>, <code>.png</code>,
+<code>.jpeg</code>, <code>.jpg</code> or <code>.svg</code>.<sup class="fn">6<span class="fn-text">SVG 
+images are included using the <code>object</code> element. This is 
+supported by many modern browsers. When using IE, one needs at least 
+IE9.</span></sup> By default this creates a link to the image file that 
+must be visited to see the image. Inline images can be created by 
+enclosing the filename in double square brackets. For example
+
+<pre class="code">
+The [[open.png]] icon is used open an existing file.
+</pre>
+
+<p>The markdown alternative for images is also supported, and looks as 
+below. The current implementation only deals with image <em>files</em>, 
+not external resources.
+
+<pre class="code">
+    ![Caption](File)
+</pre>
+
+<p><h2 id="sec:dirindex"><a id="sec:8"><span class="sec-nr">8</span> <span class="sec-title">Directory 
+indices</span></a></h2>
+
+<a id="sec:dirindex"></a>
+
+<p>A directory index consists of the contents of the file <code>README</code> 
+(or <code>README.TXT</code>), followed by a table holding all currently 
+loaded source-files that appear below the given directory (i.e. traversal 
+is
+<em>recursive</em>) and for each file a list of public predicates and 
+their descriptive summary. Finally, if a file <code>TODO</code> or <code>TODO.TXT</code> 
+exists, its content is added at the end of the directory index.
+
+<p><h2 id="sec:wikifiles"><a id="sec:9"><span class="sec-nr">9</span> <span class="sec-title">Documentation 
+files</span></a></h2>
+
+<a id="sec:wikifiles"></a>
+
+<p>Sometimes it is desirable to document aspects of a package outside 
+the source-files. For this reason the system creates a link to files 
+using the extension <code>.txt</code>. The referenced file is processed 
+as Wiki source. The two fragments below illustrate the relation between 
+an
+<code>.pl</code> file and a <code>.txt</code> file.
+
+<pre class="code">
+%!      read_setup(+File, -Setup) is det.
+%
+%       Read application setup information from File.  The details
+%       on setup are described in setup.txt.
+</pre>
+
+<pre class="code">
+---+ Application setup data
+
+If a file =|.myapprc|= exists in the user's home directory the
+application will process this data using setup.pl. ...
+</pre>
+
+<p><h2 id="sec:running"><a id="sec:10"><span class="sec-nr">10</span> <span class="sec-title">Running 
+the documentation system</span></a></h2>
+
+<a id="sec:running"></a>
+
+<p><h3 id="sec:pldoc-development"><a id="sec:10.1"><span class="sec-nr">10.1</span> <span class="sec-title">During 
+development</span></a></h3>
+
+<a id="sec:pldoc-development"></a>
+
+<p>To support the developer with an up-to-date version of the 
+documentation of both the application under development and the system 
+libraries the developer can start an HTTP documentation server using the 
+command
+<code>doc_server(?Port)</code>. A good way to deploy PlDoc for program 
+development is to write a file called e.g., <code>debug.pl</code> that 
+sets up the preferred development environment and loads your program. 
+below is an example <code>debug.pl</code> that starts PlDoc and prints 
+strings as text before loading the remainder of your program.
+
+<pre class="code">
+:- doc_server(4000).    % Start PlDoc at port 4000
+:- portray_text(true).  % Enable portray of strings
+
+:- [load].              % load your program
+</pre>
+
+<dl class="latex">
+<dt class="pubdef"><a id="doc_collect/1"><strong>doc_collect</strong>(<var>+Bool</var>)</a></dt>
+<dd class="defbody">
+Enable/disable collecting structured comments into the Prolog database. 
+See <a id="idx:docserver1:8"></a><a class="pred" href="#doc_server/1">doc_server/1</a> 
+or <a id="idx:docbrowser0:9"></a><a class="pred" href="#doc_browser/0">doc_browser/0</a> 
+for the normal way to deploy the server in your application. All these 
+predicates must be called
+<em>before</em> loading your program.</dd>
+<dt class="pubdef"><a id="doc_server/1"><strong>doc_server</strong>(<var>?Port</var>)</a></dt>
+<dd class="defbody">
+Start documentation server at <var>Port</var>. Same as
+<code>doc_server(Port, [allow(localhost), workers(1)])</code>. This 
+predicate must be called <em>before</em> loading the program for which 
+you consult the documentation. It calls <a id="idx:doccollect1:10"></a><a class="pred" href="#doc_collect/1">doc_collect/1</a> 
+to start collecting documentation while (re-)loading your program.</dd>
+<dt class="pubdef"><a id="doc_server/2"><strong>doc_server</strong>(<var>?Port, 
++Options</var>)</a></dt>
+<dd class="defbody">
+Start documentation server at <var>Port</var> using <var>Options</var>. 
+Provided options are:
+
+<dl class="latex">
+<dt><strong>root</strong>(<var>+Path</var>)</dt>
+<dd class="defbody">
+Defines the root of all locations served by the HTTP server. Default is <code><code>/</code></code>. <var>Path</var> 
+must be an absolute URL location, starting with <code><code>/</code></code> 
+and ending in <code><code>/</code></code>. Intented for public services 
+behind a reverse proxy. See documentation of the HTTP package for 
+details on using reverse proxies.</dd>
+<dt><strong>edit</strong>(<var>+Bool</var>)</dt>
+<dd class="defbody">
+If <code>false</code>, do not allow editing, even if the connection 
+comes from localhost. Intended together with the <code>root</code> 
+option to make pldoc available from behind a reverse proxy. See the HTTP 
+package for configuring a Prolog server behind an
+<a class="url" href="http://httpd.apache.org/docs/1.3/mod/mod_proxy.html">Apache 
+reverse proxy</a>.</dd>
+<dt><strong>allow</strong>(<var>+HostOrIP</var>)</dt>
+<dd class="defbody">
+Allow connections from <var>HostOrIP</var>. If <var>Host</var> is an 
+atom starting with a&rsquo;.', suffix matching is preformed. I.e. <code>allow('.uva.nl')</code> 
+grants access to all machines in this domain. IP addresses are specified 
+using the library(socket) <a id="idx:ip4:11"></a><span class="pred-ext">ip/4</span> 
+term. I.e. to allow access from the 10.0.0.X domain, specify
+<code>allow(ip(10,0,0,_))</code>.</dd>
+<dt><strong>deny</strong>(<var>+HostOrIP</var>)</dt>
+<dd class="defbody">
+Deny access from the given location. Matching is equal to the
+<code>allow</code> option.
+</dd>
+</dl>
+
+<p>Access is granted iff
+
+<p>
+<ul class="compact">
+<li>Both <em>deny</em> and <em>allow</em> match
+<li><em>allow</em> exists and matches
+<li><em>allow</em> does not exist and <em>deny</em> does not match.
+</ul>
+</dd>
+<dt class="pubdef"><a id="doc_browser/0"><strong>doc_browser</strong></a></dt>
+<dd class="defbody">
+Open the user's default browser on the running documentation server. 
+Fails if no server is running.</dd>
+<dt class="pubdef"><a id="doc_browser/1"><strong>doc_browser</strong>(<var>+Spec</var>)</a></dt>
+<dd class="defbody">
+Open the user's default browser on the specified page. <var>Spec</var> 
+is handled similar to <a id="idx:edit1:12"></a><span class="pred-ext">edit/1</span>, 
+resolving anything that relates somehow to the given specification and 
+ask the user to select.<sup class="fn">bug<span class="fn-text">This 
+flexibility is not yet implemented</span></sup>.
+</dd>
+</dl>
+
+<p><h3 id="sec:manserver"><a id="sec:10.2"><span class="sec-nr">10.2</span> <span class="sec-title">As 
+a manual server</span></a></h3>
+
+<a id="sec:manserver"></a>
+
+<p>The library <code>library(pldoc/doc_library)</code> defines <a id="idx:docloadlibrary0:13"></a><a class="pred" href="#doc_load_library/0">doc_load_library/0</a> 
+to load the entire library.
+
+<dl class="latex">
+<dt class="pubdef"><a id="doc_load_library/0"><strong>doc_load_library</strong></a></dt>
+<dd class="defbody">
+Load all library files. This is intended to set up a local documentation 
+server. A typical scenario, making the server available at port 4000 of 
+the hosting machine from all locations in a domain is given below.
+
+<pre class="code">
+:- doc_server(4000,
+              [ allow('.my.org')
+              ]).
+:- use_module(library(pldoc/doc_library)).
+:- doc_load_library.
+</pre>
+
+<p>Example code can be found in <code>$PLBASE/doc/packages/examples/pldoc</code>.
+</dd>
+</dl>
+
+<p><h3 id="sec:browser"><a id="sec:10.3"><span class="sec-nr">10.3</span> <span class="sec-title">Using 
+the browser interface</span></a></h3>
+
+<a id="sec:browser"></a>
+
+<p>The documentation system is normally accessed from a web-browser 
+after starting the server using <a id="idx:docserver1:14"></a><a class="pred" href="#doc_server/1">doc_server/1</a>. 
+This section briefly explains the user-interface provided from the 
+browser.
+
+<p><h4 id="sec:pldoc-search"><a id="sec:10.3.1"><span class="sec-nr">10.3.1</span> <span class="sec-title">Searching</span></a></h4>
+
+<a id="sec:pldoc-search"></a>
+
+<p>The top-right of the screen provides a search-form. The search string 
+typed is searched as a substring and case-insensitive. Multiple strings 
+separated by spaces search for the intersection. Searching for objects 
+that do not contain a string is written as <code><code>-</code></code>&lt;<var>string</var>&gt;. 
+A search for adjacent strings is specified as <code>"</code>&lt;<var>string</var>&gt;<code>"</code>. 
+Here are some examples:
+
+<p><table class="latex frame-box center">
+<tr><td><code>load file</code></td><td>Searches for all objects with the 
+strings
+<code>load</code> and <code>file</code>. </td></tr>
+<tr><td><code>load -file</code></td><td>Searches for objects with <code>load</code>, 
+but
+<em>without</em> <code>file</code>. </td></tr>
+<tr><td><code>"load file"</code></td><td>Searches for the string <code>load 
+file</code>.</td></tr>
+</table>
+
+<p>The two radio-buttons below the search box can be used to limit the 
+search. <b>All</b> searches both the application and manuals. Searching 
+for <b>Summary</b> also implies <b>Name</b>.
+
+<p><h4 id="sec:pldoc-views"><a id="sec:10.3.2"><span class="sec-nr">10.3.2</span> <span class="sec-title">Views</span></a></h4>
+
+<a id="sec:pldoc-views"></a>
+
+<p>The web-browser supports several views, which we briefly summarise 
+here:
+
+<p>
+<ul class="latex">
+<li><i> Directory</i><br>
+In directory-view mode, the contents of a directory holding Prolog 
+source-files is shown file-by-file in a summary-table. In addition, the 
+contents of the <code>README</code> and <code>TODO</code> files is 
+given.
+
+<p>
+<li><i> Source File</i><br>
+When showing a Prolog source-file it displays the module documentation 
+from the <code>/** &lt;module ... */</code> comment and the public 
+predicates with their full documentation. Using the <b>zoom</b> button 
+the user can select to view both public and documentated private 
+predicates. Using the <b>source</b> button, the system shows the source 
+with syntax highlighting as in PceEmacs and formatted structured 
+comments.<sup class="fn">7<span class="fn-text">This mode is still 
+incomplete. It would be nice to add line-numbers and links to 
+documentation and definitions in the sources.</span></sup>
+
+<p>
+<li><i> Predicate</i><br>
+When selecting a predicate link the system presents a page with the 
+documentation of the predicate. The navigation bar allows switching to 
+the Source File if the documentation comes from source or the containing 
+section if the documentation comes from a manual.
+
+<p>
+<li><i> Section</i><br>
+Section from the manual. The navigation bars allows viewing the 
+enclosing section (<em>Up</em>).
+</ul>
+
+<p><h4 id="sec:pldoc-editing"><a id="sec:10.3.3"><span class="sec-nr">10.3.3</span> <span class="sec-title">Editing</span></a></h4>
+
+<a id="sec:pldoc-editing"></a>
+
+<p>If the browser is accessed from <code>localhost</code>, each object 
+that is related to a known source-location has an edit icon at the right 
+side. Clicking this calls <a id="idx:edit1:15"></a><span class="pred-ext">edit/1</span> 
+on the object, calling the user's default editor in the file. To use the 
+built-in PceEmacs editor, either set the Prolog flag <code>editor</code> 
+to <code>pce_emacs</code> or run <code>?- emacs.</code> before clicking 
+an edit button.
+
+<p>Prolog source-files have a <em>reload</em> button attached. Clicking 
+this reloads the source file if it was modified and refreshes the page. 
+This supports a comfortable edit-view loop to maintain the source-code 
+documentation.
+
+<p><h3 id="sec:docfiles"><a id="sec:10.4"><span class="sec-nr">10.4</span> <span class="sec-title">library(doc_files): 
+Create stand-alone documentation files</span></a></h3>
+
+<p><a id="sec:docfiles"></a>
+
+<dl class="tags">
+<dt class="tag">To be done</dt>
+<dd>
+Generate a predicate index?
+</dd>
+</dl>
+
+<p>Create stand-alone documentation from a bundle of source-files. 
+Typical use of the PlDoc package is to run it as a web-server from the 
+project in progress, providing search and guaranteed consistency with 
+the loaded version. Creating stand-alone files as provided by this file 
+can be useful for printing or distribution.
+
+<dl class="latex">
+<dt class="pubdef"><a id="doc_save/2"><strong>doc_save</strong>(<var>+FileOrDir, 
++Options</var>)</a></dt>
+<dd class="defbody">
+Save documentation for <var>FileOrDir</var> to <code>file(s)</code>. <var>Options</var> 
+include
+
+<dl class="latex">
+<dt><strong>format</strong>(<var>+Format</var>)</dt>
+<dd class="defbody">
+Currently only supports <code>html</code>.
+</dd>
+<dt><strong>doc_root</strong>(<var>+Dir</var>)</dt>
+<dd class="defbody">
+Save output to the given directory. Default is to save the documentation 
+for a file in the same directory as the file and for a directory in a 
+subdirectory <code>doc</code>.
+</dd>
+<dt><strong>title</strong>(<var>+Title</var>)</dt>
+<dd class="defbody">
+<var>Title</var> is an atom that provides the HTML title of the main 
+(index) page. Only meaningful when generating documentation for a 
+directory.
+</dd>
+<dt><strong>man_server</strong>(<var>+RootURL</var>)</dt>
+<dd class="defbody">
+Root of a manual server used for references to built-in predicates. 
+Default is
+<code>http://www.swi-prolog.org/pldoc/</code>
+</dd>
+<dt><strong>index_file</strong>(<var>+Base</var>)</dt>
+<dd class="defbody">
+Filename for directory indices. Default is <code>index</code>.
+</dd>
+<dt><strong>if</strong>(<var>Condition</var>)</dt>
+<dd class="defbody">
+What to do with files in a directory. <code>loaded</code> (default) only 
+documents files loaded into the Prolog image. <code>true</code> 
+documents all files.
+</dd>
+<dt><strong>recursive</strong>(<var>+Bool</var>)</dt>
+<dd class="defbody">
+If <code>true</code>, recurse into subdirectories.
+</dd>
+<dt><strong>css</strong>(<var>+Mode</var>)</dt>
+<dd class="defbody">
+If <code>copy</code>, copy the CSS file to created directories. Using <code>inline</code>, 
+include the CSS file into the created files. Currently, only the default <code>copy</code> 
+is supported.
+</dd>
+</dl>
+
+<p>The typical use-case is to document the Prolog files that belong to a 
+project in the current directory. To do this load the Prolog files and 
+run the goal below. This creates a sub-directory <code>doc</code> with 
+an index file <code>index.html</code>. It replicates the directory 
+structure of the source directory, creating an HTML file for each Prolog 
+file and an index file for each sub-directory. A copy of the required 
+CSS and image resources is copied to the <code>doc</code> directory.
+
+<pre class="code">
+?- doc_save(., [recursive(true)]).
+</pre>
+
+<p></dd>
+</dl>
+
+<p><h3 id="sec:doclatex"><a id="sec:10.5"><span class="sec-nr">10.5</span> <span class="sec-title">Including 
+PlDoc in a LaTeX document</span></a></h3>
+
+<p><a id="sec:doclatex"></a>
+
+<p>The LaTeX backend aims at producing quality paper documentation as 
+well as integration of predicate description and Wiki files in LaTeX 
+documents such as articles and technical reports. It is realised by the 
+library <code>doc_latex.pl</code>.
+
+<p>The best practice for using the LaTeX backend is yet to be 
+established. For now we anticipate processing a Wiki document saved in a 
+.txt file using <a class="pred" href="#doc_latex/3">doc_latex/3</a> to 
+produce either a simple complete LaTeX document or a partial document 
+that is included into the the main document using the LaTeX <code>\input</code> 
+command. Typically, this is best established by writing a <i>Prolog 
+Script</i> that generates the required LaTeX document and call this from 
+a <i>Makefile</i>. We give a simple example from PlDoc, creating this 
+section from the wiki-file <code>latex.txt</code> below.
+
+<pre class="code">
+:- use_module(library(doc_latex)).
+:- [my_program].
+</pre>
+
+<p>We generate latex.tex from <code>latex.txt</code> using this Makefile 
+fragment:
+
+<pre class="code">
+.SUFFIXES: .txt .tex
+
+.txt.tex:
+        swipl -f script.pl \
+            -g "doc_latex('$*.txt','$*.tex',[stand_alone(false)]),halt" \
+            -t "halt(1)"
+</pre>
+
+<p><h4 id="sec:pldoc-latex-predicates"><a id="sec:10.5.1"><span class="sec-nr">10.5.1</span> <span class="sec-title">Predicate 
+reference for the LaTeX backend</span></a></h4>
+
+<p><a id="sec:pldoc-latex-predicates"></a>
+
+<p>High-level access is provided by <a class="pred" href="#doc_latex/3">doc_latex/3</a>, 
+while more low level access is provided by the remaining predicates. 
+Generated LaTeX depends on the style file <code>pldoc.sty</code>, which 
+is a plain copy of <code>pl.sty</code> from the SWI-Prolog manual 
+sources. The installation installs
+<code>pldoc.sty</code> in the <code>pldoc</code> subdirectory of the 
+Prolog manual.
+
+<dl class="latex">
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="doc_latex/3"><strong>doc_latex</strong>(<var>+Spec, 
++OutFile, +Options</var>)</a></dt>
+<dd class="defbody">
+Process one or more objects, writing the LaTeX output to
+<var>OutFile</var>. <var>Spec</var> is one of:
+
+<dl class="latex">
+<dt><var><var>Name</var></var> <strong><code>/</code></strong> <var><var>Arity</var></var></dt>
+<dd class="defbody">
+Generate documentation for predicate
+</dd>
+<dt><var><var>Name</var></var> <strong><code>//</code></strong> <var><var>Arity</var></var></dt>
+<dd class="defbody">
+Generate documentation for DCG rule
+</dd>
+<dt><strong><var>File</var></strong></dt>
+<dd class="defbody">
+If <var>File</var> is a prolog file (as defined by
+<span class="pred-ext">user:prolog_file_type/2</span>), process using
+<a class="pred" href="#latex_for_file/3">latex_for_file/3</a>, otherwise 
+process using
+<a class="pred" href="#latex_for_wiki_file/3">latex_for_wiki_file/3</a>.
+</dd>
+</dl>
+
+<p>Typically <var>Spec</var> is either a list of filenames or a list of 
+predicate indicators. Defined options are:
+
+<dl class="latex">
+<dt><strong>stand_alone</strong>(<var>+Bool</var>)</dt>
+<dd class="defbody">
+If <code>true</code> (default), create a document that can be run 
+through LaTeX. If <code>false</code>, produce a document to be included 
+in another LaTeX document.
+</dd>
+<dt><strong>public_only</strong>(<var>+Bool</var>)</dt>
+<dd class="defbody">
+If <code>true</code> (default), only emit documentation for exported 
+predicates.
+</dd>
+<dt><strong>section_level</strong>(<var>+Level</var>)</dt>
+<dd class="defbody">
+Outermost section level produced. <var>Level</var> is the name of a 
+LaTeX section command. Default is <code>section</code>.
+</dd>
+<dt><strong>summary</strong>(<var>+File</var>)</dt>
+<dd class="defbody">
+Write summary declarations to the named <var>File</var>.
+</dd>
+<dt><strong>modules</strong>(<var>+List</var>)</dt>
+<dd class="defbody">
+If [[Name/Arity]] needs to be resolved, search for the predicates in the 
+given modules.
+</dd>
+<dt><strong>module</strong>(<var>+Module</var>)</dt>
+<dd class="defbody">
+Same as <code>modules([Module])</code>.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="latex_for_file/3"><strong>latex_for_file</strong>(<var>+File, 
++Out, +Options</var>)</a></dt>
+<dd class="defbody">
+Generate a LaTeX description of all commented predicates in
+<var>File</var>, writing the LaTeX text to the stream <var>Out</var>. 
+Supports the options <code>stand_alone</code>, <code>public_only</code> 
+and <code>section_level</code>. See <a class="pred" href="#doc_latex/3">doc_latex/3</a> 
+for a description of the options.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="latex_for_wiki_file/3"><strong>latex_for_wiki_file</strong>(<var>+File, 
++Out, +Options</var>)</a></dt>
+<dd class="defbody">
+Write a LaTeX translation of a Wiki file to the steam <var>Out</var>. 
+Supports the options <code>stand_alone</code>, <code>public_only</code> 
+and
+<code>section_level</code>. See <a class="pred" href="#doc_latex/3">doc_latex/3</a> 
+for a description of the options.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="latex_for_predicates/3"><strong>latex_for_predicates</strong>(<var>+PI:list, 
++Out, +Options</var>)</a></dt>
+<dd class="defbody">
+Generate LaTeX for a list of predicate indicators. This does
+<b>not</b> produce the <code>\</code>begin{description}...<code>\</code>end{description} 
+environment, just a plain list of <code>\</code>predicate, etc. 
+statements. The current implementation ignores <var>Options</var>.
+</dd>
+</dl>
+
+<p><h2 id="sec:motivation"><a id="sec:11"><span class="sec-nr">11</span> <span class="sec-title">Motivation 
+of choices</span></a></h2>
+
+<a id="sec:motivation"></a>
+
+<p>Literate programming is an established field. The TeX source is one 
+of the first and best known examples of this approach, where input files 
+are a mixture of TeX and Pascal source. External tools are used to 
+untangle the common source and process one branch to produce the 
+documentation, while the other is compiled to produce the program.
+
+<p>A program and its documentation consists of various different parts:
+
+<p>
+<ul class="compact">
+<li>The program text itself. This is the minimum that must be handed to 
+the compiler to create an executable (module).
+<li>Meta information about the program: author, modifications, license, 
+etc.
+<li>Documentation about the overall structure and purpose of the source.
+<li>Description of the interface: public predicates, their types, modes 
+and whether or not they are deterministic as wel as an informative text 
+on each public predicate.
+<li>Description of key private predicates necessary to understand how 
+the public interface is realised.
+</ul>
+
+<h3>Structured comments or directives</h3>
+
+<p>Comments can be added through Prolog directives, a route taken by 
+Ciao Prolog with lpdoc <cite><a class="cite" href="#DBLP:conf/cl/Hermenegildo00">Hermenegildo, 
+2000</a></cite> and Logtalk
+<cite><a class="cite" href="#pmoura03">Moura, 2003</a></cite>. We feel 
+structured comments are a better alternative for the following reasons:
+
+<p>
+<ul class="latex">
+<li>Prolog programmers are used to writing comments as Prolog comments.
+<li>Using Prolog strings requires unnatural escape sequences for string 
+quotes and long literal values tend to result in hard to find 
+quote-mismatches. Python uses comments in long strings, solving this 
+problem by using three double quotes to open and close long comments.
+<li>Comments should not look like code, as that makes it more difficult 
+to find the actual code.
+</ul>
+
+<p>We are aware that the above problems can be dealt with using 
+syntax-aware editors. Only a few editors are sufficiently powerful to 
+support this correctly, though, and we do not expect the required 
+advanced modes to be widely available. If comments are used, we do not 
+need to force users into using a particular editor.
+
+<h3>Wiki or HTML</h3>
+
+<p>JavaDoc uses HTML as markup inside the structured comments. Although 
+HTML is more widely known than ---for example--- LaTeX or TeXinfo, we 
+think the Wiki approach is sufficiently widely known today. Using text 
+with minimal layout conventions taken largely from plaintext newsnet and 
+E-mail, Wiki input is much easier to read in the source-file than HTML 
+without syntax support from an editor.
+
+<h3>Types and modes</h3>
+
+<a id="sec:motivation:modes"></a>
+
+<p>Types and modes are not a formal part of the Prolog language. 
+Nevertheless, their role goes beyond pure documentation. The test-system 
+can use information about non-determinism to validate that deterministic 
+calls are indeed deterministic. Type information can be used to analyse 
+coverage from the test-suite, to generate runtime type verification or 
+to perform static type-analysis. We have chosen to use a structured 
+comment with formal syntax for the following reasons:
+
+<p>
+<ul class="latex">
+<li>As comments, they stay together with the comment block of a 
+predicate. We feel it is best to keep documentation as close as possible 
+to the source.
+<li>As we parse them separately, we can pick up argument names and 
+create a readable syntax without introducing possibly conflicting 
+operators.
+<li>As comments, they do not introduce incompatibilities with other 
+Prolog systems.
+</ul>
+
+<h3>Few requirements</h3>
+
+<p>SWI-Prolog aims at platform independence. We want tools to rely as 
+much as possible on Prolog itself. Therefore, the entire infrastructure 
+is written in Prolog. Output as HTML is suitable for browsing and not 
+very high quality printing on virtually all platforms. Output to LaTeX 
+requires more infrastructure for processing and allows for producing 
+high-quality PDF documents.
+
+<p><h2 id="sec:pldoc-compatibility"><a id="sec:12"><span class="sec-nr">12</span> <span class="sec-title">Compatibility 
+and standards</span></a></h2>
+
+<a id="sec:pldoc-compatibility"></a>
+
+<p>Initially, the PlDoc wiki language was based on
+<a class="url" href="http://www.twiki.org">Twiki</a>. Currently,
+<a class="url" href="http://en.wikipedia.org/wiki/Markdown">markdown</a> 
+is a wiki syntax that is widely accepted and not tied to a single 
+system. In PlDoc&nbsp;2, we have adopted markdown, including many of the 
+limitations and extensions introduced by
+<a class="url" href="http://www.stack.nl/~dimitri/doxygen/">Doxygen</a>. 
+Limitations are needed to avoid ambiguities due to the common use of 
+symbol charaters in programming languages. Extensions are desirable to 
+make use of already existing conventions and to support requirements of 
+program documentation.
+
+<p>Some of the changes in PlDoc&nbsp;2 are to achieve compatibility with 
+the
+<a class="url" href="http://prolog-commons.org/">Prolog Commons</a> 
+project. The library documentation conventions of this project will be 
+based on PlDoc and the Ciao lpdoc standards. It is likely that there 
+will be more changes to the PlDoc format to synchronise with Commons. We 
+do not anticipate significant impact on existing documentation.
+
+<h2>Bibliography</h2>
+
+<dl class="bib">
+<dt class="bib"><a id="DBLP:dblpjournals/tplp/CovingtonBOWP12"><strong>Covington <em>et 
+al.</em>, 2012</strong></a></dt>
+<dd class="bib">
+Michael&nbsp;A. Covington, Roberto Bagnara, Richard&nbsp;A. O'Keefe, Jan 
+Wielemaker, Simon Price, and Simon Price. Coding guidelines for prolog 
+coding guidelines for prolog. pages 889--927, 2012.</dd>
+<dt class="bib"><a id="DBLP:conf/cl/Hermenegildo00"><strong>Hermenegildo, 
+2000</strong></a></dt>
+<dd class="bib">
+Manuel&nbsp;V. Hermenegildo. A documentation generator for (c)lp 
+systems. In John&nbsp;W. Lloyd, Ver&oacute;nica Dahl, Ulrich Furbach, 
+Manfred Kerber, Kung-Kiu Lau, Catuscia Palamidessi, Lu&\iacute;s&nbsp;Moniz 
+Pereira, Yehoshua Sagiv, and Peter&nbsp;J. Stuckey, editors, <em>Computational 
+Logic</em>, volume 1861 of <em>Lecture Notes in Computer Science</em>, 
+pages 1345--1361. Springer, 2000.</dd>
+<dt class="bib"><a id="DBLP:conf/acsc/JefferyHS00"><strong>Jeffery <em>et 
+al.</em>, 2000</strong></a></dt>
+<dd class="bib">
+David Jeffery, Fergus Henderson, and Zoltan Somogyi. Type classes in 
+mercury. In <em>ACSC</em>, pages 128--135. IEEE Computer Society, 2000.</dd>
+<dt class="bib"><a id="pmoura03"><strong>Moura, 2003</strong></a></dt>
+<dd class="bib">
+Paulo Moura.
+<em>Logtalk - Design of an Object-Oriented Logic Programming Language</em>. 
+PhD thesis, Department of Informatics, University of Beira Interior, 
+Portugal, September 2003.</dd>
+<dt class="bib"><a id="DBLP:journals/ai/MycroftO84"><strong>Mycroft &amp; 
+O'Keefe, 1984</strong></a></dt>
+<dd class="bib">
+Alan Mycroft and Richard&nbsp;A. O'Keefe. A polymorphic type system for 
+prolog.
+<em>Artif. Intell.</em>, 23(3):295--307, 1984.
+
+<p></dd>
+</dl>
+
+<h1><a id="document-index">Index</a></h1>
+
+<dl>
+<dt class="index-sep">?</dt>
+<dt>absolute_file_name/3</dt>
+<dd>
+<a class="idx" href="#idx:absolutefilename3:6">7.2.2</a></dd>
+<dt>catch/3</dt>
+<dd>
+<a class="idx" href="#idx:catch3:1">5</a></dd>
+<dt><a class="idx" href="#doc_browser/0">doc_browser/0</a></dt>
+<dd>
+<a class="idx" href="#idx:docbrowser0:9">10.1</a></dd>
+<dt><a class="idx" href="#doc_browser/1">doc_browser/1</a></dt>
+<dt><a class="idx" href="#doc_collect/1">doc_collect/1</a></dt>
+<dd>
+<a class="idx" href="#idx:doccollect1:10">10.1</a></dd>
+<dt><a class="idx" href="#doc_latex/3">doc_latex/3</a></dt>
+<dt><a class="idx" href="#doc_load_library/0">doc_load_library/0</a></dt>
+<dd>
+<a class="idx" href="#idx:docloadlibrary0:13">10.2</a></dd>
+<dt><a class="idx" href="#doc_save/2">doc_save/2</a></dt>
+<dt><a class="idx" href="#doc_server/1">doc_server/1</a></dt>
+<dd>
+<a class="idx" href="#idx:docserver1:8">10.1</a> <a class="idx" href="#idx:docserver1:14">10.3</a></dd>
+<dt><a class="idx" href="#doc_server/2">doc_server/2</a></dt>
+<dt>edit/1</dt>
+<dd>
+<a class="idx" href="#idx:edit1:12">10.1</a> <a class="idx" href="#idx:edit1:15">10.3.3</a></dd>
+<dt>expand_url_path/2</dt>
+<dd>
+<a class="idx" href="#idx:expandurlpath2:7">7.2.3</a></dd>
+<dt>ip/4</dt>
+<dd>
+<a class="idx" href="#idx:ip4:11">10.1</a></dd>
+<dt><a class="idx" href="#latex_for_file/3">latex_for_file/3</a></dt>
+<dt><a class="idx" href="#latex_for_predicates/3">latex_for_predicates/3</a></dt>
+<dt><a class="idx" href="#latex_for_wiki_file/3">latex_for_wiki_file/3</a></dt>
+<dt>nb_setarg/3</dt>
+<dd>
+<a class="idx" href="#idx:nbsetarg3:5">5</a></dd>
+<dt>open/3</dt>
+<dd>
+<a class="idx" href="#idx:open3:3">5</a></dd>
+<dt>setarg/3</dt>
+<dd>
+<a class="idx" href="#idx:setarg3:4">5</a></dd>
+<dt>undefined/0</dt>
+<dd>
+<a class="idx" href="#idx:undefined0:2">5</a></dd>
+</dl>
+
+</body></html>

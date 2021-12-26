@@ -1,0 +1,38 @@
+// Simple definitions for testing Oneof, Map
+
+syntax = "proto2";
+// No package
+// package  PKG;
+
+message OneofMessage {
+  oneof first {
+    string name = 4;
+    sint64 number = 9;
+  }
+  oneof second {
+    string foo = 1;
+    double bar = 2;
+  }
+  oneof singleton_oneof {
+    string qqsv = 3;
+  }
+}
+
+// a map<...> creates a message that contains a Key and Value.
+// So, number_ints = {"one":1, "two":2} is equivalent to
+// '..MapMessage'{
+//     number_ints:[
+//          '.MapMessage.NumberIntsEntry'{key:"two",value:2},
+//          '.MapMessage.NumberIntsEntry'{key:"one",value:1}]}
+
+message MapMessage {
+  map<string, sint64> number_ints = 5;
+}
+
+message NotMapMessage {
+  message KeyValue {
+    optional string  Key = 1;
+    optional sint64  Value = 2;
+  }
+  repeated KeyValue number_ints = 5;
+}
