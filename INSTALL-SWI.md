@@ -62,6 +62,8 @@ apt-get install -y \
         libyaml-dev \
 	texlive
         
+#The qt5-default package is dropped from Ubuntu 21.04 and has never existed on some other Debian based distributions. In that case, use the command below.
+apt-get install qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools
 
 MAINTAINER apt-get install -y \
         texlive-latex-extra \
@@ -119,6 +121,8 @@ MAKE=ninja
 #MAKE=make
 (cd swipl-devel
  # \cp -a ../Patch/rootfs/usr/local/lib/swipl/* .
+ \cp -a ../Patch/boot/* boot/
+ \cp -a ../Patch/library/* library/
  rm -rf build
  mkdir -p build
  cd build
