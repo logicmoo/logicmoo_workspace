@@ -160,18 +160,29 @@ bash -x $LOGICMOO_WS/INSTALL.md
 
 
 mv /etc/apache2/conf-available /etc/apache2/conf-available.dist
+rm -f /etc/apache2/conf-available
 ln -s $LOGICMOO_WS/docker/rootfs/etc/apache2/conf-available /etc/apache2/conf-available 
+
 mv /etc/apache2/sites-enabled /etc/apache2/sites-enabled.dist
+rm -f /etc/apache2/sites-enabled
 ln -s $LOGICMOO_WS/docker/rootfs/etc/apache2/sites-enabled /etc/apache2/sites-enabled
+
 mv /etc/apache2/ssl /etc/apache2/ssl.dist
+rm -f /etc/apache2/ssl
 ln -s $LOGICMOO_WS/docker/rootfs/etc/apache2/ssl /etc/apache2/ssl
+
 mv /etc/supervisor /etc/supervisor.dist
-ln -s $LOGICMOO_WS/docker/rootfs/etc/supervisor /etc/supervisor
+rm -f /etc/supervisor
+ln -s $LOGICMOO_WS/docker/rootfs/etc/supervisor/ /etc/supervisor
+
 mv /root /root.dist
+rm -f /root
 ln -s $LOGICMOO_WS/prologmud_server /root
+
 chown -R prologmud_server:www-data /root
 
 mv /usr/local/lib/swipl /usr/local/lib/swipl.dist
+rm -f /usr/local/lib/swipl
 ln -s $LOGICMOO_WS/docker/rootfs/usr/local/lib/swipl /usr/local/lib/swipl
 
 rm -rf /opt/logicmoo_workspace/docker/rootfs/usr/local/lib/python3.6
@@ -244,7 +255,9 @@ mkdir -p $HOME/.config/pcmanfm/LXDE/
 ln -sf /usr/local/share/doro-lxde-wallpapers/desktop-items-0.conf $HOME/.config/pcmanfm/LXDE/
 # chown -R $USER:$USER $HOME
 
-mv /home/ubuntu /home/ubuntu.wrong ; ln -s /root /home/ubuntu
+mv /home/ubuntu /home/ubuntu.wrong
+rm -f /home/ubuntu
+ln -s /root /home/ubuntu
 
 # nginx workers
 sed -i 's|worker_processes .*|worker_processes 1;|' /etc/nginx/nginx.conf
@@ -277,5 +290,6 @@ HTTP_PASSWORD=
 
 
 exec tini -w -vv -- /usr/bin/supervisord -n -c /etc/supervisor/supervisord.conf
+
 
 
