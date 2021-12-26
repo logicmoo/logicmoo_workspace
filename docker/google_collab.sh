@@ -25,6 +25,7 @@ function RUN {
 #FROM aicampbell/vnc-ubuntu18-xfce
 ##EXPOSE 80
 
+touch /tmp/is_google_collab
 
 #USER root
 #LABEL maintainer = "logicmoo@gmail.com"
@@ -143,9 +144,11 @@ export HOME=/root
 
 
 
-export TINI_VERSION=v0.19.0
-wget https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini -o /bin/tini
-chmod +x /bin/tini
+#export TINI_VERSION=v0.19.0
+#wget https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini -o /bin/tini
+#chmod +x /bin/tinia
+wget http://ftp.de.debian.org/debian/pool/main/t/tini/tini_0.18.0-1_amd64.deb -o /tmp/tini_0.18.0-1_amd64.deb
+dpkg -i i/tmp/tini_0.18.0-1_amd64.deb
 #RUN chmod +x run.sh
 #RUN chmod 777 docker-entrypoint.sh
 
