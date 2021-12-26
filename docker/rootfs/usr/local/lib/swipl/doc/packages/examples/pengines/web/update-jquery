@@ -1,3 +1,0 @@
-JQUERY=http://code.jquery.com/jquery-1.11.3.min.js
-
-sed -i -e 's@src="[^"]*jquery[^"]*"@src="'$JQUERY'"@' *.html
