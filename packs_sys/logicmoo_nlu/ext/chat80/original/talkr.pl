@@ -241,11 +241,20 @@ bE(_,X,X).
 named(X,X).
 
 ti(T,_):- nonvar(T),free_ti(T),!.
+ti(T,V):- nonvar(T),num_ti(T),!,is_ti_num(V).
+
+is_ti_num(V):- atomic(V),!,number(V).
+is_ti_num(V):- var(V),!,freeze(V,is_ti_num(V)).
+is_ti_num(V):- compound(V),!.
+is_ti_num(_:V):- !, is_ti_num(V).
+is_ti_num(V--_):-!, is_ti_num(V).
+is_ti_num(V):- compound(V),!,arg(1,V,E),is_ti_num(E).
+
+num_ti(value).
+num_ti(area).
+num_ti(size).
 
 free_ti(noun_thing).
-free_ti(value).
-free_ti(area).
-free_ti(size).
 free_ti(thing).
 
 
