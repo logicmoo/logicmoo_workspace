@@ -48,7 +48,8 @@ city_country_popu(amersfoort,netherlands,120).
 city_country_popu(athens,greece,1368).
 city_country_popu(bangkok,thailand,1178).
 city_country_popu(barcelona,spain,1280).
-city_country_popu(berlin,east_germany,3481).
+city_country_popu(/*east_*/ berlin,east_germany,3481).
+city_country_popu(/*west*/ berlin,west_germany,3482).
 city_country_popu(birmingham,united_kingdom,1112).
 city_country_popu(bombay,india,2839).
 city_country_popu(brussels,belgium,986).

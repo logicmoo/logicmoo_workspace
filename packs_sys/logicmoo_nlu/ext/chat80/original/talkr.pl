@@ -240,7 +240,14 @@ bE(is,I,T):- nonvar(T),ti(T,I).
 bE(_,X,X).
 named(X,X).
 
-ti(noun_thing,_).
+ti(T,_):- nonvar(T),free_ti(T),!.
+
+free_ti(noun_thing).
+free_ti(value).
+free_ti(area).
+free_ti(size).
+free_ti(thing).
+
 
 ti(NewType,X) :- agentitive_symmetric_type(Pred,SuperType), fail,
   % dont loop
@@ -409,7 +416,7 @@ ordering_pred(thing,cp(west,of),X1,X2) :- type_measure_pred( _Region,position(x)
 
 
 generic_pred(VV,Type,mg(P),X,Y):- nonvar(P),!,generic_pred(VV,Type,P,X,Y).
-generic_pred(VV,Type,prep(Of),X,Y):- Of == of, generic_pred0(VV,Type,_,Y,X).
+generic_pred(VV,Type,prep(Of),X,Y):- Of == of, generic_pred(VV,Type,_,Y,X).
 generic_pred(VV,Type,P,X,Y):- P==in,!, generic_pred0(VV,Type,contain,Y,X).
 generic_pred(VV,Type,P,X,Y) :- P == any,!, generic_pred0(VV,Type,_,X,Y).
 generic_pred(VV,Type,P,X,Y) :- generic_pred0(VV,Type,P,X,Y)*->true;generic_pred1(Type,P,X,Y).

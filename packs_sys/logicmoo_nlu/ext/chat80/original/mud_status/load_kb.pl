@@ -96,7 +96,7 @@ ed(  9, [ what, is, the, ocean, that, borders, african, countries,
 ed( 10, [ what, are, the, capitals, of, the, countries, bordering, the,
 	  baltic, ? ],
 
-		[[[denmark]:[copenhagen], [east_germany]:[east_berlin],
+		[[[denmark]:[copenhagen], [east_germany]:[/*east_*/ berlin],
 		[finland]:[helsinki], [poland]:[warsaw],
 		[soviet_union]:[moscow], [sweden]:[stockholm],
 		[west_germany]:[bonn]]]  ).
@@ -195,7 +195,7 @@ ed( 24, [ what, are, the, areas, of, the, countries, bordering, the, baltic, ? ]
 ed( N, [ what, are, the, rivers, that, flow, through, the, countries, bordering, the,
 	  baltic, ? ],
 
-		[[[denmark]:[copenhagen], [east_germany]:[east_berlin],
+		[[[denmark]:[copenhagen], [east_germany]:[/*east_*/ berlin],
 		[finland]:[helsinki], [poland]:[warsaw],
 		[soviet_union]:[moscow], [sweden]:[stockholm],
 		[west_germany]:[bonn]]]  ):- N==25.
@@ -204,7 +204,7 @@ ed( N, [ what, are, the, rivers, that, flow, through, the, countries, bordering,
 ed( N, [ what, are, the, rivers, that, flow, through, each, country, bordering, the,
 	  baltic, ? ],
 
-		[[[denmark]:[copenhagen], [east_germany]:[east_berlin],
+		[[[denmark]:[copenhagen], [east_germany]:[/*east_*/ berlin],
 		[finland]:[helsinki], [poland]:[warsaw],
 		[soviet_union]:[moscow], [sweden]:[stockholm],
 		[west_germany]:[bonn]]]  ):- N==26.
@@ -213,7 +213,7 @@ ed( N, [ what, are, the, rivers, that, flow, through, each, country, bordering, 
 ed( N, [ what, are, the, capitals, of, the, countries, bordering, the,
 	  baltic, ? ],
 
-		[[[denmark]:[copenhagen], [east_germany]:[east_berlin],
+		[[[denmark]:[copenhagen], [east_germany]:[/*east_*/ berlin],
 		[finland]:[helsinki], [poland]:[warsaw],
 		[soviet_union]:[moscow], [sweden]:[stockholm],
 		[west_germany]:[bonn]]]  ):- N==27.
@@ -221,7 +221,7 @@ ed( N, [ what, are, the, capitals, of, the, countries, bordering, the,
 ed( N, [ what, are, the, cities, in, countries, bordering, the,
 	  baltic, ? ],
 
-		[[[denmark]:[copenhagen], [east_germany]:[east_berlin],
+		[[[denmark]:[copenhagen], [east_germany]:[/*east_*/ berlin],
 		[finland]:[helsinki], [poland]:[warsaw],
 		[soviet_union]:[moscow], [sweden]:[stockholm],
 		[west_germany]:[bonn]]]  ):- N==28.
@@ -229,7 +229,7 @@ ed( N, [ what, are, the, cities, in, countries, bordering, the,
 ed( N, [ what, cities, do, the, countries, bordering, the,
 	  baltic, contain, ? ],
 
-		[[[denmark]:[copenhagen], [east_germany]:[east_berlin],
+		[[[denmark]:[copenhagen], [east_germany]:[/*east_*/ berlin],
 		[finland]:[helsinki], [poland]:[warsaw],
 		[soviet_union]:[moscow], [sweden]:[stockholm],
 		[west_germany]:[bonn]]]  ):- N==29.
@@ -293,7 +293,7 @@ chat80_all("The rhine flows through west germany ?",true,217).
 chat80_all("The rhine flows to switzerland ?",false,219).
 chat80_all("The rhine flows to west germany ?",true,213).
 chat80_all("What are the areas of the countries bordering the baltic ?",[[[denmark]:[--(16.615,ksqmiles)],[east_germany]:[--(40.646,ksqmiles)],[finland]:[--(130.119,ksqmiles)],[poland]:[--(120.359,ksqmiles)],[soviet_union]:[--(8347.25,ksqmiles)],[sweden]:[--(173.665,ksqmiles)],[west_germany]:[--(95.815,ksqmiles)]]],24).
-chat80_all("What are the capitals of the countries bordering the baltic ?",[[[denmark]:[copenhagen],[east_germany]:[east_berlin],[finland]:[helsinki],[poland]:[warsaw],[soviet_union]:[moscow],[sweden]:[stockholm],[west_germany]:[bonn]]],10).
+chat80_all("What are the capitals of the countries bordering the baltic ?",[[[denmark]:[copenhagen],[east_germany]:[/*east_*/ berlin],[finland]:[helsinki],[poland]:[warsaw],[soviet_union]:[moscow],[sweden]:[stockholm],[west_germany]:[bonn]]],10).
 chat80_all("What are the continents containing a country in which contains more than two cities whose population exceeds 1 million ?",[america,asia,europe],211).
 chat80_all("What are the continents no country in which contains more than two cities whose population exceeds 1 million ?",[[africa,antarctica,australasia]],18).
 chat80_all("What are the continents not containing a country ?",[antarctica],208).
@@ -337,10 +337,10 @@ baltic_rivers_real([[[[east_germany]:[elbe],
 
 baltic_cities(_):-!.
 baltic_cities_real([[ [[denmark]:[copenhagen],
-                  [east_germany]:[berlin,east_berlin],
+                  [east_germany]:[/*east_*/ berlin],
                   [finland]:[helsinki],
                   [poland]:[warsaw],
                   [soviet_union]:[kiev,leningrad,moscow],
                   [sweden]:[stockholm],
-                  [west_germany]:[bonn,hamburg]]]]).
+                  [west_germany]:[berlin,bonn,hamburg]]]]).
 

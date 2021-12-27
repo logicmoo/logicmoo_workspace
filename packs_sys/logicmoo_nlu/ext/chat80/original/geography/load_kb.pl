@@ -96,7 +96,7 @@ ed(  9, [ what, is, the, ocean, that, borders, african, countries,
 ed( 10, [ what, are, the, capitals, of, the, countries, bordering, the,
 	  baltic, ? ],
 
-		[[[denmark]:[copenhagen], [east_germany]:[east_berlin],
+		[[[denmark]:[copenhagen], [east_germany]:[/*east_*/ berlin],
 		[finland]:[helsinki], [poland]:[warsaw],
 		[soviet_union]:[moscow], [sweden]:[stockholm],
 		[west_germany]:[bonn]]]  ).
@@ -195,7 +195,7 @@ ed( 24, [ what, are, the, areas, of, the, countries, bordering, the, baltic, ? ]
 ed( N, [ what, are, the, rivers, that, flow, through, the, countries, bordering, the,
 	  baltic, ? ],
 
-		[[[denmark]:[copenhagen], [east_germany]:[east_berlin],
+		[[[denmark]:[copenhagen], [east_germany]:[/*east_*/ berlin],
 		[finland]:[helsinki], [poland]:[warsaw],
 		[soviet_union]:[moscow], [sweden]:[stockholm],
 		[west_germany]:[bonn]]]  ):- N==25.
@@ -204,7 +204,7 @@ ed( N, [ what, are, the, rivers, that, flow, through, the, countries, bordering,
 ed( N, [ what, are, the, rivers, that, flow, through, each, country, bordering, the,
 	  baltic, ? ],
 
-		[[[denmark]:[copenhagen], [east_germany]:[east_berlin],
+		[[[denmark]:[copenhagen], [east_germany]:[/*east_*/ berlin],
 		[finland]:[helsinki], [poland]:[warsaw],
 		[soviet_union]:[moscow], [sweden]:[stockholm],
 		[west_germany]:[bonn]]]  ):- N==26.
@@ -213,7 +213,7 @@ ed( N, [ what, are, the, rivers, that, flow, through, each, country, bordering, 
 ed( N, [ what, are, the, capitals, of, the, countries, bordering, the,
 	  baltic, ? ],
 
-		[[[denmark]:[copenhagen], [east_germany]:[east_berlin],
+		[[[denmark]:[copenhagen], [east_germany]:[/*east_*/ berlin],
 		[finland]:[helsinki], [poland]:[warsaw],
 		[soviet_union]:[moscow], [sweden]:[stockholm],
 		[west_germany]:[bonn]]]  ):- N==27.
@@ -221,7 +221,7 @@ ed( N, [ what, are, the, capitals, of, the, countries, bordering, the,
 ed( N, [ what, are, the, cities, in, countries, bordering, the,
 	  baltic, ? ],
 
-		[[[denmark]:[copenhagen], [east_germany]:[east_berlin],
+		[[[denmark]:[copenhagen], [east_germany]:[/*east_*/ berlin],
 		[finland]:[helsinki], [poland]:[warsaw],
 		[soviet_union]:[moscow], [sweden]:[stockholm],
 		[west_germany]:[bonn]]]  ):- N==28.
@@ -229,7 +229,7 @@ ed( N, [ what, are, the, cities, in, countries, bordering, the,
 ed( N, [ what, cities, do, the, countries, bordering, the,
 	  baltic, contain, ? ],
 
-		[[[denmark]:[copenhagen], [east_germany]:[east_berlin],
+		[[[denmark]:[copenhagen], [east_germany]:[/*east_*/ berlin],
 		[finland]:[helsinki], [poland]:[warsaw],
 		[soviet_union]:[moscow], [sweden]:[stockholm],
 		[west_germany]:[bonn]]]  ):- N==29.
@@ -295,7 +295,7 @@ chat80_all("What are the rivers in countries bordering the baltic ?",Baltic_Rive
 chat80_all("What are the countries from which a river flows into the black sea ?",[[romania,soviet_union]],17).
 chat80_all("What are the cities of the countries bordering the baltic ?",Baltic_Cities,667):- baltic_cities_real(Baltic_Cities).
 chat80_all("What are the cities in countries bordering the baltic ?",Baltic_Cities,669):- baltic_cities(Baltic_Cities).
-chat80_all("What are the capitals of the countries bordering the baltic ?",[[[denmark]:[copenhagen],[east_germany]:[east_berlin],[finland]:[helsinki],[poland]:[warsaw],[soviet_union]:[moscow],[sweden]:[stockholm],[west_germany]:[bonn]]],10).
+chat80_all("What are the capitals of the countries bordering the baltic ?",[[[denmark]:[copenhagen],[east_germany]:[/*east_*/ berlin],[finland]:[helsinki],[poland]:[warsaw],[soviet_union]:[moscow],[sweden]:[stockholm],[west_germany]:[bonn]]],10).
 chat80_all("What are the areas of the countries bordering the baltic ?",[[[denmark]:[--(16.615,ksqmiles)],[east_germany]:[--(40.646,ksqmiles)],[finland]:[--(130.119,ksqmiles)],[poland]:[--(120.359,ksqmiles)],[soviet_union]:[--(8347.25,ksqmiles)],[sweden]:[--(173.665,ksqmiles)],[west_germany]:[--(95.815,ksqmiles)]]],2400).
 chat80_all("The rhine flows to west germany ?",true,21300).
 chat80_all("The rhine flows to switzerland ?",false,21900).
@@ -355,10 +355,53 @@ baltic_rivers_real([[[[east_germany]:[elbe],
 baltic_cities(_):-!.
 baltic_cities_real(_):-!.
 baltic_cities_real([[ [[denmark]:[copenhagen],
-                  [east_germany]:[berlin,east_berlin],
+                  [east_germany]:[/*east_*/ berlin],
                   [finland]:[helsinki],
                   [poland]:[warsaw],
                   [soviet_union]:[kiev,leningrad,moscow],
                   [sweden]:[stockholm],
-                  [west_germany]:[bonn,hamburg]]]]).
+                  [west_germany]:[/*west*/ berlin,bonn,hamburg]]]]).
+
+
+
+
+/*
+compile80 = ( setof_oR_nil( Is,
+                   ^( [BE_SetOf7],
+                     ( setOf( [Nation_capital_Border_Country]:SetOf,
+                         ^( [],
+                           ( database80(ti(country,Nation_capital_Border_Country))  ,
+                             database80(generic_pred(frame_1040,thing,border,Nation_capital_Border_Country,baltic)) ,
+                             setOf( Specific,
+                               []^database80(specific_pred(thing,nation_capital,Nation_capital_Border_Country,Specific)),
+                               SetOf))),
+                         BE_SetOf7) ,
+                       database80(bE(is,Is,BE_SetOf7)))),
+                   Respond_Nil) ,
+               respond(Respond_Nil)).  
+
+/* c88 = answer80([Is]) :-
+           ^( BE_SetOf6,
+             ( setOf( [Contain_Border_Country]:SetOf,
+                 ( ti(country,Contain_Border_Country)  ,
+                   generic_pred(frame_1130,thing,border,Contain_Border_Country,baltic) ,
+                   setOf( Specific,
+                     specific_pred(thing,contain,Contain_Border_Country,Specific),
+                     SetOf)),
+                 BE_SetOf6) ,
+             bE(is,Is,BE_SetOf6))).  */
+
+compile80 = ( setof_oR_nil( Is,
+                   ^( [Generic_SetOf,BE_SetOf8],
+                     ( setOf( Border_Prep_River,
+                         ^( [Generic_SetOf],
+                           ( setOf(Country,[]^database80(ti(country,Country)),Generic_SetOf)  ,
+                             database80(ti(river,Border_Prep_River)) ,
+                             database80(generic_pred(frame_1071,thing,prep(of),Border_Prep_River,Generic_SetOf)) ,
+                             database80(generic_pred(frame_1076,thing,border,Border_Prep_River,baltic)))),
+                         BE_SetOf8) ,
+                       database80(bE(is,Is,BE_SetOf8)))),
+                   Respond_Nil) ,
+               respond(Respond_Nil)).  
+*/
 

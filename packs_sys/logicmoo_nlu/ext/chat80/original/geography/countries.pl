@@ -77,7 +77,7 @@ c_r_l_l_s_cap_m(dahomey,west_africa,8,-2,43483,2910000,porto_novo,cfa_franc).
 c_r_l_l_s_cap_m(denmark,scandinavia,55,-9,16615,5130000,copenhagen,krone).
 c_r_l_l_s_cap_m(djibouti,east_africa,12,-42,9071,45000,djibouti_city,?).
 c_r_l_l_s_cap_m(dominican_republic,caribbean,19,70,18704,4430000,santa_domingo,peso).
-c_r_l_l_s_cap_m(east_germany,eastern_europe,52,-12,40646,16980000,east_berlin,ddr_mark).
+c_r_l_l_s_cap_m(east_germany,eastern_europe,52,-12,40646,16980000,/*east_*/ berlin,ddr_mark).
 c_r_l_l_s_cap_m(ecuador,south_america,-2,78,105685,6730000,quito,sucre).
 c_r_l_l_s_cap_m(egypt,north_africa,28,-31,386872,35620000,cairo,egyptian_pound).
 c_r_l_l_s_cap_m(eire,western_europe,53,8,26600,3030000,dublin,irish_pound).

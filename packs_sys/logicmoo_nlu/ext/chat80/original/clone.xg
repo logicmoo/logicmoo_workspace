@@ -874,7 +874,9 @@ maybe_modal(Tense,In,[M|Out]) ---> one_modal(Tense,M),!,maybe_modal0(Tense,In,Ou
 maybe_modal0(Tense,In,[M|Out]) ---> one_modal(Tense,M),!,maybe_modal0(Tense,In,Out).
 maybe_modal0(_,ExtraMods, ExtraMods) ---> [].
 
-rest_verb(ExtraMods,aux,aux(have,ExtraMods1),Root,Voice,[perf|Aspect]) ---> verb_form882(ExtraMods2,Root0,past+part,_,_), have_vt(ExtraMods3,Root0,Root,Voice,Aspect),{append_mods([ExtraMods1,ExtraMods2,ExtraMods3],ExtraMods)}.
+rest_verb([Pastpart|ExtraMods],aux,aux(have,ExtraMods1),Root,Voice,[perf|Aspect]) ---> 
+  verb_form882(ExtraMods2,Root0,Pastpart,_,_), 
+  have_vt(ExtraMods3,Root0,Root,Voice,Aspect),{append_mods([ExtraMods1,ExtraMods2,ExtraMods3],ExtraMods)}.
 rest_verb(ExtraMods,aux,aux(be,ExtraMods1),Root,Voice,Aspect) ---> verb_form882(ExtraMods2,Root0,Tense0,_,_), be_vt(ExtraMods3,Tense0,Root0,Root,Voice,Aspect),{append_mods([ExtraMods1,ExtraMods2,ExtraMods3],ExtraMods)}.
 rest_verb(ExtraMods,aux,aux(do,ExtraMods1),Root,active,[]) ---> verb_form882(ExtraMods2,Root,inf,_,_),{append_mods([ExtraMods1,ExtraMods2],ExtraMods)}.
 %rest_verb(ExtraMods,aux,Can,Root,active,[]) ---> {modal_verb_form_aux(_,Can,_,_)},verb_form882(ExtraMods1,Root,inf,_,_),{append([[Can],ExtraMods1],ExtraMods)}.
@@ -889,12 +891,12 @@ have_vt(ExtraMods,aux(be,_),Root,Voice,Aspect) --->
    {append_mods([ExtraMods1,ExtraMods2],ExtraMods)}.
 have_vt([],Root,Root,active,[]) ---> noText.
 
-be_vt([],past+part,Root,Root,passive,[]) ---> noText.
+be_vt([past+part],past+part,Root,Root,passive,[]) ---> noText.
 be_vt(ExtraMods,pres+part,Root0,Root,Voice,[prog]) --->
    passive_vt(ExtraMods,Root0,Root,Voice).
 
 % BE
-passive_vt(ExtraMods,aux(be,_),Root,passive) --->
+passive_vt([EM,past+part|ExtraMods],aux(be,EM),Root,passive) --->
    verb_form882(ExtraMods1,Root,past+part,_,_),
    {verb_type_lex(Root,Type), passive_vt(ExtraMods2,Type), append_mods([ExtraMods1,ExtraMods2],ExtraMods)}.
 passive_vt([],Root,Root,active) ---> noText.

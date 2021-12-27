@@ -308,9 +308,10 @@ country_contains_thing(czechoslovakia,danube).
 country_contains_thing(czechoslovakia,elbe).
 country_contains_thing(czechoslovakia,oder).
 
-country_contains_thing(east_germany,berlin).
+country_contains_thing(east_germany,/*east_*/ berlin).
 country_contains_thing(east_germany,elbe).
 
+country_contains_thing(west_germany,berlin).
 country_contains_thing(west_germany,danube).
 country_contains_thing(west_germany,elbe).
 country_contains_thing(west_germany,hamburg).

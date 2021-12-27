@@ -27,8 +27,12 @@ find_token:- expand_file_name('~/.discord_auth.pl',[X]), exists_file(X), consult
 find_token_or_throw:- find_token,!.
 find_token_or_throw:- throw(missing(tmp:discord_token(_))).
 
-:- find_token.
+set_jvm_opts:- 
+ nop(jpl_set_default_jvm_opts([
+  '-Xmx3550m',
+  '-Djava.library.path=/opt/logicmoo_workspace/lib/swipl/lib/x86_64-linux', '-Xrs'])).
 
+:- find_token, set_jvm_opts.
 
 discord_update(me):-  discord_http(users/'@me').
 discord_update(guilds):- discord_update(me), discord_http(users/'@me'/guilds).

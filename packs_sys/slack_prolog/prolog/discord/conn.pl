@@ -273,7 +273,9 @@ discord_reconnect_0:- discord_connect_0, fail.
 discord_reconnect_0:- discord_resume.
 
 discord_connect_0:- tmp:jpl_websocket(_),!.
-discord_connect_0:- %setenv('CLASSPATH','/opt/logicmoo_workspace/packs_sys/swicli/build/application/classes:/opt/logicmoo_workspace/packs_sys/swicli/lib/javax.websocket-api-1.0.jar'),
+discord_connect_0:- 
+  %setenv('CLASSPATH','/opt/logicmoo_workspace/packs_sys/swicli/build/application/classes:/opt/logicmoo_workspace/packs_sys/swicli/lib/javax.websocket-api-1.0.jar'),
+  setenv('CLASSPATH','./classes:/opt/logicmoo_workspace/packs_sys/swicli/lib/javax.websocket-api-1.0.jar'),
   discord_get_websocket_url(URL),
   jpl_new('PrologWebSocket',[URL,'discord_websocket_hook'],O),
   assert(tmp:jpl_websocket(O)),!.

@@ -122,7 +122,7 @@ expand_named(Name,Name):- !.
 % ?- c88("If an agent A1 touches the chair O2 and A1 is awake then A1 is aware that O2 is existing.").
 
 % np(3+sg,nameOf(_Var,iran),[])
-i_np_head0(nameOf(_Var,Name,Adjs),Type-X,Type-X,identityQ(_QModal),Head,Pred0,Pred,[]) :- 
+i_np_head0(nameOf(X,Name,Adjs),Type-X,Type-X,identityQ(_QModal),Head,Pred0,Pred,[]) :- 
   ignore(lf80(Type,name_template_LF(Name,Type))),!,
   expand_named(Name,Named),
   ignore(must80((i_adjs(Adjs,Type-X,Type-X,_,'`'(bE(named,X,Named)),Head,Pred0,Pred)))).
@@ -132,27 +132,28 @@ i_np_head0(nameOf(Var,Name), Type1Name,Type2Name,Ident,True,Pred0,Pred,List) :- 
 
 i_np_head0(wh(TypeX_X),TypeX_X,TypeX_X,identityQ(_QModal),'`'(true),Pred,Pred,[]):-!.
 % np(3+sg,pronoun(neut),[])
-i_np_head0(Else, Type-Name,Type-Name,identityQ(_QModal),'`'(P),Pred,Pred,[]):-  Else \= np_head(_Var,_,_,_), !,
-   lf80(Type,make_qualifiedBy(_Var,i_np_head0,Name,Type,Else,P)).
+i_np_head0(Else, Type-Name,Type-Name,identityQ(_QModal),'`'(P),Pred,Pred,[]):-  Else \= np_head(_,_,_,_), !,
+   lf80(Type,make_qualifiedBy(Name,i_np_head0,Name,Type,Else,P)).
 
-i_np_head0(np_head(_Var,Det,Adjs,Noun),TypeX_X,T,Det,Head0,Pred0,Pred,Slots) :-
+i_np_head0(np_head(Var,Det,Adjs,Noun),TypeX_X,T,Det,Head0,Pred0,Pred,Slots) :-
    i_adjs(Adjs,TypeX_X,T,TypeX_X,Head0,Head,Pred0,Pred),
-   i_noun(Noun,TypeX_X,Head,Slots).
+   i_noun(Noun,TypeX_X,Head,Slots),
+   type_x_var(TypeX_X,Var).
 
-i_np_head0(np_head(_Var,wh_det(_Kind,V),Adjs,Noun),
+i_np_head0(np_head(X,wh_det(_Kind,V),Adjs,Noun),
       Type-X,Type-X,Det,'`'(true),Pred,Pred,
       [slot(prep(of),Type,X,_,comparator)]) :-
    lf80(Type,comparator_LF(Noun,Type,V,Adjs,Det)).
 
-i_np_head0(np_head(_Var,quantV(Op0,N),Adjs,Noun),
+i_np_head0(np_head(X,quantV(Op0,N),Adjs,Noun),
       Type-X,Type-X,voidQ,'`'(P),Pred,Pred,[]) :- 
    lf80(Type,measure_LF(Noun,Type,Adjs,Units)),
    lf80(Type,pos_conversion_db(N,Op0,Type,V,Op)),
    must80(measure_op(Op,X,V--Units,P)).
 
 
-i_np_head0(np_head(Var,generic,[],Value), Type-X,Type-X,voidQ,
-  '`'(bE(same,X,Value)),Pred,Pred,[]) :- !,Var=X.
+i_np_head0(np_head(X,generic,[],Value), Type-X,Type-X,voidQ,
+  '`'(bE(same,X,Value)),Pred,Pred,[]):-!.
 
 
 /*
@@ -162,16 +163,18 @@ i_np_head0(np_head(_Var,generic,[],Value), Type-X,Type-V,voidQ,
   '`'(same_objects(generic(Type-X-V),X,Value)),Pred,Pred,[]) :- !.
 */
 
-i_np_head0(np_head(Var,Det,Adjs,Noun),X,T,Det0,Head0,Pred0,Pred,Slots) :- 
-  must80(i_np_head1(np_head(Var,Det,Adjs,Noun),X,T,Det0,Head0,Pred0,Pred,Slots)).
+i_np_head0(np_head(X,Det,Adjs,Noun),TypeX-X,TypeT-T,Det0,Head0,Pred0,Pred,Slots) :- 
+  must80(i_np_head1(np_head(X,Det,Adjs,Noun),TypeX-X,TypeT-T,Det0,Head0,Pred0,Pred,Slots)).
 
 i_np_head0(Else, Type-X,Type-X,identityQ(_QModal),'`'(P),Pred,Pred,[]):- 
-   lf80(Type,make_qualifiedBy(Var,i_np_head0,X,Type,Else,P)).
+   lf80(Type,make_qualifiedBy(X,i_np_head0,X,Type,Else,P)).
 
-i_np_head1(np_head(_Var,Det,Adjs,Noun),X,T,DetO,Head0,Pred0,Pred,Slots):-
-   i_adjs(Adjs,X,T,X,Head0,Head,Pred0,Pred),
-   i_noun(Noun,X,Head,Slots),
+i_np_head1(np_head(X,Det,Adjs,Noun),TypeX-X,TypeT-T,DetO,Head0,Pred0,Pred,Slots):-
+   i_adjs(Adjs,TypeX-X,TypeT-T,TypeX-X,Head0,Head,Pred0,Pred),
+   i_noun(Noun,TypeX-X,Head,Slots),
    xform_det(Det,DetO).
+
+type_x_var(_Type-Var,Var).
 
 xform_det(Det,Det):- !.
 xform_det(_Det,_DetO):- !.
@@ -370,7 +373,7 @@ i_s(s(Subj,verb(Mainiv,be,[],Active,Fin+fin,[],Neg),VArgs,VMods),Pred,Up,Id) :- 
    i_s(s(Subj,verb(Mainiv,exist,[],Active,Fin+fin,[],Neg),VArgs,VMods),Pred,Up,Id).
 
 i_s(s(Subj,Verb,VArgs,VMods),Pred,Up,Id) :-
-  gensym(frame_,X),
+  gensym('frame_',X),
   locally(t_l:current_vv(X),
    i_s_0(s(Subj,Verb,VArgs,VMods),Pred,Up,Id)).
 
@@ -705,7 +708,7 @@ slot_verb_template_transparent1(Verb,Pred, Slots) :-
 
 slot_verb_template_transparent2(Verb,Pred, Slots) :- fail,
    (SlotsRemaining=Slots),   
-   slot_verb_kind(_Kind,Verb,TypeS,S,Pred,SlotsRemaining).
+   slot_verb_kind(_Kind,Verb,_TypeS,_S,Pred,SlotsRemaining).
 
 select_slots(Ss,Slots):- select_slots(Ss,Slots,[]),!.
 %select_slots(Ss,Slots):- select_slots(Ss,Slots,_).
