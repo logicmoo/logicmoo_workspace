@@ -245,7 +245,7 @@ setify([Index|Indices], X, P, Y, Quant) :-
    pipe(Index, Indices, X, P, Y, Quant).
 
 
-pipe(quantU(wh_det(_Kind,_, Z), Z, P1, Z),
+pipe(quantU(wh_det3(_Kind,_, Z), Z, P1, Z),
       Indices, X, P0, Y, quantU(det(a), X, P, Y)) :-
    chain_apply(Indices,(P0, P1), P).
 
@@ -322,7 +322,7 @@ open_quant(quantU(Det, X, P, Y), Det, X, P, Y).
 % Determiner Properties
 
 index_det(index(I), I).
-index_det(wh_det(_Kind,I, _), I).
+index_det(wh_det3(_Kind,I, _), I).
 
 unit_det(set_ov).
 unit_det(lambdaV).
@@ -445,7 +445,7 @@ weak(det(Det)) :-
    weak_det(Det).
 weak(quantV(_, _)).
 weak(index(_)).
-weak(wh_det(_Kind,_, _)).
+weak(wh_det3(_Kind,_, _)).
 weak(set(_)).
 weak(wh_det(_Kind,_)).
 weak(generic).

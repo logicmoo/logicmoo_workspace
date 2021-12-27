@@ -434,9 +434,9 @@ trans_pred_type(Type,P):- tmp80:trans_rel_cache_created(=, trans_direct(Type,P))
 trans_pred_type(thing,contain).
 
 generic_pred0(_VV,Type,P,X,Y) :- trans_pred_type(Type,P), nonvar(P),trans_pred(Type,P,X,Y). % contain 
-generic_pred0(_VV,Type,P,X,Y) :- nonvar(P), measure_pred(Type,P,X,Y). % area of
-generic_pred0(_VV,Type,P,X,Y) :- nonvar(P), count_pred(Type,P,X,Y). % population of 
-generic_pred0(_VV,Type,P,X,Y) :- nonvar(P), position_pred(Type,P,X,Y). % latitude of
+generic_pred0(_VV,Type,P,X,Y) :- measure_pred(Type,P,X,Y). % area of
+generic_pred0(_VV,Type,P,X,Y) :- count_pred(Type,P,X,Y). % population of 
+generic_pred0(_VV,Type,P,X,Y) :- position_pred(Type,P,X,Y). % latitude of
 generic_pred0(_VV,Type,P,X,Y) :- nonvar(P), ordering_pred(Type,P,X,Y). % south of
 generic_pred0(_VV,Type,P,X,Y) :- nonvar(P), symmetric_pred(Type,P,X,Y). % border
 generic_pred0(_VV,Type,P,X,Y) :- specific_pred(Type,P,X,Y). % capital 

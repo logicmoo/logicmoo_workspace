@@ -780,7 +780,7 @@ index_slot(apply,_,apply).
 index_slot(comparator,_,comparator).
 
 index_args(det(the(pl)),unit,I,set(I),index(I)) :- !.
-index_args(wh_det(Kind,X),index(I),_,wh_det(Kind,I,X),unit) :- !.
+index_args(wh_det(Kind,X),index(I),_,wh_det3(Kind,I,X),unit) :- !.
 index_args(generic,apply,_,lambdaV,unit) :-!.
 index_args(D,comparator,_,identityQ(_QModal),unit) :-
  ( indexable_arg(D); D=generic), !.
