@@ -695,7 +695,7 @@ maybe_restate_s(S):-
 c80:- test_c80.
 
 c8:- s82(c8).
-c8(S):- c8_make, try_chat_80(S,c8(S,_)).
+c8(S):- c8_make, c8(S,_).
 c8(SS,O):- break_apart(c8_A,SS,O),!.
 c8_A(SS,O):- atom_length(SS,L),L<3,!,O= true.
 c8_A(SS,O):-

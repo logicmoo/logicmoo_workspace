@@ -352,7 +352,7 @@ chat80_all("How many countries does the danube not flow through ?",[150],_).
 chat80_all("Does afghanistan border china ?",[true],200).
 chat80_all("What are the continents no country in which contains more than two cities that have a population exceeding 1 million ?",[[africa,antarctica,australasia]],18).
       chat80_all("What are the continents no country in which contains more than two cities whose population exceeds 1 million ?",[[africa,antarctica,australasia]],18).
-chat80_all("Does the population of china exceed the population of india ?",_,_00).
+chat80_all("Does the population of china exceed the population of india ?",[true],_00).
 chat80_all("Which country bordering the mediterranean borders a country that is bordered by a country whose population exceeds the population of india ?",[turkey],1900).
 chat80_all("What are the continents containing a country in which contains more than two cities whose population exceeds 1 million ?",[america,asia,europe],211).
 

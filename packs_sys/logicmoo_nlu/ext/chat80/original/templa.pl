@@ -316,7 +316,7 @@ trans_LF(Look,feature&_,X,dbase_t(Look,X,Y), [slot(prep(At),feature&_,Y,_,free)]
   (tv_infpl(S,_);tv_finsg(S,_)), atomic_list_concat([Look,At],'-',S).
 
 trans_LF(exceed,value&Measure&Type,X,value&Measure&Type,Y,exceeds(X,Y),[],_,_).
-trans_LF1(Trans,_,X,_,Y,P ,[],_,_):- if_search_expanded(4),
+trans_LF1(Trans,_,X,_,Y,P ,[],_,_):- if_search_expanded(4), P\=aux(_,_),
   make_generic_pred(Spatial,Trans,X,Y,P),spatial(Spatial).
 
 make_generic_pred(Spatial,matches_prep(AT),X,Y,generic_pred(VV,Spatial,prep(AT),Y,X)):- t_l:current_vv(VV),!.
