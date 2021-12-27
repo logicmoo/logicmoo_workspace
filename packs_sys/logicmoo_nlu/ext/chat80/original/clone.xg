@@ -502,7 +502,7 @@ np_objbody((prep_obj(Word,S)),Agmt,Type) ---> {fail},
  {is_prep_case(Case)},
   locally(tlclone:np_in_case(Case),subj(S,Agmt,Type)).
 
-np_objbody((num(Int)),3+sg,defA+proper) ---> theText80(Value),{tr_number(Value,Int)}.
+%np_objbody(((Int)),3+sg,defA+proper) ---> theText80(Value),{tr_number(Value,Int)}.
 %np_objbody((adj(VGood)),_,_) --->   {if_search_expanded(6)},theText80(Good), {clex:adj_itr(Good,VGood)}.
 /*
 np_objbody(Type_X, Y, Z, A, B, C, D) :-
@@ -891,12 +891,12 @@ have_vt(ExtraMods,aux(be,_),Root,Voice,Aspect) --->
    {append_mods([ExtraMods1,ExtraMods2],ExtraMods)}.
 have_vt([],Root,Root,active,[]) ---> noText.
 
-be_vt([past+part],past+part,Root,Root,passive,[]) ---> noText.
+be_vt([],past+part,Root,Root,passive,[]) ---> noText.
 be_vt(ExtraMods,pres+part,Root0,Root,Voice,[prog]) --->
    passive_vt(ExtraMods,Root0,Root,Voice).
 
 % BE
-passive_vt([EM,past+part|ExtraMods],aux(be,EM),Root,passive) --->
+passive_vt([EM|ExtraMods],aux(be,EM),Root,passive) --->
    verb_form882(ExtraMods1,Root,past+part,_,_),
    {verb_type_lex(Root,Type), passive_vt(ExtraMods2,Type), append_mods([ExtraMods1,ExtraMods2],ExtraMods)}.
 passive_vt([],Root,Root,active) ---> noText.

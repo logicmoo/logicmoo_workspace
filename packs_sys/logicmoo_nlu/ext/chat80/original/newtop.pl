@@ -716,7 +716,7 @@ simplify80(P,R,R0) :-
 
 simplify_not(P,\+P):- var(P),!.
 simplify_not(\+P,P) :- !.
-simplify_not(P,\+P).
+simplify_not(P,NP):- negate_inward(P,NP).
 
 revand(true,P,P) :- !.
 revand(P,true,P) :- !.

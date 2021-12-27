@@ -315,29 +315,40 @@ chat80_all("The rhine flows at switzerland ?",true,22200).
 
 chat80_all("Is there some ocean that does not border any country ?",[true],1600).
 chat80_all("Is there more than one country in each continent ?",[false],1500).
-chat80_all("Is the united kingdom in europe ?",_,_00).
+chat80_all("Is the united kingdom in europe ?",[true],_00).
 chat80_all("Is the rhine in switzerland ?",_,_00).
-chat80_all("Is the population of china greater than 200 million ?",_,_00).
-chat80_all("Is the population of china 840 million ?",_,_00).
-chat80_all("Is spain bordered by the pacific ?",_,_00).
-chat80_all("Is New York in america ?",_,_00).
-%chat80_all("Iraq will border iran ?",_,10300).
+chat80_all("Is the population of china 840 million ?",[true],_00).
+chat80_all("Is the population of china greater than 200 million ?",[true],_00).
+chat80_all("Is spain bordered by the pacific ?",[false],_00).
+chat80_all("Is New York in america ?",[true],_00).
+chat80_all("Is New York in south america ?",[false],_00).
+chat80_all("Iraq will border iran ?",_,10300).
 chat80_all("Iraq was bordering iran ?",_,10500).
 chat80_all("Iraq is bordering iran ?",_,10400).
-chat80_all("Iraq does border iran ?",_,10100).
+chat80_all("Iraq does border iran ?",[true],10100).
 chat80_all("Iraq did border iran ?",_,10200).
-chat80_all("Iraq borders iran ?",_,10000).
+chat80_all("Iraq borders iran ?",[true],10000).
 chat80_all("Iran is bordered by iraq ?",_,10600).
 chat80_all("How many rivers are not in asia ?",25,20300).
 chat80_all("How many rivers are in asia ?",16,20400).
 chat80_all("How many countries have a population greater than 10 million ?",50,20700).
 chat80_all("How many countries have a population exceeding 10 million ?",50,20600).
 chat80_all("How many asian countries have a population exceeding 10 million ?",20,20500).
-chat80_all("How large is the smallest american country ?",[--(0,ksqmiles)],800).
-chat80_all("Does the population of china exceed 1000 million ?",_,_00).
-chat80_all("Does the atlantic border spain ?",_,_00).
-chat80_all("Does Mexico border the United States ?",_,_00).
-chat80_all("Does america contain new York ?",_,_00).
+chat80_all("How large is the smallest american country ?",[--(0.133,ksqmiles)],800).
+chat80_all("What is the smallest country in america?",_,_).
+chat80_all("Is the Caribbean in america?",[true],_).
+chat80_all("What is the smallest country in north america?",_,_).
+chat80_all("What is the smallest country in central america?",_,_).
+chat80_all("What is the smallest country in south america?",_,_).
+chat80_all("What is the smallest country in caribbean?",_,_).
+
+chat80_all("Does the population of china exceed 1000 million ?",[false],_00).
+chat80_all("Does the atlantic border spain ?",[true],_00).
+chat80_all("Does Mexico border the United States ?",[true],_00).
+chat80_all("Does america contain new York ?",[true],_00).
+chat80_all("What countries that are not bordering romania does the danube flow through ?",[austria, czechoslovakia, romania, west_germany],_).
+chat80_all("What countries not bordering romania does the danube flow through ?",[austria, czechoslovakia, romania, west_germany],_).
+chat80_all("How many countries does the danube not flow through ?",[150],_).
 chat80_all("Does afghanistan border china ?",[true],200).
 chat80_all("What are the continents no country in which contains more than two cities that have a population exceeding 1 million ?",[[africa,antarctica,australasia]],18).
       chat80_all("What are the continents no country in which contains more than two cities whose population exceeds 1 million ?",[[africa,antarctica,australasia]],18).

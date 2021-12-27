@@ -327,8 +327,8 @@ verb_aux_form_db(does,do,pres+fin,3+sg).
 verb_aux_form_db(doing,do,pres+part,_).
 verb_aux_form_db(done,do,past+part,_).
 
-% CAN
-verb_form_aux(can,aux(do,[can]),_,_).
+% CAN/WILL
+verb_form_aux(Shall,aux(do,List),Presfin,ThirdSg):- modal_verb_form_aux(Shall,Will,Presfin,ThirdSg),some_to_list(Will,List).
 % will
 %verb_form_aux(will,aux(do,[will]),_,_).
 /*

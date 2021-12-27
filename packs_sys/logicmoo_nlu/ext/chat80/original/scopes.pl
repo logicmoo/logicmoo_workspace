@@ -370,13 +370,13 @@ apply80(det(Det), _, X, P, Y, Q, R) :-
 apply0(Some, X, P, X, Q, X^(P, Q)) :-
    some_word(Some).
 
-apply0(All, X, P, X, Q, \+X^(P, \+Q)) :-
-   all_word(All).
+apply0(All, X, P, X, Q, \+X^(P, NQ)) :- 
+   all_word(All),negate_inward(Q,NQ).
 
 apply0(no, X, P, X, Q, \+X^(P, Q)).
-apply0(notall, X, P, X, Q, X^(P, \+Q)).
+apply0(notall, X, P, X, Q, X^(P, NQ)) :- negate_inward(Q,NQ).
 
-
+negate_inward(Q,NQ):- maybe_modalize(scope,not,Q,NQ),!.
 
 quant_op(same, X, X, P, P). %:- X = Y.
 quant_op(Op, X, Y, P, X^(P, F)) :-

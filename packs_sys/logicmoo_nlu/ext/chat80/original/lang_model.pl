@@ -627,14 +627,15 @@ acetext_to_text80(List,Out):- is_list(List),member(E,List),acetext_to_text80(E,O
 
 sentence80(U,E):- no_repeats(E,sentence80(E,U,[],[],[])).
 
-try_chat_80(S,G):- try_chat_80(green,S,G).
-try_chat_80(C,S,G):- ignore((G=..[F,Tree,QT],!,should_learn(Tree),try_chat_80(C,S,F,Tree,QT))).
-try_chat_80(C,S,F,Tree,QT):- 
+try_chat_80(S,G):- try_chat_80(60,green,S,G).
+try_chat_80(C,S,G):- ignore((G=..[F,Tree,QT],!,should_learn(Tree),try_chat_80(60,C,S,F,Tree,QT))).
+try_chat_80(TL,C,S,G):- ignore((G=..[F,Tree,QT],!,should_learn(Tree),try_chat_80(TL,C,S,F,Tree,QT))).
+try_chat_80(TL,C,S,F,Tree,QT):-
   statistics(runtime,[Start,_]),
   locally(set_prolog_flag(gc,true),
    ((((should_learn(Tree),catch(
      debug_chat80_if_fail(deepen_pos( 
-        catch(call_with_time_limit(5.0,call(F,Tree,QT)),time_limit_exceeded,(QT=time_limit_exceeded,dmsg(QT))))),
+        catch(call_with_time_limit(TL,call(F,Tree,QT)),time_limit_exceeded,(QT=time_limit_exceeded,dmsg(QT))))),
       E,QT=error(E)) *-> true ; QT = failure))))),
   statistics(runtime,[End,_]),
   Total is (End - Start)/1000,
@@ -745,7 +746,7 @@ into_cg(CLIF,CG):-cgp_common_logic:convert_clif_to_cg(CLIF,CG),!.
 e2c_80(SS,CLIF):- parser_e2c:e2c(SS,CLIF),!, \+skip_learning(CLIF).
 
 c88:- s82(c88).
-c88(S):- c8_make, try_chat_80(S,c88(S,_)).
+c88(S):- c8_make, c88(S,_).
 c88(SS,O):- break_apart(c88_A,SS,O),!.
 c88_A(SS,O):- atom_length(SS,L),L<3,!,O= true.
 c88_A(B,OO):-
