@@ -141,7 +141,7 @@ pers_pron_lex(yourselves,_,2,pl,_).
 %name_LF(there).
 %name_LF(here).
 
-%pers_pron_lex(Word,Type,Pers,PlurSg,Case):- det_pron_lex(Word,Type,Pers,PlurSg,Case).
+
 pers_pron_lex(A,B,C,D):- det_pron_lex(A,B,C,D).
 
 det_pron_lex(those,neut,3,pl,subjA).
@@ -288,7 +288,7 @@ verb_form_wlex(L,W,RootVerb,Tense,Agmt):-
   verb_form_wlex0(L,W,RootVerb,Tense,Agmt),
   nop(wdmsg(verb_form_wlex(W,RootVerb,Tense,Agmt))).
 
-verb_form_wlex0(_,Word,Root,Tense,Agmt):- verb_form_lex(Word,Root,Tense,Agmt), !.
+verb_form_wlex0(_,A,B,C,D):- verb_form_lex(A,B,C,D), !.
 verb_form_wlex0(L,_,Root,_,_):- is_list(L),member(pos(V),L),atom_concat('vb',_,V),member(root(Root0),L),!,correct_root(Root0,Root).
 
  :- discontiguous verb_aux_form_db/4.
@@ -300,23 +300,21 @@ some_to_list(Tense,List):- var(Tense),!,List=[].
 some_to_list(Tense,List):- listify(Tense,List).
 
 % BE
-verb_aux_form_db(A,be,C,Agmt):- verb_aux_form_be(A,C,Agmt).
+verb_aux_form_db(A,be,C,D):- verb_aux_form_be(A,C,D).
 %verb_aux_form_db(A,be,_,_):- verb_aux_form_be(A,_,_).
 verb_aux_form_be(am,pres+fin,1+sg).
+verb_aux_form_be(as,pres+fin,3+_).
 verb_aux_form_be(are,pres+fin,2+sg).
 verb_aux_form_be(are,pres+fin,_+pl).
-verb_aux_form_be(were,past+fin,2+sg).
-verb_aux_form_be(were,past+fin,_+pl).
-verb_aux_form_be(was,past+fin,3+sg).
-verb_aux_form_be(was,past+fin,1+sg).
-verb_aux_form_be(as,pres+fin,3+_).
 verb_aux_form_be(been,past+part,_).
 verb_aux_form_be(be,inf,_).
 verb_aux_form_be(',',inf,_).
 verb_aux_form_be(being,pres+part,_).
 verb_aux_form_be(is,pres+fin,3+sg).
-
-
+verb_aux_form_be(was,past+fin,3+sg).
+verb_aux_form_be(was,past+fin,1+sg).
+verb_aux_form_be(were,past+fin,2+sg).
+verb_aux_form_be(were,past+fin,_+pl).
 
 % DO
 verb_aux_form_db(do,do,pres+fin,_+pl).
@@ -330,7 +328,7 @@ verb_aux_form_db(doing,do,pres+part,_).
 verb_aux_form_db(done,do,past+part,_).
 
 % CAN/WILL
-verb_form_aux(Shall,aux(do,List),Presfin,Agmt):- modal_verb_form_aux(Shall,Will,Presfin,Agmt),some_to_list(Will,List).
+verb_form_aux(Shall,aux(do,List),Presfin,ThirdSg):- modal_verb_form_aux(Shall,Will,Presfin,ThirdSg),some_to_list(Will,List).
 % will
 %verb_form_aux(will,aux(do,[will]),_,_).
 /*
@@ -346,11 +344,11 @@ verb_aux_form_db(have,have,pres+fin,_+pl).
 verb_aux_form_db(having,have,pres+part,_).
 verb_aux_form_db(had,have,past+part,_).
 
-verb_form_aux(Word,Root,Tense,Agmt):- modal_verb_form_aux(Word,Root,Tense,Agmt).
+verb_form_aux(A,B,C,D):- modal_verb_form_aux(A,B,C,D).
 
-verb_form_lex(Word,Root,Tense,_):- verb_form_aux(Word,Root,Tense,_).
-%verb_form_lex(Word,Root,Tense,Agmt):- modal_verb_form_aux(Word,Root,Tense,Agmt).
-verb_form_lex(Word,Root,Tense,Agmt):- try_lex(verb_form_db(Word,Root,Tense,Agmt)), \+ avoided_verb(Word).
+verb_form_lex(A,B,C,_):- verb_form_aux(A,B,C,_).
+%verb_form_lex(A,B,C,D):- modal_verb_form_aux(A,B,C,D).
+verb_form_lex(A,B,C,D):- try_lex(verb_form_db(A,B,C,D)), \+ avoided_verb(A).
 
 avoided_verb(A):- var(A),!, freeze(A,avoided_verb(A)).
 avoided_verb(A):- clause(modal_verb_form_aux(A,_,_,_),true).
@@ -385,7 +383,7 @@ verb_form_db(chat80,governing,govern,pres+part,_).
 verb_form_db(chat80,governs,govern,pres+fin,3+sg).
 */
 
-%verb_form_lex(Are,Be,Tense,NthPlOrSing):-  use_lexicon_80(chat80), verb_form_db(chat80,Are,Be,Tense,NthPlOrSing).
+%verb_form_lex(Are,Be,PresFin,NthPlOrSing):-  use_lexicon_80(chat80), verb_form_db(chat80,Are,Be,PresFin,NthPlOrSing).
 %verb_form_lex(Verb,Verb,pres+fin,_+pl) :- 
 % NEW TRY 
 verb_form_db(chat80,Verb,Verb,pres+fin,_+pl) :-  Verb = V, verb_type_lex(V,_).
@@ -395,8 +393,8 @@ verb_form_db(chat80,Verb,Verb,pres+fin,_+pl) :-  Verb = V, verb_type_lex(V,_).
 % ... because [does,france,border,belgium,?] was not properly parsed
 % NEW TRY verb_form_lex(Verb,Inf,past+part,_) :- use_lexicon_80(chat80_extra), regular_past_lex(Verb,Inf).
 % ... because [is,france,bordered,by,belgium,?] was not properly parsed. Deduced from verb_form_db(chat80,done,do,past+part,_) bellow.
-%verb_form_lex(A,A,C,Agmt) :-
-%  writef("********************************** verb_form_db {0} failed", [[A,A,C,Agmt]]).
+%verb_form_lex(A,A,C,D) :-
+%  writef("********************************** verb_form_db {0} failed", [[A,A,C,D]]).
 %  !,
 %  fail.
 

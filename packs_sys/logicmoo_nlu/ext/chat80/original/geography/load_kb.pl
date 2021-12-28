@@ -251,6 +251,15 @@ ed( N, W, _):-
 
 chat80_all_broken("What cities do the countries bordering the baltic contain ?",Baltic_Cities,673):- baltic_cities(Baltic_Cities).
 %chat80_all("What is the total area of countries south of the equator and are not in australasia ?",[--(10228,ksqmiles)],1302).
+chat80_all("How many countries is the danube flowing through ?",[6],_).
+%chat80_all("How many countries is the danube flowing from ?",[6],_).
+chat80_all("How many countries is the danube flowing into ?",[5],_).
+%chat80_all("How many countries is the danube raising from ?",[1],_).
+chat80_all("How many countries does the danube flow through ?",[6],_).
+chat80_all("How many countries does the danube flow from ?",[6],_).
+chat80_all("How many countries does the danube flow into ?",[5],_).
+chat80_all("How many countries does the danube rise from ?",[1],_).
+
 chat80_all("What are the continents not containing a country ?",[antarctica],208).
 chat80_all("What is the total area of countries south of the equator and not in australasia ?",[--(10228,ksqmiles)],1300).
 chat80_all("What is the total area of countries south of the equator and in australasia ?",[--(3263.6419999999994,ksqmiles)],1301).
@@ -349,12 +358,6 @@ chat80_all("Does america contain new York ?",[true],_00).
 chat80_all("What countries that are not bordering romania does the danube flow through ?",[austria, czechoslovakia, romania, west_germany],_).
 chat80_all("What countries not bordering romania does the danube flow through ?",[austria, czechoslovakia, romania, west_germany],_).
 chat80_all("How many countries does the danube not flow through ?",[150],_).
-chat80_all("How many countries does the danube flow through ?",[6],_).
-chat80_all("How many countries does the danube flow into ?",[5],_).
-chat80_all("How many countries is the danube flowing into ?",[5],_).
-chat80_all("How many countries does the danube flow from ?",[6],_).
-%chat80_all("How many countries is the danube flowing from ?",[6],_).
-chat80_all("How many countries does the danube rise from ?",[1],_).
 chat80_all("What countries do rivers rise from ?", [[ afghanistan, angola,australia,brazil,burma,canada,
                    china,colombia,czechoslovakia,france, guinea,lesotho, mongolia,peru,poland, 
                    south_africa,soviet_union,spain,switzerland, turkey,uganda, united_states, upper_volta,
@@ -383,6 +386,20 @@ baltic_cities_real([[ [[denmark]:[copenhagen],
                   [sweden]:[stockholm],
                   [west_germany]:[/*west*/ berlin,bonn,hamburg]]]]).
 
+%will,can,could,would,should,ought
+chat8_all("will border").
+chat8_all("was bordering").
+chat8_all("is bordering").
+chat8_all("does border").
+chat8_all("did border").
+chat8_all("borders").
+chat8_all("will be bordering").
+chat8_all("could be bordering").
+chat8_all("would be bordering").
+chat8_all("has been bordering").
+chat8_all("will have been bordering").
+chat8_all("could have been bordering").
+chat8_all("is bordered by").
 
 
 
