@@ -703,7 +703,7 @@ slot_verb_kind((Prep),Verb,TypeS,S,Pred,AllSlots):- if_search_expanded(4),
    select_slots(AllSlots, 
        [slot(dirO,TypeD,D,SlotD,free),
        slot(indO,TypeI,I,SlotI,free)],Slots),
-   fail,fail,fail,fail,
+   %fail,fail,fail,fail,
    lf80(TypeS+TypeD+TypeI,ditrans_lex80(Verb,Prep,TypeS,S,TypeD,D,TypeI,I,Pred,Slots,SlotD,SlotI,_)).
 
 % slows the system way down like the danube
@@ -712,7 +712,7 @@ slot_verb_kind((Prep),Verb,TypeS,S,Pred,AllSlots):- if_search_expanded(4),
  % see no_repeats_dc(DC0,subj_obj_indirect_slots_LF(ditrans,verb_prep(Verb,Prep),TypeS,S,TypeD,D,TypeI,I,Pred,Slots,SlotI,SlotD,DC0)).
 
 ditrans_lex80(Verb,Prep,TypeS,S,TypeD,D,TypeI,I,Pred,Slots,SlotD,SlotI,_):- 
-  limit_slots(Slots,10),!, fail,
+  limit_slots(Slots,10), %!, fail,
   Pred = ditrans_call(Verb,prep(Prep),subjType(TypeS),subj(S),dirType(TypeD),dirO(D),indType(TypeI),
    indO(I),slots(Slots),slot_d(SlotD),slot_i(SlotI)).
 
