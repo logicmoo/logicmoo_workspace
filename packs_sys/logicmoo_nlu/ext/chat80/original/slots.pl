@@ -659,9 +659,9 @@ slot_verb_template(Verb,Pred, Slots,[],transparent) :-
   slot_verb_template_transparent1(Verb,Pred, Slots);slot_verb_template_transparent2(Verb,Pred, Slots).
 
 
-slot_verb_template_transparent1(Verb,Pred, Slots) :-
+slot_verb_template_transparent1(Verb,Pred, Slots) :-   
+   (select_slots(Slots,[slot(subjA,TypeS,S,_,free)],SlotsRemaining);SlotsRemaining=Slots),
    must80(verb_type_lex(Verb,Kind);true),
-   (select_slots(Slots,[slot(subjA,TypeS,S,_,free)],SlotsRemaining);SlotsRemaining=Slots),   
    slot_verb_kind(Kind,Verb,TypeS,S,Pred,SlotsRemaining).
 
 slot_verb_template_transparent2(Verb,Pred, Slots) :- fail,
@@ -700,7 +700,7 @@ slot_verb_kind(_Iv,Verb,TypeS,S,Pred,Slots) :-
 
 slot_verb_kind(_,aux(_,_),_TypeS,_S,_Pred,_Slots):- !, fail.
 
-slot_verb_kind(_Tv,Verb,TypeS,S,Pred,AllSlots) :-
+slot_verb_kind(_Tv,Verb,TypeS,S,Pred,AllSlots) :- if_search_expanded(2), 
    select_slots(AllSlots,[slot(dirO,TypeD,D,SlotD,free)],Slots),
    lf80(TypeS-TypeD,trans_LF1(Verb,TypeS,S,TypeD,D,Pred,Slots,SlotD,_)).
 
