@@ -677,16 +677,17 @@ select_slots(X,[Slot|Slots],Remaining):- fail,
   select_slots(Mid,Slots,Remaining).
 */
 
+slot_verb_kind(Main+More,Verb,TypeS,S,Pred,AllSlots):- 
+ nonvar(Main),!,
+ %dmsg(slot_verb_kind(More,Verb,TypeS,S,Pred,AllSlots)),
+ slot_verb_kind(More,Verb,TypeS,S,Pred,AllSlots).
+
 % BE
 % slot_verb_kind(aux(be,_MODAL),_,TypeS,S,bE(is,A,S),[slot(dirO,TypeS,A,_,free)]).
 slot_verb_kind(aux(Be,_MODAL),_,TypeS,S,bE(is,S,A),AllSlots):- Be == be,
    select_slots(AllSlots, [slot(dirO,TypeS,A,_,free)]).
 slot_verb_kind(aux(Be,_MODAL),_,TypeS,S,true,AllSlots):- Be == be, !,
    select_slots(AllSlots, [slot(arg_pred,TypeS,S,_,free)]).
-
-
-slot_verb_kind(Main+More,Verb,TypeS,S,Pred,AllSlots):- 
- nonvar(Main),!,slot_verb_kind(More,Verb,TypeS,S,Pred,AllSlots).
 
 slot_verb_kind(_Tv,Verb,TypeS,S,Pred,AllSlots) :-
    select_slots(AllSlots,[slot(dirO,TypeD,D,SlotD,free)],Slots),
@@ -695,15 +696,17 @@ slot_verb_kind(_Tv,Verb,TypeS,S,Pred,AllSlots) :-
 slot_verb_kind(_Iv,Verb,TypeS,S,Pred,Slots) :-
    lf80(TypeS,intrans_LF(Verb,TypeS,S,Pred,Slots,_)).
 
+slot_verb_kind(_,aux(_,_),_TypeS,_S,_Pred,_Slots):- !, fail.
+
 slot_verb_kind(_Tv,Verb,TypeS,S,Pred,AllSlots) :-
    select_slots(AllSlots,[slot(dirO,TypeD,D,SlotD,free)],Slots),
    lf80(TypeS-TypeD,trans_LF1(Verb,TypeS,S,TypeD,D,Pred,Slots,SlotD,_)).
 
-slot_verb_kind((Prep),Verb,TypeS,S,Pred,AllSlots):- if_search_expanded(4), 
+slot_verb_kind((Prep),Verb,TypeS,S,Pred,AllSlots):- if_search_expanded(7),
    select_slots(AllSlots, 
        [slot(dirO,TypeD,D,SlotD,free),
        slot(indO,TypeI,I,SlotI,free)],Slots),
-   fail,fail,fail,fail,
+   %fail,fail,fail,fail,
    lf80(TypeS+TypeD+TypeI,ditrans_lex80(Verb,Prep,TypeS,S,TypeD,D,TypeI,I,Pred,Slots,SlotD,SlotI,_)).
 
 % slows the system way down like the danube
