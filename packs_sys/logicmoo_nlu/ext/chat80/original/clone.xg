@@ -840,9 +840,16 @@ verb_form883(ExtraMods,RootVerb,Tense,Agmt,Role) ---> {unloop(maybe_verb_pre_mod
    {append_mods([ExtraMods1,ExtraMods2],ExtraMods)}.
 
 verb_form883(ExtraMods,RootVerbO,Tense,Agmt,_Role) ---> 
-   theText80_W2(W,L),
-   {verb_form_wlex(L,W,RootVerb,Tense,Agmt)},
+   real_verb_form(RootVerb,Tense,Agmt),
    maybe_verb_prep(RootVerb,RootVerbO,ExtraMods).
+
+real_verb_form(RootVerb,Tense,Agmt) --->
+   theText80_W2(W,L),
+   {verb_form_wlex(L,W,RootVerb,Tense,Agmt)},!.
+
+real_verb_form(RootVerb,pres+fin,_) ---> prep(RootVerb).
+
+
 
 verb_form884([],adj_prep(P,ToFrom),_Tense,_Agmt,_Role) --->
    {if_search_expanded(2)},
