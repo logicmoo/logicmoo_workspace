@@ -236,7 +236,7 @@ measure_pred(Spatial,Area,Where,Total) :- not_where(Where),
          database80(aggregate80(total, Setof, Total)).
 
 
-bE(is,I,T):- nonvar(T),ti(T,I).
+bE(is,I,T):- nonvar(T),concrete_type(T), !, ti(T,I).
 bE(_,X,X).
 named(X,X).
 
@@ -337,7 +337,7 @@ have(_,_).
 %contain(X,Y) :- trans_direct(thing,contain,X,W), contain(W,Y).
 trans_pred(Spatial,Have,X,Y) :- Have == have, trans_pred(Spatial,contain,X,Y).
 
-trans_pred(Spatial,Contain,X,Y) :- trans_rel(=,trans_direct(Spatial,Contain),X,Y).
+trans_pred(_,Contain,X,Y) :- ignore(Spatial=thing),trans_rel(=,trans_direct(Spatial,Contain),X,Y).
 %contain(X,X).
 
 
@@ -437,7 +437,7 @@ generic_pred(VV,Type,P,X,Y):- P==in,!, generic_pred0(VV,Type,contain,Y,X).
 generic_pred(VV,Type,P,X,Y) :- P == any,!, generic_pred0(VV,Type,_,X,Y).
 generic_pred(VV,Type,P,X,Y) :- generic_pred0(VV,Type,P,X,Y)*->true;generic_pred1(Type,P,X,Y).
 
-trans_pred_type(Type,P):- tmp80:trans_rel_cache_created(=, trans_direct(Type,P)).
+trans_pred_type(_Type_,P):- ignore(thing=Type),tmp80:trans_rel_cache_created(=, trans_direct(Type,P)).
 trans_pred_type(thing,contain).
 
 generic_pred0(_VV,Type,P,X,Y) :- trans_pred_type(Type,P), nonvar(P),trans_pred(Type,P,X,Y). % contain 

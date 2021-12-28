@@ -22,7 +22,7 @@
 :- op(400,xfy,&).
 
 
-spatial(thing).
+spatial(Thing):- dif(Thing,value), Thing = thing.
 
 feat(Feat):- dif(Feat,geo). % debug_var(feat,Feat),
 
@@ -147,8 +147,8 @@ property_LF(Capital,Spatial& Feat& City,X,Spatial&Geo& /*_Neo&*/ Country,Y,speci
 property_LF_1(City,Spatial&Feat&City,X,Spatial&_Geo&Country,Y,
   (ti(City,X),nop(property_LF(City,of,Country)),
    generic_pred(VV,Spatial,prep(of),X,Y)),[],_,_):- if_search_expanded(2),t_l:current_vv(VV),
- City \== total, City \== area, 
- City \== sea, City \== country, City \== continent,
+ %City \== total, City \== area, 
+ %City \== sea, City \== country, City \== continent,
 %   fail,
    concrete_type(City),
    feat(Feat), assertion(nonvar(City)).
@@ -188,7 +188,8 @@ clex_attribute(Area):-  bind_pos('attrib',Area).
 
 synonymous_spatial(nation,country).
 
-thing_LF_access(Area,value&size&Area,X,unit_format(Area,X),[],_):- assertion(nonvar(Area)), type_measure_pred(_,size,Area,_).
+thing_LF_access(Area,value&size&Area,X,unit_format(Area,X),[],_):- assertion(nonvar(Area)), 
+  type_measure_pred(_,size,Area,_).
 
 thing_LF_access(Latitude,value&position,X,unit_format(Latitude,X),[],_):- assertion(nonvar(Latitude)), type_measure_pred(_Region,position(_Y),Latitude,_).
 
@@ -369,11 +370,13 @@ adv_template_LF(RefVar,Adv,Case,X,pred_adv(RefVar,Adv,Case,X)).
 
 /* Adjectives */
 
-restriction_LF(Word,Spatial&_,X,property(X,Type,adj)):- adj_db_clex(Type,Word,restr), spatial(Spatial).
+restriction_LF(Word,_Type,_X,_P):- aggr_adj_LF(Word,_TypeV,_TypeX,_F),!,fail.
+restriction_LF(Word,_Type,_X,_P):- adj_sign_LF(Word,_),!,fail.
 restriction_LF(African,Spatial&_,X,ti(African,X)):- adj_lex(African,restr), spatial(Spatial).
 restriction_LF(Word,_,X,Out):- compound(Word),subst(Word,self,X,Out), Word\==Out.
-restriction_LF(Type,_Spatial&_,X,property(X,Type,pos)):- if_search_expanded(2).
-
+restriction_LF(_,_,_,_):- \+ if_search_expanded(2), !, fail.
+restriction_LF(Word,Spatial&_,X, property(X,Type,adj)):- adj_db_clex(Type,Word,restr), spatial(Spatial).
+restriction_LF(Type,_Spatial&_,X,property(X,Type,pos)).
 
 %restriction_LF(american,Spatial&_,X,ti(american,X)).
 %restriction_LF(asian,Spatial&_,X,ti(asian,X)).

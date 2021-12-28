@@ -172,6 +172,6 @@ one_of([_|R],X) :-
 
 ratio(N,M,R) :- R is (N*100)/M.
 
-card(S,N) :- length(S,N).
+card(S,N) :- length(S,N),!.
 
 

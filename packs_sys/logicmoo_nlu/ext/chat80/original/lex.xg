@@ -276,8 +276,8 @@ verb_form80(Verb,Tense,Agmt,_Role) --->
 
 %name_xg('Billy') ---> theText80(bill),!.
 %name_xg('Billy') ---> theText80(bob),!.
+name_xg(Name) ---> theText80(a),{!,fail},name_xg(Name).
 name_xg(Name) ---> opt_the, name_lex_txt(Name),!.
-name_xg(Name) ---> theText80(a),!,name_xg(Name).
 name_xg(Name) ---> thePos80((nnp;nnps;ner('PERSON')),Name),!.
 %name_xg('Billy') ---> theText80(bo),!.
 
