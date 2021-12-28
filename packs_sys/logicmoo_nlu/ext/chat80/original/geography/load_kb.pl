@@ -349,6 +349,16 @@ chat80_all("Does america contain new York ?",[true],_00).
 chat80_all("What countries that are not bordering romania does the danube flow through ?",[austria, czechoslovakia, romania, west_germany],_).
 chat80_all("What countries not bordering romania does the danube flow through ?",[austria, czechoslovakia, romania, west_germany],_).
 chat80_all("How many countries does the danube not flow through ?",[150],_).
+chat80_all("How many countries does the danube flow through ?",[6],_).
+chat80_all("How many countries does the danube flow into ?",[5],_).
+chat80_all("How many countries is the danube flowing into ?",[5],_).
+chat80_all("How many countries does the danube flow from ?",[6],_).
+chat80_all("How many countries is the danube flowing from ?",[6],_).
+chat80_all("How many countries does the danube rise from ?",[1],_).
+chat80_all("What countries do rivers rise from ?", [[ afghanistan, angola,australia,brazil,burma,canada,
+                   china,colombia,czechoslovakia,france, guinea,lesotho, mongolia,peru,poland, 
+                   south_africa,soviet_union,spain,switzerland, turkey,uganda, united_states, upper_volta,
+                 west_germany,zambia]],_).
 chat80_all("Does afghanistan border china ?",[true],200).
 chat80_all("What are the continents no country in which contains more than two cities that have a population exceeding 1 million ?",[[africa,antarctica,australasia]],18).
       chat80_all("What are the continents no country in which contains more than two cities whose population exceeds 1 million ?",[[africa,antarctica,australasia]],18).

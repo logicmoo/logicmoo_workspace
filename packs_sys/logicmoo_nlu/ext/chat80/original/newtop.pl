@@ -886,6 +886,9 @@ maybe_modalize0(_Scope,_,true, P, P):-!.
 
 
 maybe_modalize0(_Scope,_,root, P, P):-!.
+
+
+%maybe_modalize0(_Scope,_,info(Traits), P, PP):- member(pos(vbd),Traits),
 maybe_modalize0(_Scope,_,Fin, P, P):- skip_modalizing(Fin).
 maybe_modalize0(_Scope,_,voidQ, P, P):-!.
 
@@ -904,12 +907,14 @@ maybe_modalize0(Scope,O, negP(X),P,PP):-!, maybe_modalize0(Scope,O,[negP,X],P,PP
 %maybe_modalize0(_Scope,O,Modal, P, PP):- not_true_or_qtrue(O), atom(Modal),!,PP=..[Modal,P].
 maybe_modalize0(_Scope,_,M,P,modalized(M,P)).
 
+skip_modalizing(info(_)).
 skip_modalizing(tv). skip_modalizing(tv). skip_modalizing(dv(_)).
 skip_modalizing(active). skip_modalizing(passive).
 skip_modalizing(pres). skip_modalizing(part).
 skip_modalizing(pl). skip_modalizing(sg).
 skip_modalizing(main). skip_modalizing(aux).
 skip_modalizing(inf). skip_modalizing(fin).
+skip_modalizing(arg).
 
 
 skip_modalizing(prog).

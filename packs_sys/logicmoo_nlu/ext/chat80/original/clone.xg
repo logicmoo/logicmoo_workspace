@@ -832,22 +832,24 @@ verb_m(M) ---> thePos80((aux;vb_;rbr;rbs),M).
 
 verb_form883(ExtraMods,RootVerb,Tense,_Agmt1,_Role) ---> % {fail},
    theText80(W),
-   {verb_form_aux(W,RootVerb,Tense,_Agmt2),flatten([RootVerb],ExtraMods)}.
+   {verb_form_aux(W,RootVerb,Tense,_Agmt2)},
+   {flatten([info(RootVerb),info(Tense)],ExtraMods)}.
 
 verb_form883(ExtraMods,RootVerb,Tense,Agmt,Role) ---> {unloop(maybe_verb_pre_mods,2)},
    maybe_modal(_Tense1,[],ExtraMods1), !,
    verb_form88(ExtraMods2,RootVerb,Tense,Agmt,Role),
-   {append_mods([ExtraMods1,ExtraMods2],ExtraMods)}.
+   {append_mods([ExtraMods1,info(Tense),ExtraMods2],ExtraMods)}.
 
 verb_form883(ExtraMods,RootVerbO,Tense,Agmt,_Role) ---> 
-   real_verb_form(RootVerb,Tense,Agmt),
-   maybe_verb_prep(RootVerb,RootVerbO,ExtraMods).
+   real_verb_form(RootVerb,Tense,Agmt,ExtraMods0),
+   maybe_verb_prep(RootVerb,RootVerbO,ExtraMods1),
+   {flatten([ExtraMods0,ExtraMods1],ExtraMods)}.
 
-real_verb_form(RootVerb,Tense,Agmt) --->
+real_verb_form(RootVerb,Tense,Agmt,[]) --->
    theText80_W2(W,L),
    {verb_form_wlex(L,W,RootVerb,Tense,Agmt)},!.
 
-real_verb_form(RootVerb,pres+fin,_) ---> prep(RootVerb).
+real_verb_form(RootVerb,pres+fin,_,[]) ---> prep(RootVerb).
 
 
 

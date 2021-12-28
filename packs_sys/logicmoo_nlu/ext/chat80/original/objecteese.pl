@@ -267,7 +267,7 @@ never_change(X):- flexicon(numcompare,_,Z), sub_var(X,Z).
 never_change(X):- flexicon(det,_,Z), sub_var(X,Z).
 never_change(X):- quantifier_pron_lex(X,_,_).
 never_change(X):- terminator_lex(X,_).
-never_change(X):- verb_form_aux(X,_,_,_).
+never_change(X):- verb_form_aux(X,_,_,_,_).
 never_change(X):- wh_art_lex(_,X,_,_,_).
 never_change(X):- wh_pron_lex(X,_).
 never_change(X):- wh_rel_pron_lex(X,_).

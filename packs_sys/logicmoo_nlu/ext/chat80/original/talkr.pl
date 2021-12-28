@@ -243,6 +243,8 @@ named(X,X).
 ti(T,_):- nonvar(T),free_ti(T),!.
 ti(T,V):- nonvar(T),num_ti(T),!,is_ti_num(V).
 
+ti(danube,_).
+
 is_ti_num(V):- atomic(V),!,number(V).
 is_ti_num(V):- var(V),!,freeze(V,is_ti_num(V)).
 is_ti_num(V):- compound(V),!.
@@ -424,7 +426,12 @@ ordering_pred(thing,cp(south,of),X1,X2) :- type_measure_pred(_Region,position(y)
 ordering_pred(thing,cp(west,of),X1,X2) :- type_measure_pred( _Region,position(x),Longitude,_), position_pred(thing,Longitude,X1,L1), position_pred(thing,Longitude,X2,L2), exceeds(L1,L2).
 
 
+intrans_pred(thing,R,flow,R). %:- path_pred_linkage(_,_,R,_C,_).
+generic_pred(_,thing,prep(of),X,X).
+
 generic_pred(VV,Type,mg(P),X,Y):- nonvar(P),!,generic_pred(VV,Type,P,X,Y).
+generic_pred(_,_,prep(through),R,C):- path_pred_linkage(_,_,R,C,_).
+generic_pred(_,_,prep(into),R,C):- path_pred_linkage(_,_,R,_,C).
 generic_pred(VV,Type,prep(Of),X,Y):- Of == of, generic_pred(VV,Type,_,Y,X).
 generic_pred(VV,Type,P,X,Y):- P==in,!, generic_pred0(VV,Type,contain,Y,X).
 generic_pred(VV,Type,P,X,Y) :- P == any,!, generic_pred0(VV,Type,_,X,Y).
