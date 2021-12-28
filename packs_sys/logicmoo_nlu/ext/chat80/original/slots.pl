@@ -122,10 +122,15 @@ expand_named(Name,Name):- !.
 % ?- c88("If an agent A1 touches the chair O2 and A1 is awake then A1 is aware that O2 is existing.").
 
 % np(3+sg,nameOf(_Var,iran),[])
+i_np_head0(nameOf(X,Name,Adjs),Type-X,Type-X,identityQ(_QModal),Head,Pred0,Pred,[]) :- Name == X,
+  %ignore(lf80(Type,name_template_LF(Name,Type))),!,
+  ignore(must80((i_adjs(Adjs,Type-X,Type-X,_,'`'(true),Head,Pred0,Pred)))),!.
+
 i_np_head0(nameOf(X,Name,Adjs),Type-X,Type-X,identityQ(_QModal),Head,Pred0,Pred,[]) :- 
-  ignore(lf80(Type,name_template_LF(Name,Type))),!,
+  (var(Name)->X=Name;true),!,
+  ignore(lf80(Type,name_template_LF(Name,Type))),
   expand_named(Name,Named),
-  ignore(must80((i_adjs(Adjs,Type-X,Type-X,_,'`'(bE(named,X,Named)),Head,Pred0,Pred)))).
+  ignore(must80((i_adjs(Adjs,Type-X,Type-X,_,'`'(bE(named,X,Named)),Head,Pred0,Pred)))),!.
 
 i_np_head0(nameOf(Var,Name), Type1Name,Type2Name,Ident,True,Pred0,Pred,List) :- !,
   i_np_head0(nameOf(Var,Name,[]), Type1Name,Type2Name,Ident,True,Pred0,Pred,List).

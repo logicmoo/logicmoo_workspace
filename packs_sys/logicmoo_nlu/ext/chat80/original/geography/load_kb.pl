@@ -353,7 +353,7 @@ chat80_all("How many countries does the danube flow through ?",[6],_).
 chat80_all("How many countries does the danube flow into ?",[5],_).
 chat80_all("How many countries is the danube flowing into ?",[5],_).
 chat80_all("How many countries does the danube flow from ?",[6],_).
-chat80_all("How many countries is the danube flowing from ?",[6],_).
+%chat80_all("How many countries is the danube flowing from ?",[6],_).
 chat80_all("How many countries does the danube rise from ?",[1],_).
 chat80_all("What countries do rivers rise from ?", [[ afghanistan, angola,australia,brazil,burma,canada,
                    china,colombia,czechoslovakia,france, guinea,lesotho, mongolia,peru,poland, 
