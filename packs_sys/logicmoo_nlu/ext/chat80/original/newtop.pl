@@ -913,7 +913,7 @@ maybe_modalize0(_Obj,_Scope,_,M,P,modalized(M,P)).
 
 skip_modalizing(info(_)).
 skip_modalizing(tv). skip_modalizing(tv). skip_modalizing(dv(_)).
-skip_modalizing(active). skip_modalizing(passive).
+skip_modalizing(activeV). skip_modalizing(passiveV).
 skip_modalizing(pres). skip_modalizing(part).
 skip_modalizing(pl). skip_modalizing(sg).
 skip_modalizing(main). skip_modalizing(aux).
@@ -921,7 +921,7 @@ skip_modalizing(inf). skip_modalizing(fin).
 skip_modalizing(arg).
 
 
-skip_modalizing(prog).
+skip_modalizing(progresiveV).
 skip_modalizing(X):- integer(X).
 
 

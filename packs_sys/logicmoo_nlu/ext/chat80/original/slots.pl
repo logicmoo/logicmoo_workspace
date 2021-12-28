@@ -83,7 +83,7 @@ i_sentence2(decl(S),assertion80(P)) :- !, i_s(S,P).
 i_sentence2(whq(X,S),question80([X],P)) :- !, i_s(S,P).
 %i_sentence2(s(S),s80(P)) :- !, i_s_must(s(S),P). 
 i_sentence2(imp(U,Ve,s(_,Verb,VArgs,VMods)),imp80(U,Ve,V,Args)) :-
-   must80(i_verb(Verb,V,_,active,([]),Slots0,[],transparent)),
+   must80(i_verb(Verb,V,_,activeV,([]),Slots0,[],transparent)),
    must80(i_verb_args(RefVar,VArgs,[],[],Slots0,Slots,Args,Args0,Up,-0)),
    append(Up,VMods,Mods),
    must80(i_verb_mods(RefVar,Mods,_,[],Slots,Args0,Up,+0)),!.
@@ -161,14 +161,14 @@ i_np_head0(np_head(X,generic,[],Value), Type-X,Type-X,voidQ,
   '`'(bE(same,X,Value)),Pred,Pred,[]):-!.
 
 i_np_head0(np_head(X,Det,Adjs,Noun),TypeX-X,TypeT-T,Det0,Head0,Pred0,Pred,Slots) :- 
-  must80(i_np_head1(np_head(X,Det,Adjs,Noun),TypeX-X,TypeT-T,Det0,Head0,Pred0,Pred,Slots)).
+  i_np_head1(np_head(X,Det,Adjs,Noun),TypeX-X,TypeT-T,Det0,Head0,Pred0,Pred,Slots).
 
 i_np_head0(Else, Type-X,Type-X,identityQ(_QModal),'`'(P),Pred,Pred,[]):- 
    lf80(Type,make_qualifiedBy(X,i_np_head0,X,Type,Else,P)).
 
 i_np_head1(np_head(X,Det,Adjs,Noun),TypeX-X,TypeT-T,DetO,Head0,Pred0,Pred,Slots):-
-   i_adjs(Adjs,TypeX-X,TypeT-T,TypeX-X,Head0,Head,Pred0,Pred),
-   i_noun(Noun,TypeX-X,Head,Slots),
+   must80(i_adjs(Adjs,TypeX-X,TypeT-T,TypeX-X,Head0,Head,Pred0,Pred)),
+   must80(i_noun(Noun,TypeX-X,Head,Slots)),
    xform_det(Det,DetO).
 
 type_x_var(Var,_):- var(Var),!.
@@ -469,8 +469,8 @@ i_subj(RefVar,Voice,Subj,Slots0,Slots,Quant,Up,Id) :-
 i_verb_args(RefVar,VArgs,XA0,XA,Slots0,Slots,Args0,Args,Up,Id) :-
    fill_verb(RefVar,VArgs,XA0,XA,Slots0,Slots,Args0,Args,Up,Id).
 
-active_passive_subjcase(active,subjA).
-active_passive_subjcase(passive,subjP).
+active_passive_subjcase(activeV,subjA).
+active_passive_subjcase(passiveV,subjP).
 
 fill_verb(_RefVar,[],XA,XA,Slots,Slots,Args,Args,[],_):-!.
 fill_verb(RefVar,[Node|Nodes0],XA0,XA,Slots0,Slots,Args0,Args,Up,Id) :-
@@ -704,13 +704,18 @@ slot_verb_kind(_Tv,Verb,TypeS,S,Pred,AllSlots) :-
    select_slots(AllSlots,[slot(dirO,TypeD,D,SlotD,free)],Slots),
    lf80(TypeS-TypeD,trans_LF1(Verb,TypeS,S,TypeD,D,Pred,Slots,SlotD,_)).
 
+slot_verb_kind(Iv,Verb,TypeS,S,Pred,Slots) :- if_search_expanded(10), 
+    slot_suggester(Iv,Slots),
+   lf80(TypeS,intrans_LF_1(Iv,Verb,TypeS,S,Pred,Slots,_)).
+/*
 slot_verb_kind((Prep),Verb,TypeS,S,Pred,AllSlots):- if_search_expanded(7),
+  slot_suggester(Prep,AllSlots),
    select_slots(AllSlots, 
        [slot(dirO,TypeD,D,SlotD,free),
        slot(indO,TypeI,I,SlotI,free)],Slots),
    %fail,fail,fail,fail,
    lf80(TypeS+TypeD+TypeI,ditrans_lex80(Verb,Prep,TypeS,S,TypeD,D,TypeI,I,Pred,Slots,SlotD,SlotI,_)).
-
+*/
 % slows the system way down like the danube
 % slot_verb_kind(Type,Verb,TypeS,S,Pred,AllSlots):- fail,if_search_expanded(4),  lazy_pred_LF(Type,Verb,TypeS,S,AllSlots,Pred),!.
 

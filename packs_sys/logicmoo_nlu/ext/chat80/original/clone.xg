@@ -77,10 +77,10 @@ sentence803(S) ---> imperative80(S).
 sentence804(decl(S)) ---> subj_decl(S).
 sentence804(decl(S)) ---> pp_decl(S).
 
-subj_decl( ( s( Subj, verb(main+iv,exist,active,pres+fin,[],[]), [],[]))) ---> subj(Subj,_Agmt,_Type).
+subj_decl( ( s( Subj, verb(main+iv,exist,activeV,pres+fin,[],[]), [],[]))) ---> subj(Subj,_Agmt,_Type).
 
 pp_decl( ( s( np(_,np_head(_,generic,[adj(info(self,PP))],current_thing),[]),
-                         verb(main+iv,exist,active,pres+fin,[],[]),
+                         verb(main+iv,exist,activeV,pres+fin,[],[]),
                          [],
                        [ PP ]))) --->
    xg_prep_phrase(_PPAlowed,PP,_Case,_Set,_Mask).
@@ -261,7 +261,7 @@ if_cond(true,S,Mask) ---> s_vp_801(S,Mask).
 
 s80(P) --->  s80(P,_).
 
-s80(s(NP,verb(main+iv,E,[],active,_+fin,[],([])),[],[]),Mask) ---> 
+s80(s(NP,verb(main+iv,E,[],activeV,_+fin,[],([])),[],[]),Mask) ---> 
    theText80(there),theText80_W2(_,L),{member(root(E),L),member(upos(verb),L)},verb_arg(np,NP,Mask).
 
 s80(P,Mask) ---> % {retractall(t_l:was_sentence_level(_))},
@@ -305,7 +305,7 @@ s_vp_801(s(Subj,Verb,Args,Mods),Mask) --->
    just_vp(Subj,Agmt,Type,Verb,Args,Mods,Mask).
 
 s_vp_801(s(NP,Verb,[],[ arg(arg_pred,adj(true))]),_) --->  ace_var(AceVar), !,
-   {Verb = verb(aux+aux(be,[]), aux(be,[]),active,pres+fin,[],[ aux(be,[pres+fin]), root]),
+   {Verb = verb(aux+aux(be,[]), aux(be,[]),activeV,pres+fin,[],[ aux(be,[pres+fin]), root]),
     make_ace_var(AceVar,NP,statement)}.
 
 
@@ -317,7 +317,7 @@ just_vp(_Subj,Agmt,_Type,Verb,[ARG],_Mods,_Mask) --->
   theText80(W),
   {verb_aux_form_db(W,do,Pastfin,Agmt)},
   {if_search_expanded(5)},
-  {Verb = verb(main+tv,performed,[],active,Pastfin,[],[]),
+  {Verb = verb(main+tv,performed,[],activeV,Pastfin,[],[]),
     ARG = arg(dirO,np(Agmt,np_head(_Var2,generic,[],action),[]))},
     no_more_words.
 
@@ -738,7 +738,7 @@ reduced_rel_rest(Agmt,Conj0,Rel0,Rel,_,Mask) --->
 reduced_rel_rest(_,_,Rel,Rel,Mask,Mask) ---> noText.
 
 reduced_rel(_Agmt,reduced_rel(Type_X,decl(s( np(3+sg,np_head(_Var1,generic,[],Type_X),[]),
-                         verb(main+tv,name,[],active,past+fin,[],([])),
+                         verb(main+tv,name,[],activeV,past+fin,[],([])),
                          [ arg(dirO,np(3+sg,np_head(_Var2,generic,[],Name),[]))],
                        []))),_Mask) ---> 
    theText80(named), name_xg(Name).
@@ -854,7 +854,16 @@ real_verb_form(RootVerb,Tense,Agmt,[]) --->
    theText80_W2(W,L),
    {verb_form_wlex(L,W,RootVerb,Tense,Agmt)},!.
 
+real_verb_form(RootVerb,Tense,Agmt,ExtraMods0) ---> 
+   {if_search_expanded(10)},
+   real_verb_form_ace(RootVerb,Tense,Agmt,ExtraMods0).
+
 real_verb_form(RootVerb,pres+fin,_,[]) ---> prep(RootVerb).
+
+real_verb_form_ace(verb_fn(AceVar),pres+fin,_Agmt,[]) ---> ace_var_suffix(AceVar,'s').
+real_verb_form_ace(verb_fn(AceVar),pres+part,_Agmt,[]) ---> ace_var_suffix(AceVar,'ing').
+real_verb_form_ace(verb_fn(AceVar),past+fin,_Agmt,[]) ---> ace_var_suffix(AceVar,'ed').
+real_verb_form_ace(verb_fn(AceVar),inf,_Agmt,[]) ---> ace_var_suffix(AceVar,'').
 
 
 verb_form884([true],adj_prep(P,ToFrom),_Tense,_Agmt,_Role) --->
@@ -891,10 +900,10 @@ rest_verb([Pastpart|ExtraMods],aux,aux(have,ExtraMods1),Root,Voice,[perf|Aspect]
   verb_form882(ExtraMods2,Root0,Pastpart,_,_), 
   have_vt(ExtraMods3,Root0,Root,Voice,Aspect),{append_mods([ExtraMods1,ExtraMods2,ExtraMods3],ExtraMods)}.
 rest_verb(ExtraMods,aux,aux(be,ExtraMods1),Root,Voice,Aspect) ---> verb_form882(ExtraMods2,Root0,Tense0,_,_), be_vt(ExtraMods3,Tense0,Root0,Root,Voice,Aspect),{append_mods([ExtraMods1,ExtraMods2,ExtraMods3],ExtraMods)}.
-rest_verb(ExtraMods,aux,aux(do,ExtraMods1),Root,active,[]) ---> verb_form882(ExtraMods2,Root,inf,_,_),{append_mods([ExtraMods1,ExtraMods2],ExtraMods)}.
-%rest_verb(ExtraMods,aux,Can,Root,active,[]) ---> {modal_verb_form_aux(_,Can,_,_)},verb_form882(ExtraMods1,Root,inf,_,_),{append([[Can],ExtraMods1],ExtraMods)}.
-%rest_verb(ExtraMods,aux,Wont,Root,active,[]) ---> {modal_verb_form_aux(Wont,List,_,_),flatten([List],ListF)},verb_form882(ExtraMods1,Root,inf,_,_),{append([ListF,ExtraMods1],ExtraMods)}.
-rest_verb([root],main,Root,Root,active,[]) ---> noText.
+rest_verb(ExtraMods,aux,aux(do,ExtraMods1),Root,activeV,[]) ---> verb_form882(ExtraMods2,Root,inf,_,_),{append_mods([ExtraMods1,ExtraMods2],ExtraMods)}.
+%rest_verb(ExtraMods,aux,Can,Root,activeV,[]) ---> {modal_verb_form_aux(_,Can,_,_)},verb_form882(ExtraMods1,Root,inf,_,_),{append([[Can],ExtraMods1],ExtraMods)}.
+%rest_verb(ExtraMods,aux,Wont,Root,activeV,[]) ---> {modal_verb_form_aux(Wont,List,_,_),flatten([List],ListF)},verb_form882(ExtraMods1,Root,inf,_,_),{append([ListF,ExtraMods1],ExtraMods)}.
+rest_verb([root],main,Root,Root,activeV,[]) ---> noText.
 
 
 % BE
@@ -902,17 +911,17 @@ have_vt(ExtraMods,aux(be,_),Root,Voice,Aspect) --->
    verb_form882(ExtraMods1,Root0,Tense0,_,_),
    be_vt(ExtraMods2,Tense0,Root0,Root,Voice,Aspect),
    {append_mods([ExtraMods1,ExtraMods2],ExtraMods)}.
-have_vt([],Root,Root,active,[]) ---> noText.
+have_vt([],Root,Root,activeV,[]) ---> noText.
 
-be_vt([],past+part,Root,Root,passive,[]) ---> noText.
-be_vt(ExtraMods,pres+part,Root0,Root,Voice,[prog]) --->
+be_vt([],past+part,Root,Root,passiveV,[]) ---> noText.
+be_vt(ExtraMods,pres+part,Root0,Root,Voice,[progresiveV]) --->
    passive_vt(ExtraMods,Root0,Root,Voice).
 
 % BE
-passive_vt([EM|ExtraMods],aux(be,EM),Root,passive) --->
+passive_vt([EM|ExtraMods],aux(be,EM),Root,passiveV) --->
    verb_form882(ExtraMods1,Root,past+part,_,_),
    {verb_type_lex(Root,Type), passive_vt(ExtraMods2,Type), append_mods([ExtraMods1,ExtraMods2],ExtraMods)}.
-passive_vt([],Root,Root,active) ---> noText.
+passive_vt([],Root,Root,activeV) ---> noText.
 
 participle_vt(verb(Type,Root,Voice,inf,Aspect,Neg),Type,Voice) --->
    neg_modal_opt(Tense,[],ExtraMods,Neg),
@@ -922,8 +931,8 @@ participle_vt(verb(Type,Root,Voice,inf,Aspect,Neg),Type,Voice) --->
 passive_vt([],_+tv).
 passive_vt([],_+dv(_Prep)).
 
-participle_vt(pres+part,active,[prog]).
-participle_vt(past+part,passive,[]).
+participle_vt(pres+part,activeV,[progresiveV]).
+participle_vt(past+part,passiveV,[]).
 
 /* Extraposition brackets */
 
@@ -935,7 +944,7 @@ verb_args(_+Type,Voice,AdvArgs,Mask0,Mask) --->
    advs_opt(AdvArgs,Args,_),
    verb_args(Type,Voice,Args,Mask0,Mask).
 
-verb_args(tv,active,[arg(dirO,Dir)],_,Mask) --->
+verb_args(tv,activeV,[arg(dirO,Dir)],_,Mask) --->
    verb_arg(np,Dir,Mask).
 verb_args(dv(_Prep),_,[arg(Case,NP)|Type_X],_,Mask) --->
    verb_arg(np,NP,Mask0),
@@ -946,7 +955,7 @@ verb_args(aux(be,_),_,[arg(arg_pred,P)],_,Mask) --->
    pred_conj(_,P,Mask).
 verb_args(aux(be,_),_,[arg(dirO,P)],_,Mask) ---> verb_arg(np,P,Mask).
 % HAVE
-verb_args(aux(have,_),active,[arg(dirO,P)],_,Mask) ---> verb_arg(np,P,Mask).
+verb_args(aux(have,_),activeV,[arg(dirO,P)],_,Mask) ---> verb_arg(np,P,Mask).
 verb_args(Type,_,[],Mask,Mask) ---> {no_args_vt(Type)}.
 
 object_opt(Case,AdvArg,Mask0,Mask) --->

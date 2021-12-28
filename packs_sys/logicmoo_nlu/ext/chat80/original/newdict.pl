@@ -416,6 +416,9 @@ verb_form_db(chat80,Verb,Verb,pres+fin,_+pl) :-  Verb = V, verb_type_lex(V,_).
 verb_type_lex(aux(be,MODAL),aux+aux(be,MODAL)).
 verb_type_lex(aux(do,_MODAL),aux+dv(_Prep)).
 verb_type_lex(aux(have,MODAL),aux+aux(have,MODAL)).
+verb_type_lex(verb_fn(_),tv).
+verb_type_lex(verb_fn(_),iv).
+verb_type_lex(verb_fn(_),_+dv(_Prep)).
 verb_type_lex(Aux,aux+dv(_Prep)):- modal_verb_form_aux(_,Aux,_,_).
 verb_type_lex(Aux,main+tv):- modal_verb_form_aux(_,Aux,_,_).
 verb_type_lex(Aux,aux+Aux):- modal_verb_form_aux(_,Aux,_,_).

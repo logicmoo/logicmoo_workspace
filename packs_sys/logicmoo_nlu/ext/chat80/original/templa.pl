@@ -445,14 +445,16 @@ intrans_LF(Continue,Spatial & Feat& Type,X,LF,
  debug_var(From,Origin),
  LF = path_pred_linkage(direct(PathSystem),Type,X,Origin,Dest).
 
+%intrans_LF(Verb,TypeS,S,Pred,Slots,W):- if_search_expanded(2),
+%  intrans_LF_1(Verb,TypeS,S,Pred,Slots,W).
 
-intrans_LF(Run,Spatial & Feat& Type,X,LF, [],_):- 
+intrans_LF_1(_,Run,Spatial & Feat& Type,X,LF, [],_):- 
  feat(Feat),
  intrans_verb(Run),
  spatial(Spatial),
  LF = intrans_pred(Spatial,Type,Run,X).
 
-intrans_LF(Run,Spatial & Feat& Type,X,LF,
+intrans_LF_1(_,Run,Spatial & Feat& Type,X,LF,
  [slot(prep(Into),Spatial&_,Dest,_,free)],_):- 
  feat(Feat),
  %\+ concrete_type(Run),
@@ -460,17 +462,16 @@ intrans_LF(Run,Spatial & Feat& Type,X,LF,
  spatial(Spatial),
  LF = intrans_pred_prep(Spatial,Type,Run,X,Into,Dest).
 
-intrans_LF(Continue,Spatial& _Feat& Type,X,LF,
-  [slot(prep(dirO),Spatial&_,Y,_,free)],_):- 
-  if_search_expanded(2),
+intrans_LF_1(_,Continue,Spatial& _Feat& Type,X,LF,
+  [slot(dirO,Spatial&_,Y,_,free)],_):-   
   intrans_verb(Continue),
-  LF = intrans_pred_direct(_Spatial,Continue,Type,X,dirO,Y).
+  LF = intrans_pred_direct(_Spatial,Continue,Type,X,Y).
 
-intrans_LF(Run,Spatial & Feat& Type,X,LF, Slots,_):- 
- feat(Feat), fail,
+intrans_LF_1(Type,Run,Spatial & Feat& _TypeX,X,LF, Slots,_):- 
+ slot_suggester(Type,Slots),
+ feat(Feat), 
  %\+ concrete_type(Run),
  intrans_verb(Run),
- if_search_expanded(4),
  spatial(Spatial),
  LF = intrans_pred_slots(Spatial,Type,Run,X,Slots).
 
