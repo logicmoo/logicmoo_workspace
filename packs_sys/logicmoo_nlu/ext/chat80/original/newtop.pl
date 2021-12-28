@@ -850,7 +850,8 @@ skip_over_modalize(ti(_,_)).
 %skip_over_modalize(bE(_,_,_)).
 skip_over_modalize(true).
 
-maybe_modalize0(_Scope,O, V,P,P):- var(V),!,not_true_or_qtrue(O).
+maybe_modalize0(Scope,O,V,P,PP):- var(V),frozen(V,freeze(V, parser_chat80:ignore(X=Y))),!,maybe_modalize0(Scope,O,X+Y,P,PP).
+maybe_modalize0(_Scope,O,V,P,P):- var(V),!,not_true_or_qtrue(O).
 maybe_modalize0(Scope,O, V,P,PP):- var(P),!,maybe_modalize1(Scope,O, V,call(P),PP).
 
 maybe_modalize0(Scope,O, V,(ti(T,I),P),(ti(T,I),PP)):- !, maybe_modalize1(Scope,O, V,P,PP).

@@ -627,7 +627,7 @@ acetext_to_text80(List,Out):- is_list(List),member(E,List),acetext_to_text80(E,O
 
 sentence80(U,E):- no_repeats(E,sentence80(E,U,[],[],[])).
 
-try_chat_80(S,G):- try_chat_80(60,green,S,G).
+try_chat_80(S,G):- try_chat_80(green,S,G).
 try_chat_80(C,S,G):- ignore((G=..[F,Tree,QT],!,should_learn(Tree),try_chat_80(60,C,S,F,Tree,QT))).
 try_chat_80(TL,C,S,G):- ignore((G=..[F,Tree,QT],!,should_learn(Tree),try_chat_80(TL,C,S,F,Tree,QT))).
 try_chat_80(TL,C,S,F,Tree,QT):-

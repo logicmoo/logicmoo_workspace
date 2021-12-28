@@ -195,13 +195,13 @@ imperative80(imp(You,V,S)) --->
 
 imperative_verb(You,Root),
    theText80(You),
-   verb_form88([Inf,SgOrPl|ExtraMods],Root,imp+fin,Pers+SgOrPl,Main) --->
+   verb_form88([Inf,SgOrPl|ExtraMods],Root,_Imp+fin,Pers+SgOrPl,Main) --->
    verb_form88(ExtraMods,Root,Inf,Pers+SgOrPl,Main),
    {pers_pron_lex(You,_,Pers,SgOrPl,_)}.
 
 imperative_verb(You,Root),
    theText80(You),
-   verb_form88([X,Y,Z|ExtraMods],Root,imp+fin,X,main) --->
+   verb_form88([X,Y,Z|ExtraMods],Root,_Imp+fin,X,main) --->
    verb_form88(ExtraMods,Root,X,Y,Z),
    {ignore(You=it)}.
 
@@ -781,6 +781,9 @@ Passive forms
 */
 
 /* Verb phrase (less the complements) */
+verb_form88(ExtraMods,RootVerb,Tense,Agmt,Role) ---> {if_search_expanded(5),fail, nonvar(ExtraMods)},!,
+   verb_form88(ExtraMods2,RootVerb,Tense,Agmt,Role),
+   {nb_set_add(ExtraMods,ExtraMods2)}.
 
 verb_form88(ExtraMods,RootVerb,Tense,Agmt,Role) ---> verb_form883(ExtraMods,RootVerb,Tense,Agmt,Role).
 /*
@@ -801,7 +804,7 @@ verb_with_rest(verb(Type,Root,Voice,Timefin,Aspect,Neg),Agmt,Type,Voice) --->
    neg_modal_opt(_Tense1,[],Type0,NegI),
    rest_verb(ExtraMods3,Role,Root0,Root,Voice,Aspect),
    {append_mods([ExtraMods1,ExtraMods2,ExtraMods3],ExtraMods),
-    add_extra_to_neg(NegI,ExtraMods,Neg),
+    must(add_extra_to_neg(NegI,ExtraMods,Neg)),
     verb_type_lex(Root,Type)}.
     
 neg_modal_opt(Tense,ExtraMods,Aux,Neg) --->
@@ -833,7 +836,7 @@ verb_m(M) ---> thePos80((aux;vb_;rbr;rbs),M).
 verb_form883(ExtraMods,RootVerb,Tense,_Agmt1,_Role) ---> % {fail},
    theText80(W),
    {verb_form_aux(W,RootVerb,Tense,_Agmt2)},
-   {flatten([info(RootVerb),info(Tense)],ExtraMods)}.
+   {append_mods([info(RootVerb),info(Tense)],ExtraMods)}.
 
 verb_form883(ExtraMods,RootVerb,Tense,Agmt,Role) ---> {unloop(maybe_verb_pre_mods,2)},
    maybe_modal(_Tense1,[],ExtraMods1), !,
@@ -843,17 +846,18 @@ verb_form883(ExtraMods,RootVerb,Tense,Agmt,Role) ---> {unloop(maybe_verb_pre_mod
 verb_form883(ExtraMods,RootVerbO,Tense,Agmt,_Role) ---> 
    real_verb_form(RootVerb,Tense,Agmt,ExtraMods0),
    maybe_verb_prep(RootVerb,RootVerbO,ExtraMods1),
-   {flatten([ExtraMods0,ExtraMods1],ExtraMods)}.
+   {append_mods([ExtraMods0,ExtraMods1],ExtraMods)}.
 
 real_verb_form(RootVerb,Tense,Agmt,[]) --->
    theText80_W2(W,L),
-   {verb_form_wlex(L,W,RootVerb,Tense,Agmt)},!.
+   {verb_form_wlex(L,W,RootVerb,Tense,Agmt),
+    freeze(A,ignore([TimeFin2]=A)),
+    ignore(verb_form_wlex(_,W,_,TimeFin2,_))},!.
 
 real_verb_form(RootVerb,pres+fin,_,[]) ---> prep(RootVerb).
 
 
-
-verb_form884([],adj_prep(P,ToFrom),_Tense,_Agmt,_Role) --->
+verb_form884([true],adj_prep(P,ToFrom),_Tense,_Agmt,_Role) --->
    {if_search_expanded(2)},
    pre_prep_adj(P),prep(ToFrom).
 %verb_form882([],aux(do,[]),Tense,Agmt,_Role) ---> xg_peek(theText80(will)).
@@ -866,7 +870,7 @@ maybe_verb_prep(RootVerb,RootVerb,[])--->[].
 maybe_verb_prep(RootVerb,RootVerb,[prep(Prep)]) ---> {if_search_expanded(7)}, prep(Prep).
 maybe_verb_prep(RootVerb,verb_prep(RootVerb,Prep),[]) ---> {if_search_expanded(6)}, prep(Prep).
 
-
+append_mods(A,B):- flatten([A],B),!.
 append_mods([], []).
 append_mods([L|Ls], As) :- (var(L)->L1=[];flatten([L],L1)),!, append(L1, Ws, As), append_mods(Ls, Ws).
 
