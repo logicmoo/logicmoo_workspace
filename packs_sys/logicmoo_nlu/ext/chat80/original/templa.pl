@@ -46,6 +46,7 @@ thing_LF(OceanOrSea,Path,X,ti(OceanOrSea,X),Nil,Any):-  ti_subclass(OceanOrSea,S
 
 thing_LF(City,Spatial& Feat& City,X,ti(City,X),[],_):- concrete_type(City), feat(Feat), spatial(Spatial),like_type(geo,city,City).
 thing_LF(Seamass,Spatial&Geo& /*_Neo&*/ Seamass,X,ti(Seamass,X),[],_):- concrete_type(Seamass), spatial(Spatial),like_type(Geo,seamass,Seamass).
+
 thing_LF_access(Continent,Spatial&Geo& /*_Neo&*/ Continent,X,ti(Continent,X),[],_):- concrete_type(Continent), like_type(Geo,continent,Continent), spatial(Spatial).
 
 name_template_lf0(X,Spatial& Feat& City) :-like_type(geo,city,City), ti(City,X),feat(Feat), spatial(Spatial).
@@ -126,6 +127,11 @@ concrete_type(dog).
 concrete_type(person).
 concrete_type(statement).
 concrete_type(noun_thing).
+concrete_type(place_there).
+concrete_type(place_here).
+
+concrete_type(agent).
+concrete_type(action).
 concrete_type(man).
 concrete_type(island).
 concrete_type(country).
@@ -138,7 +144,7 @@ property_LF(Capital,Spatial& Feat& City,X,Spatial&Geo& /*_Neo&*/ Country,Y,speci
    feat(Feat), assertion(nonvar(Capital)),
    unique_of_obj(Geo,Spatial,Country,_Govern,Capital,City,_Capital_city,Nation_capital).
 
-property_LF(City,Spatial&Feat&City,X,Spatial&_Geo&Country,Y,
+property_LF_1(City,Spatial&Feat&City,X,Spatial&_Geo&Country,Y,
   (ti(City,X),nop(property_LF(City,of,Country)),
    generic_pred(VV,Spatial,prep(of),X,Y)),[],_,_):- if_search_expanded(2),t_l:current_vv(VV),
  City \== total, City \== area, 
@@ -155,6 +161,11 @@ trans_LF(    Govern,Spatial& Feat& City,X,Spatial&Geo& /*_Neo&*/ Country,Y,speci
 thing_LF(Capital,Spatial& Feat& City,X,ti(Capital_city,X),[],_):- 
   feat(Feat), assertion(nonvar(Capital)),
    unique_of_obj(_Geo,Spatial,_Country,_Govern,Capital,City,Capital_city,_Nation_capital),
+   spatial(Spatial).
+
+thing_LF_access_1(Capital,Spatial& Feat& _City,X,ti(Capital,X),[],_):- 
+  feat(Feat), assertion(nonvar(Capital)),
+   concrete_type(Capital),
    spatial(Spatial).
 
 /*
@@ -317,6 +328,7 @@ trans_LF(Look,feature&_,X,dbase_t(Look,X,Y), [slot(prep(At),feature&_,Y,_,free)]
   (tv_infpl(S,_);tv_finsg(S,_)), atomic_list_concat([Look,At],'-',S).
 
 trans_LF(exceed,value&Measure&Type,X,value&Measure&Type,Y,exceeds(X,Y),[],_,_).
+
 trans_LF1(Trans,_,X,_,Y,P ,[],_,_):- if_search_expanded(4), P\=aux(_,_),
   make_generic_pred(Spatial,Trans,X,Y,P),spatial(Spatial).
 
@@ -463,6 +475,7 @@ intrans_LF(Run,Spatial & Feat& Type,X,LF, Slots,_):-
  LF = intrans_pred_slots(Spatial,Type,Run,X,Slots).
 
 intrans_verb(Y):- once(intrans_verb0(Y)).
+intrans_verb(verb_fn(_)).
 intrans_verb0(Run):- clex:iv_infpl(Run,_).
 intrans_verb0(run).
 intrans_verb0(wait).

@@ -158,6 +158,7 @@ atom_codes_w_blobs(Atom,Codes):-atom(Atom)->atom_codes(Atom,Codes);format(codes(
 debug_var0(R,V):- is_dict(V), dict_pairs(V,VV,_), !, debug_var0(R,VV).
 debug_var0(V,R):- is_dict(V), dict_pairs(V,VV,_), !, debug_var0(VV,R).
 debug_var0(V,NonVar):-var(V),nonvar(NonVar),!,debug_var0(NonVar,V).
+%debug_var0(_New,Var):- var(Var),get_attr(Var,vnl,_),!.
 debug_var0(_,NonVar):-nonvar(NonVar),!.
 debug_var0(Var,TwoVars):- var(Var),var(TwoVars),!, ignore((get_var_name(Var,Name),debug_var0(Name,TwoVars))).
 debug_var0(Var,_):- var(Var),!.
@@ -213,8 +214,14 @@ unusable_name("").
 unusable_name('').
 
 add_var_to_env_now(New, _):- unusable_name(New),!.
-add_var_to_env_now(New0,Var):- toProperCamelAtom(New0,New),check_varname(New),add_var_to_env(New,Var).
+add_var_to_env_now(New0,Var):- toProperCamelAtom(New0,New),check_varname(New),add_var_to_env_maybe(New,Var).
 
+/*,locally(t_l:dont_append_var,name_one(V,R)),*V='$VAR'(R)*/
+add_var_to_env_perm(R,V):- atom_concat(R,'_VAR',RR), add_var_to_env(RR,V), nop(put_attr(V,vnl,R)).
+
+add_var_to_env_maybe(_New,Var):- var(Var),get_attr(Var,vnl,_),!.
+add_var_to_env_maybe(New,_Var):- atom_contains(New,'_VAR'),!.
+add_var_to_env_maybe(New,Var):- ignore(add_var_to_env(New,Var)).
 
 check_varname(UP):- name(UP,[C|Rest]),
   (
@@ -467,6 +474,8 @@ name_one(V,R):- is_dict(V), dict_pairs(V,VV,_), !, name_one(VV,R).
 name_one(R,V):- nonvar(R),var(V),!, name_one_var(R,V).
 name_one(_,_):- fail.
 
+vnl:attr_unify_hook(_,_).
+
 :- thread_local(t_l:dont_append_var/0).
 
 name_one_var([_|_],V):- debug_var('List',V),!.
@@ -494,8 +503,10 @@ pretty1(Env=List):- compound(List),var(Env),List=[H|_],compound(H),H=bv(_,_), ma
 pretty1(debug_var(R,V)):- may_debug_var(R,V).
 pretty1(bv(R,V)):- name_one(V,R).
 pretty1(isa(V,R)):- name_one(V,R).
+pretty1(ace_var(V,R)):- atom(R),var(V),!,add_var_to_env_perm(R,V).
 pretty1(bE(_,V,R)):- name_one(V,R).
 pretty1(iza(V,R)):- name_one(V,R).
+pretty1(cg_name(V,R)):- atom(R),var(V),!,add_var_to_env_perm(R,V).
 pretty1(cg_name(V,R)):- name_one(V,R).
 pretty1(cg_type(V,R)):- name_one(V,R).
 pretty1(cg_equal(V,R)):- name_one(V,R).

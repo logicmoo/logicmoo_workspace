@@ -160,14 +160,6 @@ i_np_head0(np_head(X,quantV(Op0,N),Adjs,Noun),
 i_np_head0(np_head(X,generic,[],Value), Type-X,Type-X,voidQ,
   '`'(bE(same,X,Value)),Pred,Pred,[]):-!.
 
-
-/*
-i_np_head0(np_head(_Var,generic,[],Value), Type-X,Type-X,voidQ,
-  '`'(=(X,Value)),Pred,Pred,[]) :- !.
-i_np_head0(np_head(_Var,generic,[],Value), Type-X,Type-V,voidQ,
-  '`'(same_objects(generic(Type-X-V),X,Value)),Pred,Pred,[]) :- !.
-*/
-
 i_np_head0(np_head(X,Det,Adjs,Noun),TypeX-X,TypeT-T,Det0,Head0,Pred0,Pred,Slots) :- 
   must80(i_np_head1(np_head(X,Det,Adjs,Noun),TypeX-X,TypeT-T,Det0,Head0,Pred0,Pred,Slots)).
 
@@ -271,6 +263,8 @@ i_adjs0([Adj|Adjs],X,T,T0,Head0,Head,Pred0,Pred) :-
    lf80(T-T1,i_adj(Adj,X,T,T1,Head0,Head1,Pred0,Pred1)),
    i_adjs(Adjs,X,T1,T0,Head1,Head,Pred1,Pred).
 
+adj_to_p(Adj,X,P):- notrace(subst(Adj,self,X,P)),P\==Adj,!.
+adj_to_p(lf(Adj),_X,Adj).
 
 i_adj(sup(Op0,adj(Adj)),Type-X,Type-V,_,
       aggr(F,V,[Y,X],Head,'`'(P)&Pred),Head,'`'(true),Pred) :-
@@ -280,7 +274,7 @@ i_adj(sup(Op0,adj(Adj)),Type-X,Type-V,_,
    lf80(Type,attribute_LF(Adj,Type,X,_,Y,P)).
 
 i_adj(adj(Adj),_Type-X,T,T,Head,Head,'`'(P)&Pred,Pred) :-
-   compound(Adj),subst(Adj,self,X,P),P\==Adj,!.
+   compound(Adj),adj_to_p(Adj,X,P),!.
 
 i_adj(adj(Adj),Type-X,T,T,Head,Head,'`'(P)&Pred,Pred) :-
    lf80(Type,restriction_LF(Adj,Type,X,P)).
@@ -598,7 +592,7 @@ i_sup_op(most, max).
 
 pos_conversion_db(wh(Type-X),same,Type,X,identityQ(_QModal)).
 pos_conversion_db(N,Op,_,N,Op):- number(N).
-pos_conversion_db(N,Op,_,N,Op):- bind_pos('value',N).
+pos_conversion_db(N,Op,_,N,Op):- notrace(bind_pos('value',N)).
 
 same_value(X,X).
 same_objects(X,X).
@@ -636,6 +630,14 @@ noun_template(Noun,Type,X,'`'(P),Slots) :-
 noun_template(Noun,TypeV,V,apply80(F,P),
       [slot(prep(Of),TypeX,X,_,apply)]) :-
    meta_noun_LF(Noun,Of,TypeV,V,TypeX,X,P,F).
+
+noun_template(Noun,TypeV,V,'`'(P),
+      [slot(poSS,TypeO,O,Os,index)|Slots]) :-
+   property_LF_1(Noun,TypeV,V,TypeO,O,P,Slots,Os,_).
+
+noun_template(Noun,Type,X,'`'(P),Slots) :-
+   %lf80(Type,thing_LF_access(Noun,Type,X,P,Slots,_)).
+   thing_LF_access_1(Noun,Type,X,P,Slots,_).
 
 slot_verb_template(aux(have,MODAL),(Y=Z,aux(have,S,Y)),
                 Slots,
@@ -720,6 +722,12 @@ ditrans_lex80(Verb,Prep,TypeS,S,TypeD,D,TypeI,I,Pred,Slots,SlotD,SlotI,_):-
    indO(I),slots(Slots),slot_d(SlotD),slot_i(SlotI)).
 
 limit_slots(Slots,L):- freeze(Slots,(proper_len(Slots,_,SL),SL<L)).
+
+slot_suggester(_,[slot(indO,_,_,_,free),slot(dirO,_,_,_,free)]).
+slot_suggester(_,[slot(dirO,_,_,_,free)]).
+slot_suggester(_,[]).
+slot_suggester(_,[slot(indO,_,_,_,free),slot(dirO,_,_,_,free),slot(prep(_),_,_,_,free)]).
+
 
 deepen_case(prep(at),time).
 deepen_case(subjP,dirO).

@@ -625,7 +625,8 @@ acetext_to_text80(List,Each):- is_list(List),maplist(atom,List),!,member(Each,Li
 acetext_to_text80(List,Out):- is_list(List),member(E,List),acetext_to_text80(E,Out).
 
 
-sentence80(U,E):- no_repeats(E,sentence80(E,U,[],[],[])).
+sentence80(U,E):- (no_repeats(E,sentence80(E,U,[],[],[])),i_sentence(E,_))*->true
+                  ;no_repeats(E,sentence80(E,U,[],[],[])).
 
 try_chat_80(S,G):- try_chat_80(green,S,G).
 try_chat_80(C,S,G):- ignore((G=..[F,Tree,QT],!,should_learn(Tree),try_chat_80(60,C,S,F,Tree,QT))).
@@ -763,8 +764,8 @@ c88_A(B,OO):-
  try_chat_80(magenta,S,try_ace_eng(Ace,_Eng)),
  ignore((
  maybe_restate_s(S),
- sentence80(Lex,Tree),
- ansicall(hfg(cyan),in_cmt(print_tree_nl(sentence80=Tree))),
+ try_chat_80(200,green,S,sentence80(Lex,Tree)),
+ %ansicall(hfg(cyan),in_cmt(print_tree_nl(sentence80=Tree))),
  try_chat_80(S,i_sentence(Tree,QT)),
  try_chat_80(S,clausify80(QT,UE)),
  should_learn(UE))),

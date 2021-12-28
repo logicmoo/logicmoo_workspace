@@ -211,6 +211,14 @@ textOpt(_Text) ---> noText.
 
 noun(noun_thing,Adjs,[adj(ace_var(self,AceVar))|Adjs],_Agmt) ---> 
    ace_var(AceVar),!.
+
+noun(agent,Adjs,[adj(ace_var(self,AceVarT)),adj((doer(self,Act),ace_var(Act,AceVar)))|Adjs],_Agmt) ---> 
+   ace_var_suffix_incl(AceVarT,AceVar,'er'),!.
+/*
+noun(noun_thing,Adjs,[adj((ace_var(self,AceVarT),doer(self,AceVar)))|Adjs],_Agmt) ---> 
+   ace_var_suffix_incl(AceVarT,AceVar,'er'),!.
+*/
+
 noun(Noun,Adjs,Adjs,Agmt) --->
    theText80_W2(W,L), 
    {noun_w2(L,W,Noun,Agmt)}.
@@ -283,6 +291,8 @@ is_w_w_name(W1,W2,Name):- atomic(W1),atomic(W2),atomic_list_concat([W1,'_',W2],N
 non_ace_var(W) ---> \+ xg_peek(ace_var(_)), theText80(W).
 
 ace_var(AceVar) ---> theText80_Text(AceVar), {ace_varname(AceVar),!}.
+ace_var_suffix(AceVar,Suffix) ---> theText80_Text(AceVarW), {atom_concat(AceVar,Suffix,AceVarW),ace_varname(AceVar),!}.
+ace_var_suffix_incl(AceVarWU,AceVar,Suffix) ---> theText80_Text(AceVarW), {atom_concat(AceVar,Suffix,AceVarW),ace_varname(AceVar),!,upcase_atom(AceVarW,AceVarWU)}.
 
 wh_art(_Kind,Type_X,pl,quantV(same,wh(Type_X))) ---> {how_many_lex(HOWMANY)}, theTextL80(HOWMANY).
 wh_art(Kind,Type_X,Agmt,DX) --->

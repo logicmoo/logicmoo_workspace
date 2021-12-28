@@ -252,7 +252,7 @@ ed( N, W, _):-
 chat80_all_broken("What cities do the countries bordering the baltic contain ?",Baltic_Cities,673):- baltic_cities(Baltic_Cities).
 %chat80_all("What is the total area of countries south of the equator and are not in australasia ?",[--(10228,ksqmiles)],1302).
 chat80_all("How many countries is the danube flowing through ?",[6],_).
-%chat80_all("How many countries is the danube flowing from ?",[6],_).
+chat80_all("How many countries is the danube flowing from ?",[6],_).
 chat80_all("How many countries is the danube flowing into ?",[5],_).
 %chat80_all("How many countries is the danube raising from ?",[1],_).
 chat80_all("How many countries does the danube flow through ?",[6],_).

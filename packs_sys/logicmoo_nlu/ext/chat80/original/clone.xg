@@ -190,6 +190,7 @@ fronted_verb(_QCase,_NPCase) ...
 /* Imperative sentences */
 
 imperative80(imp(You,V,S)) --->
+ {freeze(V, verb_fn(_) \= V )},
    imperative_verb(You,V),
    s80(S).
 
@@ -352,16 +353,6 @@ subj0(Subj,Agmt,_) --->
 make_ace_var(AceVar,NP,Type):- 
   NP = np(3+sg,np_head(_Var,generic,[adj(ace_var(self,AceVar))],Type),[]).
 
-np_11(NP,_Agmt,_Case,_IndefA,_Role,_Set,_Mask)
-  --->   ace_var(AceVar),!,{make_ace_var(AceVar,NP,thing), freeze(O, \+ ground(O))}.
-
-np_11(np(Agmt,nameOf(_Var,span_vp(SO),[]),_Mods),Agmt,_Case,_IndefA,_Role,_Set,_Mask) 
-  ---> {if_search_expanded(4)}, span_vp(S),{s80lf(S,SO)}.
-
-np_11(np(Agmt,nameOf(_Var,span_s(SO),[]),_Mods),Agmt,_Case,_IndefA,_Role,_Set,_Mask) 
-  ---> {if_search_expanded(3)}, span_s(S),{s80lf(S,SO)}.
-
-
    /* Noun Phrase */
 % to buy a car
 % @TODO DMILES
@@ -374,6 +365,16 @@ np_11(AgmtKernelModsO,Agmt,Case,Def,Role,Set,Mask) --->
   locally(tlclone:np_in_case(Case),
     np0(AgmtKernelMods,Agmt,Case,Def,Role,Set,Mask)),
     extend_np(_,AgmtKernelMods,AgmtKernelModsO).
+
+np_11(NP,_Agmt,_Case,_IndefA,_Role,_Set,_Mask)
+  --->   ace_var(AceVar),!,{make_ace_var(AceVar,NP,thing), freeze(O, \+ ground(O))}.
+
+np_11(np(Agmt,nameOf(_Var,span_vp(SO),[]),_Mods),Agmt,_Case,_IndefA,_Role,_Set,_Mask) 
+  ---> {if_search_expanded(4)}, span_vp(S),{s80lf(S,SO)}.
+
+np_11(np(Agmt,nameOf(_Var,span_s(SO),[]),_Mods),Agmt,_Case,_IndefA,_Role,_Set,_Mask) 
+  ---> {if_search_expanded(3)}, span_s(S),{s80lf(S,SO)}.
+
 
 np0(AgmtKernelModsO,Agmt,Case,Def,Role,Set,Mask) 
  ---> np1(AgmtKernelModsO,Agmt,Case,Def,Role,Set,Mask).
