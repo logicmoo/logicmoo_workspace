@@ -116,7 +116,7 @@ held_arg(held_arg(Case,-Id,X),[],S0,S,Id,+Id) :-
 held_arg(XA,XA,S,S,Id,Id).
 
 expand_named(Name,Name):- \+ compound(Name),!.
-expand_named(items(and, List),List):- !.
+expand_named(items(And, List),List):- And == and, !.
 expand_named(Name,Name):- !.
 
 % ?- c88("If an agent A1 touches the chair O2 and A1 is awake then A1 is aware that O2 is existing.").
@@ -174,6 +174,7 @@ i_np_head1(np_head(X,Det,Adjs,Noun),TypeX-X,TypeT-T,DetO,Head0,Pred0,Pred,Slots)
    i_noun(Noun,TypeX-X,Head,Slots),
    xform_det(Det,DetO).
 
+type_x_var(Var,_):- var(Var),!.
 type_x_var(_Type-Var,Var).
 
 xform_det(Det,Det):- !.
@@ -224,7 +225,7 @@ i_rel(conj(Conj,Left,Right),X,
    i_rel(Left,X,LPred,'`'(true),LQMods,[],[],-Id),
    i_rel(Right,X,RPred,'`'(true),RQMods,[],Up,+Id).
 
-i_np_mod(prep_phrase(_PPType,Prep,NP),
+i_np_mod(prep_phrase(Prep,NP),
       X,Slots0,Slots,Pred,Pred,[QMod|QMods],QMods,Up,Id0,Index0) :-
    i_np_head(_Var,NP,Y,Q,LDet,LDet0,LX,LPred,LQMods,LSlots0,Id0),
    i_bind(Prep,Slots0,Slots1,X,Y,Id0,Function,P,PSlots,XArg),
@@ -411,9 +412,9 @@ i_s_1(s(Subj,Verb,VArgs,VMods),Pred,Up,Id) :-
 i_verb(verb(_VerbType,Root,Voice,Tense,_Aspect,Neg0),
       PP,Tense,Voice,DetPosNeg,Slots,XArg,Meta) :-
    must80(slot_verb_template(Root,P,Slots,XArg,Meta)),
-   fix_mneg(Neg0,Neg),
+   once((fix_mneg(Neg0,Neg),
    i_neg(Neg,DetPosNeg,E),
-   maybe_modalize(slot,E,P,PP).
+   maybe_modalize(slot,E,P,PP))).
 
 add_extra_to_neg(Neg0,IntoNegs,FNewNeg):- 
   fix_mneg(Neg0,Neg),Neg=L,
@@ -436,87 +437,6 @@ fix_modal_list0([H|T],[HH|TT]):- !, fix_modal_list0(H,HH), fix_modal_list0(T,TT)
 fix_modal_list0(adv(M),O):-!,fix_modal_list0(M,O).
 fix_modal_list0(P,O):- arg(1,P,M),!,fix_modal_list0(M,O).
 
-maybe_modalize(slot,_,P,P):-!.
-maybe_modalize(Scope,PN,P,PP):-  maybe_modalize0(Scope,P,PN,P,PP),!.
-maybe_modalize(Scope,U,P, maybe_modalize_failed(Scope,U,P)).
-
-not_true_or_qtrue(O):- O\==true, O\=='`'(true),!.
-not_true_or_qtrue(_).
-
-maybe_modalize1(Scope,O,V,P,PP):- maybe_modalize0(Scope,O,V,P,PP),!,nop(wdmsg(maybe_modalize0(Scope,O,V,P,PP))).
-maybe_modalize1(Scope,_,V,P,PP):- PP = failed_modalize(Scope,V,P),!.
-
-skip_over_modalize(X):- var(X),!,fail.
-skip_over_modalize('`'(X)):-!,skip_over_modalize(X).
-skip_over_modalize(ti(_,_)).
-%skip_over_modalize(database80(X)):-!,skip_over_modalize(X).
-skip_over_modalize(bE(_,_,_)).
-skip_over_modalize(true).
-
-maybe_modalize0(_Scope,O, V,P,P):- var(V),!,not_true_or_qtrue(O).
-maybe_modalize0(Scope,O, V,P,PP):- var(P),!,maybe_modalize1(Scope,O, V,call(P),PP).
-
-maybe_modalize0(Scope,O, V,(ti(T,I),P),(ti(T,I),PP)):- !, maybe_modalize1(Scope,O, V,P,PP).
-
-maybe_modalize0(Scope,O, V,numberof(X,P,L),numberof(X,PP,L)):- !, maybe_modalize1(Scope,O, V,P,PP).
-maybe_modalize0(Scope,O, V,numberOf(X,P,L),numberOf(X,PP,L)):- !, maybe_modalize1(Scope,O, V,P,PP).
-maybe_modalize0(Scope,O, V,setof(X,P,L),setof(X,PP,L)):- !, maybe_modalize1(Scope,O, V,P,PP).
-maybe_modalize0(Scope,O, V,seto(X,P,L),seto(X,PP,L)):- !, maybe_modalize1(Scope,O, V,P,PP).
-maybe_modalize0(Scope,O, V,setOf(X,P,L),setOf(X,PP,L)):- !, maybe_modalize1(Scope,O, V,P,PP).
-maybe_modalize0(Scope,O, V,setof_oR_nil(X,P,L),setof_oR_nil(X,PP,L)):- !, maybe_modalize1(Scope,O, V,P,PP).
-maybe_modalize0(Scope,O, V,:-(X,P),:-(X,PP)):- !, maybe_modalize1(Scope,O, V,P,PP).
-
-%maybe_modalize0(Scope,O, V,'`'(P),'`'(PP)):- !, maybe_modalize1(Scope,O, V,P,PP).
-%maybe_modalize0(Scope,O, V,'database80'(P),'database80'(PP)):- !, maybe_modalize1(Scope,O, V,P,PP).
-%maybe_modalize0(Scope,O, V,^(X,P),^(X,PP)):- var(X), !, maybe_modalize1(Scope,O, V,P,PP).
-%maybe_modalize0(Scope,O, V,(X,Y,P),(X,PP)):- skip_over_modalize(X), !, maybe_modalize1(Scope,O, V, (Y, P),PP).
-maybe_modalize0(Scope,O, V,(X,P),(X,PP)):- skip_over_modalize(X), !, maybe_modalize1(Scope,O, V,P,PP).
-%maybe_modalize0(Scope,O, V,'&'(X,P),'&'(X,PP)):- skip_over_modalize(X), !, maybe_modalize1(Scope,O, V,P,PP).
-maybe_modalize0(Scope,O, V,XP,XPP):- fail, compound(XP),compound_name_arguments(XP,F,[X,P]),skip_over_modalize(X),
-  compound_name_arguments(XPP,F,[X,PP]), !, maybe_modalize1(Scope,O, V,P,PP).
-
-maybe_modalize0(Scope,O, PN+L,P,PP):- maybe_modalize1(Scope,O,PN,P,PM), maybe_modalize1(Scope,O,L,PM,PP).
-maybe_modalize0(Scope,O,tense(L,_),P,PP):- !, maybe_modalize1(Scope,O,L,P,PP).
-maybe_modalize0(Scope,O,[L|PN],P,PP):- nonvar(PN), !, maybe_modalize1(Scope,O,PN,P,PM), maybe_modalize1(Scope,O,L,PM,PP).
-maybe_modalize0(Scope,O, past, P, PP):-!,maybe_modalize0(Scope,O,in_past, P, PP).
-maybe_modalize0(Scope,O, being, P, PP):-!,maybe_modalize0(Scope,O,currently, P, PP).
-maybe_modalize0(_Scope,_,will, P, PP):- subst(P,in_past,will,PP),PP\==P,!.
-maybe_modalize0(_Scope,_,aux(_,[pres+fin]), P, PP):- subst(P,in_past,currently,PP),PP\==P,!.
-
-maybe_modalize0(_Scope,_,in_past, P, P):- (Past=will;Past=currently),sub_term(E,P),compound(E), E=modalized(Past,_),!.
-maybe_modalize0(_Scope,_,Past, P, P):- sub_term(E,P),compound(E), E=modalized(Past,_),!.
-maybe_modalize0(_Scope,_,true, P, P):-!.
-
-
-maybe_modalize0(_Scope,_,root, P, P):-!.
-maybe_modalize0(_Scope,_,Fin, P, P):- skip_modalizing(Fin).
-maybe_modalize0(_Scope,_,voidQ, P, P):-!.
-
-maybe_modalize0(scope,_,cond( Because, S), P, cond_pred(Because,P,SP)):- i_s(S,SP),!.
-%maybe_modalize0(slot, O,notP(Modal), P, PP):- !, not_true_or_qtrue(O),!,maybe_modalize1(slot,O,Modal, P, PP).
-maybe_modalize0(Scope,O,identityQ(Modal), P, PP):- !, maybe_modalize1(Scope,O,Modal, P, PP).
-maybe_modalize0(Scope,O,adv(Modal), P, PP):- !, maybe_modalize1(Scope,O,Modal, P, PP).
-maybe_modalize0(Scope,O,aux(_,Modal), P, PP):- !, maybe_modalize1(Scope,O,Modal, P, PP).
-maybe_modalize0(Scope,O,t(Modal,_,_), P, PP):- !, maybe_modalize1(Scope,O,Modal, P, PP).
-maybe_modalize0(_Scope,_,[],P,P).
-maybe_modalize0(_Scope,_,negP, P, \+ P):-!.
-maybe_modalize0(_Scope,_,not,  P, \+ P).
-maybe_modalize0(scope,O,notP(Modal), P, \+ PP):- !, nop(not_true_or_qtrue(O)),!,maybe_modalize1(scope,O,Modal, P, PP).
-maybe_modalize0(Scope,O, negP(X),P,PP):-!, maybe_modalize0(Scope,O,[negP,X],P,PP).
-
-%maybe_modalize0(_Scope,O,Modal, P, PP):- not_true_or_qtrue(O), atom(Modal),!,PP=..[Modal,P].
-maybe_modalize0(_Scope,_,M,P,modalized(M,P)).
-
-skip_modalizing(tv). skip_modalizing(tv). skip_modalizing(dv(_)).
-skip_modalizing(active). skip_modalizing(passive).
-skip_modalizing(pres). skip_modalizing(part).
-skip_modalizing(pl). skip_modalizing(sg).
-skip_modalizing(main). skip_modalizing(aux).
-skip_modalizing(inf). skip_modalizing(fin).
-
-
-skip_modalizing(prog).
-skip_modalizing(X):- integer(X).
 % make_pred(S,notP(M),P,A,PRED):- !, make_pred(S,identityQ(M),\+ P,A,PRED).
 make_pred(S,N,P,A,PRED):- pred(S,N,P,A) = PRED.
 
@@ -573,13 +493,13 @@ verb_slot1(Node,XA0,XA1,Slots0,Slots1,Args0,Args1,Up0,Id):-
   ignore((var(Slots1),trace,G2)).
  
 
-verb_slot0(_RefVar,prep_phrase(_PPType,Prep,NP),
+verb_slot0(_RefVar,prep_phrase(Prep,NP),
       XArg0,XArg,Slots0,Slots,[Q|Args],Args,Up,Id) :-
    i_np(NP,X,Q,Up,Id,unit,XArg0,XArg),
    in_slot(Slots0,Case,X,Id,Slots,_),
    deepen_case(Prep,Case).
 
-verb_slot0(_RefVar,prep_phrase(_PPType,poSS,NP),
+verb_slot0(_RefVar,prep_phrase(poSS,NP),
       TXArg,TXArg,Slots0,Slots,[Q& '`'(P)|Args],Args,Up,Id0) :-  
    Prep=of,
    (((
@@ -590,7 +510,7 @@ verb_slot0(_RefVar,prep_phrase(_PPType,poSS,NP),
    i_np_rest(NP,LDet,LDet0,LX,LPred,LQMods,LSlots,Up,Id,free),
    append(PSlots,Slots1,Slots)))).
 
-verb_slot0(_RefVar,prep_phrase(_PPType,prep(Prep),NP),
+verb_slot0(_RefVar,prep_phrase(prep(Prep),NP),
       TXArg,TXArg,Slots0,Slots,[Q& '`'(P)|Args],Args,Up,Id0) :- !,
    in_slot(Slots0,arg_pred,X,Id0,Slots1,_),
    i_adjoin(Prep,X,Y,PSlots,XArg,P),
@@ -640,7 +560,7 @@ i_pred(_RefVar,comp(Op0,adj(Adj),NP),X,[P1 & P2 & '`'(P3),Q|As],As,Up,Id) :-
    lf80(Type,i_measure(Y,Adj,Type,V,P2)),
    op_inverse(Op0,Sign,Op),
    measure_op(Op,U,V,P3).
-i_pred(_RefVar,prep_phrase(_PPType,prep(Prep),NP),X,['`'(H),Q|As],As,Up,Id) :-
+i_pred(_RefVar,prep_phrase(prep(Prep),NP),X,['`'(H),Q|As],As,Up,Id) :-
    i_np(NP,Y,Q,Up,Id,unit,[],[]),
    lf80(X-Y,adjunction_LF(Prep,X,Y,H)).
 
@@ -767,7 +687,6 @@ slot_verb_kind(_Tv,Verb,TypeS,S,Pred,AllSlots) :-
    select_slots(AllSlots,[slot(dirO,TypeD,D,SlotD,free)],Slots),
    lf80(TypeS-TypeD,trans_LF(Verb,TypeS,S,TypeD,D,Pred,Slots,SlotD,_)).
 
-
 slot_verb_kind(_Iv,Verb,TypeS,S,Pred,Slots) :-
    lf80(TypeS,intrans_LF(Verb,TypeS,S,Pred,Slots,_)).
 
@@ -779,7 +698,7 @@ slot_verb_kind((Prep),Verb,TypeS,S,Pred,AllSlots):- if_search_expanded(4),
    select_slots(AllSlots, 
        [slot(dirO,TypeD,D,SlotD,free),
        slot(indO,TypeI,I,SlotI,free)],Slots),
-   %fail,fail,fail,fail,
+   fail,fail,fail,fail,
    lf80(TypeS+TypeD+TypeI,ditrans_lex80(Verb,Prep,TypeS,S,TypeD,D,TypeI,I,Pred,Slots,SlotD,SlotI,_)).
 
 % slows the system way down like the danube
@@ -788,7 +707,7 @@ slot_verb_kind((Prep),Verb,TypeS,S,Pred,AllSlots):- if_search_expanded(4),
  % see no_repeats_dc(DC0,subj_obj_indirect_slots_LF(ditrans,verb_prep(Verb,Prep),TypeS,S,TypeD,D,TypeI,I,Pred,Slots,SlotI,SlotD,DC0)).
 
 ditrans_lex80(Verb,Prep,TypeS,S,TypeD,D,TypeI,I,Pred,Slots,SlotD,SlotI,_):- 
-  limit_slots(Slots,10), fail,
+  limit_slots(Slots,10),!, fail,
   Pred = ditrans_call(Verb,prep(Prep),subjType(TypeS),subj(S),dirType(TypeD),dirO(D),indType(TypeI),
    indO(I),slots(Slots),slot_d(SlotD),slot_i(SlotI)).
 

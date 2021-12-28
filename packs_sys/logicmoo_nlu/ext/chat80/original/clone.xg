@@ -118,12 +118,12 @@ variable_q(Type_X,Agmt,QCase,NPCase) ...
    {is_trace82(Set,Mask)}.
 
 variable_q(Type_X,Agmt,compL,CCase) ...
- xg_prep_phrase(_PPAlowed,prep_phrase(_PPType,Prep,NP),compL,Set,Mask) --->
+ xg_prep_phrase(_PPAlowed,prep_phrase(Prep,NP),compL,Set,Mask) --->
    prep(Prep),
    whq(Type_X,Agmt,NP,_),
    {is_trace82(Set,Mask), is_compl_case(CCase)}.
 variable_q(Type_X,Agmt,compL,VCase) ...
-      adv_phrase(post,prep_phrase(_PPType,Prep,
+      adv_phrase(post,prep_phrase(Prep,
                   np(Agmt,
                    np_head(X,
                     wh_det(_Kind,Type_X),[],Noun),[])),
@@ -465,7 +465,7 @@ optional_possessive(Kernel0,Agmt0,_,[],Mods0,
    gen_case,
    np_head0(Kernel1,Agmt1,Type1),
    optional_possessive(Kernel1,Agmt1,Type1,PostMods1,
-              [prep_phrase(_PPType,poSS,np(Agmt0,Kernel0,Mods0))|PostMods1],
+              [prep_phrase(poSS,np(Agmt0,Kernel0,Mods0))|PostMods1],
               Kernel,Agmt,Type,PostMods,Mods).
 optional_possessive(Kernel,Agmt,Type,PostMods,Mods,
            Kernel,Agmt,Type,PostMods,Mods) ---> noText.
@@ -603,9 +603,9 @@ verb_mod(PrePost,Adv,Set,Nil) --->
    {(is_empty_bits(Nil);PrePost==pre)->true}.
 verb_mod(post,PP,Set,Mask) ---> xg_prep_phrase(_PPAlowed,PP,compL,Set,Mask).
 
-adv_phrase(post,prep_phrase(PPType,Prep,NP),Set,Mask) --->
+adv_phrase(post,prep_phrase(Prep,NP),Set,Mask) --->
    loc_pred(Of,Prep), % north of
-   xg_prep_phrase(_PPAlowed,prep_phrase(PPType,prep(Of),NP),compL,Set,Mask).
+   xg_prep_phrase(_PPAlowed,prep_phrase(prep(Of),NP),compL,Set,Mask).
 
 /* Adjectival Constructions */
 
@@ -659,18 +659,18 @@ prep_arg_vp(vact(V,A,S)) ---> {if_search_expanded(4)},
       imperative_verb(_,_),
       s80(s(_,V,A,S)).
 
-xg_prep_phrase(_PPAlowed,prep_phrase(_PPType,Prep,Arg),_Case,_Set,_Mask) --->
+xg_prep_phrase(_PPAlowed,prep_phrase(Prep,Arg),_Case,_Set,_Mask) --->
    prep(Prep),
    {is_prep_case(_NPCase)},
    prep_arg_vp(Arg).
 
-xg_prep_phrase(_PPAlowed,prep_phrase(_PPType,Prep,Arg),Case,Set,Mask) --->
+xg_prep_phrase(_PPAlowed,prep_phrase(Prep,Arg),Case,Set,Mask) --->
    prep(Prep),
    {is_prep_case(NPCase)},
    np_11(Arg,_,NPCase,_,Case,Set,Mask).
 
 
-xg_prep_phrase(_PPAlowed,prep_phrase(_PPType,Prep,Arg),_Case,_Set,_Mask) --->
+xg_prep_phrase(_PPAlowed,prep_phrase(Prep,Arg),_Case,_Set,_Mask) --->
    prep(Prep),noText,
    {Arg=np_head(_Var,generic,[],_)}.
 
@@ -703,7 +703,7 @@ variable(Agmt,Type_X) ... np_11(np(Agmt,wh(Type_X),[]),Agmt,_,_,_,Set,Mask) --->
 variable(Agmt0,Type_X) ... np_11(NP,Agmt,NPCase,_,_,Set,Mask) --->
    wh_9(Type_X,Agmt0,NP,Agmt,NPCase),
    {is_trace82(Set,Mask)}.
-variable(Agmt0,Type_X) ... xg_prep_phrase(_PPAlowed,prep_phrase(_PPType,Prep,NP),compL,Set,Mask) --->
+variable(Agmt0,Type_X) ... xg_prep_phrase(_PPAlowed,prep_phrase(Prep,NP),compL,Set,Mask) --->
    prep(Prep),
    wh_9(Type_X,Agmt0,NP,_Agmt,Case),
    {is_trace82(Set,Mask), is_compl_case(Case)}.
@@ -711,7 +711,7 @@ variable(Agmt0,Type_X) ... xg_prep_phrase(_PPAlowed,prep_phrase(_PPType,Prep,NP)
 wh_9(Type_X,Agmt,np(Agmt,wh(Type_X),[]),Agmt,NPCase) --->
    wh_rel_pron(Case),
    {is_to_role_case(Case,decl,NPCase)}.
-wh_9(Type_X,Agmt0,np(Agmt,Kernel,[prep_phrase(_PPType,Prep,NP)]),Agmt,_) --->
+wh_9(Type_X,Agmt0,np(Agmt,Kernel,[prep_phrase(Prep,NP)]),Agmt,_) --->
    np_head0(Kernel,Agmt,_+common),
    prep(Prep),
    wh_9(Type_X,Agmt0,NP,_,_).

@@ -636,8 +636,9 @@ reduce1((P,Q),PQ):- (true) == Q,!,reduce1(P,PQ).
 reduce1((Q,P),PQ):- (true) == Q,!,reduce1(P,PQ).
 reduce1(mg(Q),Q):- !.
 
-reduce1(bE(named,Q,P),true):- P=Q, !.
-reduce1(bE(is,Q,P),bE(is,Q,P)).
+reduce1(bE(Named,Q,P),true):- Named==named, P==Q, !.
+reduce1(bE(Named,Q,P),true):- Named==named, P=Q, !.
+reduce1(bE(is,Q,P),bE(is,Q,P)):-!.
 %reduce1(bE(_,Q,P),true):- var(P),var(Q),P=Q, !.
 reduce1(same_values(Q,P),true):- P=Q,!.
 
@@ -831,6 +832,91 @@ Var =+ Val :-
 Var =: Val :-
    recorded(Var,val(Val),_).
 
+
+maybe_modalize(slot,_,P,P):-!.
+maybe_modalize(Scope,PN,P,PP):-  maybe_modalize0(Scope,P,PN,P,PP),!.
+maybe_modalize(Scope,U,P, maybe_modalize_failed(Scope,U,P)).
+
+not_true_or_qtrue(O):- O\==true, O\=='`'(true),!.
+not_true_or_qtrue(_).
+
+maybe_modalize1(Scope,O,V,P,PP):- maybe_modalize0(Scope,O,V,P,PP),!,nop(wdmsg(maybe_modalize0(Scope,O,V,P,PP))).
+maybe_modalize1(Scope,_,V,P,PP):- PP = failed_modalize(Scope,V,P),!.
+
+skip_over_modalize(X):- var(X),!,fail.
+skip_over_modalize('`'(X)):-!,skip_over_modalize(X).
+skip_over_modalize(ti(_,_)).
+%skip_over_modalize(database80(X)):-!,skip_over_modalize(X).
+%skip_over_modalize(bE(_,_,_)).
+skip_over_modalize(true).
+
+maybe_modalize0(_Scope,O, V,P,P):- var(V),!,not_true_or_qtrue(O).
+maybe_modalize0(Scope,O, V,P,PP):- var(P),!,maybe_modalize1(Scope,O, V,call(P),PP).
+
+maybe_modalize0(Scope,O, V,(ti(T,I),P),(ti(T,I),PP)):- !, maybe_modalize1(Scope,O, V,P,PP).
+
+maybe_modalize0(Scope,O, V,numberof(X,P,L),numberof(X,PP,L)):- !, maybe_modalize1(Scope,O, V,P,PP).
+maybe_modalize0(Scope,O, V,numberOf(X,P,L),numberOf(X,PP,L)):- !, maybe_modalize1(Scope,O, V,P,PP).
+maybe_modalize0(Scope,O, V,setof(X,P,L),setof(X,PP,L)):- !, maybe_modalize1(Scope,O, V,P,PP).
+maybe_modalize0(Scope,O, V,seto(X,P,L),seto(X,PP,L)):- !, maybe_modalize1(Scope,O, V,P,PP).
+maybe_modalize0(Scope,O, V,setOf(X,P,L),setOf(X,PP,L)):- !, maybe_modalize1(Scope,O, V,P,PP).
+maybe_modalize0(Scope,O, V,setof_oR_nil(X,P,L),setof_oR_nil(X,PP,L)):- !, maybe_modalize1(Scope,O, V,P,PP).
+maybe_modalize0(Scope,O, V,:-(X,P),:-(X,PP)):- !, maybe_modalize1(Scope,O, V,P,PP).
+
+%maybe_modalize0(Scope,O, V,'`'(P),'`'(PP)):- !, maybe_modalize1(Scope,O, V,P,PP).
+%maybe_modalize0(Scope,O, V,'database80'(P),'database80'(PP)):- !, maybe_modalize1(Scope,O, V,P,PP).
+%maybe_modalize0(Scope,O, V,^(X,P),^(X,PP)):- var(X), !, maybe_modalize1(Scope,O, V,P,PP).
+%maybe_modalize0(Scope,O, V,(X,Y,P),(X,PP)):- skip_over_modalize(X), !, maybe_modalize1(Scope,O, V, (Y, P),PP).
+maybe_modalize0(Scope,O, V,(X,P),(X,PP)):- skip_over_modalize(X), !, maybe_modalize1(Scope,O, V,P,PP).
+%maybe_modalize0(Scope,O, V,'&'(X,P),'&'(X,PP)):- skip_over_modalize(X), !, maybe_modalize1(Scope,O, V,P,PP).
+maybe_modalize0(Scope,O, V,XP,XPP):- fail, compound(XP),compound_name_arguments(XP,F,[X,P]),skip_over_modalize(X),
+  compound_name_arguments(XPP,F,[X,PP]), !, maybe_modalize1(Scope,O, V,P,PP).
+
+maybe_modalize0(Scope,O, PN+L,P,PP):- maybe_modalize1(Scope,O,PN,P,PM), maybe_modalize1(Scope,O,L,PM,PP).
+maybe_modalize0(Scope,O,tense(L,_),P,PP):- !, maybe_modalize1(Scope,O,L,P,PP).
+maybe_modalize0(Scope,O,[L|PN],P,PP):- nonvar(PN), !, maybe_modalize1(Scope,O,PN,P,PM), maybe_modalize1(Scope,O,L,PM,PP).
+maybe_modalize0(Scope,O, past, P, PP):-!,maybe_modalize0(Scope,O,in_past, P, PP).
+maybe_modalize0(Scope,O, being, P, PP):-!,maybe_modalize0(Scope,O,currently, P, PP).
+maybe_modalize0(_Scope,_,will, P, PP):- subst(P,in_past,will,PP),PP\==P,!.
+maybe_modalize0(_Scope,_,aux(_,[pres+fin]), P, PP):- subst(P,in_past,currently,PP),PP\==P,!.
+
+maybe_modalize0(_Scope,_,in_past, P, P):- (Past=will;Past=currently),sub_term(E,P),compound(E), E=modalized(Past,_),!.
+maybe_modalize0(_Scope,_,Past, P, P):- sub_term(E,P),compound(E), E=modalized(Past,_),!.
+maybe_modalize0(_Scope,_,true, P, P):-!.
+
+
+maybe_modalize0(_Scope,_,root, P, P):-!.
+maybe_modalize0(_Scope,_,Fin, P, P):- skip_modalizing(Fin).
+maybe_modalize0(_Scope,_,voidQ, P, P):-!.
+
+maybe_modalize0(scope,_,cond( Because, S), P, cond_pred(Because,P,SP)):- i_s(S,SP),!.
+%maybe_modalize0(slot, O,notP(Modal), P, PP):- !, not_true_or_qtrue(O),!,maybe_modalize1(slot,O,Modal, P, PP).
+maybe_modalize0(Scope,O,identityQ(Modal), P, PP):- !, maybe_modalize1(Scope,O,Modal, P, PP).
+maybe_modalize0(Scope,O,adv(Modal), P, PP):- !, maybe_modalize1(Scope,O,Modal, P, PP).
+maybe_modalize0(Scope,O,aux(_,Modal), P, PP):- !, maybe_modalize1(Scope,O,Modal, P, PP).
+maybe_modalize0(Scope,O,t(Modal,_,_), P, PP):- !, maybe_modalize1(Scope,O,Modal, P, PP).
+maybe_modalize0(_Scope,_,[],P,P).
+maybe_modalize0(_Scope,_,negP, P, \+ P):-!.
+maybe_modalize0(_Scope,_,not,  P, \+ P).
+maybe_modalize0(scope,O,notP(Modal), P, \+ PP):- !, nop(not_true_or_qtrue(O)),!,maybe_modalize1(scope,O,Modal, P, PP).
+maybe_modalize0(Scope,O, negP(X),P,PP):-!, maybe_modalize0(Scope,O,[negP,X],P,PP).
+
+%maybe_modalize0(_Scope,O,Modal, P, PP):- not_true_or_qtrue(O), atom(Modal),!,PP=..[Modal,P].
+maybe_modalize0(_Scope,_,M,P,modalized(M,P)).
+
+skip_modalizing(tv). skip_modalizing(tv). skip_modalizing(dv(_)).
+skip_modalizing(active). skip_modalizing(passive).
+skip_modalizing(pres). skip_modalizing(part).
+skip_modalizing(pl). skip_modalizing(sg).
+skip_modalizing(main). skip_modalizing(aux).
+skip_modalizing(inf). skip_modalizing(fin).
+
+
+skip_modalizing(prog).
+skip_modalizing(X):- integer(X).
+
+
+negate_inward(Q,NQ):- maybe_modalize(scope,not,Q,NQ),!.
 
 
 smerge_segsl:- 

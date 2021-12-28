@@ -225,11 +225,12 @@ adj(Type,adj(Adj)) --->
    xg_peek(\+ name_xg(_Name)),
    theText80_W2(W,W2),
    {adj_lex_w2(W,W2,Adj,Type)}.
-/*
-prep(prep(cp(Prep1,Prep2))) --->
+
+
+prep(not(Prep)) ---> {fail}, theText80(not),!,prep((Prep)).
+prep((cp(Prep1,Prep2))) ---> {fail},
    theText80(Prep1),theText80(Prep2),
-   { fail, prep_lex(Prep1),prep_lex(Prep2)}.
-*/
+   { prep_lex(Prep1),prep_lex(Prep2)}.
 prep(prep(Prep)) --->
    theText80(Prep),
    {prep_lex(Prep)}.
@@ -283,10 +284,10 @@ non_ace_var(W) ---> \+ xg_peek(ace_var(_)), theText80(W).
 
 ace_var(AceVar) ---> theText80_Text(AceVar), {ace_varname(AceVar),!}.
 
-wh_art(_Kind,X,pl,quantV(same,wh(X))) ---> {how_many_lex(HOWMANY)}, theTextL80(HOWMANY).
-wh_art(Kind,X,Agmt,DX) --->
+wh_art(_Kind,Type_X,pl,quantV(same,wh(Type_X))) ---> {how_many_lex(HOWMANY)}, theTextL80(HOWMANY).
+wh_art(Kind,Type_X,Agmt,DX) --->
    theText80(Art),
-   {wh_art_lex(Kind,Art,X,Agmt,DX)}.
+   {wh_art_lex(Kind,Art,Type_X,Agmt,DX)}.
 
 wh_pron(Case) --->
    theText80(Pron),

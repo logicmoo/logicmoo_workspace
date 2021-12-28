@@ -194,6 +194,7 @@ adjunction_LF(cp(East,Of),Spatial&_-X,Spatial&_-Y,ordering_pred(Spatial,cp(East,
 
 /* Proper nouns */
 
+name_template_LF(X,_):- var(X),!.
 name_template_LF(X,Type2):- bind_pos('object',X), type_conversion(typeOfFn(X),Type2).
 name_template_LF(X,Type2):- bind_pos('type',X), type_conversion(X,Type2).
 name_template_LF(X,Type2):- name_template_lf0(X,Type1), type_conversion(Type1,Type2).
