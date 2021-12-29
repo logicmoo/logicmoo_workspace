@@ -111,7 +111,10 @@ verb_type_db(chat80,adj_prep(A,P),main+tv):- nonvar(A),nonvar(P),!.
 verb_type_db(chat80,border,main+tv).
 symmetric_verb(Spatial,border):- spatial(Spatial).
 
-
+prep_order(move,by,dirO,dir).
+prep_order(paint,by,dirO,color).
+prep_order(give,by,to,dirO).
+%prep_order(get,by,to,from).
 /* Nouns */
 property_LF(River,Spatial& Feat& River,X,Spatial&Geo& /*_Neo&*/ _Country,Y,
  (GP,ti(River,X)),[],_,_):-  fail,

@@ -71,6 +71,8 @@ english_some(X, X):- !.
 lex_frivilous(senseExamples).
 lex_frivilous(senseComments).
 lex_frivilous(senseDefinition).
+lex_frivilous(keIrrelevantTermInternalcycterm).
+lex_frivilous(openCycRemoveExtent).
 lex_frivilous(X):- lex_frivilous_maybe(X).
 
 
@@ -239,14 +241,80 @@ merge_lists(L,R):- (L==[] ; R ==[]),!.
 merge_lists(L,R):- nb_set_add(L,R),nb_set_add(R,L).
 
 :- export(lex_winfo/2).
-lex_winfo(W2,R):- notrace(lex_winfo0(W2,R)).
+lex_winfo(W2,R):- quietly(lex_winfo0(W2,R)).
 
 lex_winfo0(W2,R):- is_list(W2),!, maplist(lex_winfo0,W2,R),!.
 lex_winfo0(W2,R):- (var(W2);W2=span(_)),!,R=W2.
-%lex_winfo(W2,W2):-!.
-lex_winfo0(W2,W2O):- W2 = w(Word,Had),W2=W2O,!,lex_winfo1(Word,Had,W2O),!.
-lex_winfo0(Word,W2):- lex_winfo_r(Word,Had),  W2 = w(Word, [lex_winfo|Had]),!.
+lex_winfo0(W2,W2O):- W2 = w(Word,Had),W2=W2O,!,do_cached(Word,lex_winfo1_a(Word,Had,W2O)),!.
+lex_winfo0(Word,W2):- do_cached(Word,lex_winfo_r_a(Word,Had)),  W2 = w(Word, [lex_winfo|Had]),!.
 lex_winfo0(W,W):-!.
+
+lex_winfo1_a(Word,Had,W2O):- lex_winfo1(Word,Had,W2O),maybe_add_root(Word,Had,W2O,W2O).
+lex_winfo_r_a(Word,HadO):-   lex_winfo_r(Word,Had),maybe_add_root(Word,_Had,Had,HadO).
+ 
+%maybe_add_root(_Word,_Had,OO,OO):-!.
+%nb_set_add(O,lex_rinfo(Word)),OO=O
+maybe_add_root(Word,Had,O,OO):- get_w2_list(O,L), maybe_add_root_1(2,Word,Had,L,O,OO),!.
+maybe_add_root(_Word,_Had,O,O).
+maybe_add_root_1(N,Word,Had,L,O,OO):- N>0,
+  find_root_word_atom(Root,O),  
+  \+ (atom(Root),downcase_atom(Root,Word)), 
+  \+ subc_member(lex_rinfo(Root,_),L),
+  % Only with verbs for now
+  subc_member(pos(Verb),O),atom(Verb),atom_concat('v',_,Verb),
+  maybe_add_root_2(N,Word,Had,Root,L,O,OO).
+maybe_add_root_1(_,_Word,_Had,_L,O,O).
+
+maybe_add_root_2(N,Word,Had,Root,L,O,OO):- 
+  lex_winfo_r_u(Root,R2), 
+  exclude(filter_presence(L),R2,R3), 
+  partition(unusefull_kr(Root,L),R3,Excl,R4), 
+  Add=lex_rinfo(Root,R4),
+  nb_set_add(O,Add),
+  (N==2->nb_set_add(O,unused(Excl));true),
+  Nm1 is N -1,
+  maybe_add_root_1(Nm1,Word,Had,L,O,OO).
+maybe_add_root_2(N,Word,Had,Root,L,O,OO):- nb_set_add(O,lex_rinfo(Root,[])),
+  Nm1 is N -1,
+  maybe_add_root_1(Nm1,Word,Had,L,O,OO).
+
+is_r_word(Root,root(Root)).
+%is_r_word(Root,cycTerm(Root,_,_)).
+%is_r_word(Root,clex_word(_,_,Root,_)).
+%is_r_word(Root,concept(_Fn,Root)).
+%is_r_word(Root,ttholds(_,Root,_)).
+%is_r_word(Root,verbnet_to_framenet(Root,_,_)).
+
+find_root_word_atom(Root,L):- is_r_word(Root,Form),subc_member(Form,L).
+%find_root_word_atom(Root,L):- subc_member(Form,L),is_r_word(Root,Form).
+
+contains_r_word(Word,G):- filter_presence(Word,G).
+all_lex_info_with(Word,G):- all_lex_info(G), contains_r_word(Word,G).
+all_lex_info_with(Term, Info):- term_to_info(Term, Info).
+
+lex_winfo_r_u(Word,R2):- 
+  (atom(Word)->do_cached(Word,lex_winfo_r(Word,R));R=[]),
+  do_cached(Word,all_r_term_info(Word,L)),
+  append(R,L,RL),  
+  unlevelize(RL,R2).
+
+all_r_term_info(Word,L):- findall(G,all_lex_info_with(Word,G),LL),exclude(filter_presence([]),LL,L).
+
+get_w2_list(L,L):- is_list(L),!.
+get_w2_list(w(_,L),L):- is_list(L),!.
+get_w2_list(L,L).
+
+filter_presence(_,_:X):- !,filter_presence(_,X).
+filter_presence(_,X):- compound(X),X=..[ac,ME|_],lex_frivilous(ME), !.
+filter_presence(L,E1):- subc_member(E,L),E=@=E1,!.
+
+subc_member(E1,L):- sub_term(E,L), nonvar(E),  E = E1.
+
+unusefull_kr(R,L,E1):- \+ useful_r(R,L,E1),!. 
+
+useful_r(_,_,E1):- sub_term(E,E1),is_list(E).
+%useful_r(_,E1):- sub_term(E,E1),string(E),!,fail.
+%useful_r(R,E1):- sub_term(E,E1),compound(E),functor(E)E==R.
 
 :- thread_local(tmplex:had/1).
 %lex_winfo1(_, _, _):- use_penn_links(false),!.
@@ -595,8 +663,14 @@ searches_arg(_F, _A, Arg):- atom_length(Arg, Len), Len<4, !, fail.
 prolog:make_hook(after, _Reload):- abolish(tmp:saved_denote_lex/3),dynamic(tmp:saved_denote_lex/3),fail.
 
 %get_lex_info(Kind, text(a), String, Out):- catch(downcase_atom(String, DCAtom), _, fail), DCAtom\==String, !, get_lex_info(Kind, text(a), DCAtom, Out).
-% %  get_lex_info(_Kind, Type, DCAtom, Out):- tmp:saved_denote_lex(Type, DCAtom, Out), !.
-get_lex_info(Kind, Type, DCAtom, Out):- do_lex_info(Kind, Type, DCAtom, Out), nop(asserta(tmp:saved_denote_lex(Type, DCAtom, Out))), !.
+get_lex_info(Kind, Type, DCAtom, Out):- do_cached(Type+DCAtom,do_lex_info(Kind, Type, DCAtom, Out)).
+
+do_cached(Key,G):- tmp:saved_denote_lex(Key,G,_),!.
+do_cached(Key,G):- call(G),ignore(asserta(tmp:saved_denote_lex(Key,G,_))),!.
+
+%
+%get_lex_info(_Kind, Type, DCAtom, Out):- tmp:saved_denote_lex(Type, DCAtom, Out), !.
+%  asserta(tmp:saved_denote_lex(Type, DCAtom, Out)), !.
 
 
 do_lex_info(Kind, text(Type), AString, OutS):-
@@ -621,7 +695,11 @@ my_l2s(List, Set) :-
 ignore_level( ( = ), level(Kind, _, _, C1, _), level(Kind, _, _, C2, _)):- compare(( = ), C1, C2), !.
 ignore_level(R, C1, C2):- compare(R, C1, C2), !.
 
-
+all_lex_info(G):- 
+ no_repeats(G,(lex_arg_type( _, _, M, P), functor(P,F,A),functor(G,F,A))),
+ parser_lexical \== M,
+ parser_chat80 \== M,
+ call(catch(M:G,_,fail)).
 
 text_to_cycinfo(String, P, C, How):- parser_lexical_plkb:text_to_cycinfo_hook(String, P, C, How).
 
