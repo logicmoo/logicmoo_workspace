@@ -833,6 +833,8 @@ Var =: Val :-
    recorded(Var,val(Val),_).
 
 
+get_sentence_level_adverbs(FN,InfoL):- findall(Info,t_l:was_sentence_level(FN,Info),InfoL).
+
 maybe_modalize(slot,_,P,P):-!.
 maybe_modalize(Scope,PN,P,PP):-  maybe_modalize0(_Obj,Scope,P,PN,P,PP),!.
 maybe_modalize(Scope,U,P, maybe_modalize_failed(Scope,U,P)).
@@ -903,6 +905,10 @@ maybe_modalize0(Obj,Scope,O,adv(Modal), P, PP):- !, maybe_modalize1(Obj,Scope,O,
 maybe_modalize0(Obj,Scope,O,aux(_,Modal), P, PP):- !, maybe_modalize1(Obj,Scope,O,Modal, P, PP).
 maybe_modalize0(Obj,Scope,O,t(Modal,_,_), P, PP):- !, maybe_modalize1(Obj,Scope,O,Modal, P, PP).
 maybe_modalize0(_Obj,_Scope,_,[],P,P).
+maybe_modalize0(Obj,Scope,O,frame(FN),P,PP):- must(get_sentence_level_adverbs(FN,InfoL)),
+  maybe_modalize0(Obj,Scope,O,[was_framed(FN)|InfoL],P,PP).
+  
+
 maybe_modalize0(_Obj,_Scope,_,negP, P, \+ P):-!.
 maybe_modalize0(_Obj,_Scope,_,not,  P, \+ P).
 maybe_modalize0(Obj,scope,O,notP(Modal), P, \+ PP):- !, nop(not_true_or_qtrue(O)),!,maybe_modalize1(Obj,scope,O,Modal, P, PP).

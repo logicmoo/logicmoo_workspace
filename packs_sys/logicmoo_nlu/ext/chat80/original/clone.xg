@@ -329,7 +329,7 @@ more_s_vp1(Subj,Agmt,Type0,Verb0,Args0,Mods0,Mask0,
                      Type,Verb,Args,Mods,Mask) ---> 
    just_vp_1(Subj,Agmt,Type1,Verb1,Args1,Mods1,Mask1).
 */
-more_s_vp1(_Subj,_Agmt,Type,Verb,Args,Mods,Mask,Type,Verb,Args,Mods,Mask) ---> noText.
+more_s_vp1(_Subj,_Agmt,Type,Verb,Args,Mods,Mask,Type,Verb,Args,Mods,Mask) ---> noText_or_sl.
 just_vp_1(_Subj,Agmt,Type,Verb,Args,Mods,Mask) --->
    verb_with_rest(Verb,Agmt,Type,Voice),
    {is_empty_bits(Nil), is_s_all(SAll)},
@@ -440,7 +440,7 @@ maybe_ace_variable(AdjIn,AdjsOut)---> ace_var(AceVar),!,{append_np_mods(AdjIn,(a
 maybe_ace_variable(Adjs,Adjs)---> [].
 
 extend_np(Type_X,I,O) ---> np_amend1(Type_X,V), {append_np_mods(I,V,M)},!, extend_np(Type_X,M,O).
-extend_np(_,IO,IO)---> [].
+extend_np(_,IO,IO)---> noText_or_sl.
 
 np_amend1(Type_X,adj(ace_var(self,AceVar))) ---> {fail},{(\+ \+ Type_X=ace_var),dif(Type_X,ace_var)}, ace_var(AceVar),!.
 np_amend1(Type_X,adj(s_vp(self,_Subj,Verb,Args,Mods))) ---> {fail},
@@ -470,7 +470,7 @@ optional_possessive(Kernel0,Agmt0,_,[],Mods0,
               [prep_phrase(poSS,np(Agmt0,Kernel0,Mods0))|PostMods1],
               Kernel,Agmt,Type,PostMods,Mods).
 optional_possessive(Kernel,Agmt,Type,PostMods,Mods,
-           Kernel,Agmt,Type,PostMods,Mods) ---> noText.
+           Kernel,Agmt,Type,PostMods,Mods) ---> noText_or_sl.
 
 gen_case, theText80(the) ---> gen_marker.
 
@@ -563,10 +563,10 @@ quant_p(Op,indefA) --->
    
 
 quant_p(the,defA) ---> theText80(the).
-quant_p(same,indefA) ---> noText.
+quant_p(same,indefA) ---> noText_or_sl.
 
 neg_adv_opt(Adv,notP([])+Adv) ---> theText80(not).
-neg_adv_opt(Adv,Adv) ---> noText.
+neg_adv_opt(Adv,Adv) ---> noText_or_sl.
 
 sup_op(least,notP([])+less).
 sup_op(most,notP([])+more).
@@ -578,7 +578,7 @@ np_mods(Agmt,Case,Mods0,[Mod|Mods],Set0,Set,_,Mask) --->
    {is_trace_bits(Trace), plus_mask(Trace,Mask0,Mask1), minus_mask(Set0,Mask1,Set1),
     plus_mask(Mask0,Set0,Mask2)},
    np_mods(Agmt,Case,Mods0,Mods,Set1,Set,Mask2,Mask).
-np_mods(_,_,Mods,Mods,Set,Set,Mask,Mask) ---> noText.
+np_mods(_,_,Mods,Mods,Set,Set,Mask,Mask) ---> noText_or_sl.
 
 np_mod(_,Case,PP,Set,Mask) ---> xg_prep_phrase(_PPAlowed,PP,Case,Set,Mask).
 np_mod(Agmt,_Case,WH,Set,Mask) --->
@@ -594,7 +594,7 @@ verb_mods(PrePost,[Mod|Mods],Set0,_,Mask) --->
    {ignore((is_trace_bits(Trace), plus_mask(Trace,Mask0,Mask1), minus_mask(Set0,Mask1,Set1),
     plus_mask(Mask0,Set0,Mask2)))},
    verb_mods(PrePost,Mods,Set1,Mask2,Mask).
-verb_mods(_,[],_,Mask,Mask) ---> noText.
+verb_mods(_,[],_,Mask,Mask) ---> noText_or_sl.
 
 verb_mod(pre,ExtraMods,_Set,_Mask0)---> maybe_modal(_,[],ExtraMods),!.
 verb_mod(pre,Adv,_Set,_Mask) ---> adverb(Adv).
@@ -673,7 +673,7 @@ xg_prep_phrase(_PPAlowed,prep_phrase(Prep,Arg),Case,Set,Mask) --->
 
 
 xg_prep_phrase(_PPAlowed,prep_phrase(Prep,Arg),_Case,_Set,_Mask) --->
-   prep(Prep),noText,
+   prep(Prep),noText_or_sl,
    {Arg=np_head(_Var,generic,[],_)}.
 
 /* Relative clause */
@@ -681,7 +681,7 @@ xg_prep_phrase(_PPAlowed,prep_phrase(Prep,Arg),_Case,_Set,_Mask) --->
 optional_relative(Agmt,[Rel],Set,_,Mask) --->
    {is_pred(Set)},
    rel_conj(Agmt,_Conj,Rel,Mask).
-optional_relative(_,[],_,Mask,Mask) ---> noText.
+optional_relative(_,[],_,Mask,Mask) ---> noText_or_sl.
 
 rel_conj(Agmt,Conj,Rel,Mask) --->
    rel(Agmt,Rel0,Mask0),
@@ -690,7 +690,7 @@ rel_conj(Agmt,Conj,Rel,Mask) --->
 rel_rest(Agmt,Conj0,Rel0,Rel,_,Mask) --->
    conj_9(Conj0,Conj,Rel0,Rel1,Rel),
    rel_conj(Agmt,Conj,Rel1,Mask).
-rel_rest(_,_,Rel,Rel,Mask,Mask) ---> noText.
+rel_rest(_,_,Rel,Rel,Mask,Mask) ---> noText_or_sl.
 
 rel(Agmt,rel(Type_X,S),Mask) --->
    mark_island,
@@ -735,7 +735,7 @@ reduced_rel_conj(Agmt,Conj,Rel,Mask) --->
 reduced_rel_rest(Agmt,Conj0,Rel0,Rel,_,Mask) --->
    conj_9(Conj0,Conj,Rel0,Rel1,Rel),
    reduced_rel_conj(Agmt,Conj,Rel1,Mask).
-reduced_rel_rest(_,_,Rel,Rel,Mask,Mask) ---> noText.
+reduced_rel_rest(_,_,Rel,Rel,Mask,Mask) ---> noText_or_sl.
 
 reduced_rel(_Agmt,reduced_rel(Type_X,decl(s( np(3+sg,np_head(_Var1,generic,[],Type_X),[]),
                          verb(main+tv,name,[],activeV,past+fin,[],([])),
@@ -814,7 +814,7 @@ neg_modal_opt(Tense,ExtraMods,Aux,Neg) --->
   neg_modal_opt1(ModalInfo,Aux,Neg).
 
 neg_modal_opt1(ExtraMods,aux+_,negP(ExtraMods)) ---> theText80(not).
-neg_modal_opt1(ExtraMods,_,(ExtraMods)) ---> noText .
+neg_modal_opt1(ExtraMods,_,(ExtraMods)) ---> noText_or_sl .
 
 
 % carved is quickly
@@ -875,7 +875,7 @@ pre_prep_adj(P) ---> theText80(W),{(clex:adj_itr(W,P);
  (negprefix:negprefix(a,W1,un,W2),(W=W1;W=W2),P=W);(wnframes:opposite(a,W1,W2,_),(W=W1;W=W2),P=W);clex:tv_pp(W,P))}.
 pre_prep_adj(P) ---> adj_phrase(P,_Mask),!.
 
-maybe_verb_prep(RootVerb,RootVerb,[])--->[].
+maybe_verb_prep(RootVerb,RootVerb,[])--->noText_or_sl.
 maybe_verb_prep(RootVerb,RootVerb,[prep(Prep)]) ---> {if_search_expanded(7)}, prep(Prep).
 maybe_verb_prep(RootVerb,verb_prep(RootVerb,Prep),[]) ---> {if_search_expanded(6)}, prep(Prep).
 
@@ -903,7 +903,7 @@ rest_verb(ExtraMods,aux,aux(be,ExtraMods1),Root,Voice,Aspect) ---> verb_form882(
 rest_verb(ExtraMods,aux,aux(do,ExtraMods1),Root,activeV,[]) ---> verb_form882(ExtraMods2,Root,inf,_,_),{append_mods([ExtraMods1,ExtraMods2],ExtraMods)}.
 %rest_verb(ExtraMods,aux,Can,Root,activeV,[]) ---> {modal_verb_form_aux(_,Can,_,_)},verb_form882(ExtraMods1,Root,inf,_,_),{append([[Can],ExtraMods1],ExtraMods)}.
 %rest_verb(ExtraMods,aux,Wont,Root,activeV,[]) ---> {modal_verb_form_aux(Wont,List,_,_),flatten([List],ListF)},verb_form882(ExtraMods1,Root,inf,_,_),{append([ListF,ExtraMods1],ExtraMods)}.
-rest_verb([root],main,Root,Root,activeV,[]) ---> noText.
+rest_verb([root],main,Root,Root,activeV,[]) ---> noText_or_sl.
 
 
 % BE
@@ -911,9 +911,9 @@ have_vt(ExtraMods,aux(be,_),Root,Voice,Aspect) --->
    verb_form882(ExtraMods1,Root0,Tense0,_,_),
    be_vt(ExtraMods2,Tense0,Root0,Root,Voice,Aspect),
    {append_mods([ExtraMods1,ExtraMods2],ExtraMods)}.
-have_vt([],Root,Root,activeV,[]) ---> noText.
+have_vt([],Root,Root,activeV,[]) ---> noText_or_sl.
 
-be_vt([],past+part,Root,Root,passiveV,[]) ---> noText.
+be_vt([],past+part,Root,Root,passiveV,[]) ---> noText_or_sl.
 be_vt(ExtraMods,pres+part,Root0,Root,Voice,[progresiveV]) --->
    passive_vt(ExtraMods,Root0,Root,Voice).
 
@@ -921,7 +921,7 @@ be_vt(ExtraMods,pres+part,Root0,Root,Voice,[progresiveV]) --->
 passive_vt([EM|ExtraMods],aux(be,EM),Root,passiveV) --->
    verb_form882(ExtraMods1,Root,past+part,_,_),
    {verb_type_lex(Root,Type), passive_vt(ExtraMods2,Type), append_mods([ExtraMods1,ExtraMods2],ExtraMods)}.
-passive_vt([],Root,Root,activeV) ---> noText.
+passive_vt([],Root,Root,activeV) ---> noText_or_sl.
 
 participle_vt(verb(Type,Root,Voice,inf,Aspect,Neg),Type,Voice) --->
    neg_modal_opt(Tense,[],ExtraMods,Neg),
@@ -936,7 +936,7 @@ participle_vt(past+part,passiveV,[]).
 
 /* Extraposition brackets */
 
-mark_island ... mark_dnalsi ---> noText.
+mark_island ... mark_dnalsi ---> noText_or_sl.
 
 /* Verb Arguments */
 
@@ -964,7 +964,7 @@ object_opt(Case,AdvArg,Mask0,Mask) --->
    obj_opt(Case,Type_X,Mask0,Mask).
 
 obj_opt(indO,[arg(dirO,NP)],_,Mask) ---> verb_arg(np,NP,Mask).
-obj_opt(dirO,[],Mask,Mask) ---> noText.
+obj_opt(dirO,[],Mask,Mask) ---> noText_or_sl.
 
 pred_conj(Conj,Arg,Mask) --->
    pred(_,Arg0,Mask0),
@@ -973,7 +973,7 @@ pred_conj(Conj,Arg,Mask) --->
 pred_rest(Conj0,Arg0,Arg,_,Mask) --->
    conj_9(Conj0,Conj,Arg0,Arg1,Arg),
    pred_conj(Conj,Arg1,Mask).
-pred_rest(_,Arg,Arg,Mask,Mask) ---> noText.
+pred_rest(_,Arg,Arg,Mask,Mask) ---> noText_or_sl.
 
 verb_arg(np,NP,Mask) --->
    {is_s_all(SAll), is_verb_case(VCase)},
@@ -991,7 +991,7 @@ advs_opt([Adv|R0],R,Set) --->
    {is_adv_bits(Set)},
    adverb(Adv),
    advs_opt(R0,R,Set).
-advs_opt(R,R,_) ---> noText.
+advs_opt(R,R,_) ---> noText_or_sl.
 
 adj_phrase(P,Nil) ---> adj(_,P), { is_empty_bits(Nil) }.
 adj_phrase(P,Mask) --->  comp_phrase(P,Mask).

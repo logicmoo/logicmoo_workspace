@@ -23,6 +23,7 @@
 :- dynamic(ditrans_lex80/13).
 :- dynamic(standard_adj_db/4).
 :- thread_local(t_l:current_vv/1).
+foc_current_vv(VV):- t_l:current_vv(VV),!.
 
 
 :- op(450,xfy,((:))).

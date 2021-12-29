@@ -50,14 +50,15 @@ w001(Cmp)--->
  [Cmp],{!, nop(ignore(on_x_fail(apw2(Cmp))))}.
 
 % NEW theText80_W2(Text,L) ---> w001(Cmp),{compound(Cmp)->Cmp=w(Text,L);(atom(Cmp)-> (Text=Cmp,L=unk))}.
-theText80_W2(Text,L) ---> %maybe_pull_sentence_level,
+%theText80_W2(Text,L) --->  theText80_W2(Text,L).
+theText80_W2(Text,L) --->
  w001(Cmp),{compound(Cmp)->Cmp=w(Text,L);(Text=Cmp,L=[])}.
 
 %w1(Text) ---> w001(A), {atomic(A),!,A=Text}.
 w1(Text) ---> theText80_W2(Text,_).
 
 :- thread_local(t_l:in_sentence_level/0).
-:- thread_local(t_l:was_sentence_level/1).
+:- thread_local(t_l:was_sentence_level/2).
 
 %maybe_pull_sentence_level ---> !.
 maybe_pull_sentence_level ---> \+ [_], !.
@@ -73,22 +74,47 @@ maybeComma ---> (theText80(',');[]),!.
 
 %do_sentence_level ---> [w('.',_)],!.
 do_sentence_level ---> 
-  maybeComma,sentence_level(W),
-  {(t_l:was_sentence_level(W) -> true ; (assert(t_l:was_sentence_level(W),R),
-    writeln(W),nop(undo(ignore(catch(erase(R),_,true))))))},
-  maybeComma,
-  do_sentence_level.
-do_sentence_level ---> [].
+{ \+ (nb_current('$in_sentence_level',T), T\==[]) },!,
+  locally(nb_setval('$in_sentence_level',[t]), do_sentence_level0).
+do_sentence_level ---> [],!.
 
-sentence_level(adv(W)) ---> thePos80(ner('DATE'),W).
-sentence_level(adv(W)) ---> theText80(W),!,{is_sent_adverb(W)}.
+noText_or_sl ---> []. % do_sentence_level;[].
+
+do_sentence_level0 ---> 
+  maybeComma,
+   sentence_level0(W),
+  {foc_current_vv(VV), %unloop(maybe_do_pull_sentence_level),
+   (t_l:was_sentence_level(VV,W) -> true ; (assert(t_l:was_sentence_level(VV,W),R),
+    %writeln(W),
+    undo(ignore(catch(erase(R),_,true)))))},!,
+  maybeComma.
+  %do_sentence_level.
+%do_sentence_level ---> [].
+
+sentence_level0(W) ---> sentence_level(W1), with_conj(W1,sentence_level0,W).
+
+with_conj(AdvW1,P,OUT) ---> {compound(AdvW1),AdvW1=..[F,W1]}, theText80(And),{logical_o_word(And)},{OUT=..[F,conj(And,W1,W)],AW=..[F,W]},call(P,AW).
+%with_conj((W1),P,(conj(And,W1,W))) ---> theText80(And),{logical_o_word(And)}, call(P,(W)).
+with_conj(W1,_,W1) ---> [].
+
+offsetDir(before_today) ---> theText80(ago).
+
+sentence_level(adv('meaning_of'([with,luck]))) ---> theTextL80([with,luck]),!.
+sentence_level(adv(timeOffset(In,I,day))) ---> prep(In),number(I,_),thePos80(root(day)),!.
+sentence_level(adv(timeOffset(Dir,I,day))) ---> number(I,_),thePos80(root(day)),offsetDir(Dir),!.
+sentence_level(adv(W)) ---> thePos80(ner('DATE'),W),!.
+sentence_level(adv(W)) ---> theText80(W),!,{is_sent_adverb(W)},!.
+sentence_level(adv('meaning_of'(Prep,Arg))) ---> {fail},
+   prep(Prep), !, (np_head0(Arg,_Agmt,_Case);s80(Arg)).
+
+sentence_level(adv('meaning_of'(PP))) ---> xg_prep_phrase(_PPAlowed,PP,_CompL,_SAll,_Mask).
 
 is_sent_adverb(Word):- member(Word,[actually, apparently, basically, briefly, certainly, clearly, conceivably, confidentially,
   curiously, evidently, fortunately, hopefully,   
-  ideally, incidentally, indeed, 
+  ideally, incidentally, indeed, sometimes, maybe,
   interestingly, ironically, naturally, predictably, presumably, regrettably, seriously, strangely,
    surprisingly, thankfully, theoretically, truthfully, ultimately, wisely]).
-
+%is_sent_adverb(Word):- clex:adv(Word,Word).
 
 move_ahead_spans(S1,S2,G,G):- is_list(S1), partition(\=(span(_)),S1,W,S),!,append(W,S,S2).
 
