@@ -915,12 +915,16 @@ get_matcher_code(Match,H,B,MATCHER):-  MATCHER = notrace(term_matches_term(Match
 trans_mask(cyc,kb0988).
 trans_mask(wn,wnframes).
 trans_mask(sys,'$syspreds').
+
 mymatch_excludes_module(MM,M,MM):- nonvar(M),!.
-mymatch_excludes_module(L-M1,M2,L-M1):- !,mymatch_excludes_module(L,M2,_),trans_mask(M1,M),freeze(M2,M\==M2),!.
 mymatch_excludes_module(L+all,M2,O):- !,del_attr(M2,freeze),mymatch_excludes_module(L,M2,O).
 mymatch_excludes_module(L+M1,M2,O):- trans_mask(M1,M), !,mymatch_excludes_module(L+M,M2,O).
-mymatch_excludes_module(L+M1,M2,L+M1):- !,mymatch_excludes_module(L,M2,_),trans_mask(M1,M),
-  ignore((frozen(M2,Goals),subst(Goals,M\==M2,true,NewGoals),del_attr(M2,freeze),freeze(M2,NewGoals))),!.  
+mymatch_excludes_module(L-M1,M2,O):- trans_mask(M1,M), !,mymatch_excludes_module(L-M,M2,O).
+
+mymatch_excludes_module(L-M1,M2,L2-M1):- !,mymatch_excludes_module(L,M2,L2),freeze(M2,M1\==M2),!.
+mymatch_excludes_module(L+M1,M2,L2+M1):- !, mymatch_excludes_module(L,M2,L2),
+  ignore((frozen(M2,Goals),subst(Goals,M1\==M2,true,NewGoals),del_attr(M2,freeze),freeze(M2,NewGoals))),!.  
+
 mymatch_excludes_module(MM,M2,MM):- dif(kb0988,M2),dif(wnframes,M2),dif(tmp,M2),dif('$syspreds',M2).
 
 pre_init_matcher(_Match,M:_H,_B):-   

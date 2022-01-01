@@ -278,7 +278,7 @@ tmp:dont_change(exceeds).
 
 compound_wrds([A,B]):- relations : nn(A,B,_Of), \+ is_adjective(A). % only non-composable compounds
 
-is_adjective(X):- framenet_pos(X,adjective).
+is_adjective(X):- framenet:framenet_pos(X,adjective).
 
 :- dynamic(tmp:replacement_4_wrd/4).
 use_replacement_4_wrd(I,'SYM',O):- upcase_atom(I,O).

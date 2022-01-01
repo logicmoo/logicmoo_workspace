@@ -625,8 +625,9 @@ acetext_to_text80(List,Each):- is_list(List),maplist(atom,List),!,member(Each,Li
 acetext_to_text80(List,Out):- is_list(List),member(E,List),acetext_to_text80(E,Out).
 
 
-sentence8d(U,E):- no_repeats(E,sentence80(E,U,[],[],[])),(true;(dmsg(redo(sentence8d(E))),fail)).
-sentence80(U,E):- ((sentence8d(U,E),i_sentence(E,_))*->true
+sentence8d(U,E):- no_repeats(E,sentence80(E,U,[],[],[])).
+sentence8dr(U,E):- sentence8d(U,E),(true;(dmsg(redo(sentence8dr(E))),fail)).
+sentence8e(U,E):- ((sentence8dr(U,E),i_sentence(E,_))*->true
                   ;sentence8d(U,E)).
 
 try_chat_80(S,G):- try_chat_80(green,S,G).
@@ -707,7 +708,7 @@ c8_A(B,OO):-
  try_chat_80(white,S,into_lexical_segs(SS,Lex)),
  try_chat_80(white,S,text_to_corenlp_tree(SS,_)),
  ignore((
- try_chat_80(200,green,S,sentence80(Lex,Tree)),
+ try_chat_80(200,green,S,sentence8e(Lex,Tree)),
  %ansicall(hfg(cyan),in_cmt(print_tree_nl(sentence80=Tree))),
  try_chat_80(S,i_sentence(Tree,QT)),
  try_chat_80(S,clausify80(QT,UE)),
@@ -738,7 +739,7 @@ s8_A(SS,O):-
  notrace((try_chat_80(S,into_lexical_segs(SS,Lex)),try_chat_80(S,text_to_corenlp_tree(SS,_)))),
  %wdmsg(Lex),
  %maybe_restate_s(S),
- try_chat_80(S,sentence8d(Lex,Tree)),
+ try_chat_80(S,sentence8dr(Lex,Tree)),
  %should_learn(Tree),
  %try_chat_80(S,i_sentence(Tree,QT)),
  %should_learn(QT),
@@ -767,7 +768,7 @@ c88_A(B,OO):-
  try_chat_80(magenta,S,try_ace_eng(Ace,_Eng)),
  ignore((
  maybe_restate_s(S),
- try_chat_80(200,green,S,sentence80(Lex,Tree)),
+ try_chat_80(200,green,S,sentence8e(Lex,Tree)),
  %ansicall(hfg(cyan),in_cmt(print_tree_nl(sentence80=Tree))),
  try_chat_80(S,i_sentence(Tree,QT)),
  try_chat_80(S,clausify80(QT,UE)),

@@ -92,8 +92,8 @@ det_lex(this,No,the(No),defA).
 det_lex(that,No,the(No),defA).
 
 
-wh_art_lex(Kind,what,X,_,wh_det(Kind,X)).
-wh_art_lex(Kind,which,X,_,wh_det(Kind,X)).
+wh_art_lex(Kind,what,Type_X,_,wh_det(Kind,Type_X)).
+wh_art_lex(Kind,which,Type_X,_,wh_det(Kind,Type_X)).
 
 wh_pron_lex(what,unDef).
 wh_pron_lex(which,unDef).
@@ -250,9 +250,6 @@ ctx_pron_lex(agent_of,agent,who).
 ctx_pron_lex(cp(by,how),manner,how).
 
 % prepositions of time, place, movement, manner, agent, measure, source and possession.
-
-how_many_lex([how,many]).
-
 
 show_tries_except(_Which,_TF,_G):- \+ tracing,!.
 show_tries_except(Which,TF,G):- !, forall((available_lexicon(_,Other),Other\==Which,get_lex_call(Other,G,CALL),clause(CALL,_)),warn_when(TF,CALL)).
@@ -476,6 +473,7 @@ match_pos_c(Pos,L):- expands_pos(L,PosB),L\==PosB,match_pos_c(Pos,PosB).
 %adj_db(chat80,american,restr).
 %adj_db(chat80,asian,restr).
 %adj_db(chat80,european,restr).
+
 
 adj_db(chat80,big,quantA).
 adj_db(chat80,great,quantA).

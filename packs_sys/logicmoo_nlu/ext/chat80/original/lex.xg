@@ -326,7 +326,11 @@ ace_var(AceVar) ---> theText80_Text(AceVar), {ace_varname(AceVar),!}.
 ace_var_suffix(AceVar,Suffix) ---> theText80_Text(AceVarW), {atom_concat(AceVar,Suffix,AceVarW),ace_varname(AceVar),!}.
 ace_var_suffix_incl(AceVarWU,AceVar,Suffix) ---> theText80_Text(AceVarW), {atom_concat(AceVar,Suffix,AceVarW),ace_varname(AceVar),!,upcase_atom(AceVarW,AceVarWU)}.
 
-wh_art(_Kind,Type_X,pl,quantV(same,wh(Type_X))) ---> {how_many_lex(HOWMANY)}, theTextL80(HOWMANY).
+is_count_lex(many).
+is_count_lex(much). is_count_lex(few).
+is_count_lex(little).
+
+wh_art(_Kind,Type_X,pl,quantV(same,wh(Type_X))) ---> theText80(how),theText80(Many),{is_count_lex(Many)}.
 wh_art(Kind,Type_X,Agmt,DX) --->
    theText80(Art),
    {wh_art_lex(Kind,Art,Type_X,Agmt,DX)}.
@@ -350,7 +354,7 @@ quantifier_pron(Det,Noun) --->
    theText80(W),
    {quantifier_pron_lex(W,Det,Noun)}.
 
-context_pron(prep(In),Place) ---> {ctx_pron_lex(In,Place,Where)}, theText80(Where).
+context_pron(prep(In),Place) ---> theText80(Where), {ctx_pron_lex(In,Place,Where)}, \+ xg_peek(thePos80(jj_)).
 
 number(N,Number) ---> theText80('-'),!, number(I,Number),{N is -I}.
 number(I,Number) ---> theText80(W), {!,number_lex(W,I,Number)}.
