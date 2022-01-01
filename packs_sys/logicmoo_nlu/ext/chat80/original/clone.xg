@@ -20,15 +20,30 @@ xg_w2_len(1,[])---> !, []. %% missing puncts
 xg_w2_len(N,[W|L])---> [W], {N>1, M is N -1},!,xg_w2_len(M,L).
 
 
-span_s(S) ---> span_as_xg('SBAR',s80,S).
-span_s(S) ---> span_as_xg('S',s80,S).
-span_vp(S) ---> span_as_xg('VP',imperative80,S).
+span_s(S) ---> span_as_xg('SBAR',s80(S)).
+span_s(S) ---> span_as_xg('S',s80(S)).
+span_vp(S) ---> span_as_xg('VP',imperative80(S)).
 
-span_as_xg(Type,P,S) --->  {\+ lctmp:in_sent804(Type+P)}, locally(lctmp:in_sent804(Type+P),span_call_xg(Type,P,S)).
+%span_as_xg(Type,P) --->  {\+ lctmp:in_sent804(Type+P)}, locally(lctmp:in_sent804(Type+P),span_call_xg(Type,P)).
+span_as_xg(Type, P, A, B, C, D) :-
+    KEY = Type %+P+A
+    ,
+    \+ lctmp:in_sent804(KEY),
+    locally(lctmp:in_sent804(KEY),span_call_xg(Type, P), A,B,C,D).
 
-span_call_xg(Type,P,S) ---> span_as_1(Type,Words),{call(P,S,Words,[],[],[])}.
+span_call_xg(Type,P) ---> span_as_1(Type,Words),{phraseXG(P,Words,[],[],[])}.
 
-span_as_1(Type,[w(S,L)|Words], [w(S,L)|A], B, Type_X, Type_X) :-
+span_as_1(Type,[w(S,L)|Words], [w(S,L)|A], Rest, Type_X, Type_X) :-
+  member(loc(N),L),
+  findall(M,member(link(_, Type, r(Type, seg(N, M))),L),Ms),
+  sort(Ms,Sorted),reverse(Sorted,Rs),!,
+  member(M,Rs),!,
+ % wdmsg(member(N-M,Rs)),
+  Len is M-N,% Len>0,
+  length(Words,Len),
+  append(Words,Rest,A).
+
+span_as_2(Type,[w(S,L)|Words], [w(S,L)|A], B, Type_X, Type_X) :-
   member(loc(N),L),
   select(link(_, Type, r(Type, seg(N, M))),L,L2),
   \+ member(link(_, Type, r(Type, seg(N, _))),L2),
@@ -37,7 +52,8 @@ span_as_1(Type,[w(S,L)|Words], [w(S,L)|A], B, Type_X, Type_X) :-
 
 
 
-sentence80(S) ---> {b_setval('$prev_w2s', []),b_setval('$prev_spans', [])},!, sentence80e(S).
+
+sentence80(S) ---> {b_setval('$prev_w2s', []),b_setval('$prev_spans', [])},!,{retractall(t_l:was_sentence_level(_,_))}, sentence80e(S).
 sentence80e(S) ---> sentence800(S).
 %sentence80e(S) ---> sentence800(S1)*->sentence801s(sentence80,S1,S).
 
@@ -75,7 +91,7 @@ sentence803(S) ---> question80(S).
 sentence803(S) ---> imperative80(S).
 
 sentence804(decl(S)) ---> subj_decl(S).
-sentence804(decl(S)) ---> pp_decl(S).
+%sentence804(decl(S)) ---> pp_decl(S).
 
 subj_decl( ( s( Subj, verb(main+iv,exist,activeV,pres+fin,[],[]), [],[]))) ---> subj(Subj,_Agmt,_Type).
 
@@ -225,7 +241,7 @@ logical_s_word(r,c,whenever).
 logical_s_word(r,c,unless).
 
 logical_s_word(r,c,if).
-logical_s_word(_,_,for).
+%logical_s_word(_,_,for).
 logical_s_word(c,c,also).
 logical_s_word(c,c,eigther).
 logical_s_word(c,r,then).
@@ -254,6 +270,8 @@ logical_s_word2(r,c,[else,if]).
 
 
 % adp
+
+xg_optional(G) ---> G ; [].
 
 if_cond(If,S,Mask) ---> logical_word(If),!,s_vp_801(S,Mask).
 if_cond(true,S,Mask) ---> s_vp_801(S,Mask).
@@ -661,16 +679,16 @@ prep_arg_vp(vact(V,A,S)) ---> {if_search_expanded(4)},
       imperative_verb(_,_),
       s80(s(_,V,A,S)).
 
-xg_prep_phrase(_PPAlowed,prep_phrase(Prep,Arg),_Case,_Set,_Mask) --->
-   prep(Prep),
-   {is_prep_case(_NPCase)},
-   prep_arg_vp(Arg).
 
 xg_prep_phrase(_PPAlowed,prep_phrase(Prep,Arg),Case,Set,Mask) --->
    prep(Prep),
    {is_prep_case(NPCase)},
    np_11(Arg,_,NPCase,_,Case,Set,Mask).
 
+xg_prep_phrase(_PPAlowed,prep_phrase(Prep,Arg),_Case,_Set,_Mask) --->
+   prep(Prep),
+   {is_prep_case(_NPCase)},
+   prep_arg_vp(Arg).
 
 xg_prep_phrase(_PPAlowed,prep_phrase(Prep,Arg),_Case,_Set,_Mask) --->
    prep(Prep),noText_or_sl,
@@ -805,7 +823,7 @@ verb_with_rest(verb(Type,Root,Voice,Timefin,Aspect,Neg),Agmt,Type,Voice) --->
    {verb_type_lex(Root0,Type0)},
    neg_modal_opt(_Tense1,[],Type0,NegI),
    rest_verb(ExtraMods3,Role,Root0,Root,Voice,Aspect),
-   {append_mods([ExtraMods1,ExtraMods2,ExtraMods3],ExtraMods),
+   {  ignore(t_l:current_vv(VV)),append_mods([[frame(VV)],ExtraMods1,ExtraMods2,ExtraMods3],ExtraMods),
     must(add_extra_to_neg(NegI,ExtraMods,Neg)),
     verb_type_lex(Root,Type)}.
     
