@@ -432,13 +432,13 @@ np_13(AgmtKernelModsO,Agmt,Case,Def,Role,Set,Mask) --->
 np0(AgmtKernelModsO,Agmt,Case,Def,Role,Set,Mask) 
  ---> np1(AgmtKernelModsO,Agmt,Case,Def,Role,Set,Mask).
 
+%np1(_AgmtKernelModsO,_Agmt,_Case,_Def,_Role,_Set,_Mask) ---> theText80(W), {logical_o_word(W),!,fail}.
+
 np1(np(Agmt,Pronoun,[]),Agmt,NPCase,defA,_,Set,Nil) --->
    {is_pp(Set)},
    pers_pron(Pronoun,Agmt,Case),
    {is_empty_bits(Nil), is_to_role_case(Case,decl,NPCase)}.
 
-
-np1(_AgmtKernelModsO,_Agmt,_Case,_Def,_Role,_Set,_Mask) ---> theText80(W), {logical_o_word(W),!,fail}.
 np1(np(Agmt,Kernel,Mods),Agmt,_Case,Def,Role,Set,Mask) --->
    {is_pp(Set)},
    np_head(_Var,Kernel,Agmt,Def+Type,PostMods,Mods),

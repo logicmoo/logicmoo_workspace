@@ -838,7 +838,7 @@ Var =: Val :-
    recorded(Var,val(Val),_).
 
 
-get_sentence_level_adverbs(FN,[framed_from(FN)|InfoL]):- findall(Info,t_l:was_sentence_level(FN,Info),InfoL).
+get_sentence_level_adverbs(FN,InfoL):- findall(Info,t_l:was_sentence_level(FN,Info),InfoL).
 
 maybe_modalize(slot,_,P,P):-!.
 maybe_modalize(Scope,PN,P,PP):-  maybe_modalize0(_Obj,Scope,P,PN,P,PP),!.
