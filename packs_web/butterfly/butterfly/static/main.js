@@ -289,12 +289,14 @@
       if (placeholder == null) {
         placeholder = false;
       }
-      newChar = this.cloneAttr(this.curAttr, c);
+      newChar = this.cloneAttr(this.curAttr, c);	  
       newChar.placeholder = placeholder;
       if (this.insertMode) {
+		  this.checkUndefined(newChar);
         this.screen[this.y + this.shift].chars.splice(this.x, 0, newChar);
         this.screen[this.y + this.shift].chars.pop();
       } else {
+		  this.checkUndefined(newChar);
         this.screen[this.y + this.shift].chars[this.x] = newChar;
       }
       return this.screen[this.y + this.shift].dirty = true;
@@ -659,7 +661,8 @@
       char = '';
       if (!this.equalAttr(data, attr)) {
         if (!this.equalAttr(attr, this.defAttr)) {
-          char += "</span>";
+          char += "</span>";	   
+		  this.checkUndefined(char);
         }
         if (!this.equalAttr(data, this.defAttr)) {
           ref = this.getClasses(data), classes = ref[0], styles = ref[1];
@@ -669,11 +672,13 @@
             char += " style=\"" + styles.join("; ") + "\"";
           }
           char += ">";
+		  this.checkUndefined(char);
         }
       }
       if (cursor) {
         char += "<span class=\"" + (this.cursorState ? "reverse-video " : "") + "cursor\">";
       }
+	  this.checkUndefined(char);
       switch (ch) {
         case "&":
           char += "&amp;";
@@ -691,10 +696,17 @@
           if (ch <= " ") {
             char += "&nbsp;";
           } else if (!(this.forceWidth || this.isCJK(ch))) {
+              		  if ((""+ch)==("undefined")) {
+						 return char; 
+					  }
+			  this.checkUndefined(ch);
             char += ch;
+			this.checkUndefined(char);
           } else {
             if (ch <= "~") {
+				this.checkUndefined(ch);
               char += ch;
+			  this.checkUndefined(char);
             } else if (this.isCJK(ch)) {
               char += "<span style=\"display: inline-block; width: " + (2 * this.charSize.width) + "px\">" + ch + "</span>";
             } else {
@@ -705,9 +717,7 @@
       if (cursor) {
         char += "</span>";
       }
-	  if(char.indexOf("undefinedundefined")>-1) {
-		  debugger;
-	  }
+	  this.checkUndefined(char);
       return char;
     };
 
@@ -719,16 +729,25 @@
       results = [];
       for (x = k = 0, ref = this.cols; 0 <= ref ? k <= ref : k >= ref; x = 0 <= ref ? ++k : --k) {
         if (x !== this.cols) {
-		   var v = this.charToDom(line.chars[x], line.chars[x - 1], x === cursorX);
-		  	  if((""+v).indexOf("dundefined")>-1) {
-		         debugger;
-			  }
-          results.push(v);
+		   var cx = line.chars[x];
+		   this.checkUndefined(cx);
+		   var cxm1 = line.chars[x - 1];
+		  // this.checkUndefined(cxm1);
+		   var sameX = (x === cursorX);
+		   var v = this.charToDom(cx, cxm1, sameX);
+		  if ((""+v)==("undefined")) {
+			 //  this.checkUndefined(v);
+		  } else {
+			  results.push(v);
+		  }
         } else {
           eol = '';
-          if (!this.equalAttr(line.chars[x - 1], this.defAttr)) {
+		  var cxm1 = line.chars[x - 1];
+		  this.checkUndefined(cxm1);
+          if (!this.equalAttr(cxm1, this.defAttr)) {
             eol += '</span>';
           }
+		  this.checkUndefined(eol);
           if (line.wrap) {
             eol += '\u23CE';
           }
@@ -739,11 +758,21 @@
           }
         }
       }
-	  if((""+results).indexOf("undefinedundefined")>-1) {
-		  debugger;
-	  }
+	  this.checkUndefined(results);
+
       return results;
     };
+
+ Terminal.prototype.checkUndefined = function(str) {
+	 if((""+str).indexOf("undefined"+"u")>-1) {
+		 debugger;
+		 //alert(str);
+	 }
+	 if((""+str)==("undefined")) {
+		 debugger;
+		 //alert(str);
+	 }
+ }
 
     Terminal.prototype.screenToDom = function(force) {
       var active, div, k, len, line, ref, results, y;
@@ -751,6 +780,7 @@
       results = [];
       for (y = k = 0, len = ref.length; k < len; y = ++k) {
         line = ref[y];
+		this.checkUndefined(line);
         if (line.dirty || force) {
           active = y === this.y + this.shift && !this.cursorHidden;
           div = document.createElement('div');
@@ -761,11 +791,20 @@
           if (line.extra) {
             div.classList.add('extended');
           }
-          div.innerHTML = (this.lineToDom(y, line, active)).join('');
+		  var arj = (this.lineToDom(y, line, active));
+		  this.checkUndefined(arj);
+
+		  var jarj = arj.join('');
+		  this.checkUndefined(jarj);
+
+		  div.innerHTML = jarj;
+		  this.checkUndefined(div.innerHTML);
+
           if (active) {
             this.active = div;
             this.cursor = div.querySelectorAll('.cursor')[0];
           }
+		  this.checkUndefined(div.innerHTML);
           results.push(div);
         } else {
           results.push(void 0);
@@ -976,6 +1015,7 @@
                   } else {
                     break;
                   }
+				  this.checkUndefined(ch);
                   this.screen[y].chars[x].ch += ch;
                   break;
                 }
@@ -1116,7 +1156,9 @@
                       line = ref1[k];
                       line.dirty = true;
                       for (c = m = 0, ref2 = line.chars.length; 0 <= ref2 ? m <= ref2 : m >= ref2; c = 0 <= ref2 ? ++m : --m) {
-                        line.chars[c] = this.cloneAttr(this.curAttr, "E");
+                        var ca = this.cloneAttr(this.curAttr, "E");
+						this.checkUndefined(ca);
+						line.chars[c] = ca;
                       }
                     }
                     this.x = this.y = 0;
@@ -1394,7 +1436,7 @@
                   pt = pt.slice(1);
                   ref3 = pt.split('|', 2), type = ref3[0], content = ref3[1];
 				  if (!content) {
-					debugger;
+					//debugger;
 					//console.error("No content for inline DECUDK: " + pt);
 					break;
 				  }
@@ -1418,6 +1460,7 @@
 					  }
 					  attr = this.cloneAttr(this.curAttr);
 					  attr.html = safe;
+					  this.checkUndefined(attr);
                       this.screen[this.y + this.shift].chars[this.x] = attr;					  
                       this.resetLine(this.screen[this.y + this.shift]);
                       this.nextLine();	  
@@ -1435,6 +1478,7 @@
                       }
                       attr = this.cloneAttr(this.curAttr);
                       attr.html = "<img class=\"inline-image\" src=\"data:" + mime + ";base64," + b64 + "\" />";
+					  this.checkUndefined(attr);
                       this.screen[this.y + this.shift].chars[this.x] = attr;
                       this.resetLine(this.screen[this.y + this.shift]);
                       break;
@@ -1564,6 +1608,7 @@
 	Terminal.prototype.writeHTML = function(data) {
 	  var attr = this.cloneAttr(this.curAttr);
 	  attr.html = data;
+	  this.checkUndefined(attr);
 	  this.screen[this.y + this.shift].chars[this.x] = attr;
 	  this.resetLine(this.screen[this.y + this.shift]);
 	};
@@ -2213,6 +2258,7 @@
       x++;
       while (x--) {
         this.screen[y + this.shift].chars[x] = this.eraseAttr();
+		this.checkUndefined(this.screen[y + this.shift].chars[x]);
       }
       return this.resetLine(this.screen[y + this.shift]);
     };
@@ -2616,7 +2662,7 @@
         this.screen.splice(this.y + this.shift, 1);
         if (!(this.normal || this.scrollTop !== 0 || this.scrollBottom !== this.rows - 1)) {
           node = this.term.childElementCount - this.rows + this.y + this.shift;
-		  var remnode = this.term.childNodes[node];
+		  var remnode = this.term.childNodes[node];		  
 		  if(remnode!=undefined) remnode.remove();
         }
       }
@@ -2650,7 +2696,9 @@
       }
       j = this.x;
       while (param-- && j < this.cols) {
-        this.screen[this.y + this.shift].chars[j++] = this.eraseAttr();
+        var ea = this.eraseAttr();
+		this.checkUndefined(ea);
+        this.screen[this.y + this.shift].chars[j++] = ea;
       }
       return this.resetLine(this.screen[this.y + this.shift]);
     };
