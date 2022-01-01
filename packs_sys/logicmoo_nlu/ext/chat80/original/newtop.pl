@@ -853,7 +853,7 @@ maybe_modalize1(_Obj,Scope,_,V,P,PP):- PP = failed_modalize(Scope,V,P),!.
 skip_over_modalize(X):- var(X),!,fail.
 skip_over_modalize('`'(X)):-!,skip_over_modalize(X).
 skip_over_modalize(ti(_,_)).
-%skip_over_modalize(database80(X)):-!,skip_over_modalize(X).
+skip_over_modalize(database80(X)):-!,skip_over_modalize(X).
 %skip_over_modalize(bE(_,_,_)).
 skip_over_modalize(true).
 
@@ -874,9 +874,10 @@ maybe_modalize0(Obj,Scope,O, V,setOf(X,P,L),setOf(X,PP,L)):- !, maybe_modalize1(
 maybe_modalize0(Obj,Scope,O, V,setof_oR_nil(X,P,L),setof_oR_nil(X,PP,L)):- !, maybe_modalize1(Obj,Scope,O, V,P,PP).
 maybe_modalize0(Obj,Scope,O, V,:-(X,P),:-(X,PP)):- !, maybe_modalize1(Obj,Scope,O, V,P,PP).
 
+%maybe_modalize0(Obj,Scope,O, V,^(X,P),^(X,PP)):- nonvar(X), !, maybe_modalize1(Obj,Scope,O, V,P,PP).
+%maybe_modalize0(Obj,Scope,O, V,^(X,P),^(X,PP)):- var(X), !, maybe_modalize1(Obj,Scope,O, V,P,PP).
 %maybe_modalize0(Obj,Scope,O, V,'`'(P),'`'(PP)):- !, maybe_modalize1(Obj,Scope,O, V,P,PP).
 %maybe_modalize0(Obj,Scope,O, V,'database80'(P),'database80'(PP)):- !, maybe_modalize1(Obj,Scope,O, V,P,PP).
-%maybe_modalize0(Obj,Scope,O, V,^(X,P),^(X,PP)):- var(X), !, maybe_modalize1(Obj,Scope,O, V,P,PP).
 %maybe_modalize0(Obj,Scope,O, V,(X,Y,P),(X,PP)):- skip_over_modalize(X), !, maybe_modalize1(Obj,Scope,O, V, (Y, P),PP).
 maybe_modalize0(Obj,Scope,O, V,(X,P),(X,PP)):- skip_over_modalize(X), !, maybe_modalize1(Obj,Scope,O, V,P,PP).
 %maybe_modalize0(Obj,Scope,O, V,'&'(X,P),'&'(X,PP)):- skip_over_modalize(X), !, maybe_modalize1(Obj,Scope,O, V,P,PP).

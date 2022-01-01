@@ -888,15 +888,15 @@ verb_m(waits) ---> theText80(waits).
 verb_m(M) ---> thePos80((aux;vb_;rbr;rbs),M).
 
 
-verb_form883(ExtraMods,RootVerb,Tense,_Agmt1,_Role) ---> % {fail},
-   theText80(W),
-   {verb_form_aux(W,RootVerb,Tense,_Agmt2)},
-   {append_mods([info(RootVerb),info(Tense)],ExtraMods)}.
-
 verb_form883(ExtraMods,RootVerb,Tense,Agmt,Role) ---> {unloop(maybe_verb_pre_mods,2)},
    maybe_modal(_Tense1,[],ExtraMods1), !,
    verb_form88(ExtraMods2,RootVerb,Tense,Agmt,Role),
-   {append_mods([ExtraMods1,info(Tense),ExtraMods2],ExtraMods)}.
+   {append_mods([ExtraMods1,/*info(Tense),*/ExtraMods2],ExtraMods)}.
+
+verb_form883(ExtraMods,RootVerb,Tense,_Agmt1,_Role) ---> % {fail},
+   theText80(W),
+   {verb_form_aux(W,RootVerb,Tense,_Agmt2)},
+   {append_mods([/*info(RootVerb),info(Tense)*/],ExtraMods)},!.
 
 verb_form883(ExtraMods,RootVerbO,Tense,Agmt,_Role) ---> 
    real_verb_form(RootVerb,Tense,Agmt,ExtraMods0),
@@ -936,17 +936,16 @@ append_mods(A,B):- flatten([A],B),!.
 append_mods([], []).
 append_mods([L|Ls], As) :- (var(L)->L1=[];flatten([L],L1)),!, append(L1, Ws, As), append_mods(Ls, Ws).
 
-one_modal(_,not) ---> theText80(not), xg_peek(thePos80(vb_)).
 %one_modal(_Tense1,_MODAL1) ---> !,{fail}.
-one_modal(_,not) ---> theText80(not), xg_peek(thePos80(vb_)).
+one_modal(pres,not) ---> theText80(not), xg_peek(thePos80(vb_)).
 one_modal(_Tense1,_MODAL1) ---> {\+ if_search_expanded(2),!,fail}.
-one_modal(_Tense1,MODAL1) ---> theText80(W),{modal_verb_form_aux(W,MODAL1,_Tense2,_)}.
-one_modal(_Tense1,Modal) ---> thePos80([pos(md),root(Modal)]).
+one_modal(Tense,MODAL1) ---> theText80(W),{modal_verb_form_aux(W,MODAL1,Tense,_)}.
+one_modal(pres,Modal) ---> thePos80([pos(md),root(Modal)]).
 
 
-maybe_modal(Tense,In,[M|Out]) ---> one_modal(Tense,M),!,maybe_modal0(Tense,In,Out).
+maybe_modal(TenseIO,In,[M+Tense|Out]) ---> one_modal(Tense,M),!,maybe_modal0(TenseIO,In,Out).
 
-maybe_modal0(Tense,In,[M|Out]) ---> one_modal(Tense,M),!,maybe_modal0(Tense,In,Out).
+maybe_modal0(TenseIO,In,[M+Tense|Out]) ---> one_modal(Tense,M),!,maybe_modal0(TenseIO,In,Out).
 maybe_modal0(_,ExtraMods, ExtraMods) ---> [].
 
 rest_verb([Pastpart|ExtraMods],aux,aux(have,ExtraMods1),Root,Voice,[perf|Aspect]) ---> 

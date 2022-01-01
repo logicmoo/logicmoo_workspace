@@ -427,6 +427,7 @@ ordering_pred(thing,cp(west,of),X1,X2) :- type_measure_pred( _Region,position(x)
 
 
 intrans_pred(thing,R,flow,R). %:- path_pred_linkage(_,_,R,_C,_).
+
 generic_pred(_,thing,prep(of),X,X).
 
 generic_pred(VV,Type,mg(P),X,Y):- nonvar(P),!,generic_pred(VV,Type,P,X,Y).
@@ -439,6 +440,11 @@ generic_pred(VV,Type,P,X,Y) :- generic_pred0(VV,Type,P,X,Y)*->true;generic_pred1
 
 trans_pred_type(_Type_,P):- ignore(thing=Type),tmp80:trans_rel_cache_created(=, trans_direct(Type,P)).
 trans_pred_type(thing,contain).
+
+generic_pred0(C,A,B,X,List):- is_list(List),!,member(E,List), generic_pred0(C,A,B,X,E).
+generic_pred0(C,A,B,List,X):- is_list(List),!,member(E,List), generic_pred0(C,A,B,E,X).
+%generic_pred0(C,A,B,List,L):- is_list(List),!,setof(X,(member(E,List),generic_pred0(C,A,B,E,X),L)).
+%generic_pred0(C,A,B,L,List):- is_list(List),!,setof(X,(member(E,List),generic_pred0(C,A,B,X,E),L)).
 
 generic_pred0(_VV,Type,P,X,Y) :- trans_pred_type(Type,P), nonvar(P),trans_pred(Type,P,X,Y). % contain 
 generic_pred0(_VV,Type,P,X,Y) :- measure_pred(Type,P,X,Y). % area of

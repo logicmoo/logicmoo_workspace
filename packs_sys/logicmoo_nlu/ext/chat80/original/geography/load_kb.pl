@@ -368,6 +368,8 @@ chat80_all("What are the continents no country in which contains more than two c
 chat80_all("Does the population of china exceed the population of india ?",[true],_00).
 chat80_all("Which country bordering the mediterranean borders a country that is bordered by a country whose population exceeds the population of india ?",[turkey],1900).
 chat80_all("What are the continents containing a country in which contains more than two cities whose population exceeds 1 million ?",[america,asia,europe],211).
+chat80_all("What are the rivers of the countries that are bordering the baltic that flow?",[amu_darya,amur,danube,don,elbe,lena,ob,oder,rhine,vistula,volga,yenisei],_).
+chat80_all("What are the capitals of the countries that are bordering the baltic that have a population exceeding 1 thousand?",[[east_germany]:[berlin],[poland]:[warsaw],[soviet_union]:[moscow]],_).
 
 baltic_rivers(_):-!.
 baltic_rivers_real(_):-!.
@@ -403,43 +405,390 @@ chat8_all("is bordered by").
 
 
 
-/*
-compile80 = ( setof_oR_nil( Is,
+end_of_file.
+end_of_file.
+end_of_file.
+end_of_file.
+
+?- 
+cls,c88("What are the capitals of the countries bordering the baltic ?").
+root /opt/logicmoo_workspace/bin/cls /dev/tty
+% /opt/logicmoo_workspace/packs_sys/logicmoo_nlu/ext/chat80/original/geography/load_kb compiled into parser_chat80 0.13 sec, 0 clauses
+%~ list_undefined([]).
+
+%~ ?- c88("What are the capitals of the countries bordering the baltic ?").
+
+/* text_to_corenlp_tree = [ 'CORENLP',
+                            [ 'SBAR',
+                              [ 'NP',
+                                ['WP','What']],
+                              [ 'S',
+                                ['VB',are],
+                                [ 'NP',
+                                  [ 'NP',
+                                    ['DT',the],
+                                    ['NNS',capitals]],
+                                  [ 'PP',
+                                    ['IN',of],
+                                    [ 'NP',
+                                      ['DT',the],
+                                      ['NNS',countries]]]],
+                                [ 'VP',
+                                  ['VBG',bordering],
+                                  [ 'NP',
+                                    ['DT',the],
+                                    ['JJ',baltic]]]],
+                            ['.',?]]].  */
+
+%~ into_lexical_segs is runtime(2.111).
+
+%~ ?- c88("What are the capitals of the countries bordering the baltic ?").
+
+/* into_lexical_segs = [ w( what, [
+                           pos(wp), root(what),loc(1),lnks(3),txt("What"),
+                           truecase('INIT_UPPER'),link(1,'NP',r('NP',seg(1,1))),
+                           link(2,'SBAR',r('SBAR',seg(1,11))), link(3,'CORENLP',r('CORENLP',seg(1,11))),lex_winfo,
+                           ac(determinerStrings,xWhatTheWord,"what"), cycWord(xWhatTheWord),ac(pronounStrings,xWhatTheWord,"what"),
+                           ttholds(inflAdverb,'TTWord_What',"what"),
+                           ttholds(inflDeterminer,'TTWord_What',"what"),
+                           ttholds(inflPronoun,'TTWord_What',"what"),
+                           ttholds(inflInterjection,'TTWord_What',"what"),
+                           flexicon( det,
+                             [ sem=what, agr=sg,wh=y+n,det_type=quant,
+                               preagr=n,can_be_np=y],
+                             what),
+                           flexicon( det,
+                             [ sem=what, agr=pl,wh=y,det_type=quant,
+                               preagr=n,can_be_np=n],
+                             what),
+                           whpron_dict(what,tSomethingExisting), whpron_dict(what,tThing),talk_db(pronoun,what),
+                           talk_db(interrog,what)]),
+                         w( are, [
+                           alt(pos(vbp)), root(be),pos(vb),loc(2),lnks(3),
+                           txt("are"),truecase('LOWER'),
+                           link(1,'S',r('S',seg(2,10))),
+                           link(2,'SBAR',r('SBAR',seg(1,11))), link(3,'CORENLP',r('CORENLP',seg(1,11))),lex_winfo,
+                           ttholds(inflNounSingular,'TTWord_Are',"are"),
+                           ttholds(inflVerbPluralPresent,'TTWord_Be',"are"),
+                           flexicon(bv,[person=2,agr=sg,verb_form=tensed],are),
+                           flexicon(bv,[person=Person,agr=pl,verb_form=tensed],are),
+                           lex_rinfo( be, [
+                             fsr(be-v,performers_and_roles,[]),
+                             flexicon(bv,[person=Person1,agr=Agr,verb_form=infinitive],be),
+                             verbnet_map_wn( be,
+                               [ 'be%2:42:03', 'be%2:42:06','be%2:42:05','be%2:42:02',
+                                 'be%2:41:00'],
+                               'seem-109-1-1'),
+                             listof( concept(wn), [
+                               'be%2:42:03', 'be%2:42:06','be%2:42:05','be%2:42:02',
+                               'be%2:41:00'])]),
+                           unused( [ ac(infinitive,xBeTheWord,"be"), cycWord(xBeTheWord),concept(fn,performers_and_roles),
+                                     ttholds(inflExpletiveUnchecked,'TTWord_Be',"be"),
+                                     ttholds(inflVerb,'TTWord_Be',"be"),
+                                     concept(vn,'seem-109-1-1'),
+                                     verbnet_to_framenet('seem-109-1-1',be,'be.01'),
+                                     concept(fn,'be.01'),
+                                     verbnet_to_framenet('seem-109-1-1',be,'be.03'), concept(fn,'be.03'),verbnet_word(be,'seem-109-1-1',"be")])]),
+                         w( the, [
+                           pos(dt), root(the),loc(3),lnks(5),txt("the"),
+                           truecase('LOWER'),link(1,'NP',r('NP',seg(3,4))),
+                           link(2,'NP',r('NP',seg(3,7))),link(3,'S',r('S',seg(2,10))),
+                           link(4,'SBAR',r('SBAR',seg(1,11))), link(5,'CORENLP',r('CORENLP',seg(1,11))),lex_winfo,
+                           ac(determinerStrings,xTheTheWord,"the"),
+                           cycWord(xTheTheWord),
+                           ttholds(inflDeterminerPlural,'TTWord_The',"the"),
+                           ttholds(inflDeterminerSingular,'TTWord_The',"the"),
+                           flexicon( det,
+                             [ sem=the_sing, agr=sg,article=y,wh=n,det_type=def,
+                               preagr=n],
+                             the),
+                           flexicon( det,
+                             [ sem=the_pl, agr=pl,article=y,wh=n,det_type=def,
+                               preagr=y],
+                             the),
+                           flexicon(det,[agr=Agr3],the),
+                           flexicon(timesuffix,[sem=morning,allows_minutes=y],[(in,the,morning)]),
+                           flexicon(timesuffix,[sem=afternoon,allows_minutes=y],[(in,the,afternoon)])]),
+                         w( capitals, [
+                           pos(nns), root(capital),loc(4),lnks(5),txt("capitals"),
+                           truecase('LOWER'),link(1,'NP',r('NP',seg(3,4))),
+                           link(2,'NP',r('NP',seg(3,7))),link(3,'S',r('S',seg(2,10))),
+                           link(4,'SBAR',r('SBAR',seg(1,11))), link(5,'CORENLP',r('CORENLP',seg(1,11))),lex_winfo,
+                           ac(plural,xCapitalTheWord,"capitals"),
+                           cycWord(xCapitalTheWord),
+                           cycTerm(tUpperCaseLetter,ttCharacterSet,ttThing),
+                           cycTerm(tCountryCapital,ttGeopoliticalEntityTypeByNonOverlappingJurisdiction,ttArtifactualFeatureType),
+                           cycTerm(tGroupedCapitalCityOfRegion,ttGeopoliticalEntityTypeByNonOverlappingJurisdiction,ttArtifactualFeatureType),
+                           ac(massNumber,xCapitalTheWord,capital),
+                           ac(singular,xCapitalTheWord,capital),
+                           clex_word(noun,capitals,capital,neutr+pl-count),
+                           ttholds(inflNounPluralUnchecked,'TTWord_Capital',"capitals"),
+                           talk_db(noun1,capital,capitals)]),
+                         w( of, [
+                           pos(in), root(of),loc(5),lnks(5),txt("of"),
+                           truecase('LOWER'),link(1,'PP',r('PP',seg(5,7))),
+                           link(2,'NP',r('NP',seg(3,7))),link(3,'S',r('S',seg(2,10))),
+                           link(4,'SBAR',r('SBAR',seg(1,11))), link(5,'CORENLP',r('CORENLP',seg(1,11))),lex_winfo,
+                           ac(prepositionStrings,xOfTheWord,"of"),cycWord(xOfTheWord),
+                           cycTerm(possessiveRelation,rtUnderspecifiedPrepositionPredicate,rtBinaryPredicate),
+                           cycTerm( temporallySubsumes,
+                             nartR(tColOfSampleInstanceOfTypeForProgramFn,rtBinaryTemporalRelationPredicate,iCW_CycAnalyticEnvironmentTheProgram),
+                             rtComplexTemporalPredicate), fsr(of-prep,origin,[]),concept(fn,origin),
+                           fsr(of-prep,partitive,[]),concept(fn,partitive),
+                           ttholds(inflPreposition,'TTWord_Of',"of"),
+                           talk_db(preposition,of)]),
+                         w( the, [
+                           pos(dt), root(the),loc(6),lnks(6),txt("the"),
+                           truecase('LOWER'),link(1,'NP',r('NP',seg(6,7))),
+                           link(2,'PP',r('PP',seg(5,7))), link(3,'NP',r('NP',seg(3,7))),link(4,'S',r('S',seg(2,10))),
+                           link(5,'SBAR',r('SBAR',seg(1,11))), link(6,'CORENLP',r('CORENLP',seg(1,11))),lex_winfo,
+                           ac(determinerStrings,xTheTheWord,"the"),
+                           cycWord(xTheTheWord),
+                           ttholds(inflDeterminerPlural,'TTWord_The',"the"),
+                           ttholds(inflDeterminerSingular,'TTWord_The',"the"),
+                           flexicon( det,
+                             [ sem=the_sing, agr=sg,article=y,wh=n,det_type=def,
+                               preagr=n],
+                             the),
+                           flexicon( det,
+                             [ sem=the_pl, agr=pl,article=y,wh=n,det_type=def,
+                               preagr=y],
+                             the),
+                           flexicon(det,[agr=Agr4],the),
+                           flexicon(timesuffix,[sem=morning,allows_minutes=y],[(in,the,morning)]),
+                           flexicon(timesuffix,[sem=afternoon,allows_minutes=y],[(in,the,afternoon)])]),
+                         w( countries, [
+                           pos(nns), root(country),loc(7),lnks(6),
+                           txt("countries"),truecase('LOWER'),
+                           link(1,'NP',r('NP',seg(6,7))),
+                           link(2,'PP',r('PP',seg(5,7))), link(3,'NP',r('NP',seg(3,7))),link(4,'S',r('S',seg(2,10))),
+                           link(5,'SBAR',r('SBAR',seg(1,11))), link(6,'CORENLP',r('CORENLP',seg(1,11))),lex_winfo,
+                           ac(massNumber,xCountryTheWord,country),
+                           cycWord(xCountryTheWord),
+                           ac(singular,xCountryTheWord,country),
+                           clex_word(noun,countries,country,neutr+pl-count),
+                           ttholds(inflNounPlural,'TTWord_Country',"countries")]),
+                         w( bordering, [
+                           pos(vbg), root(border),loc(8),lnks(4),txt("bordering"),
+                           truecase('LOWER'),link(1,'VP',r('VP',seg(8,10))),
+                           link(2,'S',r('S',seg(2,10))),
+                           link(3,'SBAR',r('SBAR',seg(1,11))), link(4,'CORENLP',r('CORENLP',seg(1,11))),lex_winfo,
+                           ac(infinitive,xBorderTheWord,border),
+                           cycWord(xBorderTheWord),
+                           talk_db(noun_or_verb,borders,bordering,border),
+                           talk_db(intransitive,border,borders,bordered,bordering,bordered),
+                           talk_db(transitive,border,borders,bordered,bordering,bordered),
+                           lex_rinfo( border, [
+                             fsr(border-n,boundary,[]),
+                             fsr(border-v,locative_relation,[]),
+                             verbnet_map_wn( border,
+                               ['border%2:35:01','border%2:42:00','border%2:35:00'],
+                               'contiguous_location-47.8'),
+                             listof(concept(wn),['border%2:35:01','border%2:42:00','border%2:35:00'])]),
+                           unused( [ ac(infinitive,xBorderTheWord,"border"),
+                                     cycTerm(actBorderingSomething,ttFirstOrderCollection,ttThing),
+                                     cycTerm('Bordering-Configuration',tCol,ttThing),
+                                     cycTerm( nartR(actMakingAvailableFn,tObjectBorderStripNearTheBoundaryOfAnObject),
+                                       ttTemporalStuffType,
+                                       ttSetOrCollection),
+                                     ac(singular,xBorderTheWord,"border"),
+                                     cycTerm(iLoc_BorderBetweenFn,rtCoexistenceRelation,rtContemporaryInResultFunction),
+                                     cycTerm(tBorder,ttCartographicFeatureType,ttFirstOrderCollection),
+                                     cycTerm(iLoc_BorderFn,rtCoexistenceRelation,rtUnaryFunction),
+                                     cycTerm(tObjectBorderStripNearTheBoundaryOfAnObject,ttExistingObjectType,ttThing),
+                                     cycTerm(tBorderline,ttArtifactualFeatureType,ttFirstOrderCollection),
+                                     cycTerm(iLoc_BorderBetweenPolitiesFn,rtBinaryFunction,rtReifiableFunction),
+                                     ac(singular,xBorderTheWord,border),
+                                     ac(singular,xBorderTheWord,border),
+                                     ac(singular,xBorderTheWord,border),
+                                     clex_word(verb,border,border,iv+infpl),
+                                     clex_word(verb,border,border,tv+infpl),
+                                     clex_word(noun,border,border,human+sg-count), concept(fn,boundary),concept(fn,locative_relation),
+                                     ttholds(inflNounSingular,'TTWord_Border',"border"),
+                                     concept(vn,'contiguous_location-47.8'),
+                                     verbnet_to_framenet('contiguous_location-47.8',border,'border.01'),
+                                     concept(fn,'border.01'),
+                                     verbnet_word(border,'contiguous_location-47.8',"border")])]),
+                         w( the, [
+                           pos(dt), root(the),loc(9),lnks(5),txt("the"),
+                           truecase('LOWER'),link(1,'NP',r('NP',seg(9,10))),
+                           link(2,'VP',r('VP',seg(8,10))),
+                           link(3,'S',r('S',seg(2,10))),
+                           link(4,'SBAR',r('SBAR',seg(1,11))), link(5,'CORENLP',r('CORENLP',seg(1,11))),lex_winfo,
+                           ac(determinerStrings,xTheTheWord,"the"),
+                           cycWord(xTheTheWord),
+                           ttholds(inflDeterminerPlural,'TTWord_The',"the"),
+                           ttholds(inflDeterminerSingular,'TTWord_The',"the"),
+                           flexicon( det,
+                             [ sem=the_sing, agr=sg,article=y,wh=n,det_type=def,
+                               preagr=n],
+                             the),
+                           flexicon( det,
+                             [ sem=the_pl, agr=pl,article=y,wh=n,det_type=def,
+                               preagr=y],
+                             the),
+                           flexicon(det,[agr=Agr5],the),
+                           flexicon(timesuffix,[sem=morning,allows_minutes=y],[(in,the,morning)]),
+                           flexicon(timesuffix,[sem=afternoon,allows_minutes=y],[(in,the,afternoon)])]),
+                         w( baltic, [
+                           pos(jj), root(baltic),loc(10),lnks(5),txt("baltic"),
+                           truecase('INIT_UPPER'),link(1,'NP',r('NP',seg(9,10))),
+                           link(2,'VP',r('VP',seg(8,10))),
+                           link(3,'S',r('S',seg(2,10))),
+                           link(4,'SBAR',r('SBAR',seg(1,11))), link(5,'CORENLP',r('CORENLP',seg(1,11))),lex_winfo,
+                           talk_db(adj,baltic)]),
+                         w( ?, [
+                           pos('.'), root(?),loc(11),lnks(2),txt("?"),
+                           link(1,'SBAR',r('SBAR',seg(1,11))), link(2,'CORENLP',r('CORENLP',seg(1,11))),lex_winfo,
+                         terminator_lex(?,?),char_type_sentence(?,ask)])].  */
+
+%~ ?- c88("What are the capitals of the countries bordering the baltic ?").
+
+%~ any_to_ace_str="What are the capitals of the countries bordering the baltic ?".
+
+%~ ?- c88("What are the capitals of the countries bordering the baltic ?").
+
+%~ try_ace_drs=failure.
+penn_tree_to_segs(
+       [ 'CORENLP',
+         [ 'SBAR',
+           [ 'NP',
+             ['WP','What']],
+           [ 'S',
+             ['VB',are],
+             [ 'NP',
+               [ 'NP',
+                 ['DT',the],
+                 ['NNS',capitals]],
+               [ 'PP',
+                 ['IN',of],
+                 [ 'NP',
+                   ['DT',the],
+                   ['NNS',countries]]]],
+             [ 'VP',
+               ['VBG',bordering],
+               [ 'NP',
+                 ['DT',the],
+                 ['JJ',baltic]]]],
+           ['.',?]]],
+       _102000).
+%~ call_residue_vars=[].
+
+%~ ?- c88("What are the capitals of the countries bordering the baltic ?").
+
+%~ e2c_80=failure.
+
+%~ ?- c88("What are the capitals of the countries bordering the baltic ?").
+
+%~ ?- c88("What are the capitals of the countries bordering the baltic ?").
+
+/* sentence80 = whq( thing&City&city-_75878,
+                  s( np(3+_105540,wh(thing&City&city-_105550),[]),
+                     verb(
+                        aux+aux(be,[pres+fin]), aux(be,[pres+fin]),activeV,pres+fin,
+                        [],
+                        [ [], info(aux(be,[pres+fin])),info(pres+fin),
+                          root]),
+                     [ arg( dirO,
+                         np( 3+pl,
+                           np_head(Det,det(the(pl)),[],capital),
+                           [ prep_phrase( prep(of),
+                               np( 3+pl,
+                                 np_head(Det4,det(the(pl)),[],country),
+                                 [ reduced_rel( thing&geo&country-Det4,
+                                     s( np(3+pl,wh(thing&geo&country-Det4),[]),
+                                        verb(main+tv,border,activeV,inf,[progresiveV],[was_framed(frame_10579)]),
+                                        [ arg(dirO,np(3+sg,nameOf(Baltic,baltic,[]),[]))],
+                                        []))]))]))],
+                   [])).  */
+
+%~ ?- c88("What are the capitals of the countries bordering the baltic ?").
+
+/* i_sentence = question80( [thing&City&city-_37778],
+                  pred(
+                     quantS( identityQ(IdentityQ),
+                       thing&City&city-_77252, '`'(true),'`'(true),
+                       [],
+                       thing&City&city-Is),
+                     identityQ([[],info(aux(be,[pres+fin])),info(pres+fin),root]),
+                     bE(is,Is,BE),
+                     [ quantS( set(- + (- 0)),
+                         thing&City&city-Specific,
+                         '`'(specific_pred(thing,nation_capital,Nation_capital,Specific)),
+                         '`'(true),
+                         [ quantS( index(- + (- 0)),
+                             thing&geo&country-Country, '`'(ti(country,Country)),'`'(true),
+                             [ pred(
+                                  quantS( identityQ(IdentityQ4),
+                                    thing&geo&country-Country, '`'(true),'`'(true),
+                                    [],
+                                    thing&geo&country-Mg),
+                                  identityQ([was_framed(frame_10579)]),
+                                  generic_pred(frame_10579,thing,mg(border),Mg,Generic),
+                                  [ quantS( identityQ(IdentityQ6),
+                                      thing&geo&seamass-Baltic, '`'(bE(named,Baltic,baltic)),'`'(true),
+                                      [],
+                                      thing&geo&seamass-Generic)])],
+                             thing&geo&country-Nation_capital)],
+                       thing&City&city-BE)])).  */
+
+%~ ?- c88("What are the capitals of the countries bordering the baltic ?").
+
+/* clausify80 = answer80([Is]) :-
+                  ^( BE_SetOf8,
+                    ( setOf( [Nation_capital_Mg_Country]:SetOf,
+                        ( bE(named,Generic_Baltic,baltic)  ,
+                          ti(country,Nation_capital_Mg_Country) ,
+                          generic_pred(frame_10579,thing,mg(border),Nation_capital_Mg_Country,Generic_Baltic) ,
+                          setOf( Specific,
+                            ( specific_pred(thing,nation_capital,Nation_capital_Mg_Country,Specific)),
+                            SetOf)),
+                        BE_SetOf8) ,
+                    bE(is,Is,BE_SetOf8))).  */
+
+%~ ?- c88("What are the capitals of the countries bordering the baltic ?").
+
+/* simplify80 = answer80([Is]) :-
+                  ^( BE_SetOf6,
+                    ( setOf( [Nation_capital_Border_Country]:SetOf,
+                        ( ti(country,Nation_capital_Border_Country)  ,
+                          generic_pred(frame_10579,thing,border,Nation_capital_Border_Country,baltic) ,
+                          setOf( Specific,
+                            specific_pred(thing,nation_capital,Nation_capital_Border_Country,Specific),
+                            SetOf)),
+                        BE_SetOf6) ,
+                    bE(is,Is,BE_SetOf6))).  */
+
+%~ ?- c88("What are the capitals of the countries bordering the baltic ?").
+
+/* results80 = [ [ [ [denmark]:[copenhagen],
+                     [east_germany]:[berlin],
+                     [finland]:[helsinki],
+                     [poland]:[warsaw],
+                     [soviet_union]:[moscow],
+                     [sweden]:[stockholm],
+                   [west_germany]:[bonn]]]].  */
+
+%~ ?- c88("What are the capitals of the countries bordering the baltic ?").
+
+/* compile80 = ( setof_oR_nil( Is,
                    ^( [BE_SetOf7],
                      ( setOf( [Nation_capital_Border_Country]:SetOf,
                          ^( [],
                            ( database80(ti(country,Nation_capital_Border_Country))  ,
-                             database80(generic_pred(frame_1040,thing,border,Nation_capital_Border_Country,baltic)) ,
+                             database80(generic_pred(frame_10579,thing,border,Nation_capital_Border_Country,baltic)) ,
                              setOf( Specific,
                                []^database80(specific_pred(thing,nation_capital,Nation_capital_Border_Country,Specific)),
                                SetOf))),
                          BE_SetOf7) ,
                        database80(bE(is,Is,BE_SetOf7)))),
                    Respond_Nil) ,
-               respond(Respond_Nil)).  
+               respond(Respond_Nil)).  */
 
-/* c88 = answer80([Is]) :-
-           ^( BE_SetOf6,
-             ( setOf( [Contain_Border_Country]:SetOf,
-                 ( ti(country,Contain_Border_Country)  ,
-                   generic_pred(frame_1130,thing,border,Contain_Border_Country,baltic) ,
-                   setOf( Specific,
-                     specific_pred(thing,contain,Contain_Border_Country,Specific),
-                     SetOf)),
-                 BE_SetOf6) ,
-             bE(is,Is,BE_SetOf6))).  */
+%~ ?- c88("What are the capitals of the countries bordering the baltic ?").
 
-compile80 = ( setof_oR_nil( Is,
-                   ^( [Generic_SetOf,BE_SetOf8],
-                     ( setOf( Border_Prep_River,
-                         ^( [Generic_SetOf],
-                           ( setOf(Country,[]^database80(ti(country,Country)),Generic_SetOf)  ,
-                             database80(ti(river,Border_Prep_River)) ,
-                             database80(generic_pred(frame_1071,thing,prep(of),Border_Prep_River,Generic_SetOf)) ,
-                             database80(generic_pred(frame_1076,thing,border,Border_Prep_River,baltic)))),
-                         BE_SetOf8) ,
-                       database80(bE(is,Is,BE_SetOf8)))),
-                   Respond_Nil) ,
-               respond(Respond_Nil)).  
-*/
+%~ capture80="[[denmark]:[copenhagen],[east_germany]:[berlin],[finland]:[helsinki],[poland]:[warsaw],[soviet_union]:[moscow],[sweden]:[stockholm],[west_germany]:[bonn]].".
 
+true.
+
+parser_chat80: 2700 ?-
