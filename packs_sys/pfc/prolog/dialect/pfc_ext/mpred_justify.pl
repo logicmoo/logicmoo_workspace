@@ -53,7 +53,7 @@ mpred_why_2(Conseq,Ante):- justifications(Conseq,Ante).
 mpred_info(O):-call_u(mpred_info0(O)).
 
 mpred_info0(O):-
- with_output_to(user_error,
+ with_output_to(current_output,
  ((dmsg_pretty("======================================================================="),  
   %quietly(call_with_inference_limit(ignore(on_xf_cont(deterministically_must(mpred_why_1(O)))),4000,_)),
   ignore(on_xf_cont(deterministically_must(mpred_why_1(O)))),
@@ -384,10 +384,10 @@ color_line_t(C,L):- color_line(C,L).
 :- meta_predicate(with_no_english(*)).
 with_no_english(Goal):- setup_call_cleanup(flag('english', Was, 0),Goal,flag('english', _, Was )).
 
-mpred_why(P):- clear_proofs,!,with_no_english((must(mpred_why_1(P)))).
+mpred_why(P):- clear_proofs,!,with_no_english((must(mpred_info(P)))).
 
 mpred_why_1(M:P):-  atom(M),!,call_from_module(M,mpred_why_1(P)).
-mpred_why_1(NX):- number(NX),!, trace, pfcWhy0(NX),!.
+mpred_why_1(NX):- number(NX),!, pfcWhy0(NX),!.
 mpred_why_1(P):- is_list(P), !, maplist(mpred_why_1, P).
 mpred_why_1(P):- ((callable(P), ((must_ex((mpred_why_justs(P))))))) *-> true ; mpred_why_1_fallback(P).
 
