@@ -126,8 +126,9 @@ text_to_corenlp(English, OptionsIn, Out):-
 text_to_corenlp_low(English, OptionsIn, ReplyO):-
  must_or_rtrace((
   DefaultOpts = [  quote, tokenize, ssplit, pos, depparse, ner, parse, coref,mwt,natlog,udfeats,
-   relation,lemma, docdate, entitylink, openie, truecase, kbp, gender, cleanxml,
-  %entitymentions, %sentiment,
+   relation,lemma, docdate,  openie, truecase, kbp, gender, cleanxml,
+  %entitymentions, %sentiment, entitylink, 
+   % entitylink cause WikiDict loading so we are disabling as it does barely anything helpfull
    dcoref], ignore(OptionsIn=DefaultOpts),
   ignore('.\nSome quick brown foxes jumped over the lazy dog after we sang a song. X is Y .  Pee implies Queue.'=English),
   into_acetext(English,ACEEnglish),
