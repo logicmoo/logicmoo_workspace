@@ -63,11 +63,11 @@ q_sentence800(S) ---> startQuotesEnding(E),!,sentence801(S),E,!.
 
 \+ (XG) ---> (XG -> {fail} ; {true}).
 
-sentence801s(_,S1, S1, W, W, C, C) :- W==[], !.
 sentence801s(_,S1, \+ (S1)) ---> theText80(is),theText80(false).
 sentence801s(_,S1, (S1)) ---> theText80(is),theText80(true).
 sentence801s(P,S1,Out) ---> theText80(Means),{join_over_s(S1,Means,S2,Out)},!,call(P,S2).
 sentence801s(P,S1,(S1,S2)) --->  !,call(P,S2).
+sentence801s(_,S1, S1, W, W, C, C) :- W==[], !.
 
 
 join_over_s(S1,implies,S2,(S1=>S2)).
@@ -559,8 +559,8 @@ np_objbody1((sent2(Type_X,S)),_Agmt,_) ---> xg_peek([_,_]),
 
 /* Determiners */
 
-determiner(Det,Number,Def) ---> det(Det,Number,Def).
 determiner(Det,Number,Def) ---> quant_phrase(Det,Number,Def).
+determiner(Det,Number,Def) ---> det(Det,Number,Def).
 
 % Measure is Type_X
 quant_phrase(quantV(Op,Quant),Number,Def) --->
@@ -1019,6 +1019,7 @@ adverb(adv(Adv)) ---> theText80_W2(W,W2), {adv_lex_w2(W,W2,Adv)}, may_adverb(W).
 adverb(adj(Adj)) ---> {if_search_expanded(3)},theText80_W2(W,W2), {adj_lex_w2(W,W2,Adj,_Type)}.
 adverb(adv(W)) ---> theText80(W), {adverb_lex(W)}, may_adverb(W).
 adverb(adv(t(A,B,C))) ---> theText80(W), {modal_verb_form_aux(W,A,B,C)}, may_adverb(W).
+adverb((W)) ---> sentence_level0(W).
 
 may_adverb(W)---> {\+ logical_s_word(W),\+ logical_o_word(W)}.
 may_adverb(_)---> xg_peek( \+ [_]).
