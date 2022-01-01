@@ -2117,6 +2117,7 @@ embed_test(URL,Width,Height):-
   format( '<div width="~w" height="~w" ><object data="~w"  width="100%" height="~w" type="text/html"><embed src="~w" width="100%" height="100%" onerror="alert(`URL invalid ~w !!`);"/></object></div>',
                 [     Width,     Height,              URL,                      Height,                        URL,        URL                  ]).
 
+slow_frame(Goal):- !,call(Goal).
 slow_frame(Goal):- slow_frame('300',Goal).
 slow_frame(_,Goal):- thread_self(main), \+ toplevel_pp(bfly),!, call(Goal).
 slow_frame(Height,Goal):- 

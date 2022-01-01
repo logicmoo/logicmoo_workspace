@@ -58,7 +58,7 @@ etc.
 :- system:use_module(library(backcomp)).
 
 :- multifile blob_rendering//3.              % +Type, +Blob, +Options
-
+:- multifile portray//2.                     % +Term, +Options
 
 :- predicate_options(pprint_tree/2, 2,
                      [ output(stream),
@@ -149,7 +149,7 @@ test_print_tree1(2):-
     ),f), 
    print_tree00(a(b(c(e(7),f),d))), print_tree00(a(b(c, X = point{x:1,y:2}.C1 , (e(X),f),d))),
     [print_tree00,a,_BE,'$VAR'('SEE'),C1,e,1.3,-7,`abcd`,"abcd",['a','b','c'],f,d, print_tree00,a,b,c,e,7,f,d],
-    print_tree00(a(b(c(e(7),f),d)))),x,y),'.').
+    print_tree00(a(b(c(e(7),f),d)),a)),x,y),'.').
 
 test_print_tree1(3):- 
  print_tree00((print_tree_with_final( a(b(c(e(E7))))):- 
@@ -571,9 +571,9 @@ without_ec_portray_hook(Goal):- exact_ec_portray_hook(1000,Goal).
 %pc_portray(X):- is_list(X),print_tree00(X).
 
 pc_portray(Term):- var(Term),!,fail.
-pc_portray(Term):- atom(Term), exists_file_safe(Term),public_file_link(Term,Public),writeq(Public).
-pc_portray(Term:L):- integer(L),atom(Term), exists_file_safe(Term),public_file_link(Term:L,Public),writeq(Public).
-pc_portray(mfl4(M,F,Term,L)):- integer(L),atom(Term), exists_file_safe(Term),public_file_link(Term:L,Public),writeq(mfl4(M,F,Public,L)).
+pc_portray(Term):- atom(Term), exists_file_safe(Term),public_file_link(Term,Public),write_q(Public).
+pc_portray(Term:L):- integer(L),atom(Term), exists_file_safe(Term),public_file_link(Term:L,Public),write_q(Public).
+pc_portray(mfl4(M,F,Term,L)):- integer(L),atom(Term), exists_file_safe(Term),public_file_link(Term:L,Public),write_q(mfl4(M,F,Public,L)).
 pc_portray(Term):- 
   \+ ( nb_current('$inprint_message', Messages), Messages\==[] ), 
   % (tracing->dumpST;true),
@@ -589,8 +589,11 @@ ec_portray_hook(Term):-
 
 color_format_maybe(_,F,A):- format(F,A),!.
 
-ec_portray(_,X):- as_is_cmpd(X),!,writeq(X).
-ec_portray(_,X):- atom(X),ansi_ansi,!,writeq(X).
+write_q(X):- in_pp(bfly),!,print_html_term(X).
+write_q(X):- writeq(X).
+
+ec_portray(_,X):- as_is_cmpd(X),!,write_q(X).
+ec_portray(_,X):- atom(X),ansi_ansi,!,write_q(X).
 ec_portray(N,_):- N > 3,!,fail.
 ec_portray(_,Term):- (\+ compound(Term);Term='$VAR'(_)),!, ec_portray_now(Term).
 ec_portray(N,List):- N<2, is_list(List),!,print_tree00(List).
@@ -911,12 +914,15 @@ prolog_pretty_print_term(A,Options):-
   my_merge_options(Options,[portray(true),quoted(true), output(current_output)], OptionsNew),
   \+ \+ pprint_tree(A, OptionsNew).
 
-%simple_write_term(A):- compound(A),compound_name_arity(A,_,0),writeq(A),!.
-%simple_write_term(A):- atomic(A), \+ atom(A), \+ string(A), !, writeq(A).
+%simple_write_term(A):- compound(A),compound_name_arity(A,_,0),write_q(A),!.
+%simple_write_term(A):- atomic(A), \+ atom(A), \+ string(A), !, write_q(A).
 % @TODO comment out the next line
-%simple_write_term(A):- !, with_no_hrefs(t,(if_defined(rok_writeq(A),writeq(A)))),!.
-simple_write_term(A):- writeq(A).
+%simple_write_term(A):- !, with_no_hrefs(t,(if_defined(rok_writeq(A),write_q(A)))),!.
+
+simple_write_term(A):- in_pp(bfly),!,print_html_term(A).
+simple_write_term(A):- write_q(A).
 simple_write_term(A,Options):- Options==[], !, simple_write_term(A).
+simple_write_term(A,_):- in_pp(bfly),!,print_html_term(A).
 simple_write_term(A,Options):-  without_ec_portray_hook(\+ \+ write_term(A,Options)),!.
 
 %simple_write_term(A,Options):-  write_term(A,[portray_goal(pretty_clauses:pprint_tree)|Options]).
@@ -1256,6 +1262,8 @@ pl_span_goal(Class, Goal):- setup_call_cleanup(pl_span_c(Class),Goal,pl_span_e).
 pt_s_e(S, Goal, E):- setup_call_cleanup(pformat(S),Goal,pformat(E)).
 
 :- fixup_exports.
+
+% :- bfly.
 /*
 
 prefix_spaces0(Tab):- \+ integer(Tab), recalc_tab(Tab,   NewTab),!,prefix_spaces(NewTab).
@@ -1420,10 +1428,10 @@ pt1(_, Tab,Term) :-
 
 %t_l:printing_dict
 pt1(_FS,_Tab,(NPV)) :- NPV=..[OP,N,V], OP==(:), atomic(N),
-  writeq(N), pformat(' '), pformat(OP),pformat(' '), print_tree00(V),!.
+  write_q(N), pformat(' '), pformat(OP),pformat(' '), print_tree00(V),!.
 
-pt1(_,_Tab,Term) :- Term=ref(_), !, writeq(Term),!.
-pt1(_,_Tab,Term) :- Term=element(_,_,List),List==[], !, writeq(Term),!.
+pt1(_,_Tab,Term) :- Term=ref(_), !, write_q(Term),!.
+pt1(_,_Tab,Term) :- Term=element(_,_,List),List==[], !, write_q(Term),!.
    
 
 pt1(_, Tab,Term) :- fail,
@@ -1435,7 +1443,7 @@ pt1(_FS,Tab,T) :- % fail,
    W120 = 120,
    as_is(T),
    max_output(Tab,W120,T),!,
-   prefix_spaces(Tab), writeq(T).
+   prefix_spaces(Tab), write_q(T).
    %system_portray(Tab,T),!.
    
 % pt1(_FS,_Tab,Term) :- is_dict(Term), ansi_ansi,!,sys:plpp(Term),!.
@@ -1476,7 +1484,7 @@ pt1(_FS,Tab,T) :-
 
 %t_l:printing_dict
 pt1(_FS,_Tab,(NPV)) :- NPV=..[OP,N,V], is_colon_mark(OP), atomic(N),
-  writeq(N), pformat(' '), pformat(OP),pformat(' '), print_tree00(V),!.
+  write_q(N), pformat(' '), pformat(OP),pformat(' '), print_tree00(V),!.
 
 
 pt1(FS,Tab,(NPV)) :- NPV=..[OP,N,V], is_colon_mark(OP), current_op(_,yfx,OP), !,
@@ -1495,7 +1503,7 @@ pt1(FS,Tab,(NPV)) :- NPV=..[OP,N,V], is_colon_mark(OP),
 pt1(_FS,Tab,T) :- % fail,
    print_tree_width(W120),
    max_output(Tab,W120,T),!,
-   prefix_spaces(Tab), writeq(T).
+   prefix_spaces(Tab), write_q(T).
    %system_portray(Tab,T),!.
 
 pt1(FS,Tab,{Prolog}) :- 
@@ -1632,7 +1640,7 @@ pt_args_arglist(FS,Tab,S,M,E,[H|T]):-
 
 write_ar_simple(Sep1, _Tab,Sep,[A|R]):- 
  pformat(Sep1),
- ( (wots(S,writeq([A|R])),atom_concat_safety('[',MR,S),atom_concat_safety(M,']',MR), write(M))->true
+ ( (wots(S,write_q([A|R])),atom_concat_safety('[',MR,S),atom_concat_safety(M,']',MR), write(M))->true
  ; (write_simple(A), write_simple_each(Sep,R))).
 
 %%	between_down(+Start, ?Count, +End) is nondet.
@@ -1700,7 +1708,7 @@ is_arity_lt10(S) :- is_codelist(S),!.
 
 not_is_list_local(X):- \+ is_list(X).
 
-on_x_ignore(G):- catch(G,E,(dumpST,writeq(E=on_x_ignore(G)))).
+on_x_ignore(G):- catch(G,E,(dumpST,write_q(E=on_x_ignore(G)))).
 
 as_is_cmpd(Term) :- \+ compound(Term),!,fail.
 as_is_cmpd(Term) :- \+ ground(Term),!,fail.
@@ -2030,7 +2038,7 @@ pp(Primitive, Ctx, Options) :-
 
 pp(AsIs, _Ctx, Options)  :- as_is(AsIs),
    option(output(Out), Options), !,
-   with_output_to(Out, writeq(AsIs)),!.
+   with_output_to(Out, write_q(AsIs)),!.
 
 
 :- if(current_predicate(is_dict/1)).
@@ -2382,15 +2390,23 @@ bfly_term(Term, Options) -->
                       depth(0)
                     ],
                     Options1),
-      dict_create(Dict, _, Options1)
+      dict_options(Dict, Options1)
     },
-    html_any(Term, Dict),!.
+    html_any(Term, Dict),
+     finalize_term(Term, Dict).
 
 
 html_any(_, Options) -->
     { Options.depth >= Options.max_depth },
     !,
-    html(span(class('pl-ellipsis'), '...')).
+    html(span(class('pl-ellipsis'), '...')).    
+html_any(Term, Options) -->
+    (   {   nonvar(Term)
+        ;   attvar(Term)
+        }
+    ->  portray(Term, Options)
+    ),
+    !.    
 html_any(Term, Options) -->
     { primitive(Term, Class0),
       !,
@@ -2416,7 +2432,7 @@ html_any(Term, Options) -->
 
 %!  html_compound(+Compound, +Options)// is det.
 %
-%   Process a html_compound term.
+%   Process a compound term.
 
 
 
@@ -2503,7 +2519,7 @@ arg_options(Options, Extra, Options.put(depth, NewDepth).put(Extra)) :-
 
 %!  html_args(+Arg0, +Arity, +Compound, +Options)//
 %
-%   Emit arguments of a html_compound term.
+%   Emit arguments of a compound term.
 
 html_args(I, Arity, Compound, ArgOptions) -->
    html(span(class(['pl-args']),
@@ -2747,12 +2763,12 @@ end_code_type(List, Type, _) :-
     Type = punct.
 end_code_type(OpTerm, Type, Options) :-
     compound_name_arity(OpTerm, Name, 1),
-    is_op1(Name, Type, Pri, ArgPri, Options),
+    is_op1(Name, OpType, Pri, ArgPri, Options),
     \+ Options.get(ignore_ops) == true,
     !,
     (   Pri > Options.priority
     ->  Type = punct
-    ;   (   Type == prefix
+    ;   (   OpType == prefix
         ->  end_code_type(Name, Type, Options)
         ;   arg(1, OpTerm, Arg),
             arg_options(Options, ArgOptions),
@@ -2848,6 +2864,11 @@ dict_kvs2([K-V|T], Options) -->
         dict_kvs2(T, Options)
     ).
 
+quote_atomic(Str, String, Options) :-
+    \+ (Options.get(quoted) == false),
+    (string(Str);atom(Str)),
+    !,
+    format(string(String), '~q', [Str]).
 quote_atomic(Float, String, Options) :-
     float(Float),
     Format = Options.get(float_format),
@@ -2914,8 +2935,26 @@ primitive(Term, Type) :- float(Term),    !, Type = 'pl-float'.
 primitive_class('pl-atom', Atom, String, Class) :-
     \+ atom_string(Atom, String),
     !,
-    Class = 'pl-quoted-atom'.
+    Class = 'pl-atom'.
 primitive_class(Class, _, _, Class).
+
+
+%!  finalize_term(+Term, +Dict)// is det.
+%
+%   Handle the full_stop(Bool) and nl(Bool) options.
+
+finalize_term(Term, Dict) -->
+    (   { true == Dict.get(full_stop) }
+    ->  space(Term, '.', Dict, Dict),
+        (   { true == Dict.get(nl) }
+        ->  html(['.', br([])])
+        ;   html('. ')
+        )
+    ;   (   { true == Dict.get(nl) }
+        ->  html(br([]))
+        ;   []
+        )
+    ).
 
 
                  /*******************************
@@ -2925,7 +2964,7 @@ primitive_class(Class, _, _, Class).
 %!  blob_rendering(+BlobType, +Blob, +WriteOptions)// is semidet.
 %
 %   Hook to render blob atoms as HTML.  This hook is called whenever
-%   a blob atom is encountered while   rendering  a html_compound term as
+%   a blob atom is encountered while   rendering  a compound term as
 %   HTML. The blob type is  provided   to  allow  efficient indexing
 %   without having to examine the blob. If this predicate fails, the
 %   blob is rendered as an HTML SPAN with class 'pl-blob' containing

@@ -64,19 +64,19 @@ block_format(G):- t_l:in_block_format,!,call(G).
 block_format(G):- wots((S),locally(t_l:in_block_format,G)),bformat(S),!.
 
 
-%bfly_write_html(S):- !, format("(HTML ~w)",[S]),!.
-%bfly_write_html(P):- format("\x90;HTML|~w\x93",[P]).
-%bfly_write_html(P):- format("P;HTML|~wP",[P]),!. %'
-%bfly_write_html(S):- format("\x1bP;HTML|~w\x1bP",[S]),end_escape.
+%bfly_write_html(S):- !, format_safely("(HTML ~w)",[S]),!.
+%bfly_write_html(P):- format_safely("\x90;HTML|~w\x93",[P]).
+%bfly_write_html(P):- format_safely("P;HTML|~wP",[P]),!. %'
+%bfly_write_html(S):- format_safely("\x1bP;HTML|~w\x1bP",[S]),end_escape.
 
 %bfly_write_html(S):- rich_output(Out),!,with_output_to(Out,bfly_write_html(S)).
 
-%bformat(P):- is_visible_output,is_butterfly_console,format(string(S),'~w',[P]),atom_contains(S,'<'),!,bformat(S).
+%bformat(P):- is_visible_output,is_butterfly_console,format_safely(string(S),'~w',[P]),atom_contains(S,'<'),!,bformat(S).
 %
 
 
 %:- /*system:*/use_module(library(http/term_html)).
-:- /*system:*/use_module(butterfly_term_html,[bfly_term//2]).
+:- /*system:*/use_module(pretty_clauses,[bfly_term//2]).
 
 :- /*system:*/use_module(library(http/thread_httpd)).
 :- /*system:*/use_module(thread_httpd:library(http/http_dispatch)).
@@ -109,7 +109,7 @@ block_format(G):- wots((S),locally(t_l:in_block_format,G)),bformat(S),!.
 :- volatile(bfly_dyn:bfly_style_asked/1).
 
 maybe_into_number(A,Num):- number(A),!,Num=A.
-maybe_into_number(A,Num):- \+ string(A), sformat(S,'~w',[A]), string(S),!, maybe_into_number(S,Num),!.
+maybe_into_number(A,Num):- \+ string(A), sformat_safe(S,'~w',[A]), string(S),!, maybe_into_number(S,Num),!.
 maybe_into_number(A,Num):- atomic_list_concat([_|Es],'/',A), Es\==[], last(Es,E),!,maybe_into_number(E,Num).
 maybe_into_number(A,Num):- atom_number(A,Num),!.
 maybe_into_number(_,Num):- Num is -1.
@@ -212,7 +212,7 @@ send_tokens_1([nl(1)|Tokens]):-!,remove_if_last(Tokens,[nl(1)],TokensLeft),send_
 send_tokens_1(Tokens):- with_output_to(string(HTMLString), html_write:print_html(Tokens)),write_html(HTMLString).
 
 %write_html(HTMLString):- ((pengines:pengine_self(_) -> pengines:pengine_output(HTMLString) ;write(HTMLString))),!.
-write_html(HTMLString):- bfly_html_goal(format(HTMLString)).
+write_html(HTMLString):- bfly_html_goal(format_safely('~w',HTMLString)).
 
 bfly_portray(X):- 
   \+ tracing, ground(X),
@@ -246,11 +246,11 @@ bfly_ask_style(E, Num):-
   current_output(Out), current_input(In),  
   retractall(bfly_dyn:bfly_style_type(_,_,Num,_,_,_)),  
   asserta(bfly_dyn:bfly_style_asked(Num)),
-  sformat(S1,'<font color="gold"><a target="_new" href="/swish/bfly_decl_style?tid=~w&pts=~w&style=html_esc">Click This GOLD text at ~w for an HTMLy Interface.</font></a><p>',
+  sformat_safe(S1,'<font color="gold"><a target="_new" href="/swish/bfly_decl_style?tid=~w&pts=~w&style=html_esc">Click This GOLD text at ~w for an HTMLy Interface.</font></a><p>',
    [TID,Num,E]),
   bfly_to_pts(E,html_esc,S1),
   Key is Num + 64,  
-  sformat(S2,'~nOr Press: <SHIFT+~s>=ansi, <~s>=ansi, <SPACE>=cancel',[[Key],[Key]]),
+  sformat_safe(S2,'~nOr Press: <SHIFT+~s>=ansi, <~s>=ansi, <SPACE>=cancel',[[Key],[Key]]),
   bfly_to_pts(E,ansi,S2),
   nop(asserta(bfly_dyn:bfly_style_type(TID,E,Num,In,Out,ansi))) )).
 
@@ -389,14 +389,19 @@ pre_tag = preformat text with HTML embedded
 %write_direct(S):- in_swish,!, pengines:pengine_output(S).
 write_direct(S):- pformat(S).
 
-%bformat(P):- atom(P),sformat(S,P,[]),!,bformat(S).
+%bformat(P):- atom(P),sformat_safe(S,P,[]),!,bformat(S).
 %bformat(S):- string(S),atom_concat(PL,'\n',S),!,bformat(PL).
-%bformat(S):- t_l:in_block_format,!,format("~w",[S]),!.
+%bformat(S):- t_l:in_block_format,!,format_safely("~w",[S]),!.
 bformat(Stream,Fmt,Args):- atomic(Stream),is_stream(Stream),!, with_output_to(Stream,bformat(Fmt,Args)).
-bformat(Stream,Fmt,Args):- format(Stream,Fmt,Args).
-bformat(Fmt,Args):- sformat(P,Fmt,Args),bformat(P).
+bformat(Stream,Fmt,Args):- format_safely(Stream,Fmt,Args).
+bformat(Fmt,Args):- sformat_safe(P,Fmt,Args),bformat(P).
 bformat(S):- use_pts_files,!,bfly_to_all_pts(S).
 bformat(S):- bfly_write(S).
+
+sformat_safe(Stream,Fmt,Args):- catch(sformat(Stream,Fmt,Args),E,(ansi,wdmsg(E),dumpST,break)).
+format_safely(Stream,Fmt,Args):- catch(format(Stream,Fmt,Args),E,(ansi,wdmsg(E),dumpST,break)).
+format_safely(Fmt,Args):- catch(format(Fmt,Args),E,(ansi,wdmsg(E),dumpST,break)).
+format_safely(Fmt):- catch(format(Fmt),E,(ansi,wdmsg(E),dumpST,break)).
 
 bfly_write(Write):- bfly_write(current,Write).
 bfly_write_plain(Stuff):- bfly_out_in(bfly_write(ansi,Stuff)).
@@ -424,7 +429,7 @@ bfly_write(Style,escape_from_screen('$end')):- !, only_bfly(bfly_write(Style,[wh
 bfly_write(Style,escape_from_screen(X)):-!, bfly_write(Style,[when_in_screen(esc(80)),X,when_in_screen(esc(92))]).
 bfly_write(Style,when_in_screen(X)):- !, only_bfly(ignore((getenv('TERM',screen),bfly_write(Style,X)))).
 
-bfly_write(Style,S):- (string(S);is_codelist(S);is_charlist(S)), format(atom(T),'~s',[S]), !, bfly_write(Style,T).
+bfly_write(Style,S):- (string(S);is_codelist(S);is_charlist(S)), format_safely(atom(T),'~s',[S]), !, bfly_write(Style,T).
 bfly_write(_Styl,S):- atom(S),(atom_contains(S,'<'),atom_contains(S,'>')),!,write_direct(S).
 bfly_write(_Styl,ansi(X)):-!, bfly_write_plain(X).
 
@@ -436,7 +441,7 @@ bfly_write(_Styl,term(X)):- !, bfly_html_goal(print_html_term(X)).
 bfly_write(ansi,style(_,X)):- !, bfly_out_in(bfly_write(ansi,X)).
 bfly_write(Style,style(C,X)):- !,bfly_write(Style,[html('<font style="~w">',[C]),X,html('</font>')]),!.
 bfly_write(ansi,color(C,X)):- !,color_format(fg(C),'~@',[bfly_write(ansi,X)]).
-bfly_write(_Styl,color(C,X)):- !,sformat(S,'<font color="~w">',[C]),bfly_write_html([html(S),X,html('</font>')]),!.
+bfly_write(_Styl,color(C,X)):- !,sformat_safe(S,'<font color="~w">',[C]),bfly_write_html([html(S),X,html('</font>')]),!.
 bfly_write(_Styl,w(Text)):- !, write(Text). % needed in order to write an integer or special atoms
 bfly_write(_Styl,hwt(0)):- !, bfly_write_html('<pre>hello world</pre>').
 bfly_write(_Styl,hwt(a)):- !, write("\e]8;;https://example.com\aThis is a link\e]8;;\a\c").
@@ -595,16 +600,16 @@ bfly_test(a1):-  bfly_html_goal(writeln('<img class="owl" src="https://www.swi-p
 bfly_test(a2):-  bfly_write(('<img class="owl" src="https://www.swi-prolog.org/icons/swipl.png" alt="SWI-Prolog owl logo" title="SWI-Prolog owl logo">')). 
 bfly_test(0):-  bfly_write([html('<pre>hi there fred</pre>'), ' foo']).
 bfly_test(1):-  bfly_write_html('<div>hi <pre>there </pre>&nbsp;fred</div>').
-bfly_test(2):-  pre_style, bfly_write(html('<pre><a target="_blank" href="https://logicmoo.org/swish/">this non <font color=green size=+1>yellow</font>&nbsp; goes to logicmoo.org</a></pre>')),!.
+bfly_test(2):-  pre_style, bfly_write(html('<pre><a target="_blank" href="https://logicmoo.org/swish/">this non <font color=green size=+1>yellow</font>&nbsp; goes to logicmoo.org</a></pre>')).
 %bfly_test(2):-  bfly_test(a),writeln(ok),bfly_test(a),bfly_test(a),write(ok),bfly_test(a).
 %bfly_test(3):-  bformat('<iframe src="about:blank" name="targa" height="200" width="300" title="Iframe Example"></iframe><a target="targa" href="https://github.com">targa</a>'). 
 %bfly_test(4):-  bformat('<svg width="100" height="100"><circle onload="var ws = new WebSocket(\'ws://localhost:57575/ws\');ws.addEventListener(\'open\', function () {ws.send(\'Stouch /tmp/pwned\\n\');});" cx="50" cy="50" r="40" stroke="green" stroke-width="4" fill="yellow" /></svg>').
 bfly_test(5):-  bfly_write(html('<pre><iframe src="/xwiki/" name="example" height="200" width="300" title="Iframe Example"></iframe></pre>')). 
 bfly_test(6):-  bfly_html_goal(writeln('<pre><iframe src="/swish/" name="example" height="200" width="300" title="Iframe Example"></iframe></pre>')). 
 
-into_attribute_q(Obj,TextBoxObj):- sformat(Text,'~q',[Obj]),into_attribute(Text,TextBoxObj).
+into_attribute_q(Obj,TextBoxObj):- sformat_safe(Text,'~q',[Obj]),into_attribute(Text,TextBoxObj).
 into_attribute(Obj,TextBoxObj):-
-  (atomic(Obj)->sformat(Text,'~w',[Obj]);sformat(Text,'~q',[Obj])),
+  (atomic(Obj)->sformat_safe(Text,'~w',[Obj]);sformat_safe(Text,'~q',[Obj])),
    xml_quote_attribute(Text,TextBoxObj,ascii),!.
 
 bfly_tests:- forall(clause(bfly_test(_Name),Body),

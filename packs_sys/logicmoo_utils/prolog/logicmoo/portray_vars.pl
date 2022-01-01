@@ -645,7 +645,7 @@ reduce_fname(L,R):- atom_concat_some_left('C',LL,L),remove_single_number(LL,LLL)
 reduce_fname(L,R):- atom_concat_some_left('Num',LL,L),remove_single_number(LL,LLL),reduce_fname(LLL,R).
 reduce_fname(L,R):- remove_single_number(L,LLL),reduce_fname(LLL,R).
 reduce_fname(ti,'').
-reduce_fname(card,size).
+reduce_fname(card,siize).
 reduce_fname(partOf,'').
 reduce_fname(N,N):-!.
 maybe_nameable_arg(F,A,N,E):- compound(E)-> pretty_two(E) ; 
