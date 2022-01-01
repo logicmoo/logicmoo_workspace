@@ -282,8 +282,25 @@ s80(P) --->  s80(P,_).
 s80(s(NP,verb(main+iv,E,[],activeV,_+fin,[],([])),[],[]),Mask) ---> 
    theText80(there),theText80_W2(_,L),{member(root(E),L),member(upos(verb),L)},verb_arg(np,NP,Mask).
 
-s80(P,Mask) ---> % {retractall(t_l:was_sentence_level(_))},
- s_vp_800(P,Mask).
+s80(PP,Mask) ---> 
+ {gensym('frame_',VV)},
+  locally(t_l:current_vv(VV),s_vp_800(P,Mask)), %xg_optional(do_sentence_level),
+  {get_sentence_level_adverbs(VV,InfoL),
+   (((subst(P,frame(VV),InfoL,PP),P\==PP))->true;append_extra_props(P,[was_framed(VV)|InfoL],PP))}.
+
+
+append_extra_props(CmpI,ExtraProps,CmpO):-
+  compound_name_arguments(CmpI,F,Args),
+  append(Left,[Neg,O1,O2],Args), append(Left,[NegO,O1,O2],ArgsO),
+  add_extra_to_verb(Neg,ExtraProps,NegO),
+  compound_name_arguments(CmpO,F,ArgsO),!.
+
+add_extra_to_verb(CmpI,ExtraProps,CmpO):-
+  compound_name_arguments(CmpI,F,Args),
+  append(Left,[Neg],Args), append(Left,[NegO],ArgsO),
+  add_extra_to_neg(Neg,ExtraProps,NegO),
+  compound_name_arguments(CmpO,F,ArgsO),!.
+
 
 s_vp_800(SO,Mask) ---> if_cond(IF,S,Mask), s_vp_800s(IF,S,SO,Mask).
 
@@ -360,6 +377,7 @@ no_new_obj ---> noText,!.
 no_new_obj ---> xg_peek(\+ subj(_,_,_)).
 
 
+/* Noun Phrase */
 subj(Subj,Agmt,Type) ---> subj0(Subj,Agmt,Type).
 
 subj0(there,_Agmt,_+aux(be,_)) ---> theText80(there).
@@ -371,26 +389,29 @@ subj0(Subj,Agmt,_) --->
 make_ace_var(AceVar,NP,Type):- 
   NP = np(3+sg,np_head(_Var,generic,[adj(ace_var(self,AceVar))],Type),[]).
 
-   /* Noun Phrase */
-% to buy a car
-% @TODO DMILES
 
+% to buy a car
 np_11(np(Agmt,nameOf(_Var,span_s(SO),[]),_Mods),Agmt,_Case,_IndefA,_Role,_Set,_Mask) 
   ---> theText80(to),!,
    imperative80(S),!,{s80lf(S,SO)}.
+np_11(_AgmtKernelModsO,_Agmt,_Case,_Def,_Role,_Set,_Mask) ---> theText80(W), {logical_o_word(W),!,fail}.
 
-np_11(AgmtKernelModsO,Agmt,Case,Def,Role,Set,Mask) --->
+np_11(AgmtKernelModsO,Agmt,Case,Def,Role,Set,Mask) ---> 
+  %\+ {if_search_expanded(3)},!,
+  np_13(AgmtKernelModsO,Agmt,Case,Def,Role,Set,Mask).
+
+np_13(AgmtKernelModsO,Agmt,Case,Def,Role,Set,Mask) --->
   locally(tlclone:np_in_case(Case),
     np0(AgmtKernelMods,Agmt,Case,Def,Role,Set,Mask)),
     extend_np(_,AgmtKernelMods,AgmtKernelModsO).
 
-np_11(NP,_Agmt,_Case,_IndefA,_Role,_Set,_Mask)
-  --->   ace_var(AceVar),!,{make_ace_var(AceVar,NP,thing), freeze(O, \+ ground(O))}.
+np_13(NP,_Agmt,_Case,_IndefA,_Role,_Set,_Mask)
+  --->   ace_var(AceVar),!,{make_ace_var(AceVar,NP,thing)}.
 
-np_11(np(Agmt,nameOf(_Var,span_vp(SO),[]),_Mods),Agmt,_Case,_IndefA,_Role,_Set,_Mask) 
+np_13(np(Agmt,nameOf(_Var,span_vp(SO),[]),_Mods),Agmt,_Case,_IndefA,_Role,_Set,_Mask) 
   ---> {if_search_expanded(4)}, span_vp(S),{s80lf(S,SO)}.
 
-np_11(np(Agmt,nameOf(_Var,span_s(SO),[]),_Mods),Agmt,_Case,_IndefA,_Role,_Set,_Mask) 
+np_13(np(Agmt,nameOf(_Var,span_s(SO),[]),_Mods),Agmt,_Case,_IndefA,_Role,_Set,_Mask) 
   ---> {if_search_expanded(3)}, span_s(S),{s80lf(S,SO)}.
 
 
