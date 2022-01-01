@@ -626,60 +626,49 @@ sent_to_prelogic(S0,S) :-
    reduce1(S5,S).
 
 %reduce1(P,P):-!.
-
-reduce1(P,Q):- reduceQ(P,R),reduce3(R,P,Q),!.
-
-reduce3(_In,P,Q):- \+ compound(P),!, Q=P.
-reduce3(_In,slot(Syntax,_Type,Var,_Mode,_SlotI),slot_i(Syntax,Var)):-!.
-reduce3(In,(P,Q),PQ):- P == Q,!,reduce3(In,P,PQ).
-reduce3(In,List,RList):- is_list(List),select(E,List,RList),compound(E),
-  E=slot_i(_,DirO),var(DirO),
-  subst(In,List,[hide],Out), \+ sub_var(DirO,Out),!.
-
-reduce3(_In,'^'(Q,P),P):- ground(Q).
-reduce3(_In,^(Var,P),P):- var(Var),\+ sub_var(Var,P),!.
-reduce3(_In,^(Vars,P),^(NewVars,P)):- is_list(Vars),select(Var,Vars,NewVars), var(Var),\+ sub_var(Var,P),!.
-reduce3(_In,^(Vars,P),^(NewVars,P)):- is_list(Vars),select(Var,Vars,NewVars), nonvar(Var),!.
+reduce1(P,Q):- \+ compound(P),!, Q=P.
+reduce1(slot(Syntax,_Type,Var,_Mode,_SlotI),slot_i(Syntax,Var)):-!.
+reduce1((P,Q),PQ):- P == Q,!,reduce1(P,PQ).
 
 
-reduce3(In,(P,Q),PQ):- (true) == Q,!,reduce3(In,P,PQ).
-reduce3(In,(Q,P),PQ):- (true) == Q,!,reduce3(In,P,PQ).
-reduce3(_In,mg(Q),Q):- !.
 
-reduce3(_In,bE(Named,Q,P),true):- Named==named, P==Q, !.
-reduce3(_In,bE(Named,Q,P),true):- Named==named, P=Q, !.
-reduce3(_In,bE(is,Q,P),bE(is,Q,P)):-!.
-%reduce3(In,bE(_,Q,P),true):- var(P),var(Q),P=Q, !.
-reduce3(_In,same_values(Q,P),true):- P=Q,!.
+reduce1((P,Q),PQ):- (true) == Q,!,reduce1(P,PQ).
+reduce1((Q,P),PQ):- (true) == Q,!,reduce1(P,PQ).
+reduce1(mg(Q),Q):- !.
 
-reduce3(In,'&'(Q,P),PQ):- compound(Q),compound(P), reduce3(In,(Q,P),PQ).
+reduce1(bE(Named,Q,P),true):- Named==named, P==Q, !.
+reduce1(bE(Named,Q,P),true):- Named==named, P=Q, !.
+reduce1(bE(is,Q,P),bE(is,Q,P)):-!.
+%reduce1(bE(_,Q,P),true):- var(P),var(Q),P=Q, !.
+reduce1(same_values(Q,P),true):- P=Q,!.
 
-%reduce3(In,( bE(_,Num_Num10,N) , P), Q):- var(Num_Num10),subst(P,Num_Num10,N,Q).
+reduce1('^'(Q,P),P):- ground(Q).
+reduce1('&'(Q,P),PQ):- compound(Q),compound(P), reduce1((Q,P),PQ).
 
-%reduce3(In,qualifiedBy(Var,Num,_&_,V),true):- (atom(V);atom(Num)), V=Num,!.
+%reduce1(( bE(_,Num_Num10,N) , P), Q):- var(Num_Num10),subst(P,Num_Num10,N,Q).
 
-reduce3(In,np_head(X,Det,AdjList,Type),O):- Type\==[],
-  reduce3(In,resultFn(X,[ti(Type,X),is_det(X,Det)|AdjList]),O).
-
-  /*
-reduce3(In,qualifiedBy(Var,BE_QualifiedBy,_Np_head,np_head(Var,Some,[],Place_here)),ti(Place_here,Var)):-
+%reduce1(qualifiedBy(Var,Num,_&_,V),true):- (atom(V);atom(Num)), V=Num,!.
+reduce1(np_head(X,generic,[adj(ace_var(self,Name))],A),O):-
+  reduce1(resultFn(X,(ti(A,X),ace_var(X,Name))),O).
+/*
+reduce1(qualifiedBy(Var,BE_QualifiedBy,_Np_head,np_head(Var,Some,[],Place_here)),ti(Place_here,Var)):-
   Some==some.
 */
 
-reduce3(_In,qualifiedBy(Var,_,_,S),R):- sub_term(E,S), compound(E), E = np_head(Var,_,_,_), R= E.
-reduce3(_In,qualifiedBy(Var,X,P,S),R):- fail, OR = qualifiedBy(Var,X,P,S), qualifiedBy_LF2(Var,xxx,X,P,S,R)-> OR\==R,!.
-reduce3(_In,qualifiedBy(Var,X,P,S),R):- qualifiedBy_LF(Var,reduce3,X,P,S,R),!.
+reduce1(qualifiedBy(Var,_,_,S),R):- sub_term(E,S), compound(E), E = np_head(Var,_,_,_), R= E.
+reduce1(qualifiedBy(Var,X,P,S),R):- fail, OR = qualifiedBy(Var,X,P,S), qualifiedBy_LF2(Var,xxx,X,P,S,R)-> OR\==R,!.
+reduce1(qualifiedBy(Var,X,P,S),R):- qualifiedBy_LF(Var,reduce1,X,P,S,R),!.
 
-reduce3(In,'`'(A),R):- reduce3(In,A,R).
-%reduce3(In,ace_var(C,N),true):- var(C),nonvar(N),C='$VAR'(N),!.
+reduce1('`'(A),R):- reduce1(A,R).
+%reduce1(ace_var(C,N),true):- var(C),nonvar(N),C='$VAR'(N),!.
 
-%reduce3(In,Ex^(ti(Type,Ex1),bE(is,Ex2,Inst)),Ex^(ti(Type,Inst)&Ex=Inst)):- Ex==Ex1, Ex1==Ex2,!.
-reduce3(_In,Ex^(exceeds(Value1, Ex1) & exceeds(Value2, Ex2)),exceeds(Value2, Value1)):- Ex==Ex1, Ex1==Ex2,!.
-reduce3(_In,Ex^(exceeds(Value1, Ex1), exceeds(Value2, Ex2)),exceeds(Value2, Value1)):- Ex==Ex1, Ex1==Ex2,!.
-reduce3(_In,Ex^(exceeds(X,Y),exceeds(A,B)),exceeds(X,B)):- Ex==Y, Y==A,!.
-reduce3(_In,Ex^(exceeds(A,B),exceeds(X,Y)),exceeds(X,B)):- Ex==Y, Y==A,!.
-reduce3(In,P,Q):- compound_name_arguments(P,F,A), \+ dont_reduce1(F),
-   maplist(reduce3(In),A,AA), 
+%reduce1(Ex^(ti(Type,Ex1),bE(is,Ex2,Inst)),Ex^(ti(Type,Inst)&Ex=Inst)):- Ex==Ex1, Ex1==Ex2,!.
+reduce1(Ex^(exceeds(Value1, Ex1) & exceeds(Value2, Ex2)),exceeds(Value2, Value1)):- Ex==Ex1, Ex1==Ex2,!.
+reduce1(Ex^(exceeds(Value1, Ex1), exceeds(Value2, Ex2)),exceeds(Value2, Value1)):- Ex==Ex1, Ex1==Ex2,!.
+reduce1(Ex^(exceeds(X,Y),exceeds(A,B)),exceeds(X,B)):- Ex==Y, Y==A,!.
+reduce1(Ex^(exceeds(A,B),exceeds(X,Y)),exceeds(X,B)):- Ex==Y, Y==A,!.
+reduce1(P,Q):- compound_name_arguments(P,F,A), \+ dont_reduce1(F),
+   maplist(reduce1,A,AA), 
    compound_name_arguments(Q,F,AA).
 
 reduceQ(P,P):- \+ compound(P),!.
@@ -691,7 +680,7 @@ reduceQ(P,Q):-
    \+ dont_reduce1(F),
    maplist(reduceQ,A,AA), 
    compound_name_arguments(Q,F,AA).
-
+   
 dont_reduce1(qualifiedBy).
 
 clausify_simplify80(QT,Plan):- 
@@ -707,7 +696,6 @@ simplify8d(C,(P:-RR)) :- !,
    unequalise(C,(P:-Q)),
    simplify80(Q,R,true),
    reduce1(R,RR).
-
 simplify80(C,C0,C1):-var(C),dmsg(var_simplify(C,C0,C1)),fail.
 simplify80(Q,R,R0):- must(simplify8d(Q,R,R0)).
 simplify8d(C,C,R):-var(C),!,R=C.

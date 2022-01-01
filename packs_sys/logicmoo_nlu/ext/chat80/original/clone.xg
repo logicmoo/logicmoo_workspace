@@ -20,30 +20,15 @@ xg_w2_len(1,[])---> !, []. %% missing puncts
 xg_w2_len(N,[W|L])---> [W], {N>1, M is N -1},!,xg_w2_len(M,L).
 
 
-span_s(S) ---> span_as_xg('SBAR',s80(S)).
-span_s(S) ---> span_as_xg('S',s80(S)).
-span_vp(S) ---> span_as_xg('VP',imperative80(S)).
+span_s(S) ---> span_as_xg('SBAR',s80,S).
+span_s(S) ---> span_as_xg('S',s80,S).
+span_vp(S) ---> span_as_xg('VP',imperative80,S).
 
-%span_as_xg(Type,P) --->  {\+ lctmp:in_sent804(Type+P)}, locally(lctmp:in_sent804(Type+P),span_call_xg(Type,P)).
-span_as_xg(Type, P, A, B, C, D) :-
-    KEY = Type %+P+A
-    ,
-    \+ lctmp:in_sent804(KEY),
-    locally(lctmp:in_sent804(KEY),span_call_xg(Type, P), A,B,C,D).
+span_as_xg(Type,P,S) --->  {\+ lctmp:in_sent804(Type+P)}, locally(lctmp:in_sent804(Type+P),span_call_xg(Type,P,S)).
 
-span_call_xg(Type,P) ---> span_as_1(Type,Words),{phraseXG(P,Words,[],[],[])}.
+span_call_xg(Type,P,S) ---> span_as_1(Type,Words),{call(P,S,Words,[],[],[])}.
 
-span_as_1(Type,[w(S,L)|Words], [w(S,L)|A], Rest, Type_X, Type_X) :-
-  member(loc(N),L),
-  findall(M,member(link(_, Type, r(Type, seg(N, M))),L),Ms),
-  sort(Ms,Sorted),reverse(Sorted,Rs),!,
-  member(M,Rs),!,
- % wdmsg(member(N-M,Rs)),
-  Len is M-N,% Len>0,
-  length(Words,Len),
-  append(Words,Rest,A).
-
-span_as_2(Type,[w(S,L)|Words], [w(S,L)|A], B, Type_X, Type_X) :-
+span_as_1(Type,[w(S,L)|Words], [w(S,L)|A], B, Type_X, Type_X) :-
   member(loc(N),L),
   select(link(_, Type, r(Type, seg(N, M))),L,L2),
   \+ member(link(_, Type, r(Type, seg(N, _))),L2),
@@ -52,8 +37,7 @@ span_as_2(Type,[w(S,L)|Words], [w(S,L)|A], B, Type_X, Type_X) :-
 
 
 
-
-sentence80(S) ---> {b_setval('$prev_w2s', []),b_setval('$prev_spans', [])},!,{retractall(t_l:was_sentence_level(_,_))}, sentence80e(S).
+sentence80(S) ---> {b_setval('$prev_w2s', []),b_setval('$prev_spans', [])},!, sentence80e(S).
 sentence80e(S) ---> sentence800(S).
 %sentence80e(S) ---> sentence800(S1)*->sentence801s(sentence80,S1,S).
 
@@ -63,11 +47,11 @@ q_sentence800(S) ---> startQuotesEnding(E),!,sentence801(S),E,!.
 
 \+ (XG) ---> (XG -> {fail} ; {true}).
 
+sentence801s(_,S1, S1, W, W, C, C) :- W==[], !.
 sentence801s(_,S1, \+ (S1)) ---> theText80(is),theText80(false).
 sentence801s(_,S1, (S1)) ---> theText80(is),theText80(true).
 sentence801s(P,S1,Out) ---> theText80(Means),{join_over_s(S1,Means,S2,Out)},!,call(P,S2).
 sentence801s(P,S1,(S1,S2)) --->  !,call(P,S2).
-sentence801s(_,S1, S1, W, W, C, C) :- W==[], !.
 
 
 join_over_s(S1,implies,S2,(S1=>S2)).
@@ -91,7 +75,7 @@ sentence803(S) ---> question80(S).
 sentence803(S) ---> imperative80(S).
 
 sentence804(decl(S)) ---> subj_decl(S).
-%sentence804(decl(S)) ---> pp_decl(S).
+sentence804(decl(S)) ---> pp_decl(S).
 
 subj_decl( ( s( Subj, verb(main+iv,exist,activeV,pres+fin,[],[]), [],[]))) ---> subj(Subj,_Agmt,_Type).
 
@@ -241,7 +225,7 @@ logical_s_word(r,c,whenever).
 logical_s_word(r,c,unless).
 
 logical_s_word(r,c,if).
-%logical_s_word(_,_,for).
+logical_s_word(_,_,for).
 logical_s_word(c,c,also).
 logical_s_word(c,c,eigther).
 logical_s_word(c,r,then).
@@ -271,8 +255,6 @@ logical_s_word2(r,c,[else,if]).
 
 % adp
 
-xg_optional(G) ---> G ; [].
-
 if_cond(If,S,Mask) ---> logical_word(If),!,s_vp_801(S,Mask).
 if_cond(true,S,Mask) ---> s_vp_801(S,Mask).
 
@@ -282,25 +264,8 @@ s80(P) --->  s80(P,_).
 s80(s(NP,verb(main+iv,E,[],activeV,_+fin,[],([])),[],[]),Mask) ---> 
    theText80(there),theText80_W2(_,L),{member(root(E),L),member(upos(verb),L)},verb_arg(np,NP,Mask).
 
-s80(PP,Mask) ---> 
- {gensym('frame_',VV)},
-  locally(t_l:current_vv(VV),s_vp_800(P,Mask)), %xg_optional(do_sentence_level),
-  {get_sentence_level_adverbs(VV,InfoL),
-   (((subst(P,frame(VV),InfoL,PP),P\==PP))->true;append_extra_props(P,[was_framed(VV)|InfoL],PP))}.
-
-
-append_extra_props(CmpI,ExtraProps,CmpO):-
-  compound_name_arguments(CmpI,F,Args),
-  append(Left,[Neg,O1,O2],Args), append(Left,[NegO,O1,O2],ArgsO),
-  add_extra_to_verb(Neg,ExtraProps,NegO),
-  compound_name_arguments(CmpO,F,ArgsO),!.
-
-add_extra_to_verb(CmpI,ExtraProps,CmpO):-
-  compound_name_arguments(CmpI,F,Args),
-  append(Left,[Neg],Args), append(Left,[NegO],ArgsO),
-  add_extra_to_neg(Neg,ExtraProps,NegO),
-  compound_name_arguments(CmpO,F,ArgsO),!.
-
+s80(P,Mask) ---> % {retractall(t_l:was_sentence_level(_))},
+ s_vp_800(P,Mask).
 
 s_vp_800(SO,Mask) ---> if_cond(IF,S,Mask), s_vp_800s(IF,S,SO,Mask).
 
@@ -347,11 +312,8 @@ s_vp_801(s(NP,Verb,[],[ arg(arg_pred,adj(true))]),_) --->  ace_var(AceVar), !,
 
 no_more_words ---> \+ [_].
 
-%just_vp(Subj,Agmt,Type,Verb,ARG,Mods,Mask) ---> span_as_xg('VP',just_vp0(Subj,Agmt,Type,Verb,ARG,Mods,Mask)).
-just_vp(Subj,Agmt,Type,Verb,ARG,Mods,Mask) ---> just_vp0(Subj,Agmt,Type,Verb,ARG,Mods,Mask).
-
 % did
-just_vp0(_Subj,Agmt,_Type,Verb,[ARG],_Mods,_Mask) ---> 
+just_vp(_Subj,Agmt,_Type,Verb,[ARG],_Mods,_Mask) ---> 
   theText80(W),
   {verb_aux_form_db(W,do,Pastfin,Agmt)},
   {if_search_expanded(5)},
@@ -359,19 +321,15 @@ just_vp0(_Subj,Agmt,_Type,Verb,[ARG],_Mods,_Mask) --->
     ARG = arg(dirO,np(Agmt,np_head(_Var2,generic,[],action),[]))},
     no_more_words.
 
-just_vp0(Subj,Agmt,Type,Verb,Args,Mods,Mask) --->
+just_vp(Subj,Agmt,Type,Verb,Args,Mods,Mask) --->
   just_vp_1(Subj,Agmt,Type0,Verb0,Args0,Mods0,Mask0),
   more_s_vp1(Subj,Agmt,Type0,Verb0,Args0,Mods0,Mask0,Type,Verb,Args,Mods,Mask).
-
-
-more_s_vp1(Subj,Agmt,Type,Verb,Args,Mods,Mask,
-                     Type,Verb,ArgsO,Mods,Mask) ---> 
-   theText80(and),
-   just_vp_1(Subj,Agmt,_Type1,Verb1,Args1,Mods1,Mask),   
-   {append(Args,cond(true-and,[s(Subj,Verb1,Args1,Mods1)]),ArgsO)}.
-
+/*
+more_s_vp1(Subj,Agmt,Type0,Verb0,Args0,Mods0,Mask0,
+                     Type,Verb,Args,Mods,Mask) ---> 
+   just_vp_1(Subj,Agmt,Type1,Verb1,Args1,Mods1,Mask1).
+*/
 more_s_vp1(_Subj,_Agmt,Type,Verb,Args,Mods,Mask,Type,Verb,Args,Mods,Mask) ---> noText_or_sl.
-
 just_vp_1(_Subj,Agmt,Type,Verb,Args,Mods,Mask) --->
    verb_with_rest(Verb,Agmt,Type,Voice),
    {is_empty_bits(Nil), is_s_all(SAll)},
@@ -384,7 +342,6 @@ no_new_obj ---> noText,!.
 no_new_obj ---> xg_peek(\+ subj(_,_,_)).
 
 
-/* Noun Phrase */
 subj(Subj,Agmt,Type) ---> subj0(Subj,Agmt,Type).
 
 subj0(there,_Agmt,_+aux(be,_)) ---> theText80(there).
@@ -396,63 +353,46 @@ subj0(Subj,Agmt,_) --->
 make_ace_var(AceVar,NP,Type):- 
   NP = np(3+sg,np_head(_Var,generic,[adj(ace_var(self,AceVar))],Type),[]).
 
-
+   /* Noun Phrase */
 % to buy a car
+% @TODO DMILES
+
 np_11(np(Agmt,nameOf(_Var,span_s(SO),[]),_Mods),Agmt,_Case,_IndefA,_Role,_Set,_Mask) 
   ---> theText80(to),!,
    imperative80(S),!,{s80lf(S,SO)}.
-np_11(_AgmtKernelModsO,_Agmt,_Case,_Def,_Role,_Set,_Mask) ---> theText80(W), {logical_o_word(W),!,fail}.
 
-% Standard NP
-np_11(AgmtKernelModsO,Agmt,Case,Def,Role,Set,Mask) ---> 
-  np_13(AgmtKernelModsO,Agmt,Case,Def,Role,Set,Mask).
-
-% CoreNLP grouped NP
-np_11(AgmtKernelModsO,Agmt,Case,Def,Role,Set,Mask) ---> 
- {if_search_expanded(3)},
- (span_as_xg('NP',np_12(AgmtKernelModsO,Agmt,Case,Def,Role,Set,Mask))*->{true}
-  % or loose NP
-  ;np_13(AgmtKernelModsO,_,_,_,_,_,_)).
-
-% ACEVAR
-np_11(NP,_Agmt,_Case,_IndefA,_Role,_Set,_Mask)
-  --->   ace_var(AceVar),!,{make_ace_var(AceVar,NP,thing)}.
-
-% action
-np_11(np(Agmt,nameOf(_Var,span_vp(SO),[]),_Mods),Agmt,_Case,_IndefA,_Role,_Set,_Mask) 
-  ---> {if_search_expanded(4)}, span_vp(S),{s80lf(S,SO)}.
-
-% sentence
-np_11(np(Agmt,nameOf(_Var,span_s(SO),[]),_Mods),Agmt,_Case,_IndefA,_Role,_Set,_Mask) 
-  ---> {if_search_expanded(3)}, span_s(S),{s80lf(S,SO)}.
-
-np_12(AgmtKernelModsO,Agmt,Case,Def,Role,Set,Mask) ---> 
-  (np_13(AgmtKernelModsO,Agmt,Case,Def,Role,Set,Mask)*->{true}
-   ;np_13(AgmtKernelModsO,Agmt,_,_,_,_,_)).
-
-np_13(AgmtKernelModsO,Agmt,Case,Def,Role,Set,Mask) --->
+np_11(AgmtKernelModsO,Agmt,Case,Def,Role,Set,Mask) --->
   locally(tlclone:np_in_case(Case),
     np0(AgmtKernelMods,Agmt,Case,Def,Role,Set,Mask)),
     extend_np(_,AgmtKernelMods,AgmtKernelModsO).
 
+np_11(NP,_Agmt,_Case,_IndefA,_Role,_Set,_Mask)
+  --->   ace_var(AceVar),!,{make_ace_var(AceVar,NP,thing), freeze(O, \+ ground(O))}.
+
+np_11(np(Agmt,nameOf(_Var,span_vp(SO),[]),_Mods),Agmt,_Case,_IndefA,_Role,_Set,_Mask) 
+  ---> {if_search_expanded(4)}, span_vp(S),{s80lf(S,SO)}.
+
+np_11(np(Agmt,nameOf(_Var,span_s(SO),[]),_Mods),Agmt,_Case,_IndefA,_Role,_Set,_Mask) 
+  ---> {if_search_expanded(3)}, span_s(S),{s80lf(S,SO)}.
+
 
 np0(AgmtKernelModsO,Agmt,Case,Def,Role,Set,Mask) 
  ---> np1(AgmtKernelModsO,Agmt,Case,Def,Role,Set,Mask).
-
-%np1(_AgmtKernelModsO,_Agmt,_Case,_Def,_Role,_Set,_Mask) ---> theText80(W), {logical_o_word(W),!,fail}.
 
 np1(np(Agmt,Pronoun,[]),Agmt,NPCase,defA,_,Set,Nil) --->
    {is_pp(Set)},
    pers_pron(Pronoun,Agmt,Case),
    {is_empty_bits(Nil), is_to_role_case(Case,decl,NPCase)}.
 
+
+np1(_AgmtKernelModsO,_Agmt,_Case,_Def,_Role,_Set,_Mask) ---> theText80(W), {logical_o_word(W),!,fail}.
 np1(np(Agmt,Kernel,Mods),Agmt,_Case,Def,Role,Set,Mask) --->
    {is_pp(Set)},
    np_head(_Var,Kernel,Agmt,Def+Type,PostMods,Mods),
    {is_np_all(NPAll)},
    np_compls(Type,Agmt,Role,PostMods,NPAll,Mask).
 
-% many of, one of, the 5 of 
+% many of, one of
 np1(part(Det,NP),3+Number,_,indefA,Role,Set,Mask) --->
    {is_pp(Set)},
    determiner(Det,Number,indefA), {Det\=generic},
@@ -601,8 +541,8 @@ np_objbody1((sent2(Type_X,S)),_Agmt,_) ---> xg_peek([_,_]),
 
 /* Determiners */
 
-determiner(Det,Number,Def) ---> quant_phrase(Det,Number,Def).
 determiner(Det,Number,Def) ---> det(Det,Number,Def).
+determiner(Det,Number,Def) ---> quant_phrase(Det,Number,Def).
 
 % Measure is Type_X
 quant_phrase(quantV(Op,Quant),Number,Def) --->
@@ -721,16 +661,16 @@ prep_arg_vp(vact(V,A,S)) ---> {if_search_expanded(4)},
       imperative_verb(_,_),
       s80(s(_,V,A,S)).
 
+xg_prep_phrase(_PPAlowed,prep_phrase(Prep,Arg),_Case,_Set,_Mask) --->
+   prep(Prep),
+   {is_prep_case(_NPCase)},
+   prep_arg_vp(Arg).
 
 xg_prep_phrase(_PPAlowed,prep_phrase(Prep,Arg),Case,Set,Mask) --->
    prep(Prep),
    {is_prep_case(NPCase)},
    np_11(Arg,_,NPCase,_,Case,Set,Mask).
 
-xg_prep_phrase(_PPAlowed,prep_phrase(Prep,Arg),_Case,_Set,_Mask) --->
-   prep(Prep),
-   {is_prep_case(_NPCase)},
-   prep_arg_vp(Arg).
 
 xg_prep_phrase(_PPAlowed,prep_phrase(Prep,Arg),_Case,_Set,_Mask) --->
    prep(Prep),noText_or_sl,
@@ -865,7 +805,7 @@ verb_with_rest(verb(Type,Root,Voice,Timefin,Aspect,Neg),Agmt,Type,Voice) --->
    {verb_type_lex(Root0,Type0)},
    neg_modal_opt(_Tense1,[],Type0,NegI),
    rest_verb(ExtraMods3,Role,Root0,Root,Voice,Aspect),
-   {  ignore(t_l:current_vv(VV)),append_mods([[frame(VV)],ExtraMods1,ExtraMods2,ExtraMods3],ExtraMods),
+   {append_mods([ExtraMods1,ExtraMods2,ExtraMods3],ExtraMods),
     must(add_extra_to_neg(NegI,ExtraMods,Neg)),
     verb_type_lex(Root,Type)}.
     
@@ -895,15 +835,15 @@ verb_m(waits) ---> theText80(waits).
 verb_m(M) ---> thePos80((aux;vb_;rbr;rbs),M).
 
 
-verb_form883(ExtraMods,RootVerb,Tense,Agmt,Role) ---> {unloop(maybe_verb_pre_mods,2)},
-   maybe_modal(_Tense1,[],ExtraMods1), !,
-   verb_form88(ExtraMods2,RootVerb,Tense,Agmt,Role),
-   {append_mods([ExtraMods1,/*info(Tense),*/ExtraMods2],ExtraMods)}.
-
 verb_form883(ExtraMods,RootVerb,Tense,_Agmt1,_Role) ---> % {fail},
    theText80(W),
    {verb_form_aux(W,RootVerb,Tense,_Agmt2)},
-   {append_mods([/*info(RootVerb),info(Tense)*/],ExtraMods)},!.
+   {append_mods([info(RootVerb),info(Tense)],ExtraMods)}.
+
+verb_form883(ExtraMods,RootVerb,Tense,Agmt,Role) ---> {unloop(maybe_verb_pre_mods,2)},
+   maybe_modal(_Tense1,[],ExtraMods1), !,
+   verb_form88(ExtraMods2,RootVerb,Tense,Agmt,Role),
+   {append_mods([ExtraMods1,info(Tense),ExtraMods2],ExtraMods)}.
 
 verb_form883(ExtraMods,RootVerbO,Tense,Agmt,_Role) ---> 
    real_verb_form(RootVerb,Tense,Agmt,ExtraMods0),
@@ -943,16 +883,17 @@ append_mods(A,B):- flatten([A],B),!.
 append_mods([], []).
 append_mods([L|Ls], As) :- (var(L)->L1=[];flatten([L],L1)),!, append(L1, Ws, As), append_mods(Ls, Ws).
 
+one_modal(_,not) ---> theText80(not), xg_peek(thePos80(vb_)).
 %one_modal(_Tense1,_MODAL1) ---> !,{fail}.
-one_modal(pres,not) ---> theText80(not), xg_peek(thePos80(vb_)).
+one_modal(_,not) ---> theText80(not), xg_peek(thePos80(vb_)).
 one_modal(_Tense1,_MODAL1) ---> {\+ if_search_expanded(2),!,fail}.
-one_modal(Tense,MODAL1) ---> theText80(W),{modal_verb_form_aux(W,MODAL1,Tense,_)}.
-one_modal(pres,Modal) ---> thePos80([pos(md),root(Modal)]).
+one_modal(_Tense1,MODAL1) ---> theText80(W),{modal_verb_form_aux(W,MODAL1,_Tense2,_)}.
+one_modal(_Tense1,Modal) ---> thePos80([pos(md),root(Modal)]).
 
 
-maybe_modal(TenseIO,In,[M+Tense|Out]) ---> one_modal(Tense,M),!,maybe_modal0(TenseIO,In,Out).
+maybe_modal(Tense,In,[M|Out]) ---> one_modal(Tense,M),!,maybe_modal0(Tense,In,Out).
 
-maybe_modal0(TenseIO,In,[M+Tense|Out]) ---> one_modal(Tense,M),!,maybe_modal0(TenseIO,In,Out).
+maybe_modal0(Tense,In,[M|Out]) ---> one_modal(Tense,M),!,maybe_modal0(Tense,In,Out).
 maybe_modal0(_,ExtraMods, ExtraMods) ---> [].
 
 rest_verb([Pastpart|ExtraMods],aux,aux(have,ExtraMods1),Root,Voice,[perf|Aspect]) ---> 
@@ -1060,7 +1001,6 @@ adverb(adv(Adv)) ---> theText80_W2(W,W2), {adv_lex_w2(W,W2,Adv)}, may_adverb(W).
 adverb(adj(Adj)) ---> {if_search_expanded(3)},theText80_W2(W,W2), {adj_lex_w2(W,W2,Adj,_Type)}.
 adverb(adv(W)) ---> theText80(W), {adverb_lex(W)}, may_adverb(W).
 adverb(adv(t(A,B,C))) ---> theText80(W), {modal_verb_form_aux(W,A,B,C)}, may_adverb(W).
-adverb((W)) ---> sentence_level0(W).
 
 may_adverb(W)---> {\+ logical_s_word(W),\+ logical_o_word(W)}.
 may_adverb(_)---> xg_peek( \+ [_]).

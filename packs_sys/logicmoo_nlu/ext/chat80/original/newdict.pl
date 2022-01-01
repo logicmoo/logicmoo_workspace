@@ -177,6 +177,7 @@ prep_db(chat80,on).
 prep_db(chat80,through).
 prep_db(chat80,to).
 prep_db(chat80,with).
+prep_db(chat80,using).
 
 prep_db(talkdb,X):- talkdb:talk_db(preposition, X), X\==a.
 
@@ -250,6 +251,9 @@ ctx_pron_lex(agent_of,agent,who).
 ctx_pron_lex(cp(by,how),manner,how).
 
 % prepositions of time, place, movement, manner, agent, measure, source and possession.
+
+how_many_lex([how,many]).
+
 
 show_tries_except(_Which,_TF,_G):- \+ tracing,!.
 show_tries_except(Which,TF,G):- !, forall((available_lexicon(_,Other),Other\==Which,get_lex_call(Other,G,CALL),clause(CALL,_)),warn_when(TF,CALL)).
@@ -473,7 +477,6 @@ match_pos_c(Pos,L):- expands_pos(L,PosB),L\==PosB,match_pos_c(Pos,PosB).
 %adj_db(chat80,american,restr).
 %adj_db(chat80,asian,restr).
 %adj_db(chat80,european,restr).
-
 
 adj_db(chat80,big,quantA).
 adj_db(chat80,great,quantA).

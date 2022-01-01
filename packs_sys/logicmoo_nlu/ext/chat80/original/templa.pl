@@ -47,11 +47,8 @@ thing_LF(OceanOrSea,Path,X,ti(OceanOrSea,X),Nil,Any):-  ti_subclass(OceanOrSea,S
 thing_LF(City,Spatial& Feat& City,X,ti(City,X),[],_):- concrete_type(City), feat(Feat), spatial(Spatial),like_type(geo,city,City).
 thing_LF(Seamass,Spatial&Geo& /*_Neo&*/ Seamass,X,ti(Seamass,X),[],_):- concrete_type(Seamass), spatial(Spatial),like_type(Geo,seamass,Seamass).
 
-thing_LF_access(Continent,_,X,ti(Continent,X),[],_):- var(Continent),!,fail.
-
 thing_LF_access(Continent,Spatial&Geo& /*_Neo&*/ Continent,X,ti(Continent,X),[],_):- concrete_type(Continent), like_type(Geo,continent,Continent), spatial(Spatial).
 
-name_template_lf0(X,_) :- var(X),!,fail.
 name_template_lf0(X,Spatial& Feat& City) :-like_type(geo,city,City), ti(City,X),feat(Feat), spatial(Spatial).
 name_template_lf0(X,Spatial& Feat& Circle_of_latitude) :- like_type(geo,circle_of_latitude,Circle_of_latitude), feat(Feat), ti(Circle_of_latitude,X), spatial(Spatial).
 
@@ -62,7 +59,7 @@ name_template_lf0(X,Spatial&Geo& /*_Neo&*/ Continent) :- like_type(Geo,continent
 %like_type(geo,River,River):- bind_pos('type',River).
 
 
-thing_LF(River,_,X,ti(River,X),[],_):- var(River),!.
+
 thing_LF(River,Spatial& Feat& River,X,ti(River,X),[],_):- feat(Feat),like_type(geo,river,River),spatial(Spatial).
 thing_LF(Type,Spatial& Feat & Type,X,ti(Type,X),[],_):- feat(Feat),bind_pos('type',Type),spatial(Spatial).
 thing_LF(Types,Spatial& Feat & Type,X,ti(Type,X),[],_):- feat(Feat),bind_pos('type',Type,'s',Types),spatial(Spatial).
@@ -84,7 +81,7 @@ unique_of_obj(geo,thing,Country,Govern,Capital,City,Capital_city,Nation_Capital)
 
 
   
-attribute_LF(Var,_,_,_,_,_):- var(Var),!,fail.
+
 attribute_LF(populous,Spatial&_,X,value&units&population/*citizens*/,Y,count_pred(Spatial,population/*citizens*/,Y,X)).
 
 attribute_LF(large,Spatial&_,X,value&size&Area,Y,measure_pred(Spatial,Area,X,Y)):- spatial(Spatial), type_measure_pred(_,size,Area,_).
@@ -150,19 +147,6 @@ property_LF(Capital,Spatial& Feat& City,X,Spatial&Geo& /*_Neo&*/ Country,Y,speci
    feat(Feat), assertion(nonvar(Capital)),
    unique_of_obj(Geo,Spatial,Country,_Govern,Capital,City,_Capital_city,Nation_capital).
 
-
-property_LF(City,Spatial&Feat&City,X,Spatial&_Geo&Country,Y,
-  (ti(City,X),nop(property_LF(City,of,Country)),
-   generic_pred(VV,Spatial,prep(of),X,Y)),[],_,_):- if_search_expanded(2),t_l:current_vv(VV),
- %City \== total, City \== area, 
- %City \== sea, City \== country, City \== continent,
-%   fail,
-   concrete_type(City),
-   feat(Feat), assertion(nonvar(City)).
-
-
-
-property_LF_1(Area,     _,    _X, _,_Y, _P,[],_,_):- var(Area),!,fail.
 property_LF_1(City,Spatial&Feat&City,X,Spatial&_Geo&Country,Y,
   (ti(City,X),nop(property_LF(City,of,Country)),
    generic_pred(VV,Spatial,prep(of),X,Y)),[],_,_):- if_search_expanded(2),t_l:current_vv(VV),
@@ -171,7 +155,6 @@ property_LF_1(City,Spatial&Feat&City,X,Spatial&_Geo&Country,Y,
 %   fail,
    concrete_type(City),
    feat(Feat), assertion(nonvar(City)).
-
 
 trans_LF(    Govern,Spatial& Feat& City,X,Spatial&Geo& /*_Neo&*/ Country,Y,specific_pred(Spatial,Nation_capital,Y,X),[],_,_):-
   feat(Feat), assertion(nonvar(Govern)),
@@ -192,9 +175,7 @@ thing_LF_access_1(Capital,Spatial& Feat& _City,X,ti(Capital,X),[],_):-
 thing_LF(River,Spatial& Feat& River,X,ti(River,X),[],_):- 
   feat(Feat), concrete_type(River), spatial(Spatial).
 */
-
-property_LF(Area,     _,    _X, _,_Y, _P,[],_,_):- var(Area),!,fail.
-
+  
 property_LF(Area,     value&size&Area,    X,Spatial&_,Y,  measure_pred(Spatial,Area,Y,X),[],_,_):- spatial(Spatial), type_measure_pred(_,size,Area,_).
 property_LF(Latitude, value&position&XY,X,Spatial&_,Y, position_pred(Spatial,Latitude,Y,X),[],_,_):- type_measure_pred(_Region,position(XY),Latitude,_).
 %property_LF(Longitude,value&position&x,X,Spatial&_,Y, position_pred(Spatial,Longitude,Y,X),[],_,_):- type_measure_pred(_Region,position(x),Longitude,_).

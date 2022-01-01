@@ -88,13 +88,10 @@ i_sentence2(imp(U,Ve,s(_,Verb,VArgs,VMods)),imp80(U,Ve,V,Args)) :-
    must80(i_verb_args(RefVar,VArgs,[],[],Slots0,Slots,Args,Args0,Up,-0)),
    append(Up,VMods,Mods),
    must80(i_verb_mods(RefVar,Mods,_,[],Slots,Args0,Up,+0)),!.
-
 i_sentence2(imp(U,Ve,S),imp80(U,Ve,P)) :-  i_s(S,P).
 
 
 i_s(s(Subj,Verb,VArgs,VMods),P):- must80(i_s(s(Subj,Verb,VArgs,VMods),P,[],0)),!.
-i_s(s(Subj,Verb,VArgs,VMods),PP):- must80(i_s(s(Subj,Verb,VArgs,[]),P,[],0)),!,
-  maybe_modalize(scope,VMods,P,PP).
 
 i_s_must(S,P):- i_s(S,P),!.
 i_s_must(s(Subj,Verb,VArgs,VMods),P):- P = failed((s(Subj,Verb,VArgs,VMods))).
@@ -377,8 +374,8 @@ i_s(s(Subj,verb(Mainiv,be,[],Active,Fin+fin,[],Neg),VArgs,VMods),Pred,Up,Id) :- 
    i_s(s(Subj,verb(Mainiv,exist,[],Active,Fin+fin,[],Neg),VArgs,VMods),Pred,Up,Id).
 
 i_s(s(Subj,Verb,VArgs,VMods),Pred,Up,Id) :-
-  (subc_member(was_framed(VV),s(VMods,VArgs,Verb,Subj));gensym('frame_',VV)),
-  locally(t_l:current_vv(VV),
+  gensym('frame_',X),
+  locally(t_l:current_vv(X),
    i_s_0(s(Subj,Verb,VArgs,VMods),Pred,Up,Id)).
 
 i_s_0(s(Subj,Verb,VArgs,VMods),Pred,Up,Id) :-
