@@ -150,6 +150,18 @@ property_LF(Capital,Spatial& Feat& City,X,Spatial&Geo& /*_Neo&*/ Country,Y,speci
    feat(Feat), assertion(nonvar(Capital)),
    unique_of_obj(Geo,Spatial,Country,_Govern,Capital,City,_Capital_city,Nation_capital).
 
+
+property_LF(City,Spatial&Feat&City,X,Spatial&_Geo&Country,Y,
+  (ti(City,X),nop(property_LF(City,of,Country)),
+   generic_pred(VV,Spatial,prep(of),X,Y)),[],_,_):- if_search_expanded(2),t_l:current_vv(VV),
+ %City \== total, City \== area, 
+ %City \== sea, City \== country, City \== continent,
+%   fail,
+   concrete_type(City),
+   feat(Feat), assertion(nonvar(City)).
+
+
+
 property_LF_1(Area,     _,    _X, _,_Y, _P,[],_,_):- var(Area),!,fail.
 property_LF_1(City,Spatial&Feat&City,X,Spatial&_Geo&Country,Y,
   (ti(City,X),nop(property_LF(City,of,Country)),
@@ -159,6 +171,7 @@ property_LF_1(City,Spatial&Feat&City,X,Spatial&_Geo&Country,Y,
 %   fail,
    concrete_type(City),
    feat(Feat), assertion(nonvar(City)).
+
 
 trans_LF(    Govern,Spatial& Feat& City,X,Spatial&Geo& /*_Neo&*/ Country,Y,specific_pred(Spatial,Nation_capital,Y,X),[],_,_):-
   feat(Feat), assertion(nonvar(Govern)),

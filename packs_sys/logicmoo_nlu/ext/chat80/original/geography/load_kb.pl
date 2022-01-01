@@ -368,7 +368,7 @@ chat80_all("What are the continents no country in which contains more than two c
 chat80_all("Does the population of china exceed the population of india ?",[true],_00).
 chat80_all("Which country bordering the mediterranean borders a country that is bordered by a country whose population exceeds the population of india ?",[turkey],1900).
 chat80_all("What are the continents containing a country in which contains more than two cities whose population exceeds 1 million ?",[america,asia,europe],211).
-chat80_all("What are the rivers of the countries that are bordering the baltic that flow?",[amu_darya,amur,danube,don,elbe,lena,ob,oder,rhine,vistula,volga,yenisei],_).
+chat80_all("What are the rivers of the countries that are bordering the baltic that flow?",[[east_germany]:[elbe],[poland]:[oder,vistula],[soviet_union]:[amu_darya,amur,don,lena,ob,volga,yenisei],[west_germany]:[danube,elbe,rhine]],_).
 chat80_all("What are the capitals of the countries that are bordering the baltic that have a population exceeding 1 thousand?",[[east_germany]:[berlin],[poland]:[warsaw],[soviet_union]:[moscow]],_).
 
 baltic_rivers(_):-!.
