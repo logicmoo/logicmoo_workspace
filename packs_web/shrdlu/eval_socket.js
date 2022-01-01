@@ -127,6 +127,7 @@ var MAX_RECONNECT_DELAY = 30000;
 
 
 	JSCtrl.prototype.connect = function() {
+               if (true) return;
 
 		try {
 			//this.url = "wss://echo.websocket.org";
