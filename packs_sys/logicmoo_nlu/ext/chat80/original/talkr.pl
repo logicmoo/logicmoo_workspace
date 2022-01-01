@@ -388,7 +388,7 @@ database801(can(X)):- database80(X).
 database801(will(X)):- database80(X).
 database801(past(X)):- database80(X).
 database801(not(X)):-  \+ database80(X).
-database801(there(X)):- database80(X).
+%database801(there(X)):- database80(X).
 
 %database80(path_pred(begins(Flow),rises,river,X,Y)) :- path_pred(begins(Flow),rises,river,X,Y).
 %database80(path_pred(ends(Flow),drains,river,X,Y)) :- path_pred(ends(Flow),drains,river,X,Y).

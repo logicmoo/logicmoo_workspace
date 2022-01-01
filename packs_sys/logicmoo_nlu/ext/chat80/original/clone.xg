@@ -347,8 +347,11 @@ s_vp_801(s(NP,Verb,[],[ arg(arg_pred,adj(true))]),_) --->  ace_var(AceVar), !,
 
 no_more_words ---> \+ [_].
 
+%just_vp(Subj,Agmt,Type,Verb,ARG,Mods,Mask) ---> span_as_xg('VP',just_vp0(Subj,Agmt,Type,Verb,ARG,Mods,Mask)).
+just_vp(Subj,Agmt,Type,Verb,ARG,Mods,Mask) ---> just_vp0(Subj,Agmt,Type,Verb,ARG,Mods,Mask).
+
 % did
-just_vp(_Subj,Agmt,_Type,Verb,[ARG],_Mods,_Mask) ---> 
+just_vp0(_Subj,Agmt,_Type,Verb,[ARG],_Mods,_Mask) ---> 
   theText80(W),
   {verb_aux_form_db(W,do,Pastfin,Agmt)},
   {if_search_expanded(5)},
@@ -356,15 +359,19 @@ just_vp(_Subj,Agmt,_Type,Verb,[ARG],_Mods,_Mask) --->
     ARG = arg(dirO,np(Agmt,np_head(_Var2,generic,[],action),[]))},
     no_more_words.
 
-just_vp(Subj,Agmt,Type,Verb,Args,Mods,Mask) --->
+just_vp0(Subj,Agmt,Type,Verb,Args,Mods,Mask) --->
   just_vp_1(Subj,Agmt,Type0,Verb0,Args0,Mods0,Mask0),
   more_s_vp1(Subj,Agmt,Type0,Verb0,Args0,Mods0,Mask0,Type,Verb,Args,Mods,Mask).
-/*
-more_s_vp1(Subj,Agmt,Type0,Verb0,Args0,Mods0,Mask0,
-                     Type,Verb,Args,Mods,Mask) ---> 
-   just_vp_1(Subj,Agmt,Type1,Verb1,Args1,Mods1,Mask1).
-*/
+
+
+more_s_vp1(Subj,Agmt,Type,Verb,Args,Mods,Mask,
+                     Type,Verb,ArgsO,Mods,Mask) ---> 
+   theText80(and),
+   just_vp_1(Subj,Agmt,_Type1,Verb1,Args1,Mods1,Mask),   
+   {append(Args,cond(true-and,[s(Subj,Verb1,Args1,Mods1)]),ArgsO)}.
+
 more_s_vp1(_Subj,_Agmt,Type,Verb,Args,Mods,Mask,Type,Verb,Args,Mods,Mask) ---> noText_or_sl.
+
 just_vp_1(_Subj,Agmt,Type,Verb,Args,Mods,Mask) --->
    verb_with_rest(Verb,Agmt,Type,Voice),
    {is_empty_bits(Nil), is_s_all(SAll)},
