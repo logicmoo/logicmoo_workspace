@@ -374,8 +374,8 @@ i_s(s(Subj,verb(Mainiv,be,[],Active,Fin+fin,[],Neg),VArgs,VMods),Pred,Up,Id) :- 
    i_s(s(Subj,verb(Mainiv,exist,[],Active,Fin+fin,[],Neg),VArgs,VMods),Pred,Up,Id).
 
 i_s(s(Subj,Verb,VArgs,VMods),Pred,Up,Id) :-
-  gensym('frame_',X),
-  locally(t_l:current_vv(X),
+  (subc_member(was_framed(VV),s(VMods,VArgs,Verb,Subj));gensym('frame_',VV)),
+  locally(t_l:current_vv(VV),
    i_s_0(s(Subj,Verb,VArgs,VMods),Pred,Up,Id)).
 
 i_s_0(s(Subj,Verb,VArgs,VMods),Pred,Up,Id) :-

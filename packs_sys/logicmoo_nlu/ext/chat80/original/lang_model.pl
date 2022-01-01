@@ -678,7 +678,7 @@ c2(B,O):-
 
 c8_test(B,O):-
   any_to_str(B,SS),
-  c88(SS,Query),!,
+  c8(SS,Query),!,
   results80(Query,O),!.
 
 
