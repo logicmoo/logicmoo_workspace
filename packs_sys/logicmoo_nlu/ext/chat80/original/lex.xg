@@ -86,7 +86,7 @@ do_sentence_level0 --->
   {foc_current_vv(VV), %unloop(maybe_do_pull_sentence_level),
    (t_l:was_sentence_level(VV,W) -> true ; (assert(t_l:was_sentence_level(VV,W),R),
     %writeln(W),
-    undo(ignore(catch(erase(R),_,true)))))},!,
+    nop(undo(ignore(catch(erase(R),_,true))))))},!,
   maybeComma.
   %do_sentence_level.
 %do_sentence_level ---> [].
@@ -103,6 +103,9 @@ sentence_level(adv('meaning_of'([with,luck]))) ---> theTextL80([with,luck]),!.
 sentence_level(adv(timeOffset(In,I,day))) ---> prep(In),number(I,_),thePos80(root(day)),!.
 sentence_level(adv(timeOffset(Dir,I,day))) ---> number(I,_),thePos80(root(day)),offsetDir(Dir),!.
 sentence_level(adv(W)) ---> thePos80(ner('DATE'),W),!.
+sentence_level(adv(meaningFn(W))) ---> span_as_xg('ADVP',theText_rest(W)).
+sentence_level(adv(meaningFn(W))) ---> span_as_xg('NP-TMP',theText_rest(W)).
+
 sentence_level(adv(W)) ---> theText80(W),!,{is_sent_adverb(W)},!.
 sentence_level(adv('meaning_of'(Prep,Arg))) ---> {fail},
    prep(Prep), !, (np_head0(Arg,_Agmt,_Case);s80(Arg)).
@@ -197,6 +200,9 @@ theText_ol([W1]) ---> theText80(W1).
 theText_cl([]) ---> !,[].
 theText_cl([W1|WL]) ---> theText80(W1),!,theText_cl(WL).
 
+theText_rest([W1|WL]) ---> theText80_Text(W1),!,theText_rest(WL).
+theText_rest([]) ---> !,[].
+
 % normal single quotes
 singleQuotes ---> theText80(''''), \+ xg_peek(theText80_Text("s")).
 % stylistic single quotes
@@ -208,10 +214,10 @@ doubleQuotes ---> theText80('"').
 startDoubleQuotes ---> theText80('``').
 endDoubleQuotes ---> theText80('''''').
 
-w2_txt_until(   [],G) ---> G,!.
-w2_txt_until([H|T],G) ---> theText80_Text(H), w2_txt_until(T,G).
+w2_txt_until(G,  []) ---> G,!.
+w2_txt_until(G, [H|T]) ---> theText80_Text(H), w2_txt_until(G,T).
 
-w2_quoted(List)---> startQuotesEnding(End), w2_txt_until(List,End).
+w2_quoted(List)---> startQuotesEnding(End), w2_txt_until(End,List).
 
 startQuotesEnding(Ending)---> theText80(','), !, startQuotesEnding(Ending).
 startQuotesEnding(endSingleQuotes)--->startSingleQuotes,!.

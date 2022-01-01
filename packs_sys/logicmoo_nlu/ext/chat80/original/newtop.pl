@@ -679,40 +679,45 @@ clausify_simplify80(QT,Plan):-
   should_learn(Plan),!.
 
 simplify80(C,C0):-var(C),dmsg(var_simplify(C,C0)),!,C=C0.
-simplify80(C,(P:-RR)) :- !,
+simplify80(C,C0):- must80(simplify8d(C,C0)),!.
+simplify80(P,Q):-reduce1(P,Q).
+
+simplify8d(C,(P:-RR)) :- !,
    unequalise(C,(P:-Q)),
    simplify80(Q,R,true),
    reduce1(R,RR).
-simplify80(C,C0,C1):-var(C),dmsg(var_simplify(C,C0,C1)),fail.
-simplify80(C,C,R):-var(C),!,R=C.
 
-simplify80(setOf(X,P0,S),R,R0) :- !,
+simplify80(C,C0,C1):-var(C),dmsg(var_simplify(C,C0,C1)),fail.
+simplify80(Q,R,R0):- must(simplify8d(Q,R,R0)).
+simplify8d(C,C,R):-var(C),!,R=C.
+
+simplify8d(setOf(X,P0,S),R,R0) :- !,
    simplify80(P0,P,true),
    revand(R0,setOf(X,P,S),R).
 
-simplify80(P,R,R0):-
+simplify8d(P,R,R0):-
   reduce1(P,Q)-> P\==Q, !,
   simplify80(Q,R,R0).
-simplify80(R,P,R0):-
+simplify8d(R,P,R0):-
   reduce1(P,Q)-> P\==Q, !,
   simplify80(R,Q,R0).
 
-simplify80((P,Q),R,R0) :-
+simplify8d((P,Q),R,R0) :-
    simplify80(Q,R1,R0),
    simplify80(P,R,R1).
-simplify80(true,R,R) :- !.
-simplify80(X^P0,R,R0) :- !,
+simplify8d(true,R,R) :- !.
+simplify8d(X^P0,R,R0) :- !,
    simplify80(P0,P,true),
    revand(R0,X^P,R).
-simplify80(numberof(X,P0,Y),R,R0) :- !,
+simplify8d(numberof(X,P0,Y),R,R0) :- !,
    simplify80(P0,P,true),
    revand(R0,numberof(X,P,Y),R).
 
-simplify80(\+P0,R,R0) :- !,
+simplify8d(\+P0,R,R0) :- !,
    simplify80(P0,P1,true),
    simplify_not(P1,P),
    revand(R0,P,R),!.
-simplify80(P,R,R0) :-
+simplify8d(P,R,R0) :-
    revand(R0,P,R),!.
 
 simplify_not(P,\+P):- var(P),!.
@@ -833,7 +838,7 @@ Var =: Val :-
    recorded(Var,val(Val),_).
 
 
-get_sentence_level_adverbs(FN,InfoL):- findall(Info,t_l:was_sentence_level(FN,Info),InfoL).
+get_sentence_level_adverbs(FN,[framed_from(FN)|InfoL]):- findall(Info,t_l:was_sentence_level(FN,Info),InfoL).
 
 maybe_modalize(slot,_,P,P):-!.
 maybe_modalize(Scope,PN,P,PP):-  maybe_modalize0(_Obj,Scope,P,PN,P,PP),!.
@@ -857,6 +862,9 @@ maybe_modalize0(_Obj,_Scope,O,V,P,P):- var(V),!,not_true_or_qtrue(O).
 maybe_modalize0(Obj,Scope,O, V,P,PP):- var(P),!,maybe_modalize1(Obj,Scope,O, V,call(P),PP).
 
 maybe_modalize0(Obj,Scope,O, V,(ti(T,I),P),(ti(T,I),PP)):- !, maybe_modalize1(Obj,Scope,O, V,P,PP).
+
+
+maybe_modalize0(Obj,Scope,O, V,pred(X,I,P,L),pred(X,I,PP,L)):- !, maybe_modalize1(Obj,Scope,O, V,P,PP).
 
 maybe_modalize0(Obj,Scope,O, V,numberof(X,P,L),numberof(X,PP,L)):- !, maybe_modalize1(Obj,Scope,O, V,P,PP).
 maybe_modalize0(Obj,Scope,O, V,numberOf(X,P,L),numberOf(X,PP,L)):- !, maybe_modalize1(Obj,Scope,O, V,P,PP).
@@ -917,6 +925,9 @@ maybe_modalize0(Obj,Scope,O, negP(X),P,PP):-!, maybe_modalize0(Obj,Scope,O,[negP
 %maybe_modalize0(Obj,_Scope,O,Modal, P, PP):- not_true_or_qtrue(O), atom(Modal),!,PP=..[Modal,P].
 maybe_modalize0(_Obj,_Scope,_,M,P,modalized(M,P)).
 
+
+skip_modalizing(framed_from(_)).
+skip_modalizing(was_framed(_)).
 skip_modalizing(info(_)).
 skip_modalizing(tv). skip_modalizing(tv). skip_modalizing(dv(_)).
 skip_modalizing(activeV). skip_modalizing(passiveV).

@@ -625,8 +625,9 @@ acetext_to_text80(List,Each):- is_list(List),maplist(atom,List),!,member(Each,Li
 acetext_to_text80(List,Out):- is_list(List),member(E,List),acetext_to_text80(E,Out).
 
 
-sentence80(U,E):- (no_repeats(E,sentence80(E,U,[],[],[])),i_sentence(E,_))*->true
-                  ;no_repeats(E,sentence80(E,U,[],[],[])).
+sentence8d(U,E):- no_repeats(E,sentence80(E,U,[],[],[])).                  
+sentence80(U,E):- ((sentence8d(U,E),i_sentence(E,_))*->true
+                  ;sentence8d(U,E)).
 
 try_chat_80(S,G):- try_chat_80(green,S,G).
 try_chat_80(C,S,G):- ignore((G=..[F,Tree,QT],!,should_learn(Tree),try_chat_80(60,C,S,F,Tree,QT))).
@@ -698,27 +699,31 @@ c80:- test_c80.
 c8:- s82(c8).
 c8(S):- c8_make, c8(S,_).
 c8(SS,O):- break_apart(c8_A,SS,O),!.
-c8_A(SS,O):- atom_length(SS,L),L<3,!,O= true.
-c8_A(SS,O):-
+c8_A(B,OO):-
+ any_to_str(B,SS),
  S = c8(SS),
-  locally(set_prolog_flag(gc,true),
- ((
- notrace((try_chat_80(S,text_to_corenlp_tree(SS,_)),
- try_chat_80(S,into_lexical_segs(SS,Lex)))),
- maybe_restate_s(S),
- try_chat_80(S,sentence80(Lex,Tree)),
- should_learn(Tree), 
- i_sentence(Tree,QT), should_learn(QT),
- ansicall(hfg(cyan),in_cmt(print_tree_nl(i_sentence=QT))),
- try_chat_80(S,clausify80(QT,UE)),  
- should_learn(UE),!, 
+ locally(set_prolog_flag(gc,true),
+((
+ try_chat_80(white,S,into_lexical_segs(SS,Lex)),
+ try_chat_80(white,S,text_to_corenlp_tree(SS,_)),
+ ignore((
+ try_chat_80(200,green,S,sentence80(Lex,Tree)),
+ %ansicall(hfg(cyan),in_cmt(print_tree_nl(sentence80=Tree))),
+ try_chat_80(S,i_sentence(Tree,QT)),
+ try_chat_80(S,clausify80(QT,UE)),
+ should_learn(UE),
+ RTL = 1.43,
  try_chat_80(S,simplify80(UE,Query)),
- try_chat_80(S,results80(Query,_Answer)),
- ignore((\+ should_learn(Query),add_c80(c8,SS))),
- member(O,[Query,UE,QT,Tree,SS]),
+ try_chat_80(RTL,magenta,S,results80(Query,_Answer)),
+ try_chat_80(S,compile80(Query,Prolog)),
+ try_chat_80(RTL,magenta,S,capture80(Prolog,_)))),
+ member(O,[Query,QT,Tree,(?- S)]),
+ ignore((\+ should_learn(O),add_c80(c80,SS))), 
  should_learn(O),
- copy_term(O,OO),
- nop(try_chat_80(S,into_cg(OO,_)))))),!.
+ nop(ignore(into_cg(O,CG))),
+ ignore((member(OO,[CG,O]),
+ should_learn(OO)))))).
+
 
  
 s8:- s82(s8).
@@ -730,17 +735,15 @@ s8_A(SS,O):-
  S = s8(SS),
   locally(set_prolog_flag(gc,true),
  ((
- notrace((
- try_chat_80(S,text_to_corenlp_tree(SS,_)),
- into_lexical_segs(SS,Lex))),
+ notrace((try_chat_80(S,into_lexical_segs(SS,Lex)),try_chat_80(S,text_to_corenlp_tree(SS,_)))),
  %wdmsg(Lex),
- maybe_restate_s(S),
- try_chat_80(S,sentence80(Lex,Tree)),
+ %maybe_restate_s(S),
+ try_chat_80(S,sentence8d(Lex,Tree)),
  %should_learn(Tree),
  %try_chat_80(S,i_sentence(Tree,QT)),
  %should_learn(QT),
  %try_chat_80(S,clausify80(QT,UE)),
- O=Tree))),!.
+ O=Tree))).
 
 
 into_cg(CLIF,CG):-cgp_common_logic:convert_clif_to_cg(CLIF,CG),!.
@@ -768,12 +771,12 @@ c88_A(B,OO):-
  %ansicall(hfg(cyan),in_cmt(print_tree_nl(sentence80=Tree))),
  try_chat_80(S,i_sentence(Tree,QT)),
  try_chat_80(S,clausify80(QT,UE)),
- should_learn(UE))),
+ should_learn(UE),
  RTL = 1.43,
  try_chat_80(S,simplify80(UE,Query)),
  try_chat_80(RTL,magenta,S,results80(Query,_Answer)),
  try_chat_80(S,compile80(Query,Prolog)),
- try_chat_80(RTL,magenta,S,capture80(Prolog,_)),
+ try_chat_80(RTL,magenta,S,capture80(Prolog,_)))),
  member(O,[Query,UE,FOL,CLIF,Ace,QT,Tree,(?- S)]),
  ignore((\+ should_learn(O),add_c80(c80,SS))), 
  should_learn(O),
