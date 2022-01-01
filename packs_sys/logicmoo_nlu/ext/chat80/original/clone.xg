@@ -400,6 +400,14 @@ np_11(AgmtKernelModsO,Agmt,Case,Def,Role,Set,Mask) --->
   %\+ {if_search_expanded(3)},!,
   np_13(AgmtKernelModsO,Agmt,Case,Def,Role,Set,Mask).
 
+np_11(AgmtKernelModsO,Agmt,Case,Def,Role,Set,Mask) ---> 
+ (span_as_xg('NP',np_12(AgmtKernelModsO,Agmt,Case,Def,Role,Set,Mask))*->{true}
+  ;np_12(AgmtKernelModsO,Agmt,Case,Def,Role,Set,Mask)).
+
+np_12(AgmtKernelModsO,Agmt,Case,Def,Role,Set,Mask) ---> 
+  (np_13(AgmtKernelModsO,Agmt,Case,Def,Role,Set,Mask)*->{true}
+   ;np_13(AgmtKernelModsO,Agmt,_,_,_,_,_)).
+
 np_13(AgmtKernelModsO,Agmt,Case,Def,Role,Set,Mask) --->
   locally(tlclone:np_in_case(Case),
     np0(AgmtKernelMods,Agmt,Case,Def,Role,Set,Mask)),
