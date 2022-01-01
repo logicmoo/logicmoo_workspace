@@ -396,13 +396,28 @@ np_11(np(Agmt,nameOf(_Var,span_s(SO),[]),_Mods),Agmt,_Case,_IndefA,_Role,_Set,_M
    imperative80(S),!,{s80lf(S,SO)}.
 np_11(_AgmtKernelModsO,_Agmt,_Case,_Def,_Role,_Set,_Mask) ---> theText80(W), {logical_o_word(W),!,fail}.
 
+% Standard NP
 np_11(AgmtKernelModsO,Agmt,Case,Def,Role,Set,Mask) ---> 
-  %\+ {if_search_expanded(3)},!,
   np_13(AgmtKernelModsO,Agmt,Case,Def,Role,Set,Mask).
 
+% CoreNLP grouped NP
 np_11(AgmtKernelModsO,Agmt,Case,Def,Role,Set,Mask) ---> 
+ {if_search_expanded(3)},
  (span_as_xg('NP',np_12(AgmtKernelModsO,Agmt,Case,Def,Role,Set,Mask))*->{true}
-  ;np_12(AgmtKernelModsO,Agmt,Case,Def,Role,Set,Mask)).
+  % or loose NP
+  ;np_13(AgmtKernelModsO,_,_,_,_,_,_)).
+
+% ACEVAR
+np_11(NP,_Agmt,_Case,_IndefA,_Role,_Set,_Mask)
+  --->   ace_var(AceVar),!,{make_ace_var(AceVar,NP,thing)}.
+
+% action
+np_11(np(Agmt,nameOf(_Var,span_vp(SO),[]),_Mods),Agmt,_Case,_IndefA,_Role,_Set,_Mask) 
+  ---> {if_search_expanded(4)}, span_vp(S),{s80lf(S,SO)}.
+
+% sentence
+np_11(np(Agmt,nameOf(_Var,span_s(SO),[]),_Mods),Agmt,_Case,_IndefA,_Role,_Set,_Mask) 
+  ---> {if_search_expanded(3)}, span_s(S),{s80lf(S,SO)}.
 
 np_12(AgmtKernelModsO,Agmt,Case,Def,Role,Set,Mask) ---> 
   (np_13(AgmtKernelModsO,Agmt,Case,Def,Role,Set,Mask)*->{true}
@@ -412,15 +427,6 @@ np_13(AgmtKernelModsO,Agmt,Case,Def,Role,Set,Mask) --->
   locally(tlclone:np_in_case(Case),
     np0(AgmtKernelMods,Agmt,Case,Def,Role,Set,Mask)),
     extend_np(_,AgmtKernelMods,AgmtKernelModsO).
-
-np_13(NP,_Agmt,_Case,_IndefA,_Role,_Set,_Mask)
-  --->   ace_var(AceVar),!,{make_ace_var(AceVar,NP,thing)}.
-
-np_13(np(Agmt,nameOf(_Var,span_vp(SO),[]),_Mods),Agmt,_Case,_IndefA,_Role,_Set,_Mask) 
-  ---> {if_search_expanded(4)}, span_vp(S),{s80lf(S,SO)}.
-
-np_13(np(Agmt,nameOf(_Var,span_s(SO),[]),_Mods),Agmt,_Case,_IndefA,_Role,_Set,_Mask) 
-  ---> {if_search_expanded(3)}, span_s(S),{s80lf(S,SO)}.
 
 
 np0(AgmtKernelModsO,Agmt,Case,Def,Role,Set,Mask) 
@@ -439,7 +445,7 @@ np1(np(Agmt,Kernel,Mods),Agmt,_Case,Def,Role,Set,Mask) --->
    {is_np_all(NPAll)},
    np_compls(Type,Agmt,Role,PostMods,NPAll,Mask).
 
-% many of, one of
+% many of, one of, the 5 of 
 np1(part(Det,NP),3+Number,_,indefA,Role,Set,Mask) --->
    {is_pp(Set)},
    determiner(Det,Number,indefA), {Det\=generic},
