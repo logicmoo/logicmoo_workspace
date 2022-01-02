@@ -484,6 +484,8 @@ name_one_var(R,V):- locally(t_l:dont_append_var,debug_var(R,V)),!.
 
 pretty_element(NV):- ignore((NV=..[_,N,V],ignore(pretty1(N=V)))).
 
+swizzle_var_names0(V,L):- ignore((var(V),get_var_name(V,UP),atomic(UP),debug_var(UP,L))).
+swizzle_var_names(V,L):- swizzle_var_names0(V,L),swizzle_var_names0(L,V).
 pretty1(H):- pretty_enough(H),!.
 pretty1(ti(R,V)):- name_one(V,R).
 pretty1(ti(R,V)):- may_debug_var(R,V).
@@ -503,6 +505,9 @@ pretty1(Env=List):- compound(List),var(Env),List=[H|_],compound(H),H=bv(_,_), ma
 pretty1(debug_var(R,V)):- may_debug_var(R,V).
 pretty1(bv(R,V)):- name_one(V,R).
 pretty1(isa(V,R)):- name_one(V,R).
+pretty1(generic_pred(_,_,HP,V1,V2)):- ground(HP), HP=has_prop(_,R),debug_var(R,V1),debug_var(hasProp,V1),debug_var(R,V2).
+pretty1(generic_pred(_,_,HP,V1,V2)):- ground(HP), HP=has_prop(R),debug_var(R,V1),debug_var(hasProp,V1),debug_var(R,V2).
+%pretty1(setOf(V,_,L)):- swizzle_var_names(V,L).
 pretty1(ace_var(V,R)):- atom(R),var(V),!,add_var_to_env_perm(R,V).
 pretty1(bE(_,V,R)):- name_one(V,R).
 pretty1(iza(V,R)):- name_one(V,R).

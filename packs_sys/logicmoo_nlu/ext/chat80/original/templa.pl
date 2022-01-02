@@ -145,10 +145,23 @@ concrete_type(river).
 concrete_type(TI):-ti(TI,_),!.
 
 
+property_LF(Capital,Spatial1& Feat& City,X,Spatial2&Geo& /*_Neo&*/ Country,Y,Out,[],_,_):-   
+  Capital == country, !, Out = ti(Capital,X).
+property_LF(Capital,Spatial1& Feat& City,X,Spatial2&Geo& /*_Neo&*/ Country,Y,Out,[],_,_):-  
+   concrete_type(Capital),
+   % feat(Feat), assertion(nonvar(Capital)),   t_l:current_vv(VV),
+   _Info = [info([Y->(Spatial2&Geo& /*_Neo&*/ Country),X->(Spatial1& Feat& City)])],
+   make_generic_pred(_Spatial,has_prop(type,Capital),Y,X,Out).
+
+property_LF(Capital,Spatial& Feat& City,X,Spatial&Geo& /*_Neo&*/ Country,Y,Out,[],_,_):-  
+   feat(Feat), assertion(nonvar(Capital)),
+   unique_of_obj(Geo,Spatial,Country,_Govern,Capital,City,_Capital_city,_Nation_capital),
+   Out = generic_pred(_,Spatial,has_prop(type2,Capital),Y,X).
+/*
 property_LF(Capital,Spatial& Feat& City,X,Spatial&Geo& /*_Neo&*/ Country,Y,specific_pred(Spatial,Nation_capital,Y,X),[],_,_):-  
-%   fail,
    feat(Feat), assertion(nonvar(Capital)),
    unique_of_obj(Geo,Spatial,Country,_Govern,Capital,City,_Capital_city,Nation_capital).
+*/
 
 property_LF_1(Area,     _,    _X, _,_Y, _P,[],_,_):- var(Area),!,fail.
 property_LF_1(City,Spatial&Feat&City,X,Spatial&_Geo&Country,Y,
@@ -209,7 +222,7 @@ thing_LF_access(Population,value&units&Population/*citizens*/,X,unit_format(Popu
 /* Prepositions */
 
 adjunction_LF(in,Spatial&_-X,Spatial&_-Y,trans_pred(Spatial,contain,Y,X)).
-adjunction_LF(Any,Spatial&_-X,Spatial&_-Y,GP):- if_search_expanded(2),make_generic_pred(Spatial,matches_prep(Any),Y,X,GP).
+adjunction_LF(Any,Spatial&_-X,Spatial&_-Y,GP):- if_search_expanded(2),make_generic_pred(Spatial,pred2(adjuction,Any),Y,X,GP).
 adjunction_LF(cp(East,Of),Spatial&_-X,Spatial&_-Y,ordering_pred(Spatial,cp(East,Of),X,Y)).
 
 
@@ -261,7 +274,8 @@ verb_form_db(chat80,bordered,border,past+part,_). % :- regular_past_db(chat80,bo
 
 :- style_check(+singleton).
 
-trans_LF(Border,Spatial&Super&_,X,Spatial&Super&_,Y,GP,[],_,_):-  make_generic_pred(Spatial,Border,X,Y,GP),
+trans_LF(Border,Spatial&Super&_,X,Spatial&Super&_,Y,GP,[],_,_):-  
+  make_generic_pred(Spatial,has_prop(pred,Border),X,Y,GP),
    verb_type_lex(Border,main+tv),
    symmetric_verb(Spatial, Border).
 
@@ -342,7 +356,7 @@ trans_LF(exceed,value&Measure&Type,X,value&Measure&Type,Y,exceeds(X,Y),[],_,_).
 trans_LF1(Trans,_,X,_,Y,P ,[],_,_):- if_search_expanded(4), P\=aux(_,_),
   make_generic_pred(Spatial,Trans,X,Y,P),spatial(Spatial).
 
-make_generic_pred(Spatial,matches_prep(AT),X,Y,generic_pred(VV,Spatial,prep(AT),Y,X)):- t_l:current_vv(VV),!.
+make_generic_pred(Spatial,pred2(adjuction,AT),X,Y,generic_pred(VV,Spatial,pred2(adjuction,AT),Y,X)):- t_l:current_vv(VV),!.
 make_generic_pred(Spatial,(AT),X,Y,generic_pred(VV,Spatial,mg(AT),X,Y)):-t_l:current_vv(VV),!.
 
 % qualifiedBy

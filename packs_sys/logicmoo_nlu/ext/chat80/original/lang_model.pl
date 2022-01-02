@@ -643,7 +643,7 @@ try_chat_80(TL,C,S,F,Tree,QT):-
   statistics(runtime,[End,_]),
   Total is (End - Start)/1000,
   answer_color(C,QT,Color),
-  (Total>1.0 -> ansicall(fg(Color),in_cmt(print_tree_nl(F is runtime(Total)))) ; true),
+  (Total>1.0 -> ansicall(fg(Color),in_cmt(print_tree_nl(runtime(F) is Total))) ; true),
   maybe_restate_s(S),
   (compound(S)->arg(1,S,SS);S=SS),
   assert_if_new(tmp:test80_result(SS,F,QT,Total)),
@@ -759,7 +759,6 @@ c88_A(B,OO):-
  S = c88(SS),
  locally(set_prolog_flag(gc,true),
 ((
- try_chat_80(white,S,text_to_corenlp_tree(SS,_)),
  try_chat_80(white,S,into_lexical_segs(SS,Lex)),
  try_chat_80(S,any_to_ace_str(SS,SACE)),
  try_chat_80(S,try_ace_drs(SACE,Ace)),
@@ -767,6 +766,7 @@ c88_A(B,OO):-
  try_chat_80(S,e2c_80(SS,CLIF)),
  try_chat_80(magenta,S,try_ace_eng(Ace,_Eng)),
  ignore((
+ try_chat_80(white,S,text_to_corenlp_tree(SS,_)),
  maybe_restate_s(S),
  try_chat_80(200,green,S,sentence8e(Lex,Tree)),
  %ansicall(hfg(cyan),in_cmt(print_tree_nl(sentence80=Tree))),

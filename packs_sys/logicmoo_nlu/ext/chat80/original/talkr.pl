@@ -110,7 +110,7 @@ expand_setos(holds_truthvalue(E,S),O):-
 expand_setos(seto(X,E,S),O):-
 	phrase(satisfy80(E,G),Vars),
 	%pprint_ecp_cmt(yellow,((X+Vars):-G)),!,
-	O=setof_oR_nil(X,Vars^G,S).
+	O=answerSet(X,Vars^G,S).
 expand_setos(I, O):- phrase(satisfy80(I,O),_Vars),!. 
 expand_setos(I, O):-
   compound_name_arguments(I, F, ARGS), 
@@ -119,9 +119,12 @@ expand_setos(I, O):-
 
 named_eq(X,X).
 
-setof_oR_nil(X,G,S):- setof(X,G,S)*->true;S=[].
+answerSet(X,G,S):- setof(X,G,S)*->true;S=[].
+:- system:import(parser_chat80:answerSet/3).
 
+setof_oR_nil(X,G,S):- setof(X,G,S)*->true;S=[].
 :- system:import(parser_chat80:setof_oR_nil/3).
+
 
 seto(X,E,S) :-
 %	portray_clause(({X} :- E)),
@@ -428,33 +431,64 @@ ordering_pred(thing,cp(west,of),X1,X2) :- type_measure_pred( _Region,position(x)
 
 intrans_pred(thing,R,flow,R). %:- path_pred_linkage(_,_,R,_C,_).
 
-generic_pred(_,thing,prep(of),X,X).
+pred_subpred(capital,nation_capital).
 
-generic_pred(VV,Type,mg(P),X,Y):- nonvar(P),!,generic_pred(VV,Type,P,X,Y).
+
+
+generic_pred_hp(VV,Type,any,Y,X):- !, generic_pred_any(VV,Type,Y,X).
+generic_pred_hp(VV,Type,Capital,Y,X):- pred_subpred(Capital,Nation_capital),!,
+  generic_pred_hp(VV,Type,Nation_capital,Y,X).
+generic_pred_hp(VV,Type,area,Y,X):- var(X), X = --(_, ksqmiles),!,generic_pred_hp(VV,Type,area,Y,X).
+
+
+generic_pred_hp(_VV,_Type,Continent,Y,X):- var(Y),var(X),
+  concrete_type(Continent),  must( \+ \+ ti(Continent,_)),!,
+  ti(Continent,X).
+
+generic_pred_hp(VV,Type,Continent,Y,X):-
+  concrete_type(Continent),  must( \+ \+ ti(Continent,_)),
+  ti(Continent,X),
+  (var(Y) -> (generic_pred_any(VV,Type,Y,X)*->true;fail); generic_pred_any(VV,Type,Y,X)).
+
+generic_pred_hp(VV,Type,City,Y,X):- concrete_type(City),!, ti(City,X),generic_pred_any(VV,Type,Y,X).
+generic_pred_hp(VV,Type,Border,Y,X):- generic_pred0(VV,Type,Border,Y,X).
+
+
+generic_pred_any(VV,Type,X,Y):- generic_pred1(VV,Type,_,X,Y).
+
+generic_pred(VV,_Type1,P,X,Y) :- var(P),!, generic_pred0(VV,_Type2,P,X,Y).
+generic_pred(VV,_Type1,P,X,Y) :- P == any,!, generic_pred_any(VV,_Type2,X,Y).
+generic_pred(VV,_Type1,has_prop(_,Continent),Y,X):- !, nonvar(Continent), generic_pred_hp(VV,_Type2,Continent,Y,X).
+
+generic_pred(VV,Type,prep(Of),X,Y):- Of == of, !, (generic_pred_any(VV,Type,Y,X)*->true;X=Y).
 generic_pred(_,_,prep(through),R,C):- path_pred_linkage(_,_,R,C,_).
 generic_pred(_,_,prep(into),R,C):- path_pred_linkage(_,_,R,_,C).
-generic_pred(VV,Type,prep(Of),X,Y):- Of == of, generic_pred(VV,Type,_,Y,X).
-generic_pred(VV,Type,P,X,Y):- P==in,!, generic_pred0(VV,Type,contain,Y,X).
-generic_pred(VV,Type,P,X,Y) :- P == any,!, generic_pred0(VV,Type,_,X,Y).
-generic_pred(VV,Type,P,X,Y) :- generic_pred0(VV,Type,P,X,Y)*->true;generic_pred1(Type,P,X,Y).
+generic_pred(VV,Type,P,X,Y) :- generic_pred0(VV,Type,P,X,Y).
+/*
+generic_pred(VV,Type,mg(P),X,Y):- nonvar(P),!,generic_pred(VV,Type,P,X,Y).
+generic_pred(VV,_Type1,prop(City,Of),Y,X):- Of==ov,!,ti(City,X),generic_pred0(VV,_Type2,_,Y,X).
+generic_pred(VV,_Type1,prop(Sym,Border),Y,X):- Sym==symmetric,!,generic_pred0(VV,_Type2,Border,Y,X).
+*/
 
 trans_pred_type(_Type_,P):- ignore(thing=Type),tmp80:trans_rel_cache_created(=, trans_direct(Type,P)).
 trans_pred_type(thing,contain).
 
-generic_pred0(C,A,B,X,List):- is_list(List),!,member(E,List), generic_pred0(C,A,B,X,E).
-generic_pred0(C,A,B,List,X):- is_list(List),!,member(E,List), generic_pred0(C,A,B,E,X).
+generic_pred0(VV,Type,P,X,Y):- P==in,!, generic_pred0(VV,Type,contain,Y,X).
+generic_pred0(C,A,B,X,List):- is_list(List),!,member(E,List), generic_pred1(C,A,B,X,E).
+generic_pred0(C,A,B,List,X):- is_list(List),!,member(E,List), generic_pred1(C,A,B,E,X).
+generic_pred0(C,A,B,X,Y):- generic_pred1(C,A,B,X,Y).
 %generic_pred0(C,A,B,List,L):- is_list(List),!,setof(X,(member(E,List),generic_pred0(C,A,B,E,X),L)).
 %generic_pred0(C,A,B,L,List):- is_list(List),!,setof(X,(member(E,List),generic_pred0(C,A,B,X,E),L)).
 
-generic_pred0(_VV,Type,P,X,Y) :- trans_pred_type(Type,P), nonvar(P),trans_pred(Type,P,X,Y). % contain 
-generic_pred0(_VV,Type,P,X,Y) :- measure_pred(Type,P,X,Y). % area of
-generic_pred0(_VV,Type,P,X,Y) :- count_pred(Type,P,X,Y). % population of 
-generic_pred0(_VV,Type,P,X,Y) :- position_pred(Type,P,X,Y). % latitude of
-generic_pred0(_VV,Type,P,X,Y) :- nonvar(P), ordering_pred(Type,P,X,Y). % south of
-generic_pred0(_VV,Type,P,X,Y) :- nonvar(P), symmetric_pred(Type,P,X,Y). % border
-generic_pred0(_VV,Type,P,X,Y) :- specific_pred(Type,P,X,Y). % capital 
+generic_pred1(_VV,Type,P,X,Y) :- trans_pred_type(Type,P), nonvar(P),trans_pred(Type,P,X,Y). % contain 
+generic_pred1(_VV,Type,P,X,Y) :- measure_pred(Type,P,X,Y). % area of
+generic_pred1(_VV,Type,P,X,Y) :- count_pred(Type,P,X,Y). % population of 
+generic_pred1(_VV,Type,P,X,Y) :- position_pred(Type,P,X,Y). % latitude of
+generic_pred1(_VV,Type,P,X,Y) :- nonvar(P), ordering_pred(Type,P,X,Y). % south of
+generic_pred1(_VV,Type,P,X,Y) :- nonvar(P), symmetric_pred(Type,P,X,Y). % border
+generic_pred1(_VV,Type,P,X,Y) :- specific_pred(Type,P,X,Y). % capital 
 
-generic_pred1(Type,P,X,Y) :- var(Type), nop(generic_pred1(Type,P,X,Y)).
+%generic_pred2(Type,P,X,Y) :- var(Type), nop(generic_pred1(Type,P,X,Y)).
 
 lazy_pred(Type,Verb,TypeS,S,AllSlots):- dmsg(lazy_pred(Type,Verb,TypeS,S,AllSlots)).
 

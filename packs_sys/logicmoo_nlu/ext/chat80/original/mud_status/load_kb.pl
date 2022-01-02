@@ -369,8 +369,9 @@ chat80_all("Does the population of china exceed the population of india ?",[true
 chat80_all("Which country bordering the mediterranean borders a country that is bordered by a country whose population exceeds the population of india ?",[turkey],1900).
 chat80_all("What are the continents containing a country in which contains more than two cities whose population exceeds 1 million ?",[america,asia,europe],211).
 chat80_all("What are the rivers of the countries that are bordering the baltic that flow?",[[east_germany]:[elbe],[poland]:[oder,vistula],[soviet_union]:[amu_darya,amur,don,lena,ob,volga,yenisei],[west_germany]:[danube,elbe,rhine]],_).
+chat80_all("What are the rivers of the countries that are bordering the baltic that flow?",[ amu_darya,amur,danube,don,elbe,lena,ob,oder,rhine,vistula,volga,yenisei],_).
 chat80_all("What are the capitals of the countries that are bordering the baltic that have a population exceeding 1 thousand?",[[east_germany]:[berlin],[poland]:[warsaw],[soviet_union]:[moscow]],_).
-
+chat80_all("Whatarethecitiesofthecountriesthatareborderingthebalticthathaveapopulationexceeding1thousand?",[[east_germany]:[berlin],[poland]:[warsaw],[soviet_union]:[moscow]],_).
 baltic_rivers(_):-!.
 baltic_rivers_real(_):-!.
 baltic_rivers_real([[[[east_germany]:[elbe],
@@ -941,42 +942,14 @@ penn_tree_to_segs(
 
 
 /* simplify80 = answer80([Is]) :-
-                  ^( BE_SetOf8,
-                    ( setOf( Border_Prep_City,
-                        ^( Generic_SetOf,
-                          ( setOf(Ti_Country,ti(country,Ti_Country),Generic_SetOf)  ,
-                            ti(city,Border_Prep_City) ,
-                            generic_pred(frame_10138,thing,prep(of),Border_Prep_City,Generic_SetOf) ,
-                            generic_pred(frame_10138,thing,border,Border_Prep_City,baltic))),
-                        BE_SetOf8) ,
-                    bE(is,Is,BE_SetOf8))).  */
+                  ^( BE_SetOf6,
+                    ( setOf( [Cp_Border_Country]:SetOf,
+                        ( ti(country,Cp_Border_Country)  ,
+                          generic_pred(frame_763074,thing,border,Cp_Border_Country,baltic) ,
+                          setOf( Generic,
+                            generic_pred(frame_763073,thing,cp(city,of),Cp_Border_Country,Generic),
+                            SetOf)),
+                        BE_SetOf6) ,
+                    bE(is,Is,BE_SetOf6))).  */
 
-%~ ?- c88("What are the cities of the countries bordering the baltic ?").
 
-%~ results80=[].
-
-%~ ?- c88("What are the cities of the countries bordering the baltic ?").
-
-/* compile80 = ( setof_oR_nil( Is,
-                   ^( [Generic_SetOf,BE_SetOf8],
-                     ( setOf( Border_Prep_City,
-                         ^( [Generic_SetOf],
-                           ( setOf(Country,[]^database80(ti(country,Country)),
-                           Generic_SetOf)  ,
-                             database80(ti(city,Border_Prep_City)) ,
-                             database80(generic_pred(frame_10138,thing,prep(of),Border_Prep_City,Generic_SetOf)) ,
-                             database80(generic_pred(frame_10138,thing,border,Border_Prep_City,baltic)))),
-                         BE_SetOf8) ,
-                       database80(bE(is,Is,BE_SetOf8)))),
-                   Respond_Nil) ,
-               respond(Respond_Nil)).  */
-
-%~ ?- c88("What are the cities of the countries bordering the baltic ?").
-
-c88("What are the cities of the countries that are bordering the baltic ?").
-
-%~ capture80="Nothing satisfies your question.\n".
-
-true.
-
-parser_chat80: 2699 ?-
