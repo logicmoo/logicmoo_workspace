@@ -330,6 +330,7 @@ unit_det(quantV(_, _)).
 unit_det(det(_)).
 unit_det(question80(_)).
 unit_det(identityQ(_Modalz)).
+unit_det(voidQ(_ModalQ)).
 unit_det(voidQ).
 unit_det(notP(_Modalz)).
 unit_det(generic).
@@ -350,6 +351,7 @@ apply80(proportion(_Type-V), _, X, P, Y, Q,
 
 apply80(identityQ(Modalz), _, X, P, X, Q, PQ):- maybe_modalize(scope, Modalz, (P, Q), PQ).
 
+apply80(voidQ(_ModalQ), _, X, P, X, Q, X^(P, Q)).
 apply80(voidQ, _, X, P, X, Q, X^(P, Q)).
 
 apply80(set_ov, _, Index:X, P0, S, Q, S^(P, Q)) :-
@@ -416,6 +418,7 @@ governs_lex(Det0, Det) :-
    Det=det(_);
    Det=quantV(_, _)).
 
+governs_lex(_, voidQ(_ModalQ)).
 governs_lex(_, voidQ).
 governs_lex(_, lambdaV).
 governs_lex(_, identityQ(_Modalz)).

@@ -96,7 +96,7 @@ i_s(s(Subj,Verb,VArgs,VMods),P):- must80(i_s(s(Subj,Verb,VArgs,VMods),P,[],0)),!
 i_s_must(S,P):- i_s(S,P),!.
 i_s_must(s(Subj,Verb,VArgs,VMods),P):- P = failed((s(Subj,Verb,VArgs,VMods))).
 
-i_np(there,Y,quantS(voidQ,_X,'`'(true),'`'(true),[],Y),[],_,_,XA,XA).
+i_np(There,Y,quantS(voidQ,X,'`'(true),'`'(is_voidQ(XV,YV,There)),[],Y),[],_,_,XA,XA):- here_there(There),type_x_var(X,XV),type_x_var(Y,YV).
 i_np(NP,Y,Q,Up,Id0,Index,XA0,XA) :-
    i_np_head(_Var,NP,Y,Q,Det,Det0,X,Pred,QMods,Slots0,Id0),
    held_arg(XA0,XA,Slots0,Slots,Id0,Id),
@@ -306,41 +306,41 @@ c8("What are the continents containing a country in which contains more than two
  _92085454+[_92085460,_92085470,_92085468,_92085464,_92085462,_92085456] :-
        setOf( _92085458,
          ^( [ _92085460, _92085470,_92085468,_92085464,_92085462],
-            ( database80(ti(continent,_92085458))  ,
-              database80(trans_pred(thing,contain,_92085458,_92085460)) ,
-              database80(ti(country,_92085462)) ,
-              database80(trans_pred(thing,contain,_92085458,_92085462)) ,
+            ( d80(ti(continent,_92085458))  ,
+              d80(trans_pred(thing,contain,_92085458,_92085460)) ,
+              d80(ti(country,_92085462)) ,
+              d80(trans_pred(thing,contain,_92085458,_92085462)) ,
               numberof( _92085466,
                 ^( [_92085470,_92085468],
-                  ( database80(ti(city,_92085466))  ,
-                    database80(count_pred(thing,population,_92085466,_92085468)) ,
-                    database80(same_values(_92085470,--(1,million))) ,
-                    database80(exceeds(_92085468,_92085470)) ,
-                    database80(trans_pred(thing,contain,_92085462,_92085466)))),
+                  ( d80(ti(city,_92085466))  ,
+                    d80(count_pred(thing,population,_92085466,_92085468)) ,
+                    d80(same_values(_92085470,--(1,million))) ,
+                    d80(exceeds(_92085468,_92085470)) ,
+                    d80(trans_pred(thing,contain,_92085462,_92085466)))),
                 _92085464) ,
-              database80(exceeds(92085464,2)))),
+              d80(exceeds(92085464,2)))),
          _92085456) ,
-       database80(bE(is,_92085454,_92085456)).
+       d80(bE(is,_92085454,_92085456)).
 
 
         _32372516+[_32372522,_32372532,_32372530,_32372526,_32372524,_32372518] :-
        setOf( _32372520,
          ^( [ _32372522, _32372532,_32372530,_32372526,_32372524],
-            ( database80(ti(continent,_32372520))  ,
-              database80(trans_pred(thing,contain,_32372520,_32372522)) ,
-              database80(ti(country,_32372524)) ,
-              database80(trans_pred(thing,contain,_32372520,_32372524)) ,
+            ( d80(ti(continent,_32372520))  ,
+              d80(trans_pred(thing,contain,_32372520,_32372522)) ,
+              d80(ti(country,_32372524)) ,
+              d80(trans_pred(thing,contain,_32372520,_32372524)) ,
               numberof( _32372528,
                 ^( [_32372532,_32372530],
-                  ( database80(ti(city,_32372528))  ,
-                    database80(count_pred(thing,population,_32372528,_32372530)) ,
-                    database80(same_values(_32372532,--(1,million))) ,
-                    database80(exceeds(_32372530,_32372532)) ,
-                    database80(trans_pred(thing,contain,_32372524,_32372528)))),
+                  ( d80(ti(city,_32372528))  ,
+                    d80(count_pred(thing,population,_32372528,_32372530)) ,
+                    d80(same_values(_32372532,--(1,million))) ,
+                    d80(exceeds(_32372530,_32372532)) ,
+                    d80(trans_pred(thing,contain,_32372524,_32372528)))),
                 _32372526) ,
-              database80(exceeds(_32372526,2)))),
+              d80(exceeds(_32372526,2)))),
          _32372518) ,
-       database80(bE(is,_32372516,_32372518)).
+       d80(bE(is,_32372516,_32372518)).
 
 */
 

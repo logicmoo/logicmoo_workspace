@@ -828,11 +828,11 @@ text_to_lf3(U,RHS):- %fail,
 
 gp_africa(Result):-
   setOf(Size:City, []^(       
-       database80(ti(city,City)),
-       database80(trans_pred(thing,contain,africa,City)) ,
-       database80(count_pred(thing,population,City,Size)),
-       database80(exceeds(Size,_Other))), List),
-   database80(aggregate80(max,List,Result)).
+       d80(ti(city,City)),
+       d80(trans_pred(thing,contain,africa,City)) ,
+       d80(count_pred(thing,population,City,Size)),
+       d80(exceeds(Size,_Other))), List),
+   d80(aggregate80(max,List,Result)).
 
 %:- add_history(ensure_loaded(geography/load_kb)).
 

@@ -110,33 +110,33 @@ number_lex(W,I,PlOrSg) :-
         tr_number(W,I),
         ag_number(I,PlOrSg).
 
-pers_pron_lex(it,neut,3,sg,_).
-pers_pron_lex(they,_,3,pl,subjA).
+pers_pron_lex(it,non_agent,3,sg,_).
+pers_pron_lex(they,agent,3,pl,subjA).
 pers_pron_lex(he,masc,3,sg,subjA).
 pers_pron_lex(her,fem,3,sg,compL).
 pers_pron_lex(him,masc,3,sg,compL).
-pers_pron_lex(i,_,1,sg,subjA).
-pers_pron_lex(me,_,1,sg,compL).
-pers_pron_lex(myself,_,1,sg,_).
+pers_pron_lex(i,agent,1,sg,subjA).
+pers_pron_lex(me,agent,1,sg,compL).
+pers_pron_lex(myself,agent,1,sg,_).
 pers_pron_lex(she,fem,3,sg,subjA).
-pers_pron_lex(them,_,3,pl,compL).
+pers_pron_lex(them,agent,3,pl,compL).
 
-%pers_pron_lex(which,neut,3,_,subjA).
-%pers_pron_lex(what,neut,3,_,subjA).
-pers_pron_lex(whom,neut,3,_,subjA).
+%pers_pron_lex(which,non_agent,3,_,subjA).
+%pers_pron_lex(what,non_agent,3,_,subjA).
+pers_pron_lex(whom,agent,3,_,subjA).
 pers_pron_lex(who,agent,3,_,SubjA):- if_search_expanded(3)-> SubjA= _ ; SubjA = subjA.
 
-pers_pron_lex(them,_,3,pl,subjA).
-pers_pron_lex(us,_,1,pl,compL).
-pers_pron_lex(we,_,1,pl,subjA).
-pers_pron_lex(you,_,2,Sg,_):- pl_or_sg(Sg).
-pers_pron_lex(yourself,_,2,sg,_).
-pers_pron_lex(itself,neut,3,sg,compL).
+pers_pron_lex(them,agent,3,pl,subjA).
+pers_pron_lex(us,agent,1,pl,compL).
+pers_pron_lex(we,agent,1,pl,subjA).
+pers_pron_lex(you,agent,2,Sg,_):- pl_or_sg(Sg).
+pers_pron_lex(yourself,agent,2,sg,_).
+pers_pron_lex(itself,non_agent,3,sg,compL).
 pers_pron_lex(herself,fem,3,sg,compL).
 pers_pron_lex(himself,masc,3,sg,compL).
 pers_pron_lex(themself,agent,3,pl,compL).
-pers_pron_lex(themelves,_,3,pl,_).
-pers_pron_lex(yourselves,_,2,pl,_).
+pers_pron_lex(themelves,agent,3,pl,agent).
+pers_pron_lex(yourselves,agent,2,pl,agent).
 
 %name_LF(there).
 %name_LF(here).
@@ -144,16 +144,16 @@ pers_pron_lex(yourselves,_,2,pl,_).
 %pers_pron_lex(Word,Type,Pers,PlurSg,Case):- det_pron_lex(Word,Type,Pers,PlurSg,Case).
 pers_pron_lex(A,B,C,D):- det_pron_lex(A,B,C,D).
 
-det_pron_lex(those,neut,3,pl,subjA).
-det_pron_lex(that,neut,3,sg,_).
-det_pron_lex(this,neut,3,sg,_).
+det_pron_lex(those,non_agent,3,pl,subjA).
+det_pron_lex(that,non_agent,3,sg,_).
+det_pron_lex(this,non_agent,3,sg,_).
 
 pl_or_sg(sg).
 pl_or_sg(pl).
 
 poss_pron_lex(her,fem,3,sg).
 poss_pron_lex(his,masc,3,sg).
-poss_pron_lex(its,neut,3,sg).
+poss_pron_lex(its,non_agent,3,sg).
 poss_pron_lex(whose,agent,3,sg).
 poss_pron_lex(my,agent,1,sg).
 poss_pron_lex(our,agent,1,pl).
@@ -194,7 +194,12 @@ quantifier_pron_lex(nothing,no,thing).
 quantifier_pron_lex(somebody,some,person).
 quantifier_pron_lex(someone,some,person).
 quantifier_pron_lex(something,some,thing).
+quantifier_pron_lex(somewhere,some,place).
 
+here_there(X,X):- here_there(X).
+here_there(there).
+here_there(here).
+here_there(existing).
 % NEW TRY regular_past_lex(Had,Have):- try_lex(regular_past_db(Had,Have)).
 
 %regular_past_db(chat80,had,have).

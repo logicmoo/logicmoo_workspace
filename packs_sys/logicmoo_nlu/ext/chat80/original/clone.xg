@@ -279,8 +279,9 @@ if_cond(true,S,Mask) ---> s_vp_801(S,Mask).
 
 s80(P) --->  s80(P,_).
 
-s80(s(NP,verb(main+iv,E,[],activeV,_+fin,[],([])),[],[]),Mask) ---> 
-   theText80(there),theText80_W2(_,L),{member(root(E),L),member(upos(verb),L)},verb_arg(np,NP,Mask).
+s80(s(NP,verb(main+iv,E,[],activeV,_+fin,[adv(is_voidQ(ModalQ))],([])),[],[]),Mask) ---> 
+   {here_there(There,(ModalQ))},theText80((There)),theText80_W2(_,L),
+    {member(root(E),L),member(upos(verb),L)},verb_arg(np,NP,Mask).
 
 s80(PP,Mask) ---> 
  {gensym('frame_',VV)},
@@ -368,7 +369,7 @@ more_s_vp1(Subj,Agmt,Type,Verb,Args,Mods,Mask,
                      Type,Verb,ArgsO,Mods,Mask) ---> 
    theText80(and),
    just_vp_1(Subj,Agmt,_Type1,Verb1,Args1,Mods1,Mask),   
-   {append(Args,cond(true-and,[s(Subj,Verb1,Args1,Mods1)]),ArgsO)}.
+   {append_mods(Mods1,ModsF),append(Args,cond(true-and,[s(Subj,Verb1,Args1,ModsF)]),ArgsO)}.
 
 more_s_vp1(_Subj,_Agmt,Type,Verb,Args,Mods,Mask,Type,Verb,Args,Mods,Mask) ---> noText_or_sl.
 just_vp_1(_Subj,Agmt,Type,Verb,Args,Mods,Mask) --->
@@ -386,7 +387,7 @@ no_new_obj ---> xg_peek(\+ subj(_,_,_)).
 /* Noun Phrase */
 subj(Subj,Agmt,Type) ---> subj0(Subj,Agmt,Type).
 
-subj0(there,_Agmt,_+aux(be,_)) ---> theText80(there).
+subj0(There,_Agmt,_+aux(be,_)) ---> {here_there(There)}, theText80((There)).
 subj0(Subj,Agmt,_) --->
    {is_s_all(SAll), is_subj_case(Case)},
    np_11(Subj,Agmt,Case,_,subjA,SAll,_).
@@ -394,6 +395,10 @@ subj0(Subj,Agmt,_) --->
 
 make_ace_var(AceVar,NP,Type):- 
   NP = np(3+sg,np_head(_Var,generic,[adj(ace_var(self,AceVar))],Type),[]).
+
+
+np_11(AgmtKernelModsO,Agmt,Case,Def,Role,Set,Mask) ---> do_sentence_level0, !,
+  np_11(AgmtKernelModsO,Agmt,Case,Def,Role,Set,Mask).
 
 
 % to buy a car
@@ -938,8 +943,8 @@ maybe_verb_prep(RootVerb,RootVerb,[prep(Prep)]) ---> {if_search_expanded(7)}, pr
 maybe_verb_prep(RootVerb,verb_prep(RootVerb,Prep),[]) ---> {if_search_expanded(6)}, prep(Prep).
 
 append_mods(A,B):- flatten([A],B),!.
-append_mods([], []).
-append_mods([L|Ls], As) :- (var(L)->L1=[];flatten([L],L1)),!, append(L1, Ws, As), append_mods(Ls, Ws).
+%append_mods([], []).
+%append_mods([L|Ls], As) :- (var(L)->L1=[];flatten([L],L1)),!, append(L1, Ws, As), append_mods(Ls, Ws).
 
 %one_modal(_Tense1,_MODAL1) ---> !,{fail}.
 one_modal(pres,not) ---> theText80(not), xg_peek(thePos80(vb_)).
@@ -960,7 +965,7 @@ rest_verb(ExtraMods,aux,aux(be,ExtraMods1),Root,Voice,Aspect) ---> verb_form882(
 rest_verb(ExtraMods,aux,aux(do,ExtraMods1),Root,activeV,[]) ---> verb_form882(ExtraMods2,Root,inf,_,_),{append_mods([ExtraMods1,ExtraMods2],ExtraMods)}.
 %rest_verb(ExtraMods,aux,Can,Root,activeV,[]) ---> {modal_verb_form_aux(_,Can,_,_)},verb_form882(ExtraMods1,Root,inf,_,_),{append([[Can],ExtraMods1],ExtraMods)}.
 %rest_verb(ExtraMods,aux,Wont,Root,activeV,[]) ---> {modal_verb_form_aux(Wont,List,_,_),flatten([List],ListF)},verb_form882(ExtraMods1,Root,inf,_,_),{append([ListF,ExtraMods1],ExtraMods)}.
-rest_verb([root],main,Root,Root,activeV,[]) ---> noText_or_sl.
+rest_verb([],main,Root,Root,activeV,[]) ---> noText_or_sl.
 
 
 % BE
@@ -1007,7 +1012,7 @@ verb_args(dv(_Prep),_,[arg(Case,NP)|Type_X],_,Mask) --->
    verb_arg(np,NP,Mask0),
    object_opt(Case,Type_X,Mask0,Mask).
 % BE
-verb_args(aux(be,_),_,[voidQ],Mask,Mask) ---> theText80(there).
+verb_args(aux(be,_),_,[voidQ],Mask,Mask) ---> {here_there(There)},theText80((There)).
 verb_args(aux(be,_),_,[arg(arg_pred,P)],_,Mask) --->
    pred_conj(_,P,Mask).
 verb_args(aux(be,_),_,[arg(dirO,P)],_,Mask) ---> verb_arg(np,P,Mask).

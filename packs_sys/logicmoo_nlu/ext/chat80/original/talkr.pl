@@ -186,15 +186,15 @@ satisfy80(X<Y, X<Y) --> !.
 satisfy80(X=<Y, X=<Y) --> !.
 satisfy80(X>=Y, X>=Y) --> !.
 satisfy80(X>Y, X>Y) --> !.
-satisfy80(database80(P), database80(P)) --> !.
-satisfy80(P, database80(P)) --> [].
+satisfy80(d80(P), d80(P)) --> !.
+satisfy80(P, d80(P)) --> [].
 
 exceptionto(P) :-
    functor(P,F,N), functor(P1,F,N),
    pickargs(N,P,P1),
    exception80(P1).
 
-exception80(P) :- database80(P), !, fail.
+exception80(P) :- d80(P), !, fail.
 exception80(_P).
 
 pickargs(0,_,_) :- !.
@@ -232,11 +232,11 @@ measure_pred(Spatial,Heads,C,Total):- is_list(C),maplist(measure_pred(Spatial,He
 measure_pred(Spatial,Area,Where,Total) :- not_where(Where), 
  % ti(continent,Where),
  setOf(Value:[Country],
-               []^(database80(measure_pred(Spatial, Area, Country, Value)), 
-               %database80(ti(country, Country)), 
-               database80(trans_pred(Spatial,contain,Where,Country))),
+               []^(d80(measure_pred(Spatial, Area, Country, Value)), 
+               %d80(ti(country, Country)), 
+               d80(trans_pred(Spatial,contain,Where,Country))),
                Setof),
-         database80(aggregate80(total, Setof, Total)).
+         d80(aggregate80(total, Setof, Total)).
 
 
 bE(is,I,T):- nonvar(T),concrete_type(T), !, ti(T,I).
@@ -262,6 +262,9 @@ num_ti(size).
 free_ti(noun_thing).
 free_ti(thing).
 
+%is_voidQ(_).
+is_voidQ(_,_).
+is_voidQ(_,_,_).
 
 ti(NewType,X) :- agentitive_symmetric_type(Pred,SuperType), fail,
   % dont loop
@@ -366,12 +369,12 @@ database801(aggregate80(X,Y,Z)) :- aggregate80(X,Y,Z).
 database801(one_of(X,Y)) :- one_of(X,Y).
 database801(ratio(X,Y,Z)) :- ratio(X,Y,Z).
 database801(card(X,Y)) :- card(X,Y).
-%database80(circle_of_latitude(X)) :- circle_of_latitude(X).
-%database80(continent(X)) :- continent(X).
+%d80(circle_of_latitude(X)) :- circle_of_latitude(X).
+%d80(continent(X)) :- continent(X).
 database801(exceeds(X,Y)) :- exceeds(X,Y).
 database801(ti(Place,X)) :- ti(Place,X).
 database801(X=Y) :- X=Y.
-%database80(person(X)) :- person(X).	% JW: person is not defined
+%d80(person(X)) :- person(X).	% JW: person is not defined
 
 
 database801(unit_format(P,X)) :- unit_format(P,X).  % square miles
@@ -385,23 +388,23 @@ database801(specific_pred(Type,P,X,Y)) :- specific_pred(Type,P,X,Y). % capital
 database801(generic_pred(VV,Type,P,X,Y)) :- generic_pred(VV,Type,P,X,Y). % capital 
 database801(trans_pred(Type,P,X,Y)) :- trans_pred(Type,P,X,Y). % contain 
 
-database801(modalized(_,X)):- database80(X).
-database801(ought(X)):- database80(X).
-database801(can(X)):- database80(X).
-database801(will(X)):- database80(X).
-database801(past(X)):- database80(X).
-database801(not(X)):-  \+ database80(X).
-%database801(there(X)):- database80(X).
+database801(modalized(_,X)):- d80(X).
+database801(ought(X)):- d80(X).
+database801(can(X)):- d80(X).
+database801(will(X)):- d80(X).
+database801(past(X)):- d80(X).
+database801(not(X)):-  \+ d80(X).
+%database801(there(X)):- d80(X).
 
-%database80(path_pred(begins(Flow),rises,river,X,Y)) :- path_pred(begins(Flow),rises,river,X,Y).
-%database80(path_pred(ends(Flow),drains,river,X,Y)) :- path_pred(ends(Flow),drains,river,X,Y).
+%d80(path_pred(begins(Flow),rises,river,X,Y)) :- path_pred(begins(Flow),rises,river,X,Y).
+%d80(path_pred(ends(Flow),drains,river,X,Y)) :- path_pred(ends(Flow),drains,river,X,Y).
 database801(path_pred(PathSystemPart,ObjType,X,Y)) :- path_pred(PathSystemPart,ObjType,X,Y).
 database801(path_pred_linkage(DirectPathSystem,ObjType,X,Y,Z)) :- path_pred_linkage(DirectPathSystem,ObjType,X,Y,Z).
 
-database80((A,B)):- nonvar(A),!,database80(A),database80(B).
-database80(G):-  clause(database801(G),B), !, call(B).
-database80(G):-  current_predicate(_,G), !, call(G).
-database80(G):- dmsg(missing(database80(G))),fail.
+d80((A,B)):- nonvar(A),!,d80(A),d80(B).
+d80(G):-  clause(database801(G),B), !, call(B).
+d80(G):-  current_predicate(_,G), !, call(G).
+d80(G):- dmsg(missing(d80(G))),fail.
 
 :- style_check(+singleton).
 
@@ -442,11 +445,11 @@ generic_pred_hp(VV,Type,area,Y,X):- var(X), X = --(_, ksqmiles),!,generic_pred_h
 
 
 generic_pred_hp(_VV,_Type,Continent,Y,X):- var(Y),var(X),
-  concrete_type(Continent),  must( \+ \+ ti(Continent,_)),!,
+  concrete_type(Continent),  %must( \+ \+ ti(Continent,_)),!,
   ti(Continent,X).
 
 generic_pred_hp(VV,Type,Continent,Y,X):-
-  concrete_type(Continent),  must( \+ \+ ti(Continent,_)),
+  concrete_type(Continent), % must( \+ \+ ti(Continent,_)),
   ti(Continent,X),
   (var(Y) -> (generic_pred_any(VV,Type,Y,X)*->true;fail); generic_pred_any(VV,Type,Y,X)).
 
@@ -469,6 +472,7 @@ generic_pred(VV,Type,mg(P),X,Y):- nonvar(P),!,generic_pred(VV,Type,P,X,Y).
 generic_pred(VV,_Type1,prop(City,Of),Y,X):- Of==ov,!,ti(City,X),generic_pred0(VV,_Type2,_,Y,X).
 generic_pred(VV,_Type1,prop(Sym,Border),Y,X):- Sym==symmetric,!,generic_pred0(VV,_Type2,Border,Y,X).
 */
+resultFn(_,_).
 
 trans_pred_type(_Type_,P):- ignore(thing=Type),tmp80:trans_rel_cache_created(=, trans_direct(Type,P)).
 trans_pred_type(thing,contain).

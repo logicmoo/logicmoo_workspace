@@ -623,21 +623,45 @@ sent_to_prelogic(S0,S) :-
    simplify80(S2,S3),
    simplify80(S3,S4),
    reduce1(S4,S5),
-   reduce1(S5,S).
+   reduce1(S5,S),!.
+sent_to_prelogic(S1,SLF):- S1\=decl(_),sent_to_prelogic(decl(S1), (_ :- SLF)),!.
+sent_to_prelogic(S1,SLF):- i_s(S1,SLF).
 
 %reduce1(P,P):-!.
+
+compat_verb_prep(V,P):- in_compat_verb_prep(V,P),!,fail.
+compat_verb_prep(_,_).
+
+in_compat_verb_prep(_Verb,from).
+in_compat_verb_prep(_Verb,of).
+%compat_verb_prep(_Verb,from).
 
 reduce1(P,Q):- reduceQ(P,R),reduce4(R,P,Q),!.
 reduce1(P,Q):- reduce4(P,P,Q),!.
 
 reduce4(_,Q,Q):- \+ compound(Q),!.
-reduce4(_,info(P),info(P)).
+reduce4(_,info(P),info(P)).   
+
 reduce4(R,P,Q):- once(reduce3(R,P,PQ)),P\==PQ,!,reduce4(R,PQ,Q).
 reduce4(_,Q,Q).
 
 reduce3(_In,P,Q):- \+ compound(P),!, Q=P.
+
+reduce3(_R,P,Q):- 
+   sub_term(Aj,P),compound(Aj),Aj = generic_pred(X,F,prop(adjunct,Prep),Joe_Prop_Door1,Generic_Key),
+   sub_term(Pr,P),compound(Pr),
+    ((Pr = generic_pred(X,F,prop(pred,Verb),Subj,Joe_Prop_Door2),Preps=[]);
+     Pr = generic_frame(X,F,prop(pred,Verb),Subj,Joe_Prop_Door2,Preps)),    
+   (Joe_Prop_Door2 == Joe_Prop_Door1; Subj==Joe_Prop_Door1),
+   compat_verb_prep(Verb,Prep),
+   subst(P,Aj,true,PQ),
+   subst(PQ,Pr,generic_frame(X,F,prop(pred,Verb),Subj,Joe_Prop_Door2,[slot_i(prep(Prep),Generic_Key)|Preps]),Q),!.
+
 reduce3(_In,'^'(Q,P),P):- ground(Q).
 
+reduce3(_In,[Nil,Root],[]):- Nil == [], Root == root,!.
+
+reduce3(_In, s(A,B,C,D), LF):- s80lf(decl(s(A,B,C,D)),_ :- LF),!.
 reduce3(In, \+ ((X,P)), (X,PP)):- skip_over_modalize(X), !, reduce4(In, \+ P,PP).
 
 reduce3(_In,^(Var,P),P):- var(Var),\+ sub_var(Var,P),!.
@@ -650,8 +674,10 @@ reduce3(_In,qualifiedBy(Var,_,_,S),R):- sub_term(E,S), compound(E), E = np_head(
 reduce3(_In,qualifiedBy(Var,X,P,S),R):- fail, OR = qualifiedBy(Var,X,P,S), qualifiedBy_LF2(Var,xxx,X,P,S,R)-> OR\==R,!.
 reduce3(_In,qualifiedBy(Var,X,P,S),R):- qualifiedBy_LF(Var,reduce1,X,P,S,R),!.
 
-reduce3(_In,(P,Q),P):- (true) == Q.
-reduce3(_In,(Q,P),P):- (true) == Q.
+
+reduce3(_In,(P,Q),P):- is_reduced_true(Q).
+reduce3(_In,(Q,P),P):- is_reduced_true(Q).
+reduce3(_In, Q,true):- Q\==true,is_reduced_true(Q).
 reduce3(_In,(P,Q),P):- P == Q,!.
 reduce3(_In,mg(Q),Q):- !.
 
@@ -707,6 +733,10 @@ reduceQ(P,Q):-
    maplist(reduceQ,A,AA), 
    compound_name_arguments(Q,F,AA).
 reduceQ(Q,Q).
+
+is_reduced_true(Q):- var(Q),!,fail.
+is_reduced_true(d80(Q)):- !,is_reduced_true(Q).
+is_reduced_true(true).
 
 dont_reduce1(info).
 dont_reduce1(qualifiedBy).
@@ -893,7 +923,7 @@ skip_over_modalize0('`'(X)):-!,skip_over_modalize0(X).
 skip_over_modalize0(generic_pred(_,_,X,_,_)):-!, skip_over_modalize0(X).
 skip_over_modalize0(has_prop(Type,_)):- !, Type==type.
 skip_over_modalize0(ti(_,_)).
-skip_over_modalize0(database80(X)):-!,skip_over_modalize0(X).
+skip_over_modalize0(d80(X)):-!,skip_over_modalize0(X).
 %skip_over_modalize(bE(_,_,_)).
 skip_over_modalize0(true).
 
@@ -920,7 +950,7 @@ maybe_modalize0(Obj,Scope,O, V,:-(X,P),:-(X,PP)):- !, maybe_modalize1(Obj,Scope,
 %maybe_modalize0(Obj,Scope,O, V,^(X,P),^(X,PP)):- nonvar(X), !, maybe_modalize1(Obj,Scope,O, V,P,PP).
 %maybe_modalize0(Obj,Scope,O, V,^(X,P),^(X,PP)):- var(X), !, maybe_modalize1(Obj,Scope,O, V,P,PP).
 %maybe_modalize0(Obj,Scope,O, V,'`'(P),'`'(PP)):- !, maybe_modalize1(Obj,Scope,O, V,P,PP).
-%maybe_modalize0(Obj,Scope,O, V,'database80'(P),'database80'(PP)):- !, maybe_modalize1(Obj,Scope,O, V,P,PP).
+%maybe_modalize0(Obj,Scope,O, V,'d80'(P),'d80'(PP)):- !, maybe_modalize1(Obj,Scope,O, V,P,PP).
 %maybe_modalize0(Obj,Scope,O, V,(X,Y,P),(X,PP)):- skip_over_modalize(X), !, maybe_modalize1(Obj,Scope,O, V, (Y, P),PP).
 maybe_modalize0(Obj,Scope,O, V,(X,P),(X,PP)):- skip_over_modalize(X), !, maybe_modalize1(Obj,Scope,O, V,P,PP).
 %maybe_modalize0(Obj,Scope,O, V,'&'(X,P),'&'(X,PP)):- skip_over_modalize(X), !, maybe_modalize1(Obj,Scope,O, V,P,PP).
@@ -948,7 +978,7 @@ maybe_modalize0(_Obj,_Scope,_,root, P, P):-!.
 
 %maybe_modalize0(Obj,_Scope,_,info(Traits), P, PP):- member(pos(vbd),Traits),
 maybe_modalize0(_Obj,_Scope,_,Fin, P, P):- skip_modalizing(Fin).
-maybe_modalize0(_Obj,_Scope,_,voidQ, P, P):-!.
+maybe_modalize0(_Obj,_Scope,_,voidQ(ModalQ), P, is_voidQ(ModalQ)&P):-!.
 
 maybe_modalize0(_Obj,scope,_,cond( Because, S), P, cond_pred(Because,P,SP)):- i_s(S,SP),!.
 %maybe_modalize0(Obj,slot, O,notP(Modal), P, PP):- !, not_true_or_qtrue(O),!,maybe_modalize1(Obj,slot,O,Modal, P, PP).
@@ -980,6 +1010,7 @@ skip_modalizing(pl). skip_modalizing(sg).
 skip_modalizing(main). skip_modalizing(aux).
 skip_modalizing(inf). skip_modalizing(fin).
 skip_modalizing(arg).
+skip_modalizing(voidQ).
 
 
 skip_modalizing(progresiveV).
