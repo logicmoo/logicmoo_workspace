@@ -33,13 +33,14 @@ foc_current_vv(VV):- t_l:current_vv(VV),!.
 
 must80(M:G):- !, M:must80(G).
 must80((G1,G2)):- !, must80(G1), must80(G2).
-must80(G):- \+ current_prolog_flag(debug_chat80,true),!, call(G).
+%must80(G):- \+ current_prolog_flag(debug_chat80,true),!, call(G).
 must80(G):- call(G)*->true;(must80_failed(G),fail).
 
 must80_failed(G):- 
   %nop((wdmsg(failed(G)),ignore(on_x_fail(ftrace(G))))),
-  % dmsg(failed(G)),
-  G \= lf80(_,_), fail,
+  \+ (term_variables(G,Vs),G=..[_,_|Vs]),
+  
+  G \= lf80(_,_),  fail,
   flag(chat80_reports,N,N+1), % N < 1,
   %set_prolog_flag(debug_chat80,false), % so we only get one report
   dmsg(failed(G)),fail,call(G).
@@ -158,7 +159,7 @@ i_np_head0(np_head(X,wh_det(_Kind,V),Adjs,Noun),
 
 i_np_head0(np_head(X,quantV(Op0,N),Adjs,Noun),
       Type-X,Type-X,voidQ,'`'(P),Pred,Pred,[]) :- 
-   lf80(Type,measure_LF(Noun,Type,Adjs,Units)),
+   measure_LF(Noun,Type,Adjs,Units),
    lf80(Type,pos_conversion_db(N,Op0,Type,V,Op)),
    must80(measure_op(Op,X,V--Units,P)).
 
@@ -381,18 +382,13 @@ i_s(s(Subj,Verb,VArgs,VMods),Pred,Up,Id) :-
   select(cond(IF,S2),VMods,NewVMods),!,
   S1 = s(Subj,Verb,VArgs,NewVMods),
   i_s(S1,Pred1,Up,Id),
-  once(deepen_pos((s80lf(S2,Pred2);i_sentence(S2,Pred2)));Pred2=lfOf(S2)),
+  debug_chat80_if_fail(deepen_pos((s80lf(S2,Pred2);i_sentence(S2,Pred2)));Pred2=lfOf(S2)),
   Pred= cond_pred(IF,Pred1,Pred2).
 
-i_s(s(Subj,Verb,VArgs,VMods),Pred,Up,Id) :-
-  select(cond(IF,S2),VArgs,NewVArgs),!,
-  S1 = s(Subj,Verb,NewVArgs,VMods),
-  i_s(S1,Pred1,Up,Id),
-  once(deepen_pos((s80lf(S2,Pred2);i_sentence(S2,Pred2)));Pred2=lfOf(S2)),
-  Pred= cond_pred(IF,Pred1,Pred2).
+i_s(s(Subj,Verb,VArgs,VMods),Pred,Up,Id) :- i_s_0(s(Subj,Verb,VArgs,VMods),Pred,Up,Id).
 
-i_s(s(Subj,Verb,VArgs,VMods),Pred,Up,Id) :-
-  once(subc_member(was_framed(VV),s(VMods,VArgs,Verb,Subj));gensym('frame_',VV)),
+i_s_0(s(Subj,Verb,VArgs,VMods),Pred,Up,Id) :-
+  once(subc_member(was_framed(VV),s(VMods,VArgs,Verb,Subj));t_l:current_vv(VV);gensym('frame_',VV)),
   locally(t_l:current_vv(VV),
    i_s_1(s(Subj,Verb,VArgs,VMods),Pred,Up,Id)),!.
 
@@ -724,9 +720,9 @@ slot_verb_kind(_Tv,Verb,TypeS,S,Pred,AllSlots) :- if_search_expanded(2),
    select_slots(AllSlots,[slot(dirO,TypeD,D,SlotD,free)],Slots),
    lf80(TypeS-TypeD,trans_LF1(Verb,TypeS,S,TypeD,D,Pred,Slots,SlotD,_)).
 
-slot_verb_kind(Iv,Verb,TypeS,S,Pred,Slots) :- if_search_expanded(10), 
-    slot_suggester(Iv,Slots),
-   lf80(TypeS,intrans_LF_1(Iv,Verb,TypeS,S,Pred,Slots,_)).
+slot_verb_kind(Iv1,Verb,TypeS,S,Pred,Slots) :- if_search_expanded(3), 
+    slot_suggester(Iv1,Slots),
+   lf80(TypeS,intrans_LF_1(Iv1,Verb,TypeS,S,Pred,Slots,_)).
 /*
 slot_verb_kind((Prep),Verb,TypeS,S,Pred,AllSlots):- if_search_expanded(7),
   slot_suggester(Prep,AllSlots),

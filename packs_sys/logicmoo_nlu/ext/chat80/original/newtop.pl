@@ -650,7 +650,7 @@ reduce1(P,Q):- reduce4(P,P,Q),!.
 
 reduce4(_,Q,Q):- \+ compound(Q),!.
 reduce4(_,info(P),info(P)).   
-reduce4(_,decl(P),O):- i_sentence(decl(P),O),!.
+%reduce4(_,decl(P),O):- i_sentence(decl(P),O),!.
 reduce4(R,P,Q):- once(reduce3(R,P,PQ)),P\==PQ,!,reduce4(R,PQ,Q).
 reduce4(_,Q,Q).
 
