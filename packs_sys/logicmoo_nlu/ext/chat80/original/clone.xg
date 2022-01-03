@@ -252,7 +252,7 @@ logical_s_word(c,r,otherwise).
 logical_s_word(c,r,however).
 logical_s_word(c,r,therefore).
 logical_s_word(X,X,W):- 
-  %if_search_expanded(5), 
+  fail, if_search_expanded(5), 
   logical_o_word(W).
 %logical_s_word(X,X,W):-is_sent_adverb(W).
 logical_s_word2(r,c,[else,if]).
@@ -283,11 +283,14 @@ s80(s(NP,verb(main+iv,E,[],activeV,_+fin,[adv(is_voidQ(ModalQ))],([])),[],[]),Ma
    {here_there(There,(ModalQ))},theText80((There)),theText80_W2(_,L),
     {member(root(E),L),member(upos(verb),L)},verb_arg(np,NP,Mask).
 
-s80(PP,Mask) ---> 
+%s80(PP,Mask) ---> theTextL80([for,everything]),ace_var(_AceVar), !,
+%  s80(PP,Mask).
+
+s80(PPPP,Mask) ---> 
  {gensym('frame_',VV)},
   locally(t_l:current_vv(VV),s_vp_800(P,Mask)), %xg_optional(do_sentence_level),
   {get_sentence_level_adverbs(VV,InfoL),
-   (((subst(P,frame(VV),InfoL,PP),P\==PP))->true;append_extra_props(P,[was_framed(VV)|InfoL],PP))}.
+   (((subst(P,frame(VV),InfoL,PP),P\==PP))->subst(PP,[[]],[],PPPP);append_extra_props(P,[was_framed(VV)|InfoL],PPPP))}.
 
 
 append_extra_props(CmpI,ExtraProps,CmpO):-
@@ -308,12 +311,9 @@ s_vp_800(SO,Mask) ---> if_cond(IF,S,Mask), s_vp_800s(IF,S,SO,Mask).
 s_vp_800s(true,S,SO,Mask) ---> !, from_true(S,SO,Mask).
 s_vp_800s(IF,S,SO,Mask) ---> from_if(IF,S,SO,Mask).
 
-s80lf(S1,SLF):- sent_to_prelogic(S1,SLF),!.
-s80lf(S1,S1).
-
 from_if(IF,S,SO,_Mask) --->  logical_word(Then),!,
-  sentence801(S1),{
-    s80lf(S1,SLF),  
+  sentence802(S1),{
+    local_s80lf(S1,SLF),  
     S=s(Subj,Verb,Args,Mods),
     append_cond(Args,IF-Then,SLF,ArgsO),
     SO=s(Subj,Verb,ArgsO,Mods)}.
@@ -397,14 +397,16 @@ make_ace_var(AceVar,NP,Type):-
   NP = np(3+sg,np_head(_Var,generic,[adj(ace_var(self,AceVar))],Type),[]).
 
 
+local_s80lf(Pred2,S2):- deepen_pos(i_sentence(S2,Pred2)),!.
+local_s80lf(I,O):- tmaybe_body(I,O).
+
 np_11(AgmtKernelModsO,Agmt,Case,Def,Role,Set,Mask) ---> do_sentence_level0, !,
   np_11(AgmtKernelModsO,Agmt,Case,Def,Role,Set,Mask).
-
 
 % to buy a car
 np_11(np(Agmt,nameOf(_Var,span_s(SO),[]),_Mods),Agmt,_Case,_IndefA,_Role,_Set,_Mask) 
   ---> theText80(to),!,
-   imperative80(S),!,{s80lf(S,SO)}.
+   imperative80(S),!,{local_s80lf(S,SO)}.
 np_11(_AgmtKernelModsO,_Agmt,_Case,_Def,_Role,_Set,_Mask) ---> theText80(W), {logical_o_word(W),!,fail}.
 
 % Standard NP
@@ -424,11 +426,11 @@ np_11(NP,_Agmt,_Case,_IndefA,_Role,_Set,_Mask)
 
 % action
 np_11(np(Agmt,nameOf(_Var,span_vp(SO),[]),_Mods),Agmt,_Case,_IndefA,_Role,_Set,_Mask) 
-  ---> {if_search_expanded(4)}, span_vp(S),{s80lf(S,SO)}.
+  ---> {if_search_expanded(4)}, span_vp(S),{local_s80lf(S,SO)}.
 
 % sentence
 np_11(np(Agmt,nameOf(_Var,span_s(SO),[]),_Mods),Agmt,_Case,_IndefA,_Role,_Set,_Mask) 
-  ---> {if_search_expanded(3)}, span_s(S),{s80lf(S,SO)}.
+  ---> {if_search_expanded(3)}, span_s(S),{local_s80lf(S,SO)}.
 
 np_12(AgmtKernelModsO,Agmt,Case,Def,Role,Set,Mask) ---> 
   (np_13(AgmtKernelModsO,Agmt,Case,Def,Role,Set,Mask)*->{true}
@@ -484,9 +486,16 @@ np_compls(common,Agmt,Case,Mods,Set0,Mask) --->
 
 np_head0(_,_,_)---> has_trait(pos('.')),!,{fail}.
 np_head0(nameOf(_Var,items(AndOr,List),[]),Agmt,Def)---> {if_search_expanded(2)}, nl_list_of_items(AndOr,np_head1(Agmt,Def),List).
+np_head0(nameOf(_Var,items(set,List),[]),_Agmt,_Def)---> {if_search_expanded(2)},theText80('{'),!,
+  set_of_items(theText80('}'),np_head_1,List).
+
 np_head0(H,Agmt,Def)---> np_head1(H,Agmt,Def).
 
 np_head1(H,Agmt,Def)--->np_head2(H,Agmt,Def).
+
+% number
+np_head_1(H)--->number(H,_).
+np_head_1(H)--->np_head2(H,_Agmt,_Def).
 
 np_head2(Pronoun,Agmt,defA+proper), gen_marker --->
    poss_pron(Pronoun,Agmt).
@@ -553,12 +562,16 @@ nl_list_of_items(AndOr,P, [H,T])---> xg_peek([_,_,_]), of_type(P,H), maybeComma,
 nl_list_of_items(AndOr,P, [H|T])---> xg_peek([_,_,_,_]), of_type(P,H), maybeComma, !, nl_list_of_items(AndOr,P, T).
 
 
+set_of_items(Until, _P, []) ---> Until,!.
+set_of_items(Until, P, [H|T])---> maybeComma, call(P,H), !, set_of_items(Until,P, T).
+
+
 np_objbody(string(List),3+sg,defA+proper) ---> w2_quoted(List),!.
 
 np_objbody(S,_,_)--->   span_s(S).
 
 %np_objbody(Det,Number,Def) ---> {if_search_expanded(2)}, np_objbody(Det,Number,Def).
-np_objbody((Name),3+sg,defA+proper) ---> name_xg(Name).
+np_objbody((Name),3+sg,defA+proper) ---> \+ xg_peek(ace_var(_)),!,name_xg(Name).
 
 
 np_objbody((prep_obj(Word,S)),Agmt,Type) ---> {fail},

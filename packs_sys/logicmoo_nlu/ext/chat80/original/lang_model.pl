@@ -625,8 +625,8 @@ acetext_to_text80(List,Each):- is_list(List),maplist(atom,List),!,member(Each,Li
 acetext_to_text80(List,Out):- is_list(List),member(E,List),acetext_to_text80(E,Out).
 
 
-sentence8d(U,E):- no_repeats(E,sentence80(E,U,[],[],[])).
-sentence8dr(U,E):- sentence8d(U,E),(true;(dmsg(redo(sentence8dr(E))),fail)).
+sentence8d(U,E):- no_repeats(E,limit(1000,sentence80(E,U,[],[],[]))).
+sentence8dr(U,E):- sentence8d(U,E),nop(true;(dmsg(redo(sentence8dr(E))),fail)).
 sentence8e(U,E):- ((sentence8dr(U,E),i_sentence(E,_))*->true
                   ;sentence8d(U,E)).
 

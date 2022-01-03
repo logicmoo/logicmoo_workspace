@@ -137,6 +137,7 @@ concrete_type(place_there).
 concrete_type(place_here).
 
 concrete_type(agent).
+concrete_type(non_agent).
 concrete_type(action).
 concrete_type(man).
 concrete_type(island).
@@ -164,7 +165,7 @@ property_LF(Capital,Spatial1& Feat& City,X,Spatial2&Geo& /*_Neo&*/ Country,Y,Out
 property_LF(Capital,Spatial& Feat& City,X,Spatial&Geo& /*_Neo&*/ Country,Y,Out,[],_,_):-  
    feat(Feat), assertion(nonvar(Capital)),
    unique_of_obj(Geo,Spatial,Country,_Govern,Capital,City,_Capital_city,_Nation_capital),
-   make_generic_pred(Spatial,has_prop(type2,Capital),Y,X,Out).
+   make_generic_pred(Spatial,has_prop(type,Capital),Y,X,Out).
 /*
 property_LF(Capital,Spatial& Feat& City,X,Spatial&Geo& /*_Neo&*/ Country,Y,specific_pred(Spatial,Nation_capital,Y,X),[],_,_):-  
    feat(Feat), assertion(nonvar(Capital)),
@@ -514,10 +515,11 @@ intrans_LF_1(Type,Run,Spatial & Feat& _TypeX,X,LF, Slots,_):-
 
 intrans_verb(Y):- once(intrans_verb0(Y)).
 intrans_verb(verb_fn(_)).
-intrans_verb0(Run):- clex:iv_infpl(Run,_).
+%intrans_verb0(Run):- clex:iv_infpl(Run,_).
 intrans_verb0(run).
+intrans_verb0(Send):- clex_iface:clex_verb(_Sent,Send,_VerbType,_Form).
 intrans_verb0(wait).
-intrans_verb0(Y):- clex:iv_finsg(_,Y).
+%intrans_verb0(Y):- clex:iv_finsg(_,Y).
 
 
 % X flows through Begin

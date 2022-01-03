@@ -34,12 +34,15 @@ foc_current_vv(VV):- t_l:current_vv(VV),!.
 must80(M:G):- !, M:must80(G).
 must80((G1,G2)):- !, must80(G1), must80(G2).
 must80(G):- \+ current_prolog_flag(debug_chat80,true),!, call(G).
-must80(G):- call(G)*->true;(
-  nop((wdmsg(failed(G)),ignore(on_x_fail(ftrace(G))))),
+must80(G):- call(G)*->true;(must80_failed(G),fail).
+
+must80_failed(G):- 
+  %nop((wdmsg(failed(G)),ignore(on_x_fail(ftrace(G))))),
+  % dmsg(failed(G)),
   G \= lf80(_,_), fail,
-  flag(chat80_reports,N,N+1), N < 1,
+  flag(chat80_reports,N,N+1), % N < 1,
   %set_prolog_flag(debug_chat80,false), % so we only get one report
-  dmsg(failed(G)),fail,call(G)).
+  dmsg(failed(G)),fail,call(G).
 
 % logical form checker for chat80
 
@@ -85,17 +88,19 @@ i_sentence2(whq(X,S),question80([X],P)) :- !, i_s(S,P).
 %i_sentence2(s(S),s80(P)) :- !, i_s_must(s(S),P). 
 i_sentence2(imp(U,Ve,s(_,Verb,VArgs,VMods)),imp80(U,Ve,V,Args)) :-
    must80(i_verb(Verb,V,_,activeV,([]),Slots0,[],transparent)),
-   must80(i_verb_args(RefVar,VArgs,[],[],Slots0,Slots,Args,Args0,Up,-0)),
+   i_verb_args(RefVar,VArgs,[],[],Slots0,Slots,Args,Args0,Up,-0),
    append(Up,VMods,Mods),
    must80(i_verb_mods(RefVar,Mods,_,[],Slots,Args0,Up,+0)),!.
-i_sentence2(imp(U,Ve,S),imp80(U,Ve,P)) :-  i_s(S,P).
+i_sentence2(imp(U,Ve,S),imp80(U,Ve,P,[])) :-  i_s(S,P),!.
 
 
 i_s(s(Subj,Verb,VArgs,VMods),P):- must80(i_s(s(Subj,Verb,VArgs,VMods),P,[],0)),!.
 
+/*
+i_s_must(S,P):- i_sentence(S,P),!.
 i_s_must(S,P):- i_s(S,P),!.
 i_s_must(s(Subj,Verb,VArgs,VMods),P):- P = failed((s(Subj,Verb,VArgs,VMods))).
-
+*/
 i_np(There,Y,quantS(voidQ,X,'`'(true),'`'(is_voidQ(XV,YV,There)),[],Y),[],_,_,XA,XA):- here_there(There),type_x_var(X,XV),type_x_var(Y,YV).
 i_np(NP,Y,Q,Up,Id0,Index,XA0,XA) :-
    i_np_head(_Var,NP,Y,Q,Det,Det0,X,Pred,QMods,Slots0,Id0),
@@ -343,14 +348,13 @@ c8("What are the continents containing a country in which contains more than two
        d80(bE(is,_32372516,_32372518)).
 
 */
-
-i_s(s(Subj,Verb,VArgs,VMods),Pred,Up,Id) :-
-  select(cond(IF,S2),VArgs,NewVargs),
-  S1 = s(Subj,Verb,NewVargs,VMods),
-  i_s(S1,Pred1,Up,Id),!,
-  s80lf(S2,Pred2),arg(2,Pred2,LF),
-  Pred= cond_pred(IF,Pred1,LF).
-
+i_s(S,lfOf(S),_Up,_Id):- var(S),!.
+i_s(decl(S),Pred,Up,Id):-!,i_s(S,Pred,Up,Id).
+i_s(q(S),Pred,Up,Id):-!,i_s(S,Pred,Up,Id).
+/*i_s(s(Subj,Verb,VArgs,VMods),Pred,Up,Id):-
+  once(repair_verb(Verb,VerbR)), Verb \=@= VerbR,!,
+  i_s(s(Subj,VerbR,VArgs,VMods),Pred,Up,Id).
+*/
 
 %i_s(S,Pred,Up,Id):- dmsg(i_s(S,Pred,Up,Id)),fail.
 i_s(s(Subj,verb(VerbType,Root,Voice,Tense,Aspect,Neg0),VArgs,VMods),Pred,Up,Id) :-
@@ -374,18 +378,26 @@ i_s(s(Subj,verb(Mainiv,be,[],Active,Fin+fin,[],Neg),VArgs,VMods),Pred,Up,Id) :- 
    i_s(s(Subj,verb(Mainiv,exist,[],Active,Fin+fin,[],Neg),VArgs,VMods),Pred,Up,Id).
 
 i_s(s(Subj,Verb,VArgs,VMods),Pred,Up,Id) :-
-  (subc_member(was_framed(VV),s(VMods,VArgs,Verb,Subj));gensym('frame_',VV)),
-  locally(t_l:current_vv(VV),
-   i_s_0(s(Subj,Verb,VArgs,VMods),Pred,Up,Id)).
+  select(cond(IF,S2),VMods,NewVMods),
+  S1 = s(Subj,Verb,VArgs,NewVMods),
+  i_s(S1,Pred1,Up,Id),
+  once(deepen_pos((s80lf(S2,Pred2);i_sentence(S2,Pred2)));Pred2=lfOf(S2)),
+  Pred= cond_pred(IF,Pred1,Pred2).
 
-i_s_0(s(Subj,Verb,VArgs,VMods),Pred,Up,Id) :-
-  i_s_1(s(Subj,Verb,VArgs,VMods),Pred,Up,Id)*-> true; i_s_2(s(Subj,Verb,VArgs,VMods),Pred,Up,Id).
-  
-i_s_2(s(Subj,Verb,VArgs,VMods),PredO,Up,Id):- fail, VMods\==[], i_s_1(s(Subj,Verb,VArgs,[]),Pred,Up,Id),
-  mabye_modalize(scope,VMods,Pred,PredO).
+i_s(s(Subj,Verb,VArgs,VMods),Pred,Up,Id) :-
+  once(subc_member(was_framed(VV),s(VMods,VArgs,Verb,Subj));gensym('frame_',VV)),
+  locally(t_l:current_vv(VV),
+   i_s_1(s(Subj,Verb,VArgs,VMods),Pred,Up,Id)),!.
 
 i_s_1(s(Subj,Verb,VArgs,VMods),Pred,Up,Id) :-
- debug_chat80_if_fail((
+  i_s_2(s(Subj,Verb,VArgs,VMods),Pred,Up,Id)*-> true; i_s_3(s(Subj,Verb,VArgs,VMods),Pred,Up,Id).
+
+  
+i_s_3(s(Subj,Verb,VArgs,VMods),PredO,Up,Id):- fail, VMods\==[], i_s_2(s(Subj,Verb,VArgs,[]),Pred,Up,Id),
+  mabye_modalize(scope,VMods,Pred,PredO).
+
+i_s_2(s(Subj,Verb,VArgs,VMods),Pred,Up,Id) :-
+ ((
    i_verb(Verb,P,Tense,Voice,DetPosNeg,Slots0,XA0,Meta),
    i_subj(RefVar,Voice,Subj,Slots0,Slots1,QSubj,SUp,'-'('-'(Id))),
    append(SUp,VArgs,TArgs),
@@ -662,8 +674,8 @@ slot_verb_template(Verb,Pred, Slots,[],transparent) :-
 
 slot_verb_template_transparent1(Verb,Pred, Slots) :-   
    (select_slots(Slots,[slot(subjA,TypeS,S,_,free)],SlotsRemaining);SlotsRemaining=Slots),
-   must80(verb_type_lex(Verb,Kind);true),
-   slot_verb_kind(Kind,Verb,TypeS,S,Pred,SlotsRemaining).
+   (verb_type_lex(Verb,Kind);true),
+   must80(slot_verb_kind(Kind,Verb,TypeS,S,Pred,SlotsRemaining)).
 
 slot_verb_template_transparent2(Verb,Pred, Slots) :- fail,
    (SlotsRemaining=Slots),   
@@ -723,16 +735,17 @@ slot_verb_kind((Prep),Verb,TypeS,S,Pred,AllSlots):- if_search_expanded(7),
  % see no_repeats_dc(DC0,subj_obj_indirect_slots_LF(ditrans,verb_prep(Verb,Prep),TypeS,S,TypeD,D,TypeI,I,Pred,Slots,SlotI,SlotD,DC0)).
 
 ditrans_lex80(Verb,Prep,TypeS,S,TypeD,D,TypeI,I,Pred,Slots,SlotD,SlotI,_):- 
-  limit_slots(Slots,10),!, fail,
+  limit_slots(Slots,10),!,% fail,
   Pred = ditrans_call(Verb,prep(Prep),subjType(TypeS),subj(S),dirType(TypeD),dirO(D),indType(TypeI),
    indO(I),slots(Slots),slot_d(SlotD),slot_i(SlotI)).
 
 limit_slots(Slots,L):- freeze(Slots,(proper_len(Slots,_,SL),SL<L)).
 
-slot_suggester(_,[slot(indO,_,_,_,free),slot(dirO,_,_,_,free)]).
-slot_suggester(_,[slot(dirO,_,_,_,free)]).
-slot_suggester(_,[]).
-slot_suggester(_,[slot(indO,_,_,_,free),slot(dirO,_,_,_,free),slot(prep(_),_,_,_,free)]).
+slot_suggester(dv(''),[slot(indO,_,_,_,free),slot(dirO,_,_,_,free)]).
+slot_suggester(tv,[slot(dirO,_,_,_,free)]).
+slot_suggester(iv,[]).
+slot_suggester(dv(Prep),[slot(indO,_,Z,_,free),slot(dirO,_,_,_,free),slot(prep(Prep),_,Z,_,free)]):- dif(Prep,'').
+%slot_suggester(dv(Prep),[slot(indO,_,_,_,free),slot(dirO,_,_,_,free),slot(prep(Prep),_,_,_,free)]):- dif(Prep,'').
 
 
 deepen_case(prep(at),time).

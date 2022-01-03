@@ -617,6 +617,15 @@ quote_amp(F):- compound(F), compound_name_arity(F,'$VAR',1),!.
 quote_amp(R) :-
    quote80(R).
 
+tmaybe_body(LF,LF):- var(LF),!.
+tmaybe_body(assertion80(I),O):- nonvar(I), !, tmaybe_body((I),O).
+tmaybe_body(question80([],I),O):- nonvar(I), !, tmaybe_body((I),O).
+tmaybe_body((_:-I),O):- nonvar(I), !, tmaybe_body((I),O).
+tmaybe_body(LF,LF).
+
+s80lf(S1,SLF):- sent_to_prelogic(S1,O),!, tmaybe_body(O,SLF).
+s80lf(S1,S1).
+
 sent_to_prelogic(S0,S) :-
    i_sentence(S0,S1),
    clausify80(S1,S2),
@@ -664,6 +673,8 @@ reduce3(_In,[Nil,Root],[]):- Nil == [], Root == root,!.
 reduce3(_In, s(A,B,C,D), LF):- s80lf(decl(s(A,B,C,D)),_ :- LF),!.
 reduce3(In, \+ ((X,P)), (X,PP)):- skip_over_modalize(X), !, reduce4(In, \+ P,PP).
 
+reduce3(_In, ^( A1,generic_pred(_X,_F,has_prop(type,T),A2,I)), ti(T,I)):- A1==A2,!.
+
 reduce3(_In,^(Var,P),P):- var(Var),\+ sub_var(Var,P),!.
 reduce3(_In,^(Vars,P),^(NewVars,P)):- is_list(Vars),select(Var,Vars,NewVars), var(Var),\+ sub_var(Var,P),!.
 reduce3(_In,^(Vars,P),^(NewVars,P)):- is_list(Vars),select(Var,Vars,NewVars), nonvar(Var),!.
@@ -701,8 +712,17 @@ reduce3(_In,'&'(Q,P),(P,Q)):-!. % compound(Q),compound(P), reduce4(In,(Q,P),PQ).
 
 %reduce3(In,qualifiedBy(Var,Num,_&_,V),true):- (atom(V);atom(Num)), V=Num,!.
 
-reduce3(_In,np_head(X,Det,AdjList,Type),O):- % Type\==[],
-  O = resultFn(X,[ti(Type,X),is_det(X,Det)|AdjList]).
+/*
+reduce3(_In,np_head(X,Det,Adjs,Table),Pred):- 
+   must(i_adjs0([(lf(ti(Table,X)))|Adjs],Type-X,Type-X,_,Head,Head,Pred,true)).
+*/
+
+
+reduce3(_In,np_head(X,Det,AdjList,Type),bE(is,X,Type)&nop(is_det(X,Det))&O):- % Type\==[],
+  maplist(r_adj(X),AdjList,Conjs),list_to_conjuncts(Conjs,O).
+reduce3(_In,resultFn(X,List),O):-
+  maplist(r_adj(X),List,Conjs),list_to_conjuncts(Conjs,O).
+
 
 /*
 reduce3(In,qualifiedBy(Var,BE_QualifiedBy,_Np_head,np_head(Var,Some,[],Place_here)),ti(Place_here,Var)):-
@@ -733,6 +753,13 @@ reduceQ(P,Q):-
    maplist(reduceQ,A,AA), 
    compound_name_arguments(Q,F,AA).
 reduceQ(Q,Q).
+
+r_adj(X,adj(Adj),PP):- !, r_adj(X,Adj,PP).
+r_adj(_,lf(Adj),Adj):- !.
+r_adj(X,P,PP):- subst(P,self,X,PP),PP\==P,!.
+r_adj(X,P,PP):- sub_var(X,P),P=PP.
+r_adj(X,Adj,isa(X,Adj)).
+%r_adj(X,Adj,PP):-  i_adj(Adj,_Type-X,T,T,Head,Head,PP,true),!.
 
 is_reduced_true(Q):- var(Q),!,fail.
 is_reduced_true(d80(Q)):- !,is_reduced_true(Q).

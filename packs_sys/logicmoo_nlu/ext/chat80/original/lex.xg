@@ -102,11 +102,11 @@ offsetDir(before_today) ---> theText80(ago).
 sentence_level(adv('meaning_of'([with,luck]))) ---> theTextL80([with,luck]),!.
 sentence_level(adv(timeOffset(In,I,day))) ---> prep(In),number(I,_),thePos80(root(day)),!.
 sentence_level(adv(timeOffset(Dir,I,day))) ---> number(I,_),thePos80(root(day)),offsetDir(Dir),!.
+sentence_level(_) ---> theText80(W), {logical_s_word(W)},!,{fail}.
 sentence_level(adv(W)) ---> thePos80(ner('DATE'),W),!.
+sentence_level(adv(W)) ---> theText80(W),!,{is_sent_adverb(W)},!.
 sentence_level(adv(meaningFn(W))) ---> span_as_xg('ADVP',theText_rest(W)).
 sentence_level(adv(meaningFn(W))) ---> span_as_xg('NP-TMP',theText_rest(W)).
-
-sentence_level(adv(W)) ---> theText80(W),!,{is_sent_adverb(W)},!.
 sentence_level(adv('meaning_of'(Prep,Arg))) ---> {fail},
    prep(Prep), !, (np_head0(Arg,_Agmt,_Case);s80(Arg)).
 

@@ -365,7 +365,10 @@ apply80(quantV(Op, N), Type, X, P, X, Q, R) :-
    value80(N, Type, Y),
    quant_op(Op, Z, Y, numberof(X,(P, Q), Z), R).
 
-apply80(det(Det), _, X, P, Y, Q, R) :-
+apply80(det(Det), A, X, P, Y, Q, R) :- !,
+   apply80(Det, A, X, P, Y, Q, R).
+
+apply80((Det), _, X, P, Y, Q, R) :-
    apply0(Det, X, P, Y, Q, R).
 
 
