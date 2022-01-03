@@ -650,7 +650,7 @@ reduce1(P,Q):- reduce4(P,P,Q),!.
 
 reduce4(_,Q,Q):- \+ compound(Q),!.
 reduce4(_,info(P),info(P)).   
-
+reduce4(_,decl(P),O):- i_sentence(decl(P),O),!.
 reduce4(R,P,Q):- once(reduce3(R,P,PQ)),P\==PQ,!,reduce4(R,PQ,Q).
 reduce4(_,Q,Q).
 
@@ -769,7 +769,7 @@ dont_reduce1(info).
 dont_reduce1(qualifiedBy).
 
 clausify_simplify80(QT,Plan):- 
-  simplify80(QT,QT0), clausify80(QT0,UE),!,should_learn(UE),
+  clausify80(QT,UE),!,should_learn(UE),
   once((simplify80(UE,Query),qplan(Query,Plan))),
   should_learn(Plan),!.
 

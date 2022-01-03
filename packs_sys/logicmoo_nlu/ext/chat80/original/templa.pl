@@ -505,13 +505,20 @@ intrans_LF_1(_,Continue,Spatial& _Feat& Type,X,LF,
   intrans_verb(Continue),
   LF = intrans_pred_direct(_Spatial,Continue,Type,X,Y).
 
+
+intrans_LF_1(Type,Run,Spatial & _Feat& _TypeX,X,LF, Slots,_):- 
+ clex_iface:clex_verb(_Sent,Run,RType,_Form),
+ LF = intrans_pred_slots(Spatial,Type=RType,Run,X,Slots).
+
 intrans_LF_1(Type,Run,Spatial & Feat& _TypeX,X,LF, Slots,_):- 
- slot_suggester(Type,Slots),
+ %slot_suggester(Type,Slots),
  feat(Feat), 
  %\+ concrete_type(Run),
  intrans_verb(Run),
+ ignore(clex_iface:clex_verb(_Sent,Run,RType,_Form)),
  spatial(Spatial),
- LF = intrans_pred_slots(Spatial,Type,Run,X,Slots).
+ LF = intrans_pred_slots(Spatial,Type=RType,Run,X,Slots).
+
 
 intrans_verb(Y):- once(intrans_verb0(Y)).
 intrans_verb(verb_fn(_)).

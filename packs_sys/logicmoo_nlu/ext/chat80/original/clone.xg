@@ -315,8 +315,8 @@ from_if(IF,S,SO,_Mask) --->  logical_word(Then),!,
   sentence802(S1),{
     local_s80lf(S1,SLF),  
     S=s(Subj,Verb,Args,Mods),
-    append_cond(Args,IF-Then,SLF,ArgsO),
-    SO=s(Subj,Verb,ArgsO,Mods)}.
+    append_cond(Mods,IF-Then,SLF,ModsO),
+    SO=s(Subj,Verb,Args,ModsO)}.
 
 logical_word(LW) ---> maybeComma,theText80(LW),!, { logical_s_word(LW)}.
 logical_word(true) ---> theText80(',').
@@ -366,7 +366,7 @@ just_vp0(Subj,Agmt,Type,Verb,Args,Mods,Mask) --->
 
 
 more_s_vp1(Subj,Agmt,Type,Verb,Args,Mods,Mask,
-                     Type,Verb,ArgsO,Mods,Mask) ---> 
+                     Type,Verb,ArgsO,Mods,Mask) ---> {fail},
    theText80(and),
    just_vp_1(Subj,Agmt,_Type1,Verb1,Args1,Mods1,Mask),   
    {append_mods(Mods1,ModsF),append(Args,cond(true-and,[s(Subj,Verb1,Args1,ModsF)]),ArgsO)}.
@@ -400,6 +400,10 @@ make_ace_var(AceVar,NP,Type):-
 local_s80lf(Pred2,S2):- deepen_pos(i_sentence(S2,Pred2)),!.
 local_s80lf(I,O):- tmaybe_body(I,O).
 
+% ACEVAR
+np_11(NP,_Agmt,_Case,_IndefA,_Role,_Set,_Mask)
+  ---> ace_var(AceVar),!,{make_ace_var(AceVar,NP,thing)}.
+
 np_11(AgmtKernelModsO,Agmt,Case,Def,Role,Set,Mask) ---> do_sentence_level0, !,
   np_11(AgmtKernelModsO,Agmt,Case,Def,Role,Set,Mask).
 
@@ -420,10 +424,6 @@ np_11(AgmtKernelModsO,Agmt,Case,Def,Role,Set,Mask) --->
   % or loose NP
   ;np_13(AgmtKernelModsO,_,_,_,_,_,_)).
 
-% ACEVAR
-np_11(NP,_Agmt,_Case,_IndefA,_Role,_Set,_Mask)
-  --->   ace_var(AceVar),!,{make_ace_var(AceVar,NP,thing)}.
-
 % action
 np_11(np(Agmt,nameOf(_Var,span_vp(SO),[]),_Mods),Agmt,_Case,_IndefA,_Role,_Set,_Mask) 
   ---> {if_search_expanded(4)}, span_vp(S),{local_s80lf(S,SO)}.
@@ -431,6 +431,10 @@ np_11(np(Agmt,nameOf(_Var,span_vp(SO),[]),_Mods),Agmt,_Case,_IndefA,_Role,_Set,_
 % sentence
 np_11(np(Agmt,nameOf(_Var,span_s(SO),[]),_Mods),Agmt,_Case,_IndefA,_Role,_Set,_Mask) 
   ---> {if_search_expanded(3)}, span_s(S),{local_s80lf(S,SO)}.
+
+% number
+%np_11(np(Agmt,nameOf(_,(N),[]),_Mods), Agmt,_Case,_IndefA,_Role,_Set,_Mask) --->  number(N,_).
+
 
 np_12(AgmtKernelModsO,Agmt,Case,Def,Role,Set,Mask) ---> 
   (np_13(AgmtKernelModsO,Agmt,Case,Def,Role,Set,Mask)*->{true}

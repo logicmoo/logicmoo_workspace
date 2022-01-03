@@ -378,8 +378,15 @@ i_s(s(Subj,verb(Mainiv,be,[],Active,Fin+fin,[],Neg),VArgs,VMods),Pred,Up,Id) :- 
    i_s(s(Subj,verb(Mainiv,exist,[],Active,Fin+fin,[],Neg),VArgs,VMods),Pred,Up,Id).
 
 i_s(s(Subj,Verb,VArgs,VMods),Pred,Up,Id) :-
-  select(cond(IF,S2),VMods,NewVMods),
+  select(cond(IF,S2),VMods,NewVMods),!,
   S1 = s(Subj,Verb,VArgs,NewVMods),
+  i_s(S1,Pred1,Up,Id),
+  once(deepen_pos((s80lf(S2,Pred2);i_sentence(S2,Pred2)));Pred2=lfOf(S2)),
+  Pred= cond_pred(IF,Pred1,Pred2).
+
+i_s(s(Subj,Verb,VArgs,VMods),Pred,Up,Id) :-
+  select(cond(IF,S2),VArgs,NewVArgs),!,
+  S1 = s(Subj,Verb,NewVArgs,VMods),
   i_s(S1,Pred1,Up,Id),
   once(deepen_pos((s80lf(S2,Pred2);i_sentence(S2,Pred2)));Pred2=lfOf(S2)),
   Pred= cond_pred(IF,Pred1,Pred2).
