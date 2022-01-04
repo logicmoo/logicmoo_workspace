@@ -106,7 +106,7 @@ expand_setos(O,O):- \+ compound(O),!.
 expand_setos(holds_truthvalue(E,S),O):-
 	phrase(satisfy80(E,G),_Vars),
 	%pprint_ecp_cmt(yellow,((X+Vars):-G)),!,
-	O=(G->S=true;S=false),!.
+	O=answerTF(G,S),!.
 expand_setos(seto(X,E,S),O):-
 	phrase(satisfy80(E,G),Vars),
 	%pprint_ecp_cmt(yellow,((X+Vars):-G)),!,
@@ -117,14 +117,14 @@ expand_setos(I, O):-
   expand_setos(qvar_to_vvar, ARGS, ArgsO), 
   compound_name_arguments(O, F, ArgsO).
 
+tti(T,I):- ti(T,I).
+
 named_eq(X,X).
 
+answerTF(G,S):- call(G)-> S=true;S=false.
+:- system:import(parser_chat80:answerTF/2).
 answerSet(X,G,S):- setof(X,G,S)*->true;S=[].
 :- system:import(parser_chat80:answerSet/3).
-
-setof_oR_nil(X,G,S):- setof(X,G,S)*->true;S=[].
-:- system:import(parser_chat80:setof_oR_nil/3).
-
 
 seto(X,E,S) :-
 %	portray_clause(({X} :- E)),

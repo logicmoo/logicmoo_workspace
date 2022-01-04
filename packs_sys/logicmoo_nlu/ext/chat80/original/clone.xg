@@ -327,7 +327,9 @@ from_if(IF,S,SO,_Mask) --->  logical_word(Then),!,
     append_cond(Mods,IF-Then,SLF,ModsO),
     SO=s(Subj,Verb,Args,ModsO)}.
 
-logical_word(LW) ---> maybeComma,theText80(LW),!, { logical_s_word(LW)}.
+logical_word(W) ---> theText80(','),!, logical_word(W).
+logical_word(LW) ---> {nonvar(LW)},!,theText80(LW),!, maybeComma.
+logical_word(LW) ---> theText80(LW),!, { logical_s_word(LW)}, maybeComma.
 logical_word(true) ---> theText80(',').
 %from_true(S,SO,_)---> theText80(LW),{logical_s_word(LW)},!, from_if(LW,S,SO,_).
 %from_true(S,S,_Mask)---> xg_peek( \+ logical_word(_LW)),!.
@@ -409,6 +411,13 @@ make_ace_var(AceVar,NP,Type):-
 local_s80lf(Pred2,S2):- deepen_pos(i_sentence(S2,Pred2)),!.
 local_s80lf(I,O):- tmaybe_body(I,O).
 
+never_starts_np(for).
+never_starts_np(W):- logical_o_word(W).
+never_starts_np(W):- logical_s_word(W).
+
+np_11(_AgmtKernelModsO,_Agmt,_Case,_Def,_Role,_Set,_Mask) 
+  ---> theText80(W), {never_starts_np(W),!,fail}.
+
 % ACEVAR
 np_11(NP,_Agmt,_Case,_IndefA,_Role,_Set,_Mask)
   ---> ace_var(AceVar),!,{make_ace_var(AceVar,NP,thing)}.
@@ -420,7 +429,6 @@ np_11(AgmtKernelModsO,Agmt,Case,Def,Role,Set,Mask) ---> do_sentence_level0, !,
 np_11(np(Agmt,nameOf(_Var,span_s(SO),[]),_Mods),Agmt,_Case,_IndefA,_Role,_Set,_Mask) 
   ---> theText80(to),!,
    imperative80(S),!,{local_s80lf(S,SO)}.
-np_11(_AgmtKernelModsO,_Agmt,_Case,_Def,_Role,_Set,_Mask) ---> theText80(W), {logical_o_word(W),!,fail}.
 
 % Standard NP
 np_11(AgmtKernelModsO,Agmt,Case,Def,Role,Set,Mask) --->
@@ -630,13 +638,16 @@ np_objbody1((sent2(Type_X,S)),_Agmt,_) ---> xg_peek([_,_]),
 
 /* Determiners */
 
+determiner(DX,Agmt,Def) ---> theText80(all), determiner(DX,Agmt,Def).
 determiner(Det,Number,Def) ---> quant_phrase(Det,Number,Def).
 determiner(Det,Number,Def) ---> det(Det,Number,Def).
 
-% Measure is Type_X
+% Measure is number
 quant_phrase(quantV(Op,Quant),Number,Def) --->
    quant_p(Op,Def),
-   number(Quant,Number).
+   number_wang(Quant,Number).
+
+number_wang(Quant,Number)---> number(Quant,Number).
 
 % Measure is more / less than
 quant_p(Op,indefA) --->

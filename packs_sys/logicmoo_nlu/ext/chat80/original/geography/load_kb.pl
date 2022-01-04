@@ -251,7 +251,8 @@ ed( N, W, _):-
 
 chat80_all_broken("What cities do the countries bordering the baltic contain ?",Baltic_Cities,673):- baltic_cities(Baltic_Cities).
 %chat80_all("What is the total area of countries south of the equator and are not in australasia ?",[--(10228,ksqmiles)],1302).
-chat80_all("What are the continents not containing a country ?",[antarctica],208).
+chat80_all("How few oceans do the countries bordering the baltic border?",[3],_).
+ chat80_all("What are the continents not containing a country ?",[antarctica],208).
 chat80_all("Is there some ocean that does not border any country ?",[true],1600).
 chat80_all("How many countries is the danube flowing through ?",[6],_).
 chat80_all("How many countries is the danube flowing from ?",[6],_).
@@ -322,7 +323,6 @@ chat80_all("The rhine flows from switzerland ?",true,22100).
 chat80_all("The rhine flows at west germany ?",true,21600).
 chat80_all("The rhine flows at switzerland ?",true,22200).
 chat80_all("What are the rivers of the countries bordering the baltic that flow into the baltic?",[[poland]:[oder,vistula]],_).
-chat80_all("How few oceans do the countries bordering the baltic border?",[3],_).
 
 
 

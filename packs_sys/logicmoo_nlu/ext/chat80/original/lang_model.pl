@@ -86,7 +86,7 @@ learn_equivalencies(Type,List):-
 skip_learning(X):- var(X),!.
 skip_learning([]).
 skip_learning(failure).
-skip_learning(time_limit_exceeded(_)).
+skip_learning(time_limit_exceeded(_,_)).
 skip_learning(error(_)).
 skip_learning(drs([],[])).
 skip_learning(E):- sub_term(X,E),compound(X),X=unparsed(_,_),!.
@@ -638,16 +638,19 @@ try_chat_80(TL,C,S,F,Tree,QT):-
   locally(set_prolog_flag(gc,true),
    ((((should_learn(Tree),catch(
      debug_chat80_if_fail(deepen_pos( 
-        catch(call_with_time_limit(TL,call(F,Tree,QT)),time_limit_exceeded,(QT=time_limit_exceeded(TL),dmsg(QT))))),
+        catch(call_with_time_limit(TL,call(F,Tree,QT)),time_limit_exceeded,(QT=time_limit_exceeded(F,TL))))),
       E,QT=error(E)) *-> true ; QT = failure))))),
   statistics(runtime,[End,_]),
   Total is (End - Start)/1000,
   answer_color(C,QT,Color),
-  (Total>1.0 -> ansicall(fg(Color),in_cmt(print_tree_nl(runtime(F) is Total))) ; true),
+  (Total>1.0 -> color_tree_cmt(fg(Color),runtime(F) is Total) ; true),
   maybe_restate_s(S),
   (compound(S)->arg(1,S,SS);S=SS),
   assert_if_new(tmp:test80_result(SS,F,QT,Total)),
-  ansicall(hfg(Color),in_cmt(print_tree_nl(F=QT))).
+  color_tree_cmt(Color,F=QT).
+
+color_tree_cmt(Color,Cmt):- \+ compound(Color),!,color_tree_cmt(hfg(Color),Cmt).
+color_tree_cmt(Color,Cmt):- ansicall(Color,in_cmt(print_tree_nl(Cmt))).
 
 answer_color(_,failure,red):-!.
 answer_color(C,QT,C):- should_learn(QT),!.
@@ -679,8 +682,8 @@ c2(B,O):-
 c8_test(B,O):-
   any_to_str(B,SS),
   c8(SS,Query),!,
-  results80(Query,O),
-  dmsg(results80=O),!.
+  with_no_x(profile(results80(Query,O))),
+  color_tree_cmt(cyan,results80=O),!.
 
 
 
@@ -703,7 +706,8 @@ c8_P(B,Query):-
  sentence8d(Lex,Tree), should_learn(Tree), 
  i_sentence(Tree,QT), should_learn(QT), 
  clausify80(QT,UE), should_learn(UE),
- simplify80(UE,Query), should_learn(Query).
+ simplify80(UE,Query), should_learn(Query),
+ compile80(Query,Prolog),color_tree_cmt(cyan,prolog=Prolog).
 
 c80:- test_c80.
 

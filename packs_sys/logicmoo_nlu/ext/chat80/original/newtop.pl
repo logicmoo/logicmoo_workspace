@@ -548,8 +548,8 @@ process4b(How,Sentence,U,S1,Answer,Times) :-
    report(How,U,'Question',TotalTime,print_test),
    ignore((report(always,Answer,'Reply',TimeAns,print_tree_nl))))),!.
    
-compile80(S1,G,S):- answer8o2_g(S1,G,S),!.
-compile80(S1,(G,respond(S))):- compile80(S1,G,S).
+compile80(S1,(GG,respond(S))):- compile803(S1,G,S),reduce1(G,GG).
+compile803(S1,G,S):- answer8o2_g(S1,G,S),!.
 
 results80(X,_):- var(X),!,fail.
 results80((S1,S2),(G1,G2)):- !,nonvar(S1), results80(S1,G1), results80(S2,G2).
@@ -671,7 +671,7 @@ reduce3(P,O&Q):-
 
 reduce3('^'(Q,P),P):- ground(Q).
 reduce3('`'(A),A). %:-!. reduce4(A,R).
-reduce3(d80(A),A):- nonvar(A),!,current_predicate(_,A).
+%reduce3(d80(A),A):- nonvar(A),!,current_predicate(_,A).
 reduce3((P,Q),P):- is_reduced_true(Q).
 reduce3((Q,P),P):- is_reduced_true(Q).
 reduce3( Q,true):- Q\==true,is_reduced_true(Q).
@@ -686,7 +686,7 @@ reduce3([Nil,Root],[]):- Nil == [], Root == root,!.
 reduce3( s(A,B,C,D), LF):- s80lf(decl(s(A,B,C,D)),_ :- LF),!.
 reduce3( \+ ((X,P)), (X,PP)):- skip_over_modalize(X), !, reduce4( \+ P,PP).
 
-reduce3(^( A1,generic_pred(_X,_F,has_prop(type,T),A2,I)), ti(T,I)):- A1==A2,!.
+reduce3(^( A1,generic_pred(_X,_F,has_prop(type,T),A2,I)), tti(T,I)):- A1==A2,!.
 
 reduce3(^(Var,P),P):- var(Var),\+ sub_var(Var,P),!.
 reduce3(^(Vars,P),^(NewVars,P)):- (is_list(Vars),select(Var,Vars,NewVars), (nonvar(Var) -> true ; \+ sub_var(Var,P))),!.
