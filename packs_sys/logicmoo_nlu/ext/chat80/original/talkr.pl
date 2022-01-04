@@ -239,7 +239,7 @@ measure_pred(Spatial,Area,Where,Total) :- not_where(Where),
          d80(aggregate80(total, Setof, Total)).
 
 
-bE(is,I,T):- nonvar(T),concrete_type(T), !, ti(T,I).
+bE(is,I,T):- nonvar(T),concrete_type(T), !, ti(T,I), nonvar(I).
 bE(_,X,X).
 named(X,X).
 
