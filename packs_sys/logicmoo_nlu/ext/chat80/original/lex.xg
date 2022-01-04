@@ -242,7 +242,9 @@ textOpt(_Text) ---> noText.
 
 is_sent_level ---> theText80(W),{is_sent_adverb(W)}.
 
-noun(Noun,Adjs,Adjs,Agmt) ---> \+ xg_peek(is_sent_level), noun1(Noun,Adjs,Adjs,Agmt).
+noun(Noun,Adjs,Adjs,Agmt) ---> 
+  \+ xg_peek(is_sent_level),
+  \+ xg_peek(det(det(_Det),_,_)), noun1(Noun,Adjs,Adjs,Agmt).
 
 noun1(noun_thing,Adjs,[adj(ace_var(self,AceVar))|Adjs],_Agmt) ---> 
    ace_var(AceVar),!.

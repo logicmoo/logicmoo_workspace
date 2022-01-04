@@ -695,11 +695,28 @@ into_string_sents(SS,ListS):- atomic_list_concat(ListS,'\n',SS),!.
 maybe_restate_s(S):- 
   (\+ string(S) -> ansicall(fg(cyan),in_cmt((write('?- '),writeq(S),write('.')))) ; true).
 
+
+c8_P(B,Query):-
+ any_to_str(B,SS),
+ into_lexical_segs(SS,Lex),
+ sentence8d(Lex,Tree),
+ i_sentence(Tree,QT), clausify80(QT,UE), should_learn(UE),
+ simplify80(UE,Query).
+
 c80:- test_c80.
 
 c8:- s82(c8).
-c8(S):- c8_make, c8(S,_).
+c8(S):- c8_make, c8(S,_),!.
+
 c8(SS,O):- break_apart(c8_A,SS,O),!.
+
+c8_A(B,Query):-
+  any_to_str(B,SS),
+ S = c8(SS),
+ locally(set_prolog_flag(gc,false),
+  try_chat_80(10,green,S,c8_P(SS,Query))),
+ should_learn(Query),!.
+
 c8_A(B,OO):-
  any_to_str(B,SS),
  S = c8(SS),
@@ -708,7 +725,7 @@ c8_A(B,OO):-
  try_chat_80(white,S,into_lexical_segs(SS,Lex)),
  try_chat_80(white,S,text_to_corenlp_tree(SS,_)),
  ignore((
- try_chat_80(200,green,S,sentence8e(Lex,Tree)),
+ try_chat_80(20,green,S,sentence8d(Lex,Tree)),
  %ansicall(hfg(cyan),in_cmt(print_tree_nl(sentence80=Tree))),
  try_chat_80(S,i_sentence(Tree,QT)),
  try_chat_80(S,clausify80(QT,UE)),

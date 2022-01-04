@@ -645,18 +645,17 @@ in_compat_verb_prep(_Verb,from).
 in_compat_verb_prep(_Verb,of).
 %compat_verb_prep(_Verb,from).
 
-reduce1(P,Q):- reduceQ(P,R),reduce4(R,P,Q),!.
-reduce1(P,Q):- reduce4(P,P,Q),!.
+reduce1(P,Q):- reduce4(P,Q),!.
 
-reduce4(_,Q,Q):- \+ compound(Q),!.
-reduce4(_,info(P),info(P)).   
+reduce4(Q,Q):- \+ compound(Q),!.
+reduce4(info(P),info(P)).   
 %reduce4(_,decl(P),O):- i_sentence(decl(P),O),!.
-reduce4(R,P,Q):- once(reduce3(R,P,PQ)),P\==PQ,!,reduce4(R,PQ,Q).
-reduce4(_,Q,Q).
+reduce4(P,Q):- once(reduce3(P,PQ)),P\==PQ,!,reduce4(PQ,Q).
+reduce4(Q,Q).
 
-reduce3(_In,P,Q):- \+ compound(P),!, Q=P.
+reduce3(P,Q):- \+ compound(P),!, Q=P.
 
-reduce3(_R,P,Q):- 
+reduce3(P,Q):- 
    sub_term(Aj,P),compound(Aj),Aj = generic_pred(X,F,prop(adjunct,Prep),Joe_Prop_Door1,Generic_Key),
    sub_term(Pr,P),compound(Pr),
     ((Pr = generic_pred(X,F,prop(pred,Verb),Subj,Joe_Prop_Door2),Preps=[]);
@@ -666,93 +665,83 @@ reduce3(_R,P,Q):-
    subst(P,Aj,true,PQ),
    subst(PQ,Pr,generic_frame(X,F,prop(pred,Verb),Subj,Joe_Prop_Door2,[slot_i(prep(Prep),Generic_Key)|Preps]),Q),!.
 
-reduce3(_In,'^'(Q,P),P):- ground(Q).
+reduce3(P,O&Q):- 
+   sub_term(Aj,P),compound(Aj),reduce5(X,Aj,O),
+   subst(P,Aj,X,Q).
 
-reduce3(_In,[Nil,Root],[]):- Nil == [], Root == root,!.
+reduce3('^'(Q,P),P):- ground(Q).
+reduce3('`'(A),A). %:-!. reduce4(A,R).
+reduce3((P,Q),P):- is_reduced_true(Q).
+reduce3((Q,P),P):- is_reduced_true(Q).
+reduce3( Q,true):- Q\==true,is_reduced_true(Q).
+reduce3((P,Q),P):- P == Q,!.
+reduce3(P,true):- P =@= nop(is_det(_,generic)).
 
-reduce3(_In, s(A,B,C,D), LF):- s80lf(decl(s(A,B,C,D)),_ :- LF),!.
-reduce3(In, \+ ((X,P)), (X,PP)):- skip_over_modalize(X), !, reduce4(In, \+ P,PP).
+reduce3(resultFn(X,List),O):-
+  maplist(r_adj(X),List,Conjs),list_to_conjuncts(Conjs,O).
 
-reduce3(_In, ^( A1,generic_pred(_X,_F,has_prop(type,T),A2,I)), ti(T,I)):- A1==A2,!.
+reduce3([Nil,Root],[]):- Nil == [], Root == root,!.
 
-reduce3(_In,^(Var,P),P):- var(Var),\+ sub_var(Var,P),!.
-reduce3(_In,^(Vars,P),^(NewVars,P)):- is_list(Vars),select(Var,Vars,NewVars), var(Var),\+ sub_var(Var,P),!.
-reduce3(_In,^(Vars,P),^(NewVars,P)):- is_list(Vars),select(Var,Vars,NewVars), nonvar(Var),!.
+reduce3( s(A,B,C,D), LF):- s80lf(decl(s(A,B,C,D)),_ :- LF),!.
+reduce3( \+ ((X,P)), (X,PP)):- skip_over_modalize(X), !, reduce4( \+ P,PP).
 
-reduce3(_In,qualifiedBy(Var,Var,Type3,pronoun(Var,Type,Tense)),R):-  Var = X,
+reduce3( ^( A1,generic_pred(_X,_F,has_prop(type,T),A2,I)), ti(T,I)):- A1==A2,!.
+
+reduce3(^(Var,P),P):- var(Var),\+ sub_var(Var,P),!.
+reduce3(^(Vars,P),^(NewVars,P)):- is_list(Vars),select(Var,Vars,NewVars), var(Var),\+ sub_var(Var,P),!.
+reduce3(^(Vars,P),^(NewVars,P)):- is_list(Vars),select(Var,Vars,NewVars), nonvar(Var),!.
+
+reduce3(qualifiedBy(Var,Var,Type3,pronoun(Var,Type,Tense)),R):-  Var = X,
   R= resultFn(X,[ti(Type,X),is_det(X,Tense),info(is_type3(X,Type3))]).
-reduce3(_In,qualifiedBy(Var,_,_,S),R):- sub_term(E,S), compound(E), E = np_head(Var,_,_,_), R= E.
-reduce3(_In,qualifiedBy(Var,X,P,S),R):- fail, OR = qualifiedBy(Var,X,P,S), qualifiedBy_LF2(Var,xxx,X,P,S,R)-> OR\==R,!.
-reduce3(_In,qualifiedBy(Var,X,P,S),R):- qualifiedBy_LF(Var,reduce1,X,P,S,R),!.
+reduce3(qualifiedBy(Var,_,_,S),R):- sub_term(E,S), compound(E), E = np_head(Var,_,_,_), R= E.
+reduce3(qualifiedBy(Var,X,P,S),R):- fail, OR = qualifiedBy(Var,X,P,S), qualifiedBy_LF2(Var,xxx,X,P,S,R)-> OR\==R,!.
+reduce3(qualifiedBy(Var,X,P,S),R):- qualifiedBy_LF(Var,reduce1,X,P,S,R),!.
 
 
-reduce3(_In,(P,Q),P):- is_reduced_true(Q).
-reduce3(_In,(Q,P),P):- is_reduced_true(Q).
-reduce3(_In, Q,true):- Q\==true,is_reduced_true(Q).
-reduce3(_In,(P,Q),P):- P == Q,!.
-reduce3(_In,mg(Q),Q):- !.
+reduce3(bE(Named,Q,P),true):- Named==named, P==Q, !.
+reduce3(bE(Named,Q,P),true):- Named==named, P=Q, !.
+reduce3(bE(is,Q,P),bE(is,Q,P)):-!.
+%reduce3(bE(_,Q,P),true):- var(P),var(Q),P=Q, !.
+reduce3(same_values(Q,P),true):- P=Q,!.
 
+reduce3('&'(Q,P),(P,Q)):-!. % compound(Q),compound(P), reduce4((Q,P),PQ).
 
-%reduce3(_In,slot(Syntax,_Type,Var,_Mode,_SlotI),slot_i(Syntax,Var)):- atom(Syntax),!.
-reduce3(_In,slot(Syntax,_Type,Var,_Mode,_SlotI),slot_i(Syntax,Var)):-!.
-reduce3(In,List,RList):- fail, is_list(List),select(E,List,RList),compound(E),
-  E=slot_i(_,DirO),var(DirO), subst(In,List,[hide],Out), \+ sub_var(DirO,Out),!.
+%reduce3(( bE(_,Num_Num10,N) , P), Q):- var(Num_Num10),subst(P,Num_Num10,N,Q).
 
-
-
-reduce3(_In,bE(Named,Q,P),true):- Named==named, P==Q, !.
-reduce3(_In,bE(Named,Q,P),true):- Named==named, P=Q, !.
-reduce3(_In,bE(is,Q,P),bE(is,Q,P)):-!.
-%reduce3(In,bE(_,Q,P),true):- var(P),var(Q),P=Q, !.
-reduce3(_In,same_values(Q,P),true):- P=Q,!.
-
-reduce3(_In,'&'(Q,P),(P,Q)):-!. % compound(Q),compound(P), reduce4(In,(Q,P),PQ).
-
-%reduce3(In,( bE(_,Num_Num10,N) , P), Q):- var(Num_Num10),subst(P,Num_Num10,N,Q).
-
-%reduce3(In,qualifiedBy(Var,Num,_&_,V),true):- (atom(V);atom(Num)), V=Num,!.
+%reduce3(qualifiedBy(Var,Num,_&_,V),true):- (atom(V);atom(Num)), V=Num,!.
 
 /*
-reduce3(_In,np_head(X,Det,Adjs,Table),Pred):- 
+reduce3(np_head(X,Det,Adjs,Table),Pred):- 
    must(i_adjs0([(lf(ti(Table,X)))|Adjs],Type-X,Type-X,_,Head,Head,Pred,true)).
 */
 
 
-reduce3(_In,np_head(X,Det,AdjList,Type),bE(is,X,Type)&nop(is_det(X,Det))&O):- % Type\==[],
-  maplist(r_adj(X),AdjList,Conjs),list_to_conjuncts(Conjs,O).
-reduce3(_In,resultFn(X,List),O):-
-  maplist(r_adj(X),List,Conjs),list_to_conjuncts(Conjs,O).
 
 
 /*
-reduce3(In,qualifiedBy(Var,BE_QualifiedBy,_Np_head,np_head(Var,Some,[],Place_here)),ti(Place_here,Var)):-
+reduce3(qualifiedBy(Var,BE_QualifiedBy,_Np_head,np_head(Var,Some,[],Place_here)),ti(Place_here,Var)):-
   Some==some.
 */
 
-reduce3(_In,'`'(A),A). %:-!. reduce4(In,A,R).
-%reduce3(In,ace_var(C,N),true):- var(C),nonvar(N),C='$VAR'(N),!.
+%reduce3(ace_var(C,N),true):- var(C),nonvar(N),C='$VAR'(N),!.
 
-%reduce3(In,Ex^(ti(Type,Ex1),bE(is,Ex2,Inst)),Ex^(ti(Type,Inst)&Ex=Inst)):- Ex==Ex1, Ex1==Ex2,!.
-reduce3(_In,Ex^(exceeds(Value1, Ex1) & exceeds(Value2, Ex2)),exceeds(Value2, Value1)):- Ex==Ex1, Ex1==Ex2,!.
-reduce3(_In,Ex^(exceeds(Value1, Ex1), exceeds(Value2, Ex2)),exceeds(Value2, Value1)):- Ex==Ex1, Ex1==Ex2,!.
-reduce3(_In,Ex^(exceeds(X,Y),exceeds(A,B)),exceeds(X,B)):- Ex==Y, Y==A,!.
-reduce3(_In,Ex^(exceeds(A,B),exceeds(X,Y)),exceeds(X,B)):- Ex==Y, Y==A,!.
+%reduce3(Ex^(ti(Type,Ex1),bE(is,Ex2,Inst)),Ex^(ti(Type,Inst)&Ex=Inst)):- Ex==Ex1, Ex1==Ex2,!.
+reduce3(Ex^(exceeds(Value1, Ex1) & exceeds(Value2, Ex2)),exceeds(Value2, Value1)):- Ex==Ex1, Ex1==Ex2,!.
+reduce3(Ex^(exceeds(Value1, Ex1), exceeds(Value2, Ex2)),exceeds(Value2, Value1)):- Ex==Ex1, Ex1==Ex2,!.
+reduce3(Ex^(exceeds(X,Y),exceeds(A,B)),exceeds(X,B)):- Ex==Y, Y==A,!.
+reduce3(Ex^(exceeds(A,B),exceeds(X,Y)),exceeds(X,B)):- Ex==Y, Y==A,!.
+reduce3(P,P):- compound_name_arity(P,F,_),\+ dont_reduce1(F),!.
+reduce3(P,Q):- compound_name_arguments(P,F,A),
+   maplist(reduce4,A,AA), compound_name_arguments(Q,F,AA).
 
-reduce3(In,P,Q):- compound_name_arguments(P,F,A), \+ dont_reduce1(F),
-   maplist(reduce4(In),A,AA), 
-   compound_name_arguments(Q,F,AA).
-reduce3(_,P,Q):- maybe_modalize(scope,true,P,Q).
 
-reduceQ(P,P):- \+ compound(P),!.
-reduceQ(^(_,P),Q):- reduceQ(P,Q),!.
-reduceQ(exists(_,P),Q):- reduceQ(P,Q).
-reduceQ(all(_,P),Q):- reduceQ(P,Q).
-reduceQ(P,Q):- 
-   compound_name_arguments(P,F,A), 
-   \+ dont_reduce1(F),
-   maplist(reduceQ,A,AA), 
-   compound_name_arguments(Q,F,AA).
-reduceQ(Q,Q).
+reduce5(X,np_head(X,Det,AdjList,Type),bE(is,X,Type)&nop(is_det(X,Det))&O):- % Type\==[],
+  maplist(r_adj(X),AdjList,Conjs),list_to_conjuncts(Conjs,O).
+
+reduce5(Var,slot(Syntax,_Type,Var,_Mode,_SlotI),is_slot(Syntax,Var)):-!.
+reduce5(Var,slot_i(Syntax,Var),is_slot(Syntax,Var)):-!.
+
+
 
 r_adj(X,adj(Adj),PP):- !, r_adj(X,Adj,PP).
 r_adj(_,lf(Adj),Adj):- !.
