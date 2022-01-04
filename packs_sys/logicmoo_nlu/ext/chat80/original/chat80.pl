@@ -52,7 +52,7 @@
 
 %!  test_chat80
 %
-%   Run default demo suite, showing timing  and   warn  if the answer80 is
+%   Run default demo suite, showing timing  and   warn  if the answer is
 %   incorrect.
 
 %!  rtest_chats(+Times)

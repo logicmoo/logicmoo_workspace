@@ -262,6 +262,7 @@ logical_s_word2(r,c,[else,if]).
      logical_o_word(not):- if_search_expanded(7).
      logical_o_word(except).
      
+logical_f_word(for).
 %logical_s_word(already).
 %logical_s_word(but).
 %logical_s_word(for).
@@ -273,8 +274,16 @@ logical_s_word2(r,c,[else,if]).
 
 xg_optional(G) ---> G ; [].
 
+if_cond(for,S,_Mask) ---> theText80(for),!, subj_decl(S).
 if_cond(If,S,Mask) ---> logical_word(If),!,s_vp_801(S,Mask).
 if_cond(true,S,Mask) ---> s_vp_801(S,Mask).
+
+% for each dog X
+% for all X
+% for some X
+% for each X
+% there exists X
+% exists X
 
 
 s80(P) --->  s80(P,_).
