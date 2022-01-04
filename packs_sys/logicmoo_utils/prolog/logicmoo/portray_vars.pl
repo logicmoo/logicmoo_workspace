@@ -489,6 +489,8 @@ swizzle_var_names(V,L):- swizzle_var_names0(V,L),swizzle_var_names0(L,V).
 pretty1(H):- pretty_enough(H),!.
 pretty1(ti(R,V)):- name_one(V,R).
 pretty1(ti(R,V)):- may_debug_var(R,V).
+pretty1(tti(R,V)):- name_one(V,R).
+pretty1(tti(R,V)):- may_debug_var(R,V).
 %pretty1(H):- trump_pretty(H),!.
 pretty1(as_rest(Name, Rest, _)):- may_debug_var_v(Name,Rest).
 pretty1(get_var(Env, Name, Val)):- may_debug_var('GEnv',Env),may_debug_var(Name,Val).

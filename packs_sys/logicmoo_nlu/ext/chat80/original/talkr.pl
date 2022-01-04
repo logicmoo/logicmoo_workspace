@@ -261,6 +261,14 @@ num_ti(size).
 
 free_ti(noun_thing).
 free_ti(thing).
+free_ti(statement).
+free_ti(noun_thing).
+free_ti(place_there).
+free_ti(place_here).
+free_ti(agent).
+free_ti(non_agent).
+free_ti(action).
+
 
 %is_voidQ(_).
 is_voidQ(_,_).

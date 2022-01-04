@@ -129,22 +129,17 @@ property_LF(River,Spatial& Feat& River,X,Spatial&Geo& /*_Neo&*/ _Country,Y,
 
 concrete_type(Type):- var(Type),dumpST,break,!,fail.
 concrete_type(Type):- Type==million,!,fail.
+concrete_type(Type):- is_toplevel_enum(Type).
+concrete_type(Type):- free_ti(Type).
+
+
 concrete_type(dog).
 concrete_type(person).
-concrete_type(statement).
-concrete_type(noun_thing).
-concrete_type(place_there).
-concrete_type(place_here).
-
-concrete_type(agent).
-concrete_type(non_agent).
-concrete_type(action).
 concrete_type(man).
 concrete_type(island).
-concrete_type(country).
-concrete_type(river).
-concrete_type(TI):-ti(TI,_),!.
+concrete_type(TI):-clause(ti(TI2,_),_),TI==TI2.
 
+is_toplevel_enum(river).
 is_toplevel_enum(ocean).
 is_toplevel_enum(seamass).
 is_toplevel_enum(sea).
