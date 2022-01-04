@@ -86,7 +86,7 @@ learn_equivalencies(Type,List):-
 skip_learning(X):- var(X),!.
 skip_learning([]).
 skip_learning(failure).
-skip_learning(time_limit_exceeded).
+skip_learning(time_limit_exceeded(_)).
 skip_learning(error(_)).
 skip_learning(drs([],[])).
 skip_learning(E):- sub_term(X,E),compound(X),X=unparsed(_,_),!.
@@ -638,7 +638,7 @@ try_chat_80(TL,C,S,F,Tree,QT):-
   locally(set_prolog_flag(gc,true),
    ((((should_learn(Tree),catch(
      debug_chat80_if_fail(deepen_pos( 
-        catch(call_with_time_limit(TL,call(F,Tree,QT)),time_limit_exceeded,(QT=time_limit_exceeded,dmsg(QT))))),
+        catch(call_with_time_limit(TL,call(F,Tree,QT)),time_limit_exceeded,(QT=time_limit_exceeded(TL),dmsg(QT))))),
       E,QT=error(E)) *-> true ; QT = failure))))),
   statistics(runtime,[End,_]),
   Total is (End - Start)/1000,
@@ -700,9 +700,10 @@ maybe_restate_s(S):-
 c8_P(B,Query):-
  any_to_str(B,SS),
  into_lexical_segs(SS,Lex),
- sentence8d(Lex,Tree),
- i_sentence(Tree,QT), clausify80(QT,UE), should_learn(UE),
- simplify80(UE,Query).
+ sentence8d(Lex,Tree), should_learn(Tree), 
+ i_sentence(Tree,QT), should_learn(QT), 
+ clausify80(QT,UE), should_learn(UE),
+ simplify80(UE,Query), should_learn(Query).
 
 c80:- test_c80.
 
@@ -715,7 +716,7 @@ c8_A(B,Query):-
   any_to_str(B,SS),
  S = c8(SS),
  locally(set_prolog_flag(gc,false),
-  try_chat_80(10,green,S,c8_P(SS,Query))),
+ try_chat_80(10,green,S,c8_P(SS,Query))),
  should_learn(Query),!.
 
 c8_A(B,OO):-
@@ -725,10 +726,12 @@ c8_A(B,OO):-
 ((
  try_chat_80(white,S,into_lexical_segs(SS,Lex)),
  try_chat_80(white,S,text_to_corenlp_tree(SS,_)),
- ignore((
- try_chat_80(20,green,S,sentence8d(Lex,Tree)),
+ ((
+ try_chat_80(S,sentence8d(Lex,Tree)),
+ should_learn(Tree), 
  %ansicall(hfg(cyan),in_cmt(print_tree_nl(sentence80=Tree))),
  try_chat_80(S,i_sentence(Tree,QT)),
+ should_learn(QT), 
  try_chat_80(S,clausify80(QT,UE)),
  should_learn(UE),
  RTL = 1.43,
@@ -737,33 +740,14 @@ c8_A(B,OO):-
  try_chat_80(S,compile80(Query,Prolog)),
  try_chat_80(RTL,magenta,S,capture80(Prolog,_)))),
  member(O,[Query,QT,Tree,(?- S)]),
- ignore((\+ should_learn(O),add_c80(c80,SS))), 
+ ignore((\+ should_learn(O),add_c80(c8,SS))), 
  should_learn(O),
  nop(ignore(into_cg(O,CG))),
- ignore((member(OO,[CG,O]),
- should_learn(OO)))))).
+ member(OO,[CG,O]),
+ should_learn(OO)))),
+ !.
 
-
- 
-s8:- s82(s8).
-s8(B):- \+ string(B), any_to_str(B,S),!,s8(S).
-s8(S):- c8_make, catch(s8(S,_),'$aborted',trace).
-s8(SS,O):- break_apart(s8_A,SS,O),!.
-s8_A(SS,O):- atom_length(SS,L),L<3,!,O= true.
-s8_A(SS,O):-
- S = s8(SS),
-  locally(set_prolog_flag(gc,true),
- ((
- notrace((try_chat_80(S,into_lexical_segs(SS,Lex)),try_chat_80(S,text_to_corenlp_tree(SS,_)))),
- %wdmsg(Lex),
- %maybe_restate_s(S),
- try_chat_80(S,sentence8dr(Lex,Tree)),
- %should_learn(Tree),
- %try_chat_80(S,i_sentence(Tree,QT)),
- %should_learn(QT),
- %try_chat_80(S,clausify80(QT,UE)),
- O=Tree))).
-
+c8_A(B,OO):- c88_A(B,OO).
 
 into_cg(CLIF,CG):-cgp_common_logic:convert_clif_to_cg(CLIF,CG),!.
 e2c_80(SS,CLIF):- parser_e2c:e2c(SS,CLIF),!, \+skip_learning(CLIF).
@@ -810,6 +794,27 @@ capture80(G,Text):- wots(Text,with_pp(plain,ignore(\+ G))).
 
 
 s83:- forall(training_data(Sent,M),(my_drs_to_fol_kif(M,O),in_cmt(block,print_tree_nl(Sent=O)))).
+
+
+ 
+s8:- s82(s8).
+s8(B):- \+ string(B), any_to_str(B,S),!,s8(S).
+s8(S):- c8_make, catch(s8(S,_),'$aborted',trace).
+s8(SS,O):- break_apart(s8_A,SS,O),!.
+s8_A(SS,O):- atom_length(SS,L),L<3,!,O= true.
+s8_A(SS,O):-
+ S = s8(SS),
+  locally(set_prolog_flag(gc,true),
+ ((
+ notrace((try_chat_80(S,into_lexical_segs(SS,Lex)),try_chat_80(S,text_to_corenlp_tree(SS,_)))),
+ %wdmsg(Lex),
+ %maybe_restate_s(S),
+ try_chat_80(S,sentence8dr(Lex,Tree)),
+ %should_learn(Tree),
+ %try_chat_80(S,i_sentence(Tree,QT)),
+ %should_learn(QT),
+ %try_chat_80(S,clausify80(QT,UE)),
+ O=Tree))).
 
 
 :- add_history(c84).
@@ -942,17 +947,19 @@ s82(P):- s82_A(p1(P)).
 s82_A(P):- s82_A(20,P).
 s82_A(N,P):- c8_make,call(s82_B(N,P)).
 s82_B(N,P):-
-  for_n(N,training_data(X,_),call(P,X)),
-  %for_n(N,parser_e2c:fracas_test_problem(X),call(P,X)),
-  for_n(N,ape_test(_,X),call(P,X)),
-  forall(parser_e2c:fracas_test_problem(X),call(P,X)),
-  %forall(test_aceese(X),call(P,X)),
-  for_n(N,sample_set80(X),call(P,X)),
-  for_n(N,test_e2c(X,_),call(P,X)),
-  for_n(N,parser_chat80:chat80_all(X,_,_),call(P,X)),
-  forall(sample_set80(X),call(P,X)),
+  for_n(N,training_data(X,_),s82_C(P,X)),
+  %for_n(N,parser_e2c:fracas_test_problem(X),s82_C(P,X)),
+  for_n(N,ape_test(_,X),s82_B(P,X)),
+  forall(parser_e2c:fracas_test_problem(X),s82_C(P,X)),
+  %forall(test_aceese(X),s82_C(P,X)),
+  for_n(N,sample_set80(X),s82_C(P,X)),
+  for_n(N,test_e2c(X,_),s82_C(P,X)),
+  for_n(N,parser_chat80:chat80_all(X,_,_),s82_C(P,X)),
+  forall(sample_set80(X),s82_C(P,X)),
   example_mentalese,
   !.
+
+s82_C(P,X):- try_chat_80(10,cyan,X,call,P,X).
 
 chat80_all(P):- c8_make,
   forall(chat80_all(X,_,_),ignore(p1(P,X))).
@@ -966,7 +973,8 @@ chat80_all(P):- c8_make,
 %:- s81.
 :- endif.
 
-example_mentalese:- cls, c8_make, forall(mu:example_mentalese(N,V), (dmsg(example_mentalese=N),c88(V))).
+example_mentalese:- cls, c8_make, forall(mu:example_mentalese(N,V), 
+  (dmsg(example_mentalese=N),s82_C(c88,V))).
 
 
 :- fixup_exports.

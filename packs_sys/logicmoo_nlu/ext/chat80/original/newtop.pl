@@ -650,7 +650,7 @@ reduce1(P,Q):- reduce4(P,Q),!.
 reduce4(Q,Q):- \+ compound(Q),!.
 reduce4(info(P),info(P)).   
 %reduce4(_,decl(P),O):- i_sentence(decl(P),O),!.
-reduce4(P,Q):- once(reduce3(P,PQ)),P\==PQ,!,reduce4(PQ,Q).
+reduce4(P,Q):- once((reduce3(P,PQ),nonvar(PQ))),P\==PQ,!,reduce4(PQ,Q).
 reduce4(Q,Q).
 
 reduce3(P,Q):- \+ compound(P),!, Q=P.
@@ -671,6 +671,7 @@ reduce3(P,O&Q):-
 
 reduce3('^'(Q,P),P):- ground(Q).
 reduce3('`'(A),A). %:-!. reduce4(A,R).
+reduce3(d80(A),A):- nonvar(A),!,current_predicate(_,A).
 reduce3((P,Q),P):- is_reduced_true(Q).
 reduce3((Q,P),P):- is_reduced_true(Q).
 reduce3( Q,true):- Q\==true,is_reduced_true(Q).
@@ -685,11 +686,10 @@ reduce3([Nil,Root],[]):- Nil == [], Root == root,!.
 reduce3( s(A,B,C,D), LF):- s80lf(decl(s(A,B,C,D)),_ :- LF),!.
 reduce3( \+ ((X,P)), (X,PP)):- skip_over_modalize(X), !, reduce4( \+ P,PP).
 
-reduce3( ^( A1,generic_pred(_X,_F,has_prop(type,T),A2,I)), ti(T,I)):- A1==A2,!.
+reduce3(^( A1,generic_pred(_X,_F,has_prop(type,T),A2,I)), ti(T,I)):- A1==A2,!.
 
 reduce3(^(Var,P),P):- var(Var),\+ sub_var(Var,P),!.
-reduce3(^(Vars,P),^(NewVars,P)):- is_list(Vars),select(Var,Vars,NewVars), var(Var),\+ sub_var(Var,P),!.
-reduce3(^(Vars,P),^(NewVars,P)):- is_list(Vars),select(Var,Vars,NewVars), nonvar(Var),!.
+reduce3(^(Vars,P),^(NewVars,P)):- (is_list(Vars),select(Var,Vars,NewVars), (nonvar(Var) -> true ; \+ sub_var(Var,P))),!.
 
 reduce3(qualifiedBy(Var,Var,Type3,pronoun(Var,Type,Tense)),R):-  Var = X,
   R= resultFn(X,[ti(Type,X),is_det(X,Tense),info(is_type3(X,Type3))]).
@@ -730,7 +730,7 @@ reduce3(Ex^(exceeds(Value1, Ex1) & exceeds(Value2, Ex2)),exceeds(Value2, Value1)
 reduce3(Ex^(exceeds(Value1, Ex1), exceeds(Value2, Ex2)),exceeds(Value2, Value1)):- Ex==Ex1, Ex1==Ex2,!.
 reduce3(Ex^(exceeds(X,Y),exceeds(A,B)),exceeds(X,B)):- Ex==Y, Y==A,!.
 reduce3(Ex^(exceeds(A,B),exceeds(X,Y)),exceeds(X,B)):- Ex==Y, Y==A,!.
-reduce3(P,P):- compound_name_arity(P,F,_),\+ dont_reduce1(F),!.
+reduce3(P,P):- compound_name_arity(P,F,_), dont_reduce1(F),!.
 reduce3(P,Q):- compound_name_arguments(P,F,A),
    maplist(reduce4,A,AA), compound_name_arguments(Q,F,AA).
 
@@ -762,14 +762,15 @@ clausify_simplify80(QT,Plan):-
   once((simplify80(UE,Query),qplan(Query,Plan))),
   should_learn(Plan),!.
 
-simplify80(C,C0):-var(C),dmsg(var_simplify(C,C0)),!,C=C0.
-simplify80(C,C0):- must80(simplify8d(C,C0)),!.
-simplify80(P,Q):-reduce1(P,Q).
+simplify80(C,C0):- var(C),dmsg(var_simplify(C,C0)),!,C=C0.
+simplify80(P,Q):- must80(simplify8d(P,PQ)),!,reduce1(PQ,Q).
+simplify80(P,Q):- reduce1(P,Q).
 
 simplify8d(C,(P:-RR)) :- !,
    unequalise(C,(P:-Q)),
    simplify80(Q,R,true),
    reduce1(R,RR).
+
 simplify80(C,C0,C1):-var(C),dmsg(var_simplify(C,C0,C1)),fail.
 simplify80(Q,R,R0):- must(simplify8d(Q,R,R0)).
 simplify8d(C,C,R):-var(C),!,R=C.

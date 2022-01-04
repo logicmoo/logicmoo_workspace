@@ -262,7 +262,6 @@ logical_s_word2(r,c,[else,if]).
      logical_o_word(not):- if_search_expanded(7).
      logical_o_word(except).
      
-logical_f_word(for).
 %logical_s_word(already).
 %logical_s_word(but).
 %logical_s_word(for).
@@ -274,16 +273,8 @@ logical_f_word(for).
 
 xg_optional(G) ---> G ; [].
 
-if_cond(for,S,_Mask) ---> logical_word(for),!, subj_decl(S).
 if_cond(If,S,Mask) ---> logical_word(If),!,s_vp_801(S,Mask).
 if_cond(true,S,Mask) ---> s_vp_801(S,Mask).
-
-% for each dog X
-% for all X
-% for some X
-% for each X
-% there exists X
-% exists X
 
 
 s80(P) --->  s80(P,_).
@@ -315,18 +306,10 @@ add_extra_to_verb(CmpI,ExtraProps,CmpO):-
   compound_name_arguments(CmpO,F,ArgsO),!.
 
 
-s_vp_800(SO,Mask) ---> if_cond(IF,S,Mask), maybeComma, s_vp_800s(IF,S,SO,Mask).
+s_vp_800(SO,Mask) ---> if_cond(IF,S,Mask), s_vp_800s(IF,S,SO,Mask).
 
 s_vp_800s(true,S,SO,Mask) ---> !, from_true(S,SO,Mask).
-%s_vp_800s(for,S,SO,Mask) ---> !, from_true(S,SO,Mask).
 s_vp_800s(IF,S,SO,Mask) ---> from_if(IF,S,SO,Mask).
-
-from_if(for,S,SO,_Mask) ---> !,
-  sentence801(S1),{
-    local_s80lf(S1,SLF),
-    S=s(Subj,Verb,Args,Mods),
-    append_cond(Mods,for-true,SLF,ModsO),
-    SO=s(Subj,Verb,Args,ModsO)}.
 
 from_if(IF,S,SO,_Mask) --->  logical_word(Then),!,
   sentence802(S1),{
@@ -335,10 +318,8 @@ from_if(IF,S,SO,_Mask) --->  logical_word(Then),!,
     append_cond(Mods,IF-Then,SLF,ModsO),
     SO=s(Subj,Verb,Args,ModsO)}.
 
-logical_word(W) ---> theText80(','),!, logical_word(W).
-logical_word(LW) ---> {nonvar(LW)},!,theText80(LW),!, maybeComma.
-logical_word(LW) ---> theText80(LW),!, { logical_s_word(LW)}.
-%logical_word(true) ---> theText80(',').
+logical_word(LW) ---> maybeComma,theText80(LW),!, { logical_s_word(LW)}.
+logical_word(true) ---> theText80(',').
 %from_true(S,SO,_)---> theText80(LW),{logical_s_word(LW)},!, from_if(LW,S,SO,_).
 %from_true(S,S,_Mask)---> xg_peek( \+ logical_word(_LW)),!.
 from_true(S,SO,Mask)---> from_if(true,S,SO,Mask).
@@ -640,16 +621,13 @@ np_objbody1((sent2(Type_X,S)),_Agmt,_) ---> xg_peek([_,_]),
 
 /* Determiners */
 
-determiner(DX,Agmt,Def) ---> theText80(all), determiner(DX,Agmt,Def).
 determiner(Det,Number,Def) ---> quant_phrase(Det,Number,Def).
 determiner(Det,Number,Def) ---> det(Det,Number,Def).
 
-% Measure is number
+% Measure is Type_X
 quant_phrase(quantV(Op,Quant),Number,Def) --->
    quant_p(Op,Def),
-   number_wang(Quant,Number).
-
-number_wang(Quant,Number)---> number(Quant,Number).
+   number(Quant,Number).
 
 % Measure is more / less than
 quant_p(Op,indefA) --->

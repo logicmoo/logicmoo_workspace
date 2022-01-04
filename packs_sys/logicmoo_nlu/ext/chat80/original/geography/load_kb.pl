@@ -261,7 +261,10 @@ chat80_all("How many countries does the danube flow through ?",[6],_).
 chat80_all("How many countries does the danube flow from ?",[6],_).
 chat80_all("How many countries does the danube flow into ?",[5],_).
 chat80_all("How many countries does the danube rise from ?",[1],_).
-
+chat80_all("What are the continents containing a country in which contains more than two cities whose population exceeds 1 million ?",[america,asia,europe],211).
+      chat80_all("What are the continents no country in which contains more than two cities whose population exceeds 1 million ?",[[africa,antarctica,australasia]],18).
+chat80_all("Does the population of china exceed the population of india ?",[true],_00).
+chat80_all("What rivers are there ?",[amazon,amu_darya,amur,brahmaputra,colorado,congo_river,cubango,danube,don,elbe,euphrates,ganges,hwang_ho,indus,irrawaddy,lena,limpopo,mackenzie,mekong,mississippi,murray,niger_river,nile,ob,oder,orange,orinoco,parana,rhine,rhone,rio_grande,salween,seine,senegal_river,tagus,vistula,volga,volta,yangtze,yenisei,yukon,zambesi],100).
 chat80_all("What is the total area of countries south of the equator and not in australasia ?",[--(10228,ksqmiles)],1300).
 chat80_all("What is the total area of countries south of the equator and in australasia ?",[--(3263.6419999999994,ksqmiles)],1301).
 chat80_all("How many countries does the danube flow through ?",[6],1200).
@@ -288,7 +291,6 @@ chat80_all("Which countries are bordered by two seas ?",[egypt,iran,israel,saudi
 chat80_all("Which continents contain more than 4 cities ?",_,31300).
 chat80_all("Which asian countries have a population exceeding 10 million ?",_,31400).
 chat80_all("Where is the largest country ?",[asia,northern_asia],400).
-chat80_all("What rivers are there ?",[amazon,amu_darya,amur,brahmaputra,colorado,congo_river,cubango,danube,don,elbe,euphrates,ganges,hwang_ho,indus,irrawaddy,lena,limpopo,mackenzie,mekong,mississippi,murray,niger_river,nile,ob,oder,orange,orinoco,parana,rhine,rhone,rio_grande,salween,seine,senegal_river,tagus,vistula,volga,volta,yangtze,yenisei,yukon,zambesi],100).
 chat80_all("What rivers are in countries bordering the baltic ?",_,66600).
 chat80_all("What percentage of countries border each ocean ?",[[arctic_ocean,2],[atlantic,35],[indian_ocean,14],[pacific,20]],2200).
 chat80_all("What is the ocean that borders african countries and that borders asian countries ?",[indian_ocean],900).
@@ -365,10 +367,7 @@ chat80_all("What countries do rivers rise from ?", [[ afghanistan, angola,austra
                  west_germany,zambia]],_).
 chat80_all("Does afghanistan border china ?",[true],200).
 chat80_all("What are the continents no country in which contains more than two cities that have a population exceeding 1 million ?",[[africa,antarctica,australasia]],18).
-      chat80_all("What are the continents no country in which contains more than two cities whose population exceeds 1 million ?",[[africa,antarctica,australasia]],18).
-chat80_all("Does the population of china exceed the population of india ?",[true],_00).
 chat80_all("Which country bordering the mediterranean borders a country that is bordered by a country whose population exceeds the population of india ?",[turkey],1900).
-chat80_all("What are the continents containing a country in which contains more than two cities whose population exceeds 1 million ?",[america,asia,europe],211).
 %chat80_all("What are the rivers of the countries that are bordering the baltic that flow?",[[east_germany]:[elbe],[poland]:[oder,vistula],[soviet_union]:[amu_darya,amur,don,lena,ob,volga,yenisei],[west_germany]:[danube,elbe,rhine]],_).
 chat80_all("What are the rivers of the countries that are bordering the baltic that flow?",[ [ [ [east_germany]:[elbe],                     [poland]:[oder,vistula],                      [soviet_union] :                        [ amu_darya, amur,don,lena,ob,volga,yenisei],                    [west_germany]:[danube,elbe,rhine]]]],_).
 chat80_all("What are the capitals of the countries that are bordering the baltic that have a population exceeding 1 thousand?",[[east_germany]:[berlin],[poland]:[warsaw],[soviet_union]:[moscow]],_).

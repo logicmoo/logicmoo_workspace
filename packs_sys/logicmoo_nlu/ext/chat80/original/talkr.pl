@@ -365,46 +365,39 @@ count_pred(Spatial,Heads,C,Total):- is_list(C),maplist(count_pred(Spatial,Heads)
 % Interface.
 % ---------
 
-database801(aggregate80(X,Y,Z)) :- aggregate80(X,Y,Z).
-database801(one_of(X,Y)) :- one_of(X,Y).
-database801(ratio(X,Y,Z)) :- ratio(X,Y,Z).
-database801(card(X,Y)) :- card(X,Y).
-%d80(circle_of_latitude(X)) :- circle_of_latitude(X).
-%d80(continent(X)) :- continent(X).
-database801(exceeds(X,Y)) :- exceeds(X,Y).
-database801(ti(Place,X)) :- ti(Place,X).
-database801(X=Y) :- X=Y.
-%d80(person(X)) :- person(X).	% JW: person is not defined
+d80(aggregate80(X,Y,Z)) :- !, aggregate80(X,Y,Z).
+d80(one_of(X,Y)) :- !, one_of(X,Y).
+d80(ratio(X,Y,Z)) :- !, ratio(X,Y,Z).
+d80(card(X,Y)) :- !, card(X,Y).
+%d80(circle_of_latitude(X)) :- !, circle_of_latitude(X).
+%d80(continent(X)) :- !, continent(X).
+d80(exceeds(X,Y)) :- !, exceeds(X,Y).
+d80(ti(Place,X)) :- !, ti(Place,X).
+d80(X=Y) :- !, X=Y.
+%d80(person(X)) :- !, person(X).	% JW: person is not defined
+d80(unit_format(P,X)) :- !, unit_format(P,X).  % square miles
+d80(measure_pred(_Type,P,X,Y)) :- !, measure_pred(_Type2,P,X,Y). % area of
+d80(count_pred(Type,P,X,Y)) :- !, count_pred(Type,P,X,Y). % population of 
+d80(position_pred(Type,P,X,Y)) :- !, position_pred(Type,P,X,Y). % latitude of
+d80(ordering_pred(Type,P,X,Y)) :- !, ordering_pred(Type,P,X,Y). % south of
+d80(symmetric_pred(Type,P,X,Y)) :- !, symmetric_pred(Type,P,X,Y). % border
+d80(specific_pred(Type,P,X,Y)) :- !, specific_pred(Type,P,X,Y). % capital 
+%d80(generic_pred(VV,thing,any,_X,_Y)):- !, true.
+d80(generic_pred(VV,Type,P,X,Y)) :- !, generic_pred(VV,Type,P,X,Y). % capital 
+d80(trans_pred(Type,P,X,Y)) :- !, trans_pred(Type,P,X,Y). % contain 
+d80(path_pred(PathSystemPart,ObjType,X,Y)) :- !, path_pred(PathSystemPart,ObjType,X,Y).
+d80(path_pred_linkage(DirectPathSystem,ObjType,X,Y,Z)) :- !, path_pred_linkage(DirectPathSystem,ObjType,X,Y,Z).
+d80(modalized(_,X)):- !, d80(X).
+d80(not(X)):-  !, \+ d80(X).
+d80((A,B)):- nonvar(A),!,d80(A),d80(B).
+d80(G):-  current_predicate(_,G), !, call(G).
+d80(G):- dmsg(missing(d80(G))),fail.
 
-
-database801(unit_format(P,X)) :- unit_format(P,X).  % square miles
-database801(measure_pred(_Type,P,X,Y)) :- measure_pred(_Type2,P,X,Y). % area of
-database801(count_pred(Type,P,X,Y)) :- count_pred(Type,P,X,Y). % population of 
-database801(position_pred(Type,P,X,Y)) :- position_pred(Type,P,X,Y). % latitude of
-database801(ordering_pred(Type,P,X,Y)) :- ordering_pred(Type,P,X,Y). % south of
-database801(symmetric_pred(Type,P,X,Y)) :- symmetric_pred(Type,P,X,Y). % border
-database801(specific_pred(Type,P,X,Y)) :- specific_pred(Type,P,X,Y). % capital 
-%database801(generic_pred(VV,thing,any,_X,_Y)):- true.
-database801(generic_pred(VV,Type,P,X,Y)) :- generic_pred(VV,Type,P,X,Y). % capital 
-database801(trans_pred(Type,P,X,Y)) :- trans_pred(Type,P,X,Y). % contain 
-
-database801(modalized(_,X)):- d80(X).
-database801(ought(X)):- d80(X).
-database801(can(X)):- d80(X).
-database801(will(X)):- d80(X).
-database801(past(X)):- d80(X).
-database801(not(X)):-  \+ d80(X).
-%database801(there(X)):- d80(X).
+%d80(there(X)):- d80(X).
 
 %d80(path_pred(begins(Flow),rises,river,X,Y)) :- path_pred(begins(Flow),rises,river,X,Y).
 %d80(path_pred(ends(Flow),drains,river,X,Y)) :- path_pred(ends(Flow),drains,river,X,Y).
-database801(path_pred(PathSystemPart,ObjType,X,Y)) :- path_pred(PathSystemPart,ObjType,X,Y).
-database801(path_pred_linkage(DirectPathSystem,ObjType,X,Y,Z)) :- path_pred_linkage(DirectPathSystem,ObjType,X,Y,Z).
 
-d80((A,B)):- nonvar(A),!,d80(A),d80(B).
-d80(G):-  clause(database801(G),B), !, call(B).
-d80(G):-  current_predicate(_,G), !, call(G).
-d80(G):- dmsg(missing(d80(G))),fail.
 
 :- style_check(+singleton).
 
