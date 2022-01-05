@@ -251,9 +251,11 @@ ed( N, W, _):-
 
 chat80_all_broken("What cities do the countries bordering the baltic contain ?",Baltic_Cities,673):- baltic_cities(Baltic_Cities).
 %chat80_all("What is the total area of countries south of the equator and are not in australasia ?",[--(10228,ksqmiles)],1302).
+chat80_all("What are the rivers of the countries bordering the baltic that flow into the baltic?",[[poland]:[oder,vistula]],_).
 chat80_all("How few oceans do the countries bordering the baltic border?",[3],_).
  chat80_all("What are the continents not containing a country ?",[antarctica],208).
 chat80_all("Is there some ocean that does not border any country ?",[true],1600).
+chat80_all("What oceans do not border any country ?",[southern_ocean],1601).
 chat80_all("How many countries is the danube flowing through ?",[6],_).
 chat80_all("How many countries is the danube flowing from ?",[6],_).
 chat80_all("How many countries is the danube flowing into ?",[5],_).
@@ -262,15 +264,15 @@ chat80_all("How many countries does the danube flow through ?",[6],_).
 chat80_all("How many countries does the danube flow from ?",[6],_).
 chat80_all("How many countries does the danube flow into ?",[5],_).
 chat80_all("How many countries does the danube rise from ?",[1],_).
-chat80_all("What are the continents containing a country in which contains more than two cities whose population exceeds 1 million ?",[america,asia,europe],211).
-      chat80_all("What are the continents no country in which contains more than two cities whose population exceeds 1 million ?",[[africa,antarctica,australasia]],18).
-chat80_all("Does the population of china exceed the population of india ?",[true],_00).
 chat80_all("What rivers are there ?",[amazon,amu_darya,amur,brahmaputra,colorado,congo_river,cubango,danube,don,elbe,euphrates,ganges,hwang_ho,indus,irrawaddy,lena,limpopo,mackenzie,mekong,mississippi,murray,niger_river,nile,ob,oder,orange,orinoco,parana,rhine,rhone,rio_grande,salween,seine,senegal_river,tagus,vistula,volga,volta,yangtze,yenisei,yukon,zambesi],100).
 chat80_all("What is the total area of countries south of the equator and not in australasia ?",[--(10228,ksqmiles)],1300).
 chat80_all("What is the total area of countries south of the equator and in australasia ?",[--(3263.6419999999994,ksqmiles)],1301).
 chat80_all("How many countries does the danube flow through ?",[6],1200).
 chat80_all("Which countries with a population exceeding 10 million border the atlantic ?",[argentina,brazil,canada,colombia,france,mexico,morocco,netherlands,nigeria,south_africa,spain,united_kingdom,united_states,venezuela,west_germany,zaire],2100).
 chat80_all("Which countries have a population exceeding 10 million ?",[afghanistan,algeria,argentina,australia,bangladesh,brazil,burma,canada,china,colombia,czechoslovakia,east_germany,egypt,ethiopia,france,india,indonesia,iran,italy,japan,kenya,malaysia,mexico,morocco,nepal,netherlands,nigeria,north_korea,pakistan,peru,philippines,poland,south_africa,south_korea,soviet_union,spain,sri_lanka,sudan,taiwan,tanzania,thailand,turkey,uganda,united_kingdom,united_states,venezuela,vietnam,west_germany,yugoslavia,zaire],2000).
+chat80_all("What are the continents containing a country in which contains more than two cities whose population exceeds 1 million ?",[america,asia,europe],211).
+      chat80_all("What are the continents no country in which contains more than two cities whose population exceeds 1 million ?",[[africa,antarctica,australasia]],18).
+chat80_all("Does the population of china exceed the population of india ?",[true],_00).
 chat80_all("Which rivers are not in asia ?",_,31800).
 chat80_all("How many rivers flow to west germany ?",2,21301).
 chat80_all("How many rivers flow to switzerland ?",_,21901).
@@ -322,7 +324,6 @@ chat80_all("The rhine flows from west germany ?",true,21500).
 chat80_all("The rhine flows from switzerland ?",true,22100).
 chat80_all("The rhine flows at west germany ?",true,21600).
 chat80_all("The rhine flows at switzerland ?",true,22200).
-chat80_all("What are the rivers of the countries bordering the baltic that flow into the baltic?",[[poland]:[oder,vistula]],_).
 
 
 

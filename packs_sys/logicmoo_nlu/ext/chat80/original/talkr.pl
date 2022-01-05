@@ -239,7 +239,7 @@ measure_pred(Spatial,Area,Where,Total) :- not_where(Where),
          d80(aggregate80(total, Setof, Total)).
 
 
-bE(is,I,T):- nonvar(T),concrete_type(T), !, ti(T,I), nonvar(I).
+bE(is,I,T):- nonvar(T),!, (\+ ti(T,_) -> I=T ; ti(T,I)).
 bE(_,X,X).
 named(X,X).
 
@@ -268,7 +268,9 @@ free_ti(place_here).
 free_ti(agent).
 free_ti(non_agent).
 free_ti(action).
-
+is_det(_,_).
+is_type3(_,_).
+info(_).
 
 %is_voidQ(_).
 is_voidQ(_,_).

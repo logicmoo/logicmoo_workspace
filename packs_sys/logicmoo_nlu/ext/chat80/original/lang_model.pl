@@ -630,16 +630,20 @@ sentence8dr(U,E):- sentence8d(U,E),nop(true;(dmsg(redo(sentence8dr(E))),fail)).
 sentence8e(U,E):- ((sentence8dr(U,E),i_sentence(E,_))*->true
                   ;sentence8d(U,E)).
 
+qt_error(QT,F,E):- dmsg(qt_error(QT,F,E)),atomic(E),throw(E).
+qt_error(QT,_,E):- QT=error(E).
+
 try_chat_80(S,G):- try_chat_80(green,S,G).
 try_chat_80(C,S,G):- ignore((G=..[F,Tree,QT],!,should_learn(Tree),try_chat_80(60,C,S,F,Tree,QT))).
 try_chat_80(TL,C,S,G):- ignore((G=..[F,Tree,QT],!,should_learn(Tree),try_chat_80(TL,C,S,F,Tree,QT))).
 try_chat_80(TL,C,S,F,Tree,QT):-
   statistics(runtime,[Start,_]),
   locally(set_prolog_flag(gc,true),
-   ((((should_learn(Tree),catch(
+   ((((should_learn(Tree),
+    catch(
      debug_chat80_if_fail(deepen_pos( 
-        catch(call_with_time_limit(TL,call(F,Tree,QT)),time_limit_exceeded,(QT=time_limit_exceeded(F,TL))))),
-      E,QT=error(E)) *-> true ; QT = failure))))),
+        catch(call_with_time_limit_local(TL,call(F,Tree,QT),Catcher),Catcher,(QT=time_limit_exceeded(F,TL))))),
+       E,qt_error(QT,F,E)) *-> true ; QT = failure))))),
   statistics(runtime,[End,_]),
   Total is (End - Start)/1000,
   answer_color(C,QT,Color),
@@ -649,7 +653,7 @@ try_chat_80(TL,C,S,F,Tree,QT):-
   assert_if_new(tmp:test80_result(SS,F,QT,Total)),
   color_tree_cmt(Color,F=QT).
 
-color_tree_cmt(Color,Cmt):- \+ compound(Color),!,color_tree_cmt(hfg(Color),Cmt).
+color_tree_cmt(Color,Cmt):- atom(Color),!,color_tree_cmt(hfg(Color),Cmt).
 color_tree_cmt(Color,Cmt):- ansicall(Color,in_cmt(print_tree_nl(Cmt))).
 
 answer_color(_,failure,red):-!.
@@ -682,7 +686,8 @@ c2(B,O):-
 c8_test(B,O):-
   any_to_str(B,SS),
   c8(SS,Query),!,
-  with_no_x(profile(results80(Query,O))),
+  %with_no_xdbg_flag(with_no_x(profile(results80(Query,O)))),
+  results80(Query,O),
   color_tree_cmt(cyan,results80=O),!.
 
 
@@ -711,7 +716,9 @@ c8_P(B,Query):-
 
 c80:- test_c80.
 
-c8:- s82(c8).
+c8:- c8_make,
+     ignore(catch(s82(c8),_,list_issues)).
+
 c8(S):- c8_make, c8(S,_),!.
 
 c8(SS,O):- break_apart(c8_A,SS,O),!.
@@ -741,7 +748,7 @@ c8_B(B,OO):-
  try_chat_80(RTL,magenta,S,results80(Query,_Answer)),
  try_chat_80(S,compile80(Query,Prolog)),
  try_chat_80(RTL,magenta,S,capture80(Prolog,_)),
- member(O,[Query,Prolog,(?- S)]),
+ member(O,[Query,Prolog]),
  ignore((\+ should_learn(O),add_c80(c8,SS))), 
  should_learn(O),
  nop(ignore(into_cg(O,CG))),
@@ -796,10 +803,15 @@ capture80(G,Text):- wots(Text,with_pp(plain,ignore(\+ G))).
 s83:- forall(training_data(Sent,M),(my_drs_to_fol_kif(M,O),in_cmt(block,print_tree_nl(Sent=O)))).
 
 
+list_issues:- 
+   forall((tmp:test80_result(S,sentence8e,B,_), \+ should_learn(B)),
+        (maybe_restate_s(s8(S)), add_c80(s8,S))).
+
+s8:- c8_make,
+     ignore(catch(s82(s8),_,list_issues)).
  
-s8:- s82(s8).
 s8(B):- \+ string(B), any_to_str(B,S),!,s8(S).
-s8(S):- c8_make, catch(s8(S,_),'$aborted',trace).
+s8(S):- c8_make, catch(s8(S,_),'$aborted',list_issues).
 s8(SS,O):- break_apart(s8_A,SS,O),!.
 s8_A(SS,O):- atom_length(SS,L),L<3,!,O= true.
 s8_A(SS,O):-
@@ -959,7 +971,13 @@ s82_B(N,P):-
   example_mentalese,
   !.
 
-s82_C(P,X):- try_chat_80(10,cyan,X,call,P,X).
+:- thread_local(t_l:tl_ov/1).
+
+%call_with_time_limit_local(TL,Goal,'$not_aborted'):- t_l:tl_ov(OTL), TL>=OTL, !, call(Goal).
+%call_with_time_limit_local(_,Goal,'$not_aborted'):- t_l:tl_ov(_), !, call(Goal).
+call_with_time_limit_local(TL,Goal,time_limit_exceeded):- locally(t_l:tl_ov(TL),call_with_time_limit(TL,Goal)).
+
+s82_C(P,X):- catch(call_with_time_limit_local(10,try_chat_80(10,cyan,X,call,P,X),Catcher),Catcher,true).
 
 chat80_all(P):- c8_make,
   forall(chat80_all(X,_,_),ignore(p1(P,X))).

@@ -315,18 +315,10 @@ add_extra_to_verb(CmpI,ExtraProps,CmpO):-
   compound_name_arguments(CmpO,F,ArgsO),!.
 
 
-s_vp_800(SO,Mask) ---> if_cond(IF,S,Mask), maybeComma, s_vp_800s(IF,S,SO,Mask).
+s_vp_800(SO,Mask) ---> if_cond(IF,S,Mask), s_vp_800s(IF,S,SO,Mask).
 
 s_vp_800s(true,S,SO,Mask) ---> !, from_true(S,SO,Mask).
-%s_vp_800s(for,S,SO,Mask) ---> !, from_true(S,SO,Mask).
 s_vp_800s(IF,S,SO,Mask) ---> from_if(IF,S,SO,Mask).
-
-from_if(for,S,SO,_Mask) ---> !,
-  sentence801(S1),{
-    local_s80lf(S1,SLF),
-    S=s(Subj,Verb,Args,Mods),
-    append_cond(Mods,for-true,SLF,ModsO),
-    SO=s(Subj,Verb,Args,ModsO)}.
 
 from_if(IF,S,SO,_Mask) --->  logical_word(Then),!,
   sentence802(S1),{
@@ -513,14 +505,18 @@ np_compls(common,Agmt,Case,Mods,Set0,Mask) --->
 
 /* Nuclear noun phrase */
 
-% number
-one_np_value(H)--->number(H,_).
-one_np_value(H)--->np_head2(H,_Agmt,_Def).
-
 np_head0(_,_,_)---> has_trait(pos('.')),!,{fail}.
-np_head0(nameOf(_Var,items(AndOr,List),[]),Agmt,Def)---> {if_search_expanded(2)}, nl_list_of_items(AndOr,np_head2(Agmt,Def),List).
-np_head0(nameOf(_Var,items(set,List),[]),_Agmt,_Def)---> {if_search_expanded(2)},theText80('{'),!, set_of_items(theText80('}'),one_np_value,List).
-np_head0(H,Agmt,Def)---> np_head2(H,Agmt,Def).
+np_head0(nameOf(_Var,items(AndOr,List),[]),Agmt,Def)---> {if_search_expanded(2)}, nl_list_of_items(AndOr,np_head1(Agmt,Def),List).
+np_head0(nameOf(_Var,items(set,List),[]),_Agmt,_Def)---> {if_search_expanded(2)},theText80('{'),!,
+  set_of_items(theText80('}'),np_head_1,List).
+
+np_head0(H,Agmt,Def)---> np_head1(H,Agmt,Def).
+
+np_head1(H,Agmt,Def)--->np_head2(H,Agmt,Def).
+
+% number
+np_head_1(H)--->number(H,_).
+np_head_1(H)--->np_head2(H,_Agmt,_Def).
 
 np_head2(Pronoun,Agmt,defA+proper), gen_marker --->
    poss_pron(Pronoun,Agmt).
@@ -530,13 +526,7 @@ np_head2(nameOf(_Var,O,[]),Agmt,Def) ---> np_objbody(O,Agmt,Def).
 np_head2(np_head(_Var,Det,AdjsO,Head),3+Number,Def+common) --->
    determiner(Det,Number,Def),
    post_determiner_pre_noun(Adjs),
-   noun_or_var(Head,Adjs,AdjsO,Number).
-
-noun_or_var(any_thing_ace_var,Adjs,[adj(ace_var(self,AceVar))|Adjs],_Number) ---> ace_var(AceVar),!.
-noun_or_var(Head,Adjs,AdjsO,Number) ---> noun(Head,Adjs,AdjsO,Number).
-%noun_or_var(Head,Adjs,Adjs,_Number) ---> 
-%  {unloop(noun_or_var)},np_head0(Head,_Agmt,_Def).
-%noun_or_var(any_thing,Adjs,Adjs,_Number) ---> [].
+   noun(Head,Adjs,AdjsO,Number).
 
 
 maybe_ace_variable(AdjIn,AdjsOut)---> ace_var(AceVar),!,{append_np_mods(AdjIn,(adj(ace_var(self,AceVar))),AdjsOut)}.

@@ -632,7 +632,7 @@ comp_adv_lex_w2(_,W2,_):- is_list(W2), \+ must_member(pos(rbr),W2), !, fail.
 comp_adv_lex_w2(Smaller,_,Small):- comp_adv_lex(Smaller,Small).
 comp_adv_lex_w2(_,W2,Root):-  is_list(W2), must_member(root(Root),W2),!.
 :- else.
-comp_adv_lex_w2(_,W2,Small):- must_member(pos(rbr),W2),!,must_member(root(Small),W2).
+comp_adv_lex_w2(_,W2,Small):- is_list(W2), must_member(pos(rbr),W2),!,must_member(root(Small),W2).
 comp_adv_lex_w2(Smaller,_,Small):- comp_adv_lex(Smaller,Small).
 %comp_adv_lex_w2(_,W2,Root):-  is_list(W2), member(root(Root),W2),!.
 :- endif.

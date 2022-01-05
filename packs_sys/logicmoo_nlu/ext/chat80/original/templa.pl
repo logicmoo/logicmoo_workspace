@@ -45,19 +45,19 @@ thing_LF(OceanOrSea,Path,X,ti(OceanOrSea,X),Nil,Any):-  ti_subclass(OceanOrSea,S
     concrete_type(Seamass).
 
 thing_LF(City,Spatial& Feat& City,X,ti(City,X),[],_):- concrete_type(City), feat(Feat), spatial(Spatial),like_type(geo,city,City).
-thing_LF(Seamass,Spatial&Geo& /*_Neo&*/ Seamass,X,ti(Seamass,X),[],_):- concrete_type(Seamass), spatial(Spatial),like_type(Geo,seamass,Seamass).
+thing_LF(Seamass,Spatial&Geo&  Seamass,X,ti(Seamass,X),[],_):- concrete_type(Seamass), spatial(Spatial),like_type(Geo,seamass,Seamass).
 
 thing_LF_access(Continent,_,X,ti(Continent,X),[],_):- var(Continent),!,fail.
 
-thing_LF_access(Continent,Spatial&Geo& /*_Neo&*/ Continent,X,ti(Continent,X),[],_):- concrete_type(Continent), like_type(Geo,continent,Continent), spatial(Spatial).
+thing_LF_access(Continent,Spatial&Geo&  Continent,X,ti(Continent,X),[],_):- concrete_type(Continent), like_type(Geo,continent,Continent), spatial(Spatial).
 
 name_template_lf0(X,_) :- var(X),!,fail.
 name_template_lf0(X,Spatial& Feat& City) :-like_type(geo,city,City), ti(City,X),feat(Feat), spatial(Spatial).
 name_template_lf0(X,Spatial& Feat& Circle_of_latitude) :- like_type(geo,circle_of_latitude,Circle_of_latitude), feat(Feat), ti(Circle_of_latitude,X), spatial(Spatial).
 
-name_template_lf0(X,Spatial&Geo& /*_Neo&*/ Seamass) :- like_type(Geo,seamass,Seamass),spatial(Spatial), ti(Seamass,X).
-name_template_lf0(X,Spatial&Geo& /*_Neo&*/ Country) :- like_type(Geo,country,Country), spatial(Spatial), ti(Country,X).
-name_template_lf0(X,Spatial&Geo& /*_Neo&*/ Continent) :- like_type(Geo,continent,Continent), spatial(Spatial), ti(Continent,X).
+name_template_lf0(X,Spatial&Geo&  Seamass) :- like_type(Geo,seamass,Seamass),spatial(Spatial), ti(Seamass,X).
+name_template_lf0(X,Spatial&Geo&  Country) :- like_type(Geo,country,Country), spatial(Spatial), ti(Country,X).
+name_template_lf0(X,Spatial&Geo&  Continent) :- like_type(Geo,continent,Continent), spatial(Spatial), ti(Continent,X).
 
 %like_type(geo,River,River):- bind_pos('type',River).
 
@@ -74,7 +74,7 @@ name_template_lf0(X,Spatial&_) :- like_type(_Geo,region,Region),spatial(Spatial)
 
 thing_LF(Place,  Spatial&_,          X,ti(Place,X),  [],_):- spatial(Spatial), place_lex(Place).
 thing_LF(Region, Spatial&_,          X,ti(Region,X), [],_):- spatial(Spatial),like_type(_Geo,region,Region).
-thing_LF(Country,Spatial&Geo& /*_Neo&*/ Country,X,ti(Country,X),[],_):- spatial(Spatial),like_type(Geo,country,Country).
+thing_LF(Country,Spatial&Geo&  Country,X,ti(Country,X),[],_):- spatial(Spatial),like_type(Geo,country,Country).
 
 
 unique_of_obj(geo,thing,Country,Govern,Capital,City,Capital_city,Nation_Capital):-
@@ -119,7 +119,7 @@ prep_order(paint,by,dirO,color).
 prep_order(give,by,to,dirO).
 %prep_order(get,by,to,from).
 /* Nouns */
-property_LF(River,Spatial& Feat& River,X,Spatial&Geo& /*_Neo&*/ _Country,Y,
+property_LF(River,Spatial& Feat& River,X,Spatial&Geo&  _Country,Y,
  (GP,ti(River,X)),[],_,_):-  fail,
    if_search_expanded(7),
    make_generic_pred(Spatial,any,Y,X,GP),
@@ -129,17 +129,22 @@ property_LF(River,Spatial& Feat& River,X,Spatial&Geo& /*_Neo&*/ _Country,Y,
 
 concrete_type(Type):- var(Type),dumpST,break,!,fail.
 concrete_type(Type):- Type==million,!,fail.
-concrete_type(Type):- is_toplevel_enum(Type).
-concrete_type(Type):- free_ti(Type).
-
-
 concrete_type(dog).
 concrete_type(person).
+concrete_type(statement).
+concrete_type(noun_thing).
+concrete_type(place_there).
+concrete_type(place_here).
+
+concrete_type(agent).
+concrete_type(non_agent).
+concrete_type(action).
 concrete_type(man).
 concrete_type(island).
-concrete_type(TI):-clause(ti(TI2,_),_),TI==TI2.
+concrete_type(country).
+concrete_type(river).
+concrete_type(TI):-ti(TI,_),!.
 
-is_toplevel_enum(river).
 is_toplevel_enum(ocean).
 is_toplevel_enum(seamass).
 is_toplevel_enum(sea).
@@ -151,18 +156,18 @@ property_LF(Capital,_Spatial1& _Feat& _City,X,Spatial2&_Geo& /*_Neo&*/Country,_Y
   nop((var(Spatial2),var(Country))),
   is_toplevel_enum(Capital),
   Out = ti(Capital,X).
-property_LF(Capital,Spatial1& Feat& City,X,Spatial2&Geo& /*_Neo&*/ Country,Y,Out,[],_,_):-  
+property_LF(Capital,Spatial1& Feat& City,X,Spatial2&Geo&  Country,Y,Out,[],_,_):-  
    concrete_type(Capital),
    % feat(Feat), assertion(nonvar(Capital)),   t_l:current_vv(VV),
-   _Info = [info([Y->(Spatial2&Geo& /*_Neo&*/ Country),X->(Spatial1& Feat& City)])],
+   _Info = [info([Y->(Spatial2&Geo&  Country),X->(Spatial1& Feat& City)])],
    make_generic_pred(_Spatial,has_prop(type,Capital),Y,X,Out).
 
-property_LF(Capital,Spatial& Feat& City,X,Spatial&Geo& /*_Neo&*/ Country,Y,Out,[],_,_):-  
+property_LF(Capital,Spatial& Feat& City,X,Spatial&Geo&  Country,Y,Out,[],_,_):-  
    feat(Feat), assertion(nonvar(Capital)),
    unique_of_obj(Geo,Spatial,Country,_Govern,Capital,City,_Capital_city,_Nation_capital),
    make_generic_pred(Spatial,has_prop(type,Capital),Y,X,Out).
 /*
-property_LF(Capital,Spatial& Feat& City,X,Spatial&Geo& /*_Neo&*/ Country,Y,specific_pred(Spatial,Nation_capital,Y,X),[],_,_):-  
+property_LF(Capital,Spatial& Feat& City,X,Spatial&Geo&  Country,Y,specific_pred(Spatial,Nation_capital,Y,X),[],_,_):-  
    feat(Feat), assertion(nonvar(Capital)),
    unique_of_obj(Geo,Spatial,Country,_Govern,Capital,City,_Capital_city,Nation_capital).
 */
@@ -177,7 +182,7 @@ property_LF_1(City,Spatial&Feat&City,X,Spatial&_Geo&Country,Y,
    feat(Feat), assertion(nonvar(City)),
    make_generic_pred(Spatial,prep(of),X,Y,Out).
 
-trans_LF(    Govern,Spatial& Feat& City,X,Spatial&Geo& /*_Neo&*/ Country,Y,specific_pred(Spatial,Nation_capital,Y,X),[],_,_):-
+trans_LF(    Govern,Spatial& Feat& City,X,Spatial&Geo&  Country,Y,specific_pred(Spatial,Nation_capital,Y,X),[],_,_):-
   feat(Feat), assertion(nonvar(Govern)),
   unique_of_obj(Geo,Spatial,Country,Govern,_Capital,City,_Capital_city,Nation_capital).
    
@@ -265,7 +270,7 @@ check_slots(Slots):- ignore((var(Slots),trace,break)).
 
 /*
 %verb_root_db(chat80,border).
-trans_LF(border,Spatial&Geo& /*_Neo&*/ _,X,Spatial&Geo& /*_Neo&*/ _,Y,symmetric_pred(Spatial,borders,X,Y),[],_,_).
+trans_LF(border,Spatial&Geo&  _,X,Spatial&Geo&  _,Y,symmetric_pred(Spatial,borders,X,Y),[],_,_).
 %regular_past_db(chat80,bordered,border).
 %% superceeded regular_pres_db(chat80,border).
 verb_form_db(chat80,bordering,border,pres+part,_):- .

@@ -652,6 +652,7 @@ reduce_fname(L,R):- atom_concat_some_left('C',LL,L),remove_single_number(LL,LLL)
 reduce_fname(L,R):- atom_concat_some_left('Num',LL,L),remove_single_number(LL,LLL),reduce_fname(LLL,R).
 reduce_fname(L,R):- remove_single_number(L,LLL),reduce_fname(LLL,R).
 reduce_fname(ti,'').
+reduce_fname(tti,'').
 reduce_fname(card,siize).
 reduce_fname(partOf,'').
 reduce_fname(N,N):-!.
@@ -700,6 +701,7 @@ maplist_not_tail(G,[X|ArgS]):-call(G,X),maplist_not_tail(G,ArgS).
 
 pretty_three(H):- pretty_enough(H),!. 
 pretty_three(ti(R,V)):- name_one(V,R).
+pretty_three(tti(R,V)):- name_one(V,R).
 %pretty_three([H|T]):-!,maplist_not_tail(pretty_three,[H|T]).
 pretty_three(_):-!.
 pretty_three(H):-  

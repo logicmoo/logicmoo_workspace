@@ -268,6 +268,7 @@ riddle(Level) :- forall(test_e2c(Text, riddle(Level)), e2c(Text)).
 :- thread_local(t_l:into_form_code/0).
 :- asserta(t_l:into_form_code).
 
+the_text_unif(IC,W0):- compound(IC),IC=(I;C),!,(the_text_unif(I,W0);the_text_unif(C,W0)).
 the_text_unif(IC,W0):- atom(W0),!,downcase_atom(W0,DC),(var(IC)->IC=DC;downcase_atom(IC,DC)).
 the_text_unif(IC,W0):- var(W0),!,nonvar(IC),!,the_text_unif(W0,IC).
 the_text_unif(IC,W0):- parser_tokenize:any_nb_to_atom(W0,W1),!,downcase_atom(W1,DC),(var(IC)->IC=DC;downcase_atom(IC,DC)).
