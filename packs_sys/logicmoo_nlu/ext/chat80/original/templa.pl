@@ -122,7 +122,7 @@ prep_order(give,by,to,dirO).
 property_LF(River,Spatial& Feat& River,X,Spatial&Geo&  _Country,Y,
  (GP,ti(River,X)),[],_,_):-  fail,
    if_search_expanded(7),
-   make_generic_pred(Spatial,any,Y,X,GP),
+   make_gp(Spatial,any,Y,X,GP),
    feat(Feat),spatial(Spatial),Geo=geo,
    %concrete_type(Country),
    concrete_type(River).
@@ -160,12 +160,12 @@ property_LF(Capital,Spatial1& Feat& City,X,Spatial2&Geo&  Country,Y,Out,[],_,_):
    concrete_type(Capital),
    % feat(Feat), assertion(nonvar(Capital)),   t_l:current_vv(VV),
    _Info = [info([Y->(Spatial2&Geo&  Country),X->(Spatial1& Feat& City)])],
-   make_generic_pred(_Spatial,has_prop(type,Capital),Y,X,Out).
+   make_gp(_Spatial,has_prop(type,Capital),Y,X,Out).
 
 property_LF(Capital,Spatial& Feat& City,X,Spatial&Geo&  Country,Y,Out,[],_,_):-  
    feat(Feat), assertion(nonvar(Capital)),
    unique_of_obj(Geo,Spatial,Country,_Govern,Capital,City,_Capital_city,_Nation_capital),
-   make_generic_pred(Spatial,has_prop(type,Capital),Y,X,Out).
+   make_gp(Spatial,has_prop(type,Capital),Y,X,Out).
 /*
 property_LF(Capital,Spatial& Feat& City,X,Spatial&Geo&  Country,Y,specific_pred(Spatial,Nation_capital,Y,X),[],_,_):-  
    feat(Feat), assertion(nonvar(Capital)),
@@ -180,7 +180,7 @@ property_LF_1(City,Spatial&Feat&City,X,Spatial&_Geo&Country,Y,
 %   fail,
    concrete_type(City),
    feat(Feat), assertion(nonvar(City)),
-   make_generic_pred(Spatial,prep(of),X,Y,Out).
+   make_gp(Spatial,prep(of),X,Y,Out).
 
 trans_LF(    Govern,Spatial& Feat& City,X,Spatial&Geo&  Country,Y,specific_pred(Spatial,Nation_capital,Y,X),[],_,_):-
   feat(Feat), assertion(nonvar(Govern)),
@@ -232,7 +232,7 @@ thing_LF_access(Population,value&units&Population/*citizens*/,X,unit_format(Popu
 
 adjunction_LF(in,Spatial&_-X,Spatial&_-Y,trans_pred(Spatial,contain,Y,X)).
 adjunction_LF(Any,Spatial&_-X,Spatial&_-Y,GP):- if_search_expanded(2),
-                    make_generic_pred(Spatial,prop(adjunct,Any),X,Y,GP).
+                    make_gp(Spatial,prop(adjunct,Any),X,Y,GP).
 adjunction_LF(cp(East,Of),Spatial&_-X,Spatial&_-Y,ordering_pred(Spatial,cp(East,Of),X,Y)).
 
 
@@ -285,13 +285,13 @@ verb_form_db(chat80,bordered,border,past+part,_). % :- regular_past_db(chat80,bo
 :- style_check(+singleton).
 
 trans_LF(Border,Spatial&Super&_,X,Spatial&Super&_,Y,GP,[],_,_):-  
-  make_generic_pred(Spatial,has_prop(pred,Border),X,Y,GP),
+  make_gp(Spatial,has_prop(pred,Border),X,Y,GP),
    verb_type_lex(Border,main+tv),
    symmetric_verb(Spatial, Border).
 
 trans_LF(Border,Spatial&Super&_,X,Spatial&Super&_,Y,GP,[],_,_):-  
    (bind_pos('action',Border);bind_pos('attrib',Border)),nop(spatial(Spatial)),
-   make_generic_pred(Spatial,has_prop(pred,Border),X,Y,GP).
+   make_gp(Spatial,has_prop(pred,Border),X,Y,GP).
 
 bind_pos(_,_,_,_):- !,fail.
 bind_pos(Type,Var,Lex,Var2):- nonvar(Var),!,clex:learned_as_type(Type,Var,Lex,Var2).
@@ -364,12 +364,12 @@ trans_LF(Look,feature&_,X,dbase_t(Look,X,Y), [slot(prep(At),feature&_,Y,_,free)]
 trans_LF(exceed,value&Measure&Type,X,value&Measure&Type,Y,exceeds(X,Y),[],_,_).
 
 trans_LF1(Trans,_,X,_,Y, P,[],_,_):- if_search_expanded(4), Trans\=aux(_,_),
-  make_generic_pred(Spatial,prop(pred,Trans),X,Y,P),spatial(Spatial).
+  make_gp(Spatial,prop(pred,Trans),X,Y,P),spatial(Spatial).
 
-%make_generic_pred(Spatial,prop(adjunct,AT),X,Y,generic_pred(VV,Spatial,prop(adjunct,AT),X,Y)):- t_l:current_vv(VV),!.
-make_generic_pred(_Spatial,(AT),X,Y,OUT):-  ignore(t_l:current_vv(VV)),!, OUT = generic_pred(x,VV,AT,X,Y).
-make_generic_pred(_Spatial,(AT),X,Y,OUT):- OUT = generic_pred(x,y,AT,X,Y).
-%make_generic_pred(Spatial,(AT),X,Y,OUT):- ignore(t_l:current_vv(VV)),!, OUT = generic_pred(VV,Spatial,AT,X,Y).
+%make_gp(Spatial,prop(adjunct,AT),X,Y,generic_pred(VV,Spatial,prop(adjunct,AT),X,Y)):- t_l:current_vv(VV),!.
+make_gp(_Spatial,(AT),X,Y,OUT):-  ignore(t_l:current_vv(VV)),!, OUT = generic_pred(x,VV,AT,X,Y).
+make_gp(_Spatial,(AT),X,Y,OUT):- OUT = generic_pred(x,y,AT,X,Y).
+%make_gp(Spatial,(AT),X,Y,OUT):- ignore(t_l:current_vv(VV)),!, OUT = generic_pred(VV,Spatial,AT,X,Y).
 
 % qualifiedBy
 qualifiedBy_LF2(Var,FType,Name,Type,Else,P):-

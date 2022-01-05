@@ -251,6 +251,7 @@ ed( N, W, _):-
 
 chat80_all_broken("What cities do the countries bordering the baltic contain ?",Baltic_Cities,673):- baltic_cities(Baltic_Cities).
 %chat80_all("What is the total area of countries south of the equator and are not in australasia ?",[--(10228,ksqmiles)],1302).
+chat80_all("What percentage of countries border each ocean ?",[[arctic_ocean,2],[atlantic,35],[indian_ocean,14],[pacific,20]],2200).
 chat80_all("What are the rivers of the countries bordering the baltic that flow into the baltic?",[[poland]:[oder,vistula]],_).
 chat80_all("How few oceans do the countries bordering the baltic border?",[3],_).
  chat80_all("What are the continents not containing a country ?",[antarctica],208).
@@ -295,7 +296,6 @@ chat80_all("Which continents contain more than 4 cities ?",_,31300).
 chat80_all("Which asian countries have a population exceeding 10 million ?",_,31400).
 chat80_all("Where is the largest country ?",[asia,northern_asia],400).
 chat80_all("What rivers are in countries bordering the baltic ?",_,66600).
-chat80_all("What percentage of countries border each ocean ?",[[arctic_ocean,2],[atlantic,35],[indian_ocean,14],[pacific,20]],2200).
 chat80_all("What is the ocean that borders african countries and that borders asian countries ?",[indian_ocean],900).
 chat80_all("What is the capital of upper volta ?",[ouagadougou],300).
 chat80_all("What is the average area of the countries in each continent ?",[[africa,--(233,ksqmiles)],[america,--(496,ksqmiles)],[asia,--(485,ksqmiles)],[australasia,--(543,ksqmiles)],[europe,--(58,ksqmiles)]],1400).
