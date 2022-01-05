@@ -469,7 +469,7 @@ generic_pred(VV,_Type1,has_prop(_,Continent),Y,X):- !, nonvar(Continent), generi
 generic_pred(VV,Type,prep(Of),X,Y):- Of == of, !, (generic_pred_any(VV,Type,Y,X)*->true;X=Y).
 generic_pred(_,_,prep(through),R,C):- path_pred_linkage(_,_,R,C,_).
 generic_pred(_,_,prep(into),R,C):- path_pred_linkage(_,_,R,_,C).
-generic_pred(VV,Type,P,X,Y) :- generic_pred0(VV,Type,P,X,Y).
+generic_pred(_VV1,_Type1,P,X,Y) :- generic_pred0(_VV2,_Type2,P,X,Y).
 /*
 generic_pred(VV,Type,mg(P),X,Y):- nonvar(P),!,generic_pred(VV,Type,P,X,Y).
 generic_pred(VV,_Type1,prop(City,Of),Y,X):- Of==ov,!,ti(City,X),generic_pred0(VV,_Type2,_,Y,X).

@@ -653,6 +653,13 @@ reduce4(info(P),info(P)).
 reduce4(P,Q):- once((reduce3(P,PQ),nonvar(PQ))),P\==PQ,!,reduce4(PQ,Q).
 reduce4(Q,Q).
 
+sub_cl_var(Var,P):- \+ sub_var(Var,P), !, fail.
+sub_cl_var(Var,P):- sub_term(E,P), compound(E), E = ^(Vars,_),in_vars(Var,Vars),!,fail.
+sub_cl_var(_,_).
+
+in_vars(Var,Vars):- is_list(Vars),!, sub_var(Var,Vars).
+in_vars(Var,Vars):- Var==Vars.
+
 reduce3(P,Q):- \+ compound(P),!, Q=P.
 
 reduce3(P,Q):- 
@@ -669,7 +676,13 @@ reduce3(P,O&Q):-
    sub_term(Aj,P),compound(Aj),reduce5(X,Aj,O),
    subst(P,Aj,X,Q).
 
-reduce3('^'(Q,P),P):- ground(Q).
+reduce3(^(Q,P),P):- ground(Q).
+
+reduce3(^(Vars,P), ^(NewVars,R)):- flatten([Vars],VarsL),select(A1,VarsL,NewVars),var(A1),
+  sub_term(E,P), compound(E), E = generic_pred(_X,_F,has_prop(type,T),A2,I),
+  A1==A2,
+  subst(P,E,tti(T,I),R), \+ sub_var(A1,R).
+  
 reduce3('`'(A),A). %:-!. reduce4(A,R).
 %reduce3(d80(A),A):- nonvar(A),!,current_predicate(_,A).
 reduce3((P,Q),P):- is_reduced_true(Q).
@@ -686,10 +699,11 @@ reduce3([Nil,Root],[]):- Nil == [], Root == root,!.
 reduce3( s(A,B,C,D), LF):- s80lf(decl(s(A,B,C,D)),_ :- LF),!.
 reduce3( \+ ((X,P)), (X,PP)):- skip_over_modalize(X), !, reduce4( \+ P,PP).
 
-reduce3(^( A1,generic_pred(_X,_F,has_prop(type,T),A2,I)), tti(T,I)):- A1==A2,!.
 
-reduce3(^(Var,P),P):- var(Var),\+ sub_var(Var,P),!.
-reduce3(^(Vars,P),^(NewVars,P)):- (is_list(Vars),select(Var,Vars,NewVars), (nonvar(Var) -> true ; \+ sub_var(Var,P))),!.
+
+reduce3(^(Var,P),P):- var(Var),\+ sub_cl_var(Var,P),!.
+reduce3(^(Vars,P),^(NewVars,P)):- (is_list(Vars),select(Var,Vars,NewVars), (nonvar(Var) -> true ; \+ sub_cl_var(Var,P))),!.
+reduce3(^(Vars,P),^(Var,P)):- is_list(Vars),Vars=[Var],!.
 
 reduce3(qualifiedBy(Var,Var,Type3,pronoun(Var,Type,Tense)),R):-  Var = X,
   R= resultFn(X,[ti(Type,X),is_det(X,Tense),info(is_type3(X,Type3))]).
