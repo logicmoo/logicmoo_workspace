@@ -575,7 +575,8 @@ report_item(_,_).
 report_item0(respond,Item) :- !,
    respond(Item), nl.
 report_item0(print_test,Item) :- !,
-   write('?- test_chat80("'),print_test(Item),write('").'), nl.
+   writeln('===========\n'),
+   write('?- c80("'),print_test(Item),write('").'), nl.
 
 report_item0(_,Item) :- print_tree_with_final(Item,'.'),!.
 
@@ -676,15 +677,9 @@ reduce3(P,O&Q):-
    sub_term(Aj,P),compound(Aj),reduce5(X,Aj,O),
    subst(P,Aj,X,Q).
 
-reduce3(^(Q,P),P):- ground(Q).
 
-reduce3(^(Vars,P), ^(NewVars,R)):- flatten([Vars],VarsL),select(A1,VarsL,NewVars),var(A1),
-  sub_term(E,P), compound(E), E = generic_pred(_X,_F,has_prop(type,T),A2,I),
-  A1==A2,
-  subst(P,E,tti(T,I),R), \+ sub_var(A1,R).
-  
 reduce3('`'(A),A). %:-!. reduce4(A,R).
-%reduce3(d80(A),A):- nonvar(A),!,current_predicate(_,A).
+reduce3(d80(A),A):- nonvar(A),!,current_predicate(_,A).
 reduce3((P,Q),P):- is_reduced_true(Q).
 reduce3((Q,P),P):- is_reduced_true(Q).
 reduce3( Q,true):- Q\==true,is_reduced_true(Q).
@@ -700,6 +695,27 @@ reduce3( s(A,B,C,D), LF):- s80lf(decl(s(A,B,C,D)),_ :- LF),!.
 reduce3( \+ ((X,P)), (X,PP)):- skip_over_modalize(X), !, reduce4( \+ P,PP).
 
 
+reduce3(^(Q,P),P):- ground(Q).
+
+reduce3(^(Vars,P), ^(NewVars,R)):- flatten([Vars],VarsL),select(A1,VarsL,NewVars),var(A1),
+  sub_term(E,P), compound(E), E = generic_pred(_X,_F,has_prop(type,T),A2,I),
+  A1==A2,
+  subst(P,E,ti(T,I),R), \+ sub_var(A1,R).
+
+reduce3(^(Vars,P), ^(NewVars,R)):- flatten([Vars],VarsL),select(A1,VarsL,NewVars),var(A1),
+  sub_term(E,P), compound(E), E =  trans_pred(Contain,Pred,X,Y),A1==Y,
+  sub_term(F,P), compound(F), F =  trans_pred(Contain2,Pred2,X2,Y2),
+  Contain == Contain2,
+  Pred == Pred2,
+  X == X2,
+  Y \== Y2,
+  subst(P,E,true,R), \+ sub_var(A1,R).
+
+
+reduce3(setOf(A1,P,L), setOf(A1,R,L)):- 
+  =(E,P), compound(E), E = generic_pred(_X,_F,has_prop(type,T),I,A2),
+  A1==A2,
+  subst(P,E,ti(T,A1),R), \+ sub_var(I,R).
 
 reduce3(^(Var,P),P):- var(Var),\+ sub_cl_var(Var,P),!.
 reduce3(^(Vars,P),^(NewVars,P)):- (is_list(Vars),select(Var,Vars,NewVars), (nonvar(Var) -> true ; \+ sub_cl_var(Var,P))),!.

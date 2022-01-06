@@ -52,6 +52,11 @@ type_measure_pred(region,position(x),longitude,degrees).
 type_measure_pred(region,position(y),latitude,degrees).
 unique_of_obj(_,thing,country,govern,capital,city,capital_city,nation_capital).
 
+pred_subpred(capital,nation_capital).
+pred_subpred(govern,capital).
+
+ti_isa(nation_capital,country,capital_city).
+ti_subclass(capital_city,city).
 
 ti_subclass(continent,place).
 ti_subclass(region,place).

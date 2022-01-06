@@ -437,22 +437,21 @@ ordering_pred(thing,cp(west,of),X1,X2) :- type_measure_pred( _Region,position(x)
 
 intrans_pred(thing,R,flow,R). %:- path_pred_linkage(_,_,R,_C,_).
 
-pred_subpred(capital,nation_capital).
 
 
 
 generic_pred_hp(VV,Type,any,Y,X):- !, generic_pred_any(VV,Type,Y,X).
-generic_pred_hp(VV,Type,Capital,Y,X):- pred_subpred(Capital,Nation_capital),!,
-  generic_pred_hp(VV,Type,Nation_capital,Y,X).
+generic_pred_hp(VV,Type,Capital,Y,X):- pred_subpred(Capital,Nation_capital),generic_pred(VV,Type,Nation_capital,Y,X).
 generic_pred_hp(VV,Type,area,Y,X):- var(X), X = --(_, ksqmiles),!,generic_pred_hp(VV,Type,area,Y,X).
 
-
+/*
 generic_pred_hp(_VV,_Type,Continent,Y,X):- var(Y),var(X),
   concrete_type(Continent),  %must( \+ \+ ti(Continent,_)),!,
   ti(Continent,X).
+*/
 
 generic_pred_hp(VV,Type,Continent,Y,X):-
-  concrete_type(Continent), % must( \+ \+ ti(Continent,_)),
+  \+ \+ ti(Continent,_), % must( \+ \+ ti(Continent,_)),
   ti(Continent,X),
   (var(Y) -> (generic_pred_any(VV,Type,Y,X)*->true;fail); generic_pred_any(VV,Type,Y,X)).
 

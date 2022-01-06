@@ -251,8 +251,8 @@ ed( N, W, _):-
 
 chat80_all_broken("What cities do the countries bordering the baltic contain ?",Baltic_Cities,673):- baltic_cities(Baltic_Cities).
 %chat80_all("What is the total area of countries south of the equator and are not in australasia ?",[--(10228,ksqmiles)],1302).
-chat80_all("What percentage of countries border each ocean ?",[[arctic_ocean,2],[atlantic,35],[indian_ocean,14],[pacific,20]],2200).
 chat80_all("What are the rivers of the countries bordering the baltic that flow into the baltic?",[[poland]:[oder,vistula]],_).
+chat80_all("What percentage of countries border each ocean ?",[[arctic_ocean,2],[atlantic,35],[indian_ocean,14],[pacific,20]],2200).
 chat80_all("How few oceans do the countries bordering the baltic border?",[3],_).
  chat80_all("What are the continents not containing a country ?",[antarctica],208).
 chat80_all("Is there some ocean that does not border any country ?",[true],1600).
@@ -271,6 +271,8 @@ chat80_all("What is the total area of countries south of the equator and in aust
 chat80_all("How many countries does the danube flow through ?",[6],1200).
 chat80_all("Which countries with a population exceeding 10 million border the atlantic ?",[argentina,brazil,canada,colombia,france,mexico,morocco,netherlands,nigeria,south_africa,spain,united_kingdom,united_states,venezuela,west_germany,zaire],2100).
 chat80_all("Which countries have a population exceeding 10 million ?",[afghanistan,algeria,argentina,australia,bangladesh,brazil,burma,canada,china,colombia,czechoslovakia,east_germany,egypt,ethiopia,france,india,indonesia,iran,italy,japan,kenya,malaysia,mexico,morocco,nepal,netherlands,nigeria,north_korea,pakistan,peru,philippines,poland,south_africa,south_korea,soviet_union,spain,sri_lanka,sudan,taiwan,tanzania,thailand,turkey,uganda,united_kingdom,united_states,venezuela,vietnam,west_germany,yugoslavia,zaire],2000).
+chat80_all("What countries not bordering romania does the danube flow through ?",[austria, czechoslovakia, romania, west_germany],_).
+chat80_all("How many countries does the danube not flow through ?",[150],_).
 chat80_all("What are the continents containing a country in which contains more than two cities whose population exceeds 1 million ?",[america,asia,europe],211).
       chat80_all("What are the continents no country in which contains more than two cities whose population exceeds 1 million ?",[[africa,antarctica,australasia]],18).
 chat80_all("Does the population of china exceed the population of india ?",[true],_00).
@@ -360,8 +362,6 @@ chat80_all("Does the atlantic border spain ?",[true],_00).
 chat80_all("Does Mexico border the United States ?",[true],_00).
 chat80_all("Does america contain new York ?",[true],_00).
 chat80_all("What countries that are not bordering romania does the danube flow through ?",[austria, czechoslovakia, romania, west_germany],_).
-chat80_all("What countries not bordering romania does the danube flow through ?",[austria, czechoslovakia, romania, west_germany],_).
-chat80_all("How many countries does the danube not flow through ?",[150],_).
 chat80_all("What countries do rivers rise from ?", [[ afghanistan, angola,australia,brazil,burma,canada,
                    china,colombia,czechoslovakia,france, guinea,lesotho, mongolia,peru,poland, 
                    south_africa,soviet_union,spain,switzerland, turkey,uganda, united_states, upper_volta,

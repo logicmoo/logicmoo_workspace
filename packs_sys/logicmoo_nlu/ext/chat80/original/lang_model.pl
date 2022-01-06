@@ -683,12 +683,13 @@ c2(B,O):-
  try_chat_80(S,into_cg(O,_))))),!.
 
 
-c8_test(B,O):-
+c8_test(B,O):-  
   any_to_str(B,SS),
   c8(SS,Query),!,
   %with_no_xdbg_flag(with_no_x(profile(results80(Query,O)))),
-  results80(Query,O),
-  color_tree_cmt(cyan,results80=O),!.
+  time(results80(Query,O)),
+  color_tree_cmt(cyan,results80=O),
+  writeln('==========='),!.
 
 
 

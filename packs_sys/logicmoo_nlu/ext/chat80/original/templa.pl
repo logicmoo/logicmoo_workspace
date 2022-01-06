@@ -33,10 +33,10 @@ trans_LF12(Verb,TypeS,S,TypeD,D,Pred,Slots,SlotD,R):-
  *->true
  ;trans_LF1(Verb,TypeS,S,TypeD,D,Pred,Slots,SlotD,R).
 
-trans_LF(contain,Spatial&_,X,Spatial&_,Y, trans_pred(Spatial,contain,X,Y),[],_,_).
-trans_LF(have,Spatial&_,X,Spatial&_,Y, trans_pred(Spatial,have,X,Y),[],_,_).
+trans_LF(contain,Spatial&_,X,Spatial&_,Y, Out,[],_,_):- make_pred(trans_pred,Spatial,contain,X,Y,Out).
+trans_LF(have,   Spatial&_,X,Spatial&_,Y, Out,[],_,_):- make_pred(trans_pred,Spatial,have,X,Y,Out).
 trans_LF(aux(have,MODAL),Spatial&_,X,Spatial&_,Y, OUT, [],_,_):- 
-  P=trans_pred(Spatial,have,X,Y), maybe_modalize(scope,MODAL,P,OUT).
+  make_pred(trans_pred,Spatial,have,X,Y,P), maybe_modalize(scope,MODAL,P,OUT).
 
 
 thing_LF(OceanOrSea,Path,X,ti(OceanOrSea,X),Nil,Any):-  ti_subclass(OceanOrSea,Seamass), 
@@ -127,60 +127,34 @@ property_LF(River,Spatial& Feat& River,X,Spatial&Geo&  _Country,Y,
    %concrete_type(Country),
    concrete_type(River).
 
-concrete_type(Type):- var(Type),dumpST,break,!,fail.
-concrete_type(Type):- Type==million,!,fail.
+concrete_type(Type):- var(Type),dmsg(var_concrete_type(Type)),!,fail.
+concrete_type(Type):- is_prop_type80(Type),!,fail.
+concrete_type(Type):- free_ti(Type).
 concrete_type(dog).
 concrete_type(person).
-concrete_type(statement).
-concrete_type(noun_thing).
-concrete_type(place_there).
-concrete_type(place_here).
-
-concrete_type(agent).
-concrete_type(non_agent).
-concrete_type(action).
 concrete_type(man).
 concrete_type(island).
-concrete_type(country).
-concrete_type(river).
-concrete_type(TI):-ti(TI,_),!.
+concrete_type(TI):- clause(ti(TI2,_),_),TI==TI2.
+concrete_type(Type):- is_toplevel_class(Type).
 
-is_toplevel_enum(ocean).
-is_toplevel_enum(seamass).
-is_toplevel_enum(sea).
-is_toplevel_enum(country).
+is_toplevel_class(C):- is_toplevel_enum(C).
+is_toplevel_class(C):- ti_subclass(C,S), is_toplevel_class(S).
 
-property_LF(Capital,_Spatial1& _Feat& _City,X,Spatial2&_Geo& /*_Neo&*/Country,_Y,Out,[],_,_):- 
-  nonvar(Capital),
-  concrete_type(Capital),
-  nop((var(Spatial2),var(Country))),
-  is_toplevel_enum(Capital),
-  Out = ti(Capital,X).
-property_LF(Capital,Spatial1& Feat& City,X,Spatial2&Geo&  Country,Y,Out,[],_,_):-  
-   concrete_type(Capital),
-   % feat(Feat), assertion(nonvar(Capital)),   t_l:current_vv(VV),
-   _Info = [info([Y->(Spatial2&Geo&  Country),X->(Spatial1& Feat& City)])],
-   make_gp(_Spatial,has_prop(type,Capital),Y,X,Out).
+is_toplevel_enum(city).
+is_toplevel_enum(river).
+is_toplevel_enum(place).
+is_toplevel_enum(circle_of_latitude).
 
-property_LF(Capital,Spatial& Feat& City,X,Spatial&Geo&  Country,Y,Out,[],_,_):-  
-   feat(Feat), assertion(nonvar(Capital)),
-   unique_of_obj(Geo,Spatial,Country,_Govern,Capital,City,_Capital_city,_Nation_capital),
-   make_gp(Spatial,has_prop(type,Capital),Y,X,Out).
-/*
-property_LF(Capital,Spatial& Feat& City,X,Spatial&Geo&  Country,Y,specific_pred(Spatial,Nation_capital,Y,X),[],_,_):-  
-   feat(Feat), assertion(nonvar(Capital)),
-   unique_of_obj(Geo,Spatial,Country,_Govern,Capital,City,_Capital_city,Nation_capital).
-*/
+is_prop_type80(Million):- ratio(Million1,Thousand,_,_),(Million1=Million;(Million1\=Thousand,Million=Thousand)).
+is_prop_type80(Percentage):- comparator_LF(Percentage,_,_,_,_).
+is_prop_type80(Total):- aggr_adj_LF(Total1,_,_,Total2),(Total1=Total;(Total1\=Total2,Total2=Total)).
+
+property_LF(Capital,_,X,_,Y,Out,[],_,_):- 
+   \+ is_prop_type80(Capital),!,
+   ( \+ \+ ti(Capital,_) -> PT = type ; PT = prop),
+   make_gp(_Spatial,has_prop(PT,Capital),Y,X,Out).
 
 property_LF_1(Area,     _,    _X, _,_Y, _P,[],_,_):- var(Area),!,fail.
-property_LF_1(City,Spatial&Feat&City,X,Spatial&_Geo&Country,Y,
-  (ti(City,X),nop(property_LF(City,of,Country)),Out),[],_,_):- if_search_expanded(2),
- %City \== total, City \== area, 
- %City \== sea, City \== country, City \== continent,
-%   fail,
-   concrete_type(City),
-   feat(Feat), assertion(nonvar(City)),
-   make_gp(Spatial,prep(of),X,Y,Out).
 
 trans_LF(    Govern,Spatial& Feat& City,X,Spatial&Geo&  Country,Y,specific_pred(Spatial,Nation_capital,Y,X),[],_,_):-
   feat(Feat), assertion(nonvar(Govern)),
@@ -230,9 +204,8 @@ thing_LF_access(Population,value&units&Population/*citizens*/,X,unit_format(Popu
 
 /* Prepositions */
 
-adjunction_LF(in,Spatial&_-X,Spatial&_-Y,trans_pred(Spatial,contain,Y,X)).
-adjunction_LF(Any,Spatial&_-X,Spatial&_-Y,GP):- if_search_expanded(2),
-                    make_gp(Spatial,prop(adjunct,Any),X,Y,GP).
+adjunction_LF(in, Spatial&_-X,Spatial&_-Y,GP):- make_pred(trans_pred,Spatial,contain,Y,X,GP).
+adjunction_LF(Any,Spatial&_-X,Spatial&_-Y,GP):- if_search_expanded(2), make_pred(trans_pred,Spatial,prop(adjunct,Any),X,Y,GP).
 adjunction_LF(cp(East,Of),Spatial&_-X,Spatial&_-Y,ordering_pred(Spatial,cp(East,Of),X,Y)).
 
 
@@ -366,7 +339,9 @@ trans_LF(exceed,value&Measure&Type,X,value&Measure&Type,Y,exceeds(X,Y),[],_,_).
 trans_LF1(Trans,_,X,_,Y, P,[],_,_):- if_search_expanded(4), Trans\=aux(_,_),
   make_gp(Spatial,prop(pred,Trans),X,Y,P),spatial(Spatial).
 
+make_pred(Trans_pred,S,P,X,Y,OUT):- OUT=..[Trans_pred,S,P,X,Y].
 %make_gp(Spatial,prop(adjunct,AT),X,Y,generic_pred(VV,Spatial,prop(adjunct,AT),X,Y)):- t_l:current_vv(VV),!.
+make_gp(_Spatial,(AT),X,Y,OUT):-  \+ compound(AT), OUT = trans_pred(_,AT,X,Y).
 make_gp(_Spatial,(AT),X,Y,OUT):-  ignore(t_l:current_vv(VV)),!, OUT = generic_pred(x,VV,AT,X,Y).
 make_gp(_Spatial,(AT),X,Y,OUT):- OUT = generic_pred(x,y,AT,X,Y).
 %make_gp(Spatial,(AT),X,Y,OUT):- ignore(t_l:current_vv(VV)),!, OUT = generic_pred(VV,Spatial,AT,X,Y).
