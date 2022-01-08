@@ -32,22 +32,19 @@ inference_step(_) :- (heap_get(_Priority, Event, belief_events_queue),
                       write(Conclusion), nl
                      ; true ).
 
-opencog_s_main :- create_heap(belief_events_queue), opencog_s_main(1).
-opencog_s_main(T) :- read_atomspace(X),
+opencog_main :- create_heap(belief_events_queue), opencog_main(1).
+opencog_main(T) :- read_atomese(X),
      (X = 1, write("performing 1 inference steps:"), nl, 
      inference_step(T), write("done with 1 additioatomspace inference steps."), nl,  
-       opencog_s_main(T+1) ; 
-       X \= 1, write("Input: "), write(X), nl, input_event(X), opencog_s_main(T+1)).
-
-% read_atomspace(X):- read(X).
-read_atomspace(X):- atomspace_read_clause(current_input, X).
+       opencog_main(T+1) ; 
+       X \= 1, write("Input: "), write(X), nl, input_event(X), opencog_main(T+1)).
 
 :- if( prolog_load_context(reload,false)).
 :- create_heap(belief_events_queue).
 :- endif.
 
 %test:
-%opencog_s_main.
+%opencog_main.
 %[inheritance(cat,animal), [1.0, 0.9]].
 %[inheritance(animal,being), [1.0, 0.9]].
 %1.
