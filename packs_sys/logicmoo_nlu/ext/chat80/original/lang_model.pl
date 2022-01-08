@@ -630,20 +630,23 @@ sentence8dr(U,E):- sentence8d(U,E),nop(true;(dmsg(redo(sentence8dr(E))),fail)).
 sentence8e(U,E):- ((sentence8dr(U,E),i_sentence(E,_))*->true
                   ;sentence8d(U,E)).
 
-qt_error(QT,F,E):- dmsg(qt_error(QT,F,E)),atomic(E),throw(E).
-qt_error(QT,_,E):- QT=error(E).
+qt_error(TL,QT,F,E):- dmsg(qt_error(TL,QT,F,E)),atomic(E),throw(E).
+qt_error(_TL,QT,_,E):- QT=error(E).
 
 try_chat_80(S,G):- try_chat_80(green,S,G).
 try_chat_80(C,S,G):- ignore((G=..[F,Tree,QT],!,should_learn(Tree),try_chat_80(60,C,S,F,Tree,QT))).
 try_chat_80(TL,C,S,G):- ignore((G=..[F,Tree,QT],!,should_learn(Tree),try_chat_80(TL,C,S,F,Tree,QT))).
 try_chat_80(TL,C,S,F,Tree,QT):-
   statistics(runtime,[Start,_]),
+call_cleanup((
   locally(set_prolog_flag(gc,true),
    ((((should_learn(Tree),
     catch(
      debug_chat80_if_fail(deepen_pos( 
         catch(call_with_time_limit_local(TL,call(F,Tree,QT),Catcher),Catcher,(QT=time_limit_exceeded(F,TL))))),
-       E,qt_error(QT,F,E)) *-> true ; QT = failure))))),
+       E,qt_error(TL,QT,F,E)) *-> true ; QT = failure)))))),
+((
+  ignore(QT = failure),
   statistics(runtime,[End,_]),
   Total is (End - Start)/1000,
   answer_color(C,QT,Color),
@@ -651,7 +654,8 @@ try_chat_80(TL,C,S,F,Tree,QT):-
   maybe_restate_s(S),
   (compound(S)->arg(1,S,SS);S=SS),
   assert_if_new(tmp:test80_result(SS,F,QT,Total)),
-  color_tree_cmt(Color,F=QT).
+  color_tree_cmt(Color,F=QT),
+  ignore((\+ should_learn(QT),list_issues))))).
 
 color_tree_cmt(Color,Cmt):- atom(Color),!,color_tree_cmt(hfg(Color),Cmt).
 color_tree_cmt(Color,Cmt):- ansicall(Color,in_cmt(print_tree_nl(Cmt))).
@@ -717,14 +721,13 @@ c8_P(B,Query):-
 
 c80:- test_c80.
 
-c8:- c8_make,
-     ignore(catch(s82(c8),_,list_issues)).
+c8:- ignore(catch(s82(c8),E,(list_issues,throw(E)))).
 
 c8(S):- c8_make, c8(S,_),!.
 
 c8(SS,O):- break_apart(c8_A,SS,O),!.
 
-c8_A(B,Query):-
+c8_A(B,Query):- c8_make,
   any_to_str(B,SS),
  S = c8(SS),
  locally(set_prolog_flag(gc,false),
@@ -811,24 +814,25 @@ list_issues:-
 s8:- c8_make,
      ignore(catch(s82(s8),_,list_issues)).
  
-s8(B):- \+ string(B), any_to_str(B,S),!,s8(S).
-s8(S):- c8_make, catch(s8(S,_),'$aborted',list_issues).
-s8(SS,O):- break_apart(s8_A,SS,O),!.
-s8_A(SS,O):- atom_length(SS,L),L<3,!,O= true.
+s8(B):- c8_make, \+ string(B), any_to_str(B,S),!,s8(S).
+s8(S):- s8(S,_).
+s8(SS,O):- break_apart(s8_A,SS,O).
+s8_A(SS,O):- atom_length(SS,L),L<1,!,O= true.
 s8_A(SS,O):-
  S = s8(SS),
   locally(set_prolog_flag(gc,true),
- ((
- notrace((try_chat_80(S,into_lexical_segs(SS,Lex)),try_chat_80(S,text_to_corenlp_tree(SS,_)))),
- %wdmsg(Lex),
- %maybe_restate_s(S),
- try_chat_80(S,sentence8dr(Lex,Tree)),
- %should_learn(Tree),
- %try_chat_80(S,i_sentence(Tree,QT)),
- %should_learn(QT),
- %try_chat_80(S,clausify80(QT,UE)),
- O=Tree))).
+ notrace((try_chat_80(S,into_lexical_segs(SS,Lex)),try_chat_80(S,text_to_corenlp_tree(SS,_))))),
+ locally(set_prolog_flag(gc,false),
+   try_chat_80(8,cyan,S,s8_B,Lex,O)).
 
+s8_B(Lex,O):- 
+ limit(8,sentence8d(Lex,O)),should_learn(Tree),
+ color_tree_cmt(cyan,sentence8d=Tree), 
+ %try_chat_80(S,i_sentence(Tree,QT)), %should_learn(QT),
+ %try_chat_80(S,clausify80(QT,UE)),
+ O=Tree.
+
+s80(X):- c88(X).
 
 :- add_history(c84).
 
@@ -974,8 +978,8 @@ s82_B(N,P):-
 
 :- thread_local(t_l:tl_ov/1).
 
-%call_with_time_limit_local(TL,Goal,'$not_aborted'):- t_l:tl_ov(OTL), TL>=OTL, !, call(Goal).
-%call_with_time_limit_local(_,Goal,'$not_aborted'):- t_l:tl_ov(_), !, call(Goal).
+call_with_time_limit_local(TL,Goal,'$not_aborted'):- t_l:tl_ov(OTL), TL>=OTL, !, call(Goal).
+call_with_time_limit_local(_,Goal,'$not_aborted'):- t_l:tl_ov(_), !, call(Goal).
 call_with_time_limit_local(TL,Goal,time_limit_exceeded):- locally(t_l:tl_ov(TL),call_with_time_limit(TL,Goal)).
 
 s82_C(P,X):- catch(call_with_time_limit_local(10,try_chat_80(10,cyan,X,call,P,X),Catcher),Catcher,true).

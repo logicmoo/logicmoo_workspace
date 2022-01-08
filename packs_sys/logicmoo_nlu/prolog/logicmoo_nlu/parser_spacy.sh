@@ -11,6 +11,8 @@ while [ 1==1 ]
       [ ! -f /opt/logicmoo_workspace/nofederation ] && grep_return_code=1
 
       if (( $grep_return_code == 0 )); then
+         python3 -m spacy download en_core_web_lg 
+         #python3 -m spacy download en_core_web_sm
          python3 ./parser_$LIB.py -port 4096
       else 
          echo parser_$LIB in federated mode

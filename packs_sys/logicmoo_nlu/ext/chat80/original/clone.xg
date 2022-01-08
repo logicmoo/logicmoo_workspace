@@ -146,11 +146,14 @@ variable_q(Type_X,Agmt,compL,VCase) ...
                  Set,Mask) --->
    context_pron(Prep,Noun),
    {is_trace82(Set,Mask), is_verb_case(VCase),Type_X=(_-X)}.
+
+% how many
 variable_q(Type_X,_,compL,VCase) ...
       pred(adj,value80(Adj,wh(Type_X)),Mask) --->
    theText80(how),  % how big
    adj(quantA,Adj),
    {is_empty_bits(Mask), is_verb_case(VCase)}.
+
 
 whq(Type_X,Agmt,NP,unDef) --->
    wh_det(_Kind,Type_X,Agmt),
@@ -252,7 +255,7 @@ logical_s_word(c,r,otherwise).
 logical_s_word(c,r,however).
 logical_s_word(c,r,therefore).
 logical_s_word(X,X,W):- 
-  fail, if_search_expanded(5), 
+  if_search_expanded(5), 
   logical_o_word(W).
 %logical_s_word(X,X,W):-is_sent_adverb(W).
 logical_s_word2(r,c,[else,if]).
@@ -450,6 +453,10 @@ np_11(AgmtKernelModsO,Agmt,Case,Def,Role,Set,Mask) --->
   % or loose NP
   ;np_13(AgmtKernelModsO,_,_,_,_,_,_)).
 
+% number
+np_11(np(Agmt,nameOf(_Var,Number,[]),_Mods),Agmt,_Case,_IndefA,_Role,_Set,_Mask) 
+  ---> {if_search_expanded(3)}, number(Number,_Ag).
+
 % action
 np_11(np(Agmt,nameOf(_Var,span_vp(SO),[]),_Mods),Agmt,_Case,_IndefA,_Role,_Set,_Mask) 
   ---> {if_search_expanded(4)}, span_vp(S),{local_s80lf(S,SO)}.
@@ -488,9 +495,9 @@ np1(np(Agmt,Kernel,Mods),Agmt,_Case,Def,Role,Set,Mask) --->
    np_compls(Type,Agmt,Role,PostMods,NPAll,Mask).
 
 % many of, one of, the 5 of 
-np1(part(Det,NP),3+Number,_,indefA,Role,Set,Mask) --->
+np1(part(Det,NP),3+Agmt,_,indefA,Role,Set,Mask) --->
    {is_pp(Set)},
-   determiner(Det,Number,indefA), {Det\=generic},
+   determiner(Det,Agmt,indefA), {Det\=generic},
    theText80(of),
    {is_s_all(SAll), is_prep_case(Case)},
    np_expand(NP,3+pl,Case,defA,Role,SAll,Mask).
@@ -520,7 +527,7 @@ one_np_value(H)--->np_head2(H,_Agmt,_Def).
 
 np_head0(_,_,_)---> has_trait(pos('.')),!,{fail}.
 np_head0(nameOf(_Var,items(AndOr,List),[]),Agmt,Def)---> {if_search_expanded(2)}, nl_list_of_items(AndOr,np_head2(Agmt,Def),List).
-np_head0(nameOf(_Var,items(set,List),[]),_Agmt,_Def)---> {if_search_expanded(2)},theText80('{'),!, set_of_items(theText80('}'),one_np_value,List).
+np_head0(nameOf(_Var,items(set,List),[]),_Agmt,_Def)---> {if_search_expanded(2)}, theText80('{'),!, set_of_items(theText80('}'),one_np_value,List).
 np_head0(H,Agmt,Def)---> np_head2(H,Agmt,Def).
 
 np_head2(Pronoun,Agmt,defA+proper), gen_marker --->
@@ -528,13 +535,13 @@ np_head2(Pronoun,Agmt,defA+proper), gen_marker --->
 np_head2(np_head(_Var,Det,[],Noun),3+sg,indefA+common) --->
    quantifier_pron(Det,Noun).
 np_head2(nameOf(_Var,O,[]),Agmt,Def) ---> np_objbody(O,Agmt,Def).
-np_head2(np_head(_Var,Det,AdjsO,Head),3+Number,Def+common) --->
-   determiner(Det,Number,Def),
+np_head2(np_head(_Var,Det,AdjsO,Head),3+Agmt,Def+common) --->
+   determiner(Det,Agmt,Def),
    post_determiner_pre_noun(Adjs),
-   noun_or_var(Head,Adjs,AdjsO,Number).
+   noun_or_var(Head,Adjs,AdjsO,Agmt).
 
 noun_or_var(any_thing_ace_var,Adjs,[adj(ace_var(self,AceVar))|Adjs],_Number) ---> ace_var(AceVar),!.
-noun_or_var(Head,Adjs,AdjsO,Number) ---> noun(Head,Adjs,AdjsO,Number).
+noun_or_var(Head,Adjs,AdjsO,Agmt) ---> noun(Head,Adjs,AdjsO,Agmt).
 %noun_or_var(Head,Adjs,Adjs,_Number) ---> 
 %  {unloop(noun_or_var)},np_head0(Head,_Agmt,_Def).
 %noun_or_var(any_thing,Adjs,Adjs,_Number) ---> [].
@@ -602,7 +609,7 @@ np_objbody(string(List),3+sg,defA+proper) ---> w2_quoted(List),!.
 
 np_objbody(S,_,_)--->   span_s(S).
 
-%np_objbody(Det,Number,Def) ---> {if_search_expanded(2)}, np_objbody(Det,Number,Def).
+%np_objbody(Det,Agmt,Def) ---> {if_search_expanded(2)}, np_objbody(Det,Agmt,Def).
 np_objbody((Name),3+sg,defA+proper) ---> \+ xg_peek(ace_var(_)),!,name_xg(Name).
 
 
@@ -622,10 +629,10 @@ np_objbody(Type_X, Y, Z, A, B, C, D) :-
     \+ lctmp:in_sent802,
      locally(lctmp:in_sent802,np_objbody0(Type_X, Y, Z, A, B, C, D)).
 
-np_objbody0(Det,Number,Def)--->theText80(that),!,np_objbody1(Det,Number,Def).
+np_objbody0(Det,Agmt,Def)--->theText80(that),!,np_objbody1(Det,Agmt,Def).
 %np_objbody0((var(Type_X)),3+sg,defA+proper) ---> variable_q(Type_X,_,_QCase,_NPCase).
 %np_objbody0(_,_,_,_,_,_,_):- !, fail.
-%np_objbody0(Det,Number,Def)--->np_objbody1(Det,Number,Def).
+%np_objbody0(Det,Agmt,Def)--->np_objbody1(Det,Agmt,Def).
 
 np_objbody0(Type_X, Y, Z, A, B, C, D) :-
     if_search_expanded(2),
@@ -645,20 +652,20 @@ np_objbody1((sent2(Type_X,S)),_Agmt,_) ---> xg_peek([_,_]),
 */
 
 %np_objbody(Type_X,Y,Z) ---> quant_phrase(Type_X,Y,Z).
-%np_objbody0(quantV(Op,Quant),Number,Def) ---> quant_p(Op,Def), number(Quant,Number).
+%np_objbody0(quantV(Op,Quant),Agmt,Def) ---> quant_p(Op,Def), number(Quant,Agmt).
 
 /* Determiners */
 
 determiner(DX,Agmt,Def) ---> theText80(all), determiner(DX,Agmt,Def).
-determiner(Det,Number,Def) ---> quant_phrase(Det,Number,Def).
-determiner(Det,Number,Def) ---> det(Det,Number,Def).
+determiner(Det,Agmt,Def) ---> quant_phrase(Det,Agmt,Def).
+determiner(Det,Agmt,Def) ---> det(Det,Agmt,Def).
 
 % Measure is number "at least 2" "less than"
-quant_phrase(quantV(Op,Quant),Number,Def) --->
+quant_phrase(quantV(Op,Quant),Agmt,Def) --->
    quant_p(Op,Def),
-   number_wang(Quant,Number).
+   number_wang(Quant,Agmt).
 
-number_wang(Quant,Number)---> number(Quant,Number).
+number_wang(Quant,Agmt)---> number(Quant,Agmt).
 
 % Measure is more / less than / faster than
 quant_p(Op,indefA) --->

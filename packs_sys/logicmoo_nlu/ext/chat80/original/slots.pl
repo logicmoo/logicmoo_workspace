@@ -619,17 +619,21 @@ same_values(X,X).
 measure_op(identityQ(Modalz), X,Y,  P):- maybe_modalize(scope,identityQ(Modalz),same_value(X,Y), P).
 measure_op(notP(Modalz)+Cond, X, Y , PP):- !, measure_op(Cond, X, Y , P),maybe_modalize(scope,notP(Modalz), P, PP).
 measure_op(same, X,Y,   same_values(X,Y)).
-measure_op(more, X,Y,   exceeds(X,Y)).
-measure_op(less, X,Y,   P):- measure_op(more,Y,X,P).
+measure_op(More, X,Y,   exceeds(X,Y)):- op_inverse2(More,_).
+measure_op(Less, X,Y,   P):- op_inverse2(More,Less), measure_op(More,Y,X,P).
 %measure_op(Less,      X,Y,   P):- op_inverse(Less,-,More), measure_op(More,Y,X,P).
 
 
-op_inverse(most,-,least).
-op_inverse(least,-,most).
-op_inverse(same,-,same).
-op_inverse(less,-,more).
-op_inverse(more,-,less).
 op_inverse(X,+,X).
+op_inverse(same,-,same).
+op_inverse(Least,-,Most):- op_inverse1(Most,Least).
+op_inverse(Most,-,Least):- op_inverse1(Most,Least).
+
+op_inverse1(most,least).
+op_inverse1(more,less).
+op_inverse2(many,few).
+op_inverse2(much,little).
+op_inverse2(Many,Few):-op_inverse1(Many,Few).
 
 noun_template(Noun,TypeV,V,'`'(P),
       [slot(poSS,TypeO,O,Os,index)|Slots]) :-

@@ -251,6 +251,7 @@ ed( N, W, _):-
 
 chat80_all_broken("What cities do the countries bordering the baltic contain ?",Baltic_Cities,673):- baltic_cities(Baltic_Cities).
 %chat80_all("What is the total area of countries south of the equator and are not in australasia ?",[--(10228,ksqmiles)],1302).
+chat80_all("What are the cities of the countries bordering the baltic ?",Baltic_Cities,667):- baltic_cities_real(Baltic_Cities).
 chat80_all("What are the rivers of the countries bordering the baltic that flow into the baltic?",[[poland]:[oder,vistula]],_).
 chat80_all("What percentage of countries border each ocean ?",[[arctic_ocean,2],[atlantic,35],[indian_ocean,14],[pacific,20]],2200).
 chat80_all("How few oceans do the countries bordering the baltic border?",[3],_).
@@ -276,28 +277,78 @@ chat80_all("How many countries does the danube not flow through ?",[150],_).
 chat80_all("What are the continents containing a country in which contains more than two cities whose population exceeds 1 million ?",[america,asia,europe],211).
       chat80_all("What are the continents no country in which contains more than two cities whose population exceeds 1 million ?",[[africa,antarctica,australasia]],18).
 chat80_all("Does the population of china exceed the population of india ?",[true],_00).
-chat80_all("Which rivers are not in asia ?",_,31800).
+chat80_all("Which rivers are not in asia ?",[ [ amazon, colorado,congo_river,cubango,danube,
+                   elbe,limpopo,mackenzie,mississippi,
+                   murray,niger_river,nile,oder,orange,
+                   orinoco,parana,rhine,rhone,rio_grande,
+                   seine,senegal_river,tagus,vistula,volta,
+                 yukon,zambesi]],31800).
 chat80_all("How many rivers flow to west germany ?",2,21301).
-chat80_all("How many rivers flow to switzerland ?",_,21901).
+chat80_all("How many rivers flow to switzerland ?",[],21901).
 chat80_all("How many rivers flow through switzerland ?",2,22301).
 %chat80_all("How many rivers flow into switzerland ?",false,21801).
-chat80_all("How many rivers flow in switzerland ?",_,22010).
+chat80_all("How many rivers flow in switzerland ?",2,22010).
 chat80_all("How many rivers flow from switzerland ?",2,22101).
 chat80_all("How many rivers flow at switzerland ?",2,22201).
 
 chat80_all("Which is the largest african country ?",[sudan],700).
 chat80_all("Which country's capital is london ?",[united_kingdom],600).
-chat80_all("Which countries contain more than 3 cities ?",_,31100).
-chat80_all("Which countries contain more than 2 cities ?",_,31200).
-chat80_all("Which countries contain a city ?",_,30800).
-chat80_all("Which countries contain 3 cities ?",_,31000).
-chat80_all("Which countries contain 2 cities ?",_,30900).
+chat80_all("Which countries contain more than 3 cities ?",[[china,india,japan,united_states]],31100).
+chat80_all("Which countries contain more than 2 cities ?",[ [ australia, brazil,canada,china,india,italy,
+                   japan,soviet_union,united_kingdom,
+                 united_states,west_germany]],31200).
+chat80_all("Which countries contain a city ?",[ [ afghanistan, albania,algeria,andorra,angola,
+                   argentina,australia,austria,bahamas,
+                   bahrain,bangladesh,barbados,belgium,
+                   belize,bhutan,bolivia,botswana,brazil,
+                   bulgaria,burma,burundi,cambodia,
+                   cameroon,canada,central_african_republic,chad,
+                   chile,china,colombia,congo,costa_rica,
+                   cuba,cyprus,czechoslovakia,dahomey,
+                   denmark,djibouti,dominican_republic,
+                   east_germany,ecuador,egypt,eire,
+                   el_salvador,equatorial_guinea,ethiopia,fiji,
+                   finland,france,french_guiana,gabon,
+                   gambia,ghana,greece,grenada,guatemala,
+                   guinea,guinea_bissau,guyana,haiti,
+                   honduras,hungary,iceland,india,
+                   indonesia,iran,iraq,israel,italy,
+                   ivory_coast,jamaica,japan,jordan,kenya,
+                   kuwait,laos,lebanon,lesotho,liberia,
+                   libya,liechtenstein,luxembourg,malagasy,
+                   malawi,malaysia,maldives,mali,malta,
+                   mauritania,mauritius,mexico,monaco,
+                   mongolia,morocco,mozambique,nepal,
+                   netherlands,new_zealand,nicaragua,niger,
+                   nigeria,north_korea,norway,oman,
+                   pakistan,panama,papua_new_guinea,paraguay,
+                   peru,philippines,poland,portugal,qatar,
+                   romania,rwanda,san_marino,saudi_arabia,
+                   senegal,seychelles,sierra_leone,singapore,
+                   somalia,south_africa,south_korea,south_yemen,
+                   soviet_union,spain,sri_lanka,sudan,
+                   surinam,swaziland,sweden,switzerland,
+                   syria,taiwan,tanzania,thailand,togo,
+                   tonga,trinidad_and_tobago,tunisia,turkey,
+                   uganda,united_arab_emirates,united_kingdom,
+                   united_states,upper_volta,uruguay,venezuela,
+                   vietnam,west_germany,western_samoa,yemen,
+                 yugoslavia,zaire,zambia,zimbabwe]],30800).
+chat80_all("Which countries contain 3 cities ?",[ [ australia, brazil,canada,italy,soviet_union,
+                 united_kingdom,west_germany]],31000).
+chat80_all("Which countries contain 2 cities ?", [ [ netherlands, pakistan,philippines,south_africa,south_korea,
+                 spain,turkey,vietnam]],30900).
 chat80_all("Which countries are european ?",[albania,andorra,austria,belgium,bulgaria,cyprus,czechoslovakia,denmark,east_germany,eire,finland,france,greece,hungary,iceland,italy,liechtenstein,luxembourg,malta,monaco,netherlands,norway,poland,portugal,romania,san_marino,spain,sweden,switzerland,united_kingdom,west_germany,yugoslavia],500).
 chat80_all("Which countries are bordered by two seas ?",[egypt,iran,israel,saudi_arabia,turkey],1100).
-chat80_all("Which continents contain more than 4 cities ?",_,31300).
-chat80_all("Which asian countries have a population exceeding 10 million ?",_,31400).
+chat80_all("Which continents contain more than 4 cities ?",[ [ africa, america,asia,australasia,europe]],31300).
+chat80_all("Which asian countries have a population exceeding 10 million ?",[ [ afghanistan, bangladesh,burma,china,india,indonesia,
+                   iran,japan,malaysia,nepal,north_korea,
+                   pakistan,philippines,south_korea,soviet_union,
+                   sri_lanka,taiwan,thailand,turkey,
+                 vietnam]],31400).
 chat80_all("Where is the largest country ?",[asia,northern_asia],400).
-chat80_all("What rivers are in countries bordering the baltic ?",_,66600).
+chat80_all("What rivers are in countries bordering the baltic ?", [ [ amu_darya, amur,danube,don,elbe,lena,ob,
+                 oder,rhine,vistula,volga,yenisei]],66600).
 chat80_all("What is the ocean that borders african countries and that borders asian countries ?",[indian_ocean],900).
 chat80_all("What is the capital of upper volta ?",[ouagadougou],300).
 chat80_all("What is the average area of the countries in each continent ?",[[africa,--(233,ksqmiles)],[america,--(496,ksqmiles)],[asia,--(485,ksqmiles)],[australasia,--(543,ksqmiles)],[europe,--(58,ksqmiles)]],1400).
@@ -310,7 +361,6 @@ chat80_all("What are the rivers that flow through each country bordering the bal
 chat80_all("What are the rivers of the countries bordering the baltic ?",Baltic_Rivers,668):- baltic_rivers_real(Baltic_Rivers).
 chat80_all("What are the rivers in countries bordering the baltic ?",Baltic_Rivers,670):- baltic_rivers(Baltic_Rivers).
 chat80_all("What are the countries from which a river flows into the black sea ?",[[romania,soviet_union]],17).
-chat80_all("What are the cities of the countries bordering the baltic ?",Baltic_Cities,667):- baltic_cities_real(Baltic_Cities).
 chat80_all("What are the cities in countries bordering the baltic ?",Baltic_Cities,669):- baltic_cities(Baltic_Cities).
 chat80_all("What are the capitals of the countries bordering the baltic ?",[[[denmark]:[copenhagen],[east_germany]:[/*east_*/ berlin],[finland]:[helsinki],[poland]:[warsaw],[soviet_union]:[moscow],[sweden]:[stockholm],[west_germany]:[bonn]]],10).
 chat80_all("What are the areas of the countries bordering the baltic ?",[[[denmark]:[--(16.615,ksqmiles)],[east_germany]:[--(40.646,ksqmiles)],[finland]:[--(130.119,ksqmiles)],[poland]:[--(120.359,ksqmiles)],[soviet_union]:[--(8347.25,ksqmiles)],[sweden]:[--(173.665,ksqmiles)],[west_germany]:[--(95.815,ksqmiles)]]],2400).
@@ -337,25 +387,25 @@ chat80_all("Is the population of china greater than 200 million ?",[true],_00).
 chat80_all("Is spain bordered by the pacific ?",[false],_00).
 chat80_all("Is New York in america ?",[true],_00).
 chat80_all("Is New York in south america ?",[false],_00).
-chat80_all("Iraq will border iran ?",_,10300).
-chat80_all("Iraq was bordering iran ?",_,10500).
-chat80_all("Iraq is bordering iran ?",_,10400).
+chat80_all("Iraq will border iran ?",true,10300).
+chat80_all("Iraq was bordering iran ?",true,10500).
+chat80_all("Iraq is bordering iran ?",true,10400).
 chat80_all("Iraq does border iran ?",[true],10100).
-chat80_all("Iraq did border iran ?",_,10200).
+chat80_all("Iraq did border iran ?",true,10200).
 chat80_all("Iraq borders iran ?",[true],10000).
-chat80_all("Iran is bordered by iraq ?",_,10600).
+chat80_all("Iran is bordered by iraq ?",true,10600).
 chat80_all("How many rivers are not in asia ?",25,20300).
 chat80_all("How many rivers are in asia ?",16,20400).
 chat80_all("How many countries have a population greater than 10 million ?",50,20700).
 chat80_all("How many countries have a population exceeding 10 million ?",50,20600).
 chat80_all("How many asian countries have a population exceeding 10 million ?",20,20500).
 chat80_all("How large is the smallest american country ?",[--(0.133,ksqmiles)],800).
-chat80_all("What is the smallest country in america?",_,_).
+chat80_all("What is the smallest country in america?",[grenada],_).
 chat80_all("Is the Caribbean in america?",[true],_).
-chat80_all("What is the smallest country in north america?",_,_).
-chat80_all("What is the smallest country in central america?",_,_).
-chat80_all("What is the smallest country in south america?",_,_).
-chat80_all("What is the smallest country in caribbean?",_,_).
+chat80_all("What is the smallest country in north america?",[[united_states]],_).
+chat80_all("What is the smallest country in central america?",el_salvador,_).
+chat80_all("What is the smallest country in south america?",french_guiana,_).
+chat80_all("What is the smallest country in caribbean?",grenada,_).
 
 chat80_all("Does the population of china exceed 1000 million ?",[false],_00).
 chat80_all("Does the atlantic border spain ?",[true],_00).

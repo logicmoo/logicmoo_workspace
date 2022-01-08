@@ -200,8 +200,16 @@ theText_ol([W1]) ---> theText80(W1).
 theText_cl([]) ---> !,[].
 theText_cl([W1|WL]) ---> theText80(W1),!,theText_cl(WL).
 
-theText_rest([W1|WL]) ---> theText80_Text(W1),!,theText_rest(WL).
+theText_rest(Out) ---> theText80(W),!,{trim_punct(W,W1,P)},
+  {(P\==''->Out=[W1|WL];Out=[W1,P|WL])}, theText_rest(WL).
 theText_rest([]) ---> !,[].
+
+
+trim_punct(AceVar,AceVarText,Punct):- sub_atom(AceVar,Before,1,0,Punct),char_type(Punct,punct),!,
+ sub_atom(AceVar,0,Before,1,AceVarText).
+trim_punct(AceVar,AceVar,'').
+
+theText80_Text_no_punct(W1) ---> theText80_Text(W), {trim_punct(W,W1,_)}.
 
 % normal single quotes
 singleQuotes ---> theText80(''''), \+ xg_peek(theText80_Text("s")).
@@ -327,15 +335,21 @@ is_w_w_name(W1,W2,Name):- atomic(W1),atomic(W2),atomic_list_concat([W1,'_',W2],N
 
 non_ace_var(W) ---> \+ xg_peek(ace_var(_)), theText80(W).
 
-ace_var(AceVar) ---> theText80_Text(AceVar), {ace_varname(AceVar),!}.
-ace_var_suffix(AceVar,Suffix) ---> theText80_Text(AceVarW), {atom_concat(AceVar,Suffix,AceVarW),ace_varname(AceVar),!}.
-ace_var_suffix_incl(AceVarWU,AceVar,Suffix) ---> theText80_Text(AceVarW), {atom_concat(AceVar,Suffix,AceVarW),ace_varname(AceVar),!,upcase_atom(AceVarW,AceVarWU)}.
+ace_var(AceVar) ---> theText80_Text_no_punct(AceVar), {ace_varname(AceVar)}.
+ace_var_suffix(AceVar,Suffix) ---> theText80_Text_no_punct(AceVarW), { atom_concat(AceVar,Suffix,AceVarW),ace_varname(AceVar),!}.
+ace_var_suffix_incl(AceVarWU,AceVar,Suffix) ---> theText80_Text_no_punct(AceVarW), {atom_concat(AceVar,Suffix,AceVarW),ace_varname(AceVar),!,upcase_atom(AceVarW,AceVarWU)}.
 
+is_count_lex(MMF):- many_most_few(MMF).
+/* covered by many_most_few/1 call
 is_count_lex(many).
-is_count_lex(much). is_count_lex(few).
+is_count_lex(much). 
+is_count_lex(few).
 is_count_lex(little).
+*/
 
+% How many/little/few
 wh_art(_Kind,Type_X,pl,quantV(same,wh(Type_X))) ---> theText80(how),theText80(Many),{is_count_lex(Many)}.
+% what, which
 wh_art(Kind,Type_X,Agmt,DX) --->
    theText80(Art),
    {wh_art_lex(Kind,Art,Type_X,Agmt,DX)}.

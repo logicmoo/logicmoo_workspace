@@ -81,8 +81,11 @@ conj_lex(or).
 
 det_lex(a,_Sg,a,indefA).
 det_lex(all,pl,all,indefA).
+det_lex(both,pl,all,defA).
 det_lex(an,sg,a,indefA).
 det_lex(any,_,any,indefA).
+det_lex(many,_,many,indefA).
+det_lex(Many,_,Many,indefA):- many_most_few(Many).
 det_lex(each,sg,each,indefA).
 det_lex(every,sg,every,indefA).
 det_lex(no,_,no,indefA).
@@ -531,12 +534,6 @@ noun_form_lex(Word,Root,_) :- noun_sing_plu_lex(chat80,Word),!,Root=Word.
 noun_form_lex(Word,Root,Agmt) :- noun_plu_lex(Word,Sin),Root=Sin,!,(Word==Root-> Agmt=_;pl=Agmt).
 noun_form_lex(Word,Root,Agmt) :- noun_plu_lex(Plu,Word),Root=Word, (Plu==Root-> Agmt=_;sg=Agmt).
 
-noun_sing_plu_lex(chat80,proportion).
-noun_sing_plu_lex(chat80,percentage).
-noun_sing_plu_lex(chat80,million).
-noun_sing_plu_lex(chat80,thousand).
-noun_sing_plu_lex(chat80,fish).
-%noun_sing_plu_lex(clex,Y):- clex:noun_mass(Y, _, _).
 
 :- ignore((clause(talk_db(X,W),true,R),X==adv,\+ atom_concat(_,'ly',W),erase(R),fail)).
 
@@ -552,10 +549,6 @@ hide_plur_root_noun(1,_Whats,What):- talkdb:talk_db(pronoun,What).
 hide_plur_root_noun(2,Does,_):- atom(Does),Does=does. % deer
 hide_plur_root_noun(N,_,River):- N\==0, atom(River), verb_form_lex(River,_,_,_).
 
-noun_plu_lex(ksqmiles,ksqmile).
-noun_plu_lex(seamasses,seamass).
-noun_plu_lex(sqmiles,sqmile).
-noun_plu_lex(Averages,Average):- try_lex(noun_plu_db(Averages,Average)).
 
 which_var(Rivers,River,N):- arg(N,v(Rivers,River),V),var(V),!.
 which_var(_,_,0).
@@ -567,30 +560,50 @@ noun_plu_db(clex,Rivers,River):- which_var(Rivers,River,N), clex:noun_pl(Rivers,
   nop(dmsg(warn(hide_plur_root_noun(N,Rivers,River)))),
   nop(rtrace(hide_plur_root_noun(N,Rivers,River)))).
 
-noun_plu_db(chat80,areas,area).
-noun_plu_db(chat80,averages,average).
 noun_plu_db(chat80,capitals,capital).
 noun_plu_db(chat80,cities,city).
 noun_plu_db(chat80,continents,continent).
 noun_plu_db(chat80,countries,country).
 noun_plu_db(chat80,nations,nation).
 noun_plu_db(chat80,states,state).
-noun_plu_db(chat80,degrees,degree).
-noun_plu_db(chat80,latitudes,latitude).
-noun_plu_db(chat80,longitudes,longitude).
-noun_plu_db(chat80,numbers,number).
 noun_plu_db(chat80,oceans,ocean).
 noun_plu_db(chat80,persons,person).
 noun_plu_db(chat80,people,person).
 noun_plu_db(chat80,places,place).
-noun_plu_db(chat80,populations,population).
 noun_plu_db(chat80,regions,region).
 noun_plu_db(chat80,rivers,river).
 noun_plu_db(chat80,Types,Type):- bind_pos('type',Type,'s',Types).
 noun_plu_db(chat80,seas,sea).
-noun_plu_db(chat80,sums,sum).
-noun_plu_db(chat80,times,time).
-noun_plu_db(chat80,totals,total).
+
+noun_sing_plu_lex(chat80,fish).
+noun_sing_plu_lex(Chat80,Million):- val_noun_sing_plu_lex(Chat80,Million).
+%noun_sing_plu_lex(clex,Y):- clex:noun_mass(Y, _, _).
+
+
+val_noun_sing_plu_lex(chat80,proportion).
+val_noun_sing_plu_lex(chat80,percentage).
+val_noun_sing_plu_lex(chat80,million).
+val_noun_sing_plu_lex(chat80,thousand).
+
+noun_plu_db(Chat80,Sums,Sum):- val_noun_plu_db(Chat80,Sums,Sum).
+
+noun_plu_lex(ksqmiles,ksqmile).
+noun_plu_lex(seamasses,seamass).
+noun_plu_lex(sqmiles,sqmile).
+noun_plu_lex(Averages,Average):- try_lex(noun_plu_db(Averages,Average)).
+
+val_noun_plu_db(chat80,latitudes,latitude).
+val_noun_plu_db(chat80,longitudes,longitude).
+val_noun_plu_db(chat80,populations,population).
+val_noun_plu_db(chat80,areas,area).
+val_noun_plu_db(chat80,averages,average).
+val_noun_plu_db(chat80,degrees,degree).
+val_noun_plu_db(chat80,numbers,number).
+val_noun_plu_db(chat80,sums,sum).
+val_noun_plu_db(chat80,times,time).
+val_noun_plu_db(chat80,totals,total).
+val_noun_plu_db(chat80,ages,age).
+
 
 %comp_adj_lex_w2(More,_,_):- never_adj(More),!,fail.
 comp_adj_lex_w2(_,W2,_):-  is_list(W2), \+ member(pos(jjr),W2),!,fail.
@@ -608,6 +621,7 @@ comp_adj_db(chat80,lesser,small).
 comp_adj_db(chat80,less,small).
 comp_adj_db(chat80,newer,new).
 comp_adj_db(chat80,older,old).
+comp_adj_db(chat80,younger,young).
 comp_adj_db(chat80,smaller,small).
 
 sup_adj_lex_w2(More,_,_):- never_adj(More),!,fail.

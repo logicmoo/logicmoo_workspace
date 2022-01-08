@@ -19,9 +19,33 @@ if [ -f "/tmp/is_google_collab" ]; then
 fi
 
 
+
 export DEBIAN_FRONTEND=noninteractive
 
 apt update
+apt install --reinstall -y apt
+
+\cp -a /usr/local/lib/python3.10/* /usr/local/lib/python3.8/
+mv /usr/local/lib/python3.10 /usr/local/lib/python3.10-orig
+mv /usr/local/lib/python3.8 /usr/local/lib/python3.10
+\cp -a /home/opencog/.local/lib/python3.10/* /usr/local/lib/python3.10
+     
+#sed -i 's/^command=x11vnc.*/& -rfbauth \/.password2/' /etc/supervisor/conf.d/supervisord.conf
+#sed -i "s/^command=x11vnc.*/& ${X11VNC_ARGS}/" /etc/supervisor/conf.d/supervisord.conf
+
+mv /home/opencog/.local/lib/python3.10 /home/opencog/.local/lib/python3.10-orig
+ln -s /usr/local/lib/python3.10 /home/opencog/.local/lib/python3.10
+
+curl -sS https://bootstrap.pypa.io/get-pip.py | /usr/bin/python3.10
+python -m pip install pip -U
+pip3 uninstall -y html5lib pyzmq zmq gevent greenlet spacy nltk nbconvert jupyter jupyterlab requests six gevent.websocket
+pip3 install html5lib pyzmq zmq gevent greenlet spacy nltk nbconvert jupyter jupyterlab requests six gevent.websocket
+
+find /opt/logicmoo_workspace/packs_sys/logicmoo_agi -name setup.py -execdir pip install -e . \;
+find /opt/logicmoo_workspace/packs_lib -name setup.py -execdir pip install -e . \;
+find /opt/logicmoo_workspace/packs_sys/logicmoo_opencog -name .git -execdir git pull \;
+find /opt/logicmoo_workspace/packs_sys/logicmoo_opencog -name setup.py -execdir pip install -e . \;
+
 sudo apt-get install -y \
         build-essential cmake ninja-build pkg-config \
         ncurses-dev libreadline-dev libedit-dev \
@@ -37,7 +61,8 @@ sudo apt-get install -y \
         libdb-dev  libraptor2-dev \
         libpcre3-dev \
         libyaml-dev \
-        default-jdk junit4 libserd-dev libserd-0-0
+        default-jdk junit4 libserd-dev libserd-0-0 \
+     libgnutls28-dev libidn11-dev libkrb5-dev librtmp-dev libssh2-1-dev
 
 if false; then
 
@@ -201,16 +226,16 @@ if [[ -f /usr/share/emacs/26.3 ]]; then
    ln -s  /usr/local/share/emacs/28.0.50/ /usr/share/emacs/26.3
 fi
 
-if [[ -f $LOGICMOO_WS/nofederation ]]; then
+#if [[ -f $LOGICMOO_WS/nofederation ]]; then
 
    #pip3 uninstall nbconvert Pygments pygments   
    #apt remove -y python3-pygments python3-h5py python3-packaging python3-nbconvert # python3-requests # python3-six 
-   pip3 install filelock==3.4 importlib-metadata==4.4
-   pip3 install -r $LOGICMOO_WS/packs_sys/logicmoo_nlu/requirements.txt
-   python3 -m spacy download en_core_web_lg
-   python3 -m spacy download en_core_web_sm
+   #pip3 install filelock==3.4 importlib-metadata==4.4
+   #pip3 install -r $LOGICMOO_WS/packs_sys/logicmoo_nlu/requirements.txt
+   #python3 -m spacy download en_core_web_lg
+   #python3 -m spacy download en_core_web_sm
 
-fi
+#fi
 
 
 if [ -n "$VNC_PASSWORD" ]; then
@@ -250,14 +275,18 @@ if [ "$USER" != "root" ]; then
 fi
 sed -i -e "s|%USER%|$USER|" -e "s|%HOME%|$HOME|" /etc/supervisor/conf.d/supervisord.conf
 
-# home folder
-mkdir -p $HOME/.config/pcmanfm/LXDE/
-ln -sf /usr/local/share/doro-lxde-wallpapers/desktop-items-0.conf $HOME/.config/pcmanfm/LXDE/
-# chown -R $USER:$USER $HOME
+
+mkdir -p /home/ubuntu
+mkdir -p /home/opencog
 
 mv /home/ubuntu /home/ubuntu.wrong
 rm -f /home/ubuntu
 ln -s /root /home/ubuntu
+
+# home folder
+mkdir -p $HOME/.config/pcmanfm/LXDE/
+ln -sf /usr/local/share/doro-lxde-wallpapers/desktop-items-0.conf $HOME/.config/pcmanfm/LXDE/
+# chown -R $USER:$USER $HOME
 
 # nginx workers
 sed -i 's|worker_processes .*|worker_processes 1;|' /etc/nginx/nginx.conf
@@ -289,7 +318,7 @@ PASSWORD=
 HTTP_PASSWORD=
 
 
+set +x
+
 exec tini -w -vv -- /usr/bin/supervisord -n -c /etc/supervisor/supervisord.conf
-
-
 

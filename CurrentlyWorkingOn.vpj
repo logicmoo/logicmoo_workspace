@@ -6447,11 +6447,6 @@
 									<F N="packs_xtra/programk/aiml/test_suite/ProgramY/that_tests/coffee/coffee.aiml"/>
 									<F N="packs_xtra/programk/aiml/test_suite/ProgramY/that_tests/coffee/test_coffee.py"/>
 								</Folder>
-								<Folder Name="core">
-									<F N="packs_xtra/programk/aiml/test_suite/ProgramY/that_tests/core/__init__.py"/>
-									<F N="packs_xtra/programk/aiml/test_suite/ProgramY/that_tests/core/test_core.py"/>
-									<F N="packs_xtra/programk/aiml/test_suite/ProgramY/that_tests/core/that.aiml"/>
-								</Folder>
 								<Folder Name="multi_sentence">
 									<F N="packs_xtra/programk/aiml/test_suite/ProgramY/that_tests/multi_sentence/__init__.py"/>
 									<F N="packs_xtra/programk/aiml/test_suite/ProgramY/that_tests/multi_sentence/multi_sentence.aiml"/>
@@ -6475,11 +6470,6 @@
 								<F N="packs_xtra/programk/aiml/test_suite/ProgramY/timeout_tests/timeout.aiml"/>
 							</Folder>
 							<Folder Name="topic_tests">
-								<Folder Name="core">
-									<F N="packs_xtra/programk/aiml/test_suite/ProgramY/topic_tests/core/__init__.py"/>
-									<F N="packs_xtra/programk/aiml/test_suite/ProgramY/topic_tests/core/test_topic_aiml.py"/>
-									<F N="packs_xtra/programk/aiml/test_suite/ProgramY/topic_tests/core/topic.aiml"/>
-								</Folder>
 								<Folder Name="gimisa">
 									<F N="packs_xtra/programk/aiml/test_suite/ProgramY/topic_tests/gimisa/__init__.py"/>
 									<F N="packs_xtra/programk/aiml/test_suite/ProgramY/topic_tests/gimisa/blender.txt"/>
@@ -6603,20 +6593,13 @@
 							<F N="packs_xtra/programk/aiml/test_suite/ProgramY/__init__.py"/>
 						</Folder>
 						<F N="packs_xtra/programk/aiml/test_suite/CustomTagTest.aiml"/>
-						<F N="packs_xtra/programk/aiml/test_suite/CustomTagTest.aiml.tmp.pl"/>
 						<F N="packs_xtra/programk/aiml/test_suite/shouldbeabletodo.txt"/>
 						<F N="packs_xtra/programk/aiml/test_suite/Test_Dmiles.aiml"/>
-						<F N="packs_xtra/programk/aiml/test_suite/Test_Dmiles.aiml.tmp.pl"/>
 						<F N="packs_xtra/programk/aiml/test_suite/Test_Stu.aiml"/>
-						<F N="packs_xtra/programk/aiml/test_suite/Test_Stu.aiml.tmp.pl"/>
 						<F N="packs_xtra/programk/aiml/test_suite/Y_OpenCyc.aiml"/>
-						<F N="packs_xtra/programk/aiml/test_suite/Y_OpenCyc.aiml.tmp.pl"/>
 						<F N="packs_xtra/programk/aiml/test_suite/Z_Secondlife.aiml"/>
-						<F N="packs_xtra/programk/aiml/test_suite/Z_Secondlife.aiml.tmp.pl"/>
 						<F N="packs_xtra/programk/aiml/test_suite/ZZZ_InfoBot.aiml"/>
-						<F N="packs_xtra/programk/aiml/test_suite/ZZZ_InfoBot.aiml.tmp.pl"/>
 						<F N="packs_xtra/programk/aiml/test_suite/ZZZZ_HeardSelfSay.aiml"/>
-						<F N="packs_xtra/programk/aiml/test_suite/ZZZZ_HeardSelfSay.aiml.tmp.pl"/>
 					</Folder>
 					<Folder Name="users">
 						<Folder Name="doug~_miles">
@@ -6660,7 +6643,6 @@
 							<F N="packs_xtra/programk/prolog/programk/cyc_pl/cyc_system_intern.pl"/>
 							<F N="packs_xtra/programk/prolog/programk/cyc_pl/cycp.pl"/>
 							<F N="packs_xtra/programk/prolog/programk/cyc_pl/new_cyc.pl"/>
-							<F N="packs_xtra/programk/prolog/programk/cyc_pl/saved_cached_queries"/>
 							<F N="packs_xtra/programk/prolog/programk/cyc_pl/textCached"/>
 						</Folder>
 						<Folder Name="logicmoo">
@@ -6685,7 +6667,6 @@
 						<F N="packs_xtra/programk/prolog/programk/logicmoo_module_aiml_testing.pl"/>
 						<F N="packs_xtra/programk/prolog/programk/logicmoo_module_aiml_toplevel.pl"/>
 						<F N="packs_xtra/programk/prolog/programk/README.md"/>
-						<F N="packs_xtra/programk/prolog/programk/saved_cached_queries"/>
 					</Folder>
 				</Folder>
 				<Folder Name="temp">

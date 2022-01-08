@@ -635,10 +635,10 @@ reduce_fname(M,N):- atom_codes(M,[C|R]), \+ code_type(C,alpha), atom_codes(N0,R)
 reduce_fname(M,N):- atom_codes(M,Codes), append(R,[C],Codes), \+ code_type(C,alnum), atom_codes(N0,R),reduce_fname(N0,N).
 
 reduce_fname(L,R):- reduce_single_letter(L,LL), reduce_fname(LL,R).
-reduce_fname(M,N):- atom_concat_w_blobs(N0,'_pred',M),reduce_fname(N0,N).
 reduce_fname(M,N):- atom_concat_safety('trans_',N0,M),reduce_fname(N0,N).
 reduce_fname(M,N):- atom_concat_safety('symmetric_',N0,M),reduce_fname(N0,N).
 reduce_fname(M,N):- atom_concat_safety('predicate_',N0,M),reduce_fname(N0,N).
+reduce_fname(M,N):- atom_concat_safety('generic_',N0,M),!,reduce_fname(N0,N).
 reduce_fname(L,R):- atom_concat_some_left('v',LL,L),name(LL,[UC,LC|_]),char_type(UC,upper),char_type(LC,lower),reduce_fname(LL,R).
 reduce_fname(L,R):- atom_concat_some_left('Cl_',LL,L),reduce_fname(LL,R).
 reduce_fname(L,R):- atom_concat_some_left('U_',LL,L),reduce_fname(LL,R).
@@ -651,6 +651,9 @@ reduce_fname(L,R):- atom_concat_some_left('c',LL,L),remove_single_number(LL,LLL)
 reduce_fname(L,R):- atom_concat_some_left('C',LL,L),remove_single_number(LL,LLL),reduce_fname(LLL,R).
 reduce_fname(L,R):- atom_concat_some_left('Num',LL,L),remove_single_number(LL,LLL),reduce_fname(LLL,R).
 reduce_fname(L,R):- remove_single_number(L,LLL),reduce_fname(LLL,R).
+reduce_fname(M,N):- atom_concat_w_blobs(N0,'_pred',M),reduce_fname(N0,N).
+reduce_fname(M,N):- atom_concat_w_blobs(N0,'pred',M),reduce_fname(N0,N).
+
 reduce_fname(ti,'').
 reduce_fname(generic,'').
 reduce_fname(tti,'').

@@ -259,6 +259,14 @@ num_ti(value).
 num_ti(area).
 num_ti(size).
 
+num_ti(Count):- count_ti(Count).
+
+count_ti(count).
+count_ti(quantity).
+count_ti(number).
+count_ti(amount).
+count_ti(degree).
+
 free_ti(noun_thing).
 free_ti(thing).
 free_ti(statement).

@@ -403,7 +403,14 @@ all_word(any).
 some_word(a).
 some_word(the(sg)).
 some_word(some).
+some_word(Many):- many_most_few(Many).
 
+many_most_few(many).
+many_most_few(most).
+many_most_few(much).
+many_most_few(more).
+many_most_few(few).
+many_most_few(little).
 
 apply_set([], X, true:P, S, setOf(X, P, S)).
 

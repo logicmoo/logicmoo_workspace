@@ -117,18 +117,8 @@ symmetric_verb(Spatial,border):- spatial(Spatial).
 prep_order(move,by,dirO,dir).
 prep_order(paint,by,dirO,color).
 prep_order(give,by,to,dirO).
-%prep_order(get,by,to,from).
-/* Nouns */
-property_LF(River,Spatial& Feat& River,X,Spatial&Geo&  _Country,Y,
- (GP,ti(River,X)),[],_,_):-  fail,
-   if_search_expanded(7),
-   make_gp(Spatial,any,Y,X,GP),
-   feat(Feat),spatial(Spatial),Geo=geo,
-   %concrete_type(Country),
-   concrete_type(River).
 
 concrete_type(Type):- var(Type),dmsg(var_concrete_type(Type)),!,fail.
-concrete_type(Type):- is_prop_type80(Type),!,fail.
 concrete_type(Type):- free_ti(Type).
 concrete_type(dog).
 concrete_type(person).
@@ -136,6 +126,7 @@ concrete_type(man).
 concrete_type(island).
 concrete_type(TI):- clause(ti(TI2,_),_),TI==TI2.
 concrete_type(Type):- is_toplevel_class(Type).
+concrete_type(Type):- nonvar(Type), loop_check(is_prop_type80(Type)),!,fail.
 
 is_toplevel_class(C):- is_toplevel_enum(C).
 is_toplevel_class(C):- ti_subclass(C,S), is_toplevel_class(S).
@@ -145,16 +136,44 @@ is_toplevel_enum(river).
 is_toplevel_enum(place).
 is_toplevel_enum(circle_of_latitude).
 
+
 is_prop_type80(Million):- ratio(Million1,Thousand,_,_),(Million1=Million;(Million1\=Thousand,Million=Thousand)).
 is_prop_type80(Percentage):- comparator_LF(Percentage,_,_,_,_).
 is_prop_type80(Total):- aggr_adj_LF(Total1,_,_,Total2),(Total1=Total;(Total1\=Total2,Total2=Total)).
+is_prop_type80(Type):- nonvar(Type), loop_check(concrete_type(Type)),!,fail.
+
+
+%prep_order(get,by,to,from).
+/* Nouns *//*
+property_LF(River,Spatial& Feat& River,X,Spatial&Geo&  _Country,Y,
+ (GP,ti(River,X)),[],_,_):-  fail,
+   if_search_expanded(7),
+   make_gp(Spatial,any,Y,X,GP),
+   feat(Feat),spatial(Spatial),Geo=geo,
+   %concrete_type(Country),
+   concrete_type(River).*/
+%property_LF(Area,     _,    _X, _,_Y, _P,[],_,_):- var(Area),!,fail.
+
+property_LF(Area,     value&size&Area,    X,Spatial&_,Y,  measure_pred(Spatial,Area,Y,X),[],_,_):- 
+   spatial(Spatial), type_measure_pred(_,size,Area,_).
+property_LF(Latitude, value&position&XY,X,Spatial&_,Y, position_pred(Spatial,Latitude,Y,X),[],_,_):- 
+                     type_measure_pred(_Region,position(XY),Latitude,_).
+%property_LF(Longitude,value&position&x,X,Spatial&_,Y, position_pred(Spatial,Longitude,Y,X),[],_,_):- type_measure_pred(_Region,position(x),Longitude,_).
+property_LF(Population, value&Units&Population/*citizens*/, X,Spatial&_,Y,    
+  count_pred(Spatial,Population/*citizens*/,Y,X),[],_,_):-
+  type_measure_pred(_City,Units,Population,countV).
+
+property_LF(Area,     value&size&Area,    X,Spatial&_,Y, measure_pred(Spatial,Area,Y,X),[],_,_):- assertion(nonvar(Area)),spatial(Spatial), clex_attribute(Area).
+
+type_measure_pred(_AnyObjectType,MeasureType,Area,countV):- MeasureType\==size, MeasureType=Area, clex_attribute(Area).
 
 property_LF(Capital,_,X,_,Y,Out,[],_,_):- 
    \+ is_prop_type80(Capital),!,
-   ( \+ \+ ti(Capital,_) -> PT = type ; PT = prop),
+   (( \+ \+ ti(Capital,_) ; concrete_type(Capital)) -> PT = type ; PT = prop),
    make_gp(_Spatial,has_prop(PT,Capital),Y,X,Out).
 
 property_LF_1(Area,     _,    _X, _,_Y, _P,[],_,_):- var(Area),!,fail.
+
 
 trans_LF(    Govern,Spatial& Feat& City,X,Spatial&Geo&  Country,Y,specific_pred(Spatial,Nation_capital,Y,X),[],_,_):-
   feat(Feat), assertion(nonvar(Govern)),
@@ -176,17 +195,6 @@ thing_LF(River,Spatial& Feat& River,X,ti(River,X),[],_):-
   feat(Feat), concrete_type(River), spatial(Spatial).
 */
   
-property_LF(Area,     _,    _X, _,_Y, _P,[],_,_):- var(Area),!,fail.
-
-property_LF(Area,     value&size&Area,    X,Spatial&_,Y,  measure_pred(Spatial,Area,Y,X),[],_,_):- spatial(Spatial), type_measure_pred(_,size,Area,_).
-property_LF(Latitude, value&position&XY,X,Spatial&_,Y, position_pred(Spatial,Latitude,Y,X),[],_,_):- type_measure_pred(_Region,position(XY),Latitude,_).
-%property_LF(Longitude,value&position&x,X,Spatial&_,Y, position_pred(Spatial,Longitude,Y,X),[],_,_):- type_measure_pred(_Region,position(x),Longitude,_).
-property_LF(Population, value&units&Population/*citizens*/, X,Spatial&_,Y,    count_pred(Spatial,Population/*citizens*/,Y,X),[],_,_):-
-  type_measure_pred(_City,units,Population,countV).
-
-property_LF(Area,     value&size&Area,    X,Spatial&_,Y, measure_pred(Spatial,Area,Y,X),[],_,_):- assertion(nonvar(Area)),spatial(Spatial), clex_attribute(Area).
-
-type_measure_pred(_AnyObjectType,MeasureType,Area,countV):- MeasureType\==size, MeasureType=Area, clex_attribute(Area).
 
 clex_attribute(Area):-  bind_pos('attrib',Area).
 %clex_attribute(Area):-  bind_pos('type',Area).

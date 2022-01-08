@@ -646,12 +646,12 @@ in_compat_verb_prep(_Verb,from).
 in_compat_verb_prep(_Verb,of).
 %compat_verb_prep(_Verb,from).
 
-reduce1(P,Q):- reduce4(P,Q),!.
+reduce1(P,Q):- locally(b_setval('$t_l_orig',P),reduce4(P,Q)),!.
 
 reduce4(Q,Q):- \+ compound(Q),!.
 reduce4(info(P),info(P)).   
 %reduce4(_,decl(P),O):- i_sentence(decl(P),O),!.
-reduce4(P,Q):- once((reduce3(P,PQ),nonvar(PQ))),P\==PQ,!,reduce4(PQ,Q).
+reduce4(P,Q):- once((locally(b_setval('$t_l_orig3',P),reduce3(P,PQ)),nonvar(PQ))),P\==PQ,!,reduce4(PQ,Q).
 reduce4(Q,Q).
 
 sub_cl_var(Var,P):- \+ sub_var(Var,P), !, fail.
@@ -660,6 +660,13 @@ sub_cl_var(_,_).
 
 in_vars(Var,Vars):- is_list(Vars),!, sub_var(Var,Vars).
 in_vars(Var,Vars):- Var==Vars.
+
+not_outter_var(I):-
+ (b_getval('$t_l_orig',Orig),
+   b_getval('$t_l_orig3',P3),
+   subst(Orig,P3,hiddddddddddddddeeeeeeeeeeee,RR),
+ %  dmsg(sub_var(I,RR)),
+    \+ sub_var(I,RR)).
 
 reduce3(P,Q):- \+ compound(P),!, Q=P.
 
@@ -695,12 +702,29 @@ reduce3( s(A,B,C,D), LF):- s80lf(decl(s(A,B,C,D)),_ :- LF),!.
 reduce3( \+ ((X,P)), (X,PP)):- skip_over_modalize(X), !, reduce4( \+ P,PP).
 
 
-reduce3(^(Q,P),P):- ground(Q).
+reduce3(^(Q,P),P):- ground(Q);ground(P).
+reduce3(^(Var,P),P):- var(Var),\+ sub_cl_var(Var,P),!.
+
+reduce3(setOf(A1,P,L), setOf(A1,R,L)):- %fail, %1
+  =(E,P), compound(E), E = generic_pred(_X,_F,has_prop(type,T),I,A2),
+  A1==A2,
+  not_outter_var(I),
+  subst(P,E, ti(T,A1),R).
 
 reduce3(^(Vars,P), ^(NewVars,R)):- flatten([Vars],VarsL),select(A1,VarsL,NewVars),var(A1),
   sub_term(E,P), compound(E), E = generic_pred(_X,_F,has_prop(type,T),A2,I),
   A1==A2,
+  not_outter_var(A1),
   subst(P,E,ti(T,I),R), \+ sub_var(A1,R).
+
+/*
+reduce3(P, R):- compound(P),
+  compound_name_arguments(P,_,[A,B|C]),
+  nth0(N,[A,B|C],A),
+  sub_term(E,A1), compound(E), \+ is_list(E),
+  sub_term(F,Rest), compound(F), F ==E,
+  subst
+*/
 
 reduce3(^(Vars,P), ^(NewVars,R)):- flatten([Vars],VarsL),select(A1,VarsL,NewVars),var(A1),
   sub_term(E,P), compound(E), E =  trans_pred(Contain,Pred,X,Y),A1==Y,
@@ -709,15 +733,15 @@ reduce3(^(Vars,P), ^(NewVars,R)):- flatten([Vars],VarsL),select(A1,VarsL,NewVars
   Pred == Pred2,
   X == X2,
   Y \== Y2,
+  not_outter_var(A1),
   subst(P,E,true,R), \+ sub_var(A1,R).
 
-
-reduce3(setOf(A1,P,L), setOf(A1,R,L)):- 
-  =(E,P), compound(E), E = generic_pred(_X,_F,has_prop(type,T),I,A2),
+reduce3(^(A1,P), ^(A1,R)):- 
+  sub_term(E,P), compound(E), E = trans_pred(_X,_F,I,A2),
   A1==A2,
-  subst(P,E,ti(T,A1),R), \+ sub_var(I,R).
+  not_outter_var(A2),
+  subst(P,E,true,R), sub_var(I,P), \+ sub_var(A2,R).
 
-reduce3(^(Var,P),P):- var(Var),\+ sub_cl_var(Var,P),!.
 reduce3(^(Vars,P),^(NewVars,P)):- (is_list(Vars),select(Var,Vars,NewVars), (nonvar(Var) -> true ; \+ sub_cl_var(Var,P))),!.
 reduce3(^(Vars,P),^(Var,P)):- is_list(Vars),Vars=[Var],!.
 
@@ -765,6 +789,8 @@ reduce3(P,Q):- compound_name_arguments(P,F,A),
    maplist(reduce4,A,AA), compound_name_arguments(Q,F,AA).
 
 
+reduce5(X,pronoun(X,PronounIs_det,Pronoun_Det),is_pronoun(X,PronounIs_det,Pronoun_Det)).
+   
 reduce5(X,np_head(X,Det,AdjList,Type),bE(is,X,Type)&nop(is_det(X,Det))&O):- % Type\==[],
   maplist(r_adj(X),AdjList,Conjs),list_to_conjuncts(Conjs,O).
 
@@ -777,7 +803,7 @@ r_adj(X,adj(Adj),PP):- !, r_adj(X,Adj,PP).
 r_adj(_,lf(Adj),Adj):- !.
 r_adj(X,P,PP):- subst(P,self,X,PP),PP\==P,!.
 r_adj(X,P,PP):- sub_var(X,P),P=PP.
-r_adj(X,Adj,isa(X,Adj)).
+r_adj(X,Adj,isa_adj(X,Adj)).
 %r_adj(X,Adj,PP):-  i_adj(Adj,_Type-X,T,T,Head,Head,PP,true),!.
 
 is_reduced_true(Q):- var(Q),!,fail.

@@ -1,8 +1,19 @@
-FROM dorowu/ubuntu-desktop-lxde-vnc
+FROM dorowu/ubuntu-desktop-lxde-vnc:latest
 LABEL maintainer = "logicmoo@gmail.com"
+ARG --security-opt seccomp:unconfined
 ARG DEBIAN_FRONTEND=noninteractive
 ENV DEBIAN_FRONTEND noninteractive
-ARG --security-opt seccomp:unconfined
+
+#COPY --from=dorowu/ubuntu-desktop-lxde-vnc:latest / /
+#COPY --from=opencog/cogutil:latest / /
+#COPY --from=opencog/opencog-deps:latest / /
+#COPY --from=opencog/postgres:latest / /
+#COPY --from=opencog/relex:latest / /
+#COPY --from=opencog/moses:latest / /
+#COPY --from=synthillect/atomspace:latest / /
+#COPY --from=synthillect/opencog-dev:latest / /
+#COPY --from=synthillect/opencog-jupyter:latest / /
+#COPY --from=synthillect/opencog-minerl:latest / /
 
 RUN mkdir -p /usr/share/man/man1/
 RUN apt-get update && apt-get install -y --no-upgrade --allow-unauthenticated \
@@ -69,4 +80,6 @@ RUN apt-get update && apt-get install -y --no-upgrade --allow-unauthenticated \
 	libpcre3-dev \
 	libyaml-dev \
 	default-jdk junit4
+
+COPY docker/rootfs /
 

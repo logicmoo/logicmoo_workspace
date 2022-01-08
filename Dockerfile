@@ -5,7 +5,81 @@ LABEL maintainer = "logicmoo@gmail.com"
 ARG DEBIAN_FRONTEND=noninteractive
 ENV DEBIAN_FRONTEND noninteractive
 ARG --security-opt seccomp:unconfined
+LABEL maintainer = "logicmoo@gmail.com"
+ARG DEBIAN_FRONTEND=noninteractive
+ENV DEBIAN_FRONTEND noninteractive
+ARG --security-opt seccomp:unconfined
 
+COPY docker/rootfs /
+
+RUN mkdir -p /usr/share/man/man1/
+RUN apt-get update && apt-get install -y --no-upgrade --allow-unauthenticated \
+  nginx-common nginx nginx-core  libnginx-mod-http-geoip libnginx-mod-http-image-filter \
+  libnginx-mod-http-xslt-filter libnginx-mod-mail libnginx-mod-stream \
+  supervisor apache2 nmap x11-apps vim eggdrop default-jdk default-jre \
+  iproute2 libgd3 libgeoip1 libmnl0 libwebp6 libxslt1.1 \
+  libtcmalloc-minimal4 \
+  psmisc \
+ python3-gevent \
+ python3-flask-api \
+ iputils-ping \
+ iputils-arping \
+ nfs-kernel-server \
+ python3-pip \
+ nfs-common \
+ rpcbind \
+ telnet \
+ traceroute \
+ inotify-tools \
+ ant \
+ swig \
+ flex \
+ libllvm8 \
+ lsb-release \
+ tzdata \
+ gosu \
+ zlib1g-dev \
+ zlib1g \
+ zip \
+ yarn \
+ #xvnc4viewer \
+ xterm \
+ wget \
+ vim \
+ uuid-dev \
+ unzip \
+ unixodbc-dev \
+ unixodbc \
+ #unattended-upgrades \
+ tightvncserver \
+ chromium-browser \
+ # tini \
+ texlive-extra-utils \
+ tdsodbc \
+ sudo \
+ #software-properties-common \
+ screen \
+ rsync \
+ rlwrap \
+ libraptor2-dev			 \
+	build-essential cmake ninja-build pkg-config \
+	ncurses-dev libreadline-dev libedit-dev \
+	libgoogle-perftools-dev \
+	libunwind-dev \
+	libgmp-dev \
+	libssl-dev \
+	unixodbc-dev \
+	zlib1g-dev libarchive-dev \
+	libossp-uuid-dev \
+	libxext-dev libice-dev libjpeg-dev libxinerama-dev libxft-dev \
+	libxpm-dev libxt-dev \
+	libdb-dev \
+	libpcre3-dev \
+	libyaml-dev \
+	default-jdk junit4
+
+# Jupyter
+EXPOSE 1800
 # SSHD
 EXPOSE 22    
 # Apache HTTP 
@@ -51,16 +125,14 @@ ENV HOME /root
 
 COPY docker/rootfs /
 
-COPY packs_web/butterfly /tmp/butterfly/
-RUN cd /tmp/butterfly/ && pip3 install .
-
-MAINTAINER RUN apt-get update && apt-get install -y --allow-unauthenticated \
+RUN apt-get update && apt-get install -y --allow-unauthenticated \
   nginx-common nginx nginx-core  libnginx-mod-http-geoip libnginx-mod-http-image-filter \
   libnginx-mod-http-xslt-filter libnginx-mod-mail libnginx-mod-stream \
   supervisor apache2 nmap x11-apps vim eggdrop default-jdk default-jre \
   iproute2 libgd3 libgeoip1 libmnl0 libwebp6 libxslt1.1 \
  \
  python3-gevent \
+ python3-pip \
  python3-flask-api \
  iputils-ping \
  iputils-arping \
@@ -111,7 +183,8 @@ MAINTAINER RUN apt-get update && apt-get install -y --allow-unauthenticated \
  software-properties-common \
  screen \
  rsync \
- rlwrap
+ rlwrap \
+ tini
 
 
 RUN apt update \
@@ -131,6 +204,7 @@ RUN apt update \
         libpcre3-dev \
         libyaml-dev \
         default-jdk junit4 libserd-dev libserd-0-0
+        
 
 RUN a2dismod mpm_event \
  && a2enmod macro access_compat alias auth_basic authn_core authn_file authz_core authz_host authz_user autoindex deflate dir env \
@@ -159,6 +233,64 @@ RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | s
 
 COPY packs_sys/logicmoo_nlu/requirements.txt /tmp/requirements.txt
 
+#RUN  curl -sS https://bootstrap.pypa.io/get-pip.py | /usr/bin/python3.10
+
+# install our Butterfly websockets (telnet server over httpd)
+RUN \
+ pip install --upgrade pip ; python3 -m pip install --upgrade pip \
+ # && python3 -m pip uninstall setuptools ; pip install setuptools \
+ && python3 -m pip install --upgrade setuptools wheel \
+ && python3 -m pip install tornado asyncio \
+ && python3 -m pip install butterfly \
+ && python3 -m pip install butterfly[themes] # If you want to use themes \
+ && python3 -m pip install butterfly[systemd] # If you want to use systemd \
+ && RUN cd /etc/systemd/system \
+ && curl -O https://raw.githubusercontent.com/paradoxxxzero/butterfly/master/butterfly.service \
+ && curl -O https://raw.githubusercontent.com/paradoxxxzero/butterfly/master/butterfly.socket \
+ && echo Maybe remember to: systemctl enable butterfly.socket \
+ && echo Maybe remember to: systemctl start butterfly.socket
+
+RUN apt update \
+ && apt-get install -y \
+        build-essential cmake ninja-build pkg-config \
+        ncurses-dev libreadline-dev libedit-dev \
+        libgoogle-perftools-dev \
+        libunwind-dev \
+        libgmp-dev \
+        libssl-dev \
+        unixodbc-dev \
+        zlib1g-dev libarchive-dev \
+        libossp-uuid-dev \
+        libxext-dev libice-dev libjpeg-dev libxinerama-dev libxft-dev \
+        libxpm-dev libxt-dev \
+        libdb-dev  libraptor2-dev \
+        libpcre3-dev \
+        libyaml-dev \
+	python3-pip \
+        default-jdk junit4 libserd-dev libserd-0-0
+
+MAINTAINER RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo gpg --dearmor -o /usr/share/keyrings/githubcli-archive-keyring.gpg \
+ && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
+ && apt update \
+ && apt install -y gh
+
+# Python NLP Stuff
+EXPOSE 4095 4096 4097 4098 4099
+
+EXPOSE 5901
+
+RUN pip3 uninstall -y  nbconvert Pygments pygments ; /bin/true
+RUN apt remove -y python3-pygments python3-h5py python3-packaging python3-nbconvert # python3-requests # python3-six 
+RUN apt remove -y python3-gevent python3-greenlet
+COPY packs_sys/logicmoo_nlu/requirements.txt /tmp/requirements.txt
+#RUN pip3 install --verbose -r /tmp/requirements.txt
+RUN pip3 install --verbose filelock==3.4 importlib-metadata==4.4
+RUN pip3 install --verbose gevent greenlet spacy nltk nbconvert jupyter jupyterlab requests six gevent.websocket
+
+#RUN cd /opt/logicmoo_workspace/packs_web/butterfly && pip install -e .
+
+
+#RUN /startup.sh Dockerfile
 #CMD $LOGICMOO_WS/StartLogicmoo.sh
 ENTRYPOINT ["/startup_logicmoo.sh"]
 #ENTRYPOINT ["/startup.sh"]

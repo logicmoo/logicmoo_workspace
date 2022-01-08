@@ -3,4 +3,5 @@
 ./*
 !./packs_sys/logicmoo_nlu/requirements.txt
 !./packs_web/butterfly/
+!./serv/
 !./docker/
