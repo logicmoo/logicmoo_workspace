@@ -130,7 +130,7 @@ fi
 if [ "${build}" == "1" ]; then
      set +e +x
      cd $LOGICMOO_WS
-     docker build -f serv/Dockerfile $EXTRA -t logicmoo/logicmoo_server_32gb . 
+     docker build -f docker/Dockerfile.32g $EXTRA -t logicmoo/logicmoo_server_32gb . 
      echo MAYBE: docker push logicmoo/logicmoo_server_32gb
      cd $LOGICMOO_WS
 fi
