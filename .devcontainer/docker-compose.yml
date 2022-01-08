@@ -1,0 +1,72 @@
+version: "2.1"
+
+
+services:
+    logicmoo:
+        container_name: logicmoo
+        restart: on-failure
+        healthcheck:
+          test: "exit 0"
+        build: .
+        environment:
+          - DEBIAN_FRONTEND=noninteractive
+          - LANG=C.UTF-8
+          - LANGUAGE=C.UTF-8
+          - LC_ALL=C.UTF-8
+          - SHELL=/bin/bash
+          - TINI_VERSION=v0.19.0
+          - LOGICMOO_GAMES=/opt/logicmoo_workspace/packs_sys/prologmud_samples/prolog/prologmud_sample_games
+          - LOGICMOO_USER=prologmud_server
+          - LOGICMOO_WS=/opt/logicmoo_workspace
+          - PATH=/opt/logicmoo_workspace/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+          - USER=prologmud_server
+          - HOME=/opt/logicmoo_workspace/prologmud_server
+          - WNDB=/opt/logicmoo_workspace/packs_sys/logicmoo_nlu/data/WNprolog- 3.0/prolog
+        ports:
+         #- "3020:3020"
+         #- "3334:3334"
+          - "4000-4199:4000-4199"
+          - "4222:22"
+          - "4280:80"
+          - "4243:443"
+          - "4220:3020"
+          - "4200:5900"
+          - "4201:9001"
+          - "4290:4090"
+          - "6079-6081:6079-6081"          
+         #- "14100-14199:14100-14199"
+        volumes:
+          - .:/opt/logicmoo_workspace
+        networks:
+           default:
+           pub_net:
+              ipv4_address: 10.0.0.99
+           #app_net:
+           #   ipv4_address: 172.17.0.2
+networks:
+  pub_net:
+    driver: macvlan
+    driver_opts:
+      parent: eth0
+    ipam:
+      driver: default
+      config:
+        - subnet: 10.0.0.0/24
+          gateway: 10.0.0.194
+  app_net:
+    driver: host
+    enable_ipv6: false
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.17.0.0/16
+          gateway: 172.17.0.1
+
+volumes:
+  shared:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: "${PWD}/"
+
