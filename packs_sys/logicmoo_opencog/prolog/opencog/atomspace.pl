@@ -1,7 +1,6 @@
 
 %%% individual inferencerules
 
-% There are three types of inferencerules in ATOMSPACE:
 % (1) "revision" merges its two premises into a conclusion;
 % (2) "choice"opencog_s_selects one of its two premises as a conclusion;
 % (3) "inference" generates a conclusion from one or two premises.
