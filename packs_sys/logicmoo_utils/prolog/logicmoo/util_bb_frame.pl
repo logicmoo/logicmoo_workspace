@@ -265,7 +265,7 @@ frmprint0(I) :-
     reverse(FrameA, FrameO),
     frmprint_e(FrameO).
 frmprint_e(I) :- 
-catch(make_pretty(I, Frame), _, I=Frame),
+  catch(make_pretty(I, Frame), _, I=Frame),
     guess_pretty(Frame),
  with_output_to(atom(A),print_tree_nl(Frame)), format('~N~w~n', [A]).
 

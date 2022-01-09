@@ -381,8 +381,10 @@ guess_pretty1(H):- pretty_enough(H), !.
 %guess_pretty1(H):- term_variables(H,Vs),copy_term(H+Vs,CH+CVs),try_get_varname_cache(CH),CVs\=@=Vs,maplist(maybe_xfr_varname,CVs,Vs),!.
 %guess_pretty1(_):- !. % dmiles to undo
 guess_pretty1(O):- mortvar(( ignore(pretty1(O)),ignore(pretty_two(O)),ignore(pretty_three(O)),ignore(pretty_final(O)))),!.
-%make_pretty(I,O):- is_user_output,!,shrink_naut_vars(I,O), pretty1(O),pretty_three(O),pretty_final(O).
-%make_pretty(I,O):- I=O, pretty1(O),pretty_three(O),pretty_final(O).
+
+make_pretty(I,O):- pretty_numbervars(I,O),!.
+make_pretty(I,O):- is_user_output,!,shrink_naut_vars(I,O), pretty1(O),pretty_three(O),pretty_final(O),!.
+make_pretty(I,O):- dumplicate_term(I,O), pretty1(O),pretty_three(O),pretty_final(O),!.
 
 :- export(guess_varnames/1).
 

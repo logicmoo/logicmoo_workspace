@@ -396,9 +396,11 @@ sexpr0((Expr))                 -->  `.{`, read_string_until(S,`}.`), swhite,
 
 
 sexpr0(['#'(quote),E])             --> `'`, !, sexpr(E).
+sexpr0(['#'(hbackquote),E])         --> {is_scm}, `#```, !, sexpr(E).
 sexpr0(['#'(backquote),E])         --> ````, !, sexpr(E).
 sexpr0(['#BQ-COMMA-ELIPSE',E])     --> `,@`, !, sexpr(E).
 sexpr0(['#COMMA',E])               --> `,`, !, sexpr(E).
+sexpr0(['#HCOMMA',E])               --> {is_scm}, `#,`, !, sexpr(E).
 sexpr0('$OBJ'(claz_bracket_vector,V))                 --> `[`, sexpr_vector(V,`]`),!, swhite.
 sexpr0('#'(A))              --> `|`, !, read_string_until(S,`|`), swhite,{quietly_sreader(((atom_string(A,S))))}.
 
@@ -450,7 +452,9 @@ sexpr0(OBJ)--> `#<`,!,zalwayz(ugly_sexpr_cont(OBJ)),!.
 
 sexpr0(E)                      --> !,zalwayz(sym_or_num(E)), swhite,!.
 
+is_scm.
 
+% c:/opt/logicmoo_workspace/packs_sys/logicmoo_opencog/guile/module/ice-9/and-let-star.scm
 priority_symbol((`#+`)).
 priority_symbol((`#-`)).
 priority_symbol((`#false`)).
@@ -458,6 +462,7 @@ priority_symbol((`#true`)).
 priority_symbol((`#nil`)).
 priority_symbol((`#null`)).
 priority_symbol((`#f`)).
+priority_symbol((`#;`)):- is_scm.
 priority_symbol((`#t`)).
 priority_symbol((`+1+`)).
 priority_symbol((`+1-`)).
@@ -492,7 +497,7 @@ sblank_line --> eoln,!.
 sblank_line --> [C],{bx(C =< 32)},!, sblank_line.
 
 s_string(Text)                 --> sexpr_string(Text).
-s_string(Text)                 --> {kif_ok},`'`, !, zalwayz(read_string_until_no_esc(Text,`'`)),!.
+s_string(Text)                 --> {kif_ok},`'`, !, zalwayz(read_string_until(Text,`'`)),!.
 
 
 
@@ -525,6 +530,9 @@ comment_expr_3(T,N,CharPOS) -->  `;`,!, my_lazy_list_location(file(_,_,N,CharPOS
   {text_to_string_safe(S,T)},!.
 comment_expr_3(T,N,CharPOS) --> {kif_ok}, `#!`,!, my_lazy_list_location(file(_,_,N,CharPOS)),!,zalwayz(read_string_until_no_esc(S,eoln)),!,
   {text_to_string_safe(S,T)},!.
+% For Scheme
+comment_expr_3(T,N,CharPOS) --> `#!`,!, my_lazy_list_location(file(_,_,N,CharPOS)),!,zalwayz(read_string_until_no_esc(S,`!#`)),!,
+  {text_to_string_safe(S,T)},!.
 
 
 sexprs([H|T]) --> sexpr(H), !, sexprs(T).
@@ -556,9 +564,10 @@ sexpr_vector0([First|Rest],End) --> sexpr(First), !, sexpr_vector0(Rest,End).
 
 %s_string_cont(Until,"")             --> Until,!, swhite.
 :- encoding(iso_latin_1).
-sexpr_string(Text)                 --> `“`, !, zalwayz(read_string_until_no_esc(Text,`”`)),!.
-sexpr_string(Text)                 --> `"`, !, zalwayz(read_string_until_no_esc(Text,`"`)),!.
-sexpr_string(Text)                 --> `#|`, !, zalwayz(read_string_until_no_esc(Text,`|#`)),!.
+sexpr_string(Text)                 --> `"`, !, zalwayz(read_string_until(Text,`"`)),!.
+sexpr_string(Text)                 --> `“`, !, zalwayz(read_string_until(Text,(`”`;`“`))),!.
+sexpr_string(Text)                 --> (`”`;`“`), !, zalwayz(read_string_until(Text,(`”`;`“`))),!.
+sexpr_string(Text)                 --> `#|`, !, zalwayz(read_string_until(Text,`|#`)),!.
 %sexpr_string([C|S],End) --> `\\`,!, zalwayz(escaped_char(C)),!, sexpr_string(S,End).
 %sexpr_string([],End) --> End, !.
 % sexpr_string([32|S]) --> [C],{eoln(C)}, sexpr_string(S).

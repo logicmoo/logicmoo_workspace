@@ -11,11 +11,52 @@ read_atomese(X):- read_atomese(current_input, X).
 :- use_module(library(logicmoo_common)).
 :- use_module(library(wam_cl/sreader)).
 
+outof_name(_,F,O):- O=F,!.
+outof_name(P,F,O):- O=F:P,!.
 
-read_atomese(S, A):- input_to_forms(S,X),s_to_atomese(X,A).
+into_name(I,O):- atom(I),!,I=O.
+into_name(I,O):- is_list(I),text_to_string(I,S),into_name(S,O),!.
+into_name([I],O):- into_name(I,O).
+into_name(I,O):- compound(I),compound_name_arguments(I,_,[A]),into_name(A,O),!.
+into_name(I,O):- compound(I),!,O=I.
+into_name(I,O):- atom_concat('$',V,I),!,into_name(V,O).
+into_name(I,O):- atom_concat('',O,I),!.
 
-read_atomese_file(F, L):-  open(F,read,S),
-   findall(X,read_atomese(S,X),L),dmsg(L).
+s_to_atomese(U,A):- once(s_to_atomese0(U,M)),U\=@=M,!,s_to_atomese(M,A).
+s_to_atomese(U,U).
+
+s_to_atomese0(I,O):- \+ compound(I),!,I=O.
+s_to_atomese0('$STRING'(S),S):-!.
+s_to_atomese0(['Variable',Name],'$VAR'(F)):- into_name(Name,N),svar_fixvarname(N,F),!.
+s_to_atomese0([T,Name],F):- atom(T),into_name(Name,N),!,atomic_list_concat([N,T],'_',F).
+s_to_atomese0([stv,X,Y],stv(X,Y)):-!.
+s_to_atomese0(I,O):- \+ is_list(I),
+  compound_name_arguments(I, F, ARGS), 
+  maplist(s_to_atomese0, ARGS, ArgsO), 
+  compound_name_arguments(O, F, ArgsO),!.
+s_to_atomese0(I,O):- \+ is_list(I),I=O,!.
+s_to_atomese0([F|I],O):- atom(F),maplist(s_to_atomese0,I,M),O=..[F|M],!.
+s_to_atomese0(I,O):- maplist(s_to_atomese0,I,O),!.
+s_to_atomese0(O,O).
+
+%s_to_forms(_,_):- source_location(F,L),writeln(source_location(F,L)),fail.
+s_to_forms(S,A):- atom(S),exists_file(S),!,s_to_forms(file(S),A).
+s_to_forms(file(S),A):- !, filematch(S,F), writeln(file(F)),open(F,read,SS),undo(close(SS)),s_to_forms(in(SS),A).
+s_to_forms(in(S),A):- !,s_to_forms(S,A),ignore((stream_loc_info(S,L),write(L))).
+%s_to_forms(S,A):- string(S),!,parse_sexpr_string(S,A).
+s_to_forms(S,A):- nd_parse_sexpr_stream(S,U),must(to_untyped(U,A)).
+
+nd_parse_sexpr_stream(S,U):- repeat, (at_end_of_stream(S)->(!,fail);true),parse_sexpr_stream(S,U).
+
+stream_loc_info(S,L):- 
+  ignore(stream_property(S,file_name(F))),  
+  ignore(line_count(S,L)),
+  ignore(line_position(S,C)), L=F:L:C.
+
+read_atomese(S, A):- s_to_forms(S,A). %, must( to_untyped(X,U)),must(s_to_atomese(U,A)).
+
+read_atomese_file(F,L):-  %open(F,read,S),
+   findall(X,(read_atomese(F,X),dmsg(X)),L).
 
 
 % will change later to what we consider "enough" ground
@@ -25,6 +66,29 @@ opencog_string(Name):- atom(Name) ; string(Name).
 
 atomspace_examples:atomspace_example_test(read_atomese_file(File,O),is_list(O)):-
   filematch(library('../pln/tests/pln/rules/*.scm'),File).
+atomspace_examples:atomspace_example_test(read_atomese_file(File,O),is_list(O)):-
+  (filematch(library('../*/*/*/*.scm'),File);filematch(library('../*/*/*.scm'),File);
+   filematch(library('../*/*/*/*/*.scm'),File);
+   filematch(library('../*/*/*/*/*/*.scm'),File);
+   filematch(library('../*/*/*/*/*/*/*.scm'),File);
+   filematch(library('../*/*/*/*/*/*/*.scm'),File);
+   filematch(library('../*/*/*/*/*/*/*/*.scm'),File);
+   filematch(library('../*/*/*/*/*/*/*/*/*.scm'),File)),
+  %\+ atom_contains(File,'deduction-engine'),
+  %\+ atom_contains(File,'chicken-feet-or-pizza'), %1230 Multibyte
+  % C:/opt/logicmoo_workspace/packs_sys/logicmoo_opencog/ure/tests/ure/rules/implication-instantiation-rule.scm:1098
+  %\+ atom_contains(File,'/guile'),
+  %/opt/logicmoo_workspace/packs_sys/logicmoo_opencog/guile-log/ice-9/set/basic.scm
+  %\+ atom_contains(File,'/implication-instantiation-rule'),
+  %\+ atom_contains(File,'/opencog/scm/opencog/base/file-utils'),
+  %C:/opt/logicmoo_workspace/packs_sys/logicmoo_opencog/pln/opencog/pln/rules/wip/decontextualize.scm:321
+  \+ atom_contains(File,'/guile-log'),
+  \+ atom_contains(File,'/ice-9'),  
+  \+ atom_contains(File,'packs_sys/logicmoo_opencog/guile'),
+  \+ atom_contains(File,'/build/'),
+  \+ atom_contains(File,'/wam_common_lisp').
+  
+  
 
 
 

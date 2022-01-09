@@ -1467,6 +1467,7 @@ remove_undef_search:- ((
 % :- remove_undef_search.
 
 was_check:list_void_declarations :-
+ check:(
     P=_:_,
     (   predicate_property(P, undefined),
         (   '$get_predicate_attribute'(P, meta_predicate, Pattern),
@@ -1485,7 +1486,7 @@ was_check:list_void_declarations :-
         print_message(warning, check(void_declaration(P, discontiguous))),
         fail
     ;   true
-    ).
+    )).
 
 :- abolish(check:list_void_declarations/0).
 :- asserta(check:list_void_declarations).

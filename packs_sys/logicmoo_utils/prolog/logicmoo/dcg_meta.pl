@@ -604,6 +604,7 @@ parse_meta_stream(Pred, S,Expr):-
     parse_meta_stream_1(Pred, S,Expr),
     end_of_stream_signal(_Gram,S),
     Expr=end_of_file).
+
 parse_meta_stream_1(Pred, S,Expr):-
   phrase_from_stream_nd(file_meta_with_comments(Pred,Expr),S).
 
@@ -623,15 +624,22 @@ phrase_from_stream_nd(Grammar,In):-
    remove_pending_buffer_codes(In,_))),
    (phrase(Grammar,Codes,NewBuffer)-> append_buffer_codes(In,NewBuffer);(append_buffer_codes(In,Codes),fail)).
                                                        
-phrase_from_stream_nd(Grammar, In) :- at_end_of_stream(In), peek_pending_codes(In,Pend),is_eof_codes(Pend),!,phrase_from_eof(Grammar, In). %
+phrase_from_stream_nd(Grammar, In) :- at_end_of_stream(In), 
+  peek_pending_codes(In,Pend),is_eof_codes(Pend),!,phrase_from_eof(Grammar, In). %
 %phrase_from_stream_nd(Grammar, _) :- clause(t_l:'$last_comment'(I),_,Ref),I=Grammar,erase(Ref).
-phrase_from_stream_nd(Grammar, In) :- stream_property(In,tty(true)),!,repeat,is_tty_alive(In),phrase_from_pending_stream(Grammar, In).
-phrase_from_stream_nd(Grammar, In) :- stream_property(In,file_name(_Name)),!,
-    if_debugging(sreader,show_stream_info(In)),
-    read_stream_to_codes(In,Codes),
-    b_setval('$translation_stream',In),
-    append_buffer_codes(In,Codes),!,
-    phrase_from_buffer_codes(Grammar,In).
+
+phrase_from_stream_nd(Grammar, In) :- stream_property(In,tty(true)),!,
+ repeat,
+ (is_tty_alive(In)-> true ; throw(end_of_stream_signal(Grammar,In))), 
+ phrase_from_pending_stream(Grammar, In).
+
+phrase_from_stream_nd(Grammar, In) :-  supports_seek(In),
+    set_stream(In,buffer_size(819200)),set_stream(In,buffer_size(16384)), set_stream(In,encoding(octet)), set_stream(In,timeout(3.0)),    
+    %set_stream(In,buffer_size(5)), set_stream(In,encoding(octet)), set_stream(In,timeout(3.0)),set_stream(In,type(text)),%set_stream(In,buffer(false)),    
+   repeat, (at_end_of_stream(In)->(!,fail);true),
+
+    character_count(In, FailToPosition),
+    ((phrase_from_stream_lazy_part(Grammar, In) *-> true ; (seek(In,FailToPosition,bof,_),!,fail))),!.
 
 phrase_from_stream_nd(Grammar, In) :- \+ supports_seek(In),!,
     if_debugging(sreader,show_stream_info(In)),
@@ -639,6 +647,14 @@ phrase_from_stream_nd(Grammar, In) :- \+ supports_seek(In),!,
     b_setval('$translation_stream',In),
     append_buffer_codes(In,Codes),!,
     phrase_from_buffer_codes(Grammar,In).
+
+phrase_from_stream_nd(Grammar, In) :- stream_property(In,file_name(_Name)),!,
+    if_debugging(sreader,show_stream_info(In)),
+    read_stream_to_codes(In,Codes),
+    b_setval('$translation_stream',In),
+    append_buffer_codes(In,Codes),!,
+    phrase_from_buffer_codes(Grammar,In).
+
 
 phrase_from_stream_nd(Grammar, In) :- \+ supports_seek(In),!, phrase_from_pending_stream(Grammar, In).
 %phrase_from_stream_nd(Grammar, In) :- b_setval('$translation_stream',In), quietly(phrase_from_stream_nd(Grammar, In)).
@@ -744,6 +760,7 @@ file_eof(I,O):- I==end_of_file,!,O=[].
 file_eof --> [X],{ attvar(X), X = -1},!.
 file_eof --> [X],{ attvar(X), X = end_of_file},!.
 file_eof --> [X],{ var(X), X = -1},!.
+file_eof --> [X],{ X = -1},!.
 
 expr_with_text(Out,DCG,O,S,E):- 
    zalwayz(lazy_list_character_count(StartPos,S,M)),%integer(StartPos),
@@ -787,7 +804,9 @@ parse_meta_term(Pred, atom(String), Expr) :- !,parse_meta_ascii(Pred, String, Ex
 parse_meta_term(Pred, text(String), Expr) :- !,parse_meta_ascii(Pred, String, Expr).
 parse_meta_term(Pred, (String), Expr) :- string(String),!,parse_meta_ascii(Pred, String, Expr).
 parse_meta_term(Pred, [E|List], Expr) :- !, parse_meta_ascii(Pred, [E|List], Expr).
-parse_meta_term(Pred, Other, Expr) :- quietly((l_open_input(Other,In)->Other\=@=In)),!,parse_meta_term(Pred, In, Expr).
+parse_meta_term(Pred, Other, Expr) :- quietly((l_open_input(Other,In)->Other\=@=In)),!, 
+  repeat, (at_end_of_stream(In)->(!,fail);true),
+  parse_meta_term(Pred, In, Expr).
 
 
 quoted_string(Text) --> (double_quoted_string(Text); single_quoted_string(Text)),!.
