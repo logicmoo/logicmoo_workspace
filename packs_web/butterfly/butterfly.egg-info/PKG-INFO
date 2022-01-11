@@ -6,7 +6,6 @@ Home-page: https://github.com/paradoxxxzero/butterfly
 Author: Florian Mounier
 Author-email: paradoxxx.zero@gmail.com
 License: GPLv3
-Description: UNKNOWN
 Platform: Any
 Classifier: Development Status :: 5 - Production/Stable
 Classifier: Intended Audience :: Developers
@@ -15,6 +14,10 @@ Classifier: Operating System :: POSIX :: Linux
 Classifier: Programming Language :: Python :: 2
 Classifier: Programming Language :: Python :: 3
 Classifier: Topic :: Terminals
-Provides-Extra: lint
-Provides-Extra: systemd
 Provides-Extra: themes
+Provides-Extra: systemd
+Provides-Extra: lint
+License-File: LICENSE
+
+UNKNOWN
+

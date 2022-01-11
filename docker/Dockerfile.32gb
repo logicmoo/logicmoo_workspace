@@ -1,11 +1,12 @@
 FROM logicmoo/logicmoo_workspace:latest
 USER root
-RUN ls -l /var/lib/apt/lists/
-RUN apt update
-RUN apt install -y apt
+#COPY --from=synthillect/atomspace:latest / /
+#COPY --from=synthillect/opencog-dev:latest / /
+#COPY --from=synthillect/opencog-jupyter:latest / /
 COPY --from=synthillect/opencog-minerl:latest / /
-RUN apt install --reinstall -y apt
 COPY docker/rootfs /
+RUN cp /dockerstartup/generate_container_user /generate_container_user
+
 EXPOSE 8188 1800 8888
 ENTRYPOINT ["/startup_logicmoo.sh"]
 

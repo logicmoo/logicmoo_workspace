@@ -1,5 +1,5 @@
-pyOpenSSL
 tornado>=3.2
+pyOpenSSL
 
 [lint]
 pytest

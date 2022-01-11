@@ -19,19 +19,17 @@ if [ -f "/tmp/is_google_collab" ]; then
 fi
 
 
+cp /dockerstartup/generate_container_user /generate_container_user
 
 export DEBIAN_FRONTEND=noninteractive
 
-apt update
-apt install --reinstall -y apt
 
-\cp -a /usr/local/lib/python3.10/* /usr/local/lib/python3.8/
+if [ -d "/usr/local/lib/python3.8" ]; then
+\cp -a /usr/local/lib/python3.10/?* /usr/local/lib/python3.8/
 mv /usr/local/lib/python3.10 /usr/local/lib/python3.10-orig
 mv /usr/local/lib/python3.8 /usr/local/lib/python3.10
-\cp -a /home/opencog/.local/lib/python3.10/* /usr/local/lib/python3.10
-     
-#sed -i 's/^command=x11vnc.*/& -rfbauth \/.password2/' /etc/supervisor/conf.d/supervisord.conf
-#sed -i "s/^command=x11vnc.*/& ${X11VNC_ARGS}/" /etc/supervisor/conf.d/supervisord.conf
+\cp -a /home/opencog/.local/lib/python3.10/?* /usr/local/lib/python3.10
+fi
 
 mv /home/opencog/.local/lib/python3.10 /home/opencog/.local/lib/python3.10-orig
 ln -s /usr/local/lib/python3.10 /home/opencog/.local/lib/python3.10
@@ -41,12 +39,26 @@ python -m pip install pip -U
 pip3 uninstall -y html5lib pyzmq zmq gevent greenlet spacy nltk nbconvert jupyter jupyterlab requests six gevent.websocket
 pip3 install html5lib pyzmq zmq gevent greenlet spacy nltk nbconvert jupyter jupyterlab requests six gevent.websocket
 
-find /opt/logicmoo_workspace/packs_sys/logicmoo_agi -name setup.py -execdir pip install -e . \;
-find /opt/logicmoo_workspace/packs_lib -name setup.py -execdir pip install -e . \;
-find /opt/logicmoo_workspace/packs_sys/logicmoo_opencog -name .git -execdir git pull \;
-find /opt/logicmoo_workspace/packs_sys/logicmoo_opencog -name setup.py -execdir pip install -e . \;
+#find /opt/logicmoo_workspace/packs_sys/logicmoo_agi -maxdepth 3 -name setup.py -execdir pip install -e . \;
+find /opt/logicmoo_workspace/packs_lib -maxdepth 2 -name setup.py -execdir pip install -e . \;
 
-sudo apt-get install -y \
+pip3 install nbnovnc
+jupyter serverextension enable  --py --sys-prefix nbnovnc
+jupyter nbextension     install --py --sys-prefix nbnovnc
+jupyter nbextension     enable  --py --sys-prefix nbnovnc
+
+(
+sudo ln -s /usr/lib/x86_64-linux-gnu /usr/lib64
+ln -s /usr/lib/x86_64-linux-gnu/libguile-3.0.so /usr/local/lib/libguile-3.0.so
+cd /opt/logicmoo_workspace/packs_sys/logicmoo_opencog
+#find -maxdepth 2  -name requirements-dev.txt -execdir bash -c "pip install -r requirements-dev.txt" \;
+#find -maxdepth 2  -name requirements.txt -execdir bash -c "pip install -r requirements.txt" \;
+#find -maxdepth 3 -name setup.py -execdir bash -c "pip install -e ." \;
+)
+
+
+
+echo apt-get --allow-unauthenticated --no-install-recommends --no-upgrade -y install \
         build-essential cmake ninja-build pkg-config \
         ncurses-dev libreadline-dev libedit-dev \
         libgoogle-perftools-dev \
@@ -64,64 +76,36 @@ sudo apt-get install -y \
         default-jdk junit4 libserd-dev libserd-0-0 \
      libgnutls28-dev libidn11-dev libkrb5-dev librtmp-dev libssh2-1-dev
 
-if false; then
-
-echo apt-get install -y --allow-unauthenticated \
-  nginx-common nginx nginx-core  libnginx-mod-http-geoip libnginx-mod-http-image-filter \
-  libnginx-mod-http-xslt-filter libnginx-mod-mail libnginx-mod-stream \
-  supervisor apache2 nmap x11-apps vim eggdrop default-jdk default-jre \
-  iproute2 libgd3 libgeoip1 libmnl0 libwebp6 libxslt1.1 \
- \
- python3-gevent \
- python3-flask-api \
- iputils-ping \
- iputils-arping \
- nfs-kernel-server \
- nfs-common \
- rpcbind \
- telnet \
- traceroute \
- inotify-tools \
- ant \
- swig \
- flex \
- libllvm8 \
- lsb-release \
- tzdata \
- gosu \
- zlib1g-dev \
- zlib1g \
- zip \
- yarn \
- xvfb \
- xtrans-dev \
- xterm \
- xorg-sgml-doctools \
- xfonts-base \
- xdotool \
- xauth \
- x11vnc \
- x11-utils \
- x11proto-xinerama-dev \
- x11proto-xext-dev \
- x11proto-dev \
- x11proto-core-dev \
- wget \
- vim \
- uuid-dev \
- unzip \
- unixodbc-dev \
- unixodbc \
- unattended-upgrades \
- tightvncserver \
- texlive-extra-utils \
- tdsodbc \
- supervisor \
- sudo \
- software-properties-common
-
-fi
-
+echo apt-get --allow-unauthenticated --no-install-recommends --no-upgrade -y install \
+	dbus-x11 ant apache2 apt build-essential chromium-browser \
+	cmake default-jdk default-jre eggdrop flex gosu inotify-tools iproute2 iputils-arping iputils-ping junit4 \
+	libarchive-dev libboost-all-dev libdb-dev libedit-dev libgd3 libgeoip1 libgmp-dev \
+	libgnutls28-dev libgoogle-perftools-dev guile-3.0-dev \
+	graphviz libboost1.71-doc libboost-contract1.71-dev autoconf-archive \
+	libmpfrc++-dev libntl-dev xsltproc doxygen docbook-xml docbook-xsl fop \
+	libcanberra-gtk0 libcanberra-pulse libldap2-dev git fuse rng-tools geoip-bin \
+	libmpfr-dev openssh-server keychain libpam-ssh monkeysphere ssh-askpass ed \
+	ant-optional ssl-cert fakeroot libalgorithm-merge-perl libfl-dev \
+	libsaxon-java less manpages manpages-dev libcanberra-gtk-module \
+	libfile-fcntllock-perl liblocale-gettext-perl icc-profiles-free \
+	geoip-database libgts-bin javascript-common libtool libsocket6-perl \
+	libcoarrays-openmpi-dev libpam-tmpdir libpng-tools raptor2-utils \
+  cron netcat-openbsd netcat socat ssh-import-id rtkit \
+	file libatk-wrapper-java-jni fonts-dejavu-extra ncurses-term \
+	lmodern dvisvgm ghostscript libfile-homedir-perl liblog-log4perl-perl libyaml-tiny-perl ruby \
+	libice-dev libidn11-dev libjpeg-dev libkrb5-dev libllvm8 libmnl0 libnginx-mod-http-geoip libnginx-mod-http-image-filter \
+	libnginx-mod-http-xslt-filter libnginx-mod-mail libnginx-mod-stream libossp-uuid-dev libpcre3-dev \
+	libraptor2-dev libraptor2-dev libreadline-dev librtmp-dev libserd-0-0 libserd-dev libssh2-1-dev \
+	libssl-dev libtcmalloc-minimal4 libunwind-dev libwebp6 libxext-dev libxft-dev libxinerama-dev libxpm-dev \
+	libxslt1.1 libxt-dev libyaml-dev libzip-dev libzip-ocaml-dev lsb-release ncurses-dev \
+	nfs-common nfs-kernel-server nginx nginx-common nginx-core ninja-build nmap pkg-config psmisc \
+	python3-flask-api python3-gevent python3-pip rlwrap rpcbind rsync screen \
+	software-properties-common sudo supervisor swig tdsodbc telnet texlive-extra-utils \
+	tightvncserver tini traceroute tzdata unattended-upgrades unixodbc unixodbc-dev unzip \
+	uuid-dev vim wget x11-apps x11-utils x11proto-core-dev x11proto-dev x11proto-xext-dev \
+	x11proto-xinerama-dev x11vnc xauth xdotool xfonts-base xorg-sgml-doctools xterm xtrans-dev xvfb \
+	yarn zip zlib1g zlib1g-dev
+	
 export LOGICMOO_WS=/opt/logicmoo_workspace
 export DO_PULL=0
 
@@ -225,17 +209,6 @@ if [[ -f /usr/share/emacs/26.3 ]]; then
    ln -s  /usr/local/share/emacs/28.0.50/ /usr/share/emacs/26.1
    ln -s  /usr/local/share/emacs/28.0.50/ /usr/share/emacs/26.3
 fi
-
-#if [[ -f $LOGICMOO_WS/nofederation ]]; then
-
-   #pip3 uninstall nbconvert Pygments pygments   
-   #apt remove -y python3-pygments python3-h5py python3-packaging python3-nbconvert # python3-requests # python3-six 
-   #pip3 install filelock==3.4 importlib-metadata==4.4
-   #pip3 install -r $LOGICMOO_WS/packs_sys/logicmoo_nlu/requirements.txt
-   #python3 -m spacy download en_core_web_lg
-   #python3 -m spacy download en_core_web_sm
-
-#fi
 
 
 if [ -n "$VNC_PASSWORD" ]; then

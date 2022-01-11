@@ -1370,6 +1370,7 @@ real_collect_undef(Grouped) :-
     check:group_pairs_by_key(Sorted, Grouped).
 
 
+:- export(real_list_undefined/1).
 real_list_undefined(Options) :-
     merge_options(Options, [module_class([user])], WalkOptions),
     call_cleanup(prolog_walk_code(
@@ -1454,19 +1455,31 @@ update_changed_files1 :-
 %
 % Remove Undef Search.
 %
-remove_undef_search:- !.
-remove_undef_search:- ((
+
+% remove_undef_search:- !.
+remove_undef_search:- 
+ once((
  '@'(use_module(library(check)),'user'),
  redefine_system_predicate(check:list_undefined(_)),
  abolish(check:list_undefined/1),
  assertz((check:list_undefined(A):- \+ thread_self_main ,!, ignore(A=[]))),
  %assert((check:list_undefined(A):- dmsg(check:list_undefined(A)),!)),
  assertz((check:list_undefined(A):- check:reload_library_index,  update_changed_files, call(thread_self_main),!, ignore(A=[]))),
- assertz((check:list_undefined(A):- ignore(A=[]),scansrc_list_undefined(A),!)))).
+ assertz((check:list_undefined(A):- ignore(A=[]),scansrc_list_undefined(A),!)),
+ redefine_system_predicate(check:list_void_declarations),
+ abolish(check:list_void_declarations/0),
+ asserta(check:list_void_declarations))).
 
 % :- remove_undef_search.
-
-was_check:list_void_declarations :-
+/*
+:- multifile(check:list_undefined/1).
+:- dynamic(check:list_undefined/1).
+:- system:use_module(library(make)), system:use_module(library(check)), 
+   redefine_system_predicate(check:list_undefined/1).
+:- asserta((check:list_undefined(Stuff):- Stuff==[], dmsg(list_undefined(Stuff)),!)).
+*/
+:- export(real_list_void_declarations/0).
+real_list_void_declarations :-
  check:(
     P=_:_,
     (   predicate_property(P, undefined),
@@ -1488,8 +1501,7 @@ was_check:list_void_declarations :-
     ;   true
     )).
 
-:- abolish(check:list_void_declarations/0).
-:- asserta(check:list_void_declarations).
+
 %= 	 	 
 
 %% mp( ?M, ?P, ?MP) is semidet.

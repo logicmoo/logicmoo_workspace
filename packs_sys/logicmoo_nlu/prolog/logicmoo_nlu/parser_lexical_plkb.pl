@@ -562,18 +562,21 @@ cyc_term_to_info(Term, Info):- between(5, 12, A), functor(Info, cyckb_lex, A), a
 in_call(C, P, Template, Call):- P=Call, call(P), once(sub_var(C, Template)).
 
 cyc_lex:- cyc_lex("I saw two books sitting on the shelf by the fire").
-cyc_lex(W):- cls,debug,make,into_lexical_segs(W,X),include_is_w2(X,Y),wdmsg(Y).
+cyc_lex(W):- cls,debug,make,into_lexical_segs(W,X),include_is_w2(X,Y),dmsg(Y).
 
 :- system:import(parser_lexical_plkb:cyc_lex/1).
 :- system:import(cyc_lex/0).
 
-:- multifile(check:list_undefined/1).
-:- dynamic(check:list_undefined/1).
-:- system:use_module(library(make)), system:use_module(library(check)), nop(redefine_system_predicate(check:list_undefined/1)).
-:- asserta((check:list_undefined(Stuff):- Stuff==[], wdmsg(list_undefined(Stuff)),!)).
+
 /*
 %:- abolish(check:list_undefined/1).
 :- listing(check:list_undefined).
 % :- break.
 */
+:- remove_undef_search.
 
+:- thread_local(system:e2eco/1).
+system:e2ec(X):- e2ec(X,true).
+system:e2ec(X,true):- parser_chat80:((
+  with_no_dmsg(wots(S,((current_output(CO),set_stream(CO,alias(user_error)),
+  set_stream(CO,alias(current_output)),c80(X))))),asserta(system:e2eco(S)))),!.

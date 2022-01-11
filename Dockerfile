@@ -1,82 +1,102 @@
-FROM logicmoo/logicmoo_starter_image
-
-USER root
+FROM dorowu/ubuntu-desktop-lxde-vnc:latest
 LABEL maintainer = "logicmoo@gmail.com"
+ARG --security-opt seccomp:unconfined
 ARG DEBIAN_FRONTEND=noninteractive
 ENV DEBIAN_FRONTEND noninteractive
-ARG --security-opt seccomp:unconfined
-LABEL maintainer = "logicmoo@gmail.com"
-ARG DEBIAN_FRONTEND=noninteractive
-ENV DEBIAN_FRONTEND noninteractive
-ARG --security-opt seccomp:unconfined
 
-COPY docker/rootfs /
+#COPY --from=dorowu/ubuntu-desktop-lxde-vnc:latest / /
+#COPY --from=opencog/cogutil:latest / /
+#COPY --from=opencog/opencog-deps:latest / /
+#COPY --from=opencog/postgres:latest / /
+#COPY --from=opencog/relex:latest / /
+#COPY --from=opencog/moses:latest / /
+#COPY --from=synthillect/atomspace:latest / /
+#COPY --from=synthillect/opencog-dev:latest / /
+#COPY --from=synthillect/opencog-jupyter:latest / /
+#COPY --from=synthillect/opencog-minerl:latest / /
 
 RUN mkdir -p /usr/share/man/man1/
-RUN apt-get update && apt-get install -y --no-upgrade --allow-unauthenticated \
-  nginx-common nginx nginx-core  libnginx-mod-http-geoip libnginx-mod-http-image-filter \
-  libnginx-mod-http-xslt-filter libnginx-mod-mail libnginx-mod-stream \
-  supervisor apache2 nmap x11-apps vim eggdrop default-jdk default-jre \
-  iproute2 libgd3 libgeoip1 libmnl0 libwebp6 libxslt1.1 \
-  libtcmalloc-minimal4 \
-  psmisc \
- python3-gevent \
- python3-flask-api \
- iputils-ping \
- iputils-arping \
- nfs-kernel-server \
- python3-pip \
- nfs-common \
- rpcbind \
- telnet \
- traceroute \
- inotify-tools \
- ant \
- swig \
- flex \
- libllvm8 \
- lsb-release \
- tzdata \
- gosu \
- zlib1g-dev \
- zlib1g \
- zip \
- yarn \
- #xvnc4viewer \
- xterm \
- wget \
- vim \
- uuid-dev \
- unzip \
- unixodbc-dev \
- unixodbc \
- #unattended-upgrades \
- tightvncserver \
- chromium-browser \
- # tini \
- texlive-extra-utils \
- tdsodbc \
- sudo \
- #software-properties-common \
- screen \
- rsync \
- rlwrap \
- libraptor2-dev			 \
-	build-essential cmake ninja-build pkg-config \
-	ncurses-dev libreadline-dev libedit-dev \
-	libgoogle-perftools-dev \
-	libunwind-dev \
-	libgmp-dev \
-	libssl-dev \
-	unixodbc-dev \
-	zlib1g-dev libarchive-dev \
-	libossp-uuid-dev \
-	libxext-dev libice-dev libjpeg-dev libxinerama-dev libxft-dev \
-	libxpm-dev libxt-dev \
-	libdb-dev \
-	libpcre3-dev \
-	libyaml-dev \
-	default-jdk junit4
+RUN apt-get update && apt-get --allow-unauthenticated --no-install-recommends --no-upgrade -y install \
+	dbus-x11 ant apache2 apt build-essential chromium-browser \
+	cmake default-jdk default-jre eggdrop flex gosu inotify-tools iproute2 iputils-arping iputils-ping junit4 \
+	libarchive-dev libboost-all-dev libdb-dev libedit-dev libgd3 libgeoip1 libgmp-dev \
+	libgnutls28-dev libgoogle-perftools-dev guile-3.0-dev \
+	graphviz libboost1.71-doc libboost-contract1.71-dev autoconf-archive \
+	libmpfrc++-dev libntl-dev xsltproc doxygen docbook-xml docbook-xsl fop \
+	libcanberra-gtk0 libcanberra-pulse libldap2-dev git fuse rng-tools geoip-bin \
+	libmpfr-dev openssh-server keychain libpam-ssh monkeysphere ssh-askpass ed \
+	ant-optional ssl-cert fakeroot libalgorithm-merge-perl libfl-dev \
+	libsaxon-java less manpages manpages-dev libcanberra-gtk-module \
+	libfile-fcntllock-perl liblocale-gettext-perl icc-profiles-free \
+	geoip-database libgts-bin javascript-common libtool libsocket6-perl \
+	libcoarrays-openmpi-dev libpam-tmpdir libpng-tools raptor2-utils \
+  cron netcat-openbsd netcat socat ssh-import-id rtkit \
+	file libatk-wrapper-java-jni fonts-dejavu-extra ncurses-term \
+	lmodern dvisvgm ghostscript libfile-homedir-perl liblog-log4perl-perl libyaml-tiny-perl ruby \
+	libice-dev libidn11-dev libjpeg-dev libkrb5-dev libllvm8 libmnl0 libnginx-mod-http-geoip libnginx-mod-http-image-filter \
+	libnginx-mod-http-xslt-filter libnginx-mod-mail libnginx-mod-stream libossp-uuid-dev libpcre3-dev \
+	libraptor2-dev libraptor2-dev libreadline-dev librtmp-dev libserd-0-0 libserd-dev libssh2-1-dev \
+	libssl-dev libtcmalloc-minimal4 libunwind-dev libwebp6 libxext-dev libxft-dev libxinerama-dev libxpm-dev \
+	libxslt1.1 libxt-dev libyaml-dev libzip-dev libzip-ocaml-dev lsb-release ncurses-dev \
+	nfs-common nfs-kernel-server nginx nginx-common nginx-core ninja-build nmap pkg-config psmisc \
+	python3-flask-api python3-gevent python3-pip rlwrap rpcbind rsync screen \
+	software-properties-common sudo supervisor swig tdsodbc telnet texlive-extra-utils \
+	tightvncserver tini traceroute tzdata unattended-upgrades unixodbc unixodbc-dev unzip \
+	uuid-dev vim wget x11-apps x11-utils x11proto-core-dev x11proto-dev x11proto-xext-dev \
+	x11proto-xinerama-dev x11vnc xauth xdotool xfonts-base xorg-sgml-doctools xterm xtrans-dev xvfb \
+	yarn zip zlib1g zlib1g-dev
+
+COPY docker/rootfs /
+RUN cp /dockerstartup/generate_container_user /
+
+
+
+USER root
+
+COPY --from=jupyter/base-notebook:latest / / 
+RUN mv /etc/dhcp/dhclient-enter-hooks.d/resolved /etc/dhcp/dhclient-enter-hooks.d/resolved.some
+RUN mv /etc/apparmor.d/usr.bin.firefox /etc/apparmor.d/usr.bin.firefox.some
+
+ENV DEBIAN_FRONTEND noninteractive
+ARG DEBIAN_FRONTEND noninteractive
+RUN apt-get update && apt-get install -y --allow-unauthenticated --no-install-recommends apt-utils
+RUN add-apt-repository -y ppa:deadsnakes/ppa && apt-get -y update \
+ &&  apt install -y --allow-unauthenticated --no-install-recommends python3.10 \
+ build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libreadline-dev libffi-dev libsqlite3-dev wget libbz2-dev \
+ rlwrap dbus-x11 firefox
+
+
+# Remove light-locker to prevent screen lock
+ARG TURBOVNC_VERSION=2.2.6
+RUN wget -q "https://sourceforge.net/projects/turbovnc/files/${TURBOVNC_VERSION}/turbovnc_${TURBOVNC_VERSION}_amd64.deb/download" -O turbovnc_${TURBOVNC_VERSION}_amd64.deb && \
+   apt-get install -y -q ./turbovnc_${TURBOVNC_VERSION}_amd64.deb && \
+   apt-get remove -y -q light-locker && \
+   rm ./turbovnc_${TURBOVNC_VERSION}_amd64.deb && \
+   ln -s /opt/TurboVNC/bin/* /usr/local/bin/
+
+RUN mkdir -p /home/ubuntu
+
+# apt-get may result in root-owned directories/files under $HOME
+RUN chown -R $NB_UID:$NB_GID $HOME
+
+ADD . /opt/install
+RUN fix-permissions /opt/install ; /bin/true
+
+# USER $NB_USER
+
+ENV PATH="/home/ubuntu/miniconda3/bin:$PATH"
+ARG PATH="/home/ubuntu/miniconda3/bin:$PATH"
+
+MAINTAINER RUN wget \
+    https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh \
+    && mkdir /home/ubuntu/.conda \
+    && bash Miniconda3-latest-Linux-x86_64.sh -b \
+    && rm -f Miniconda3-latest-Linux-x86_64.sh 
+RUN conda --version ; /bin/true
+
+#RUN cd /opt/install && \
+#   conda env update -n base --file environment.yml
+
 
 # Jupyter
 EXPOSE 1800
@@ -125,87 +145,6 @@ ENV HOME /root
 
 COPY docker/rootfs /
 
-RUN apt-get update && apt-get install -y --allow-unauthenticated \
-  nginx-common nginx nginx-core  libnginx-mod-http-geoip libnginx-mod-http-image-filter \
-  libnginx-mod-http-xslt-filter libnginx-mod-mail libnginx-mod-stream \
-  supervisor apache2 nmap x11-apps vim eggdrop default-jdk default-jre \
-  iproute2 libgd3 libgeoip1 libmnl0 libwebp6 libxslt1.1 \
- \
- python3-gevent \
- python3-pip \
- python3-flask-api \
- iputils-ping \
- iputils-arping \
- nfs-kernel-server \
- nfs-common \
- rpcbind \
- telnet \
- traceroute \
- inotify-tools \
- ant \
- swig \
- flex \
- libllvm8 \
- lsb-release \
- tzdata \
- gosu \
- zlib1g-dev \
- zlib1g \
- zip \
- yarn \
- #xvnc4viewer \
- xvfb \
- xtrans-dev \
- xterm \
- xorg-sgml-doctools \
- xfonts-base \
- xdotool \
- xauth \
- x11vnc \
- x11-utils \
- x11proto-xinerama-dev \
- x11proto-xext-dev \
- x11proto-dev \
- x11proto-core-dev \
- wget \
- vim \
- uuid-dev \
- unzip \
- unixodbc-dev \
- unixodbc \
- unattended-upgrades \
- tightvncserver \
- # tini \
- texlive-extra-utils \
- tdsodbc \
- supervisor \
- sudo \
- software-properties-common \
- screen \
- rsync \
- rlwrap \
- tini
-
-
-RUN apt update \
- && apt-get install -y \
-        build-essential cmake ninja-build pkg-config \
-        ncurses-dev libreadline-dev libedit-dev \
-        libgoogle-perftools-dev \
-        libunwind-dev \
-        libgmp-dev \
-        libssl-dev \
-        unixodbc-dev \
-        zlib1g-dev libarchive-dev \
-        libossp-uuid-dev \
-        libxext-dev libice-dev libjpeg-dev libxinerama-dev libxft-dev \
-        libxpm-dev libxt-dev \
-        libdb-dev  libraptor2-dev \
-        libpcre3-dev \
-        libyaml-dev \
-        default-jdk junit4 libserd-dev libserd-0-0
-        
-
 RUN a2dismod mpm_event \
  && a2enmod macro access_compat alias auth_basic authn_core authn_file authz_core authz_host authz_user autoindex deflate dir env \
  filter headers http2 mime mpm_prefork negotiation  php7.4 proxy proxy_ajp proxy_balancer proxy_connect proxy_express \
@@ -233,7 +172,28 @@ RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | s
 
 COPY packs_sys/logicmoo_nlu/requirements.txt /tmp/requirements.txt
 
+RUN apt remove python3-pip
+
+#COPY --from=python:3.8-slim /usr/local/lib/python3.8/distutils /usr/lib/python3.8/distutils
+#COPY --from=python:3.9-slim /usr/local/lib/python3.9/distutils /usr/lib/python3.9/distutils
+COPY --from=python:3.10-slim /usr/local/lib/python3.10/distutils /usr/lib/python3.10/distutils
+#COPY --from=python:3.10-slim /usr/local/lib/python3.10/setuptools /usr/lib/python3.10/setuptools
+COPY --from=python:3.10-slim /usr/local/lib/python3.10 /usr/lib/python3.10
+
+ARG PYTHON=python3.10
+RUN curl https://bootstrap.pypa.io/get-pip.py | \
+        $PYTHON - pip==21.3 && \
+        # pip adopts the behaviour which is unsupported by debian
+        # https://issueexplorer.com/issue/pypa/get-pip/124
+        mkdir /usr/lib/$PYTHON/dist-packages && \
+        echo /usr/lib/$PYTHON/site-packages > /usr/lib/$PYTHON/dist-packages/site-packages.pth && \
+        rm -rf /tmp/*
+
 #RUN  curl -sS https://bootstrap.pypa.io/get-pip.py | /usr/bin/python3.10
+
+RUN \cp -a /usr/local/lib/python3.10/* /usr/local/lib/python3.8/ && rm -rf /usr/local/lib/python3.10 \
+ && mv /usr/local/lib/python3.8 /usr/local/lib/python3.10 && ln -s /usr/local/lib/python3.10 /usr/local/lib/python3.8
+
 
 # install our Butterfly websockets (telnet server over httpd)
 RUN \
@@ -250,29 +210,6 @@ RUN \
  && echo Maybe remember to: systemctl enable butterfly.socket \
  && echo Maybe remember to: systemctl start butterfly.socket
 
-RUN apt update \
- && apt-get install -y \
-        build-essential cmake ninja-build pkg-config \
-        ncurses-dev libreadline-dev libedit-dev \
-        libgoogle-perftools-dev \
-        libunwind-dev \
-        libgmp-dev \
-        libssl-dev \
-        unixodbc-dev \
-        zlib1g-dev libarchive-dev \
-        libossp-uuid-dev \
-        libxext-dev libice-dev libjpeg-dev libxinerama-dev libxft-dev \
-        libxpm-dev libxt-dev \
-        libdb-dev  libraptor2-dev \
-        libpcre3-dev \
-        libyaml-dev \
-	python3-pip \
-        default-jdk junit4 libserd-dev libserd-0-0
-
-MAINTAINER RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo gpg --dearmor -o /usr/share/keyrings/githubcli-archive-keyring.gpg \
- && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
- && apt update \
- && apt install -y gh
 
 # Python NLP Stuff
 EXPOSE 4095 4096 4097 4098 4099
@@ -286,10 +223,27 @@ COPY packs_sys/logicmoo_nlu/requirements.txt /tmp/requirements.txt
 #RUN pip3 install --verbose -r /tmp/requirements.txt
 RUN pip3 install --verbose filelock==3.4 importlib-metadata==4.4
 RUN pip3 install --verbose gevent greenlet spacy nltk nbconvert jupyter jupyterlab requests six gevent.websocket
+RUN python -m pip install pip -U
+RUN pip3 uninstall -y html5lib pyzmq zmq gevent greenlet spacy nltk nbconvert jupyter jupyterlab requests six gevent.websocket
+RUN pip3 install html5lib pyzmq zmq gevent greenlet spacy nltk nbconvert jupyter jupyterlab requests six gevent.websocket
+
+RUN pip3 install nbnovnc
+RUN jupyter serverextension enable  --py --sys-prefix nbnovnc
+RUN jupyter nbextension     install --py --sys-prefix nbnovnc
+RUN jupyter nbextension     enable  --py --sys-prefix nbnovnc
 
 #RUN cd /opt/logicmoo_workspace/packs_web/butterfly && pip install -e .
 
 
+RUN apt-get -y update \
+ && apt-get install -y --no-upgrade --allow-unauthenticated --no-install-recommends npm \
+ && npm install -g n \
+ && n stable
+
+RUN sudo ln -s /usr/lib/x86_64-linux-gnu /usr/lib64
+RUN ln -s /usr/lib/x86_64-linux-gnu/libguile-3.0.so /usr/local/lib/libguile-3.0.so
+RUN cp /dockerstartup/generate_container_user /generate_container_user
+ENV DEBIAN_FRONTEND teletype
 #RUN /startup.sh Dockerfile
 #CMD $LOGICMOO_WS/StartLogicmoo.sh
 ENTRYPOINT ["/startup_logicmoo.sh"]

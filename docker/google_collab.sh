@@ -112,8 +112,7 @@ apt-get install -y --allow-unauthenticated \
  sudo \
  software-properties-common \
  screen \
- rsync \
- rlwrap
+ rsync
 
 # apt-get install -y locales -qq && locale-gen en_AU \&& locale-gen en_AU.UTF-8 \ && dpkg-reconfigure locales \ && locale-gen C.UTF-8 \ && dpkg-reconfigure locales
 
@@ -299,8 +298,7 @@ apt-get install -y --allow-unauthenticated \
  sudo \
  software-properties-common \
  screen \
- rsync \
- rlwrap
+ rsync
 
 
 apt-get install -y \
