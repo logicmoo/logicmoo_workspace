@@ -9,35 +9,84 @@ read_atomese(X):- read_atomese(current_input, X).
 :- set_module(class(library)).
 :- set_module(base(system)).
 :- use_module(library(logicmoo_common)).
+:- use_module(library(wamcl)).
 :- use_module(library(wam_cl/sreader)).
 
 outof_name(_,F,O):- O=F,!.
 outof_name(P,F,O):- O=F:P,!.
 
+into_name(I,O):- var(I),!,I=O.
 into_name(I,O):- atom(I),!,I=O.
-into_name(I,O):- is_list(I),text_to_string(I,S),into_name(S,O),!.
-into_name([I],O):- into_name(I,O).
-into_name(I,O):- compound(I),compound_name_arguments(I,_,[A]),into_name(A,O),!.
+into_name(I,O):- is_list(I),!,catch(text_to_string(I,S),_,fail),into_name(S,O),!.
+into_name([I],O):- !, into_name(I,O).
+into_name('$STRING'(I),O):- into_name(I,O),!.
 into_name(I,O):- compound(I),!,O=I.
 into_name(I,O):- atom_concat('$',V,I),!,into_name(V,O).
+into_name(I,O):- atom_concat('#',V,I),!,into_name(V,O).
 into_name(I,O):- atom_concat('',O,I),!.
 
-s_to_atomese(U,A):- once(s_to_atomese0(U,M)),U\=@=M,!,s_to_atomese(M,A).
+s_to_atomese(U,A):- once(s_to_atomese01(U,M)),U\=@=M,!,s_to_atomese(M,A).
 s_to_atomese(U,U).
 
-s_to_atomese0(I,O):- \+ compound(I),!,I=O.
-s_to_atomese0('$STRING'(S),S):-!.
-s_to_atomese0(['Variable',Name],'$VAR'(F)):- into_name(Name,N),svar_fixvarname(N,F),!.
-s_to_atomese0([T,Name],F):- atom(T),into_name(Name,N),!,atomic_list_concat([N,T],'_',F).
-s_to_atomese0([stv,X,Y],stv(X,Y)):-!.
-s_to_atomese0(I,O):- \+ is_list(I),
+s_to_atomese01(I,O):- s_to_atomese0r(I,M),s_to_atomese1r(M,O).
+
+s_to_atomese0r(U,A):- once(s_to_atomese0(U,M)),U\=@=M,!,s_to_atomese0r(M,A).
+s_to_atomese0r(U,U).
+
+s_to_atomese1r(U,A):- once(s_to_atomese1(U,M)),U\=@=M,!,s_to_atomese1r(M,A).
+s_to_atomese1r(U,U).
+
+
+s_to_atomese0(I,O):- var(I),!,I=O.
+s_to_atomese0('$VAR'(I),'$VAR'(I)):-!.
+s_to_atomese0(['Variable',N],'$VAR'(F)):- into_name(N,M),svar_fixvarname(M,F).
+s_to_atomese0('$STRING'(I),O):- !, any_to_string(I,O).
+s_to_atomese0([F|List],[stv,X,Y,O]):- select([stv,X,Y],List,NewList),maplist(s_to_atomese0,[F|NewList],O).
+s_to_atomese0([F|List],[stv,X,Y,O]):- select(['SimpleTruthValue',X,Y],List,NewList),maplist(s_to_atomese0,[F|NewList],O).
+s_to_atomese0(I,O):- is_list(I),maplist(s_to_atomese0,I,O),!.
+s_to_atomese0(I,O):- compound(I),!,
   compound_name_arguments(I, F, ARGS), 
+  s_to_atomese0(F,FF),
   maplist(s_to_atomese0, ARGS, ArgsO), 
+  compound_name_arguments(O, FF, ArgsO),!.
+s_to_atomese0(I,O):- \+ atom(I), I=O.
+%s_to_atomese0(A,O):- atom_concat(C,'Link',A),!,s_to_atomese0(C,O).
+s_to_atomese0(A,O):- atom_concat(C,'Node',A),!,s_to_atomese0(C,O).
+s_to_atomese0(A,O):- atom_concat(C,'Link',A),atom_length(C,L),L>1,!,s_to_atomese0(C,O).
+%s_to_atomese0('EvaluationLink','Evaluation').
+s_to_atomese0(A,A).
+
+
+
+
+s_prolog(A,N,O):- atom_concat(C,'Node',A),!,s_prolog(C,N,O).
+%s_prolog(A,N,O):- atom_concat(C,'Link',A),!,s_prolog(C,N,O).
+s_prolog('True',_,_):-!,fail.
+s_prolog('List',_,_):-!,fail.
+s_prolog('Schema',_,_):-!,fail.
+
+s_prolog('Number',N,F):- atom_number(N,F),!.
+s_prolog('Variable',N,'$VAR'(F)):- svar_fixvarname(N,F),!.
+s_prolog('Predicate',N,N).
+s_prolog('Concept',N,N).
+%s_prolog(T,N,F):- atomic_list_concat([N,T],'_',F).
+%s_prolog(T,N,F):- atomic_list_concat([N,T],'_',F).
+
+s_to_atomese1(I,O):- \+ compound(I),!,I=O.
+s_to_atomese1('Evaluation'(Pred,List),(O)):- compound(List),compound_name_arguments(List,'List',Args),atom(Pred), O=..[Pred|Args].
+s_to_atomese1('Evaluation'(Pred,List),(O)):- atom(Pred), O=..[Pred,List].
+s_to_atomese1([T,Name],F):- atom(T),into_name(Name,N),s_prolog(T,N,F),!.
+s_to_atomese1(I,O):- \+ is_list(I),
+  compound_name_arguments(I, F, ARGS), 
+  maplist(s_to_atomese1, ARGS, ArgsO), 
   compound_name_arguments(O, F, ArgsO),!.
-s_to_atomese0(I,O):- \+ is_list(I),I=O,!.
-s_to_atomese0([F|I],O):- atom(F),maplist(s_to_atomese0,I,M),O=..[F|M],!.
-s_to_atomese0(I,O):- maplist(s_to_atomese0,I,O),!.
-s_to_atomese0(O,O).
+s_to_atomese1(I,O):- \+ is_list(I),I=O,!.
+s_to_atomese1([F|I],O):- atom(F), pify(F), maplist(s_to_atomese1,I,M),O=..[F|M],!.
+s_to_atomese1(I,O):- maplist(s_to_atomese1,I,O),!.
+s_to_atomese1(O,O).
+
+pify(stv).
+pify(F):- \+ downcase_atom(F,F).
 
 %s_to_forms(_,_):- source_location(F,L),writeln(source_location(F,L)),fail.
 s_to_forms(S,A):- atom(S),exists_file(S),!,s_to_forms(file(S),A).
@@ -53,10 +102,14 @@ stream_loc_info(S,L):-
   ignore(line_count(S,L)),
   ignore(line_position(S,C)), L=F:L:C.
 
-read_atomese(S, A):- s_to_forms(S,A). %, must( to_untyped(X,U)),must(s_to_atomese(U,A)).
+read_atomese(S, A):- s_to_forms(S,A).
+
+show_atomese(XX):- copy_term(XX,X),to_untyped(X,U),s_to_atomese(U,A),
+ wdmsg(XX),ansicall(cyan,print_tree_nl(A)),!.
+show_atomese(XX):- ansicall(red,print_tree_nl(XX)).
 
 read_atomese_file(F,L):-  %open(F,read,S),
-   findall(X,(read_atomese(F,X),dmsg(X)),L).
+   findall(X,(read_atomese(F,X),show_atomese(X)),L).
 
 
 % will change later to what we consider "enough" ground
@@ -65,12 +118,14 @@ opencog_z_ground(G):-  ground(G).
 opencog_string(Name):- atom(Name) ; string(Name).
 
 atomspace_examples:atomspace_example_test(read_atomese_file(File,O),is_list(O)):-
-  filematch(library('../pln/tests/pln/rules/*.scm'),File).
-atomspace_examples:atomspace_example_test(read_atomese_file(File,O),is_list(O)):-
-  (filematch(library('../*/*/*/*.scm'),File);filematch(library('../*/*/*.scm'),File);
+  filematch(library('../pln/*/*/*/*.scm'),File);
+  filematch(library('../pln/*/*/*.scm'),File).
+  
+atomspace_examples:atomspace_example_test(read_atomese_file(File,O),is_list(O)):- fail,
+  (filematch(library('../*/*/*/*.scm'),File);
+   filematch(library('../*/*/*.scm'),File);
    filematch(library('../*/*/*/*/*.scm'),File);
    filematch(library('../*/*/*/*/*/*.scm'),File);
-   filematch(library('../*/*/*/*/*/*/*.scm'),File);
    filematch(library('../*/*/*/*/*/*/*.scm'),File);
    filematch(library('../*/*/*/*/*/*/*/*.scm'),File);
    filematch(library('../*/*/*/*/*/*/*/*/*.scm'),File)),

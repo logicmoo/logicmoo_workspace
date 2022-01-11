@@ -947,9 +947,9 @@ svar(VAR,Name):-atom(VAR),atom_concat_or_rtrace('@',A,VAR),non_empty_atom(A),sva
 
 svar_fixvarname(SVAR,UP):- nonvar(UP),!,trace_or_throw(nonvar_svar_fixvarname(SVAR,UP)).
 svar_fixvarname(SVAR,UP):- svar_fixname(SVAR,UP),!.
-svar_fixvarname(SVAR,UP):- trace_or_throw(svar_fixname(SVAR,UP)).
+svar_fixvarname(SVAR,UP):- fail,trace_or_throw(svar_fixname(SVAR,UP)).
 
-svar_fixname(Var,NameO):-var(Var),variable_name_or_ref(Var,Name),sanity(nonvar(Name)),!,svar_fixvarname(Name,NameO).
+svar_fixname(Var,NameO):-var(Var),!,variable_name_or_ref(Var,Name),sanity(nonvar(Name)),!,svar_fixvarname(Name,NameO).
 svar_fixname('$VAR'(Name),UP):- !,svar_fixvarname(Name,UP).
 svar_fixname('@'(Name),UP):- !,svar_fixvarname(Name,UP).
 svar_fixname('?'(Name),UP):- !,svar_fixvarname(Name,UP).
@@ -960,10 +960,11 @@ svar_fixname(QA,AU):-atom_concat_or_rtrace('??',A,QA),non_empty_atom(A),!,svar_f
 svar_fixname(QA,AO):-atom_concat_or_rtrace('?',A,QA),non_empty_atom(A),!,svar_fixvarname(A,AO).
 svar_fixname(QA,AO):-atom_concat_or_rtrace('@',A,QA),non_empty_atom(A),!,svar_fixvarname(A,AO).
 svar_fixname(NameU,NameU):-atom_concat_or_rtrace('_',Name,NameU),non_empty_atom(Name),atom_number(Name,_),!.
-svar_fixname(NameU,NameUO):-atom_concat_or_rtrace('_',Name,NameU),non_empty_atom(Name), \+ atom_number(Name,_),!,svar_fixvarname(Name,NameO),atom_concat_or_rtrace('_',NameO,NameUO).
+svar_fixname(NameU,NameUO):-atom_concat_or_rtrace('_',Name,NameU),non_empty_atom(Name), 
+ \+ atom_number(Name,_),!,svar_fixvarname(Name,NameO),atom_concat_or_rtrace('_',NameO,NameUO).
 svar_fixname(I,O):-  
- zalwayz((
-  fix_varcase(I,M0),
+ notrace((
+  notrace(catch(fix_varcase(I,M0),_,fail)),
   atom_subst(M0,'@','_AT_',M1),
   atom_subst(M1,'?','_Q_',M2),
   atom_subst(M2,':','_C_',M3),
@@ -996,9 +997,10 @@ ok_varname_or_int(Name):- number(Name).
 %
 % Ok Varname.
 %
-ok_var_name(Name):- 
+ok_var_name(Name):-
+ notrace((
   quietly_sreader(( atom(Name),atom_codes(Name,[C|_List]),char_type(C,prolog_var_start),
-      read_term_from_atom(Name,Term,[syntax_errors(fail),variable_names(Vs)]),!,var(Term),Vs=[RName=RVAR],!,RVAR==Term,RName==Name)).
+      notrace(catch(read_term_from_atom(Name,Term,[syntax_errors(fail),variable_names(Vs)]),_,fail)),!,var(Term),Vs=[RName=RVAR],!,RVAR==Term,RName==Name)))).
 
 %:- export(ok_codes_in_varname/1).
 %ok_codes_in_varname([]).
