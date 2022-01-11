@@ -1,29 +1,135 @@
-# On Logicmoo's LAN: 
-#
-#  docker build -t logicmoo/logicmoo_workspace  --add-host=logicmoo.org:10.0.0.90 - < ./Dockerfile
-# 
-# Elsewhere
-#
-#  docker build -t logicmoo/logicmoo_workspace - < ./Dockerfile
-#
-FROM logicmoo/logicmoo_starter_image
+FROM dorowu/ubuntu-desktop-lxde-vnc:latest
+LABEL maintainer = "logicmoo@gmail.com"
+ARG --security-opt seccomp:unconfined
+ARG DEBIAN_FRONTEND=noninteractive
+ENV DEBIAN_FRONTEND noninteractive
+
+#COPY --from=dorowu/ubuntu-desktop-lxde-vnc:latest / /
+#COPY --from=opencog/cogutil:latest / /
+#COPY --from=opencog/opencog-deps:latest / /
+#COPY --from=opencog/postgres:latest / /
+#COPY --from=opencog/relex:latest / /
+#COPY --from=opencog/moses:latest / /
+#COPY --from=synthillect/atomspace:latest / /
+#COPY --from=synthillect/opencog-dev:latest / /
+#COPY --from=synthillect/opencog-jupyter:latest / /
+#COPY --from=synthillect/opencog-minerl:latest / /
+
+RUN mkdir -p /usr/share/man/man1/
+RUN apt-get update && apt-get --allow-unauthenticated --no-install-recommends --no-upgrade -y install \
+	dbus-x11 ant apache2 apt build-essential chromium-browser \
+	cmake default-jdk default-jre eggdrop flex gosu inotify-tools iproute2 iputils-arping iputils-ping junit4 \
+	libarchive-dev libboost-all-dev libdb-dev libedit-dev libgd3 libgeoip1 libgmp-dev \
+	libgnutls28-dev libgoogle-perftools-dev guile-3.0-dev \
+	graphviz libboost1.71-doc libboost-contract1.71-dev autoconf-archive \
+	libmpfrc++-dev libntl-dev xsltproc doxygen docbook-xml docbook-xsl fop \
+	libcanberra-gtk0 libcanberra-pulse libldap2-dev git fuse rng-tools geoip-bin \
+	libmpfr-dev openssh-server keychain libpam-ssh monkeysphere ssh-askpass ed \
+	ant-optional ssl-cert fakeroot libalgorithm-merge-perl libfl-dev \
+	libsaxon-java less manpages manpages-dev libcanberra-gtk-module \
+	libfile-fcntllock-perl liblocale-gettext-perl icc-profiles-free \
+	geoip-database libgts-bin javascript-common libtool libsocket6-perl \
+	libcoarrays-openmpi-dev libpam-tmpdir libpng-tools raptor2-utils \
+  cron netcat-openbsd netcat socat ssh-import-id rtkit \
+	file libatk-wrapper-java-jni fonts-dejavu-extra ncurses-term \
+	lmodern dvisvgm ghostscript libfile-homedir-perl liblog-log4perl-perl libyaml-tiny-perl ruby \
+	libice-dev libidn11-dev libjpeg-dev libkrb5-dev libllvm8 libmnl0 libnginx-mod-http-geoip libnginx-mod-http-image-filter \
+	libnginx-mod-http-xslt-filter libnginx-mod-mail libnginx-mod-stream libossp-uuid-dev libpcre3-dev \
+	libraptor2-dev libraptor2-dev libreadline-dev librtmp-dev libserd-0-0 libserd-dev libssh2-1-dev \
+	libssl-dev libtcmalloc-minimal4 libunwind-dev libwebp6 libxext-dev libxft-dev libxinerama-dev libxpm-dev \
+	libxslt1.1 libxt-dev libyaml-dev libzip-dev libzip-ocaml-dev lsb-release ncurses-dev \
+	nfs-common nfs-kernel-server nginx nginx-common nginx-core ninja-build nmap pkg-config psmisc \
+	python3-flask-api python3-gevent python3-pip rlwrap rpcbind rsync screen \
+	software-properties-common sudo supervisor swig tdsodbc telnet texlive-extra-utils \
+	tightvncserver tini traceroute tzdata unattended-upgrades unixodbc unixodbc-dev unzip \
+	uuid-dev vim wget x11-apps x11-utils x11proto-core-dev x11proto-dev x11proto-xext-dev \
+	x11proto-xinerama-dev x11vnc xauth xdotool xfonts-base xorg-sgml-doctools xterm xtrans-dev xvfb \
+	yarn zip zlib1g zlib1g-dev
+
+COPY docker/rootfs /
+RUN cp /dockerstartup/generate_container_user /
+
+
 
 USER root
-LABEL maintainer = "logicmoo@gmail.com"
 
-# Set environment variables
-ARG LOGICMOO_EXTRAS
-ENV LANG en_US.UTF-8
-ENV LANGUAGE en_US.UTF-8
-ENV SHELL /bin/bash
+COPY --from=jupyter/base-notebook:latest / / 
+RUN mv /etc/dhcp/dhclient-enter-hooks.d/resolved /etc/dhcp/dhclient-enter-hooks.d/resolved.some
+RUN mv /etc/apparmor.d/usr.bin.firefox /etc/apparmor.d/usr.bin.firefox.some
+
+RUN apt-get -y update \
+ && apt-get install -y --no-upgrade --allow-unauthenticated --no-install-recommends rlwrap dbus-x11 \
+   firefox
+
+# Remove light-locker to prevent screen lock
+ARG TURBOVNC_VERSION=2.2.6
+RUN wget -q "https://sourceforge.net/projects/turbovnc/files/${TURBOVNC_VERSION}/turbovnc_${TURBOVNC_VERSION}_amd64.deb/download" -O turbovnc_${TURBOVNC_VERSION}_amd64.deb && \
+   apt-get install -y -q ./turbovnc_${TURBOVNC_VERSION}_amd64.deb && \
+   apt-get remove -y -q light-locker && \
+   rm ./turbovnc_${TURBOVNC_VERSION}_amd64.deb && \
+   ln -s /opt/TurboVNC/bin/* /usr/local/bin/
+
+RUN mkdir -p /home/ubuntu
+
+# apt-get may result in root-owned directories/files under $HOME
+RUN chown -R $NB_UID:$NB_GID $HOME
+
+ADD . /opt/install
+RUN fix-permissions /opt/install ; /bin/true
+
+RUN apt-get -y update \
+ && apt-get install -y --no-upgrade --allow-unauthenticated --no-install-recommends \
+   firefox
+
+# USER $NB_USER
+
+ENV PATH="/home/ubuntu/miniconda3/bin:$PATH"
+ARG PATH="/home/ubuntu/miniconda3/bin:$PATH"
+
+RUN wget \
+    https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh \
+    && mkdir /home/ubuntu/.conda \
+    && bash Miniconda3-latest-Linux-x86_64.sh -b \
+    && rm -f Miniconda3-latest-Linux-x86_64.sh 
+RUN conda --version
+
+#RUN cd /opt/install && \
+#   conda env update -n base --file environment.yml
 
 
-# who/where
-ENV LOGICMOO_USER prologmud_server
-ENV LOGICMOO_WS /opt/logicmoo_workspace
-ENV LOGICMOO_GAMES $LOGICMOO_WS/prologmud_server
+# Jupyter
+EXPOSE 1800
+# SSHD
+EXPOSE 22    
+# Apache HTTP 
+#EXPOSE 80    
+# Apache SSL 
+#EXPOSE 443 4443
+# Ngynx
+EXPOSE 4801   
+# Butterfly Logins
+EXPOSE 4180
+# SWISH
+EXPOSE 3020
+# Eggdrop
+EXPOSE 3334
+# MUD Plain Text (HTTPS/HTTP/TELNET)
+EXPOSE 14100  4100  4000   
+# MUD with Debug (HTTPS/HTTP/TELNET)
+EXPOSE 14101  4101  4001   
+# MUD with Graphics (HTTPS/HTTP/TELNET)
+EXPOSE 14102  4102  4002  
+# WAM-CL REPL (HTTPS/HTTP/TELNET)
+EXPOSE 14103  4103  4003  
+# NOMIC MU (HTTPS/HTTP/TELNET)
+EXPOSE 14104  4104  4004   
+#  Shared SWIPL ?-  (HTTPS/HTTP/TELNET)
+EXPOSE 14123  4123  4023  
+# Non-Shared SWIPL ?- (HTTPS/HTTP/TELNET)
+EXPOSE 14125  4125  4025   
 
-RUN mkdir -p $LOGICMOO_WS
+EXPOSE 4090 4091
+
 
 MAINTAINER RUN if [ ! -z "$LOGICMOO_EXTRAS" ]; \
  then \
@@ -34,91 +140,80 @@ MAINTAINER RUN if [ ! -z "$LOGICMOO_EXTRAS" ]; \
  fi
 
 
-EXPOSE 22
-EXPOSE 80
-EXPOSE 443
-EXPOSE 3020
-EXPOSE 3080
-EXPOSE 3100
-EXPOSE 3101
-EXPOSE 3102
-EXPOSE 3103
-EXPOSE 3123
-EXPOSE 3125
-EXPOSE 3200
-EXPOSE 3201
-EXPOSE 3202
-EXPOSE 3203
-EXPOSE 3223
-EXPOSE 3225
-EXPOSE 3334
-EXPOSE 3401
-EXPOSE 3501
-EXPOSE 3904
-EXPOSE 4000
-EXPOSE 4001
-EXPOSE 4002
-EXPOSE 4003
-EXPOSE 4004
-EXPOSE 4005
-EXPOSE 4006
-
-RUN mkdir -p $LOGICMOO_WS/../
-WORKDIR $LOGICMOO_WS/../
 ENV HOME /root
-# check out our repo
-RUN mkdir -p /opt \
- && cd /opt ; pwd \
- && git clone https://github.com/logicmoo/logicmoo_workspace $LOGICMOO_WS \
- && cd $LOGICMOO_WS ; pwd \
- && git config --local http.sslVerify false \
- && git submodule update --init \
- && git pull --recurse-submodules
 
-WORKDIR $LOGICMOO_WS
-# Pull in fixes
-MAINTAINER RUN cd $LOGICMOO_WS \
- && git fetch origin \
- && git pull --recurse-submodules
+COPY docker/rootfs /
 
-# do local updates
-MAINTAINER RUN ./INSTALL.md
 
-# make our process running user
-RUN adduser --disabled-password --gecos "" --no-create-home $LOGICMOO_USER --home $LOGICMOO_GAMES \
- ; chown -R $LOGICMOO_USER $LOGICMOO_GAMES
 
-# apache config
-RUN cp -a $LOGICMOO_WS/packs_web/logicmoo_webui/etc/* /etc \
- && cp -a -n $LOGICMOO_WS/packs_web/logicmoo_webui/var/* /var \
- # shell config \
- ; cp -a -n $LOGICMOO_WS/etc/* /etc
-
-# install swi-prolog
-MAINTAINER RUN cd $LOGICMOO_WS && ./INSTALL-SWI.md
-
-# set up our runtime stuff (give root better shell stuff and our likely history commands)
-RUN cp -f $LOGICMOO_GAMES/.??*rc ~root/ \
- && cp -n $LOGICMOO_GAMES/.bash* ~root/ \
- && cp -n $LOGICMOO_GAMES/.profile* ~root/ \
- && touch $LOGICMOO_GAMES/history_3804 \
- && touch $LOGICMOO_GAMES/completion_3804 \
- && touch $LOGICMOO_GAMES/nohup.out \
- && chown $LOGICMOO_USER $LOGICMOO_GAMES/completion_* \
- && chown $LOGICMOO_USER $LOGICMOO_GAMES/history_* \
- && chown $LOGICMOO_USER $LOGICMOO_GAMES/nohup.out \
- && chown -R $LOGICMOO_USER $LOGICMOO_WS/packs_sys/eggdrop/ \
- && chown -R $LOGICMOO_USER $LOGICMOO_WS/packs_sys/logicmoo_nlu/ext/pldata/ \
-# in case of symlinking \
+RUN a2dismod mpm_event \
+ && a2enmod macro access_compat alias auth_basic authn_core authn_file authz_core authz_host authz_user autoindex deflate dir env \
+ filter headers http2 mime mpm_prefork negotiation  php7.4 proxy proxy_ajp proxy_balancer proxy_connect proxy_express \
+ proxy_fcgi proxy_fdpass proxy_ftp proxy_hcheck proxy_html proxy_http proxy_http2 proxy_scgi proxy_uwsgi proxy_wstunnel reqtimeout \
+ rewrite setenvif slotmem_shm socache_shmcb ssl status xml2enc ; /bin/true \
  \
- && chown -R $LOGICMOO_USER $LOGICMOO_WS/packs_sys/logicmoo_nlu/ext/pldata/plkb0988/ \
- && chown -R $LOGICMOO_USER $LOGICMOO_WS/packs_sys/logicmoo_nlu/ext/pldata/plkb0988/src~/ \
- && chown -R $LOGICMOO_USER $LOGICMOO_WS/packs_web/butterfly
-MAINTAINER WORKDIR $LOGICMOO_WS
-EXPOSE 57575
-MAINTAINER CMD ["butterfly", "--unsecure", "--host=0.0.0.0"]
-# ENTRYPOINT ["/opt/Logicmoo_docker/run.sh"]
-MAINTAINER ENTRYPOINT ["/opt/Logicmoo_docker/start.sh"]
+# confirm our webconfig works (or it exits docker build) \
+ && service apache2 start && service apache2 status && service apache2 stop
 
-ENTRYPOINT /opt/logicmoo_workspace/StartLogicmoo.sh
+# who/where
+ENV LOGICMOO_WS /opt/logicmoo_workspace
+ENV LOGICMOO_USER prologmud_server
+ENV LOGICMOO_GAMES $LOGICMOO_WS/prologmud_server
+
+ENV PATH "${LOGICMOO_WS}/bin:${PATH}"
+ENV WNDB $LOGICMOO_WS/packs_sys/logicmoo_nlu/data/WNprolog-3.0/prolog
+
+RUN apt-get update && apt-get install -y --allow-unauthenticated \
+  libtinfo5 libtinfo6
+
+RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo gpg --dearmor -o /usr/share/keyrings/githubcli-archive-keyring.gpg \
+ && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
+ && apt update \
+ && apt install -y gh
+
+COPY packs_sys/logicmoo_nlu/requirements.txt /tmp/requirements.txt
+
+#RUN  curl -sS https://bootstrap.pypa.io/get-pip.py | /usr/bin/python3.10
+
+# install our Butterfly websockets (telnet server over httpd)
+RUN \
+ pip install --upgrade pip ; python3 -m pip install --upgrade pip \
+ # && python3 -m pip uninstall setuptools ; pip install setuptools \
+ && python3 -m pip install --upgrade setuptools wheel \
+ && python3 -m pip install tornado asyncio \
+ && python3 -m pip install butterfly \
+ && python3 -m pip install butterfly[themes] # If you want to use themes \
+ && python3 -m pip install butterfly[systemd] # If you want to use systemd \
+ && RUN cd /etc/systemd/system \
+ && curl -O https://raw.githubusercontent.com/paradoxxxzero/butterfly/master/butterfly.service \
+ && curl -O https://raw.githubusercontent.com/paradoxxxzero/butterfly/master/butterfly.socket \
+ && echo Maybe remember to: systemctl enable butterfly.socket \
+ && echo Maybe remember to: systemctl start butterfly.socket
+
+
+MAINTAINER RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo gpg --dearmor -o /usr/share/keyrings/githubcli-archive-keyring.gpg \
+ && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
+ && apt update \
+ && apt install -y gh
+
+# Python NLP Stuff
+EXPOSE 4095 4096 4097 4098 4099
+
+EXPOSE 5901
+
+RUN pip3 uninstall -y  nbconvert Pygments pygments ; /bin/true
+RUN apt remove -y python3-pygments python3-h5py python3-packaging python3-nbconvert # python3-requests # python3-six 
+RUN apt remove -y python3-gevent python3-greenlet
+COPY packs_sys/logicmoo_nlu/requirements.txt /tmp/requirements.txt
+#RUN pip3 install --verbose -r /tmp/requirements.txt
+RUN pip3 install --verbose filelock==3.4 importlib-metadata==4.4
+RUN pip3 install --verbose gevent greenlet spacy nltk nbconvert jupyter jupyterlab requests six gevent.websocket
+
+#RUN cd /opt/logicmoo_workspace/packs_web/butterfly && pip install -e .
+
+
+#RUN /startup.sh Dockerfile
+#CMD $LOGICMOO_WS/StartLogicmoo.sh
+ENTRYPOINT ["/startup_logicmoo.sh"]
+#ENTRYPOINT ["/startup.sh"]
 
