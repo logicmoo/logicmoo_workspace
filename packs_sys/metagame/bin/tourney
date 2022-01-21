@@ -1,0 +1,10 @@
+#!/bin/sh
+host=`/usr/etc/resman dbank`
+
+echo "Running tourney " $* "on host: "$host
+
+rsh $host "cd /usr/groups/ailanguages ; ~/Metagame/bin/tourn $* \
+| nice -14 metagame > /dev/null" > /dev/null ;
+echo "Experiment finished on host: "$host &
+
+

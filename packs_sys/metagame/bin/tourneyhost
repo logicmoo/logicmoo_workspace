@@ -1,0 +1,11 @@
+#!/bin/sh
+host=$1
+shift
+
+echo "Running tourney " $* "on host: "$host
+
+rsh $host -n "cd /usr/groups/ailanguages ; ~/Metagame/bin/tourn $* \
+| nice -14 metagame &> /dev/null" &> /dev/null ;
+echo "Experiment finished on host: "$host &
+
+

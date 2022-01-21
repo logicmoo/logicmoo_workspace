@@ -1,0 +1,301 @@
+%============================================================
+%		   METAGAME Game-Playing Workbench
+%		  Copyright (c) 1992 Barney D. Pell
+%============================================================
+
+% CHINESE CHESS (or most of it) as a symmetric chess-like game.
+%
+% This definition differs from Chinese Chess in the following ways:
+% Horses cannot be blocked.
+% Elephants cannot be blocked. 
+%
+% You can leave your king in check, but of course you lose if 
+% your opponent is at all intelligent and captures him!
+%
+% You can move pieces out of their specified regions.  Instead of 
+% being illegal, these are legal moves which lose the game instantly.
+%
+% There are no special rules prohibiting continuous threats.  
+%
+% Pieces are displayed on squares, instead of grid intersections.
+% The river is not displayed.
+%
+% Some of the pieces have been renamed.
+
+game chinese_chess
+goals 	stalemate opponent
+	eradicate [ { opponent } { king } ]
+
+% Restricting the king and guards within the SIDES of the fortress 
+	arrive [ { opponent } { king guard } ] 
+		AT { (3,10) (3,9) (3,8) (3,7) 
+	             (7,10) (7,9) (7,8) (7,7) }
+
+% Restricting the king and guards within the FRONT of the fortress:
+	arrive [ { opponent } { king guard } ] 
+		AT { (4,7) (5,7) (6,7) }
+
+% Restricting the elephant to the first half of the board:
+	arrive [ { opponent } 
+	         { elephant } ]
+	 AT
+	         { (1,4) (2,4) (3,4) (4,4) (5,4)
+                   (6,4) (7,4) (8,4) (9,4) }
+	             
+
+board_size 9 by 10
+board_type planar
+promote_rank 6
+setup 	pawn at { (1,4) (3,4) (5,4) (7,4) (9,4) }
+	cannon at { (2,3) (8,3) }	
+	rook at { (1,1) (9,1) }	
+	horse at { (2,1) (8,1) }	
+	elephant at { (3,1) (7,1) }	
+	guard at { (4,1) (6,1) }	
+	king at { (5,1) }
+	             
+
+% The PAWN moves and captures forward, and promotes to a QUEEN.
+define 	pawn 	
+   moving 
+	movement
+	leap <0,1> symmetry { } 
+        end movement
+   end moving		
+
+   capturing
+	capture by { clobber }
+	type [ { opponent } 
+	       any_piece ]
+	effect REMOVE
+	movement 
+	leap <0,1> symmetry { }
+	end movement
+	end capture
+   end capturing
+
+   promoting
+	promote_to  queen
+   end promoting
+end define
+
+% A QUEEN is a promoted pawn, which moves sideways as well as forward.
+define 	queen
+   moving 
+	movement
+	leap <0,1> symmetry { } 
+        end movement
+	movement
+	leap <1,0> symmetry { side } 
+        end movement
+   end moving		
+
+   capturing
+	capture by { clobber }
+	type [ { opponent } 
+	       any_piece ]
+	effect REMOVE
+        	movement
+		leap <0,1> symmetry { } 
+	        end movement
+		movement
+		leap <1,0> symmetry { side } 
+	        end movement
+	end capture
+   end capturing
+
+   promoting
+	promote_to  queen
+   end promoting
+end define
+
+
+
+% The HORSE only moves forward, and moves long, not wide.
+% We can't capture condition that first ortho square is empty.
+define 	horse	
+   moving 
+	movement
+	leap <1,2>
+	symmetry all_symmetry
+        end movement
+   end moving		
+
+   capturing
+	capture by { clobber }
+	type [ { opponent } 
+	       any_piece ]
+	effect REMOVE
+	movement
+	leap <1,2>
+	symmetry all_symmetry
+        end movement
+	end capture
+   end capturing
+
+   promoting
+	promote_to  horse
+   end promoting
+end define
+	   			
+
+% The ELEPHANT moves next diagonal but one.
+% If it gets past river, this is illegal, so we say it
+% promotes to a restrictor. 
+define 	elephant	
+   moving 
+	movement
+	ride min 2 max 2 <1,1> symmetry all_symmetry
+        end movement
+   end moving		
+
+   capturing
+	capture by { clobber }
+	type [ { opponent } 
+	       any_piece ]
+	effect REMOVE
+	movement
+     		leap <2,2> symmetry all_symmetry
+        end movement
+	end capture
+   end capturing
+
+   promoting
+	promote_to elephant
+   end promoting
+end define
+	   			
+% The ROOK moves as in chess.
+define 	rook	
+   moving 
+	movement
+	ride <1,0>
+	symmetry all_symmetry
+        end movement
+   end moving		
+
+   capturing
+	capture by { clobber }
+	type [ { opponent } 
+	       any_piece ]
+	effect REMOVE
+	movement
+	ride <1,0>
+	symmetry all_symmetry
+        end movement
+	end capture
+   end capturing
+
+   promoting
+	promote_to rook
+   end promoting
+end define
+
+
+	   			
+% The CANNON, for moving moves like a rook.
+% For capturing, there must be 1 piece on the line before the final
+% piece, which it captures by landing on. 
+define 	cannon
+   moving 
+	movement
+	ride <1,0>
+	symmetry all_symmetry
+        end movement
+   end moving		
+
+   capturing
+	capture by { clobber }
+	type [ { opponent } 
+	       any_piece ]
+	effect REMOVE
+	movement
+		hop before [X >= 0]
+		    over   [X = 1]
+		    after  [X >= 0]
+		hop_over   [any_player any_piece]
+		<1,0> symmetry all_symmetry
+        end movement
+	end capture
+   end capturing
+
+   promoting
+	promote_to cannon
+   end promoting
+end define
+
+
+	
+% The KING moves 1 square orthogonally.
+% If it leaves the fortress, a restrictor can capture it,
+% thus effectively making this illegal.
+% If your king faces the enemy king without screening pieces,
+% you can capture him.  This effectively makes that illegal.
+define 	king	
+   moving 
+	movement
+	leap <1,0>
+	symmetry all_symmetry
+        end movement
+   end moving		
+
+   capturing
+	capture by { clobber }
+	type [ { opponent } 
+	       any_piece ]
+	effect REMOVE
+	movement
+	leap <1,0> symmetry all_symmetry
+        end movement
+	end capture
+
+	capture by { clobber }
+	type [ { opponent } 
+	       { king } ]
+	effect REMOVE
+
+	movement
+	ride <0,1> symmetry {}
+        end movement
+	end capture
+
+   end capturing
+
+   promoting
+	promote_to king
+   end promoting
+end define
+
+
+% The GUARD moves 1 square diagonally.
+% If it leaves the fortress, a restrictor can capture it,
+% thus effectively making this illegal.
+define 	guard
+   moving 
+	movement
+	leap <1,1>
+	symmetry all_symmetry
+        end movement
+   end moving		
+
+   capturing
+	capture by { clobber }
+	type [ { opponent } 
+	       any_piece ]
+	effect REMOVE
+
+	movement
+	leap <1,1>
+	symmetry all_symmetry
+        end movement
+
+	end capture
+   end capturing
+
+   promoting
+	promote_to guard
+   end promoting
+end define
+
+
+end game .

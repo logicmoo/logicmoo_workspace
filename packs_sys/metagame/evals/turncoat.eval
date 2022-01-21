@@ -1,0 +1,26 @@
+%============================================================
+%		   METAGAME Game-Playing Workbench
+%		  Copyright (c) 1992 Barney D. Pell
+%============================================================
+
+%===========================================================================
+% Example file:  turncoat_eval.pl
+%===========================================================================
+% Save this as a separate file by the name above.
+% Then load it, set parameters <material> and <square> to be the
+% relative weights you want for each of these features.
+
+piece_value(piece(firefly,player),-1).
+piece_value(piece(firefly,opponent),1).
+piece_value(piece(termite,player),-3).
+piece_value(piece(termite,opponent),3).
+piece_value(piece(slug,player),-5).
+piece_value(piece(slug,opponent),5).
+
+% I couldn't think of any good piece-square tables here,
+% but this should give you the idea ...
+%piece_square_value(piece(firefly,player),square(4,4),2).
+%piece_square_value(piece(firefly,opponent),square(1,1),-5).
+
+
+

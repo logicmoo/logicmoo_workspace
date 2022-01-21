@@ -1,0 +1,352 @@
+%============================================================
+%		   METAGAME Game-Playing Workbench
+%		  Copyright (c) 1992 Barney D. Pell
+%============================================================
+
+
+% seed: random(7291,4848,13536,425005073)
+game game2 
+goals stalemate player 
+     arrive [ { player } { jerk llama monster plato } ] at { ( 2 , 5 ) } 
+     arrive [ { player } { jerk llama monster plato } ] at { ( 3 , 5 ) } 
+     eradicate [ { opponent } { albino boy cleric drainer frenchman hooter jerk llama monster plato } ] 
+     arrive [ { opponent } { drainer plato } ] at { ( 5 , 5 ) } 
+     arrive [ { opponent } any_piece ] at { ( 1 , 2 ) } 
+     
+board_size 6 by 6 
+board_type planar 
+inversion forward 
+promote_rank 6 
+setup 
+   decision opponent assigns { albino boy cleric drainer frenchman hooter } 
+     to { ( 1 , 1 ) ( 2 , 1 ) ( 3 , 1 ) ( 4 , 1 ) ( 5 , 1 ) ( 6 , 1 ) } 
+   end decision 
+
+define albino 
+   moving 
+               movement 
+                    leap 
+                    < 0 , 1 > symmetry { side rotation } 
+               end movement 
+
+               movement 
+                    ride max 3 
+                    < 1 , 1 > symmetry { forward } 
+               end movement 
+
+               movement 
+                    ride 
+                    < 2 , 1 > symmetry all_symmetry 
+               end movement 
+   end moving 
+   capturing 
+     capture by { clobber } 
+              type [ { opponent } any_piece ] 
+              effect remove 
+               movement 
+                    ride 
+                    < 1 , 0 > symmetry { side rotation } 
+               end movement 
+     end capture 
+   end capturing 
+   promoting promote_to jerk 
+   end promoting 
+end define 
+
+define boy 
+   moving 
+               movement 
+                    leap 
+                    < 0 , 1 > symmetry all_symmetry 
+               end movement 
+
+               movement 
+                    hop before [ x = 0 ] over [ x <= 3 ] after [ x >= 0 ] 
+                    hop_over [ any_player { albino drainer llama } ] 
+                    < 2 , 3 > symmetry all_symmetry 
+               end movement 
+   end moving 
+   capturing 
+     capture by { clobber } 
+              type [ { player } { boy drainer frenchman jerk llama plato } ] 
+              effect opponent possesses 
+               movement 
+                    leap 
+                    < 1 , 1 > symmetry { side rotation } 
+               end movement 
+     end capture 
+
+     capture by { clobber } 
+              type [ { player } any_piece ] 
+              effect remove 
+               movement 
+                    hop before [ x >= 0 ] over [ x <= 2 ] after [ x >= 0 ] 
+                    hop_over [ { player } any_piece ] 
+                    < 0 , 3 > symmetry all_symmetry 
+               end movement 
+
+               movement 
+                    ride 
+                    < 0 , 2 > symmetry { forward rotation } 
+               end movement 
+
+               movement 
+                    leap 
+                    < 1 , 1 > symmetry all_symmetry 
+               end movement 
+     end capture 
+   end capturing 
+   promoting promote_to albino 
+   end promoting 
+end define 
+
+define cleric 
+   moving 
+               movement 
+                    ride max 2 
+                    < 0 , 1 > symmetry all_symmetry 
+               end movement 
+   end moving 
+   capturing 
+     capture by { clobber hop } 
+              type [ { opponent } { albino boy cleric drainer hooter jerk llama monster } ] 
+              effect opponent possesses 
+               movement 
+                    ride 
+                    < 1 , 1 > symmetry { forward side } 
+               end movement 
+
+               movement 
+                    hop before [ x >= 0 ] over [ x <= 1 ] after [ x <= 1 ] 
+                    hop_over [ any_player any_piece ] 
+                    < 2 , 3 > symmetry { forward side } 
+               end movement 
+     end capture 
+   end capturing 
+   promoting decision opponent 
+          options [ any_player any_piece ] 
+   end promoting 
+end define 
+
+define drainer 
+   moving 
+               movement 
+                    leap 
+                    < 0 , 1 > symmetry { forward side } 
+               end movement 
+   end moving 
+   capturing 
+     capture by { clobber hop } 
+              type [ { player } { llama plato } ] 
+              effect opponent possesses 
+               movement 
+                    ride 
+                    < 1 , 1 > symmetry all_symmetry 
+               end movement 
+     end capture 
+
+     capture by { hop } 
+              type [ { player } { albino boy cleric hooter llama plato } ] 
+              effect remove 
+               movement 
+                    leap 
+                    < 1 , 0 > symmetry all_symmetry 
+               end movement 
+
+               movement 
+                    ride max 4 longest 
+                    < 1 , 1 > symmetry { side rotation } 
+               end movement 
+     end capture 
+
+     capture by { clobber hop } 
+              type [ { opponent } { albino drainer frenchman hooter } ] 
+              effect opponent possesses 
+               movement 
+                    ride 
+                    < 1 , 1 > symmetry { forward side } 
+               end movement 
+
+               movement 
+                    leap 
+                    < 1 , 1 > symmetry all_symmetry 
+               end movement 
+     end capture 
+   end capturing 
+   promoting decision opponent 
+          options [ any_player any_piece ] 
+   end promoting 
+   constraints must_capture 
+end define 
+
+define frenchman 
+   moving 
+               movement 
+                    ride 
+                    < 1 , 0 > symmetry { side rotation } 
+               end movement 
+   end moving 
+   capturing 
+     capture by { clobber hop } 
+              type [ { player } any_piece ] 
+              effect remove 
+               movement 
+                    leap 
+                    < 1 , 1 > symmetry all_symmetry 
+               end movement 
+     end capture 
+
+     capture by { clobber hop } 
+              type [ { opponent } any_piece ] 
+              effect remove 
+               movement 
+                    ride 
+                    < 2 , 2 > symmetry all_symmetry 
+               end movement 
+     end capture 
+
+     capture by { clobber hop } 
+              type [ { player } any_piece ] 
+              effect remove 
+               movement 
+                    ride 
+                    < 0 , 1 > symmetry all_symmetry 
+               end movement 
+     end capture 
+   end capturing 
+   promoting decision player 
+          options [ { player } any_piece ] 
+   end promoting 
+end define 
+
+define hooter 
+   moving 
+               movement 
+                    leap 
+                    < 2 , 0 > symmetry all_symmetry 
+               end movement 
+   end moving 
+   capturing 
+     capture by { retrieve clobber } 
+              type [ { opponent } any_piece ] 
+              effect player possesses 
+               movement 
+                    ride 
+                    < 3 , 0 > symmetry all_symmetry 
+               end movement 
+
+               movement 
+                    ride 
+                    < 0 , 1 > symmetry all_symmetry 
+               end movement 
+     end capture 
+
+     capture by { clobber hop } 
+              type [ { opponent } { albino boy cleric drainer frenchman hooter monster } ] 
+              effect player possesses 
+               movement 
+                    leap 
+                    < 1 , 1 > symmetry all_symmetry 
+               end movement 
+     end capture 
+   end capturing 
+   promoting decision opponent 
+          options [ { player } any_piece ] 
+   end promoting 
+   constraints must_capture 
+end define 
+
+define jerk 
+   moving 
+               movement 
+                    leap 
+                    < 1 , 0 > symmetry all_symmetry 
+               end movement 
+   end moving 
+   capturing 
+     capture by { clobber } 
+              type [ any_player { cleric frenchman } ] 
+              effect player possesses 
+               movement 
+                    leap 
+                    < 2 , 0 > symmetry all_symmetry 
+               end movement 
+     end capture 
+   end capturing 
+   promoting decision player 
+          options [ { player } any_piece ] 
+   end promoting 
+end define 
+
+define llama 
+   moving 
+               movement 
+                    hop before [ x >= 0 ] over [ x <= 3 ] after [ x >= 0 ] 
+                    hop_over [ { player } { albino boy frenchman jerk monster plato } ] 
+                    < 2 , 3 > symmetry { forward side } 
+               end movement 
+   end moving 
+   capturing 
+     capture by { clobber hop } 
+              type [ { player } { albino cleric drainer hooter monster } ] 
+              effect remove 
+               movement 
+                    ride 
+                    < 1 , 2 > symmetry all_symmetry 
+               end movement 
+
+               movement 
+                    leap 
+                    < 1 , 0 > symmetry all_symmetry 
+               end movement 
+     end capture 
+   end capturing 
+   promoting decision player 
+          options [ { player } any_piece ] 
+   end promoting 
+end define 
+
+define monster 
+   moving 
+               movement 
+                    ride max 2 
+                    < 1 , 0 > symmetry { side rotation } 
+               end movement 
+   end moving 
+   capturing 
+     capture by { clobber } 
+              type [ any_player { albino boy hooter jerk llama plato } ] 
+              effect remove 
+               movement 
+                    leap 
+                    < 0 , 1 > symmetry all_symmetry 
+               end movement 
+     end capture 
+   end capturing 
+   promoting decision opponent 
+          options [ { player } { jerk } ] 
+   end promoting 
+end define 
+
+define plato 
+   moving 
+               movement 
+                    leap 
+                    < 1 , 0 > symmetry all_symmetry 
+               end movement 
+   end moving 
+   capturing 
+     capture by { } 
+              type [ { opponent } { albino boy cleric drainer frenchman hooter jerk llama monster plato } ] 
+              effect opponent possesses 
+               movement 
+                    leap 
+                    < 0 , 1 > symmetry all_symmetry 
+               end movement 
+     end capture 
+   end capturing 
+   promoting promote_to frenchman 
+   end promoting 
+end define 
+
+end game . 

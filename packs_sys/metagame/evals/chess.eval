@@ -1,0 +1,46 @@
+%============================================================
+%		   METAGAME Game-Playing Workbench
+%		  Copyright (c) 1992 Barney D. Pell
+%============================================================
+
+%===========================================================================
+% Example file:  chess_eval.pl
+%===========================================================================
+%============================================================================
+% Specific Piece-value tables
+%============================================================================
+% To change this for another game, make a new file containing just
+% facts like these but with piece names specialized for your new game.
+% Then load this file separately.
+
+piece_value(piece(king,player),15).
+piece_value(piece(king,opponent),-15).
+piece_value(piece(queen,player),9).
+piece_value(piece(queen,opponent),-9).
+piece_value(piece(rook,player),5).
+piece_value(piece(rook,opponent),-5).
+piece_value(piece(night,player),3).
+piece_value(piece(night,opponent),-3).
+piece_value(piece(bishop,player),3.25).
+piece_value(piece(bishop,opponent),-3.25).
+piece_value(piece(pawn,player),1).
+piece_value(piece(pawn,opponent),-1).
+
+%============================================================================
+% Piece-Square tables
+%============================================================================
+% This model is again for chess.  Make a separate file containing
+% just rules of these types for your game, and load it.
+% This could of course be the same file at that used for specific
+% piece material values above.  
+
+% Piece-Square tables
+piece_square_value(piece(night,player),square(4,4),2).
+piece_square_value(piece(night,player),square(1,1),-5).
+
+% Pawns given value as they move closer to their promotion
+% rank.  
+piece_square_value(piece(pawn,player),square(_X,Y),Val) :- 
+	Val is (Y-1)/6. 
+piece_square_value(piece(pawn,opponent),square(_X,Y),Val) :- 
+	Val is (Y-8)/6. 

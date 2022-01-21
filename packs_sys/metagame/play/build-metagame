@@ -1,0 +1,20 @@
+#!/bin/sh
+name=$1
+shift
+version=$1
+shift
+prologversion=$1
+shift
+compiling=$1
+shift
+topdir=$1
+
+echo "version('Metagame Workbench" $version"').";
+echo "assert(metagame_version('"$version"'))."
+echo "assert(metagame_directory('"$topdir"'))."
+# possibly native code:
+echo "write('Ignore warnings below as native code is only available on some machines.')."
+echo "prolog_flag(compiling,_,"$compiling")."
+echo "consult('"$prologversion"')."
+echo "format('Saving Metagame under name: ~w~n',['"$name"'])."
+echo "save_metagame('"$name"')."

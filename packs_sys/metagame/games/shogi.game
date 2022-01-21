@@ -1,0 +1,340 @@
+%============================================================
+%		   METAGAME Game-Playing Workbench
+%		  Copyright (c) 1992 Barney D. Pell
+%============================================================
+
+% SHOGI (or most of it) as a symmetric chess-like game.
+%
+% This definition differs from Shogi in the following ways:
+%
+% Pawns can be placed on any empty square, whether or the player
+% has a pawn on that column already.
+% 
+% When a player captures a promoted piece, he then owns a piece
+% of the promoted type, whereas in Shogi proper he would own
+% only the unpromoted version.
+
+game shogi
+goals 	stalemate opponent
+	eradicate [ { opponent } { king } ]
+board_size 9 by 9
+board_type planar
+promote_rank 7
+setup 	pawn at { (1,3) (2,3) (3,3) (4,3)
+	          (5,3) (6,3) (7,3) (8,3) (9,3) }
+	lance at { (1,1) (9,1) }	
+	night at { (2,1) (8,1) }	
+	silver at { (3,1) (7,1) }	
+	gold at { (4,1) (6,1) }	
+	king at { (5,1) }
+	bishop at { (2,2) }	
+	rook at { (8,2) }	
+
+% The PAWN moves and captures forward, and promotes to a GOLD general.
+define 	pawn 	
+   moving 
+	movement
+	leap <0,1>
+	symmetry { } 
+        end movement
+   end moving		
+
+   capturing
+	capture by { clobber }
+	type [ { opponent } any_piece ]
+	effect PLAYER POSSESSES
+	movement
+	leap <0,1>
+	symmetry { }
+	end movement
+	end capture
+   end capturing
+
+   promoting
+	promote_to  gold
+   end promoting
+end define
+
+% The NIGHT only moves forward, and moves long, not wide.
+define 	night	
+   moving 
+	movement
+	leap <1,2>
+	symmetry { side }
+        end movement
+   end moving		
+
+   capturing
+	capture by { clobber }
+	type [ { opponent } any_piece ]
+	effect PLAYER POSSESSES
+	movement
+	leap <1,2>
+	symmetry { side }
+        end movement
+	end capture
+   end capturing
+
+   promoting
+	promote_to  gold
+   end promoting
+end define
+	   			
+% The LANCE is like a chess rook, but only moves forward.
+define 	lance
+   moving 
+	movement
+	ride <0,1>
+	symmetry {}
+        end movement
+   end moving		
+
+   capturing
+	capture by { clobber }
+	type [ { opponent } any_piece ]
+	effect PLAYER POSSESSES
+	movement
+	ride <0,1>
+	symmetry {}
+        end movement
+	end capture
+   end capturing
+
+   promoting
+	promote_to gold
+   end promoting
+end define
+
+
+% The BISHOP moves as in chess, but promotes
+define 	bishop	
+   moving 
+	movement
+	ride <1,1>
+	symmetry all_symmetry
+        end movement
+   end moving		
+
+   capturing
+	capture by { clobber }
+	type [ { opponent } any_piece ]
+	effect PLAYER POSSESSES
+	movement
+	ride <1,1>
+	symmetry all_symmetry
+        end movement
+	end capture
+   end capturing
+
+   promoting
+	promote_to cleric
+   end promoting
+end define
+	   			
+% The ROOK moves as in chess, but promotes to a semi-queen	
+define 	rook	
+   moving 
+	movement
+	ride <1,0>
+	symmetry all_symmetry
+        end movement
+   end moving		
+
+   capturing
+	capture by { clobber }
+	type [ { opponent } any_piece ]
+	effect PLAYER POSSESSES
+	movement
+	ride <1,0>
+	symmetry all_symmetry
+        end movement
+	end capture
+   end capturing
+
+   promoting
+	promote_to queen
+   end promoting
+end define
+			
+% A QUEEN is a promoted ROOK (adds diag-1-leap).
+define 	queen	
+   moving 
+	movement
+	ride <1,0>
+	symmetry all_symmetry
+        end movement
+
+	movement
+	leap <1,1>
+	symmetry all_symmetry
+        end movement
+   end moving		
+
+   capturing
+	capture by { clobber }
+	type [ { opponent } any_piece ]
+	effect PLAYER POSSESSES
+
+	movement
+	ride <1,0>
+	symmetry all_symmetry
+        end movement
+
+	movement
+	leap <1,1>
+	symmetry all_symmetry
+        end movement
+	end capture
+   end capturing
+
+   promoting
+	promote_to queen
+   end promoting
+end define
+	
+% A CLERIC is a promoted BISHOP (adds ortho-1-leap).
+define 	cleric	
+   moving 
+	movement
+	leap <1,0>
+	symmetry all_symmetry
+        end movement
+
+	movement
+	ride <1,1>
+	symmetry all_symmetry
+        end movement
+   end moving		
+
+   capturing
+	capture by { clobber }
+	type [ { opponent } any_piece ]
+	effect PLAYER POSSESSES
+
+	movement
+	leap <1,0>
+	symmetry all_symmetry
+        end movement
+
+	movement
+	ride <1,1>
+	symmetry all_symmetry
+        end movement
+	end capture
+   end capturing
+
+   promoting
+	promote_to cleric
+   end promoting
+end define
+	
+% The KING moves as in Chess.
+define 	king	
+   moving 
+	movement
+	leap <1,0>
+	symmetry all_symmetry
+        end movement
+
+	movement
+	leap <1,1>
+	symmetry all_symmetry
+        end movement
+   end moving		
+
+   capturing
+	capture by { clobber }
+	type [ { opponent } any_piece ]
+	effect PLAYER POSSESSES
+
+	movement
+	leap <1,0>
+	symmetry all_symmetry
+        end movement
+
+	movement
+	leap <1,1>
+	symmetry all_symmetry
+        end movement
+	end capture
+   end capturing
+
+   promoting
+	promote_to king
+   end promoting
+end define
+
+% A SILVER general leaps 1 diag or 1 forward
+define 	silver
+   moving 
+	movement
+	leap <0,1>
+	symmetry { } 
+        end movement
+
+	movement
+	leap <1,1>
+	symmetry all_symmetry
+        end movement
+   end moving		
+
+   capturing
+	capture by { clobber }
+	type [ { opponent } any_piece ]
+	effect PLAYER POSSESSES
+
+	movement
+	leap <1,0>
+	symmetry {}
+        end movement
+
+	movement
+	leap <1,1>
+	symmetry all_symmetry
+        end movement
+	end capture
+   end capturing
+
+   promoting
+	promote_to gold
+   end promoting
+end define
+
+% A GOLD general leaps 1 ortho or 1 forward diag
+define 	gold
+   moving 
+	movement
+	leap <1,0>
+	symmetry all_symmetry
+        end movement
+
+	movement
+	leap <1,1>
+	symmetry { side }
+        end movement
+   end moving		
+
+   capturing
+	capture by { clobber }
+	type [ { opponent } any_piece ]
+	effect PLAYER POSSESSES
+
+	movement
+	leap <1,0>
+	symmetry all_symmetry
+        end movement
+
+	movement
+	leap <1,1>
+	symmetry { side }
+        end movement
+	end capture
+   end capturing
+
+   promoting
+	promote_to gold
+   end promoting
+end define
+
+
+end game .

@@ -1,0 +1,99 @@
+% Barney Pell, Copyright 1992
+% This file exists in two versions:
+%       sicstus-version: Industrial SICStus Prolog 
+%       quintus-version: Quintus Prolog 
+
+%:- consult(files).
+
+%:- files(F), compile(F).
+
+%difgoal(A,X,Y) :- A=prolog:dif(X,Y).
+
+is_profiling :- fail.
+
+/*
+is_profiling :- 
+	prolog_flag(compiling,profiledcode,profiledcode).
+*/
+
+exists_absolute_file_name(Path,File) :- 
+	absolute_file_name(Path,File),
+	file_exists(File).
+
+
+
+mktemp(FullTemplate,File) :- 
+        unix(mktemp(FullTemplate,File)). 
+
+
+
+% SAVE_METAGAME 
+save_metagame :-
+	save(metagame,1), enter_metagame.
+save_metagame :-
+	format('METAGAME System saved~n',[]).
+
+% SAVE_METAGAME(Name)
+save_metagame(Name) :-
+	save(Name,1), enter_metagame.
+save_metagame(_) :-
+	format('METAGAME System saved~n',[]).
+
+
+sumlist(A,B) :- sum_list(A,B).
+
+%======================================================================
+% The following is copied from quintus prolog library.
+%======================================================================
+
+%   random_select(?Elem, ?List, ?Rest)
+%   unifies Elem with a random element of List and Rest with all the
+%   other elements of List (in order).  Either List or Rest should
+%   be proper, and List should/will have one more element than Rest.
+%   Takes O(N) time (average and best case).
+
+random_select(Elem, List, Rest) :-
+	'one longer'(List, Rest, N),
+	random(0, N, I),
+	random_select(I, List, Elem, Rest).
+
+%   random_select/4 has the same arguments and meaning as nth0/4
+%   in library(lists), but only works one way around.  (Not exported.)
+
+random_select(0, List, Elem, Rest) :- !,
+	List = [Elem|Rest].
+random_select(N, [Head|Tail], Elem, [Head|Rest]) :-
+	M is N-1,
+	random_select(M, Tail, Elem, Rest).
+
+
+%  'one longer'(+List, +Rest, -N) is true when List and Rest are lists,
+%   List has N elements, and Rest has N-1 elements.  It is assumed
+%   that either List or Rest is proper.
+
+'one longer'([_|List], Rest, N) :-
+	'common length'(List, Rest, 1, N).
+
+
+%   'common length'(L1, L2, N0, N) is true when L1 and L2 are
+%   lists of the same length, and N-N0 is that common length.
+%   same_length/3 in library(lists) was derived from this.
+
+'common length'([], [], N, N).
+'common length'([_|X], [_|Y], K, N) :-
+	L is K+1,
+	'common length'(X, Y, L, N).
+
+%======================================================================
+%/*
+:-	compile(sysdev).
+:-	prolog_flag(redefine_warnings,_,off).
+:-	prolog_flag(single_var_warnings,_,off).
+:-	load_metagame.
+
+:-	prolog_flag(redefine_warnings,_,on).
+:-	prolog_flag(single_var_warnings,_,on).
+%*/
+%:-	save_metagame.
+
+

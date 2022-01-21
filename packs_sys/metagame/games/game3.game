@@ -1,0 +1,203 @@
+%============================================================
+%		   METAGAME Game-Playing Workbench
+%		  Copyright (c) 1992 Barney D. Pell
+%============================================================
+
+
+% seed: random(27362,15707,14125,425005073)
+game game3 
+goals stalemate opponent 
+     arrive [ { opponent } { albino bear cheeseman dumbo fairy heaven } ] at { ( 3 , 4 ) } 
+     arrive [ { opponent } any_piece ] at { ( 1 , 2 ) } 
+     eradicate [ { opponent } { albino bear cheeseman dumbo heaven } ] 
+     arrive [ { opponent } any_piece ] at { ( 3 , 3 ) } 
+     arrive [ { player } { dumbo fairy heaven } ] at { ( 5 , 5 ) } 
+     arrive [ { opponent } { dumbo } ] at { ( 2 , 1 ) } 
+     
+board_size 6 by 5 
+board_type planar 
+inversion forward 
+promote_rank 5 
+setup 
+     albino at { ( 1 , 1 ) } 
+     bear at { ( 5 , 1 ) } 
+     cheeseman at { ( 3 , 1 ) ( 4 , 1 ) } 
+
+define albino 
+   moving 
+               movement 
+                    leap 
+                    < 1 , 0 > symmetry all_symmetry 
+               end movement 
+   end moving 
+   capturing 
+     capture by { clobber } 
+              type [ { opponent } any_piece ] 
+              effect opponent possesses 
+               movement 
+                    ride longest 
+                    < 1 , 1 > symmetry all_symmetry 
+               end movement 
+     end capture 
+   end capturing 
+   promoting decision opponent 
+          options [ { opponent } any_piece ] 
+   end promoting 
+   constraints must_capture 
+end define 
+
+define bear 
+   moving 
+               movement 
+                    leap 
+                    < 1 , 0 > symmetry all_symmetry 
+               end movement 
+
+               movement 
+                    leap 
+                    < 0 , 2 > symmetry all_symmetry 
+               end movement 
+   end moving 
+   capturing 
+     capture by { clobber hop } 
+              type [ { player } { albino bear fairy } ] 
+              effect opponent possesses 
+               movement 
+                    hop before [ x >= 0 ] over [ x = 1 ] after [ x >= 0 ] 
+                    hop_over [ { player } { albino bear cheeseman dumbo fairy heaven } ] 
+                    < 2 , 1 > symmetry all_symmetry 
+               end movement 
+     end capture 
+   end capturing 
+   promoting decision opponent 
+          options [ any_player { albino bear cheeseman dumbo fairy } ] 
+   end promoting 
+   constraints must_capture 
+end define 
+
+define cheeseman 
+   moving 
+               movement 
+                    leap 
+                    < 1 , 0 > symmetry all_symmetry 
+               end movement 
+   end moving 
+   capturing 
+     capture by { clobber } 
+              type [ { opponent } { albino bear dumbo heaven } ] 
+              effect remove 
+               movement 
+                    leap 
+                    < 2 , 1 > symmetry { side rotation } 
+               end movement 
+     end capture 
+   end capturing 
+   promoting promote_to heaven 
+   end promoting 
+end define 
+
+define dumbo 
+   moving 
+               movement 
+                    ride max 4 longest 
+                    < 1 , 1 > symmetry { side rotation } 
+               end movement 
+
+               movement 
+                    ride max 3 
+                    < 1 , 1 > symmetry all_symmetry 
+               end movement 
+   end moving 
+   capturing 
+     capture by { clobber } 
+              type [ { player } any_piece ] 
+              effect remove 
+               movement 
+                    hop before [ x = 0 ] over [ x = 2 ] after [ x >= 2 ] 
+                    hop_over [ { opponent } { albino } ] 
+                    < 1 , 0 > symmetry all_symmetry 
+               end movement 
+
+               movement 
+                    hop before [ x >= 0 ] over [ x >= 1 ] after [ x >= 0 ] 
+                    hop_over [ any_player any_piece ] 
+                    < 2 , 1 > symmetry all_symmetry 
+               end movement 
+
+               movement 
+                    ride max 4 
+                    < 0 , 1 > symmetry all_symmetry 
+               end movement 
+     end capture 
+   end capturing 
+   promoting decision player 
+          options [ { player } { albino bear cheeseman dumbo fairy heaven } ] 
+   end promoting 
+end define 
+
+define fairy 
+   moving 
+               movement 
+                    ride longest 
+                    < 2 , 0 > symmetry all_symmetry 
+               end movement 
+   end moving 
+   capturing 
+     capture by { hop } 
+              type [ any_player any_piece ] 
+              effect remove 
+               movement 
+                    ride max 3 
+                    < 0 , 1 > symmetry { forward side } 
+               end movement 
+     end capture 
+   end capturing 
+   promoting promote_to albino 
+   end promoting 
+end define 
+
+define heaven 
+   moving 
+               movement 
+                    leap 
+                    < 1 , 1 > symmetry all_symmetry 
+               end movement 
+   end moving 
+   capturing 
+     capture by { clobber hop } 
+              type [ { player } any_piece ] 
+              effect remove 
+               movement 
+                    hop before [ x >= 0 ] over [ x >= 1 ] after [ x >= 0 ] 
+                    hop_over [ { player } { albino bear dumbo heaven } ] 
+                    < 1 , 1 > symmetry all_symmetry 
+               end movement 
+
+               movement 
+                    leap 
+                    < 1 , 0 > symmetry { forward side } 
+               end movement 
+
+               movement 
+                    ride max 2 
+                    < 1 , 1 > symmetry { side rotation } 
+               end movement 
+     end capture 
+
+     capture by { clobber } 
+              type [ { opponent } { albino bear cheeseman dumbo fairy } ] 
+              effect remove 
+               movement 
+                    hop before [ x = 1 ] over [ x >= 1 ] after [ x >= 0 ] 
+                    hop_over [ any_player any_piece ] 
+                    < 0 , 1 > symmetry all_symmetry 
+               end movement 
+     end capture 
+   end capturing 
+   promoting decision player 
+          options [ { player } { albino fairy } ] 
+   end promoting 
+   constraints must_capture 
+end define 
+
+end game . 

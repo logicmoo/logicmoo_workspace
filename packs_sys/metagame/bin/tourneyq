@@ -1,0 +1,3 @@
+#!/bin/sh
+/homes/bdp/Metagame/bin/tourney $* < /dev/null >> /anfs/tiptmp/pell/Tourneys/log &
+

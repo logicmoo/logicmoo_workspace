@@ -1,0 +1,13 @@
+------------------------------------------------------------------------------
+The theory files
+------------------------------------------------------------------------------
+People interested in building learning systems based on metagame
+should pay attention to the player theory files, which define
+the class of symmetric chess-like games in a very declarative
+way.  I'll have more documentation about this soon, but for now
+these files are following ones, in the Metagame/play directory:
+
+	 parse.pl matches.pl boards.pl legal.pl goals.pl
+
+------------------------------------------------------------------------------
+

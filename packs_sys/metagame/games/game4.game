@@ -1,0 +1,233 @@
+%============================================================
+%		   METAGAME Game-Playing Workbench
+%		  Copyright (c) 1992 Barney D. Pell
+%============================================================
+
+
+% seed: random(3694,18912,5146,425005073)
+game game4 
+goals stalemate opponent 
+     arrive [ { opponent } any_piece ] at { ( 2 , 3 ) } 
+     eradicate [ { opponent } { andover clinton } ] 
+     
+board_size 5 by 6 
+board_type planar 
+inversion forward 
+promote_rank 6 
+setup 
+     andover at { ( 4 , 1 ) } 
+     bishop at { ( 1 , 1 ) } 
+     clinton at { ( 2 , 1 ) } 
+     dumbo at { ( 5 , 1 ) } 
+     firefly at { ( 3 , 1 ) } 
+
+define andover 
+   moving 
+               movement 
+                    ride 
+                    < 1 , 3 > symmetry all_symmetry 
+               end movement 
+   end moving 
+   capturing 
+     capture by { retrieve clobber hop } 
+              type [ { player } { firefly } ] 
+              effect remove 
+               movement 
+                    hop before [ x <= 4 ] over [ x >= 1 ] after [ x >= 0 ] 
+                    hop_over [ any_player any_piece ] 
+                    < 2 , 0 > symmetry all_symmetry 
+               end movement 
+     end capture 
+   end capturing 
+   promoting decision player 
+          options [ any_player any_piece ] 
+   end promoting 
+end define 
+
+define bishop 
+   moving 
+               movement 
+                    leap 
+                    < 1 , 1 > symmetry { forward rotation } 
+               end movement 
+   end moving 
+   capturing 
+     capture by { retrieve clobber hop } 
+              type [ { opponent } any_piece ] 
+              effect opponent possesses 
+               movement 
+                    leap 
+                    < 0 , 2 > symmetry all_symmetry 
+               end movement 
+     end capture 
+
+     capture by { clobber } 
+              type [ any_player { jupiter lover } ] 
+              effect remove 
+               movement 
+                    leap 
+                    < 0 , 1 > symmetry { forward rotation } 
+               end movement 
+     end capture 
+   end capturing 
+   promoting decision player 
+          options [ { opponent } any_piece ] 
+   end promoting 
+   constraints must_capture 
+end define 
+
+define clinton 
+   moving 
+               movement 
+                    ride 
+                    < 1 , 0 > symmetry all_symmetry 
+               end movement 
+   end moving 
+   capturing 
+     capture by { clobber } 
+              type [ { player } { andover jupiter } ] 
+              effect remove 
+               movement 
+                    hop before [ x >= 0 ] over [ x <= 6 ] after [ x >= 0 ] 
+                    hop_over [ { opponent } { bishop firefly handler } ] 
+                    < 1 , 2 > symmetry all_symmetry 
+               end movement 
+     end capture 
+   end capturing 
+   promoting promote_to firefly 
+   end promoting 
+end define 
+
+define dumbo 
+   moving 
+               movement 
+                    ride max 4 
+                    < 0 , 1 > symmetry all_symmetry 
+               end movement 
+   end moving 
+   capturing 
+     capture by { clobber } 
+              type [ { player } any_piece ] 
+              effect opponent possesses 
+               movement 
+                    leap 
+                    < 1 , 1 > symmetry all_symmetry 
+               end movement 
+     end capture 
+   end capturing 
+   promoting decision player 
+          options [ { player } any_piece ] 
+   end promoting 
+   constraints must_capture 
+end define 
+
+define firefly 
+   moving 
+               movement 
+                    ride 
+                    < 1 , 2 > symmetry { forward side } 
+               end movement 
+   end moving 
+   capturing 
+     capture by { clobber hop } 
+              type [ { player } { andover bishop clinton dumbo firefly handler jupiter lover } ] 
+              effect opponent possesses 
+               movement 
+                    ride 
+                    < 2 , 3 > symmetry { forward rotation } 
+               end movement 
+     end capture 
+   end capturing 
+   promoting promote_to lover 
+   end promoting 
+   constraints must_capture 
+end define 
+
+define handler 
+   moving 
+               movement 
+                    ride 
+                    < 3 , 2 > symmetry all_symmetry 
+               end movement 
+   end moving 
+   capturing 
+     capture by { clobber hop } 
+              type [ { player } { andover bishop clinton firefly handler jupiter lover } ] 
+              effect opponent possesses 
+               movement 
+                    leap 
+                    < 3 , 1 > symmetry all_symmetry 
+               end movement 
+
+               movement 
+                    ride max 4 
+                    < 0 , 1 > symmetry all_symmetry 
+               end movement 
+     end capture 
+   end capturing 
+   promoting promote_to lover 
+   end promoting 
+end define 
+
+define jupiter 
+   moving 
+               movement 
+                    ride 
+                    < 2 , 1 > symmetry all_symmetry 
+               end movement 
+   end moving 
+   capturing 
+     capture by { clobber } 
+              type [ { player } any_piece ] 
+              effect player possesses 
+               movement 
+                    ride max 3 
+                    < 1 , 0 > symmetry { forward rotation } 
+               end movement 
+     end capture 
+   end capturing 
+   promoting promote_to andover 
+   end promoting 
+   constraints continue_captures 
+end define 
+
+define lover 
+   moving 
+               movement 
+                    hop before [ x = 0 ] over [ x <= 2 ] after [ x >= 0 ] 
+                    hop_over [ { player } any_piece ] 
+                    < 2 , 1 > symmetry all_symmetry 
+               end movement 
+   end moving 
+   capturing 
+     capture by { retrieve clobber hop } 
+              type [ { player } { bishop firefly handler lover } ] 
+              effect player possesses 
+               movement 
+                    leap 
+                    < 0 , 2 > symmetry all_symmetry 
+               end movement 
+
+               movement 
+                    leap 
+                    < 1 , 1 > symmetry all_symmetry 
+               end movement 
+
+               movement 
+                    ride 
+                    < 1 , 0 > symmetry all_symmetry 
+               end movement 
+
+               movement 
+                    leap 
+                    < 1 , 1 > symmetry all_symmetry 
+               end movement 
+     end capture 
+   end capturing 
+   promoting decision opponent 
+          options [ { opponent } { bishop clinton dumbo handler } ] 
+   end promoting 
+   constraints continue_captures 
+end define 
+
+end game . 

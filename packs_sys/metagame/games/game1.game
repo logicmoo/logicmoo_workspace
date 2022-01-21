@@ -1,0 +1,241 @@
+%============================================================
+%		   METAGAME Game-Playing Workbench
+%		  Copyright (c) 1992 Barney D. Pell
+%============================================================
+
+
+% seed: random(12569,9977,13544,425005073)
+game game1 
+goals stalemate opponent 
+     
+board_size 6 by 6 
+board_type planar 
+promote_rank 6 
+setup 
+   decision player assigns { albino badger casket dumbo fairy handler } 
+     to { ( 1 , 1 ) ( 2 , 1 ) ( 3 , 1 ) ( 4 , 1 ) ( 5 , 1 ) ( 6 , 1 ) } 
+   end decision 
+
+define albino 
+   moving 
+               movement 
+                    ride 
+                    < 3 , 3 > symmetry all_symmetry 
+               end movement 
+   end moving 
+   capturing 
+     capture by { clobber } 
+              type [ { opponent } { badger casket jester } ] 
+              effect player possesses 
+               movement 
+                    hop before [ x >= 0 ] over [ x = 1 ] after [ x <= 6 ] 
+                    hop_over [ { opponent } any_piece ] 
+                    < 1 , 1 > symmetry all_symmetry 
+               end movement 
+     end capture 
+   end capturing 
+   promoting decision player 
+          options [ { player } any_piece ] 
+   end promoting 
+   constraints must_capture 
+end define 
+
+define badger 
+   moving 
+               movement 
+                    leap 
+                    < 3 , 3 > symmetry { forward rotation } 
+               end movement 
+   end moving 
+   capturing 
+     capture by { retrieve clobber } 
+              type [ { player } any_piece ] 
+              effect player possesses 
+               movement 
+                    hop before [ x = 0 ] over [ x >= 1 ] after [ x >= 0 ] 
+                    hop_over [ { player } { albino badger casket dumbo fairy handler jester lover } ] 
+                    < 1 , 1 > symmetry all_symmetry 
+               end movement 
+     end capture 
+   end capturing 
+   promoting decision opponent 
+          options [ { opponent } { albino badger casket dumbo fairy handler jester lover morph } ] 
+   end promoting 
+   constraints must_capture 
+end define 
+
+define casket 
+   moving 
+               movement 
+                    leap 
+                    < 2 , 2 > symmetry all_symmetry 
+               end movement 
+
+               movement 
+                    hop before [ x >= 0 ] over [ x <= 4 ] after [ x >= 0 ] 
+                    hop_over [ { opponent } { dumbo handler jester lover } ] 
+                    < 2 , 0 > symmetry all_symmetry 
+               end movement 
+   end moving 
+   capturing 
+     capture by { retrieve clobber } 
+              type [ { player } { albino badger casket dumbo fairy handler jester lover morph } ] 
+              effect player possesses 
+               movement 
+                    ride longest 
+                    < 2 , 0 > symmetry { side rotation } 
+               end movement 
+     end capture 
+   end capturing 
+   promoting decision opponent 
+          options [ any_player any_piece ] 
+   end promoting 
+   constraints must_capture continue_captures 
+end define 
+
+define dumbo 
+   moving 
+               movement 
+                    leap 
+                    < 1 , 0 > symmetry all_symmetry 
+               end movement 
+   end moving 
+   capturing 
+     capture by { clobber } 
+              type [ { opponent } { badger casket fairy jester morph } ] 
+              effect remove 
+               movement 
+                    ride 
+                    < 2 , 3 > symmetry { forward side } 
+               end movement 
+     end capture 
+   end capturing 
+   promoting promote_to handler 
+   end promoting 
+   constraints must_capture 
+end define 
+
+define fairy 
+   moving 
+               movement 
+                    leap 
+                    < 1 , 0 > symmetry { forward rotation } 
+               end movement 
+   end moving 
+   capturing 
+     capture by { clobber } 
+              type [ { player } any_piece ] 
+              effect remove 
+               movement 
+                    hop before [ x >= 0 ] over [ x >= 1 ] after [ x <= 5 ] 
+                    hop_over [ { player } any_piece ] 
+                    < 0 , 2 > symmetry all_symmetry 
+               end movement 
+
+               movement 
+                    leap 
+                    < 1 , 1 > symmetry { side rotation } 
+               end movement 
+     end capture 
+   end capturing 
+   promoting promote_to albino 
+   end promoting 
+end define 
+
+define handler 
+   moving 
+               movement 
+                    leap 
+                    < 0 , 1 > symmetry all_symmetry 
+               end movement 
+   end moving 
+   capturing 
+     capture by { clobber } 
+              type [ { opponent } { badger dumbo fairy jester morph } ] 
+              effect remove 
+               movement 
+                    ride max 4 
+                    < 1 , 1 > symmetry all_symmetry 
+               end movement 
+     end capture 
+   end capturing 
+   promoting decision player 
+          options [ any_player any_piece ] 
+   end promoting 
+end define 
+
+define jester 
+   moving 
+               movement 
+                    ride 
+                    < 2 , 3 > symmetry { side rotation } 
+               end movement 
+   end moving 
+   capturing 
+     capture by { retrieve } 
+              type [ { player } any_piece ] 
+              effect player possesses 
+               movement 
+                    leap 
+                    < 0 , 1 > symmetry all_symmetry 
+               end movement 
+     end capture 
+   end capturing 
+   promoting promote_to lover 
+   end promoting 
+   constraints must_capture 
+end define 
+
+define lover 
+   moving 
+               movement 
+                    hop before [ x >= 0 ] over [ x = 2 ] after [ x >= 0 ] 
+                    hop_over [ any_player { albino badger casket dumbo fairy handler jester lover morph } ] 
+                    < 1 , 1 > symmetry { side rotation } 
+               end movement 
+
+               movement 
+                    leap 
+                    < 2 , 0 > symmetry all_symmetry 
+               end movement 
+   end moving 
+   capturing 
+     capture by { clobber hop } 
+              type [ { opponent } { albino badger casket dumbo fairy handler jester lover morph } ] 
+              effect remove 
+               movement 
+                    ride 
+                    < 1 , 0 > symmetry { side rotation } 
+               end movement 
+     end capture 
+   end capturing 
+   promoting decision player 
+          options [ { player } { badger casket handler jester } ] 
+   end promoting 
+   constraints continue_captures 
+end define 
+
+define morph 
+   moving 
+               movement 
+                    ride max 3 
+                    < 1 , 1 > symmetry all_symmetry 
+               end movement 
+   end moving 
+   capturing 
+     capture by { clobber } 
+              type [ { player } any_piece ] 
+              effect opponent possesses 
+               movement 
+                    leap 
+                    < 1 , 0 > symmetry all_symmetry 
+               end movement 
+     end capture 
+   end capturing 
+   promoting decision player 
+          options [ { player } any_piece ] 
+   end promoting 
+   constraints must_capture 
+end define 
+
+end game . 

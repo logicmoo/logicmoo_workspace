@@ -1,0 +1,94 @@
+%============================================================
+%		   METAGAME Game-Playing Workbench
+%		  Copyright (c) 1992 Barney D. Pell
+%============================================================
+
+% DAMES
+% (FRENCH) CHECKERS as a symmetric chess-like game.
+%
+% A major difference between the official rules and the 
+% implementation here is that here, the must_capture 
+% constraint is local to each piece.  That is, IF a piece
+% decides to move, it must capture if it can.  
+% Of course, we don't have to move that piece if we can
+% move another.
+%
+% Another difference is that in proper dames, each move must
+% capture the maximum number of opponent pieces.  This is a much
+% stronger constraint than is representable in symmetric chess-like
+% games.  
+
+game dames
+goals 	stalemate opponent
+	eradicate [ { opponent } any_piece ]
+board_size 10 by 10
+board_type planar
+promote_rank 10
+setup 	pawn AT {(1,1) (3,1) (5,1) (7,1) (9,1)
+	          (2,2) (4,2) (6,2) (8,2) (10,2)
+	        (1,3) (3,3) (5,3) (7,3) (9,3)
+	          (2,4) (4,4) (6,4) (8,4) (10,4)   }
+define 	pawn  
+   moving 
+	movement
+	leap <1,1>
+	symmetry {side} 
+        end movement
+   end moving		
+
+   capturing
+	capture by {hop}
+	type [{opponent} any_piece]
+	effect remove
+	movement
+		hop before [X=0]
+		    over   [X=1]
+		    after  [X=0]
+		hop_over   [{opponent} any_piece]
+	<1,1> symmetry {forward side}
+	end movement
+	end capture
+   end capturing
+
+   promoting
+	promote_to dame
+   end promoting
+
+   constraints 
+	must_capture
+	continue_captures	
+end define
+
+define 	dame
+   moving 
+	movement
+	ride <1,1>
+	symmetry {forward side} 
+        end movement
+   end moving		
+
+   capturing
+	capture by {hop}
+	type [{opponent} any_piece]
+	effect remove
+	movement
+		hop before [X >= 0]
+		    over   [X = 1]
+		    after  [X >= 0]
+		hop_over   [{opponent} any_piece]
+	<1,1> symmetry {forward side}
+	end movement
+	end capture
+   end capturing
+
+   promoting
+	promote_to dame
+   end promoting
+
+   constraints 
+	must_capture
+	continue_captures	
+end define
+
+end game .
+

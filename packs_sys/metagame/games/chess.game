@@ -1,0 +1,199 @@
+%============================================================
+%		   METAGAME Game-Playing Workbench
+%		  Copyright (c) 1992 Barney D. Pell
+%============================================================
+
+% CHESS (or most of it) as a symmetric chess-like game.
+% 
+% This definition differs from Chess in the following ways:
+% Pawns move only 1 square forward, not 2 on initial move.
+% No en-passant rule
+% No Castling
+% Stalemate is a loss for the stalemated player.
+% You can leave your king in check, but of course you lose if 
+% your opponent is at all intelligent and captures him!
+
+game chess
+goals 	stalemate opponent
+	eradicate [ { opponent } { king } ]
+board_size 8 by 8
+board_type planar
+inversion forward
+promote_rank 8
+setup 	pawn at { ( 1 , 2 ) ( 2 , 2 ) ( 3 , 2 ) ( 4 , 2 )
+	            ( 5 , 2 ) ( 6 , 2 ) ( 7 , 2 ) ( 8 , 2 ) }
+	night at { ( 2 , 1 ) ( 7 , 1 ) }	
+	bishop at { ( 3 , 1 ) ( 6 , 1 ) }	
+	rook at { ( 1 , 1 ) ( 8 , 1 ) }	
+	queen at { ( 4 , 1 ) }
+	king at { ( 5 , 1 ) }
+
+define 	pawn 	
+   moving 
+	movement
+	leap < 0 , 1 >
+	symmetry { } 
+        end movement
+   end moving		
+
+   capturing
+	capture by { clobber }
+	type [ { opponent } any_piece ]
+	effect remove
+	movement
+	leap < 1 , 1 >
+	symmetry { side }
+	end movement
+	end capture
+   end capturing
+
+   promoting
+	decision player
+	options [ { player } { night bishop rook queen } ]
+   end promoting
+end define
+
+define 	night	
+   moving 
+	movement
+	leap < 2 , 1 >
+	symmetry all_symmetry
+        end movement
+   end moving		
+
+   capturing
+	capture by { clobber }
+	type [ { opponent } any_piece ]
+	effect remove
+	movement
+	leap < 2 , 1 >
+	symmetry all_symmetry
+        end movement
+	end capture
+   end capturing
+
+   promoting
+	promote_to  night 
+   end promoting
+end define
+	   			
+define 	bishop	
+   moving 
+	movement
+	ride < 1 , 1 >
+	symmetry all_symmetry
+        end movement
+   end moving		
+
+   capturing
+	capture by { clobber }
+	type [ { opponent } any_piece ]
+	effect remove
+	movement
+	ride < 1 , 1 >
+	symmetry all_symmetry
+        end movement
+	end capture
+   end capturing
+
+   promoting
+	promote_to bishop
+   end promoting
+end define
+	   			
+define 	rook	
+   moving 
+	movement
+	ride < 1 , 0 >
+	symmetry all_symmetry
+        end movement
+   end moving		
+
+   capturing
+	capture by { clobber }
+	type [ { opponent } any_piece ]
+	effect remove
+	movement
+	ride < 1 , 0 >
+	symmetry all_symmetry
+        end movement
+	end capture
+   end capturing
+
+   promoting
+	promote_to rook
+   end promoting
+end define
+			
+define 	queen	
+   moving 
+	movement
+	ride < 1 , 0 >
+	symmetry all_symmetry
+        end movement
+
+	movement
+	ride < 1 , 1 >
+	symmetry all_symmetry
+        end movement
+   end moving		
+
+   capturing
+	capture by { clobber }
+	type [ { opponent } any_piece ]
+	effect remove
+
+	movement
+	ride < 1 , 0 >
+	symmetry all_symmetry
+        end movement
+
+	movement
+	ride < 1 , 1 >
+	symmetry all_symmetry
+        end movement
+	end capture
+   end capturing
+
+   promoting
+	promote_to queen
+   end promoting
+end define
+	
+			
+define 	king	
+   moving 
+	movement
+	leap < 1 , 0 >
+	symmetry all_symmetry
+        end movement
+
+	movement
+	leap < 1 , 1 >
+	symmetry all_symmetry
+        end movement
+   end moving		
+
+   capturing
+	capture by { clobber }
+	type [ { opponent } any_piece ]
+	effect remove
+
+	movement
+	leap < 1 , 0 >
+	symmetry all_symmetry
+        end movement
+
+	movement
+	leap < 1 , 1 >
+	symmetry all_symmetry
+        end movement
+	end capture
+   end capturing
+
+   promoting
+	promote_to king
+   end promoting
+end define
+
+end game .

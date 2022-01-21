@@ -1,0 +1,28 @@
+#!/bin/sh
+name=$1
+shift
+#game=$1
+#shift
+movetime=$1
+#shift
+#gametime=$1
+
+host=`hostname`
+
+SHORTHOST=`echo $host | sed -e "s!\..*!!"`
+echo "past shorthost!"
+
+file=/anfs/tiptmp/pell/Tourneys/$name-$SHORTHOST.tourney
+
+#echo "set move_time_limit "$movetime"."
+echo "evalfile static."
+#echo "evalfile traceab."
+echo "prolog."
+echo "silent_play."
+echo "trace_play_move."
+echo "set_parameter(move_time_limit,"$movetime")."
+echo "compile(library(tourney))."
+echo "do_tourney("$name",'"$file"')."
+
+
+

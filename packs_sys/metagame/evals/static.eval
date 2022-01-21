@@ -1,0 +1,15 @@
+%============================================================
+%		   METAGAME Game-Playing Workbench
+%		  Copyright (c) 1992 Barney D. Pell
+%============================================================
+
+:- setp(max_static_mob,1).
+:- setp(max_eventual_mob,1).
+:- setp(eradicate,1).
+:- setp(victims,1).
+:- setp(immunity,1).
+:- setp(giveaway,1).
+:- setp(eradicate,1).
+:- setp(stalemate,1).
+:- setp(arrive,1).
+:- setp(static,1).

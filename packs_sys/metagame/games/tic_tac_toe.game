@@ -1,0 +1,130 @@
+%============================================================
+%		   METAGAME Game-Playing Workbench
+%		  Copyright (c) 1992 Barney D. Pell
+%============================================================
+
+% TIC_TAC_TOE as a symmetric chess-like game.
+% 
+
+game tic_tac_toe
+goals 	stalemate opponent
+	stalemate player
+
+% Detecting files: Win if can hop over 2 of our own pieces to
+% land and capture a third.  Thus win if on main part of board.
+	arrive [ { player } { win } ] 
+		AT { 
+			(1,7) (2,7) (3,7) 
+			(1,6) (2,6) (3,6) 
+			(1,5) (2,5) (3,5)
+		   }
+
+
+board_size 3 by 11
+board_type planar
+promote_rank 4
+setup 	
+	man at   { (1,1) (2,1) (3,1) 
+		   (1,2) (2,2) (3,2) 
+		   (1,3) (2,3) (3,3)
+		 }
+
+	dummy at { (1,4) (2,4) (3,4) }
+		
+constraints must_capture
+
+% A piece on board only captures when a win is detected.
+% It hops over 2 of our own men, and lands on a third to capture.
+define 	on_board
+   moving 
+	movement
+	leap <20,20>
+	symmetry { }
+        end movement
+   end moving		
+
+   capturing
+	capture by { hop }
+	type [ { player } { on_board } ]
+	effect REMOVE
+
+	movement
+		hop before [X = 0]
+		    over   [X = 1]
+		    after  [X = 0]
+		hop_over   [ { player } { on_board } ]
+		<1,0> symmetry { forward side rotation }
+        end movement
+
+	movement
+		hop before [X = 0]
+		    over   [X = 1]
+		    after  [X = 0]
+		hop_over   [ { player } { on_board } ]
+		<1,1> symmetry { forward side rotation }
+        end movement
+
+	end capture
+
+
+	capture by { clobber }
+	type [ { player } { on_board } ]
+	effect REMOVE
+
+	movement
+		hop before [X = 1]
+		    over   [X = 0]
+		    after  [X = 0]
+		hop_over   [ { player } { on_board } ]
+		<1,0> symmetry { forward side rotation }
+        end movement
+
+	movement
+		hop before [X = 1]
+		    over   [X = 0]
+		    after  [X = 0]
+		hop_over   [ { player } { on_board } ]
+		<1,1> symmetry { forward side }
+        end movement
+
+	end capture
+
+   end capturing
+
+   promoting
+	promote_to win
+   end promoting
+end define
+
+	   			
+% The MAN doesn't capture, but instead moves by leaping 4 squares 
+% forward.  Thus, with 3 men lined up on rows 1,2,3, we can thus 
+% place them on 5,6,7.
+define 	man
+   moving 
+	movement
+		leap <0,4> symmetry { }
+        end movement
+   end moving		
+
+   capturing
+	capture by { }
+	type [ { opponent } 
+	       any_piece ]
+	effect REMOVE
+	movement
+		leap <20,20>
+		symmetry { }
+        end movement
+	end capture
+   end capturing
+
+   promoting
+	promote_to on_board
+   end promoting
+end define
+
+
+
+end game .
+

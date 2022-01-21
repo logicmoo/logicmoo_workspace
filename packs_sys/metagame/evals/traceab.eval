@@ -1,0 +1,8 @@
+%============================================================
+%		   METAGAME Game-Playing Workbench
+%		  Copyright (c) 1992 Barney D. Pell
+%============================================================
+
+:- set_tracing(ab,iteration,on).
+:- set_tracing(ab,value,on).
+:- set_tracing(ab,resources,on).

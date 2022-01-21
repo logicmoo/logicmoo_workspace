@@ -1,0 +1,61 @@
+% Barney Pell, Copyright 1992
+% This file exists in two versions:
+%       sicstus-version: Industrial SICStus Prolog 
+%       quintus-version: Quintus Prolog 
+
+%:- consult(files).
+
+%:- files(F), compile(F).
+
+%difgoal(A,X,Y) :- A=prolog:dif(X,Y).
+
+:- use_module(library(sets)).
+:- use_module(library(basics)).
+
+is_profiling :- fail.
+
+nth(A,B,C) :- nth1(A,B,C).
+
+exists_absolute_file_name(Path,File) :- 
+	absolute_file_name(Path,[access(exist)],File).
+%	file_exists(File).
+
+
+	
+mktemp(File,File).
+
+
+% From aux.pl
+remove_duplicates([], []).
+remove_duplicates([Head|Tail1], [Head|Tail2]) :- 
+	delete(Tail1, Head, Residue),
+        remove_duplicates(Residue, Tail2).
+
+
+% SAVE_METAGAME 
+save_metagame :-
+	save_program(metagame,enter_metagame),
+	format('METAGAME System saved~n',[]).
+
+% SAVE_METAGAME(name) 
+save_metagame(Name) :-
+	save_program(Name,enter_metagame),
+	format('METAGAME System saved~n',[]).
+
+
+if(A,B,_C) :- 
+	A,B.
+if(A,_B,C) :- 
+	\+A,C.
+
+sum_list(A,B) :- sumlist(A,B).
+
+:- 	compile(sysdev). 
+:- 	no_style_check(all).
+%:- 	prolog_flag(multiple,_,off).
+%:- 	prolog_flag(single_var,_,off).
+:- 	load_metagame.
+:- 	style_check(all).
+%:- 	prolog_flag(multiple,_,on).
+%:- 	prolog_flag(single_var,_,on).
+%:- 	save_metagame.

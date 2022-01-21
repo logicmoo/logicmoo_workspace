@@ -1,0 +1,11 @@
+%============================================================
+%		   METAGAME Game-Playing Workbench
+%		  Copyright (c) 1992 Barney D. Pell
+%============================================================
+
+:- setp(eventual_mobility,1).
+:- setp(static,1).
+:- setp(vital,1).
+:- setp(gmovmob,1).
+:- setp(gcapmob,5).
+:- setp(pthreat,1).

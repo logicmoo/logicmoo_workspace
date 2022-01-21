@@ -1,0 +1,171 @@
+%============================================================
+%		   METAGAME Game-Playing Workbench
+%		  Copyright (c) 1992 Barney D. Pell
+%============================================================
+
+
+% seed: random(12632,9957,1936,425005073)
+game game5 
+goals stalemate player 
+     arrive [ { player } { frenchman heaven } ] at { ( 6 , 2 ) } 
+     arrive [ { player } { heaven } ] at { ( 4 , 2 ) } 
+     eradicate [ { opponent } { aardvark berkeley christ digger frenchman } ] 
+     arrive [ { opponent } any_piece ] at { ( 5 , 4 ) } 
+     
+board_size 6 by 6 
+board_type planar 
+promote_rank 6 
+setup 
+     aardvark at { ( 6 , 1 ) ( 5 , 1 ) ( 3 , 1 ) } 
+     berkeley at { ( 4 , 1 ) } 
+     christ at { ( 2 , 1 ) } 
+     digger at { ( 1 , 1 ) } 
+
+define aardvark 
+   moving 
+               movement 
+                    ride 
+                    < 1 , 1 > symmetry { forward rotation } 
+               end movement 
+   end moving 
+   capturing 
+     capture by { retrieve clobber hop } 
+              type [ any_player { berkeley } ] 
+              effect remove 
+               movement 
+                    ride max 2 
+                    < 1 , 1 > symmetry { forward rotation } 
+               end movement 
+     end capture 
+   end capturing 
+   promoting decision opponent 
+          options [ { opponent } any_piece ] 
+   end promoting 
+   constraints must_capture 
+end define 
+
+define berkeley 
+   moving 
+               movement 
+                    ride max 2 
+                    < 1 , 1 > symmetry all_symmetry 
+               end movement 
+   end moving 
+   capturing 
+     capture by { clobber hop } 
+              type [ { player } { berkeley digger } ] 
+              effect remove 
+               movement 
+                    leap 
+                    < 2 , 1 > symmetry all_symmetry 
+               end movement 
+     end capture 
+   end capturing 
+   promoting decision player 
+          options [ { opponent } { berkeley christ } ] 
+   end promoting 
+   constraints must_capture 
+end define 
+
+define christ 
+   moving 
+               movement 
+                    ride 
+                    < 1 , 1 > symmetry all_symmetry 
+               end movement 
+   end moving 
+   capturing 
+     capture by { clobber } 
+              type [ { opponent } any_piece ] 
+              effect remove 
+               movement 
+                    leap 
+                    < 0 , 1 > symmetry { forward side } 
+               end movement 
+     end capture 
+   end capturing 
+   promoting decision opponent 
+          options [ { opponent } { berkeley frenchman heaven } ] 
+   end promoting 
+end define 
+
+define digger 
+   moving 
+               movement 
+                    ride longest 
+                    < 1 , 0 > symmetry all_symmetry 
+               end movement 
+   end moving 
+   capturing 
+     capture by { clobber hop } 
+              type [ { player } { digger } ] 
+              effect player possesses 
+               movement 
+                    leap 
+                    < 0 , 3 > symmetry all_symmetry 
+               end movement 
+     end capture 
+   end capturing 
+   promoting promote_to berkeley 
+   end promoting 
+end define 
+
+define frenchman 
+   moving 
+               movement 
+                    ride max 2 
+                    < 1 , 0 > symmetry { forward side } 
+               end movement 
+   end moving 
+   capturing 
+     capture by { hop } 
+              type [ { player } { aardvark berkeley christ digger frenchman heaven } ] 
+              effect player possesses 
+               movement 
+                    ride max 4 
+                    < 0 , 1 > symmetry all_symmetry 
+               end movement 
+
+               movement 
+                    hop before [ x >= 0 ] over [ x <= 6 ] after [ x >= 0 ] 
+                    hop_over [ { opponent } any_piece ] 
+                    < 1 , 1 > symmetry all_symmetry 
+               end movement 
+     end capture 
+   end capturing 
+   promoting decision opponent 
+          options [ { player } { aardvark berkeley christ digger frenchman heaven } ] 
+   end promoting 
+end define 
+
+define heaven 
+   moving 
+               movement 
+                    ride 
+                    < 0 , 2 > symmetry all_symmetry 
+               end movement 
+   end moving 
+   capturing 
+     capture by { clobber } 
+              type [ { player } any_piece ] 
+              effect remove 
+               movement 
+                    leap 
+                    < 1 , 1 > symmetry all_symmetry 
+               end movement 
+     end capture 
+
+     capture by { clobber } 
+              type [ { player } { aardvark berkeley christ digger frenchman heaven } ] 
+              effect remove 
+               movement 
+                    ride 
+                    < 1 , 3 > symmetry all_symmetry 
+               end movement 
+     end capture 
+   end capturing 
+   promoting promote_to christ 
+   end promoting 
+end define 
+
+end game . 
