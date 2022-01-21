@@ -1,14 +1,16 @@
 #!/bin/bash
 
-export LM_PORTS="-p 5901:5901 -p 5900:5900 -p 4018:8188 -p 4180:1800 -p 4188:8888 -p 4000-4004:4000-4004 -p 4021-4025:4021-4025 -p 4100-4125:4100-4125 -p 4090-4099:4090-4099 -p 4243:443 -p 4280:80 -p 4020:3020  -p 3020:3020 -p 4222:22 -p 4220:3020 -p 4200:5900 -p 4201:9001 -p 4290:4090 -p 6079-6081:6079-6081"
-export LM_VOLUMES="-v /opt/logicmoo_workspace:/opt/logicmoo_workspace"
+export LM_PORTS="-p 5901:5901 -p 5900:5900 -p 4018:8188 -p 4180:1800 -p 4188:8888 -p 4181:8880 -p 4000-4004:4000-4004 -p 4021-4025:4021-4025 -p 4100-4125:4100-4125 -p 4090-4099:4090-4099 -p 4243:443 -p 4280:80 -p 4020:3020  -p 3020:3020 -p 4222:22 -p 4220:3020 -p 4200:5900 -p 4201:9001 -p 4290:4090 -p 6079-6081:6079-6081"
+export LM_VOLUMES="-v /opt/logicmoo_workspace_docker:/opt/logicmoo_workspace"
 export EXTRA=''
-export DOCKER_RUN="--privileged=true --no-healthcheck $LM_VOLUMES --rm -it ${LM_PORTS} ${EXTRA}"
+# --privileged=true 
+export DOCKER_RUN="--no-healthcheck $LM_VOLUMES --rm -it ${LM_PORTS} ${EXTRA}"
 export DOCKER_UP=""
 export RUN_IMAGE=logicmoo/logicmoo_workspace:latest
 
 if [ "$(hostname -d)" == "logicmoo.org" ]; then
-  export DOCKER_RUN="--privileged=true --no-healthcheck $LM_VOLUMES --rm -it ${LM_PORTS} ${EXTRA}"
+  # --privileged=true 
+  export DOCKER_RUN="--no-healthcheck $LM_VOLUMES --rm -it ${LM_PORTS} ${EXTRA}"
   DOCKER_RUN="$DOCKER_RUN --add-host logicmoo.org:10.0.0.194"
   RUN_IMAGE=logicmoo/logicmoo_server_32gb:latest
   echo "locally testing on logicmoo.org"
@@ -124,11 +126,19 @@ if [ "${build_fresh}" == "1" ]; then
      docker build -f docker/Dockerfile $EXTRA -t logicmoo/logicmoo_starter_image . 
      echo MAYBE: docker push logicmoo/logicmoo_starter_image
    cd $LOGICMOO_WS
-   export build=1
+   export build_2=1
 fi
 
 if [ "${push}" == "1" ]; then
      docker push logicmoo/logicmoo_starter_image      
+fi
+
+
+if [ "${build}" == "1" ]; then
+   set +e +x
+   cd $LOGICMOO_WS
+   docker build $EXTRA -t logicmoo/logicmoo_workspace .
+   echo MAYBE: docker push logicmoo/logicmoo_workspace
 fi
 
 if [ "${build_2}" == "1" ]; then
@@ -136,20 +146,13 @@ if [ "${build_2}" == "1" ]; then
    cd $LOGICMOO_WS
 
    tmp_img=logicmoo/logicmoo_starter_image
-   docker build $EXTRA -t $tmp_img . 
-   docker run --name logicmoo_builder $DOCKER_RUN --entrypoint /bin/bash $tmp_img
+   #docker build $EXTRA -t $tmp_img .
+   docker container rm logicmoo_builder 
+   docker run --name logicmoo_builder -v /opt/logicmoo_workspace:/opt/logicmoo_workspace $tmp_img /startup.sh 
    docker commit logicmoo_builder logicmoo/logicmoo_workspace:latest
-   docker rm "$tmp_container"
-   #docker build $EXTRA -t logicmoo/logicmoo_workspace .
+   docker container rm logicmoo_builder
    echo MAYBE: docker push logicmoo/logicmoo_workspace
-   return 0 2>/dev/null ; exit 0
-fi
-
-if [ "${build}" == "1" ]; then
-   set +e +x
-   cd $LOGICMOO_WS
-   docker build $EXTRA -t logicmoo/logicmoo_workspace .
-   echo MAYBE: docker push logicmoo/logicmoo_workspace
+   export build=1
 fi
 
 if [ "${push}" == "1" ]; then
@@ -184,7 +187,16 @@ if [ "$run" == "1" ]; then
    docker container rm logicmoo 2>/dev/null ; /bin/true
    docker kill logicmoo 2>/dev/null ; /bin/true
    docker ps
-   
+
+   #defining a copy-on-write filesystem
+   umount /opt/logicmoo_workspace_docker 2>/dev/null ; /bin/true
+   umount /opt/logicmoo_workspace_docker 2>/dev/null ; /bin/true
+   rm -rf /opt/logicmoo_workspace_upper
+   mkdir -p /opt/logicmoo_workspace_upper
+   mkdir -p /opt/logicmoo_workspace_work
+   mkdir -p /opt/logicmoo_workspace_docker 2>/dev/null ; /bin/true
+   mount -t overlay overlay -o lowerdir=/opt/logicmoo_workspace,upperdir=/opt/logicmoo_workspace_upper,workdir=/opt/logicmoo_workspace_work /opt/logicmoo_workspace_docker
+
    echo "docker-compose up $DOCKER_UP"
    echo "docker run $DOCKER_RUN"
    if [ "$compose" == "1" ]; then

@@ -121,21 +121,21 @@ git pull --recurse-submodules
 
 if [ -f "/.dockerenv" ]; then
 
-rm -rf /usr/local/lib/python3.8/dist-packages/butterfly/templates
-rm -rf /usr/local/lib/python3.8/dist-packages/butterfly/static
+#rm -rf /usr/local/lib/python3.8/dist-packages/butterfly/templates
+#rm -rf /usr/local/lib/python3.8/dist-packages/butterfly/static
 
-ln -s /opt/logicmoo_workspace/packs_web/butterfly/butterfly/static/ /usr/local/lib/python3.8/dist-packages/butterfly/static
-ln -s /opt/logicmoo_workspace/packs_web/butterfly/butterfly/templates/ /usr/local/lib/python3.8/dist-packages/butterfly/templates
+#ln -s /opt/logicmoo_workspace/packs_web/butterfly/butterfly/static/ /usr/local/lib/python3.8/dist-packages/butterfly/static
+#ln -s /opt/logicmoo_workspace/packs_web/butterfly/butterfly/templates/ /usr/local/lib/python3.8/dist-packages/butterfly/templates
 
 #\cp /opt/logicmoo_workspace/packs_web/butterfly/butterfly/static/* /usr/local/lib/python3.8/dist-packages/butterfly/static/
 #\cp /opt/logicmoo_workspace/packs_web/butterfly/butterfly/templates/* /usr/local/lib/python3.8/dist-packages/butterfly/templates/
 
-mkdir -p /opt/ros/eloquent/
-touch /opt/ros/eloquent/setup.bash
+#mkdir -p /opt/ros/eloquent/
+#touch /opt/ros/eloquent/setup.bash
 
 # make our process running user
 adduser --disabled-password --gecos "" --no-create-home $LOGICMOO_USER --home $LOGICMOO_GAMES
-chown -R $LOGICMOO_USER $LOGICMOO_GAMES
+#chown -R $LOGICMOO_USER $LOGICMOO_GAMES
 
 
 # apache config
@@ -201,7 +201,7 @@ fi
 
 )
 
-find -name "*.qlf" -exec touch '{}' +
+#find -name "*.qlf" -exec touch '{}' +
 
 
 )

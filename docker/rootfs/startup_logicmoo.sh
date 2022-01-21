@@ -18,3 +18,5 @@ then
       fi
 fi
 
+exec tini -w -vv -- /usr/bin/supervisord -n -c /etc/supervisor/supervisord.conf
+

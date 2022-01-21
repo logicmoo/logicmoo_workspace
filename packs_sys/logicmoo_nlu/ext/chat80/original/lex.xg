@@ -265,12 +265,13 @@ noun(noun_thing,Adjs,[adj((ace_var(self,AceVarT),doer(self,AceVar)))|Adjs],_Agmt
 */
 
 noun1(Noun,Adjs,Adjs,Agmt) --->
-   theText80_W2(W,L), 
+   theText80_W2(W,L),  { \+ member(pos(nnp),L)},
    {noun_w2(L,W,Noun,Agmt)}.
 
 det(det(Det),Number,Def) --->
    theText80(W),
    {det_lex(W,Number,Det,Def)}.
+
 det(generic,_,generic) ---> noText.
 
 %adj(restr,adj(from_adjp(Out))) ---> link_t_1('ADJP',Words),{c88(['something','X1','is'|Words],Out)}.
@@ -320,8 +321,8 @@ verb_form80(Verb,Tense,Agmt,_Role) --->
 
 
 %name_xg('Billy') ---> theText80(bill),!.
-%name_xg('Billy') ---> theText80(bob),!.
 name_xg(Name) ---> theText80(a),{!,fail},name_xg(Name).
+name_xg('John') ---> theText80(john),!.
 name_xg(Name) ---> opt_the, name_lex_txt(Name),!.
 name_xg(Name) ---> thePos80((nnp;nnps;ner('PERSON')),Name),!.
 %name_xg('Billy') ---> theText80(bo),!.

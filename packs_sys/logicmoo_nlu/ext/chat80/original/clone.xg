@@ -84,14 +84,18 @@ sentence801(S) ---> sentence802(S).
 
 sentence802(S) ---> sentence803(S) *-> {true} ; sentence804(S).
 
-%sentence802(np(Subj)) ---> theText80(there),thePos80(root(be)),subj(Subj,_Agmt,_Type).
 %sentence802(np(Subj)) ---> theText80(there),thePos80(root(exist)),subj(Subj,_Agmt,_Type).
 sentence803(S) ---> declarative(S).
 sentence803(S) ---> question80(S).
 sentence803(S) ---> imperative80(S).
 
+sentence804a(S) ---> (theText80(there);theText80(it)),xg_peek(thePos80(root(be));thePos80(root(exist))),!,
+ {np(_,np_head(_,generic,[],current_thing),[])= Subj},
+ just_vp(Subj,_Agmt,_Type,Verb,ARG,Mods,_Mask), {S = s( Subj, Verb,ARG,Mods) }.
+
 sentence804(decl(S)) ---> subj_decl(S).
-%sentence804(decl(S)) ---> pp_decl(S).
+sentence804(decl(S)) ---> pp_decl(S).
+sentence804(S) ---> [_],!,sentence802(S).
 
 subj_decl( ( s( Subj, verb(main+iv,exist,activeV,pres+fin,[],[]), [],[]))) ---> subj(Subj,_Agmt,_Type).
 
@@ -658,6 +662,7 @@ np_objbody1((sent2(Type_X,S)),_Agmt,_) ---> xg_peek([_,_]),
 
 determiner(DX,Agmt,Def) ---> theText80(all), determiner(DX,Agmt,Def).
 determiner(Det,Agmt,Def) ---> quant_phrase(Det,Agmt,Def).
+%determiner(generic,Agmt,indefA) ---> [].
 determiner(Det,Agmt,Def) ---> det(Det,Agmt,Def).
 
 % Measure is number "at least 2" "less than"

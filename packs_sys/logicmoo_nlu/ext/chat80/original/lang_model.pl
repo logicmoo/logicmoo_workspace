@@ -813,7 +813,8 @@ list_issues:-
 
 s8:- c8_make,
      ignore(catch(s82(s8),_,list_issues)).
- 
+
+s8(B):- c88(B),!.
 s8(B):- c8_make, \+ string(B), any_to_str(B,S),!,s8(S).
 s8(S):- s8(S,_).
 s8(SS,O):- break_apart(s8_A,SS,O).

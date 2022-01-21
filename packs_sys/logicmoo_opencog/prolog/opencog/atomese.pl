@@ -137,11 +137,11 @@ atomspace_examples:atomspace_example_test(read_atomese_file(File,O),is_list(O)):
   %\+ atom_contains(File,'/implication-instantiation-rule'),
   %\+ atom_contains(File,'/opencog/scm/opencog/base/file-utils'),
   %C:/opt/logicmoo_workspace/packs_sys/logicmoo_opencog/pln/opencog/pln/rules/wip/decontextualize.scm:321
-  \+ atom_contains(File,'/guile-log'),
-  \+ atom_contains(File,'/ice-9'),  
-  \+ atom_contains(File,'packs_sys/logicmoo_opencog/guile'),
+  \+ atom_contains(File,'/guile-log/'),
+  \+ atom_contains(File,'/ice-9/'),  
+  \+ atom_contains(File,'/unused/'),
   \+ atom_contains(File,'/build/'),
-  \+ atom_contains(File,'/wam_common_lisp').
+  \+ atom_contains(File,'/wam_common_lisp/').
   
   
 

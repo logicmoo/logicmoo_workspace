@@ -124,10 +124,14 @@ held_arg(XA,XA,S,S,Id,Id).
 
 expand_named(Name,Name):- \+ compound(Name),!.
 expand_named(items(And, List),List):- And == and, !.
+expand_named(Name,LF):- s80lf(Name,LF),!.
 expand_named(Name,Name):- !.
 
 % ?- c88("If an agent A1 touches the chair O2 and A1 is awake then A1 is aware that O2 is existing.").
 
+i_np_head0(Atomic,TypeX,TypeY,IdentityQ,Head,Pred0,Pred,Slots):- \+ compound(Atomic),!,
+  i_np_head0(nameOf(_Var,Atomic),TypeX,TypeY,IdentityQ,Head,Pred0,Pred,Slots).
+  
 % np(3+sg,nameOf(_Var,iran),[])
 i_np_head0(nameOf(X,Name,Adjs),Type-X,Type-X,identityQ(_QModal),Head,Pred0,Pred,[]) :- Name == X,
   %ignore(lf80(Type,name_template_LF(Name,Type))),!,
@@ -135,7 +139,7 @@ i_np_head0(nameOf(X,Name,Adjs),Type-X,Type-X,identityQ(_QModal),Head,Pred0,Pred,
 
 i_np_head0(nameOf(X,Name,Adjs),Type-X,Type-X,identityQ(_QModal),Head,Pred0,Pred,[]) :- 
   (var(Name)->X=Name;true),!,
-  ignore(lf80(Type,name_template_LF(Name,Type))),
+  ignore(lf80(Type-X,name_template_LF(Name,Type))),
   expand_named(Name,Named),
   ignore(must80((i_adjs(Adjs,Type-X,Type-X,_,'`'(bE(named,X,Named)),Head,Pred0,Pred)))),!.
 
@@ -385,7 +389,7 @@ i_s(s(Subj,Verb,VArgs,VMods),Pred,Up,Id) :-
   debug_chat80_if_fail(deepen_pos((s80lf(S2,Pred2);i_sentence(S2,Pred2)));Pred2=lfOf(S2)),
   Pred= cond_pred(IF,Pred1,Pred2).
 
-i_s(s(Subj,Verb,VArgs,VMods),Pred,Up,Id) :- i_s_0(s(Subj,Verb,VArgs,VMods),Pred,Up,Id).
+i_s(S,Pred,Up,Id) :- i_s_0(S,Pred,Up,Id).
 
 i_s_0(s(Subj,Verb,VArgs,VMods),Pred,Up,Id) :-
   once(subc_member(was_framed(VV),s(VMods,VArgs,Verb,Subj));t_l:current_vv(VV);gensym('frame_',VV)),

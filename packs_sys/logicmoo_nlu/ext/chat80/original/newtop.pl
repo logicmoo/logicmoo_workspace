@@ -624,7 +624,7 @@ tmaybe_body(question80([],I),O):- nonvar(I), !, tmaybe_body((I),O).
 tmaybe_body((_:-I),O):- nonvar(I), !, tmaybe_body((I),O).
 tmaybe_body(LF,LF).
 
-s80lf(S1,SLF):- sent_to_prelogic(S1,O),!, tmaybe_body(O,SLF).
+s80lf(S1,SLF):- deepen_pos(sent_to_prelogic(S1,O)),!, tmaybe_body(O,SLF).
 s80lf(S1,S1).
 
 sent_to_prelogic(S0,S) :-
