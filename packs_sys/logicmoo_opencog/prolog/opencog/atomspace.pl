@@ -8,13 +8,13 @@
 opencog_ctx(default).
 
 %revision/3
-revision([S, T1], [S, T2], [S, T]):- opencog_revision([S, T1], [S, T2], [S, T]).
+opencog:revision([S, T1], [S, T2], [S, T]):- opencog_revision([S, T1], [S, T2], [S, T]).
 
 opencog_revision([S, T1], [S, T2], [S, T]):-
  	opencog_z_f_rev(T1, T2, T).
 
 %OPENCOG_AS choice/3
-choice(X, Y, Z):- opencog_choice(X, Y, Z).
+opencog:choice(X, Y, Z):- opencog_choice(X, Y, Z).
 
 opencog_choice([S, [F1, C1]], [S, [_F2, C2]], [S, [F1, C1]]):-
  	C1 >= C2, !.
@@ -27,7 +27,7 @@ opencog_choice([S1, T1], [S2, T2], [S2, T2]):-
 
 
 %OPENCOG_AS infer-ence/2 (simplified version)
-infer(T1, T):- opencog_infer(T1, T).
+opencog:infer(T1, T):- opencog_infer(T1, T).
 
 opencog_infer(T1, T):-  opencog_ctx(Ctx), opencog_inference(Ctx, [T1, [1, 0.9]], T).
 
@@ -46,7 +46,7 @@ opencog_infer(T1, T2, T):-  opencog_ctx(Ctx), opencog_inference(Ctx, [T1, [1, 0.
 
 
 %OPENCOG_AS inference/2
-inference(T1, T):- opencog_ctx(Ctx), opencog_inference(Ctx, T1, T).
+opencog:inference(T1, T):- opencog_ctx(Ctx), opencog_inference(Ctx, T1, T).
 
 %% immediate inference
 
@@ -76,7 +76,7 @@ opencog_inference(Ctx, P, C):-
 
 
 % inference/3
-inference(X, Y, Z):- opencog_ctx(Ctx), opencog_inference(Ctx, X, Y, Z).
+opencog:inference(X, Y, Z):- opencog_ctx(Ctx), opencog_inference(Ctx, X, Y, Z).
 
 
 %% inheritance-based syllogism
@@ -293,7 +293,7 @@ replace_all([H|T1], H1, [H|T2], H2):-
 %%% Theorems in IL:
 
 %OPENCOG_AS inheritance/2
-inheritance(X, Y):- opencog_ctx(Ctx), opencog_inheritance(Ctx, X, Y).
+opencog:inheritance(X, Y):- opencog_ctx(Ctx), opencog_inheritance(Ctx, X, Y).
 
 opencog_inheritance(_Ctx, ext_intersection(Ls), P):-
  	opencog_z_include([P], Ls).
@@ -319,7 +319,7 @@ opencog_inheritance(_Ctx, R, product(L1)):-
  	opencog_z_ground(L1), member(int_image(R, L2), L1), opencog_z_replace(L1, int_image(R, L2), L2).
 
 %OPENCOG_AS similarity/2
-similarity(X, Y):- opencog_ctx(Ctx), opencog_similarity(Ctx, X, Y).
+opencog:similarity(X, Y):- opencog_ctx(Ctx), opencog_similarity(Ctx, X, Y).
 
 opencog_similarity(_Ctx, X, Y):-
  	opencog_z_ground(X), opencog_z_reduce(X, Y), X \== Y, !.
@@ -334,7 +334,7 @@ opencog_similarity(_Ctx, int_set(L1), int_set(L2)):-
  	opencog_z_same_set(L1, L2).
 
 %OPENCOG_AS implication/2
-implication(X, Y):- opencog_ctx(Ctx), opencog_implication(Ctx, X, Y).
+opencog:implication(X, Y):- opencog_ctx(Ctx), opencog_implication(Ctx, X, Y).
 
 opencog_implication(_Ctx, similarity(S, P), inheritance(S, P)).
 opencog_implication(_Ctx, equivalence(S, P), implication(S, P)).
@@ -568,13 +568,13 @@ opencog_z_same(L, [H|T]):-
  	member(H, L), opencog_subtract(L, [H], L1), opencog_z_same(L1, T).
 
 opencog_z_include(L1, L2):-
- 	opencog_z_ground(L2), include1(L1, L2), L1 \== [], L1 \== L2.
+ 	opencog_z_ground(L2), include1_2(L1, L2), L1 \== [], L1 \== L2.
 
- include1([], _).
- include1([H|T1], [H|T2]):-
- 	include1(T1, T2).
- include1([H1|T1], [H2|T2]):-
- 	H2 \== H1, include1([H1|T1], T2).
+ include1_2([], _).
+ include1_2([H|T1], [H|T2]):-
+ 	include1_2(T1, T2).
+ include1_2([H1|T1], [H2|T2]):-
+ 	H2 \== H1, include1_2([H1|T1], T2).
 
 opencog_z_not_member(_, []).
 opencog_z_not_member(C, [C|_]):-  !, fail.
