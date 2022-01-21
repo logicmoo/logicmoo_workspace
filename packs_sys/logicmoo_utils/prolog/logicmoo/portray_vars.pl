@@ -641,6 +641,7 @@ reduce_fname(M,N):- atom_concat_safety('trans_',N0,M),reduce_fname(N0,N).
 reduce_fname(M,N):- atom_concat_safety('symmetric_',N0,M),reduce_fname(N0,N).
 reduce_fname(M,N):- atom_concat_safety('predicate_',N0,M),reduce_fname(N0,N).
 reduce_fname(M,N):- atom_concat_safety('generic_',N0,M),!,reduce_fname(N0,N).
+reduce_fname(M,N):- atom_concat_safety('HasProp',N0,M),!,reduce_fname(N0,N).
 reduce_fname(L,R):- atom_concat_some_left('v',LL,L),name(LL,[UC,LC|_]),char_type(UC,upper),char_type(LC,lower),reduce_fname(LL,R).
 reduce_fname(L,R):- atom_concat_some_left('Cl_',LL,L),reduce_fname(LL,R).
 reduce_fname(L,R):- atom_concat_some_left('U_',LL,L),reduce_fname(LL,R).
@@ -658,6 +659,7 @@ reduce_fname(M,N):- atom_concat_w_blobs(N0,'pred',M),reduce_fname(N0,N).
 
 reduce_fname(ti,'').
 reduce_fname(generic,'').
+reduce_fname(has_prop,'').
 reduce_fname(tti,'').
 reduce_fname(card,siize).
 reduce_fname(partOf,'').
