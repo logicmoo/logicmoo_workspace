@@ -1,6 +1,6 @@
 name(predicate_streams).
 title('Implement your own Abstract Predicate Streams').
-version('2.0.3').
+version('3.0.3').
 download('https://github.com/logicmoo/predicate_streams/*').
 author( 'Douglas R. Miles', 'logicmoo@gmail.com' ).
 packager( 'logicmoo/LogicMoo', 'https://github.com/logicmoo/' ).

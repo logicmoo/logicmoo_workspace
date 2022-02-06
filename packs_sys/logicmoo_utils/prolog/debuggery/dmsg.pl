@@ -1263,7 +1263,7 @@ save_real_main_error:-
   asserta(tmp:real_main_error(Err)).
 
 :- initialization(retractall(tmp:real_main_error(_)), prepare_state).
-:- now_and_later(save_real_main_error).
+:- ignore(now_and_later(save_real_main_error)).
 
 with_output_to_real_main_error(G):-
   %set_prolog_flag(occurs_check,false),

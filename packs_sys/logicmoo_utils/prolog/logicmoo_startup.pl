@@ -1437,13 +1437,14 @@ load_history_from_file(File):-
 
 load_history:- 
  carelessly(prolog_history:prolog_history(enable)),
- default_history_file(File),show_call(always,load_history_from_file(File)),!,
+ default_history_file(File),doug_only(show_call(always,load_history_from_file(File))),!,
  %(current_prolog_flag(readline,editline) -> User_input = libedit_input; User_input = user_input),
  %prolog:history(User_input, load(File)),
- listing('$history':'$history'/2),
- listing(histtmp:history_data/1),
+ doug_only(listing('$history':'$history'/2)),
+ doug_only(listing(histtmp:history_data/1)),
  !.
-  
+
+doug_only(G):- nop(G).
 
 
 nb_linkval_current(N,V):-duplicate_term(V,VV),V=VV,nb_linkval(N,VV),nb_current(N,V).

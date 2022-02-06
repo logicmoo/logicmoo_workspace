@@ -45,13 +45,13 @@ appear in the source-code.
 
 mst(G):- catch((G*->true;writeln(failed_mst(G))),_E,writeln(err(G))).
 
-call_pred_to(Where,List):-is_list(List),!,maplist(call_pred_to(Where),List).
-call_pred_to(Where,F/A):- call_pred_to(Where,_:F/A).
+call_pred_to(Where,List):-  is_list(List),!,maplist(call_pred_to(Where),List).
+call_pred_to(Where,F/A):-   call_pred_to(Where,_:F/A).
 call_pred_to(Where,M:F/A):- ground(F/A),functor(P,F,A),call_pred_to(Where,M:P).
 call_pred_to(Where,M:F/A):- forall(current_predicate(F/A),((functor(P,F,A),call_pred_to(Where,M:P)))).
-call_pred_to(Where,M:P):-var(M),!,forall(current_module(M),call_pred_to(Where,M:P)).
-call_pred_to(Where,M:P):-!,call(Where,M,P).
-call_pred_to(Where,P):-forall(current_module(M),call_pred_to(Where,M:P)).
+call_pred_to(Where,M:P):-   var(M),!,forall(current_module(M),call_pred_to(Where,M:P)).
+call_pred_to(Where,M:P):-   !,call(Where,M,P).
+call_pred_to(Where,P):-     forall(current_module(M),call_pred_to(Where,M:P)).
 
 
 save_pred_to(Where,Each):-

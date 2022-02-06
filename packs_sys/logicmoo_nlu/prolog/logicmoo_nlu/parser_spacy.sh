@@ -1,5 +1,6 @@
 #!/bin/bash
 
+sleep 10
 LIB=spacy
 
 while [ 1==1 ]

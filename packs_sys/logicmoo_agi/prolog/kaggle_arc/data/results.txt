@@ -1,0 +1,5 @@
+# Automatically generated
+# duptype id depth size device inode priority name
+DUPTYPE_FIRST_OCCURRENCE 9 1 7576 2050 13844143 3 ./evaluation/070dd51e.json
+DUPTYPE_WITHIN_SAME_TREE -9 1 7576 2050 13848278 3 ./training/40853293.json
+# end of file
