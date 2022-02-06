@@ -1,0 +1,93 @@
+/* Parts of speech */
+
+noun(Noun,Agmt) -->
+   [W],
+   {noun_form(W,Noun,Agmt)}.
+
+det(det(Det),Number,Def) -->
+   [W],
+   {det(W,Number,Det,Def)}.
+det(generic,_,generic) --> [].
+
+adj(Type,adj(Adj)) -->
+   [Adj],
+   {adj(Adj,Type)}.
+
+prep(prep(Prep)) -->
+   [Prep],
+   {prep(Prep)}.
+
+rel_adj(adj(Adj)) -->
+   [RAdj],
+   {rel_adj(RAdj,Adj)}.
+
+sup_adj(adj(Adj)) -->
+   [SAdj],
+   {sup_adj(SAdj,Adj)}.
+
+comp_adv(less) --> [less].
+comp_adv(more) --> [more].
+
+sup_adv(least) --> [least].
+sup_adv(most) --> [most].
+
+rel_pron(Case) -->
+   [W],
+   {rel_pron(W,Case)}.
+
+verb_form(Verb,Tense,Agmt,Role) -->
+   [W],
+   {verb_form(W,Verb,Tense,Agmt)}.
+
+name(Name) -->
+   opt_the,
+   [Name],
+   {name(Name)}.
+
+int_art(X,plu,quant(same,wh(X))) --> [how,many].
+int_art(X,Agmt,DX) -->
+   [Art],
+   {int_art(Art,X,Agmt,DX)}.
+
+int_pron(Case) -->
+   [Pron],
+   {int_pron(Pron,Case)}.
+
+adverb(adv(Adv)) -->
+   [Adv],
+   {adverb(Adv)}.
+
+poss_pron(pronoun(Gender),Person+Number) -->
+   [W],
+   {poss_pron(W,Gender,Person,Number)}.
+
+pers_pron(pronoun(Gender),Person+Number,Case) -->
+   [W],
+   {pers_pron(W,Gender,Person,Number,Case)}.
+
+quantifier_pron(Det,Noun) -->
+   [W],
+   {quantifier_pron(W,Det,Noun)}.
+
+context_pron(prep(in),place) --> [where].
+context_pron(prep(at),time) --> [when].
+
+number(nb(I),Number) -->
+   [W],
+   {number(W,I,Number)}.
+
+terminator(Type) -->
+   [Term],
+   {terminator(Term,Type)}.
+
+opt_the --> [].
+opt_the --> [the].
+
+conj(_,list,list) --> [','].
+conj(Conj,list,end) -->
+   [Conj],
+   {conj(Conj)}.
+
+loc_pred(P) -->
+   [W],
+   {loc_pred(W,P)}.

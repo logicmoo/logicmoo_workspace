@@ -1,0 +1,1486 @@
+
+Quintus Prolog Release 2.0 (Sun FCS)
+Copyright (C) 1987, Quintus Computer Systems, Inc.  All rights reserved.
+
+| ?- 
+ [compiling /usr/sri-marvin/pereira/chat/80/xgrun.pl...]
+ [xgrun.pl compiled 0.400 sec 532 bytes]
+ [compiling /usr/sri-marvin/pereira/chat/80/newg.pl...]
+ [newg.pl compiled 30.400 sec 22,588 bytes]
+ [compiling /usr/sri-marvin/pereira/chat/80/clotab.pl...]
+ [clotab.pl compiled 1.850 sec 2,100 bytes]
+ [compiling /usr/sri-marvin/pereira/chat/80/newdict.pl...]
+[WARNING: Clauses for verb_form/4 are not together in the source file]
+[WARNING: Clauses for verb_type/2 are not together in the source file]
+[WARNING: Clauses for regular_pres/1 are not together in the source file]
+[WARNING: Clauses for noun_form/3 are not together in the source file]
+[WARNING: Clauses for verb_root/1 are not together in the source file]
+[WARNING: Clauses for regular_past/2 are not together in the source file]
+ [newdict.pl compiled 8.550 sec 12,068 bytes]
+ [compiling /usr/sri-marvin/pereira/chat/80/slots.pl...]
+ [slots.pl compiled 18.084 sec 14,092 bytes]
+ [compiling /usr/sri-marvin/pereira/chat/80/scopes.pl...]
+ [scopes.pl compiled 12.666 sec 10,352 bytes]
+ [compiling /usr/sri-marvin/pereira/chat/80/templa.pl...]
+ [templa.pl compiled 6.034 sec 4,848 bytes]
+ [compiling /usr/sri-marvin/pereira/chat/80/qplan.pl...]
+[WARNING: Singleton variables, clause 2 of intersect/2: W_]
+ [qplan.pl compiled 11.567 sec 8,984 bytes]
+ [compiling /usr/sri-marvin/pereira/chat/80/talkr.pl...]
+[WARNING: Singleton variables, clause 2 of exception/1: P]
+ [talkr.pl compiled 4.150 sec 4,020 bytes]
+ [compiling /usr/sri-marvin/pereira/chat/80/ndtabl.pl...]
+[WARNING: Clauses for nd/3 are not together in the source file]
+[WARNING: Clauses for nd/4 are not together in the source file]
+[WARNING: Clauses for nd/5 are not together in the source file]
+ [ndtabl.pl compiled 1.634 sec 1,784 bytes]
+ [compiling /usr/sri-marvin/pereira/chat/80/readin.pl...]
+ [readin.pl compiled 1.950 sec 1,776 bytes]
+ [compiling /usr/sri-marvin/pereira/chat/80/ptree.pl...]
+ [ptree.pl compiled 0.733 sec 780 bytes]
+ [compiling /usr/sri-marvin/pereira/chat/80/aggreg.pl...]
+ [aggreg.pl compiled 4.933 sec 3,784 bytes]
+ [compiling /usr/sri-marvin/pereira/chat/80/world0.pl...]
+ [world0.pl compiled 4.583 sec 5,424 bytes]
+ [compiling /usr/sri-marvin/pereira/chat/80/rivers.pl...]
+ [rivers.pl compiled 3.000 sec 3,844 bytes]
+ [compiling /usr/sri-marvin/pereira/chat/80/cities.pl...]
+ [cities.pl compiled 2.383 sec 3,716 bytes]
+ [compiling /usr/sri-marvin/pereira/chat/80/countries.pl...]
+ [countries.pl compiled 10.950 sec 17,636 bytes]
+ [compiling /usr/sri-marvin/pereira/chat/80/contain.pl...]
+ [contain.pl compiled 8.867 sec 11,512 bytes]
+ [compiling /usr/sri-marvin/pereira/chat/80/borders.pl...]
+ [borders.pl compiled 22.450 sec 29,416 bytes]
+ [compiling /usr/sri-marvin/pereira/chat/80/newtop.pl...]
+ [newtop.pl compiled 5.850 sec 5,252 bytes]
+[compilation completed 162.833 sec 167,180 bytes]
+| ?- hi(demo).
+
+trace . 
+Tracing from now on!
+
+what rivers are there ? 
+
+Parse: 0.0168457sec.
+whq
+   $VAR
+      1
+   s
+      np
+         3+plu
+         np_head
+            int_det(B)
+            []
+            river
+         []
+      verb(be,active,pres+fin,[],pos)
+      void
+      []
+
+
+
+Semantics: 0.0170898sec.
+answer([B]) :-
+   river(B)
+ & exists B 
+     true
+
+Planning: 0.0sec.
+answer([B]) :-
+   river(B)
+ & exists B 
+     true
+amazon, amu_darya, amur, brahmaputra, colorado, congo_river, cubango, danube, don, elbe, euphrates, ganges, hwang_ho, indus, irrawaddy, lena, limpopo, mackenzie, mekong, mississippi, murray, niger_river, nile, ob, oder, orange, orinoco, parana, rhine, rhone, rio_grande, salween, senegal_river, tagus, vistula, volga, volta, yangtze, yenisei, yukon and zambesi.
+
+Reply: 0.166992sec.
+
+does afghanistan border china ? 
+
+Parse: 0.0161133sec.
+q
+   s
+      np
+         3+sin
+         name(afghanistan)
+         []
+      verb(border,active,pres+fin,[],pos)
+      arg
+         dir
+         np
+            3+sin
+            name(china)
+            []
+      []
+
+
+
+Semantics: 0.0170898sec.
+answer([]) :-
+   borders(afghanistan,china)
+
+Planning: 0.0170898sec.
+answer([]) :-
+   {borders(afghanistan,china)}
+Yes.
+
+Reply: 0.0sec.
+
+what is the capital of upper_volta ? 
+
+Parse: 0.0339356sec.
+whq
+   $VAR
+      1
+   s
+      np
+         3+sin
+         wh(B)
+         []
+      verb(be,active,pres+fin,[],pos)
+      arg
+         dir
+         np
+            3+sin
+            np_head
+               det(the(sin))
+               []
+               capital
+            pp
+               prep(of)
+               np
+                  3+sin
+                  name(upper_volta)
+                  []
+      []
+
+
+
+Semantics: 0.032959sec.
+answer([B]) :-
+   capital(upper_volta,B)
+
+Planning: 0.0sec.
+answer([B]) :-
+   capital(upper_volta,B)
+ouagadougou.
+
+Reply: 0.0sec.
+
+where is the largest country ? 
+
+Parse: 0.032959sec.
+whq
+   $VAR
+      1
+   s
+      np
+         3+sin
+         np_head
+            det(the(sin))
+            sup
+               most
+               adj
+                  large
+            country
+         []
+      verb(be,active,pres+fin,[],pos)
+      arg
+         pred
+         pp
+            prep(in)
+            np
+               $VAR
+                  2
+               np_head
+                  int_det(B)
+                  []
+                  place
+               []
+      []
+
+
+
+Semantics: 0.0341797sec.
+answer([B]) :-
+   exists C 
+     exists D 
+       D = setof E:F 
+         country(F)
+       & area(F,E)
+     & aggregate(max,D,C)
+   & place(B)
+   & in(C,B)
+
+Planning: 0.0339356sec.
+answer([B]) :-
+   exists C D 
+     D = setof E:F 
+       country(F)
+     & area(F,E)
+   & aggregate(max,D,C)
+   & in(C,B)
+   & {place(B)}
+asia and northern_asia.
+
+Reply: 0.650146sec.
+
+which countries are european ? 
+
+Parse: 0.0500488sec.
+whq
+   $VAR
+      1
+   s
+      np
+         3+plu
+         np_head
+            int_det(B)
+            []
+            country
+         []
+      verb(be,active,pres+fin,[],pos)
+      arg
+         pred
+         adj
+            european
+      []
+
+
+
+Semantics: 0.032959sec.
+answer([B]) :-
+   country(B)
+ & european(B)
+
+Planning: 0.0170898sec.
+answer([B]) :-
+   european(B)
+ & {country(B)}
+albania, andorra, austria, belgium, bulgaria, cyprus, czechoslovakia, denmark, east_germany, eire, finland, france, greece, hungary, iceland, italy, liechtenstein, luxembourg, malta, monaco, netherlands, norway, poland, portugal, romania, san_marino, spain, sweden, switzerland, united_kingdom, west_germany and yugoslavia.
+
+Reply: 0.184082sec.
+
+which country ' s capital is london ? 
+
+Parse: 0.0500488sec.
+whq
+   $VAR
+      1
+   s
+      np
+         3+sin
+         np_head
+            det(the(sin))
+            []
+            capital
+         pp
+            poss
+            np
+               3+sin
+               np_head
+                  int_det(B)
+                  []
+                  country
+               []
+      verb(be,active,pres+fin,[],pos)
+      arg
+         dir
+         np
+            3+sin
+            name(london)
+            []
+      []
+
+
+
+Semantics: 0.0161133sec.
+answer([B]) :-
+   country(B)
+ & capital(B,london)
+
+Planning: 0.032959sec.
+answer([B]) :-
+   capital(B,london)
+ & {country(B)}
+united_kingdom.
+
+Reply: 0.0170898sec.
+
+which is the largest african country ? 
+
+Parse: 0.0500488sec.
+whq
+   $VAR
+      1
+   s
+      np
+         3+sin
+         wh(B)
+         []
+      verb(be,active,pres+fin,[],pos)
+      arg
+         dir
+         np
+            3+sin
+            np_head
+               det(the(sin))
+               sup
+                  most
+                  adj
+                     large
+               adj
+                  african
+               country
+            []
+      []
+
+
+
+Semantics: 0.0339356sec.
+answer([B]) :-
+   exists C 
+     C = setof D:E 
+       country(E)
+     & area(E,D)
+     & african(E)
+   & aggregate(max,C,B)
+
+Planning: 0.0500488sec.
+answer([B]) :-
+   exists C 
+     C = setof D:E 
+       african(E)
+     & {country(E)}
+     & area(E,D)
+   & aggregate(max,C,B)
+sudan.
+
+Reply: 0.300049sec.
+
+how large is the smallest american country ? 
+
+Parse: 0.0339356sec.
+whq
+   $VAR
+      1
+   s
+      np
+         3+sin
+         np_head
+            det(the(sin))
+            sup
+               most
+               adj
+                  small
+            adj
+               american
+            country
+         []
+      verb(be,active,pres+fin,[],pos)
+      arg
+         pred
+         value
+            adj
+               large
+            wh(B)
+      []
+
+
+
+Semantics: 0.0500488sec.
+answer([B]) :-
+   exists C 
+     exists D 
+       D = setof E:F 
+         country(F)
+       & area(F,E)
+       & american(F)
+     & aggregate(min,D,C)
+   & area(C,B)
+
+Planning: 0.032959sec.
+answer([B]) :-
+   exists C D 
+     D = setof E:F 
+       american(F)
+     & {country(F)}
+     & area(F,E)
+   & aggregate(min,D,C)
+   & area(C,B)
+0 ksqmiles.
+
+Reply: 0.199951sec.
+
+what is the ocean that borders african countries and that borders asian countries
+? 
+
+Parse: 0.0827637sec.
+whq
+   $VAR
+      1
+   s
+      np
+         3+sin
+         wh(B)
+         []
+      verb(be,active,pres+fin,[],pos)
+      arg
+         dir
+         np
+            3+sin
+            np_head
+               det(the(sin))
+               []
+               ocean
+            conj
+               and
+               rel
+                  $VAR
+                     2
+                  s
+                     np
+                        3+sin
+                        wh(C)
+                        []
+                     verb(border,active,pres+fin,[],pos)
+                     arg
+                        dir
+                        np
+                           3+plu
+                           np_head
+                              generic
+                              adj
+                                 african
+                              country
+                           []
+                     []
+               rel
+                  $VAR
+                     3
+                  s
+                     np
+                        3+sin
+                        wh(D)
+                        []
+                     verb(border,active,pres+fin,[],pos)
+                     arg
+                        dir
+                        np
+                           3+plu
+                           np_head
+                              generic
+                              adj
+                                 asian
+                              country
+                           []
+                     []
+      []
+
+
+
+Semantics: 0.100098sec.
+answer([B]) :-
+   ocean(B)
+ & exists C 
+     country(C)
+   & african(C)
+   & borders(B,C)
+ & exists D 
+     country(D)
+   & asian(D)
+   & borders(B,D)
+
+Planning: 0.0500488sec.
+answer([B]) :-
+   exists C D 
+     ocean(B)
+   & { borders(B,C)
+     & {african(C)}
+     & {country(C)} }
+   & { borders(B,D)
+     & {asian(D)}
+     & {country(D)} }
+indian_ocean.
+
+Reply: 0.25sec.
+
+what are the capitals of the countries bordering the baltic ? 
+
+Parse: 0.032959sec.
+whq
+   $VAR
+      1
+   s
+      np
+         3+plu
+         wh(B)
+         []
+      verb(be,active,pres+fin,[],pos)
+      arg
+         dir
+         np
+            3+plu
+            np_head
+               det(the(plu))
+               []
+               capital
+            pp
+               prep(of)
+               np
+                  3+plu
+                  np_head
+                     det(the(plu))
+                     []
+                     country
+                  reduced_rel
+                     $VAR
+                        2
+                     s
+                        np
+                           3+plu
+                           wh(C)
+                           []
+                        verb(border,active,inf,[prog],pos)
+                        arg
+                           dir
+                           np
+                              3+sin
+                              name(baltic)
+                              []
+                        []
+      []
+
+
+
+Semantics: 0.0830078sec.
+answer([B]) :-
+   B = setof [C]:D 
+     country(C)
+   & borders(C,baltic)
+   & D = setof E 
+       capital(C,E)
+
+Planning: 0.0168457sec.
+answer([B]) :-
+   B = setof [C]:D 
+     country(C)
+   & borders(C,baltic)
+   & D = setof E 
+       capital(C,E)
+[[denmark]:[copenhagen],[east_germany]:[east_berlin],[finland]:[helsinki],[poland]:[warsaw],[soviet_union]:[moscow],[sweden]:[stockholm],[west_germany]:[bonn]].
+
+Reply: 0.233154sec.
+
+which countries are bordered by two seas ? 
+
+Parse: 0.032959sec.
+whq
+   $VAR
+      1
+   s
+      np
+         3+plu
+         np_head
+            int_det(B)
+            []
+            country
+         []
+      verb(border,passive,pres+fin,[],pos)
+      []
+      pp
+         prep(by)
+         np
+            3+plu
+            np_head
+               quant(same,nb(2))
+               []
+               sea
+            []
+
+
+
+Semantics: 0.0168457sec.
+answer([B]) :-
+   country(B)
+ & 2 = numberof C 
+     sea(C)
+   & borders(C,B)
+
+Planning: 0.0500488sec.
+answer([B]) :-
+   2 = numberof C 
+     sea(C)
+   & borders(C,B)
+ & {country(B)}
+egypt, iran, israel, saudi_arabia and turkey.
+
+Reply: 0.25sec.
+
+how many countries does the danube flow through ? 
+
+Parse: 0.065918sec.
+whq
+   $VAR
+      1
+   s
+      np
+         3+sin
+         name(danube)
+         []
+      verb(flow,active,pres+fin,[],pos)
+      []
+      pp
+         prep(through)
+         np
+            3+plu
+            np_head
+               quant(same,wh(B))
+               []
+               country
+            []
+
+
+
+Semantics: 0.0168457sec.
+answer([B]) :-
+   B = numberof C 
+     country(C)
+   & flows(danube,C)
+
+Planning: 0.0158691sec.
+answer([B]) :-
+   B = numberof C 
+     flows(danube,C)
+   & {country(C)}
+6.
+
+Reply: 0.032959sec.
+
+what is the total area of countries south of the equator and not in australasia
+? 
+
+Parse: 0.0500488sec.
+whq
+   $VAR
+      1
+   s
+      np
+         3+sin
+         wh(B)
+         []
+      verb(be,active,pres+fin,[],pos)
+      arg
+         dir
+         np
+            3+sin
+            np_head
+               det(the(sin))
+               adj
+                  total
+               area
+            pp
+               prep(of)
+               np
+                  3+plu
+                  np_head
+                     generic
+                     []
+                     country
+                  conj
+                     and
+                     reduced_rel
+                        $VAR
+                           2
+                        s
+                           np
+                              3+plu
+                              wh(C)
+                              []
+                           verb(be,active,pres+fin,[],pos)
+                           arg
+                              pred
+                              pp
+                                 prep(southof)
+                                 np
+                                    3+sin
+                                    name(equator)
+                                    []
+                           []
+                     reduced_rel
+                        $VAR
+                           3
+                        s
+                           np
+                              3+plu
+                              wh(D)
+                              []
+                           verb(be,active,pres+fin,[],neg)
+                           arg
+                              pred
+                              pp
+                                 prep(in)
+                                 np
+                                    3+sin
+                                    name(australasia)
+                                    []
+                           []
+      []
+
+
+
+Semantics: 0.132813sec.
+answer([B]) :-
+   exists C 
+     C = setof D:[E] 
+       area(E,D)
+     & country(E)
+     & southof(E,equator)
+     & \+in(E,australasia)
+   & aggregate(total,C,B)
+
+Planning: 0.0830078sec.
+answer([B]) :-
+   exists C 
+     C = setof D:[E] 
+       southof(E,equator)
+     & area(E,D)
+     & {country(E)}
+     & {\+in(E,australasia)}
+   & aggregate(total,C,B)
+10228 ksqmiles.
+
+Reply: 0.25sec.
+
+what is the average area of the countries in each continent ? 
+
+Parse: 0.0668945sec.
+whq
+   $VAR
+      1
+   s
+      np
+         3+sin
+         wh(B)
+         []
+      verb(be,active,pres+fin,[],pos)
+      arg
+         dir
+         np
+            3+sin
+            np_head
+               det(the(sin))
+               adj
+                  average
+               area
+            pp
+               prep(of)
+               np
+                  3+plu
+                  np_head
+                     det(the(plu))
+                     []
+                     country
+                  pp
+                     prep(in)
+                     np
+                        3+sin
+                        np_head
+                           det(each)
+                           []
+                           continent
+                        []
+      []
+
+
+
+Semantics: 0.0671387sec.
+answer([B,C]) :-
+   continent(B)
+ & exists D 
+     D = setof E:[F] 
+       area(F,E)
+     & country(F)
+     & in(F,B)
+   & aggregate(average,D,C)
+
+Planning: 0.0500488sec.
+answer([B,C]) :-
+   continent(B)
+ & exists D 
+     D = setof E:[F] 
+       area(F,E)
+     & country(F)
+     & in(F,B)
+   & aggregate(average,D,C)
+[africa,233.583--ksqmiles], [america,496.322--ksqmiles], [asia,485.23--ksqmiles], [australasia,543.5--ksqmiles] and [europe,58.3125--ksqmiles].
+
+Reply: 2.88403sec.
+
+is there more than one country in each continent ? 
+
+Parse: 0.032959sec.
+q
+   s
+      there
+      verb(be,active,pres+fin,[],pos)
+      arg
+         dir
+         np
+            3+sin
+            np_head
+               quant(more,nb(1))
+               []
+               country
+            pp
+               prep(in)
+               np
+                  3+sin
+                  np_head
+                     det(each)
+                     []
+                     continent
+                  []
+      []
+
+
+
+Semantics: 0.0339356sec.
+answer([]) :-
+   \+ 
+     exists B 
+       continent(B)
+     & \+ 
+         exists C 
+           C = numberof D 
+             country(D)
+           & in(D,B)
+         & C>1
+
+Planning: 0.032959sec.
+answer([]) :-
+   \+ 
+     exists B 
+       continent(B)
+     & \+ 
+         exists C 
+           C = numberof D 
+             country(D)
+           & in(D,B)
+         & C>1
+No.
+
+Reply: 0.884033sec.
+
+is there some ocean that does not border any country ? 
+
+Parse: 0.0500488sec.
+q
+   s
+      there
+      verb(be,active,pres+fin,[],pos)
+      arg
+         dir
+         np
+            3+sin
+            np_head
+               det(some)
+               []
+               ocean
+            rel
+               $VAR
+                  1
+               s
+                  np
+                     3+sin
+                     wh(B)
+                     []
+                  verb(border,active,pres+fin,[],neg)
+                  arg
+                     dir
+                     np
+                        3+sin
+                        np_head
+                           det(any)
+                           []
+                           country
+                        []
+                  []
+      []
+
+
+
+Semantics: 0.032959sec.
+answer([]) :-
+   exists B 
+     ocean(B)
+   & \+ 
+       exists C 
+         country(C)
+       & borders(B,C)
+
+Planning: 0.032959sec.
+answer([]) :-
+   exists B 
+     { ocean(B)
+     & { \+ 
+           exists C 
+             borders(B,C)
+           & {country(C)} } }
+Yes.
+
+Reply: 0.0158691sec.
+
+what are the countries from which a river flows into the black_sea ? 
+
+Parse: 0.0830078sec.
+whq
+   $VAR
+      1
+   s
+      np
+         3+plu
+         wh(B)
+         []
+      verb(be,active,pres+fin,[],pos)
+      arg
+         dir
+         np
+            3+plu
+            np_head
+               det(the(plu))
+               []
+               country
+            rel
+               $VAR
+                  2
+               s
+                  np
+                     3+sin
+                     np_head
+                        det(a)
+                        []
+                        river
+                     []
+                  verb(flow,active,pres+fin,[],pos)
+                  []
+                  pp
+                     prep(from)
+                     np
+                        3+plu
+                        wh(C)
+                        []
+                  pp
+                     prep(into)
+                     np
+                        3+sin
+                        name(black_sea)
+                        []
+      []
+
+
+
+Semantics: 0.0830078sec.
+answer([B]) :-
+   B = setof C 
+     country(C)
+   & exists D 
+       river(D)
+     & flows(D,C,black_sea)
+
+Planning: 0.0158691sec.
+answer([B]) :-
+   B = setof C 
+     exists D 
+       flows(D,C,black_sea)
+     & {country(C)}
+     & {river(D)}
+[romania,soviet_union].
+
+Reply: 0.0500488sec.
+
+what are the continents no country in which contains more than two cities
+whose population exceeds 1 million ? 
+
+Parse: 0.184082sec.
+whq
+   $VAR
+      1
+   s
+      np
+         3+plu
+         wh(B)
+         []
+      verb(be,active,pres+fin,[],pos)
+      arg
+         dir
+         np
+            3+plu
+            np_head
+               det(the(plu))
+               []
+               continent
+            rel
+               $VAR
+                  2
+               s
+                  np
+                     3+sin
+                     np_head
+                        det(no)
+                        []
+                        country
+                     pp
+                        prep(in)
+                        np
+                           3+plu
+                           wh(C)
+                           []
+                  verb(contain,active,pres+fin,[],pos)
+                  arg
+                     dir
+                     np
+                        3+plu
+                        np_head
+                           quant(more,nb(2))
+                           []
+                           city
+                        rel
+                           $VAR
+                              3
+                           s
+                              np
+                                 3+sin
+                                 np_head
+                                    det(the(sin))
+                                    []
+                                    population
+                                 pp
+                                    poss
+                                    np
+                                       3+plu
+                                       wh(D)
+                                       []
+                              verb(exceed,active,pres+fin,[],pos)
+                              arg
+                                 dir
+                                 np
+                                    3+sin
+                                    np_head
+                                       quant(same,nb(1))
+                                       []
+                                       million
+                                    []
+                              []
+                  []
+      []
+
+
+
+Semantics: 0.0998535sec.
+answer([B]) :-
+   B = setof C 
+     continent(C)
+   & \+ 
+       exists D 
+         country(D)
+       & in(D,C)
+       & exists E 
+           E = numberof F 
+             city(F)
+           & exists G 
+               population(F,G)
+             & exceeds(G,1--million)
+           & in(F,D)
+         & E>2
+
+Planning: 0.0500488sec.
+answer([B]) :-
+   B = setof C 
+     continent(C)
+   & \+ 
+       exists D 
+         country(D)
+       & in(D,C)
+       & exists E 
+           E = numberof F 
+             city(F)
+           & exists G 
+               population(F,G)
+             & exceeds(G,1--million)
+           & in(F,D)
+         & E>2
+[africa,antarctica,australasia].
+
+Reply: 25.0sec.
+
+which country bordering the mediterranean borders a country that is bordered
+by a country whose population exceeds the population of india ? 
+
+Parse: 0.116943sec.
+whq
+   $VAR
+      1
+   s
+      np
+         3+sin
+         np_head
+            int_det(B)
+            []
+            country
+         reduced_rel
+            $VAR
+               2
+            s
+               np
+                  3+sin
+                  wh(C)
+                  []
+               verb(border,active,inf,[prog],pos)
+               arg
+                  dir
+                  np
+                     3+sin
+                     name(mediterranean)
+                     []
+               []
+      verb(border,active,pres+fin,[],pos)
+      arg
+         dir
+         np
+            3+sin
+            np_head
+               det(a)
+               []
+               country
+            rel
+               $VAR
+                  3
+               s
+                  np
+                     3+sin
+                     wh(D)
+                     []
+                  verb(border,passive,pres+fin,[],pos)
+                  []
+                  pp
+                     prep(by)
+                     np
+                        3+sin
+                        np_head
+                           det(a)
+                           []
+                           country
+                        rel
+                           $VAR
+                              4
+                           s
+                              np
+                                 3+sin
+                                 np_head
+                                    det(the(sin))
+                                    []
+                                    population
+                                 pp
+                                    poss
+                                    np
+                                       3+sin
+                                       wh(E)
+                                       []
+                              verb(exceed,active,pres+fin,[],pos)
+                              arg
+                                 dir
+                                 np
+                                    3+sin
+                                    np_head
+                                       det(the(sin))
+                                       []
+                                       population
+                                    pp
+                                       prep(of)
+                                       np
+                                          3+sin
+                                          name(india)
+                                          []
+                              []
+      []
+
+
+
+Semantics: 0.116943sec.
+answer([B]) :-
+   country(B)
+ & borders(B,mediterranean)
+ & exists C 
+     country(C)
+   & exists D 
+       country(D)
+     & exists E 
+         population(D,E)
+       & exists F 
+           population(india,F)
+         & exceeds(E,F)
+     & borders(D,C)
+   & borders(B,C)
+
+Planning: 0.0830078sec.
+answer([B]) :-
+   exists C D E F 
+     population(india,F)
+   & borders(B,mediterranean)
+   & {country(B)}
+   & { borders(B,C)
+     & {country(C)}
+     & { borders(D,C)
+       & {country(D)}
+       & { population(D,E)
+         & {exceeds(E,F)} } } }
+turkey.
+
+Reply: 1.09985sec.
+
+which countries have a population exceeding 10 million ? 
+
+Parse: 0.0500488sec.
+whq
+   $VAR
+      1
+   s
+      np
+         3+plu
+         np_head
+            int_det(B)
+            []
+            country
+         []
+      verb(have,active,pres+fin,[],pos)
+      arg
+         dir
+         np
+            3+sin
+            np_head
+               det(a)
+               []
+               population
+            reduced_rel
+               $VAR
+                  2
+               s
+                  np
+                     3+sin
+                     wh(C)
+                     []
+                  verb(exceed,active,inf,[prog],pos)
+                  arg
+                     dir
+                     np
+                        3+plu
+                        np_head
+                           quant(same,nb(10))
+                           []
+                           million
+                        []
+                  []
+      []
+
+
+
+Semantics: 0.0671387sec.
+answer([B]) :-
+   country(B)
+ & exists C 
+     exceeds(C,10--million)
+   & population(B,C)
+
+Planning: 0.0158691sec.
+answer([B]) :-
+   exists C 
+     country(B)
+   & { population(B,C)
+     & {exceeds(C,10--million)} }
+afghanistan, algeria, argentina, australia, bangladesh, brazil, burma, canada, china, colombia, czechoslovakia, east_germany, egypt, ethiopia, france, india, indonesia, iran, italy, japan, kenya, mexico, morocco, nepal, netherlands, nigeria, north_korea, pakistan, peru, philippines, poland, south_africa, south_korea, soviet_union, spain, sri_lanka, sudan, taiwan, tanzania, thailand, turkey, united_kingdom, united_states, venezuela, vietnam, west_germany, yugoslavia and zaire.
+
+Reply: 0.466064sec.
+
+which countries with a population exceeding 10 million border the atlantic
+? 
+
+Parse: 0.0671387sec.
+whq
+   $VAR
+      1
+   s
+      np
+         3+plu
+         np_head
+            int_det(B)
+            []
+            country
+         pp
+            prep(with)
+            np
+               3+sin
+               np_head
+                  det(a)
+                  []
+                  population
+               reduced_rel
+                  $VAR
+                     2
+                  s
+                     np
+                        3+sin
+                        wh(C)
+                        []
+                     verb(exceed,active,inf,[prog],pos)
+                     arg
+                        dir
+                        np
+                           3+plu
+                           np_head
+                              quant(same,nb(10))
+                              []
+                              million
+                           []
+                     []
+      verb(border,active,pres+fin,[],pos)
+      arg
+         dir
+         np
+            3+sin
+            name(atlantic)
+            []
+      []
+
+
+
+Semantics: 0.0998535sec.
+answer([B]) :-
+   exists C 
+     population(B,C)
+   & exceeds(C,10--million)
+   & country(B)
+ & borders(B,atlantic)
+
+Planning: 0.0158691sec.
+answer([B]) :-
+   exists C 
+     borders(B,atlantic)
+   & { population(B,C)
+     & {exceeds(C,10--million)} }
+   & {country(B)}
+argentina, brazil, canada, colombia, france, mexico, morocco, netherlands, nigeria, south_africa, spain, united_kingdom, united_states, venezuela, west_germany and zaire.
+
+Reply: 0.233154sec.
+
+what percentage of countries border each ocean ? 
+
+Parse: 0.0500488sec.
+whq
+   $VAR
+      1
+   s
+      np
+         3+plu
+         np_head
+            int_det(B)
+            []
+            percentage
+         pp
+            prep(of)
+            np
+               3+plu
+               np_head
+                  generic
+                  []
+                  country
+               []
+      verb(border,active,pres+fin,[],pos)
+      arg
+         dir
+         np
+            3+sin
+            np_head
+               det(each)
+               []
+               ocean
+            []
+      []
+
+
+
+Semantics: 0.032959sec.
+answer([B,C]) :-
+   ocean(B)
+ & exists D 
+     D = setof E 
+       country(E)
+   & exists F 
+       F = numberof G 
+         one_of(D,G)
+       & borders(G,B)
+     & exists H 
+         card(D,H)
+       & ratio(F,H,C)
+
+Planning: 0.032959sec.
+answer([B,C]) :-
+   ocean(B)
+ & exists D 
+     D = setof E 
+       country(E)
+   & exists F 
+       F = numberof G 
+         one_of(D,G)
+       & borders(G,B)
+     & exists H 
+         card(D,H)
+       & ratio(F,H,C)
+[arctic_ocean,2.5641], [atlantic,35.2564], [indian_ocean,14.1026] and [pacific,20.5128].
+
+Reply: 3.41577sec.
+
+what countries are there in europe ? 
+
+Parse: 0.0500488sec.
+whq
+   $VAR
+      1
+   s
+      np
+         3+plu
+         np_head
+            int_det(B)
+            []
+            country
+         []
+      verb(be,active,pres+fin,[],pos)
+      void
+      pp
+         prep(in)
+         np
+            3+sin
+            name(europe)
+            []
+
+
+
+Semantics: 0.032959sec.
+answer([B]) :-
+   country(B)
+ & in(B,europe)
+
+Planning: 0.0sec.
+answer([B]) :-
+   in(B,europe)
+ & {country(B)}
+albania, andorra, austria, belgium, bulgaria, cyprus, czechoslovakia, denmark, east_germany, eire, finland, france, greece, hungary, iceland, italy, liechtenstein, luxembourg, malta, monaco, netherlands, norway, poland, portugal, romania, san_marino, spain, sweden, switzerland, united_kingdom, west_germany and yugoslavia.
+
+Reply: 0.199951sec.
+
+bye . 
+Cheerio.
+
+yes
+| ?- Terminated
+Exit -113
