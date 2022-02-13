@@ -2,6 +2,7 @@
 
 set +x
 
+ln -s /usr/bin/python3 /usr/bin/python
 #set +e
 
 if [ -f "/tmp/is_google_collab" ]; then
