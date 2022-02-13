@@ -7,6 +7,6 @@ COPY --from=synthillect/opencog-minerl:latest / /
 COPY docker/rootfs /
 RUN cp /dockerstartup/generate_container_user /generate_container_user
 
-EXPOSE 8188 1800 8888 4081 4082 4083 4084 4088
+EXPOSE 8188 1800 8888 4081 4082 4083 4084 4085
 ENTRYPOINT ["/startup_logicmoo.sh"]
 
