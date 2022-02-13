@@ -23,6 +23,10 @@
 %----------------------------------------------------------
 
 
+:- multifile(user:cell/4).
+:- dyanmic(user:cell/4).
+cell(0,0,yellow,arm). cell(0,1,default,empty). cell(0,2,blue,money). cell(0,3,default,empty). cell(0,4,default,empty). 
+cell(0,5,default,empty). cell(0,6,yellow,star). cell(0,7,yellow,book). cell(1,0,red,paper). cell(1,1,blue,money).
 
 
 :- use_module(library(terms)).
@@ -66,6 +70,7 @@
 :- ensure_loaded(defaults).
 :- use_module(library(clpfd)).  % used by invert_constraint in SWI, and in old SCIFF code (e.g., block world)
 :- [pretty_print].
+:- use_module(library(chr)).
 
 %----------------------------------------------------------
 % DECLARATIONS
@@ -85,8 +90,8 @@
 % Quantify the variables in an imposed IC, and impose the result as a
 % PSIC
 %----------------------------------------------------------
-:- chr_constraint
-	ic/2, psic/2.
+:- chr_constraint((
+	ic/2, psic/2)).
 impose_ics @
     ic(Body1,Head1)
     ==>
@@ -110,9 +115,9 @@ convert_to_psic(ic(Body1,Head1),PSIC):-
 %----------------------------------------------------------
 % IMPOSING VARIOUS CONSTRAINTS
 %----------------------------------------------------------
-:- chr_type functarity ---> [any,int].
-:- chr_type posexp ---> e(functarity,?,int).
-:- chr_type list(T) --->    [] ; [T | list(T)].
+:- chr_type (functarity ---> [any,int]).
+:- chr_type (posexp ---> e(functarity,?,int)).
+:- chr_type (list(T) --->    [] ; [T | list(T)]).
 :- chr_constraint
     h/3, en/3, note/2, noten/2, fulf/1, viol/1, pending/1, abd/3,
     e/3.

@@ -108,9 +108,9 @@ constraints (::)/2.
  ::(X,Dom) <=> nonground(Dom) | 
         raise_exception( instantiation_error(::(X,Dom),2)).
 
-constraints labeling/0.
+constraints ((labeling)/0).
 
-labeling, (X::[Y|L]) # Ph <=> 
+labeling, (X :: [Y|L]) # Ph <=> 
 	member(X,[Y|L]), labeling
     pragma passive(Ph).
 

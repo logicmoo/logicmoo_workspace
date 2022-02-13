@@ -1,7 +1,9 @@
 :- dynamic ics_file/1, sokb_file/1, history_file/1, required_option/2.
 
 history_file('trace.txt').
-ics_file('regole.txt').
+%ics_file('regole.txt').
+ics_file('game.xml').
+ics_file('http://lia.deis.unibo.it/Research/sciff/ic.ruleml').
 
 sokb_file('kb.pl').
 

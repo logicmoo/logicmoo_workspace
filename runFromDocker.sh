@@ -8,10 +8,12 @@ export DOCKER_RUN="--no-healthcheck $LM_VOLUMES --rm -it ${LM_PORTS} ${EXTRA}"
 export DOCKER_UP=""
 export RUN_IMAGE=logicmoo/logicmoo_workspace:latest
 
+LOGICMOO_ORG=$(getent ahosts logicmoo.org| sed -n 's/ *STREAM.*//p')
 if [ "$(hostname -d)" == "logicmoo.org" ]; then
   # --privileged=true 
   export DOCKER_RUN="--no-healthcheck $LM_VOLUMES --rm -it ${LM_PORTS} ${EXTRA}"
-  DOCKER_RUN="$DOCKER_RUN --add-host logicmoo.org:10.0.0.194"
+
+  DOCKER_RUN="$DOCKER_RUN --add-host logicmoo.org:$LOGICMOO_ORG --add-host www.logicmoo.org:$LOGICMOO_ORG --add-host api.logicmoo.org:$LOGICMOO_ORG"
   RUN_IMAGE=logicmoo/logicmoo_server_32gb:latest
   echo "locally testing on logicmoo.org"
 fi

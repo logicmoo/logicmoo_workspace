@@ -62,6 +62,8 @@ name_template_lf0(X,Spatial&Geo&  Continent) :- like_type(Geo,continent,Continen
 %like_type(geo,River,River):- bind_pos('type',River).
 
 
+
+
 thing_LF(River,_,X,ti(River,X),[],_):- var(River),!.
 thing_LF(River,Spatial& Feat& River,X,ti(River,X),[],_):- feat(Feat),like_type(geo,river,River),spatial(Spatial).
 thing_LF(Type,Spatial& Feat & Type,X,ti(Type,X),[],_):- feat(Feat),bind_pos('type',Type),spatial(Spatial).
@@ -121,6 +123,7 @@ prep_order(give,by,to,dirO).
 concrete_type(Type):- var(Type),dmsg(var_concrete_type(Type)),!,fail.
 concrete_type(Type):- free_ti(Type).
 concrete_type(dog).
+concrete_type(toy).
 concrete_type(person).
 concrete_type(man).
 concrete_type(island).

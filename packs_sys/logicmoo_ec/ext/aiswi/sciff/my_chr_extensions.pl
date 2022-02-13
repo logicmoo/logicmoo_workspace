@@ -1,4 +1,6 @@
 
+:- dyanmic(user:cell/4).
+
 % I re-implement the old findall_constraints that was implemented in
 % SICStus 3. I have looked at the source code of the new CHR library
 findall_constraints(C,L):-

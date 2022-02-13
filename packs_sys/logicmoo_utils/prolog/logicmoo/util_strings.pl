@@ -859,9 +859,10 @@ toPropercase(I,O):-toCaseSplit(_Same,to_titlecase,I,O).
 %
 toCase(_Pred,MiXed,MiXed):-noCaseChange(MiXed),!.
 toCase(_Pred,95,45):-!.
+toCase(_Pred,N,N):-integer(N),!.
 toCase( Pred,MiXed,CASED):-atom(MiXed),!,call(Pred,MiXed,CASED),!.
 toCase( Pred,D3,DD3):- text_to_string_safe(D3,S),!,string_to_atom(S,A3),toCase(Pred,A3,DD3).
-toCase( Pred,D3,DD3):- is_list(D3),atomic_list_concat(D3,' ',Str),maplist(toCase( Pred),Str,DD3),!.
+toCase( Pred,D3,DD3):- is_list(D3),catch(atomic_list_concat(D3,' ',Str),_,fail),maplist(toCase( Pred),Str,DD3),!.
 toCase( Pred,D3,DD3):- is_list(D3),!,must_maplist(toCase( Pred),D3,DD3).
 toCase( Pred,MiXed,CASED):-compound(MiXed),MiXed=..MList,must_maplist(toCase(Pred),MList,UList),!,CASED=..UList.
 
@@ -1423,9 +1424,9 @@ vars_to_ucase_0([N=V|Vars],List):-
 % Atom Split.
 %
 atomSplit(In,List):- convert_to_cycString(In,M),listify(M,List).
-%atomSplit(In,List):- quietly(( ground(In),
-% any_to_string(In,String),
-%    splt_words(String,List,Vars),vars_to_ucase(Vars,List))),!.
+atomSplit_old(In,List):- quietly(( ground(In),
+ any_to_string(In,String),
+    splt_words(String,List,Vars),vars_to_ucase(Vars,List))),!.
 
 %atomSplit(Atom,WordsO):-atomSplitEasy_unused(Atom,WordsO),!.
 

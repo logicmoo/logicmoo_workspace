@@ -776,7 +776,7 @@ obtain_object_conds(Var1,Var2,Dom1,Dom2):-
   obtain_conds(Var1,Dom1),obtain_conds(Var2,Dom2).
 
 obtain_conds(Var,Doms):- mtc_get_attr(Var,iza,Doms),!.
-obtain_conds(Var,DomsO):- compound(Var),\+ is_fort(Var),functor(Var,_,A),arg(A,Var,Doms),
+obtain_conds(Var,DomsO):- compound(Var),\+ is_fort_ts(Var),functor(Var,_,A),arg(A,Var,Doms),
   (is_list(Doms)->DomsO=Doms; obtain_conds(Doms,DomsO)).
 obtain_conds(Var,DomsO):- as_existential(Var,X),obtain_conds(X,DomsO).
 % obtain_conds(_,[]).
@@ -799,21 +799,23 @@ non_disjoint_conds(Dom1,Dom2):-
 
 aoc(_,_).
 
+is_fort_ts(Term):- var(Term)->is_existential(Term);atom(Term).
+
 % already same skolems
 not_rejected_cond(aoc(SK,W1),Dom2):- !, memberchk(aoc(SK,W2),Dom2),'#='(W1 , W2),!.
 not_rejected_cond(male,Dom2):- memberchk(female,Dom2).
 
 as_existential(In,Out):- is_existential(In),!,must(In=Out).
 as_existential(In,Out):- var(In),!,decl_existential(In),must(In=Out).
-% as_existential(In,Out):- strip_module(In,M,X), oo_deref(M,X,Out)->(X\==Out,is_existential(Out)),!.
-as_existential(In,Out):- \+ is_fort(In),!,trace_or_throw(as_existential(In,Out)).
+%as_existential(In,Out):- strip_module(In,M,X), oo_deref(M,X,Out)->(X\==Out,is_existential(Out)),!.
 as_existential(In,Out):- nb_current_value(?('$fort2exist$'),In,Out),!.
+as_existential(In,Out):- \+ is_fort_ts(In),!,decl_existential(Out),!,In=Out,!. %trace_or_throw(as_existential(In,Out)).
 as_existential(In,Out):- decl_existential(Out0),!,add_cond(Out0,aoc(isNamed,In)),!,
-   must(nb_set_value(?('$fort2exist$'),In,Out0)),!,
+   must(nb_set_value(?('$fort2exist$'),In,Out0)),
    must(nb_current_value(?('$fort2exist$'),In,Out)),
    must(add_var_to_env(In,Out)).
 
-% :- ensure_loaded(library(multivar)).
+:- ensure_loaded(library(multivar)).
 l_xvarx(Var):- xvarx(Var).
 
 decl_existential(Var):- is_existential(Var),!.
@@ -933,7 +935,7 @@ xnr:attribute_goals(Var) --> {fail},
 
 xnr_dif(Old,VarValue):- Old\==VarValue,!,fail.
 xnr_dif(Old,VarValue):- (is_existential(Old);is_existential(VarValue)),!,=(Old,VarValue),!,get_attrs(Old,Attrs),nb_put_attrs(Old,Attrs),!,fail.
-xnr_dif(Old,VarValue):- (is_fort(Old);is_fort(VarValue)),!,\=(Old,VarValue).
+xnr_dif(Old,VarValue):- (is_fort_ts(Old);is_fort_ts(VarValue)),!,\=(Old,VarValue).
 xnr_dif(Old,VarValue):- (var(Old);var(VarValue)),!.
 xnr_dif(Old,VarValue):- is_list(Old),!,xnr_dif_l(Old,VarValue).
 xnr_dif(Old,VarValue):- nonvar(VarValue),Old\=@=VarValue.
@@ -1102,7 +1104,7 @@ chk_cond(E,Cs):- once(call_cond(E,Cs)).
 % Isac Gen.
 %
 call_cond(Var):- as_existential(Var,X),obtain_conds(X,Conds),call_cond_x(X,Conds).
-call_cond(Var,Conds):- is_fort(Var),!,as_existential(Var,X),call_cond_x(X,Conds).
+call_cond(Var,Conds):- is_fort_ts(Var),!,as_existential(Var,X),call_cond_x(X,Conds).
 call_cond(Var,Conds):- call_cond_x(Var,Conds).
 
 call_cond_x(Y, [H|List]):- ground(Y),!,cond_call0(Y,H),!,cond_call00(Y, List).
@@ -1872,6 +1874,6 @@ mpred_type_constraints_file.
 %
 % system:goal_expansion(G,O):- \+ current_prolog_flag(xref,true),\+ pldoc_loading, nonvar(G),boxlog_goal_expansion(G,O).
 
-:- baseKB:import(is_fort/1).
+:- baseKB:import(is_fort_ts/1).
 :- baseKB:import(member_eqz/2).
 

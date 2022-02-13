@@ -120,7 +120,7 @@ install_swi_package packs_sys logicmoo_nlu
 install_swi_package packs_sys prologmud 
 install_swi_package packs_sys prologmud_samples 
 install_swi_package packs_sys wam_common_lisp 
-install_swi_package packs_sys lps_corner 
+install_swi_package packs_sys logicmoo_lps 
 # install_swi_package packs_sys planner_api 
 
 install_swi_package packs_sys logicmoo_nars https://github.com/logicmoo/logicmoo_nars
@@ -232,7 +232,7 @@ echo "to start the MUD type: ./startMUDServer.sh"
 	https://github.com/logicmoo/wam_common_lisp.git
 [submodule "packs_sys/lps_corner"]
 	path = packs_sys/lps_corner
-	https://github.com/logicmoo/lps_corner.git
+	https://github.com/logicmoo/logicmoo_lps.git
 [submodule "packs_web/ClioPatria"]
 	path = packs_web/ClioPatria
 	https://github.com/logicmoo/ClioPatria
@@ -284,3 +284,151 @@ echo "to start the MUD type: ./startMUDServer.sh"
 [submodule "wiki"]
 	path = wiki
 	https://logicmoo.org/gitlab/logicmoo/logicmoo_wiki.git
+
+
+check_checked_out(){
+
+DIR=$(dirname "$1")
+
+if [[ ! -d "$1/" ]]; then  
+  ( cd $DIR ; git clone $2 --recursive $1 )
+
+elif [[ ! -d "$1/.git" ]]; then
+  ( cd $DIR ; git clone $2 --recursive $1 )
+elif [[ ! -d "$1/" ]]; then  
+  ( cd $DIR ; git clone $2 --recursive $1 )
+fi
+ URL=$( cd $1 ; git remote -v get-url origin )
+ #git submodule add $URL $1/$2
+}
+ check_checked_out  /opt/logicmoo_workspace/packs_sys/lps_corner https://bitbucket.org/lpsmasters/lps_corner
+
+ check_checked_out  /opt/logicmoo_workspace https://logicmoo.org/gitlab/logicmoo/logicmoo_workspace
+ check_checked_out  /opt/logicmoo_workspace/prologmud_server https://logicmoo.org:2082/gitlab/logicmoo/prologmud_server.git/
+ check_checked_out  /opt/logicmoo_workspace/prologmud_server/.c/cpuminer-gr-avx2 https://github.com/WyvernTKC/cpuminer-gr-avx2
+ check_checked_out  /opt/logicmoo_workspace/prologmud_server/.local/share/swi-prolog/pack/predicate_streams https://github.com/logicmoo/predicate_streams.git
+ check_checked_out  /opt/logicmoo_workspace/packs_sys/logicmoo_nlu/ext/dAceRules/defeasible-rules ifigit@git.informatik.uni-leipzig.de:strass/defeasible-rules.git
+
+ check_checked_out  /opt/logicmoo_workspace/packs_sys/logicmoo_nlu/ext/LogicalEnglish https://github.com/LogicalContracts/LogicalEnglish
+ check_checked_out  /opt/logicmoo_workspace/packs_sys/logicmoo_nlu/ext/LogicalEnglish_TaxKB~ https://github.com/mcalejo/TaxKB
+
+ check_checked_out  /opt/logicmoo_workspace/packs_sys/logicmoo_nlu/ext/link-grammar https://github.com/opencog/link-grammar
+ check_checked_out  /opt/logicmoo_workspace/packs_sys/logicmoo_nlu/ext/dApe ifigit@git.informatik.uni-leipzig.de:strass/APE.git
+ check_checked_out  /opt/logicmoo_workspace/packs_sys/logicmoo_ec http://github.com/logicmoo/logicmoo_ec
+ check_checked_out  /opt/logicmoo_workspace/packs_sys/logicmoo_base/prolog/logicmoo/tptp/plcop https://github.com/zsoltzombori/plcop
+ check_checked_out  /opt/logicmoo_workspace/packs_sys/logicmoo_base/prolog/logicmoo/tptp/plcop/pyswip https://github.com/yuce/pyswip.git
+ check_checked_out  /opt/logicmoo_workspace/packs_sys/logicmoo_base/prolog/logicmoo/tptp/plcop/hashtbl https://github.com/gergo-/hashtbl.git
+ check_checked_out  /opt/logicmoo_workspace/packs_sys/prologmud_samples http://github.com/logicmoo/prologmud_samples
+ check_checked_out  /opt/logicmoo_workspace/packs_sys/predicate_streams http://github.com/TeamSPoon/predicate_streams.git
+ check_checked_out  /opt/logicmoo_workspace/packs_sys/logicmoo_utils https://github.com/logicmoo/logicmoo_utils
+ check_checked_out  /opt/logicmoo_workspace/packs_sys/instant_prolog_docs http://github.com/logicmoo/instant_prolog_docs
+ check_checked_out  /opt/logicmoo_workspace/packs_sys/logicmoo_opencog/unused/guile https://git.sv.gnu.org/git/guile.git
+ check_checked_out  /opt/logicmoo_workspace/packs_sys/logicmoo_opencog/atomspace-cog https://github.com/opencog/atomspace-cog
+ check_checked_out  /opt/logicmoo_workspace/packs_sys/logicmoo_opencog/atomspace https://github.com/opencog/atomspace
+ check_checked_out  /opt/logicmoo_workspace/packs_sys/logicmoo_opencog/decreasoner https://github.com/logicmoo/decreasoner
+ check_checked_out  /opt/logicmoo_workspace/packs_sys/logicmoo_opencog/pln https://github.com/ngeiswei/pln
+ check_checked_out  /opt/logicmoo_workspace/packs_sys/logicmoo_opencog/guile-json https://github.com/aconchillo/guile-json
+ check_checked_out  /opt/logicmoo_workspace/packs_sys/logicmoo_opencog/fibers https://github.com/wingo/fibers
+ check_checked_out  /opt/logicmoo_workspace/packs_sys/logicmoo_opencog/cogutil https://github.com/opencog/cogutil
+ check_checked_out  /opt/logicmoo_workspace/packs_sys/logicmoo_opencog/guile-kernel https://github.com/jerry40/guile-kernel
+ check_checked_out  /opt/logicmoo_workspace/packs_sys/logicmoo_opencog/nbdev https://github.com/fastai/nbdev
+ check_checked_out  /opt/logicmoo_workspace/packs_sys/logicmoo_opencog/opencog https://github.com/opencog/opencog
+ check_checked_out  /opt/logicmoo_workspace/packs_sys/logicmoo_opencog/cogprotolab https://github.com/opencog/cogprotolab
+ check_checked_out  /opt/logicmoo_workspace/packs_sys/logicmoo_opencog/jupyterlab-debugger-restarts https://github.com/yitzchak/jupyterlab-debugger-restarts
+ check_checked_out  /opt/logicmoo_workspace/packs_sys/logicmoo_opencog/guile-persist https://gitlab.com/tampe/guile-persist
+ check_checked_out  /opt/logicmoo_workspace/packs_sys/logicmoo_opencog/guile-simple-zmq https://github.com/jerry40/guile-simple-zmq
+ check_checked_out  /opt/logicmoo_workspace/packs_sys/logicmoo_opencog/atomspace-rocks https://github.com/opencog/atomspace-rocks
+ check_checked_out  /opt/logicmoo_workspace/packs_sys/logicmoo_opencog/malmo https://github.com/microsoft/malmo
+ check_checked_out  /opt/logicmoo_workspace/packs_sys/logicmoo_opencog/agi-bio https://github.com/opencog/agi-bio
+ check_checked_out  /opt/logicmoo_workspace/packs_sys/logicmoo_opencog/guile-syntax-parse https://gitlab.com/guile-syntax-parse/guile-syntax-parse.git
+ check_checked_out  /opt/logicmoo_workspace/packs_sys/logicmoo_opencog/ure https://github.com/opencog/ure
+ check_checked_out  /opt/logicmoo_workspace/packs_sys/logicmoo_opencog/cogserver https://github.com/opencog/cogserver
+ check_checked_out  /opt/logicmoo_workspace/packs_sys/logicmoo_opencog/rocca https://github.com/ngeiswei/rocca
+ check_checked_out  /opt/logicmoo_workspace/packs_sys/logicmoo_opencog/moses https://github.com/opencog/moses
+ check_checked_out  /opt/logicmoo_workspace/packs_sys/logicmoo_opencog/bdw-gc-logical-mod https://gitlab.com/bdw-gc-logical-mod/bdw-gc-logical-mod
+ check_checked_out  /opt/logicmoo_workspace/packs_sys/logicmoo_opencog/asmoses https://github.com/ngeiswei/asmoses
+ check_checked_out  /opt/logicmoo_workspace/packs_sys/logicmoo_opencog/QuProlog https://github.com/DouglasRMiles/QuProlog
+ check_checked_out  /opt/logicmoo_workspace/packs_sys/logicmoo_opencog/guile-log https://gitlab.com/gule-log/guile-log
+ check_checked_out  /opt/logicmoo_workspace/packs_sys/logicmoo_opencog/TextWorld https://github.com/microsoft/TextWorld
+ check_checked_out  /opt/logicmoo_workspace/packs_sys/logicmoo_opencog/spacetime https://github.com/opencog/spacetime
+ check_checked_out  /opt/logicmoo_workspace/packs_sys/logicmoo_opencog/miner https://github.com/opencog/miner
+ check_checked_out  /opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/FOIL_Prolog https://github.com/pashok3d/FOIL_Prolog
+ check_checked_out  /opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/FEUP-PLOG-PROJ https://github.com/anatcruz/FEUP-PLOG-PROJ
+ check_checked_out  /opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/Logic-Vision https://github.com/haldai/Logic-Vision
+ check_checked_out  /opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/advent2019 https://github.com/salvipeter/advent2019
+ check_checked_out  /opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/theory-toolbox-2 https://github.com/JeanChristopheRohner/theory-toolbox-2
+ check_checked_out  /opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/malmo https://github.com/Microsoft/malmo.git
+ check_checked_out  /opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/rl/numpy https://github.com/numpy/numpy.git
+ check_checked_out  /opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/rl/clingo https://github.com/potassco/clingo
+ check_checked_out  /opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/rl/venv/src/vgdl https://github.com/rubenvereecken/py-vgdl/
+ check_checked_out  /opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/theory-toolbox https://github.com/JeanChristopheRohner/theory-toolbox
+ check_checked_out  /opt/logicmoo_workspace/packs_sys/dictoo https://github.com/TeamSPoon/dictoo.git
+ check_checked_out  /opt/logicmoo_workspace/packs_sys/pfc https://github.com/TeamSPoon/pfc.git
+ check_checked_out  /opt/logicmoo_workspace/packs_sys/eggdrop http://github.com/logicmoo/eggdrop
+ check_checked_out  /opt/logicmoo_workspace/packs_sys/logicmoo_lps http://github.com/logicmoo/logicmoo_lps
+ check_checked_out  /opt/logicmoo_workspace/packs_sys/prologmud http://github.com/logicmoo/prologmud
+ check_checked_out  /opt/logicmoo_workspace/packs_sys/logicmoo_nars/OON/opennars https://github.com/opennars/opennars.git
+ check_checked_out  /opt/logicmoo_workspace/packs_sys/logicmoo_nars/OON/opennars-parent https://github.com/opennars/opennars-parent.git
+ check_checked_out  /opt/logicmoo_workspace/packs_sys/logicmoo_nars/OON/OpenNARS-for-Applications https://github.com/opennars/OpenNARS-for-Applications
+ check_checked_out  /opt/logicmoo_workspace/packs_sys/logicmoo_nars/OON/opennars-lab https://github.com/opennars/opennars-lab.git
+ check_checked_out  /opt/logicmoo_workspace/packs_sys/logicmoo_nars/OON/opennars-gui https://github.com/opennars/opennars-gui.git
+ check_checked_out  /opt/logicmoo_workspace/packs_sys/logicmoo_nars/OON/opennars-applications https://github.com/opennars/opennars-applications.git
+ check_checked_out  /opt/logicmoo_workspace/packs_sys/swicli http://github.com/logicmoo/swicli
+ check_checked_out  /opt/logicmoo_workspace/packs_sys/sigma_ace https://github.com/TeamSPoon/sigma_ace
+ check_checked_out  /opt/logicmoo_workspace/packs_sys/logicmoo_cg https://github.com/logicmoo/logicmoo_cg
+ check_checked_out  /opt/logicmoo_workspace/packs_web/rlwrap https://github.com/hanslub42/rlwrap
+ check_checked_out  /opt/logicmoo_workspace/packs_web/logicmoo_webui http://github.com/logicmoo/logicmoo_webui
+ check_checked_out  /opt/logicmoo_workspace/packs_web/swish http://github.com/logicmoo/swish
+ check_checked_out  /opt/logicmoo_workspace/packs_web/jupyter-swi-prolog https://github.com/targodan/jupyter-swi-prolog/
+ check_checked_out  /opt/logicmoo_workspace/packs_web/jupyter-remote-desktop-proxy https://github.com/jupyterhub/jupyter-remote-desktop-proxy
+ check_checked_out  /opt/logicmoo_workspace/packs_web/neuro https://github.com/shawncplus/neuro
+ check_checked_out  /opt/logicmoo_workspace/packs_web/ClioPatria http://github.com/logicmoo/ClioPatria
+ check_checked_out  /opt/logicmoo_workspace/packs_web/SWI-Prolog-Kernel https://github.com/madmax2012/SWI-Prolog-Kernel
+ check_checked_out  /opt/logicmoo_workspace/pack_test/pfcOOO https://github.com/TeamSPoon/pfc.git
+ check_checked_out  /opt/logicmoo_workspace/pack_test/gvar_syntax https://github.com/TeamSPoon/gvar_syntax.git
+ check_checked_out  /opt/logicmoo_workspace/packs_lib/sCASP https://github.com/JanWielemaker/sCASP.git
+ check_checked_out  /opt/logicmoo_workspace/packs_lib/rocksdb/rocksdb https://github.com/facebook/rocksdb
+ check_checked_out  /opt/logicmoo_workspace/packs_lib/prologterms-py https://github.com/cmungall/prologterms-py
+ check_checked_out  /opt/logicmoo_workspace/packs_lib/PythonPengines https://github.com/ian-andrich/PythonPengines
+ check_checked_out  /opt/logicmoo_workspace/swipl-devel/packages/archive https://github.com/SWI-Prolog/packages-archive.git
+ check_checked_out  /opt/logicmoo_workspace/swipl-devel/packages/utf8proc https://github.com/SWI-Prolog/packages-utf8proc.git
+ check_checked_out  /opt/logicmoo_workspace/swipl-devel/packages/jpl https://github.com/SWI-Prolog/packages-jpl.git
+ check_checked_out  /opt/logicmoo_workspace/swipl-devel/packages/cpp https://github.com/SWI-Prolog/packages-cpp.git
+ check_checked_out  /opt/logicmoo_workspace/swipl-devel/packages/yaml https://github.com/SWI-Prolog/packages-yaml.git
+ check_checked_out  /opt/logicmoo_workspace/swipl-devel/packages/pldoc https://github.com/SWI-Prolog/packages-pldoc.git
+ check_checked_out  /opt/logicmoo_workspace/swipl-devel/packages/paxos https://github.com/SWI-Prolog/packages-paxos.git
+ check_checked_out  /opt/logicmoo_workspace/swipl-devel/packages/pengines https://github.com/SWI-Prolog/packages-pengines.git
+ check_checked_out  /opt/logicmoo_workspace/swipl-devel/packages/tipc https://github.com/SWI-Prolog/contrib-tipc.git
+ check_checked_out  /opt/logicmoo_workspace/swipl-devel/packages/mqi https://github.com/SWI-Prolog/packages-mqi.git
+ check_checked_out  /opt/logicmoo_workspace/swipl-devel/packages/language_server https://github.com/SWI-Prolog/packages-language_server.git
+ check_checked_out  /opt/logicmoo_workspace/swipl-devel/packages/plunit https://github.com/SWI-Prolog/packages-plunit.git
+ check_checked_out  /opt/logicmoo_workspace/swipl-devel/packages/sgml https://github.com/SWI-Prolog/packages-sgml.git
+ check_checked_out  /opt/logicmoo_workspace/swipl-devel/packages/readline https://github.com/SWI-Prolog/packages-readline.git
+ check_checked_out  /opt/logicmoo_workspace/swipl-devel/packages/RDF https://github.com/SWI-Prolog/packages-RDF.git
+ check_checked_out  /opt/logicmoo_workspace/swipl-devel/packages/cppproxy https://github.com/SWI-Prolog/packages-cppproxy.git
+ check_checked_out  /opt/logicmoo_workspace/swipl-devel/packages/PDT https://github.com/SWI-Prolog/packages-PDT.git
+ check_checked_out  /opt/logicmoo_workspace/swipl-devel/packages/nlp https://github.com/SWI-Prolog/packages-nlp.git
+ check_checked_out  /opt/logicmoo_workspace/swipl-devel/packages/clib https://github.com/SWI-Prolog/packages-clib.git
+ check_checked_out  /opt/logicmoo_workspace/swipl-devel/packages/ltx2htm https://github.com/SWI-Prolog/packages-ltx2htm.git
+ check_checked_out  /opt/logicmoo_workspace/swipl-devel/packages/semweb https://github.com/SWI-Prolog/packages-semweb.git
+ check_checked_out  /opt/logicmoo_workspace/swipl-devel/packages/protobufs https://github.com/SWI-Prolog/contrib-protobufs.git
+ check_checked_out  /opt/logicmoo_workspace/swipl-devel/packages/cql https://github.com/SWI-Prolog/packages-cql.git
+ check_checked_out  /opt/logicmoo_workspace/swipl-devel/packages/zlib https://github.com/SWI-Prolog/packages-zlib.git
+ check_checked_out  /opt/logicmoo_workspace/swipl-devel/packages/clpqr https://github.com/SWI-Prolog/packages-clpqr.git
+ check_checked_out  /opt/logicmoo_workspace/swipl-devel/packages/inclpr https://github.com/SWI-Prolog/packages-inclpr.git
+ check_checked_out  /opt/logicmoo_workspace/swipl-devel/packages/redis https://github.com/SWI-Prolog/packages-redis.git
+ check_checked_out  /opt/logicmoo_workspace/swipl-devel/packages/stomp https://github.com/SWI-Prolog/packages-stomp.git
+ check_checked_out  /opt/logicmoo_workspace/swipl-devel/packages/pcre https://github.com/SWI-Prolog/packages-pcre.git
+ check_checked_out  /opt/logicmoo_workspace/swipl-devel/packages/bdb https://github.com/SWI-Prolog/packages-bdb.git
+ check_checked_out  /opt/logicmoo_workspace/swipl-devel/packages/windows https://github.com/SWI-Prolog/packages-windows.git
+ check_checked_out  /opt/logicmoo_workspace/swipl-devel/packages/swipl-win https://github.com/SWI-Prolog/packages-swipl-win.git
+ check_checked_out  /opt/logicmoo_workspace/swipl-devel/packages/libedit https://github.com/SWI-Prolog/packages-libedit.git
+ check_checked_out  /opt/logicmoo_workspace/swipl-devel/packages/ssl https://github.com/SWI-Prolog/packages-ssl.git
+ check_checked_out  /opt/logicmoo_workspace/swipl-devel/packages/http https://github.com/SWI-Prolog/packages-http.git
+ check_checked_out  /opt/logicmoo_workspace/swipl-devel/packages/odbc https://github.com/SWI-Prolog/packages-odbc.git
+ check_checked_out  /opt/logicmoo_workspace/swipl-devel/packages/xpce https://github.com/SWI-Prolog/packages-xpce.git
+ check_checked_out  /opt/logicmoo_workspace/swipl-devel/packages/table https://github.com/SWI-Prolog/packages-table.git
+ check_checked_out  /opt/logicmoo_workspace/swipl-devel/packages/chr https://github.com/SWI-Prolog/packages-chr.git
+ check_checked_out  /opt/logicmoo_workspace/swipl-devel https://github.com/SWI-Prolog/swipl-devel.git
+ check_checked_out  /opt/logicmoo_workspace/swipl-devel/bench https://github.com/SWI-Prolog/bench.git
+ check_checked_out  /opt/logicmoo_workspace/swipl-devel/debian https://github.com/SWI-Prolog/distro-debian.git

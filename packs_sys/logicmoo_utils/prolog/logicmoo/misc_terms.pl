@@ -780,7 +780,7 @@ wom_functor(MP, F, A):- strip_module(MP,_,P),safe_functor(P, F, A).
 % Subst.
 %
 % subst(A,B,C,D):-  quietly((catchv(quietly(nd_subst(A,B,C,D)),E,(dumpST,dmsg(E:nd_subst(A,B,C,D)),fail)))),!.
-subst(A,B,C,D):-  must(nd_subst(A,B,C,D0)),on_x_debug(D=D0),!.
+subst(A,B,C,D):-  (must(nd_subst(A,B,C,D0))),on_x_debug(D=D0),!.
 subst(A,_B,_C,A).
 
 subst_each(A,[NV|List],D):-
@@ -827,7 +827,7 @@ nd_subst1( X, Sk, P, N, P1 ) :- N > 0, univ_term(P , [F|Args]),
 nd_subst2( _,  _, [], [] ).
 nd_subst2( X, Sk, [A|As], [Sk|AS] ) :- X == A, !, nd_subst2( X, Sk, As, AS).
 nd_subst2( X, Sk, [A|As], [A|AS]  ) :- var(A), !, nd_subst2( X, Sk, As, AS).
-nd_subst2( X, Sk, [A|As], [Ap|AS] ) :- nd_subst( A,X,Sk,Ap ),nd_subst2( X, Sk, As, AS).
+nd_subst2( X, Sk, [A|As], [Ap|AS] ) :- nd_subst( A,X,Sk,Ap ),!,nd_subst2( X, Sk, As, AS).
 nd_subst2( _X, _Sk, L, L ).
 
 

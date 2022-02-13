@@ -13,7 +13,6 @@ society_goal.
 % dx(X, Y, X2, Y2) :- X2 #> X.
 % sx(X, Y, X2, Y2) :- X #> X2.
 
-
 %%:- regola([X,Y,_,_], _),  X > X2.
 
 
