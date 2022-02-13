@@ -149,7 +149,7 @@ if [ "${build_2}" == "1" ]; then
 
    tmp_img=logicmoo/logicmoo_starter_image
    #docker build $EXTRA -t $tmp_img .
-   docker container rm logicmoo_builder 
+   docker container rm logicmoo_builder  ; /bin/true
    docker run --name logicmoo_builder -v /opt/logicmoo_workspace:/opt/logicmoo_workspace $tmp_img /startup.sh 
    docker commit logicmoo_builder logicmoo/logicmoo_workspace:latest
    docker container rm logicmoo_builder
