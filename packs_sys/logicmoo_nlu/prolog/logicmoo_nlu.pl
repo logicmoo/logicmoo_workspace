@@ -30,7 +30,8 @@
    reexport(library(logicmoo_nlu/nl_pipeline)),
    set_prolog_flag(access_level,WAS).
 
-:- user:ensure_loaded(library(programk/aiml_2_0)).
+:- user:ensure_loaded(library(logicmoo_programk)).
+:- user:ensure_loaded(library(logicmoo_chat_ensemble)).
 
 %:- break.
 

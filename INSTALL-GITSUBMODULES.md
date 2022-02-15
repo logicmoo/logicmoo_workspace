@@ -301,7 +301,8 @@ fi
  URL=$( cd $1 ; git remote -v get-url origin )
  #git submodule add $URL $1/$2
 }
- check_checked_out  /opt/logicmoo_workspace/packs_sys/lps_corner https://bitbucket.org/lpsmasters/lps_corner
+
+do_check_checked_out {check_checked_out  /opt/logicmoo_workspace/packs_sys/lps_corner https://bitbucket.org/lpsmasters/lps_corner
 
  check_checked_out  /opt/logicmoo_workspace https://logicmoo.org/gitlab/logicmoo/logicmoo_workspace
  check_checked_out  /opt/logicmoo_workspace/prologmud_server https://logicmoo.org:2082/gitlab/logicmoo/prologmud_server.git/
@@ -432,3 +433,5 @@ fi
  check_checked_out  /opt/logicmoo_workspace/swipl-devel https://github.com/SWI-Prolog/swipl-devel.git
  check_checked_out  /opt/logicmoo_workspace/swipl-devel/bench https://github.com/SWI-Prolog/bench.git
  check_checked_out  /opt/logicmoo_workspace/swipl-devel/debian https://github.com/SWI-Prolog/distro-debian.git
+
+}

@@ -189,15 +189,16 @@ if [ "$run" == "1" ]; then
    docker container rm logicmoo 2>/dev/null ; /bin/true
    docker kill logicmoo 2>/dev/null ; /bin/true
    docker ps
-
+   set +x +e
    #defining a copy-on-write filesystem
    umount /opt/logicmoo_workspace_docker 2>/dev/null ; /bin/true
    umount /opt/logicmoo_workspace_docker 2>/dev/null ; /bin/true
-   rm -rf /opt/logicmoo_workspace_upper
-   mkdir -p /opt/logicmoo_workspace_upper
-   mkdir -p /opt/logicmoo_workspace_work
+   rm -rf /opt/logicmoo_workspace_docker_upper
+   rm -rf /opt/logicmoo_workspace_docker_work
+   mkdir -p /opt/logicmoo_workspace_docker_upper
+   mkdir -p /opt/logicmoo_workspace_docker_work
    mkdir -p /opt/logicmoo_workspace_docker 2>/dev/null ; /bin/true
-   mount -t overlay overlay -o lowerdir=/opt/logicmoo_workspace,upperdir=/opt/logicmoo_workspace_upper,workdir=/opt/logicmoo_workspace_work /opt/logicmoo_workspace_docker
+   mount -t overlay overlay -o lowerdir=/opt/logicmoo_workspace,upperdir=/opt/logicmoo_workspace_docker_upper,workdir=/opt/logicmoo_workspace_docker_work /opt/logicmoo_workspace_docker
 
    echo "docker-compose up $DOCKER_UP"
    echo "docker run $DOCKER_RUN"
