@@ -53,12 +53,23 @@ else:
   cmdloop = 1
   
 import spacy
+def try_model(m):
+    global model
+    global nlp
+    try: 
+        nlp = spacy.load(m)
+        return m;
+    except Exception as ex:
+        return model;
+
 from nltk import Tree
-model = "en_core_web_lg" #model = "en_ud_model_sm" #model = "en_ud_model_trf"
+
+model = try_model("en_core_web_sm")
+model = try_model("en_core_web_lg") #model = "en_ud_model_sm" #model = "en_ud_model_trf"
 if len(sysargv) > 0 and sysargv[0]=='-m':
-  sysargv.pop(0)
-  model = sysargv.pop(0);
-nlp = spacy.load(model)
+  model = sysargv.pop(0)
+  model = try_model(model)
+
 # Add BART converter to spaCy's pipeline #nlp.add_pipe("pybart_spacy_pipe", last="True", config={'remove_extra_info':True}) # you can pass an empty config for default behavior, this is just an example
 def do_nlp_proc(text0):
  text0 = text0.strip(' \t\n\r')

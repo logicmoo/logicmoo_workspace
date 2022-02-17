@@ -40,6 +40,7 @@ if [ -n "$RESOLUTION" ]; then
     sed -i "s/1024x768/$RESOLUTION/" /usr/local/bin/xvfb.sh
 fi
 
+
 USER=${USER:-root}
 HOME=/root
 if [ "$USER" != "root" ]; then
@@ -131,7 +132,7 @@ fi
 
 
 # check out our repo
-if [[ ! -d $LOGICMOO_WS/.git ]]
+if [ ! -d $LOGICMOO_WS/.git ]
 then
  cd /opt
  git config --global http.sslVerify false
@@ -155,4 +156,6 @@ rsync -ra $LOGICMOO_WS/docker/rootfs/. /.
 set +x
 
 bash -x "/mounted_fs_build.sh"
+
+touch /finished_startup
 

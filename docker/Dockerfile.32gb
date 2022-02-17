@@ -4,6 +4,7 @@ USER root
 #COPY --from=synthillect/opencog-dev:latest / /
 #COPY --from=synthillect/opencog-jupyter:latest / /
 COPY --from=synthillect/opencog-minerl:latest / /
+COPY --from=logicmoo/logicmoo_workspace:latest / /
 COPY docker/rootfs /
 RUN cp /dockerstartup/generate_container_user /generate_container_user
 

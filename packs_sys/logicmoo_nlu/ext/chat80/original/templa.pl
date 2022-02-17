@@ -171,6 +171,7 @@ property_LF(Area,     value&size&Area,    X,Spatial&_,Y, measure_pred(Spatial,Ar
 type_measure_pred(_AnyObjectType,MeasureType,Area,countV):- MeasureType\==size, MeasureType=Area, clex_attribute(Area).
 
 property_LF(Capital,_,X,_,Y,Out,[],_,_):- 
+   nonvar(Capital),
    \+ is_prop_type80(Capital),!,
    (( \+ \+ ti(Capital,_) ; concrete_type(Capital)) -> PT = type ; PT = prop),
    make_gp(_Spatial,has_prop(PT,Capital),Y,X,Out).
@@ -269,12 +270,14 @@ verb_form_db(chat80,bordered,border,past+part,_). % :- regular_past_db(chat80,bo
 :- style_check(+singleton).
 
 trans_LF(Border,Spatial&Super&_,X,Spatial&Super&_,Y,GP,[],_,_):-  
+  nonvar(Border),
   make_gp(Spatial,has_prop(pred,Border),X,Y,GP),
    verb_type_lex(Border,main+tv),
    symmetric_verb(Spatial, Border).
 
 trans_LF(Border,Spatial&Super&_,X,Spatial&Super&_,Y,GP,[],_,_):-  
    (bind_pos('action',Border);bind_pos('attrib',Border)),nop(spatial(Spatial)),
+   nonvar(Border),
    make_gp(Spatial,has_prop(pred,Border),X,Y,GP).
 
 bind_pos(_,_,_,_):- !,fail.

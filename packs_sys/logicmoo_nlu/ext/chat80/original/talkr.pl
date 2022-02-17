@@ -402,6 +402,7 @@ d80(symmetric_pred(Type,P,X,Y)) :- !, symmetric_pred(Type,P,X,Y). % border
 d80(specific_pred(Type,P,X,Y)) :- !, specific_pred(Type,P,X,Y). % capital 
 %d80(generic_pred(VV,thing,any,_X,_Y)):- !, true.
 d80(generic_pred(VV,Type,P,X,Y)) :- !, generic_pred(VV,Type,P,X,Y). % capital 
+%d80(intrans_pred_direct(_Spatial,P,Type,X,Y)) :- !, trans_pred(Type,P,X,Y). % contain 
 d80(trans_pred(Type,P,X,Y)) :- !, trans_pred(Type,P,X,Y). % contain 
 d80(path_pred(PathSystemPart,ObjType,X,Y)) :- !, path_pred(PathSystemPart,ObjType,X,Y).
 d80(path_pred_linkage(DirectPathSystem,ObjType,X,Y,Z)) :- !, path_pred_linkage(DirectPathSystem,ObjType,X,Y,Z).
@@ -409,7 +410,7 @@ d80(modalized(_,X)):- !, d80(X).
 d80(not(X)):-  !, \+ d80(X).
 d80((A,B)):- nonvar(A),!,d80(A),d80(B).
 d80(G):-  current_predicate(_,G), !, call(G).
-d80(G):- dmsg(missing(d80(G))),fail.
+d80(G):- fail, dmsg(missing(d80(G))),fail.
 
 %d80(there(X)):- d80(X).
 

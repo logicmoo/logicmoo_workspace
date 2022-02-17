@@ -89,12 +89,14 @@ install_converter(XY):- strip_module(XY, M, CNV), install_converter(M, CNV).
 ainz_installed_converter(M, CNVLST, Ins,Out):- ainz(installed_converter(M, CNVLST, Ins,Out)).
 install_pipeline_rule(M, CNVLST, Ins,Outs):-
    make_pipeline_rule(M, CNVLST, Ins,Outs, FullRule),
-   ain((FullRule)),
-   mpred_trace_exec,
+   %mpred_trace_exec,
+   ain(pipeline_rule(FullRule)),
+   ain((FullRule)),   
    dmsg(ain((FullRule))),!.
    
 
 make_pipe_listener(St,S,A,O,P):- O=..[S,A],P=pipeline(St,A,O).
+make_pipe_listener_checked(St,S,A,O,P):- O=..[S,A],P= (pipeline(St,A,O),{should_learn(O)}).
 make_pipe_writer(St,S,A,O,P):- O=..[S,A],P=(call((ignore((should_learn(O),ain(pipeline(St,A,O))))))).
 make_pipeline_rule(M, CNVLST, Ins,Outs, FullRule):- 
  maplist(make_pipe_listener(St,+),Ins,Listeners,Pre),
@@ -103,7 +105,19 @@ make_pipeline_rule(M, CNVLST, Ins,Outs, FullRule):-
  list_to_conjuncts(Post,PostR),
  conjoin(PreR,{M:CNVLST},PreC),
  Rule = (PreC==>{PostR}),
+ dmsg(make_pipeline_rule((Listeners,Writers)-->Rule)),
  subst_each_pipe_node((Listeners,Writers),Rule,FullRule).
+
+make_pipeline_rule_new(M, CNVLST, Ins,Outs, FullRule):- 
+ maplist(make_pipe_listener_checked(St,+),Ins,Listeners,Pre),
+ maplist(make_pipe_listener(St,-),Outs,Writers,Post),
+ list_to_conjuncts(Pre,PreR),
+ list_to_conjuncts(Post,PostR),
+ conjoin(PreR,{M:CNVLST},PreC),
+ Rule = (PreC==>PostR),
+ subst_each_pipe_node((Listeners,Writers),Rule,FullRule).
+
+
 
 subst_each_pipe_node([],O,O).
 subst_each_pipe_node((Ins,Outs),Rule,FullRule):- !,
@@ -129,6 +143,7 @@ install_converter(M, CNV):-
   catch(system:import(M:F/A),_,true),
   %while_tracing_pipeline(dmsg(installed_converter(M, CNVLST))),
   get_in_outs(CNVLST,Ins,Outs),
+  ainz(installed_converter_io(M, CNVLST, Ins,Outs)),
   must_maplist(ainz_installed_converter(M, CNVLST, Ins),Outs),
   install_pipeline_rule(M, CNVLST, Ins,Outs).
 %install_converter(M, CNV):-strip_module(CNV, M, CNVLST), functor(CNVLST, F, A), '@'(export(M:F/A), M), must(assertz_new(installed_converter(M, CNVLST,Ins,Outs))).

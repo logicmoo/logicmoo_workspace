@@ -3,9 +3,9 @@
 %   implements non-overlapping idioms
 %   idiomizes List into Result
 
-:- module(nldata_dictionary_some01,[rememberDictionary2/3, idioms/3, rememberDictionary/0, translatePersonal/3, translatePersonalUTokens/2, rememberDictionary/3, explitVocab/2, to_codes/2, decontract/2, dictionary/3, dictionary_access/3, idioms_each/3, idioms2/3, isa_speechpart/1, lexicicalRefWord/2, translatePersonalCodes3/2, lexicicalRefWords/2, translatePersonalCodes2/2, translatePersonalCodes/2, my_lexicalRef/4]).
+:- module(nldata_dictionary_some01,[rememberDictionary2/3, idioms/3, rememberDictionary/0, translatePersonal/3, translatePersonalUTokens/2, rememberDictionary/3, explitVocab/2, to_codes/2, decontract/2, dictionary/3, dictionary_access/3, idioms2/3, idioms2/3, isa_speechpart/1, lexicicalRefWord/2, translatePersonalCodes3/2, lexicicalRefWords/2, translatePersonalCodes2/2, translatePersonalCodes/2, my_lexicalRef/4]).
 
-:- dynamic((rememberDictionary2/3, idioms/3, rememberDictionary/0, translatePersonal/3, translatePersonalUTokens/2, rememberDictionary/3, explitVocab/2, to_codes/2, decontract/2, dictionary/3, dictionary_access/3, idioms_each/3, idioms2/3, isa_speechpart/1, lexicicalRefWord/2, translatePersonalCodes3/2, lexicicalRefWords/2, translatePersonalCodes2/2, translatePersonalCodes/2, my_lexicalRef/4)).
+:- dynamic((rememberDictionary2/3, idioms/3, rememberDictionary/0, translatePersonal/3, translatePersonalUTokens/2, rememberDictionary/3, explitVocab/2, to_codes/2, decontract/2, dictionary/3, dictionary_access/3, idioms2/3, idioms2/3, isa_speechpart/1, lexicicalRefWord/2, translatePersonalCodes3/2, lexicicalRefWords/2, translatePersonalCodes2/2, translatePersonalCodes/2, my_lexicalRef/4)).
 
 :- use_module(library(logicmoo_plarkc)).
 
@@ -55,74 +55,108 @@ translatePersonal(In,OutputLower,OutputNormal):-
         translatePersonalCodes(CodesLower,OutputLower),
         translatePersonalCodes(CodesNormal,OutputNormal),!.
 
-translatePersonalCodes(Codes,Output):-
-   translatePersonalCodes2(Codes,M),
-   translatePersonalCodes3(M,Output).
-
-%translatePersonalCodes3(M,Output):-append(Output,['?'],M),!.
-translatePersonalCodes3(M,M):-!.
-
-
-translatePersonalCodes2(Codes,Output):-
-	 atom_codes(Atom,Codes),
-	atomSplit(Atom,Words),
-	%writeSTDERR(atomSplit(Atom,Words)),
-	idioms(doctor,Words,Output),!.
+translatePersonalCodes(Codes,Output):- swap_person(Codes,Output).
 	
 
 % ========================================================================================
 % ========================================================================================
 :-export(idioms/3).
 
+idioms(D,F,R):- \+ is_list(F), into_text80(F,T80),!,idioms(D,T80,R).
+
 idioms(doctor,F,R):-!,
-      idioms_each(slang,F,S),
-      idioms_each(contractions,S,C),
-      idioms_each(mud,C,M),
-      idioms_each(irc,M,I),!,
-      idioms_each(swap_person,I,P),
-      idioms_each(doctor ,P,R).
+      idioms2(slang,F,S),
+      idioms2(contractions,S,C),
+      idioms2(mud,C,M),
+      idioms2(irc,M,I),!,
+      idioms2(swap_person,I,P),
+      idioms2(doctor ,P,R).
 
 idioms(e2c,A,A):-!.
-idioms(e2c,A,Z):-!,idioms_each(contractions,A,Z),!.
+idioms(e2c,A,Z):-!,idioms2(contractions,A,Z),!.
 idioms(e2c,A,Z):-!,
-      idioms_each(contractions,A,D),      
-      idioms_each(mud,D,H),
-      idioms_each(irc,H,J),!,
-      idioms_each(slang,J,Z),!.
+      idioms(contractions,A,D),      
+      idioms(mud,D,H),
+      idioms(irc,H,J),!,
+      idioms(slang,J,Z),!.
 
 idioms(D,F,R):-
-      idioms_each(D,F,R).
+      idioms2(D,F,R).
 
-idioms_each(_,[],[]):-!.
-idioms_each(D,F,R):-ignore(D=doctor),!,idioms2(D,F,R).
 
-idioms2(_,[],[]):-!.
-
+/*
 idioms2(D,[Ignore|In],Out):-
 	dictionary(D,ignore_word,Ignore),!,
-	idioms2(D,In,Out).
-	
-idioms2(D,[Ignore|In],Out):-
-	dictionary(_,ignore_word,Ignore),!,
 	idioms2(D,In,Out).
 	
 idioms2(D,[F|In],[R|New]):-
       dictionary_access(D,F,R),!,
       idioms2(D,In,New).
+*/
 
-idioms2(D,In,New):-
-	dictionary_access(D,This,Replace),
-        stringToWords(This,ThisText),
-        stringToWords(Replace,ReplaceText),
-	append_ci(ThisText,After,In),!,
-	idioms2(D,After,NewAfter),!,
-	flatten([[ReplaceText,NewAfter]],New),!.
+dig_into_dict([A,B,C],[_,_,_],[A,B,C]).
+dig_into_dict([A,B],[_,_],[A,B]).
+dig_into_dict([A],[_],[A]).
+dig_into_dict([A],[_],A):- freeze(A, atom_or_string(A)).
+
+idioms2(D,F,R):- \+ is_list(F), into_text80(F,T80),!,idioms2(D,T80,R).
+idioms2(D,In,New):- D==contractions,idioms3(D,In,M),In\==M,!,idioms2(D,M,New).
+idioms2(D,In,New):- idioms3(D,In,New).
+idioms2(D,F,F).
+
+idioms3(_,[],[]):-!.
+idioms3(D,In,New):-
+	((
+  dig_into_dict(Match,From,Dig),
+  dictionary_access(D,Dig,Replace),
+  append(From,Right,In),
+  %Match=From,
+  (Match=From->true;maplist(nc_equal_s,Match,From)))),
+  copy_term(Dig+Replace,Dig+Replace,Goals),maplist(call,Goals),
+	idioms3(D,Right,NewAfter),
+	flatten([Replace,NewAfter],New),!.
+
+/*idioms3(D,[A|In],NewAfter):-
+      idioms3(D,In,New),
+      flatten([A,New],NewAfter).
+*/
+idioms3(D,[A|In],[A|New]):- idioms3(D,In,New).
 
 
-idioms2(D,[A|In],[A|New]):-
-      idioms2(D,In,New).
+:-export(swap_person/2).
+swap_person(F,R):- idioms(doctor,F,R).
 
+:- export(swap_person/1).
+swap_person(P):- swap_person(P,X),writeq(P=X),nl.
 
+:- export(swap_person/0).
+swap_person:-  make, swap_persons.
+swap_persons:- 
+ swap_person([i,am,here]),
+ swap_person([u,r,here]),
+ swap_person([u,r,me]),
+ swap_person([m,i,u,?]),
+ swap_person('I cant?'),
+ swap_person('Me myself and I.'),
+ swap_person('my self and I.'),
+ swap_person('I cannot?'),
+ swap_person("I've and you've seen it"),
+ swap_person(['I','cant',?]),
+ swap_person(['I','can','t',?]),
+ swap_person([i,can,'\'t']),
+ swap_person([i,can,'\'','t']),
+ swap_person('I am there?'),!.
+
+%?-   swap_person('I am here',X),writeq(X).
+%?-   swap_person('I am here',X),writeq(X).
+nc_equal_s(A,B):-( ( \+ atom_or_string(A));( \+ atom_or_string(B))),!,A=B.
+nc_equal_s(A,B):-upcase_atom(A,A1),upcase_atom(B,B1),B1=A1.
+% nc_equal_s(A0,B0):- string_equal_ci(A0,B0),!.
+%nc_equal_s(A0,B0):- as_nc_str(A0,AR),as_nc_str(B0,BR),!, AR = BR.
+
+wappend_ci([], L, L).
+wappend_ci([H|T], L, [HA|R]) :- freeze(H,freeze(HA,string_equal_ci(H,HA))),
+    wappend_ci(T, L, R).
 
 
 decontract([],_):-!,fail.
@@ -131,6 +165,9 @@ decontract(im,[i,am]):-!.
 decontract(youre,[you,are]):-!.
 decontract(H,[H]):-!.
 
+
+listify_text(B0,B):- is_list(B0),!,B=B0.
+listify_text(B0,B):- [B]=B0.
 
 dictionary_access(D,B,A):-dictionary(D,B,A).
 /*
@@ -165,236 +202,156 @@ explitVocab(huh,interjects).
 :-dynamic(dictionary/3).
 
 
-dictionary(contractions,['I','\'','m'],['I',am]).
-dictionary(contractions,[can,'\'',t],[can,not]).
-dictionary(contractions,[cannot],[can,not]).
-dictionary(contractions,[cant],[can,not]).
-dictionary(contractions,[couldn,'\'',t],[could,not]).
-dictionary(contractions,[couldnt],[could,not]).
-dictionary(contractions,[didn,'\'',t],[did,not]).
-dictionary(contractions,[didnt],[did,not]).
-dictionary(contractions,[don,'\'',t],[do,not]).
-dictionary(contractions,[dont],[do,not]).
-dictionary(contractions,[isn,'\'',t],[is,not]).
-dictionary(contractions,[isnt],[is,not]).
-dictionary(contractions,[shant],[should,not]).
-dictionary(contractions,[shouldn,'\'',t],[should,not]).
-dictionary(contractions,[shouldnt],[should,not]).
-% dictionary(contractions,[will,not],[wont]).
-dictionary(contractions,[won,'\'',t],[will,not]).
-dictionary(contractions,[wont],[will,not]).
-dictionary(contractions,youre,[you,are]).
 
+dictionary(contractions,[cannot],[can,not]).
+dictionary(contractions,[Can,'\'',T],[Can2,Not2]):- dict_c([Can,*,T],[Can2,Not2]).
+dictionary(contractions,[Can,'\'',T],[Can,Not2]):- dict_c([I,*,T],[I,Not2]).
+dictionary(contractions,[Cant],[Can2,Not2]):- dict_c([Can,*,T],[Can2,Not2]),atom_concat(Can,T,Cant).
+dictionary(contractions,[AposT],['\'',T]):-dict_c([_,*,T],_),
+  freeze(AposT,(atom_or_string(AposT),atom_concat('\'',T,AposT))).
+
+dict_c([can,*,t],[can,not]).
+dict_c([couldn,*,t],[could,not]).
+dict_c([didn,*,t],[did,not]).
+dict_c([don,*,t],[do,not]).
+dict_c([i,*,ll],[i,will]).
+dict_c([i,*,d],[i,would]).
+dict_c([i,*,m],[i,am]).
+dict_c([i,*,ve],[i,have]).
+dict_c([isn,*,t],[is,not]).
+dict_c([shal,*,t],[shall,not]).
+dict_c([shan,*,t],[should,not]).
+dict_c([shouldn,*,t],[should,not]).
+dict_c([that,*,s],[that,is]).
+dict_c([what,*,s],[what,is]).
+dict_c([ain,*,t],[are,not]).
+dict_c([won,*,t],[will,not]).
+dict_c([you,*,re],[you,are]).
 %dictionary(contractions,['Let',me,_],[yes]).
 %dictionary(contractions,[let,me,_],[yes]).
 %dictionary(contractions,['Lets',_],[yes]).
 %dictionary(contractions,['lets',_],[yes]).
-dictionary(contractions,['thats'],['that','is']).
+
+%dictionary(contractions,u,you).
+%swap_person(them,'im',youre).
 
 
+
+dictionary(swap_person,i,you).
+dictionary(swap_person,you,me).
+dictionary(swap_person,Me,You):- swap_person0(self,Me,You).
+dictionary(swap_person,You,Me):- swap_person0(self,Me,You).
+
+swap_person0(Who,[You,Are],[I,Am]):- swap_person1(self,[Are,You],[Am,I]).
+swap_person0(Who,Me,You):- swap_person1(self,Me,You).
+swap_person1(self,[you,are],[i,am]).
+swap_person1(self,yourself,myself).
+swap_person1(self,yours,mine).
+swap_person1(self,your,my).
+swap_person1(self,there,here).
+swap_person1(self,mine,yours).
+swap_person1(self,me,you).
+%swap_person(them,we,you).
+%swap_person(them,them,they).
+%swap_person(them,belong,belonging).
+%swap_person(them,would,will).
+%swap_person(them,were,was).
+%swap_person(them,us,you).
+%swap_person(them,i,you).
+%swap_person(them,his,my).
+%swap_person(them,him,me).
+%swap_person(them,he,i).
+%swap_person(them,am,are).
+%swap_person(them,[hes],[i,am]).
+%swap_person(them,['Hes'],[i,am]).
+%swap_person(them,['he',is],[i,am]).
+%swap_person(them,'He',i).
 
 dictionary(slang,[precieved],[percieved]).
-
-dictionary(swap_person,[you,are],[im]).
-dictionary(swap_person,[i,am],[youre]).
-dictionary(swap_person,[u,are],[im]).
-dictionary(swap_person,['ill'],[you,will]).
-dictionary(swap_person,['ive'],[you,have]).
-dictionary(swap_person,your,my).
-dictionary(swap_person,yours,mine).
-dictionary(swap_person,there,here).
-dictionary(swap_person,here,there).
-dictionary(swap_person,were,was).
-dictionary(swap_person,me,you).
-dictionary(swap_person,myself,yourself).
-dictionary(swap_person,yourself,myself).
-dictionary(swap_person,'i',you).
-dictionary(swap_person,'I',you).
-dictionary(swap_person,'im',youre).
-dictionary(swap_person,'youre',im).
-dictionary(swap_person,am,are).
-dictionary(swap_person,would,will).
-dictionary(swap_person,i,you).
-dictionary(swap_person,you,i).
-dictionary(swap_person,u,i).
-dictionary(swap_person,my,your).
-dictionary(swap_person,mine,yours).
-dictionary(swap_person,us,you).
-dictionary(swap_person,we,you).
-dictionary(swap_person,them,they).
-dictionary(swap_person,belong,belonging).
-
-dictionary(swap_person,he,i).
-dictionary(swap_person,[hes],[i,am]).
-dictionary(swap_person,['Hes'],[i,am]).
-dictionary(swap_person,'He',i).
-
-dictionary(swap_person,['he',is],[i,am]).
-dictionary(swap_person,his,my).
-dictionary(swap_person,him,me).
-
-dictionary(slang,r,are).
-dictionary(slang,[wanna],[want,to]).
-
-dictionary(slang,sup,hello).
-dictionary(slang,hijm,him).
-
 dictionary(slang,yur,your).
 dictionary(slang,yuor,your).
+dictionary(slang,wuv,love).
+dictionary(slang,wut,what).
 dictionary(slang,wazzup,hello).
 dictionary(slang,wazup,hello).
-dictionary(slang,greetings,hello).
-dictionary(slang,[whats,up],[hello]).
-dictionary(slang,[you,know],[yes]).
-dictionary(slang,[whats],[what,is]).
-dictionary(slang,mom,mother).
+dictionary(slang,waht,what).
+dictionary(slang,teh,the).
+dictionary(slang,m,am).
+dictionary(slang,tard,retard).
+dictionary(slang,sup,hello).
+dictionary(slang,r,are).
+dictionary(slang,c,see).
+dictionary(slang,u,you).
+dictionary(slang,neph,nephrael).
 dictionary(slang,mum,mother).
 dictionary(slang,mommy,mother).
 dictionary(slang,momma,mother).
+dictionary(slang,mom,mother).
+dictionary(slang,mebbe,maybe).
 dictionary(slang,mamma,mother).
-dictionary(slang,dad,father).
+dictionary(slang,luv,love).
+dictionary(slang,lubbin,lubbing).
+dictionary(slang,lub,love).
+dictionary(slang,k,ok).
+dictionary(slang,hijm,him).
+dictionary(slang,hi,hello).
+dictionary(slang,greetings,hello).
 dictionary(slang,daddy,father).
 dictionary(slang,dadda,father).
-
-dictionary(slang,waht,what).
-dictionary(slang,wut,what).
-dictionary(slang,[you,know],[yes]).
-dictionary(slang,teh,the).
-dictionary(slang,k,ok).
-% dictionary(slang,re,hello).
-dictionary(slang,hi,hello).
+dictionary(slang,dad,father).
+dictionary(slang,cuz,because).
+dictionary(slang,cuase,because).
 dictionary(slang,cause,because).
 dictionary(slang,casue,because).
-dictionary(slang,cuase,because).
-dictionary(slang,cuz,because).
-dictionary(slang,luv,love).
-dictionary(slang,wuv,love).
-dictionary(slang,lub,love).
-dictionary(slang,lubbin,lubbing).
-dictionary(slang,becasue,because).
-dictionary(slang,mebbe,maybe).
-
-
-%dictionary(mud,X,Y):-catch(mud_dictionary(X,Y),_,fail).
-
-dictionary(doctor,dreamed,dreamt).
-dictionary(doctor,fantasy,dreamt).
-dictionary(doctor,fantasies,dreamt).
-dictionary(doctor,dreams,dream).
-dictionary(doctor,how,how).
-dictionary(doctor,what,what).
-dictionary(doctor,when,when).
-dictionary(doctor,alike,dit).
-dictionary(doctor,different,dit).
-dictionary(doctor,same,dit).
-dictionary(doctor,opposite,dit).
-dictionary(doctor,certainly,yes).
-dictionary(doctor,ok,ok).
-dictionary(doctor,yep,yes).
-dictionary(doctor,yup,yes).
-dictionary(doctor,yeah,yes).
-dictionary(doctor,maybe,perhaps).
-dictionary(doctor,deutsch,xfremd).
-dictionary(doctor,francais,xfremd).
-dictionary(doctor,espanol,xfremd).
-dictionary(doctor,machine,computer).
-dictionary(doctor,machines,computer).
-dictionary(doctor,computers,computer).
-dictionary(doctor,whatever,insult).
-dictionary(doctor,everybody,everyone).
-dictionary(doctor,nobody,everyone).
-dictionary(doctor,would,will).
-
-%dictionary(doctor,X,Y):-dictionary(swap_person,X,Y).
-
-dictionary(swap_person,[you,are],[im]).
-dictionary(swap_person,[i,am],[youre]).
-dictionary(swap_person,[u,are],[im]).
-dictionary(swap_person,['ill'],[you,will]).
-dictionary(swap_person,['ive'],[you,have]).
-dictionary(swap_person,your,my).
-dictionary(swap_person,yours,mine).
-dictionary(swap_person,there,here).
-dictionary(swap_person,here,there).
-dictionary(swap_person,were,was).
-dictionary(swap_person,me,you).
-dictionary(swap_person,myself,yourself).
-dictionary(swap_person,yourself,myself).
-dictionary(swap_person,'i',you).
-dictionary(swap_person,'I',you).
-dictionary(swap_person,'im',youre).
-dictionary(swap_person,'youre',im).
-dictionary(swap_person,am,are).
-dictionary(swap_person,are,am).
-dictionary(swap_person,would,will).
-dictionary(swap_person,i,you).
-dictionary(swap_person,you,i).
-dictionary(swap_person,u,i).
-dictionary(swap_person,my,your).
-dictionary(swap_person,mine,yours).
-dictionary(swap_person,us,you).
-dictionary(swap_person,we,you).
-dictionary(swap_person,them,they).
-dictionary(swap_person,belong,belonging).
-
-dictionary(swap_person,he,i).
-dictionary(swap_person,[hes],[i,am]).
-dictionary(swap_person,['Hes'],[i,am]).
-dictionary(swap_person,'He',i).
-
-dictionary(swap_person,['he',is],[i,am]).
-dictionary(swap_person,his,my).
-dictionary(swap_person,him,me).
-%dictionary(irc,ignore_word,prolog).
-dictionary(irc,ignore_word,'jllykifsh').
-dictionary(irc,ignore_word,'jellyfish').
-dictionary(irc,ignore_word,'jlly').
-dictionary(irc,ignore_word,'jll').
-
-dictionary(slang,r,are).
-dictionary(slang,[wanna],[want,to]).
-
-dictionary(slang,sup,hello).
-dictionary(slang,hijm,him).
-
-dictionary(slang,yur,your).
-dictionary(slang,[the,bot],[me]).
 dictionary(slang,bith,bitch).
-dictionary(slang,yuor,your).
-dictionary(slang,wazzup,hello).
-dictionary(slang,wazup,hello).
-dictionary(slang,greetings,hello).
+dictionary(slang,becasue,because).
+dictionary(slang,[you,know],[yes]).
+dictionary(slang,[wtf],[what,the,fuck]).
+dictionary(slang,[whats],[what,is]).
 dictionary(slang,[whats,up],[hello]).
 dictionary(slang,[what,is,up],[hello]).
-dictionary(slang,[whats],[what,is]).
-dictionary(slang,mom,mother).
-dictionary(slang,mum,mother).
-dictionary(slang,mommy,mother).
-dictionary(slang,momma,mother).
-dictionary(slang,mamma,mother).
-dictionary(slang,dad,father).
-dictionary(slang,daddy,father).
-dictionary(slang,dadda,father).
-
-dictionary(slang,waht,what).
-dictionary(slang,wut,what).
-dictionary(slang,[wtf],[what,the,fuck]).
-dictionary(slang,teh,the).
-dictionary(slang,k,ok).
+dictionary(slang,[wanna],[want,to]).
+dictionary(slang,[the,bot],[me]).
+dictionary(irc,ignore_word,'jllykifsh').
+dictionary(irc,ignore_word,'jlly').
+dictionary(irc,ignore_word,'jll').
+dictionary(irc,ignore_word,'jellyfish').
+dictionary(doctor,yup,yes).
+dictionary(doctor,yep,yes).
+dictionary(doctor,yeah,yes).
+dictionary(doctor,would,will).
+dictionary(doctor,when,when).
+dictionary(doctor,whatever,insult).
+dictionary(doctor,what,what).
+dictionary(doctor,dit,same).
+dictionary(doctor,opposite,dit).
+dictionary(doctor,ok,ok).
+dictionary(doctor,nobody,everyone).
+dictionary(doctor,maybe,perhaps).
+dictionary(doctor,machines,computer).
+dictionary(doctor,machine,computer).
+dictionary(doctor,how,how).
+dictionary(doctor,francais,xfremd).
+dictionary(doctor,fantasy,dreamt).
+dictionary(doctor,fantasies,dreamt).
+dictionary(doctor,everybody,everyone).
+dictionary(doctor,espanol,xfremd).
+dictionary(doctor,dreams,dream).
+dictionary(doctor,dreamed,dreamt).
+dictionary(doctor,different,dit).
+dictionary(doctor,deutsch,xfremd).
+dictionary(doctor,computers,computer).
+dictionary(doctor,certainly,yes).
+dictionary(doctor,alike,dit).
+/*
+*/
+%swap_person(them,are,am).
+%swap_person(them,am,are).
+%dictionary(mud,X,Y):-catch(mud_dictionary(X,Y),_,fail).
+%dictionary(irc,ignore_word,prolog).
+%dictionary(doctor,X,Y):-dictionary(swap_person,X,Y).
 % dictionary(slang,re,hello).
-dictionary(slang,hi,hello).
-dictionary(slang,tard,retard).
-dictionary(slang,neph,nephrael).
-dictionary(slang,cause,because).
-dictionary(slang,casue,because).
-dictionary(slang,cuase,because).
-dictionary(slang,cuz,because).
-dictionary(slang,luv,love).
-dictionary(slang,wuv,love).
-dictionary(slang,lub,love).
-dictionary(slang,lubbin,lubbing).
-dictionary(slang,becasue,because).
-dictionary(slang,mebbe,maybe).
+
 %dictionary(slang,X,Y):-isa_mem(X,is,Y),rnd(25).
 
 

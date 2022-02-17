@@ -715,6 +715,7 @@ reduce3(^(Vars,P), ^(NewVars,R)):- flatten([Vars],VarsL),select(A1,VarsL,NewVars
   sub_term(E,P), compound(E), E = generic_pred(_X,_F,has_prop(type,T),A2,I),
   A1==A2,
   not_outter_var(A1),
+
   subst(P,E,ti(T,I),R), \+ sub_var(A1,R).
 
 /*

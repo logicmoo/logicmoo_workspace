@@ -553,13 +553,6 @@ hide_plur_root_noun(N,_,River):- N\==0, atom(River), verb_form_lex(River,_,_,_).
 which_var(Rivers,River,N):- arg(N,v(Rivers,River),V),var(V),!.
 which_var(_,_,0).
 
-noun_plu_db(talkdb,Rivers,River):- which_var(Rivers,River,N),talkdb:talk_db(noun1,River,Rivers),  \+ hide_plur_root_noun(N,Rivers,River).
-noun_plu_db(talkdb,Rivers,River):- noun_plu_db(clex,Rivers,River).
-noun_plu_db(clex,Rivers,River):- which_var(Rivers,River,N), clex:noun_pl(Rivers,River,_), 
-  \+ (hide_plur_root_noun(N,Rivers,River),
-  nop(dmsg(warn(hide_plur_root_noun(N,Rivers,River)))),
-  nop(rtrace(hide_plur_root_noun(N,Rivers,River)))).
-
 noun_plu_db(chat80,capitals,capital).
 noun_plu_db(chat80,cities,city).
 noun_plu_db(chat80,continents,continent).
@@ -574,6 +567,13 @@ noun_plu_db(chat80,regions,region).
 noun_plu_db(chat80,rivers,river).
 noun_plu_db(chat80,Types,Type):- bind_pos('type',Type,'s',Types).
 noun_plu_db(chat80,seas,sea).
+noun_plu_db(talkdb,Rivers,River):- \+ (nonvar(River);nonvar(Rivers)),!,fail.
+noun_plu_db(talkdb,Rivers,River):- which_var(Rivers,River,N),(nonvar(River);nonvar(Rivers)),talkdb:talk_db(noun1,River,Rivers),  \+ hide_plur_root_noun(N,Rivers,River).
+noun_plu_db(talkdb,Rivers,River):- noun_plu_db(clex,Rivers,River).
+noun_plu_db(clex,Rivers,River):- which_var(Rivers,River,N), clex:noun_pl(Rivers,River,_), 
+  \+ (hide_plur_root_noun(N,Rivers,River),
+  nop(dmsg(warn(hide_plur_root_noun(N,Rivers,River)))),
+  nop(rtrace(hide_plur_root_noun(N,Rivers,River)))).
 
 noun_sing_plu_lex(chat80,fish).
 noun_sing_plu_lex(Chat80,Million):- val_noun_sing_plu_lex(Chat80,Million).

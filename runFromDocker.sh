@@ -146,13 +146,14 @@ fi
 if [ "${build_2}" == "1" ]; then
    set +e +x
    cd $LOGICMOO_WS
-
+   docker image rm logicmoo/logicmoo_server_32gb:latest ; /bin/true
    tmp_img=logicmoo/logicmoo_starter_image
    #docker build $EXTRA -t $tmp_img .
    docker container rm logicmoo_builder  ; /bin/true
    docker run --name logicmoo_builder -v /opt/logicmoo_workspace:/opt/logicmoo_workspace $tmp_img /startup.sh 
    docker commit logicmoo_builder logicmoo/logicmoo_workspace:latest
    docker container rm logicmoo_builder
+   
    echo MAYBE: docker push logicmoo/logicmoo_workspace
    export build=1
 fi
@@ -161,9 +162,11 @@ if [ "${push}" == "1" ]; then
    docker push logicmoo/logicmoo_workspace
 fi
 
-if [ "${build}" == "1" ]; then
-     set +e +x
+if [ "${build}" == "1" ]; then     
      cd $LOGICMOO_WS
+     [ ! -d /opt/logicmoo_workspace/docker/rootfs/usr/local/lib/python3.10/dist-packages/en_core_web_lg ] && \cp -a /usr/local/lib/python3.10/dist-packages/en_core_web_lg /opt/logicmoo_workspace/docker/rootfs/usr/local/lib/python3.10/dist-packages
+     set +e +x
+     #docker image rm logicmoo/logicmoo_server_32gb
      docker build -f docker/Dockerfile.32gb $EXTRA -t logicmoo/logicmoo_server_32gb . 
      echo MAYBE: docker push logicmoo/logicmoo_server_32gb
      cd $LOGICMOO_WS
