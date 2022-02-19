@@ -12,6 +12,7 @@
 %:- reexport(library(agi_lib/doc_print)).
 
 :- reexport(library(abduction/adv_mindi)).
+:- ensure_loaded(library(agi_lib/agent)).
 %:- reexport(library(abduction/adv_mindi2)).
 
 

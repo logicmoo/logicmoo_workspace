@@ -142,6 +142,7 @@ swap_persons:-
  swap_person('I cannot?'),
  swap_person("I've and you've seen it"),
  swap_person(['I','cant',?]),
+ swap_person(['I','can\'t',?]),
  swap_person(['I','can','t',?]),
  swap_person([i,can,'\'t']),
  swap_person([i,can,'\'','t']),
@@ -205,6 +206,7 @@ explitVocab(huh,interjects).
 
 dictionary(contractions,[cannot],[can,not]).
 dictionary(contractions,[Can,'\'',T],[Can2,Not2]):- dict_c([Can,*,T],[Can2,Not2]).
+dictionary(contractions,[CanT],[Can2,Not2]):- dict_c([Can,*,T],[Can2,Not2]),atomic_list_concat([Can,'\'',T],CanT).
 dictionary(contractions,[Can,'\'',T],[Can,Not2]):- dict_c([I,*,T],[I,Not2]).
 dictionary(contractions,[Cant],[Can2,Not2]):- dict_c([Can,*,T],[Can2,Not2]),atom_concat(Can,T,Cant).
 dictionary(contractions,[AposT],['\'',T]):-dict_c([_,*,T],_),
@@ -238,34 +240,30 @@ dict_c([you,*,re],[you,are]).
 
 
 dictionary(swap_person,i,you).
-dictionary(swap_person,you,me).
+dictionary(swap_person,me,you).
 dictionary(swap_person,Me,You):- swap_person0(self,Me,You).
 dictionary(swap_person,You,Me):- swap_person0(self,Me,You).
 
-swap_person0(Who,[You,Are],[I,Am]):- swap_person1(self,[Are,You],[Am,I]).
-swap_person0(Who,Me,You):- swap_person1(self,Me,You).
+swap_person0(Who,[You,Are],[I,Am]):- swap_person1(Who,[Are,You],[Am,I]).
+swap_person0(Who,Me,You):- swap_person1(Who,Me,You).
+
 swap_person1(self,[you,are],[i,am]).
 swap_person1(self,yourself,myself).
 swap_person1(self,yours,mine).
 swap_person1(self,your,my).
 swap_person1(self,there,here).
 swap_person1(self,mine,yours).
-swap_person1(self,me,you).
 %swap_person(them,we,you).
 %swap_person(them,them,they).
 %swap_person(them,belong,belonging).
 %swap_person(them,would,will).
 %swap_person(them,were,was).
 %swap_person(them,us,you).
-%swap_person(them,i,you).
+
 %swap_person(them,his,my).
 %swap_person(them,him,me).
 %swap_person(them,he,i).
-%swap_person(them,am,are).
-%swap_person(them,[hes],[i,am]).
-%swap_person(them,['Hes'],[i,am]).
 %swap_person(them,['he',is],[i,am]).
-%swap_person(them,'He',i).
 
 dictionary(slang,[precieved],[percieved]).
 dictionary(slang,yur,your).
@@ -323,8 +321,6 @@ dictionary(doctor,would,will).
 dictionary(doctor,when,when).
 dictionary(doctor,whatever,insult).
 dictionary(doctor,what,what).
-dictionary(doctor,dit,same).
-dictionary(doctor,opposite,dit).
 dictionary(doctor,ok,ok).
 dictionary(doctor,nobody,everyone).
 dictionary(doctor,maybe,perhaps).
@@ -338,11 +334,15 @@ dictionary(doctor,everybody,everyone).
 dictionary(doctor,espanol,xfremd).
 dictionary(doctor,dreams,dream).
 dictionary(doctor,dreamed,dreamt).
-dictionary(doctor,different,dit).
+
+%dictionary(doctor,different,dit).
+%dictionary(doctor,dit,same).
+%dictionary(doctor,opposite,dit).
+%dictionary(doctor,alike,dit).
+
 dictionary(doctor,deutsch,xfremd).
 dictionary(doctor,computers,computer).
 dictionary(doctor,certainly,yes).
-dictionary(doctor,alike,dit).
 /*
 */
 %swap_person(them,are,am).

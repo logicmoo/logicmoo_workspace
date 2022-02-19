@@ -93,29 +93,54 @@ install_pipeline_rule(M, CNVLST, Ins,Outs):-
    ain(pipeline_rule(FullRule)),
    ain((FullRule)),   
    dmsg(ain((FullRule))),!.
-   
 
-make_pipe_listener(St,S,A,O,P):- O=..[S,A],P=pipeline(St,A,O).
-make_pipe_listener_checked(St,S,A,O,P):- O=..[S,A],P= (pipeline(St,A,O),{should_learn(O)}).
-make_pipe_writer(St,S,A,O,P):- O=..[S,A],P=(call((ignore((should_learn(O),ain(pipeline(St,A,O))))))).
+
+pipe_add(X):- ain(pipeline(X)).
+pipe_rem(X):- ain(\+ pipeline(X)).
+test_pipeline(A):-
+  any_to_string(A,X),
+  pipe_add(X),
+  listing(pipeline(input(X),_,_)),
+  pipe_rem(X),
+  listing(pipeline(input(X),_,_)).
+
+baseKB:sanity_test(pipe_add_rem):-
+  test_pipeline("Joe loves Mary").
+
+lst_cj(List,Out):- lst_cj(true,List,Out).
+lst_cj(Was,[],Was):-!.
+lst_cj(Was,[H|T],Out):-!,
+  lst_cj(Was,H,M),
+  lst_cj(M,T,Out).
+lst_cj(Was,(H,T),Out):-!,
+  lst_cj(Was,H,M),
+  lst_cj(M,T,Out).
+lst_cj(Was,H,Out):-
+  conjoin(Was,H,Out).
+
+should_learn_as(O,_Type,OO):- should_learn(O),OO=O.
+make_pipe_listener(St,S,A,O,pipeline(St,A,O)/should_learn(O)):- O=..[S,A].
+make_pipe_writer(St,S,A,O,pipeline(St,A,O)):- O=..[S,A].
+%make_pipe_writer(St,S,A,O,P):- O=..[S,A],P=(call((ignore((should_learn(O),ain(pipeline(St,A,O))))))).
+
+make_pipeline_rule(M, CNVLST, Ins,Outs, FullRule):- Outs=[Out],!,
+ maplist(make_pipe_listener(St,+),Ins,Listeners,Pre),
+ maplist(make_pipe_writer(St,-),Outs,Writers,Post),
+ lst_cj(Pre,PreR),
+ lst_cj(Post,PostR),
+ conjoin(PreR,{M:CNVLST,should_learn(-Out)},PreC),
+ Rule = (PreC==>PostR),
+ subst_each_pipe_node((Listeners,Writers),Rule,FullRule),!.
+
 make_pipeline_rule(M, CNVLST, Ins,Outs, FullRule):- 
  maplist(make_pipe_listener(St,+),Ins,Listeners,Pre),
  maplist(make_pipe_writer(St,-),Outs,Writers,Post),
- list_to_conjuncts(Pre,PreR),
- list_to_conjuncts(Post,PostR),
- conjoin(PreR,{M:CNVLST},PreC),
- Rule = (PreC==>{PostR}),
- dmsg(make_pipeline_rule((Listeners,Writers)-->Rule)),
- subst_each_pipe_node((Listeners,Writers),Rule,FullRule).
-
-make_pipeline_rule_new(M, CNVLST, Ins,Outs, FullRule):- 
- maplist(make_pipe_listener_checked(St,+),Ins,Listeners,Pre),
- maplist(make_pipe_listener(St,-),Outs,Writers,Post),
- list_to_conjuncts(Pre,PreR),
- list_to_conjuncts(Post,PostR),
+ lst_cj(Pre,PreR),
+ lst_cj(Post,PostR),
  conjoin(PreR,{M:CNVLST},PreC),
  Rule = (PreC==>PostR),
- subst_each_pipe_node((Listeners,Writers),Rule,FullRule).
+ subst_each_pipe_node((Listeners,Writers),Rule,FullRule),!.
+
 
 
 
@@ -128,7 +153,7 @@ subst_each_pipe_node([Ins|Outs],Rule,FullRule):- !,
   subst_each_pipe_node(Outs,M,FullRule).
 subst_each_pipe_node(I,R,O):- subst(R,I,_,O).  
 
-:- ain((pipeline(Text)==>pipeline(Text,input,Text))).
+:- ain((pipeline(Text)==>pipeline(input(Text),input,Text))).
 
 :-share_mp(install_converter/2).
 install_converter(M, XY):- pi_splits(XY, X, Y), !, install_converter(M, X), install_converter(M, Y).

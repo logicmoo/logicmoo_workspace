@@ -87,6 +87,9 @@ skip_learning(X):- var(X),!.
 skip_learning([]).
 skip_learning(failure).
 skip_learning(time_limit_exceeded(_,_)).
+skip_learning(warn(_)).
+skip_learning("None").
+skip_learning('None').
 skip_learning(error(_)).
 skip_learning(drs([],[])).
 skip_learning(E):- sub_term(X,E),compound(X),X=unparsed(_,_),!.
