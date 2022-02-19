@@ -7,7 +7,7 @@
  
 do(E1 : E2,S,S1) :- do(E1,S,S2), do(E2,S2,S1).
 do(call(P),S,S) :- holds(P,S).
-do(E1 # E2,S,S1) :- do(E1,S,S1) ; do(E2,S,S1).
+do( #(E1 , E2),S,S1) :- do(E1,S,S1) ; do(E2,S,S1).
 do(if(P,E1,E2),S,S1) :- do((call(P) : E1) # (call( not P) : E2),S,S1).
 do(star(E),S,S1) :- S1 = S ; do(E : star(E),S,S1).
 do(while(P,E),S,S1):- do(star(call(P) : E) : call( not P),S,S1).

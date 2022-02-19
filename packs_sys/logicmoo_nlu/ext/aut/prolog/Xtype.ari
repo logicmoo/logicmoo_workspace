@@ -75,18 +75,18 @@ xperson([kuchma, hussein,  president_china, president_uk, yeltsin, clinton, moni
 xtrade([cotton, oil, iron, lumber, corn, weapon, refugees, narkotics]).
 
 xyear(Y):- nonvar(Y), string_term(Ystr, Y), 
-           string_search($19$, Ystr, 0).
+           string_search(`19`, Ystr, 0).
 xyear(Ns):- var(Ns), findall(N, ( member(Num, [80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99]),
 		           N is Num+1900),
 		           Ns).    
   %xnum???
 args([xcountry, xcity, xyear, xtrade, xmissile, xperson, xorg, xabstr, xaction, xattribute, xevent, xarbitrary, xweapon, xagent ]).
 
-argsString( [$xnum$,$xcountry$,$xcity$,$xagent$,$xyear$,$xtrade$,$xteam$,$xperson$,$xorg$,$xabstr$,
-             $xxnum1$,$xxcountry1$,$xxcity1$,$xxagent1$,$xxtrade1$,$xxyear1$,$xxperson1$,$xxteam1$,$xxabstr1$,
-             $xxxnum11$,$xxxcountry11$,$xxxcity11$,$xxxagent11$,$xxxtrade11$,$xxxyear11$,$xxxteam11$,$xxxorg11$,$xxxabstr11$,
-             $xxxxnum111$,$xxxxcountry111$,$xxxxcity111$,$xxxxagent111$,$xxxxtrade111$,$xxxxyear111$,$xxxxteam111$,$xxxxorg111$,$xxxxabstr111$,
-             $xxxxxnum1111$,$xxxxxcountry1111$,$xxxxxcity1111$,$xxxxx1111$,$xxxxxtrade1111$,$xxxxxyear1111$,$xxxxxteam1111$,$xxxxxorg1111$, $xxxxxabstr1111$
+argsString( [`xnum`,`xcountry`,`xcity`,`xagent`,`xyear`,`xtrade`,`xteam`,`xperson`,`xorg`,`xabstr`,
+             `xxnum1`,`xxcountry1`,`xxcity1`,`xxagent1`,`xxtrade1`,`xxyear1`,`xxperson1`,`xxteam1`,`xxabstr1`,
+             `xxxnum11`,`xxxcountry11`,`xxxcity11`,`xxxagent11`,`xxxtrade11`,`xxxyear11`,`xxxteam11`,`xxxorg11`,`xxxabstr11`,
+             `xxxxnum111`,`xxxxcountry111`,`xxxxcity111`,`xxxxagent111`,`xxxxtrade111`,`xxxxyear111`,`xxxxteam111`,`xxxxorg111`,`xxxxabstr111`,
+             `xxxxxnum1111`,`xxxxxcountry1111`,`xxxxxcity1111`,`xxxxx1111`,`xxxxxtrade1111`,`xxxxxyear1111`,`xxxxxteam1111`,`xxxxxorg1111`, `xxxxxabstr1111`
           ]).
 predlist([
   %capabilities,

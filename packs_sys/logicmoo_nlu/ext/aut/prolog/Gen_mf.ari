@@ -45,109 +45,110 @@ yieldTermTwiceAlt(Agents,Term):- member(MentalPred, [inform, pretend]),
 
 yieldMental2(Agent2,Agent,TotalTerm):-
      yieldTerm(Agent2,TermHigh), yieldTerm(Agent,TermLow),
-         [!
-       change_char($smth$, $sm1th$, TermHigh, TermHigh1), %writeln(TermHigh1),
+         aritySlice((
+       change_char('smth', 'sm1th', TermHigh, TermHigh1), %writeln(TermHigh1),
          string_term(TermLowStr, TermLow),
-         change_char($sm1th$,  TermLowStr, TermHigh1, TotalTerm)
-      !].
+         change_char('sm1th',  TermLowStr, TermHigh1, TotalTerm)
+      )).
 
 yieldMental2OT(Agent2,Agents,TotalTerm):-
      yieldTerm(Agent2,TermHigh), yieldTermTwiceAlt(Agents,TermLow),
-         [!
-       change_char($smth$, $sm1th$, TermHigh, TermHigh1), %writeln(TermHigh1),
+         aritySlice((
+       change_char('smth', 'sm1th', TermHigh, TermHigh1), %writeln(TermHigh1),
          string_term(TermLowStr, TermLow),
-         change_char($sm1th$,  TermLowStr, TermHigh1, TotalTerm)
-      !].
+         change_char('sm1th',  TermLowStr, TermHigh1, TotalTerm)
+      )).
 
 yieldMental2TO(Agent2,PassiveAgent2,Agent,TotalTerm):-
      yieldTermTwice(Agent2,PassiveAgent2,TermHigh),   
      yieldTerm(Agent,TermLow),
-         [!
-       change_char($smth$, $sm1th$, TermHigh, TermHigh1), %writeln(TermHigh1),
+         aritySlice((
+       change_char('smth', 'sm1th', TermHigh, TermHigh1), %writeln(TermHigh1),
          string_term(TermLowStr, TermLow),
-         change_char($sm1th$,  TermLowStr, TermHigh1, TotalTerm)
-      !].
+         change_char('sm1th',  TermLowStr, TermHigh1, TotalTerm)
+      )).
 
 yieldMental2TT(Agent2,PassiveAgent2,Agents,TotalTerm):-
      yieldTermTwice(Agent2,PassiveAgent2,TermHigh),          
      yieldTermTwiceAlt(Agents,TermLow),
-         [!
-       change_char($smth$, $sm1th$, TermHigh, TermHigh1), %writeln(TermHigh1),
+         aritySlice((
+       change_char('smth', 'sm1th', TermHigh, TermHigh1), %writeln(TermHigh1),
          string_term(TermLowStr, TermLow),
-         change_char($sm1th$,  TermLowStr, TermHigh1, TotalTerm)
-      !].
+         change_char('sm1th',  TermLowStr, TermHigh1, TotalTerm)
+      )).
 
 yieldMental3(Agent3,Agent2,Agent,TotalTerm):-
      yieldMental2(Agent3,Agent2,TermHigh), yieldTerm(Agent,TermLow),
-     [! change_char($smth$, $sm1th$, TermHigh, TermHigh1),
+     aritySlice(( change_char('smth', 'sm1th', TermHigh, TermHigh1),
          string_term(TermLowStr, TermLow),
-         change_char($sm1th$,  TermLowStr, TermHigh1, TotalTerm)
+         change_char('sm1th',  TermLowStr, TermHigh1, TotalTerm)
 %         ternMent(TotalTerm)
-      !].
+      )).
 
 yieldMental3OOT(Agent3,Agent2,Agents,TotalTerm):-
      yieldMental2(Agent3,Agent2,TermHigh), yieldTermTwiceAlt(Agents,TermLow),
-     [! change_char($smth$, $sm1th$, TermHigh, TermHigh1),
+     aritySlice(( change_char('smth', 'sm1th', TermHigh, TermHigh1),
          string_term(TermLowStr, TermLow),
-         change_char($sm1th$,  TermLowStr, TermHigh1, TotalTerm)
+         change_char('sm1th',  TermLowStr, TermHigh1, TotalTerm)
 %         ternMent(TotalTerm)
-      !].
+      )).
 
 yieldMental3OTO(Agent3,Agents2,Agent,TotalTerm):-
      yieldMental2OT(Agent3,Agents2,TermHigh), yieldTerm(Agent,TermLow),
-     [! change_char($smth$, $sm1th$, TermHigh, TermHigh1),
+     aritySlice(( change_char('smth', 'sm1th', TermHigh, TermHigh1),
          string_term(TermLowStr, TermLow),
-         change_char($sm1th$,  TermLowStr, TermHigh1, TotalTerm)
+         change_char('sm1th',  TermLowStr, TermHigh1, TotalTerm)
 %         ternMent(TotalTerm)
-      !].
+      )).
 
 yieldMental3TOO(Agent3,PassiveAgent3,Agent2,Agent,TotalTerm):-
      yieldMental2TO(Agent3,PassiveAgent3,Agent2,TermHigh),   
      yieldTerm(Agent,TermLow),
-     [! change_char($smth$, $sm1th$, TermHigh, TermHigh1),
+     aritySlice(( change_char('smth', 'sm1th', TermHigh, TermHigh1),
          string_term(TermLowStr, TermLow),
-         change_char($sm1th$,  TermLowStr, TermHigh1, TotalTerm)
+         change_char('sm1th',  TermLowStr, TermHigh1, TotalTerm)
 %         ternMent(TotalTerm)
-      !].
+      )).
 
 yieldMental3OTT(Agent3,Agents2,Agents,TotalTerm):-
      yieldMental2OT(Agent3,Agents2,TermHigh), yieldTermTwiceAlt(Agents,TermLow),
-     [! change_char($smth$, $sm1th$, TermHigh, TermHigh1),
+     aritySlice(( change_char('smth', 'sm1th', TermHigh, TermHigh1),
          string_term(TermLowStr, TermLow),
-         change_char($sm1th$,  TermLowStr, TermHigh1, TotalTerm)
+         change_char('sm1th',  TermLowStr, TermHigh1, TotalTerm)
 %         ternMent(TotalTerm)
-      !].
+      )).
 
 yieldMental3TOT(Agent3,PassiveAgent3,Agent2,Agents,TotalTerm):-
      yieldMental2TO(Agent3,PassiveAgent3,Agent2,TermHigh),   
      yieldTermTwiceAlt(Agents,TermLow),
-     [! change_char($smth$, $sm1th$, TermHigh, TermHigh1),
+     aritySlice(( change_char('smth', 'sm1th', TermHigh, TermHigh1),
          string_term(TermLowStr, TermLow),
-         change_char($sm1th$,  TermLowStr, TermHigh1, TotalTerm)
+         change_char('sm1th',  TermLowStr, TermHigh1, TotalTerm)
 %         ternMent(TotalTerm)
-      !].
+      )).
 
 yieldMental3TTO(Agent3,PassiveAgent3,Agents2,Agent,TotalTerm):-
      yieldMental2TT(Agent3,PassiveAgent3,Agents2,TermHigh),   
      yieldTerm(Agent,TermLow),
-     [! change_char($smth$, $sm1th$, TermHigh, TermHigh1),
+     aritySlice(( change_char('smth', 'sm1th', TermHigh, TermHigh1),
          string_term(TermLowStr, TermLow),
-         change_char($sm1th$,  TermLowStr, TermHigh1, TotalTerm)
+         change_char('sm1th',  TermLowStr, TermHigh1, TotalTerm)
 %         ternMent(TotalTerm)
-      !].
+      )).
 
 yieldMental3TTT(Agent3,PassiveAgent3,Agents2,Agents,TotalTerm):-
      yieldMental2TT(Agent3,PassiveAgent3,Agents2,TermHigh),     
      yieldTermTwiceAlt(Agents,TermLow),
-     [! change_char($smth$, $sm1th$, TermHigh, TermHigh1),
+     aritySlice(( change_char('smth', 'sm1th', TermHigh, TermHigh1),
          string_term(TermLowStr, TermLow),
-         change_char($sm1th$,  TermLowStr, TermHigh1, TotalTerm)
+         change_char('sm1th',  TermLowStr, TermHigh1, TotalTerm)
 %         ternMent(TotalTerm)
-      !].
+      )).
 
 
-save_wkb:-  open(H, $C:\nl_ext\au\wkb_3.ari$, w), 
-           %  open(H, $wkb_11.ari$, w),
+save_wkb:-   % create(H1, `C:/nl_ext/wkb_3.ari`), % 
+              open('C:/nl_ext/wkb_3.ari',write,H), 
+           %  open(H, 'wkb_11.ari', w),
               not (
               yieldMental2(mike,mike,K),
               write_expr(H,K),
@@ -269,7 +270,7 @@ ternMent(TotalTerm):-
                   list_search([not Idempot, Agent, Idempot, Agent], TwiceMentals,_);
                           list_search([Idempot, Agent, not Idempot, Agent], TwiceMentals,_);
                   list_search([not Idempot, Agent, not Idempot, Agent], TwiceMentals,_)
-                          ),  writeln(($binary mental$,TwiceMentals))   % , get(CCC)
+                          ),  writeln(('binary mental',TwiceMentals))   % , get(CCC)
             ),
 %%%%%% inform, pretend, ask repetition
        not  ( member(Idempot, [inform, pretend, ask]),
@@ -277,7 +278,7 @@ ternMent(TotalTerm):-
                   list_search([not Idempot, Agent,PassAgent, Idempot, Agent], TwiceMentals,_);
                           list_search([Idempot, Agent,PassAgent, not Idempot, Agent], TwiceMentals,_);
                   list_search([not Idempot, Agent,PassAgent, not Idempot, Agent], TwiceMentals,_)
-                          ), writeln(($ternary mental$,TwiceMentals)) % , get(CCC)
+                          ), writeln(('ternary mental',TwiceMentals)) % , get(CCC)
             ).
  
 
@@ -286,17 +287,17 @@ write_expr(H,K):- clause_list(K, Ks),
                   meaningfulFormula(K),
                     flatExpand(Ks, Ksfe),
                 string_term(KStr, Ksfe),                    %  writeln(KStr),
-                                string_change_char($,$,' ', KStr, Text),
+                                string_change_char(',',' ', KStr, Text),
                                 (Expr = (K :- iassert( Text ))),
                                                             % writeln(Expr),
-%                                write(H, Expr), write(H, $.$), 
+%                                write(H, Expr), write(H, '.'), 
                                  write(H,K), nl(H), !.
 
 
 
 
 clause_list(B,Ls) :- nonvar(B),string_term(Bstr,B),
-           concat([$[$,Bstr,$]$],B_str), string_term(B_str,Ls).
+           concat(['[',Bstr,']'],B_str), string_term(B_str,Ls).
 clause_list(B,Ls) :-nonvar(Ls), Ls\==[],
             len(Ls,N), ifthenelse( N<20 ,brack_del(B,Ls), (
       N1 is N//3, N2 is N*2//3,
@@ -307,20 +308,20 @@ clause_list(B,Ls) :-nonvar(Ls), Ls\==[],
 
 flatExpand(Clause,ClauseFE):-
     ifthen( not clause_list(_,Clause),
-            ( writeln($!!! input term must be a list: flatExpand$),fail)),
+            ( writeln('!!! input term must be a list: flatExpand'),fail)),
     string_term(Str,Clause),                              % writeln(Str),
-        string_change_char($((($,$,$,Str,Str1),
-    string_change_char($))))$,$,$,Str1,Str2),
-        string_change_char($)))$,$,$,Str2,Str3),
-        string_change_char($(($,$,$,Str3,Str4),
-        string_change_char($))$,$,$,Str4,Str5),
+        string_change_char('(((',',',Str,Str1),
+    string_change_char('))))',',',Str1,Str2),
+        string_change_char(')))',',',Str2,Str3),
+        string_change_char('((',',',Str3,Str4),
+        string_change_char('))',',',Str4,Str5),
 
-        string_change_char($($,$,$,Str5,Str6),
-        string_change_char($)$,$,$,Str6,Str7),
-    string_change_char($,]$,$>$, Str7, Str8),
-    string_change_char($>$,$]$,Str8,Str9),
-    string_change_char($,,$,$>$, Str9, Str10),
-    string_change_char($>$,$,$,Str10, Str11),
+        string_change_char('(',',',Str5,Str6),
+        string_change_char(')',',',Str6,Str7),
+    string_change_char(',]','>', Str7, Str8),
+    string_change_char('>',']',Str8,Str9),
+    string_change_char(',,','>', Str9, Str10),
+    string_change_char('>',',',Str10, Str11),
         string_term(Str11, ClauseFE).
 
 
@@ -336,7 +337,7 @@ append([H|T], L, [H|R]) :-
 
 
 member(H, [H|_]).
-member(H, [_|T]) :- ifthen( var(T), ( write($!!!! list member of Var$), nl, fail)),
+member(H, [_|T]) :- ifthen( var(T), ( write('!!!! list member of Var'), nl, fail)),
    member(H, T).
 
 
@@ -364,8 +365,8 @@ sublist(Off, Len, [H|L1], L2) :-
 
 
 string_change_char(Char1,Char2,C,O):- % ifthen(string_search(Char1,Char2,_),
-%       (writeln($!!!! Incorrect string change ! $), fail)),
-                 [! string_change_ch(Char1,Char2,'',C,O) !].
+%       (writeln('!!!! Incorrect string change ! '), fail)),
+                 aritySlice(( string_change_ch(Char1,Char2,'',C,O) )).
 
 string_change_ch(Char1,Char2,Lstr,Wstr,Ostr):- not (string_search(Char1,Wstr,_)),
       concat(Lstr, Wstr, Ostr).
@@ -380,7 +381,7 @@ string_change_ch(Char1,Char2,Lstr,Wstr,Ostr):-
     string_length(Lstr,Nl),   dec(Nl,Nl1),
  ifthenelse(Nl>0, substring(Lstr,Nl1,1,PreLast),PreLast=''),
 
-                  %    writeln(($last::$,PreLast)),
+                  %    writeln(('last::',PreLast)),
          ifthenelse( not fail ,%any_name(PreLast),
         (substring(Wstr,N1,LN,Wstr1),concat([Lstr,C1,Char2],Lstr1)  ),
         (substring(Wstr,N1,LN,Wstr1),concat([Lstr,C1,Char1],Lstr1)  )),
@@ -390,8 +391,8 @@ string_change_ch(Char1,Char2,Lstr,Wstr,Ostr):-
 
 
 change_char(Char1,Char2,C,O):-  ifthen(string_search(Char1,Char2,_),
-       (writeln($!!!! Incorrect string change ! $), fail)),
-     string_term(Str,C), [! change_ch(Char1,Char2,'',Str,Ostr) !],
+       (writeln('!!!! Incorrect string change ! '), fail)),
+     string_term(Str,C), aritySlice(( change_ch(Char1,Char2,'',Str,Ostr) )),
      string_term(Ostr,O).
 
 change_ch(Char1,Char2,Lstr,Wstr,Ostr):- not
@@ -409,7 +410,7 @@ change_ch(Char1,Char2,Lstr,Wstr,Ostr):-
 
      ifthenelse( ( PastFirst=='(',(var(CHt);integer(CHt) ),Char2\='_'),
                (LNb is LN-1, substring(Wstr,N1b,LNb,Wstr1),
-                  concat([Lstr,C1,$eng($,Char2,','],Lstr1) ),
+                  concat([Lstr,C1,'eng(',Char2,','],Lstr1) ),
 
          ifthenelse( (% writeln((PreLast,Char1,PastFirst)),
              %  not (any_name(PastFirst);any_name(PreLast) ),

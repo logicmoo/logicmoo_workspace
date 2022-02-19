@@ -9,7 +9,7 @@
 
 member(H, [H|_]).
 member(H, [A|T]) :- ifthen( var(T), ( write(member(H, [A|T])), 
-                                      write($!!!! list member of Var$), nl, fail)),
+                                      write(`!!!! list member of Var`), nl, fail)),
    member(H, T).
 
 cl_member(H, [H1|_]):-cl_eq(H,H1).
@@ -396,7 +396,7 @@ writel([]) :-
    !,
    nl.
 writel([H|T]) :-
-   write(H),write($ $),
+   write(H),write(` `),
    writel(T).
 
 
@@ -448,7 +448,7 @@ list_insert:-list_insert(([a(c2334),d(c3333),e(c5643,c7654),g(c5644)] ),
 list_ins:-list_insert([1,2,3,4,5,6],6,11,O), write(O).
 list_insert(Cc,Pold,Pnew,CCC):-
 			  ifthen( not(  list_search([Pold],Cc,_)),
-			  (write(Pold), write($ is absent in $), write(Cc), nl, fail)   ),
+			  (write(Pold), write(` is absent in `), write(Cc), nl, fail)   ),
       list_search([Pold],Cc,N),
 		len(Cc,Lr), N2 is Lr-N-1, Np1_ is N+1, Np is N+1,
                     ifthenelse(N>0,sublist(0,N,Cc,R1), R1=[]),
@@ -459,11 +459,11 @@ cll:-cl_list_insert_all([a(1,2),b(A,N),a(U,M)],a(R1,R2),aaaa(11,22),O), write(O)
 
 cl_list_insert(Cc,Pold,Pnew,CCC):-
 			  ifthen( not( cl_list_search([Pold],Cc,_,_)),
-			  (write(Pold), write($ is absent !!! in $), write(Cc), nl, fail)   ),
-	                  ifthen( cl_eq(Pold,Pnew), ( write($!!! subst $),
-                          write(Pnew), write($ in spite of $), write(Pold),fail)),
+			  (write(Pold), write(` is absent !!! in `), write(Cc), nl, fail)   ),
+	                  ifthen( cl_eq(Pold,Pnew), ( write(`!!! subst `),
+                          write(Pnew), write(` in spite of `), write(Pold),fail)),
       cl_list_search([Pold],Cc,N,Insp),
-%	   write($      both_add$), write((Insp,Pold)),	   %
+%	   write(`      both_add`), write((Insp,Pold)),	   %
                %      both_add(Insp,Pold,Pnew,Pnew_l_),%
 		     		Pnew_l_=[Pnew],
 		len(Cc,Lr), N2 is Lr-N-1, Np1_ is N+1, Np is N+1,
@@ -472,8 +472,8 @@ cl_list_insert(Cc,Pold,Pnew,CCC):-
 		 append(R1,Pnew_l_,R_), append(R_,R2,CCC).
 
 both_add(I,Pold,P,P_):-Pold=..[_|J], len(I,Li), len(J,Lj), ifthen(Lj\==Li,
-                           ( % write(I), write($ \== $), write(J),%
-                     write($!!! different pred while insert$),nl,fail)),
+                           ( % write(I), write(` \== `), write(J),%
+                     write(`!!! different pred while insert`),nl,fail)),
     	            append([eq(J,I)],[P],P1), append(P1,[eq(J,I)], P_).
 
 

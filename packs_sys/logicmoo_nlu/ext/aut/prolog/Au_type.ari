@@ -14,11 +14,11 @@ xabstr(Abstrs) :- findall(P, ( pattern(PFull), PFull=..[P|Args],
 				  Abstrsd ), remove_duplicates(Abstrsd,Abstrs) .
 				  
 
-argsString( [$xnum$,$xobject$,$xcity$,$xagent$,$xyear$,$xtrade$,$xteam$,$xperson$,$xorg$,$xabstr$,
-             $xxnum1$,$xxobject1$,$xxcity1$,$xxagent1$,$xxtrade1$,$xxyear1$,$xxperson1$,$xxteam1$,$xxabstr1$,
-             $xxxnum11$,$xxxobject11$,$xxxcity11$,$xxxagent11$,$xxxtrade11$,$xxxyear11$,$xxxteam11$,$xxxorg11$,$xxxabstr11$,
-             $xxxxnum111$,$xxxxobject111$,$xxxxcity111$,$xxxxagent111$,$xxxxtrade111$,$xxxxyear111$,$xxxxteam111$,$xxxxorg111$,$xxxxabstr111$,
-             $xxxxxnum1111$,$xxxxxobject1111$,$xxxxxcity1111$,$xxxxx1111$,$xxxxxtrade1111$,$xxxxxyear1111$,$xxxxxteam1111$,$xxxxxorg1111$, $xxxxxabstr1111$
+argsString( [`xnum`,`xobject`,`xcity`,`xagent`,`xyear`,`xtrade`,`xteam`,`xperson`,`xorg`,`xabstr`,
+             `xxnum1`,`xxobject1`,`xxcity1`,`xxagent1`,`xxtrade1`,`xxyear1`,`xxperson1`,`xxteam1`,`xxabstr1`,
+             `xxxnum11`,`xxxobject11`,`xxxcity11`,`xxxagent11`,`xxxtrade11`,`xxxyear11`,`xxxteam11`,`xxxorg11`,`xxxabstr11`,
+             `xxxxnum111`,`xxxxobject111`,`xxxxcity111`,`xxxxagent111`,`xxxxtrade111`,`xxxxyear111`,`xxxxteam111`,`xxxxorg111`,`xxxxabstr111`,
+             `xxxxxnum1111`,`xxxxxobject1111`,`xxxxxcity1111`,`xxxxx1111`,`xxxxxtrade1111`,`xxxxxyear1111`,`xxxxxteam1111`,`xxxxxorg1111`, `xxxxxabstr1111`
           ]).
 
 antiSym(As):- findall( P , ( pattern(PFull),

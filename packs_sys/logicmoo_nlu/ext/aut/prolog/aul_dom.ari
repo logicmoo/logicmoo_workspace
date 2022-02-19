@@ -51,7 +51,7 @@ abbrev([going,to], want).
 abbrev([avoid], not). abbrev([escape], not).
 abbrev([speculate], believe).
 
-want(mike,not know(mike,inform(peter,mike,smth))):-iassert($This knowledge is expected to be unpleasent for Mike.$).
+want(mike,not know(mike,inform(peter,mike,smth))):-iassert(`This knowledge is expected to be unpleasent for Mike.`).
 
 %* For what reason does Mike want to avoid knowledge of what Peter told to Mike
 
@@ -60,22 +60,22 @@ agent(mike). agent(peter).
 
 know(mike, location(token)).
                           
-know(mike, know(peter, not know(mike, location(token)))):-iassert($Mike thinks: "since it's OK with Peter that I don't know the location, I assume that I should not ask Peter for the location".$).
+know(mike, know(peter, not know(mike, location(token)))):-iassert(`Mike thinks: "since it's OK with Peter that I don't know the location, I assume that I should not ask Peter for the location".`).
 %* suppose mike knows that peter knows that mike does not know the location
 
-know(peter, know(mike, not know(peter, location(token)))):-iassert($Since Peter knows that Mike knows that Peter does not know the location, Peter expects the Mike will let him know the location without a specific request.$).
+know(peter, know(mike, not know(peter, location(token)))):-iassert(`Since Peter knows that Mike knows that Peter does not know the location, Peter expects the Mike will let him know the location without a specific request.`).
 %*what would peter expect if he would know that mike knows that peter does not know the location
 %%%bug: not allowed knows...knows...
 
-want(mike, not know(peter, location(token))):- iassert($So Mike decides not to tell Peter about it$).
+want(mike, not know(peter, location(token))):- iassert(`So Mike decides not to tell Peter about it`).
 %guess what did mike do such that he would want that peter did not know the location
-want(peter,not know(mike, know(peter, location(token)))):-iassert($Then Peter does not show Mike that he knows the location, he behaves as if he did not know the location.$).
+want(peter,not know(mike, know(peter, location(token)))):-iassert(`Then Peter does not show Mike that he knows the location, he behaves as if he did not know the location.`).
 %not 
-want(mike,know(peter,location(token))):- iassert($Then Mike should not tell Peter anything about the location or show it.$), fail.
+want(mike,know(peter,location(token))):- iassert(`Then Mike should not tell Peter anything about the location or show it.`), fail.
 
-know(peter, not know(mike,location(token))) :- iassert($If Peter wants Mike to know the location, Peter will tell it, and if Peter does not want to, he will say nothing.$).
+know(peter, not know(mike,location(token))) :- iassert(`If Peter wants Mike to know the location, Peter will tell it, and if Peter does not want to, he will say nothing.`).
  
-want(peter,not know(mike,not know(peter,location(token)))) :- iassert($So Peter avoids talking on the subject.$).
+want(peter,not know(mike,not know(peter,location(token)))) :- iassert(`So Peter avoids talking on the subject.`).
 %*Did Peter want Mike not to know that Peter does not know
 % peter want mike to know that peter does not know
 % peter know that mike not know
@@ -83,68 +83,68 @@ want(peter,not know(mike,not know(peter,location(token)))) :- iassert($So Peter 
 % is it true that mike does not want that peter know the location
 % why would mike want peter to know the location
 
-believe(peter,not know(mike,location(token))) :- iassert($Being not sure whether Mikes knows the location, Peter decides to ask Mike first about his knowledge, and then disclose the location if necessary.$).
+believe(peter,not know(mike,location(token))) :- iassert(`Being not sure whether Mikes knows the location, Peter decides to ask Mike first about his knowledge, and then disclose the location if necessary.`).
 %*what peter believe mike to not know
 
 %bug may be: know peter that know mike not believe peter
 
-know(peter,know(mike,not believe(peter,location(token)))):- iassert($Peter would expect Mike to keep convincing Peter concerning the token location.$).
+know(peter,know(mike,not believe(peter,location(token)))):- iassert(`Peter would expect Mike to keep convincing Peter concerning the token location.`).
 %peter know that mike know that peter does not believe
 
-want(mike,believe(mike,not know(peter,location(token)))):- iassert($ Mike prefers not  to change his belief and keeps saying to himself that Peter does not know the location.$).
+want(mike,believe(mike,not know(peter,location(token)))):- iassert(` Mike prefers not  to change his belief and keeps saying to himself that Peter does not know the location.`).
 %does mike want to believe that peter does not know
 
-want(peter,know(mike,believe(peter, location(token)))):-iassert($Then Peter is going to tell Mike about his current belief, which can be changed at any time later.$).
+want(peter,know(mike,believe(peter, location(token)))):-iassert(`Then Peter is going to tell Mike about his current belief, which can be changed at any time later.`).
 %%what peter want mike to know about peter belief
 
-want(mike,not believe(peter,know(mike,location(token)))):-iassert($Mike wants to conceal his knowledge of the token location from Peter.$).
+want(mike,not believe(peter,know(mike,location(token)))):-iassert(`Mike wants to conceal his knowledge of the token location from Peter.`).
 %%mike want that peter does not believe that mike know
 
 %% Nobody can pretend about a foreign mental state (only the own mental state and any physical state).
 %% 
 %% exception: % I want both of us to pretend that you know
 
-want(mike,pretend(mike,peter,know(mike,location(token)))):- iassert($Since Mike wants to pretend that he knows the token location, he does not ask Peter about it, though both of them actually know that Mike has no idea about its location. Note that any pretend is oriented to particular agents.$).
+want(mike,pretend(mike,peter,know(mike,location(token)))):- iassert(`Since Mike wants to pretend that he knows the token location, he does not ask Peter about it, though both of them actually know that Mike has no idea about its location. Note that any pretend is oriented to particular agents.`).
 %did mike want to pretend that peter know the location
 
-pretend(peter,mike,believe(peter,know(mike,location(token)))):-iassert($To pretend for Mike that Peter believes that Mike knows the location, Peter asks Mike if he knows the location before telling him the actual location.$).
+pretend(peter,mike,believe(peter,know(mike,location(token)))):-iassert(`To pretend for Mike that Peter believes that Mike knows the location, Peter asks Mike if he knows the location before telling him the actual location.`).
 
-pretend(peter,mike,believe(peter,know(mike,location(token)))):-iassert($To pretend for Mike that Peter believes that Mike knows the location, Peter avoids asking Mike about his knowledge not to stress its absense.$).
+pretend(peter,mike,believe(peter,know(mike,location(token)))):-iassert(`To pretend for Mike that Peter believes that Mike knows the location, Peter avoids asking Mike about his knowledge not to stress its absense.`).
 
 %does peter pretend that peter believe that mike know the location
 
-pretend(peter,mike,not want(peter,know(mike,location(token)))):-iassert($Before telling Mike about the token location, Peter is showing to Mike that he is trying to cover the token, attracting his attention (curiosity).$).
+pretend(peter,mike,not want(peter,know(mike,location(token)))):-iassert(`Before telling Mike about the token location, Peter is showing to Mike that he is trying to cover the token, attracting his attention (curiosity).`).
 
 %how can Peter pretend that Peter does not want that mike know the location
 
 %%%% jul 16
-pretend(mike, peter,believe(mike,know(peter, location(token)))) :- iassert($Since Mike pretends he believes that Peter knows the token location, he will ask Peter to bring it in$).
+pretend(mike, peter,believe(mike,know(peter, location(token)))) :- iassert(`Since Mike pretends he believes that Peter knows the token location, he will ask Peter to bring it in`).
 % what mike pretend to believe about what peter know
 
-know(mike,believe(peter,not pretend(mike,peter, location(token)))) :- iassert($Peter trusts Mike concerning the location.$).
+know(mike,believe(peter,not pretend(mike,peter, location(token)))) :- iassert(`Peter trusts Mike concerning the location.`).
 
 %does mike know that peter believe that mike does not pretend
-believe(peter,want(mike,pretend(mike,peter, not location(token)))) :- iassert($...And Peter decides not to let Mike do so and tell him the real location.$).
+believe(peter,want(mike,pretend(mike,peter, not location(token)))) :- iassert(`...And Peter decides not to let Mike do so and tell him the real location.`).
 % *did peter believe that mike wanted to be pretend something
 
-want(mike,pretend(peter,mike,want(peter, location(token)))) :- iassert($ ...And Mike encouraged Peter to look for the token.$).
+want(mike,pretend(peter,mike,want(peter, location(token)))) :- iassert(` ...And Mike encouraged Peter to look for the token.`).
 %did mike want peter to pretend that he wants something
 
 %jul22
-want(mike,inform(peter,mike,location(token))):-iassert($Mike wanted to know the location of the token, therefore he wanted Peter to inform him about it, so he asked him.$).
+want(mike,inform(peter,mike,location(token))):-iassert(`Mike wanted to know the location of the token, therefore he wanted Peter to inform him about it, so he asked him.`).
 %what mike want peter tell to mike
 
-want(mike,inform(peter,mike,not know(peter,location(token)))):-iassert($Just to tell to Mike something$).
+want(mike,inform(peter,mike,not know(peter,location(token)))):-iassert(`Just to tell to Mike something`).
 %what did mike want peter to tell to mike that peter not know
 %what did mike want that peter tell to mike that peter did not know
 
-want(mike,inform(peter,mike,not know(mike,_6294))):-iassert($This makes sense in case Peter does know smth Mike does not know.$).
+want(mike,inform(peter,mike,not know(mike,_6294))):-iassert(`This makes sense in case Peter does know smth Mike does not know.`).
 % what did mike want that peter tell to mike that he did not know
 
-pretend(mike,peter,not inform(mike,peter,want(mike,_9068))):-iassert($Ignoring the information from Mike concerning his intentions, Peter did exactly he wanted. $).
+pretend(mike,peter,not inform(mike,peter,want(mike,_9068))):-iassert(`Ignoring the information from Mike concerning his intentions, Peter did exactly he wanted. `).
 %*did mike pretend that mike did not tell peter what mike want
 
-pretend(peter,mike,want(peter,know(mike,location(token)))):-iassert($Peter is provoking: "ask me, ask me! (but I will never respond!!)". $).
+pretend(peter,mike,want(peter,know(mike,location(token)))):-iassert(`Peter is provoking: "ask me, ask me! (but I will never respond!!)". `).
 %*does peter pretend that he wants mike to know
 
 %% mike told me he was impressed by a book, and I asked him to help mke finding it, though I was 
@@ -153,21 +153,21 @@ pretend(peter,mike,want(peter,know(mike,location(token)))):-iassert($Peter is pr
 %%%% typical way to extract a secret facts: pretend that I don't want to know though I do want
 %%%% to know
 %can't be
-%want(peter,inform(peter,mike,believe(mike,location(token)))):-iassert($Therefore Peter actually influenced the belief of Mike.$).
+%want(peter,inform(peter,mike,believe(mike,location(token)))):-iassert(`Therefore Peter actually influenced the belief of Mike.`).
 %*what did peter want to tell mike about his belief
 
 % can't be
-%pretend(mike,peter,inform(mike,peter,believe(peter,smth))):- iassert($ How could Mike pretend that he had informed Peter about something, more concretely: his own (Peter's) belief. Mike could write it on a piece of paper.$).
+%pretend(mike,peter,inform(mike,peter,believe(peter,smth))):- iassert(` How could Mike pretend that he had informed Peter about something, more concretely: his own (Peter's) belief. Mike could write it on a piece of paper.`).
 %*did mike pretend to peter that mike had inform peter about his belief
 
-want(mike,pretend(mike,peter, inform(mike,peter,smth))):- iassert($ Mike whispered something, and then he pretended that he expected a response back from Peter. Actually, Mike wanted to conceal some information from Peter and tries to avoid confession.$).
+want(mike,pretend(mike,peter, inform(mike,peter,smth))):- iassert(` Mike whispered something, and then he pretended that he expected a response back from Peter. Actually, Mike wanted to conceal some information from Peter and tries to avoid confession.`).
 %*did mike want to pretend to peter that mike will let peter know smth 
 %% I did't want to tell you where I was going, but then I was surprised why you did not join the trip,
 %% since I believed you would like it
 %%
 % %% usually linked with the internal intention NOT to share information
 
-believe(peter,pretend(mike,peter,not inform(mike,peter,smth))):- iassert($ There was a striking news. Mike send Peter an e.mail saying that his friend got married. When Peter was visiting Mike, he pretended that he did not send this e.mail and this news will be impressive for Peter, being claimed.$).
+believe(peter,pretend(mike,peter,not inform(mike,peter,smth))):- iassert(` There was a striking news. Mike send Peter an e.mail saying that his friend got married. When Peter was visiting Mike, he pretended that he did not send this e.mail and this news will be impressive for Peter, being claimed.`).
 % %% usually linked with the internal intention to ACTUALLY share information
 %% usually for the others , not for the info addressee.
 
@@ -180,7 +180,7 @@ believe(peter,pretend(mike,peter,not inform(mike,peter,smth))):- iassert($ There
 %pretend that I know that you know but NOT
 %I pretend that you know
 
-want(mike,not pretend(peter,mike,know(peter, smth))):- iassert($ A teacher and a student: stop pretending you actually know something.$).
+want(mike,not pretend(peter,mike,know(peter, smth))):- iassert(` A teacher and a student: stop pretending you actually know something.`).
 %what did mike want that peter would not pretend about
 %%% I know that you are going to pretend and I know what is actually the truth
 
@@ -188,7 +188,7 @@ want(mike,not pretend(peter,mike,know(peter, smth))):- iassert($ A teacher and a
 %I know that you do not know what I want to tell you   
 % iassert ++I either ask you what you want to tell or just wait till you start talking
 
-pretend(mike,peter,want(mike,know(mike,smth))):- iassert($ Then Mike should ask and leave as only Peter start answering.$).
+pretend(mike,peter,want(mike,know(mike,smth))):- iassert(` Then Mike should ask and leave as only Peter start answering.`).
 %% did mike pretend that he wanted to know smth
 
 
@@ -212,7 +212,7 @@ pretend(mike,peter,want(mike,know(mike,smth))):- iassert($ Then Mike should ask 
 %know(girl, write(lover, pasquile)).
 abbrev([not, to], not).
 want(person, not pretend(other_person, _, not know(other_person, Smth))):-
- iassert($
+ iassert(`
  <B><I><FONT FACE="Arial"><P ALIGN="CENTER">The Heaven and the Hell</P>
  </I></FONT><FONT SIZE=2><P ALIGN="CENTER">by P. Merimie</P>
  </B>
@@ -232,14 +232,14 @@ to another woman. Poor girl turns pale with offence and indignation and betrays 
 that he is the person who composed the libel on the Pope.
 </P></FONT>
 <a href="http://www.amazon.com/exec/obidos/ASIN/9991959246">Read the book</a>
-$).
+`).
 
 %4) dva slugi 
 %want(1,not pretend(2,1, tell(2,1,_7450))).
 %know(1, pretend(2, 1,tell(2,1, smth))).
 
 pretend(person, other_person, not want(person, know(person, smth))) :-
- iassert($ 
+ iassert(` 
  <B><I><FONT FACE="Arial"><P ALIGN="CENTER">The two genlemen of Verona</P>
  </I></FONT><FONT SIZE=2><P ALIGN="CENTER">by W. Shakespeare</P>
  </B>
@@ -251,10 +251,10 @@ interested in the content of the letter. She sends the maidservant back and tear
 into pieces together.
   After that the girl puts the pieces together and does her best to read the letter.
 </P></FONT> 
-<P><IMG SRC="IMG\SHAK1.GIF" WIDTH=91 HEIGHT=140></P>
+<P><IMG SRC="IMG\\SHAK1.GIF" WIDTH=91 HEIGHT=140></P>
 <a href="http://www.amazon.com/exec/obidos/ASIN/0517053616">Read the book</a>
 
-$).
+`).
 
 %5)
 %pretend(girl, not want(girl, know(girl, smth))).
@@ -271,13 +271,13 @@ abbrev([another, person], other_person).
 abbrev([other, person], other_person).
 
 pretend(person, other_person, want(person, know(person, Smth))):-
-iassert($ 
+iassert(` 
 <B><I><FONT FACE="Arial"><P ALIGN="CENTER">The Carriage of holly gifts</P>
 </I></FONT><FONT SIZE=2><P ALIGN="CENTER">by P. Merimee</P>
 </B>
 <P>An old-aged king wants to learn from his secretary if the young girl he loves is faithful to him. The secretary is anxious to please the king and tells him all the rumors he knows. The king gets indignant and instead of being grateful to his servant he drives the secretary away. In fact, the king doesn't want to know the truth. Later on the king meets the girl he loves. The king accuses her of cheating him. In the end he begs her to assure him that all these rumors are not true and it is the people spreading these rumors who are to blame, not the girl</P>
 </FONT>
- $).
+ `).
 
 
 %7) want(king, tell(actress, king, love(actress, king))).
@@ -296,7 +296,7 @@ iassert($
 %pretend(1,2, believe(1, pretend(2,1,smth))).
 
 want(person, pretend(other_person, person, want(other_person, Smth))):-
- iassert($ 
+ iassert(` 
 <B><I><FONT FACE="Arial"><P ALIGN="CENTER">A wife and a husband under the bed</P>
 </I></FONT><FONT SIZE=2><P ALIGN="CENTER">by F. Dostoevsky</P>
 </B>
@@ -305,16 +305,16 @@ waiting for his datling date. As the husband supposes that this very man is his 
 lover, he would like the young man to pretend to be waiting for another woman,
 whereas he wants his wife to act as if she were absolutely unaware of anything.
 </P></FONT>
-<P><IMG SRC="IMG\DOST1.GIF" WIDTH=91 HEIGHT=140></P>
+<P><IMG SRC="IMG\\DOST1.GIF" WIDTH=91 HEIGHT=140></P>
 <a href="http://www.amazon.com/exec/obidos/ASIN/0679600205">Read the book</a>
 
-$).
+`).
 
 
 %10) 
 %pretend(1,2, not understand(1,2, pretend(2,1,smth))).
 pretend(person, other_person, not understand(person, not want(other_person, person))):-
-  iassert($
+  iassert(`
 <B><I><FONT FACE="Arial"><P ALIGN="CENTER">A Guest</P>
 </I></FONT><FONT SIZE=2><P ALIGN="CENTER">by A. Chekhov</P>
 </B>
@@ -325,16 +325,16 @@ to pretend to be sick. He says that the desease is infectious. The former behave
 as if he does not understand what his neighbor is driving at.
   Finally, the owner of the house asks his guest to lend him some money. After
 that the latter immediately disappears.</P></FONT>
-<P><IMG SRC="scripts\IMG\CHEKHOV2.GIF" WIDTH=91 HEIGHT=140></P>
+<P><IMG SRC="scripts\\IMG\\CHEKHOV2.GIF" WIDTH=91 HEIGHT=140></P>
 <a href="http://www.amazon.com/exec/obidos/ASIN/0679603174">Read the book</a>
 
-$).
+`).
 
 %11)
 %believe(guests, not pretend(husband, want(wife, guests))):-
 believe(person, not pretend(other_person, person, want(wife, person))):-
 
- iassert($
+ iassert(`
 <B><I><FONT FACE="Arial"><P ALIGN="CENTER">Invisible Tears<B>
    (Tears which are not obvious to the world)</P>
 </I></FONT><FONT SIZE=2><P ALIGN="CENTER">by A. Chekhov</P>
@@ -346,12 +346,12 @@ down to greet the guests, her face full of insincere joy. She keeps on dysplayin
 hospitality and love toward her husband. Of course, both joy and hospitality
 are fake. But when the guests leave the house, they get envious of his friend. They
 wish they had a family like that.</P></FONT>
-<P><IMG SRC="IMG\CHEKHOV1.GIF" WIDTH=91 HEIGHT=140></P>
+<P><IMG SRC="IMG\\CHEKHOV1.GIF" WIDTH=91 HEIGHT=140></P>
 <a href="http://www.amazon.com/exec/obidos/ASIN/0393090027">Read the book</a>
-$).
+`).
 %!
 believe(person, pretend(other_person,person, want(other_person, Smth))):-
-iassert($
+iassert(`
 <B><I><FONT FACE="Arial"><P ALIGN="CENTER">Nerves</P>
 </I></FONT><FONT SIZE=2><P ALIGN="CENTER">by A. Chekhov</P>
 </B>
@@ -362,14 +362,14 @@ iassert($
  reason that the dark night is really scary for him. But the governess is 
  absolutely sure that the landlord means something else. She suspects the
  landlord of sexual harassment and promises to tell the whole thing to his wife.
- <P><IMG SRC="scripts\IMG\CHEKHOV3.GIF" WIDTH=91 HEIGHT=140></P>
+ <P><IMG SRC="scripts\\IMG\\CHEKHOV3.GIF" WIDTH=91 HEIGHT=140></P>
 <a href="http://www.amazon.com/exec/obidos/ASIN/0679603174">Read the book</a>
-</P></FONT>$).
+</P></FONT>`).
 
 
     %! she pretends that believes that he pretends that he is a prince
-pretend(she, he, believe(she, pretend(he, she, $he is a prince$ ))):-
-iassert($
+pretend(she, he, believe(she, pretend(he, she, `he is a prince` ))):-
+iassert(`
 <B><I><FONT FACE="Arial"><P ALIGN="CENTER">Boris Godunov</P>
 </I></FONT><FONT SIZE=2><P ALIGN="CENTER">by A. Pushkin</P>
 </B>
@@ -382,14 +382,14 @@ iassert($
     The fiance has the clear understanding that her lover is a priest, but she
  impresses him that she wants to be together again, calls him "prince" and pretends
  that she believes that he does not pretend about being a prince.
- <P><IMG SRC="scripts\IMG\CHEKHOV3.GIF" WIDTH=91 HEIGHT=140></P>
+ <P><IMG SRC="scripts\\IMG\\CHEKHOV3.GIF" WIDTH=91 HEIGHT=140></P>
 <a href="http://www.amazon.com/exec/obidos/ASIN/0679603174">Read the book</a>
 
-</P></FONT>$).
+</P></FONT>`).
 
     %%! it is not true that she pretends that believes that he does not pretend that he is not a murderer of her husband
-pretend(she, he, believe(she, not pretend(he, she, $he is not a murderer$ ))):-
-iassert($
+pretend(she, he, believe(she, not pretend(he, she, `he is not a murderer` ))):-
+iassert(`
 <B><I><FONT FACE="Arial"><P ALIGN="CENTER">Don Juan</P>
 </I></FONT><FONT SIZE=2><P ALIGN="CENTER">by A. Pushkin</P>
 </B>
@@ -400,13 +400,13 @@ iassert($
  discloses his real name. Seeing her horror, he turns back and starts to pretend
  that he is actually Don Diego. Donna Anna does not pretend that she believes his pretent.
 
- <P><IMG SRC="scripts\IMG\CHEKHOV3.GIF" WIDTH=91 HEIGHT=140></P>
+ <P><IMG SRC="scripts\\IMG\\CHEKHOV3.GIF" WIDTH=91 HEIGHT=140></P>
 <a href="http://www.amazon.com/exec/obidos/ASIN/0679603174">Read the book</a>
-</P></FONT>$).
+</P></FONT>`).
 
     %% she believes that he does not pretend that he committed the murderer of her husband because of his love to her
 believe(she, not pretend(he, she, love(he, she))):-
-iassert($
+iassert(`
 <B><I><FONT FACE="Arial"><P ALIGN="CENTER">Richard III</P>
 </I></FONT><FONT SIZE=2><P ALIGN="CENTER">by W. Shakespear</P>
 </B>
@@ -414,14 +414,14 @@ iassert($
  The husband's murderer comes to the funeral. The wife is familiar with him.
  He approaches her and explains, that he killed her husband because of his passion
  to her. The wife trusts the murderer.
- <P><IMG SRC="scripts\IMG\CHEKHOV3.GIF" WIDTH=91 HEIGHT=140></P>
+ <P><IMG SRC="scripts\\IMG\\CHEKHOV3.GIF" WIDTH=91 HEIGHT=140></P>
 <a href="http://www.amazon.com/exec/obidos/ASIN/0679603174">Read the book</a>
-</P></FONT>$).
+</P></FONT>`).
 
 %% 
 %! a person believes that the husband does not want that he love the wife  
 believe(lover, not want( husband, love(lover, wife))):-
-iassert($
+iassert(`
 <B><I><FONT FACE="Arial"><P ALIGN="CENTER">How he lied to her husband</P>
 </I></FONT><FONT SIZE=2><P ALIGN="CENTER">by B. Show</P>
 </B>
@@ -433,13 +433,13 @@ that the  has no appeal to his wife at all.
   The husband is getting mad at the young gentlemen and starts fighting with him.
   The lover starts yelling that he indeed fell in love with the wife and she is the
   the real addressee of his poems. The husband is relaxed and suggests to publish them.
- <P><IMG SRC="scripts\IMG\CHEKHOV3.GIF" WIDTH=91 HEIGHT=140></P>
+ <P><IMG SRC="scripts\\IMG\\CHEKHOV3.GIF" WIDTH=91 HEIGHT=140></P>
 <a href="http://www.amazon.com/exec/obidos/ASIN/0679603174">Read the book</a>
-</P></FONT>$).
+</P></FONT>`).
 
 %! a wife does not want to confess to her husband that she was not faithful
 want(wife, not confess(wife, husband, not faithful(wife, husband))):-
-iassert($
+iassert(`
 <B><I><FONT FACE="Arial"><P ALIGN="CENTER">The long tongue</P>
 </I></FONT><FONT SIZE=2><P ALIGN="CENTER">by A. Chekhov</P>
 </B>
@@ -449,9 +449,9 @@ iassert($
  affairs here and there. The young wife does not want to tell what she was doing,
  so she focuses on her friend instead. Invisible for herself, she started mentioning
  that she followed her friend rather frequently.
- <P><IMG SRC="scripts\IMG\CHEKHOV3.GIF" WIDTH=91 HEIGHT=140></P>
+ <P><IMG SRC="scripts\\IMG\\CHEKHOV3.GIF" WIDTH=91 HEIGHT=140></P>
 <a href="http://www.amazon.com/exec/obidos/ASIN/0679603174">Read the book</a>
-</P></FONT>$).
+</P></FONT>`).
 
 %12
 %  pretend(husband, server, want(husband, smth)).
@@ -465,7 +465,7 @@ pretend(wife, neighbour, want(wife, beat(husband, wife))).
 ask(neighbour, husband, beat(neighbour, wife)).
 say(husband, neighbour, want( husband, beat(husband, wife))).
 /*
-iassert($
+iassert(`
 <B><I><FONT FACE="Arial"><P ALIGN="CENTER">Lekar' ponevole</P>
 </I></FONT><FONT SIZE=2><P ALIGN="CENTER">by Molier</P>
 </B>
@@ -476,7 +476,7 @@ being beaten by her husband. Moreover, she started to yell at the neighbour and 
 Then the upset neighbour suggest the husband to join him beating his wife. The husband says that
 he loves his wife and beats her very infrequently. Finally, the husband and the wife start 
 beating the neighbor.
- $).
+ `).
 */
 want(husband, forgive(wife, husband, beat(husband, wife))).
 not want(wife, forgive(wife, husband, beat(husband, wife))).
@@ -536,10 +536,10 @@ want(mike, know(peter, location(token))).
 believe(mike, not know(peter, location(token))).
 believe(mike, want(peter, know(peter, location(token)))).
 
-want(peter,not believe(peter,pretend(mike,peter,smth))):-iassert($Because Peter likes to speculate about smth real.$).
+want(peter,not believe(peter,pretend(mike,peter,smth))):-iassert(`Because Peter likes to speculate about smth real.`).
 %*Why does Peter want to avoid thinking about the pretend of Mike
 
-pretend(peter,mike,know(peter,inform(mike,peter,smth))):-iassert($Actually, Peter did not hear what Mike told him but was ashamed to ask again.$).
+pretend(peter,mike,know(peter,inform(mike,peter,smth))):-iassert(`Actually, Peter did not hear what Mike told him but was ashamed to ask again.`).
 %*What kind of Peter's pretending was based on his knowledge of what Mike told to Peter
 
 inform(A,B, What):- Inform= ( know(A, What),
@@ -558,7 +558,7 @@ want(A, inform(A,B,What)):- inform(A,B, What), not want(A, not know(B, What)).
 %bugs:
 %repetative know : not _> second
 %inform peter-> inform(peter, __, J).
-%enu($who, know, that, peter, know, that, me, not, know$, O), writeln(O).
+%enu(`who, know, that, peter, know, that, me, not, know`, O), writeln(O).
 
 
 %why would a person pretend to the other person that he does not want to know
@@ -583,34 +583,34 @@ want(A, inform(A,B,What)):- inform(A,B, What), not want(A, not know(B, What)).
 
 genKeywords(Sentence, Ques, KeySearchStr):-
   flatExpand(Ques, KeyWordStrE),
-  string_search($z$, KeyWordStrE, PosZ), PosZ1 is PosZ-1,     %writeln(PosZ1),
+  string_search(`z`, KeyWordStrE, PosZ), PosZ1 is PosZ-1,     %writeln(PosZ1),
   substring(KeyWordStrE, 0, PosZ1, KeyWordStr), 
-  Pre= $ NL component did not find an answer to this question. 
+  Pre= ` NL component did not find an answer to this question. 
   Click to run the 
-  <a href="http://mars.peoplesupport.com/dormstore/faq/default.asp?find_spec=$,
- Post= $">keyword search</a>$,
+  <a href="http://mars.peoplesupport.com/dormstore/faq/default.asp?find_spec=`,
+ Post= `">keyword search</a>`,
  concat([Pre, KeyWordStr, Post], KeySearchStr),
  iassert(KeySearchStr). %, writeln(KeySearchStr).
 
 flatExpand(Clause,ClauseList):-
     ifthen( not clause_list(_,Clause), 
-            ( writeln($!!! input term must be a list: flatExpand$),fail)),
+            ( writeln(`!!! input term must be a list: flatExpand`),fail)),
 
      string_term(Str,Clause),                              % writeln(Str),
-	string_change_char($((($,$,$,Str,Str1),
-    string_change_char($))))$,$,$,Str1,Str2),
-	string_change_char($)))$,$,$,Str2,Str3),
-	string_change_char($(($,$,$,Str3,Str4),
-	string_change_char($))$,$,$,Str4,Str5),	
-	string_change_char($($,$,$,Str5,Str6),
-	string_change_char($)$,$,$,Str6,Str7), 
-    string_change_char($,]$,$>$, Str7, Str8),
-    string_change_char($>$,$]$,Str8,Str9),
-    string_change_char($,,$,$>$, Str9, Str10),
-	string_change_char($>$, $,$, Str10, Str11), 
-    string_change_char($,$,$+$,Str11, Str12),
-    string_change_char($]$,'', Str12, Str13),
-    string_change_char($[$,'', Str13, ClauseList).
+	string_change_char(`(((`,`,`,Str,Str1),
+    string_change_char(`))))`,`,`,Str1,Str2),
+	string_change_char(`)))`,`,`,Str2,Str3),
+	string_change_char(`((`,`,`,Str3,Str4),
+	string_change_char(`))`,`,`,Str4,Str5),	
+	string_change_char(`(`,`,`,Str5,Str6),
+	string_change_char(`)`,`,`,Str6,Str7), 
+    string_change_char(`,]`,`>`, Str7, Str8),
+    string_change_char(`>`,`]`,Str8,Str9),
+    string_change_char(`,,`,`>`, Str9, Str10),
+	string_change_char(`>`, `,`, Str10, Str11), 
+    string_change_char(`,`,`+`,Str11, Str12),
+    string_change_char(`]`,'', Str12, Str13),
+    string_change_char(`[`,'', Str13, ClauseList).
 	
 %%==========================================================
 abbrev([eating], eat).

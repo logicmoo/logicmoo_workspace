@@ -53,17 +53,17 @@ yieldTerm(Term):- member(Agent, [mike, peter, nick]),
 
 yieldMental2(TotalTerm):-
      yieldTerm(TermHigh), yieldTerm(TermLow), TermHigh \= TermLow,
-	 [!
-       change_char($smth$, $sm1th$, TermHigh, TermHigh1), %writeln(TermHigh1),
+	 aritySlice((
+       change_char(`smth`, `sm1th`, TermHigh, TermHigh1), %writeln(TermHigh1),
 	 string_term(TermLowStr, TermLow),
-	 change_char($sm1th$,  TermLowStr, TermHigh1, TotalTerm)
-      !].
+	 change_char(`sm1th`,  TermLowStr, TermHigh1, TotalTerm)
+      )).
 
 yieldMental3(TotalTerm):-
      yieldMental2(TermHigh), yieldTerm(TermLow),
-     [! change_char($smth$, $sm1th$, TermHigh, TermHigh1),
+     aritySlice(( change_char(`smth`, `sm1th`, TermHigh, TermHigh1),
 	 string_term(TermLowStr, TermLow),
-	 change_char($sm1th$,  TermLowStr, TermHigh1, TotalTerm), 
+	 change_char(`sm1th`,  TermLowStr, TermHigh1, TotalTerm), 
 	 not (TotalTerm = (not NT)) ,
 
 	 clause_list(TotalTerm, TotalTerms),
@@ -86,7 +86,7 @@ yieldMental3(TotalTerm):-
 	          list_search([not Idempot, Agent, Idempot, Agent], TwiceMentals,_);
 			  list_search([Idempot, Agent, not Idempot, Agent], TwiceMentals,_);
 	          list_search([not Idempot, Agent, not Idempot, Agent], TwiceMentals,_)
-			  )                   %,  writeln(($binary mental$,TwiceMentals))   % , get(CCC)      
+			  )                   %,  writeln((`binary mental`,TwiceMentals))   % , get(CCC)      
             ),
 %%%%%% inform, pretend, ask repetition
        not  ( member(Idempot, [inform, pretend, ask]),
@@ -94,9 +94,9 @@ yieldMental3(TotalTerm):-
 	          list_search([not Idempot, Agent,PassAgent, Idempot, Agent], TwiceMentals,_);
 			  list_search([Idempot, Agent,PassAgent, not Idempot, Agent], TwiceMentals,_);
 	          list_search([not Idempot, Agent,PassAgent, not Idempot, Agent], TwiceMentals,_)
-			  )                  %, writeln(($ternary mental$,TwiceMentals)) % , get(CCC)   
+			  )                  %, writeln((`ternary mental`,TwiceMentals)) % , get(CCC)   
             )
-	  !].
+	  )).
 
 yieldMental4(TotalTerm):-
      yieldMental2(TermHigh), yieldMental2(TermLow),
@@ -105,9 +105,9 @@ yieldMental4(TotalTerm):-
 		axiomFormula(TermLow),
         meaningfulFormula(TermLow),
 
-     [! change_char($smth$, $sm1th$, TermHigh, TermHigh1),
+     aritySlice(( change_char(`smth`, `sm1th`, TermHigh, TermHigh1),
 	 string_term(TermLowStr, TermLow),
-	 change_char($sm1th$,  TermLowStr, TermHigh1, TotalTerm), 
+	 change_char(`sm1th`,  TermLowStr, TermHigh1, TotalTerm), 
 	 not (TotalTerm = (not NT)) ,
 
 	 clause_list(TotalTerm, TotalTerms),
@@ -130,7 +130,7 @@ yieldMental4(TotalTerm):-
 	          list_search([not Idempot, Agent, Idempot, Agent], TwiceMentals,_);
 			  list_search([Idempot, Agent, not Idempot, Agent], TwiceMentals,_);
 	          list_search([not Idempot, Agent, not Idempot, Agent], TwiceMentals,_)
-			  )       %,  writeln(($binary mental$,TwiceMentals))   % , get(CCC)      
+			  )       %,  writeln((`binary mental`,TwiceMentals))   % , get(CCC)      
             ),
 %%%%%% inform, pretend, ask repetition
        not  ( member(Idempot, [inform, pretend, ask]),
@@ -138,12 +138,12 @@ yieldMental4(TotalTerm):-
 	          list_search([not Idempot, Agent,PassAgent, Idempot, Agent], TwiceMentals,_);
 			  list_search([Idempot, Agent,PassAgent, not Idempot, Agent], TwiceMentals,_);
 	          list_search([not Idempot, Agent,PassAgent, not Idempot, Agent], TwiceMentals,_)
-			  )       %  , writeln(($ternary mental$,TwiceMentals)) % , get(CCC)   
+			  )       %  , writeln((`ternary mental`,TwiceMentals)) % , get(CCC)   
             )
-	  !].
+	  )).
 
-save_wkb:-   % create(H1, $C:\nl_ext\wkb_2_2.ari$), % 
-              open(H, $C:\nl_ext\wkb_2_2.ari$, w), 
+save_wkb:-   % create(H1, `C:/nl_ext/wkb_2_2.ari`), % 
+              open('C:/nl_ext/wkb_2_2.ari',write,H), 
               not (
 		      yieldMental3(K),
                                              %yieldMental4(K)), 	  
@@ -153,31 +153,31 @@ save_wkb:-   % create(H1, $C:\nl_ext\wkb_2_2.ari$), %
                       write(H, K), nl(H),
               fail ), close(H).
 /*          	
-              [! clause_list(K, Ks),
+              aritySlice(( clause_list(K, Ks),
 	            flatExpand(Ks, Ksfe),           
                 string_term(KStr, Ksfe),                   
-				string_change_char($,$,' ', KStr, Text),
+				string_change_char(`,`,' ', KStr, Text),
 			%	(Expr = (K :- iassert( Text ))), 
 			     Expr=K,	                            % writeln(Expr),
-				write(H, Expr), write(H, $.$), nl(H) !],
+				write(H, Expr), write(H, `.`), nl(H) )),
 
                 fail ), close(H).
 */
 synth_info(Clause):-flatSynth(Clause, Sent),
                       string_term(Str, Sent),         writeln(Sent),
-                      string_change_char($,$,' ', Str, Text),
-                     string_change_char($[$,' ', Text, Text1),
-                     string_change_char($]$,'', Text1, Text2),
-                      concat($ You mean,$, Text2, YouMeanText),
+                      string_change_char(`,`,' ', Str, Text),
+                     string_change_char(`[`,' ', Text, Text1),
+                     string_change_char(`]`,'', Text1, Text2),
+                      concat(` You mean,`, Text2, YouMeanText),
                       iassert(YouMeanText).
 
 
 yieldMentalSuccess(STerm):-
       (yieldMental3(Term);yieldMental2(Term);yieldTerm(Term)),
       ifthen( (Term = (not AnyTerm)) , fail),
-      [![!change_char($s$,$_$, Term, XTerm)!],
+      aritySlice((aritySlice((change_char(`s`,`_`, Term, XTerm))),
       XTerm ,                                      %	writeln(Term),
-      STerm=XTerm !].
+      STerm=XTerm )).
       
 fe:-flatExpand( [know(mike, not believe(peter, smth)), tell(mike,peter,smth)],
                 O), writeln(O).
@@ -221,20 +221,20 @@ flatSynth(Clause, Sentence):- flatExpand(Clause, ClauseFE),
              
 flatExpand(Clause,ClauseFE):-
     ifthen( not clause_list(_,Clause), 
-            ( writeln($!!! input term must be a list: flatExpand$),fail)),
+            ( writeln(`!!! input term must be a list: flatExpand`),fail)),
     string_term(Str,Clause),                              % writeln(Str),
-	string_change_char($((($,$,$,Str,Str1),
-    string_change_char($))))$,$,$,Str1,Str2),
-	string_change_char($)))$,$,$,Str2,Str3),
-	string_change_char($(($,$,$,Str3,Str4),
-	string_change_char($))$,$,$,Str4,Str5),
+	string_change_char(`(((`,`,`,Str,Str1),
+    string_change_char(`))))`,`,`,Str1,Str2),
+	string_change_char(`)))`,`,`,Str2,Str3),
+	string_change_char(`((`,`,`,Str3,Str4),
+	string_change_char(`))`,`,`,Str4,Str5),
 	
-	string_change_char($($,$,$,Str5,Str6),
-	string_change_char($)$,$,$,Str6,Str7), 
-    string_change_char($,]$,$>$, Str7, Str8),
-    string_change_char($>$,$]$,Str8,Str9),
-    string_change_char($,,$,$>$, Str9, Str10),
-    string_change_char($>$,$,$,Str10, Str11),
+	string_change_char(`(`,`,`,Str5,Str6),
+	string_change_char(`)`,`,`,Str6,Str7), 
+    string_change_char(`,]`,`>`, Str7, Str8),
+    string_change_char(`>`,`]`,Str8,Str9),
+    string_change_char(`,,`,`>`, Str9, Str10),
+    string_change_char(`>`,`,`,Str10, Str11),
 	string_term(Str11, ClauseFE).
 
 mm3:- matchMental3(  [know(mike, want(peter,smth))], 
@@ -261,7 +261,7 @@ matchMental( M1,M2, Suffix ):-
   ( matchMental3( M1, M2, Suffix)                       ).
   
 matchMental3( M1,M2, Suffix):- 
- [!  clause_list(M1,M1s), clause_list(M2,M2s),
+ aritySlice((  clause_list(M1,M1s), clause_list(M2,M2s),
 
   flatExpand(M1s, M1era), flatExpand(M2s, M2e),  	
   reduceAntiSym(M1era, M1e),            %  writeln((M1e,M2e)), !, get(CCC),
@@ -271,15 +271,15 @@ matchMental3( M1,M2, Suffix):-
   Lmin_m2 is Lmin - 2, Lmin_m1 is Lmin-1,
   (
       ( L1=L2, M1em=M1e, M2em=M2e , Suffix= exact);
-%          (sublist(0,Lmin,M1e,M1em),    sublist(0,Lmin,M2e,M2em),   sublist(Lmin_m1,1,M1e,[Suffix]), writeln($no shift$) );
-%	  (sublist(2,Lmin,M1e,M1em),    sublist(0,Lmin_m2,M2e,M2em), sublist(0,1,M1e,[Suffix] ),  writeln($2-shift $) ),  %;
-      	  (sublist(0,Lmin,M1e,M1em), sublist(2,Lmin,M2e,M2em),    sublist(0,1,M2e,[Suffix]),   writeln($-2-shift$) )
-  ) !],
+%          (sublist(0,Lmin,M1e,M1em),    sublist(0,Lmin,M2e,M2em),   sublist(Lmin_m1,1,M1e,[Suffix]), writeln(`no shift`) );
+%	  (sublist(2,Lmin,M1e,M1em),    sublist(0,Lmin_m2,M2e,M2em), sublist(0,1,M1e,[Suffix] ),  writeln(`2-shift `) ),  %;
+      	  (sublist(0,Lmin,M1e,M1em), sublist(2,Lmin,M2e,M2em),    sublist(0,1,M2e,[Suffix]),   writeln(`-2-shift`) )
+  ) )),
     runMatch(M1em, M2em, Suffix, Matchs).
 
 runMatch(M1e,M2e,Suffix, Matchs):-
-            %    len(M1e, LLen), len(M2e, LLen), writeln($inside runmatch$),
-                                                    %  writeln(($cut: $, M1e, M2e)),		     get(CCCCCC),
+            %    len(M1e, LLen), len(M2e, LLen), writeln(`inside runmatch`),
+                                                    %  writeln((`cut: `, M1e, M2e)),		     get(CCCCCC),
     LongList=[0,1,2,3,4,5,6,7,9,10,11,12,13],
     findall(Match,(  member(LtrN, LongList),    
              sublist(LtrN,1,M1e,[Ltr1]),
@@ -334,7 +334,7 @@ list_delete_pos(Pos, Orig, Result):- len(Orig, LenOrig),	 dec(Pos, Pos0),
                        
 ss:- sublist(0,7,[want,mike,know,peter,want,mike,smth],O1) , writeln(O1),
      sublist(0,7,[want, mike,believe,mike,not know,peter,location,token],O2) , writeln(O2), 
-     sublist(6,1,[want,mike,know,peter,want,mike,smth],O3) , writeln(($no shift$,O3)).
+     sublist(6,1,[want,mike,know,peter,want,mike,smth],O3) , writeln((`no shift`,O3)).
 
 
 

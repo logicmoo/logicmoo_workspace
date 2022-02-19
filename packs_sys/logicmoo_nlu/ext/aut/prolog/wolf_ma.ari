@@ -55,7 +55,7 @@ want(wolf, not see(girl, woodcutter)).
 %want(wolf, not kill(Smb, wolf)). %negation is passive
 
   know([wolf, girl], (
-want(wolf, eat(wolf, woodcutter)) :- eat(wolf, girl)   %,writeln($!!!!!!!!$)
+want(wolf, eat(wolf, woodcutter)) :- eat(wolf, girl)   %,writeln(`!!!!!!!!`)
                      )).
 
 want(girl, eat(woodcutter, wolf)).

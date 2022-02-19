@@ -102,7 +102,7 @@ just_transl:-fail.
 interpreter:-fail.
 yes_info.
 iassert(Str):-ifthen(yes_info, assert(info(Str))).
-au_prep :-[-xtype, -lists, -nl_util, -htmlout, -$au\au_patt$, -$au\aul_dom$, -$au\au_type$, -nl ], assert(interpreter).
+au_prep :-[-xtype, -lists, -nl_util, -htmlout, -`au\au_patt`, -`au\aul_dom`, -`au\au_type`, -nl ], assert(interpreter).
 
 nonQuest(Z):- not (Z=who; Z=which; Z=what; Z=where;  Z=when ).
 writeln(A,A):- not fail. % I can't find it!!
@@ -122,24 +122,24 @@ advance(SentenceInit,Ques):-  assert(yes_info),
              sublist(NN,1,Sentence,[F]),
              member(F,AllPreds)),
      Fs ), !,
-     [! findall((FullPred,FullPredPattern),  ( member( (F,NN),Fs),
+     aritySlice(( findall((FullPred,FullPredPattern),  ( member( (F,NN),Fs),
         Fragms=Sentence,
-        [!ifthenelse( (functor(PFull1,F), pattern(PFull1) , verifyCorrectPattern(PFull1, Fragms,F) ),
+        aritySlice((ifthenelse( (functor(PFull1,F), pattern(PFull1) , verifyCorrectPattern(PFull1, Fragms,F) ),
                     (findMaxPattern(PFull, Fragms,F) , writeln(findMaxPattern(PFull, Fragms, F))
                       ),
-                    (                              writeln($no substitution$),
-                     functor(PFull,F), pattern(PFull) ) ) !] ,
+                    (                              writeln(`no substitution`),
+                     functor(PFull,F), pattern(PFull) ) ) )) ,
                                                    writeln(pattern(PFull)),
             FullPredPattern=PFull,
-        [!
+        aritySlice((
              SeparChk=PFull, PureChk=PFull,
-             PFull=..[_|ArgTypes] !],
+             PFull=..[_|ArgTypes] )),
          findall(PredArg, (
                     member(ArgN,[0,1,2,3,4,5,6,7,8]),
-                    [! sublist(ArgN,1,ArgTypes,[Arg]),
-                    ArgListPred=..[Arg,Vs] !],
+                    aritySlice(( sublist(ArgN,1,ArgTypes,[Arg]),
+                    ArgListPred=..[Arg,Vs] )),
                     string_term(NNstr,NN), string_term(ArgNstr, ArgN),
-                    concat([$z$, NNstr, ArgNstr], ArbVarstr),
+                    concat([`z`, NNstr, ArgNstr], ArbVarstr),
                     string_term(ArbVarstr, ArbVar),
 
                     ifthenelse( ( ArgListPred, nrev(Fragms, FragmRevs),
@@ -176,13 +176,13 @@ advance(SentenceInit,Ques):-  assert(yes_info),
         findall(FP, member((_,FP),FullPred_Patterns), FullPredPatterns),
         shiftAbstr(FullPredPatterns, FullPredPatternsAbstr),
         shiftAntisymm(FullPredPatternsAbstr,Sentence,FullPreds, ShiftASPredPatts, ShiftFullPreds)
-        !],
+        )),
         mrelease(ShiftASPredPatts, Sentence, PredsRL),
-        [! change_char('x','_', PredsRL, ShiftASPredPattsv),
-        var_const(FullPredsv, ShiftFullPreds) !],
+        aritySlice(( change_char('x','_', PredsRL, ShiftASPredPattsv),
+        var_const(FullPredsv, ShiftFullPreds) )),
          writeln((ShiftASPredPattsv=FullPredsv)),
         ShiftASPredPattsv = FullPredsv ,
-        [!    var_const(ShiftASPredPattsv, ShiftASPredPattsvc),
+        aritySlice((    var_const(ShiftASPredPattsv, ShiftASPredPattsvc),
              metapred_substAdd(ShiftASPredPattsvc, QueRs11),
              metapred_substAdd(QueRs11, QueRs12),
              metapred_substAdd(QueRs12, QueRs),
@@ -197,18 +197,18 @@ advance(SentenceInit,Ques):-  assert(yes_info),
              reorder(OR_ANDsubj,Sentence,QuesDe) ,
                          reorderMode(QuesDe, QuesRM),
              deEnum( QuesRM, Ques),
-             var_list(Que,Ques), var_var(Que,QueCheck)!],  writeln(QueCheck),
+             var_list(Que,Ques), var_var(Que,QueCheck))),  writeln(QueCheck),
              QueCheck,
              !,
              final(Sentence,Ques,Que).
 
 final(Ls,Ques,Que):-
-              [! abolish(accum/1),
+              aritySlice(( abolish(accum/1),
 
               ifthenelse( ( chk_maxmin(Ls,Bmax)),
-                   ( [! (chk_maxmin(Ls,Bmax),
+                   ( aritySlice(( (chk_maxmin(Ls,Bmax),
                          add_maxmin(Ls,Ques,Add,Bmax) ),
-                          var_const(QueM,Add) !], not QueM ),
+                          var_const(QueM,Add) )), not QueM ),
               (
               not  ( Que, assert(accum(Que)), fail ))
                         ),
@@ -218,17 +218,17 @@ final(Ls,Ques,Que):-
               abolish(info/1),
               findall(Y,  (member(Y, Xsd), Y), _),
 
-              ifthenelse( (not interpreter,open(H1, $msnl.v10$, w)),
-                                                           ( write(H1, $<HTML><BODY>$), nl(H1) ),
-                                                           ( H1=5, writeln($No output to msnl.v10$))
+              ifthenelse( (not interpreter,open(H1, `msnl.v10`, w)),
+                                                           ( write(H1, `<HTML><BODY>`), nl(H1) ),
+                                                           ( H1=5, writeln(`No output to msnl.v10`))
                                                          ),
            findall(X, (member(X,Xsd),
-                       writeFormula(X, Ls, H1)), Xss) !],
+                       writeFormula(X, Ls, H1)), Xss) )),
 
               writeInfo(H1),
-                ifthen(not interpreter, (write(H1, $</BODY></HTML>$), nl(H1),   close(H1))),
+                ifthen(not interpreter, (write(H1, `</BODY></HTML>`), nl(H1),   close(H1))),
 
-           ifthen(Xss=[], writeHtml($ I don't know, or you question is inconsistent! $)).
+           ifthen(Xss=[], writeHtml(` I don't know, or you question is inconsistent! `)).
 chk_maxmin(Ls, Bmax):-
          intersection(Ls, [maximal, maximum], I), I \= [], Bmax is 1. %max
 chk_maxmin(Ls, Bmax):-
@@ -263,9 +263,9 @@ subVar( Cs, Cmatchs):- clause_list(C,Cs),
                                    A1=..[_|Args1], A2=..[_|Args2],
                                    member(M1,Args1),  member(M2,Args2),
                                    M1\==M2,
-                                 [!     M1Z=..[M1,Z],
+                                 aritySlice((     M1Z=..[M1,Z],
                                    clause( M1Z, ClM),  ClM\==true,
-                                   clause_list(ClM,ClMs) !],
+                                   clause_list(ClM,ClMs) )),
                                    member(J,ClMs), J=..[M2|_] ,
                                    X= (M1=M2)
                                    ), Cmatchds),
@@ -294,7 +294,7 @@ shiftAs(Cs, Sentence,  SubstPreds, CAs,  SubstPredsOut):-  antiSym(AntiSyms),
                 PFull2=..[P2,ArgAS21,ArgAS22| ArgNAS2],
 
                 ArgAS12=ArgAS21,
-                [! member(P1, AntiSyms), member(P2, AntiSyms) !],
+                aritySlice(( member(P1, AntiSyms), member(P2, AntiSyms) )),
                 list_search([P1], Sentence, StartBetween1), StartBetween is StartBetween1+1,
                 list_search([P2], Sentence, EndBetween),    Len is EndBetween - StartBetween,
                 Len > -1,
@@ -311,7 +311,7 @@ shiftAs(Cs, Sentence,  SubstPreds, CAs,  SubstPredsOut):-  antiSym(AntiSyms),
                                                             )
                                                  )
                                                ),
-                                               (          writeln($and or$),
+                                               (          writeln(`and or`),
                                                            PFull2New=..[P2,ArgAS11,ArgAS12| ArgNAS2],
                                                ifthenelse(member(or, Links),
                                                                       (  list_insert(Cs, PFull2, PFull2New, CAs),
@@ -346,7 +346,7 @@ shiftAs(Cs, Sentence,  SubstPreds, CAs,  SubstPredsOut):-  antiSym(AntiSyms),
                                       )
                                    ),
                                   ifthen( var(CAs), ( CAs=Cs,
-                                           writeln($!!! unknown preposition between antisym$)
+                                           writeln(`!!! unknown preposition between antisym`)
                                         ))
 
                            )
@@ -360,7 +360,7 @@ shiftAs(Cs,CAs):-string_term(Cstr,Cs),     %writeln(shiftAs(Cs,CAs)),
                  string_search(ChkStr,Cstr,Dist)  ),
               (Dist1 is Dist+3, string_length(Cstr,Cl), Lch is Cl-Dist1,
                substring(Cstr,Dist1,Lch,Left),
-                       concat([$x$,VarStr,$1$],NewStr),
+                       concat([`x`,VarStr,`1`],NewStr),
                string_change_char(VarStr,NewStr ,Left,Left1),
                substring(Cstr,0,Dist1,Right),  concat(Right,Left1,CAstr),
                string_term(CAstr,CAs)),
@@ -373,18 +373,18 @@ add_maxmin(Ls,Ques,Add, Bmax):-
                         member(LM,Ls),  member(M,Ques) , ( (M=..[LM|_],MM=M);
                                      (clause_list(M,Ms),
                                       member(M1,Ms),M1=..[LM|_]),MM=M1 ),
-                        [! functor(LMxx,LM), pattern(LMxx) !],
+                        aritySlice(( functor(LMxx,LM), pattern(LMxx) )),
                         member(TermPos,[0,1,2,3,4,5]),
                         arg0(TermPos,LMxx,xnum),
-                        arg0(TermPos,MM,Xnum),                             writeln(($Xnum$,M,Xnum)),
+                        arg0(TermPos,MM,Xnum),                             writeln((`Xnum`,M,Xnum)),
                         clause_list(Que,Ques),
                   ifthenelse(Bmax=1,
-                            ( QueMaxs=[ [! findall(Xnum, (Que) , Xs) !],
+                            ( QueMaxs=[ aritySlice(( findall(Xnum, (Que) , Xs) )),
                                        Xs\==[],
                                        quicksort(Xs,Sorts),
                                        last(Sorts,Max),
                                        Xnum=Max,!, Que, writeln(Que),assert(accum(Que)),fail]),
-                            ( QueMaxs=[ [! findall(Xnum, (Que, integer(Xnum)) , Xs) !],
+                            ( QueMaxs=[ aritySlice(( findall(Xnum, (Que, integer(Xnum)) , Xs) )),
                                        Xs\==[],
                                        quicksort(Xs,Sorts),
                                        Sorts=[Max|_],
@@ -440,7 +440,7 @@ ppsition([on, to, in, from, of, by]).
 
        ( list_search( [MOther, F, M], Os, _), ArgN=1, writeln([MOther, F,M]) );
          list_search([F,M], Os, _), ArgN=1, writeln([F,M])
-    ), writeln($first case: no prep$).
+    ), writeln(`first case: no prep`).
  antiSymMember(M, Os, ArgN, F, _,_,_):-
            antiSym(As), member(F, As),
          (    (list_between(F, by, M, Os), ArgN =:=0,
@@ -458,7 +458,7 @@ ppsition([on, to, in, from, of, by]).
                list_between(F,ONto,M, Os), list_between(by,ONto,M, Os))
               ),
               ArgN =:= 1, writeln((1,list_between(F,by,M))) )
-         ), writeln($passive$).
+         ), writeln(`passive`).
 
  antiSymMember(M,Os,ArgN,F, PFull,AllConstSemType, AllPreds):-
        not (list_between(F, by, M, Os);list_between(M, F, by, Os)),
@@ -486,7 +486,7 @@ ppsition([on, to, in, from, of, by]).
                                     (StaLen is StaLen1,StaBeg is PosM)
                         ), sublist(StaBeg,StaLen,Os,OStas),
           symOccure(OStas,ArgN)
-     )), writeln($active$).
+     )), writeln(`active`).
 
     symOccure(OStas,ArgN):-
          reverse(OStas,OStasRev),
@@ -506,14 +506,14 @@ normal_form(InpSent, NormSent):-
              string_term(SWord, Word),
              string_length(SWord, Wlen),
              OffSet is Wlen-2,   CutLen is OffSet-0,
-             ifthen(substring(SWord, OffSet, 2, $ed$),
+             ifthen(substring(SWord, OffSet, 2, `ed`),
                     (substring(SWord, 0,CutLen, CutWordS),
                             string_term(CutWordS, CutWord) )),
              ifthen(var(CutWord), CutWord=Word)
              ), NormSent),
 
              ifthen( (not (len(NormSent, L), len(InpSent,L))),
-                      writeln( $wrong normal form!$)).
+                      writeln( `wrong normal form!`)).
 
 rav:- replace_fork([which, team ,play, 1914],O).
 
@@ -580,8 +580,8 @@ metapred_substAdd(MetaSubs, Meta3):-
    SmallTerm=..[Atom| Args],!,
      string_term(SmallStr, SmallTerm),
      atom_string(Atom, AtomStr),
-     change_char(AtomStr, $smallstr$ , Term, TermRepl),
-     change_char($smallstr$, SmallStr, TermRepl, NewTerm),
+     change_char(AtomStr, `smallstr` , Term, TermRepl),
+     change_char(`smallstr`, SmallStr, TermRepl, NewTerm),
      list_insert(MetaSubs, Term, NewTerm, MetaNewSubs),
    cl_delete(SmallTerm, MetaNewSubs, Meta3).
 
@@ -644,7 +644,7 @@ list_between(A,B,C, Ls) :- list_after(A,B,Ls), list_after(B,C,Ls).
 mrelease(Cs, Sentence, R):- R=Cs.
 mrelease(A,B,C):-
                  releaseSepar(A,B,C).
-mrelease(A,B,D):- releaseSepar(A,B,C), releaseSepar(C,B,D), writeln($release 2nd ord$).
+mrelease(A,B,D):- releaseSepar(A,B,C), releaseSepar(C,B,D), writeln(`release 2nd ord`).
 
 releaseSepar(Csx, Sentence,R):-
    change_char('x','_',Csx, Csv),
@@ -656,9 +656,9 @@ releaseSepar(Csx, Sentence,R):-
                 nrev(ArgCommon, ArgCommonr),
 
                 member(SeparArg, ArgCommonr),
-                [! list_insert(ArgAS2, SeparArg, zuniq, ArgAS2New),
+                aritySlice(( list_insert(ArgAS2, SeparArg, zuniq, ArgAS2New),
                 PFull2New=..[P2| ArgAS2New],
-                list_insert(Cs, PFull2, PFull2New, Rz), change_char('z','x', Rz, R) !].
+                list_insert(Cs, PFull2, PFull2New, Rz), change_char('z','x', Rz, R) )).
 
 releaseAbstr(Cs, Sentence,R):-
    member(PFull1, Cs), member(PFull2, Cs),
@@ -668,14 +668,14 @@ releaseAbstr(Cs, Sentence,R):-
                 nrev(ArgCommon, ArgCommonr),
 
                 member(SeparArg, ArgCommonr),
-                [! not ( member(LinkFull, Cs),    LinkFull \= PFull1, LinkFull \=PFull2,
+                aritySlice(( not ( member(LinkFull, Cs),    LinkFull \= PFull1, LinkFull \=PFull2,
                       LinkFull=..[_|LinkArgs],
                           member(SeparArg, LinkArgs)
                         ),
 
         list_insert(ArgAS2, SeparArg, xuniq, ArgAS2New),
                 PFull2New=..[P2| ArgAS2New],
-                list_insert(Cs, PFull2, PFull2New, R) !].
+                list_insert(Cs, PFull2, PFull2New, R) )).
 
 
 predArgDistance(F, Const, Sentence, Dist):-
@@ -691,24 +691,24 @@ minDistance(F, Const, SemType, Sentence):-
      not (
           member(FF, AllPreds),
           member(FF,Sentence), FF \= F,
-          [!pattern(FFull), FFull=..[FF| Args], len(Args, NA), NA>1,
+          aritySlice((pattern(FFull), FFull=..[FF| Args], len(Args, NA), NA>1,
           member(SemType, Args),
 
-          predArgDistance(FF, Const, Sentence, FFDist) !],
+          predArgDistance(FF, Const, Sentence, FFDist) )),
           FFDist<Dist
          ).
 minDistance(F, Const, SemType, Sentence):- fail,
-     predArgDistance(F, Const, Sentence, Dist),     writeln($minDist for mental$),
+     predArgDistance(F, Const, Sentence, Dist),     writeln(`minDist for mental`),
      getPredlist(AllPreds),
      not (
           member(FF, AllPreds),
           member(FF,Sentence), FF \= F,
-          [!pattern(FFull), FFull=..[FF| Args], member(xagent, Args),
+          aritySlice((pattern(FFull), FFull=..[FF| Args], member(xagent, Args),
             list_after(Const,FF, Sentence),
             len(Args, NA), NA>1,
           member(SemType, Args),
 
-          predArgDistance(FF, Const, Sentence, FFDist) !],
+          predArgDistance(FF, Const, Sentence, FFDist) )),
           FFDist<Dist
          ).
 
@@ -756,9 +756,9 @@ insertNOmetaOnce(Cs, Sentence, CAs, NegTerm):-
           ifthenelse(
                   (
                    (list_search([no], Sentence, OffSetNO);list_search([not], Sentence, OffSetNO)),
-                              [! member(FollowFull, [1,2,3,4,5,6,7]),
+                              aritySlice(( member(FollowFull, [1,2,3,4,5,6,7]),
                               OffSetPred is OffSetNO+FollowFull,
-                              sublist(OffSetPred,1,Sentence, [F]) !],    %writeln(F),
+                              sublist(OffSetPred,1,Sentence, [F]) )),    %writeln(F),
                                                                  writeln(F),
                               ifthenelse(var(NegTerm),
                                         NegTerm=F,
@@ -766,16 +766,16 @@ insertNOmetaOnce(Cs, Sentence, CAs, NegTerm):-
                                         ),
                                 getPredlist(Preds), member(F, Preds), %writeln(F),
                                 atom_string(F, Fstr) ,
-                                concat($not $, Fstr, NoFstr),
+                                concat(`not `, Fstr, NoFstr),
                                 string_term(CsStr,Cs),
                                 not string_search(NoFstr,CsStr, _)
                  ),(
 
                  atom_string(F, Fstr),
                    Fstr=FstrOrig,
-                concat([$not $, Fstr], NoFstr1),
-                change_char(FstrOrig, $smallstr$,  Cs, CAs1),
-                change_char($smallstr$, NoFstr1, CAs1, CAs)
+                concat([`not `, Fstr], NoFstr1),
+                change_char(FstrOrig, `smallstr`,  Cs, CAs1),
+                change_char(`smallstr`, NoFstr1, CAs1, CAs)
 
                    ), CAs=Cs).
 
@@ -811,9 +811,9 @@ insertOR_ANDsubject(Cs, Sentence, CAs):-
                       );        (ArgFixs=Args ))
                    ),(
                    member(ArgLink, ArgFixs),
-                [! findall(A, (member(NA, [0,1,2,3,4,5,6,7]), NA<LArgs,
+                aritySlice(( findall(A, (member(NA, [0,1,2,3,4,5,6,7]), NA<LArgs,
                               sublist(NA, 1, Args, [AA]),
-                                     string_term(NNstr, NA), concat($z$, NNstr, NNAstr),
+                                     string_term(NNstr, NA), concat(`z`, NNstr, NNAstr),
                                      string_term(NNAstr, NNA),
                               ifthenelse(AA=Old, A=New,
                                       ifthenelse(AA=ArgLink, A=ArgLink,A=NNA)
@@ -826,7 +826,7 @@ insertOR_ANDsubject(Cs, Sentence, CAs):-
                                               list_insert(Cs, Full, (Full;FullNew), CAs),
                                                   list_insert(Cs, Full, (Full,FullNew), CAs)
                                                 )
-                   !]
+                   ))
                    ), CAs=Cs).
 
 insertOR(Cs, Sentence, CAs):-
@@ -841,9 +841,9 @@ insertOR(Cs, Sentence, CAs):-
                       Full=..[F|Args],
                       len(Args, LArgs), LArgs>1,
                          member(Back, [1,2,3,4,5,6]),
-                       [!  PosPrev is PosFull-Back, PosPrev > -1,
+                       aritySlice((  PosPrev is PosFull-Back, PosPrev > -1,
                  sublist(PosPrev, 1 ,Cs, [PrevFull]),
-                         PrevFull=..FullList, len(FullList, LFl) !], LFl>2
+                         PrevFull=..FullList, len(FullList, LFl) )), LFl>2
                ),(
 
                 cl_delete(Full,    Cs,   Csd1),   writeln(Csd1),
@@ -886,9 +886,9 @@ insertONLY(Cs, Sentence, CAs):-
                ),(
                 FullOnly=Full, FullOnly=..[F|ArgsOnly],
                 member(ArgLink, ArgFixs),
-                [! findall(A, (member(NA, [0,1,2,3,4,5,6,7]), NA<LArgs,
+                aritySlice(( findall(A, (member(NA, [0,1,2,3,4,5,6,7]), NA<LArgs,
                               sublist(NA, 1, ArgsOnly, [AA]),
-                                     string_term(NNstr, NA), concat($z$, NNstr, NNAstr),
+                                     string_term(NNstr, NA), concat(`z`, NNstr, NNAstr),
                                      string_term(NNAstr, NNA),
 
                               ifthenelse(AA=Arg, A=zOnly,
@@ -904,7 +904,7 @@ insertONLY(Cs, Sentence, CAs):-
                 remove_duplicates(zOnlys, zAlls), zAlls=[Arg]
               ),
 
-               append( Cs, [Addition], CAs)!]
+               append( Cs, [Addition], CAs)))
                ),
                ( CAs=Cs )).
 vlc:-verifyLogic([], [what, export, or, import, only], O), writeln(O).
@@ -914,7 +914,7 @@ verifyLogic(Cs,Sentence, CAs):-
                            writeln(LogProps),
                      len(LogProps, LLP), LLP>1
                     ),
-                     CAs=writeln($Query is too complicated logically$),
+                     CAs=writeln(`Query is too complicated logically`),
                      CAs=Cs).
 
 saob:- secondArgOfBin(before(xyear, xyear), 0).
@@ -958,8 +958,8 @@ shiftAbstr(FullPredPatterns, FullPredPatternsAbstr) :-
  findall(Term, ( member(TM, [0,1,2,3,4,5,6,7]),
                  sublist(TM,1,FullPredPatterns, [TermAbstr]),
                  string_term(TMstr, TM),
-                 concat([$xabs$, TMstr], AbstrStr),
-                 change_char($xabstr$, AbstrStr, TermAbstr, Term)
+                 concat([`xabs`, TMstr], AbstrStr),
+                 change_char(`xabstr`, AbstrStr, TermAbstr, Term)
                ), FullPredPatternsAbstr
          ).
 
@@ -976,7 +976,7 @@ etap_check(F, C, Arg, PFull):-
   ArgN=0,  antiSymCheck(F, PFull ),             writeln(PFull),
    etaplink(Fid, F, FRef), etaplink(Cid, C, CRef),
    etaplink(Mid, M, MRef), F\=M, C\=M,                writeln(M),
-  CRef=Mid, FRef=Mid, writeln(($Active$,M)).
+  CRef=Mid, FRef=Mid, writeln((`Active`,M)).
 
 etap_check(F, C, Arg, _):-
 etaplink(Fid, F, FRef), etaplink(Cid, C, CRef),
@@ -1024,16 +1024,16 @@ rom:- reorderMode([play(z9C70,z9C84,z9C98,z9CAC) , after(z9C70,z9C84) , start(z9
 
 reorderMode(Ques, QuesRM):-
    findall(GoodInst, (
-       member( Term, Ques),[! GoodInst=Term,
+       member( Term, Ques),aritySlice(( GoodInst=Term,
            var_const(TermV, Term), writeln(TermV),
             TermV
-               !]
+               ))
            ), GoodInsts), writeln(GoodInsts),
 
    findall(BadInst, (
-       member( TermB, Ques), [! BadInst=TermB,
+       member( TermB, Ques), aritySlice(( BadInst=TermB,
            var_const(TermBV, TermB),
-           not TermBV !]
+           not TermBV ))
            ), BadInsts),  writeln(BadInsts),
             append(GoodInsts, BadInsts, QuesRM).
 :-public xagent/1.
@@ -1050,11 +1050,11 @@ xabstr(Abstrs) :- findall(P, ( pattern(PFull), PFull=..[P|Args],
                                                           ),
                                   Abstrsd ), remove_duplicates(Abstrsd,Abstrs) .
 
-argsString( [$xnum$,$xobject$,$xcity$,$xagent$,$xyear$,$xtrade$,$xteam$,$xperson$,$xorg$,$xabstr$,
-             $xxnum1$,$xxobject1$,$xxcity1$,$xxagent1$,$xxtrade1$,$xxyear1$,$xxperson1$,$xxteam1$,$xxabstr1$,
-             $xxxnum11$,$xxxobject11$,$xxxcity11$,$xxxagent11$,$xxxtrade11$,$xxxyear11$,$xxxteam11$,$xxxorg11$,$xxxabstr11$,
-             $xxxxnum111$,$xxxxobject111$,$xxxxcity111$,$xxxxagent111$,$xxxxtrade111$,$xxxxyear111$,$xxxxteam111$,$xxxxorg111$,$xxxxabstr111$,
-             $xxxxxnum1111$,$xxxxxobject1111$,$xxxxxcity1111$,$xxxxx1111$,$xxxxxtrade1111$,$xxxxxyear1111$,$xxxxxteam1111$,$xxxxxorg1111$, $xxxxxabstr1111$
+argsString( [`xnum`,`xobject`,`xcity`,`xagent`,`xyear`,`xtrade`,`xteam`,`xperson`,`xorg`,`xabstr`,
+             `xxnum1`,`xxobject1`,`xxcity1`,`xxagent1`,`xxtrade1`,`xxyear1`,`xxperson1`,`xxteam1`,`xxabstr1`,
+             `xxxnum11`,`xxxobject11`,`xxxcity11`,`xxxagent11`,`xxxtrade11`,`xxxyear11`,`xxxteam11`,`xxxorg11`,`xxxabstr11`,
+             `xxxxnum111`,`xxxxobject111`,`xxxxcity111`,`xxxxagent111`,`xxxxtrade111`,`xxxxyear111`,`xxxxteam111`,`xxxxorg111`,`xxxxabstr111`,
+             `xxxxxnum1111`,`xxxxxobject1111`,`xxxxxcity1111`,`xxxxx1111`,`xxxxxtrade1111`,`xxxxxyear1111`,`xxxxxteam1111`,`xxxxxorg1111`, `xxxxxabstr1111`
           ]).
 
 antiSym(As):- findall( P , ( pattern(PFull),
@@ -1067,7 +1067,7 @@ num([0,1,2,3,4,5,6,7,8,9]).
 consult(Ls,list):-member(F,Ls), consult(F), fail.
 
 writeln(D):- write(D), nl.
-writeHtml(D):- write($<BR>$),
+writeHtml(D):- write(`<BR>`),
                   write(D), nl.
 
 string_insert(Str,Ins,D,Out):-string_length(Str,Len),
@@ -1082,8 +1082,8 @@ string_insert(Str,Ins,D,Out):-string_length(Str,Len),
                       substring(Str,1,L1,St),
                       string_term(St,Prod).
 
-del_fin_term(B,Baim):-    string_term(Bstr,B), concat($[$,Bstr,B_str),
-                                      concat(B_str,$]$,B_str_),
+del_fin_term(B,Baim):-    string_term(Bstr,B), concat(`[`,Bstr,B_str),
+                                      concat(B_str,`]`,B_str_),
                                       string_term(B_str_,Bt),
                                       reverse(Bt,Binv),Binv=[Fir|Bin],
                                       reverse(Bin,Baim_),
@@ -1092,7 +1092,7 @@ del_fin_term(B,Baim):-    string_term(Bstr,B), concat($[$,Bstr,B_str),
 vl:-var_list(F,[w,rit,a(a),b,b,n,h(K),e(H)]), write(F).
 
 clause_list(B,Ls) :- nonvar(B),string_term(Bstr,B),
-           concat([$[$,Bstr,$]$],B_str), string_term(B_str,Ls).
+           concat([`[`,Bstr,`]`],B_str), string_term(B_str,Ls).
 clause_list(B,Ls) :-nonvar(Ls), Ls\==[],
             len(Ls,N), ifthenelse( N<20 ,brack_del(B,Ls), (
       N1 is N//3, N2 is N*2//3,
@@ -1102,10 +1102,10 @@ clause_list(B,Ls) :-nonvar(Ls), Ls\==[],
 
 vv:-write(A),var_const(a(A),C), write(a(A)), var_const(V,C), write(V).
 v:-var_const((c(w1),h(A,h(HH),w2)),H),  write(H).
-var_const(V,C):-nonvar(V),  change_char('_','z',V,Cz),  change_char($zz$,'_',Cz,C).
+var_const(V,C):-nonvar(V),  change_char('_','z',V,Cz),  change_char(`zz`,'_',Cz,C).
 var_const(V,C):-nonvar(C),  change_char('z','_',C,V).
 var_const(V,C):-var(V),var(C),
-                writeln($constant part contains Var or vice versa! $),nl.
+                writeln(`constant part contains Var or vice versa! `),nl.
 var_list(V,L):-var(L),var_const(V,C),!, clause_list(C,L).
 
 va:-var_list(V,[b(w12,w23),a(w12)]), write(V).
@@ -1146,7 +1146,7 @@ expand(A,B):-
                          string_term(Ustr,U), not(string_search('=',Ustr,_)),
                          subpred(U,Xs) ,         member(X,Xs) ), Bc), !,
                  remove_duplicates(Bc,Bcd),
-             ifthenelse(A\==Ac,[! var_const(B,Bcd) !] ,B=Bcd).
+             ifthenelse(A\==Ac,aritySlice(( var_const(B,Bcd) )) ,B=Bcd).
 
 expand_dupl(Ac,Bc):- clause_list(Ac,As),
               findall(X,(member(U,As),
@@ -1160,10 +1160,10 @@ subpred(A,S):-            A=..[P|L2], X1=A,
                                                           X3=T3), X3s),
                           append([X1],X2s,X12s), append(X12s,X3s,S).
 
-cww:-change_char($w$,$_$, (sell(john,whom,aptw)     ),J), write(J).
+cww:-change_char(`w`,`_`, (sell(john,whom,aptw)     ),J), write(J).
    change_char(Char1,Char2,C,O):-  ifthen(string_search(Char1,Char2,_),
-       (writeln($!!!! Incorrect string change ! $), fail)),
-     string_term(Str,C), [! change_ch(Char1,Char2,'',Str,Ostr) !],
+       (writeln(`!!!! Incorrect string change ! `), fail)),
+     string_term(Str,C), aritySlice(( change_ch(Char1,Char2,'',Str,Ostr) )),
      string_term(Ostr,O).
 
    change_ch(Char1,Char2,Lstr,Wstr,Ostr):- not(string_search(Char1,Wstr,_)),
@@ -1180,7 +1180,7 @@ cww:-change_char($w$,$_$, (sell(john,whom,aptw)     ),J), write(J).
 
      ifthenelse( ( PastFirst=='(',(var(CHt);integer(CHt) ),Char2\='_'),
                (LNb is LN-1, substring(Wstr,N1b,LNb,Wstr1),
-                  concat([Lstr,C1,$eng($,Char2,','],Lstr1) ),
+                  concat([Lstr,C1,`eng(`,Char2,','],Lstr1) ),
 
          ifthenelse( (
                PreLast=='(';PreLast==','  ; PreLast=='=';PreLast==' '  ),
@@ -1191,7 +1191,7 @@ cww:-change_char($w$,$_$, (sell(john,whom,aptw)     ),J), write(J).
 
 any_name(Char):-nth_char(0,Char,N), nth_char(0,'a',Na),nth_char(0,'z',Nz),
             N>Na-1,N<Nz+1.
-string_change_char(Char1,Char2,C,O):- [! string_change_ch(Char1,Char2,'',C,O) !].
+string_change_char(Char1,Char2,C,O):- aritySlice(( string_change_ch(Char1,Char2,'',C,O) )).
 string_change_ch(Char1,Char2,Lstr,Wstr,Ostr):- not(string_search(Char1,Wstr,_)),
       concat(Lstr, Wstr, Ostr).
    string_change_ch(Char1,Char2,Lstr,Wstr,Ostr):-
@@ -1230,7 +1230,7 @@ functor(S,P):-functor(S,P,0);functor(S,P,1);functor(S,P,2);
               functor(S,P,6);functor(S,P,7);functor(S,P,8).
 list_assert(Ls):-member(C,Ls),assert(C),fail.
 list_abolish(Ls):-member(C,Ls), abolish_all(C), fail.
-take(Dbfile):-atom_string(Dbfile,Dstr), concat($dbinp $, Dstr, Exec),
+take(Dbfile):-atom_string(Dbfile,Dstr), concat(`dbinp `, Dstr, Exec),
          exec(Exec).
 exec(S):-atom_string(A,S),shell(A).
 sh:-shorten((a,s,h(d),f(9)),f(H),J,O), writeln((J,O)).
@@ -1241,7 +1241,7 @@ shorten(Cl,Until,O,InspO):-clause_list(Cl,Cls),
 
 sco:-subcombination([1,2,3],C), writeln(C),fail.
 
-allcombinations(S,C):-len(S,L),  ifthen(L>6,(write($ !!! list for combination too long : $),
+allcombinations(S,C):-len(S,L),  ifthen(L>6,(write(` !!! list for combination too long : `),
                                            writeln(S), fail)),
     findall( (Ys), (member(X0,S), ifthen(L>1,(member(X1,S), X0\==X1)),
     ifthen(L>2,(member(X2,S), X2\==X1,X2\==X0)),
@@ -1252,7 +1252,7 @@ allcombinations(S,C):-len(S,L),  ifthen(L>6,(write($ !!! list for combination to
  sublist(0,L,[X0,X1,X2,X3,X4,X5,X6],Ys) ),
   C), remove_duplicates(C,Cd).
 
-combination(S,C):-len(S,L),  ifthen(L>6,(write($ !!! list for combination too long$),
+combination(S,C):-len(S,L),  ifthen(L>6,(write(` !!! list for combination too long`),
                                            writeln(S), fail)),
     member(X0,S), ifthen(L>1,(member(X1,S), X0\==X1)),
     ifthen(L>2,(member(X2,S), X2\==X1,X2\==X0)),
@@ -1262,7 +1262,7 @@ combination(S,C):-len(S,L),  ifthen(L>6,(write($ !!! list for combination too lo
     ifthen(L>6,(member(X6,S),X6\==X1,X6\==X0,X6\==X2,X6\==X3,X6\==X4,X6\==X5)),
 sublist(0,L,[X0,X1,X2,X3,X4,X5,X6],C).
 
-subcombination(S,C):-len(S,L),  ifthen(L>6,(write($ !!! list for combination too long$),
+subcombination(S,C):-len(S,L),  ifthen(L>6,(write(` !!! list for combination too long`),
                                            writeln(S), fail)),
     member(X0,S), ifthen(L>1,(member(X1,S), X0\==X1)),
     ifthen(L>2,(member(X2,S), X2\==X1,X2\==X0)),
@@ -1296,11 +1296,11 @@ vlv:-const_clause(ana(n),O), writeln(O).
 const_clause(Cl_inst,Cl):- cnst_cl(Cl_inst,Cl).
 ccl:-cnst_cl((d(g),a(g),o(4) ),O), writeln(O).
     cnst_cl(A,Afin):-expand(A,Aexp), writeln(Aexp),
-not (member(X,Aexp), write($##$), (atom(X);integer(X)) ),
-  Afin=A, writeln($ end $).
+not (member(X,Aexp), write(`##`), (atom(X);integer(X)) ),
+  Afin=A, writeln(` end `).
      cnst_cl(A,Afin):- expand(A,Aexp),  member(X,Aexp),
  (atom(X);integer(X)),
-           string_term(Xstr,X),  string_length(Xstr,Lx), concat(Xstr,$zz$,X1str),
+           string_term(Xstr,X),  string_length(Xstr,Lx), concat(Xstr,`zz`,X1str),
     substring(X1str,1,Lx,Y1str),
 concat('_',Y1str,Ystr), writeln((Xstr,Ystr)),
         change_char(Xstr,Ystr,A,B), writeln(B), cnst_cl(B,Afin).
@@ -1320,11 +1320,11 @@ replace(Term):-Term=..[F|Args],
                      assert(Term)
                      ).
 var_var(A,B):-var_const(A,C), var_const(B,C).
-createMN:-    open(H, $mn.ari$, w),
+createMN:-    open(H, `mn.ari`, w),
               findall( P, (current_predicate(P),
-                          write(H, $:- visible $),
+                          write(H, `:- visible `),
                           write(H, P),
-                          write(H, $.$), nl(H) ),_),
+                          write(H, `.`), nl(H) ),_),
               close(H).
 :-public antiSym/1.
 :-public xagent/1.
@@ -1376,17 +1376,17 @@ xorg([muslim, christian, hindu, jewish, military, civilian,
 xperson([kuchma, hussein,  president_china, president_uk, yeltsin, clinton, monica_lewinsky]).
 xtrade([cotton, oil, iron, lumber, corn, weapon, refugees, narkotics]).
 xyear(Y):- nonvar(Y), string_term(Ystr, Y),
-           string_search($19$, Ystr, 0).
+           string_search(`19`, Ystr, 0).
 xyear(Ns):- var(Ns), findall(N, ( member(Num, [80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99]),
                            N is Num+1900),
                            Ns).
   %xnum???
 args([xcountry, xcity, xyear, xtrade, xmissile, xperson, xorg, xabstr, xaction, xattribute, xevent, xarbitrary, xweapon, xagent ]).
-argsString( [$xnum$,$xcountry$,$xcity$,$xagent$,$xyear$,$xtrade$,$xteam$,$xperson$,$xorg$,$xabstr$,
-             $xxnum1$,$xxcountry1$,$xxcity1$,$xxagent1$,$xxtrade1$,$xxyear1$,$xxperson1$,$xxteam1$,$xxabstr1$,
-             $xxxnum11$,$xxxcountry11$,$xxxcity11$,$xxxagent11$,$xxxtrade11$,$xxxyear11$,$xxxteam11$,$xxxorg11$,$xxxabstr11$,
-             $xxxxnum111$,$xxxxcountry111$,$xxxxcity111$,$xxxxagent111$,$xxxxtrade111$,$xxxxyear111$,$xxxxteam111$,$xxxxorg111$,$xxxxabstr111$,
-             $xxxxxnum1111$,$xxxxxcountry1111$,$xxxxxcity1111$,$xxxxx1111$,$xxxxxtrade1111$,$xxxxxyear1111$,$xxxxxteam1111$,$xxxxxorg1111$, $xxxxxabstr1111$
+argsString( [`xnum`,`xcountry`,`xcity`,`xagent`,`xyear`,`xtrade`,`xteam`,`xperson`,`xorg`,`xabstr`,
+             `xxnum1`,`xxcountry1`,`xxcity1`,`xxagent1`,`xxtrade1`,`xxyear1`,`xxperson1`,`xxteam1`,`xxabstr1`,
+             `xxxnum11`,`xxxcountry11`,`xxxcity11`,`xxxagent11`,`xxxtrade11`,`xxxyear11`,`xxxteam11`,`xxxorg11`,`xxxabstr11`,
+             `xxxxnum111`,`xxxxcountry111`,`xxxxcity111`,`xxxxagent111`,`xxxxtrade111`,`xxxxyear111`,`xxxxteam111`,`xxxxorg111`,`xxxxabstr111`,
+             `xxxxxnum1111`,`xxxxxcountry1111`,`xxxxxcity1111`,`xxxxx1111`,`xxxxxtrade1111`,`xxxxxyear1111`,`xxxxxteam1111`,`xxxxxorg1111`, `xxxxxabstr1111`
           ]).
 predlist([
 abi1,
@@ -1436,7 +1436,7 @@ xarbitrary(Arbs):- args(SemTypes), findall( A, (
                                                ), Arbs).
 :- mode member(?,+).
 member(H, [H|_]).
-member(H, [_|T]) :- ifthen( var(T), ( writeln($!!!! list member of Var$), fail)),
+member(H, [_|T]) :- ifthen( var(T), ( writeln(`!!!! list member of Var`), fail)),
    member(H, T).
 cl_member(H, [H1|_]):-cl_eq(H,H1).
 cl_member(H, [_|T]) :-
@@ -1665,7 +1665,7 @@ writel([]) :-
    !,
    nl.
 writel([H|T]) :-
-   write(H),write($ $),
+   write(H),write(` `),
    writel(T).
 
 :- mode number_occurrences(+,+,-/+).
@@ -1703,7 +1703,7 @@ list_insert:-list_insert(([a(c2334),d(c3333),e(c5643,c7654),g(c5644)] ),
 list_ins:-list_insert([1,2,3,4,5,6],6,11,O), write(O).
 list_insert(Cc,Pold,Pnew,CCC):-
                           ifthen( not(  list_search([Pold],Cc,_)),
-                          (write(Pold), write($ is absent in $), write(Cc), nl, fail)   ),
+                          (write(Pold), write(` is absent in `), write(Cc), nl, fail)   ),
       list_search([Pold],Cc,N),
                 len(Cc,Lr), N2 is Lr-N-1, Np1_ is N+1, Np is N+1,
                     ifthenelse(N>0,sublist(0,N,Cc,R1), R1=[]),
@@ -1714,9 +1714,9 @@ cll:-cl_list_insert_all([a(1,2),b(A,N),a(U,M)],a(R1,R2),aaaa(11,22),O), write(O)
 
 cl_list_insert(Cc,Pold,Pnew,CCC):-
                           ifthen( not( cl_list_search([Pold],Cc,_,_)),
-                          (write(Pold), write($ is absent !!! in $), write(Cc), nl, fail)   ),
-                          ifthen( cl_eq(Pold,Pnew), ( write($!!! subst $),
-                          write(Pnew), write($ in spite of $), write(Pold),fail)),
+                          (write(Pold), write(` is absent !!! in `), write(Cc), nl, fail)   ),
+                          ifthen( cl_eq(Pold,Pnew), ( write(`!!! subst `),
+                          write(Pnew), write(` in spite of `), write(Pold),fail)),
       cl_list_search([Pold],Cc,N,Insp),
                                 Pnew_l_=[Pnew],
                 len(Cc,Lr), N2 is Lr-N-1, Np1_ is N+1, Np is N+1,
@@ -1726,7 +1726,7 @@ cl_list_insert(Cc,Pold,Pnew,CCC):-
 
 both_add(I,Pold,P,P_):-Pold=..[_|J], len(I,Li), len(J,Lj), ifthen(Lj\==Li,
                            (
-                     write($!!! different pred while insert$),nl,fail)),
+                     write(`!!! different pred while insert`),nl,fail)),
                     append([eq(J,I)],[P],P1), append(P1,[eq(J,I)], P_).
 
 

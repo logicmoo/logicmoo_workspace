@@ -35,7 +35,7 @@ know(nick, not send(AnyAgent, AnyAgent, _)).
 know(peter, not send(AnyAgent, AnyAgent, _)).
 
 know(Agent,  W):- inform(A,Agent, W);cheat(A,Agent, W);pretend(A, Agent, W). 
-know(Agent,  W):- inform(A,Agent, W);cheat(A,Agent, W);pretend(A, Agent, W)
+know(Agent,  W):- inform(A,Agent, W);cheat(A,Agent, W);pretend(A, Agent, W).
 
 
 /*

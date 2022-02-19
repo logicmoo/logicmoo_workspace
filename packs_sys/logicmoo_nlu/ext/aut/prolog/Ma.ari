@@ -23,7 +23,7 @@ whatToDo(Agent, ChosenActions ):-
                             want(Agent, State), % writeln(want(Agent, State, possAct(PossibleAction) )),
                             not State,
                             assume(WAction), writeln0((assume(WAction), State)),
-                            ifthenelse( State, ( clean_assume(WAction), writeln0($State accepted$)),
+                            ifthenelse( State, ( clean_assume(WAction), writeln0('State accepted')),
                                                ( clean_assume(WAction), fail)
                                       )
                            ), BestActionsd), remove_duplicates(BestActionsd, BestActions),
@@ -69,7 +69,7 @@ whatToDoInConflict(Agent, ChosenActions, Happens ):-
                             assume(WAction), writeln0((assume(WAction), State)),
 							assumeOtherAgents(Agent, OthersActions),
 							findall(Term, ( member(Term, OthersActions), assume(Term)),_),
-                            ifthenelse( (not State), ( clean_assume(WAction), writeln0($Unwanted state avoided$)),
+                            ifthenelse( (not State), ( clean_assume(WAction), writeln0('Unwanted state avoided')),
                                               ( clean_assume(WAction), fail)
                                      ),
 			findall(Term, ( member(Term, OthersActions), clean_assume(Term)),_)
@@ -121,7 +121,7 @@ state(Agent, State):- nonvar(State), not ownAction(Agent, State),
   %% generate physical action that is included in Agents'intention (may be other's action).
   %% Agents tries to perform it himself
   %% procedure finds  a subformula of intention so that its argumwent is atom and is not an agent
-generateAction(Agent, ActionFull, _):- want(Agent, StateORAction), [! expand( StateORAction, SOAs) !], writeln0(SOAs),
+generateAction(Agent, ActionFull, _):- want(Agent, StateORAction), aritySlice(( expand( StateORAction, SOAs) )), writeln0(SOAs),
                           member(PhysFull, SOAs), %% PhysFull=..[PhysAct,WhoWhat, Object|_], 
                           PhysFull=..PhysFulls, last(PhysFulls, Object),
 			  allAgents(AllAgents), atom(Object), not member(Object, AllAgents),
@@ -166,13 +166,13 @@ generateAction(Agent, ActionFull, _):-(  know(Agent, want(Addressee, know(Addres
 					assert(ActionFull).
 
    %% when to ask :-want to know ( and possibly believe that someone knows))
-generateAction(Agent, ActionFull, _):-[! ((  want(Agent, know(Agent, Smth)), believe(Agent, know(InformAgent, Smth)),
+generateAction(Agent, ActionFull, _):-aritySlice(( ((  want(Agent, know(Agent, Smth)), believe(Agent, know(InformAgent, Smth)),
                                        nonvar(Smth)  );
                                     (  want(Agent, know(Agent, Smth)), nonvar(Smth)  )),                                   
-                       [! expand(Smth, SmthEXPs) !],
+                       aritySlice(( expand(Smth, SmthEXPs) )),
                        ifthenelse( (member(InformAgent, SmthEXPs), agent(InformAgent), InformAgent\=Agent), 
 
-                       (allAgents(Ags), member(InformAgent, Ags))) !],
+                       (allAgents(Ags), member(InformAgent, Ags))) )),
                        ActionFull= ask(Agent, InformAgent, Smth).
 
     %% when to answer: history includes asking, one answers if knows and/or wants addressee to know
@@ -180,7 +180,7 @@ generateAction(Agent, ActionFull, _):-[! ((  want(Agent, know(Agent, Smth)), bel
 generateAction(Agent, ActionFull, Happens):- allAgents(AllAgents), len(AllAgents, LAg),
 					nonvar(Happens), nrev(Happens, HapRs),
 					sublist(0, LAg, HapRs, LastHappens),
-					member(ask(AgentAsk, Agent, Smth), LastHappens), [!
+					member(ask(AgentAsk, Agent, Smth), LastHappens), aritySlice((
 					(
 					  (know(Agent, Smth), want(Agent, know(AskAgent, Smth)),
                         ActionFull= answer(Agent, AgentAsk, Smth) );
@@ -194,16 +194,16 @@ generateAction(Agent, ActionFull, Happens):- allAgents(AllAgents), len(AllAgents
 					  ( (know(Agent, SmthRelevant);believe(Agent, SmthRelevant)), 
 					       expand(SmthRelevant, SmthRE), member(Smth, SmthRE),
                         ActionFull= answer(Agent, AgentAsk, SmthRelevant) )
-					) !], writeln0(answer(ActionFull, Smth, SmthRelevant)).
+					) )), writeln0(answer(ActionFull, Smth, SmthRelevant)).
     
 	%% when to generate a suggestion
 	%% if an agent wants someone's action and does not have a belief that this agent does not
 	%% want to perform that action then that action is suggested.
-generateAction(Agent, ActionFull, Happens):-  want(Agent, OtherAgAction), [! OtherAgAction=..[Action, OtherAg|_], writeln0(OtherAgAction), 
+generateAction(Agent, ActionFull, Happens):-  want(Agent, OtherAgAction), aritySlice(( OtherAgAction=..[Action, OtherAg|_], writeln0(OtherAgAction), 
                     not believe(Agent, not want(OtherAg,   OtherAgAction)),
                     not member(Action, [know, believe, want] ), 
                                         Agent\=OtherAg, allAgents(Ags), member(OtherAg, Ags),
-					ActionFull= suggest(Agent, OtherAg, OtherAgAction) !],
+					ActionFull= suggest(Agent, OtherAg, OtherAgAction) )),
 					writeln0(suggest_since_want(ActionFull)).
     %% when to follow a suggestion
 generateAction(Agent, ActionFull, Happens):- allAgents(AllAgents), len(AllAgents, LAg),
@@ -218,7 +218,7 @@ generateAction(Agent, ActionFull, Happens):- allAgents(AllAgents), len(AllAgents
 					writeln0(follow_suggest(ActionFull)).
 
  %% try not to share information / conceal /suggest to not inform
-generateAction(Agent, ActionFull, _) :- want(Agent, not OtherAgAction), [! OtherAgAction=..[_, OtherAg|_], writeln0(OtherAgAction), 
+generateAction(Agent, ActionFull, _) :- want(Agent, not OtherAgAction), aritySlice(( OtherAgAction=..[_, OtherAg|_], writeln0(OtherAgAction), 
                       ( believe(Agent, believe(ThirdAgent, OtherAgActionCondition));
 					     believe(Agent, know(ThirdAgent, OtherAgActionCondition));  
 				             know(Agent, know(ThirdAgent, OtherAgActionCondition));
@@ -226,7 +226,7 @@ generateAction(Agent, ActionFull, _) :- want(Agent, not OtherAgAction), [! Other
                                              believe(ThirdAgent, OtherAgActionCondition);
 						 know(ThirdAgent, OtherAgActionCondition)
 
-					    ), Agent\=OtherAg, Agent\=ThirdAgent, ThirdAgent\=OtherAg !], 
+					    ), Agent\=OtherAg, Agent\=ThirdAgent, ThirdAgent\=OtherAg )), 
 
                    ifthen( (  know(Agent, (OtherAgAction:-believe(OtherAg, OtherAgActionCondition)));
 					   clause(OtherAgAction, believe(OtherAg, OtherAgActionCondition));
@@ -248,7 +248,7 @@ generateAction(Agent, ActionFull, _) :- want(Agent, not OtherAgAction), [! Other
                   writeln0(suggest_not_inform(ActionFull, OtherAgAction,OtherAgActionCondition)).
 						 
  %% intentional cheat/informing to make someone perform desired action
-generateAction(Agent, ActionFull, _):-  want(Agent, OtherAgAction), [! OtherAgAction=..[_, OtherAg|_],  agent(OtherAg), writeln0(OtherAgAction), 
+generateAction(Agent, ActionFull, _):-  want(Agent, OtherAgAction), aritySlice(( OtherAgAction=..[_, OtherAg|_],  agent(OtherAg), writeln0(OtherAgAction), 
 					(  know(Agent, (OtherAgAction:-believe(OtherAg, OtherAgActionCondition)));
 					   clause(OtherAgAction, believe(OtherAg, OtherAgActionCondition));
 					   believe(Agent, (OtherAgAction:-believe(OtherAg, OtherAgActionCondition)));
@@ -263,7 +263,7 @@ generateAction(Agent, ActionFull, _):-  want(Agent, OtherAgAction), [! OtherAgAc
 								 ),
                			ActionFull=..[cheat, Agent, OtherAg, OtherAgActionCondition],
                                 ActionFull=..[inform, Agent, OtherAg, OtherAgActionCondition]
-                               ), writeln0(inform_to_achieve(ActionFull, OtherAgAction, OtherAgActionCondition)) !].
+                               ), writeln0(inform_to_achieve(ActionFull, OtherAgAction, OtherAgActionCondition)) )).
 
 
  %% random (dis)information
@@ -383,12 +383,12 @@ commit( Actions) :-
 
        findall( Action,
               ( agent(Agent),
-                   [! whatToDoInConflict(Agent, ActionLs, Happens ) !],
+                   aritySlice(( whatToDoInConflict(Agent, ActionLs, Happens ) )),
                                    writeln( whatToDoInConflict(Agent, ActionLs ) ),
                       ActionLs=[Action|_] %first action from a list of chosen action
            /*     
                 %%eliminate implemented WANTs
-                [! want(Agent, Action) !],                         %writeln((eliminate,want(Agent, Action))),
+                aritySlice(( want(Agent, Action) )),                         %writeln((eliminate,want(Agent, Action))),
                 ifthen(( clause( want(Agent, Action), true ) ,
 			     not always(want(Agent, Action))  
                                  %  writeln( clause( want(Agent, Action), true ))
@@ -405,7 +405,7 @@ commit( Actions) :-
                 ),
                 ActionsF),  append( ActionsF, MandActions, ActionsMF), %% adding mandatory actions
 				flatten(ActionsMF, Actions), 	writeln(mandActions(MandActions)),
-                             writeln0($update(store) achieved goals$),
+                             writeln0('update(store) achieved goals'),
                 ifthenelse( (happen(PrevActions), PrevActions \=[]), 
                   ( happen(PrevActions), 
                     retract(happen(W)),                     writeln0(afterRetract(happen(W))),
@@ -415,7 +415,7 @@ commit( Actions) :-
                ).  
 
 mandatoryActionCANCEL(Agent, MandAction):-
-     want(Agent, StateORAction), [! expand( StateORAction, SOAs) !], writeln0(SOAs),
+     want(Agent, StateORAction), aritySlice(( expand( StateORAction, SOAs) )), writeln0(SOAs),
             reverse(SOAs, SOAREVs), member(PhysFull, SOAREVs),
                         PhysFull=[Nonmental|_],
                         mental_pred(Ps), not member(Nonmentl, Ps), writeln(PhysFull),
@@ -433,7 +433,7 @@ mandatoryBelief(Agent, MandAction, Happens):- allAgents(AllAgents), len(AllAgent
 					nonvar(Happens), nrev(Happens, HapRs),sublist(0, LAg, HapRs, LastHappens),
 					( member(inform(AgentInf, Agent, Smth), LastHappens);
 					  member(cheat(AgentInf, Agent, Smth), LastHappens)), 
-                    MandAction=believe( Agent, Smth ), not member(MandAction, Happens)..  				
+                    MandAction=believe( Agent, Smth ), not member(MandAction, Happens).
               
 mental_pred([know, want, believe, pretend, cheat, explain, suggest, ask, answer, inform]).
 
@@ -505,7 +505,7 @@ clean_knowledge(Agent):- not ( (know(Agents, Knowledge); know(_, know(Agents,Kno
                                writeln0(know(Agents, Knowledge)),
                              ifthenelse( (Knowledge  = (not NegKnowledge)),
                              retract((NegKnowledge:-fail)),
-                             (retract((Knowledge)), writeln0(($retracted$,Knowledge)) )  ),         fail).
+                             (retract((Knowledge)), writeln0(('retracted',Knowledge)) )  ),         fail).
 
 clean_knowledge:-       not ( agent(Agent), 
                       ( know(Agents, Knowledge);believe(Agents, Knowledge)),
@@ -515,20 +515,20 @@ clean_knowledge:-       not ( agent(Agent),
                              retract((Knowledge)) ),         fail).
 clean:-clean_assumptions, clean_knowledge,
       allActions(Acts),
-     findall(Action, ( member(Action, Acts ), [!name_term(Action, ActionTerm)!],
+     findall(Action, ( member(Action, Acts ), aritySlice((name_term(Action, ActionTerm))),
                                retract(ActionTerm) ), _).
    
 
 writeln0(A):-not fail. %writeln(A).
 
-start0:-findall(_, (current_predicate(X/Y), abolish(X/Y)),  _), [-$au\ma.ari$],
-        [-lists,-nl_util, -$au\gen.ari$],
-    [-$au\link_ma.ari$], 
+start0:-findall(_, (current_predicate(X/Y), abolish(X/Y)),  _), [-'au/ma.ari'],
+        [-lists,-nl_util, -'au/gen.ari'],
+    [-'au/link_ma.ari'], 
     allActions(Acts), not (member(Action, Acts), 
     ( name_clause(Action, _, Term) ; name_term(Action,Term) ),
     abolish_all(Term), fail ),
     ifthen(happen(Actions),  retract(happen(Actions)) ),
-    [-$au\link_ma.ari$]. %, clean.
+    [-'au/link_ma.ari']. %, clean.
  
 %allAgents([]).
 agent(X):-allAgents(Xs), member(X, Xs).

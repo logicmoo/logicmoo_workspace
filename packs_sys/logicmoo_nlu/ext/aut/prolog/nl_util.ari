@@ -5,13 +5,13 @@ consult(Ls,list):-member(F,Ls), consult(F), fail.
 
 writeln(D):- %ifthen(interpreter,
              %   (
-             %     write($<BR>$)
+             %     write(`<BR>`)
 			 %   )
                   write(D), nl.
 
 			 %   )).
 
-writeHtml(D):- write($<BR>$),
+writeHtml(D):- write(`<BR>`),
                   write(D), nl.
 
 string_insert(Str,Ins,D,Out):-string_length(Str,Len),
@@ -26,8 +26,8 @@ brack_del(Prod,Pls):-string_term(Str,Pls), string_length(Str,L), L1 is L-2,
                       substring(Str,1,L1,St),
                       string_term(St,Prod).
 
-del_fin_term(B,Baim):-    string_term(Bstr,B), concat($[$,Bstr,B_str),
-                                      concat(B_str,$]$,B_str_),
+del_fin_term(B,Baim):-    string_term(Bstr,B), concat(`[`,Bstr,B_str),
+                                      concat(B_str,`]`,B_str_),
                                       string_term(B_str_,Bt),
                                       reverse(Bt,Binv),Binv=[Fir|Bin],
                                       reverse(Bin,Baim_),
@@ -36,7 +36,7 @@ del_fin_term(B,Baim):-    string_term(Bstr,B), concat($[$,Bstr,B_str),
 vl:-var_list(F,[w,rit,a(a),b,b,n,h(K),e(H)]), write(F).
 
 clause_list(B,Ls) :- nonvar(B),string_term(Bstr,B),
-           concat([$[$,Bstr,$]$],B_str), string_term(B_str,Ls).
+           concat([`[`,Bstr,`]`],B_str), string_term(B_str,Ls).
 clause_list(B,Ls) :-nonvar(Ls), Ls\==[],
             len(Ls,N), ifthenelse( N<20 ,brack_del(B,Ls), (
       N1 is N//3, N2 is N*2//3,
@@ -46,10 +46,10 @@ clause_list(B,Ls) :-nonvar(Ls), Ls\==[],
 
 vv:-write(A),var_const(a(A),C), write(a(A)), var_const(V,C), write(V).
 v:-var_const((c(w1),h(A,h(HH),w2)),H),  write(H).
-var_const(V,C):-nonvar(V),  change_char('_','z',V,Cz),  change_char($zz$,'_',Cz,C).
+var_const(V,C):-nonvar(V),  change_char('_','z',V,Cz),  change_char(`zz`,'_',Cz,C).
 var_const(V,C):-nonvar(C),  change_char('z','_',C,V).
 var_const(V,C):-var(V),var(C),
-                writeln($constant part contains Var or vice versa! $),nl.
+                writeln(`constant part contains Var or vice versa! `),nl.
 var_list(V,L):-var(L),var_const(V,C),!, clause_list(C,L).
 
 va:-var_list(V,[b(w12,w23),a(w12)]), write(V).
@@ -90,7 +90,7 @@ expand(A,B):-
                          string_term(Ustr,U), not(string_search('=',Ustr,_)),
                          subpred(U,Xs) ,         member(X,Xs) ), Bc), !,
                  remove_duplicates(Bc,Bcd),
-             ifthenelse(A\==Ac,[! var_const(B,Bcd) !] ,B=Bcd).
+             ifthenelse(A\==Ac,aritySlice(( var_const(B,Bcd) )) ,B=Bcd).
 
 expand_dupl(Ac,Bc):- clause_list(Ac,As),
               findall(X,(member(U,As),
@@ -112,17 +112,17 @@ subpred_list([A|R],[A,L2|S]):-
 /* subpred(A,S):-            A=..[P|L2], X1=A,
                           findall(X2,(member(T2,L2), % T2=..L3,%
                                                      X2=T2),X2s),
-                                                               %write($X2s = $), writeln(X2s), %
+                                                               %write(`X2s = `), writeln(X2s), %
                  findall(X3,(member(T2,L2), T2=..[_|L3], member(T3,L3),%T3=..L4,%
                                                           X3=T3), X3s),
-                                                               %write($X3s = $), writeln(X3s),%
+                                                               %write(`X3s = `), writeln(X3s),%
                           append([X1],X2s,X12s), append(X12s,X3s,S).
 */
 
-cww:-change_char($w$,$_$, (sell(john,whom,aptw)     ),J), write(J).
+cww:-change_char(`w`,`_`, (sell(john,whom,aptw)     ),J), write(J).
    change_char(Char1,Char2,C,O):-  ifthen(string_search(Char1,Char2,_),
-       (writeln($!!!! Incorrect string change ! $), fail)),
-     string_term(Str,C), [! change_ch(Char1,Char2,'',Str,Ostr) !],
+       (writeln(`!!!! Incorrect string change ! `), fail)),
+     string_term(Str,C), aritySlice(( change_ch(Char1,Char2,'',Str,Ostr) )),
      string_term(Ostr,O).
 
    change_ch(Char1,Char2,Lstr,Wstr,Ostr):- not(string_search(Char1,Wstr,_)),
@@ -139,7 +139,7 @@ cww:-change_char($w$,$_$, (sell(john,whom,aptw)     ),J), write(J).
 
      ifthenelse( ( PastFirst=='(',(var(CHt);integer(CHt) ),Char2\='_'),
                (LNb is LN-1, substring(Wstr,N1b,LNb,Wstr1),
-                  concat([Lstr,C1,$eng($,Char2,','],Lstr1) ),
+                  concat([Lstr,C1,`eng(`,Char2,','],Lstr1) ),
 
          ifthenelse( (% writeln((PreLast,Char1,PastFirst)),
              %  not (any_name(PastFirst);any_name(PreLast) ),
@@ -156,8 +156,8 @@ any_name(Char):-nth_char(0,Char,N), nth_char(0,'a',Na),nth_char(0,'z',Nz),
 
 
  string_change_char(Char1,Char2,C,O):- % ifthen(string_search(Char1,Char2,_),
-%       (writeln($!!!! Incorrect string change ! $), fail)),
-                 [! string_change_ch(Char1,Char2,'',C,O) !].
+%       (writeln(`!!!! Incorrect string change ! `), fail)),
+                 aritySlice(( string_change_ch(Char1,Char2,'',C,O) )).
 
    string_change_ch(Char1,Char2,Lstr,Wstr,Ostr):- not(string_search(Char1,Wstr,_)),
       concat(Lstr, Wstr, Ostr).
@@ -173,7 +173,7 @@ any_name(Char):-nth_char(0,Char,N), nth_char(0,'a',Na),nth_char(0,'z',Nz),
     string_length(Lstr,Nl),   dec(Nl,Nl1),
  ifthenelse(Nl>0, substring(Lstr,Nl1,1,PreLast),PreLast=''),
 
-                  %    writeln(($last::$,PreLast)),
+                  %    writeln((`last::`,PreLast)),
          ifthenelse( not fail ,%any_name(PreLast),
         (substring(Wstr,N1,LN,Wstr1),concat([Lstr,C1,Char2],Lstr1)  ),
         (substring(Wstr,N1,LN,Wstr1),concat([Lstr,C1,Char1],Lstr1)  )),
@@ -213,7 +213,7 @@ functor(S,P):-functor(S,P,0);functor(S,P,1);functor(S,P,2);
 list_assert(Ls):-not (member(C,Ls),assert(C),fail).
 list_abolish(Ls):-member(C,Ls), abolish_all(C), fail.
 
-take(Dbfile):-atom_string(Dbfile,Dstr), concat($dbinp $, Dstr, Exec),
+take(Dbfile):-atom_string(Dbfile,Dstr), concat(`dbinp `, Dstr, Exec),
          exec(Exec).
 exec(S):-atom_string(A,S),shell(A).
 
@@ -225,7 +225,7 @@ shorten(Cl,Until,O,InspO):-clause_list(Cl,Cls),
 
 sco:-subcombination([1,2,3],C), writeln(C),fail.
 
-allcombinations(S,C):-len(S,L),  ifthen(L>6,(write($ !!! list for combination too long : $),
+allcombinations(S,C):-len(S,L),  ifthen(L>6,(write(` !!! list for combination too long : `),
                                            writeln(S), fail)),
     findall( (Ys), (member(X0,S), ifthen(L>1,(member(X1,S), X0\==X1)),
     ifthen(L>2,(member(X2,S), X2\==X1,X2\==X0)),
@@ -236,7 +236,7 @@ allcombinations(S,C):-len(S,L),  ifthen(L>6,(write($ !!! list for combination to
  sublist(0,L,[X0,X1,X2,X3,X4,X5,X6],Ys) ),
   C), remove_duplicates(C,Cd).
 
-combination(S,C):-len(S,L),  ifthen(L>6,(write($ !!! list for combination too long$),
+combination(S,C):-len(S,L),  ifthen(L>6,(write(` !!! list for combination too long`),
                                            writeln(S), fail)),
     member(X0,S), ifthen(L>1,(member(X1,S), X0\==X1)),
     ifthen(L>2,(member(X2,S), X2\==X1,X2\==X0)),
@@ -246,7 +246,7 @@ combination(S,C):-len(S,L),  ifthen(L>6,(write($ !!! list for combination too lo
     ifthen(L>6,(member(X6,S),X6\==X1,X6\==X0,X6\==X2,X6\==X3,X6\==X4,X6\==X5)),
 sublist(0,L,[X0,X1,X2,X3,X4,X5,X6],C).
 
-subcombination(S,C):-len(S,L),  ifthen(L>6,(write($ !!! list for combination too long$),
+subcombination(S,C):-len(S,L),  ifthen(L>6,(write(` !!! list for combination too long`),
                                            writeln(S), fail)),
     member(X0,S), ifthen(L>1,(member(X1,S), X0\==X1)),
     ifthen(L>2,(member(X2,S), X2\==X1,X2\==X0)),
@@ -291,12 +291,12 @@ const_clause(Cl_inst,Cl):- cnst_cl(Cl_inst,Cl).
 ccl:-cnst_cl((d(g),a(g),o(4) ),O), writeln(O).
 
     cnst_cl(A,Afin):-expand(A,Aexp), writeln(Aexp),
-not (member(X,Aexp), write($##$), (atom(X);integer(X)) ),
-  Afin=A, writeln($ end $).
+not (member(X,Aexp), write(`##`), (atom(X);integer(X)) ),
+  Afin=A, writeln(` end `).
 
      cnst_cl(A,Afin):- expand(A,Aexp),  member(X,Aexp),
  (atom(X);integer(X)),
-           string_term(Xstr,X),  string_length(Xstr,Lx), concat(Xstr,$zz$,X1str),
+           string_term(Xstr,X),  string_length(Xstr,Lx), concat(Xstr,`zz`,X1str),
     substring(X1str,1,Lx,Y1str),
 concat('_',Y1str,Ystr), writeln((Xstr,Ystr)),
         change_char(Xstr,Ystr,A,B), writeln(B), cnst_cl(B,Afin).
@@ -321,9 +321,9 @@ replace(Term):-Term=..[F|Args],
 
 var_var(A,B):-var_const(A,C), var_const(B,C).
 
-createMN:-    open(H, $mn.ari$, w),
+createMN:-    open(H, `mn.ari`, w),
               findall( P, (current_predicate(P),
-                          write(H, $:- visible $),
+                          write(H, `:- visible `),
                           write(H, P),
-                          write(H, $.$), nl(H) ),_),
+                          write(H, `.`), nl(H) ),_),
               close(H).

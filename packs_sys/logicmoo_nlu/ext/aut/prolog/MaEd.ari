@@ -16,7 +16,7 @@ whatToDo(Agent, ChosenActions ):-
                             want(Agent, State), writeln0(want(Agent, State)),
                             not State,
                             assume(WAction), writeln0((assume(WAction), State)),
-                            ifthenelse( State, ( clean_assume(WAction), writeln0($State accepted$)),
+                            ifthenelse( State, ( clean_assume(WAction), writeln0(`State accepted`)),
                                                ( clean_assume(WAction), fail)
                                       )
                            ), BestActionsd), remove_duplicates(BestActionsd, BestActions),
@@ -46,7 +46,7 @@ whatToDoInConflict(Agent, ChosenActions ):-
 							assumeOtherAgents(Agent, OthersActions),
 							findall(Term, ( member(Term, OthersActions), assume(Term)),_),
                             
-							ifthenelse( State, ( clean_assume(WAction), writeln0($State accepted$)),
+							ifthenelse( State, ( clean_assume(WAction), writeln0(`State accepted`)),
                                               ( clean_assume(WAction), fail)
                                      ),
 			findall(Term, ( member(Term, OthersActions), clean_assume(Term)),_)
@@ -117,13 +117,13 @@ commit( Actions) :-
        ifthen( happen(Happens), list_assert(Happens)), 
        findall( Action,
               ( agent(Agent),
-                   [! whatToDoInConflict(Agent, ActionLs ) !],
+                   aritySlice(( whatToDoInConflict(Agent, ActionLs ) )),
                                writeln( whatToDoInConflict(Agent, ActionLs ) ),
 
                 (ActionLs=[Action|_])
            /*     
                 %%eliminate implemented WANTs
-                [! want(Agent, Action) !],                         %writeln((eliminate,want(Agent, Action))),
+                aritySlice(( want(Agent, Action) )),                         %writeln((eliminate,want(Agent, Action))),
                 ifthen(( clause( want(Agent, Action), true ) ,
 			     not always(want(Agent, Action))  
                                  %  writeln( clause( want(Agent, Action), true ))
@@ -140,7 +140,7 @@ commit( Actions) :-
 
                  ),
                 Actions), 
-                             %writeln($update(store) achieved goals$),
+                             %writeln(`update(store) achieved goals`),
 
                 ifthenelse( (happen(PrevActions), PrevActions \=[]), 
                   ( happen(PrevActions), retract(happen(_)), append(PrevActions, Actions, Happens1), %writeln(assert(happen(Happens1))), 
@@ -214,7 +214,7 @@ clean_knowledge(Agent):- not ( (know(Agents, Knowledge); know(_, know(Agents,Kno
                                writeln0(know(Agents, Knowledge)),
                              ifthenelse( (Knowledge  = (not NegKnowledge)),
                              retract((NegKnowledge:-fail)),
-                             (retract((Knowledge)), writeln0(($retracted$,Knowledge)) )  ),         fail).
+                             (retract((Knowledge)), writeln0((`retracted`,Knowledge)) )  ),         fail).
 
 clean_knowledge:-       not ( agent(Agent), 
                       ( know(Agents, Knowledge);believe(Agents, Knowledge)),
@@ -224,20 +224,20 @@ clean_knowledge:-       not ( agent(Agent),
                              retract((Knowledge)) ),         fail).
 clean:-clean_assumptions, clean_knowledge,
       allActions(Acts),
-     findall(Action, ( member(Action, Acts ), [!name_term(Action, ActionTerm)!],
+     findall(Action, ( member(Action, Acts ), aritySlice((name_term(Action, ActionTerm))),
                                retract(ActionTerm) ), _).
    
 
 writeln0(A):-not fail. %writeln(A).
 
-start0:-[-lists,-nl_util, -$gen.ari$], start.
-start:- [-$wkb_ma.ari$], %[-$au\wolf_ma.ari$], 
+start0:-[-lists,-nl_util, -`gen.ari`], start.
+start:- [-`wkb_ma.ari`], %[-`au\wolf_ma.ari`], 
     allActions(Acts), not (member(Action, Acts), 
     ( name_clause(Action, _, Term) ; name_term(Action,Term) ),
     abolish_all(Term), fail ),
     ifthen(happen(Actions),  retract(happen(Actions)) ),
     %   
-     [-$wkb_ma.ari$], clean. 
+     [-`wkb_ma.ari`], clean. 
  
 %allAgents([]).
 agent(X):-allAgents(Xs), member(X, Xs).

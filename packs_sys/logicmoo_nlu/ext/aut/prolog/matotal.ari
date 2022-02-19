@@ -23,7 +23,7 @@ whatToDo(Agent, ChosenActions ):-
                             want(Agent, State), writeln0(want(Agent, State)),
                             not State,
                             assume(WAction), writeln0((assume(WAction), State)),
-                            ifthenelse( State, ( clean_assume(WAction), writeln0($State accepted$)),
+                            ifthenelse( State, ( clean_assume(WAction), writeln0(`State accepted`)),
                                                ( clean_assume(WAction), fail)
                                       )
                            ), BestActionsd), remove_duplicates(BestActionsd, BestActions),
@@ -54,7 +54,7 @@ whatToDoInConflict(Agent, ChosenActions, Happens ):-
 							assumeOtherAgents(Agent, OthersActions),
 							findall(Term, ( member(Term, OthersActions), assume(Term)),_),
                             
-							ifthenelse( State, ( clean_assume(WAction), writeln($State accepted$)),
+							ifthenelse( State, ( clean_assume(WAction), writeln(`State accepted`)),
                                               ( clean_assume(WAction), fail)
                                      ),
 			findall(Term, ( member(Term, OthersActions), clean_assume(Term)),_)
@@ -66,7 +66,7 @@ whatToDoInConflict(Agent, ChosenActions, Happens ):-
                             assume(WAction), writeln0((assume(WAction), State)),
 							assumeOtherAgents(Agent, OthersActions),
 							findall(Term, ( member(Term, OthersActions), assume(Term)),_),
-                            ifthenelse( (not State), ( clean_assume(WAction), writeln0($Unwanted state avoided$)),
+                            ifthenelse( (not State), ( clean_assume(WAction), writeln0(`Unwanted state avoided`)),
                                               ( clean_assume(WAction), fail)
                                      ),
 			findall(Term, ( member(Term, OthersActions), clean_assume(Term)),_)
@@ -111,7 +111,7 @@ state(Agent, State):- nonvar(State), not ownAction(Agent, State),
   %% generate physical action that is included in Agents'intention (may be other's action).
   %% Agents tries to perform it himself
   %% procedure finds  a subformula of intention so that its argumwent is atom and is not an agent
-generateAction(Agent, ActionFull, _):- want(Agent, StateORAction), [! expand( StateORAction, SOAs) !], writeln0(SOAs),
+generateAction(Agent, ActionFull, _):- want(Agent, StateORAction), aritySlice(( expand( StateORAction, SOAs) )), writeln0(SOAs),
                           member(PhysFull, SOAs), PhysFull=..[PhysAct,WhoWhat, Object|_], 
 						  allAgents(AllAgents), atom(Object), not member(Object, AllAgents),
                           argrep(PhysFull, 1, Agent, ActionFull),                                    writeln0(ActionFull).
@@ -183,13 +183,13 @@ commit( Actions) :-
        ifthen( happen(Happens), list_assert(Happens)), 
        findall( Action,
               ( agent(Agent),
-                   [! whatToDoInConflict(Agent, ActionLs, Happens ) !],
+                   aritySlice(( whatToDoInConflict(Agent, ActionLs, Happens ) )),
                                writeln( whatToDoInConflict(Agent, ActionLs ) ),
 
                 (ActionLs=[Action|_])
            /*     
                 %%eliminate implemented WANTs
-                [! want(Agent, Action) !],                         %writeln((eliminate,want(Agent, Action))),
+                aritySlice(( want(Agent, Action) )),                         %writeln((eliminate,want(Agent, Action))),
                 ifthen(( clause( want(Agent, Action), true ) ,
 			     not always(want(Agent, Action))  
                                  %  writeln( clause( want(Agent, Action), true ))
@@ -206,7 +206,7 @@ commit( Actions) :-
 
                  ),
                 Actions), 
-                             %writeln($update(store) achieved goals$),
+                             %writeln(`update(store) achieved goals`),
 
                 ifthenelse( (happen(PrevActions), PrevActions \=[]), 
                   ( happen(PrevActions), retract(happen(_)), append(PrevActions, Actions, Happens1), %writeln(assert(happen(Happens1))), 
@@ -280,7 +280,7 @@ clean_knowledge(Agent):- not ( (know(Agents, Knowledge); know(_, know(Agents,Kno
                                writeln0(know(Agents, Knowledge)),
                              ifthenelse( (Knowledge  = (not NegKnowledge)),
                              retract((NegKnowledge:-fail)),
-                             (retract((Knowledge)), writeln0(($retracted$,Knowledge)) )  ),         fail).
+                             (retract((Knowledge)), writeln0((`retracted`,Knowledge)) )  ),         fail).
 
 clean_knowledge:-       not ( agent(Agent), 
                       ( know(Agents, Knowledge);believe(Agents, Knowledge)),
@@ -290,20 +290,20 @@ clean_knowledge:-       not ( agent(Agent),
                              retract((Knowledge)) ),         fail).
 clean:-clean_assumptions, clean_knowledge,
       allActions(Acts),
-     findall(Action, ( member(Action, Acts ), [!name_term(Action, ActionTerm)!],
+     findall(Action, ( member(Action, Acts ), aritySlice((name_term(Action, ActionTerm))),
                                retract(ActionTerm) ), _).
    
 
 writeln0(A):-not fail. %writeln(A).
 
-start0:-[-lists,-nl_util, -$au\gen.ari$], start.
-start:- [-$au\wkb_ma.ari$], %[-$au\wolf_ma.ari$], 
+start0:-[-lists,-nl_util, -`au/gen.ari`], start.
+start:- [-`au/wkb_ma.ari`], %[-`au/wolf_ma.ari`], 
     allActions(Acts), not (member(Action, Acts), 
     ( name_clause(Action, _, Term) ; name_term(Action,Term) ),
     abolish_all(Term), fail ),
     ifthen(happen(Actions),  retract(happen(Actions)) ),
     %   
-     [-$au\wkb_ma.ari$], clean. %[-$au\wolf_ma.ari$], 
+     [-`au/wkb_ma.ari`], clean. %[-`au/wolf_ma.ari`], 
  
 %allAgents([]).
 agent(X):-allAgents(Xs), member(X, Xs).
@@ -394,17 +394,17 @@ yieldTerm(Term):- member(Agent, [mike, peter, nick]),
 
 yieldMental2(TotalTerm):-
      yieldTerm(TermHigh), yieldTerm(TermLow), TermHigh \= TermLow,
-	 [!
-       change_char($smth$, $sm1th$, TermHigh, TermHigh1), %writeln(TermHigh1),
+	 aritySlice((
+       change_char(`smth`, `sm1th`, TermHigh, TermHigh1), %writeln(TermHigh1),
 	 string_term(TermLowStr, TermLow),
-	 change_char($sm1th$,  TermLowStr, TermHigh1, TotalTerm)
-      !].
+	 change_char(`sm1th`,  TermLowStr, TermHigh1, TotalTerm)
+      )).
 
 yieldMental3(TotalTerm):-
      yieldMental2(TermHigh), yieldTerm(TermLow),
-     [! change_char($smth$, $sm1th$, TermHigh, TermHigh1),
+     aritySlice(( change_char(`smth`, `sm1th`, TermHigh, TermHigh1),
 	 string_term(TermLowStr, TermLow),
-	 change_char($sm1th$,  TermLowStr, TermHigh1, TotalTerm), 
+	 change_char(`sm1th`,  TermLowStr, TermHigh1, TotalTerm), 
 	 not (TotalTerm = (not NT)) ,
 
 	 clause_list(TotalTerm, TotalTerms),
@@ -427,7 +427,7 @@ yieldMental3(TotalTerm):-
 	          list_search([not Idempot, Agent, Idempot, Agent], TwiceMentals,_);
 			  list_search([Idempot, Agent, not Idempot, Agent], TwiceMentals,_);
 	          list_search([not Idempot, Agent, not Idempot, Agent], TwiceMentals,_)
-			  )                   %,  writeln(($binary mental$,TwiceMentals))   % , get(CCC)      
+			  )                   %,  writeln((`binary mental`,TwiceMentals))   % , get(CCC)      
             ),
 %%%%%% inform, pretend, ask repetition
        not  ( member(Idempot, [inform, pretend, ask]),
@@ -435,9 +435,9 @@ yieldMental3(TotalTerm):-
 	          list_search([not Idempot, Agent,PassAgent, Idempot, Agent], TwiceMentals,_);
 			  list_search([Idempot, Agent,PassAgent, not Idempot, Agent], TwiceMentals,_);
 	          list_search([not Idempot, Agent,PassAgent, not Idempot, Agent], TwiceMentals,_)
-			  )                  %, writeln(($ternary mental$,TwiceMentals)) % , get(CCC)   
+			  )                  %, writeln((`ternary mental`,TwiceMentals)) % , get(CCC)   
             )
-	  !].
+	  )).
 
 yieldMental4(TotalTerm):-
      yieldMental2(TermHigh), yieldMental2(TermLow),
@@ -446,9 +446,9 @@ yieldMental4(TotalTerm):-
 		axiomFormula(TermLow),
         meaningfulFormula(TermLow),
 
-     [! change_char($smth$, $sm1th$, TermHigh, TermHigh1),
+     aritySlice(( change_char(`smth`, `sm1th`, TermHigh, TermHigh1),
 	 string_term(TermLowStr, TermLow),
-	 change_char($sm1th$,  TermLowStr, TermHigh1, TotalTerm), 
+	 change_char(`sm1th`,  TermLowStr, TermHigh1, TotalTerm), 
 	 not (TotalTerm = (not NT)) ,
 
 	 clause_list(TotalTerm, TotalTerms),
@@ -471,7 +471,7 @@ yieldMental4(TotalTerm):-
 	          list_search([not Idempot, Agent, Idempot, Agent], TwiceMentals,_);
 			  list_search([Idempot, Agent, not Idempot, Agent], TwiceMentals,_);
 	          list_search([not Idempot, Agent, not Idempot, Agent], TwiceMentals,_)
-			  )       %,  writeln(($binary mental$,TwiceMentals))   % , get(CCC)      
+			  )       %,  writeln((`binary mental`,TwiceMentals))   % , get(CCC)      
             ),
 %%%%%% inform, pretend, ask repetition
        not  ( member(Idempot, [inform, pretend, ask]),
@@ -479,12 +479,12 @@ yieldMental4(TotalTerm):-
 	          list_search([not Idempot, Agent,PassAgent, Idempot, Agent], TwiceMentals,_);
 			  list_search([Idempot, Agent,PassAgent, not Idempot, Agent], TwiceMentals,_);
 	          list_search([not Idempot, Agent,PassAgent, not Idempot, Agent], TwiceMentals,_)
-			  )       %  , writeln(($ternary mental$,TwiceMentals)) % , get(CCC)   
+			  )       %  , writeln((`ternary mental`,TwiceMentals)) % , get(CCC)   
             )
-	  !].
+	  )).
 
-save_wkb:-   % create(H1, $C:\nl_ext\wkb_2_2.ari$), % 
-              open(H, $C:\nl_ext\wkb_2_2.ari$, w), 
+save_wkb:-   % create(H1, `C:/nl_ext/wkb_2_2.ari`), % 
+              open("C:/nl_ext/wkb_2_2.ari", write, H), 
               not (
 		      yieldMental3(K),
                                              %yieldMental4(K)), 	  
@@ -494,31 +494,31 @@ save_wkb:-   % create(H1, $C:\nl_ext\wkb_2_2.ari$), %
                       write(H, K), nl(H),
               fail ), close(H).
 /*          	
-              [! clause_list(K, Ks),
+              aritySlice(( clause_list(K, Ks),
 	            flatExpand(Ks, Ksfe),           
                 string_term(KStr, Ksfe),                   
-				string_change_char($,$,' ', KStr, Text),
+				string_change_char(`,`,' ', KStr, Text),
 			%	(Expr = (K :- iassert( Text ))), 
 			     Expr=K,	                            % writeln(Expr),
-				write(H, Expr), write(H, $.$), nl(H) !],
+				write(H, Expr), write(H, `.`), nl(H) )),
 
                 fail ), close(H).
 */
 synth_info(Clause):-flatSynth(Clause, Sent),
                       string_term(Str, Sent),         writeln(Sent),
-                      string_change_char($,$,' ', Str, Text),
-                     string_change_char($[$,' ', Text, Text1),
-                     string_change_char($]$,'', Text1, Text2),
-                      concat($ You mean,$, Text2, YouMeanText),
+                      string_change_char(`,`,' ', Str, Text),
+                     string_change_char(`[`,' ', Text, Text1),
+                     string_change_char(`]`,'', Text1, Text2),
+                      concat(` You mean,`, Text2, YouMeanText),
                       iassert(YouMeanText).
 
 
 yieldMentalSuccess(STerm):-
       (yieldMental3(Term);yieldMental2(Term);yieldTerm(Term)),
       ifthen( (Term = (not AnyTerm)) , fail),
-      [![!change_char($s$,$_$, Term, XTerm)!],
+      aritySlice((aritySlice((change_char(`s`,`_`, Term, XTerm))),
       XTerm ,                                      %	writeln(Term),
-      STerm=XTerm !].
+      STerm=XTerm )).
       
 fe:-flatExpand( [know(mike, not believe(peter, smth)), tell(mike,peter,smth)],
                 O), writeln(O).
@@ -562,20 +562,20 @@ flatSynth(Clause, Sentence):- flatExpand(Clause, ClauseFE),
              
 flatExpand(Clause,ClauseFE):-
     ifthen( not clause_list(_,Clause), 
-            ( writeln($!!! input term must be a list: flatExpand$),fail)),
+            ( writeln(`!!! input term must be a list: flatExpand`),fail)),
     string_term(Str,Clause),                              % writeln(Str),
-	string_change_char($((($,$,$,Str,Str1),
-    string_change_char($))))$,$,$,Str1,Str2),
-	string_change_char($)))$,$,$,Str2,Str3),
-	string_change_char($(($,$,$,Str3,Str4),
-	string_change_char($))$,$,$,Str4,Str5),
+	string_change_char(`(((`,`,`,Str,Str1),
+    string_change_char(`))))`,`,`,Str1,Str2),
+	string_change_char(`)))`,`,`,Str2,Str3),
+	string_change_char(`((`,`,`,Str3,Str4),
+	string_change_char(`))`,`,`,Str4,Str5),
 	
-	string_change_char($($,$,$,Str5,Str6),
-	string_change_char($)$,$,$,Str6,Str7), 
-    string_change_char($,]$,$>$, Str7, Str8),
-    string_change_char($>$,$]$,Str8,Str9),
-    string_change_char($,,$,$>$, Str9, Str10),
-    string_change_char($>$,$,$,Str10, Str11),
+	string_change_char(`(`,`,`,Str5,Str6),
+	string_change_char(`)`,`,`,Str6,Str7), 
+    string_change_char(`,]`,`>`, Str7, Str8),
+    string_change_char(`>`,`]`,Str8,Str9),
+    string_change_char(`,,`,`>`, Str9, Str10),
+    string_change_char(`>`,`,`,Str10, Str11),
 	string_term(Str11, ClauseFE).
 
 mm3:- matchMental3(  [know(mike, want(peter,smth))], 
@@ -602,7 +602,7 @@ matchMental( M1,M2, Suffix ):-
   ( matchMental3( M1, M2, Suffix)                       ).
   
 matchMental3( M1,M2, Suffix):- 
- [!  clause_list(M1,M1s), clause_list(M2,M2s),
+ aritySlice((  clause_list(M1,M1s), clause_list(M2,M2s),
 
   flatExpand(M1s, M1era), flatExpand(M2s, M2e),  	
   reduceAntiSym(M1era, M1e),            %  writeln((M1e,M2e)), !, get(CCC),
@@ -612,15 +612,15 @@ matchMental3( M1,M2, Suffix):-
   Lmin_m2 is Lmin - 2, Lmin_m1 is Lmin-1,
   (
       ( L1=L2, M1em=M1e, M2em=M2e , Suffix= exact);
-%          (sublist(0,Lmin,M1e,M1em),    sublist(0,Lmin,M2e,M2em),   sublist(Lmin_m1,1,M1e,[Suffix]), writeln($no shift$) );
-%	  (sublist(2,Lmin,M1e,M1em),    sublist(0,Lmin_m2,M2e,M2em), sublist(0,1,M1e,[Suffix] ),  writeln($2-shift $) ),  %;
-      	  (sublist(0,Lmin,M1e,M1em), sublist(2,Lmin,M2e,M2em),    sublist(0,1,M2e,[Suffix]),   writeln($-2-shift$) )
-  ) !],
+%          (sublist(0,Lmin,M1e,M1em),    sublist(0,Lmin,M2e,M2em),   sublist(Lmin_m1,1,M1e,[Suffix]), writeln(`no shift`) );
+%	  (sublist(2,Lmin,M1e,M1em),    sublist(0,Lmin_m2,M2e,M2em), sublist(0,1,M1e,[Suffix] ),  writeln(`2-shift `) ),  %;
+      	  (sublist(0,Lmin,M1e,M1em), sublist(2,Lmin,M2e,M2em),    sublist(0,1,M2e,[Suffix]),   writeln(`-2-shift`) )
+  ) )),
     runMatch(M1em, M2em, Suffix, Matchs).
 
 runMatch(M1e,M2e,Suffix, Matchs):-
-            %    len(M1e, LLen), len(M2e, LLen), writeln($inside runmatch$),
-                                                    %  writeln(($cut: $, M1e, M2e)),		     get(CCCCCC),
+            %    len(M1e, LLen), len(M2e, LLen), writeln(`inside runmatch`),
+                                                    %  writeln((`cut: `, M1e, M2e)),		     get(CCCCCC),
     LongList=[0,1,2,3,4,5,6,7,9,10,11,12,13],
     findall(Match,(  member(LtrN, LongList),    
              sublist(LtrN,1,M1e,[Ltr1]),
@@ -675,7 +675,7 @@ list_delete_pos(Pos, Orig, Result):- len(Orig, LenOrig),	 dec(Pos, Pos0),
                        
 ss:- sublist(0,7,[want,mike,know,peter,want,mike,smth],O1) , writeln(O1),
      sublist(0,7,[want, mike,believe,mike,not know,peter,location,token],O2) , writeln(O2), 
-     sublist(6,1,[want,mike,know,peter,want,mike,smth],O3) , writeln(($no shift$,O3)).
+     sublist(6,1,[want,mike,know,peter,want,mike,smth],O3) , writeln((`no shift`,O3)).
 
 
 
@@ -828,11 +828,11 @@ write0(J):-not fail.
 %%%        If you supply an uninstantited variable for Element, then each of
 %%%        the members of the list is returned through backtracking.
 
-:- mode member(?,+).
+:- mode( member(?,+)).
 
 member(H, [H|_]).
 member(H, [A|T]) :- ifthen( var(T), ( write(member(H, [A|T])), 
-                                      write($!!!! list member of Var$), nl, fail)),
+                                      write(`!!!! list member of Var`), nl, fail)),
    member(H, T).
 
 cl_member(H, [H1|_]):-cl_eq(H,H1).
@@ -850,7 +850,7 @@ cl_eq(A,B):-A=B.
 %%%        However, the member_check predicate does not backtrack and thus only
 %%%        returns a single answer.
 
-:- mode member_check(+,+).
+:- mode( member_check(+,+)).
 
 member_check( H, [H|_]) :- !.
 member_check(H, [_|T]) :-
@@ -1219,7 +1219,7 @@ writel([]) :-
    !,
    nl.
 writel([H|T]) :-
-   write(H),write($ $),
+   write(H),write(` `),
    writel(T).
 
 
@@ -1271,7 +1271,7 @@ list_insert:-list_insert(([a(c2334),d(c3333),e(c5643,c7654),g(c5644)] ),
 list_ins:-list_insert([1,2,3,4,5,6],6,11,O), write(O).
 list_insert(Cc,Pold,Pnew,CCC):-
 			  ifthen( not(  list_search([Pold],Cc,_)),
-			  (write(Pold), write($ is absent in $), write(Cc), nl, fail)   ),
+			  (write(Pold), write(` is absent in `), write(Cc), nl, fail)   ),
       list_search([Pold],Cc,N),
 		len(Cc,Lr), N2 is Lr-N-1, Np1_ is N+1, Np is N+1,
                     ifthenelse(N>0,sublist(0,N,Cc,R1), R1=[]),
@@ -1282,11 +1282,11 @@ cll:-cl_list_insert_all([a(1,2),b(A,N),a(U,M)],a(R1,R2),aaaa(11,22),O), write(O)
 
 cl_list_insert(Cc,Pold,Pnew,CCC):-
 			  ifthen( not( cl_list_search([Pold],Cc,_,_)),
-			  (write(Pold), write($ is absent !!! in $), write(Cc), nl, fail)   ),
-	                  ifthen( cl_eq(Pold,Pnew), ( write($!!! subst $),
-                          write(Pnew), write($ in spite of $), write(Pold),fail)),
+			  (write(Pold), write(` is absent !!! in `), write(Cc), nl, fail)   ),
+	                  ifthen( cl_eq(Pold,Pnew), ( write(`!!! subst `),
+                          write(Pnew), write(` in spite of `), write(Pold),fail)),
       cl_list_search([Pold],Cc,N,Insp),
-%	   write($      both_add$), write((Insp,Pold)),	   %
+%	   write(`      both_add`), write((Insp,Pold)),	   %
                %      both_add(Insp,Pold,Pnew,Pnew_l_),%
 		     		Pnew_l_=[Pnew],
 		len(Cc,Lr), N2 is Lr-N-1, Np1_ is N+1, Np is N+1,
@@ -1295,8 +1295,8 @@ cl_list_insert(Cc,Pold,Pnew,CCC):-
 		 append(R1,Pnew_l_,R_), append(R_,R2,CCC).
 
 both_add(I,Pold,P,P_):-Pold=..[_|J], len(I,Li), len(J,Lj), ifthen(Lj\==Li,
-                           ( % write(I), write($ \== $), write(J),%
-                     write($!!! different pred while insert$),nl,fail)),
+                           ( % write(I), write(` \== `), write(J),%
+                     write(`!!! different pred while insert`),nl,fail)),
     	            append([eq(J,I)],[P],P1), append(P1,[eq(J,I)], P_).
 
 
@@ -1314,13 +1314,13 @@ consult(Ls,list):-member(F,Ls), consult(F), fail.
 
 writeln(D):- %ifthen(interpreter,
              %   (
-             %     write($<BR>$)
+             %     write(`<BR>`)
 			 %   )
                   write(D), nl.
 
 			 %   )).
 
-writeHtml(D):- write($<BR>$),
+writeHtml(D):- write(`<BR>`),
                   write(D), nl.
 
 string_insert(Str,Ins,D,Out):-string_length(Str,Len),
@@ -1335,8 +1335,8 @@ brack_del(Prod,Pls):-string_term(Str,Pls), string_length(Str,L), L1 is L-2,
                       substring(Str,1,L1,St),
                       string_term(St,Prod).
 
-del_fin_term(B,Baim):-    string_term(Bstr,B), concat($[$,Bstr,B_str),
-                                      concat(B_str,$]$,B_str_),
+del_fin_term(B,Baim):-    string_term(Bstr,B), concat(`[`,Bstr,B_str),
+                                      concat(B_str,`]`,B_str_),
                                       string_term(B_str_,Bt),
                                       reverse(Bt,Binv),Binv=[Fir|Bin],
                                       reverse(Bin,Baim_),
@@ -1345,7 +1345,7 @@ del_fin_term(B,Baim):-    string_term(Bstr,B), concat($[$,Bstr,B_str),
 vl:-var_list(F,[w,rit,a(a),b,b,n,h(K),e(H)]), write(F).
 
 clause_list(B,Ls) :- nonvar(B),string_term(Bstr,B),
-           concat([$[$,Bstr,$]$],B_str), string_term(B_str,Ls).
+           concat([`[`,Bstr,`]`],B_str), string_term(B_str,Ls).
 clause_list(B,Ls) :-nonvar(Ls), Ls\==[],
             len(Ls,N), ifthenelse( N<20 ,brack_del(B,Ls), (
       N1 is N//3, N2 is N*2//3,
@@ -1355,10 +1355,10 @@ clause_list(B,Ls) :-nonvar(Ls), Ls\==[],
 
 vv:-write(A),var_const(a(A),C), write(a(A)), var_const(V,C), write(V).
 v:-var_const((c(w1),h(A,h(HH),w2)),H),  write(H).
-var_const(V,C):-nonvar(V),  change_char('_','z',V,Cz),  change_char($zz$,'_',Cz,C).
+var_const(V,C):-nonvar(V),  change_char('_','z',V,Cz),  change_char(`zz`,'_',Cz,C).
 var_const(V,C):-nonvar(C),  change_char('z','_',C,V).
 var_const(V,C):-var(V),var(C),
-                writeln($constant part contains Var or vice versa! $),nl.
+                writeln(`constant part contains Var or vice versa! `),nl.
 var_list(V,L):-var(L),var_const(V,C),!, clause_list(C,L).
 
 va:-var_list(V,[b(w12,w23),a(w12)]), write(V).
@@ -1399,7 +1399,7 @@ expand(A,B):-
                          string_term(Ustr,U), not(string_search('=',Ustr,_)),
                          subpred(U,Xs) ,         member(X,Xs) ), Bc), !,
                  remove_duplicates(Bc,Bcd),
-             ifthenelse(A\==Ac,[! var_const(B,Bcd) !] ,B=Bcd).
+             ifthenelse(A\==Ac,aritySlice(( var_const(B,Bcd) )) ,B=Bcd).
 
 expand_dupl(Ac,Bc):- clause_list(Ac,As),
               findall(X,(member(U,As),
@@ -1421,17 +1421,17 @@ subpred_list([A|R],[A,L2|S]):-
 /* subpred(A,S):-            A=..[P|L2], X1=A,
                           findall(X2,(member(T2,L2), % T2=..L3,%
                                                      X2=T2),X2s),
-                                                               %write($X2s = $), writeln(X2s), %
+                                                               %write(`X2s = `), writeln(X2s), %
                  findall(X3,(member(T2,L2), T2=..[_|L3], member(T3,L3),%T3=..L4,%
                                                           X3=T3), X3s),
-                                                               %write($X3s = $), writeln(X3s),%
+                                                               %write(`X3s = `), writeln(X3s),%
                           append([X1],X2s,X12s), append(X12s,X3s,S).
 */
 
-cww:-change_char($w$,$_$, (sell(john,whom,aptw)     ),J), write(J).
+cww:-change_char(`w`,`_`, (sell(john,whom,aptw)     ),J), write(J).
    change_char(Char1,Char2,C,O):-  ifthen(string_search(Char1,Char2,_),
-       (writeln($!!!! Incorrect string change ! $), fail)),
-     string_term(Str,C), [! change_ch(Char1,Char2,'',Str,Ostr) !],
+       (writeln(`!!!! Incorrect string change ! `), fail)),
+     string_term(Str,C), aritySlice(( change_ch(Char1,Char2,'',Str,Ostr) )),
      string_term(Ostr,O).
 
    change_ch(Char1,Char2,Lstr,Wstr,Ostr):- not(string_search(Char1,Wstr,_)),
@@ -1448,7 +1448,7 @@ cww:-change_char($w$,$_$, (sell(john,whom,aptw)     ),J), write(J).
 
      ifthenelse( ( PastFirst=='(',(var(CHt);integer(CHt) ),Char2\='_'),
                (LNb is LN-1, substring(Wstr,N1b,LNb,Wstr1),
-                  concat([Lstr,C1,$eng($,Char2,','],Lstr1) ),
+                  concat([Lstr,C1,`eng(`,Char2,','],Lstr1) ),
 
          ifthenelse( (% writeln((PreLast,Char1,PastFirst)),
              %  not (any_name(PastFirst);any_name(PreLast) ),
@@ -1465,8 +1465,8 @@ any_name(Char):-nth_char(0,Char,N), nth_char(0,'a',Na),nth_char(0,'z',Nz),
 
 
  string_change_char(Char1,Char2,C,O):- % ifthen(string_search(Char1,Char2,_),
-%       (writeln($!!!! Incorrect string change ! $), fail)),
-                 [! string_change_ch(Char1,Char2,'',C,O) !].
+%       (writeln(`!!!! Incorrect string change ! `), fail)),
+                 aritySlice(( string_change_ch(Char1,Char2,'',C,O) )).
 
    string_change_ch(Char1,Char2,Lstr,Wstr,Ostr):- not(string_search(Char1,Wstr,_)),
       concat(Lstr, Wstr, Ostr).
@@ -1482,7 +1482,7 @@ any_name(Char):-nth_char(0,Char,N), nth_char(0,'a',Na),nth_char(0,'z',Nz),
     string_length(Lstr,Nl),   dec(Nl,Nl1),
  ifthenelse(Nl>0, substring(Lstr,Nl1,1,PreLast),PreLast=''),
 
-                  %    writeln(($last::$,PreLast)),
+                  %    writeln((`last::`,PreLast)),
          ifthenelse( not fail ,%any_name(PreLast),
         (substring(Wstr,N1,LN,Wstr1),concat([Lstr,C1,Char2],Lstr1)  ),
         (substring(Wstr,N1,LN,Wstr1),concat([Lstr,C1,Char1],Lstr1)  )),
@@ -1522,7 +1522,7 @@ functor(S,P):-functor(S,P,0);functor(S,P,1);functor(S,P,2);
 list_assert(Ls):-not (member(C,Ls),assert(C),fail).
 list_abolish(Ls):-member(C,Ls), abolish_all(C), fail.
 
-take(Dbfile):-atom_string(Dbfile,Dstr), concat($dbinp $, Dstr, Exec),
+take(Dbfile):-atom_string(Dbfile,Dstr), concat(`dbinp `, Dstr, Exec),
          exec(Exec).
 exec(S):-atom_string(A,S),shell(A).
 
@@ -1534,7 +1534,7 @@ shorten(Cl,Until,O,InspO):-clause_list(Cl,Cls),
 
 sco:-subcombination([1,2,3],C), writeln(C),fail.
 
-allcombinations(S,C):-len(S,L),  ifthen(L>6,(write($ !!! list for combination too long : $),
+allcombinations(S,C):-len(S,L),  ifthen(L>6,(write(` !!! list for combination too long : `),
                                            writeln(S), fail)),
     findall( (Ys), (member(X0,S), ifthen(L>1,(member(X1,S), X0\==X1)),
     ifthen(L>2,(member(X2,S), X2\==X1,X2\==X0)),
@@ -1545,7 +1545,7 @@ allcombinations(S,C):-len(S,L),  ifthen(L>6,(write($ !!! list for combination to
  sublist(0,L,[X0,X1,X2,X3,X4,X5,X6],Ys) ),
   C), remove_duplicates(C,Cd).
 
-combination(S,C):-len(S,L),  ifthen(L>6,(write($ !!! list for combination too long$),
+combination(S,C):-len(S,L),  ifthen(L>6,(write(` !!! list for combination too long`),
                                            writeln(S), fail)),
     member(X0,S), ifthen(L>1,(member(X1,S), X0\==X1)),
     ifthen(L>2,(member(X2,S), X2\==X1,X2\==X0)),
@@ -1555,7 +1555,7 @@ combination(S,C):-len(S,L),  ifthen(L>6,(write($ !!! list for combination too lo
     ifthen(L>6,(member(X6,S),X6\==X1,X6\==X0,X6\==X2,X6\==X3,X6\==X4,X6\==X5)),
 sublist(0,L,[X0,X1,X2,X3,X4,X5,X6],C).
 
-subcombination(S,C):-len(S,L),  ifthen(L>6,(write($ !!! list for combination too long$),
+subcombination(S,C):-len(S,L),  ifthen(L>6,(write(` !!! list for combination too long`),
                                            writeln(S), fail)),
     member(X0,S), ifthen(L>1,(member(X1,S), X0\==X1)),
     ifthen(L>2,(member(X2,S), X2\==X1,X2\==X0)),
@@ -1600,12 +1600,12 @@ const_clause(Cl_inst,Cl):- cnst_cl(Cl_inst,Cl).
 ccl:-cnst_cl((d(g),a(g),o(4) ),O), writeln(O).
 
     cnst_cl(A,Afin):-expand(A,Aexp), writeln(Aexp),
-not (member(X,Aexp), write($##$), (atom(X);integer(X)) ),
-  Afin=A, writeln($ end $).
+not (member(X,Aexp), write(`##`), (atom(X);integer(X)) ),
+  Afin=A, writeln(` end `).
 
      cnst_cl(A,Afin):- expand(A,Aexp),  member(X,Aexp),
  (atom(X);integer(X)),
-           string_term(Xstr,X),  string_length(Xstr,Lx), concat(Xstr,$zz$,X1str),
+           string_term(Xstr,X),  string_length(Xstr,Lx), concat(Xstr,`zz`,X1str),
     substring(X1str,1,Lx,Y1str),
 concat('_',Y1str,Ystr), writeln((Xstr,Ystr)),
         change_char(Xstr,Ystr,A,B), writeln(B), cnst_cl(B,Afin).
@@ -1630,11 +1630,11 @@ replace(Term):-Term=..[F|Args],
 
 var_var(A,B):-var_const(A,C), var_const(B,C).
 
-createMN:-    open(H, $mn.ari$, w),
+createMN:-    open(H, `mn.ari`, w),
               findall( P, (current_predicate(P),
-                          write(H, $:- visible $),
+                          write(H, `:- visible `),
                           write(H, P),
-                          write(H, $.$), nl(H) ),_),
+                          write(H, `.`), nl(H) ),_),
               close(H).
 /*
 Three guys got together for a dinner, they 've got some food, but it is unclear who will cook.
@@ -1805,4 +1805,3 @@ ask(mike,peter,not want(nick,cook(peter,food))) ]
 
 */
 
-

@@ -1,3 +1,5 @@
+end_of_file.
+
 want(mike,know(mike,smth))
 want(mike,believe(mike,smth))
 know(mike,not know(mike,smth))

@@ -45,7 +45,7 @@ generateAction(Agent, ActionFull):- allActions(AllActions), member(Action, AllAc
 
 myselfToDo(MyAgent, [BestAction]) :-       
       clean,
-      involve_knowledge(MyAgent, MyAgent), % write($involved$),
+      involve_knowledge(MyAgent, MyAgent), % write(`involved`),
       findall( (PossibleAction,Score),
               (
                 clean_assumptions,
@@ -66,7 +66,7 @@ myselfToDo(MyAgent, [BestAction]) :-
           ActionsScores),                                          %writeln(ActionsScores),
        ifthenelse(ActionsScores = [], doWorst(MyAgent, BestAction),
    %      BestAction=ActionScores,
-       (   reduceActions(ActionsScores,MyAgent,ReviseActions), %writeln($reduction$), writeln(ReviseActions),
+       (   reduceActions(ActionsScores,MyAgent,ReviseActions), %writeln(`reduction`), writeln(ReviseActions),
            findBestAction(MyAgent, ReviseActions, BestAction)         %          writeln( findBestAction(ReviseActions, BestAction))
        )),
         clean_knowledge(MyAgent),
@@ -207,7 +207,7 @@ learn(Agent):- clean_assumptions,
 %             whatToDo(Agent, NewAgentActions), writeln( whatToDo(Agent, NewAgentActions)),
 %               clean_knowledge(Agent ),  
 %             ifthenelse((NewAgentActions = AgentActions),  retract(NewBelief), 
-%                                           write($success with new belief$)).
+%                                           write(`success with new belief`)).
 
 	     
 aa:- assert((   see(girl,woodcutter) :- (reduce((stay_behind_bush(wolf) , 
@@ -221,13 +221,13 @@ commit( Actions) :-
        ifthen( happen(Happens), list_assert(Happens)), 
        findall( Action,
               ( agent(Agent),
-                   [! myselfToDo(Agent, ActionLs ) !],
+                   aritySlice(( myselfToDo(Agent, ActionLs ) )),
                                writeln( myselfToDo(Agent, ActionLs ) ),
 
                 (ActionLs=[Action|_]), %; ActionLs = [doNothing]),
                 
                 %%eliminate implemented WANTs
-                [! want(Agent, Action) !],                         %writeln((eliminate,want(Agent, Action))),
+                aritySlice(( want(Agent, Action) )),                         %writeln((eliminate,want(Agent, Action))),
                 ifthen(( clause( want(Agent, Action), true ) ,
 			     not always(want(Agent, Action))  
                                  %  writeln( clause( want(Agent, Action), true ))
@@ -242,7 +242,7 @@ commit( Actions) :-
                    	)
                  ),
                 Actions), 
-                             %writeln($update(store) achieved goals$),
+                             %writeln(`update(store) achieved goals`),
                 ifthenelse( (happen(PrevActions), PrevActions \=[]), 
                   ( happen(PrevActions), retract(happen(_)), append(PrevActions, Actions, Happens1), %writeln(assert(happen(Happens1))), 
                     assert(happen(Happens1)) ),
@@ -250,7 +250,7 @@ commit( Actions) :-
                 
                   clean.
 
-ca:- clean_assumptions, writeln($ wolf cleaned $).
+ca:- clean_assumptions, writeln(` wolf cleaned `).
 
 clean_assumptions(Agent) :-not ( want(Agent, PossibleAction),
                              ifthenelse( (PossibleAction  = (not NegPossibleAction)),
@@ -318,18 +318,18 @@ clean_knowledge:-       not ( agent(Agent),
                              retract((Knowledge)) ),         fail).
 clean:-clean_assumptions, clean_knowledge,
       allAction(Acts),
-     findall(Action, ( member(Action, Acts ), [!name_term(Action, ActionTerm)!],
+     findall(Action, ( member(Action, Acts ), aritySlice((name_term(Action, ActionTerm))),
                                retract(ActionTerm) ), _).
    
-%    writeln($cleaned$).
+%    writeln(`cleaned`).
 start0:-[-lists,-nl_util], start.
-start:- [-$au\wkb_ma.ari$], %[-$au\wolf_ma.ari$], 
+start:- [-`au/wkb_ma.ari`], %[-`au/wolf_ma.ari`], 
     allAction(Acts), not (member(Action, Acts), 
     ( name_clause(Action, _, Term) ; name_term(Action,Term) ),
     abolish_all(Term), fail ),
     ifthen(happen(Actions),  retract(happen(Actions)) ),
     %   
-    [-$au\wkb_ma.ari$]. %[-$au\wolf_ma.ari$], 
+    [-`au/wkb_ma.ari`]. %[-`au/wolf_ma.ari`], 
 
 %allAgents([]).
 %allAction([see, eat, kill, stay_behind_bush, ask, say, respond]).

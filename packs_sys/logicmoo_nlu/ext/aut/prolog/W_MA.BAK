@@ -40,7 +40,7 @@ know(mike, not want(nick, cook(peter, food)))
  know(peter, not cook(mike, food)),
  want(peter, not cook(peter, food)),
  (cook(peter, food) :- know(peter,  want(nick, cook(peter, food)))),
- (cook(mike, food) :- know(peter,  want(nick, cook(mike, food))),
+ (cook(mike, food) :- know(peter,  want(nick, cook(mike, food)))),
  know(peter,  know(nick, want(nick, cook(mike, food))) ),
  want(peter, know(mike, not cook(peter, food)))
 ]), 
