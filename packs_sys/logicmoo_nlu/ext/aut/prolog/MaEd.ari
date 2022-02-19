@@ -1,0 +1,250 @@
+wtd:-whatToDo(mike,PossibleActions ), writeln(whatToDo(mike,PossibleActions )).
+
+%implement desire
+whatToDo(Agent, ChosenActions ):-
+    findall( PossibleAction,
+              (
+                availableAction(Agent, PossibleAction), 
+                assume( PossibleAction ), %writeln0( assume( PossibleAction)),
+			         ifthenelse( acceptableState(Agent), 
+					             clean_assume(PossibleAction),
+								 (clean_assume(PossibleAction),fail))
+               ),
+         PossibleActionsd), remove_duplicates(PossibleActionsd, PossibleActions),
+         PossibleActions\=[],                                    %clean_assumptions(Agent), %writeln0(PossibleActions),
+    findall( WAction, (member( WAction, PossibleActions), 
+                            want(Agent, State), writeln0(want(Agent, State)),
+                            not State,
+                            assume(WAction), writeln0((assume(WAction), State)),
+                            ifthenelse( State, ( clean_assume(WAction), writeln0($State accepted$)),
+                                               ( clean_assume(WAction), fail)
+                                      )
+                           ), BestActionsd), remove_duplicates(BestActionsd, BestActions),
+    ifthenelse(BestActions\=[], ChosenActions=BestActions, ChosenActions=PossibleActions). 
+
+wtdc:-whatToDoInConflict(peter,  ChosenActions ), writeln( ChosenActions ).
+
+whatToDoInConflict(Agent, ChosenActions ):-
+    findall( PossibleAction,
+               (
+                availableAction(Agent, PossibleAction), 
+                assume( PossibleAction ), %writeln0( assume( PossibleAction)),
+				assumeOtherAgents(Agent, OthersActions),
+                findall(Term, ( member(Term, OthersActions), assume(Term)),_),
+			         ifthenelse( acceptableState(Agent), 
+					             clean_assume(PossibleAction),
+								 (clean_assume(PossibleAction),fail)
+							 ),
+				findall(Term, ( member(Term, OthersActions), clean_assume(Term)),_)
+               ),
+         PossibleActionsd), remove_duplicates(PossibleActionsd, PossibleActions),
+         PossibleActions\=[],                                    %clean_assumptions(Agent), %writeln0(PossibleActions),
+    findall( WAction, (member( WAction, PossibleActions), 
+                            want(Agent, State), writeln0(want(Agent, State)),
+                            not State,
+                            assume(WAction), writeln0((assume(WAction), State)),
+							assumeOtherAgents(Agent, OthersActions),
+							findall(Term, ( member(Term, OthersActions), assume(Term)),_),
+                            
+							ifthenelse( State, ( clean_assume(WAction), writeln0($State accepted$)),
+                                              ( clean_assume(WAction), fail)
+                                     ),
+			findall(Term, ( member(Term, OthersActions), clean_assume(Term)),_)
+                           ), BestActionsd), remove_duplicates(BestActionsd, BestActions),
+    ifthenelse(BestActions\=[], ChosenActions=BestActions, ChosenActions=PossibleActions).
+
+
+availableAction(Agent, PossibleAction):- (want(Agent, PossibleAction),
+						ownAction(Agent, PossibleAction),
+                        not ( PossibleAction  = (not NegPossibleAction))  ); (
+			generateAction(Agent, PossibleAction), axiomFormula(PossibleAction), 
+			                                       meaningfulFormula(PossibleAction)).					
+
+% for attenuation, first "and" then "either"
+% hypothetically commited Action is not important:
+% either/and wanted state or absence of unwanted state
+acceptableState(Agent):- (want(Agent, Action),
+						state(Agent, PossibleAction)),
+						not (want(Agent, not UnwantedEvent), 
+                              UnwantedEvent ).
+
+acceptableState(Agent):- (want(Agent, PossibleAction),
+						state(Agent, PossibleAction));
+						not (want(Agent, not UnwantedEvent), 
+                              UnwantedEvent ), !.
+
+state(Agent, State): - nonvar(State), not ownAction(Agent, State),
+                       allActions(AllActions), not member(State, AllActions).
+
+% try all possible actions
+% it is any mental action, involving own knowldge or its negation, substituted by available agents
+
+generateAction(Agent, ActionFull):-(  know(Agent, want(Addressee, know(Addressee, Smth)));
+                                    want(Agent, know(Addressee, Smth)) ),
+                                   
+                       ActionFull= inform(Agent, Addressee, Smth),!.
+                                    
+generateAction(Agent, ActionFull):- allActions(AllActions), member(Action, AllActions),
+			allAgents(AllAgents), member(OAgent, AllAgents), OAgent \= Agent,
+								know(Agent, AgentKnowledge),
+                                    not (AgentKnowledge =( He :- Bo)),
+                        ( ActionFull=..[Action, Agent, OAgent, AgentKnowledge];  %sharing true knowledge
+ 				      	ifthenelse( (AgentKnowledge= (not K)),                     %cheating with not true knowledge 
+					        	(AgentKnowledge= (not K), ActionFull=..[cheat, Agent, OAgent, K]),
+								ActionFull=..[cheat, Agent, OAgent, AgentKnowledge]
+                               )).
+
+doWorst(MyAgent, BestAction) :- (BestAction = doNothing(MyAgent, MyAgent)). %to develop
+
+aoa :- assumeOtherAgents(wolf, AllAfd), writeln(AllAfd).
+aoo :- assumeOtherAgents(peter, M), writeln(M).
+
+assumeOtherAgents(MyAgent, AllAgentsActions):-
+     findall( AgentActions,
+           ( agent(Agent), Agent \= MyAgent,
+	     involve_knowledge(Agent, MyAgent, KList), 	 writeln0(involve_knowledge(Agent, MyAgent, KList)),
+             whatToDo(Agent, AgentActions), writeln( whatToDo(Agent, AgentActions)), 
+             clean_kList( KList )
+           ), AllAgentsActionsd),
+                                                   %     flatten(AllAgentActions, AllAf), 
+            remove_duplicates(AllAgentsActionsd, AllAgentsActions).
+               
+mytd :- whatToDoConflict(mike,PossibleActions), writeln(PossibleActions).
+cm:-commit( Actions), writeln( Actions).
+commit( Actions) :- 
+       clean_assumptions,
+        %refresh commited actions
+       ifthen( happen(Happens), list_assert(Happens)), 
+       findall( Action,
+              ( agent(Agent),
+                   [! whatToDoInConflict(Agent, ActionLs ) !],
+                               writeln( whatToDoInConflict(Agent, ActionLs ) ),
+
+                (ActionLs=[Action|_])
+           /*     
+                %%eliminate implemented WANTs
+                [! want(Agent, Action) !],                         %writeln((eliminate,want(Agent, Action))),
+                ifthen(( clause( want(Agent, Action), true ) ,
+			     not always(want(Agent, Action))  
+                                 %  writeln( clause( want(Agent, Action), true ))
+                      ), retract(want(Agent, Action))  ),
+
+                ifthen((
+                        not always(want(Agent, Action)),
+	                clause(want(Agent, Action), Body), Body =\= true,
+                        nonGeneral(Body),
+                                 writeln(  retract((want(Agent, Action):-Body)))  ),         
+                        retract((want(Agent, Action) :- Body))
+                                	)
+	     */
+
+                 ),
+                Actions), 
+                             %writeln($update(store) achieved goals$),
+
+                ifthenelse( (happen(PrevActions), PrevActions \=[]), 
+                  ( happen(PrevActions), retract(happen(_)), append(PrevActions, Actions, Happens1), %writeln(assert(happen(Happens1))), 
+                    assert(happen(Happens1)) ),
+                  (Happens = Actions, assert((happen(Happens))) )
+               ),
+                
+                  clean.
+
+clean_assume(Term):- ifthen(call(Term), retract(Term)). 
+clean_assumptions(Agent) :-not ( want(Agent, PossibleAction),
+                             ifthenelse( (PossibleAction  = (not NegPossibleAction)),
+                             retract((NegPossibleAction:-fail)),
+                             retract((PossibleAction)) ),
+                             fail ).
+clean_assumptions :-  not ( agent(Agent),  want(Agent, PossibleAction) ,
+                             ifthenelse( (PossibleAction  = (not NegPossibleAction)),
+                             retract((NegPossibleAction:-fail)),
+                             retract((PossibleAction)) ),
+                             fail ).
+%handles  negation of assert
+
+assume( PossibleAction ) :- ifthenelse( (PossibleAction  = (not NegPossibleAction)),
+                             assertz((NegPossibleAction:-fail)),
+                             assertz((PossibleAction)) ).
+
+ik:- involve_knowledge(nick, peter, O), writeln(O).
+iw:- involve_knowledge(wolf, wolf).
+
+
+involve_knowledge(Agent, AgentViewPoint, AllKnowledge) :-
+      findall(Knowledge, ( agent(Agent),
+                 (know(Agents, Knowledge) ; believe(Agents, Knowledge);
+                  know(AgentViewPoint, know(Agents, Knowledge));
+		 (know(AgentViewPoint, know(Agents, K)), 
+                  Knowledge=know(Agents, K) )                       ),
+                               nonvar(Agents),   
+                               ( member(Agent, Agents); Agents = Agent ),
+                           
+                 not ( know(AgentViewPoint, not know(NegAgents, Knowledge)),
+                                nonvar(NegAgents),
+                               ( member(Agent, NegAgents); Agent = NegAgents) )
+                  ),  AllKnowledged ),                % writeln(AllKnowledged),
+
+                           remove_duplicates(AllKnowledged, AllKnowledge),
+                findall(Term, ( member(Term, AllKnowledge),
+                                call( not Term ), 
+                                assume(Term), writeln0(assumed(Term)) ),_).
+
+involve_knowledgeLater(Agent, AgentViewPoint) :- 
+      findall(Knowledge, ( agent(Agent),
+                 (know(Agents, Knowledge) ; believe(Agents, Knowledge)),
+                               nonvar(Agents),   
+                               ( member(Agent, Agents); Agents = Agent ),
+                           
+                 not ( know(AgentViewPoint, not know(NegAgents, Knowledge)),
+                                nonvar(NegAgents),
+                               ( member(Agent, NegAgents); Agent = NegAgents) )
+                  ),  AllKnowledge ),                % writeln0(AllKnowledge),
+                           remove_duplicates(AllKnowledge, AllKnowledged),
+      findall(Term, ( member(Term, AllKnowledged),assume(Term), writeln0(assumed(Term)) ),_).
+
+
+
+ck:-clean_knowledge(mike).
+
+clean_kList(List):- not ( member(Term, List), retract(Term), writeln0(cleanKList(Term)),fail).
+
+clean_knowledge(Agent):- not ( (know(Agents, Knowledge); know(_, know(Agents,Knowledge)) ),
+                               ( member(Agent, Agents); Agents = Agent ),
+                               writeln0(know(Agents, Knowledge)),
+                             ifthenelse( (Knowledge  = (not NegKnowledge)),
+                             retract((NegKnowledge:-fail)),
+                             (retract((Knowledge)), writeln0(($retracted$,Knowledge)) )  ),         fail).
+
+clean_knowledge:-       not ( agent(Agent), 
+                      ( know(Agents, Knowledge);believe(Agents, Knowledge)),
+                               ( member(Agent, Agents); Agents \= Agent ),
+                             ifthenelse( (Knowledge  = (not NegKnowledge)),
+                             retract((NegKnowledge:-fail)),
+                             retract((Knowledge)) ),         fail).
+clean:-clean_assumptions, clean_knowledge,
+      allActions(Acts),
+     findall(Action, ( member(Action, Acts ), [!name_term(Action, ActionTerm)!],
+                               retract(ActionTerm) ), _).
+   
+
+writeln0(A):-not fail. %writeln(A).
+
+start0:-[-lists,-nl_util, -$gen.ari$], start.
+start:- [-$wkb_ma.ari$], %[-$au\wolf_ma.ari$], 
+    allActions(Acts), not (member(Action, Acts), 
+    ( name_clause(Action, _, Term) ; name_term(Action,Term) ),
+    abolish_all(Term), fail ),
+    ifthen(happen(Actions),  retract(happen(Actions)) ),
+    %   
+     [-$wkb_ma.ari$], clean. 
+ 
+%allAgents([]).
+agent(X):-allAgents(Xs), member(X, Xs).
+%allActions([see, eat, kill, stay_behind_bush, ask, say, respond]).
+%allActions([dig, inform]).
+
+ownAction(MyAgent, PossibleAction):-
+                 PossibleAction=..[Action, MyAgent |Args], allAction(Actions),
+                 member(Action, Actions).
+

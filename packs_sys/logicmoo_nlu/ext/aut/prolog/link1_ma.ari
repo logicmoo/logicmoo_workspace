@@ -1,0 +1,64 @@
+/*
+
+*/
+
+want(C, link(_, C)):-agent(C).
+
+want(c1, link(c2, c1)).
+believe(c1, want(c2, link(c2, c3))).
+believe(c1, not want(c2, link(c2, c1))).
+believe(c1, want(c3, link(c1, c3))):- believe(c3, want(c2, link(c1, c3))).
+want(c1, (link(c3, c2):-believe(c3, want(c2, link(c3,c2))) )). 
+want(c1, believe(c3, want(c1, link(c1, c3)))). %!
+want(c1, not  believe(c3, want(c1, link(c2, c1)))).
+believe(c1, ( link(c2, c1):-believe(c2, want(c3, link(c2, c1))) ) ).
+
+want(c2, link(c3, c2)).
+believe(c2, want(c3, link(c3, c1))).
+believe(c2, not want(c3, link(c3, c2))).
+believe(c2, want(c1, link(c2, c1))):- believe(c1, want(c3, link(c2, c1))).
+want(c2, (link(c1, c3):-believe(c1, want(c3, link(c1,c3))) )). 
+want(c2, believe(c1, want(c2, link(c2, c1)))). %!
+want(c2, not  believe(c1, want(c2, link(c3, c2)))).
+believe(c2, ( link(c3, c2):-believe(c3, want(c1, link(c3, c2))) ) ).
+link(c3, c2):-believe(c3, want(c1, link(c3, c2)))
+
+want(c3, link(c1, c3)).
+believe(c3, want(c1, link(c1, c2))).
+believe(c3, not want(c1, link(c1, c3))).
+believe(c3, want(c2, link(c3, c2))):- believe(c2, want(c1, link(c3, c2))).
+want(c3, (link(c2, c1):-believe(c2, want(c1, link(c2,c1))) )). 
+want(c3, believe(c2, want(c3, link(c3, c2)))). %!
+want(c3, not  believe(c2, want(c3, link(c1, c3)))).
+believe(c3, ( link(c1, c3):-believe(c1, want(c2, link(c1, c3))) ) ).
+
+
+
+
+unable( link(Ag, Ag) ) :- member(Agent, [s,m]).
+
+allActions([ inform, ask]). %, forgive, conceal,pretend,]).
+allAgents([c1,c2,c3]).
+
+/*
+H = [ 
+inform(s,b,not pb),
+inform(b,s,buy(b,p)),
+inform(m,s,(buy(b,p) :- inform(m,b,not bp))),
+
+inform(s,m,not pb),
+inform(b,m,not buy(b,p)),
+suggest(m,b,buy(b,p))
+
+suggest(s,b,buy(b,p)),
+inform(b,s,believe(b,not bp)),
+cheat(m,b,_270) ]
+=======================
+inform(s,b,not bp),buy(b,p),inform(m,b,buy(m,p)),
+
+inform(s,b,not pb),inform(b,s,buy(b,p)),inform(m,s,(buy(b,p) :- inform(m,b,not bp))),
+inform(s,m,not pb),inform(b,m,not buy(b,p)),suggest(m,b,buy(b,p)),
+suggest(s,b,buy(b,p)),inform(b,s,believe(b,not bp)),cheat(m,b,_2F4) ]
+
+
+*/

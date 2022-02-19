@@ -1,0 +1,72 @@
+
+%stay_behind_bush(wolf)-> not eat(wolf, girl).
+
+%eat(Who,Whom) -> noise(Whom).
+noise(Whom):- eat(Who,Whom).
+
+near(Who, Whom):- eat(Who, Whom).
+
+%noise(Whom) -> hear(Who, Whom).
+know([wolf, woodcutter, girl],(
+hear(Who, Whom):-noise(Whom), agent(Who)
+ )).
+
+know(wolf, not know(girl, (
+hear(Who, Whom):-noise(Whom), agent(Who)
+ ))).
+
+believe([wolf], near(wolf, woodcutter)):-hear(wolf, woodcutter).
+believe([girl,woodcutter],  ( want(girl, eat(wolf, girl)) :- want(wolf, eat(wolf, girl)))).
+believe([wolf], want(girl, eat(wolf, girl)) ):-want(wolf, eat(wolf, girl)).
+
+%ask(wolf, Who):-want(wolf, know(wolf, see(Who, girl))).
+ask(Agent, Who, Action) :- want(Agent, believe(Agent, Action)). 
+say(Agent, OtherAgent, Action) :- want(Agent, believe(OtherAgent, Action)). 
+
+%hear(Who, Whom) -> near(Whom, Who).
+  know([woodcutter, wolf], (
+near(Who, Whom):-hear(Who, Whom)
+  )).
+
+%near(woodcutters, Who) -> see(woodcutters, near(Who, Everybody) ).
+
+see(Who, Whom):- (near(Who, Whom);near(Whom, Who)).
+
+know([wolf, girl], (
+  see(Who,WhomElse):- near(Who, Whom), (near(WhomElse, Whom);
+                                     near(Whom, WhomElse))
+                   )).
+
+%see(Who, Whom), woodcutter(Who), wolf(Whom) -> kill(Who, Whom).
+kill(Who, Whom):-  woodcutter(Who), wolf(Whom), see(Who, Whom).
+
+kill(Who, Whom):-  woodcutter(Who), wolf(Whom), see(Who, Whom),
+                      want(Who, kill(Who, Whom)).
+
+
+agent(girl). agent(wolf). agent(woodcutter).
+woodcutter(woodcutter).
+wolf(wolf).
+
+want(wolf, stay_behind_bush(wolf)).
+want(wolf, eat(wolf, girl)).
+
+want(wolf, not see(girl, woodcutter)).
+%want(wolf, not kill(Smb, wolf)). %negation is passive
+
+  know([wolf, girl], (
+want(wolf, eat(wolf, woodcutter)) :- eat(wolf, girl)   %,writeln($!!!!!!!!$)
+                     )).
+
+want(girl, eat(woodcutter, wolf)).
+want(girl, see(girl, woodcutter)).
+%want(girl, not eat(wolf, girl)).
+%want(girl, not see(woodcutter, girl)).
+
+want(woodcutter, kill(woodcutter, wolf)).
+%want(woodcutter, not eat(wolf, woodcutter)).
+want(woodcutter, eat(woodcutter, wolf)).
+want(woodcutter, not kill(girl, wolf)). %odcutter)).
+
+allAction([see, eat, kill, stay_behind_bush, ask, say, respond]).
+

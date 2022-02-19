@@ -1,0 +1,1808 @@
+:- public main/0.
+:- visible findall/3.
+
+:- visible(all).
+:- visible(arity_builtins).
+main:- cm.
+
+wtd:-whatToDo(mike,PossibleActions ), writeln(whatToDo(mike,PossibleActions )).
+
+%implement desire
+whatToDo(Agent, ChosenActions ):-
+    findall( PossibleAction,
+              (
+                availableAction(Agent, PossibleAction, _), 
+                assume( PossibleAction ), writeln0( assume( PossibleAction)),
+			         ifthenelse( acceptableState(Agent), 
+					             clean_assume(PossibleAction),
+								 (clean_assume(PossibleAction),fail))
+               ),
+         PossibleActionsd), remove_duplicates(PossibleActionsd, PossibleActions),
+         PossibleActions\=[],                                    %clean_assumptions(Agent), %writeln0(PossibleActions),
+    findall( WAction, (member( WAction, PossibleActions), 
+                            want(Agent, State), writeln0(want(Agent, State)),
+                            not State,
+                            assume(WAction), writeln0((assume(WAction), State)),
+                            ifthenelse( State, ( clean_assume(WAction), writeln0($State accepted$)),
+                                               ( clean_assume(WAction), fail)
+                                      )
+                           ), BestActionsd), remove_duplicates(BestActionsd, BestActions),
+    ifthenelse(BestActions\=[], ChosenActions=BestActions, ChosenActions=PossibleActions). 
+
+wtdc:-whatToDoInConflict(peter,  ChosenActions,_ ), writeln0( ChosenActions ).
+
+%main action choice predicate
+whatToDoInConflict(Agent, ChosenActions, Happens ):- 
+    findall( PossibleAction,
+               (
+                availableAction(Agent, PossibleAction, Happens),  
+                assume( PossibleAction ),                          writeln0( assume( PossibleAction)),
+				assumeOtherAgents(Agent, OthersActions),
+                findall(Term, ( member(Term, OthersActions), assume(Term)),_),
+			         ifthenelse( acceptableState(Agent), 
+					             clean_assume(PossibleAction),
+								 (clean_assume(PossibleAction),fail)
+							 ),
+				findall(Term, ( member(Term, OthersActions), clean_assume(Term)),_)
+               ),
+         PossibleActionsd), remove_duplicates(PossibleActionsd, PossibleActions),
+         PossibleActions\=[],                                    %clean_assumptions(Agent), %writeln0(PossibleActions),
+    findall( WAction, (member( WAction, PossibleActions), 
+                            want(Agent, State), writeln0(want(Agent, State)),
+                            not State,
+                            assume(WAction), writeln0((assume(WAction), State)),
+							assumeOtherAgents(Agent, OthersActions),
+							findall(Term, ( member(Term, OthersActions), assume(Term)),_),
+                            
+							ifthenelse( State, ( clean_assume(WAction), writeln($State accepted$)),
+                                              ( clean_assume(WAction), fail)
+                                     ),
+			findall(Term, ( member(Term, OthersActions), clean_assume(Term)),_)
+                           ), BestActionsd), remove_duplicates(BestActionsd, BestActions),
+    ifthenelse(BestActions\=[], ImprovedActions=BestActions, ImprovedActions=PossibleActions),
+    findall( WAction, (member( WAction, ImprovedActions), 
+                            want(Agent, not State), writeln0(want(Agent, not State)),
+                            State,
+                            assume(WAction), writeln0((assume(WAction), State)),
+							assumeOtherAgents(Agent, OthersActions),
+							findall(Term, ( member(Term, OthersActions), assume(Term)),_),
+                            ifthenelse( (not State), ( clean_assume(WAction), writeln0($Unwanted state avoided$)),
+                                              ( clean_assume(WAction), fail)
+                                     ),
+			findall(Term, ( member(Term, OthersActions), clean_assume(Term)),_)
+                           ), AvoidWorseActionsd), remove_duplicates(AvoidWorseActionsd, AvoidWorseActions),
+    ifthenelse(AvoidWorseActions\=[], ChosenActions=AvoidWorseActions, ChosenActions=ImprovedActions ).
+/*  
+    explicit preference	
+	want(Action
+	want(State), not State, assume(ChosenAction), State, 
+	   not ( want( not NegState), not NegState, assume(ChosenAction), NegState ). 
+*/
+
+availableAction(Agent, PossibleAction, Happens):- (want(Agent, PossibleAction),
+						ownAction(Agent, PossibleAction),
+                        not ( PossibleAction  = (not NegPossibleAction)),
+                                  writeln0(wanted_action(PossibleAction))   ); (
+		     	generateAction(Agent, PossibleAction, Happens),                writeln0(generatedAction(PossibleAction)),
+                                                   ifthen(nonvar(Happens),
+                                                          not member(PossibleAction, Happens)),       
+					                               axiomFormula(PossibleAction),  
+			                                       meaningfulFormula(PossibleAction)).					
+
+% for attenuation, first "and" then "either"
+% hypothetically commited Action is not important:
+% either/and wanted state or absence of unwanted state
+acceptableState(Agent):- (want(Agent, Action),
+						state(Agent, PossibleAction)),
+						not (want(Agent, not UnwantedEvent), 
+                              UnwantedEvent ).
+
+acceptableState(Agent):- (want(Agent, ResultState),
+						state(Agent, ResultState), writeln0(accepted(ResultState)) );
+		         ( not (want(Agent, not UnwantedEvent), 
+                              UnwantedEvent ), writeln0(avoided(UnwantedEvent)) ), !.
+
+state(Agent, State):- nonvar(State), not ownAction(Agent, State),
+                       allActions(AllActions), not member(State, AllActions).
+
+% try all possible actions
+% it is any mental action, involving own knowldge or its negation, substituted by available agents
+ 
+  %% generate physical action that is included in Agents'intention (may be other's action).
+  %% Agents tries to perform it himself
+  %% procedure finds  a subformula of intention so that its argumwent is atom and is not an agent
+generateAction(Agent, ActionFull, _):- want(Agent, StateORAction), [! expand( StateORAction, SOAs) !], writeln0(SOAs),
+                          member(PhysFull, SOAs), PhysFull=..[PhysAct,WhoWhat, Object|_], 
+						  allAgents(AllAgents), atom(Object), not member(Object, AllAgents),
+                          argrep(PhysFull, 1, Agent, ActionFull),                                    writeln0(ActionFull).
+                          
+                                       
+   %% when to inform
+generateAction(Agent, ActionFull, _):-(  know(Agent, want(Addressee, know(Addressee, Smth)));
+                                    want(Agent, know(Addressee, Smth)) ),                                   
+                       ActionFull= inform(Agent, Addressee, Smth),!.
+
+   %% when to ask :-want to know ( and possibly believe that someone knows))
+generateAction(Agent, ActionFull, _):-((  want(Agent, know(Agent, Smth)), believe(Agent, know(InformAgent, Smth)),
+                                       nonvar(Smth)  );
+                                    (  want(Agent, know(Agent, Smth)), nonvar(Smth)  )),                                   
+                       ActionFull= ask(Agent, InformAgent, Smth),!.
+    %% when to answer: history includes asking, one answers if knows and/or wants addressee to know
+	%% believe/know options
+generateAction(Agent, ActionFull, Happens):- allAgents(AllAgents), len(AllAgents, LAg),
+					nonvar(Happens), nrev(Happens, HapRs),
+					sublist(0, LAg, HapRs, LastHappens),
+					member(ask(AgentAsk, Agent, Smth), LastHappens),
+					(
+					  (know(Agent, Smth), want(Agent, know(AskAgent, Smth)),
+                        ActionFull= answer(Agent, AgentAsk, Smth) );
+                      (believe(Agent, Smth), want(Agent, know(AskAgent, Smth)),
+                        ActionFull= answer(Agent, AgentAsk, believe(Agent,Smth)) );
+						 (know(Agent, not Smth), want(Agent, know(AskAgent, Smth)),
+                        ActionFull= answer(Agent, AgentAsk, not Smth) );
+                      (believe(Agent, not Smth), want(Agent, know(AskAgent, Smth)),
+                        ActionFull= answer(Agent, AgentAsk, believe(Agent,not Smth)) );
+						 
+					  ( (know(Agent, SmthRelevant);believe(Agent, SmthRelevant)), 
+					       expand(SmthRelevant, SmthRE), member(Smth, SmthRE),
+                        ActionFull= answer(Agent, AgentAsk, SmthRelevant) )
+					),!.
+                      
+
+                                    
+generateAction(Agent, ActionFull, _):- allActions(AllActions), member(Action, AllActions),
+			allAgents(AllAgents), member(OAgent, AllAgents), OAgent \= Agent,
+								know(Agent, AgentKnowledge),
+                                    not (AgentKnowledge =( He :- Bo)),
+                        ( ActionFull=..[Action, Agent, OAgent, AgentKnowledge];  %sharing true knowledge
+ 				      	ifthenelse( (AgentKnowledge= (not K)),                     %cheating with not true knowledge 
+					        	(AgentKnowledge= (not K), ActionFull=..[cheat, Agent, OAgent, K]),
+								ActionFull=..[cheat, Agent, OAgent, AgentKnowledge]
+                               )).
+
+doWorst(MyAgent, BestAction) :- (BestAction = doNothing(MyAgent, MyAgent)). %to develop
+
+aoa :- assumeOtherAgents(wolf, AllAfd), writeln(AllAfd).
+aoo :- assumeOtherAgents(peter, M), writeln(M).
+
+assumeOtherAgents(MyAgent, AllAgentsActions):-
+     findall( AgentActions,
+           ( agent(Agent), Agent \= MyAgent,
+	     involve_knowledge(Agent, MyAgent, KList), 	 writeln0(involve_knowledge(Agent, MyAgent, KList)),
+             whatToDo(Agent, AgentActions), writeln0( whatToDo(Agent, AgentActions)), 
+             clean_kList( KList )
+           ), AllAgentsActionsd),
+                                                   %     flatten(AllAgentActions, AllAf), 
+            remove_duplicates(AllAgentsActionsd, AllAgentsActions).
+               
+mytd :- whatToDoInConflict(mike,PossibleActions,_), writeln(PossibleActions).
+cm:-commit( Actions), writeln( Actions).
+commit( Actions) :- 
+       clean_assumptions,
+        %refresh commited actions
+       ifthen( happen(Happens), list_assert(Happens)), 
+       findall( Action,
+              ( agent(Agent),
+                   [! whatToDoInConflict(Agent, ActionLs, Happens ) !],
+                               writeln( whatToDoInConflict(Agent, ActionLs ) ),
+
+                (ActionLs=[Action|_])
+           /*     
+                %%eliminate implemented WANTs
+                [! want(Agent, Action) !],                         %writeln((eliminate,want(Agent, Action))),
+                ifthen(( clause( want(Agent, Action), true ) ,
+			     not always(want(Agent, Action))  
+                                 %  writeln( clause( want(Agent, Action), true ))
+                      ), retract(want(Agent, Action))  ),
+
+                ifthen((
+                        not always(want(Agent, Action)),
+	                clause(want(Agent, Action), Body), Body =\= true,
+                        nonGeneral(Body),
+                                 writeln(  retract((want(Agent, Action):-Body)))  ),         
+                        retract((want(Agent, Action) :- Body))
+                                	)
+	     */
+
+                 ),
+                Actions), 
+                             %writeln($update(store) achieved goals$),
+
+                ifthenelse( (happen(PrevActions), PrevActions \=[]), 
+                  ( happen(PrevActions), retract(happen(_)), append(PrevActions, Actions, Happens1), %writeln(assert(happen(Happens1))), 
+                    assert(happen(Happens1)) ),
+                  (Happens2 = Actions, assert((happen(Happens2))) )
+               ),
+                
+                  clean.
+
+clean_assume(Term):- ifthen(call(Term), retract(Term)). 
+clean_assumptions(Agent) :-not ( want(Agent, PossibleAction),
+                             ifthenelse( (PossibleAction  = (not NegPossibleAction)),
+                             retract((NegPossibleAction:-fail)),
+                             retract((PossibleAction)) ),
+                             fail ).
+clean_assumptions :-  not ( agent(Agent),  want(Agent, PossibleAction) ,
+                             ifthenelse( (PossibleAction  = (not NegPossibleAction)),
+                             retract((NegPossibleAction:-fail)),
+                             retract((PossibleAction)) ),
+                             fail ).
+%handles  negation of assert
+
+assume( PossibleAction ) :- ifthenelse( (PossibleAction  = (not NegPossibleAction)),
+                             assertz((NegPossibleAction:-fail)),
+                             assertz((PossibleAction)) ).
+
+%ik:- involve_knowledge(nick, peter, O), writeln(O).
+%iw:- involve_knowledge(wolf, wolf).
+
+
+involve_knowledge(Agent, AgentViewPoint, AllKnowledge) :-
+      findall(Knowledge, ( agent(Agent),
+                 (know(Agents, Knowledge) ; believe(Agents, Knowledge);
+                  know(AgentViewPoint, know(Agents, Knowledge));
+		 (know(AgentViewPoint, know(Agents, K)), 
+                  Knowledge=know(Agents, K) )                       ),
+                               nonvar(Agents),   
+                               ( member(Agent, Agents); Agents = Agent ),
+                           
+                 not ( know(AgentViewPoint, not know(NegAgents, Knowledge)),
+                                nonvar(NegAgents),
+                               ( member(Agent, NegAgents); Agent = NegAgents) )
+                  ),  AllKnowledged ),                % writeln(AllKnowledged),
+
+                           remove_duplicates(AllKnowledged, AllKnowledge),
+                findall(Term, ( member(Term, AllKnowledge),
+                                call( not Term ), 
+                                assume(Term), writeln0(assumed(Term)) ),_).
+
+involve_knowledgeLater(Agent, AgentViewPoint) :- 
+      findall(Knowledge, ( agent(Agent),
+                 (know(Agents, Knowledge) ; believe(Agents, Knowledge)),
+                               nonvar(Agents),   
+                               ( member(Agent, Agents); Agents = Agent ),
+                           
+                 not ( know(AgentViewPoint, not know(NegAgents, Knowledge)),
+                                nonvar(NegAgents),
+                               ( member(Agent, NegAgents); Agent = NegAgents) )
+                  ),  AllKnowledge ),                % writeln0(AllKnowledge),
+                           remove_duplicates(AllKnowledge, AllKnowledged),
+      findall(Term, ( member(Term, AllKnowledged),assume(Term), writeln0(assumed(Term)) ),_).
+
+
+
+ck:-clean_knowledge(mike).
+
+clean_kList(List):- not ( member(Term, List), retract(Term), writeln0(cleanKList(Term)),fail).
+
+clean_knowledge(Agent):- not ( (know(Agents, Knowledge); know(_, know(Agents,Knowledge)) ),
+                               ( member(Agent, Agents); Agents = Agent ),
+                               writeln0(know(Agents, Knowledge)),
+                             ifthenelse( (Knowledge  = (not NegKnowledge)),
+                             retract((NegKnowledge:-fail)),
+                             (retract((Knowledge)), writeln0(($retracted$,Knowledge)) )  ),         fail).
+
+clean_knowledge:-       not ( agent(Agent), 
+                      ( know(Agents, Knowledge);believe(Agents, Knowledge)),
+                               ( member(Agent, Agents); Agents \= Agent ),
+                             ifthenelse( (Knowledge  = (not NegKnowledge)),
+                             retract((NegKnowledge:-fail)),
+                             retract((Knowledge)) ),         fail).
+clean:-clean_assumptions, clean_knowledge,
+      allActions(Acts),
+     findall(Action, ( member(Action, Acts ), [!name_term(Action, ActionTerm)!],
+                               retract(ActionTerm) ), _).
+   
+
+writeln0(A):-not fail. %writeln(A).
+
+start0:-[-lists,-nl_util, -$au\gen.ari$], start.
+start:- [-$au\wkb_ma.ari$], %[-$au\wolf_ma.ari$], 
+    allActions(Acts), not (member(Action, Acts), 
+    ( name_clause(Action, _, Term) ; name_term(Action,Term) ),
+    abolish_all(Term), fail ),
+    ifthen(happen(Actions),  retract(happen(Actions)) ),
+    %   
+     [-$au\wkb_ma.ari$], clean. %[-$au\wolf_ma.ari$], 
+ 
+%allAgents([]).
+agent(X):-allAgents(Xs), member(X, Xs).
+%allActions([see, eat, kill, stay_behind_bush, ask, say, respond]).
+%allActions([dig, inform]).
+
+ownAction(MyAgent, PossibleAction):-
+                 PossibleAction=..[Action, MyAgent |Args], allActions(Actions),
+                 member(Action, Actions).
+
+nonGeneral(Body):- expand(Body, Bodyes), 
+        not ( member(Atom, [member(A,B), clause(C,D)]),
+                   member(Atom, Bodyes) ).
+
+who:- allActions(Actions),
+      findall(Term, (  member(Action, Actions ),
+                      % (name_clause(Action, _, Term) ;
+                  (     name_term(Action,Term) )),
+               Terms), writeln0(Terms).
+what(FileName):- allActions(Actions), append([want, know, believe], Actions, Alls), listing(Alls),
+       atom_string(FileName, FileNameStr), file_list(FileNameStr,Alls).
+
+ent:-enter(hhh1, h(1,h(H), j(hhh1)) ).
+enter(Atom, Body):-nonvar(Atom), var_const(Body, Bodyc), expand(Bodyc, Bodyce),
+                   member(Atom,Bodyce).
+name_term(P,PP):-functor(PP,P), clause(PP,H), H==true.
+
+% 1) What other agents would do based on their knowledge and intentions
+% 2) What I will do based on my knowledge and my
+%    beleif the other agents plan to do.
+% 1') what other agents would do if they believe,
+%    in addition, that I will do 2)
+% 2')what I will do, having renewed other's decisions. if it's the same that
+% 2',then stop. Otherwise, go to 1') with the new decision concerning
+%    my action.
+% 3) search for the possible action squeeze instead of coinsidence
+/*
+:-public findMentalMatch/2.
+:-extrn clause_list/2.
+:-extrn string_change_char/4.
+:-extrn xagent/1.
+:-extrn antiSym/1.
+:-extrn list_search/3.
+:-extrn append/3.
+:-extrn len/2.
+:-extrn member/2.
+:-extrn writeln/1.
+:-extrn	quicksort/2.
+:-extrn last/2.
+:-extrn args/1.
+:-extrn var_const/2.
+:-extrn intersection/3.
+:-extrn var_var/2.
+:-extrn change_char/4.
+:-extrn pattern/1.
+:-extrn expand/2.
+:-extrn iassert/1.
+:-extrn sublist/4.
+:-extrn flatten/2.
+:-extrn getPredlist/1.
+
+:-public synth_info/1.
+*/
+xagent([_]).
+iassert(_).
+pattern(_).
+antiSym(_).
+getPredlist(_).
+
+
+yieldTerm(Term):- member(Agent, [mike, peter, nick]),
+			(
+               ( member(MentalPred, [want, know]), %believe]),
+				NegTerm=..[MentalPred,Agent,smth]
+			   );
+			   (member(PassiveAgent, [mike, peter, nick]), PassiveAgent \= Agent,
+			    member(MentalPred, [inform, pretend, cheat, forgive, conceal]),
+				NegTerm=..[MentalPred,Agent,PassiveAgent, smth]
+			   );
+			   ( member(ActiveAgent, [mike, peter, nick] ),
+			     member(PassiveAgent, [mike, peter, nick]), PassiveAgent \= Agent,
+					PassiveAgent \= ActiveAgent, Agent \= ActiveAgent,
+			    member(MentalPred, [reconsile, quarrel ]),
+				NegTerm=..[MentalPred,ActiveAgent, Agent,PassiveAgent, smth]
+			   )   
+			 ),
+				( Term= NegTerm ; (Term=(not NegTerm))).
+
+yieldMental2(TotalTerm):-
+     yieldTerm(TermHigh), yieldTerm(TermLow), TermHigh \= TermLow,
+	 [!
+       change_char($smth$, $sm1th$, TermHigh, TermHigh1), %writeln(TermHigh1),
+	 string_term(TermLowStr, TermLow),
+	 change_char($sm1th$,  TermLowStr, TermHigh1, TotalTerm)
+      !].
+
+yieldMental3(TotalTerm):-
+     yieldMental2(TermHigh), yieldTerm(TermLow),
+     [! change_char($smth$, $sm1th$, TermHigh, TermHigh1),
+	 string_term(TermLowStr, TermLow),
+	 change_char($sm1th$,  TermLowStr, TermHigh1, TotalTerm), 
+	 not (TotalTerm = (not NT)) ,
+
+	 clause_list(TotalTerm, TotalTerms),
+	 flatExpand(TotalTerms, TwiceMentals),
+	 
+%%%%%% pretend about own mental state
+	 ifthen( ((list_search([pretend, Agent, PassiveAgent, Mental, NextAgent], TwiceMentals,_);
+	          list_search([not pretend, Agent, PassiveAgent, Mental, NextAgent], TwiceMentals,_)),
+              member(Mental, [know, believe, want, pretend, not know, not believe, not want, not pretend])
+              ),
+             ((list_search([pretend, Agent, PassiveAgent, Mental, NextAgent], TwiceMentals,_);
+			  list_search([pretend, Agent, PassiveAgent, Mental, NextAgent], TwiceMentals,_)),
+              Agent=NextAgent										   %writeln(([pretend, Agent, PassiveAgent, Mental, NextAgent], TwiceMentals)),
+			                                                           %writeln(TotalTerms),  
+			  ) 
+			),
+%%%%%% want,believe repetition
+       not  ( member(Idempot, [want, believe]),
+	         (list_search([Idempot, Agent, Idempot, Agent], TwiceMentals,_);
+	          list_search([not Idempot, Agent, Idempot, Agent], TwiceMentals,_);
+			  list_search([Idempot, Agent, not Idempot, Agent], TwiceMentals,_);
+	          list_search([not Idempot, Agent, not Idempot, Agent], TwiceMentals,_)
+			  )                   %,  writeln(($binary mental$,TwiceMentals))   % , get(CCC)      
+            ),
+%%%%%% inform, pretend, ask repetition
+       not  ( member(Idempot, [inform, pretend, ask]),
+	         (list_search([Idempot, Agent,PassAgent, Idempot, Agent], TwiceMentals,_);
+	          list_search([not Idempot, Agent,PassAgent, Idempot, Agent], TwiceMentals,_);
+			  list_search([Idempot, Agent,PassAgent, not Idempot, Agent], TwiceMentals,_);
+	          list_search([not Idempot, Agent,PassAgent, not Idempot, Agent], TwiceMentals,_)
+			  )                  %, writeln(($ternary mental$,TwiceMentals)) % , get(CCC)   
+            )
+	  !].
+
+yieldMental4(TotalTerm):-
+     yieldMental2(TermHigh), yieldMental2(TermLow),
+		axiomFormula(TermHigh),
+		meaningfulFormula(TermHigh),
+		axiomFormula(TermLow),
+        meaningfulFormula(TermLow),
+
+     [! change_char($smth$, $sm1th$, TermHigh, TermHigh1),
+	 string_term(TermLowStr, TermLow),
+	 change_char($sm1th$,  TermLowStr, TermHigh1, TotalTerm), 
+	 not (TotalTerm = (not NT)) ,
+
+	 clause_list(TotalTerm, TotalTerms),
+	 flatExpand(TotalTerms, TwiceMentals),
+	 
+%%%%%% pretend about own mental state
+	 ifthen( ((list_search([pretend, Agent, PassiveAgent, Mental, NextAgent], TwiceMentals,_);
+	          list_search([not pretend, Agent, PassiveAgent, Mental, NextAgent], TwiceMentals,_)),
+              member(Mental, [know, believe, want, pretend, not know, not believe, not want, not pretend])
+              ),
+             ((list_search([pretend, Agent, PassiveAgent, Mental, NextAgent], TwiceMentals,_);
+			  list_search([pretend, Agent, PassiveAgent, Mental, NextAgent], TwiceMentals,_)),
+              Agent=NextAgent										   %writeln(([pretend, Agent, PassiveAgent, Mental, NextAgent], TwiceMentals)),
+			                                                           %writeln(TotalTerms),  
+			  ) 
+			),
+%%%%%% want,believe repetition
+       not  ( member(Idempot, [want, believe]),
+	         (list_search([Idempot, Agent, Idempot, Agent], TwiceMentals,_);
+	          list_search([not Idempot, Agent, Idempot, Agent], TwiceMentals,_);
+			  list_search([Idempot, Agent, not Idempot, Agent], TwiceMentals,_);
+	          list_search([not Idempot, Agent, not Idempot, Agent], TwiceMentals,_)
+			  )       %,  writeln(($binary mental$,TwiceMentals))   % , get(CCC)      
+            ),
+%%%%%% inform, pretend, ask repetition
+       not  ( member(Idempot, [inform, pretend, ask]),
+	         (list_search([Idempot, Agent,PassAgent, Idempot, Agent], TwiceMentals,_);
+	          list_search([not Idempot, Agent,PassAgent, Idempot, Agent], TwiceMentals,_);
+			  list_search([Idempot, Agent,PassAgent, not Idempot, Agent], TwiceMentals,_);
+	          list_search([not Idempot, Agent,PassAgent, not Idempot, Agent], TwiceMentals,_)
+			  )       %  , writeln(($ternary mental$,TwiceMentals)) % , get(CCC)   
+            )
+	  !].
+
+save_wkb:-   % create(H1, $C:\nl_ext\wkb_2_2.ari$), % 
+              open(H, $C:\nl_ext\wkb_2_2.ari$, w), 
+              not (
+		      yieldMental3(K),
+                                             %yieldMental4(K)), 	  
+			      axiomFormula(K),
+                              meaningfulFormula(K), 
+			       %	  writeln(K),
+                      write(H, K), nl(H),
+              fail ), close(H).
+/*          	
+              [! clause_list(K, Ks),
+	            flatExpand(Ks, Ksfe),           
+                string_term(KStr, Ksfe),                   
+				string_change_char($,$,' ', KStr, Text),
+			%	(Expr = (K :- iassert( Text ))), 
+			     Expr=K,	                            % writeln(Expr),
+				write(H, Expr), write(H, $.$), nl(H) !],
+
+                fail ), close(H).
+*/
+synth_info(Clause):-flatSynth(Clause, Sent),
+                      string_term(Str, Sent),         writeln(Sent),
+                      string_change_char($,$,' ', Str, Text),
+                     string_change_char($[$,' ', Text, Text1),
+                     string_change_char($]$,'', Text1, Text2),
+                      concat($ You mean,$, Text2, YouMeanText),
+                      iassert(YouMeanText).
+
+
+yieldMentalSuccess(STerm):-
+      (yieldMental3(Term);yieldMental2(Term);yieldTerm(Term)),
+      ifthen( (Term = (not AnyTerm)) , fail),
+      [![!change_char($s$,$_$, Term, XTerm)!],
+      XTerm ,                                      %	writeln(Term),
+      STerm=XTerm !].
+      
+fe:-flatExpand( [know(mike, not believe(peter, smth)), tell(mike,peter,smth)],
+                O), writeln(O).
+fs:-flatSynth( [know(mike, not believe(peter, smth)), want(mike,peter,smth)],
+                O), writeln(O).
+
+
+flatSynth(Clause, Sentence):- flatExpand(Clause, ClauseFE),
+              getPredlist(AllPreds), xagent(Agents), 
+                                                          %writeln((ClauseFE, AllPreds)),
+          findall(El, (
+                    member(OffSet, [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22]),
+			   sublist(OffSet,1,ClauseFE, [Current]),
+                           inc(OffSet, OffSet1),dec(OffSet, OffSet0),
+                           ifthenelse(sublist(OffSet1,1,ClauseFE, [Next]),sublist(OffSet1,1,ClauseFE, [Next]), Next=noth),
+                           ifthenelse(sublist(OffSet0,1,ClauseFE, [Prev]),sublist(OffSet0,1,ClauseFE, [Prev]), Prev=noth),
+                                                                           %   writeln((Prev, Current, Next)),  
+        	    ifthenelse( ( (member(Current, AllPreds);((Current= (not Curr)),member(Curr, AllPreds))),
+                                   member(Next, Agents) ),
+                                (El=Next ),
+
+                  
+                                ifthenelse( ( (member(Prev, AllPreds);((Prev= (not Pre)),member(Pre, AllPreds))),
+
+                                             member(Current, Agents) ),
+                                             ( ifthenelse(
+						(pattern(Full), Full=..[Prev,Ag,Sem]),
+					       
+                                               El=[Prev,that] ,
+                                               El=Prev
+					      )
+                                             ),
+                                ifthenelse(member(Current, Agents), 
+                                           El=[Current, about], 
+                                           El=Current))
+                              )	
+                                                          %            writeln((OffSet,El)),   get(CCC)
+                   ), SentenceF), flatten(SentenceF, Sentence).
+
+
+             
+flatExpand(Clause,ClauseFE):-
+    ifthen( not clause_list(_,Clause), 
+            ( writeln($!!! input term must be a list: flatExpand$),fail)),
+    string_term(Str,Clause),                              % writeln(Str),
+	string_change_char($((($,$,$,Str,Str1),
+    string_change_char($))))$,$,$,Str1,Str2),
+	string_change_char($)))$,$,$,Str2,Str3),
+	string_change_char($(($,$,$,Str3,Str4),
+	string_change_char($))$,$,$,Str4,Str5),
+	
+	string_change_char($($,$,$,Str5,Str6),
+	string_change_char($)$,$,$,Str6,Str7), 
+    string_change_char($,]$,$>$, Str7, Str8),
+    string_change_char($>$,$]$,Str8,Str9),
+    string_change_char($,,$,$>$, Str9, Str10),
+    string_change_char($>$,$,$,Str10, Str11),
+	string_term(Str11, ClauseFE).
+
+mm3:- matchMental3(  [know(mike, want(peter,smth))], 
+                    [believe(mike, want(peter, smth))], O), writeln(O).
+mm31:- matchMental3( [know(mike, want(peter,inform(peter, mike, smth)))],
+                    [believe(mike, want(peter, know(mike, smth)))], O), writeln(O).
+
+findMentalMatch(InpM, STerm):-InpM, STerm=InpM.
+findMentalMatch(InpM, STerm):-
+  yieldMentalSuccess(STerm),                  %writeln((yield,STerm)),
+  matchMental(InpM, STerm, Suffix),
+  abolish(info/1),
+  STerm,
+  string_term(SuffixStr, Suffix) ,
+  iassert(SuffixStr).
+
+%fmm:-findMentalMatch( want(mike, know(peter, want(mike,smth))), O ), writeln(O).
+fmm:-findMentalMatch( want(peter, know(peter, smth)) , O ), writeln(O).
+
+
+matchMental( M1,M2, Suffix ):-   
+%  ( matchMental3( M1, not M2, Suffix), Suffix= [not] );
+%  ( matchMental3( not M1, M2, Suffix), Suffix = [not] );
+  ( matchMental3( M1, M2, Suffix)                       ).
+  
+matchMental3( M1,M2, Suffix):- 
+ [!  clause_list(M1,M1s), clause_list(M2,M2s),
+
+  flatExpand(M1s, M1era), flatExpand(M2s, M2e),  	
+  reduceAntiSym(M1era, M1e),            %  writeln((M1e,M2e)), !, get(CCC),
+
+  len(M1e, L1), len(M2e, L2),   
+  ifthenelse(L1>L2, (Lmin=L2, Lmax=L1), (Lmin=L1, Lmax=L2)  ),
+  Lmin_m2 is Lmin - 2, Lmin_m1 is Lmin-1,
+  (
+      ( L1=L2, M1em=M1e, M2em=M2e , Suffix= exact);
+%          (sublist(0,Lmin,M1e,M1em),    sublist(0,Lmin,M2e,M2em),   sublist(Lmin_m1,1,M1e,[Suffix]), writeln($no shift$) );
+%	  (sublist(2,Lmin,M1e,M1em),    sublist(0,Lmin_m2,M2e,M2em), sublist(0,1,M1e,[Suffix] ),  writeln($2-shift $) ),  %;
+      	  (sublist(0,Lmin,M1e,M1em), sublist(2,Lmin,M2e,M2em),    sublist(0,1,M2e,[Suffix]),   writeln($-2-shift$) )
+  ) !],
+    runMatch(M1em, M2em, Suffix, Matchs).
+
+runMatch(M1e,M2e,Suffix, Matchs):-
+            %    len(M1e, LLen), len(M2e, LLen), writeln($inside runmatch$),
+                                                    %  writeln(($cut: $, M1e, M2e)),		     get(CCCCCC),
+    LongList=[0,1,2,3,4,5,6,7,9,10,11,12,13],
+    findall(Match,(  member(LtrN, LongList),    
+             sublist(LtrN,1,M1e,[Ltr1]),
+             sublist(LtrN,1,M2e,[Ltr2]), 
+        ifthenelse(
+             (		   nonMentalLiteral(Ltr1);
+			   (Ltr1=Ltr2);
+               (Ltr1=pretend, Ltr2=believe); 
+			   (Ltr1=believe, Ltr2=pretend); 
+               (Ltr1=know, Ltr2=believe); 
+ 			   (Ltr1=believe, Ltr2=know) ;
+               ( Ltr1=know, Ltr2=inform );
+               (Ltr1=inform, Ltr2=know)
+             ), Match=1,  Match=0), writeln((Ltr1, Ltr2,Match))
+	   ),
+	   Matchs
+          ),  writeln(Matchs),
+         not member(0,Matchs).     %, Suffix=[exactly].
+
+nonMentalLiteral(X):-not (  (X= (not NX));
+                          ( 
+                      ( pattern(MentalPred), MentalPred=..[X,xagent|_]);
+                      ( xagent(Agents), member(X, Agents) )
+                     )).
+
+ras:-flatExpand([want(peter, inform(peter, mike, smth))], Exp), reduceAntiSym(Exp, O), writeln(O).
+reduceAntiSym(Mera, Me)  :-  reduceAntiSymOnce(Mera, M1), reduceAntiSymOnce(M1, M2),
+                             reduceAntiSymOnce(M2, Me).
+reduceAntiSymOnce(M1era, M1e) :-
+    antiSym(InformLikes), 	
+	member(Inform, InformLikes),
+ifthenelse(
+   (list_search([Inform, AgentActive, AgentPassive], M1era, Pos);
+    (list_search([(not Inform), AgentActive, AgentPassive], M1era,Pos))
+   ),
+   (
+   (list_search([Inform, AgentActive, AgentPassive], M1era, Pos);
+    (list_search([(not Inform), AgentActive, AgentPassive], M1era,Pos))
+   ),
+   xagent(Agents), member( AgentPassive, Agents), member( AgentActive, Agents),
+    inc(Pos, Pos1),  
+    list_delete_pos(Pos1, M1era, M1e)
+  ),
+   M1e=M1era).
+
+lrep :- list_delete_pos( 4,[0,1,2,3], O), writeln(O).
+list_delete_pos(Pos, Orig, Result):- len(Orig, LenOrig),	 dec(Pos, Pos0),
+           ifthenelse(Pos<1, Orig1=[], sublist(0,Pos,Orig, Orig1)),  %writeln(Orig1),
+           Offset2 is LenOrig-Pos-1, inc(Pos,PosN),
+           ifthenelse(PosN>LenOrig-1, Orig2=[], sublist(PosN,Offset2, Orig, Orig2) ),   % writeln(Orig2),
+           append(Orig1, Orig2, Result).
+                       
+ss:- sublist(0,7,[want,mike,know,peter,want,mike,smth],O1) , writeln(O1),
+     sublist(0,7,[want, mike,believe,mike,not know,peter,location,token],O2) , writeln(O2), 
+     sublist(6,1,[want,mike,know,peter,want,mike,smth],O3) , writeln(($no shift$,O3)).
+
+
+
+axiomFormula(K):- 
+ not (K = (not I)),
+     not (( (K = know(A, know(A,_)) );  (K =..[_,_,know(A, know(A,_))] ) ;  (K =..[_,_,not know(A, know(A,_))] )  
+     ), write0(K)),   % eliminating axiom
+
+     not (( (K = know(A, want(A,_)) );  (K =..[_,_,know(A, want(A,_))] )  
+     ), write0(K)),   % eliminating axiom
+	 not (( (K = know(A, not want(A,_)) );  (K =..[_,_,know(A, not want(A,_))] )  
+     ), write0(K)),   % eliminating axiom
+	 not (( (K = believe(A, want(A,_)) );  (K =..[_,_,believe(A, want(A,_))] )  
+     ), write0(K)),   % eliminating axiom
+	 not (( (K = believe(A, not want(A,_)) );  (K =..[_,_,believe(A, not want(A,_))] )  
+     ), write0(K)),   % eliminating axiom
+     not (( (K = know(A, believe(A,_)) );  (K =..[_,_,know(A, believe(A,_))] )  
+     ), write0(K)),   % eliminating axiom
+     not (( (K = believe(A, want(A,_)) );  (K =..[_,_,believe(A, want(A,_))] )  
+     ), write0(K)),   % eliminating axiom
+	 not (( (K = believe(A, not want(A,_)) );  (K =..[_,_,believe(A, not want(A,_))] )  
+     ), write0(K)),   % eliminating axiom
+     not (( (K = believe(A, believe(A,_)) );  
+                                         (K =..[_,_,believe(A, believe(A,_))] )  
+     ), write0(K)),   % eliminating axiom
+     not (( (K = believe(A, not believe(A,_)) );  
+                                         (K =..[_,_,believe(A, not believe(A,_))] )  
+     ), write0(K)),   % eliminating axiom
+	 not (( (K = believe(A, believe(A,_)) );  
+                                         (K =..[_,_,not believe(A, believe(A,_))] )  
+     ), write0(K)),
+     not (( (K = know(A, not know(A,_)) );(K = know(A, not believe(A,_)) );
+	         (K =.. [_,_,not know(A, not know(A,_))] );
+	(K =.. [_,_,know(A, not know(A,_))] );(K=.. [_,_,know(A, not believe(A,_))] )
+     ), write0(K)),
+     not (( (K = know(A, pretend(A,_,_)) );(K = know(A, not pretend(A,_,_)) );
+	(K =.. [_,_,know(A, pretend(A,_,_))] );(K=.. [_,_,know(A, not pretend(A,_,_))] );
+	(K =.. [_,_,not know(A, pretend(A,_,_))] );(K=.. [_,_,not know(A, not pretend(A,_,_))] )
+     ), write0(K)),
+  not (( (K = believe(A, pretend(A,_,_)) );(K = believe(A, not pretend(A,_,_)) );
+	(K =.. [_,_,believe(A, pretend(A,_,_))] );(K=.. [_,_,believe(A, not pretend(A,_,_))] );
+	(K =.. [_,_,not believe(A, pretend(A,_,_))] );(K=.. [_,_,not believe(A, not pretend(A,_,_))] )
+     ), write0(K)). %,
+	  not (( (K = know(A, inform(A,_,_)) );(K = know(A, not inform(A,_,_)) );
+	(K =.. [_,_,know(A, inform(A,_,_))] );(K=.. [_,_,know(A, not inform(A,_,_))] );
+	(K =.. [_,_,not know(A, inform(A,_,_))] );(K=.. [_,_,not know(A, not inform(A,_,_))] )
+     ), write0(K)),
+	  not (( (K = believe(A, inform(A,_,_)) );(K = believe(A, not inform(A,_,_)) );
+	(K =.. [_,_,believe(A, inform(A,_,_))] );(K=.. [_,_,believe(A, not inform(A,_,_))] );
+	(K =.. [_,_,not believe(A, inform(A,_,_))] );(K=.. [_,_,not believe(A, not inform(A,_,_))] )
+     ), write0(K)),
+   
+
+mf:-meaningfulFormula( know(mike, smth) ).
+
+meaningfulFormula(K):-    
+
+not (( (K = want(A, want(A,_)) );  (K =..[_,_,want(A, want(A,_))] )  
+     ), write0(K)),   % eliminating meaningless
+not (( (K = want(A, not want(A,_)) );  (K =..[_,_,want(A, not want(A,_))] )  
+     ), write0(K)),   % eliminating meaningless
+not (( ( fail );  (K =..[_,_,not want(A, want(A,_))] )  
+     ), write0(K)),   % eliminating meaningless
+not (( (K = want(A, not know(A,_)) );  (K =..[_,_,want(A, not know(A,_))] )  
+     ), write0(K)),   % eliminating meaningless
+not (( (K = want(A, not believe(A,_)) );  (K =..[_,_,want(A, not believe(A,_))] )  
+     ), write0(K)),   % eliminating meaningless
+not (( (K = believe(A, know(A,_)) );  (K =..[_,_,believe(A, know(A,_))] )  
+     ), write0(K)),   % eliminating meaningless
+not (( (K = believe(A, not know(A,_)) );  (K =..[_,_,believe(A, not know(A,_))] )  
+     ), write0(K)),   % eliminating meaningless
+not (( (K = believe(A, not believe(A,_)) );  (K =..[_,_,believe(A, not believe(A,_))] )  
+     ), write0(K)),   % eliminating meaningless
+not (( (K = pretend(A, B,  Pretent), Pretent=..[_,BB|_],BB\=A );  
+       (K =..Ks, member(pretend(A, B,  Pretent),Ks), 
+       ((Pretent=..[_,BB|_],BB\=A); (( (not NPret)= Pretent), NPret=..[_,BB|_],BB\=A ))  )  
+     ), write0(K) ),   % eliminating meaningless
+not (( (K = pretend(A, B,  not Pretent), Pretent=..[_,BB|_], BB\=A );  
+       (K =..Ks, member((not pretend(A, B,  Pretent)),Ks) ,       
+        ( (Pretent=..[_,BB|_],BB\=A ); ( (not NPret) = Pretent, NPret=..[_,BB|_],BB\=A ))
+     )   
+     ), write0(K) ),   % eliminating meaningless
+
+not (( (K = inform(A, B,  Pretent), Pretent=..[_,BB|_],BB=B );  
+       (K =..Ks, member(inform(A, B,  Pretent),Ks), 
+       ((Pretent=..[_,BB|_], BB=B); (( (not NPret)= Pretent), NPret=..[_,BB|_],BB=B ))  )  
+     ), write0(K) ),   % eliminating meaningless
+not (( (K = inform(A, B,  not Pretent), Pretent=..[_,B|_],BB=B );  
+       (K =..Ks, member((not inform(A, B,  Pretent)),Ks) ,       
+        (( Pretent=..[_,BB|_], BB=B); ( (not NPret) = Pretent, NPret=..[_,BB|_],BB=B ))
+     )   
+     ), write0(K) ),
+not (( (K = cheat(A, B,  Pretent), Pretent=..[_,BB|_],BB=B );  
+       (K =..Ks, member(cheat(A, B,  Pretent),Ks), 
+       ((Pretent=..[_,BB|_], BB=B); (( (not NPret)= Pretent), NPret=..[_,BB|_],BB=B ))  )  
+     ), write0(K) ),   % eliminating meaningless
+not (( (K = cheat(A, B,  not Pretent), Pretent=..[_,B|_],BB=B );  
+       (K =..Ks, member((not cheat(A, B,  Pretent)),Ks) ,       
+        (( Pretent=..[_,BB|_], BB=B); ( (not NPret) = Pretent, NPret=..[_,BB|_],BB=B ))
+     )   
+     ), write0(K) ).   % eliminating meaningless
+
+write0(J):-not fail.
+	 
+%know(K, want(_, know(K,_))
+%formula is meaningless, if it seems a meaningless as its negation.
+%formula is meaningful if either its negation or itself is more meaningful
+%want(know( - OK
+%want (not know - notOK
+%not want know - OK 
+%not want not know = want know ?
+
+%want(believe( - OK
+%want (not believe - notOK
+%not want believe - OK 
+%not want not believe = want believe ?
+
+%want -> know( want ) axiom
+%want -> know( not want ) axiom
+%want -> believe( want ) axiom
+%want -> believe( not want ) axiom
+
+%know believe - believe    axiom
+%believe - know            meaningless
+%know not know,believe             axiom
+% to do believe not know, believe  meaningles
+%know pretend                axiom
+%believe pretend,inform             axiom
+
+%pretend(A,B , m_action(A) (only A: one can pretend about arbitrary but own mental/phys action or state).
+%inform(A,B , m_action(BB) (BB \= A: one can inform about own or someone's but not addressee's mental/phys action or state).
+
+% triple constraint: 
+% want(mike,know(mike,want(mike = want(mike   axiom
+
+% want(mi
+%believe(mike,inform(peter,mike,smth)) a person may believe or not of being informed (action of inform may be without a result)
+
+%know want = intention
+%belive want = desire
+
+% proposition: mental1(m, mental2(p, mental3(m) )) always meaningfull
+ 
+% it is not possible to want smth that is meaningless
+% meaning of a formula and its terms is formed given the whole formula
+    
+%%%   member(?Element,+List)
+
+%%%   The member predicate checks whether Element is a member of List.
+%%%        If you supply an uninstantited variable for Element, then each of
+%%%        the members of the list is returned through backtracking.
+
+:- mode member(?,+).
+
+member(H, [H|_]).
+member(H, [A|T]) :- ifthen( var(T), ( write(member(H, [A|T])), 
+                                      write($!!!! list member of Var$), nl, fail)),
+   member(H, T).
+
+cl_member(H, [H1|_]):-cl_eq(H,H1).
+cl_member(H, [_|T]) :-
+   cl_member(H, T).
+
+cl_eq(A,B):-A=..[P|_],B=..[P|_], ifthenelse(nonvar(B),B=..[P|_],B=A).
+cl_eq(A,B):-A=B.
+
+
+
+%%%   member_check(+Element,+List)
+
+%%%   The member_check predicate checks whether Element is a member of List.
+%%%        However, the member_check predicate does not backtrack and thus only
+%%%        returns a single answer.
+
+:- mode member_check(+,+).
+
+member_check( H, [H|_]) :- !.
+member_check(H, [_|T]) :-
+   member_check(H, T).
+
+
+
+%%%   append(?List1,?List2,?List3)
+
+
+:- mode append(?,?,?).
+
+append([],L,L).
+append([H|T], L, [H|R]) :-
+   append(T, L, R).
+
+
+%%%   intersection(+List1,+List2,-/+Intersect)
+
+%%%   The intersection predicate lists the intersection (common elements)
+%%%        of two lists.
+
+:- mode intersection(+,+,-/+).
+
+intersection([], _, []) :-
+   !.
+intersection([H|L1], L2, [H|L3]) :-
+   member(H, L2),
+   intersection(L1,L2,L3),
+   !.
+intersection([_|L1],L2,L3) :-
+   intersection(L1,L2,L3).
+
+
+%%%   subset(+Subset,+List)
+
+%%%   The subset predicate succeeds if the list provided as Subset is a
+%%%        subset of the list provided as List.
+
+:- mode subset(+,+).
+
+subset( [], _ ).
+subset( [A|X], Y ) :-
+   member( A, Y ),
+   subset( X, Y ).
+
+
+%%%   prefix(+List1,+List2,-/+Prefix)
+
+%%%   The prefix predicate compares two lists from the beginning of
+%%%    each list and returns a list containing the elements that are
+%%%    prefixes for both lists.
+%%%
+
+:- mode prefix(+,+,-/+).
+
+prefix([],_,[]) :-
+   !.
+prefix(_,[],[]) :-
+   !.
+prefix([H|T1], [H|T2], [H|T3]) :-
+   !,
+   prefix(T1, T2, T3).
+prefix(_, _, []).
+
+
+%%%   suffix(+List1,+List2,-/+Suffix)
+
+%%%   The suffix predicate compares two lists from the end of each list
+%%%        and returns a list containing the elements that are suffixes for
+%%%        both lists.
+
+:- mode suffix(+,+,-/+).
+
+suffix(L, L, L ) :- !.
+suffix( [H|T1], [H|T2], [H|T3] ) :-
+   !,
+   suffix( T1, T2, T3 ).
+   suffix( _, _, [] ).
+
+
+%%%   insert_sort(+List,-/+Sorted)
+
+%%%   Converts a list into a sorted list using an insertion sort. In an
+%%%   insertion sort, an individual element is taken from List and
+%%%   compared with successive elements in the sorted list to determine
+%%%   where it should be placed in the sorted list.
+%%%
+
+:- mode insert_sort(+,-/+).
+
+insert_sort([], []).
+insert_sort([H|T], L2) :-
+   insert_sort(T, L1),
+   insert(H, L1, L2).
+
+
+insert(X, [H|T], [H|L]) :-
+   X @>= H,
+   !,
+   insert(X, T, L).
+insert(X,L,[X|L]).
+
+
+%%%   bubble(+List,-/+Sorted)
+
+%%%   Converts a list into a sorted list using a bubble sort. In a
+%%%   bubble sort, two adjacent elements are compared to see if they
+%%%   are out of order. If so, their order is changed and the pair
+%%%   comparison continues. In this way, elements that are out of order
+%%%   "bubble" up to their place in the list.
+
+:- mode bubble(+,-/+).
+
+bubble(L1,L2) :-
+   append(U, [A,B|V], L1),
+   B @< A,
+   !,
+   append(U, [B,A|V], M),
+   bubble(M, L2).
+bubble(L1,L1).
+
+
+
+
+%%%   quicksort(+List,-/+Sorted)
+
+%%%   Converts a list into a sorted list using a quick sort. In a quick
+%%%   sort, the list is split at an arbitrary point. All the elements
+%%%   greater than the element at the split point are placed in one
+%%%   list, and all the elements less than the element at the split
+%%%   point are placed in another list. Then each of the resultent
+%%%   lists are themselves quick sorted. The sorted lists are appended
+%%%   to create the full sorted list.
+
+:- mode quicksort(+,-/+).
+
+quicksort([],[]) :- !.
+quicksort([H|T], Sort) :-
+   split(H, T, Less, Greater),
+   quicksort(Less, LSort),
+   quicksort(Greater, GSort),
+   append(LSort, [H|GSort], Sort).
+
+
+%%%      split( +Divisor, +List, -/+Less, -/+Greater
+
+%%%      split a List into those elements which are Less than a Greater than
+%%%      some divisor.
+
+:- mode split( +, +, -/+, -/+ ).
+
+   split(_, [], [], []) :- !.
+   split(Test, [H|Tail], [H|Less], Greater) :-
+      H @< Test,
+      !,
+      split(Test, Tail, Less, Greater).
+   split(Test, [H|Tail], Less, [H|Greater]) :-
+      split(Test, Tail, Less, Greater).
+
+
+%%%   sublist(+Offset,+Length,+List,-/+Sublist)
+
+%%%   The sublist predicate returns a sublist of the length you
+%%%   specify. The Offset argument indicates where the sublist should
+%%%   start. Elements in a list are numbered from 0, so an offset of 4
+%%%   will return a sublist beginning at the fifth element in the list.
+
+:- mode sublist(+,+,+,-/+).
+
+sublist(0, 1, [H|_], [H]) :-                % [] is not a sublist
+   !.
+sublist(0, Len, [H|L1], [H|L2]) :-
+   !,
+   dec(Len, Len1),
+   sublist(0, Len1, L1, L2).
+sublist(Off, Len, [H|L1], L2) :-
+   dec(Off, Off1),
+   sublist(Off1, Len, L1, L2).
+
+
+%%% merge(+List1,+List2,-/+Merged)
+
+%%%   The merge predicate merges two lists together. To merge the
+%%%   lists, the first element in List1 is compared to the first
+%%%   element in List2. The element that ranks higher in the standard
+%%%   order is added to the Merged list. Then, the first elements of
+%%%   each list are compared again. Comparison of the first elements in
+%%%   the list continues until all elements have been compared and
+%%%   merged or until one list is empty, in which case the elements of
+%%%   the remaining list are appended to the Merged list.
+
+:- mode merge(+,+,-/+).
+
+merge([],L,L) :- !.
+merge(L,[],L) :- !.
+merge([H1|L1], [H2|L2], [H1|L3]) :-
+   H1 @=< H2,
+   !,
+   merge(L1, [H2|L2], L3).
+merge(L1, [H2|L2], [H2|L3]) :-
+   merge(L1, L2, L3).
+
+
+%%%   sorted(+List)
+
+%%%   The sorted predicate succeeds if List is a sorted list.
+
+:- mode sorted(+).
+
+sorted([]) :- !.
+sorted([_]) :- !.
+sorted([A,B|_]) :-
+   B @< A,
+   !,
+   fail.
+sorted([_|T]) :-
+   sorted(T).
+
+
+%%%   flatten(+List,-/+Flattened)
+
+%%%   The flatten predicate eliminates all sublists by making the elements
+%%%   of each sublist individual elements of the overall list.
+
+:- mode flatten(+,-/+).
+
+flatten([],[]) :-
+   !.
+flatten([H|T], List) :-
+   !,
+   flatten(H, H1),
+   flatten(T, T1),
+   append(H1, T1, List).
+flatten(X, [X]).
+
+
+%%%   last(+List,-/+Last)
+
+%%%   The last predicate returns the last element in a list.
+
+:- mode last(+,-/+).
+
+last(List, Last) :-
+   append(_, [Last], List).
+
+
+%%%   list_search(+SubList,+List,-/+Offset)
+
+%%%   The list_search predicate indicates where in a list that a
+%%%   sublist begins. The starting position of the sublist is returned
+%%%   as an integer to the Offset argument. Note that the elements of a
+%%%   list are numbered from 0, so, for example, the fifth element of a
+%%%   list is at offset 4.
+
+:- mode list_search(+,+,-/+).
+
+list_search(L1, L2, Off) :-
+   list_search(L1, L2, 0, Off).
+
+list_search(_, [], _, _) :-                % end - no more sublists found
+   !,
+   fail.
+list_search(L, L2, Off, Off) :-                % sublist found
+   append(L, _, L2).
+list_search(L1, [H|L2], N, Off) :-
+   inc(N, N1),
+   list_search(L1, L2, N1, Off).
+
+   cl_list_search(L1, L2, Off,Insp) :-
+   cl_list_search(L1, L2, 0, Off,Insp).
+
+cl_list_search(_, [], _, _,_) :-                % end - no more sublists found
+   !,
+   fail.
+cl_list_search(L, L2, Off, Off,Insp) :-                % sublist found
+    L2=[A|_], L=[B|_], cl_eq(A,B), A=..[_|Insp] .
+cl_list_search(L1, [H|L2], N, Off,Insp) :-
+   inc(N, N1),
+   cl_list_search(L1, L2, N1, Off,Insp).
+
+cl:-cl_list_search([a(N,n)],[c(8),a(D1,D2),b(2)],U,Insp), write(Insp).
+%%%   nrev(+List,-/+Reverse)
+
+%%%   The nrev predicate reverses the elements in a list by recursively
+%%%   appending the head of the list to its tail. This type of list
+%%%   reverasal is commonly known as naive reverse.
+
+:- mode nrev(+,-/+).
+
+nrev([],[]).
+nrev([H|T], Reverse) :-
+   nrev(T, L1),
+   append(L1, [H], Reverse).
+
+
+%%%   reverse(+List,-/+Reverse)
+
+%%%   Like the nrev predicate, the reverse predicate reverses a list.
+%%%   However, the reverse predicate uses an "accumulator" to store
+%%%   intermediate results. The accumulator is an extra argument that
+%%%   stores the successive versions of the reversed list as each
+%%%   recursive iteration of reverse occurs. The accumulator makes the
+%%%   list reversal process much more efficient.
+
+:- mode reverse(+,-/+).
+
+reverse(List, Rev) :-
+   rev(List, [], Rev).
+
+
+rev([], Rev, Rev) :- !.
+rev([H|T], WorkList, Rev) :-
+   rev(T, [H|WorkList], Rev).
+
+
+%%%   delete(+Element,+List,-/+NewList)
+
+%%%   The delete predicate deletes an element from a list and returns
+%%%   the new list. For example:
+
+:- mode delete(+,+,-/+).
+
+delete(_,[],[]) :- !.
+delete(X,[X|T],T2) :-
+   !, delete(X,T,T2).
+delete(X,[H|T],[H|T2]) :-
+   !, delete(X,T,T2).
+
+cl_delete(_,[],[]) :-
+   !.
+cl_delete(X,[X1|T],T2) :- cl_eq(X,X1),
+   cl_delete(X,T,T2),
+   !.
+cl_delete(X,[H|T],[H|T2]) :-
+   cl_delete(X,T,T2),
+   !.
+
+
+%%%   list_insert(+Element,+List,-/+NewList)
+
+%%%   The list_insert predicate inserts an element into a list and
+%%%   returns the new list. The element is placed in the list in sorted
+%%%   order.
+
+:- mode list_insert(+,+,-/+).
+
+list_insert(X,[],[X]) :-
+   !.
+list_insert(X,[H|T], [X,H|T]) :-
+   compare(<,X,H),
+   !.
+list_insert(X,[H|T],[H|T2]) :-
+   list_insert(X,T,T2),
+   !.
+
+
+%%%   writel(+List)
+
+%%%   The writel predicate  writes  out the elements of a list
+%%%   consecutively, placing a newline at the end. For example:
+
+:- mode writel(+).
+
+writel([]) :-
+   !,
+   nl.
+writel([H|T]) :-
+   write(H),write($ $),
+   writel(T).
+
+
+%%%   number_occurrences(+Element,+List,-/+Number)
+
+%%%   The  number_occurrences  predicate  indicates the number of
+%%%   occurrences of an element in a list. For example:
+
+:- mode number_occurrences(+,+,-/+).
+
+number_occurrences(X, [], 0).
+number_occurrences(X, [X|T], N1) :-
+   !,
+   number_occurrences(X, T, N),
+   inc(N, N1).
+number_occurrences(X, [_|T], N) :-
+   number_occurrences(X, T, N).
+
+
+%%%   remove_duplicates(+List,-/+NewList)
+
+%%%     The remove_duplicates predicate removes all duplicate characters
+%%%     from a list and returns the new list.
+
+:- mode remove_duplicates(+,-/+).
+
+remove_duplicates([],[]):-!.
+remove_duplicates([H|T1], [H|T3]) :-
+   delete(H, T1, T2),
+   !, remove_duplicates(T2, T3).
+
+cl_remove_duplicates([],[]).
+cl_remove_duplicates([H|T1], [H|T3]) :-
+   cl_delete(H, T1, T2),
+   cl_remove_duplicates(T2, T3).
+
+
+
+:-mode list_after(+,+,+).
+list_after(P1,P2,Ls):- list_search([P1],Ls,N1), list_search([P2],Ls,N2), N1<N2.
+
+:-mode len(+,?).
+len([],0).
+len([A|Xs],N):-len(Xs,N1), N is N1+1.
+
+:-mode list_insert(+,+,+,-).
+list_insert:-list_insert(([a(c2334),d(c3333),e(c5643,c7654),g(c5644)] ),
+                                           d(c3333),e(cd643,cd654),R), write(R).
+list_ins:-list_insert([1,2,3,4,5,6],6,11,O), write(O).
+list_insert(Cc,Pold,Pnew,CCC):-
+			  ifthen( not(  list_search([Pold],Cc,_)),
+			  (write(Pold), write($ is absent in $), write(Cc), nl, fail)   ),
+      list_search([Pold],Cc,N),
+		len(Cc,Lr), N2 is Lr-N-1, Np1_ is N+1, Np is N+1,
+                    ifthenelse(N>0,sublist(0,N,Cc,R1), R1=[]),
+                    ifthenelse(Np1_+N2>N+1, sublist(Np1_,N2,Cc,R2), R2=[]),
+		 append(R1,[Pnew],R_), append(R_,R2,CCC).
+
+cll:-cl_list_insert_all([a(1,2),b(A,N),a(U,M)],a(R1,R2),aaaa(11,22),O), write(O).
+
+cl_list_insert(Cc,Pold,Pnew,CCC):-
+			  ifthen( not( cl_list_search([Pold],Cc,_,_)),
+			  (write(Pold), write($ is absent !!! in $), write(Cc), nl, fail)   ),
+	                  ifthen( cl_eq(Pold,Pnew), ( write($!!! subst $),
+                          write(Pnew), write($ in spite of $), write(Pold),fail)),
+      cl_list_search([Pold],Cc,N,Insp),
+%	   write($      both_add$), write((Insp,Pold)),	   %
+               %      both_add(Insp,Pold,Pnew,Pnew_l_),%
+		     		Pnew_l_=[Pnew],
+		len(Cc,Lr), N2 is Lr-N-1, Np1_ is N+1, Np is N+1,
+                    ifthenelse(N>0,sublist(0,N,Cc,R1), R1=[]),
+                    ifthenelse(Np1_+N2>N+1, sublist(Np1_,N2,Cc,R2), R2=[]),
+		 append(R1,Pnew_l_,R_), append(R_,R2,CCC).
+
+both_add(I,Pold,P,P_):-Pold=..[_|J], len(I,Li), len(J,Lj), ifthen(Lj\==Li,
+                           ( % write(I), write($ \== $), write(J),%
+                     write($!!! different pred while insert$),nl,fail)),
+    	            append([eq(J,I)],[P],P1), append(P1,[eq(J,I)], P_).
+
+
+cl_list_insert_all(C,Old,New,O):-not cl_list_search([Old],C,_,_),O=C,!.
+cl_list_insert_all(C,Old,New,O):- cl_list_insert(C,Old,New,C1),
+                     cl_list_insert_all(C1,Old,New,O).
+
+
+%%%
+%%%   END OF LISTS
+%%%list_between(A,B,C, Ls) :- list_after(A,B,Ls), list_after(B,C,Ls).
+num([0,1,2,3,4,5,6,7,8,9]).
+
+consult(Ls,list):-member(F,Ls), consult(F), fail.
+
+writeln(D):- %ifthen(interpreter,
+             %   (
+             %     write($<BR>$)
+			 %   )
+                  write(D), nl.
+
+			 %   )).
+
+writeHtml(D):- write($<BR>$),
+                  write(D), nl.
+
+string_insert(Str,Ins,D,Out):-string_length(Str,Len),
+                                  string_length(Ins,Lins),
+                                  D1 is D,  D2 is Len-D,
+                               substring(Str,0,D,Str1),
+                               substring(Str,D1,D2,Str2),
+                               concat([Str1,Ins,Str2],Out).
+
+:-mode brack_del(-,+).
+brack_del(Prod,Pls):-string_term(Str,Pls), string_length(Str,L), L1 is L-2,
+                      substring(Str,1,L1,St),
+                      string_term(St,Prod).
+
+del_fin_term(B,Baim):-    string_term(Bstr,B), concat($[$,Bstr,B_str),
+                                      concat(B_str,$]$,B_str_),
+                                      string_term(B_str_,Bt),
+                                      reverse(Bt,Binv),Binv=[Fir|Bin],
+                                      reverse(Bin,Baim_),
+                                      brack_del(Baim,Baim_).
+
+vl:-var_list(F,[w,rit,a(a),b,b,n,h(K),e(H)]), write(F).
+
+clause_list(B,Ls) :- nonvar(B),string_term(Bstr,B),
+           concat([$[$,Bstr,$]$],B_str), string_term(B_str,Ls).
+clause_list(B,Ls) :-nonvar(Ls), Ls\==[],
+            len(Ls,N), ifthenelse( N<20 ,brack_del(B,Ls), (
+      N1 is N//3, N2 is N*2//3,
+       sublist(0,N1,Ls,Ls1), brack_del(B1,Ls1), N11 is N1,N12 is N2-N1,
+       sublist(N11,N12,Ls,Ls2), brack_del(B2,Ls2), N22 is N2, N23 is N-N2,
+       sublist(N22,N23,Ls,Ls3), brack_del(B3,Ls3),     B=(B1,B2,B3))).
+
+vv:-write(A),var_const(a(A),C), write(a(A)), var_const(V,C), write(V).
+v:-var_const((c(w1),h(A,h(HH),w2)),H),  write(H).
+var_const(V,C):-nonvar(V),  change_char('_','z',V,Cz),  change_char($zz$,'_',Cz,C).
+var_const(V,C):-nonvar(C),  change_char('z','_',C,V).
+var_const(V,C):-var(V),var(C),
+                writeln($constant part contains Var or vice versa! $),nl.
+var_list(V,L):-var(L),var_const(V,C),!, clause_list(C,L).
+
+va:-var_list(V,[b(w12,w23),a(w12)]), write(V).
+var_list(V,Ls):-var(V), clause_list(L,Ls), var_const(V,L).
+
+
+e:-explicit( ( h(I),j(I,j(J),LL),k(I,i(J))  ), L , jj ,Cl), write(Cl).
+e111:-explicit_NL( (we(h),c(v),j(k), jj(j) )      ,E), write(E).
+
+explicit(C,V,Name,Cl):-
+                     var_const(C,Ccnst), expand(Ccnst,Mexp),
+       findall(X,(  member(X,Mexp),
+                      atom_string(X,Xstr), string_search('z',Xstr,0)
+                      ), Xs),
+                      remove_duplicates(Xs,Xsd),
+                             Cpp=..[Name|Xsd],
+                        var_const(V,Cpp), var_const(Cl,(Cpp:-Ccnst)).
+
+explicit_NL(C,Xs):-
+                     expand_dupl(C,Mexp),
+       findall(X,(  member(X,Mexp),
+                     atom_string(X,Xstr) %, string_search('w',Xstr,0)
+                      ), Xs).
+
+dex:-deepExpand(want(sa, not inc(oae, oil)), O), writeln(O).
+deepExpand(F, ExpSFD):-expand(F, FExpS),
+                   findall( ExpS, ( member(Term, FExpS),
+                                 expand( Term, ExpS)
+                          ), AllExpS),
+                   flatten(AllExpS, ExpSF),
+                   remove_duplicates(ExpSF, ExpSFD).
+
+
+ x:-expand( ( a(C,Y) ) ,   E), write(E).
+expand(A,B):-
+              var_const(A,Ac), clause_list(Ac,As),
+              findall(X,(member(U,As),
+                         string_term(Ustr,U), not(string_search('=',Ustr,_)),
+                         subpred(U,Xs) ,         member(X,Xs) ), Bc), !,
+                 remove_duplicates(Bc,Bcd),
+             ifthenelse(A\==Ac,[! var_const(B,Bcd) !] ,B=Bcd).
+
+expand_dupl(Ac,Bc):- clause_list(Ac,As),
+              findall(X,(member(U,As),
+                         string_term(Ustr,U), not(string_search('=',Ustr,_)),
+                         subpred(U,Xs),         member(X,Xs) ), Bc), !.
+
+
+%%%%%%% Inna 25.02.00
+subpred(A,S):- subpred_list([A],S1), flatten(S1,S).
+subpred_list([],[]):-!.
+subpred_list([A|R],[A|S]):-
+  atomic(A),
+  !, subpred_list(R,S).
+subpred_list([A|R],[A,L2|S]):-
+  A=..[_|L2],
+  append(L2,R,L3),
+  !, subpred_list(L3,S).
+
+/* subpred(A,S):-            A=..[P|L2], X1=A,
+                          findall(X2,(member(T2,L2), % T2=..L3,%
+                                                     X2=T2),X2s),
+                                                               %write($X2s = $), writeln(X2s), %
+                 findall(X3,(member(T2,L2), T2=..[_|L3], member(T3,L3),%T3=..L4,%
+                                                          X3=T3), X3s),
+                                                               %write($X3s = $), writeln(X3s),%
+                          append([X1],X2s,X12s), append(X12s,X3s,S).
+*/
+
+cww:-change_char($w$,$_$, (sell(john,whom,aptw)     ),J), write(J).
+   change_char(Char1,Char2,C,O):-  ifthen(string_search(Char1,Char2,_),
+       (writeln($!!!! Incorrect string change ! $), fail)),
+     string_term(Str,C), [! change_ch(Char1,Char2,'',Str,Ostr) !],
+     string_term(Ostr,O).
+
+   change_ch(Char1,Char2,Lstr,Wstr,Ostr):- not(string_search(Char1,Wstr,_)),
+      concat(Lstr, Wstr, Ostr).
+
+   change_ch(Char1,Char2,Lstr,Wstr,Ostr):-
+          string_length(Wstr,L),         string_length(Char1,L1),
+     string_search(Char1,Wstr,N),
+     N1 is N+L1, LN is L-N1,    N1b is N1+1,  dec(N,Nlast),
+     substring(Wstr,0,N,C1),
+              string_term(Char2,CHt),
+         ifthenelse(L>N1,substring(Wstr,N1,1,PastFirst),PastFirst=''),
+         ifthenelse(Nlast>0, substring(Wstr,Nlast,1,PreLast),PreLast=''),
+
+     ifthenelse( ( PastFirst=='(',(var(CHt);integer(CHt) ),Char2\='_'),
+               (LNb is LN-1, substring(Wstr,N1b,LNb,Wstr1),
+                  concat([Lstr,C1,$eng($,Char2,','],Lstr1) ),
+
+         ifthenelse( (% writeln((PreLast,Char1,PastFirst)),
+             %  not (any_name(PastFirst);any_name(PreLast) ),
+               PreLast=='(';PreLast==','  ; PreLast=='=';PreLast==' '  ),
+        (substring(Wstr,N1,LN,Wstr1),concat([Lstr,C1,Char2],Lstr1)  ),
+        (substring(Wstr,N1,LN,Wstr1),concat([Lstr,C1,Char1],Lstr1)  ))
+               ),				   %!Char1!!!!!!
+                                                                %  writeln(([Lstr],[Lstr1],[Wstr],[Wstr1])),
+        change_ch(Char1,Char2,Lstr1,Wstr1,Ostr) .
+
+any_name(Char):-nth_char(0,Char,N), nth_char(0,'a',Na),nth_char(0,'z',Nz),
+            N>Na-1,N<Nz+1.
+
+
+
+ string_change_char(Char1,Char2,C,O):- % ifthen(string_search(Char1,Char2,_),
+%       (writeln($!!!! Incorrect string change ! $), fail)),
+                 [! string_change_ch(Char1,Char2,'',C,O) !].
+
+   string_change_ch(Char1,Char2,Lstr,Wstr,Ostr):- not(string_search(Char1,Wstr,_)),
+      concat(Lstr, Wstr, Ostr).
+
+
+   string_change_ch(Char1,Char2,Lstr,Wstr,Ostr):-
+          string_length(Wstr,L),         string_length(Char1,L1),
+     string_search(Char1,Wstr,N),
+     N1 is N+L1, LN is L-N1,    N1b is N1+1,  dec(N,Nlast),
+     substring(Wstr,0,N,C1),
+         ifthenelse(L>N1,substring(Wstr,N1,1,PastFirst),PastFirst=''),
+
+    string_length(Lstr,Nl),   dec(Nl,Nl1),
+ ifthenelse(Nl>0, substring(Lstr,Nl1,1,PreLast),PreLast=''),
+
+                  %    writeln(($last::$,PreLast)),
+         ifthenelse( not fail ,%any_name(PreLast),
+        (substring(Wstr,N1,LN,Wstr1),concat([Lstr,C1,Char2],Lstr1)  ),
+        (substring(Wstr,N1,LN,Wstr1),concat([Lstr,C1,Char1],Lstr1)  )),
+               				   %!Char1!!!!!!
+                                           %writeln(  (Lstr1;Wstr1,Ostr)),
+   string_change_ch(Char1,Char2,Lstr1,Wstr1,Ostr) .
+
+
+
+
+
+
+ts:-term_subst( (a(s,f(2,g(2))), hhhh(g(2)) ), g(2), gg(C), O), write(O).
+
+cl_list_insert1(T,Old,New,O):-term_subst(T,Old,New,O).
+term_subst(T,Old,New,O):-%var_const(T,Tc),%
+        expand(T,Ts),   member(Old,Ts),
+             string_term(Oldstr,Old), string_term(Newstr,New),
+write((Oldstr,Newstr)),nl,
+      change_char(Oldstr,Newstr,T,O).
+%cc:-change_char('f(2)',
+abolish_all(Ps):-not ( member(P,Ps), abolish_arity(P), fail).
+abolish_arity(P):-abolish(P/0), abolish(P/1), abolish(P/2), abolish(P/3),
+                abolish(P/4), abolish(P/5), abolish(P/6).
+functor(S,P):-functor(S,P,0);functor(S,P,1);functor(S,P,2);
+              functor(S,P,3);functor(S,P,4);functor(S,P,5);
+              functor(S,P,6);functor(S,P,7);functor(S,P,8).
+
+nc:-name_clause(cc,J,H), writeln(H), fail.
+name_clause(P,PP,H):-functor(PP,P), clause(PP,H), H\==true.
+
+functor(S,P):-functor(S,P,0);functor(S,P,1);functor(S,P,2);
+              functor(S,P,3);functor(S,P,4);functor(S,P,5);
+              functor(S,P,6);functor(S,P,7);functor(S,P,8).
+
+
+list_assert(Ls):-not (member(C,Ls),assert(C),fail).
+list_abolish(Ls):-member(C,Ls), abolish_all(C), fail.
+
+take(Dbfile):-atom_string(Dbfile,Dstr), concat($dbinp $, Dstr, Exec),
+         exec(Exec).
+exec(S):-atom_string(A,S),shell(A).
+
+sh:-shorten((a,s,h(d),f(9)),f(H),J,O), writeln((J,O)).
+shorten(Cl,Until,O,InspO):-clause_list(Cl,Cls),
+               cl_list_search([Until],Cls,N,Insp),
+               sublist(0,N,Cls,Os), clause_list(O,Os), Until=..[P|_],
+               InspO=..[P|Insp]  .
+
+sco:-subcombination([1,2,3],C), writeln(C),fail.
+
+allcombinations(S,C):-len(S,L),  ifthen(L>6,(write($ !!! list for combination too long : $),
+                                           writeln(S), fail)),
+    findall( (Ys), (member(X0,S), ifthen(L>1,(member(X1,S), X0\==X1)),
+    ifthen(L>2,(member(X2,S), X2\==X1,X2\==X0)),
+    ifthen(L>3,(member(X3,S),X3\==X1,X3\==X0,X3\==X2)),
+    ifthen(L>4,(member(X4,S), X4\==X1,X4\==X0,X4\==X2,X4\==X3)),
+    ifthen(L>5,(member(X5,S),X5\==X1,X5\==X0,X5\==X2,X5\==X3,X5\==X4)),
+    ifthen(L>6,(member(X6,S),X6\==X1,X6\==X0,X6\==X2,X6\==X3,X6\==X4,X6\==X5)),
+ sublist(0,L,[X0,X1,X2,X3,X4,X5,X6],Ys) ),
+  C), remove_duplicates(C,Cd).
+
+combination(S,C):-len(S,L),  ifthen(L>6,(write($ !!! list for combination too long$),
+                                           writeln(S), fail)),
+    member(X0,S), ifthen(L>1,(member(X1,S), X0\==X1)),
+    ifthen(L>2,(member(X2,S), X2\==X1,X2\==X0)),
+    ifthen(L>3,(member(X3,S),X3\==X1,X3\==X0,X3\==X2)),
+    ifthen(L>4,(member(X4,S), X4\==X1,X4\==X0,X4\==X2,X4\==X3)),
+    ifthen(L>5,(member(X5,S),X5\==X1,X5\==X0,X5\==X2,X5\==X3,X5\==X4)),
+    ifthen(L>6,(member(X6,S),X6\==X1,X6\==X0,X6\==X2,X6\==X3,X6\==X4,X6\==X5)),
+sublist(0,L,[X0,X1,X2,X3,X4,X5,X6],C).
+
+subcombination(S,C):-len(S,L),  ifthen(L>6,(write($ !!! list for combination too long$),
+                                           writeln(S), fail)),
+    member(X0,S), ifthen(L>1,(member(X1,S), X0\==X1)),
+    ifthen(L>2,(member(X2,S), X2\==X1,X2\==X0)),
+    ifthen(L>3,(member(X3,S),X3\==X1,X3\==X0,X3\==X2)),
+    ifthen(L>4,(member(X4,S), X4\==X1,X4\==X0,X4\==X2,X4\==X3)),
+    ifthen(L>5,(member(X5,S),X5\==X1,X5\==X0,X5\==X2,X5\==X3,X5\==X4)),
+    ifthen(L>6,(member(X6,S),X6\==X1,X6\==X0,X6\==X2,X6\==X3,X6\==X4,X6\==X5)),
+dec(L,L1), dec(L1,L2), dec(L2,L3), dec(L3,L4),
+   member(LL,[L,L1,L2,L3,L4]),  member(B,[0,1,2,3,4]), (B+LL)<L+1,
+sublist(B,LL,[X0,X1,X2,X3,X4,X5,X6],C).
+
+
+uneq(Ys):-len(Ys,Ly), remove_duplicates(Ys,Yds), len(Yds,Ly).
+
+eneq(As,Bs):- len(As,L), len(Bs,L),
+             sublist(0,1,As,[A0]), sublist(0,1,Bs,[B0]),
+            ifthen( not (nonvar(B0),nonvar(A0)), B0=A0),
+ifthen((L>1),(  sublist(1,1,As,[A1]), sublist(1,1,Bs,[B1]),
+            ifthen( not (nonvar(B1),nonvar(A1)), B1=A1) )),
+ifthen((L>2),(  sublist(2,1,As,[A2]), sublist(2,1,Bs,[B2]),
+            ifthen( not (nonvar(B2),nonvar(A2)), B2=A2) )),
+ifthen((L>3),(  sublist(3,1,As,[A3]), sublist(3,1,Bs,[B3]),
+            ifthen( not (nonvar(B3),nonvar(A3)), B3=A3) )),
+ifthen((L>4),(  sublist(4,1,As,[A4]), sublist(4,1,Bs,[B4]),
+            ifthen( not (nonvar(B4),nonvar(A4)), B4=A4) )),
+ifthen((L>5),(  sublist(5,1,As,[A5]), sublist(5,1,Bs,[B5]),
+            ifthen( not (nonvar(B5),nonvar(A5)), B5=A5) )),
+ifthen((L>6),(  sublist(6,1,As,[A6]), sublist(6,1,Bs,[B6]),
+            ifthen( not (nonvar(B6),nonvar(A6)), B6=A6) )).
+
+
+% Th if search of direct inference rule application is difficult,
+% it's possible to use natural rules with natural corrections
+% by metarules`
+
+
+vlv:-const_clause(ana(n),O), writeln(O).
+%(vlia(_2,teplo2,_4), vstrec(_3,teplo2,_5)),O), write(O).
+
+const_clause(Cl_inst,Cl):- cnst_cl(Cl_inst,Cl).
+
+ccl:-cnst_cl((d(g),a(g),o(4) ),O), writeln(O).
+
+    cnst_cl(A,Afin):-expand(A,Aexp), writeln(Aexp),
+not (member(X,Aexp), write($##$), (atom(X);integer(X)) ),
+  Afin=A, writeln($ end $).
+
+     cnst_cl(A,Afin):- expand(A,Aexp),  member(X,Aexp),
+ (atom(X);integer(X)),
+           string_term(Xstr,X),  string_length(Xstr,Lx), concat(Xstr,$zz$,X1str),
+    substring(X1str,1,Lx,Y1str),
+concat('_',Y1str,Ystr), writeln((Xstr,Ystr)),
+        change_char(Xstr,Ystr,A,B), writeln(B), cnst_cl(B,Afin).
+
+lf:-list_full([a, not (b,c) , (h ; j)] ,O), write(O).
+list_full(As,Fsf):-findall(B,( member(M,As),
+      ifthenelse(M=(not M1),
+        ( M=(not Mnot), clause_list(Mnot,B) ),
+          ifthenelse(M=(M1;M2), (M=(M1;M2), clause_list(M1,M1s),
+                                clause_list(M2,M2s),  append(M1s,M2s,B)),
+                     B=M))
+                           ),Fs), flatten(Fs,Fsf).
+
+ch:-clause_head(cnst_cl(Cl_inst,Cl),H ), writeln(H).
+clause_head(Cl,H):- current_predicate(P/A), functor(H,P,A), clause(H,Cl).
+
+replace(Term):-Term=..[F|Args],
+	       ifthenelse((functor(Full,F),Full),
+		     ( Full=Term;(retract(Full),writeln(retract(Full)),assert(Term) )),
+		     assert(Term)
+		     ).
+
+var_var(A,B):-var_const(A,C), var_const(B,C).
+
+createMN:-    open(H, $mn.ari$, w),
+              findall( P, (current_predicate(P),
+                          write(H, $:- visible $),
+                          write(H, P),
+                          write(H, $.$), nl(H) ),_),
+              close(H).
+/*
+Three guys got together for a dinner, they 've got some food, but it is unclear who will cook.
+This is the usual story for the friends, Mike, Peter and Nick, and below is what they have learned from the 
+previous dinners:
+Mike wants either Nick ot Peter to cook.
+Mike knows that Nick does not want Peter to cook.
+Peter does not want to cook himself and believes that Mike would not cook anyway.
+Also, Peter believes that Mike believes that Nick wants Mike to cook.
+Peter wants Mike to know that Peter would not cook himself.
+
+Nick believes that Mike wants Peter to cook, and Nick wants Mike to cook.
+
+However, Peter would cook if he knows (someone tells him) that Nick wants him (Peter) to cook.
+Mike would cook if Peter believes (is said) that Nick wants himself (Mike) to cook.
+And Nick would cook if no one else does, but would not like to.
+
+The friends take information from each other seriously in spite of the fact that they
+sometimes may want to cheat each other. In other words, they always trust each other even though they are
+aware that they may be told a lie.
+To decide who will cook, they exchange some thoughts on that matter.
+
+Who will finally cook?
+Try to be as realistic as possible in your explanation.
+
+*/
+
+allActions([ inform, ask]). %, forgive, conceal,pretend,]).
+allAgents([nick, mike, peter]).
+
+
+want(mike, cook(A, food)):-   not cook(mike, food), A = nick  ; A = peter.
+know(mike, not cook(mike, food)).
+want(mike, not cook(mike, food)).
+
+%know(mike, ( cook(peter, food) :- inform(mike, peter, want(nick, cook(peter, food))  ))).
+%know(peter, know(mike, ( not cook(peter, food) :- inform(mike, peter, want(nick, cook(peter, food))  )))).
+
+know(mike, not want(nick, cook(peter, food))).
+know(peter, not cook(mike, food)).
+
+
+
+want(peter, not cook(peter, food) ).
+
+%peter follows nick
+
+cook(peter, food) :- know(peter,  want(nick, cook(peter, food))).
+cook(mike, food) :- know(peter,  want(nick, cook(mike, food))).
+								
+know(Agent,  W):- inform(A,Agent, W);cheat(A,Agent, W). 
+
+
+know(nick, want(mike, cook(peter, food))).
+
+	% need inform(nick, peter, want(nick, cook(mike, food)))
+know(peter,  know(nick, want(nick, cook(mike, food))) ).
+     
+want(nick, not cook(peter, food)).
+want(nick, cook(mike, food)).
+
+want(peter, know(mike, not cook(peter, food))).
+
+%%%%
+%want(peter, not silence).
+%silence:-not inform(_,_,_).
+
+%want(peter, know(peter, cook(Who, food))).
+%believe(peter, know(mike, cook(Who, food))).
+
+%% for compiler
+believe(a,b).
+inform(a,b,c).
+cheat(a,b,c).
+happen([]).
+
+
+
+
+/*
+inform(nick,peter,want(mike,cook(peter,food))),
+cheat(mike,peter,want(nick,cook(peter,food))),
+inform(peter,mike,not cook(peter,food)),
+
+cheat(nick,peter,want(mike,cook(peter,food))),
+inform(mike,nick,not cook(mike,food)),
+
+inform(nick,peter,not cook(mike,food)),
+cheat(mike,nick,cook(mike,food)),
+
+cheat(nick,peter,cook(mike,food)),
+inform(mike,peter,not cook(mike,food)),
+
+inform(nick,peter,cook(mike,food)),
+cheat(mike,peter,cook(mike,food)),
+
+ask(nick,mike,not cook(mike,food)),
+inform(mike,peter,not want(nick,cook(peter,food))),
+
+ask(nick,mike,cook(mike,food)),
+ask(mike,nick,not cook(mike,food)) 
+
+
+*/
+/*
+inform(nick,peter,want(mike,cook(peter,food))),
+cheat(mike,peter,want(nick,cook(peter,food))),
+inform(peter,mike,not cook(peter,food)),
+
+cheat(nick,peter,want(mike,cook(peter,food))),
+inform(mike,nick,not cook(mike,food)),
+
+inform(nick,peter,not cook(mike,food)),
+cheat(mike,nick,cook(mike,food)),
+
+cheat(nick,peter,cook(mike,food)),
+inform(mike,peter,not cook(mike,food)),
+
+inform(nick,peter,cook(mike,food)),
+cheat(mike,peter,cook(mike,food)),
+
+ask(nick,mike,not cook(mike,food)),
+inform(mike,peter,not want(nick,cook(peter,food))),
+
+ask(nick,mike,cook(mike,food)),
+answer(mike,nick,not cook(mike,food)) ]
+*/
+/*
+inform(nick,peter,want(mike,cook(peter,food))),
+cheat(mike,peter,want(nick,cook(peter,food))),
+inform(peter,mike,not cook(peter,food)),
+
+cheat(nick,peter,want(mike,cook(peter,food))),
+inform(mike,nick,not cook(mike,food)),
+
+inform(nick,peter,not cook(mike,food)),
+cheat(mike,nick,cook(mike,food)),
+
+cheat(nick,peter,cook(mike,food)),
+inform(mike,peter,not cook(mike,food)),
+
+inform(nick,peter,cook(mike,food)),
+cheat(mike,peter,cook(mike,food)),
+
+ask(nick,mike,not cook(mike,food)),
+inform(mike,peter,not want(nick,cook(peter,food))),
+
+ask(nick,mike,cook(mike,food)),
+answer(mike,nick,not cook(mike,food)),
+
+ask(nick,mike,want(mike,cook(peter,food))),
+answer(mike,nick,cook(mike,food)),
+
+ask(nick,peter,not cook(mike,food)),
+answer(mike,nick,want(mike,cook(peter,food))),
+
+ask(nick,peter,cook(mike,food)),
+ask(mike,nick,not cook(mike,food)),
+
+answer(nick,mike,not cook(mike,food)),
+ask(mike,nick,not want(nick,cook(peter,food))),
+
+answer(nick,mike,not want(nick,cook(peter,food))),
+ask(mike,peter,not cook(mike,food)),
+
+ask(nick,peter,want(mike,cook(peter,food))),
+ask(mike,peter,not want(nick,cook(peter,food))) ]
+
+*/
+
+

@@ -1,0 +1,30 @@
+
+want(mike, cook(A, food)):-   do(1).
+know(mike, not cook(mike, food)):- do(1).
+want(mike, not cook(mike, food)):-do(1).
+
+%know(mike, ( cook(peter, food) :- inform(mike, peter, want(nick, cook(peter, food))  ))).
+%know(peter, know(mike, ( not cook(peter, food) :- inform(mike, peter, want(nick, cook(peter, food))  )))).
+
+know(mike, not want(nick, cook(peter, food))):-do(1).
+know(peter, not cook(mike, food)):-do(2).
+
+
+
+want(peter, not cook(peter, food) ):-do(2).
+
+%peter follows nick
+
+cook(peter, food) :- do(2). 
+cook(mike, food) :- do(1). 
+								
+know(Agent,  W):- do(4). 
+know(nick, want(mike, cook(peter, food))):- do(3). 
+
+	% need inform(nick, peter, want(nick, cook(mike, food)))
+know(peter,  know(nick, want(nick, cook(mike, food))) ):-do(2).
+     
+want(nick, not cook(peter, food)):- do(3). 
+want(nick, cook(mike, food)):-do(3).
+
+want(peter, know(mike, not cook(peter, food))):-do(2).

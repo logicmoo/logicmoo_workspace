@@ -1,0 +1,130 @@
+allActions([ inform]). %, forgive, conceal,pretend,]).
+allAgents([nick, mike, peter]).
+
+
+want(nick, send(peter, nick, letter)).
+want(nick, know(peter, not want(nick, send(mike, peter, letter)))).
+know(nick, send(mike, peter, letter)):- know(mike, know(peter, not send(nick, mike, letter))).
+know(nick, want(mike, send(nick, mike, letter))).
+
+want(peter, not know(mike, want(nick, send(mike, nick, letter)))).
+want(peter, not send(peter, nick, letter)):- know(peter, want(mike, send(peter, nick, letter))).
+want(peter, send(mike, nick, letter)).
+%% for suggest not inform
+want(peter, not send(nick, peter, letter)).
+send(nick, peter, letter):-believe(nick, want(peter, send(nick, peter, letter))).
+believe(peter, believe(mike, want(peter, send(nick, peter, letter)) )).
+
+
+
+know(peter, send(mike, nick, letter)):- ask(nick, mike, not send(mike, peter, letter)).
+know(peter, ( want(nick, send(peter, nick, letter)):- know(nick, not want(peter, send(nick, peter, letter))))).
+
+want(mike, send(peter, mike, letter)).
+% for cheat
+want(mike, know(mike, want(nick, send(nick, Who, letter)))).
+%know(mike, (send(peter, mike, letter):-believe(peter, want(mike, send(peter, mike, letter))))).
+send(peter, mike, letter):-believe(peter, want(mike, send(peter, mike, letter))).
+
+know(mike, send(peter, mike, letter)):-know(nick, want(mike, send(peter, mike, letter))).
+know(mike, want(nick, know(nick, send(Who, mike, letter)))).
+know(mike, know(peter, want(nick, not send(mike, nick, letter)))).
+
+know(mike, not send(AnyAgent, AnyAgent, _)).
+know(nick, not send(AnyAgent, AnyAgent, _)).
+know(peter, not send(AnyAgent, AnyAgent, _)).
+
+know(Agent,  W):- inform(A,Agent, W);cheat(A,Agent, W);pretend(A, Agent, W). 
+know(Agent,  W):- inform(A,Agent, W);cheat(A,Agent, W);pretend(A, Agent, W)
+
+
+/*
+inform_to_achieve(inform(nick,peter,want(mike,send(peter,mike,letter))),
+                  send(peter,mike,letter),
+				  want(mike,send(peter,mike,letter)))
+
+
+send(nick,mike,letter),
+send(peter,nick,letter),
+
+send(nick,peter,letter),
+inform(peter,mike,want(nick,not send(mike,nick,letter))),
+
+inform(nick,peter,not want(nick,send(mike,peter,letter))),
+cheat(peter,mike,want(nick,not send(mike,nick,letter))) ]
+=========================
+ inform(nick,peter,not want(nick,send(mike,peter,letter))),
+ ask(mike,nick,want(nick,send(nick,_128,letter))), suggest(mike,peter,send(peter,mike,letter))
+    inform(mike,peter,want(mike,send(peter,mike,letter))),
+ send(peter,nick,letter), suggest(peter,mike,send(mike,nick,letter)),
+ suggest(peter,mike,not inform(mike,nick,want(peter,send(nick,peter,letter)))),
+
+ send(nick,peter,letter),suggest(nick,peter,send(peter,nick,letter)),
+ send(mike,nick,letter) ]
+
+*/
+
+/*
+inform(nick,peter,not want(nick,send(mike,peter,letter))),
+ask(mike,nick,want(nick,send(nick,_128,letter))),
+send(peter,nick,letter),
+
+send(nick,peter,letter),
+suggest(mike,peter,send(peter,mike,letter)),
+suggest(peter,mike,send(mike,nick,letter)),
+
+suggest(nick,peter,send(peter,nick,letter)),
+send(mike,nick,letter),
+send(peter,mike,letter),
+
+inform(mike,peter,want(mike,send(peter,mike,letter))),
+suggest(peter,mike,not inform(mike,nick,want(peter,send(nick,peter,letter))
+
+
+*/
+/*
+inform(nick,peter,not want(nick,send(mike,peter,letter))),
+suggest(mike,peter,send(peter,mike,letter)),
+send(peter,nick,letter),
+
+send(nick,peter,letter),
+inform(mike,peter,want(mike,send(peter,mike,letter))),
+suggest(peter,know(mike,want(nick,send(mike,nick,letter))),
+
+not know(mike,want(nick,send(mike,nick,letter)))),
+suggest(nick,peter,send(peter,nick,letter)),
+suggest(peter,mike,send(mike,nick,letter)),
+
+suggest(peter,send(nick,peter,letter),not send(nick,peter,lett
+er)),
+
+suggest(peter,mike,not inform(mike,nick,want(peter,send(nick,peter,letter
+)))) 
+
+
+
+
+
+
+retracted(inform(mike,peter,want(mike,send(peter,mike,letter))))l[send(peter,m
+ike,letter),know(mike,want(nick,send(nick,_46E8,letter)))]
+phys(send(peter,nick,letter))
+retracted(send(peter,nick,letter))l[send(peter,mike,letter),know(mike,want(nic
+k,send(nick,_9878,letter)))]
+phys(send(peter,nick,letter))
+retracted(send(peter,nick,letter))l[send(peter,mike,letter),know(mike,want(nic
+k,send(nick,_82E8,letter)))]
+retracted(send(peter,nick,letter))l[send(peter,mike,letter),know(mike,want(nic
+k,send(nick,_4A2C,letter)))]
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+retracted(inform(nick,peter,want(mike,send(peter,mike,letter))))l[know(mike,wa
+nt(nick,send(nick,_3D04,letter)))]
+phys(send(mike,_660C,letter))
+inform_to_share(inform(mike,nick,send(_21C4,mike,letter)))
+inform_to_share(inform(mike,mike,want(nick,send(nick,_21E0,letter))))
+phys(send(peter,nick,letter))
+retracted(send(peter,nick,letter))l[know(mike,want(nick,send(nick,_71EC,letter
+)))]
+phys(send(peter,nick,letter))
+retracted(send(peter,nick,letter))
+*/

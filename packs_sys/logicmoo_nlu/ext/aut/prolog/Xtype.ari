@@ -1,0 +1,156 @@
+:-public antiSym/1.
+:-public xagent/1.
+xagent([]).
+
+xabstr(Abstrs) :- findall(P, ( pattern(PFull), PFull=..[P|Args],
+							   len(Args, L), L>1
+							  ), 
+				  Abstrsd ), remove_duplicates(Abstrsd,Abstrs) .
+
+%xaction([urbanization, development, public_health, kill,
+%    injury, stricken,
+%    announce, report, discover, expose, tell, promise, explain,
+%    protest, renounce, condemn, praise, criticize,
+%    ask, demand, order, persuade,
+%    reject, demand, request,
+%    apologize, announce, declare, 
+%    establish, discuss, arrest, expel, take_hostage, release, assassinate,
+%    evacuate, withdraw_ambassador,
+%    intimidate, impose_sanctions, claim, deny, accuse,
+%	troop_withdrawal, 
+%    mobilization, posturing, exercise, maneuvers,
+%    peacekeeping, counter_terrorism, search_and_rescue,
+%    combat_support, evacuation, patrol, 
+%    humanitarian_mission, military_invasion, occupation, 
+%    troop_withdrawal, troop_movement, mobilization, posturing, exercise, maneuvers,
+%    crisis, civil_war, refugee_influx, persecution, 
+%	massacre, terrorism, genocide, crime, narcotics_trafficking
+%	 ]).
+
+xattribute([economic, trade, science, technology, military, diplomatic,
+                political, cultural, social, religious, territorial,
+				economical, military, diplomatical,
+				humanitarian, multilateral, criminal,
+				countermine, submarine, antisubmarine,
+                warfare, theocratic_republic, monarchy,
+				bad, poor,  good, medium, average, no_diplomatic_relations,
+				tax, unemployment, internal, external,refugees
+				]).
+
+xcity([riyadh,tehran, baghdad, delhi, djakarta, beijing, kiev, moscow, washington, paris, tel_aviv, london, roma]).
+%
+xcountry([iraq, iran, china, indonesia, ukraine, india, oae,
+          russia, us, france, uk, italy, germany, israel, egipt, lebanon, israel, siria, saudi_arabia,
+		  japan, south_korea, turkey, thailand, india, brazil, afghanistan, taliban, taiwan, six_plus_two]).
+
+xevent([iran_iraq_tanker_war, persian_gulf_war,iranian-taliban_crisis]).
+
+xmissile([ surface_to_air, surface_to_surface, 
+           air_to_surface, air_to_air, anti_radar, anti_ship, cruise, ballistic ]).
+
+xweapon([tanks,
+ armored_infantry_fighting_vehicles,
+ armored_personnel_carriers,
+ self_propelled_artillery,
+ towed_artillery,
+combat_aircraft,
+armed_helicopter,
+surface_combatant,
+patrol_craft,
+landing_craft,
+mine_vessel, submarine]).
+
+xnum(Integer) :- nonvar(Integer), integer(Integer).
+
+xorg([muslim, christian, hindu, jewish, military, civilian,
+      persian, opeq,       
+      executive, judicial, legislative,
+	  arabsat,gcc, iaea,iea,interpol, imf, isba, nato,oecd,opcw, un,unsc, wto, oapec, opec,
+	  amnesty_interntional, doctors_without_borders, international_red_cross,
+      pflp, pij, pkk, gia, hamas, al_jihad, shi_a, un
+		 ]).
+
+xperson([kuchma, hussein,  president_china, president_uk, yeltsin, clinton, monica_lewinsky]).
+
+xtrade([cotton, oil, iron, lumber, corn, weapon, refugees, narkotics]).
+
+xyear(Y):- nonvar(Y), string_term(Ystr, Y), 
+           string_search($19$, Ystr, 0).
+xyear(Ns):- var(Ns), findall(N, ( member(Num, [80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99]),
+		           N is Num+1900),
+		           Ns).    
+  %xnum???
+args([xcountry, xcity, xyear, xtrade, xmissile, xperson, xorg, xabstr, xaction, xattribute, xevent, xarbitrary, xweapon, xagent ]).
+
+argsString( [$xnum$,$xcountry$,$xcity$,$xagent$,$xyear$,$xtrade$,$xteam$,$xperson$,$xorg$,$xabstr$,
+             $xxnum1$,$xxcountry1$,$xxcity1$,$xxagent1$,$xxtrade1$,$xxyear1$,$xxperson1$,$xxteam1$,$xxabstr1$,
+             $xxxnum11$,$xxxcountry11$,$xxxcity11$,$xxxagent11$,$xxxtrade11$,$xxxyear11$,$xxxteam11$,$xxxorg11$,$xxxabstr11$,
+             $xxxxnum111$,$xxxxcountry111$,$xxxxcity111$,$xxxxagent111$,$xxxxtrade111$,$xxxxyear111$,$xxxxteam111$,$xxxxorg111$,$xxxxabstr111$,
+             $xxxxxnum1111$,$xxxxxcountry1111$,$xxxxxcity1111$,$xxxxx1111$,$xxxxxtrade1111$,$xxxxxyear1111$,$xxxxxteam1111$,$xxxxxorg1111$, $xxxxxabstr1111$
+          ]).
+predlist([
+  %capabilities,
+  %economic,
+  %full,
+  %idea,
+  %interests,
+  %national,
+  %overview,
+  %per,
+  %regional,
+  %sources,
+abi1,
+capabilities,
+capital_overview,
+country_info,
+diplomatic_capabilities,
+economic_capabilities,
+economic_interests,
+ethnic_overview,
+government_overview,
+ideological_interests,
+interests,
+military_capabilities,
+overview,
+population,
+relationships,
+relationships_with_countries,
+religion,
+security_interests,
+status_interests,
+           administration, age, agriculture, aid, area, birthrate,
+           related,
+		   product,
+		   population, relations, religion, ethnic_groups, want, government,
+              relate, raize,send,more, less, capital, good, city, country, year, trade, exchange,
+              export,import, border,increase, decrease, agreement, fight, attack, occupy, after, same_year, 
+              before, distance, east, west, south, north, influence,president, change, similar, link,
+              immigration, emigration, interest, concern, religion, conduct, announce, discover, election, war, form, meeting, possess,
+              deliver, terrorist, charity, believe, industry, sponsor]).			 
+
+antiSym(As):- findall( P , ( pattern(PFull),
+                             PFull=..[P, ArgSym, ArgSym|_]
+							), Asd), remove_duplicates(Asd, As).
+
+antiSymOld([relations, related,
+          relate, send,more, less, before, after, same_year, agreement, exchange, import,
+                export, meet,affect,resolve,follow,connect,reach, distance, east, west, south, north, border,
+                influence, similar, link,immigration, emigration, interest, conduct, announce, discover, war, meeting,
+                deliver]).
+
+noSearchThrough([related, similar, influence]).
+outpat([xnum,xnum],value). outpat([xapp,xappto],apparatus).
+outpat([xdrug,xdrug],reagent). outpat([xparam],parameter).
+
+xarbitrary(Arbs):- args(SemTypes), findall( A, (
+                                              member(Type, SemTypes), Type \= xarbitrary,
+                                              TypeConst=..[Type, Values],
+					      TypeConst,
+					      member(A, Values)
+					       ), Arbs).
+
+
+
+
+
+

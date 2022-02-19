@@ -1,0 +1,147 @@
+allActions([ inform, ask]). %, forgive, conceal,pretend,]).
+allAgents([nick, mike, peter]).
+
+world( [
+( mike, mike, [
+want(mike, cook(peter, food)),
+want(mike, cook(nick, food)),
+know(mike, not want(nick, cook(peter, food)))
+]), 
+
+( peter, peter, [
+ know(peter, not cook(mike, food)),
+ want(peter, know(mike, not cook(peter, food)))
+]), 
+( nick, nick, [	
+know(nick, want(mike, cook(peter, food)))
+])
+]).
+
+
+cook(peter, food) :- know(peter,  want(nick, cook(peter, food))).
+cook(peter, food, W) :- know(peter,  want(nick, cook(peter, food)),W).
+
+
+
+cook(mike, food) :- know(peter,  want(nick, cook(mike, food))).
+
+know(mike, not cook(mike, food)).
+want(mike, not cook(mike, food)).
+know(mike, want(peter, know(peter, cook(Who, food)))).
+want(mike, know(peter, cook(Who, food))).
+
+want(peter, not cook(peter, food)).
+know(peter,  know(nick, want(nick, cook(mike, food))) ).
+ 
+want(nick, not cook(peter, food)).
+want(nick, cook(mike, food)).
+
+
+know(Agent,  W):- inform(A,Agent, W);cheat(A,Agent, W). 
+
+%%%%
+%want(peter, not silence).
+%silence:-not inform(_,_,_).
+
+%want(peter, know(peter, cook(Who, food))).
+%believe(peter, know(mike, cook(Who, food))).
+
+%% for compiler
+believe(a,b).
+inform(a,b,c).
+cheat(a,b,c).
+%happen([]).
+
+
+
+
+/*
+inform(nick,peter,want(mike,cook(peter,food))),
+cheat(mike,peter,want(nick,cook(peter,food))),
+inform(peter,mike,not cook(peter,food)),
+
+cheat(nick,peter,want(mike,cook(peter,food))),
+inform(mike,nick,not cook(mike,food)),
+
+inform(nick,peter,not cook(mike,food)),
+cheat(mike,nick,cook(mike,food)),
+
+cheat(nick,peter,cook(mike,food)),
+inform(mike,peter,not cook(mike,food)),
+
+inform(nick,peter,cook(mike,food)),
+cheat(mike,peter,cook(mike,food)),
+
+ask(nick,mike,not cook(mike,food)),
+inform(mike,peter,not want(nick,cook(peter,food))),
+
+ask(nick,mike,cook(mike,food)),
+ask(mike,nick,not cook(mike,food)) 
+
+
+*/
+/*
+inform(nick,peter,want(mike,cook(peter,food))),
+cheat(mike,peter,want(nick,cook(peter,food))),
+inform(peter,mike,not cook(peter,food)),
+
+cheat(nick,peter,want(mike,cook(peter,food))),
+inform(mike,nick,not cook(mike,food)),
+
+inform(nick,peter,not cook(mike,food)),
+cheat(mike,nick,cook(mike,food)),
+
+cheat(nick,peter,cook(mike,food)),
+inform(mike,peter,not cook(mike,food)),
+
+inform(nick,peter,cook(mike,food)),
+cheat(mike,peter,cook(mike,food)),
+
+ask(nick,mike,not cook(mike,food)),
+inform(mike,peter,not want(nick,cook(peter,food))),
+
+ask(nick,mike,cook(mike,food)),
+answer(mike,nick,not cook(mike,food)) ]
+*/
+/*
+inform(nick,peter,want(mike,cook(peter,food))),
+cheat(mike,peter,want(nick,cook(peter,food))),
+inform(peter,mike,not cook(peter,food)),
+
+cheat(nick,peter,want(mike,cook(peter,food))),
+inform(mike,nick,not cook(mike,food)),
+
+inform(nick,peter,not cook(mike,food)),
+cheat(mike,nick,cook(mike,food)),
+
+cheat(nick,peter,cook(mike,food)),
+inform(mike,peter,not cook(mike,food)),
+
+inform(nick,peter,cook(mike,food)),
+cheat(mike,peter,cook(mike,food)),
+
+ask(nick,mike,not cook(mike,food)),
+inform(mike,peter,not want(nick,cook(peter,food))),
+
+ask(nick,mike,cook(mike,food)),
+answer(mike,nick,not cook(mike,food)),
+
+ask(nick,mike,want(mike,cook(peter,food))),
+answer(mike,nick,cook(mike,food)),
+
+ask(nick,peter,not cook(mike,food)),
+answer(mike,nick,want(mike,cook(peter,food))),
+
+ask(nick,peter,cook(mike,food)),
+ask(mike,nick,not cook(mike,food)),
+
+answer(nick,mike,not cook(mike,food)),
+ask(mike,nick,not want(nick,cook(peter,food))),
+
+answer(nick,mike,not want(nick,cook(peter,food))),
+ask(mike,peter,not cook(mike,food)),
+
+ask(nick,peter,want(mike,cook(peter,food))),
+ask(mike,peter,not want(nick,cook(peter,food))) ]
+
+*/

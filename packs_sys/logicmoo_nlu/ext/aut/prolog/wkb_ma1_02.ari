@@ -1,0 +1,60 @@
+/*
+Three guys got together for a dinner, they 've got some food, but it is unclear who will cook.
+This is the usual story for the friends, Mike, Peter and Nick, and below is what they have learned from the 
+previous dinners:
+Mike wants either Nick ot Peter to cook.
+Mike knows that Nick does not want Peter to cook.
+Peter does not want to cook himself and believes that Mike would not cook anyway.
+Also, Peter believes that Mike believes that Nick wants Mike to cook.
+Peter wants Mike to know that Peter would not cok himself.
+
+Nick believes that Mike wants Peter to cook, and Nick wants Mike to cook.
+
+However, Peter would cook if he knows (someone tells him) that Nick wants him (Peter) to cook.
+Mike would cook if Peter believes (is said) that Nick wants himself (Mike) to cook.
+And Nick would cook if no one else does, but would not like to.
+
+The friends take information from each other seriously in spite of the fact that they
+sometimes may want to cheat each other. In other words, they always trust each other even though they are
+aware that they may be told a lie.
+To decide who will cook, they exchange some thoughts on that matter.
+
+Who will finally cook?
+Try to be as realistic as possible in your explanation.
+
+*/
+
+allActions([ inform]). 
+allAgents([nick, mike, peter]).
+
+
+want(mike, cook(A, food)):-   not cook(mike, food), A = nick  ; A = peter.
+%know(mike, not cook(mike, food)).
+want(mike, not cook(mike, food)).
+
+%know(mike, ( cook(peter, food) :- inform(mike, peter, want(nick, cook(peter, food))  ))).
+%know(peter, know(mike, ( not cook(peter, food) :- inform(mike, peter, want(nick, cook(peter, food))  )))).
+
+know(mike, not want(nick, cook(peter, food))).
+know(peter, not cook(mike, food)).
+
+want(peter, not cook(peter, food) ).
+
+%peter follows nick
+
+cook(peter, food) :- know(peter,  want(nick, cook(peter, food))).
+cook(mike, food) :- know(peter,  want(nick, cook(mike, food))).
+%cook(nick, food) :- not cook(mike, food), not cook(peter, food).
+								
+know(Agent,  W):- inform(A,Agent, W);cheat(A,Agent, W). 
+
+
+know(nick, want(mike, cook(peter, food))).
+
+	% need inform(nick, peter, want(nick, cook(mike, food)))
+know(peter,  know(mike, want(nick, cook(mike, food))) ).
+     
+want(nick, not cook(peter, food)).
+want(nick, cook(mike, food)).
+
+want(peter, know(mike, not cook(peter, food))).

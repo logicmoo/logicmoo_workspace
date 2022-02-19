@@ -1,0 +1,28 @@
+:-public xagent/1.
+args([xagent, xabstr, xobject]).
+
+xagent([mike,peter,mike0,peter0, mike1,peter1,mike2,peter2,i,you,i0,you0,
+        he, she, he0, she0, he1, she1, he2, she2, lover, mistress,
+		wife, husband, wife1, husband1, wife0, husband0, 
+        person, other_person, person0, other_person0, person1, another_person1]).
+xobject([token]).
+
+
+xabstr(Abstrs) :- findall(P, ( pattern(PFull), PFull=..[P|Args],
+							   len(Args, L), L>1
+							  ), 
+				  Abstrsd ), remove_duplicates(Abstrsd,Abstrs) .
+				  
+
+argsString( [$xnum$,$xobject$,$xcity$,$xagent$,$xyear$,$xtrade$,$xteam$,$xperson$,$xorg$,$xabstr$,
+             $xxnum1$,$xxobject1$,$xxcity1$,$xxagent1$,$xxtrade1$,$xxyear1$,$xxperson1$,$xxteam1$,$xxabstr1$,
+             $xxxnum11$,$xxxobject11$,$xxxcity11$,$xxxagent11$,$xxxtrade11$,$xxxyear11$,$xxxteam11$,$xxxorg11$,$xxxabstr11$,
+             $xxxxnum111$,$xxxxobject111$,$xxxxcity111$,$xxxxagent111$,$xxxxtrade111$,$xxxxyear111$,$xxxxteam111$,$xxxxorg111$,$xxxxabstr111$,
+             $xxxxxnum1111$,$xxxxxobject1111$,$xxxxxcity1111$,$xxxxx1111$,$xxxxxtrade1111$,$xxxxxyear1111$,$xxxxxteam1111$,$xxxxxorg1111$, $xxxxxabstr1111$
+          ]).
+
+antiSym(As):- findall( P , ( pattern(PFull),
+                             PFull=..[P, ArgSym, ArgSym|_]
+							), Asd), remove_duplicates(Asd, As).
+
+noSearchThrough([related, similar, influence]).

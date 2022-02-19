@@ -1,0 +1,58 @@
+/*
+There is a the buyer, a the seller and a the mediator.
+
+the seller wants the buyer to buy the product.
+the seller knows that the product is bad.
+the seller wants that both the seller and the buyer believe that the product is not bad.
+the seller believes that the mediator does not know that the product is bad.
+the seller knows that initially the buyer does not know that the product is bad.
+
+the seller wants the mediator to inform the buyer that the product is not bad.
+the seller will confess to other parties that the product is bad if he believes that the mediator informed the buyer that it is the case.
+the seller believes that if the buyer beleives that the product is not bad then the buyer would buy it.
+the seller would start believing that when the buyer is informed by the mediator that the product is not bad then the buyer would buy it.
+
+the mediator wants the buyer to buy a product.
+the mediator does not want the seller to know that the mediator wants the buyer to buy a product.
+the mediator believes that the buyer would buy the products if the buyer believes it is not bad.
+the mediator believes the buyer would buy a product if the seller informs the buyer that the product is not bad.
+the mediator wants the seller to believe that the buyer buys the product if the mediator informs th the buyer that the product is not bad.
+
+the buyer wants to buy the product if the mediator informs the buyer that the product is not bad.
+the buyer wants to buy the product if the mediator informs the buyer that the product is worth buying.  
+the buyer wants the mediator to believe that the buyer will not buy the product
+the buyer wants the seller to believe that the buyer believes that the product is not bad.
+the buyer wants that the mediator informs the seller that the buyer will not buy the product
+
+*/
+want(s, buy(b,p)).
+know(s, pb).
+want(s, believe(b, not pb)). want(s, believe(m, not pb)).
+believe(s, not know(m, pb)).
+know(s, not know(b, pb)).
+
+want(s,m, inform(m, b, not pb)).
+inform(s,_, pb) :- believe(s, inform(m, b, pb)).
+believe(s, (buy(b,p) :- beleive(b, not bp))).
+believe(s, (buy(b,p):- inform(m,b, not bp)) ):- inform(m,b, buy(m, p)).
+
+
+want(m, buy(b,p)).
+want(m, not know(s, want(m, buy(b,p)) )).
+believe(m, (buy(b,p) :- beleive(b, not bp))).
+believe(m, buy(b,p)):- inform(s,b, not bp).
+want(m, believe(s, (buy(b,p):- inform(m,b, not bp)) )).
+
+want(b, buy(b, p)):- inform(m,b, not bp);inform(m,b, buy(m, p)).
+want(b, believe(s, buy(b,p))). 
+want(b, believe(m, not buy(b,p))).
+want(b, believe(s, believe(b, not bp))).
+want(b, inform(m,s, not want(b, buy(b, p)))).
+
+
+
+
+
+allActions([ inform, ask]). %, forgive, conceal,pretend,]).
+allAgents([s,b,m]).
+

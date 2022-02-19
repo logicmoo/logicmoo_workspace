@@ -1,0 +1,221 @@
+mymaze([[0,0,1,0,0,0,0,0,1,0],
+        [0,0,1,0,1,1,1,0,1,0],
+        [0,1,1,0,0,1,0,0,1,0],
+        [0,0,1,0,0,1,0,1,1,0],
+        [0,1,0,0,0,1,0,0,0,0],
+        [0,0,1,0,1,1,0,0,1,0],
+        [1,0,1,0,0,0,0,1,1,0],
+        [0,0,0,0,1,1,0,0,0,0],
+        [0,1,0,0,0,0,0,0,1,0],
+        [0,0,0,1,0,1,0,1,1,0],
+        [1,0,1,0,0,1,0,0,0,0],
+        [1,0,0,0,1,1,1,0,1,0] ]).
+
+draw(Path) :- not 
+              (member(V, [0,1,2,3,4,5,6,7,8,9]), writeln($$),
+              member(U, [0,1,2,3,4,5,6,7,8,9]),
+             get(El, U, V), 
+             ifthenelse(member((U,V),Path), write(*),     
+ 	        ifthenelse( step(U,V) ,
+                            write(v), write(El) )
+                       ),
+             fail ), writeln($$).
+d:-draw(3,3),
+ 
+
+mask( [ [A1,B1,C1,D1,E1,F1,G1,H1],
+        [A2,B2,C2,D2,E2,F2,G2,H2],
+        [A3,B3,C3,D3,E3,F3,G3,H3],
+        [A4,B4,C4,D4,E4,F4,G4,H4],
+        [A5,B5,C5,D5,E5,F5,G5,H5],
+        [A6,B6,C6,D6,E6,F6,G6,H6] ]).
+
+sign(Unit, To, Number) :- ifthen(var(Number), writeln($var for sign$) ),
+                      ifthen( ( To-Number<1), Unit is Number-1),  
+                      ifthen( (To-Number>0), Unit is Number+1).
+                     % ifthen( (To-Number =:= 0), Unit is Number), 
+                     %                          writeln(sign(Unit, To, Number)).
+             
+
+get(El,X,Y) :- mymaze(Mymaze), sublist(Y,1,Mymaze, [Row]), %            writeln(Row),
+               sublist(X, 1, Row, [El]).   
+
+wall(X, Y):- get(1, X, Y).
+
+stepped(1,X,Y):- mask(Mask), sublist(Y, 1, Mask, [Row]),
+                             sublist(X, 1, Row, [A]), A=1.   
+
+isStepped(X, Y):-  mask(Mask), sublist(Y,1,Mask, Row), sublist(X, 1, Row, [A]), A==1.   
+
+
+init(9,9).
+init:- abolish(step / 2),  init(A, B), assert(step(A, B)).
+%init:- init(A, B), assert(step(A, B)).
+
+reach(X, Y, Step,Path):- Step=1, init(A, B), A=:=X, B=:=Y,!,  %writeln(($found:$, A, B, $Step=$, Step)), 
+                         draw(Path).
+
+reach(X,Y,Step,Path):- (X >=0) , (Y>=0) , (9>=X), (9>=Y),
+                         not step(X, Y),
+                         not wall(X, Y),  
+                         assert(step(X, Y)),              
+                                               %% writeln(nextReach(X,Y,  Step1)),
+                                                       %draw(Path),get(C),
+                         nextReach(X,Y,  Step1, Path),   
+                         inc(Step1, Step).            
+                               %writeln(($reached$, X, Y)). 
+				 
+rules([ (
+    nextReach(A,B,C,D) :-
+    init(E,F),
+    sign(G,E,A),
+    append(D,[(G , B)],H),
+    (G , B , C , H) = (I , J , K , L),
+    init(M,N),
+    sign(O,N,J),
+    append(L,[(I , O)],P),
+    reach(I,O,K,P),
+    write(&)
+),(nextReach(X,Y,  Step1, Path):- %%write(3),
+                   init(Xinit, Yinit),
+                   sign(X1, Xinit,X), XX1 is X+X-X1, append(Path, [(XX1,Y)], Path3),
+                   reach( XX1, Y,Step1, Path3)
+),(nextReach(X,Y,  Step1, Path):- %%write(4),
+                   init(Xinit, Yinit),
+                   sign(Y1, Yinit,Y), YY1 is Y+Y-Y1, append(Path, [(X,YY1)], Path4),
+                   reach( X, YY1, Step1,Path4)
+),(nextReach(X,Y,  Step1, Path):- %%write(1),
+                   init(Xinit, Yinit), 
+	             sign(X1, Xinit,X), append(Path, [(X1,Y)], Path1),
+                   reach( X1, Y,Step1, Path1 )
+),(nextReach(X,Y, Step1, Path):- %%write(2),
+                   init(Xinit, Yinit), 
+                   sign(Y1, Yinit,Y), append(Path, [(X,Y1)], Path2),
+                   reach( X, Y1, Step1,Path2 )
+),(nextReach(X,Y, Step1, Path):- %%write(5),
+                   init(Xinit, Yinit), 
+                   last(Path, (Xl,Yl)),
+                   X1 is 2*X-Xl;  Y1 is 2*Y-Yl;
+                   append(Path, [(X1,Y1)], Path5),
+                   reach( X1, Y1, Step1,Path5)
+  ) ]).
+
+
+% try:-init, reach( 7,5,40 ,[]).
+% try:-init, reach( 7,0, Step ,[]), writeln(Step).
+ try:-init, reach( 1,1, Step ,[]), writeln(Step).
+
+chk:- not (name_clause(reach_next, _, Cl), writeln(Cl), fail).
+ab:-rules(Rules),  list_abolish(Rules).
+
+trnBasic:- 
+   rules(Rules),           
+   findall( (Comb,Step), (
+                           subcombination([0,4,2,3], Comb),      % write($======$),writeln(Combs), 
+			   [! list_abolish(Rules) ,              % writeln($abol!$),
+                           init,
+                           sublist_assertz(Rules, Comb)       %writeln($before reach$)
+                           !] ,                          
+                           reach( 1, 1, Step,[]),
+                           findall(S, step(S,_), Ss), len(Ss, Step1)
+                         ),     
+         (CombsSteps)
+       ),                    writeln( (CombsSteps)), 
+
+   findall(M, member( (_,M), (CombsSteps) ), ToSorts),
+         [!
+           quicksort(ToSorts, Sorteds),                writeln(Sorteds),
+           sublist(0,1,Sorteds,[Max]),
+           member((BestSeqs,Max),  (CombsSteps) ) !], writeln(BestSeqs),
+           sublist_assertz(Rules, BestSeqs),
+           init,     
+           reach( 1,1,St,  []). 
+
+train:- 
+   abolish(nextReach/4),    
+%   [rules],
+    rules(Rules),   %), 
+
+    findall( (Comb,Step,NewRule), (
+                           member(R1, Rules), member(R2, Rules), R1 \== R2,
+                       	   [!
+                           mergeRules((R1, R2),  NewRule), 
+                        
+                           append([NewRule], Rules, NewRules), % writeln(NewRule),
+                          
+                           subcombination([3,5,4,2], BasicComb),        
+			   append([0], BasicComb, Comb),             writeln(Combs), 
+                           [! %list_abolish(NewRules) ,              % writeln($abol!$),
+                               abolish(nextReach/4),
+                           init,
+                           sublist_assertz(NewRules,Comb)       %writeln($before reach$)
+                           !] !],                         
+                           reach( 1, 1, Step,[]),
+                           findall(S, step(S,_), Ss), len(Ss, Step1)
+                          ),     
+        (CombsSteps)
+       ),                    
+                         % writeln( (CombsSteps)), 	
+
+   findall(M, member( (_,M,_), (CombsSteps) ), ToSorts),
+         [!
+           quicksort(ToSorts, Sorteds),                writeln(Sorteds),
+           sublist(0,1,Sorteds,[Max]),
+           member((BestSeqs,Max,NRule),  (CombsSteps) ) !], writeln(BestSeqs),
+           abolish(nextReach/4),
+           append([NRule], Rules, NRules),
+           sublist_assertz(NRules, BestSeqs), % writeln(NRules),
+           init,     
+           reach( 1,1,St, []),  file_list($rules.ari$,  nextReach / 4) . 
+
+
+updateRules:- findall( Cl, ( name_clause(nextReach, H, B), (Cl = (H:-B) ),
+                             writeln(Cl), get(J)   ),
+                       Cls ),
+              abolish( rules / 1 ),
+              assert( rules(Cls)), file_list($rules.ari$, rules / 1).
+   
+
+do:- rules(Rs), member(R1, Rs), member(R2, Rs), R1 \== R2,
+     !, %writeln((R1, R2)),
+     mergeRules((R1, R2),  NewRule), writeln(NewRule).
+     
+ mergeRules((R1, R2),  NewRule):-
+     [!
+                        % writeln(R1),
+     var_var(R1, R1vv), % writeln(R1vv),
+     var_const(R1vv, R1c), R1c = (H1c :- B1c),  clause_list(B1c, B1cs), %writeln(R1c),
+     cl_list_search( [reach(X,Y,Step,Path )],B1cs, Off, Outs), 
+     cl_delete( reach(X,Y,Step,Path ), B1cs, B1csd), clause_list(Out,Outs),      %writeln(Out).
+
+     var_const(R2, R2c),  R2c = (H2c :- B2c), 
+     clause_list(B2c, B2cs), H2c =.. [_|In_s],       clause_list(In,In_s),                    
+
+     append(B1csd, [ (Out) = (In) ], B1CsdOutIn),
+     append(B1CsdOutIn, B2cs, Bodysc),                %    writeln(Bodysc),
+     clause_list(Bodyc, Bodysc), 
+     HB = (H1c :- (Bodyc,write($&$)))                 %  , writeln(HB)
+     !], var_const( NewRule, HB ) .
+
+
+vvv:- var_const(V, ( nextReach(z03EC,z0510,z03EC,z0510) :-
+       init(z040C,z0410) , sign(z0424,z040C,z03EC) , z0440 is z03EC + z03EC - z0424 ,
+ append(z03F8,[(z0440 , z03F0)],z0478) , (z0440 , z03F0 , z03F4 , z0478) = (z03EC , z03F0 , z03F4 , z03F8) , 
+ init(z040C,z0410) , sign(z04F4,z0410,z03F0) , z0510 is z03F0 + z03F0 - z04F4 , append(z03F8,[(z03EC , z0510)],z0548) , 
+ append(z03F8,[(z0440 , z03F0)],z0478) , (z0440 , z03F0 , z03F4 , z0478) = (z03EC , z03F0 , z03F4 , z03F8) , 
+ init(z040C,z0410) , sign(z04F4,z0410,z03F0) , z0510 is z03F0 + z03F0 - z04F4 , append(z03F8,[(z03EC , z0510)],z0548) , 
+ reach(z03EC,z0510,z03F4,z0548)
+	      )
+           ), writeln(V).  
+
+vcs:-
+var_const( 
+(
+nextReach(_7CE8,_7CFC,_7D10,_7D24) :- init(_7D38,_7D4C) , 
+          sign(_7D60,_7D38,_7CE8) , append(_7D24,[(_7D60 , _7CFC)],_7D74) ,
+      (_7D60 , _7CFC , _7D10 , _7D74) = (_7D88 , _7D9C , _7DB0 , _7DC4) ,
+      init(_7DD8,_7DEC) , sign(_7E00,_7DEC,_7D9C) , 
+      append(_7DC4,[(_7D88 , _7E00)],_7E14) , reach(_7D88,_7E00,_7DB0,_7E14) ,
+      write(&)
+),
+        V). % writeln(V).  

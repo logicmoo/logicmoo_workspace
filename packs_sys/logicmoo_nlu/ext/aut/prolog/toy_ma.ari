@@ -1,0 +1,61 @@
+/*
+
+/*
+
+There is a the Mike, a the Nick and a the Peter.
+
+the Nick wants the Mike to get the toy.
+the Nick knows that the toy is bad.
+the Nick wants that both the Nick and the Mike believe that the toy is not bad.
+the Nick believes that the Peter does not know that the toy is bad.
+the Nick knows that initially the Mike does not know that the toy is bad.
+
+the Nick wants the Peter to inform the Mike that the toy is not bad.
+the Nick will confess to other parties that the toy is bad if he believes that the Peter informed the Mike that it is the case.
+the Nick believes that if the Mike beleives that the toy is not bad then the Mike would get it.
+the Nick would start believing that when the Mike is informed by the Peter that the toy is not bad then the Mike would get it.
+
+the Peter wants the Mike to get a toy.
+the Peter does not want the Nick to know that the Peter wants the Mike to get a toy.
+the Peter believes that the Mike would get the toys if the Mike believes it is not bad.
+the Peter believes the Mike would get a toy if the Nick informs the Mike that the toy is not bad.
+the Peter wants the Nick to believe that the Mike gets the toy if the Peter informs th the Mike that the toy is not bad.
+
+the Mike wants to get the toy if the Peter informs the Mike that the toy is not bad.
+the Mike wants to get the toy if the Peter informs the Mike that the toy is worth geting.  
+the Mike wants the Peter to believe that the Mike will not get the toy
+the Mike wants the Nick to believe that the Mike believes that the toy is not bad.
+the Mike wants that the Peter informs the Nick that the Mike will not get the toy
+
+*/
+want(s, get(b,p)).
+know(s, pb).
+want(s, believe(b, not pb)). want(s, believe(m, not pb)).
+believe(s, not know(m, pb)).
+know(s, not know(b, pb)).
+
+want(s,m, inform(m, b, not pb)).
+inform(s,_, pb) :- believe(s, inform(m, b, pb)).
+believe(s, (get(b,p) :- beleive(b, not bp))).
+believe(s, (get(b,p):- inform(m,b, not bp)) ):- inform(m,b, get(m, p)).
+
+
+want(m, get(b,p)).
+want(m, not know(s, want(m, get(b,p)) )).
+believe(m, (get(b,p) :- beleive(b, not bp))).
+believe(m, get(b,p)):- inform(s,b, not bp).
+want(m, believe(s, (get(b,p):- inform(m,b, not bp)) )).
+
+want(b, get(b, p)):- inform(m,b, not bp);inform(m,b, get(m, p)).
+want(b, believe(s, get(b,p))). 
+want(b, believe(m, not get(b,p))).
+want(b, believe(s, believe(b, not bp))).
+want(b, inform(m,s, not want(b, get(b, p)))).
+
+
+
+
+
+allActions([ inform, ask]). %, forgive, conceal,pretend,]).
+allAgents([s,b,m]).
+

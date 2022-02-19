@@ -1,0 +1,36 @@
+
+allActions([ inform]). %, forgive, conceal,pretend,]).
+allAgents([nick, mike, peter]).
+
+
+want(mike, cook(A, food)):-   not cook(mike, food), A = nick  ; A = peter.
+know(mike, not cook(mike, food)).
+want(mike, not cook(mike, food)).
+
+%know(mike, ( cook(peter, food) :- inform(mike, peter, want(nick, cook(peter, food))  ))).
+%know(peter, know(mike, ( not cook(peter, food) :- inform(mike, peter, want(nick, cook(peter, food))  )))).
+
+know(mike, not want(nick, cook(peter, food))).
+know(peter, not cook(mike, food)).
+
+
+
+want(peter, not cook(peter, food) ).
+
+%peter follows nick
+
+cook(peter, food) :- know(peter,  want(nick, cook(peter, food))).
+cook(mike, food) :- know(peter,  want(nick, cook(mike, food))).
+								
+know(Agent,  W):- inform(A,Agent, W);cheat(A,Agent, W). 
+
+
+know(nick, want(mike, cook(peter, food))).
+
+	% need inform(nick, peter, want(nick, cook(mike, food)))
+know(peter,  know(nick, want(nick, cook(mike, food))) ).
+     
+want(nick, not cook(peter, food)).
+want(nick, cook(mike, food)).
+
+want(peter, know(mike, not cook(peter, food))).

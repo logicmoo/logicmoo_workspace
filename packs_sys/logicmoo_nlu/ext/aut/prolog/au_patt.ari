@@ -1,0 +1,58 @@
+:-public pattern/1.
+:- public prep_pattern/1.
+prep_pattern(_):-fail.
+
+pattern(location(xobject)).
+pattern(know(xagent,xabstr)).
+pattern(know0(xagent,xabstr)).
+pattern(know1(xagent,xabstr)).
+pattern(know2(xagent,xabstr)).
+pattern(know3(xagent,xabstr)).
+
+pattern(want(xagent, xabstr )).
+pattern(want0(xagent, xabstr )).
+
+pattern(believe0(xagent, xabstr)).
+pattern(believe(xagent, xabstr)).
+pattern(inform(xagent, xagent, xabstr)).
+pattern(want1(xagent, xabstr )).
+pattern(believe1(xagent, xabstr)).
+pattern(inform1(xagent, xagent, xabstr)).
+pattern(want2(xagent, xabstr )).
+pattern(believe2(xagent, xabstr)).
+pattern(inform2(xagent, xagent, xabstr)).
+pattern(want3(xagent, xabstr )).
+pattern(believe3(xagent, xabstr)).
+pattern(inform3(xagent, xagent, xabstr)).
+
+pattern(pretend(xagent, xagent, xabstr)).
+pattern(pretend0(xagent, xagent, xabstr)).
+pattern(pretend1(xagent, xagent, xabstr)).
+
+pattern(search0(xagent, xagent)).
+pattern(search0(xagent, xabstr)).
+pattern(find0(xagent, xagent)).
+pattern(find0(xagent, xabstr)).
+
+pattern(confess0(xagent, xagent, xabstr)).
+
+pattern(inform0(xagent, xagent, xabstr)).
+pattern(explain0(xagent, xagent, xabstr)).
+pattern(understand0(xagent, xabstr)).
+
+pattern(eat0(xagent, xobject)).
+
+pattern(search(xagent, xagent)).
+pattern(search(xagent, xabstr)).
+pattern(find(xagent, xagent)).
+pattern(find(xagent, xabstr)).
+
+pattern(confess(xagent, xagent, xabstr)).
+
+pattern(inform(xagent, xagent, xabstr)).
+pattern(explain(xagent, xagent, xabstr)).
+pattern(understand(xagent, xabstr)).
+
+pattern(eat(xagent, xobject)).
+
+

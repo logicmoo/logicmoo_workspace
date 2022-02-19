@@ -1,0 +1,487 @@
+
+%%%   member(?Element,+List)
+
+%%%   The member predicate checks whether Element is a member of List.
+%%%        If you supply an uninstantited variable for Element, then each of
+%%%        the members of the list is returned through backtracking.
+
+:- mode member(?,+).
+
+member(H, [H|_]).
+member(H, [A|T]) :- ifthen( var(T), ( write(member(H, [A|T])), 
+                                      write($!!!! list member of Var$), nl, fail)),
+   member(H, T).
+
+cl_member(H, [H1|_]):-cl_eq(H,H1).
+cl_member(H, [_|T]) :-
+   cl_member(H, T).
+
+cl_eq(A,B):-A=..[P|_],B=..[P|_], ifthenelse(nonvar(B),B=..[P|_],B=A).
+cl_eq(A,B):-A=B.
+
+
+
+%%%   member_check(+Element,+List)
+
+%%%   The member_check predicate checks whether Element is a member of List.
+%%%        However, the member_check predicate does not backtrack and thus only
+%%%        returns a single answer.
+
+:- mode member_check(+,+).
+
+member_check( H, [H|_]) :- !.
+member_check(H, [_|T]) :-
+   member_check(H, T).
+
+
+
+%%%   append(?List1,?List2,?List3)
+
+
+:- mode append(?,?,?).
+
+append([],L,L).
+append([H|T], L, [H|R]) :-
+   append(T, L, R).
+
+
+%%%   intersection(+List1,+List2,-/+Intersect)
+
+%%%   The intersection predicate lists the intersection (common elements)
+%%%        of two lists.
+
+:- mode intersection(+,+,-/+).
+
+intersection([], _, []) :-
+   !.
+intersection([H|L1], L2, [H|L3]) :-
+   member(H, L2),
+   intersection(L1,L2,L3),
+   !.
+intersection([_|L1],L2,L3) :-
+   intersection(L1,L2,L3).
+
+
+%%%   subset(+Subset,+List)
+
+%%%   The subset predicate succeeds if the list provided as Subset is a
+%%%        subset of the list provided as List.
+
+:- mode subset(+,+).
+
+subset( [], _ ).
+subset( [A|X], Y ) :-
+   member( A, Y ),
+   subset( X, Y ).
+
+
+%%%   prefix(+List1,+List2,-/+Prefix)
+
+%%%   The prefix predicate compares two lists from the beginning of
+%%%    each list and returns a list containing the elements that are
+%%%    prefixes for both lists.
+%%%
+
+:- mode prefix(+,+,-/+).
+
+prefix([],_,[]) :-
+   !.
+prefix(_,[],[]) :-
+   !.
+prefix([H|T1], [H|T2], [H|T3]) :-
+   !,
+   prefix(T1, T2, T3).
+prefix(_, _, []).
+
+
+%%%   suffix(+List1,+List2,-/+Suffix)
+
+%%%   The suffix predicate compares two lists from the end of each list
+%%%        and returns a list containing the elements that are suffixes for
+%%%        both lists.
+
+:- mode suffix(+,+,-/+).
+
+suffix(L, L, L ) :- !.
+suffix( [H|T1], [H|T2], [H|T3] ) :-
+   !,
+   suffix( T1, T2, T3 ).
+   suffix( _, _, [] ).
+
+
+%%%   insert_sort(+List,-/+Sorted)
+
+%%%   Converts a list into a sorted list using an insertion sort. In an
+%%%   insertion sort, an individual element is taken from List and
+%%%   compared with successive elements in the sorted list to determine
+%%%   where it should be placed in the sorted list.
+%%%
+
+:- mode insert_sort(+,-/+).
+
+insert_sort([], []).
+insert_sort([H|T], L2) :-
+   insert_sort(T, L1),
+   insert(H, L1, L2).
+
+
+insert(X, [H|T], [H|L]) :-
+   X @>= H,
+   !,
+   insert(X, T, L).
+insert(X,L,[X|L]).
+
+
+%%%   bubble(+List,-/+Sorted)
+
+%%%   Converts a list into a sorted list using a bubble sort. In a
+%%%   bubble sort, two adjacent elements are compared to see if they
+%%%   are out of order. If so, their order is changed and the pair
+%%%   comparison continues. In this way, elements that are out of order
+%%%   "bubble" up to their place in the list.
+
+:- mode bubble(+,-/+).
+
+bubble(L1,L2) :-
+   append(U, [A,B|V], L1),
+   B @< A,
+   !,
+   append(U, [B,A|V], M),
+   bubble(M, L2).
+bubble(L1,L1).
+
+
+
+
+%%%   quicksort(+List,-/+Sorted)
+
+%%%   Converts a list into a sorted list using a quick sort. In a quick
+%%%   sort, the list is split at an arbitrary point. All the elements
+%%%   greater than the element at the split point are placed in one
+%%%   list, and all the elements less than the element at the split
+%%%   point are placed in another list. Then each of the resultent
+%%%   lists are themselves quick sorted. The sorted lists are appended
+%%%   to create the full sorted list.
+
+:- mode quicksort(+,-/+).
+
+quicksort([],[]) :- !.
+quicksort([H|T], Sort) :-
+   split(H, T, Less, Greater),
+   quicksort(Less, LSort),
+   quicksort(Greater, GSort),
+   append(LSort, [H|GSort], Sort).
+
+
+%%%      split( +Divisor, +List, -/+Less, -/+Greater
+
+%%%      split a List into those elements which are Less than a Greater than
+%%%      some divisor.
+
+:- mode split( +, +, -/+, -/+ ).
+
+   split(_, [], [], []) :- !.
+   split(Test, [H|Tail], [H|Less], Greater) :-
+      H @< Test,
+      !,
+      split(Test, Tail, Less, Greater).
+   split(Test, [H|Tail], Less, [H|Greater]) :-
+      split(Test, Tail, Less, Greater).
+
+
+%%%   sublist(+Offset,+Length,+List,-/+Sublist)
+
+%%%   The sublist predicate returns a sublist of the length you
+%%%   specify. The Offset argument indicates where the sublist should
+%%%   start. Elements in a list are numbered from 0, so an offset of 4
+%%%   will return a sublist beginning at the fifth element in the list.
+
+:- mode sublist(+,+,+,-/+).
+
+sublist(0, 1, [H|_], [H]) :-                % [] is not a sublist
+   !.
+sublist(0, Len, [H|L1], [H|L2]) :-
+   !,
+   dec(Len, Len1),
+   sublist(0, Len1, L1, L2).
+sublist(Off, Len, [H|L1], L2) :-
+   dec(Off, Off1),
+   sublist(Off1, Len, L1, L2).
+
+
+%%% merge(+List1,+List2,-/+Merged)
+
+%%%   The merge predicate merges two lists together. To merge the
+%%%   lists, the first element in List1 is compared to the first
+%%%   element in List2. The element that ranks higher in the standard
+%%%   order is added to the Merged list. Then, the first elements of
+%%%   each list are compared again. Comparison of the first elements in
+%%%   the list continues until all elements have been compared and
+%%%   merged or until one list is empty, in which case the elements of
+%%%   the remaining list are appended to the Merged list.
+
+:- mode merge(+,+,-/+).
+
+merge([],L,L) :- !.
+merge(L,[],L) :- !.
+merge([H1|L1], [H2|L2], [H1|L3]) :-
+   H1 @=< H2,
+   !,
+   merge(L1, [H2|L2], L3).
+merge(L1, [H2|L2], [H2|L3]) :-
+   merge(L1, L2, L3).
+
+
+%%%   sorted(+List)
+
+%%%   The sorted predicate succeeds if List is a sorted list.
+
+:- mode sorted(+).
+
+sorted([]) :- !.
+sorted([_]) :- !.
+sorted([A,B|_]) :-
+   B @< A,
+   !,
+   fail.
+sorted([_|T]) :-
+   sorted(T).
+
+
+%%%   flatten(+List,-/+Flattened)
+
+%%%   The flatten predicate eliminates all sublists by making the elements
+%%%   of each sublist individual elements of the overall list.
+
+:- mode flatten(+,-/+).
+
+flatten([],[]) :-
+   !.
+flatten([H|T], List) :-
+   !,
+   flatten(H, H1),
+   flatten(T, T1),
+   append(H1, T1, List).
+flatten(X, [X]).
+
+
+%%%   last(+List,-/+Last)
+
+%%%   The last predicate returns the last element in a list.
+
+:- mode last(+,-/+).
+
+last(List, Last) :-
+   append(_, [Last], List).
+
+
+%%%   list_search(+SubList,+List,-/+Offset)
+
+%%%   The list_search predicate indicates where in a list that a
+%%%   sublist begins. The starting position of the sublist is returned
+%%%   as an integer to the Offset argument. Note that the elements of a
+%%%   list are numbered from 0, so, for example, the fifth element of a
+%%%   list is at offset 4.
+
+:- mode list_search(+,+,-/+).
+
+list_search(L1, L2, Off) :-
+   list_search(L1, L2, 0, Off).
+
+list_search(_, [], _, _) :-                % end - no more sublists found
+   !,
+   fail.
+list_search(L, L2, Off, Off) :-                % sublist found
+   append(L, _, L2).
+list_search(L1, [H|L2], N, Off) :-
+   inc(N, N1),
+   list_search(L1, L2, N1, Off).
+
+   cl_list_search(L1, L2, Off,Insp) :-
+   cl_list_search(L1, L2, 0, Off,Insp).
+
+cl_list_search(_, [], _, _,_) :-                % end - no more sublists found
+   !,
+   fail.
+cl_list_search(L, L2, Off, Off,Insp) :-                % sublist found
+    L2=[A|_], L=[B|_], cl_eq(A,B), A=..[_|Insp] .
+cl_list_search(L1, [H|L2], N, Off,Insp) :-
+   inc(N, N1),
+   cl_list_search(L1, L2, N1, Off,Insp).
+
+cl:-cl_list_search([a(N,n)],[c(8),a(D1,D2),b(2)],U,Insp), write(Insp).
+%%%   nrev(+List,-/+Reverse)
+
+%%%   The nrev predicate reverses the elements in a list by recursively
+%%%   appending the head of the list to its tail. This type of list
+%%%   reverasal is commonly known as naive reverse.
+
+:- mode nrev(+,-/+).
+
+nrev([],[]).
+nrev([H|T], Reverse) :-
+   nrev(T, L1),
+   append(L1, [H], Reverse).
+
+
+%%%   reverse(+List,-/+Reverse)
+
+%%%   Like the nrev predicate, the reverse predicate reverses a list.
+%%%   However, the reverse predicate uses an "accumulator" to store
+%%%   intermediate results. The accumulator is an extra argument that
+%%%   stores the successive versions of the reversed list as each
+%%%   recursive iteration of reverse occurs. The accumulator makes the
+%%%   list reversal process much more efficient.
+
+:- mode reverse(+,-/+).
+
+reverse(List, Rev) :-
+   rev(List, [], Rev).
+
+
+rev([], Rev, Rev) :- !.
+rev([H|T], WorkList, Rev) :-
+   rev(T, [H|WorkList], Rev).
+
+
+%%%   delete(+Element,+List,-/+NewList)
+
+%%%   The delete predicate deletes an element from a list and returns
+%%%   the new list. For example:
+
+:- mode delete(+,+,-/+).
+
+delete(_,[],[]) :- !.
+delete(X,[X|T],T2) :-
+   !, delete(X,T,T2).
+delete(X,[H|T],[H|T2]) :-
+   !, delete(X,T,T2).
+
+cl_delete(_,[],[]) :-
+   !.
+cl_delete(X,[X1|T],T2) :- cl_eq(X,X1),
+   cl_delete(X,T,T2),
+   !.
+cl_delete(X,[H|T],[H|T2]) :-
+   cl_delete(X,T,T2),
+   !.
+
+
+%%%   list_insert(+Element,+List,-/+NewList)
+
+%%%   The list_insert predicate inserts an element into a list and
+%%%   returns the new list. The element is placed in the list in sorted
+%%%   order.
+
+:- mode list_insert(+,+,-/+).
+
+list_insert(X,[],[X]) :-
+   !.
+list_insert(X,[H|T], [X,H|T]) :-
+   compare(<,X,H),
+   !.
+list_insert(X,[H|T],[H|T2]) :-
+   list_insert(X,T,T2),
+   !.
+
+
+%%%   writel(+List)
+
+%%%   The writel predicate  writes  out the elements of a list
+%%%   consecutively, placing a newline at the end. For example:
+
+:- mode writel(+).
+
+writel([]) :-
+   !,
+   nl.
+writel([H|T]) :-
+   write(H),write($ $),
+   writel(T).
+
+
+%%%   number_occurrences(+Element,+List,-/+Number)
+
+%%%   The  number_occurrences  predicate  indicates the number of
+%%%   occurrences of an element in a list. For example:
+
+:- mode number_occurrences(+,+,-/+).
+
+number_occurrences(X, [], 0).
+number_occurrences(X, [X|T], N1) :-
+   !,
+   number_occurrences(X, T, N),
+   inc(N, N1).
+number_occurrences(X, [_|T], N) :-
+   number_occurrences(X, T, N).
+
+
+%%%   remove_duplicates(+List,-/+NewList)
+
+%%%     The remove_duplicates predicate removes all duplicate characters
+%%%     from a list and returns the new list.
+
+:- mode remove_duplicates(+,-/+).
+
+remove_duplicates([],[]):-!.
+remove_duplicates([H|T1], [H|T3]) :-
+   delete(H, T1, T2),
+   !, remove_duplicates(T2, T3).
+
+cl_remove_duplicates([],[]).
+cl_remove_duplicates([H|T1], [H|T3]) :-
+   cl_delete(H, T1, T2),
+   cl_remove_duplicates(T2, T3).
+
+
+
+:-mode list_after(+,+,+).
+list_after(P1,P2,Ls):- list_search([P1],Ls,N1), list_search([P2],Ls,N2), N1<N2.
+
+:-mode len(+,?).
+len([],0).
+len([A|Xs],N):-len(Xs,N1), N is N1+1.
+
+:-mode list_insert(+,+,+,-).
+list_insert:-list_insert(([a(c2334),d(c3333),e(c5643,c7654),g(c5644)] ),
+                                           d(c3333),e(cd643,cd654),R), write(R).
+list_ins:-list_insert([1,2,3,4,5,6],6,11,O), write(O).
+list_insert(Cc,Pold,Pnew,CCC):-
+			  ifthen( not(  list_search([Pold],Cc,_)),
+			  (write(Pold), write($ is absent in $), write(Cc), nl, fail)   ),
+      list_search([Pold],Cc,N),
+		len(Cc,Lr), N2 is Lr-N-1, Np1_ is N+1, Np is N+1,
+                    ifthenelse(N>0,sublist(0,N,Cc,R1), R1=[]),
+                    ifthenelse(Np1_+N2>N+1, sublist(Np1_,N2,Cc,R2), R2=[]),
+		 append(R1,[Pnew],R_), append(R_,R2,CCC).
+
+cll:-cl_list_insert_all([a(1,2),b(A,N),a(U,M)],a(R1,R2),aaaa(11,22),O), write(O).
+
+cl_list_insert(Cc,Pold,Pnew,CCC):-
+			  ifthen( not( cl_list_search([Pold],Cc,_,_)),
+			  (write(Pold), write($ is absent !!! in $), write(Cc), nl, fail)   ),
+	                  ifthen( cl_eq(Pold,Pnew), ( write($!!! subst $),
+                          write(Pnew), write($ in spite of $), write(Pold),fail)),
+      cl_list_search([Pold],Cc,N,Insp),
+%	   write($      both_add$), write((Insp,Pold)),	   %
+               %      both_add(Insp,Pold,Pnew,Pnew_l_),%
+		     		Pnew_l_=[Pnew],
+		len(Cc,Lr), N2 is Lr-N-1, Np1_ is N+1, Np is N+1,
+                    ifthenelse(N>0,sublist(0,N,Cc,R1), R1=[]),
+                    ifthenelse(Np1_+N2>N+1, sublist(Np1_,N2,Cc,R2), R2=[]),
+		 append(R1,Pnew_l_,R_), append(R_,R2,CCC).
+
+both_add(I,Pold,P,P_):-Pold=..[_|J], len(I,Li), len(J,Lj), ifthen(Lj\==Li,
+                           ( % write(I), write($ \== $), write(J),%
+                     write($!!! different pred while insert$),nl,fail)),
+    	            append([eq(J,I)],[P],P1), append(P1,[eq(J,I)], P_).
+
+
+cl_list_insert_all(C,Old,New,O):-not cl_list_search([Old],C,_,_),O=C,!.
+cl_list_insert_all(C,Old,New,O):- cl_list_insert(C,Old,New,C1),
+                     cl_list_insert_all(C1,Old,New,O).
+
+
+%%%
+%%%   END OF LISTS
+%%%

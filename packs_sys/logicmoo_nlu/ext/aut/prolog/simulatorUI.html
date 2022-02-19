@@ -1,0 +1,106 @@
+?<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD>
+<META content="text/html; charset=unicode" http-equiv=Content-Type>
+<META content="MSHTML 5.00.2614.3500" name=GENERATOR></HEAD>
+<BODY>
+<p class=MsoNormal><LABEL></LABEL><FONT size=5>Mental Simulator </FONT></p>
+<P class=MsoNormal>This&nbsp;educational 
+tool&nbsp;developes general&nbsp;analytical skills, your capability to quickly 
+grasp a complex situation, creative decision making and situational memory. 
+Ability to develop a negotiation strategy in real time&nbsp;may be important for 
+business and legal personnel. Starting from the selected scenario below, try to 
+resolve it and then to add more facts or circumstrances, as well as 
+mental&nbsp;states and 
+actions of the story characters. </P>
+<P class=MsoNormal><o:p></O:P>&nbsp;Specify the <A 
+href="http://www.dimacs.rutgers.edu/~galitsky/MS/agent_param.html">agents'</A> 
+and simulator parameters</P>
+
+<p class=MsoNormal>
+
+</p>
+
+<p class=MsoNormal>
+   
+
+</p>
+<P class=MsoNormal><TEXTAREA id=TEXTAREA1 name=TEXTAREA1 style="HEIGHT: 249px; WIDTH: 557px">Three guys got together for a dinner, they 've got some food, but it is unclear who will cook. This is the usual story for the friends, Mike, Peter and Nick, and below is what they have learned from the 
+previous dinners:
+Mike wants either Nick ot Peter to cook.
+Mike knows that Nick does not want Peter to cook.
+Peter does not want to cook himself and believes that Mike would not cook anyway.
+Also, Peter believes that Mike believes that Nick wants Mike to cook.
+Peter wants Mike to know that Peter would not cok himself.
+
+Nick believes that Mike wants Peter to cook, and Nick wants Mike to cook.
+
+However, Peter would cook if he knows (someone tells him) that Nick wants him (Peter) to cook.
+Mike would cook if Peter believes (is said) that Nick wants himself (Mike) to cook.
+And Nick would cook if no one else does, but would not like to.
+
+The friends take information from each other seriously in spite of the fact that they
+sometimes may want to cheat each other. In other words, they always trust each other even though they are
+aware that they may be told a lie.
+To decide who will cook, they exchange some thoughts on that matter.
+
+Who will finally cook?
+</TEXTAREA> <INPUT id=submit1 name=submit1 type=submit value="Build the behavior">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+<INPUT id=button1 name=button1 type=button value="Check consistency"></P>
+<P class=MsoNormal><FONT color=red><LABEL><LABEL>&nbsp;&nbsp; <STRONG>See the statements and select/deselect 
+them to run the simulator</STRONG>     
+      </LABEL></LABEL></FONT></P>
+<P class=MsoNormal><LABEL><LABEL><INPUT id=submit2 name=submit2 style="HEIGHT: 24px; LEFT: 10px; TOP: 450px; WIDTH: 310px" type=submit value="Load (translate into formal representation) "></LABEL></LABEL></P>
+<P class=MsoNormal><SELECT id=select1 name=select1 size=7 
+style="HEIGHT: 171px; WIDTH: 311px" multiple> <OPTION  
+  value 
+  ="want(mike, cook(A, food)):-   not cook(mike, food), A = nick  ; A = peter."
+ 
+   
+  >want(mike, cook(A, food)):- not cook(mike, food), A =       
+     nick  ; A = peter.</OPTION><OPTION 
+  value="want(mike,know(mike, not want(nick, cook(peter, food)))." 
+   
+ selected 
+ >want(mike,know(mike, not want(nick, cook(peter, 
+  food))).</OPTION><OPTION 
+  value="know(mike, not want(nick, cook(peter, food)))." 
+   
+ selected 
+ >know(mike, not want(nick, cook(peter, 
+  food))).</OPTION><OPTION 
+  value="cook(mike, food) :- know(peter,  want(nick, cook(mike, food)))." 
+  selected 
+ >cook(mike, food) :- know(peter,  want(nick, cook(mike, 
+  food))).</OPTION><OPTION 
+  value="know(nick, want(mike, cook(peter, food))).">know(nick, want(mike, cook(peter, 
+  food))).</OPTION><OPTION 
+  value="know(peter,  know(nick, want(nick, cook(mike, food))) ).">know(peter,  know(nick, want(nick, cook(mike, food))) 
+  ).</OPTION><OPTION 
+  value=""></OPTION><OPTION value=""></OPTION></SELECT><INPUT id=button2 name=button2 type=button value="Update scenario"><INPUT id=button3 name=button3 type=button value="Draw interdependence graph"></P>
+<P class=MsoNormal><IMG 
+alt="" src="want_know_mike_peter_domviewer.bmp" ></P>
+<P class=MsoNormal>&nbsp;</P>
+<P class=MsoNormal><FONT color=red><STRONG>Read the answer:</STRONG></FONT></P>
+<P class=MsoNormal><FONT color=black><STRONG><EM>whatToDoInConflict</EM>(mike,[cheat(mike,peter,want(nick,cook(peter,food)))]) 
+whatToDo(nick,[inform(nick,peter,want(nick,cook(mike,food))),cheat(nick,peter, 
+want(nick,cook(mike,food)))]) 
+<EM>whatToDo</EM>(mike,[cheat(mike,peter,want(nick,cook(peter,food)))]) 
+whatToDo(nick,[inform(nick,peter,want(nick,cook(mike,food))),cheat(nick,peter, 
+want(nick,cook(mike,food)))]) 
+<EM>whatToDoInConflict</EM>(peter,[inform(peter,mike,not 
+cook(peter,food))])</STRONG></FONT></P>
+<P class=MsoNormal><FONT color=black><STRONG>[inform(nick,peter,want(mike,cook(peter,food))),cheat(mike,peter, 
+want(nick,cook(peter,food))),inform(peter,mike,not cook(peter,food))]</STRONG></FONT></P>
+<P class=MsoNormal><FONT color=lime><STRONG>          
+        Nick informed Peter that Mike 
+wanted Peter to cook food.</STRONG></FONT></P>
+<P class=MsoNormal><FONT color=lime><STRONG>Mike cheated Peter that Nick wanted 
+that Peter cooked food. </STRONG></FONT></P>
+<P class=MsoNormal><FONT color=lime><STRONG>Peter informed Mike that Peter would 
+not cook.</STRONG></FONT></P>
+<P class=MsoNormal>&nbsp;</P>
+<DIV></DIV>
+
+</BODY>
+
+</html>
