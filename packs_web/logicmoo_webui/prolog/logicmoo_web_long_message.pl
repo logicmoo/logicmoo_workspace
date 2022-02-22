@@ -88,11 +88,10 @@ print_long_web_message(ID):-
   clean_long_message(S,SS),
   print_long_web_message_string(SS),!.
 
-clean_long_message(I,O):- atom_or_string(I),!,atom_codes(I,C),clean_long_message(C,CC),atom_codes(O,CC).
-% ';HTML|'
+clean_long_message(I,O):- atom(I),!,atom_codes(I,C),clean_long_message(C,CC),atom_codes(O,CC).
+clean_long_message(I,O):- string(I),!,atom_codes(I,C),clean_long_message(C,CC),string_codes(O,CC).
 clean_long_message([],[]).
 clean_long_message([144|C],CC):- append(_,[147|R],C),!,clean_long_message(R,CC).
-%clean_long_message([27|C],[32|CC]):- append(_,[124|R],C),!,clean_long_message(R,CC).
 clean_long_message([27,_|C],[32|CC]):- append(`;HTML|`,R,C),!,clean_long_message(R,CC).
 clean_long_message([27,_|C],[32|CC]):- !, clean_long_message(C,CC).
 clean_long_message([C|Cs],[CC|CCs]):- !, clean_long_message(C,CC),!,clean_long_message(Cs,CCs).
@@ -102,7 +101,7 @@ clean_long_message(C,32):- C < 32.
 clean_long_message(C,32):- C > 127.
 clean_long_message(C,C).
 
-print_long_web_message_string(S):- 
+print_long_web_message_string(S):- atom_contains(S,'<span'),
     clean_long_message(S,SS),
     atom_string(SSS,SS),!,
     xhandler_logicmoo_cyclone(format('<pre>~w</pre>',[SSS])),!.
