@@ -2,10 +2,13 @@ allActions([ inform]). %, forgive, conceal,pretend,]).
 allAgents([mary, kate, ann]).
 
 believe(kate, want(ann, go(ann, seminar))).
-know(mary, not want(ann, go(ann, seminar))).
-want(ann, not go(ann, seminar)).
+know(mary, not(want(ann, go(ann, seminar)))).
+
+want(ann, not(go(ann, seminar))).
+
 know(kate, believe(ann, go(kate, seminar))).
-know(mary,  (  go(ann, seminar)  :-  not ( go(kate, seminar), go(mary, seminar)) )).
+
+know(mary,  (go(ann, seminar):-not((go(kate, seminar), go(mary, seminar))))).
 
 want(kate, go(ann, seminar)).
 want(mary, go(kate, seminar)).

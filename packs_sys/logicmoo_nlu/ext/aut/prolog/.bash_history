@@ -39,6 +39,7 @@ git status ./*
 git status .
 git status
 git commit -am "computational autism"
+git commit -am "AU2"
 git add .
 find / -xdev -size +10M
 find -xdev /.. -size +10M
@@ -62,13 +63,8 @@ du .
 \cp ../../auttttt/Appendix/training_images/au/Demo/au/au2003/*.* .
 cp ../../auttttt/Appendix/training_images/au/Demo/au/*.ari .
 \cp ../../auttttt/Appendix/training_images/au/Demo/au/*.* .
+cd ../reformated/
 cd is_pl/
 cd foo/
 cd ..
 cd ..
-ls
-git add .
-git status
-git status
-git add .
-git status

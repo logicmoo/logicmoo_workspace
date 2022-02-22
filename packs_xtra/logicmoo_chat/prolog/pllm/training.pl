@@ -22,7 +22,8 @@ corpus_stat(sent_num). corpus_stat(corpus_convos).
 
 train_from_corpus:- 
  debugln("reading corpus..."),
- absolute_file_name(library('../self_dialogue_corpus/train_from.txt'),File,[access(read)]),
+ %absolute_file_name(library('../ext/self_dialogue_corpus/train_from.txt'),File,[access(read)]),
+ absolute_file_name(pldata('corpus/self_dialogue_corpus/train_from.txt'),File,[access(read)]),
  time((open(File,read,In),
  forall(corpus_stat(Stat),set_flag(Stat,0)),
  set_flag(sent_num,0),

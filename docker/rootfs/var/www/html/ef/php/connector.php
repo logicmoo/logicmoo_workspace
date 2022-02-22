@@ -45,7 +45,7 @@ elFinder::$netDrivers['googledrive'] = 'GoogleDrive';
 define('ELFINDER_GOOGLEDRIVE_CLIENTID',     '131442651-0b9tbp7n2ihu4or4nj31395n05v1lg2c.apps.googleusercontent.com');
 define('ELFINDER_GOOGLEDRIVE_CLIENTSECRET', 'jykqJiZikgMteL3vq0IhjPDC');
 // // Required case of without composer
-define('ELFINDER_GOOGLEDRIVE_GOOGLEAPICLIENT', '/opt/logicmoo_workspace/html/ef/php/vendor/autoload.php');
+define('ELFINDER_GOOGLEDRIVE_GOOGLEAPICLIENT', '/opt/logicmoo_workspace/docker/rootfs/var/www/html/ef/php/vendor/autoload.php');
 // ===============================================
 
 // // Required for Google Drive network mount with Flysystem

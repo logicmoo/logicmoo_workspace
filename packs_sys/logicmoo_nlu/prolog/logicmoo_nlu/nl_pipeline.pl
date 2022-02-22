@@ -86,9 +86,14 @@ foo4a.
 
 :- install_converter(parser_e2c, e2c_parse(+merged_lexical_segs, -clause_e2c)).
 %:- install_converter(parser_e2c:e2c(+acetext, -lf_e2c)).
-%:- install_converter(parser_e2c, e2c_clausify(+lf_e2c, -clause_e2c)).
+%:- install_converter(parser_e2c, e2c_clausify(+clause_e2c, -clause_e2c)).
 :- install_converter(parser_e2c, e2c_reply(+clause_e2c, -reply_e2c)).
 
+kif_to_boxlog_each(Reply_e2c, Boxlog):-
+  common_logic_snark:kif_to_boxlog(Reply_e2c, BoxlogL),
+  member(Boxlog,BoxlogL).
+:- install_converter(nl_pipeline, kif_to_boxlog_each(+reply_e2c, -boxlog)).
+:- install_converter(nl_pipeline, kif_to_boxlog_each(+ace_fol, -boxlog)).
 %:- debug.
 
 :- endif.

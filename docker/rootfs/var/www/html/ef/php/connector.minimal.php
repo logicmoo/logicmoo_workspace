@@ -45,7 +45,7 @@ elFinder::$netDrivers['googledrive'] = 'GoogleDrive';
 define('ELFINDER_GOOGLEDRIVE_CLIENTID',     '131442651-0b9tbp7n2ihu4or4nj31395n05v1lg2c.apps.googleusercontent.com');
 define('ELFINDER_GOOGLEDRIVE_CLIENTSECRET', 'jykqJiZikgMteL3vq0IhjPDC');
 // // Required case of without composer
-define('ELFINDER_GOOGLEDRIVE_GOOGLEAPICLIENT', '/opt/logicmoo_workspace/html/ef/php/vendor/autoload.php');
+define('ELFINDER_GOOGLEDRIVE_GOOGLEAPICLIENT', '/opt/logicmoo_workspace_docker/docker/rootfs/var/www/html/ef/php/vendor/autoload.php');
 // ===============================================
 
 // // Required for Google Drive network mount with Flysystem
@@ -308,9 +308,9 @@ $opts = array(
 	'roots' => array(
 		array(
 			'driver'     => 'LocalFileSystem',
-			'path'       => '/opt/logicmoo_workspace/',
-			'startPath'  => '/opt/logicmoo_workspace/',
-			'URL'        => dirname($_SERVER['PHP_SELF']) . '/opt/logicmoo_workspace/',
+			'path'       => '/opt/logicmoo_workspace_docker/',
+			'startPath'  => '/opt/logicmoo_workspace_docker/',
+			'URL'        => dirname($_SERVER['PHP_SELF']) . '/opt/logicmoo_workspace_docker/',
 			'trashHash'  => 't1_Lw',                     // elFinder's hash of trash folder
 			// 'treeDeep'   => 3,
 			// 'alias'      => 'File system',
@@ -343,8 +343,8 @@ $opts = array(
 		array(
 			'id'            => '1',
 			'driver'        => 'Trash',
-			'path'          => '/opt/logicmoo_workspace/.trash/',
-			'tmbURL'        => dirname($_SERVER['PHP_SELF']) . '/opt/logicmoo_workspace/.trash/.tmb/',
+			'path'          => '/opt/logicmoo_workspace_docker/.trash/',
+			'tmbURL'        => dirname($_SERVER['PHP_SELF']) . '/opt/logicmoo_workspace_docker/.trash/.tmb/',
 			'uploadDeny'    => array('all'),                // Recomend the same settings as the original volume that uses the trash
 			'uploadAllow'   => array('image', 'text/plain'),// Same as above
 			'uploadOrder'   => array('deny', 'allow'),      // Same as above

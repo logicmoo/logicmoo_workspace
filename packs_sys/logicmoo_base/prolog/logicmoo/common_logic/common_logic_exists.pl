@@ -790,6 +790,7 @@ expandQuants(_,X,X):- is_ftVar(X),!.
 expandQuants(_,Fml,Fml):- is_leave_alone(Fml),!.
 expandQuants(_,[],[]):- !.
 expandQuants(KB,[A|B],[AO|BO]):- expandQuants(KB,A,AO),expandQuants(KB,B,BO),!.
+%expandQuants(KB,quant(Q,X,NNF),FmlO):- expandQuants(KB,q(Q,X,NNF),FmlO).
 %expandQuants(KB,PAB,FmlO):- PAB=..[F|AB], must_maplist_det(expandQuants(KB),AB,ABO), FmlO=..[F|ABO].
 expandQuants(KB,exactly(N,X,NNF),FmlO):- expandQuants(KB,quant(exactly(N),X,NNF),FmlO).
 expandQuants(KB,atleast(N,X,NNF),FmlO):- expandQuants(KB,quant(atleast(N),X,NNF),FmlO).
@@ -843,9 +844,11 @@ un_quant3(_,Fml,FmlO):- is_leave_alone(Fml),!,Fml=FmlO.
 %un_quant3(KB,exists(X,NNF),exists(X,FmlO)):- !,un_quant3(KB,NNF,FmlO).
 un_quant3(KB,quant(exactly(0),X,NNF),FmlO):- un_quant3(KB,~exists(X,NNF),FmlO).
 un_quant3(KB,quant(atmost(0),X,NNF),FmlO):- un_quant3(KB,quant(exactly(0),X,NNF),FmlO).
+%un_quant3(KB,quant(Z,X,NNF),FmlO):- un_quant3(KB,q(Z,X,NNF),FmlO).
 un_quant3(KB,quant(all(),X,NNF),all(X,FmlO)):- !,un_quant3(KB,NNF,FmlO).
 un_quant3(KB,quant(_,Nil,NNF),FmlO):- Nil==[],!,un_quant3(KB,NNF,FmlO).
 un_quant3(KB,quant(exists(),X,NNF),exists(X,FmlO)):- !,un_quant3(KB,NNF,FmlO).
+un_quant3(KB,quant(exists,X,NNF),exists(X,FmlO)):- !,un_quant3(KB,NNF,FmlO).
 un_quant3(KB,quant(atleast(1),X,NNF),exists(X,FmlO)):- !,un_quant3(KB,NNF,FmlO).
 un_quant3(KB,quant(isa(K),X,NNF),FmlO):- un_quant3(KB,NNF,NNFO),un_quant3(KB,isa(X,K) & NNFO,FmlO).
 %un_quant3(KB,quant(Quant,X,NNF),FmlO):- append_termlist(Quant,[X,NNF],TODO), un_quant3(KB,TODO,FmlO).

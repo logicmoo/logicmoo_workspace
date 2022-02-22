@@ -2785,7 +2785,7 @@ try_or_rtrace(G):- tracing,!,dmsg(try(G)),call(G).
 try_or_rtrace(G):- fast_and_mean, !, with_no_xdbg(G).
 try_or_rtrace(G):- catch(G,E,(E==time_limit_exceeded->throw(time_limit_exceeded);(ignore((dmsg(G=E),www_dumpST,dmsg(G=E),thread_self(main),rtrace(G),www_dumpST,dmsg(G=E),break))))).
 
-www_dumpST:- write('<pre>'),dumpST,write('</pre>').
+www_dumpST:- write_expandable(false,(write('<pre>'),dumpST,write('</pre>'))).
 % :- prolog_xref:assert_default_options(register_called(all)).
 
 %i2tml_hbr_trace(H,B,R):- rtrace(i2tml_hbr(H,B,R)).

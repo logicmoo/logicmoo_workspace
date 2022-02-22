@@ -1092,11 +1092,13 @@ writeqln1(O):- writeq(O),writeln('.').
 %====== kif_to_boxlog(+Wff,-NormalClauses):-
 :- public(kif_to_boxlog/2).
 
+
 %% kif_to_boxlog( +Fml, -Datalog) is det.
 %
 % Knowledge Interchange Format Converted To Datalog.
 %
-kif_to_boxlog(Wff,Out):- Wff\=(_:-_), why_to_id(rule,Wff,Why),!,must(kif_to_boxlog(Wff,Out,Why)),!.
+kif_to_boxlog(Wff,Out):- Wff\=(_:-_),  
+  why_to_id(rule,Wff,Why),!,must(kif_to_boxlog(Wff,Out,Why)),!.
 % kif_to_boxlog(Wff,Out):- loop_check(kif_to_boxlog(Wff,Out),Out=looped_kb(Wff)). % kif_to_boxlog('=>'(WffIn,enables(Rule)),'$VAR'('MT2'),complete,Out1), % kif_to_boxlog('=>'(enabled(Rule),WffIn),'$VAR'('KB'),complete,Out).
 
 %% kif_to_boxlog( +Fml, +Why, -Datalog) is det.
@@ -1145,7 +1147,7 @@ kif_to_boxlog_attvars(Original,WffIn0,KB0,Why0,RealOUT):-
 kif_to_boxlog_attvars(Original,Clause,KB,Why,RealOUT):-
  kif_to_boxlog_attvars2(Original,Clause,KB,Why,RealOUT).
 
-kif_to_boxlog_attvars2(_Original,Clause,KB,Why,RealOUT):-
+kif_to_boxlog_attvars2(_Original,Clause,KB,Why,RealOUT):- 
   flag(skolem_count,_,0),
   kif_optionally_e(true,as_sigma,Clause,CTerm),
   %unnumbervars_with_names_best2(Clause0,CTerm),

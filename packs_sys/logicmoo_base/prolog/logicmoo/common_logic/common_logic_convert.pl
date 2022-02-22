@@ -88,7 +88,14 @@ is_kif_string(String):-atomic(String),name(String,Codes), memberchk(40,Codes),me
 %
 % Convert If Knowledge Interchange Format String.
 %
-convert_if_kif_string(I, O):-is_kif_string(I),sumo_to_pdkb(I,O),!, \+ is_list(O).
+convert_if_kif_string0(I,_):- var(I),fail.
+convert_if_kif_string0(I, O):- is_kif_string(I),sumo_to_pdkb(I,O), \+ is_list(O).
+convert_if_kif_string0(I, O):- subst(I,q,quant,O).
+convert_if_kif_string0(asserted(I), I). 
+convert_if_kif_string0(question(I), I). 
+convert_if_kif_string0(I, O):- sumo_to_pdkb(I,O), \+ is_list(O).
+
+convert_if_kif_string(I, O):- convert_if_kif_string0(I, O), I\==O, !.
 
 
 last_chance_doc(Wff0,WffO):- will_mws(Wff0),string_to_mws(Wff0,MWS),last_chance_doc(MWS,WffO),!.

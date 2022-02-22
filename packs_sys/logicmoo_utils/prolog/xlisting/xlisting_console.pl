@@ -675,8 +675,9 @@ save_search_ref_tl(Ref,Atomic):-nb_setval(Atomic,[Ref]).
 % Shared Hide Data.
 %
 baseKB:shared_hide_data(lmcache:varname_info/4):- !,is_listing_hidden(metaInfo).
-baseKB:shared_hide_data(lmcache:_):- is_listing_hidden(metaInfo).
+baseKB:shared_hide_data(lmcache:_):- nop(is_listing_hidden(metaInfo)).
 baseKB:shared_hide_data(wid):- is_listing_hidden(metaInfo).
+baseKB:shared_hide_data( Head:- True):- nonvar(Head), True==true, baseKB:shared_hide_data( Head ).
 
 
 %= 	 	 
@@ -705,14 +706,16 @@ is_listing_hidden_00(_,P):-var(P),!,fail.
 is_listing_hidden_00(_,~(_)):-!,fail.
 is_listing_hidden_00(_,metaInfo):- is_listing_hidden(showAll),!,fail.
 is_listing_hidden_00(_,P):-t_l:tl_hide_data(P),!.
-is_listing_hidden_00(_,P):-baseKB:shared_hide_data(P),!.
+is_listing_hidden_00(M,P):-baseKB:shared_hide_data(M:P),!.
+is_listing_hidden_00(M,F/A):- compound_name_arity(P,F,A), predicate_property(M:P,number_of_clauses(N)),N>100,is_listing_hidden(largePreds).
 is_listing_hidden_00(_,_/_):-!,fail.
 is_listing_hidden_00(M,P):- is_meta_info_pred(M:P),!,is_listing_hidden(metaInfo).
-is_listing_hidden_00(M,F/A):- compound_name_arity(P,F,A), predicate_property(M:P,number_of_clauses(N)),N>100,is_listing_hidden(largePreds).
 is_listing_hidden_00(M,P):- compound(P),functor(P,F,A), (is_listing_hidden_00(M,F/A);is_listing_hidden_00(M,F)).
 is_listing_hidden_00(_,'$spft'):- is_listing_hidden(metaInfo),!.
 % %%% is_listing_hidden_00(_,P):- predicate_property(P,number_of_clauses(N)),N > 50000,\+ is_listing_hidden(showAll), \+ is_listing_hidden(showHUGE),!.
 
+is_meta_info_pred(Var):- var(Var),!,fail.
+is_meta_info_pred(M:P):- is_meta_info_pred(P).
 is_meta_info_pred(rnc).
 is_meta_info_pred(_):- fail.
 
