@@ -85,15 +85,67 @@ long_web_message(Request) :-
 print_long_web_message(ID):- 
   %id_to_href(ID,HREF),
   with_output_to(string(S),print_long_message(ID)),
+  clean_long_message(S,SS),
+  print_long_web_message_string(SS),!.
+
+clean_long_message(I,O):- atom_or_string(I),!,atom_codes(I,C),clean_long_message(C,CC),atom_codes(O,CC).
+% ';HTML|'
+clean_long_message([],[]).
+clean_long_message([144|C],CC):- append(_,[147|R],C),!,clean_long_message(R,CC).
+%clean_long_message([27|C],[32|CC]):- append(_,[124|R],C),!,clean_long_message(R,CC).
+clean_long_message([27,_|C],[32|CC]):- append(`;HTML|`,R,C),!,clean_long_message(R,CC).
+clean_long_message([27,_|C],[32|CC]):- !, clean_long_message(C,CC).
+clean_long_message([C|Cs],[CC|CCs]):- !, clean_long_message(C,CC),!,clean_long_message(Cs,CCs).
+clean_long_message(10,10).
+clean_long_message(13,13).
+clean_long_message(C,32):- C < 32.
+clean_long_message(C,32):- C > 127.
+clean_long_message(C,C).
+
+print_long_web_message_string(S):- 
+    clean_long_message(S,SS),
+    atom_string(SSS,SS),!,
+    xhandler_logicmoo_cyclone(format('<pre>~w</pre>',[SSS])),!.
+
+print_long_web_message_string(S):- atom_contains(S,'</'),
+    clean_long_message(S,SS),
+    atom_string(SSS,SS),
+    phrase(html([
+     %a([class(id), href(HREF)],HREF),
+     html([head(''),body( \['<pre>', SSS, '</pre>'] )])]), Tokens),
+     print_html(Tokens),!.
+print_long_web_message_string(S):-
     phrase(html([
      %a([class(id), href(HREF)],HREF),
      html([head(''),body(pre(S))])]), Tokens),
      print_html(Tokens).
 
 
+xhandler_logicmoo_cyclone(Goal):- 
+  html_write:html_current_option(content_type(D)),format('Content-type: ~w~n~n', [D]),
+  %format('<!DOCTYPE html>',[]),flush_output_safe,
+  must_run_html(xhandler_logicmoo_cyclone000(Goal)),!.
+
+
+xhandler_logicmoo_cyclone000(Goal):-
+  maplist(on_xf_ignore_flush,[
+      ignore(get_http_session(_)), 
+      set_prolog_flag(retry_undefined, none),
+      current_input(In),current_output(Out),
+      (stream_property(Err,file_no(2));current_error_stream(Err)),
+      thread_self(ID),!,
+      asserta(lmcache:current_ioet(In,Out,Err,ID)),
+      write_begin_html(Goal),
+      Goal,
+      ensure_colapsable_script,
+      write_end_html,
+      flush_output_safe]),
+      !.
+
+
 :- meta_predicate(maybe_long_message_printer_simple(+,0)).
 maybe_long_message_printer_simple(Max,Goal):-
-  with_output_to(string(S),Goal),
+  with_output_to(string(S),user:Goal),
   atomic_list_concat(Lines,'\n',S),
   length(Lines,Vert),
   ((Vert > Max) -> 
@@ -144,7 +196,10 @@ maybe_long_message_printer(Max,Goal):-
 
 
 :- meta_predicate(maybe_long_message_printer(0)).
+:- export(maybe_long_message_printer/1).
 maybe_long_message_printer(Goal):-
   maybe_long_message_printer(4, Goal).
 
-system:mlmp(G):- maybe_long_message_printer(0,G).
+system:mlmp(G):- ignore(maybe_long_message_printer(0,G)).
+
+:- fixup_exports.

@@ -8,6 +8,8 @@ This module starts and defines the web UI for LOGICMOO.
 @author Douglas R. Miles
 @license LGPL
 */
+:- set_module(class(library)).
+:- set_module(base(system)).
 
 :- discontiguous(lemur:'$exported_op'/3).
 :- discontiguous(phil:'$exported_op'/3).

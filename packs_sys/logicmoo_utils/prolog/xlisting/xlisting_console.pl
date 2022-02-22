@@ -715,7 +715,7 @@ is_listing_hidden_00(_,'$spft'):- is_listing_hidden(metaInfo),!.
 % %%% is_listing_hidden_00(_,P):- predicate_property(P,number_of_clauses(N)),N > 50000,\+ is_listing_hidden(showAll), \+ is_listing_hidden(showHUGE),!.
 
 is_meta_info_pred(Var):- var(Var),!,fail.
-is_meta_info_pred(M:P):- is_meta_info_pred(P).
+is_meta_info_pred(_:P):- !, is_meta_info_pred(P).
 is_meta_info_pred(rnc).
 is_meta_info_pred(_):- fail.
 

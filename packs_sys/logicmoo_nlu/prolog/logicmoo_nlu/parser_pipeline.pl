@@ -100,9 +100,15 @@ pipe_rem(X):- ain(\+ pipeline(X)).
 test_pipeline(A):-
   any_to_string(A,X),
   pipe_add(X),
-  listing(pipeline(input(X),_,_)),
+  pipe_show(X),
   pipe_rem(X),
-  listing(pipeline(input(X),_,_)).
+  pipe_show(X).
+
+pipe_show(A):-
+  any_to_string(A,X),
+  forall(baseKB:pipeline(input(X),N,V),print_tree(N=V)).
+
+
 
 baseKB:sanity_test(pipe_add_rem):-
   test_pipeline("Joe loves Mary").

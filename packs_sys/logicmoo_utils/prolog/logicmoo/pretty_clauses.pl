@@ -1117,7 +1117,7 @@ set_pp(Where,Goal):-
 with_real_pp(ansi,ansi,Goal):- in_bfly(f,Goal).
 with_real_pp(ansi,bfly,Goal):- in_bfly(t,Goal).
 with_real_pp(ansi,http,Goal):- in_bfly(f,Goal).
-with_real_pp(ansi,swish,Goal):- wots(S,Goal), sformat(SO,'<pre class="swish">~w</pre>',[S]),our_pengine_output(SO).
+with_real_pp(ansi,swish,Goal):- wots(S,Goal), our_pengine_output(S).
 %wots(S,in_bfly(t,bfly_html_goal(Goal))), ttyflush, format('~s',[S]).
 
 with_real_pp(bfly,ansi,Goal):- bfly_out_in(in_bfly(f,Goal)).
@@ -1138,10 +1138,13 @@ with_real_pp(swish,bfly,Goal):- wots(SO,in_bfly(t,Goal)),our_pengine_output(SO).
 with_real_pp(swish,http,Goal):- wots(SO,in_bfly(t,Goal)),our_pengine_output(SO).
 with_real_pp(swish,swish,Goal):-wots(SO,in_bfly(t,Goal)),our_pengine_output(SO).
 
-our_pengine_output(SO):- toplevel_pp(swish),!,pengines:pengine_output(SO),!.
+our_pengine_output(SO):- toplevel_pp(swish),pengines:pengine_output(SO),!.
+our_pengine_output(SO):- atom_contains(SO,'/>'),!,write(SO),!.
+our_pengine_output(SO):- toplevel_pp(swish), format('<pre class="swish">~w</pre>',[SO]).
 our_pengine_output(SO):- toplevel_pp(http),!,format('<pre>~w</pre>',[SO]).
 our_pengine_output(SO):- toplevel_pp(bfly),!,bfly_html_goal(format('<pre>~w </pre>',[SO])).
-our_pengine_output(SO):- ttyflush,format('our_pengine_output\n{~w}',[SO]),nl.
+our_pengine_output(SO):- ttyflush,format('~w~n',[SO]),!.
+%our_pengine_output(SO):- ttyflush,format('our_pengine_output\n{~w}',[SO]),nl.
 
 
 is_webui:- notrace(once(toplevel_pp(http);toplevel_pp(swish);in_pp(http);in_pp(swish);get_print_mode(html))).
