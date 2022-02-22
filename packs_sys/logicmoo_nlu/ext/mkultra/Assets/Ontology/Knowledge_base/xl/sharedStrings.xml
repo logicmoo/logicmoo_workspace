@@ -1,0 +1,1165 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<sst xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"
+count="712" uniqueCount="382">
+  <si>
+    <t>Kind</t>
+  </si>
+  <si>
+    <t>entity</t>
+  </si>
+  <si>
+    <t>thing</t>
+  </si>
+  <si>
+    <t>endurant</t>
+  </si>
+  <si>
+    <t>-</t>
+  </si>
+  <si>
+    <t>actor</t>
+  </si>
+  <si>
+    <t>physical_endurant</t>
+  </si>
+  <si>
+    <t>physical_object</t>
+  </si>
+  <si>
+    <t>object</t>
+  </si>
+  <si>
+    <t>nonphysical_endurant</t>
+  </si>
+  <si>
+    <t>nonphysical_object</t>
+  </si>
+  <si>
+    <t>living_thing</t>
+  </si>
+  <si>
+    <t>male</t>
+  </si>
+  <si>
+    <t>female</t>
+  </si>
+  <si>
+    <t>creature</t>
+  </si>
+  <si>
+    <t>plant</t>
+  </si>
+  <si>
+    <t>person</t>
+  </si>
+  <si>
+    <t>living_thing, actor</t>
+  </si>
+  <si>
+    <t>Parents (list)</t>
+  </si>
+  <si>
+    <t>container</t>
+  </si>
+  <si>
+    <t>human</t>
+  </si>
+  <si>
+    <t>man</t>
+  </si>
+  <si>
+    <t>human, male</t>
+  </si>
+  <si>
+    <t>woman</t>
+  </si>
+  <si>
+    <t>human, female</t>
+  </si>
+  <si>
+    <t>men</t>
+  </si>
+  <si>
+    <t>women</t>
+  </si>
+  <si>
+    <t>people</t>
+  </si>
+  <si>
+    <t>prop</t>
+  </si>
+  <si>
+    <t>% Physical objects</t>
+  </si>
+  <si>
+    <t>% Living things</t>
+  </si>
+  <si>
+    <t>furniture</t>
+  </si>
+  <si>
+    <t>sittable</t>
+  </si>
+  <si>
+    <t>chair</t>
+  </si>
+  <si>
+    <t>toilet</t>
+  </si>
+  <si>
+    <t>sofa</t>
+  </si>
+  <si>
+    <t>layable</t>
+  </si>
+  <si>
+    <t>bed</t>
+  </si>
+  <si>
+    <t>% Furniture</t>
+  </si>
+  <si>
+    <t>bookshelf</t>
+  </si>
+  <si>
+    <t>sink</t>
+  </si>
+  <si>
+    <t>work_surface</t>
+  </si>
+  <si>
+    <t>desk</t>
+  </si>
+  <si>
+    <t>table</t>
+  </si>
+  <si>
+    <t>% Rooms</t>
+  </si>
+  <si>
+    <t>room</t>
+  </si>
+  <si>
+    <t>enclosing_container</t>
+  </si>
+  <si>
+    <t>surface_container</t>
+  </si>
+  <si>
+    <t>furniture, surface_container</t>
+  </si>
+  <si>
+    <t>storage_furniture</t>
+  </si>
+  <si>
+    <t>furniture, enclosing_container</t>
+  </si>
+  <si>
+    <t>kitchen</t>
+  </si>
+  <si>
+    <t>bedroom</t>
+  </si>
+  <si>
+    <t>bathroom</t>
+  </si>
+  <si>
+    <t>living_room</t>
+  </si>
+  <si>
+    <t>food</t>
+  </si>
+  <si>
+    <t>fruit</t>
+  </si>
+  <si>
+    <t>apple</t>
+  </si>
+  <si>
+    <t>orange</t>
+  </si>
+  <si>
+    <t>% Food and drink</t>
+  </si>
+  <si>
+    <t>ingestible</t>
+  </si>
+  <si>
+    <t>beverage</t>
+  </si>
+  <si>
+    <t>beer</t>
+  </si>
+  <si>
+    <t>% Nonphysical</t>
+  </si>
+  <si>
+    <t>% Social objects</t>
+  </si>
+  <si>
+    <t>social_object</t>
+  </si>
+  <si>
+    <t>social_group</t>
+  </si>
+  <si>
+    <t>social_object, actor</t>
+  </si>
+  <si>
+    <t>ethnic_group</t>
+  </si>
+  <si>
+    <t>organization</t>
+  </si>
+  <si>
+    <t>government</t>
+  </si>
+  <si>
+    <t>agency</t>
+  </si>
+  <si>
+    <t>business</t>
+  </si>
+  <si>
+    <t>conspiracy</t>
+  </si>
+  <si>
+    <t>% Mental objects</t>
+  </si>
+  <si>
+    <t>mental_object</t>
+  </si>
+  <si>
+    <t>sittable, layable</t>
+  </si>
+  <si>
+    <t>perdurant</t>
+  </si>
+  <si>
+    <t>% Events</t>
+  </si>
+  <si>
+    <t>event</t>
+  </si>
+  <si>
+    <t>action</t>
+  </si>
+  <si>
+    <t>question</t>
+  </si>
+  <si>
+    <t>assertion</t>
+  </si>
+  <si>
+    <t>% Torts</t>
+  </si>
+  <si>
+    <t>tort</t>
+  </si>
+  <si>
+    <t>assault</t>
+  </si>
+  <si>
+    <t>battery</t>
+  </si>
+  <si>
+    <t>property_tort</t>
+  </si>
+  <si>
+    <t>trespassing</t>
+  </si>
+  <si>
+    <t>theft</t>
+  </si>
+  <si>
+    <t>Type</t>
+  </si>
+  <si>
+    <t>Argument types</t>
+  </si>
+  <si>
+    <t>eat(person, food)</t>
+  </si>
+  <si>
+    <t>condition</t>
+  </si>
+  <si>
+    <t>can(action)</t>
+  </si>
+  <si>
+    <t>type(actor, question)</t>
+  </si>
+  <si>
+    <t>type(actor, action)</t>
+  </si>
+  <si>
+    <t>type(actor, assertion)</t>
+  </si>
+  <si>
+    <t>location(physical_object, container)</t>
+  </si>
+  <si>
+    <t>halt(actor)</t>
+  </si>
+  <si>
+    <t>go(actor, physical_object)</t>
+  </si>
+  <si>
+    <t>talk(actor, actor, entity)</t>
+  </si>
+  <si>
+    <t>related(entity, relation, entity)</t>
+  </si>
+  <si>
+    <t>kill(actor, living_thing)</t>
+  </si>
+  <si>
+    <t>move(person, physical_object, container, container)</t>
+  </si>
+  <si>
+    <t>do(actor, action)</t>
+  </si>
+  <si>
+    <t>drink(actor, beverage)</t>
+  </si>
+  <si>
+    <t>give(actor, actor, physical_object)</t>
+  </si>
+  <si>
+    <t>put(actor, physical_object, container)</t>
+  </si>
+  <si>
+    <t>take(actor, physical_object, container)</t>
+  </si>
+  <si>
+    <t>% Conditions</t>
+  </si>
+  <si>
+    <t>% Abstract entities</t>
+  </si>
+  <si>
+    <t>abstract</t>
+  </si>
+  <si>
+    <t>relation</t>
+  </si>
+  <si>
+    <t>tell_about(actor, actor, entity)</t>
+  </si>
+  <si>
+    <t>ask_about(actor, actor, entity)</t>
+  </si>
+  <si>
+    <t>% Other objects</t>
+  </si>
+  <si>
+    <t>macguffin</t>
+  </si>
+  <si>
+    <t>bring(person, physical_object, physical_object)</t>
+  </si>
+  <si>
+    <t>end_game(entity, entity)</t>
+  </si>
+  <si>
+    <t>agentive_social_object</t>
+  </si>
+  <si>
+    <t>social_agent</t>
+  </si>
+  <si>
+    <t>socially_constructed_person</t>
+  </si>
+  <si>
+    <t>social_role</t>
+  </si>
+  <si>
+    <t>job</t>
+  </si>
+  <si>
+    <t>spy</t>
+  </si>
+  <si>
+    <t>spies</t>
+  </si>
+  <si>
+    <t>barista</t>
+  </si>
+  <si>
+    <t>Property</t>
+  </si>
+  <si>
+    <t>Object type</t>
+  </si>
+  <si>
+    <t>Value type</t>
+  </si>
+  <si>
+    <t>age</t>
+  </si>
+  <si>
+    <t>number</t>
+  </si>
+  <si>
+    <t>Relation</t>
+  </si>
+  <si>
+    <t>Relatum type</t>
+  </si>
+  <si>
+    <t>knows_about</t>
+  </si>
+  <si>
+    <t>friend_of</t>
+  </si>
+  <si>
+    <t>roommate_of</t>
+  </si>
+  <si>
+    <t>given_name</t>
+  </si>
+  <si>
+    <t>string</t>
+  </si>
+  <si>
+    <t>surname</t>
+  </si>
+  <si>
+    <t>gender</t>
+  </si>
+  <si>
+    <t>[male, female]</t>
+  </si>
+  <si>
+    <t>knows</t>
+  </si>
+  <si>
+    <t>likes</t>
+  </si>
+  <si>
+    <t>member_of</t>
+  </si>
+  <si>
+    <t>Generalizations (list)</t>
+  </si>
+  <si>
+    <t>interested_in</t>
+  </si>
+  <si>
+    <t>loves</t>
+  </si>
+  <si>
+    <t>manner(action, manner)</t>
+  </si>
+  <si>
+    <t>be(actor)</t>
+  </si>
+  <si>
+    <t>manner</t>
+  </si>
+  <si>
+    <t>Kinds (list)</t>
+  </si>
+  <si>
+    <t>Properties (list)</t>
+  </si>
+  <si>
+    <t>Relations (list)</t>
+  </si>
+  <si>
+    <t>illuminati</t>
+  </si>
+  <si>
+    <t>cia</t>
+  </si>
+  <si>
+    <t>clandestine_organization</t>
+  </si>
+  <si>
+    <t>spying</t>
+  </si>
+  <si>
+    <t>tamping</t>
+  </si>
+  <si>
+    <t>%Appliances</t>
+  </si>
+  <si>
+    <t>appliance</t>
+  </si>
+  <si>
+    <t>storage_furniture, appliance</t>
+  </si>
+  <si>
+    <t>radio</t>
+  </si>
+  <si>
+    <t>be(entity)</t>
+  </si>
+  <si>
+    <t>be(entity, entity)</t>
+  </si>
+  <si>
+    <t>contained_in(physical_object, container)</t>
+  </si>
+  <si>
+    <t>fine(person)</t>
+  </si>
+  <si>
+    <t>good(person)</t>
+  </si>
+  <si>
+    <t>okay(person)</t>
+  </si>
+  <si>
+    <t>thirsty(person)</t>
+  </si>
+  <si>
+    <t>hungry(person)</t>
+  </si>
+  <si>
+    <t>the 'CIA'</t>
+  </si>
+  <si>
+    <t>the 'Illuminati'</t>
+  </si>
+  <si>
+    <t>Number</t>
+  </si>
+  <si>
+    <t>plural</t>
+  </si>
+  <si>
+    <t>watch(actor, physical_object)</t>
+  </si>
+  <si>
+    <t>Copular form (word list)</t>
+  </si>
+  <si>
+    <t>be interested in</t>
+  </si>
+  <si>
+    <t>be a friend of</t>
+  </si>
+  <si>
+    <t>be a roomate of</t>
+  </si>
+  <si>
+    <t>be a member of</t>
+  </si>
+  <si>
+    <t>Surface form (word list)</t>
+  </si>
+  <si>
+    <t>given name</t>
+  </si>
+  <si>
+    <t>subkind_of(job)</t>
+  </si>
+  <si>
+    <t>be a parent of</t>
+  </si>
+  <si>
+    <t>Inverse</t>
+  </si>
+  <si>
+    <t>be a child of</t>
+  </si>
+  <si>
+    <t>parent_of</t>
+  </si>
+  <si>
+    <t>child_of</t>
+  </si>
+  <si>
+    <t>player</t>
+  </si>
+  <si>
+    <t>interest</t>
+  </si>
+  <si>
+    <t>interests</t>
+  </si>
+  <si>
+    <t>friend</t>
+  </si>
+  <si>
+    <t>friends</t>
+  </si>
+  <si>
+    <t>roommate</t>
+  </si>
+  <si>
+    <t>roomates</t>
+  </si>
+  <si>
+    <t>parent</t>
+  </si>
+  <si>
+    <t>parents</t>
+  </si>
+  <si>
+    <t>child</t>
+  </si>
+  <si>
+    <t>children</t>
+  </si>
+  <si>
+    <t>Singular genitive (word list)</t>
+  </si>
+  <si>
+    <t>Plural genitive (word list)</t>
+  </si>
+  <si>
+    <t>the player</t>
+  </si>
+  <si>
+    <t>$kavi</t>
+  </si>
+  <si>
+    <t>age=23, given_name="Kavi", surname="Surkow", gender=male</t>
+  </si>
+  <si>
+    <t xml:space="preserve">
+ 'Kavi'
+</t>
+  </si>
+  <si>
+    <t>goal</t>
+  </si>
+  <si>
+    <t>goals</t>
+  </si>
+  <si>
+    <t>government_agency</t>
+  </si>
+  <si>
+    <t>government, agency</t>
+  </si>
+  <si>
+    <t>government agency</t>
+  </si>
+  <si>
+    <t>government agencies</t>
+  </si>
+  <si>
+    <t>government_agency, clandestine_organization</t>
+  </si>
+  <si>
+    <t>description</t>
+  </si>
+  <si>
+    <t>Description</t>
+  </si>
+  <si>
+    <t>"It's, you know, a thingy."</t>
+  </si>
+  <si>
+    <t>"She's a woman."</t>
+  </si>
+  <si>
+    <t>"He's a man."</t>
+  </si>
+  <si>
+    <t>"It's furniture."</t>
+  </si>
+  <si>
+    <t>"It's a labor-saving device."</t>
+  </si>
+  <si>
+    <t>"It's where you cook."</t>
+  </si>
+  <si>
+    <t>"It's where you sleep."</t>
+  </si>
+  <si>
+    <t>"It's where you do that hygiene stuff."</t>
+  </si>
+  <si>
+    <t>"It's where you hang out."</t>
+  </si>
+  <si>
+    <t>"It's food."</t>
+  </si>
+  <si>
+    <t>"It's a beverage."</t>
+  </si>
+  <si>
+    <t>attribute</t>
+  </si>
+  <si>
+    <t>property</t>
+  </si>
+  <si>
+    <t>"It's something you can sit on."</t>
+  </si>
+  <si>
+    <t>"You can store stuff in it."</t>
+  </si>
+  <si>
+    <t>living room</t>
+  </si>
+  <si>
+    <t>living rooms</t>
+  </si>
+  <si>
+    <t>www</t>
+  </si>
+  <si>
+    <t>["A ragtag group of performance artists,", "working to
+    undermine the apalling level of normativity", "of late
+    capitalism."]</t>
+  </si>
+  <si>
+    <t>goal: "the enweirdening of the world."</t>
+  </si>
+  <si>
+    <t>adam_weishaupt</t>
+  </si>
+  <si>
+    <t>goal: "complete world domination", leader:
+    adam_weishaupt</t>
+  </si>
+  <si>
+    <t>leader</t>
+  </si>
+  <si>
+    <t>be led by</t>
+  </si>
+  <si>
+    <t>leaders</t>
+  </si>
+  <si>
+    <t>leads</t>
+  </si>
+  <si>
+    <t>be leader of</t>
+  </si>
+  <si>
+    <t xml:space="preserve">
+  'Adam' 'Weishaupt'
+</t>
+  </si>
+  <si>
+    <t xml:space="preserve">
+ 'Wiccans' for a 'Weirder' 'World'
+</t>
+  </si>
+  <si>
+    <t>knows_about: spying, member_of:www, interested_in:
+    illuminati, friend_of: $'Kavi'</t>
+  </si>
+  <si>
+    <t>"A shadowy conspiracy to floridate our precious bodily
+    fluids"</t>
+  </si>
+  <si>
+    <t>% Documents</t>
+  </si>
+  <si>
+    <t>document</t>
+  </si>
+  <si>
+    <t>report</t>
+  </si>
+  <si>
+    <t>$report</t>
+  </si>
+  <si>
+    <t>"Final report on project MKSPARSE."</t>
+  </si>
+  <si>
+    <t>examine(actor, physical_object)</t>
+  </si>
+  <si>
+    <t>read(actor, document)</t>
+  </si>
+  <si>
+    <t>% Built space</t>
+  </si>
+  <si>
+    <t>building</t>
+  </si>
+  <si>
+    <t>house</t>
+  </si>
+  <si>
+    <t>portal</t>
+  </si>
+  <si>
+    <t>door</t>
+  </si>
+  <si>
+    <t>exit</t>
+  </si>
+  <si>
+    <t>Default Properties (list)</t>
+  </si>
+  <si>
+    <t>Default Relations (list)</t>
+  </si>
+  <si>
+    <t>Class relations (list)</t>
+  </si>
+  <si>
+    <t>Class properties (list)</t>
+  </si>
+  <si>
+    <t>required_properties</t>
+  </si>
+  <si>
+    <t>kind</t>
+  </si>
+  <si>
+    <t>required_relations</t>
+  </si>
+  <si>
+    <t>required_properties=[building]</t>
+  </si>
+  <si>
+    <t>required_properties=[connected_to]</t>
+  </si>
+  <si>
+    <t>kavis_house</t>
+  </si>
+  <si>
+    <t>Entity</t>
+  </si>
+  <si>
+    <t>"The word is everything"</t>
+  </si>
+  <si>
+    <t>the_game</t>
+  </si>
+  <si>
+    <t>"The game is everything."</t>
+  </si>
+  <si>
+    <t>the game</t>
+  </si>
+  <si>
+    <t>the world</t>
+  </si>
+  <si>
+    <t>architectural_space</t>
+  </si>
+  <si>
+    <t>text="\"Subject LNJOKER is manifesting. Contact
+    MKMOTHER.\""</t>
+  </si>
+  <si>
+    <t>$mainframe</t>
+  </si>
+  <si>
+    <t>mainframe</t>
+  </si>
+  <si>
+    <t>computer</t>
+  </si>
+  <si>
+    <t>"An old-style computer."</t>
+  </si>
+  <si>
+    <t>"A device that lets you listen to old white dudes rant about
+    politics."</t>
+  </si>
+  <si>
+    <t>"A bedraggled looking ficus."</t>
+  </si>
+  <si>
+    <t>key_item</t>
+  </si>
+  <si>
+    <t>report, key_item</t>
+  </si>
+  <si>
+    <t>$macguffin</t>
+  </si>
+  <si>
+    <t>macguffin, key_item</t>
+  </si>
+  <si>
+    <t>text</t>
+  </si>
+  <si>
+    <t>Visibility</t>
+  </si>
+  <si>
+    <t>public</t>
+  </si>
+  <si>
+    <t>internal</t>
+  </si>
+  <si>
+    <t>hates</t>
+  </si>
+  <si>
+    <t>$pc</t>
+  </si>
+  <si>
+    <t>age=23, job=spy</t>
+  </si>
+  <si>
+    <t>refrigerator</t>
+  </si>
+  <si>
+    <t>the_world</t>
+  </si>
+  <si>
+    <t>is_a(entity, kind)</t>
+  </si>
+  <si>
+    <t>kind_of(kind, kind)</t>
+  </si>
+  <si>
+    <t>move(person, physical_object, container)</t>
+  </si>
+  <si>
+    <t>button</t>
+  </si>
+  <si>
+    <t>press(actor, button)</t>
+  </si>
+  <si>
+    <t>$'run button'</t>
+  </si>
+  <si>
+    <t>"a run button"</t>
+  </si>
+  <si>
+    <t>$'stop button'</t>
+  </si>
+  <si>
+    <t>"a stop button"</t>
+  </si>
+  <si>
+    <t>$'magic button'</t>
+  </si>
+  <si>
+    <t>"a MAGIC button"</t>
+  </si>
+  <si>
+    <t>$'more magic button'</t>
+  </si>
+  <si>
+    <t>"a MORE MAGIC button"</t>
+  </si>
+  <si>
+    <t>the run button</t>
+  </si>
+  <si>
+    <t>the stop button</t>
+  </si>
+  <si>
+    <t>the magic button</t>
+  </si>
+  <si>
+    <t>the more magic button</t>
+  </si>
+  <si>
+    <t>["It's an old mainframe computer", "inexplicably located in
+    Kavi's house.", "It has three buttons: run, stop,", "MAGIC,",
+    "and MORE MAGIC."]</t>
+  </si>
+  <si>
+    <t>$captive</t>
+  </si>
+  <si>
+    <t>photograph</t>
+  </si>
+  <si>
+    <t>$photo</t>
+  </si>
+  <si>
+    <t>photograph, key_item</t>
+  </si>
+  <si>
+    <t>"A surveillance photo"</t>
+  </si>
+  <si>
+    <t>'Trip'</t>
+  </si>
+  <si>
+    <t>age=23, given_name="Trip", surname="Abel", gender=male</t>
+  </si>
+  <si>
+    <t>friend_of: $pc</t>
+  </si>
+  <si>
+    <t>Singular (phrase list)</t>
+  </si>
+  <si>
+    <t>Plural (phrase list)</t>
+  </si>
+  <si>
+    <t>refrigerator, fridge</t>
+  </si>
+  <si>
+    <t>refrigerators</t>
+  </si>
+  <si>
+    <t>bookshelf, bookcase</t>
+  </si>
+  <si>
+    <t>bookshelves, bookcases</t>
+  </si>
+  <si>
+    <t>sofa, couch</t>
+  </si>
+  <si>
+    <t>sofas, couches</t>
+  </si>
+  <si>
+    <t>Proper noun (phrase list)</t>
+  </si>
+  <si>
+    <t>search_for(actor, physical_object, physical_object)</t>
+  </si>
+  <si>
+    <t>look_for(actor, physical_object)</t>
+  </si>
+  <si>
+    <t>get(actor, physical_object)</t>
+  </si>
+  <si>
+    <t>find(actor, physical_object)</t>
+  </si>
+  <si>
+    <t>sleep(actor, container)</t>
+  </si>
+  <si>
+    <t>photographs, photos, pictures</t>
+  </si>
+  <si>
+    <t>photograph, photo, picture</t>
+  </si>
+  <si>
+    <t>turn_on(actor, appliance)</t>
+  </si>
+  <si>
+    <t>turn_off(actor, appliance)</t>
+  </si>
+  <si>
+    <t>turned_on(appliance)</t>
+  </si>
+  <si>
+    <t>believes(actor, condition)</t>
+  </si>
+  <si>
+    <t>knows(actor, condition)</t>
+  </si>
+  <si>
+    <t>entity:condition</t>
+  </si>
+  <si>
+    <t>creature, container</t>
+  </si>
+  <si>
+    <t>tell(actor, actor, condition)</t>
+  </si>
+  <si>
+    <t>tell(actor, actor, action)</t>
+  </si>
+  <si>
+    <t>tell_value(actor, actor, condition)</t>
+  </si>
+  <si>
+    <t>ask(actor, actor, action)</t>
+  </si>
+  <si>
+    <t>ask(actor, actor, condition)</t>
+  </si>
+  <si>
+    <t>ask_value(actor, actor, condition)</t>
+  </si>
+  <si>
+    <t>(condition, condition)</t>
+  </si>
+  <si>
+    <t>entity:action</t>
+  </si>
+  <si>
+    <t>(action, condition)</t>
+  </si>
+  <si>
+    <t>knows_value(actor, condition)</t>
+  </si>
+  <si>
+    <t>wants(actor, condition)</t>
+  </si>
+  <si>
+    <t>wants(actor, action)</t>
+  </si>
+  <si>
+    <t>needs(actor, condition)</t>
+  </si>
+  <si>
+    <t>needs(actor, action)</t>
+  </si>
+  <si>
+    <t>likes(actor, condition)</t>
+  </si>
+  <si>
+    <t>likes(actor, action)</t>
+  </si>
+  <si>
+    <t>thinks(actor, condition)</t>
+  </si>
+  <si>
+    <t>would(action)</t>
+  </si>
+  <si>
+    <t>should(action)</t>
+  </si>
+  <si>
+    <t>must(action)</t>
+  </si>
+  <si>
+    <t>may(action)</t>
+  </si>
+  <si>
+    <t>would(condition)</t>
+  </si>
+  <si>
+    <t>$exit</t>
+  </si>
+  <si>
+    <t>door, exit</t>
+  </si>
+  <si>
+    <t>leave(actor, container)</t>
+  </si>
+  <si>
+    <t>exit= $exit</t>
+  </si>
+  <si>
+    <t>$'bathroom door'</t>
+  </si>
+  <si>
+    <t>caption="Bathroom door"</t>
+  </si>
+  <si>
+    <t>caption="The exit"</t>
+  </si>
+  <si>
+    <t>caption="an antique mainframe?"</t>
+  </si>
+  <si>
+    <t>"The exit."</t>
+  </si>
+  <si>
+    <t>flee(actor)</t>
+  </si>
+  <si>
+    <t>flush(actor, toilet)</t>
+  </si>
+  <si>
+    <t>Symmetric</t>
+  </si>
+  <si>
+    <t>yes</t>
+  </si>
+  <si>
+    <t>member_of: illuminati</t>
+  </si>
+</sst>

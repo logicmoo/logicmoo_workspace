@@ -1,0 +1,704 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"
+xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"
+xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+mc:Ignorable="x14ac"
+xmlns:x14ac="http://schemas.microsoft.com/office/spreadsheetml/2009/9/ac">
+
+  <sheetPr codeName="Sheet2" />
+  <dimension ref="A1:B78" />
+  <sheetViews>
+    <sheetView topLeftCell="A15" workbookViewId="0">
+      <selection activeCell="C43" sqref="A43:XFD43" />
+    </sheetView>
+  </sheetViews>
+  <sheetFormatPr defaultColWidth="11" defaultRowHeight="15.75"
+  x14ac:dyDescent="0.5" />
+  <sheetData>
+    <row r="1" spans="1:2" s="6" customFormat="1" ht="25.5"
+    x14ac:dyDescent="0.75">
+      <c r="A1" s="6" t="s">
+        <v>90</v>
+      </c>
+      <c r="B1" s="6" t="s">
+        <v>91</v>
+      </c>
+    </row>
+    <row r="2" spans="1:2" x14ac:dyDescent="0.5">
+      <c r="A2" t="s">
+        <v>80</v>
+      </c>
+      <c r="B2" t="s">
+        <v>105</v>
+      </c>
+    </row>
+    <row r="3" spans="1:2" x14ac:dyDescent="0.5">
+      <c r="A3" t="s">
+        <v>80</v>
+      </c>
+      <c r="B3" t="s">
+        <v>150</v>
+      </c>
+    </row>
+    <row r="4" spans="1:2" x14ac:dyDescent="0.5">
+      <c r="A4" t="s">
+        <v>80</v>
+      </c>
+      <c r="B4" t="s">
+        <v>106</v>
+      </c>
+    </row>
+    <row r="5" spans="1:2" x14ac:dyDescent="0.5">
+      <c r="A5" t="s">
+        <v>80</v>
+      </c>
+      <c r="B5" t="s">
+        <v>92</v>
+      </c>
+    </row>
+    <row r="6" spans="1:2" x14ac:dyDescent="0.5">
+      <c r="A6" t="s">
+        <v>80</v>
+      </c>
+      <c r="B6" t="s">
+        <v>119</v>
+      </c>
+    </row>
+    <row r="7" spans="1:2" x14ac:dyDescent="0.5">
+      <c r="A7" t="s">
+        <v>80</v>
+      </c>
+      <c r="B7" t="s">
+        <v>107</v>
+      </c>
+    </row>
+    <row r="8" spans="1:2" x14ac:dyDescent="0.5">
+      <c r="A8" t="s">
+        <v>80</v>
+      </c>
+      <c r="B8" t="s">
+        <v>100</v>
+      </c>
+    </row>
+    <row r="9" spans="1:2" x14ac:dyDescent="0.5">
+      <c r="A9" t="s">
+        <v>80</v>
+      </c>
+      <c r="B9" t="s">
+        <v>99</v>
+      </c>
+    </row>
+    <row r="10" spans="1:2" x14ac:dyDescent="0.5">
+      <c r="A10" t="s">
+        <v>80</v>
+      </c>
+      <c r="B10" t="s">
+        <v>103</v>
+      </c>
+    </row>
+    <row r="11" spans="1:2" x14ac:dyDescent="0.5">
+      <c r="A11" t="s">
+        <v>80</v>
+      </c>
+      <c r="B11" t="s">
+        <v>104</v>
+      </c>
+    </row>
+    <row r="12" spans="1:2" x14ac:dyDescent="0.5">
+      <c r="A12" t="s">
+        <v>80</v>
+      </c>
+      <c r="B12" t="s">
+        <v>299</v>
+      </c>
+    </row>
+    <row r="13" spans="1:2" x14ac:dyDescent="0.5">
+      <c r="A13" t="s">
+        <v>80</v>
+      </c>
+      <c r="B13" t="s">
+        <v>108</v>
+      </c>
+    </row>
+    <row r="14" spans="1:2" x14ac:dyDescent="0.5">
+      <c r="A14" t="s">
+        <v>80</v>
+      </c>
+      <c r="B14" t="s">
+        <v>301</v>
+      </c>
+    </row>
+    <row r="15" spans="1:2" x14ac:dyDescent="0.5">
+      <c r="A15" t="s">
+        <v>80</v>
+      </c>
+      <c r="B15" t="s">
+        <v>334</v>
+      </c>
+    </row>
+    <row r="16" spans="1:2" x14ac:dyDescent="0.5">
+      <c r="A16" t="s">
+        <v>80</v>
+      </c>
+      <c r="B16" t="s">
+        <v>335</v>
+      </c>
+    </row>
+    <row r="17" spans="1:2" x14ac:dyDescent="0.5">
+      <c r="A17" t="s">
+        <v>80</v>
+      </c>
+      <c r="B17" t="s">
+        <v>109</v>
+      </c>
+    </row>
+    <row r="18" spans="1:2" x14ac:dyDescent="0.5">
+      <c r="A18" t="s">
+        <v>80</v>
+      </c>
+      <c r="B18" t="s">
+        <v>101</v>
+      </c>
+    </row>
+    <row r="19" spans="1:2" x14ac:dyDescent="0.5">
+      <c r="A19" t="s">
+        <v>80</v>
+      </c>
+      <c r="B19" t="s">
+        <v>347</v>
+      </c>
+    </row>
+    <row r="20" spans="1:2" x14ac:dyDescent="0.5">
+      <c r="A20" t="s">
+        <v>80</v>
+      </c>
+      <c r="B20" t="s">
+        <v>346</v>
+      </c>
+    </row>
+    <row r="21" spans="1:2" x14ac:dyDescent="0.5">
+      <c r="A21" t="s">
+        <v>80</v>
+      </c>
+      <c r="B21" t="s">
+        <v>348</v>
+      </c>
+    </row>
+    <row r="22" spans="1:2" x14ac:dyDescent="0.5">
+      <c r="A22" t="s">
+        <v>80</v>
+      </c>
+      <c r="B22" t="s">
+        <v>114</v>
+      </c>
+    </row>
+    <row r="23" spans="1:2" x14ac:dyDescent="0.5">
+      <c r="A23" t="s">
+        <v>80</v>
+      </c>
+      <c r="B23" t="s">
+        <v>115</v>
+      </c>
+    </row>
+    <row r="24" spans="1:2" x14ac:dyDescent="0.5">
+      <c r="A24" t="s">
+        <v>80</v>
+      </c>
+      <c r="B24" t="s">
+        <v>349</v>
+      </c>
+    </row>
+    <row r="25" spans="1:2" x14ac:dyDescent="0.5">
+      <c r="A25" t="s">
+        <v>80</v>
+      </c>
+      <c r="B25" t="s">
+        <v>350</v>
+      </c>
+    </row>
+    <row r="26" spans="1:2" x14ac:dyDescent="0.5">
+      <c r="A26" t="s">
+        <v>80</v>
+      </c>
+      <c r="B26" t="s">
+        <v>351</v>
+      </c>
+    </row>
+    <row r="27" spans="1:2" x14ac:dyDescent="0.5">
+      <c r="A27" t="s">
+        <v>80</v>
+      </c>
+      <c r="B27" t="s">
+        <v>96</v>
+      </c>
+    </row>
+    <row r="28" spans="1:2" x14ac:dyDescent="0.5">
+      <c r="A28" t="s">
+        <v>80</v>
+      </c>
+      <c r="B28" t="s">
+        <v>97</v>
+      </c>
+    </row>
+    <row r="29" spans="1:2" x14ac:dyDescent="0.5">
+      <c r="A29" t="s">
+        <v>80</v>
+      </c>
+      <c r="B29" t="s">
+        <v>95</v>
+      </c>
+    </row>
+    <row r="30" spans="1:2" x14ac:dyDescent="0.5">
+      <c r="A30" t="s">
+        <v>80</v>
+      </c>
+      <c r="B30" t="s">
+        <v>118</v>
+      </c>
+    </row>
+    <row r="31" spans="1:2" x14ac:dyDescent="0.5">
+      <c r="A31" t="s">
+        <v>80</v>
+      </c>
+      <c r="B31" t="s">
+        <v>332</v>
+      </c>
+    </row>
+    <row r="32" spans="1:2" x14ac:dyDescent="0.5">
+      <c r="A32" t="s">
+        <v>80</v>
+      </c>
+      <c r="B32" t="s">
+        <v>333</v>
+      </c>
+    </row>
+    <row r="33" spans="1:2" x14ac:dyDescent="0.5">
+      <c r="A33" t="s">
+        <v>80</v>
+      </c>
+      <c r="B33" t="s">
+        <v>336</v>
+      </c>
+    </row>
+    <row r="34" spans="1:2" x14ac:dyDescent="0.5">
+      <c r="A34" t="s">
+        <v>80</v>
+      </c>
+      <c r="B34" t="s">
+        <v>252</v>
+      </c>
+    </row>
+    <row r="35" spans="1:2" x14ac:dyDescent="0.5">
+      <c r="A35" t="s">
+        <v>80</v>
+      </c>
+      <c r="B35" t="s">
+        <v>253</v>
+      </c>
+    </row>
+    <row r="36" spans="1:2" x14ac:dyDescent="0.5">
+      <c r="A36" t="s">
+        <v>80</v>
+      </c>
+      <c r="B36" t="s">
+        <v>339</v>
+      </c>
+    </row>
+    <row r="37" spans="1:2" x14ac:dyDescent="0.5">
+      <c r="A37" t="s">
+        <v>80</v>
+      </c>
+      <c r="B37" t="s">
+        <v>340</v>
+      </c>
+    </row>
+    <row r="38" spans="1:2" x14ac:dyDescent="0.5">
+      <c r="A38" t="s">
+        <v>80</v>
+      </c>
+      <c r="B38" t="s">
+        <v>342</v>
+      </c>
+    </row>
+    <row r="39" spans="1:2" x14ac:dyDescent="0.5">
+      <c r="A39" t="s">
+        <v>80</v>
+      </c>
+      <c r="B39" t="s">
+        <v>176</v>
+      </c>
+    </row>
+    <row r="40" spans="1:2" x14ac:dyDescent="0.5">
+      <c r="A40" t="s">
+        <v>80</v>
+      </c>
+      <c r="B40" t="s">
+        <v>370</v>
+      </c>
+    </row>
+    <row r="41" spans="1:2" x14ac:dyDescent="0.5">
+      <c r="A41" t="s">
+        <v>80</v>
+      </c>
+      <c r="B41" t="s">
+        <v>377</v>
+      </c>
+    </row>
+    <row r="42" spans="1:2" x14ac:dyDescent="0.5">
+      <c r="A42" t="s">
+        <v>80</v>
+      </c>
+      <c r="B42" t="s">
+        <v>378</v>
+      </c>
+    </row>
+    <row r="43" spans="1:2" x14ac:dyDescent="0.5">
+      <c r="A43" t="s">
+        <v>80</v>
+      </c>
+      <c r="B43" t="s">
+        <v>362</v>
+      </c>
+    </row>
+    <row r="44" spans="1:2" x14ac:dyDescent="0.5">
+      <c r="A44" s="2" t="s">
+        <v>110</v>
+      </c>
+    </row>
+    <row r="45" spans="1:2" x14ac:dyDescent="0.5">
+      <c r="A45" t="s">
+        <v>93</v>
+      </c>
+      <c r="B45" t="s">
+        <v>94</v>
+      </c>
+    </row>
+    <row r="46" spans="1:2" x14ac:dyDescent="0.5">
+      <c r="A46" t="s">
+        <v>93</v>
+      </c>
+      <c r="B46" t="s">
+        <v>367</v>
+      </c>
+    </row>
+    <row r="47" spans="1:2" x14ac:dyDescent="0.5">
+      <c r="A47" t="s">
+        <v>93</v>
+      </c>
+      <c r="B47" t="s">
+        <v>363</v>
+      </c>
+    </row>
+    <row r="48" spans="1:2" x14ac:dyDescent="0.5">
+      <c r="A48" t="s">
+        <v>93</v>
+      </c>
+      <c r="B48" t="s">
+        <v>365</v>
+      </c>
+    </row>
+    <row r="49" spans="1:2" x14ac:dyDescent="0.5">
+      <c r="A49" t="s">
+        <v>93</v>
+      </c>
+      <c r="B49" t="s">
+        <v>366</v>
+      </c>
+    </row>
+    <row r="50" spans="1:2" x14ac:dyDescent="0.5">
+      <c r="A50" t="s">
+        <v>93</v>
+      </c>
+      <c r="B50" t="s">
+        <v>364</v>
+      </c>
+    </row>
+    <row r="51" spans="1:2" x14ac:dyDescent="0.5">
+      <c r="A51" t="s">
+        <v>93</v>
+      </c>
+      <c r="B51" t="s">
+        <v>98</v>
+      </c>
+    </row>
+    <row r="52" spans="1:2" x14ac:dyDescent="0.5">
+      <c r="A52" t="s">
+        <v>93</v>
+      </c>
+      <c r="B52" t="s">
+        <v>166</v>
+      </c>
+    </row>
+    <row r="53" spans="1:2" x14ac:dyDescent="0.5">
+      <c r="A53" t="s">
+        <v>93</v>
+      </c>
+      <c r="B53" t="s">
+        <v>102</v>
+      </c>
+    </row>
+    <row r="54" spans="1:2" x14ac:dyDescent="0.5">
+      <c r="A54" t="s">
+        <v>93</v>
+      </c>
+      <c r="B54" t="s">
+        <v>149</v>
+      </c>
+    </row>
+    <row r="55" spans="1:2" x14ac:dyDescent="0.5">
+      <c r="A55" t="s">
+        <v>93</v>
+      </c>
+      <c r="B55" t="s">
+        <v>164</v>
+      </c>
+    </row>
+    <row r="56" spans="1:2" x14ac:dyDescent="0.5">
+      <c r="A56" t="s">
+        <v>93</v>
+      </c>
+      <c r="B56" t="s">
+        <v>165</v>
+      </c>
+    </row>
+    <row r="57" spans="1:2" x14ac:dyDescent="0.5">
+      <c r="A57" t="s">
+        <v>93</v>
+      </c>
+      <c r="B57" t="s">
+        <v>167</v>
+      </c>
+    </row>
+    <row r="58" spans="1:2" x14ac:dyDescent="0.5">
+      <c r="A58" t="s">
+        <v>93</v>
+      </c>
+      <c r="B58" t="s">
+        <v>168</v>
+      </c>
+    </row>
+    <row r="59" spans="1:2" x14ac:dyDescent="0.5">
+      <c r="A59" t="s">
+        <v>93</v>
+      </c>
+      <c r="B59" t="s">
+        <v>169</v>
+      </c>
+    </row>
+    <row r="60" spans="1:2" x14ac:dyDescent="0.5">
+      <c r="A60" t="s">
+        <v>93</v>
+      </c>
+      <c r="B60" t="s">
+        <v>170</v>
+      </c>
+    </row>
+    <row r="61" spans="1:2" x14ac:dyDescent="0.5">
+      <c r="A61" t="s">
+        <v>93</v>
+      </c>
+      <c r="B61" t="s">
+        <v>171</v>
+      </c>
+    </row>
+    <row r="62" spans="1:2" x14ac:dyDescent="0.5">
+      <c r="A62" t="s">
+        <v>93</v>
+      </c>
+      <c r="B62" t="s">
+        <v>297</v>
+      </c>
+    </row>
+    <row r="63" spans="1:2" x14ac:dyDescent="0.5">
+      <c r="A63" t="s">
+        <v>93</v>
+      </c>
+      <c r="B63" t="s">
+        <v>298</v>
+      </c>
+    </row>
+    <row r="64" spans="1:2" x14ac:dyDescent="0.5">
+      <c r="A64" t="s">
+        <v>93</v>
+      </c>
+      <c r="B64" t="s">
+        <v>341</v>
+      </c>
+    </row>
+    <row r="65" spans="1:2" x14ac:dyDescent="0.5">
+      <c r="A65" t="s">
+        <v>93</v>
+      </c>
+      <c r="B65" t="s">
+        <v>356</v>
+      </c>
+    </row>
+    <row r="66" spans="1:2" x14ac:dyDescent="0.5">
+      <c r="A66" t="s">
+        <v>93</v>
+      </c>
+      <c r="B66" t="s">
+        <v>357</v>
+      </c>
+    </row>
+    <row r="67" spans="1:2" x14ac:dyDescent="0.5">
+      <c r="A67" t="s">
+        <v>93</v>
+      </c>
+      <c r="B67" t="s">
+        <v>358</v>
+      </c>
+    </row>
+    <row r="68" spans="1:2" x14ac:dyDescent="0.5">
+      <c r="A68" t="s">
+        <v>93</v>
+      </c>
+      <c r="B68" t="s">
+        <v>359</v>
+      </c>
+    </row>
+    <row r="69" spans="1:2" x14ac:dyDescent="0.5">
+      <c r="A69" t="s">
+        <v>93</v>
+      </c>
+      <c r="B69" t="s">
+        <v>360</v>
+      </c>
+    </row>
+    <row r="70" spans="1:2" x14ac:dyDescent="0.5">
+      <c r="A70" t="s">
+        <v>93</v>
+      </c>
+      <c r="B70" t="s">
+        <v>361</v>
+      </c>
+    </row>
+    <row r="71" spans="1:2" x14ac:dyDescent="0.5">
+      <c r="A71" t="s">
+        <v>93</v>
+      </c>
+      <c r="B71" t="s">
+        <v>362</v>
+      </c>
+    </row>
+    <row r="72" spans="1:2" x14ac:dyDescent="0.5">
+      <c r="A72" t="s">
+        <v>93</v>
+      </c>
+      <c r="B72" t="s">
+        <v>342</v>
+      </c>
+    </row>
+    <row r="73" spans="1:2" x14ac:dyDescent="0.5">
+      <c r="A73" t="s">
+        <v>93</v>
+      </c>
+      <c r="B73" t="s">
+        <v>343</v>
+      </c>
+    </row>
+    <row r="74" spans="1:2" x14ac:dyDescent="0.5">
+      <c r="A74" t="s">
+        <v>93</v>
+      </c>
+      <c r="B74" t="s">
+        <v>355</v>
+      </c>
+    </row>
+    <row r="75" spans="1:2" x14ac:dyDescent="0.5">
+      <c r="A75" t="s">
+        <v>93</v>
+      </c>
+      <c r="B75" t="s">
+        <v>353</v>
+      </c>
+    </row>
+    <row r="76" spans="1:2" x14ac:dyDescent="0.5">
+      <c r="A76" t="s">
+        <v>93</v>
+      </c>
+      <c r="B76" t="s">
+        <v>344</v>
+      </c>
+    </row>
+    <row r="77" spans="1:2" x14ac:dyDescent="0.5">
+      <c r="A77" t="s">
+        <v>93</v>
+      </c>
+      <c r="B77" t="s">
+        <v>352</v>
+      </c>
+    </row>
+    <row r="78" spans="1:2" x14ac:dyDescent="0.5">
+      <c r="A78" t="s">
+        <v>93</v>
+      </c>
+      <c r="B78" t="s">
+        <v>354</v>
+      </c>
+    </row>
+  </sheetData>
+  <sortState ref="A2:B18">
+    <sortCondition ref="A1" />
+  </sortState>
+  <conditionalFormatting sqref="A1:B10 A27:B31 A12:B21 A34:B46 A53:B75 A76:A137 A51:B51">
+
+    <cfRule type="expression" dxfId="10" priority="9">
+      <formula>LEFT($A1, 1)="%"</formula>
+    </cfRule>
+  </conditionalFormatting>
+  <conditionalFormatting sqref="A22:B22">
+    <cfRule type="expression" dxfId="9" priority="8">
+      <formula>LEFT($A22, 1)="%"</formula>
+    </cfRule>
+  </conditionalFormatting>
+  <conditionalFormatting sqref="A23:B23">
+    <cfRule type="expression" dxfId="8" priority="7">
+      <formula>LEFT($A23, 1)="%"</formula>
+    </cfRule>
+  </conditionalFormatting>
+  <conditionalFormatting sqref="A52:B52">
+    <cfRule type="expression" dxfId="7" priority="6">
+      <formula>LEFT($A52, 1)="%"</formula>
+    </cfRule>
+  </conditionalFormatting>
+  <conditionalFormatting sqref="A11:B11">
+    <cfRule type="expression" dxfId="6" priority="5">
+      <formula>LEFT($A11, 1)="%"</formula>
+    </cfRule>
+  </conditionalFormatting>
+  <conditionalFormatting sqref="A32:B33">
+    <cfRule type="expression" dxfId="5" priority="4">
+      <formula>LEFT($A32, 1)="%"</formula>
+    </cfRule>
+  </conditionalFormatting>
+  <conditionalFormatting sqref="A24:B26">
+    <cfRule type="expression" dxfId="4" priority="3">
+      <formula>LEFT($A24, 1)="%"</formula>
+    </cfRule>
+  </conditionalFormatting>
+  <conditionalFormatting sqref="B76:B77 B79:B136">
+    <cfRule type="expression" dxfId="3" priority="17">
+      <formula>LEFT($A77, 1)="%"</formula>
+    </cfRule>
+  </conditionalFormatting>
+  <conditionalFormatting sqref="B78">
+    <cfRule type="expression" dxfId="2" priority="22">
+      <formula>LEFT(#REF!, 1)="%"</formula>
+    </cfRule>
+  </conditionalFormatting>
+  <conditionalFormatting sqref="A47:B49">
+    <cfRule type="expression" dxfId="1" priority="2">
+      <formula>LEFT($A47, 1)="%"</formula>
+    </cfRule>
+  </conditionalFormatting>
+  <conditionalFormatting sqref="A50:B50">
+    <cfRule type="expression" dxfId="0" priority="1">
+      <formula>LEFT($A50, 1)="%"</formula>
+    </cfRule>
+  </conditionalFormatting>
+  <pageMargins left="0.75" right="0.75" top="1" bottom="1"
+  header="0.5" footer="0.5" />
+  <pageSetup orientation="portrait" horizontalDpi="4294967292"
+  verticalDpi="4294967292" />
+</worksheet>

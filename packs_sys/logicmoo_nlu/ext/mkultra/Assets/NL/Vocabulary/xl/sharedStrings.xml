@@ -1,0 +1,784 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<sst xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"
+count="406" uniqueCount="260">
+  <si>
+    <t>okay(Noun)</t>
+  </si>
+  <si>
+    <t>okay</t>
+  </si>
+  <si>
+    <t>fine(Noun)</t>
+  </si>
+  <si>
+    <t>fine</t>
+  </si>
+  <si>
+    <t>good(Noun)</t>
+  </si>
+  <si>
+    <t>good</t>
+  </si>
+  <si>
+    <t>Meaning (prefix: Noun^)</t>
+  </si>
+  <si>
+    <t>related(Agent, knows_about, Topic)</t>
+  </si>
+  <si>
+    <t>about</t>
+  </si>
+  <si>
+    <t>knowing</t>
+  </si>
+  <si>
+    <t>knew</t>
+  </si>
+  <si>
+    <t>knows</t>
+  </si>
+  <si>
+    <t>know</t>
+  </si>
+  <si>
+    <t>talk(Agent, _Conversant, _Topic)</t>
+  </si>
+  <si>
+    <t>to, about</t>
+  </si>
+  <si>
+    <t>talking</t>
+  </si>
+  <si>
+    <t>talked</t>
+  </si>
+  <si>
+    <t>talks</t>
+  </si>
+  <si>
+    <t>talk</t>
+  </si>
+  <si>
+    <t>go(Agent, _Dest)</t>
+  </si>
+  <si>
+    <t>to</t>
+  </si>
+  <si>
+    <t>going</t>
+  </si>
+  <si>
+    <t>went</t>
+  </si>
+  <si>
+    <t>goes</t>
+  </si>
+  <si>
+    <t>go</t>
+  </si>
+  <si>
+    <t>halt(Agent)</t>
+  </si>
+  <si>
+    <t>halting</t>
+  </si>
+  <si>
+    <t>halted</t>
+  </si>
+  <si>
+    <t>halts</t>
+  </si>
+  <si>
+    <t>halt</t>
+  </si>
+  <si>
+    <t>LF (prefix: Agent^)</t>
+  </si>
+  <si>
+    <t>Force PPs (list)</t>
+  </si>
+  <si>
+    <t>drink(Agent, Patient)</t>
+  </si>
+  <si>
+    <t>drinking</t>
+  </si>
+  <si>
+    <t>drank</t>
+  </si>
+  <si>
+    <t>drinks</t>
+  </si>
+  <si>
+    <t>drink</t>
+  </si>
+  <si>
+    <t>eat(Agent, Patient)</t>
+  </si>
+  <si>
+    <t>eating</t>
+  </si>
+  <si>
+    <t>ate</t>
+  </si>
+  <si>
+    <t>eats</t>
+  </si>
+  <si>
+    <t>eat</t>
+  </si>
+  <si>
+    <t>telling</t>
+  </si>
+  <si>
+    <t>told</t>
+  </si>
+  <si>
+    <t>tells</t>
+  </si>
+  <si>
+    <t>tell</t>
+  </si>
+  <si>
+    <t>move(Agent, Patient, _Source, _Destination)</t>
+  </si>
+  <si>
+    <t>from,to</t>
+  </si>
+  <si>
+    <t>moving</t>
+  </si>
+  <si>
+    <t>moved</t>
+  </si>
+  <si>
+    <t>moves</t>
+  </si>
+  <si>
+    <t>move</t>
+  </si>
+  <si>
+    <t>put(Agent, Patient, _Destination)</t>
+  </si>
+  <si>
+    <t>in</t>
+  </si>
+  <si>
+    <t>putting</t>
+  </si>
+  <si>
+    <t>put</t>
+  </si>
+  <si>
+    <t>puts</t>
+  </si>
+  <si>
+    <t>take(Agent, Patient, _Origin)</t>
+  </si>
+  <si>
+    <t>from</t>
+  </si>
+  <si>
+    <t>taking</t>
+  </si>
+  <si>
+    <t>taken</t>
+  </si>
+  <si>
+    <t>took</t>
+  </si>
+  <si>
+    <t>takes</t>
+  </si>
+  <si>
+    <t>take</t>
+  </si>
+  <si>
+    <t>do(Agent, Patient)</t>
+  </si>
+  <si>
+    <t>doing</t>
+  </si>
+  <si>
+    <t>did</t>
+  </si>
+  <si>
+    <t>does</t>
+  </si>
+  <si>
+    <t>do</t>
+  </si>
+  <si>
+    <t>type(Agent, Patient)</t>
+  </si>
+  <si>
+    <t>typing</t>
+  </si>
+  <si>
+    <t>typed</t>
+  </si>
+  <si>
+    <t>types</t>
+  </si>
+  <si>
+    <t>type</t>
+  </si>
+  <si>
+    <t>give(Agent ,_Recipient, Patient)</t>
+  </si>
+  <si>
+    <t>giving</t>
+  </si>
+  <si>
+    <t>gave</t>
+  </si>
+  <si>
+    <t>gives</t>
+  </si>
+  <si>
+    <t>give</t>
+  </si>
+  <si>
+    <t>related(Agent, hates, Patient)</t>
+  </si>
+  <si>
+    <t>hating</t>
+  </si>
+  <si>
+    <t>hated</t>
+  </si>
+  <si>
+    <t>hates</t>
+  </si>
+  <si>
+    <t>hate</t>
+  </si>
+  <si>
+    <t>related(Agent, likes, Patient)</t>
+  </si>
+  <si>
+    <t>liking</t>
+  </si>
+  <si>
+    <t>liked</t>
+  </si>
+  <si>
+    <t>likes</t>
+  </si>
+  <si>
+    <t>like</t>
+  </si>
+  <si>
+    <t>related(Agent, loves, Patient)</t>
+  </si>
+  <si>
+    <t>loving</t>
+  </si>
+  <si>
+    <t>loved</t>
+  </si>
+  <si>
+    <t>loves</t>
+  </si>
+  <si>
+    <t>love</t>
+  </si>
+  <si>
+    <t>related(Agent, knows, Patient)</t>
+  </si>
+  <si>
+    <t>kill(Agent, Patient)</t>
+  </si>
+  <si>
+    <t>killing</t>
+  </si>
+  <si>
+    <t>killed</t>
+  </si>
+  <si>
+    <t>kills</t>
+  </si>
+  <si>
+    <t>kill</t>
+  </si>
+  <si>
+    <t>LF (prefix: Agent^Patient^)</t>
+  </si>
+  <si>
+    <t>give(S,D,I)</t>
+  </si>
+  <si>
+    <t>LF (prefix: S^D^I^)</t>
+  </si>
+  <si>
+    <t>related(_A, knows_about, Topic)</t>
+  </si>
+  <si>
+    <t>Topic</t>
+  </si>
+  <si>
+    <t>move(_A, _P, _O, Destination)</t>
+  </si>
+  <si>
+    <t>Destination</t>
+  </si>
+  <si>
+    <t>move(_A, _P, Origin, _D)</t>
+  </si>
+  <si>
+    <t>Origin</t>
+  </si>
+  <si>
+    <t>put(_A, _P, Destination)</t>
+  </si>
+  <si>
+    <t>on</t>
+  </si>
+  <si>
+    <t>take(_A, _P, Origin)</t>
+  </si>
+  <si>
+    <t>talk(_Speaker, Addressee, _Topic)</t>
+  </si>
+  <si>
+    <t>Addressee</t>
+  </si>
+  <si>
+    <t>with</t>
+  </si>
+  <si>
+    <t>talk(_Speaker, _Addressee, Topic)</t>
+  </si>
+  <si>
+    <t>give(_Agent, Recipient, _Patient)</t>
+  </si>
+  <si>
+    <t>Recipient</t>
+  </si>
+  <si>
+    <t>go(_Agent, Destination)</t>
+  </si>
+  <si>
+    <t>Predicate structure</t>
+  </si>
+  <si>
+    <t>Role</t>
+  </si>
+  <si>
+    <t>Preposition</t>
+  </si>
+  <si>
+    <t>hungry</t>
+  </si>
+  <si>
+    <t>thirsty</t>
+  </si>
+  <si>
+    <t>hungry(Noun)</t>
+  </si>
+  <si>
+    <t>thirsty(Noun)</t>
+  </si>
+  <si>
+    <t>tell_about(Agent, Patient, _Topic)</t>
+  </si>
+  <si>
+    <t>tell_about(_Speaker, _Addressee, Topic)</t>
+  </si>
+  <si>
+    <t>ask_about(_Speaker, _Addressee, Topic)</t>
+  </si>
+  <si>
+    <t>ask</t>
+  </si>
+  <si>
+    <t>asks</t>
+  </si>
+  <si>
+    <t>asked</t>
+  </si>
+  <si>
+    <t>asking</t>
+  </si>
+  <si>
+    <t>ask_about(Agent, Patient, _Topic)</t>
+  </si>
+  <si>
+    <t>search</t>
+  </si>
+  <si>
+    <t>searches</t>
+  </si>
+  <si>
+    <t>searched</t>
+  </si>
+  <si>
+    <t>searching</t>
+  </si>
+  <si>
+    <t>for</t>
+  </si>
+  <si>
+    <t>Target</t>
+  </si>
+  <si>
+    <t>search_for(_Searcher, _Location, Target)</t>
+  </si>
+  <si>
+    <t>search_for(Agent, Patient, _Target)</t>
+  </si>
+  <si>
+    <t>bring</t>
+  </si>
+  <si>
+    <t>brings</t>
+  </si>
+  <si>
+    <t>brought</t>
+  </si>
+  <si>
+    <t>bringing</t>
+  </si>
+  <si>
+    <t>bring(S, D, I)</t>
+  </si>
+  <si>
+    <t>bring(Agent, _Recipient, Patient)</t>
+  </si>
+  <si>
+    <t>bring(_Agent, Recipient, _Target)</t>
+  </si>
+  <si>
+    <t>TPS (word list)</t>
+  </si>
+  <si>
+    <t>Past (word list)</t>
+  </si>
+  <si>
+    <t>PastP (word list)</t>
+  </si>
+  <si>
+    <t>PresP (word list)</t>
+  </si>
+  <si>
+    <t>Base (word list)</t>
+  </si>
+  <si>
+    <t>look around</t>
+  </si>
+  <si>
+    <t>looks around</t>
+  </si>
+  <si>
+    <t>looked around</t>
+  </si>
+  <si>
+    <t>looking around</t>
+  </si>
+  <si>
+    <t>check</t>
+  </si>
+  <si>
+    <t>checks</t>
+  </si>
+  <si>
+    <t>checked</t>
+  </si>
+  <si>
+    <t>checking</t>
+  </si>
+  <si>
+    <t>look</t>
+  </si>
+  <si>
+    <t>looks</t>
+  </si>
+  <si>
+    <t>looked</t>
+  </si>
+  <si>
+    <t>looking</t>
+  </si>
+  <si>
+    <t>search_for(Agent, _Patient, _Target)</t>
+  </si>
+  <si>
+    <t>search_for(Agent, _Location, _Target)</t>
+  </si>
+  <si>
+    <t>look at</t>
+  </si>
+  <si>
+    <t>looks at</t>
+  </si>
+  <si>
+    <t>looked at</t>
+  </si>
+  <si>
+    <t>looking at</t>
+  </si>
+  <si>
+    <t>examine(Agent, Patient)</t>
+  </si>
+  <si>
+    <t>examine</t>
+  </si>
+  <si>
+    <t>examines</t>
+  </si>
+  <si>
+    <t>examined</t>
+  </si>
+  <si>
+    <t>examining</t>
+  </si>
+  <si>
+    <t>read</t>
+  </si>
+  <si>
+    <t>reads</t>
+  </si>
+  <si>
+    <t>reading</t>
+  </si>
+  <si>
+    <t>read(Agent, Patient)</t>
+  </si>
+  <si>
+    <t>get in</t>
+  </si>
+  <si>
+    <t>gets in</t>
+  </si>
+  <si>
+    <t>got in</t>
+  </si>
+  <si>
+    <t>getting in</t>
+  </si>
+  <si>
+    <t>move(Agent, Agent, Patient)</t>
+  </si>
+  <si>
+    <t>push</t>
+  </si>
+  <si>
+    <t>pushes</t>
+  </si>
+  <si>
+    <t>pushed</t>
+  </si>
+  <si>
+    <t>pushing</t>
+  </si>
+  <si>
+    <t>press</t>
+  </si>
+  <si>
+    <t>press(Agent, Patient)</t>
+  </si>
+  <si>
+    <t>presses</t>
+  </si>
+  <si>
+    <t>pressed</t>
+  </si>
+  <si>
+    <t>pressing</t>
+  </si>
+  <si>
+    <t>stop</t>
+  </si>
+  <si>
+    <t>stops</t>
+  </si>
+  <si>
+    <t>stopped</t>
+  </si>
+  <si>
+    <t>stopping</t>
+  </si>
+  <si>
+    <t>here</t>
+  </si>
+  <si>
+    <t>find</t>
+  </si>
+  <si>
+    <t>finds</t>
+  </si>
+  <si>
+    <t>found</t>
+  </si>
+  <si>
+    <t>finding</t>
+  </si>
+  <si>
+    <t>find(Agent, Patient)</t>
+  </si>
+  <si>
+    <t>get</t>
+  </si>
+  <si>
+    <t>gets</t>
+  </si>
+  <si>
+    <t>got</t>
+  </si>
+  <si>
+    <t>getting</t>
+  </si>
+  <si>
+    <t>get(Agent, Patient)</t>
+  </si>
+  <si>
+    <t>enter</t>
+  </si>
+  <si>
+    <t>enters</t>
+  </si>
+  <si>
+    <t>entered</t>
+  </si>
+  <si>
+    <t>entering</t>
+  </si>
+  <si>
+    <t>sleep</t>
+  </si>
+  <si>
+    <t>sleeps</t>
+  </si>
+  <si>
+    <t>slept</t>
+  </si>
+  <si>
+    <t>sleeping</t>
+  </si>
+  <si>
+    <t>sleep(Agent, _OnWhat)</t>
+  </si>
+  <si>
+    <t>OnWhat</t>
+  </si>
+  <si>
+    <t>sleep(_Agent, OnWhat)</t>
+  </si>
+  <si>
+    <t>look for</t>
+  </si>
+  <si>
+    <t>looks for</t>
+  </si>
+  <si>
+    <t>looked for</t>
+  </si>
+  <si>
+    <t>looking for</t>
+  </si>
+  <si>
+    <t>look_for(Agent, Patient)</t>
+  </si>
+  <si>
+    <t>grab</t>
+  </si>
+  <si>
+    <t>grabs</t>
+  </si>
+  <si>
+    <t>grabbed</t>
+  </si>
+  <si>
+    <t>grabbing</t>
+  </si>
+  <si>
+    <t>turned_on(Noun)</t>
+  </si>
+  <si>
+    <t>turned on</t>
+  </si>
+  <si>
+    <t>Adjective (word list)</t>
+  </si>
+  <si>
+    <t>leave</t>
+  </si>
+  <si>
+    <t>leaves</t>
+  </si>
+  <si>
+    <t>left</t>
+  </si>
+  <si>
+    <t>leaving</t>
+  </si>
+  <si>
+    <t>leave(Agent, Patient)</t>
+  </si>
+  <si>
+    <t>exit</t>
+  </si>
+  <si>
+    <t>exits</t>
+  </si>
+  <si>
+    <t>exited</t>
+  </si>
+  <si>
+    <t>exiting</t>
+  </si>
+  <si>
+    <t>run away</t>
+  </si>
+  <si>
+    <t>runs away</t>
+  </si>
+  <si>
+    <t>ran away</t>
+  </si>
+  <si>
+    <t>running away</t>
+  </si>
+  <si>
+    <t>flee(Patient)</t>
+  </si>
+  <si>
+    <t>flee</t>
+  </si>
+  <si>
+    <t>flees</t>
+  </si>
+  <si>
+    <t>fled</t>
+  </si>
+  <si>
+    <t>fleeing</t>
+  </si>
+  <si>
+    <t>flush</t>
+  </si>
+  <si>
+    <t>flushes</t>
+  </si>
+  <si>
+    <t>flushed</t>
+  </si>
+  <si>
+    <t>flushing</t>
+  </si>
+  <si>
+    <t>flush(Agent, Patient)</t>
+  </si>
+  <si>
+    <t>wait</t>
+  </si>
+  <si>
+    <t>waits</t>
+  </si>
+  <si>
+    <t>waited</t>
+  </si>
+  <si>
+    <t>waiting</t>
+  </si>
+</sst>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"
+xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"
+xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+mc:Ignorable="x15"
+xmlns:x15="http://schemas.microsoft.com/office/spreadsheetml/2010/11/main">
+
+  <fileVersion appName="xl" lastEdited="6" lowestEdited="5"
+  rupBuild="14420"
+  codeName="{7A2D7E96-6E34-419A-AE5F-296B3A7E7977}" />
+  <workbookPr showInkAnnotation="0" codeName="ThisWorkbook"
+  autoCompressPictures="0" />
+  <mc:AlternateContent xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006">
+
+    <mc:Choice Requires="x15">
+      <x15ac:absPath url="C:\Users\ian\Documents\GitHub\MKULTRA\Assets\NL\"
+      xmlns:x15ac="http://schemas.microsoft.com/office/spreadsheetml/2010/11/ac" />
+    </mc:Choice>
+  </mc:AlternateContent>
+  <bookViews>
+    <workbookView xWindow="1223" yWindow="563" windowWidth="13778"
+    windowHeight="7905" tabRatio="500" />
+  </bookViews>
+  <sheets>
+    <sheet name="intransitive_verb" sheetId="3" r:id="rId1" />
+    <sheet name="transitive_verb" sheetId="4" r:id="rId2" />
+    <sheet name="ditransitive_verb" sheetId="5" r:id="rId3" />
+    <sheet name="prepositional_slot" sheetId="6" r:id="rId4" />
+    <sheet name="adjective" sheetId="2" r:id="rId5" />
+  </sheets>
+  <functionGroups builtInGroupCount="18" />
+  <calcPr calcId="140000" concurrentCalc="0" />
+  <extLst>
+    <ext uri="{7523E5D3-25F3-A5E0-1632-64F254C22452}"
+    xmlns:mx="http://schemas.microsoft.com/office/mac/excel/2008/main">
+
+      <mx:ArchID Flags="2" />
+    </ext>
+  </extLst>
+</workbook>

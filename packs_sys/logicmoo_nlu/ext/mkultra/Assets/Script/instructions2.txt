@@ -1,0 +1,14 @@
+<size=28>You can <color="lime"><b>talk with characters by typing</b></color></size>
+<size=20>- Talk to Kavi
+- Search the kitchen
+- Look at the plant
+- Where is the macguffin?</size><size=28>
+
+If Betsy isn't in a conversation with another character, then anything you type, you are saying to her.
+
+You can inject false beliefs into another character by prefixing them with the magic word <color="lime"><b>fnord</b></color>.</size>
+<size=20>- fnord you are an orange</size><size=28>
+
+Good luck!
+</size>
+

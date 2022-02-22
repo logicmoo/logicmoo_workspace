@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"
+xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"
+xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+mc:Ignorable="x15"
+xmlns:x15="http://schemas.microsoft.com/office/spreadsheetml/2010/11/main">
+
+  <fileVersion appName="xl" lastEdited="6" lowestEdited="5"
+  rupBuild="14420"
+  codeName="{7A2D7E96-6E34-419A-AE5F-296B3A7E7977}" />
+  <workbookPr showInkAnnotation="0" codeName="ThisWorkbook"
+  autoCompressPictures="0" />
+  <mc:AlternateContent xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006">
+
+    <mc:Choice Requires="x15">
+      <x15ac:absPath url="C:\Users\ian\Documents\GitHub\MKULTRA\Assets\Ontology\"
+      xmlns:x15ac="http://schemas.microsoft.com/office/spreadsheetml/2010/11/ac" />
+    </mc:Choice>
+  </mc:AlternateContent>
+  <bookViews>
+    <workbookView xWindow="0" yWindow="0" windowWidth="15000"
+    windowHeight="7680" tabRatio="500" activeTab="4" />
+  </bookViews>
+  <sheets>
+    <sheet name="kinds" sheetId="1" r:id="rId1" />
+    <sheet name="predicate_type" sheetId="2" r:id="rId2" />
+    <sheet name="properties" sheetId="3" r:id="rId3" />
+    <sheet name="relations" sheetId="4" r:id="rId4" />
+    <sheet name="entities" sheetId="5" r:id="rId5" />
+  </sheets>
+  <functionGroups builtInGroupCount="18" />
+  <calcPr calcId="140000" concurrentCalc="0" />
+</workbook>
