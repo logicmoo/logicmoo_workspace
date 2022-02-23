@@ -12,6 +12,7 @@ initial_goal(introductions(Agent2,Agent1)):-
 
 builtin(Mode,(A,B)):- !,call(Mode,A),call(Mode,B).
 builtin(Mode, [A|B]):- !,call(Mode,A),call(Mode,B).
+builtin(Mode,(A=B)):- !, A=B.
 builtin(Mode,(A;B)):- !, (call(Mode,A);call(Mode,B)).
 builtin(_,play_mode(Mode)):- retractall(play_mode(_)),ain(play_mode(Mode)).
 builtin(_,noplay_mode):- retractall(play_mode(_)),!.
@@ -26,19 +27,23 @@ ensure(Sit):- clause(builtin(ensure,Sit),Body),!,call(Body).
 ensure(Sit):- already_true(Sit),!, wdmsg(already_true(Sit)).
 ensure(Sit):- \+ \+ is_assumable_happens(Sit),!, wdmsg(happen(Sit)),ain(Sit).
 ensure(Sit):- \+ \+ is_assumable(Sit),!, wdmsg(happen(Sit)),ain(Sit).
+ensure(Sit):- clause(make_true(achieves(Agent1,Sit)),Body),dif(Agent1,user),wdmsg(trying(achieves(Agent1,Sit))),call(Body),!,wdmsg(success(make_true(Sit))),ain(Sit).
 ensure(Sit):- clause(make_true(Sit),Body),wdmsg(trying(make_true(Sit))),call(Body),!,wdmsg(success(make_true(Sit))),ain(Sit).
 ensure(Sit):- wdmsg(failed(ensure(Sit))),!,fail,ain(Sit).
 
-is_assumable_happens(X):- \+ \+ X = prop(_,_,_),!, fail.
+cant_assume(knows(_,_)).
+cant_assume(prop(_,_,_)).
+is_assumable_happens(X):- \+ \+ cant_assume(X),!, fail.
 is_assumable_happens(wants(_,_)).
+is_assumable_happens(said(Robot,_)):- Robot\==user.
 is_assumable_happens(X):- is_assumable(X).
 
+is_assumable(X):- \+ \+ cant_assume(X),!, fail.
 is_assumable(prop(_,_,_)).
 is_assumable(heard(Robot,_)):- Robot\==user.
 is_assumable(Prop):-compound(Prop),arg(1,Prop,V),nonvar(V),functor(Prop,F,A),functor(Prop2,F,A),!,is_assumable(Prop2).
 is_assumable(avoids(agent,prop)).
 is_assumable(wants(agent,prop)).
-is_assumable(said(agent,prop)).
 %is_assumable(heard(agent,prop)).
 
 
@@ -51,14 +56,16 @@ prop(robot,self,robot).
 prop(S,P,O):- atom(P), O=..[P,S].
 
 
+op_props(avoids(agent,prop)).
+op_props(wants(agent,prop)).
+op_props(said(agent,prop)).
+op_props(unknown(agent,prop)).
+op_props(know(agent,prop)).
+op_props(suspects(agent,prop)).
 
-state_pred(unknown(agent,prop)).
-state_pred(know(agent,prop)).
-state_pred(suspects(agent,prop)).
 
-
-define_state_pred(Decl):- functor(Decl,F,A),dynamic(F/A).
-:- forall(state_pred(Pred),define_state_pred(Pred)).
+define_op_props(Decl):- functor(Decl,F,A),dynamic(F/A).
+:- forall(op_props(Pred),define_op_props(Pred)).
 % agents already know their props
 already_true(know(Agent2,Sit)):- compound(Sit), arg(1,Sit,Agent2).
 already_true(Sit):- compound(Sit), clause(Sit,true).
@@ -137,7 +144,7 @@ make_true(knows_each_others_name):-
   debug("i want you to know my name"),
   wants(Agent1,know(Agent2,prop(Agent1,name,_))),
   said(Agent1,"My name is Professor Einstein."),
-  debug("i want me to know your name so I am going to ask you to spell it"),
+  debug("i want robot to know your name so I am going to ask you to spell it"),
   ensure(wants(Agent1,know(Agent1,list(Agent2,letters_of_first_name,_)))),
   said(Agent1,"Would you spell your first name so that I can know it?"),
  ((expect(Agent2,"no")->make_true(find_out_why(not(wants(Agent2,know(Agent1,list(Agent2,letters_of_first_name,_)))))) ;
@@ -148,15 +155,15 @@ make_true(knows_each_others_name):-
 /*
 wants(Agent1,know(Agent1,prop(Agent2,name,?))),
 said(Agent1,"Hi, my name is Professor Einstein."),
-debug("i want me to know your name's length"),
+debug("i want robot to know your name's length"),
 wants(Agent1,know(Agent1,prop(Agent2,name,N),prop(N,length,?))),
-debug("i want me to know your name's length"),
+debug("i want robot to know your name's length"),
 (prop(Agent2,name,N),prop(N,length,L))=>
 prop(Agent2,name,N),prop(N,length,_))
 prop(N,length,L) ? 
-wants(me,know(Agent2,prop(me,name))))
+wants(robot,know(Agent2,prop(robot,name))))
 "Hi, my name is Professor Einstein."
-"Would you spell your name for me?"
+"Would you spell your name for robot?"
 "D. O. U. G."
 "How many letters is your name?"  
 "7"
@@ -211,7 +218,7 @@ human:  Computer
 BINA48: What is a Computer?
 human:  Artifact
 
-BINA48: Do you want me to learn more objects?
+BINA48: Do you want robot to learn more objects?
 human:  no
 
 BINA48: These objects are odd: my laptop
@@ -251,4 +258,37 @@ toploop(UserOrSelf):-
   note(released_preconds(UserOrSelf,NoLongerPrecond)),
   note(add_req_preconds(UserOrSelf,ActualNewPreconds)),
   !.
+
+102 ?- ensure(introductions(robot,user)).
+%~ trying(achieves(_42164,introductions(robot,user))).
+%~ trying(make_true(introductions(robot,user))).
+%~ trying(achieves(_598,know(user,prop(robot,name,_160)))).
+%~ trying(make_true(know(user,prop(robot,name,_160)))).
+%~ trying(make_true(know(user,prop(robot,name,_160)))).
+%~ happen(heard(robot,tell(user,prop(robot,name,_160)))).
+%~ success(make_true(know(user,prop(robot,name,_156)))).
+%~ trying(achieves(_20020,know(robot,prop(user,name,_170)))).
+%~ happen(prop(robot,pronoun,"I")).
+%~ happen(prop(user,pronoun,"you")).
+%~ debug("i want you to know my name").
+%~ happen(wants(robot,know(user,prop(robot,name,_406)))).
+%~ happen(said(robot,"My name is Professor_Einstein.")).
+%~ debug("i want to know your name so I am going to ask you").
+%~ happen(wants(robot,know(robot,prop(user,name,_170)))).
+%~ happen(said(robot,"What is your first name so that I can know it?")).
+%~ trying( achieves( _59908,
+%~           expect(not(wants(user,know(robot,prop(user,name,Prop_Name))))) ->
+%~             make_true(find_out_why(not(wants(user,know(robot,prop(user,name,Prop_Name)))))))).
+%~ failed( ensure( expect(not(wants(user,know(robot,prop(user,name,Prop_Name))))) ->
+%~                   make_true(find_out_why(not(wants(user,know(robot,prop(user,name,Prop_Name)))))))).
+%~ trying( achieves( _54146,
+%~           expect(wants(user,know(robot,prop(user,name,Prop_Name)))) ->
+%~             ensure(wants(user,know(robot,prop(user,name,Prop_Name1)))))).
+%~ failed( ensure( expect(wants(user,know(robot,prop(user,name,Prop_Name)))) ->
+%~                   ensure(wants(user,know(robot,prop(user,name,Prop_Name1)))))).
+%~ trying(make_true(know(robot,prop(user,name,_170)))).
+%~ trying(make_true(know(robot,prop(user,name,_170)))).
+%~ happen(heard(user,tell(robot,prop(user,name,_170)))).
+%~ success(make_true(know(robot,prop(user,name,_170)))).
+%~ success(make_true(introductions(robot,user))).
 
