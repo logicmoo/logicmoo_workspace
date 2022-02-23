@@ -121,7 +121,7 @@ concat_words( [Word], String ) :-
 concat_words( [Word|Words], String ) :-
 	atom_chars( Word, S1 ),
 	concat_words( Words, S2 ),
-	append( S1, [ 0' | S2 ], String ).
+	append( S1, [ 0' | S2 ], String ). %'
 
 
 
@@ -270,7 +270,7 @@ concat_words( [Word], String ) :-
 concat_words( [Word|Words], String ) :-
 	atom_chars( Word, S1 ),
 	concat_words( Words, S2 ),
-	append( S1, [ 0' | S2 ], String ).
+	append( S1, [ 0' | S2 ], String ). %'
 
 /*----------------------------------------------------------------------
      - Domain concepts
