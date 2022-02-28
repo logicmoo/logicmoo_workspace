@@ -3430,21 +3430,6 @@
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/Characters/Kavi.prolog"/>
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/Characters/pc.prolog"/>
 						</Folder>
-						<Folder Name="Concerns">
-							<F N="packs_xtra/logicmoo_chat/npc/Assets/Concerns/affect_manager.prolog"/>
-							<F N="packs_xtra/logicmoo_chat/npc/Assets/Concerns/be_polite.prolog"/>
-							<F N="packs_xtra/logicmoo_chat/npc/Assets/Concerns/command_line.prolog"/>
-							<F N="packs_xtra/logicmoo_chat/npc/Assets/Concerns/concerns.prolog"/>
-							<F N="packs_xtra/logicmoo_chat/npc/Assets/Concerns/conversation.prolog"/>
-							<F N="packs_xtra/logicmoo_chat/npc/Assets/Concerns/event_grammar.prolog"/>
-							<F N="packs_xtra/logicmoo_chat/npc/Assets/Concerns/need_satifaction.prolog"/>
-							<F N="packs_xtra/logicmoo_chat/npc/Assets/Concerns/need_satisfaction.prolog"/>
-							<F N="packs_xtra/logicmoo_chat/npc/Assets/Concerns/patrol.prolog"/>
-							<F N="packs_xtra/logicmoo_chat/npc/Assets/Concerns/player_interaction.prolog"/>
-							<F N="packs_xtra/logicmoo_chat/npc/Assets/Concerns/roles.prolog"/>
-							<F N="packs_xtra/logicmoo_chat/npc/Assets/Concerns/script.prolog"/>
-							<F N="packs_xtra/logicmoo_chat/npc/Assets/Concerns/social_interaction.prolog"/>
-						</Folder>
 						<Folder Name="Conversation">
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/Conversation/assertions.prolog"/>
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/Conversation/description.prolog"/>
@@ -3464,35 +3449,6 @@
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/Fonts/SourceSansPro-Regular.otf"/>
 						</Folder>
 						<Folder Name="NL">
-							<Folder Name="Vocabulary">
-								<Folder Name="_rels">
-									<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/Vocabulary/_rels/.rels"/>
-								</Folder>
-								<Folder Name="docProps">
-									<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/Vocabulary/docProps/app.xml"/>
-									<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/Vocabulary/docProps/core.xml"/>
-								</Folder>
-								<Folder Name="xl">
-									<Folder Name="_rels">
-										<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/Vocabulary/xl/_rels/workbook.xml.rels"/>
-									</Folder>
-									<Folder Name="theme">
-										<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/Vocabulary/xl/theme/theme1.xml"/>
-									</Folder>
-									<Folder Name="worksheets">
-										<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/Vocabulary/xl/worksheets/sheet1.xml"/>
-										<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/Vocabulary/xl/worksheets/sheet2.xml"/>
-										<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/Vocabulary/xl/worksheets/sheet3.xml"/>
-										<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/Vocabulary/xl/worksheets/sheet4.xml"/>
-										<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/Vocabulary/xl/worksheets/sheet5.xml"/>
-									</Folder>
-									<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/Vocabulary/xl/sharedStrings.xml"/>
-									<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/Vocabulary/xl/styles.xml"/>
-									<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/Vocabulary/xl/vbaProject.bin"/>
-									<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/Vocabulary/xl/workbook.xml"/>
-								</Folder>
-								<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/Vocabulary/[Content_Types].xml"/>
-							</Folder>
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/_aux.prolog"/>
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/adjective.csv"/>
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/auxverbs.prolog"/>
@@ -3519,7 +3475,6 @@
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/prepositional_slot.csv"/>
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/preterminals.prolog"/>
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/transitive_verb.csv"/>
-							<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/Vocabulary.xlsm"/>
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/vp.prolog"/>
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/vp_tests.prolog"/>
 						</Folder>
@@ -3530,53 +3485,22 @@
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/Norms/ethics.prolog"/>
 						</Folder>
 						<Folder Name="Ontology">
-							<Folder Name="Knowledge_base">
-								<Folder Name="_rels">
-									<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/Knowledge_base/_rels/.rels"/>
-								</Folder>
-								<Folder Name="docProps">
-									<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/Knowledge_base/docProps/app.xml"/>
-									<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/Knowledge_base/docProps/core.xml"/>
-								</Folder>
-								<Folder Name="xl">
-									<Folder Name="_rels">
-										<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/Knowledge_base/xl/_rels/workbook.xml.rels"/>
-									</Folder>
-									<Folder Name="theme">
-										<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/Knowledge_base/xl/theme/theme1.xml"/>
-									</Folder>
-									<Folder Name="worksheets">
-										<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/Knowledge_base/xl/worksheets/sheet1.xml"/>
-										<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/Knowledge_base/xl/worksheets/sheet2.xml"/>
-										<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/Knowledge_base/xl/worksheets/sheet3.xml"/>
-										<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/Knowledge_base/xl/worksheets/sheet4.xml"/>
-										<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/Knowledge_base/xl/worksheets/sheet5.xml"/>
-									</Folder>
-									<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/Knowledge_base/xl/sharedStrings.xml"/>
-									<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/Knowledge_base/xl/styles.xml"/>
-									<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/Knowledge_base/xl/vbaProject.bin"/>
-									<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/Knowledge_base/xl/workbook.xml"/>
-								</Folder>
-								<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/Knowledge_base/.bash_history"/>
-								<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/Knowledge_base/[Content_Types].xml"/>
-							</Folder>
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/.bash_history"/>
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/container.prolog"/>
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/csv_loading.prolog"/>
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/entities.csv"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/favor.prolog"/>
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/food_drink.prolog"/>
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/hypno.prolog"/>
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/integrity_checks.prolog"/>
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/kinds.csv"/>
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/kinds.prolog"/>
-							<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/Knowledge base.xlsm"/>
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/knowledge_representation.prolog"/>
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/person.prolog"/>
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/physical_object.prolog"/>
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/predicate_type.csv"/>
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/properties.csv"/>
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/relations.csv"/>
-							<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/tort.prolog"/>
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/type_check.prolog"/>
 						</Folder>
 						<Folder Name="Photos">
@@ -3662,6 +3586,21 @@
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/Prolog/UndefinedPredicateException.cs"/>
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/Prolog/UnityExtensionMethods.cs"/>
 						</Folder>
+						<Folder Name="Qud">
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Qud/affect_manager.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Qud/be_polite.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Qud/command_line.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Qud/conversation.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Qud/event_grammar.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Qud/need_satifaction.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Qud/need_satisfaction.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Qud/patrol.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Qud/player_interaction.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Qud/quds.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Qud/roles.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Qud/script.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Qud/social_interaction.prolog"/>
+						</Folder>
 						<Folder Name="Script">
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/Script/demo_level.prolog"/>
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/Script/instructions.txt"/>
@@ -3675,33 +3614,6 @@
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/Scripting/beat_task_crossrefs.prolog"/>
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/Scripting/quip_manager.prolog"/>
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/Scripting/quips.prolog"/>
-						</Folder>
-						<Folder Name="Self-exporting_excel_file">
-							<Folder Name="_rels">
-								<F N="packs_xtra/logicmoo_chat/npc/Assets/Self-exporting_excel_file/_rels/.rels"/>
-							</Folder>
-							<Folder Name="docProps">
-								<F N="packs_xtra/logicmoo_chat/npc/Assets/Self-exporting_excel_file/docProps/app.xml"/>
-								<F N="packs_xtra/logicmoo_chat/npc/Assets/Self-exporting_excel_file/docProps/core.xml"/>
-								<F N="packs_xtra/logicmoo_chat/npc/Assets/Self-exporting_excel_file/docProps/thumbnail.jpeg"/>
-							</Folder>
-							<Folder Name="xl">
-								<Folder Name="_rels">
-									<F N="packs_xtra/logicmoo_chat/npc/Assets/Self-exporting_excel_file/xl/_rels/workbook.xml.rels"/>
-								</Folder>
-								<Folder Name="theme">
-									<F N="packs_xtra/logicmoo_chat/npc/Assets/Self-exporting_excel_file/xl/theme/theme1.xml"/>
-								</Folder>
-								<Folder Name="worksheets">
-									<F N="packs_xtra/logicmoo_chat/npc/Assets/Self-exporting_excel_file/xl/worksheets/sheet1.xml"/>
-								</Folder>
-								<F N="packs_xtra/logicmoo_chat/npc/Assets/Self-exporting_excel_file/xl/sharedStrings.xml"/>
-								<F N="packs_xtra/logicmoo_chat/npc/Assets/Self-exporting_excel_file/xl/styles.xml"/>
-								<F N="packs_xtra/logicmoo_chat/npc/Assets/Self-exporting_excel_file/xl/vbaProject.bin"/>
-								<F N="packs_xtra/logicmoo_chat/npc/Assets/Self-exporting_excel_file/xl/workbook.xml"/>
-							</Folder>
-							<F N="packs_xtra/logicmoo_chat/npc/Assets/Self-exporting_excel_file/.bash_history"/>
-							<F N="packs_xtra/logicmoo_chat/npc/Assets/Self-exporting_excel_file/[Content_Types].xml"/>
 						</Folder>
 						<Folder Name="Sims">
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/Sims/action_selection.prolog"/>
@@ -3804,14 +3716,7 @@
 						<F N="packs_xtra/logicmoo_chat/npc/Assets/CREDITS.txt"/>
 						<F N="packs_xtra/logicmoo_chat/npc/Assets/logicmoo_mkultra.pl"/>
 						<F N="packs_xtra/logicmoo_chat/npc/Assets/PopupAttribute.cs"/>
-						<F N="packs_xtra/logicmoo_chat/npc/Assets/Prolog.dll.HIDE"/>
-						<F N="packs_xtra/logicmoo_chat/npc/Assets/Prolog.dll.mdb"/>
-						<F N="packs_xtra/logicmoo_chat/npc/Assets/Prolog.dll.meta.HIDE"/>
-						<F N="packs_xtra/logicmoo_chat/npc/Assets/Sandbox scene.unity"/>
-						<F N="packs_xtra/logicmoo_chat/npc/Assets/Self-exporting excel file.xlsm"/>
-						<F N="packs_xtra/logicmoo_chat/npc/Assets/TestScene.unity"/>
 						<F N="packs_xtra/logicmoo_chat/npc/Assets/unity_prolog.pl"/>
-						<F N="packs_xtra/logicmoo_chat/npc/Assets/UnityEngine.xml"/>
 					</Folder>
 					<Folder Name="Logs">
 						<F N="packs_xtra/logicmoo_chat/npc/Logs/ApiUpdaterCheck.txt"/>
