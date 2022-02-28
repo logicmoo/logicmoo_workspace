@@ -1,0 +1,2 @@
+gripper2 0.050 688 1921024 5 (pick left ball1 rooma) (pick right ball2 rooma) (move rooma roomb) (drop left ball1 roomb) (drop right ball2 roomb)
+gripper4 79.780 1066906 3227648 11 (pick left ball1 rooma) (pick right ball2 rooma) (move rooma roomb) (drop left ball1 roomb) (drop right ball2 roomb) (move roomb rooma) (pick left ball3 rooma) (pick right ball4 rooma) (move rooma roomb) (drop left ball3 roomb) (drop right ball4 roomb)

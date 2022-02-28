@@ -1,0 +1,55 @@
+(define (domain sliding_domain)
+(:requirements :strips)
+(:predicates
+	(at ?block ?pos)
+	(free ?pos)
+	(over ?pos1 ?pos2)
+	(left ?pos1 ?pos2)
+	(block ?block)
+)
+
+(:action move_up
+:parameters (?free_pos ?old_pos ?block)
+:precondition (and (free ?free_pos)
+					(at ?block ?old_pos)
+					(over ?free_pos ?old_pos)
+					(block ?block))
+:effect (and (free ?old_pos)
+			 (at ?block ?free_pos)
+			 (not (free ?free_pos))
+			 (not (at ?block ?old_pos))))
+
+(:action move_down
+:parameters (?free_pos ?old_pos ?block)
+:precondition (and (free ?free_pos)
+					(at ?block ?old_pos)
+					(over ?old_pos ?free_pos)
+					(block ?block))
+:effect (and (free ?old_pos)
+			 (at ?block ?free_pos)
+			 (not (free ?free_pos))
+			 (not (at ?block ?old_pos))))
+
+(:action move_right
+:parameters (?free_pos ?old_pos ?block)
+:precondition (and (free ?free_pos)
+					(at ?block ?old_pos)
+					(left ?old_pos ?free_pos)
+					(block ?block))
+:effect (and (free ?old_pos)
+			 (at ?block ?free_pos)
+			 (not (free ?free_pos))
+			 (not (at ?block ?old_pos))))
+
+(:action move_left
+:parameters (?free_pos ?old_pos ?block)
+:precondition (and (free ?free_pos)
+					(at ?block ?old_pos)
+					(left ?free_pos ?old_pos)
+					(block ?block))
+:effect (and (free ?old_pos)
+			 (at ?block ?free_pos)
+			 (not (free ?free_pos))
+			 (not (at ?block ?old_pos))))
+)
+					

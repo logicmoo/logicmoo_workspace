@@ -1,0 +1,5 @@
+mixed-f2-p 0.005 42 1921024 4 (up f0 f1) (board f1 p0) (down f1 f0) (depart f0 p0)
+mixed-f2-p 0.01 40 1921024 3 (board f0 p0) (up f0 f1) (depart f1 p0)
+mixed-f2-p 0.01 42 1921024 4 (up f0 f1) (board f1 p0) (down f1 f0) (depart f0 p0)
+mixed-f2-p 0.01 42 1921024 4 (up f0 f1) (board f1 p0) (down f1 f0) (depart f0 p0)
+mixed-f2-p 0.01 42 1921024 4 (up f0 f1) (board f1 p0) (down f1 f0) (depart f0 p0)

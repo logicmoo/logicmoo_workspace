@@ -1,0 +1,4 @@
+blocks-3-0 0.210 19 2166784 4 (pick-up b) (stack b a) (pick-up c) (stack c b)
+blocks-4-0 0.250 67 2166784 6 (pick-up b) (stack b a) (pick-up c) (stack c b) (pick-up d) (stack d c)
+blocks-4-1 18.300 20326 2166784 10 (unstack b c) (put-down b) (unstack c a) (put-down c) (unstack a d) (stack a b) (pick-up c) (stack c a) (pick-up d) (stack d c)
+blocks-4-2 9.820 10652 2146304 6 (unstack c b) (stack c d) (pick-up b) (stack b c) (pick-up a) (stack a b)

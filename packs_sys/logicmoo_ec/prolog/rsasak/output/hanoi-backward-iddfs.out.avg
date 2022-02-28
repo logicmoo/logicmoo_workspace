@@ -1,0 +1,1 @@
+hanoi3 23.53 14784 1921024 7 (move d1 peg1 d2) (move d2 peg2 d3) (move d1 d2 peg1) (move d3 peg1 peg3) (move d1 peg3 d2) (move d2 d3 peg2) (move d1 d2 peg3)

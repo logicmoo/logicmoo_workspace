@@ -1,0 +1,59 @@
+The sliding folder implements the sliding puzzle as a domain, corresponding
+to the 8 puzzle or the 15 puzzle, or any other size. The h_manhattan heuristics
+is specifically designed for this domain, see the file for more documentation. 
+It works much faster than the other heuristics and is admissible.
+
+https://en.wikipedia.org/wiki/Sliding_puzzle
+
+SLIDING, my_pop, weighted_member, solution2
+h_0
+
+sliding2x2-1 0.000 2 101580352 1 
+sliding2x2-2 0.000 5 101580352 3
+sliding2x2-3 0.000 7 101580352 4 
+sliding2x2-4 0.000 11 101580352 6
+
+sliding3x3-1 0.000 2 101580352 1
+sliding3x3-2 0.031 84 101580352 6
+sliding3x3-3 0.500 437 101580352 9 
+sliding3x3-4 20.219 2817 101580352 13 
+
+sliding4x4-1 0.000 2 101580352 1 
+sliding4x4-2 0.000 9 101580352 3 
+sliding4x4-3 128.985 4924 158072384 10
+
+h_diff 
+
+sliding2x2-1 0.000 2 158072384 1
+sliding2x2-2 0.000 4 158072384 3 
+sliding2x2-3 0.000 6 158072384 4 
+sliding2x2-4 0.000 11 158072384 6 
+
+sliding3x3-1 0.000 2 158072384 1 
+sliding3x3-2 0.015 26 158072384 6
+sliding3x3-3 0.000 41 158072384 9 
+sliding3x3-4 0.172 246 158072384 13
+
+sliding4x4-1 0.000 2 158072384 1
+sliding4x4-2 0.000 6 158072384 3 
+sliding4x4-3 0.094 114 158072384 10
+
+h_manhattan
+
+sliding2x2-1 0.000 2 101580352 1 
+sliding2x2-2 0.000 4 101580352 3 
+sliding2x2-3 0.000 5 101580352 4 
+sliding2x2-4 0.000 11 101580352 6 
+
+sliding3x3-1 0.000 2 101580352 1
+sliding3x3-2 0.000 18 101580352 6 
+sliding3x3-3 0.000 20 101580352 9
+sliding3x3-4 0.031 68 101580352 13 
+sliding3x3-5 2.969 1070 101580352 24 
+
+sliding4x4-1 0.000 2 18677312 1
+sliding4x4-2 0.000 6 18677312 3 
+sliding4x4-3 0.031 49 18677312 10 
+sliding4x4-4 2.047 595 158072384 15
+sliding4x4-5 69.860 3621 101580352 27
+

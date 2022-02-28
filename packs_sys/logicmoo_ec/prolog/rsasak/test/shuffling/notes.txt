@@ -1,0 +1,17 @@
+Shuffling is a domain designed to reveal h_diff's non-admissibility, but 
+revealed another bug in the solver. 
+
+The positions are placed from left to right, and blocks are put on top of them.
+The goal is to get block1 on position1, block2 on position2, and so on. The initial
+state is a shuffle of this. The blocks can be moved by a 2shuffle, which means to 
+neighbouring blocks get swapped, or a 3shuffle. The 3shuffle can either be done in 
+the right or left direction. 
+
+This can reveal h_diff non-admissibility, because it assumes that each fact in the 
+goal state takes at least one action to satisfy. In other words, if there are 3 
+facts in the goal state that are not fulfilled in the current state, h_diff estimates
+3 moves. However, in this domain it is possible to change all 3 at once, with a 
+3shuffle. This means that h_diff can overestimate, and thereby not giving the optimal
+solution. 
+
+The h_dist is specially implemented for this domain. 

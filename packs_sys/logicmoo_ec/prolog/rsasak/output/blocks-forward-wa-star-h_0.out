@@ -1,0 +1,7 @@
+blocks-3-0 0.010 18 1921024 4 (pick-up b) (stack b a) (pick-up c) (stack c b)
+blocks-4-0 0.090 127 2146304 6 (pick-up b) (stack b a) (pick-up c) (stack c b) (pick-up d) (stack d c)
+blocks-4-1 0.070 110 2007040 10 (unstack b c) (put-down b) (unstack c a) (put-down c) (unstack a d) (stack a b) (pick-up c) (stack c a) (pick-up d) (stack d c)
+blocks-4-2 0.050 84 2007040 6 (unstack c b) (stack c d) (pick-up b) (stack b c) (pick-up a) (stack a b)
+blocks-5-0 10.580 1477 8466432 12 (unstack c e) (put-down c) (unstack e b) (put-down e) (pick-up d) (stack d c) (unstack b a) (stack b d) (pick-up e) (stack e b) (pick-up a) (stack a e)
+blocks-5-1 9.310 1398 8466432 10 (unstack b a) (put-down b) (unstack a d) (stack a e) (pick-up b) (stack b a) (pick-up c) (stack c b) (pick-up d) (stack d c)
+blocks-5-2 15.420 2096 12652544 16 (unstack d e) (put-down d) (unstack e c) (put-down e) (unstack c a) (put-down c) (unstack a b) (put-down a) (pick-up e) (stack e a) (pick-up b) (stack b e) (pick-up c) (stack c b) (pick-up d) (stack d c)
