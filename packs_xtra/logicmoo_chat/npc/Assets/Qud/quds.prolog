@@ -1,5 +1,5 @@
 %%%
-%%% QUD SYSTEM
+%%% QUD SYSTEM (Question Under Discussion)
 %%%
 
 %%
