@@ -2,10 +2,10 @@
 %%% Initializations for the player character
 %%%
 
-player_character.
+$pc/player_character.
 
 % Monitor goals quickly
-/parameters/poll_time:1.
+$pc/parameters/poll_time:1.
 
 :- ((unless(proper_name($pc, _, _X, []),
 	  assert_proper_name($pc, ['Betsy'], singular)),
@@ -17,7 +17,7 @@ player_character.
 	  assert($global::declare_value($pc, surname, "Quatermass"))))).
 
 
-/goals/player_objective_monolog:["I need to get my macguffin back.",
+$pc/goals/player_objective_monolog:["I need to get my macguffin back.",
 				 "I'm sure Kavi stole it,",
 				 "but I don't know where he hid it."].
 

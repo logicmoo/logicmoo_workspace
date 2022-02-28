@@ -112,7 +112,7 @@ display(X,Props) :- u_call(display(X,Props)).
 action(X) :- u_call(action(X)).
 current_goal(X) :- u_call(current_goal(X)).
 current_time(X) :- u_call(current_time(X)).
-real_time_beginning(X) :- u_call(real_time_beginning(X)).
+%real_time_beginning(X) :- u_call(real_time_beginning(X)).
 lps_updating_current_state :- u_call(lps_updating_current_state).
 d_pre(X) :- u_call(d_pre(X)).
 depth(X) :- u_call(depth(X)).

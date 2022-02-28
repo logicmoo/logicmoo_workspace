@@ -90,13 +90,12 @@ e2lf(Sent):-
    fmt(lf=LF).
 
 e2lf([],done([])).
-e2lf(sent(WList),'FakedLFParsedNowFn'(WList)):-!.
-e2lf([sent(WList)|MORE],and(LF,MORELF)):-!, e2lf(sent(WList),LF),e2lf(MORE,MORELF).
-e2lf(English,LF):-not(is_list(English)),atomic(English),!,
+e2lf(English,LF):- \+ is_list(English),atomic(English),
    convert_members([replace_periods_string_list,to_list_of_sents],English,Sents),
-   !,
-   e2lf(Sents,LF),!. 
-e2lf(English,LF):- !,e2lf(sent(English),LF).
+   !, e2lf(Sents,LF),!. 
+e2lf([sent(WList)|MORE],and(LF,MORELF)):-!, e2lf(sent(WList),LF),e2lf(MORE,MORELF).
+e2lf(English,LF):- English \= sent(_), e2lf(sent(English),LF).
+e2lf(sent(WList),'FakedLFParsedNowFn'(WList)):-!.
 
 
 e2lf_test   :- e2lf("You find yourself standing by the door of Captain Picard's quarters.

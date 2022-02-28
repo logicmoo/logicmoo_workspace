@@ -1,3 +1,4 @@
+
 :- expects_dialect(lps).
 
 maxTime(10).

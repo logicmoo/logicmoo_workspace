@@ -26,7 +26,7 @@ turn_off_boiler initiates boiler_off.
 observe plant_safe from 8.
 
 
-%:- multifile(ec:demo_test/3).
+:- multifile(ec:demo_test/3).
 ec:demo_test(lps_demo_test_1, lps_demo, [holds(plant_safe,9)]).
 
 %baseKB:lps_demo_test_1_run:- abdemo([holds(plant_safe,9)]).

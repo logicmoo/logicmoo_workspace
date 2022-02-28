@@ -100,7 +100,7 @@ explanationNarrative(Tree) --> {Tree=..[Node|Children]}, html(li([span(Node),ul(
 	
 :- else.
 % Now support for vanilla SWI Prolog
-:- use_module('../engine/db.P',[real_time_beginning/1,
+:- use_module('../engine/db.P',[ real_time_beginning/1,
 	action/1, d_pre/1 ,event/1,
 	fluent/1,(initiated)/3, l_events/2, l_int/2, %  happens/3 redefined here
 	l_timeless/2, (observe)/2, reactive_rule/2, reactive_rule/3, % state/1 redefined here

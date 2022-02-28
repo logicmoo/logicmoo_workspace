@@ -4,13 +4,13 @@ hot_button_topic($bookshelf).
 hot_button_topic(illuminati).
 
 % Keep intruders out of bedroom
-/goals/maintain/bedroom_empty.
+$kavi/goals/maintain/bedroom_empty.
 
 % I know the secret location of the macguffin
-/perception/location/ $macguffin : $bookshelf.
+$kavi/perception/location/ $macguffin : $bookshelf.
 
 % Monitor goals quickly
-/parameters/poll_time:3.
+$kavi/parameters/poll_time:3.
 
 % Don't admit you know where the macguffin is to anyone
 % but other illuminati members

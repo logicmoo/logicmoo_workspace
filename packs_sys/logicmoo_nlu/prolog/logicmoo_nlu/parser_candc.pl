@@ -30,6 +30,8 @@
 :- discontiguous(input:(id/2)).
 
 :- use_module(parser_lexical).
+:- user:ensure_loaded(logicmoo_nlu_ext('candc/parser_boxer.pl')).
+
 :- user:ensure_loaded(logicmoo_nlu_ext('candc/src/prolog/boxer/boxer.pl')).
 
 :- use_module(boxer(ccg2drs),[ccg2drs/2]).

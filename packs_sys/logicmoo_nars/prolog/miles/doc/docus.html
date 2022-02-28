@@ -1,0 +1,1061 @@
+<!DOCTYPE html><html>
+<head>
+<title></title>
+<style type="text/css">
+<!--
+.xflip {
+    -moz-transform: scaleX(-1);
+    -webkit-transform: scaleX(-1);
+    -o-transform: scaleX(-1);
+    transform: scaleX(-1);
+    filter: fliph;
+}
+.yflip {
+    -moz-transform: scaleY(-1);
+    -webkit-transform: scaleY(-1);
+    -o-transform: scaleY(-1);
+    transform: scaleY(-1);
+    filter: flipv;
+}
+.xyflip {
+    -moz-transform: scaleX(-1) scaleY(-1);
+    -webkit-transform: scaleX(-1) scaleY(-1);
+    -o-transform: scaleX(-1) scaleY(-1);
+    transform: scaleX(-1) scaleY(-1);
+    filter: fliph + flipv;
+}
+-->
+</style>
+</head>
+<body>
+<a name=1></a>MILES&#160;{&#160;a&#160;Modular&#160;Inductive&#160;Logic&#160;Programming<br/>
+Experimentation&#160;System<br/>
+Ir<br/>
+ene<br/>
+Stahl<br/>
+Bir<br/>
+git<br/>
+T<br/>
+ausend<br/>
+Institut&#160;fur&#160;Informatik,&#160;Universitat&#160;Stuttgart,&#160;Breitwiesenstr.&#160;20-22,&#160;D-70565&#160;Stuttgart<br/>
+stahl@informatik.uni-stuttgart.de<br/>
+tausend@informatik.uni-stuttgart.de<br/>
+Jan<br/>
+uary<br/>
+10,<br/>
+1994<br/>
+Abstra&#160;ct<br/>
+In&#160;this&#160;paper,&#160;we&#160;give&#160;a&#160;short&#160;technical&#160;description&#160;of&#160;the&#160;prototypical<br/>
+system&#160;MILES.&#160;MILES&#160;is&#160;a&#160;toolbox&#160;of&#160;ILP-methods&#160;and&#160;operators.&#160;It&#160;provides<br/>
+a&#160;exible&#160;and&#160;powerful&#160;environment&#160;for&#160;handling,&#160;maintaining&#160;and&#160;inductively<br/>
+transforming&#160;a&#160;knowledge&#160;base&#160;of&#160;Horn&#160;clauses&#160;with&#160;respect&#160;to&#160;the&#160;examples.&#160;It<br/>
+is&#160;designed&#160;to&#160;support&#160;researchers&#160;in&#160;ILP&#160;in&#160;rapid&#160;prototyping&#160;of&#160;ILP&#160;methods<br/>
+and&#160;systems.<br/>
+1&#160;Introduction<br/>The&#160;task&#160;of&#160;inductive&#160;logic&#160;programming&#160;(ILP)&#160;is&#160;to&#160;learn&#160;logic&#160;programs&#160;from<br/>
+classied&#160;examples&#160;in&#160;the&#160;presence&#160;of&#160;background&#160;knowledge.&#160;In&#160;recent&#160;years,&#160;a&#160;large<br/>
+variety&#160;of&#160;algorithms&#160;that&#160;tackle&#160;this&#160;problem&#160;have&#160;been&#160;developed&#160;and&#160;investigated.<br/>
+They&#160;mainly&#160;dier&#160;in&#160;the&#160;way&#160;the&#160;hypothesis&#160;space&#160;is&#160;searched,&#160;the&#160;operators&#160;for<br/>
+generalising&#160;or&#160;specialising&#160;hypotheses,&#160;the&#160;particular&#160;bias&#160;used&#160;to&#160;prune&#160;the&#160;search<br/>
+space,&#160;and&#160;the&#160;ability&#160;to&#160;recover&#160;from&#160;an&#160;overly&#160;strong&#160;bias.<br/>
+In&#160;order&#160;to&#160;compare&#160;the&#160;dierent&#160;approaches&#160;and&#160;to&#160;experiment&#160;with&#160;known&#160;and<br/>
+new&#160;operators,&#160;control&#160;mechanisms,&#160;biases,&#160;heuristics&#160;and&#160;methods&#160;for&#160;shifting&#160;the<br/>
+bias,&#160;we&#160;developed&#160;MILES.&#160;MILES&#160;is&#160;a&#160;toolbox&#160;for&#160;experiments&#160;with&#160;ILP&#160;systems<br/>
+and&#160;methods.&#160;It&#160;oers&#160;a&#160;exible&#160;representation&#160;for&#160;examples,&#160;background&#160;knowledge<br/>
+and&#160;hypotheses&#160;as&#160;well&#160;as&#160;procedures&#160;for&#160;handling&#160;and&#160;maintaining&#160;the&#160;knowledge<br/>
+base.&#160;It&#160;contains&#160;a&#160;large&#160;range&#160;of&#160;generalisation,&#160;specialisation&#160;and&#160;reformulation<br/>
+operators,&#160;procedures&#160;for&#160;initializing&#160;and&#160;evaluating&#160;the&#160;knowledge&#160;base,&#160;and&#160;a<br/>
+generic&#160;control&#160;for&#160;testing&#160;various&#160;combinations&#160;of&#160;operators.<br/>
+MILES&#160;can&#160;be&#160;used&#160;for&#160;dierent&#160;goals.&#160;First,&#160;it&#160;allows&#160;to&#160;investigate&#160;the&#160;eects&#160;of<br/>
+the&#160;available&#160;operators&#160;on&#160;the&#160;knowledge&#160;base&#160;without&#160;specifying&#160;a&#160;specic&#160;con-<br/>
+trol&#160;mechanism.&#160;Secondly,&#160;it&#160;facilitates&#160;the&#160;construction&#160;of&#160;specic&#160;ILP-systems&#160;by<br/>
+adding&#160;a&#160;control&#160;mechanism&#160;that&#160;uses&#160;some&#160;of&#160;the&#160;operators.&#160;A&#160;third&#160;class&#160;of&#160;exper-<br/>
+iments&#160;can&#160;be&#160;done&#160;by&#160;specifying&#160;a&#160;parametric&#160;ILP-system&#160;and&#160;studying&#160;the&#160;eects<br/>
+of&#160;dierent&#160;instantiations.<br/>
+The&#160;generic&#160;control&#160;of&#160;MILES&#160;is&#160;a&#160;parametric&#160;ILP-system&#160;of&#160;that&#160;kind.&#160;It&#160;yields&#160;dif-<br/>
+ferent&#160;specic&#160;ILP-methods&#160;according&#160;to&#160;its&#160;parameter&#160;instantiations.&#160;The&#160;operators<br/>
+and&#160;tools&#160;available&#160;in&#160;MILES&#160;allow&#160;to&#160;experiment&#160;with&#160;a&#160;large&#160;range&#160;of&#160;instanti-<br/>
+ations&#160;of&#160;the&#160;algorithm.&#160;They&#160;help&#160;to&#160;rapidly&#160;develop&#160;and&#160;test&#160;new&#160;approaches&#160;to<br/>
+ILP.<br/>
+In&#160;the&#160;following,&#160;we&#160;give&#160;a&#160;short&#160;overview&#160;of&#160;the&#160;representation&#160;and&#160;operators&#160;of<br/>
+MILES.&#160;Then&#160;we&#160;describe&#160;the&#160;generic&#160;control,&#160;and&#160;give&#160;some&#160;example&#160;instantiations.<br/>
+At&#160;last,&#160;we&#160;present&#160;the&#160;X&#160;user&#160;interface&#160;of&#160;MILES,&#160;and&#160;conclude.<br/>
+1<br/>
+<hr/>
+<a name=2></a><img class="yflip" src="doc/docu-2_1.png"/><br/>
+2&#160;The&#160;Representation&#160;of&#160;MILES<br/>The&#160;MILES&#160;system&#160;is&#160;an&#160;environment&#160;for&#160;inductive&#160;logic&#160;programming.&#160;Before&#160;we<br/>
+present&#160;the&#160;dierent&#160;inductive&#160;operators,&#160;we&#160;describe&#160;the&#160;knowledge&#160;base&#160;the&#160;oper-<br/>
+ators&#160;work&#160;on.<br/>
+The&#160;knowledge&#160;base&#160;of&#160;MILES&#160;consists&#160;of<br/>
+positive&#160;and&#160;negative&#160;examples,<br/>
+<br/>
+Horn&#160;clauses&#160;that&#160;constitute&#160;the&#160;background&#160;knowledge&#160;and&#160;hypotheses,<br/>
+<br/>
+information&#160;on&#160;argument&#160;types.<br/>
+<br/>
+To&#160;realise&#160;closed-loop&#160;learning,&#160;we&#160;choose&#160;the&#160;same&#160;representation&#160;for&#160;the&#160;back-<br/>
+ground&#160;knowledge&#160;and&#160;hypotheses.&#160;Examples&#160;and&#160;rules&#160;are&#160;stored&#160;as&#160;higher-order<br/>
+facts&#160;with&#160;a&#160;unique&#160;identier.&#160;A&#160;depth-bounded&#160;iterative-deepening&#160;theorem&#160;prover<br/>
+allows&#160;to&#160;interpret&#160;the&#160;rules,&#160;and&#160;to&#160;deduce&#160;the&#160;examples&#160;from&#160;the&#160;theory.<br/>2.1&#160;Examples<br/>An&#160;example&#160;is&#160;stored&#160;in&#160;the&#160;knowledge&#160;base&#160;as<br/>
+ex(ID;Fact;Class)<br/>
+where&#160;ID&#160;is&#160;the&#160;unique&#160;identier.&#160;Fact&#160;is&#160;a&#160;ground&#160;unit&#160;clause,&#160;and&#160;Class&#160;either&#160;+<br/>
+for&#160;positive&#160;or&#160;for&#160;negative&#160;examples.<br/>
+MILES&#160;oers&#160;procedures&#160;for&#160;reading,&#160;storing&#160;and&#160;deleting&#160;examples.&#160;As&#160;only&#160;those<br/>
+procedures&#160;are&#160;visible&#160;to&#160;the&#160;user&#160;of&#160;the&#160;system,&#160;the&#160;actual&#160;implementation&#160;can&#160;be<br/>
+changed&#160;independently.<br/>2.2&#160;Horn&#160;Clauses<br/>
+Both&#160;clauses&#160;of&#160;the&#160;background&#160;knowledge&#160;and&#160;hypothesis&#160;clauses&#160;are&#160;stored&#160;in&#160;the<br/>
+knowledge&#160;base&#160;as<br/>
+known(ID;Head;Body;Clist;Label;evaluation(::::))<br/>
+where&#160;ID&#160;is&#160;the&#160;knowledge&#160;base&#160;key,&#160;and&#160;Head&#160;and&#160;Body&#160;are&#160;the&#160;head&#160;and&#160;the<br/>
+body&#160;of&#160;the&#160;clause.&#160;Clist&#160;contains&#160;an&#160;alternative,&#160;but&#160;equivalent&#160;list&#160;representation<br/>
+of&#160;the&#160;clause&#160;that&#160;is&#160;advantageous&#160;for&#160;some&#160;operators.&#160;For&#160;example,&#160;for&#160;a&#160;clause<br/>
+with&#160;head&#160;H&#160;and&#160;body&#160;B&#160;;::;B&#160;Clist&#160;is&#160;[H&#160;:&#160;p;B&#160;:&#160;n;::;B&#160;:&#160;n].&#160;Label&#160;allows&#160;to<br/>
+1<br/>
+n<br/>
+1<br/>
+n<br/>
+distinguish&#160;between&#160;background&#160;and&#160;hypothesis&#160;clauses.&#160;It&#160;may&#160;for&#160;example&#160;refer&#160;to<br/>
+the&#160;generating&#160;operator&#160;of&#160;the&#160;clause,&#160;or&#160;to&#160;the&#160;source&#160;le.&#160;The&#160;argument&#160;evaluation<br/>
+contains&#160;information&#160;on&#160;the&#160;applicability&#160;of&#160;the&#160;clause&#160;in&#160;proving&#160;the&#160;examples.<br/>
+Again,&#160;MILES&#160;oers&#160;a&#160;set&#160;of&#160;procedures&#160;for&#160;manipulating&#160;clauses.&#160;These&#160;procedures<br/>
+are&#160;the&#160;interface&#160;for&#160;the&#160;user,&#160;such&#160;that&#160;the&#160;actual&#160;implementation&#160;might&#160;be&#160;changed.<br/>2.3&#160;Argument&#160;Types<br/>
+The&#160;specication&#160;of&#160;argument&#160;types&#160;for&#160;a&#160;predicate&#160;is&#160;optional&#160;and&#160;might&#160;be&#160;elicited<br/>
+automatically,&#160;if&#160;examples&#160;for&#160;the&#160;predicate&#160;are&#160;present.&#160;Argument&#160;types&#160;are&#160;stored<br/>
+as&#160;facts<br/>
+type&#160;restriction(p(V&#160;;::;V&#160;);[type&#160;(V&#160;);::;typen(V&#160;)])<br/>
+1<br/>
+n<br/>
+1<br/>
+1<br/>
+n<br/>
+Each&#160;type&#160;type&#160;is&#160;dened&#160;by&#160;clauses&#160;in&#160;the&#160;knowledge&#160;base&#160;of&#160;MILES.&#160;Besides<br/>
+i<br/>
+the&#160;method&#160;for&#160;determining&#160;argument&#160;types&#160;mechanically,&#160;there&#160;are&#160;procedures&#160;for<br/>
+2<br/>
+<hr/>
+<a name=3></a><img class="yflip" src="doc/docu-3_1.png"/><br/>
+<img class="yflip" src="doc/docu-3_2.png"/><br/>
+<img class="yflip" src="doc/docu-3_3.png"/><br/>
+comparing&#160;types&#160;on&#160;generality,&#160;and&#160;for&#160;determining&#160;the&#160;type&#160;of&#160;a&#160;variable&#160;within&#160;a<br/>
+clause.&#160;These&#160;procedures&#160;can&#160;be&#160;employed&#160;during&#160;the&#160;generalisation&#160;or&#160;specialisation<br/>
+of&#160;hypotheses.<br/>
+MILES&#160;contains&#160;procedures&#160;for&#160;initializing&#160;a&#160;knowledge&#160;base&#160;from&#160;les,&#160;saving&#160;and<br/>
+restoring&#160;the&#160;state&#160;of&#160;a&#160;knowledge&#160;base,&#160;and&#160;inspecting&#160;rules&#160;and&#160;examples.<br/>3&#160;The&#160;Operators&#160;of&#160;MILES<br/>MILES&#160;contains&#160;ve&#160;dierent&#160;kinds&#160;of&#160;operators.<br/>
+generalisation&#160;operators&#160;which&#160;generalise&#160;a&#160;single&#160;clause&#160;or&#160;sets&#160;of&#160;clauses<br/>
+<br/>
+specialisation&#160;operators&#160;which&#160;specialise&#160;a&#160;single&#160;clause&#160;or&#160;sets&#160;of&#160;clauses<br/>
+<br/>
+reformulation&#160;operators&#160;which&#160;perform&#160;an&#160;equivalent&#160;reformulation&#160;of&#160;the<br/>
+<br/>
+knowledge&#160;base<br/>preprocessing&#160;operators&#160;which&#160;initialize&#160;the&#160;knowledge&#160;base&#160;and&#160;hypotheses<br/>
+<br/>
+evaluation&#160;operators&#160;which&#160;measure&#160;the&#160;quality&#160;of&#160;the&#160;knowledge&#160;base<br/>
+<br/>
+In&#160;the&#160;following,&#160;we&#160;give&#160;a&#160;short&#160;description&#160;of&#160;the&#160;implemented&#160;operators.<br/>3.1&#160;Generalisation&#160;Operators<br/>
+Generalisation&#160;operators&#160;generalise&#160;single&#160;clauses&#160;or&#160;sets&#160;of&#160;clauses&#160;with&#160;respect<br/>
+to&#160;a&#160;generalisation&#160;model.&#160;Generalisation&#160;models&#160;formally&#160;dene&#160;a&#160;generality&#160;rela-<br/>
+tion&#160;between&#160;clauses&#160;and&#160;sets&#160;of&#160;clauses.&#160;Several&#160;generalisation&#160;models&#160;have&#160;been<br/>
+proposed&#160;in&#160;ILP,&#160;such&#160;as&#160;-subsumption&#160;[Plo70],&#160;generalised&#160;subsumption&#160;[Bun88],<br/>
+relative&#160;subsumption&#160;[Plo71,&#160;MF90]&#160;and&#160;logical&#160;implication.&#160;These&#160;generalisation<br/>
+models&#160;dene&#160;the&#160;search&#160;space&#160;for&#160;the&#160;generalisation&#160;operators.<br/>3.1.1&#160;Least&#160;General&#160;Generalisations<br/>Given&#160;a&#160;set&#160;of&#160;clauses,&#160;their&#160;least&#160;general&#160;generalisation&#160;(lgg)&#160;with&#160;respect&#160;to&#160;the<br/>
+generalisation&#160;model&#160;is&#160;of&#160;special&#160;interest&#160;for&#160;learning&#160;procedures.&#160;MILES&#160;contains<br/>
+lgg-operators&#160;for&#160;all&#160;generalisation&#160;models&#160;except&#160;for&#160;logical&#160;implication.&#160;However,<br/>
+in&#160;that&#160;case&#160;no&#160;unique&#160;or&#160;nite&#160;lgg&#160;needs&#160;to&#160;exist.<br/>
+Three&#160;lgg-operators&#160;with&#160;respect&#160;to&#160;-subsumption&#160;have&#160;been&#160;implemented:<br/>
+the&#160;complete&#160;lgg-operator&#160;[Plo70]&#160;which&#160;involves&#160;the&#160;costly&#160;reduction&#160;under&#160;-<br/>
+subsumption,&#160;a&#160;weaker&#160;version&#160;nr&#160;lgg&#160;that&#160;works&#160;without&#160;reduction&#160;and&#160;an&#160;operator<br/>
+headed&#160;lgg&#160;which&#160;is&#160;specially&#160;suited&#160;for&#160;Horn&#160;clauses&#160;and&#160;fails&#160;if&#160;the&#160;input&#160;clauses<br/>
+have&#160;incompatible&#160;heads.&#160;An&#160;alternative&#160;generalisation&#160;operator&#160;with&#160;respect&#160;to<br/>
+-subsumption&#160;is&#160;the&#160;gti-operator&#160;that&#160;realizes&#160;generalisation&#160;through&#160;intersection<br/>
+[Jun92].&#160;In&#160;contrast&#160;to&#160;lgg,&#160;the&#160;generalised&#160;clause&#160;is&#160;at&#160;most&#160;as&#160;long&#160;as&#160;the&#160;shortest<br/>
+input&#160;clause.<br/>
+With&#160;respect&#160;to&#160;stronger&#160;generalisation&#160;models,&#160;two&#160;operators&#160;have&#160;been&#160;imple-<br/>
+mented.&#160;The&#160;rst,&#160;gen&#160;msg&#160;computes&#160;the&#160;least&#160;general&#160;generalisation&#160;with&#160;respect<br/>
+to&#160;generalised&#160;subsumption&#160;[Bun88].&#160;As&#160;the&#160;background&#160;knowledge&#160;is&#160;involved,&#160;it<br/>
+generally&#160;results&#160;in&#160;complex&#160;clauses&#160;that&#160;have&#160;to&#160;be&#160;reduced&#160;in&#160;additional&#160;steps.<br/>
+The&#160;same&#160;holds&#160;for&#160;the&#160;second&#160;operator,&#160;rlgg,&#160;that&#160;determines&#160;the&#160;least&#160;general<br/>
+generalisation&#160;with&#160;respect&#160;to&#160;relative&#160;subsumption&#160;[Plo71,&#160;MF90].&#160;It&#160;is&#160;realised&#160;by<br/>
+Muggleton&#160;und&#160;Feng's&#160;algorithm&#160;[MF90].<br/>
+3<br/>
+<hr/>
+<a name=4></a><img class="yflip" src="doc/docu-4_1.png"/><br/>
+<img class="yflip" src="doc/docu-4_2.png"/><br/>
+<img class="yflip" src="doc/docu-4_3.png"/><br/>
+<img class="yflip" src="doc/docu-4_4.png"/><br/>
+<img class="yflip" src="doc/docu-4_5.png"/><br/>
+<img class="yflip" src="doc/docu-4_6.png"/><br/>
+<img class="yflip" src="doc/docu-4_7.png"/><br/>
+<img class="yflip" src="doc/docu-4_8.png"/><br/>
+<img class="yflip" src="doc/docu-4_9.png"/><br/>
+3.1.2&#160;Inverse&#160;Resolution<br/>Inverse&#160;resolution&#160;operators&#160;aim&#160;to&#160;invert&#160;single&#160;or&#160;multiple&#160;deductive&#160;resolution<br/>
+steps.&#160;According&#160;to&#160;the&#160;clauses&#160;given&#160;as&#160;input,&#160;-&#160;and&#160;-operators&#160;can&#160;be&#160;distin-<br/>
+V<br/>
+W<br/>
+guished.<br/>
+Given&#160;a&#160;parent&#160;clause&#160;B&#160;and&#160;a&#160;resolvent&#160;C,&#160;-operators&#160;determine&#160;the&#160;missing<br/>
+V<br/>
+parent&#160;clause.&#160;Depending&#160;on&#160;whether&#160;the&#160;resolution&#160;literal&#160;in&#160;B&#160;is&#160;positive&#160;or&#160;neg-<br/>
+ative,&#160;the&#160;missing&#160;parent&#160;clause&#160;is&#160;a&#160;generalisation&#160;with&#160;respect&#160;to&#160;generalised<br/>
+subsumption&#160;or&#160;realitive&#160;subsumption&#160;[Jun93].&#160;The&#160;operators&#160;absorption&#160;[MB88]<br/>
+and&#160;saturation&#160;[Rou91]&#160;realised&#160;in&#160;MILES&#160;invert&#160;generalised&#160;subsumption,&#160;whereas<br/>
+identification&#160;[MB88]&#160;and&#160;inverse&#160;derivation&#160;[Mug90]&#160;invert&#160;relative&#160;subsump-<br/>
+tion.&#160;The&#160;G&#160;-operator&#160;[Wir89]&#160;integrates&#160;both.<br/>
+1<br/>
+-operators&#160;start&#160;with&#160;a&#160;set&#160;of&#160;resolvent&#160;clauses&#160;B&#160;;:::;B&#160;and&#160;construct&#160;a&#160;clause<br/>
+W<br/>
+f<br/>
+g<br/>
+1<br/>
+n<br/>
+A&#160;and&#160;clauses&#160;C&#160;;:::;C&#160;such&#160;that&#160;B&#160;results&#160;from&#160;resolving&#160;A&#160;with&#160;C&#160;on&#160;a&#160;xed<br/>
+f<br/>
+g<br/>
+1<br/>
+n<br/>
+i<br/>
+i<br/>
+literal&#160;L&#160;in&#160;A.&#160;Since&#160;L&#160;is&#160;resolved&#160;away&#160;in&#160;B&#160;and&#160;nothing&#160;is&#160;known&#160;about&#160;its<br/>
+i<br/>
+predicate&#160;symbol,&#160;a&#160;new&#160;predicate&#160;is&#160;invented.&#160;Three&#160;-operators&#160;are&#160;realised&#160;in<br/>
+W<br/>
+MILES.&#160;The&#160;intraconstruction-operators&#160;of&#160;[MB88]&#160;and&#160;[Rou91]&#160;are&#160;a&#160;special&#160;case<br/>
+as&#160;the&#160;new&#160;predicate&#160;literal&#160;is&#160;assumed&#160;to&#160;be&#160;negative&#160;in&#160;A.&#160;The&#160;more&#160;general&#160;G&#160;-2<br/>
+operator&#160;[Wir89]&#160;allows&#160;for&#160;both&#160;L&#160;being&#160;positive&#160;and&#160;negative&#160;in&#160;A.<br/>3.1.3&#160;Truncation<br/>Truncation&#160;operators&#160;generalise&#160;clauses&#160;by&#160;dropping&#160;body&#160;literals.&#160;They&#160;realise&#160;a<br/>
+very&#160;simple&#160;generalisation&#160;with&#160;respect&#160;to&#160;-subsumption.&#160;Combined&#160;with&#160;saturation<br/>
+or&#160;inverse&#160;derivation,&#160;and&#160;inverse&#160;substitution,&#160;truncation&#160;operators&#160;allow&#160;for&#160;com-<br/>
+plete&#160;generalisations&#160;with&#160;respect&#160;to&#160;generalised&#160;or&#160;relative&#160;subsumption&#160;[Jun93].<br/>
+That&#160;is,&#160;they&#160;allow&#160;to&#160;construct&#160;every&#160;clause&#160;that&#160;is&#160;more&#160;general&#160;than&#160;the&#160;input<br/>
+clause.<br/>
+Heuristics&#160;and&#160;the&#160;knowledge&#160;about&#160;properties&#160;of&#160;logic&#160;programs&#160;control&#160;which&#160;body<br/>
+literals&#160;are&#160;actually&#160;removed.&#160;MILES&#160;contains&#160;ve&#160;dierent&#160;truncation&#160;operators.<br/>
+The&#160;rst,&#160;truncate&#160;facts,&#160;is&#160;based&#160;on&#160;the&#160;observation&#160;that&#160;every&#160;body&#160;literal&#160;sub-<br/>
+sumed&#160;by&#160;a&#160;fact&#160;in&#160;the&#160;knowledge&#160;base&#160;is&#160;true&#160;regardless&#160;of&#160;the&#160;current&#160;proof.<br/>
+Therefore,&#160;the&#160;literal&#160;can&#160;be&#160;removed&#160;from&#160;the&#160;clause&#160;without&#160;changing&#160;the&#160;success<br/>
+set&#160;of&#160;the&#160;program.<br/>
+The&#160;second&#160;operator,&#160;truncate&#160;unconnected,&#160;starts&#160;from&#160;a&#160;similar&#160;observation&#160;de-<br/>
+scribed&#160;in&#160;[Rou91].&#160;Unconnected&#160;literals,&#160;that&#160;is,&#160;literals&#160;that&#160;share&#160;no&#160;variables<br/>
+with&#160;the&#160;clause&#160;head&#160;or&#160;other&#160;connected&#160;literals,&#160;can&#160;be&#160;skipped&#160;without&#160;aecting<br/>
+the&#160;success&#160;set&#160;of&#160;the&#160;clause&#160;.1<br/>
+The&#160;third&#160;operator,&#160;truncate&#160;unconnecting,&#160;is&#160;only&#160;slightly&#160;dierent.&#160;It&#160;drops&#160;a<br/>
+body&#160;literal&#160;if&#160;all&#160;other&#160;literals&#160;remain&#160;connected&#160;[Rou91].&#160;However,&#160;this&#160;slight&#160;dif-<br/>
+ference&#160;leads&#160;to&#160;varying&#160;results,&#160;as&#160;the&#160;following&#160;example&#160;will&#160;show.<br/>Example&#160;1:&#160;If&#160;a&#160;clause<br/>
+p(X)&#160;q(X;V&#160;1);r(V&#160;2);s(V&#160;2;V&#160;1)<br/>
+&#160;<br/>
+is&#160;given,&#160;then&#160;truncate&#160;unconnecting&#160;removes&#160;the&#160;literal&#160;r(V&#160;2),&#160;whereas<br/>
+truncate&#160;unconnected&#160;does&#160;not&#160;change&#160;the&#160;clause.<br/>
+The&#160;fourth&#160;truncation&#160;operator,&#160;truncate&#160;negation&#160;based,&#160;relies&#160;on&#160;the&#160;examples.<br/>
+It&#160;removes&#160;a&#160;body&#160;literal&#160;if&#160;the&#160;remaining&#160;clause&#160;still&#160;excludes&#160;all&#160;negative&#160;examples<br/>
+Except&#160;for&#160;the&#160;case&#160;that&#160;the&#160;clause&#160;has&#160;an&#160;empty&#160;success&#160;set.<br/>
+1<br/>
+4<br/>
+<hr/>
+<a name=5></a><img class="yflip" src="doc/docu-5_1.png"/><br/>
+<img class="yflip" src="doc/docu-5_2.png"/><br/>
+<img class="yflip" src="doc/docu-5_3.png"/><br/>
+<img class="yflip" src="doc/docu-5_4.png"/><br/>
+<img class="yflip" src="doc/docu-5_5.png"/><br/>
+[MF90].&#160;Combined&#160;with&#160;an&#160;lgg-operation,&#160;negation-based&#160;truncation&#160;allows&#160;to&#160;re-<br/>
+move&#160;redundant&#160;literals&#160;from&#160;the&#160;generalisation&#160;without&#160;sacricing&#160;correctness&#160;with<br/>
+respect&#160;to&#160;the&#160;examples.<br/>
+The&#160;last&#160;operator,&#160;truncate&#160;redundant,&#160;leaves&#160;out&#160;all&#160;literals&#160;within&#160;a&#160;saturated<br/>
+clause&#160;that&#160;have&#160;been&#160;used&#160;for&#160;an&#160;elementary&#160;saturation&#160;step&#160;[Rou91].&#160;This&#160;allows<br/>
+to&#160;implement&#160;absorption&#160;[MB88].<br/>Example&#160;2:&#160;Let<br/>
+C&#160;:&#160;bird(X)&#160;vulture(X);<br/>
+&#160;<br/>
+D&#160;:&#160;has&#160;beak(X)&#160;vulture(X):<br/>
+&#160;<br/>
+Then,&#160;saturation&#160;of&#160;D&#160;with&#160;respect&#160;to&#160;C&#160;yields<br/>
+E&#160;:&#160;has&#160;beak(X)&#160;bird(X);vulture(X):<br/>
+&#160;<br/>
+The&#160;truncate&#160;redundant-operator&#160;removes&#160;vulture(X)&#160;from&#160;E,&#160;resulting&#160;in&#160;the<br/>
+same&#160;clause&#160;as&#160;an&#160;absorption&#160;between&#160;D&#160;and&#160;C.<br/>
+3.2&#160;Specialisation&#160;Operators<br/>Specialisation&#160;operators&#160;specialise&#160;a&#160;single&#160;clause&#160;with&#160;respect&#160;to&#160;a&#160;generalisation<br/>
+model,&#160;usually&#160;-subsumption.&#160;Four&#160;specialisation&#160;operators&#160;are&#160;realised&#160;in&#160;MILES.<br/>
+Three&#160;if&#160;them&#160;are&#160;part&#160;of&#160;Shapiro's&#160;renement&#160;operator&#160;&#160;[Sha83].&#160;Given&#160;a&#160;clause<br/>
+0<br/>
+c,&#160;the&#160;specialisations&#160;of&#160;c&#160;that&#160;result&#160;from&#160;unifying&#160;variables&#160;within&#160;c,&#160;instantiating<br/>
+variables&#160;with&#160;terms&#160;and&#160;adding&#160;body&#160;literals&#160;are&#160;determined.&#160;Our&#160;implementation<br/>
+uses&#160;the&#160;argument&#160;types&#160;of&#160;the&#160;predicates&#160;involved,&#160;but&#160;it&#160;does&#160;not&#160;employ&#160;mode<br/>
+information,&#160;in&#160;contrast&#160;to&#160;Shapiro's&#160;operator.<br/>
+The&#160;second&#160;specialisation&#160;operator&#160;implemented&#160;in&#160;MILES&#160;specialises&#160;a&#160;clause&#160;with<br/>
+a&#160;new&#160;predicate.&#160;It&#160;employs&#160;discrimination-based&#160;reduction&#160;[KNS92]&#160;to&#160;nd&#160;the<br/>
+minimal&#160;set&#160;of&#160;argument&#160;variables&#160;for&#160;the&#160;new&#160;predicate.<br/>3.3&#160;Reformulation&#160;Operators<br/>Reformulation&#160;operators&#160;perform&#160;equivalent&#160;transformations&#160;of&#160;the&#160;knowledge&#160;base<br/>
+that&#160;facilitate&#160;the&#160;learning&#160;task.&#160;The&#160;rst&#160;operator&#160;realised&#160;in&#160;MILES&#160;is&#160;the<br/>
+reduction&#160;of&#160;clauses&#160;with&#160;respect&#160;to&#160;-subsumption&#160;[Plo70].&#160;It&#160;helps&#160;to&#160;nd&#160;the<br/>
+shortest&#160;equivalent&#160;form&#160;of&#160;a&#160;given&#160;clause.&#160;This&#160;is&#160;important&#160;especially&#160;for&#160;opera-<br/>
+tors&#160;that&#160;construct&#160;very&#160;long&#160;and&#160;complex&#160;clauses&#160;as&#160;e.g.&#160;rlgg&#160;[MF90].&#160;However,<br/>
+reduction&#160;with&#160;respect&#160;to&#160;-subsumption&#160;is&#160;quite&#160;costly.&#160;MILES&#160;contains&#160;dierent<br/>
+approximations,&#160;namely&#160;the&#160;truncation&#160;operators,&#160;that&#160;remove&#160;redundant&#160;body&#160;lit-<br/>
+erals&#160;without&#160;performing&#160;a&#160;complete&#160;reduction.<br/>
+The&#160;second&#160;reformulation&#160;operator&#160;implemented&#160;in&#160;MILES&#160;is&#160;flattening&#160;[Rou91].&#160;It<br/>
+replaces&#160;n-ary&#160;functions&#160;with&#160;(n+1)-ary&#160;predicates&#160;throughout&#160;the&#160;knowledge&#160;base.<br/>
+The&#160;resulting&#160;program&#160;is&#160;function-free&#160;and&#160;allows&#160;for&#160;deciding&#160;logical&#160;implication<br/>
+and&#160;satisability.&#160;Furthermore,&#160;generalisation&#160;operators&#160;like&#160;saturation&#160;or&#160;absorp-<br/>
+tion&#160;are&#160;more&#160;easily&#160;to&#160;apply&#160;as&#160;inverse&#160;substitutions&#160;are&#160;not&#160;necessary.&#160;The&#160;reverse<br/>
+unflattening&#160;operator&#160;restores&#160;the&#160;n-ary&#160;functors&#160;from&#160;the&#160;(n&#160;+&#160;1)-ary&#160;predicates.<br/>3.4&#160;Preprocessing&#160;Operators<br/>
+Preprocessing&#160;operators&#160;are&#160;designed&#160;to&#160;elicit&#160;information&#160;given&#160;implicitly&#160;within<br/>
+the&#160;examples,&#160;and&#160;to&#160;initialize&#160;the&#160;hypothesis.&#160;The&#160;rst&#160;operator&#160;determines&#160;the<br/>
+argument&#160;types&#160;for&#160;all&#160;example&#160;predicates.&#160;Argument&#160;types&#160;can&#160;be&#160;described&#160;by<br/>
+RUL-programs,&#160;and&#160;induced&#160;very&#160;eciently&#160;from&#160;the&#160;given&#160;examples&#160;by&#160;the&#160;method<br/>
+5<br/>
+<hr/>
+<a name=6></a><img class="yflip" src="doc/docu-6_1.png"/><br/>
+<img class="yflip" src="doc/docu-6_2.png"/><br/>
+<img class="yflip" src="doc/docu-6_3.png"/><br/>
+<img class="yflip" src="doc/docu-6_4.png"/><br/>
+<img class="yflip" src="doc/docu-6_5.png"/><br/>
+<img class="yflip" src="doc/docu-6_6.png"/><br/>
+<img class="yflip" src="doc/docu-6_7.png"/><br/>
+<img class="yflip" src="doc/docu-6_8.png"/><br/>
+described&#160;in&#160;[STW93].&#160;The&#160;knowledge&#160;about&#160;types&#160;can&#160;be&#160;employed&#160;to&#160;prune&#160;the<br/>
+search&#160;space&#160;during&#160;generalisation&#160;or&#160;specialisation.<br/>
+The&#160;second&#160;preprocessing&#160;operator&#160;implemented&#160;in&#160;MILES&#160;determines&#160;a&#160;set&#160;of&#160;clause<br/>
+heads&#160;that&#160;cover&#160;all&#160;positive&#160;examples&#160;in&#160;the&#160;knowledge&#160;base&#160;by&#160;the&#160;method&#160;de-<br/>
+scribed&#160;in&#160;[STW93].&#160;These&#160;clause&#160;heads&#160;give&#160;important&#160;structural&#160;information&#160;about<br/>
+the&#160;disjunctive&#160;cases&#160;of&#160;the&#160;predicates.&#160;They&#160;can&#160;be&#160;used&#160;as&#160;initial&#160;hypothesis&#160;that<br/>
+is&#160;specialised&#160;further.<br/>3.5&#160;Evaluation&#160;of&#160;the&#160;Knowledge&#160;Base<br/>Evaluation&#160;operators&#160;measure&#160;the&#160;quality&#160;of&#160;the&#160;knowledge&#160;base&#160;according&#160;to&#160;dier-<br/>
+ent&#160;criteria.&#160;A&#160;very&#160;simple&#160;measures&#160;realised&#160;in&#160;MILES&#160;is&#160;the&#160;syntactic&#160;size&#160;of&#160;the<br/>
+knowledge&#160;base.<br/>
+A&#160;more&#160;complex&#160;operation&#160;evaluates&#160;the&#160;current&#160;theory&#160;with&#160;respect&#160;to&#160;the&#160;given<br/>
+examples.&#160;It&#160;determines&#160;the&#160;evaluation&#160;of&#160;the&#160;clauses&#160;in&#160;the&#160;knowledge&#160;base,&#160;i.e.<br/>
+the&#160;positive&#160;and&#160;negative&#160;examples&#160;they&#160;cover&#160;and&#160;the&#160;proofs&#160;of&#160;examples&#160;they<br/>
+have&#160;been&#160;used&#160;in.&#160;This&#160;information&#160;stored&#160;for&#160;each&#160;clause&#160;can&#160;be&#160;used&#160;to&#160;compute<br/>
+commonly&#160;employed&#160;measures&#160;as&#160;accuracy&#160;or&#160;information&#160;gain&#160;of&#160;the&#160;current&#160;theory<br/>
+with&#160;respect&#160;to&#160;the&#160;examples.<br/>
+Additionally,&#160;MILES&#160;contains&#160;predicates&#160;that&#160;check&#160;whether&#160;the&#160;current&#160;theory&#160;is<br/>
+complete&#160;or&#160;consistent&#160;with&#160;respect&#160;to&#160;the&#160;examples.&#160;If&#160;neither&#160;is&#160;the&#160;case,&#160;procedures<br/>
+that&#160;detect&#160;the&#160;culprit&#160;are&#160;implemented&#160;in&#160;MILES.&#160;The&#160;rst&#160;one,&#160;fp&#160;[Sha83],&#160;imple-<br/>
+ments&#160;an&#160;oracle-free&#160;version&#160;of&#160;Shapiro's&#160;contradiction-backtracing&#160;algorithm&#160;that<br/>
+localises&#160;overgeneral&#160;clauses&#160;within&#160;a&#160;theory.&#160;These&#160;clauses&#160;need&#160;to&#160;be&#160;specialised&#160;to<br/>
+make&#160;the&#160;theory&#160;consistent.&#160;The&#160;second&#160;one,&#160;ip&#160;[Sha83],&#160;implements&#160;Shapiro's&#160;algo-<br/>
+rithm&#160;for&#160;diagnosing&#160;nite&#160;failures&#160;on&#160;the&#160;examples.&#160;It&#160;returns&#160;a&#160;set&#160;of&#160;ground&#160;facts<br/>
+that&#160;should&#160;be&#160;covered&#160;in&#160;order&#160;to&#160;make&#160;the&#160;theory&#160;complete.&#160;Both&#160;procedures&#160;can<br/>
+be&#160;used&#160;to&#160;provide&#160;relevant&#160;input&#160;to&#160;the&#160;generalisation&#160;and&#160;specialisation&#160;operators<br/>
+of&#160;MILES.<br/>4&#160;Generic&#160;Control&#160;Mechanism<br/>To&#160;test&#160;the&#160;eects&#160;of&#160;dierent&#160;operator&#160;combinations,&#160;MILES&#160;contains&#160;a&#160;generic<br/>
+control&#160;procedure&#160;that&#160;can&#160;be&#160;instantiated&#160;to&#160;actual&#160;ILP&#160;algorithms.&#160;It&#160;is&#160;basically<br/>
+the&#160;same&#160;as&#160;the&#160;generic&#160;concept&#160;learning&#160;algorithm&#160;GENCOL&#160;[Rae92],&#160;except&#160;that&#160;it<br/>
+oers&#160;the&#160;possibility&#160;to&#160;invent&#160;new&#160;predicates.&#160;Because&#160;of&#160;its&#160;vicinity&#160;to&#160;GENCOL,&#160;it<br/>
+is&#160;called&#160;GENCON&#160;for&#160;GENeric&#160;CONtrol.&#160;Figure&#160;1&#160;shows&#160;the&#160;GENCON&#160;algorithm.<br/>
+Twelve&#160;parameter&#160;procedures,&#160;underlined&#160;in&#160;gure&#160;1,&#160;control&#160;the&#160;hypothesis&#160;space,<br/>
+the&#160;search&#160;paradigm&#160;and&#160;the&#160;decision&#160;criteria&#160;for&#160;predicate&#160;invention&#160;of&#160;GENCON.<br/>
+The&#160;central&#160;idea&#160;of&#160;GENCON&#160;is&#160;to&#160;mark&#160;the&#160;hypotheses&#160;in&#160;partial&#160;sols&#160;as&#160;active<br/>
+and&#160;passive.&#160;Active&#160;programs&#160;are&#160;subject&#160;to&#160;further&#160;generalisation&#160;or&#160;specialisation<br/>
+steps,&#160;whereas&#160;passive&#160;ones&#160;have&#160;already&#160;been&#160;tried.&#160;Programs&#160;marked&#160;as&#160;passive<br/>
+are&#160;potential&#160;starting&#160;points&#160;for&#160;predicate&#160;invention.<br/>
+The&#160;parameter&#160;procdure&#160;initialize&#160;in&#160;gure&#160;1&#160;initializes&#160;the&#160;set&#160;of&#160;partial&#160;solu-<br/>
+tions&#160;partial&#160;sols&#160;to&#160;(PS&#160;;Mark&#160;);:::;(PS&#160;;Mark&#160;)&#160;.&#160;It&#160;should&#160;be&#160;based&#160;on&#160;the<br/>
+f<br/>
+g<br/>
+1<br/>
+1<br/>
+n<br/>
+n<br/>
+examples&#160;present&#160;in&#160;the&#160;knowledge&#160;base.<br/>
+The&#160;procedures&#160;Stop&#160;Criterion&#160;and&#160;Quality&#160;Criterion&#160;express&#160;the&#160;success&#160;cri-<br/>
+terion&#160;of&#160;the&#160;algorithm.&#160;The&#160;procedure&#160;Stop&#160;Criterion&#160;decides&#160;whether&#160;the&#160;set<br/>
+complete&#160;sols&#160;contains&#160;a&#160;satisfactory&#160;solution.&#160;In&#160;that&#160;case,&#160;the&#160;algorithm&#160;stops<br/>
+and&#160;outputs&#160;one&#160;or&#160;all&#160;of&#160;the&#160;complete&#160;solutions&#160;depending&#160;on&#160;the&#160;implementation<br/>
+of&#160;output.&#160;The&#160;procedure&#160;Quality&#160;Criterion&#160;checks&#160;whether&#160;the&#160;current&#160;hypothesis<br/>
+PS&#160;is&#160;satisfactory&#160;and&#160;should&#160;be&#160;added&#160;to&#160;complete&#160;sols.&#160;In&#160;that&#160;case,&#160;it&#160;might<br/>
+6<br/>
+<hr/>
+<a name=7></a><img class="yflip" src="doc/docu-7_1.png"/><br/>
+<img class="yflip" src="doc/docu-7_2.png"/><br/>
+<img class="yflip" src="doc/docu-7_3.png"/><br/>
+<img class="yflip" src="doc/docu-7_4.png"/><br/>
+<img class="yflip" src="doc/docu-7_5.png"/><br/>
+<img class="yflip" src="doc/docu-7_6.png"/><br/>
+<img class="yflip" src="doc/docu-7_7.png"/><br/>
+<img class="yflip" src="doc/docu-7_8.png"/><br/>
+<img class="yflip" src="doc/docu-7_9.png"/><br/>
+<img class="yflip" src="doc/docu-7_10.png"/><br/>
+<img class="yflip" src="doc/docu-7_11.png"/><br/>
+<img class="yflip" src="doc/docu-7_12.png"/><br/>
+<img class="yflip" src="doc/docu-7_13.png"/><br/>
+<img class="yflip" src="doc/docu-7_14.png"/><br/>
+<img class="yflip" src="doc/docu-7_15.png"/><br/>
+<img class="yflip" src="doc/docu-7_16.png"/><br/>
+<img class="yflip" src="doc/docu-7_17.png"/><br/>
+<img class="yflip" src="doc/docu-7_18.png"/><br/>
+<img class="yflip" src="doc/docu-7_19.png"/><br/>
+<img class="yflip" src="doc/docu-7_20.png"/><br/>
+<img class="yflip" src="doc/docu-7_21.png"/><br/>
+<img class="yflip" src="doc/docu-7_22.png"/><br/>
+<img class="yflip" src="doc/docu-7_23.png"/><br/>
+<img class="yflip" src="doc/docu-7_24.png"/><br/>
+<img class="yflip" src="doc/docu-7_25.png"/><br/>
+<img class="yflip" src="doc/docu-7_26.png"/><br/>
+<img class="yflip" src="doc/docu-7_27.png"/><br/>
+<img class="yflip" src="doc/docu-7_28.png"/><br/>
+<img class="yflip" src="doc/docu-7_29.png"/><br/>
+<img class="yflip" src="doc/docu-7_30.png"/><br/>
+<img class="yflip" src="doc/docu-7_31.png"/><br/>
+<img class="yflip" src="doc/docu-7_32.png"/><br/>
+<img class="yflip" src="doc/docu-7_33.png"/><br/>
+<img class="yflip" src="doc/docu-7_34.png"/><br/>
+<img class="yflip" src="doc/docu-7_35.png"/><br/>
+<img class="yflip" src="doc/docu-7_36.png"/><br/>
+<img class="yflip" src="doc/docu-7_37.png"/><br/>
+<img class="yflip" src="doc/docu-7_38.png"/><br/>
+<img class="yflip" src="doc/docu-7_39.png"/><br/>
+<img class="yflip" src="doc/docu-7_40.png"/><br/>
+<img class="yflip" src="doc/docu-7_41.png"/><br/>
+<img class="yflip" src="doc/docu-7_42.png"/><br/>
+<img class="yflip" src="doc/docu-7_43.png"/><br/>
+<img class="yflip" src="doc/docu-7_44.png"/><br/>
+<img class="yflip" src="doc/docu-7_45.png"/><br/>
+<img class="yflip" src="doc/docu-7_46.png"/><br/>
+<img class="yflip" src="doc/docu-7_47.png"/><br/>
+<img class="yflip" src="doc/docu-7_48.png"/><br/>
+<img class="yflip" src="doc/docu-7_49.png"/><br/>
+<img class="yflip" src="doc/docu-7_50.png"/><br/>
+<img class="yflip" src="doc/docu-7_51.png"/><br/>
+<img class="yflip" src="doc/docu-7_52.png"/><br/>
+<img class="yflip" src="doc/docu-7_53.png"/><br/>
+Given:&#160;B,&#160;E&#160;,&#160;E<br/>
+<br/>
+&#160;<br/>
+Algorithm:<br/>
+partial&#160;sols&#160;:=&#160;initialize(E&#160;;E&#160;;B)<br/>
+<br/>
+&#160;<br/>
+all&#160;PS&#160;partial&#160;sols&#160;marked&#160;active<br/>
+2<br/>
+complete&#160;sols&#160;:=&#160;<br/>
+while&#160;not(Stop&#160;Criterion(complete&#160;sols))&#160;do<br/>
+PS&#160;:=&#160;select(partial&#160;sols)<br/>
+if&#160;Quality&#160;Criterion(PS)<br/>
+then&#160;complete&#160;sols&#160;:=&#160;complete&#160;sols&#160;PS<br/>
+[<br/>
+f<br/>
+g<br/>
+partial&#160;sols&#160;:=&#160;update(partial&#160;sols)<br/>
+else&#160;if&#160;active(PS)<br/>
+then&#160;one&#160;of(&#160;partial&#160;sols&#160;:=&#160;add(partial&#160;sols;spec(PS))<br/>
+!<br/>
+partial&#160;sols&#160;:=&#160;add(partial&#160;sols;gen(PS)))<br/>
+!<br/>
+all&#160;PS&#160;spec(PS)(gen(PS))&#160;marked&#160;active<br/>
+0<br/>
+2<br/>
+else&#160;partial&#160;sols&#160;:=&#160;add(partial&#160;sols;learn&#160;newp(PS))<br/>
+mark&#160;PS&#160;as&#160;passive<br/>
+partial&#160;sols&#160;:=&#160;filter(partial&#160;sols)<br/>
+Output:&#160;output(complete&#160;sols)<br/>
+Figure&#160;1:&#160;Generic&#160;Control&#160;of&#160;MILES:&#160;GENCON<br/>
+be&#160;necessary&#160;to&#160;update&#160;partial&#160;sols&#160;with&#160;the&#160;procedure&#160;update.&#160;For&#160;example,&#160;to<br/>
+implement&#160;a&#160;greedy&#160;covering&#160;strategy,&#160;both&#160;partial&#160;sols&#160;and&#160;complete&#160;sols&#160;contain<br/>
+clauses&#160;as&#160;elements,&#160;the&#160;latter&#160;consistent,&#160;the&#160;rst&#160;possibly&#160;overgeneral&#160;ones.&#160;The<br/>
+Stop&#160;Criterion&#160;is&#160;fulllled&#160;as&#160;soon&#160;as&#160;the&#160;clauses&#160;in&#160;complete&#160;sols&#160;cover&#160;all&#160;positive<br/>
+examples,&#160;whereas&#160;the&#160;Quality&#160;Criterion&#160;is&#160;true&#160;if&#160;the&#160;clause&#160;PS&#160;is&#160;consistent&#160;with<br/>
+respect&#160;to&#160;the&#160;negative&#160;examples.&#160;In&#160;that&#160;case,&#160;partial&#160;sols&#160;needs&#160;to&#160;be&#160;reset&#160;to<br/>
+containing&#160;only&#160;one&#160;active&#160;clause&#160;head&#160;to&#160;be&#160;specialised.<br/>
+The&#160;procedures&#160;select,&#160;add&#160;and&#160;filter&#160;constitute&#160;the&#160;search&#160;paradigm.&#160;The&#160;proce-<br/>
+dure&#160;select&#160;selects&#160;one&#160;of&#160;the&#160;current&#160;hypotheses&#160;to&#160;be&#160;generalised&#160;or&#160;specialised,&#160;add<br/>
+adds&#160;the&#160;newly&#160;generated&#160;hypotheses&#160;to&#160;the&#160;set&#160;of&#160;partial&#160;solutions,&#160;and&#160;filter&#160;l-<br/>
+ters&#160;the&#160;most&#160;promising&#160;ones&#160;among&#160;them.&#160;For&#160;example,&#160;to&#160;implement&#160;breadth-rst<br/>
+search,&#160;select&#160;always&#160;chooses&#160;the&#160;rst&#160;active&#160;element&#160;of&#160;partial&#160;sols,&#160;add&#160;appends<br/>
+the&#160;new&#160;partial&#160;programs&#160;to&#160;partial&#160;sols,&#160;and&#160;filter&#160;is&#160;the&#160;identity.<br/>
+Additionally,&#160;select&#160;controls&#160;when&#160;predicate&#160;invention&#160;is&#160;performed.&#160;If&#160;it&#160;chooses<br/>
+active&#160;programs&#160;as&#160;long&#160;as&#160;any&#160;are&#160;present,&#160;and&#160;passive&#160;ones&#160;only&#160;after&#160;all&#160;programs<br/>
+in&#160;partial&#160;sols&#160;have&#160;become&#160;marked&#160;passive,&#160;it&#160;implements&#160;nite&#160;axiomatisability.<br/>
+This&#160;is&#160;because&#160;as&#160;long&#160;as&#160;active&#160;programs&#160;are&#160;present&#160;the&#160;hypothesis&#160;space&#160;is&#160;not&#160;yet<br/>
+completely&#160;explored.&#160;As&#160;soon&#160;as&#160;all&#160;programs&#160;in&#160;partial&#160;sols&#160;are&#160;marked&#160;passive,<br/>
+the&#160;hypothesis&#160;space&#160;is&#160;exhausted&#160;and&#160;needs&#160;to&#160;be&#160;enlarged.&#160;If&#160;it&#160;selects&#160;passive<br/>
+programs&#160;though&#160;active&#160;ones&#160;are&#160;present,&#160;it&#160;implements&#160;a&#160;heuristic&#160;criterion&#160;for<br/>
+predicate&#160;invention.&#160;Active&#160;programs&#160;indicate&#160;further&#160;options&#160;for&#160;generalisation&#160;or<br/>
+specialisation&#160;that&#160;are&#160;discarded&#160;in&#160;sake&#160;of&#160;a&#160;more&#160;promising&#160;new&#160;predicate.<br/>
+The&#160;predicate&#160;one&#160;of&#160;decides&#160;whether&#160;the&#160;current&#160;hypothesis&#160;should&#160;be&#160;generalised<br/>
+or&#160;specialised.&#160;A&#160;common&#160;implementation&#160;as&#160;e.g.&#160;in&#160;MIS&#160;[Sha83]&#160;generalises&#160;if&#160;PS<br/>
+is&#160;incomplete,&#160;and&#160;specialises&#160;if&#160;PS&#160;is&#160;inconsistent.&#160;The&#160;generalisation&#160;and&#160;special-<br/>
+isation&#160;operators&#160;gen&#160;and&#160;spec&#160;determine&#160;the&#160;generalisations&#160;and&#160;specialisations&#160;of<br/>
+PS&#160;with&#160;respect&#160;to&#160;the&#160;bias.<br/>
+The&#160;procedure&#160;learn&#160;newp&#160;corrects&#160;the&#160;overgeneral&#160;and/or&#160;overspecic&#160;partial&#160;so-<br/>
+lution&#160;PS&#160;with&#160;new&#160;predicates.&#160;For&#160;nding&#160;the&#160;denition&#160;of&#160;the&#160;new&#160;predicates,&#160;a<br/>
+recursive&#160;call&#160;of&#160;the&#160;whole&#160;induction&#160;algorithm&#160;might&#160;be&#160;necessary.<br/>
+7<br/>
+<hr/>
+<a name=8></a><img class="yflip" src="doc/docu-8_1.png"/><br/>
+<img class="yflip" src="doc/docu-8_2.png"/><br/>
+<img class="yflip" src="doc/docu-8_3.png"/><br/>
+<img class="yflip" src="doc/docu-8_4.png"/><br/>
+<img class="yflip" src="doc/docu-8_5.png"/><br/>
+<img class="yflip" src="doc/docu-8_6.png"/><br/>
+<img class="yflip" src="doc/docu-8_7.png"/><br/>
+<img class="yflip" src="doc/docu-8_8.png"/><br/>
+<img class="yflip" src="doc/docu-8_9.png"/><br/>
+<img class="yflip" src="doc/docu-8_10.png"/><br/>
+<img class="yflip" src="doc/docu-8_11.png"/><br/>
+<img class="yflip" src="doc/docu-8_12.png"/><br/>
+<img class="yflip" src="doc/docu-8_13.png"/><br/>
+GENCON&#160;provides&#160;a&#160;simple&#160;and&#160;very&#160;general&#160;control,&#160;but&#160;leaves&#160;most&#160;work&#160;to&#160;the<br/>
+implementation&#160;of&#160;the&#160;parameter&#160;predicates.&#160;However,&#160;the&#160;large&#160;amount&#160;of&#160;operators<br/>
+and&#160;heuristics&#160;in&#160;MILES&#160;that&#160;can&#160;be&#160;used&#160;to&#160;instantiate&#160;the&#160;parameters&#160;reduces&#160;this<br/>
+implementational&#160;work&#160;a&#160;lot.<br/>5&#160;Simple&#160;Instantiations&#160;of&#160;the&#160;Generic&#160;Control<br/>Currently,&#160;three&#160;instantiations&#160;of&#160;GENCON&#160;are&#160;included&#160;in&#160;the&#160;MILES&#160;toolbox,<br/>
+one&#160;for&#160;RUL-programs,&#160;one&#160;for&#160;constrained&#160;programs,&#160;and&#160;a&#160;FOIL-like&#160;algorithm.<br/>
+They&#160;demonstrate&#160;the&#160;interaction&#160;between&#160;the&#160;dierent&#160;parameters&#160;of&#160;GENCON.<br/>5.1&#160;RUL-Programs<br/>Regular&#160;unary&#160;logic&#160;(RUL)&#160;programs&#160;[YS91]&#160;are&#160;logic&#160;programs&#160;that&#160;allow&#160;to&#160;de-<br/>
+scribe&#160;syntactic&#160;argument&#160;types.&#160;They&#160;contain&#160;only&#160;unary&#160;predicates&#160;and&#160;allow<br/>
+for&#160;non-variable&#160;argument&#160;terms&#160;only&#160;in&#160;the&#160;clause&#160;heads.&#160;The&#160;head&#160;arguments&#160;of<br/>
+clauses&#160;of&#160;the&#160;same&#160;predicate&#160;must&#160;dier&#160;in&#160;their&#160;function&#160;symbol.&#160;Additionally,<br/>
+every&#160;variable&#160;in&#160;a&#160;clause&#160;must&#160;occur&#160;exactly&#160;once&#160;in&#160;the&#160;head&#160;and&#160;once&#160;in&#160;the&#160;body.<br/>
+The&#160;extensions&#160;of&#160;predicates&#160;dened&#160;by&#160;RUL-programs&#160;are&#160;regular&#160;sets.&#160;Therefore,<br/>
+they&#160;can&#160;be&#160;eciently&#160;compared&#160;on&#160;generality.&#160;Regular&#160;unary&#160;predicates&#160;can&#160;be<br/>
+sorted&#160;in&#160;a&#160;complete&#160;lattice&#160;with&#160;respect&#160;to&#160;set&#160;union&#160;and&#160;intersection&#160;of&#160;their<br/>
+extensions.&#160;Methods&#160;for&#160;comparing&#160;regular&#160;predicates&#160;are&#160;included&#160;in&#160;the&#160;argument<br/>
+type&#160;module&#160;of&#160;MILES.<br/>
+To&#160;obtain&#160;an&#160;instantiation&#160;of&#160;GENCON&#160;for&#160;inducing&#160;RUL-programs,&#160;the&#160;parameters<br/>
+are&#160;set&#160;as&#160;follows:<br/>
+initialize(E&#160;;;B)&#160;=&#160;(heads(E&#160;);active)&#160;where&#160;the&#160;heads&#160;for&#160;E&#160;are<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+f<br/>
+g<br/>
+dened&#160;as&#160;lgg&#160;(&#160;p(f(:::))&#160;E&#160;)&#160;p&#160;predicate,&#160;f&#160;functor&#160;in&#160;E&#160;.<br/>
+2<br/>
+<br/>
+<br/>
+f<br/>
+f<br/>
+2<br/>
+g<br/>
+j<br/>
+g<br/>
+RUL-programs&#160;for&#160;argument&#160;types&#160;are&#160;induced&#160;from&#160;positive&#160;examples&#160;only.<br/>
+Therefore,&#160;the&#160;second&#160;argument&#160;of&#160;initialize&#160;is&#160;the&#160;empty&#160;set.<br/>Stop&#160;Criterion(complete&#160;sols)&#160;(&#160;complete&#160;sols&#160;=&#160;1)<br/>
+<br/>
+<br/>
+j<br/>
+j<br/>
+select(partial&#160;sols)&#160;=&#160;the&#160;most&#160;specic&#160;active&#160;PS&#160;partial&#160;sols,&#160;if&#160;any.&#160;Else<br/>
+<br/>
+2<br/>
+the&#160;most&#160;specic&#160;passive&#160;PS&#160;partial&#160;sols.<br/>
+2<br/>
+Quality&#160;Criterion(PS)&#160;(B&#160;PS&#160;E&#160;)&#160;and&#160;PS&#160;is&#160;a&#160;RUL-program<br/>
+<br/>
+<br/>
+<br/>
+[<br/>
+`<br/>
+update(partial&#160;sols)&#160;=&#160;partial&#160;sols<br/>
+<br/>
+one&#160;of&#160;if&#160;B&#160;PS&#160;E&#160;then&#160;specialise,&#160;else&#160;generalise<br/>
+<br/>
+<br/>
+<br/>
+[<br/>
+`<br/>
+add(partial&#160;sols;PSL)&#160;=&#160;partial&#160;sols&#160;PSL<br/>
+<br/>
+[<br/>
+spec(PS)&#160;:&#160;localise&#160;a&#160;clause&#160;C<br/>
+PS&#160;where&#160;V<br/>
+vars(head(C))<br/>
+<br/>
+2<br/>
+9<br/>
+2<br/>
+vars(body(C))&#160;and&#160;specialise&#160;C&#160;by&#160;adding&#160;a&#160;body&#160;literal&#160;p(V&#160;)&#160;that&#160;is&#160;true<br/>
+for&#160;all&#160;example&#160;instantiations&#160;of&#160;the&#160;clause<br/>gen(PS)&#160;:&#160;localise&#160;a&#160;clause&#160;C&#160;PS&#160;where<br/>
+<br/>
+2<br/>
+e&#160;E&#160;head(C)&#160;=&#160;e<br/>
+e&#160;E&#160;B&#160;PS&#160;e&#160;=&#160;;<br/>
+f<br/>
+2<br/>
+j<br/>
+9<br/>
+g<br/>
+f<br/>
+2<br/>
+j<br/>
+[<br/>
+`<br/>
+g<br/>
+6<br/>
+and&#160;remove&#160;its&#160;body&#160;literals.<br/>
+[Plo70]<br/>
+2<br/>
+8<br/>
+<hr/>
+<a name=9></a><img class="yflip" src="doc/docu-9_1.png"/><br/>
+<img class="yflip" src="doc/docu-9_2.png"/><br/>
+<img class="yflip" src="doc/docu-9_3.png"/><br/>
+<img class="yflip" src="doc/docu-9_4.png"/><br/>
+<img class="yflip" src="doc/docu-9_5.png"/><br/>
+<img class="yflip" src="doc/docu-9_6.png"/><br/>
+<img class="yflip" src="doc/docu-9_7.png"/><br/>
+<img class="yflip" src="doc/docu-9_8.png"/><br/>
+<img class="yflip" src="doc/docu-9_9.png"/><br/>
+<img class="yflip" src="doc/docu-9_10.png"/><br/>
+<img class="yflip" src="doc/docu-9_11.png"/><br/>
+<img class="yflip" src="doc/docu-9_12.png"/><br/>
+<img class="yflip" src="doc/docu-9_13.png"/><br/>
+<img class="yflip" src="doc/docu-9_14.png"/><br/>
+<img class="yflip" src="doc/docu-9_15.png"/><br/>
+<img class="yflip" src="doc/docu-9_16.png"/><br/>
+<img class="yflip" src="doc/docu-9_17.png"/><br/>
+<img class="yflip" src="doc/docu-9_18.png"/><br/>
+<img class="yflip" src="doc/docu-9_19.png"/><br/>
+<img class="yflip" src="doc/docu-9_20.png"/><br/>
+<img class="yflip" src="doc/docu-9_21.png"/><br/>
+<img class="yflip" src="doc/docu-9_22.png"/><br/>
+learn&#160;newp(PS)&#160;:&#160;for&#160;each&#160;clause&#160;C&#160;PS&#160;with&#160;V&#160;=&#160;vars(head(C))<br/>
+<br/>
+2<br/>
+C<br/>
+vars(body(C))&#160;=&#160;,&#160;and&#160;for&#160;each&#160;V&#160;V&#160;,&#160;add&#160;a&#160;literal&#160;newp&#160;(V&#160;)&#160;to&#160;the<br/>
+6<br/>
+2<br/>
+C<br/>
+V<br/>
+body&#160;of&#160;C.&#160;The&#160;instantiations&#160;E&#160;=&#160;newp&#160;(V&#160;)&#160;e&#160;E&#160;head(C)&#160;=&#160;e<br/>
+<br/>
+f<br/>
+j<br/>
+9<br/>
+2<br/>
+g<br/>
+V<br/>
+V<br/>
+are&#160;added&#160;to&#160;E&#160;,&#160;and&#160;heads(E)&#160;to&#160;PS.<br/>
+<br/>
+V<br/>
+filter(partial&#160;sols)&#160;=&#160;partial&#160;sols<br/>
+<br/>
+output(complete&#160;sols)&#160;:&#160;remove&#160;and&#160;replace&#160;all&#160;equivalent&#160;new&#160;predicates,&#160;then<br/>
+<br/>
+add&#160;the&#160;resulting&#160;clauses&#160;to&#160;the&#160;knowledge&#160;base&#160;of&#160;MILES.&#160;Removing&#160;equiv-<br/>
+alently&#160;dened&#160;new&#160;predicates&#160;is&#160;necessary&#160;to&#160;improve&#160;the&#160;readability&#160;of&#160;the<br/>
+program.&#160;The&#160;equivalence&#160;of&#160;new&#160;predicates&#160;can&#160;be&#160;checked&#160;with&#160;the&#160;methods<br/>
+for&#160;comparing&#160;regular&#160;unary&#160;predicates.<br/>
+5.2&#160;Constrained&#160;Programs<br/>
+The&#160;restriction&#160;to&#160;constrained&#160;clauses,&#160;that&#160;is&#160;clauses&#160;without&#160;existential&#160;variables,<br/>
+is&#160;widely&#160;used&#160;in&#160;ILP&#160;and&#160;deductive&#160;data&#160;bases.&#160;In&#160;particular&#160;for&#160;ILP-systems&#160;this<br/>
+restriction&#160;is&#160;very&#160;useful&#160;as&#160;it&#160;avoids&#160;the&#160;combinatorial&#160;problems&#160;with&#160;existential<br/>
+variables.<br/>
+The&#160;following&#160;parameter&#160;instantiation&#160;for&#160;GENCON&#160;leads&#160;to&#160;a&#160;method&#160;for&#160;inducing<br/>
+constrained&#160;programs:<br/>
+initialize(E&#160;;E&#160;;B)&#160;=&#160;(clause&#160;heads(E&#160;);active)&#160;where&#160;the&#160;clause<br/>
+<br/>
+&#160;<br/>
+<br/>
+<br/>
+f<br/>
+g<br/>
+heads&#160;for&#160;the&#160;predicates&#160;in&#160;E&#160;are&#160;determined&#160;as&#160;described&#160;in&#160;[STW93].<br/>
+<br/>
+Stop&#160;Criterion(complete&#160;sols)&#160;(&#160;complete&#160;sols&#160;=&#160;1)<br/>
+<br/>
+<br/>
+j<br/>
+j<br/>
+select(partial&#160;sols)&#160;=&#160;the&#160;rst&#160;active&#160;PS&#160;partial&#160;sols,&#160;if&#160;any.&#160;Otherwise&#160;the<br/>
+<br/>
+2<br/>
+passive&#160;PS&#160;partial&#160;sols&#160;that&#160;covers&#160;the&#160;fewest&#160;negative&#160;examples.<br/>
+2<br/>
+Quality&#160;Criterion(PS)&#160;((B&#160;PS&#160;E&#160;)&#160;(B&#160;PS&#160;E&#160;))<br/>
+<br/>
+&#160;<br/>
+<br/>
+<br/>
+[<br/>
+`<br/>
+^<br/>
+[<br/>
+6`<br/>
+update(partial&#160;sols)&#160;=&#160;partial&#160;sols<br/>
+<br/>
+one&#160;of&#160;if&#160;B&#160;PS&#160;E&#160;then&#160;specialise,&#160;else&#160;generalise<br/>
+<br/>
+<br/>
+<br/>
+[<br/>
+`<br/>
+add(partial&#160;sols;PSL)&#160;=&#160;partial&#160;sols&#160;PSL<br/>
+<br/>
+[<br/>
+spec(PS)&#160;:&#160;localise&#160;an&#160;overgeneral&#160;clause&#160;C&#160;PS&#160;with&#160;fp,&#160;and&#160;specialise&#160;C<br/>
+<br/>
+2<br/>
+by&#160;adding&#160;a&#160;constrained&#160;body&#160;literal.<br/>gen(PS)&#160;:&#160;localise&#160;a&#160;clause&#160;C&#160;PS&#160;where<br/>
+<br/>
+2<br/>
+e&#160;E<br/>
+head(C)&#160;=&#160;e<br/>
+e&#160;E&#160;B&#160;PS&#160;e&#160;=&#160;;<br/>
+<br/>
+<br/>
+f<br/>
+2<br/>
+j<br/>
+9<br/>
+g<br/>
+f<br/>
+2<br/>
+j<br/>
+[<br/>
+`<br/>
+g<br/>
+6<br/>
+and&#160;greedily&#160;remove&#160;its&#160;body&#160;literals&#160;until&#160;the&#160;missing&#160;examples&#160;are&#160;covered.<br/>learn&#160;newp(PS)&#160;:&#160;localise&#160;an&#160;overgeneral&#160;clause&#160;C&#160;PS&#160;with&#160;fp&#160;and&#160;spe-<br/>
+<br/>
+2<br/>
+cialise&#160;it&#160;with&#160;a&#160;constrained&#160;new&#160;predicate.&#160;Abductively&#160;add&#160;the&#160;instantiations<br/>
+of&#160;the&#160;new&#160;predicate&#160;to&#160;the&#160;examples,&#160;and&#160;recursively&#160;invoke&#160;the&#160;algorithm&#160;on<br/>
+them.<br/>filter(partial&#160;sols)&#160;=&#160;partial&#160;sols<br/>
+<br/>
+output(complete&#160;sols)&#160;=&#160;add&#160;the&#160;clauses&#160;in&#160;complete&#160;sols&#160;to&#160;the&#160;knowledge<br/>
+<br/>
+base&#160;of&#160;MILES.<br/>
+9<br/>
+<hr/>
+<a name=10></a><img class="yflip" src="doc/docu-10_1.png"/><br/>
+<img class="yflip" src="doc/docu-10_2.png"/><br/>
+<img class="yflip" src="doc/docu-10_3.png"/><br/>
+<img class="yflip" src="doc/docu-10_4.png"/><br/>
+<img class="yflip" src="doc/docu-10_5.png"/><br/>
+<img class="yflip" src="doc/docu-10_6.png"/><br/>
+<img class="yflip" src="doc/docu-10_7.png"/><br/>
+<img class="yflip" src="doc/docu-10_8.png"/><br/>
+<img class="yflip" src="doc/docu-10_9.png"/><br/>
+<img class="yflip" src="doc/docu-10_10.png"/><br/>
+<img class="yflip" src="doc/docu-10_11.png"/><br/>
+<img class="yflip" src="doc/docu-10_12.png"/><br/>
+<img class="yflip" src="doc/docu-10_13.png"/><br/>
+<img class="yflip" src="doc/docu-10_14.png"/><br/>
+<img class="yflip" src="doc/docu-10_15.png"/><br/>
+<img class="yflip" src="doc/docu-10_16.png"/><br/>
+<img class="yflip" src="doc/docu-10_17.png"/><br/>
+<img class="yflip" src="doc/docu-10_18.png"/><br/>
+<img class="yflip" src="doc/docu-10_19.png"/><br/>
+<img class="yflip" src="doc/docu-10_20.png"/><br/>
+<img class="yflip" src="doc/docu-10_21.png"/><br/>
+5.3&#160;FOIL<br/>
+FOIL&#160;[Qui90]&#160;learns&#160;function-free&#160;logic&#160;programs&#160;with&#160;a&#160;greedy-covering&#160;strategy<br/>
+guided&#160;by&#160;the&#160;information&#160;gain&#160;heuristic.&#160;To&#160;obtain&#160;a&#160;FOIL-like&#160;algorithm&#160;as&#160;in-<br/>
+stantiation&#160;of&#160;GENCON,&#160;the&#160;parameters&#160;are&#160;set&#160;as&#160;follows:<br/>
+initialize(E&#160;;E&#160;;B)&#160;=&#160;(most&#160;general&#160;term(E&#160;);active)&#160;where&#160;the&#160;most<br/>
+<br/>
+&#160;<br/>
+<br/>
+<br/>
+f<br/>
+g<br/>
+general&#160;term&#160;for&#160;E&#160;is&#160;p(X&#160;;::;X&#160;)&#160;for&#160;the&#160;target&#160;predicate&#160;p=n.&#160;E&#160;must&#160;not<br/>
+<br/>
+<br/>
+1<br/>
+n<br/>
+contain&#160;examples&#160;for&#160;dierent&#160;predicates.<br/>Stop&#160;Criterion(complete&#160;sols)&#160;(B&#160;complete&#160;sols&#160;E&#160;),&#160;or&#160;the&#160;encoding<br/>
+<br/>
+<br/>
+<br/>
+[<br/>
+`<br/>
+length&#160;of&#160;complete&#160;sols&#160;exceeds&#160;that&#160;of&#160;the&#160;examples.<br/>select(partial&#160;sols)&#160;=&#160;the&#160;best&#160;active&#160;PS&#160;partial&#160;sols&#160;according&#160;to&#160;the<br/>
+<br/>
+2<br/>
+information&#160;gain&#160;heuristic,&#160;if&#160;any.&#160;Fails&#160;else.<br/>Quality&#160;Criterion(PS)&#160;(B&#160;PS&#160;E&#160;)<br/>
+&#160;<br/>
+<br/>
+<br/>
+[<br/>
+6`<br/>
+update(partial&#160;sols)&#160;=&#160;(most&#160;general&#160;term(E&#160;);active)&#160;for&#160;the&#160;positive<br/>
+<br/>
+<br/>
+f<br/>
+g<br/>
+r<br/>
+examples&#160;not&#160;yet&#160;covered&#160;by&#160;complete&#160;sols.<br/>one&#160;of&#160;:&#160;always&#160;specialise<br/>
+<br/>
+add(partial&#160;sols;PSL)&#160;=&#160;partial&#160;sols&#160;PSL<br/>
+<br/>
+[<br/>
+spec(PS)&#160;:&#160;specialise&#160;PS&#160;by&#160;adding&#160;a&#160;body&#160;literal<br/>
+<br/>
+gen(PS)&#160;:&#160;|<br/>
+<br/>
+learn&#160;newp(PS)&#160;:&#160;|<br/>
+<br/>
+filter(partial&#160;sols)&#160;:&#160;remove&#160;all&#160;clauses&#160;from&#160;partial&#160;sols&#160;violating&#160;the&#160;encod-<br/>
+<br/>
+ing&#160;length&#160;restriction<br/>output(complete&#160;sols)&#160;=&#160;add&#160;the&#160;clauses&#160;in&#160;complete&#160;sols&#160;to&#160;the&#160;knowledge<br/>
+<br/>
+base&#160;of&#160;MILES.<br/>
+6&#160;User&#160;Interface<br/>The&#160;X&#160;user&#160;interface&#160;of&#160;MILES,&#160;X-MILES,&#160;is&#160;built&#160;on&#160;top&#160;of&#160;the&#160;ProXT&#160;interface&#160;of<br/>
+QUINTUS&#160;prolog&#160;v3.1.1.&#160;ProXT&#160;is&#160;a&#160;prolog&#160;interface&#160;to&#160;the&#160;Motif&#160;widget&#160;set&#160;and<br/>
+the&#160;X&#160;Toolkit&#160;(Xt).&#160;Widgets&#160;are&#160;ready-made&#160;graphical&#160;components&#160;for&#160;building&#160;user<br/>
+interfaces,&#160;for&#160;example&#160;menus,&#160;dialog&#160;boxes,&#160;scroll&#160;bars&#160;and&#160;command&#160;buttons.&#160;The<br/>
+X&#160;Toolkit&#160;provides&#160;routines&#160;for&#160;creating&#160;and&#160;using&#160;such&#160;widgets.&#160;ProXT&#160;provides<br/>
+access&#160;from&#160;prolog&#160;to&#160;all&#160;the&#160;widgets&#160;in&#160;Motif&#160;and&#160;the&#160;Xt&#160;routines&#160;necessary&#160;for<br/>
+using&#160;them&#160;[Qui91].<br/>
+Figure&#160;2&#160;shows&#160;the&#160;complete&#160;X&#160;interface&#160;of&#160;MILES.&#160;It&#160;is&#160;separated&#160;in&#160;six&#160;dierent<br/>
+parts.&#160;The&#160;knowledge&#160;base&#160;area&#160;presents&#160;the&#160;examples&#160;and&#160;the&#160;current&#160;set&#160;of&#160;rules.<br/>
+The&#160;editor&#160;area&#160;allows&#160;to&#160;edit,&#160;add&#160;or&#160;change&#160;examples&#160;and&#160;rules.&#160;The&#160;command&#160;area<br/>
+provides&#160;direct&#160;access&#160;to&#160;prolog,&#160;whereas&#160;the&#160;message&#160;area&#160;displays&#160;system&#160;messages<br/>
+about&#160;the&#160;state&#160;and&#160;the&#160;result&#160;of&#160;the&#160;computation.&#160;The&#160;function&#160;area&#160;contains&#160;groups<br/>
+of&#160;learning&#160;operators&#160;that&#160;might&#160;be&#160;applied&#160;to&#160;the&#160;current&#160;knowledge&#160;base.&#160;The<br/>
+argument&#160;area&#160;provides&#160;interactive&#160;facilities&#160;to&#160;specify&#160;the&#160;arguments&#160;of&#160;a&#160;learning<br/>
+operator.&#160;In&#160;the&#160;following,&#160;the&#160;functionality&#160;of&#160;the&#160;separate&#160;parts&#160;is&#160;discussed&#160;in<br/>
+detail.<br/>
+10<br/>
+<hr/>
+<a name=11></a><img src="doc/docu-11_1.png"/><br/>
+<img src="doc/docu-11_2.png"/><br/>
+Figure&#160;2:&#160;X-MILES<br/>
+Figure&#160;3:&#160;The&#160;Command&#160;Area<br/>
+6.1&#160;Prolog&#160;Interaction&#160;in&#160;the&#160;Command&#160;Area<br/>The&#160;command&#160;area&#160;provides&#160;direct&#160;access&#160;to&#160;prolog.&#160;It&#160;allows&#160;for&#160;example&#160;to&#160;di-<br/>
+rectly&#160;invoke&#160;operators&#160;not&#160;yet&#160;included&#160;in&#160;the&#160;interface,&#160;to&#160;turn&#160;on&#160;the&#160;debugger<br/>
+or&#160;to&#160;set&#160;spy&#160;points.&#160;These&#160;capabilities&#160;are&#160;an&#160;important&#160;precondition&#160;for&#160;the&#160;easy<br/>
+extendability&#160;of&#160;MILES&#160;and&#160;X-MILES.<br/>
+Figure&#160;3&#160;shows&#160;the&#160;command&#160;area&#160;in&#160;more&#160;detail.&#160;The&#160;central&#160;part&#160;is&#160;a&#160;single-line<br/>
+editable&#160;window&#160;that&#160;allows&#160;to&#160;type&#160;in&#160;prolog&#160;commands&#160;as&#160;if&#160;directly&#160;at&#160;the&#160;prolog<br/>
+prompt.&#160;Hitting&#160;the&#160;return&#160;key&#160;or&#160;pressing&#160;the&#160;OK!&#160;button&#160;invokes&#160;the&#160;command.<br/>
+The&#160;status&#160;of&#160;the&#160;command&#160;line&#160;is&#160;indicated&#160;above.&#160;Input&#160;means&#160;that&#160;the&#160;command<br/>
+line&#160;allows&#160;input,&#160;Yes&#160;that&#160;a&#160;command&#160;has&#160;been&#160;successfully&#160;performed,&#160;No&#160;that<br/>
+it&#160;has&#160;failed,&#160;and&#160;Exit&#160;that&#160;it&#160;has&#160;been&#160;interrupted.&#160;The&#160;Clear&#160;button&#160;below&#160;the<br/>
+command&#160;line&#160;empties&#160;the&#160;command&#160;input,&#160;whereas&#160;the&#160;Quit&#160;X-Miles&#160;button&#160;returns<br/>
+to&#160;the&#160;prolog&#160;prompt.<br/>6.2&#160;Knowledge&#160;Base&#160;Area<br/>The&#160;knowledge&#160;base&#160;of&#160;MILES&#160;consists&#160;basically&#160;of&#160;rules&#160;and&#160;examples.&#160;Accordingly,<br/>
+the&#160;knowledge&#160;base&#160;area&#160;of&#160;X-MILES&#160;shown&#160;in&#160;gure&#160;4&#160;contains&#160;an&#160;area&#160;for&#160;rules&#160;and<br/>
+for&#160;examples.&#160;The&#160;status&#160;of&#160;the&#160;knowledge&#160;base&#160;is&#160;indicated&#160;next&#160;to&#160;the&#160;knowledge<br/>
+base&#160;label.&#160;The&#160;status&#160;evaluated&#160;means&#160;that&#160;the&#160;rules&#160;are&#160;evaluated&#160;with&#160;respect<br/>
+to&#160;the&#160;examples,&#160;i.e.&#160;their&#160;applicability&#160;and&#160;coverage&#160;has&#160;been&#160;determined,&#160;whereas<br/>
+11<br/>
+<hr/>
+<a name=12></a><img src="doc/docu-12_1.png"/><br/>
+<img class="yflip" src="doc/docu-12_2.png"/><br/>
+<img class="yflip" src="doc/docu-12_3.png"/><br/>
+<img src="doc/docu-12_4.png"/><br/>
+<img class="yflip" src="doc/docu-12_5.png"/><br/>
+<img class="yflip" src="doc/docu-12_6.png"/><br/>
+Figure&#160;4:&#160;The&#160;Knowledge&#160;Base&#160;Area<br/>
+Figure&#160;5:&#160;A&#160;File&#160;Selection&#160;Dialog<br/>
+not&#160;evaluated&#160;indicates&#160;that&#160;the&#160;knowledge&#160;base&#160;has&#160;been&#160;changed&#160;since&#160;the&#160;last<br/>
+evaluation.<br/>
+The&#160;utilities&#160;that&#160;apply&#160;to&#160;both&#160;examples&#160;and&#160;rules&#160;are&#160;realised&#160;as&#160;buttons&#160;in&#160;the<br/>
+bottom&#160;row&#160;of&#160;the&#160;knowledge&#160;base&#160;area.&#160;Load&#160;and&#160;Save&#160;open&#160;a&#160;le&#160;selection&#160;dialog&#160;as<br/>
+e.g.&#160;in&#160;gure&#160;5.&#160;The&#160;les&#160;to&#160;be&#160;loaded&#160;may&#160;be&#160;either&#160;.qof&#160;les&#160;resulting&#160;from&#160;saving<br/>
+a&#160;knowledge&#160;base,&#160;or&#160;prolog&#160;les&#160;containing&#160;clauses,&#160;examples&#160;and&#160;type&#160;restrictions.<br/>
+Save&#160;saves&#160;the&#160;current&#160;knowledge&#160;base&#160;in&#160;.qof&#160;format.&#160;The&#160;Clear&#160;button&#160;empties<br/>
+the&#160;knowledge&#160;base&#160;of&#160;MILES.<br/>
+12<br/>
+<hr/>
+<a name=13></a><img class="yflip" src="doc/docu-13_1.png"/><br/>
+<img class="yflip" src="doc/docu-13_2.png"/><br/>
+<img src="doc/docu-13_3.png"/><br/>
+<img class="yflip" src="doc/docu-13_4.png"/><br/>
+<img class="yflip" src="doc/docu-13_5.png"/><br/>
+Figure&#160;6:&#160;Examining&#160;a&#160;Rule<br/>
+6.3&#160;Rule&#160;Area<br/>The&#160;rule&#160;area&#160;displays&#160;the&#160;unique&#160;identier,&#160;the&#160;label,&#160;and&#160;head&#160;and&#160;body&#160;for&#160;each<br/>
+clause&#160;in&#160;the&#160;knowledge&#160;base.&#160;Further&#160;information&#160;on&#160;rules&#160;can&#160;be&#160;obtained&#160;by<br/>
+selecting&#160;a&#160;rule&#160;and&#160;pressing&#160;the&#160;Examine&#160;button&#160;in&#160;the&#160;title&#160;row.&#160;Figure&#160;6&#160;shows<br/>
+the&#160;resulting&#160;window.&#160;It&#160;displays&#160;the&#160;type&#160;restriction&#160;of&#160;the&#160;clause&#160;head,&#160;if&#160;any,&#160;and<br/>
+the&#160;evaluation&#160;of&#160;the&#160;clause.<br/>
+Rules&#160;can&#160;be&#160;selected&#160;simply&#160;by&#160;a&#160;mouse&#160;click,&#160;or&#160;by&#160;the&#160;Select&#160;Al&#160;and&#160;Unselect<br/>
+Al&#160;buttons&#160;in&#160;the&#160;button&#160;row&#160;below.&#160;The&#160;Delete&#160;button&#160;deletes&#160;all&#160;selected&#160;rules,<br/>
+whereas&#160;Refresh&#160;updates&#160;the&#160;presentation&#160;of&#160;the&#160;rules&#160;according&#160;to&#160;the&#160;knowledge<br/>
+base&#160;of&#160;MILES.&#160;This&#160;might&#160;be&#160;necessary&#160;if&#160;a&#160;command&#160;does&#160;not&#160;activate&#160;the&#160;refresh<br/>
+callback.<br/>
+The&#160;Label&#160;button&#160;provides&#160;a&#160;facility&#160;to&#160;change&#160;the&#160;label&#160;of&#160;the&#160;rules&#160;selected.&#160;For<br/>
+example,&#160;gure&#160;7&#160;shows&#160;how&#160;to&#160;change&#160;the&#160;label&#160;of&#160;two&#160;rules&#160;resulting&#160;from&#160;the<br/>
+clause-heads&#160;operator&#160;to&#160;usr.<br/>
+The&#160;View&#160;button&#160;allows&#160;to&#160;specify&#160;a&#160;subset&#160;of&#160;the&#160;rules&#160;to&#160;be&#160;displayed.&#160;This&#160;is<br/>
+advantageous&#160;in&#160;case&#160;of&#160;large&#160;knowledge&#160;bases&#160;where&#160;creating&#160;and&#160;maintaining&#160;all<br/>
+rule&#160;widgets&#160;might&#160;become&#160;costly.&#160;The&#160;view-rules&#160;dialog&#160;in&#160;gure&#160;8&#160;displays&#160;all<br/>
+existing&#160;labels&#160;and&#160;head&#160;predicates.&#160;They&#160;can&#160;be&#160;transfered&#160;by&#160;mouse&#160;clicks&#160;to&#160;the<br/>
+viewed&#160;labels&#160;and&#160;head&#160;predicates&#160;area.&#160;Min&#160;and&#160;Max&#160;are&#160;the&#160;lower&#160;and&#160;upper<br/>
+bounds&#160;for&#160;clause&#160;identicators&#160;to&#160;be&#160;displayed.&#160;The&#160;View&#160;button&#160;activates&#160;the<br/>
+restrictions&#160;expressed&#160;in&#160;the&#160;viewed-part&#160;and&#160;by&#160;Min&#160;and&#160;Max,&#160;whereas&#160;View&#160;Al<br/>
+deactivates&#160;them&#160;and&#160;displays&#160;all&#160;rules.<br/>
+13<br/>
+<hr/>
+<a name=14></a><img class="yflip" src="doc/docu-14_1.png"/><br/>
+<img class="yflip" src="doc/docu-14_2.png"/><br/>
+<img src="doc/docu-14_3.png"/><br/>
+<img class="yflip" src="doc/docu-14_4.png"/><br/>
+<img class="yflip" src="doc/docu-14_5.png"/><br/>
+<img class="yflip" src="doc/docu-14_6.png"/><br/>
+<img class="yflip" src="doc/docu-14_7.png"/><br/>
+<img src="doc/docu-14_8.png"/><br/>
+<img class="yflip" src="doc/docu-14_9.png"/><br/>
+<img class="yflip" src="doc/docu-14_10.png"/><br/>
+Figure&#160;7:&#160;Changing&#160;Rule&#160;Labels<br/>
+Figure&#160;8:&#160;The&#160;View&#160;Rule&#160;Dialog<br/>
+6.4&#160;Example&#160;Area<br/>
+The&#160;design&#160;of&#160;the&#160;example&#160;area&#160;is&#160;almost&#160;identical&#160;to&#160;that&#160;of&#160;the&#160;rule&#160;area.&#160;For&#160;each<br/>
+example,&#160;its&#160;unique&#160;identier,&#160;its&#160;classication&#160;and&#160;the&#160;fact&#160;itsself&#160;is&#160;displayed.&#160;Select<br/>
+Al&#160;,&#160;Unselect&#160;Al&#160;,&#160;Refresh&#160;and&#160;Delete&#160;work&#160;exactly&#160;as&#160;for&#160;rules.&#160;Instead&#160;of&#160;changing<br/>
+the&#160;labels&#160;of&#160;a&#160;rule,&#160;the&#160;classication&#160;of&#160;the&#160;selected&#160;examples&#160;can&#160;be&#160;changed&#160;by<br/>
+pressing&#160;the&#160;+,&#160;-&#160;or&#160;?&#160;button.&#160;The&#160;view-example&#160;dialog&#160;in&#160;gure&#160;9&#160;is&#160;similar&#160;to&#160;that<br/>
+for&#160;rules,&#160;except&#160;that&#160;only&#160;the&#160;existing&#160;predicates&#160;are&#160;displayed.&#160;This&#160;is&#160;because<br/>
+examples&#160;are&#160;not&#160;labeled.<br/>
+The&#160;knowledge&#160;base&#160;area&#160;is&#160;basically&#160;passive.&#160;It&#160;displays&#160;the&#160;contents&#160;of&#160;the&#160;knowl-<br/>
+edge&#160;base,&#160;but&#160;allows&#160;only&#160;minor&#160;changes&#160;on&#160;them.&#160;For&#160;really&#160;changing&#160;rules&#160;and<br/>
+14<br/>
+<hr/>
+<a name=15></a><img class="yflip" src="doc/docu-15_1.png"/><br/>
+<img class="yflip" src="doc/docu-15_2.png"/><br/>
+<img src="doc/docu-15_3.png"/><br/>
+<img class="yflip" src="doc/docu-15_4.png"/><br/>
+<img class="yflip" src="doc/docu-15_5.png"/><br/>
+<img src="doc/docu-15_6.png"/><br/>
+Figure&#160;9:&#160;The&#160;View&#160;Example&#160;Dialog<br/>
+Figure&#160;10:&#160;The&#160;Knowledge&#160;Base&#160;Editor<br/>
+examples,&#160;an&#160;editor&#160;is&#160;necessary.<br/>6.5&#160;Knowledge&#160;Base&#160;Editor<br/>The&#160;knowledge&#160;base&#160;editor&#160;shown&#160;in&#160;gure&#160;10&#160;basically&#160;consists&#160;of&#160;a&#160;multi-line<br/>
+editable&#160;and&#160;scrollable&#160;area.&#160;The&#160;buttons&#160;below&#160;allow&#160;to&#160;add&#160;new&#160;rules&#160;and&#160;examples<br/>
+that&#160;have&#160;been&#160;typed&#160;in.&#160;Add&#160;Rule&#160;and&#160;Add&#160;Example&#160;perform&#160;a&#160;simple&#160;syntax&#160;check<br/>
+and&#160;create&#160;a&#160;new&#160;unique&#160;identier&#160;under&#160;which&#160;the&#160;rule,&#160;respectively&#160;the&#160;example,<br/>
+is&#160;stored.&#160;The&#160;label&#160;of&#160;the&#160;new&#160;rule&#160;defaults&#160;to&#160;usr,&#160;the&#160;classication&#160;of&#160;the&#160;new<br/>
+example&#160;to&#160;'?'.<br/>
+Besides&#160;simply&#160;typing&#160;in&#160;new&#160;rules&#160;and&#160;examples,&#160;existing&#160;rules&#160;and&#160;examples&#160;can<br/>
+be&#160;copied&#160;into&#160;the&#160;editor&#160;area&#160;by&#160;double&#160;clicking&#160;them&#160;in&#160;the&#160;knowledge&#160;base&#160;area.<br/>
+After&#160;modication,&#160;either&#160;they&#160;can&#160;be&#160;added&#160;as&#160;new&#160;rules&#160;or&#160;examples,&#160;or&#160;they&#160;are<br/>
+used&#160;to&#160;overwrite&#160;the&#160;old&#160;denition.&#160;The&#160;latter&#160;is&#160;done&#160;with&#160;the&#160;Change&#160;Rule&#160;and<br/>
+Change&#160;Example&#160;buttons.<br/>6.6&#160;Function&#160;and&#160;Argument&#160;Area<br/>The&#160;function&#160;area&#160;provides&#160;access&#160;to&#160;the&#160;dierent&#160;learning&#160;operators&#160;of&#160;MILES&#160;that<br/>
+might&#160;be&#160;applied&#160;to&#160;the&#160;current&#160;knowledge&#160;base.&#160;Because&#160;the&#160;large&#160;range&#160;of&#160;available<br/>
+operators&#160;cannot&#160;be&#160;displayed&#160;all&#160;at&#160;once,&#160;they&#160;are&#160;grouped&#160;together&#160;in&#160;menus&#160;that<br/>
+pop&#160;up&#160;on&#160;pressing&#160;the&#160;according&#160;push&#160;button,&#160;as&#160;eg.&#160;in&#160;gure&#160;11.<br/>
+15<br/>
+<hr/>
+<a name=16></a><img class="yflip" src="doc/docu-16_1.png"/><br/>
+<img class="yflip" src="doc/docu-16_2.png"/><br/>
+<img src="doc/docu-16_3.png"/><br/>
+<img src="doc/docu-16_4.png"/><br/>
+<img src="doc/docu-16_5.png"/><br/>
+<img class="yflip" src="doc/docu-16_6.png"/><br/>
+<img class="yflip" src="doc/docu-16_7.png"/><br/>
+<img src="doc/docu-16_8.png"/><br/>
+<img class="yflip" src="doc/docu-16_9.png"/><br/>
+Figure&#160;11:&#160;The&#160;Function&#160;Area<br/>
+Figure&#160;12:&#160;The&#160;Argument&#160;Area<br/>
+The&#160;arguments&#160;of&#160;an&#160;operator&#160;are&#160;specied&#160;in&#160;the&#160;argument&#160;area&#160;shown&#160;in&#160;gure<br/>
+12.&#160;A&#160;special&#160;argument&#160;is&#160;Depth&#160;that&#160;allows&#160;to&#160;specify&#160;globally&#160;the&#160;depth&#160;bound<br/>
+for&#160;operators&#160;like&#160;saturation&#160;or&#160;rlgg.&#160;Each&#160;of&#160;the&#160;twelve&#160;other&#160;argument&#160;positions<br/>
+might&#160;be&#160;either&#160;edited&#160;directly,&#160;or&#160;lled&#160;by&#160;rst&#160;activating&#160;the&#160;toggle&#160;button&#160;Get<br/>
+Id,&#160;and&#160;then&#160;clicking&#160;the&#160;rules&#160;or&#160;examples&#160;in&#160;the&#160;knowledge&#160;base&#160;area&#160;on&#160;which<br/>
+the&#160;operator&#160;shall&#160;be&#160;applied.&#160;Of&#160;course,&#160;for&#160;specifying&#160;the&#160;arguments&#160;properly,&#160;one<br/>
+must&#160;know&#160;the&#160;number&#160;and&#160;type&#160;of&#160;them&#160;for&#160;each&#160;operator.<br/>
+These&#160;can&#160;be&#160;found&#160;in&#160;the&#160;conguration&#160;le&#160;xmiles&#160;functions.pl.&#160;This&#160;le&#160;allows<br/>
+to&#160;simply&#160;change&#160;or&#160;extend&#160;the&#160;function&#160;area&#160;of&#160;X-MILES.&#160;It&#160;contains&#160;easy-to-read<br/>
+and&#160;easy-to-add&#160;descriptions&#160;of&#160;the&#160;available&#160;operator&#160;groups&#160;and&#160;operators.<br/>
+An&#160;operator&#160;group&#160;is&#160;dened&#160;by&#160;the&#160;expression<br/>
+group(&#160;&lt;group-name&gt;,&#160;[&#160;&lt;operator-name&gt;,&#160;&lt;operator-name&gt;,&#160;....&#160;]&#160;).<br/>
+This&#160;creates&#160;a&#160;push&#160;button&#160;labeled&#160;by&#160;&lt;group-name&gt;&#160;which&#160;pops&#160;up&#160;a&#160;menu&#160;of&#160;the<br/>
+operator&#160;names&#160;on&#160;being&#160;pressed.<br/>
+A&#160;single&#160;operator&#160;is&#160;dened&#160;by<br/>
+operator(&#160;&lt;operator-name&gt;,&#160;&lt;predicate-name&gt;,&#160;InOutPattern,<br/>
+InTypeChecks,&#160;OutPredicates,&#160;KBChanges&#160;)<br/>
+The&#160;operator&#160;name&#160;must&#160;be&#160;one&#160;of&#160;the&#160;operator&#160;names&#160;in&#160;a&#160;group&#160;denition.&#160;The<br/>
+predicate&#160;name&#160;is&#160;the&#160;name&#160;of&#160;the&#160;procedure&#160;in&#160;MILES&#160;that&#160;is&#160;called&#160;on&#160;selecting&#160;the<br/>
+operator&#160;from&#160;the&#160;menu.&#160;InOutPattern&#160;species&#160;the&#160;input-&#160;and&#160;output&#160;arguments<br/>
+the&#160;predicate&#160;is&#160;called&#160;with.&#160;It&#160;is&#160;a&#160;list&#160;containing&#160;some&#160;of&#160;the&#160;following&#160;terms:<br/>
+xmArg1&#160;-&#160;xmArg12&#160;for&#160;input&#160;arguments.&#160;They&#160;are&#160;set&#160;to&#160;the&#160;values&#160;of&#160;the<br/>
+<br/>
+according&#160;widgets&#160;in&#160;the&#160;argument&#160;area.<br/>xmDepth&#160;for&#160;the&#160;depth&#160;bound&#160;of&#160;the&#160;operator.&#160;It&#160;is&#160;set&#160;to&#160;the&#160;value&#160;of&#160;Depth<br/>
+<br/>
+in&#160;the&#160;argument&#160;area.<br/>
+16<br/>
+<hr/>
+<a name=17></a><img class="yflip" src="doc/docu-17_1.png"/><br/>
+<img class="yflip" src="doc/docu-17_2.png"/><br/>
+<img src="doc/docu-17_3.png"/><br/>
+<img class="yflip" src="doc/docu-17_4.png"/><br/>
+<img class="yflip" src="doc/docu-17_5.png"/><br/>
+<img class="yflip" src="doc/docu-17_6.png"/><br/>
+<img class="yflip" src="doc/docu-17_7.png"/><br/>
+Figure&#160;13:&#160;The&#160;Specialisation&#160;Dialog<br/>
+xmOut&#160;for&#160;output&#160;arguments.<br/>
+<br/>
+The&#160;input&#160;arguments&#160;can&#160;be&#160;checked&#160;on&#160;their&#160;type.&#160;InTypeChecks&#160;is&#160;a&#160;list&#160;of&#160;unary<br/>
+predicates&#160;for&#160;each&#160;input&#160;argument,&#160;e.g.&#160;isRule&#160;or&#160;isExample.<br/>
+The&#160;output&#160;argument&#160;is&#160;passed&#160;on&#160;to&#160;each&#160;of&#160;the&#160;predicates&#160;specied&#160;in<br/>
+OutPredicates.&#160;These&#160;might&#160;for&#160;example&#160;display&#160;several&#160;alternative&#160;solutions,&#160;or<br/>
+write&#160;informative&#160;text&#160;to&#160;the&#160;message&#160;area.<br/>
+Refreshing&#160;the&#160;knowledge&#160;base&#160;area&#160;is&#160;controlled&#160;by&#160;KBChanges.&#160;This&#160;is&#160;either&#160;[],<br/>
+[rules]&#160;if&#160;the&#160;rule&#160;area&#160;needs&#160;to&#160;be&#160;refreshed,&#160;[examples]&#160;if&#160;the&#160;example&#160;area<br/>
+needs&#160;a&#160;refresh,&#160;or&#160;[rules,&#160;examples]&#160;for&#160;both.&#160;This&#160;helps&#160;to&#160;avoid&#160;superuous<br/>
+refreshs.<br/>
+As&#160;an&#160;example,&#160;in&#160;gure&#160;11&#160;New&#160;Predicate&#160;is&#160;one&#160;of&#160;the&#160;operators&#160;of&#160;the&#160;renement<br/>
+group.&#160;It&#160;is&#160;dened&#160;as&#160;follows:<br/>
+operator(&#160;'New&#160;Predicate',&#160;spec&#160;with&#160;newpred,&#160;[xmArg1,xmOut],<br/>
+[isRule],&#160;resultAddNewpred,&#160;[rules]&#160;):<br/>
+The&#160;procedure&#160;resultAddNewpred&#160;pops&#160;up&#160;the&#160;window&#160;in&#160;gure&#160;13&#160;that&#160;displays<br/>
+all&#160;potential&#160;specialisations&#160;with&#160;new&#160;predicates.&#160;The&#160;user&#160;might&#160;either&#160;select&#160;one<br/>
+and&#160;add&#160;it&#160;to&#160;the&#160;knowledge&#160;base&#160;through&#160;the&#160;Add&#160;Rule&#160;button,&#160;or&#160;reject&#160;them&#160;all<br/>
+by&#160;the&#160;None&#160;button.<br/>
+The&#160;conguration&#160;le&#160;provides&#160;large&#160;a&#160;part&#160;of&#160;the&#160;exibility&#160;and&#160;extendability&#160;of<br/>
+X-MILES.&#160;It&#160;allows&#160;to&#160;add&#160;or&#160;change&#160;operators&#160;without&#160;much&#160;knowledge&#160;about&#160;the<br/>
+realisation&#160;of&#160;the&#160;interface.<br/>6.7&#160;System&#160;Messages<br/>
+The&#160;message&#160;area&#160;displays&#160;system&#160;messages&#160;in&#160;a&#160;scrollable&#160;window.&#160;It&#160;serves&#160;as<br/>
+a&#160;kind&#160;of&#160;protocol,&#160;as&#160;every&#160;prolog&#160;goal&#160;invoked&#160;through&#160;X-MILES&#160;is&#160;reported.<br/>
+Additional&#160;information,&#160;for&#160;example&#160;Yes&#160;for&#160;success,&#160;is&#160;prexed&#160;with&#160;%.&#160;This&#160;allows<br/>
+to&#160;consult&#160;the&#160;message&#160;le&#160;in&#160;order&#160;to&#160;restore&#160;the&#160;knowledge&#160;base&#160;at&#160;a&#160;certain&#160;stage<br/>
+of&#160;interaction.<br/>
+To&#160;save&#160;the&#160;message&#160;le,&#160;the&#160;Save&#160;botton&#160;below&#160;the&#160;message&#160;area&#160;in&#160;gure&#160;14&#160;must<br/>
+17<br/>
+<hr/>
+<a name=18></a><img src="doc/docu-18_1.png"/><br/>
+Figure&#160;14:&#160;The&#160;Message&#160;Area<br/>
+be&#160;used.&#160;It&#160;creates&#160;a&#160;le&#160;xmProtokol.sav.&#160;The&#160;Clear&#160;button&#160;empties&#160;the&#160;message<br/>
+window.&#160;This&#160;means&#160;the&#160;begin&#160;of&#160;a&#160;new&#160;logical&#160;X-MILES&#160;session.<br/>7&#160;Conclusions<br/>MILES&#160;is&#160;a&#160;prototypical&#160;test-system&#160;for&#160;ILP.&#160;It&#160;oers&#160;a&#160;exible&#160;and&#160;powerful&#160;en-<br/>
+vironment&#160;of&#160;operators&#160;for&#160;handling,&#160;maintaining&#160;and&#160;inductively&#160;transforming&#160;a<br/>
+knowledge&#160;base&#160;of&#160;Horn&#160;clauses&#160;with&#160;respect&#160;to&#160;the&#160;examples.&#160;It&#160;is&#160;designed&#160;to<br/>
+support&#160;researchers&#160;in&#160;ILP&#160;in&#160;rapid&#160;prototyping&#160;of&#160;ILP-methods&#160;and&#160;-systems.<br/>
+However,&#160;MILES&#160;itself&#160;is&#160;not&#160;an&#160;ILP-system&#160;in&#160;the&#160;sense&#160;that&#160;the&#160;user&#160;can&#160;sim-<br/>
+ply&#160;input&#160;examples&#160;and&#160;get&#160;back&#160;a&#160;theory.&#160;Only&#160;instantiations&#160;of&#160;ILP-algorithms<br/>
+generated&#160;on&#160;the&#160;top&#160;of&#160;MILES&#160;might&#160;show&#160;that&#160;behaviour.&#160;Thus,&#160;MILES&#160;is&#160;more<br/>
+appropriate&#160;for&#160;people&#160;working&#160;on&#160;ILP-methods&#160;itself&#160;than&#160;for&#160;people&#160;applying&#160;them<br/>
+in&#160;practice.<br/>
+Future&#160;work&#160;will&#160;concentrate&#160;on&#160;predicate&#160;invention&#160;techniques&#160;and&#160;the&#160;integration<br/>
+of&#160;a&#160;declarative&#160;representation&#160;language&#160;for&#160;biases&#160;that&#160;allows&#160;to&#160;express&#160;biased<br/>
+generalisation&#160;and&#160;specialisation&#160;operators&#160;for&#160;GENCON&#160;more&#160;easily.<br/>Acknowledgements<br/>This&#160;work&#160;has&#160;been&#160;supported&#160;by&#160;the&#160;European&#160;Community&#160;ESPRIT&#160;project&#160;ILP<br/>
+(Inductive&#160;Logic&#160;Programming).We&#160;want&#160;to&#160;thank&#160;Bernhard&#160;Jung,&#160;Markus&#160;Muller<br/>
+and&#160;Thorsten&#160;Volz&#160;for&#160;their&#160;implementational&#160;work&#160;on&#160;MILES&#160;and&#160;X-MILES.<br/>References<br/>[Bun88]&#160;W.&#160;Buntine.&#160;Generalized&#160;subsumption&#160;and&#160;its&#160;applications&#160;to&#160;induction<br/>
+and&#160;redundancy.&#160;Articial&#160;Intelligence,&#160;36:149{176,&#160;1988.<br/>
+[Jun92]&#160;B.&#160;Jung.&#160;Generalisierungsoperatoren&#160;bei&#160;der&#160;induktiven&#160;logischen&#160;Pro-<br/>
+grammierung.&#160;Diplomarbeit&#160;nr.&#160;940,&#160;Fakultat&#160;Informatik,&#160;Universitat<br/>
+Stuttgart,&#160;1992.<br/>
+[Jun93]&#160;B.&#160;Jung.&#160;On&#160;inverting&#160;generality&#160;relations.&#160;In&#160;Proc.&#160;of&#160;the&#160;Third&#160;Inter-<br/>
+national&#160;Workshop&#160;on&#160;Inductive&#160;Logic&#160;Programming&#160;ILP-93,&#160;Technical<br/>
+Report,&#160;IJS-DP-6707.&#160;J.&#160;Stefan&#160;Institute,&#160;1993.<br/>
+18<br/>
+<hr/>
+<a name=19></a>[KNS92]&#160;B.&#160;Kijsirikul,&#160;M.&#160;Numao,&#160;and&#160;M.&#160;Shimura.&#160;Discrimination-based&#160;construc-<br/>
+tive&#160;induction&#160;of&#160;logic&#160;programs.&#160;In&#160;Proc.&#160;of&#160;the&#160;10th&#160;National&#160;Conference<br/>
+on&#160;AI,&#160;1992.<br/>
+[MB88]&#160;S.&#160;Muggleton&#160;and&#160;W.&#160;Buntine.&#160;Machine&#160;invention&#160;of&#160;rst-order&#160;predicates<br/>
+by&#160;inverting&#160;resolution.&#160;In&#160;Fifth&#160;International&#160;Conference&#160;on&#160;Machine<br/>
+Learning.&#160;Morgan&#160;Kaufmann,&#160;1988.<br/>
+[MF90]&#160;S.&#160;Muggleton&#160;and&#160;C.&#160;Feng.&#160;Ecient&#160;induction&#160;of&#160;logic&#160;programs.&#160;In&#160;First<br/>
+Conference&#160;on&#160;Algorithmic&#160;Learning&#160;Theory,&#160;Tokyo,&#160;1990.&#160;Ohmsha.<br/>
+[Mug90]&#160;S.&#160;Muggleton.&#160;Inductive&#160;logic&#160;programming.&#160;In&#160;First&#160;Conference&#160;on<br/>
+Algorithmic&#160;Learning&#160;Theory,&#160;Tokio,&#160;October&#160;1990.&#160;Ohmsha.<br/>
+[Plo70]&#160;G.&#160;Plotkin.&#160;A&#160;note&#160;on&#160;inductive&#160;generalisation.&#160;In&#160;B.&#160;Meltzer&#160;and<br/>
+D.&#160;Michie,&#160;editors,&#160;Machine&#160;Intelligence,&#160;volume&#160;5,&#160;pages&#160;153{163.&#160;Edin-<br/>
+burgh&#160;University&#160;Press,&#160;Edinburgh,&#160;1970.<br/>
+[Plo71]&#160;G.&#160;Plotkin.&#160;A&#160;further&#160;note&#160;on&#160;inductive&#160;generalisation.&#160;In&#160;B.&#160;Meltzer<br/>
+and&#160;D.&#160;Michie,&#160;editors,&#160;Machine&#160;Intelligence,&#160;volume&#160;6,&#160;pages&#160;101{124.<br/>
+Edinburgh&#160;Univeristy&#160;Press,&#160;Edinburgh,&#160;1971.<br/>
+[Qui90]&#160;J.&#160;R.&#160;Quinlan.&#160;Learning&#160;logical&#160;denitions&#160;from&#160;relations.&#160;Machine&#160;Learn-<br/>
+ing,&#160;5:239{266,&#160;1990.<br/>
+[Qui91]&#160;Quintus&#160;Corporation,&#160;Palo&#160;Alto,&#160;California.&#160;Quintus&#160;Prolog&#160;X&#160;Window<br/>
+Interface,&#160;February&#160;1991.<br/>
+[Rae92]&#160;L.&#160;De&#160;Raedt.&#160;Interactive&#160;Theory&#160;Revision:&#160;an&#160;Inductive&#160;Logic&#160;Program-<br/>
+ming&#160;Approach.&#160;Academic&#160;Press,&#160;1992.<br/>
+[Rou91]&#160;C.&#160;Rouveirol.&#160;ITOU:&#160;Induction&#160;de&#160;Theories&#160;en&#160;Ordre&#160;Un.&#160;PhD&#160;thesis,<br/>
+Universite&#160;Paris&#160;Sud,&#160;Centre&#160;d'Orsay,&#160;1991.<br/>
+[Sha83]&#160;E.&#160;Y.&#160;Shapiro.&#160;Algorithmic&#160;Program&#160;Debugging.&#160;MIT&#160;Press,&#160;1983.<br/>[STW93]&#160;I.&#160;Stahl,&#160;B.&#160;Tausend,&#160;and&#160;R.&#160;Wirth.&#160;Two&#160;methods&#160;for&#160;improving&#160;inductive<br/>
+logic&#160;programming&#160;systems.&#160;In&#160;Machine&#160;Learning:&#160;ECML-93,&#160;European<br/>
+Conference&#160;on&#160;Machine&#160;Learning,&#160;Wien,&#160;Austria.&#160;Springer,&#160;1993.<br/>
+[Wir89]&#160;R.&#160;Wirth.&#160;Completing&#160;logic&#160;programs&#160;by&#160;inverse&#160;resolution.&#160;In&#160;Fourth<br/>
+European&#160;Working&#160;Session&#160;on&#160;Learning.&#160;Pitman,&#160;1989.<br/>
+[YS91]&#160;E.&#160;Yardeni&#160;and&#160;E.&#160;Shapiro.&#160;A&#160;type&#160;system&#160;for&#160;logic&#160;programs.&#160;Journal&#160;of<br/>
+Logic&#160;Programming,&#160;(10):125{153,&#160;1991.<br/>
+19<br/>
+<hr/>
+</body>
+</html>

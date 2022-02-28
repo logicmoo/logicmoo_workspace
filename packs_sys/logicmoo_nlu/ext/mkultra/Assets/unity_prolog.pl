@@ -112,6 +112,7 @@ uarg_expansion(X,Y):- var(X),!,X=Y.
 uarg_expansion(X,Y):- \+ compound(X),!,X=Y.
 uarg_expansion(is(X,Y),is(X,Y)):-!.
 uarg_expansion(slash_db(X,Y),slash_db(X,Y)):-!.
+uarg_expansion(dynamic(_),_):- !, fail.
 uarg_expansion(X,Y):- maybe_into_slash_db(X,Y),!.
 %uarg_expansion(X:-B,Y:-B):- maybe_into_slash_db(X,Y),!.
 %uarg_expansion(X,Y):- compound(X),once(ugoal_expansion(X,Y)),X\==Y.

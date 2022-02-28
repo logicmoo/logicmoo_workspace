@@ -202,7 +202,7 @@ process_kind_hierarchy:- log(todo(process_kind_hierarchy)).
 :- load_unity_prolog_file('NL/grammar.prolog').
 :- load_unity_prolog_file('Script/demo_level.prolog').
 
-:- module(mkultra).
+:- add_history(module(mkultra)).
 
 gen_all:- between(1,6,L),length(S,L),utterance(X,S,[]),print_tree_with_final(S=X,'.\n\n'),fail.
 :- add_history(gen_all).

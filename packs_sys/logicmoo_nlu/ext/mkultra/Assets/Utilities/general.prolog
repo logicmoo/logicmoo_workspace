@@ -32,8 +32,8 @@ test_file(freeze(_), "Utilities/freeze_tests").
 %% if(:Condition, :Then, :Else)
 %  CONTROL FLOW OPERATOR FOR IMPERATIVES
 %  Runs Then if Condition is true, else Else.
-:- public if/3.
-:- higher_order if(1,1,1).
+:- public(('if'/3)).
+:- higher_order(if(1,1,1)).
 if(C, T, _E) :-
    C, !, T.
 if(_, _, E) :-

@@ -42,7 +42,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 	action/1,
 	current_goal/1,
 	current_time/1,
-	real_time_beginning/1,
+	%real_time_beginning/1,
 	lps_updating_current_state/0,
 	(events)/1, (prolog_events)/1, (fluents)/1, (actions)/1, (unserializable)/1,
 	d_pre/1,

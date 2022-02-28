@@ -789,5 +789,6 @@ problem(flp1, []).
 
 :- multifile(ec:demo_test/3).
 ec:demo_test(lps_demo_test_9_run, lps_demo, [holds(directly_holding(andrewdougherty, bluetoothkeyboard),8)]).
-baseKB:lps_demo_test_9_run :- abdemo([directly_holding(andrewdougherty, bluetoothkeyboard)at 8]).
+baseKB:lps_demo_test_9_run :- abdemo([at(directly_holding(andrewdougherty, bluetoothkeyboard), 8)]).
+baseKB:lps_demo_test_9_run_tweak :- abdemo([holds(directly_holding(andrewdougherty, bluetoothkeyboard), 8)]).
 

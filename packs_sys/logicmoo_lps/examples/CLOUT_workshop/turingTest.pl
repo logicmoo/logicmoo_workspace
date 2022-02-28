@@ -4,10 +4,11 @@
 % for XSB only: 
 % :- import append/3 from basics.
 
-maxTime(10).
+maxTime(20).
 
 fluents  	said(_,_).
 actions 	say(_,_).
+actions 	saying(_,_).
 
 initially	said(turing, []), said(robot, []).
 
@@ -15,6 +16,7 @@ observe		say(turing, what)	from 1 to 2.
 observe		say(turing, is)		from 2 to 3.
 observe		say(turing, your)	from 3 to 4.
 observe		say(turing, name)	from 4 to 5.
+observe		saying(robot, sentence) from 12.
 
 if		saying(turing, sentence)  	from T1 to T2  
 then 	saying(robot, sentence) 	from T3 to T4.

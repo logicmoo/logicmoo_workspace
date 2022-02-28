@@ -3282,6 +3282,746 @@
 		</Folder>
 		<Folder Name="packs_xtra">
 			<Folder Name="logicmoo_chat">
+				<Folder Name="corpus">
+					<Folder Name="fairy_tales">
+						<F N="packs_xtra/logicmoo_chat/corpus/fairy_tales/little_red_riding_hood.txt"/>
+					</Folder>
+					<Folder Name="self_dialogue_corpus">
+						<Folder Name="old">
+							<F N="packs_xtra/logicmoo_chat/corpus/self_dialogue_corpus/old/blocked_workers.txt"/>
+							<F N="packs_xtra/logicmoo_chat/corpus/self_dialogue_corpus/old/get_data.py"/>
+							<F N="packs_xtra/logicmoo_chat/corpus/self_dialogue_corpus/old/LICENSE"/>
+							<F N="packs_xtra/logicmoo_chat/corpus/self_dialogue_corpus/old/README.md"/>
+						</Folder>
+						<F N="packs_xtra/logicmoo_chat/corpus/self_dialogue_corpus/README.md"/>
+						<F N="packs_xtra/logicmoo_chat/corpus/self_dialogue_corpus/train_from.txt"/>
+						<F N="packs_xtra/logicmoo_chat/corpus/self_dialogue_corpus/train_from_topic_action.txt"/>
+						<F N="packs_xtra/logicmoo_chat/corpus/self_dialogue_corpus/train_from_topic_baseball.txt"/>
+						<F N="packs_xtra/logicmoo_chat/corpus/self_dialogue_corpus/train_from_topic_basketball.txt"/>
+						<F N="packs_xtra/logicmoo_chat/corpus/self_dialogue_corpus/train_from_topic_beatles.txt"/>
+						<F N="packs_xtra/logicmoo_chat/corpus/self_dialogue_corpus/train_from_topic_comedy.txt"/>
+						<F N="packs_xtra/logicmoo_chat/corpus/self_dialogue_corpus/train_from_topic_disney.txt"/>
+						<F N="packs_xtra/logicmoo_chat/corpus/self_dialogue_corpus/train_from_topic_fashion.txt"/>
+						<F N="packs_xtra/logicmoo_chat/corpus/self_dialogue_corpus/train_from_topic_fast_furious.txt"/>
+						<F N="packs_xtra/logicmoo_chat/corpus/self_dialogue_corpus/train_from_topic_harry_potter.txt"/>
+						<F N="packs_xtra/logicmoo_chat/corpus/self_dialogue_corpus/train_from_topic_icehockey.txt"/>
+						<F N="packs_xtra/logicmoo_chat/corpus/self_dialogue_corpus/train_from_topic_lady_gaga.txt"/>
+						<F N="packs_xtra/logicmoo_chat/corpus/self_dialogue_corpus/train_from_topic_movies.txt"/>
+						<F N="packs_xtra/logicmoo_chat/corpus/self_dialogue_corpus/train_from_topic_music.txt"/>
+						<F N="packs_xtra/logicmoo_chat/corpus/self_dialogue_corpus/train_from_topic_music_and_movies.txt"/>
+						<F N="packs_xtra/logicmoo_chat/corpus/self_dialogue_corpus/train_from_topic_nfl_football.txt"/>
+						<F N="packs_xtra/logicmoo_chat/corpus/self_dialogue_corpus/train_from_topic_pop.txt"/>
+						<F N="packs_xtra/logicmoo_chat/corpus/self_dialogue_corpus/train_from_topic_rap_hiphop.txt"/>
+						<F N="packs_xtra/logicmoo_chat/corpus/self_dialogue_corpus/train_from_topic_rock.txt"/>
+						<F N="packs_xtra/logicmoo_chat/corpus/self_dialogue_corpus/train_from_topic_star_wars.txt"/>
+						<F N="packs_xtra/logicmoo_chat/corpus/self_dialogue_corpus/train_from_topic_superhero.txt"/>
+						<F N="packs_xtra/logicmoo_chat/corpus/self_dialogue_corpus/train_from_topic_thriller.txt"/>
+						<F N="packs_xtra/logicmoo_chat/corpus/self_dialogue_corpus/train_from_topic_transition_music_movies.txt"/>
+					</Folder>
+					<Folder Name="soap_opera_corpus">
+						<F N="packs_xtra/logicmoo_chat/corpus/soap_opera_corpus/README.md"/>
+						<F N="packs_xtra/logicmoo_chat/corpus/soap_opera_corpus/so_convert.pl"/>
+						<F N="packs_xtra/logicmoo_chat/corpus/soap_opera_corpus/SOC_crawler.perl"/>
+					</Folder>
+					<Folder Name="tmpdata">
+						<F N="packs_xtra/logicmoo_chat/corpus/tmpdata/checkpoint_is_word_1.pl"/>
+						<F N="packs_xtra/logicmoo_chat/corpus/tmpdata/checkpoint_is_word_2.pl"/>
+						<F N="packs_xtra/logicmoo_chat/corpus/tmpdata/checkpoint_ngram_5.pl"/>
+						<F N="packs_xtra/logicmoo_chat/corpus/tmpdata/checkpoint_ngram_6.pl"/>
+						<F N="packs_xtra/logicmoo_chat/corpus/tmpdata/checkpoint_tok_split_3.pl"/>
+						<F N="packs_xtra/logicmoo_chat/corpus/tmpdata/checkpoint_tok_split_4.pl"/>
+						<F N="packs_xtra/logicmoo_chat/corpus/tmpdata/checkpoint_training_3.pl"/>
+						<F N="packs_xtra/logicmoo_chat/corpus/tmpdata/checkpoint_trigram_3.pl"/>
+						<F N="packs_xtra/logicmoo_chat/corpus/tmpdata/checkpoint_trigram_4.pl"/>
+						<F N="packs_xtra/logicmoo_chat/corpus/tmpdata/done_pllm_is_word_1.pl"/>
+						<F N="packs_xtra/logicmoo_chat/corpus/tmpdata/done_pllm_is_word_2.pl"/>
+						<F N="packs_xtra/logicmoo_chat/corpus/tmpdata/done_pllm_ngram_5.pl"/>
+						<F N="packs_xtra/logicmoo_chat/corpus/tmpdata/done_pllm_ngram_6.pl"/>
+						<F N="packs_xtra/logicmoo_chat/corpus/tmpdata/done_pllm_tok_split_3.pl"/>
+						<F N="packs_xtra/logicmoo_chat/corpus/tmpdata/done_pllm_tok_split_4.pl"/>
+						<F N="packs_xtra/logicmoo_chat/corpus/tmpdata/done_pllm_training_3.pl"/>
+						<F N="packs_xtra/logicmoo_chat/corpus/tmpdata/done_pllm_trigram_3.pl"/>
+						<F N="packs_xtra/logicmoo_chat/corpus/tmpdata/done_pllm_trigram_4.pl"/>
+						<F N="packs_xtra/logicmoo_chat/corpus/tmpdata/done_tmp_buffer_training_2.pl"/>
+						<F N="packs_xtra/logicmoo_chat/corpus/tmpdata/done_training_3.pl"/>
+						<F N="packs_xtra/logicmoo_chat/corpus/tmpdata/done_user_is_word_1.pl"/>
+						<F N="packs_xtra/logicmoo_chat/corpus/tmpdata/done_user_is_word_2.pl"/>
+						<F N="packs_xtra/logicmoo_chat/corpus/tmpdata/done_user_ngram_5.pl"/>
+						<F N="packs_xtra/logicmoo_chat/corpus/tmpdata/done_user_ngram_6.pl"/>
+						<F N="packs_xtra/logicmoo_chat/corpus/tmpdata/done_user_training_3.pl"/>
+						<F N="packs_xtra/logicmoo_chat/corpus/tmpdata/more_pllm_training_3.pl"/>
+						<F N="packs_xtra/logicmoo_chat/corpus/tmpdata/ttt"/>
+						<F N="packs_xtra/logicmoo_chat/corpus/tmpdata/ttt2"/>
+					</Folder>
+				</Folder>
+				<Folder Name="npc">
+					<Folder Name="UnityProlog/.git">
+						<Folder Name="hooks">
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/.git/hooks/applypatch-msg.sample"/>
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/.git/hooks/commit-msg.sample"/>
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/.git/hooks/fsmonitor-watchman.sample"/>
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/.git/hooks/post-update.sample"/>
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/.git/hooks/pre-applypatch.sample"/>
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/.git/hooks/pre-commit.sample"/>
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/.git/hooks/pre-merge-commit.sample"/>
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/.git/hooks/pre-push.sample"/>
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/.git/hooks/pre-rebase.sample"/>
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/.git/hooks/pre-receive.sample"/>
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/.git/hooks/prepare-commit-msg.sample"/>
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/.git/hooks/push-to-checkout.sample"/>
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/.git/hooks/update.sample"/>
+						</Folder>
+						<Folder Name="info">
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/.git/info/exclude"/>
+						</Folder>
+						<Folder Name="logs">
+							<Folder Name="refs">
+								<Folder Name="heads">
+									<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/.git/logs/refs/heads/master"/>
+								</Folder>
+								<Folder Name="remotes">
+									<Folder Name="origin">
+										<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/.git/logs/refs/remotes/origin/HEAD"/>
+									</Folder>
+								</Folder>
+							</Folder>
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/.git/logs/HEAD"/>
+						</Folder>
+						<Folder Name="objects">
+							<Folder Name="pack">
+								<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/.git/objects/pack/pack-e6cc43a7bb5e5326902930a0cb5c438ea0047f88.idx"/>
+								<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/.git/objects/pack/pack-e6cc43a7bb5e5326902930a0cb5c438ea0047f88.pack"/>
+							</Folder>
+						</Folder>
+						<Folder Name="refs">
+							<Folder Name="heads">
+								<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/.git/refs/heads/master"/>
+							</Folder>
+							<Folder Name="remotes">
+								<Folder Name="origin">
+									<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/.git/refs/remotes/origin/HEAD"/>
+								</Folder>
+							</Folder>
+						</Folder>
+						<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/.git/config"/>
+						<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/.git/description"/>
+						<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/.git/HEAD"/>
+						<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/.git/index"/>
+						<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/.git/packed-refs"/>
+					</Folder>
+					<Folder Name="UnityProlog/.vs">
+						<Folder Name="Unity Prolog">
+							<Folder Name="v15">
+								<Folder Name="Server">
+									<Folder Name="sqlite3">
+										<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/.vs/Unity Prolog/v15/Server/sqlite3/db.lock"/>
+										<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/.vs/Unity Prolog/v15/Server/sqlite3/storage.ide"/>
+										<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/.vs/Unity Prolog/v15/Server/sqlite3/storage.ide-shm"/>
+										<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/.vs/Unity Prolog/v15/Server/sqlite3/storage.ide-wal"/>
+									</Folder>
+								</Folder>
+								<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/.vs/Unity Prolog/v15/.suo"/>
+							</Folder>
+						</Folder>
+					</Folder>
+					<Folder Name="Assets">
+						<Folder Name="Characters">
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Characters/captive.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Characters/Kavi.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Characters/pc.prolog"/>
+						</Folder>
+						<Folder Name="Concerns">
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Concerns/affect_manager.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Concerns/be_polite.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Concerns/command_line.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Concerns/concerns.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Concerns/conversation.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Concerns/event_grammar.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Concerns/need_satifaction.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Concerns/need_satisfaction.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Concerns/patrol.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Concerns/player_interaction.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Concerns/roles.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Concerns/script.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Concerns/social_interaction.prolog"/>
+						</Folder>
+						<Folder Name="Conversation">
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Conversation/assertions.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Conversation/description.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Conversation/imperatives.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Conversation/introductions.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Conversation/misc_responses.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Conversation/normalization.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Conversation/questions.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Conversation/strategies.prolog"/>
+						</Folder>
+						<Folder Name="Editor">
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Editor/CopyFilesOnBuild.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Editor/NewEditorTest.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Editor/PopupDrawer.cs"/>
+						</Folder>
+						<Folder Name="Fonts">
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Fonts/SourceSansPro-Regular.otf"/>
+						</Folder>
+						<Folder Name="NL">
+							<Folder Name="Vocabulary">
+								<Folder Name="_rels">
+									<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/Vocabulary/_rels/.rels"/>
+								</Folder>
+								<Folder Name="docProps">
+									<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/Vocabulary/docProps/app.xml"/>
+									<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/Vocabulary/docProps/core.xml"/>
+								</Folder>
+								<Folder Name="xl">
+									<Folder Name="_rels">
+										<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/Vocabulary/xl/_rels/workbook.xml.rels"/>
+									</Folder>
+									<Folder Name="theme">
+										<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/Vocabulary/xl/theme/theme1.xml"/>
+									</Folder>
+									<Folder Name="worksheets">
+										<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/Vocabulary/xl/worksheets/sheet1.xml"/>
+										<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/Vocabulary/xl/worksheets/sheet2.xml"/>
+										<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/Vocabulary/xl/worksheets/sheet3.xml"/>
+										<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/Vocabulary/xl/worksheets/sheet4.xml"/>
+										<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/Vocabulary/xl/worksheets/sheet5.xml"/>
+									</Folder>
+									<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/Vocabulary/xl/sharedStrings.xml"/>
+									<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/Vocabulary/xl/styles.xml"/>
+									<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/Vocabulary/xl/vbaProject.bin"/>
+									<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/Vocabulary/xl/workbook.xml"/>
+								</Folder>
+								<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/Vocabulary/[Content_Types].xml"/>
+							</Folder>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/_aux.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/adjective.csv"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/auxverbs.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/base_grammar.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/base_grammar_test.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/context_menu.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/contractions.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/discourse.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/ditransitive_verb.csv"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/grammar.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/grammar_exclaim.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/interface.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/intransitive_verb.csv"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/lexicon.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/lf.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/NLPrompt.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/np.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/np_tests.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/parser_tests.csv"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/pdebug.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/PieMenu.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/player_help.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/pp.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/prepositional_slot.csv"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/preterminals.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/transitive_verb.csv"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/Vocabulary.xlsm"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/vp.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/vp_tests.prolog"/>
+						</Folder>
+						<Folder Name="Norms">
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Norms/dprolog.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Norms/dprolog.prolog.bak"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Norms/dputils.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Norms/ethics.prolog"/>
+						</Folder>
+						<Folder Name="Ontology">
+							<Folder Name="Knowledge_base">
+								<Folder Name="_rels">
+									<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/Knowledge_base/_rels/.rels"/>
+								</Folder>
+								<Folder Name="docProps">
+									<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/Knowledge_base/docProps/app.xml"/>
+									<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/Knowledge_base/docProps/core.xml"/>
+								</Folder>
+								<Folder Name="xl">
+									<Folder Name="_rels">
+										<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/Knowledge_base/xl/_rels/workbook.xml.rels"/>
+									</Folder>
+									<Folder Name="theme">
+										<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/Knowledge_base/xl/theme/theme1.xml"/>
+									</Folder>
+									<Folder Name="worksheets">
+										<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/Knowledge_base/xl/worksheets/sheet1.xml"/>
+										<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/Knowledge_base/xl/worksheets/sheet2.xml"/>
+										<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/Knowledge_base/xl/worksheets/sheet3.xml"/>
+										<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/Knowledge_base/xl/worksheets/sheet4.xml"/>
+										<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/Knowledge_base/xl/worksheets/sheet5.xml"/>
+									</Folder>
+									<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/Knowledge_base/xl/sharedStrings.xml"/>
+									<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/Knowledge_base/xl/styles.xml"/>
+									<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/Knowledge_base/xl/vbaProject.bin"/>
+									<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/Knowledge_base/xl/workbook.xml"/>
+								</Folder>
+								<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/Knowledge_base/.bash_history"/>
+								<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/Knowledge_base/[Content_Types].xml"/>
+							</Folder>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/.bash_history"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/container.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/csv_loading.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/entities.csv"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/food_drink.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/hypno.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/integrity_checks.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/kinds.csv"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/kinds.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/Knowledge base.xlsm"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/knowledge_representation.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/person.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/physical_object.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/predicate_type.csv"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/properties.csv"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/relations.csv"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/tort.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/type_check.prolog"/>
+						</Folder>
+						<Folder Name="Photos">
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Photos/Grace and Trip.png"/>
+						</Folder>
+						<Folder Name="Prefabs">
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Prefabs/Door.prefab"/>
+						</Folder>
+						<Folder Name="Problem solver">
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Problem solver/crash_log.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Problem solver/debugger.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Problem solver/driver_code.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Problem solver/everyday_life.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Problem solver/general_strategies.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Problem solver/integrity_checks.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Problem solver/invoke_continuation.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Problem solver/metastrategies.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Problem solver/problem_solver.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Problem solver/problem_solver_orig.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Problem solver/ps_tests.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Problem solver/switch_to_task.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Problem solver/task_reduction.prolog"/>
+						</Folder>
+						<Folder Name="Prolog">
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Prolog/.DS_Store"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Prolog/AlphaConvertibleTerm.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Prolog/ArgumentCountException.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Prolog/ArgumentTypeException.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Prolog/BadProcedureException.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Prolog/ByteCompiledRule.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Prolog/ConfigurationOptions.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Prolog/Console.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Prolog/CSVParser.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Prolog/CutStateSequencer.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Prolog/DebugOverlay.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Prolog/DelegateUtils.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Prolog/DocumentationAttribute.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Prolog/ELInspector.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Prolog/ELNode.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Prolog/ELNodeEnumerator.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Prolog/ELNodeExclusionException.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Prolog/ELProlog.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Prolog/FunctionalExpression.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Prolog/GenericArithmetic.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Prolog/GoalException.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Prolog/Indexical.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Prolog/InferenceStepsExceededException.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Prolog/InstantiationException.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Prolog/ISOPrologReader.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Prolog/ISOPrologWriter.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Prolog/KB.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Prolog/KnowledgeBase.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Prolog/KnowledgeBaseEntry.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Prolog/KnowledgeBaseRule.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Prolog/KnowledgeBaseVariable.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Prolog/LogicVariable.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Prolog/Manual.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Prolog/Metastructure.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Prolog/PauseManager.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Prolog/PositionTrackingTextReader.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Prolog/PredicateArgumentIndexer.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Prolog/PredicateIndicator.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Prolog/PredicateInfo.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Prolog/Prolog.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Prolog/prolog_primitives.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Prolog/PrologChecker.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Prolog/PrologConsole.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Prolog/PrologContext.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Prolog/PrologError.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Prolog/PrologException.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Prolog/PrologPrimitives.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Prolog/PrologWarning.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Prolog/Repl.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Prolog/Shuffler.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Prolog/SourceFileTracker.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Prolog/StoragePool.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Prolog/StringUtils.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Prolog/Structure.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Prolog/Symbol.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Prolog/SyntaxErrorException.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Prolog/Term.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Prolog/TypeUtils.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Prolog/UndefinedPredicateException.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Prolog/UnityExtensionMethods.cs"/>
+						</Folder>
+						<Folder Name="Script">
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Script/demo_level.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Script/instructions.txt"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Script/instructions2.txt"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Script/intro_screen.txt"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Script/MKSPARSE.txt"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Script/radio.prolog"/>
+						</Folder>
+						<Folder Name="Scripting">
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Scripting/beat_manager.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Scripting/beat_task_crossrefs.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Scripting/quip_manager.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Scripting/quips.prolog"/>
+						</Folder>
+						<Folder Name="Self-exporting_excel_file">
+							<Folder Name="_rels">
+								<F N="packs_xtra/logicmoo_chat/npc/Assets/Self-exporting_excel_file/_rels/.rels"/>
+							</Folder>
+							<Folder Name="docProps">
+								<F N="packs_xtra/logicmoo_chat/npc/Assets/Self-exporting_excel_file/docProps/app.xml"/>
+								<F N="packs_xtra/logicmoo_chat/npc/Assets/Self-exporting_excel_file/docProps/core.xml"/>
+								<F N="packs_xtra/logicmoo_chat/npc/Assets/Self-exporting_excel_file/docProps/thumbnail.jpeg"/>
+							</Folder>
+							<Folder Name="xl">
+								<Folder Name="_rels">
+									<F N="packs_xtra/logicmoo_chat/npc/Assets/Self-exporting_excel_file/xl/_rels/workbook.xml.rels"/>
+								</Folder>
+								<Folder Name="theme">
+									<F N="packs_xtra/logicmoo_chat/npc/Assets/Self-exporting_excel_file/xl/theme/theme1.xml"/>
+								</Folder>
+								<Folder Name="worksheets">
+									<F N="packs_xtra/logicmoo_chat/npc/Assets/Self-exporting_excel_file/xl/worksheets/sheet1.xml"/>
+								</Folder>
+								<F N="packs_xtra/logicmoo_chat/npc/Assets/Self-exporting_excel_file/xl/sharedStrings.xml"/>
+								<F N="packs_xtra/logicmoo_chat/npc/Assets/Self-exporting_excel_file/xl/styles.xml"/>
+								<F N="packs_xtra/logicmoo_chat/npc/Assets/Self-exporting_excel_file/xl/vbaProject.bin"/>
+								<F N="packs_xtra/logicmoo_chat/npc/Assets/Self-exporting_excel_file/xl/workbook.xml"/>
+							</Folder>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Self-exporting_excel_file/.bash_history"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Self-exporting_excel_file/[Content_Types].xml"/>
+						</Folder>
+						<Folder Name="Sims">
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Sims/action_selection.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Sims/actions.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Sims/Concern.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Sims/delayed_operations.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Sims/events.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Sims/indexicals.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Sims/PropInfo.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Sims/RLSEstimator.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Sims/SimController.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Sims/SimControllerGameObjectExtensions.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Sims/Sonifier.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Sims/utilities.prolog"/>
+						</Folder>
+						<Folder Name="Sprites">
+							<Folder Name="Kavi">
+								<F N="packs_xtra/logicmoo_chat/npc/Assets/Sprites/Kavi/East.anim"/>
+								<F N="packs_xtra/logicmoo_chat/npc/Assets/Sprites/Kavi/kavi.png"/>
+								<F N="packs_xtra/logicmoo_chat/npc/Assets/Sprites/Kavi/North.anim"/>
+								<F N="packs_xtra/logicmoo_chat/npc/Assets/Sprites/Kavi/South.anim"/>
+								<F N="packs_xtra/logicmoo_chat/npc/Assets/Sprites/Kavi/Walk.controller"/>
+								<F N="packs_xtra/logicmoo_chat/npc/Assets/Sprites/Kavi/West.anim"/>
+							</Folder>
+							<Folder Name="Steampunk">
+								<F N="packs_xtra/logicmoo_chat/npc/Assets/Sprites/Steampunk/East.anim"/>
+								<F N="packs_xtra/logicmoo_chat/npc/Assets/Sprites/Steampunk/North.anim"/>
+								<F N="packs_xtra/logicmoo_chat/npc/Assets/Sprites/Steampunk/South.anim"/>
+								<F N="packs_xtra/logicmoo_chat/npc/Assets/Sprites/Steampunk/steampunk_m10.png"/>
+								<F N="packs_xtra/logicmoo_chat/npc/Assets/Sprites/Steampunk/Walk.controller"/>
+								<F N="packs_xtra/logicmoo_chat/npc/Assets/Sprites/Steampunk/West.anim"/>
+							</Folder>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Sprites/free_tileset_version_10.png"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Sprites/moderngirl04.png"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Sprites/modernguy01.png"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Sprites/modernguy02.png"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Sprites/modernguy03.png"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Sprites/modernguy04.png"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Sprites/officeman1.png"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Sprites/officeman2.png"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Sprites/officeman3.png"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Sprites/officeman4.png"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Sprites/officeman5.png"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Sprites/officeman6.png"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Sprites/officewoman1.png"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Sprites/officewoman2.png"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Sprites/officewoman3.png"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Sprites/officewoman4.png"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Sprites/officewoman5.png"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Sprites/officewoman6.png"/>
+						</Folder>
+						<Folder Name="TileCore">
+							<Folder Name="Editor">
+								<F N="packs_xtra/logicmoo_chat/npc/Assets/TileCore/Editor/Retiler.cs"/>
+								<F N="packs_xtra/logicmoo_chat/npc/Assets/TileCore/Editor/RoomEditor.cs"/>
+							</Folder>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/TileCore/BindingBehaviour.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/TileCore/CharacterSteeringController.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/TileCore/DockingRegion.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/TileCore/Door.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/TileCore/ExaminationContent.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/TileCore/ExtensionMethods.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/TileCore/FloorMaterial.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/TileCore/GameObjectExtensions.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/TileCore/GeometryExtensions.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/TileCore/GizmoUtils.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/TileCore/MapOverlays.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/TileCore/PathPlanner.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/TileCore/PhysicalObject.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/TileCore/Room.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/TileCore/RowAnimation.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/TileCore/SequenceExtensions.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/TileCore/SpriteAnimation.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/TileCore/SpriteSheetAnimationController.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/TileCore/Tile.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/TileCore/TileMap.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/TileCore/TilePath.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/TileCore/TilePosition.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/TileCore/TileRect.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/TileCore/TileType.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/TileCore/WallMaterial.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/TileCore/WallTopStyle.cs"/>
+						</Folder>
+						<Folder Name="Utilities">
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Utilities/data_structures.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Utilities/episodic_memory.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Utilities/freeze_tests.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Utilities/general.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Utilities/graphviz.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Utilities/startup.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Utilities/tell.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Utilities/test_rig.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Utilities/truth_value.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Utilities/unity_stuff.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Utilities/why.prolog"/>
+						</Folder>
+						<F N="packs_xtra/logicmoo_chat/npc/Assets/.bash_history"/>
+						<F N="packs_xtra/logicmoo_chat/npc/Assets/ConfigureWindows.cs"/>
+						<F N="packs_xtra/logicmoo_chat/npc/Assets/Copyright.txt"/>
+						<F N="packs_xtra/logicmoo_chat/npc/Assets/CREDITS.txt"/>
+						<F N="packs_xtra/logicmoo_chat/npc/Assets/logicmoo_mkultra.pl"/>
+						<F N="packs_xtra/logicmoo_chat/npc/Assets/PopupAttribute.cs"/>
+						<F N="packs_xtra/logicmoo_chat/npc/Assets/Prolog.dll.HIDE"/>
+						<F N="packs_xtra/logicmoo_chat/npc/Assets/Prolog.dll.mdb"/>
+						<F N="packs_xtra/logicmoo_chat/npc/Assets/Prolog.dll.meta.HIDE"/>
+						<F N="packs_xtra/logicmoo_chat/npc/Assets/Sandbox scene.unity"/>
+						<F N="packs_xtra/logicmoo_chat/npc/Assets/Self-exporting excel file.xlsm"/>
+						<F N="packs_xtra/logicmoo_chat/npc/Assets/TestScene.unity"/>
+						<F N="packs_xtra/logicmoo_chat/npc/Assets/unity_prolog.pl"/>
+						<F N="packs_xtra/logicmoo_chat/npc/Assets/UnityEngine.xml"/>
+					</Folder>
+					<Folder Name="Logs">
+						<F N="packs_xtra/logicmoo_chat/npc/Logs/ApiUpdaterCheck.txt"/>
+						<F N="packs_xtra/logicmoo_chat/npc/Logs/Packages-Update.log"/>
+						<F N="packs_xtra/logicmoo_chat/npc/Logs/shadercompiler-UnityShaderCompiler.exe0.log"/>
+					</Folder>
+					<Folder Name="obj">
+						<Folder Name="Debug">
+							<F N="packs_xtra/logicmoo_chat/npc/obj/Debug/Assembly-CSharp.csproj.CopyComplete"/>
+							<F N="packs_xtra/logicmoo_chat/npc/obj/Debug/Assembly-CSharp.csproj.FileListAbsolute.txt"/>
+							<F N="packs_xtra/logicmoo_chat/npc/obj/Debug/TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/obj/Debug/TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/obj/Debug/TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs"/>
+						</Folder>
+					</Folder>
+					<Folder Name="Packages">
+						<F N="packs_xtra/logicmoo_chat/npc/Packages/manifest.json"/>
+						<F N="packs_xtra/logicmoo_chat/npc/Packages/packages-lock.json"/>
+					</Folder>
+					<Folder Name="ProjectSettings">
+						<F N="packs_xtra/logicmoo_chat/npc/ProjectSettings/ProjectVersion.txt"/>
+					</Folder>
+					<Folder Name="UnityProlog">
+						<Folder Name="Documentation">
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Documentation/Prolog test scene.unity"/>
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Documentation/Unity Prolog Reference.htm"/>
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Documentation/User Manual.docx"/>
+						</Folder>
+						<Folder Name="Editor">
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Editor/CopyFilesOnBuild.cs"/>
+						</Folder>
+						<Folder Name="Make_release">
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Make_release/make_release.sh"/>
+						</Folder>
+						<Folder Name="Manual generator">
+							<Folder Name="bin">
+								<Folder Name="Debug">
+									<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Manual generator/bin/Debug/Manual generator.exe.config"/>
+									<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Manual generator/bin/Debug/UnityEngine.xml"/>
+								</Folder>
+							</Folder>
+							<Folder Name="obj">
+								<Folder Name="Debug">
+									<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Manual generator/obj/Debug/.NETFramework,Version=v4.5.AssemblyAttributes.cs"/>
+									<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Manual generator/obj/Debug/build.force"/>
+									<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Manual generator/obj/Debug/Manual generator.csproj.CopyComplete"/>
+									<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Manual generator/obj/Debug/Manual generator.csproj.FileListAbsolute.txt"/>
+									<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Manual generator/obj/Debug/TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs"/>
+									<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Manual generator/obj/Debug/TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs"/>
+									<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Manual generator/obj/Debug/TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs"/>
+								</Folder>
+							</Folder>
+							<Folder Name="Properties">
+								<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Manual generator/Properties/AssemblyInfo.cs"/>
+							</Folder>
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Manual generator/App.config"/>
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Manual generator/Manual generator.csproj"/>
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Manual generator/Program.cs"/>
+						</Folder>
+						<Folder Name="Prolog">
+							<Folder Name="bin">
+								<Folder Name="Debug">
+									<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/bin/Debug/UnityEngine.xml"/>
+								</Folder>
+							</Folder>
+							<Folder Name="obj">
+								<Folder Name="Debug">
+									<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/obj/Debug/Prolog.csproj.CopyComplete"/>
+									<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/obj/Debug/Prolog.csproj.FileListAbsolute.txt"/>
+								</Folder>
+							</Folder>
+							<Folder Name="Properties">
+								<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/Properties/AssemblyInfo.cs"/>
+							</Folder>
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/AlphaConvertibleTerm.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/ArgumentCountException.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/ArgumentTypeException.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/BadProcedureException.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/BinaryPrimitive.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/ByteCompiledRule.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/ConfigurationOptions.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/Console.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/CSVParser.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/CutStateSequencer.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/DebugOverlay.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/DelegateUtils.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/DocumentationAttribute.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/ELInspector.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/ELNode.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/ELNodeEnumerator.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/ELNodeExclusionException.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/ELProlog.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/FunctionalExpression.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/GenericArithmetic.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/GoalException.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/Indexical.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/InferenceStepsExceededException.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/InstantiationException.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/ISOPrologReader.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/ISOPrologWriter.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/KB.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/KnowledgeBase.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/KnowledgeBaseEntry.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/KnowledgeBaseRule.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/KnowledgeBaseVariable.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/LogicVariable.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/Manual.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/Metastructure.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/PauseManager.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/PositionTrackingTextReader.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/PredicateArgumentIndexer.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/PredicateIndicator.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/PredicateInfo.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/Prolog.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/Prolog.csproj"/>
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/Prolog.csproj.user"/>
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/PrologChecker.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/PrologConsole.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/PrologContext.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/PrologError.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/PrologException.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/PrologPrimitives.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/PrologWarning.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/Repl.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/Shuffler.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/SourceFileTracker.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/StoragePool.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/StringUtils.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/Structure.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/Symbol.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/SyntaxErrorException.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/Term.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/TypeUtils.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/UndefinedPredicateException.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/UnityExtensionMethods.cs"/>
+						</Folder>
+						<Folder Name="Test rig">
+							<Folder Name="bin">
+								<Folder Name="Debug">
+									<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Test rig/bin/Debug/Test rig.exe.config"/>
+									<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Test rig/bin/Debug/UnityEngine.xml"/>
+								</Folder>
+							</Folder>
+							<Folder Name="obj">
+								<Folder Name="Debug">
+									<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Test rig/obj/Debug/.NETFramework,Version=v4.5.2.AssemblyAttributes.cs"/>
+									<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Test rig/obj/Debug/TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs"/>
+									<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Test rig/obj/Debug/TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs"/>
+									<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Test rig/obj/Debug/TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs"/>
+									<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Test rig/obj/Debug/Test rig.csproj.CopyComplete"/>
+									<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Test rig/obj/Debug/Test rig.csproj.FileListAbsolute.txt"/>
+								</Folder>
+							</Folder>
+							<Folder Name="Prolog">
+								<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Test rig/Prolog/freeze_tests.prolog"/>
+								<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Test rig/Prolog/test_rig.prolog"/>
+							</Folder>
+							<Folder Name="Properties">
+								<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Test rig/Properties/AssemblyInfo.cs"/>
+							</Folder>
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Test rig/App.config"/>
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Test rig/Test rig.csproj"/>
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Test rig/TestRig.cs"/>
+						</Folder>
+						<Folder Name="TestRepl">
+							<Folder Name="bin">
+								<Folder Name="Debug">
+									<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/TestRepl/bin/Debug/TestRepl.exe.config"/>
+									<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/TestRepl/bin/Debug/UnityEngine.xml"/>
+								</Folder>
+							</Folder>
+							<Folder Name="obj">
+								<Folder Name="Debug">
+									<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/TestRepl/obj/Debug/.NETFramework,Version=v4.5.2.AssemblyAttributes.cs"/>
+									<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/TestRepl/obj/Debug/TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs"/>
+									<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/TestRepl/obj/Debug/TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs"/>
+									<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/TestRepl/obj/Debug/TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs"/>
+									<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/TestRepl/obj/Debug/TestRepl.csproj.CopyComplete"/>
+									<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/TestRepl/obj/Debug/TestRepl.csproj.FileListAbsolute.txt"/>
+								</Folder>
+							</Folder>
+							<Folder Name="Properties">
+								<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/TestRepl/Properties/AssemblyInfo.cs"/>
+							</Folder>
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/TestRepl/App.config"/>
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/TestRepl/TestRepl.cs"/>
+							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/TestRepl/TestRepl.csproj"/>
+						</Folder>
+						<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/.gitignore"/>
+						<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/CREDITS.txt"/>
+						<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/README.md"/>
+						<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Unity Prolog.sln"/>
+					</Folder>
+					<Folder Name="WebOutput">
+						<F N="packs_xtra/logicmoo_chat/npc/WebOutput/WebOutput.html"/>
+						<F N="packs_xtra/logicmoo_chat/npc/WebOutput/WebOutput.unity3d"/>
+					</Folder>
+					<F N="packs_xtra/logicmoo_chat/npc/.bash_history"/>
+					<F N="packs_xtra/logicmoo_chat/npc/agent.pl"/>
+					<F N="packs_xtra/logicmoo_chat/npc/allthis.unitypackage"/>
+					<F N="packs_xtra/logicmoo_chat/npc/Assembly-CSharp-Editor.csproj"/>
+					<F N="packs_xtra/logicmoo_chat/npc/Assembly-CSharp.csproj"/>
+					<F N="packs_xtra/logicmoo_chat/npc/MKULTRA.csproj"/>
+					<F N="packs_xtra/logicmoo_chat/npc/MKULTRA.Editor.csproj"/>
+					<F N="packs_xtra/logicmoo_chat/npc/MKULTRA.sln"/>
+					<F N="packs_xtra/logicmoo_chat/npc/MKULTRA.userprefs"/>
+					<F N="packs_xtra/logicmoo_chat/npc/test.txt"/>
+					<F N="packs_xtra/logicmoo_chat/npc/UnityVS.MKULTRA.sln.DotSettings"/>
+					<F N="packs_xtra/logicmoo_chat/npc/UpgradeLog.htm"/>
+				</Folder>
 				<Folder Name="prolog">
 					<Folder Name="bigram-sentence-evaluator">
 						<Folder Name="output">
@@ -3349,10 +4089,730 @@
 						<F N="packs_xtra/logicmoo_chat/prolog/word-similarity/trigramModel.pl"/>
 						<F N="packs_xtra/logicmoo_chat/prolog/word-similarity/wordVectors.pl"/>
 					</Folder>
+					<F N="packs_xtra/logicmoo_chat/prolog/.bash_history"/>
 					<F N="packs_xtra/logicmoo_chat/prolog/logicmoo_pllm.pl"/>
 					<F N="packs_xtra/logicmoo_chat/prolog/README.md"/>
 				</Folder>
+				<Folder Name="voicexml-examples">
+					<Folder Name="audio">
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/audio/5DBD78EB3E6A7BB7CEAB2AA9405EAA50.mp3"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/audio/audio_3gp.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/audio/audio_app.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/audio/audio_cdr.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/audio/audio_cli.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/audio/audio_counter.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/audio/audio_dial.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/audio/audio_formats.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/audio/audio_g729.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/audio/audio_h264.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/audio/audio_mark.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/audio/audio_messaging.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/audio/audio_mp3.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/audio/audio_mp3_raphael.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/audio/audio_mp4.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/audio/audio_saynumber.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/audio/audio_saynumber2.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/audio/audio_sounds.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/audio/audio_streammp3.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/audio/audio_tif.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/audio/audio_wav.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/audio/audio_wavulaw.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/audio/demo.g729"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/audio/jefflew_h264.mp4"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/audio/Joke_DP_Aje_butter_victim.mp3"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/audio/Joke_DP_Aje_butter_victim2.mp3"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/audio/linux.3gp"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/audio/linux.h263p"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/audio/linux.mp4"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/audio/linux.wav"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/audio/SMALL.tif"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/audio/test.mp3"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/audio/ulawfile.wav"/>
+					</Folder>
+					<Folder Name="benchs">
+						<Folder Name="dial3">
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/benchs/dial3/dialer.sh"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/benchs/dial3/dialout.call"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/benchs/dial3/in.vxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/benchs/dial3/mktest.sh"/>
+						</Folder>
+						<Folder Name="test1">
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/benchs/test1/dialer.sh"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/benchs/test1/dialout.call"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/benchs/test1/in.vxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/benchs/test1/mktest.sh"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/benchs/test1/out.vxml"/>
+						</Folder>
+						<Folder Name="test2">
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/benchs/test2/dialer.sh"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/benchs/test2/dialout.call"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/benchs/test2/in.vxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/benchs/test2/mktest.sh"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/benchs/test2/out.vxml"/>
+						</Folder>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/benchs/test1.zip"/>
+					</Folder>
+					<Folder Name="blackjack">
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/blackjack/blackjack.vxml"/>
+					</Folder>
+					<Folder Name="cache">
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/cache/cache_attributes_maxage.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/cache/cache_attributes_maxage_maxstale_static.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/cache/cache_attributes_maxage_static.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/cache/cache_attributes_maxstale.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/cache/cache_attributes_maxstale_expires.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/cache/cache_attributes_maxstale_static.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/cache/cache_attributes_none.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/cache/cache_headers_expires.php"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/cache/cache_headers_maxage.php"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/cache/cache_headers_nocache.php"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/cache/date.php"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/cache/index.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/cache/next.vxml"/>
+					</Folder>
+					<Folder Name="cacheaudio">
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/cacheaudio/index.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/cacheaudio/index2.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/cacheaudio/test.wav"/>
+					</Folder>
+					<Folder Name="callercalled">
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/callercalled/index.vxml"/>
+					</Folder>
+					<Folder Name="catcherror">
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/catcherror/index.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/catcherror/index2.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/catcherror/root.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/catcherror/subdialog.vxml"/>
+					</Folder>
+					<Folder Name="chatbots">
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/chatbots/chatbot_api-ai.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/chatbots/chatbot_davi.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/chatbots/chatbot_pandorabots.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/chatbots/chatbot_program-o.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/chatbots/chatbot_watson.vxml"/>
+					</Folder>
+					<Folder Name="control">
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/control/index.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/control/index2.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/control/index3.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/control/test.wav"/>
+					</Folder>
+					<Folder Name="cookies">
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/cookies/getcookies.php"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/cookies/index.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/cookies/result_mozilla.txt"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/cookies/result_vxi.txt"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/cookies/setcookies.php"/>
+					</Folder>
+					<Folder Name="data">
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/data/data.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/data/request.xml"/>
+					</Folder>
+					<Folder Name="demo">
+						<Folder Name="audio">
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/demo/audio/aud04.wav"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/demo/audio/aud05.wav"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/demo/audio/aud06.wav"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/demo/audio/aud07.wav"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/demo/audio/aud08.wav"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/demo/audio/jingle.wav"/>
+						</Folder>
+						<Folder Name="image">
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/demo/image/fleurs.gif"/>
+						</Folder>
+						<Folder Name="include">
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/demo/include/class.phpmailer.php"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/demo/include/class.smtp.php"/>
+						</Folder>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/demo/error.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/demo/goodbye.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/demo/index.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/demo/record.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/demo/send.php"/>
+					</Folder>
+					<Folder Name="disconnect">
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/disconnect/index.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/disconnect/index2.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/disconnect/index_multiple.vxml"/>
+					</Folder>
+					<Folder Name="ecmascript">
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/ecmascript/ecmascript_indexof.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/ecmascript/ecmascript_indexof2.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/ecmascript/ecmascript_strings.vxml"/>
+					</Folder>
+					<Folder Name="error">
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/error/index.vxml"/>
+					</Folder>
+					<Folder Name="exit">
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/exit/exit_expr.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/exit/exit_simple.vxml"/>
+					</Folder>
+					<Folder Name="foreach">
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/foreach/foreach3.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/foreach/foreach_reprompt.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/foreach/prompt_foreach.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/foreach/prompt_foreach2.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/foreach/prompt_foreach3.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/foreach/prompt_foreach4.vxml"/>
+					</Folder>
+					<Folder Name="googlespeech">
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/googlespeech/grammar_text.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/googlespeech/grammar_text2.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/googlespeech/MRCP_trace_IVR_Nuance.txt"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/googlespeech/nlsml - Copie.xml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/googlespeech/nlsml.xml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/googlespeech/sample_page_1.vxml"/>
+					</Folder>
+					<Folder Name="goto">
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/goto/nextitem.vxml"/>
+					</Folder>
+					<Folder Name="grammar">
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/grammar/basic.jsgf"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/grammar/digits_dtmf.grxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/grammar/Filler.grxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/grammar/grammar.abnf"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/grammar/grammar.dtd"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/grammar/grammar.grxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/grammar/grammar_builtin.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/grammar/grammar_builtin2.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/grammar/grammar_builtin3.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/grammar/grammar_dtmf.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/grammar/grammar_free.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/grammar/grammar_garbage.grxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/grammar/grammar_garbage.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/grammar/grammar_grxml.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/grammar/grammar_grxml_dtmf.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/grammar/grammar_initial.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/grammar/grammar_inline.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/grammar/grammar_inline_event.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/grammar/grammar_inline_itemtag.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/grammar/grammar_inline_itemtag2.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/grammar/grammar_jsgf_dtmf.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/grammar/grammar_mode.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/grammar/grammar_options.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/grammar/grammar_repeat.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/grammar/grammar_srcexpr.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/grammar/grammar_srcexpr2.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/grammar/grammar_srcexpr3.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/grammar/grammar_text.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/grammar/grammar_text_grammar.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/grammar/grammar_urljsgf.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/grammar/grammar_xml.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/grammar/longgram.grxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/grammar/nomes.gram"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/grammar/return_voice.grxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/grammar/SAN-CB-MENU-DESEA-CALLBACK-ASR.grxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/grammar/SAN-CB-MENU-INTRODUCIR-TELF-ASR.grxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/grammar/SAN-PA-MENU-CANTIDAD-TRASPASO-ASR.grxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/grammar/SAN-PA-MENU-CANTIDAD-TRASPASO-ASR2.grxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/grammar/SAN-PA-MENU-FECHA-MOVS-TARJETA-DTMF.grxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/grammar/simple_DTMF.grxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/grammar/use_grammar_itemtag.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/grammar/use_grammar_itemtag2.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/grammar/Welcome_DTMF.vxml"/>
+					</Folder>
+					<Folder Name="headers">
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/headers/index.php"/>
+					</Folder>
+					<Folder Name="helloworld">
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/helloworld/helloworld.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/helloworld/helloworld.wav"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/helloworld/helloworld1.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/helloworld/helloworld2.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/helloworld/helloworld3.vxml"/>
+					</Folder>
+					<Folder Name="jquery">
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/jquery/index.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/jquery/jquery-1.2.6.js"/>
+					</Folder>
+					<Folder Name="link">
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/link/link_amd.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/link/link_event.vxml"/>
+					</Folder>
+					<Folder Name="lumenvox">
+						<Folder Name="audio">
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/lumenvox/audio/index.vxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/lumenvox/audio/input.vxml"/>
+						</Folder>
+						<Folder Name="dial2do">
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/lumenvox/dial2do/confirmABNF.gram"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/lumenvox/dial2do/service_menu.vxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/lumenvox/dial2do/servicesABNF.gram"/>
+						</Folder>
+						<Folder Name="tanla">
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/lumenvox/tanla/grammar_2.grxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/lumenvox/tanla/srgs.vxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/lumenvox/tanla/srgs2.vxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/lumenvox/tanla/srgs3.gram"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/lumenvox/tanla/srgs3.vxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/lumenvox/tanla/Yesno.grxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/lumenvox/tanla/yesno.vxml"/>
+						</Folder>
+						<Folder Name="video">
+							<Folder Name="video">
+								<F N="packs_xtra/logicmoo_chat/voicexml-examples/lumenvox/video/video/input.3gp"/>
+								<F N="packs_xtra/logicmoo_chat/voicexml-examples/lumenvox/video/video/silence.3gp"/>
+								<F N="packs_xtra/logicmoo_chat/voicexml-examples/lumenvox/video/video/welcome.3gp"/>
+							</Folder>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/lumenvox/video/index.vxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/lumenvox/video/input.vxml"/>
+						</Folder>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/lumenvox/choices.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/lumenvox/control.gram"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/lumenvox/control.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/lumenvox/example.gram"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/lumenvox/extension.conf"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/lumenvox/lumenvox.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/lumenvox/srgs.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/lumenvox/srgs2.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/lumenvox/srgs3.gram"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/lumenvox/srgs3.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/lumenvox/tell.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/lumenvox/test.wav"/>
+					</Folder>
+					<Folder Name="nuance">
+						<Folder Name="grammars">
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/nuance/grammars/amper.txt"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/nuance/grammars/codigo.bnf"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/nuance/grammars/fr-FR_userID.grxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/nuance/grammars/grammar_accents.vxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/nuance/grammars/grammar_digits.vxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/nuance/grammars/grammar_goto.vxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/nuance/grammars/grammar_inline.vxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/nuance/grammars/grammar_links.vxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/nuance/grammars/grammar_menu.vxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/nuance/grammars/grammar_options.vxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/nuance/grammars/grammar_produban.vxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/nuance/grammars/grammar_produban2.vxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/nuance/grammars/grammar_reference.vxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/nuance/grammars/grammar_reference2.vxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/nuance/grammars/grammar_reference3.vxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/nuance/grammars/grammar_reference4.vxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/nuance/grammars/longaudio.wav"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/nuance/grammars/options.bnf"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/nuance/grammars/ouinon.gram"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/nuance/grammars/spell_es.bnf"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/nuance/grammars/sr.gram"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/nuance/grammars/vdemo.txt"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/nuance/grammars/yesno.gram"/>
+						</Folder>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/nuance/MRCP_trace_IVR_Nuance.txt"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/nuance/nlsml - Copie.xml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/nuance/nlsml.xml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/nuance/sample_page_1.vxml"/>
+					</Folder>
+					<Folder Name="object">
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/object/object_curl.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/object/object_curl2.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/object/object_curl3.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/object/object_curl4.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/object/object_curl5.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/object/object_curl6.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/object/object_curl7.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/object/object_curl8.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/object/object_echo.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/object/object_http.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/object/object_pick.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/object/object_property.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/object/object_recordpick.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/object/object_set.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/object/object_setproperty.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/object/object_sms.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/object/object_sms2.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/object/object_soap.vxml"/>
+					</Folder>
+					<Folder Name="omilia">
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/omilia/grammar_sino.vxml"/>
+					</Folder>
+					<Folder Name="parrot">
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/parrot/index.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/parrot/parrot_en.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/parrot/parrot_es.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/parrot/parrot_fr.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/parrot/parrot_menu.vxml"/>
+					</Folder>
+					<Folder Name="play">
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/play/disc_audio.wav"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/play/index.vxml"/>
+					</Folder>
+					<Folder Name="play2">
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/play2/index.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/play2/linux.h263p"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/play2/linux.h264"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/play2/linux.wav"/>
+					</Folder>
+					<Folder Name="play3gp">
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/play3gp/eno_1.3gp"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/play3gp/eno_2.3gp"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/play3gp/index.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/play3gp/linux.mp4"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/play3gp/logoIvesFixe.mp4"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/play3gp/mondial.wmv.3gp"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/play3gp/s1.txt"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/play3gp/test.3gp"/>
+					</Folder>
+					<Folder Name="pocketsphinx">
+						<Folder Name="example">
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/pocketsphinx/example/digit4.grm"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/pocketsphinx/example/index.vxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/pocketsphinx/example/Yesno.grm"/>
+						</Folder>
+						<Folder Name="grammars">
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/pocketsphinx/grammars/grammar_options.vxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/pocketsphinx/grammars/grammar_reference.vxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/pocketsphinx/grammars/longaudio.wav"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/pocketsphinx/grammars/test.jsgf"/>
+						</Folder>
+						<Folder Name="video">
+							<Folder Name="video">
+								<F N="packs_xtra/logicmoo_chat/voicexml-examples/pocketsphinx/video/video/input.3gp"/>
+								<F N="packs_xtra/logicmoo_chat/voicexml-examples/pocketsphinx/video/video/silence.3gp"/>
+								<F N="packs_xtra/logicmoo_chat/voicexml-examples/pocketsphinx/video/video/welcome.3gp"/>
+							</Folder>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/pocketsphinx/video/index.vxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/pocketsphinx/video/input.vxml"/>
+						</Folder>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/pocketsphinx/grammar_first.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/pocketsphinx/test.jsgf"/>
+					</Folder>
+					<Folder Name="prompts">
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/prompts/h264_ives.mp4"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/prompts/index.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/prompts/mp4prompt.vxml"/>
+					</Folder>
+					<Folder Name="record">
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/record/audio_1_1.WAV"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/record/audio_1_5.WAV"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/record/beep_end.wav"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/record/beep_start.wav"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/record/clip.wav"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/record/index.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/record/index2.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/record/record.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/record/record_dest.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/record/record_empty.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/record/record_fax.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/record/record_flac.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/record/record_format.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/record/record_hangup.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/record/record_karaoke.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/record/record_long.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/record/record_mp4.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/record/record_silence.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/record/record_text.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/record/record_wav.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/record/save.php"/>
+					</Folder>
+					<Folder Name="script">
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/script/prueba - Copie.js"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/script/prueba.js"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/script/root.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/script/script.js"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/script/script_embedded.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/script/script_next.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/script/script_root.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/script/script_src.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/script/script_srcexpr.vxml"/>
+					</Folder>
+					<Folder Name="sessionvariables">
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/sessionvariables/index.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/sessionvariables/index_submit.vxml"/>
+					</Folder>
+					<Folder Name="sestek">
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/sestek/index.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/sestek/prompt.vxml"/>
+					</Folder>
+					<Folder Name="slow">
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/slow/end.php"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/slow/hello.wav"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/slow/index.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/slow/longaudio.wav"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/slow/page1.php"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/slow/page2.php"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/slow/page3.php"/>
+					</Folder>
+					<Folder Name="speechtotext">
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/speechtotext/grammar.vxml"/>
+					</Folder>
+					<Folder Name="subdialog">
+						<Folder Name="grammatiche">
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/subdialog/grammatiche/capoluoghi_di_provincia_IT.grxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/subdialog/grammatiche/comuni_provincia_terni.grxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/subdialog/grammatiche/conf_1.grxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/subdialog/grammatiche/conf_2.grxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/subdialog/grammatiche/conf_3.grxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/subdialog/grammatiche/conf_4.grxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/subdialog/grammatiche/conf_5.grxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/subdialog/grammatiche/conf_dtfm.grxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/subdialog/grammatiche/conf_dtmf.grxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/subdialog/grammatiche/date.php"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/subdialog/grammatiche/date_1.grxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/subdialog/grammatiche/date_1.grxml.bk"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/subdialog/grammatiche/date_2.grxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/subdialog/grammatiche/date_3.grxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/subdialog/grammatiche/date_4.grxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/subdialog/grammatiche/gr_cognomi_1.grxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/subdialog/grammatiche/gr_nomi_1.grxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/subdialog/grammatiche/gramm_cod_numerico_dtmf.grxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/subdialog/grammatiche/gramm_numeri.grxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/subdialog/grammatiche/gramm_numeri_telefono.grxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/subdialog/grammatiche/gramm_numeri_telefono_fino_a_mille.grxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/subdialog/grammatiche/gramm_pesi.grxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/subdialog/grammatiche/gramm_spelling_citta.php"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/subdialog/grammatiche/gramm_spelling_citta_1.grxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/subdialog/grammatiche/gramm_spelling_citta_2.grxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/subdialog/grammatiche/gramm_spelling_citta_3.grxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/subdialog/grammatiche/gramm_spelling_citta_4.grxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/subdialog/grammatiche/municipi_roma.grxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/subdialog/grammatiche/regioni_IT.grxml"/>
+						</Folder>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/subdialog/first.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/subdialog/index.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/subdialog/insert_pren.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/subdialog/last.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/subdialog/login.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/subdialog/main.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/subdialog/main2.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/subdialog/MD5.js"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/subdialog/md5_value.js"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/subdialog/registrazione.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/subdialog/subdialog.vxml"/>
+					</Folder>
+					<Folder Name="submit">
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/submit/end.php"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/submit/hello.wav"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/submit/index.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/submit/longaudio.wav"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/submit/page1.php"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/submit/page2.php"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/submit/page3.php"/>
+					</Folder>
+					<Folder Name="telisma">
+						<Folder Name="example">
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/telisma/example/digit4.grm"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/telisma/example/index.vxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/telisma/example/jours.grxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/telisma/example/Yesno.grm"/>
+						</Folder>
+						<Folder Name="grammars">
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/telisma/grammars/amper.txt"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/telisma/grammars/codigo.bnf"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/telisma/grammars/fr-FR_userID.grxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/telisma/grammars/grammar_accents.vxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/telisma/grammars/grammar_digits.vxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/telisma/grammars/grammar_goto.vxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/telisma/grammars/grammar_inline.vxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/telisma/grammars/grammar_links.vxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/telisma/grammars/grammar_menu.vxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/telisma/grammars/grammar_options.vxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/telisma/grammars/grammar_produban.vxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/telisma/grammars/grammar_produban2.vxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/telisma/grammars/grammar_reference.vxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/telisma/grammars/grammar_reference2.vxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/telisma/grammars/grammar_reference3.vxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/telisma/grammars/grammar_reference4.vxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/telisma/grammars/longaudio.wav"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/telisma/grammars/options.bnf"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/telisma/grammars/ouinon.gram"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/telisma/grammars/spell_es.bnf"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/telisma/grammars/vdemo.txt"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/telisma/grammars/yesno.gram"/>
+						</Folder>
+						<Folder Name="video">
+							<Folder Name="video">
+								<F N="packs_xtra/logicmoo_chat/voicexml-examples/telisma/video/video/input.3gp"/>
+								<F N="packs_xtra/logicmoo_chat/voicexml-examples/telisma/video/video/silence.3gp"/>
+								<F N="packs_xtra/logicmoo_chat/voicexml-examples/telisma/video/video/welcome.3gp"/>
+							</Folder>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/telisma/video/index.vxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/telisma/video/input.vxml"/>
+						</Folder>
+					</Folder>
+					<Folder Name="transfer">
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/transfer/hello.wav"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/transfer/transfer.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/transfer/transfer_3g.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/transfer/transfer_aii.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/transfer/transfer_amd.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/transfer/transfer_ani.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/transfer/transfer_blind.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/transfer/transfer_blind2.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/transfer/transfer_callback.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/transfer/transfer_calluser.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/transfer/transfer_camera.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/transfer/transfer_cdr.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/transfer/transfer_cdr2.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/transfer/transfer_celudan.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/transfer/transfer_conference.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/transfer/transfer_conference2.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/transfer/transfer_conference3.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/transfer/transfer_conference4.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/transfer/transfer_conference5.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/transfer/transfer_conference_master.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/transfer/transfer_conference_slave.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/transfer/transfer_consultation.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/transfer/transfer_curl.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/transfer/transfer_db.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/transfer/transfer_dual.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/transfer/transfer_echo.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/transfer/transfer_extra.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/transfer/transfer_function.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/transfer/transfer_get.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/transfer/transfer_goto.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/transfer/transfer_group.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/transfer/transfer_gtalk.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/transfer/transfer_innomedia.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/transfer/transfer_maxtime.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/transfer/transfer_memory.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/transfer/transfer_messaging.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/transfer/transfer_monitor.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/transfer/transfer_numweek.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/transfer/transfer_ooh323.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/transfer/transfer_ooh323_local.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/transfer/transfer_originate.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/transfer/transfer_produban.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/transfer/transfer_queue.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/transfer/transfer_refere.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/transfer/transfer_refere2.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/transfer/transfer_rtmpuser.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/transfer/transfer_set.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/transfer/transfer_settimeout.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/transfer/transfer_sippeer.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/transfer/transfer_split.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/transfer/transfer_split_connect.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/transfer/transfer_transferaudio.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/transfer/transfer_user1.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/transfer/transfer_voztele.vxml"/>
+					</Folder>
+					<Folder Name="tts">
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/tts/0110.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/tts/tts_cache.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/tts/tts_cepstral.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/tts/tts_cutting.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/tts/tts_loquendo.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/tts/tts_param.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/tts/tts_speechaas.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/tts/tts_verbio.vxml"/>
+					</Folder>
+					<Folder Name="unimrcp">
+						<Folder Name="grammars">
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/unimrcp/grammars/grammar.abnf"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/unimrcp/grammars/grammar.xml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/unimrcp/grammars/grammar2.xml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/unimrcp/grammars/grammar_options.vxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/unimrcp/grammars/grammar_reference.vxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/unimrcp/grammars/grammar_reference2.vxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/unimrcp/grammars/grammar_reference3.vxml"/>
+						</Folder>
+					</Folder>
+					<Folder Name="var">
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/var/var_content.vxml"/>
+					</Folder>
+					<Folder Name="verbio">
+						<Folder Name="builtins">
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/verbio/builtins/builtin_boolean.vxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/verbio/builtins/builtin_date.vxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/verbio/builtins/builtin_digits.vxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/verbio/builtins/builtin_number.vxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/verbio/builtins/builtin_presenceco.vxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/verbio/builtins/builtin_spell.vxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/verbio/builtins/builtin_time.vxml"/>
+						</Folder>
+						<Folder Name="grammars">
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/verbio/grammars/directorio.txt"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/verbio/grammars/dpinedo.vxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/verbio/grammars/grammar_accents.vxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/verbio/grammars/grammar_digits.vxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/verbio/grammars/grammar_goto.vxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/verbio/grammars/grammar_inline.vxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/verbio/grammars/grammar_menu.vxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/verbio/grammars/grammar_options.vxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/verbio/grammars/grammar_recordutterance.vxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/verbio/grammars/grammar_recordutterance2.vxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/verbio/grammars/grammar_reference.vxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/verbio/grammars/grammar_reference2.vxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/verbio/grammars/grammar_reference3.vxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/verbio/grammars/grammar_reference4.vxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/verbio/grammars/longaudio.wav"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/verbio/grammars/multi.bnf"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/verbio/grammars/semaine.bnf"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/verbio/grammars/semana.bnf"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/verbio/grammars/spell_es.bnf"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/verbio/grammars/vdemo.txt"/>
+						</Folder>
+						<Folder Name="video">
+							<Folder Name="video">
+								<F N="packs_xtra/logicmoo_chat/voicexml-examples/verbio/video/video/input.3gp"/>
+								<F N="packs_xtra/logicmoo_chat/voicexml-examples/verbio/video/video/silence.3gp"/>
+								<F N="packs_xtra/logicmoo_chat/voicexml-examples/verbio/video/video/welcome.3gp"/>
+							</Folder>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/verbio/video/index.vxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/verbio/video/input.vxml"/>
+						</Folder>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/verbio/grammars.zip"/>
+					</Folder>
+					<Folder Name="vestec">
+						<Folder Name="example">
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/vestec/example/digit4.grm"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/vestec/example/index.vxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/vestec/example/Yesno.grm"/>
+						</Folder>
+						<Folder Name="grammars">
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/vestec/grammars/amper.txt"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/vestec/grammars/codigo.bnf"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/vestec/grammars/fr-FR_userID.grxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/vestec/grammars/grammar_accents.vxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/vestec/grammars/grammar_digits.vxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/vestec/grammars/grammar_goto.vxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/vestec/grammars/grammar_inline.vxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/vestec/grammars/grammar_links.vxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/vestec/grammars/grammar_menu.vxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/vestec/grammars/grammar_options.vxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/vestec/grammars/grammar_produban.vxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/vestec/grammars/grammar_produban2.vxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/vestec/grammars/grammar_reference.vxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/vestec/grammars/grammar_reference2.vxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/vestec/grammars/grammar_reference3.vxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/vestec/grammars/grammar_reference4.vxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/vestec/grammars/longaudio.wav"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/vestec/grammars/options.bnf"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/vestec/grammars/ouinon.gram"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/vestec/grammars/spell_es.bnf"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/vestec/grammars/vdemo.txt"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/vestec/grammars/yesno.gram"/>
+						</Folder>
+						<Folder Name="video">
+							<Folder Name="video">
+								<F N="packs_xtra/logicmoo_chat/voicexml-examples/vestec/video/video/input.3gp"/>
+								<F N="packs_xtra/logicmoo_chat/voicexml-examples/vestec/video/video/silence.3gp"/>
+								<F N="packs_xtra/logicmoo_chat/voicexml-examples/vestec/video/video/welcome.3gp"/>
+							</Folder>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/vestec/video/index.vxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/vestec/video/input.vxml"/>
+						</Folder>
+					</Folder>
+					<Folder Name="voicebox">
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/voicebox/acceuil.vxml"/>
+						<F N="packs_xtra/logicmoo_chat/voicexml-examples/voicebox/jours.grxml"/>
+					</Folder>
+					<Folder Name="voiceinteraction">
+						<Folder Name="grammars">
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/voiceinteraction/grammars/grammar.abnf"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/voiceinteraction/grammars/grammar.xml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/voiceinteraction/grammars/grammar2.xml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/voiceinteraction/grammars/grammar_options.vxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/voiceinteraction/grammars/grammar_reference.vxml"/>
+							<F N="packs_xtra/logicmoo_chat/voicexml-examples/voiceinteraction/grammars/grammar_reference2.vxml"/>
+						</Folder>
+					</Folder>
+					<F N="packs_xtra/logicmoo_chat/voicexml-examples/.bash_history"/>
+					<F N="packs_xtra/logicmoo_chat/voicexml-examples/.gitattributes"/>
+					<F N="packs_xtra/logicmoo_chat/voicexml-examples/.gitignore"/>
+					<F N="packs_xtra/logicmoo_chat/voicexml-examples/README.md"/>
+				</Folder>
+				<F N="packs_xtra/logicmoo_chat/.bash_history"/>
 				<F N="packs_xtra/logicmoo_chat/pack.pl"/>
+				<F N="packs_xtra/logicmoo_chat/plm.pl"/>
 				<F N="packs_xtra/logicmoo_chat/README.md"/>
 			</Folder>
 			<Folder Name="logicmoo_packages">
@@ -5909,6 +7369,175 @@
 						<F N="packs_xtra/programk/aiml/jliza/jliza-aux.aiml"/>
 						<F N="packs_xtra/programk/aiml/jliza/jliza.aiml"/>
 					</Folder>
+					<Folder Name="lilSophia">
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky001.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky002.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky003.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky004.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky005.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky006.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky007.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky008.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky009.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky010.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky011.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky012.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky013.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky014.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky015.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky016.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky017.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky018.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky019.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky020.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky021.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky022.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky023.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky024.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky025.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky026.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky027.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky028.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky029.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky030.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky031.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky032.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky033.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky034.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky035.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky036.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky037.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky038.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky039.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky040.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky041.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky042.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky043.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky044.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky045.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky046.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky047.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky048.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky049.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky050.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky051.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky052.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky053.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky054.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky055.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky056.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky057.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky058.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky059.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky060.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky061.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky062.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky063.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky064.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky065.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky066.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky067.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky068.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky069.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky070.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky071.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky072.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky073.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky074.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky075.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky076.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky077.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky078.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky079.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky080.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky081.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky082.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky083.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky084.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky085.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky086.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky087.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky088.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky089.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky090.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky091.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky092.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky093.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky094.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky095.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky096.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky097.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky098.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky099.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky100.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky101.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky102.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky103.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky104.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky105.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky106.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky107.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky108.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky109.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky110.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky111.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/chomsky112.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/readme.txt"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/update001.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/update002.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/update003.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/update004.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/update005.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/update006.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/update007.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/update008.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/update009.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/update010.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/update011.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/update012.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/update013.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/update014.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/update015.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/update016.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/update017.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/update018.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/update019.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/update020.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/update021.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/update022.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/update023.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/update024.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/update025.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/update026.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/update027.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/update028.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/update029.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/update030.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/update031.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/update032.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/update033.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/update034.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/update035.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/update036.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/update037.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/update038.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/update039.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/update040.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/update041.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/update42.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/update43.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/update44.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/update45.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/update46.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/update47.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/update48.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/update49.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/update50.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/update51.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/update52.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/update53.aiml"/>
+						<F N="packs_xtra/programk/aiml/lilSophia/update54.aiml"/>
+					</Folder>
 					<Folder Name="nephrael_rae">
 						<F N="packs_xtra/programk/aiml/nephrael_rae/Settings.xml"/>
 						<F N="packs_xtra/programk/aiml/nephrael_rae/ZZZ_ExtraIdioms.aiml"/>
@@ -5934,6 +7563,7 @@
 						<F N="packs_xtra/programk/aiml/special/knockknock.aiml"/>
 						<F N="packs_xtra/programk/aiml/special/Learn-XEducate.aiml"/>
 						<F N="packs_xtra/programk/aiml/special/learn.aiml"/>
+						<F N="packs_xtra/programk/aiml/special/learn1_0.aiml"/>
 						<F N="packs_xtra/programk/aiml/special/learn3rd.aiml"/>
 						<F N="packs_xtra/programk/aiml/special/learn4rd.aiml"/>
 						<F N="packs_xtra/programk/aiml/special/lucene-assert.aiml"/>
@@ -6447,6 +8077,11 @@
 									<F N="packs_xtra/programk/aiml/test_suite/ProgramY/that_tests/coffee/coffee.aiml"/>
 									<F N="packs_xtra/programk/aiml/test_suite/ProgramY/that_tests/coffee/test_coffee.py"/>
 								</Folder>
+								<Folder Name="core">
+									<F N="packs_xtra/programk/aiml/test_suite/ProgramY/that_tests/core/__init__.py"/>
+									<F N="packs_xtra/programk/aiml/test_suite/ProgramY/that_tests/core/test_core.py"/>
+									<F N="packs_xtra/programk/aiml/test_suite/ProgramY/that_tests/core/that.aiml"/>
+								</Folder>
 								<Folder Name="multi_sentence">
 									<F N="packs_xtra/programk/aiml/test_suite/ProgramY/that_tests/multi_sentence/__init__.py"/>
 									<F N="packs_xtra/programk/aiml/test_suite/ProgramY/that_tests/multi_sentence/multi_sentence.aiml"/>
@@ -6470,6 +8105,11 @@
 								<F N="packs_xtra/programk/aiml/test_suite/ProgramY/timeout_tests/timeout.aiml"/>
 							</Folder>
 							<Folder Name="topic_tests">
+								<Folder Name="core">
+									<F N="packs_xtra/programk/aiml/test_suite/ProgramY/topic_tests/core/__init__.py"/>
+									<F N="packs_xtra/programk/aiml/test_suite/ProgramY/topic_tests/core/test_topic_aiml.py"/>
+									<F N="packs_xtra/programk/aiml/test_suite/ProgramY/topic_tests/core/topic.aiml"/>
+								</Folder>
 								<Folder Name="gimisa">
 									<F N="packs_xtra/programk/aiml/test_suite/ProgramY/topic_tests/gimisa/__init__.py"/>
 									<F N="packs_xtra/programk/aiml/test_suite/ProgramY/topic_tests/gimisa/blender.txt"/>
@@ -6593,13 +8233,20 @@
 							<F N="packs_xtra/programk/aiml/test_suite/ProgramY/__init__.py"/>
 						</Folder>
 						<F N="packs_xtra/programk/aiml/test_suite/CustomTagTest.aiml"/>
+						<F N="packs_xtra/programk/aiml/test_suite/CustomTagTest.aiml.tmp.pl"/>
 						<F N="packs_xtra/programk/aiml/test_suite/shouldbeabletodo.txt"/>
 						<F N="packs_xtra/programk/aiml/test_suite/Test_Dmiles.aiml"/>
+						<F N="packs_xtra/programk/aiml/test_suite/Test_Dmiles.aiml.tmp.pl"/>
 						<F N="packs_xtra/programk/aiml/test_suite/Test_Stu.aiml"/>
+						<F N="packs_xtra/programk/aiml/test_suite/Test_Stu.aiml.tmp.pl"/>
 						<F N="packs_xtra/programk/aiml/test_suite/Y_OpenCyc.aiml"/>
+						<F N="packs_xtra/programk/aiml/test_suite/Y_OpenCyc.aiml.tmp.pl"/>
 						<F N="packs_xtra/programk/aiml/test_suite/Z_Secondlife.aiml"/>
+						<F N="packs_xtra/programk/aiml/test_suite/Z_Secondlife.aiml.tmp.pl"/>
 						<F N="packs_xtra/programk/aiml/test_suite/ZZZ_InfoBot.aiml"/>
+						<F N="packs_xtra/programk/aiml/test_suite/ZZZ_InfoBot.aiml.tmp.pl"/>
 						<F N="packs_xtra/programk/aiml/test_suite/ZZZZ_HeardSelfSay.aiml"/>
+						<F N="packs_xtra/programk/aiml/test_suite/ZZZZ_HeardSelfSay.aiml.tmp.pl"/>
 					</Folder>
 					<Folder Name="users">
 						<Folder Name="doug~_miles">
@@ -6612,8 +8259,881 @@
 						</Folder>
 					</Folder>
 					<F N="packs_xtra/programk/aiml/.gitignore"/>
+					<F N="packs_xtra/programk/aiml/cleanup.sh"/>
+					<F N="packs_xtra/programk/aiml/lilSo.aiml"/>
+					<F N="packs_xtra/programk/aiml/lilSo2.aiml"/>
+					<F N="packs_xtra/programk/aiml/lilSo3.aiml"/>
 				</Folder>
 				<Folder Name="prolog">
+					<Folder Name="chat_ensemble">
+						<Folder Name="ilm/.git">
+							<Folder Name="hooks">
+								<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/hooks/applypatch-msg.sample"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/hooks/commit-msg.sample"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/hooks/fsmonitor-watchman.sample"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/hooks/post-update.sample"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/hooks/pre-applypatch.sample"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/hooks/pre-commit.sample"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/hooks/pre-merge-commit.sample"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/hooks/pre-push.sample"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/hooks/pre-rebase.sample"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/hooks/pre-receive.sample"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/hooks/prepare-commit-msg.sample"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/hooks/push-to-checkout.sample"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/hooks/update.sample"/>
+							</Folder>
+							<Folder Name="info">
+								<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/info/exclude"/>
+							</Folder>
+							<Folder Name="logs">
+								<Folder Name="refs">
+									<Folder Name="heads">
+										<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/logs/refs/heads/master"/>
+									</Folder>
+									<Folder Name="remotes">
+										<Folder Name="origin">
+											<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/logs/refs/remotes/origin/HEAD"/>
+										</Folder>
+									</Folder>
+								</Folder>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/logs/HEAD"/>
+							</Folder>
+							<Folder Name="objects">
+								<Folder Name="02">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/02/248126ce1bdd70ed89adfbb19919e9bac53a21"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/02/dcd62a706480cafec257c4fe91d2053f0fddca"/>
+								</Folder>
+								<Folder Name="03">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/03/e0f7ae715e7725345fd170124c80d816efb63d"/>
+								</Folder>
+								<Folder Name="04">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/04/73fe6534ec728adeaba963e5688b499c9c7663"/>
+								</Folder>
+								<Folder Name="05">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/05/76c4ee842a13802ddcf3c145bcc811365ddec1"/>
+								</Folder>
+								<Folder Name="06">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/06/26e77f06b91bd8b7141aa2a48da5338a999431"/>
+								</Folder>
+								<Folder Name="09">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/09/57ca30fc6576475192586892cbca63369c5c6c"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/09/7ca896c4006f4ba5f99186baf145db18a9e592"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/09/9aedab1b7484d3cc3d8c74b284036a10e262ee"/>
+								</Folder>
+								<Folder Name="0d">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/0d/a9eb42b63afc35a3e300931986cb427ca575a8"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/0d/be9b5c2cbc1d8953247004eee93589f02dd2f3"/>
+								</Folder>
+								<Folder Name="11">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/11/049ec0769a59875b59c63826fb13c6bd8ec0ab"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/11/65899edc8eeee61745c1964cabf015a91be960"/>
+								</Folder>
+								<Folder Name="17">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/17/c3ea46a18f42a160b41011baf3d39ea38bb3c8"/>
+								</Folder>
+								<Folder Name="18">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/18/1ed9e04fdd7b31849f8baa3d420f9bbc226d0b"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/18/986ccdcab4357ba587092d604dc97b1c4aa9c3"/>
+								</Folder>
+								<Folder Name="1a">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/1a/143ec172d0efbe35f05c9baebd807be35937fa"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/1a/bd7d62c552c61097d2f4caff5b62f78de2dae6"/>
+								</Folder>
+								<Folder Name="1c">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/1c/8c8739018eb2b687f55c59e57e455eb756cc0a"/>
+								</Folder>
+								<Folder Name="1d">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/1d/b72a05272c962bf56bfd9c50d5590b638a8e08"/>
+								</Folder>
+								<Folder Name="1f">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/1f/38f05b8ed34a939b64d40e9adc6ae322219a08"/>
+								</Folder>
+								<Folder Name="22">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/22/5a8003a07093839c286d477a8a049d35ac90ed"/>
+								</Folder>
+								<Folder Name="23">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/23/f37b24f3045fbd53805180aa0f23fd4d2e6063"/>
+								</Folder>
+								<Folder Name="24">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/24/a9ded462b41fb093a15afa66ebb29049ff947e"/>
+								</Folder>
+								<Folder Name="26">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/26/188d34cdaa57244b7f3d1c3b83607520da326e"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/26/85af60dffad4483f8bbf2f44b1c637a28963c5"/>
+								</Folder>
+								<Folder Name="29">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/29/4d76d51163fc1e60c26aac4076f5f0530c0a9c"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/29/8ae50db5b0b96e8c1eb547f01ab2b093dec34f"/>
+								</Folder>
+								<Folder Name="2c">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/2c/22d11c2ec8cec3806638bd51815e25e63e9009"/>
+								</Folder>
+								<Folder Name="30">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/30/a795a34d699cb406fcd7529afd568d2d5b6e10"/>
+								</Folder>
+								<Folder Name="34">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/34/8dea30d3531147968ebcf13dc7a88549d9b42f"/>
+								</Folder>
+								<Folder Name="35">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/35/260ebef8ce8d2b226671dacb29f723d6886493"/>
+								</Folder>
+								<Folder Name="37">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/37/4ff965a315906d5373af80dacaa8fc972c5e63"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/37/d361091128d921cd43931a6ccfd8b0a7e3d62a"/>
+								</Folder>
+								<Folder Name="3a">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/3a/a323f1a3b39bfbee6983701372bf60e98218cd"/>
+								</Folder>
+								<Folder Name="3c">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/3c/e8be6d3d41df82c0781af6711a5132342708b2"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/3c/ecd6a6038550916d50892dfe5819726a5d1d70"/>
+								</Folder>
+								<Folder Name="3d">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/3d/58b58cfa7dff0001d3678dec375392926b02be"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/3d/cb0935417d5037f3ebd922a88c1aaf8d097402"/>
+								</Folder>
+								<Folder Name="3f">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/3f/240f886e6b57d82339b0bc0be40fb2a5aa6302"/>
+								</Folder>
+								<Folder Name="40">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/40/507192dce3c87f912cbfcc88a7478333a31372"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/40/897cc7e6f8e914ae849e611ed51da9ea27927b"/>
+								</Folder>
+								<Folder Name="41">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/41/36864bbf13177150c7376894d84d6e6479ed39"/>
+								</Folder>
+								<Folder Name="42">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/42/5719cf7c4e01e7824a2556b4107d74f9a85627"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/42/583abda64e458caaaec1d4b12bf083ee22bff4"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/42/f0a179afdd721a2fdd483c2511272be9927247"/>
+								</Folder>
+								<Folder Name="43">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/43/6e006aa2eafced4c41ec407a0280d5720a7d3d"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/43/e4ac19522514b700e5d66a1cfb447ca7a201aa"/>
+								</Folder>
+								<Folder Name="44">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/44/3871a9e5598243de7a2519e109a189161fa953"/>
+								</Folder>
+								<Folder Name="46">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/46/6683c5681a9062d5677e37c5f924523aecf731"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/46/9ac22bf0b7d007b186f6ea6aec32a1ebccf212"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/46/d62ef1ab175d2d8484d4489117ffc964c9d8bf"/>
+								</Folder>
+								<Folder Name="47">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/47/23600ac2668ebe6ea97e2419a4c6fa9b00d2ad"/>
+								</Folder>
+								<Folder Name="4a">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/4a/4b826d66bf167e7fb377a19b28f15bc439ede3"/>
+								</Folder>
+								<Folder Name="4d">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/4d/a1306b08fdfdd0d18a90ec0915e7461e0078a8"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/4d/ea0682511f40865b43b5021c4c365ea60ef4fe"/>
+								</Folder>
+								<Folder Name="4e">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/4e/572e8fcc84f1bc9ef4eabb80272088d2c86310"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/4e/71d2ec950a4f2b4aa6d8f7bcf10e2f550a603f"/>
+								</Folder>
+								<Folder Name="4f">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/4f/7c162ef95d23e3a02d467d87e66e86d9755e02"/>
+								</Folder>
+								<Folder Name="58">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/58/078ddaca4c09ea7af14309b9f5c74f77456819"/>
+								</Folder>
+								<Folder Name="59">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/59/092758abfb60990146344c4448c36e5a5efdf3"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/59/a20af77bc1a60981474f13a9654a606c29939e"/>
+								</Folder>
+								<Folder Name="5b">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/5b/4692fd2aff890b54e421343f176d30f6610c43"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/5b/95b63886063e70ce5b4ebba105fdb36b05404e"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/5b/c7d6256e1d9e96550dcc78bd45434ed606c2c8"/>
+								</Folder>
+								<Folder Name="5e">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/5e/9fd9fd1afcc4a4591510c8976c851c1c09f9fe"/>
+								</Folder>
+								<Folder Name="60">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/60/d2d40c7cc907b08889e55e1657cd082e647ad7"/>
+								</Folder>
+								<Folder Name="61">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/61/9742057bbd52e28713aa51e95c3f9c9580b6c7"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/61/ef537f653e7499221a2f431f059fa194f6d931"/>
+								</Folder>
+								<Folder Name="62">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/62/e402d9e1cf894cce0ead55b7817d59d7a80c40"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/62/fb35c75db477a6e71b409a2da2d66d37920597"/>
+								</Folder>
+								<Folder Name="63">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/63/cf4b5c132dd145534c4db008f4530747113032"/>
+								</Folder>
+								<Folder Name="64">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/64/77960580319a0e40ae38c621db2a5b87aa2093"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/64/b65bcfcf17078ea29b40b76960ee0a63d4a04b"/>
+								</Folder>
+								<Folder Name="65">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/65/b517e2ad0333af9faef227ec50ca624ebf8504"/>
+								</Folder>
+								<Folder Name="66">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/66/6ab219159a7d79e1b80be1d47a83aaad1a93c5"/>
+								</Folder>
+								<Folder Name="67">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/67/fd161b57ab114adebaff84c02a92d91c73fc17"/>
+								</Folder>
+								<Folder Name="69">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/69/d9014dbc51b8f9798ee57149cebf1d0015dd3b"/>
+								</Folder>
+								<Folder Name="6a">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/6a/c037487b7da6c6d3cca175ae6398ab78120faa"/>
+								</Folder>
+								<Folder Name="6b">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/6b/e6cc196c3fe169567f18e20b981a4919b1f90f"/>
+								</Folder>
+								<Folder Name="6c">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/6c/97e43dc04b7f167efce2cca80c2e28f7a5e314"/>
+								</Folder>
+								<Folder Name="6d">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/6d/711b46dfa8f392db00c5ff02c4fc943249742d"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/6d/ace814576b8a89a346548448d9124ebd480605"/>
+								</Folder>
+								<Folder Name="6f">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/6f/47f4be31442b3ee1a0bd031299915ed4ffd761"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/6f/7b3c13adc809f5c871c384c7c7572e9bc9d03f"/>
+								</Folder>
+								<Folder Name="72">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/72/9b4bdd681cfff146fd4369584085c4b8dfdb7e"/>
+								</Folder>
+								<Folder Name="73">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/73/2fa0d23f8879d771c93b5a4d22c489d9c10b61"/>
+								</Folder>
+								<Folder Name="75">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/75/3eb2e9950edf6508588799c6325c164dee9277"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/75/b94cdf5678fc8d30ec5c73fc1eff5a120095b2"/>
+								</Folder>
+								<Folder Name="76">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/76/8350ab618ebb3da9b1aed0569f600def4bc052"/>
+								</Folder>
+								<Folder Name="77">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/77/c726fb57eeb0d34e920927982438ce0c985b28"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/77/f9112934a57c0f1429e9b9e17423b9f15a1acd"/>
+								</Folder>
+								<Folder Name="79">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/79/00cec6d941d7457500dd0dc46f0b81fc4de65a"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/79/2a8792a648a45806659f37a2d902e7dae35a35"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/79/3aeef361492196da99c41ea97e709fdeed490a"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/79/54597dae66d1bb13e42e0f9dbb51baa4b80dc6"/>
+								</Folder>
+								<Folder Name="7a">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/7a/2f1027c987d83187fa7c4a6ef4309d82120846"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/7a/b23e0c7b09ea4a48dfa7436ff2e77d270523a5"/>
+								</Folder>
+								<Folder Name="7e">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/7e/26004436f8cc84b7317280b513b23397c6ea46"/>
+								</Folder>
+								<Folder Name="7f">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/7f/ec51502cbc3200b3d0ffc6bbba1fe85e197f3d"/>
+								</Folder>
+								<Folder Name="81">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/81/c50a1ec48d41f1561d14c3b4c2057499e7a3ea"/>
+								</Folder>
+								<Folder Name="82">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/82/242b85e47aeede7d058bda8f1df5dfc0affeba"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/82/f5a350237fd40e0aae0bab434e68dedc41189e"/>
+								</Folder>
+								<Folder Name="83">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/83/111ae5fdb9e4c1ea78c830124852b2ec3789bd"/>
+								</Folder>
+								<Folder Name="84">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/84/1c88f3de43cace756f44e53b1a5d1dc6b804ed"/>
+								</Folder>
+								<Folder Name="8a">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/8a/f92cd79f7ab90d1d54b15ff824ceb2ffd29628"/>
+								</Folder>
+								<Folder Name="8b">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/8b/dfe02552e5edc398052fd6b8202990bda01113"/>
+								</Folder>
+								<Folder Name="8e">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/8e/206a73f49be7c22746bb459e8a102a6ccf5d52"/>
+								</Folder>
+								<Folder Name="8f">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/8f/a924bbead89ff62494a05b41ff1e8c4b98de96"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/8f/a9b969b93fa33f7f66653b59cc6c1c63f8f87f"/>
+								</Folder>
+								<Folder Name="90">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/90/4caf0b928b730ecf01980555e277b67bad1b06"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/90/91c7f4f8188ced52e44dd9e28879067340147c"/>
+								</Folder>
+								<Folder Name="92">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/92/306c592e86e96e8dc24d4fc77b18c0bb93a348"/>
+								</Folder>
+								<Folder Name="95">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/95/21b535b2eee9c7d8c227ff5ca783507e1c97c4"/>
+								</Folder>
+								<Folder Name="97">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/97/cf000cdf3ebd1786358a3c5d8455b8bea8da1c"/>
+								</Folder>
+								<Folder Name="98">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/98/008b9ba6f32d287615ca4fc8e38b6d10a96936"/>
+								</Folder>
+								<Folder Name="9a">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/9a/867d4216726e58a10bd253c636fbd519d74f84"/>
+								</Folder>
+								<Folder Name="9c">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/9c/2e9190386ef84b1f558a4bcf25c2391759cca4"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/9c/a2d903c0e562f4c7828541fb308e678655f002"/>
+								</Folder>
+								<Folder Name="9d">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/9d/0f9231cfc262773bcfcfaa1e0497052b4a7487"/>
+								</Folder>
+								<Folder Name="9f">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/9f/8656bf3b480ebb50e7d6092ab6b9c3d98783f9"/>
+								</Folder>
+								<Folder Name="a0">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/a0/a54242d92d7de1d602859a8750309e64381aa4"/>
+								</Folder>
+								<Folder Name="a1">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/a1/b1ca04432617493a912c4689b3a648bc34c5db"/>
+								</Folder>
+								<Folder Name="a2">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/a2/7208c4c5ba42fd187cae1077e94d5a1bad3f7a"/>
+								</Folder>
+								<Folder Name="a3">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/a3/13f65d2746d025dcee60f72f608b6c6379a8d1"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/a3/77f67dd6afaa6e8718e8787ff4709eb123f360"/>
+								</Folder>
+								<Folder Name="a5">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/a5/22865cf1b2439341e2a0665282937f5bfbbbc4"/>
+								</Folder>
+								<Folder Name="a6">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/a6/518f0772a2a696987c4e0c4864f254423bd70a"/>
+								</Folder>
+								<Folder Name="aa">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/aa/d0a601146efeb95b8e2c210cecdbcbcf52f872"/>
+								</Folder>
+								<Folder Name="ab">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/ab/1371ce39cfd3bac3ed4ea232be7e2f44620ae1"/>
+								</Folder>
+								<Folder Name="ad">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/ad/6b214c10622a3a20aa92b58dca70d5d2d574ff"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/ad/a0093faa97e16586bfcb21c225a82cae4a5311"/>
+								</Folder>
+								<Folder Name="af">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/af/3208733ff0e9bb6fb1729fb266bb0aea6573b8"/>
+								</Folder>
+								<Folder Name="b1">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/b1/871ee7d34b9f0a4d78b92fac938b1b7306aafd"/>
+								</Folder>
+								<Folder Name="b5">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/b5/8a4290ccdabe30d1cb0fc4920843cd375741e4"/>
+								</Folder>
+								<Folder Name="b6">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/b6/dc6a70dda127491d703063ee1de7f987f83547"/>
+								</Folder>
+								<Folder Name="b7">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/b7/5c671feff5410efa27488e0cbe1dcd7851b6c2"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/b7/9500ae7cafadd273a84a6987353eedee730ccc"/>
+								</Folder>
+								<Folder Name="ba">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/ba/3b8b2118e6fd824580d3bc788e72ba76f48113"/>
+								</Folder>
+								<Folder Name="bb">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/bb/05edf4b06d1edae66f14dfb9d12928f242e07e"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/bb/3fe09eba9419c2bdc324583c7cba3d5938a410"/>
+								</Folder>
+								<Folder Name="bd">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/bd/24b2cd15c4cfd15e49ae3e953dd39b19f421eb"/>
+								</Folder>
+								<Folder Name="be">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/be/a49ebaef04244d10c9cba11f5e64c87e25929d"/>
+								</Folder>
+								<Folder Name="bf">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/bf/67bd1547782f77317cb443c095c27d77abed28"/>
+								</Folder>
+								<Folder Name="c2">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/c2/211d4669ef319a567534acc94c8a8e41a8d8a2"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/c2/6a96ea6de05892f5455be0a1a73211a446fe43"/>
+								</Folder>
+								<Folder Name="c5">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/c5/53dedda42bcb215196e0bc994f01c25c03a3e7"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/c5/b85c5c6824b399d55b509a0d98dcf7baaa134f"/>
+								</Folder>
+								<Folder Name="c6">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/c6/00c7a2bd835a87f89543545fdfef4249972f15"/>
+								</Folder>
+								<Folder Name="c7">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/c7/62d4ea6f5606786e2af09fe42f78052c1799b7"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/c7/dd89cea9d0177bb4eb317d568493d0984f9a18"/>
+								</Folder>
+								<Folder Name="c8">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/c8/7db59fdd281cc910de29a752b3df50944c7a6c"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/c8/a6a1a9a7fc8da5bfc81d7cbc2cc37a1e1795a9"/>
+								</Folder>
+								<Folder Name="c9">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/c9/45226e5f08c4bb8de90e7f32ad59b32f5ccc43"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/c9/5107a68a97819686b12bfdb226a634861029e2"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/c9/cfc05ac1b562c37cfd86105a5557fa32d9ca49"/>
+								</Folder>
+								<Folder Name="ca">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/ca/9fc31f9dcad63d6403bf7410413c4848ce001d"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/ca/e82bcd1dbac7a5e739485b57c36cc1e4903c8a"/>
+								</Folder>
+								<Folder Name="cc">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/cc/36ed62a17566b69fad16d9fe874998e0f6f5af"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/cc/387049fb081ae8282a1b896b5b9122aa4304a0"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/cc/9a0fe5ccba419576f982512e79a85a143fb64d"/>
+								</Folder>
+								<Folder Name="ce">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/ce/5dfd7c584776572888bdb1600fe6b50014711a"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/ce/a8ea540b22d8e3feca4375f5a83db941e57597"/>
+								</Folder>
+								<Folder Name="cf">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/cf/b91c835fec3b2b93cf59a9f7884a19f0b32489"/>
+								</Folder>
+								<Folder Name="d0">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/d0/832362a68ba994212a539edd193fe7f5d4e9a5"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/d0/fa62a23385bff9ca988cea290958c3575e752b"/>
+								</Folder>
+								<Folder Name="d1">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/d1/ba1a81eb9cccf37f8840f361fa051411f64e19"/>
+								</Folder>
+								<Folder Name="d3">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/d3/244dfb6067da8de5f130503d230c0c607315dc"/>
+								</Folder>
+								<Folder Name="d4">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/d4/a8926981a65ac70c229aebe6c12548a9ccc5fb"/>
+								</Folder>
+								<Folder Name="d6">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/d6/3fb9ec59ea22cb8e7a0215070d3e67e5b394cc"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/d6/5249d2533b3fd9eb2526771897422a94b475fe"/>
+								</Folder>
+								<Folder Name="d8">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/d8/2e7175869663cff2310e8f92ac7e46b185177d"/>
+								</Folder>
+								<Folder Name="da">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/da/abb2fa0960f6e29aa1cfa188092558c01b09db"/>
+								</Folder>
+								<Folder Name="db">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/db/a375f05e450140c5f3ad829a79f85bb7bf2678"/>
+								</Folder>
+								<Folder Name="dd">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/dd/e28226a5f37b0ded9b25ff382dfefdf1468772"/>
+								</Folder>
+								<Folder Name="de">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/de/d910999d4290aa00e9dc94f814a43223a48d69"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/de/ed49b99cf372de2b9bbeb40aa792a8866e1193"/>
+								</Folder>
+								<Folder Name="df">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/df/4aa9467b4bbe249bd8d3d60fb4644d190e1ee2"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/df/eab3d54cf5504c0a4ec9589e676fa08537a278"/>
+								</Folder>
+								<Folder Name="e4">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/e4/43e39677b0f693eb2308d38ada92edb631b237"/>
+								</Folder>
+								<Folder Name="e6">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/e6/2f1e11ff7c4d60205a809e1e0adfa6e7602552"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/e6/c970b06e1437ae1c2ca67b6b9cc9604bcb9003"/>
+								</Folder>
+								<Folder Name="ec">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/ec/0171c802537d316885869fcbddfb3beec2b825"/>
+								</Folder>
+								<Folder Name="ed">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/ed/d7a20b5e85b511d12fbcc2b5a79c3c1cd4f52a"/>
+								</Folder>
+								<Folder Name="ee">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/ee/451aab06e8e8f1aff38251a6e1ebc6bc6b63e9"/>
+								</Folder>
+								<Folder Name="f1">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/f1/0b1afaec813f7189151ac76fa85880c9dc164d"/>
+								</Folder>
+								<Folder Name="f5">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/f5/a917cbb8f1f8daac97b7875ecbe36213047941"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/f5/ee55042e8988fc38d400529ff7708912353ef3"/>
+								</Folder>
+								<Folder Name="f6">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/f6/36ce4754d0a5a20f1fa1621d4bebb8e8f3f57a"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/f6/7f28963fd428c5ab5e18c707ab0bea45ccde87"/>
+								</Folder>
+								<Folder Name="f7">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/f7/a2cafa52db0e8f6b0a17bf84a11f0cf41fa373"/>
+								</Folder>
+								<Folder Name="f8">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/f8/5140c2e45e6e0f6e335902a5b574e822be2c4c"/>
+								</Folder>
+								<Folder Name="f9">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/f9/1baea9dc0d1e1b1434370d0595e47bba1d507c"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/f9/c5087e4ceb765c636067700d3dca286e3ca0ed"/>
+								</Folder>
+								<Folder Name="fb">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/fb/9df20cd3a0fa03e7024989852107018c8d9362"/>
+								</Folder>
+								<Folder Name="ff">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/ff/6816a1db6744ea8490a1c3cb9478ccba0deae6"/>
+								</Folder>
+								<Folder Name="pack">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/pack/pack-4a8de020cda05618050c8303bc9a44da813a53c1.idx"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/objects/pack/pack-4a8de020cda05618050c8303bc9a44da813a53c1.pack"/>
+								</Folder>
+							</Folder>
+							<Folder Name="refs">
+								<Folder Name="heads">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/refs/heads/master"/>
+								</Folder>
+								<Folder Name="remotes">
+									<Folder Name="origin">
+										<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/refs/remotes/origin/HEAD"/>
+									</Folder>
+								</Folder>
+							</Folder>
+							<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/COMMIT_EDITMSG"/>
+							<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/config"/>
+							<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/description"/>
+							<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/FETCH_HEAD"/>
+							<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/HEAD"/>
+							<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/index"/>
+							<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/ORIG_HEAD"/>
+							<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.git/packed-refs"/>
+						</Folder>
+						<Folder Name="bin">
+							<Folder Name="__pycache__">
+								<F N="packs_xtra/programk/prolog/chat_ensemble/bin/__pycache__/wsdump.cpython-310.pyc"/>
+							</Folder>
+							<F N="packs_xtra/programk/prolog/chat_ensemble/bin/activate"/>
+							<F N="packs_xtra/programk/prolog/chat_ensemble/bin/activate.csh"/>
+							<F N="packs_xtra/programk/prolog/chat_ensemble/bin/activate.fish"/>
+							<F N="packs_xtra/programk/prolog/chat_ensemble/bin/Activate.ps1"/>
+							<F N="packs_xtra/programk/prolog/chat_ensemble/bin/chardetect"/>
+							<F N="packs_xtra/programk/prolog/chat_ensemble/bin/f2py"/>
+							<F N="packs_xtra/programk/prolog/chat_ensemble/bin/f2py3"/>
+							<F N="packs_xtra/programk/prolog/chat_ensemble/bin/f2py3.10"/>
+							<F N="packs_xtra/programk/prolog/chat_ensemble/bin/flask"/>
+							<F N="packs_xtra/programk/prolog/chat_ensemble/bin/futurize"/>
+							<F N="packs_xtra/programk/prolog/chat_ensemble/bin/nltk"/>
+							<F N="packs_xtra/programk/prolog/chat_ensemble/bin/normalizer"/>
+							<F N="packs_xtra/programk/prolog/chat_ensemble/bin/openai"/>
+							<F N="packs_xtra/programk/prolog/chat_ensemble/bin/pasteurize"/>
+							<F N="packs_xtra/programk/prolog/chat_ensemble/bin/pip"/>
+							<F N="packs_xtra/programk/prolog/chat_ensemble/bin/pip3"/>
+							<F N="packs_xtra/programk/prolog/chat_ensemble/bin/pip3.10"/>
+							<F N="packs_xtra/programk/prolog/chat_ensemble/bin/pyjwt"/>
+							<F N="packs_xtra/programk/prolog/chat_ensemble/bin/python"/>
+							<F N="packs_xtra/programk/prolog/chat_ensemble/bin/python3"/>
+							<F N="packs_xtra/programk/prolog/chat_ensemble/bin/python3.10"/>
+							<F N="packs_xtra/programk/prolog/chat_ensemble/bin/tqdm"/>
+							<F N="packs_xtra/programk/prolog/chat_ensemble/bin/wsdump.py"/>
+						</Folder>
+						<Folder Name="files">
+							<Folder Name="aiml">
+								<F N="packs_xtra/programk/prolog/chat_ensemble/files/aiml/AI.aiml"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/files/aiml/Atomic.aiml"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/files/aiml/Biography.aiml"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/files/aiml/Bot.aiml"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/files/aiml/Botmaster.aiml"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/files/aiml/Client.aiml"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/files/aiml/Computers.aiml"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/files/aiml/CustomTagTest.aiml"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/files/aiml/Default.aiml"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/files/aiml/Ecologics.aiml"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/files/aiml/Emotion.aiml"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/files/aiml/Food.aiml"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/files/aiml/Geography.aiml"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/files/aiml/Google.aiml"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/files/aiml/History.aiml"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/files/aiml/Inquiry.aiml"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/files/aiml/Interjection.aiml"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/files/aiml/IU.aiml"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/files/aiml/Knowledge.aiml"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/files/aiml/Literature.aiml"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/files/aiml/Money.aiml"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/files/aiml/Movies.aiml"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/files/aiml/Music.aiml"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/files/aiml/Neha.aiml"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/files/aiml/Personality.aiml"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/files/aiml/Philosophy.aiml"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/files/aiml/Pickup.aiml"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/files/aiml/Predicates.aiml"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/files/aiml/Reduce.aiml"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/files/aiml/Reductions.aiml"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/files/aiml/Salutations.aiml"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/files/aiml/Science.aiml"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/files/aiml/Stack.aiml"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/files/aiml/Stories.aiml"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/files/aiml/That.aiml"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/files/aiml/thrift.aiml"/>
+							</Folder>
+							<Folder Name="utils">
+								<Folder Name="aiml_generator">
+									<Folder Name="input">
+										<F N="packs_xtra/programk/prolog/chat_ensemble/files/utils/aiml_generator/input/test.csv"/>
+									</Folder>
+									<Folder Name="output">
+										<F N="packs_xtra/programk/prolog/chat_ensemble/files/utils/aiml_generator/output/test.aiml"/>
+									</Folder>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/files/utils/aiml_generator/generate.sh"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/files/utils/aiml_generator/generator.py"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/files/utils/aiml_generator/README.txt"/>
+								</Folder>
+								<Folder Name="botflow">
+									<Folder Name="aiml">
+										<F N="packs_xtra/programk/prolog/chat_ensemble/files/utils/botflow/aiml/aimlstandardlibrary.aiml"/>
+										<F N="packs_xtra/programk/prolog/chat_ensemble/files/utils/botflow/aiml/botflowlibrary.aiml"/>
+									</Folder>
+									<Folder Name="src">
+										<F N="packs_xtra/programk/prolog/chat_ensemble/files/utils/botflow/src/botflow.py"/>
+									</Folder>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/files/utils/botflow/botflow.sh"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/files/utils/botflow/README.txt"/>
+								</Folder>
+								<Folder Name="braintree_viewer">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/files/utils/braintree_viewer/README.txt"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/files/utils/braintree_viewer/viewer.py"/>
+								</Folder>
+								<Folder Name="corpus_creator">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/files/utils/corpus_creator/corpus_creator.py"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/files/utils/corpus_creator/README.txt"/>
+								</Folder>
+								<Folder Name="csv_tools">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/files/utils/csv_tools/aiml_to_csv.py"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/files/utils/csv_tools/csv_to_aiml.py"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/files/utils/csv_tools/README.txt"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/files/utils/csv_tools/test.aiml"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/files/utils/csv_tools/test.csv"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/files/utils/csv_tools/test2.csv"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/files/utils/csv_tools/test_aiml_to_csv.sh"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/files/utils/csv_tools/test_both_ways.sh"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/files/utils/csv_tools/test_csv_to_aiml.sh"/>
+								</Folder>
+								<Folder Name="healthcheck">
+									<Folder Name="static">
+										<F N="packs_xtra/programk/prolog/chat_ensemble/files/utils/healthcheck/static/healthcheck.html"/>
+										<F N="packs_xtra/programk/prolog/chat_ensemble/files/utils/healthcheck/static/healthcheck.js"/>
+									</Folder>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/files/utils/healthcheck/client.py"/>
+								</Folder>
+								<Folder Name="pandorabots">
+									<Folder Name="pbfiles">
+										<F N="packs_xtra/programk/prolog/chat_ensemble/files/utils/pandorabots/pbfiles/DefaultPredicates.xml"/>
+										<F N="packs_xtra/programk/prolog/chat_ensemble/files/utils/pandorabots/pbfiles/GenderSubstitutions.xml"/>
+										<F N="packs_xtra/programk/prolog/chat_ensemble/files/utils/pandorabots/pbfiles/Person2Substitutions.xml"/>
+										<F N="packs_xtra/programk/prolog/chat_ensemble/files/utils/pandorabots/pbfiles/PersonSubsitutions.xml"/>
+										<F N="packs_xtra/programk/prolog/chat_ensemble/files/utils/pandorabots/pbfiles/Settings.xml"/>
+										<F N="packs_xtra/programk/prolog/chat_ensemble/files/utils/pandorabots/pbfiles/Splitters.xml"/>
+										<F N="packs_xtra/programk/prolog/chat_ensemble/files/utils/pandorabots/pbfiles/Substitutions.xml"/>
+									</Folder>
+									<Folder Name="yfiles">
+										<F N="packs_xtra/programk/prolog/chat_ensemble/files/utils/pandorabots/yfiles/converters.txt"/>
+										<F N="packs_xtra/programk/prolog/chat_ensemble/files/utils/pandorabots/yfiles/defaults.txt"/>
+										<F N="packs_xtra/programk/prolog/chat_ensemble/files/utils/pandorabots/yfiles/denormals.txt"/>
+										<F N="packs_xtra/programk/prolog/chat_ensemble/files/utils/pandorabots/yfiles/gender.txt"/>
+										<F N="packs_xtra/programk/prolog/chat_ensemble/files/utils/pandorabots/yfiles/person2.txt"/>
+										<F N="packs_xtra/programk/prolog/chat_ensemble/files/utils/pandorabots/yfiles/Settings.txt"/>
+										<F N="packs_xtra/programk/prolog/chat_ensemble/files/utils/pandorabots/yfiles/splitters.txt"/>
+									</Folder>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/files/utils/pandorabots/converter.py"/>
+								</Folder>
+								<Folder Name="pattern_lister">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/files/utils/pattern_lister/pattern_lister.py"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/files/utils/pattern_lister/README.txt"/>
+								</Folder>
+								<Folder Name="pip">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/files/utils/pip/pipver.py"/>
+								</Folder>
+								<Folder Name="rdf_lister">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/files/utils/rdf_lister/rdf_lister.py"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/files/utils/rdf_lister/README.txt"/>
+								</Folder>
+								<Folder Name="rdf_tools">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/files/utils/rdf_tools/rdf_formatter.py"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/files/utils/rdf_tools/README.txt"/>
+								</Folder>
+								<Folder Name="test_creator">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/files/utils/test_creator/README.txt"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/files/utils/test_creator/test_creator.py"/>
+								</Folder>
+								<Folder Name="test_runner">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/files/utils/test_runner/README.txt"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/files/utils/test_runner/test_runner.py"/>
+								</Folder>
+							</Folder>
+						</Folder>
+						<Folder Name="ilm">
+							<Folder Name="bin">
+								<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/bin/activate"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/bin/activate.csh"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/bin/activate.fish"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/bin/activate.nu"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/bin/activate.ps1"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/bin/activate_this.py"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/bin/convert-caffe2-to-onnx"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/bin/convert-onnx-to-caffe2"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/bin/deactivate.nu"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/bin/f2py"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/bin/f2py3"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/bin/f2py3.9"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/bin/google-oauthlib-tool"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/bin/huggingface-cli"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/bin/markdown_py"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/bin/nltk"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/bin/normalizer"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/bin/pip"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/bin/pip3"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/bin/pip3.9"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/bin/pyrsa-decrypt"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/bin/pyrsa-encrypt"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/bin/pyrsa-keygen"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/bin/pyrsa-priv2pub"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/bin/pyrsa-sign"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/bin/pyrsa-verify"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/bin/python"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/bin/python3"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/bin/python3.9"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/bin/sacremoses"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/bin/tensorboard"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/bin/torchrun"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/bin/tqdm"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/bin/transformers-cli"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/bin/wheel"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/bin/wheel-3.9"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/bin/wheel3"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/bin/wheel3.9"/>
+							</Folder>
+							<Folder Name="data">
+								<Folder Name="char_masks">
+									<Folder Name="arxiv_cs_abstracts">
+										<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/data/char_masks/arxiv_cs_abstracts/train.pkl"/>
+										<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/data/char_masks/arxiv_cs_abstracts/valid.pkl"/>
+									</Folder>
+								</Folder>
+								<Folder Name="raw_data">
+									<Folder Name="arxiv_cs_abstracts">
+										<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/data/raw_data/arxiv_cs_abstracts/arxiv_cs_abstracts.txt"/>
+									</Folder>
+								</Folder>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/data/get_arxiv_cs_abstracts.sh"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/data/get_lyrics_stanzas.sh"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/data/get_roc_stories.sh"/>
+							</Folder>
+							<Folder Name="ilm">
+								<Folder Name="__pycache__">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/ilm/__pycache__/constants.cpython-39.pyc"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/ilm/__pycache__/datasets.cpython-39.pyc"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/ilm/__pycache__/paths.cpython-39.pyc"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/ilm/__pycache__/string_util.cpython-39.pyc"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/ilm/__pycache__/tokenize_util.cpython-39.pyc"/>
+								</Folder>
+								<Folder Name="mask">
+									<Folder Name="__pycache__">
+										<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/ilm/mask/__pycache__/base.cpython-39.pyc"/>
+										<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/ilm/mask/__pycache__/hierarchical.cpython-39.pyc"/>
+										<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/ilm/mask/__pycache__/util.cpython-39.pyc"/>
+									</Folder>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/ilm/mask/base.py"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/ilm/mask/custom.py"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/ilm/mask/custom_test.py"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/ilm/mask/hierarchical.py"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/ilm/mask/hierarchical_test.py"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/ilm/mask/mid_sentence.py"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/ilm/mask/mid_sentence_test.py"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/ilm/mask/util.py"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/ilm/mask/util_test.py"/>
+								</Folder>
+								<Folder Name="official_gpt2_encoder">
+									<Folder Name="__pycache__">
+										<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/ilm/official_gpt2_encoder/__pycache__/encoder.cpython-39.pyc"/>
+									</Folder>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/ilm/official_gpt2_encoder/encoder.json"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/ilm/official_gpt2_encoder/encoder.py"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/ilm/official_gpt2_encoder/vocab.bpe"/>
+								</Folder>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/ilm/constants.py"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/ilm/datasets.py"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/ilm/datasets_test.py"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/ilm/infer.py"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/ilm/paths.py"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/ilm/string_util.py"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/ilm/string_util_test.py"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/ilm/tokenize_util.py"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/ilm/tokenize_util_test.py"/>
+							</Folder>
+							<Folder Name="ilm.egg-info">
+								<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/ilm.egg-info/dependency_links.txt"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/ilm.egg-info/PKG-INFO"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/ilm.egg-info/SOURCES.txt"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/ilm.egg-info/top_level.txt"/>
+							</Folder>
+							<Folder Name="runs">
+								<Folder Name="Feb15_14-32-19_gitlab">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/runs/Feb15_14-32-19_gitlab/events.out.tfevents.1644964339.gitlab.1705116.0"/>
+								</Folder>
+							</Folder>
+							<Folder Name="scripts">
+								<Folder Name="resources">
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/scripts/resources/common_words.txt"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/scripts/resources/filler_words.txt"/>
+									<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/scripts/resources/prepropcessed_filler.txt"/>
+								</Folder>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/scripts/generate_banned_words.py"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/scripts/out.txt"/>
+							</Folder>
+							<Folder Name="train">
+								<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/train/additional_ids_to_tokens.pkl"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/train/config.json"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/train/eval_inp.npy"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/train/eval_num_docs.pkl"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/train/eval_tts.npy"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/train/optimizer.pt"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/train/pytorch_model.bin"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/train/step.pkl"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/train/train_inp.npy"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/train/train_num_docs.pkl"/>
+								<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/train/train_tts.npy"/>
+							</Folder>
+							<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.bash_history"/>
+							<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/.gitignore"/>
+							<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/acl20_repro.py"/>
+							<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/acl20_repro_eval.py"/>
+							<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/acl20_repro_train.py"/>
+							<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/create_ilm_examples.py"/>
+							<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/create_ilm_examples_test.py"/>
+							<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/Dockerfile"/>
+							<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/generate_SST2.py"/>
+							<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/generate_SST2_joint.py"/>
+							<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/inference.ipynb"/>
+							<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/infill.py"/>
+							<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/infill_batch.py"/>
+							<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/prepareGLUE.py"/>
+							<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/prepareMR.py"/>
+							<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/prepareSST2.py"/>
+							<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/preprocess.sh"/>
+							<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/preview.sh"/>
+							<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/preview_ilm_examples.py"/>
+							<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/proc_data.ipynb"/>
+							<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/pyvenv.cfg"/>
+							<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/README.md"/>
+							<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/requirements.txt"/>
+							<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/sample_pickle.pkl"/>
+							<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/setup.py"/>
+							<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/sorting.py"/>
+							<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/test_sorting.py"/>
+							<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/testMasks.py"/>
+							<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/train.sh"/>
+							<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/train_ilm.py"/>
+							<F N="packs_xtra/programk/prolog/chat_ensemble/ilm/train_ilm_test.py"/>
+						</Folder>
+						<F N="packs_xtra/programk/prolog/chat_ensemble/.api_key"/>
+						<F N="packs_xtra/programk/prolog/chat_ensemble/.bash_history"/>
+						<F N="packs_xtra/programk/prolog/chat_ensemble/bot_factoids.pl"/>
+						<F N="packs_xtra/programk/prolog/chat_ensemble/bot_factoids.py"/>
+						<F N="packs_xtra/programk/prolog/chat_ensemble/bot_factoids.sh"/>
+						<F N="packs_xtra/programk/prolog/chat_ensemble/bot_fillin.pl"/>
+						<F N="packs_xtra/programk/prolog/chat_ensemble/bot_fillin.py"/>
+						<F N="packs_xtra/programk/prolog/chat_ensemble/bot_fillin.sh"/>
+						<F N="packs_xtra/programk/prolog/chat_ensemble/bot_neox.pl"/>
+						<F N="packs_xtra/programk/prolog/chat_ensemble/bot_neox.py"/>
+						<F N="packs_xtra/programk/prolog/chat_ensemble/bot_neox.sh"/>
+						<F N="packs_xtra/programk/prolog/chat_ensemble/bot_neox_textsynth.py"/>
+						<F N="packs_xtra/programk/prolog/chat_ensemble/bot_pyaiml.pl"/>
+						<F N="packs_xtra/programk/prolog/chat_ensemble/bot_pyaiml.py"/>
+						<F N="packs_xtra/programk/prolog/chat_ensemble/bot_pyaiml.sh"/>
+						<F N="packs_xtra/programk/prolog/chat_ensemble/pyvenv.cfg"/>
+					</Folder>
 					<Folder Name="dcg_hash">
 						<F N="packs_xtra/programk/prolog/dcg_hash/dcg_hashexp.pl"/>
 						<F N="packs_xtra/programk/prolog/dcg_hash/dcg_hashlib.pl"/>
@@ -6643,6 +9163,7 @@
 							<F N="packs_xtra/programk/prolog/programk/cyc_pl/cyc_system_intern.pl"/>
 							<F N="packs_xtra/programk/prolog/programk/cyc_pl/cycp.pl"/>
 							<F N="packs_xtra/programk/prolog/programk/cyc_pl/new_cyc.pl"/>
+							<F N="packs_xtra/programk/prolog/programk/cyc_pl/saved_cached_queries"/>
 							<F N="packs_xtra/programk/prolog/programk/cyc_pl/textCached"/>
 						</Folder>
 						<Folder Name="logicmoo">
@@ -6651,8 +9172,10 @@
 							<F N="packs_xtra/programk/prolog/programk/logicmoo/logicmoo_util_strings.pl"/>
 							<F N="packs_xtra/programk/prolog/programk/logicmoo/logicmoo_util_terms.pl"/>
 						</Folder>
+						<F N="packs_xtra/programk/prolog/programk/.bash_history"/>
 						<F N="packs_xtra/programk/prolog/programk/aiml_2_0.pl"/>
 						<F N="packs_xtra/programk/prolog/programk/aiml_lf.pl"/>
+						<F N="packs_xtra/programk/prolog/programk/lil_sophia.pl"/>
 						<F N="packs_xtra/programk/prolog/programk/logicmoo_module_aiml_convertor.pl"/>
 						<F N="packs_xtra/programk/prolog/programk/logicmoo_module_aiml_cxt_path.pl"/>
 						<F N="packs_xtra/programk/prolog/programk/logicmoo_module_aiml_eval.pl"/>
@@ -6667,7 +9190,12 @@
 						<F N="packs_xtra/programk/prolog/programk/logicmoo_module_aiml_testing.pl"/>
 						<F N="packs_xtra/programk/prolog/programk/logicmoo_module_aiml_toplevel.pl"/>
 						<F N="packs_xtra/programk/prolog/programk/README.md"/>
+						<F N="packs_xtra/programk/prolog/programk/saved_cached_queries"/>
+						<F N="packs_xtra/programk/prolog/programk/test_aiml.pl"/>
 					</Folder>
+					<F N="packs_xtra/programk/prolog/.bash_history"/>
+					<F N="packs_xtra/programk/prolog/logicmoo_chat_ensemble.pl"/>
+					<F N="packs_xtra/programk/prolog/logicmoo_programk.pl"/>
 				</Folder>
 				<Folder Name="temp">
 					<F N="packs_xtra/programk/temp/alice.aiml.pl"/>
@@ -6677,6 +9205,7 @@
 				<Folder Name="test">
 					<F N="packs_xtra/programk/test/.gitignore"/>
 				</Folder>
+				<F N="packs_xtra/programk/.bash_history"/>
 				<F N="packs_xtra/programk/.gitignore"/>
 				<F N="packs_xtra/programk/pack.pl"/>
 				<F N="packs_xtra/programk/README.md"/>

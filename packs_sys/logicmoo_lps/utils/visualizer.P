@@ -186,6 +186,7 @@ visual(File,Options,lps_visualization(Timeline,Sequence),DFAgraph) :-
 		collect_display_specs(Ranged,DS), % (member(XX,DS), writeln(XX), fail;true),
 		prepare_display_sequence(DS,DSarray) % , (member(XX,DSarray), writeq(XX), nl, fail;true)
 		; DSarray=[] ),
+	print_message(informational,"...."-[]),
 	create_counter(IDs),
 	% Render fluents
 	% Let's find the end of time; since real time was introduced, we can't rely on endTime(_),

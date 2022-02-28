@@ -100,8 +100,8 @@ mindi_main(Args) :-
 %    semantics based on single-stepping and termination checking. For
 %    a program D and a situation S, the program may be partially
 %    executed to result in a new situation Sp and remaining program Dp
-%    if the predicate trans(D,S,Dp,Sp) holds.  A program D may legally
-%    terminate in situation S if the predicate final(D,S) holds.
+%    if the predicate trans(D,S,Dp,Sp) mindi_holds.  A program D may legally
+%    terminate in situation S if the predicate final(D,S) mindi_holds.
 % ---
 %    It should be noted that many of the constructs in the Golog family
 %    of languaged involve some nondeterminism, so trans/4 and final/2
@@ -172,14 +172,14 @@ final(star(_),_).
 %  Synchronised-if may terminate if the test is true and the true option
 %  may terminate, or the test is false and the false option may terminate.
 final(if(Cond,D1,D2),S) :-
-    holds(Cond,S), final(D1,S)
+    mindi_holds(Cond,S), final(D1,S)
     ;
-    holds(neg(Cond),S), final(D2,S).
+    mindi_holds(neg(Cond),S), final(D2,S).
 
 %  Synchronised-while may terminate if the test is false, or if the
 %  loop program may terminate.
 final(while(Cond,D),S) :-
-    holds(neg(Cond),S)
+    mindi_holds(neg(Cond),S)
     ;
     final(D,S).
 
@@ -280,10 +280,10 @@ trans(C,S,Dp,Sp) :-
     )
     .
 
-%  A test may transition to the empty program if it holds, leaving the
+%  A test may transition to the empty program if it mindi_holds, leaving the
 %  situation unaltered.
 trans(test(Cond),S,Dp,Sp) :-
-    holds(Cond,S), S=Sp, Dp=nil
+    mindi_holds(Cond,S), S=Sp, Dp=nil
     ;
     lntp(S,LNTP),
     findall(NA,(natural(NA),poss(NA,LNTP,S)),NActs),
@@ -306,7 +306,7 @@ trans(choice(D1,D2),S,Dp,Sp) :-
 %  Nondeterministic choice of arguments may transition if there is an
 %  appropriate binding of the arguments for which the program may transition.
 trans(exists(V,D),S,Dp,Sp) :-
-    sub(V,_,D,Dr), step(Dr,S,Dp,Sp).
+    sub(V,_,D,Dr), mindi_step(Dr,S,Dp,Sp).
 
 %  Iteration of a program may transition to the program followed by further
 %  iteration, provided that the program may transition.
@@ -316,15 +316,15 @@ trans(star(D),S,Dp,Sp) :-
 %  Synchronised-if may transition if the test is true and the true option
 %  may transition, or the test is false and the false option may transition.
 trans(if(Cond,D1,D2),S,Dp,Sp) :-
-    holds(Cond,S), trans(D1,S,Dp,Sp)
+    mindi_holds(Cond,S), trans(D1,S,Dp,Sp)
     ;
-    holds(neg(Cond),S), trans(D2,S,Dp,Sp).
+    mindi_holds(neg(Cond),S), trans(D2,S,Dp,Sp).
 
 %  Syncrhonised-while may transition to the loop program in sequence
-%  with another loop, as long as the test condition holds and the loop
+%  with another loop, as long as the test condition mindi_holds and the loop
 %  program may transition.
 trans(while(Cond,D),S,Dp,Sp) :-
-    Dp = seq(Dr,while(Cond,D)), holds(Cond,S), trans(D,S,Dr,Sp).
+    Dp = seq(Dr,while(Cond,D)), mindi_holds(Cond,S), trans(D,S,Dr,Sp).
 
 %  Concurrent execution may transition in three ways:
 % ---
@@ -339,8 +339,8 @@ trans(while(Cond,D),S,Dp,Sp) :-
 % ---
 
 trans_true_conc(conc(D1,D2),S,Dp,Sp) :-
-    step(D1,S,Dr1,do(C1,T,S)),
-    step(D2,S,Dr2,do(C2,T,S)),
+    mindi_step(D1,S,Dr1,do(C1,T,S)),
+    mindi_step(D2,S,Dr2,do(C2,T,S)),
     % TODO:  if one part is waiting for a natural action, do the other first.
     %        This will produce solutions in which as much as possible is done
     %        while waiting for a natural actions.  Such solutions are already
@@ -415,35 +415,35 @@ syn_sugar(Proc,pcall(Proc)) :-
 
 
 % ---
-%  holds(Cond,S):  check whether a condition holds in a situation
+%  mindi_holds(Cond,S):  check whether a condition mindi_holds in a situation
 % ---
 %  This predicate is used to evaluate reified condition terms from
 %  MIndiGolog programs.  It recursively reduces the formula to equivalent
 %  forms which can be tested directly by the prolog theorem prover,
 %  and hence includes the standard prolog negation-as-failure semantics.
 %  
-holds(and(C1,C2),S) :-
-    holds(C1,S), holds(C2,S).
-holds(or(C1,C2),S) :- 
-    holds(C1,S) ; holds(C2,S).
-holds(all(V,C),S) :-
-    holds(neg(some(V,neg(C))),S).
-holds(some(V,C),S) :-
-    sub(V,_,C,Cr), holds(Cr,S).
-holds(neg(neg(C)),S) :-
-    holds(C,S).
-holds(neg(and(C1,C2)),S) :-
-    holds(or(neg(C1),neg(C2)),S).
-holds(neg(or(C1,C2)),S) :-
-    holds(and(neg(C1),neg(C2)),S).
-holds(neg(all(V,C)),S) :-
-    holds(some(V,neg(C)),S).
-holds(neg(some(V,C)),S) :-
-    \+ holds(some(V,C),S).
-holds(P_Xs,S) :-
+mindi_holds(and(C1,C2),S) :-
+    mindi_holds(C1,S), mindi_holds(C2,S).
+mindi_holds(or(C1,C2),S) :- 
+    mindi_holds(C1,S) ; mindi_holds(C2,S).
+mindi_holds(all(V,C),S) :-
+    mindi_holds(neg(some(V,neg(C))),S).
+mindi_holds(some(V,C),S) :-
+    sub(V,_,C,Cr), mindi_holds(Cr,S).
+mindi_holds(neg(neg(C)),S) :-
+    mindi_holds(C,S).
+mindi_holds(neg(and(C1,C2)),S) :-
+    mindi_holds(or(neg(C1),neg(C2)),S).
+mindi_holds(neg(or(C1,C2)),S) :-
+    mindi_holds(and(neg(C1),neg(C2)),S).
+mindi_holds(neg(all(V,C)),S) :-
+    mindi_holds(some(V,neg(C)),S).
+mindi_holds(neg(some(V,C)),S) :-
+    \+ mindi_holds(some(V,C),S).
+mindi_holds(P_Xs,S) :-
     P_Xs \= and(_,_), P_Xs \= or(_,_), P_Xs \= neg(_), P_Xs \= all(_,_),
     P_Xs \= some(_,_), sub(now,S,P_Xs,P_XsS), P_XsS.
-holds(neg(P_Xs),S) :-
+mindi_holds(neg(P_Xs),S) :-
     P_Xs \= and(_,_), P_Xs \= or(_,_), P_Xs \= neg(_), P_Xs \= all(_,_),
     P_Xs \= some(_,_), sub(now,S,P_Xs,P_XsS), \+ P_XsS.
 
@@ -493,20 +493,20 @@ trans_c(D,S,Dp,Sp) :-
 
 
 % ---
-%  step(D,S,Dp,Sp):  single-step a program
+%  mindi_step(D,S,Dp,Sp):  single-mindi_step a program
 % ---
 %  This predicate takes a program D and a situation S in which to execute it,
 %  and returns a new situation Sp and remaining program Dp such that the
 %  execution of D has progressed by a single action.  It may be used
 %  repeatedly to find a possible next action to perform for a given program.
 % ---
-step(D,S,Dp,Sp) :-
+mindi_step(D,S,Dp,Sp) :-
     %  Naive implementation is simply:  trans_c(D,S,Dp,do(C,T,S))
     %  This implementation is more efficient as it does not generate
     %  transitions that go beyond one action from S (which will always fail).
     Sp = do(_,_,S), trans(D,S,Dp,Sp)
     ;
-    trans(D,S,Dr,S), step(Dr,S,Dp,Sp).
+    trans(D,S,Dr,S), mindi_step(Dr,S,Dp,Sp).
 
 
 % ---
@@ -555,7 +555,7 @@ show_action_history(do(C,T,S)) :-
 % ---
 ol_do(D,S) :-
     %( ol_valid_step(D,S,Dr,Sr) ->
-    ( step(D,S,Dr,Sr) ->
+    ( mindi_step(D,S,Dr,Sr) ->
         Sr = do(C,T,S),
         ( inf(T,MinT) ->
             true
@@ -574,14 +574,14 @@ ol_do(D,S) :-
     ).
 
 
-% If the step being called for contains a natural action, ensure that
+% If the mindi_step being called for contains a natural action, ensure that
 % the resulting program is not waiting for that action.
 ol_valid_step(D,S,Dr,do(C,T,S)) :-
-    step(D,S,Dr,do(C,T,S)),
-    %write('step: '), write(C), nl,
+    mindi_step(D,S,Dr,do(C,T,S)),
+    %write('mindi_step: '), write(C), nl,
     ( happens(NA,C), natural(NA) ->
         %write('contains NA'), nl,
-        \+ ( step(Dr,S,_,do(C2,_,S)),
+        \+ ( mindi_step(Dr,S,_,do(C2,_,S)),
              happens(NA,C2) %, write('which is broken'), nl
            )
       ;

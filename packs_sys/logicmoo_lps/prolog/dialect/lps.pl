@@ -29,7 +29,7 @@ expects_dialect/1:
 @author Douglas R. Miles
 */
 
-:- module(lps, [pop_lps_dialect/0,push_lps_dialect/0,dialect_input_stream/1, calc_load_module_lps/1]).
+:- module(lps, [pop_lps_dialect/0,push_lps_dialect/0,dialect_input_stream/1,load_lps/0,calc_load_module_lps/1]).
 % :- asserta(swish:is_a_module).
 
 
@@ -49,6 +49,10 @@ expects_dialect/1:
 	user:prolog_file_type/2.
 
 % :- notrace(system:ensure_loaded(library(operators))).
+swish:fakeout_swish.
+:- notrace(lps_repl:ensure_loaded(library(lps_corner))).
+%:- notrace(logicmoo_planner:ensure_loaded(library(logicmoo_planner))).
+:- notrace(ec:ensure_loaded(library(ec_planner/ec_planner_dmiles))).
 
 
 lps_debug(Info):- ignore(notrace((debug(lps(dialect),'~N% ~p.',[Info])))).
@@ -163,7 +167,10 @@ calc_load_module_lps(Module):-
     call(Call),
     lps_debug(calc_load_module_lps(Call)),
     \+ likely_reserved_module(Module)); interpreter:must_lps_program_module(Module).
-get_lps_program_module(Module):- interpreter:lps_program_module(Module).
+
+get_lps_program_module(Module):- 
+  load_lps,
+  interpreter:lps_program_module(Module).
 
 set_lps_program_module(Module):- interpreter:must_lps_program_module(Module).
 
@@ -246,10 +253,13 @@ lps_operators(Module,[
   op(700,xfx,((Module:(<=))))
 ]).
 
-add_lps_to_module(Module):-
+load_lps:-    
    notrace(interpreter:ensure_loaded(library('../engine/interpreter.P'))),
    notrace(lps_term_expander:ensure_loaded(library('../swish/term_expander.pl'))),
-   notrace(lps_repl:ensure_loaded(library(lps_corner))),
+   notrace(lps_repl:ensure_loaded(library(lps_corner))).
+
+add_lps_to_module(Module):-
+   load_lps,
    %notrace(system:ensure_loaded(library(broadcast))),
    interpreter:check_lps_program_module(Module),
    Module:style_check(-discontiguous), Module:style_check(-singleton),
@@ -257,11 +267,12 @@ add_lps_to_module(Module):-
    !.
 
 push_lps_dialect:-
+   load_lps,
    calc_load_module_lps(Module),
    lps_expects_dialect(Module, Module).   
   
 lps_expects_dialect(User, User):-  
-  User==user,
+  User==user,  
   get_lps_alt_user_module(User,LPS_USER),
   LPS_USER\==user,
   lps_debug(alt_module(User,LPS_USER)),

@@ -17,14 +17,19 @@ golps(T,DFAgraph,Options) :-
     visualizer:gojson(_File, [dc, silent|Options], [], T, DFAgraph).
 
 
-:- user:ensure_loaded(library(dialect/lps)).
 :- current_predicate(swish:is_a_module/0) -> true ; asserta(swish:is_a_module).
+:- user:ensure_loaded(library(dialect/lps)).
 
 :- interpreter:use_module(library('../engine/interpreter.P')).
 :- visualizer:use_module(library('../utils/visualizer.P')).
-
 :- lps_term_expander:ensure_loaded(library('../swish/term_expander')).   
 
+:- use_module(library(logicmoo_utils)).
+:- user:ensure_loaded(library(dialect/lps)).
+:- notrace(lps_repl:ensure_loaded(library(lps_corner))).
+:- notrace(lps_repl:ensure_loaded(library(logicmoo_planner))).
+
+:- notrace(ec_loader:ensure_loaded(library(ec_planner/ec_planner_dmiles))).
 
 
 :- if(current_module(swish)).

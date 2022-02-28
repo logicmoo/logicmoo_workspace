@@ -221,7 +221,6 @@ webui_load_swish_and_clio0:-
   % trace,
   \+ \+ (absolute_file_name('../../swish/run_swish_and_clio',Run,[relative_to(Dir),file_type(prolog),file_errors(fail)]),
   user:ensure_loaded(Run)),
-  
   asserta((prolog_version:git_update_versions(V):- skipping(prolog_version:git_update_versions(V)),!)),
   asserta((swish_version:git_update_versions(V):- skipping(swish_version:git_update_versions(V)),!)),
   swish_app:load_config('./config-enabled-swish'),

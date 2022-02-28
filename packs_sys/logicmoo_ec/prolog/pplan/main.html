@@ -1,0 +1,264 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Frameset//EN">
+<html>
+<HEAD>
+<TITLE>PPLAN: Main</TITLE>
+<link rel="stylesheet" type="text/css" href="http://www.cs.toronto.edu/~sheila/resources/common.css">
+</HEAD>
+<body>
+
+<center>
+<h2> PPLAN -- Planning with Preferences </h2>
+</center>
+<p>
+
+<b> 
+<center>
+*** January 2010:  This page is currently in the process of being updated. *** 
+</center>
+</b>
+<p>
+This page contains, code, domain challenge problems, and experimental results
+for ongoing work on PPLAN, a best-first search planner for planning
+with rich user preferences that was developed at the University of Toronto.  
+<!--
+<b>
+Warning:  This page is evolving as we update and
+improve our software.</b>
+</p><br>
+<p>
+
+<hr>
+<h3>
+This page remains under constructions.</h3>
+<script type="text/javascript">
+document.write("<i style='font-size:small'>(last update: " + 
+document.lastModified + ")</i>");
+</script><br>
+</p>
+<hr>
+<br>
+
+-->
+
+
+<br>
+<h3>Contributors</h3>
+<ul>
+<tab><a href="http://www.informatik.uni-bremen.de/~meghyn/">Meghyn Bienvenu<br>
+<a href="http://www.cs.toronto.edu/~sheila/">Sheila McIlraith</a><br>
+<a href="http://www.cs.utoronto.ca/~shirin/">Shirin Sohrabi Araghi</a><br>
+<a href="http://www.cs.toronto.edu/~fritz/">Christian Fritz</a><br>
+</ul>
+
+<H3><a name="overview"><br>Overview</a></H3>
+<p>
+PPLAN is a provably optimal best-first search planner for planning with
+non-Markovian qualitative preferences.  
+
+<p>
+Work on PPLAN was first reported in the paper 
+<a href="#references">Specifying and Generating Preferred Plans</a>,
+by Bienvenu and McIlraith. More recent citations are included below.
+Contributions include:
+<ul>
+<li> A first-order language for specifying non-Markovian qualitative (user) 
+preferences over possible plans, and
+<li> A best-first search planner
+together with theoretical results on the correctness and optimality of the algorithm.
+</ul>
+
+The language is rich, and is amenable to integration with
+many existing planners, and beyond planning, can be used to support 
+arbitrary dynamical reasoning tasks.
+The semantics of the first-order preference language is defined using the 
+situation calculus. The truth or falsity of a preference formula is evaluated
+as a situation calculus formula.  The relative preference of alternative plans
+is represented as a weight, which is a function of the weights of its 
+component properties.
+A preference formula provides a partial order on what are effectively
+temporally extended goals. 
+<br>
+<p> PPLAN is an optimal best-first forward-chaining planner that 
+generates a plan that not only achieves a user-defined goal, but 
+that also conforms, where possible, to a user's preferences.  
+
+<!-- There are currently 3 versions of PPLAN:  PPLAN v1, PPLAN v2, and PPLAN v3. -->
+<!-- PPLAN v1 and v2 are both bounded best-first search planners that require  -->
+<!-- specification of a plan horizon and quality measure.  PPLAN v3 does not  -->
+<!-- require a horizon or quality measure, using an <i>optimistic</i> admissible heuristic together with best-first search.  All versions are proven optimal. -->
+<!-- PPLAN v1 and v2's optimality is predicated on the horizon and quality measure. -->
+
+PPLAN uses <i>progression</i> to more efficiently evaluate preference
+formulae.
+
+</p>
+<p>
+PPLAN takes as input, an action theory, a specification of 
+the initial state of the system, a preference formula, and a goal. 
+<!--  In later  -->
+<!-- implementations of PPLAN, the goal is a temporally extended goal.  In PPLAN -->
+<!-- v1 and v2, a plan horizon and quality bound are also part of the input. -->
+<!-- In v1, the quality bound can be  -->
+<!-- an arbitrarily large numbers. In v2, quality bounds are normalized to be  -->
+<!-- between zero and one, as described in -->
+<!-- <a href="main.htm#references"> Qualitative Dynamical Preferences in the Situation -->
+<!--   Calculus </a>.  -->
+<!--
+</p>
+<p>
+This website provides the code for all three versions as well as the data and
+experimental results.
+</p>
+-->
+<br>
+
+<H3>Language Syntax</H3>
+<p>
+To specify preferences for planning, we appeal to a first-order preference
+language defined in 
+<a href="main.htm#references">Planning with Qualitative Temporal Preferences</a>.  
+Details of the syntax of the language can be found in this paper.
+</p> 
+
+
+
+<H3><a name="implementation"><br>Implementation</a></H3>
+<p>PPLAN is implemented in Prolog.
+<!-- There are currently three versions of PPLAN, PPLAN v1, PPLAN v2 and PPLAN v3.  -->
+<!-- PPLAN v1 is based on the work described in  -->
+<!-- <a href="main.htm#references">Specifying and Generating Preferred Plans</a>. -->
+Users must provide a plan horizon (length bound).
+<!--  and a quality bound,  -->
+<!-- ranging from zero to an arbitrarily large number. -->
+<!-- In PPLAN v2, the quality of a plan was normalized to range between zero and one. -->
+    
+<!-- PPLAN v3 improves on both the specification of a plan and the efficiency of -->
+<!-- the heuristic search by evaluating partial plans optimistically.  As such  -->
+<!-- it uses an admissible evaluation function with best-first search.   -->
+<!-- Improvements in the efficiency -->
+<!-- of the heuristic are reflected in the experimental results below. -->
+
+PPLAN evaluates partial plans optimistically. As such it uses an
+admissible evaluation function with best-first search.
+
+</p>
+<p>
+<!-- We recommend that users interested in using PPLAN start with PPLAN v3.  </p> -->
+<!-- <br> -->
+<!-- <p>Note that the implementations of PPLAN that we have currently made available do not implement the quantifier feature of our preference language. -->
+<!-- This will be available shortly. -->
+<!-- </p> -->
+<!-- <br> -->
+
+<p> You can find code, test cases and experimentals results by clicking on 
+the relevant link that follows.
+<ul>
+<!-- <li><a href="pplanv3.htm" target="mainwindow">PPLAN V3</a>  : This is the newest version of PPLAN which uses an admissible heuristic in its best-first search algorithm to find the best plan. -->
+<!-- <li><a href="pplanv2.htm" target="mainwindow">PPLAN V2</a>  : This is the second version of PPLAN in which weights were normalized to be between zero and one. -->
+<li><a href="resources/pplan.pl" target="mainwindow">pplan.pl</a>: This is the main PPLAN interpreter. This files uses computeWeights.pl.
+<li><a href="resources/computeWeights.pl" target="mainwindow">computeWeights.pl</a>: This module calculates the weights and progressions of preferences.
+</ul>
+</p>
+
+<H3><a name="testcases"><br> Test Cases</a></H3>
+<p>As an example we provide the dinner domain, specified in the following 
+Prolog (e.g. <a href="http://xsb.sourceforge.net/">XSB</a>) files: 
+<ul>
+<li> <a href="resources/dinner.pl">dinner.pl</a>
+</ul>
+</p>
+
+<p>PPLAN has been tested on 60 instances of the dinner domain:
+<ul>
+<li> <a href="resources/dinner_test_cases.pl">Test cases for the dinner example</a>
+</ul>
+</p>
+
+
+<H3><a name="results"><br>Experimental Results</a></H3>
+<p> We have proved that our algorithm will find the plan that optimizes the
+user's preferences.  To evaluate the effectiveness of our heuristic in
+pruning search, we compared the number of nodes expanded or considered by 
+PPLAN to the equivalent breadth-first planner.  The results are given here:
+<ul>
+<li> <a href="results.html">Results for the dinner domain</a>
+</ul>
+
+In these experiments, we used the following implementation of
+breadth-first search.
+<ul>
+<li><a href="resources/bfs.pl" target="mainwindow">bfs.pl</a>: This is the main BFS implementation file. This files uses computeWeightsBFS.pl.
+<li><a href="resources/computeWeightsBFS.pl" target="mainwindow">computeWeightsBFS.pl</a>: This module assigns weights to partial plans in a way that emulates breadth-first search.
+</ul>
+
+<br>
+</p>
+
+<!-- <p>We also compared the number of nodes expanded and considered by PPLAN v2,  -->
+<!-- the normalized version of PPLAN v1, -->
+<!-- with both -->
+<!-- PPLAN v1 and with the equivalent breath-first planner. The results are  -->
+<!-- given here:  -->
+<!-- <ul> -->
+<!-- <li> <a href="dinnerresultsV2.htm">Results for the dinner example</a>  -->
+<!-- <li> <a href="travelresultsV2.htm">Results for the school travel example</a>  -->
+<!-- </ul><br> -->
+<!-- </p> -->
+
+<!-- <p>In addition, we compared the number of nodes expanded and considered by  -->
+<!-- PPLAN v3, -->
+<!-- the version of PPLAN that uses A* search with an admissible -->
+<!-- heuristic that evaluates partial plans optimistically, with both PPLAN v1 and -->
+<!-- with the  -->
+<!-- equivalent breath-first planner.  -->
+<!--  The results are given here: -->
+<!--  <ul> -->
+<!-- <li> <a href="dinnerresultsV3.htm">Results for the dinner example</a>  -->
+<!-- <li> <a href="travelresultsV3.htm">Results for the school travel example</a>   -->
+<!-- </ul> -->
+<!-- </p> -->
+
+<H3><a name="references"><br>References</a></H3>
+<p>The principle references for PPLAN are the following: 
+<ul>
+[1] M. Bienvenu and S. McIlraith. <a href="bie-mci-cs05final.pdf">
+Specifying and Generating Preferred Plans</a>. Working Notes of the Seventh
+International Symposium on Logical Formalizations of Commonsense Reasoning,
+May 2005, Kerkyra, Greece. 
+<br><br>
+[2] M. Bienvenu and S. McIlraith. <a href="bie-mci-pref05f.pdf">
+ Qualitative Dynamical Preferences in the Situation Calculus</a>. Proceedings of the IJCAI-05 Multidisciplinary
+Workshop on Advances in Preference Handling, July 31, 2005.
+<br><br>
+[3] M. Bienvenu and C. Fritz and S. McIlraith <a href="http://www.cs.toronto.edu/~sheila/publications/200603101347_KR06BienvenuM.pdf">Planning with Qualitative Temporal Preferences</a>.
+Proceedings of the 10th International Conference on Principles of Knowledge Representation and Reasoning (KR06), June 2006, Lake District, UK
+<br><br>
+[4] M. Bienvenu and C. Fritz and S. McIlraith <a href="http://www.cs.toronto.edu/~sheila/publications/bie-fri-mci-aij11.pdf">
+Specifying and Computing Preferred Plans</a>.  
+Artificial Intelligence, 175(7-8): 1308-1345. 2011.
+</ul>
+</p>
+
+<p> The closest related work is that of Son and Pontelli:
+<ul>
+[5] T. Son and E. Pontelli. 
+<a href="http://www.cs.nmsu.edu/~tson/papers/lpnmr03-prefs.pdf">
+Planning with preferences using logic programming. </a>In <it>
+Proc. LPNMR 2004</it>, pages 247-260. 2004.
+</ul>
+</p>
+<br>
+<p> Code and examples for Son and Pontelli's planner can be found <a href="http://www.cs.nmsu.edu/~tson/ASPlan/Preferences/">here</a>.
+</p>
+<br>
+Related work on integrating qualitative user preferences with 
+decision-theoretic agent programming can be found here:
+<ul>
+[6] C. Fritz and S. McIlraith.
+<a href="http://www.cs.toronto.edu/~sheila/publications/200604231150_200603061828_KR0603FritzC.pdf">Decision-Theoretic GOLOG with Qualitative Preferences</a>. 
+Proceedings of the 10th International Conference on Principles of Knowledge Representation and Reasoning (KR06), June 2006, Lake District, UK
+</ul>
+<br><br><br><br><br><br>
+</font>
+</body>
+</html>
