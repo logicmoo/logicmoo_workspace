@@ -32,8 +32,8 @@ whpron( what, entity ).
 
 % :- randomizable det/2.
 % det( every, (X^S1)^(X^S2)^   all(X,S1,S2) ).
-% det( a,     (X^S1)^(X^S2)^exists(X,S1,S2)  ).
-% det( some,  (X^S1)^(X^S2)^exists(X,S1,S2)  ).
+% det( a,     (X^S1)^(X^S2)^present(X,S1,S2)  ).
+% det( some,  (X^S1)^(X^S2)^present(X,S1,S2)  ).
 
 :- register_all_lexical_items([P], whpron(P, _)).
 :- register_all_lexical_items([P], pronoun_word(P,_,_,_,_)).
@@ -41,8 +41,8 @@ whpron( what, entity ).
 /*
 :- randomizable det/2.
 det( every, (X^S1)^(X^S2)^   all(X,S1,S2) ).
-det( a,     (X^S1)^(X^S2)^exists(X,S1,S2)  ).
-det( some,  (X^S1)^(X^S2)^exists(X,S1,S2)  ).
+det( a,     (X^S1)^(X^S2)^present(X,S1,S2)  ).
+det( some,  (X^S1)^(X^S2)^present(X,S1,S2)  ).
 
 :- randomizable n/3.
 n( author,     authors,     X^author(X)     ).

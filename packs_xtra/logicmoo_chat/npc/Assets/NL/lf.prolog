@@ -2,7 +2,7 @@
 %% Predicates for manipulating logical forms
 %%
 
-:- external past/1, future/1, can/1, may/1, should/1, would/1, must/1.
+:- external past/1, future/1, can/1, may/1, should/1, would/1, shall/1.
 
 %% modalized(?LF, ?Tense, ?Aspect, ?Modalized) is det
 %  Modalized is LF inflected with Tense and Aspect
@@ -45,7 +45,7 @@ lf_core_predicate(should(S), P) :-
 lf_core_predicate(can(S), P) :-
    !,
    lf_core_predicate(S, P).
-lf_core_predicate(must(S), P) :-
+lf_core_predicate(shall(S), P) :-
    !,
    lf_core_predicate(S, P).
 lf_core_predicate(would(S), P) :-

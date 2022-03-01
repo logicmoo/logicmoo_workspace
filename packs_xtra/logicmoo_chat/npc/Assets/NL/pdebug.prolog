@@ -13,12 +13,10 @@ test_nonterminal(N, _) :-
    writeln(F:fail).
 
 parse(Nonterminal, WordList) :-
-   term_append(Nonterminal, [ WordList, [ ] ], Full),
-   Full.
+   apply(Nonterminal, [ WordList, [ ] ]).
 
 parse(Nonterminal, WordList, Completion) :-
-   term_append(Nonterminal, [ WordList, Completion ], Full),
-   Full.
+   apply(Nonterminal, [ WordList, Completion ]).
 
 nonterminal(np(_LF, _C, _A, nogap, nogap)).
 nonterminal(aux(_, _P, _Agreement, _T, _Aspect, _F, _M)).

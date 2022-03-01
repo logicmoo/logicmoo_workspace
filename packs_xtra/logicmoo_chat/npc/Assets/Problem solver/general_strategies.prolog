@@ -33,7 +33,7 @@ strategy(achieve(runnable(Action)),
 
 %% unachievable(+Task)
 %  Task is a-priori unachievable, so give up.
-unachievable(exists(_)).
+unachievable(present(_)).
 
 strategy(achieve(P),
 	 wait_condition(P)) :-
@@ -271,7 +271,7 @@ previously_hidden(Item) :-
 strategy(eat($me, X),
 	 ingest(X)).
 postcondition(eat(_, X),
-	      ~exists(X)).
+	      ~present(X)).
 postcondition(eat(Person, F),
 	      ~hungry(Person)) :-
    existing(food, F).
@@ -279,7 +279,7 @@ postcondition(eat(Person, F),
 strategy(drink($me, X),
 	 ingest(X)).
 postcondition(drink(_, X),
-	      ~exists(X)).
+	      ~present(X)).
 postcondition(drink(Person, B),
 	      ~thirsty(Person)) :-
    existing(beverage, B).
@@ -378,12 +378,12 @@ default_strategy(turn_off($me, X),
 %% Misc mechanical operations
 %%
 
-strategy(flush($me, Shower),
-	 call(flush(Shower))) :-
+strategy(operate($me, Shower),
+	 call(operate(Shower))) :-
    is_a(Shower, shower).
 
-:- public flush/1.
-flush(Shower) :-
+:- public use/1.
+operate(Shower) :-
    forall(contained_in(X, Shower),
 	  destroy(X)).
 

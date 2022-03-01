@@ -27,7 +27,7 @@ strategy(follow_command(Requestor, Task, normal),
 	 if(dialog_task(Task),
 	    Task,
 	    if(Task=halt($me),
-	       call(kstop_current_everyday_life_task),
+	       call(stop_current_everyday_life_task),
 	       call(add_pending_task(on_behalf_of(Requestor, Task)))))).
 
 :- public dialog_task/1.

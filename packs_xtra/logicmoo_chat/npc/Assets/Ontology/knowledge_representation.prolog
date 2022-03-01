@@ -10,7 +10,7 @@
 :- public property_type/3, relation_type/3.
 :- public kind_lub/3, kind_glb/3.
 :- public implies_relation/2, inverse_relation/2.
-:- external declare_value/3, default_value/3, declare_related/3, symmatric/1.
+:- external declare_value/3, default_value/3, declare_related/3, symmetric/1.
 
 test_file(integrity(_), "Ontology/integrity_checks").
 

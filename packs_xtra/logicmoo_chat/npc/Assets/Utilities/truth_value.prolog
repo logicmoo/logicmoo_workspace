@@ -189,7 +189,7 @@ admitted_truth_value(player, P, Value) :-
 admitted_truth_value(Listener, P, Value) :-
    pretend_truth_value(Listener, P , Value),
    !,
-   emit_grain("lie", 100),
+   emit_grain("untrue", 100),
    affective_reaction(0, 0, 1, 0.2).
 admitted_truth_value(Listener, P, Value) :-
    truth_value(P, Value),

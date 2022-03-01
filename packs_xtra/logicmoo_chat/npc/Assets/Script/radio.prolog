@@ -80,7 +80,7 @@ heroic_act(Speaker, Group) -->
    [are, really, secret],
    goodguy_members(Speaker, OtherGroup),
    { Group \= OtherGroup }.
-heroic_act(_, _) --> [are, trying, to, help us].
+heroic_act(_, _) --> [are, trying, to, help, us].
 
 
 goodguy_members(Speaker, Group) --> [members, of], goodguys(Speaker, Group), { organization(Group) }.

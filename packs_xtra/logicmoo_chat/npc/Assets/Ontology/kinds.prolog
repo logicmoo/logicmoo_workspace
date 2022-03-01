@@ -1,3 +1,6 @@
+:- multifile(immediate_kind_of/2).
+:- dynamic(immediate_kind_of/2).
+
 immediate_kind_of(endurant, entity).
 immediate_kind_of(actor, endurant).
 immediate_kind_of(physical_endurant, endurant).

@@ -6,10 +6,10 @@
 
 pi_to_p(F/A,P):- functor(P,F,A),!.
 pi_to_p(F//A,P):- A2 is A + 2, functor(P,F,A2).
-assume_todo(FA):- pi_to_p(FA,P), TODO=assume_todo(P), asserta((P:- !, log(warn(TODO)),throw(TODO))).
-assume_done(FA):- pi_to_p(FA,P), TODO=assume_done(P), asserta((P:- !, log(warn(TODO)))).
-assume_dyn_fail(FA):- pi_to_p(FA,P), TODO=assume_dyn_fail(P), asserta((P:- !, log(warn(TODO)),fail)).
-assume_dyn_succeed(FA):- pi_to_p(FA,P), TODO=assume_dyn_succeed(P), asserta((P:- !, log(warn(TODO)),!)).
+assume_todo(FA):- pi_to_p(FA,P), TODO=assume_todo(P), asserta((P:- predicate_property(P,number_of_clauses(1)), !, log(warn(TODO)),throw(TODO))).
+assume_done(FA):- pi_to_p(FA,P), TODO=assume_done(P), asserta((P:- predicate_property(P,number_of_clauses(1)), !, log(warn(TODO)))).
+assume_dyn_fail(FA):- pi_to_p(FA,P), TODO=assume_dyn_fail(P), asserta((P:- predicate_property(P,number_of_clauses(1)),!, log(warn(TODO)),fail)).
+assume_dyn_succeed(FA):- pi_to_p(FA,P), TODO=assume_dyn_succeed(P), asserta((P:- predicate_property(P,number_of_clauses(1)), !, log(warn(TODO)),!)).
 
 :- if( \+ prolog_load_context(reloading,false)).
 :- prolog_load_context(directory,D),asserta(lmchat_dir(D)).
@@ -143,7 +143,7 @@ process_kind_hierarchy:- log(todo(process_kind_hierarchy)).
 :- load_unity_prolog_file('Problem solver/debugger.prolog').
 :- load_unity_prolog_file('Problem solver/crash_log.prolog').
 :- load_unity_prolog_file('Ontology/favor.prolog').
-:- load_unity_prolog_file('Quds/script.prolog').
+:- load_unity_prolog_file('Qud/script.prolog').
 :- load_unity_prolog_file('Ontology/physical_object.prolog').
 :- load_unity_prolog_file('Ontology/person.prolog').
 :- load_unity_prolog_file('Ontology/knowledge_representation.prolog').
@@ -180,18 +180,18 @@ process_kind_hierarchy:- log(todo(process_kind_hierarchy)).
 :- load_unity_prolog_file('Conversation/imperatives.prolog').
 :- load_unity_prolog_file('Conversation/description.prolog').
 :- load_unity_prolog_file('Conversation/assertions.prolog').
-:- load_unity_prolog_file('Quds/social_interaction.prolog').
-:- load_unity_prolog_file('Quds/roles.prolog').
-:- load_unity_prolog_file('Quds/player_interaction.prolog').
-:- load_unity_prolog_file('Quds/patrol.prolog').
-:- load_unity_prolog_file('Quds/need_satisfaction.prolog').
-:- load_unity_prolog_file('Quds/need_satifaction.prolog').
-:- load_unity_prolog_file('Quds/event_grammar.prolog').
-:- load_unity_prolog_file('Quds/conversation.prolog').
-:- load_unity_prolog_file('Quds/quds.prolog').
-:- load_unity_prolog_file('Quds/command_line.prolog').
-:- load_unity_prolog_file('Quds/be_polite.prolog').
-:- load_unity_prolog_file('Quds/affect_manager.prolog').
+:- load_unity_prolog_file('Qud/social_interaction.prolog').
+:- load_unity_prolog_file('Qud/roles.prolog').
+:- load_unity_prolog_file('Qud/player_interaction.prolog').
+:- load_unity_prolog_file('Qud/patrol.prolog').
+:- load_unity_prolog_file('Qud/need_satisfaction.prolog').
+:- load_unity_prolog_file('Qud/need_satifaction.prolog').
+:- load_unity_prolog_file('Qud/event_grammar.prolog').
+:- load_unity_prolog_file('Qud/conversation.prolog').
+:- load_unity_prolog_file('Qud/quds.prolog').
+:- load_unity_prolog_file('Qud/command_line.prolog').
+:- load_unity_prolog_file('Qud/be_polite.prolog').
+:- load_unity_prolog_file('Qud/affect_manager.prolog').
 %:- load_unity_prolog_file('NL/grammar_exclaim.prolog').
 
 :- load_unity_prolog_file('NL/lexicon.prolog').
@@ -201,6 +201,20 @@ process_kind_hierarchy:- log(todo(process_kind_hierarchy)).
 
 :- load_unity_prolog_file('NL/grammar.prolog').
 :- load_unity_prolog_file('Script/demo_level.prolog').
+
+
+:- load_unity_csv_file('Ontology/relations.csv').
+:- load_unity_csv_file('Ontology/entities.csv').
+:- load_unity_csv_file('Ontology/predicate_type.csv').
+:- load_unity_csv_file('Ontology/properties.csv').
+:- load_unity_csv_file('Ontology/kinds.csv').
+:- load_unity_csv_file('NL/ditransitive_verb.csv').
+:- load_unity_csv_file('NL/intransitive_verb.csv').
+:- load_unity_csv_file('NL/adjective.csv').
+:- load_unity_csv_file('NL/prepositional_slot.csv').
+:- load_unity_csv_file('NL/parser_tests.csv').
+:- load_unity_csv_file('NL/transitive_verb.csv').
+
 
 :- add_history(module(lmchat)).
 

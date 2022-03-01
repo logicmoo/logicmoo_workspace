@@ -27,7 +27,7 @@ default_strategy(respond_to_assertion(_Speaker, _ModalLF, false),
 default_strategy(respond_to_assertion(Speaker, ModalLF, unknown),
 		 begin(say_string(Response),
 		       tell(/hearsay/Speaker/ModalLF))) :-
-   heard_hearsay(ModalLF) -> Response="I've head that." ; Response="Really?".
+   heard_hearsay(ModalLF) -> Response="I do not know." ; Response="Really?".
 
 heard_hearsay(ModalLF) :-
    /hearsay/_/Assertion, Assertion=ModalLF.

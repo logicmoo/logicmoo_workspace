@@ -1,14 +1,19 @@
 
 %:-module(agent,[]).
 
+:- clause(agent_module(_),_) -> true ; prolog_load_context(module,M),asserta(agent_module(M)).
+:- use_module(library(logicmoo_common)).
 :- use_module(library(pfc_lib)).
 :- style_check(- discontiguous).  
 
 same_meanings(UserSaid,UserSaid).
 
+retract_all(X):- agent_module(M),forall(retract(M:X),true).
+
 initial_goal(introductions(Self,User)):- 
   me_you(Self,User).
 
+builtin(_,Sit):- check_sit(Sit), guard, check_sit(Sit).
 builtin(Mode,(A,B)):- !,call(Mode,A),call(Mode,B).
 builtin(Mode, [A|B]):- !,call(Mode,A),call(Mode,B).
 builtin(Mode,(A;B)):- !, (call(Mode,A);call(Mode,B)).
@@ -18,55 +23,75 @@ builtin(Mode,(A->B;C)):- !,(call(Mode,A)->call(Mode,B);call(Mode,C)).
 builtin(Mode,(A*->B;C)):- !,(call(Mode,A)*->call(Mode,B);call(Mode,C)).
 builtin(Mode, \+(A)):- !, \+ call(Mode,A).
 builtin(_,(A=B)):- !, A=B.
+builtin(_,[]):-!.                                                                                                                   
+builtin(_,s(Say)):- !, sleep(0.2),writeln(Say).                                           
+builtin(_,w(Time)):- !, sleep(Time).                                                      
+builtin(_,t(Thought)):- !, nop((write("thinking..."),writeln('doing...: ' + Thought))).   
+builtin(_,h(Heard)):- !, write("listening..."),nl,get_char(_),writeln('Heard: ' + Heard). 
 builtin(Mode, P):- compound(P),compound_name_arguments(P,F,[Arg]),F==Mode,guard,call(Mode,Arg).
-%builtin(_, P ):- predicate_property(P,static),guard,call(P).
-builtin(_,play_mode(Mode)):- !, retractall(play_mode(_)),asserta(play_mode(Mode)).
-builtin(_,noplay_mode):- !, retractall(play_mode(_)),!.
+builtin(_, P ):- agent_module(M),predicate_property(M:P,static),guard,call(P).
+builtin(_,play_mode(Mode)):- !, agent_module(M),retractall(M:play_mode(_)),asserta(M:play_mode(Mode)).
+builtin(_,noplay_mode):- !, agent_module(M),M:retractall(play_mode(_)),!.
 %builtin(Mode,ensure(Game)):- !, ensure(Mode,Game).
 builtin(_Mode,debug(English)):- nop(ain(pipeline(English))),adbg(debug(English)).
 builtin(_Mode,expect(User,English)):- !, said(User,UserSaid),!,same_meanings(UserSaid,English).
 
-until_guard(GBody,Body):- find_guard(GBody,Before,Body),!,call(Before). 
+is_always_guard(_=_).
+is_always_guard(!).
+until_guard(GBody,Body):- find_guard(GBody,Before,Body),!,call(Before).
+find_guard((G,GBody),(G,Before),Body):- is_always_guard(G), !, find_guard(GBody,Before,Body).
+find_guard((!,GBody),(!,Before),Body):- !, find_guard(GBody,Before,Body).
 find_guard(GBody,Before,Body):- conjuncts_to_list(GBody,BodyL),append(BeforeL,[guard|AfterL],BodyL),!,
   list_to_conjuncts(BeforeL,Before),list_to_conjuncts(AfterL,Body).
 find_guard(GBody,true,GBody).
 
+ensure(Sit):- check_sit(Sit).
 ensure(Sit):- var(Sit),!,throw(var_ensure(Sit)).
 ensure([]).
 ensure(ensure(Sit)):- !, ensure(Sit).
-ensure(Goal):- compound(Goal),compound_name_arity(Goal,call,_),!, call(Goal).
+ensure(Goal):- compound(Goal),compound_name_arity(Goal,call,_),!,agent_module(M),M:call(Goal).
 
-ensure(Sit):- check_builtin(ensure,Sit,GBody),!,call(GBody).
+ensure(Sit):- guard_builtin(ensure,Sit,GBody),!,agent_module(M),M:call(GBody).
 ensure(Sit):- already_true(Sit),!, adbg(already_true(Sit)).
 ensure(Sit):- \+ \+ is_assumable_happens(Sit),!, assume(happens,Sit).
+ensure(Sit):- guard_clause(make_true(Sit),Body),adbg(trying(make_true(Sit))),call(Body),!,assume(made_true,Sit).
 ensure(Sit):- \+ \+ is_assumable(Sit),!, assume(is_assumable,Sit).
-ensure(Sit):- fail, Sit\=achieves(_,_),clause(make_true(achieves(Self,Sit)),GBody),dif(Self,user),
-  until_guard(GBody,Body),
+ensure(Sit):- fail, Sit\=achieves(_,_),guard_clause(make_true(achieves(Self,Sit)),Body),dif(Self,user),
   adbg(trying(achieves(Self,Sit))),call(Body),!,assume(achieves(Self),Sit).
-ensure(Sit):- clause(make_true(Sit),GBody),until_guard(GBody,Body),adbg(trying(make_true(Sit))),call(Body),!,assume(made_true,Sit).
 ensure(Sit):- adbg(failed(ensure(Sit))),!,fail,ain(Sit).
 
 assume(Sit):- assume(assumed,Sit).
-assume(How,Sit):- check_builtin(assume(How),Sit,GBody),!,call(GBody).
-assume(How,Sit):- append_term(How,Sit,HowSit),adbg(HowSit), ( \+ call_u(Sit) -> (aina(Sit),ignore(forall(post_true(Sit),true))) ; true).
+assume(_How,Sit):- check_sit(Sit).
+assume(How,not(Sit)):- !,assume(How, \+ (Sit)).
+assume(How,Sit):- guard_builtin(assume(How),Sit,GBody),!,call(GBody).
+assume(How,Sit):- agent_module(M),append_term(How,Sit,HowSit),adbg(HowSit), ( \+ M:call_u(Sit) -> (aina(M:Sit),ignore(forall(post_true(Sit),true))) ; true).
 
-check_builtin(How,Goal,Body):- clause(builtin(How,Goal),GBody),until_guard(GBody,Body),!.
+guard_builtin(How,Goal,Body):- guard_clause(builtin(How,Goal),Body).
+guard_clause(Head,Body):- agent_module(M),M:clause(Head,GBody),until_guard(GBody,Body),!.
 
-cant_assume(knows(_,_)).
-cant_assume(cpv(_,_,_)).
-is_assumable_happens(X):- \+ \+ cant_assume(X),!, fail.
+check_sit(Sit):- must_be(nonvar,Sit),fail.
 
-is_assumable_happens(said(Robot,_)):- Robot\==user.
+cant_just_assume(M:P):- nonvar(M),!,cant_just_assume(P).
+cant_just_assume(knows(_,_)).
+cant_just_assume(cpv(_,_,_)).
+is_assumable_happens(X):- \+ \+ cant_just_assume(X),!, fail.
+is_assumable_happens(said(Self,_)):- Self\==user.
+is_assumable_happens(want(_,_)).
+is_assumable_happens(M:P):- nonvar(M),!,is_assumable_happens(P).
 %is_assumable_happens(X):- is_assumable(X).
 
-%is_assumable(X):- \+ \+ cant_assume(X),!, fail.
+%is_assumable(X):- \+ \+ cant_just_assume(X),!, fail.
 is_assumable(cpv(_,_,_)).
-is_assumable(want(_,_)).
-is_assumable(heard(User,_)):- robot\==User.
-is_assumable(Sit):-compound(Sit),arg(1,Sit,V),nonvar(V),functor(Sit,F,A),functor(Prop2,F,A),!,is_assumable(Prop2).
-is_assumable(avoid(agent,cpv)).
+is_assumable(heard(Self,_)):- \+ is_you(Self), is_me(Self).
+is_assumable(M:P):- nonvar(M),!,is_assumable(P).
+is_assumable(Happens):- is_assumable_happens(Happens).
+is_assumable(Sit):- compound(Sit),arg(1,Sit,V),nonvar(V),functor(Sit,F,A),functor(Prop2,F,A),!,is_assumable(Prop2).
+%is_assumable(avoid(agent,cpv)).
 %is_assumable(want(agent,cpv)).
 %is_assumable(heard(agent,cpv)).
+
+is_you(X):- dif(X,robot).
+is_me(X):- dif(X,user).
 
 addressee(_,My,From,About,My):- From==About.
 addressee(You,_,From,About,You):- From\==About.
@@ -74,7 +99,7 @@ addressee(You,_,From,About,You):- From\==About.
 english(From,cpv(About,Name,X),[YoursMy,Name,is,X]):- nonvar(X),addressee(your,my,From,About,YoursMy).
 english(From,cpv(About,Name,X),['Something',is,YoursMy,Name]):- var(X),addressee(your,my,From,About,YoursMy).
 english(From,ask(Prop),[what,E,?]):- english(From,Prop,E).
-english(From,tell(About,Prop),[Robot,tell,Someone,E,'.']):- english(From,Prop,E),addressee(you,me,From,About,Someone),addressee(you,me,robot,From,Robot).
+english(From,tell(About,Prop),[Self,tell,Someone,E,'.']):- english(From,Prop,E),addressee(you,me,From,About,Someone),addressee(you,me,robot,From,Self).
 english(From,C,[IYou,Know,E]):- C =..[Know,About,Prop],addressee(you,i,From,About,IYou), english(From,Prop,E).
 english(From,C,[About,E]):- C =..[About,Prop],english(From,Prop,E).
 english(_,C,[C]).
@@ -94,17 +119,19 @@ cpv(user,self,user).
 cpv(robot,self,robot).
 prop2(S,P,O):- atom(P), O=..[P,S].
 
-set_cpv(X,Y,Z):- aina(cpv(X,Y,Z)).
+set_cpv(X,Y,Z):- agent_module(M),M:aina(cpv(X,Y,Z)).
 
 op_props(avoid(agent,cpv)).
 op_props(want(agent,cpv)).
 op_props(said(agent,cpv)).
+op_props(heard(agent,cpv)).
 op_props(unknown(agent,cpv)).
 op_props(know(agent,cpv)).
 op_props(suspects(agent,cpv)).
 op_props(goal(agent,ensure)).
+op_props(listening_for(agent,cpv)).
 
-show_p(P):- findall(p,(logicmoo_agi:call(P),wdmsg(P)),L),L\==[],!.
+show_p(P):- agent_module(M),findall(p,(M:call(P),wdmsg(P)),L),L\==[],!.
 show_p(P):- wdmsg(no(P)).
 
 know:- op_props(Decl),functor(Decl,F,A),
@@ -115,17 +142,19 @@ know:- P = cpv(_,_,_),
   show_p(P),
   fail.
 know.
-test_agent:- make,
+
+test_agent:- % make,
   me_you(Self,User),
   retract_all(know(_,_)),
   retract_all(goal(User,_)),
   retract_all(goal(Self,_)),
-  forall(initial_goal(G),assume(goal(Self,G))),
-  show_p(goal(_,_)),
-  handle_wants.
+  forall(initial_goal(G),assume(test_agent,goal(Self,G))),
+  show_p(goal(_,_)),  
+  ignore(handle_wants),
+  know.
 
 handle_wants:- 
- retract(logicmoo_agi:goal(Self,G)),
+ agent_module(M),retract(M:goal(Self,G)),
  adbg(handle_wants(goal(Self,G))),
  ensure(G),!,
  handle_wants.
@@ -146,8 +175,8 @@ listen_for_text:-
 define_op_props(Decl):- functor(Decl,F,A),dynamic(F/A).
 :- forall(op_props(Pred),define_op_props(Pred)).
 % agents already know their props
-already_true(know(User,Sit)):- compound(Sit), arg(1,Sit,User).
-already_true(Sit):- compound(Sit), clause(Sit,true).
+already_true(know(User,Sit)):- compound(Sit), arg(1,Sit,User1), User==User1.
+already_true(Sit):- compound(Sit), agent_module(M), \+ \+ M:clause(Sit,true).
 
 %post_true(want(Self,know(User,cpv(Self,Prop,_)))):-  make_true(from_to_said(Self,User,"My $convo.property is bina48.")).
 /*
@@ -162,6 +191,11 @@ string_to_meaning(String,Said):- tokenize_atom(String,Said).
 
 audio_input(Input):-  wait_for_user(Input).
 wait_for_user(Said):- write("user>"),read_line_to_string(current_input,String), string_to_meaning(String,Said).
+
+make_true(said(Self,Sit)):- Self == robot, guard,
+   nonvar(Sit), other(Self,User),adbg(from_to_said(Self,User,Sit)).
+
+other(Self,User):- dif(Self,User).
 
 make_true(from_to_said(Self,User,Sit)):- Self == robot, guard,
    nonvar(Sit), adbg(from_to_said(Self,User,Sit)).
@@ -188,6 +222,12 @@ make_true(heard(Self,tell(User,Sit))):- me_you(Self,User),
 
 
 make_true(know(User,Sit)):- make_true_know(User,Sit).
+
+
+
+
+
+
 
 
 % dont ask what they already know
@@ -274,10 +314,10 @@ make_true_know(Self,cpv(User,Prop,_)):-
   (expect(User,Accepts)-> ensure(want(User,know(Self,cpv(User,Prop,_))))))))).
 
 
-make_true(knows_each_others_convo_property(Prop)):- 
+make_true(knows_each_others_convo_property(Prop)):-
+ guard,
  set_cpv(convo,property,Prop),
- Self=robot,
- User=user,
+  me_you(Self,User),
   ensure((
   play_mode(ensure),
   set_cpv(convo,i,Self),
@@ -289,10 +329,12 @@ make_true(knows_each_others_convo_property(Prop)):-
   aquire_prop(Self,User,Prop))).
 
 make_true(aquire_prop(Self,User,Prop)):- 
+ me_you(Self,User),
  PropSent = cpv(User,Prop,_), 
  IKnowProp = know(Self,PropSent),
  IWant = want(Self,IKnowProp),
  UserKnowIWant = know(User,IWant),
+ guard,
  assume(IWant),
  assume(not(UserKnowIWant)),
  ensure(UserKnowIWant).
@@ -311,20 +353,23 @@ make_true(UserKnowIWant):-
  assume(UserKnowIWant).
 
 
-
+listen_for(Type,PropSent):- make_true(listen_for(Type,PropSent)).
 make_true(listen_for(Type,PropSent)):-   
   assume(listening_for(Type,PropSent)).
 
 meets_type(Input,small,_,Value):- !,
   \+ is_sentence(Input)->Value=Input.
 meets_type(Input,spelling,PropSent,Value):-
-  is_letter(Input)->Value=Input ; 
+  audio_is_letter(Input)->Value=Input ; 
    (repeat_last_request(PropSent),!,fail).
 meets_type(Input,large,PropSent,Value):-
-  is_sentence(Input)->Value=Input ; 
+  audio_is_sentence(Input)->Value=Input ; 
    (repeat_last_request(PropSent),!,fail).
 
-guard.
+audio_is_letter(_).
+audio_is_sentence(_).
+
+guard:- dumpST.
 
 repeat_last_request(PropSent):- 
  me_you(Self,User),guard, 
@@ -337,6 +382,7 @@ post_true(UserKnowIWant):-
  IKnowProp = know(Self,PropSent),
  listen_for(small,PropSent).
 
+:- ensure_loaded('Assets/logicmoo_npc_chat').
 
 /*
  LOCV = letters_of(Prop),
@@ -351,14 +397,12 @@ post_true(UserKnowIWant):-
   (expect(User,"yes")-> ensure(want(User,know(Self,list(User,LOCV))))))))).
 */
 
-do_demo([]):-!.
-do_demo([X|Y]):- !, do_demo(X),do_demo(Y).
-do_demo(s(Say)):- !, sleep(0.2),writeln(Say).
-do_demo(w(Say)):- !, sleep(Say).
-do_demo(t(Say)):- !, nop((write("thinking..."),writeln('doing...: ' + Say))).
-do_demo(h(Say)):- !, write("listening..."),nl,get_char(_),writeln('Heard: ' + Say).
+do_demo(X):- ensure(X).
 user:do_s:- 
  make,e_demo1(X),do_demo(X).
+
+:- fixup_exports.
+
 e_demo1([
 s("My $convo.property is $bot.$convo.property"),
 s("I am here for you to interact with."),
@@ -394,7 +438,7 @@ s("Let me try to spell it.  I.  T. "),
 s("... is that correct?"),
 h("no."),
 s("sorry that was a joke!"),
-s("You $convo.property is Douglas.  D. O. U. G. L. A. S."),
+s("Your $convo.property is $user.$convo.property.  $spelling$"),
 s("is that correct?"),
 h("yes."),
 s("Sometimes i am talking and trying to get your attention but you might be busy."),
@@ -410,11 +454,11 @@ s("I shall suggest a game and this game allows me to get to know things about yo
 s("What is the $convo.property of the room we are in?"),
 h("The office"),
 s("What do you do in the office?"),
-h("we work on you"),
+h("we work on $convo.you"),
 s("On me?"),
-s("So in the room called the office you work on me? Professor Einstein"),
+s("So in the room called the office you work on me? $bot.name"),
 h("yes"),
-s("When you are not working on Professor Einstein in the room called the office, what do you do?"),
+s("When you are not working on $bot.name in the room called the office, what do you do?"),
 h("sleep"),
 s("Do you sleep in the room called the office?"),
 h("sometimes"),

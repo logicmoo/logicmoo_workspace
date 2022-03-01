@@ -22,7 +22,7 @@
 :- public (@)/1.
 :- public preempt/0.
 
-~(~P) :- P.
+~(Q) :- compound(Q), Q = ~P,!, P.
 
 %
 % @(+Goal)
@@ -72,6 +72,7 @@ strict_der(KB,Goal) :-
 %   Succeeds if Goal is defeasibly derivable from the
 %   knowledge base KB.
 %
+:- discontiguous def_der/2.
 
 def_der(_,true) :- !.
       % `true' is defeasibly derivable from any

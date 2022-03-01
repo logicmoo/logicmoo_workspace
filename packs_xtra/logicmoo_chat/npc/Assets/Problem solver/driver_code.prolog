@@ -34,19 +34,19 @@ poll_task_action(T, starting, _) :-
    begin(T/type:task:Goal,
 	 log($me:polling_task_that_never_finished_starting(T, Goal)),
 	 save_log(T, "task never finished starting"),
-	 kstop_task(T)).
+	 stop_task(T)).
 poll_task_action(T, completing_timeout, _) :-
    % The task in in the middle of trying to complete a timeout.
    begin(T/type:task:Goal,
 	 log($me:polling_task_that_never_finished_completing_timeout(T, Goal)),
 	 save_log(T, "task never finished completing timeout"),
-	 kstop_task(T)).
+	 stop_task(T)).
 poll_task_action(T, completing_wait, _) :-
    % The task is in the middle of trying to complete a wait operation.
    begin(T/type:task:Goal,
 	 log($me:polling_task_that_never_finished_completing_wait(T, Goal)),
 	 save_log(T, "task never finished completing wait"),
-	 kstop_task(T)).
+	 stop_task(T)).
 poll_task_action(T, restarting, _) :-
    % The task is in the middle of trying to restart.
    begin(T/type:task:Goal,
@@ -57,8 +57,8 @@ poll_task_action(T, exiting, _) :-
    % The task is in the middle of trying to exit.
    begin(T/type:task:Goal,
 	 log($me:polling_task_that_already_exited(T, Goal)),
-	 save_log(T, "task kstoped twice"),
-	 kstop_task(T)).
+	 save_log(T, "task stopped twice"),
+	 stop_task(T)).
 poll_task_action(_, breakpoint, _).  % do nothing.
 poll_task_action(T, A, ActionNode) :-
    % Check if the task is in the middle of an action.
