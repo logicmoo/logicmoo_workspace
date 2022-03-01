@@ -26,7 +26,7 @@ aux_without_do_support(Gap, Polarity, Agreement, future, Aspect, Form, X^X) -->
    aux_aspect_future(Aspect, Agreement, Form).
 aux_without_do_support(Gap, Polarity, _Agreement, present, simple, base, P^LF) -->
    [ ModalAux ],
-   { modal_aux(ModalAux), LF =.. [ModalAux, P] },
+   { modal_aux(ModalAux,ModalAuxLF), LF =.. [ModalAuxLF, P] },
    opt_not(Polarity),
    aux_gap(Gap).
 aux_without_do_support(Gap, Polarity, Agreement, Tense, Aspect, Form, X^X) -->
@@ -83,14 +83,14 @@ opt_not(negative) --> [not].
 %%% Lexical entries
 %%%
 
-:- randomizable(modal_aux/1).
-modal_aux(can).
-modal_aux(may).
-modal_aux(should).
-modal_aux(would).
-modal_aux(must).
+:- randomizable(modal_aux/2).
+modal_aux(can,can).
+modal_aux(may,may).
+modal_aux(should,should).
+modal_aux(would,would).
+modal_aux(must,shall).
 
-:- register_all_lexical_items([A], modal_aux(A)).
+:- register_all_lexical_items([A], modal_aux(A,_)).
 
 :- randomizable aux_do//2.
 aux_do(present, Agreement) -->

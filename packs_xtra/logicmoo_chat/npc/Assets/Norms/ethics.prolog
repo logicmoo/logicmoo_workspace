@@ -1,22 +1,22 @@
-:- external immoral/1, murder/1, possession/2, threatening_to_kstop/2.
+:- external immoral/1, murder/1, possession/2, threatening_to_stop/2.
 immoral(Action) :-
-   murder(Action).
+   mean(Action).
 
 murder(Action) :=
    patient(Action, Person),
    is_a(Person, person),
-   alive(Person),
-   true_after(Action, dead(Person)).
+   here(Person),
+   true_after(Action, away(Person)).
 
 ~murder(Action) :-
    agent(Action, Actor),
    patient(Action, Person),
-   intend(Person, kstop(Person, Actor)).
+   intend(Person, freeze(Person, Actor)).
 
 :- external intend/2.
 
-% Testing purposes - Kavi wants to kstop everyone.
-%intend($'Kavi', kstop($'Kavi', _)).
+% Testing purposes - Kavi wants to freeze everyone.
+%intend($'Kavi', freeze($'Kavi', _)).
 
 				% Don't steal
 ~permissible(move(Actor, Object, Actor)) :=

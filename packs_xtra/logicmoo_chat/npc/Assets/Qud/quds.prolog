@@ -100,34 +100,34 @@ begin_child_qud(Parent, Type, Priority, Child) :-
 %% Destruction
 %%
 
-:- public kstop_qud/1.
+:- public stop_qud/1.
 
-%% kstop_qud(+Qud)
+%% stop_qud(+Qud)
 %  IMPERATIVE
 %  Kstops qud and all its children.
-%  Calls on_kstop/2 on it before deletion.
-kstop_qud(Qud) :-
+%  Calls on_stop/2 on it before deletion.
+stop_qud(Qud) :-
     begin(Qud/type:Type,
-	  ignore(on_kstop(Type, Qud)),
-	  kstop_children(Qud),
+	  ignore(on_stop(Type, Qud)),
+	  stop_children(Qud),
 	  retract(Qud)).
 
-%% kstop_children(+Qud)
+%% stop_children(+Qud)
 %  IMPERATIVE
-%  Calls kstop_qud/1 on all children of Qud.
+%  Calls stop_qud/1 on all children of Qud.
 
-:- public kstop_children/1.
+:- public stop_children/1.
 
-kstop_children(Qud) :-
+stop_children(Qud) :-
     forall(Qud/quds/_>>Subqud,
-	   kstop_qud(Subqud)).
+	   stop_qud(Subqud)).
 
-%% on_kstop(+Type, +Qud)
+%% on_stop(+Type, +Qud)
 %  IMPERATIVE
 %  Called when Qud is to be destroyed.
 %  Called before either it or its children are destroyed.
 
-:- external on_kstop/2.
+:- external on_stop/2.
 
 %%
 %% State switching

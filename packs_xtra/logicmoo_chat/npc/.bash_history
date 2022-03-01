@@ -213,3 +213,12 @@ git status
 git commit -m w
 find -name "*bak" -delete 
 git commit -m w
+git add .
+git commit -m w
+cls ; swipl -l agent.pl 
+cp ../npc ../npc4 -a
+cls ; swipl -l agent.pl 
+cls ; swipl -l agent.pl 
+cls ; swipl -l agent.pl 
+git commit -m w
+find -name "*bak" -delete 

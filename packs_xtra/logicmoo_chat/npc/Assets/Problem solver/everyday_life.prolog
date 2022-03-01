@@ -78,12 +78,12 @@ restart_everyday_life_task :-
    everyday_life_task(C),
    restart_task(C).
 
-%% kstop_current_everyday_life_task
+%% stop_current_everyday_life_task
 % Stops whatever the everyday_life task is currently trying to do.
-:- public kstop_current_everyday_life_task/0.
-kstop_current_everyday_life_task :-
+:- public stop_current_everyday_life_task/0.
+stop_current_everyday_life_task :-
    everyday_life_task(T),
-   kstop_children(T).
+   stop_children(T).
 
 
 %%%
