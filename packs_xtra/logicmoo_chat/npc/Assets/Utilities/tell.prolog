@@ -7,7 +7,7 @@
 
 tell(P) :- ugoal_expansion(P,PP), tellg(PP), !.
 
-tellg(P) :- call(P), !.
+tellg(P) :- \+ \+ call(P), !.
 tellg(P) :-
    tell_assertion(P),
    forall(when_added(P, Action),

@@ -31,7 +31,7 @@ script_update_await_list(C) :-
 	 %log($me:(History->NextSet)),
 	 ( (NextSet = [ ]) ->
 	     % Done; exit.
-	     kstop_qud(C)
+	     stop_qud(C)
 	     ;
 	     % Not done; write back to working memory
 	     forall(member(Event, NextSet),

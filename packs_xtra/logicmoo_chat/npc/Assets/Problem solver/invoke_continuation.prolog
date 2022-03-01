@@ -23,7 +23,7 @@ invoke_continuation(K) :-
 invoke_continuation(TaskQud, K) :-
    within_task(TaskQud, invoke_continuation(K)).
 
-restart_or_stop_task :-
+restart_or_kstop_task :-
    % Poor being's flow: task achievement -> positive affect
    affective_reaction(0.2, 0.05, 0, 0),
    ($task/repeating_task ->
@@ -31,12 +31,12 @@ restart_or_stop_task :-
 	    ignore(retract($task/log)),
 	    invoke_continuation(Goal))
       ;
-      stop_task($task)).
+      kstop_task($task)).
 
-stop_task(T) :-
+kstop_task(T) :-
    begin(assert(T/current:exiting),
 	 maybe_save_log(T),
-	 stop_qud(T)).
+	 kstop_qud(T)).
 
 %% restart_task(+TaskQud)
 %  Restarts a repeating task

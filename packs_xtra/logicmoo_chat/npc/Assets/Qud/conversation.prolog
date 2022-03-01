@@ -23,7 +23,7 @@ launch_conversation(Parent, Partner, Event) :-
 			 Child/initial_history/Event ]),
    (Partner \= player -> assert(Child/location_bids/Partner:0.5);true).
 
-on_stop(conversation, C) :-
+on_kstop(conversation, C) :-
    forall(C/partner/P,
 	  retract(/social_state/talking_to/P)).
 
@@ -32,7 +32,7 @@ on_stop(conversation, C) :-
 %  IMPERATIVE
 %  Launches child task to run Task.
 conversation_handler_task(Qud, Input) :-
-   stop_children(Qud),
+   kstop_children(Qud),
    ignore(retract(Qud/location_bids)),
    Qud/partner/P,
    start_task(Qud, Input, 100, T, [T/partner/P]).
@@ -73,14 +73,14 @@ on_enter_state(start, conversation, C) :-
 on_event(exit_conversational_space(Partner),
 	 conversation,
 	 C,
-	 stop_qud(C)) :-
+	 kstop_qud(C)) :-
    C/partner/Partner.
 
-% They just left :(
-on_event(departed(Partner),
+% They just died :(
+on_event(die(Partner),
 	 conversation,
 	 C,
-	 stop_qud(C)) :-
+	 kstop_qud(C)) :-
    C/partner/Partner.
 
 % KLUGE: when polling for actions, check if the conversation is idle,

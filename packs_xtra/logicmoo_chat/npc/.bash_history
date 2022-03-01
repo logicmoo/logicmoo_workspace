@@ -222,3 +222,24 @@ cls ; swipl -l agent.pl
 cls ; swipl -l agent.pl 
 git commit -m w
 find -name "*bak" -delete 
+git add .
+git commit -m w
+cls ; swipl -l agent.pl 
+cls ; swipl -l agent.pl 
+cls ; swipl -l agent.pl 
+git checkout master Assets/Conversation/imperatives.prolog
+cls ; swipl -l agent.pl 
+git checkout master~1 Assets/Conversation/imperatives.prolog
+git checkout master~2 Assets/Conversation/imperatives.prolog
+git checkout master~3 Assets/Conversation/imperatives.prolog
+cls ; swipl -l agent.pl 
+git checkout master~4 Assets/Conversation/imperatives.prolog
+cls ; swipl -l agent.pl 
+git checkout master Assets
+cls ; swipl -l agent.pl 
+cls ; swipl -l agent.pl 
+git checkout master~1 Assets
+cls ; swipl -l agent.pl 
+cls ; swipl -l agent.pl 
+cls ; swipl -l agent.pl 
+find -name "*bak" -delete 
