@@ -64,7 +64,7 @@ nearest(GameObject, Constraint) :-
     arg_min(GameObject,
 	    Distance,
 	    ( Constraint,
-	      present(GameObject),
+	      exists(GameObject),
 	      Distance is distance(GameObject, $me))).
 
 %% elroot(+GameObject, -Root)
@@ -74,17 +74,17 @@ elroot(GameObject, Root) :-
    component_of_gameobject_with_type(KB, GameObject, $'KB'),
    Root is KB.'KnowledgeBase'.'ELRoot' .
 
-:- public present/1.
+:- public exists/1.
 
-%% present(*GameObject)
+%% exists(*GameObject)
 %  The specified game object has not been destroyed
-present(X) :-
+exists(X) :-
    is_class(X, $'GameObject'),
    ( component_of_gameobject_with_type(C, X, $'PhysicalObject') ->
         C.'Exists'
         ;
         true ).
-~present(X) :-
+~exists(X) :-
    is_class(X, $'GameObject'),
    component_of_gameobject_with_type(C, X, $'PhysicalObject'),
    \+ C.'Exists'.
@@ -112,12 +112,12 @@ force_move(GameObject, Container) :-
 %  GameObject is an undestroyed instance of Kind
 existing(Kind, Object) :-
    is_a(Object, Kind),
-   present(Object).
+   exists(Object).
 
-%% freeze(+Character)
+%% kstop(+Character)
 %  Kstops (destroys) the character.  The character will stop updating.
-:- public freeze/1.
-freeze(Character) :-
+:- public kstop/1.
+kstop(Character) :-
    component_of_gameobject_with_type(SimController, Character, $'SimController'),
    call_method(SimController, destroy, _).
 
@@ -128,17 +128,17 @@ destroy(GameObject) :-
    component_of_gameobject_with_type(P, GameObject, $'PhysicalObject'),
    call_method(P, destroy, _).
 
-:- public away/1, here/1.
+:- public dead/1, alive/1.
 
-%% away(?X)
-%  X is a away (nonexisting) person.
-away(X) :- is_a(X, person), ~present(X).
-~away(X) :- is_a(X, person), present(X).
+%% dead(?X)
+%  X is a dead (nonexisting) person.
+dead(X) :- is_a(X, person), ~exists(X).
+~dead(X) :- is_a(X, person), exists(X).
 
-%% here(?X)
+%% alive(?X)
 %  X is a living (undestroyed) person
-here(X) :- is_a(X, person), present(X).
-~here(X) :- is_a(X, person), ~present(X).
+alive(X) :- is_a(X, person), exists(X).
+~alive(X) :- is_a(X, person), ~exists(X).
 
 %% docked_with(?GameObject)
 %  The character is currently docked with GameObject or its top-level container.
@@ -274,8 +274,8 @@ display_status_screen(game_over) :-
 			     line(Line),
 			     "'Nuff said.").
 
-game_over_header("You are no longer present in game...") :-
-   \+ present($pc),
+game_over_header("You died...") :-
+   \+ exists($pc),
    !.
 game_over_header("Game over") :-
    objectives_achieved(0).

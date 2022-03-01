@@ -34,7 +34,7 @@ action(T) :-
 
 action_functor(pickup, 1).
 precondition(pickup(X),
-	     present(X)).
+	     exists(X)).
 precondition(pickup(X),
 	     docked_with(X)).
 postcondition(pickup(X),
@@ -63,9 +63,9 @@ precondition(ingest(Edible),
    is_a(Edible, person),
    Edible \= $me.
 precondition(ingest(Edible),
-	     present(Edible)).
+	     exists(Edible)).
 postcondition(ingest(X),
-	      ~present(X)).
+	      ~exists(X)).
 
 action_functor(flash, 4).
 
@@ -104,5 +104,5 @@ follows_from(P, L) :-
    clause(P, C),
    follows_from(C, L).
 
-inferrable_postcondition(here(_)).
-inferrable_postcondition(away(_)).
+inferrable_postcondition(alive(_)).
+inferrable_postcondition(dead(_)).

@@ -156,7 +156,7 @@ def_der(KB,Goal) :-
 %
 % contrary(+Clause1,-Clause2)
 %   Discovers Clause2 which either is the complement of
-%   Clause1 or is incompatible_cl with Clause1.
+%   Clause1 or is incompatible with Clause1.
 %
 
 contrary(Clause1,Clause2) :-

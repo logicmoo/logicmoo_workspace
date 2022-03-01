@@ -238,16 +238,11 @@ randomizable(X):- dynamic(X),multifile(X),discontiguous(X),nop(log(randomizable(
 
 load_unity_prolog_file(F):- 
   log(load_unity_prolog_file(F)),
-  unity_prolog_filename(F,Filename),
-  load_files(Filename,[module(lmchat),must_be_module(false),redefine_module(false),scope_settings(false)]).
+  unity_prolog_filename(F,FN),
+  load_files(FN,[module(lmchat),must_be_module(false),redefine_module(false),scope_settings(false)]).
 
-load_unity_csv_file(F):- 
-  log(load_unity_csv_file(F)),
-  unity_prolog_filename(F,Prolog),
-  load_unity_csv_file_data(Prolog).
-
-unity_prolog_filename(F,Filename):- exists_file(F),!,Filename=F.
-unity_prolog_filename(F,Filename):- lmchat_dir(D),atomic_list_concat([D,'/',F],Filename),exists_file(Filename),!.
+unity_prolog_filename(F,FN):- exists_file(F),!,FN=F.
+unity_prolog_filename(F,FN):- lmchat_dir(D),atomic_list_concat([D,'/',F],FN),exists_file(FN),!.
 unity_prolog_filename(F,F).
 
 now(Now):-  get_time(Now).
@@ -277,7 +272,7 @@ component_of_gameobject_with_type(X,X,_).
 :- assume_dyn_fail(property_name/3).
 :- assume_dyn_fail(property/3).
 :- assume_dyn_fail(predicate_type/2).
-:- assume_todo(is_class/2).
+:- assume_dyn_fail(is_class/2).
 
 :- assume_done(pause_game/0).
 :- assume_done(unpause_game/0).
@@ -291,8 +286,7 @@ component_of_gameobject_with_type(X,X,_).
 %:- assume_todo(consult/2).
 
 %:- assume_dyn_fail(word_list/2).
-word_list(X,Y):- nonvar(X),tokenize_atom(X,Y),!.
-word_list(X,Y):- atomic_list_concat(Y,' ',X).
+word_list(X,Y):- atomic_list_concat(Y,X).
 
 consult(File, M):- M:consult(File).
 
@@ -302,78 +296,6 @@ module_ctx(X):- prolog_load_context(module,X),!.
 unity_ctx:- module_ctx(lmchat).
 
 print_clexp(Y):- \+ \+ (numbervars(Y,9,_), print_tree(Y)).
-
-
-
-
-csv_predicate(CSV_file,Pred):-
-    file_base_name(CSV_file,Name),file_name_extension(Pred,_,Name).
-
-load_unity_csv_file_data(CSV_file):-
-    csv_predicate(CSV_file,Pred),
-    csv_read_file(CSV_file, CSV, [table(Pred)]),
-    CSV = [Props|Rows],
-    Props=..[_|Types],
-    must_maplist(into_row_types,Types,RTypes),
-    adbg(rowTypes(Types) --> RTypes),
-    ignore(begin_csv_loading(Pred)),
-    set_flag('$csv_row',1),!,
-    maplist(load_csv_row_data(RTypes,Pred), Rows),
-    ignore(end_csv_loading(Pred)).
-
-load_csv_row_data(Types,Pred, RowTerm):- (load_csv_row_data_now(Types,Pred, RowTerm)),!.
-load_csv_row_data_now(Types,Pred, RowTerm) :-     
-    RowTerm=..[_|Row],
-    Row = [F|_],
-    % allow comments
-    (atom_concat('%',_,F) -> ! ;
-     (must_maplist(correct_row,Types,Row,CRow),
-      RowCall=..[Pred|CRow],
-      flag('$csv_row',RowNumber,RowNumber+1),!,
-      adbg(load_csv_row(RowNumber,RowCall)),
-      once(load_csv_row(RowNumber,RowCall)))),
-    !.
-
-vs_name(N='$VAR'(N)).
-into_row_types('Description',string).
-into_row_types('Role',[prefix,'']).
-into_row_types(Type,[prefix,RType]):- atom(Type),atomic_list_concat([L,R],'prefix:',Type),atomic_list_concat([RType,_],')',R).
-into_row_types(Type,RType):- atom(Type),tokenize_atom(Type,M),M\==[Type],!,into_row_types(M,RType).
-into_row_types([A],A).
-into_row_types(List,RTypeO):- is_list(List),append(_,['('|Rest],List),append(RType,[')'],Rest),!,into_row_types(RType,RTypeO).
-into_row_types(Type,Type).
-
-correct_row([prefix,Prefix],A,V):- atom(A),atom_concat(Prefix,A,R),
- read_term_from_atom(R,T,[variable_names(Vs)]),maplist(vs_name,Vs),
- correct_row_type(Type,T,V),
- notrace(ignore((V\==[],A\==V,fail,adbg(Prefix+A --> V)))),!.
-correct_row(Type,A,V):- atom(A),
- once(atom_concat(_,')',A);atom_contains(A,',');atom_contains(A,':');atom_contains(A,'=');atom_contains(A,')')),
- read_term_from_atom(A,T,[variable_names(Vs)]),maplist(vs_name,Vs),
- correct_row_type(Type,T,V),
- notrace(ignore((V\==[],A\==V,fail,adbg(Type+A --> V)))),!.
-correct_row(Type,A,V):-
-  correct_row_type(Type,A,V),
-  notrace(ignore((V\==[],Type\==list,Type\==string,Type\=[_,list],A\==V,adbg(Type+A --> V)))),!.
-
-correct_row_type([_Word,list],A,V):- !,correct_row_type('list',A,V).
-correct_row_type([T],A,V):- correct_row_type(T,A,V),!.
-correct_row_type(list,A,V):- listify_row(A,V),!.
-correct_row_type(string,A,V):- cell_to_string(A,V),!.
-correct_row_type(_,V,V).
-
-cell_to_string(A,V):- atom(A),atom_concat('"',R,A),string_concat(V,'"',R),!.
-cell_to_string(A,V):- notrace(any_to_string(A,V)),!.
-
-listify_row(A,V):- is_list(A),!,A=V.
-listify_row((A,B),V):- !, conjuncts_to_list((A,B),V).
-listify_row('',[]):-!.
-listify_row('-',[['-']]):-!.
-listify_row(A,V):- atom(A),!,tokenize_atom(A,M),join_underscores(M,V).
-listify_row(A,[A]).
-
-join_underscores(A,V):- append(Left,[L,'_',R|More],A),atomic_list_concat([L,'_',R],LR),append(Left,[LR|More],M),!,join_underscores(M,V).
-join_underscores(V,V).
 
 :- fixup_exports.
 

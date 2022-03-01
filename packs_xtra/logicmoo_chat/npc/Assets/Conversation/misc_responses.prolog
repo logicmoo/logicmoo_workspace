@@ -27,17 +27,17 @@ strategy(respond_to_dialog_act(parting(Them, $me)),
 	 begin(assert(Parent/generated_parting),
 	       parting($me, Them),
 	       pause(1),
-	       call(stop_qud(Parent)))) :-
+	       call(kstop_qud(Parent)))) :-
    parent_qud_of($task, Parent),
    \+ Parent/generated_parting.
 
 strategy(respond_to_dialog_act(parting(_Them, $me)),
-	 call(stop_qud(Parent))) :-
+	 call(kstop_qud(Parent))) :-
    parent_qud_of($task, Parent),
    Parent/generated_parting.
 
 strategy(respond_to_dialog_act(excuse_self(Them, $me)),
-	 call(stop_qud(Parent))) :-
+	 call(kstop_qud(Parent))) :-
    $task/partner/Them,
    parent_qud_of($task, Parent).
 

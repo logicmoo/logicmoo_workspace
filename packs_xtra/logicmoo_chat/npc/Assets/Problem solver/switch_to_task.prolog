@@ -21,7 +21,7 @@ switch_to_task(Task) :-
 % Check for immediate builtins
 switch_to_task(done) :-
    !,
-   restart_or_stop_task.
+   restart_or_kstop_task.
 switch_to_task(null) :-
    !,
    step_completed.
@@ -86,7 +86,7 @@ fail_task(Why, FailedTask) :-
 	 asserta($global::failed_task($me, (TopLevelTask-> FailedTask))),
 	 emit_grain("task fail", 100),
 	 affective_reaction(0,0, 1, 0.1),
-	 restart_or_stop_task,
+	 restart_or_kstop_task,
 	 throw(task_failed($me, Why, (TopLevelTask->FailedTask)))).
 
 % Compound task, so decompose it.

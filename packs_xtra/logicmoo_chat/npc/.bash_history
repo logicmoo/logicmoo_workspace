@@ -196,3 +196,12 @@ git status
 git status .
 rm Assets/Ontology/knowledge_representation.prolog.bak
 git status .
+git add .
+git status .
+git commit -m "a set"
+git checkout master~1 .
+cls ; swipl -l agent.pl 
+cls ; swipl -l agent.pl 
+cp ../npc ../npc3
+cp ../npc ../npc3 -a
+cls ; swipl -l agent.pl 

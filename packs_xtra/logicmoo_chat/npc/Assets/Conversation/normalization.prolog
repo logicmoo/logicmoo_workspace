@@ -19,7 +19,7 @@ da_normal_form(assertion(Speaker, Addressee, want(Speaker, Command), present, si
 da_normal_form(assertion(Speaker, Addressee, should(Command), present, simple),
 	       command(Speaker, Addressee, Command)) :-
    agent(Command, Addressee).
-da_normal_form(assertion(Speaker, Addressee, shall(Command), present, simple),
+da_normal_form(assertion(Speaker, Addressee, must(Command), present, simple),
 	       command(Speaker, Addressee, Command)) :-
    agent(Command, Addressee).
 da_normal_form(assertion(Speaker, Addressee, would(likes(Speaker, Command)),
