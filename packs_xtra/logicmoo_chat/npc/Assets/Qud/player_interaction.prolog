@@ -74,8 +74,8 @@ propose_action(A, player_interaction, C) :-
 :- public player_input_task/2.
 
 player_input_task(Qud, Input) :-
-   kstop_current_everyday_life_task,
-   kstop_children(Qud),
+   stop_current_everyday_life_task,
+   stop_children(Qud),
    start_task(Qud, Input, 100, T, [T/partner/player]),
    restart_everyday_life_task.
 

@@ -247,3 +247,15 @@ git checkout .
 cls ; swipl -l agent.pl 
 find -name "*bak" -delete 
 git add . -U
+git add . -u
+git status
+git status .
+git commit -m w
+cls ; swipl -l agent.pl 
+cls ; swipl -l agent.pl 
+cls ; swipl -l agent.pl 
+git checkout Assets/NL/lf.prolog
+cls ; swipl -l agent.pl 
+cls ; swipl -l agent.pl 
+find -name "*bak" -delete 
+git add -U .
