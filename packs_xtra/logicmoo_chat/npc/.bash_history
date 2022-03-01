@@ -243,3 +243,7 @@ cls ; swipl -l agent.pl
 cls ; swipl -l agent.pl 
 cls ; swipl -l agent.pl 
 find -name "*bak" -delete 
+git checkout .
+cls ; swipl -l agent.pl 
+find -name "*bak" -delete 
+git add . -U
