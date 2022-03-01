@@ -205,3 +205,11 @@ cls ; swipl -l agent.pl
 cp ../npc ../npc3
 cp ../npc ../npc3 -a
 cls ; swipl -l agent.pl 
+git add .
+git status
+find -name "*bak"
+find -name "*bak" -delete 
+git status
+git commit -m w
+find -name "*bak" -delete 
+git commit -m w
