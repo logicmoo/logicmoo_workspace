@@ -7,7 +7,7 @@ make_pred_narity_call_list(P,A):-
   assert((Head:-Body)).
 
 begin(G):- is_list(G),!,maplist(begin,G).
-begin(G):- must(G).
+begin(G):- call_u(G).
 
 :- forall(between(2,11,A), make_pred_narity_call_list(begin,A)).
 displayln(X):- is_list(X),!,maplist(write,X),nl.

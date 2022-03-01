@@ -259,3 +259,17 @@ cls ; swipl -l agent.pl
 cls ; swipl -l agent.pl 
 find -name "*bak" -delete 
 git add -U .
+git add -u .
+git statuts .
+git status .
+git commit -m w
+find -name "*bak" -delete 
+cls ; swipl -l agent.pl 
+cls ; swipl -l agent.pl 
+cls ; swipl -l agent.pl 
+find -name "*bak" -delete 
+git status .
+cls ; swipl -l agent.pl 
+cls ; swipl -l agent.pl 
+cls ; swipl -l agent.pl 
+find -name "*bak" -delete 

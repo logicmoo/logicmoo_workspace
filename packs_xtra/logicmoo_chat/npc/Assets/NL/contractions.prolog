@@ -19,7 +19,8 @@ contracted_form([A | UncontractedTail], [A | ContractedTail]) :-
 contraction(will, not, won, t).
 contraction(can, not, can, t).
 contraction(should, not, 'shouldn','t').
-contraction(must, not, 'mustn','t').
+contraction(shall, not, 'mustn','t').
+%contraction(must, not, 'mustn','t').
 
 contraction(do, not, 'don','t').
 contraction(does, not, 'doesn','t').
