@@ -168,7 +168,7 @@ as_clause_hb(Ctx::H,B,((H:- ( if_uctx_equals(Ctx), in_uctx(Ctx,BB))))):-  expand
 as_clause_hb(H,B,H):- B == true,!.
 as_clause_hb(H,B,(H:-BB)):- H\==goal, expand_ugoal(B,BB).
 
-:- thread_local(t_l:unity_ctx/1).
+:- thread_local(t_l:(unity_ctx/1)).
 in_uctx(M,G):- locally(t_l:unity_ctx(M), M:call(G)).
 if_uctx_equals(T):-  t_l:unity_ctx(M),!,T==M.
 

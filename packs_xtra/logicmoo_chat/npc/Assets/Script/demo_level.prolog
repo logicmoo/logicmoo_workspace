@@ -133,13 +133,13 @@ beat(react_to_photo,
            "What's a photo of them doing here?" ]
      }).
 
-:- assert((
+
 $kavi::personal_strategy(patrol_kitchen,
 			 { goto(Object), face(Object), pause(Time) }) :-
    once((random_member(Object, [$refrigerator, $'kitchen sink', $'kitchen table']),
 	 \+ docked_with(Object))),
    % Sigh.  I can't believe I didn't implement random_integer.
-   once(random_member(Time, [2, 3, 5, 7, 8])))).
+   once(random_member(Time, [2, 3, 5, 7, 8])).
 
 :- assert((
 $kavi::personal_todo(patrol_kitchen, -100) :-
