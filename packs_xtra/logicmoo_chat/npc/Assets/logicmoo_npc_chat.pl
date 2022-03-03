@@ -217,17 +217,17 @@ process_kind_hierarchy:- log(todo(process_kind_hierarchy)).
 
 :- load_unity_prolog_file('NL/lexicon.prolog').
 
-:- load_unity_csv_file('Ontology/relations.csv').
-:- load_unity_csv_file('Ontology/entities.csv').
+:- load_unity_csv_file('Ontology/kinds.csv').
 :- load_unity_csv_file('Ontology/predicate_type.csv').
 :- load_unity_csv_file('Ontology/properties.csv').
-:- load_unity_csv_file('Ontology/kinds.csv').
-:- load_unity_csv_file('NL/ditransitive_verb.csv').
-:- load_unity_csv_file('NL/intransitive_verb.csv').
+:- load_unity_csv_file('Ontology/entities.csv').
 :- load_unity_csv_file('NL/adjective.csv').
+:- load_unity_csv_file('Ontology/relations.csv').
 :- load_unity_csv_file('NL/prepositional_slot.csv').
 :- load_unity_csv_file('NL/parser_tests.csv').
 :- load_unity_csv_file('NL/transitive_verb.csv').
+:- load_unity_csv_file('NL/ditransitive_verb.csv').
+:- load_unity_csv_file('NL/intransitive_verb.csv').
 
 
 :- load_unity_prolog_file('Characters/Kavi.prolog').

@@ -24,5 +24,5 @@ when_added(P, tell(Q)) :-
    (P ==>> Q).
 
 :- external tell_globally/1.
-tell_assertion(P) :-
+tell_assertion(Q) :- unnumbervars(Q,P),
    tell_globally(P) -> assert($global::P) ; assert(P).

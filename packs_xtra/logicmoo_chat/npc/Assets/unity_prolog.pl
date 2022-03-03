@@ -514,6 +514,7 @@ correct_row(Type,A,V):-
   correct_row_type(Type,A,V),
   notrace(ignore((V\==[],Type\==list,Type\==string,Type\=[_,list],A\==V,adbg(Type+A --> V)))),!.
 
+correct_row_type(T,A,A):- var(T),!.
 correct_row_type([_Word,list],A,V):- !,correct_row_type('list',A,V).
 correct_row_type([T],A,V):- correct_row_type(T,A,V),!.
 correct_row_type(list,A,V):- listify_row(A,V),!.
