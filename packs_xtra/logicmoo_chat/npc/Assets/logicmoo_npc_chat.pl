@@ -2,6 +2,7 @@
 %:- module(lmchat,[]).
 
 :- module(baseKB).
+:- '$set_source_module'(baseKB).
 
 % use_module(library('../ext/lmchat/Assets/logicmoo_lmchat')).
 :- use_module(library(logicmoo_utils)).

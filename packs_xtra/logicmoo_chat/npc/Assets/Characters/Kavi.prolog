@@ -1,7 +1,7 @@
-hot_button_topic($macguffin).
-hot_button_topic($bedroom).
-hot_button_topic($bookshelf).
-hot_button_topic(theclub).
+$kavi::hot_button_topic($macguffin).
+$kavi::hot_button_topic($bedroom).
+$kavi::hot_button_topic($bookshelf).
+$kavi::hot_button_topic(theclub).
 
 % Keep intruders out of bedroom
 $kavi/goals/maintain/bedroom_empty.
@@ -14,45 +14,45 @@ $kavi/parameters/poll_time:3.
 
 % Don't admit you know where the macguffin is to anyone
 % but other theclub members
-pretend_truth_value(Asker,
+$kavi::pretend_truth_value(Asker,
 		    location($macguffin, Loc),
 		    T) :-
    \+ related(Asker, member_of, theclub),
    (var(Loc) -> T = unknown ; T = false).
-pretend_truth_value(Asker,
+$kavi::pretend_truth_value(Asker,
 		    contained_in($macguffin, Loc),
 		    T) :-
    \+ related(Asker, member_of, theclub),
    (var(Loc) -> T = unknown ; T = false).
 
 % Don't admit to being an theclub member to non-members
-pretend_truth_value(Asker,
+$kavi::pretend_truth_value(Asker,
 		    related($me, member_of, theclub),
 		    false) :-
    \+ related(Asker, member_of, theclub).
    
 % Don't admit to knowing who's in the theclub
-pretend_truth_value(Asker,
+$kavi::pretend_truth_value(Asker,
 		    related(X, member_of, theclub),
 		    unknown) :-
    var(X),
    \+ related(Asker, member_of, theclub).
    
 :- public bedroom_empty/0.
-bedroom_empty :-
+$kavi::bedroom_empty :-
    % Kluge, but I don't have time to refactor this stuff to be nice.
    $global_root/configuration/inhibit_beat_system
    ;
    \+ intruder(_Intruder, $bedroom).
 
 % An intruder is a person who isn't an theclub member
-intruder(Intruder, Room) :-
+$kavi::intruder(Intruder, Room) :-
    location(Intruder, Room),
    is_a(Intruder, person),
    \+ related(Intruder, member_of, theclub).
 
 % Eat all intruders
-personal_strategy(achieve(bedroom_empty),
+$kavi::personal_strategy(achieve(bedroom_empty),
 		  ingest(Intruder)) :-
    intruder(Intruder, $bedroom).
 

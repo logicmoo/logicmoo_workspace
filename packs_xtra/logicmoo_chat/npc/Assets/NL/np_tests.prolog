@@ -15,7 +15,7 @@ test(generate(np, speaker_object_case),
 
 test(generate(np, character_third_person),
      [ true(Generated == [ 'Kavi' ]) ]) :-
-   np_test($'Kavi', object, third:singular, Generated).
+   np_test($kavi, object, third:singular, Generated).
 
 test(generate(np, addressee),
      [ true(Generated == [ you ]) ]) :-
@@ -58,19 +58,22 @@ test(completion(np, prop),
 %%
 
 test(parse(np, speaker_subject_case),
-     [ true(LF == unknown_speaker) ]) :-
+     [ true(LF == Speaker) ]) :-
+   unknownvar_value(speaker,Speaker),
    np_test(LF, subject, first:singular, [ 'I' ]).
 
 test(parse(np, speaker_object_case),
-     [ true(LF == unknown_speaker) ]) :-
+     [ true(LF == Speaker) ]) :-
+   unknownvar_value(speaker,Speaker),
    np_test(LF, object, first:singular, [ me ]).
 
 test(parse(np, character_third_person),
-     [ true(LF == $'Kavi') ]) :-
+     [ true(LF == $kavi) ]) :-
    np_test(LF, object, third:singular, ['Kavi']).
 
 test(parse(np, addressee),
-     [ true(LF == unknown_addressee) ]) :-
+     [ true(LF == Addressee) ]) :-
+   unknownvar_value(addressee,Addressee),
    np_test(LF, subject, second:singular, [ you ]).
 
 test(parse(np, kind),

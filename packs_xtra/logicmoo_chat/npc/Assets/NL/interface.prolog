@@ -40,7 +40,7 @@ well_formed_dialog_act(how_do_i(_,_,_)).
 well_formed_dialog_act(objective_query(_,_)).
 well_formed_dialog_act(color_query(_,_,_)).
 well_formed_dialog_act(question(_, _, LF, _, _)) :-
-   (LF = _:Y) ->
+   call(LF = _:Y) ->
       well_typed(Y, condition)
       ;
       well_typed(LF, condition).

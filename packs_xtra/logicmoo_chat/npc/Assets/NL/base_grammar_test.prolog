@@ -13,7 +13,7 @@ test(completion(s, imperative),
    s_test(_, Mood, [go, to | Completion]).
 
 test(generate(s, in_expression)) :-
-   s_test(location($'Kavi', $'kitchen'), indicative, Generated),
+   s_test(location($kavi, $'kitchen'), indicative, Generated),
    Generated == ['Kavi', is, in, the, kitchen ].
 
 test(generate(s, future_indicative),
@@ -27,7 +27,7 @@ test(generate(s, future_indicative2),
        true(Generated == ['I', will, talk, to, 'Kavi']),
        nondet ]) :-
    bind(generating_nl, true),
-   s(talk($pc, $'Kavi', _), indicative, affirmative, future, simple, Generated, [ ]).
+   s(talk($pc, $kavi, _), indicative, affirmative, future, simple, Generated, [ ]).
 
 test(parse(s, imperative),
      [ setup(bind(addressee, $pc)),
@@ -45,14 +45,16 @@ test(parse(s, adjectival_property),
      Generated, []).
 
 test(parse(s, wh_transitive),
-     [ true(LF = Object:( can(type(unknown_speaker, Object)),
+     [ true(LF = Object:( can(type(Speaker, Object)),
 			  is_a(Object, entity) )) ]) :-
+   unknownvar_value(speaker,Speaker),
    s_test(LF, interrogative, [what, can, 'I', type]).
 
 test(generate(s, wh_transitive),
      [ true(Generated == [what, can, 'I', type]),
        nondet ]) :-
-   s_test(X:(can(type(unknown_speaker, X)), is_a(X, entity)), interrogative, Generated).
+   unknownvar_value(speaker,Speaker),
+   s_test(X:(can(type(Speaker, X)), is_a(X, entity)), interrogative, Generated).
 
 s_test(LF, Mood, SurfaceForm) :-
    s(LF, Mood, affirmative, present, simple, SurfaceForm, [ ]).

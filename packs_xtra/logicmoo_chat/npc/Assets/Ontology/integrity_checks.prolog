@@ -40,7 +40,7 @@ test(integrity(properties_have_types_declared),
 test(integrity(valid_property_types),
      [ problem_list("The following objects have properties with invalid types",
 		    InvalidValues) ]) :-
-   all(Object.Property=Value,
+   all(o_p_v(Object,Property,Value,ValueType),
        ( declare_value(Object, Property, Value),
 	 property_type(Property, ObjectType, ValueType),
 	 \+ ( is_type(Object, ObjectType),
@@ -75,8 +75,9 @@ test(integrity(inverse_relations_must_be_declared_in_their_canonical_form),
 test(integrity(valid_relation_types),
      [ problem_list("The following objects declare relations with the wrong types",
 		    InvalidValues) ]) :-
-   all(Object:Relation:Value,
-       ( declare_related(Object, Relation, Value),
+
+  DR = declare_related(Object, Relation, Value),
+  all(DR,( DR,
 	 relation_type(Relation, ObjectType, ValueType),
 	 \+ ( is_type(Object, ObjectType),
 	      is_type(Value, ValueType) ) ),
@@ -93,7 +94,7 @@ test(integrity(implied_relations_must_be_defined),
 test(integrity(implied_relations_must_be_type_consistent),
      [ problem_list("Relation is declared to have a generalization with incompatible types",
 		    UndeclaredRelations) ]) :-
-   all((R -> S),
+   all(implies_relation(R, S),
        ( implies_relation(R, S),
 	 \+ ( relation_type(R, RTO, RTR),
 	      relation_type(S, STO, STR),
@@ -104,7 +105,7 @@ test(integrity(implied_relations_must_be_type_consistent),
 test(integrity(intransitive_verb_semantics_defined),
      [problem_list("The following undefined predicates or attributes appear in word definitions",
 		    UndefinedPredicates) ]) :-
-   all(Spec:Phrase,
+   all(Spec:Semantics:Phrase,
        ( iv(past_participle, _, Semantics, _, _, Phrase, [ ]),
 	 lambda_contains_undefined_predicate(Semantics, Spec) ),
        UndefinedPredicates).
@@ -112,7 +113,7 @@ test(integrity(intransitive_verb_semantics_defined),
 test(integrity(transitive_verb_semantics_defined),
      [ problem_list("The following undefined predicates or attributes appear in word definitions",
 		    UndefinedPredicates) ]) :-
-   all(Spec:Phrase,
+   all(Spec:Semantics:Phrase,
        ( tv(past_participle, _, Semantics, _, _, Phrase, [ ]),
 	 lambda_contains_undefined_predicate(Semantics, Spec) ),
        UndefinedPredicates).
@@ -120,7 +121,7 @@ test(integrity(transitive_verb_semantics_defined),
 test(integrity(ditransitive_verb_semantics_defined),
      [problem_list("The following undefined predicates or attributes appear in word definitions",
 		    UndefinedPredicates) ]) :-
-   all(Spec:Phrase,
+   all(Spec:Semantics:Phrase,
        ( dtv(past_participle, _, Semantics, _, _, Phrase, [ ]),
 	 lambda_contains_undefined_predicate(Semantics, Spec) ),
        UndefinedPredicates).
@@ -128,7 +129,7 @@ test(integrity(ditransitive_verb_semantics_defined),
 test(integrity(adjective_semantics_defined),
      [ problem_list("The following undefined predicates or attributes appear in word definitions",
 		    UndefinedPredicates) ]) :-
-   all(Spec:Phrase,
+   all(Spec+adjective(Semantics, Phrase, []),
        ( adjective(Semantics, Phrase, []),
 	 lambda_contains_undefined_predicate(Semantics, Spec) ),
        UndefinedPredicates).
@@ -147,13 +148,16 @@ test(entities_have_required_properties,
 test(entities_have_required_relations,
      [ problem_list("The following entities are missing required relations",
 		    ProblematicEntities) ]) :-
-   all(Entity:MissingRelation,
+   all(Entity:Required:MissingRelation,
        ( kind(Kind),
 	 property_value(Kind, required_relation, Required),
 	 is_a(Entity, Kind),
 	 member(MissingRelation, Required),
 	 \+ related(Entity, MissingRelation, _) ),
        ProblematicEntities).
+
+lambda_contains_undefined_predicate([P],O) :- !, lambda_contains_undefined_predicate(P,O).
+lambda_contains_undefined_predicate(P,O) :- !, is_list(P), maplist(lambda_contains_undefined_predicate,P,O).
 
 lambda_contains_undefined_predicate(_^P, Spec) :-
    !,
@@ -170,3 +174,4 @@ lambda_contains_undefined_predicate(P,Name/Arity) :-
    functor(P, Name, Arity),
    functor(Copy, Name, Arity),
    \+ predicate_type(_, Copy).
+

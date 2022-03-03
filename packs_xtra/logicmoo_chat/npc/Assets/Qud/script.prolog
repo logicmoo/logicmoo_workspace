@@ -1,4 +1,4 @@
-:- indexical script_qud=unknown_qud.
+:- indexical script_qud.
 
 on_enter_state(start, script, C) :-
    begin(C/initial_history:History,

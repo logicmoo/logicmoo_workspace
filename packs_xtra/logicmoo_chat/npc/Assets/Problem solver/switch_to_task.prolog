@@ -4,7 +4,6 @@
 %  Stop running current step and instead run Task followed by our continuation.
 %  If Task decomposes to a (,) expression, this will update both current and
 %  continuation, otherwise just current.
-
 switch_to_task(Task) :-
    % This clause just logs Task and fails over to the next clause.
    maybe_log_task(Task),

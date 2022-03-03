@@ -11,8 +11,8 @@
 %% running_tests
 %  True if the current goal is part of a unit test.
 running_tests :-
-   X = $running_tests,
-   X.
+   must_getvar(running_tests,X),
+   call(X).
 
 %% test(*Name, +Options)
 %  Body of this rule is a test that should be run with the specified options.
@@ -120,16 +120,16 @@ check_test_success(Name, Options) :-
 
 :- public run_success_test/2.
 run_success_test(_Name, true(P)) :-
-   P.
+   call(P).
 run_success_test(Name, true(P)) :-
    displayln("Success test for ", Name, " failed; ", P).
 run_success_test(Name, problem_list(Message, List)) :-
    (List == [ ]) ->
       true
       ;
-      begin(displayln(Message, ":              (test ", Name, ")"),
+     ansicall(yellow, begin(displayln(Message, ":              (test ", Name, ")"),
 	    forall(member(X, List),
-		   displayln("   ", X))).
+		   displayln("   ", X)))).
 
 success_test(true(_)).
 success_test(problem_list(_,_)).

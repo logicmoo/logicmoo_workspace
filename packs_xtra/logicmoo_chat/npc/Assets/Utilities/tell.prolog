@@ -5,9 +5,9 @@
 :- op(1200, xfx, '==>>').
 :- external (==>>)/2.
 
-tell(P) :- expand_ugoal(P,PP), tellg(PP), !.
+tell(P) :- expand_ugoal_vars(P,PP), tellg(PP), !.
 
-tellg(P) :- \+ \+ call(P), !.
+tellg(P) :- current_predicate(_,P), \+ \+ call(P), !.
 tellg(P) :-
    tell_assertion(P),
    forall(when_added(P, Action),
