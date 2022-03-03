@@ -105,6 +105,8 @@ generating_nl :-
 input_from_player :-
    X = $input_from_player, X.
 
+unknown_input_from_player:- fail.
+unknown_generating_nl:- fail.
 %% player_idle_time(-Time)
 %  Time is the number of seconds of game time since the player
 %  last did something (i.e. typed).

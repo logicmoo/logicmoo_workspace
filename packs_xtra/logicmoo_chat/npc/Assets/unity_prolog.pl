@@ -229,7 +229,7 @@ ugoal_expansion(begin(H),begin(HH)):- !, expand_ugoal(H,HH).
 
 % xfy_mathese_arity(XFY, !.
 ugoal_expansion(G::X,in_uctx(G,Y)):- !, expand_ugoal(X,Y).
-ugoal_expansion(M:Cmp,M:CmpO):- meta_pred_style(M:Cmp,Meta),
+ugoal_expansion(M:Cmp,M:CmpO):- atom(M),meta_pred_style(M:Cmp,Meta),
   compound_name_arguments(Cmp,F,Args),compound_name_arguments(Meta,_,MArgs),
   maplist(ugoal_expansion_3,MArgs,Args,ArgsO),!,compound_name_arguments(CmpO,F,ArgsO).
 ugoal_expansion(CmpI,CmpO):- strip_module(CmpI,_,Cmp),CmpI==Cmp,meta_pred_style(Cmp,Meta),
@@ -353,7 +353,7 @@ must_getvar(X,Y):- number(X),!,Y=X.
 must_getvar(X,Y):- unknownvar_value(X,Y),!.
 % for DCGs
 must_getvar(X,Y,A,A):- must_getvar(X,Y).
-unknownvar_value(X,V):- atom(X),!,atom_concat('',X,V).
+% unknownvar_value(X,V):- atom(X),!,atom_concat('',X,V).
 unknownvar_value(X,V):- atom(X),!,atom_concat('unknown_',X,V).
 unknownvar_value(X,'#'(X)).
 
