@@ -22,10 +22,11 @@ assertion(P, Message) :-
    throw(error(assertion_failed(Message, P), null)).
 
 %% thaw(?X)
-%  If X is an unbound variable with a frozen goal, wakes the goal.
+%  If X is an unbound variable with a frozen_u goal, wakes the goal.
 thaw(X) :-
-   frozen(X, G),
+   frozen_u(X, G),
    G.
+
 
 test_file(freeze(_), "Utilities/freeze_tests").
 

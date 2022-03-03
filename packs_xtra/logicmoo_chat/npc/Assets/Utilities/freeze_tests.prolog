@@ -13,11 +13,11 @@ test(freeze(runs_goal_when_variable_already_bound),
 test(freeze(frozen_retrieves_goal),
      [ true(Z == 1) ]) :-
    freeze(X, Y = 1),
-   frozen(X, Y = Z).
+   frozen_u(X, Y = Z).
 
 test(freeze(frozen_fails_when_goal_pattern_doesnt_match)) :-
    freeze(X, _Y = 1),
-   \+ frozen(X, a).
+   \+ frozen_u(X, a).
 
 test(freeze(doesnt_wake_without_binding),
      [ true(var(Y)) ]) :-

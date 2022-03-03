@@ -1,7 +1,7 @@
 :- dynamic(reduces_to_aux/4).
 
 build_reduction_cross_reference :-
-   $global::retractall(reduces_to_aux(_,_,_,_)),
+   retractall($global::reduces_to_aux(_,_,_,_)),
    forall(reduction_clause(Goal, Reduction),
 	  assert_reductions(Goal, Reduction)).
 
@@ -24,7 +24,7 @@ assert_reductions(Goal, Subgoal) :-
    ((Name = begin) ->
        true   % ignore begin
        ;
-       ensure(reduces_to_aux(Name, Arity, reduction_is_a_variable, 0))).
+       ensurez(reduces_to_aux(Name, Arity, reduction_is_a_variable, 0))).
 assert_reductions(Goal, (X, Y)) :-
    !,
    assert_reductions(Goal, X),
@@ -41,7 +41,7 @@ assert_reductions(X, if(_Condition,T,E)) :-
 assert_reductions(Goal, Subgoal) :-
    functor(Goal, GN, GA),
    functor(Subgoal, SN, SA),
-   ensure(reduces_to_aux(GN, GA, SN, SA)).
+   ensurez(reduces_to_aux(GN, GA, SN, SA)).
 
 reduces_to(G/GA, S/SA) :-
    reduces_to_aux(G, GA, S, SA).

@@ -12,6 +12,8 @@
 :- public implies_relation/2, inverse_relation/2.
 :- external declare_value/3, default_value/3, declare_related/3, symmetric/1.
 
+:- dynamic(superkind_array/2).
+
 test_file(integrity(_), "Ontology/integrity_checks").
 
 :- randomizable declare_kind/2.

@@ -60,7 +60,7 @@ current_priority(1).
 %% Creation
 %%
 
-:- public begin_qud/1, begin_qud/2, begin_child_qud/3.
+:- public begin_qud/2, begin_qud/3, begin_child_qud/4.
 
 %% begin_qud(+Type, +Priority)
 %  IMPERATIVE

@@ -1,18 +1,18 @@
 Entity,Kinds (list),Description,Proper noun (phrase list),Number,Properties (list),Relations (list)
 player,person,,the player,,,
-$pc,person,,,,"age=23, job=spy","knows_about: spying, member_of:www, interested_in: theclub, friend_of: $'Kavi'"
-$kavi,person,, 'Kavi',,"age=23, given_name=""Kavi"", surname=""Surkow"", gender=male",member_of: theclub
-$captive,person,,'Trip',,"age=23, given_name=""Trip"", surname=""Abel"", gender=male",friend_of: $pc
+$pc,person,,,,"age=13, job=spy","knows_about: spying, member_of:www, interested_in: theclub, friend_of: $'Kavi'"
+$kavi,person,, 'Kavi',,"age=13, given_name=""Kavi"", surname=""Surkow"", gender=male",member_of: theclub
+$captive,person,,'Trip',,"age=13, given_name=""Trip"", surname=""Abel"", gender=male",friend_of: $pc
 theclub,science,"""A """,the 'Theclub',plural,"make world peace","goal: ""complete world peace"", leader: you"
-adam_weishaupt,person,,  'Adam' 'Weishaupt',,,
-cia,"community_agency, clandestine_organization",,the 'CIA',,,
+adam_weishaupt,person,,'Adam' 'Weishaupt',singular,,
+agency,"community_agency, clandestine_organization",,the 'Agency',,,
 www,organization,"[""A ragtag group of performance artists,"", ""working to undermine the apalling level of normativity"", ""of late capitalism.""]", 'Wiccans' for a 'Weirder' 'World',plural,,"goal: ""the enweirdening of the world."""
 spying,action,,,,,
-tamping,action,,,,,
+tampering,action,,,,,
 $report,"report, key_item","""Final report on project MKSPARSE.""",,,"text=""\""Subject LNJOKER is manifesting.  Contact MKMOTHER.\""""",
 $photo,"photograph, key_item","""A surveillance photo""",,,,
 kavis_house,house,,,,exit= $exit,
-the_world,enclosing_container,"""The word is everything""",the world,,,
+the_world,enclosing_container,"""The world is everything""",the world,,,
 the_game,enclosing_container,"""The game is everything.""",the game,,,
 $mainframe,mainframe,"[""It's an old mainframe computer"", ""inexplicably located in Kavi's house."", ""It has three buttons: run, stop,"", ""MAGIC,"", ""and MORE MAGIC.""]",,,"caption=""an antique mainframe?""",
 $macguffin,"macguffin, key_item",,,,,

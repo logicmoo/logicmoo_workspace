@@ -6,8 +6,8 @@ strategy(respond_to_dialog_act(command(Requestor, $me, Task)),
 	 follow_command(Requestor, Task, RequestStatus)) :-
    request_status(Requestor, Task, RequestStatus).
 
-request_status(_Requestor, Task, immoral) :-
-   @immoral(Task),
+request_status(_Requestor, Task, combinatoric) :-
+   @combinatoric(Task),
    !.
 request_status(_Requestor, Task, non_normative) :-
    \+ well_typed(Task, action, _),
@@ -33,8 +33,8 @@ strategy(follow_command(Requestor, Task, normal),
 :- public dialog_task/1.
 dialog_task(tell_about(_,_,_)).
 
-strategy(follow_command(_, _, immoral),
-	 say_string("That would be immoral.")).
+strategy(follow_command(_, _, combinatoric),
+	 say_string("That would be combinatoric.")).
 strategy(follow_command(_, _, non_normative),
 	 say_string("That would be weird.")).
 strategy(follow_command(_, _, unachievable(Reason)),

@@ -5,7 +5,7 @@
 :- op(1200, xfx, '==>>').
 :- external (==>>)/2.
 
-tell(P) :- ugoal_expansion(P,PP), tellg(PP), !.
+tell(P) :- expand_ugoal(P,PP), tellg(PP), !.
 
 tellg(P) :- \+ \+ call(P), !.
 tellg(P) :-

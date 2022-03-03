@@ -10,3 +10,4 @@ required_relations,internal,,kind,entity
 exit,public,exit,building,portal
 building,public,building,room,building
 text,internal,,document,string
+caption,internal,,document,string

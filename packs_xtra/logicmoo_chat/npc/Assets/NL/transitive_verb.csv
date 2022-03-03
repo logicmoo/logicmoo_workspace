@@ -1,5 +1,5 @@
 Base (word list),TPS (word list),Past (word list),PastP (word list),PresP (word list),Force PPs (list),LF (prefix: Agent^Patient^)
-freeze,freezes,froze,froze,freezing,,"freeze(Agent, Patient)"
+deactivate,deactivates,deactivated,deactivated,deactivating,,"deactivate(Agent, Patient)"
 know,knows,knew,knew,knowing,,"related(Agent, knows, Patient)"
 love,loves,loved,loved,loving,,"related(Agent, loves, Patient)"
 like,likes,liked,liked,liking,,"related(Agent, likes, Patient)"

@@ -37,6 +37,8 @@ todo(Task, Priority) :-
 
 :- external personal_todo/2.
 
+:- dynamic(everyday_life_task/1).
+
 strategy(everyday_life,
 	 work_on_everyday_life_task(Task)) :-
    arg_max(Task, Priority, todo(Task, Priority)).

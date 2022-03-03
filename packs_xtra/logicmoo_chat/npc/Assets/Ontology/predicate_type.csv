@@ -7,7 +7,7 @@ action,"end_game(entity, entity)"
 action,"give(actor, actor, physical_object)"
 action,"go(actor, physical_object)"
 action,halt(actor)
-action,"freeze(actor, living_thing)"
+action,"deactivate(actor, living_thing)"
 action,"move(person, physical_object, container, container)"
 action,"move(person, physical_object, container)"
 action,"put(actor, physical_object, container)"
@@ -40,6 +40,7 @@ action,"watch(actor, physical_object)"
 action,"leave(actor, container)"
 action,flee(actor)
 action,"use(actor, shower)"
+action,"operate(actor, shower)"
 action,"thinks(actor, condition)"
 % Conditions,
 condition,can(action)

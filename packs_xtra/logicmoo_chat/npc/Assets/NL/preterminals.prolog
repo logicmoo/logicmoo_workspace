@@ -136,6 +136,7 @@ check_lexicon_typing(LF^Generator) :-
    forall(Generator,
 	  check_lexical_entry_type(LF)).
 
+check_lexical_entry_type([X]):- check_lexical_entry_type(X).
 check_lexical_entry_type(_Arg^LF) :-
    !,
    check_lexical_entry_type(LF).

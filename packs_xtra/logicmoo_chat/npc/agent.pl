@@ -1,10 +1,13 @@
 
 %:-module(agent,[]).
+:- module(baseKB).
 
 :- clause(agent_module(_),_) -> true ; prolog_load_context(module,M),asserta(agent_module(M)).
 :- use_module(library(logicmoo_common)).
-:- use_module(library(pfc_lib)).
+%:- use_module(library(pfc_lib)).
 :- style_check(- discontiguous).  
+
+%:- echo_source_file.
 
 same_meanings(UserSaid,UserSaid).
 
@@ -64,7 +67,7 @@ assume(Sit):- assume(assumed,Sit).
 assume(_How,Sit):- check_sit(Sit).
 assume(How,not(Sit)):- !,assume(How, \+ (Sit)).
 assume(How,Sit):- guard_builtin(assume(How),Sit,GBody),!,call(GBody).
-assume(How,Sit):- agent_module(M),append_term(How,Sit,HowSit),adbg(HowSit), ( \+ M:call_u(Sit) -> (aina(M:Sit),ignore(forall(post_true(Sit),true))) ; true).
+assume(How,Sit):- agent_module(M),append_term(How,Sit,HowSit),adbg(HowSit), ( \+ M:call(Sit) -> (aina(M:Sit),ignore(forall(post_true(Sit),true))) ; true).
 
 guard_builtin(How,Goal,Body):- guard_clause(builtin(How,Goal),Body).
 guard_clause(Head,Body):- agent_module(M),M:clause(Head,GBody),until_guard(GBody,Body),!.
@@ -171,6 +174,8 @@ listen_for_text:-
    functor(PropSent,_,A),
    setarg(A,PropSent,Value))),
   fail.
+
+clear_audio_input.
 
 define_op_props(Decl):- functor(Decl,F,A),dynamic(F/A).
 :- forall(op_props(Pred),define_op_props(Pred)).
@@ -358,7 +363,7 @@ make_true(listen_for(Type,PropSent)):-
   assume(listening_for(Type,PropSent)).
 
 meets_type(Input,small,_,Value):- !,
-  \+ is_sentence(Input)->Value=Input.
+  \+ audio_is_sentence(Input)->Value=Input.
 meets_type(Input,spelling,PropSent,Value):-
   audio_is_letter(Input)->Value=Input ; 
    (repeat_last_request(PropSent),!,fail).

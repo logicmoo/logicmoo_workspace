@@ -53,7 +53,7 @@ well_formed_dialog_act(offer(S, A, SAction, AAction)) :-
    agent(AAction, A),
    well_typed(SAction, action),
    well_typed(AAction, action).
-well_formed_dialog_act(threat(S, A, SAction, AAction)) :-
+well_formed_dialog_act(inaction(S, A, SAction, AAction)) :-
    agent(SAction, S),
    agent(AAction, A),
    well_typed(SAction, action),

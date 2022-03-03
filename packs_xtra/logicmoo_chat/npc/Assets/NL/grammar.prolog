@@ -36,10 +36,10 @@ utterance(automa_command(Speaker, Addressee, LF, T, A)) -->
    { current_dialog_pair(Speaker, Addressee) }.
 
 %%
-%% THREATS AND OFFERS
+%% INACTIONS AND OFFERS
 %%
 %% An offer is a suggestion that each party perform an action
-%% A threat is a an offer to not do an action, provided the reciprocal
+%% A inaction is a an offer to not do an action, provided the reciprocal
 %% action is taken.
 %%
 
@@ -57,7 +57,7 @@ utterance(offer(Speaker, Addressee, SpeakerAct, AddresseeAct)) -->
    { current_dialog_pair(Speaker, Addressee) },
    opt_stop(conditional).
 
-utterance(threat(Speaker, Addressee, SpeakerAct, AddresseeAct)) -->
+utterance(inaction(Speaker, Addressee, SpeakerAct, AddresseeAct)) -->
    s(AddresseeAct, imperative, affirmative, _, _),
    [ or ],
    s(SpeakerAct, indicative, affirmative, future, simple),

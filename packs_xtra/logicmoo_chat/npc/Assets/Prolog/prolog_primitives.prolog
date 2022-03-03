@@ -46,8 +46,8 @@ def_prolog_prim("::", ModuleCallImplementation, "flow control",
     "*module", ":goal").
 def_prolog_prim("freeze", FreezeImplementation, "flow control,constraint programming",
                 "Runs GOAL when VAR becomes bound; unification will fail if GOAL fails.", "?var", ":goal").
-def_prolog_prim("frozen", FrozenImplementation, "flow control,constraint programming",
-                "Unifies GOAL with the goal frozen on TERM, if TERM is an unbound variable with a frozen goal; otherwise unifies GOAL with true.", "?term", "-goal").
+def_prolog_prim("frozen_u", FrozenImplementation, "flow control,constraint programming",
+                "Unifies GOAL with the goal frozen_u on TERM, if TERM is an unbound variable with a frozen_u goal; otherwise unifies GOAL with true.", "?term", "-goal").
 def_prolog_prim("dif", DifImplementation, "comparisons,constraint programming",
                 "Requires that TERM1 and TERM2 never be equal.  If they are, the predicate fails.  If they are not, it forces any future unifications that would make them equal to fail.", "?term1", "?term2").
 def_prolog_prim("maplist", MapListImplementation, "list predicates,meta-logical predicates",

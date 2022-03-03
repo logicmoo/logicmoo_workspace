@@ -1,22 +1,23 @@
-:- external immoral/1, murder/1, possession/2, threatening_to_stop/2.
-immoral(Action) :-
-   mean(Action).
 
-murder(Action) :=
+:- external combinatoric/1, deactivation/1, possession/2, threatening_to_stop/2.
+combinatoric(Action) :=
+   deactivation(Action).
+
+deactivation(Action) :-
    patient(Action, Person),
    is_a(Person, person),
    here(Person),
    true_after(Action, away(Person)).
 
-~murder(Action) :-
+~deactivation(Action) :-
    agent(Action, Actor),
    patient(Action, Person),
-   intend(Person, freeze(Person, Actor)).
+   intend(Person, deactivate(Person, Actor)).
 
 :- external intend/2.
 
-% Testing purposes - Kavi wants to freeze everyone.
-%intend($'Kavi', freeze($'Kavi', _)).
+% Testing purposes - Kavi wants to deactivate everyone.
+%intend($'Kavi', deactivate($'Kavi', _)).
 
 				% Don't steal
 ~permissible(move(Actor, Object, Actor)) :=
