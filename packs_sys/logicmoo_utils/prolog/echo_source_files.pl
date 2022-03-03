@@ -14,6 +14,7 @@
 % File:  $PACKDIR/subclause_expansion/prolog/echo_files.pl
 :- module(echo_files, [
           check_current_echo/0,
+          echo_source_file/0,
           echo_source_file_no_catchup/1,
           echo_source_file/1]).
 
@@ -44,6 +45,8 @@ This module allows running prolog files as echos.
 echo_source_file(F):- 
  (\+ t_l:echoing_file(F) -> asserta(t_l:echoing_file(F)) ; true),
  check_current_echo(F).
+
+echo_source_file:- prolog_load_context(file,File), echo_source_file(File).
 
 echo_source_file_no_catchup(F):-
  ignore((  

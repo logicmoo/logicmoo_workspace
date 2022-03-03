@@ -58,6 +58,7 @@ turned_on(Appliance) :-
 % maybe informed_about(_, turned_on(_)).
 :- multifile(informed_about/2).
 informed_about(_, turned_on(_)).
+:- multifile(closed/1).
 closed(turned_on(_)).
 
 %% on_activation_changed(+Prop, +NewActivation)

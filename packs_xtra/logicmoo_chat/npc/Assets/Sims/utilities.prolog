@@ -16,7 +16,7 @@
 register_room(Room, Kind) :-
    assert(declare_value(Room, building, kavis_house)),  %KLUGE
    asserta(location(Room, kavis_house)),
-   ensure(declare_kind(Room, Kind)).
+   ensurez(declare_kind(Room, Kind)).
 
 %% register_prop(*Prop, *CommonNoun, *Plural, Adjectives)
 %  IMPERATIVE
@@ -24,31 +24,31 @@ register_room(Room, Kind) :-
 %  Called from Start() routine of PropInfo.cs
 register_prop(Prop, Kind, Adjectives) :-
    assertion(kind(Kind), prop_has_unknown_kind(Prop, Kind)),
-   ensure(prop(Prop)),
-   ensure(declare_kind(Prop, Kind)),
-   forall(member(A, Adjectives), ensure([A, Prop])),
+   ensurez(prop(Prop)),
+   ensurez(declare_kind(Prop, Kind)),
+   forall(member(A, Adjectives), ensurez([A, Prop])),
    forall(is_a(Prop, K),
 	  ignore(initialize_prop(Prop, K))).
 
 register_door(Door) :-
-   ensure(base_kind(Door, door)),
-   ensure(door(Door)).
+   ensurez(base_kind(Door, door)),
+   ensurez(door(Door)).
 
 %% register_character(*Character)
 %  IMPERATIVE
 %  Add Character to database.
 %  Called from Start() routine of SimController.cs
 register_character(Character) :-
-   ensure(character(Character)).
+   ensurez(character(Character)).
 
-%% ensure(+Fact)
+%% ensurez(+Fact)
 %  IMPERATIVE
 %  Adds Fact to database, if it is not already there.
-ensure([Functor | Arguments]) :-
+ensurez([Functor | Arguments]) :-
    !,
    Predication =.. [Functor | Arguments],
-   ensure(Predication).
-ensure(Assertion) :-
+   ensurez(Predication).
+ensurez(Assertion) :-
    functor(Assertion, F, A),
    external(F/A),
    (Assertion ; assertz($global::Assertion)).
@@ -114,10 +114,10 @@ existing(Kind, Object) :-
    is_a(Object, Kind),
    present(Object).
 
-%% freeze(+Character)
+%% deactivate(+Character)
 %  Kstops (destroys) the character.  The character will stop updating.
-:- public freeze/1.
-freeze(Character) :-
+:- public deactivate/1.
+deactivate(Character) :-
    component_of_gameobject_with_type(SimController, Character, $'SimController'),
    call_method(SimController, destroy, _).
 

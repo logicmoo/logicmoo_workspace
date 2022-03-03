@@ -3283,6 +3283,24 @@
 		<Folder Name="packs_xtra">
 			<Folder Name="logicmoo_chat">
 				<Folder Name="corpus">
+					<Folder Name="bigram-sentence-evaluator">
+						<Folder Name="output">
+							<F N="packs_xtra/logicmoo_chat/corpus/bigram-sentence-evaluator/output/output.PNG"/>
+							<F N="packs_xtra/logicmoo_chat/corpus/bigram-sentence-evaluator/output/output1.png"/>
+							<F N="packs_xtra/logicmoo_chat/corpus/bigram-sentence-evaluator/output/output2.png"/>
+						</Folder>
+						<F N="packs_xtra/logicmoo_chat/corpus/bigram-sentence-evaluator/bigram_model.pl"/>
+						<F N="packs_xtra/logicmoo_chat/corpus/bigram-sentence-evaluator/bigrams.pl"/>
+						<F N="packs_xtra/logicmoo_chat/corpus/bigram-sentence-evaluator/calc_similarity.pl"/>
+						<F N="packs_xtra/logicmoo_chat/corpus/bigram-sentence-evaluator/DA_Corpus.txt"/>
+						<F N="packs_xtra/logicmoo_chat/corpus/bigram-sentence-evaluator/homework_4.pdf"/>
+						<F N="packs_xtra/logicmoo_chat/corpus/bigram-sentence-evaluator/README.md"/>
+						<F N="packs_xtra/logicmoo_chat/corpus/bigram-sentence-evaluator/TDA.txt"/>
+						<F N="packs_xtra/logicmoo_chat/corpus/bigram-sentence-evaluator/trigramModel.pl"/>
+						<F N="packs_xtra/logicmoo_chat/corpus/bigram-sentence-evaluator/unigrams.pl"/>
+						<F N="packs_xtra/logicmoo_chat/corpus/bigram-sentence-evaluator/unix_commands.txt"/>
+						<F N="packs_xtra/logicmoo_chat/corpus/bigram-sentence-evaluator/wordVectors.pl"/>
+					</Folder>
 					<Folder Name="fairy_tales">
 						<F N="packs_xtra/logicmoo_chat/corpus/fairy_tales/little_red_riding_hood.txt"/>
 					</Folder>
@@ -3317,6 +3335,20 @@
 						<F N="packs_xtra/logicmoo_chat/corpus/self_dialogue_corpus/train_from_topic_superhero.txt"/>
 						<F N="packs_xtra/logicmoo_chat/corpus/self_dialogue_corpus/train_from_topic_thriller.txt"/>
 						<F N="packs_xtra/logicmoo_chat/corpus/self_dialogue_corpus/train_from_topic_transition_music_movies.txt"/>
+					</Folder>
+					<Folder Name="sentence-tagging">
+						<Folder Name="output">
+							<F N="packs_xtra/logicmoo_chat/corpus/sentence-tagging/output/output.PNG"/>
+						</Folder>
+						<F N="packs_xtra/logicmoo_chat/corpus/sentence-tagging/DA_Corpus.txt"/>
+						<F N="packs_xtra/logicmoo_chat/corpus/sentence-tagging/DA_Normalized.txt"/>
+						<F N="packs_xtra/logicmoo_chat/corpus/sentence-tagging/hmm_tagger.pl"/>
+						<F N="packs_xtra/logicmoo_chat/corpus/sentence-tagging/README.md"/>
+						<F N="packs_xtra/logicmoo_chat/corpus/sentence-tagging/sigmas.pl"/>
+						<F N="packs_xtra/logicmoo_chat/corpus/sentence-tagging/tags_count.pl"/>
+						<F N="packs_xtra/logicmoo_chat/corpus/sentence-tagging/taus.pl"/>
+						<F N="packs_xtra/logicmoo_chat/corpus/sentence-tagging/TDA.txt"/>
+						<F N="packs_xtra/logicmoo_chat/corpus/sentence-tagging/unix_command.txt"/>
 					</Folder>
 					<Folder Name="soap_opera_corpus">
 						<F N="packs_xtra/logicmoo_chat/corpus/soap_opera_corpus/README.md"/>
@@ -3353,77 +3385,9 @@
 						<F N="packs_xtra/logicmoo_chat/corpus/tmpdata/ttt"/>
 						<F N="packs_xtra/logicmoo_chat/corpus/tmpdata/ttt2"/>
 					</Folder>
+					<F N="packs_xtra/logicmoo_chat/corpus/.bash_history"/>
 				</Folder>
 				<Folder Name="npc">
-					<Folder Name="UnityProlog/.git">
-						<Folder Name="hooks">
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/.git/hooks/applypatch-msg.sample"/>
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/.git/hooks/commit-msg.sample"/>
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/.git/hooks/fsmonitor-watchman.sample"/>
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/.git/hooks/post-update.sample"/>
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/.git/hooks/pre-applypatch.sample"/>
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/.git/hooks/pre-commit.sample"/>
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/.git/hooks/pre-merge-commit.sample"/>
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/.git/hooks/pre-push.sample"/>
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/.git/hooks/pre-rebase.sample"/>
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/.git/hooks/pre-receive.sample"/>
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/.git/hooks/prepare-commit-msg.sample"/>
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/.git/hooks/push-to-checkout.sample"/>
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/.git/hooks/update.sample"/>
-						</Folder>
-						<Folder Name="info">
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/.git/info/exclude"/>
-						</Folder>
-						<Folder Name="logs">
-							<Folder Name="refs">
-								<Folder Name="heads">
-									<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/.git/logs/refs/heads/master"/>
-								</Folder>
-								<Folder Name="remotes">
-									<Folder Name="origin">
-										<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/.git/logs/refs/remotes/origin/HEAD"/>
-									</Folder>
-								</Folder>
-							</Folder>
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/.git/logs/HEAD"/>
-						</Folder>
-						<Folder Name="objects">
-							<Folder Name="pack">
-								<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/.git/objects/pack/pack-e6cc43a7bb5e5326902930a0cb5c438ea0047f88.idx"/>
-								<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/.git/objects/pack/pack-e6cc43a7bb5e5326902930a0cb5c438ea0047f88.pack"/>
-							</Folder>
-						</Folder>
-						<Folder Name="refs">
-							<Folder Name="heads">
-								<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/.git/refs/heads/master"/>
-							</Folder>
-							<Folder Name="remotes">
-								<Folder Name="origin">
-									<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/.git/refs/remotes/origin/HEAD"/>
-								</Folder>
-							</Folder>
-						</Folder>
-						<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/.git/config"/>
-						<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/.git/description"/>
-						<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/.git/HEAD"/>
-						<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/.git/index"/>
-						<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/.git/packed-refs"/>
-					</Folder>
-					<Folder Name="UnityProlog/.vs">
-						<Folder Name="Unity Prolog">
-							<Folder Name="v15">
-								<Folder Name="Server">
-									<Folder Name="sqlite3">
-										<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/.vs/Unity Prolog/v15/Server/sqlite3/db.lock"/>
-										<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/.vs/Unity Prolog/v15/Server/sqlite3/storage.ide"/>
-										<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/.vs/Unity Prolog/v15/Server/sqlite3/storage.ide-shm"/>
-										<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/.vs/Unity Prolog/v15/Server/sqlite3/storage.ide-wal"/>
-									</Folder>
-								</Folder>
-								<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/.vs/Unity Prolog/v15/.suo"/>
-							</Folder>
-						</Folder>
-					</Folder>
 					<Folder Name="Assets">
 						<Folder Name="Characters">
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/Characters/captive.prolog"/>
@@ -3480,18 +3444,17 @@
 						</Folder>
 						<Folder Name="Norms">
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/Norms/dprolog.prolog"/>
-							<F N="packs_xtra/logicmoo_chat/npc/Assets/Norms/dprolog.prolog.bak"/>
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/Norms/dputils.prolog"/>
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/Norms/ethics.prolog"/>
 						</Folder>
 						<Folder Name="Ontology">
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/.bash_history"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/automa.prolog"/>
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/container.prolog"/>
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/csv_loading.prolog"/>
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/entities.csv"/>
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/favor.prolog"/>
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/food_drink.prolog"/>
-							<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/hypno.prolog"/>
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/integrity_checks.prolog"/>
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/kinds.csv"/>
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/kinds.prolog"/>
@@ -3710,237 +3673,15 @@
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/Utilities/unity_stuff.prolog"/>
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/Utilities/why.prolog"/>
 						</Folder>
-						<F N="packs_xtra/logicmoo_chat/npc/Assets/.bash_history"/>
-						<F N="packs_xtra/logicmoo_chat/npc/Assets/ConfigureWindows.cs"/>
 						<F N="packs_xtra/logicmoo_chat/npc/Assets/Copyright.txt"/>
 						<F N="packs_xtra/logicmoo_chat/npc/Assets/CREDITS.txt"/>
-						<F N="packs_xtra/logicmoo_chat/npc/Assets/logicmoo_mkultra.pl"/>
-						<F N="packs_xtra/logicmoo_chat/npc/Assets/PopupAttribute.cs"/>
+						<F N="packs_xtra/logicmoo_chat/npc/Assets/logicmoo_npc_chat.pl"/>
 						<F N="packs_xtra/logicmoo_chat/npc/Assets/unity_prolog.pl"/>
-					</Folder>
-					<Folder Name="Logs">
-						<F N="packs_xtra/logicmoo_chat/npc/Logs/ApiUpdaterCheck.txt"/>
-						<F N="packs_xtra/logicmoo_chat/npc/Logs/Packages-Update.log"/>
-						<F N="packs_xtra/logicmoo_chat/npc/Logs/shadercompiler-UnityShaderCompiler.exe0.log"/>
-					</Folder>
-					<Folder Name="obj">
-						<Folder Name="Debug">
-							<F N="packs_xtra/logicmoo_chat/npc/obj/Debug/Assembly-CSharp.csproj.CopyComplete"/>
-							<F N="packs_xtra/logicmoo_chat/npc/obj/Debug/Assembly-CSharp.csproj.FileListAbsolute.txt"/>
-							<F N="packs_xtra/logicmoo_chat/npc/obj/Debug/TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs"/>
-							<F N="packs_xtra/logicmoo_chat/npc/obj/Debug/TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs"/>
-							<F N="packs_xtra/logicmoo_chat/npc/obj/Debug/TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs"/>
-						</Folder>
-					</Folder>
-					<Folder Name="Packages">
-						<F N="packs_xtra/logicmoo_chat/npc/Packages/manifest.json"/>
-						<F N="packs_xtra/logicmoo_chat/npc/Packages/packages-lock.json"/>
-					</Folder>
-					<Folder Name="ProjectSettings">
-						<F N="packs_xtra/logicmoo_chat/npc/ProjectSettings/ProjectVersion.txt"/>
-					</Folder>
-					<Folder Name="UnityProlog">
-						<Folder Name="Documentation">
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Documentation/Prolog test scene.unity"/>
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Documentation/Unity Prolog Reference.htm"/>
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Documentation/User Manual.docx"/>
-						</Folder>
-						<Folder Name="Editor">
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Editor/CopyFilesOnBuild.cs"/>
-						</Folder>
-						<Folder Name="Make_release">
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Make_release/make_release.sh"/>
-						</Folder>
-						<Folder Name="Manual generator">
-							<Folder Name="bin">
-								<Folder Name="Debug">
-									<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Manual generator/bin/Debug/Manual generator.exe.config"/>
-									<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Manual generator/bin/Debug/UnityEngine.xml"/>
-								</Folder>
-							</Folder>
-							<Folder Name="obj">
-								<Folder Name="Debug">
-									<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Manual generator/obj/Debug/.NETFramework,Version=v4.5.AssemblyAttributes.cs"/>
-									<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Manual generator/obj/Debug/build.force"/>
-									<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Manual generator/obj/Debug/Manual generator.csproj.CopyComplete"/>
-									<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Manual generator/obj/Debug/Manual generator.csproj.FileListAbsolute.txt"/>
-									<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Manual generator/obj/Debug/TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs"/>
-									<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Manual generator/obj/Debug/TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs"/>
-									<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Manual generator/obj/Debug/TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs"/>
-								</Folder>
-							</Folder>
-							<Folder Name="Properties">
-								<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Manual generator/Properties/AssemblyInfo.cs"/>
-							</Folder>
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Manual generator/App.config"/>
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Manual generator/Manual generator.csproj"/>
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Manual generator/Program.cs"/>
-						</Folder>
-						<Folder Name="Prolog">
-							<Folder Name="bin">
-								<Folder Name="Debug">
-									<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/bin/Debug/UnityEngine.xml"/>
-								</Folder>
-							</Folder>
-							<Folder Name="obj">
-								<Folder Name="Debug">
-									<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/obj/Debug/Prolog.csproj.CopyComplete"/>
-									<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/obj/Debug/Prolog.csproj.FileListAbsolute.txt"/>
-								</Folder>
-							</Folder>
-							<Folder Name="Properties">
-								<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/Properties/AssemblyInfo.cs"/>
-							</Folder>
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/AlphaConvertibleTerm.cs"/>
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/ArgumentCountException.cs"/>
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/ArgumentTypeException.cs"/>
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/BadProcedureException.cs"/>
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/BinaryPrimitive.cs"/>
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/ByteCompiledRule.cs"/>
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/ConfigurationOptions.cs"/>
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/Console.cs"/>
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/CSVParser.cs"/>
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/CutStateSequencer.cs"/>
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/DebugOverlay.cs"/>
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/DelegateUtils.cs"/>
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/DocumentationAttribute.cs"/>
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/ELInspector.cs"/>
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/ELNode.cs"/>
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/ELNodeEnumerator.cs"/>
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/ELNodeExclusionException.cs"/>
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/ELProlog.cs"/>
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/FunctionalExpression.cs"/>
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/GenericArithmetic.cs"/>
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/GoalException.cs"/>
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/Indexical.cs"/>
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/InferenceStepsExceededException.cs"/>
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/InstantiationException.cs"/>
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/ISOPrologReader.cs"/>
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/ISOPrologWriter.cs"/>
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/KB.cs"/>
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/KnowledgeBase.cs"/>
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/KnowledgeBaseEntry.cs"/>
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/KnowledgeBaseRule.cs"/>
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/KnowledgeBaseVariable.cs"/>
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/LogicVariable.cs"/>
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/Manual.cs"/>
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/Metastructure.cs"/>
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/PauseManager.cs"/>
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/PositionTrackingTextReader.cs"/>
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/PredicateArgumentIndexer.cs"/>
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/PredicateIndicator.cs"/>
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/PredicateInfo.cs"/>
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/Prolog.cs"/>
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/Prolog.csproj"/>
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/Prolog.csproj.user"/>
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/PrologChecker.cs"/>
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/PrologConsole.cs"/>
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/PrologContext.cs"/>
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/PrologError.cs"/>
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/PrologException.cs"/>
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/PrologPrimitives.cs"/>
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/PrologWarning.cs"/>
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/Repl.cs"/>
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/Shuffler.cs"/>
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/SourceFileTracker.cs"/>
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/StoragePool.cs"/>
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/StringUtils.cs"/>
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/Structure.cs"/>
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/Symbol.cs"/>
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/SyntaxErrorException.cs"/>
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/Term.cs"/>
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/TypeUtils.cs"/>
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/UndefinedPredicateException.cs"/>
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Prolog/UnityExtensionMethods.cs"/>
-						</Folder>
-						<Folder Name="Test rig">
-							<Folder Name="bin">
-								<Folder Name="Debug">
-									<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Test rig/bin/Debug/Test rig.exe.config"/>
-									<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Test rig/bin/Debug/UnityEngine.xml"/>
-								</Folder>
-							</Folder>
-							<Folder Name="obj">
-								<Folder Name="Debug">
-									<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Test rig/obj/Debug/.NETFramework,Version=v4.5.2.AssemblyAttributes.cs"/>
-									<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Test rig/obj/Debug/TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs"/>
-									<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Test rig/obj/Debug/TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs"/>
-									<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Test rig/obj/Debug/TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs"/>
-									<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Test rig/obj/Debug/Test rig.csproj.CopyComplete"/>
-									<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Test rig/obj/Debug/Test rig.csproj.FileListAbsolute.txt"/>
-								</Folder>
-							</Folder>
-							<Folder Name="Prolog">
-								<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Test rig/Prolog/freeze_tests.prolog"/>
-								<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Test rig/Prolog/test_rig.prolog"/>
-							</Folder>
-							<Folder Name="Properties">
-								<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Test rig/Properties/AssemblyInfo.cs"/>
-							</Folder>
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Test rig/App.config"/>
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Test rig/Test rig.csproj"/>
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Test rig/TestRig.cs"/>
-						</Folder>
-						<Folder Name="TestRepl">
-							<Folder Name="bin">
-								<Folder Name="Debug">
-									<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/TestRepl/bin/Debug/TestRepl.exe.config"/>
-									<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/TestRepl/bin/Debug/UnityEngine.xml"/>
-								</Folder>
-							</Folder>
-							<Folder Name="obj">
-								<Folder Name="Debug">
-									<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/TestRepl/obj/Debug/.NETFramework,Version=v4.5.2.AssemblyAttributes.cs"/>
-									<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/TestRepl/obj/Debug/TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs"/>
-									<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/TestRepl/obj/Debug/TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs"/>
-									<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/TestRepl/obj/Debug/TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs"/>
-									<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/TestRepl/obj/Debug/TestRepl.csproj.CopyComplete"/>
-									<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/TestRepl/obj/Debug/TestRepl.csproj.FileListAbsolute.txt"/>
-								</Folder>
-							</Folder>
-							<Folder Name="Properties">
-								<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/TestRepl/Properties/AssemblyInfo.cs"/>
-							</Folder>
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/TestRepl/App.config"/>
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/TestRepl/TestRepl.cs"/>
-							<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/TestRepl/TestRepl.csproj"/>
-						</Folder>
-						<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/.gitignore"/>
-						<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/CREDITS.txt"/>
-						<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/README.md"/>
-						<F N="packs_xtra/logicmoo_chat/npc/UnityProlog/Unity Prolog.sln"/>
-					</Folder>
-					<Folder Name="WebOutput">
-						<F N="packs_xtra/logicmoo_chat/npc/WebOutput/WebOutput.html"/>
-						<F N="packs_xtra/logicmoo_chat/npc/WebOutput/WebOutput.unity3d"/>
 					</Folder>
 					<F N="packs_xtra/logicmoo_chat/npc/.bash_history"/>
 					<F N="packs_xtra/logicmoo_chat/npc/agent.pl"/>
-					<F N="packs_xtra/logicmoo_chat/npc/allthis.unitypackage"/>
-					<F N="packs_xtra/logicmoo_chat/npc/Assembly-CSharp-Editor.csproj"/>
-					<F N="packs_xtra/logicmoo_chat/npc/Assembly-CSharp.csproj"/>
-					<F N="packs_xtra/logicmoo_chat/npc/MKULTRA.csproj"/>
-					<F N="packs_xtra/logicmoo_chat/npc/MKULTRA.Editor.csproj"/>
-					<F N="packs_xtra/logicmoo_chat/npc/MKULTRA.sln"/>
-					<F N="packs_xtra/logicmoo_chat/npc/MKULTRA.userprefs"/>
-					<F N="packs_xtra/logicmoo_chat/npc/test.txt"/>
-					<F N="packs_xtra/logicmoo_chat/npc/UnityVS.MKULTRA.sln.DotSettings"/>
-					<F N="packs_xtra/logicmoo_chat/npc/UpgradeLog.htm"/>
 				</Folder>
 				<Folder Name="prolog">
-					<Folder Name="bigram-sentence-evaluator">
-						<Folder Name="output">
-							<F N="packs_xtra/logicmoo_chat/prolog/bigram-sentence-evaluator/output/output.PNG"/>
-							<F N="packs_xtra/logicmoo_chat/prolog/bigram-sentence-evaluator/output/output1.png"/>
-							<F N="packs_xtra/logicmoo_chat/prolog/bigram-sentence-evaluator/output/output2.png"/>
-						</Folder>
-						<F N="packs_xtra/logicmoo_chat/prolog/bigram-sentence-evaluator/bigram_model.pl"/>
-						<F N="packs_xtra/logicmoo_chat/prolog/bigram-sentence-evaluator/bigrams.pl"/>
-						<F N="packs_xtra/logicmoo_chat/prolog/bigram-sentence-evaluator/DA_Corpus.txt"/>
-						<F N="packs_xtra/logicmoo_chat/prolog/bigram-sentence-evaluator/README.md"/>
-						<F N="packs_xtra/logicmoo_chat/prolog/bigram-sentence-evaluator/unigrams.pl"/>
-						<F N="packs_xtra/logicmoo_chat/prolog/bigram-sentence-evaluator/unix_commands.txt"/>
-					</Folder>
 					<Folder Name="pllm">
 						<F N="packs_xtra/logicmoo_chat/prolog/pllm/pllm_drs.pl"/>
 						<F N="packs_xtra/logicmoo_chat/prolog/pllm/pllm_lps.pl"/>
@@ -3954,45 +3695,6 @@
 						<F N="packs_xtra/logicmoo_chat/prolog/pllm/unweighted_pllm.pl"/>
 						<F N="packs_xtra/logicmoo_chat/prolog/pllm/utils_pllm.pl"/>
 						<F N="packs_xtra/logicmoo_chat/prolog/pllm/weighted_pllm.pl"/>
-					</Folder>
-					<Folder Name="roman-decimal-convertor">
-						<Folder Name="output">
-							<F N="packs_xtra/logicmoo_chat/prolog/roman-decimal-convertor/output/output.png"/>
-						</Folder>
-						<F N="packs_xtra/logicmoo_chat/prolog/roman-decimal-convertor/FST.PNG"/>
-						<F N="packs_xtra/logicmoo_chat/prolog/roman-decimal-convertor/README.md"/>
-						<F N="packs_xtra/logicmoo_chat/prolog/roman-decimal-convertor/RomanDecimalConversion.pl"/>
-					</Folder>
-					<Folder Name="sentence-tagging">
-						<Folder Name="output">
-							<F N="packs_xtra/logicmoo_chat/prolog/sentence-tagging/output/output.PNG"/>
-						</Folder>
-						<F N="packs_xtra/logicmoo_chat/prolog/sentence-tagging/DA_Corpus.txt"/>
-						<F N="packs_xtra/logicmoo_chat/prolog/sentence-tagging/DA_Normalized.txt"/>
-						<F N="packs_xtra/logicmoo_chat/prolog/sentence-tagging/hmm_tagger.pl"/>
-						<F N="packs_xtra/logicmoo_chat/prolog/sentence-tagging/README.md"/>
-						<F N="packs_xtra/logicmoo_chat/prolog/sentence-tagging/sigmas.pl"/>
-						<F N="packs_xtra/logicmoo_chat/prolog/sentence-tagging/tags_count.pl"/>
-						<F N="packs_xtra/logicmoo_chat/prolog/sentence-tagging/taus.pl"/>
-						<F N="packs_xtra/logicmoo_chat/prolog/sentence-tagging/TDA.txt"/>
-						<F N="packs_xtra/logicmoo_chat/prolog/sentence-tagging/unix_command.txt"/>
-					</Folder>
-					<Folder Name="smart-refrigerator">
-						<Folder Name="code">
-							<F N="packs_xtra/logicmoo_chat/prolog/smart-refrigerator/code/main.pl"/>
-							<F N="packs_xtra/logicmoo_chat/prolog/smart-refrigerator/code/model.pl"/>
-							<F N="packs_xtra/logicmoo_chat/prolog/smart-refrigerator/code/response.pl"/>
-							<F N="packs_xtra/logicmoo_chat/prolog/smart-refrigerator/code/sr_parser.pl"/>
-						</Folder>
-						<F N="packs_xtra/logicmoo_chat/prolog/smart-refrigerator/README.md"/>
-						<F N="packs_xtra/logicmoo_chat/prolog/smart-refrigerator/Report.pdf"/>
-					</Folder>
-					<Folder Name="word-similarity">
-						<F N="packs_xtra/logicmoo_chat/prolog/word-similarity/calc_similarity.pl"/>
-						<F N="packs_xtra/logicmoo_chat/prolog/word-similarity/homework_4.pdf"/>
-						<F N="packs_xtra/logicmoo_chat/prolog/word-similarity/README.md"/>
-						<F N="packs_xtra/logicmoo_chat/prolog/word-similarity/trigramModel.pl"/>
-						<F N="packs_xtra/logicmoo_chat/prolog/word-similarity/wordVectors.pl"/>
 					</Folder>
 					<F N="packs_xtra/logicmoo_chat/prolog/.bash_history"/>
 					<F N="packs_xtra/logicmoo_chat/prolog/logicmoo_pllm.pl"/>

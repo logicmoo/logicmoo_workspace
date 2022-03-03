@@ -707,7 +707,7 @@ is_listing_hidden_00(_,~(_)):-!,fail.
 is_listing_hidden_00(_,metaInfo):- is_listing_hidden(showAll),!,fail.
 is_listing_hidden_00(_,P):-t_l:tl_hide_data(P),!.
 is_listing_hidden_00(M,P):-baseKB:shared_hide_data(M:P),!.
-is_listing_hidden_00(M,F/A):- compound_name_arity(P,F,A), predicate_property(M:P,number_of_clauses(N)),N>100,is_listing_hidden(largePreds).
+is_listing_hidden_00(M,F/A):- atom(F),integer(A), compound_name_arity(P,F,A), predicate_property(M:P,number_of_clauses(N)),N>100,is_listing_hidden(largePreds).
 is_listing_hidden_00(_,_/_):-!,fail.
 is_listing_hidden_00(M,P):- is_meta_info_pred(M:P),!,is_listing_hidden(metaInfo).
 is_listing_hidden_00(M,P):- compound(P),functor(P,F,A), (is_listing_hidden_00(M,F/A);is_listing_hidden_00(M,F)).

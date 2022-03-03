@@ -1,4 +1,6 @@
 % :- module(unity_prolog,[]).
+:- dynamic(tmpu:(is_unity_file/1)).
+:- dynamic(unity_module_name/1).
 
 
 make_pred_narity_call_list(P,A):- 
@@ -7,7 +9,7 @@ make_pred_narity_call_list(P,A):-
   assert((Head:-Body)).
 
 begin(G):- is_list(G),!,maplist(begin,G).
-begin(G):- call_u(G).
+begin(G):- expand_ugoal(G,GG),call(GG).
 
 :- forall(between(2,11,A), make_pred_narity_call_list(begin,A)).
 displayln(X):- is_list(X),!,maplist(write,X),nl.
@@ -26,6 +28,7 @@ displayln(X):- write(X),nl.
 :- op(800,fx,'/').
 :- op(900,xfx,'::').
 :- op(399,xfy,':').
+%:- op(350,xfy,'/').
 
 string_representation(Term,String):- term_to_string(Term,String).
 
@@ -54,6 +57,10 @@ db_pred(asserta).
 db_pred(assertz).
 db_pred(clause).
 db_pred(abolish).
+db_pred(assert_if_new).
+db_pred(asserta_if_new).
+db_pred(assertz_if_new).
+db_pred(retract_all).
 
 
 % ugoal_expansion(X=Y,unity_call(X=Y)).
@@ -108,6 +115,9 @@ slash_db(rel,X):- slash_db(top,/X).
 slash_db(rel,X):- slash_db(top,/_/X).
 slash_db(rel,X):- slash_db(top,/_/_/X).
  
+expand_uarg(I,O):- uarg_expansion(I,O),!.
+expand_uarg(O,O).
+
 uarg_expansion(X,Y):- var(X),!,X=Y.
 uarg_expansion(X,Y):- \+ compound(X),!,X=Y.
 uarg_expansion(is(X,Y),is(X,Y)):-!.
@@ -147,11 +157,17 @@ uclause_expansion_inner(dcg,H,B,H-->B).
 
 uclause_expansion(T,H,B,HHBB):- uclause_expansion_inner(T,H,B,HB),uarg_expansion(HB,HHBB).
 
+expand_uterm(I,O):- uterm_expansion(I,O),!.
+expand_uterm(O,O).
+
 uterm_expansion(X,_):- prolog_load_context(term,T),T\==X,!,fail.
 uterm_expansion(:-B,:-BB):- !, ugoal_expansion(B,BB).
 uterm_expansion(H:-B,HB):- !, uclause_expansion(hb,H,B,HB).
 uterm_expansion(H-->B,HB):- !, uclause_expansion(dcg,H,B,HB).
 uterm_expansion(H,HB):- uclause_expansion(hb,H,true,HB).
+
+expand_ugoal(I,O):- ugoal_expansion(I,O),!.
+expand_ugoal(O,O).
 
 ugoal_expansion(Var,Var):- var(Var),!.
 ugoal_expansion(Var,Var):- \+ compound(Var),!.
@@ -160,7 +176,7 @@ ugoal_expansion(G::X,Y):- G == $global,!,ugoal_expansion(X,Y).
 ugoal_expansion(B,BBB):- once(uclause_expansion_inner(hb,goal,B,goal:-BB)),B\==BB,!,expand_goal(BB,BBB).
 %ugoal_expansion(X,_):- \+ compound(X),!,fail.
 %ugoal_expansion(Var,unity_call(Var)):- var(Var),!.
-ugoal_expansion(G,BArgs):- compound_name_arguments(G,B,Args),args_to_list(B),Args\=[_],!,BArgs=..[B|Args].
+ugoal_expansion(G,BArgs):- compound_name_arguments(G,B,Args),expand_f_args_to_list(B),Args\=[_],!,BArgs=..[B|Args].
 ugoal_expansion(public(X),unity_call(public(X))).
 ugoal_expansion(X,Y):- compound(X),maybe_into_slash_db(X,Y).
 %ugoal_expansion(X,Y):- prolog_load_context(term,:-T),T==X,uarg_expansion(X,Y).
@@ -168,8 +184,8 @@ ugoal_expansion(X,Y):- compound(X),maybe_into_slash_db(X,Y).
 ugoal_expansion(G,unity_call(G)):-  compound_name_arguments(G,DBPred,_),db_pred(DBPred).
 ugoal_expansion(X,Y):- uarg_expansion(X,Y).
 
-args_to_list(begin).
-args_to_list(displayln).
+expand_f_args_to_list(begin).
+expand_f_args_to_list(displayln).
 
 %:- use_module(library(pfc_lib)).
 
@@ -190,6 +206,27 @@ ho2mp(1,0).
 ho2mp(X,X).
 
 
+%% thaw(?X)
+%  If X is an unbound variable with a frozen_u goal, wakes the goal.
+frozen_u(X,G) :-
+   frozen(X, T),
+   unwrap_popsickle(T,TT),G=TT.
+
+unwrap_popsickle(O,O):- \+ compound(O),!.
+unwrap_popsickle(freeze(_,G),O):- !, unwrap_popsickle(G,O).
+unwrap_popsickle(M:G,O):- nonvar(M),!, unwrap_popsickle(G,O).
+unwrap_popsickle(Comp,CmpO):- predicate_property(Comp,meta_predicate(Meta)),
+  strip_module(Comp,_,Cmp),
+  compound_name_arguments(Cmp,F,Args),compound_name_arguments(Meta,_,MArgs),
+  maplist(unwrap_popsickle_3,MArgs,Args,ArgsO),!,compound_name_arguments(CmpO,F,ArgsO).
+unwrap_popsickle(O,O).
+
+unwrap_popsickle_3(?,A,A):-!.
+unwrap_popsickle_3(+,A,A):-!.
+unwrap_popsickle_3(-,A,A):-!.
+unwrap_popsickle_3(_,A,O):- unwrap_popsickle(A,O).
+
+
 all(X,Y,Z):- findall(X,Y,L), list_to_set(L,Z).
 
 :- current_op(X,Y,dynamic),op(X,Y,indexical).
@@ -199,19 +236,47 @@ indexical(X):- %compound(X),!,
 
 indexical_named(X,Y):- must_getvar(X,Y).
 
+/*
+            DeclareIndexical("this",
+                context =>
+                {
+                    if (context.This == null)
+                        throw new Exception("Indexical $this has not been given a value");
+                    return context.This;
+                });
+            DeclareIndexical("me",
+                context =>
+                {
+                    if (context.KnowledgeBase.GameObject == null)
+                        throw new Exception("Current KnowledgeBase has no associated game object");
+                    return context.GameObject;
+                });
+            DeclareIndexical("parent",
+                context =>
+                {
+                    if (context.KnowledgeBase.Parent == null)
+                        throw new Exception("Current KnowledgeBase has no parent.");
+                    return context.KnowledgeBase.Parent;
+                });
+            DeclareIndexical("global", context => KnowledgeBase.Global);
+            DeclareIndexical("root", context => context.KnowledgeBase.ELRoot);
+            DeclareIndexical("global_root", context => KnowledgeBase.Global.ELRoot);
+            DeclareIndexical("now", context => Time.time);
+*/
+
+'$'(Var,Value):- must_getvar(Var,Value).
+must_getvar(now,Value):- !, get_time(Value).
 must_getvar(X,Y):- nb_current(X,Y),!.
 %must_getvar(me,Y):- !, Y = me.
 must_getvar(X,Y):- log(warn(must_getvar(X,Y))),fail.
-must_getvar(X,Y):- atom(X),!,atom_concat('unknown__',X,Y).
+must_getvar(X,Y):- number(X),!,Y=X.
+must_getvar(X,Y):- atom(X),!,atom_concat('unknown_',X,Y).
 must_getvar(X,'#'(X)).
-'$'(Number,Value):- number(Number),!,Number=Value.
-'$'(now,Value):- !, get_time(Value).
-'$'(Var,Value):- must_getvar(Var,Value).
 
 bind(X,Y):- b_setval(X,Y).
 
 log(warn(X)):- !, dmsg(warn(X)).
-log(X):-nop(dmsg(X)).
+log(X):- dmsg(X).
 
 starts_with_one_of(String,Word):- sub_string(Word,0,1,_,L),sub_string(String,_,_,_,L).
 
@@ -220,7 +285,8 @@ for_all_unique(T,Gen,Goal):-
   all(T,Gen,Set),member(T,Set),call(Goal).
 
 :- current_op(X,Y,dynamic),op(X,Y,register_lexical_items).
-register_lexical_item(X):- nop(log(register_lexical_item(X))), assert(is_lexical_item(X)).
+:- dynamic(is_lexical_item/1).
+register_lexical_item(X):- log(register_lexical_item(X)), assert_if_new(is_lexical_item(X)).
 
 
 :- current_op(X,Y,dynamic),op(X,Y,external).
@@ -229,7 +295,8 @@ system:external(X):- nop(log(external(X))),discontiguous(X),distributed_pred(X).
 
 :- current_op(X,Y,dynamic),op(X,Y,distributed_pred).
 :- meta_predicate(system:distributed_pred(:)).
-system:distributed_pred(X):- nop(log(distributed_pred(X))),dynamic(X),multifile(X),discontiguous(X).
+system:distributed_pred(X):- nop(log(distributed_pred(X))),
+  dynamic(X),multifile(X),public(X),discontiguous(X).
 
 :- distributed_pred(fkey_command/2).
 
@@ -239,7 +306,9 @@ randomizable(X):- dynamic(X),multifile(X),discontiguous(X),nop(log(randomizable(
 load_unity_prolog_file(F):- 
   log(load_unity_prolog_file(F)),
   unity_prolog_filename(F,Filename),
-  load_files(Filename,[module(lmchat),must_be_module(false),redefine_module(false),scope_settings(false)]).
+  asserta_if_new(tmpu:is_unity_file(Filename)),
+  unity_module_name(Unity),
+  load_files(Filename,[module(Unity),must_be_module(false),redefine_module(false),scope_settings(false)]).
 
 load_unity_csv_file(F):- 
   log(load_unity_csv_file(F)),
@@ -248,12 +317,13 @@ load_unity_csv_file(F):-
 
 unity_prolog_filename(F,Filename):- exists_file(F),!,Filename=F.
 unity_prolog_filename(F,Filename):- lmchat_dir(D),atomic_list_concat([D,'/',F],Filename),exists_file(Filename),!.
+unity_prolog_filename(N,Filename):- name(F,N), lmchat_dir(D),absolute_file_name(F,Filename,[relative_to(D),extensions(['prolog','pl','P','']),access(read)]),!.
 unity_prolog_filename(F,F).
 
 now(Now):-  get_time(Now).
 
 
-call_with_step_limit(Limit,Goal):- call_with_inference_limit(Goal, Limit, Result), 
+call_with_step_limit(Limit,Goal):- ALimit is Limit ^ 3, call_with_inference_limit(Goal, ALimit, Result), 
     ignore((inference_limit_exceeded == Result, throw(Result))),
     (((Result == (!))-> ! ; Result)).
 
@@ -272,7 +342,7 @@ component_of_gameobject_with_type(X,X,_).
 :- assume_todo(arg_max/3).
 
 :- assume_dyn_fail(type/2).
-:- assume_dyn_fail(relation_type/3).
+:- dynamic(relation_type/3).
 :- assume_dyn_fail(property_type/3).
 :- assume_dyn_fail(property_name/3).
 :- assume_dyn_fail(property/3).
@@ -296,12 +366,15 @@ word_list(X,Y):- atomic_list_concat(Y,' ',X).
 
 consult(File, M):- M:consult(File).
 
-module_ctx(X):- '$current_typein_module'(X),!.
-module_ctx(X):- prolog_load_context(module,X),!.
+module_uctx(X):- '$current_typein_module'(X),!.
+module_uctx(X):- prolog_load_context(module,X),!.
 
-unity_ctx:- module_ctx(lmchat).
+unity_uctx:- prolog_load_context(file,File),!,tmpu:is_unity_file(File).
+unity_uctx:- unity_module_name(M),module_uctx(T),!,M==T.
 
-print_clexp(Y):- \+ \+ (numbervars(Y,9,_), print_tree(Y)).
+print_clexp(X,Y):- X=@=Y,!.
+%print_clexp(X,Y):- in_cmt(print_tree(X)),print_tree(Y).
+print_clexp(X,Y):- dmsg(X),writeln('%~'),dmsg(Y).
 
 
 
@@ -379,8 +452,8 @@ join_underscores(V,V).
 
 :- multifile(term_expansion/2).
 :- dynamic(term_expansion/2).
-term_expansion(X,Y):- compound(X), unity_ctx, uterm_expansion(X,Y),!. %,print_clexp(Y),nl.
-system:goal_expansion(X,Y):- compound(X), unity_ctx, ugoal_expansion(X,Y),!.
+term_expansion(X,Y):- compound(X), unity_uctx, uterm_expansion(X,Y),X\==Y,ansicall(yellow,print_clexp(X,Y)).
+system:goal_expansion(X,Y):- compound(X), unity_uctx, expand_ugoal(X,Y),X\==Y,ansicall(gold,print_clexp(X,Y)).
 :- load_unity_prolog_file('Utilities/startup.prolog').
 
 

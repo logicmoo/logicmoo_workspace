@@ -2,8 +2,9 @@
 %%% Simple unit test system based loosely on Jan Wielemaker's paper Prolog Unit Tests
 %%%
 
+:- prolog_load_context(file,File), retractall(tmpu:is_unity_file(File)).
 :- public test/2, test/1, test_options/2, test_file/2.
-:- public run_tests/0, run_tests/1.
+:- public run_utests/0, run_utests/1.
 
 :- indexical test_name=null, test_options=null, test_body=null, running_tests=false.
 
@@ -16,14 +17,15 @@ running_tests :-
 %% test(*Name, +Options)
 %  Body of this rule is a test that should be run with the specified options.
 
-%% run_tests
+%% run_utests
 %  Run all defined tests
-run_tests :-
-   call_with_step_limit(100000, run_tests(_)).
+run_utests:- make, forall(run_utests(_),true).
+%run_utests :- call_with_step_limit(100000, run_utests(_)).
 
-%% run_tests(*TestName)
+
+%% run_utests(*TestName)
 %  Run all tests with name TestName
-run_tests(Name) :-
+run_utests(Name) :-
    ensure_tests_loaded(Name),
    bind(running_tests, true),
    forall(test_body(Name, Options, Body),
@@ -48,9 +50,9 @@ run_test(Name, Options, Body) :-
 	 %displayln("Running ", Name),
 	 setup_test(Name, Options),
 	 (catch(run_test_body(Options, Body), Exception, true) ->
-	     print_test_results(Name, Options, Exception)
+	     (ansicall(cyan,displayln(["Test ", Name, " was GOOD."])), print_test_results(Name, Options, Exception))
 	     ;
-	     displayln("Test ", Name, " was unsatisfiable."))).
+	     ansicall(red,displayln("Test ", Name, " was unsatisfiable.")))).
 
 run_test_body(Options, Body) :-
    test_has_option(trace, Options),
@@ -91,10 +93,12 @@ check_test_determinism(_Name, Options) :-
    test_has_option(nondet, Options),
    !.
 check_test_determinism(_Name, _Options) :-
-   % $test_body is a copy of the body (doesn't share variables with the one that was run previously)
-   call_with_step_limit(10000, deterministic($test_body)), !.
+  % $test_body is a copy of the body (doesn't share variables with the one that was run previously)
+   must_getvar(test_body,TB),
+   wdmsg(test_body= TB),
+   call_with_step_limit(10000, are_deterministic(TB)), !.
 check_test_determinism(Name, _) :-
-   displayln("Test ", Name, " succeeded but is non-deterministic.").
+   displayln("Test ", Name, " succeeded but is non-are_deterministic.").
       
 setup_test(Name, Options) :-
    % Call P for every setup(P) that appears in the test's options.
@@ -160,9 +164,9 @@ call_on_list(OptionPattern, [ Option | MoreOptions ], Predicate) :-
 call_on_list(OptionPattern, [ _ | MoreOptions ], Predicate) :-
    call_on_list(OptionPattern, MoreOptions, Predicate).
 
-%% deterministic(:Goal)
+%% are_deterministic(:Goal)
 %  Goal has exactly one solution by attempting to solve for a second solution.
-deterministic(Goal) :-
+are_deterministic(Goal) :-
    findnsols(2, _, Goal, [_]).
 
 %% nonempty_instantiated_atom_list(+List)
@@ -195,9 +199,12 @@ ensure_tests_loaded(TestName) :-
    forall(test_file(TestName, File),
 	  ensure_test_file_loaded(File)).
 
+:- dynamic(tmp_u:(is_unity_file_loaded/1)).
+
+ensure_test_file_loaded(File) :- tmp_u:is_unity_file_loaded(File),!.
 ensure_test_file_loaded(File) :-
-   consult(File, $global),
-   asserta( $global::(ensure_test_file_loaded(File) :- !) ).
+   load_unity_prolog_file(File), %($global),
+   asserta(tmp_u:is_unity_file_loaded(File)).
 
 %% test_file(+TestPattern, *File)
 %  Declares that File must be loaded before running test matching TestPattern.

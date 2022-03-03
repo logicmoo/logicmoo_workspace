@@ -1,5 +1,7 @@
 
-:- module(lmchat,[]).
+%:- module(lmchat,[]).
+
+:- module(baseKB).
 
 % use_module(library('../ext/lmchat/Assets/logicmoo_lmchat')).
 :- use_module(library(logicmoo_utils)).
@@ -13,6 +15,7 @@ assume_dyn_succeed(FA):- pi_to_p(FA,P), TODO=assume_dyn_succeed(P), asserta((P:-
 
 :- if( \+ prolog_load_context(reloading,false)).
 :- prolog_load_context(directory,D),asserta(lmchat_dir(D)).
+:- clause(unity_module_name(_),_)-> true; prolog_load_context(module,D),asserta(unity_module_name(D)).
 :- endif.
 
 load_lmchat:- lmchat_dir(D),atom_concat(D,'/*/*.prolog',F), expand_file_name(F,List),
@@ -91,7 +94,6 @@ process_kind_hierarchy:- log(todo(process_kind_hierarchy)).
 :- assume_dyn_succeed(manner/2).
 :- assume_dyn_succeed(leaf_kind/1).
 :- assume_dyn_succeed(kind_noun/4).
-:- assume_dyn_succeed(kind/1).
 :- assume_dyn_succeed(inverse_relation/2).
 :- assume_dyn_succeed(implies_relation/2).
 :- assume_dyn_succeed(genitive_form_of_relation/4).
@@ -101,13 +103,28 @@ process_kind_hierarchy:- log(todo(process_kind_hierarchy)).
 :- assume_dyn_succeed(begin_qud/1).
 :- assume_dyn_succeed(begin_child_qud/3).
 */
+%:- assume_dyn_succeed(kind/1).
+:- dynamic(kind/1).
+:- dynamic(character/1).
+:- dynamic('>-->'/2).
+:- dynamic(door/1).
+:- dynamic(implies_relation/2).
+:- dynamic(inverse_relation/2).
+:- dynamic(prop/1).
+:- dynamic(manner/2 ).
+:- dynamic(use/1 ).
+:- dynamic(prop/1 ).
+:- dynamic(dialog_task_advances_current_beat/1 ).
+
+
 %:- load_lmchat.
 :- load_unity_prolog_file('Prolog/prolog_primitives.prolog').
 :- load_unity_prolog_file('Sims/indexicals.prolog').
-:- load_unity_prolog_file('Utilities/tell.prolog').
-:- load_unity_prolog_file('Utilities/general.prolog').
+
 :- load_unity_prolog_file('Utilities/unity_stuff.prolog').
 :- load_unity_prolog_file('Utilities/startup.prolog').
+:- load_unity_prolog_file('Utilities/tell.prolog').
+:- load_unity_prolog_file('Utilities/general.prolog').
 :- load_unity_prolog_file('Ontology/type_check.prolog').
 :- load_unity_prolog_file('NL/interface.prolog').
 
@@ -194,14 +211,10 @@ process_kind_hierarchy:- log(todo(process_kind_hierarchy)).
 :- load_unity_prolog_file('Qud/affect_manager.prolog').
 %:- load_unity_prolog_file('NL/grammar_exclaim.prolog').
 
-:- load_unity_prolog_file('NL/lexicon.prolog').
-:- load_unity_prolog_file('Characters/Kavi.prolog').
-:- load_unity_prolog_file('Characters/captive.prolog').
-:- load_unity_prolog_file('Characters/pc.prolog').
 
 :- load_unity_prolog_file('NL/grammar.prolog').
-:- load_unity_prolog_file('Script/demo_level.prolog').
 
+:- load_unity_prolog_file('NL/lexicon.prolog').
 
 :- load_unity_csv_file('Ontology/relations.csv').
 :- load_unity_csv_file('Ontology/entities.csv').
@@ -216,8 +229,16 @@ process_kind_hierarchy:- log(todo(process_kind_hierarchy)).
 :- load_unity_csv_file('NL/transitive_verb.csv').
 
 
-:- add_history(module(lmchat)).
+:- load_unity_prolog_file('Characters/Kavi.prolog').
+:- load_unity_prolog_file('Characters/captive.prolog').
+:- load_unity_prolog_file('Characters/pc.prolog').
+:- load_unity_prolog_file('Script/demo_level.prolog').
+
+:- 
+  unity_module_name(M),add_history(module(M)).
 
 gen_all:- between(1,6,L),length(S,L),utterance(X,S,[]),print_tree_with_final(S=X,'.\n\n'),fail.
 :- add_history(gen_all).
 :- fixup_exports.
+
+:- run_utests.
