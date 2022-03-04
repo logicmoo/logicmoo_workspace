@@ -18,12 +18,12 @@ parse(Nonterminal, WordList) :-
 parse(Nonterminal, WordList, Completion) :-
    call(Nonterminal, WordList, Completion ).
 
-nonterminal(np(_LF, _C, _A, nogap, nogap)).
-nonterminal(aux(_, _P, _Agreement, _T, _Aspect, _F, _M)).
+nonterminal(utterance(_DialogAct)).
+nonterminal(s(_LF, _M, _P, _T, _A)).
 nonterminal(vp(_F, _LF, _S, _T, _A, nogap)).
 nonterminal(aux_vp(_VP, _P, _A, _T, _)).
-nonterminal(s(_LF, _M, _P, _T, _A)).
-nonterminal(utterance(_DialogAct)).
+nonterminal(aux(_, _P, _Agreement, _T, _Aspect, _F, _M)).
+nonterminal(np(_LF, _C, _A, nogap, nogap)).
 
 %%%
 %%% Regression testing
@@ -51,9 +51,9 @@ try_completion(Nonterminal, String, CompletionText) :-
 run_parser_test(Nonterminal, String) :-
    nonterminal_args(Nonterminal, Prototype),
    word_list(String, Words),
-   catch(once((parse(Prototype, Words) ; writeln(String:fail:Prototype))),
+   catch(once((parse(Prototype, Words) -> ansicall(cyan,writeln(Words:pass:Prototype)) ; ansicall(red,writeln(String:fail:Prototype)))),
 	 Exception,
-	 writeln(String:Exception:Prototype)).
+	 ansicall(yellow,writeln(String:Exception:Prototype))).
 
 %% nonterminal_args(+Functor, -Prototype)
 %  Prototype is the arguments for parsing a Functor nonterminal, sans input and output text.

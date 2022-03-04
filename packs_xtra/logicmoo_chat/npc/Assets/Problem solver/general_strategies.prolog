@@ -68,19 +68,19 @@ strategy(achieve(location(X, $me)),
 strategy(achieve(location(X, Room)),
 	 achieve(location(X, Container))) :-
    %\+ freestanding(X),
-   is_a(Room, room),
-   is_a(Container, work_surface),
+   iz_a(Room, room),
+   iz_a(Container, work_surface),
    location(Container, Room).
 default_strategy(achieve(location(X, Container)),
 	 putdown(X, Container)) :-
    X \= $me,
    Container \= $me,
-   \+ is_a(Container, room).
+   \+ iz_a(Container, room).
 
 strategy(achieve(location($me, Container)),
 	 begin(goto(Container),
 	       get_in(Container))) :-
-   is_a(Container, prop).
+   iz_a(Container, prop).
 
 precondition(move($me, Patient, _),
 	     know(X:location(Patient, X))).
@@ -99,7 +99,7 @@ precondition(goto(Object),
 
 strategy(goto(Building),
 	 null) :-
-   is_a(Building, building).
+   iz_a(Building, building).
 strategy(goto(Room),
 	 unless(contained_in($me, Room),
 		goto_internal(Room))) :-
@@ -126,14 +126,14 @@ after(goto_internal(Person),
 
 strategy(leave($me, Building),
 	 goto(Exit)) :-
-   is_a(Building, building),
+   iz_a(Building, building),
    property_value(Building, exit, Exit).
 
 strategy(flee($me),
 	 leave($me, Building)) :-
    % Leave whatever building I'm in.
    contained_in($me, Building),
-   is_a(Building, building).
+   iz_a(Building, building).
 
 %%
 %% Getting things
@@ -187,7 +187,7 @@ strategy(handle_discovery(X),
 	       mental_monolog(["Found", np(X)]))).
 after(handle_discovery(X),
       pickup(X)) :-
-   is_a(X, key_item).
+   iz_a(X, key_item).
 
 before(search_object(Object, _, _, _),
        goto(Object)):-
@@ -207,7 +207,7 @@ strategy(search_object(ArchitecturalSpace, CriterionLambda, SuccessLambda, FailT
 	     begin(tell(/searched/ArchitecturalSpace),
 		   FailTask))
 	 }) :-
-   is_a(ArchitecturalSpace, architectural_space).
+   iz_a(ArchitecturalSpace, architectural_space).
 
 strategy(search_object(Container, CriterionLambda, SuccessLambda, FailTask),
 	 if(nearest_unsearched(Container, Object),
@@ -220,8 +220,8 @@ strategy(search_object(Container, CriterionLambda, SuccessLambda, FailTask),
 	    % Searched entire contents
 	    begin(tell(/searched/Container),
 		  FailTask))) :-
-   is_a(Container, container),
-   \+ is_a(Container, architectural_space),
+   iz_a(Container, container),
+   \+ iz_a(Container, architectural_space),
    % Reveal a hidden item, if there is one.
    ignore(reveal_hidden_item(Container)).
 
@@ -246,7 +246,7 @@ unsearched(Container, Contents) :-
    \+ /searched/Contents.
 
 implausible_search_location(X) :-
-   is_a(X, exit).
+   iz_a(X, exit).
 implausible_search_location(X) :-
    character(X).
 
@@ -380,7 +380,7 @@ default_strategy(switch($me, X, power= off),
 
 strategy(operate($me, Device),
 	 call(operate(Device))) :-
-   is_a(Device, device).
+   iz_a(Device, device).
 
 :- public use/1.
 operate(Device) :-

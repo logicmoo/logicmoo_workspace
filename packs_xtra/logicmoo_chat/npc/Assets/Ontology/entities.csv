@@ -1,7 +1,7 @@
 Entity,Kinds (list),Description,Proper noun (phrase list),Number,Properties (list),Relations (list)
 player,person,,the player,,,
 $pc,person,,,,"age=13, job=spy","knows_about: spying, member_of:www, interested_in: theclub, friend_of: $kavi"
-$kavi,person,, 'Kavi',,"age=13, given_name=""Kavi"", surname=""Surkow"", gender=male",member_of: theclub
+$kavi,person,,'Kavi',,"age=13, given_name=""Kavi"", surname=""Surkow"", gender=male",member_of: theclub
 $captive,person,,'Trip',,"age=13, given_name=""Trip"", surname=""Abel"", gender=male",friend_of: $pc
 theclub,science,"""A """,the 'Theclub',plural,"make world peace","goal: ""complete world peace"", leader: you"
 adam_weishaupt,person,,'Adam' 'Weishaupt',singular,,

@@ -6,11 +6,12 @@
 :- external (==>>)/2.
 
 
-%assert_if_unew(P):- is_asserted(P),!.
-assert_if_unew(P):- tell(P).
+assert_if_unew(P):- tellg(P),!.
+assert_if_unew(P):- assert_if_new(P).
 
-tell(P) :- expand_assert(tell,P,PP), tellg(PP), !.
+tell(P) :- tellg(P), !.
 
+%expand_assert(tell,P,PP), 
 %tellg(P) :- current_predicate(_,P), \+ \+ call(P), !.
 tellg(P) :- clause_asserted(P), !.
 tellg(P) :- current_predicate(_,P), \+ \+ call(P), !.
@@ -31,4 +32,4 @@ when_added(P, tell(Q)) :-
 
 :- external tell_globally/1.
 tell_assertion(P) :-
-   tell_globally(P) -> assert($global::P) ; assert(P).
+   \+ \+ tell_globally(P) -> assert($global::P) ; assert(P).

@@ -20,7 +20,7 @@ default_strategy(preface_description(Object),
 
 strategy(describe_type(Object),
 	 let(base_kind(Object, Kind),
-	     say_answer(is_a(Object, Kind)))).
+	     say_answer(iz_a(Object, Kind)))).
 
 %%
 %% Describing lists of attributes

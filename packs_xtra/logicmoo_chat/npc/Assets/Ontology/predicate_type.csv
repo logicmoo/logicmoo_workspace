@@ -59,7 +59,7 @@ condition,good(person)
 condition,okay(person)
 condition,thirsty(person)
 condition,hungry(person)
-condition,"is_a(entity, kind)"
+condition,"iz_a(entity, kind)"
 condition,"kind_of(kind, kind)"
 condition,"toggled_state(appliance, entity, entity)"
 condition,"wants(actor, condition)"

@@ -2,7 +2,7 @@
 :- dynamic(tmpu:(is_unity_file/1)).
 :- dynamic(unity_module_name/1).
 
-:- set_prolog_flag(occurs_check,error).
+%:- set_prolog_flag(occurs_check,error).
 
 make_pred_narity_call_list(P,A):- 
   length(L,A),
@@ -98,8 +98,8 @@ maybe_into_slash_db(F/_,_):- \+ slash_arg(F),!,fail.
 maybe_into_slash_db(_/A,_):- \+ slash_arg(A),!,fail.
 %maybe_into_slash_db(M'::' /(A),slash_db(M,/(A))).
 %maybe_into_slash_db(M'::' (A),slash_db(M,(A))).
-maybe_into_slash_db(C,slash_db(me,C)):- \+ \+ (numbervars(C,0,_,[attvar(bind)]),is_slashed_g(C)).
-maybe_into_slash_db(C,slash_db(rel,C)):- \+ \+ (numbervars(C,0,_,[attvar(bind)]),is_slashed(C)).
+maybe_into_slash_db(C,slash_db(me ,C)):- \+ \+ (copy_term_nat(C,Nat),(numbervars(Nat,0,_,[attvar(skip)]),is_slashed_g(Nat))).
+maybe_into_slash_db(C,slash_db(rel,C)):- \+ \+ (copy_term_nat(C,Nat),(numbervars(Nat,0,_,[attvar(skip)]),is_slashed(Nat))).
 
 slash_arg(E):- var(E),!.
 slash_arg(E):- atom(E),!.
@@ -151,7 +151,7 @@ trans_p_to_v(P,C,[C|P]).
 
 ephemerally(A):- write(ephemerally(A)),asserta(A,C),undo(erase(C)).
 
-if_uctx_equals(X):-get_uctx_equals(M),!,M=X. 
+if_uctx_equals(X):-get_uctx_equals(M),(M=X;(is_list(M),member(X,M))),!.
 get_uctx_equals(X):- t_l:unity_this_path(X),!.
 get_uctx_equals([X]):- getvar(root,X).
 
@@ -236,11 +236,18 @@ uctx_corrections(H,H):- \+ compound(H), !.
 uctx_corrections(H:-B,HB):- !, as_clause_hb(H,B,HB).
 uctx_corrections(H,CH):- as_clause_head(H,CH).
 
-as_clause_hb('::'($Ctx,H),B,((H:- ( getvar(Ctx,V), if_uctx_equals(V), '::'(V,BB))))):- nonvar(Ctx),!, expand_ugoal(B,BB).
-as_clause_hb('::'(Ctx,H),B,((H:- ( if_uctx_equals(Ctx), '::'(Ctx,BB))))):-  expand_ugoal(B,BB).
+%lock_var(_).
+lock_var(V):- freeze(V, (ignore((nonvar(V),break)))).
+as_clause_hb(H,B,HBO):- term_variables(H+B,Vars),nop(maplist(lock_var,Vars)),!,
+  as_clause_hb0(H,B,HBO).
+as_clause_hb0(H,B,H):- var(H), B ==true,!.
+as_clause_hb0(H,B,(H:-B)):- var(H),!.
+as_clause_hb0('::'(Ctx,H),B,('::'(Ctx,H):-B)):- var(Ctx),!.
+as_clause_hb0('::'($Ctx,H),B,((H:- ( getvar(Ctx,V), if_uctx_equals(V), '::'(V,BB))))):- nonvar(Ctx),!, expand_ugoal(B,BB).
+as_clause_hb0('::'(Ctx,H),B,((H:- ( if_uctx_equals(Ctx), '::'(Ctx,BB))))):-  expand_ugoal(B,BB).
 %as_clause_hb(H,B,Out):- B == true,!,as_clause_head(H,Out).
 %as_clause_hb(H,B,(:-BB)):- H==goal,!, expand_ugoal(B,BB).
-as_clause_hb(H,B,(HH:-BBB)):- get_var_expansions(h,H,HH,G),expand_ugoal(B,BB),conjoin(G,BB,BBB).
+as_clause_hb0(H,B,(HH:-BBB)):- get_var_expansions(h,H,HH,G),expand_ugoal(B,BB),conjoin(G,BB,BBB).
 
 as_clause_head(H:-B,GOut):-get_var_expansions(h,H,HH,G),(G==true -> Out = H ; Out = (HH:- G)),conjoin(Out,B,GOut).
 as_clause_head(H,Out):-get_var_expansions(h,H,HH,G),(G==true -> Out = H ; Out = (HH:- G)).
@@ -272,6 +279,7 @@ ugoal_expansion_3(_,X,Y):- expand_ugoal(X,Y).
 
 expand_ugoal(C,O):- no_more_expansion(h,C,O),!.
 expand_ugoal($X,(getvar(X,G),call(G))):-atomic(X),debug_var(X,G).
+expand_ugoal('::'(X,G),'::'(X,GG)):-var(X),!,expand_ugoal(G,GG).
 expand_ugoal('::'($X,G),(getvar(X,V),'::'(V,G))):-atomic(X),debug_var(X,V).
 expand_ugoal(X,Y):- expand_slash(X,XX), ugoal_expansion(XX,XY),!,expand_slash(XY,Y).
 expand_ugoal(X,Y):- expand_slash(X,Y).
@@ -282,12 +290,16 @@ shouldnt_need_expansion(_):- !.
 ugoal_expansion(C,C):- \+ compound(C),!.
 ugoal_expansion(\+ C , \+ O):- !, expand_ugoal(C,O).
 ugoal_expansion(C,O):- no_more_expansion(b,C,O),!.
+ugoal_expansion((A,B),(AA,BB)):- !, expand_ugoal(A,AA),expand_ugoal(B,BB).
+ugoal_expansion((A;B),(AA;BB)):- !, expand_ugoal(A,AA),expand_ugoal(B,BB).
+ugoal_expansion((A->B),(AA->BB)):- !, expand_ugoal(A,AA),expand_ugoal(B,BB).
+ugoal_expansion((A*->B),(AA*->BB)):- !, expand_ugoal(A,AA),expand_ugoal(B,BB).
 ugoal_expansion('::'(G,X),'::'(G,Y)):- !, expand_ugoal(X,Y).
 ugoal_expansion(':'(G,X),':'(G,Y)):- !, expand_ugoal(X,Y).
 
+/*
 subst_vars(G,B,BM):- \+ compound(G),!,B=BM.
 subst_vars(_,B,BM):- B=BM,!.
-/*
 subst_vars([H|T],B,BO):- !,
    subst_vars(H,B,BM),
    subst_vars(T,BM,BO).
@@ -296,10 +308,6 @@ subst_vars(G,B,BM):- compound_name_arguments(G,_,Args),subst_vars(Args,B,BM).
 */
 
 %ugoal_expansion((A,B),(AA,BB)):- get_var_expansions(h,A,AH,G), subst_vars(G,B,BM), G\== true, !, expand_ugoal(AH,AA),expand_ugoal(BM,BB).
-ugoal_expansion((A,B),(AA,BB)):- !, expand_ugoal(A,AA),expand_ugoal(B,BB).
-ugoal_expansion((A;B),(AA;BB)):- !, expand_ugoal(A,AA),expand_ugoal(B,BB).
-ugoal_expansion((A->B),(AA->BB)):- !, expand_ugoal(A,AA),expand_ugoal(B,BB).
-ugoal_expansion((A*->B),(AA*->BB)):- !, expand_ugoal(A,AA),expand_ugoal(B,BB).
 
 %$ugoal_expansion(G'::'X,'::'(X,Y)):- G == $global,!,ugoal_expansion(X,Y).
 
@@ -499,7 +507,7 @@ getvar(X,Y,A,A):- getvar(X,Y).
 unknownvar_value(X,V):- atom(X),!,atom_concat('unknown_',X,V).
 unknownvar_value(X,'#'(X)).
 
-'#'(_).
+%'#'(_).
 
 bind(X,Y):- b_setval(X,Y).
 
@@ -601,6 +609,7 @@ module_uctx(X):- prolog_load_context(module,X),!.
 unity_uctx:- prolog_load_context(file,File),!,tmpu:is_unity_file(File).
 unity_uctx:- unity_module_name(M),module_uctx(T),!,M==T.
 
+print_clexp(_,_,_):-!.
 print_clexp(_,X,Y):- X=@=Y,!.
 %print_clexp(X,Y):- in_cmt(print_tree(X)),print_tree(Y).
 print_clexp(W,X,Y):- wdmsg(X),write('%~  '),writeln(W),wdmsg(Y).
@@ -617,7 +626,7 @@ load_unity_csv_file_data(CSV_file):-
     CSV = [Props|Rows],
     Props=..[_|Types],
     must_maplist(into_row_types,Types,RTypes),
-    adbg(rowTypes(Types) --> RTypes),
+    dmsg(rowTypes(Types) --> RTypes),
     ignore(begin_csv_loading(Pred)),
     set_flag('$csv_row',1),!,
     maplist(load_csv_row_data(RTypes,Pred), Rows),
@@ -632,7 +641,7 @@ load_csv_row_data_now(Types,Pred, RowTerm) :-
      (must_maplist(correct_row,Types,Row,CRow),
       RowCall=..[Pred|CRow],
       flag('$csv_row',RowNumber,RowNumber+1),!,
-      adbg(load_csv_row(RowNumber,RowCall)),
+      dmsg(load_csv_row(RowNumber,RowCall)),
       once(load_csv_row(RowNumber,RowCall)))),
     !.
 
@@ -648,15 +657,15 @@ into_row_types(Type,Type).
 correct_row([prefix,Prefix],A,V):- atom(A),atom_concat(Prefix,A,R),
  read_term_from_atom(R,T,[variable_names(Vs)]),maplist(vs_name,Vs),
  correct_row_type(Type,T,V),
- notrace(ignore((V\==[],A\==V,fail,adbg(Prefix+A --> V)))),!.
+ notrace(ignore((V\==[],A\==V,fail,dmsg(Prefix+A --> V)))),!.
 correct_row(Type,A,V):- atom(A),
  once(atom_concat(_,')',A);atom_contains(A,',');atom_contains(A,':');atom_contains(A,'$');atom_contains(A,'=');atom_contains(A,')')),
  read_term_from_atom(A,T,[variable_names(Vs)]),maplist(vs_name,Vs),
  correct_row_type(Type,T,V),
- notrace(ignore((V\==[],A\==V,fail,adbg(Type+A --> V)))),!.
+ notrace(ignore((V\==[],A\==V,fail,dmsg(Type+A --> V)))),!.
 correct_row(Type,A,V):-
   correct_row_type(Type,A,V),
-  notrace(ignore((V\==[],Type\==list,Type\==string,Type\=[_,list],A\==V,adbg(Type+A --> V)))),!.
+  notrace(ignore((V\==[],Type\==list,Type\==string,Type\=[_,list],A\==V,dmsg(Type+A --> V)))),!.
 
 correct_row_type(T,A,A):- var(T),!.
 correct_row_type([_Word,list],A,V):- !,correct_row_type('list',A,V).
@@ -682,8 +691,8 @@ join_underscores(V,V).
 
 :- multifile(term_expansion/2).
 :- dynamic(term_expansion/2).
-term_expansion(X,Y):- compound(X), unity_uctx, uterm_expansion(X,Y),X\==Y,ansicall(yellow,print_clexp(ce,X,Y)).
-system:goal_expansion(X,Y):- compound(X), unity_uctx, expand_ugoal(X,Y),X\==Y,ansicall(gold,print_clexp(sg,X,Y)).
+term_expansion(X,Y):- notrace((compound(X), unity_uctx, uterm_expansion(X,Y),X\==Y,ansicall(yellow,print_clexp(ce,X,Y)))).
+system:goal_expansion(X,Y):- notrace((compound(X), unity_uctx, expand_ugoal(X,Y),X\==Y,ansicall(gold,print_clexp(sg,X,Y)))).
 :- load_unity_prolog_file('Utilities/startup.prolog').
 
 ltest:- 

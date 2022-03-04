@@ -9,7 +9,7 @@ possible_types_given_constraint(Var, Expression, Types) :-
 %  Gives all the possible types for Var within Expression.
 variable_type_given_constraint(Object, _, Type) :-
    nonvar(Object),
-   is_a(Object, Type).
+   iz_a(Object, Type).
 variable_type_given_constraint(Var, Expression, Type) :-
    well_typed(Expression, _, Bindings),
    lookup_variable_type(Var, Type, Bindings).
@@ -38,7 +38,7 @@ well_typed(Atom, Type, Bindings, Bindings) :-
    !,
    is_type(Atom, Type).
 
-well_typed((Expression, is_a(Var, VKind)), Kind, BIn, BOut) :-
+well_typed((Expression, iz_a(Var, VKind)), Kind, BIn, BOut) :-
    well_typed(Expression, Kind, [Var:VKind | BIn], BOut).
 
 well_typed(related(Object, Relation, Relatum), condition, BIn, BOut) :-

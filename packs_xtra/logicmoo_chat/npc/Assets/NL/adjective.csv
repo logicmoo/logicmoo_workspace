@@ -4,5 +4,5 @@ fine,fine(Noun)
 okay,okay(Noun)
 hungry,hungry(Noun)
 thirsty,thirsty(Noun)
-on,toggled_state(Noun,power,on)
-turned on,toggled_state(Noun,power,on)
+on,"toggled_state(Noun,power,on)"
+turned on,"toggled_state(Noun,power,on)"

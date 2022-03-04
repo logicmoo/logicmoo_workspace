@@ -98,7 +98,7 @@ def_der(_,Goal) :-
         Goal.
 
 dprolog_treat_as_primitive(kind_of(_,_)).
-dprolog_treat_as_primitive(is_a(_,_)).
+dprolog_treat_as_primitive(iz_a(_,_)).
 dprolog_treat_as_primitive(true_after(_,_)).
 dprolog_treat_as_primitive(Goal) :-
    predicate_property(Goal, built_in).

@@ -9,15 +9,15 @@
 %%%
 :- style_check(-discontiguous).
 
-:- multifile(closed/1).
+:- multifile(closed_word_naf/1).
 
 :- public truth_value/2, admitted_truth_value/3,
    know_true/1, know_false/1,
-   closed/1,
+   closed_word_naf/1,
    thinks/2, knows_if/2.
 :- external know_whether/1, pretend_truth_value/3.
 :- dynamic know_property/3, know_relation/3,
-   know_about_kind/1, closed/1.
+   know_about_kind/1, closed_word_naf/1.
 :- external believes/2, knows/2, knows_value/2.
 
 thinks($me, Proposition) :-
@@ -87,15 +87,15 @@ determine_truth_value(P, false) :-
    informed_about($me, P),
    ~P.
 determine_truth_value(P, false) :-
-   closed(P),
+   closed_word_naf(P),
    informed_about($me, P),
    \+ P.
 determine_truth_value(P, unknown) :-
-   \+ closed(P),
+   \+ closed_word_naf(P),
    \+ P,
    \+ ~P.
 
-closed(is_a(_,_)).
+closed_word_naf(iz_a(_,_)).
 
 %% know_true(:Sentence)
 %  This character knows that Sentence is true.
@@ -126,7 +126,7 @@ know_false(~P) :-
    know_true(P).
 know_false(P) :-
    informed_about($me, P),
-   (~P ; (closed(P), \+ P)).
+   (~P ; (closed_word_naf(P), \+ P)).
 
 %%%%%%%%%%%%%%%%%%%%%% OLD CODE %%%%%%%%%%%%%%%%%%%%%%%%
 % truth_value(P, unknown) :-
@@ -139,8 +139,8 @@ know_false(P) :-
 
 know_whether(_) :-
    $global_root/configuration/omniscent_characters.
-know_whether(is_a(_, entity)).
-know_whether(is_a(Object, _Kind)) :-
+know_whether(iz_a(_, entity)).
+know_whether(iz_a(Object, _Kind)) :-
    !,
    know_about_object(Object).
 
@@ -167,7 +167,7 @@ know_property(_Property, Object, _Value) :-
 
 know_about_object(Object) :-
    atomic(Object),
-   is_a(Object, Kind),
+   iz_a(Object, Kind),
    know_about_kind(Kind).
 
 %% pretend_truth_value(+Listener, :P, ?TValue)

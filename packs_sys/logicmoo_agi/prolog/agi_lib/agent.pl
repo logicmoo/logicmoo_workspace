@@ -1,4 +1,18 @@
 
+:- setup_call_cleanup('$current_typein_module'(TIM), 
+                      setup_call_cleanup('$current_source_module'(SIM), 
+                          ensure_loaded('/opt/logicmoo_workspace/packs_xtra/logicmoo_chat/npc/agent.pl'),
+                          '$set_source_module'(SIM)),
+                      '$set_typein_module'(TIM)).
+
+end_of_file.
+
+
+end_of_file.
+
+
+end_of_file.
+
 %:-module(agent,[]).
 
 :- use_module(library(pfc_lib)).

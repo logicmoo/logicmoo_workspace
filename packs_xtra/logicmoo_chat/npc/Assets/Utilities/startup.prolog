@@ -17,7 +17,7 @@
 %  it's allowed to process the row.  Otherwise the RowData is
 %  asserted into the KB as a fact.
 
-load_csv_row(Row, Assertion):- unnumbervars(Assertion,AssertionU),!,load_csv_row0(Row, AssertionU).
+load_csv_row(Row, Assertion):- unnumbervars(Assertion,AssertionU),!,load_csv_row0(Row, AssertionU),!.
 load_csv_row0(Row, Assertion) :-
    load_special_csv_row(Row, Assertion), assertz_if_new(Assertion),!.
 load_csv_row0(_, Assertion) :-

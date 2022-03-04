@@ -1,8 +1,11 @@
 
 %:- module(lmchat,[]).
 
-:- module(baseKB).
-:- '$set_source_module'(baseKB).
+:- clause(unity_module_name(_),_) -> true ; prolog_load_context(module,M),asserta(unity_module_name(M)).
+:- use_module(library(logicmoo_common)).
+%:- use_module(library(pfc_lib)).
+:- style_check(- discontiguous).  
+:- unity_module_name(M), module(M),'$set_source_module'(M).
 
 % use_module(library('../ext/lmchat/Assets/logicmoo_lmchat')).
 :- use_module(library(logicmoo_utils)).
@@ -239,6 +242,7 @@ process_kind_hierarchy:- log(todo(process_kind_hierarchy)).
   unity_module_name(M),add_history(module(M)).
 
 gen_all:- between(1,6,L),length(S,L),utterance(X,S,[]),print_tree_with_final(S=X,'.\n\n'),fail.
+:- add_history(gen_all).
 :- add_history(gen_all).
 :- fixup_exports.
 

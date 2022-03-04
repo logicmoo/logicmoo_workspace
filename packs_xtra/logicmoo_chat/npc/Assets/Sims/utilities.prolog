@@ -27,7 +27,7 @@ register_prop(Prop, Kind, Adjectives) :-
    ensurez(prop(Prop)),
    ensurez(declare_kind(Prop, Kind)),
    forall(member(A, Adjectives), ensurez([A, Prop])),
-   forall(is_a(Prop, K),
+   forall(iz_a(Prop, K),
 	  ignore(initialize_prop(Prop, K))).
 
 register_door(Door) :-
@@ -72,7 +72,7 @@ nearest(GameObject, Constraint) :-
 
 elroot(GameObject, Root) :-
    component_of_gameobject_with_type(KB, GameObject, $'KB'),
-   Root is KB.'KnowledgeBase'.'ELRoot' .
+   unity_call(Root = KB.'KnowledgeBase'.'ELRoot') .
 
 :- public present/1.
 
@@ -81,13 +81,14 @@ elroot(GameObject, Root) :-
 present(X) :-
    is_class(X, $'GameObject'),
    ( component_of_gameobject_with_type(C, X, $'PhysicalObject') ->
-        C.'Exists'
+        unity_call(C,'Exists')
         ;
         true ).
+
 ~present(X) :-
    is_class(X, $'GameObject'),
    component_of_gameobject_with_type(C, X, $'PhysicalObject'),
-   \+ C.'Exists'.
+   \+ unity_call(C,'Exists').
 
 :- public true_location/2.
 
@@ -111,7 +112,7 @@ force_move(GameObject, Container) :-
 %% existing(*Kind, ?GameObject)
 %  GameObject is an undestroyed instance of Kind
 existing(Kind, Object) :-
-   is_a(Object, Kind),
+   iz_a(Object, Kind),
    present(Object).
 
 %% deactivate(+Character)
@@ -132,13 +133,13 @@ destroy(GameObject) :-
 
 %% away(?X)
 %  X is a away (nonexisting) person.
-away(X) :- is_a(X, person), ~present(X).
-~away(X) :- is_a(X, person), present(X).
+away(X) :- iz_a(X, person), ~present(X).
+~away(X) :- iz_a(X, person), present(X).
 
 %% here(?X)
 %  X is a living (undestroyed) person
-here(X) :- is_a(X, person), present(X).
-~here(X) :- is_a(X, person), ~present(X).
+here(X) :- iz_a(X, person), present(X).
+~here(X) :- iz_a(X, person), ~present(X).
 
 %% docked_with(?GameObject)
 %  The character is currently docked with GameObject or its me-level container.
@@ -162,11 +163,11 @@ after_time(Time) :-
 hidden(X) :-
    is_class(X, $'GameObject'),
    component_of_gameobject_with_type(PhysicalObject, X, $'PhysicalObject'),
-   PhysicalObject.'IsHidden'.
+   unity_call(PhysicalObject.'IsHidden').
 
 reveal(X) :-
    component_of_gameobject_with_type(PhysicalObject, X, $'PhysicalObject'),
-   PhysicalObject.'SetHidden'(false).
+   unity_call(PhysicalObject.'SetHidden'(false)).
 
 hidden_contents(Container, HiddenObject) :-
    parent_of_gameobject(HiddenObject, Container),

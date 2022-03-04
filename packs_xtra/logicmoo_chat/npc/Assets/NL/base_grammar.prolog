@@ -36,17 +36,17 @@ bind_discourse_variables( (X, Y)) :-
    !,
    bind_discourse_variables(X),
    bind_discourse_variables(Y).
-bind_discourse_variables(is_a(Var, Kind)) :-
+bind_discourse_variables(iz_a(Var, Kind)) :-
    !,
    must_getvar(discourse_variables,DV),
-   bind(discourse_variables, [is_a(Var, Kind) | DV]).
+   bind(discourse_variables, [iz_a(Var, Kind) | DV]).
 bind_discourse_variables(_).
 
 %% discourse_variable_type(Var, Kind)
-%  Var is bound in $discourse_variables using is_a(Var,Kind).
+%  Var is bound in $discourse_variables using iz_a(Var,Kind).
 discourse_variable_type(Var, Kind) :-
     must_getvar(discourse_variables,DV),
-   member(is_a(Var, Kind), DV).
+   member(iz_a(Var, Kind), DV).
 
 %% bound_discourse_variable(Var)
 %  Var is an uninstantiated variable that is bound to a type in $discourse_variables.
@@ -76,12 +76,12 @@ content_clause(ComplementLF, DeclarativePredicate, InterrogativePredicate, Predi
    complementizer(DeclarativePredicate, InterrogativePredicate, Predicate),
    { Predicate \= null },
    s(ComplementLF, indicative, affirmative, present, simple).
-content_clause((Wh:(S, is_a(Wh, Kind))), _, InterrogativePredicate, InterrogativePredicate) -->
+content_clause((Wh:(S, iz_a(Wh, Kind))), _, InterrogativePredicate, InterrogativePredicate) -->
    { InterrogativePredicate \= null },
    whpron(Kind),
    np((NP^S1)^S, subject, Agreement, nogap, nogap),
    vp(base, X^X, NP^S1, _Tense, Agreement, np(Wh)).
-content_clause(Object:(be(Subject, Object), is_a(Subject, Kind)), _, InterrogativePredicate, InterrogativePredicate) -->
+content_clause(Object:(be(Subject, Object), iz_a(Subject, Kind)), _, InterrogativePredicate, InterrogativePredicate) -->
    { InterrogativePredicate \= null },
    whpron(Kind),
    np((Subject^S)^S, subject, Agreement, nogap, nogap),
@@ -140,7 +140,7 @@ s(S, indicative, Polarity, Tense, simple) -->
    ap(Noun^S).
 
 % NP is [not] KIND
-s(is_a(Noun, Kind), indicative, Polarity, Tense, simple) -->
+s(iz_a(Noun, Kind), indicative, Polarity, Tense, simple) -->
    np((Noun^_)^_, subject, Agreement, nogap, nogap),
    aux_be(Tense, Agreement),
    opt_not(Polarity),
@@ -161,7 +161,7 @@ s(contained_in(S, Container), indicative, Polarity, Tense, simple) -->
    opt_not(Polarity),
    [in],
    np((Container^_)^_, object, _, nogap, nogap),
-   { is_a(Container, enclosing_container) }.
+   { iz_a(Container, enclosing_container) }.
 
 % NP is [not] on NP
 s(contained_in(S, Container), indicative, Polarity, Tense, simple) -->
@@ -170,7 +170,7 @@ s(contained_in(S, Container), indicative, Polarity, Tense, simple) -->
    opt_not(Polarity),
    [on],
    np((Container^_)^_, object, _, nogap, nogap),
-   { is_a(Container, work_surface) }.
+   { iz_a(Container, work_surface) }.
 
 % Character has  NP
 s(contained_in(Object, Character), indicative, Polarity, Tense, simple) -->
@@ -249,7 +249,7 @@ inverted_sentence(S, Polarity, Tense, Aspect) -->
    vp(Form, Modality, NP^S1, Tense, Agreement, nogap).
 
 % is NP a KIND?
-s(is_a(Noun, Kind), interrogative, affirmative, Tense, simple) -->
+s(iz_a(Noun, Kind), interrogative, affirmative, Tense, simple) -->
    aux_be(Tense, Agreement),
    np((Noun^_)^_, subject, Agreement, nogap, nogap),
    [a],
@@ -259,12 +259,12 @@ s(is_a(Noun, Kind), interrogative, affirmative, Tense, simple) -->
 
 % This seems redundant with the "questions about the subject" rule below.
 % % What Verbs?
-% s((Wh:(S, is_a(Wh, Kind))), interrogative, affirmative, Tense, Aspect) -->
+% s((Wh:(S, iz_a(Wh, Kind))), interrogative, affirmative, Tense, Aspect) -->
 %    whpron(Kind),
 %    aux_vp(Wh^S, affirmative, third:singular, Tense, Aspect).
 
 % What did Subject Verb?
-s((Wh:(S, is_a(Wh, Kind))), interrogative, affirmative, Tense, simple) -->
+s((Wh:(S, iz_a(Wh, Kind))), interrogative, affirmative, Tense, simple) -->
    whpron(Kind),
    aux_do(Tense, Agreement),
    np((NP^S1)^S, subject, Agreement, nogap, nogap),
@@ -285,7 +285,7 @@ s(Noun:property_value(Noun, Property, Value),
 :- register_lexical_item(whose).
 
 % NP's Property is [not] PropertyValue
-s((Value:(property_value(Noun, Property, Value), is_a(Value, Kind))),
+s((Value:(property_value(Noun, Property, Value), iz_a(Value, Kind))),
   interrogative, affirmative, Tense, simple) -->
    whpron(Kind),
    copula(simple, Tense, third:singular),
@@ -305,7 +305,7 @@ s(Noun:related(Noun, Relation, Value),
    np((Value^_)^_, subject, Person:Number, nogap, nogap).
 
 % NP's Relation is [not] RelationValue
-s((Value:(related(Noun, Relation, Value), is_a(Value, Kind))),
+s((Value:(related(Noun, Relation, Value), iz_a(Value, Kind))),
   interrogative, affirmative, Tense, simple) -->
    whpron(Kind),
    copula(simple, Tense, third:Number),
@@ -313,13 +313,13 @@ s((Value:(related(Noun, Relation, Value), is_a(Value, Kind))),
    genitive_form_of_relation(Relation, Number).
 
 % Wh-questions about the subject.
-s(Subject:(S, is_a(Subject, Kind)), interrogative, Polarity, Tense, Aspect) -->
+s(Subject:(S, iz_a(Subject, Kind)), interrogative, Polarity, Tense, Aspect) -->
    { lf_subject(S, Subject), var(Subject) },
    whpron(Kind),
    aux_vp(Subject^S, Polarity, _Agreement, Tense, Aspect).
 
 % Wh-questions about the object.
-s(Object:(S, is_a(Object, Kind)), interrogative, Polarity, Tense, Aspect) -->
+s(Object:(S, iz_a(Object, Kind)), interrogative, Polarity, Tense, Aspect) -->
    { lf_subject(S, NP) },
    whpron(Kind),
    aux(nogap, Polarity, Agreement, Tense, Aspect, Form, Modality),
@@ -327,7 +327,7 @@ s(Object:(S, is_a(Object, Kind)), interrogative, Polarity, Tense, Aspect) -->
    vp(Form, Modality, NP^S1, Tense, Agreement, np(Object)).
 
 % Who is/what is Subject
-s(Object:(be(Subject, Object), is_a(Subject, Kind)), interrogative, affirmative, present, simple) -->
+s(Object:(be(Subject, Object), iz_a(Subject, Kind)), interrogative, affirmative, present, simple) -->
    whpron(Kind),
    aux_be(present, Agreement),
    np((Subject^S)^S, subject, Agreement, nogap, nogap).
@@ -362,7 +362,7 @@ s(contained_in(S, Container), interrogative, Polarity, Tense, simple) -->
    opt_not(Polarity),
    [in],
    np((Container^_)^_, object, _, nogap, nogap),
-   { is_a(Container, enclosing_container) }.
+   { iz_a(Container, enclosing_container) }.
 
 s(contained_in(S, Container), interrogative, Polarity, Tense, simple) -->
    aux_be(Tense, Agreement),
@@ -370,7 +370,7 @@ s(contained_in(S, Container), interrogative, Polarity, Tense, simple) -->
    opt_not(Polarity),
    [on],
    np((Container^_)^_, object, _, nogap, nogap),
-   { is_a(Container, work_surface) }.
+   { iz_a(Container, work_surface) }.
 
 % Is Subject a PROPERTYVALUE?
 inverted_sentence(property_value(Subject, Property, Value), Polarity, Tense, simple) -->
@@ -398,7 +398,7 @@ s(Container:contained_in(S, Container), interrogative, Polarity, Tense, simple) 
 :- register_lexical_item(where).
 
 % Who has  NP
-s((Character:contained_in(Object, Character), is_a(Character, person)), interrogative, Polarity, Tense, simple) -->
+s((Character:contained_in(Object, Character), iz_a(Character, person)), interrogative, Polarity, Tense, simple) -->
    [who],
    aux_have(Tense, third:singular),
    opt_not(Polarity),
@@ -412,17 +412,17 @@ s(S:contained_in(S, Container), interrogative, Polarity, Tense, simple) -->
    [on],
    { impose_selectional_constraint(Container, work_surface) },
    np((Container^Ignored)^Ignored, subject, Agreement, nogap, nogap),
-   { is_a(Container, work_surface) }.
+   { iz_a(Container, work_surface) }.
 
 % Who/what is in the X
-s(S:(contained_in(S, Container), is_a(S, Kind)), interrogative, Polarity, Tense, simple) -->
+s(S:(contained_in(S, Container), iz_a(S, Kind)), interrogative, Polarity, Tense, simple) -->
    whpron(Kind),
    aux_be(Tense, Agreement),
    opt_not(Polarity),
    [in],
    { impose_selectional_constraint(Container, enclosing_container) },
    np((Container^Ignored)^Ignored, subject, Agreement, nogap, nogap),
-   { is_a(Container, enclosing_container), \+ character(Container) }.
+   { iz_a(Container, enclosing_container), \+ character(Container) }.
 
 % what does Character have?
 s(S:contained_in(S, Character), interrogative, Polarity, Tense, simple) -->

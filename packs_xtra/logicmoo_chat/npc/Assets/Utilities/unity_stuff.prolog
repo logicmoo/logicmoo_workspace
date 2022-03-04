@@ -58,8 +58,8 @@ toggled_state(Appliance,power,on) :-
 % maybe informed_about(_, powered_on(_)).
 :- multifile(informed_about/2).
 informed_about(_, toggled_state(_,power,on)).
-:- multifile(closed/1).
-closed(toggled_state(_,power,on)).
+:- multifile(closed_word_naf/1).
+closed_word_naf(toggled_state(_,power,on)).
 
 %% on_activation_changed(+Prop, +NewActivation)
 %  Called by C# code when Prop's activation state changes.  Success is ignored.

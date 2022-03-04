@@ -7,7 +7,7 @@ strategy(introduce_person(Person),
 
 strategy(preface_description(Person),
 	 give_name(Person)) :-
-   is_a(Person, person).
+   iz_a(Person, person).
 
 default_strategy(give_name($me),
 	 say_answer(be($me, Name))) :-

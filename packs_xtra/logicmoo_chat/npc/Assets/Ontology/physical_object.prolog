@@ -22,7 +22,7 @@ in_room(PhysicalObject, Room) :-
    room(Room).
 
 top_level_container(Space, Space) :-
-   is_a(Space, architectural_space).
+   iz_a(Space, architectural_space).
 top_level_container(PhysicalObject, Container) :-
    location(PhysicalObject, C),
    (room(C) ->
@@ -49,4 +49,4 @@ contained_in(PhysicalObject, Location) :-
 %% room(?X) is nondet
 %  X is a room.
 room(X) :-
-   is_a(X, room).
+   iz_a(X, room).

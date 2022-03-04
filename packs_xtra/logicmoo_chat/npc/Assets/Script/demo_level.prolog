@@ -21,12 +21,12 @@ objective_description(trip_escaped,
 
 menu_action(X, examine($pc, X)) :-
    \+ character(X),
-   \+ is_a(X, container),
+   \+ iz_a(X, container),
    \+ examined(X).
 
 menu_action(X, search_for($pc, X, _)) :-
    \+ character(X),
-   is_a(X, container),
+   iz_a(X, container),
    \+ /searched/X.
 
 %%%
@@ -100,7 +100,7 @@ beat(search_house,
       leads_to($kavi, ingest($pc)),
       menu_automa_command($kavi):related($pc, member_of, theclub),
       menu_automa_command($kavi):hungry($kavi),
-      menu_automa_command($kavi):is_a($kavi, orange),
+      menu_automa_command($kavi):iz_a($kavi, orange),
       menu_question($kavi):(X:contained_in($macguffin, X)),
       menu_command($kavi):bring($kavi, $pc, $macguffin)
      }).

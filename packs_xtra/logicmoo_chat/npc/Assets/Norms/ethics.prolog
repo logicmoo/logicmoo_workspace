@@ -5,7 +5,7 @@ combinatoric(Action) :=
 
 deactivation(Action) :-
    patient(Action, Person),
-   is_a(Person, person),
+   iz_a(Person, person),
    here(Person),
    true_after(Action, away(Person)).
 

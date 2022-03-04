@@ -1,12 +1,12 @@
 
-%:-module(agent,[]).
-:- module(baseKB).
+:- module(npc,[]).
+% :- module(baseKB).
 
 :- clause(agent_module(_),_) -> true ; prolog_load_context(module,M),asserta(agent_module(M)).
 :- use_module(library(logicmoo_common)).
 %:- use_module(library(pfc_lib)).
 :- style_check(- discontiguous).  
-
+:- agent_module(M), module(M).
 %:- echo_source_file.
 
 same_meanings(UserSaid,UserSaid).
@@ -387,7 +387,11 @@ post_true(UserKnowIWant):-
  IKnowProp = know(Self,PropSent),
  listen_for(small,PropSent).
 
-:- ensure_loaded('Assets/logicmoo_npc_chat').
+:- setup_call_cleanup('$current_typein_module'(TIM), 
+                      setup_call_cleanup('$current_source_module'(SIM), 
+                          ensure_loaded('Assets/logicmoo_npc_chat'),
+                          '$set_source_module'(SIM)),
+                      '$set_typein_module'(TIM)).
 
 /*
  LOCV = letters_of(Prop),

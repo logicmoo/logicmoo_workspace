@@ -24,7 +24,7 @@ automatically_believable(hungry($me),
 			/physiological_states/hungry).
 automatically_believable(thirsty($me),
 			/physiological_states/thirsty).
-automatically_believable(is_a(Thing, Kind),
+automatically_believable(iz_a(Thing, Kind),
 			/remote_control/Thing/kind/Kind).
 automatically_believable(location(Thing, Place),
 			/perception/location/Thing:Place:remote_controled).

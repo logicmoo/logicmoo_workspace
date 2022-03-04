@@ -74,13 +74,13 @@ not_completing(_, In, In) :-
 possessive_np(X, Number) -->
    [your],
    kind_noun(Kind, Number),
-   { is_a(X, Kind),
+   { iz_a(X, Kind),
      owner($addressee, X) }.
 
 possessive_np(X, Number) -->
    [my],
    kind_noun(Kind, Number),
-   { is_a(X, Kind),
+   { iz_a(X, Kind),
      possessive_pronoun_referrent($speaker, Owner),
      owner(Owner, X) }.
 
@@ -88,7 +88,7 @@ possessive_np(X, Number) -->
    proper_name(Owner, singular),
    ['\'', s],
    kind_noun(Kind, Number),
-   { is_a(X, Kind),
+   { iz_a(X, Kind),
      owner(Owner, X) }.
 
 possessive_pronoun_referrent(player, $pc) :- !.
@@ -100,7 +100,7 @@ np(LF, _, third:singular, Gap, Gap) -->
    { var(LF) }, 
    [a],
    kind_noun(Kind, singular),
-   { LF = ((X^S)^(S, is_a(X, Kind))) }.
+   { LF = ((X^S)^(S, iz_a(X, Kind))) }.
 
 % GENERATE ONLY
 % "a KIND" from unbound variables with declared types
@@ -117,7 +117,7 @@ np((X^S)^S, _C, third:singular, Gap, Gap) -->
    { var(X),
      input_from_player},	% filter for parsing
    kind_noun(Kind, singular),
-   { resolve_definite_description(X, is_a(X, Kind)) }.
+   { resolve_definite_description(X, iz_a(X, Kind)) }.
 
 % PARSE ONLY
 % "NOUN" (not grammatical English but common in IF text 
@@ -125,7 +125,7 @@ np((X^S)^S, _C, third:singular, Gap, Gap) -->
    { var(X),
      input_from_player},	% filter for parsing
    kind_noun(Kind, singular),
-   { resolve_definite_description(X, is_a(X, Kind)) }.
+   { resolve_definite_description(X, iz_a(X, Kind)) }.
 
 % GENERATE ONLY
 % "the NOUN"
@@ -153,7 +153,7 @@ np((X^S)^S, _C, third:singular, Gap, Gap) -->
 object_matching_selectional_constraint(X, Kind) :-
    selectional_constraint(X, ConstraintKind),
    kind_of(Kind, ConstraintKind),
-   is_a(X, Kind).
+   iz_a(X, Kind).
 
 % GENERATE ONLY
 % Fixed strings.
@@ -171,10 +171,10 @@ resolve_definite_description(X, Constraint) :-
    nonvar(X),
    !,
    Constraint.
-resolve_definite_description(Object, is_a(Object, Kind)) :-
+resolve_definite_description(Object, iz_a(Object, Kind)) :-
    kind_of(Kind, room),
    !,
-   is_a(Object, Kind).
+   iz_a(Object, Kind).
 resolve_definite_description(Object, Constraint) :-
    % This rule will fail in the test suite b/c the global environment has no gameobject.
    \+ running_tests,

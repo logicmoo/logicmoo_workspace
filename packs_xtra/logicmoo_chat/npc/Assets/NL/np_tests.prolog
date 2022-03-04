@@ -22,7 +22,7 @@ test(generate(np, addressee),
    np_test(player, subject, second:singular, Generated).
 
 test(generate(np, kind),
-     [ setup(bind_discourse_variables(is_a(X, room))),
+     [ setup(bind_discourse_variables(iz_a(X, room))),
        true(Generated == [a, room]) ]) :-
    np_test(X, subject, third:singular, Generated).
 
@@ -77,7 +77,7 @@ test(parse(np, addressee),
    np_test(LF, subject, second:singular, [ you ]).
 
 test(parse(np, kind),
-     [ true(LF = ((X^S)^(S, is_a(X, Room)))) ]) :-
+     [ true(LF = ((X^S)^(S, iz_a(X, Room)))) ]) :-
    np(LF, subject, third:singular, nogap, nogap, [a, Room], []).
 
 test(parse(np, prop),

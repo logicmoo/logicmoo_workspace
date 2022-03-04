@@ -1,5 +1,7 @@
+
+%:- public assertion/2, thaw/1, arguments_unbound/2.
 :- public assertion/2, thaw/1, arguments_unbound/2.
-:- higher_order(assertion(1,0)).
+
 
 %% arguments_unbound(+Structure, -Unbound)
 %  Unbound is a structure with the same functor and arity as Structure,
@@ -8,13 +10,18 @@ arguments_unbound(In, Out) :-
    functor(In, Name, Arity),
    functor(Out, Name, Arity).
 
+:- if( \+ current_predicate(assertion/2)).
 %% term_append(+Structure, +List, -ExtendedStructure) is det
 %  ExtendedStructure is Structure with the extra arguments List appended.
 term_append(Term, AdditionalArgs, ExtendedTerm) :-
    Term =.. List,
    append(List, AdditionalArgs, ExtendedList),
    ExtendedTerm =.. ExtendedList.
+:- endif.
 
+
+:- if( \+ current_predicate(assertion/2)).
+:- higher_order(assertion(1,0)).
 %% assertion(:P. +Message)
 %  Throw exception if P is unprovable.
 assertion(P, _) :- P, !.
@@ -23,9 +30,8 @@ assertion(P, Message) :-
 
 %% thaw(?X)
 %  If X is an unbound variable with a frozen_u goal, wakes the goal.
-thaw(X) :-
-   frozen_u(X, G),
-   G.
+%thaw(X) :- frozen_u(X, G), G.
+:- endif.
 
 
 test_file(freeze(_), "Utilities/freeze_tests").

@@ -46,7 +46,7 @@ strategy(answer_wh(Asker, Answer, contained_in(Object, Answer), Constraint),
 	 answer_wh(Asker, Answer, location(Object, Answer), Constraint)).
 
 strategy(answer_wh(_Asker, Identity, _,
-		   (be(Person, Identity), is_a(Person, person))),
+		   (be(Person, Identity), iz_a(Person, person))),
 	 introduce_person(Person)) :-
    character(Person).
 
@@ -57,12 +57,12 @@ strategy(answer_wh(player, Answer,
 
 strategy(answer_wh(Asker, Identity,
 		   be(Entity, Identity),
-		   (be(Entity, Identity), is_a(Entity, entity))),
+		   (be(Entity, Identity), iz_a(Entity, entity))),
 	 tell_about($me, Asker, Entity)).
 
 strategy(answer_wh(_Asker, Identity,
 		   be(player, Identity),
-		   (be(player, Identity), is_a(player, person))),
+		   (be(player, Identity), iz_a(player, person))),
 	 say_answer(be(player, $me))).
 
 strategy(answer_wh(Asker, Answer, can(Action), Constraint),
@@ -70,7 +70,7 @@ strategy(answer_wh(Asker, Answer, can(Action), Constraint),
 
 default_strategy(answer_can_wh(_Asker, Answer, can(Action), Constraint),
 		 answer_with_list(List, "or", Type,
-				  (can(Action), is_a(Answer, Type)))) :-
+				  (can(Action), iz_a(Answer, Type)))) :-
    possible_types_given_constraint(Answer, Constraint, List).
 
 strategy(answer_can_wh(player, Answer,
@@ -88,10 +88,10 @@ strategy(answer_can_wh(player, Answer,
 % Change what is in X queries from location queries to contained_in queries.
 strategy(answer_wh(Asker,
 		   Answer, location(Answer, Container),
-		   (location(Answer, Container), is_a(Answer, Type))),
+		   (location(Answer, Container), iz_a(Answer, Type))),
 	 answer_wh(Asker,
 		   Answer, location(Answer, Container),
-		   (contained_in(Answer, Container), is_a(Answer, Type)))).
+		   (contained_in(Answer, Container), iz_a(Answer, Type)))).
 
 strategy(answer_wh(_Asker, X, wellbeing(Who, X), _),
 	 say_answer(okay(Who))).

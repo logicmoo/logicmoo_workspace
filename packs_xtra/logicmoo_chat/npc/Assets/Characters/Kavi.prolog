@@ -48,7 +48,7 @@ $kavi::bedroom_empty :-
 % An intruder is a person who isn't an theclub member
 $kavi::intruder(Intruder, Room) :-
    location(Intruder, Room),
-   is_a(Intruder, person),
+   iz_a(Intruder, person),
    \+ related(Intruder, member_of, theclub).
 
 % Eat all intruders
