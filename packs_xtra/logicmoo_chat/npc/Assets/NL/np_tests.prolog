@@ -77,8 +77,8 @@ test(parse(np, addressee),
    np_test(LF, subject, second:singular, [ you ]).
 
 test(parse(np, kind),
-     [ true(LF = ((X^S)^(S, is_a(X, room)))) ]) :-
-   np(LF, subject, third:singular, nogap, nogap, [a, room], []).
+     [ true(LF = ((X^S)^(S, is_a(X, Room)))) ]) :-
+   np(LF, subject, third:singular, nogap, nogap, [a, Room], []).
 
 test(parse(np, prop),
      [ true(LF == $bed),

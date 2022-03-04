@@ -5,8 +5,14 @@
 :- op(1200, xfx, '==>>').
 :- external (==>>)/2.
 
-tell(P) :- expand_ugoal_vars(P,PP), tellg(PP), !.
 
+%assert_if_unew(P):- is_asserted(P),!.
+assert_if_unew(P):- tell(P).
+
+tell(P) :- expand_assert(tell,P,PP), tellg(PP), !.
+
+%tellg(P) :- current_predicate(_,P), \+ \+ call(P), !.
+tellg(P) :- clause_asserted(P), !.
 tellg(P) :- current_predicate(_,P), \+ \+ call(P), !.
 tellg(P) :-
    tell_assertion(P),
@@ -24,5 +30,5 @@ when_added(P, tell(Q)) :-
    (P ==>> Q).
 
 :- external tell_globally/1.
-tell_assertion(Q) :- unnumbervars(Q,P),
+tell_assertion(P) :-
    tell_globally(P) -> assert($global::P) ; assert(P).

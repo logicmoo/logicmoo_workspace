@@ -141,7 +141,7 @@ here(X) :- is_a(X, person), present(X).
 ~here(X) :- is_a(X, person), ~present(X).
 
 %% docked_with(?GameObject)
-%  The character is currently docked with GameObject or its top-level container.
+%  The character is currently docked with GameObject or its me-level container.
 docked_with(WorldObject) :-
    /perception/docked_with:WorldObject,
    !.
@@ -262,7 +262,10 @@ do_all_character_initializations :-
 allocate_UID(UID) :-
     begin(/next_uid:UID,
 	  NextUID is UID+1,
-	  assert(/next_uid:NextUID)).
+    retract(/next_uid:UID),
+	  asserta(/next_uid:NextUID)).
+
+/next_uid:0.
 
 fkey_command(alt-i, "Display inventory") :-
    display_status_screen(inventory).

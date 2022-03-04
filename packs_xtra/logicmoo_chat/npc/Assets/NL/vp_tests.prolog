@@ -9,12 +9,12 @@ test(generate(vp, intransitive),
 
 test(generate(vp, transitive),
      [ true(Generated == [drinks, the, lemonaid]) ]) :-
-   vp_test(drink(x, $beer1), simple, Generated).
+   vp_test(drink(x, $lemonaid), simple, Generated).
 
 test(generate(vp, ditransitive),
      [ true(Generated == [gives, 'Kavi', the, lemonaid]),
        nondet ]) :-
-   vp_test(give(x, $kavi, $beer1), simple, Generated).
+   vp_test(give(x, $kavi, $lemonaid), simple, Generated).
 
 %%
 %% Completion

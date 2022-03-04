@@ -74,7 +74,7 @@ default_strategy(answer_can_wh(_Asker, Answer, can(Action), Constraint),
    possible_types_given_constraint(Answer, Constraint, List).
 
 strategy(answer_can_wh(player, Answer,
-		       can(type(player, Answer)),
+		       can(comm(keystrokes,player, Answer)),
 		       _),
 	 show_status(sample_commands)).
 

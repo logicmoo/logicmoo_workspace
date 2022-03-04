@@ -28,7 +28,7 @@ immediate_kind_of(prop, physical_object).
 immediate_kind_of(furniture, prop).
 immediate_kind_of(sittable, furniture).
 immediate_kind_of(chair, sittable).
-immediate_kind_of(shower, sittable).
+immediate_kind_of(device, sittable).
 immediate_kind_of(sofa, sittable).
 
 immediate_kind_of(layable, furniture).

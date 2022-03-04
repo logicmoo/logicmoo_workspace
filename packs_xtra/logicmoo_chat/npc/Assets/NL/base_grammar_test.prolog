@@ -45,7 +45,7 @@ test(parse(s, adjectival_property),
      Generated, []).
 
 test(parse(s, wh_transitive),
-     [ true(LF = Object:( can(type(Speaker, Object)),
+     [ true(LF = Object:( can(comm(keystrokes,Speaker, Object)),
 			  is_a(Object, entity) )) ]) :-
    unknownvar_value(speaker,Speaker),
    s_test(LF, interrogative, [what, can, 'I', type]).
@@ -54,7 +54,7 @@ test(generate(s, wh_transitive),
      [ true(Generated == [what, can, 'I', type]),
        nondet ]) :-
    unknownvar_value(speaker,Speaker),
-   s_test(X:(can(type(Speaker, X)), is_a(X, entity)), interrogative, Generated).
+   s_test(X:(can(comm(keystrokes,Speaker, X)), is_a(X, entity)), interrogative, Generated).
 
 s_test(LF, Mood, SurfaceForm) :-
    s(LF, Mood, affirmative, present, simple, SurfaceForm, [ ]).

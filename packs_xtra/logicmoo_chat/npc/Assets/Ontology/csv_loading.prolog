@@ -21,31 +21,31 @@ load_special_csv_row(RowNumber,
 	 (([DefPlural | _] = Singular) ; DefPlural = []),
 	 decode_kind_names(PluralSpec, DefPlural, Plural),
 	 assert_kind_nouns(Kind, Singular, Plural),
-	 assert(declare_kind(Kind, kind)),
+	 assert_if_unew(declare_kind(Kind, kind)),
 	 parse_list(Prop=Value, DefaultProperties,
-		    assert(default_value(Kind, Prop, Value)),
+		    assert_if_unew(default_value(Kind, Prop, Value)),
 		    BadElement,
 		    kind_declaration_syntax_error(Kind, row:RowNumber,
 						  default_property_list:BadElement)),
 	 parse_list(Relation:Relatum, DefaultRelations,
-		    assert(default_related(Kind, Relation, Relatum)),
+		    assert_if_unew(default_related(Kind, Relation, Relatum)),
 		    BadElement,
 		    kind_declaration_syntax_error(Kind, row:RowNumber,
 						  default_relation_list:BadElement)),
 	 parse_list(Prop=Value, ClassProperties,
-		    assert(declare_value(Kind, Prop, Value)),
+		    assert_if_unew(declare_value(Kind, Prop, Value)),
 		    BadElement,
 		    kind_declaration_syntax_error(Kind, row:RowNumber,
 						  class_property_list:BadElement)),
 	 parse_list(Relation:Relatum, ClassRelations,
-		    assert(declare_related(Kind, Relation, Relatum)),
+		    assert_if_unew(declare_related(Kind, Relation, Relatum)),
 		    BadElement,
 		    kind_declaration_syntax_error(Kind, row:RowNumber,
 						  class_relation_list:BadElement))).
 
 assert_default_description(_, null).
 assert_default_description(Kind, Description) :-
-   assert(default_value(Kind, description, Description)).
+   assert_if_unew(default_value(Kind, description, Description)).
 
 decode_kind_names([[-]], _, []).
 decode_kind_names([[]], Default, [Default]).
@@ -65,14 +65,14 @@ define_kind(RowNumber, Kind, [ ]) :-
    Kind \= entity,
    throw(error(row:RowNumber:kind_has_no_parents:Kind)).
 define_kind(_, Kind, Parents) :-
-   assert(kind(Kind)),
+   assert_if_unew(kind(Kind)),
    forall(member(P, Parents),
-	  assert(immediate_kind_of(Kind, P))).
+	  assert_if_unew(immediate_kind_of(Kind, P))).
 
 end_csv_loading(kinds) :-
    % Find all the leaf kinds
    forall((kind(K), \+ immediate_kind_of(_, K)),
-	   assert(leaf_kind(K))).
+	   assert_if_unew(leaf_kind(K))).
 
 end_csv_loading(predicate_type) :-
    forall(predicate_type(Type, ArgTypes),
@@ -94,9 +94,9 @@ check_predicate_signature(_Type, ArgTypes) :-
 load_special_csv_row(_RowNumber, properties(Name, Visibility,
 					    SurfaceForm,
 					    ObjectType, ValueType)) :-
-   assert(declare_kind(Name, property)),
-   assert(visibility(Name, Visibility)),
-   assert(property_type(Name, ObjectType, ValueType)),
+   assert_if_unew(declare_kind(Name, property)),
+   assert_if_unew(visibility(Name, Visibility)),
+   assert_if_unew(property_type(Name, ObjectType, ValueType)),
    assert_phrase_rule(property_name(Name), SurfaceForm).
 
 %%
@@ -113,16 +113,16 @@ load_special_csv_row(_RowNumber,
 			       Generalizations,
 			       Inverse,
 			       Symmetric)) :-
-   begin(assert(declare_kind(Name, relation)),
-	 assert(visibility(Name, Visibility)),
-	 assert(relation_type(Name, ObjectType, ValueType)),
+   begin(assert_if_unew(declare_kind(Name, relation)),
+	 assert_if_unew(visibility(Name, Visibility)),
+	 assert_if_unew(relation_type(Name, ObjectType, ValueType)),
 	 assert_copular_form(Name, CopularForm),
 	 assert_genitive_form(Name, singular, SingularForm),
 	 assert_genitive_form(Name, plural, PluralForm),
 	 forall(member(Gen, Generalizations),
-		assert(implies_relation(Name, Gen))),
-	 (Inverse \= null -> assert(inverse_relation(Name, Inverse)) ; true),
-	 (Symmetric \= null -> assert(symmetric(Name)) ; true)).
+		assert_if_unew(implies_relation(Name, Gen))),
+	 (Inverse \= null -> assert_if_unew(inverse_relation(Name, Inverse)) ; true),
+	 (Symmetric \= null -> assert_if_unew(symmetric(Name)) ; true)).
 
 assert_copular_form(_Name, [ ]).
 assert_copular_form(Name, [be | CopularForm]) :-
@@ -147,17 +147,17 @@ load_special_csv_row(_RowNumber,
 			      PropertyList, RelationList)) :-
    assert_description(EntityName, Description),
    forall(member(Kind, KindList),
-	  assert(declare_kind(EntityName, Kind))),
+	  assert_if_unew(declare_kind(EntityName, Kind))),
    forall(member(ProperName, ProperNames),
 	  assert_proper_name(EntityName, ProperName, GramaticalNumber)),
    forall(member(PropertyName=Value, PropertyList),
-	  assert(declare_value(EntityName, PropertyName, Value))),
+	  assert_if_unew(declare_value(EntityName, PropertyName, Value))),
    forall(member(RelationName:Relatum, RelationList),
-	  assert(declare_related(EntityName, RelationName, Relatum))).
+	  assert_if_unew(declare_related(EntityName, RelationName, Relatum))).
 
 assert_description(_, null).
 assert_description(Entity, Description) :-
-   assert(declare_value(Entity, description, Description)).
+   assert_if_unew(declare_value(Entity, description, Description)).
 
 parse_list(Pattern, List, Goal, ListElement, ErrorMessage) :-
    forall(member(ListElement, List),

@@ -6,7 +6,7 @@
 :- public why/1, why_not/1.
 
 %% why(:P)
-%  Prints the top-level rule that is used to prove P.
+%  Prints the me-level rule that is used to prove P.
 why(P) :-
 	clause(P,B),
 	copy_term((P:-B), Rule),

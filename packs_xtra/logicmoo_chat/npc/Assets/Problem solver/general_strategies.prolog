@@ -364,27 +364,27 @@ default_strategy(press($me, _Button),
 %% Turning things on/off
 %%
 
-precondition(turn_on($me, X),
+precondition(switch($me, X, power= on),
 	     ready_to_hand(X)).
-default_strategy(turn_on($me, X),
+default_strategy(switch($me, X, power= on),
 		 call(activate_prop(X))).
 
-precondition(turn_off($me, X),
+precondition(switch($me, X, power= off),
 	     ready_to_hand(X)).
-default_strategy(turn_off($me, X),
+default_strategy(switch($me, X, power= off),
 		 call(deactivate_prop(X))).
 
 %%
 %% Misc mechanical operations
 %%
 
-strategy(operate($me, Shower),
-	 call(operate(Shower))) :-
-   is_a(Shower, shower).
+strategy(operate($me, Device),
+	 call(operate(Device))) :-
+   is_a(Device, device).
 
 :- public use/1.
-operate(Shower) :-
-   forall(contained_in(X, Shower),
+operate(Device) :-
+   forall(contained_in(X, Device),
 	  destroy(X)).
 
 

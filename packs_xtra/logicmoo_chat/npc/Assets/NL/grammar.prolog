@@ -272,8 +272,8 @@ assert_action_functor(Structure) :-
    functor(Structure, Functor, Arity),
    ( action_functor(Functor, Arity) -> true
      ;
-     ( assert(action_functor(Functor, Arity)),
-       assert(precondition(Structure, /perception/nobody_speaking)),
+     ( assert_if_unew(action_functor(Functor, Arity)),
+       assert_if_unew(precondition(Structure, /perception/nobody_speaking)),
        add_conversation_dispatch_clause(Structure) ) ).
 
 add_conversation_dispatch_clause(Structure) :-
@@ -282,7 +282,7 @@ add_conversation_dispatch_clause(Structure) :-
    EventArgs = [Partner, Me | _],
    length(EventArgs, Arity),
    Event =.. [Functor | EventArgs],
-   assert( ( on_event(Event, conversation, C,
+   assert_if_unew( ( on_event(Event, conversation, C,
 		      conversation_handler_task(C, respond_to_dialog_act(Normalized))) :-
 	       C/partner/Partner,
 	       normalize_dialog_act(Event, Normalized)

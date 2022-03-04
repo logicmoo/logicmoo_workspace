@@ -1,5 +1,5 @@
 
-:-if(current_prolog_flag(use_old_code_to,true)).
+%:-if(current_prolog_flag(use_old_code_to,true)).
 
 %%%%
 %%%% A simple (read: lame) implementation of Sims-style needs
@@ -39,7 +39,7 @@ satisfies(social, Character, 100, greet($me, Character), 5) :-
    character(Character),
    Character \= $me.
 satisfies(fun, $radio, 60, say("Listening to the radio"), 10).
-satisfies(sweat, $shower, 100, say("Excuse me; privacy, please?"), 5).
+satisfies(sweat, $device, 100, say("Excuse me; privacy, please?"), 5).
 satisfies(sleep, $bed, 100, say("I really wish I had an animation for happy down on the bed."), 15).
 satisfies(sleep, $sofa, 100, say("That's a comfy looking sofa"), 15).
 satisfies(hygiene, $'bathroom sink', 100, say("Brush brush brush!"), 5).
@@ -200,4 +200,4 @@ force_need_update :-
    rebid_need_destinations(C).
 
 
-:- endif.
+%:- endif.

@@ -25,7 +25,7 @@ test_file(integrity(_), "Ontology/integrity_checks").
 
 %% is_a(?Object, ?Kind)
 %  Object is of kind Kind.
-%  Kinds are simple atoms, and exist in a lattice with entity at the top.
+%  Kinds are simple atoms, and exist in a lattice with entity at the me.
 
 %is_a(Object, entity) :-
 %   var(Object),

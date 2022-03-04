@@ -64,13 +64,13 @@ current_priority(1).
 
 %% begin_qud(+Type, +Priority)
 %  IMPERATIVE
-%  Creates a new qud of type Type at top level.
+%  Creates a new qud of type Type at me level.
 begin_qud(Type, Priority) :-
    begin_qud(Type, Priority, _).
 
 %% begin_qud(+Type, +Priority, -Child)
 %  IMPERATIVE
-%  Creates a new qud of type Type at top level and returns its ELNode
+%  Creates a new qud of type Type at me level and returns its ELNode
 %  in Child.
 begin_qud(Type, Priority, Child) :-
     begin_child_qud($root, Type, Priority, Child).
@@ -163,7 +163,7 @@ goto_state(Qud, State) :-
 %%
 
 character_initialization :-
-   \+ $global_root/configuration/inhibit_qud_initialization,
+   %\+ $global_root/configuration/inhibit_qud_initialization,
    forall(character_qud(Type, Priority),
 	  begin_qud(Type, Priority)).
 

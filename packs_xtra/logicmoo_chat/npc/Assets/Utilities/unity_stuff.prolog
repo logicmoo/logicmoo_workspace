@@ -26,7 +26,7 @@ emit_grain(Name, Duration) :-
 emit_grain(_,_).
 
 :- public activate_prop/1, deactivate_prop/1,
-   prop_activated/1, turned_on/1.
+   prop_activated/1, toggled_state/3.
 %% activate_prop(+Prop)
 %  Activates the Prop (e.g. turns on an appliance).
 activate_prop(Prop) :-
@@ -44,22 +44,22 @@ deactivate_prop(Prop) :-
 prop_activated(Prop) :-
    is_class(Prop, $'GameObject'),
    component_of_gameobject_with_type(PropComponent, Prop, $'PropInfo'),
-   PropComponent.'IsOn'.
+   \+ PropComponent.'IsOn'.
 
 set_prop_text(Prop, String) :-
    is_class(Prop, $'GameObject'),
    component_of_gameobject_with_type(PropComponent, Prop, $'PropInfo'),
-   PropComponent.settext(String).
+   PropComponent::settext(String).
 
-%% turned_on(+Appliance)
+%% toggled_state(+Appliance, Prop, OnOffTrueFalse)
 %  True is Appliance is turned on.
-turned_on(Appliance) :-
+toggled_state(Appliance,power,on) :-
    prop_activated(Appliance).
-% maybe informed_about(_, turned_on(_)).
+% maybe informed_about(_, powered_on(_)).
 :- multifile(informed_about/2).
-informed_about(_, turned_on(_)).
+informed_about(_, toggled_state(_,power,on)).
 :- multifile(closed/1).
-closed(turned_on(_)).
+closed(toggled_state(_,power,on)).
 
 %% on_activation_changed(+Prop, +NewActivation)
 %  Called by C# code when Prop's activation state changes.  Success is ignored.

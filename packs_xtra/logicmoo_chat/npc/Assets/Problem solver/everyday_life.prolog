@@ -7,7 +7,7 @@
 :- style_check(-discontiguous).
 
 character_initialization :-
-   \+ $global_root/configuration/inhibit_qud_initialization,
+  % \+ $global_root/configuration/inhibit_qud_initialization,
    start_task($root, everyday_life, 1, T, [T/repeating_task, T/status:idle]),
    assert(everyday_life_task(T)).
 
@@ -64,7 +64,7 @@ unpack_preamble(Task, Task, null).
 
 %% everyday_life_task(-TaskQud)
 % Returns the everyday_life task of the current character.
-% This means the top-level task called everyday_life, not whatever
+% This means the me-level task called everyday_life, not whatever
 % todo list item it happens to be running right now.
 
 % Defined when the everyday_life qud is created. 
