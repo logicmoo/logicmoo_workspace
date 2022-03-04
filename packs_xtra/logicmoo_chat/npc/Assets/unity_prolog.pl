@@ -35,7 +35,7 @@ string_representation(Term,String):- term_to_string(Term,String).
 
 :- op(399,fx,'~').
 
-%:- op(1000,fx,(get_val)).
+%:- op(1000,fx,(getvar)).
 %:- multifile (/)/1.
 :- multifile  '~' / 1.
 %:- multifile  '::' / 2.
@@ -126,16 +126,18 @@ slash_db(top,X):- !, slash_db(me,X).
 slash_db(me,/(X)):- me_path(Root),slash_db(Root,X).
 slash_db(this,X):- this_path(Root),slash_db(Root,X).
 %slash_db(rel,X):- slash_db(($this)/X).
-%slash_db(me,X):- get_val(me,Me),extend_path(Me,X,Full),slash_db(full,Full).
+%slash_db(me,X):- getvar(me,Me),extend_path(Me,X,Full),slash_db(full,Full).
 
 me_path(($global) / ($me) ).
 this_path( ($global)/($me)/this ).
 
 :- thread_local(t_l:(unity_this_path/1)).
-'::'(C,G):- dv(C,N),get_val(N,V),!,'::'(V,G).
+'::'(C,G):- dv(C,N),getvar(N,V),!,'::'(V,G).
 '::'(V,G):- var(V),get_uctx_equals(V),!,'::'(V,G).
 '::'(Me=Foo,G):- !, locally(b_setval(Me,Foo),'::'($me,G)).
-'::'(C,G):- get_uctx_equals(P), trans_p_to_v(P,C,V),
+'::'(parent,G):- get_uctx_equals(P), trans_p_to_v(P,up,V),!,
+  locally(t_l:unity_this_path(V), locally(nb_setval(this,V), begin(G))).
+'::'(C,G):- get_uctx_equals(P), trans_p_to_v(P,C,V),!,
   locally(t_l:unity_this_path(V), locally(nb_setval(this,V), begin(G))).
 
 %'::'(C,G):- t_l:unity_this_path(C),  locally(t_l:unity_this_path(C,P), begin(G)).
@@ -151,25 +153,25 @@ ephemerally(A):- write(ephemerally(A)),asserta(A,C),undo(erase(C)).
 
 if_uctx_equals(X):-get_uctx_equals(M),!,M=X. 
 get_uctx_equals(X):- t_l:unity_this_path(X),!.
-get_uctx_equals([X]):- get_val(root,X).
+get_uctx_equals([X]):- getvar(root,X).
 
 
 calc_to_hashmap(I):- calc_to_hashmap(I,O),print_tree(hasmap_was(I,O)).
 calc_to_hashmap(/Nextuid,O):- !, me_path(Me),extend_path(Me,Nextuid,O).
 calc_to_hashmap(Nextuid,O):- !, if_uctx_equals(This),extend_path(This,Nextuid,O).
 /*
-calc_to_hashmap(Nextuid:Var,O,Var):- !, get_val(this,Y),extend_path(Y,Nextuid,O).
-calc_to_hashmap(/Nextuid,O,t):- !, get_val(me,Y),extend_path(Y,Nextuid,O).
-calc_to_hashmap(Nextuid,O,r):- !, get_val(this,Y),extend_path(Y,Nextuid,O).
+calc_to_hashmap(Nextuid:Var,O,Var):- !, getvar(this,Y),extend_path(Y,Nextuid,O).
+calc_to_hashmap(/Nextuid,O,t):- !, getvar(me,Y),extend_path(Y,Nextuid,O).
+calc_to_hashmap(Nextuid,O,r):- !, getvar(this,Y),extend_path(Y,Nextuid,O).
 */
 extend_path(X,Y,'/'(X,Y)).
 
 /*
-calc_full_slash_db(/X,X,Full):- !, get_val(me,Y),extend_path(Y,X,Full).
+calc_full_slash_db(/X,X,Full):- !, getvar(me,Y),extend_path(Y,X,Full).
 calc_full_slash_db(M'::'From,X,Full):- '::'(M,calc_full_slash_db(From,X,Full)).
-calc_full_slash_db(From,X,Full):- get_val(this,Y),extend_path(From,X,Full).
-calc_full_slash_db(me,X,Full):- get_val(me,Y),extend_path(Y,X,Full).
-calc_full_slash_db(rel,X,Full):- get_val(this,Y),extend_path(Y,X,Full).
+calc_full_slash_db(From,X,Full):- getvar(this,Y),extend_path(From,X,Full).
+calc_full_slash_db(me,X,Full):- getvar(me,Y),extend_path(Y,X,Full).
+calc_full_slash_db(rel,X,Full):- getvar(this,Y),extend_path(Y,X,Full).
 */
 expand_slash(X,Y):- slash_exp(X,Y),!.
 expand_slash(X,X).
@@ -201,15 +203,15 @@ functor_expansion(F,F).
 
 dv(E,V):-compound(E), (E= ($(V))), nonvar(V), V \== global. %, V \== this, V \== me.
 %uclause_expansion_inner(hb,H,B,HHBB):- sub_uterm(E,H),dv(E,V),usubst(H,E,Var,HH),!,
-%  conjoin(get_val(V,Var),B,BB),uclause_expansion_inner(hb,HH,BB,HHBB).
+%  conjoin(getvar(V,Var),B,BB),uclause_expansion_inner(hb,HH,BB,HHBB).
 %uclause_expansion_inner(hb,H,B,HHBB):- sub_uterm(E,B),dv(E,V),usubst(B,E,Var,BB),!,
-%  conjoin(get_val(V,Var),BB,BBB),uclause_expansion_inner(hb,H,BBB,HHBB).
+%  conjoin(getvar(V,Var),BB,BBB),uclause_expansion_inner(hb,H,BBB,HHBB).
 uclause_expansion_inner(hb,H,B,HB):-  as_clause_hb(H,B,HB).
 
 uclause_expansion_inner(dcg,H,B,HHBB):- sub_term(E,H),dv(E,V),subst(H,E,Var,HH),!,
-  conjoin({get_val(V,Var)},B,BB),uclause_expansion_inner(dcg,HH,BB,HHBB).
+  conjoin({getvar(V,Var)},B,BB),uclause_expansion_inner(dcg,HH,BB,HHBB).
 uclause_expansion_inner(dcg,H,B,HHBB):- sub_uterm(E,B),dv(E,V),subst(B,E,Var,BB),!,
-  conjoin({get_val(V,Var)},BB,BBB),uclause_expansion_inner(dcg,H,BBB,HHBB).
+  conjoin({getvar(V,Var)},BB,BBB),uclause_expansion_inner(dcg,H,BBB,HHBB).
 uclause_expansion_inner(dcg,H,B,H-->B).
 
 uclause_expansion(T,H,B,HHBB):- uclause_expansion_inner(T,H,B,HB),expand_slash(HB,HHBB).
@@ -234,7 +236,7 @@ uctx_corrections(H,H):- \+ compound(H), !.
 uctx_corrections(H:-B,HB):- !, as_clause_hb(H,B,HB).
 uctx_corrections(H,CH):- as_clause_head(H,CH).
 
-as_clause_hb('::'($Ctx,H),B,((H:- ( get_val(Ctx,V), if_uctx_equals(V), '::'(V,BB))))):- nonvar(Ctx),!, expand_ugoal(B,BB).
+as_clause_hb('::'($Ctx,H),B,((H:- ( getvar(Ctx,V), if_uctx_equals(V), '::'(V,BB))))):- nonvar(Ctx),!, expand_ugoal(B,BB).
 as_clause_hb('::'(Ctx,H),B,((H:- ( if_uctx_equals(Ctx), '::'(Ctx,BB))))):-  expand_ugoal(B,BB).
 %as_clause_hb(H,B,Out):- B == true,!,as_clause_head(H,Out).
 %as_clause_hb(H,B,(:-BB)):- H==goal,!, expand_ugoal(B,BB).
@@ -269,8 +271,8 @@ ugoal_expansion_3(?,A,A):- shouldnt_need_expansion(A).
 ugoal_expansion_3(_,X,Y):- expand_ugoal(X,Y).
 
 expand_ugoal(C,O):- no_more_expansion(h,C,O),!.
-expand_ugoal($X,(get_val(X,G),call(G))):-atomic(X),debug_var(X,G).
-expand_ugoal('::'($X,G),(get_val(X,V),'::'(V,G))):-atomic(X),debug_var(X,V).
+expand_ugoal($X,(getvar(X,G),call(G))):-atomic(X),debug_var(X,G).
+expand_ugoal('::'($X,G),(getvar(X,V),'::'(V,G))):-atomic(X),debug_var(X,V).
 expand_ugoal(X,Y):- expand_slash(X,XX), ugoal_expansion(XX,XY),!,expand_slash(XY,Y).
 expand_ugoal(X,Y):- expand_slash(X,Y).
 
@@ -318,7 +320,7 @@ ugoal_expansion(begin(H),begin(HH)):- !, expand_ugoal(H,HH).
 ugoal_expansion(X,Y):- maybe_into_slash_db(X,YY),X\==YY,expand_ugoal(YY,Y).
 
 ugoal_expansion(B,BBBB):- sub_uterm(E,B),dv(E,V),subst(B,E,Var,BB),!,
-  conjoin(get_val(V,Var),BB,BBB),expand_ugoal(BBB,BBBB).
+  conjoin(getvar(V,Var),BB,BBB),expand_ugoal(BBB,BBBB).
 
 %ugoal_expansion(X,_):- \+ compound(X),!,fail.
 %ugoal_expansion(Var,unity_call(Var)):- var(Var),!.
@@ -342,8 +344,8 @@ unity_db_call(F,Args):- maplist(expand_uterm,Args,EArgs),!,apply(F,EArgs).
 
 get_var_expansions(_,O,O,true):- \+ compound(O),!.
 %get_var_expansions(h,'::'(C,T),'::'(CO,T),VarsOut):- get_var_expansions(h,C,CO,VarsOut).
-get_var_expansions(h,H,O,VarsOut):- compound(H), sub_term(E,H),dv(E,V),subst(H,E,Var,HH),!,get_var_expansions(h,HH,O,SVars),debug_var(V,Var),conjoin(get_val(V,Var),SVars,VarsOut).
-get_var_expansions(b,B,O,VarsOut):- compound(B), sub_uterm(E,B),dv(E,V),subst(B,E,Var,BB),!,get_var_expansions(h,BB,O,SVars),debug_var(V,Var),conjoin(get_val(V,Var),SVars,VarsOut).
+get_var_expansions(h,H,O,VarsOut):- compound(H), sub_term(E,H),dv(E,V),subst(H,E,Var,HH),!,get_var_expansions(h,HH,O,SVars),debug_var(V,Var),conjoin(getvar(V,Var),SVars,VarsOut).
+get_var_expansions(b,B,O,VarsOut):- compound(B), sub_uterm(E,B),dv(E,V),subst(B,E,Var,BB),!,get_var_expansions(h,BB,O,SVars),debug_var(V,Var),conjoin(getvar(V,Var),SVars,VarsOut).
 get_var_expansions(_,O,O,true).
 
 no_more_expansion(_,C,C):- \+ compound(C),!.
@@ -409,7 +411,7 @@ indexical(X):- atom(X),!,unknownvar_value(X,V),bind(X,V).
 indexical(X):- %compound(X),!, 
   compound_name_arguments(X,_,AX), maplist(indexical,AX).
 
-indexical_named(X,Y):- get_val(X,Y).
+indexical_named(X,Y):- getvar(X,Y).
 
 /*
             DeclareIndexical("this",
@@ -439,29 +441,29 @@ indexical_named(X,Y):- get_val(X,Y).
             DeclareIndexical("now", context => Time.time);
 */
 
-'must_getvar'(Var,Value):- get_val(Var,V),!,V=Value.
+'must_getvar'(Var,Value):- getvar(Var,V),!,V=Value.
 '$'(Var,Value):- number(Value),!,Var= Value.
 '$'(Value,Var):- number(Value),!,Var= Value.
-'$'(Var,Value):- get_val(Var,Value).
-%'must_getvar'(Var,Value):- get_val(Var,Value).
+'$'(Var,Value):- getvar(Var,Value).
+%'must_getvar'(Var,Value):- getvar(Var,Value).
 
 only_getvar(N,V):- var(N),!,throw(var_only_getvar(N,V)).
-only_getvar(N,V):- nonvar(V),!,get_val(N,Y),!,V=Y.
-only_getvar(now,Value):- !, get_time(Value).
-only_getvar(parent,Parent):- get_val(this,Value),Value=[_|Parent].
+only_getvar(N,V):- nonvar(V),!,getvar(N,Y),!,V=Y.
+only_getvar(now,Value):- !, now(Value).
+only_getvar(parent,Parent):- getvar(this,Value),Value=[_|Parent].
 only_getvar(this,Value):- t_l:unity_this_path(Value),!.
-only_getvar(this,Value):- !, get_val(me,Value).
+only_getvar(this,Value):- !, getvar(me,Value),listify(me,Value).
 
 only_getvar(X,Y):- nb_current(X,Y),!.
-only_getvar(me,Value):- !, get_val(root,Value).
-only_getvar(root,Value):- !, get_val(global,Value).
-%get_val(me,Y):- !, Y = me.
-%get_val(X,Y):- log(warn(get_val(X,Y))),fail.
+only_getvar(me,Value):- !, getvar(root,Value).
+only_getvar(root,Value):- !, getvar(global,Value).
+%getvar(me,Y):- !, Y = me.
+%getvar(X,Y):- log(warn(getvar(X,Y))),fail.
 %only_getvar(X,Y):- number(X),!,Y=X.
 %only_getvar(X,Y):- unknownvar_value(X,Y),!.
 
-get_val(X,Y):- only_getvar(X,Y),!.
-get_val(X,Y):- unknownvar_value(X,Y),!.
+getvar(X,Y):- only_getvar(X,Y),!.
+getvar(X,Y):- unknownvar_value(X,Y),!.
 
 dont_udecend_into('::'(_,_)).
 %dont_udecend_into(slash_db(_,_)).
@@ -492,7 +494,7 @@ usubst2st(_X, _Sk, L, L).
 */
 
 % for DCGs
-get_val(X,Y,A,A):- get_val(X,Y).
+getvar(X,Y,A,A):- getvar(X,Y).
 % unknownvar_value(X,V):- atom(X),!,atom_concat('',X,V).
 unknownvar_value(X,V):- atom(X),!,atom_concat('unknown_',X,V).
 unknownvar_value(X,'#'(X)).
