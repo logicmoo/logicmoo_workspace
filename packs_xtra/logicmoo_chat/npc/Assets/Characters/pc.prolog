@@ -7,7 +7,8 @@ $pc/player_character.
 % Monitor goals quickly
 $pc/parameters/poll_time:1.
 
-:- ((unless(proper_name($pc, _, _X, []),
+:- trace,
+  ((unless(proper_name($pc, _, _X, []),
 	  assert_proper_name($pc, ['Betsy'], singular)),
    unless(declare_value($pc, gender, _),
 	  assert($global::declare_value($pc, gender, female))),

@@ -27,10 +27,12 @@ term_append(Term, AdditionalArgs, ExtendedTerm) :-
 assertion(P, _) :- P, !.
 assertion(P, Message) :-
    throw(error(assertion_failed(Message, P), null)).
+:- endif.
 
+:- if( \+ current_predicate(thaw/1)).
 %% thaw(?X)
 %  If X is an unbound variable with a frozen_u goal, wakes the goal.
-%thaw(X) :- frozen_u(X, G), G.
+thaw(X) :- frozen_u(X, G), G.
 :- endif.
 
 

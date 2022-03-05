@@ -241,9 +241,9 @@ process_kind_hierarchy:- log(todo(process_kind_hierarchy)).
 :- 
   unity_module_name(M),add_history(module(M)).
 
+:- getvar(pc,PC),bind(me,PC).
+
 gen_all:- between(1,6,L),length(S,L),utterance(X,S,[]),print_tree_with_final(S=X,'.\n\n'),fail.
 :- add_history(gen_all).
-:- add_history(gen_all).
+:- add_history(run_utests).
 :- fixup_exports.
-
-:- run_utests.

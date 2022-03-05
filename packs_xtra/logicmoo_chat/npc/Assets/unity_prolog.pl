@@ -9,9 +9,11 @@ make_pred_narity_call_list(P,A):-
   Head=..[P|L],Body=..[P,L],
   assert_if_new((Head:-Body)).
 
-begin(G):- is_list(G),!,maplist(begin,G).
-begin(G):- expand_ugoal(G,GG), GG\==G,!, ansicall(fushia, print_clexp(call,G,GG)),call(GG).
-begin(G):- call(G).
+begin(G):- locally(t_l:pretend_source_file_expansion(false),unity_begin(G)).
+
+unity_begin(G):- is_list(G),!,maplist(unity_begin,G).
+unity_begin(G):- unity_call(G).
+
 
 :- forall(between(2,11,A), make_pred_narity_call_list(begin,A)).
 displayln(X):- is_list(X),!,maplist(write,X),nl.
@@ -40,8 +42,8 @@ string_representation(Term,String):- term_to_string(Term,String).
 :- multifile  '~' / 1.
 %:- multifile  '::' / 2.
 
-:- multifile slash_db/2.
-:- dynamic slash_db/2.
+:- multifile uslash/2.
+:- dynamic uslash/2.
 
 :- discontiguous (':=')/2.
 :- discontiguous  '~' / 1.
@@ -64,24 +66,29 @@ db_pred(assertz_if_new).
 db_pred(retract_all).
 
 
-% ugoal_expansion(X=Y,unity_call(X=Y)).
 :- meta_predicate(system:unity_call(:)).
-system:unity_call(M:G):- G=..[F|Args],unity_apply(M:F,Args).
+system:unity_call(M:G):- 
+  expand_ugoal(G,GG), GG\==G,!, ansicall(cyan, (print_clexp(call,G,GG))),!, M:call(GG).
+system:unity_call(M:G):- !, call(M:G).
+%system:unity_call(M:G):- G=..[F|Args],unity_apply(M:F,Args).
+%ugoal_expansion(B,BBB):- once(uclause_expansion_inner(hb,goal,B,goal:-BB)),B\==BB,!,expand_goal(BB,BBB).
+unity_db_call(F,Args):- maplist(expand_uterm,Args,EArgs),!,unity_apply(F,EArgs).
+
 
 :- meta_predicate(system:unity_apply(:,+)).
 system:unity_apply(F,[Arg]):- once(convert_assert(Arg,Slash)),Arg\==Slash,!, unity_apply(F,[Slash]).
 system:unity_apply(M:(public),[Arg]):- !, system:unity_apply(M:(external),[Arg]).
-system:unity_apply(F,Args):- \+ ground(Args), log(unity_apply(F,Args)), fail.
+%system:unity_apply(F,Args):- \+ ground(Args), log(unity_apply(F,Args)), fail.
 system:unity_apply(F,Args):- apply(F,Args).
 
-expand_assert(W,I,O):- convert_assert(I,O),I\==O,ansicall(fushia, print_clexp(W,I,O)),!.
+expand_assert(W,I,O):-expand_slash(I,II), convert_assert(II,O),II\==O,ansicall(fushia, print_clexp(W,I,O)),!.
 expand_assert(_,O,O).
 
 convert_assert(G,G):- var(G),!.
 convert_assert(B,O):- get_var_expansions(h,B,M,G),G\==true,!,call(G),convert_assert(M,O).
 convert_assert(Arg,Slash):-  expand_uterm(Arg,Slash),!.
 %convert_assert('::'(G,Arg),Slash):- G == $global,!, convert_assert(Arg,Slash).
-%convert_assert(X,X):- \+ \+ X = slash_db(_,_),!.
+%convert_assert(X,X):- \+ \+ X = uslash(_,_),!.
 convert_assert(Arg,Slash):-  maybe_into_slash_db(Arg,Slash),!.
 convert_assert(X,Y):- compound(X),
   compound_name_arguments(X,F,AX),
@@ -92,14 +99,14 @@ convert_assert(X,X).
 :- system:import(convert_assert/2).
 
 maybe_into_slash_db(C,_):- \+ compound(C),!,fail.
-maybe_into_slash_db(slash_db(X,Y),slash_db(X,Y)):- !.
+maybe_into_slash_db(uslash(X,Y),uslash(X,Y)):- !.
 %maybe_into_slash_db(F/A,_):- atom(F),integer(A), !,fail.
 maybe_into_slash_db(F/_,_):- \+ slash_arg(F),!,fail.
 maybe_into_slash_db(_/A,_):- \+ slash_arg(A),!,fail.
-%maybe_into_slash_db(M'::' /(A),slash_db(M,/(A))).
-%maybe_into_slash_db(M'::' (A),slash_db(M,(A))).
-maybe_into_slash_db(C,slash_db(me ,C)):- \+ \+ (copy_term_nat(C,Nat),(numbervars(Nat,0,_,[attvar(skip)]),is_slashed_g(Nat))).
-maybe_into_slash_db(C,slash_db(rel,C)):- \+ \+ (copy_term_nat(C,Nat),(numbervars(Nat,0,_,[attvar(skip)]),is_slashed(Nat))).
+%maybe_into_slash_db(M'::' /(A),uslash(M,/(A))).
+%maybe_into_slash_db(M'::' (A),uslash(M,(A))).
+maybe_into_slash_db(C,TO):- \+ \+ (copy_term_nat(C,Nat),(numbervars(Nat,0,_,[attvar(skip)]),is_slashed_g(Nat))),to_slash_db(C,top,TO).
+maybe_into_slash_db(C,TO):- \+ \+ (copy_term_nat(C,Nat),(numbervars(Nat,0,_,[attvar(skip)]),is_slashed(Nat))),to_slash_db(C,rel,TO).
 
 slash_arg(E):- var(E),!.
 slash_arg(E):- atom(E),!.
@@ -116,17 +123,20 @@ is_slashed_g(/_:_).
 is_slashed_g((/_)/_).
 is_slashed_g((/_):_).
 
-%slash_db(X,Y):- log(slash_db(X,Y)),fail.
-%slash_db(me,_X):- fail.
-'/'(X):- slash_db(me,/X).
+%uslash(X,Y):- log(uslash(X,Y)),fail.
+%uslash(me,_X):- fail.
+'/'(X):- uslash(me,/X).
 
-slash_db(rel,X):- !, slash_db(this,X).
-slash_db(top,X):- !, slash_db(me,X).
+to_slash_db(C,Top,uslash(Top,C)) :- !.
+%to_slash_db(C,Top,uslash(Top,O)) :- subst(C,'/','[|]',O).
 
-slash_db(me,/(X)):- me_path(Root),slash_db(Root,X).
-slash_db(this,X):- this_path(Root),slash_db(Root,X).
-%slash_db(rel,X):- slash_db(($this)/X).
-%slash_db(me,X):- getvar(me,Me),extend_path(Me,X,Full),slash_db(full,Full).
+uslash(rel,X):- !, uslash(this,X).
+uslash(top,X):- !, uslash(me,X).
+
+uslash(me,/(X)):- me_path(Root),uslash(Root,X).
+uslash(this,X):- this_path(Root),uslash(Root,X).
+%uslash(rel,X):- uslash(($this)/X).
+%uslash(me,X):- getvar(me,Me),extend_path(Me,X,Full),uslash(full,Full).
 
 me_path(($global) / ($me) ).
 this_path( ($global)/($me)/this ).
@@ -176,8 +186,11 @@ calc_full_slash_db(rel,X,Full):- getvar(this,Y),extend_path(Y,X,Full).
 expand_slash(X,Y):- slash_exp(X,Y),!.
 expand_slash(X,X).
 
+slash_exp(C,O):- \+ compound(C),!,C=O.
+slash_exp(G,G):- compound_name_arity(G,B,_),atom_contains(B,'reduc'),!.
+slash_exp(G,O):- compound_name_arguments(G,B,Args),expand_f_args_to_list(B),Args\=[_],!,O=..[B,Args].
 slash_exp(C,O):- no_more_expansion(e,C,O),!.
-slash_exp(G,O):- compound_name_arguments(G,B,Args),expand_f_args_to_list(B),Args\=[_],!,BArgs=..[B|Args],=(BArgs,O).
+slash_exp(library(X),library(X)):-!.
 slash_exp(is(X,Y),is(X,Y)):-!.
 slash_exp(X,Y):- maybe_into_slash_db(X,Y),!.
 %slash_exp(X:-B,Y:-B):- maybe_into_slash_db(X,Y),!.
@@ -258,12 +271,16 @@ uterm_expansion(X,Y):- expand_uterm(X,Y),!.
 expand_uterm(C,O):- no_more_expansion(h,C,O),!.
 expand_uterm(:-B,:-BB):- !, expand_ugoal(B,BB),!.
 expand_uterm(H:-B,HB):- !, typed_uclause_expansion(hb,H,B,HB),!.
-expand_uterm(H-->B,HB):- !, typed_uclause_expansion(dcg,H,B,HB),!.
+expand_uterm(H-->B,HB):- !, dcg_translate_rule((H-->B),HB),!,expand_uterm(H:-B,HB).
 expand_uterm(H,HB):- typed_uclause_expansion(hb,H,true,HB),!.
 %expand_uterm(H,HB):- expand_slash(H,HB).
 
+:- dynamic(is_meta_predicate/1).
+
 meta_pred_style(Cmp,Meta):- compound(Cmp),compound_name_arity(Cmp,F,A), \+ never_meta_fa(F,A),
   predicate_property(Cmp,meta_predicate(Meta)),!.
+meta_pred_style(Cmp,Meta):- compound(Cmp),compound_name_arity(Cmp,F,A), \+ never_meta_fa(F,A),
+  compound_name_arity(Meta,F,A),is_meta_predicate(Meta),!.
 
 never_meta_fa('/',_).
 
@@ -290,7 +307,6 @@ shouldnt_need_expansion(_):- !.
 ugoal_expansion(C,C):- \+ compound(C),!.
 ugoal_expansion(\+ C , \+ O):- !, expand_ugoal(C,O).
 ugoal_expansion(C,O):- no_more_expansion(b,C,O),!.
-ugoal_expansion((A,B),(AA,BB)):- !, expand_ugoal(A,AA),expand_ugoal(B,BB).
 ugoal_expansion((A;B),(AA;BB)):- !, expand_ugoal(A,AA),expand_ugoal(B,BB).
 ugoal_expansion((A->B),(AA->BB)):- !, expand_ugoal(A,AA),expand_ugoal(B,BB).
 ugoal_expansion((A*->B),(AA*->BB)):- !, expand_ugoal(A,AA),expand_ugoal(B,BB).
@@ -309,24 +325,24 @@ subst_vars(G,B,BM):- compound_name_arguments(G,_,Args),subst_vars(Args,B,BM).
 
 %ugoal_expansion((A,B),(AA,BB)):- get_var_expansions(h,A,AH,G), subst_vars(G,B,BM), G\== true, !, expand_ugoal(AH,AA),expand_ugoal(BM,BB).
 
-%$ugoal_expansion(G'::'X,'::'(X,Y)):- G == $global,!,ugoal_expansion(X,Y).
+%ugoal_expansion(unity_db_call(DB,Args),BBB):- get_var_expansions(h,Args,ArgsO,VarsOut), \+ source_file_expansion, !,
+%  conjoin(VarsOut,unity_db_call(DB,ArgsO),BBB).
 
-ugoal_expansion(unity_db_call(DB,Args),BBB):- get_var_expansions(h,Args,ArgsO,VarsOut),!,
-  conjoin(VarsOut,unity_db_call(DB,ArgsO),BBB).
-
-ugoal_expansion(B,BB):- sub_term(E,B),compound(E),compound_name_arguments(E,DB,Args),db_pred(DB),
-   subst(B,E,Var,BBM),
-   maplist(convert_assert,Args,BArgs),
-   Var = unity_db_call(DB,BArgs),
-   expand_goal(BBM,BB).
+ugoal_expansion(E,unity_db_call(DB, Args)):- unity_uctx,compound_name_arguments(E,DB,Args),db_pred(DB),!.
+ugoal_expansion(unity_db_call(DB, Args),unity_db_call(DB, Args)):- !.
 
 ugoal_expansion(begin(List),begin(List)):- var(List),!.
-ugoal_expansion(begin([H|B]),begin(Program)):- !, list_to_conjuncts([H|B],Conj),
-  expand_ugoal(Conj,Program),!.
-ugoal_expansion(begin(H),begin(HH)):- !, expand_ugoal(H,HH).
+ugoal_expansion(begin(List),begin(List)):- is_list(List),!.
+%ugoal_expansion(begin([H|B]),begin(Program)):- !, list_to_conjuncts([H|B],Conj),
+%  expand_ugoal(Conj,Program),!.
+ugoal_expansion(begin(H),begin(HH)):- \+ source_file_expansion, !, expand_ugoal(H,HH).
+ugoal_expansion(unity_call(G),unity_call(G)):- !.
 
-ugoal_expansion(X,Y):- maybe_into_slash_db(X,YY),X\==YY,expand_ugoal(YY,Y).
+%ugoal_expansion(X,Y):- maybe_into_slash_db(X,YY),X\==YY,expand_ugoal(YY,Y).
 
+ugoal_expansion(B,BBBB):- B=(F,_), sub_uterm(E,F),dv(E,V),subst(B,E,Var,BB),!,
+  conjoin(getvar(V,Var),BB,BBB),expand_ugoal(BBB,BBBB).
+ugoal_expansion((A,B),(AA,BB)):- !, expand_ugoal(A,AA),expand_ugoal(B,BB).
 ugoal_expansion(B,BBBB):- sub_uterm(E,B),dv(E,V),subst(B,E,Var,BB),!,
   conjoin(getvar(V,Var),BB,BBB),expand_ugoal(BBB,BBBB).
 
@@ -342,18 +358,19 @@ ugoal_expansion(CmpI,CmpO):- strip_module(CmpI,_,Cmp),CmpI==Cmp,meta_pred_style(
 ugoal_expansion(public(X),unity_call(public(X))).
 %ugoal_expansion(X,Y):- prolog_load_context(term,:-T),T==X,slash_exp(X,Y).
 %ugoal_expansion(X,Y):- prolog_load_context(term,_:-T),T==X,slash_exp(X,Y).
-ugoal_expansion(G,unity_call(G)):-  compound_name_arguments(G,DBPred,_),db_pred(DBPred).
-%ugoal_expansion(X,Y):- expand_slash(X,Y).
+ugoal_expansion(X=Y,unity_call(X=Y)):- contains_uvar(X=Y),!.
+ugoal_expansion(G,unity_call(G)):-  source_file_expansion, is_unity(G).
+ugoal_expansion(G,unity_call(G)):-  \+ source_file_expansion, is_unity(G).
+ugoal_expansion(X,Y):- expand_slash(X,Y).
 
-
-
-%ugoal_expansion(B,BBB):- once(uclause_expansion_inner(hb,goal,B,goal:-BB)),B\==BB,!,expand_goal(BB,BBB).
-unity_db_call(F,Args):- maplist(expand_uterm,Args,EArgs),!,apply(F,EArgs).
+is_unity(X):- contains_uvar(X).
+is_unity(X):- sub_uterm(E,X),compound(E),E='::'(_,_).
+contains_uvar(X):- sub_uterm(E,X),compound(E),E='$'(_).
 
 get_var_expansions(_,O,O,true):- \+ compound(O),!.
 %get_var_expansions(h,'::'(C,T),'::'(CO,T),VarsOut):- get_var_expansions(h,C,CO,VarsOut).
 get_var_expansions(h,H,O,VarsOut):- compound(H), sub_term(E,H),dv(E,V),subst(H,E,Var,HH),!,get_var_expansions(h,HH,O,SVars),debug_var(V,Var),conjoin(getvar(V,Var),SVars,VarsOut).
-get_var_expansions(b,B,O,VarsOut):- compound(B), sub_uterm(E,B),dv(E,V),subst(B,E,Var,BB),!,get_var_expansions(h,BB,O,SVars),debug_var(V,Var),conjoin(getvar(V,Var),SVars,VarsOut).
+get_var_expansions(b,B,O,VarsOut):- compound(B), sub_uterm(E,B),dv(E,V),subst(B,E,Var,BB),!,get_var_expansions(b,BB,O,SVars),debug_var(V,Var),conjoin(getvar(V,Var),SVars,VarsOut).
 get_var_expansions(_,O,O,true).
 
 no_more_expansion(_,C,C):- \+ compound(C),!.
@@ -364,8 +381,8 @@ no_more_expansion(_,(A,G),A):- G==true,!.
 no_more_expansion(b,'::'(C,G),OUT):- get_var_expansions(b,C,CO,Vars),!,expand_ugoal(G,GG), conjoin(Vars,'::'(CO,GG),OUT).
 no_more_expansion(b,unity_call(C),Out):- get_var_expansions(h,C,O,Vars),conjoin(Vars,unity_call(O),Out).
 no_more_expansion(b,unity_db_call(C,Args),Out):- fail, get_var_expansions(h,Args,VArgs,Vars),Vars\==true,conjoin(Vars,unity_call(C,VArgs),Out).
-%no_more_expansion(h,slash_db(S,C),Out):- get_var_expansions(h,slash_db(S,C),O,Vars),conjoin(Vars,O,Out).
-no_more_expansion(b,slash_db(S,C),Out):- get_var_expansions(h,C,O,Vars),conjoin(Vars,slash_db(S,O),Out).
+%no_more_expansion(h,uslash(S,C),Out):- get_var_expansions(h,uslash(S,C),O,Vars),conjoin(Vars,O,Out).
+no_more_expansion(b,uslash(S,C),Out):- get_var_expansions(h,C,O,Vars),conjoin(Vars,uslash(S,O),Out).
 
 expand_f_args_to_list(begin).
 expand_f_args_to_list(displayln).
@@ -379,7 +396,8 @@ expand_f_args_to_list(displayln).
 higher_order(X):-
   ho2mp(X,Y),
   assert_if_new(
-    is_meta_predicate(Y)).
+    is_meta_predicate(Y)),
+  meta_predicate(Y).
 
 ho2mp(X,Y):- compound(X),!,
   compound_name_arguments(X,F,AX),
@@ -458,11 +476,10 @@ indexical_named(X,Y):- getvar(X,Y).
 only_getvar(N,V):- var(N),!,throw(var_only_getvar(N,V)).
 only_getvar(N,V):- nonvar(V),!,getvar(N,Y),!,V=Y.
 only_getvar(now,Value):- !, now(Value).
+only_getvar(X,Y):- nb_current(X,Y),!.
 only_getvar(parent,Parent):- getvar(this,Value),Value=[_|Parent].
 only_getvar(this,Value):- t_l:unity_this_path(Value),!.
 only_getvar(this,Value):- !, getvar(me,Value),listify(me,Value).
-
-only_getvar(X,Y):- nb_current(X,Y),!.
 only_getvar(me,Value):- !, getvar(root,Value).
 only_getvar(root,Value):- !, getvar(global,Value).
 %getvar(me,Y):- !, Y = me.
@@ -474,17 +491,19 @@ getvar(X,Y):- only_getvar(X,Y),!.
 getvar(X,Y):- unknownvar_value(X,Y),!.
 
 dont_udecend_into('::'(_,_)).
-%dont_udecend_into(slash_db(_,_)).
+dont_udecend_into(Begin):- compound_name_arity(Begin,begin,_),source_file_expansion,!.
+dont_udecend_into(Begin):- compound_name_arity(Begin,uslash,_),source_file_expansion,!.
+dont_udecend_into(uslash(_,_)).
 
 sub_uterm(X, X):- \+compound(X),!.
-% sub_uterm(_, X):- dont_udecend_into(X),!,fail.
-%sub_uterm(X, '::'(C,_)):- !, sub_uterm(X, C).
+sub_uterm(X, '::'(C,_)):- source_file_expansion,!, sub_uterm(X, C).
+sub_uterm(_, X):- source_file_expansion,dont_udecend_into(X),!,fail.
 sub_uterm(X, X).
 sub_uterm(X, Term) :-
     arg(_, Term, Arg),
     sub_term(X, Arg).
 
-/*
+
 usubst(W,X,Y,Z):- !, notrace(subst(W,X,Y,Z)),!.
 usubst(Var, VarS, SUB, SUB) :- Var==VarS, !.
 usubst(Var, _, _, Var) :- \+ compound(Var), !.
@@ -499,7 +518,7 @@ usubst2st(X,Sk,[A|As],[Sk|AS]) :- X==A, !, usubst2st(X, Sk, As, AS).
 usubst2st(X, Sk,[A|As],[A|AS]) :- var(A), !, usubst2st(X, Sk, As, AS).
 usubst2st(X,Sk,[A|As],[Ap|AS]) :- usubst(A, X, Sk, Ap), !, usubst2st(X, Sk, As, AS).
 usubst2st(_X, _Sk, L, L).
-*/
+
 
 % for DCGs
 getvar(X,Y,A,A):- getvar(X,Y).
@@ -509,7 +528,8 @@ unknownvar_value(X,'#'(X)).
 
 %'#'(_).
 
-bind(X,Y):- b_setval(X,Y).
+bind(X,Y):- nb_current(X,O),O\==[],!,b_setval(X,Y).
+bind(X,Y):- nb_setval(X,Y).
 
 log(warn(X)):- !, dmsg(warn(X)).
 log(X):- dmsg(X).
@@ -606,10 +626,15 @@ consult(File, M):- M:consult(File).
 module_uctx(X):- '$current_typein_module'(X),!.
 module_uctx(X):- prolog_load_context(module,X),!.
 
-unity_uctx:- prolog_load_context(file,File),!,tmpu:is_unity_file(File).
+:- thread_local(t_l:(pretend_source_file_expansion/1)).
+
+source_file_expansion:- t_l:pretend_source_file_expansion(YN),!,YN==true.
+source_file_expansion:- prolog_load_context(file,File),prolog_load_context(source,File),!,tmpu:is_unity_file(File).
+unity_uctx:- source_file_expansion,!.
+unity_uctx:- prolog_load_context(file,File),prolog_load_context(source,File),!,tmpu:is_unity_file(File).
 unity_uctx:- unity_module_name(M),module_uctx(T),!,M==T.
 
-print_clexp(_,_,_):-!.
+%print_clexp(_,_,_):-!.
 print_clexp(_,X,Y):- X=@=Y,!.
 %print_clexp(X,Y):- in_cmt(print_tree(X)),print_tree(Y).
 print_clexp(W,X,Y):- wdmsg(X),write('%~  '),writeln(W),wdmsg(Y).
@@ -672,12 +697,14 @@ correct_row_type([_Word,list],A,V):- !,correct_row_type('list',A,V).
 correct_row_type([T],A,V):- correct_row_type(T,A,V),!.
 correct_row_type(list,A,V):- listify_row(A,V),!.
 correct_row_type(string,A,V):- cell_to_string(A,V),!.
+correct_row_type(_,'',null):-!.
 correct_row_type(_,V,V).
 
 cell_to_string(A,V):- atom(A),atom_concat('"',R,A),string_concat(V,'"',R),!.
 cell_to_string(A,V):- notrace(any_to_string(A,V)),!.
 
 listify_row(A,V):- is_list(A),!,A=V.
+listify_row(Var,[Var]):- var(Var),throw(var_listify_row(Var,[Var])).
 listify_row((A,B),V):- !, conjuncts_to_list((A,B),V).
 listify_row('',[]):-!.
 listify_row('-',[['-']]):-!.
@@ -692,7 +719,7 @@ join_underscores(V,V).
 :- multifile(term_expansion/2).
 :- dynamic(term_expansion/2).
 term_expansion(X,Y):- notrace((compound(X), unity_uctx, uterm_expansion(X,Y),X\==Y,ansicall(yellow,print_clexp(ce,X,Y)))).
-system:goal_expansion(X,Y):- notrace((compound(X), unity_uctx, expand_ugoal(X,Y),X\==Y,ansicall(gold,print_clexp(sg,X,Y)))).
+system:goal_expansion(X,Y):- notrace((compound(X), unity_uctx, \+ source_file_expansion, expand_ugoal(X,Y),X\==Y,ansicall(blue,print_clexp(ge,X,Y)))).
 :- load_unity_prolog_file('Utilities/startup.prolog').
 
 ltest:- 
