@@ -65,9 +65,7 @@ strategy(respond_to_increment(_Speaker, _Addressee, _String:Markup),
 %% Agreement/disagreement
 %%
 
-strategy(respond_to_dialog_act(agree(_, _, _)),
-	 null).
-strategy(respond_to_dialog_act(disagree(_, _, _)),
+strategy(respond_to_dialog_act(agree(_, _,_, _)),
 	 null).
 
 %%

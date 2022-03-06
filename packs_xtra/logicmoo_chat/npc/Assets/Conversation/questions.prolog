@@ -26,9 +26,9 @@ strategy(answer_yes_no(Asker, Q),
    admitted_truth_value(Asker, Q, Answer).
 
 strategy(generate_answer(Q, true),
-	 agree($me, $addressee, Q)).
+	 agree($me, $addressee, true, Q)).
 strategy(generate_answer(Q, false),
-	 disagree($me, $addressee, Q)).
+	 agree($me, $addressee, false, Q)).
 strategy(generate_answer(_Q, unknown),
 	 speech(["Don't know."])).
 

@@ -24,16 +24,21 @@ utterance(command(Speaker, Addressee, LF)) -->
 utterance(injunction(Speaker, Addressee, LF)) -->
    sentence(LF, imperative, negative, _, _),
    { current_dialog_pair(Speaker, Addressee) }.
-utterance(agree(Speaker, Addressee, _LF)) -->
-   [ yes ],
+utterance(agree(Speaker, Addressee,true,_LF)) -->
+   (means(yes);means(true);means(correct);means(agree)),
    { current_dialog_pair(Speaker, Addressee) }.
-utterance(disagree(Speaker, Addressee, _LF)) -->
-   [ no ],
+utterance(agree(Speaker, Addressee,false, _LF)) -->
+   (means(no);means(false);means(incorrect);means(disagree)),
    { current_dialog_pair(Speaker, Addressee) }.
 utterance(automa_command(Speaker, Addressee, LF, T, A)) -->
    [ fnord ],
    s(LF, indicative, affirmative, T, A),
    { current_dialog_pair(Speaker, Addressee) }.
+
+means(Yes)-->[Yes].
+means(Yes)-->[Syn],{is_synonym(Yes,Syn)}.
+
+is_synonym(yes,right).
 
 %%
 %% INACTIONS AND OFFERS
@@ -131,27 +136,13 @@ stock_phrase(objective_query(player, $me)) -->
    { member(Us, [we, you]) },
    [trying, to, do, '?'].
 
-stock_phrase(color_query(player, $me, red)) -->
-   [what, does, red, text, mean, '?'].
-stock_phrase(color_query(player, $me, red)) -->
-   [why, does, my, text, turn, red, '?'].
-
 :- register_lexical_items([red, green, yellow, white, turn, mean]).
 
-stock_phrase(color_query(player, $me, yellow)) -->
-   [what, does, yellow, text, mean, '?'].
-stock_phrase(color_query(player, $me, yellow)) -->
-   [why, does, my, text, turn, yellow, '?'].
+stock_phrase(color_query(player, $me, Yellow)) -->
+   [what, does, Yellow, text, mean, '?'].
+stock_phrase(color_query(player, $me, Yellow)) -->
+   [why, does, my, text, turn, Yellow, '?'].
 
-stock_phrase(color_query(player, $me, green)) -->
-   [what, does, green, text, mean, '?'].
-stock_phrase(color_query(player, $me, green)) -->
-   [why, does, my, text, turn, green, '?'].
-
-stock_phrase(color_query(player, $me, white)) -->
-   [what, does, white, text, mean, '?'].
-stock_phrase(color_query(player, $me, white)) -->
-   [why, does, my, text, turn, white, '?'].
 
 nsew(north).
 nsew(south).
@@ -164,19 +155,23 @@ nsew(w).
 
 :- forall(nsew(X), register_lexical_item(X)).
 
-stock_phrase(if_navigation_command(player, $me)) -->
-   { input_from_player },
-   nsew_nav_command.
+stock_phrase(if_navigation_command(player, $me, X)) -->
+   %{ input_from_player },
+   nsew_nav_command(X).
 
-nsew_nav_command -->
+nsew_nav_command(X) -->
    [go, X],
    { nsew(X) }.
 
-nsew_nav_command -->
+nsew_nav_command(X) -->
    [go, to, the, X],
    { nsew(X) }.
 
-nsew_nav_command -->
+nsew_nav_command(X) -->
+   [go, to, X],
+   { nsew(X) }.
+
+nsew_nav_command(X) -->
    [X],
    { nsew(X) }.
 
