@@ -15,40 +15,45 @@
 
 opt_pp(ForcePPs, Predication, Gap, SIn, SOut) -->
    { generating_nl, ! },
-   generator_pp(ForcePPs, Predication, Gap, SIn, SOut).
+   generator_pp([],ForcePPs, Predication, Gap, SIn, SOut).
 
 opt_pp(_ForcePPs, Predication, Gap, SIn, SOut) -->
-   parser_opt_pp(Predication, Gap, SIn, SOut).
+   parser_opt_pp([],Predication, Gap, SIn, SOut).
 
 % This must not be randomized.
-generator_pp([], _Predication, nogap, S, S) --> [ ].
-generator_pp([ Preposition | Prepositions ], Predication, Gap, S1, S2) -->
-   { prepositional_slot(Preposition, X, Predication), var(X), ! },
-   generator_pp(Prepositions, Predication, Gap, S1, S2).
-generator_pp([ Preposition | Prepositions ], Predication, Gap, S1, S3) -->
+generator_pp(_PrevPreps,[], _Predication, nogap, S, S) --> [ ].
+generator_pp(PrevPreps,[ Preposition | Prepositions ], Predication, Gap, S1, S2) -->
+   { prepositional_slot(Preposition, X, Predication), var(X), !, 
+     \+ member(Preposition,PrevPreps),
+     enforce_set([ Preposition | Prepositions ]) },
+   generator_pp([Preposition|PrevPreps],Prepositions, Predication, Gap, S1, S2).
+generator_pp(PrevPreps,[ Preposition | Prepositions ], Predication, Gap, S1, S3) -->
    [ Preposition ],
-   { prepositional_slot(Preposition, X, Predication) },
+   { prepositional_slot(Preposition, X, Predication),
+     \+ member(Preposition,PrevPreps),
+     enforce_set([ Preposition | Prepositions ]) },
    np((X^S1)^S2, object, _, Gap, NewGap),
-   generator_pp(Prepositions, Predication, NewGap, S2, S3).
+   generator_pp([Preposition|PrevPreps],Prepositions, Predication, NewGap, S2, S3).
    
 
 :- randomizable parser_opt_pp//3.
 
-parser_opt_pp(_, nogap, S, S) --> [ ].
+parser_opt_pp(_PrevPreps,_, nogap, S, S) --> [ ].
 % We model here as a kind of weird PP rather than as an adverb
 % That lets us specifically annotate verbs with information about
 % what slots to bind, rather than needing to have a general theory.
-parser_opt_pp(Predication, nogap, S, S) -->
+parser_opt_pp(_PrevPreps,Predication, nogap, S, S) -->
    [ Here ],
    { here_there_adverb(Here),
      prepositional_slot(here, Selection, Predication),
      /perception/mouse_selection:Selection }.
-parser_opt_pp(Predication, Gap, S1, S3) -->
+parser_opt_pp(PrevPreps,Predication, Gap, S1, S3) -->
    [ Preposition ],
-   { preposition(Preposition),
+   { preposition(Preposition),      
+    \+ member(Preposition,PrevPreps),
      prepositional_slot(Preposition, X, Predication) },
    np((X^S1)^S2, object, _, Gap, nogap),
-   parser_opt_pp(Predication, nogap, S2, S3).
+   parser_opt_pp([Preposition|PrevPreps],Predication, nogap, S2, S3).
 
 %% preposition(?Word)
 %  Word is a preposition
@@ -60,6 +65,26 @@ preposition(with).
 preposition(on).
 preposition(in).
 preposition(for).
+
+
+check_set(Set):- check_set2(Set,Set).
+check_set2(Set,Var):- var(Var),!,freeze_as_set(Set,Var).
+check_set2(Set,[]):- !,enforce_set(Set).
+check_set2(Set,[Var|Rest]):- var(Var),freeze_as_set(Set,Var),!,check_set2(Set,Rest).
+check_set2(Set,[Var|Rest]):- \+ member_no_open(Var,Rest),!,check_set2(Set,Rest).
+member_no_open(_,Rest):- var(Rest),!,fail.
+member_no_open(E,[V|Rest]):- (E==V ; member_no_open(E,Rest)),!.
+enforce_set(Set):- term_variables(Set,Vars),maplist(freeze_as_set(Set),Vars).
+attr_unify_hook(ListOfSets,_):- maplist(check_set,ListOfSets).
+%freeze_as_set(Set,Var):- freeze(Var,check_set(Set)).
+freeze_as_set(Set,Var):- 
+  A = npc,
+  (get_attr(Var,A,ListOfSets) 
+   -> ((member(E,ListOfSets),E==Set) -> true ; put_attr(Var,A,[Set|ListOfSets]))
+   ; put_attr(Var,A,[Set])).
+
+
+
 
 %% prepositional_slot(?Preposition, ?Referrent, ?Predication
 %  True when the slot of Predication corresponding to Preposition
