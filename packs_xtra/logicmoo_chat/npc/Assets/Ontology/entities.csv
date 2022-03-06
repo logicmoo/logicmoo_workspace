@@ -4,7 +4,7 @@ $pc,person,,,,"age=13, job=spy","knows_about: spying, member_of:www, interested_
 $kavi,person,,'Kavi',,"age=13, given_name=""Kavi"", surname=""Surkow"", gender=male",member_of: theclub
 $captive,person,,'Trip',,"age=13, given_name=""Trip"", surname=""Abel"", gender=male",friend_of: $pc
 theclub,science,"""A """,the 'Theclub',plural,"make world peace","goal: ""complete world peace"", leader: you"
-adam_weishaupt,person,,'Adam' 'Weishaupt',singular,,
+adam_weishaupt,person,,'Adam Weishaupt',singular,,
 agency,"community_agency, clandestine_organization",,the 'Agency',,,
 www,organization,"[""A ragtag group of performance artists,"", ""working to undermine the apalling level of normativity"", ""of late capitalism.""]", 'Wiccans' for a 'Weirder' 'World',plural,,"goal: ""the enweirdening of the world."""
 spying,action,,,,,

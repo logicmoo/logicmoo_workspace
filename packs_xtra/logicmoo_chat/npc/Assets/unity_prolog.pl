@@ -67,8 +67,11 @@ db_pred(retract_all).
 
 
 :- meta_predicate(system:unity_call(:)).
+
+unity_call_p(O,P):- property_value(O,P,V),V==true.
+
 system:unity_call(M:G):- 
-  expand_ugoal(G,GG), GG\==G,!, ansicall(cyan, (print_clexp(call,G,GG))),!, M:call(GG).
+  expand_ugoal(G,GG), GG\==G,!, nop(ansicall(cyan, (print_clexp(call,G,GG)))),!, M:call(GG).
 system:unity_call(M:G):- !, call(M:G).
 %system:unity_call(M:G):- G=..[F|Args],unity_apply(M:F,Args).
 %ugoal_expansion(B,BBB):- once(uclause_expansion_inner(hb,goal,B,goal:-BB)),B\==BB,!,expand_goal(BB,BBB).
@@ -520,10 +523,12 @@ usubst2st(X,Sk,[A|As],[Ap|AS]) :- usubst(A, X, Sk, Ap), !, usubst2st(X, Sk, As, 
 usubst2st(_X, _Sk, L, L).
 
 
+atom_or_var(AV):- atom(AV); var(AV).
 % for DCGs
 getvar(X,Y,A,A):- getvar(X,Y).
 % unknownvar_value(X,V):- atom(X),!,atom_concat('',X,V).
-unknownvar_value(X,V):- atom(X),!,atom_concat('unknown_',X,V).
+unknownvar_value(X,V):- atom(X),atom_or_var(Y),atom_concat('unknown_',X,V),!.
+unknownvar_value(X,V):- nonvar(V),!,X=V,log(assume_bind(X,V)),bind(X,V).
 unknownvar_value(X,'#'(X)).
 
 %'#'(_).
@@ -701,6 +706,7 @@ correct_row_type(_,'',null):-!.
 correct_row_type(_,V,V).
 
 cell_to_string(A,V):- atom(A),atom_concat('"',R,A),string_concat(V,'"',R),!.
+cell_to_string(A,V):- atom(A),atom_concat('''',R,A),string_concat(V,'''',R),!.
 cell_to_string(A,V):- notrace(any_to_string(A,V)),!.
 
 listify_row(A,V):- is_list(A),!,A=V.
@@ -708,7 +714,7 @@ listify_row(Var,[Var]):- var(Var),throw(var_listify_row(Var,[Var])).
 listify_row((A,B),V):- !, conjuncts_to_list((A,B),V).
 listify_row('',[]):-!.
 listify_row('-',[['-']]):-!.
-listify_row(A,V):- atom(A),!,tokenize_atom(A,M),join_underscores(M,V).
+listify_row(A,V):- atom(A),!,cell_to_string(A,S),tokenize_atom(S,M),join_underscores(M,V).
 listify_row(A,[A]).
 
 join_underscores(A,V):- append(Left,[L,'_',R|More],A),atomic_list_concat([L,'_',R],LR),append(Left,[LR|More],M),!,join_underscores(M,V).

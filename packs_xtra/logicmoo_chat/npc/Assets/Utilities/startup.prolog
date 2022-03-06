@@ -40,25 +40,35 @@ register_lexical_items(List) :-
 %  Asserts that Phrase can be matched by Words (a list of symbols).
 %  Asserts the DCG rule: Phrase --> Words.
 assert_phrase_rule(_, []) :- !.
+
+assert_phrase_rule(Phrase, Words):- \+ is_list(Words),!,
+  assert_phrase_rule(Phrase, [Words]).
 assert_phrase_rule(Phrase, Words) :-
+ must_det_l((
    assertion(\+ (member(X, Words), \+ atomic(X)),
 	     Words:"Phrase must be a list of symbols"),
    forall(member(Word, Words),
 	  register_lexical_item(Word)),
    append(Words, Tail, WordsWithTail),
    term_append(Phrase, [WordsWithTail, Tail], DCGRule),
-   assertz(/*$global::*/DCGRule).
+   assertz_if_new(/*$global::*/DCGRule),
+   log(ap(DCGRule)))),!.
+assert_phrase_rule(Phrase, Words):- throw(assert_phrase_rule(Phrase, Words)).
 
 %% assert_phrase_rule(Phrase, Words, Guard) is det
 %  Asserts that Phrase can be matched by Words (a list of symbols) if
 %  Guard is true.
 %  Asserts the DCG rule: Phrase --> Words, {Guard}.
+assert_phrase_rule(Phrase, Words, Guard):- \+ is_list(Words),!,
+  assert_phrase_rule(Phrase, [Words], Guard).
 assert_phrase_rule(Phrase, Words, Guard) :-
    assertion(\+ (member(X, Words), \+ atomic(X)),
 	     Words:"Phrase must be a list of symbols"),
    append(Words, Tail, WordsWithTail),
    term_append(Phrase, [WordsWithTail, Tail], DCGRule),
-   assertz((DCGRule :- Guard)).
+   assertz_if_new((DCGRule :- Guard)),
+   log(ap(DCGRule :- Guard)),!.
+assert_phrase_rule(Phrase, Words, Guard):- throw(assert_phrase_rule(Phrase, Words,Guard)).
 
 %% assert_proper_name(+Object, +Name, +Number) is det
 %  Asserts that Object has proper name Name (a list of words) with
@@ -94,3 +104,4 @@ assert_proper_name(Object, Name, NumberSpec) :-
 number_spec_number([ ], singular).
 number_spec_number(singular, singular).
 number_spec_number(plural, plural).
+

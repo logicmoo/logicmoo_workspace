@@ -40,6 +40,8 @@ iz_a(Object, Kind) :-
 iz_a(X, entity) :-
    (number(X) ; string(X) ; is_list(X)),
    !.
+iz_a(Object, Kind) :- (var(Kind);atom(Kind)),atom(Object),atom_concat('unknown_',Kind,Object).
+
 iz_a(Object, Kind) :-
    atomic(Object),
    assertion(valid_kind(Kind), "Invalid kind"),

@@ -13,6 +13,16 @@ proper_name(Object, Number) -->
    [the],
    proper_name_without_the(Object, Number).
 
+:- multifile(proper_name_without_the//2).
+:- dynamic(proper_name_without_the//2).
+proper_name_without_the(Obj,_,Left, More):- 
+ object_words(Obj,Words),
+ append(Words,More,Left).
+
+object_words(Object,[Kind]) :- (var(Kind);atom(Kind)),atom(Object),atom_concat('unknown_',Kind,Object).
+object_words(Object,Words):- 
+ atom(Object), (atom_contains(Object,' ')-> atomic_list_concat(Words,' ',Object);atomic_list_concat(Words,'_',Object)).
+
 pronoun(Case, Person:Number, (E^S)^S) -->
    [PN],
    { \+ bound_discourse_variable(E),
@@ -41,18 +51,18 @@ load_special_csv_row(_RowNumber,
    assert_phrase_rule(iv(simple, Agreement, LF, present, ForcePPs),
 		      Base,
 		      Agreement \= third:singular),
-   assert_phrase_rule(iv(simple, _Agreement, LF, past, ForcePPs),
+   assert_phrase_rule(iv(simple, _Agreement1, LF, past, ForcePPs),
 		      Past),
-   assert_phrase_rule(iv(simple, _Agreement, LF, future, ForcePPs),
+   assert_phrase_rule(iv(simple, _Agreement2, LF, future, ForcePPs),
 		      Base),
    % Used only in the construction X does not BASEFORM.
-   assert_phrase_rule(iv(base, _Agreement, LF, present, ForcePPs),
+   assert_phrase_rule(iv(base, _Agreement3, LF, present, ForcePPs),
 		      Base),
-   assert_phrase_rule(iv(base, _Agreement, LF, past, ForcePPs),
+   assert_phrase_rule(iv(base, _Agreement4, LF, past, ForcePPs),
 		      Base),
-   assert_phrase_rule(iv(past_participle, _Agreement, LF, _Tense, ForcePPs),
+   assert_phrase_rule(iv(past_participle, _Agreement5, LF, _Tense5, ForcePPs),
 		      PastP),
-   assert_phrase_rule(iv(present_participle, _Agreement, LF, _Tense, ForcePPs),
+   assert_phrase_rule(iv(present_participle, _Agreement6, LF, _Tense6, ForcePPs),
 		      PresentP).
 		     
 end_csv_loading(intransitive_verb) :-
@@ -69,18 +79,18 @@ load_special_csv_row(_RowNumber,
    assert_phrase_rule(tv(simple, Agreement, LF, present, ForcePPs),
 		      Base,
 		      Agreement \= third:singular),
-   assert_phrase_rule(tv(simple, _Agreement, LF, past, ForcePPs),
+   assert_phrase_rule(tv(simple, _, LF, past, ForcePPs),
 		      Past),
-   assert_phrase_rule(tv(simple, _Agreement, LF, future, ForcePPs),
+   assert_phrase_rule(tv(simple, _, LF, future, ForcePPs),
 		      Base),
    % Used only in the construction X does not BASEFORM.
-   assert_phrase_rule(tv(base, _Agreement, LF, present, ForcePPs),
+   assert_phrase_rule(tv(base, _, LF, present, ForcePPs),
 		      Base),
-   assert_phrase_rule(tv(base, _Agreement, LF, past, ForcePPs),
+   assert_phrase_rule(tv(base, _, LF, past, ForcePPs),
 		      Base),
-   assert_phrase_rule(tv(past_participle, _Agreement, LF, _Tense, ForcePPs),
+   assert_phrase_rule(tv(past_participle, _, LF, _, ForcePPs),
 		      PastP),
-   assert_phrase_rule(tv(present_participle, _Agreement, LF, _Tense, ForcePPs),
+   assert_phrase_rule(tv(present_participle, _, LF, _, ForcePPs),
 		      PresentP).
 
 end_csv_loading(transitive_verb) :-
@@ -97,7 +107,7 @@ tv(Form, Agreement, S^O^related(S, Relation, O), Tense, [ ]) -->
    copula(Form, Tense, Agreement),
    copular_relation(Relation).
 % Inverted sentence
-tv(present_participle, _Agreement, S^O^related(S, Relation, O), present, [ ])
+tv(present_participle, _, S^O^related(S, Relation, O), present, [ ])
    -->
    copular_relation(Relation).
 
@@ -115,18 +125,18 @@ load_special_csv_row(_RowNumber,
    assert_phrase_rule(dtv(simple, Agreement, LF, present, ForcePPs),
 		      Base,
 		      Agreement \= third:singular),
-   assert_phrase_rule(dtv(simple, _Agreement, LF, past, ForcePPs),
+   assert_phrase_rule(dtv(simple, _, LF, past, ForcePPs),
 		      Past),
-   assert_phrase_rule(dtv(simple, _Agreement, LF, future, ForcePPs),
+   assert_phrase_rule(dtv(simple, _, LF, future, ForcePPs),
 		      Base),
    % Used only in the construction X does not BASEFORM.
-   assert_phrase_rule(dtv(base, _Agreement, LF, present, ForcePPs),
+   assert_phrase_rule(dtv(base, _, LF, present, ForcePPs),
 		      Base),
-   assert_phrase_rule(dtv(base, _Agreement, LF, past, ForcePPs),
+   assert_phrase_rule(dtv(base, _, LF, past, ForcePPs),
 		      Base),
-   assert_phrase_rule(dtv(past_participle, _Agreement, LF, _Tense, ForcePPs),
+   assert_phrase_rule(dtv(past_participle, _, LF, _, ForcePPs),
 		      PastP),
-   assert_phrase_rule(dtv(present_participle, _Agreement, LF, _Tense, ForcePPs),
+   assert_phrase_rule(dtv(present_participle, _, LF, _, ForcePPs),
 		      PresentP).
 
 end_csv_loading(ditransitive_verb) :-

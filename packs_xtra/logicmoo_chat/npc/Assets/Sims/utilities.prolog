@@ -81,14 +81,14 @@ elroot(GameObject, Root) :-
 present(X) :-
    is_class(X, $'GameObject'),
    ( component_of_gameobject_with_type(C, X, $'PhysicalObject') ->
-        unity_call(C,'Exists')
+        unity_call_p(C,'Exists')
         ;
         true ).
 
 ~present(X) :-
    is_class(X, $'GameObject'),
    component_of_gameobject_with_type(C, X, $'PhysicalObject'),
-   \+ unity_call(C,'Exists').
+   \+ unity_call_p(C,'Exists').
 
 :- public true_location/2.
 

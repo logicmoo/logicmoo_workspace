@@ -47,8 +47,8 @@ run_test(Name, Options, Body) :-
 	 bind(test_options, Options),
 	 copy_term(Body, Copy),
 	 bind(test_body, Copy),
-	 %displayln("Running ", Name),
 	 setup_test(Name, Options),
+   displayln("Running ", Name,' with options=',Options ),
 	 (catch(run_test_body(Options, Body), Exception, true) ->
 	     (ansicall(cyan,displayln(["Test ", Name, " was GOOD."])), print_test_results(Name, Options, Exception))
 	     ;
@@ -65,9 +65,9 @@ run_test_body(_, Body) :-
 
 print_test_results(Name, Options, Exception) :-
    test_has_option(throws(ExpectedException), Options) ->
-      print_exception_test_results(Name, ExpectedException, Exception)
+      ansicall(red,print_exception_test_results(Name, ExpectedException, Exception))
       ;
-      print_nonexception_test_results(Name, Options, Exception).
+      ansicall(yellow,print_nonexception_test_results(Name, Options, Exception)).
 
 print_exception_test_results(_Name, ExpectedException, ActualException) :-
    ExpectedException == ActualException,
@@ -95,7 +95,7 @@ check_test_determinism(_Name, Options) :-
 check_test_determinism(_Name, _Options) :-
   % $test_body is a copy of the body (doesn't share variables with the one that was run previously)
    must_getvar(test_body,TB),
-   wdmsg(test_body= TB),
+   in_cmt(block,print_tree(test_body= TB)),
    call_with_step_limit(10000, are_deterministic(TB)), !.
 check_test_determinism(Name, _) :-
    displayln("Test ", Name, " succeeded but is non-are_deterministic.").
@@ -108,7 +108,7 @@ setup_test(Name, Options) :-
 		do_test_setup(Name)).
 :- public do_test_setup/2.
 do_test_setup(_Name, setup(P)) :-
-   P.
+   unity_call(P).
 do_test_setup(Name, setup(P)) :-
    displayln("Test setup operation for ", Name, " failed: ", P).
 

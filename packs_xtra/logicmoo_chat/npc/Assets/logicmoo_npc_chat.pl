@@ -1,7 +1,7 @@
 
 %:- module(lmchat,[]).
 
-:- clause(unity_module_name(_),_) -> true ; prolog_load_context(module,M),asserta(unity_module_name(M)).
+:- clause(unity_module_name(_),_) -> true ; prolog_load_context(module,M),asserta_if_new(unity_module_name(M)).
 :- use_module(library(logicmoo_common)).
 %:- use_module(library(pfc_lib)).
 :- style_check(- discontiguous).  
@@ -12,14 +12,14 @@
 
 pi_to_p(F/A,P):- functor(P,F,A),!.
 pi_to_p(F//A,P):- A2 is A + 2, functor(P,F,A2).
-assume_todo(FA):- pi_to_p(FA,P), TODO=assume_todo(P), asserta((P:- predicate_property(P,number_of_clauses(1)), !, log(warn(TODO)),throw(TODO))).
-assume_done(FA):- pi_to_p(FA,P), TODO=assume_done(P), asserta((P:- predicate_property(P,number_of_clauses(1)), !, log(warn(TODO)))).
-assume_dyn_fail(FA):- pi_to_p(FA,P), TODO=assume_dyn_fail(P), asserta((P:- predicate_property(P,number_of_clauses(1)),!, log(warn(TODO)),fail)).
-assume_dyn_succeed(FA):- pi_to_p(FA,P), TODO=assume_dyn_succeed(P), asserta((P:- predicate_property(P,number_of_clauses(1)), !, log(warn(TODO)),!)).
+assume_todo(FA):- pi_to_p(FA,P), TODO=assume_todo(P), asserta_if_new((P:- predicate_property(P,number_of_clauses(1)), !, log(warn(TODO)),throw(TODO))).
+assume_done(FA):- pi_to_p(FA,P), TODO=assume_done(P), asserta_if_new((P:- predicate_property(P,number_of_clauses(1)), !, log(warn(TODO)))).
+assume_dyn_fail(FA):- pi_to_p(FA,P), TODO=assume_dyn_fail(P), assert_if_new((P:- predicate_property(P,number_of_clauses(1)),!, log(warn(TODO)),fail)).
+assume_dyn_succeed(FA):- pi_to_p(FA,P), TODO=assume_dyn_succeed(P), asserta_if_new((P:- predicate_property(P,number_of_clauses(1)), !, log(warn(TODO)),!)).
 
 :- if( \+ prolog_load_context(reloading,false)).
-:- prolog_load_context(directory,D),asserta(lmchat_dir(D)).
-:- clause(unity_module_name(_),_)-> true; prolog_load_context(module,D),asserta(unity_module_name(D)).
+:- prolog_load_context(directory,D),asserta_if_new(lmchat_dir(D)).
+:- clause(unity_module_name(_),_)-> true; prolog_load_context(module,D),asserta_if_new(unity_module_name(D)).
 :- endif.
 
 load_lmchat:- lmchat_dir(D),atom_concat(D,'/*/*.prolog',F), expand_file_name(F,List),

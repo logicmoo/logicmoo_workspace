@@ -51,7 +51,7 @@ try_completion(Nonterminal, String, CompletionText) :-
 run_parser_test(Nonterminal, String) :-
    nonterminal_args(Nonterminal, Prototype),
    word_list(String, Words),
-   catch(once((parse(Prototype, Words) -> ansicall(cyan,writeln(Words:pass:Prototype)) ; ansicall(red,writeln(String:fail:Prototype)))),
+   catch(once((parse(Prototype, Words) -> ansicall(green,writeln(Words:pass:Prototype)) ; ansicall(red,writeln(String:fail:Prototype)))),
 	 Exception,
 	 ansicall(yellow,writeln(String:Exception:Prototype))).
 
