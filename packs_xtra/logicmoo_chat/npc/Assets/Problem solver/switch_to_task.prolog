@@ -110,7 +110,7 @@ unsatisfied_task_precondition(Task, P) :-
    precondition(Task, P),
    \+ task_precondition_satisfied(P).
 
-task_precondition_satisfied(know(_:Condition)) :-
+task_precondition_satisfied(know(_,Condition)) :-
    !,
    ($task/on_behalf_of:Beneficiary) ->
       admitted_truth_value(Beneficiary, Condition, true)

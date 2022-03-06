@@ -126,6 +126,8 @@ infinitival_clause(EnclosingSubject, S) -->
 %%% Indicative mood
 %%%
 
+a_an --> ([a];[an];[]).
+
 s(S, indicative, Polarity, Tense, Aspect) -->
    { lf_subject(S, NP) },
    np((NP^S1)^S, subject, Agreement, nogap, nogap),
@@ -144,7 +146,7 @@ s(iz_a(Noun, Kind), indicative, Polarity, Tense, simple) -->
    np((Noun^_)^_, subject, Agreement, nogap, nogap),
    aux_be(Tense, Agreement),
    opt_not(Polarity),
-   [a],
+   a_an,
    kind_noun(Kind, singular).
 
 % NP is [not] NP
@@ -252,7 +254,7 @@ inverted_sentence(S, Polarity, Tense, Aspect) -->
 s(iz_a(Noun, Kind), interrogative, affirmative, Tense, simple) -->
    aux_be(Tense, Agreement),
    np((Noun^_)^_, subject, Agreement, nogap, nogap),
-   [a],
+   a_an,
    kind_noun(Kind, singular).
 
 % Wh-questions about normal verbs

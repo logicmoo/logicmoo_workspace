@@ -3,8 +3,8 @@ knows_about,public,person,entity,,,,,,
 interested_in,public,person,entity,be interested in,interest,interests,knows_about,,
 friend_of,public,person,person,be a friend of,friend,friends,likes,,yes
 roommate_of,public,person,person,be a roomate of,roommate,roomates,,,yes
-knows,public,person,person,,,,knows_about,,
-likes,public,person,person,,,,knows,,
+know,public,person,person,,,,knows_about,,
+likes,public,person,person,,,,know,,
 member_of,public,person,organization,be a member of,,,knows_about,,
 loves,public,person,person,,,,likes,,
 dislikes,public,person,person,,,,,,

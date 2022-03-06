@@ -70,7 +70,7 @@ condition,"likes(actor, condition)"
 condition,"likes(actor, action)"
 condition,"thinks(actor, condition)"
 condition,"believes(actor, condition)"
-condition,"knows(actor, condition)"
+condition,"know(actor, condition)"
 condition,"knows_value(actor, condition)"
 condition,entity:action
 condition,entity:condition

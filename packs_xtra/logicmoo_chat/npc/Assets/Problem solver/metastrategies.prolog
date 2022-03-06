@@ -23,11 +23,12 @@ strategy(restart(T),
 	   invoke_continuation(Goal) )) :-
    $task/type:task:Goal.
 
-strategy(pick_randomly(List), X) :-
+strategy(pick_randomly(List), X) :- is_list(List),
    % Pick randomly; need once/1, or it just regenerates the whole list.
    once(random_member(X, List)).
 
 strategy(pick_preferred(Task, List), Preferred) :-
+   is_list(List),
    preferred_strategy(Task, List, Preferred).
 
 :- external prefer_strategy/3.

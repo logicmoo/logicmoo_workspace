@@ -47,7 +47,7 @@ diagnose(Task, ~Precondition) :-
 
 default_strategy(explain_failure(_),
 		 say_string("I don't know how.")).
-strategy(explain_failure(~know(X:location(Object, X))),
+strategy(explain_failure(~know(X,location(Object, X))),
 	 speech(["I don't know where", np(Object), "is"])).
 
 strategy(explain_failure(~ready_to_hand(Object)),

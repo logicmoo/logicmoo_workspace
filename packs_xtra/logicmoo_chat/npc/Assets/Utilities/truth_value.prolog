@@ -18,13 +18,13 @@
 :- external know_whether/1, pretend_truth_value/3.
 :- dynamic know_property/3, know_relation/3,
    know_about_kind/1, closed_word_naf/1.
-:- external believes/2, knows/2, knows_value/2.
+:- external believes/2, know/2, knows_value/2.
 
 thinks($me, Proposition) :-
    truth_value(Proposition, true).
 believes($me, Proposition) :-
    truth_value(Proposition, true).
-knows($me, Proposition) :-
+know($me, Proposition) :-
    truth_value(Proposition, true).
 knows_if($me, Proposition) :-
    truth_value(Proposition, true).
@@ -137,6 +137,8 @@ know_false(P) :-
 % truth_value(P, false) :-
 %    \+ P.
 
+$global_root/configuration/omniscent_characters.
+
 know_whether(_) :-
    $global_root/configuration/omniscent_characters.
 know_whether(iz_a(_, entity)).
@@ -154,7 +156,7 @@ know_whether(related(Object, Relation, Relatum)) :-
 
 know_about_object($me).
 know_about_object(Person) :-
-   related($me, know, Person).
+   related($me, know, Person);know($me, Person).
 
 know_about_object(theclub).
 

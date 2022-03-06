@@ -1,6 +1,6 @@
 Base (word list),TPS (word list),Past (word list),PastP (word list),PresP (word list),Force PPs (list),LF (prefix: Agent^Patient^)
 deactivate,deactivates,deactivated,deactivated,deactivating,,"deactivate(Agent, Patient)"
-know,knows,knew,knew,knowing,,"related(Agent, knows, Patient)"
+know,knows,knew,knew,knowing,,"know(Agent, Patient)"
 love,loves,loved,loved,loving,,"related(Agent, loves, Patient)"
 like,likes,liked,liked,liking,,"related(Agent, likes, Patient)"
 dislike,dislikes,disliked,disliked,disliking,,"related(Agent, dislikes, Patient)"

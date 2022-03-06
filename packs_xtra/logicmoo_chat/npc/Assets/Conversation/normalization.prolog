@@ -45,6 +45,6 @@ da_normal_form(assertion(Speaker, Addressee, Assertion, T, A),
 
 normalized_assertion(S, _, likes(S, thinks(S, A)), A).
 normalized_assertion(S, _, thinks(S, A), A).
-normalized_assertion(S, _, knows(S, A), A).
+normalized_assertion(S, _, know(S, A), A).
 normalized_assertion(S, _, believes(S, A), A).
 

@@ -83,7 +83,7 @@ strategy(achieve(location($me, Container)),
    iz_a(Container, prop).
 
 precondition(move($me, Patient, _),
-	     know(X:location(Patient, X))).
+	     know(X,location(Patient, X))).
 strategy(move($me, X,Y),
 	 achieve(location(X, Y))).
 
@@ -93,9 +93,9 @@ strategy(achieve(docked_with(WorldObject)),
 %%
 %% locomotion
 %%
-:- external know/1.
+:- external know/2.
 precondition(goto(Object),
-	     know(X:location(Object, X))).
+	     know(X,location(Object, X))).
 
 strategy(goto(Building),
 	 null) :-
@@ -161,9 +161,9 @@ guard_condition(Task, location(Object, _Loc)) :-
 %% Spatial search
 %%
 
-strategy(achieve(know(X:location(Object, X))),
+strategy(achieve(know(X,location(Object, X))),
 	 begin(search_for($me, _, Object),
-	       unless(know(X:location(Object, X)),
+	       unless(know(X,location(Object, X)),
 		      failed_because(cant_find(Object))))).
 
 normalize_task(search_for($me, Unspecified, Target),

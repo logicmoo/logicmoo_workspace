@@ -75,7 +75,7 @@ guard_clause(Head,Body):- agent_module(M),M:clause(Head,GBody),until_guard(GBody
 check_sit(Sit):- must_be(nonvar,Sit),fail.
 
 cant_just_assume(M:P):- nonvar(M),!,cant_just_assume(P).
-cant_just_assume(knows(_,_)).
+cant_just_assume(know(_,_)).
 cant_just_assume(cpv(_,_,_)).
 is_assumable_happens(X):- \+ \+ cant_just_assume(X),!, fail.
 is_assumable_happens(said(Self,_)):- Self\==user.

@@ -34,10 +34,10 @@ print_load_lmchat:- lmchat_dir(D),atom_concat(D,'/*/*.prolog',F), expand_file_na
 %:- print_load_lmchat.
 
 s(String):- s(String,_).
-s(String,LogicalForm):- atomic(String),!,tokenize_atom(String,Words),!,s(Words).
+s(String,LogicalForm):- atomic(String),!,tokenize_atom(String,Words),!,s(Words,LogicalForm).
 s(LogicForm,Words):- s(LogicForm, Mood, Polarity, Tense, Aspect, Words,[]),
   log(Words-->s(LogicForm, Mood, Polarity, Tense, Aspect)).
-s(Words,LogicalForm):- Words =[_|_],!, s(LogicForm, Mood, Polarity, Tense, Aspect, Words,[]),
+s(Words,LogicalForm):- Words =[_|_],!, s(LogicalForm, Mood, Polarity, Tense, Aspect, Words,[]),
   log(Words-->s(LogicForm, Mood, Polarity, Tense, Aspect)).
 
 

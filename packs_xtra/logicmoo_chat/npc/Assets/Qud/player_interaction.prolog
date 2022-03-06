@@ -38,7 +38,7 @@ modal_payload(wants(_, P), P).
 modal_payload(needs(_, P), P).
 modal_payload(likes(_, P), P).
 modal_payload(believes(_, P), P).
-modal_payload(knows(_, P), P).
+modal_payload(know(_, P), P).
 modal_payload(thinks(_, P), P).
 
 recursive_modal(P) :-
@@ -48,13 +48,13 @@ recursive_modal(P) :-
 player_input_response(X, C, assert(C/propose_action:X)).
 
 :- multifile(da_normal_form/2).
-da_normal_form(assertion($pc, NPC, knows(NPC, Proposition), present, simple),
+da_normal_form(assertion($pc, NPC, know(NPC, Proposition), present, simple),
 	       automa_command($pc, NPC, Proposition, present, simple)).
 da_normal_form(assertion($pc, NPC, believes(NPC, Proposition), present, simple),
 	       automa_command($pc, NPC, Proposition, present, simple)).
 da_normal_form(assertion($pc, NPC, thinks(NPC, Proposition), present, simple),
 	       automa_command($pc, NPC, Proposition, present, simple)).
-da_normal_form(command($pc, NPC, knows(NPC, Proposition)),
+da_normal_form(command($pc, NPC, know(NPC, Proposition)),
 	       automa_command($pc, NPC, Proposition, present, simple)).
 da_normal_form(command($pc, NPC, believes(NPC, Proposition)),
 	       automa_command($pc, NPC, Proposition, present, simple)).

@@ -31,6 +31,7 @@ object_words(pn,Object,Words):- object_words0(pn,Object, Words).
 object_words(a,Object,Words):- object_words0(a,Object,Words), \+ object_words0(pn,Object, Words).
 
 object_words0(pn,Object, Words):- declare_value(Object,given_name,String),tokenize_atom(String,Words).
+object_words0(a,#(Kind),[Kind]):- atom(Kind),!.
 object_words0(a,Object,[Kind]) :- (var(Kind);atom(Kind)),atom(Object),atom_concat('unknown_',Kind,Object).
 object_words0(a,Object,Words):- 
  atom(Object), \+ atom_concat('unknown_',_,Object),

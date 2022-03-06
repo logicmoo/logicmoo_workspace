@@ -145,11 +145,11 @@ verb_with_clausal_complement(present, Agreement, Subject, Complement, thinks(Sub
    [think],
    { dif(Agreement, third:single) }.
 
-verb_with_clausal_complement(present, third:single, Subject, Complement, knows(Subject, Complement), knows_value(Subject, Complement)) -->
+verb_with_clausal_complement(present, third:single, Subject, Complement, know(Subject, Complement), knows_value(Subject, Complement)) -->
    [knows].
-verb_with_clausal_complement(past, _, Subject, Complement, knows(Subject, Complement), knows_value(Subject, Complement)) -->
+verb_with_clausal_complement(past, _, Subject, Complement, know(Subject, Complement), knows_value(Subject, Complement)) -->
    [knew].
-verb_with_clausal_complement(present, Agreement, Subject, Complement, knows(Subject, Complement), knows_value(Subject, Complement)) -->
+verb_with_clausal_complement(present, Agreement, Subject, Complement, know(Subject, Complement), knows_value(Subject, Complement)) -->
    [know],
    { dif(Agreement, third:single) }.
 
