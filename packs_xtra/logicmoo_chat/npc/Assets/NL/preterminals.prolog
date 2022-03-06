@@ -10,15 +10,19 @@ proper_name(Object, Name) :-
    proper_name(Object, _, Name, [ ]).
 
 proper_name(Object, Number) -->
+   proper_name_without_the(Object, Number).
+
+proper_name(Object, Number) -->
    [the],
    proper_name_without_the(Object, Number).
 
 :- multifile(proper_name_without_the//2).
 :- dynamic(proper_name_without_the//2).
-proper_name_without_the(Obj,_,Left, More):- 
- object_words(Obj,Words),
+proper_name_without_the(Object,_,Left, More):- 
+ object_words(Object,Words), 
  append(Words,More,Left).
 
+object_words(Object, Words):- declare_value(Object,given_name,String),tokenize_atom(String,Words).
 object_words(Object,[Kind]) :- (var(Kind);atom(Kind)),atom(Object),atom_concat('unknown_',Kind,Object).
 object_words(Object,Words):- 
  atom(Object), (atom_contains(Object,' ')-> atomic_list_concat(Words,' ',Object);atomic_list_concat(Words,'_',Object)).
@@ -31,7 +35,7 @@ pronoun(Case, Person:Number, (E^S)^S) -->
 %relpron --> [RP], {relpron(RP)}.
 whpron(Kind) -->
    { Kind \== person,		% Use who for persons
-     Kind \= entity },		% Just say what, rather than "what entities"
+     Kind \== entity },		% Just say what, rather than "what entities"
    [what],
    kind_noun(Kind, _).
 

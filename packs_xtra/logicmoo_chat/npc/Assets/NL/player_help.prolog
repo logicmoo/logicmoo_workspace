@@ -58,7 +58,7 @@ strategy(how_do_i(control_minds),
 		  "I just say the magic word 'fnord',",
 		  "followed by a statement of fact.",
 		  "For example, \"fnord you're an orange\",",
-		  "will make someone thing they're an orange.",
+		  "will make someone think they're an orange.",
 		  "I can't make people believe all statements,",
 		  "but I can get them to believe a lot."])).
 player_question(read_minds) --> [read, minds].

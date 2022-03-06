@@ -9,7 +9,7 @@ make_pred_narity_call_list(P,A):-
   Head=..[P|L],Body=..[P,L],
   assert_if_new((Head:-Body)).
 
-begin(G):- locally(t_l:pretend_source_file_expansion(false),unity_begin(G)).
+begin(G):- locally(t_l:pretend_expansion(call),unity_begin(G)).
 
 unity_begin(G):- is_list(G),!,maplist(unity_begin,G).
 unity_begin(G):- unity_call(G).
@@ -75,31 +75,34 @@ system:unity_call(M:G):-
 system:unity_call(M:G):- !, call(M:G).
 %system:unity_call(M:G):- G=..[F|Args],unity_apply(M:F,Args).
 %ugoal_expansion(B,BBB):- once(uclause_expansion_inner(hb,goal,B,goal:-BB)),B\==BB,!,expand_goal(BB,BBB).
-unity_db_call(F,Args):- maplist(expand_uterm,Args,EArgs),!,unity_apply(F,EArgs).
+unity_db_call(F,Args):- maplist(expand_assert,[F],Args,EArgs),!,unity_apply(F,EArgs).
 
 
 :- meta_predicate(system:unity_apply(:,+)).
-system:unity_apply(F,[Arg]):- once(convert_assert(Arg,Slash)),Arg\==Slash,!, unity_apply(F,[Slash]).
+system:unity_apply(F,[Arg]):- once(expand_assert(unity_apply,Arg,Slash)),Arg\==Slash,!, unity_apply(F,[Slash]).
 system:unity_apply(M:(public),[Arg]):- !, system:unity_apply(M:(external),[Arg]).
 %system:unity_apply(F,Args):- \+ ground(Args), log(unity_apply(F,Args)), fail.
 system:unity_apply(F,Args):- apply(F,Args).
 
-expand_assert(W,I,O):-expand_slash(I,II), convert_assert(II,O),II\==O,ansicall(fushia, print_clexp(W,I,O)),!.
-expand_assert(_,O,O).
+expand_assert(Why,I,O):-
+  expand_slash(I,II), convert_assert(Why,II,O),II\==O,!,ansicall(fushia, print_clexp(Why,I,O)),!.
+expand_assert(_Why,O,O).
 
-convert_assert(G,G):- var(G),!.
-convert_assert(B,O):- get_var_expansions(h,B,M,G),G\==true,!,call(G),convert_assert(M,O).
-convert_assert(Arg,Slash):-  expand_uterm(Arg,Slash),!.
-%convert_assert('::'(G,Arg),Slash):- G == $global,!, convert_assert(Arg,Slash).
-%convert_assert(X,X):- \+ \+ X = uslash(_,_),!.
-convert_assert(Arg,Slash):-  maybe_into_slash_db(Arg,Slash),!.
-convert_assert(X,Y):- compound(X),
+convert_assert(_Why,G,G):- \+ compound(G),!.
+convert_assert(_Why,X,X):- \+ \+ X = uslash(_,_),!.
+convert_assert(Why,'::'(G,Arg),Slash):- G == $global,!, unity_module_name(M), expand_assert(Why,M:Arg,Slash).
+convert_assert(Why,M:Arg,M:Slash):- !,expand_assert(Why,Arg,Slash).
+convert_assert(_Why,C,O):- no_more_expansion(a,C,O),!.
+convert_assert(Why,B,(O)):- get_var_expansions(a,B,M,G),G\==true,immediate_expansion,!,call(G),!,expand_assert(Why,M,O).
+convert_assert(Why,B,(O:-G)):- get_var_expansions(h,B,M,G),G\==true,!,expand_assert(Why,M,O).
+convert_assert(_Why,Arg,Slash):-  maybe_into_slash_db(Arg,Slash),!.
+convert_assert(_Why,Arg,Slash):- expand_uterm(Arg,Slash),!.
+convert_assert(Why,X,Y):- 
   compound_name_arguments(X,F,AX),
-  maplist(convert_assert,AX,AY),
+  maplist(expand_assert([F|Why]),AX,AY),
   compound_name_arguments(Y,F,AY),!.
-convert_assert(X,X).
 
-:- system:import(convert_assert/2).
+:- system:import(convert_assert/3).
 
 maybe_into_slash_db(C,_):- \+ compound(C),!,fail.
 maybe_into_slash_db(uslash(X,Y),uslash(X,Y)):- !.
@@ -217,7 +220,7 @@ slash_exp(X,Y):- compound(X),!,
 functor_expansion(F,F).
 
 
-dv(E,V):-compound(E), (E= ($(V))), nonvar(V), V \== global. %, V \== this, V \== me.
+dv(E,V):-compound(E), (E= ('$'(V))), nonvar(V), V \== global. %, V \== this, V \== me.
 %uclause_expansion_inner(hb,H,B,HHBB):- sub_uterm(E,H),dv(E,V),usubst(H,E,Var,HH),!,
 %  conjoin(getvar(V,Var),B,BB),uclause_expansion_inner(hb,HH,BB,HHBB).
 %uclause_expansion_inner(hb,H,B,HHBB):- sub_uterm(E,B),dv(E,V),usubst(B,E,Var,BB),!,
@@ -257,10 +260,13 @@ lock_var(V):- freeze(V, (ignore((nonvar(V),break)))).
 as_clause_hb(H,B,HBO):- term_variables(H+B,Vars),nop(maplist(lock_var,Vars)),!,
   as_clause_hb0(H,B,HBO).
 as_clause_hb0(H,B,H):- var(H), B ==true,!.
-as_clause_hb0(H,B,(H:-B)):- var(H),!.
-as_clause_hb0('::'(Ctx,H),B,('::'(Ctx,H):-B)):- var(Ctx),!.
-as_clause_hb0('::'($Ctx,H),B,((H:- ( getvar(Ctx,V), if_uctx_equals(V), '::'(V,BB))))):- nonvar(Ctx),!, expand_ugoal(B,BB).
-as_clause_hb0('::'(Ctx,H),B,((H:- ( if_uctx_equals(Ctx), '::'(Ctx,BB))))):-  expand_ugoal(B,BB).
+as_clause_hb0(H,B,(H:-BB)):- var(H),!, expand_ugoal(B,BB).
+as_clause_hb0(M:H,B,M:(HB)):-!,as_clause_hb0(H,B,HB).
+
+as_clause_hb0('::'( Ctx,H),B,((H:- Ctx::BB))):- var(Ctx),!, expand_ugoal(B,BB).
+as_clause_hb0('::'($Ctx,H),B,((H:- BB))):- Ctx==global,!, expand_ugoal(B,BB).
+as_clause_hb0('::'($Ctx,H),B,((H:- ( getvar(Ctx,V), if_uctx_equals(V), BB)))):- nonvar(Ctx),!, expand_ugoal(B,BB).
+as_clause_hb0('::'( Ctx,H),B,((H:- ( if_uctx_equals(Ctx), BB)))):-  expand_ugoal(B,BB).
 %as_clause_hb(H,B,Out):- B == true,!,as_clause_head(H,Out).
 %as_clause_hb(H,B,(:-BB)):- H==goal,!, expand_ugoal(B,BB).
 as_clause_hb0(H,B,(HH:-BBB)):- get_var_expansions(h,H,HH,G),expand_ugoal(B,BB),conjoin(G,BB,BBB).
@@ -274,8 +280,9 @@ uterm_expansion(X,Y):- expand_uterm(X,Y),!.
 expand_uterm(C,O):- no_more_expansion(h,C,O),!.
 expand_uterm(:-B,:-BB):- !, expand_ugoal(B,BB),!.
 expand_uterm(H:-B,HB):- !, typed_uclause_expansion(hb,H,B,HB),!.
-expand_uterm(H-->B,HB):- !, dcg_translate_rule((H-->B),HB),!,expand_uterm(H:-B,HB).
+expand_uterm(H-->B,HBO):- !, dcg_translate_rule((H-->B),HB),!,expand_uterm(HB,HBO).
 expand_uterm(H,HB):- typed_uclause_expansion(hb,H,true,HB),!.
+expand_uterm(H,H).
 %expand_uterm(H,HB):- expand_slash(H,HB).
 
 :- dynamic(is_meta_predicate/1).
@@ -372,14 +379,16 @@ contains_uvar(X):- sub_uterm(E,X),compound(E),E='$'(_).
 
 get_var_expansions(_,O,O,true):- \+ compound(O),!.
 %get_var_expansions(h,'::'(C,T),'::'(CO,T),VarsOut):- get_var_expansions(h,C,CO,VarsOut).
-get_var_expansions(h,H,O,VarsOut):- compound(H), sub_term(E,H),dv(E,V),subst(H,E,Var,HH),!,get_var_expansions(h,HH,O,SVars),debug_var(V,Var),conjoin(getvar(V,Var),SVars,VarsOut).
 get_var_expansions(b,B,O,VarsOut):- compound(B), sub_uterm(E,B),dv(E,V),subst(B,E,Var,BB),!,get_var_expansions(b,BB,O,SVars),debug_var(V,Var),conjoin(getvar(V,Var),SVars,VarsOut).
+get_var_expansions(HA,H,O,VarsOut):- HA\==b,compound(H), sub_term(E,H),dv(E,V),subst(H,E,Var,HH),!,get_var_expansions(HA,HH,O,SVars),debug_var(V,Var),conjoin(getvar(V,Var),SVars,VarsOut).
 get_var_expansions(_,O,O,true).
 
 no_more_expansion(_,C,C):- \+ compound(C),!.
 no_more_expansion(_,Dyn,Dyn):-  compound_name_arity(Dyn,F,1), current_op(X,Y,dynamic), \+ upcase_atom(F,F), current_op(X,Y,F),current_predicate(F/1),!.
 no_more_expansion(b,'::'(_,G),true):- G==true,!.
 no_more_expansion(_,(A,G),A):- G==true,!.
+no_more_expansion(b,In,true):- In =@= (getvar(global, A),if_uctx_equals(A)).
+no_more_expansion(b,In,!):- In =@= (getvar(global, A),if_uctx_equals(A),!).
 %no_more_expansion(h,'::'(C,G),'::'(C,G)):-!.
 no_more_expansion(b,'::'(C,G),OUT):- get_var_expansions(b,C,CO,Vars),!,expand_ugoal(G,GG), conjoin(Vars,'::'(CO,GG),OUT).
 no_more_expansion(b,unity_call(C),Out):- get_var_expansions(h,C,O,Vars),conjoin(Vars,unity_call(O),Out).
@@ -574,8 +583,9 @@ load_unity_prolog_file(F):-
 
 load_unity_csv_file(F):- 
   log(load_unity_csv_file(F)),
-  unity_prolog_filename(F,Prolog),
-  load_unity_csv_file_data(Prolog).
+  locally(t_l:pretend_expansion(file),
+   (unity_prolog_filename(F,Prolog),
+    load_unity_csv_file_data(Prolog))).
 
 unity_prolog_filename(F,Filename):- exists_file(F),!,Filename=F.
 unity_prolog_filename(F,Filename):- lmchat_dir(D),atomic_list_concat([D,'/',F],Filename),exists_file(Filename),!.
@@ -631,9 +641,10 @@ consult(File, M):- M:consult(File).
 module_uctx(X):- '$current_typein_module'(X),!.
 module_uctx(X):- prolog_load_context(module,X),!.
 
-:- thread_local(t_l:(pretend_source_file_expansion/1)).
+:- thread_local(t_l:(pretend_expansion/1)).
 
-source_file_expansion:- t_l:pretend_source_file_expansion(YN),!,YN==true.
+immediate_expansion:- t_l:pretend_expansion(YN),!,YN==call.
+source_file_expansion:- t_l:pretend_expansion(YN),!,YN==file.
 source_file_expansion:- prolog_load_context(file,File),prolog_load_context(source,File),!,tmpu:is_unity_file(File).
 unity_uctx:- source_file_expansion,!.
 unity_uctx:- prolog_load_context(file,File),prolog_load_context(source,File),!,tmpu:is_unity_file(File).
@@ -641,6 +652,7 @@ unity_uctx:- unity_module_name(M),module_uctx(T),!,M==T.
 
 %print_clexp(_,_,_):-!.
 print_clexp(_,X,Y):- X=@=Y,!.
+print_clexp(_,X,Y):- (($global)::X)=@=Y,!.
 %print_clexp(X,Y):- in_cmt(print_tree(X)),print_tree(Y).
 print_clexp(W,X,Y):- wdmsg(X),write('%~  '),writeln(W),wdmsg(Y).
 
@@ -701,6 +713,7 @@ correct_row_type(T,A,A):- var(T),!.
 correct_row_type([_Word,list],A,V):- !,correct_row_type('list',A,V).
 correct_row_type([T],A,V):- correct_row_type(T,A,V),!.
 correct_row_type(list,A,V):- listify_row(A,V),!.
+correct_row_type(string,'',null):-!.
 correct_row_type(string,A,V):- cell_to_string(A,V),!.
 correct_row_type(_,'',null):-!.
 correct_row_type(_,V,V).

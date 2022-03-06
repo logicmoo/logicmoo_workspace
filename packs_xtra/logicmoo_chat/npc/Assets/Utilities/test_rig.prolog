@@ -36,9 +36,11 @@ run_utests(Name) :-
 %% test_body(+Name, -Options, -Body)
 %  There is a test with Name, Options, and Body.
 test_body(Name, Options, Body) :-
-   clause(test(Name, Options), Body).
+   unity_module_name(Unity),
+   Unity:call(clause,test(Name, Options), Body).
 test_body(Name, [ ], Body) :-
-   clause(test(Name), Body).
+   unity_module_name(Unity),
+   Unity:call(clause,test(Name), Body).
 
 %% run_test(+Name, +Options, +Body)
 %  Runs the specified test, printing out any failures.  Always succeeds.
@@ -50,7 +52,7 @@ run_test(Name, Options, Body) :-
 	 setup_test(Name, Options),
    displayln("Running ", Name,' with options=',Options ),
 	 (catch(run_test_body(Options, Body), Exception, true) ->
-	     (ansicall(cyan,displayln(["Test ", Name, " was GOOD."])), print_test_results(Name, Options, Exception))
+	     (ansicall(cyan,displayln(["Test ", Name, " was GOOD.\n",Options,'\n',Body])), print_test_results(Name, Options, Exception))
 	     ;
 	     ansicall(red,displayln("Test ", Name, " was unsatisfiable.")))).
 
