@@ -27,8 +27,16 @@ proper_name_with_the(Object,_,Left, More):-
  object_words(a,Object,Words), 
  append(Words,More,Left).
 
-object_words(pn,Object,Words):- object_words0(pn,Object, Words).
-object_words(a,Object,Words):- object_words0(a,Object,Words), \+ object_words0(pn,Object, Words).
+art_the(Art):- atom(Art), member(Art,[a,an,the]).
+carefull_words([Art|X],Y):- art_the(Art),!,carefull_words(X,Y).
+carefull_words([X],[X]):-!.
+carefull_words([],_):-!,fail.
+carefull_words(FIT,Out):- include(not_lower,FIT,NotLow), (NotLow==[] -> Out=FIT ; Out = NotLow).
+
+not_lower(X):- \+ (atom(X), downcase_atom(X,X)).
+
+object_words(pn,Object,CWords):- object_words0(pn,Object, Words),carefull_words(Words,CWords).
+object_words(a,Object,CWords):- object_words0(a,Object,Words), \+ object_words0(pn,Object, Words),carefull_words(Words,CWords).
 
 object_words0(pn,Object, Words):- declare_value(Object,given_name,String),tokenize_atom(String,Words).
 object_words0(a,#(Kind),[Kind]):- atom(Kind),!.

@@ -139,6 +139,8 @@ assert_genitive_form(Name, Number, Phrase) :-
 %%
 %% Entities
 %%
+member_pn(E,[H|T]):- is_list(H),!,member(E,[H|T]).
+member_pn(E,E):- E\==[], is_list(E).
 
 load_special_csv_row(_RowNumber,
 		     entities(EntityName, KindList,
@@ -148,7 +150,7 @@ load_special_csv_row(_RowNumber,
    assert_description(EntityName, Description),
    forall(member(Kind, KindList),
 	  assert_if_unew(declare_kind(EntityName, Kind))),
-   forall(member(ProperName, ProperNames),
+   forall(member_pn(ProperName, ProperNames),
 	  assert_proper_name(EntityName, ProperName, GramaticalNumber)),
    forall(member(PropertyName=Value, PropertyList),
 	  assert_if_unew(declare_value(EntityName, PropertyName, Value))),
