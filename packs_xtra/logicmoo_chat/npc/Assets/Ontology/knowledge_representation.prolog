@@ -192,11 +192,12 @@ is_type(Object, number) :-
    number(Object), !.
 is_type(Object, string) :-
    string(Object), !.
-is_type(Object, kind) :-
-   kind(Object).
 is_type(Object, List) :-
    is_list(List),
    member(Object, List).
+is_type(Object, kind) :-
+   kind(Object).
+is_type(Object, Kind) :- compound(Object),Object='#'(Var),Var=Kind.
 is_type(Object, kind_of(Kind)) :-
    kind_of(Object, Kind).
 is_type(Object, subkind_of(Kind)) :-

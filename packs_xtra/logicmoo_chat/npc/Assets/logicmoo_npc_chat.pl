@@ -12,9 +12,9 @@
 
 pi_to_p(F/A,P):- functor(P,F,A),!.
 pi_to_p(F//A,P):- A2 is A + 2, functor(P,F,A2).
-assume_todo(FA):- pi_to_p(FA,P), TODO=assume_todo(P), asserta_if_new((P:- predicate_property(P,number_of_clauses(1)), !, log(warn(TODO)),throw(TODO))).
+assume_todo(FA):- pi_to_p(FA,P), TODO=assume_todo(P), asserta_if_new((P:- predicate_property(P,number_of_clauses(1)), !, log((warn(TODO))),throw(TODO))).
 assume_done(FA):- pi_to_p(FA,P), TODO=assume_done(P), asserta_if_new((P:- predicate_property(P,number_of_clauses(1)), !, log(warn(TODO)))).
-assume_dyn_fail(FA):- pi_to_p(FA,P), TODO=assume_dyn_fail(P), assert_if_new((P:- predicate_property(P,number_of_clauses(1)),!, log(warn(TODO)),fail)).
+assume_dyn_fail(FA):- pi_to_p(FA,P), TODO=assume_dyn_fail(P), assert_if_new((P:- predicate_property(P,number_of_clauses(1)),!, log(v(warn(TODO))),fail)).
 assume_dyn_succeed(FA):- pi_to_p(FA,P), TODO=assume_dyn_succeed(P), asserta_if_new((P:- predicate_property(P,number_of_clauses(1)), !, log(warn(TODO)),!)).
 
 :- if( \+ prolog_load_context(reloading,false)).
@@ -33,7 +33,14 @@ print_load_lmchat:- lmchat_dir(D),atom_concat(D,'/*/*.prolog',F), expand_file_na
   maplist(print_load_unity_prolog_file,Rev).
 %:- print_load_lmchat.
 
-process_kind_hierarchy:- log(todo(process_kind_hierarchy)).
+s(String):- s(String,_).
+s(String,LogicalForm):- atomic(String),!,tokenize_atom(String,Words),!,s(Words).
+s(LogicForm,Words):- s(LogicForm, Mood, Polarity, Tense, Aspect, Words,[]),
+  log(Words-->s(LogicForm, Mood, Polarity, Tense, Aspect)).
+s(Words,LogicalForm):- Words =[_|_],!, s(LogicForm, Mood, Polarity, Tense, Aspect, Words,[]),
+  log(Words-->s(LogicForm, Mood, Polarity, Tense, Aspect)).
+
+
 
 :- discontiguous valid_property_value/2.
 :- discontiguous utterance/3.
@@ -240,6 +247,8 @@ process_kind_hierarchy:- log(todo(process_kind_hierarchy)).
 
 :- 
   unity_module_name(M),add_history(module(M)).
+
+:- forall(clause(unity_init,Body),must_or_rtrace(Body)).
 
 :- getvar(pc,PC),bind(me,PC).
 

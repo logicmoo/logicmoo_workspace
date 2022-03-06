@@ -136,11 +136,51 @@ is_slashed_g((/_):_).
 to_slash_db(C,Top,uslash(Top,C)) :- !.
 %to_slash_db(C,Top,uslash(Top,O)) :- subst(C,'/','[|]',O).
 
-uslash(rel,X):- !, uslash(this,X).
-uslash(top,X):- !, uslash(me,X).
+slash_top(Rel):- arg(_,e(rel,top,this,me,global),Rel).
+uslash(Rel,X):- var(Rel),!,slash_top(Rel),uslash(Rel,X).
+uslash(#(Rel),X):- !, uslash(Rel,X).
+uslash($(Rel),X):- getvar(Rel,From), !, uslash(From,X).
+%uslash(top,/(X)):- uslash(me,X).
+%uslash(rel,X):- uslash(this,X).
+uslash(me,/(X)):- me_path(Root),!,extend_path(Root,X,Full),uslash(full,Full).
+uslash(this,X):- this_path(Root),!,extend_path(Root,X,Full),uslash(full,Full).
+%uslash(top,X):- !, uslash(me,X).
+uslash(Rel,Path/Name:Value):- gen_pnv(Path,Name,Value,PathVarValue), Path/Name:Value\==PathVarValue,uslash(Rel,PathVarValue).
 
-uslash(me,/(X)):- me_path(Root),uslash(Root,X).
-uslash(this,X):- this_path(Root),uslash(Root,X).
+
+gen_pnv(Path,Name,Value,Path/Name:Value).
+gen_pnv(Path,Name,Value,Path/VarValue):- VarValue\=(_:_),VarValue=Name,Value=true.
+
+:- dynamic(ufslash/1).
+
+extend_path(_,'/'(Y),'/'(Y)):- nonvar(Y),!.
+extend_path(X,Y,XY):- get_slash(Y,YY),Y\==YY,!,extend_path(X,YY,XY).
+extend_path(Y,X,XY):- get_slash(X,YY),Y\==YY,!,extend_path(X,YY,XY).
+extend_path(Y,This,Y):- This==this, !.
+extend_path(X,'/'(Y),'/'(XX,YY)):- get_slash(X,XX),get_slash(Y,YY).
+
+slash_props(Path,Name,Value):- gen_pnv(Path,Name,Value,PathVarValue),uslash(rel,PathVarValue).
+
+get_slash(X,X):- var(X),!.
+get_slash(uslash(rel,X),XX):- get_slash(X,XX).
+get_slash(uslash(this,X),X):-!.
+get_slash(X,X).
+
+uslashv(ME,X,V):- getvar(me,ME),uslash(_,Y),slash_to_list(Y,Z), (append([ME|X],[val(V)],Z)-> true ; (append([ME|X],[],Z),V=true)).
+
+slash_to_list(X,Y):- slash_to_list0(X,Y),!.
+%slash_to_list(X,Y:true):-slash_to_list0(X,Y).
+slash_to_list0(XY,[XY]):- \+ compound(XY),XY\==[],!.
+slash_to_list0([],[]):-!.
+slash_to_list0(X:V,VXX):-!,slash_to_list0(X,XX),append(XX,[val(V)],VXX). 
+slash_to_list0(X/Y,XXYY):- !, slash_to_list0(X,XX),slash_to_list0(Y,YY),append(XX,YY,XXYY). 
+%slash_to_list0(X/Y,[X|List]):- \+ compound(X),!,slash_to_list0(Y,List).
+%slash_to_list0(X/Y,XXYY):- !, slash_to_list0(X,XX),slash_to_list0(Y,YY),append(XX,YY,XXYY). 
+%slash_to_list0(X/YV,List=V):- nonvar(YV),!,(YV = Y:V), slash_to_list0(X/Y,List).
+%slash_to_list0(X/Y,ListY:true):- \+ compound(Y),!,slash_to_list0(X,List),append(List,[Y],ListY).
+%slash_to_list0(XY,[XY]):- \+ compound(XY),!.
+slash_to_list0(XY,[XY]).
+
 %uslash(rel,X):- uslash(($this)/X).
 %uslash(me,X):- getvar(me,Me),extend_path(Me,X,Full),uslash(full,Full).
 
@@ -180,7 +220,6 @@ calc_to_hashmap(Nextuid:Var,O,Var):- !, getvar(this,Y),extend_path(Y,Nextuid,O).
 calc_to_hashmap(/Nextuid,O,t):- !, getvar(me,Y),extend_path(Y,Nextuid,O).
 calc_to_hashmap(Nextuid,O,r):- !, getvar(this,Y),extend_path(Y,Nextuid,O).
 */
-extend_path(X,Y,'/'(X,Y)).
 
 /*
 calc_full_slash_db(/X,X,Full):- !, getvar(me,Y),extend_path(Y,X,Full).
@@ -534,18 +573,22 @@ usubst2st(_X, _Sk, L, L).
 
 atom_or_var(AV):- atom(AV); var(AV).
 % for DCGs
-getvar(X,Y,A,A):- getvar(X,Y).
-% unknownvar_value(X,V):- atom(X),!,atom_concat('',X,V).
-unknownvar_value(X,V):- atom(X),atom_or_var(Y),atom_concat('unknown_',X,V),!.
-unknownvar_value(X,V):- nonvar(V),!,X=V,log(assume_bind(X,V)),bind(X,V).
-unknownvar_value(X,'#'(X)).
+getvar(N,V,A,A):- getvar(N,V).
+%unknownvar_value(N,V):- atom(N),atom_or_var(V),atom_concat('',N,V),!,log(warn(assume_bind(N,V))),bind(N,V).
+%unknownvar_value(N,V):- \+ \+ iz_a(_,N),!, freeze(V,iz_a(V,N)).
+%unknownvar_value(N,V):- atom(N),atom_or_var(V),!,atom_concat('unknown_',N,V),!.
+%unknownvar_value(N,V):- nonvar(V),!,N=V,log(warn(assume_bind(N,V))),bind(N,V).
+%unknownvar_value(N,'$'(N)).
+unknownvar_value(N,'#'(N)).
 
-%'#'(_).
+%'#'(IsDef):- current_predicate(IsDef/0),!,log(call(IsDef)),fail,unity_call(IsDef).
+'#'(Undef):- log(v('#'(Undef))),fail.
 
 bind(X,Y):- nb_current(X,O),O\==[],!,b_setval(X,Y).
 bind(X,Y):- nb_setval(X,Y).
 
 log(warn(X)):- !, dmsg(warn(X)).
+log(v(_)):- !. % overly verbose
 log(X):- dmsg(X).
 
 starts_with_one_of(String,Word):- sub_string(Word,0,1,_,L),sub_string(String,_,_,_,L).
@@ -653,6 +696,7 @@ unity_uctx:- unity_module_name(M),module_uctx(T),!,M==T.
 %print_clexp(_,_,_):-!.
 print_clexp(_,X,Y):- X=@=Y,!.
 print_clexp(_,X,Y):- (($global)::X)=@=Y,!.
+print_clexp(asserta,_,_):-!.
 %print_clexp(X,Y):- in_cmt(print_tree(X)),print_tree(Y).
 print_clexp(W,X,Y):- wdmsg(X),write('%~  '),writeln(W),wdmsg(Y).
 
@@ -672,18 +716,19 @@ load_unity_csv_file_data(CSV_file):-
     ignore(begin_csv_loading(Pred)),
     set_flag('$csv_row',1),!,
     maplist(load_csv_row_data(RTypes,Pred), Rows),
+    listing(Pred),
     ignore(end_csv_loading(Pred)).
 
 load_csv_row_data(Types,Pred, RowTerm):- (load_csv_row_data_now(Types,Pred, RowTerm)),!.
 load_csv_row_data_now(Types,Pred, RowTerm) :-     
     RowTerm=..[_|Row],
     Row = [F|_],
+    flag('$csv_row',RowNumber,RowNumber+1),!,
     % allow comments
-    (atom_concat('%',_,F) -> ! ;
+    (atom_concat('%',_,F) -> in_cmt(log(ap(load_csv_row(RowNumber,RowCall)))) ;
      (must_maplist(correct_row,Types,Row,CRow),
       RowCall=..[Pred|CRow],
-      flag('$csv_row',RowNumber,RowNumber+1),!,
-      dmsg(load_csv_row(RowNumber,RowCall)),
+      log(ap(load_csv_row(RowNumber,RowCall))),
       once(load_csv_row(RowNumber,RowCall)))),
     !.
 

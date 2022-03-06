@@ -92,5 +92,6 @@ immediate_kind_of(telling_truth, dignitary_favor).
 immediate_kind_of(honesty, telling_truth).
 immediate_kind_of(honoring, dignitary_favor).
 
+process_kind_hierarchy:- log(todo(process_kind_hierarchy)).
 
 :- process_kind_hierarchy.

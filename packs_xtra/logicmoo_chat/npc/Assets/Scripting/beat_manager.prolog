@@ -490,6 +490,10 @@ unachieved_objective(Objective) :-
    objective_description(Objective, _),
    \+ Objective.
 
+
+unity_init :- forall(objective_description(Objective, _),
+  (strip_module(Objective,M,OPFA),get_pi(OPFA,PI),functor(PI,F,A),dynamic(M:(F/A)))).
+
 %%%
 %%% Debugging display
 %%%
@@ -666,3 +670,5 @@ beat_graph_subgraph(TerminalBeats, [rank=sink]) :-
    all(Beat,
        terminal_beat(Beat),
        TerminalBeats).
+
+

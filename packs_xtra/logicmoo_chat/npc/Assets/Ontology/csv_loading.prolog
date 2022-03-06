@@ -60,7 +60,7 @@ assert_kind_nouns(Kind, Singulars, Plurals) :-
 
 define_kind(RowNumber, Kind, _) :-
    kind(Kind),
-   throw(error(row:RowNumber:kind_already_defined:Kind)).
+   log(warn(throw(error(row:RowNumber:kind_already_defined:Kind)))),fail.
 define_kind(RowNumber, Kind, [ ]) :-
    Kind \= entity,
    throw(error(row:RowNumber:kind_has_no_parents:Kind)).
