@@ -1,6 +1,6 @@
 Kind,Parents (list),Description,Singular (phrase list),Plural (phrase list),Default Properties (list),Default Relations (list),Class properties (list),Class relations (list)
-entity,,"""It's, you know, a thingy.""",thing,,,,,
-entity2,entity,"""It's, you know, a thingy2.""","[entity,thing]",entities,,,,
+entity,,"""It's, you know, a thingy.""",entity,entities,,,,
+% entity2,entity,"""It's, you know, a thingy2.""","[entity,thing]",entities,,,,
 perdurant,entity,,-,-,,,,
 endurant,entity,,-,-,,,,
 actor,endurant,,-,-,,,,

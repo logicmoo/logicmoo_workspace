@@ -55,26 +55,26 @@ plot_goal_achieves(house_searched,
 
 beat(exposition,
      {
- start($kavi): goto($pc),
- ($kavi + $pc):[ 
-     $kavi::"Sorry to hear your macguffin was stolen.",
-	   $kavi::"Make yourself at home.",
-	   $kavi::"By the way,",
-	   $kavi::("Stay out of my bedroom"
+ start($'Kavi'): goto($pc),
+ ($'Kavi' + $pc):[ 
+     $'Kavi'::"Sorry to hear your macguffin was stolen.",
+	   $'Kavi'::"Make yourself at home.",
+	   $'Kavi'::"By the way,",
+	   $'Kavi'::("Stay out of my bedroom"
 		  :[surprised,
 		    introduce_question(why_stay_out_of_bedroom,
 				       "Why does Kavi want me to stay out of the bedroom?")]),
-	   $kavi::"It's a personal thing."
+	   $'Kavi'::"It's a personal thing."
 	 ]
      }).
 
 beat(pc_reacts,
     {
      sequel_to: exposition,
-     start($kavi) : goto($'kitchen sink'),
+     start($'Kavi') : goto($'kitchen sink'),
      $pc: [ pause(3),
 	    "Kavi's a member of the theclub."
-	      : clue(kavi-theclub,
+	      : clue('Kavi'-theclub,
 		     "Kavi is a member of the theclub"),
 	    "He must have stolen my macguffin.",
 	    "I need to search the house."
@@ -97,12 +97,12 @@ beat(search_house,
       leads_to($pc, pickup($report)),
       leads_to($pc, captive_released),
       leads_to($pc, examine($pc, $photo)),
-      leads_to($kavi, ingest($pc)),
-      menu_automa_command($kavi):related($pc, member_of, theclub),
-      menu_automa_command($kavi):hungry($kavi),
-      menu_automa_command($kavi):iz_a($kavi, orange),
-      menu_question($kavi):(X:contained_in($macguffin, X)),
-      menu_command($kavi):bring($kavi, $pc, $macguffin)
+      leads_to($'Kavi', ingest($pc)),
+      menu_automa_command($'Kavi'):related($pc, member_of, theclub),
+      menu_automa_command($'Kavi'):hungry($'Kavi'),
+      menu_automa_command($'Kavi'):iz_a($'Kavi', orange),
+      menu_question($'Kavi'):(X:contained_in($macguffin, X)),
+      menu_command($'Kavi'):bring($'Kavi', $pc, $macguffin)
      }).
 
 after(pickup($report),
@@ -134,7 +134,7 @@ beat(react_to_photo,
      }).
 
 
-$kavi::personal_strategy(patrol_kitchen,
+$'Kavi'::personal_strategy(patrol_kitchen,
 			 { goto(Object), face(Object), pause(Time) }) :-
    once((random_member(Object, [$refrigerator, $'kitchen sink', $'kitchen table']),
 	 \+ docked_with(Object))),
@@ -142,7 +142,7 @@ $kavi::personal_strategy(patrol_kitchen,
    once(random_member(Time, [2, 3, 5, 7, 8])).
 
 :- assert((
-$kavi::personal_todo(patrol_kitchen, -100) :-
+$'Kavi'::personal_todo(patrol_kitchen, -100) :-
    background_character_in_current_beat)).
 
 %%%
@@ -156,7 +156,7 @@ beat(react_to_macguffin,
       reaction_to($pc, pickup($macguffin)),
       $pc:
         ["Got it!" : answered(why_stay_out_of_bedroom),
-	 "I knew he stole it."]
+	 "I knew $Kavi stole it."]
      }).
      
 %%%
@@ -167,9 +167,9 @@ beat(kavis_goodbye_speech,
      {
       bad_ending,
       priority: 2,
-      reaction_to($kavi, ingest($pc)),
+      reaction_to($'Kavi', ingest($pc)),
       expected_during: search_house,
-      $kavi:
+      $'Kavi':
         ["Sorry, but we have to take a break"]
      }).
 
@@ -244,7 +244,7 @@ beat(exit_house,
 %%% Ownership
 %%%
 
-owner($kavi, X) :- X \= $macguffin.
+owner($'Kavi', X) :- X \= $macguffin.
 owner($pc, $macguffin).
 
 %:- consult("Script/radio").

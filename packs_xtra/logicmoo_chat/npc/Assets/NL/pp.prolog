@@ -58,6 +58,7 @@ parser_opt_pp(PrevPreps,Predication, Gap, S1, S3) -->
 %% preposition(?Word)
 %  Word is a preposition
 :- randomizable preposition/1.
+preposition(at).
 preposition(from).
 preposition(to).
 preposition(about).
@@ -67,6 +68,13 @@ preposition(in).
 preposition(for).
 
 
+enforce_set(Set):- term_variables(Set,Vars),maplist(freeze_as_set(Set),Vars).
+freeze_as_set(Set,Var):- 
+  A = npc, %freeze_as_set(Set,Var):- freeze(Var,check_set(Set)).
+  (get_attr(Var,A,ListOfSets) 
+   -> ((member(E,ListOfSets),E==Set) -> true ; put_attr(Var,A,[Set|ListOfSets]))
+   ; put_attr(Var,A,[Set])).
+attr_unify_hook(ListOfSets,_):- maplist(check_set,ListOfSets).
 check_set(Set):- check_set2(Set,Set).
 check_set2(Set,Var):- var(Var),!,freeze_as_set(Set,Var).
 check_set2(Set,[]):- !,enforce_set(Set).
@@ -74,14 +82,6 @@ check_set2(Set,[Var|Rest]):- var(Var),freeze_as_set(Set,Var),!,check_set2(Set,Re
 check_set2(Set,[Var|Rest]):- \+ member_no_open(Var,Rest),!,check_set2(Set,Rest).
 member_no_open(_,Rest):- var(Rest),!,fail.
 member_no_open(E,[V|Rest]):- (E==V ; member_no_open(E,Rest)),!.
-enforce_set(Set):- term_variables(Set,Vars),maplist(freeze_as_set(Set),Vars).
-attr_unify_hook(ListOfSets,_):- maplist(check_set,ListOfSets).
-%freeze_as_set(Set,Var):- freeze(Var,check_set(Set)).
-freeze_as_set(Set,Var):- 
-  A = npc,
-  (get_attr(Var,A,ListOfSets) 
-   -> ((member(E,ListOfSets),E==Set) -> true ; put_attr(Var,A,[Set|ListOfSets]))
-   ; put_attr(Var,A,[Set])).
 
 
 

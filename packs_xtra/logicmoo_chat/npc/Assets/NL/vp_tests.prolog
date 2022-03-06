@@ -14,7 +14,7 @@ test(generate(vp, transitive),
 test(generate(vp, ditransitive),
      [ true(Generated == [gives, 'Kavi', the, lemonaid]),
        nondet ]) :-
-   vp_test(give(x, $kavi, $lemonaid), simple, Generated).
+   vp_test(give(x, $'Kavi', $lemonaid), simple, Generated).
 
 %%
 %% Completion

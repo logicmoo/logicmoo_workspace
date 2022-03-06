@@ -309,7 +309,7 @@ sample_command("go to the kitchen").
 sample_command("go here (while pointing at something)").
 sample_command("look at the plant").
 sample_command("take the plant").
-sample_command("talk to kavi").
+sample_command("talk to Kavi").
 sample_command("search the house").
 sample_command("search the desk").
 sample_command("search this (while pointing at something)").

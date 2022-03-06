@@ -1,60 +1,60 @@
-$kavi::hot_button_topic($macguffin).
-$kavi::hot_button_topic($bedroom).
-$kavi::hot_button_topic($bookshelf).
-$kavi::hot_button_topic(theclub).
+$'Kavi'::hot_button_topic($macguffin).
+$'Kavi'::hot_button_topic($bedroom).
+$'Kavi'::hot_button_topic($bookshelf).
+$'Kavi'::hot_button_topic(theclub).
 
 % Keep intruders out of bedroom
-$kavi/goals/maintain/bedroom_empty.
+$'Kavi'/goals/maintain/bedroom_empty.
 
 % I know the secret location of the macguffin
-$kavi/perception/location/ $macguffin : $bookshelf.
+$'Kavi'/perception/location/ $macguffin : $bookshelf.
 
 % Monitor goals quickly
-$kavi/parameters/poll_time:3.
+$'Kavi'/parameters/poll_time:3.
 
 % Don't admit you know where the macguffin is to anyone
 % but other theclub members
-$kavi::pretend_truth_value(Asker,
+$'Kavi'::pretend_truth_value(Asker,
 		    location($macguffin, Loc),
 		    T) :-
    \+ related(Asker, member_of, theclub),
    (var(Loc) -> T = unknown ; T = false).
-$kavi::pretend_truth_value(Asker,
+$'Kavi'::pretend_truth_value(Asker,
 		    contained_in($macguffin, Loc),
 		    T) :-
    \+ related(Asker, member_of, theclub),
    (var(Loc) -> T = unknown ; T = false).
 
 % Don't admit to being an theclub member to non-members
-$kavi::pretend_truth_value(Asker,
+$'Kavi'::pretend_truth_value(Asker,
 		    related($me, member_of, theclub),
 		    false) :-
    \+ related(Asker, member_of, theclub).
    
 % Don't admit to knowing who's in the theclub
-$kavi::pretend_truth_value(Asker,
+$'Kavi'::pretend_truth_value(Asker,
 		    related(X, member_of, theclub),
 		    unknown) :-
    var(X),
    \+ related(Asker, member_of, theclub).
    
 :- public bedroom_empty/0.
-$kavi::bedroom_empty :-
+$'Kavi'::bedroom_empty :-
    % Kluge, but I don't have time to refactor this stuff to be nice.
    $global_root/configuration/inhibit_beat_system
    ;
    \+ intruder(_Intruder, $bedroom).
 
 % An intruder is a person who isn't an theclub member
-$kavi::intruder(Intruder, Room) :-
+$'Kavi'::intruder(Intruder, Room) :-
    location(Intruder, Room),
    iz_a(Intruder, person),
    \+ related(Intruder, member_of, theclub).
 
 % Eat all intruders
-$kavi::personal_strategy(achieve(bedroom_empty),
+$'Kavi'::personal_strategy(achieve(bedroom_empty),
 		  ingest(Intruder)) :-
    intruder(Intruder, $bedroom).
 
 :- assert($global::fkey_command(alt-k, "Display Kavi's status") :-
-   generate_character_debug_overlay($kavi)).
+   generate_character_debug_overlay($'Kavi')).

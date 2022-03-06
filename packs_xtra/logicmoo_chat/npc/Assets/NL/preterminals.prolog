@@ -10,22 +10,31 @@ proper_name(Object, Name) :-
    proper_name(Object, _, Name, [ ]).
 
 proper_name(Object, Number) -->
-   proper_name_without_the(Object, Number).
+   proper_name_without_A(Object, Number).
 
 proper_name(Object, Number) -->
    [the],
-   proper_name_without_the(Object, Number).
+   proper_name_with_the(Object, Number).
 
 :- multifile(proper_name_without_the//2).
 :- dynamic(proper_name_without_the//2).
-proper_name_without_the(Object,_,Left, More):- 
- object_words(Object,Words), 
+proper_name_without_A(Object,_,Left, More):- 
+ object_words(pn,Object,Words), 
  append(Words,More,Left).
 
-object_words(Object, Words):- declare_value(Object,given_name,String),tokenize_atom(String,Words).
-object_words(Object,[Kind]) :- (var(Kind);atom(Kind)),atom(Object),atom_concat('unknown_',Kind,Object).
-object_words(Object,Words):- 
- atom(Object), (atom_contains(Object,' ')-> atomic_list_concat(Words,' ',Object);atomic_list_concat(Words,'_',Object)).
+proper_name_with_the(Object, Number)--> proper_name_without_the(Object, Number).
+proper_name_with_the(Object,_,Left, More):- 
+ object_words(a,Object,Words), 
+ append(Words,More,Left).
+
+object_words(pn,Object,Words):- object_words0(pn,Object, Words).
+object_words(a,Object,Words):- object_words0(a,Object,Words), \+ object_words0(pn,Object, Words).
+
+object_words0(pn,Object, Words):- declare_value(Object,given_name,String),tokenize_atom(String,Words).
+object_words0(a,Object,[Kind]) :- (var(Kind);atom(Kind)),atom(Object),atom_concat('unknown_',Kind,Object).
+object_words0(a,Object,Words):- 
+ atom(Object), \+ atom_concat('unknown_',_,Object),
+ (atom_contains(Object,' ')-> atomic_list_concat(Words,' ',Object);atomic_list_concat(Words,'_',Object)).
 
 pronoun(Case, Person:Number, (E^S)^S) -->
    [PN],

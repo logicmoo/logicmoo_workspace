@@ -15,7 +15,7 @@ test(generate(np, speaker_object_case),
 
 test(generate(np, character_third_person),
      [ true(Generated == [ 'Kavi' ]) ]) :-
-   np_test($kavi, object, third:singular, Generated).
+   np_test($'Kavi', object, third:singular, Generated).
 
 test(generate(np, addressee),
      [ true(Generated == [ you ]) ]) :-
@@ -68,7 +68,7 @@ test(parse(np, speaker_object_case),
    np_test(LF, object, first:singular, [ me ]).
 
 test(parse(np, character_third_person),
-     [ true(LF == $kavi) ]) :-
+     [ true(LF == $'Kavi') ]) :-
    np_test(LF, object, third:singular, ['Kavi']).
 
 test(parse(np, addressee),

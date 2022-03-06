@@ -13,7 +13,7 @@ test(completion(s, imperative),
    s_test(_, Mood, [go, to | Completion]).
 
 test(generate(s, in_expression)) :-
-   s_test(location($kavi, $'kitchen'), indicative, Generated),
+   s_test(location($'Kavi', $'kitchen'), indicative, Generated),
    Generated == ['Kavi', is, in, the, kitchen ].
 
 test(generate(s, future_indicative),
@@ -27,7 +27,7 @@ test(generate(s, future_indicative2),
        true(Generated == ['I', will, talk, to, 'Kavi']),
        nondet ]) :-
    bind(generating_nl, true),
-   s(talk($pc, $kavi, _), indicative, affirmative, future, simple, Generated, [ ]).
+   s(talk($pc, $'Kavi', _), indicative, affirmative, future, simple, Generated, [ ]).
 
 test(parse(s, imperative),
      [ setup(bind(addressee, $pc)),
