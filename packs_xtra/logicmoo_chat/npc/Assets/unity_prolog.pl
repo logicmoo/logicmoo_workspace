@@ -89,7 +89,7 @@ unity_db_call(F,Args):- unity_apply(F,Args).
 system:unity_apply(M:F,Args):- system:unity_apply(M,F,Args).
 :- meta_predicate(system:unity_apply(+,+,+)).
 system:unity_apply(M,(public),[Arg]):- !, apply(M:(external),[Arg]).
-system:unity_apply(M,F,Args):- \+ ground(Args), Call=..[F|Args],log(unity_apply_call(M:Call)), fail.
+%system:unity_apply(M,F,Args):- \+ ground(Args), Call=..[F|Args],log(unity_apply_call(M:Call)), fail.
 system:unity_apply(M,F,[Arg|Rest]):- db_pred(F),expand_assert([F,module(M),db_pred],Arg,Slash),Arg\==Slash,!, system:unity_apply(M:F,[Slash|Rest]).
 system:unity_apply(M,F,Args):- M:apply(F,Args).
 
@@ -349,7 +349,7 @@ expand_uterm0(H,H).
 expand_dcg_body(T,T):- \+ compound(T),!.
 expand_dcg_body(T,T):- compound_name_arity(T,F,_),atom_concat('the',_,F),!.
 expand_dcg_body({T},{T}).
-expand_dcg_body([H|T],TheText):- wrap_words([H|T],TheText),!,dmsg(wrap_words([H|T],TheText)),!.
+expand_dcg_body([H|T],TheText):- wrap_words([H|T],TheText),!,log(wrap_words([H|T],TheText)),!.
 expand_dcg_body(Comp,CmpO):-
   meta_pred_style(Comp,Meta),
   strip_module(Comp,_,Cmp),
@@ -701,6 +701,7 @@ with_bind(X=Y,G):- !,locally(b_setval(X,Y),G).
 with_bind([H|T],G):- with_bind(H,with_bind(T,G)).
 
 log(warn(X)):- !, dmsg(warn(X)).
+log(ap(_)):- !. % overly verbose
 log(v(_)):- !. % overly verbose
 log(X):- dmsg(X).
 
@@ -806,7 +807,7 @@ unity_uctx:- source_file_expansion,!.
 unity_uctx:- prolog_load_context(file,File),prolog_load_context(source,File),!,tmpu:is_unity_file(File).
 unity_uctx:- unity_module_name(M),module_uctx(T),!,M==T.
 
-%print_clexp(_,_,_):-!.
+print_clexp(_,_,_):-!.
 print_clexp(_,X,Y):- X=@=Y,!.
 print_clexp(_,X,Y):- (($global)::X)=@=Y,!.
 print_clexp(asserta,_,_):-!.
