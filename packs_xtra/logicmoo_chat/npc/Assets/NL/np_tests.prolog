@@ -58,13 +58,11 @@ test(completion(np, prop),
 %%
 
 test(parse(np, speaker_subject_case),
-     [ true(LF == Speaker) ]) :-
-   unknownvar_value(speaker,Speaker),
+     [ true(LF == $speaker) ]) :-
    np_test(LF, subject, first:singular, [ 'I' ]).
 
 test(parse(np, speaker_object_case),
-     [ true(LF == Speaker) ]) :-
-   unknownvar_value(speaker,Speaker),
+     [ true(LF == $speaker) ]) :-
    np_test(LF, object, first:singular, [ me ]).
 
 test(parse(np, character_third_person),
@@ -72,8 +70,7 @@ test(parse(np, character_third_person),
    np_test(LF, object, third:singular, ['Kavi']).
 
 test(parse(np, addressee),
-     [ true(LF == Addressee) ]) :-
-   unknownvar_value(addressee,Addressee),
+     [ true(LF == $addressee) ]) :-
    np_test(LF, subject, second:singular, [ you ]).
 
 test(parse(np, kind),

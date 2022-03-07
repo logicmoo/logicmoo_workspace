@@ -256,8 +256,9 @@ s(Words,LogicalForm):- Words =[_|_], sentence(LogicalForm, Mood, Polarity, Tense
 
 :- getvar(pc,PC),bind(me,PC).
 
-:- do_all_character_initializations.
 gen_all:- between(1,6,L),length(S,L),utterance(X,S,[]),print_tree_with_final(S=X,'.\n\n'),fail.
 :- add_history(gen_all).
 :- add_history(run_utests).
 :- fixup_exports.
+:- do_all_character_initializations.
+

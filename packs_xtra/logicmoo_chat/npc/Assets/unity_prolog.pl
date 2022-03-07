@@ -94,7 +94,7 @@ system:unity_apply(M,F,[Arg|Rest]):- db_pred(F),expand_assert([F,module(M),db_pr
 system:unity_apply(M,F,Args):- M:apply(F,Args).
 
 expand_assert(Why,I,O):-
-  expand_slash(I,II), convert_assert(Why,II,O),ansicall(fushia, print_clexp(Why,I,O)),!.
+  expand_slash(I,II), convert_assert(Why,II,O),nop(ansicall(fushia, print_clexp(Why,I,O))),!.
 expand_assert(Why,O,O):- throw(cant_expand_assert(Why,O)).
 
 convert_assert(_Why,Arg,Slash):- expand_uterm(Arg,Slash),!.
@@ -111,6 +111,7 @@ convert_assert(Why,X,Y):-
   compound_name_arguments(X,F,AX),
   maplist(expand_assert([F|Why]),AX,AY),
   compound_name_arguments(Y,F,AY),!.
+
 :- system:import(convert_assert/3).
 */
 
@@ -344,6 +345,7 @@ expand_uterm0(H,HB):- typed_uclause_expansion(hb,H,true,HB),!.
 expand_uterm0(H,H).
 %expand_uterm(H,HB):- expand_slash(H,HB).
 
+%expand_dcg_body(T,T):- !.
 expand_dcg_body(T,T):- \+ compound(T),!.
 expand_dcg_body(T,T):- compound_name_arity(T,F,_),atom_concat('the',_,F),!.
 expand_dcg_body({T},{T}).
@@ -690,8 +692,10 @@ unknownvar_value(N,'#'(N)).
 %'#'(IsDef):- current_predicate(IsDef/0),!,log(call(IsDef)),fail,unity_call(IsDef).
 '#'(Undef):- log(v('#'(Undef))),fail.
 
-% bind(X,Y):- nb_current(X,O),O\==[],!,b_setval(X,Y).
-bind(X,Y):- nb_setval(X,Y).
+%bind(X,Y):- \+ core_systems_initialized,!,nb_bind(X,Y).
+bind(X,Y):- nb_current(X,O),O\==[],!,must_be(atom,X),(var(Y)->break;true),b_setval(X,Y).
+bind(X,Y):- nb_bind(X,Y),!.
+nb_bind(X,Y):- must_be(atom,X),(var(Y)->break;true),duplicate_term(Y,YY), nb_setval(X,Y).
 
 with_bind(X=Y,G):- !,locally(b_setval(X,Y),G).
 with_bind([H|T],G):- with_bind(H,with_bind(T,G)).

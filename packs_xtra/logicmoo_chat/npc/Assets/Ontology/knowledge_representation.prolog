@@ -229,7 +229,7 @@ property_value(Object, Property, Value) :-
    nonvar_ref(Property),
    !,
    lookup_property_value(Object, Property, Value).
-property_value(Object, Property, Value) :-   
+property_value(Object, Property, Value) :-
    iz_a(Object, Kind),
    property_type(Property, Kind, _ValueType),
    lookup_property_value(Object, Property, Value).
