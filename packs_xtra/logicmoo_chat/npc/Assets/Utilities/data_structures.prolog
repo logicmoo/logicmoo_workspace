@@ -8,6 +8,7 @@ list_to_array(List, Array) :-
    Array =.. [array | List].
 
 array_member(Member, Array) :-
+   must_be(compound,Array),
    arg(_, Array, Member).
 
 %% topological_sort(*RootList, *EdgeRelation, -List)

@@ -2,6 +2,8 @@
 %% Responding to questions
 %%
 
+strategy_player(player).
+
 % Dispatch on question type
 strategy(respond_to_dialog_act(question(Asker, $me, Question,
 					_Tense, _Aspect)),
@@ -50,10 +52,10 @@ strategy(answer_wh(_Asker, Identity, _,
 	 introduce_person(Person)) :-
    character(Person).
 
-strategy(answer_wh(player, Answer,
-		   should(do(player, Answer)),
+strategy(answer_wh(Player, Answer,
+		   should(do(Player, Answer)),
 		   _),
-	 show_status(notebook)).
+	 show_status(notebook)):- strategy_player(Player).
 
 strategy(answer_wh(Asker, Identity,
 		   be(Entity, Identity),
@@ -61,9 +63,9 @@ strategy(answer_wh(Asker, Identity,
 	 tell_about($me, Asker, Entity)).
 
 strategy(answer_wh(_Asker, Identity,
-		   be(player, Identity),
-		   (be(player, Identity), iz_a(player, person))),
-	 say_answer(be(player, $me))).
+		   be(Player, Identity),
+		   (be(Player, Identity), iz_a(Player, person))),
+	 say_answer(be(Player, $me))):- strategy_player(Player).
 
 strategy(answer_wh(Asker, Answer, can(Action), Constraint),
 	 answer_can_wh(Asker, Answer, can(Action), Constraint)).
@@ -73,16 +75,16 @@ default_strategy(answer_can_wh(_Asker, Answer, can(Action), Constraint),
 				  (can(Action), iz_a(Answer, Type)))) :-
    possible_types_given_constraint(Answer, Constraint, List).
 
-strategy(answer_can_wh(player, Answer,
-		       can(comm(keystrokes,player, Answer)),
+strategy(answer_can_wh(Player, Answer,
+		       can(comm(keystrokes,Player, Answer)),
 		       _),
-	 show_status(sample_commands)).
+	 show_status(sample_commands)):- strategy_player(Player).
 
-strategy(answer_can_wh(player, Answer,
+strategy(answer_can_wh(Player, Answer,
 		       can(do(Who, Answer)),
 		       _),
 	 show_status(sample_commands)) :-
-   member(Who, [player, $pc]).
+   member(Who, [Player, $pc]), strategy_player(Player).
 
 
 % Change what is in X queries from location queries to contained_in queries.

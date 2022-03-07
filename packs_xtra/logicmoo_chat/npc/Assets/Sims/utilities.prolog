@@ -411,6 +411,7 @@ grammar_subgoal_dissection('C'(Head, Name, Tail), word, Head, Tail) :-
 grammar_subgoal_dissection('C'(Head, Name, Tail), NameString, Head, Tail) :-
    word_list(NameString, ["'", Name, "'"]).
 grammar_subgoal_dissection(Goal, Name, Head, Tail) :-
+   must_be(compound,Goal),
    functor(Goal, Functor, Arity),
    Arity >= 2,
    HeadArg is Arity-1,

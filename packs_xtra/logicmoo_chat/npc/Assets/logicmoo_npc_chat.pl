@@ -39,10 +39,10 @@ s(LogicalForm,Words):- LogicalForm\=[_|_],npc:utterance(LogicalForm, Words,[]),
   log(Words-->utterance(LogicalForm)).
 s(Words,LogicalForm):- Words =[_|_],npc:utterance(LogicalForm, Words,[]),
   log(Words-->utterance(LogicalForm)).
-s(LogicalForm,Words):- LogicalForm\=[_|_], s(LogicalForm, Mood, Polarity, Tense, Aspect, Words,[]),
-  log(Words-->s(LogicalForm, Mood, Polarity, Tense, Aspect)).
-s(Words,LogicalForm):- Words =[_|_], s(LogicalForm, Mood, Polarity, Tense, Aspect, Words,[]),
-  log(Words-->s(LogicalForm, Mood, Polarity, Tense, Aspect)).
+s(LogicalForm,Words):- LogicalForm\=[_|_], sentence(LogicalForm, Mood, Polarity, Tense, Aspect, Words,[]),
+  log(Words-->sentence(LogicalForm, Mood, Polarity, Tense, Aspect)).
+s(Words,LogicalForm):- Words =[_|_], sentence(LogicalForm, Mood, Polarity, Tense, Aspect, Words,[]),
+  log(Words-->sentence(LogicalForm, Mood, Polarity, Tense, Aspect)).
 
 
 
@@ -256,6 +256,7 @@ s(Words,LogicalForm):- Words =[_|_], s(LogicalForm, Mood, Polarity, Tense, Aspec
 
 :- getvar(pc,PC),bind(me,PC).
 
+:- do_all_character_initializations.
 gen_all:- between(1,6,L),length(S,L),utterance(X,S,[]),print_tree_with_final(S=X,'.\n\n'),fail.
 :- add_history(gen_all).
 :- add_history(run_utests).

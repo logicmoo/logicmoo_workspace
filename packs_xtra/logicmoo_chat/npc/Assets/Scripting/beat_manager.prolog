@@ -371,13 +371,16 @@ menu_automa_command(Object, DialogAct) :-
 
 :- public beat/2.
 
+:- multifile((initialization)/0).
+
 (initialization) :-
+ forall(
    beat(BeatName, { Declarations }),
-   assert($global::beat(BeatName)),
+  (assert($global::beat(BeatName)),
    forall(( member_of_comma_separated_list(Declaration, Declarations),
 	    once(beat_declaration_assertions(BeatName, Declaration, Assertions)),
 	    member(Assertion, Assertions) ),
-	  assert($global::Assertion)).
+	  assert($global::Assertion)))).
 
 member_of_comma_separated_list(Member, (X, Y)) :-
    !,

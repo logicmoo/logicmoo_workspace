@@ -16,8 +16,13 @@ unity_begin(G):- unity_call(G).
 
 
 :- forall(between(2,11,A), make_pred_narity_call_list(begin,A)).
-displayln(X):- is_list(X),!,maplist(write,X),nl.
-displayln(X):- write(X),nl.
+displayln(X):- is_list(X),!,maplist(displayln0,X),nl.
+displayln(X):- displayln0(X), nl.
+displayln0(C):- atomic(C),!,write(C).
+displayln0(C):- var(C),!, writeq(C).
+displayln0(print(C)):- !, write(' '),print_tree(C),write(' ').
+displayln0(C):- writeq(C).
+
 :- forall(between(2,7,A), make_pred_narity_call_list(displayln,A)).
 
 :- arithmetic_function('$'/1).
@@ -75,19 +80,25 @@ system:unity_call(M:G):-
 system:unity_call(M:G):- !, call(M:G).
 %system:unity_call(M:G):- G=..[F|Args],unity_apply(M:F,Args).
 %ugoal_expansion(B,BBB):- once(uclause_expansion_inner(hb,goal,B,goal:-BB)),B\==BB,!,expand_goal(BB,BBB).
-unity_db_call(F,Args):- maplist(expand_assert,[F],Args,EArgs),!,unity_apply(F,EArgs).
+:- meta_predicate(unity_db_call(:,+)).
+%unity_db_call(F,Args):- maplist(expand_assert,[F],Args,EArgs),!,unity_apply(F,EArgs).
+unity_db_call(F,Args):- unity_apply(F,Args).
 
 
 :- meta_predicate(system:unity_apply(:,+)).
-system:unity_apply(F,[Arg]):- once(expand_assert(unity_apply,Arg,Slash)),Arg\==Slash,!, unity_apply(F,[Slash]).
-system:unity_apply(M:(public),[Arg]):- !, system:unity_apply(M:(external),[Arg]).
-%system:unity_apply(F,Args):- \+ ground(Args), log(unity_apply(F,Args)), fail.
-system:unity_apply(F,Args):- apply(F,Args).
+system:unity_apply(M:F,Args):- system:unity_apply(M,F,Args).
+:- meta_predicate(system:unity_apply(+,+,+)).
+system:unity_apply(M,(public),[Arg]):- !, apply(M:(external),[Arg]).
+system:unity_apply(M,F,Args):- \+ ground(Args), Call=..[F|Args],log(unity_apply_call(M:Call)), fail.
+system:unity_apply(M,F,[Arg|Rest]):- db_pred(F),expand_assert([F,module(M),db_pred],Arg,Slash),Arg\==Slash,!, system:unity_apply(M:F,[Slash|Rest]).
+system:unity_apply(M,F,Args):- M:apply(F,Args).
 
 expand_assert(Why,I,O):-
-  expand_slash(I,II), convert_assert(Why,II,O),II\==O,!,ansicall(fushia, print_clexp(Why,I,O)),!.
-expand_assert(_Why,O,O).
+  expand_slash(I,II), convert_assert(Why,II,O),ansicall(fushia, print_clexp(Why,I,O)),!.
+expand_assert(Why,O,O):- throw(cant_expand_assert(Why,O)).
 
+convert_assert(_Why,Arg,Slash):- expand_uterm(Arg,Slash),!.
+/*
 convert_assert(_Why,G,G):- \+ compound(G),!.
 convert_assert(_Why,X,X):- \+ \+ X = uslash(_,_),!.
 convert_assert(Why,'::'(G,Arg),Slash):- G == $global,!, unity_module_name(M), expand_assert(Why,M:Arg,Slash).
@@ -96,13 +107,12 @@ convert_assert(_Why,C,O):- no_more_expansion(a,C,O),!.
 convert_assert(Why,B,(O)):- get_var_expansions(a,B,M,G),G\==true,immediate_expansion,!,call(G),!,expand_assert(Why,M,O).
 convert_assert(Why,B,(O:-G)):- get_var_expansions(h,B,M,G),G\==true,!,expand_assert(Why,M,O).
 convert_assert(_Why,Arg,Slash):-  maybe_into_slash_db(Arg,Slash),!.
-convert_assert(_Why,Arg,Slash):- expand_uterm(Arg,Slash),!.
 convert_assert(Why,X,Y):- 
   compound_name_arguments(X,F,AX),
   maplist(expand_assert([F|Why]),AX,AY),
   compound_name_arguments(Y,F,AY),!.
-
 :- system:import(convert_assert/3).
+*/
 
 maybe_into_slash_db(C,_):- \+ compound(C),!,fail.
 maybe_into_slash_db(uslash(X,Y),uslash(X,Y)):- !.
@@ -110,7 +120,7 @@ maybe_into_slash_db(uslash(X,Y),uslash(X,Y)):- !.
 maybe_into_slash_db(F/_,_):- \+ slash_arg(F),!,fail.
 maybe_into_slash_db(_/A,_):- \+ slash_arg(A),!,fail.
 %maybe_into_slash_db(M'::' /(A),uslash(M,/(A))).
-%maybe_into_slash_db(M'::' (A),uslash(M,(A))).
+%maybe_into_slash_db(M::A,uslash(M,AA)):- maybe_into_slash_db(A,AA).
 maybe_into_slash_db(C,TO):- \+ \+ (copy_term_nat(C,Nat),(numbervars(Nat,0,_,[attvar(skip)]),is_slashed_g(Nat))),to_slash_db(C,top,TO).
 maybe_into_slash_db(C,TO):- \+ \+ (copy_term_nat(C,Nat),(numbervars(Nat,0,_,[attvar(skip)]),is_slashed(Nat))),to_slash_db(C,rel,TO).
 
@@ -120,10 +130,14 @@ slash_arg(E):- compound(E),functor(E,F,A),slash_arg_f(F,A).
 slash_arg_f($,1).
 slash_arg_f(/,2).
 slash_arg_f(/,1).
+slash_arg_f('>>',2).
+
 slash_arg_f(:,2).
 
+is_slashed(S>>_):- is_slashed(S).
 is_slashed(_/_).
 is_slashed(_/_:_).
+is_slashed_g(S>>_):- is_slashed_g(S).
 is_slashed_g(/_/_).
 is_slashed_g(/_:_).
 is_slashed_g((/_)/_).
@@ -131,7 +145,7 @@ is_slashed_g((/_):_).
 
 %uslash(X,Y):- log(uslash(X,Y)),fail.
 %uslash(me,_X):- fail.
-'/'(X):- uslash(me,/X).
+'/'(X):- uslash(top,/X).
 
 to_slash_db(C,Top,uslash(Top,C)) :- !.
 %to_slash_db(C,Top,uslash(Top,O)) :- subst(C,'/','[|]',O).
@@ -302,7 +316,7 @@ as_clause_hb0(H,B,H):- var(H), B ==true,!.
 as_clause_hb0(H,B,(H:-BB)):- var(H),!, expand_ugoal(B,BB).
 as_clause_hb0(M:H,B,M:(HB)):-!,as_clause_hb0(H,B,HB).
 
-as_clause_hb0('::'( Ctx,H),B,((H:- Ctx::BB))):- var(Ctx),!, expand_ugoal(B,BB).
+as_clause_hb0('::'( Ctx,H),B,((H:- nonvar(Ctx), Ctx::BB))):- var(Ctx),!, expand_ugoal(B,BB).
 as_clause_hb0('::'($Ctx,H),B,((H:- BB))):- Ctx==global,!, expand_ugoal(B,BB).
 as_clause_hb0('::'($Ctx,H),B,((H:- ( getvar(Ctx,V), if_uctx_equals(V), BB)))):- nonvar(Ctx),!, expand_ugoal(B,BB).
 as_clause_hb0('::'( Ctx,H),B,((H:- ( if_uctx_equals(Ctx), BB)))):-  expand_ugoal(B,BB).
@@ -316,22 +330,114 @@ as_clause_head(H,Out):-get_var_expansions(h,H,HH,G),(G==true -> Out = H ; Out = 
 uterm_expansion(X,_):- prolog_load_context(term,T),T\==X,!,fail.
 uterm_expansion(X,Y):- expand_uterm(X,Y),!.
 
-expand_uterm(C,O):- no_more_expansion(h,C,O),!.
-expand_uterm(:-B,:-BB):- !, expand_ugoal(B,BB),!.
-expand_uterm(H:-B,HB):- !, typed_uclause_expansion(hb,H,B,HB),!.
-expand_uterm(H-->B,HBO):- !, dcg_translate_rule((H-->B),HB),!,expand_uterm(HB,HBO).
-expand_uterm(H,HB):- typed_uclause_expansion(hb,H,true,HB),!.
-expand_uterm(H,H).
+expand_uterm(C,C):- \+ compound(C),!.
+expand_uterm(M:I,M:O):- !, expand_uterm(I,O),!.
+expand_uterm(I,O):- expand_uterm0(I,O),!.
+expand_uterm(I,O):- throw(failed_expand_uterm(I,O)).
+
+expand_uterm0(C,C):- \+ compound(C),!.
+expand_uterm0(H-->T,HBO):- expand_dcg_body(T,B), !, dcg_translate_rule((H-->B),HB),!,expand_uterm(HB,HBO).
+expand_uterm0(C,O):- no_more_expansion(h,C,O),!.
+expand_uterm0(:-B,:-BB):- !, expand_ugoal(B,BB),!.
+expand_uterm0(H:-B,HB):- !, typed_uclause_expansion(hb,H,B,HB),!.
+expand_uterm0(H,HB):- typed_uclause_expansion(hb,H,true,HB),!.
+expand_uterm0(H,H).
 %expand_uterm(H,HB):- expand_slash(H,HB).
+
+expand_dcg_body(T,T):- \+ compound(T),!.
+expand_dcg_body(T,T):- compound_name_arity(T,F,_),atom_concat('the',_,F),!.
+expand_dcg_body({T},{T}).
+expand_dcg_body([H|T],TheText):- wrap_words([H|T],TheText),!,dmsg(wrap_words([H|T],TheText)),!.
+expand_dcg_body(Comp,CmpO):-
+  meta_pred_style(Comp,Meta),
+  strip_module(Comp,_,Cmp),
+  compound_name_arguments(Cmp,F,Args),
+  compound_name_arguments(Meta,_,MArgs),
+  maplist(meta_expansion(expand_dcg_body),MArgs,Args,ArgsO),!,
+  compound_name_arguments(CmpO,F,ArgsO).
+expand_dcg_body(Cmp,CmpO):-
+  compound_name_arguments(Cmp,F,Args),
+  maplist(expand_only_meta(expand_dcg_body),Args,ArgsO),!,
+  compound_name_arguments(CmpO,F,ArgsO).
+expand_dcg_body(Comp,CmpO):- throw(cant_expand_dcg_body(Comp,CmpO)).
+
+expand_only_meta(_,A,A):- \+ compound(A),!.
+expand_only_meta(_,{T},{T}).
+expand_only_meta(Exp,Comp,CmpO):-
+  meta_pred_style(Comp,Meta),
+  strip_module(Comp,_,Cmp),
+  compound_name_arguments(Cmp,F,Args),
+  compound_name_arguments(Meta,_,MArgs),
+  maplist(meta_expansion(Exp),MArgs,Args,ArgsO),!,
+  compound_name_arguments(CmpO,F,ArgsO).
+expand_only_meta(Exp,Cmp,CmpO):-
+  compound_name_arguments(Cmp,F,Args),
+  maplist(expand_only_meta(Exp),Args,ArgsO),!,
+  compound_name_arguments(CmpO,F,ArgsO).
+expand_only_meta(Exp,Comp,CmpO):- throw(cant_expand_only_meta(Exp,Comp,CmpO)).
+
+meta_expansion(_Exp,V,A,A):- var(V),!,shouldnt_need_expansion(A).
+meta_expansion(_Exp,+,A,A):- shouldnt_need_expansion(A).
+meta_expansion(_Exp,-,A,A):- shouldnt_need_expansion(A).
+meta_expansion(_Exp,?,A,A):- shouldnt_need_expansion(A).
+meta_expansion(Exp,_,X,Y):- call(Exp,X,Y),!.
+meta_expansion(_,_,_,_).
+
+
+wrap_words([H|T],theTextM1(H)):- T == [],!.
+wrap_words([H|T],[H|T]):- member_no_open(E,[H|T]),compound(E),!,dmsg(no_wrap_words([H|T])). % other kind of DCG
+wrap_words(L,theTextM(L)).
+
+theTextM1(X) --> [M],{compound(M)->arg(1,M,X);M=X}.
+theTextM(Var) --> {var(Var),!, Var=[X|L]}, theTextM([X|L]).
+theTextM([]) --> [],!.
+theTextM([X|L]) --> theTextM1(X),theTextM(L).
+
+enforce_set(Set):- term_variables(Set,Vars),maplist(freeze_as_set(Set),Vars).
+freeze_as_set(Set,Var):- 
+  A = npc, %freeze_as_set(Set,Var):- freeze(Var,check_set(Set)).
+  (get_attr(Var,A,ListOfSets) 
+   -> ((member(E,ListOfSets),E==Set) -> true ; put_attr(Var,A,[Set|ListOfSets]))
+   ; put_attr(Var,A,[Set])).
+attr_unify_hook(ListOfSets,_):- maplist(check_set,ListOfSets).
+check_set(Set):- check_set2(Set,Set).
+check_set2(Set,Var):- var(Var),!,freeze_as_set(Set,Var).
+check_set2(Set,[]):- !,enforce_set(Set).
+check_set2(Set,[Var|Rest]):- var(Var),freeze_as_set(Set,Var),!,check_set2(Set,Rest).
+check_set2(Set,[Var|Rest]):- \+ (member_no_open(E,Rest), E==Var),!,check_set2(Set,Rest).
+member_no_open(_,Rest):- var(Rest),!,fail.
+member_no_open(E,[V|Rest]):- (V=E ; member_no_open(E,Rest)),!.
+
 
 :- dynamic(is_meta_predicate/1).
 
-meta_pred_style(Cmp,Meta):- compound(Cmp),compound_name_arity(Cmp,F,A), \+ never_meta_fa(F,A),
-  predicate_property(Cmp,meta_predicate(Meta)),!.
-meta_pred_style(Cmp,Meta):- compound(Cmp),compound_name_arity(Cmp,F,A), \+ never_meta_fa(F,A),
-  compound_name_arity(Meta,F,A),is_meta_predicate(Meta),!.
+:- meta_predicate(meta_pred_style(+,-)).
+meta_pred_style(Cmp,Meta):- 
+  strip_module(Cmp,M,Pred),
+  compound(Pred),compound_name_arity(Pred,F,A), 
+  compound_name_arity(Meta,F,A),
+  meta_pred_style(M,Pred,Meta),  
+  \+ never_meta_fa(F,A).
+
+:- meta_predicate(meta_pred_style(+,?,?)).
+meta_pred_style(_,Cmp,_):- var(Cmp),!,fail.
+meta_pred_style(_,Cmp,Meta):- compound_name_arity(Cmp,F,A), compound_name_arity(Meta,F,A),meta_pred_style(Meta).
+meta_pred_style(M,Cmp,Meta):- predicate_property(M:Cmp,meta_predicate(Meta)).
+
+meta_pred_style((+ :: 0)).
+meta_pred_style((+ : 0)).
+meta_pred_style('$'(?)).
+meta_pred_style({0}).
+meta_pred_style(X):- is_meta_predicate(X).
+meta_pred_style('//' => '//').
+meta_pred_style('//' --> '//').
 
 never_meta_fa('/',_).
+% never_meta_fa(':',_).
+never_meta_fa('$',_).
+never_meta_fa('=>',_).
+never_meta_fa('#',_).
+never_meta_fa(F,A):- functor([list],F,A).
 
 %meta_pred_style(Cmp,Meta):- predicate_property(Cmp,transparent),!,functor(Cmp,F,A),functor(Meta,F,A).
 
@@ -412,9 +518,9 @@ ugoal_expansion(G,unity_call(G)):-  source_file_expansion, is_unity(G).
 ugoal_expansion(G,unity_call(G)):-  \+ source_file_expansion, is_unity(G).
 ugoal_expansion(X,Y):- expand_slash(X,Y).
 
-is_unity(X):- contains_uvar(X).
+is_unity(X):- contains_uvar(X),!.
 is_unity(X):- sub_uterm(E,X),compound(E),E='::'(_,_).
-contains_uvar(X):- sub_uterm(E,X),compound(E),E='$'(_).
+contains_uvar(X):- sub_uterm(E,X),compound(E),E='$'(N),atom(N).
 
 get_var_expansions(_,O,O,true):- \+ compound(O),!.
 %get_var_expansions(h,'::'(C,T),'::'(CO,T),VarsOut):- get_var_expansions(h,C,CO,VarsOut).
@@ -584,8 +690,11 @@ unknownvar_value(N,'#'(N)).
 %'#'(IsDef):- current_predicate(IsDef/0),!,log(call(IsDef)),fail,unity_call(IsDef).
 '#'(Undef):- log(v('#'(Undef))),fail.
 
-bind(X,Y):- nb_current(X,O),O\==[],!,b_setval(X,Y).
+% bind(X,Y):- nb_current(X,O),O\==[],!,b_setval(X,Y).
 bind(X,Y):- nb_setval(X,Y).
+
+with_bind(X=Y,G):- !,locally(b_setval(X,Y),G).
+with_bind([H|T],G):- with_bind(H,with_bind(T,G)).
 
 log(warn(X)):- !, dmsg(warn(X)).
 log(v(_)):- !. % overly verbose

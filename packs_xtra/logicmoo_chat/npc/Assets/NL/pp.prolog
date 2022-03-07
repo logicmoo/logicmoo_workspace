@@ -68,20 +68,7 @@ preposition(in).
 preposition(for).
 
 
-enforce_set(Set):- term_variables(Set,Vars),maplist(freeze_as_set(Set),Vars).
-freeze_as_set(Set,Var):- 
-  A = npc, %freeze_as_set(Set,Var):- freeze(Var,check_set(Set)).
-  (get_attr(Var,A,ListOfSets) 
-   -> ((member(E,ListOfSets),E==Set) -> true ; put_attr(Var,A,[Set|ListOfSets]))
-   ; put_attr(Var,A,[Set])).
-attr_unify_hook(ListOfSets,_):- maplist(check_set,ListOfSets).
-check_set(Set):- check_set2(Set,Set).
-check_set2(Set,Var):- var(Var),!,freeze_as_set(Set,Var).
-check_set2(Set,[]):- !,enforce_set(Set).
-check_set2(Set,[Var|Rest]):- var(Var),freeze_as_set(Set,Var),!,check_set2(Set,Rest).
-check_set2(Set,[Var|Rest]):- \+ member_no_open(Var,Rest),!,check_set2(Set,Rest).
-member_no_open(_,Rest):- var(Rest),!,fail.
-member_no_open(E,[V|Rest]):- (E==V ; member_no_open(E,Rest)),!.
+
 
 
 

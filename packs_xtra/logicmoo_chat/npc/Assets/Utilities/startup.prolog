@@ -50,8 +50,8 @@ assert_phrase_rule(Phrase, Words) :-
 	     Words:"Phrase must be a list of symbols"),
    forall(member(Word, Words),
 	  register_lexical_item(Word)),
-   append(Words, Tail, WordsWithTail),
-   term_append(Phrase, [WordsWithTail, Tail], DCGRule),
+   DCG = (Phrase --> Words),
+   expand_uterm(DCG,DCGRule),
    assertz_if_new(/*$global::*/DCGRule),
    log(ap(DCGRule)))),!.
 assert_phrase_rule(Phrase, Words):- throw(assert_phrase_rule(Phrase, Words)).
@@ -66,10 +66,10 @@ assert_phrase_rule(_, [Art], _) :- art_the(Art),!.
 assert_phrase_rule(Phrase, Words, Guard) :- 
    assertion(\+ (member(X, Words), \+ atomic(X)),
 	     Words:"Phrase must be a list of symbols"),
-   append(Words, Tail, WordsWithTail),
-   term_append(Phrase, [WordsWithTail, Tail], DCGRule),
-   assertz_if_new((DCGRule :- Guard)),
-   log(ap(DCGRule :- Guard)),!.
+   DCG = (Phrase --> (Words, {Guard})),
+   expand_uterm(DCG,DCGRule),
+   assertz_if_new(/*$global::*/DCGRule),
+   log(ap(DCGRule)),!.
 assert_phrase_rule(Phrase, Words, Guard):- throw(assert_phrase_rule(Phrase, Words,Guard)).
 
 %% assert_proper_name(+Object, +Name, +Number) is det

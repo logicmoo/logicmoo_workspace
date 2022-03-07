@@ -2997,6 +2997,54 @@
 				Excludes="pldata/;*.qlf;*.class;.git/;~*;*~;~*/;*~/;.svn/;*.*r;*.*o;*.dll;*.exe;*.bak;*.jpg;*.xp*;*.gif;*.b?*"/>
 		</Folder>
 		<Folder Name="packs_sys">
+			<Folder Name="logicmoo_agi">
+				<Folder Name="prolog">
+					<Folder Name="episodic_memory">
+						<F N="packs_sys/logicmoo_agi/prolog/episodic_memory/adv12.pro"/>
+						<F N="packs_sys/logicmoo_agi/prolog/episodic_memory/adv_action.pl"/>
+						<F N="packs_sys/logicmoo_agi/prolog/episodic_memory/adv_agent.pl"/>
+						<F N="packs_sys/logicmoo_agi/prolog/episodic_memory/adv_axiom.pl"/>
+						<F N="packs_sys/logicmoo_agi/prolog/episodic_memory/adv_behaviour_tree.pl"/>
+						<F N="packs_sys/logicmoo_agi/prolog/episodic_memory/adv_control.pl"/>
+						<F N="packs_sys/logicmoo_agi/prolog/episodic_memory/adv_data.pl"/>
+						<F N="packs_sys/logicmoo_agi/prolog/episodic_memory/adv_debug.pl"/>
+						<F N="packs_sys/logicmoo_agi/prolog/episodic_memory/adv_edit.pl"/>
+						<F N="packs_sys/logicmoo_agi/prolog/episodic_memory/adv_eng2cmd.pl"/>
+						<F N="packs_sys/logicmoo_agi/prolog/episodic_memory/adv_eng2cmd_frame.pl"/>
+						<F N="packs_sys/logicmoo_agi/prolog/episodic_memory/adv_eng2txt.pl"/>
+						<F N="packs_sys/logicmoo_agi/prolog/episodic_memory/adv_examine.pl"/>
+						<F N="packs_sys/logicmoo_agi/prolog/episodic_memory/adv_floyd.pl"/>
+						<F N="packs_sys/logicmoo_agi/prolog/episodic_memory/adv_functors.pl"/>
+						<F N="packs_sys/logicmoo_agi/prolog/episodic_memory/adv_help.pl"/>
+						<F N="packs_sys/logicmoo_agi/prolog/episodic_memory/adv_implies.pl"/>
+						<F N="packs_sys/logicmoo_agi/prolog/episodic_memory/adv_inst.pl"/>
+						<F N="packs_sys/logicmoo_agi/prolog/episodic_memory/adv_io.pl"/>
+						<F N="packs_sys/logicmoo_agi/prolog/episodic_memory/adv_io_key.pl"/>
+						<F N="packs_sys/logicmoo_agi/prolog/episodic_memory/adv_loader.pl"/>
+						<F N="packs_sys/logicmoo_agi/prolog/episodic_memory/adv_log2eng.pl"/>
+						<F N="packs_sys/logicmoo_agi/prolog/episodic_memory/adv_main.pl"/>
+						<F N="packs_sys/logicmoo_agi/prolog/episodic_memory/adv_model.pl"/>
+						<F N="packs_sys/logicmoo_agi/prolog/episodic_memory/adv_percept.pl"/>
+						<F N="packs_sys/logicmoo_agi/prolog/episodic_memory/adv_physics.pl"/>
+						<F N="packs_sys/logicmoo_agi/prolog/episodic_memory/adv_plan.pl"/>
+						<F N="packs_sys/logicmoo_agi/prolog/episodic_memory/adv_plugins.pl"/>
+						<F N="packs_sys/logicmoo_agi/prolog/episodic_memory/adv_portray.pl"/>
+						<F N="packs_sys/logicmoo_agi/prolog/episodic_memory/adv_props.pl"/>
+						<F N="packs_sys/logicmoo_agi/prolog/episodic_memory/adv_quasiquote.pl"/>
+						<F N="packs_sys/logicmoo_agi/prolog/episodic_memory/adv_spider.pl"/>
+						<F N="packs_sys/logicmoo_agi/prolog/episodic_memory/adv_state.pl"/>
+						<F N="packs_sys/logicmoo_agi/prolog/episodic_memory/adv_state_db.pl"/>
+						<F N="packs_sys/logicmoo_agi/prolog/episodic_memory/adv_telnet.pl"/>
+						<F N="packs_sys/logicmoo_agi/prolog/episodic_memory/adv_unused.pro"/>
+						<F N="packs_sys/logicmoo_agi/prolog/episodic_memory/adv_util.pl"/>
+						<F N="packs_sys/logicmoo_agi/prolog/episodic_memory/gdbinit"/>
+						<F N="packs_sys/logicmoo_agi/prolog/episodic_memory/IFMUD.md"/>
+						<F N="packs_sys/logicmoo_agi/prolog/episodic_memory/index.html"/>
+						<F N="packs_sys/logicmoo_agi/prolog/episodic_memory/input.log"/>
+						<F N="packs_sys/logicmoo_agi/prolog/episodic_memory/README.md"/>
+					</Folder>
+				</Folder>
+			</Folder>
 			<Folder Name="logicmoo_nlu">
 				<Folder Name="ext">
 					<Folder Name="chat80">
@@ -3336,20 +3384,6 @@
 						<F N="packs_xtra/logicmoo_chat/corpus/self_dialogue_corpus/train_from_topic_thriller.txt"/>
 						<F N="packs_xtra/logicmoo_chat/corpus/self_dialogue_corpus/train_from_topic_transition_music_movies.txt"/>
 					</Folder>
-					<Folder Name="sentence-tagging">
-						<Folder Name="output">
-							<F N="packs_xtra/logicmoo_chat/corpus/sentence-tagging/output/output.PNG"/>
-						</Folder>
-						<F N="packs_xtra/logicmoo_chat/corpus/sentence-tagging/DA_Corpus.txt"/>
-						<F N="packs_xtra/logicmoo_chat/corpus/sentence-tagging/DA_Normalized.txt"/>
-						<F N="packs_xtra/logicmoo_chat/corpus/sentence-tagging/hmm_tagger.pl"/>
-						<F N="packs_xtra/logicmoo_chat/corpus/sentence-tagging/README.md"/>
-						<F N="packs_xtra/logicmoo_chat/corpus/sentence-tagging/sigmas.pl"/>
-						<F N="packs_xtra/logicmoo_chat/corpus/sentence-tagging/tags_count.pl"/>
-						<F N="packs_xtra/logicmoo_chat/corpus/sentence-tagging/taus.pl"/>
-						<F N="packs_xtra/logicmoo_chat/corpus/sentence-tagging/TDA.txt"/>
-						<F N="packs_xtra/logicmoo_chat/corpus/sentence-tagging/unix_command.txt"/>
-					</Folder>
 					<Folder Name="soap_opera_corpus">
 						<F N="packs_xtra/logicmoo_chat/corpus/soap_opera_corpus/README.md"/>
 						<F N="packs_xtra/logicmoo_chat/corpus/soap_opera_corpus/so_convert.pl"/>
@@ -3448,7 +3482,6 @@
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/Norms/ethics.prolog"/>
 						</Folder>
 						<Folder Name="Ontology">
-							<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/.bash_history"/>
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/automa.prolog"/>
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/container.prolog"/>
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/csv_loading.prolog"/>
@@ -3696,7 +3729,6 @@
 						<F N="packs_xtra/logicmoo_chat/prolog/pllm/utils_pllm.pl"/>
 						<F N="packs_xtra/logicmoo_chat/prolog/pllm/weighted_pllm.pl"/>
 					</Folder>
-					<F N="packs_xtra/logicmoo_chat/prolog/.bash_history"/>
 					<F N="packs_xtra/logicmoo_chat/prolog/logicmoo_pllm.pl"/>
 					<F N="packs_xtra/logicmoo_chat/prolog/README.md"/>
 				</Folder>
@@ -4412,7 +4444,6 @@
 							<F N="packs_xtra/logicmoo_chat/voicexml-examples/voiceinteraction/grammars/grammar_reference2.vxml"/>
 						</Folder>
 					</Folder>
-					<F N="packs_xtra/logicmoo_chat/voicexml-examples/.bash_history"/>
 					<F N="packs_xtra/logicmoo_chat/voicexml-examples/.gitattributes"/>
 					<F N="packs_xtra/logicmoo_chat/voicexml-examples/.gitignore"/>
 					<F N="packs_xtra/logicmoo_chat/voicexml-examples/README.md"/>

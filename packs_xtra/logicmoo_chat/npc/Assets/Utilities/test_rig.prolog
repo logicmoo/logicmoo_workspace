@@ -11,7 +11,7 @@
 %% running_tests
 %  True if the current goal is part of a unit test.
 running_tests :-
-   must_getvar(running_tests,X),
+   only_getvar(running_tests,X),
    call(X).
 
 %% test(*Name, +Options)
@@ -131,7 +131,7 @@ run_success_test(Name, problem_list(Message, List)) :-
       ;
      ansicall(yellow, begin(displayln(Message, ":              (test ", Name, ")"),
 	    forall(member(X, List),
-		   displayln("   ", X)))).
+		   displayln("   ", print(X))))).
 
 success_test(true(_)).
 success_test(problem_list(_,_)).

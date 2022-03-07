@@ -16,6 +16,10 @@
 
 test_file(integrity(_), "Ontology/integrity_checks").
 
+nonvar_ref(V):- atomic(V),!.
+nonvar_ref(V):- nonvar(V), V='#'(_).
+
+
 :- randomizable declare_kind/2.
 
 %%%
@@ -40,10 +44,10 @@ iz_a(Object, Kind) :-
 iz_a(X, entity) :-
    (number(X) ; string(X) ; is_list(X)),
    !.
-iz_a(Object, Kind) :- (var(Kind);atom(Kind)),atom(Object),atom_concat('unknown_',Kind,Object).
+iz_a(Object, Kind) :- atom(Object),(var(Kind);atom(Kind)),atom_concat('unknown_',Kind,Object).
 
 iz_a(Object, Kind) :-
-   atomic(Object),
+   nonvar_ref(Object),
    assertion(valid_kind(Kind), "Invalid kind"),
    is_a_aux(Object, ImmediateKind),
    superkind_array(ImmediateKind, Supers),
@@ -65,7 +69,7 @@ is_a_aux(Object, Kind) :-
 %  Kind is the most specific type for Object
 %  (technically a most specific type, since there might be more than one).
 base_kind(Object, Kind) :-
-   atomic(Object),
+   nonvar_ref(Object),
    is_a_aux(Object, Kind).
 
 %%%
@@ -76,7 +80,7 @@ valid_kind(Kind) :-
    var(Kind),
    !.
 valid_kind(Kind) :-
-   atomic(Kind),
+   nonvar_ref(Kind),
    kind(Kind).
 valid_kind(number).
 valid_kind(string).
@@ -84,11 +88,11 @@ valid_kind(_TODO).
 
 kind_of(K, K).
 kind_of(Sub, Super) :-
-   atomic(Sub),
+   nonvar_ref(Sub),
    superkind_array(Sub, Supers),
    array_member(Super, Supers).
 kind_of(Sub, Super) :-
-   atomic(Super),
+   nonvar_ref(Super),
    var(Sub),
    subkind_array(Super, Subs),
    array_member(Sub, Subs).
@@ -103,11 +107,11 @@ immediate_superkind_of(K, Sub) :-
    immediate_kind_of(Sub, K).
 
 superkinds(Kind, Superkinds) :-
-   atomic(Kind),
+   nonvar_ref(Kind),
    topological_sort([Kind], immediate_kind_of, Superkinds).
 
 subkinds(Kind, Subkinds) :-
-   atomic(Kind),
+   nonvar_ref(Kind),
    topological_sort([Kind], immediate_superkind_of, Subkinds).
 
 superkind_array(Kind, Array) :-
@@ -128,8 +132,8 @@ subkind_array(Kind, Array) :-
 
 % This version handles multiple LUBs, but then it turned out the hierarchy doesn't currently have multiple lubs.
 % lub(Kind1, Kind2, LUB) :-
-%    atomic(Kind1),
-%    atomic(Kind2),
+%    nonvar_ref(Kind1),
+%    nonvar_ref(Kind2),
 %    superkind_array(Kind1, A1),
 %    superkind_array(Kind2, A2),
 %    lub_not_including(A1, A2, LUB, []).
@@ -142,8 +146,8 @@ subkind_array(Kind, Array) :-
 %    (LUB = Candidate ; lub_not_including(A1, A2, LUB, [Candidate | AlreadyFound])).
 
 kind_lub(Kind1, Kind2, LUB) :-
-   atomic(Kind1),
-   atomic(Kind2),
+   nonvar_ref(Kind1),
+   nonvar_ref(Kind2),
    superkind_array(Kind1, A1),
    superkind_array(Kind2, A2),
    array_member(LUB, A1),
@@ -151,8 +155,8 @@ kind_lub(Kind1, Kind2, LUB) :-
    !.
 
 kind_glb(Kind1, Kind2, GLB) :-
-   atomic(Kind1),
-   atomic(Kind2),
+   nonvar_ref(Kind1),
+   nonvar_ref(Kind2),
    subkind_array(Kind1, A1),
    subkind_array(Kind2, A2),
    array_member(GLB, A1),
@@ -203,7 +207,7 @@ is_type(Object, kind_of(Kind)) :-
 is_type(Object, subkind_of(Kind)) :-
    subkind_of(Object, Kind).
 is_type(Object, Kind) :-
-   atom(Kind),
+   atom_or_var(Kind),
    iz_a(Object, Kind).
 
 
@@ -222,23 +226,23 @@ property_nondefault_value(Object, Property, Value) :-
 %% property_value(?Object, ?Property, ?Value)
 %  Object has this value for this property.
 property_value(Object, Property, Value) :-
-   nonvar(Property),
+   nonvar_ref(Property),
    !,
    lookup_property_value(Object, Property, Value).
-property_value(Object, Property, Value) :-
+property_value(Object, Property, Value) :-   
    iz_a(Object, Kind),
    property_type(Property, Kind, _ValueType),
    lookup_property_value(Object, Property, Value).
 
 unique_answer(Value, property_value(Object, Property, Value)) :-
    var(Value),
-   nonvar(Object),
-   nonvar(Property).
+   nonvar_ref(Object),
+   nonvar_ref(Property).
 
 lookup_property_value(Object, Property, Value) :-
    declare_value(Object, Property, Value).
 lookup_property_value(Object, Property, Value) :-
-   nonvar(Object),
+   nonvar_ref(Object),
    \+ declare_value(Object, Property, _),
    iz_a(Object, Kind),
    default_value(Kind, Property, Value).
@@ -277,7 +281,7 @@ related(Object, Relation, Relatum) :-
    inverse_relation(Relation, Inverse),
    related(Relatum, Inverse, Object).
 related(Object, Relation, Relatum) :-
-   nonvar(Relation),
+   nonvar_ref(Relation),
    % This relation has no inverse or is the canonical form.
    \+ inverse_relation(Relation, _Inverse),
    related_nondefault(Object, Relation, Relatum).

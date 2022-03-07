@@ -25,6 +25,6 @@ test(problem_solver(default_conflict_resolution),
    ConflictSet = [w, x, y, z],
    matching_strategies(L, resolve_match_failure(resolve_conflict(a, ConflictSet))).
 
-:- endif.
 
+:- endif.
 

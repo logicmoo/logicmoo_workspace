@@ -90,7 +90,7 @@ adv_prolog_portray_simple_only(Term):-
   format(atom(Fmt), '{|i7||<~w> ~~s |}', [Type]),
   print_english_simple_only(Fmt, Term), !.
 
-adv_prolog_portray_now(Term):- fail,
+adv_prolog_portray_now(Term):- %fail,
  \+ ( nb_current('$inprint_message', Messages), Messages\==[] ),
  \+ tracing, % fail,
  \+ \+ setup_call_cleanup(
@@ -104,20 +104,17 @@ portray_string(Type, Term):- current_prolog_flag(back_quotes, Type), format('`~s
 portray_string(Type, Term):- current_prolog_flag(double_quotes, Type), format('"~s"', [Term]).
 
 
-:- dynamic user:portray/1.
-:- multifile user:portray/1.
-:- module_transparent user:portray/1.
 
 :- thread_local(t_l:no_english/0).
 
-adv_prolog_portray_hook(Term) :- var(Term),!,fail.
-adv_prolog_portray_hook(Term) :- \+ ( nb_current('$inprint_message', Messages), Messages\==[] ), \+ tracing, \+ t_l:no_english, 
- !, adv_prolog_portray(Term), !.
+adv_prolog_portray_hook(Term) :- \+ compound(Term),!,fail.
+adv_prolog_portray_hook(Term) :- \+ ( nb_current('$inprint_message', Messages), Messages\==[] ),  
+  \+ tracing, \+ t_l:no_english, !, adv_prolog_portray(Term), !.
+
 adv_prolog_portray_hook(Term) :-  tracing, is_list(Term), 
  member(E, Term), compound(E),
   ((E = inst(Some), format('[~w|...]', [inst(Some)]));(E = structure_label(Some), format('[~w|...]', [Some]))), !.
 
-%user:portray(Term):- notrace(adv_prolog_portray_hook(Term)), !.
 
 no_memlists(Term):- fail, simplify_dbug(Term,Term1), map_tree_pred(simplify_memlists,Term1,Term2),!, Term\=@=Term2, writeq(Term2),!.
 
@@ -128,6 +125,12 @@ map_tree_pred(Pred,Arg1,Arg2):-
   maplist(map_tree_pred(Pred),ArgS1,ArgS2),
   compound_name_arguments(Arg2,F1,ArgS2).
 
+:- fixup_exports.
+
+:- dynamic user:portray/1.
+:- multifile user:portray/1.
+:- module_transparent user:portray/1.
+user:portray(Term):- notrace(adv_prolog_portray_hook(Term)), !.
 user:portray(Term):- notrace(no_memlists(Term)), !.
 
 %:- set_prolog_flag(debugger_write_options,[quoted(true),portray(true),max_depth(5000),attributes(dots)]).

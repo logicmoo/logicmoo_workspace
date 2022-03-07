@@ -7,10 +7,10 @@ agent(player_input(_), _) :-
    !,
    fail.
 agent(Event, Who) :-
-    arg(1, Event, Who).
+    must_be(compound,Event),arg(1, Event, Who).
 
 %% patient(+Event, ?What) is det
 %  True if What is the parient of Event.
 %  Assumes the patient is the second argument.
 patient(Event, What) :-
-    arg(2, Event, What).
+    must_be(compound,Event),arg(2, Event, What).

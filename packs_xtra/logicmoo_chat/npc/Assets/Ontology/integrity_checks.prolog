@@ -40,7 +40,7 @@ test(integrity(properties_have_types_declared),
 test(integrity(valid_property_types),
      [ problem_list("The following objects have properties with invalid types",
 		    InvalidValues) ]) :-
-   all(o_p_v(Object,Property,Value,ValueType),
+   all(o_p_v(ObjectType:Object,Property,ValueType:Value),
        ( declare_value(Object, Property, Value),
 	 property_type(Property, ObjectType, ValueType),
 	 \+ ( is_type(Object, ObjectType),

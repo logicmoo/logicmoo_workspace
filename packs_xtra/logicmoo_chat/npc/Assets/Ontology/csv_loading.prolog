@@ -53,9 +53,9 @@ decode_kind_names([], Default, [Default]).
 decode_kind_names(Names, _, Names).
 
 assert_kind_nouns(Kind, Singulars, Plurals) :-
-   begin(forall(member(Phrase, Singulars),
+   begin(forall(member_pn(Phrase, Singulars),
 		assert_phrase_rule(kind_noun(Kind, singular), Phrase)),
-	 forall(member(Phrase, Plurals),
+	 forall(member_pn(Phrase, Plurals),
 		assert_phrase_rule(kind_noun(Kind, plural), Phrase))).
 
 define_kind(RowNumber, Kind, _) :-
