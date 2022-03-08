@@ -56,20 +56,11 @@ decode_kind_names(Names, _, Names).
 atom_len_gt2(R): atom_length(R,L),L>2.
 pluralize([B|S],[B|P]):- S\==[], !, pluralize(S,P).
 pluralize([S],[P]):- !, pluralize(S,P).
-pluralize(S,P):- atom_concat(R,'sis',S),atom_len_gt2(R),atom_concat(R,'ses',P).
-pluralize(S,P):- atom_concat(R,'xis',S),atom_concat(R,'xes',P).
-pluralize(S,P):- atom_concat(R,'us',S),atom_len_gt2(R),atom_concat(R,'i',P).
-pluralize(S,P):- atom_concat(R,'s',S),atom_concat(R,'s',P).
-pluralize(S,P):- atom_concat(R,'fe',S),atom_concat(R,'ves',P).
-pluralize(S,P):- atom_concat(R,'f',S),atom_concat(R,'ves',P).
-pluralize(S,P):- atom_concat(R,'o',S),atom_concat(R,'oes',P).
-pluralize(S,P):- atom_concat(R,'x',S),atom_concat(R,'xes',P).
-pluralize(S,P):- atom_concat(R,'um',S),atom_len_gt2(R),atom_concat(R,'a',P).
-pluralize(S,P):- atom_concat(R,'on',S),atom_len_gt2(R),atom_concat(R,'a',P).
-pluralize(S,P):- atom_concat(R,'elf',S),atom_concat(R,'elves',P).
-pluralize(S,P):- atom_concat(R,'y',S),atom_concat(R,'ies',P),!.
-pluralize(S,P):- atom_concat(R,'h',S),atom_concat(R,'hes',P),!.
-pluralize(S,P):- atom_concat(S,'s',P).
+pluralize(S,P):- atom(S),plur(SF,L,PF),atom_concat(R,SF,S),atom_length(R,AL),AL>L,!,atom_concat(R,PF,P).
+pluralize(S,P):- atom(P),plur(SF,L,PF),atom_concat(R,PF,P),atom_length(R,AL),AL>L,!,atom_concat(R,SF,S).
+plur('sis',2,'ses'). plur('xis',0,'xes').   plur('us',2,'i').    plur('ss',0,'sses'). plur('s',0,'s').
+plur('fe',0,'ves').  plur('f',0,'ves').     plur('o',0,'oes').   plur('x',0,'xes').   plur('um',2,'a').
+plur('on',2,'a').    plur('elf',0,'elves'). plur('y',0,'ies',P). plur('h',0,'hes',P). plur('',2,'s').
 
 assert_kind_nouns(Kind, [Nil], Pls):-  Nil == [], !, assert_kind_nouns(Kind, [], Pls).
 assert_kind_nouns(Kind, Sings, [Nil]):- Nil == [], !,  assert_kind_nouns(Kind, Sings, []).
