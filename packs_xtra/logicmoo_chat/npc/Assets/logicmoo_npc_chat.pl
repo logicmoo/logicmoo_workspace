@@ -135,12 +135,12 @@ s(Words,LogicalForm):- Words =[_|_], sentence(LogicalForm, Mood, Polarity, Tense
 %:- load_lmchat.
 :- load_unity_prolog_file('Prolog/prolog_primitives.prolog').
 :- load_unity_prolog_file('Utilities/tell.prolog').
+:- load_unity_prolog_file('Ontology/type_check.prolog').
 :- load_unity_prolog_file('Sims/indexicals.prolog').
 
 :- load_unity_prolog_file('Utilities/unity_stuff.prolog').
 :- load_unity_prolog_file('Utilities/startup.prolog').
 :- load_unity_prolog_file('Utilities/general.prolog').
-:- load_unity_prolog_file('Ontology/type_check.prolog').
 :- load_unity_prolog_file('NL/interface.prolog').
 
 
@@ -260,5 +260,7 @@ gen_all:- between(1,6,L),length(S,L),utterance(X,S,[]),print_tree_with_final(S=X
 :- add_history(gen_all).
 :- add_history(run_utests).
 :- fixup_exports.
+%:- rtrace(do_all_character_initializations).
+
 :- do_all_character_initializations.
 

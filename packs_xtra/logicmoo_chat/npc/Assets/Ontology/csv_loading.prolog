@@ -53,14 +53,18 @@ decode_kind_names([[]], Default, [Default]).
 decode_kind_names([], Default, [Default]).
 decode_kind_names(Names, _, Names).
 
-atom_len_gt2(R): atom_length(R,L),L>2.
 pluralize([B|S],[B|P]):- S\==[], !, pluralize(S,P).
 pluralize([S],[P]):- !, pluralize(S,P).
-pluralize(S,P):- atom(S),plur(SF,L,PF),atom_concat(R,SF,S),atom_length(R,AL),AL>L,!,atom_concat(R,PF,P).
-pluralize(S,P):- atom(P),plur(SF,L,PF),atom_concat(R,PF,P),atom_length(R,AL),AL>L,!,atom_concat(R,SF,S).
-plur('sis',2,'ses'). plur('xis',0,'xes').   plur('us',2,'i').    plur('ss',0,'sses'). plur('s',0,'s').
-plur('fe',0,'ves').  plur('f',0,'ves').     plur('o',0,'oes').   plur('x',0,'xes').   plur('um',2,'a').
-plur('on',2,'a').    plur('elf',0,'elves'). plur('y',0,'ies',P). plur('h',0,'hes',P). plur('',2,'s').
+pluralize(die,dice).    pluralize(ox,oxen). 
+pluralize(S,P):- atom(S),plur(SF,L,PF),atom_concat(R,SF,S),atom_length(R,AL),AL>=L,!,atom_concat(R,PF,P).
+pluralize(S,P):- atom(P),plur(SF,L,PF),atom_concat(R,PF,P),atom_length(R,AL),AL>=L,!,atom_concat(R,SF,S).
+plur(foot,0,feet).   plur(tooth,0,teeth).   plur(goose,0,geese).   plur(child,0,children).
+plur(woman,0,women). plur(mouse,0,mice).    plur(index,0,indices). plur(man,0,men).    
+plur('sis',2,'ses'). plur('xis',1,'xes').   plur('us',2,'i').      plur('ss',1,'sses').
+plur('ef',2,'efs').  plur('ff',2,'ffs').    plur('ife',1,'ives').  plur('if',1,'ives'). plur('elf',1,'elves'). 
+plur('o',1,'oes').   plur('x',1,'xes').     plur('um',2,'a').      plur('on',2,'a').    
+plur('y',1,'ies').   plur('h',3,'hes').     plur('z',2,'zes').     plur('s',2,'ses'). 
+plur('',3,'s').      plur('s',0,'s').       plur('',0,'s').
 
 assert_kind_nouns(Kind, [Nil], Pls):-  Nil == [], !, assert_kind_nouns(Kind, [], Pls).
 assert_kind_nouns(Kind, Sings, [Nil]):- Nil == [], !,  assert_kind_nouns(Kind, Sings, []).

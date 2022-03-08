@@ -1,6 +1,8 @@
 %%%
 %%% STRATEGIES FOR STANDARD OPERATIONS
 %%%
+  
+
 
 %% default_strategy(+Task, -Strategy) is nondet
 %  Provides default strategies to use when Task has no specific matches.

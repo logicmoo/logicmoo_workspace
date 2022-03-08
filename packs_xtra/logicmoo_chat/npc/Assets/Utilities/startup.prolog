@@ -79,7 +79,7 @@ assert_phrase_1subrule(Phrase, Words, Guard) :-
    expand_uterm(DCG,DCGRule),
   assertz_if_new(/*$global::*/DCGRule),
   log(ap(DCGRule)),!.
-assert_phrase_subrules(Phrase, Words, Guard):- throw(assert_phrase_rule(Phrase, Words,Guard)).
+assert_phrase_1subrule(Phrase, Words, Guard):- throw(assert_phrase_rule(Phrase, Words,Guard)).
 
 %% assert_proper_name(+Object, +Name, +Number) is det
 %  Asserts that Object has proper name Name (a list of words) with
@@ -103,12 +103,12 @@ assert_proper_name(Object, [the | Name], NumberSpec) :-
    (number_spec_number(NumberSpec, Number) -> 
       assert_phrase_rule(proper_name_without_the(Object, Number), Name)
       ;
-      log(bad_grammatical_number(NumberSpec:Name))).
+      log(error(bad_grammatical_number(NumberSpec:Name)))).
 assert_proper_name(Object, Name, NumberSpec) :-
    number_spec_number(NumberSpec, Number) -> 
       assert_phrase_rule(proper_name(Object, Number), Name)
       ;
-      log(bad_grammatical_number(NumberSpec:Name)).
+      log(error(bad_grammatical_number(NumberSpec:Name))).
 
 % This is just to handle defaulting of number to singular, and to
 % catch mistyped number.

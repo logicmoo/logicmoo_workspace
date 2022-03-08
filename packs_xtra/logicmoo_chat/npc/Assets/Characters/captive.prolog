@@ -1,4 +1,5 @@
 % Monitor goals quickly
+
 $captive/parameters/poll_time:3.
 
 :-assert(($global::fkey_command(alt-z, "Display captive's status") :-

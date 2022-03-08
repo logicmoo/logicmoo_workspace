@@ -5,6 +5,13 @@
 :- op(300,fx,'~').
 :- style_check(-discontiguous).
 
+/*
+:- rtrace.
+:- multifile(('/')/1).
+:- multifile(('/')/2).
+:- dynamic(('/')/1).
+:- dynamic(('/')/2).
+*/
 :- public prop/1, character/1, door/1, world_object/1, nearest/2, docked_with/1, after_time/1.
 
 :- public register_room/2, register_prop/3, register_character/1, register_door/1.
@@ -266,7 +273,7 @@ allocate_UID(UID) :-
     retract(/next_uid:UID),
 	  asserta(/next_uid:NextUID)).
 
-/next_uid:0.
+uslash(top,/next_uid:0).
 
 fkey_command(alt-i, "Display inventory") :-
    display_status_screen(inventory).

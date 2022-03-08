@@ -34,3 +34,5 @@ when_added(P, tell(Q)) :-
 :- external tell_globally/1.
 tell_assertion(P) :-
    \+ \+ tell_globally(P) -> $global::assert(P) ; call(assert,P).
+
+

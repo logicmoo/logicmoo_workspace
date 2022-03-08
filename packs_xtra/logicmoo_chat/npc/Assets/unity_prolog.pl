@@ -232,7 +232,7 @@ calc_to_hashmap(/Nextuid,O):- !, me_path(Me),extend_path(Me,Nextuid,O).
 calc_to_hashmap(Nextuid,O):- !, if_uctx_equals(This),extend_path(This,Nextuid,O).
 /*
 calc_to_hashmap(Nextuid:Var,O,Var):- !, getvar(this,Y),extend_path(Y,Nextuid,O).
-calc_to_hashmap(/Nextuid,O,t):- !, getvar(me,Y),extend_path(Y,Nextuid,O).
+calc_to_hashmap(/Nextuid,O,iz):- !, getvar(me,Y),extend_path(Y,Nextuid,O).
 calc_to_hashmap(Nextuid,O,r):- !, getvar(this,Y),extend_path(Y,Nextuid,O).
 */
 
@@ -333,7 +333,7 @@ uterm_expansion(X,Y):- expand_uterm(X,Y),!.
 
 expand_uterm(C,C):- \+ compound(C),!.
 expand_uterm(M:I,M:O):- !, expand_uterm(I,O),!.
-expand_uterm(I,O):- expand_uterm0(I,O),!.
+expand_uterm(I,O):- copy_term(I,II),expand_uterm0(I,O),!,ignore(study_body(II,_)).
 expand_uterm(I,O):- throw(failed_expand_uterm(I,O)).
 
 expand_uterm0(C,C):- \+ compound(C),!.
@@ -344,6 +344,107 @@ expand_uterm0(H:-B,HB):- !, typed_uclause_expansion(hb,H,B,HB),!.
 expand_uterm0(H,HB):- typed_uclause_expansion(hb,H,true,HB),!.
 expand_uterm0(H,H).
 %expand_uterm(H,HB):- expand_slash(H,HB).
+
+study_body(T,T):- var(T),!.
+study_body(C, O):- dont_reduce(C),!,O=C.
+study_body(P,iz(uslash)):- maybe_into_slash_db(P,_),!.
+study_body(S,iz(string)):-string(S),!.
+study_body(S,iz(number)):-number(S),!.
+study_body(T,_):- \+ compound(T),!.
+study_body(Dyn,Dyn):-  compound_name_arity(Dyn,F,1), current_op(X,Y,dynamic), \+ upcase_atom(F,F), current_op(X,Y,F),current_predicate(F/1),!.
+%study_body((_/_),iz(uslash)):-!.
+%study_body(/(_),iz(uslash)):-!.
+study_body(log(Comp),log(Comp)):- !.
+study_body(nop(_),_):-!.
+study_body(throw(_),_):-!.
+study_body(getvar(_,_),_):-!.
+study_body(DCGText,iz(list)):- DCGText=@=[_|_],!.
+study_body(DCGText,O):- DCGText=[_|_], member_no_open(E,DCGText),\+is_list(E),compound(E),O=[E],!.
+study_body(mexp(Comp),CmpO):- !, study_body(Comp,CmpO).
+study_body(_:Comp,CmpO):- !, study_body(Comp,CmpO).
+study_body((B,A),AA):- !, study_body(A,AA), study_body(B,_),!.
+study_body((A;B),AA):- !, study_body((A,B),AA),!.
+study_body((A:-B),AA):- !, study_body((A,B),AA),!.
+study_body((A->B),AA):-  !, study_body((A,B),AA),!.
+study_body((A*->B),AA):-  !, study_body((A,B),AA),!.
+study_body(\+ (B),O):- !, study_body(B,O).
+study_body('$VAR'(V),'$VAR'(V)):- !.
+study_body(_=Comp,CmpO):- !, study_body(Comp,CmpO).
+study_body(writeln(_),iz(call)):- !.
+study_body(call(Comp),CmpO):- !, study_body(Comp,CmpO).
+study_body(_::Comp,CmpO):- !, study_body(Comp,CmpO).
+study_body(_^Comp,CmpO):- !, study_body(Comp,CmpO).
+study_body(findall(_,Comp,_),CmpO):- !, study_body(Comp,CmpO).
+study_body(Cmp,CmpO):- compound_name_arguments(Cmp,F,[Comp|_]),db_pred(F),!,study_body(Comp,CmpO).
+study_body(all(_,Comp,_),CmpO):- !, study_body(Comp,CmpO).
+study_body(Comp,CmpO):-
+  strip_module(Comp,_,Cmp),
+  compound_name_arguments(Cmp,F,Args),
+  upcase_atom(F,F), % is meta?
+  maplist(study_body,Args,ArgsO),
+  compound_name_arguments(CmpO,F,ArgsO),!.
+study_body(Cmp,CmpO):- 
+  compound_name_arguments(Cmp,F,Args),
+  maplist(study_body,Args,ArgsO),
+  compound_name_arguments(CmpO,F,ArgsO),
+  ignore((\+ \+ grok_cmp(CmpO))),!.
+study_body(Comp,CmpO):- throw(cant_study_body(Comp,CmpO)).
+
+share_functor(C,O):- share_functor(C,O,_F).
+share_functor(C,O,F):- compound(C), compound_name_arity(C,F,A),compound_name_arity(O,F,A),!.
+share_functor(C,O,F):- compound(O), compound_name_arity(O,F,A),compound_name_arity(C,F,A),!.
+share_functor(C,O,_):- throw(failed_share_functor(C,O)).
+
+share_arg(Args,ArgsT):- atom(Args),var(ArgsT),!,nop(share_arg(ArgsT,Args)). 
+share_arg(Args,ArgsT):- atom(ArgsT),!,assert_arg_type(Args,ArgsT).
+share_arg(_Args,_ArgsT).
+
+assert_arg_type(Args,ArgsT):- var(Args),!, freeze(Args,share_arg(Args,ArgsT)).
+assert_arg_type(iz(Args),ArgsT):- log(assert_subtype( Args,ArgsT)).
+assert_arg_type(Args,ArgsT):- compound(Args), log(assert_result_isa(Args,ArgsT)).
+
+share_args(C,O):- share_functor(C,O),compound_name_arguments(C,F,Args),compound_name_arguments(O,F,ArgsT),maplist(share_arg,Args,ArgsT).
+share_args(C,O):- throw(failed_share_args(C,O)).
+
+:- dynamic(mexp/1).
+grok_cmp(Cmp):- 
+  shallow(Cmp,CmpO),
+  ignore((share_functor(CmpO,CmpS),predicate_type(_,CmpS),share_args(CmpO,CmpS))),
+  ignore((share_functor(CmpO,CmpX),mexp(CmpX),share_args(CmpO,CmpX))),
+  ignore((contains_compound(CmpO),call(assert_if_new,mexp(CmpO)),log(mexp(CmpX-->CmpO)))).
+
+contains_compound(CmpS):- compound(CmpS),arg(_,CmpS,E), compound(E),\+ is_list(E),!.
+
+dont_reduce(Var):- var(Var),!.
+dont_reduce(Var):- \+ compound(Var),!,fail.
+dont_reduce(log(_)):- !.
+dont_reduce(iz(T)):- nonvar(T),!.
+dont_reduce(Cmp):- compound_name_arguments(Cmp,_,[Atom,Compd]),atom(Atom),compound(Compd),\+ is_list(Compd).
+dont_reduce(predicate_type(_,_)).
+
+shallow(C, O):- dont_reduce(C),!,O=C.
+shallow(Cmp,CmpO):- 
+  compound_name_arguments(Cmp,F,Args),
+  maplist(no_subcmps,Args,ArgsO),
+  compound_name_arguments(CmpO,F,ArgsO).
+
+no_subcmps(C,C):- dont_reduce(C),!.
+no_subcmps(C,_):- \+ compound(C),!.
+no_subcmps(P,iz(uslash)):- maybe_into_slash_db(P,_),!.
+no_subcmps($(_),_):- !.
+no_subcmps(#(_),_):- !.
+no_subcmps(/(_),_):- !.
+no_subcmps(/(_,_),_):- !.
+no_subcmps(C,T):- compound_name_arity(C,F,A),compound_name_arity(O,F,A),maybe_pred_type(O,T).
+
+maybe_pred_type(C,C):- dont_reduce(C),!.
+maybe_pred_type(O,iz(T)):- predicate_type(T,O),!.
+maybe_pred_type(O,O).
+
+mexp:-
+   listing(mexp/1),
+   forall(retract(mexp(P)), study_body(P,_)),
+   setup_call_cleanup(open(mpred,write,S),with_output_to(S,listing(mexp/1)),close(S)).
 
 %expand_dcg_body(T,T):- !.
 expand_dcg_body(T,T):- \+ compound(T),!.
@@ -703,8 +804,11 @@ unbind(X):- nb_delete(X).
 with_bind(X=Y,G):- !,locally(b_setval(X,Y),G).
 with_bind([H|T],G):- with_bind(H,with_bind(T,G)).
 
-log(warn(X)):- !, dmsg(warn(X)).
+log(error(X)):- !, ansicall(bg(red),dmsg(error(X))).
+log(warn(X)):- !, ansicall(red,dmsg(warn(X))).
+log(mexp(X)):- !, dmsg(x=X),!. % overly verbose
 log(ap(_)):- !. % overly verbose
+log(apr(_)):- !. % overly verbose
 log(v(_)):- !. % overly verbose
 log(X):- dmsg(X).
 
@@ -1000,9 +1104,9 @@ property(Obj,Prop,Num):-
 /*
                case "magnitude":
                 {
-                    if (t.Arguments.Length != 1)
-                        throw new ArgumentCountException("magnitude", t.Arguments, "Vector3");
-                    object v = Eval(t.Argument(0), context);
+                    if (iz.Arguments.Length != 1)
+                        throw new ArgumentCountException("magnitude", iz.Arguments, "Vector3");
+                    object v = Eval(iz.Argument(0), context);
                     if (!(v is Vector3))
                         throw new ArgumentTypeException("magnitude", "vector", v, typeof (Vector3));
                     return ((Vector3) v).magnitude;
@@ -1010,9 +1114,9 @@ property(Obj,Prop,Num):-
 
                 case "magnitude_squared":
                 {
-                    if (t.Arguments.Length != 1)
-                        throw new ArgumentCountException("magnitude_squared", t.Arguments, "Vector3");
-                    object v = Eval(t.Argument(0), context);
+                    if (iz.Arguments.Length != 1)
+                        throw new ArgumentCountException("magnitude_squared", iz.Arguments, "Vector3");
+                    object v = Eval(iz.Argument(0), context);
                     if (!(v is Vector3))
                         throw new ArgumentTypeException("magnitude_squared", "vector", v, typeof (Vector3));
                     return ((Vector3) v).sqrMagnitude;
@@ -1020,12 +1124,12 @@ property(Obj,Prop,Num):-
 
                 case "distance":
                 {
-                    if (t.Arguments.Length != 2)
-                        throw new ArgumentCountException("distance", t.Arguments, "v1", "v2");
-                    object v1 = Eval(t.Argument(0), context);
+                    if (iz.Arguments.Length != 2)
+                        throw new ArgumentCountException("distance", iz.Arguments, "v1", "v2");
+                    object v1 = Eval(iz.Argument(0), context);
                     if (v1 is GameObject)
                         v1 = ((GameObject)v1).transform.position;
-                    object v2 = Eval(t.Argument(1), context);
+                    object v2 = Eval(iz.Argument(1), context);
                     if (v2 is GameObject)
                         v2 = ((GameObject)v2).transform.position;
                     if (!(v1 is Vector3))
@@ -1037,12 +1141,12 @@ property(Obj,Prop,Num):-
 
                 case "distance_squared":
                 {
-                    if (t.Arguments.Length != 2)
-                        throw new ArgumentCountException("distance_squared", t.Arguments, "v1", "v2");
-                    object v1 = Eval(t.Argument(0), context);
+                    if (iz.Arguments.Length != 2)
+                        throw new ArgumentCountException("distance_squared", iz.Arguments, "v1", "v2");
+                    object v1 = Eval(iz.Argument(0), context);
                     if (v1 is GameObject)
                         v1 = ((GameObject)v1).transform.position;
-                    object v2 = Eval(t.Argument(1), context);
+                    object v2 = Eval(iz.Argument(1), context);
                     if (v2 is GameObject)
                         v2 = ((GameObject)v2).transform.position;
                     if (!(v1 is Vector3))
@@ -1054,9 +1158,9 @@ property(Obj,Prop,Num):-
 
                 case "position":
                 {
-                    if (t.Arguments.Length != 1)
-                        throw new ArgumentCountException("position", t.Arguments, "gameObject");
-                    var gameObject = Eval(t.Argument(0), context);
+                    if (iz.Arguments.Length != 1)
+                        throw new ArgumentCountException("position", iz.Arguments, "gameObject");
+                    var gameObject = Eval(iz.Argument(0), context);
                     var go = gameObject as GameObject;
                     if (go==null)
                         throw new ArgumentTypeException("position", "gameObject", gameObject, typeof(GameObject));
@@ -1064,46 +1168,46 @@ property(Obj,Prop,Num):-
                 }
 
                 case ".":
-                    if (t.Arguments.Length != 2)
+                    if (iz.Arguments.Length != 2)
                     {
-                        throw new ArgumentCountException(".", t.Arguments, "object");
+                        throw new ArgumentCountException(".", iz.Arguments, "object");
                     }
-                    return EvalMemberExpression(t.Arguments[0], t.Arguments[1], context);
+                    return EvalMemberExpression(iz.Arguments[0], iz.Arguments[1], context);
 
                 case "property":
                 {
-                    if (t.Arguments.Length != 2)
-                        throw new ArgumentCountException("property", t.Arguments, "object", "property_name");
-                    object o = t.Argument(0);
+                    if (iz.Arguments.Length != 2)
+                        throw new ArgumentCountException("property", iz.Arguments, "object", "property_name");
+                    object o = iz.Argument(0);
                     if (o is Structure)
                         o = Eval(o, context);
-                    var name = t.Argument(1) as Symbol;
+                    var name = iz.Argument(1) as Symbol;
                     if (name == null)
-                        throw new ArgumentTypeException("property", "property_name", t.Argument(1), typeof(Symbol));
+                        throw new ArgumentTypeException("property", "property_name", iz.Argument(1), typeof(Symbol));
                     return o.GetPropertyOrField(name.Name);
                 }
 
                 case "vector":
                 {
-                    if (t.Arguments.Length != 3)
-                        throw new ArgumentCountException("vector", t.Arguments, "x", "y", "z");
-                    return new Vector3(Convert.ToSingle(Eval(t.Argument(0), context)),
-                        Convert.ToSingle(Eval(t.Argument(1), context)),
-                        Convert.ToSingle(Eval(t.Argument(2), context)));
+                    if (iz.Arguments.Length != 3)
+                        throw new ArgumentCountException("vector", iz.Arguments, "x", "y", "z");
+                    return new Vector3(Convert.ToSingle(Eval(iz.Argument(0), context)),
+                        Convert.ToSingle(Eval(iz.Argument(1), context)),
+                        Convert.ToSingle(Eval(iz.Argument(2), context)));
                 }
 
                 case "instance_id":
                 {
-                    if (t.Arguments.Length != 1)
-                        throw new ArgumentCountException("instance_id", t.Arguments, "game_object");
-                    var arg = t.Argument(0) as UnityEngine.Object;
+                    if (iz.Arguments.Length != 1)
+                        throw new ArgumentCountException("instance_id", iz.Arguments, "game_object");
+                    var arg = iz.Argument(0) as UnityEngine.Object;
                     if (arg == null)
-                        throw new ArgumentTypeException("instance_id", "object", t.Argument(0), typeof(UnityEngine.Object));
+                        throw new ArgumentTypeException("instance_id", "object", iz.Argument(0), typeof(UnityEngine.Object));
                     return arg.GetInstanceID();
                 }
 
                 default:
-                    throw new BadProcedureException(t.Functor, t.Arguments.Length);
+                    throw new BadProcedureException(iz.Functor, iz.Arguments.Length);
             }
         }
 */

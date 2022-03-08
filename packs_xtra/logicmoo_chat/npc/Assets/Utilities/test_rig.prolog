@@ -53,7 +53,8 @@ run_test(Name, Options, Body) :-
 	 setup_test(Name, Options),
    displayln("Running ", Name,' with options=',Options ),
 	 (catch(run_test_body(Options, Body), Exception, true) ->
-	     (ansicall(cyan,displayln(["Test ", Name, " was GOOD.\n",Options,'\n',Body])), print_test_results(Name, Options, Exception))
+	     (ansicall(cyan,displayln(["Test ", Name, " was GOOD.\n",Options,'\n',Body])), print_test_results(Name, Options, Exception),
+        (nonvar(Exception)->rtrace(Body);true))
 	     ;
 	     ansicall(red,displayln("Test ", Name, " was unsatisfiable.")))).
 

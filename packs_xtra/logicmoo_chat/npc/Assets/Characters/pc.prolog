@@ -2,6 +2,7 @@
 %%% Initializations for the player character
 %%%
 
+
 $pc/player_character.
 
 % Monitor goals quickly

@@ -5,6 +5,7 @@ build_reduction_cross_reference :-
    forall(reduction_clause(Goal, Reduction),
 	  assert_reductions(Goal, Reduction)).
 
+
 reduction_clause(Goal, Reduction) :-
    clause(strategy(Goal, Reduction),
 	  _Guard).

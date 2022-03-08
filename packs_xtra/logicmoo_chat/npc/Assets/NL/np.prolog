@@ -73,13 +73,13 @@ not_completing(_, In, In) :-
 
 possessive_np(X, Number) -->
    [your],
-   kind_noun(Kind, Number),
+   kind_noun_s(Kind, Number),
    { iz_a(X, Kind),
      owner($addressee, X) }.
 
 possessive_np(X, Number) -->
    [my],
-   kind_noun(Kind, Number),
+   kind_noun_s(Kind, Number),
    { iz_a(X, Kind),
      possessive_pronoun_referrent($speaker, Owner),
      owner(Owner, X) }.
@@ -87,7 +87,7 @@ possessive_np(X, Number) -->
 possessive_np(X, Number) -->
    proper_name(Owner, singular),
    ['\'', s],
-   kind_noun(Kind, Number),
+   kind_noun_s(Kind, Number),
    { iz_a(X, Kind),
      owner(Owner, X) }.
 
@@ -99,7 +99,7 @@ possessive_pronoun_referrent(X, X).
 np(LF, _, third:singular, Gap, Gap) -->
    { var(LF) }, 
    [a],
-   kind_noun(Kind, singular),
+   kind_noun_s(Kind, singular),
    { LF = ((X^S)^(S, iz_a(X, Kind))) }.
 
 % GENERATE ONLY
@@ -108,34 +108,47 @@ np((X^S)^S, _, third:singular, Gap, Gap) -->
    { var(X) },
    [a ],
    { discourse_variable_type(X, Kind) },
-   kind_noun(Kind, singular).
+   kind_noun_s(Kind, singular).
 
 % PARSE ONLY
 % "the NOUN"
 np((X^S)^S, _C, third:singular, Gap, Gap) --> %{trace},
    [ the ],
    { var(X),
-     input_from_player},	% filter for parsing
-   kind_noun(Kind, singular),
-   { resolve_definite_description(X, (nop(parse_only([the_noun])),iz_a(X, Kind))) }.
+     nop(input_from_player)},	% filter for parsing
+   kind_noun_s(Kind, singular),
+   { fail, resolve_definite_description(X, (nop(parse_only([the_noun])),iz_a(X, Kind))) }.
 
 % PARSE ONLY
 % "NOUN" (not grammatical English but common in IF text 
 np((X^S)^S, _C, third:singular, Gap, Gap) -->
    { var(X),
      input_from_player},	% filter for parsing
-   kind_noun(Kind, singular),
+   kind_noun_s(Kind, singular),
    { resolve_definite_description(X, (nop(parse_only([noun])),iz_a(X, Kind))) }.
 
 % GENERATE ONLY
 % "the NOUN"
 np((X^S)^S, _C, third:singular, Gap, Gap) -->
-   { nonvar(X),
+    { nonvar(X), 
      % If it has a proper name or a bound variable, then don't use this rule.
      \+ proper_name(X, _),
      base_kind(X, Kind) },
+   [the], % fail,
+   kind_noun_s(Kind, singular).
+
+% COMPLETE ONLY
+% "the NOUN"
+np((X^S)^S, _C, third:singular, Gap, Gap) -->
+   % If we're generating (nonvar(X)) rather than completing (var(X)),
+   % don't generate something that has a proper name.
    [the],
-   kind_noun(Kind, singular).
+   { var(X),
+     %input_from_player,
+     \+ bound_discourse_variable(X) },
+   kind_noun_s(Kind, singular),
+   { leaf_kind(Kind),
+     object_matching_selectional_constraint(X, Kind) }.
 
 % COMPLETE ONLY
 % "the NOUN"
@@ -146,9 +159,9 @@ np((X^S)^S, _C, third:singular, Gap, Gap) -->
    { var(X),
      input_from_player,
      \+ bound_discourse_variable(X) },
-   kind_noun(Kind, singular),
-   { leaf_kind(Kind),
-     object_matching_selectional_constraint(X, Kind) }.
+   kind_noun_s(Kind, singular),
+   { % leaf_kind(Kind),
+     (X = Kind) }.
 
 object_matching_selectional_constraint(X, Kind) :-
    selectional_constraint(X, ConstraintKind),
@@ -167,9 +180,15 @@ np((Number^S)^S, _, _, Gap, Gap) -->
    {number(Number)},
    [Number].
 
+kind_noun_s(Kind, Singular, A, B) :-
+    leaf_kind(Kind),
+    kind_noun(Kind, Singular, A, B),
+    Kind\==kind,   
+    log(v(kind_noun(Kind, singular,A,B))).
+% kind_noun_s(Kind, singular)--> kind_noun(Kind, singular), {log(kind_noun(Kind, singular))}.
 resolve_definite_description(Object, Constraint):-
   resolve_definite_description0(Object, Constraint),
-  log(resolve_definite_description(Object, Constraint)).
+  log(ap(resolve_definite_description(Object, Constraint))).
 
 resolve_definite_description0(X, Constraint) :-
    nonvar(X),
