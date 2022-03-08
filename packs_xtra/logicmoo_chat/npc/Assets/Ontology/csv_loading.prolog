@@ -53,10 +53,19 @@ decode_kind_names([[]], Default, [Default]).
 decode_kind_names([], Default, [Default]).
 decode_kind_names(Names, _, Names).
 
+atom_len_gt2(R): atom_length(R,L),L>2.
 pluralize([B|S],[B|P]):- S\==[], !, pluralize(S,P).
 pluralize([S],[P]):- !, pluralize(S,P).
+pluralize(S,P):- atom_concat(R,'sis',S),atom_len_gt2(R),atom_concat(R,'ses',P).
+pluralize(S,P):- atom_concat(R,'xis',S),atom_concat(R,'xes',P).
+pluralize(S,P):- atom_concat(R,'us',S),atom_len_gt2(R),atom_concat(R,'i',P).
 pluralize(S,P):- atom_concat(R,'s',S),atom_concat(R,'s',P).
-pluralize(S,P):- atom_concat(R,'elf',S),atom_concat(R,'elves',P).
+pluralize(S,P):- atom_concat(R,'fe',S),atom_concat(R,'ves',P).
+pluralize(S,P):- atom_concat(R,'f',S),atom_concat(R,'ves',P).
+pluralize(S,P):- atom_concat(R,'o',S),atom_concat(R,'oes',P).
+pluralize(S,P):- atom_concat(R,'x',S),atom_concat(R,'xes',P).
+pluralize(S,P):- atom_concat(R,'um',S),atom_len_gt2(R),atom_concat(R,'a',P).
+pluralize(S,P):- atom_concat(R,'on',S),atom_len_gt2(R),atom_concat(R,'a',P).
 pluralize(S,P):- atom_concat(R,'elf',S),atom_concat(R,'elves',P).
 pluralize(S,P):- atom_concat(R,'y',S),atom_concat(R,'ies',P),!.
 pluralize(S,P):- atom_concat(R,'h',S),atom_concat(R,'hes',P),!.
