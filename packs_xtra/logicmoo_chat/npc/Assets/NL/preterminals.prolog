@@ -27,6 +27,43 @@ proper_name_with_the(Object,_,Left, More):-
  object_words(a,Object,Words), 
  append(Words,More,Left).
 
+kind_noun(Kind, Number) --> 
+  {phrase_rule(kind_noun(Kind, Number), Words, Guard)},
+  Words,{Guard}.
+
+proper_name(Kind, Number) --> 
+  {phrase_rule(proper_name(Kind, Number), Words, Guard)},
+  Words,{Guard}.
+
+proper_name_without_the(Kind, Number) --> 
+  {phrase_rule(proper_name_without_the(Kind, Number), Words, Guard)},
+  Words,{Guard}.
+
+proper_name_without_the(Kind, Number) --> 
+  {phrase_rule(proper_name_without_the(Kind, Number), Words, Guard)},
+  Words,{Guard}.
+
+genitive_form_of_relation(Kind, Number) --> 
+  {phrase_rule(genitive_form_of_relation(Kind, Number), Words, Guard)},
+  Words,{Guard}.
+
+property_name(Kind) --> 
+  {phrase_rule(property_name(Kind), Words, Guard)},
+  Words,{Guard}.
+
+copular_relation(Kind) --> 
+  {phrase_rule(copular_relation(Kind), Words, Guard)},
+  Words,{Guard}.
+
+adjective(Kind) --> 
+  {phrase_rule(adjective(Kind), Words, Guard)},
+  Words,{Guard}.
+
+dtv(Form, Agreement, LF, Tense, ForcePPs) --> 
+  {phrase_rule(dtv(Form, Agreement, LF, Tense, ForcePPs), Words, Guard)},
+  Words,{Guard}.
+
+
 art_the(Art):- atom(Art), member(Art,[a,an,the]).
 carefull_words([Art|X],Y):- art_the(Art),!,carefull_words(X,Y).
 carefull_words([X],[X]):-!.
@@ -64,6 +101,10 @@ whpron(Kind) --> [WH], {whpron(WH, Kind)}.
 %%
 
 :- randomizable iv//5.
+
+iv(Form, Agreement, LF, Tense, ForcePPs) --> 
+  {phrase_rule(iv(Form, Agreement, LF, Tense, ForcePPs), Words, Guard)},
+  Words,{Guard}.
 
 load_special_csv_row(_RowNumber,
                      intransitive_verb(Base, TPS, Past, PastP, PresentP,
@@ -133,7 +174,11 @@ tv(present_participle, _, S^O^related(S, Relation, O), present, [ ])
    -->
    copular_relation(Relation).
 
-%tv(Form, Agreement, S^O^property_value(S, Property, O), Tense, [ ]) -->
+tv(Form, Agreement, LF, Tense, ForcePPs) --> 
+  {phrase_rule(tv(Form, Agreement, LF, Tense, ForcePPs), Words, Guard)},
+  Words,{Guard}.
+
+  %tv(Form, Agreement, S^O^property_value(S, Property, O), Tense, [ ]) -->
 %   property_verb(Property, Form, Agreement, Tense).
 
 

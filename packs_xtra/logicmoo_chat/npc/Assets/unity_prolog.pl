@@ -349,7 +349,7 @@ expand_uterm0(H,H).
 expand_dcg_body(T,T):- \+ compound(T),!.
 expand_dcg_body(T,T):- compound_name_arity(T,F,_),atom_concat('the',_,F),!.
 expand_dcg_body({T},{T}).
-expand_dcg_body([H|T],TheText):- wrap_words([H|T],TheText),!,log(wrap_words([H|T],TheText)),!.
+expand_dcg_body(DCGText,TheText):- DCGText=[_|_], wrap_words(DCGText,TheText),!,ignore(( \+ ground(DCGText), log(wrap_words(DCGText,TheText)))),!.
 expand_dcg_body(Comp,CmpO):-
   meta_pred_style(Comp,Meta),
   strip_module(Comp,_,Cmp),
@@ -563,7 +563,7 @@ ho2mp(X,Y):- compound(X),!,
   maplist(ho2mp,AX,AY),
   compound_name_arguments(Y,F,AY).
 ho2mp(0,'?').
-ho2mp(1,0).
+ho2mp(1,'*').
 ho2mp(X,X).
 
 
@@ -693,9 +693,12 @@ unknownvar_value(N,'#'(N)).
 '#'(Undef):- log(v('#'(Undef))),fail.
 
 %bind(X,Y):- \+ core_systems_initialized,!,nb_bind(X,Y).
-bind(X,Y):- nb_current(X,O),O\==[],!,must_be(atom,X),(var(Y)->break;true),b_setval(X,Y).
+bind(X,Y):- nb_current(X,O),O\==[],!,must_be(atom,X),(var(Y)->dumpST;true),b_setval(X,Y).
 bind(X,Y):- nb_bind(X,Y),!.
-nb_bind(X,Y):- must_be(atom,X),(var(Y)->break;true),duplicate_term(Y,YY), nb_setval(X,Y).
+nb_bind(X,Y):- must_be(atom,X),notrace(var(Y)->dumpST;true),duplicate_term(Y,YY), nb_setval(X,Y).
+
+unbind(X):- is_list(X),!,maplist(unbind,X).
+unbind(X):- nb_delete(X).
 
 with_bind(X=Y,G):- !,locally(b_setval(X,Y),G).
 with_bind([H|T],G):- with_bind(H,with_bind(T,G)).
@@ -706,10 +709,6 @@ log(v(_)):- !. % overly verbose
 log(X):- dmsg(X).
 
 starts_with_one_of(String,Word):- sub_string(Word,0,1,_,L),sub_string(String,_,_,_,L).
-
-for_all_unique(T,Gen):- for_all_unique(T,Gen,true).
-for_all_unique(T,Gen,Goal):-
-  all(T,Gen,Set),member(T,Set),call(Goal).
 
 :- current_op(X,Y,dynamic),op(X,Y,register_lexical_items).
 :- dynamic(is_lexical_item/1).
@@ -764,19 +763,32 @@ component_of_gameobject_with_type(X,X,_).
 
 :- assume_todo(parent_of_gameobject/2).
 
-:- assume_todo(sumall/3).
-:- assume_todo(generate_unique/2).
+% True if GOAL is true given variable bindings of each unique value of TEMPLATE produced by GENERATOR.
+for_all_unique(T,Gen):- for_all_unique(T,Gen,true). 
+%for_all_unique(T,Gen,Goal):- all(T,Gen,Set),member(T,Set),call(Goal).
+for_all_unique(T,G,Goal):- forall(generate_unique(T,G),Goal).
+%:- assume_todo(generate_unique/2).
+% Succeeds once for each unique value of TEMPLATE produced by GENERATOR.
+generate_unique(T,G):- no_repeats_u(V,G).
+%:- assume_todo(sumall/3).
+sumall(D,G,S):- aggregate_all(sum(D),G,S).
 :- assume_todo(call_method/3).
-:- assume_todo(arg_min/3).
-:- assume_todo(arg_max/3).
+%:- assume_todo(arg_min/3).
+%arg_min(T,S,G):- findall(S-T,G,L),keysort(L,[_-T|_]).
+arg_min(T,S,G):- aggregate(min(S,T),G,min(S,T)).
+%:- assume_todo(arg_max/3).
+%arg_max(T,S,G):- findall(S-T,G,L),keysort(L,KS),last(KS,_-T).
+arg_max(T,S,G):- aggregate(max(S,T),G,max(S,T)).
+
 
 :- assume_dyn_fail(type/2).
 :- dynamic(relation_type/3).
 :- assume_dyn_fail(property_type/3).
-:- assume_dyn_fail(property_name/3).
-:- assume_dyn_fail(property/3).
+%:- assume_dyn_fail(property_name/3).
 :- assume_dyn_fail(predicate_type/2).
-:- assume_todo(is_class/2).
+
+%:- assume_dyn_fail(property/3).
+%:- assume_done(is_class/2).
 
 :- assume_done(pause_game/0).
 :- assume_done(unpause_game/0).
@@ -859,11 +871,21 @@ correct_row([prefix,Prefix],A,V):- atom(A),atom_concat(Prefix,A,R),
  read_term_from_atom(R,T,[variable_names(Vs)]),maplist(vs_name,Vs),
  correct_row_type(Type,T,V),
  notrace(ignore((V\==[],A\==V,fail,dmsg(Prefix+A --> V)))),!.
+
 correct_row(Type,A,V):- atom(A),
- once(atom_concat(_,')',A);atom_contains(A,',');atom_contains(A,':');atom_contains(A,'$');atom_contains(A,'=');atom_contains(A,')')),
+ once(atom_concat(_,')',A);atom_contains(A,':');atom_contains(A,'$');atom_contains(A,'=');atom_contains(A,')')),
  read_term_from_atom(A,T,[variable_names(Vs)]),maplist(vs_name,Vs),
  correct_row_type(Type,T,V),
  notrace(ignore((V\==[],A\==V,fail,dmsg(Type+A --> V)))),!.
+
+correct_row(Type,A,V):- atom(A), atom_contains(A,','), 
+ read_term_from_atom(A,TT,[variable_names(Vs)]),maplist(vs_name,Vs),
+ conjuncts_to_list(TT,TL),
+ ((Type\==[phrase,list])->T=TL;maplist(listify,TL,T)),
+ correct_row_type(Type,T,V),
+ notrace(ignore((V\==[],A\==V,dmsg(Type+A --> V)))),!.
+
+
 correct_row(Type,A,V):-
   correct_row_type(Type,A,V),
   notrace(ignore((V\==[],Type\==list,Type\==string,Type\=[_,list],A\==V,dmsg(Type+A --> V)))),!.
@@ -907,6 +929,184 @@ ltest:-
   '::'(a,b).
 
 
+:- arithmetic_function('<'/2).
+'<'(X,Y,Z):- 
+  (X < Y) -> Z = 1 ; Z = 0.
+:- arithmetic_function('>'/2).
+'>'(X,Y,Z):- 
+ (X > Y) -> Z = 1 ; Z = 0.
+
+:- arithmetic_function('if'/3).
+if([Cond],True,False,RetVal):- (Cond -> RetVal is True ; RetVal is False),!.
+if(Cond,True,False,RetVal):- number(Cond),!,( Cond>0 -> RetVal is True ; RetVal is False),!.
+:- arithmetic_function('vector'/3).
+vector(X,Y,Z,RetVal):-
+ RetVal is 
+      (if(X < 0.0, 1, 0) * 0x40000000 + (integer(abs(X) /\ 0xFF) << 22)) \/
+      (if(Y < 0.0, 1, 0) * 0x200000 + (integer(abs(Y) /\ 0xFF) << 13)) \/
+      (if(Z < 0.0, 1, 0) * 0x1000 + (integer(abs(Z)) /\ 0xFFF)), !.
+
+:- arithmetic_function('v_x'/1).
+v_x(V3,X):- X is if(V3 /\ 0x40000000, -1, 1) * ((V3 >> 22) /\ 0xFF).
+:- arithmetic_function('v_y'/1).
+v_y(V3,X):- X is if(((V3 /\ 0x200000) > 0), -1, 1) * ((V3 >> 13) /\ 0xFF).
+:- arithmetic_function('v_z'/1).
+v_z(V3,X):- X is if(((V3 /\ 0x1000) > 0), -1, 1) * (V3 /\ 0xFFF).
+
+:- arithmetic_function('position'/1).
+
+position(V3,X):- number(V3) -> X = V3 ; (v3_position(V3,X1,Y1,Z1), X is vector(X1,Y1,Z1)).
+
+:- arithmetic_function('tlen'/1).
+tlen([V3],X):-!, tlen0(V3,X).
+tlen(V3,X):-!, tlen0(V3,X).
+tlen0(V3,X):- number(V3),!,X is V3.
+tlen0(V3,X):- atomic(V3),!,atom_length(V3,X).
+tlen0(V3,X):- is_list(V3),!,length(V3,X).
+tlen0(V3,X):- term_hash(V3,H), X is H rem 100.
+
+v3_position(V3,X,Y,Z):- number(V3),!, X is v_x(V3), Y is v_y(V3), Z is v_z(V3).
+v3_position([V3],X,Y,Z):- nonvar(V3),!, v3_position(V3,X,Y,Z).
+v3_position(V3,X,Y,Z):- property_value(V3,x,X),property_value(V3,y,Y),property_value(V3,z,Z),!.
+v3_position(V3,X,Y,Z):- T is tlen(V3), X is T,Y is T*100, Z is T*10000.
+
+:- arithmetic_function('magnitude_squared_v3'/3).
+magnitude_squared_v3(X1,Y1,Z1,RetVal):-
+  RetVal is (X1)^2 +(Y1)^2 +(Z1)^2. 
+
+:- arithmetic_function('magnitude_squared'/1).
+magnitude_squared(V3,RetVal):-
+  v3_position(V3,X1,Y1,Z1),
+  RetVal is magnitude_squared_v3(X1,Y1,Z1). 
+:- arithmetic_function('magnitude'/1).
+magnitude(V3,RetVal):-
+  RetVal is sqrt(magnitude_squared(V3)).
+
+:- arithmetic_function('distance_squared'/2).
+distance_squared(V3,P2,RetVal):- 
+  v3_position(V3,X1,Y1,Z1),
+  v3_position(P2,X2,Y2,Z2),
+  RetVal is magnitude_squared_v3(X1-X2,Y1-Y2,Z1-Z2).
+
+:- arithmetic_function('distance'/2).
+distance(V3,P2,RetVal):-
+  RetVal is sqrt(distance_squared(V3,P2)).
+
+:- arithmetic_function('property'/2).
+property(Obj,Prop,Num):-
+  property_value(Obj,Prop,Value),
+  Num is Value.
+
+/*
+               case "magnitude":
+                {
+                    if (t.Arguments.Length != 1)
+                        throw new ArgumentCountException("magnitude", t.Arguments, "Vector3");
+                    object v = Eval(t.Argument(0), context);
+                    if (!(v is Vector3))
+                        throw new ArgumentTypeException("magnitude", "vector", v, typeof (Vector3));
+                    return ((Vector3) v).magnitude;
+                }
+
+                case "magnitude_squared":
+                {
+                    if (t.Arguments.Length != 1)
+                        throw new ArgumentCountException("magnitude_squared", t.Arguments, "Vector3");
+                    object v = Eval(t.Argument(0), context);
+                    if (!(v is Vector3))
+                        throw new ArgumentTypeException("magnitude_squared", "vector", v, typeof (Vector3));
+                    return ((Vector3) v).sqrMagnitude;
+                }
+
+                case "distance":
+                {
+                    if (t.Arguments.Length != 2)
+                        throw new ArgumentCountException("distance", t.Arguments, "v1", "v2");
+                    object v1 = Eval(t.Argument(0), context);
+                    if (v1 is GameObject)
+                        v1 = ((GameObject)v1).transform.position;
+                    object v2 = Eval(t.Argument(1), context);
+                    if (v2 is GameObject)
+                        v2 = ((GameObject)v2).transform.position;
+                    if (!(v1 is Vector3))
+                        throw new ArgumentTypeException("distance", "v1", v1, typeof (Vector3));
+                    if (!(v2 is Vector3))
+                        throw new ArgumentTypeException("distance", "v2", v2, typeof (Vector3));
+                    return Vector3.Distance((Vector3) v1, (Vector3) v2);
+                }
+
+                case "distance_squared":
+                {
+                    if (t.Arguments.Length != 2)
+                        throw new ArgumentCountException("distance_squared", t.Arguments, "v1", "v2");
+                    object v1 = Eval(t.Argument(0), context);
+                    if (v1 is GameObject)
+                        v1 = ((GameObject)v1).transform.position;
+                    object v2 = Eval(t.Argument(1), context);
+                    if (v2 is GameObject)
+                        v2 = ((GameObject)v2).transform.position;
+                    if (!(v1 is Vector3))
+                        throw new ArgumentTypeException("distance_squared", "v1", v1, typeof (Vector3));
+                    if (!(v2 is Vector3))
+                        throw new ArgumentTypeException("distance_squared", "v2", v2, typeof (Vector3));
+                    return Vector3.SqrMagnitude((Vector3) v1 - (Vector3) v2);
+                }
+
+                case "position":
+                {
+                    if (t.Arguments.Length != 1)
+                        throw new ArgumentCountException("position", t.Arguments, "gameObject");
+                    var gameObject = Eval(t.Argument(0), context);
+                    var go = gameObject as GameObject;
+                    if (go==null)
+                        throw new ArgumentTypeException("position", "gameObject", gameObject, typeof(GameObject));
+                    return go.transform.position;
+                }
+
+                case ".":
+                    if (t.Arguments.Length != 2)
+                    {
+                        throw new ArgumentCountException(".", t.Arguments, "object");
+                    }
+                    return EvalMemberExpression(t.Arguments[0], t.Arguments[1], context);
+
+                case "property":
+                {
+                    if (t.Arguments.Length != 2)
+                        throw new ArgumentCountException("property", t.Arguments, "object", "property_name");
+                    object o = t.Argument(0);
+                    if (o is Structure)
+                        o = Eval(o, context);
+                    var name = t.Argument(1) as Symbol;
+                    if (name == null)
+                        throw new ArgumentTypeException("property", "property_name", t.Argument(1), typeof(Symbol));
+                    return o.GetPropertyOrField(name.Name);
+                }
+
+                case "vector":
+                {
+                    if (t.Arguments.Length != 3)
+                        throw new ArgumentCountException("vector", t.Arguments, "x", "y", "z");
+                    return new Vector3(Convert.ToSingle(Eval(t.Argument(0), context)),
+                        Convert.ToSingle(Eval(t.Argument(1), context)),
+                        Convert.ToSingle(Eval(t.Argument(2), context)));
+                }
+
+                case "instance_id":
+                {
+                    if (t.Arguments.Length != 1)
+                        throw new ArgumentCountException("instance_id", t.Arguments, "game_object");
+                    var arg = t.Argument(0) as UnityEngine.Object;
+                    if (arg == null)
+                        throw new ArgumentTypeException("instance_id", "object", t.Argument(0), typeof(UnityEngine.Object));
+                    return arg.GetInstanceID();
+                }
+
+                default:
+                    throw new BadProcedureException(t.Functor, t.Arguments.Length);
+            }
+        }
+*/
 end_of_file.
 
 %:- dynamic($/2).

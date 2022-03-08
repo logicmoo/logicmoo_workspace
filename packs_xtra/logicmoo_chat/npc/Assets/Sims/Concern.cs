@@ -11,7 +11,7 @@ public class Concern : MonoBehaviour
     {
         foreach (var c in Concerns)
         {
-            this.Assert("special_concern", Symbol.Intern(c), Priority);
+            this.Assert("special_qud", Symbol.Intern(c), Priority);
         }
     }
 }

@@ -43,6 +43,9 @@ action,"operate(actor, device)"
 action,"thinks(actor, condition)"
 % Conditions,
 condition,can(action)
+condition,away(living_thing)
+condition,here(living_thing)
+condition,present(physical_object)
 condition,would(condition)
 condition,would(action)
 condition,shall(action)

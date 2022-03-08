@@ -14,7 +14,7 @@
 %  in any further quantifiers from the NPs of the PPs, to produce SentenceLFOut
 
 opt_pp(ForcePPs, Predication, Gap, SIn, SOut) -->
-   { generating_nl, ! },
+   { /*generating_nl, !*/ },
    generator_pp([],ForcePPs, Predication, Gap, SIn, SOut).
 
 opt_pp(_ForcePPs, Predication, Gap, SIn, SOut) -->

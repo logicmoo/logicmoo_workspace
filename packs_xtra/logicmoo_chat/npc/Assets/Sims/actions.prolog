@@ -90,14 +90,14 @@ true_after(Action, Condition) :-
    all(PC, postcondition(Action, PC), AllPCs),
    follows_from(Condition, AllPCs).
 
-follows_from( (A, B) , L) :-
+follows_from( (A, B) , L) :- nonvar(A),
    follows_from(A, L),
    follows_from(B, L).
 follows_from(P, L) :-
    member(P, L).
-follows_from(P, L) :-
-   member(~P, L), !, fail.
-follows_from(P, _) :-
+follows_from(P, L) :- 
+   member(~P, L), nonvar(P), !, fail.
+follows_from(P, _) :- callable(P),
    P.
 follows_from(P, L) :-
    inferrable_postcondition(P),

@@ -18,8 +18,9 @@ load_special_csv_row(RowNumber,
    begin(define_kind(RowNumber, Kind, Parents),
 	 assert_default_description(Kind, Description),
 	 decode_kind_names(SingularSpec, [Kind], Singular),
-	 (([DefPlural | _] = Singular) ; DefPlural = []),
-	 decode_kind_names(PluralSpec, DefPlural, Plural),
+	 %(([DefPlural | _] = Singular) ; DefPlural = []),
+	 decode_kind_names(PluralSpec, [], Plural),
+   log(assert_kind_nouns(Kind, Singular, Plural)),
 	 assert_kind_nouns(Kind, Singular, Plural),
 	 assert_if_unew(declare_kind(Kind, kind)),
 	 parse_list(Prop=Value, DefaultProperties,
@@ -52,10 +53,26 @@ decode_kind_names([[]], Default, [Default]).
 decode_kind_names([], Default, [Default]).
 decode_kind_names(Names, _, Names).
 
+pluralize([B|S],[B|P]):- S\==[], !, pluralize(S,P).
+pluralize([S],[P]):- !, pluralize(S,P).
+pluralize(S,P):- atom_concat(R,'s',S),atom_concat(R,'s',P).
+pluralize(S,P):- atom_concat(R,'elf',S),atom_concat(R,'elves',P).
+pluralize(S,P):- atom_concat(R,'elf',S),atom_concat(R,'elves',P).
+pluralize(S,P):- atom_concat(R,'y',S),atom_concat(R,'ies',P),!.
+pluralize(S,P):- atom_concat(R,'h',S),atom_concat(R,'hes',P),!.
+pluralize(S,P):- atom_concat(S,'s',P).
+
+assert_kind_nouns(Kind, [Nil], Pls):-  Nil == [], !, assert_kind_nouns(Kind, [], Pls).
+assert_kind_nouns(Kind, Sings, [Nil]):- Nil == [], !,  assert_kind_nouns(Kind, Sings, []).
+assert_kind_nouns(Kind, [], Pls):- !, 
+  assert_kind_nouns(Kind, [Kind], Pls).
+assert_kind_nouns(Kind, Singulars, []):- % Singulars\==[],
+  maplist(pluralize,Singulars,Plurals), !,
+  assert_kind_nouns(Kind, Singulars, Plurals).
 assert_kind_nouns(Kind, Singulars, Plurals) :-
-   begin(forall(member_pn(Phrase, Singulars),
+   begin(forall(member(Phrase, Singulars),
 		assert_phrase_rule(kind_noun(Kind, singular), Phrase)),
-	 forall(member_pn(Phrase, Plurals),
+	 forall(member(Phrase, Plurals),
 		assert_phrase_rule(kind_noun(Kind, plural), Phrase))).
 
 define_kind(RowNumber, Kind, _) :-

@@ -36,41 +36,50 @@ register_lexical_items(List) :-
    forall(member(Item, List),
 	  register_lexical_item(Item)).
 
+
+repaired_words([],[]):-!.
+repaired_words(Words,RWords):- atom(Words),atom_contains(Words,'_'),atomic_list_concat(RWords,'_',Words).
+repaired_words(Words,RWords):- atom(Words),atom_contains(Words,' '),atomic_list_concat(RWords,' ',Words).
+repaired_words(Words,RWords):- \+ is_list(Words),!,RWords=[Words].
+repaired_words([W|Words],RWords):- repaired_words(W,RW),repaired_words(Words,RWordL),
+  append(RW,RWordL,RWords).
+
 %% assert_phrase_rule(Phrase, Words) is det
 %  Asserts that Phrase can be matched by Words (a list of symbols).
 %  Asserts the DCG rule: Phrase --> Words.
-assert_phrase_rule(_, []) :- !.
-assert_phrase_rule(_, [Art]) :- art_the(Art),!.
-
-assert_phrase_rule(Phrase, Words):- \+ is_list(Words),!,
-  assert_phrase_rule(Phrase, [Words]).
-assert_phrase_rule(Phrase, Words) :- 
- must_det_l((
-   assertion(\+ (member(X, Words), \+ atomic(X)),
-	     Words:"Phrase must be a list of symbols"),
-   forall(member(Word, Words),
-	  register_lexical_item(Word)),
-   DCG = (Phrase --> Words),
-   expand_uterm(DCG,DCGRule),
-   assertz_if_new(/*$global::*/DCGRule),
-   log(ap(DCGRule)))),!.
+assert_phrase_rule(Phrase, Words) :- assert_phrase_rule(Phrase, Words, true),!.
 assert_phrase_rule(Phrase, Words):- throw(assert_phrase_rule(Phrase, Words)).
 
 %% assert_phrase_rule(Phrase, Words, Guard) is det
 %  Asserts that Phrase can be matched by Words (a list of symbols) if
 %  Guard is true.
 %  Asserts the DCG rule: Phrase --> Words, {Guard}.
-assert_phrase_rule(Phrase, Words, Guard):- \+ is_list(Words),!,
-  assert_phrase_rule(Phrase, [Words], Guard).
-assert_phrase_rule(_, [Art], _) :- art_the(Art),!.
-assert_phrase_rule(Phrase, Words, Guard) :- 
+
+assert_phrase_rule(_Phrase, [], _Goal) :- !.
+%assert_phrase_rule(Phrase, [Art|S], Goal) :- art_the(Art),!,assert_phrase_rule(Phrase,S, Goal).
+assert_phrase_rule(Phrase, Words, Guard):- repaired_words(Words,RWords),Words\==RWords,!,
+  assert_phrase_rule(Phrase, RWords, Guard).
+assert_phrase_rule(Phrase, Words, Guard):- 
    assertion(\+ (member(X, Words), \+ atomic(X)),
 	     Words:"Phrase must be a list of symbols"),
-   DCG = (Phrase --> (Words, {Guard})),
+   assert_phrase_subrules(Phrase, Words, Guard).
+
+assert_phrase_subrules(Phrase, [W|Words], Guard):-
+  assert_phrase_1subrule(Phrase, [W|Words], Guard),
+  nop(assert_phrase_subrules(Phrase, Words, Guard)).
+assert_phrase_subrules(_Phrase, [], _Guard).
+
+assert_phrase_1subrule(Phrase, Words, Guard):- 
+  Rule = phrase_rule(Phrase, Words, Guard),
+   assertz_if_new(/*$global::*/Rule),
+   log(apr(Rule)),!.
+
+assert_phrase_1subrule(Phrase, Words, Guard) :- 
+   (Guard==true -> DCG = (Phrase --> (Words)); DCG = (Phrase --> (Words, {Guard}))),
    expand_uterm(DCG,DCGRule),
-   assertz_if_new(/*$global::*/DCGRule),
-   log(ap(DCGRule)),!.
-assert_phrase_rule(Phrase, Words, Guard):- throw(assert_phrase_rule(Phrase, Words,Guard)).
+  assertz_if_new(/*$global::*/DCGRule),
+  log(ap(DCGRule)),!.
+assert_phrase_subrules(Phrase, Words, Guard):- throw(assert_phrase_rule(Phrase, Words,Guard)).
 
 %% assert_proper_name(+Object, +Name, +Number) is det
 %  Asserts that Object has proper name Name (a list of words) with

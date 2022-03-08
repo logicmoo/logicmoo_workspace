@@ -112,12 +112,12 @@ np((X^S)^S, _, third:singular, Gap, Gap) -->
 
 % PARSE ONLY
 % "the NOUN"
-np((X^S)^S, _C, third:singular, Gap, Gap) -->
+np((X^S)^S, _C, third:singular, Gap, Gap) --> %{trace},
    [ the ],
    { var(X),
      input_from_player},	% filter for parsing
    kind_noun(Kind, singular),
-   { resolve_definite_description(X, iz_a(X, Kind)) }.
+   { resolve_definite_description(X, (nop(parse_only([the_noun])),iz_a(X, Kind))) }.
 
 % PARSE ONLY
 % "NOUN" (not grammatical English but common in IF text 
@@ -125,7 +125,7 @@ np((X^S)^S, _C, third:singular, Gap, Gap) -->
    { var(X),
      input_from_player},	% filter for parsing
    kind_noun(Kind, singular),
-   { resolve_definite_description(X, iz_a(X, Kind)) }.
+   { resolve_definite_description(X, (nop(parse_only([noun])),iz_a(X, Kind))) }.
 
 % GENERATE ONLY
 % "the NOUN"
@@ -167,21 +167,25 @@ np((Number^S)^S, _, _, Gap, Gap) -->
    {number(Number)},
    [Number].
 
-resolve_definite_description(X, Constraint) :-
+resolve_definite_description(Object, Constraint):-
+  resolve_definite_description0(Object, Constraint),
+  log(resolve_definite_description(Object, Constraint)).
+
+resolve_definite_description0(X, Constraint) :-
    nonvar(X),
    !,
    Constraint.
-resolve_definite_description(Object, iz_a(Object, Kind)) :-
+resolve_definite_description0(Object, iz_a(Object, Kind)) :-
    kind_of(Kind, room),
    !,
    iz_a(Object, Kind).
-resolve_definite_description(Object, Constraint) :-
+resolve_definite_description0(Object, Constraint) :-
    % This rule will fail in the test suite b/c the global environment has no gameobject.
    \+ running_tests,
    % Pick the nearest one, if it's something that nearest works on.
    nearest(Object, Constraint),
    !.
-resolve_definite_description(_Object, Constraint) :-
+resolve_definite_description0(_Object, Constraint) :-
    % Punt, and choose whatever Prolog gives us first.
    Constraint.
 

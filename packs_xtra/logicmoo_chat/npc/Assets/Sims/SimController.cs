@@ -843,7 +843,7 @@ public class SimController : PhysicalObject
     readonly Dictionary<GameObject, float> bidTotals = new Dictionary<GameObject, float>();
 
     // ReSharper disable once InconsistentNaming
-    private readonly Symbol SConcerns = Symbol.Intern("concerns");
+    private readonly Symbol SConcerns = Symbol.Intern("quds");
 
     void UpdateLocomotionBidsAndPath()
     {

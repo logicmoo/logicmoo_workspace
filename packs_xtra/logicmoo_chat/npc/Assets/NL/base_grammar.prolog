@@ -184,7 +184,8 @@ s(contained_in(Object, Character), indicative, Polarity, Tense, simple) -->
 
 % NP's Property is [not] PropertyValue
 s(property_value(Noun, Property, Value), indicative, Polarity, Tense, simple) -->
-   { once(valid_property_value(Property, Value)),
+   { % DMILES %%%%%%%%%%%%%%% 
+     at_least_once(valid_property_value(Property, Value)),
      % Prefer other forms of realization, when available
      % But always let the user type this version if they want.
      ( input_from_player
@@ -199,7 +200,8 @@ s(property_value(Noun, Property, Value), indicative, Polarity, Tense, simple) --
 
 % NP is [not] PropertyValue
 s(property_value(Noun, Property, Value), indicative, Polarity, Tense, simple) -->
-   { once(valid_property_value(Property, Value)),
+   { % DMILES %%%%%%%%%%%%%%% 
+     at_least_once(valid_property_value(Property, Value)),
      adjectival_property(Property) },
    np((Noun^_)^_, subject, Agreement, nogap, nogap),
    aux_be(Tense, Agreement),
@@ -208,7 +210,8 @@ s(property_value(Noun, Property, Value), indicative, Polarity, Tense, simple) --
 
 % NP is [not] a PropertyValue
 s(property_value(Noun, Property, Value), indicative, Polarity, Tense, simple) -->
-   { once(valid_property_value(Property, Value)),
+   { % DMILES %%%%%%%%%%%%%%% 
+     at_least_once(valid_property_value(Property, Value)),
      nominal_property(Property) },
    np((Noun^_)^_, subject, Agreement, nogap, nogap),
    aux_be(Tense, Agreement),
@@ -222,6 +225,8 @@ s(related(Noun, Relation, Relatum), indicative, Polarity, Tense, simple) -->
    copula(simple, Tense, third:singular),
    opt_not(Polarity),
    np((Relatum^_)^_, object, _Agreement, nogap, nogap).
+
+at_least_once(G):- call(G).
 
 %%%
 %%% Imperative mood
