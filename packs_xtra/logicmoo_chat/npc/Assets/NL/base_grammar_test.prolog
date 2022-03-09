@@ -16,6 +16,10 @@ test(generate(s, in_expression)) :-
    s_test(location($'Kavi', $'kitchen'), indicative, Generated),
    Generated == ['Kavi', is, in, the, kitchen ].
 
+test(generate(s, in_expression0)) :-         
+  while_completing( s_test(contained_in($'Kavi', $'kitchen'), indicative, Generated)),
+   Generated == ['Kavi', is, in, the, kitchen ].
+
 test(generate(s, in_expression1)) :-
          s_test(contained_in($'Kavi', $'kitchen'), indicative, Generated),
    Generated == ['Kavi', is, in, the, kitchen ].
@@ -43,7 +47,7 @@ test(parse(s, imperative),
        nondet]):-
    with_bind(input_from_player, true,
     with_bind(addressee, $pc,
-     s_test(LF, Mood, [go, to, the, bed])).
+     s_test(LF, Mood, [go, to, the, bed]))).
 
 :- register_prop($bed,bed,[]).
 :- assert(location($bed,$bedroom)).

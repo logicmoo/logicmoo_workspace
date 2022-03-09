@@ -114,7 +114,7 @@ while_parsing(G) :-
 while_generating(G) :-
  with_bind(generating_nl=true,G).
 while_completing(G) :-
- with_bind(generating_nl=true,G).
+ bind_dialog_indexicals_for_input(G).
 
 %% player_idle_time(-Time)
 %  Time is the number of seconds of game time since the player

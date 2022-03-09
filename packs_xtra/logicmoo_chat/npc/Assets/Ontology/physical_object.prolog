@@ -10,6 +10,13 @@ location(the_world, the_game).
 location(PhysicalObject, Location) :-
    /perception/location/PhysicalObject:Location.
 
+located_object(Type, Where):- located_object(_, Type, Where).
+located_object(Obj, Type, Where):-
+  (iz_a(Obj,Type) -> true ; (ignore(Obj = #(Type)), register_prop(Obj,Type,[]))),!,
+  register_prop(Obj,Type,[]),assert_if_new(location(Obj,Where)).
+
+
+
 unique_answer(X, location(Object, X)) :-
    var(X),
    nonvar(Object).

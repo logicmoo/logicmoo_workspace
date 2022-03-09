@@ -56,7 +56,7 @@ run_test(Name, Options, Body) :-
 	     (ansicall(cyan,displayln(["Test ", Name, " was GOOD.\n",Options,'\n',Body])), print_test_results(Name, Options, Exception),
         (nonvar(Exception)->rtrace(Body);true))
 	     ;
-	     ansicall(red,displayln("Test ", Name, " was unsatisfiable.")))))))).
+	     (ansicall(red,(displayln("Test ", Name, " was unsatisfiable!!! \n",rtrace(Body)))),nop(ignore(rtrace(Body)))))))))).
 
 run_test_body(Options, Body) :-
    test_has_option(trace, Options),
@@ -212,3 +212,7 @@ ensure_test_file_loaded(File) :-
 
 %% test_file(+TestPattern, *File)
 %  Declares that File must be loaded before running test matching TestPattern.
+
+:- located_object(bed,$bedroom).
+:- located_object(desk,$living_room).
+:- located_object(report,$desk).

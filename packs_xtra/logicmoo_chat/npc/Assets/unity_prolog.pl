@@ -1011,13 +1011,13 @@ load_unity_csv_file_data(CSV_file):-
     Props=..[_|Types],
     must_maplist(into_row_types,Types,RTypes),
     dmsg(rowTypes(Types) --> RTypes),
-    ignore(begin_csv_loading(Pred)),
+    warn_but_keep_going(begin_csv_loading(Pred)),
     set_flag('$csv_row',1),!,
     maplist(load_csv_row_data(RTypes,Pred), Rows),
     listing(Pred),
-    ignore(end_csv_loading(Pred)).
+    warn_but_keep_going(end_csv_loading(Pred)).
 
-load_csv_row_data(Types,Pred, RowTerm):- (load_csv_row_data_now(Types,Pred, RowTerm)),!.
+load_csv_row_data(Types,Pred, RowTerm):- warn_but_keep_going(load_csv_row_data_now(Types,Pred, RowTerm)),!.
 load_csv_row_data_now(Types,Pred, RowTerm) :-     
     RowTerm=..[_|Row],
     Row = [F|_],

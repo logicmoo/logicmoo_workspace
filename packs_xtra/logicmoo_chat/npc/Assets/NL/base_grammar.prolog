@@ -6,8 +6,8 @@ sentence(S, Mood, Polarity, Tense, Aspect) -->
    ['('], !,
    with_bind(speaker, player,
 	   with_bind(addressee, $me,
-       s(S, Mood, Polarity, Tense, Aspect), 
-       opt_stop(Mood))),
+      (s(S, Mood, Polarity, Tense, Aspect), 
+       opt_stop(Mood)))),
    [')'].
 
 sentence(S, Mood, Polarity, Tense, Aspect) -->

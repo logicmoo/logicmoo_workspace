@@ -2,6 +2,7 @@
 %%% Utilities involved in loading the KB and lexicon
 %%%
 
+warn_but_keep_going(G):-  G *-> true ; (clause(G,_)->log(warn(failed(G)));true).
 :- public load_csv_row/2.
 :- public begin_csv_loading/1, end_csv_loading/1.
 :- external begin_csv_loading/1, end_csv_loading/1.
@@ -19,7 +20,7 @@
 
 load_csv_row(Row, Assertion):- unnumbervars(Assertion,AssertionU),!,load_csv_row0(Row, AssertionU),!.
 load_csv_row0(Row, Assertion) :-
-   load_special_csv_row(Row, Assertion), assertz_if_new(Assertion),!.
+   warn_but_keep_going((load_special_csv_row(Row, Assertion))), assertz_if_new(Assertion),!.
 load_csv_row0(_, Assertion) :-
    assertz_if_new(Assertion).
 
