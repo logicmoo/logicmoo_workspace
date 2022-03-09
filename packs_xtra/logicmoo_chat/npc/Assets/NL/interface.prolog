@@ -1,37 +1,37 @@
 :- public generate_text/2, input_completion/3.
 :- indexical input_from_player=false,
    generating_nl=false,
-   discourse_variables=null.
+   discourse_variables=[].
 
 %% generate_text(?SpeechAct, ?Text)
 %  The string Text is a possible realization of SpeechAct.
 generate_text(SpeechAct, Text) :-
-   bind_dialog_indexicals_for_output(SpeechAct),
-   step_limit(10000),
-   randomize(utterance(SpeechAct, Words, [ ])),
-   contracted_form(Words, Contracted),
-   word_list(Text, Contracted).
+   bind_dialog_indexicals_for_output(SpeechAct,
+   (step_limit(10000),
+    randomize(utterance(SpeechAct, Words, [ ])),
+    contracted_form(Words, Contracted),
+    word_list(Text, Contracted))).
 
 generate_text_for_menu(SpeechAct, Text) :-
-   bind_dialog_indexicals_for_output(SpeechAct),
-   step_limit(10000),
-   utterance(SpeechAct, Words, [ ]),
-   contracted_form(Words, Contracted),
-   word_list(Text, Contracted).
+   bind_dialog_indexicals_for_output(SpeechAct,
+   (step_limit(10000),
+    utterance(SpeechAct, Words, [ ]),
+    contracted_form(Words, Contracted),
+    word_list(Text, Contracted))).
 
 
 %% input_completion(+InputText, -CompletionText, -SpeechAct)
 %  InputText followed by CompletionText is a possible realization of SpeechAct.
 input_completion(InputText, CompletionText, SpeechAct) :-
-   bind_dialog_indexicals_for_input,
-   word_list(InputText, InputWords),
+  bind_dialog_indexicals_for_input(
+  (word_list(InputText, InputWords),
    contracted_form(InputUncontracted, InputWords),
    append(InputUncontracted, CompletionUncontracted, AllWords),
    %call_with_step_limit(10000, randomize(utterance(SpeechAct, AllWords, []))),
    step_limit(10000),
    randomize(utterance(SpeechAct, AllWords, [])),
    contracted_form(CompletionUncontracted, CompletionWords),
-   word_list(CompletionText, CompletionWords).
+   word_list(CompletionText, CompletionWords))).
 
 :- public well_formed_dialog_act/1.
 well_formed_dialog_act(acceptance(_, _, _, _)).
@@ -62,42 +62,46 @@ well_formed_dialog_act(automa_command(_, Target, _, _, _)) :-
    Target \= $me.
 well_formed_dialog_act(show_status(_,_,_)).
 
-bind_dialog_indexicals_for_input :-
-   in_conversation_with_npc(NPC),
-   !,
-   bind(input_from_player, true),
-   bind(speaker, $me),
-   bind(addressee, NPC),
-   bind(dialog_group, $me).
-bind_dialog_indexicals_for_input :-
-   bind(input_from_player, true),
-   bind(speaker, player),
-   bind(addressee, $me),
-   bind(dialog_group, $me).
+   
+bind_dialog_indexicals_for_input(NPC, G):-
+   with_bind(input_from_player, true,
+    with_bind(speaker, $me,
+     with_bind(addressee, NPC,
+      with_bind(dialog_group, $me, G)))).
 
-bind_indexicals_for_addressing_character_named(Name) :-
-   proper_name(Character, [Name]),
-   character(Character),
-   bind_indexicals_for_addressing_character(Character).
+bind_dialog_indexicals_for_input(G):-
+  in_conversation_with_npc(NPC),!, 
+   bind_dialog_indexicals_for_input(NPC, G).
+bind_dialog_indexicals_for_input(G) :-
+   with_bind(input_from_player, true,
+    with_bind(speaker, player,
+     with_bind(addressee, $me,
+      with_bind(dialog_group, $me, G)))).
 
-bind_indexicals_for_addressing_character($me) :-
-   !.
-bind_indexicals_for_addressing_character(Character) :-
-   bind(speaker, $me),
-   bind(addressee, Character).
+bind_indexicals_for_addressing_character_named(Name, G) --> 
+   {proper_name(Character, [Name]),
+    character(Character)},
+    bind_indexicals_for_addressing_character(Character, G).
+
+bind_indexicals_for_addressing_character($me, G) --> G.
+bind_indexicals_for_addressing_character(Character, G) -->
+   with_bind(speaker, $me,
+    with_bind(addressee, Character, G)).
+
+with_bind(N, V, DCG, S, E):- with_bind(N, V, phrase(DCG, S, E)).
 
 in_conversation_with_npc(NPC) :-
    qud(C),
    C/partner/NPC,
    NPC \= player.
 
-bind_dialog_indexicals_for_output(SpeechAct) :-
-   bind(generating_nl, true),
-   bind(discourse_variables, null),
-   agent(SpeechAct, A),
-   patient(SpeechAct, P),
-   bind(speaker, A),
-   bind(addressee, P).
+bind_dialog_indexicals_for_output(SpeechAct, G) :-
+   with_bind(generating_nl, true,
+    with_bind(discourse_variables, [],
+    (agent(SpeechAct, A),
+     patient(SpeechAct, P),
+     with_bind(speaker, A,
+      with_bind(addressee, P, G))))).
 
 generating_nl :-
    X = $generating_nl, X.
@@ -105,9 +109,13 @@ generating_nl :-
 input_from_player :-
    X = $input_from_player, X.
 
-unknown_input_from_player.
-unknown_generating_nl.
-unknown_running_tests.
+while_parsing(G) :-
+ with_bind(input_from_player=true,G).
+while_generating(G) :-
+ with_bind(generating_nl=true,G).
+while_completing(G) :-
+ with_bind(generating_nl=true,G).
+
 %% player_idle_time(-Time)
 %  Time is the number of seconds of game time since the player
 %  last did something (i.e. typed).

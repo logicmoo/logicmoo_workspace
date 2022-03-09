@@ -30,6 +30,7 @@ emit_grain(_,_).
 %% activate_prop(+Prop)
 %  Activates the Prop (e.g. turns on an appliance).
 activate_prop(Prop) :-
+   assert_if_new(prop_activated(Prop)),
    is_class(Prop, $'GameObject'),
    component_of_gameobject_with_type(PropComponent, Prop, $'PropInfo'),
    set_property(PropComponent, 'IsOn', true).
@@ -37,6 +38,7 @@ activate_prop(Prop) :-
 %% deactivate_prop(+Prop)
 %  Activates the Prop (e.g. turns on an appliance).
 deactivate_prop(Prop) :-
+   retractall(prop_activated(Prop)),
    is_class(Prop, $'GameObject'),
    component_of_gameobject_with_type(PropComponent, Prop, $'PropInfo'),
    set_property(PropComponent, 'IsOn', false).

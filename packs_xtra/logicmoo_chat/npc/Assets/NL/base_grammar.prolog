@@ -3,49 +3,42 @@ test_file(generate(s, _), "NL/base_grammar_test").
 
 sentence(S, Mood, Polarity, Tense, Aspect) -->
    { input_from_player },
-   [X],
-   { X=='(',
-     !,
-     begin(bind(speaker, player),
-	   bind(addressee, $me)) },
-   s(S, Mood, Polarity, Tense, Aspect),
-   opt_stop(Mood),
+   ['('], !,
+   with_bind(speaker, player,
+	   with_bind(addressee, $me,
+       s(S, Mood, Polarity, Tense, Aspect), 
+       opt_stop(Mood))),
    [')'].
 
 sentence(S, Mood, Polarity, Tense, Aspect) -->
    [ Name, ',' ],     
    { input_from_player },
-   { bind_indexicals_for_addressing_character_named(Name) },
-   s(S, Mood, Polarity, Tense, Aspect),
-   opt_stop(Mood).
+   bind_indexicals_for_addressing_character_named(Name,
+    (s(S, Mood, Polarity, Tense, Aspect),
+     opt_stop(Mood))).
 
 sentence(S, Mood, Polarity, Tense, Aspect) -->
-   { bind_discourse_variables(S, Core) },
-   s(Core, Mood, Polarity, Tense, Aspect),
-   opt_stop(Mood).
+   bind_discourse_variables(S, Core,
+   (s(Core, Mood, Polarity, Tense, Aspect),
+    opt_stop(Mood))).
 
-bind_discourse_variables(Var, Var) :-
-   var(Var),
-   !.
-bind_discourse_variables( (Core, Other), Core) :-
-   !,
-   bind_discourse_variables(Other).
-bind_discourse_variables(S, S).
+bind_discourse_variables(Var, Var, G) --> {var(Var)}, !, G.
+bind_discourse_variables( (Core, Other), Core, G) --> !, bind_discourse_variables(Other, G).
+bind_discourse_variables(S, S, G) --> G.
 
-bind_discourse_variables( (X, Y)) :-
-   !,
-   bind_discourse_variables(X),
-   bind_discourse_variables(Y).
-bind_discourse_variables(iz_a(Var, Kind)) :-
-   !,
-   must_getvar(discourse_variables,DV),
-   bind(discourse_variables, [iz_a(Var, Kind) | DV]).
-bind_discourse_variables(_).
+bind_discourse_variables( (X, Y), G) -->  !,
+   bind_discourse_variables(X,
+    bind_discourse_variables(Y, G)).
+bind_discourse_variables(iz_a(Var, Kind), G) -->
+   { must_getvar(discourse_variables,DV) }, !,
+     with_bind(discourse_variables, [iz_a(Var, Kind) | DV], G).
+bind_discourse_variables(_, G) --> G.
 
 %% discourse_variable_type(Var, Kind)
 %  Var is bound in $discourse_variables using iz_a(Var,Kind).
 discourse_variable_type(Var, Kind) :-
     must_getvar(discourse_variables,DV),
+    DV \== null,
    member(iz_a(Var, Kind), DV).
 
 %% bound_discourse_variable(Var)
@@ -134,9 +127,17 @@ infinitival_clause(EnclosingSubject, S) -->
 
 a_an --> ([a];[an];[]).
 
-s(S, Indicative, Polarity, Tense, Aspect) -->
-   {enforce_args(S)},
-   ss(S, Indicative, Polarity, Tense, Aspect).
+swizzle_lf(location(X,Y),contained_in(X,Y)).
+swizzle_lf(relation(X,location,Y),contained_in(X,Y)).
+%swizzle_lf(located(X,Y),contained_in(X,Y)).
+swizzle_lf(LF,LF):-!.
+swizzle_lf(LF,SLF):- nonvar(SLF),LF=SLF.
+swizzle_lf(LF,SLF):- var(LF),!,freeze(SLF,swizzle_lf(LF,SLF)).
+
+s(LF, Indicative, Polarity, Tense, Aspect, S, E) :- 
+  % {enforce_args(S)},
+   swizzle_lf(LF,SLF),
+   limit(1000, ss(SLF, Indicative, Polarity, Tense, Aspect, S, E)).
 
 ss(S, indicative, Polarity, Tense, Aspect) -->
    { lf_subject(S, NP) },

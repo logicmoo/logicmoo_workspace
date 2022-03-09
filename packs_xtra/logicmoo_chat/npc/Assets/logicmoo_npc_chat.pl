@@ -146,9 +146,7 @@ s(Words,LogicalForm):- Words =[_|_], sentence(LogicalForm, Mood, Polarity, Tense
 
 :- load_unity_prolog_file('Utilities/why.prolog').
 :- load_unity_prolog_file('Utilities/truth_value.prolog').
-:- load_unity_prolog_file('Utilities/test_rig.prolog').
 :- load_unity_prolog_file('Utilities/graphviz.prolog').
-:- load_unity_prolog_file('Utilities/freeze_tests.prolog').
 :- load_unity_prolog_file('Utilities/episodic_memory.prolog').
 :- load_unity_prolog_file('Utilities/data_structures.prolog').
 :- load_unity_prolog_file('Sims/utilities.prolog').
@@ -163,7 +161,6 @@ s(Words,LogicalForm):- Words =[_|_], sentence(LogicalForm, Mood, Polarity, Tense
 :- load_unity_prolog_file('Scripting/beat_manager.prolog').
 :- load_unity_prolog_file('Problem solver/task_reduction.prolog').
 :- load_unity_prolog_file('Problem solver/switch_to_task.prolog').
-:- load_unity_prolog_file('Problem solver/ps_tests.prolog').
 :- load_unity_prolog_file('Problem solver/problem_solver.prolog').
 %:- load_unity_prolog_file('Problem solver/problem_solver_orig.prolog').
 :- load_unity_prolog_file('Problem solver/metastrategies.prolog').
@@ -188,19 +185,16 @@ s(Words,LogicalForm):- Words =[_|_], sentence(LogicalForm, Mood, Polarity, Tense
 :- load_unity_prolog_file('Norms/ethics.prolog').
 :- load_unity_prolog_file('Norms/dputils.prolog').
 :- load_unity_prolog_file('Norms/dprolog.prolog').
-:- load_unity_prolog_file('NL/vp_tests.prolog').
 :- load_unity_prolog_file('NL/vp.prolog').
 :- load_unity_prolog_file('NL/preterminals.prolog').
 :- load_unity_prolog_file('NL/pp.prolog').
 :- load_unity_prolog_file('NL/player_help.prolog').
 :- load_unity_prolog_file('NL/pdebug.prolog').
-:- load_unity_prolog_file('NL/np_tests.prolog').
 :- load_unity_prolog_file('NL/np.prolog').
 :- load_unity_prolog_file('NL/lf.prolog').
 :- load_unity_prolog_file('NL/discourse.prolog').
 :- load_unity_prolog_file('NL/contractions.prolog').
 :- load_unity_prolog_file('NL/context_menu.prolog').
-:- load_unity_prolog_file('NL/base_grammar_test.prolog').
 :- load_unity_prolog_file('NL/base_grammar.prolog').
 :- load_unity_prolog_file('NL/auxverbs.prolog').
 :- load_unity_prolog_file('NL/_aux.prolog').
@@ -237,24 +231,34 @@ s(Words,LogicalForm):- Words =[_|_], sentence(LogicalForm, Mood, Polarity, Tense
 :- load_unity_csv_file('Ontology/predicate_type.csv').
 :- load_unity_csv_file('Ontology/properties.csv').
 :- load_unity_csv_file('Ontology/relations.csv').
-:- load_unity_csv_file('NL/parser_tests.csv').
+
 :- load_unity_csv_file('NL/transitive_verb.csv').
 :- load_unity_csv_file('NL/ditransitive_verb.csv').
 :- load_unity_csv_file('NL/intransitive_verb.csv').
 :- load_unity_csv_file('NL/prepositional_slot.csv').
 
-
+:- load_unity_csv_file('NL/parser_tests.csv').
+/*
+:- load_unity_prolog_file('Problem solver/ps_tests.prolog').
+:- load_unity_prolog_file('NL/base_grammar_test.prolog').
+:- load_unity_prolog_file('Utilities/freeze_tests.prolog').
+:- load_unity_prolog_file('NL/np_tests.prolog').
+:- load_unity_prolog_file('NL/vp_tests.prolog').
+*/
+:- load_unity_prolog_file('Utilities/test_rig.prolog').
 :- load_unity_prolog_file('Characters/Kavi.prolog').
 :- load_unity_prolog_file('Characters/captive.prolog').
 :- load_unity_prolog_file('Characters/pc.prolog').
 :- load_unity_prolog_file('Script/demo_level.prolog').
+
+
 
 :- 
   unity_module_name(M),add_history(module(M)).
 
 :- forall(clause(unity_init,Body),must_or_rtrace(Body)).
 
-:- getvar(pc,PC),bind(me,PC).
+:- getvar(pc,PC), bind(me,PC).
 
 gen_all:- between(1,6,L),length(S,L),utterance(X,S,[]),print_tree_with_final(S=X,'.\n\n'),fail.
 :- add_history(gen_all).

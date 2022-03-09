@@ -367,14 +367,14 @@ default_strategy(press($me, _Button),
 %% Turning things on/off
 %%
 
-precondition(switch($me, X, power= on),
+precondition(switch($me, X, power, on),
 	     ready_to_hand(X)).
-default_strategy(switch($me, X, power= on),
+default_strategy(switch($me, X, power, on),
 		 call(activate_prop(X))).
 
-precondition(switch($me, X, power= off),
+precondition(switch($me, X, power, off),
 	     ready_to_hand(X)).
-default_strategy(switch($me, X, power= off),
+default_strategy(switch($me, X, power, off),
 		 call(deactivate_prop(X))).
 
 %%
@@ -385,7 +385,7 @@ strategy(operate($me, Device),
 	 call(operate(Device))) :-
    iz_a(Device, device).
 
-:- public use/1.
+:- public operate/1.
 operate(Device) :-
    forall(contained_in(X, Device),
 	  destroy(X)).

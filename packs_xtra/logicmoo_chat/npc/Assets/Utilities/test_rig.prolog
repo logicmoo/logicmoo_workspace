@@ -12,7 +12,7 @@
 %  True if the current goal is part of a unit test.
 running_tests :-
    only_getvar(running_tests,X),
-   call(X).
+   X\==[],call(X).
 
 %% test(*Name, +Options)
 %  Body of this rule is a test that should be run with the specified options.
@@ -27,11 +27,11 @@ run_utests:- make, forall(run_utests(_),true).
 %  Run all tests with name TestName
 run_utests(Name) :-
    ensure_tests_loaded(Name),
-   bind(running_tests, true),
-   forall(test_body(Name, Options, Body),
+   with_bind(running_tests, true,
+   (forall(test_body(Name, Options, Body),
 	  begin(all_test_options(Name, Options, AllOptions),
 		run_test(Name, AllOptions, Body))),
-   displayln("Tests complete").
+   displayln("Tests complete"))).
 
 %% test_body(+Name, -Options, -Body)
 %  There is a test with Name, Options, and Body.
@@ -45,18 +45,18 @@ test_body(Name, [ ], Body) :-
 %% run_test(+Name, +Options, +Body)
 %  Runs the specified test, printing out any failures.  Always succeeds.
 run_test(Name, Options, Body) :-
-   begin(bind(test_name, Name),
-	 bind(test_options, Options),
-   unbind([pc,addressee,speaker,generating_nl,input_from_player,player]),
-	 copy_term(Body, Copy),
-	 bind(test_body, Copy),
-	 setup_test(Name, Options),
-   displayln("Running ", Name,' with options=',Options ),
-	 (catch(run_test_body(Options, Body), Exception, true) ->
+ with_bind(test_name, Name,
+	with_bind(test_options, Options,
+   (unbind([pc,addressee,speaker,generating_nl,player]),
+	  copy_term(Body, Copy),
+	  with_bind(test_body, Copy,
+	  (setup_test(Name, Options),
+     displayln("Running ", Name,' with options=',Options ),
+	   (catch(run_test_body(Options, Body), Exception, true) ->
 	     (ansicall(cyan,displayln(["Test ", Name, " was GOOD.\n",Options,'\n',Body])), print_test_results(Name, Options, Exception),
         (nonvar(Exception)->rtrace(Body);true))
 	     ;
-	     ansicall(red,displayln("Test ", Name, " was unsatisfiable.")))).
+	     ansicall(red,displayln("Test ", Name, " was unsatisfiable.")))))))).
 
 run_test_body(Options, Body) :-
    test_has_option(trace, Options),

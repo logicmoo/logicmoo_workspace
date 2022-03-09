@@ -4,10 +4,14 @@
 
 :- randomizable proper_name/4, proper_name/2.
 
+limit_var(_Four,ObjectName,Goal):- ground(ObjectName),!,once(Goal).
+limit_var(Four,_ObjectName,Goal):-
+  limit(Four,Goal).
+
 %% proper_name(?Object, ?Name) is nondet
 %  Object has proper name Name (a list of words)
-proper_name(Object, Name) :-
-   proper_name(Object, _, Name, [ ]).
+proper_name(Object, Name) :-   
+   limit_var(4,Object:Name,proper_name(Object, _, Name, [ ])).
 
 proper_name(Object, Number) -->
    proper_name_without_A(Object, Number).
@@ -18,6 +22,8 @@ proper_name(Object, Number) -->
 
 :- multifile(proper_name_without_the//2).
 :- dynamic(proper_name_without_the//2).
+:- dynamic(phrase_rule/3).
+
 proper_name_without_A(Object,_,Left, More):- 
  object_words(pn,Object,Words), 
  append(Words,More,Left).
@@ -28,11 +34,11 @@ proper_name_with_the(Object,_,Left, More):-
  append(Words,More,Left).
 
 kind_noun(Kind, Number) --> 
-  {phrase_rule(kind_noun(Kind, Number), Words, Guard)},
+  {limit_var(4,Kind,phrase_rule(kind_noun(Kind, Number), Words, Guard))},
   Words,{Guard}.
 
-proper_name(Kind, Number) --> 
-  {phrase_rule(proper_name(Kind, Number), Words, Guard)},
+proper_name(Object, Number) --> 
+  {phrase_rule(proper_name(Object, Number), Words, Guard)},
   Words,{Guard}.
 
 proper_name_without_the(Kind, Number) --> 

@@ -22,9 +22,8 @@ test(generate(np, addressee),
    np_test(player, subject, second:singular, Generated).
 
 test(generate(np, kind),
-     [ setup(bind_discourse_variables(iz_a(X, room))),
-       true(Generated == [a, room]) ]) :-
-   np_test(X, subject, third:singular, Generated).
+     [ true(Generated == [a, room]) ]) :-
+   bind_discourse_variables(iz_a(X, room), {np_test(X, subject, third:singular, Generated)},[],[]).
 
 test(generate(np, prop),
      [ true(Generated == [the, bed]) ]) :-
@@ -80,8 +79,8 @@ test(parse(np, kind),
 test(parse(np, prop),
      [ true(LF == $bed),
        nondet ]) :-
-   bind(input_from_player, true),
-   np_test(LF, subject, third:singular, [the, bed]).
+   with_bind(input_from_player, true,
+    np_test(LF, subject, third:singular, [the, bed])).
 
 
 np_test(LF, Case, Agreement, SurfaceForm) :-

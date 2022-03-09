@@ -6,7 +6,7 @@ test_file(generate(np, _), "NL/np_tests").
 test_file(complete(np, _), "NL/np_tests").
 test_file(parse(np, _), "NL/np_tests").
 
-:- indexical selectional_constraints=null.
+:- indexical selectional_constraints=[].
 
 impose_selectional_constraint(Var, Type) :-
    bind(selectional_constraints, [Var:Type | $selectional_constraints]).
@@ -73,13 +73,13 @@ not_completing(_, In, In) :-
 
 possessive_np(X, Number) -->
    [your],
-   kind_noun_s(Kind, Number),
+   kind_noun_s(X, Kind, Number),
    { iz_a(X, Kind),
      owner($addressee, X) }.
 
 possessive_np(X, Number) -->
    [my],
-   kind_noun_s(Kind, Number),
+   kind_noun_s(X, Kind, Number),
    { iz_a(X, Kind),
      possessive_pronoun_referrent($speaker, Owner),
      owner(Owner, X) }.
@@ -87,7 +87,7 @@ possessive_np(X, Number) -->
 possessive_np(X, Number) -->
    proper_name(Owner, singular),
    ['\'', s],
-   kind_noun_s(Kind, Number),
+   kind_noun_s(X, Kind, Number),
    { iz_a(X, Kind),
      owner(Owner, X) }.
 
@@ -99,7 +99,7 @@ possessive_pronoun_referrent(X, X).
 np(LF, _, third:singular, Gap, Gap) -->
    { var(LF) }, 
    [a],
-   kind_noun_s(Kind, singular),
+   kind_noun_s(X, Kind, singular),
    { LF = ((X^S)^(S, iz_a(X, Kind))) }.
 
 % GENERATE ONLY
@@ -108,7 +108,7 @@ np((X^S)^S, _, third:singular, Gap, Gap) -->
    { var(X) },
    [a ],
    { discourse_variable_type(X, Kind) },
-   kind_noun_s(Kind, singular).
+   kind_noun_s(X, Kind, singular).
 
 % PARSE ONLY
 % "the NOUN"
@@ -116,7 +116,7 @@ np((X^S)^S, _C, third:singular, Gap, Gap) --> %{trace},
    [ the ],
    { var(X),
      nop(input_from_player)},	% filter for parsing
-   kind_noun_s(Kind, singular),
+   kind_noun_s(X, Kind, singular),
    { resolve_definite_description(X, (nop(parse_only([the_noun])),iz_a(X, Kind))) }.
 
 % PARSE ONLY
@@ -124,7 +124,7 @@ np((X^S)^S, _C, third:singular, Gap, Gap) --> %{trace},
 np((X^S)^S, _C, third:singular, Gap, Gap) -->
    { var(X),
      input_from_player},	% filter for parsing
-   kind_noun_s(Kind, singular),
+   kind_noun_s(X, Kind, singular),
    { resolve_definite_description(X, (nop(parse_only([noun])),iz_a(X, Kind))) }.
 
 % GENERATE ONLY
@@ -135,7 +135,7 @@ np((X^S)^S, _C, third:singular, Gap, Gap) -->
      \+ proper_name(X, _),
      base_kind(X, Kind) },
    [the], % fail,
-   kind_noun_s(Kind, singular).
+   kind_noun_s(X, Kind, singular).
 
 % COMPLETE ONLY
 % "the NOUN"
@@ -146,7 +146,7 @@ np((X^S)^S, _C, third:singular, Gap, Gap) -->
    { var(X),
      %input_from_player,
      \+ bound_discourse_variable(X) },
-   kind_noun_s(Kind, singular),
+   kind_noun_s(X, Kind, singular),
    { leaf_kind(Kind),
      object_matching_selectional_constraint(X, Kind) }.
 
@@ -159,7 +159,7 @@ np((X^S)^S, _C, third:singular, Gap, Gap) -->
    { var(X),
      input_from_player,
      \+ bound_discourse_variable(X) },
-   kind_noun_s(Kind, singular),
+   kind_noun_s(X, Kind, singular),
    { % leaf_kind(Kind),
      (X = Kind) }.
 
@@ -180,15 +180,18 @@ np((Number^S)^S, _, _, Gap, Gap) -->
    {number(Number)},
    [Number].
 
-kind_noun_s(Kind, Singular, [A|S], B) :-
-    %leaf_kind(Kind),
+autocomplete_kinds(Kind):- leaf_kind(Kind), Kind \== kind, (\+ \+ iz_a(_,Kind)),  subkinds(abstract,X), \+ member(Kind,X).
+autocomplete_kinds(person).
+
+kind_noun_s(X, Kind, Singular, [A|S], B) :-
+    ( (\+ var(A), \+ var(X)) -> true; autocomplete_kinds(Kind)),
     kind_noun(Kind, Singular, [A|S], B),
     %Kind\==kind,
-    A \== entity,
+    
     log(v(kind_noun(Kind, singular,A,B))).
-% kind_noun_s(Kind, singular)--> kind_noun(Kind, singular), {log(kind_noun(Kind, singular))}.
+% kind_noun_s(X, Kind, singular)--> kind_noun(Kind, singular), {log(kind_noun(Kind, singular))}.
 resolve_definite_description(Object, Constraint):-
-  resolve_definite_description0(Object, Constraint),
+  limit(4,resolve_definite_description0(Object, Constraint)),
   log(ap(resolve_definite_description(Object, Constraint))).
 
 resolve_definite_description0(X, Constraint) :-

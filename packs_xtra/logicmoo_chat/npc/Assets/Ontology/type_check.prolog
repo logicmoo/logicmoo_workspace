@@ -1,3 +1,7 @@
+
+:- multifile test/2, test/1, test_options/2, test_file/2.
+
+
 %% possibile_types_given_constraint(-Var, :Expression, -Types)
 % Gives all the possible types for Var within Expression.
 possible_types_given_constraint(Var, Expression, Types) :-

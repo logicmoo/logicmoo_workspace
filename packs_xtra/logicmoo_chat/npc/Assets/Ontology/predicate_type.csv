@@ -38,7 +38,6 @@ action,"believes(actor, condition)"
 action,"watch(actor, physical_object)"
 action,"leave(actor, container)"
 action,flee(actor)
-action,"use(actor, device)"
 action,"operate(actor, device)"
 action,"thinks(actor, condition)"
 % Conditions,

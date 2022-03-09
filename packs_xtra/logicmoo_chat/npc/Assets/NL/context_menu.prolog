@@ -44,9 +44,9 @@ menu_action(X, talk($pc, X, _)) :-
 
 menu_action(X, sleep($pc, X)) :-
    iz_a(X, layable).
-menu_action(X, switch($pc, X , power=on)) :-
+menu_action(X, switch($pc, X , power,on)) :-
    once(iz_a(X, appliance)),
    \+ prop_activated(X).
-menu_action(X, switch($pc, X, power=on)) :-
+menu_action(X, switch($pc, X, power,on)) :-
    once(iz_a(X, appliance)),
    prop_activated(X).

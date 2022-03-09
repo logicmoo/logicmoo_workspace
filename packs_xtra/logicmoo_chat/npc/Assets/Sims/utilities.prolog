@@ -72,7 +72,7 @@ nearest(GameObject, Constraint) :-
 	    Distance,
 	    ( Constraint,
 	      present(GameObject),
-	      Distance is distance(GameObject, $me))).
+	      Distance is distance([GameObject], $me))).
 
 %% elroot(+GameObject, -Root)
 %  Returns the root of the EL database for GameObject, if there is one.

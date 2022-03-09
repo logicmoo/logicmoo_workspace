@@ -75,18 +75,18 @@ vp(_Form, Predicate^Modal, Subject^S, Tense, Agreement, GapInfo) -->
    [TurnAdverb],
    { turn_phrasal_verb(TurnAdverb, Subject, Object, Predicate) }.
 
-turn_verb(_, Tense) --> {turn_word(Turned,Tense)}, [Turned].
+turn_verb(_, Tense) --> [Turned], {turn_word(Turned,Tense)}.
 
-turn_word(switch,present).
-turn_word(switched,past).
 turn_word(turn,present).
-turn_word(turned,present).
+turn_word(turned,past).
+turn_word(Switch,present):- Switch=switch.
+turn_word(Switched,past):- Switched=switched.
 :- forall(turn_word(W,_),register_lexical_items([W])).
 
-turn_phrasal_verb(on, S, O, switch(S, O, power=on)).
-turn_phrasal_verb(off, S, O, switch(S, O, power=off)).
-turn_phrasal_verb(true, S, O, switch(S, O, power=on)).
-turn_phrasal_verb(false, S, O, switch(S, O, power=off)).
+turn_phrasal_verb(on, S, O, switch(S, O, power,on)).
+turn_phrasal_verb(off, S, O, switch(S, O, power,off)).
+turn_phrasal_verb(True, S, O, switch(S, O, power,on)):- true == True.
+turn_phrasal_verb(False, S, O, switch(S, O, power,off)):- false == False.
 
 :- register_lexical_item(turn),
    forall(turn_phrasal_verb(Word, _, _, _),

@@ -226,8 +226,7 @@ property_nondefault_value(Object, Property, Value) :-
 %% property_value(?Object, ?Property, ?Value)
 %  Object has this value for this property.
 property_value(Object, Property, Value) :-
-   nonvar_ref(Property),
-   !,
+   nonvar_ref(Property), !,
    lookup_property_value(Object, Property, Value).
 property_value(Object, Property, Value) :-
    iz_a(Object, Kind),

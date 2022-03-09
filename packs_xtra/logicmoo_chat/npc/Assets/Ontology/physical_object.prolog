@@ -1,5 +1,6 @@
 :- external owner/2.
 
+:- dynamic(location/2).
 location(X, Location) :-
    X == player,
    !,
