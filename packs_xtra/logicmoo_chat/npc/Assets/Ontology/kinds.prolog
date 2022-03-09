@@ -23,6 +23,11 @@ immediate_kind_of(boy, male).
 immediate_kind_of(girl, human).
 immediate_kind_of(girl, female).
 
+immediate_kind_of(conversant,person).
+immediate_kind_of(character,creature).
+
+
+
 immediate_kind_of(prop, physical_object).
 
 immediate_kind_of(furniture, prop).
@@ -64,9 +69,13 @@ immediate_kind_of(social_object, nonphysical_object).
 immediate_kind_of(perdurant, entity).
 immediate_kind_of(event, perdurant).
 immediate_kind_of(action, event).
-immediate_kind_of(question, event).
-immediate_kind_of(assertion, event).
+immediate_kind_of(beat_task, event).
+immediate_kind_of(dialog_act, beat_task).
+immediate_kind_of(question, dialog_act).
+immediate_kind_of(assertion, dialog_act).
 immediate_kind_of(favor, event).
+
+immediate_kind_of(dialog_act,action).
 
 immediate_kind_of(social_group, social_object).
 immediate_kind_of(social_group, actor).

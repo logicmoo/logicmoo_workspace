@@ -234,6 +234,12 @@ normalize_task(emote(E),
 :- dynamic core_systems_initialized/0.
 :- external (initialization)/0.
 
+
+(initialization):- forall(iz_a(X,door),register_door(X)).
+(initialization):- forall(member(X,[living_room,bedroom,bathroom,kitchen]),register_room($(X),X)).
+(initialization):- forall(member(X,[$'Kavi',$pc,$captive]),register_character(X)).
+(initialization):- forall((iz_a(X,physical_object),\+ iz_a(X,person),once(iz_a(X,K))),register_prop(X,K,[])).
+
 ensure_core_systems_initialized :-
    core_systems_initialized,
    !.

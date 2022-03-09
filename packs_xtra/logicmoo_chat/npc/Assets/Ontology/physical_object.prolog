@@ -18,8 +18,8 @@ incompatible_cl(location(X, Y),
    Y \= Z.
 
 in_room(PhysicalObject, Room) :-
-   location(PhysicalObject, Room),
-   room(Room).
+   room(Room),
+   location(PhysicalObject, Room).
 
 top_level_container(Space, Space) :-
    iz_a(Space, architectural_space).

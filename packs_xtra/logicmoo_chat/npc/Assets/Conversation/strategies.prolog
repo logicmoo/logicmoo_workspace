@@ -14,7 +14,7 @@ strategy(pending_conversation,
 		  speech([Topic]),
 		  Topic))) :-
    % Need the once to prevent it from generating all topics at once.
-   once(/pending_conversation_topics/ $addressee/(Topic>>TopicNode)).
+   once(/pending_conversation_topics/ $addressee/Topic>>TopicNode).
 
 conversation_idle_task(Partner, do_beat_dialog(Task)) :-
    current_beat(B),

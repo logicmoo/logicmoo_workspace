@@ -178,8 +178,8 @@ s(Words,LogicalForm):- Words =[_|_], sentence(LogicalForm, Mood, Polarity, Tense
 :- load_unity_prolog_file('Qud/script.prolog').
 :- load_unity_prolog_file('Ontology/physical_object.prolog').
 :- load_unity_prolog_file('Ontology/person.prolog').
-:- load_unity_prolog_file('Ontology/knowledge_representation.prolog').
 :- load_unity_prolog_file('Ontology/kinds.prolog').
+:- load_unity_prolog_file('Ontology/knowledge_representation.prolog').
 :- load_unity_prolog_file('Ontology/integrity_checks.prolog').
 :- load_unity_prolog_file('Ontology/automa.prolog').
 :- load_unity_prolog_file('Ontology/food_drink.prolog').
@@ -232,16 +232,16 @@ s(Words,LogicalForm):- Words =[_|_], sentence(LogicalForm, Mood, Polarity, Tense
 :- load_unity_prolog_file('NL/lexicon.prolog').
 
 :- load_unity_csv_file('Ontology/kinds.csv').
-:- load_unity_csv_file('Ontology/predicate_type.csv').
-:- load_unity_csv_file('Ontology/properties.csv').
 :- load_unity_csv_file('Ontology/entities.csv').
 :- load_unity_csv_file('NL/adjective.csv').
+:- load_unity_csv_file('Ontology/predicate_type.csv').
+:- load_unity_csv_file('Ontology/properties.csv').
 :- load_unity_csv_file('Ontology/relations.csv').
-:- load_unity_csv_file('NL/prepositional_slot.csv').
 :- load_unity_csv_file('NL/parser_tests.csv').
 :- load_unity_csv_file('NL/transitive_verb.csv').
 :- load_unity_csv_file('NL/ditransitive_verb.csv').
 :- load_unity_csv_file('NL/intransitive_verb.csv').
+:- load_unity_csv_file('NL/prepositional_slot.csv').
 
 
 :- load_unity_prolog_file('Characters/Kavi.prolog').

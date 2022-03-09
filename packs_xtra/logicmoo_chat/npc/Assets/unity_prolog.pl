@@ -146,12 +146,19 @@ is_slashed_g((/_):_).
 
 %uslash(X,Y):- log(uslash(X,Y)),fail.
 %uslash(me,_X):- fail.
-'/'(X):- uslash(top,/X).
 
 to_slash_db(C,Top,uslash(Top,C)) :- !.
 %to_slash_db(C,Top,uslash(Top,O)) :- subst(C,'/','[|]',O).
 
 slash_top(Rel):- arg(_,e(rel,top,this,me,global),Rel).
+
+uslash_call(X,Y):- uslash(X,Y).
+uslash_call_top(Y):- compound(Y), (Y = (L>>R)),!,uslash_completion('/'(L),R).
+uslash_call_top(Y):- uslash(top,Y).
+uslash_completion(X,Y):- dmsg(uslash_completion(X,Y)),fail.
+uslash_completion(/(X),Y):- uslash(top,X/Y).
+uslash_completion((X),Y):- uslash(rel,X/Y).
+
 uslash(Rel,X):- var(Rel),!,slash_top(Rel),uslash(Rel,X).
 uslash(#(Rel),X):- !, uslash(Rel,X).
 uslash($(Rel),X):- getvar(Rel,From), !, uslash(From,X).
@@ -168,17 +175,20 @@ gen_pnv(Path,Name,Value,Path/VarValue):- VarValue\=(_:_),VarValue=Name,Value=tru
 
 :- dynamic(ufslash/1).
 
-extend_path(_,'/'(Y),'/'(Y)):- nonvar(Y),!.
+extend_path(_,SFirst,SFirst):- compound(SFirst), SFirst = '/'(_),!.
 extend_path(X,Y,XY):- get_slash(Y,YY),Y\==YY,!,extend_path(X,YY,XY).
-extend_path(Y,X,XY):- get_slash(X,YY),Y\==YY,!,extend_path(X,YY,XY).
+extend_path(X,Y,XY):- get_slash(X,XX),X\==XX,!,extend_path(XX,Y,XY).
 extend_path(Y,This,Y):- This==this, !.
-extend_path(X,'/'(Y),'/'(XX,YY)):- get_slash(X,XX),get_slash(Y,YY).
-
+%extend_path(X,'/'(Y),'/'(XX,YY)):- get_slash(X,XX),get_slash(Y,YY).
+extend_path(X,Y,X/Y).
 slash_props(Path,Name,Value):- gen_pnv(Path,Name,Value,PathVarValue),uslash(rel,PathVarValue).
 
-get_slash(X,X):- var(X),!.
+get_slash(X,X):- \+ compound(X),!.
 get_slash(uslash(rel,X),XX):- get_slash(X,XX).
 get_slash(uslash(this,X),X):-!.
+get_slash(uslash(top,X),X):-!.
+get_slash(uslash(Var,X),Y):- atom(Var), getvar(Var,Val),!,get_slash(uslash(Val,X),Y).
+get_slash(uslash(Var,X),Var/X):- !. 
 get_slash(X,X).
 
 uslashv(ME,X,V):- getvar(me,ME),uslash(_,Y),slash_to_list(Y,Z), (append([ME|X],[val(V)],Z)-> true ; (append([ME|X],[],Z),V=true)).
@@ -199,8 +209,8 @@ slash_to_list0(XY,[XY]).
 %uslash(rel,X):- uslash(($this)/X).
 %uslash(me,X):- getvar(me,Me),extend_path(Me,X,Full),uslash(full,Full).
 
-me_path(($global) / ($me) ).
-this_path( ($global)/($me)/this ).
+me_path( R ):- getvar(global,G), getvar(me,Me), extend_path(G, Me, R).
+this_path( R ):- me_path( W ), extend_path(W, this, R).
 
 :- thread_local(t_l:(unity_this_path/1)).
 '::'(C,G):- dv(C,N),getvar(N,V),!,'::'(V,G).
@@ -400,8 +410,19 @@ share_arg(Args,ArgsT):- atom(ArgsT),!,assert_arg_type(Args,ArgsT).
 share_arg(_Args,_ArgsT).
 
 assert_arg_type(Args,ArgsT):- var(Args),!, freeze(Args,share_arg(Args,ArgsT)).
-assert_arg_type(iz(Args),ArgsT):- log(assert_subtype( Args,ArgsT)).
-assert_arg_type(Args,ArgsT):- compound(Args), log(assert_result_isa(Args,ArgsT)).
+assert_arg_type(iz(Args),ArgsT):- assert_subtype( Args,ArgsT).
+assert_arg_type(Args,ArgsT):- compound(Args), assert_result_isa(Args,ArgsT).
+assert_arg_type(Args,ArgsT):- assert_arg_isa(Args,ArgsT).
+
+assert_result_isa(Args,Args):- !. 
+assert_result_isa(Args,ArgsT):- log_assert(decl_asap(result_isa(Args,ArgsT))).
+
+log_assert(G):- log(ap(G)),assert_if_new(G).
+assert_arg_isa(Args,ArgsT):- log_assert(decl_asap(arg_isa(Args,ArgsT))).
+
+assert_subtype( Args,Args):- !. 
+assert_subtype( Args,ArgsT):-  log_assert(decl_asap(subtype( Args,ArgsT))).
+ 
 
 share_args(C,O):- share_functor(C,O),compound_name_arguments(C,F,Args),compound_name_arguments(O,F,ArgsT),maplist(share_arg,Args,ArgsT).
 share_args(C,O):- throw(failed_share_args(C,O)).
@@ -806,7 +827,7 @@ with_bind([H|T],G):- with_bind(H,with_bind(T,G)).
 
 log(error(X)):- !, ansicall(bg(red),dmsg(error(X))).
 log(warn(X)):- !, ansicall(red,dmsg(warn(X))).
-log(mexp(X)):- !, dmsg(x=X),!. % overly verbose
+log(mexp(X)):- !, log(v(x=X)),!. % overly verbose
 log(ap(_)):- !. % overly verbose
 log(apr(_)):- !. % overly verbose
 log(v(_)):- !. % overly verbose
@@ -863,9 +884,25 @@ call_with_step_limit(Limit,Goal):- ALimit is Limit ^ 3, call_with_inference_limi
 
 % :- assume_todo(component_of_gameobject_with_type/3).
 
-component_of_gameobject_with_type(X,X,_).
+% "True if component is a component of gameobject with type class."
+% "?component", "?gameobject", "+class"
+%:- assume_done(is_class/2). 
+is_class(Obj, #('PhysicalObject')):-
+  iz_a(Obj,physical_object).
+is_class(Obj, #('GameObject')):-
+  iz_a(Obj,entity).
 
-:- assume_todo(parent_of_gameobject/2).
+component_of_gameobject_with_type(X,X,Class):- Class== #('PhysicalObject'),!.
+component_of_gameobject_with_type(X,X,Class):- Class== #('PropInfo'),!.
+component_of_gameobject_with_type(X,X,Class):- Class== #('GameObject'),!.
+component_of_gameobject_with_type(X,X,Class):- is_class(X,Class),!.
+component_of_gameobject_with_type(instanceOfClassFn(X,Class),X,Class).
+
+%:- assume_todo(parent_of_gameobject/2).
+%                "True if CHILD is a child of PARENT in the game's rendering hierarchy.",
+%                "?child", "?parent".
+parent_of_gameobject(Child,Parent):- location(Child,Parent)*->Child=Parent.
+  
 
 % True if GOAL is true given variable bindings of each unique value of TEMPLATE produced by GENERATOR.
 for_all_unique(T,Gen):- for_all_unique(T,Gen,true). 
@@ -1018,13 +1055,6 @@ listify_row(A,[A]).
 join_underscores(A,V):- append(Left,[L,'_',R|More],A),atomic_list_concat([L,'_',R],LR),append(Left,[LR|More],M),!,join_underscores(M,V).
 join_underscores(V,V).
 
-:- fixup_exports.
-
-:- multifile(term_expansion/2).
-:- dynamic(term_expansion/2).
-term_expansion(X,Y):- notrace((compound(X), unity_uctx, uterm_expansion(X,Y),X\==Y,ansicall(yellow,print_clexp(ce,X,Y)))).
-system:goal_expansion(X,Y):- notrace((compound(X), unity_uctx, \+ source_file_expansion, expand_ugoal(X,Y),X\==Y,ansicall(blue,print_clexp(ge,X,Y)))).
-:- load_unity_prolog_file('Utilities/startup.prolog').
 
 ltest:- 
   nb_setval(c,writeln(hi_c)),
@@ -1211,6 +1241,23 @@ property(Obj,Prop,Num):-
             }
         }
 */
+
+
+:- fixup_exports.
+:- unload_file(library(yall)).
+'>>'(X,Y):- uslash_completion(X,Y).
+(X/Y) :- uslash_call(X,Y).
+'/'(X):- uslash_call_top(X).
+:-use_module(library(yall)).
+
+:- multifile(term_expansion/2).
+:- dynamic(term_expansion/2).
+term_expansion(X,Y):- notrace((compound(X), unity_uctx, uterm_expansion(X,Y),X\==Y,ansicall(yellow,print_clexp(ce,X,Y)))).
+system:goal_expansion(X,Y):- notrace((compound(X), unity_uctx, \+ source_file_expansion, expand_ugoal(X,Y),X\==Y,ansicall(blue,print_clexp(ge,X,Y)))).
+:- load_unity_prolog_file('Utilities/startup.prolog').
+
+
+
 end_of_file.
 
 %:- dynamic($/2).

@@ -117,7 +117,7 @@ np((X^S)^S, _C, third:singular, Gap, Gap) --> %{trace},
    { var(X),
      nop(input_from_player)},	% filter for parsing
    kind_noun_s(Kind, singular),
-   { fail, resolve_definite_description(X, (nop(parse_only([the_noun])),iz_a(X, Kind))) }.
+   { resolve_definite_description(X, (nop(parse_only([the_noun])),iz_a(X, Kind))) }.
 
 % PARSE ONLY
 % "NOUN" (not grammatical English but common in IF text 
@@ -180,10 +180,11 @@ np((Number^S)^S, _, _, Gap, Gap) -->
    {number(Number)},
    [Number].
 
-kind_noun_s(Kind, Singular, A, B) :-
-    leaf_kind(Kind),
-    kind_noun(Kind, Singular, A, B),
-    Kind\==kind,   
+kind_noun_s(Kind, Singular, [A|S], B) :-
+    %leaf_kind(Kind),
+    kind_noun(Kind, Singular, [A|S], B),
+    %Kind\==kind,
+    A \== entity,
     log(v(kind_noun(Kind, singular,A,B))).
 % kind_noun_s(Kind, singular)--> kind_noun(Kind, singular), {log(kind_noun(Kind, singular))}.
 resolve_definite_description(Object, Constraint):-

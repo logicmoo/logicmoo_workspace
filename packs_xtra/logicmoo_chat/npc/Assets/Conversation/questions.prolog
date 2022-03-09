@@ -25,7 +25,7 @@ reduce_question(X:manner(be(C), X),
 % % Yes/no quetsions
 strategy(answer_yes_no(Asker, Q),
 	 generate_answer(Q, Answer)) :-
-   admitted_truth_value(Asker, Q, Answer).
+   freeze(Q, admitted_truth_value(Asker, Q, Answer)).
 
 strategy(generate_answer(Q, true),
 	 agree($me, $addressee, true, Q)).

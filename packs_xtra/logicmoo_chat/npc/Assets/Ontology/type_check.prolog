@@ -92,9 +92,6 @@ lookup_variable_type(Var, Type, [_ | Tail]) :-
 
 
 
-
-
-
 enforce_args(S):- var(S), !, freeze(S, enforce_args(S)).
 enforce_args(_:S):- enforce_args(S).
 enforce_args(S):- \+ compound(S), !.
@@ -110,6 +107,7 @@ enforce_args(S, SType):-
 enforce_args(S, SType):-
   share_functor(SType, S, F ),
   compound_name_arguments(S, F, Args),
+  compound_name_arguments(SType, F, TArgs),
   enforce_args(F, TArgs, Args).
 
 enforce_args(_, _, []):-!.
@@ -204,9 +202,9 @@ predicate_type(condition, objectives_achieved(number)).
 predicate_type(condition, objective_description(condition, string)).
 predicate_type(condition, normalize_task(action, task)).
 predicate_type(condition, normalize_dialog_act(action, action)).
-predicate_type(condition, menu_dialog_act(player_character, action)).
-predicate_type(condition, menu_dialog(player_character, action)).
-predicate_type(condition, menu_action(player_character, action)).
+predicate_type(condition, menu_dialog_act(character, action)).
+predicate_type(condition, menu_dialog(character, action)).
+predicate_type(condition, menu_action(character, action)).
 predicate_type(condition, default_strategy(action, action)).
 predicate_type(condition, unique_answer(entity, condition)).
 
@@ -215,7 +213,7 @@ predicate_type(condition, inverted_sentence(condition, entity, entity, entity, e
 predicate_type(condition, ss(condition, entity, entity, entity, entity, entity, entity)).
 
 predicate_type(condition, well_formed_dialog_act(dialog_act)).
-predicate_type(condition, stock_phrase(objective_query(player, $me))).
+predicate_type(condition, stock_phrase(dialog_act)).
 predicate_type(condition, notebook_entry(list)).
 predicate_type(condition, nocondition).
 predicate_type(condition, normalize_precondition_for_graph(dialog_act,dialog_act)).

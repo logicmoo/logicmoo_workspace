@@ -1211,6 +1211,13 @@ lmconfig:never_export_named(_,attr_unify_hook,2).
 lmconfig:never_export_named(_,attribute_goals,3).
 lmconfig:never_export_named(_,project_attributes,2).
 lmconfig:never_export_named(_,attr_portray_hook,2).
+/*
+lmconfig:never_export_named(_,'/',2).
+lmconfig:never_export_named(_,'>>',2).
+lmconfig:never_export_named(_,'==>',2).
+lmconfig:never_export_named(_,'=>',2).
+*/
+lmconfig:never_export_named(_,Symbol,_):- upcase_atom(Symbol,UC),Symbol==UC,!.
 lmconfig:never_export_named(_,isa,2).
 lmconfig:never_export_named(_,F,_):- atom_concat('$',_,F) ; atom_concat('__aux',_,F).
 

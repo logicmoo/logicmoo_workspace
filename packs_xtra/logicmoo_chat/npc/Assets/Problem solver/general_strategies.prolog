@@ -25,7 +25,8 @@ strategy(achieve(P),
 strategy(achieve(Condition),
 	 null) :-
    % Don't have to do anything if condition is already true.
-   Condition,
+   callable(Condition),
+   call(Condition),
    !.
 
 strategy(achieve(runnable(Action)),
@@ -317,7 +318,7 @@ strategy(engage_in_conversation(Person),
 
 strategy(pause(Seconds),
 	 wait_condition(after_time(Time))) :-
-   Time is $now + Seconds.
+   freeze(Seconds, Time is $now + Seconds).
 
 ready_to_hand(Object) :-
    location(Object, $me).

@@ -4,10 +4,6 @@
 
 :- public examination_content/2, pop_up_examination_content/1.
 
-%:- assume_done(is_class/2).
-is_class(Obj,$'GameObject'):-
-  is_type(Obj,physical_object).
-
 %% examination_content(+Object, -ContentComponent)
 %  ContentComponent is the ExaminationContent component of the GameObject Object.
 examination_content(Object, ContentComponent) :-
