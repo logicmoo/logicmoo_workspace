@@ -302,4 +302,252 @@ predicate_type(condition, iz_a(entity, kind)).
 predicate_type(condition, be(entity, entity)).
 predicate_type(condition, be(entity)).
 
+end_of_file.
+
+% discovered by system
+
+decl_asap(result_isa(~(_), condition)).
+decl_asap(result_isa({_}, action)).
+decl_asap(result_isa(work_on_everyday_life_task(_), action)).
+decl_asap(result_isa(with_status_text(_, _), action)).
+decl_asap(result_isa(with_child_task(_, _, _, _), action)).
+decl_asap(result_isa(with_child_task(_, _, _), action)).
+decl_asap(result_isa(when(_, _, _, _, _, _), action)).
+decl_asap(result_isa(when(_, _, _, _, _), action)).
+decl_asap(result_isa(when(_, _, _), action)).
+decl_asap(result_isa(when(_, _), action)).
+decl_asap(result_isa(wait_for_child(_), action)).
+decl_asap(result_isa(wait_event_with_timeout(_, _), action)).
+decl_asap(result_isa(wait_event_completed(_, _), condition)).
+decl_asap(result_isa(wait_event(_, _), task)).
+decl_asap(result_isa(wait_condition(_), task)).
+decl_asap(result_isa(wait_condition(_), action)).
+decl_asap(result_isa(uslash(top, /(perception/nobody_speaking)), condition)).
+decl_asap(result_isa(unless(_, _, _, _, _, _), action)).
+decl_asap(result_isa(unless(_, _, _, _, _), action)).
+decl_asap(result_isa(unless(_, _, _), action)).
+decl_asap(result_isa(unless(_, _), action)).
+decl_asap(result_isa(tell(_), action)).
+decl_asap(result_isa(stop_qud(_), condition)).
+decl_asap(result_isa(stop_qud(_), action)).
+decl_asap(result_isa(stop(_), action)).
+decl_asap(result_isa(speech(_), action)).
+decl_asap(result_isa(spawn_child_task(_, _, _), task)).
+decl_asap(result_isa(spawn_child_task(_), task)).
+decl_asap(result_isa(spawn(_, _, _), action)).
+decl_asap(result_isa(spawn(_), action)).
+decl_asap(result_isa(show_status(_, _, _), dialog_act)).
+decl_asap(result_isa(show_status(_, _, _), action)).
+decl_asap(result_isa(show_status(_), task)).
+decl_asap(result_isa(show_status(_), action)).
+decl_asap(result_isa(set_status(_), action)).
+decl_asap(result_isa(set_qud_status(_, _), task)).
+decl_asap(result_isa(search_object(_, _, _, _), action)).
+decl_asap(result_isa(script_update(_, _), condition)).
+decl_asap(result_isa(schedule_satisfaction(_, _, _, _), condition)).
+decl_asap(result_isa(say_string(_), task)).
+decl_asap(result_isa(say_string(_), action)).
+decl_asap(result_isa(say_rest(_, _, _), action)).
+decl_asap(result_isa(say_object(_), action)).
+decl_asap(result_isa(say_next(_), action)).
+decl_asap(result_isa(say_list(_, _, _), action)).
+decl_asap(result_isa(say_last(_, _, _), action)).
+decl_asap(result_isa(say_first(_, _), action)).
+decl_asap(result_isa(say_answer(_), action)).
+decl_asap(result_isa(say(_), action)).
+decl_asap(result_isa(s(_), dialog_act)).
+decl_asap(result_isa(run_quip(_), beat_task)).
+decl_asap(result_isa(run_quip(_), action)).
+decl_asap(result_isa(reveal(_), dialog_act)).
+decl_asap(result_isa(restart(_), action)).
+decl_asap(result_isa(resolve_match_failure(_), action)).
+decl_asap(result_isa(resolve_conflict(_, _), action)).
+decl_asap(result_isa(rejection(_, _, _, _), dialog_act)).
+decl_asap(result_isa(ready_to_hand(_), condition)).
+decl_asap(result_isa(reaction_to(_, _), conversant)).
+decl_asap(result_isa(question_answer(_, _, _, _, _), action)).
+decl_asap(result_isa(question_answer(_, _, _), dialog_act)).
+decl_asap(result_isa(question_answer(_), dialog_act)).
+decl_asap(result_isa(question(_, _, _, _, _), dialog_act)).
+decl_asap(result_isa(question(_, _, _, _, _), action)).
+decl_asap(result_isa(question(_), entity)).
+decl_asap(result_isa(putdown(_, _), action)).
+decl_asap(result_isa(property_value(_, _, _), condition)).
+decl_asap(result_isa(prompt_player(_, _), dialog_act)).
+decl_asap(result_isa(prompt_player(_, _), action)).
+decl_asap(result_isa(preface_description(_), action)).
+decl_asap(result_isa(possession(_, _), condition)).
+decl_asap(result_isa(player_input(_), action)).
+decl_asap(result_isa(pickup(_), task)).
+decl_asap(result_isa(pickup(_), action)).
+decl_asap(result_isa(pick_randomly(_), action)).
+decl_asap(result_isa(pick_preferred(_, _), action)).
+decl_asap(result_isa(pause(_), action)).
+decl_asap(result_isa(parting(_, _), dialog_act)).
+decl_asap(result_isa(parting(_, _), action)).
+decl_asap(result_isa(operate(_), action)).
+decl_asap(result_isa(on_behalf_of(_, _), action)).
+decl_asap(result_isa(offer(_, _, _, _), dialog_act)).
+decl_asap(result_isa(offer(_, _, _, _), action)).
+decl_asap(result_isa(objective_query(_, _), dialog_act)).
+decl_asap(result_isa(objective_query(_, _), action)).
+decl_asap(result_isa(monolog(_), task)).
+decl_asap(result_isa(monolog(_), action)).
+decl_asap(result_isa(method(_, _), condition)).
+decl_asap(result_isa(mention(_), event)).
+decl_asap(result_isa(mental_monolog(_), action)).
+decl_asap(result_isa(maybe_remember_event(_), action)).
+decl_asap(result_isa(let(_, _), task)).
+decl_asap(result_isa(let(_, _), action)).
+decl_asap(result_isa(leads_to(_, _), conversant)).
+decl_asap(result_isa(launch_conversation(_, _, _), condition)).
+decl_asap(result_isa(iz(uslash), condition)).
+decl_asap(result_isa(iz(condition), task)).
+decl_asap(result_isa(iz(condition), condition)).
+decl_asap(result_isa(iz(condition), action)).
+decl_asap(result_isa(invoke_continuation(_), action)).
+decl_asap(result_isa(introduce_question(_, _), dialog_act)).
+decl_asap(result_isa(introduce_person(_), action)).
+decl_asap(result_isa(introduce_goal(_, _), dialog_act)).
+decl_asap(result_isa(injunction(_, _, _), action)).
+decl_asap(result_isa(ingest(_), action)).
+decl_asap(result_isa(inaction(_, _, _, _), dialog_act)).
+decl_asap(result_isa(inaction(_, _, _, _), action)).
+decl_asap(result_isa(ignore(_), condition)).
+decl_asap(result_isa(if_navigation_command(_, _, _), dialog_act)).
+decl_asap(result_isa(if_navigation_command(_, _, _), action)).
+decl_asap(result_isa(if_navigation_command(_), task)).
+decl_asap(result_isa(if_navigation_command(_), action)).
+decl_asap(result_isa(if(_, _, _), action)).
+decl_asap(result_isa(how_do_i(_, _, _), dialog_act)).
+decl_asap(result_isa(how_do_i(_, _, _), action)).
+decl_asap(result_isa(how_do_i(_), task)).
+decl_asap(result_isa(how_do_i(_), action)).
+decl_asap(result_isa(handle_discovery(_), action)).
+decl_asap(result_isa(greet(_, _), dialog_act)).
+decl_asap(result_isa(greet(_, _), action)).
+decl_asap(result_isa(goto_internal(_), action)).
+decl_asap(result_isa(goto(_), task)).
+decl_asap(result_isa(goto(_), action)).
+decl_asap(result_isa(give_name(_), action)).
+decl_asap(result_isa(generate_unique_answer(_, _, _, _), action)).
+decl_asap(result_isa(generate_singleton(_, _), action)).
+decl_asap(result_isa(generate_rest(_, _), action)).
+decl_asap(result_isa(generate_next(_, _), action)).
+decl_asap(result_isa(generate_list(_, _), action)).
+decl_asap(result_isa(generate_last(_, _), action)).
+decl_asap(result_isa(generate_first(_, _), action)).
+decl_asap(result_isa(generate_empty(_), action)).
+decl_asap(result_isa(generate_answer(_, _), action)).
+decl_asap(result_isa(general_help(_, _), dialog_act)).
+decl_asap(result_isa(general_help(_, _), action)).
+decl_asap(result_isa(force_examine(_), action)).
+decl_asap(result_isa(follow_command(_, _, _), action)).
+decl_asap(result_isa(failed_because(_), action)).
+decl_asap(result_isa(explanation(_, _), condition)).
+decl_asap(result_isa(explain_failure(_), action)).
+decl_asap(result_isa(exit_conversational_space(_), action)).
+decl_asap(result_isa(excuse_self(_, _), dialog_act)).
+decl_asap(result_isa(excuse_self(_, _), action)).
+decl_asap(result_isa(enumerate_answers(_, _, _, _), action)).
+decl_asap(result_isa(enter_social_space(_), action)).
+decl_asap(result_isa(engage_in_conversation(_), action)).
+decl_asap(result_isa(end_game(_), action)).
+decl_asap(result_isa(emote(_), task)).
+decl_asap(result_isa(emote(_), action)).
+decl_asap(result_isa(docked_with(_), condition)).
+decl_asap(result_isa(do_not_understand(_, _, _), dialog_act)).
+decl_asap(result_isa(do_not_understand(_, _, _), action)).
+decl_asap(result_isa(do_beat_dialog(_), dialog_task)).
+decl_asap(result_isa(do_beat_dialog(_), action)).
+decl_asap(result_isa(do_automatically_believe(_), action)).
+decl_asap(result_isa(discourse_increment(_, _, _), dialog_act)).
+decl_asap(result_isa(discourse_increment(_, _, _), action)).
+decl_asap(result_isa(describe_type(_), action)).
+decl_asap(result_isa(describe_relation(_, _, _, _, _), action)).
+decl_asap(result_isa(describe_property(_, _, _, _, _), action)).
+decl_asap(result_isa(describe_attributes(_, _, _), action)).
+decl_asap(result_isa(describe(_, _, _), task)).
+decl_asap(result_isa(describe(_, _, _), action)).
+decl_asap(result_isa(describe(_), action)).
+decl_asap(result_isa(departed(_), action)).
+decl_asap(result_isa(deactivate_prop(_), action)).
+decl_asap(result_isa(command(_, _, _), dialog_act)).
+decl_asap(result_isa(command(_, _, _), action)).
+decl_asap(result_isa(color_query(_, _, _), dialog_act)).
+decl_asap(result_isa(color_query(_, _, _), action)).
+decl_asap(result_isa(color_query(_), task)).
+decl_asap(result_isa(color_query(_), action)).
+decl_asap(result_isa(color(_, _), text)).
+decl_asap(result_isa(cobegin(_, _, _, _, _, _), action)).
+decl_asap(result_isa(cobegin(_, _, _, _, _), action)).
+decl_asap(result_isa(cobegin(_, _, _, _), action)).
+decl_asap(result_isa(cobegin(_, _, _), action)).
+decl_asap(result_isa(cobegin(_), action)).
+decl_asap(result_isa(clue(_, _), dialog_act)).
+decl_asap(result_isa(clue(_), dialog_act)).
+decl_asap(result_isa(character_remembers_recently(_, _), condition)).
+decl_asap(result_isa(cases(_), action)).
+decl_asap(result_isa(begin(_, _, _, _, _, _, _), action)).
+decl_asap(result_isa(begin(_, _, _, _, _, _), action)).
+decl_asap(result_isa(begin(_, _, _, _, _), action)).
+decl_asap(result_isa(begin(_, _, _, _), action)).
+decl_asap(result_isa(begin(_, _, _), action)).
+decl_asap(result_isa(begin(_, _), task)).
+decl_asap(result_isa(begin(_, _), condition)).
+decl_asap(result_isa(begin(_, _), action)).
+decl_asap(result_isa(beat_state(_, _), condition)).
+decl_asap(result_isa(automa_command(_, _, _, _, _), dialog_act)).
+decl_asap(result_isa(automa_command(_, _, _, _, _), action)).
+decl_asap(result_isa(assertion(_, _, _, _, _), dialog_act)).
+decl_asap(result_isa(assertion(_, _, _, _, _), action)).
+decl_asap(result_isa(arrived_at(_), action)).
+decl_asap(result_isa(apology(_, _), dialog_act)).
+decl_asap(result_isa(apology(_, _), action)).
+decl_asap(result_isa(answered(_), dialog_act)).
+decl_asap(result_isa(answer_yes_no(_, _), action)).
+decl_asap(result_isa(answer_with_list(_, _, _, _), action)).
+decl_asap(result_isa(answer_wh(_, _, _, _), action)).
+decl_asap(result_isa(answer_can_wh(_, _, _, _), action)).
+decl_asap(result_isa(agree(_, _, _, _), dialog_act)).
+decl_asap(result_isa(agree(_, _, _, _), action)).
+decl_asap(result_isa(affective_reaction(_, _, _, _), condition)).
+decl_asap(result_isa(add_pending_task(_), action)).
+decl_asap(result_isa(add_conversation_topic(_, _), action)).
+decl_asap(result_isa(add_conversation_task(_, _), action)).
+decl_asap(result_isa(activate_prop(_), action)).
+decl_asap(result_isa(achieve_precondition(_, _), action)).
+decl_asap(result_isa(achieve(_), action)).
+decl_asap(result_isa(acceptance(_, _, _, _), dialog_act)).
+decl_asap(result_isa(acceptance(_, _, _, _), action)).
+decl_asap(result_isa(abort_and_then(_), action)).
+decl_asap(result_isa([_|_], list)).
+decl_asap(result_isa([_|_], dialog_act)).
+decl_asap(result_isa((table _), text)).
+decl_asap(arg_isa(wait_event_completed(_, _), condition)).
+decl_asap(arg_isa(tell(_), action)).
+decl_asap(arg_isa(speech(_), action)).
+decl_asap(arg_isa(script_update(_, _), condition)).
+decl_asap(arg_isa(schedule_satisfaction(_, _, _, _), condition)).
+decl_asap(arg_isa(run_quip(_), action)).
+decl_asap(arg_isa(resolve_match_failure(_), action)).
+decl_asap(arg_isa(player_input(_), action)).
+decl_asap(arg_isa(pick_randomly(_), action)).
+decl_asap(arg_isa(pick_preferred(_, _), action)).
+decl_asap(arg_isa(iz(uslash), condition)).
+decl_asap(arg_isa(iz(condition), task)).
+decl_asap(arg_isa(iz(condition), condition)).
+decl_asap(arg_isa(iz(condition), action)).
+decl_asap(arg_isa(if(_, _, _), action)).
+decl_asap(arg_isa(greet(_, _), action)).
+decl_asap(arg_isa(goto(_), action)).
+decl_asap(arg_isa(give_name(_), action)).
+decl_asap(arg_isa(engage_in_conversation(_), action)).
+decl_asap(arg_isa(emote(_), action)).
+decl_asap(arg_isa(do_beat_dialog(_), action)).
+decl_asap(arg_isa(begin(_, _, _), action)).
+decl_asap(arg_isa(begin(_, _), action)).
+decl_asap(arg_isa(affective_reaction(_, _, _, _), condition)).
+decl_asap(arg_isa(achieve_precondition(_, _), action)).
+decl_asap(arg_isa(achieve(_), action)).
 
