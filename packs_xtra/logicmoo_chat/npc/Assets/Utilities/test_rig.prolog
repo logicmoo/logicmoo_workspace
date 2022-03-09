@@ -216,3 +216,6 @@ ensure_test_file_loaded(File) :-
 :- located_object(bed,$bedroom).
 :- located_object(desk,$living_room).
 :- located_object(report,$desk).
+:- located_object($'kitchen counter','counter',$kitchen).
+:- located_object($'kitchen sink',sink,$'kitchen counter').
+

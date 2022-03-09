@@ -127,12 +127,12 @@ infinitival_clause(EnclosingSubject, S) -->
 
 a_an --> ([a];[an];[]).
 
+swizzle_lf(LF,LF).
 swizzle_lf(location(X,Y),contained_in(X,Y)).
 swizzle_lf(relation(X,location,Y),contained_in(X,Y)).
 %swizzle_lf(located(X,Y),contained_in(X,Y)).
-swizzle_lf(LF,LF):-!.
-swizzle_lf(LF,SLF):- nonvar(SLF),LF=SLF.
-swizzle_lf(LF,SLF):- var(LF),!,freeze(SLF,swizzle_lf(LF,SLF)).
+%swizzle_lf(LF,SLF):- nonvar(SLF),LF=SLF.
+%swizzle_lf(LF,SLF):- var(LF),!,freeze(SLF,swizzle_lf(LF,SLF)).
 
 s(LF, Indicative, Polarity, Tense, Aspect, S, E) :- 
   % {enforce_args(S)},

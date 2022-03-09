@@ -216,10 +216,10 @@ status_display_term_with_determiner(What) -->
 %
 
 utterance(discourse_increment(Speaker, Addressee, Fragments)) -->
-   { generating_nl,            % Only valid for character output, not player input.
-     bind(speaker, Speaker),
-     bind(addressee, Addressee) },
-   discourse_fragments(Fragments).
+   { generating_nl },            % Only valid for character output, not player input.
+     with_bind(speaker, Speaker,
+      with_bind(addressee, Addressee,
+       discourse_fragments(Fragments))).
 
 discourse_fragments([]) -->
    [ ].
