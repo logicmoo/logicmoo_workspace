@@ -183,14 +183,16 @@ matching_strategy(S, Task) :-
 %
 % Maybe Trace Reduction.
 %
-maybe_trace_reduction(Canonical) :-
-   trace_reduction(Canonical),
-   forall( ( clause(strategy(Task, Reduction), Body),
-	     copy_term(Task:Reduction:Body, CTask:CReduction:CBody),
-	     Canonical = CTask ),
-	   if(CBody,
-	      assert($task/log/match(Canonical, strategy(Task,Reduction), CReduction)),
-	      assert($task/log/fail_match(Canonical, strategy(Task, Reduction))))).   
+maybe_trace_reduction(Canonical) :- 
+  trace_reduction(Canonical), 
+  forall( 
+     ( clause(strategy(Task, Reduction), Body)  ,
+       copy_term( Task:Reduction:Body, 
+         CTask:CReduction:CBody), 
+       Canonical=CTask), 
+     if( CBody, 
+       assert($task/log/match(Canonical, strategy(Task, Reduction), CReduction)), 
+       assert($task/log/fail_match(Canonical, strategy(Task, Reduction))))).   
 maybe_trace_reduction(_).
 
 %%

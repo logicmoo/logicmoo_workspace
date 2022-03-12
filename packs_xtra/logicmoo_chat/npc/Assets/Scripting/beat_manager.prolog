@@ -261,24 +261,21 @@ next_beat_monolog_task(Beat, T) :-
 %
 % Monolog Task.
 %
-monolog_task(Beat,
-	     String,
-	     begin(run_quip(String),
-		   assert($global_root/beats/Beat/completed_tasks/String)) ) :-
-   string(String),
-   !.
-monolog_task(Beat,
-	     String:Markup,
-	     begin(run_quip(String),
-		   respond_to_quip_markup(Markup),
-		   assert($global_root/beats/Beat/completed_tasks/String)) ) :-
-   string(String),
-   !.
+monolog_task( Beat, 
+  String, 
+  begin( run_quip(String), 
+    assert($global_root/beats/Beat/completed_tasks/String))) :- 
+  string(String),  !.
+monolog_task( Beat, 
+  String:Markup, 
+  begin( run_quip(String), 
+    respond_to_quip_markup(Markup), 
+    assert($global_root/beats/Beat/completed_tasks/String))) :- 
+  string(String),  !.
 
-monolog_task(Beat,
-	     Task,
-	     begin(Task,
-		   assert($global_root/beats/Beat/completed_tasks/Task))).
+monolog_task( Beat, 
+  Task, 
+  begin(Task, assert($global_root/beats/Beat/completed_tasks/Task))).
 
 
 
@@ -441,11 +438,11 @@ check_beat_completion :-
 %
 % End Beat.
 %
-end_beat :-
-   current_beat(Beat),
-   set_beat_state(Beat, completed),
-   assert($global_root/beats/previous:Beat),
-   retract($global_root/beats/current).
+end_beat :- 
+  current_beat(Beat), 
+  set_beat_state(Beat, completed), 
+  assert($global_root/beats/previous:Beat), 
+  retract($global_root/beats/current).
 
 
 
@@ -575,14 +572,13 @@ menu_automa_command(Object, DialogAct) :-
 %
 % Initialization.
 %
-(initialization) :-
- forall(
-   beat(BeatName, { Declarations }),
-  (assert($global::beat(BeatName)),
-   forall(( member_of_comma_separated_list(Declaration, Declarations),
-	    once(beat_declaration_assertions(BeatName, Declaration, Assertions)),
-	    member(Assertion, Assertions) ),
-	  assert($global::Assertion)))).
+(initialization) :- forall( 
+                     beat(BeatName, {Declarations}), 
+                     ( assert($global::beat(BeatName)), 
+                       forall( ( member_of_comma_separated_list(Declaration, Declarations)  ,
+                                 once(beat_declaration_assertions(BeatName, Declaration, Assertions)), 
+                                 member(Assertion, Assertions)), 
+                         assert($global::Assertion)))).
 
 
 
@@ -693,7 +689,7 @@ beat_declaration_assertions(BeatName,
 			   [beat_menu_question(BeatName, Character, DialogAct)]).
 
 beat_declaration_assertions(BeatName, Declaration, []) :-
-   log(BeatName:unknown_beat_declaration(Declaration)).
+   log(BeatName:unknown_beat_declaration(Declaration)), break.
 
 %%%
 %%% Derived beat properties

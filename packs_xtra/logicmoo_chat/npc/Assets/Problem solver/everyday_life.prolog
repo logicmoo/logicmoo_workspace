@@ -120,9 +120,9 @@ stop_current_everyday_life_task :-
 %%% Pending task queue
 %%%
 
-todo(T/retract(Node), P) :-
-   /goals/pending_tasks/(T>>Node),
-   Node:P.
+todo(T/retract(Node), P) :- 
+  /goals/pending_tasks/(T>>Node), 
+  Node:P.
 
 
 
@@ -140,10 +140,10 @@ add_pending_task(Task) :-
 %
 % Add Pending Task.
 %
-add_pending_task(Task, Priority) :-
-   current_priority(P),
-   Multiplied is Priority*P,
-   assert(/goals/pending_tasks/Task:Multiplied).
+add_pending_task(Task, Priority) :- 
+  current_priority(P), 
+  Multiplied is Priority*P, 
+  assert(/goals/pending_tasks/Task:Multiplied).
 
 %%%
 %%% Maintenance goals

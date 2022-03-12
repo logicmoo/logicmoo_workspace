@@ -10,7 +10,7 @@ maybe_log_task(resolve_match_failure(X)) :-
    X \= resolve_match_failure(_),
    !.
 maybe_log_task(Task) :-
-   assert($task/log/Task).
+    assert($task/log/Task).
 
 %% save_task_logs(+Character, +TopLevelGoal)
 % Tasks for Character that involve TopLevelGoal should be logged.
@@ -26,13 +26,13 @@ maybe_save_log(TaskQud) :-
 
 %% save_log(+TaskQud, +ExitStatus)
 % Saves the log of TaskQud in /logs.
-save_log(TaskQud, ExitStatus) :-
-   begin(TaskQud/type:task:Task,
-	 property(TaskQud, "Key", Key),
-	 assert($global_root/logs/ $me/Key/task:Task),
-	 assert($global_root/logs/ $me/Key/exit_status:ExitStatus),
-	 forall(TaskQud/log/T,
-		assert($global_root/logs/ $me/Key/log/T))).
+save_log(TaskQud, ExitStatus) :-  
+  begin( TaskQud/type:task:Task, 
+    t("Key", TaskQud, Key), 
+    assert($global_root/logs/ $me/Key/task:Task), 
+    assert($global_root/logs/ $me/Key/exit_status:ExitStatus), 
+    forall( TaskQud/log/T, 
+      assert($global_root/logs/ $me/Key/log/T))).
 
 save_task_logs(_,_).
 
@@ -77,20 +77,20 @@ task_log_line(_, _, _, line("")).
 task_log_line(_Character, _UID, Log, line(T)) :-
    Log/log/T.		     
 
-fkey_command(alt-rightarrow, "Show logs for next character") :-
-   current_log_character(C),
-   all(X, character(X), Characters),
-   adjacent_in_list_circular(C, New, Characters),
-   assert($global_root/gui_state/current_log_character:New),
-   ignore(retract($global_root/gui_state/current_log_uid)),
-   update_crash_log_display.
-fkey_command(alt-leftarrow, "Show logs for previous character") :-
-   current_log_character(C),
-   all(X, character(X), Characters),
-   adjacent_in_list_circular(New, C, Characters),
-   assert($global_root/gui_state/current_log_character:New),
-   ignore(retract($global_root/gui_state/current_log_uid)),
-   update_crash_log_display.
+fkey_command(alt-rightarrow, "Show logs for next character") :- 
+  current_log_character(C), 
+  all(X, character(X), Characters), 
+  adjacent_in_list_circular(C, New, Characters), 
+  assert($global_root/gui_state/current_log_character:New), 
+  ignore(retract($global_root/gui_state/current_log_uid)), 
+  update_crash_log_display.
+fkey_command(alt-leftarrow, "Show logs for previous character") :- 
+  current_log_character(C), 
+  all(X, character(X), Characters), 
+  adjacent_in_list_circular(New, C, Characters), 
+  assert($global_root/gui_state/current_log_character:New), 
+  ignore(retract($global_root/gui_state/current_log_uid)), 
+  update_crash_log_display.
 
 
 
@@ -102,24 +102,24 @@ fkey_command(alt-leftarrow, "Show logs for previous character") :-
 current_log_character(C) :-
    $global_root/gui_state/current_log_character:C,
    !.
-current_log_character(C) :-
-   character(C),
-   assert($global_root/gui_state/current_log_character:C).
+current_log_character(C) :- 
+  character(C), 
+  assert($global_root/gui_state/current_log_character:C).
 
-fkey_command(alt-downarrow, "Show next log for this character") :-
-   current_log_character(C),
-   current_log_uid(CU),
-   all(U, $global_root/logs/C/U, UIDs),
-   adjacent_in_list_circular(CU, New, UIDs),
-   assert($global_root/gui_state/current_log_uid:New),
-   update_crash_log_display.
-fkey_command(alt-uparrow, "Show previous log for this character") :-
-   current_log_character(C),
-   current_log_uid(CU),
-   all(U, $global_root/logs/C/U, UIDs),
-   adjacent_in_list_circular(New, CU, UIDs),
-   assert($global_root/gui_state/current_log_uid:New),
-   update_crash_log_display.
+fkey_command(alt-downarrow, "Show next log for this character") :- 
+  current_log_character(C), 
+  current_log_uid(CU), 
+  all(U, $global_root/logs/C/U, UIDs), 
+  adjacent_in_list_circular(CU, New, UIDs), 
+  assert($global_root/gui_state/current_log_uid:New), 
+  update_crash_log_display.
+fkey_command(alt-uparrow, "Show previous log for this character") :- 
+  current_log_character(C), 
+  current_log_uid(CU), 
+  all(U, $global_root/logs/C/U, UIDs), 
+  adjacent_in_list_circular(New, CU, UIDs), 
+  assert($global_root/gui_state/current_log_uid:New), 
+  update_crash_log_display.
 
 
 
@@ -131,11 +131,10 @@ fkey_command(alt-uparrow, "Show previous log for this character") :-
 current_log_uid(U) :-
    $global_root/gui_state/current_log_uid:U,
    !.
-current_log_uid(U) :-
-   current_log_character(C),
-   $global_root/logs/C/U,
-   !,
-   assert($global_root/gui_state/current_log_uid:U).
+current_log_uid(U) :- 
+  current_log_character(C), 
+  $global_root/logs/C/U,  !, 
+  assert($global_root/gui_state/current_log_uid:U).
 
 
 

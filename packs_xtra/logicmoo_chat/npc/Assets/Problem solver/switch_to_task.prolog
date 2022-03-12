@@ -30,12 +30,10 @@ switch_to_task(call(PrologCode)) :-
 switch_to_task(tell(Fact)) :-
    begin(tell(Fact),
 	 step_completed).
-switch_to_task(assert(Fact)) :-
-   begin(assert(Fact),
-	 step_completed).
-switch_to_task(retract(Fact)) :-
-   begin(retract(Fact),
-	 step_completed).
+switch_to_task(assert(Fact)) :-  
+  begin(assert(Fact), step_completed).
+switch_to_task(retract(Fact)) :-  
+  begin(retract(Fact), step_completed).
 switch_to_task(invoke_continuation(K)) :-
    !,
    invoke_continuation(K).
@@ -44,10 +42,10 @@ switch_to_task(wait_condition(Condition)) :-
    Condition,
    !,
    step_completed.
-switch_to_task( (First, Rest) ) :-
-   begin($task/continuation:K,
-	 assert($task/continuation:(Rest,K)),
-	 switch_to_task(First)).
+switch_to_task((First, Rest)) :-  
+  begin( $task/continuation:K, 
+    assert($task/continuation:(Rest, K)), 
+    switch_to_task(First)).
 switch_to_task(let(BindingCode, Task)) :-
    !,
    BindingCode ->
@@ -55,14 +53,14 @@ switch_to_task(let(BindingCode, Task)) :-
       ;
       throw(let_failed(let(BindingCode, Task))).
 switch_to_task(breakpoint) :-
-   !,
-   assert($task/current:breakpoint),
-   display_task_debugger.
+    !,
+    assert($task/current:breakpoint),
+    display_task_debugger.
 % All other primitive tasks
 switch_to_task(B) :-
-   polled_builtin(B),
-   !,
-   assert($task/current:B).
+    polled_builtin(B),
+    !,
+    assert($task/current:B).
 switch_to_task(A) :-
    action(A),
    !,

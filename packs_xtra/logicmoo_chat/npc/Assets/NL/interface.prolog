@@ -242,7 +242,7 @@ caption(GameObject, Name) :-
    proper_name(GameObject, Words),
    word_list(Name, Words).
 caption(GameObject, Description) :-
-   property_value(GameObject, caption, Description).
+    t(caption, GameObject, Description).
 caption(GameObject, Description) :-
    iz_a(GameObject, room),
    base_kind(GameObject, Kind),

@@ -310,10 +310,13 @@ end_csv_loading(transitive_verb) :-
 %
 
 % Uninverted sentence
-tv(Form, Agreement, S^O^related(S, Relation, O), Tense, [ ]) -->
-   {Form \== present_participle ; Tense \== present },
-   copula(Form, Tense, Agreement),
-   copular_relation(Relation).
+tv( Form, 
+  Agreement, 
+  S^O^t(Relation, S, O), 
+   Tense, []) -->  
+  ( {Form\==present_participle;Tense\==present}  ,
+    copula(Form, Tense, Agreement), 
+    copular_relation(Relation)).
 
 %=autodoc
 %% tv( ?ARG1, ?ARG2, ?ARG3, ?ARG4, ?ARG5) is semidet.
@@ -322,9 +325,11 @@ tv(Form, Agreement, S^O^related(S, Relation, O), Tense, [ ]) -->
 %
 
 % Inverted sentence
-tv(present_participle, _, S^O^related(S, Relation, O), present, [ ])
-   -->
-   copular_relation(Relation).
+tv( present_participle, 
+  _, 
+  S^O^t(Relation, S, O), 
+   present, []) -->  
+  copular_relation(Relation).
 
 tv(Form, Agreement, LF, Tense, ForcePPs) --> 
   {phrase_rule(tv(Form, Agreement, LF, Tense, ForcePPs), Words, Guard)},

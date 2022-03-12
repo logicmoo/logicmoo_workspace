@@ -100,12 +100,12 @@ satisfaction_level(Need, SatisfactionLevel) :-
 %  IMPERATIVE
 %  Updates Need to be Delta units more satisfied than before,
 %  or 100% satisfied, whichever is lower.
-increase_satisfaction(Need, Delta) :-
-   need(Need, DepletionTime),
-   satisfaction_level(Need, Level),
-   NewLevel is min(100, Level+Delta),
-   LastSatTime is $now-(DepletionTime*(1-(NewLevel/100))),
-   assert(/needs/last_satisfied/Need: LastSatTime).
+increase_satisfaction(Need, Delta) :- 
+  need(Need, DepletionTime), 
+  satisfaction_level(Need, Level), 
+  NewLevel is min(100, Level+Delta), 
+  LastSatTime is $now-DepletionTime*(1-NewLevel/100), 
+  assert(/needs/last_satisfied/Need:LastSatTime).
 
 %% last_satisfied_time(+Need, -Time)
 %  It's been Time seconds since Need was last satisfied.
@@ -119,11 +119,11 @@ last_satisfied_time(Need, Time) :-
 %
 % Initialize Last Satisfied Times.
 %
-initialize_last_satisfied_times :-
-   forall(need(Need, DepletionTime),
-	  begin(random_member(InitialState, [30, 40, 50, 60, 70, 80, 90]),
-		LastSatTime is $now-(DepletionTime*(1-(InitialState/100))),
-		assert(/needs/last_satisfied/Need:LastSatTime))).
+initialize_last_satisfied_times :- forall( need(Need, DepletionTime), 
+                                     begin( 
+                                        random_member(InitialState, [30, 40, 50, 60, 70, 80, 90]), 
+                                        LastSatTime is $now-DepletionTime*(1-InitialState/100), 
+                                        assert(/needs/last_satisfied/Need:LastSatTime))).
 
 % When you start, initialize all objects to being unvisited.
 on_enter_state(start, need_satisfaction, Qud) :-
@@ -151,12 +151,12 @@ on_event(Action, need_satisfaction, Qud,
 %  IMPERATIVE
 %  Arrange for Need's satisfaction to be increased by Delta units
 %  DelayTime Seconds from now.
-schedule_satisfaction(Qud, DelayTime, Need, Delta) :-
-   assert(Qud/pending_action),
-   delay_for(DelayTime,
-	     begin(ignore(retract(Qud/pending_action)),
-		   increase_satisfaction(Need, Delta),
-		   rebid_need_destinations(Qud))).
+schedule_satisfaction(Qud, DelayTime, Need, Delta) :- 
+  assert(Qud/pending_action), 
+  delay_for( DelayTime, 
+    begin( ignore(retract(Qud/pending_action)), 
+      increase_satisfaction(Need, Delta), 
+      rebid_need_destinations(Qud))).
 
 %%
 %% Action selection
@@ -176,10 +176,11 @@ score_action(Action, need_satisfaction, _, Score) :-
 %% rebid_need_destinations(+Qud)
 %  IMPERATIVE
 %  Updates locomotion bids for all the objects
-rebid_need_destinations(NeedQud) :-
-   forall(satisfies(_, Object, _, _, _),
-	  begin(desirability_of_going_to_object(Object, D),
-		assert(NeedQud/location_bids/Object:D))).
+rebid_need_destinations(NeedQud) :-  
+  forall( 
+     satisfies(_, Object, _, _, _), 
+     begin( desirability_of_going_to_object(Object, D), 
+       assert(NeedQud/location_bids/Object:D))).
 
 
 

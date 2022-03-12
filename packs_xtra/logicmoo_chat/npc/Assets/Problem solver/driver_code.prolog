@@ -100,12 +100,9 @@ poll_builtin(T, wait_condition(Condition)) :-
    !,
    (Condition -> step_completed(T) ; true).
 poll_builtin(_, wait_event(_)).   % nothing to do.
-poll_builtin(T, wait_event(_, Timeout)) :-
-   ($now > Timeout) ->
-       begin(assert(T/current:completing_timeout),
-	     step_completed(T))
-       ;
-       true.
+poll_builtin(T, wait_event(_, Timeout)) :-  
+  ( $now>Timeout ->  
+      begin(assert(T/current:completing_timeout), step_completed(T)) ; true).
 
 
 

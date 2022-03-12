@@ -15,27 +15,27 @@
 %  IMPERATIVE
 %  Creates a subqud of Parent to handle conversation with Partner.
 %  Event is the initial event that is triggering the conversation.
-launch_conversation(Parent, Partner, Event) :-
-   assert(/social_state/talking_to/Partner),
-   begin_child_qud(Parent, conversation, 1, Child,
-		       [ Child/partner/Partner,
-			 Child/status_text:"[chat]":0.1,
-			 Child/initial_history/Event ]),
-   (Partner \= player -> assert(Child/location_bids/Partner:0.5);true).
+launch_conversation(Parent, Partner, Event) :- 
+  assert(/social_state/talking_to/Partner), 
+  begin_child_qud( Parent, 
+    conversation, 1, Child, 
+    [ Child/partner/Partner, 
+      Child/status_text:"[chat]":0.1, 
+      Child/initial_history/Event]), 
+  Partner\=player->assert(Child/location_bids/Partner:0.5);true.
 
-on_stop(conversation, C) :-
-   forall(C/partner/P,
-	  retract(/social_state/talking_to/P)).
+on_stop(conversation, C) :-  
+  forall(C/partner/P, retract(/social_state/talking_to/P)).
 
 
 %% conversation_handler_task(+ConversationQud, Task)
 %  IMPERATIVE
 %  Launches child task to run Task.
-conversation_handler_task(Qud, Input) :-
-   stop_children(Qud),
-   ignore(retract(Qud/location_bids)),
-   Qud/partner/P,
-   start_task(Qud, Input, 100, T, [T/partner/P]).
+conversation_handler_task(Qud, Input) :- 
+  stop_children(Qud), 
+  ignore(retract(Qud/location_bids)), 
+  Qud/partner/P, 
+  start_task(Qud, Input, 100, T, [T/partner/P]).
 
 %% conversation_is_idle(+ConversationQud)
 %  ConversationQud is idle, i.e. neither party is speaking.
@@ -61,13 +61,12 @@ partner_still_speaking_to_me(Conversation) :-
    C/quds/_.
 
 % The conversation was just started up.
-on_enter_state(start, conversation, C) :-
-   C/initial_history/Event,
-   normalize_dialog_act(Event, Normalized),
-   ( Normalized = greet($me, _) ->
-       assert(C/greeted)
-       ;
-       conversation_handler_task(C, respond_to_dialog_act(Normalized)) ).
+on_enter_state(start, conversation, C) :- 
+  C/initial_history/Event, 
+  normalize_dialog_act(Event, Normalized), 
+  ( Normalized =  
+      greet($me, _) ->  
+      assert(C/greeted) ; conversation_handler_task(C, respond_to_dialog_act(Normalized))) .
 
 % They just walked away from us!
 on_event(exit_conversational_space(Partner),

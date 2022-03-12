@@ -188,25 +188,22 @@ load_special_csv_row(_RowNumber, properties(Name, Visibility,
 %%
 :- dynamic(symmetric/1).
 
-load_special_csv_row(_RowNumber,
-		     relations(Name, Visibility,
-			       ObjectType, ValueType,
-			       CopularForm,
-			       SingularForm,
-			       PluralForm,
-			       Generalizations,
-			       Inverse,
-			       Symmetric)) :-
-   begin(assert_if_unew(declare_kind(Name, relation)),
-	 assert_if_unew(visibility(Name, Visibility)),
-	 assert_if_unew(relation_type(Name, ObjectType, ValueType)),
-	 assert_copular_form(Name, CopularForm),
-	 assert_genitive_form(Name, singular, SingularForm),
-	 assert_genitive_form(Name, plural, PluralForm),
-	 forall(member(Gen, Generalizations),
-		assert_if_unew(implies_relation(Name, Gen))),
-	 (Inverse \= null -> assert_if_unew(inverse_relation(Name, Inverse)) ; true),
-	 (Symmetric \= null -> assert_if_unew(symmetric(Name)) ; true)).
+load_special_csv_row( _RowNumber, 
+  relations( Name, 
+    Visibility, ObjectType, ValueType, 
+    CopularForm, SingularForm, 
+    PluralForm, Generalizations, 
+    Inverse, Symmetric)) :-  
+  begin( assert_if_unew(declare_kind(Name, relation)), 
+    assert_if_unew(visibility(Name, Visibility)), 
+    assert_if_unew(mpred_argtypes(t(Name, ObjectType, ValueType))), 
+    assert_copular_form(Name, CopularForm), 
+    assert_genitive_form(Name, singular, SingularForm), 
+    assert_genitive_form(Name, plural, PluralForm), 
+    forall( member(Gen, Generalizations), 
+      assert_if_unew(implies_relation(Name, Gen))), 
+    Inverse\=null->assert_if_unew(inverse_relation(Name, Inverse));true, 
+    Symmetric\=null->assert_if_unew(symmetric(Name));true).
 
 
 

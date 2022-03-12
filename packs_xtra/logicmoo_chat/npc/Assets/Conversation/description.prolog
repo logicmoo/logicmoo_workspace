@@ -20,10 +20,10 @@ strategy(describe(Object, Purpose, NullContinuation),
        AllAttributes),
    remove_redundant_attributes(AllAttributes, Attributes).
 
-default_strategy(preface_description(Object),
-		 if(property_value(Object, description, Description),
-		    monolog(Description),
-		    describe_type(Object))).
+default_strategy( preface_description(Object), 
+  if( t(description, Object, Description), 
+    monolog(Description), 
+    describe_type(Object))).
 
 strategy(describe_type(Object),
 	 let(base_kind(Object, Kind),
@@ -48,16 +48,18 @@ strategy(generate_next(Property/Value, attribute_of(Object)),
 strategy(generate_last(Property/Value, attribute_of(Object)),
 	 describe_relation("and", Object, Property, Value, ".")).
 
-strategy(describe_property(Linkage, Object, Property, Value, Termination),
-	 speech([Linkage, Surface, Termination])) :-
-   surface_form(property_value(Object, Property, Value), Surface),
-   tell(/mentioned_to/ $addressee /Object/Property:Value).
+strategy( 
+   describe_property(Linkage, Object, Property, Value, Termination), 
+   speech([Linkage, Surface, Termination])) :- 
+  surface_form(t(Property, Object, Value), Surface), 
+  tell(/mentioned_to/ $addressee/Object/Property:Value).
 
-strategy(describe_relation(Linkage, Object, Relation, Relatum, Termination),
-	 speech([Linkage, Surface, Termination])) :-
-   surface_form(related(Object, Relation, Relatum), Surface),
-   forall(ancestor_relation(A, Relation),
-	  tell(/mentioned_to/ $addressee /Object/A/Relatum)).
+strategy( 
+   describe_relation(Linkage, Object, Relation, Relatum, Termination), 
+   speech([Linkage, Surface, Termination])) :- 
+  surface_form(t(Relation, Object, Relatum), Surface), 
+  forall( ancestor_relation(A, Relation), 
+    tell(/mentioned_to/ $addressee/Object/A/Relatum)).
 
 
 
@@ -66,11 +68,11 @@ strategy(describe_relation(Linkage, Object, Relation, Relatum, Termination),
 %
 % Surface Form.
 %
-surface_form(property_value(Object, Property, Value),
-	     question_answer(property_value(Object, Property, Value))).
+surface_form( t(Property, Object, Value), 
+  question_answer(t(Property, Object, Value))).
 
-surface_form(related(Object, Relation, Relatum),
-	     question_answer(related(Object, Relation, Relatum))).
+surface_form( t(Relation, Object, Relatum), 
+  question_answer(t(Relation, Object, Relatum))).
 
 %%
 %% Determining lists of relevant attributes
@@ -128,14 +130,12 @@ interesting_attribute(Listener, Purpose, Object, Attribute) :-
 %
 % Interesting Property.
 %
-interesting_property(Listener, Purpose, Object, Prop:Value) :-
-   property_nondefault_value(Object, Prop, Value),
-   \+ /mentioned_to/ $addressee /Object/Prop:Value,
-   \+ visibility(Prop, internal),
-   property_relevant_to_purpose(Purpose, Object, Prop, Value),
-   admitted_truth_value(Listener,
-			property_value(Object, Prop, Value),
-			true).
+interesting_property(Listener, Purpose, Object, Prop:Value) :- 
+  property_nondefault_value(Object, Prop, Value), 
+  \+ /mentioned_to/ $addressee/Object/Prop:Value, 
+  \+visibility(Prop, internal), 
+  property_relevant_to_purpose(Purpose, Object, Prop, Value), 
+  admitted_truth_value(Listener, t(Prop, Object, Value), true).
 
 
 
@@ -144,13 +144,11 @@ interesting_property(Listener, Purpose, Object, Prop:Value) :-
 %
 % Interesting Relation.
 %
-interesting_relation(Listener, Purpose, Object, Relation/Relatum) :-
-   related_nondefault(Object, Relation, Relatum),
-   \+ /mentioned_to/ $addressee /Object/Relation/Relatum,
-   \+ visibility(Relation, internal),
-   relation_relevant_to_purpose(Purpose, Object, Relation, Relatum),
-   admitted_truth_value(Listener,
-			related(Object, Relation, Relatum),
-			true).
+interesting_relation(Listener, Purpose, Object, Relation/Relatum) :- 
+  related_nondefault(Object, Relation, Relatum), 
+  \+ /mentioned_to/ $addressee/Object/Relation/Relatum, 
+  \+visibility(Relation, internal), 
+  relation_relevant_to_purpose(Purpose, Object, Relation, Relatum), 
+  admitted_truth_value(Listener, t(Relation, Object, Relatum), true).
 
 

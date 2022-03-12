@@ -65,8 +65,9 @@ default_strategy(answer_wh(Asker, Answer, Core, Constraint),
 		    generate_unique_answer(Asker, Answer, Core, Constraint),
 		    enumerate_answers(Asker, Answer, Core, Constraint))).
 
-strategy(answer_wh(Asker, Answer, contained_in(Object, Answer), Constraint),
-	 answer_wh(Asker, Answer, location(Object, Answer), Constraint)).
+strategy( 
+   answer_wh(Asker, Answer, t(contained_in, Object, Answer), Constraint), 
+   answer_wh(Asker, Answer, t(location, Object, Answer), Constraint)).
 
 strategy(answer_wh(_Asker, Identity, _,
 		   (be(Person, Identity), iz_a(Person, person))),
@@ -109,12 +110,15 @@ strategy(answer_can_wh(Player, Answer,
 
 
 % Change what is in X queries from location queries to contained_in queries.
-strategy(answer_wh(Asker,
-		   Answer, location(Answer, Container),
-		   (location(Answer, Container), iz_a(Answer, Type))),
-	 answer_wh(Asker,
-		   Answer, location(Answer, Container),
-		   (contained_in(Answer, Container), iz_a(Answer, Type)))).
+strategy( 
+   answer_wh( Asker, 
+     Answer, 
+     t(location, Answer, Container), 
+     t(location, Answer, Container), iz_a(Answer, Type)), 
+   answer_wh( Asker, 
+     Answer, 
+     t(location, Answer, Container), 
+     t(contained_in, Answer, Container), iz_a(Answer, Type))).
 
 strategy(answer_wh(_Asker, X, wellbeing(Who, X), _),
 	 say_answer(okay(Who))).

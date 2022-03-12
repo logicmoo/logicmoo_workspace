@@ -76,8 +76,8 @@ lf_subject(LF, Subject) :-
 %
 lf_core_predicate_subject(be(Subject), Subject) :-
    !.
-lf_core_predicate_subject(related(Subject, _, _), Subject):-
-   !.
+lf_core_predicate_subject(t(_, Subject, _), Subject) :-  
+  !.
 lf_core_predicate_subject(S, Subject) :-
    iv(past_participle, _, Subject^S, _, _, _, _).
 lf_core_predicate_subject(S, Subject) :-

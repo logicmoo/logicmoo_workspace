@@ -45,8 +45,8 @@ known_property(Property) :-
 %
 % Known Relation.
 %
-known_relation(Relation) :-
-   for_all_unique(Relation, relation_type(Relation, _, _)).
+known_relation(Relation) :-  
+  for_all_unique(Relation, mpred_argtypes(t(Relation, _, _))).
 
 
 
@@ -82,60 +82,51 @@ test(integrity(valid_property_types),
 	      is_type(Value, ValueType) ) ),
        InvalidValues).
 
-test(integrity(relation_declarations_well_formed),
-     [ problem_list("The following relations have invalid types in the spreadsheet",
-		    Malformed) ]) :-
-   all(Relation,
-       ( relation_type(Relation, ObjectType, ValueType),
-	 \+ ( known_type(ObjectType),
-	      known_type(ValueType) ) ),
-       Malformed).
+test( integrity(relation_declarations_well_formed), [
+  problem_list("The following relations have invalid types in the spreadsheet", Malformed)]) :-  
+  all( Relation, 
+    ( mpred_argtypes(t(Relation, ObjectType, ValueType)), 
+      \+ (known_type(ObjectType), known_type(ValueType))), 
+    Malformed).
 
-test(integrity(relations_declared),
-     [ problem_list("The following relations are not declared in the spreadsheet",
-		    UndeclaredRelations) ]) :-
-   all(Relation,
-       ( declare_related(_, Relation, _),
-	 \+ relation_type(Relation, _, _) ),
-       UndeclaredRelations).
+test( integrity(relations_declared), [
+  problem_list("The following relations are not declared in the spreadsheet", UndeclaredRelations)]) :-  
+  all( Relation, 
+    ( declare_related(_, Relation, _), 
+      \+mpred_argtypes(t(Relation, _, _))), 
+    UndeclaredRelations).
 
-test(integrity(inverse_relations_must_be_declared_in_their_canonical_form),
-     [ problem_list("The following objects declare relations that should be declared through their inverses instead",
-		    Malformed) ]) :-
-   all(related(X, R, Y),
-       ( declare_related(X, R, Y),
-	 inverse_relation(R, _) ),
-       Malformed).
+test( integrity(inverse_relations_must_be_declared_in_their_canonical_form), [
+  problem_list( "The following objects declare relations that should be declared through their inverses instead", 
+    Malformed)]) :-  
+  all( t(R, X, Y), 
+    (declare_related(X, R, Y), inverse_relation(R, _)), 
+    Malformed).
 
-test(integrity(valid_relation_types),
-     [ problem_list("The following objects declare relations with the wrong types",
-		    InvalidValues) ]) :-
+test( integrity(valid_relation_types), [
+  problem_list("The following objects declare relations with the wrong types", InvalidValues)]) :- 
+  DR=declare_related(Object, Relation, Value), 
+  all( DR, 
+    ( DR  ,
+      mpred_argtypes(t(Relation, ObjectType, ValueType)), 
+      \+ (is_type(Object, ObjectType), is_type(Value, ValueType))), 
+    InvalidValues).
 
-  DR = declare_related(Object, Relation, Value),
-  all(DR,( DR,
-	 relation_type(Relation, ObjectType, ValueType),
-	 \+ ( is_type(Object, ObjectType),
-	      is_type(Value, ValueType) ) ),
-       InvalidValues).
+test( integrity(implied_relations_must_be_defined), [
+  problem_list("The following relations are undeclared", UndeclaredRelations)]) :-  
+  all( S, 
+    (implies_relation(_R, S), \+mpred_argtypes(t(S, _, _))), 
+    UndeclaredRelations).
 
-test(integrity(implied_relations_must_be_defined),
-     [ problem_list("The following relations are undeclared",
-		    UndeclaredRelations) ]) :-
-   all(S,
-       ( implies_relation(_R, S),
-	 \+ relation_type(S, _, _) ),
-       UndeclaredRelations).
-
-test(integrity(implied_relations_must_be_type_consistent),
-     [ problem_list("Relation is declared to have a generalization with incompatible types",
-		    UndeclaredRelations) ]) :-
-   all(implies_relation(R, S),
-       ( implies_relation(R, S),
-	 \+ ( relation_type(R, RTO, RTR),
-	      relation_type(S, STO, STR),
-	      kind_of(RTO, STO),
-	      kind_of(RTR, STR) ) ),
-       UndeclaredRelations).
+test( integrity(implied_relations_must_be_type_consistent), [
+  problem_list("Relation is declared to have a generalization with incompatible types", UndeclaredRelations)]) :-  
+  all( implies_relation(R, S), 
+    ( implies_relation(R, S), 
+      \+( ( mpred_argtypes(t(R, RTO, RTR))  ,
+            mpred_argtypes(t(S, STO, STR)), 
+            kind_of(RTO, STO), 
+            kind_of(RTR, STR)))), 
+    UndeclaredRelations).
 
 test(integrity(intransitive_verb_semantics_defined),
      [problem_list("The following undefined predicates or attributes appear in word definitions",
@@ -169,27 +160,25 @@ test(integrity(adjective_semantics_defined),
 	 lambda_contains_undefined_predicate(Semantics, Spec) ),
        UndefinedPredicates).
 
-test(entities_have_required_properties,
-     [ problem_list("The following entities are missing values for required properties",
-		    ProblematicEntities) ]) :-
-   all(Entity:MissingProperty,
-       ( kind(Kind),
-	 property_value(Kind, required_properties, Required),
-	 iz_a(Entity, Kind),
-	 member(MissingProperty, Required),
-	 \+ property_value(Entity, MissingProperty, _) ),
-       ProblematicEntities).
+test( entities_have_required_properties, [
+  problem_list("The following entities are missing values for required properties", ProblematicEntities)]) :-  
+  all( Entity:MissingProperty, 
+    ( kind(Kind)  ,
+      t(required_properties, Kind, Required), 
+      iz_a(Entity, Kind), 
+      member(MissingProperty, Required), 
+      \+t(MissingProperty, Entity, _)), 
+    ProblematicEntities).
 
-test(entities_have_required_relations,
-     [ problem_list("The following entities are missing required relations",
-		    ProblematicEntities) ]) :-
-   all(Entity:Required:MissingRelation,
-       ( kind(Kind),
-	 property_value(Kind, required_relation, Required),
-	 iz_a(Entity, Kind),
-	 member(MissingRelation, Required),
-	 \+ related(Entity, MissingRelation, _) ),
-       ProblematicEntities).
+test( entities_have_required_relations, [
+  problem_list("The following entities are missing required relations", ProblematicEntities)]) :-  
+  all( Entity:Required:MissingRelation, 
+    ( kind(Kind)  ,
+      t(required_relation, Kind, Required), 
+      iz_a(Entity, Kind), 
+      member(MissingRelation, Required), 
+      \+t(MissingRelation, Entity, _)), 
+    ProblematicEntities).
 
 
 
@@ -204,14 +193,10 @@ lambda_contains_undefined_predicate(P,O) :- !, is_list(P), maplist(lambda_contai
 lambda_contains_undefined_predicate(_^P, Spec) :-
    !,
    lambda_contains_undefined_predicate(P, Spec).
-lambda_contains_undefined_predicate(related(_, Relation, _),
-				    relation(Relation)) :-
-   !,
-   \+ relation_type(Relation, _, _).
-lambda_contains_undefined_predicate(property_value(_, Property, _),
-				    property(Property)) :-
-   !,
-   \+ property_type(Property, _, _).
+lambda_contains_undefined_predicate(t(Relation, _, _), relation(Relation)) :-  !, 
+  \+mpred_argtypes(t(Relation, _, _)).
+lambda_contains_undefined_predicate(t(Property, _, _), property(Property)) :-  !, 
+  \+property_type(Property, _, _).
 lambda_contains_undefined_predicate(P,Name/Arity) :-
    functor(P, Name, Arity),
    functor(Copy, Name, Arity),

@@ -72,30 +72,24 @@ normalize_task(abort_and_then(Task),
 %% goto
 %%
 
-strategy(achieve(location(X, $me)),
-	 pickup(X)) :-
-   X \= $me.
+strategy(achieve(t(location, X, $me)), pickup(X)) :-  
+  X\= $me.
 strategy(achieve(location(X, Room)),
 	 achieve(location(X, Container))) :-
    %\+ freestanding(X),
    iz_a(Room, room),
    iz_a(Container, work_surface),
    location(Container, Room).
-default_strategy(achieve(location(X, Container)),
-	 putdown(X, Container)) :-
-   X \= $me,
-   Container \= $me,
-   \+ iz_a(Container, room).
+default_strategy(achieve(t(location, X, Container)), putdown(X, Container)) :- 
+  X\= $me, 
+  Container\= $me, 
+  \+iz_a(Container, room).
 
-strategy(achieve(location($me, Container)),
-	 begin(goto(Container),
-	       get_in(Container))) :-
-   iz_a(Container, prop).
+strategy(achieve(t(location, $me, Container)), begin(goto(Container), get_in(Container))) :-  
+  iz_a(Container, prop).
 
-precondition(move($me, Patient, _),
-	     know(X,location(Patient, X))).
-strategy(move($me, X,Y),
-	 achieve(location(X, Y))).
+precondition(move($me, Patient, _), know(X, t(location, Patient, X))).
+strategy(move($me, X, Y), achieve(t(location, X, Y))).
 
 strategy(achieve(docked_with(WorldObject)),
 	 goto(WorldObject)).
@@ -104,16 +98,13 @@ strategy(achieve(docked_with(WorldObject)),
 %% locomotion
 %%
 :- external know/2.
-precondition(goto(Object),
-	     know(X,location(Object, X))).
+precondition(goto(Object), know(X, t(location, Object, X))).
 
 strategy(goto(Building),
 	 null) :-
    iz_a(Building, building).
-strategy(goto(Room),
-	 unless(contained_in($me, Room),
-		goto_internal(Room))) :-
-   room(Room).
+strategy(goto(Room), unless(t(contained_in, $me, Room), goto_internal(Room))) :-  
+  room(Room).
 strategy(goto(PropOrCharacter),
 	 unless(docked_with(Place),
 		goto_internal(Place))) :-
@@ -141,15 +132,14 @@ after(goto_internal(Person),
       greet($me, Person)) :-
    character(Person).
 
-strategy(leave($me, Building),
-	 goto(Exit)) :-
-   iz_a(Building, building),
-   property_value(Building, exit, Exit).
+strategy(leave($me, Building), goto(Exit)) :- 
+  iz_a(Building, building), 
+  t(exit, Building, Exit).
 
 strategy(flee($me),
 	 leave($me, Building)) :-
    % Leave whatever building I'm in.
-   contained_in($me, Building),
+   t(contained_in,$me, Building),
    iz_a(Building, building).
 
 %%
@@ -184,18 +174,19 @@ task_interacts_with_objects(give(_, A, B), [A, B]).
 %
 % Guard Condition.
 %
-guard_condition(Task, location(Object, _Loc)) :-
-   task_interacts_with_objects(Task, Objects),
-   member(Object, Objects).
+guard_condition(Task, t(location, Object, _Loc)) :- 
+  task_interacts_with_objects(Task, Objects), 
+  member(Object, Objects).
 
 %%
 %% Spatial search
 %%
 
-strategy(achieve(know(X,location(Object, X))),
-	 begin(search_for($me, _, Object),
-	       unless(know(X,location(Object, X)),
-		      failed_because(cant_find(Object))))).
+strategy( 
+   achieve(know(X, t(location, Object, X))), 
+   begin( 
+      search_for($me, _, Object), 
+      unless(know(X, t(location, Object, X)), failed_because(cant_find(Object))))).
 
 normalize_task(search_for($me, Unspecified, Target),
 	       search_for($me, CurrentRoom, Target)) :-
@@ -227,9 +218,8 @@ after(handle_discovery(X),
 %
 % Before.
 %
-before(search_object(Object, _, _, _),
-       goto(Object)):-
-   \+ contained_in($me, Object).
+before(search_object(Object, _, _, _), goto(Object)) :-  
+  \+t(contained_in, $me, Object).
 
 strategy(search_object(ArchitecturalSpace, CriterionLambda, SuccessLambda, FailTask),
 	 {
@@ -292,10 +282,10 @@ nearest_unsearched(Container, Contents) :-
 %
 % Unsearched.
 %
-unsearched(Container, Contents) :-
-   location(Contents, Container),
-   \+ implausible_search_location(Contents),
-   \+ /searched/Contents.
+unsearched(Container, Contents) :- 
+  t(location, Contents, Container), 
+  \+implausible_search_location(Contents), 
+  \+ /searched/Contents.
 
 
 
@@ -370,8 +360,7 @@ self_achieving(/perception/nobody_speaking).
 %% Sleeping
 %%
 
-precondition(sleep($me, OnWhat),
-	     location($me, OnWhat)).
+precondition(sleep($me, OnWhat), t(location, $me, OnWhat)).
 strategy(sleep($me, _OnWhat),
 	 with_status_text("zzz":2,
 			  pause(60))).
@@ -404,8 +393,8 @@ strategy(pause(Seconds),
 %
 % Ready Converted To Hand.
 %
-ready_to_hand(Object) :-
-   location(Object, $me).
+ready_to_hand(Object) :-  
+  t(location, Object, $me).
 ready_to_hand(Object) :-
    docked_with(Object).
 
@@ -484,18 +473,16 @@ strategy(operate($me, Device),
 %
 % Operate.
 %
-operate(Device) :-
-   forall(contained_in(X, Device),
-	  destroy(X)).
+operate(Device) :-  
+  forall(t(contained_in, X, Device), destroy(X)).
 
 
 %%
 %% Tracking who you're doing something for
 %%
 
-normalize_task(on_behalf_of(Person, Task),
-	       begin(assert($task/on_behalf_of:Person),
-		     Task)).
+normalize_task( on_behalf_of(Person, Task), 
+  begin(assert($task/on_behalf_of:Person), Task)).
 
 
 %=autodoc
@@ -628,12 +615,11 @@ default_strategy(cobegin(T1, T2, T3, T4, T5, T6),
 
 
 %% Kstop the current task and log the reason for its failure.
-strategy(failed_because(Reason),
-	 begin(assert(/failures/UID:StrippedTask:Reason),
-	       done)) :-
-   $task/type:task:Task,
-   strip_task_wrappers(Task, StrippedTask),
-   qud_uid($task, UID).
+strategy( failed_because(Reason), 
+  begin(assert(/failures/UID:StrippedTask:Reason), done)) :- 
+  $task/type:task:Task, 
+  strip_task_wrappers(Task, StrippedTask), 
+  qud_uid($task, UID).
 
 %% strip_task_wrappers(+Task, -Stripped)
 %  Stripped is the core task of Task, with any unimportant

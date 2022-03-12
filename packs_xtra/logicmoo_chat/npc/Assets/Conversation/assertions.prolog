@@ -53,8 +53,8 @@ default_strategy(respond_to_assertion(Speaker, ModalLF, unknown),
 heard_hearsay(ModalLF) :-
    /hearsay/_/Assertion, Assertion=ModalLF.
 
-strategy(respond_to_dialog_act(question_answer(Speaker,_, LF)),
-	 assert(/hearsay/Speaker/LF)).
+strategy( respond_to_dialog_act(question_answer(Speaker, _, LF)), 
+  assert(/hearsay/Speaker/LF)).
 
 
 %%
@@ -70,7 +70,7 @@ strategy(respond_to_dialog_act(question_answer(Speaker,_, LF)),
 %
 be(X,X).
 be(Character, Name) :-
-   property_value(Character, given_name, Name).
+    t(given_name, Character, Name).
 
 strategy(respond_to_assertion(Speaker, okay(Speaker), _),
 	 null).

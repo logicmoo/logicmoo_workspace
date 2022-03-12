@@ -74,7 +74,7 @@ when_added(P, tell(Q)) :-
 %
 % Canonicalize And Store Assertion.
 %
-tell_assertion(P) :-
-   \+ \+ tell_globally(P) -> $global::assert(P) ; call(assert,P).
+tell_assertion(P) :-  
+  \+ \+tell_globally(P)-> $global::assert(P);call(assert, P).
 
 

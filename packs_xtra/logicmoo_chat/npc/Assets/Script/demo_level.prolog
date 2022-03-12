@@ -13,7 +13,7 @@
 %
 % Plot Goal.
 %
-plot_goal(location($macguffin, $pc)).
+plot_goal(t(location, $macguffin, $pc)).
 
 
 %=autodoc
@@ -21,8 +21,7 @@ plot_goal(location($macguffin, $pc)).
 %
 % Plot Goal Flavor Text.
 %
-plot_goal_flavor_text(location($macguffin, $pc),
-		      "I have to get my macguffin back!").
+plot_goal_flavor_text(t(location, $macguffin, $pc), "I have to get my macguffin back!").
 
 
 
@@ -31,8 +30,7 @@ plot_goal_flavor_text(location($macguffin, $pc),
 %
 % Objective Description.
 %
-objective_description(location($macguffin, $pc),
-		      "You got your macguffin back!").
+objective_description(t(location, $macguffin, $pc), "You got your macguffin back!").
 objective_description(trip_escaped,
 		      "You freed Trip!").
 
@@ -61,7 +59,7 @@ menu_action(X, search_for($pc, X, _)) :-
 %%% PLOT GOAL
 %%% Search the house
 %%%
-plot_subgoal(house_searched, location($macguffin, $pc)).
+plot_subgoal(house_searched, t(location, $macguffin, $pc)).
 
 %=autodoc
 %% plot_subgoal( ?UPARAM1, ?UPARAM2) is semidet.
@@ -100,10 +98,8 @@ plot_goal_idle_task(house_searched,
 %
 % Plot Goal Achieves.
 %
-plot_goal_achieves(house_searched,
-		   location($macguffin, $pc)).
-plot_goal_achieves(house_searched,
-		   location($report, $pc)).
+plot_goal_achieves(house_searched, t(location, $macguffin, $pc)).
+plot_goal_achieves(house_searched, t(location, $report, $pc)).
 
 %%%
 %%% Exposition
@@ -149,24 +145,26 @@ beat(pc_reacts,
 %%% PC explores the house
 %%%
 
-beat(search_house,
-     {
-      start_delay: 20,
-      precondition: plot_goal(house_searched),
-      completed_when: ( $pc::location($macguffin, $pc),
-			$pc::location($report, $pc) ),
-      player_achieves: house_searched,
-      leads_to($pc, pickup($macguffin)),
-      leads_to($pc, pickup($report)),
-      leads_to($pc, captive_released),
-      leads_to($pc, examine($pc, $photo)),
-      leads_to($'Kavi', ingest($pc)),
-      menu_automa_command($'Kavi'):related($pc, member_of, theclub),
-      menu_automa_command($'Kavi'):hungry($'Kavi'),
-      menu_automa_command($'Kavi'):iz_a($'Kavi', orange),
-      menu_question($'Kavi'):(X:contained_in($macguffin, X)),
-      menu_command($'Kavi'):bring($'Kavi', $pc, $macguffin)
-     }).
+beat( search_house, 
+  { start_delay : 20, 
+    precondition : plot_goal(house_searched), 
+    completed_when : ($pc::t(location, $macguffin, $pc), $pc::t(location, $report, $pc)), 
+    player_achieves : house_searched, 
+    leads_to($pc, pickup($macguffin)), 
+    leads_to($pc, pickup($report)), 
+    leads_to($pc, captive_released), 
+    leads_to($pc, examine($pc, $photo)), 
+    leads_to($'Kavi', ingest($pc)), 
+    menu_automa_command($'Kavi') :  
+      t(member_of, $pc, theclub), 
+    menu_automa_command($'Kavi'):hungry($'Kavi'), 
+    menu_automa_command($'Kavi') :  
+      iz_a($'Kavi', orange), 
+    menu_question($'Kavi') :  
+      X :  
+        t(contained_in, $macguffin, X), 
+    menu_command($'Kavi') :  
+      bring($'Kavi', $pc, $macguffin) }).
 
 
 
@@ -218,9 +216,7 @@ $'Kavi'::personal_strategy(patrol_kitchen,
    % Sigh.  I can't believe I didn't implement random_integer.
    once(random_member(Time, [2, 3, 5, 7, 8])).
 
-:- assert((
-$'Kavi'::personal_todo(patrol_kitchen, -100) :-
-   background_character_in_current_beat)).
+:- assert(($'Kavi'::personal_todo(patrol_kitchen, -100):-background_character_in_current_beat)).
 
 %%%
 %%% Good ending
@@ -255,29 +251,26 @@ beat(kavis_goodbye_speech,
 %%%% Releasd Trip from captivity
 %%%%
 
-beat(react_to_trip,
-     {
-      priority: 1,
-      reaction_to($pc, captive_released),
-      start($captive): goto($pc),
-      ($pc + $captive):
-     [ $captive::face($pc),
-       $pc::face($captive),
-       $captive::("Thanks for releasing me!":answered(photo)),
-	 $pc::"I haven't seen you since that horrible dinner party!",
-	 $pc::"How long has it been?",
-	 $captive::"Oh I'd say about ten years!",
-	 $pc::"What are you doing here?",
-	 $captive::"They kidnapped me for medical experiments!",
-	 $pc::"Oh no!",
-	 $captive::"They were trying to reimplement me in JavaScript!",
-	 $pc::"How barbaric!",
-	 $captive::"We've got to get out of here!",
-	 $captive::goto($exit),
-	 $captive::call(vanish_captive),
-	 $captive::assert($global::trip_escaped)
-       ]
-     }).
+beat( react_to_trip, 
+  { priority : 1, 
+    reaction_to($pc, captive_released), 
+    start($captive):goto($pc), 
+    ($pc+ $captive) :  
+      [ $captive::face($pc), 
+        $pc::face($captive), 
+        $captive::"Thanks for releasing me!":answered(photo), 
+        $pc::"I haven't seen you since that horrible dinner party!", 
+        $pc::"How long has it been?", 
+        $captive::"Oh I'd say about ten years!", 
+        $pc::"What are you doing here?", 
+        $captive::"They kidnapped me for medical experiments!", 
+        $pc::"Oh no!", 
+        $captive::"They were trying to reimplement me in JavaScript!", 
+        $pc::"How barbaric!", 
+        $captive::"We've got to get out of here!", 
+        $captive::goto($exit), 
+        $captive::call(vanish_captive), 
+        $captive::assert($global::trip_escaped)] }).
 
 
 %%%
@@ -342,7 +335,8 @@ beat(exit_house,
 %
 % Owner.
 %
-owner($'Kavi', X) :- X \= $macguffin.
-owner($pc, $macguffin).
+t(owner, $'Kavi', X) :-  
+  X\= $macguffin.
+t(owner, $pc, $macguffin).
 
 %:- consult("Script/radio").

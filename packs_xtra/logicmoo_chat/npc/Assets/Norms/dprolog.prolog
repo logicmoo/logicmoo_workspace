@@ -410,18 +410,18 @@ preempted(KB,(Head := Body)) :-
 :- external preemption/0.
 
 preempt :-
-        retract(preemption),
-        !,
-        write('Preemption is disabled.'), nl.
+    retract(preemption),
+    !,
+    write('Preemption is disabled.'),
+    nl.
 
 %=autodoc
 %% preempt is semidet.
 %
 % Preempt.
 %
-
-
 preempt :-
-        assert(preemption),
-        write('Preemption is enabled.'), nl.
+    assert(preemption),
+    write('Preemption is enabled.'),
+    nl.
 

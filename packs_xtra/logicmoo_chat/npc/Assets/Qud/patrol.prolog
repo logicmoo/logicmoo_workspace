@@ -7,16 +7,15 @@
 %%%
 
 % When you arrive at a new place, update its last visit time and rebid.
-on_event(arrived_at(Place),
-	 patrol, Qud,
-	 begin(assert(Qud/visited/Place: $now),
-	       rebid_patrol(Qud))).
+on_event( arrived_at(Place), 
+  patrol, 
+  Qud, 
+  begin(assert(Qud/visited/Place: $now), rebid_patrol(Qud))).
 
 % When you start, initialize all objects to being unvisited.
-on_enter_state(start, patrol, Qud) :-
-   forall(patrol_destination(P),
-	  assert(Qud/visited/P:(-100))),
-   rebid_patrol(Qud).
+on_enter_state(start, patrol, Qud) :- 
+  forall(patrol_destination(P), assert(Qud/visited/P: -100)), 
+  rebid_patrol(Qud).
 
 % Visit a prop if it's in a room (and not in another container).
 patrol_destination(Prop) :-
@@ -31,10 +30,11 @@ patrol_destination(Prop) :-
 
 
 % Update location bids.
-rebid_patrol(Qud) :-
-   forall(Qud/visited/Prop:Time,
-	  begin(Score is ($now-Time)-distance(Prop, $me),
-		assert(Qud/location_bids/Prop:Score))).
+rebid_patrol(Qud) :-  
+  forall( Qud/visited/Prop:Time, 
+    begin( 
+       Score is $now-Time-distance(Prop, $me), 
+       assert(Qud/location_bids/Prop:Score))).
 
 %=autodoc
 %% rebid_patrol( ?Qud) is semidet.

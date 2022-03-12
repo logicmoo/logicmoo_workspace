@@ -57,7 +57,6 @@ swi_or_unity(G,_U):- call(G).
 
 :- discontiguous(ugoal_expansion/2).
 
-
 db_pred(assert).
 db_pred(retract).
 db_pred(retractall).
@@ -79,6 +78,7 @@ system:unity_call(MG):- strip_module(MG,M,G), unity_call(M,G).
 
 system:unity_call(M,G):- \+ callable(G),!,throw(uncallable_unity_call(M:G)).
 system:unity_call(M,public(Arg)):- !, apply(M:(external),[Arg]).
+%system:unity_call(M,assert(Arg)):- !,system:unity_call(M,assert(Arg)).
 system:unity_call(M,G):-
   expand_ugoal(G,GG), GG\==G,!, ansicall(cyan, (print_clexp(call,G,GG))),!, M:call(GG).
 system:unity_call(M,G):- call(M:G).

@@ -37,27 +37,23 @@ precondition(pickup(X),
 	     present(X)).
 precondition(pickup(X),
 	     docked_with(X)).
-postcondition(pickup(X),
-	      location(X, $me)) :-
-   X \= $me.
+postcondition(pickup(X), t(location, X, $me)) :-  
+  X\= $me.
 
 action_functor(putdown, 2).
-precondition(putdown(Object, _Dest),
-	     location(Object, $me)).
+precondition(putdown(Object, _Dest), t(location, Object, $me)).
 precondition(putdown(_Object, Dest),
 	     docked_with(Dest)).
-postcondition(putdown(Object, Dest),
-	      location(Object, Dest)) :-
-   Dest \= $me,
-   Object \= $me.
+postcondition(putdown(Object, Dest), t(location, Object, Dest)) :- 
+  Dest\= $me, 
+  Object\= $me.
 
 action_functor(face, 1).
 action_functor(ingest, 1).
 action_functor(get_in, 1).
-precondition(ingest(Edible),
-	     location(Edible, $me)) :-
-   \+ iz_a(Edible, person),
-   Edible \= $me.
+precondition(ingest(Edible), t(location, Edible, $me)) :- 
+  \+iz_a(Edible, person), 
+  Edible\= $me.
 precondition(ingest(Edible),
 	     docked_with(Edible)) :-
    iz_a(Edible, person),

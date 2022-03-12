@@ -80,16 +80,16 @@ well_typed(Atom, Type, Bindings, Bindings) :-
 well_typed((Expression, iz_a(Var, VKind)), Kind, BIn, BOut) :-
   well_typed(Expression, Kind, [Var:VKind | BIn], BOut).
 
-well_typed(related(Object, Relation, Relatum), condition, BIn, BOut) :-
-  nonvar(Relation),
-  relation_type(Relation, ObjectType, RelatumType),
-  well_typed(Object, ObjectType, BIn, BIntermediate),
+well_typed(t(Relation, Object, Relatum), condition, BIn, BOut) :- 
+  nonvar(Relation), 
+  mpred_argtypes(t(Relation, ObjectType, RelatumType)), 
+  well_typed(Object, ObjectType, BIn, BIntermediate), 
   well_typed(Relatum, RelatumType, BIntermediate, BOut).
 
-well_typed(property_value(Object, Property, Value), condition, BIn, BOut) :-
-  nonvar(Property),
-  property_type(Property, ObjectType, ValueType),
-  well_typed(Object, ObjectType, BIn, BIntermediate),
+well_typed(t(Property, Object, Value), condition, BIn, BOut) :- 
+  nonvar(Property), 
+  property_type(Property, ObjectType, ValueType), 
+  well_typed(Object, ObjectType, BIn, BIntermediate), 
   well_typed(Value, ValueType, BIntermediate, BOut).
 
 well_typed(Event, Kind, BindingsIn, BindingsOut) :-
@@ -433,9 +433,9 @@ predicate_type(condition, know(actor, condition)).
 predicate_type(condition, manner(action, manner)).
 
 predicate_type(condition, toggled_state(appliance, entity, entity)).
-predicate_type(condition, related(entity, relation, entity)).
-predicate_type(condition, location(physical_object, container)).
-predicate_type(condition, contained_in(physical_object, container)).
+predicate_type(condition, t(relation, entity, entity)).
+predicate_type(condition, t(location, physical_object, container)).
+predicate_type(condition, t(contained_in, physical_object, container)).
 
 predicate_type(condition, away(living_thing)).
 predicate_type(condition, present(physical_object)).
@@ -523,7 +523,7 @@ decl_asap(result_isa(question(_, _, _, _, _), dialog_act)).
 decl_asap(result_isa(question(_, _, _, _, _), action)).
 decl_asap(result_isa(question(_), entity)).
 decl_asap(result_isa(putdown(_, _), action)).
-decl_asap(result_isa(property_value(_, _, _), condition)).
+decl_asap(result_isa(t(_, _, _), condition)).
 decl_asap(result_isa(prompt_player(_, _), dialog_act)).
 decl_asap(result_isa(prompt_player(_, _), action)).
 decl_asap(result_isa(preface_description(_), action)).

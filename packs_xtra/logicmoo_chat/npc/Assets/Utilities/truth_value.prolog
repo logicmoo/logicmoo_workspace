@@ -209,13 +209,11 @@ know_whether(iz_a(Object, _Kind)) :-
    !,
    know_about_object(Object).
 
-know_whether(property_value(Object, Property, Value)) :-
-   !,
-   know_property(Property, Object, Value).
+know_whether(t(Property, Object, Value)) :-  !, 
+  know_property(Property, Object, Value).
 
-know_whether(related(Object, Relation, Relatum)) :-
-   !,
-   know_relation(Relation, Object, Relatum).
+know_whether(t(Relation, Object, Relatum)) :-  !, 
+  know_relation(Relation, Object, Relatum).
 
 
 
@@ -225,8 +223,8 @@ know_whether(related(Object, Relation, Relatum)) :-
 % Know About Object.
 %
 know_about_object($me).
-know_about_object(Person) :-
-   related($me, know, Person);know($me, Person).
+know_about_object(Person) :-  
+  ( t(know, $me, Person) ; know($me, Person)).
 
 know_about_object(theclub).
 

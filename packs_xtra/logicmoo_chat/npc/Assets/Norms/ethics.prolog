@@ -56,6 +56,5 @@ incompatible_cl(possession(X, O1),
 	     possession(X,O2)) :-
    O1 \= O2.
 
-possession(X, Character) :=
-   character(Character),
-   location(X, Character).
+( possession(X, Character) := 
+  character(Character), t(location, X, Character)).

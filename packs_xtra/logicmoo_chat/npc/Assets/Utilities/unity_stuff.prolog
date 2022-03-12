@@ -197,11 +197,9 @@ generate_unsorted_overlay(Title, Generator, Template, Default) :-
 %  Pops up the standard character debug overlay information for Character.
 %  Debug information can be added by adding rules for character_debug_display/2.
 :- public character_debug_display/2, generate_character_debug_overlay/1.
-generate_character_debug_overlay(Character) :-
-   property_value(Character, given_name, Name),
-   generate_overlay(Name,
-		    character_debug_display(Character, Data),
-		    Data).
+generate_character_debug_overlay(Character) :- 
+  t(given_name, Character, Name), 
+  generate_overlay(Name, character_debug_display(Character, Data), Data).
 
 %% character_debug_display(+Character, -Line) is nondet
 %  When displaying character debug data for Character, display Line.

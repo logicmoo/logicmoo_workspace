@@ -1112,19 +1112,23 @@ xform_src(X,Z):- compound(X),!,
   xform_cmpd(Y,Z).
 
 xform_cmpd((X --> B), X --> Body):- expand_dcg_body(B,Body),!.
-xform_cmpd(X,X):- !.
+%xform_cmpd(X,X):- !.
 
-xform_cmpd(property(X,P,Y),p(P,X,Y)).
-xform_cmpd(property(Ctx,X,P,Y),ist(Ctx,p(P,X,Y))).
-xform_cmpd(property_value(X,P,Y),p(P,X,Y)).
+xform_cmpd(property(X,P,Y),t(P,X,Y)).
+xform_cmpd(property(Ctx,X,P,Y),ist(Ctx,t(P,X,Y))).
+xform_cmpd(property_value(X,P,Y),t(P,X,Y)).
+
+%xform_cmpd(relation_type(Relation, ObjectType, RelatumType),(argIsa(Relation,1,ObjectType),argIsa(Relation,2,RelatumType))).
+xform_cmpd(relation_type(Relation, ObjectType, RelatumType),mpred_argtypes(t(Relation, ObjectType, RelatumType))).
 
 xform_cmpd(relation(X,P,Y),t(P,X,Y)).
 xform_cmpd(related(X,P,Y),t(P,X,Y)).
 
 xform_cmpd(location(X,Y),t(location,X,Y)).
 xform_cmpd(contained_in(X,Y),t(contained_in,X,Y)).
-xform_cmpd(p(P,X,Y),t(P,X,Y)).
 xform_cmpd(owner(X,Y),t(owner,X,Y)).
+%xform_cmpd(assert(X),uassert(X)).
+%xform_cmpd(retract(X),uretract(X)).
 
 xform_cmpd(P,T):- compound_name_arguments(P,F,ARGS), needs_t_wrapped(F,TF,FF), compound_name_arguments(T,TF,[FF|ARGS]).
 xform_cmpd(Q,Q).

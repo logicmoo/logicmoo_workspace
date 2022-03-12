@@ -131,6 +131,8 @@ s(Words,LogicalForm):- Words =[_|_], sentence(LogicalForm, Mood, Polarity, Tense
 :- dynamic(prop/1 ).
 :- dynamic(dialog_task_advances_current_beat/1 ).
 
+:- dynamic(t/3).
+:- multifile(t/3).
 
 %:- load_lmchat.
 :- load_unity_prolog_file('Prolog/prolog_primitives.prolog').

@@ -22,7 +22,7 @@
 %  Called from Start() routine of Room.cs
 register_room(Room, Kind) :-
    assert(declare_value(Room, building, kavis_house)),  %KLUGE
-   asserta(location(Room, kavis_house)),
+   asserta(t(location,Room, kavis_house)),
    ensurez(declare_kind(Room, Kind)).
 
 %=autodoc
@@ -100,7 +100,7 @@ nearest(GameObject, Constraint) :-
 	    Distance,
 	    ( Constraint,
 	      present(GameObject),
-	      Distance is distance([GameObject], $me))).
+	      distance(GameObject, $me, Distance))).
 
 %% elroot(+GameObject, -Root)
 %  Returns the root of the EL database for GameObject, if there is one.
@@ -145,7 +145,7 @@ present(X) :-
 %  Returns the true location of GameObject, bypassing the perceptual system.
 true_location(GameObject, Container) :-
    component_of_gameobject_with_type(C, GameObject, $'PhysicalObject'),
-   property(C, "Container", Container).
+  t("Container", C, Container).
 
 :- public force_move/2.
 
@@ -263,9 +263,9 @@ hidden_contents(Container, HiddenObject) :-
 %
 % Update Character Status.
 %
-update_character_status :-
-   character_status_string(S, P),
-   assert(/status_text:S:P).
+update_character_status :- 
+  character_status_string(S, P), 
+  assert(/status_text:S:P).
 
 
 
@@ -291,11 +291,11 @@ character_status_string("", 0).
 update_halo :-
    \+ player_character.
 update_halo :-
-   /perception/nobody_speaking,
-   not(everyday_life_task_busy),
-   assert(/halo:on).
+    /perception/nobody_speaking,
+    not(everyday_life_task_busy),
+    assert(/halo:on).
 update_halo :-
-   assert(/halo:off).
+    assert(/halo:off).
 update_halo.
 
 
@@ -312,9 +312,9 @@ update_halo.
 %
 % Emote.
 %
-emote(Emotion) :-
-   emotion_string(Emotion, String),
-   assert(/motor_state/emote:String: $now).
+emote(Emotion) :- 
+  emotion_string(Emotion, String), 
+  assert(/motor_state/emote:String: $now).
 
 
 %=autodoc
@@ -355,7 +355,7 @@ normalize_task(emote(E),
 % Initialization.
 %
 (initialization):- forall(iz_a(X,door),register_door(X)).
-(initialization):- forall(member(X,[living_room,bedroom,bathroom,kitchen]),register_room($(X),X)).
+(initialization):- forall(member(X,[living_room,bedroom,bathroom,kitchen]),(R = ($(X)) ,register_room(R,X))).
 (initialization):- forall(member(X,[$'Kavi',$pc,$captive]),register_character(X)).
 (initialization):- forall((iz_a(X,physical_object),\+ iz_a(X,person),once(iz_a(X,K))),register_prop(X,K,[])).
 
@@ -370,8 +370,8 @@ ensure_core_systems_initialized :-
    core_systems_initialized,
    !.
 ensure_core_systems_initialized :-
-   assert($global::core_systems_initialized),
-   forall(initialization, true).
+    assert($global::core_systems_initialized),
+    forall(initialization, true).
 
 %%%
 %%% Character initialization.
@@ -399,11 +399,11 @@ do_all_character_initializations :-
 %% allocate_UID(UID)
 %  IMPERATIVE
 %  UID is a unique integer not previously allocated within this character.
-allocate_UID(UID) :-
-    begin(/next_uid:UID,
-	  NextUID is UID+1,
-    retract(/next_uid:UID),
-	  asserta(/next_uid:NextUID)).
+allocate_UID(UID) :-  
+  begin( /next_uid:UID, 
+    NextUID is UID+1, 
+    retract(/next_uid:UID), 
+    asserta(/next_uid:NextUID)).
 
 
 
@@ -747,10 +747,7 @@ nonterminal(F, A) :-
 
 display_status_screen(inventory) :-
    generate_unsorted_overlay("Inventory",
-			     ( location(Item, $me),
-			       once(caption(Item, Description)) ),
-			     line(Description),
-			     "Nothing").
+    t(location, Item, $me), once(caption(Item, Description)), line(Description), "Nothing").
 
 fkey_command(alt-n, "Display notebook") :-
    display_status_screen(notebook).

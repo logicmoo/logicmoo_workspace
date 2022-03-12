@@ -23,12 +23,13 @@ test_file(problem_solver(_), "Problem solver/ps_tests").
 %  Adds a task to Parent's subquds.  Priority is
 %  The score to be given by the task to any actions it attempts
 %  to perform.
-start_task(Parent, Task, Priority, TaskQud, Assertions) :-
-   begin_child_qud(Parent, task, Priority, TaskQud,
-   		       [TaskQud/type:task:Task,
-			        TaskQud/current:start,
-   			      TaskQud/continuation:done]),
-   forall(member(A, Assertions), assert(A)).
+start_task(Parent, Task, Priority, TaskQud, Assertions) :- 
+  begin_child_qud( Parent, 
+    task, Priority, TaskQud, 
+    [ TaskQud/type:task:Task, 
+      TaskQud/current:start, 
+      TaskQud/continuation:done]), 
+  forall(member(A, Assertions), assert(A)).
 %   within_task(TaskQud, switch_to_task(Task)).
 
 

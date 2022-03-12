@@ -43,7 +43,7 @@ parent_qud_of(Child, Parent) :-
 % Topic Uid.
 %
 qud_uid(Qud, UID) :-
-   property(Qud, "Key", UID).
+    t("Key", Qud, UID).
 
 :- public qud_status/2, set_qud_status/2.
 
@@ -56,7 +56,7 @@ qud_status(Qud, Status) :-
 %  IMPERATIVE
 %  Update's qud's status field.
 set_qud_status(Qud, Status) :-
-   assert(Qud/status:Status).
+    assert(Qud/status:Status).
 
 
 
@@ -101,14 +101,13 @@ begin_qud(Type, Priority, Child) :-
 %  Creates a new qud of type Type as a child of Parent, and returns its
 %  ELNode in Child.
 %  Adds Assertions to its ELNode.
-begin_child_qud(Parent, Type, Priority, Child, Assertions) :-
-    begin(allocate_UID(ChildUID),
-	  assert(Parent/quds/ChildUID/type:Type),
-	  Parent/quds/ChildUID>>Child,
-	  assert(Child/priority:Priority),
-	  forall(member(A, Assertions),
-		 assert(A)),
-	  goto_state(Child, start)).
+begin_child_qud(Parent, Type, Priority, Child, Assertions) :-  
+  begin( allocate_UID(ChildUID), 
+    assert(Parent/quds/ChildUID/type:Type), 
+    Parent/quds/ChildUID>>Child, 
+    assert(Child/priority:Priority), 
+    forall(member(A, Assertions), assert(A)), 
+    goto_state(Child, start)).
 
 %% begin_child_qud(+Parent, +Type, +Priority, -Child)
 %  IMPERATIVE
@@ -127,11 +126,9 @@ begin_child_qud(Parent, Type, Priority, Child) :-
 %  IMPERATIVE
 %  Kstops qud and all its children.
 %  Calls on_stop/2 on it before deletion.
-stop_qud(Qud) :-
-    begin(Qud/type:Type,
-	  ignore(on_stop(Type, Qud)),
-	  stop_children(Qud),
-	  retract(Qud)).
+stop_qud(Qud) :-  
+  begin( Qud/type:Type, 
+    ignore(on_stop(Type, Qud)), stop_children(Qud), retract(Qud)).
 
 %% stop_children(+Qud)
 %  IMPERATIVE
@@ -160,12 +157,11 @@ stop_children(Qud) :-
 
 :- public goto_state/2.
 
-goto_state(Qud, State) :-
-   begin(Qud/type:Type,
-	 ignore(( Qud/state:OldState,
-		  on_exit_state(OldState, Type, Qud) )),
-	 assert(Qud/state:State/enter_time: $now),
-	 ignore(on_enter_state(State, Type, Qud))).
+goto_state(Qud, State) :-  
+  begin( Qud/type:Type, 
+    ignore( Qud/state:OldState, on_exit_state(OldState, Type, Qud)), 
+    assert(Qud/state:State/enter_time: $now), 
+    ignore(on_enter_state(State, Type, Qud))).
 
 %% on_enter_state(+NewState, +Type, +Qud)
 %  IMPERATIVE

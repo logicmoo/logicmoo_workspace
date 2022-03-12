@@ -9,9 +9,8 @@ strategy(preface_description(Person),
 	 give_name(Person)) :-
    iz_a(Person, person).
 
-default_strategy(give_name($me),
-	 say_answer(be($me, Name))) :-
-   property_value($me, given_name, Name).
+default_strategy(give_name($me), say_answer(be($me, Name))) :-  
+  t(given_name, $me, Name).
 
 strategy(give_name(X),
 	 null) :-

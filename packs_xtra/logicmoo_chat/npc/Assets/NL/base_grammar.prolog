@@ -1,7 +1,7 @@
 
 
-%=autodoc
-%% test_file( ?ARG1, ?NL/base_grammar_test2) is semidet.
+:- multifile(test_file/2).
+%% test_file( ?TestMask, ?Filename) is semidet.
 %
 % Test File.
 %
@@ -10,7 +10,7 @@ test_file(generate(s, _), "NL/base_grammar_test").
 
 
 
-%=autodoc
+
 %% sentence( ?ARG1, ?ARG2, ?ARG3, ?ARG4, ?ARG5) is semidet.
 %
 % Sentence.
@@ -39,7 +39,7 @@ sentence(S, Mood, Polarity, Tense, Aspect) -->
 
 
 
-%=autodoc
+
 %% bind_discourse_variables( ?ARG1, ?ARG2, ?ARG3) is semidet.
 %
 % Bind Discourse Variables.
@@ -50,7 +50,7 @@ bind_discourse_variables(S, S, G) --> G.
 
 
 
-%=autodoc
+
 %% bind_discourse_variables( ?ARG1, ?ARG2) is semidet.
 %
 % Bind Discourse Variables.
@@ -78,7 +78,7 @@ bound_discourse_variable(Var) :-
 
 
 
-%=autodoc
+
 %% opt_stop( ?ARG1) is semidet.
 %
 % Opt Stop.
@@ -109,7 +109,7 @@ opt_stop(Mood)-->theTextM1(!), {Mood\=interrogative}.
 
 
 
-%=autodoc
+
 %% content_clause( ?ARG1, ?ARG2, ?ARG3, ?ARG4) is semidet.
 %
 % Content Clause.
@@ -128,7 +128,7 @@ content_clause(Object:(be(Subject, Object), iz_a(Subject, Kind)), _, Interrogati
    whpron(Kind),
    np((Subject^S)^S, subject, Agreement, nogap, nogap),
    aux_be(present, Agreement).
-content_clause( Container:contained_in(Subject, Container), 
+content_clause( Container:t(contained_in, Subject, Container), 
   _, InterrogativePredicate, InterrogativePredicate) -->  
   ( {InterrogativePredicate\=null}  ,
     theTextM1(where), 
@@ -154,7 +154,7 @@ complementizer(Predicate, _, Predicate) --> [].
 
 
 
-%=autodoc
+
 %% infinitival_clause( ?ARG1, ?ARG2) is semidet.
 %
 % Infinitival Clause.
@@ -178,7 +178,7 @@ infinitival_clause(EnclosingSubject, S) -->
 
 
 
-%=autodoc
+
 %% a_an is semidet.
 %
 % A An.
@@ -187,21 +187,21 @@ a_an-->theTextM1(a);theTextM1(an);[].
 
 
 
-%=autodoc
+
 %% swizzle_lf( ?UPARAM1, ?LF) is semidet.
 %
 % Swizzle Lf.
 %
 swizzle_lf(LF,LF).
-swizzle_lf(location(X,Y),contained_in(X,Y)).
-swizzle_lf(relation(X,location,Y),contained_in(X,Y)).
+swizzle_lf(t(location, X, Y), t(contained_in, X, Y)).
+swizzle_lf(t(location, X, Y), t(contained_in, X, Y)).
 %swizzle_lf(located(X,Y),contained_in(X,Y)).
 %swizzle_lf(LF,SLF):- nonvar(SLF),LF=SLF.
 %swizzle_lf(LF,SLF):- var(LF),!,freeze(SLF,swizzle_lf(LF,SLF)).
 
 
 
-%=autodoc
+
 %% s( ?LF, +Indicative, ?Polarity, ?Tense, ?Aspect, ?S, ?E) is semidet.
 %
 % S.
@@ -213,7 +213,7 @@ s(LF, Indicative, Polarity, Tense, Aspect, S, E) :-
 
 
 
-%=autodoc
+
 %% ss( ?ARG1, ?ARG2, ?ARG3, ?ARG4, ?ARG5) is semidet.
 %
 % Ss.
@@ -246,34 +246,40 @@ ss(be(S, O), indicative, Polarity, Tense, simple) -->
    opt_not(Polarity),
    np((O^_)^_, object, _, nogap, nogap).
 
+
+x_is_cont_in(contained_in, in, enclosing_container).
+x_is_cont_in(contained_in, on, work_surface).
+
 % NP is [not] in NP
-ss(contained_in(S, Container), indicative, Polarity, Tense, simple) -->  
+ss(t(Contained_in, S, Container), indicative, Polarity, Tense, simple) -->  
+  {x_is_cont_in(Contained_in, In, Enclosing_container)},
   ( np((S^_)^_, subject, Agreement, nogap, nogap)  ,
     aux_be(Tense, Agreement), 
     opt_not(Polarity), 
-    theTextM1(in), 
+    theTextM1(In), 
     np((Container^_)^_, object, _, nogap, nogap), 
-    {iz_a(Container, enclosing_container)}).
-
+    {iz_a(Container, Enclosing_container)}).
+/*
 % NP is [not] on NP
-ss(contained_in(S, Container), indicative, Polarity, Tense, simple) -->  
+ss(t(contained_in, S, Container), indicative, Polarity, Tense, simple) -->  
   ( np((S^_)^_, subject, Agreement, nogap, nogap)  ,
     aux_be(Tense, Agreement), 
     opt_not(Polarity), 
     theTextM1(on), 
     np((Container^_)^_, object, _, nogap, nogap), 
     {iz_a(Container, work_surface)}).
+*/
 
 % Character has  NP
-ss(contained_in(Object, Character), indicative, Polarity, Tense, simple) -->
-   np((Character^_)^_, subject, Agreement, nogap, nogap),
-   { character(Character) },
-   aux_have(Tense, Agreement),
-   opt_not(Polarity),
-   np((Object^_)^_, object, _, nogap, nogap).
+ss(t(contained_in, Object, Character), indicative, Polarity, Tense, simple) -->  
+  ( np((Character^_)^_, subject, Agreement, nogap, nogap)  ,
+    {character(Character)}, 
+    aux_have(Tense, Agreement), 
+    opt_not(Polarity), 
+    np((Object^_)^_, object, _, nogap, nogap)).
 
 % NP's Property is [not] PropertyValue
-ss(property_value(Noun, Property, Value), indicative, Polarity, Tense, simple) -->
+ss(t(Property, Noun, Value), indicative, Polarity, Tense, simple) -->
    { % DMILES %%%%%%%%%%%%%%% 
      at_least_once(valid_property_value(Property, Value)),
      % Prefer other forms of realization, when available
@@ -289,7 +295,7 @@ ss(property_value(Noun, Property, Value), indicative, Polarity, Tense, simple) -
    property_value_np(Property, Value).
 
 % NP is [not] PropertyValue
-ss(property_value(Noun, Property, Value), indicative, Polarity, Tense, simple) -->
+ss(t(Property, Noun, Value), indicative, Polarity, Tense, simple) -->
    { % DMILES %%%%%%%%%%%%%%% 
      at_least_once(valid_property_value(Property, Value)),
      adjectival_property(Property) },
@@ -299,7 +305,7 @@ ss(property_value(Noun, Property, Value), indicative, Polarity, Tense, simple) -
    [Value].
 
 % NP is [not] a PropertyValue
-ss(property_value(Noun, Property, Value), indicative, Polarity, Tense, simple) -->
+ss(t(Property, Noun, Value), indicative, Polarity, Tense, simple) -->
    { % DMILES %%%%%%%%%%%%%%% 
      at_least_once(valid_property_value(Property, Value)),
      nominal_property(Property) },
@@ -309,16 +315,15 @@ ss(property_value(Noun, Property, Value), indicative, Polarity, Tense, simple) -
    [a, Value].
 
 % NP's Relation is [not] Relatum
-ss(related(Noun, Relation, Relatum), indicative, Polarity, Tense, simple) -->
-   np((Noun^_)^_, genitive, _Agreement1, nogap, nogap),
-   genitive_form_of_relation(Relation, singular),
-   copula(simple, Tense, third:singular),
-   opt_not(Polarity),
-   np((Relatum^_)^_, object, _Agreement2, nogap, nogap).
+ss(t(Relation, Noun, Relatum), indicative, Polarity, Tense, simple) -->  
+  ( np((Noun^_)^_, genitive, _Agreement1, nogap, nogap)  ,
+    genitive_form_of_relation(Relation, singular), 
+    copula(simple, Tense, third:singular), 
+    opt_not(Polarity), 
+    np((Relatum^_)^_, object, _Agreement2, nogap, nogap)).
 
 
 
-%=autodoc
 %% at_least_once( ?G) is semidet.
 %
 % When Least Once.
@@ -353,7 +358,7 @@ inverted_sentence(S, Polarity, Tense, Aspect) -->
        Polarity, Agreement, Tense, Aspect, Form, Modality),
    vp(Form, Modality, NP^S1, Tense, Agreement, nogap).
 
-%=autodoc
+
 %% inverted_sentence( ?ARG1, ?ARG2, ?ARG3, ?ARG4) is semidet.
 %
 % Inverted Sentence.
@@ -386,7 +391,7 @@ ss((Wh:(S, iz_a(Wh, Kind))), interrogative, affirmative, Tense, simple) -->
 % Wh-questions about properties
 
 % Whose property is Value?
-ss( Noun:property_value(Noun, Property, Value), 
+ss( Noun:t(Property, Noun, Value), 
   interrogative, affirmative, Tense, simple) -->  
   ( {valid_property_value(Property, Value)}  ,
     theTextM1(whose), 
@@ -397,19 +402,19 @@ ss( Noun:property_value(Noun, Property, Value),
 :- register_lexical_item(whose).
 
 % NP's Property is [not] PropertyValue
-ss((Value:(property_value(Noun, Property, Value), iz_a(Value, Kind))),
-  interrogative, affirmative, Tense, simple) -->
-   whpron(Kind),
-   copula(simple, Tense, third:singular),
-   np((Noun^_)^_, genitive, _Agreement, nogap, nogap),
-   property_name(Property).
+ss( Value:(t(Property, Noun, Value), iz_a(Value, Kind)), 
+  interrogative, affirmative, Tense, simple) -->  
+  ( whpron(Kind)  ,
+    copula(simple, Tense, third:singular), 
+    np((Noun^_)^_, genitive, _Agreement, nogap, nogap), 
+    property_name(Property)).
 
 % Wh-questions about relations
 
 :- dynamic(genitive_form_of_relation//2).
 
 % Whose relation is Value?
-ss( Noun:related(Noun, Relation, Value), 
+ss( Noun:t(Relation, Noun, Value), 
   interrogative, affirmative, Tense, simple) -->  
   ( theTextM1(whose)  ,
     genitive_form_of_relation(Relation, Number), 
@@ -417,12 +422,12 @@ ss( Noun:related(Noun, Relation, Value),
     np((Value^_)^_, subject, Person:Number, nogap, nogap)).
 
 % NP's Relation is [not] RelationValue
-ss((Value:(related(Noun, Relation, Value), iz_a(Value, Kind))),
-  interrogative, affirmative, Tense, simple) -->
-   whpron(Kind),
-   copula(simple, Tense, third:Number),
-   np((Noun^_)^_, genitive, _Agreement, nogap, nogap),
-   genitive_form_of_relation(Relation, Number).
+ss( Value:(t(Relation, Noun, Value), iz_a(Value, Kind)), 
+  interrogative, affirmative, Tense, simple) -->  
+  ( whpron(Kind)  ,
+    copula(simple, Tense, third:Number), 
+    np((Noun^_)^_, genitive, _Agreement, nogap, nogap), 
+    genitive_form_of_relation(Relation, Number)).
 
 % Wh-questions about the subject.
 ss(Subject:(S, iz_a(Subject, Kind)), interrogative, Polarity, Tense, Aspect) -->
@@ -468,7 +473,7 @@ ss(S, interrogative, Polarity, present, simple) -->
    ap(Noun^S).
 
 % Is X in/on Container?
-ss(contained_in(S, Container), interrogative, Polarity, Tense, simple) -->  
+ss(t(contained_in, S, Container), interrogative, Polarity, Tense, simple) -->  
   ( aux_be(Tense, Agreement)  ,
     np((S^_)^_, subject, Agreement, nogap, nogap), 
     opt_not(Polarity), 
@@ -476,7 +481,7 @@ ss(contained_in(S, Container), interrogative, Polarity, Tense, simple) -->
     np((Container^_)^_, object, _, nogap, nogap), 
     {iz_a(Container, enclosing_container)}).
 
-ss(contained_in(S, Container), interrogative, Polarity, Tense, simple) -->  
+ss(t(contained_in, S, Container), interrogative, Polarity, Tense, simple) -->  
   ( aux_be(Tense, Agreement)  ,
     np((S^_)^_, subject, Agreement, nogap, nogap), 
     opt_not(Polarity), 
@@ -485,8 +490,7 @@ ss(contained_in(S, Container), interrogative, Polarity, Tense, simple) -->
     {iz_a(Container, work_surface)}).
 
 % Is Subject a PROPERTYVALUE?
-inverted_sentence( property_value(Subject, Property, Value), 
-  Polarity, Tense, simple) -->  
+inverted_sentence(t(Property, Subject, Value), Polarity, Tense, simple) -->  
   ( copula(simple, Tense, Agreement)  ,
     opt_not(Polarity), 
     np((Subject^_)^_, subject, Agreement, nogap, nogap), 
@@ -501,7 +505,7 @@ ss( X:explanation(S, X),
 :- register_lexical_item(why).
 
 % where is NP
-ss( Container:contained_in(S, Container), 
+ss( Container:t(contained_in, S, Container), 
   interrogative, Polarity, Tense, simple) -->  
   ( theTextM1(where)  ,
     aux_be(Tense, Agreement), 
@@ -511,15 +515,23 @@ ss( Container:contained_in(S, Container),
 :- register_lexical_item(where).
 
 % Who has  NP
-ss( Character:contained_in(Object, Character), iz_a(Character, person), 
-  interrogative, Polarity, Tense, simple) -->  
+ss( Character:t(contained_in, Object, Character), 
+  iz_a(Character, person), interrogative, Polarity, Tense, 
+  simple) -->  
   ( theTextM1(who)  ,
     aux_have(Tense, third:singular), 
     opt_not(Polarity), 
     np((Object^S)^S, object, _, nogap, nogap)).
 
+
+%% ss( ?ARG1, ?ARG2, ?ARG3, ?ARG4, ?ARG5, ?ARG6) is semidet.
+%
+% Ss.
+%
+
+
 % what is on the X
-ss( S:contained_in(S, Container), 
+ss( S:t(contained_in, S, Container), 
   interrogative, Polarity, Tense, simple) -->  
   ( theTextM1(what)  ,
     aux_be(Tense, Agreement), 
@@ -530,7 +542,7 @@ ss( S:contained_in(S, Container),
     {iz_a(Container, work_surface)}).
 
 % Who/what is in the X
-ss( S:(contained_in(S, Container), iz_a(S, Kind)), 
+ss( S:(t(contained_in, S, Container), iz_a(S, Kind)), 
   interrogative, Polarity, Tense, simple) -->  
   ( whpron(Kind)  ,
     aux_be(Tense, Agreement), 
@@ -541,7 +553,7 @@ ss( S:(contained_in(S, Container), iz_a(S, Kind)),
     {iz_a(Container, enclosing_container), \+character(Container)}).
 
 % what does Character have?
-ss( S:contained_in(S, Character), 
+ss( S:t(contained_in, S, Character), 
   interrogative, Polarity, Tense, simple) -->  
   ( theTextM1(what)  ,
     aux_do(Tense, Agreement), 
@@ -555,12 +567,9 @@ ss( S:contained_in(S, Character),
 %%% Seems silly to make a whole new file for one clause...
 %%%
 
-
-
-%=autodoc
 %% ap( ?ARG1) is semidet.
 %
-% Ap.
+% Adjectival phrases
 %
 ap(Meaning) -->
    adjective(Meaning).

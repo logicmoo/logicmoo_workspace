@@ -103,12 +103,9 @@ da_normal_form(command($pc, NPC, believes(NPC, Proposition)),
 da_normal_form(command($pc, NPC, thinks(NPC, Proposition)),
 	       automa_command($pc, NPC, Proposition, present, simple)).
 
-on_event(DialogAct,
-	 player_interaction,
-	 C,
-	 retract(C/propose_action)) :-
-   C/propose_action:A,
-   A=DialogAct.
+on_event(DialogAct, player_interaction, C, retract(C/propose_action)) :- 
+  C/propose_action:A, 
+  A=DialogAct.
 
 propose_action(A, player_interaction, C) :-
    C/propose_action:A.

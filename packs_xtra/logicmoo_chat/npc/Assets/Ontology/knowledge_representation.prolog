@@ -316,13 +316,13 @@ property_nondefault_value(Object, Property, Value) :-
 
 %% property_value(?Object, ?Property, ?Value)
 %  Object has this value for this property.
-property_value(Object, Property, Value) :-
-   nonvar_ref(Property), !,
-   lookup_property_value(Object, Property, Value).
-property_value(Object, Property, Value) :-
-   iz_a(Object, Kind),
-   property_type(Property, Kind, _ValueType),
-   lookup_property_value(Object, Property, Value).
+t(Property, Object, Value) :- 
+  nonvar_ref(Property),  !, 
+  lookup_property_value(Object, Property, Value).
+t(Property, Object, Value) :- 
+  iz_a(Object, Kind), 
+  property_type(Property, Kind, _ValueType), 
+  lookup_property_value(Object, Property, Value).
 
 
 
@@ -331,10 +331,10 @@ property_value(Object, Property, Value) :-
 %
 % Unique Answer.
 %
-unique_answer(Value, property_value(Object, Property, Value)) :-
-   var(Value),
-   nonvar_ref(Object),
-   nonvar_ref(Property).
+unique_answer(Value, t(Property, Object, Value)) :- 
+  var(Value), 
+  nonvar_ref(Object), 
+  nonvar_ref(Property).
 
 
 
@@ -385,8 +385,8 @@ related_nondefault_aux(Object, D, Relatum) :-
 
 %% related(?Object, ?Relation, ?Relatum)
 %  Object and Relatum are related by Relation.
-related(Object, Relation, Relatum) :-
-   /remote_control/relations/Object/Relation/Relatum.
+t(Relation, Object, Relatum) :-  
+  /remote_control/relations/Object/Relation/Relatum.
 related(Object, Relation, Relatum) :-
    % This relation is canonically stored as its inverse
    inverse_relation(Relation, Inverse),
@@ -396,10 +396,10 @@ related(Object, Relation, Relatum) :-
    % This relation has no inverse or is the canonical form.
    \+ inverse_relation(Relation, _Inverse),
    related_nondefault(Object, Relation, Relatum).
-related(Object, Relation, Relatum) :-
-   var(Relation),
-   declare_related(Object, D, Relatum),
-   decendant_relation(D, Relation).
+t(Relation, Object, Relatum) :- 
+  var(Relation), 
+  declare_related(Object, D, Relatum), 
+  decendant_relation(D, Relation).
 
 
 

@@ -1,10 +1,9 @@
 :- indexical script_qud.
 
-on_enter_state(start, script, C) :-
-   begin(C/initial_history:History,
-	 forall(member(Event, History),
-		assert(C/history/Event)),
-	 script_update_await_list(C)).
+on_enter_state(start, script, C) :-  
+  begin( C/initial_history:History, 
+    forall(member(Event, History), assert(C/history/Event)), 
+    script_update_await_list(C)).
 
 on_event(Event, script, C, script_update(C, Event)) :-
    C/awaiting/AwaitedEvent,

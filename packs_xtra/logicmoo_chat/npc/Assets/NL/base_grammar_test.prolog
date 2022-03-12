@@ -13,19 +13,19 @@ test(completion(s, imperative),
    s_test(_, Mood, [go, to | Completion]).
 
 test(generate(s, in_expression)) :-
-   s_test(location($'Kavi', $'kitchen'), indicative, Generated),
+   s_test(t(location, $'Kavi', $'kitchen'), indicative, Generated),
    Generated == ['Kavi', is, in, the, kitchen ].
 
 test(generate(s, in_expression0)) :-         
-  while_completing( s_test(contained_in($'Kavi', $'kitchen'), indicative, Generated)),
+  while_completing( s_test(t(contained_in, $'Kavi', $'kitchen'), indicative, Generated)),
    Generated == ['Kavi', is, in, the, kitchen ].
 
 test(generate(s, in_expression1)) :-
-         s_test(contained_in($'Kavi', $'kitchen'), indicative, Generated),
+         s_test(t(contained_in, $'Kavi', $'kitchen'), indicative, Generated),
    Generated == ['Kavi', is, in, the, kitchen ].
 
 test(generate(s, in_expression2)) :-
-   s_test(relation($'Kavi',location, $'kitchen'), indicative, Generated),
+   s_test(t(location, $'Kavi', $'kitchen'), indicative, Generated),
    Generated == ['Kavi', is, in, the, kitchen ].
 
 test(generate(s, future_indicative),

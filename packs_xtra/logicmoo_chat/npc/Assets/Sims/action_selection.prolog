@@ -38,14 +38,14 @@ next_action(pause(1)).
 %
 % Best Action.
 %
-best_action(Action) :-
-   ignore(retract(/action_state/candidates)),
-   arg_max(Action,
-	   Score,
-	   (  generate_unique(Action, available_action(Action)),
-	      runnable(Action),
-	      action_score(Action, Score),
-	      assert(/action_state/candidates/Action:Score) )).
+best_action(Action) :- 
+  ignore(retract(/action_state/candidates)), 
+  arg_max( Action, 
+    Score, 
+    ( generate_unique(Action, available_action(Action))  ,
+      runnable(Action), 
+      action_score(Action, Score), 
+      assert(/action_state/candidates/Action:Score))).
 
 
 

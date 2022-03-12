@@ -14,22 +14,22 @@ default_strategy(respond_to_dialog_act(Act),
 %% Greetings and closings
 %%
 
-strategy(respond_to_dialog_act(greet($addressee, $me)),
-	 (assert(Conversation/greeted), greet($me, $addressee))) :-
-   parent_qud_of($task, Conversation),
-   \+ Conversation/greeted.
+strategy( 
+   respond_to_dialog_act(greet($addressee, $me)), 
+   assert(Conversation/greeted), greet($me, $addressee)) :- 
+  parent_qud_of($task, Conversation), 
+  \+Conversation/greeted.
 strategy(respond_to_dialog_act(greet($addressee, $me)),
 	 null) :-
    parent_qud_of($task, Conversation),
    Conversation/greeted.
 
-strategy(respond_to_dialog_act(parting(Them, $me)),
-	 begin(assert(Parent/generated_parting),
-	       parting($me, Them),
-	       pause(1),
-	       call(stop_qud(Parent)))) :-
-   parent_qud_of($task, Parent),
-   \+ Parent/generated_parting.
+strategy( 
+   respond_to_dialog_act(parting(Them, $me)), 
+   begin( assert(Parent/generated_parting), 
+     parting($me, Them), pause(1), call(stop_qud(Parent)))) :- 
+  parent_qud_of($task, Parent), 
+  \+Parent/generated_parting.
 
 strategy(respond_to_dialog_act(parting(_Them, $me)),
 	 call(stop_qud(Parent))) :-

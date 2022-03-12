@@ -4,8 +4,8 @@
 
 
 
-%=autodoc
-%% test_file( ?ARG1, ?NL/base_grammar_test2) is semidet.
+
+%% test_file( ?TestName, -Filename) is semidet.
 %
 % Test File.
 %
@@ -17,7 +17,7 @@ test_file(parse(np, _), "NL/np_tests").
 
 
 
-%=autodoc
+
 %% impose_selectional_constraint( ?Var, ?Type) is semidet.
 %
 % Impose Selectional Constraint.
@@ -27,7 +27,7 @@ impose_selectional_constraint(Var, Type) :-
 
 
 
-%=autodoc
+
 %% selectional_constraint( ?Var, ?Type) is semidet.
 %
 % Selectional Constraint.
@@ -39,7 +39,8 @@ selectional_constraint(_, entity).
 
 %:- randomizable np/7.
 
-%% np(?Meaning, ?Case, Agreement, +GapIn, -GapOut)
+%% np(?Meaning, ?Case, ?Agreement, +GapIn, -GapOut)
+%
 %  Noun phrases
 
 % Gaps
@@ -73,7 +74,7 @@ np((E^S)^S, Case, third:Number, Gap, Gap) -->
 
 
 
-%=autodoc
+
 %% opt_genitive( ?ARG1) is semidet.
 %
 % Opt Genitive.
@@ -90,7 +91,7 @@ np((X^S)^S, _, third:Number, Gap, Gap) -->
 :- public not_generating_or_completing/2, not_completing/3.
 
 
-%=autodoc
+
 %% not_generating_or_completing( +IN1, +In) is semidet.
 %
 % Not Generating Or Completing.
@@ -100,8 +101,7 @@ not_generating_or_completing(In, In) :-
    
 
 
-%=autodoc
-%% not_completing( ?LF, ?ARG2, ?ARG3) is semidet.
+%% not_completing( ?LF, ?Number, ?ARG3) is semidet.
 %
 % Not Completing.
 %
@@ -115,33 +115,32 @@ not_completing(_, In, In) :-
 
 
 
-%=autodoc
-%% possessive_np( ?ARG1, ?ARG2) is semidet.
+
+%% possessive_np( ?ARG1, ?Number) is semidet.
 %
 % Possessive Noun Phrase.
 %
 possessive_np(X, Number) -->  
   ( theTextM1(your)  ,
     kind_noun_s(X, Kind, Number), 
-    {iz_a(X, Kind), owner($addressee, X)}).
+    {iz_a(X, Kind), t(owner, $addressee, X)}).
 
 possessive_np(X, Number) -->  
   ( theTextM1(my)  ,
     kind_noun_s(X, Kind, Number), 
     { iz_a(X, Kind), 
       possessive_pronoun_referrent($speaker, Owner), 
-      owner(Owner, X) }).
+      t(owner, Owner, X) }).
 
 possessive_np(X, Number) -->  
   ( proper_name(Owner, singular)  ,
     theTextM(['\'', s]), 
     kind_noun_s(X, Kind, Number), 
-    {iz_a(X, Kind), owner(Owner, X)}).
+    {iz_a(X, Kind), t(owner, Owner, X)}).
 
 
 
-%=autodoc
-%% possessive_pronoun_referrent( ?ARG1, ?ARG2) is semidet.
+%% possessive_pronoun_referrent( ?ARG1, ?Number) is semidet.
 %
 % Possessive Pronoun Referrent.
 %
@@ -219,7 +218,7 @@ np((X^S)^S, _C, third:singular, Gap, Gap) -->
 
 
 
-%=autodoc
+
 %% object_matching_selectional_constraint( ?X, +Kind) is semidet.
 %
 % Object Matching Selectional Constraint.
@@ -241,7 +240,6 @@ np((Number^S)^S, _, _, Gap, Gap) -->
 
 
 
-%=autodoc
 %% autocomplete_kinds( ?Kind) is semidet.
 %
 % Autocomplete Kinds.
@@ -251,10 +249,9 @@ autocomplete_kinds(person).
 
 
 
-%=autodoc
 %% kind_noun_s( ?X, +Kind, +Singular, ?A, ?B) is semidet.
 %
-% Kind Noun S.
+% Kind Noun Supplimental.
 %
 kind_noun_s(X, Kind, Singular, [A|S], B) :-
     ( (\+ var(A), \+ var(X)) -> true; autocomplete_kinds(Kind)),
@@ -263,16 +260,14 @@ kind_noun_s(X, Kind, Singular, [A|S], B) :-
     
     log(v(kind_noun(Kind, singular,A,B))).
 % kind_noun_s(X, Kind, singular)--> kind_noun(Kind, singular), {log(kind_noun(Kind, singular))}.
-resolve_definite_description(Object, Constraint):-
-  limit(4,resolve_definite_description0(Object, Constraint)),
-  log(ap(resolve_definite_description(Object, Constraint))).
 
-%=autodoc
 %% resolve_definite_description( ?Object, +Constraint) is semidet.
 %
 % Resolve Definite Description.
 %
-
+resolve_definite_description(Object, Constraint):-
+  limit(4,resolve_definite_description0(Object, Constraint)),
+  log(ap(resolve_definite_description(Object, Constraint))).
 
 resolve_definite_description0(X, Constraint) :-
    nonvar(X),
@@ -292,16 +287,10 @@ resolve_definite_description0(_Object, Constraint) :-
    % Punt, and choose whatever Prolog gives us first.
    Constraint.
 
-%%%
-%%% Realizing property values
-%%%
 
-
-
-%=autodoc
-%% property_value_np( ?ARG1, ?ARG2) is semidet.
+%% property_value_np( ?Prop, ?Value) is semidet.
 %
-% Property Value Noun Phrase.
+% Realizing property values Noun Phrase
 %
 property_value_np(_Property, Value)-->theTextM1(Value).
 

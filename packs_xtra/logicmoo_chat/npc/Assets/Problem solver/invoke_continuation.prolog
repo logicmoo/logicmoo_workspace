@@ -12,13 +12,10 @@ step_completed(TaskQud) :-
 
 %% invoke_continuation(+Task)
 %  Switch to current task's continuation, which is Task.
-invoke_continuation( (First, Rest) ) :-
-   !,
-   begin(assert($task/continuation:Rest),
-	 switch_to_task(First)).
-invoke_continuation(K) :-
-   begin(assert($task/continuation:done),
-	 switch_to_task(K)).
+invoke_continuation((First, Rest)) :-  !, 
+  begin(assert($task/continuation:Rest), switch_to_task(First)).
+invoke_continuation(K) :-  
+  begin(assert($task/continuation:done), switch_to_task(K)).
 
 
 
@@ -54,19 +51,17 @@ restart_or_stop_task :-
 %
 % Stop Task.
 %
-stop_task(T) :-
-   begin(assert(T/current:exiting),
-	 maybe_save_log(T),
-	 stop_qud(T)).
+stop_task(T) :-  
+  begin(assert(T/current:exiting), maybe_save_log(T), stop_qud(T)).
 
 %% restart_task(+TaskQud)
 %  Restarts a repeating task
-restart_task(TaskQud) :-
-   begin(perform_restart_retractions(TaskQud),
-	 assertion(TaskQud/repeating_task, "Attempt to restart a non-repeating task"),
-	 assert(TaskQud/current:restarting),
-	 TaskQud/type:task:Goal,
-	 invoke_continuation(TaskQud, Goal)).
+restart_task(TaskQud) :-  
+  begin( perform_restart_retractions(TaskQud), 
+    assertion(TaskQud/repeating_task, "Attempt to restart a non-repeating task"), 
+    assert(TaskQud/current:restarting), 
+    TaskQud/type:task:Goal, 
+    invoke_continuation(TaskQud, Goal)).
 
 
 
@@ -75,9 +70,8 @@ restart_task(TaskQud) :-
 %
 % Perform Restart Retractions.
 %
-perform_restart_retractions(Task) :-
-   forall(retract_on_restart(Task, Assertion),
-	  ignore(retract(Assertion))).
+perform_restart_retractions(Task) :-  
+  forall(retract_on_restart(Task, Assertion), ignore(retract(Assertion))).
 
 
 
@@ -95,9 +89,9 @@ retract_on_restart(Task, Task/monitor).
 
 %% interrupt_step(TaskQud, +InterruptingTask)
 %  Executes InterruptingTask, then returns to previous step.
-interrupt_step(TaskQud, InterruptingTask) :-
-   within_task(TaskQud,
-	       begin([TaskQud/current:C,
-		     TaskQud/continuation:K,
-		     assert(TaskQud/continuation:(C,K)),
-		     switch_to_task(InterruptingTask)])).
+interrupt_step(TaskQud, InterruptingTask) :-  
+  within_task( TaskQud, 
+    begin( [ TaskQud/current:C, 
+             TaskQud/continuation:K, 
+             assert(TaskQud/continuation:(C, K)), 
+             switch_to_task(InterruptingTask)])).
