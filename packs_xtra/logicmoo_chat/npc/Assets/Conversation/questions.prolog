@@ -2,6 +2,13 @@
 %% Responding to questions
 %%
 
+
+
+%=autodoc
+%% strategy_player( ?Player1) is semidet.
+%
+% Strategy Player.
+%
 strategy_player(player).
 
 % Dispatch on question type
@@ -13,12 +20,26 @@ strategy(respond_to_dialog_act(question(Asker, $me, Question,
 	    answer_yes_no(Asker, Canon))) :-
    canonicalize_question(Question, Canon).
 
+
+
+%=autodoc
+%% canonicalize_question( ?Q, ?C) is semidet.
+%
+% Canonicalize Question.
+%
 canonicalize_question(Q, C) :-
    reduce_question(Q, Reduced),
    !,
    canonicalize_question(Reduced, C).
 canonicalize_question(Q, Q).
 
+
+
+%=autodoc
+%% reduce_question( ?X, ?X) is semidet.
+%
+% Reduce Question.
+%
 reduce_question(X:manner(be(C), X),
 		X:wellbeing(C, X)).
 
@@ -119,6 +140,13 @@ default_strategy(enumerate_answers(Asker, Answer, Core, Constraint),
    all(Answer, admitted_truth_value(Asker, Constraint, true), List),
    connective_for_answer(Constraint, Connective).
 
+
+
+%=autodoc
+%% connective_for_answer( ?ARG1, ?And2) is semidet.
+%
+% Connective For Answer.
+%
 connective_for_answer((can(_), _), "or") :- !.
 connective_for_answer(_, "and").
 

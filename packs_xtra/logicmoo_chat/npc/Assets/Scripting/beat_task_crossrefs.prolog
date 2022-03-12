@@ -1,3 +1,10 @@
+
+
+%=autodoc
+%% reduction_clause( :GoalGoal, ?Reduction) is semidet.
+%
+% Reduction Clause.
+%
 reduction_clause(beat_start_task(Beat), StartTask) :-
    beat_start_task(Beat, _, StartTask).
 reduction_clause(beat_idle_task(Beat), IdleTask) :-
@@ -24,4 +31,11 @@ reduction_clause(Goal, quip) :-
    C::clause(quip(Goal, _), _),
    nonvar(Goal).
 
+
+
+%=autodoc
+%% ignore_undeclared_task( ?Quip1, :GoalGOAL2) is semidet.
+%
+% Ignore Undeclared Task.
+%
 ignore_undeclared_task(quip,0).

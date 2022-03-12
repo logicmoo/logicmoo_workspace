@@ -863,7 +863,7 @@ log(mexp(X)):- !, log(v(x=X)),!. % overly verbose
 log(ap(_)):- !. % overly verbose
 log(apr(_)):- !. % overly verbose
 log(v(_)):- !. % overly verbose
-log(X):- dmsg(X).
+log(X):- with_output_to(string(Str),print_tree(X)), dmsg(Str).
 
 starts_with_one_of(String,Word):- sub_string(Word,0,1,_,L),sub_string(String,_,_,_,L).
 

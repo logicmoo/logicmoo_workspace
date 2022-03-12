@@ -836,7 +836,8 @@ toCamelcase(I,O):-toCaseSplit('',first_char_to_upper,I,O).
 %
 % Un Camelcase.
 %
-unCamelcase(I,O):- \+ atom(I),I=O.
+
+%unCamelcase(I,O):- \+ string(I),any_to_string(I,S),
 unCamelcase(I,O):- upcase_atom(I,O),downcase_atom(I,O),!.
 unCamelcase(I,O):-toCaseSplit('_',first_char_to_lower,I,O).
 

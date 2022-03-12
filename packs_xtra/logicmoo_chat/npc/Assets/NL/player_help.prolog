@@ -1,3 +1,10 @@
+
+
+%=autodoc
+%% normalize_task( ?Status, ?Task) is semidet.
+%
+% Normalize Task.
+%
 normalize_task(respond_to_dialog_act(general_help(player, $me)),
 	       general_help).
 normalize_task(respond_to_dialog_act(how_do_i(player, $me, Question)),
@@ -10,6 +17,13 @@ normalize_task(respond_to_dialog_act(if_navigation_command(player, $me, X)),
 	       if_navigation_command(X)).
 normalize_task(respond_to_dialog_act(show_status(player, $me, What)),
 	       show_status(What)).
+
+
+%=autodoc
+%% before( ?ARG1, ?Partner) is semidet.
+%
+% Before.
+%
 before(show_status(notebook),
        { speech(["I should check my notebook",
 		 "to take stock of the situation"]),
@@ -47,11 +61,19 @@ strategy(general_help,
 		  "Even if we're currently in a conversation",
 		  "with someone else."])).
 
-player_question(play) --> [play].
+
+
+%=autodoc
+%% player_question( ?ARG1) is semidet.
+%
+% Player Question.
+%
+player_question(play)-->theTextM1(play).
 normalize_task(how_do_i(play),
 	       general_help).
 
-player_question(control_minds) --> [control, people, '\'', s, minds].
+player_question(control_minds) -->  
+  theTextM([control, people, '\'', s, minds]).
 strategy(how_do_i(control_minds),
 	 monolog(["I can't force people to do things.",
 		  "But I can make them believe silly things.",
@@ -61,7 +83,7 @@ strategy(how_do_i(control_minds),
 		  "will make someone think they're an orange.",
 		  "I can't make people believe all statements,",
 		  "but I can get them to believe a lot."])).
-player_question(read_minds) --> [read, minds].
+player_question(read_minds)-->theTextM([read, minds]).
 strategy(how_do_i(read_minds),
 	 monolog(["I sure wish I could read minds, but I can't.",
 		  "But sometimes I think I can hear people's thoughts.",

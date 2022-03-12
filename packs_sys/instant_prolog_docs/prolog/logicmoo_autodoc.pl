@@ -1,7 +1,7 @@
 
 :- module(logicmoo_autodoc, [autodoc_sanity_tests/0]).
 
-:- use_module(library(instance_prolog_docs)).
+:- use_module(library(instant_prolog_docs)).
 
 %! autodoc_sanity_tests is semidet.
 %

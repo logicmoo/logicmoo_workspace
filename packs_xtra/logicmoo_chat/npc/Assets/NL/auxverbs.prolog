@@ -10,25 +10,35 @@ aux(nogap, affirmative, _Agreement, present, simple, simple, X^X) --> [ ].
 aux(np(NP, Case, Agreement), affirmative, Agreement, Tense, simple, base, X^X) -->
    aux_do(Tense, Agreement),
    np(NP, Case, Agreement, nogap, nogap).
-aux(Gap, negative, Agreement, Tense, simple, base, X^X) -->
-   aux_do(Tense, Agreement),
-   [ not ],
-   aux_gap(Gap).
+aux(Gap, negative, Agreement, Tense, simple, base, X^X) -->  
+  aux_do(Tense, Agreement), theTextM1(not), aux_gap(Gap).
 aux(Gap, Polarity, Agreement, Tense, Aspect, Form, ModalLF) -->
    aux_without_do_support(Gap, Polarity, Agreement, Tense, Aspect, Form, ModalLF).
 
 :- register_lexical_item(not).
 
-aux_without_do_support(Gap, Polarity, Agreement, future, Aspect, Form, X^X) -->
-   [ will ],
-   opt_not(Polarity),
-   aux_gap(Gap),
-   aux_aspect_future(Aspect, Agreement, Form).
-aux_without_do_support(Gap, Polarity, _Agreement, present, simple, base, P^LF) -->
-   [ ModalAux ],
-   { modal_aux(ModalAux,ModalAuxLF), LF =.. [ModalAuxLF, P] },
-   opt_not(Polarity),
-   aux_gap(Gap).
+
+
+%=autodoc
+%% aux_without_do_support( ?ARG1, ?ARG2, ?ARG3, ?ARG4, ?ARG5, ?ARG6, ?ARG7) is semidet.
+%
+% Aux Without Do Support.
+%
+aux_without_do_support( Gap, 
+  Polarity, Agreement, future, Aspect, 
+  Form, X^X) -->  
+  ( theTextM1(will)  ,
+    opt_not(Polarity), 
+    aux_gap(Gap), 
+    aux_aspect_future(Aspect, Agreement, Form)).
+aux_without_do_support( Gap, 
+  Polarity, _Agreement, present, simple, base, 
+  P^LF) -->  
+  ( theTextM1(ModalAux)  ,
+    { modal_aux(ModalAux, ModalAuxLF), 
+      LF=..[ModalAuxLF, P] }, 
+    opt_not(Polarity), 
+    aux_gap(Gap)).
 aux_without_do_support(Gap, Polarity, Agreement, Tense, Aspect, Form, X^X) -->
    aux_aspect(Gap, Polarity, Tense, Aspect, Agreement, Form).
 
@@ -70,20 +80,41 @@ aux_gap(np(LF, Case, Agreement)) -->
    np(LF, Case, Agreement, nogap, nogap).
 
 :- randomizable aux_perfect//3.
+
+
+%=autodoc
+%% aux_perfect( ?ARG1, ?ARG2, ?ARG3) is semidet.
+%
+% Aux Perfect.
+%
 aux_perfect(perfect, _Agreement, past_participle) -->
    [ ].
 aux_perfect(perfect_progressive, Agreement, present_participle) -->
    aux_be(past, Agreement).
 
 :- randomizable opt_not//1.
+
+
+%=autodoc
+%% opt_not( ?ARG1) is semidet.
+%
+% Opt Not.
+%
 opt_not(affirmative) --> [ ].
-opt_not(negative) --> [not].
+opt_not(negative)-->theTextM1(not).
 
 %%%
 %%% Lexical entries
 %%%
 
 :- randomizable(modal_aux/2).
+
+
+%=autodoc
+%% modal_aux( ?Must1, ?Shall2) is semidet.
+%
+% Modal Aux.
+%
 modal_aux(can,can).
 modal_aux(may,may).
 modal_aux(should,should).
@@ -93,43 +124,60 @@ modal_aux(must,shall).
 :- register_all_lexical_items([A], modal_aux(A,_)).
 
 :- randomizable aux_do//2.
-aux_do(present, Agreement) -->
-	[ do ],
-	{ Agreement \== third:singular }.
-aux_do(present, third:singular) -->
-	[ does ].
-aux_do(past, _Agreement) --> [did].
+
+
+%=autodoc
+%% aux_do( ?ARG1, ?ARG2) is semidet.
+%
+% Aux Do.
+%
+aux_do(present, Agreement)-->theTextM1(do), {Agreement\==third:singular}.
+aux_do(present, third:singular) -->  
+  theTextM1(does).
+aux_do(past, _Agreement)-->theTextM1(did).
 
 :- register_lexical_items([do, does, did, doing]).
 
 :- randomizable aux_have//2.
-aux_have(present, Agreement) -->
-	[ have ],
-	{ Agreement \== third:singular }.
-aux_have(present, third:singular) -->
-	[ has ].
-aux_have(past, _Agreement) --> [had].
-aux_have(future, _Agreement) --> [have].
+
+
+%=autodoc
+%% aux_have( ?ARG1, ?ARG2) is semidet.
+%
+% Aux Have.
+%
+aux_have(present, Agreement)-->theTextM1(have), {Agreement\==third:singular}.
+aux_have(present, third:singular) -->  
+  theTextM1(has).
+aux_have(past, _Agreement)-->theTextM1(had).
+aux_have(future, _Agreement)-->theTextM1(have).
 
 :- register_lexical_items([have, has, had, having]).
 
 :- randomizable aux_be//2.
-aux_be(present, first:singular) -->
-	[ am ].
-aux_be(present, second:singular) -->
-	[ are ].
-aux_be(present, third:singular) -->
-	[ is ].
-aux_be(present, _:plural) -->
-	[ are ].
-aux_be(past, first:singular) -->
-	[ was ].
-aux_be(past, second:singular) -->
-	[ were ].
-aux_be(past, third:singular) -->
-	[ was ].
-aux_be(past, _:plural) -->
-	[ were ].
+
+
+%=autodoc
+%% aux_be( ?ARG1, ?ARG2) is semidet.
+%
+% Aux Be.
+%
+aux_be(present, first:singular) -->  
+  theTextM1(am).
+aux_be(present, second:singular) -->  
+  theTextM1(are).
+aux_be(present, third:singular) -->  
+  theTextM1(is).
+aux_be(present, _:plural) -->  
+  theTextM1(are).
+aux_be(past, first:singular) -->  
+  theTextM1(was).
+aux_be(past, second:singular) -->  
+  theTextM1(were).
+aux_be(past, third:singular) -->  
+  theTextM1(was).
+aux_be(past, _:plural) -->  
+  theTextM1(were).
 aux_be(Tense, _Agreement) -->
    % Only applies if we already know this is future tense
    { Tense == future },

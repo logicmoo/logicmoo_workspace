@@ -20,12 +20,40 @@
    know_about_kind/1, closed_word_naf/1.
 :- external believes/2, know/2, knows_value/2.
 
+
+
+%=autodoc
+%% thinks( ?Me, ?Proposition) is semidet.
+%
+% Thinks.
+%
 thinks($me, Proposition) :-
    truth_value(Proposition, true).
+
+
+%=autodoc
+%% believes( ?Me, ?Proposition) is semidet.
+%
+% Believes.
+%
 believes($me, Proposition) :-
    truth_value(Proposition, true).
+
+
+%=autodoc
+%% know( ?Me, ?Proposition) is semidet.
+%
+% Know.
+%
 know($me, Proposition) :-
    truth_value(Proposition, true).
+
+
+%=autodoc
+%% knows_if( ?Me, ?Proposition) is semidet.
+%
+% Knows If.
+%
 knows_if($me, Proposition) :-
    truth_value(Proposition, true).
 
@@ -33,6 +61,13 @@ knows_if($me, Proposition) :-
 %  True when this character has knowledge about the truth of
 %  Predicate.
 
+
+
+%=autodoc
+%% informed_about( ?Me, ?P) is semidet.
+%
+% Informed About.
+%
 informed_about($me, P) :- know_whether(P).
 
 %% truth_value(:P, ?TruthValue)
@@ -55,6 +90,13 @@ determine_truth_value((P, Q), Value) :-
    !,
    determine_truth_value(P, LeftValue),
    continue_conjunction(Q, LeftValue, Value).
+
+
+%=autodoc
+%% continue_conjunction( ?ARG1, ?Unknown2, ?Unknown3) is semidet.
+%
+% Continue Conjunction.
+%
 continue_conjunction(_, false, false).
 continue_conjunction(_, unknown, unknown).
 continue_conjunction(Q, LValue, Value) :-
@@ -65,6 +107,13 @@ determine_truth_value((P ; Q), Value) :-
    !,
    determine_truth_value(P, LeftValue),
    continue_disjunction(Q, LeftValue, Value).
+
+
+%=autodoc
+%% continue_disjunction( ?ARG1, ?ARG2, ?ARG3) is semidet.
+%
+% Continue Disjunction.
+%
 continue_disjunction(_, true, true).
 continue_disjunction(Q, LValue, Value) :-
    LValue \= true,
@@ -74,6 +123,13 @@ determine_truth_value(~P, Value) :-
    !,
    determine_truth_value(P, NotValue),
    invert_truth_value(NotValue, Value).
+
+
+%=autodoc
+%% invert_truth_value( ?Unknown1, ?Unknown2) is semidet.
+%
+% Invert Truth Value.
+%
 invert_truth_value(true, false).
 invert_truth_value(false, true).
 invert_truth_value(unknown, unknown).
@@ -95,6 +151,13 @@ determine_truth_value(P, unknown) :-
    \+ P,
    \+ ~P.
 
+
+
+%=autodoc
+%% closed_word_naf( ?ARG1) is semidet.
+%
+% Closed Word Negation-by-faliure.
+%
 closed_word_naf(iz_a(_,_)).
 
 %% know_true(:Sentence)
@@ -154,6 +217,13 @@ know_whether(related(Object, Relation, Relatum)) :-
    !,
    know_relation(Relation, Object, Relatum).
 
+
+
+%=autodoc
+%% know_about_object( ?Theclub1) is semidet.
+%
+% Know About Object.
+%
 know_about_object($me).
 know_about_object(Person) :-
    related($me, know, Person);know($me, Person).
@@ -162,8 +232,22 @@ know_about_object(theclub).
 
 know_whether(_).
 
+
+
+%=autodoc
+%% know_relation( ?Relation, ?Object, ?Relatum) is semidet.
+%
+% Know Relation.
+%
 know_relation(_Relation, Object, _Relatum) :-
    know_about_object(Object).
+
+
+%=autodoc
+%% know_property( ?Property, ?Object, ?Value) is semidet.
+%
+% Know Property.
+%
 know_property(_Property, Object, _Value) :-
    know_about_object(Object).
 
@@ -199,12 +283,26 @@ admitted_truth_value(Listener, P, Value) :-
    truth_value(P, Value),
    consistent_with_pretend_truth_value(Listener, P, Value).
 
+
+
+%=autodoc
+%% consistent_with_pretend_truth_value( ?Listener, ?P, ?Value) is semidet.
+%
+% Consistent Using Pretend Truth Value.
+%
 consistent_with_pretend_truth_value(Listener, P, Value) :-
    pretend_truth_value(Listener, P, PretendValue) ->
        (Value=PretendValue)
        ;
        true.
 
+
+
+%=autodoc
+%% and_truth_values( ?ARG1, ?ARG2, ?Unknown3) is semidet.
+%
+% And Truth Values.
+%
 and_truth_values(true, true, true) :-
    !.
 and_truth_values(false, _, false) :-

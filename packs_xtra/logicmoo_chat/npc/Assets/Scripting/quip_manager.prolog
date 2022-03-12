@@ -9,6 +9,13 @@ strategy(Task, run_quip(QuipName)) :-
 strategy(Task, run_quip(Task)) :-
    quip(Task, _).
 
+
+
+%=autodoc
+%% normalize_task( ?Status, ?Task) is semidet.
+%
+% Normalize Task.
+%
 normalize_task(run_quip(String:Markup),
 	       begin(monolog([String:Markup]),
 		     assert(/quips/spoken/String))) :-

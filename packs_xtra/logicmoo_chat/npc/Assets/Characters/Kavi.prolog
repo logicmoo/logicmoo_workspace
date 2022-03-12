@@ -1,3 +1,10 @@
+
+
+%=autodoc
+%%  ?Kavi:: ?Patrol_kitchen is semidet.
+%
+% ::.
+%
 $'Kavi'::hot_button_topic($macguffin).
 $'Kavi'::hot_button_topic($bedroom).
 $'Kavi'::hot_button_topic($bookshelf).

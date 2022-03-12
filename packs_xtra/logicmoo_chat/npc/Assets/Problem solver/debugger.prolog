@@ -1,8 +1,22 @@
+
+
+%=autodoc
+%% display_task_debugger is semidet.
+%
+% Display Task Debugger.
+%
 display_task_debugger :-
    pause_game,
    generate_unsorted_overlay("Breakpoint",
 			     debugger_line(Line),
 			     Line).
+
+
+%=autodoc
+%% debugger_line( ?STRING1) is semidet.
+%
+% Debugger Line.
+%
 debugger_line(line("Who:\t", $me)).
 debugger_line(line("Task:\t", Task)) :-
    $task/type:task:Task.
@@ -19,6 +33,13 @@ fkey_command(alt-c, "Continue from problem solver breakpoint.") :-
    character(C),
    C::continue_from_breakpoint.
 
+
+
+%=autodoc
+%% continue_from_breakpoint is semidet.
+%
+% Continue Converted From Breakpoint.
+%
 continue_from_breakpoint :-
    qud(C, task),
    C/current:breakpoint,

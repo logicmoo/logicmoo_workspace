@@ -87,6 +87,13 @@ construe(question(_, _, LF, _, _), mention(Concept)) :-
 construe(command(_, _, Command), mention(Concept)) :-
    mentions(Command, Concept).
 
+
+
+%=autodoc
+%% mentions( ?ARG1, ?Concept) is semidet.
+%
+% Mentions.
+%
 mentions(Concept, Concept) :-
    nonvar(Concept).
 mentions(Term, Subterm) :-

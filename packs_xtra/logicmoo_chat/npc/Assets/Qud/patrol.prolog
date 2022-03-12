@@ -23,8 +23,22 @@ patrol_destination(Prop) :-
    prop(Prop),
    in_room(Prop, _).
 
+%=autodoc
+%% patrol_destination( +Prop) is semidet.
+%
+% Patrol Destination.
+%
+
+
 % Update location bids.
 rebid_patrol(Qud) :-
    forall(Qud/visited/Prop:Time,
 	  begin(Score is ($now-Time)-distance(Prop, $me),
 		assert(Qud/location_bids/Prop:Score))).
+
+%=autodoc
+%% rebid_patrol( ?Qud) is semidet.
+%
+% Rebid Patrol.
+%
+

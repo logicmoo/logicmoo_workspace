@@ -31,6 +31,13 @@ next_action(Action) :-
    best_action(Action).
 next_action(pause(1)).
 
+
+
+%=autodoc
+%% best_action( ?Action) is semidet.
+%
+% Best Action.
+%
 best_action(Action) :-
    ignore(retract(/action_state/candidates)),
    arg_max(Action,
@@ -40,10 +47,24 @@ best_action(Action) :-
 	      action_score(Action, Score),
 	      assert(/action_state/candidates/Action:Score) )).
 
+
+
+%=autodoc
+%% available_action( ?Action) is semidet.
+%
+% Available Action.
+%
 available_action(Action) :-
    qud(Qud, Type),
    propose_action(Action, Type, Qud).
 
+
+
+%=autodoc
+%% action_score( ?Action, ?TotalScore) is semidet.
+%
+% Action Score.
+%
 action_score(Action, TotalScore) :-
    sumall(Score,
 	  ( generate_unique(Construal, construal(Action, Construal)),
@@ -64,3 +85,10 @@ actions :-
 	  begin(write(Action),
 		write("\t"),
 		writeln(Score))).
+
+%=autodoc
+%% actions is semidet.
+%
+% Actions.
+%
+

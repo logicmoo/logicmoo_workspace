@@ -4,84 +4,229 @@
 
 :- public headline/1.
 
+
+
+%=autodoc
+%% headline( +String) is semidet.
+%
+% Headline.
+%
 headline(String) :-
    randomize(headline(Words, [])),
    word_list(String, Words).
 
+
+
+%=autodoc
+%% headline is semidet.
+%
+% Headline.
+%
 headline --> opt_intro, headline_body.
 
 :- randomizable opt_intro/2, intro_phrase/2.
 
-opt_intro --> [].
-opt_intro --> intro_phrase, [':'].
 
-intro_phrase --> [and, this, just, in].
-intro_phrase --> [breaking, news, ':'].
-intro_phrase --> [on, a, lighter, note].
+
+%=autodoc
+%% opt_intro is semidet.
+%
+% Opt Intro.
+%
+opt_intro --> [].
+opt_intro-->intro_phrase, theTextM1(:).
+
+
+
+%=autodoc
+%% intro_phrase is semidet.
+%
+% Intro Phrase.
+%
+intro_phrase-->theTextM([and, this, just, in]).
+intro_phrase-->theTextM([breaking, news, :]).
+intro_phrase-->theTextM([on, a, lighter, note]).
 
 :- randomizable headline_body/2, soundbite/2, said/3.
 
+
+
+%=autodoc
+%% headline_body is semidet.
+%
+% Headline Body.
+%
 headline_body --> soundbite.
 
+
+
+%=autodoc
+%% soundbite is semidet.
+%
+% Soundbite.
+%
 soundbite --> speaker(X), said(X), crazy_thing(X).
 
-said(_) --> [said].
-said(_) --> [decreed].
-said(_) --> [opined].
-said(_) --> [claimed].
-said(X) --> [raised, eyebrows, when], she(X), said(X).
 
-she(X) --> {male(X)}, [he].
-she(X) --> {female(X)}, [she].
-she(_) --> [it].
+
+%=autodoc
+%% said( ?ARG1) is semidet.
+%
+% Said.
+%
+said(_)-->theTextM1(said).
+said(_)-->theTextM1(decreed).
+said(_)-->theTextM1(opined).
+said(_)-->theTextM1(claimed).
+said(X) -->  
+  theTextM([raised, eyebrows, when]), she(X), said(X).
+
+
+
+%=autodoc
+%% she( ?ARG1) is semidet.
+%
+% She.
+%
+she(X)-->{male(X)}, theTextM1(he).
+she(X)-->{female(X)}, theTextM1(she).
+she(_)-->theTextM1(it).
 
 :- randomizable speaker/3, speaker_name/3, speaker_title/3.
+
+
+%=autodoc
+%% speaker( ?ARG1) is semidet.
+%
+% Speaker.
+%
 speaker(X) --> speaker_title(X), speaker_name(X).
 
+
+
+%=autodoc
+%% male( ?Newcaster1) is semidet.
+%
+% Male.
+%
 male(newcaster).
+
+
+%=autodoc
+%% news_commentator( ?Judy1) is semidet.
+%
+% News Commentator.
+%
 news_commentator(judy).
-speaker_name(newcaster) --> [newcaster].
-speaker_name(newcaster) --> [donald].
 
 
+%=autodoc
+%% speaker_name( ?ARG1) is semidet.
+%
+% Speaker Name.
+%
+speaker_name(newcaster)-->theTextM1(newcaster).
+speaker_name(newcaster)-->theTextM1(donald).
+
+
+
+
+%=autodoc
+%% female( ?Judy1) is semidet.
+%
+% Female.
+%
 female(judy).
 news_commentator(judy).
-speaker_name(judy) --> [little, judy].
-speaker_title(judy) --> [former, governor].
-speaker_title(judy) --> [animatronic, markov, generator].
+speaker_name(judy)-->theTextM([little, judy]).
 
-speaker_title(X) --> {news_commentator(X)}, [news, commentator].
+
+%=autodoc
+%% speaker_title( ?ARG1) is semidet.
+%
+% Speaker Title.
+%
+speaker_title(judy)-->theTextM([former, governor]).
+speaker_title(judy)-->theTextM([animatronic, markov, generator]).
+
+speaker_title(X)-->{news_commentator(X)}, theTextM([news, commentator]).
 
 :- randomizable crazy_thing/3, goodguys/4, heroic_act/4, sports_team/1.
 
+
+
+%=autodoc
+%% crazy_thing( ?ARG1) is semidet.
+%
+% Crazy Thing.
+%
 crazy_thing(Speaker) --> goodguys(Speaker, Group), heroic_act(Speaker, Group).
 
-goodguys(_, X) --> [X], { sports_team(X) }.
 
+
+%=autodoc
+%% goodguys( ?ARG1, ?ARG2) is semidet.
+%
+% Goodguys.
+%
+goodguys(_, X)-->theTextM1(X), {sports_team(X)}.
+
+
+
+%=autodoc
+%% sports_team( ?Cowboys1) is semidet.
+%
+% Sports Team.
+%
 sports_team(seahawks).
 sports_team(cowboys).
 
-goodguys(_, scouts) --> ['SCOUTS'].
+goodguys(_, scouts)-->theTextM1('SCOUTS').
+
+
+%=autodoc
+%% organization( ?Media1) is semidet.
+%
+% Organization.
+%
 organization(scouts).
 
-goodguys(_, parents) --> [the, parents].
+goodguys(_, parents)-->theTextM([the, parents]).
 organization(parents).
 
-goodguys(_, doctors) --> [doctors].
-goodguys(_, environmentalists) --> [environmentalists].
-goodguys(judy, media) --> [the, news, media].
+goodguys(_, doctors)-->theTextM1(doctors).
+goodguys(_, environmentalists)-->theTextM1(environmentalists).
+goodguys(judy, media)-->theTextM([the, news, media]).
 organization(media).
 
-goodguys(newcaster, heros) --> [heros].
-goodguys(judy, players) --> [players].
-goodguys(judy, those_people) --> ['THOSE', people].
-
-heroic_act(Speaker, Group) -->
-   [are, really, secret],
-   goodguy_members(Speaker, OtherGroup),
-   { Group \= OtherGroup }.
-heroic_act(_, _) --> [are, trying, to, help, us].
+goodguys(newcaster, heros)-->theTextM1(heros).
+goodguys(judy, players)-->theTextM1(players).
+goodguys(judy, those_people)-->theTextM(['THOSE', people]).
 
 
-goodguy_members(Speaker, Group) --> [members, of], goodguys(Speaker, Group), { organization(Group) }.
+
+%=autodoc
+%% heroic_act( ?ARG1, ?ARG2) is semidet.
+%
+% Heroic Single Doer Action.
+%
+heroic_act(Speaker, Group) -->  
+  ( theTextM([are, really, secret])  ,
+    goodguy_members(Speaker, OtherGroup), 
+    {Group\=OtherGroup}).
+heroic_act(_, _) -->  
+  theTextM([are, trying, to, help, us]).
+
+
+
+
+%=autodoc
+%% goodguy_members( ?ARG1, ?ARG2) is semidet.
+%
+% Goodguy Members.
+%
+goodguy_members(Speaker, Group) -->  
+  ( theTextM([members, of])  ,
+    goodguys(Speaker, Group), 
+    {organization(Group)}).
 goodguy_members(Speaker, Group) --> goodguys(Speaker, Group).

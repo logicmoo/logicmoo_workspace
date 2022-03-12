@@ -24,6 +24,13 @@
 
 ~(Q) :- compound(Q), Q = ~P,!, P.
 
+%=autodoc
+%% ~ ?Q is semidet.
+%
+% ~.
+%
+
+
 %
 % @(+Goal)
 %   Succeeds if Goal is defeasibly derivable from
@@ -31,6 +38,13 @@
 %
 
 @ Goal :- def_der(root,Goal).
+
+%=autodoc
+%% @ :GoalGoal is semidet.
+%
+% @.
+%
+
 
 %
 % strict_der(+KB,+Goal)
@@ -43,6 +57,13 @@ strict_der(root,Goal) :-
       % knowledge base if and only if it succeeds.
         !,
         call(Goal).
+
+%=autodoc
+%% strict_der( ?Root, :GoalGoal) is semidet.
+%
+% Strict Der.
+%
+
 
 strict_der(KB,(First,Rest)) :-
       % A conjunction is strictly derivable if and only if
@@ -75,6 +96,13 @@ strict_der(KB,Goal) :-
 :- discontiguous def_der/2.
 
 def_der(_,true) :- !.
+
+%=autodoc
+%% def_der( ?ARG1, ?ARG2) is semidet.
+%
+% Def Der.
+%
+
       % `true' is defeasibly derivable from any
       % knowledge base.
 
@@ -98,6 +126,13 @@ def_der(_,Goal) :-
         Goal.
 
 dprolog_treat_as_primitive(kind_of(_,_)).
+
+%=autodoc
+%% dprolog_treat_as_primitive( ?ARG1) is semidet.
+%
+% Dprolog Treat Converted To Primitive.
+%
+
 dprolog_treat_as_primitive(iz_a(_,_)).
 dprolog_treat_as_primitive(true_after(_,_)).
 dprolog_treat_as_primitive(Goal) :-
@@ -163,6 +198,13 @@ def_der(KB,Goal) :-
 contrary(Clause1,Clause2) :-
         incompatible_cl(Clause1,Clause2).
 
+%=autodoc
+%% contrary( ?Clause1, ?Clause2) is semidet.
+%
+% Contrary.
+%
+
+
 contrary(Clause1,Clause2) :-
         incompatible_cl(Clause2,Clause1).
 
@@ -177,6 +219,13 @@ contrary(Clause1,Clause2) :-
 
 comp(~Atom,Atom) :-
         !.
+
+%=autodoc
+%% comp( ?Atom, ?Atom) is semidet.
+%
+% Comp.
+%
+
 
 comp(Atom,~Atom).
 
@@ -195,6 +244,13 @@ rebutted(KB,Rule) :-
         contrary(Head,Contrary),
         strict_der(KB,Contrary),
         !.
+
+%=autodoc
+%% rebutted( ?KB, ?Rule) is semidet.
+%
+% Rebutted.
+%
+
 
 rebutted(KB,Rule) :-
       % Any rule may be rebutted by an ordinary
@@ -229,6 +285,13 @@ undercut(KB,(Head := Body)) :-
         \+ sup_rule((Head := Body),(Contrary :^ Body)),
         !.
 
+%=autodoc
+%% undercut( ?KB, ?Head) is semidet.
+%
+% Undercut.
+%
+
+
 %
 % sup_rule(+Rule1,+Rule2)
 %   Succeeds if the body of Rule2 is defeasibly derivable 
@@ -240,6 +303,13 @@ undercut(KB,(Head := Body)) :-
 
 sup_rule(Rule1,Rule2) :-
         sup(Rule1,Rule2).
+
+%=autodoc
+%% sup_rule( ?Rule1, ?Rule2) is semidet.
+%
+% Sup Rule.
+%
+
 
 sup_rule((_ := Body1),(_ := Body2)) :-
         def_der(Body1,Body2),
@@ -254,6 +324,13 @@ sup_rule((_ := Body1),(_ :^ Body2)) :-
 %
 
 conjunct(Clause,Clause) :- !.
+
+%=autodoc
+%% conjunct( ?ARG1, ?Clause) is semidet.
+%
+% Conjunct.
+%
+
 
 conjunct(Clause,(Clause,_)) :- !.
 
@@ -271,6 +348,13 @@ conjunct(Clause,(_,Rest)) :-
 def_rule(root,(Head := Body)) :-
         !,
         (Head := Body).
+
+%=autodoc
+%% def_rule( ?Root, ?Head) is semidet.
+%
+% Def Rule.
+%
+
 
 def_rule(_,(Head := Body)) :-
         (Head := Body),
@@ -291,6 +375,13 @@ preempted(KB,Rule) :-
         contrary(Head,Contrary),
         strict_der(KB,Contrary),
         !.
+
+%=autodoc
+%% preempted( ?KB, ?Rule) is semidet.
+%
+% Preempted.
+%
+
 
 preempted(KB,Rule) :-
       % Any rule may be preempted by an ordinary
@@ -322,6 +413,13 @@ preempt :-
         retract(preemption),
         !,
         write('Preemption is disabled.'), nl.
+
+%=autodoc
+%% preempt is semidet.
+%
+% Preempt.
+%
+
 
 preempt :-
         assert(preemption),

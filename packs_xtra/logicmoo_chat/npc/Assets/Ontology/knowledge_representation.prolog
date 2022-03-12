@@ -14,8 +14,22 @@
 
 :- dynamic(superkind_array/2).
 
+
+
+%=autodoc
+%% test_file( ?ARG1, ?NL/base_grammar_test2) is semidet.
+%
+% Test File.
+%
 test_file(integrity(_), "Ontology/integrity_checks").
 
+
+
+%=autodoc
+%% nonvar_ref( ?V) is semidet.
+%
+% Nonvar Ref.
+%
 nonvar_ref(V):- atomic(V),!.
 nonvar_ref(V):- nonvar(V), V='#'(_).
 
@@ -59,6 +73,13 @@ iz_a(Object, Kind) :-
    array_member(Sub, Subs),
    is_a_aux(Object, Sub).
 
+
+
+%=autodoc
+%% is_a_aux( ?Object, +Kind) is semidet.
+%
+% If Is A A Aux.
+%
 is_a_aux(Object, Kind) :-
    /remote_control/Object/kind/Kind.
 is_a_aux(Object, Kind) :-
@@ -76,6 +97,13 @@ base_kind(Object, Kind) :-
 %%% Kinds and the kind hierarchy
 %%%
 
+
+
+%=autodoc
+%% valid_kind( ?Kind) is semidet.
+%
+% Valid Kind.
+%
 valid_kind(Kind) :-
    var(Kind),
    !.
@@ -86,6 +114,13 @@ valid_kind(number).
 valid_kind(string).
 valid_kind(_TODO).
 
+
+
+%=autodoc
+%% kind_of( ?ARG1, ?K) is semidet.
+%
+% Kind Of.
+%
 kind_of(K, K).
 kind_of(Sub, Super) :-
    nonvar_ref(Sub),
@@ -97,23 +132,58 @@ kind_of(Sub, Super) :-
    subkind_array(Super, Subs),
    array_member(Sub, Subs).
 
+
+
+%=autodoc
+%% subkind_of( ?Sub, ?Super) is semidet.
+%
+% Subkind Of.
+%
 subkind_of(Sub, Super) :-
    kind_of(Sub, Super),
    Sub \= Super.
 
 :- public immediate_superkind_of/2.
 
+
+
+%=autodoc
+%% immediate_superkind_of( ?K, ?Sub) is semidet.
+%
+% Immediate Superkind Of.
+%
 immediate_superkind_of(K, Sub) :-
    immediate_kind_of(Sub, K).
 
+
+
+%=autodoc
+%% superkinds( +Kind, +Superkinds) is semidet.
+%
+% Superkinds.
+%
 superkinds(Kind, Superkinds) :-
    nonvar_ref(Kind),
    topological_sort([Kind], immediate_kind_of, Superkinds).
 
+
+
+%=autodoc
+%% subkinds( +Kind, +Subkinds) is semidet.
+%
+% Subkinds.
+%
 subkinds(Kind, Subkinds) :-
    nonvar_ref(Kind),
    topological_sort([Kind], immediate_superkind_of, Subkinds).
 
+
+
+%=autodoc
+%% superkind_array( ?Kind, ?Array) is semidet.
+%
+% Superkind Array.
+%
 superkind_array(Kind, Array) :-
    call_with_step_limit(10000, superkinds(Kind, List)),
    list_to_array(List, Array),
@@ -123,6 +193,13 @@ superkind_array(Kind, Array) :-
 
 :- dynamic(subkind_array/2).
 
+
+
+%=autodoc
+%% subkind_array( ?Kind, ?Array) is semidet.
+%
+% Subkind Array.
+%
 subkind_array(Kind, Array) :-
    call_with_step_limit(10000, subkinds(Kind, List)),
    list_to_array(List, Array),
@@ -145,6 +222,13 @@ subkind_array(Kind, Array) :-
 %    !,
 %    (LUB = Candidate ; lub_not_including(A1, A2, LUB, [Candidate | AlreadyFound])).
 
+
+
+%=autodoc
+%% kind_lub( +Kind1, +Kind2, ?LUB) is semidet.
+%
+% Kind Lub.
+%
 kind_lub(Kind1, Kind2, LUB) :-
    nonvar_ref(Kind1),
    nonvar_ref(Kind2),
@@ -154,6 +238,13 @@ kind_lub(Kind1, Kind2, LUB) :-
    array_member(LUB, A2),
    !.
 
+
+
+%=autodoc
+%% kind_glb( +Kind1, +Kind2, ?GLB) is semidet.
+%
+% Kind Glb.
+%
 kind_glb(Kind1, Kind2, GLB) :-
    nonvar_ref(Kind1),
    nonvar_ref(Kind2),
@@ -233,11 +324,25 @@ property_value(Object, Property, Value) :-
    property_type(Property, Kind, _ValueType),
    lookup_property_value(Object, Property, Value).
 
+
+
+%=autodoc
+%% unique_answer( ?Value, ?Object) is semidet.
+%
+% Unique Answer.
+%
 unique_answer(Value, property_value(Object, Property, Value)) :-
    var(Value),
    nonvar_ref(Object),
    nonvar_ref(Property).
 
+
+
+%=autodoc
+%% lookup_property_value( ?Object, ?Property, ?Value) is semidet.
+%
+% Lookup Property Value.
+%
 lookup_property_value(Object, Property, Value) :-
    declare_value(Object, Property, Value).
 lookup_property_value(Object, Property, Value) :-
@@ -265,6 +370,13 @@ related_nondefault(Object, Relation, Relatum) :-
    decendant_relation(D, Relation),
    related_nondefault_aux(Object, D, Relatum).
 
+
+
+%=autodoc
+%% related_nondefault_aux( ?Object, ?D, ?Relatum) is semidet.
+%
+% Related Nondefault Aux.
+%
 related_nondefault_aux(Object, D, Relatum) :-
    declare_related(Object, D, Relatum).
 related_nondefault_aux(Object, D, Relatum) :-
@@ -289,11 +401,25 @@ related(Object, Relation, Relatum) :-
    declare_related(Object, D, Relatum),
    decendant_relation(D, Relation).
 
+
+
+%=autodoc
+%% decendant_relation( ?ARG1, ?R) is semidet.
+%
+% Decendant Relation.
+%
 decendant_relation(R, R).
 decendant_relation(D, R) :-
    implies_relation(I, R),
    decendant_relation(D, I).
 
+
+
+%=autodoc
+%% ancestor_relation( ?ARG1, ?R) is semidet.
+%
+% Ancestor Relation.
+%
 ancestor_relation(R,R).
 ancestor_relation(A, R) :-
    implies_relation(R, I),

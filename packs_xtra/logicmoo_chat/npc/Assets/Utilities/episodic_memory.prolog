@@ -7,6 +7,13 @@
 :- dynamic past_event/1.
 :- external memorable_event/1.
 
+
+
+%=autodoc
+%% maybe_remember_event( ?Event) is semidet.
+%
+% Maybe Remember Event.
+%
 maybe_remember_event(Event) :-
    memorable_event(Event),
    asserta(past_event(Event)),

@@ -33,9 +33,23 @@ strategy(pick_preferred(Task, List), Preferred) :-
 
 :- external prefer_strategy/3.
 
+
+
+%=autodoc
+%% preferred_strategy( ?Task, ?First, ?Preferred) is semidet.
+%
+% Preferred Strategy.
+%
 preferred_strategy(Task, [First | Rest], Preferred) :-
    max_preference(Task, First, Rest, Preferred).
 
+
+
+%=autodoc
+%% max_preference( ?Task, ?ARG2, ?ARG3, ?Default) is semidet.
+%
+% Max Preference.
+%
 max_preference(_Task, Default, [], Default).
 max_preference(Task, Default, [First | Rest], Max) :-
    prefer_strategy(Task, First, Default),

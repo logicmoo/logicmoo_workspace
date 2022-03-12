@@ -9,12 +9,26 @@ strategy(respond_to_dialog_act(assertion(Speaker,_, LF, Tense, Aspect)),
    canonicalize_assertion(Speaker, Modalized, CM),
    admitted_truth_value(Speaker, CM, Truth).
 
+
+
+%=autodoc
+%% canonicalize_assertion( ?Asserter, ?A, ?C) is semidet.
+%
+% Canonicalize Assertion.
+%
 canonicalize_assertion(Asserter, A, C) :-
    reduce_assertion(Asserter, A, Reduced),
    !,
    canonicalize_assertion(Asserter, Reduced, C).
 canonicalize_assertion(_, A, A).
 
+
+
+%=autodoc
+%% reduce_assertion( ?Asserter, ?Asserter, ?P) is semidet.
+%
+% Reduce Assertion.
+%
 reduce_assertion(Asserter, believes(Asserter, P), P).
 reduce_assertion(Asserter, thinks(Asserter, P), P).
 reduce_assertion(Asserter, not(P), not(C)) :-
@@ -29,6 +43,13 @@ default_strategy(respond_to_assertion(Speaker, ModalLF, unknown),
 		       tell(/hearsay/Speaker/ModalLF))) :-
    heard_hearsay(ModalLF) -> Response="I do not know." ; Response="Really?".
 
+
+
+%=autodoc
+%% heard_hearsay( ?ModalLF) is semidet.
+%
+% Heard Hearsay.
+%
 heard_hearsay(ModalLF) :-
    /hearsay/_/Assertion, Assertion=ModalLF.
 
@@ -40,6 +61,13 @@ strategy(respond_to_dialog_act(question_answer(Speaker,_, LF)),
 %% Kluges to keep characters from inappropriately contradicting other characters answers
 %%
 
+
+
+%=autodoc
+%% be( ?Player1, ?X) is semidet.
+%
+% Be.
+%
 be(X,X).
 be(Character, Name) :-
    property_value(Character, given_name, Name).

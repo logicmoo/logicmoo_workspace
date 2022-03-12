@@ -12,6 +12,13 @@ generate_text(SpeechAct, Text) :-
     contracted_form(Words, Contracted),
     word_list(Text, Contracted))).
 
+
+
+%=autodoc
+%% generate_text_for_menu( ?SpeechAct, ?Text) is semidet.
+%
+% Generate Text For Menu.
+%
 generate_text_for_menu(SpeechAct, Text) :-
    bind_dialog_indexicals_for_output(SpeechAct,
    (step_limit(10000),
@@ -34,6 +41,13 @@ input_completion(InputText, CompletionText, SpeechAct) :-
    word_list(CompletionText, CompletionWords))).
 
 :- public well_formed_dialog_act/1.
+
+
+%=autodoc
+%% well_formed_dialog_act( ?ARG1) is semidet.
+%
+% Well Formed Dialog Single Doer Action.
+%
 well_formed_dialog_act(acceptance(_, _, _, _)).
 well_formed_dialog_act(general_help(_,_)).
 well_formed_dialog_act(how_do_i(_,_,_)).
@@ -63,12 +77,26 @@ well_formed_dialog_act(automa_command(_, Target, _, _, _)) :-
 well_formed_dialog_act(show_status(_,_,_)).
 
    
+
+
+%=autodoc
+%% bind_dialog_indexicals_for_input( ?NPC, ?G) is semidet.
+%
+% Bind Dialog Indexicals For Input.
+%
 bind_dialog_indexicals_for_input(NPC, G):-
    with_bind(input_from_player, true,
     with_bind(speaker, $me,
      with_bind(addressee, NPC,
       with_bind(dialog_group, $me, G)))).
 
+
+
+%=autodoc
+%% bind_dialog_indexicals_for_input( ?G) is semidet.
+%
+% Bind Dialog Indexicals For Input.
+%
 bind_dialog_indexicals_for_input(G):-
   in_conversation_with_npc(NPC),!, 
    bind_dialog_indexicals_for_input(NPC, G).
@@ -78,23 +106,58 @@ bind_dialog_indexicals_for_input(G) :-
      with_bind(addressee, $me,
       with_bind(dialog_group, $me, G)))).
 
+
+
+%=autodoc
+%% bind_indexicals_for_addressing_character_named( ?ARG1, ?ARG2) is semidet.
+%
+% Bind Indexicals For Addressing Character Named.
+%
 bind_indexicals_for_addressing_character_named(Name, G) --> 
    {proper_name(Character, [Name]),
     character(Character)},
     bind_indexicals_for_addressing_character(Character, G).
 
+
+
+%=autodoc
+%% bind_indexicals_for_addressing_character( ?ARG1, ?ARG2) is semidet.
+%
+% Bind Indexicals For Addressing Character.
+%
 bind_indexicals_for_addressing_character($me, G) --> G.
 bind_indexicals_for_addressing_character(Character, G) -->
    with_bind(speaker, $me,
     with_bind(addressee, Character, G)).
 
+
+
+%=autodoc
+%% with_bind( ?N, ?V, ?DCGDCG, ?S, ?E) is semidet.
+%
+% Using Bind.
+%
 with_bind(N, V, DCG, S, E):- with_bind(N, V, phrase(DCG, S, E)).
 
+
+
+%=autodoc
+%% in_conversation_with_npc( ?NPC) is semidet.
+%
+% In Conversation Using Automatic Character.
+%
 in_conversation_with_npc(NPC) :-
    qud(C),
    C/partner/NPC,
    NPC \= player.
 
+
+
+%=autodoc
+%% bind_dialog_indexicals_for_output( ?SpeechAct, ?G) is semidet.
+%
+% Bind Dialog Indexicals For Output.
+%
 bind_dialog_indexicals_for_output(SpeechAct, G) :-
    with_bind(generating_nl, true,
     with_bind(discourse_variables, [],
@@ -103,16 +166,51 @@ bind_dialog_indexicals_for_output(SpeechAct, G) :-
      with_bind(speaker, A,
       with_bind(addressee, P, G))))).
 
+
+
+%=autodoc
+%% generating_nl is semidet.
+%
+% Generating Nl.
+%
 generating_nl :-
    X = $generating_nl, X.
 
+
+
+%=autodoc
+%% input_from_player is semidet.
+%
+% Input Converted From Player.
+%
 input_from_player :-
    X = $input_from_player, X.
 
+
+
+%=autodoc
+%% while_parsing( ?G) is semidet.
+%
+% While Parsing.
+%
 while_parsing(G) :-
  with_bind(input_from_player=true,G).
+
+
+%=autodoc
+%% while_generating( ?G) is semidet.
+%
+% While Generating.
+%
 while_generating(G) :-
  with_bind(generating_nl=true,G).
+
+
+%=autodoc
+%% while_completing( ?G) is semidet.
+%
+% While Completing.
+%
 while_completing(G) :-
  bind_dialog_indexicals_for_input(G).
 
@@ -125,6 +223,13 @@ player_idle_time(Time) :-
    $global_root/last_player_activity:Last,
    Time is $now-Last.
 
+
+
+%=autodoc
+%% player_idle_for_at_least( ?Time) is semidet.
+%
+% Player Idle For When Least.
+%
 player_idle_for_at_least(Time) :-
    player_idle_time(T),
    T >= Time.

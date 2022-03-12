@@ -90,6 +90,13 @@ true_after(Action, Condition) :-
    all(PC, postcondition(Action, PC), AllPCs),
    follows_from(Condition, AllPCs).
 
+
+
+%=autodoc
+%% follows_from( ?A, ?L) is semidet.
+%
+% Follows Converted From.
+%
 follows_from( (A, B) , L) :- nonvar(A),
    follows_from(A, L),
    follows_from(B, L).
@@ -104,5 +111,12 @@ follows_from(P, L) :-
    clause(P, C),
    follows_from(C, L).
 
+
+
+%=autodoc
+%% inferrable_postcondition( ?ARG1) is semidet.
+%
+% Inferrable Postcondition.
+%
 inferrable_postcondition(here(_)).
 inferrable_postcondition(away(_)).

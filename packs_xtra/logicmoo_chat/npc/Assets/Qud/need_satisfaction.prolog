@@ -112,6 +112,13 @@ increase_satisfaction(Need, Delta) :-
 last_satisfied_time(Need, Time) :-
    /needs/last_satisfied/Need:Time.
 
+
+
+%=autodoc
+%% initialize_last_satisfied_times is semidet.
+%
+% Initialize Last Satisfied Times.
+%
 initialize_last_satisfied_times :-
    forall(need(Need, DepletionTime),
 	  begin(random_member(InitialState, [30, 40, 50, 60, 70, 80, 90]),

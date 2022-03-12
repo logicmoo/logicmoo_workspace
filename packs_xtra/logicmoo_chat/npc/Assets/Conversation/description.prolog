@@ -2,6 +2,13 @@
 %% Describing objects
 %%
 
+
+
+%=autodoc
+%% normalize_task( ?Status, ?Task) is semidet.
+%
+% Normalize Task.
+%
 normalize_task(describe(X),
 	       describe(X, general, null)).
 
@@ -52,6 +59,13 @@ strategy(describe_relation(Linkage, Object, Relation, Relatum, Termination),
    forall(ancestor_relation(A, Relation),
 	  tell(/mentioned_to/ $addressee /Object/A/Relatum)).
 
+
+
+%=autodoc
+%% surface_form( ?Object, ?Object) is semidet.
+%
+% Surface Form.
+%
 surface_form(property_value(Object, Property, Value),
 	     question_answer(property_value(Object, Property, Value))).
 
@@ -62,6 +76,13 @@ surface_form(related(Object, Relation, Relatum),
 %% Determining lists of relevant attributes
 %%
 
+
+
+%=autodoc
+%% remove_redundant_attributes( ?ARG1, ?ARG2) is semidet.
+%
+% Remove Redundant Attributes.
+%
 remove_redundant_attributes([ ], [ ]).
 remove_redundant_attributes([Relation/Relatum | Rest], RestRemoved) :-
    decendant_relation(Antecedant, Relation),
@@ -72,6 +93,13 @@ remove_redundant_attributes([X | Rest], [X | Final]) :-
    remove_implicants(X, Rest, WithoutImplicants),
    remove_redundant_attributes(WithoutImplicants, Final).
 
+
+
+%=autodoc
+%% remove_implicants( ?ARG1, ?ARG2, ?ARG3) is semidet.
+%
+% Remove Implicants.
+%
 remove_implicants(_, [ ], [ ]).
 remove_implicants(Rel/Object, [Implicant/Object | Rest], Rest) :-
    ancestor_relation(Implicant, Rel),
@@ -79,6 +107,13 @@ remove_implicants(Rel/Object, [Implicant/Object | Rest], Rest) :-
 remove_implicants(Attribute, [X | Rest] , [X | RestRemoved]) :-
    remove_implicants(Attribute, Rest, RestRemoved).
 
+
+
+%=autodoc
+%% interesting_attribute( ?Listener, ?Purpose, ?Object, ?Attribute) is semidet.
+%
+% Interesting Attribute.
+%
 interesting_attribute(Listener, Purpose, Object, Attribute) :-
    interesting_property(Listener, Purpose, Object, Attribute)
    ;
@@ -86,6 +121,13 @@ interesting_attribute(Listener, Purpose, Object, Attribute) :-
 
 :- dynamic(visibility/2).
 
+
+
+%=autodoc
+%% interesting_property( ?Listener, ?Purpose, ?Object, +Prop) is semidet.
+%
+% Interesting Property.
+%
 interesting_property(Listener, Purpose, Object, Prop:Value) :-
    property_nondefault_value(Object, Prop, Value),
    \+ /mentioned_to/ $addressee /Object/Prop:Value,
@@ -95,6 +137,13 @@ interesting_property(Listener, Purpose, Object, Prop:Value) :-
 			property_value(Object, Prop, Value),
 			true).
 
+
+
+%=autodoc
+%% interesting_relation( ?Listener, ?Purpose, ?Object, ?Relation) is semidet.
+%
+% Interesting Relation.
+%
 interesting_relation(Listener, Purpose, Object, Relation/Relatum) :-
    related_nondefault(Object, Relation, Relatum),
    \+ /mentioned_to/ $addressee /Object/Relation/Relatum,

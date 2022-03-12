@@ -6,10 +6,31 @@
 %%% Find the macguffin
 %%%
 
+
+
+%=autodoc
+%% plot_goal( ?UPARAM1) is semidet.
+%
+% Plot Goal.
+%
 plot_goal(location($macguffin, $pc)).
+
+
+%=autodoc
+%% plot_goal_flavor_text( ?ARG1, ?I have to get my macguffin back!2) is semidet.
+%
+% Plot Goal Flavor Text.
+%
 plot_goal_flavor_text(location($macguffin, $pc),
 		      "I have to get my macguffin back!").
 
+
+
+%=autodoc
+%% objective_description( ?Trip_escaped1, ?You freed Trip!2) is semidet.
+%
+% Objective Description.
+%
 objective_description(location($macguffin, $pc),
 		      "You got your macguffin back!").
 objective_description(trip_escaped,
@@ -19,6 +40,13 @@ objective_description(trip_escaped,
 %%% Context menu stuff
 %%%
 
+
+
+%=autodoc
+%% menu_action( ?X, ?Pc) is semidet.
+%
+% Menu Action.
+%
 menu_action(X, examine($pc, X)) :-
    \+ character(X),
    \+ iz_a(X, container),
@@ -34,7 +62,28 @@ menu_action(X, search_for($pc, X, _)) :-
 %%% Search the house
 %%%
 plot_subgoal(house_searched, location($macguffin, $pc)).
+
+%=autodoc
+%% plot_subgoal( ?UPARAM1, ?UPARAM2) is semidet.
+%
+% Plot Subgoal.
+%
+
+
+
+%=autodoc
+%% house_searched is semidet.
+%
+% House Searched.
+%
 house_searched :- /searched/kavis_house.
+
+
+%=autodoc
+%% plot_goal_idle_task( ?House_searched, ?I'll search the house) is semidet.
+%
+% Plot Goal Idle Task.
+%
 plot_goal_idle_task(house_searched,
 		    {
 		     mental_monolog("I'll search the house"),
@@ -44,6 +93,13 @@ plot_goal_idle_task(house_searched,
 				   mental_monolog(["Nothing seems to be hidden."]))
 		    }).
 
+
+
+%=autodoc
+%% plot_goal_achieves( ?House_searched1, ?ARG2) is semidet.
+%
+% Plot Goal Achieves.
+%
 plot_goal_achieves(house_searched,
 		   location($macguffin, $pc)).
 plot_goal_achieves(house_searched,
@@ -53,6 +109,13 @@ plot_goal_achieves(house_searched,
 %%% Exposition
 %%%
 
+
+
+%=autodoc
+%% beat( ?React_to_trip1, ?ARG2) is semidet.
+%
+% Beat.
+%
 beat(exposition,
      {
  start($'Kavi'): goto($pc),
@@ -105,6 +168,13 @@ beat(search_house,
       menu_command($'Kavi'):bring($'Kavi', $pc, $macguffin)
      }).
 
+
+
+%=autodoc
+%% after( ?ARG1, ?ARG2) is semidet.
+%
+% After.
+%
 after(pickup($report),
       describe($report)).
 
@@ -134,6 +204,13 @@ beat(react_to_photo,
      }).
 
 
+
+
+%=autodoc
+%%  ?Kavi:: ?Patrol_kitchen is semidet.
+%
+% ::.
+%
 $'Kavi'::personal_strategy(patrol_kitchen,
 			 { goto(Object), face(Object), pause(Time) }) :-
    once((random_member(Object, [$refrigerator, $'kitchen sink', $'kitchen table']),
@@ -213,6 +290,13 @@ strategy(press($pc, $'magic button'),
 
 :- public release_captive/0, vanish_captive/0.
 
+
+
+%=autodoc
+%% release_captive is semidet.
+%
+% Release Captive.
+%
 release_captive :-
    force_move($captive, $living_room),
    component_of_gameobject_with_type(SimController, $captive, $'SimController'),
@@ -221,6 +305,13 @@ release_captive :-
    set_property(Renderer, visible, true),
    maybe_remember_event(captive_released).
 
+
+
+%=autodoc
+%% vanish_captive is semidet.
+%
+% Vanish Captive.
+%
 vanish_captive :-
    force_move($captive, $'DestroyedObjects'),
    component_of_gameobject_with_type(SimController, $captive, $'SimController'),
@@ -244,6 +335,13 @@ beat(exit_house,
 %%% Ownership
 %%%
 
+
+
+%=autodoc
+%% owner( ?Kavi, ?X) is semidet.
+%
+% Owner.
+%
 owner($'Kavi', X) :- X \= $macguffin.
 owner($pc, $macguffin).
 

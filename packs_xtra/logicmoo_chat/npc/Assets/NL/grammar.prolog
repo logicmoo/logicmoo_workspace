@@ -5,6 +5,13 @@
 
 :- randomizable utterance//1, stock_phrase//1.
 
+
+
+%=autodoc
+%% utterance( ?ARG1) is semidet.
+%
+% Utterance.
+%
 utterance(DialogAct) --> stock_phrase(DialogAct).
 utterance(question(Speaker, Addressee, LF, T, A)) -->
    sentence(LF, interrogative, affirmative, T, A),
@@ -30,14 +37,28 @@ utterance(agree(Speaker, Addressee,true,_LF)) -->
 utterance(agree(Speaker, Addressee,false, _LF)) -->
    (means(no);means(false);means(incorrect);means(disagree)),
    { current_dialog_pair(Speaker, Addressee) }.
-utterance(automa_command(Speaker, Addressee, LF, T, A)) -->
-   [ fnord ],
-   s(LF, indicative, affirmative, T, A),
-   { current_dialog_pair(Speaker, Addressee) }.
+utterance(automa_command(Speaker, Addressee, LF, T, A)) -->  
+  ( theTextM1(fnord)  ,
+    s(LF, indicative, affirmative, T, A), 
+    {current_dialog_pair(Speaker, Addressee)}).
 
-means(Yes)-->[Yes].
-means(Yes)-->[Syn],{is_synonym(Yes,Syn)}.
 
+
+%=autodoc
+%% means( ?ARG1) is semidet.
+%
+% Means.
+%
+means(Yes)-->theTextM1(Yes).
+means(Yes)-->theTextM1(Syn), {is_synonym(Yes, Syn)}.
+
+
+
+%=autodoc
+%% is_synonym( ?Yes1, ?Right2) is semidet.
+%
+% If Is A Synonym.
+%
 is_synonym(yes,right).
 
 %%
@@ -48,46 +69,67 @@ is_synonym(yes,right).
 %% action is taken.
 %%
 
-utterance(offer(Speaker, Addressee, SpeakerAct, AddresseeAct)) -->
-   s(AddresseeAct, imperative, affirmative, _, _),
-   [ and ],
-   s(SpeakerAct, indicative, affirmative, future, simple),
-   { current_dialog_pair(Speaker, Addressee) },
-   opt_stop(conditional).
-utterance(offer(Speaker, Addressee, SpeakerAct, AddresseeAct)) -->
-   [ if ],
-   s(AddresseeAct, indicative, affirmative, _, _),
-   opt_comma,
-   s(SpeakerAct, indicative, affirmative, future, simple),
-   { current_dialog_pair(Speaker, Addressee) },
-   opt_stop(conditional).
+utterance(offer(Speaker, Addressee, SpeakerAct, AddresseeAct)) -->  
+  ( s(AddresseeAct, imperative, affirmative, _, _)  ,
+    theTextM1(and), 
+    s(SpeakerAct, indicative, affirmative, future, simple), 
+    {current_dialog_pair(Speaker, Addressee)}, 
+    opt_stop(conditional)).
+utterance(offer(Speaker, Addressee, SpeakerAct, AddresseeAct)) -->  
+  ( theTextM1(if)  ,
+    s(AddresseeAct, indicative, affirmative, _, _), 
+    opt_comma, 
+    s(SpeakerAct, indicative, affirmative, future, simple), 
+    {current_dialog_pair(Speaker, Addressee)}, 
+    opt_stop(conditional)).
 
-utterance(inaction(Speaker, Addressee, SpeakerAct, AddresseeAct)) -->
-   s(AddresseeAct, imperative, affirmative, _, _),
-   [ or ],
-   s(SpeakerAct, indicative, affirmative, future, simple),
-   { current_dialog_pair(Speaker, Addressee) },
-   opt_stop(conditional).
+utterance(inaction(Speaker, Addressee, SpeakerAct, AddresseeAct)) -->  
+  ( s(AddresseeAct, imperative, affirmative, _, _)  ,
+    theTextM1(or), 
+    s(SpeakerAct, indicative, affirmative, future, simple), 
+    {current_dialog_pair(Speaker, Addressee)}, 
+    opt_stop(conditional)).
 
-utterance(acceptance(Speaker, Addressee, _, _)) -->
-   [ okay ],
-   { current_dialog_pair(Speaker, Addressee) },
-   opt_stop(agreement).
+utterance(acceptance(Speaker, Addressee, _, _)) -->  
+  theTextM1(okay), {current_dialog_pair(Speaker, Addressee)}, opt_stop(agreement).
 
+
+
+%=autodoc
+%% opt_comma is semidet.
+%
+% Opt Comma.
+%
 opt_comma --> [].
-opt_comma --> [ '.' ].
+opt_comma-->theTextM1('.').
 
 
 :- register_lexical_items([and, or, if, okay]).
 
+
+
+%=autodoc
+%% current_dialog_pair( ?ARG1, ?ARG2) is semidet.
+%
+% Current Dialog Pair.
+%
 current_dialog_pair($speaker, $addressee).
 
 %
 % Stock phrases
 %
 
-stock_phrase(do_not_understand($speaker, $addressee, _)) --> [ huh, '?'].
-stock_phrase(prompt_player($me, $me)) --> [type, something].
+
+
+%=autodoc
+%% stock_phrase( ?ARG1) is semidet.
+%
+% Stock Phrase.
+%
+stock_phrase(do_not_understand($speaker, $addressee, _)) -->  
+  theTextM([huh, ?]).
+stock_phrase(prompt_player($me, $me)) -->  
+  theTextM([type, something]).
 
 :-register_lexical_items([huh, type, something]).
 
@@ -95,20 +137,27 @@ stock_phrase(greet($speaker, Who)) -->
    [Salutation, ','],
    { member(Salutation, ['Hey', 'Hello', 'Hi']) },
    proper_name(Who, singular).
-stock_phrase(greet($speaker, $addressee)) --> ['Hi', there].
+stock_phrase(greet($speaker, $addressee)) -->  
+  theTextM(['Hi', there]).
 
 :- register_lexical_items(['Hey', 'Hellow', 'Hi']).
 
-stock_phrase(apology($speaker, $addressee)) --> ['Sorry'].
-stock_phrase(excuse_self($speaker, $addressee)) --> ['Excuse', me].
+stock_phrase(apology($speaker, $addressee)) -->  
+  theTextM1('Sorry').
+stock_phrase(excuse_self($speaker, $addressee)) -->  
+  theTextM(['Excuse', me]).
 
 :- register_lexical_items(['Sorry', 'Excuse']).
 
-stock_phrase(parting($speaker, $addressee)) --> [X], { member(X, [bye, byebye, goodbye]) }.
-stock_phrase(parting($speaker, $addressee)) --> [see, you].
-stock_phrase(parting($speaker, $addressee)) --> [be, seeing, you].
+stock_phrase(parting($speaker, $addressee)) -->  
+  theTextM1(X), {member(X, [bye, byebye, goodbye])}.
+stock_phrase(parting($speaker, $addressee)) -->  
+  theTextM([see, you]).
+stock_phrase(parting($speaker, $addressee)) -->  
+  theTextM([be, seeing, you]).
 
-stock_phrase(command($speaker, $addressee, end_game($addressee, $addressee))) --> [ end, game ].
+stock_phrase(command($speaker, $addressee, end_game($addressee, $addressee))) -->  
+  theTextM([end, game]).
 
 :- register_lexical_items([end, game]).
 
@@ -116,34 +165,41 @@ stock_phrase(command($speaker, $addressee, end_game($addressee, $addressee))) --
 % Help queries from the player
 %
 
-stock_phrase(general_help(player, $me)) -->
-   [help].
+stock_phrase(general_help(player, $me)) -->  
+  theTextM1(help).
 
 :- register_lexical_item(help).
 
-stock_phrase(general_help(player, $me)) -->
-   [what, do, 'I', do, '?'].
-stock_phrase(how_do_i(player, $me, Q)) -->
-   [how, do, Us],
-   { member(Us, ['I', you, we]) },
-   player_question(Q),
-   ['?'].
+stock_phrase(general_help(player, $me)) -->  
+  theTextM([what, do, 'I', do, ?]).
+stock_phrase(how_do_i(player, $me, Q)) -->  
+  ( theTextM([how, do, Us])  ,
+    {member(Us, ['I', you, we])}, 
+    player_question(Q), 
+    theTextM1(?)).
 
-stock_phrase(objective_query(player, $me)) -->
-   [what, am, 'I', trying, to, do, '?'].
-stock_phrase(objective_query(player, $me)) -->
-   [what, are, Us],
-   { member(Us, [we, you]) },
-   [trying, to, do, '?'].
+stock_phrase(objective_query(player, $me)) -->  
+  theTextM([what, am, 'I', trying, to, do, ?]).
+stock_phrase(objective_query(player, $me)) -->  
+  ( theTextM([what, are, Us])  ,
+    {member(Us, [we, you])}, 
+    theTextM([trying, to, do, ?])).
 
 :- register_lexical_items([red, green, yellow, white, turn, mean]).
 
-stock_phrase(color_query(player, $me, Yellow)) -->
-   [what, does, Yellow, text, mean, '?'].
-stock_phrase(color_query(player, $me, Yellow)) -->
-   [why, does, my, text, turn, Yellow, '?'].
+stock_phrase(color_query(player, $me, Yellow)) -->  
+  theTextM([what, does, Yellow, text, mean, ?]).
+stock_phrase(color_query(player, $me, Yellow)) -->  
+  theTextM([why, does, my, text, turn, Yellow, ?]).
 
 
+
+
+%=autodoc
+%% nsew( ?ATOM1) is semidet.
+%
+% Nsew.
+%
 nsew(north).
 nsew(south).
 nsew(east).
@@ -159,57 +215,60 @@ stock_phrase(if_navigation_command(player, $me, X)) -->
    %{ input_from_player },
    nsew_nav_command(X).
 
-nsew_nav_command(X) -->
-   [go, X],
-   { nsew(X) }.
 
-nsew_nav_command(X) -->
-   [go, to, the, X],
-   { nsew(X) }.
 
-nsew_nav_command(X) -->
-   [go, to, X],
-   { nsew(X) }.
+%=autodoc
+%% nsew_nav_command( ?ARG1) is semidet.
+%
+% Nsew Nav Command.
+%
+nsew_nav_command(X)-->theTextM([go, X]), {nsew(X)}.
 
-nsew_nav_command(X) -->
-   [X],
-   { nsew(X) }.
+nsew_nav_command(X) -->  
+  theTextM([go, to, the, X]), {nsew(X)}.
 
-stock_phrase(show_status(player, $pc, What)) -->
-   [ check ],
-   status_display_term_with_determiner(What).
+nsew_nav_command(X)-->theTextM([go, to, X]), {nsew(X)}.
+
+nsew_nav_command(X)-->theTextM1(X), {nsew(X)}.
+
+stock_phrase(show_status(player, $pc, What)) -->  
+  theTextM1(check), status_display_term_with_determiner(What).
 
 stock_phrase(show_status(player, $pc, What)) -->
    status_display_term(What).
 
-stock_phrase(show_status(player, $pc, What)) -->
-   [ show, me ],
-   status_display_term_with_determiner(What).
+stock_phrase(show_status(player, $pc, What)) -->  
+  theTextM([show, me]), status_display_term_with_determiner(What).
 
-stock_phrase(show_status(player, $pc, What)) -->
-   [ look, at ],
-   status_display_term_with_determiner(What).
+stock_phrase(show_status(player, $pc, What)) -->  
+  theTextM([look, at]), status_display_term_with_determiner(What).
 
-stock_phrase(show_status(player, $pc, What)) -->
-   [ examine ],
-   status_display_term_with_determiner(What).
+stock_phrase(show_status(player, $pc, What)) -->  
+  theTextM1(examine), status_display_term_with_determiner(What).
 
 :- register_lexical_items([examine, look, at, show, check, inventory, notebook, vocabulary ]).
 
 :- randomizable status_display_term/3.
-status_display_term(inventory) -->
-   [ inventory ].
-status_display_term(notebook) -->
-   [ notebook ].
-status_display_term(vocabulary) -->
-   [ vocabulary ].
 
-status_display_term_with_determiner(What) -->
-   [ my ],
-   status_display_term(What).
-status_display_term_with_determiner(What) -->
-   [ the ],
-   status_display_term(What).
+
+%=autodoc
+%% status_display_term( ?ARG1) is semidet.
+%
+% Status Display Term.
+%
+status_display_term(inventory)-->theTextM1(inventory).
+status_display_term(notebook)-->theTextM1(notebook).
+status_display_term(vocabulary)-->theTextM1(vocabulary).
+
+
+
+%=autodoc
+%% status_display_term_with_determiner( ?ARG1) is semidet.
+%
+% Status Display Term Using Determiner.
+%
+status_display_term_with_determiner(What)-->theTextM1(my), status_display_term(What).
+status_display_term_with_determiner(What)-->theTextM1(the), status_display_term(What).
 
 %
 % Increments produced by the discourse generator
@@ -221,12 +280,26 @@ utterance(discourse_increment(Speaker, Addressee, Fragments)) -->
       with_bind(addressee, Addressee,
        discourse_fragments(Fragments))).
 
+
+
+%=autodoc
+%% discourse_fragments( ?ARG1) is semidet.
+%
+% Discourse Fragments.
+%
 discourse_fragments([]) -->
    [ ].
 discourse_fragments([F | Fs]) -->
    discourse_fragment(F),
    discourse_fragments(Fs).
 
+
+
+%=autodoc
+%% discourse_fragment( ?ARG1) is semidet.
+%
+% Discourse Fragment.
+%
 discourse_fragment(question_answer(X)) -->
    {!}, sentence(X, indicative, affirmative, present, simple).
 discourse_fragment(s(X)) -->
@@ -234,18 +307,14 @@ discourse_fragment(s(X)) -->
 discourse_fragment(uninterpreted_s(X)) -->
    {!}, sentence(X, indicative, affirmative, present, simple).
 
-discourse_fragment(np(X)) -->
-   {kind(X), !}, [a, X].
+discourse_fragment(np(X))-->{kind(X), !}, theTextM([a, X]).
 
 discourse_fragment(np(X)) -->
    {!}, np((X^S)^S, subject, third:singular, nogap, nogap).
 
-discourse_fragment(String) -->
-   { string(String), ! },
-   [ String ].
-discourse_fragment(String:_Markup) -->
-   { string(String), ! },
-   [ String ].
+discourse_fragment(String)-->{string(String), !}, theTextM1(String).
+discourse_fragment(String:_Markup) -->  
+  {string(String), !}, theTextM1(String).
 
 %
 % Interface to action and conversation systems
@@ -256,6 +325,13 @@ discourse_fragment(String:_Markup) -->
 
 :- public register_utterance_types/0.
 
+
+
+%=autodoc
+%% register_utterance_types is semidet.
+%
+% Register Utterance  Types.
+%
 register_utterance_types :-
    forall(( clause(utterance(A, _, _), _),
 	    nonvar(A) ),
@@ -263,6 +339,13 @@ register_utterance_types :-
    forall(clause(stock_phrase(A, _, _), _),
 	  assert_action_functor(A)).
 
+
+
+%=autodoc
+%% assert_action_functor( ?Structure) is semidet.
+%
+% Assert Action Functor.
+%
 assert_action_functor(Structure) :-
    functor(Structure, Functor, Arity),
    ( action_functor(Functor, Arity) -> true
@@ -271,6 +354,13 @@ assert_action_functor(Structure) :-
        assert_if_unew(precondition(Structure, /perception/nobody_speaking)),
        add_conversation_dispatch_clause(Structure) ) ).
 
+
+
+%=autodoc
+%% add_conversation_dispatch_clause( ?Structure) is semidet.
+%
+% Add Conversation Dispatch Clause.
+%
 add_conversation_dispatch_clause(Structure) :-
    functor(Structure, Functor, Arity),
    indexical_named(me, Me),

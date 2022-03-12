@@ -31,6 +31,13 @@ menu_dialog(Character, automa_command($pc, Character, LF, present, simple)) :-
 menu_dialog(Character, command($pc, Character, Action)) :-
    menu_command(Character, Action).
 
+
+
+%=autodoc
+%% menu_action( ?X, ?Pc) is semidet.
+%
+% Menu Action.
+%
 menu_action($pc, stop($pc)) :-
    everyday_life_task_busy.
 

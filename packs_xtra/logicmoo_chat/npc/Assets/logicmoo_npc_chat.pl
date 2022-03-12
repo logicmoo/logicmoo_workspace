@@ -266,5 +266,15 @@ gen_all:- between(1,6,L),length(S,L),utterance(X,S,[]),print_tree_with_final(S=X
 :- fixup_exports.
 %:- rtrace(do_all_character_initializations).
 
+
+fadoc:- fadoc2,fadoc1.
+
+fadoc1:- 
+   forall(tmpu:is_unity_file(Filename),autodoc_module_file(npc,Filename)).
+fadoc2:- 
+  autodoc_file(library('prologmud/*.pl')),
+  autodoc_file(library('prologmud/*/*.pl')),
+  autodoc_file(library('prologmud/*/*/*.pl')),!.
+  
 :- do_all_character_initializations.
 

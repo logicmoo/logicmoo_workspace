@@ -25,6 +25,13 @@ term_append(Term, AdditionalArgs, ExtendedTerm) :-
 %% assertion(:P. +Message)
 %  Throw exception if P is unprovable.
 assertion(P, _) :- P, !.
+
+%=autodoc
+%% assertion( ?P, ?UPARAM2) is semidet.
+%
+% Assertion.
+%
+
 assertion(P, Message) :-
    throw(error(assertion_failed(Message, P), null)).
 :- endif.
@@ -36,6 +43,13 @@ thaw(X) :- frozen_u(X, G), G.
 :- endif.
 
 
+
+
+%=autodoc
+%% test_file( ?ARG1, ?NL/base_grammar_test2) is semidet.
+%
+% Test File.
+%
 test_file(freeze(_), "Utilities/freeze_tests").
 
 %% if(:Condition, :Then, :Else)
@@ -62,12 +76,40 @@ if(_, _, E) :-
 %  Run Imperatives in order if Condition is true, else do nothing
 when(P, Imperative) :-
    P -> begin(Imperative) ; true.
+
+
+%=autodoc
+%% when( ?P, ?Imperative1, ?Imperative2) is semidet.
+%
+% When.
+%
 when(P, Imperative1, Imperative2) :-
    P -> begin(Imperative1, Imperative2) ; true.
+
+
+%=autodoc
+%% when( ?P, ?Imperative1, ?Imperative2, ?Imperative3) is semidet.
+%
+% When.
+%
 when(P, Imperative1, Imperative2, Imperative3) :-
    P -> begin(Imperative1, Imperative2, Imperative3) ; true.
+
+
+%=autodoc
+%% when( ?P, ?Imperative1, ?Imperative2, ?Imperative3, ?Imperative4) is semidet.
+%
+% When.
+%
 when(P, Imperative1, Imperative2, Imperative3, Imperative4) :-
    P -> begin(Imperative1, Imperative2, Imperative3, Imperative4) ; true.
+
+
+%=autodoc
+%% when( ?P, ?Imperative1, ?Imperative2, ?Imperative3, ?Imperative4, ?Imperative5) is semidet.
+%
+% When.
+%
 when(P, Imperative1, Imperative2, Imperative3, Imperative4, Imperative5) :-
    P -> begin(Imperative1, Imperative2, Imperative3, Imperative4, Imperative5) ; true.
 
@@ -84,12 +126,40 @@ when(P, Imperative1, Imperative2, Imperative3, Imperative4, Imperative5) :-
 %  Run Imperatives in order unless Condition is true.
 unless(P, Imperative) :-
    P -> true ; begin(Imperative).
+
+
+%=autodoc
+%% unless( ?P, ?Imperative1, ?Imperative2) is semidet.
+%
+% Unless.
+%
 unless(P, Imperative1, Imperative2) :-
    P -> true ; begin(Imperative1, Imperative2).
+
+
+%=autodoc
+%% unless( ?P, ?Imperative1, ?Imperative2, ?Imperative3) is semidet.
+%
+% Unless.
+%
 unless(P, Imperative1, Imperative2, Imperative3) :-
    P -> true ; begin(Imperative1, Imperative2, Imperative3).
+
+
+%=autodoc
+%% unless( ?P, ?Imperative1, ?Imperative2, ?Imperative3, ?Imperative4) is semidet.
+%
+% Unless.
+%
 unless(P, Imperative1, Imperative2, Imperative3, Imperative4) :-
    P -> true ; begin(Imperative1, Imperative2, Imperative3, Imperative4).
+
+
+%=autodoc
+%% unless( ?P, ?Imperative1, ?Imperative2, ?Imperative3, ?Imperative4, ?Imperative5) is semidet.
+%
+% Unless.
+%
 unless(P, Imperative1, Imperative2, Imperative3, Imperative4, Imperative5) :-
    P -> true ; begin(Imperative1, Imperative2, Imperative3, Imperative4, Imperative5).
 

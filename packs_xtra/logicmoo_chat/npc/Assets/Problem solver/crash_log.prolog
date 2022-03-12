@@ -39,6 +39,13 @@ save_task_logs(_,_).
 fkey_command(alt-l, "Display crash log") :-
    update_crash_log_display.
 
+
+
+%=autodoc
+%% update_crash_log_display is semidet.
+%
+% Update Crash Log Display.
+%
 update_crash_log_display :-
    begin(current_log_character(C),
 	 if(( current_log_uid(UID),
@@ -51,6 +58,13 @@ update_crash_log_display :-
 						    line("No logs saved so far") ]),
 				      Line))).
 
+
+
+%=autodoc
+%% task_log_line( ?Character, ?UID, ?Log, ?Color) is semidet.
+%
+% Task Log Line.
+%
 task_log_line(Character, _UID, _Log, color(Color, line("Who:\t", Character))) :-
    (Character= $pc) -> Color="lime" ; Color="yellow".
 task_log_line(_Character, UID, _Log, line("UID:\t", UID)).
@@ -78,6 +92,13 @@ fkey_command(alt-leftarrow, "Show logs for previous character") :-
    ignore(retract($global_root/gui_state/current_log_uid)),
    update_crash_log_display.
 
+
+
+%=autodoc
+%% current_log_character( ?C) is semidet.
+%
+% Current Log Character.
+%
 current_log_character(C) :-
    $global_root/gui_state/current_log_character:C,
    !.
@@ -100,6 +121,13 @@ fkey_command(alt-uparrow, "Show previous log for this character") :-
    assert($global_root/gui_state/current_log_uid:New),
    update_crash_log_display.
 
+
+
+%=autodoc
+%% current_log_uid( ?U) is semidet.
+%
+% Current Log Uid.
+%
 current_log_uid(U) :-
    $global_root/gui_state/current_log_uid:U,
    !.
@@ -109,14 +137,35 @@ current_log_uid(U) :-
    !,
    assert($global_root/gui_state/current_log_uid:U).
 
+
+
+%=autodoc
+%% adjacent_in_list_circular( ?Before, ?After, ?After) is semidet.
+%
+% Adjacent In List Circular.
+%
 adjacent_in_list_circular(Before, After, [After | Tail]) :-
    last_element(Before, Tail).
 adjacent_in_list_circular(Before, After, List) :-
    adjacent_in_list(Before, After, List).
+
+
+%=autodoc
+%% adjacent_in_list( ?ARG1, ?After, ?Before) is semidet.
+%
+% Adjacent In List.
+%
 adjacent_in_list(Before, After, [Before, After | _]).
 adjacent_in_list(Before, After, [_ | Tail]) :-
    adjacent_in_list(Before, After, Tail).
 
+
+
+%=autodoc
+%% last_element( ?X, ?X) is semidet.
+%
+% Last Element.
+%
 last_element(X, [X]).
 last_element(X, [_ | Tail]) :-
    last_element(X, Tail).

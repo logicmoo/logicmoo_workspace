@@ -6,45 +6,76 @@
 %%
 
 :- randomizable opt_will//1.
-opt_will(future) --> [ will ].
+
+
+%=autodoc
+%% opt_will( ?ARG1) is semidet.
+%
+% Opt Will.
+%
+opt_will(future)-->theTextM1(will).
+
+
+%=autodoc
+%% opt_will( ?ARG1, ?ARG2, ?X) is semidet.
+%
+% Opt Will.
+%
 opt_will(past, X, X).
 opt_will(present, X, X).
 
 :- randomizable aux_do//2.
-aux_do(present, Agreement) -->
-	[ do ],
-	{ Agreement \= third:singular }.
-aux_do(present, third:singular) -->
-	[ does ].
-aux_do(past, _Agreement) --> [did].
+
+
+%=autodoc
+%% aux_do( ?ARG1, ?ARG2) is semidet.
+%
+% Aux Do.
+%
+aux_do(present, Agreement)-->theTextM1(do), {Agreement\=third:singular}.
+aux_do(present, third:singular) -->  
+  theTextM1(does).
+aux_do(past, _Agreement)-->theTextM1(did).
 
 :- randomizable aux_have//2.
-aux_have(present, Agreement) -->
-	[ have ],
-	{ Agreement \= third:singular }.
-aux_have(present, third:singular) -->
-	[ has ].
-aux_have(past, _Agreement) --> [had].
-aux_have(future, _Agreement) --> [have].
+
+
+%=autodoc
+%% aux_have( ?ARG1, ?ARG2) is semidet.
+%
+% Aux Have.
+%
+aux_have(present, Agreement)-->theTextM1(have), {Agreement\=third:singular}.
+aux_have(present, third:singular) -->  
+  theTextM1(has).
+aux_have(past, _Agreement)-->theTextM1(had).
+aux_have(future, _Agreement)-->theTextM1(have).
 
 :- randomizable aux_be//2.
-aux_be(present, first:singular) -->
-	[ am ].
-aux_be(present, second:singular) -->
-	[ are ].
-aux_be(present, third:singular) -->
-	[ is ].
-aux_be(present, _:plural) -->
-	[ are ].
-aux_be(past, first:singular) -->
-	[ was ].
-aux_be(past, second:singular) -->
-	[ were ].
-aux_be(past, third:singular) -->
-	[ was ].
-aux_be(past, _:plural) -->
-	[ were ].
-aux_be(future, _Agreement) --> [be].
+
+
+%=autodoc
+%% aux_be( ?ARG1, ?ARG2) is semidet.
+%
+% Aux Be.
+%
+aux_be(present, first:singular) -->  
+  theTextM1(am).
+aux_be(present, second:singular) -->  
+  theTextM1(are).
+aux_be(present, third:singular) -->  
+  theTextM1(is).
+aux_be(present, _:plural) -->  
+  theTextM1(are).
+aux_be(past, first:singular) -->  
+  theTextM1(was).
+aux_be(past, second:singular) -->  
+  theTextM1(were).
+aux_be(past, third:singular) -->  
+  theTextM1(was).
+aux_be(past, _:plural) -->  
+  theTextM1(were).
+aux_be(future, _Agreement)-->theTextM1(be).
 
 
 :- endif.

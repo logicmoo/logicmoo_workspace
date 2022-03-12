@@ -1,11 +1,25 @@
 :- dynamic(reduces_to_aux/4).
 
+
+
+%=autodoc
+%% build_reduction_cross_reference is semidet.
+%
+% Build Reduction Cross Reference.
+%
 build_reduction_cross_reference :-
    retractall($global::reduces_to_aux(_,_,_,_)),
    forall(reduction_clause(Goal, Reduction),
 	  assert_reductions(Goal, Reduction)).
 
 
+
+
+%=autodoc
+%% reduction_clause( :GoalGoal, ?Reduction) is semidet.
+%
+% Reduction Clause.
+%
 reduction_clause(Goal, Reduction) :-
    clause(strategy(Goal, Reduction),
 	  _Guard).
@@ -15,6 +29,13 @@ reduction_clause(Goal, Reduction) :-
 reduction_clause(Goal, Reduction) :-
    clause(normalize_task(Goal, Reduction), _Guard).
 
+
+
+%=autodoc
+%% assert_reductions( :GoalGoal, ?ARG2) is semidet.
+%
+% Assert Reductions.
+%
 assert_reductions(Goal, _) :-
    var(Goal),
    !.
@@ -44,22 +65,50 @@ assert_reductions(Goal, Subgoal) :-
    functor(Subgoal, SN, SA),
    ensurez(reduces_to_aux(GN, GA, SN, SA)).
 
+
+
+%=autodoc
+%% reduces_to( ?G, ?S) is semidet.
+%
+% Reduces Converted To.
+%
 reduces_to(G/GA, S/SA) :-
    reduces_to_aux(G, GA, S, SA).
 
 :- external ignore_undeclared_task/2.
 
+
+
+%=autodoc
+%% bad_reduction( ?G, ?R) is semidet.
+%
+% Bad Reduction.
+%
 bad_reduction(G/GA, R/RA) :-
    reduces_to_aux(G, GA, R, RA),
    \+ primitive_task(R, RA),
    \+ reduces_to_aux(R, RA, _, _),
    \+ ignore_undeclared_task(R, RA).
 
+
+
+%=autodoc
+%% primitive_task( ?ARG1, ?ARG2) is semidet.
+%
+% Primitive Task.
+%
 primitive_task(reduction_is_a_variable, 0).
 primitive_task(R, RA) :-
    functor(S, R, RA),
    primitive_task(S).
 
+
+
+%=autodoc
+%% test( ?Property_declarations_well_formed, ?The following properties specify unknown types in the spreadsheet) is semidet.
+%
+% Test.
+%
 test(problem_solver(undeclared_tasks),
      [ setup(build_reduction_cross_reference),
        problem_list("The following tasks have no reductions",

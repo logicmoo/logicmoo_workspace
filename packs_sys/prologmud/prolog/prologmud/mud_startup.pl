@@ -65,6 +65,14 @@ set_default_sample_games:-
 :- sanity(functorDeclares(mobExplorer)).
 
 
+:- op(500,fx,'~').
+:- op(1050,xfx,('=>')).
+:- op(1050,xfx,'<==>').
+:- op(1050,xfx,'==>').
+:- op(1050,xfx,('<-')).
+:- op(1100,fx,('==>')).
+:- op(1150,xfx,('::::')).
+
 ==>((tCol(tLivingRoom),
  tSet(tRegion),
  tSet(tLivingRoom),

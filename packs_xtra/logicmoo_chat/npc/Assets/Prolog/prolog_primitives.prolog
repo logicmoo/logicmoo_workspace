@@ -3,6 +3,13 @@
 
 :- use_module(library(logicmoo_utils)).
 
+
+
+%=autodoc
+%% def_prolog_prim_te( ?X, ?A4) is semidet.
+%
+% Def Prolog Prim Te.
+%
 def_prolog_prim_te(X,A4):- compound(X),
   compound_name_arguments(X,def_prolog_prim,[A,B,C|Rest]), 
   prolog_load_context(variable_names,G),maplist(call,G),
@@ -15,11 +22,25 @@ def_prolog_prim_te(X,A4):- compound(X),
 :- dynamic(term_expansion/2).
 :- asserta_until_eof((term_expansion(X,A4):- def_prolog_prim_te(X,A4))).
 
+
+
+%=autodoc
+%% def_prolog_prim( ?Symbol, ?AndImplementation, ?Flow control, ?True if both goals are true., ?:goal1, ?:goal2) is semidet.
+%
+% Def Prolog Prim.
+%
 def_prolog_prim(Symbol.Comma, AndImplementation, "flow control", "True if both goals are true.", ":goal1",
                 ":goal2").
 def_prolog_prim(".", OrImplementation, "flow control", "True if both goals are true.", ":goal1", ":goal2").
 def_prolog_prim("->", IfThenImplementation, "flow control", "Proves CONSEQUENT if TEST is true.", ":test",
                 ":consequent").
+
+
+%=autodoc
+%% def_prolog_prim( ?Not, ?NotImplementation, ?Flow control, ?True if GOAL is unprovable.  GOAL must be ground., ?*goal) is semidet.
+%
+% Def Prolog Prim.
+%
 def_prolog_prim("not", NotImplementation, "flow control", "True if GOAL is unprovable.  GOAL must be ground.", "*goal").
 def_prolog_prim("\\+", NotPlusImplementation, "flow control", "True if GOAL is unprovable", ":goal").
 def_prolog_prim("once", OnceImplementation, "flow control,meta-logical predicates",
@@ -27,6 +48,13 @@ def_prolog_prim("once", OnceImplementation, "flow control,meta-logical predicate
 def_prolog_prim("ignore", IgnoreImplementation, "flow control,meta-logical predicates",
                 "Attempts to prove GOAL, but suppresses backtracking for a second solution.",
                 ":goals", "...").
+
+
+%=autodoc
+%% def_prolog_prim( ?Symbol, :CallCallImplementation, ?Flow control,meta-logical predicates, ?Attempts to prove the specified GOAL, adding any additional arguments, if specified., ?:goal, ??optionalArguments, ?...) is semidet.
+%
+% Def Prolog Prim.
+%
 def_prolog_prim(Symbol.Call, CallImplementation, "flow control,meta-logical predicates",
                 "Attempts to prove the specified GOAL, adding any additional arguments, if specified.",
                 ":goal", "?optionalArguments", "...").
@@ -118,6 +146,13 @@ def_prolog_prim("generate_unique", GenerateUniqueImplementation, "all solutions 
 def_prolog_prim("findall", FindallImplementation, "all solutions predicates",
                 "Unifies SOLUTIONS with a list of every value of TEMPLATE for every possible solution of GOAL.",
                 "=template", ":goal", "-solutions").
+
+
+%=autodoc
+%% def_prolog_prim( ?Findnsols, +FindNSolsImplementation, ?All solutions predicates, ?Unifies SOLUTIONS with a list of every value of TEMPLATE for every possible solution of GOAL.  Finds at most N solutiosn., ?*n, ?=template, ?:goal, ?-solutions) is semidet.
+%
+% Def Prolog Prim.
+%
 def_prolog_prim("findnsols", FindNSolsImplementation, "all solutions predicates",
                 "Unifies SOLUTIONS with a list of every value of TEMPLATE for every possible solution of GOAL.  Finds at most N solutiosn.",
                 "*n", "=template", ":goal", "-solutions").
@@ -183,6 +218,13 @@ def_prolog_prim("set_prolog_flag", SetPrologFlagImplementation, "declarations", 
 def_prolog_prim("check", CheckImplementation, "other predicates",
                 "Checks that Goal is true, and throws an exception if it fails.  Only succeeds once, so similar to once/1.",
                 ":goal").
+
+
+%=autodoc
+%% def_prolog_prim( ?Symbol, ?CutImplementation, ?Flow control,meta-logical predicates, ?Prohibits backtracking past this point for the current goal.) is semidet.
+%
+% Def Prolog Prim.
+%
 def_prolog_prim(Symbol.Cut, CutImplementation, "flow control,meta-logical predicates",
                 "Prohibits backtracking past this point for the current goal.").
 def_prolog_prim(Symbol.Fail, ((args, context) => FailImplementation), "flow control",

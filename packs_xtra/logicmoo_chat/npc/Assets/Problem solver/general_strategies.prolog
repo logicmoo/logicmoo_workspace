@@ -53,6 +53,13 @@ strategy(achieve_precondition(_, P),
 default_strategy(achieve_precondition(_SubTask, P),
 		 abort_and_then(explain_failure(~P))).
 
+
+
+%=autodoc
+%% normalize_task( ?Status, ?Task) is semidet.
+%
+% Normalize Task.
+%
 normalize_task(abort_and_then(Task),
 	       begin(call(perform_restart_retractions($task)),
 		     invoke_continuation(Task))).
@@ -123,6 +130,13 @@ strategy(goto_internal(Place),
 	     wait_for_child(Child))) :-
    $task/priority:Priority.
 
+
+
+%=autodoc
+%% after( ?ARG1, ?ARG2) is semidet.
+%
+% After.
+%
 after(goto_internal(Person),
       greet($me, Person)) :-
    character(Person).
@@ -153,9 +167,23 @@ normalize_task(bring($me, Recipient, Object),
 	       move($me, Object, Recipient)).
 normalize_task(give($me, Recipient, Object),
 	       move($me, Object, Recipient)).
+
+
+%=autodoc
+%% task_interacts_with_objects( ?ARG1, ?A) is semidet.
+%
+% Task Interacts Using Objects.
+%
 task_interacts_with_objects(bring(_, A, B), [A, B]).
 task_interacts_with_objects(give(_, A, B), [A, B]).
 
+
+
+%=autodoc
+%% guard_condition( ?Task, ?Object) is semidet.
+%
+% Guard Condition.
+%
 guard_condition(Task, location(Object, _Loc)) :-
    task_interacts_with_objects(Task, Objects),
    member(Object, Objects).
@@ -192,6 +220,13 @@ after(handle_discovery(X),
       pickup(X)) :-
    iz_a(X, key_item).
 
+
+
+%=autodoc
+%% before( ?ARG1, ?Partner) is semidet.
+%
+% Before.
+%
 before(search_object(Object, _, _, _),
        goto(Object)):-
    \+ contained_in($me, Object).
@@ -239,15 +274,36 @@ default_strategy(search_object(Object, CriterionLambda, SuccessLambda, FailTask)
 			  FailTask))).
 
 :- public nearest_unsearched/2, unsearched/2.
+
+
+%=autodoc
+%% nearest_unsearched( +Container, ?Contents) is semidet.
+%
+% Nearest Unsearched.
+%
 nearest_unsearched(Container, Contents) :-
    nearest(Contents,
 	   unsearched(Container, Contents)).
 
+
+
+%=autodoc
+%% unsearched( +Container, ?Contents) is semidet.
+%
+% Unsearched.
+%
 unsearched(Container, Contents) :-
    location(Contents, Container),
    \+ implausible_search_location(Contents),
    \+ /searched/Contents.
 
+
+
+%=autodoc
+%% implausible_search_location( ?X) is semidet.
+%
+% Implausible Search Location.
+%
 implausible_search_location(X) :-
    iz_a(X, exit).
 implausible_search_location(X) :-
@@ -255,6 +311,13 @@ implausible_search_location(X) :-
 
 :- public reveal_hidden_item/1.
 
+
+
+%=autodoc
+%% reveal_hidden_item( +Container) is semidet.
+%
+% Reveal Hidden Item.
+%
 reveal_hidden_item(Container) :-
    hidden_contents(Container, Item),
    reveal(Item),
@@ -264,6 +327,13 @@ reveal_hidden_item(Container) :-
    !.
 
 :- public previously_hidden/1.
+
+
+%=autodoc
+%% previously_hidden( ?Item) is semidet.
+%
+% Previously Hidden.
+%
 previously_hidden(Item) :-
    $task/previously_hidden_items/Item.
 
@@ -287,6 +357,13 @@ postcondition(drink(Person, B),
 	      ~thirsty(Person)) :-
    existing(beverage, B).
 
+
+
+%=autodoc
+%% self_achieving( ?Nobody_speaking1) is semidet.
+%
+% Self Achieving.
+%
 self_achieving(/perception/nobody_speaking).
 
 %%
@@ -320,6 +397,13 @@ strategy(pause(Seconds),
 	 wait_condition(after_time(Time))) :-
    freeze(Seconds, Time is $now + Seconds).
 
+
+
+%=autodoc
+%% ready_to_hand( ?Object) is semidet.
+%
+% Ready Converted To Hand.
+%
 ready_to_hand(Object) :-
    location(Object, $me).
 ready_to_hand(Object) :-
@@ -330,6 +414,13 @@ strategy(achieve_precondition(_, ready_to_hand(Object)),
 
 :- external examined/1.
 
+
+
+%=autodoc
+%% tell_globally( ?ARG1) is semidet.
+%
+% Canonicalize And Store Globally.
+%
 tell_globally(examined(_)).
 
 precondition(examine($me, Object),
@@ -386,6 +477,13 @@ strategy(operate($me, Device),
    iz_a(Device, device).
 
 :- public operate/1.
+
+
+%=autodoc
+%% operate( ?Device) is semidet.
+%
+% Operate.
+%
 operate(Device) :-
    forall(contained_in(X, Device),
 	  destroy(X)).
@@ -398,6 +496,13 @@ operate(Device) :-
 normalize_task(on_behalf_of(Person, Task),
 	       begin(assert($task/on_behalf_of:Person),
 		     Task)).
+
+
+%=autodoc
+%% retract_on_restart( ?Task, ?Task) is semidet.
+%
+% Retract Whenever Restart.
+%
 retract_on_restart(Task, Task/on_behalf_of).
 
 %%
@@ -422,9 +527,23 @@ normalize_task(spawn(Task, Child, Assertions),
 	       call(spawn_child_task(Task, Child, Assertions))).
 
 :- public spawn_child_task/1, spawn_child_task/3.
+
+
+%=autodoc
+%% spawn_child_task( ?Task) is semidet.
+%
+% Spawn Child Task.
+%
 spawn_child_task(Task) :-
    begin($task/priority:Priority,
 	 start_task($task, Task, Priority)).
+
+
+%=autodoc
+%% spawn_child_task( ?Task, ?Child, ?Assertions) is semidet.
+%
+% Spawn Child Task.
+%
 spawn_child_task(Task, Child, Assertions) :-
    begin($task/priority:Priority,
 	 start_task($task, Task, Priority, Child, Assertions)).
@@ -448,6 +567,13 @@ normalize_task(wait_for_child(Child),
 
 :- public child_completed/2.
 
+
+
+%=autodoc
+%% child_completed( ?UID, ?Me) is semidet.
+%
+% Child Completed.
+%
 child_completed(UID, Me) :-
    Me/quds/UID, !, fail.
 child_completed(UID, Me) :-

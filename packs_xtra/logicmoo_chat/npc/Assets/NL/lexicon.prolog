@@ -2,6 +2,13 @@
 % relpron( who  ).
 % relpron( whom ).
 
+
+
+%=autodoc
+%% pronoun_word( ?Our1, ?Genitive2, ?First3, ?Plural4, ?ARG5) is semidet.
+%
+% Pronoun Word.
+%
 pronoun_word('I', subject, first, singular, $speaker).
 pronoun_word(me, object, first, singular, $speaker).
 pronoun_word(my, genitive, first, singular, $speaker).
@@ -12,11 +19,25 @@ pronoun_word(we, subject, first, plural, $dialog_group).
 pronoun_word(us, object, first, plural, $dialog_group).
 pronoun_word(our, genitive, first, plural, $dialog_group).
 
+
+
+%=autodoc
+%% demonstrative_pronoun( ?That1) is semidet.
+%
+% Demonstrative Pronoun.
+%
 demonstrative_pronoun(this).
 demonstrative_pronoun(that).
 
 :- register_all_lexical_items([D], demonstrative_pronoun(D)).
 
+
+
+%=autodoc
+%% here_there_adverb( ?There1) is semidet.
+%
+% Here There Adverb.
+%
 here_there_adverb(here).
 here_there_adverb(there).
 
@@ -26,6 +47,13 @@ here_there_adverb(there).
 :- randomizable noun/3.
 
 :- randomizable whpron/2.
+
+
+%=autodoc
+%% whpron( ?What1, ?Entity2) is semidet.
+%
+% Whpron.
+%
 whpron( who, person  ).
 %whpron( whom, person ).
 whpron( what, entity ).

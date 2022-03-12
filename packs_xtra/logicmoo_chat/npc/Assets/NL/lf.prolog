@@ -67,6 +67,13 @@ lf_subject(LF, Subject) :-
    lf_core_predicate(LF, P),
    lf_core_predicate_subject(P, Subject).
 
+
+
+%=autodoc
+%% lf_core_predicate_subject( ?Subject, ?Subject) is semidet.
+%
+% Lf Core Predicate Subject.
+%
 lf_core_predicate_subject(be(Subject), Subject) :-
    !.
 lf_core_predicate_subject(related(Subject, _, _), Subject):-

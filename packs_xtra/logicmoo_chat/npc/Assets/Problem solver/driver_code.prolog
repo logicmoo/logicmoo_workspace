@@ -24,6 +24,13 @@ poll_task(T) :-
 poll_task(T) :-
    begin((T/current:A)>>ActionNode,
 	 poll_task_action(T, A, ActionNode)).
+
+
+%=autodoc
+%% poll_task_action( ?T, ?Breakpoint2, ?ARG3) is semidet.
+%
+% Poll Task Action.
+%
 poll_task_action(T, start, _) :-
    % The task was just created and has yet to start.
    begin(assert(T/current:starting),
@@ -67,10 +74,24 @@ poll_task_action(T, A, _) :-
    % The task is in the middle of a polled builtin.
    call_with_step_limit(10000, poll_builtin(T, A)).
 
+
+
+%=autodoc
+%% poll_action( ?T, ?A) is semidet.
+%
+% Poll Action.
+%
 poll_action(T, A) :-
    % Make sure it's still runnable
    runnable(A) ; interrupt_step(T, achieve(runnable(A))).
 
+
+
+%=autodoc
+%% poll_builtin( ?T, ?Yield) is semidet.
+%
+% Poll Builtin.
+%
 poll_builtin(T, yield) :-
    % Task had yielded, so let it run now.
    !,
@@ -86,6 +107,13 @@ poll_builtin(T, wait_event(_, Timeout)) :-
        ;
        true.
 
+
+
+%=autodoc
+%% bind_default_task_indexicals is semidet.
+%
+% Bind Default Task Indexicals.
+%
 bind_default_task_indexicals :-
    default_addressee(A),
    bind(addressee, A).
@@ -105,10 +133,24 @@ score_action(A, task, T, Score) :-
 on_event(E, task, T, wait_event_completed(T, E)) :-
    task_waiting_for(T, E).
 
+
+
+%=autodoc
+%% task_waiting_for( ?T, ?E) is semidet.
+%
+% Task Waiting For.
+%
 task_waiting_for(T, E) :-
    T/current:X,
    (X=E ; X=wait_event(E) ; X=wait_event(E,_)).
 
+
+
+%=autodoc
+%% wait_event_completed( ?T, ?E) is semidet.
+%
+% Wait Event Completed.
+%
 wait_event_completed(T, E) :-
    % Check to make sure that we're still waiting for this event.
    task_waiting_for(T, E),

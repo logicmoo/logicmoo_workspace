@@ -17,6 +17,13 @@ contracted_form([A | UncontractedTail], [A | ContractedTail]) :-
 %% contraction(?First, ?Second, ?Contraction)
 %  Contraction is the single-word contraction of [First, Second].
 contraction(will, not, won, t).
+
+%=autodoc
+%% contraction( ?You1, ?Would2, ?You3, ?ATOM4) is semidet.
+%
+% Contraction.
+%
+
 contraction(can, not, can, t).
 contraction(should, not, 'shouldn','t').
 contraction(shall, not, 'mustn','t').

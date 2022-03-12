@@ -28,6 +28,12 @@
 
 :- must(\+ t_l:disable_px).
 
+:- op(500,fx,'~').
+:- op(1050,xfx,('=>')).
+:- op(1050,xfx,'<==>').
+:- op(1050,xfx,('<-')).
+:- op(1100,fx,('==>')).
+:- op(1150,xfx,('::::')).
 
 /*
 :- dynamic   lmcache:session_io/4, lmcache:session_agent/2, lmcache:agent_session/2,   telnet_fmt_shown/3,   agent_action_queue/3).
@@ -238,6 +244,7 @@ listing_break(G):- cwc, listing(G),break.
 :- op(500,fx,'~').
 :- op(1050,xfx,('=>')).
 :- op(1050,xfx,'<==>').
+:- op(1050,xfx,'==>').
 :- op(1050,xfx,('<-')).
 :- op(1100,fx,('==>')).
 :- op(1150,xfx,('::::')).

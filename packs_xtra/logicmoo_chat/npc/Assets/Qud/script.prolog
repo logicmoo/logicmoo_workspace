@@ -17,11 +17,25 @@ propose_action(Action, script, C) :-
    agent(Action, $me).
    %log($me:propose(Action)).
 
+
+
+%=autodoc
+%% script_update( ?C, ?Event) is semidet.
+%
+% Script Update.
+%
 script_update(C, Event) :-
    %log($me:got(Event)),
    assert(C/history/Event),
    script_update_await_list(C).
 
+
+
+%=autodoc
+%% script_update_await_list( ?C) is semidet.
+%
+% Script Update Await List.
+%
 script_update_await_list(C) :-
    begin(C/type:script:Script,
 	 ignore(retract(C/awaiting)),
@@ -37,5 +51,12 @@ script_update_await_list(C) :-
 	     forall(member(Event, NextSet),
 		    assert(C/awaiting/Event))) ).
 
+
+
+%=autodoc
+%% script_history( ?C, ?History) is semidet.
+%
+% Script History.
+%
 script_history(C, History) :-
    findall(Event, C/history/Event, History).

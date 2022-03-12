@@ -9,15 +9,36 @@ possible_types_given_constraint(Var, Expression, Types) :-
     variable_type_given_constraint(Var, Expression, Type),
     Types).
 
+%=autodoc
+%% possible_types_given_constraint( ?Var, ?Expression, ?Types) is semidet.
+%
+% Possible  Types Given Constraint.
+%
+
+
 %% possibile_types_given_constraint(-Var, :Expression, -Types)
 % Gives all the possible types for Var within Expression.
 variable_type_given_constraint(Object, _, Type) :-
   nonvar(Object),
   iz_a(Object, Type).
+
+%=autodoc
+%% variable_type_given_constraint( ?Object, ?ARG2, ?Type) is semidet.
+%
+% Variable Type Given Constraint.
+%
+
 variable_type_given_constraint(Var, Expression, Type) :-
   well_typed(Expression, _, Bindings),
   lookup_variable_type(Var, Type, Bindings).
 
+
+
+%=autodoc
+%% well_typed( ?Expression, +Kind) is semidet.
+%
+% Well Typed.
+%
 well_typed(Expression, Kind) :-
   well_typed(Expression, Kind, _).
 
@@ -26,6 +47,13 @@ well_typed(Expression, Kind) :-
 % Types of any free variables of it are given by Bindings.
 well_typed(Object, Kind, Bindings) :-
   well_typed(Object, Kind, [ ], Bindings).
+
+%=autodoc
+%% well_typed( ?Object, +Kind, +Bindings) is semidet.
+%
+% Well Typed.
+%
+
 
 %% well_typed(=Expression, ?Kind, +BindingsIn, -BindingsOut)
 % Expression is well typed and of type Kind
@@ -36,6 +64,13 @@ well_typed(Var, Kind, BIn, BOut) :-
   var(Var),
   !,
   variable_well_typed(Var, Kind, BIn, BOut).
+
+%=autodoc
+%% well_typed( ?Var, ?Kind, +BIn, -BOut) is semidet.
+%
+% Well Typed.
+%
+
 
 well_typed(Atom, Type, Bindings, Bindings) :-
   atomic(Atom),
@@ -64,21 +99,49 @@ well_typed(Event, Kind, BindingsIn, BindingsOut) :-
   predicate_type(Kind, TypeDecl),
   well_typed_arguments(ActualArgs, ArgTypes, BindingsIn, BindingsOut).
 
+
+
+%=autodoc
+%% well_typed_arguments( ?ARG1, ?ARG2, ?ARG3, +Bindings) is semidet.
+%
+% Well Typed Arguments.
+%
 well_typed_arguments([], [], Bindings, Bindings).
 well_typed_arguments([Arg | Args], [Type | Types], BIn, BOut) :-
   well_typed(Arg, Type, BIn, BIntermediate),
   well_typed_arguments(Args, Types, BIntermediate, BOut).
 
+
+
+%=autodoc
+%% copy_list_as_variables( ?ARG1, ?ARG2) is semidet.
+%
+% Copy List Converted To Variables.
+%
 copy_list_as_variables([], []).
 copy_list_as_variables([_ | T1], [_ | T2]) :-
   copy_list_as_variables(T1, T2).
 
+
+
+%=autodoc
+%% variable_well_typed( ?V, +Kind, +BIn, +BOut) is semidet.
+%
+% Variable Well Typed.
+%
 variable_well_typed(V, Kind, BIn, BOut) :-
   lookup_variable_type(V, PreviousKind, BIn),
   !,
   variable_well_typed(V, Kind, PreviousKind, BIn, BOut).
 variable_well_typed(V, Kind, B, [V:Kind | B]). % haven't seen this var before.
 
+
+
+%=autodoc
+%% variable_well_typed( ?V, +Kind, ?Entity, ?B, ?V) is semidet.
+%
+% Variable Well Typed.
+%
 variable_well_typed(V, Kind, entity, B, [V:Kind | B]) :-
   !.
 variable_well_typed(_V, Kind, PreviousKind, B, B) :-
@@ -88,6 +151,13 @@ variable_well_typed(V, Kind, PreviousKind, B, [V:Kind | B]) :-
   kind_of(Kind, PreviousKind),  % Kind is a more specific type.
   !.
 
+
+
+%=autodoc
+%% lookup_variable_type( ?Var, ?Type, ?V) is semidet.
+%
+% Lookup Variable Type.
+%
 lookup_variable_type(Var, Type, [V:Type | _]) :-
   V==Var,
   !.
@@ -96,6 +166,13 @@ lookup_variable_type(Var, Type, [_ | Tail]) :-
 
 
 
+
+
+%=autodoc
+%% enforce_args( ?S) is semidet.
+%
+% Enforce Arguments.
+%
 enforce_args(S):- var(S), !, freeze(S, enforce_args(S)).
 enforce_args(_:S):- enforce_args(S).
 enforce_args(S):- \+ compound(S), !.
@@ -104,6 +181,13 @@ enforce_args(S):-
   compound_name_arity(STypes, F, A),
   (attempt_predicate_type(_, STypes)-> enforce_args(S, STypes) ; true).
 
+
+
+%=autodoc
+%% enforce_args( ?S, ?SType) is semidet.
+%
+% Enforce Arguments.
+%
 enforce_args(S, SType):-
   atom(SType),!,
   enforce_args(S).
@@ -114,36 +198,99 @@ enforce_args(S, SType):-
   compound_name_arguments(SType, F, TArgs),
   enforce_args(F, TArgs, Args).
 
+
+
+%=autodoc
+%% enforce_args( ?ARG1, ?ARG2, ?ARG3) is semidet.
+%
+% Enforce Arguments.
+%
 enforce_args(_, _, []):-!.
 enforce_args(F, [TArg|TArgs], [Arg|Args]):-
   enforce_arg(Arg, TArg),
   enforce_args(F, TArgs, Args).
 
+
+
+%=autodoc
+%% iz_c( ?Arg, ?TArg) is semidet.
+%
+% Iz Class.
+%
 iz_c(Arg, TArg):- iz_a(Arg, TArg).
 iz_c(Arg, TArg):- attempt_predicate_type(TArg, STypes),
   (compound(STypes) -> (compound_name_arity(STypes, F, A), functor(Arg, F, A));true),
   enforce_args(Arg, STypes).
 
+
+
+%=autodoc
+%% enforce_arg( ?Arg, ?Entity) is semidet.
+%
+% Enforce Argument.
+%
 enforce_arg(Arg, entity):- !, nop((iz_c(Arg, entity);Arg=_)).
 enforce_arg( _, TArg):- \+ iz_c(_, TArg), !.
 enforce_arg(Arg, TArg):- var(Arg), !, freeze(Arg, enforce_targ(Arg, TArg)).
 enforce_arg(Arg, TArg):- enforce_targ(Arg, TArg).
 
+
+
+%=autodoc
+%% enforce_targ( ?Arg, ?TArg) is semidet.
+%
+% Enforce Targ.
+%
 enforce_targ(Arg, TArg):- compound(Arg), !, enforce_args(Arg, TArg).
 enforce_targ(Arg, TArg):- iz_c(Arg, TArg).
 
 :- multifile(predicate_type/2).
 :- dynamic(predicate_type/2).
 
+
+
+%=autodoc
+%% attempt_predicate_type( ?PType, ?STypes) is semidet.
+%
+% Attempt Predicate Type.
+%
 attempt_predicate_type(PType, STypes):- predicate_type(PType, STypes).
 attempt_predicate_type(PType, STypes):- typed_clauses(PType, STypes).
 
+
+
+%=autodoc
+%% typed_clauses( ?Type, ?P) is semidet.
+%
+% Typed Clauses.
+%
 typed_clauses(Type, P) :- clt(Type, P, Head), clause(Head, _), nonvar(P).
 
+
+
+%=autodoc
+%% clt( ?T, ?P, ?Head) is semidet.
+%
+% Clt.
+%
 clt(T, P, Head):- cltf(T, F, A, N), functor(Head, F, A), arg(N, Head, P).
+
+
+%=autodoc
+%% cltf( ?Event1, ?Ss2, :PRED7PRED73, :PRED1PRED14) is semidet.
+%
+% Cltf.
+%
 cltf(event, ss, 7, 1):- fail.
 
 
+
+
+%=autodoc
+%% predicate_type( ?Condition1, ?Entity2) is semidet.
+%
+% Predicate Type.
+%
 predicate_type(action, do(actor, action)).
 predicate_type(action, be(actor)).
 predicate_type(action, drink(actor, beverage)).

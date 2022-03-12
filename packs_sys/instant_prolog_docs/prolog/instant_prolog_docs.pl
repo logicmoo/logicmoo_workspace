@@ -44,7 +44,7 @@
             make_l_summary/3,
             make_module_name/2,
             autodoc_module/1,
-            autodoc_stream/3,
+            pre_autodoc_stream/3,
             autodoc_stream_data/7,
             make_l_summary_lc/3,
             for_m_make_summary/3,
@@ -62,6 +62,7 @@
             predicate_decl_module/2,
             autodoc_pred/2,
             autodoc_file_0s/0,
+            autodoc_file/1,
             autodoc_file_0/1,
             autodoc_file_0_0/1,
             scan_and_list_file_preds/1,
@@ -74,13 +75,15 @@
             target_module/2,
             list_item_per_line/4,
             write_modules/0,
-            baseKB:sf_known/4,
+            baseKB:(sf_known/4),
             attempt_head_vnames/1,
             attempt_head_varnames_0/1,
             helper_name0/1, is_crossfile_module_0/1, make_summary0/3, mpred_source_file_0/2, skip_functor_export_0/1, to_comparable_name_arity/3, to_mfa_0/4
           ]).
 
 :- set_module(class(library)).
+
+:- op(600,xfy,':').
 
 :- meta_predicate fixup_doc_args(4, ?, ?, *, *).
 :- meta_predicate notes_to_better_text(2, *, *).
@@ -153,7 +156,9 @@
 :-endif.
 */
 
-:- use_module(library(logicmoo_cg)).
+%:- use_module(library(logicmoo_cg)).
+:- use_module(library(logicmoo_utils)).
+:- use_module(library(dictoo)).
 
 %= 	 	
 
@@ -266,7 +271,7 @@ functor_compare(R, P1, P2):- instant_prolog_docs:to_comparable_name_arity(P1, F1
 %
 % List File Predicates.
 %
-list_file_preds:- source_location(S, _), list_file_preds(S).
+list_file_preds:- source_location(S, _), with_output_doc(list_file_preds(S)).
 
 
 
@@ -287,7 +292,6 @@ skip_functor_export_0('$pldoc'/_).
 %
 % If Is A crossfile module  Primary Helper.
 %
-is_crossfile_module_0(baseKB).
 is_crossfile_module_0(baseKB).
 is_crossfile_module_0(basePFC).
 is_crossfile_module_0(user).
@@ -525,6 +529,14 @@ export_file_preds(NotUser, S, M, P, F, A):- must(predicate_property(M:P, transpa
 export_module_preds:- current_prolog_flag(xref, true), !.
 export_module_preds:- source_context_module(M), source_file_property(S, module(M)), export_file_preds(S), forall(source_file_property(S, includes(F, _)), export_file_preds(F)).
 
+autodoc_current_module(M):- nonvar(M),!, autodoc_current_module(V),!,M==V.
+autodoc_current_module(M):- nb_current(autodoc_context_module,M), M\== [],!.
+autodoc_current_module(M):- source_context_module(M),
+  M:op(1200, xfy, ('==>>')), M:op(1200, xfy, ('::=')), M:op(500,fx,'~'),
+  M:op(1050,xfx,('=>')), M:op(1050,xfx,'<==>'), M:op(1050,xfx,'==>'),
+  M:op(1050,xfx,('<-')), M:op(1100,fx,('==>')), M:op(1150,xfx,('::::')),
+  M:op(200,fx,'?'), M:op(1050,fx,'==>').
+
 /*
 :- if(exists_source(library(pldoc/doc_pack))).
 
@@ -563,16 +575,27 @@ target_module(P, M):-mpred_source_file(M:P, F), baseKB:mpred_is_impl_file(F), ma
 %
 % Autodoc Output Path.
 %
-autodoc_output_path(File, PlDocFile):-
-   atom_subst(File, '/prolog', '/pldox', PlDocFile0),
-   (PlDocFile0\==File-> PlDocFile=PlDocFile0 ;
-       (atom_subst(PlDocFile0, '/logicmoo_base/', '/logicmoo_base_docs/', PlDocFile1),
-         (PlDocFile1\==PlDocFile0->PlDocFile=PlDocFile1;PlDocFile=user))),
-   (PlDocFile == user -> true ;(file_directory_name(PlDocFile, Dir), make_directory_path(Dir))), !.
+
+autodoc_dir(prolog,autodox).
+autodoc_dir('Assets','PLDoc').
+autodoc_dir(src,autodox).
+autodoc_dir(source,autodox).
+autodoc_dir(logicmoo_base,logicmoo_base_docs).
+
+rev_append0(L,R,LR):- is_list(LR),!, reverse(LR,RL),append(L1,R1,RL),reverse(L1,R),reverse(R1,L).
+
+autodoc_output_path(File, PlDocFile):- \+ is_list(File),atomic_list_concat(List,'/',File),!,
+  autodoc_output_path(List, PlDocFile).
+autodoc_output_path(List, PlDocFile):- autodoc_dir(Prolog,AutoDoc),rev_append0(Left,[Prolog,A|Rest],List),!,
+  append(Left,[AutoDoc,A|Rest],AList),autodoc_list_to_path(AList, PlDocFile).
+autodoc_output_path(List, PlDocFile):-  append(Left,[A,File],List),atom_concat(A,'_autodox',AA),!,
+  append(Left,[AA,File],AList),autodoc_list_to_path(AList, PlDocFile).
+autodoc_output_path(List, PlDocFile):- autodoc_list_to_path(List,PlDocFile).
+autodoc_list_to_path(List,PlDocFile):- atomic_list_concat(List,'/',PlDocFile),
+ file_directory_name(PlDocFile, Dir), make_directory_path(Dir).
 
 % autodoc_file_0(library(logicmoo_user)).
 %  list_file_preds(library(logicmoo/util/logicmoo_util_bb_env)).
-
 
 
 %= 	 	
@@ -583,8 +606,7 @@ autodoc_output_path(File, PlDocFile):-
 %
 skip_autodoc_file_0('/mnt/sdc1/logicmoo_workspace.1/packs_sys/lps_corner/swish/lps_server_UI.pl').
 
-:- op(1200, xfy, ('==>>')).
-:- op(1200, xfy, ('::=')).
+
 
 %= 	 	
 
@@ -592,19 +614,19 @@ skip_autodoc_file_0('/mnt/sdc1/logicmoo_workspace.1/packs_sys/lps_corner/swish/l
 %
 % Autodoc File.
 %
+autodoc_module_file(Mod,File):-
+  locally(nb_setval(autodoc_context_module,Mod),autodoc_file(File)).
+
 autodoc_file(File):- with_vars_unlocked(autodoc_file_0(File)),!.
 autodoc_file_0(File):- var(File), !, no_repeats(varname_cache:varname_info_file(File)), autodoc_file_0(File).
 autodoc_file_0(*):-!, autodoc_file_0s.
 autodoc_file_0(module(M)):- !, autodoc_module(M).
-autodoc_file_0(File):- ( \+ atom(File) ; \+ exists_file(File) ), !,
-   forall(must(filematch(File, E)), autodoc_file_0(E)).
-autodoc_file_0(File):- skip_autodoc_file_0(File), !, autodoc_dbg(skip_autodoc_file_0(File)).
-
-autodoc_file_0(File):-
+autodoc_file_0(File):- forall(must(filematch(File, E)), autodoc_file_00(E)).
+autodoc_file_00(File):- skip_autodoc_file_0(File), !, autodoc_dbg(skip_autodoc_file_0(File)).
+autodoc_file_00(File):-
   autodoc_setup,
-  each_call_cleanup(
-   tell(user_error),
-   instant_prolog_docs:autodoc_file_0_0(File),
+  each_call_cleanup( system:tell(user_error),
+   autodoc_file_0_0(File),
    told), !.
 
   
@@ -629,12 +651,12 @@ autodoc_file_0_0(File):-
     must_det_l((
      make_module_name(File, M),
      M:convert_to_dynamic(M, '$pldoc', 4),
-     setup_call_cleanup(tell(PlDocFile),
+     setup_call_cleanup(system:tell(PlDocFile),
       setup_call_cleanup(
           open(File, read, LineByLineStream),
           	setup_call_cleanup(
           	    prolog_open_source(File, In),
-          	    autodoc_stream(LineByLineStream, File, In),
+          	    pre_autodoc_stream(LineByLineStream, File, In),
           	    prolog_close_source(In)),
                   (copy_until_line(LineByLineStream, 999999999999),
                     close(LineByLineStream))), told))))).
@@ -677,13 +699,19 @@ autodoc_module(M):-
 % Read Once.
 %
 read_once(In, Term, Expanded, Vs, TermPos):-
- prolog_read_source_term(In, Term, Expanded, [ variable_names(Vs), syntax_errors(error) , term_position(TermPos) ]),
+  read_once(In, Term, Expanded, Vs, TermPos, [syntax_errors(error)]).
+
+read_once(In, Term, Expanded, Vs, TermPos, Options):-
+ as_stream(In,Inn),
+ autodoc_current_module(M),
+ prolog_read_source_term(Inn, Term, Expanded, [ variable_names(Vs), module(M), term_position(TermPos) | Options ]),
  must_det_l((
   \+ \+ autodoc_on_varnames(Term, Vs),
   ignore(( Expanded\==Term -> \+ \+ autodoc_on_varnames(Expanded, Vs) )),
   autodoc_on_directive(Expanded))).
 
-
+as_stream(In,Inn):- atomic(In),is_stream(In),!,Inn=In.
+as_stream(In,Inn):- with_output_to(chars(Cs),write(In)),open_chars_stream(Cs,Inn).
 
 %= 	 	
 
@@ -785,7 +813,10 @@ user:argname_hook(F,A,N,T):-
 autodoc_call(Goal):- autodoc_temp:call(Goal).
 
 :- dynamic(autodoc_temp:arg_info/1).
-autodoc_assert(ArgInfo):- autodoc_temp:assert_if_new(ArgInfo), nop(autodoc_dbg(ArgInfo)).
+autodoc_assert(ArgInfo):- 
+  %M:convert_to_dynamic(M, '$pldoc', 4),
+  %autodoc_dbg(ArgInfo),
+  autodoc_temp:assert_if_new(ArgInfo), nop(autodoc_dbg(ArgInfo)).
 
 no_topvar(Arg):- \+ (arg(_,Arg, E), nonvar(E), E = '$VAR'(_)), !.
 autodoc_unused_arg(H):- \+ compound(H), !.
@@ -882,18 +913,25 @@ get_type_hints(Term, Name, Hints):- compound(Term), Term= 'aVar'(Name,_), oo_get
 %
 autodoc_on_directive(Expanded):- \+ compound(Expanded), !.
 autodoc_on_directive(:- Expanded):- \+ compound(Expanded), !.
-autodoc_on_directive((:- '$set_source_module'(M))):- '$set_source_module'(M).
-autodoc_on_directive((:-op(P, XF, Atom))):- !, push_op(P, XF, Atom).
+autodoc_on_directive((:-op(P, XF, Atom))):- autodoc_current_module(M),!, M:push_op(P, XF, Atom),push_op(P, XF, Atom).
+autodoc_on_directive((A,B)):- !, autodoc_on_directive(A),autodoc_on_directive(B).
+autodoc_on_directive(:- G):- nonvar(G), adod(G), !, autodoc_current_module(M), M:call(G).
 
 %autodoc_on_directive(Expanded):- autodoc_dbg(autodoc_on_directive(Expanded)), !.
 autodoc_on_directive(_Expanded).
 
+adod(G):- \+ compound(G),!.
+adod(_:G):- adod(G).
+adod(set_prolog_flag_until_eof(_,_)).
+adod(set_prolog_flag(_,_)).
+adod('$set_source_module'(_)).
+adod(style_check(_,_)).
 
-%% autodoc_stream( ?LineByLineStream, ?File, ?In) is semidet.
+%% pre_autodoc_stream( ?LineByLineStream, ?File, ?In) is semidet.
 %
 % Autodoc Stream.
 %
-autodoc_stream(LineByLineStream, File, In):-
+pre_autodoc_stream(LineByLineStream, File, In):-
   setup_call_cleanup(
     push_operators([]),
     autodoc_stream_0(LineByLineStream, File, In),
@@ -949,36 +987,151 @@ copy_until_line(Src, LineNo):-
     (at_end_of_stream(Src) -> ! ;
     (line_count(Src, CurrentLinePos),
     (CurrentLinePos>=LineNo -> ! ;
-      (echo_one_line_or_skip_autodoc(Src), fail)))).
+      (with_output_doc(echo_in_between(Src)), fail)))).
 
 
 %% autodoc_magic( ?Starter) is semidet.
 %
 % Autodoc Magic Recogition (only the first is used in generation)
 %
+autodoc_magic(Starter):- Starter = "\n\n%=autodoc\n".
 autodoc_magic(Starter):- Starter = "\n%= \t \t \n\n".
 autodoc_magic(Starter):- Starter = "\n% \t \t \n".
 
 
+:-thread_local(t_l:file_loc/1).
+
+with_output_doc(G):- with_output_to(codes(C),G),doc_format('~s',[C]),format(user_error,'~s',[C]).
+doc_format(T,S):- format(T,S).
+
+read_nchars(_, 0, []):-!.
+read_nchars(Src,N,[C|Codes]):- get_char(Src,C),Nm1 is N - 1,read_nchars(Src,Nm1,Codes).
+
+read_term_line_to_codes(Src, Codes):- read_line_to_codes(Src, Codes).
+
+reinclude_vars(N=V):- V='$VAR'(N).
+
+
 %= 	 	
 
-%% echo_one_line_or_skip_autodoc( ?Src) is semidet.
+%% echo_in_between( ?Src) is semidet.
 %
 % Echo One Line Or Skip Autodoc.
 %
-echo_one_line_or_skip_autodoc(Src):- at_end_of_stream(Src), !.
-echo_one_line_or_skip_autodoc(Src):-
+echo_in_between(In):- (\+ atomic(In); \+ is_stream(In)), !,
+  with_output_to(chars(Cs),write(In)),open_chars_stream(Cs,Src),!,
+  locally_tl(file_loc(In:0),
+  (repeat, echo_in_between(Src))), !.
+echo_in_between(Src):- at_end_of_stream(Src), !.
+echo_in_between(Src):-
   autodoc_magic(Find), string_length(Find, L),
   peek_string(Src, L, Peeked), Peeked=Find, !,
   read_line_to_codes(Src, _), !,
   repeat,
   read_line_to_codes(Src, _),
   peek_string(Src, 1, Was),
-  Was \== "%", !.
-echo_one_line_or_skip_autodoc(Src):- read_line_to_codes(Src, Codes), format('~s~n', [Codes]).
+  Was \== "%", echo_in_between2(Src).
+ %read_term_line_to_codes(Src, Codes),
+echo_in_between(Src):- peek_char(Src,'\n'),!,get_char(Src,Code),doc_format('~w', [Code]),echo_in_between2(Src).
+echo_in_between(Src):- do_white(Src),!, echo_in_between(Src).
+echo_in_between(Src):- 
+  stream_property(Src, position(Pos)), 
+  (recode_codes(Src,Recodes)->doc_format('~s', [Recodes]);(set_stream_position(Src,Pos),fail)),!,
+  echo_in_between2(Src).
+echo_in_between(Src):- read_term_line_to_codes(Src, Codes),doc_format('~s~n', [Codes]),!,echo_in_between2(Src).
 
-:-thread_local(t_l:file_loc/1).
+echo_in_between2(Src):- nop(echo_in_between(Src)).
 
+do_white(In):- peek_char(In,Code),char_type(Code,white),get_char(In,Code),!,doc_format('~w', [Code]).
+do_white(In):- peek_char(In,Code),Code=='%',read_term_line_to_codes(In, Codes),!,doc_format('~s~n', [Codes]).
+
+
+recode_codes(In,Codes):-
+  as_stream(In, Src),
+  stream_property(Src, position(Pos)),
+  byte_count(Src, OrigPos),
+  autodoc_current_module(M),
+  Opts = [singletons(SinglesM),variable_names(VsM), % syntax_errors(quiet),
+          subterm_positions(ST),module(M), comments(CmtM),quasi_quotations(QQM)],
+  
+  prolog_read_source_term(Src, TermM, _, Opts),
+  %autodoc_pred(M:TermM),
+  duplicate_term((TermM+SinglesM+VsM+CmtM+QQM),(TermI+Singles+Vs+Cmt+QQ)),
+  append(Vs,Singles,Vars),
+  maplist(reinclude_vars,Vars),
+  autodoc_xform(M,TermI,Term),!,
+     
+  ((TermI=Term; Cmt \== []; (sub_term(E,TermM),compound(E),E='$VAR'(_))) 
+    -> ( byte_count(Src, NewPos),
+         Len is NewPos - OrigPos,
+         set_stream_position(Src,Pos),
+         read_nchars(Src,Len,Codes))
+       ; with_output_to(chars(Codes),with_pos_write(Term,Vars,ST,Cmt,QQ))),
+  !.
+
+with_pos_write(Term,Vars,ST,Cmt,QQ):- Cmt \== [], !, 
+  Opts = tpc(Term,ST, Cmt),
+  % log(comment_options(Opts)),
+  locally(nb_setval(comment_options,Opts),
+    with_pos_write(Term,Vars,ST,[],QQ)).
+with_pos_write(Term,Vars,ST,Cmt,QQ):- QQ \== [], !, 
+  Opts = tpc(Term,ST, QQ),
+  log(qq_options(Opts)),
+  locally(b_setval(qq_options,Opts),
+    with_pos_write(Term,Vars,ST,Cmt,[])).
+with_pos_write(Term,_,_,_,_):- print_tree_with_final(Term,'.').
+
+autodoc_xform(M,TermI,Term):- current_predicate(M:xform_ad/1), call(M:xform_ad,TermI,Term),!.
+autodoc_xform(_,C,O):-  xform_src(C,O).
+
+
+xform_src_f_l(begin).
+xform_src_f_l(displayln).
+
+
+
+xform_slashed(Dyn,Dyn):- compound_name_arity(Dyn,F,1), 
+   current_op(X,Y,dynamic), current_op(X,Y,F), current_predicate(F/1),
+   \+ ((upcase_atom(F, FF), FF == F)), !.
+
+xform_slashed(C,O):- maybe_into_slash_db(C,O),!.
+xform_slashed(C/CC,uslash(C,CC)).
+
+make_anonymous('$VAR'('_')).
+
+xform_src(C,O):- \+ ground(C), duplicate_term(C,M), term_variables(M,Vars),maplist(make_anonymous,Vars),!,xform_src(M,O).
+xform_src(C,O):- \+ compound(C),!,C=O.
+xform_src('$VAR'(O),'$VAR'(O)).
+%xform_src(G,O):- compound_name_arguments(G,B,Args),xform_src_f_l(B),Args\=[_],!,O=..[B,Args].
+%xform_src(C,O):- autodoc_current_module(npc), npc:xform_slashed(C,O),!.
+xform_src(library(X),library(X)):-!.
+xform_src(X,Z):- compound(X),!,
+  compound_name_arguments(X,F,AX),
+  maplist(xform_src,AX,AY),
+  compound_name_arguments(Y,F,AY),
+  xform_cmpd(Y,Z).
+
+xform_cmpd((X --> B), X --> Body):- expand_dcg_body(B,Body),!.
+xform_cmpd(X,X):- !.
+
+xform_cmpd(property(X,P,Y),p(P,X,Y)).
+xform_cmpd(property(Ctx,X,P,Y),ist(Ctx,p(P,X,Y))).
+xform_cmpd(property_value(X,P,Y),p(P,X,Y)).
+
+xform_cmpd(relation(X,P,Y),t(P,X,Y)).
+xform_cmpd(related(X,P,Y),t(P,X,Y)).
+
+xform_cmpd(location(X,Y),t(location,X,Y)).
+xform_cmpd(contained_in(X,Y),t(contained_in,X,Y)).
+xform_cmpd(p(P,X,Y),t(P,X,Y)).
+xform_cmpd(owner(X,Y),t(owner,X,Y)).
+
+xform_cmpd(P,T):- compound_name_arguments(P,F,ARGS), needs_t_wrapped(F,TF,FF), compound_name_arguments(T,TF,[FF|ARGS]).
+xform_cmpd(Q,Q).
+
+needs_t_wrapped(F,t,FFF):- atom_concat('mud',FF,F),unCamelcase(FF,FFF).
+%needs_t_wrapped(F,m,F):- modal(F).
+%modal(know).
 
 %= 	 	
 
@@ -1011,7 +1164,7 @@ autodoc_stream_data(Src, M, File, FromLine1-_EndingLine, Term, _Expanded, _Vs):-
 %
 autodoc_stream_pred(_, File, M:F/A):- t_l:last_source_file_help_shown(File, M:F/A, _), !.
 autodoc_stream_pred(FromLine, File, M:F/A):- !, autodoc_assert(t_l:last_source_file_help_shown(File, M:F/A, FromLine)),
-                  functor(P, F, A), must(autodoc_pred(M, M:P)), !.
+                  functor(P, F, A), with_output_doc(autodoc_pred(M, M:P)), !.
 autodoc_stream_pred(FromLine, File, M:P):-!, get_functor(P, F, A), autodoc_stream_pred(FromLine, File, M:F/A).
 autodoc_stream_pred(FromLine, File, P):-!, get_functor(P, F, A), autodoc_stream_pred(FromLine, File, _M:F/A).
 
@@ -1023,16 +1176,26 @@ autodoc_stream_pred(FromLine, File, P):-!, get_functor(P, F, A), autodoc_stream_
 %
 % Autodoc Predicate.
 %
-autodoc_pred(M, M:P0):- t_l:last_predicate_help_shown(M, _, P0), !.
-autodoc_pred(M, M:P0):- once(to_comparable_name_arity(P0, F, A)), functor(P, F, A), M \==baseKB , (predicate_property(baseKB:P, _),
-   \+predicate_property(baseKB:P, imported_from(_))), !.
-autodoc_pred(M, M:P0):- once(to_comparable_name_arity(P0, F, A)), clause(M:'$pldoc'(F/A, _, S, D), true), S\==D, !.
-autodoc_pred(_, MP):- MP = _:end_of_file, !.
 
-autodoc_pred(M, M:P0):-
- autodoc_assert(t_l:last_predicate_help_shown(M, M, P0)),
+skip_autodocing_m_f_a(_,F,_):- atom_concat(_,'-',F), !.
+skip_autodocing_m_f_a(_,F,_):- atom_concat(_,'_',F), !.
+skip_autodocing_m_f_a(_,F,_):- atom_concat(_,'0',F), !.
+skip_autodocing_m_f_a(_,F,_):- atom_concat(_,'1',F), !.
+skip_autodocing_m_f_a(_,F,_):- atom_concat(_,'2',F), !.
+skip_autodocing_m_f_a(_,F,_):- atom_concat(_,'3',F), !.
+skip_autodocing_m_f_a(_,end_of_file,0).
+
+autodoc_pred(MP):- strip_module(MP,M,P),autodoc_pred(M, M:P).
+autodoc_pred(M, M:(V/_)):- var(V),!.
+autodoc_pred(M, M:((:-)/1)):- !.
+autodoc_pred(M, M2:P0) :- to_comparable_name_arity(P0, F, A), autodoc_pred(M, M2, F, A).
+autodoc_pred(M, M2, F, A):- t_l:last_predicate_help_shown(M, M2, F/A), !.
+autodoc_pred(_, M, F, A):- functor(P, F, A), M \==baseKB , (predicate_property(baseKB:P, _),
+   \+predicate_property(baseKB:P, imported_from(_))), !.
+autodoc_pred(_, M, F, A):- clause(M:'$pldoc'(F/A, _, S, D), true), S\==D, !.
+autodoc_pred(_, M, F, A):- skip_autodocing_m_f_a(M, F, A),!.
+autodoc_pred(_, M, F, A):-
  must_det_l((
-   once(to_comparable_name_arity(P0, F, A)),
    functor(NameH, F, A), NameH=..[F|NameAs],
    functor(ModeH, F, A), ModeH=..[F|ModeAs],
    functor(NameM, F, A), NameM=..[F|NameAsM],
@@ -1079,8 +1242,7 @@ autodoc_pred(M, M:P0):-
    t_l:file_loc(FileFromLine),
    autodoc_assert(M:'$pldoc'(F/A, FileFromLine, Summary, Summary)),
    autodoc_magic(Starter),
-   format('~N~s%% ~w is semidet.\n%\n% ~w.\n%\n', [Starter, HDocAsNew, Summary]))), !.
-
+   doc_format('~N~s%% ~w is semidet.\n%\n% ~w.\n%\n', [Starter, HDocAsNew, Summary]))), !.
 
 
 %= 	 	
@@ -1100,6 +1262,10 @@ autodoc_toPropercase(I, I).
 %
 ignored_assignment(A, B):-ignore(A=B).
 
+reCaseArg(A,AA):- \+atom(A),format(atom(M),'~w',[A]),!,reCaseArg(M,AA).
+reCaseArg(A,AA):- name(A,[C|Odes]),code_type(C,to_lower(U)),name(AA,[U|Odes]),!.
+reCaseArg(A,AA):- catch(toPropercase(A,AA),_,fail),!.
+reCaseArg(A,AA):- A = AA,!.
 
 %= 	 	
 
@@ -1107,16 +1273,21 @@ ignored_assignment(A, B):-ignore(A=B).
 %
 % Fix Document Arguments For Write.
 %
-fix_doc_args_for_write(Var:A, SF):- var(Var), format(atom(SF), ' ?~w', [A]).
-fix_doc_args_for_write((*):A, SF):-format(atom(SF), ' :Term~w', [A]).
-fix_doc_args_for_write((0):A, SF):-format(atom(SF), ' :Goal~w', [A]).
-fix_doc_args_for_write((I):A, SF):-integer(I), format(atom(SF), ' :PRED~w~w', [I, A]).
-fix_doc_args_for_write((?):A, SF):-format(atom(SF), ' ?~w', [A]).
-fix_doc_args_for_write((+):A, SF):-format(atom(SF), ' +~w', [A]).
-fix_doc_args_for_write((-):A, SF):-format(atom(SF), ' -~w', [A]).
-fix_doc_args_for_write([_|_]:A, SF):-format(atom(SF), ' ?list:~w', [A]).
-fix_doc_args_for_write(_:A, SF):-!, fix_doc_args_for_write('?':A, SF).
-fix_doc_args_for_write(A, A).
+fix_doc_args_for_write(Any:A, SF):- reCaseArg(A,AA), fix_doc_args_for_write_0(Any:AA,SF),!.
+fix_doc_args_for_write(A, SF):- reCaseArg(A,AA), fix_doc_args_for_write_0(AA,SF),!.
+
+fix_doc_args_for_write_0(Var:A, SF):- var(Var), format(atom(SF), ' ?~w', [A]).
+fix_doc_args_for_write_0((*):A, SF):-format(atom(SF), ' :Term~w', [A]).
+fix_doc_args_for_write_0((0):A, SF):-format(atom(SF), ' :Goal~w', [A]).
+fix_doc_args_for_write_0((:):A, SF):-format(atom(SF), ' :Call~w', [A]).
+fix_doc_args_for_write_0((//):A, SF):-format(atom(SF), ' ?DCG~w', [A]).
+fix_doc_args_for_write_0((I):A, SF):-integer(I), format(atom(SF), ' :PRED~w~w', [I, A]).
+fix_doc_args_for_write_0((?):A, SF):-format(atom(SF), ' ?~w', [A]).
+fix_doc_args_for_write_0((+):A, SF):-format(atom(SF), ' +~w', [A]).
+fix_doc_args_for_write_0((-):A, SF):-format(atom(SF), ' -~w', [A]).
+fix_doc_args_for_write_0([_|_]:A, SF):-format(atom(SF), ' ?list:~w', [A]).
+fix_doc_args_for_write_0(_:A, SF):-!, fix_doc_args_for_write_0('?':A, SF).
+fix_doc_args_for_write_0(A, A).
 
 
 %= 	 	
@@ -1160,12 +1331,6 @@ attempt_head_modes(_:ModeH):- predicate_property(M:ModeH, number_of_clauses(Nth)
 attempt_head_modes(NotFound):-autodoc_dbg(attempt_head_modes(NotFound)), !.
 
 
-%= 	 	
-
-%% attempt_head_modes_0( ?VALUE1, ?VALUE2, :TermM) is semidet.
-%
-% attempt head Pred Modes  Primary Helper.
-%
 attempt_head_modes_0(0, _, _).
 attempt_head_modes_0(1, _, M:ModeH):-!, clause(M:ModeH, _), !.
 attempt_head_modes_0(Max, 1, M:ModeH):-nth_clause(M:ModeH, Max, Ref), !, clause(M:ModeH, _, Ref), !.
@@ -1180,7 +1345,7 @@ attempt_head_modes_0(_, _, M:ModeH):-!, clause(M:ModeH, _), !.
 %
 % Great Clause.
 %
-great_clause(M:ModeH, Ref):- term_variables(ModeH, Vs1), clause(M:ModeH, _, Ref), term_variables(ModeH, Vs2), \+ ground(Vs1), Vs1\=Vs2.
+great_clause(M:ModeH, Ref):- term_variables(ModeH, Vs1), clause(M:ModeH, _, Ref), term_variables(ModeH, Vs2), \+ ground(Vs1), Vs1\=Vs2, !.
 great_clause(M:ModeH, Ref):- term_variables(ModeH, Vs1), clause(M:ModeH, _, Ref), term_variables(ModeH, Vs2),  Vs1\=Vs2.
 
 
@@ -1261,9 +1426,10 @@ value_to_name(P, N, Comp, 'TERM'):- compound(Comp).
 mode_to_name0(0, 'GOAL').
 mode_to_name0(*, 'QUERY').
 mode_to_name0(:, 'CALL').
-mode_to_name0(+, 'OUT').
+mode_to_name0(-, 'OUT').
 mode_to_name0(?, 'UPARAM').
-mode_to_name0(-, 'IN').
+mode_to_name0(+, 'IN').
+mode_to_name0('//', 'DCG').
 mode_to_name0(I, Name):- number(I), atom_concat('PRED', I, Name).
 
 % mode_to_name0(_, 'VALUE').
@@ -1277,8 +1443,9 @@ mode_to_name0(I, Name):- number(I), atom_concat('PRED', I, Name).
 name_to_mode(P, N, Name, Mode):-var(Name), !, mode_to_name(P, N, Mode, Name).
 name_to_mode(P, N, '$VAR'(Name), Mode):-!, name_to_mode(P, N, Name, Mode), !.
 name_to_mode(P, N, Name, _Mode):- \+ atom(Name), !.
-name_to_mode(P, N, Name, Mode):-between(1, 9, Mode), mode_to_name0(Mode, Part), atom_contains(Name, Part).
-name_to_mode(P, N, Name, Mode):-mode_to_name0(Mode, Part), atom_contains(Name, Part).
+name_to_mode(P, N, Name, Mode):- atom(Name), upcase_atom(Name,UName),Name\==UName,name_to_mode(P, N, UName, Mode).
+name_to_mode(P, N, Name, Mode):- between(1, 9, Mode), mode_to_name0(Mode, Part), atom_contains(Name, Part).
+name_to_mode(P, N, Name, Mode):- mode_to_name0(Mode, Part), atom_contains(Name, Part).
 name_to_mode(P, N, Name, -):-atom_contains(Name, 'OUT').
 name_to_mode(P, N, Name, *):-atom_contains(Name, 'PRED').
 name_to_mode(P, N, Name, :):-atom_contains(Name, 'CALL').
@@ -1476,7 +1643,7 @@ longer_sumry(cl, 'Clause').
 longer_sumry(clif, 'IEEE Standard Common Logic Interchange Format Version').
 longer_sumry(clr, 'Remove/Erase').
 longer_sumry(cmt, 'Comment').
-longer_sumry(cnf, 'Confunctive Normal Form').
+longer_sumry(cnf, 'Conjunctive Normal Form').
 longer_sumry(ctx, 'Context').
 longer_sumry(d, '(Debug)').
 longer_sumry(db, 'Database').
@@ -1522,6 +1689,8 @@ longer_sumry(mfa, m_fa).
 longer_sumry(minfo, 'Metainformation').
 longer_sumry(mode, 'p Mode').
 longer_sumry(mp, m_goal).
+longer_sumry(vp, 'Verb Phrase').
+longer_sumry(np, 'Noun Phrase').
 longer_sumry(mk, 'Make').
 longer_sumry(mpi, m_pi).
 longer_sumry(mpred, 'Managed Predicate').
@@ -1550,9 +1719,11 @@ longer_sumry(pfc, 'Prolog Forward Chaining').
 longer_sumry(pi, 'Predicate Indicator').
 longer_sumry(poss, 'Possibility').
 longer_sumry(pp, 'Pretty Print').
+longer_sumry(pp, 'Prep Phrase').
 longer_sumry(pred, 'Predicate').
 longer_sumry(pt, 'Predicate Type').
 longer_sumry(quick, 'Incomplete, But Fast, Version').
+longer_sumry(qud, 'Topic').
 longer_sumry(rem, 'Remove/Erase').
 longer_sumry(rhs, 'Right-Hand-Side').
 longer_sumry(safe, 'Safely Paying Attention To Corner Cases').
@@ -1617,7 +1788,7 @@ mpred_show_doc(What):- match_predicates(What, Preds), Preds\==[], Preds\==[What]
 %
 mpred_show_doc(M:F/A, ['$mode'(PI, Det)]):-functor(PI, F, A), clause(M:'$mode'(PI, Det), true).
 mpred_show_doc(M:F/A, [Info, Info2]):-   clause(M:'$pldoc'(F/A, _FL, Info, Info2), true).
-mpred_show_doc(Id, [Info, Info2]):- clause(_, '$pldoc'(Id, _FL, Info, Info2), true).
+mpred_show_doc(Id, [Info, Info2]):- clause('$pldoc'(Id, _FL, Info, Info2), true).
 mpred_show_doc(M, [Title, Info, Info2]):- pldoc_process:doc_comment(M:module(Title), _FileLines, Info, Info2).
 
 
@@ -1672,9 +1843,11 @@ mpred_prolog_only_module(M):-atom_concat(common_logic_, _, M).
 % Autodoc Test.
 %
 autodoc_test:-
-  autodoc_file_0(library(episodic_memory/'adv_action.pl')),
-  autodoc_file_0(library(episodic_memory/'*.pl')),
-  autodoc_file_0(library(instant_prolog_docs)),
+  notrace,cls , make,
+   autodoc_file('Assets/Ontology/knowledge_representation.prolog'),
+  %%autodoc_file_0(library(episodic_memory/'adv_action.pl')),
+  %%autodoc_file_0(library(episodic_memory/'*.pl')),
+  %%autodoc_file_0(library(instant_prolog_docs)),
   %autodoc_file_0(library(logicmoo/'*.pl')),
   !.
 

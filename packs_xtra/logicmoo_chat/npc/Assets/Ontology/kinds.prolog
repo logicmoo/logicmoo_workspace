@@ -1,6 +1,13 @@
 :- multifile(immediate_kind_of/2).
 :- dynamic(immediate_kind_of/2).
 
+
+
+%=autodoc
+%% immediate_kind_of( ?Text1, ?Abstract2) is semidet.
+%
+% Immediate Kind Of.
+%
 immediate_kind_of(endurant, entity).
 immediate_kind_of(actor, endurant).
 immediate_kind_of(physical_endurant, endurant).
@@ -101,6 +108,13 @@ immediate_kind_of(telling_truth, dignitary_favor).
 immediate_kind_of(honesty, telling_truth).
 immediate_kind_of(honoring, dignitary_favor).
 
+
+
+%=autodoc
+%% process_kind_hierarchy is semidet.
+%
+% Process Kind Hierarchy.
+%
 process_kind_hierarchy:- log(todo(process_kind_hierarchy)).
 
 :- process_kind_hierarchy.

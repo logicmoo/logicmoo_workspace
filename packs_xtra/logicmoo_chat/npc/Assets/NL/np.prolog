@@ -2,15 +2,36 @@
 %%%                  Noun Phrases
 %%%
 
+
+
+%=autodoc
+%% test_file( ?ARG1, ?NL/base_grammar_test2) is semidet.
+%
+% Test File.
+%
 test_file(generate(np, _), "NL/np_tests").
 test_file(complete(np, _), "NL/np_tests").
 test_file(parse(np, _), "NL/np_tests").
 
 :- indexical selectional_constraints=[].
 
+
+
+%=autodoc
+%% impose_selectional_constraint( ?Var, ?Type) is semidet.
+%
+% Impose Selectional Constraint.
+%
 impose_selectional_constraint(Var, Type) :-
    bind(selectional_constraints, [Var:Type | $selectional_constraints]).
 
+
+
+%=autodoc
+%% selectional_constraint( ?Var, ?Type) is semidet.
+%
+% Selectional Constraint.
+%
 selectional_constraint(Var, Type) :-
    memberchk(Var:Type, $selectional_constraints),
    !.
@@ -30,12 +51,12 @@ np(NP, Case, Agreement, Gap, Gap) -->
    pronoun(Case, Agreement,NP).
 
 % Demonstrative pronouns
-np((E^S)^S, _Case, third:singular, Gap, Gap) -->
-   { var(E) },
-   [ Demonstrative ],
-   { input_from_player,
-     demonstrative_pronoun(Demonstrative),
-     /perception/mouse_selection:E }.
+np((E^S)^S, _Case, third:singular, Gap, Gap) -->  
+  ( {var(E)}  ,
+    theTextM1(Demonstrative), 
+    { input_from_player, 
+      demonstrative_pronoun(Demonstrative), 
+      /perception/mouse_selection:E }).
 
 % Proper names
 np((E^S)^S, Case, third:Number, Gap, Gap) -->
@@ -50,9 +71,16 @@ np((E^S)^S, Case, third:Number, Gap, Gap) -->
    proper_name_without_the(E, Number),
    opt_genitive(Case).
 
+
+
+%=autodoc
+%% opt_genitive( ?ARG1) is semidet.
+%
+% Opt Genitive.
+%
 opt_genitive(subject) --> [].
 opt_genitive(object) --> [].
-opt_genitive(genitive) --> ['\'', s].
+opt_genitive(genitive)-->theTextM(['\'', s]).
 
 % Possessive constructions (parse only right now).
 np((X^S)^S, _, third:Number, Gap, Gap) -->
@@ -60,9 +88,23 @@ np((X^S)^S, _, third:Number, Gap, Gap) -->
    possessive_np(X, Number).
 
 :- public not_generating_or_completing/2, not_completing/3.
+
+
+%=autodoc
+%% not_generating_or_completing( +IN1, +In) is semidet.
+%
+% Not Generating Or Completing.
+%
 not_generating_or_completing(In, In) :-
    nonvar(In).
    
+
+
+%=autodoc
+%% not_completing( ?LF, ?ARG2, ?ARG3) is semidet.
+%
+% Not Completing.
+%
 not_completing(LF, _, _) :-
    nonvar(LF),
    !.
@@ -71,44 +113,56 @@ not_completing(_, In, In) :-
    
 :- dynamic(kind_noun//2).
 
-possessive_np(X, Number) -->
-   [your],
-   kind_noun_s(X, Kind, Number),
-   { iz_a(X, Kind),
-     owner($addressee, X) }.
 
-possessive_np(X, Number) -->
-   [my],
-   kind_noun_s(X, Kind, Number),
-   { iz_a(X, Kind),
-     possessive_pronoun_referrent($speaker, Owner),
-     owner(Owner, X) }.
 
-possessive_np(X, Number) -->
-   proper_name(Owner, singular),
-   ['\'', s],
-   kind_noun_s(X, Kind, Number),
-   { iz_a(X, Kind),
-     owner(Owner, X) }.
+%=autodoc
+%% possessive_np( ?ARG1, ?ARG2) is semidet.
+%
+% Possessive Noun Phrase.
+%
+possessive_np(X, Number) -->  
+  ( theTextM1(your)  ,
+    kind_noun_s(X, Kind, Number), 
+    {iz_a(X, Kind), owner($addressee, X)}).
 
+possessive_np(X, Number) -->  
+  ( theTextM1(my)  ,
+    kind_noun_s(X, Kind, Number), 
+    { iz_a(X, Kind), 
+      possessive_pronoun_referrent($speaker, Owner), 
+      owner(Owner, X) }).
+
+possessive_np(X, Number) -->  
+  ( proper_name(Owner, singular)  ,
+    theTextM(['\'', s]), 
+    kind_noun_s(X, Kind, Number), 
+    {iz_a(X, Kind), owner(Owner, X)}).
+
+
+
+%=autodoc
+%% possessive_pronoun_referrent( ?ARG1, ?ARG2) is semidet.
+%
+% Possessive Pronoun Referrent.
+%
 possessive_pronoun_referrent(player, $pc) :- !.
 possessive_pronoun_referrent(X, X).
 
 % PARSE/COMPLETE ONLY
 % "a KIND" from unbound variables with declared types
-np(LF, _, third:singular, Gap, Gap) -->
-   { var(LF) }, 
-   [a],
-   kind_noun_s(X, Kind, singular),
-   { LF = ((X^S)^(S, iz_a(X, Kind))) }.
+np(LF, _, third:singular, Gap, Gap) -->  
+  ( {var(LF)}  ,
+    theTextM1(a), 
+    kind_noun_s(X, Kind, singular), 
+    {LF=(X^S)^(S, iz_a(X, Kind))}).
 
 % GENERATE ONLY
 % "a KIND" from unbound variables with declared types
-np((X^S)^S, _, third:singular, Gap, Gap) -->
-   { var(X) },
-   [a ],
-   { discourse_variable_type(X, Kind) },
-   kind_noun_s(X, Kind, singular).
+np((X^S)^S, _, third:singular, Gap, Gap) -->  
+  ( {var(X)}  ,
+    theTextM1(a), 
+    {discourse_variable_type(X, Kind)}, 
+    kind_noun_s(X, Kind, singular)).
 
 % PARSE ONLY
 % "the NOUN"
@@ -163,6 +217,13 @@ np((X^S)^S, _C, third:singular, Gap, Gap) -->
    { % leaf_kind(Kind),
      (X = Kind) }.
 
+
+
+%=autodoc
+%% object_matching_selectional_constraint( ?X, +Kind) is semidet.
+%
+% Object Matching Selectional Constraint.
+%
 object_matching_selectional_constraint(X, Kind) :-
    selectional_constraint(X, ConstraintKind),
    kind_of(Kind, ConstraintKind),
@@ -170,19 +231,31 @@ object_matching_selectional_constraint(X, Kind) :-
 
 % GENERATE ONLY
 % Fixed strings.
-np((String^S)^S, _, _, Gap, Gap) -->
-   {string(String)},
-   [String].
+np((String^S)^S, _, _, Gap, Gap) -->  
+  {string(String)}, theTextM1(String).
 
 % GENERATE ONLY
 % Numbers.
-np((Number^S)^S, _, _, Gap, Gap) -->
-   {number(Number)},
-   [Number].
+np((Number^S)^S, _, _, Gap, Gap) -->  
+  {number(Number)}, theTextM1(Number).
 
+
+
+%=autodoc
+%% autocomplete_kinds( ?Kind) is semidet.
+%
+% Autocomplete Kinds.
+%
 autocomplete_kinds(Kind):- leaf_kind(Kind), Kind \== kind, (\+ \+ iz_a(_,Kind)),  subkinds(abstract,X), \+ member(Kind,X).
 autocomplete_kinds(person).
 
+
+
+%=autodoc
+%% kind_noun_s( ?X, +Kind, +Singular, ?A, ?B) is semidet.
+%
+% Kind Noun S.
+%
 kind_noun_s(X, Kind, Singular, [A|S], B) :-
     ( (\+ var(A), \+ var(X)) -> true; autocomplete_kinds(Kind)),
     kind_noun(Kind, Singular, [A|S], B),
@@ -193,6 +266,13 @@ kind_noun_s(X, Kind, Singular, [A|S], B) :-
 resolve_definite_description(Object, Constraint):-
   limit(4,resolve_definite_description0(Object, Constraint)),
   log(ap(resolve_definite_description(Object, Constraint))).
+
+%=autodoc
+%% resolve_definite_description( ?Object, +Constraint) is semidet.
+%
+% Resolve Definite Description.
+%
+
 
 resolve_definite_description0(X, Constraint) :-
    nonvar(X),
@@ -216,5 +296,12 @@ resolve_definite_description0(_Object, Constraint) :-
 %%% Realizing property values
 %%%
 
-property_value_np(_Property, Value) --> [Value].
+
+
+%=autodoc
+%% property_value_np( ?ARG1, ?ARG2) is semidet.
+%
+% Property Value Noun Phrase.
+%
+property_value_np(_Property, Value)-->theTextM1(Value).
 

@@ -1,8 +1,22 @@
+
+
+%=autodoc
+%% known_object( ?Object) is semidet.
+%
+% Known Object.
+%
 known_object(Object) :-
    for_all_unique(Object,
 		  declare_kind(Object, _),
 		  true).
 
+
+
+%=autodoc
+%% known_type( ?String1) is semidet.
+%
+% Known Type.
+%
 known_type(number).
 known_type(string).
 known_type(List) :-
@@ -14,12 +28,33 @@ known_type(subkind_of(Kind)) :-
 known_type(Kind) :-
    kind(Kind).
 
+
+
+%=autodoc
+%% known_property( ?Property) is semidet.
+%
+% Known Property.
+%
 known_property(Property) :-
    for_all_unique(Property, property_type(Property, _, _)).
 
+
+
+%=autodoc
+%% known_relation( ?Relation) is semidet.
+%
+% Known Relation.
+%
 known_relation(Relation) :-
    for_all_unique(Relation, relation_type(Relation, _, _)).
 
+
+
+%=autodoc
+%% test( ?Property_declarations_well_formed, ?The following properties specify unknown types in the spreadsheet) is semidet.
+%
+% Test.
+%
 test(integrity(property_declarations_well_formed),
      [ problem_list("The following properties specify unknown types in the spreadsheet",
 		    Malformed) ]) :-
@@ -156,6 +191,13 @@ test(entities_have_required_relations,
 	 \+ related(Entity, MissingRelation, _) ),
        ProblematicEntities).
 
+
+
+%=autodoc
+%% lambda_contains_undefined_predicate( ?P, -O) is semidet.
+%
+% Lambda Contains Undefined Predicate.
+%
 lambda_contains_undefined_predicate([P],O) :- !, lambda_contains_undefined_predicate(P,O).
 lambda_contains_undefined_predicate(P,O) :- !, is_list(P), maplist(lambda_contains_undefined_predicate,P,O).
 

@@ -4,6 +4,13 @@
 
 :- public log_dialog_act/1.
 :- external recent_dialog/1, transcript/1.
+
+
+%=autodoc
+%% log_dialog_act( ?DA) is semidet.
+%
+% Log Dialog Single Doer Action.
+%
 log_dialog_act(DA) :-
    asserta($global::recent_dialog(DA)),
    assertz($global::transcript(DA)).
@@ -13,6 +20,13 @@ log_dialog_act(DA) :-
 transcript :-
    forall(transcript(DA),
 	  writeln(DA)).
+
+%=autodoc
+%% transcript is semidet.
+%
+% Transcript.
+%
+
 
 fkey_command(alt-t, "Display transcript") :-
    generate_unsorted_overlay("Transcript",
@@ -63,6 +77,13 @@ recent_dialog(Speaker, DA) :-
 %% Just big chunks of fixed text.
 %%
 
+
+
+%=autodoc
+%% normalize_task( ?Status, ?Task) is semidet.
+%
+% Normalize Task.
+%
 normalize_task(monolog([ ]),
 	       null).
 normalize_task(monolog([String | MoreMonolog]),
@@ -160,4 +181,11 @@ strategy(mental_monolog(Items),
 default_addressee(Partner) :-
    in_conversation_with(Partner),
    !.
+
+%=autodoc
+%% default_addressee( ?Partner) is semidet.
+%
+% Default Addressee.
+%
+
 default_addressee($me).

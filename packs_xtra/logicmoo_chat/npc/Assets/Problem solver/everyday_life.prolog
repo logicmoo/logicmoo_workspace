@@ -25,6 +25,13 @@ character_debug_display(Character, line("Topics:\t", Person:Topic)) :-
 
 :- multifile(todo/2).
 
+
+
+%=autodoc
+%% todo( ?Person, :PRED11) is semidet.
+%
+% Todo.
+%
 todo(Task, Priority) :-
    personal_todo(Task, Priority).
 
@@ -55,6 +62,13 @@ default_strategy(work_on_everyday_life_task(T),
 		       set_status(idle))) :-
    unpack_preamble(T, Task, Preamble).
 
+
+
+%=autodoc
+%% unpack_preamble( ?Task, ?Task, ?Preamble) is semidet.
+%
+% Unpack Preamble.
+%
 unpack_preamble(Task/Preamble, Task, Preamble) :- !.
 unpack_preamble(Task, Task, null).
 
@@ -70,6 +84,13 @@ unpack_preamble(Task, Task, null).
 % Defined when the everyday_life qud is created. 
 :- external everyday_life_task/1.
 
+
+
+%=autodoc
+%% everyday_life_task_busy is semidet.
+%
+% Everyday Life Task Busy.
+%
 everyday_life_task_busy :-
    everyday_life_task(C),
    C/quds/_.
@@ -79,6 +100,13 @@ everyday_life_task_busy :-
 restart_everyday_life_task :-
    everyday_life_task(C),
    restart_task(C).
+
+%=autodoc
+%% restart_everyday_life_task is semidet.
+%
+% Restart Everyday Life Task.
+%
+
 
 %% stop_current_everyday_life_task
 % Stops whatever the everyday_life task is currently trying to do.
@@ -96,8 +124,22 @@ todo(T/retract(Node), P) :-
    /goals/pending_tasks/(T>>Node),
    Node:P.
 
+
+
+%=autodoc
+%% add_pending_task( ?Task) is semidet.
+%
+% Add Pending Task.
+%
 add_pending_task(Task) :-
    add_pending_task(Task, 1).
+
+
+%=autodoc
+%% add_pending_task( ?Task, ?Priority) is semidet.
+%
+% Add Pending Task.
+%
 add_pending_task(Task, Priority) :-
    current_priority(P),
    Multiplied is Priority*P,
@@ -112,29 +154,85 @@ todo(achieve(P), 1) :-
    % Make sure that P isn't obviously unachievable.
    have_strategy(achieve(P)).
 
+
+
+%=autodoc
+%% unsatisfied_maintenance_goal( ?P) is semidet.
+%
+% Unsatisfied Maintenance Goal.
+%
 unsatisfied_maintenance_goal(P) :-
    maintenance_goal(P),
    \+ P.
 
+
+
+%=autodoc
+%% maintenance_goal( ?P) is semidet.
+%
+% Maintenance Goal.
+%
 maintenance_goal(P) :-
    /goals/maintain/P.
 
 maintenance_goal(~hungry($me)).
+
+
+%=autodoc
+%% hungry( ?ARG1) is semidet.
+%
+% Hungry.
+%
 hungry($me) :- /physiological_states/hungry.
+
+
+%=autodoc
+%% ~ ?Q is semidet.
+%
+% ~.
+%
 ~hungry(X) :- \+ hungry(X).
 
 maintenance_goal(~thirsty($me)).
+
+
+%=autodoc
+%% thirsty( ?ARG1) is semidet.
+%
+% Thirsty.
+%
 thirsty($me) :- /physiological_states/thirsty.
 ~thirsty(X) :- \+ thirsty(X).
 
 maintenance_goal(~tired($me)).
+
+
+%=autodoc
+%% tired( ?ARG1) is semidet.
+%
+% Tired.
+%
 tired($me) :- /physiological_states/tired.
 ~tired(X) :- \+ tired(X).
 
 maintenance_goal(~dirty($me)).
+
+
+%=autodoc
+%% dirty( ?ARG1) is semidet.
+%
+% Dirty.
+%
 dirty($me) :- /physiological_states/dirty.
 ~dirty(X) :- \+ dirty(X).
 
 maintenance_goal(~full_sweat($me)).
+
+
+%=autodoc
+%% full_sweat( ?ARG1) is semidet.
+%
+% Full Sweat.
+%
 full_sweat($me) :- /physiological_states/full_sweat.
 ~full_sweat(X) :- \+ full_sweat(X).

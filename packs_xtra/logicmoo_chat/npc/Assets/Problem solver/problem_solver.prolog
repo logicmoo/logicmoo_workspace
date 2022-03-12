@@ -2,6 +2,13 @@
 %% Simple problem solver in the general tradition of NASL
 %%
 
+
+
+%=autodoc
+%% test_file( ?ARG1, ?NL/base_grammar_test2) is semidet.
+%
+% Test File.
+%
 test_file(problem_solver(_), "Problem solver/integrity_checks").
 test_file(problem_solver(_), "Problem solver/ps_tests").
 
@@ -24,8 +31,22 @@ start_task(Parent, Task, Priority, TaskQud, Assertions) :-
    forall(member(A, Assertions), assert(A)).
 %   within_task(TaskQud, switch_to_task(Task)).
 
+
+
+%=autodoc
+%% start_task( ?Parent, ?Task, ?Priority) is semidet.
+%
+% Start Task.
+%
 start_task(Parent, Task, Priority) :-
    start_task(Parent, Task, Priority, _, [ ]).
+
+
+%=autodoc
+%% start_task( ?Task, ?Priority) is semidet.
+%
+% Start Task.
+%
 start_task(Task, Priority) :-
    start_task($root, Task, Priority, _, [ ]).
 
@@ -45,10 +66,31 @@ within_task(TaskQud, Code) :-
    (TaskQud/partner/P -> bind(addressee, P) ; true),
    Code.
 
+
+
+%=autodoc
+%% primitive_task( ?T) is semidet.
+%
+% Primitive Task.
+%
 primitive_task(T) :-
    builtin_task(T) ; action(T).
+
+
+%=autodoc
+%% builtin_task( ?T) is semidet.
+%
+% Builtin Task.
+%
 builtin_task(T) :-
    immediate_builtin(T) ; polled_builtin(T).
+
+
+%=autodoc
+%% immediate_builtin( ?ARG1) is semidet.
+%
+% Immediate Builtin.
+%
 immediate_builtin(null).
 immediate_builtin(done).
 immediate_builtin(call(_)).
@@ -59,6 +101,13 @@ immediate_builtin(retract(_)).
 immediate_builtin(invoke_continuation(_)).
 immediate_builtin((_,_)).
 immediate_builtin(let(_,_)).
+
+
+%=autodoc
+%% polled_builtin( ?Breakpoint1) is semidet.
+%
+% Polled Builtin.
+%
 polled_builtin(yield).
 polled_builtin(wait_condition(_)).
 polled_builtin(wait_event(_)).
@@ -82,6 +131,13 @@ have_strategy(Task) :-
    !,
    have_strategy_aux(Reduct).
 
+
+
+%=autodoc
+%% have_strategy_aux( ?Task) is semidet.
+%
+% Have Strategy Aux.
+%
 have_strategy_aux(resolve_match_failure(Task)) :-
    !,
    task_reduction(resolve_match_failure(Task),

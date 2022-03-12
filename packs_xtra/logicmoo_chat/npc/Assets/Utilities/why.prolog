@@ -29,6 +29,13 @@ why_not(_) :-
 	writeln('No rules match goal.').
 diagnose_failure((A,B)) :-
 	!, (diagnose_failure(A) ; diagnose_failure(B)).
+
+%=autodoc
+%% diagnose_failure( ?A) is semidet.
+%
+% Diagnose Failure.
+%
+
 diagnose_failure(P) :-
 	\+ P,
 	write('   fails at: '), write(P), nl.

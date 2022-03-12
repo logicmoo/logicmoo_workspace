@@ -33,6 +33,13 @@
         !,
         fail.
 
+%=autodoc
+%% @@ :GoalGoal is semidet.
+%
+% @@.
+%
+
+
 @@ Goal :-
         strict_der(root,Goal),
         contrary(Goal,Contrary),
@@ -78,6 +85,13 @@
 dlisting(Predicate) :-
         listing(Predicate),
         fail.
+
+%=autodoc
+%% dlisting( :TermPredicate) is semidet.
+%
+% Dlisting.
+%
+
 
 dlisting(Predicate) :-
         clause(~ Head,Body),
@@ -133,6 +147,13 @@ dfunctor(~ Clause,Predicate,Arity) :-
         functor(Clause,Predicate,Arity),
         !.
 
+%=autodoc
+%% dfunctor( ?Clause, :TermPredicate, ?Arity) is semidet.
+%
+% Dfunctor.
+%
+
+
 dfunctor(Clause,Predicate,Arity):-
         functor(Clause,Predicate,Arity).
 
@@ -145,6 +166,13 @@ dfunctor(Clause,Predicate,Arity):-
 rule_functor((Head :- _),Predicate,Arity) :-
         dfunctor(Head,Predicate,Arity),
         !.
+
+%=autodoc
+%% rule_functor( ?Head, :TermPredicate, ?Arity) is semidet.
+%
+% Rule Functor.
+%
+
 
 rule_functor((Head := _),Predicate,Arity) :-
         dfunctor(Head,Predicate,Arity),
@@ -164,6 +192,13 @@ pprint(Head,' :-',true) :-
         !,
         write(Head), write('.'), nl.
 
+%=autodoc
+%% pprint( ?Head, ? :-, ?True) is semidet.
+%
+% Pprint.
+%
+
+
 pprint(Head,Operator,Clause) :-
         write(Head), write(Operator), nl,
         pprint(Clause).
@@ -172,6 +207,13 @@ pprint((First,Rest)) :-
         !,
         write('    '), write(First), write(','), nl,
         pprint(Rest).
+
+%=autodoc
+%% pprint( ?First) is semidet.
+%
+% Pprint.
+%
+
 
 pprint(Clause) :-
         write('    '), write(Clause), write('.'), nl.

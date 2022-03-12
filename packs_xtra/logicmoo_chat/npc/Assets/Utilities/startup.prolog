@@ -2,6 +2,13 @@
 %%% Utilities involved in loading the KB and lexicon
 %%%
 
+
+
+%=autodoc
+%% warn_but_keep_going( ?G) is semidet.
+%
+% Warn But Keep Going.
+%
 warn_but_keep_going(G):-  G *-> true ; (clause(G,_)->log(warn(failed(G)));true).
 :- public load_csv_row/2.
 :- public begin_csv_loading/1, end_csv_loading/1.
@@ -38,6 +45,13 @@ register_lexical_items(List) :-
 	  register_lexical_item(Item)).
 
 
+
+
+%=autodoc
+%% repaired_words( ?ARG1, ?ARG2) is semidet.
+%
+% Repaired Words.
+%
 repaired_words([],[]):-!.
 repaired_words(Words,RWords):- atom(Words),atom_contains(Words,'_'),atomic_list_concat(RWords,'_',Words).
 repaired_words(Words,RWords):- atom(Words),atom_contains(Words,' '),atomic_list_concat(RWords,' ',Words).
@@ -65,11 +79,25 @@ assert_phrase_rule(Phrase, Words, Guard):-
 	     Words:"Phrase must be a list of symbols"),
    assert_phrase_subrules(Phrase, Words, Guard).
 
+
+
+%=autodoc
+%% assert_phrase_subrules( ?Phrase, ?W, ?Guard) is semidet.
+%
+% Assert Phrase Subrules.
+%
 assert_phrase_subrules(Phrase, [W|Words], Guard):-
   assert_phrase_1subrule(Phrase, [W|Words], Guard),
   nop(assert_phrase_subrules(Phrase, Words, Guard)).
 assert_phrase_subrules(_Phrase, [], _Guard).
 
+
+
+%=autodoc
+%% assert_phrase_1subrule( ?Phrase, ?Words, ?Guard) is semidet.
+%
+% Assert Phrase 1subrule.
+%
 assert_phrase_1subrule(Phrase, Words, Guard):- 
   Rule = phrase_rule(Phrase, Words, Guard),
    assertz_if_new(/*$global::*/Rule),
@@ -114,6 +142,13 @@ assert_proper_name(Object, Name, NumberSpec) :-
 % This is just to handle defaulting of number to singular, and to
 % catch mistyped number.
 number_spec_number(Plural, plural):- plural == Plural.
+
+%=autodoc
+%% number_spec_number( ?Plural, ?Plural) is semidet.
+%
+% Number Spec Number.
+%
+
 number_spec_number([X], N):- nonvar(X), number_spec_number(X, N).
 number_spec_number(_, singular).
 

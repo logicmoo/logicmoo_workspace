@@ -1,9 +1,10 @@
 
-:- module(npc,[]).
+%:- module(npc,[]).
 % :- module(baseKB).
 
 :- clause(agent_module(_),_) -> true ; prolog_load_context(module,M),asserta(agent_module(M)).
 :- use_module(library(logicmoo_common)).
+:- use_module(library(logicmoo_autodoc)).
 %:- use_module(library(pfc_lib)).
 :- style_check(- discontiguous).  
 :- agent_module(M), module(M).
@@ -409,6 +410,8 @@ post_true(UserKnowIWant):-
 do_demo(X):- ensure(X).
 user:do_s:- 
  make,e_demo1(X),do_demo(X).
+
+:- use_module(library(logicmoo_autodoc)).
 
 :- fixup_exports.
 

@@ -1,9 +1,23 @@
 :- external explanation/2.
 
+
+
+%=autodoc
+%% before( ?ARG1, ?Partner) is semidet.
+%
+% Before.
+%
 before(goto(_),
        excuse_self($me, Partner)) :-
    in_conversation_with(Partner).
 
+
+
+%=autodoc
+%% conversation_idle_task( ?Partner, +Pending_conversation) is semidet.
+%
+% Conversation Idle Task.
+%
 conversation_idle_task(Partner, pending_conversation) :-
    /pending_conversation_topics/Partner/_.
 

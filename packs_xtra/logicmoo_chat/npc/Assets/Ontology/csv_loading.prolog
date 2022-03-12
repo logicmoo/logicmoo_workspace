@@ -7,6 +7,13 @@
 %% Kinds
 %%
 
+
+
+%=autodoc
+%% load_special_csv_row( ?RowNumber, ?Base) is semidet.
+%
+% Load Special Csv Row.
+%
 load_special_csv_row(RowNumber,
 		     kinds(Kind, Parents,
 			   Description,
@@ -44,20 +51,48 @@ load_special_csv_row(RowNumber,
 		    kind_declaration_syntax_error(Kind, row:RowNumber,
 						  class_relation_list:BadElement))).
 
+
+
+%=autodoc
+%% assert_default_description( ?ARG1, ?ARG2) is semidet.
+%
+% Assert Default Description.
+%
 assert_default_description(_, null).
 assert_default_description(Kind, Description) :-
    assert_if_unew(default_value(Kind, description, Description)).
 
+
+
+%=autodoc
+%% decode_kind_names( ?ARG1, ?ARG2, ?ARG3) is semidet.
+%
+% Decode Kind Names.
+%
 decode_kind_names([[-]], _, []).
 decode_kind_names([[]], Default, [Default]).
 decode_kind_names([], Default, [Default]).
 decode_kind_names(Names, _, Names).
 
+
+
+%=autodoc
+%% pluralize( ?B, ?B) is semidet.
+%
+% Pluralize.
+%
 pluralize([B|S],[B|P]):- S\==[], !, pluralize(S,P).
 pluralize([S],[P]):- !, pluralize(S,P).
 pluralize(die,dice).    pluralize(ox,oxen). 
 pluralize(S,P):- atom(S),plur(SF,L,PF),atom_concat(R,SF,S),atom_length(R,AL),AL>=L,!,atom_concat(R,PF,P).
 pluralize(S,P):- atom(P),plur(SF,L,PF),atom_concat(R,PF,P),atom_length(R,AL),AL>=L,!,atom_concat(R,SF,S).
+
+
+%=autodoc
+%% plur( ?ATOM1, :GoalGOAL2, ?ATOM3) is semidet.
+%
+% Plur.
+%
 plur(foot,0,feet).   plur(tooth,0,teeth).   plur(goose,0,geese).   plur(child,0,children).
 plur(woman,0,women). plur(mouse,0,mice).    plur(index,0,indices). plur(man,0,men).    
 plur('sis',2,'ses'). plur('xis',1,'xes').   plur('us',2,'i').      plur('ss',1,'sses').
@@ -66,6 +101,13 @@ plur('o',1,'oes').   plur('x',1,'xes').     plur('um',2,'a').      plur('on',2,'
 plur('y',1,'ies').   plur('h',3,'hes').     plur('z',2,'zes').     plur('s',2,'ses'). 
 plur('',3,'s').      plur('s',0,'s').       plur('',0,'s').
 
+
+
+%=autodoc
+%% assert_kind_nouns( +Kind, ?Nil, ?Pls) is semidet.
+%
+% Assert Kind Nouns.
+%
 assert_kind_nouns(Kind, [Nil], Pls):-  Nil == [], !, assert_kind_nouns(Kind, [], Pls).
 assert_kind_nouns(Kind, Sings, [Nil]):- Nil == [], !,  assert_kind_nouns(Kind, Sings, []).
 assert_kind_nouns(Kind, [], Pls):- !, 
@@ -79,6 +121,13 @@ assert_kind_nouns(Kind, Singulars, Plurals) :-
 	 forall(member(Phrase, Plurals),
 		assert_phrase_rule(kind_noun(Kind, plural), Phrase))).
 
+
+
+%=autodoc
+%% define_kind( ?RowNumber, +Kind, ?ARG3) is semidet.
+%
+% Define Kind.
+%
 define_kind(RowNumber, Kind, _) :-
    kind(Kind),
    log(warn(throw(error(row:RowNumber:kind_already_defined:Kind)))),fail.
@@ -90,6 +139,13 @@ define_kind(_, Kind, Parents) :-
    forall(member(P, Parents),
 	  assert_if_unew(immediate_kind_of(Kind, P))).
 
+
+
+%=autodoc
+%% end_csv_loading( ?Intransitive_verb) is semidet.
+%
+% End Csv Loading.
+%
 end_csv_loading(kinds) :-
    % Find all the leaf kinds
    forall((kind(K), \+ immediate_kind_of(_, K)),
@@ -99,6 +155,13 @@ end_csv_loading(predicate_type) :-
    forall(predicate_type(Type, ArgTypes),
 	  check_predicate_signature(Type, ArgTypes)).
 
+
+
+%=autodoc
+%% check_predicate_signature( ?Type, ?ArgTypes) is semidet.
+%
+% Check Predicate Signature.
+%
 check_predicate_signature(Type, ArgTypes) :-
    \+ kind(Type),
    log(bad_declared_type(ArgTypes, Type)).
@@ -145,6 +208,13 @@ load_special_csv_row(_RowNumber,
 	 (Inverse \= null -> assert_if_unew(inverse_relation(Name, Inverse)) ; true),
 	 (Symmetric \= null -> assert_if_unew(symmetric(Name)) ; true)).
 
+
+
+%=autodoc
+%% assert_copular_form( ?Name, ?[]) is semidet.
+%
+% Assert Copular Form.
+%
 assert_copular_form(_Name, [ ]).
 assert_copular_form(Name, [be | CopularForm]) :-
    assert_phrase_rule(copular_relation(Name), CopularForm).
@@ -153,6 +223,13 @@ assert_copular_form(Name, CopularForm) :-
    % (the English copula is the verb "to be").
    log(malformed_copular_form_of_relation(Name, CopularForm)).
 
+
+
+%=autodoc
+%% assert_genitive_form( ?Name, ?Number, ?[]) is semidet.
+%
+% Assert Genitive Form.
+%
 assert_genitive_form(_Name, _Number, []).
 assert_genitive_form(Name, Number, Phrase) :-
    assert_phrase_rule(genitive_form_of_relation(Name, Number), Phrase).
@@ -161,6 +238,13 @@ assert_genitive_form(Name, Number, Phrase) :-
 %% Entities
 %%
 member_pn(E,[H|T]):- is_list(H),!,member(E,[H|T]).
+
+%=autodoc
+%% member_pn( ?E, ?H) is semidet.
+%
+% Member Pn.
+%
+
 member_pn(E,E):- E\==[], is_list(E).
 
 load_special_csv_row(_RowNumber,
@@ -182,10 +266,24 @@ load_special_csv_row(_RowNumber,
    forall(member(RelationName:Relatum, RelationList),
 	  assert_if_unew(declare_related(EntityName, RelationName, Relatum))).
 
+
+
+%=autodoc
+%% assert_description( ?ARG1, ?ARG2) is semidet.
+%
+% Assert Description.
+%
 assert_description(_, null).
 assert_description(Entity, Description) :-
    assert_if_unew(declare_value(Entity, description, Description)).
 
+
+
+%=autodoc
+%% parse_list( ?Pattern, ?List, :GoalGoal, ?ListElement, ?ErrorMessage) is semidet.
+%
+% Parse List.
+%
 parse_list(Pattern, List, Goal, ListElement, ErrorMessage) :-
    forall(member(ListElement, List),
 	  ( ListElement=Pattern ->

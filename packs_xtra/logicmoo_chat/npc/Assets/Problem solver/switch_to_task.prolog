@@ -79,6 +79,13 @@ switch_to_task(resolve_match_failure(resolve_match_failure(resolve_match_failure
    !,
    fail_task("repeated match failure", FailedTask).
 
+
+
+%=autodoc
+%% fail_task( ?Why, ?FailedTask) is semidet.
+%
+% Fail Task.
+%
 fail_task(Why, FailedTask) :-
    begin($task/type:task:TopLevelTask,
 	 emote(frustration),
@@ -93,6 +100,13 @@ switch_to_task(T) :-
    begin(canonical_form_of_task(T, Task),
 	 switch_to_canonical_task(Task)).
 
+
+
+%=autodoc
+%% switch_to_canonical_task( ?Task) is semidet.
+%
+% Switch Converted To Canonical Task.
+%
 switch_to_canonical_task(Task) :-
    unsatisfied_task_precondition(Task, Precondition),
    switch_to_task((achieve_precondition(Task,
@@ -106,10 +120,24 @@ switch_to_canonical_task(Task) :-
 %% Task preconditions
 %%
 
+
+
+%=autodoc
+%% unsatisfied_task_precondition( ?Task, ?P) is semidet.
+%
+% Unsatisfied Task Precondition.
+%
 unsatisfied_task_precondition(Task, P) :-
    precondition(Task, P),
    \+ task_precondition_satisfied(P).
 
+
+
+%=autodoc
+%% task_precondition_satisfied( ?ARG1) is semidet.
+%
+% Task Precondition Satisfied.
+%
 task_precondition_satisfied(know(_,Condition)) :-
    !,
    ($task/on_behalf_of:Beneficiary) ->

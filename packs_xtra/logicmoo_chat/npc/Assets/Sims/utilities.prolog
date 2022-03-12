@@ -25,6 +25,13 @@ register_room(Room, Kind) :-
    asserta(location(Room, kavis_house)),
    ensurez(declare_kind(Room, Kind)).
 
+%=autodoc
+%% register_room( ?Room, +Kind) is semidet.
+%
+% Register Room.
+%
+
+
 %% register_prop(*Prop, *CommonNoun, *Plural, Adjectives)
 %  IMPERATIVE
 %  Add Prop to the database, ensuring its singular and plural nouns are registered in the lexicon.
@@ -37,6 +44,20 @@ register_prop(Prop, Kind, Adjectives) :-
    forall(iz_a(Prop, K),
 	  ignore(initialize_prop(Prop, K))).
 
+%=autodoc
+%% register_prop( +Prop, +Kind, ?Adjectives) is semidet.
+%
+% Register Prop.
+%
+
+
+
+
+%=autodoc
+%% register_door( ?Door) is semidet.
+%
+% Register Door.
+%
 register_door(Door) :-
    ensurez(base_kind(Door, door)),
    ensurez(door(Door)).
@@ -47,6 +68,13 @@ register_door(Door) :-
 %  Called from Start() routine of SimController.cs
 register_character(Character) :-
    ensurez(character(Character)).
+
+%=autodoc
+%% register_character( ?Character) is semidet.
+%
+% Register Character.
+%
+
 
 %% ensurez(+Fact)
 %  IMPERATIVE
@@ -92,6 +120,20 @@ present(X) :-
         ;
         true ).
 
+%=autodoc
+%% present( ?X) is semidet.
+%
+% Present.
+%
+
+
+
+
+%=autodoc
+%% ~ ?Q is semidet.
+%
+% ~.
+%
 ~present(X) :-
    is_class(X, $'GameObject'),
    component_of_gameobject_with_type(C, X, $'PhysicalObject'),
@@ -121,6 +163,13 @@ force_move(GameObject, Container) :-
 existing(Kind, Object) :-
    iz_a(Object, Kind),
    present(Object).
+
+%=autodoc
+%% existing( +Kind, ?Object) is semidet.
+%
+% Existing.
+%
+
 
 %% deactivate(+Character)
 %  Kstops (destroys) the character.  The character will stop updating.
@@ -167,15 +216,36 @@ after_time(Time) :-
 %%% Hidden objects
 %%%
 
+
+
+%=autodoc
+%% hidden( ?X) is semidet.
+%
+% Hidden.
+%
 hidden(X) :-
    is_class(X, $'GameObject'),
    component_of_gameobject_with_type(PhysicalObject, X, $'PhysicalObject'),
    unity_call(PhysicalObject.'IsHidden').
 
+
+
+%=autodoc
+%% reveal( ?X) is semidet.
+%
+% Reveal.
+%
 reveal(X) :-
    component_of_gameobject_with_type(PhysicalObject, X, $'PhysicalObject'),
    unity_call(PhysicalObject.'SetHidden'(false)).
 
+
+
+%=autodoc
+%% hidden_contents( +Container, ?HiddenObject) is semidet.
+%
+% Hidden Contents.
+%
 hidden_contents(Container, HiddenObject) :-
    parent_of_gameobject(HiddenObject, Container),
    hidden(HiddenObject).
@@ -186,10 +256,24 @@ hidden_contents(Container, HiddenObject) :-
 
 :- external player_character/0.
 
+
+
+%=autodoc
+%% update_character_status is semidet.
+%
+% Update Character Status.
+%
 update_character_status :-
    character_status_string(S, P),
    assert(/status_text:S:P).
 
+
+
+%=autodoc
+%% character_status_string( ?Emote, :Goal10) is semidet.
+%
+% Character Status String.
+%
 character_status_string(Emote,10) :-
    /motor_state/emote:Emote:Time,
    $now < Time+3 .
@@ -197,6 +281,13 @@ character_status_string("O.o", 0) :-
    /remote_control/remote_controled.
 character_status_string("", 0).
 
+
+
+%=autodoc
+%% update_halo is semidet.
+%
+% Update Halo.
+%
 update_halo :-
    \+ player_character.
 update_halo :-
@@ -214,9 +305,23 @@ update_halo.
 
 :- public emote/1.
 
+
+
+%=autodoc
+%% emote( ?Emotion) is semidet.
+%
+% Emote.
+%
 emote(Emotion) :-
    emotion_string(Emotion, String),
    assert(/motor_state/emote:String: $now).
+
+
+%=autodoc
+%% emotion_string( ?Blush1, ?Grrr!!!2) is semidet.
+%
+% Emotion String.
+%
 emotion_string(surprise, "!").
 emotion_string(frustration, "(>_<)").
 emotion_string(question, "?").
@@ -224,6 +329,13 @@ emotion_string(confusion, "???").
 emotion_string(automatized, "O.o").
 emotion_string(blush, "Grrr!!!").
 
+
+
+%=autodoc
+%% normalize_task( ?Status, ?Task) is semidet.
+%
+% Normalize Task.
+%
 normalize_task(emote(E),
 	       call(emote(E))).
 
@@ -235,11 +347,25 @@ normalize_task(emote(E),
 :- external (initialization)/0.
 
 
+
+
+%=autodoc
+%% initialization is semidet.
+%
+% Initialization.
+%
 (initialization):- forall(iz_a(X,door),register_door(X)).
 (initialization):- forall(member(X,[living_room,bedroom,bathroom,kitchen]),register_room($(X),X)).
 (initialization):- forall(member(X,[$'Kavi',$pc,$captive]),register_character(X)).
 (initialization):- forall((iz_a(X,physical_object),\+ iz_a(X,person),once(iz_a(X,K))),register_prop(X,K,[])).
 
+
+
+%=autodoc
+%% ensure_core_systems_initialized is semidet.
+%
+% Ensure Core Systems Initialized.
+%
 ensure_core_systems_initialized :-
    core_systems_initialized,
    !.
@@ -279,11 +405,25 @@ allocate_UID(UID) :-
     retract(/next_uid:UID),
 	  asserta(/next_uid:NextUID)).
 
+
+
+%=autodoc
+%% uslash( ?Rel1, ?Social_interaction2) is semidet.
+%
+% Uslash.
+%
 uslash(top,/next_uid:0).
 
 fkey_command(alt-i, "Display inventory") :-
    display_status_screen(inventory).
 
+
+
+%=autodoc
+%% display_status_screen( ?Game_over) is semidet.
+%
+% Display Status Screen.
+%
 display_status_screen(game_over) :-
    game_over_header(H),
    generate_unsorted_overlay(H,
@@ -291,6 +431,13 @@ display_status_screen(game_over) :-
 			     line(Line),
 			     "'Nuff said.").
 
+
+
+%=autodoc
+%% game_over_header( ?You are no longer present in game...) is semidet.
+%
+% Game Over Header.
+%
 game_over_header("You are no longer present in game...") :-
    \+ present($pc),
    !.
@@ -302,10 +449,24 @@ game_over_header("Game over: objectives achieved") :-
    objectives_achieved(N),
    N>1.
 
+
+
+%=autodoc
+%% objectives_achieved( ?N) is semidet.
+%
+% Objectives Achieved.
+%
 objectives_achieved(N) :-
    findall(O, objective_achieved(O), L),
    length(L, N).
 
+
+
+%=autodoc
+%% game_over_status_line( ?Description) is semidet.
+%
+% Game Over Status Line.
+%
 game_over_status_line(Description) :-
    objective_achieved(Objective),
    objective_description(Objective, Description).
@@ -318,6 +479,13 @@ display_status_screen(sample_commands) :-
 			     line(Command),
 			     "Nothing").
 
+
+
+%=autodoc
+%% sample_command( ?You know you're an orange1) is semidet.
+%
+% Sample Command.
+%
 sample_command("go to the kitchen").
 sample_command("go here (while pointing at something)").
 sample_command("look at the plant").
@@ -339,14 +507,35 @@ display_status_screen(vocabulary) :-
 			     line(E),
 			     null).
 
+
+
+%=autodoc
+%% vocabulary_entry( ?Type) is semidet.
+%
+% Vocabulary Entry.
+%
 vocabulary_entry([line(bold(Type)), line(Items), line("")]) :-
    vocabulary_type(Type, Item^Predicate),
    all(String, (Predicate, word_list(String, Item)), Items).
 
 :- public verb_list_element/1, noun_list_element/1, proper_name_list_element/1,
    adjective_list_element/1, preposition_list_element/1, other_words_list_element/1.
+
+
+%=autodoc
+%% vocabulary_type( ?Verbs, ?V) is semidet.
+%
+% Vocabulary Type.
+%
 vocabulary_type("Verbs", V^verb_list_element(V)).
 
+
+
+%=autodoc
+%% verb_list_element( ?V) is semidet.
+%
+% Verb List Element.
+%
 verb_list_element(V) :-
    iv(base, _, _, _, _, V, [", "]).
 verb_list_element(V) :-
@@ -360,26 +549,61 @@ verb_list_element(V) :-
 
 vocabulary_type("Common nouns", N^noun_list_element(N)).
 
+
+
+%=autodoc
+%% noun_list_element( ?N) is semidet.
+%
+% Noun List Element.
+%
 noun_list_element(N) :-
    kind_noun(_, singular, N, [", "]).
 
 vocabulary_type("Proper names", N^proper_name_list_element(N)).
 
+
+
+%=autodoc
+%% proper_name_list_element( ?N) is semidet.
+%
+% Proper Name List Element.
+%
 proper_name_list_element(N) :-
    proper_name(_, _, N, [", "]).
 
 vocabulary_type("Adjectives", N^adjective_list_element(N)).
 
+
+
+%=autodoc
+%% adjective_list_element( ?A) is semidet.
+%
+% Adjective List Element.
+%
 adjective_list_element(A) :-
    adjective(_, A, [", "]).
 
 vocabulary_type("Prepositions", N^preposition_list_element(N)).
 
+
+
+%=autodoc
+%% preposition_list_element( ?P) is semidet.
+%
+% Preposition List Element.
+%
 preposition_list_element([P, ", "]) :-
    preposition(P).
 
 vocabulary_type("Other", N^other_words_list_element(N)).
 
+
+
+%=autodoc
+%% other_words_list_element( ?W) is semidet.
+%
+% Other Words List Element.
+%
 other_words_list_element([W, ", "]) :-
    whpron(W, _).
 other_words_list_element([W, ", "]) :-
@@ -399,6 +623,13 @@ fkey_command(alt-g, "Display grammar") :-
 
 :- public grammar_entry/1.
 
+
+
+%=autodoc
+%% grammar_entry( ?Functor) is semidet.
+%
+% Grammar Entry.
+%
 grammar_entry([Functor, " --> " | FormattedBody]) :-
    important_nonterminal(Functor, Arity),
    functor(Head, Functor, Arity),
@@ -406,6 +637,13 @@ grammar_entry([Functor, " --> " | FormattedBody]) :-
    grammar_subgoal_dissection(Head, Functor, In, _),
    once(format_grammar_rule_body(Body, In, FormattedBody)).
 
+
+
+%=autodoc
+%% format_grammar_rule_body( ?A, +In, ?Name) is semidet.
+%
+% Format Grammar Rule Body.
+%
 format_grammar_rule_body((A, B), In, [Name, " " | BForm]) :-
    grammar_subgoal_dissection(A, Name, In, Out),
    format_grammar_rule_body(B, Out, BForm).
@@ -415,6 +653,13 @@ format_grammar_rule_body(LastElt, In, [Name]) :-
    grammar_subgoal_dissection(LastElt, Name, In, _).
 format_grammar_rule_body(_, _, []).
 
+
+
+%=autodoc
+%% grammar_subgoal_dissection( ?X, ?Word2, ?ARG3, ?UPARAM4) is semidet.
+%
+% Grammar Subgoal Dissection.
+%
 grammar_subgoal_dissection(X, _, _, _) :-
    suppress_grammar_goal_in_pretty_print(X),
    !,
@@ -432,6 +677,13 @@ grammar_subgoal_dissection(Goal, Name, Head, Tail) :-
    arg(Arity, Goal, Tail),
    nonterminal_pretty_name(Functor, Name).
 
+
+
+%=autodoc
+%% suppress_grammar_goal_in_pretty_print( ?ARG1) is semidet.
+%
+% Suppress Grammar Goal In Pretty Print.
+%
 suppress_grammar_goal_in_pretty_print(lf_subject(_, _)).
 suppress_grammar_goal_in_pretty_print(lf_core_predicate(_, _)).
 suppress_grammar_goal_in_pretty_print(resolve_definite_description(_, _)).
@@ -440,6 +692,13 @@ suppress_grammar_goal_in_pretty_print(not_generating_or_completing(_, _)).
 suppress_grammar_goal_in_pretty_print(not_completing(_, _, _)).
 suppress_grammar_goal_in_pretty_print(';'(_, _)).
 
+
+
+%=autodoc
+%% nonterminal_pretty_name( ?ARG1, ?ARG2) is semidet.
+%
+% Nonterminal Pretty Name.
+%
 nonterminal_pretty_name(aux_be, "'is'").
 nonterminal_pretty_name(copula, "'is'").
 nonterminal_pretty_name(aux_have, "'has'").
@@ -448,11 +707,25 @@ nonterminal_pretty_name(opt_pp, "[pp]").
 nonterminal_pretty_name(opt_genetive, "['s]").
 nonterminal_pretty_name(N, N).
 
+
+
+%=autodoc
+%% space_out( ?ARG1, ?ARG2) is semidet.
+%
+% Space Out.
+%
 space_out([], []).
 space_out([X], [X]) :- !.
 space_out([X | Rest], [X, " ", SpacedRest]) :-
    space_out(Rest, SpacedRest).
 
+
+
+%=autodoc
+%% important_nonterminal( ?Np1, :PRED7PRED72) is semidet.
+%
+% Important Nonterminal.
+%
 important_nonterminal(s, 7).
 important_nonterminal(aux_vp, 7).
 important_nonterminal(vp, 8).
@@ -460,6 +733,13 @@ important_nonterminal(np, 7).
 
 :- public nonterminal/2.
 
+
+
+%=autodoc
+%% nonterminal( ?Kind_noun1, :PRED4PRED42) is semidet.
+%
+% Nonterminal.
+%
 nonterminal(ap, 3).
 nonterminal(kind_noun, 4).
 nonterminal(F, A) :-
@@ -481,12 +761,26 @@ display_status_screen(notebook) :-
 			     line(E),
 			     "Nothing yet").
 
+
+
+%=autodoc
+%% notebook_entry( ?Goals) is semidet.
+%
+% Notebook Entry.
+%
 notebook_entry([line(bold("Goals")) | List]) :-
    findall(line(D),
 	   (unsatisfied_plot_goal(G), plot_goal_flavor_text(G, D)),
 	   List),
    List \= [].
 
+
+
+%=autodoc
+%% unsatisfied_plot_goal( ?G) is semidet.
+%
+% Unsatisfied Plot Goal.
+%
 unsatisfied_plot_goal(G) :-
    plot_goal(G),
    \+ G,

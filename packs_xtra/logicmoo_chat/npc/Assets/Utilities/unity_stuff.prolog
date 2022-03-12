@@ -43,11 +43,25 @@ deactivate_prop(Prop) :-
    component_of_gameobject_with_type(PropComponent, Prop, $'PropInfo'),
    set_property(PropComponent, 'IsOn', false).
 
+
+
+%=autodoc
+%% prop_activated( +Prop) is semidet.
+%
+% Prop Activated.
+%
 prop_activated(Prop) :-
    is_class(Prop, $'GameObject'),
    component_of_gameobject_with_type(PropComponent, Prop, $'PropInfo'),
    \+ PropComponent.'IsOn'.
 
+
+
+%=autodoc
+%% set_prop_text( +Prop, +String) is semidet.
+%
+% Set Prop Text.
+%
 set_prop_text(Prop, String) :-
    is_class(Prop, $'GameObject'),
    component_of_gameobject_with_type(PropComponent, Prop, $'PropInfo'),
@@ -59,8 +73,22 @@ toggled_state(Appliance,power,on) :-
    prop_activated(Appliance).
 % maybe informed_about(_, powered_on(_)).
 :- multifile(informed_about/2).
+
+
+%=autodoc
+%% informed_about( ?Me, ?P) is semidet.
+%
+% Informed About.
+%
 informed_about(_, toggled_state(_,power,on)).
 :- multifile(closed_word_naf/1).
+
+
+%=autodoc
+%% closed_word_naf( ?ARG1) is semidet.
+%
+% Closed Word Negation-by-faliure.
+%
 closed_word_naf(toggled_state(_,power,on)).
 
 %% on_activation_changed(+Prop, +NewActivation)
@@ -79,6 +107,13 @@ on_activation_changed($radio, false) :-
 %% fkey_command(+FKeySymbol, Documentation)
 %  Called by UI whenever a given F-key is pressed.
 
+
+
+%=autodoc
+%% fkey_command( ?F1) is semidet.
+%
+% Fkey Command.
+%
 fkey_command(f1) :-
    generate_overlay("Debug commands",
 		    clause(fkey_command(Key, Documentation), _),
@@ -115,6 +150,13 @@ hide_overlay :-
 %  Then displays all templates, sorted alphabetically, in an overlay named
 %  Title.
 :- higher_order generate_overlay(0, 1, 0).
+
+
+%=autodoc
+%% generate_overlay( ?Title, ?Generator, ?Template) is semidet.
+%
+% Generate Overlay.
+%
 generate_overlay(Title, Generator, Template) :-
    all(Template, Generator, Lines),
    display_as_overlay([size(30, line(Title)) | Lines]).
@@ -126,9 +168,23 @@ generate_overlay(Title, Generator, Template) :-
 %  in an overlay named Title.
 :- higher_order generate_unsorted_overlay(0, 1, 0).
 :- higher_order generate_unsorted_overlay(0,1,0,0).
+
+
+%=autodoc
+%% generate_unsorted_overlay( ?Title, ?Generator, ?Template) is semidet.
+%
+% Generate Unsorted Overlay.
+%
 generate_unsorted_overlay(Title, Generator, Template) :-
    findall(Template, Generator, Lines),
    display_as_overlay([size(30, line(Title)) | Lines]).
+
+
+%=autodoc
+%% generate_unsorted_overlay( ?Title, ?Generator, ?Template, ?Default) is semidet.
+%
+% Generate Unsorted Overlay.
+%
 generate_unsorted_overlay(Title, Generator, Template, Default) :-
    findall(Template, Generator, Lines),
    (Lines = [] ->

@@ -4,6 +4,13 @@
 %%%
 
 :- higher_order delay_until(0, 1).
+
+
+%=autodoc
+%% delay_until( ?Time, ?Code) is semidet.
+%
+% Delay Until.
+%
 delay_until(Time, Code) :-
    assert(/delayed/queue/Time:Code),
    % Recompute deadline
@@ -14,10 +21,24 @@ delay_until(Time, Code) :-
 
 :- higher_order delay_for(0, 1).
 :- public delay_for/2.
+
+
+%=autodoc
+%% delay_for( ?Seconds, ?Code) is semidet.
+%
+% Delay For.
+%
 delay_for(Seconds, Code) :-
    Time is $now + Seconds,
    delay_until(Time, Code).
 
+
+
+%=autodoc
+%% run_delayed_operations is semidet.
+%
+% Run Delayed Operations.
+%
 run_delayed_operations :-
    /delayed/next_deadline:Time,
    Time < $now,
@@ -32,6 +53,13 @@ run_delayed_operations :-
       retract(/delayed/next_deadline)).
 run_delayed_operations.
 
+
+
+%=autodoc
+%% minimum( ?Variable, :GoalGoal) is semidet.
+%
+% Minimum.
+%
 minimum(Variable, Goal) :-
    arg_min(Variable, Variable, Goal).
       

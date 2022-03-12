@@ -4,6 +4,13 @@
 %%% A simple implementation of Sims-style needs
 %%%
 
+
+
+%=autodoc
+%% need( ?ARG1) is semidet.
+%
+% Need.
+%
 need(hunger).
 need(thirst).
 need(sleep).

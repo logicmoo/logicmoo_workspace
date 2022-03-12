@@ -25,9 +25,23 @@ descendant_qud_of(Ancestor, Descendant) :-
     ( Descendant=Child 
       ; descendant_qud_of(Child,Descendant) ).
 
+
+
+%=autodoc
+%% parent_qud_of( ?Child, ?Parent) is semidet.
+%
+% Parent Topic Of.
+%
 parent_qud_of(Child, Parent) :-
    Parent is Child.'Parent'.'Parent'.
 
+
+
+%=autodoc
+%% qud_uid( ?Qud, ?UID) is semidet.
+%
+% Topic Uid.
+%
 qud_uid(Qud, UID) :-
    property(Qud, "Key", UID).
 
@@ -44,6 +58,13 @@ qud_status(Qud, Status) :-
 set_qud_status(Qud, Status) :-
    assert(Qud/status:Status).
 
+
+
+%=autodoc
+%% normalize_task( ?Status, ?Task) is semidet.
+%
+% Normalize Task.
+%
 normalize_task(set_status(Status),
 	       call(set_qud_status($task, Status))).
 

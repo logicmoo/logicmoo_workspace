@@ -101,6 +101,13 @@ strategy(respond_to_dialog_act(offer(Offerer, $me, TheirAct, MyAct)),
       ;
       Response = rejection($me, Offerer, TheirAct, MyAct).
 
+
+
+%=autodoc
+%% acceptable_offer( ?ARG1, ?ARG2, ?ARG3) is semidet.
+%
+% Acceptable Offer.
+%
 acceptable_offer(_, _, _).
 
 strategy(respond_to_dialog_act(acceptance(Acceptor, $me, MyAct, _TheirAct)),

@@ -6,6 +6,13 @@ strategy(respond_to_dialog_act(command(Requestor, $me, Task)),
 	 follow_command(Requestor, Task, RequestStatus)) :-
    request_status(Requestor, Task, RequestStatus).
 
+
+
+%=autodoc
+%% request_status( ?Requestor, ?Task, ?Combinatoric) is semidet.
+%
+% Request Status.
+%
 request_status(_Requestor, Task, combinatoric) :-
    @combinatoric(Task),
    !.
@@ -31,6 +38,13 @@ strategy(follow_command(Requestor, Task, normal),
 	       call(add_pending_task(on_behalf_of(Requestor, Task)))))).
 
 :- public dialog_task/1.
+
+
+%=autodoc
+%% dialog_task( ?ARG1) is semidet.
+%
+% Dialog Task.
+%
 dialog_task(tell_about(_,_,_)).
 
 strategy(follow_command(_, _, combinatoric),
@@ -42,6 +56,13 @@ strategy(follow_command(_, _, unachievable(Reason)),
 strategy(follow_command(_, _, incriminating(_)),
 	 say_string("Sorry, I can't.")).
 
+
+
+%=autodoc
+%% diagnose( ?Task, ?Precondition) is semidet.
+%
+% Diagnose.
+%
 diagnose(Task, ~Precondition) :-
    unsatisfied_task_precondition(Task, Precondition).
 
@@ -62,6 +83,13 @@ strategy(tell_about($me, Who, Topic),
 strategy(tell($me, Who, What),
 	 add_conversation_task(Who, assertion($me, Who, What, present, simple))).
 
+
+
+%=autodoc
+%% normalize_task( ?Status, ?Task) is semidet.
+%
+% Normalize Task.
+%
 normalize_task(go($me, Location),
 	       goto(Location)).
 normalize_task(take($me, Patient, _),
@@ -85,6 +113,13 @@ strategy(end_game(_,_), end_game(null)).
 %%%
 
 :- multifile(todo/2).
+
+
+%=autodoc
+%% todo( ?Person, :PRED11) is semidet.
+%
+% Todo.
+%
 todo(engage_in_conversation(Person), 1) :-
    \+ currently_in_conversation,
    /pending_conversation_topics/Person/_.

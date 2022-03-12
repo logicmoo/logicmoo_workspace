@@ -4,6 +4,13 @@
 %%%
 
 :- public do/1.
+
+
+%=autodoc
+%% do( ?Location) is semidet.
+%
+% Do.
+%
 do(goto(Location)) :-
    !,
    qud(C, command_line),
