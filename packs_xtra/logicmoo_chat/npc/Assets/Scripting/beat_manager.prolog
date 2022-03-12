@@ -82,7 +82,6 @@ background_character_in_current_beat :-
 
 
 
-%=autodoc
 %% dialog_task_with_partner_advances_current_beat( ?Beat, ?Partner, ?Canon) is semidet.
 %
 % Dialog Task Using Partner Advances Current Beat.
@@ -97,8 +96,7 @@ dialog_task_with_partner_advances_current_beat(Beat, Partner, Canon) :-
 
 
 
-%=autodoc
-%% canonicalize_beat_dialog_task( +String, +String) is semidet.
+%% canonicalize_beat_dialog_task( +StringOrTask, -Task) is semidet.
 %
 % Canonicalize Beat Dialog Task.
 %
@@ -112,8 +110,7 @@ canonicalize_beat_dialog_task(Task, Task).
 
 
 
-%=autodoc
-%% beat_task_name( +String, +String) is semidet.
+%% beat_task_name( +Task, -String) is semidet.
 %
 % Beat Task Name.
 %
@@ -123,22 +120,18 @@ beat_task_name(run_quip(String), String) :-
    !.
 beat_task_name(X, X).
 
+%% potential_beat_dialog( ?Task) is semidet.
+%
+% Potential Beat Dialog.
+%
 % Used for debugging display.
 potential_beat_dialog(Task) :-
    current_log_character(Beat),
    in_conversation_with(Partner),
    dialog_task_with_partner_advances_current_beat(Beat, Partner, Task).
 
-%=autodoc
-%% potential_beat_dialog( ?Task) is semidet.
-%
-% Potential Beat Dialog.
-%
 
 
-
-
-%=autodoc
 %% can_perform_beat_task( +Who, +Task) is semidet.
 %
 % Can Perform Beat Task.
@@ -162,8 +155,7 @@ incomplete_beat_task_from_list(Beat, TaskList, Task) :-
 
 
 
-%=autodoc
-%% beat_task_already_executed( ?Beat, ?Character) is semidet.
+%% beat_task_already_executed( ?Beat, ?Task) is semidet.
 %
 % Beat Task Already Executed.
 %
