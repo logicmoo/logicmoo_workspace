@@ -44,9 +44,7 @@ thaw(X) :- frozen_u(X, G), G.
 
 
 
-
-%=autodoc
-%% test_file( ?ARG1, ?NL/base_grammar_test2) is semidet.
+%% test_file( ?Test, ?File) is semidet.
 %
 % Test File.
 %

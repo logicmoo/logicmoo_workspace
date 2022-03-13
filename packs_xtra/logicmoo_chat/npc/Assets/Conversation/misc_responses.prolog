@@ -14,6 +14,11 @@ default_strategy(respond_to_dialog_act(Act),
 %% Greetings and closings
 %%
 
+
+%% strategy( ?Addressee, ?Conversation, ?Me) is semidet.
+%
+% Strategy.
+%
 strategy( 
    respond_to_dialog_act(greet($addressee, $me)), 
    assert(Conversation/greeted), greet($me, $addressee)) :- 

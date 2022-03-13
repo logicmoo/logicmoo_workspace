@@ -102,7 +102,7 @@ bind_dialog_indexicals_for_input(G):-
    bind_dialog_indexicals_for_input(NPC, G).
 bind_dialog_indexicals_for_input(G) :-
    with_bind(input_from_player, true,
-    with_bind(speaker, player,
+    with_bind(speaker, $player,
      with_bind(addressee, $me,
       with_bind(dialog_group, $me, G)))).
 
@@ -149,7 +149,7 @@ with_bind(N, V, DCG, S, E):- with_bind(N, V, phrase(DCG, S, E)).
 in_conversation_with_npc(NPC) :-
    qud(C),
    C/partner/NPC,
-   NPC \= player.
+   NPC \= $player.
 
 
 
@@ -215,7 +215,7 @@ while_completing(G) :-
  bind_dialog_indexicals_for_input(G).
 
 %% player_idle_time(-Time)
-%  Time is the number of seconds of game time since the player
+%  Time is the number of seconds of game time since the $player
 %  last did something (i.e. typed).
 :- public player_idle_time/1.
 

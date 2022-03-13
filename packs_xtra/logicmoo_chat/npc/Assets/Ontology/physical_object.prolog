@@ -3,14 +3,14 @@
 :- dynamic(location/2).
 
 
-%=autodoc
 %% location( ?X, ?Location) is semidet.
 %
 % Location.
 %
 t(location, X, Location) :- 
-  X==player,  !, 
+  X == $player, 
   t(location, $me, Location).
+
 t(location, kavis_house, the_world).
 t(location, the_world, the_game).
 t(location, PhysicalObject, Location) :-  
@@ -19,29 +19,36 @@ t(location, PhysicalObject, Location) :-
 
 
 %=autodoc
-%% located_object( ?Type, ?Where) is semidet.
+%% set_located_object( ?Type, ?Where) is semidet.
 %
 % Located Object.
 %
-located_object(Type, Where):- located_object(_, Type, Where).
+set_located_object(ObjIn, Where):- 
+  extract_object(ObjIn, Type, Obj),
+  set_located_object(Obj, Type, Where),!.
 
 
 %=autodoc
-%% located_object( ?Obj, ?Type, ?Where) is semidet.
+%% set_located_object( ?Obj, ?Type, ?Where) is semidet.
 %
 % Located Object.
 %
-located_object(Obj, Type, Where) :- 
-  ( iz_a(Obj, Type)->true ; ignore(Obj= #(Type)), register_prop(Obj, Type, [])) ,  !, 
-  register_prop(Obj, Type, []), 
-  assert_if_new(t(location, Obj, Where)).
+set_located_object(ObjIn, Type, Where) :- 
+  extract_object(ObjIn, Type, Obj),  !, 
+  register_prop(Obj, Type, []),
+  register_prop(Where, container, []),
+  assert_if_new(t(location, Obj, Where)),!.
+
+extract_object(ObjIn, Type, Obj):-
+  atom(ObjIn), iz_a(ObjIn, kind),!,
+  Type = ObjIn, (Obj= #(Type)), register_prop(Obj, Type, []).
+
+extract_object(ObjIn, Type, Obj):-
+ iz_a(ObjIn, Type)-> ObjIn = Obj ; (ignore(Obj= #(Type)), register_prop(Obj, Type, [])).
 
 
 
-
-
-%=autodoc
-%% unique_answer( ?Value, ?Object) is semidet.
+%% unique_answer( ?Value, ?Condition) is semidet.
 %
 % Unique Answer.
 %
@@ -85,7 +92,6 @@ top_level_container(PhysicalObject, Container) :-
 
 
 
-%=autodoc
 %% contained_in( ?X, ?Y) is semidet.
 %
 % Contained In.

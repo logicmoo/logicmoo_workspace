@@ -5,17 +5,17 @@
 %
 % Normalize Task.
 %
-normalize_task(respond_to_dialog_act(general_help(player, $me)),
+normalize_task(respond_to_dialog_act(general_help($player, $me)),
 	       general_help).
-normalize_task(respond_to_dialog_act(how_do_i(player, $me, Question)),
+normalize_task(respond_to_dialog_act(how_do_i($player, $me, Question)),
 	       how_do_i(Question)).
-normalize_task(respond_to_dialog_act(objective_query(player, $me)),
+normalize_task(respond_to_dialog_act(objective_query($player, $me)),
 	       objective_query).
-normalize_task(respond_to_dialog_act(color_query(player, $me, Color)),
+normalize_task(respond_to_dialog_act(color_query($player, $me, Color)),
 	       color_query(Color)).
-normalize_task(respond_to_dialog_act(if_navigation_command(player, $me, X)),
+normalize_task(respond_to_dialog_act(if_navigation_command($player, $me, X)),
 	       if_navigation_command(X)).
-normalize_task(respond_to_dialog_act(show_status(player, $me, What)),
+normalize_task(respond_to_dialog_act(show_status($player, $me, What)),
 	       show_status(What)).
 
 

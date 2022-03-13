@@ -401,25 +401,16 @@ preempted(KB,(Head := Body)) :-
         sup_rule((Contrary := Condition),(Head := Body)),
         !.
 
-%
-% preempt
+%% preempt is semidet.
 %   Toggles the preemption of defeaters feature between
 %   enabled and disabled.
 %
-
 :- external preemption/0.
-
 preempt :-
     retract(preemption),
     !,
     write('Preemption is disabled.'),
     nl.
-
-%=autodoc
-%% preempt is semidet.
-%
-% Preempt.
-%
 preempt :-
     assert(preemption),
     write('Preemption is enabled.'),

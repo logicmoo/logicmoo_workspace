@@ -144,7 +144,7 @@ can_perform_beat_task(Task, Task) :-
 
 
 
-%=autodoc
+
 %% incomplete_beat_task_from_list( ?Beat, ?TaskList, ?Task) is semidet.
 %
 % Incomplete Beat Task Converted From List.
@@ -176,7 +176,7 @@ beat_task_already_executed(Beat, Task) :-
 
 
 
-%=autodoc
+
 %% beat_dialog_with( ?Beat, ?Partner, ?TaskList) is semidet.
 %
 % Beat Dialog Using.
@@ -192,7 +192,7 @@ beat_dialog_with(Beat, Partner, TaskList) :-
 
 
 
-%=autodoc
+
 %% todo( ?Person, :PRED11) is semidet.
 %
 % Todo.
@@ -212,7 +212,7 @@ my_beat_idle_task(Task) :-
 
 
 
-%=autodoc
+
 %% beat_is_idle is semidet.
 %
 % Beat If Is A Idle.
@@ -242,7 +242,7 @@ todo(PlotGoalIdleTask, 0) :-
 
 
 
-%=autodoc
+
 %% next_beat_monolog_task( ?Beat, ?T) is semidet.
 %
 % Next Beat Monolog Task.
@@ -256,7 +256,7 @@ next_beat_monolog_task(Beat, T) :-
 
 
 
-%=autodoc
+
 %% monolog_task( ?Beat, +String, ?String) is semidet.
 %
 % Monolog Task.
@@ -279,7 +279,7 @@ monolog_task( Beat,
 
 
 
-%=autodoc
+
 %% beat_waiting_for_timeout is semidet.
 %
 % Beat Waiting For Timeout.
@@ -308,7 +308,7 @@ current_beat(Beat) :-
 
 
 
-%=autodoc
+
 %% set_current_beat( ?Beat) is semidet.
 %
 % Set Current Beat.
@@ -323,7 +323,7 @@ beat_state(Beat, State) :-
    $global_root/beats/Beat/state:State.
 
 
-%=autodoc
+
 %% set_beat_state( ?Beat, ?State) is semidet.
 %
 % Set Beat State.
@@ -333,7 +333,7 @@ set_beat_state(Beat, State) :-
 
 
 
-%=autodoc
+
 %% beat_running_time( ?Beat, ?Time) is semidet.
 %
 % Beat Running Time.
@@ -344,7 +344,7 @@ beat_running_time(Beat, Time) :-
 
 
 
-%=autodoc
+
 %% beat_running_for_at_least( ?Beat, ?Time) is semidet.
 %
 % Beat Running For When Least.
@@ -387,7 +387,7 @@ runnable_beat(Beat) :-
 
 
 
-%=autodoc
+
 %% beat_requirement( ?Beat, :TermPredecessor) is semidet.
 %
 % Beat Requirement.
@@ -408,7 +408,7 @@ beat_score(Beat, Score) :-
 
 
 
-%=autodoc
+
 %% start_beat( ?Beat) is semidet.
 %
 % Start Beat.
@@ -433,7 +433,7 @@ check_beat_completion :-
 
 
 
-%=autodoc
+
 %% end_beat is semidet.
 %
 % End Beat.
@@ -446,8 +446,9 @@ end_beat :-
 
 
 
-%=autodoc
-%% test_file( ?ARG1, ?NL/base_grammar_test2) is semidet.
+
+:- multifile(test_file/2).
+%% test_file( ?TestMask, ?Filename) is semidet.
 %
 % Test File.
 %
@@ -456,7 +457,7 @@ test_file(problem_solver(_),
 
 
 
-%=autodoc
+
 %% on_memorable_event( ?Event) is semidet.
 %
 % Whenever Memorable Event.
@@ -467,7 +468,7 @@ on_memorable_event(Event) :-
 :- multifile(when_added/2).
 
 
-%=autodoc
+
 %% when_added( ?Assertion, ?Maybe_interrupt_current_beat) is semidet.
 %
 % When Added.
@@ -480,7 +481,7 @@ when_added(Assertion, maybe_interrupt_current_beat) :-
 
 
 
-%=autodoc
+
 %% maybe_interrupt_current_beat is semidet.
 %
 % Maybe Interrupt Current Beat.
@@ -504,7 +505,7 @@ maybe_interrupt_current_beat.
    beat_menu_assertion/3, beat_menu_command/3, beat_menu_question/3, beat_menu_automa_command/3.
 
 
-%=autodoc
+
 %% menu_action( ?X, ?Pc) is semidet.
 %
 % Menu Action.
@@ -515,7 +516,7 @@ menu_action(Object, DialogAct) :-
 
 
 
-%=autodoc
+
 %% menu_question( ?Object, ?DialogAct) is semidet.
 %
 % Menu Question.
@@ -526,7 +527,7 @@ menu_question(Object, DialogAct) :-
 
 
 
-%=autodoc
+
 %% menu_assertion( ?Object, ?DialogAct) is semidet.
 %
 % Menu Assertion.
@@ -537,7 +538,7 @@ menu_assertion(Object, DialogAct) :-
 
 
 
-%=autodoc
+
 %% menu_command( ?Object, ?DialogAct) is semidet.
 %
 % Menu Command.
@@ -548,7 +549,7 @@ menu_command(Object, DialogAct) :-
 
 
 
-%=autodoc
+
 %% menu_automa_command( ?Object, ?DialogAct) is semidet.
 %
 % Menu Automa Command.
@@ -572,13 +573,14 @@ menu_automa_command(Object, DialogAct) :-
 %
 % Initialization.
 %
+(initialization) :- listing(tellg0/2),listing(tell_assertion/1).
 (initialization) :- forall( 
                      beat(BeatName, {Declarations}), 
-                     ( assert($global::beat(BeatName)), 
+                     ( tellg($global::beat(BeatName)), 
                        forall( ( member_of_comma_separated_list(Declaration, Declarations)  ,
                                  once(beat_declaration_assertions(BeatName, Declaration, Assertions)), 
                                  member(Assertion, Assertions)), 
-                         assert($global::Assertion)))).
+                         (log(Assertion), tellg($global::Assertion))))).
 
 
 
@@ -595,9 +597,7 @@ member_of_comma_separated_list(Member, (X, Y)) :-
 member_of_comma_separated_list(Member, Member).
 
 
-
-%=autodoc
-%% beat_declaration_assertions( ?BeatName, ?Character, ?BeatName) is semidet.
+%% beat_declaration_assertions( +BeatName, +BeatTask, -AssertionList) is semidet.
 %
 % Beat Declaration Assertions.
 %
@@ -625,7 +625,7 @@ beat_declaration_assertions(BeatName,
 			   follows: Beat,
 			   [beat_follows(BeatName, Beat)]).
 beat_declaration_assertions(BeatName,
-			   completed_when: Condition,
+			   (completed_when: Condition),
 			   [beat_completion_condition(BeatName, Condition)]).
 beat_declaration_assertions(BeatName,
 			   priority: Priority,
@@ -653,7 +653,7 @@ beat_declaration_assertions(BeatName,
 
 
 
-%=autodoc
+
 %% memorable_event( ?E) is semidet.
 %
 % Memorable Event.
@@ -697,7 +697,7 @@ beat_declaration_assertions(BeatName, Declaration, []) :-
 
 
 
-%=autodoc
+
 %% terminal_beat( ?B) is semidet.
 %
 % Terminal Beat.
@@ -713,7 +713,7 @@ terminal_beat(B) :-
 
 
 
-%=autodoc
+
 %% objective_achieved( ?Objective) is semidet.
 %
 % Objective Achieved.
@@ -724,7 +724,7 @@ objective_achieved(Objective) :-
 
 
 
-%=autodoc
+
 %% unachieved_objective( ?Objective) is semidet.
 %
 % Unachieved Objective.
@@ -736,7 +736,7 @@ unachieved_objective(Objective) :-
 
 
 
-%=autodoc
+
 %% unity_init is semidet.
 %
 % Unity Init.
@@ -760,7 +760,7 @@ fkey_command(alt-b, "Show beat status") :-
 
 
 
-%=autodoc
+
 %% beat_info( ?ARG1) is semidet.
 %
 % Beat Info.
@@ -776,7 +776,7 @@ beat_info(table([[bold("Beat"), bold("Score"), bold("State"), bold("Waiting for"
 
 
 
-%=autodoc
+
 %% beat_table_entry( ?Beat, ?Score, ?State, ?WaitList, ?Color) is semidet.
 %
 % Beat Table Entry.
@@ -793,7 +793,7 @@ beat_table_entry(Beat, Score, State, WaitList, Color) :-
 
 
 
-%=autodoc
+
 %% unsatisfied_beat_precondition( ?Beat, ?P) is semidet.
 %
 % Unsatisfied Beat Precondition.
@@ -804,7 +804,7 @@ unsatisfied_beat_precondition(Beat, P) :-
 
 
 
-%=autodoc
+
 %% beat_display_color( ?ARG1, ?Current, ?ARG3, ?ARG4, ?Red5) is semidet.
 %
 % Beat Display Color.
@@ -831,7 +831,7 @@ character_debug_display(Character, line("Beat task:\t", Task)) :-
 
 
 
-%=autodoc
+
 %% make_plot_graph is semidet.
 %
 % Make Plot Graph.
@@ -841,7 +841,7 @@ make_plot_graph :-
 
 
 
-%=autodoc
+
 %% beat_graph_node( ?Beat, ?Shape) is semidet.
 %
 % Beat Graph Node.
@@ -852,7 +852,7 @@ beat_graph_node(Beat, [shape=box | Attributes]) :-
 
 
 
-%=autodoc
+
 %% beat_graph_attributes( ?Beat, ?Style) is semidet.
 %
 % Beat Graph Attributes.
@@ -867,7 +867,7 @@ beat_graph_attributes(_Beat, []).
 
 
 
-%=autodoc
+
 %% beat_graph_relation( ?B1, ?B2, ?Label) is semidet.
 %
 % Beat Graph Relation.
@@ -926,7 +926,7 @@ beat_graph_relation(Event, Condition, [label="achieves"]) :-
 
 
 
-%=autodoc
+
 %% plot_relevant_condition( ?Condition) is semidet.
 %
 % Plot Relevant Condition.
@@ -949,7 +949,7 @@ beat_graph_node(N, [shape=ellipse]) :-
    once((normalize_precondition_for_graph(P, N) ; P=N)).
 
 
-%=autodoc
+
 %% normalize_precondition_for_graph( ?Pc, ?P) is semidet.
 %
 % Normalize Precondition For Graph.
@@ -972,7 +972,7 @@ beat_graph_node(C, [shape=ellipse]) :-
 
 
 
-%=autodoc
+
 %% beat_includes_markup( ?Beat, ?Markup) is semidet.
 %
 % Beat Includes Markup.
@@ -984,7 +984,7 @@ beat_includes_markup(Beat, Markup) :-
 
 
 
-%=autodoc
+
 %% line_includes_markup( ?ARG1, ?Markup) is semidet.
 %
 % Line Includes Markup.
@@ -996,7 +996,7 @@ line_includes_markup((_::(_:LineMarkup)), Markup) :-
 
 
 
-%=autodoc
+
 %% markup_matches( ?ARG1, ?M) is semidet.
 %
 % Markup Matches.
@@ -1009,7 +1009,7 @@ markup_matches(List, M) :-
 
 
 
-%=autodoc
+
 %% beat_graph_subgraph( +TerminalBeats, ?Rank) is semidet.
 %
 % Beat Graph Subgraph.

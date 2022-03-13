@@ -63,8 +63,7 @@ strategy(
 
 
 
-%=autodoc
-%% surface_form( ?Object, ?Object) is semidet.
+%% surface_form( ?Property, ?Form) is semidet.
 %
 % Surface Form.
 %

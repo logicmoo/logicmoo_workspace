@@ -36,17 +36,17 @@ load_special_csv_row(RowNumber,
 		    kind_declaration_syntax_error(Kind, row:RowNumber,
 						  default_property_list:BadElement)),
 	 parse_list(Relation:Relatum, DefaultRelations,
-		    assert_if_unew(default_related(Kind, Relation, Relatum)),
+		    assert_if_unew(default_value(Kind, Relation, Relatum)),
 		    BadElement,
 		    kind_declaration_syntax_error(Kind, row:RowNumber,
 						  default_relation_list:BadElement)),
 	 parse_list(Prop=Value, ClassProperties,
-		    assert_if_unew(declare_value(Kind, Prop, Value)),
+		    assert_if_unew(default_value(Kind, Prop, Value)),
 		    BadElement,
 		    kind_declaration_syntax_error(Kind, row:RowNumber,
 						  class_property_list:BadElement)),
 	 parse_list(Relation:Relatum, ClassRelations,
-		    assert_if_unew(declare_related(Kind, Relation, Relatum)),
+		    assert_if_unew(default_value(Kind, Relation, Relatum)),
 		    BadElement,
 		    kind_declaration_syntax_error(Kind, row:RowNumber,
 						  class_relation_list:BadElement))).
@@ -245,23 +245,27 @@ member_pn(E,[H|T]):- is_list(H),!,member(E,[H|T]).
 member_pn(E,E):- E\==[], is_list(E).
 
 load_special_csv_row(_RowNumber,
-		     entities(EntityName, KindList,
-			      Description,
-			      ProperNames, GramaticalNumber,
-			      PropertyList, RelationList)) :-
+  entities( EntityName, 
+    KindList, Description, ProperNames, 
+    GramaticalNumber, PropertyList, 
+    RelationList)) :- 
    assert_description(EntityName, Description),
-   forall(member(Kind, KindList),
-	  assert_if_unew(declare_kind(EntityName, Kind))),
+  forall(member(Kind, KindList), assert_if_unew(declare_kind(EntityName, Kind))), 
    forall(member_pn(ProperName, ProperNames),
 	  assert_proper_name(EntityName, ProperName, GramaticalNumber)),
-  forall(member(PropertyName=Value, PropertyList),
-   assert_if_unew(declare_value(EntityName, PropertyName, Value))),
-  forall(member(PropertyName:Value, PropertyList),
-   assert_if_unew(declare_value(EntityName, PropertyName, Value))),
-  forall(member(RelationName=Relatum, RelationList),
-   assert_if_unew(declare_related(EntityName, RelationName, Relatum))),
-   forall(member(RelationName:Relatum, RelationList),
-	  assert_if_unew(declare_related(EntityName, RelationName, Relatum))).
+  forall( 
+     member(PropertyName=Value, PropertyList), 
+     assert_if_unew(t(PropertyName, EntityName, Value))), 
+  forall( 
+     member(PropertyName:Value, PropertyList), 
+     assert_if_unew(t(PropertyName, EntityName, Value))), 
+  forall( 
+     member(PropertyName=Value, RelationList), 
+     assert_if_unew(t(PropertyName, EntityName, Value))), 
+  forall( 
+     member(PropertyName:Value, RelationList), 
+     assert_if_unew(t(PropertyName, EntityName, Value))), 
+     !.
 
 
 
@@ -272,7 +276,7 @@ load_special_csv_row(_RowNumber,
 %
 assert_description(_, null).
 assert_description(Entity, Description) :-
-   assert_if_unew(declare_value(Entity, description, Description)).
+  assert_if_unew(t(description, Entity, Description)).
 
 
 

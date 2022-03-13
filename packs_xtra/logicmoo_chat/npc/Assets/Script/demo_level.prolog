@@ -40,7 +40,6 @@ objective_description(trip_escaped,
 
 
 
-%=autodoc
 %% menu_action( ?X, ?Pc) is semidet.
 %
 % Menu Action.
@@ -107,7 +106,7 @@ plot_goal_achieves(house_searched, t(location, $report, $pc)).
 
 
 
-%=autodoc
+
 %% beat( ?React_to_trip1, ?ARG2) is semidet.
 %
 % Beat.
@@ -127,6 +126,7 @@ beat(exposition,
 	 ]
      }).
 
+
 beat(pc_reacts,
     {
      sequel_to: exposition,
@@ -140,6 +140,7 @@ beat(pc_reacts,
 	      : introduce_goal(house_searched,
 			       "I need to search the house for the macguffin.")]
     }).
+
 
 %%%
 %%% PC explores the house
@@ -157,6 +158,7 @@ beat( search_house,
     leads_to($'Kavi', ingest($pc)), 
     menu_automa_command($'Kavi') :  
       t(member_of, $pc, theclub), 
+     % Kavi, you are hungry!
     menu_automa_command($'Kavi'):hungry($'Kavi'), 
     menu_automa_command($'Kavi') :  
       iz_a($'Kavi', orange), 
@@ -330,7 +332,6 @@ beat(exit_house,
 
 
 
-%=autodoc
 %% owner( ?Kavi, ?X) is semidet.
 %
 % Owner.

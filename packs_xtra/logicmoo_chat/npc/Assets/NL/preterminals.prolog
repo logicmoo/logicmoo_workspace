@@ -185,7 +185,9 @@ not_lower(X):- \+ (atom(X), downcase_atom(X,X)).
 object_words(pn,Object,CWords):- object_words0(pn,Object, Words),carefull_words(Words,CWords).
 object_words(a,Object,CWords):- object_words0(a,Object,Words), \+ object_words0(pn,Object, Words),carefull_words(Words,CWords).
 
-object_words0(pn,Object, Words):- declare_value(Object,given_name,String),tokenize_atom(String,Words).
+object_words0(pn, Object, Words) :- 
+  t(given_name, Object, String), 
+  tokenize_atom(String, Words).
 object_words0(a,#(Kind),[Kind]):- atom(Kind),!.
 object_words0(a,Object,[Kind]) :- (var(Kind);atom(Kind)),atom(Object),atom_concat('unknown_',Kind,Object).
 object_words0(a,Object,Words):- 

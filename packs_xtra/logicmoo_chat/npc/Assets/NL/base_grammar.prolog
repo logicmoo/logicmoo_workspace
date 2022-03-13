@@ -19,7 +19,7 @@ sentence(S, Mood, Polarity, Tense, Aspect) -->
   ( {input_from_player}  ,
     theTextM1('('),  !, 
     with_bind( speaker, 
-      player, 
+      $player, 
       with_bind( addressee, 
         $me, 
         s(S, Mood, Polarity, Tense, Aspect), opt_stop(Mood))), 
@@ -247,6 +247,12 @@ ss(be(S, O), indicative, Polarity, Tense, simple) -->
    np((O^_)^_, object, _, nogap, nogap).
 
 
+
+
+%% x_is_cont_in( ?Contained_in1, ?On2, ?Work_surface3) is semidet.
+%
+% X If Is A Cont In.
+%
 x_is_cont_in(contained_in, in, enclosing_container).
 x_is_cont_in(contained_in, on, work_surface).
 

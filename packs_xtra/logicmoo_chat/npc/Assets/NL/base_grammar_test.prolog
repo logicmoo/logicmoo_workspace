@@ -55,7 +55,7 @@ test(parse(s, imperative),
 test(parse(s, adjectival_property),
      [ true(Generated == ['Betsy', is, female]),
        nondet ]) :-
-   s(property_value($pc, gender, female),
+   s(t(gender, $pc, female),
      indicative, affirmative, present, simple,
      Generated, []).
 

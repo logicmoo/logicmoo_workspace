@@ -1117,6 +1117,9 @@ xform_cmpd((X --> B), X --> Body):- expand_dcg_body(B,Body),!.
 xform_cmpd(property(X,P,Y),t(P,X,Y)).
 xform_cmpd(property(Ctx,X,P,Y),ist(Ctx,t(P,X,Y))).
 xform_cmpd(property_value(X,P,Y),t(P,X,Y)).
+xform_cmpd(declare_value(X,P,Y),t(P,X,Y)).
+%xform_cmpd(declare_kind(I,C),iz_a(I,C)).
+
 
 %xform_cmpd(relation_type(Relation, ObjectType, RelatumType),(argIsa(Relation,1,ObjectType),argIsa(Relation,2,RelatumType))).
 xform_cmpd(relation_type(Relation, ObjectType, RelatumType),mpred_argtypes(t(Relation, ObjectType, RelatumType))).

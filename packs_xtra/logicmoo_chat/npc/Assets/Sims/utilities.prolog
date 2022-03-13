@@ -16,20 +16,18 @@
 
 :- public register_room/2, register_prop/3, register_character/1, register_door/1.
 
+%% register_room( ?Room, +Kind) is semidet.
 %% register_room(*Room, *CommonNoun, *Plural)
 %  IMPERATIVE
 %  Add Room to the database, ensuring its singular and plural nouns are registered in the lexicon.
 %  Called from Start() routine of Room.cs
-register_room(Room, Kind) :-
-   assert(declare_value(Room, building, kavis_house)),  %KLUGE
-   asserta(t(location,Room, kavis_house)),
+%
+register_room(Room, Kind) :- 
+   asserta(t(building, Room, kavis_house)), %KLUGE
+   asserta(t(location, Room, kavis_house)),
+   ensurez(base_kind(Room, room)),
    ensurez(declare_kind(Room, Kind)).
 
-%=autodoc
-%% register_room( ?Room, +Kind) is semidet.
-%
-% Register Room.
-%
 
 
 %% register_prop(*Prop, *CommonNoun, *Plural, Adjectives)
@@ -354,8 +352,9 @@ normalize_task(emote(E),
 %
 % Initialization.
 %
+(initialization):- listing((initialization)/0).
 (initialization):- forall(iz_a(X,door),register_door(X)).
-(initialization):- forall(member(X,[living_room,bedroom,bathroom,kitchen]),(R = ($(X)) ,register_room(R,X))).
+(initialization):- forall(member(X,[living_room,bedroom,bathroom,kitchen]),(getvar(X,R) ,register_room(R,X))).
 (initialization):- forall(member(X,[$'Kavi',$pc,$captive]),register_character(X)).
 (initialization):- forall((iz_a(X,physical_object),\+ iz_a(X,person),once(iz_a(X,K))),register_prop(X,K,[])).
 

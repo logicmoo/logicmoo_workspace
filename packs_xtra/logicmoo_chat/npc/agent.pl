@@ -1,5 +1,7 @@
 
-%:- module(npc,[]).
+:- if(\+ current_module(npc_chat)).
+:- module(npc_chat,[]).
+:- endif.
 % :- module(baseKB).
 
 :- clause(agent_module(_),_) -> true ; prolog_load_context(module,M),asserta(agent_module(M)).

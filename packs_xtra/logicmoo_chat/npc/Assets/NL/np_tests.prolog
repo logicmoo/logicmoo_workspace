@@ -1,5 +1,5 @@
 test_options(generate(np, _),
-	     [ setup( (bind(speaker, $pc), bind(addressee, player)) ) ]).
+	     [ setup( (bind(speaker, $pc), bind(addressee, $player)) ) ]).
 
 %%
 %% Generation
@@ -19,7 +19,7 @@ test(generate(np, character_third_person),
 
 test(generate(np, addressee),
      [ true(Generated == [ you ]) ]) :-
-   np_test(player, subject, second:singular, Generated).
+   np_test($player, subject, second:singular, Generated).
 
 test(generate(np, kind),
      [ true(Generated == [a, room]) ]) :-

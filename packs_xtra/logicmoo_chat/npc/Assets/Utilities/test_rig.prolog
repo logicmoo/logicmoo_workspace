@@ -2,7 +2,7 @@
 %%% Simple unit test system based loosely on Jan Wielemaker's paper Prolog Unit Tests
 %%%
 
-:- prolog_load_context(file,File), retractall(tmpu:is_unity_file(File)).
+%:- prolog_load_context(file,File), retractall(tmpu:is_unity_file(File)).
 :- public test/2, test/1, test_options/2, test_file/2.
 :- public run_utests/0, run_utests/1.
 
@@ -213,9 +213,12 @@ ensure_test_file_loaded(File) :-
 %% test_file(+TestPattern, *File)
 %  Declares that File must be loaded before running test matching TestPattern.
 
-:- located_object(bed,$bedroom).
-:- located_object(desk,$living_room).
-:- located_object(report,$desk).
-:- located_object($'kitchen counter','counter',$kitchen).
-:- located_object($'kitchen sink',sink,$'kitchen counter').
+(initialization):- 
+  set_located_object($bed,$bedroom),
+  set_located_object($desk,$living_room),
+  set_located_object($report,$desk),
+  set_located_object($'kitchen counter','counter',$kitchen),
+  set_located_object($'kitchen sink',sink,$'kitchen counter').
+
+:- set_located_object($'bad sink',sink,$'kitchen counter').
 

@@ -34,7 +34,7 @@ fkey_command(alt-t, "Display transcript") :-
 			       agent(DA, Agent),
       (t(given_name, Agent, Name)->true;Name=Agent), 
 			       once(generate_text(DA, Text)),
-      ( Agent= $pc->Color=lime ; Agent=player->Color=white;Color=yellow) ), 
+      ( Agent= $pc->Color=lime ; Agent = $player->Color=white;Color=yellow) ), 
 			     color(Color, line(Name, ":\t", Text))).
 		   
 fkey_command(control-alt-t, "Display transcript as dialog acts") :-

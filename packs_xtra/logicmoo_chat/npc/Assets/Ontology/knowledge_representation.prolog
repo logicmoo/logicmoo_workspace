@@ -15,9 +15,7 @@
 :- dynamic(superkind_array/2).
 
 
-
-%=autodoc
-%% test_file( ?ARG1, ?NL/base_grammar_test2) is semidet.
+%% test_file( ?Test, ?Filename) is semidet.
 %
 % Test File.
 %
@@ -312,22 +310,38 @@ is_type(Object, Kind) :-
 %% property_nondefault_value(?Object, ?Property, ?Value)
 %  Object has this property value explicitly declared, rather than inferred.
 property_nondefault_value(Object, Property, Value) :-
-   declare_value(Object, Property, Value).
+  clause(t(Property, Object, Value), G), without_backchain(G).
+
+asserted_t(P,X,Y):- property_nondefault_value(X,P,Y).
+
+without_backchain(true).
+without_backchain((X,Y)):- !, without_backchain(X), without_backchain(Y).
+without_backchain(getvar(X,Y)):- !, getvar(X,Y).
 
 %% property_value(?Object, ?Property, ?Value)
 %  Object has this value for this property.
+/*
 t(Property, Object, Value) :- 
   nonvar_ref(Property),  !, 
   lookup_property_value(Object, Property, Value).
+*/
+
+%% t( ?Pred, ?Arg1, ?Arg2) is semidet.
+%
+% True Structure.
+%
+
 t(Property, Object, Value) :- 
-  iz_a(Object, Kind), 
-  property_type(Property, Kind, _ValueType), 
-  lookup_property_value(Object, Property, Value).
+  var(Property), (nonvar(Object); nonvar(Value)),
+ (nonvar(Object) -> iz_a(Object, Kind) ; true),
+ (nonvar(Value) -> iz_a(Value, ValueType) ; true),
+  property_type(Property, Kind, ValueType),
+  t(Property, Object, Value).
+  %lookup_property_value(Object, Property, Value).
 
 
 
-%=autodoc
-%% unique_answer( ?Value, ?Object) is semidet.
+%% unique_answer( ?Value, ?Condition) is semidet.
 %
 % Unique Answer.
 %
@@ -337,17 +351,16 @@ unique_answer(Value, t(Property, Object, Value)) :-
   nonvar_ref(Property).
 
 
-
-%=autodoc
 %% lookup_property_value( ?Object, ?Property, ?Value) is semidet.
 %
 % Lookup Property Value.
 %
+
 lookup_property_value(Object, Property, Value) :-
-   declare_value(Object, Property, Value).
+  t(Property, Object, Value).
 lookup_property_value(Object, Property, Value) :-
    nonvar_ref(Object),
-   \+ declare_value(Object, Property, _),
+  \+t(Property, Object, _), 
    iz_a(Object, Kind),
    default_value(Kind, Property, Value).
 
@@ -387,20 +400,15 @@ related_nondefault_aux(Object, D, Relatum) :-
 %  Object and Relatum are related by Relation.
 t(Relation, Object, Relatum) :-  
   /remote_control/relations/Object/Relation/Relatum.
-related(Object, Relation, Relatum) :-
+t(Relation, Object, Relatum) :-
    % This relation is canonically stored as its inverse
-   inverse_relation(Relation, Inverse),
-   related(Relatum, Inverse, Object).
-related(Object, Relation, Relatum) :-
-   nonvar_ref(Relation),
+   inverse_relation(Relation, Inverse) *-> t(Inverse, Relatum, Object);
    % This relation has no inverse or is the canonical form.
-   \+ inverse_relation(Relation, _Inverse),
    related_nondefault(Object, Relation, Relatum).
 t(Relation, Object, Relatum) :- 
   var(Relation), 
   declare_related(Object, D, Relatum), 
   decendant_relation(D, Relation).
-
 
 
 %=autodoc

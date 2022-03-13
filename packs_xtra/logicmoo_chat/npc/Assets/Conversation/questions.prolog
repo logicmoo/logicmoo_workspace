@@ -9,7 +9,7 @@
 %
 % Strategy Player.
 %
-strategy_player(player).
+strategy_player($player).
 
 % Dispatch on question type
 strategy(respond_to_dialog_act(question(Asker, $me, Question,

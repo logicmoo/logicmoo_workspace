@@ -1,5 +1,5 @@
 %%%
-%%% Driver for conversation between player and player character
+%%% Driver for conversation between $player and $player character
 %%%
 
 on_event(player_input(DialogAct),
@@ -19,7 +19,7 @@ on_event(player_input(DialogAct),
 player_input_response(DialogAct, C, player_input_task(C, respond_to_dialog_act(Normalized))) :-
    normalize_dialog_act(DialogAct, Normalized),
    Normalized \= automa_command(_, $pc, _, _, _),
-   agent(Normalized, player).
+   agent(Normalized, $player).
 player_input_response(DA, C,
 		      player_input_task(C, say_string(Feedback))) :-
    normalize_dialog_act(DA, Normalized),
@@ -122,7 +122,7 @@ propose_action(A, player_interaction, C) :-
 player_input_task(Qud, Input) :-
    stop_current_everyday_life_task,
    stop_children(Qud),
-   start_task(Qud, Input, 100, T, [T/partner/player]),
+   start_task(Qud, Input, 100, T, [T/partner/$player]),
    restart_everyday_life_task.
 
 %%
@@ -146,7 +146,7 @@ okay($pc).
 %
 % Be.
 %
-be(player, $pc).
+be($player, $pc).
 
 
 
@@ -155,4 +155,4 @@ be(player, $pc).
 %
 % Declare Kind.
 %
-declare_kind(player, actor).
+declare_kind($player, actor).

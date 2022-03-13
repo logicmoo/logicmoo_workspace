@@ -1,6 +1,5 @@
 
 
-%=autodoc
 %%  ?Kavi:: ?Patrol_kitchen is semidet.
 %
 % ::.
@@ -21,29 +20,25 @@ $'Kavi'/parameters/poll_time:3.
 
 % Don't admit you know where the macguffin is to anyone
 % but other theclub members
-$'Kavi'::pretend_truth_value(Asker,
-		    location($macguffin, Loc),
-		    T) :-
-   \+ related(Asker, member_of, theclub),
-   (var(Loc) -> T = unknown ; T = false).
-$'Kavi'::pretend_truth_value(Asker,
-		    contained_in($macguffin, Loc),
-		    T) :-
-   \+ related(Asker, member_of, theclub),
-   (var(Loc) -> T = unknown ; T = false).
+$'Kavi' ::  
+  pretend_truth_value(Asker, t(location, $macguffin, Loc), T) :- 
+  \+t(member_of, Asker, theclub), 
+  var(Loc)->T=unknown;T=false.
+$'Kavi' ::  
+  pretend_truth_value(Asker, t(contained_in, $macguffin, Loc), T) :- 
+  \+t(member_of, Asker, theclub), 
+  var(Loc)->T=unknown;T=false.
 
 % Don't admit to being an theclub member to non-members
-$'Kavi'::pretend_truth_value(Asker,
-		    related($me, member_of, theclub),
-		    false) :-
-   \+ related(Asker, member_of, theclub).
+$'Kavi' ::  
+  pretend_truth_value(Asker, t(member_of, $me, theclub), false) :-  
+  \+t(member_of, Asker, theclub).
    
 % Don't admit to knowing who's in the theclub
-$'Kavi'::pretend_truth_value(Asker,
-		    related(X, member_of, theclub),
-		    unknown) :-
+$'Kavi' ::  
+  pretend_truth_value(Asker, t(member_of, X, theclub), unknown) :- 
    var(X),
-   \+ related(Asker, member_of, theclub).
+  \+t(member_of, Asker, theclub).
    
 :- public bedroom_empty/0.
 $'Kavi'::bedroom_empty :-
@@ -54,14 +49,13 @@ $'Kavi'::bedroom_empty :-
 
 % An intruder is a person who isn't an theclub member
 $'Kavi'::intruder(Intruder, Room) :-
-   location(Intruder, Room),
+  t(location, Intruder, Room), 
    iz_a(Intruder, person),
-   \+ related(Intruder, member_of, theclub).
+  \+t(member_of, Intruder, theclub).
 
 % Eat all intruders
 $'Kavi'::personal_strategy(achieve(bedroom_empty),
 		  ingest(Intruder)) :-
    intruder(Intruder, $bedroom).
 
-:- assert($global::fkey_command(alt-k, "Display Kavi's status") :-
-   generate_character_debug_overlay($'Kavi')).
+:-( assert(($global::fkey_command(alt-k, "Display Kavi's status"):-generate_character_debug_overlay($'Kavi')))).

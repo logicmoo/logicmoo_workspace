@@ -269,7 +269,7 @@ admitted_truth_value(Listener, (P1, P2), Value) :-
 admitted_truth_value($me, P, Value) :-
    !,
    truth_value(P, Value).
-admitted_truth_value(player, P, Value) :-
+admitted_truth_value($player, P, Value) :-
    !,
    admitted_truth_value($pc, P, Value).
 admitted_truth_value(Listener, P, Value) :-

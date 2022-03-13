@@ -162,34 +162,34 @@ stock_phrase(command($speaker, $addressee, end_game($addressee, $addressee))) --
 :- register_lexical_items([end, game]).
 
 %
-% Help queries from the player
+% Help queries from the $player
 %
 
-stock_phrase(general_help(player, $me)) -->  
+stock_phrase(general_help($player, $me)) -->  
   theTextM1(help).
 
 :- register_lexical_item(help).
 
-stock_phrase(general_help(player, $me)) -->  
+stock_phrase(general_help($player, $me)) -->  
   theTextM([what, do, 'I', do, ?]).
-stock_phrase(how_do_i(player, $me, Q)) -->  
+stock_phrase(how_do_i($player, $me, Q)) -->  
   ( theTextM([how, do, Us])  ,
     {member(Us, ['I', you, we])}, 
     player_question(Q), 
     theTextM1(?)).
 
-stock_phrase(objective_query(player, $me)) -->  
+stock_phrase(objective_query($player, $me)) -->  
   theTextM([what, am, 'I', trying, to, do, ?]).
-stock_phrase(objective_query(player, $me)) -->  
+stock_phrase(objective_query($player, $me)) -->  
   ( theTextM([what, are, Us])  ,
     {member(Us, [we, you])}, 
     theTextM([trying, to, do, ?])).
 
 :- register_lexical_items([red, green, yellow, white, turn, mean]).
 
-stock_phrase(color_query(player, $me, Yellow)) -->  
+stock_phrase(color_query($player, $me, Yellow)) -->  
   theTextM([what, does, Yellow, text, mean, ?]).
-stock_phrase(color_query(player, $me, Yellow)) -->  
+stock_phrase(color_query($player, $me, Yellow)) -->  
   theTextM([why, does, my, text, turn, Yellow, ?]).
 
 
@@ -211,7 +211,7 @@ nsew(w).
 
 :- forall(nsew(X), register_lexical_item(X)).
 
-stock_phrase(if_navigation_command(player, $me, X)) -->
+stock_phrase(if_navigation_command($player, $me, X)) -->
    %{ input_from_player },
    nsew_nav_command(X).
 
@@ -231,19 +231,19 @@ nsew_nav_command(X)-->theTextM([go, to, X]), {nsew(X)}.
 
 nsew_nav_command(X)-->theTextM1(X), {nsew(X)}.
 
-stock_phrase(show_status(player, $pc, What)) -->  
+stock_phrase(show_status($player, $pc, What)) -->  
   theTextM1(check), status_display_term_with_determiner(What).
 
-stock_phrase(show_status(player, $pc, What)) -->
+stock_phrase(show_status($player, $pc, What)) -->
    status_display_term(What).
 
-stock_phrase(show_status(player, $pc, What)) -->  
+stock_phrase(show_status($player, $pc, What)) -->  
   theTextM([show, me]), status_display_term_with_determiner(What).
 
-stock_phrase(show_status(player, $pc, What)) -->  
+stock_phrase(show_status($player, $pc, What)) -->  
   theTextM([look, at]), status_display_term_with_determiner(What).
 
-stock_phrase(show_status(player, $pc, What)) -->  
+stock_phrase(show_status($player, $pc, What)) -->  
   theTextM1(examine), status_display_term_with_determiner(What).
 
 :- register_lexical_items([examine, look, at, show, check, inventory, notebook, vocabulary ]).
@@ -275,7 +275,7 @@ status_display_term_with_determiner(What)-->theTextM1(the), status_display_term(
 %
 
 utterance(discourse_increment(Speaker, Addressee, Fragments)) -->
-   { generating_nl },            % Only valid for character output, not player input.
+   { generating_nl },            % Only valid for character output, not $player input.
      with_bind(speaker, Speaker,
       with_bind(addressee, Addressee,
        discourse_fragments(Fragments))).

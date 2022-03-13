@@ -64,22 +64,19 @@ test(integrity(property_declarations_well_formed),
 	      known_type(ValueType) ) ),
        Malformed).
 
-test(integrity(properties_have_types_declared),
-     [ problem_list("The following properties have no type listed in the spreadsheet",
-		    UndeclaredProperties) ]) :-
+test( integrity(properties_have_types_declared), [
+  problem_list("The following properties have no type listed in the spreadsheet", UndeclaredProperties)]) :-  
    all(Property,
-       ( declare_value(_, Property, _),
-	 \+ property_type(Property, _, _) ),
+    (t(Property, _, _), \+property_type(Property, _, _)), 
        UndeclaredProperties).
 
-test(integrity(valid_property_types),
-     [ problem_list("The following objects have properties with invalid types",
-		    InvalidValues) ]) :-
-   all(o_p_v(ObjectType:Object,Property,ValueType:Value),
-       ( declare_value(Object, Property, Value),
+test( integrity(valid_property_types), [
+  problem_list("The following objects have properties with invalid types", InvalidValues)]) :-  
+  all( 
+     o_p_v(ObjectType:Object, Property, ValueType:Value), 
+     ( t(Property, Object, Value)  ,
 	 property_type(Property, ObjectType, ValueType),
-	 \+ ( is_type(Object, ObjectType),
-	      is_type(Value, ValueType) ) ),
+       \+ (is_type(Object, ObjectType), is_type(Value, ValueType))), 
        InvalidValues).
 
 test( integrity(relation_declarations_well_formed), [
@@ -92,7 +89,7 @@ test( integrity(relation_declarations_well_formed), [
 test( integrity(relations_declared), [
   problem_list("The following relations are not declared in the spreadsheet", UndeclaredRelations)]) :-  
   all( Relation, 
-    ( declare_related(_, Relation, _), 
+    ( asserted_t(Relation, _, _),
       \+mpred_argtypes(t(Relation, _, _))), 
     UndeclaredRelations).
 
@@ -100,17 +97,20 @@ test( integrity(inverse_relations_must_be_declared_in_their_canonical_form), [
   problem_list( "The following objects declare relations that should be declared through their inverses instead", 
     Malformed)]) :-  
   all( t(R, X, Y), 
-    (declare_related(X, R, Y), inverse_relation(R, _)), 
+    (asserted_t(R, X, Y), inverse_relation(R, _)), 
     Malformed).
 
 test( integrity(valid_relation_types), [
   problem_list("The following objects declare relations with the wrong types", InvalidValues)]) :- 
-  DR=declare_related(Object, Relation, Value), 
+  DR=t(Relation, Object, Value), 
   all( DR, 
-    ( DR  ,
-      mpred_argtypes(t(Relation, ObjectType, ValueType)), 
-      \+ (is_type(Object, ObjectType), is_type(Value, ValueType))), 
+    ( DR  , \+ valid_relation_data(Relation, Object, Value) ), 
     InvalidValues).
+
+valid_relation_data(Relation, Object, Value):-
+    mpred_argtypes(t(Relation, ObjectType, ValueType)), 
+    is_type(Object, ObjectType), is_type(Value, ValueType).
+valid_relation_data(Relation, _Object, _Value):- \+ mpred_argtypes(t(Relation, _, _)) , !.
 
 test( integrity(implied_relations_must_be_defined), [
   problem_list("The following relations are undeclared", UndeclaredRelations)]) :-  

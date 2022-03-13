@@ -144,7 +144,7 @@ possessive_np(X, Number) -->
 %
 % Possessive Pronoun Referrent.
 %
-possessive_pronoun_referrent(player, $pc) :- !.
+possessive_pronoun_referrent($player, $pc) :- !.
 possessive_pronoun_referrent(X, X).
 
 % PARSE/COMPLETE ONLY

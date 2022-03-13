@@ -86,7 +86,6 @@ strategy(tell($me, Who, What),
 
 
 
-%=autodoc
 %% normalize_task( ?Status, ?Task) is semidet.
 %
 % Normalize Task.
@@ -116,7 +115,6 @@ strategy(end_game(_,_), end_game(null)).
 :- multifile(todo/2).
 
 
-%=autodoc
 %% todo( ?Person, :PRED11) is semidet.
 %
 % Todo.

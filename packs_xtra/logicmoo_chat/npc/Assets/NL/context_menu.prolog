@@ -8,11 +8,11 @@ menu_item(GameObject, String, Command) :-
 
 %% menu_dialog_act(+GameObject, -DialogAct)
 %  DialogAct should be displayed in the context menu for GameObject.
-menu_dialog_act(GameObject, command(player, $pc, Action)) :-
+menu_dialog_act(GameObject, command($player, $pc, Action)) :-
    menu_action(GameObject, Action).
-menu_dialog_act($pc, show_status(player, $pc, notebook)).
-menu_dialog_act($pc, show_status(player, $pc, inventory)).
-menu_dialog_act($pc, show_status(player, $pc, vocabulary)).
+menu_dialog_act($pc, show_status($player, $pc, notebook)).
+menu_dialog_act($pc, show_status($player, $pc, inventory)).
+menu_dialog_act($pc, show_status($player, $pc, vocabulary)).
 menu_dialog_act(Character, DialogAct) :-
    character(Character),
    in_conversation_with(Character),
@@ -33,7 +33,6 @@ menu_dialog(Character, command($pc, Character, Action)) :-
 
 
 
-%=autodoc
 %% menu_action( ?X, ?Pc) is semidet.
 %
 % Menu Action.

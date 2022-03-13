@@ -1,5 +1,7 @@
 
-%:- module(lmchat,[]).
+:- if(\+ current_module(npc_chat)).
+:- module(npc_chat,[]).
+:- endif.
 
 :- clause(unity_module_name(_),_) -> true ; prolog_load_context(module,M),asserta_if_new(unity_module_name(M)).
 :- use_module(library(logicmoo_common)).
