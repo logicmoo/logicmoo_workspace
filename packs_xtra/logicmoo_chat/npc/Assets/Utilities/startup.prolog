@@ -121,8 +121,8 @@ assert_phrase_1subrule(Phrase, Words, Guard):- throw(assert_phrase_rule(Phrase, 
 %proper_name_without_the
 
 assert_proper_name(Object, [ ], _) :-
-   % Don't default a name for GameObjects
-   is_class(Object, $'GameObject'),
+   % Don't default a name for MetaverseObjects
+   is_class(Object, $'MetaverseObject'),
    !.
 assert_proper_name(Object, [ ], NumberSpec) :-
    !,

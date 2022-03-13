@@ -124,7 +124,7 @@ s(Words,LogicalForm):- Words =[_|_], sentence(LogicalForm, Mood, Polarity, Tense
 :- dynamic(kind/1).
 :- dynamic(character/1).
 :- dynamic('>-->'/2).
-:- dynamic(door/1).
+:- dynamic(algorithm/1).
 :- dynamic(implies_relation/2).
 :- dynamic(inverse_relation/2).
 :- dynamic(prop/1).
@@ -250,8 +250,8 @@ s(Words,LogicalForm):- Words =[_|_], sentence(LogicalForm, Mood, Polarity, Tense
 :- load_unity_prolog_file('NL/vp_tests.prolog').
 */
 :- load_unity_prolog_file('Utilities/test_rig.prolog').
-:- load_unity_prolog_file('Characters/Kavi.prolog').
-:- load_unity_prolog_file('Characters/captive.prolog').
+:- load_unity_prolog_file('Characters/Sophia.prolog').
+:- load_unity_prolog_file('Characters/bina48.prolog').
 :- load_unity_prolog_file('Characters/pc.prolog').
 :- load_unity_prolog_file('Script/demo_level.prolog').
 

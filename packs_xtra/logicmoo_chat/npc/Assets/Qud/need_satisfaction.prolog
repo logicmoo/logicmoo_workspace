@@ -32,17 +32,17 @@ survival_need(sleep).
 %  True if performing Action at Object will increase satisfaction
 %  of Need by Delta units.  Should wait DelayTime before executing
 %  another action.
-satisfies(hunger, $refrigerator, 50, say("Nom nom nom"), 5).
+satisfies(hunger, $research_incubater, 50, say("Nom nom nom"), 5).
 satisfies(thirst, $desk, 50, say("Glug glug glug"), 3).
-satisfies(thirst, $'kitchen table', 50, say("Glug glug glug"), 3).
+satisfies(thirst, $'research design', 50, say("Glug glug glug"), 3).
 satisfies(social, Character, 100, greet($me, Character), 5) :-
    character(Character),
    Character \= $me.
 satisfies(fun, $radio, 60, say("Listening to the radio"), 10).
 satisfies(sweat, $device, 100, say("Excuse me; privacy, please?"), 5).
-satisfies(sleep, $bed, 100, say("I really wish I had an animation for happy down on the bed."), 15).
-satisfies(sleep, $sofa, 100, say("That's a comfy looking sofa"), 15).
-satisfies(hygiene, $'bathroom sink', 100, say("Brush brush brush!"), 5).
+satisfies(sleep, $buggy_routine, 100, say("I really wish I had an animation for happy down on the buggy_routine."), 15).
+satisfies(sleep, $good_idea, 100, say("That's a comfy looking good_idea"), 15).
+satisfies(hygiene, $'old_sourcefile', 100, say("Brush brush brush!"), 5).
 
 
 

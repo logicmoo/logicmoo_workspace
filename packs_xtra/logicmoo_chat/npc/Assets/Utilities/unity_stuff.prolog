@@ -5,10 +5,10 @@
 :- public examination_content/2, pop_up_examination_content/1.
 
 %% examination_content(+Object, -ContentComponent)
-%  ContentComponent is the ExaminationContent component of the GameObject Object.
+%  ContentComponent is the ExaminationContent component of the MetaverseObject Object.
 examination_content(Object, ContentComponent) :-
-   is_class(Object, $'GameObject'),
-   component_of_gameobject_with_type(ContentComponent, Object, $'ExaminationContent').
+   is_class(Object, $'MetaverseObject'),
+   component_of_metaverse_object_with_type(ContentComponent, Object, $'ExaminationContent').
 
 %% pop_up_examination_content(+ContentComponent)
 %  IMPERATIVE
@@ -31,16 +31,16 @@ emit_grain(_,_).
 %  Activates the Prop (e.g. turns on an appliance).
 activate_prop(Prop) :-
    assert_if_new(prop_activated(Prop)),
-   is_class(Prop, $'GameObject'),
-   component_of_gameobject_with_type(PropComponent, Prop, $'PropInfo'),
+   is_class(Prop, $'MetaverseObject'),
+   component_of_metaverse_object_with_type(PropComponent, Prop, $'PropInfo'),
    set_property(PropComponent, 'IsOn', true).
 
 %% deactivate_prop(+Prop)
 %  Activates the Prop (e.g. turns on an appliance).
 deactivate_prop(Prop) :-
    retractall(prop_activated(Prop)),
-   is_class(Prop, $'GameObject'),
-   component_of_gameobject_with_type(PropComponent, Prop, $'PropInfo'),
+   is_class(Prop, $'MetaverseObject'),
+   component_of_metaverse_object_with_type(PropComponent, Prop, $'PropInfo'),
    set_property(PropComponent, 'IsOn', false).
 
 
@@ -51,8 +51,8 @@ deactivate_prop(Prop) :-
 % Prop Activated.
 %
 prop_activated(Prop) :-
-   is_class(Prop, $'GameObject'),
-   component_of_gameobject_with_type(PropComponent, Prop, $'PropInfo'),
+   is_class(Prop, $'MetaverseObject'),
+   component_of_metaverse_object_with_type(PropComponent, Prop, $'PropInfo'),
    \+ PropComponent.'IsOn'.
 
 
@@ -63,8 +63,8 @@ prop_activated(Prop) :-
 % Set Prop Text.
 %
 set_prop_text(Prop, String) :-
-   is_class(Prop, $'GameObject'),
-   component_of_gameobject_with_type(PropComponent, Prop, $'PropInfo'),
+   is_class(Prop, $'MetaverseObject'),
+   component_of_metaverse_object_with_type(PropComponent, Prop, $'PropInfo'),
    PropComponent::settext(String).
 
 %% toggled_state(+Appliance, Prop, OnOffTrueFalse)
@@ -121,11 +121,11 @@ fkey_command(f1) :-
 fkey_command(Key) :-
    fkey_command(Key, _).
 
-fkey_command(alt-q, "Quit the game") :-
+fkey_command(alt-q, "Quit the metaverse") :-
    call_method($'Application', quit, _).
 % These are implemented in the C# code, so the handlers are here
 % only to make sure the documentation appears in the help display.
-fkey_command(f5, "Pause/unpause game").
+fkey_command(f5, "Pause/unpause metaverse").
 fkey_command(f2, "Toggle Prolog window").
 
 :- public display_as_overlay/1.
@@ -134,14 +134,14 @@ fkey_command(f2, "Toggle Prolog window").
 %  IMPERATIVE
 %  Pops up debug overlay and displays StuffToDisplay within it.
 display_as_overlay(Stuff) :-
-   begin(component_of_gameobject_with_type(Overlay, _, $'DebugOverlay'),
+   begin(component_of_metaverse_object_with_type(Overlay, _, $'DebugOverlay'),
 	 call_method(Overlay, updatetext(Stuff), _)).
 
 %% hide_overlay
 %  IMPERATIVE
 %  Disappears the debug overlay.
 hide_overlay :-
-   begin(component_of_gameobject_with_type(Overlay, _, $'DebugOverlay'),
+   begin(component_of_metaverse_object_with_type(Overlay, _, $'DebugOverlay'),
 	 call_method(Overlay, hide, _)).
 
 %% generate_overlay(+Title, :Generator, =Template)

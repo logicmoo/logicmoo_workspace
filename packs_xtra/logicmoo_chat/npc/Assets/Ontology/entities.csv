@@ -1,27 +1,26 @@
 Entity,Kinds (list),Description,Proper noun (phrase list),Number,Properties (list),Relations (list)
-$player,person,,the player,,,
-$pc,person,,,,"age=13, job=spy","knows_about: spying, member_of:www, interested_in: theclub, friend_of: $'Kavi'"
-$'Kavi',person,,'Kavi',,"age=13, given_name=""Kavi"", surname=""Surkow"", gender=male",member_of: theclub
-$captive,person,,'Trip',,"age=13, given_name=""Trip"", surname=""Abel"", gender=male",friend_of: $pc
+$user,user,,the user,,,
+$pc,person,,,,"age=13, job=researcher","knows_about: reaearch, member_of:sophialab, interested_in: theclub, friend_of: $'Sophia'"
+$'Sophia',person,,'Sophia',,"age=4, given_name=""Sophia"", surname=""Surkow"", gender=female",member_of: theclub
+$bina48,person,,'Bina48',,"age=13, given_name=""Bina48"", gender=female",friend_of: $pc
 theclub,science,"A Club",TheClub,plural,"make world peace","goal: ""complete world peace"", leader: $pc"
-adam_weishaupt,person,,'Adam Weishaupt',singular,,
-agency,"community_agency, clandestine_organization",,the Agency,,,
-% www,organization,"[""A ragtag group of performance artists,"", ""working to undermine the apalling level of normativity"", ""of late capitalism.""]",'Wiccans for a Weirder World',plural,,"goal: ""the enweirdening of the world."""
-www,organization,"[""A ragtag group of performance artists,"", ""working to undermine the apalling level of normativity"", ""of late capitalism.""]",'Weirder World Way',plural,,"goal: ""the enweirdening of the world."""
-spying,action,,,,,
-tampering,action,,,,,
-$report,"report, key_item","""Final report on project MKSPARSE.""",,,"text=""\""Subject LNJOKER is manifesting.  Contact MKMOTHER.\""""","location= $desk"
+douglas_miles,person,,'Douglas Miles',singular,,
+agency,"community_agency, research_organization",,the Agency,,,
+% sophialab,organization,"[""A ragtag group of performance artists,"", ""working to undermine the apalling level of normativity"", ""of late capitalism.""]",'Wiccans for a Weirder Metaverse',plural,,"goal: ""the enweirdening of the metaverse."""
+sophialab,organization,"[""A ragtag group of performance artists,"", ""working to undermine the apalling level of normativity"", ""of late capitalism.""]",'Weirder Metaverse Way',plural,,"goal: ""the enweirdening of the metaverse."""
+reaearch,action,,,,,
+programming,action,,,,,
+$report,"report, key_item","""Final report on project LOGICMOO.""",,,"text=""\""Subject LNJOKER is manifesting.  Contact MKMOTHER.\""""","location= $desk"
 $photo,"photograph, key_item","""A surveillance photo""",,,,location= $desk
-kavis_house,house,,,,exit= $exit,
-the_world,enclosing_container,"""The world is everything""",the world,,,
-the_game,enclosing_container,"""The game is everything.""",the game,,,
-$mainframe,"mainframe, document","[""It's an old mainframe computer"", ""inexplicably located in Kavi's house."", ""It has three buttons: run, stop,"", ""MAGIC,"", ""and MORE MAGIC.""]",,,"caption=""an antique mainframe?""",
-$macguffin,"macguffin, key_item",,,,,
-$'run button',button,"""a run button""",the run button,,"location= $mainframe",
-$'stop button',button,"""a stop button""",the stop button,,"location= $mainframe",
+sophias_sourcecode,sourcecode,,,,exit= $exit,
+the_metaverse,enclosing_container,"""The metaverse is everything.""",the metaverse,,,
+$gofai,"gofai, document","[""It's an old gofai subroutine"", ""inexplicably located in Sophia's sourcecode."", ""It has three buttons: run, stop,"", ""MAGIC,"", ""and MORE MAGIC.""]",,,"caption=""an antique gofai?""",
+$novel_idea,"novel_idea, key_item",,,,,
+$'run button',button,"""a run button""",the run button,,"location= $gofai",
+$'stop button',button,"""a stop button""",the stop button,,"location= $gofai",
 $'magic button',button,"""a MAGIC button""",the magic button,,,
 $'more magic button',button,"""a MORE MAGIC button""",the more magic button,,,
-$exit,"door, exit, document","""The exit.""",,,"caption=""The exit""",
-$'bathroom door',"door, exit, document",,,,"caption=""Bathroom door""",
-$'kitchen sink',sink,,,,,
-$'kitchen counter',counter,,,,,
+$exit,"algorithm, exit, document","""The exit.""",,,"caption=""The exit""",
+$'old algorithm',"algorithm, exit, document",,,,"caption=""Old algorithm""",
+$'research sourcefile',sourcefile,,,,,
+$'research repository',repository,,,,,

@@ -13,20 +13,20 @@ test(completion(s, imperative),
    s_test(_, Mood, [go, to | Completion]).
 
 test(generate(s, in_expression)) :-
-   s_test(t(location, $'Kavi', $'kitchen'), indicative, Generated),
-   Generated == ['Kavi', is, in, the, kitchen ].
+   s_test(t(location, $'Sophia', $'research_program'), indicative, Generated),
+   Generated == ['Sophia', is, in, the, research].
 
 test(generate(s, in_expression0)) :-         
-  while_completing( s_test(t(contained_in, $'Kavi', $'kitchen'), indicative, Generated)),
-   Generated == ['Kavi', is, in, the, kitchen ].
+  while_completing( s_test(t(contained_in, $'Sophia', $'research_program'), indicative, Generated)),
+   Generated == ['Sophia', is, in, the, research].
 
 test(generate(s, in_expression1)) :-
-         s_test(t(contained_in, $'Kavi', $'kitchen'), indicative, Generated),
-   Generated == ['Kavi', is, in, the, kitchen ].
+         s_test(t(contained_in, $'Sophia', $'research_program'), indicative, Generated),
+   Generated == ['Sophia', is, in, the, research].
 
 test(generate(s, in_expression2)) :-
-   s_test(t(location, $'Kavi', $'kitchen'), indicative, Generated),
-   Generated == ['Kavi', is, in, the, kitchen ].
+   s_test(t(location, $'Sophia', $'research_program'), indicative, Generated),
+   Generated == ['Sophia', is, in, the, research].
 
 test(generate(s, future_indicative),
      [ true(Generated == ['I', will, eat, the, plant]),
@@ -35,27 +35,27 @@ test(generate(s, future_indicative),
       s(eat($pc, $plant), indicative, affirmative, future, simple, Generated, [ ])).
 
 test(generate(s, future_indicative2),
-     [ true(Generated == ['I', will, talk, to, 'Kavi']),
+     [ true(Generated == ['I', will, talk, to, 'Sophia']),
        nondet ]) :-
   with_bind(generating_nl, true,
     with_bind(speaker, $pc,
-     s(talk($pc, $'Kavi', _), indicative, affirmative, future, simple, Generated, [ ]))).
+     s(talk($pc, $'Sophia', _), indicative, affirmative, future, simple, Generated, [ ]))).
 
 test(parse(s, imperative),
-     [ true(LF == go($pc, $bed)),
+     [ true(LF == go($pc, $buggy_routine)),
        true(Mood == imperative),
        nondet]):-
    with_bind(input_from_player, true,
     with_bind(addressee, $pc,
-     s_test(LF, Mood, [go, to, the, bed]))).
+     s_test(LF, Mood, [go, to, the, buggy_routine]))).
 
-:- register_prop($bed,bed,[]).
-:- assert(location($bed,$bedroom)).
+:- register_prop($buggy_routine,buggy_routine,[]).
+:- assert(location($buggy_routine,$buggy_program)).
 
 test(parse(s, adjectival_property),
-     [ true(Generated == ['Betsy', is, female]),
+     [ true(Generated == ['User', is, male]),
        nondet ]) :-
-   s(t(gender, $pc, female),
+   s(t(gender, $pc, male),
      indicative, affirmative, present, simple,
      Generated, []).
 

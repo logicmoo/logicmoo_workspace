@@ -5,17 +5,17 @@
 %
 % Normalize Task.
 %
-normalize_task(respond_to_dialog_act(general_help($player, $me)),
+normalize_task(respond_to_dialog_act(general_help($user, $me)),
 	       general_help).
-normalize_task(respond_to_dialog_act(how_do_i($player, $me, Question)),
+normalize_task(respond_to_dialog_act(how_do_i($user, $me, Question)),
 	       how_do_i(Question)).
-normalize_task(respond_to_dialog_act(objective_query($player, $me)),
+normalize_task(respond_to_dialog_act(objective_query($user, $me)),
 	       objective_query).
-normalize_task(respond_to_dialog_act(color_query($player, $me, Color)),
+normalize_task(respond_to_dialog_act(color_query($user, $me, Color)),
 	       color_query(Color)).
-normalize_task(respond_to_dialog_act(if_navigation_command($player, $me, X)),
+normalize_task(respond_to_dialog_act(if_navigation_command($user, $me, X)),
 	       if_navigation_command(X)).
-normalize_task(respond_to_dialog_act(show_status($player, $me, What)),
+normalize_task(respond_to_dialog_act(show_status($user, $me, What)),
 	       show_status(What)).
 
 
@@ -30,21 +30,21 @@ before(show_status(notebook),
 	 pause(1) }).
 strategy(show_status(What),
 	 {
-	  pause_game,
+	  pause_metaverse,
 	  call(display_status_screen(What))
 	 }).
 
 strategy(if_navigation_command(X),
 	 monolog(["Just say what to go to.",
 		  "For example, \"go to the desk\",",
-		  "or \"go to Kavi\"",
-		  "or \"go to the kitchen\"",
+		  "or \"go to Sophia\"",
+		  "or \"go to the research_program\"",
 		  "or just say someplace and say \"go there\"",
 		  "or \"go to this\"."])).
 
 strategy(general_help,
 	 monolog(["Okay, I'm going to break character for a minute.",
-		  "This is a game about mind control.",
+		  "This is a metaverse about mind control.",
 		  "You can talk to the characters in English,",
 		  "Although we're fairly open-minded.",
 		  "Sort of like toddlers",
@@ -66,7 +66,7 @@ strategy(general_help,
 %=autodoc
 %% player_question( ?ARG1) is semidet.
 %
-% Player Question.
+% User Question.
 %
 player_question(play)-->theTextM1(play).
 normalize_task(how_do_i(play),

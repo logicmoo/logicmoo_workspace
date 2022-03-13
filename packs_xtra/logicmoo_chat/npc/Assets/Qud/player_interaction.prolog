@@ -1,5 +1,5 @@
 %%%
-%%% Driver for conversation between $player and $player character
+%%% Driver for conversation between $user and $user character
 %%%
 
 on_event(player_input(DialogAct),
@@ -14,12 +14,12 @@ on_event(player_input(DialogAct),
 %=autodoc
 %% player_input_response( ?DialogAct, ?C, ?C) is semidet.
 %
-% Player Input Response.
+% User Input Response.
 %
 player_input_response(DialogAct, C, player_input_task(C, respond_to_dialog_act(Normalized))) :-
    normalize_dialog_act(DialogAct, Normalized),
    Normalized \= automa_command(_, $pc, _, _, _),
-   agent(Normalized, $player).
+   agent(Normalized, $user).
 player_input_response(DA, C,
 		      player_input_task(C, say_string(Feedback))) :-
    normalize_dialog_act(DA, Normalized),
@@ -30,7 +30,7 @@ player_input_response(DA, C,
 %=autodoc
 %% reject_player_dialog_act( ?X, ?STRING2) is semidet.
 %
-% Reject Player Dialog Single Doer Action.
+% Reject User Dialog Single Doer Action.
 %
 reject_player_dialog_act(automa_command($pc, X, wants(X, _), _, _),
 			 "I wish I could just tell people to want things, but I can't.").
@@ -117,12 +117,12 @@ propose_action(A, player_interaction, C) :-
 %=autodoc
 %% player_input_task( ?Qud, +Input) is semidet.
 %
-% Player Input Task.
+% User Input Task.
 %
 player_input_task(Qud, Input) :-
    stop_current_everyday_life_task,
    stop_children(Qud),
-   start_task(Qud, Input, 100, T, [T/partner/$player]),
+   start_task(Qud, Input, 100, T, [T/partner/ $user]),
    restart_everyday_life_task.
 
 %%
@@ -142,17 +142,17 @@ okay($pc).
 
 
 %=autodoc
-%% be( ?Player1, ?ARG2) is semidet.
+%% be( ?User1, ?ARG2) is semidet.
 %
 % Be.
 %
-be($player, $pc).
+be($user, $pc).
 
 
 
 %=autodoc
-%% declare_kind( ?ARG1, ?Kitchen2) is semidet.
+%% declare_kind( ?ARG1, ?Research_program2) is semidet.
 %
 % Declare Kind.
 %
-declare_kind($player, actor).
+declare_kind($user, actor).

@@ -20,7 +20,7 @@ character_debug_display(Character, line("Topics:\t", Person:Topic)) :-
 %% todo(-Task/-Preamble, -Priority)
 % Character wants/need to do Task with specified Priority.
 % When executing this task, it should first run Preamble
-% Preamble is used for housekeeping, e.g. to remove Task
+% Preamble is used for sourcecodekeeping, e.g. to remove Task
 % from a queue of pending tasks. 
 
 :- multifile(todo/2).
@@ -39,7 +39,7 @@ todo(Task, Priority) :-
 % Like todo/2, but is specific to one character's KB.
 % Character wants/need to do Task with specified Priority.
 % When executing this task, it should first run Preamble
-% Preamble is used for housekeeping, e.g. to remove Task
+% Preamble is used for sourcecodekeeping, e.g. to remove Task
 % from a queue of pending tasks. 
 
 :- external personal_todo/2.

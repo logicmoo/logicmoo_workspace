@@ -10,12 +10,12 @@
 %
 immediate_kind_of(endurant, entity).
 immediate_kind_of(actor, endurant).
-immediate_kind_of(physical_endurant, endurant).
-immediate_kind_of(physical_object, physical_endurant).
-immediate_kind_of(nonphysical_endurant, endurant).
-immediate_kind_of(nonphysical_object, nonphysical_endurant).
+immediate_kind_of(virtual_endurant, endurant).
+immediate_kind_of(metaverse_object, virtual_endurant).
+immediate_kind_of(imaginary_endurant, endurant).
+immediate_kind_of(imaginary_object, imaginary_endurant).
 
-immediate_kind_of(living_thing, physical_object).
+immediate_kind_of(living_thing, metaverse_object).
 immediate_kind_of(male, living_thing).
 immediate_kind_of(female, living_thing).
 immediate_kind_of(creature, living_thing).
@@ -23,7 +23,7 @@ immediate_kind_of(plant, living_thing).
 immediate_kind_of(creature, actor).
 immediate_kind_of(person, creature).
 immediate_kind_of(person, container).
-immediate_kind_of(container, physical_object).
+immediate_kind_of(container, metaverse_object).
 immediate_kind_of(human, person).
 immediate_kind_of(boy, human).
 immediate_kind_of(boy, male).
@@ -35,43 +35,43 @@ immediate_kind_of(character,creature).
 
 
 
-immediate_kind_of(prop, physical_object).
+immediate_kind_of(prop, metaverse_object).
 
-immediate_kind_of(furniture, prop).
-immediate_kind_of(sittable, furniture).
-immediate_kind_of(chair, sittable).
-immediate_kind_of(device, sittable).
-immediate_kind_of(sofa, sittable).
+immediate_kind_of(subroutine, prop).
+immediate_kind_of(runnable, subroutine).
+%immediate_kind_of(task, runnable).
+immediate_kind_of(device, runnable).
+immediate_kind_of(good_idea, runnable).
 
-immediate_kind_of(layable, furniture).
-immediate_kind_of(bed, layable).
+immediate_kind_of(debugable, subroutine).
+immediate_kind_of(buggy_routine, debugable).
 
-immediate_kind_of(physical_storage, furniture).
-immediate_kind_of(physical_storage, container).
-immediate_kind_of(closed_container, physical_storage).
-immediate_kind_of(refridgerator, closed_container).
-immediate_kind_of(sink, closed_container).
+immediate_kind_of(virtual_storage, subroutine).
+immediate_kind_of(virtual_storage, container).
+immediate_kind_of(closed_container, virtual_storage).
+immediate_kind_of(research_incubater, closed_container).
+immediate_kind_of(sourcefile, closed_container).
 immediate_kind_of(bookshelf, closed_container).
 
-immediate_kind_of(work_surface, furniture).
-immediate_kind_of(work_surface, physical_storage).
+%immediate_kind_of(work_surface, subroutine).
+immediate_kind_of(work_surface, virtual_storage).
 immediate_kind_of(desk, work_surface).
 immediate_kind_of(table, work_surface).
 
-immediate_kind_of(room, physical_object).
-immediate_kind_of(room, closed_container).
-immediate_kind_of(kitchen, room).
-immediate_kind_of(bedroom, room).
-immediate_kind_of(bathroom, room).
-immediate_kind_of(living_room, room).
+immediate_kind_of(program, metaverse_object).
+immediate_kind_of(program, closed_container).
+immediate_kind_of(research_program, program).
+immediate_kind_of(buggy_program, program).
+immediate_kind_of(old_program, program).
+immediate_kind_of(living_program, program).
 
-immediate_kind_of(food, prop).
-immediate_kind_of(fruit, food).
-immediate_kind_of(apple, fruit).
-immediate_kind_of(orange, fruit).
+immediate_kind_of(task, prop).
+immediate_kind_of(visualization, task).
+immediate_kind_of(apple, visualization).
+immediate_kind_of(orange, visualization).
 
-immediate_kind_of(mental_object, nonphysical_object).
-immediate_kind_of(social_object, nonphysical_object).
+immediate_kind_of(mental_object, imaginary_object).
+immediate_kind_of(social_object, imaginary_object).
 
 immediate_kind_of(perdurant, entity).
 immediate_kind_of(event, perdurant).

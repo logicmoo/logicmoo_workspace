@@ -910,7 +910,7 @@ beat_graph_relation(N, B, [label="precondition"]) :-
 
 beat_graph_relation(G, C, [label="consequence"]) :-
    plot_goal_achieves(G, C).
-beat_graph_relation(B, T, [label="player achieves"]) :-
+beat_graph_relation(B, T, [label="user achieves"]) :-
    player_achieves_task_during_beat(B, T).
 
 beat_graph_node(Event, [shape=octagon]) :-
@@ -1014,7 +1014,7 @@ markup_matches(List, M) :-
 %
 % Beat Graph Subgraph.
 %
-beat_graph_subgraph(TerminalBeats, [rank=sink]) :-
+beat_graph_subgraph(TerminalBeats, [rank=sourcefile]) :-
    all(Beat,
        terminal_beat(Beat),
        TerminalBeats).

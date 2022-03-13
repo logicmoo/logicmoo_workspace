@@ -37,8 +37,8 @@ deactivation(Action) :-
 
 :- external intend/2.
 
-% Testing purposes - Kavi wants to deactivate everyone.
-%intend($'Kavi', deactivate($'Kavi', _)).
+% Testing purposes - Sophia wants to deactivate everyone.
+%intend($'Sophia', deactivate($'Sophia', _)).
 
 				% Don't steal
 ~permissible(move(Actor, Object, Actor)) :=

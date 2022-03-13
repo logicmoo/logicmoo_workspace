@@ -1,5 +1,5 @@
 test_options(generate(np, _),
-	     [ setup( (bind(speaker, $pc), bind(addressee, $player)) ) ]).
+	     [ setup( (bind(speaker, $pc), bind(addressee, $user)) ) ]).
 
 %%
 %% Generation
@@ -14,20 +14,20 @@ test(generate(np, speaker_object_case),
    np_test($pc, object, first:singular, Generated).
 
 test(generate(np, character_third_person),
-     [ true(Generated == [ 'Kavi' ]) ]) :-
-   np_test($'Kavi', object, third:singular, Generated).
+     [ true(Generated == [ 'Sophia' ]) ]) :-
+   np_test($'Sophia', object, third:singular, Generated).
 
 test(generate(np, addressee),
      [ true(Generated == [ you ]) ]) :-
-   np_test($player, subject, second:singular, Generated).
+   np_test($user, subject, second:singular, Generated).
 
 test(generate(np, kind),
-     [ true(Generated == [a, room]) ]) :-
-   bind_discourse_variables(iz_a(X, room), {np_test(X, subject, third:singular, Generated)},[],[]).
+     [ true(Generated == [a, program]) ]) :-
+   bind_discourse_variables(iz_a(X, program), {np_test(X, subject, third:singular, Generated)},[],[]).
 
 test(generate(np, prop),
-     [ true(Generated == [the, bed]) ]) :-
-   np_test($bed, subject, third:singular, Generated).
+     [ true(Generated == [the, buggy_routine]) ]) :-
+   np_test($buggy_routine, subject, third:singular, Generated).
 
 %%
 %% Completion
@@ -65,22 +65,22 @@ test(parse(np, speaker_object_case),
    np_test(LF, object, first:singular, [ me ]).
 
 test(parse(np, character_third_person),
-     [ true(LF == $'Kavi') ]) :-
-   np_test(LF, object, third:singular, ['Kavi']).
+     [ true(LF == $'Sophia') ]) :-
+   np_test(LF, object, third:singular, ['Sophia']).
 
 test(parse(np, addressee),
      [ true(LF == $addressee) ]) :-
    np_test(LF, subject, second:singular, [ you ]).
 
 test(parse(np, kind),
-     [ true(LF = ((X^S)^(S, iz_a(X, Room)))) ]) :-
-   np(LF, subject, third:singular, nogap, nogap, [a, Room], []).
+     [ true(LF = ((X^S)^(S, iz_a(X, Program)))) ]) :-
+   np(LF, subject, third:singular, nogap, nogap, [a, Program], []).
 
 test(parse(np, prop),
-     [ true(LF == $bed),
+     [ true(LF == $buggy_routine),
        nondet ]) :-
    with_bind(input_from_player, true,
-    np_test(LF, subject, third:singular, [the, bed])).
+    np_test(LF, subject, third:singular, [the, buggy_routine])).
 
 
 np_test(LF, Case, Agreement, SurfaceForm) :-

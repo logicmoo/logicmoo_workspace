@@ -1,7 +1,7 @@
 Property,Visibility,Surface form (word list),Object type,Value type
 job,public,job,person,subkind_of(job)
 age,public,age,person,number
-location,public,location,physical_object,container
+location,public,location,metaverse_object,container
 given_name,public,given name,person,string
 surname,public,surname,person,string
 gender,public,gender,person,"[male, female]"
@@ -9,6 +9,6 @@ description,internal,,entity,entity
 required_properties,internal,,kind,entity
 required_relations,internal,,kind,entity
 exit,public,exit,building,portal
-building,public,building,room,building
+building,public,building,program,building
 text,internal,,document,string
 caption,internal,,document,string

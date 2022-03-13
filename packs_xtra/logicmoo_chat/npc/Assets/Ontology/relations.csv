@@ -2,7 +2,7 @@ Relation,Visibility,Object type,Relatum type,Copular form (word list),Singular g
 knows_about,public,person,entity,,,,,,
 interested_in,public,person,entity,be interested in,interest,interests,knows_about,,
 friend_of,public,person,person,be a friend of,friend,friends,likes,,yes
-roommate_of,public,person,person,be a roomate of,roommate,roomates,,,yes
+coworker_of,public,person,person,be a coworker of,coworker,coworkers,,,yes
 know,public,person,person,,,,knows_about,,
 likes,public,person,person,,,,know,,
 member_of,public,person,organization,be a member of,,,knows_about,,
@@ -13,4 +13,4 @@ child_of,public,person,person,be a child of,parent,parents,,,
 goal,public,actor,entity,,goal,goals,,,
 leader,public,organization,person,be led by,leader,leaders,,,
 leads,public,person,organization,be leader of,,,member_of,leader,
-location,public,physical_object,container,located at,,locations,contained_in,contains,
+location,public,metaverse_object,container,located at,,locations,contained_in,contains,

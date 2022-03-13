@@ -5,11 +5,11 @@
 
 
 %=autodoc
-%% strategy_player( ?Player1) is semidet.
+%% strategy_player( ?User1) is semidet.
 %
-% Strategy Player.
+% Strategy User.
 %
-strategy_player($player).
+strategy_player($user).
 
 % Dispatch on question type
 strategy(respond_to_dialog_act(question(Asker, $me, Question,
@@ -74,10 +74,10 @@ strategy(answer_wh(_Asker, Identity, _,
 	 introduce_person(Person)) :-
    character(Person).
 
-strategy(answer_wh(Player, Answer,
-		   should(do(Player, Answer)),
+strategy(answer_wh(User, Answer,
+		   should(do(User, Answer)),
 		   _),
-	 show_status(notebook)):- strategy_player(Player).
+	 show_status(notebook)):- strategy_player(User).
 
 strategy(answer_wh(Asker, Identity,
 		   be(Entity, Identity),
@@ -85,9 +85,9 @@ strategy(answer_wh(Asker, Identity,
 	 tell_about($me, Asker, Entity)).
 
 strategy(answer_wh(_Asker, Identity,
-		   be(Player, Identity),
-		   (be(Player, Identity), iz_a(Player, person))),
-	 say_answer(be(Player, $me))):- strategy_player(Player).
+		   be(User, Identity),
+		   (be(User, Identity), iz_a(User, person))),
+	 say_answer(be(User, $me))):- strategy_player(User).
 
 strategy(answer_wh(Asker, Answer, can(Action), Constraint),
 	 answer_can_wh(Asker, Answer, can(Action), Constraint)).
@@ -97,16 +97,16 @@ default_strategy(answer_can_wh(_Asker, Answer, can(Action), Constraint),
 				  (can(Action), iz_a(Answer, Type)))) :-
    possible_types_given_constraint(Answer, Constraint, List).
 
-strategy(answer_can_wh(Player, Answer,
-		       can(comm(keystrokes,Player, Answer)),
+strategy(answer_can_wh(User, Answer,
+		       can(comm(keystrokes,User, Answer)),
 		       _),
-	 show_status(sample_commands)):- strategy_player(Player).
+	 show_status(sample_commands)):- strategy_player(User).
 
-strategy(answer_can_wh(Player, Answer,
+strategy(answer_can_wh(User, Answer,
 		       can(do(Who, Answer)),
 		       _),
 	 show_status(sample_commands)) :-
-   member(Who, [Player, $pc]), strategy_player(Player).
+   member(Who, [User, $pc]), strategy_player(User).
 
 
 % Change what is in X queries from location queries to contained_in queries.

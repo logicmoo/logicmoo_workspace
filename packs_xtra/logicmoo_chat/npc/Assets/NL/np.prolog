@@ -145,7 +145,7 @@ possessive_np(X, Number) -->
 %
 % Possessive Pronoun Referrent.
 %
-possessive_pronoun_referrent($player, $pc) :- !.
+possessive_pronoun_referrent($user, $pc) :- !.
 possessive_pronoun_referrent(X, X).
 
 % PARSE/COMPLETE ONLY
@@ -275,11 +275,11 @@ resolve_definite_description0(X, Constraint) :-
    !,
    Constraint.
 resolve_definite_description0(Object, iz_a(Object, Kind)) :-
-   kind_of(Kind, room),
+   kind_of(Kind, program),
    !,
    iz_a(Object, Kind).
 resolve_definite_description0(Object, Constraint) :-
-   % This rule will fail in the test suite b/c the global environment has no gameobject.
+   % This rule will fail in the test suite b/c the global environment has no metaverseobject.
    \+ running_tests,
    % Pick the nearest one, if it's something that nearest works on.
    nearest(Object, Constraint),

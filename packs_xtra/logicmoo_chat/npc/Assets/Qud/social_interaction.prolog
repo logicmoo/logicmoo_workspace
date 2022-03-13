@@ -12,7 +12,7 @@ on_event(greet(Speaker, $me),
 			     Speaker,
 			     greet(Speaker, $me))
 	) :-
-   Speaker \= $player,
+   Speaker \= $user,
     \+(SocialInteraction/quds/_/partner/Speaker).
 
 on_event(greet($me, Target),
@@ -22,7 +22,7 @@ on_event(greet($me, Target),
 			     Target,
 			     greet($me, Target))
 	) :-
-   Target \= $player,
+   Target \= $user,
    \+(SocialInteraction/quds/_/partner/Target).
 
 

@@ -102,7 +102,7 @@ bind_dialog_indexicals_for_input(G):-
    bind_dialog_indexicals_for_input(NPC, G).
 bind_dialog_indexicals_for_input(G) :-
    with_bind(input_from_player, true,
-    with_bind(speaker, $player,
+    with_bind(speaker, $user,
      with_bind(addressee, $me,
       with_bind(dialog_group, $me, G)))).
 
@@ -149,7 +149,7 @@ with_bind(N, V, DCG, S, E):- with_bind(N, V, phrase(DCG, S, E)).
 in_conversation_with_npc(NPC) :-
    qud(C),
    C/partner/NPC,
-   NPC \= $player.
+   NPC \= $user.
 
 
 
@@ -181,7 +181,7 @@ generating_nl :-
 %=autodoc
 %% input_from_player is semidet.
 %
-% Input Converted From Player.
+% Input Converted From User.
 %
 input_from_player :-
    X = $input_from_player, X.
@@ -215,7 +215,7 @@ while_completing(G) :-
  bind_dialog_indexicals_for_input(G).
 
 %% player_idle_time(-Time)
-%  Time is the number of seconds of game time since the $player
+%  Time is the number of seconds of metaverse time since the $user
 %  last did something (i.e. typed).
 :- public player_idle_time/1.
 
@@ -228,28 +228,28 @@ player_idle_time(Time) :-
 %=autodoc
 %% player_idle_for_at_least( ?Time) is semidet.
 %
-% Player Idle For When Least.
+% User Idle For When Least.
 %
 player_idle_for_at_least(Time) :-
    player_idle_time(T),
    T >= Time.
 
-%% caption(+GameObject, -Caption) is det
+%% caption(+MetaverseObject, -Caption) is det
 % Generates caption for the desired object.
 :- public caption/2.
 caption($pc, "That's me!").
-caption(GameObject, Name) :-
-   proper_name(GameObject, Words),
+caption(MetaverseObject, Name) :-
+   proper_name(MetaverseObject, Words),
    word_list(Name, Words).
-caption(GameObject, Description) :-
-    t(caption, GameObject, Description).
-caption(GameObject, Description) :-
-   iz_a(GameObject, room),
-   base_kind(GameObject, Kind),
+caption(MetaverseObject, Description) :-
+    t(caption, MetaverseObject, Description).
+caption(MetaverseObject, Description) :-
+   iz_a(MetaverseObject, program),
+   base_kind(MetaverseObject, Kind),
    kind_noun(Kind, singular, Words, []),
    word_list(Description, Words).
-caption(GameObject, Description) :-
-   base_kind(GameObject, Kind),
+caption(MetaverseObject, Description) :-
+   base_kind(MetaverseObject, Kind),
    kind_noun(Kind, singular, Words, []),
    contracted_form([a | Words], Contracted),
    word_list(Description, Contracted).

@@ -178,13 +178,13 @@ def_prolog_prim("call_method", CallMethodImplementation, ".net interoperation",
                 "Calls the specified method on OBJECT with the specified arguments and unifies RESULT with its return value.  Always succeeds exactly once (unless it throws an exception).",
                 "*object", "*method_and_args", ">result").
 def_prolog_prim("is_class", IsClassImplementation, ".net interoperation",
-                "True if OBJECT is of the specified CLASS.  If CLASS is a subclass of TwigGameComponent and OBJECT is uninstantiated, then it will enumerate objects if the specified type.",
+                "True if OBJECT is of the specified CLASS.  If CLASS is a subclass of TwigMetaverseComponent and OBJECT is uninstantiated, then it will enumerate objects if the specified type.",
                 "?object", "?class").
-def_prolog_prim("component_of_gameobject_with_type", ComponentOfGameObjectWithTypeImplementation, ".net interoperation",
-                "True if component is a component of gameobject with type class.",
-                "?component", "?gameobject", "+class").
-def_prolog_prim("parent_of_gameobject", ParentOfGameObjectImplementation, ".net interoperation",
-                "True if CHILD is a child of PARENT in the game's rendering hierarchy.",
+def_prolog_prim("component_of_metaverse_object_with_type", ComponentOfMetaverseObjectWithTypeImplementation, ".net interoperation",
+                "True if component is a component of metaverseobject with type class.",
+                "?component", "?metaverseobject", "+class").
+def_prolog_prim("parent_of_metaverse_object", ParentOfMetaverseObjectImplementation, ".net interoperation",
+                "True if CHILD is a child of PARENT in the metaverse's rendering hierarchy.",
                 "?child", "?parent").
 def_prolog_prim("discontiguous", (args1, context1) => CutStateSequencer.Succeed(), "declarations",
                 "Declares that the specified predicate is allowed to be scattered through a file.  Currently unused but provided for compatibility with other Prolog implementation.",
@@ -204,14 +204,14 @@ def_prolog_prim("notrace", NoTraceImplementation,
                 "flow control,declarations",
                 "Declares that the specified predicate should be traced when executing.",
                 ":predicateIndicator", "...").
-def_prolog_prim("pause_game", PauseImplementation,
+def_prolog_prim("pause_metaverse", PauseImplementation,
                 "flow control",
-                "Pauses the game, leaving GUI, etc. running.",
+                "Pauses the metaverse, leaving GUI, etc. running.",
                 ":predicateIndicator", "...").
-def_prolog_prim("unpause_game",
+def_prolog_prim("unpause_metaverse",
                 UnpauseImplementation,
                 "flow control",
-                "Restores normal flow of time in game.",
+                "Restores normal flow of time in metaverse.",
                 ":predicateIndicator", "...").
 def_prolog_prim("set_prolog_flag", SetPrologFlagImplementation, "declarations", "Sets/gets value of the specified control parameter for the prolog system.",
                 "*flag", "?value").
@@ -402,8 +402,8 @@ def_prolog_prim("plural_form", PluralFormImplementation, "other predicates",
                 "String plural is the plural form of string singular, using the default rules for English plurals.", "*singular", "?plural").
 def_prolog_prim("atom_string", AtomStringImplementation, "other predicates",
                 "Atom has the same print name as string.", "?atom", "?string").
-def_prolog_prim("game_object_name", GameObjectNameImplementation, "other predicates",
-                "True when name_symbol is the name of game_object.", "?game_object", "?name_symbol").
+def_prolog_prim("metaverse_object_name", MetaverseObjectNameImplementation, "other predicates",
+                "True when name_symbol is the name of metaverse_object.", "?metaverse_object", "?name_symbol").
 def_prolog_prim("set", KnowledgeBaseVariable.SetImplementation, "other predicates,meta-logical predicates",
                 "Forcibly asserts PREDICATE(VALUE) and retracts all other clauses for PREDICATE.",
                 "*predicate", "*value").
@@ -422,7 +422,7 @@ def_prolog_prim("log_warning", LogWarningImplementation, "other predicates", "Pr
     "?Term", "...").
 def_prolog_prim("log_error", LogErrorImplementation, "other predicates", "Prints TERMS as a line in the Unity console.",
     "?Term", "...").
-def_prolog_prim("break", BreakImplementation, "flow control", "Pauses game within the Unity editor and prints TERMS as a line in the unity console.",
+def_prolog_prim("break", BreakImplementation, "flow control", "Pauses metaverse within the Unity editor and prints TERMS as a line in the unity console.",
     "?Term", "...").
 def_prolog_prim("break_cs", BreakCSharpImplementation, "flow control", "Breakpoints the Prolog interpreter itself.").
 def_prolog_prim("op", DeclareOperator, "declarations",

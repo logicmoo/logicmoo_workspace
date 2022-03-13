@@ -1,9 +1,9 @@
 
 
-% Mark instances of food as being edible.
-initialize_prop(S, food) :-
-   component_of_gameobject_with_type(C, S, $'PropInfo'),
-   set_property(C, "IsFood", true).
+% Mark instances of task as being runnable.
+initialize_prop(S, task) :-
+   component_of_metaverse_object_with_type(C, S, $'PropInfo'),
+   set_property(C, "IsRunnable", true).
 
 %=autodoc
 %% initialize_prop( ?S, ?Container) is semidet.
@@ -12,7 +12,7 @@ initialize_prop(S, food) :-
 %
 
 
-% Mark instances of beverage as being drinkable.
-initialize_prop(S, beverage) :-
-   component_of_gameobject_with_type(C, S, $'PropInfo'),
-   set_property(C, "IsBeverage", true).
+% Mark instances of animation as being playable.
+initialize_prop(S, animation) :-
+   component_of_metaverse_object_with_type(C, S, $'PropInfo'),
+   set_property(C, "IsAnimation", true).

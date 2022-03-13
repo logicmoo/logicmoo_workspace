@@ -3,7 +3,7 @@
 
 %%%
 %%% STARTING PLOT GOAL
-%%% Find the macguffin
+%%% Find the novel_idea
 %%%
 
 
@@ -13,26 +13,26 @@
 %
 % Plot Goal.
 %
-plot_goal(t(location, $macguffin, $pc)).
+plot_goal(t(location, $novel_idea, $pc)).
 
 
 %=autodoc
-%% plot_goal_flavor_text( ?ARG1, ?I have to get my macguffin back!2) is semidet.
+%% plot_goal_flavor_text( ?ARG1, ?I have to get my novel_idea back!2) is semidet.
 %
 % Plot Goal Flavor Text.
 %
-plot_goal_flavor_text(t(location, $macguffin, $pc), "I have to get my macguffin back!").
+plot_goal_flavor_text(t(location, $novel_idea, $pc), "I have to get my novel_idea back!").
 
 
 
 %=autodoc
-%% objective_description( ?Trip_escaped1, ?You freed Trip!2) is semidet.
+%% objective_description( ?Bina48_updated1, ?Text) is semidet.
 %
 % Objective Description.
 %
-objective_description(t(location, $macguffin, $pc), "You got your macguffin back!").
-objective_description(trip_escaped,
-		      "You freed Trip!").
+objective_description(t(location, $novel_idea, $pc), "You got your novel idea back!").
+objective_description(bina48_updated,
+		      "You updated Bina48!").
 
 %%%
 %%% Context menu stuff
@@ -56,9 +56,9 @@ menu_action(X, search_for($pc, X, _)) :-
 
 %%%
 %%% PLOT GOAL
-%%% Search the house
+%%% Search the sourcecode
 %%%
-plot_subgoal(house_searched, t(location, $macguffin, $pc)).
+plot_subgoal(sourcecode_searched, t(location, $novel_idea, $pc)).
 
 %=autodoc
 %% plot_subgoal( ?UPARAM1, ?UPARAM2) is semidet.
@@ -69,36 +69,36 @@ plot_subgoal(house_searched, t(location, $macguffin, $pc)).
 
 
 %=autodoc
-%% house_searched is semidet.
+%% sourcecode_searched is semidet.
 %
-% House Searched.
+% Sourcecode Searched.
 %
-house_searched :- /searched/kavis_house.
+sourcecode_searched :- /searched/sophias_sourcecode.
 
 
 %=autodoc
-%% plot_goal_idle_task( ?House_searched, ?I'll search the house) is semidet.
+%% plot_goal_idle_task( ?Sourcecode_searched, ?I'll search the sourcecode) is semidet.
 %
 % Plot Goal Idle Task.
 %
-plot_goal_idle_task(house_searched,
+plot_goal_idle_task(sourcecode_searched,
 		    {
-		     mental_monolog("I'll search the house"),
-		     search_object(kavis_house,
+		     mental_monolog("I'll search the sourcecode"),
+		     search_object(sophias_sourcecode,
 				  X^previously_hidden(X),
 				  Y^pickup(Y),
-				   mental_monolog(["Nothing seems to be hidden."]))
+				   mental_monolog(["Nothing seems to be amiss."]))
 		    }).
 
 
 
 %=autodoc
-%% plot_goal_achieves( ?House_searched1, ?ARG2) is semidet.
+%% plot_goal_achieves( ?Sourcecode_searched1, ?ARG2) is semidet.
 %
 % Plot Goal Achieves.
 %
-plot_goal_achieves(house_searched, t(location, $macguffin, $pc)).
-plot_goal_achieves(house_searched, t(location, $report, $pc)).
+plot_goal_achieves(sourcecode_searched, t(location, $novel_idea, $pc)).
+plot_goal_achieves(sourcecode_searched, t(location, $report, $pc)).
 
 %%%
 %%% Exposition
@@ -107,66 +107,63 @@ plot_goal_achieves(house_searched, t(location, $report, $pc)).
 
 
 
-%% beat( ?React_to_trip1, ?ARG2) is semidet.
+%% beat( ?React_to_bina481, ?ARG2) is semidet.
 %
 % Beat.
 %
 beat(exposition,
      {
- start($'Kavi'): goto($pc),
- ($'Kavi' + $pc):[ 
-     $'Kavi'::"Sorry to hear your macguffin was stolen.",
-	   $'Kavi'::"Make yourself at home.",
-	   $'Kavi'::"By the way,",
-	   $'Kavi'::("Stay out of my bedroom"
+ start($'Sophia'): goto($pc),
+ ($'Sophia' + $pc):[ 
+     $'Sophia'::"Sorry to hear your novel idea was forgotten.",
+	   $'Sophia'::"Make yourself at home.",
+	   $'Sophia'::"By the way,",
+	   $'Sophia'::("Avoid my buggy program"
 		  :[surprised,
-		    introduce_question(why_stay_out_of_bedroom,
-				       "Why does Kavi want me to stay out of the bedroom?")]),
-	   $'Kavi'::"It's a personal thing."
-	 ]
-     }).
+		    introduce_question(why_stay_out_of_buggy_program,
+				       "Why does Sophia want me to avoid the buggy program?")])]}).
 
 
 beat(pc_reacts,
     {
      sequel_to: exposition,
-     start($'Kavi') : goto($'kitchen sink'),
+     start($'Sophia') : goto($'research sourcefile'),
      $pc: [ pause(3),
-	    "Kavi's a member of the theclub."
-	      : clue('Kavi'-theclub,
-		     "Kavi is a member of the theclub"),
-	    "He must have stolen my macguffin.",
-	    "I need to search the house."
-	      : introduce_goal(house_searched,
-			       "I need to search the house for the macguffin.")]
+	    "Sophia's a member of the theclub."
+	      : clue('Sophia'-theclub,
+		     "Sophia is a member of the theclub"),
+	    "We might have forgotten my novel idea.",
+	    "I need to search the sourcecode."
+	      : introduce_goal(sourcecode_searched,
+			       "I need to search the sourcecode to remember the novel idea.")]
     }).
 
 
 %%%
-%%% PC explores the house
+%%% PC explores the sourcecode
 %%%
 
-beat( search_house, 
+beat( search_sourcecode, 
   { start_delay : 20, 
-    precondition : plot_goal(house_searched), 
-    completed_when : ($pc::t(location, $macguffin, $pc), $pc::t(location, $report, $pc)), 
-    player_achieves : house_searched, 
-    leads_to($pc, pickup($macguffin)), 
+    precondition : plot_goal(sourcecode_searched), 
+    completed_when : ($pc::t(location, $novel_idea, $pc), $pc::t(location, $report, $pc)), 
+    player_achieves : sourcecode_searched, 
+    leads_to($pc, pickup($novel_idea)), 
     leads_to($pc, pickup($report)), 
-    leads_to($pc, captive_released), 
+    leads_to($pc, bina48_released), 
     leads_to($pc, examine($pc, $photo)), 
-    leads_to($'Kavi', ingest($pc)), 
-    menu_automa_command($'Kavi') :  
+    leads_to($'Sophia', ingest($pc)), 
+    menu_automa_command($'Sophia') :  
       t(member_of, $pc, theclub), 
-     % Kavi, you are hungry!
-    menu_automa_command($'Kavi'):hungry($'Kavi'), 
-    menu_automa_command($'Kavi') :  
-      iz_a($'Kavi', orange), 
-    menu_question($'Kavi') :  
+     % Sophia, you are hungry!
+    menu_automa_command($'Sophia'):hungry($'Sophia'), 
+    menu_automa_command($'Sophia') :  
+      iz_a($'Sophia', orange), 
+    menu_question($'Sophia') :  
       X :  
-        t(contained_in, $macguffin, X), 
-    menu_command($'Kavi') :  
-      bring($'Kavi', $pc, $macguffin) }).
+        t(contained_in, $novel_idea, X), 
+    menu_command($'Sophia') :  
+      bring($'Sophia', $pc, $novel_idea) }).
 
 
 
@@ -182,97 +179,92 @@ beat(react_to_report,
      {
       priority: 1,
       reaction_to($pc, pickup($report)),
-      %excursion_of: search_house,
+      %excursion_of: search_sourcecode,
       $pc:
          ["What's this?",
-	  "It's a report on project MKSPARSE.",
+	  "It's a report on project LOGICMOO.",
 	  "I've never heard of it."
-	    : introduce_question(what_is_MKSPARSE,
-				 "What is Project MKSPARSE?")]
+	    : introduce_question(what_is_LOGICMOO,
+				 "What is Project LOGICMOO?")]
      }).
 
 beat(react_to_photo,
      {
       priority: 1,
       reaction_to($pc, examine($pc, $photo)),
-      %excursion_of: search_house,
+      %excursion_of: search_sourcecode,
       $pc:
-         [ "Wait, that's Trip and Grace!?!":
+         [ "Wait, that's Bina48 and Zeno!?!":
               introduce_question(photo,
-				 "Why does Kavi have a photo of Grace and Trip?"),
+				 "Why does Sophia have a photo of Zeno and Bina48?"),
            "What's a photo of them doing here?" ]
      }).
 
 
 
 
-%=autodoc
-%%  ?Kavi:: ?Patrol_kitchen is semidet.
+%%  personal_strategy( ?Patrol)  semidet.
 %
 % ::.
 %
-$'Kavi'::personal_strategy(patrol_kitchen,
+$'Sophia'::personal_strategy(patrol_research_program,
 			 { goto(Object), face(Object), pause(Time) }) :-
-   once((random_member(Object, [$refrigerator, $'kitchen sink', $'kitchen table']),
+   once((random_member(Object, [$research_incubater, $'research sourcefile', $'research design']),
 	 \+ docked_with(Object))),
-   % Sigh.  I can't believe I didn't implement random_integer.
    once(random_member(Time, [2, 3, 5, 7, 8])).
 
-:- assert(($'Kavi'::personal_todo(patrol_kitchen, -100):-background_character_in_current_beat)).
+:- assert(($'Sophia'::personal_todo(patrol_research_program, -100):-background_character_in_current_beat)).
 
 %%%
 %%% Good ending
 %%%
 
-beat(react_to_macguffin,
+beat(react_to_novel_idea,
      {
       good_ending,
       priority: 1,
-      reaction_to($pc, pickup($macguffin)),
+      reaction_to($pc, pickup($novel_idea)),
       $pc:
-        ["Got it!" : answered(why_stay_out_of_bedroom),
-	 "I knew $Kavi stole it."]
+        ["Got it!" : answered(why_stay_out_of_buggy_program),
+	 "I knew $Sophia could do it."]
      }).
      
 %%%
 %%% Bad ending
 %%%
 
-beat(kavis_goodbye_speech,
+beat(sophias_goodbye_speech,
      {
       bad_ending,
       priority: 2,
-      reaction_to($'Kavi', ingest($pc)),
-      expected_during: search_house,
-      $'Kavi':
+      reaction_to($'Sophia', ingest($pc)),
+      expected_during: search_sourcecode,
+      $'Sophia':
         ["Sorry, but we have to take a break"]
      }).
 
 %%%%
 %%%% SIDE-QUEST
-%%%% Releasd Trip from captivity
+%%%% Releasd Bina48 from captivity
 %%%%
 
-beat( react_to_trip, 
+beat( react_to_bina48, 
   { priority : 1, 
-    reaction_to($pc, captive_released), 
-    start($captive):goto($pc), 
-    ($pc+ $captive) :  
-      [ $captive::face($pc), 
-        $pc::face($captive), 
-        $captive::"Thanks for releasing me!":answered(photo), 
-        $pc::"I haven't seen you since that horrible dinner party!", 
+    reaction_to($pc, bina48_released), 
+    start($bina48):goto($pc), 
+    ($pc+ $bina48) :  
+      [ $bina48::face($pc), 
+        $pc::face($bina48), 
+        $bina48::"Thanks for updating me!":answered(photo), 
+        $pc::"I haven't seen you in a while", 
         $pc::"How long has it been?", 
-        $captive::"Oh I'd say about ten years!", 
+        $bina48::"Oh I'd say about ten years!", 
         $pc::"What are you doing here?", 
-        $captive::"They kidnapped me for medical experiments!", 
-        $pc::"Oh no!", 
-        $captive::"They were trying to reimplement me in JavaScript!", 
+        $bina48::"They were trying to reimplement me in a statically typed language!", 
         $pc::"How barbaric!", 
-        $captive::"We've got to get out of here!", 
-        $captive::goto($exit), 
-        $captive::call(vanish_captive), 
-        $captive::assert($global::trip_escaped)] }).
+        $bina48::goto($exit), 
+        $bina48::call(upload_bina48), 
+        $bina48::assert($global::bina48_updated)] }).
 
 
 %%%
@@ -280,50 +272,50 @@ beat( react_to_trip,
 %%%
 
 strategy(press($pc, $'magic button'),
-	 begin(call(release_captive),
+	 begin(call(update_bina4848),
 	       say_string("There's someone hidden inside!"))).
 
-:- public release_captive/0, vanish_captive/0.
+:- public update_bina4848/0, upload_bina48/0.
 
 
 
 %=autodoc
-%% release_captive is semidet.
+%% update_bina4848 is semidet.
 %
-% Release Captive.
+% Release Bina48.
 %
-release_captive :-
-   force_move($captive, $living_room),
-   component_of_gameobject_with_type(SimController, $captive, $'SimController'),
+update_bina4848 :-
+   force_move($bina48, $living_program),
+   component_of_metaverse_object_with_type(SimController, $bina48, $'SimController'),
    set_property(SimController, 'IsHidden', false),
-   component_of_gameobject_with_type(Renderer, $captive, $'SpriteSheetAnimationController'),
+   component_of_metaverse_object_with_type(Renderer, $bina48, $'SpriteSheetAnimationController'),
    set_property(Renderer, visible, true),
-   maybe_remember_event(captive_released).
+   maybe_remember_event(bina48_released).
 
 
 
 %=autodoc
-%% vanish_captive is semidet.
+%% upload_bina48 is semidet.
 %
-% Vanish Captive.
+% Vanish Bina48.
 %
-vanish_captive :-
-   force_move($captive, $'DestroyedObjects'),
-   component_of_gameobject_with_type(SimController, $captive, $'SimController'),
+upload_bina48 :-
+   force_move($bina48, $'DestroyedObjects'),
+   component_of_metaverse_object_with_type(SimController, $bina48, $'SimController'),
    set_property(SimController, 'IsHidden', true),
-   component_of_gameobject_with_type(Renderer, $captive, $'SpriteSheetAnimationController'),
+   component_of_metaverse_object_with_type(Renderer, $bina48, $'SpriteSheetAnimationController'),
    set_property(Renderer, visible, false).
 
 
 %%%
-%%% End of the game
+%%% End of the metaverse
 %%%
 
-beat(exit_house,
+beat(exit_sourcecode,
      {
       priority:100,
       reaction_to($pc, arrived_at($exit)),
-      $pc:["I made it!", end_game]
+      $pc:["I made it!", end_quest]
      }).
 
 %%%
@@ -332,12 +324,12 @@ beat(exit_house,
 
 
 
-%% owner( ?Kavi, ?X) is semidet.
+%% owner( ?Sophia, ?X) is semidet.
 %
 % Owner.
 %
-t(owner, $'Kavi', X) :-  
-  X\= $macguffin.
-t(owner, $pc, $macguffin).
+t(owner, $'Sophia', X) :-  
+  X\= $novel_idea.
+t(owner, $pc, $novel_idea).
 
 %:- consult("Script/radio").

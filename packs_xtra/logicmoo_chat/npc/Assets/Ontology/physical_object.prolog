@@ -8,13 +8,12 @@
 % Location.
 %
 t(location, X, Location) :- 
-  X == $player, 
+  X == $user, 
   t(location, $me, Location).
 
-t(location, kavis_house, the_world).
-t(location, the_world, the_game).
-t(location, PhysicalObject, Location) :-  
-  /perception/location/PhysicalObject:Location.
+t(location, sophias_sourcecode, the_metaverse).
+t(location, MetaverseObject, Location) :-  
+  /perception/location/MetaverseObject:Location.
 
 
 
@@ -69,13 +68,13 @@ incompatible_cl(t(location, X, Y), t(location, X, Z)) :-
 
 
 %=autodoc
-%% in_room( ?PhysicalObject, ?Room) is semidet.
+%% in_program( ?MetaverseObject, ?Program) is semidet.
 %
-% In Room.
+% In Program.
 %
-in_room(PhysicalObject, Room) :- 
-  room(Room), 
-  t(location, PhysicalObject, Room).
+in_program(MetaverseObject, Program) :- 
+  program(Program), 
+  t(location, MetaverseObject, Program).
 
 
 
@@ -86,9 +85,9 @@ in_room(PhysicalObject, Room) :-
 %
 top_level_container(Space, Space) :-
    iz_a(Space, architectural_space).
-top_level_container(PhysicalObject, Container) :- 
-  t(location, PhysicalObject, C), 
-  ( room(C)->Container=PhysicalObject ; top_level_container(C, Container)) .
+top_level_container(MetaverseObject, Container) :- 
+  t(location, MetaverseObject, C), 
+  ( program(C)->Container=MetaverseObject ; top_level_container(C, Container)) .
 
 
 
@@ -101,18 +100,18 @@ t(contained_in, X, Y) :-
   var(X), 
   var(Y), 
   throw(error("contained_in/2 called with no instantiated argument.")).
-t(contained_in, PhysicalObject, Location) :-
-    t(location, PhysicalObject, Location).
-t(contained_in, PhysicalObject, Location) :- 
-  nonvar(PhysicalObject),  !, 
-  t(location, PhysicalObject, Container), 
+t(contained_in, MetaverseObject, Location) :-
+    t(location, MetaverseObject, Location).
+t(contained_in, MetaverseObject, Location) :- 
+  nonvar(MetaverseObject),  !, 
+  t(location, MetaverseObject, Container), 
   t(contained_in, Container, Location).
-t(contained_in, PhysicalObject, Location) :- 
+t(contained_in, MetaverseObject, Location) :- 
   nonvar(Location), 
   t(location, Container, Location), 
-  t(contained_in, PhysicalObject, Container).
+  t(contained_in, MetaverseObject, Container).
 
-%% room(?X) is nondet
-%  X is a room.
-room(X) :-
-   iz_a(X, room).
+%% program(?X) is nondet
+%  X is a program.
+program(X) :-
+   iz_a(X, program).

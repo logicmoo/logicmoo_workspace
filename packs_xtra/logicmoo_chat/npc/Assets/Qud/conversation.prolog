@@ -22,7 +22,7 @@ launch_conversation(Parent, Partner, Event) :-
     [ Child/partner/Partner, 
       Child/status_text:"[chat]":0.1, 
       Child/initial_history/Event]), 
-  (Partner \= $player->assert(Child/location_bids/Partner:0.5);true).
+  (Partner \= $user->assert(Child/location_bids/Partner:0.5);true).
 
 on_stop(conversation, C) :-  
   forall(C/partner/P, retract(/social_state/talking_to/P)).

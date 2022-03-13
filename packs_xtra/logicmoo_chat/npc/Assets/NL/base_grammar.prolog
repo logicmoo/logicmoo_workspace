@@ -19,7 +19,7 @@ sentence(S, Mood, Polarity, Tense, Aspect) -->
   ( {input_from_player}  ,
     theTextM1('('),  !, 
     with_bind( speaker, 
-      $player, 
+      $user, 
       with_bind( addressee, 
         $me, 
         s(S, Mood, Polarity, Tense, Aspect), opt_stop(Mood))), 

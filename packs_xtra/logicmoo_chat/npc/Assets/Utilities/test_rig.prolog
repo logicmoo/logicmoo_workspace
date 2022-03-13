@@ -47,7 +47,7 @@ test_body(Name, [ ], Body) :-
 run_test(Name, Options, Body) :-
  with_bind(test_name, Name,
 	with_bind(test_options, Options,
-   (unbind([pc,addressee,speaker,player]),
+   (unbind([pc,addressee,speaker,user]),
 	  copy_term(Body, Copy),
 	  with_bind(test_body, Copy,
 	  (setup_test(Name, Options),
@@ -214,11 +214,11 @@ ensure_test_file_loaded(File) :-
 %  Declares that File must be loaded before running test matching TestPattern.
 
 (initialization):- 
-  set_located_object($bed,$bedroom),
-  set_located_object($desk,$living_room),
+  set_located_object($buggy_routine,$buggy_program),
+  set_located_object($desk,$living_program),
   set_located_object($report,$desk),
-  set_located_object($'kitchen counter','counter',$kitchen),
-  set_located_object($'kitchen sink',sink,$'kitchen counter').
+  set_located_object($'research repository',repository,$research_program),
+  set_located_object($'research sourcefile',sourcefile,$'research repository').
 
-:- set_located_object($'bad sink',sink,$'kitchen counter').
+:- set_located_object($'buggy sourcefile',sourcefile,$'research repository').
 

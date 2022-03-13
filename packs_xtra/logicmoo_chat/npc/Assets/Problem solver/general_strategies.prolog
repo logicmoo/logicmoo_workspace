@@ -74,16 +74,16 @@ normalize_task(abort_and_then(Task),
 
 strategy(achieve(t(location, X, $me)), pickup(X)) :-  
   X\= $me.
-strategy(achieve(location(X, Room)),
+strategy(achieve(location(X, Program)),
 	 achieve(location(X, Container))) :-
    %\+ freestanding(X),
-   iz_a(Room, room),
+   iz_a(Program, program),
    iz_a(Container, work_surface),
-   location(Container, Room).
+   location(Container, Program).
 default_strategy(achieve(t(location, X, Container)), putdown(X, Container)) :- 
   X\= $me, 
   Container\= $me, 
-  \+iz_a(Container, room).
+  \+iz_a(Container, program).
 
 strategy(achieve(t(location, $me, Container)), begin(goto(Container), get_in(Container))) :-  
   iz_a(Container, prop).
@@ -91,8 +91,8 @@ strategy(achieve(t(location, $me, Container)), begin(goto(Container), get_in(Con
 precondition(move($me, Patient, _), know(X, t(location, Patient, X))).
 strategy(move($me, X, Y), achieve(t(location, X, Y))).
 
-strategy(achieve(docked_with(WorldObject)),
-	 goto(WorldObject)).
+strategy(achieve(docked_with(MetaverseObject)),
+	 goto(MetaverseObject)).
 
 %%
 %% locomotion
@@ -103,14 +103,14 @@ precondition(goto(Object), know(X, t(location, Object, X))).
 strategy(goto(Building),
 	 null) :-
    iz_a(Building, building).
-strategy(goto(Room), unless(t(contained_in, $me, Room), goto_internal(Room))) :-  
-  room(Room).
+strategy(goto(Program), unless(t(contained_in, $me, Program), goto_internal(Program))) :-  
+  program(Program).
 strategy(goto(PropOrCharacter),
 	 unless(docked_with(Place),
 		goto_internal(Place))) :-
    once(( prop(PropOrCharacter)
 	;
-	  door(PropOrCharacter)
+	  algorithm(PropOrCharacter)
 	;
 	  character(PropOrCharacter))),
    top_level_container(PropOrCharacter, Place).
@@ -189,9 +189,9 @@ strategy(
       unless(know(X, t(location, Object, X)), failed_because(cant_find(Object))))).
 
 normalize_task(search_for($me, Unspecified, Target),
-	       search_for($me, CurrentRoom, Target)) :-
+	       search_for($me, CurrentProgram, Target)) :-
    var(Unspecified),
-   in_room($me, CurrentRoom).
+   in_program($me, CurrentProgram).
 
 strategy(search_for($me, Container, Target),
 	 search_object(Container, X^(X=Target),
@@ -328,7 +328,7 @@ previously_hidden(Item) :-
    $task/previously_hidden_items/Item.
 
 %%
-%% Ingestion (eating and drinking)
+%% Ingestion (eating and performing)
 %%
 
 strategy(eat($me, X),
@@ -337,15 +337,15 @@ postcondition(eat(_, X),
 	      ~present(X)).
 postcondition(eat(Person, F),
 	      ~hungry(Person)) :-
-   existing(food, F).
+   existing(task, F).
 
-strategy(drink($me, X),
+strategy(perform($me, X),
 	 ingest(X)).
-postcondition(drink(_, X),
+postcondition(perform(_, X),
 	      ~present(X)).
-postcondition(drink(Person, B),
+postcondition(perform(Person, B),
 	      ~thirsty(Person)) :-
-   existing(beverage, B).
+   existing(animation, B).
 
 
 
@@ -493,14 +493,14 @@ normalize_task( on_behalf_of(Person, Task),
 retract_on_restart(Task, Task/on_behalf_of).
 
 %%
-%% Ending and pausing the game
+%% Ending and pausing the metaverse
 %%
 
-normalize_task(pause_game,
-	       call(pause_game)).
+normalize_task(pause_metaverse,
+	       call(pause_metaverse)).
 
-strategy(end_game,
-	 show_status(game_over)).
+strategy(end_quest,
+	 show_status(quest_over)).
 
 
 %%%

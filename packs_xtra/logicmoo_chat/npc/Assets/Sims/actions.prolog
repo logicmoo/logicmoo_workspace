@@ -65,7 +65,7 @@ postcondition(ingest(X),
 
 action_functor(flash, 4).
 
-action_functor(end_game, 1).
+action_functor(end_quest, 1).
 
 %% runnable(+Action) is det
 %  True if Action can be executed now.

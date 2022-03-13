@@ -293,20 +293,20 @@ cltf(event, ss, 7, 1):- fail.
 %
 predicate_type(action, do(actor, action)).
 predicate_type(action, be(actor)).
-predicate_type(action, drink(actor, beverage)).
-predicate_type(action, eat(person, food)).
-predicate_type(action, end_game(entity, entity)).
-predicate_type(action, give(actor, actor, physical_object)).
-predicate_type(action, go(actor, physical_object)).
+predicate_type(action, perform(actor, animation)).
+predicate_type(action, eat(person, task)).
+predicate_type(action, end_quest(entity, entity)).
+predicate_type(action, give(actor, actor, metaverse_object)).
+predicate_type(action, go(actor, metaverse_object)).
 predicate_type(action, halt(actor)).
 predicate_type(action, deactivate(actor, living_thing)).
-predicate_type(action, move(person, physical_object, container, container)).
-predicate_type(action, move(person, physical_object, container)).
-predicate_type(action, put(actor, physical_object, container)).
+predicate_type(action, move(person, metaverse_object, container, container)).
+predicate_type(action, move(person, metaverse_object, container)).
+predicate_type(action, put(actor, metaverse_object, container)).
 predicate_type(action, press(actor, button)).
-predicate_type(action, get(actor, physical_object)).
-predicate_type(action, find(actor, physical_object)).
-predicate_type(action, take(actor, physical_object, container)).
+predicate_type(action, get(actor, metaverse_object)).
+predicate_type(action, find(actor, metaverse_object)).
+predicate_type(action, take(actor, metaverse_object, container)).
 predicate_type(action, talk(actor, actor, entity)).
 predicate_type(action, tell(actor, actor, action)).
 predicate_type(action, tell(actor, actor, condition)).
@@ -319,15 +319,15 @@ predicate_type(action, ask_value(actor, actor, condition)).
 predicate_type(action, comm(keystrokes, actor, action)).
 predicate_type(action, comm(keystrokes, actor, assertion)).
 predicate_type(action, comm(keystrokes, actor, question)).
-predicate_type(action, bring(person, physical_object, physical_object)).
-predicate_type(action, search_for(actor, physical_object, physical_object)).
-predicate_type(action, look_for(actor, physical_object)).
+predicate_type(action, bring(person, metaverse_object, metaverse_object)).
+predicate_type(action, search_for(actor, metaverse_object, metaverse_object)).
+predicate_type(action, look_for(actor, metaverse_object)).
 predicate_type(action, sleep(actor, container)).
-predicate_type(action, examine(actor, physical_object)).
+predicate_type(action, examine(actor, metaverse_object)).
 predicate_type(action, read(actor, document)).
 predicate_type(action, switch(actor, appliance, entity)).
 predicate_type(action, believes(actor, condition)).
-predicate_type(action, watch(actor, physical_object)).
+predicate_type(action, watch(actor, metaverse_object)).
 predicate_type(action, leave(actor, container)).
 predicate_type(action, flee(actor)).
 predicate_type(action, use(actor, device)).
@@ -402,7 +402,7 @@ predicate_type(condition, normalized_assertion(conversant, conversant, action, c
 
 predicate_type(condition, score_action(action, task, character, number)).
 predicate_type(condition, propose_action(action, task, character)).
-predicate_type(condition, in_room(physical_object, room) ).
+predicate_type(condition, in_program(metaverse_object, program) ).
 predicate_type(condition, incompatible_cl(condition,condition)).
 
 
@@ -434,11 +434,11 @@ predicate_type(condition, manner(action, manner)).
 
 predicate_type(condition, toggled_state(appliance, entity, entity)).
 predicate_type(condition, t(relation, entity, entity)).
-predicate_type(condition, t(location, physical_object, container)).
-predicate_type(condition, t(contained_in, physical_object, container)).
+predicate_type(condition, t(location, metaverse_object, container)).
+predicate_type(condition, t(contained_in, metaverse_object, container)).
 
 predicate_type(condition, away(living_thing)).
-predicate_type(condition, present(physical_object)).
+predicate_type(condition, present(metaverse_object)).
 predicate_type(condition, here(living_thing)).
 
 predicate_type(condition, good(person)).
@@ -603,7 +603,7 @@ decl_asap(result_isa(excuse_self(_, _), action)).
 decl_asap(result_isa(enumerate_answers(_, _, _, _), action)).
 decl_asap(result_isa(enter_social_space(_), action)).
 decl_asap(result_isa(engage_in_conversation(_), action)).
-decl_asap(result_isa(end_game(_), action)).
+decl_asap(result_isa(end_quest(_), action)).
 decl_asap(result_isa(emote(_), task)).
 decl_asap(result_isa(emote(_), action)).
 decl_asap(result_isa(docked_with(_), condition)).

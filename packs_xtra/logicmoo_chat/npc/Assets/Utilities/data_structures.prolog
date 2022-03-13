@@ -44,14 +44,20 @@ topological_sort(RootList, EdgeRelation, List) :-
 %
 % Topological Sort Recur.
 %
-topological_sort_recur([ ], _, List, List).
-topological_sort_recur([Element | Elements], EdgeRelation, InList, OutList) :-
-   memberchk(Element, InList) ->
-      topological_sort_recur(Elements, EdgeRelation, InList, OutList)
+
+topological_sort_recur(A,B,C,D):- topological_sort_recur(100,A,B,C,D).
+
+topological_sort_recur(R,_,_,_,_):- (R>0 -> true ; !), fail.
+
+topological_sort_recur(_,[ ], _, List, List).
+topological_sort_recur(R2,[Element | Elements], EdgeRelation, InList, OutList) :-
+   R is R2 -1,
+  (memberchk(Element, InList) ->
+      topological_sort_recur(R,Elements, EdgeRelation, InList, OutList)
       ;
       ( all(Neighbor, call(EdgeRelation, Element, Neighbor), Neighbors),
-	topological_sort_recur(Neighbors, EdgeRelation, InList, WithNeighbors),
-	topological_sort_recur(Elements, EdgeRelation, [Element | WithNeighbors], OutList) ).
+	topological_sort_recur(R,Neighbors, EdgeRelation, InList, WithNeighbors),
+	topological_sort_recur(R,Elements, EdgeRelation, [Element | WithNeighbors], OutList) )).
 
 
 

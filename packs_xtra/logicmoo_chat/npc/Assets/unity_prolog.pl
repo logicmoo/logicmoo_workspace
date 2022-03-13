@@ -279,7 +279,7 @@ slash_exp(X,Y):- maybe_into_slash_db(X,Y),!.
 %slash_exp(G:X,M:Y):- G=M,!,expand_slash(X,Y).
 %slash_exp('::'(G,X),M:Y):- nonvar(G),G='$'(M),slash_exp(X,Y).
 %slash_exp(G'::'X,G{}.X):- !.
-%slash_exp($Kavi,K{k:K,name:Kavi}).
+%slash_exp($Sophia,K{k:K,name:Sophia}).
 slash_exp(X,Y):- compound(X),!,
   compound_name_arguments(X,F,AX),
   maplist(expand_slash,AX,AY),
@@ -778,9 +778,9 @@ indexical_named(X,Y):- getvar(X,Y).
             DeclareIndexical("me",
                 context =>
                 {
-                    if (context.KnowledgeBase.GameObject == null)
-                        throw new Exception("Current KnowledgeBase has no associated game object");
-                    return context.GameObject;
+                    if (context.KnowledgeBase.MetaverseObject == null)
+                        throw new Exception("Current KnowledgeBase has no associated metaverse object");
+                    return context.MetaverseObject;
                 });
             DeclareIndexical("parent",
                 context =>
@@ -933,26 +933,26 @@ call_with_step_limit(Limit,Goal):- ALimit is Limit ^ 3, call_with_inference_limi
 
 :- assume_done(step_limit/1).
 
-% :- assume_todo(component_of_gameobject_with_type/3).
+% :- assume_todo(component_of_metaverse_object_with_type/3).
 
-% "True if component is a component of gameobject with type class."
-% "?component", "?gameobject", "+class"
+% "True if component is a component of metaverseobject with type class."
+% "?component", "?metaverseobject", "+class"
 %:- assume_done(is_class/2). 
-is_class(Obj, #('PhysicalObject')):-
-  iz_a(Obj,physical_object).
-is_class(Obj, #('GameObject')):-
+is_class(Obj, #('MetaverseObject')):-
+  iz_a(Obj,metaverse_object).
+is_class(Obj, #('MetaverseObject')):-
   iz_a(Obj,entity).
 
-component_of_gameobject_with_type(X,X,Class):- Class== #('PhysicalObject'),!.
-component_of_gameobject_with_type(X,X,Class):- Class== #('PropInfo'),!.
-component_of_gameobject_with_type(X,X,Class):- Class== #('GameObject'),!.
-component_of_gameobject_with_type(X,X,Class):- is_class(X,Class),!.
-component_of_gameobject_with_type(instanceOfClassFn(X,Class),X,Class).
+component_of_metaverse_object_with_type(X,X,Class):- Class== #('MetaverseObject'),!.
+component_of_metaverse_object_with_type(X,X,Class):- Class== #('PropInfo'),!.
+component_of_metaverse_object_with_type(X,X,Class):- Class== #('MetaverseObject'),!.
+component_of_metaverse_object_with_type(X,X,Class):- is_class(X,Class),!.
+component_of_metaverse_object_with_type(instanceOfClassFn(X,Class),X,Class).
 
-%:- assume_todo(parent_of_gameobject/2).
-%                "True if CHILD is a child of PARENT in the game's rendering hierarchy.",
+%:- assume_todo(parent_of_metaverse_object/2).
+%                "True if CHILD is a child of PARENT in the metaverse's rendering hierarchy.",
 %                "?child", "?parent".
-parent_of_gameobject(Child,Parent):- location(Child,Parent)*->Child=Parent.
+parent_of_metaverse_object(Child,Parent):- location(Child,Parent)*->Child=Parent.
   
 
 % True if GOAL is true given variable bindings of each unique value of TEMPLATE produced by GENERATOR.
@@ -982,8 +982,8 @@ arg_max(T,S,G):- aggregate(max(S,T),G,max(S,T)).
 %:- assume_dyn_fail(property/3).
 %:- assume_done(is_class/2).
 
-:- assume_done(pause_game/0).
-:- assume_done(unpause_game/0).
+:- assume_done(pause_metaverse/0).
+:- assume_done(unpause_metaverse/0).
 :- assume_done(randomize/1).
 
 
@@ -1207,11 +1207,11 @@ property(Obj,Prop,Num):-
                     if (iz.Arguments.Length != 2)
                         throw new ArgumentCountException("distance", iz.Arguments, "v1", "v2");
                     object v1 = Eval(iz.Argument(0), context);
-                    if (v1 is GameObject)
-                        v1 = ((GameObject)v1).transform.position;
+                    if (v1 is MetaverseObject)
+                        v1 = ((MetaverseObject)v1).transform.position;
                     object v2 = Eval(iz.Argument(1), context);
-                    if (v2 is GameObject)
-                        v2 = ((GameObject)v2).transform.position;
+                    if (v2 is MetaverseObject)
+                        v2 = ((MetaverseObject)v2).transform.position;
                     if (!(v1 is Vector3))
                         throw new ArgumentTypeException("distance", "v1", v1, typeof (Vector3));
                     if (!(v2 is Vector3))
@@ -1224,11 +1224,11 @@ property(Obj,Prop,Num):-
                     if (iz.Arguments.Length != 2)
                         throw new ArgumentCountException("distance_squared", iz.Arguments, "v1", "v2");
                     object v1 = Eval(iz.Argument(0), context);
-                    if (v1 is GameObject)
-                        v1 = ((GameObject)v1).transform.position;
+                    if (v1 is MetaverseObject)
+                        v1 = ((MetaverseObject)v1).transform.position;
                     object v2 = Eval(iz.Argument(1), context);
-                    if (v2 is GameObject)
-                        v2 = ((GameObject)v2).transform.position;
+                    if (v2 is MetaverseObject)
+                        v2 = ((MetaverseObject)v2).transform.position;
                     if (!(v1 is Vector3))
                         throw new ArgumentTypeException("distance_squared", "v1", v1, typeof (Vector3));
                     if (!(v2 is Vector3))
@@ -1239,11 +1239,11 @@ property(Obj,Prop,Num):-
                 case "position":
                 {
                     if (iz.Arguments.Length != 1)
-                        throw new ArgumentCountException("position", iz.Arguments, "gameObject");
-                    var gameObject = Eval(iz.Argument(0), context);
-                    var go = gameObject as GameObject;
+                        throw new ArgumentCountException("position", iz.Arguments, "metaverseObject");
+                    var metaverseObject = Eval(iz.Argument(0), context);
+                    var go = metaverseObject as MetaverseObject;
                     if (go==null)
-                        throw new ArgumentTypeException("position", "gameObject", gameObject, typeof(GameObject));
+                        throw new ArgumentTypeException("position", "metaverseObject", metaverseObject, typeof(MetaverseObject));
                     return go.transform.position;
                 }
 
@@ -1279,7 +1279,7 @@ property(Obj,Prop,Num):-
                 case "instance_id":
                 {
                     if (iz.Arguments.Length != 1)
-                        throw new ArgumentCountException("instance_id", iz.Arguments, "game_object");
+                        throw new ArgumentCountException("instance_id", iz.Arguments, "metaverse_object");
                     var arg = iz.Argument(0) as UnityEngine.Object;
                     if (arg == null)
                         throw new ArgumentTypeException("instance_id", "object", iz.Argument(0), typeof(UnityEngine.Object));

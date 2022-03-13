@@ -3425,8 +3425,8 @@
 					<Folder Name="Assets">
 						<Folder Name="Characters">
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/Characters/captive.prolog"/>
-							<F N="packs_xtra/logicmoo_chat/npc/Assets/Characters/Kavi.prolog"/>
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/Characters/pc.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Characters/Sophia.prolog"/>
 						</Folder>
 						<Folder Name="Conversation">
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/Conversation/assertions.prolog"/>
@@ -3451,6 +3451,7 @@
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/adjective.csv"/>
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/auxverbs.prolog"/>
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/base_grammar.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/base_grammar.prolog.bak"/>
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/base_grammar_test.prolog"/>
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/context_menu.prolog"/>
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/contractions.prolog"/>
@@ -3464,6 +3465,7 @@
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/lf.prolog"/>
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/NLPrompt.cs"/>
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/np.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/np.prolog.bak"/>
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/np_tests.prolog"/>
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/parser_tests.csv"/>
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/pdebug.prolog"/>
@@ -3474,6 +3476,9 @@
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/preterminals.prolog"/>
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/transitive_verb.csv"/>
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/vp.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/vp.prolog.bak"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/vp.prolog.new"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/vp.prolog.new.bak"/>
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/NL/vp_tests.prolog"/>
 						</Folder>
 						<Folder Name="Norms">
@@ -3488,6 +3493,7 @@
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/entities.csv"/>
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/favor.prolog"/>
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/food_drink.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/hypno.prolog"/>
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/integrity_checks.prolog"/>
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/kinds.csv"/>
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/Ontology/kinds.prolog"/>
@@ -3624,6 +3630,7 @@
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/Sims/SimControllerGameObjectExtensions.cs"/>
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/Sims/Sonifier.cs"/>
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/Sims/utilities.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Sims/utilities.prolog.bak"/>
 						</Folder>
 						<Folder Name="Sprites">
 							<Folder Name="Kavi">
@@ -3702,17 +3709,22 @@
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/Utilities/startup.prolog"/>
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/Utilities/tell.prolog"/>
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/Utilities/test_rig.prolog"/>
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Utilities/test_rig.prolog.bak"/>
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/Utilities/truth_value.prolog"/>
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/Utilities/unity_stuff.prolog"/>
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/Utilities/why.prolog"/>
 						</Folder>
+						<F N="packs_xtra/logicmoo_chat/npc/Assets/.bash_history"/>
 						<F N="packs_xtra/logicmoo_chat/npc/Assets/Copyright.txt"/>
 						<F N="packs_xtra/logicmoo_chat/npc/Assets/CREDITS.txt"/>
+						<F N="packs_xtra/logicmoo_chat/npc/Assets/logicmoo_mkultra.pl"/>
 						<F N="packs_xtra/logicmoo_chat/npc/Assets/logicmoo_npc_chat.pl"/>
 						<F N="packs_xtra/logicmoo_chat/npc/Assets/unity_prolog.pl"/>
+						<F N="packs_xtra/logicmoo_chat/npc/Assets/unity_prolog.pl.bak"/>
 					</Folder>
 					<F N="packs_xtra/logicmoo_chat/npc/.bash_history"/>
 					<F N="packs_xtra/logicmoo_chat/npc/agent.pl"/>
+					<F N="packs_xtra/logicmoo_chat/npc/mpred"/>
 				</Folder>
 				<Folder Name="prolog">
 					<Folder Name="pllm">

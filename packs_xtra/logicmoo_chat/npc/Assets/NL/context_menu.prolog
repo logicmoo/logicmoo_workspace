@@ -1,18 +1,18 @@
-%% menu_item(+GameObject, -String, -DialogAct)
-%  DialogAct is an option to display in the context menu for GameObject
+%% menu_item(+MetaverseObject, -String, -DialogAct)
+%  DialogAct is an option to display in the context menu for MetaverseObject
 %  with the english surface form of String.
 :- public menu_item/3.
-menu_item(GameObject, String, Command) :-
-   menu_dialog_act(GameObject, Command),
+menu_item(MetaverseObject, String, Command) :-
+   menu_dialog_act(MetaverseObject, Command),
    once(generate_text_for_menu(Command, String)).
 
-%% menu_dialog_act(+GameObject, -DialogAct)
-%  DialogAct should be displayed in the context menu for GameObject.
-menu_dialog_act(GameObject, command($player, $pc, Action)) :-
-   menu_action(GameObject, Action).
-menu_dialog_act($pc, show_status($player, $pc, notebook)).
-menu_dialog_act($pc, show_status($player, $pc, inventory)).
-menu_dialog_act($pc, show_status($player, $pc, vocabulary)).
+%% menu_dialog_act(+MetaverseObject, -DialogAct)
+%  DialogAct should be displayed in the context menu for MetaverseObject.
+menu_dialog_act(MetaverseObject, command($user, $pc, Action)) :-
+   menu_action(MetaverseObject, Action).
+menu_dialog_act($pc, show_status($user, $pc, notebook)).
+menu_dialog_act($pc, show_status($user, $pc, inventory)).
+menu_dialog_act($pc, show_status($user, $pc, vocabulary)).
 menu_dialog_act(Character, DialogAct) :-
    character(Character),
    in_conversation_with(Character),
@@ -49,7 +49,7 @@ menu_action(X, talk($pc, X, _)) :-
    \+ in_conversation_with(X).
 
 menu_action(X, sleep($pc, X)) :-
-   iz_a(X, layable).
+   iz_a(X, debugable).
 menu_action(X, switch($pc, X , power,on)) :-
    once(iz_a(X, appliance)),
    \+ prop_activated(X).

@@ -117,7 +117,7 @@ male(newcaster).
 %
 % News Commentator.
 %
-news_commentator(judy).
+news_commentator(little_sophia).
 
 
 %=autodoc
@@ -136,9 +136,9 @@ speaker_name(newcaster)-->theTextM1(donald).
 %
 % Female.
 %
-female(judy).
-news_commentator(judy).
-speaker_name(judy)-->theTextM([little, judy]).
+female(little_sophia).
+news_commentator(little_sophia).
+speaker_name(little_sophia)-->theTextM([little, sophia]).
 
 
 %=autodoc
@@ -146,8 +146,8 @@ speaker_name(judy)-->theTextM([little, judy]).
 %
 % Speaker Title.
 %
-speaker_title(judy)-->theTextM([former, governor]).
-speaker_title(judy)-->theTextM([animatronic, markov, generator]).
+speaker_title(little_sophia)-->theTextM([former, infant]).
+speaker_title(little_sophia)-->theTextM([animatronic, markov, generator]).
 
 speaker_title(X)-->{news_commentator(X)}, theTextM([news, commentator]).
 
@@ -196,12 +196,12 @@ organization(parents).
 
 goodguys(_, doctors)-->theTextM1(doctors).
 goodguys(_, environmentalists)-->theTextM1(environmentalists).
-goodguys(judy, media)-->theTextM([the, news, media]).
+goodguys(little_sophia, media)-->theTextM([the, news, media]).
 organization(media).
 
 goodguys(newcaster, heros)-->theTextM1(heros).
-goodguys(judy, players)-->theTextM1(players).
-goodguys(judy, those_people)-->theTextM(['THOSE', people]).
+goodguys(little_sophia, users)-->theTextM1(users).
+goodguys(little_sophia, those_people)-->theTextM(['THOSE', people]).
 
 
 

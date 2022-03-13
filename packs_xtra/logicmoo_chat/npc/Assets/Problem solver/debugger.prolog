@@ -6,7 +6,7 @@
 % Display Task Debugger.
 %
 display_task_debugger :-
-   pause_game,
+   pause_metaverse,
    generate_unsorted_overlay("Breakpoint",
 			     debugger_line(Line),
 			     Line).
@@ -29,7 +29,7 @@ debugger_line(line(Step)) :-
    $task/log/Step.
 
 fkey_command(alt-c, "Continue from problem solver breakpoint.") :-
-   unpause_game,
+   unpause_metaverse,
    character(C),
    C::continue_from_breakpoint.
 

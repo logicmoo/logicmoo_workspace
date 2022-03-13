@@ -1,5 +1,5 @@
 %%
-%% Indexicals used throughout the game
+%% Indexicals used throughout the metaverse
 %%
 
 :- indexical

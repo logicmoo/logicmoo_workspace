@@ -36,6 +36,6 @@ property_relevant_to_purpose(general, _, Property, _) :-
 % Relation Relevant Converted To Purpose.
 %
 relation_relevant_to_purpose(introduction, _, Relation, _) :-
-   memberchk(Relation, [ interested_in, member_of, roommate_of ]).
+   memberchk(Relation, [ interested_in, member_of, coworker_of ]).
 relation_relevant_to_purpose(general, _, _, _).
 

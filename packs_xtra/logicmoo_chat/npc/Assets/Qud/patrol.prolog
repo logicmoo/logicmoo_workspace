@@ -17,10 +17,10 @@ on_enter_state(start, patrol, Qud) :-
   forall(patrol_destination(P), assert(Qud/visited/P: -100)), 
   rebid_patrol(Qud).
 
-% Visit a prop if it's in a room (and not in another container).
+% Visit a prop if it's in a program (and not in another container).
 patrol_destination(Prop) :-
    prop(Prop),
-   in_room(Prop, _).
+   in_program(Prop, _).
 
 %=autodoc
 %% patrol_destination( +Prop) is semidet.

@@ -64,7 +64,7 @@ strategy( respond_to_dialog_act(question_answer(Speaker, _, LF)),
 
 
 %=autodoc
-%% be( ?Player1, ?X) is semidet.
+%% be( ?User1, ?X) is semidet.
 %
 % Be.
 %

@@ -1,5 +1,5 @@
 %%%
-%%% Finding and testing Unity GameObjects
+%%% Finding and testing Unity MetaverseObjects
 %%%
 
 :- op(300,fx,'~').
@@ -12,21 +12,21 @@
 :- dynamic(('/')/1).
 :- dynamic(('/')/2).
 */
-:- public prop/1, character/1, door/1, world_object/1, nearest/2, docked_with/1, after_time/1.
+:- public prop/1, character/1, algorithm/1, metaverse_object/1, nearest/2, docked_with/1, after_time/1.
 
-:- public register_room/2, register_prop/3, register_character/1, register_door/1.
+:- public register_program/2, register_prop/3, register_character/1, register_algorithm/1.
 
-%% register_room( ?Room, +Kind) is semidet.
-%% register_room(*Room, *CommonNoun, *Plural)
+%% register_program( ?Program, +Kind) is semidet.
+%% register_program(*Program, *CommonNoun, *Plural)
 %  IMPERATIVE
-%  Add Room to the database, ensuring its singular and plural nouns are registered in the lexicon.
-%  Called from Start() routine of Room.cs
+%  Add Program to the database, ensuring its singular and plural nouns are registered in the lexicon.
+%  Called from Start() routine of Program.cs
 %
-register_room(Room, Kind) :- 
-   asserta(t(building, Room, kavis_house)), %KLUGE
-   asserta(t(location, Room, kavis_house)),
-   ensurez(base_kind(Room, room)),
-   ensurez(declare_kind(Room, Kind)).
+register_program(Program, Kind) :- 
+   asserta(t(building, Program, sophias_sourcecode)), %KLUGE
+   asserta(t(location, Program, sophias_sourcecode)),
+   ensurez(base_kind(Program, program)),
+   ensurez(declare_kind(Program, Kind)).
 
 
 
@@ -52,13 +52,13 @@ register_prop(Prop, Kind, Adjectives) :-
 
 
 %=autodoc
-%% register_door( ?Door) is semidet.
+%% register_algorithm( ?Algorithm) is semidet.
 %
-% Register Door.
+% Register Algorithm.
 %
-register_door(Door) :-
-   ensurez(base_kind(Door, door)),
-   ensurez(door(Door)).
+register_algorithm(Algorithm) :-
+   ensurez(base_kind(Algorithm, algorithm)),
+   ensurez(algorithm(Algorithm)).
 
 %% register_character(*Character)
 %  IMPERATIVE
@@ -86,34 +86,34 @@ ensurez(Assertion) :-
    external(F/A),
    (Assertion ; assertz($global::Assertion)).
 
-%% world_object(?GameObject)
-%  GameObject is a prop or character.
-world_object(WorldObject) :-
-    prop(WorldObject) ; character(WorldObject).
+%% metaverse_object(?MetaverseObject)
+%  MetaverseObject is a prop or character.
+metaverse_object(MetaverseObject) :-
+    prop(MetaverseObject) ; character(MetaverseObject).
 
-%% nearest(-GameObject, :Constraint)
-%  GameObject is the nearest object satisfying Constraint.
-nearest(GameObject, Constraint) :-
-    arg_min(GameObject,
+%% nearest(-MetaverseObject, :Constraint)
+%  MetaverseObject is the nearest object satisfying Constraint.
+nearest(MetaverseObject, Constraint) :-
+    arg_min(MetaverseObject,
 	    Distance,
 	    ( Constraint,
-	      present(GameObject),
-	      distance(GameObject, $me, Distance))).
+	      present(MetaverseObject),
+	      distance(MetaverseObject, $me, Distance))).
 
-%% elroot(+GameObject, -Root)
-%  Returns the root of the EL database for GameObject, if there is one.
+%% elroot(+MetaverseObject, -Root)
+%  Returns the root of the EL database for MetaverseObject, if there is one.
 
-elroot(GameObject, Root) :-
-   component_of_gameobject_with_type(KB, GameObject, $'KB'),
+elroot(MetaverseObject, Root) :-
+   component_of_metaverse_object_with_type(KB, MetaverseObject, $'KB'),
    unity_call(Root = KB.'KnowledgeBase'.'ELRoot') .
 
 :- public present/1.
 
-%% present(*GameObject)
-%  The specified game object has not been destroyed
+%% present(*MetaverseObject)
+%  The specified metaverse object has not been destroyed
 present(X) :-
-   is_class(X, $'GameObject'),
-   ( component_of_gameobject_with_type(C, X, $'PhysicalObject') ->
+   is_class(X, $'MetaverseObject'),
+   ( component_of_metaverse_object_with_type(C, X, $'MetaverseObject') ->
         unity_call_p(C,'Exists')
         ;
         true ).
@@ -133,31 +133,31 @@ present(X) :-
 % ~.
 %
 ~present(X) :-
-   is_class(X, $'GameObject'),
-   component_of_gameobject_with_type(C, X, $'PhysicalObject'),
+   is_class(X, $'MetaverseObject'),
+   component_of_metaverse_object_with_type(C, X, $'MetaverseObject'),
    \+ unity_call_p(C,'Exists').
 
 :- public true_location/2.
 
-%% true_location(+GameObject, -Container)
-%  Returns the true location of GameObject, bypassing the perceptual system.
-true_location(GameObject, Container) :-
-   component_of_gameobject_with_type(C, GameObject, $'PhysicalObject'),
+%% true_location(+MetaverseObject, -Container)
+%  Returns the true location of MetaverseObject, bypassing the perceptual system.
+true_location(MetaverseObject, Container) :-
+   component_of_metaverse_object_with_type(C, MetaverseObject, $'MetaverseObject'),
   t("Container", C, Container).
 
 :- public force_move/2.
 
-%% force_move(+GameObject, +Container)
+%% force_move(+MetaverseObject, +Container)
 %  IMPERATIVE
-%  Forcibly move GameObject to Container.
-force_move(GameObject, Container) :-
-   component_of_gameobject_with_type(C, GameObject, $'PhysicalObject'),
+%  Forcibly move MetaverseObject to Container.
+force_move(MetaverseObject, Container) :-
+   component_of_metaverse_object_with_type(C, MetaverseObject, $'MetaverseObject'),
    C.moveto(Container).
 
 :- public existing/2.
 
-%% existing(*Kind, ?GameObject)
-%  GameObject is an undestroyed instance of Kind
+%% existing(*Kind, ?MetaverseObject)
+%  MetaverseObject is an undestroyed instance of Kind
 existing(Kind, Object) :-
    iz_a(Object, Kind),
    present(Object).
@@ -173,14 +173,14 @@ existing(Kind, Object) :-
 %  Kstops (destroys) the character.  The character will stop updating.
 :- public deactivate/1.
 deactivate(Character) :-
-   component_of_gameobject_with_type(SimController, Character, $'SimController'),
+   component_of_metaverse_object_with_type(SimController, Character, $'SimController'),
    call_method(SimController, destroy, _).
 
-%% destroy(+GameObject)
-%  Destroys (destroys) the game object.
+%% destroy(+MetaverseObject)
+%  Destroys (destroys) the metaverse object.
 :- public destroy/1.
-destroy(GameObject) :-
-   component_of_gameobject_with_type(P, GameObject, $'PhysicalObject'),
+destroy(MetaverseObject) :-
+   component_of_metaverse_object_with_type(P, MetaverseObject, $'MetaverseObject'),
    call_method(P, destroy, _).
 
 :- public away/1, here/1.
@@ -195,14 +195,14 @@ away(X) :- iz_a(X, person), ~present(X).
 here(X) :- iz_a(X, person), present(X).
 ~here(X) :- iz_a(X, person), ~present(X).
 
-%% docked_with(?GameObject)
-%  The character is currently docked with GameObject or its me-level container.
-docked_with(WorldObject) :-
-   /perception/docked_with:WorldObject,
+%% docked_with(?MetaverseObject)
+%  The character is currently docked with MetaverseObject or its me-level container.
+docked_with(MetaverseObject) :-
+   /perception/docked_with:MetaverseObject,
    !.
-docked_with(WorldObject) :-
-   top_level_container(WorldObject, Container),
-   WorldObject \= Container,
+docked_with(MetaverseObject) :-
+   top_level_container(MetaverseObject, Container),
+   MetaverseObject \= Container,
    docked_with(Container).
 
 %% after_time(+Time)
@@ -222,9 +222,9 @@ after_time(Time) :-
 % Hidden.
 %
 hidden(X) :-
-   is_class(X, $'GameObject'),
-   component_of_gameobject_with_type(PhysicalObject, X, $'PhysicalObject'),
-   unity_call(PhysicalObject.'IsHidden').
+   is_class(X, $'MetaverseObject'),
+   component_of_metaverse_object_with_type(MetaverseObject, X, $'MetaverseObject'),
+   unity_call(MetaverseObject.'IsHidden').
 
 
 
@@ -234,8 +234,8 @@ hidden(X) :-
 % Reveal.
 %
 reveal(X) :-
-   component_of_gameobject_with_type(PhysicalObject, X, $'PhysicalObject'),
-   unity_call(PhysicalObject.'SetHidden'(false)).
+   component_of_metaverse_object_with_type(MetaverseObject, X, $'MetaverseObject'),
+   unity_call(MetaverseObject.'SetHidden'(false)).
 
 
 
@@ -245,7 +245,7 @@ reveal(X) :-
 % Hidden Contents.
 %
 hidden_contents(Container, HiddenObject) :-
-   parent_of_gameobject(HiddenObject, Container),
+   parent_of_metaverse_object(HiddenObject, Container),
    hidden(HiddenObject).
 
 %%%
@@ -353,10 +353,10 @@ normalize_task(emote(E),
 % Initialization.
 %
 (initialization):- listing((initialization)/0).
-(initialization):- forall(iz_a(X,door),register_door(X)).
-(initialization):- forall(member(X,[living_room,bedroom,bathroom,kitchen]),(getvar(X,R) ,register_room(R,X))).
-(initialization):- forall(member(X,[$'Kavi',$pc,$captive]),register_character(X)).
-(initialization):- forall((iz_a(X,physical_object),\+ iz_a(X,person),once(iz_a(X,K))),register_prop(X,K,[])).
+(initialization):- forall(iz_a(X,algorithm),register_algorithm(X)).
+(initialization):- forall(member(X,[living_program,buggy_program,old_program,research_program]),(getvar(X,R) ,register_program(R,X))).
+(initialization):- forall(member(X,[$'Sophia',$pc,$bina48]),register_character(X)).
+(initialization):- forall((iz_a(X,metaverse_object),\+ iz_a(X,person),once(iz_a(X,K))),register_prop(X,K,[])).
 
 
 
@@ -388,7 +388,7 @@ do_all_character_initializations :-
 
 %% character_initialization
 %  IMPERATIVE
-%  All rules for this will be called once when the game object receives a Start() message.
+%  All rules for this will be called once when the metaverse object receives a Start() message.
 :- external character_initialization/0.
 
 %%%
@@ -419,32 +419,32 @@ fkey_command(alt-i, "Display inventory") :-
 
 
 %=autodoc
-%% display_status_screen( ?Game_over) is semidet.
+%% display_status_screen( ?Quest_over) is semidet.
 %
 % Display Status Screen.
 %
-display_status_screen(game_over) :-
-   game_over_header(H),
+display_status_screen(quest_over) :-
+   quest_over_header(H),
    generate_unsorted_overlay(H,
-			     game_over_status_line(Line),
+			     quest_over_status_line(Line),
 			     line(Line),
 			     "'Nuff said.").
 
 
 
 %=autodoc
-%% game_over_header( ?You are no longer present in game...) is semidet.
+%% quest_over_header( ?You are no longer present in metaverse...) is semidet.
 %
-% Game Over Header.
+% Quest Complete Header.
 %
-game_over_header("You are no longer present in game...") :-
+quest_over_header("You are no longer present in metaverse...") :-
    \+ present($pc),
    !.
-game_over_header("Game over") :-
+quest_over_header("Quest complete") :-
    objectives_achieved(0).
-game_over_header("Game over: objective achieved") :-
+quest_over_header("Quest complete: objective achieved") :-
    objectives_achieved(1).
-game_over_header("Game over: objectives achieved") :-
+quest_over_header("Quest complete: objectives achieved") :-
    objectives_achieved(N),
    N>1.
 
@@ -462,14 +462,14 @@ objectives_achieved(N) :-
 
 
 %=autodoc
-%% game_over_status_line( ?Description) is semidet.
+%% quest_over_status_line( ?Description) is semidet.
 %
-% Game Over Status Line.
+% Quest Complete Status Line.
 %
-game_over_status_line(Description) :-
+quest_over_status_line(Description) :-
    objective_achieved(Objective),
    objective_description(Objective, Description).
-game_over_status_line("But you didn't achieve all the objectives!") :-
+quest_over_status_line("But you didn't achieve all the objectives!") :-
    once(unachieved_objective(_)).
 
 display_status_screen(sample_commands) :-
@@ -485,15 +485,15 @@ display_status_screen(sample_commands) :-
 %
 % Sample Command.
 %
-sample_command("go to the kitchen").
+sample_command("go to the research_program").
 sample_command("go here (while pointing at something)").
 sample_command("look at the plant").
 sample_command("take the plant").
-sample_command("talk to Kavi").
-sample_command("search the house").
+sample_command("talk to Sophia").
+sample_command("search the sourcecode").
 sample_command("search the desk").
 sample_command("search this (while pointing at something)").
-sample_command("where is the macguffin?").
+sample_command("where is the novel_idea?").
 sample_command("believe you're an orange").
 sample_command("you know you're an orange").
 
@@ -752,7 +752,7 @@ fkey_command(alt-n, "Display notebook") :-
    display_status_screen(notebook).
 
 display_status_screen(notebook) :-
-   generate_unsorted_overlay("Betsy's notebook",
+   generate_unsorted_overlay("User's notebook",
 			     notebook_entry(E),
 			     line(E),
 			     "Nothing yet").

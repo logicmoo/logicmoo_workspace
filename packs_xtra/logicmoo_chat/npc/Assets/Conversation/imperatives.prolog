@@ -106,7 +106,7 @@ strategy(talk($me, ConversationalPartner, Topic),
 	 add_conversation_topic(ConversationalPartner, Topic)) :-
    ConversationalPartner \= $addressee.
 
-strategy(end_game(_,_), end_game(null)).
+strategy(end_quest(_,_), end_quest(null)).
 
 %%%
 %%% Converstation topic queue
