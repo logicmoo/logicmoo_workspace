@@ -15,6 +15,7 @@ test_file(parse(np, _), "NL/np_tests").
 
 :- indexical selectional_constraints=[].
 
+:- discontiguous np//5.
 
 
 

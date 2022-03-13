@@ -2,7 +2,7 @@
 
 :- setup_call_cleanup('$current_typein_module'(TIM), 
                       setup_call_cleanup('$current_source_module'(SIM), 
-                          npc:ensure_loaded('/opt/logicmoo_workspace/packs_xtra/logicmoo_chat/npc/agent.pl'),
+                          npc_chat:ensure_loaded('/opt/logicmoo_workspace/packs_xtra/logicmoo_chat/npc/agent.pl'),
                           '$set_source_module'(SIM)),
                       '$set_typein_module'(TIM)).
 

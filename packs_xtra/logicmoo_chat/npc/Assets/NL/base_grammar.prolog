@@ -97,7 +97,31 @@ opt_stop(Mood)-->theTextM1(!), {Mood\=interrogative}.
 
 :- discontiguous s//5.
 :- discontiguous ss//5.
+/*
+vvpp( Form, PredicateModalIn, SubjectS, Tense, Agreement, GapInfo) -->  theTextM1(not),
+  {negatePM(PredicateModalIn,PredicateModalOut)},
+  vp( Form, PredicateModalOut, SubjectS, Tense, Agreement, GapInfo), 
+  {negatePM(PredicateModalIn,PredicateModalOut)}.
+*/
 
+vvpp( Form, PredicateModal, SubjectS, Tense, Agreement, GapInfo) -->  
+  vp( Form, PredicateModal, SubjectS, Tense, Agreement, GapInfo).
+
+negatePM(PredicateModalIn,PredicateModalOut):- nonvar(PredicateModalIn),PredicateModalIn=(P^M),
+  PredicateModalOut=PP^MM,negatePM(P,PP),=(M,MM).
+negatePM(PredicateModalOut,PredicateModalIn):- nonvar(PredicateModalIn),PredicateModalIn=(P^M),
+  PredicateModalOut=PP^MM,negatePM(P,PP),=(M,MM).
+negatePM(PredicateModalIn,PredicateModalOut):- nonvar(PredicateModalIn),nonvar(PredicateModalOut),!.
+negatePM(PredicateModalIn,PredicateModalOut):- nonvar(PredicateModalIn),!, PredicateModalOut = not(PredicateModalIn).
+negatePM(PredicateModalOut,PredicateModalIn):- nonvar(PredicateModalIn),!, PredicateModalOut = not(PredicateModalIn).
+/*
+vp( Form, 
+  Predicate^not(Modal), Subject^S, Tense, 
+  Agreement, GapInfo) -->  theTextM1(not),
+  vp( Form, 
+  Predicate^Modal, Subject^S, Tense, 
+  Agreement, GapInfo).
+*/
 
 %%%%
 %%%% CLAUSES
@@ -122,7 +146,7 @@ content_clause((Wh:(S, iz_a(Wh, Kind))), _, InterrogativePredicate, Interrogativ
    { InterrogativePredicate \= null },
    whpron(Kind),
    np((NP^S1)^S, subject, Agreement, nogap, nogap),
-   vp(base, X^X, NP^S1, _Tense, Agreement, np(Wh)).
+   vvpp(base, X^X, NP^S1, _Tense, Agreement, np(Wh)).
 content_clause(Object:(be(Subject, Object), iz_a(Subject, Kind)), _, InterrogativePredicate, InterrogativePredicate) -->
    { InterrogativePredicate \= null },
    whpron(Kind),
@@ -362,7 +386,7 @@ inverted_sentence(S, Polarity, Tense, Aspect) -->
    { lf_subject(S, NP) },
    aux(np((NP^S1)^S, subject, Agreement),
        Polarity, Agreement, Tense, Aspect, Form, Modality),
-   vp(Form, Modality, NP^S1, Tense, Agreement, nogap).
+   vvpp(Form, Modality, NP^S1, Tense, Agreement, nogap).
 
 
 %% inverted_sentence( ?ARG1, ?ARG2, ?ARG3, ?ARG4) is semidet.
@@ -391,7 +415,7 @@ ss((Wh:(S, iz_a(Wh, Kind))), interrogative, affirmative, Tense, simple) -->
    whpron(Kind),
    aux_do(Tense, Agreement),
    np((NP^S1)^S, subject, Agreement, nogap, nogap),
-   vp(base, X^X, NP^S1, Tense, Agreement, np(Wh)).
+   vvpp(base, X^X, NP^S1, Tense, Agreement, np(Wh)).
 
 
 % Wh-questions about properties
@@ -447,7 +471,7 @@ ss(Object:(S, iz_a(Object, Kind)), interrogative, Polarity, Tense, Aspect) -->
    whpron(Kind),
    aux(nogap, Polarity, Agreement, Tense, Aspect, Form, Modality),
    np((NP^S1)^S, subject, Agreement, nogap, nogap),
-   vp(Form, Modality, NP^S1, Tense, Agreement, np(Object)).
+   vvpp(Form, Modality, NP^S1, Tense, Agreement, np(Object)).
 
 % Who is/what is Subject
 ss(Object:(be(Subject, Object), iz_a(Subject, Kind)), interrogative, affirmative, present, simple) -->
@@ -467,7 +491,7 @@ ss(Method:method(S, Method), interrogative, affirmative, Tense, simple) -->
     {lf_subject(S, NP)}, 
     aux_do(Tense, Agreement), 
     np((NP^S1)^S, subject, Agreement, nogap, nogap), 
-    vp(base, M^M, NP^S1, present, Agreement, nogap)).
+    vvpp(base, M^M, NP^S1, present, Agreement, nogap)).
 
 :- register_lexical_item(how).
 

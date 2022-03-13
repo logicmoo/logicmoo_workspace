@@ -21,8 +21,9 @@ displayln(X):- is_list(X),!,maplist(displayln0,X),nl.
 displayln(X):- displayln0(X), nl.
 displayln0(C):- atomic(C),!,write(C).
 displayln0(C):- var(C),!, writeq(C).
-displayln0(print(C)):- !, write(' '),print_tree(C),write(' ').
-displayln0(C):- writeq(C).
+%displayln0(_):- !.
+%displayln0(print(C)):- !, write(' '),print_tree(C),write(' ').
+displayln0(C):- write_term(C,[attributes(dots),quoted(true)]).
 
 :- forall(between(2,7,A), make_pred_narity_call_list(displayln,A)).
 
@@ -536,9 +537,9 @@ wrap_words([H|T],[H|T]):- member_no_open(E,[H|T]),compound(E),!,dmsg(no_wrap_wor
 wrap_words(L,theTextM(L)).
 
 
-same_s(X,X):-!.
 same_s(MX,X):- atom(MX),atom(X),!, upcase_atom(MX,MXU),upcase_atom(X,XU),!,XU==MXU.
-same_s(X,X):-!.
+same_s(X,X).
+
 theTextM1(X) --> [M],{(compound(M)->arg(1,M,MX);M=MX),same_s(MX,X)}.
 theTextM(Var) --> {var(Var),!, Var=[X|L]}, theTextM([X|L]).
 theTextM([]) --> [],!.
@@ -688,8 +689,8 @@ no_more_expansion_f(wdmsg).
 no_more_expansion_f(dmsg).
 no_more_expansion_f(library).
 no_more_expansion_f(nop).
+no_more_expansion_fa(b,F,1):- current_op(X,Y,dynamic), \+ upcase_atom(F,F), current_op(X,Y,F). % ,current_predicate(F/1),!.
 no_more_expansion_fa(b,Dmsg,A):-no_more_expansion_f(Dmsg), A < 3.
-no_more_expansion_fa(b,F,1):- current_op(X,Y,dynamic), \+ upcase_atom(F,F), current_op(X,Y,F),current_predicate(F/1),!.
 
 no_more_expansion(_,C,C):- \+ compound(C),!.
 no_more_expansion(_,C,C):- dont_reduce(C),!.
