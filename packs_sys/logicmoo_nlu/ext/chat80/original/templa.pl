@@ -399,8 +399,8 @@ restriction_LF(Word,_Type,_X,_P):- adj_sign_LF(Word,_),!,fail.
 restriction_LF(African,Spatial&_,X,ti(African,X)):- adj_lex(African,restr), spatial(Spatial).
 restriction_LF(Word,_,X,Out):- compound(Word),subst(Word,self,X,Out), Word\==Out.
 restriction_LF(_,_,_,_):- \+ if_search_expanded(2), !, fail.
-restriction_LF(Word,Spatial&_,X, property(X,Type,adj)):- adj_db_clex(Type,Word,restr), spatial(Spatial).
-restriction_LF(Type,_Spatial&_,X,property(X,Type,pos)).
+restriction_LF(Word,Spatial&_,X, property(X,Type,pos)):- adj_db_clex(Type,Word,restr), spatial(Spatial).
+restriction_LF(Type,_Spatial&_,X, object(X,Type,countable, na, eq, 1)).
 
 %restriction_LF(american,Spatial&_,X,ti(american,X)).
 %restriction_LF(asian,Spatial&_,X,ti(asian,X)).

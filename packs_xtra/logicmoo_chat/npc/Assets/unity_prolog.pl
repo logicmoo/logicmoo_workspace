@@ -542,7 +542,7 @@ theTextM([X|L]) --> theTextM1(X),theTextM(L).
 
 enforce_set(Set):- term_variables(Set,Vars),maplist(freeze_as_set(Set),Vars).
 freeze_as_set(Set,Var):- 
-  A = npc, %freeze_as_set(Set,Var):- freeze(Var,check_set(Set)).
+  A = npc_chat, %freeze_as_set(Set,Var):- freeze(Var,check_set(Set)).
   (get_attr(Var,A,ListOfSets) 
    -> ((member(E,ListOfSets),E==Set) -> true ; put_attr(Var,A,[Set|ListOfSets]))
    ; put_attr(Var,A,[Set])).
@@ -1309,7 +1309,7 @@ end_of_file.
 
 %:- dynamic($/2).
 Warning: baseKB:calc_to_hashmap/3, which is referenced by
-Warning:        /opt/logicmoo_workspace/packs_xtra/logicmoo_chat/npc/Assets/unity_prolog.pl:141:21: 1-st clause of baseKB:calc_to_hashmap/1
+Warning:        /opt/logicmoo_workspace/packs_xtra/logicmoo_chat/npc_chat/Assets/unity_prolog.pl:141:21: 1-st clause of baseKB:calc_to_hashmap/1
 Warning: baseKB:would/1 is declared as discontiguous, but has no clauses
 Warning: baseKB:veto_strategy/1 is declared as discontiguous, but has no clauses
 Warning: baseKB:transcript/1 is declared as discontiguous, but has no clauses
