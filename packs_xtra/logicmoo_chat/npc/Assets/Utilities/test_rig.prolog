@@ -47,7 +47,7 @@ test_body(Name, [ ], Body) :-
 run_test(Name, Options, Body) :-
  with_bind(test_name, Name,
 	with_bind(test_options, Options,
-   (unbind([pc,addressee,speaker,generating_nl,player]),
+   (unbind([pc,addressee,speaker,player]),
 	  copy_term(Body, Copy),
 	  with_bind(test_body, Copy,
 	  (setup_test(Name, Options),

@@ -746,7 +746,7 @@ nonterminal(F, A) :-
 
 display_status_screen(inventory) :-
    generate_unsorted_overlay("Inventory",
-    t(location, Item, $me), once(caption(Item, Description)), line(Description), "Nothing").
+    (t(location, Item, $me), once(caption(Item, Description))), line(Description), "Nothing").
 
 fkey_command(alt-n, "Display notebook") :-
    display_status_screen(notebook).

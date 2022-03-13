@@ -32,6 +32,18 @@ copula(Form, Tense, Agreement) -->
    aux_be(Tense, Agreement).
 
 
+start_verb(_Agreement, present, Info)--> theTextMLR(2,1,Info). 
+complete_verb(SInfo, Subject, Object, do(Subject, SInfo, Object, Info))--> theTextMLR(1,0,Info). 
+
+theTextMLR(N,_,Info) -->  theTextML(N,Info).
+theTextMLR(_,R,Info) -->  theTextML(R,Info).
+
+theTextML(1,Info)--> !, theTextM1W(Info).
+theTextML(2,[Info,Info2])--> !, theTextM1W(Info), theTextM1W(Info2).
+theTextML(0,[])--> !,[].
+
+theTextM1W(Info)--> theTextM1(Info), {atom(Info), \+ (upcase_atom(Info,InfoU), Info==InfoU)}.
+
 
 %=autodoc
 %% aux_vp( ?ARG1, ?ARG2, ?ARG3, ?ARG4, ?ARG5) is semidet.
@@ -111,9 +123,6 @@ vp( _Form,
     theTextM1(TurnAdverb), 
     {turn_phrasal_verb(TurnAdverb, Subject, Object, Predicate)}).
 
-
-
-%=autodoc
 %% turn_verb( ?ARG1, ?ARG2) is semidet.
 %
 % Turn Verb.
@@ -184,6 +193,18 @@ modal_verb(present, Agreement, S^C^likes(S, C)) -->
 modal_verb(past, _Agreement, S^C^likes(S, C)) -->  
   theTextM1(liked).
 
+modal_verb(Present, ThirdSingular, S^C^ not(WSC)) -->
+  nonvar(theTextM1(not);WSC),
+  modal_verb(Present, ThirdSingular, S^C^WSC).
+
+modal_verb(present, _Agreement, _S^C^ not(C)) -->
+  theTextM1(not).
+
+
+nonvar(DCG;WSE,[Not|S],E):- nonvar(WSE), !, phrase(DCG,[Not|S],E).
+nonvar(DCG;_,[Not|S],E):- !, nonvar(Not), !, phrase(DCG,[Not|S],E).
+nonvar(DCG,[Not|S],E):- nonvar(Not), !, phrase(DCG,[Not|S],E).
+
 
 :- forall(modal_verb(_, _, _, Phrase, []),
 	  register_lexical_items(Phrase)).
@@ -196,7 +217,6 @@ vp(_, Predicate^Modal, Subject^Modal, Tense, Agreement, nogap) -->
 
 
 
-%=autodoc
 %% verb_with_clausal_complement( ?ARG1, ?ARG2, ?ARG3, ?ARG4, ?ARG5, ?ARG6) is semidet.
 %
 % Verb Using Clausal Complement.
@@ -298,6 +318,14 @@ verb_with_object_and_clausal_complement( present,
 
 :- forall(verb_with_object_and_clausal_complement(_, _, _, _, _, _, _, Phrase, []),
 	  register_lexical_items(Phrase)).
+
+
+vp( _Form, 
+  Predicate^Modal, Subject^S, Tense, 
+  Agreement, GapInfo) -->  %{fail},
+  ( start_verb(_Agreement, Tense, Info)  ,
+    np((Object^Modal)^S, object, _, GapInfo, nogap), 
+    complete_verb(Info, Subject, Object, Predicate)).
 
 
 

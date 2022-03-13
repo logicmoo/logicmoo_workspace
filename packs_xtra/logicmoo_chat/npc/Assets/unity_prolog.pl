@@ -535,7 +535,11 @@ wrap_words([H|T],theTextM1(H)):- T == [],!.
 wrap_words([H|T],[H|T]):- member_no_open(E,[H|T]),compound(E),!,dmsg(no_wrap_words([H|T])). % other kind of DCG
 wrap_words(L,theTextM(L)).
 
-theTextM1(X) --> [M],{compound(M)->arg(1,M,X);M=X}.
+
+same_s(X,X):-!.
+same_s(MX,X):- atom(MX),atom(X),!, upcase_atom(MX,MXU),upcase_atom(X,XU),!,XU==MXU.
+same_s(X,X):-!.
+theTextM1(X) --> [M],{(compound(M)->arg(1,M,MX);M=MX),same_s(MX,X)}.
 theTextM(Var) --> {var(Var),!, Var=[X|L]}, theTextM([X|L]).
 theTextM([]) --> [],!.
 theTextM([X|L]) --> theTextM1(X),theTextM(L).
