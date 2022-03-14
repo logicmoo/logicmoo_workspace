@@ -10,10 +10,10 @@
 %
 immediate_kind_of(endurant, entity).
 immediate_kind_of(actor, endurant).
-immediate_kind_of(virtual_endurant, endurant).
-immediate_kind_of(metaverse_object, virtual_endurant).
-immediate_kind_of(imaginary_endurant, endurant).
-immediate_kind_of(imaginary_object, imaginary_endurant).
+immediate_kind_of(metaverse_endurant, endurant).
+immediate_kind_of(metaverse_object, metaverse_endurant).
+immediate_kind_of(abstract_endurant, endurant).
+immediate_kind_of(abstract_object, abstract_endurant).
 
 immediate_kind_of(living_thing, metaverse_object).
 immediate_kind_of(male, living_thing).
@@ -37,41 +37,41 @@ immediate_kind_of(character,creature).
 
 immediate_kind_of(prop, metaverse_object).
 
-immediate_kind_of(subroutine, prop).
-immediate_kind_of(runnable, subroutine).
-%immediate_kind_of(task, runnable).
-immediate_kind_of(device, runnable).
-immediate_kind_of(good_idea, runnable).
+immediate_kind_of(routine, prop).
+immediate_kind_of(thinkable, routine).
+immediate_kind_of(chair, thinkable).
+immediate_kind_of(device, thinkable).
+immediate_kind_of(good_idea, thinkable).
 
-immediate_kind_of(debugable, subroutine).
+immediate_kind_of(debugable, routine).
 immediate_kind_of(buggy_routine, debugable).
 
-immediate_kind_of(virtual_storage, subroutine).
-immediate_kind_of(virtual_storage, container).
-immediate_kind_of(closed_container, virtual_storage).
-immediate_kind_of(research_incubater, closed_container).
-immediate_kind_of(sourcefile, closed_container).
+immediate_kind_of(metaverse_storage, routine).
+immediate_kind_of(metaverse_storage, container).
+immediate_kind_of(closed_container, metaverse_storage).
+immediate_kind_of(refridgerator, closed_container).
+immediate_kind_of(sink, closed_container).
 immediate_kind_of(bookshelf, closed_container).
 
-%immediate_kind_of(work_surface, subroutine).
-immediate_kind_of(work_surface, virtual_storage).
+immediate_kind_of(work_surface, routine).
+immediate_kind_of(work_surface, metaverse_storage).
 immediate_kind_of(desk, work_surface).
 immediate_kind_of(table, work_surface).
 
-immediate_kind_of(program, metaverse_object).
-immediate_kind_of(program, closed_container).
-immediate_kind_of(research_program, program).
-immediate_kind_of(buggy_program, program).
-immediate_kind_of(old_program, program).
-immediate_kind_of(living_program, program).
+immediate_kind_of(module, metaverse_object).
+immediate_kind_of(module, closed_container).
+immediate_kind_of(thought_module, module).
+immediate_kind_of(buggy_module, module).
+immediate_kind_of(old_module, module).
+immediate_kind_of(living_module, module).
 
-immediate_kind_of(task, prop).
-immediate_kind_of(visualization, task).
-immediate_kind_of(apple, visualization).
-immediate_kind_of(orange, visualization).
+immediate_kind_of(thought, prop).
+immediate_kind_of(fruit, thought).
+immediate_kind_of(apple, fruit).
+immediate_kind_of(orange, fruit).
 
-immediate_kind_of(mental_object, imaginary_object).
-immediate_kind_of(social_object, imaginary_object).
+immediate_kind_of(mental_object, abstract_object).
+immediate_kind_of(social_object, abstract_object).
 
 immediate_kind_of(perdurant, entity).
 immediate_kind_of(event, perdurant).

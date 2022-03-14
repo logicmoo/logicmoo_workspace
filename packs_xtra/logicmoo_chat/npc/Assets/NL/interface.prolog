@@ -244,7 +244,7 @@ caption(MetaverseObject, Name) :-
 caption(MetaverseObject, Description) :-
     t(caption, MetaverseObject, Description).
 caption(MetaverseObject, Description) :-
-   iz_a(MetaverseObject, program),
+   iz_a(MetaverseObject, module),
    base_kind(MetaverseObject, Kind),
    kind_noun(Kind, singular, Words, []),
    word_list(Description, Words).

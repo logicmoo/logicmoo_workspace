@@ -14,19 +14,19 @@
 */
 :- public prop/1, character/1, algorithm/1, metaverse_object/1, nearest/2, docked_with/1, after_time/1.
 
-:- public register_program/2, register_prop/3, register_character/1, register_algorithm/1.
+:- public register_module/2, register_prop/3, register_character/1, register_algorithm/1.
 
-%% register_program( ?Program, +Kind) is semidet.
-%% register_program(*Program, *CommonNoun, *Plural)
+%% register_module( ?Module, +Kind) is semidet.
+%% register_module(*Module, *CommonNoun, *Plural)
 %  IMPERATIVE
-%  Add Program to the database, ensuring its singular and plural nouns are registered in the lexicon.
-%  Called from Start() routine of Program.cs
+%  Add Module to the database, ensuring its singular and plural nouns are registered in the lexicon.
+%  Called from Start() routine of Module.cs
 %
-register_program(Program, Kind) :- 
-   asserta(t(building, Program, sophias_sourcecode)), %KLUGE
-   asserta(t(location, Program, sophias_sourcecode)),
-   ensurez(base_kind(Program, program)),
-   ensurez(declare_kind(Program, Kind)).
+register_module(Module, Kind) :- 
+   asserta(t(building, Module, sophias_sourcecode)), %KLUGE
+   asserta(t(location, Module, sophias_sourcecode)),
+   ensurez(base_kind(Module, module)),
+   ensurez(declared_kind(Module, Kind)).
 
 
 
@@ -37,7 +37,7 @@ register_program(Program, Kind) :-
 register_prop(Prop, Kind, Adjectives) :-
    assertion(kind(Kind), prop_has_unknown_kind(Prop, Kind)),
    ensurez(prop(Prop)),
-   ensurez(declare_kind(Prop, Kind)),
+   ensurez(declared_kind(Prop, Kind)),
    forall(member(A, Adjectives), ensurez([A, Prop])),
    forall(iz_a(Prop, K),
 	  ignore(initialize_prop(Prop, K))).
@@ -354,7 +354,7 @@ normalize_task(emote(E),
 %
 (initialization):- listing((initialization)/0).
 (initialization):- forall(iz_a(X,algorithm),register_algorithm(X)).
-(initialization):- forall(member(X,[living_program,buggy_program,old_program,research_program]),(getvar(X,R) ,register_program(R,X))).
+(initialization):- forall(member(X,[living_module,buggy_module,old_module,thought_module]),(getvar(X,R) ,register_module(R,X))).
 (initialization):- forall(member(X,[$'Sophia',$pc,$bina48]),register_character(X)).
 (initialization):- forall((iz_a(X,metaverse_object),\+ iz_a(X,person),once(iz_a(X,K))),register_prop(X,K,[])).
 
@@ -485,7 +485,7 @@ display_status_screen(sample_commands) :-
 %
 % Sample Command.
 %
-sample_command("go to the research_program").
+sample_command("go to the thought_module").
 sample_command("go here (while pointing at something)").
 sample_command("look at the plant").
 sample_command("take the plant").
@@ -493,7 +493,7 @@ sample_command("talk to Sophia").
 sample_command("search the sourcecode").
 sample_command("search the desk").
 sample_command("search this (while pointing at something)").
-sample_command("where is the novel_idea?").
+sample_command("where is the novel idea?").
 sample_command("believe you're an orange").
 sample_command("you know you're an orange").
 

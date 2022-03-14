@@ -68,13 +68,13 @@ incompatible_cl(t(location, X, Y), t(location, X, Z)) :-
 
 
 %=autodoc
-%% in_program( ?MetaverseObject, ?Program) is semidet.
+%% in_module( ?MetaverseObject, ?Module) is semidet.
 %
-% In Program.
+% In Module.
 %
-in_program(MetaverseObject, Program) :- 
-  program(Program), 
-  t(location, MetaverseObject, Program).
+in_module(MetaverseObject, Module) :- 
+  is_impl_module(Module), 
+  t(location, MetaverseObject, Module).
 
 
 
@@ -87,7 +87,7 @@ top_level_container(Space, Space) :-
    iz_a(Space, architectural_space).
 top_level_container(MetaverseObject, Container) :- 
   t(location, MetaverseObject, C), 
-  ( program(C)->Container=MetaverseObject ; top_level_container(C, Container)) .
+  ( is_impl_module(C)->Container=MetaverseObject ; top_level_container(C, Container)) .
 
 
 
@@ -111,7 +111,7 @@ t(contained_in, MetaverseObject, Location) :-
   t(location, Container, Location), 
   t(contained_in, MetaverseObject, Container).
 
-%% program(?X) is nondet
-%  X is a program.
-program(X) :-
-   iz_a(X, program).
+%% is_impl_module(?X) is nondet
+%  X is a module.
+is_impl_module(X) :-
+   iz_a(X, module).

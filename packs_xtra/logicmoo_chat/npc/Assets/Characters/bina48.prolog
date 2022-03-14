@@ -8,7 +8,7 @@ $bina48/parameters/poll_time:3.
 
 
 %=autodoc
-%%  ?Sophia:: ?Patrol_researchis semidet.
+%%  ?Sophia:: ?Patrol_thoughtis semidet.
 %
 % ::.
 %

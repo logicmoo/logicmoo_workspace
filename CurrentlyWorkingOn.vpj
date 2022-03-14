@@ -3424,6 +3424,7 @@
 				<Folder Name="npc">
 					<Folder Name="Assets">
 						<Folder Name="Characters">
+							<F N="packs_xtra/logicmoo_chat/npc/Assets/Characters/bina48.prolog"/>
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/Characters/captive.prolog"/>
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/Characters/pc.prolog"/>
 							<F N="packs_xtra/logicmoo_chat/npc/Assets/Characters/Sophia.prolog"/>

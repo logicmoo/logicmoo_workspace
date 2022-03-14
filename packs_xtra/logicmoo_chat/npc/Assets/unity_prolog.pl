@@ -1007,12 +1007,13 @@ module_uctx(X):- prolog_load_context(module,X),!.
 immediate_expansion:- t_l:pretend_expansion(YN),!,YN==call.
 source_file_expansion:- t_l:pretend_expansion(YN),!,YN==file.
 source_file_expansion:- prolog_load_context(file,File),prolog_load_context(source,File),!,tmpu:is_unity_file(File).
-unity_uctx:- prolog_load_context(file,File),prolog_load_context(source,File),!,tmpu:is_unity_file(File).
-%unity_uctx:- unity_module_name(M),module_uctx(T),!,M==T.
 
-print_clexp(GE,X,Y):- GE==ce,X==Y,!.
-%print_clexp(_,X,Y):- X=@=Y,!.
+unity_uctx:- prolog_load_context(file,File),prolog_load_context(source,File),!,tmpu:is_unity_file(File).
+unity_uctx:- unity_module_name(M),module_uctx(T),!,M==T.
+
+print_clexp(_,X,Y):- X=@=Y,!.
 print_clexp(_,X,Y):- ((#(global))::X)=@=Y,!.
+print_clexp(ce,_,_):- source_file_expansion,!.
 %print_clexp(asserta,_,_):-!.
 %print_clexp(X,Y):- in_cmt(print_tree(X)),print_tree(Y).
 print_clexp(W,X,Y):- wdmsg(X),write('%~  '),writeln(W),wdmsg(Y).

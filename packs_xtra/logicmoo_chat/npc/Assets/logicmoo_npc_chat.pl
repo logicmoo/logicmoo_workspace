@@ -125,6 +125,7 @@ s(Words,LogicalForm):- Words =[_|_], sentence(LogicalForm, Mood, Polarity, Tense
 :- dynamic(character/1).
 :- dynamic('>-->'/2).
 :- dynamic(algorithm/1).
+:- dynamic(algorithm/1).
 :- dynamic(implies_relation/2).
 :- dynamic(inverse_relation/2).
 :- dynamic(prop/1).

@@ -15,8 +15,27 @@ test_file(parse(np, _), "NL/np_tests").
 
 :- indexical selectional_constraints=[].
 
-:- discontiguous np//5.
+:- discontiguous nnp//6.
 
+
+%% autocomplete_kinds( ?Kind) is semidet.
+%
+% Autocomplete Kinds.
+%
+autocomplete_kinds(Kind):- leaf_kind(Kind), Kind \== kind, (\+ \+ iz_a(_,Kind)),  subkinds(abstract,X), \+ member(Kind,X).
+autocomplete_kinds(person).
+
+
+
+%% kind_noun_s( ?X, +Kind, +Singular, ?A, ?B) is semidet.
+%
+% Kind Noun Supplimental.
+%
+kind_noun_s(X, Kind, Singular, [A|S], B) :-
+    ( (\+ var(A), \+ var(X)) -> true; (var(Kind) -> autocomplete_kinds(Kind) ; true)),
+    kind_noun(Kind, Singular, [A|S], B),
+    %Kind\==kind,    
+    log(v(kind_noun(Kind, singular,A,B))).
 
 
 %% impose_selectional_constraint( ?Var, ?Type) is semidet.
@@ -38,39 +57,57 @@ selectional_constraint(Var, Type) :-
    !.
 selectional_constraint(_, entity).
 
-%:- randomizable np/7.
+%:- randomizable nnp//6.
 
-%% np(?Meaning, ?Case, ?Agreement, +GapIn, -GapOut)
+np( Meaning, Case, Agreement, GapIn, GapOut, S, E) :-
+  % BREAKS Dicourse Var resolution 
+  %Meaning = ((X^_)^_),
+  nnp0(X, Meaning, Case, Agreement, GapIn, GapOut, S, E).
+
+nnp0(X, Meaning, Case, Agreement, GapIn, GapOut, S, E):- 
+  %(nonvar(X)->trace;true),
+  nnp(X, Meaning, Case, Agreement, GapIn, GapOut, S, E).
+
+%% nnp( X, ?Meaning, ?Case, ?Agreement, +GapIn, -GapOut)
 %
 %  Noun phrases
 
 % Gaps
-np((X^S)^S, _C, _Agreement, np(X), nogap) -->
+nnp( X, (X^S)^S, _C, _Agreement, np( X), nogap) -->
    [ ].
 
+
+% GENERATE ONLY
+% "a KIND" from unbound variables with declared discourse_variables as types
+nnp( X, (X^S)^S, _, third:singular, Gap, Gap) -->    
+  ( {var(X)}  ,
+    theTextM1(a), 
+    {discourse_variable_type(X, Kind)}, 
+    kind_noun_s(X, Kind, singular)).
+
 % Pronouns
-np(NP, Case, Agreement, Gap, Gap) -->
-   pronoun(Case, Agreement,NP).
+nnp(_X, NP, Case, Agreement, Gap, Gap) -->
+   pronoun(Case, Agreement, NP).
 
 % Demonstrative pronouns
-np((E^S)^S, _Case, third:singular, Gap, Gap) -->  
-  ( {var(E)}  ,
+nnp( X, (X^S)^S, _Case, third:singular, Gap, Gap) -->  
+  ( {var(X)}  ,
     theTextM1(Demonstrative), 
     { input_from_player, 
       demonstrative_pronoun(Demonstrative), 
-      /perception/mouse_selection:E }).
+      /perception/mouse_selection:X }).
 
 % Proper names
-np((E^S)^S, Case, third:Number, Gap, Gap) -->
-   { \+ bound_discourse_variable(E) },
-   proper_name(E, Number),
+nnp( X, (X^S)^S, Case, third:Number, Gap, Gap) -->
+   { \+ bound_discourse_variable(X) },
+   proper_name(X, Number),
    opt_genitive(Case).
 
 % PARSE ONLY
-np((E^S)^S, Case, third:Number, Gap, Gap) -->
-   { \+ bound_discourse_variable(E) },
+nnp( X, (X^S)^S, Case, third:Number, Gap, Gap) -->
+   { \+ bound_discourse_variable(X) },
    { input_from_player },  % filter for parse mode
-   proper_name_without_the(E, Number),
+   proper_name_without_the(X, Number),
    opt_genitive(Case).
 
 
@@ -85,7 +122,7 @@ opt_genitive(object) --> [].
 opt_genitive(genitive)-->theTextM(['\'', s]).
 
 % Possessive constructions (parse only right now).
-np((X^S)^S, _, third:Number, Gap, Gap) -->
+nnp( X, (X^S)^S, _, third:Number, Gap, Gap) -->
    not_generating_or_completing,
    possessive_np(X, Number).
 
@@ -150,32 +187,24 @@ possessive_pronoun_referrent(X, X).
 
 % PARSE/COMPLETE ONLY
 % "a KIND" from unbound variables with declared types
-np(LF, _, third:singular, Gap, Gap) -->  
+nnp( X, LF, _, third:singular, Gap, Gap) -->  
   ( {var(LF)}  ,
     theTextM1(a), 
     kind_noun_s(X, Kind, singular), 
     {LF=(X^S)^(S, iz_a(X, Kind))}).
 
-% GENERATE ONLY
-% "a KIND" from unbound variables with declared types
-np((X^S)^S, _, third:singular, Gap, Gap) -->  
-  ( {var(X)}  ,
-    theTextM1(a), 
-    {discourse_variable_type(X, Kind)}, 
-    kind_noun_s(X, Kind, singular)).
-
 % PARSE ONLY
 % "the NOUN"
-np((X^S)^S, _C, third:singular, Gap, Gap) --> %{trace},
+nnp( X, (X^S)^S, _C, third:singular, Gap, Gap) --> %{trace},
    [ the ],
    { var(X),
-     nop(input_from_player)},	% filter for parsing
+     input_from_player},	% filter for parsing
    kind_noun_s(X, Kind, singular),
    { resolve_definite_description(X, (nop(parse_only([the_noun])),iz_a(X, Kind))) }.
 
 % PARSE ONLY
 % "NOUN" (not grammatical English but common in IF text 
-np((X^S)^S, _C, third:singular, Gap, Gap) -->
+nnp( X, (X^S)^S, _C, third:singular, Gap, Gap) -->
    { var(X),
      input_from_player},	% filter for parsing
    kind_noun_s(X, Kind, singular),
@@ -183,7 +212,7 @@ np((X^S)^S, _C, third:singular, Gap, Gap) -->
 
 % GENERATE ONLY
 % "the NOUN"
-np((X^S)^S, _C, third:singular, Gap, Gap) -->
+nnp( X, (X^S)^S, _C, third:singular, Gap, Gap) -->
     { nonvar(X), 
      % If it has a proper name or a bound variable, then don't use this rule.
      \+ proper_name(X, _),
@@ -193,7 +222,7 @@ np((X^S)^S, _C, third:singular, Gap, Gap) -->
 
 % COMPLETE ONLY
 % "the NOUN"
-np((X^S)^S, _C, third:singular, Gap, Gap) -->
+nnp( X, (X^S)^S, _C, third:singular, Gap, Gap) -->
    % If we're generating (nonvar(X)) rather than completing (var(X)),
    % don't generate something that has a proper name.
    [the],
@@ -206,7 +235,7 @@ np((X^S)^S, _C, third:singular, Gap, Gap) -->
 
 % COMPLETE ONLY
 % "the NOUN"
-np((X^S)^S, _C, third:singular, Gap, Gap) -->
+nnp( X, (X^S)^S, _C, third:singular, Gap, Gap) -->
    % If we're generating (nonvar(X)) rather than completing (var(X)),
    % don't generate something that has a proper name.
    [the],
@@ -214,7 +243,7 @@ np((X^S)^S, _C, third:singular, Gap, Gap) -->
      input_from_player,
      \+ bound_discourse_variable(X) },
    kind_noun_s(X, Kind, singular),
-   { % leaf_kind(Kind),
+   {  leaf_kind(Kind),
      (X = Kind) }.
 
 
@@ -231,35 +260,15 @@ object_matching_selectional_constraint(X, Kind) :-
 
 % GENERATE ONLY
 % Fixed strings.
-np((String^S)^S, _, _, Gap, Gap) -->  
+nnp( _, (String^S)^S, _, _, Gap, Gap) -->  
   {string(String)}, theTextM1(String).
 
 % GENERATE ONLY
 % Numbers.
-np((Number^S)^S, _, _, Gap, Gap) -->  
+nnp( _, (Number^S)^S, _, _, Gap, Gap) -->  
   {number(Number)}, theTextM1(Number).
 
 
-
-%% autocomplete_kinds( ?Kind) is semidet.
-%
-% Autocomplete Kinds.
-%
-autocomplete_kinds(Kind):- leaf_kind(Kind), Kind \== kind, (\+ \+ iz_a(_,Kind)),  subkinds(abstract,X), \+ member(Kind,X).
-autocomplete_kinds(person).
-
-
-
-%% kind_noun_s( ?X, +Kind, +Singular, ?A, ?B) is semidet.
-%
-% Kind Noun Supplimental.
-%
-kind_noun_s(X, Kind, Singular, [A|S], B) :-
-    ( (\+ var(A), \+ var(X)) -> true; autocomplete_kinds(Kind)),
-    kind_noun(Kind, Singular, [A|S], B),
-    %Kind\==kind,
-    
-    log(v(kind_noun(Kind, singular,A,B))).
 % kind_noun_s(X, Kind, singular)--> kind_noun(Kind, singular), {log(kind_noun(Kind, singular))}.
 
 %% resolve_definite_description( ?Object, +Constraint) is semidet.
@@ -275,7 +284,7 @@ resolve_definite_description0(X, Constraint) :-
    !,
    Constraint.
 resolve_definite_description0(Object, iz_a(Object, Kind)) :-
-   kind_of(Kind, program),
+   kind_of(Kind, module),
    !,
    iz_a(Object, Kind).
 resolve_definite_description0(Object, Constraint) :-
@@ -289,7 +298,7 @@ resolve_definite_description0(_Object, Constraint) :-
    Constraint.
 
 
-%% property_value_np( ?Prop, ?Value) is semidet.
+%% property_value_nnp( X,  ?Prop, ?Value) is semidet.
 %
 % Realizing property values Noun Phrase
 %

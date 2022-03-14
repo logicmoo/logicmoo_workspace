@@ -68,7 +68,7 @@ proper_name_with_the(Object,_,Left, More):-
 % Kind Noun.
 %
 kind_noun(Kind, Number) --> 
-  {limit_var(4,Kind,phrase_rule(kind_noun(Kind, Number), Words, Guard))},
+  {limit_var(1000,Kind,phrase_rule(kind_noun(Kind, Number), Words, Guard))},
   Words,{Guard}.
 
 proper_name(Object, Number) --> 
@@ -188,7 +188,7 @@ object_words(a,Object,CWords):- object_words0(a,Object,Words), \+ object_words0(
 object_words0(pn, Object, Words) :- 
   t(given_name, Object, String), 
   tokenize_atom(String, Words).
-object_words0(a,#(Kind),[Kind]):- atom(Kind),!.
+object_words0(a,#(VarName),Words):- atom(VarName),atomic_list_concat(Words,'_',VarName).
 object_words0(a,Object,[Kind]) :- (var(Kind);atom(Kind)),atom(Object),atom_concat('unknown_',Kind,Object).
 object_words0(a,Object,Words):- 
  atom(Object), \+ atom_concat('unknown_',_,Object),

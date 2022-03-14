@@ -1014,7 +1014,7 @@ markup_matches(List, M) :-
 %
 % Beat Graph Subgraph.
 %
-beat_graph_subgraph(TerminalBeats, [rank=sourcefile]) :-
+beat_graph_subgraph(TerminalBeats, [rank=sink]) :-
    all(Beat,
        terminal_beat(Beat),
        TerminalBeats).

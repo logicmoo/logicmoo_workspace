@@ -22,11 +22,12 @@ test(generate(np, addressee),
    np_test($user, subject, second:singular, Generated).
 
 test(generate(np, kind),
-     [ true(Generated == [a, program]) ]) :-
-   bind_discourse_variables(iz_a(X, program), {np_test(X, subject, third:singular, Generated)},[],[]).
+     [ true(Generated == [a, module]) ]) :-
+   bind_discourse_variables(iz_a(X, module), 
+     {np_test(X, subject, third:singular, Generated)},[],[]).
 
 test(generate(np, prop),
-     [ true(Generated == [the, buggy_routine]) ]) :-
+     [ true(Generated == [the, buggy, routine]) ]) :-
    np_test($buggy_routine, subject, third:singular, Generated).
 
 %%
@@ -40,7 +41,7 @@ test(completion(np, from_nothing),
 
 test(completion(np, kind),
      [ true(ground(Completion)),
-       true(Completion = [_]),
+       true(Completion = [_|_]),
        nondet ]) :-
    np(_, subject, third:singular, nogap, nogap, [a | Completion ], [ ]).
 
@@ -73,14 +74,14 @@ test(parse(np, addressee),
    np_test(LF, subject, second:singular, [ you ]).
 
 test(parse(np, kind),
-     [ true(LF = ((X^S)^(S, iz_a(X, Program)))) ]) :-
-   np(LF, subject, third:singular, nogap, nogap, [a, Program], []).
+     [ true(LF = ((X^S)^(S, iz_a(X, Module)))) ]) :-
+   np(LF, subject, third:singular, nogap, nogap, [a, Module], []).
 
 test(parse(np, prop),
      [ true(LF == $buggy_routine),
        nondet ]) :-
    with_bind(input_from_player, true,
-    np_test(LF, subject, third:singular, [the, buggy_routine])).
+    np_test(LF, subject, third:singular, [the, buggy, routine])).
 
 
 np_test(LF, Case, Agreement, SurfaceForm) :-

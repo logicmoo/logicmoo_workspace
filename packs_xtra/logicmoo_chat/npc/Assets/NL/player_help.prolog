@@ -38,7 +38,7 @@ strategy(if_navigation_command(X),
 	 monolog(["Just say what to go to.",
 		  "For example, \"go to the desk\",",
 		  "or \"go to Sophia\"",
-		  "or \"go to the research_program\"",
+		  "or \"go to the thought_module\"",
 		  "or just say someplace and say \"go there\"",
 		  "or \"go to this\"."])).
 

@@ -13,20 +13,20 @@ test(completion(s, imperative),
    s_test(_, Mood, [go, to | Completion]).
 
 test(generate(s, in_expression)) :-
-   s_test(t(location, $'Sophia', $'research_program'), indicative, Generated),
-   Generated == ['Sophia', is, in, the, research].
+   s_test(t(location, $'Sophia', $'thought_module'), indicative, Generated),
+   Generated == ['Sophia', is, in, the, thought, module ].
 
 test(generate(s, in_expression0)) :-         
-  while_completing( s_test(t(contained_in, $'Sophia', $'research_program'), indicative, Generated)),
-   Generated == ['Sophia', is, in, the, research].
+  while_completing( s_test(t(contained_in, $'Sophia', $'thought_module'), indicative, Generated)),
+   Generated == ['Sophia', is, in, the, thought, module ].
 
 test(generate(s, in_expression1)) :-
-         s_test(t(contained_in, $'Sophia', $'research_program'), indicative, Generated),
-   Generated == ['Sophia', is, in, the, research].
+         s_test(t(contained_in, $'Sophia', $'thought_module'), indicative, Generated),
+   Generated == ['Sophia', is, in, the, thought, module ].
 
 test(generate(s, in_expression2)) :-
-   s_test(t(location, $'Sophia', $'research_program'), indicative, Generated),
-   Generated == ['Sophia', is, in, the, research].
+   s_test(t(location, $'Sophia', $'thought_module'), indicative, Generated),
+   Generated == ['Sophia', is, in, the, thought, module ].
 
 test(generate(s, future_indicative),
      [ true(Generated == ['I', will, eat, the, plant]),
@@ -47,13 +47,20 @@ test(parse(s, imperative),
        nondet]):-
    with_bind(input_from_player, true,
     with_bind(addressee, $pc,
-     s_test(LF, Mood, [go, to, the, buggy_routine]))).
+     s_test(LF, Mood, [go, to, the, buggy, routine]))).
 
 :- register_prop($buggy_routine,buggy_routine,[]).
-:- assert(location($buggy_routine,$buggy_program)).
+:- assert(location($buggy_routine,$buggy_module)).
 
 test(parse(s, adjectival_property),
-     [ true(Generated == ['User', is, male]),
+     [ true(Generated == ['Douglas', is, female]),
+       nondet ]) :-
+   s(t(gender, $pc, female),
+     indicative, affirmative, present, simple,
+     Generated, []).
+
+test(parse(s, adjectival_property2),
+     [ true(Generated == ['Douglas', is, male]),
        nondet ]) :-
    s(t(gender, $pc, male),
      indicative, affirmative, present, simple,

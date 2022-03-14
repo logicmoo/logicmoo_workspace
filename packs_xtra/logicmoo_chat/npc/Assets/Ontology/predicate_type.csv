@@ -2,19 +2,19 @@ Type,Argument types
 action,"do(actor, action)"
 action,be(actor)
 action,"drink(actor, beverage)"
-action,"eat(person, food)"
-action,"end_game(entity, entity)"
-action,"give(actor, actor, physical_object)"
-action,"go(actor, physical_object)"
+action,"eat(person, thought)"
+action,"end_quest(entity, entity)"
+action,"give(actor, actor, metaverse_object)"
+action,"go(actor, metaverse_object)"
 action,halt(actor)
 action,"deactivate(actor, living_thing)"
-action,"move(person, physical_object, container, container)"
-action,"move(person, physical_object, container)"
-action,"put(actor, physical_object, container)"
+action,"move(person, metaverse_object, container, container)"
+action,"move(person, metaverse_object, container)"
+action,"put(actor, metaverse_object, container)"
 action,"press(actor, button)"
-action,"get(actor, physical_object)"
-action,"find(actor, physical_object)"
-action,"take(actor, physical_object, container)"
+action,"get(actor, metaverse_object)"
+action,"find(actor, metaverse_object)"
+action,"take(actor, metaverse_object, container)"
 action,"talk(actor, actor, entity)"
 action,"tell(actor, actor, action)"
 action,"tell(actor, actor, condition)"
@@ -27,15 +27,15 @@ action,"ask_value(actor, actor, condition)"
 action,"comm(keystrokes,actor, action)"
 action,"comm(keystrokes,actor, assertion)"
 action,"comm(keystrokes,actor, question)"
-action,"bring(person, physical_object, physical_object)"
-action,"search_for(actor, physical_object, physical_object)"
-action,"look_for(actor, physical_object)"
+action,"bring(person, metaverse_object, metaverse_object)"
+action,"search_for(actor, metaverse_object, metaverse_object)"
+action,"look_for(actor, metaverse_object)"
 action,"sleep(actor, container)"
-action,"examine(actor, physical_object)"
+action,"examine(actor, metaverse_object)"
 action,"read(actor, document)"
 action,"switch(actor, appliance, entity)"
 action,"believes(actor, condition)"
-action,"watch(actor, physical_object)"
+action,"watch(actor, metaverse_object)"
 action,"leave(actor, container)"
 action,flee(actor)
 action,"operate(actor, device)"
@@ -44,14 +44,14 @@ action,"thinks(actor, condition)"
 condition,can(action)
 condition,away(living_thing)
 condition,here(living_thing)
-condition,present(physical_object)
+condition,present(metaverse_object)
 condition,would(condition)
 condition,would(action)
 condition,shall(action)
 condition,may(action)
 condition,should(action)
-condition,"location(physical_object, container)"
-condition,"contained_in(physical_object, container)"
+condition,"location(metaverse_object, container)"
+condition,"contained_in(metaverse_object, container)"
 condition,"related(entity, relation, entity)"
 condition,"manner(action, manner)"
 condition,be(entity)

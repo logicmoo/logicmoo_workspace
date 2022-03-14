@@ -9,6 +9,14 @@ test_file(completion(s, _), "NL/base_grammar_test").
 test_file(generate(s, _), "NL/base_grammar_test").
 
 
+%% x_is_cont_in( ?Contained_in1, ?On2, ?Work_surface3) is semidet.
+%
+% X If Is A Cont In.
+%
+x_is_cont_in(contained_in, Has, _):- Has==has,!.
+x_is_cont_in(contained_in, in, enclosing_container).
+x_is_cont_in(contained_in, on, work_surface).
+
 
 
 %% sentence( ?ARG1, ?ARG2, ?ARG3, ?ARG4, ?ARG5) is semidet.
@@ -58,7 +66,10 @@ bind_discourse_variables(S, S, G) --> G.
 bind_discourse_variables( (X, Y), G) -->  !,
    bind_discourse_variables(X,
     bind_discourse_variables(Y, G)).
-bind_discourse_variables(iz_a(Var, Kind), G) -->
+bind_discourse_variables( [X | Y], G) -->  !,
+   bind_discourse_variables(X,
+    bind_discourse_variables(Y, G)).
+bind_discourse_variables(iz_a(Var, Kind), G) --> !,
    { must_getvar(discourse_variables,DV) }, !,
      with_bind(discourse_variables, [iz_a(Var, Kind) | DV], G).
 bind_discourse_variables(_, G) --> G.
@@ -68,7 +79,7 @@ bind_discourse_variables(_, G) --> G.
 discourse_variable_type(Var, Kind) :-
     must_getvar(discourse_variables,DV),
     DV \== null,
-   member(iz_a(Var, Kind), DV).
+   member(iz_a(EVar, Kind), DV), EVar==Var.
 
 %% bound_discourse_variable(Var)
 %  Var is an uninstantiated variable that is bound to a type in $discourse_variables.
@@ -152,8 +163,9 @@ content_clause(Object:(be(Subject, Object), iz_a(Subject, Kind)), _, Interrogati
    whpron(Kind),
    np((Subject^S)^S, subject, Agreement, nogap, nogap),
    aux_be(present, Agreement).
-content_clause( Container:t(contained_in, Subject, Container), 
+content_clause( Container:t(Contained_in, Subject, Container), 
   _, InterrogativePredicate, InterrogativePredicate) -->  
+  {x_is_cont_in(Contained_in, has, _)},
   ( {InterrogativePredicate\=null}  ,
     theTextM1(where), 
     np((Subject^S)^S, subject, Agreement, nogap, nogap), 
@@ -218,7 +230,6 @@ a_an-->theTextM1(a);theTextM1(an);[].
 %
 swizzle_lf(LF,LF).
 swizzle_lf(t(location, X, Y), t(contained_in, X, Y)).
-swizzle_lf(t(location, X, Y), t(contained_in, X, Y)).
 %swizzle_lf(located(X,Y),contained_in(X,Y)).
 %swizzle_lf(LF,SLF):- nonvar(SLF),LF=SLF.
 %swizzle_lf(LF,SLF):- var(LF),!,freeze(SLF,swizzle_lf(LF,SLF)).
@@ -272,14 +283,6 @@ ss(be(S, O), indicative, Polarity, Tense, simple) -->
 
 
 
-
-%% x_is_cont_in( ?Contained_in1, ?On2, ?Work_surface3) is semidet.
-%
-% X If Is A Cont In.
-%
-x_is_cont_in(contained_in, in, enclosing_container).
-x_is_cont_in(contained_in, on, work_surface).
-
 % NP is [not] in NP
 ss(t(Contained_in, S, Container), indicative, Polarity, Tense, simple) -->  
   {x_is_cont_in(Contained_in, In, Enclosing_container)},
@@ -288,7 +291,7 @@ ss(t(Contained_in, S, Container), indicative, Polarity, Tense, simple) -->
     opt_not(Polarity), 
     theTextM1(In), 
     np((Container^_)^_, object, _, nogap, nogap), 
-    {iz_a(Container, Enclosing_container)}).
+    {ignore(iz_a(Container, Enclosing_container))}).
 /*
 % NP is [not] on NP
 ss(t(contained_in, S, Container), indicative, Polarity, Tense, simple) -->  
@@ -301,7 +304,8 @@ ss(t(contained_in, S, Container), indicative, Polarity, Tense, simple) -->
 */
 
 % Character has  NP
-ss(t(contained_in, Object, Character), indicative, Polarity, Tense, simple) -->  
+ss(t(Contained_in, Object, Character), indicative, Polarity, Tense, simple) -->  
+  {x_is_cont_in(Contained_in, has, _)},
   ( np((Character^_)^_, subject, Agreement, nogap, nogap)  ,
     {character(Character)}, 
     aux_have(Tense, Agreement), 
@@ -314,7 +318,7 @@ ss(t(Property, Noun, Value), indicative, Polarity, Tense, simple) -->
      at_least_once(valid_property_value(Property, Value)),
      % Prefer other forms of realization, when available
      % But always let the user type this version if they want.
-     ( input_from_player
+     ( nop(input_from_player)
        ;
        ( \+ adjectival_property(Property),
 	 \+ nominal_property(Property) ) ) },
@@ -347,8 +351,8 @@ ss(t(Property, Noun, Value), indicative, Polarity, Tense, simple) -->
 % NP's Relation is [not] Relatum
 ss(t(Relation, Noun, Relatum), indicative, Polarity, Tense, simple) -->  
   ( np((Noun^_)^_, genitive, _Agreement1, nogap, nogap)  ,
-    genitive_form_of_relation(Relation, singular), 
-    copula(simple, Tense, third:singular), 
+    genitive_form_of_relation(Relation, Singular), 
+    copula(simple, Tense, third:Singular), 
     opt_not(Polarity), 
     np((Relatum^_)^_, object, _Agreement2, nogap, nogap)).
 
@@ -503,14 +507,15 @@ ss(S, interrogative, Polarity, present, simple) -->
    ap(Noun^S).
 
 % Is X in/on Container?
-ss(t(contained_in, S, Container), interrogative, Polarity, Tense, simple) -->  
+ss(t(Contained_in, S, Container), interrogative, Polarity, Tense, simple) -->  
+ {x_is_cont_in(Contained_in, On, Enclosing_container)},
   ( aux_be(Tense, Agreement)  ,
     np((S^_)^_, subject, Agreement, nogap, nogap), 
     opt_not(Polarity), 
-    theTextM1(in), 
+    theTextM1(On), 
     np((Container^_)^_, object, _, nogap, nogap), 
-    {iz_a(Container, enclosing_container)}).
-
+    {iz_a(Container, Enclosing_container)}).
+/*
 ss(t(contained_in, S, Container), interrogative, Polarity, Tense, simple) -->  
   ( aux_be(Tense, Agreement)  ,
     np((S^_)^_, subject, Agreement, nogap, nogap), 
@@ -518,7 +523,7 @@ ss(t(contained_in, S, Container), interrogative, Polarity, Tense, simple) -->
     theTextM1(on), 
     np((Container^_)^_, object, _, nogap, nogap), 
     {iz_a(Container, work_surface)}).
-
+*/
 % Is Subject a PROPERTYVALUE?
 inverted_sentence(t(Property, Subject, Value), Polarity, Tense, simple) -->  
   ( copula(simple, Tense, Agreement)  ,
@@ -535,8 +540,9 @@ ss( X:explanation(S, X),
 :- register_lexical_item(why).
 
 % where is NP
-ss( Container:t(contained_in, S, Container), 
+ss( Container:t(Contained_in, S, Container), 
   interrogative, Polarity, Tense, simple) -->  
+ {x_is_cont_in(Contained_in, _, _)},
   ( theTextM1(where)  ,
     aux_be(Tense, Agreement), 
     opt_not(Polarity), 
@@ -545,9 +551,10 @@ ss( Container:t(contained_in, S, Container),
 :- register_lexical_item(where).
 
 % Who has  NP
-ss( Character:t(contained_in, Object, Character), 
+ss( Character:t(Contained_in, Object, Character), 
   iz_a(Character, person), interrogative, Polarity, Tense, 
   simple) -->  
+  {x_is_cont_in(Contained_in, _, _)},
   ( theTextM1(who)  ,
     aux_have(Tense, third:singular), 
     opt_not(Polarity), 
@@ -560,31 +567,35 @@ ss( Character:t(contained_in, Object, Character),
 %
 
 
+
 % what is on the X
-ss( S:t(contained_in, S, Container), 
+ss( S:t(Contained_in, S, Container), 
   interrogative, Polarity, Tense, simple) -->  
+  {x_is_cont_in(Contained_in, On, Enclosing_container)},
   ( theTextM1(what)  ,
     aux_be(Tense, Agreement), 
     opt_not(Polarity), 
-    theTextM1(on), 
-    {impose_selectional_constraint(Container, work_surface)}, 
+    theTextM1(On), 
+    {impose_selectional_constraint(Container, Enclosing_container)}, 
     np((Container^Ignored)^Ignored, subject, Agreement, nogap, nogap), 
-    {iz_a(Container, work_surface)}).
+    {iz_a(Container, Enclosing_container)}).
 
 % Who/what is in the X
-ss( S:(t(contained_in, S, Container), iz_a(S, Kind)), 
+ss( S:(t(Contained_in, S, Container), iz_a(S, Kind)), 
   interrogative, Polarity, Tense, simple) -->  
+  {x_is_cont_in(Contained_in, On, Enclosing_container)},
   ( whpron(Kind)  ,
     aux_be(Tense, Agreement), 
     opt_not(Polarity), 
-    theTextM1(in), 
-    {impose_selectional_constraint(Container, enclosing_container)}, 
+    theTextM1(On), 
+    {impose_selectional_constraint(Container, Enclosing_container)}, 
     np((Container^Ignored)^Ignored, subject, Agreement, nogap, nogap), 
-    {iz_a(Container, enclosing_container), \+character(Container)}).
+    {iz_a(Container, Enclosing_container), \+character(Container)}).
 
 % what does Character have?
-ss( S:t(contained_in, S, Character), 
+ss( S:t(Contained_in, S, Character), 
   interrogative, Polarity, Tense, simple) -->  
+ {x_is_cont_in(Contained_in, has, _)},
   ( theTextM1(what)  ,
     aux_do(Tense, Agreement), 
     opt_not(Polarity), 

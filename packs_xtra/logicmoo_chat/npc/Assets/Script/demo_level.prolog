@@ -3,7 +3,7 @@
 
 %%%
 %%% STARTING PLOT GOAL
-%%% Find the novel_idea
+%%% Find the novel idea
 %%%
 
 
@@ -17,11 +17,11 @@ plot_goal(t(location, $novel_idea, $pc)).
 
 
 %=autodoc
-%% plot_goal_flavor_text( ?ARG1, ?I have to get my novel_idea back!2) is semidet.
+%% plot_goal_flavor_text( ?ARG1, ?I have to get my novel idea back!2) is semidet.
 %
 % Plot Goal Flavor Text.
 %
-plot_goal_flavor_text(t(location, $novel_idea, $pc), "I have to get my novel_idea back!").
+plot_goal_flavor_text(t(location, $novel_idea, $pc), "I have to get my novel idea back!").
 
 
 
@@ -118,16 +118,16 @@ beat(exposition,
      $'Sophia'::"Sorry to hear your novel idea was forgotten.",
 	   $'Sophia'::"Make yourself at home.",
 	   $'Sophia'::"By the way,",
-	   $'Sophia'::("Avoid my buggy program"
+	   $'Sophia'::("Avoid my buggy module"
 		  :[surprised,
-		    introduce_question(why_stay_out_of_buggy_program,
-				       "Why does Sophia want me to avoid the buggy program?")])]}).
+		    introduce_question(why_stay_out_of_buggy_module,
+				       "Why does Sophia want me to avoid the buggy module?")])]}).
 
 
 beat(pc_reacts,
     {
      sequel_to: exposition,
-     start($'Sophia') : goto($'research sourcefile'),
+     start($'Sophia') : goto($'thought_module sink'),
      $pc: [ pause(3),
 	    "Sophia's a member of the theclub."
 	      : clue('Sophia'-theclub,
@@ -207,13 +207,13 @@ beat(react_to_photo,
 %
 % ::.
 %
-$'Sophia'::personal_strategy(patrol_research_program,
+$'Sophia'::personal_strategy(patrol_thought_module,
 			 { goto(Object), face(Object), pause(Time) }) :-
-   once((random_member(Object, [$research_incubater, $'research sourcefile', $'research design']),
+   once((random_member(Object, [$thought_incubater, $'thought sourcefile', $'thought design']),
 	 \+ docked_with(Object))),
    once(random_member(Time, [2, 3, 5, 7, 8])).
 
-:- assert(($'Sophia'::personal_todo(patrol_research_program, -100):-background_character_in_current_beat)).
+:- assert(($'Sophia'::personal_todo(patrol_thought_module, -100):-background_character_in_current_beat)).
 
 %%%
 %%% Good ending
@@ -225,7 +225,7 @@ beat(react_to_novel_idea,
       priority: 1,
       reaction_to($pc, pickup($novel_idea)),
       $pc:
-        ["Got it!" : answered(why_stay_out_of_buggy_program),
+        ["Got it!" : answered(why_stay_out_of_buggy_module),
 	 "I knew $Sophia could do it."]
      }).
      
@@ -272,20 +272,20 @@ beat( react_to_bina48,
 %%%
 
 strategy(press($pc, $'magic button'),
-	 begin(call(update_bina4848),
+	 begin(call(update_bina48),
 	       say_string("There's someone hidden inside!"))).
 
-:- public update_bina4848/0, upload_bina48/0.
+:- public update_bina48/0, upload_bina48/0.
 
 
 
 %=autodoc
-%% update_bina4848 is semidet.
+%% update_bina48 is semidet.
 %
 % Release Bina48.
 %
-update_bina4848 :-
-   force_move($bina48, $living_program),
+update_bina48 :-
+   force_move($bina48, $living_module),
    component_of_metaverse_object_with_type(SimController, $bina48, $'SimController'),
    set_property(SimController, 'IsHidden', false),
    component_of_metaverse_object_with_type(Renderer, $bina48, $'SpriteSheetAnimationController'),

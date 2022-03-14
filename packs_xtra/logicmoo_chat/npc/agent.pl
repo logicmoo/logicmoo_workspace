@@ -38,7 +38,7 @@ builtin(Mode, P):- compound(P),compound_name_arguments(P,F,[Arg]),F==Mode,guard,
 builtin(_, P ):- agent_module(M),predicate_property(M:P,static),guard,call(P).
 builtin(_,play_mode(Mode)):- !, agent_module(M),retractall(M:play_mode(_)),asserta(M:play_mode(Mode)).
 builtin(_,noplay_mode):- !, agent_module(M),M:retractall(play_mode(_)),!.
-%builtin(Mode,ensure(Metaverse)):- !, ensure(Mode,Metaverse).
+%builtin(Mode,ensure(Game)):- !, ensure(Mode,Game).
 builtin(_Mode,debug(English)):- nop(ain(pipeline(English))),adbg(debug(English)).
 builtin(_Mode,expect(User,English)):- !, said(User,UserSaid),!,same_meanings(UserSaid,English).
 
@@ -197,8 +197,8 @@ satisfy(Self,want(Self, know(User,Sit))) :-
 %make_true(Sit) :- already_true(Sit).
 string_to_meaning(String,Said):- tokenize_atom(String,Said).
 
-audio_input(Input):-  wait_for_player(Input).
-wait_for_player(Said):- write("user>"),read_line_to_string(current_input,String), string_to_meaning(String,Said).
+audio_input(Input):-  wait_for_user(Input).
+wait_for_user(Said):- write("user>"),read_line_to_string(current_input,String), string_to_meaning(String,Said).
 
 make_true(said(Self,Sit)):- Self == robot, guard,
    nonvar(Sit), other(Self,User),adbg(from_to_said(Self,User,Sit)).
@@ -209,7 +209,7 @@ make_true(from_to_said(Self,User,Sit)):- Self == robot, guard,
    nonvar(Sit), adbg(from_to_said(Self,User,Sit)).
 
 make_true(from_to_said(Self,User,Sit)):- Self == user, guard,
-   wait_for_player(Said),
+   wait_for_user(Said),
    nonvar(Sit), adbg(from_to_said(Self,User,Said)).
 
 post_true(from_to_said(Self,User,Sit)):- 
@@ -458,26 +458,26 @@ h("yes."),
 s("Sometimes i am talking and trying to get your attention but you might be busy."),
 s("When that happens, you say wait a minute.  And I will wait at least a minute.  You can also say wait five minutes."),
 s("Afterwards, you can say, please wait, and I will wait and come back after a little while"),
-s("So we have differnt types of Experiments, Metaverses and Stories we can do together "),
-s("Say Metaverses, Story, Experiement, wait or goodbye"),
+s("So we have differnt types of Experiments, Games and Stories we can do together "),
+s("Say Games, Story, Experiement, wait or goodbye"),
 s("You always can say wait or goodbye"),
 h("Wait"),
 s("Ok I will wait a minute "),
-h("Metaverses"),
-s("I shall suggest a metaverse and this metaverse allows me to get to know things about you ...."),
-s("What is the $convo.property of the program we are in?"),
+h("Games"),
+s("I shall suggest a game and this game allows me to get to know things about you ...."),
+s("What is the $convo.property of the module we are in?"),
 h("The office"),
 s("What do you do in the office?"),
 h("we work on $convo.you"),
 s("On me?"),
-s("So in the program called the office you work on me? $bot.name"),
+s("So in the module called the office you work on me? $bot.name"),
 h("yes"),
-s("When you are not working on $bot.name in the program called the office, what do you do?"),
+s("When you are not working on $bot.name in the module called the office, what do you do?"),
 h("sleep"),
-s("Do you sleep in the program called the office?"),
+s("Do you sleep in the module called the office?"),
 h("sometimes"),
-s("Name three objects you find in your program called the office."),
-h("You me my subroutine"),
+s("Name three objects you find in your module called the office."),
+h("You me my computer"),
 h("goodbye"),
 s("just say my $convo.property to begin talking again"),
 
@@ -839,9 +839,9 @@ BINA48: What is the $convo.property of the BLACK CLUSTER on the TABLE?
 human:  my laptop
 
 BINA48: What kind of object is my laptop?
-human:  Subroutine
+human:  Computer
 
-BINA48: What is a Subroutine?
+BINA48: What is a Computer?
 human:  Artifact
 
 BINA48: Do you want robot to learn more objects?

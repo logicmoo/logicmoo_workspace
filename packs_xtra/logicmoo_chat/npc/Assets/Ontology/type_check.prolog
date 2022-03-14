@@ -294,7 +294,9 @@ cltf(event, ss, 7, 1):- fail.
 predicate_type(action, do(actor, action)).
 predicate_type(action, be(actor)).
 predicate_type(action, perform(actor, animation)).
-predicate_type(action, eat(person, task)).
+predicate_type(action, drink(actor, beverage)).
+predicate_type(action, eat(person, thought)).
+predicate_type(action, perform(person, thought)).
 predicate_type(action, end_quest(entity, entity)).
 predicate_type(action, give(actor, actor, metaverse_object)).
 predicate_type(action, go(actor, metaverse_object)).
@@ -402,7 +404,7 @@ predicate_type(condition, normalized_assertion(conversant, conversant, action, c
 
 predicate_type(condition, score_action(action, task, character, number)).
 predicate_type(condition, propose_action(action, task, character)).
-predicate_type(condition, in_program(metaverse_object, program) ).
+predicate_type(condition, in_module(metaverse_object, module) ).
 predicate_type(condition, incompatible_cl(condition,condition)).
 
 

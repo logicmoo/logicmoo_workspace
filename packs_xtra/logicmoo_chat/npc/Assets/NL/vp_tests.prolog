@@ -8,8 +8,8 @@ test(generate(vp, intransitive),
    vp_test(halt(x), simple, Generated).
 
 test(generate(vp, transitive),
-     [ true(Generated == [performs, the, lemonaid]) ]) :-
-   vp_test(perform(x, $lemonaid), simple, Generated).
+     [ true(Generated == [drinks, the, lemonaid]) ]) :-
+   vp_test(drink(x, $lemonaid), simple, Generated).
 
 test(generate(vp, ditransitive),
      [ true(Generated == [gives, 'Sophia', the, lemonaid]),
@@ -28,7 +28,7 @@ test(completion(vp, from_nothing),
 test(completion(vp, transitive),
      [ true(nonempty_instantiated_atom_list(Completion)),
        nondet ]) :-
-   vp_test(_, simple, [performs | Completion]).
+   vp_test(_, simple, [drinks | Completion]).
 
 test(completion(vp, ditransitive),
      [ true(nonempty_instantiated_atom_list(Completion)),

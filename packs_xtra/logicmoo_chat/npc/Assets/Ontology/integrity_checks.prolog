@@ -7,7 +7,7 @@
 %
 known_object(Object) :-
    for_all_unique(Object,
-		  declare_kind(Object, _),
+		  declared_kind(Object, _),
 		  true).
 
 

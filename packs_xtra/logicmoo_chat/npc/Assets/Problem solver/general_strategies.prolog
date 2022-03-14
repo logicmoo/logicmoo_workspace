@@ -74,16 +74,16 @@ normalize_task(abort_and_then(Task),
 
 strategy(achieve(t(location, X, $me)), pickup(X)) :-  
   X\= $me.
-strategy(achieve(location(X, Program)),
+strategy(achieve(location(X, Module)),
 	 achieve(location(X, Container))) :-
    %\+ freestanding(X),
-   iz_a(Program, program),
+   iz_a(Module, module),
    iz_a(Container, work_surface),
-   location(Container, Program).
+   location(Container, Module).
 default_strategy(achieve(t(location, X, Container)), putdown(X, Container)) :- 
   X\= $me, 
   Container\= $me, 
-  \+iz_a(Container, program).
+  \+iz_a(Container, module).
 
 strategy(achieve(t(location, $me, Container)), begin(goto(Container), get_in(Container))) :-  
   iz_a(Container, prop).
@@ -103,8 +103,8 @@ precondition(goto(Object), know(X, t(location, Object, X))).
 strategy(goto(Building),
 	 null) :-
    iz_a(Building, building).
-strategy(goto(Program), unless(t(contained_in, $me, Program), goto_internal(Program))) :-  
-  program(Program).
+strategy(goto(Module), unless(t(contained_in, $me, Module), goto_internal(Module))) :-  
+  is_impl_module(Module).
 strategy(goto(PropOrCharacter),
 	 unless(docked_with(Place),
 		goto_internal(Place))) :-
@@ -189,9 +189,9 @@ strategy(
       unless(know(X, t(location, Object, X)), failed_because(cant_find(Object))))).
 
 normalize_task(search_for($me, Unspecified, Target),
-	       search_for($me, CurrentProgram, Target)) :-
+	       search_for($me, CurrentModule, Target)) :-
    var(Unspecified),
-   in_program($me, CurrentProgram).
+   in_module($me, CurrentModule).
 
 strategy(search_for($me, Container, Target),
 	 search_object(Container, X^(X=Target),
@@ -328,7 +328,7 @@ previously_hidden(Item) :-
    $task/previously_hidden_items/Item.
 
 %%
-%% Ingestion (eating and performing)
+%% Ingestion (eating and drinking)
 %%
 
 strategy(eat($me, X),
@@ -337,15 +337,15 @@ postcondition(eat(_, X),
 	      ~present(X)).
 postcondition(eat(Person, F),
 	      ~hungry(Person)) :-
-   existing(task, F).
+   existing(thought, F).
 
-strategy(perform($me, X),
+strategy(drink($me, X),
 	 ingest(X)).
-postcondition(perform(_, X),
+postcondition(drink(_, X),
 	      ~present(X)).
-postcondition(perform(Person, B),
+postcondition(drink(Person, B),
 	      ~thirsty(Person)) :-
-   existing(animation, B).
+   existing(beverage, B).
 
 
 

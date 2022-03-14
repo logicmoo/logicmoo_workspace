@@ -85,13 +85,14 @@ print_exception_test_results(Name, ExpectedException, ActualException) :-
 print_nonexception_test_results(Name, _Options, Exception) :-
    nonvar(Exception),
    !,
-   displayln("Test ", Name, " threw the exception ", Exception, ".").
+   ansicall(red,displayln("Test ", Name, " threw the exception ", Exception, ".")).
+
 print_nonexception_test_results(Name, Options, _) :-
    check_test_success(Name, Options),
    !,
    check_test_determinism(Name, Options).
 print_nonexception_test_results(Name, _, _) :-
-   displayln("Test ", Name, " failed its success test.").
+   ansicall(red,displayln("Test ", Name, " failed its success test.")).
 
 check_test_determinism(_Name, Options) :-
    test_has_option(nondet, Options),
@@ -99,10 +100,10 @@ check_test_determinism(_Name, Options) :-
 check_test_determinism(_Name, _Options) :-
   % $test_body is a copy of the body (doesn't share variables with the one that was run previously)
    must_getvar(test_body,TB),
-   in_cmt(block,print_tree(test_body= TB)),
+   ansicall(green,in_cmt(block,print_tree(test_body= TB))),
    call_with_step_limit(10000, are_deterministic(TB)), !.
 check_test_determinism(Name, _) :-
-   displayln("Test ", Name, " succeeded but is non-are_deterministic.").
+   ansicall(yellow,displayln("Test ", Name, " succeeded but is non-are_deterministic.")).
       
 setup_test(Name, Options) :-
    % Call P for every setup(P) that appears in the test's options.
@@ -114,7 +115,7 @@ setup_test(Name, Options) :-
 do_test_setup(_Name, setup(P)) :-
    unity_call(P).
 do_test_setup(Name, setup(P)) :-
-   displayln("Test setup operation for ", Name, " failed: ", P).
+   ansicall(red,displayln("Test setup operation for ", Name, " failed: ", P)).
 
 check_test_success(Name, Options) :-
    forall(( member(Option, Options),
@@ -126,7 +127,7 @@ check_test_success(Name, Options) :-
 run_success_test(_Name, true(P)) :-
    call(P).
 run_success_test(Name, true(P)) :-
-   displayln("Success test for ", Name, " failed; ", P).
+   ansicall(red,displayln("Success test for ", Name, " failed; ", P)).
 run_success_test(Name, problem_list(Message, List)) :-
    (List == [ ]) ->
       true
@@ -135,7 +136,7 @@ run_success_test(Name, problem_list(Message, List)) :-
 	    forall(member(X, List),
 		   displayln("   ", print(X))))).
 
-success_test(true(_)).
+success_test(true(P)):- (P *-> true ; (ansicall(red,print_tree(fail_test(true(P)))),fail)).
 success_test(problem_list(_,_)).
 
 
@@ -214,11 +215,12 @@ ensure_test_file_loaded(File) :-
 %  Declares that File must be loaded before running test matching TestPattern.
 
 (initialization):- 
-  set_located_object($buggy_routine,$buggy_program),
-  set_located_object($desk,$living_program),
+  set_located_object($buggy_routine,$buggy_module),
+  set_located_object($desk,$living_module),
   set_located_object($report,$desk),
-  set_located_object($'research repository',repository,$research_program),
-  set_located_object($'research sourcefile',sourcefile,$'research repository').
+  set_located_object($'thought_module counter','counter',$thought_module),
+  set_located_object($'thought_module',thought_module,$'thought_module counter'),
+  set_located_object($'thought_module sink',sink,$'thought_module counter').
 
-:- set_located_object($'buggy sourcefile',sourcefile,$'research repository').
+:- set_located_object($'bad sink',sink,$'thought_module counter').
 

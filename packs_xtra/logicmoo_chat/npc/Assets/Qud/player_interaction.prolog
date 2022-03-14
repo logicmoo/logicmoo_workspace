@@ -151,8 +151,8 @@ be($user, $pc).
 
 
 %=autodoc
-%% declare_kind( ?ARG1, ?Research_program2) is semidet.
+%% declared_kind( ?ARG1, ?Kitchen2) is semidet.
 %
 % Declare Kind.
 %
-declare_kind($user, actor).
+declared_kind($user, actor).

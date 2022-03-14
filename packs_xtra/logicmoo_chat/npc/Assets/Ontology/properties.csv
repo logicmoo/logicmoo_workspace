@@ -9,6 +9,6 @@ description,internal,,entity,entity
 required_properties,internal,,kind,entity
 required_relations,internal,,kind,entity
 exit,public,exit,building,portal
-building,public,building,program,building
+building,public,building,module,building
 text,internal,,document,string
 caption,internal,,document,string

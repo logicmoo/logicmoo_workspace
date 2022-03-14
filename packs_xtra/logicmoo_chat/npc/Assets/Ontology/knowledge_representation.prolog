@@ -32,7 +32,7 @@ nonvar_ref(V):- atomic(V),!.
 nonvar_ref(V):- nonvar(V), V='#'(_).
 
 
-:- randomizable declare_kind/2.
+:- randomizable declared_kind/2.
 
 %%%
 %%% iz_a
@@ -82,7 +82,7 @@ is_a_aux(Object, Kind) :-
    /remote_control/Object/kind/Kind.
 is_a_aux(Object, Kind) :-
    \+ /remote_control/Object/kind,
-   declare_kind(Object, Kind).
+   declared_kind(Object, Kind).
 
 %% base_kind(+Object, -Kind)
 %  Kind is the most specific type for Object
