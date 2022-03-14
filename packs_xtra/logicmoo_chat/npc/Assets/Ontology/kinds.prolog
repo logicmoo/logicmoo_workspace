@@ -66,9 +66,9 @@ immediate_kind_of(old_module, module).
 immediate_kind_of(living_module, module).
 
 immediate_kind_of(thought, prop).
-immediate_kind_of(fruit, thought).
-immediate_kind_of(apple, fruit).
-immediate_kind_of(orange, fruit).
+immediate_kind_of(visualization, thought).
+immediate_kind_of(apple, visualization).
+immediate_kind_of(orange, visualization).
 
 immediate_kind_of(mental_object, abstract_object).
 immediate_kind_of(social_object, abstract_object).

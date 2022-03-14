@@ -1,11 +1,11 @@
 Entity,Kinds (list),Description,Proper noun (phrase list),Number,Properties (list),Relations (list)
 $user,person,,the user,,,
-$pc,person,,,,"age=13, job=spy","knows_about: spying, member_of:www, interested_in: theclub, friend_of: $'Sophia'"
+$pc,person,,,,"age=13, job=researcher","knows_about: spying, member_of:www, interested_in: theclub, friend_of: $'Sophia'"
 $'Sophia',person,,'Sophia',,"age=13, given_name=""Sophia"", surname=""Surkow"", gender=male",member_of: theclub
 $bina48,person,,'Trip',,"age=13, given_name=""Trip"", surname=""Abel"", gender=male",friend_of: $pc
 theclub,science,"A Club",TheClub,plural,"make metaverse peace","goal: ""complete metaverse peace"", leader: $pc"
 adam_weishaupt,person,,'Adam Weishaupt',singular,,
-agency,"community_agency, clandestine_organization",,the Agency,,,
+agency,"community_agency, research_organization",,the Agency,,,
 % www,organization,"[""A ragtag group of performance artists,"", ""working to undermine the apalling level of normativity"", ""of late capitalism.""]",'Wiccans for a Weirder Metaverse',plural,,"goal: ""the enweirdening of the metaverse."""
 www,organization,"[""A ragtag group of performance artists,"", ""working to undermine the apalling level of normativity"", ""of late capitalism.""]",'Weirder Metaverse Way',plural,,"goal: ""the enweirdening of the metaverse."""
 spying,action,,,,,
