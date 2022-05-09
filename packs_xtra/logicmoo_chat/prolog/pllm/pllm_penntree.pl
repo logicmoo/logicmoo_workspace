@@ -86,6 +86,7 @@ max_of(X,Y,X):-X>Y,!. max_of(_,Y,Y).
 inc_flag(F):- flag(F,X,X+1).
 compute_extent(F,A):-
   functor(NGram,F,A),
+  A2 is A + 1, functor(NGram2,F,A2), dynamic(NGram2),
   set_flag(total_fa,0),
   set_flag(min_fa,999999999),
   set_flag(max_fa,0),

@@ -30,11 +30,12 @@ sentence(S, Mood, Polarity, Tense, Aspect) -->
       $user, 
       with_bind( addressee, 
         $me, 
-        s(S, Mood, Polarity, Tense, Aspect), opt_stop(Mood))), 
+        (s(S, Mood, Polarity, Tense, Aspect), opt_stop(Mood)))), 
     theTextM1(')')).
 
 sentence(S, Mood, Polarity, Tense, Aspect) -->
-   [ Name, ',' ],     
+   character_name(Name), 
+   theTextM1(','),
    { input_from_player },
    bind_indexicals_for_addressing_character_named(Name,
     (s(S, Mood, Polarity, Tense, Aspect),
@@ -45,7 +46,9 @@ sentence(S, Mood, Polarity, Tense, Aspect) -->
    (s(Core, Mood, Polarity, Tense, Aspect),
     opt_stop(Mood))).
 
+character_name(Name) --> theTextM1V(Name).
 
+theTextM1V(Value) --> theTextM1(Value).
 
 
 %% bind_discourse_variables( ?ARG1, ?ARG2, ?ARG3) is semidet.
@@ -70,7 +73,7 @@ bind_discourse_variables( [X | Y], G) -->  !,
    bind_discourse_variables(X,
     bind_discourse_variables(Y, G)).
 bind_discourse_variables(iz_a(Var, Kind), G) --> !,
-   { must_getvar(discourse_variables,DV) }, !,
+   { must_getvar(discourse_variables, DV) }, !,
      with_bind(discourse_variables, [iz_a(Var, Kind) | DV], G).
 bind_discourse_variables(_, G) --> G.
 
@@ -156,19 +159,19 @@ content_clause(ComplementLF, DeclarativePredicate, InterrogativePredicate, Predi
 content_clause((Wh:(S, iz_a(Wh, Kind))), _, InterrogativePredicate, InterrogativePredicate) -->
    { InterrogativePredicate \= null },
    whpron(Kind),
-   np((NP^S1)^S, subject, Agreement, nogap, nogap),
+   np_chat((NP^S1)^S, subject, Agreement, nogap, nogap),
    vvpp(base, X^X, NP^S1, _Tense, Agreement, np(Wh)).
 content_clause(Object:(be(Subject, Object), iz_a(Subject, Kind)), _, InterrogativePredicate, InterrogativePredicate) -->
    { InterrogativePredicate \= null },
    whpron(Kind),
-   np((Subject^S)^S, subject, Agreement, nogap, nogap),
+   np_chat((Subject^S)^S, subject, Agreement, nogap, nogap),
    aux_be(present, Agreement).
 content_clause( Container:t(Contained_in, Subject, Container), 
   _, InterrogativePredicate, InterrogativePredicate) -->  
   {x_is_cont_in(Contained_in, has, _)},
   ( {InterrogativePredicate\=null}  ,
     theTextM1(where), 
-    np((Subject^S)^S, subject, Agreement, nogap, nogap), 
+    np_chat((Subject^S)^S, subject, Agreement, nogap, nogap), 
     aux_be(present, Agreement)).
 content_clause(ComplementLF, _, InterrogativePredicate, InterrogativePredicate) -->
    { InterrogativePredicate \= null },
@@ -197,7 +200,7 @@ complementizer(Predicate, _, Predicate) --> [].
 %
 infinitival_clause(EnclosingSubject, S) -->
    { lf_subject(S, NP) },
-   np((NP^S1)^S, subject, _Agreement, nogap, nogap),
+   np_chat((NP^S1)^S, subject, _Agreement, nogap, nogap),
    { NP \= EnclosingSubject },
    infinitival_vp(NP^S1).
 
@@ -244,7 +247,7 @@ swizzle_lf(t(location, X, Y), t(contained_in, X, Y)).
 s(LF, Indicative, Polarity, Tense, Aspect, S, E) :- 
   % {enforce_args(S)},
    swizzle_lf(LF,SLF),
-   limit(1000, ss(SLF, Indicative, Polarity, Tense, Aspect, S, E)).
+   limit(1000, npc_chat:ss(SLF, Indicative, Polarity, Tense, Aspect, S, E)).
 
 
 
@@ -255,20 +258,20 @@ s(LF, Indicative, Polarity, Tense, Aspect, S, E) :-
 %
 ss(S, indicative, Polarity, Tense, Aspect) -->
    { lf_subject(S, NP) },
-   np((NP^S1)^S, subject, Agreement, nogap, nogap),
+   np_chat((NP^S1)^S, subject, Agreement, nogap, nogap),
    aux_vp(NP^S1, Polarity, Agreement, Tense, Aspect).
 
 % NP is [not] Adj
 ss(S, indicative, Polarity, Tense, simple) -->
    { lf_subject(S, Noun) },
-   np((Noun^S)^S, subject, Agreement, nogap, nogap),
+   np_chat((Noun^S)^S, subject, Agreement, nogap, nogap),
    aux_be(Tense, Agreement),
    opt_not(Polarity),
    ap(Noun^S).
 
 % NP is [not] KIND
 ss(iz_a(Noun, Kind), indicative, Polarity, Tense, simple) -->
-   np((Noun^_)^_, subject, Agreement, nogap, nogap),
+   np_chat((Noun^_)^_, subject, Agreement, nogap, nogap),
    aux_be(Tense, Agreement),
    opt_not(Polarity),
    a_an,
@@ -276,41 +279,41 @@ ss(iz_a(Noun, Kind), indicative, Polarity, Tense, simple) -->
 
 % NP is [not] NP
 ss(be(S, O), indicative, Polarity, Tense, simple) -->
-   np((S^_)^_, subject, Agreement, nogap, nogap),
+   np_chat((S^_)^_, subject, Agreement, nogap, nogap),
    aux_be(Tense, Agreement),
    opt_not(Polarity),
-   np((O^_)^_, object, _, nogap, nogap).
+   np_chat((O^_)^_, object, _, nogap, nogap).
 
 
 
 % NP is [not] in NP
 ss(t(Contained_in, S, Container), indicative, Polarity, Tense, simple) -->  
   {x_is_cont_in(Contained_in, In, Enclosing_container)},
-  ( np((S^_)^_, subject, Agreement, nogap, nogap)  ,
+  ( np_chat((S^_)^_, subject, Agreement, nogap, nogap)  ,
     aux_be(Tense, Agreement), 
     opt_not(Polarity), 
     theTextM1(In), 
-    np((Container^_)^_, object, _, nogap, nogap), 
+    np_chat((Container^_)^_, object, _, nogap, nogap), 
     {ignore(iz_a(Container, Enclosing_container))}).
 /*
 % NP is [not] on NP
 ss(t(contained_in, S, Container), indicative, Polarity, Tense, simple) -->  
-  ( np((S^_)^_, subject, Agreement, nogap, nogap)  ,
+  ( np_chat((S^_)^_, subject, Agreement, nogap, nogap)  ,
     aux_be(Tense, Agreement), 
     opt_not(Polarity), 
     theTextM1(on), 
-    np((Container^_)^_, object, _, nogap, nogap), 
+    np_chat((Container^_)^_, object, _, nogap, nogap), 
     {iz_a(Container, work_surface)}).
 */
 
 % Character has  NP
 ss(t(Contained_in, Object, Character), indicative, Polarity, Tense, simple) -->  
   {x_is_cont_in(Contained_in, has, _)},
-  ( np((Character^_)^_, subject, Agreement, nogap, nogap)  ,
+  ( np_chat((Character^_)^_, subject, Agreement, nogap, nogap)  ,
     {character(Character)}, 
     aux_have(Tense, Agreement), 
     opt_not(Polarity), 
-    np((Object^_)^_, object, _, nogap, nogap)).
+    np_chat((Object^_)^_, object, _, nogap, nogap)).
 
 % NP's Property is [not] PropertyValue
 ss(t(Property, Noun, Value), indicative, Polarity, Tense, simple) -->
@@ -322,7 +325,7 @@ ss(t(Property, Noun, Value), indicative, Polarity, Tense, simple) -->
        ;
        ( \+ adjectival_property(Property),
 	 \+ nominal_property(Property) ) ) },
-   np((Noun^_)^_, genitive, _Agreement, nogap, nogap),
+   np_chat((Noun^_)^_, genitive, _Agreement, nogap, nogap),
    property_name(Property),
    copula(simple, Tense, third:singular),
    opt_not(Polarity),
@@ -333,28 +336,28 @@ ss(t(Property, Noun, Value), indicative, Polarity, Tense, simple) -->
    { % DMILES %%%%%%%%%%%%%%% 
      at_least_once(valid_property_value(Property, Value)),
      adjectival_property(Property) },
-   np((Noun^_)^_, subject, Agreement, nogap, nogap),
+   np_chat((Noun^_)^_, subject, Agreement, nogap, nogap),
    aux_be(Tense, Agreement),
    opt_not(Polarity),
-   [Value].
+   theTextM1V(Value).
 
 % NP is [not] a PropertyValue
 ss(t(Property, Noun, Value), indicative, Polarity, Tense, simple) -->
    { % DMILES %%%%%%%%%%%%%%% 
      at_least_once(valid_property_value(Property, Value)),
      nominal_property(Property) },
-   np((Noun^_)^_, subject, Agreement, nogap, nogap),
+   np_chat((Noun^_)^_, subject, Agreement, nogap, nogap),
    aux_be(Tense, Agreement),
    opt_not(Polarity),
-   [a, Value].
+   theTextM1(a), theTextM1V(Value).
 
 % NP's Relation is [not] Relatum
 ss(t(Relation, Noun, Relatum), indicative, Polarity, Tense, simple) -->  
-  ( np((Noun^_)^_, genitive, _Agreement1, nogap, nogap)  ,
+  ( np_chat((Noun^_)^_, genitive, _Agreement1, nogap, nogap)  ,
     genitive_form_of_relation(Relation, Singular), 
     copula(simple, Tense, third:Singular), 
     opt_not(Polarity), 
-    np((Relatum^_)^_, object, _Agreement2, nogap, nogap)).
+    np_chat((Relatum^_)^_, object, _Agreement2, nogap, nogap)).
 
 
 
@@ -370,8 +373,10 @@ at_least_once(G):- call(G).
 ss(S, imperative, Polarity, present, simple) -->
    { lf_subject(S, $addressee) },
    aux_vp($addressee^S, Polarity, second:singular, present, simple).
+
+% let us [do|be|have] ...
 ss(S, imperative, Polarity, present, simple) -->  
-  ( theTextM([let, us])  ,
+  ( theTextM1(let), theTextM1(us),
     {lf_subject(S, $dialog_group)}, 
     aux_vp($dialog_group^S, Polarity, first:singular, present, simple)).
 
@@ -388,7 +393,7 @@ ss(S, interrogative, Polarity, Tense, Aspect) -->
 % Normal inverted sentence
 inverted_sentence(S, Polarity, Tense, Aspect) -->
    { lf_subject(S, NP) },
-   aux(np((NP^S1)^S, subject, Agreement),
+   aux(np_chat((NP^S1)^S, subject, Agreement),
        Polarity, Agreement, Tense, Aspect, Form, Modality),
    vvpp(Form, Modality, NP^S1, Tense, Agreement, nogap).
 
@@ -402,7 +407,7 @@ inverted_sentence(S, Polarity, Tense, Aspect) -->
 % is NP a KIND?
 ss(iz_a(Noun, Kind), interrogative, affirmative, Tense, simple) -->
    aux_be(Tense, Agreement),
-   np((Noun^_)^_, subject, Agreement, nogap, nogap),
+   np_chat((Noun^_)^_, subject, Agreement, nogap, nogap),
    a_an,
    kind_noun(Kind, singular).
 
@@ -418,7 +423,7 @@ ss(iz_a(Noun, Kind), interrogative, affirmative, Tense, simple) -->
 ss((Wh:(S, iz_a(Wh, Kind))), interrogative, affirmative, Tense, simple) -->
    whpron(Kind),
    aux_do(Tense, Agreement),
-   np((NP^S1)^S, subject, Agreement, nogap, nogap),
+   np_chat((NP^S1)^S, subject, Agreement, nogap, nogap),
    vvpp(base, X^X, NP^S1, Tense, Agreement, np(Wh)).
 
 
@@ -440,7 +445,7 @@ ss( Value:(t(Property, Noun, Value), iz_a(Value, Kind)),
   interrogative, affirmative, Tense, simple) -->  
   ( whpron(Kind)  ,
     copula(simple, Tense, third:singular), 
-    np((Noun^_)^_, genitive, _Agreement, nogap, nogap), 
+    np_chat((Noun^_)^_, genitive, _Agreement, nogap, nogap), 
     property_name(Property)).
 
 % Wh-questions about relations
@@ -453,14 +458,14 @@ ss( Noun:t(Relation, Noun, Value),
   ( theTextM1(whose)  ,
     genitive_form_of_relation(Relation, Number), 
     copula(simple, Tense, Person:Number), 
-    np((Value^_)^_, subject, Person:Number, nogap, nogap)).
+    np_chat((Value^_)^_, subject, Person:Number, nogap, nogap)).
 
 % NP's Relation is [not] RelationValue
 ss( Value:(t(Relation, Noun, Value), iz_a(Value, Kind)), 
   interrogative, affirmative, Tense, simple) -->  
   ( whpron(Kind)  ,
     copula(simple, Tense, third:Number), 
-    np((Noun^_)^_, genitive, _Agreement, nogap, nogap), 
+    np_chat((Noun^_)^_, genitive, _Agreement, nogap, nogap), 
     genitive_form_of_relation(Relation, Number)).
 
 % Wh-questions about the subject.
@@ -474,27 +479,27 @@ ss(Object:(S, iz_a(Object, Kind)), interrogative, Polarity, Tense, Aspect) -->
    { lf_subject(S, NP) },
    whpron(Kind),
    aux(nogap, Polarity, Agreement, Tense, Aspect, Form, Modality),
-   np((NP^S1)^S, subject, Agreement, nogap, nogap),
+   np_chat((NP^S1)^S, subject, Agreement, nogap, nogap),
    vvpp(Form, Modality, NP^S1, Tense, Agreement, np(Object)).
 
 % Who is/what is Subject
 ss(Object:(be(Subject, Object), iz_a(Subject, Kind)), interrogative, affirmative, present, simple) -->
    whpron(Kind),
    aux_be(present, Agreement),
-   np((Subject^S)^S, subject, Agreement, nogap, nogap).
+   np_chat((Subject^S)^S, subject, Agreement, nogap, nogap).
 
 % How is Subject?
 ss(Manner:manner(be(Subject), Manner), interrogative, affirmative, present, simple) -->  
   ( theTextM1(how)  ,
     aux_be(present, Agreement), 
-    np((Subject^be(Subject))^be(Subject), subject, Agreement, nogap, nogap)).
+    np_chat((Subject^be(Subject))^be(Subject), subject, Agreement, nogap, nogap)).
 
 % How does Subject Predicate?
 ss(Method:method(S, Method), interrogative, affirmative, Tense, simple) -->  
   ( theTextM1(how)  ,
     {lf_subject(S, NP)}, 
     aux_do(Tense, Agreement), 
-    np((NP^S1)^S, subject, Agreement, nogap, nogap), 
+    np_chat((NP^S1)^S, subject, Agreement, nogap, nogap), 
     vvpp(base, M^M, NP^S1, present, Agreement, nogap)).
 
 :- register_lexical_item(how).
@@ -503,34 +508,34 @@ ss(Method:method(S, Method), interrogative, affirmative, Tense, simple) -->
 ss(S, interrogative, Polarity, present, simple) -->
    aux_be(present, Agreement),
    opt_not(Polarity),
-   np((Noun^_)^_, subject, Agreement, nogap, nogap),
+   np_chat((Noun^_)^_, subject, Agreement, nogap, nogap),
    ap(Noun^S).
 
 % Is X in/on Container?
 ss(t(Contained_in, S, Container), interrogative, Polarity, Tense, simple) -->  
  {x_is_cont_in(Contained_in, On, Enclosing_container)},
   ( aux_be(Tense, Agreement)  ,
-    np((S^_)^_, subject, Agreement, nogap, nogap), 
+    np_chat((S^_)^_, subject, Agreement, nogap, nogap), 
     opt_not(Polarity), 
     theTextM1(On), 
-    np((Container^_)^_, object, _, nogap, nogap), 
+    np_chat((Container^_)^_, object, _, nogap, nogap), 
     {iz_a(Container, Enclosing_container)}).
 /*
 ss(t(contained_in, S, Container), interrogative, Polarity, Tense, simple) -->  
   ( aux_be(Tense, Agreement)  ,
-    np((S^_)^_, subject, Agreement, nogap, nogap), 
+    np_chat((S^_)^_, subject, Agreement, nogap, nogap), 
     opt_not(Polarity), 
     theTextM1(on), 
-    np((Container^_)^_, object, _, nogap, nogap), 
+    np_chat((Container^_)^_, object, _, nogap, nogap), 
     {iz_a(Container, work_surface)}).
 */
 % Is Subject a PROPERTYVALUE?
 inverted_sentence(t(Property, Subject, Value), Polarity, Tense, simple) -->  
   ( copula(simple, Tense, Agreement)  ,
     opt_not(Polarity), 
-    np((Subject^_)^_, subject, Agreement, nogap, nogap), 
+    np_chat((Subject^_)^_, subject, Agreement, nogap, nogap), 
     {nominal_property(Property), valid_property_value(Property, Value)}, 
-    theTextM([a, Value])).
+    theTextM1(a), theTextM1V(Value)).
 
 % why did he X?
 ss( X:explanation(S, X), 
@@ -546,7 +551,7 @@ ss( Container:t(Contained_in, S, Container),
   ( theTextM1(where)  ,
     aux_be(Tense, Agreement), 
     opt_not(Polarity), 
-    np((S^S)^S, subject, Agreement, nogap, nogap)).
+    np_chat((S^S)^S, subject, Agreement, nogap, nogap)).
 
 :- register_lexical_item(where).
 
@@ -558,7 +563,7 @@ ss( Character:t(Contained_in, Object, Character),
   ( theTextM1(who)  ,
     aux_have(Tense, third:singular), 
     opt_not(Polarity), 
-    np((Object^S)^S, object, _, nogap, nogap)).
+    np_chat((Object^S)^S, object, _, nogap, nogap)).
 
 
 %% ss( ?ARG1, ?ARG2, ?ARG3, ?ARG4, ?ARG5, ?ARG6) is semidet.
@@ -577,7 +582,7 @@ ss( S:t(Contained_in, S, Container),
     opt_not(Polarity), 
     theTextM1(On), 
     {impose_selectional_constraint(Container, Enclosing_container)}, 
-    np((Container^Ignored)^Ignored, subject, Agreement, nogap, nogap), 
+    np_chat((Container^Ignored)^Ignored, subject, Agreement, nogap, nogap), 
     {iz_a(Container, Enclosing_container)}).
 
 % Who/what is in the X
@@ -589,7 +594,7 @@ ss( S:(t(Contained_in, S, Container), iz_a(S, Kind)),
     opt_not(Polarity), 
     theTextM1(On), 
     {impose_selectional_constraint(Container, Enclosing_container)}, 
-    np((Container^Ignored)^Ignored, subject, Agreement, nogap, nogap), 
+    np_chat((Container^Ignored)^Ignored, subject, Agreement, nogap, nogap), 
     {iz_a(Container, Enclosing_container), \+character(Container)}).
 
 % what does Character have?
@@ -599,7 +604,7 @@ ss( S:t(Contained_in, S, Character),
   ( theTextM1(what)  ,
     aux_do(Tense, Agreement), 
     opt_not(Polarity), 
-    np((Character^Ignored)^Ignored, subject, Agreement, nogap, nogap), 
+    np_chat((Character^Ignored)^Ignored, subject, Agreement, nogap, nogap), 
     {character(Character)}, 
     aux_have(Tense, Agreement)).
 

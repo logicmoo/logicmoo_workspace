@@ -310,7 +310,7 @@ discourse_fragment(uninterpreted_s(X)) -->
 discourse_fragment(np(X))-->{kind(X), !}, theTextM([a, X]).
 
 discourse_fragment(np(X)) -->
-   {!}, np((X^S)^S, subject, third:singular, nogap, nogap).
+   {!}, np_chat((X^S)^S, subject, third:singular, nogap, nogap).
 
 discourse_fragment(String)-->{string(String), !}, theTextM1(String).
 discourse_fragment(String:_Markup) -->  

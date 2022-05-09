@@ -7,9 +7,9 @@
 
 :- randomizable aux/9, aux_without_do_support/9.
 aux(nogap, affirmative, _Agreement, present, simple, simple, X^X) --> [ ].
-aux(np(NP, Case, Agreement), affirmative, Agreement, Tense, simple, base, X^X) -->
+aux(np_chat(NP, Case, Agreement), affirmative, Agreement, Tense, simple, base, X^X) -->
    aux_do(Tense, Agreement),
-   np(NP, Case, Agreement, nogap, nogap).
+   np_chat(NP, Case, Agreement, nogap, nogap).
 aux(Gap, negative, Agreement, Tense, simple, base, X^X) -->  
   aux_do(Tense, Agreement), theTextM1(not), aux_gap(Gap).
 aux(Gap, Polarity, Agreement, Tense, Aspect, Form, ModalLF) -->
@@ -36,7 +36,7 @@ aux_without_do_support( Gap,
   P^LF) -->  
   ( theTextM1(ModalAux)  ,
     { modal_aux(ModalAux, ModalAuxLF), 
-      LF=..[ModalAuxLF, P] }, 
+      apply_modal(ModalAuxLF, P, LF) }, 
     opt_not(Polarity), 
     aux_gap(Gap)).
 aux_without_do_support(Gap, Polarity, Agreement, Tense, Aspect, Form, X^X) -->
@@ -44,6 +44,9 @@ aux_without_do_support(Gap, Polarity, Agreement, Tense, Aspect, Form, X^X) -->
 
 :- register_lexical_item(will).
 
+apply_modal([], P, LF):- !, LF=P.
+apply_modal([Modal|AuxLF], P, LF):-  !, apply_modal(Modal, P, M), apply_modal(AuxLF, M, LF).
+apply_modal(ModalAuxLF, P, LF):- LF=..[ModalAuxLF, P].
 
 %% aux_aspect_future(?Aspect, ?Agreement, ?Form)
 %  An optional string of auxilliaries devoted to aspect (be, have), and/or negative particle.
@@ -76,8 +79,8 @@ aux_aspect(Gap, Polarity, Tense, Aspect, Agreement, Form) -->
 %% aux_gap(+Gap)
 %  Inserts NP for Gap here if need be
 aux_gap(nogap) --> [ ].
-aux_gap(np(LF, Case, Agreement)) -->
-   np(LF, Case, Agreement, nogap, nogap).
+aux_gap(np_chat(LF, Case, Agreement)) -->
+   np_chat(LF, Case, Agreement, nogap, nogap).
 
 :- randomizable aux_perfect//3.
 
@@ -119,7 +122,12 @@ modal_aux(can,can).
 modal_aux(may,may).
 modal_aux(should,should).
 modal_aux(would,would).
+modal_aux(could,can).
+modal_aux(shall,shall).
 modal_aux(must,shall).
+modal_aux(X,Y):- parser_chat80:modal_verb_form_aux(X,Y,_,_).
+
+
 
 :- register_all_lexical_items([A], modal_aux(A,_)).
 

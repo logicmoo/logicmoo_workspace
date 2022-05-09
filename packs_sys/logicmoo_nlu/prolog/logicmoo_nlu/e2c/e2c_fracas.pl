@@ -2,7 +2,8 @@
 % File 'logicmoo_module_aiml_loader.pl'
 % Purpose: An Implementation in SWI-Prolog of AIML
 % Maintainer: Douglas Miles
-% Contact: $Author: dmiles $@users.sourceforge.net ;
+% Contact: $Author: dmiles $@users.sourceforge.net 
+
 % Version: 'logicmoo_module_aiml.pl' 1.0.0
 % Revision:  $Revision: 1.7 $
 % Revised At:   $Date: 2002/07/11 21:57:28 $
@@ -52,7 +53,8 @@ append_terms(P, L, O):- L==[], P = O, !.
 append_terms(P, L, O):- P==[], L = O, !.
 append_terms([F|P], L, O):- atom(F), is_list(P), !, PP=..[F|P], append_terms(PP, L, O).
 append_terms(P, L, O):- is_list(P), PP=..[lst|P], append_terms(PP, L, O).
-append_terms(P, L, O):- is_list(L)->append_termlist(P, L, O);append_term(P, L, O).
+append_terms(P, L, O):- is_list(L)->append_termlist(P, L, O)
+append_term(P, L, O).
 
 
 writeEachTo(_ID, _Ctx, []):-!.
@@ -75,7 +77,8 @@ writeEachTo(ParentID, Ctx, element(CLASS, S, STUFF)):- % member(CLASS, ['VNCLASS
 
 writeEachTo(ID, Ctx, element('role', [], STUFF)):- !,
   flag(frame_num, N, N+1),
-  (N==0->atomic_list_concat([ID, '_f', N], NewID);atomic_list_concat([ID, '_f', N], NewID)),
+  (N==0->atomic_list_concat([ID, '_f', N], NewID)
+atomic_list_concat([ID, '_f', N], NewID)),
   writeEachTo(NewID, Ctx, STUFF).
 
 writeEachTo(_D, _Tx, element('comment', _, S)):-!, nl, writeEachTo(problem_header, problem_header, S), !.
@@ -1023,7 +1026,8 @@ Here's the breakdown by topic:
 :-problem('061', p, "Both female commissioners used to be in business.").
 :-problem('061', q, "Did both commissioners used to be in business?").
 :-problem('061', h, "Both commissioners used to be in business.").
-:-problem('061', a, "Yes, if both commissioners are female; otherwise there are more than two commissioners.").
+:-problem('061', a, "Yes, if both commissioners are female
+ otherwise there are more than two commissioners.").
 
 
 :-switch_test('062', problem, [], ['fracas-problems']).
@@ -1033,7 +1037,8 @@ Here's the breakdown by topic:
 :-problem('062', p, "Neither female commissioner spends a lot of time at home.").
 :-problem('062', q, "Does either commissioner spend a lot of time at home?").
 :-problem('062', h, "One of the commissioners spends a lot of time at home.").
-:-problem('062', a, "No, if both commissioners are female; otherwise there are more than two commissioners.").
+:-problem('062', a, "No, if both commissioners are female
+ otherwise there are more than two commissioners.").
 
 
 :-switch_test('063', problem, [], ['fracas-problems']).
@@ -1190,7 +1195,8 @@ Here's the breakdown by topic:
 :-problem('077', p, "Both commissioners used to be in business.").
 :-problem('077', q, "Did both female commissioners used to be in business?").
 :-problem('077', h, "Both female commissioners used to be in business.").
-:-problem('077', a, "Yes, if both commissioners are female; otherwise there are more than two commissioners.").
+:-problem('077', a, "Yes, if both commissioners are female
+ otherwise there are more than two commissioners.").
 
 
 :-switch_test('078', problem, [], ['fracas-problems']).
@@ -1200,7 +1206,8 @@ Here's the breakdown by topic:
 :-problem('078', p, "Neither commissioner spends a lot of time at home.").
 :-problem('078', q, "Does either female commissioner spend a lot of time at home?").
 :-problem('078', h, "One of the female commissioners spends a lot of time at home.").
-:-problem('078', a, "No, if both commissioners are female; otherwise there are more than two commissioners.").
+:-problem('078', a, "No, if both commissioners are female
+ otherwise there are more than two commissioners.").
 
 
 :-switch_test('079', problem, [], ['fracas-problems']).
@@ -1231,8 +1238,11 @@ Here's the breakdown by topic:
 /*
 
   A number of inferences pertaining to plurals are covered under the headings of
-  generalized quantifiers and elsewhere. Here we concentrate on conjoined NPs;
-  bare, existential and definite plurals; dependent plurals; and collective and
+  generalized quantifiers and elsewhere. Here we concentrate on conjoined NPs
+
+  bare, existential and definite plurals
+ dependent plurals
+ and collective and
   distributive readings and scope ambiguity.
 
 
@@ -2980,7 +2990,8 @@ comparison class they depend on.
 :-problem('213', p, "Mickey is a large mouse.").
 :-problem('213', q, "Is Mickey small?").
 :-problem('213', h, "Mickey is small.").
-:-problem('213', a, "??: Yes for a mouse; ?? No for an animal").
+:-problem('213', a, "??: Yes for a mouse
+ ?? No for an animal").
 :-problem('213', why, "Adjectives requiring a comparison class cannot usually be predicated in the absence of a common noun, unless some comparison class is clear from the wider context.").
 
 
@@ -3631,7 +3642,8 @@ with respect to some temporal reference point (e.g. now):
     X < Y.
     Y < Z.
     X < Z.
-  where < \in {before; after}
+  where < \in {before
+ after}
 
 
 */
@@ -3645,7 +3657,8 @@ with respect to some temporal reference point (e.g. now):
 :-problem('261', q, "Did Smith leave before Anderson left?").
 :-problem('261', h, "Smith left before Anderson left.").
 :-problem('261', a, "Yes").
-:-note(problem, ' Original is degenerate problem; this is my fabrication. ').
+:-note(problem, ' Original is degenerate problem
+ this is my fabrication. ').
 
 
 :-switch_test('262', problem, [], ['fracas-problems']).
@@ -3698,7 +3711,8 @@ sentences with simple tenses 'before' and 'after' are inverses of each other:
 :-problem('264', q, "Did Jones leave after Smith left?").
 :-problem('264', h, "Jones left after Smith left.").
 :-problem('264', a, "Yes").
-:-note(problem, ' Original is degenerate problem; this is my fabrication. ').
+:-note(problem, ' Original is degenerate problem
+ this is my fabrication. ').
 
 
 :-switch_test('265', problem, [], ['fracas-problems']).
@@ -3871,7 +3885,8 @@ meaning. Whether this is a distinct sense of "before" is open to debate:
 :-problem('276', q, "").
 :-problem('276', h, "").
 :-problem('276', a, "").
-:-note(problem, ' Original is degenerate problem; no question or answer given. ').
+:-note(problem, ' Original is degenerate problem
+ no question or answer given. ').
 
 
 /*
@@ -4170,7 +4185,8 @@ verb phrases (or sentences).
 :-problem('305', q, "").
 :-problem('305', h, "").
 :-problem('305', a, "").
-:-note(problem, ' Original is degenerate problem; no question or answer given. ').
+:-note(problem, ' Original is degenerate problem
+ no question or answer given. ').
 
 
 :-switch_test('306', problem, [], ['fracas-problems']).
@@ -4212,7 +4228,8 @@ to other quantified NPs
 :-problem('308', p, "Smith wrote to a representative every week.").
 :-problem('308', q, "Is there a representative that Smith wrote to every week?").
 :-problem('308', h, "There is a representative that Smith wrote to every week.").
-:-problem('308', a, "Yes on one scoping; unknown on another scoping").
+:-problem('308', a, "Yes on one scoping
+ unknown on another scoping").
 
 
 /*
@@ -4240,7 +4257,8 @@ to other quantified NPs
 :-problem('309', q, "").
 :-problem('309', h, "").
 :-problem('309', a, "").
-:-note(problem, ' Original is degenerate problem; no question or answer given. ').
+:-note(problem, ' Original is degenerate problem
+ no question or answer given. ').
 
 
 :-switch_test('310', problem, [], ['fracas-problems']).
@@ -4252,7 +4270,8 @@ to other quantified NPs
 :-problem('310', q, "").
 :-problem('310', h, "").
 :-problem('310', a, "").
-:-note(problem, ' Original is degenerate problem; no question or answer given. ').
+:-note(problem, ' Original is degenerate problem
+ no question or answer given. ').
 
 
 :-switch_test('311', problem, [], ['fracas-problems']).
@@ -4384,8 +4403,10 @@ to other quantified NPs
 :-problem('322', id, '322').
 :-problem('322', fracas_answer, "yes").
 :-problem('322', p, "Last week I already knew that when, in a month's time, Smith would discover that she had been duped she would be furious.").
-:-problem('322', q, "Will it be the case that in a few weeks Smith will discover that she has been duped; and will she be furious?").
-:-problem('322', h, "It will be the case that in a few weeks Smith will discover that she has been duped; and she will be furious.").
+:-problem('322', q, "Will it be the case that in a few weeks Smith will discover that she has been duped
+ and will she be furious?").
+:-problem('322', h, "It will be the case that in a few weeks Smith will discover that she has been duped
+ and she will be furious.").
 :-problem('322', a, "Yes").
 
 

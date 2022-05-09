@@ -19,7 +19,22 @@ pronoun_word(we, subject, first, plural, $dialog_group).
 pronoun_word(us, object, first, plural, $dialog_group).
 pronoun_word(our, genitive, first, plural, $dialog_group).
 
+pronoun_word(it, SO, third, singular, $it_that):- subject_or_object(SO).
+pronoun_word(these, SO, third, plural, $they_them):- subject_or_object(SO).
+pronoun_word(this, SO, third, plural, $these_those):- subject_or_object(SO).
+pronoun_word(that, SO, that, singular, $these_those):- subject_or_object(SO).
+pronoun_word(those, SO, third, singular, $these_those):- subject_or_object(SO).
+pronoun_word(they, subject, third, plural, $they_them).
+pronoun_word(them, subject, third, plural, $they_them).
+pronoun_word(their, genitive, third, plural, $they_them).
 
+pronoun_word(what, SO, third, singular, $it_that):- subject_or_object(SO).
+pronoun_word(who, SO, third, singular, $they_them):- subject_or_object(SO).
+
+%pronoun_word(so, object, third, singular, $it_that).
+
+subject_or_object(subject).
+subject_or_object(object).
 
 %=autodoc
 %% demonstrative_pronoun( ?That1) is semidet.

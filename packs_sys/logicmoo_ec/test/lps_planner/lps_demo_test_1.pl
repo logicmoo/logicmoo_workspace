@@ -1,4 +1,5 @@
 
+% Logicmoo specific
 :- expects_dialect(lps).
 
 maxTime(10).
@@ -23,7 +24,10 @@ pressure_normal at T if boiler_off at T.
 open_valve initiates valve_open.
 turn_off_boiler initiates boiler_off.
 
-observe plant_safe from 8.
+initially not plant_safe.
+events plant_safe.
+
+
 
 
 :- multifile(ec:demo_test/3).

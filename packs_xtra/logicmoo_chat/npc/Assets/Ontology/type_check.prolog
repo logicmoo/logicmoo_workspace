@@ -363,7 +363,8 @@ predicate_type(condition, unique_answer(entity, condition)).
 
 predicate_type(condition, pretend_truth_value(conversant, condition, truthvalue)).
 predicate_type(condition, inverted_sentence(condition, entity, entity, entity, entity, entity)).
-predicate_type(condition, ss(condition, entity, entity, entity, entity, entity, entity)).
+predicate_type(condition, ss(condition, entity, entity, entity, entity, list, list)).
+predicate_type(condition, s(condition, entity, entity, entity, entity, list, list)).
 
 predicate_type(condition, well_formed_dialog_act(dialog_act)).
 predicate_type(condition, stock_phrase(dialog_act)).

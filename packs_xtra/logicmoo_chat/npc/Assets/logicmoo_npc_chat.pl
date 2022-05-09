@@ -3,6 +3,8 @@
 :- module(npc_chat,[]).
 :- endif.
 
+:- use_module(library(logicmoo_clif)).
+:- use_module(library(logicmoo_nlu)).
 :- clause(unity_module_name(_),_) -> true ; prolog_load_context(module,M),asserta_if_new(unity_module_name(M)).
 :- use_module(library(logicmoo_common)).
 %:- use_module(library(pfc_lib)).
@@ -36,14 +38,15 @@ print_load_lmchat:- lmchat_dir(D),atom_concat(D,'/*/*.prolog',F), expand_file_na
 %:- print_load_lmchat.
 
 s(String):- s(String,_Out).
-s(String,LogicalForm):- atomic(String),!,tokenize_atom(String,Words),!,s(Words,LogicalForm).
+s(String,LogicalForm):- string(String),tokenize_atom(String,Words),!,s(Words,LogicalForm).
+s(String,LogicalForm):- atom(String),tokenize_atom(String,Words),!,s(Words,LogicalForm).
 s(LogicalForm,Words):- LogicalForm\=[_|_],npc_chat:utterance(LogicalForm, Words,[]),
-  log(Words-->utterance(LogicalForm)).
+  log(Words-->utterance(LogicalForm)),!.
 s(Words,LogicalForm):- Words =[_|_],npc_chat:utterance(LogicalForm, Words,[]),
-  log(Words-->utterance(LogicalForm)).
-s(LogicalForm,Words):- LogicalForm\=[_|_], sentence(LogicalForm, Mood, Polarity, Tense, Aspect, Words,[]),
+  log(Words-->utterance(LogicalForm)),!.
+s(LogicalForm,Words):- LogicalForm\=[_|_], npc_chat:sentence(LogicalForm, Mood, Polarity, Tense, Aspect, Words,[]),
   log(Words-->sentence(LogicalForm, Mood, Polarity, Tense, Aspect)).
-s(Words,LogicalForm):- Words =[_|_], sentence(LogicalForm, Mood, Polarity, Tense, Aspect, Words,[]),
+s(Words,LogicalForm):- Words =[_|_], npc_chat:sentence(LogicalForm, Mood, Polarity, Tense, Aspect, Words,[]),
   log(Words-->sentence(LogicalForm, Mood, Polarity, Tense, Aspect)).
 
 
@@ -124,7 +127,7 @@ s(Words,LogicalForm):- Words =[_|_], sentence(LogicalForm, Mood, Polarity, Tense
 :- dynamic(kind/1).
 :- dynamic(character/1).
 :- dynamic('>-->'/2).
-:- dynamic(algorithm/1).
+:- dynamic(door/1).
 :- dynamic(algorithm/1).
 :- dynamic(implies_relation/2).
 :- dynamic(inverse_relation/2).

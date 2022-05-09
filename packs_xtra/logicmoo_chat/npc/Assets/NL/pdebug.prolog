@@ -58,7 +58,7 @@ nonterminal(s(_LF, _M, _P, _T, _A)).
 nonterminal(vp(_F, _LF, _S, _T, _A, nogap)).
 nonterminal(aux_vp(_VP, _P, _A, _T, _)).
 nonterminal(aux(_, _P, _Agreement, _T, _Aspect, _F, _M)).
-nonterminal(np(_LF, _C, _A, nogap, nogap)).
+nonterminal(np_chat(_LF, _C, _A, nogap, nogap)).
 
 %%%
 %%% Regression testing

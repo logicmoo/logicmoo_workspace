@@ -33,7 +33,7 @@ copula(Form, Tense, Agreement) -->
 
 
 start_verb(_Agreement, present, Info)--> theTextMLR(2,1,Info). 
-complete_verb(SInfo, Subject, Object, do(Subject, SInfo, Object, Info))--> theTextMLR(1,0,Info). 
+complete_verb(SInfo, Subject, Object, do_v(Subject, SInfo, Object, Info))--> theTextMLR(1,0,Info). 
 
 theTextMLR(N,_,Info) -->  theTextML(N,Info).
 theTextMLR(_,R,Info) -->  theTextML(R,Info).
@@ -58,6 +58,13 @@ aux_vp(VP, Polarity, Agreement, Tense, Aspect) -->
 
 :- randomizable vp/8.
 
+/*
+vp(_, Predicate^Modal, Subject^Modal, Tense, Agreement, Gap) -->
+   modal_verb(Tense, Agreement, Subject^Complement^Predicate),
+   vp(_, Predicate, Complement, Tense, Agreement, Gap).
+*/
+
+
 %test_modal_vp(LF) :-
 %   vp(_, X^can(X), LF, _, _, nogap, [halt], [ ]).
 vp(Form, Predication^Modal, Subject^S, Tense, Agreement, Gap) -->
@@ -78,14 +85,14 @@ vp(Form, Predication^Modal, Subject^S3, Tense, Agreement, GapInfo) -->
        Subject^IndirectObject^DirectObject^Predication,
        Tense,
        ForcePPs), 
-   np((IndirectObject^Modal)^S1, object, _, nogap, nogap),
-   np((DirectObject^S1)^S2, object, _, GapInfo, GapOut),
+   np_chat((IndirectObject^Modal)^S1, object, _, nogap, nogap),
+   np_chat((DirectObject^S1)^S2, object, _, GapInfo, GapOut),
    opt_pp(ForcePPs, Predication, GapOut, S2, S3).
 
 vp(Form, Predication^Modal, Subject^S2, Tense, Agreement, GapInfo) -->
    { lf_core_predicate(S2, Predication) },
    tv(Form, Agreement, Subject^Object^Predication, Tense, ForcePPs), 
-   np((Object^Modal)^S1, object, _, GapInfo, GapOut),
+   np_chat((Object^Modal)^S1, object, _, GapInfo, GapOut),
    opt_pp(ForcePPs, Predication, GapOut, S1, S2).
 
 %%%
@@ -100,7 +107,8 @@ vp(Form, Predication^Modal, Subject^S2, Tense, Agreement, GapInfo) -->
 % Infinitival Verb Phrase.
 %
 infinitival_vp(LF) -->  
-  theTextM1(to), vp(base, S^S, LF, present, first:singular, nogap).
+  %LF = EnclosingSubject^S
+  (theTextM1(to);[]), vp(base, S^S, LF, present, first:singular, nogap).
 
 %%%
 %%% Special case verbs
@@ -114,12 +122,12 @@ vp( _Form,
   ( turn_verb(Agreement, Tense)  ,
     theTextM1(TurnAdverb), 
     {turn_phrasal_verb(TurnAdverb, Subject, Object, Predicate)}, 
-    np((Object^Modal)^S, object, _, GapInfo, nogap)).
+    np_chat((Object^Modal)^S, object, _, GapInfo, nogap)).
 vp( _Form, 
   Predicate^Modal, Subject^S, Tense, 
   Agreement, GapInfo) -->  
   ( turn_verb(Agreement, Tense)  ,
-    np((Object^Modal)^S, object, _, GapInfo, nogap), 
+    np_chat((Object^Modal)^S, object, _, GapInfo, nogap), 
     theTextM1(TurnAdverb), 
     {turn_phrasal_verb(TurnAdverb, Subject, Object, Predicate)}).
 
@@ -268,7 +276,7 @@ verb_with_clausal_complement( present,
 
 vp(_, Predicate^Modal, Subject^Modal, Tense, Agreement, nogap) -->
    verb_with_object_and_clausal_complement(Tense, Agreement, Subject, Object, Complement, DeclarativePredicate, InterrogativePredicate),
-   np((Object^_)^_, object, _, nogap, nogap),
+   np_chat((Object^_)^_, object, _, nogap, nogap),
    content_clause(Complement, DeclarativePredicate, InterrogativePredicate, Predicate).
 
 
@@ -322,9 +330,9 @@ verb_with_object_and_clausal_complement( present,
 
 vp( _Form, 
   Predicate^Modal, Subject^S, Tense, 
-  Agreement, GapInfo) -->  %{fail},
-  ( start_verb(_Agreement, Tense, Info)  ,
-    np((Object^Modal)^S, object, _, GapInfo, nogap), 
+  Agreement, GapInfo) -->  {fail},
+  ( start_verb(Agreement, Tense, Info)  ,
+    np_chat((Object^Modal)^S, object, _, GapInfo, nogap), 
     complete_verb(Info, Subject, Object, Predicate)).
 
 

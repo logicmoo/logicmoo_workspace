@@ -37,16 +37,16 @@ test(generate(np, prop),
 test(completion(np, from_nothing),
      [ true(nonempty_instantiated_atom_list(Completion)),
        nondet ]) :-
-   np(_, subject, third:singular, nogap, nogap, Completion, [ ]).
+   np_chat(_, subject, third:singular, nogap, nogap, Completion, [ ]).
 
 test(completion(np, kind),
      [ true(ground(Completion)),
        true(Completion = [_|_]),
        nondet ]) :-
-   np(_, subject, third:singular, nogap, nogap, [a | Completion ], [ ]).
+   np_chat(_, subject, third:singular, nogap, nogap, [a | Completion ], [ ]).
 
 test(completion(np, reject_verb)) :-
-   \+ np(_, subject, third:singular, nogap, nogap, [go | _Completion ], [ ]).
+   \+ np_chat(_, subject, third:singular, nogap, nogap, [go | _Completion ], [ ]).
 
 test(completion(np, prop),
      [ true(atomic(Noun)),
@@ -75,7 +75,7 @@ test(parse(np, addressee),
 
 test(parse(np, kind),
      [ true(LF = ((X^S)^(S, iz_a(X, Module)))) ]) :-
-   np(LF, subject, third:singular, nogap, nogap, [a, Module], []).
+   np_chat(LF, subject, third:singular, nogap, nogap, [a, Module], []).
 
 test(parse(np, prop),
      [ true(LF == $buggy_routine),
@@ -85,4 +85,4 @@ test(parse(np, prop),
 
 
 np_test(LF, Case, Agreement, SurfaceForm) :-
-   np((LF^S)^S, Case, Agreement, nogap, nogap, SurfaceForm, [ ]).
+   np_chat((LF^S)^S, Case, Agreement, nogap, nogap, SurfaceForm, [ ]).

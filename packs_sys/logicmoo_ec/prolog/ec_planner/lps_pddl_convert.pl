@@ -160,9 +160,11 @@ solve_files_w_lps(DomainFile, ProblemFile):-
 
 sanity_breaks:- 
  pre_pddl_tests,
+ setup_call_cleanup(
  l_open_input('/opt/logicmoo_workspace/packs_sys/logicmoo_ec/test/pddl_tests/benchmarks/airport/p29-airport4halfMUC-p8.pddl',Stream),
- set_stream(Stream,buffer_size(2560000)),
-  with_lisp_translation(Stream,writeln).
+  (set_stream(Stream,buffer_size(2560000)),
+    with_lisp_translation(Stream,print_tree_with_nl)),
+  close(Stream)).
 
 pre_pddl_tests:- retractall(tmp_pddl:took_test(_,_,_)),!.
 

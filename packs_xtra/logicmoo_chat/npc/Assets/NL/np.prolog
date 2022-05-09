@@ -59,14 +59,13 @@ selectional_constraint(_, entity).
 
 %:- randomizable nnp//6.
 
-np( Meaning, Case, Agreement, GapIn, GapOut, S, E) :-
-  % BREAKS Dicourse Var resolution 
-  %Meaning = ((X^_)^_),
-  nnp0(X, Meaning, Case, Agreement, GapIn, GapOut, S, E).
+%np( ((X^LFIn)^LFOut), _Case, _Agreement, GapInOut, GapInOut, S, E) :- noun_phrase(_SO, X, LFIn, LFOut,S,E).
+np_chat( Meaning, Case, Agreement, GapIn, GapOut, S, E) :- nnp0(_X, Meaning, Case, Agreement, GapIn, GapOut, S, E).
 
-nnp0(X, Meaning, Case, Agreement, GapIn, GapOut, S, E):- 
   %(nonvar(X)->trace;true),
-  nnp(X, Meaning, Case, Agreement, GapIn, GapOut, S, E).
+nnp0(X, Meaning, Case, Agreement, GapIn, GapOut, S, E):- nnp(X,Meaning, Case, Agreement, GapIn, GapOut, S, E).
+
+nnp0(X, ((X^LF)^(of_np(X,Subj),LF)), _Case, _Agreement, _, nogap, S, E) :- call(parser_chat80:subj(Subj,_Agmt,_Type,S,E,[],[])).
 
 %% nnp( X, ?Meaning, ?Case, ?Agreement, +GapIn, -GapOut)
 %

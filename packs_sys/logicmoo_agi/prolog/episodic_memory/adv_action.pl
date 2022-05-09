@@ -590,8 +590,11 @@ expected_truth(G) :- ignore(dshow_failure(G)).
 
 change_state(Agent, Action, Thing, OpenedTF, S0, S):-
  change_state_0(Agent, Action, Thing, OpenedTF, S0, S), !.
-change_state(Agent, Action, Thing, OpenedTF, S0, S):-
+change_state(Agent, Action, Thing, OpenedTF, S0, S):- fail,
  ignore(rtrace(change_state_0(Agent, Action, Thing, OpenedTF, S0, S))), !.
+
+change_state_0(Agent, _Action, Thing, OpenedTF, S, S):-
+   getprop(Thing, OpenedTF, S),!.
 
 change_state_0(Agent, Action, Thing, OpenedTF, S0, S):-
  action_verb_agent_thing(Action, Open, _, _),
@@ -606,7 +609,10 @@ change_state_0(Agent, Action, Thing, OpenedTF, S0, S):-
    maybe_when(proper_requires_spatially(Open, touch), 
      required_reason(Agent, 
        will_need_touch(Agent, Thing, S0, _)))),
-   required_reason(Agent, \+ getprop(Thing, OpenedTF, S0)),
+
+
+
+ required_reason(Agent, \+ getprop(Thing, OpenedTF, S0)),
 
  %getprop(Thing, can_be(open, S0),
  %\+ getprop(Thing, =(open, t), S0),  

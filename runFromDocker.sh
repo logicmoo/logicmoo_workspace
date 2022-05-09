@@ -1,7 +1,7 @@
 #!/bin/bash
 
 export LM_PORTS="-p 5901:5901 -p 5900:5900 -p 4018:8188 -p 4180:1800 -p 4188:8888 -p 4181:8880 -p 4000-4004:4000-4004 -p 4021-4025:4021-4025 -p 4081-4085:4081-4085 -p 4100-4125:4100-4125 -p 4090-4099:4090-4099 -p 4243:443 -p 4280:80 -p 4020:3020  -p 3020:3020 -p 4222:22 -p 4220:3020 -p 4200:5900 -p 4201:9001 -p 4290:4090 -p 6079-6081:6079-6081"
-export LM_VOLUMES="-v /opt/logicmoo_workspace_docker:/opt/logicmoo_workspace"
+export LM_VOLUMES="-v /opt/logicmoo_workspace_docker:/opt/logicmoo_workspace  -v /mnt/sdb2:/ubuntu"
 export EXTRA=''
 # --privileged=true 
 export DOCKER_RUN="--no-healthcheck $LM_VOLUMES --rm -it ${LM_PORTS} ${EXTRA}"

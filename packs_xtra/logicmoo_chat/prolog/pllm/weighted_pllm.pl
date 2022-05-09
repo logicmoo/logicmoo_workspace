@@ -22,7 +22,6 @@ once_ngram(_PrevLoc,A,B,C,D,N):- ngram(Loc,A,B,C,D,N), may_use(Loc,A,B,C,D,N).
 %may_use(Loc,_,B,C,D,_):- \+ used_cl(ngram(A,B,C,D)), assert(used_cl(ngram(A,B,C,D)),Cl2), undo(erase(Cl2)), !.
 may_use(Loc,_,B,C,D,_):- \+ used_cl(ngram(A,B,C,D)), assert(used_cl(ngram(A,B,C,D))).
 
-
 gen6([A,B,C,D,E,F,G,H]=N):-
   ngram(Loc1,E,F,G,H,Z), ngram(Loc2,C,D,E,F,Y), ngram(Loc3,A,B,C,D,X), N is X+Y+Z.
 

@@ -706,7 +706,7 @@ reduce3(^(Q,P),P):- ground(Q);ground(P).
 reduce3(^(Var,P),P):- var(Var),\+ sub_cl_var(Var,P),!.
 
 reduce3(generic_pred(x, _Frame_352, has_prop(prop, Car), Relation_Man, Car_Of),
-  (ti(Car_Of, Car),relation(Car_Of, of, Relation_Man))).
+  (ti(Car_Of, Car),relation(Car_Of, of, Relation_Man))):- fail.
 
 reduce3(setOf(A1,P,L), setOf(A1,R,L)):- %fail, %1
   =(E,P), compound(E), E = generic_pred(_X,_F,has_prop(type,T),I,A2),

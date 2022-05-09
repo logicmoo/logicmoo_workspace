@@ -191,6 +191,7 @@ functionword(your).
 functionword('Your').
 functionword(yourself).
 functionword(yourselves).
+
 functionword(to).  % e.g. "wants to"
 functionword(own).  % e.g. "his own"
 functionword(many).  % e.g. "how many"

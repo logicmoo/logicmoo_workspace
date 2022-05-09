@@ -636,6 +636,7 @@ nars_inference(_Ctx, [conjunction(L1), T1], [inheritance(S, M), T2], [conjunctio
 
 %% dependant variable elimination
 
+
 nars_inference(_Ctx, [conjunction(L1), T1], [inheritance(M, S), T2], [C, T]):-
  	nars_subtract(L1, [inheritance(var(N, D), S)], L2), L1 \= L2,
  	replace_var(L2, var(N, D), L3, M), narz_reduce(conjunction(L3), C), narz_f_cnv(T2, T0), narz_f_ana(T1, T0, T).

@@ -728,7 +728,7 @@ space_out([X | Rest], [X, " ", SpacedRest]) :-
 important_nonterminal(s, 7).
 important_nonterminal(aux_vp, 7).
 important_nonterminal(vp, 8).
-important_nonterminal(np, 7).
+important_nonterminal(np_chat, 7).
 
 :- public nonterminal/2.
 

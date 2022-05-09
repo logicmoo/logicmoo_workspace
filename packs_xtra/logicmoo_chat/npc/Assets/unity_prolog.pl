@@ -495,7 +495,8 @@ mexp:-
 expand_dcg_body(T,T):- \+ compound(T),!.
 expand_dcg_body(T,T):- compound_name_arity(T,F,_),atom_concat('the',_,F),!.
 expand_dcg_body({T},{T}).
-expand_dcg_body(DCGText,TheText):- DCGText=[_|_], wrap_words(DCGText,TheText),!,ignore(( \+ ground(DCGText), log(wrap_words(DCGText,TheText)))),!.
+expand_dcg_body(DCGText,TheText):- DCGText=[_|_], wrap_words(DCGText,TheText),!,ignore(( \+ ground(DCGText), 
+  source_location(S,F), wdmsg(source_location(S,F)), log(wrap_words(DCGText,TheText)))),!.
 expand_dcg_body(Comp,CmpO):-
   meta_pred_style(Comp,Meta),
   strip_module(Comp,_,Cmp),
@@ -541,9 +542,9 @@ same_s(MX,X):- atom(MX),atom(X),!, upcase_atom(MX,MXU),upcase_atom(X,XU),!,XU==M
 same_s(X,X).
 
 theTextM1(X) --> [M],{(compound(M)->arg(1,M,MX);M=MX),same_s(MX,X)}.
-theTextM(Var) --> {var(Var),!, Var=[X|L]}, theTextM([X|L]).
-theTextM([]) --> [],!.
-theTextM([X|L]) --> theTextM1(X),theTextM(L).
+theTextM([X|L]) --> theTextM1(X),!,theTextML(L).
+theTextML([]) --> [].
+theTextML([X|L]) --> theTextM1(X),theTextM(L).
 
 enforce_set(Set):- term_variables(Set,Vars),maplist(freeze_as_set(Set),Vars).
 freeze_as_set(Set,Var):- 
@@ -824,7 +825,7 @@ dont_udecend_into(Begin):- compound_name_arity(Begin,uslash,_),source_file_expan
 dont_udecend_into(uslash(_,_)).
 dont_udecend_into(Begin):- dont_reduce(Begin).
 
-sub_uterm(Type, X, X):- \+compound(X),!.
+sub_uterm(Type, Y, X):- \+compound(X),!,X=Y.
 %sub_uterm(Type, X, '::'(C,_)):- source_file_expansion,!, sub_uterm(Type, X, C).
 sub_uterm(Type, X, Arg):- is_db_call(Arg),!, sub_term(X, Arg).
 %sub_uterm(Type, _, X):- source_file_expansion,dont_udecend_into(X),!,fail.

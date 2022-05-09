@@ -202,33 +202,68 @@ explitVocab(huh,interjects).
 
 :-dynamic(dictionary/3).
 
+atom_or_string(AS):- once(atom(AS);string(AS)).
+:- export(atom_or_string/1).
 
+contracks(Is,Joe):- var(Joe),!,freeze(Joe,contracks(Is,Joe)).
+contracks(Is,Joe):- downcase_atom(Joe,LJoe),LJoe\==Joe,!,contracks(Is,LJoe).
 
+contracks(us,let).
+contracks(has,there).
+contracks(is,it).
+contracks(is,that).
+contracks(is,What):- atom_concat('wh',_,What),not_e(S).
+contracks(is,What):- atom_concat('ev',_,What),not_e(S).
+contracks(is,What):- atom_concat(S,'ere',What),not_e(S).
+contracks(is,What):- atom_concat(S,'body',What),not_e(S).
+contracks(is,What):- atom_concat(S,'thing',What),not_e(S).
+contracks(is,What):- atom_concat(S,'one',What),not_e(S).
+contracks(is,he).
+contracks(is,she).
+not_e(E):- E\==''.
+
+dictionary(contractions,[Joe,'\'s'],[Joe,Is]):- contracks(Is,Joe).
 dictionary(contractions,[cannot],[can,not]).
+
+dictionary(contractions,[W,AposT],O):- 
+ freeze(AposT, (atom_concat('\'',T,AposT), dictionary(contractions,[W,'\'',T],O))).
+ 
+dictionary(contractions,['n\'t'],[not]).
+dictionary(contractions,['\'ll'],[will]).
+dictionary(contractions,['\'m'],[am]).
+dictionary(contractions,['\'ve'],[have]).
+dictionary(contractions,['\'d'],[would]).
+dictionary(contractions,['\'re'],[are]).
+dictionary(contractions,[Can,'\'',T],[Can,Not2]):- dict_c([I,*,T],[I,Not2]).
 dictionary(contractions,[Can,'\'',T],[Can2,Not2]):- dict_c([Can,*,T],[Can2,Not2]).
 dictionary(contractions,[CanT],[Can2,Not2]):- dict_c([Can,*,T],[Can2,Not2]),atomic_list_concat([Can,'\'',T],CanT).
-dictionary(contractions,[Can,'\'',T],[Can,Not2]):- dict_c([I,*,T],[I,Not2]).
 dictionary(contractions,[Cant],[Can2,Not2]):- dict_c([Can,*,T],[Can2,Not2]),atom_concat(Can,T,Cant).
-dictionary(contractions,[AposT],['\'',T]):-dict_c([_,*,T],_),
+dictionary(contractions,[wasn,not],[was,not]).
+dictionary(contractions,[don,not],[do,not]).
+dictionary(contractions,[isn,not],[is,not]).
+dictionary(contractions,[AposT],['\'',T]):- dict_c([_,*,T],_),
   freeze(AposT,(atom_or_string(AposT),atom_concat('\'',T,AposT))).
 
-dict_c([can,*,t],[can,not]).
-dict_c([couldn,*,t],[could,not]).
-dict_c([didn,*,t],[did,not]).
-dict_c([don,*,t],[do,not]).
+dict_c([you,*,re],[you,are]).
 dict_c([i,*,ll],[i,will]).
 dict_c([i,*,d],[i,would]).
 dict_c([i,*,m],[i,am]).
 dict_c([i,*,ve],[i,have]).
+
+dict_c([can,*,t],[can,not]).
+dict_c([ain,*,t],[are,not]).
+dict_c([wasn,*,t],[was,not]).
+dict_c([won,*,t],[will,not]).
+dict_c([aren,*,t],[are,not]).
+dict_c([couldn,*,t],[could,not]).
+dict_c([didn,*,t],[did,not]).
+dict_c([don,*,t],[do,not]).
 dict_c([isn,*,t],[is,not]).
 dict_c([shal,*,t],[shall,not]).
 dict_c([shan,*,t],[should,not]).
 dict_c([shouldn,*,t],[should,not]).
-dict_c([that,*,s],[that,is]).
-dict_c([what,*,s],[what,is]).
-dict_c([ain,*,t],[are,not]).
-dict_c([won,*,t],[will,not]).
-dict_c([you,*,re],[you,are]).
+%dict_c([that,*,s],[that,is]).
+%dict_c([what,*,s],[what,is]).
 %dictionary(contractions,['Let',me,_],[yes]).
 %dictionary(contractions,[let,me,_],[yes]).
 %dictionary(contractions,['Lets',_],[yes]).

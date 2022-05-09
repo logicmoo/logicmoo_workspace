@@ -5,4 +5,7 @@
 :- indexical
    speaker,
    addressee,
-   dialog_group.
+   dialog_group,
+   they_them,
+   it_that,
+   these_those.

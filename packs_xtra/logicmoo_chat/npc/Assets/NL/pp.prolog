@@ -48,7 +48,7 @@ generator_pp( PrevPreps,
     { prepositional_slot(Preposition, X, Predication), 
       \+member(Preposition, PrevPreps), 
       enforce_set([Preposition|Prepositions]) }, 
-    np((X^S1)^S2, object, _, Gap, NewGap), 
+    np_chat((X^S1)^S2, object, _, Gap, NewGap), 
     generator_pp( [Preposition|PrevPreps], 
       Prepositions, Predication, NewGap, S2, 
       S3)).
@@ -77,7 +77,7 @@ parser_opt_pp(PrevPreps, Predication, Gap, S1, S3) -->
     { preposition(Preposition), 
       \+member(Preposition, PrevPreps), 
       prepositional_slot(Preposition, X, Predication) }, 
-    np((X^S1)^S2, object, _, Gap, nogap), 
+    np_chat((X^S1)^S2, object, _, Gap, nogap), 
     parser_opt_pp([Preposition|PrevPreps], Predication, nogap, S2, S3)).
 
 %% preposition(?Word)

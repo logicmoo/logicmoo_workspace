@@ -173,7 +173,7 @@ type_measure_pred(_AnyObjectType,MeasureType,Area,countV):- MeasureType\==size, 
 property_LF(Capital,_,X,_,Y,Out,[],_,_):- 
    nonvar(Capital),
    \+ is_prop_type80(Capital),!,
-   (( \+ \+ ti(Capital,_) ; concrete_type(Capital)) -> PT = type ; PT = prop),
+   (( \+ \+ ti(Capital,_) ; concrete_type(Capital)) -> PT = type ; (fail, PT = prop)),
    make_gp(_Spatial,has_prop(PT,Capital),Y,X,Out).
 
 property_LF_1(Area,     _,    _X, _,_Y, _P,[],_,_):- var(Area),!,fail.

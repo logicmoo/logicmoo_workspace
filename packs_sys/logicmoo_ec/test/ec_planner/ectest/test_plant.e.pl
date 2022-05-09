@@ -4,6 +4,16 @@
 
 */
 
+executable(drain_tank).
+
+executable(cool_tank).
+
+executable(open_valve).
+
+executable(turn_off_boiler).
+
+
+
 do_ec_test(plant1) :- abdemo_special(easy,[holds_at(plant_safe,t)],R).
 
 
@@ -24,17 +34,6 @@ axiom(initiates(open_valve,valve_open,T),[]).
 axiom(initiates(turn_off_boiler,boiler_off,T),[]).
 
 
-/* Abduction policy */
-
-abducible(dummy).
-
-executable(drain_tank).
-
-executable(cool_tank).
-
-executable(open_valve).
-
-executable(turn_off_boiler).
 
 
 
@@ -42,4 +41,7 @@ executable(turn_off_boiler).
 :- run_ec_tests.
 
 % :- halt.
+/* Abduction policy */
+
+abducible(dummy).
 

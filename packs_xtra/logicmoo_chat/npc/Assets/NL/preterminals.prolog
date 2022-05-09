@@ -5,6 +5,70 @@
 :- randomizable proper_name/4, proper_name/2.
 
 
+%transitive_interface_verb(Deactivate, Deactivates, Deactivated, Deactivated, Deactivating, _, ABDAB).
+%transitive_interface_verb(D, es(D), ed(D), ed2(D), ing(D), _, LF):- D = craz, LF = A^B^tv_call(D,A,B).
+
+iface(iv, Write, Writes, Wrote, Written, Writing, _, A^t(Write,A)):-
+  current_predicate(talkdb_talk_db/6),
+  talkdb_talk_db(intransitive,Write,Writes,Wrote,Writing,Written).
+
+iface(tv, Write, Writes, Wrote, Written, Writing, _, (A^(B^t(Write,A,B)))):-
+  current_predicate(talkdb_talk_db/6),
+  talkdb_talk_db(transitive,Write,Writes,Wrote,Writing,Written).
+
+iface(dtv, Write, Writes, Wrote, Written, Writing, _, (A^(B^(C^t(Write,A,B,C))))):-
+  current_predicate(talkdb_talk_db/6),
+  talkdb_talk_db(ditransitive,Write,Writes,Wrote,Writing,Written).
+%iface(iv,Deactivate, Deactivates, Deactivated, Deactivated2, Deactivating, _, ABDAB):-
+%  talkdb_talk_db(_Transitive,Write,Writes,_Wrote,_Writing,_Written)
+
+phrase_rule_gen(PR,Phrase,Guard):-
+ ARG = ppg(PR,Phrase,Guard),
+ arg(_,
+  v(ppg(iv(simple, third:singular, ABDAB, present, []), [Deactivates], true),
+    ppg(iv(simple, E, ABDAB, present, []),[Deactivate], E\=third:singular),
+    ppg(iv(simple, _, ABDAB, past, []),   [Deactivated], true),
+    ppg(iv(simple, _, ABDAB, future, []), [Deactivate], true),
+    ppg(iv(base, _, ABDAB, present, []),  [Deactivate], true),
+    ppg(iv(base, _, ABDAB, past, []),     [Deactivate], true),
+    ppg(iv(past_participle,_,ABDAB,_,[]), [Deactivated2], true),
+    ppg(iv(present_participle,_,ABDAB,_,[]), [Deactivating], true)),
+  ARG),
+ iface(iv,Deactivate, Deactivates, Deactivated, Deactivated2, Deactivating, _, ABDAB).
+
+phrase_rule_gen(PR,Phrase,Guard):-
+ arg(_,
+  v(ppg(tv(simple, third:singular, ABDAB, present, []), [Deactivates], true),
+    ppg(tv(simple, E, ABDAB, present, []),[Deactivate], E\=third:singular),
+    ppg(tv(simple, _, ABDAB, past, []),   [Deactivated], true),
+    ppg(tv(simple, _, ABDAB, future, []), [Deactivate], true),
+    ppg(tv(base, _, ABDAB, present, []),  [Deactivate], true),
+    ppg(tv(base, _, ABDAB, past, []),     [Deactivate], true),
+    ppg(tv(past_participle,_,ABDAB,_,[]), [Deactivated2], true),
+    ppg(tv(present_participle,_,ABDAB,_,[]), [Deactivating], true)),
+  ppg(PR,Phrase,Guard)),
+ iface(tv,Deactivate, Deactivates, Deactivated, Deactivated2, Deactivating, _, ABDAB).
+
+phrase_rule_gen(PR,Phrase,Guard):- 
+ arg(_,
+  v(ppg(dtv(simple, third:singular, ABDAB, present, []), [Deactivates], true),
+    ppg(dtv(simple, E, ABDAB, present, []),[Deactivate], E\=third:singular),
+    ppg(dtv(simple, _, ABDAB, past, []),   [Deactivated], true),
+    ppg(dtv(simple, _, ABDAB, future, []), [Deactivate], true),
+    ppg(dtv(base, _, ABDAB, present, []),  [Deactivate], true),
+    ppg(dtv(base, _, ABDAB, past, []),     [Deactivate], true),
+    ppg(dtv(past_participle,_,ABDAB,_,[]), [Deactivated2], true),
+    ppg(dtv(present_participle,_,ABDAB,_,[]), [Deactivating], true)),
+  ppg(PR,Phrase,Guard)),
+ iface(dtv,Deactivate, Deactivates, Deactivated, Deactivated2, Deactivating, _, ABDAB).
+
+
+ 
+phrase_rule(PR,Phrase,Guard):- % fail,
+ phrase_rule_gen(PR,Phrase,Guard).
+
+ 
+
 
 %=autodoc
 %% limit_var( ?Four, ?ObjectName, :GoalGoal) is semidet.
@@ -141,9 +205,11 @@ adjective(Kind) -->
 %
 % Dtv.
 %
-dtv(Form, Agreement, LF, Tense, ForcePPs) --> 
-  {phrase_rule(dtv(Form, Agreement, LF, Tense, ForcePPs), Words, Guard)},
-  Words,{Guard}.
+
+dtv(Form, Agreement, SLF, Tense, ForcePPs, [S|SS], E) :- SLF = (_^(_^(_^LF))), once(nonvar(S);nonvar(LF)),
+  phrase_rule(dtv(Form, Agreement, SLF, Tense, ForcePPs), [S|Words], Guard),
+  append(Words,E,SS),
+  call(Guard).
 
 
 
@@ -188,7 +254,11 @@ object_words(a,Object,CWords):- object_words0(a,Object,Words), \+ object_words0(
 object_words0(pn, Object, Words) :- 
   t(given_name, Object, String), 
   tokenize_atom(String, Words).
-object_words0(a,#(VarName),Words):- atom(VarName),atomic_list_concat(Words,'_',VarName).
+%object_words0(a,#(Kind),[Kind]):- atom(Kind),!.
+object_words0(a,#(VarName),Words):- atom(VarName),
+  (atom_contains(VarName,' ')
+   -> atomic_list_concat(Words,' ',VarName)
+   ;  atomic_list_concat(Words,'_',VarName)).
 object_words0(a,Object,[Kind]) :- (var(Kind);atom(Kind)),atom(Object),atom_concat('unknown_',Kind,Object).
 object_words0(a,Object,Words):- 
  atom(Object), \+ atom_concat('unknown_',_,Object),
@@ -235,9 +305,10 @@ whpron(Kind)-->theTextM1(WH), {whpron(WH, Kind)}.
 %
 % Iv.
 %
-iv(Form, Agreement, LF, Tense, ForcePPs) --> 
-  {phrase_rule(iv(Form, Agreement, LF, Tense, ForcePPs), Words, Guard)},
-  Words,{Guard}.
+iv(Form, Agreement, SLF, Tense, ForcePPs, [S|SS], E) :- SLF = _^LF, once(nonvar(S);nonvar(LF)),
+  phrase_rule(iv(Form, Agreement, SLF, Tense, ForcePPs), [S|Words], Guard),
+  append(Words,E,SS),
+  call(Guard).
 
 
 
@@ -306,6 +377,43 @@ load_special_csv_row(_RowNumber,
 end_csv_loading(transitive_verb) :-
    check_lexicon_typing(LF^tv(past_participle, _, LF, _, _, _, _)).
 
+:- dynamic(transitive_verb/7).
+transitive_verb([deactivate], [deactivates], [deactivated], [deactivated], [deactivating], [], A^B^deactivate(A, B)).
+transitive_verb([know], [knows], [knew], [knew], [knowing], [], A^B^know(A, B)).
+transitive_verb([love], [loves], [loved], [loved], [loving], [], A^B^related(A, loves, B)).
+transitive_verb([like], [likes], [liked], [liked], [liking], [], A^B^related(A, likes, B)).
+transitive_verb([dislike], [dislikes], [disliked], [disliked], [disliking], [], A^B^related(A, dislikes, B)).
+transitive_verb([give], [gives], [gave], [gave], [giving], [to], A^B^give(A, _, B)).
+transitive_verb([type], [types], [typed], [typed], [typing], [], A^B^comm(keystrokes, A, B)).
+transitive_verb([do], [does], [did], [did], [doing], [], A^B^do(A, B)).
+transitive_verb([grab], [grabs], [grabbed], [grabbed], [grabbing], [], A^B^take(A, B, _)).
+transitive_verb([take], [takes], [took], [taken], [taking], [from], A^B^take(A, B, _)).
+transitive_verb([put], [puts], [put], [put], [putting], [in], A^B^put(A, B, _)).
+transitive_verb([move], [moves], [moved], [moved], [moving], [from, to], A^B^move(A, B, _, _)).
+transitive_verb([tell], [tells], [told], [told], [telling], [about], A^B^tell_about(A, B, _)).
+transitive_verb([ask], [asks], [asked], [asked], [asking], [about], A^B^ask_about(A, B, _)).
+transitive_verb([eat], [eats], [ate], [ate], [eating], [], A^B^eat(A, B)).
+transitive_verb([drink], [drinks], [drank], [drank], [drinking], [], A^B^drink(A, B)).
+transitive_verb([search], [searches], [searched], [searched], [searching], [for], A^B^search_for(A, B, _)).
+transitive_verb([check], [checks], [checked], [checked], [checking], [for], A^B^search_for(A, B, _)).
+transitive_verb([look, around], [looks, around], [looked, around], [looked, around], [looking, around], [for], A^B^search_for(A, B, _)).
+transitive_verb([look], [looks], [looked], [looked], [looking], [for], A^_^search_for(A, _, _)).
+transitive_verb([look, at], [looks, at], [looked, at], [looked, at], [looking, at], [], A^B^examine(A, B)).
+transitive_verb([examine], [examines], [examined], [examined], [examining], [], A^B^examine(A, B)).
+transitive_verb([read], [reads], [read], [read], [reading], [], A^B^read(A, B)).
+transitive_verb([bring], [brings], [brought], [brought], [bringing], [to], A^B^bring(A, _, B)).
+transitive_verb([get, in], [gets, in], [got, in], [got, in], [getting, in], [], A^B^move(A, A, B)).
+transitive_verb([enter], [enters], [entered], [entered], [entering], [], A^B^move(A, A, B)).
+transitive_verb([push], [pushes], [pushed], [pushed], [pushing], [], A^B^press(A, B)).
+transitive_verb([press], [presses], [pressed], [pressed], [pressing], [], A^B^press(A, B)).
+transitive_verb([find], [finds], [found], [found], [finding], [], A^B^find(A, B)).
+transitive_verb([get], [gets], [got], [got], [getting], [], A^B^get(A, B)).
+transitive_verb([look, for], [looks, for], [looked, for], [looked, for], [looking, for], [in], A^B^look_for(A, B)).
+transitive_verb([leave], [leaves], [left], [left], [leaving], [], A^B^leave(A, B)).
+transitive_verb([exit], [exits], [exited], [exited], [exiting], [], A^B^leave(A, B)).
+transitive_verb([operate], [operates], [operated], [operated], [operating], [], A^B^operate(A, B)).
+
+
 :- dynamic(copular_relation//1).
 %
 % Relations and properties disguised as transitive verbs
@@ -333,9 +441,10 @@ tv( present_participle,
    present, []) -->  
   copular_relation(Relation).
 
-tv(Form, Agreement, LF, Tense, ForcePPs) --> 
-  {phrase_rule(tv(Form, Agreement, LF, Tense, ForcePPs), Words, Guard)},
-  Words,{Guard}.
+tv(Form, Agreement, SLF, Tense, ForcePPs, [S|SS], E) :- SLF= (_^(_^LF)), once(nonvar(S);nonvar(LF)),
+  phrase_rule(tv(Form, Agreement, SLF, Tense, ForcePPs), [S|Words], Guard),
+  append(Words,E,SS),
+  call(Guard).
 
   %tv(Form, Agreement, S^O^property_value(S, Property, O), Tense, [ ]) -->
 %   property_verb(Property, Form, Agreement, Tense).
