@@ -65,10 +65,10 @@ fav(t('6150a2bd'),[sol([rot180])]).
 fav(t('a79310a0'),[sol([gravity(1,s),swap_colors(cyan,red)])]).
 fav(t('d511f180'),[sol([swap_colors(cyan,grey)])]).
 fav(t('d511f180'),[sol([compute_max_color(C1),compute_next_color(C2),swap_colors(C2,C1)])]).
-fav(t('73251a56'),[learn_mapping([learn_mapping_stateful]),sol([apply_mapping_stateful])]).
+fav(t('73251a56'),[learn([learn_mapping_stateful]),sol([apply_mapping_stateful])]).
 fav(t('f76d97a5'),[sol([compute_max_color(C1),compute_next_color(C2),blacken_color(C1),subst_color(C2,C1)])]).
 fav(t('6f8cd79b'),[sol([add_borders(cyan)])]).
-fav(t('ae4f1146'),[learn_mapping([call(set_bgc(cyan))]),sol([largest_indiv,trim_to_used,set_bg(cyan)])]).
+fav(t('ae4f1146'),[learn([call(set_bgc(cyan))]),sol([largest_indiv,trim_to_used,set_bg(cyan)])]).
 fav(t('a48eeaf7'),[sol([largest_indiv(I),tiny_individuals(Is),gravity_to(Is,I)])]).
 fav(t('8d5021e8'),[sol([growTimes([[rot180,flipV],
                                    [flipH ,same],
@@ -140,8 +140,19 @@ if like in the game of TTT you can win, but not diagonlly.. place the color on t
 
 
 */
-                              
- 
+% S=[[1,2,3],[4,x,6],[7,8,0]],grow([[self,self],[self,self]],S, X).
+
+% grow([[self,self]],[[a,b,c]], [[a,b,c,a,b,c]]).
+append_left(Grid1,[],Grid1):-!.
+append_left(Grid1,Grid2,Grid):- length(Grid1,Len),assertion(length(Grid2,Len)),maplist(append,Grid1,Grid2,Grid).
+append_down(Grid1,Grid2,Grid):- append(Grid1,Grid2,Grid).
+
+grow_row([],_,[]).
+grow_row([C1],Grid,G1):- !, solving_progs(C1,Grid,G1).
+grow_row([C1|Row],Grid,GM):- !, solving_progs(C1,Grid,G1),grow_row(Row,Grid,GR),append_left(G1,GR,GM).
+grow([],_,[]).
+grow([[Self]],Grid,GridO):- !, solving_progs(Self,Grid,GridO).
+grow([Row|Rows],Grid,G1GridO):- grow_row(Row,Grid,G1), grow(Rows,Grid,GridO),append(G1,GridO,G1GridO).
 
 largest_indiv(Grid,GridO):- individuals(Grid,[Points|_]),points_to_grid(Points,GridO).
 largest_indiv(GridO,Grid,Grid):- largest_indiv(Grid,GridO).
@@ -348,14 +359,14 @@ print_arc_in_out(Name,Type,In,Out):-
   ignore(maybe_do(CName,Name,Type,In,Out))),true,notrace).
 
 
-maybe_do(_,_,_,_,_):- \+ test_cond(sol(_)),!.
+%maybe_do(_,_,_,_,_):- \+ test_cond(sol(_)),!.
 maybe_do(CName,Name,Type,In,Out):-
   ignore((CName\==Name,dash_char(60,"A"),dash_char(6,"\n"),nl)),  
      dash_char(60,"V"),nl,
      describe_feature(Name,[test_info]),
      print_grid(Name=in(Type),In),
      print_grid(Name=out(Type),Out),
-    \+ \+ ignore(((Type = trn+_), test_cond(learn_mapping(CProg)),must(training_progs(CProg,In,Out)))),
+    \+ \+ ignore(((Type = trn+_), test_cond(learn(CProg)),must(training_progs(CProg,In,Out)))),
      confirm(Name,Type,In,Out),nl,!.
 
 
@@ -365,7 +376,7 @@ confirm(Name,Type,In,Out):-
 sols_for(Name,Sol):- test_info(Name,Sols),member(sol(Sol),Sols).
 
 confirm_sol(Prog,Name,Type,In,Out):- 
-   run_grid_prog(Prog,In,GridO)
+   solving_progs(Prog,In,GridO)
    *-> 
    count_difs(Out,GridO,Errors),
    (Errors==0 -> arcdbg(pass(Name,Type,Prog));(arcdbg(fail(Errors,Name,Type,Prog)),
@@ -775,22 +786,23 @@ b_rplc_hv_value(Grid,OldC,NewC,H,V):- nth1(V,Grid,Row),rplc_nth1(H,Row,OldC,NewC
 nb_rplc_hv_value(Grid,OldC,NewC,H,V):- nth1(V,Grid,Row),nb_rplc_nth1(H,Row,OldC,NewC).
 
 */
-run_grid_prog(Prog,In,Out):- var(Prog),!,throw(var_run_grid_prog(Prog,In,Out)).
+solving_progs(Prog,In,Out):- var(Prog),!,throw(var_solving_progs(Prog,In,Out)).
 
-run_grid_prog(sol(Prog),In,Out):- !, run_grid_prog(Prog,In,Out).
-run_grid_prog(call(G),In,Out):-!,call(G),(var(Out)->Out=In; true).
-run_grid_prog([],In,Out):-!, var(Out)->Out=In; true.
-run_grid_prog([H|Prog],In,Out):-!,
-  run_grid_prog(H,In,GridM), run_grid_prog(Prog,GridM,Out).
-run_grid_prog(Prog,In,In):- missing_arity2(Prog),!,arcdbg(missing(run_grid_prog(Prog))).
-run_grid_prog(Prog,In,Out):- call(Prog,In,Out)*-> true ; arcdbg(nonworking(Prog)).
+solving_progs(sol(Prog),In,Out):- !, solving_progs(Prog,In,Out).
+solving_progs(call(G),In,Out):-!,call(G),(var(Out)->Out=In; true).
+solving_progs([],In,Out):-!, var(Out)->Out=In; true.
+solving_progs(self,In,Out):-!, duplicate_term(In,Out).
+solving_progs([H|Prog],In,Out):-!, solving_progs(H,In,GridM), solving_progs(Prog,GridM,Out).
+solving_progs(Prog,In,In):- missing_arity2(Prog),!,arcdbg(warn(missing(solving_progs(Prog)))).
+solving_progs(Prog,In,Out):- call(Prog,In,Out)*-> true ; arcdbg(warn(nonworking(solving_progs(Prog)))).
 
 training_progs(Prog,In,Out):- var(Prog),!,throw(var_training_progs(Prog,In,Out)).
 training_progs(call(G),_In,_Out):-!,call(G).
 training_progs([],_In,_Out):-!.
 training_progs([H|Prog],In,Out):-!, training_progs(H,In,Out), training_progs(Prog,In,Out).
-training_progs(Prog,_,_):- missing_arity2(Prog),!,arcdbg(missing(training_progs(Prog))).
-training_progs(Prog,In,Out):- call(Prog,In,Out)*-> true ; arcdbg(nonworking(Prog)).
+training_progs(Prog,_,_):- missing_arity2(Prog),!,arcdbg(warn(missing(training_progs(Prog)))).
+training_progs(Prog,In,Out):- call(Prog,In,Out)*-> true ; arcdbg(warn(nonworking(training_progs(Prog)))).
+
 
 missing_arity2(P2):- compound(P2),!,compound_name_arity(P2,F,Am2),A is Am2 + 2, \+ current_predicate(F/A).
 missing_arity2(F):- \+ current_predicate(F/2).
