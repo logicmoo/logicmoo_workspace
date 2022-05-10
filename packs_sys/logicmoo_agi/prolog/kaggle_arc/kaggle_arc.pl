@@ -57,6 +57,7 @@ test_name(Name):-
 
 
 fav(X,[]):- clause(fav(X),true).
+fav(v('94133066'),[sol([largest_indiv,trim_to_used,rot90,flipV])]).
 fav(t('5582e5ca'),[sol([compute_max_color(C1),cls_with(C1)])]).
 fav(v('e9bb6954'),[indiv(min(8)),e('box of nine draw outward, if you hit a drawn line blacken it')]).
 fav(v('762cd429'),[]).
@@ -82,7 +83,10 @@ fav(t('9aec4887'),[indiv(color_blind),todo_sol([find_individuals([hollow,inside(
 %fav(t('db3e9e38'),[sol([flipV,C1=orange,C2=blue,[],flipV]).
 fav(t('1cf80156'),[sol([trim_to_used])]).
 %fav(t(_),[sol([fillFromBorder(none,yellow)])]).
-fav(t('47c1f68c'),[sol([compute_max_color(C1),compute_next_color(C2),blacken_color(C1),subst_color(C2,C1),trim_to_used,
+fav(t('47c1f68c'),[sol([compute_max_color(C1),compute_next_color(C2),
+ 
+ blacken_color(C1),subst_color(C2,C1),
+ trim_to_used_square,
  grow([[self,rot90],
       [rot270,rot180]])])]).
 
@@ -106,7 +110,9 @@ fav(t('d6ad076f'),[sol(find_smaller,shoot_at_other,wide_beam)]).
 fav(t('6d58a25d'),["the blue object is a downward beam maker, each beam must connect to one of its colors "]).
 fav(t('23b5c85d'),[sol([smallest_indiv,trim_to_used])]).
 %fav(t('23b5c85d'),[b7249182
-fav(t('8be77c9e'),[grow([[self],[flipV]])]).
+fav(t('8be77c9e'),[sol([grow([[self],[flipV]])])]).
+
+
 /*
 first i look to see if the grid sizes are purporional, if not i look to see if the output grid can be recognised on the input
 if not i look to see if the input grid can be recognised on the output
@@ -159,6 +165,13 @@ largest_indiv(GridO,Grid,Grid):- largest_indiv(Grid,GridO).
 smallest_indiv(Grid,GridO):- individuals(Grid,Is),last(Is,Points),points_to_grid(Points,GridO).
 smallest_indiv(GridO,Grid,Grid):- smallest_indiv(Grid,GridO).
 
+
+trim_to_used_square(G,G9):- get_bgc(BG),
+  trim_unused_vert_square(BG,G,G1),
+  trim_unused_vert_square(BG,G1,G2),
+  trim_unused_vert_square(BG,G2,G3),
+  trim_unused_vert_square(BG,G3,G9).
+
 trim_to_used(G,G9):- get_bgc(BG),trim_unused_vert(BG,G,G1),rot90(G1,G2),trim_unused_vert(BG,G2,G3),rot270(G3,G9).
 
 %:- nb_setval(grid_bgc,8).
@@ -182,6 +195,16 @@ free_cell(Var):- var(Var),!.
 free_cell(0).
 free_cell(8).
 free_cell(C):- get_bgc(X),C==X.
+
+trim_unused_vert_square(_,[],[]).
+%trim_unused_vert_square(_,_,GridO,GridO):-grid_size(GridO,size(H,W)),H=W,!.
+trim_unused_vert_square(BG,[Row|Grid],Grid90):- maplist(is_bg_or_var(BG),Row),rot90(Grid,[Col|Grid90]),
+   maplist(is_bg_or_var(BG),Col).
+trim_unused_vert_square(_,G1,Grid90):- rot90(G1,Grid90).
+/*  
+   trim_unused_vert_square(BG,Grid,GridO).
+trim_unused_vert_square(BG,GridR,GridO):- append(Grid,[Row],GridR),maplist(is_bg_or_var(BG),Row),trim_unused_vert_square(BG,Grid,GridO).
+trim_unused_vert_square(_,G,G).*/
 
 trim_unused_vert([],[]).
 trim_unused_vert(BG,[Row|Grid],GridO):- maplist(is_bg_or_var(BG),Row),trim_unused_vert(BG,Grid,GridO).
@@ -349,7 +372,7 @@ functor_color(pass,green).
 functor_color(fail,red).
 functor_color(warn,yellow).
 
-arcdbg(G):- compound(G), compound_name_arity(G,F,_),functor_color(F,C),wots(S,print(G)),color_print(C,S),!.
+arcdbg(G):- compound(G), compound_name_arity(G,F,_),functor_color(F,C),wots(S,print(G)),color_print(C,S),!,format('~N').
 arcdbg(G):- wdmsg(G).
 
 print_arc_in_out(Name,Type,In,Out):-
