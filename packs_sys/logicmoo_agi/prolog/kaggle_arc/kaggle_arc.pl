@@ -7,9 +7,30 @@
 :- expects_dialect(pfc).
 
 :- dynamic(cmem/3).
-:- ensure_loaded(kaggle_arc_train).
-:- ensure_loaded(kaggle_arc_eval).
+load_json_files(F,Mask):- 
+  absolute_file_name(Mask,AbsMask),
+  expand_file_name(AbsMask,FullNames),
+  maplist(file_base_name,FullNames,BaseNames),
+  maplist(file_name_extension,Names,_,BaseNames),
+  maplist(load_json_file(F),Names,FullNames),!.
 
+load_json_file(F, BaseName, FullName):- Name=..[F,BaseName], 
+  setup_call_cleanup(open(FullName,read,In),
+   json_read(In,Term,[]),
+   close(In)),
+  load_json_of_file(Name,file,Term),!.
+
+  load_json_of_file(Name,Type,json(Term)):-! , load_json_of_file(Name,Type,Term).
+  load_json_of_file(Name,_,Type=Value):-!, load_json_of_file(Name,Type,Value).
+  load_json_of_file(Name,train,T):-!,load_json_of_file(Name,trn,T).
+  load_json_of_file(Name,test,T):-!,load_json_of_file(Name,tst,T).
+  load_json_of_file(Name,Type,[input=In,output=Out]):-assert(kaggle_arc_json(Name,Type,In,Out)),!.
+  load_json_of_file(Name,Type,[H|T]):- !, forall(nth0(N,[H|T],E), load_json_of_file(Name,Type+N,E)).
+  load_json_of_file(N,T,V):- wdmsg(load_json_of_file(N,T,V)),!.
+
+:- load_json_files(t,'./data/training/*.json').
+:- load_json_files(v,'./data/evaluation/*.json').
+kaggle_arc(TName,Type,In,Out):- kaggle_arc_json(TName,Type,In,Out).
 fix_test_name(X,X):- var(X),!.
 fix_test_name(X,X):- kaggle_arc(X,_,_,_).
 fix_test_name(X,Y):- compound(X),!,arg(_,X,E),nonvar(E),fix_test_name(E,Y).
@@ -27,15 +48,6 @@ print_eval0:- print_trainer(v('009d5c81')).
 
 nth_fact(P,I):- clause(P,true,Ref),nth_clause(P,I,Ref).
 
-% Type is tst or trn
-kaggle_arc(t(Name),TypeI,In,Out):-   
-  nth_fact(kaggle_arc_train(Name,Type,In,Out),This),
-  once((nth_fact(kaggle_arc_train(Name,Type,_,_),Start), I is This - Start,TypeI=Type+I)).
-kaggle_arc(v(Name),TypeI,In,Out):-   
-  member(Type,[trn,tst]),
-  nth_fact(kaggle_arc_eval(Name,Type,In,Out),This),
-  once((nth_fact(kaggle_arc_eval(Name,Type,_,_),Start), I is This - Start,TypeI=Type+I)).
-
 test_name(Name):- 
   findall(Name,kaggle_arc(Name,_,_,_),All),
   sort(All,AllS),member(Name,AllS).
@@ -47,63 +59,65 @@ fav(A,B):- nonvar(A),nonvar(B),asserta(fav(A,B),Ref),!,
 
 fav(X,[]):- clause(fav(X),true).
 
-fav(v('1d398264'),[]).
+fav(v('6d58a25d'),[]).
 fav(v('e41c6fd3'),[]).
-fav(v('94133066'),[sol([largest_indiv,trim_to_used,rot90,flipV])]).
-fav(t('5582e5ca'),[sol([compute_max_color(C1),cls_with(C1)])]).
+fav(v('1d398264'),[]).
+fav(v('94133066'),[lmDSL([largest_indiv,trim_to_rect,rot90,flipV])]).
+fav(t('5582e5ca'),[lmDSL([compute_max_color(C1),cls_with(C1)])]).
 fav(v('e9bb6954'),[indiv(min(8)),e('box of nine draw outward, if you hit a drawn line blacken it')]).
 fav(v('762cd429'),[]).
-fav(t('3c9b0459'),[sol([rot180])]).
-fav(t('6150a2bd'),[sol([rot180])]).
-fav(t('a79310a0'),[sol([gravity(1,s),swap_colors(cyan,red)])]).
-fav(t('d511f180'),[sol([swap_colors(cyan,grey)])]).
-fav(t('d511f180'),[sol([compute_max_color(C1),compute_next_color(C2),swap_colors(C2,C1)])]).
-fav(t('73251a56'),[learn([learn_mapping_stateful]),sol([apply_mapping_stateful])]).
-fav(t('f76d97a5'),[sol([compute_max_color(C1),compute_next_color(C2),blacken_color(C1),subst_color(C2,C1)])]).
-fav(t('6f8cd79b'),[sol([add_borders(cyan)])]).
-fav(t('ae4f1146'),[learn([call(set_bgc(cyan))]),sol([largest_indiv,trim_to_used,set_bg(cyan)])]).
-fav(t('a48eeaf7'),[sol([largest_indiv(I),tiny_individuals(Is),gravity_to(Is,I)])]).
-fav(t('8d5021e8'),[sol([grow([[rot180,flipV],
-                                   [flipH ,same],
-                                   [rot180,flipV]])])]).
+fav(t('3c9b0459'),[lmDSL([rot180])]).
+fav(t('6150a2bd'),[lmDSL([rot180])]).
+fav(t('a79310a0'),[lmDSL([gravity(1,s),swap_colors(cyan,red)])]).
+fav(t('d511f180'),[lmDSL([swap_colors(cyan,grey)])]).
+fav(t('d511f180'),[lmDSL([compute_max_color(C1),compute_next_color(C2),swap_colors(C2,C1)])]).
+fav(t('73251a56'),[learn([learn_mapping_stateful]),lmDSL([apply_mapping_stateful])]).
+fav(t('f76d97a5'),[lmDSL([compute_max_color(C1),compute_next_color(C2),blacken_color(C1),subst_color(C2,C1)])]).
+fav(t('6f8cd79b'),[lmDSL([add_borders(cyan)])]).
+fav(t('ae4f1146'),[learn([call(set_bgc(cyan))]),lmDSL([largest_indiv,trim_to_rect,set_bg(cyan)])]).
+fav(t('a48eeaf7'),[lmDSL([largest_indiv(I),tiny_individuals(Is),gravity_to(Is,I)])]).
+fav(t('8d5021e8'),[lmDSL([grow([[rot180, flipV],
+                               [flipH, same],
+                              [rot180, flipV]])])]).
 
-fav(t('7b6016b9'),[sol([fillFromBorder(green),subst_color(black,red)])]).
-fav(t('810b9b61'),[sol([find_individuals([hollow,boxes],I),indiv_set_color(I,green)])]).
-fav(t('44d8ac46'),[sol([find_individuals([hollow,boxes,inside([square])],I),indiv_fill_color(I,red)])]).
-fav(t('9aec4887'),[indiv(color_blind),todo_sol([find_individuals([hollow,inside([square])],I),rest_indivdual(Is),put_inside(Is,I),
+fav(t('7b6016b9'),[lmDSL([fillFromBorder(green),subst_color(black,red)])]).
+fav(t('810b9b61'),[lmDSL([find_individuals([hollow,boxes],I),indiv_set_color(I,green)])]).
+fav(t('44d8ac46'),[lmDSL([find_individuals([hollow,boxes,inside([squares])],I),indiv_fill_color(I,red)])]).
+fav(t('9aec4887'),[indiv(color_blind),todo_sol([find_individuals([hollow,inside([squares])],I),rest_indivdual(Is),put_inside(Is,I),
   if_edge_strong([color=C]),touch(Is,Point),set_point(Point,C)])]).
-%fav(t('db3e9e38'),[sol([flipV,C1=orange,C2=blue,[],flipV]).
-fav(t('1cf80156'),[sol([trim_to_used])]).
-%fav(t(_),[sol([fillFromBorder(none,yellow)])]).
-fav(t('47c1f68c'),[sol([compute_max_color(C1),compute_next_color(C2),
+%fav(t('db3e9e38'),[lmDSL([flipV,C1=orange,C2=blue,[],flipV]).
+fav(t('1cf80156'),[lmDSL([trim_to_rect])]).
+%fav(t(_),[lmDSL([fillFromBorder(none,yellow)])]).
+fav(t('47c1f68c'),[lmDSL([compute_max_color(C1),compute_next_color(C2),
  
  blacken_color(C1),subst_color(C2,C1),
- trim_to_used_square,
- grow([[self,rot90],
+ trim_to_square,
+ grow([[same,rot90],
       [rot270,rot180]])])]).
 
-fav(t('447fd412'),[sol([find_two_color_indivs,find_lesser_block,select_scaled_versions,builds,create_greater_blocks])]).
-fav(t('ed36ccf7'),[sol([rot270])]).
-fav(t('5521c0d9'),[sol([with_each_indiv,move_above_itself])]).
-fav(t('5c2c9af4'),[sol([two_closest_dots_to_edge,make_a_box,grow_box_that_much_bigger,grow_box_that_much_bigger,grow_box_that_much_bigger])]).
-fav(t('27a28665'),[learn([shape_to_color]),sol([make_box(1),shape_to_color(C),cls_with(C)])]).
-fav(t('6cf79266'),[learn([find(nines),remove_them]),sol(reverse_learned)]).
-fav(t('97999447'),[sol([find_ones,unil_edges(copy_right(grey),copy_right(self))])]).
-fav(t('dae9d2b5'),[sol([find_by_color,combine_all,set_all_fg(magenta)])]).
+fav(t('447fd412'),[lmDSL([find_two_color_indivs,find_lesser_block,select_scaled_versions,builds,create_greater_blocks])]).
+fav(t('ed36ccf7'),[lmDSL([rot270])]).
+fav(t('5521c0d9'),[lmDSL([with_each_indiv,move_above_itself])]).
+fav(t('5c2c9af4'),[lmDSL([two_closest_dots_to_edge,make_a_box,grow_box_that_much_bigger,grow_box_that_much_bigger,grow_box_that_much_bigger])]).
+fav(t('27a28665'),[learn([shape_to_color]),lmDSL([make_box(1),shape_to_color(C),cls_with(C)])]).
+fav(t('6cf79266'),[learn([find(nines),remove_them]),lmDSL(reverse_learned)]).
+fav(t('97999447'),[lmDSL([find_ones,until_edges([copy_right(grey),copy_right(same)])])]).
+fav(t('dae9d2b5'),[lmDSL([find_by_color,combine_all,set_all_fg(magenta)])]).
 fav(t('3631a71a'),[learn([find_damage_to_input,find_center,fraction_evenly_to_four,map_slices_upon_themselves])]).
 
 fav(t('9ecd008a'),[learn([find_damage_to_input,find_center,fraction_evenly_to_four,map_slices_upon_themselves]),
-    sol([indiv_is_one_hole,fix_image,selected_indiv,trim_to_used])]).
-fav(t('5117e062'),[sol([find_two_color_indivs,selected_indiv,trim_to_used,main_color,paint_landscape])]).
-fav(t('7f4411dc'),[sol([shave_away_1s])]).
+    lmDSL([indiv_is_one_hole,fix_image,selected_indiv,trim_to_rect])]).
+fav(t('5117e062'),[lmDSL([find_two_color_indivs,selected_indiv,trim_to_rect,main_color,paint_landscape])]).
+fav(t('7f4411dc'),[lmDSL([shave_away_1s])]).
 fav(t('1b60fb0c'),[learn([find_damage_to_input,find_center,fraction_evenly_to_four,map_slices_upon_themselves]),
-    sol([new_things_are_a_color,fix_image])]).
-fav(t('d6ad076f'),[sol([find_smaller,shoot_at_other,wide_beam])]).
+    lmDSL([new_things_are_a_color,fix_image])]).
+fav(t('d6ad076f'),[lmDSL([find_smaller,shoot_at_other,wide_beam])]).
 fav(t('6d58a25d'),["the blue object is a downward beam maker, each beam must connect to one of its colors "]).
-fav(t('23b5c85d'),[sol([smallest_indiv,trim_to_used])]).
+fav(t('23b5c85d'),[lmDSL([smallest_indiv,trim_to_rect])]).
 %fav(t('23b5c85d'),[b7249182
-fav(t('8be77c9e'),[sol([grow([[self],[flipV]])])]).
+fav(t('8be77c9e'),[lmDSL([grow([[same],[flipV]])])]).
 
+make_box(X,_,G):- make_unassigned_grid(X,X,G).
 %c:- forall(clause(fav(A,B),true),add_history1((fav(A,B)))).
 :- add_history1(print_trainer).
 /*
@@ -125,7 +139,7 @@ arround each color point there is a box of the oposting color
  cbded52d
 
 we have a blue background and black TTT board .. to blue openings are made of 2x2s
-in each square there can be a color.. each color has a default pos on the 2x2
+in each squares there can be a color.. each color has a default pos on the 2x2
 if like in the game of TTT you can win, but not diagonlly.. place the color on that area
 
 
@@ -138,14 +152,7 @@ if like in the game of TTT you can win, but not diagonlly.. place the color on t
 
 1) identify background and individuation
 
-  a) scotch patterns such as TTT
-  b) rug/kalidiscope patterns
-  c) 2D rougue-like
-  d) space invaders
-  e) shapes on black
-   lines on black
-  f) answer keys
-  g) repeating codes
+
 
      
 
@@ -153,39 +160,60 @@ if like in the game of TTT you can win, but not diagonlly.. place the color on t
 
 
 */
-% S=[[1,2,3],[4,x,6],[7,8,0]],grow([[self,self],[self,self]],S, X).
+% S=[[1,2,3],[4,x,6],[7,8,0]],grow([[same,same],[same,same]],S, X).
 
-% grow([[self,self]],[[a,b,c]], [[a,b,c,a,b,c]]).
+% grow([[same,same]],[[a,b,c]], [[a,b,c,a,b,c]]).
 append_left(Grid1,[],Grid1):-!.
 append_left(Grid1,Grid2,Grid):- length(Grid1,Len),assertion(length(Grid2,Len)),maplist(append,Grid1,Grid2,Grid).
 append_down(Grid1,Grid2,Grid):- append(Grid1,Grid2,Grid).
 
 grow_row([],_,[]).
-grow_row([C1],Grid,G1):- !, solving_progs(C1,Grid,G1).
-grow_row([C1|Row],Grid,GM):- !, solving_progs(C1,Grid,G1),grow_row(Row,Grid,GR),append_left(G1,GR,GM).
+grow_row([C1],Grid,G1):- !, run_dsl(C1,Grid,G1).
+grow_row([C1|Row],Grid,GM):- !, run_dsl(C1,Grid,G1),grow_row(Row,Grid,GR),append_left(G1,GR,GM).
 grow([],_,[]).
-grow([[Self]],Grid,GridO):- !, solving_progs(Self,Grid,GridO).
+grow([[Self]],Grid,GridO):- !, run_dsl(Self,Grid,GridO).
 grow([Row|Rows],Grid,G1GridO):- grow_row(Row,Grid,G1), grow(Rows,Grid,GridO),append(G1,GridO,G1GridO).
 
-largest_indiv(Grid,GridO):- individuals(Grid,[Points|_]),points_to_grid(Points,GridO).
-largest_indiv(GridO,Grid,Grid):- largest_indiv(Grid,GridO).
-smallest_indiv(Grid,GridO):- individuals(Grid,Is),last(Is,Points),points_to_grid(Points,GridO).
-smallest_indiv(GridO,Grid,Grid):- smallest_indiv(Grid,GridO).
 
+largest_indiv(Points,Grid,Grid):- individuals(Grid,[Points|_]).
+smallest_indiv(Points,Grid,Grid):- individuals(Grid,Is),last(Is,Points).
+
+largest_indiv(Grid,GridO):-  largest_indiv(Points,Grid,_),points_to_grid(Points,GridO).
+smallest_indiv(Grid,GridO):-  smallest_indiv(Points,Grid,_),points_to_grid(Points,GridO).
+
+/*
+largest_indiv(Grid,Points):- individuals(Grid,[Points|_]).
+largest_indiv(Points,Grid,Grid):- largest_indiv(Grid,Points).
+
+smallest_indiv(Grid,Points):- individuals(Grid,Is),last(Is,Points),points_to_grid(Points,Points).
+smallest_indiv(Points,Grid,Grid):- smallest_indiv(Grid,Points).
+*/
   
 
-trim_to_used_square(G,G9):- get_bgc(BG),
+trim_to_square(G,G9):- get_bgc(BG),
   trim_unused_vert_square(BG,G,G1),
   trim_unused_vert_square(BG,G1,G2),
   trim_unused_vert_square(BG,G2,G3),
   trim_unused_vert_square(BG,G3,G9).
 
-trim_to_used(G,G9):- get_bgc(BG),trim_unused_vert(BG,G,G1),rot90(G1,G2),trim_unused_vert(BG,G2,G3),rot270(G3,G9).
+  trim_unused_vert_square(_,[],[]).
+  %trim_unused_vert_square(_,_,GridO,GridO):-grid_size(GridO,H,(W)),H=W,!.
+  trim_unused_vert_square(BG,[Row|Grid],Grid90):- maplist(is_bg_or_var(BG),Row),rot90(Grid,[Col|Grid90]),
+     maplist(is_bg_or_var(BG),Col).
+  trim_unused_vert_square(_,G1,Grid90):- rot90(G1,Grid90).
+
+
+trim_to_rect(G,G9):- get_bgc(BG),trim_unused_vert(BG,G,G1),rot90(G1,G2),trim_unused_vert(BG,G2,G3),rot270(G3,G9).
+
+  trim_unused_vert([],[]).
+  trim_unused_vert(BG,[Row|Grid],GridO):- maplist(is_bg_or_var(BG),Row),trim_unused_vert(BG,Grid,GridO).
+  trim_unused_vert(BG,GridR,GridO):- append(Grid,[Row],GridR),maplist(is_bg_or_var(BG),Row),trim_unused_vert(BG,Grid,GridO).
+  trim_unused_vert(_,G,G).
 
 %:- nb_setval(grid_bgc,8).
 
 set_bg(C0,Grid,GridO):- color_num(C0,C),  nb_setval(grid_bgc,X), get_bgc(X),pred_subst(if_bgc_then(X,C), Grid, GridO).
-if_bgc_then(X,C,B,A):- \+compound(B),is_bg_or_var(X,B), A=C, !.
+  if_bgc_then(X,C,B,A):- \+compound(B),is_bg_or_var(X,B), A=C, !.
 
 shave_away_1s(Grid,GridO):- individuals(Grid,Is), include(\=([_,_|_]),Is,I1s), remove_points(I1s,Grid,GridO).
 
@@ -230,21 +258,12 @@ free_cell(C):- get_bgco(X),C==X.
 %free_cell(0).
 %free_cell(8).
 
-trim_unused_vert_square(_,[],[]).
-%trim_unused_vert_square(_,_,GridO,GridO):-grid_size(GridO,H,(W)),H=W,!.
-trim_unused_vert_square(BG,[Row|Grid],Grid90):- maplist(is_bg_or_var(BG),Row),rot90(Grid,[Col|Grid90]),
-   maplist(is_bg_or_var(BG),Col).
-trim_unused_vert_square(_,G1,Grid90):- rot90(G1,Grid90).
 /*  
    trim_unused_vert_square(BG,Grid,GridO).
 trim_unused_vert_square(BG,GridR,GridO):- append(Grid,[Row],GridR),maplist(is_bg_or_var(BG),Row),trim_unused_vert_square(BG,Grid,GridO).
 trim_unused_vert_square(_,G,G).*/
 
-trim_unused_vert([],[]).
-trim_unused_vert(BG,[Row|Grid],GridO):- maplist(is_bg_or_var(BG),Row),trim_unused_vert(BG,Grid,GridO).
-trim_unused_vert(BG,GridR,GridO):- append(Grid,[Row],GridR),maplist(is_bg_or_var(BG),Row),trim_unused_vert(BG,Grid,GridO).
-trim_unused_vert(_,G,G).
-%fav(t('25d487eb'),[sol([rocketship])]).
+%fav(t('25d487eb'),[lmDSL([rocketship])]).
 %fav(v('20818e16'),[guess_bg,indiv(min(2))]).
 
 %(fav(_,P)/(flatten([P],Flat),member(E,Flat))) ==> fav_trait(E).
@@ -264,6 +283,7 @@ flipH(Grid,FlipH):- maplist(reverse,Grid,FlipH).
 flipV(Grid,FlipV):- reverse(Grid,FlipV).
 rocketship(Grid,Grid).
 apply_mapping_stateful(Grid,GridO):- unbind_color(0,Grid,GridO),ignore(backfill_vars(GridO)).
+
 gravity(1,n,Grid,GridNew):-!,gravity_1_n_0(Grid,GridNew).
 gravity(N,n,Grid,GridNew):-!,gravity_1_n_0(Grid,GridM),(Grid\=@=GridM->(Nm1 is N-1,gravity(Nm1,n,GridM,GridNew));GridNew=GridM).
 gravity(N,s,Grid,GridNew):-!,flipV(Grid,FlipV),gravity(N,n,FlipV,GridM),flipV(GridM,GridNew).
@@ -290,20 +310,19 @@ colors_to_vars(Grid,GridO):- unique_colors(Grid,Colors0),include(integer,Colors0
  length(Colors,Len),length(Vars,Len),
  subst_list_vars(Colors,Vars,Grid,GridO).
 
-subst_list_vars(B,A,Grid,GridO):- subst_list_vars0(B,A,Grid,GridO).
+subst_list_vars(B,A,Grid,GridO):- subst_list_vars_0(B,A,Grid,GridO).
 
-subst_list_vars0([],_,A,A):-!.
-subst_list_vars0([F|FF],[R|RR],S,D):- !,subst(S,F,R,M), subst_list_vars0(FF,RR,M,D).
+  subst_list_vars_0([],_,A,A):-!.
+  subst_list_vars_0([F|FF],[R|RR],S,D):- !,subst(S,F,R,M), subst_list_vars_0(FF,RR,M,D).
 /*
-subst_list_vars0(B,A,Grid,GridO):- is_list(Grid),!,maplist(subst_list_vars0(B,A),Grid,GridO).
-subst_list_vars0(F,R,S,D):- nth1(N,F,E),E==S,nth1(N,R,D),!.
-subst_list_vars0(_,_,V,V).
+subst_list_vars_0(B,A,Grid,GridO):- is_list(Grid),!,maplist(subst_list_vars_0(B,A),Grid,GridO).
+subst_list_vars_0(F,R,S,D):- nth1(N,F,E),E==S,nth1(N,R,D),!.
+subst_list_vars_0(_,_,V,V).
 */
 
+add_borders(Color1,Grid,GridO):- color_num(Color1,Num1),!,add_borders_0(Num1,Grid,GridO),!.
 
-add_borders(Color1,Grid,GridO):- color_num(Color1,Num1),!,outline_with0(Num1,Grid,GridO),!.
-
-outline_with0(Num1,Grid,GridO):- 
+add_borders_0(Num1,Grid,GridO):- 
  grid_size(Grid,H,V),
  must_det_l((
   replace_row_e(1,Num1,Grid,G1),
@@ -311,9 +330,9 @@ outline_with0(Num1,Grid,GridO):-
   replace_col_e(1,Num1,G2,G3),
   replace_col_e(H,Num1,G3,GridO))).
 
-cls_with(Color1,Old,Grid):- color_num(Color1,Num1),cls_with0(Num1,Old,Grid),!.
-cls_with0(Color1,Old,Grid):- is_list(Old),!,maplist(cls_with0(Color1),Old,Grid).
-cls_with0(Color1,_,Color1).
+cls_with(Color1,Old,Grid):- color_num(Color1,Num1),cls_with_0(Num1,Old,Grid),!.
+cls_with_0(Color1,Old,Grid):- is_list(Old),!,maplist(cls_with_0(Color1),Old,Grid).
+cls_with_0(Color1,_,Color1).
 
 get_colums(Grid,Cols):- Grid = [Row|_], length(Row,Width),
   get_colum_l(Width,Grid,Cols).
@@ -349,9 +368,9 @@ replace_col_e(N,E,Grid,NewGrid):- grid_size(Grid,H,V), make_list(V,E,Col), repla
 replace_col(N,Col,Grid,NewGrid):- grid_size(Grid,H,V), replace_col(N,Col,Grid,H,V,NewGrid).
 replace_col(N,Col,Grid,H,V,NewGrid):- N<0, NewN is H + N+1,!,replace_col(NewN,Col,Grid,H,V,NewGrid).
 
-replace_col(N,Col,Grid,_,V,NewGrid):- Nm1 is N - 1, length(Col,V),maplist(replace_col_at0(Nm1),Col,Grid,NewGrid).
+replace_col(N,Col,Grid,_,V,NewGrid):- Nm1 is N - 1, length(Col,V),maplist(replace_col_at_0(Nm1),Col,Grid,NewGrid).
 
-replace_col_at0(N,Col,Row,NewRow):- length(Left,N),append(Left,[_|Right],Row),append(Left,[Col|Right],NewRow).
+replace_col_at_0(N,Col,Row,NewRow):- length(Left,N),append(Left,[_|Right],Row),append(Left,[Col|Right],NewRow).
 
 
 contains_nonvar(N,Info):- sub_term(E,Info),nonvar(E),E=N,!.
@@ -420,7 +439,7 @@ print_arc_in_out(Name,Type,In,Out):-
 run_nb(G):- call(G).
 %run_nb(G):- setup_call_cleanup(G,true,notrace).
 
-%maybe_do(_,_,_,_,_):- \+ test_cond(sol(_)),!.
+%maybe_do(_,_,_,_,_):- \+ test_cond(lmDSL(_)),!.
 maybe_do(CName,Name,Type,In,Out):-
   ignore((CName\==Name,dash_char(60,"A"),dash_char(6,"\n"),nl)),  
      dash_char(60,"V"),nl,
@@ -434,10 +453,10 @@ maybe_do(CName,Name,Type,In,Out):-
 confirm(Name,Type,In,Out):- 
    ignore((sols_for(Name,Sol), confirm_sol(Sol,Name,Type,In,Out))).
 
-sols_for(Name,Sol):- test_info(Name,Sols),member(sol(Sol),Sols).
+sols_for(Name,Sol):- test_info(Name,Sols),member(lmDSL(Sol),Sols).
 
 confirm_sol(Prog,Name,Type,In,Out):- 
-   solving_progs(Prog,In,GridO)
+   run_dsl(Prog,In,GridO)
    *-> 
    count_difs(Out,GridO,Errors),
    (Errors==0 -> arcdbg(pass(Name,Type,Prog));(arcdbg(fail(Errors,Name,Type,Prog)),
@@ -469,14 +488,18 @@ grid_info(Name,Grid):-
   % dash_char(60,"="),  
   arcdbg(Name),
   describe_feature(Grid,[grid_size,colors_count_size,colors_count,num_objects]),
-  %print_grid(Grid),
-  describe_feature(Grid,[individuals]),!.
+  individuals(Grid,IndvS),
+  grid_size(Grid,H,V),
+   locally(grid_nums(IndvS),
+   ( % print_grid(Grid),
+     print_indiv(H,V,IndvS))),
+  nop(describe_feature(Grid,[individuals])),!.
 describe_feature(Grid,List):- is_list(List),!,maplist(describe_feature(Grid),List).
 describe_feature(Grid,Pred):- call(Pred,Grid,Res)->print_equals(Grid,Pred,Res);print_equals(Pred,f),!.
 
 writeqln(X):- format('~N~q~N',[X]).
 
-grid_size(O,size_range(_,_,_,_,H,V)):- is_grid(O),grid_size(O,H,V).
+grid_size(O,offset_ranges(_,_,_,_,H,V)):- is_grid(O),grid_size(O,H,V).
 grid_size(P,S):- points_size(P,S).
 
 print_equals(_,N,V):- \+ compound(V),writeqln(N=V).
@@ -499,7 +522,7 @@ print_points(N,H,V,E):-
   dash_char(H,"-"),nl,  
   points_name(E,Name),
   write(Name), write(' from '),writeln(N),
-  points_range(E,LoH,LoV,HiH,HiV,H,V),length(E,Len),writeqln(len(Len)->size_range(LoH,LoV,HiH,HiV,H,V)),
+  points_range(E,LoH,LoV,HiH,HiV,H,V),length(E,Len),writeqln(len(Len)->offset_ranges(LoH,LoV,HiH,HiV,H,V)),
   
   print_grid(1,1,LoH,LoV,HiH,HiV,H,V,E),dash_char(H,"-"),!,
   nl.
@@ -511,7 +534,7 @@ print_equals(N,V):- \+ compound(V),writeqln(N=V).
 print_equals(N,V):- is_grid(V),!,writeqln(N),print_grid(V).
 print_equals(N,[G|L]):-
   is_grid(G),is_list(L),maplist(is_grid,L),!,
-  length([G|L],Len),
+  length([G|L],Len), 
   grid_size(G,H,_),
   writeqln(N=len(Len)),  
   dash_char(H,"-"),
@@ -526,6 +549,23 @@ print_equals(Name,[H|L]):- !, maplist(print_equals(Name),[H|L]).
 print_equals(Name,Val):- print_tree_nl(Name=Val).
 
 commawrite(S):- write(','),write(S).
+
+
+print_indiv(H,V,PS):- print_indiv_0(H,V,PS),!.
+print_indiv(H,V,PS):-
+  maplist(print_indiv_0(H,V),PS).
+
+print_indiv_0(H,V,Points):- 
+ points_to_grid(Points,Grid), % grid_size(Grid,HH,EV),trim_to_rect(Grid,G),grid_size(G,LH,LV),
+  forall(between(1,H,_),write('__')),nl,
+  LoH = 1,LoV = 1,
+  HiH = H,HiV = V,
+  forall(between(1,V,IV),
+   ((format('~N'),forall(between(1,H,IH), 
+     (hv_value_or(Grid,C,H,V,_),
+        once(print_g(IH,IV,C,1,1,H,V))))))),format('~N'),!,
+  forall(between(1,H,_),write('__')),nl,
+  !.
 
 is_list_of_points([G|V]):- is_points(G),is_list(V),maplist(is_points,V).
 
@@ -559,13 +599,13 @@ count_each([C|L],GC,[Len-C|LL]):- include(==(C),GC,Lst),length(Lst,Len),count_ea
 /*
 print_points_grid(Points):- 
   points_range(Points,LoH,LoV,HiH,HiV,H,V),
-  writeqln(size_range(LoH,LoV,HiH,HiV,H,V)),
+  writeqln(offset_ranges(LoH,LoV,HiH,HiV,H,V)),
   points_to_grid(Points,Grid),
   print_grid(Grid).
-*/
-print_points_grid(Grid):- 
+print_points_grid(Grid):-  
   points_range(Grid,LoH,LoV,HiH,HiV,_H,_V),
   print_grid(Grid,LoH,LoV,HiH,HiV,Grid).
+*/
 
 print_grid(Grid):- grid_size(Grid,HH,VV),
   print_grid(1,1,HH,VV,Grid).
@@ -684,7 +724,7 @@ make_lengths(N,L):- length(L,N).
 
 points_range(Points,LoH,LoV,HiH,HiV,H,V):- calc_range(inf,inf,-inf,-inf,H,V,Points,LoH,LoV,HiH,HiV,H,V).
 points_size(Points,H,V):- points_range(Points,_LoH,_LoV,_HiH,_HiV,H,V).
-points_range(Points,size_range(LoH,LoV,HiH,HiV,H,V)):- calc_range(inf,inf,-inf,-inf,H,V,Points,LoH,LoV,HiH,HiV,H,V).
+points_range(Points,offset_ranges(LoH,LoV,HiH,HiV,H,V)):- calc_range(inf,inf,-inf,-inf,H,V,Points,LoH,LoV,HiH,HiV,H,V).
 points_size(Points,size(H,V)):- points_range(Points,_LoH,_LoV,_HiH,_HiV,H,V).
    
 
@@ -699,7 +739,7 @@ calc_range(WLoH,WLoV,WHiH,WHiV,WH,WV,[E|L],LoH,LoV,HiH,HiV,H,V):- !,
   calc_range(WLoH,WLoV,WHiH,WHiV,WH,WV,E,MLoH,MLoV,MHiH,MHiV,MH,MV),
   calc_range(MLoH,MLoV,MHiH,MHiV,MH,MV,L,LoH,LoV,HiH,HiV,H,V).
 calc_range(WLoH,WLoV,WHiH,WHiV,WH,WV,[],WLoH,WLoV,WHiH,WHiV,WH,WV).
-calc_range(WLoH,WLoV,WHiH,WHiV,WH,WV,size_range(ILoH,ILoV,IHiH,IHiV,IH,IV),LoH,LoV,HiH,HiV,H,V):- 
+calc_range(WLoH,WLoV,WHiH,WHiV,WH,WV,offset_ranges(ILoH,ILoV,IHiH,IHiV,IH,IV),LoH,LoV,HiH,HiV,H,V):- 
   max_min(WLoV,ILoV,_,LoV),max_min(WHiV,IHiV,HiV,_),max_min(WV,IV,V,_),
   max_min(WLoH,ILoH,_,LoH),max_min(WHiH,IHiH,HiH,_),max_min(WH,IH,H,_),!.
 
@@ -708,6 +748,14 @@ calc_range(WLoH,WLoV,WHiH,WHiV,WH,WV,Point,LoH,LoV,HiH,HiV,H,V):- as_hv_point(IH
   max_min(WLoV,IV,_,LoV),max_min(WHiV,IV,HiV,_),max_min(HiV,WV,V,_),
   max_min(WLoH,IH,_,LoH),max_min(WHiH,IH,HiH,_),max_min(HiH,WH,H,_))),!.
 
+ap(scotch_patterns). ap(rug_kalidiscope_patterns). ap(rougue_like). ap(space_invaders).
+ap(shapes_on_black). ap(lines_on_black). ap(answer_keys). ap(repeating_codes).
+ap(rotated45). ap(spins).  ap(contained). ap(sticky). ap(immobile). ap(mobile). ap(gravity).
+ap(thick0). ap(thick1). ap(thick2). ap(thick3). 
+ap(dashed).  ap(two_color). ap(multi_color). ap(monochrome).
+ap(underneath). ap(painted_surface).
+ap(square). ap(round). ap(triangle). ap(rectangular). ap(rectangular).
+ap(diagonal_line). ap(horizontal_line). ap(vertical_line). ap(open_edge). ap(container).  ap(ray).
 
 grid_size_nd([C,R|Rows],H,V):- 
    (var(Rows)->between(2,30,V);!), 
@@ -716,35 +764,6 @@ grid_size_nd([C,R|Rows],H,V):-
    length(R,H),
    (is_list(C)->true;(length(C,H),maplist(make_lengths(H),Rows))).
 grid_size_nd([L],H,(1)):- (var(L)->between(1,30,H);true), length(L,H).
-
-% make or do plan
-do_change(Change,Grid1,Grid2):- \+ is_list(Change),!,one_change(Change,Grid1,Grid2).
-do_change(Change,Grid1,Grid2):- do_change_nd(Change,Grid1,Grid2).
-
-do_change_nd([],Grid1,Grid1).
-do_change_nd([H|T],Grid1,Grid2):- one_change(H,Grid1,GridM),do_change_nd(T,GridM,Grid2).
-
-one_change(same,Grid1,Grid2):- is_grid(Grid2),Grid1=Grid2,!.
-one_change(colorChange(C1,C2),Grid1,Grid2):- 
-  first_color(Grid1,C1),ignore((is_grid(Grid2),first_color(Grid2,C2))),
-  subst(Grid1,C1,C2,Grid2).
-one_change(blank1Color(C1),Grid1,Grid2):- 
-  first_color(Grid1,C1),copy_cells(==(C1),free_cell,Grid1,Grid2).
-one_change(same_size,Grid1,Grid2):- var(Grid2),grid_size(Grid1,C1),grid_size(Grid2,C1),!.
-one_change(resize(C1,C2),Grid1,Grid2):- var(Grid2),grid_size(Grid1,C1),grid_size(Grid2,C2).
-
-
-
-
-unraw_inds(IndvS,IndvO):-   
-  largest_first(IndvS,Indv1),
-  reverse(Indv1,IndvR),
-  %partition(groups_of_1,IndvR,Ones,Rest),
-  %unraw_inds2(_,Ones,IndvO)
-  %trace,
-  test_cond_or(indiv(min(SZ)),1),
-  check_minsize(SZ,IndvR,Indv),
-  unraw_inds2(_,Indv,IndvO),!.
 
 
 test_cond(This):- current_test_name(Name),test_info(Name,InfoL),!,contains_nonvar(This,InfoL).
@@ -768,7 +787,12 @@ finish_grp(C,Grp,Point2,Dir,Rest,NewGroup,RRest):-
    finish_grp(C,[C-Point3|Grp],Point3,Dir,Rest1,NewGroup,RRest).
 finish_grp(_C,Grp,_From,_Dir,Rest,Grp,Rest).
 
-unraw_inds2(GrpTiny,IndvS,IndvO):-   
+unraw_inds2(Types,IndvS,IndvO):- fail,
+   largest_first(IndvS,Indv1),
+   reverse(Indv1,IndvR), IndvR\=@=IndvS,
+   unraw_inds2(Types,IndvR,IndvO).
+
+unraw_inds2(Types,IndvS,IndvO):-   
   select([C-Point1],IndvS,Rest1), \+ free_cell(C),\+ get_bgc(C),
   is_diag(Dir),
   is_adjacent_point(Point1,Dir,Point2),
@@ -779,32 +803,33 @@ unraw_inds2(GrpTiny,IndvS,IndvO):-
   reverse(NewGroup1,NewGroupR),
   reverse_dir(Dir,RevDir),
   finish_grp(C,NewGroupR,Point1,RevDir,RRest,NewGroup,RRestO),
-  unraw_inds2(GrpTiny,[NewGroup|RRestO],IndvO).
+  unraw_inds2(Types,[NewGroup|RRestO],IndvO).
 
-
-unraw_inds2(GrpTiny,IndvS,IndvO):-  fail,
+unraw_inds2(Types,IndvS,IndvO):-  fail,
   select([C-Point1],IndvS,Rest1), \+ free_cell(C),
   select([C2-Point2],Rest1,Rest),
   findall(C3-Point3,member([C3-Point3],Rest),CRest),
   subtract(Rest,CRest,IndvM),
-  unraw_inds2(GrpTiny,IndvM,IndvMO),
+  unraw_inds2(Types,IndvM,IndvMO),
   Grp=[C-Point1,C2-Point2|CRest],
   IndvO=[Grp|IndvMO].
 
-unraw_inds2(GrpTiny,IndvS,IndvO):-   fail,
+unraw_inds2(Types,IndvS,IndvO):- 
   select([C-Point1],IndvS,Rest1),
   select(Grp,Rest1,Rest),
-  adjacent_groups(C,[C-Point1],Grp),
-  unraw_inds2(GrpTiny,[[C-Point1|Grp]|Rest],IndvO).
+  Grp=[C-_,_|_],
+  is_diag(Dir),
+  adjacent_groups(C,[C-Point1],Dir,Grp),
+  unraw_inds2(Types,[[C-Point1|Grp]|Rest],IndvO).
 
 /*
-unraw_inds2(GrpTiny,IndvS,IndvO):-   
+unraw_inds2(Types,IndvS,IndvO):-   
   select([C1-Point1],IndvS,Rest),
   nearby_one(Types,C,C1-Point1,Rest),
   select([C-Point2],Rest1,Rest),
   findall(C-Point,member([C-Point],Rest),CRest),
   subtract(Rest,CRest,IndvM),
-  unraw_inds2(GrpTiny,IndvM,IndvMO),
+  unraw_inds2(Types,IndvM,IndvMO),
   Grp=[C-Point1,C-Point2|C-Rest],
   IndvO=[Grp|IndvMO].
 */
@@ -816,26 +841,41 @@ unraw_inds2(_,IndvS,IndvS).
 embue_points(_,_,I,I):-!.
 embue_points(H,V,Points,PointsO):-
  must_det_l(( calc_range(inf,inf,-inf,-inf,H,V,Points,LoH,LoV,HiH,HiV,HO,VO),
-  append([size_range(LoH,LoV,HiH,HiV,HO,VO)],Points,PointsO))).
+  append([offset_ranges(LoH,LoV,HiH,HiV,HO,VO)],Points,PointsO))).
 
 individuals(ID,IndvS):-
  must_det_l((
   grid_size(ID,H,V),
   grid_to_points(ID,Points),
   locally(t_l:id_cells(ID,Points),
-  ( individuals_raw(ID,Points,Indv0),      
-    unraw_inds(Indv0,Indv1),
+  ( individuals_raw(ID,Points,Indv_0),      
+    unraw_inds(Indv_0,Indv1),
     largest_first(Indv1,Indv2))),
   maplist(embue_points(H,V),Indv2,IndvS))),
   set_grid_nums(IndvS).
 
 individuals_raw(ID,Points,Indv):-  
-  individuals_list(square,ID,Points,Indv).
+  individuals_list(squares,ID,Points,Indv1),
+  individuals_list(diamonds,ID,Indv1,Indv),!.
+
+unraw_inds(IndvS,IndvO):-   
+  largest_first(IndvS,Indv1),
+  reverse(Indv1,IndvR),
+  test_cond_or(indiv(min(SZ)),1),
+  check_minsize(SZ,IndvR,Indv),
+  unraw_inds2(_,Indv,IndvO),!.
+
+%individuals_list_diamonds(_,Indv,Indv1):-
+%  individuals_list(diamonds,ID,Indv,Indv1).
+
 
 individuals_list(_,_,[],[]):-!.
 individuals_list(Types,ID,Points,[Indv|IndvList]):- 
     find_one_individual(Types,Points,Indv,NextScanPoints),!,
-    individuals_list(Types,ID,NextScanPoints,IndvList). 
+    individuals_list(Types,ID,NextScanPoints,IndvList).
+individuals_list(squares,ID,Points,[Indv|IndvList]):- fail,
+   find_one_individual(diamonds,Points,Indv,NextScanPoints),!,
+   individuals_list(diamonds,ID,NextScanPoints,IndvList). 
 individuals_list(_Types,_,Points,IndvList):- maplist(obj1,Points,IndvList).
   
 
@@ -866,19 +906,20 @@ filtered_point(C,HV):- t_l:id_cells(_ID,Points),% select(_-HV,Points,Rest),
   !.
 
 shape_has_filtered_use(_,[],_Unused).
-shape_has_filtered_use(C,[_],_):- shape_filter(C,square),!.
+shape_has_filtered_use(C,[_],_):- shape_filter(C,squares),!.
 
-adjacent_groups(C,Grp1,Grp2):- member(_-P1,Grp1),member(_-P2,Grp2),adjacent_point(C,P1,P2).
+adjacent_groups(C,Grp1,Dir,Grp2):- member(_-P1,Grp1),member(C-P2,Grp2),is_adjacent_point(P1,Dir,P2).
 adjacent_point(C,HV,HV2):- adjacent_point_allowed(C,HV,_Dir,HV2).
 adjacent_point_allowed(C,HV,Dir,HV2):- is_adjacent_point(HV,Dir,HV2), shape_filter(C,Shape),allow_dir(Shape,DirS),member(Dir,DirS).
 adjacent_disallowed(C,HV,Dir,HV2):- is_adjacent_point(HV,Dir,HV2), shape_filter(C,Shape),allow_dir(Shape,DirS), \+ member(Dir,DirS).
 
 allow_dirs(Square,X):- allow_dir(Square,List),member(X,List).
 allow_dir(horizs,[e,w]). allow_dir(virtzs,[n,s]). allow_dir(diaguz,[ne,sw]). allow_dir(diagdz,[nw,se]). 
-allow_dir(square,[n,s,e,w]). allow_dir(polygs,[n,s,e,w]).
+allow_dir(squares,[n,s,e,w]). allow_dir(polygs,[n,s,e,w]).
+allow_dir(diamonds,[nw,sw,se,ne]).
 %circles, dots, holes, rays, walls
 
-shape_filter(X,square):- free_cell(X).
+shape_filter(X,squares):- free_cell(X).
 shape_filter(X,polygs):- \+ free_cell(X).
 
 
@@ -904,15 +945,6 @@ individuals_near(Types,C,From,[E|ScanPoints],Nears,[E|NextScanPoints]):-
       individuals_near(Types,C,From,ScanPoints,Nears,NextScanPoints).
 
 nearby_one(Types,C,C2-E,List):- allow_dirs(Types,Dir), adjacent_point_allowed(C,E2,Dir,E), member(C2-E2,List),ok_color_with(C2,C).
-/*
-
-% eventually use 2nd arg as a hueristic
-
-%g(V,H,obj(OV,OH,C,[CellList])).
-*/
-
-
-
 
 points_to_grid(Points,Grid):- 
   must_det_l((
@@ -923,14 +955,14 @@ points_to_grid(Points,Grid):-
 calc_add_points(_,Obj):- var(Obj),throw(var_calc_add_points(Obj)).
 calc_add_points(Grid,Points):- is_list(Points),!,maplist(calc_add_points(Grid),Points).
 calc_add_points(Grid,Obj):- is_grid(Obj),grid_to_points(Obj,Points),maplist(calc_add_points(Grid),Points).
-calc_add_points(_,size_range(_,_,_,_,_,_)).
+calc_add_points(_,offset_ranges(_,_,_,_,_,_)).
 calc_add_points(Grid,Point):- as_hv_point(H,V,C,Point),add_h_v_c(Grid,H,V,C).
 %add_h_v_c(Grid,H,V,C):- var(C),!,nop(add_h_v_c(Grid,H,V,C)).
 add_h_v_c(Grid,H,V,C):- hv_value(Grid,Was,H,V),ignore(Was=C).
 as_hv_point(H,V,C,C-Point):- hv_point(H,V,Point),!.
 as_hv_point(H,V,_,Point):- hv_point(H,V,Point),!.
 as_hv_point(H,V,_,H,V).
-%as_hv_point(inf,inf,size_range(_,_,_,_)).
+%as_hv_point(inf,inf,offset_ranges(_,_,_,_)).
 
 
 make_unassigned_grid(H,V,Grid):- grid_size_nd(Grid,H,V),!.
@@ -979,17 +1011,24 @@ b_rplc_hv_value(Grid,OldC,NewC,H,V):- nth1(V,Grid,Row),rplc_nth1(H,Row,OldC,NewC
 nb_rplc_hv_value(Grid,OldC,NewC,H,V):- nth1(V,Grid,Row),nb_rplc_nth1(H,Row,OldC,NewC).
 
 */
-solving_progs(Prog,In,Out):- var(Prog),!,throw(var_solving_progs(Prog,In,Out)).
+run_dsl(Prog,In,Out):- var(Prog),!,throw(var_solving_progs(Prog,In,Out)).
 
-solving_progs(sol(Prog),In,Out):- !, solving_progs(Prog,In,Out).
-solving_progs(call(G),In,Out):-!,call(G),(var(Out)->Out=In; true).
-solving_progs([],In,Out):-!, var(Out)->Out=In; true.
-solving_progs(self,In,Out):-!, duplicate_term(In,Out).
-solving_progs([H|Prog],In,Out):-!, solving_progs(H,In,GridM), solving_progs(Prog,GridM,Out).
-solving_progs(Prog,In,In):- missing_arity2(Prog),!,arcdbg(warn(missing(solving_progs(Prog)))).
-solving_progs(Prog,In,Out):- call(Prog,In,M)*-> into_grid(M,Out) ; arcdbg(warn(nonworking(solving_progs(Prog)))).
+run_dsl(lmDSL(Prog),In,Out):- !, run_dsl(Prog,In,Out).
+run_dsl(call(G),In,Out):-!,call(G),(var(Out)->Out=In; true).
+run_dsl([],In,Out):-!, var(Out)->Out=In; true.
+run_dsl(same,In,Out):-!, duplicate_term(In,Out).
+run_dsl([H|Prog],In,Out):-!, run_dsl(H,In,GridM), run_dsl(Prog,GridM,Out).
+run_dsl(Prog,In,In):- missing_arity2(Prog),!,arcdbg(warn(missing(run_dsl(Prog)))).
+run_dsl(Prog,In,Out):- call(Prog,In,M)*-> into_grid(M,Out) ; arcdbg(warn(nonworking(run_dsl(Prog)))).
 
+named_test(P,G):- fix_test_name(P,Name),kaggle_arc(Name,tst+0,G,_),!.
+named_test(P=in(Type),G):- fix_test_name(P,Name),!,kaggle_arc(Name,Type,G,_),!.
+named_test(P=out(Type),G):- fix_test_name(P,Name),!,kaggle_arc(Name,Type,_,G),!.
+
+into_grid(G,G):- var(G),throw(var_into_grid(G)).
 into_grid(G,G):- is_grid(G),!.
+into_grid(P,G):- named_test(P,G),!.
+
 into_grid(P,G):- is_points(P),points_to_grid(P,G),!.
 into_grid(P,G):- is_list_of_points(P),set_grid_nums(P),
   maplist(into_grid,P,Gs),!,combine_grids(overlay,Gs,G).
@@ -1028,21 +1067,21 @@ missing_arity2(P2):- compound(P2),!,compound_name_arity(P2,F,Am2),A is Am2 + 2, 
 missing_arity2(F):- \+ current_predicate(F/2).
 % turtle(H,V,Dir,N,H2,V2):- 
 prim_ops([
-call_object_grid_size(obj),
-trim_grid_to_size(point,size),
-fill_from_point(point,color),
-create_a_ray(point,dir,len),
-object_as_own_grid(obj,gridOps),
-copy_one_object(obj,point),
-rotate_one_object(obj,nsew),
-flatten_one_object(obj),
-sort_by_gravity(nsew),
-flip_grid(hOrv),
-rotate_grid(nsew)]).
+  call_object_grid_size(obj),
+  trim_grid_to_size(point,size),
+  fill_from_point(point,color),
+  create_a_ray(point,dir,len),
+  object_as_own_grid(obj,gridOps),
+  copy_one_object(obj,point),
+  rotate_one_object(obj,nsew),
+  flatten_one_object(obj),
+  sort_by_gravity(nsew),
+  flip_grid(hOrv),
+  rotate_grid(nsew)]).
 
 is_points(H):- is_list(H),maplist(is_cpoint,H).
 is_cpoint(C):- \+ compound(C),!,fail.
-is_cpoint(size_range(C,_,_,_,_,_)):- !, nonvar(C).
+is_cpoint(offset_ranges(C,_,_,_,_,_)):- !, nonvar(C).
 is_cpoint(prop(_)).
 is_cpoint(prop(_,_)).
 is_cpoint(C-P):- integer(C),!,atom(P).
@@ -1066,9 +1105,6 @@ save_calc_movement(H,V,Dir,HO,VO):- H2 is HO+H, V2 is VO+V,
     assert_if_new(hv_point(H,V,HV)),
     assert_if_new(is_adjacent_point(H,V,Dir,H2,V2)))).
   
-  
-
-
 
 nav(s,0,1). nav(e, 1,0). nav(w,-1,0). nav(n,0,-1).
 nav(se, 1,1). nav(sw,-1,1). nav(nw,-1,-1). nav(ne, 1,-1).
@@ -1089,3 +1125,22 @@ copy_cells(B,A,[H|T],[HH|TT]):-!, copy_cells(B,A,H,HH), copy_cells(B,A,T,TT).
   
 
 same_grid(Grid1,Grid1).
+
+% make or do plan
+do_change(Change,Grid1,Grid2):- \+ is_list(Change),!,one_change(Change,Grid1,Grid2).
+do_change(Change,Grid1,Grid2):- do_change_nd(Change,Grid1,Grid2).
+
+do_change_nd([],Grid1,Grid1).
+do_change_nd([H|T],Grid1,Grid2):- one_change(H,Grid1,GridM),do_change_nd(T,GridM,Grid2).
+
+one_change(same,Grid1,Grid2):- is_grid(Grid2),Grid1=Grid2,!.
+one_change(colorChange(C1,C2),Grid1,Grid2):- 
+  first_color(Grid1,C1),ignore((is_grid(Grid2),first_color(Grid2,C2))),
+  subst(Grid1,C1,C2,Grid2).
+one_change(blank1Color(C1),Grid1,Grid2):- 
+  first_color(Grid1,C1),copy_cells(==(C1),free_cell,Grid1,Grid2).
+one_change(same_size,Grid1,Grid2):- var(Grid2),grid_size(Grid1,C1),grid_size(Grid2,C1),!.
+
+
+% resize(H,V,Grid1,Grid2):- var(Grid2),grid_size(Grid1,C1),grid_size(Grid2,C2).
+

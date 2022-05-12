@@ -14,6 +14,49 @@ json_pairs(Type=List,Type,In,Out):-!,member(L,List),
 json_pairs([H|T],Type,In,Out):-!, 
   (json_pairs(H,Type,In,Out);json_pairs(T,Type,In,Out)).
 
+nth_fact(P,I):- clause(P,true,Ref),nth_clause(P,I,Ref).
+
+
+% make or do plan
+do_change(Change,Grid1,Grid2):- \+ is_list(Change),!,one_change(Change,Grid1,Grid2).
+do_change(Change,Grid1,Grid2):- do_change_nd(Change,Grid1,Grid2).
+
+do_change_nd([],Grid1,Grid1).
+do_change_nd([H|T],Grid1,Grid2):- one_change(H,Grid1,GridM),do_change_nd(T,GridM,Grid2).
+
+one_change(same,Grid1,Grid2):- is_grid(Grid2),Grid1=Grid2,!.
+one_change(colorChange(C1,C2),Grid1,Grid2):- 
+  first_color(Grid1,C1),ignore((is_grid(Grid2),first_color(Grid2,C2))),
+  subst(Grid1,C1,C2,Grid2).
+one_change(blank1Color(C1),Grid1,Grid2):- 
+  first_color(Grid1,C1),copy_cells(==(C1),free_cell,Grid1,Grid2).
+one_change(same_size,Grid1,Grid2):- var(Grid2),grid_size(Grid1,C1),grid_size(Grid2,C1),!.
+one_change(resize(C1,C2),Grid1,Grid2):- var(Grid2),grid_size(Grid1,C1),grid_size(Grid2,C2).
+
+
+/*
+print_points_grid(Points):- 
+  points_range(Points,LoH,LoV,HiH,HiV,H,V),
+  writeqln(size_range(LoH,LoV,HiH,HiV,H,V)),
+  points_to_grid(Points,Grid),
+  print_grid(Grid).
+
+print_points_grid(Grid):- 
+  points_range(Grid,LoH,LoV,HiH,HiV,_H,_V),
+  print_grid(Grid,LoH,LoV,HiH,HiV,Grid).
+*/
+
+
+% Type is tst or trn
+kaggle_arc(t(Name),TypeI,In,Out):-   
+  nth_fact(kaggle_arc_train(Name,Type,In,Out),This),
+  once((nth_fact(kaggle_arc_train(Name,Type,_,_),Start), I is This - Start,TypeI=Type+I)).
+kaggle_arc(v(Name),TypeI,In,Out):-   
+  member(Type,[trn,tst]),
+  nth_fact(kaggle_arc_eval(Name,Type,In,Out),This),
+  once((nth_fact(kaggle_arc_eval(Name,Type,_,_),Start), I is This - Start,TypeI=Type+I)).
+
+
 %print_trainer:- kaggle_arc_train(Name,Stuff), atom_json_term(Stuff,JSON,[]),print_arc(Name,JSON).
 %print_evaler:- kaggle_arc_eval(Name,Stuff), atom_json_term(Stuff,JSON,[]),print_arc(Name,JSON).
 
