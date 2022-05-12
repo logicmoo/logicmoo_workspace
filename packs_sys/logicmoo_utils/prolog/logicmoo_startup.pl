@@ -1360,8 +1360,9 @@ ensure_period_at_end(A,O):- string_concat(A,'.',O).
 
 make_historical(O,PO):-
   make_historical0(O,A),
-  string_trim1(A,A1),
-  ensure_period_at_end(A1,PO),!.
+  string_trim1(A,A2),
+  replace_in_string(['\n'=' ','   '=' ','    '=' '],A2,A3),
+  ensure_period_at_end(A3,PO),!.
 
 make_historical0(M:O,A):- (M==user),!, make_historical0(O,A).
 make_historical0(whenever_flag_permits(_,O),A):-!,make_historical0(O,A).

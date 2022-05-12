@@ -1,4 +1,23 @@
+/*
+JSON Conversion
+:- use_module(library(http/json_convert)).
 
+test_pairs(Name,Type,In,Out):- 
+  kaggle_arc_eval(Name,Stuff), once(atom_json_term(Stuff,json(L),[])),
+  json_pairs(L,Type,In,Out).
+
+json_pairs([],_,_,_):- !, fail.
+json_pairs(json(T),Type,In,Out):-!,json_pairs(T,Type,In,Out).
+json_pairs([input=In,output=Out],_Type,In,Out):-!.
+json_pairs(Type=List,Type,In,Out):-!,member(L,List),
+   json_pairs(L,Type,In,Out).
+json_pairs([H|T],Type,In,Out):-!, 
+  (json_pairs(H,Type,In,Out);json_pairs(T,Type,In,Out)).
+
+%print_trainer:- kaggle_arc_train(Name,Stuff), atom_json_term(Stuff,JSON,[]),print_arc(Name,JSON).
+%print_evaler:- kaggle_arc_eval(Name,Stuff), atom_json_term(Stuff,JSON,[]),print_arc(Name,JSON).
+
+*/
   /*
 % data looks like
 
