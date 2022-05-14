@@ -37,17 +37,17 @@ fix_test_name(X,Y):- compound(X),!,arg(_,X,E),nonvar(E),fix_test_name(E,Y).
 fix_test_name(X,t(X)):- kaggle_arc(t(X),_,_,_).
 fix_test_name(X,v(X)):- kaggle_arc(v(X),_,_,_).
 
-arc_test(Name):-  fix_test_name(Name,TName), 
+arc(Name):-  fix_test_name(Name,TName), 
   retractall(grid_nums(_)),
   nb_delete(grid_bgc),
   forall(kaggle_arc(TName,Type,In,Out),print_arc_in_out(TName,Type,In,Out)).
-arc_test:- cls,mmake,
-  time((forall(test_names_by_hard(Name),once(arc_test(Name))))).
-arc_test_1:- arc_test(v('009d5c81')).
-arc_test_2:- arc_test(t('25d487eb')).
+arc:- cls,mmake,
+  time((forall(test_names_by_hard(Name),once(arc(Name))))).
+arc_1:- arc(v('009d5c81')).
+arc_2:- arc(t('25d487eb')).
 
-print_trainer0:- arc_test(t('25d487eb')).
-print_eval0:- arc_test(v('009d5c81')).
+print_trainer0:- arc(t('25d487eb')).
+print_eval0:- arc(v('009d5c81')).
 
 nth_fact(P,I):- clause(P,true,Ref),nth_clause(P,I,Ref).
 
@@ -57,13 +57,15 @@ test_name(Name):-
 
 :- dynamic(fav/2).
 
+fav:- forall(fav(X),arc(X)).
+
 fav(A,B):- nonvar(A),nonvar(B),asserta(fav(A,B),Ref),!,
- call_cleanup((cls,mmake,arc_test(A)),erase(Ref)),!.
+ call_cleanup((cls,mmake,arc(A)),erase(Ref)),!.
 
 fav(X,[]):- clause(fav(X),true).
 
-fav(v('6d58a25d'),[]).
-fav(v('e41c6fd3'),[]).
+fav(t('6d58a25d'),[debug_indiv]).
+fav(v('e41c6fd3'),[debug_indiv]).
 fav(v('1d398264'),[]).
 fav(v('94133066'),[lmDSL([largest_indiv,trim_to_rect,rot90,flipV])]).
 fav(t('5582e5ca'),[lmDSL([compute_max_color(C1),cls_with(C1)])]).
@@ -122,7 +124,7 @@ fav(t('8be77c9e'),[lmDSL([grow([[same],[flipV]])])]).
 
 make_box(X,_,G):- make_unassigned_grid(X,X,G).
 %c:- forall(clause(fav(A,B),true),add_history1((fav(A,B)))).
-:- add_history1(arc_test).
+:- add_history1(arc).
 /*
 first i look to see if the grid sizes are purporional, if not i look to see if the output grid can be recognised on the input
 if not i look to see if the input grid can be recognised on the output
@@ -200,7 +202,7 @@ trim_to_square(G,G9):- get_bgc(BG),
   trim_unused_vert_square(BG,G3,G9).
 
   trim_unused_vert_square(_,[],[]).
-  %trim_unused_vert_square(_,_,GridO,GridO):-grid_size(GridO,H,(W)),H=W,!.
+  %trim_unused_vert_square(_,_,GridO,GridO):-grid_size(GridO,H,W),H=W,!.
   trim_unused_vert_square(BG,[Row|Grid],Grid90):- maplist(is_bg_or_var(BG),Row),rot90(Grid,[Col|Grid90]),
      maplist(is_bg_or_var(BG),Col).
   trim_unused_vert_square(_,G1,Grid90):- rot90(G1,Grid90).
@@ -377,8 +379,8 @@ replace_col_at_0(N,Col,Row,NewRow):- length(Left,N),append(Left,[_|Right],Row),a
 
 
 contains_nonvar(N,Info):- sub_term(E,Info),nonvar(E),E=N,!.
-debug_indiv:- test_cond(indiv(_)), \+ test_cond(nodebug_indiv),!.
-test_info(Name,InfoF):- findall(Inf,fav(Name,Inf),Info),flatten(Info,InfoF).
+debug_indiv:- test_config(indiv(_)), \+ test_config(nodebug_indiv),!.
+test_info(Name,InfoF):- findall([Inf],user:fav(Name,Inf),Info),flatten(Info,InfoF).
 fav(X):- clause(fav(X,_),true).
 
 test_names_by_hard(Name):- fav(Name).
@@ -446,15 +448,14 @@ print_arc_in_out(Name,Type,In,Out):-
 run_nb(G):- call(G).
 %run_nb(G):- setup_call_cleanup(G,true,notrace).
 
-%maybe_do(_,_,_,_,_):- \+ test_cond(lmDSL(_)),!.
+%maybe_do(_,_,_,_,_):- \+ test_config(lmDSL(_)),!.
 maybe_do(CName,Name,Type,In,Out):-
   ignore((CName\==Name,dash_char(60,"A"),dash_char(6,"\n"),nl)),  
      dash_char(60,"V"),nl,
-     describe_feature(Name,[test_info]),
-     
+     describe_feature(Name,[test_info]),     
      grid_info(Name=in(Type),In),
      grid_info(Name=out(Type),Out),
-    \+ \+ ignore(((Type = trn+_), test_cond(learn(CProg)),must(training_progs(CProg,In,Out)))),
+    \+ \+ ignore(((Type = trn+_), test_config(learn(CProg)),must(training_progs(CProg,In,Out)))),
      confirm(Name,Type,In,Out),nl,!.
 
 
@@ -495,30 +496,48 @@ count_difs(Out,GridO,Errors):-
 grid_info(Name,Grid):- 
   % dash_char(60,"="),  
   arcdbg(Name),
-  describe_feature(Grid,[grid_size,colors_count_size,colors_count,num_objects]),
-  individuals(Grid,IndvS),
+  describe_feature(Grid,[grid_dim,colors_count_size,colors_count,num_objects]),
   grid_size(Grid,H,V),
+  individuals(Grid,IndvS),  
    locally(grid_nums(IndvS),
-   ( when_config(print_grid,print_grid(Grid)),
-     print_indiv(H,V,IndvS))),
+   must_det_l(( when_config(print_grid,print_grid(Grid)),
+     print_indiv(H,V,IndvS),
+     when_config(debug_indiv,maplist(debug_indiv,IndvS))))),
   nop(describe_feature(Grid,[individuals])),!.
+
 describe_feature(Grid,List):- is_list(List),!,maplist(describe_feature(Grid),List).
 describe_feature(Grid,Pred):- call(Pred,Grid,Res)->print_equals(Grid,Pred,Res);print_equals(Pred,f),!.
 
+debug_indiv([props(A)|_]):- A.count==1,!.
+debug_indiv([props(A)|Points]):-  
+  must_det_l((
+   A.size=size(H,V),
+   make_unassigned_grid(H,V,Grid),
+   A.offset=offset(LoH,LoV),
+   calc_add_points(LoH,LoV,Grid,Points))),!,
+  must_det_l((
+   format('~N'),print_tree_nl(A),
+   locally(grid_nums([]),print_grid(Grid)))),!.
+debug_indiv(A):- format('~N'),print_tree_nl((A)),!.
+%debug_indiv(Indv):- % trace,
+%  pmember(props(Props),Indv),writeqln(Props+Indv).
 writeqln(X):- format('~N~q~N',[X]).
 
-grid_size(O,offset_ranges(_,_,_,_,H,V)):- is_grid(O),grid_size(O,H,V).
-grid_size(P,S):- points_size(P,S).
+grid_dim(G,gsize(H,W)):- grid_size(G,H,W).
+%grid_size(O,offset_ranges(_,_,_,_,H,V)):- is_grid(O),grid_size(O,H,V).
+%grid_size(P,S):- points_gsize(P,S).
 
 print_equals(_,N,V):- \+ compound(V),writeqln(N=V).
-print_equals(Grid,N,Ps):- is_points(Ps),grid_size(Grid,H,V),print_points(N,H,V,Ps).
+print_equals(Grid,N,Ps):- is_points(Ps),grid_size(Grid,H,V),print_points(N,H,V,Ps),!.
 print_equals(Grid,N,PL):- is_list_of_points(PL), grid_size(Grid,H,V), 
   locally(grid_nums(PL),print_list_of_points(N,H,V,[[]])).
 print_equals(_,N,G):- print_equals(N,G).
 
+props_of_points(E,Ns):- findall(props(Ps),member(props(Ps),E),Ns).
 points_name(E,Name):- 
-  ignore((grid_nums(Nums),nth0(N,Nums,EE),EE=@=E,i_sym(N,Code),format(atom(Name),' Individual #~w  Code: "~s"',[N,[Code]]))),!.
-points_name(_,points).
+ props_of_points(E,Ns),
+  ignore((grid_nums(Nums),nth0(N,Nums,EE),EE=@=E,i_sym(N,Code),format(atom(Name),' Individual #~w  Code: "~s" ~w',[N,[Code],Ns]))),!.
+points_name(E,pop(Ns)):- props_of_points(E,Ns).
 
 print_list_of_points(N,H,V,PL):- 
   length(PL,Len),
@@ -554,7 +573,7 @@ print_equals(Name,json(JSON)):-!, print_equals(Name,JSON).
 print_equals(Name,trn=Y):- !, print_equals(Name,Y).
 print_equals(Name,X->Y):- !, print_equals(in(Name),X), print_equals(out(Name),Y).
 print_equals(Name,X=Y):- !, print_equals(Name=X,Y).
-print_equals(Name,[H|L]):- !, maplist(print_equals(Name),[H|L]).
+%print_equals(Name,[H|L]):- !, maplist(print_equals(Name),[H|L]).
 print_equals(Name,Val):- print_tree_nl(Name=Val).
 
 commawrite(S):- write(','),write(S).
@@ -592,7 +611,8 @@ no_black(SK,BF):-select(_-0,SK,BF),!.
 no_black(SK,BF):-select(0,SK,BF),!.
 no_black(BF,BF).
 
-pixels(G,GL):- flatten(G,GF),include(integer,GF,GL).
+pixels(G,GL):- is_grid(G),!,flatten(G,GF),include(integer,GF,GL).
+pixels(G,GL):- findall(C,(sub_term(CP,G),compound(CP),CP=(C-_)),GL).
 unique_colors(G,UC):- pixels(G,GF),sort(GF,UC).
 colors_count_size(G,UC):- colors_count_no_black(G,GS),length(GS,UC).
 
@@ -703,9 +723,10 @@ save_codes(Max):-
 :- save_codes(42600).
 
 
-grid_to_id(Grid,ID):-
- 
-erase_grid(GID):- retractall(cmem(GID,_HV,_C)), forall(retract(grid_indv(GID,_,ID)),cmem(ID,_HV,_C)).
+%grid_to_id(Grid,ID):- 
+
+erase_grid(GID):- retractall(cmem(GID,_,_)), 
+  forall(retract(cindv(GID,_,ID)), erase_grid(ID)).
 
 grid_to_points(Grid,Points):- is_points(Grid),!,Grid=Points.
 grid_to_points(Grid,Points):- is_list_of_points(Grid),!,flatten(Grid,Points).
@@ -748,10 +769,24 @@ make_lengths(N,L):- length(L,N).
 
 
 
-points_range(Points,LoH,LoV,HiH,HiV,H,V):- calc_range(inf,inf,-inf,-inf,H,V,Points,LoH,LoV,HiH,HiV,H,V).
-points_size(Points,H,V):- points_range(Points,_LoH,_LoV,_HiH,_HiV,H,V).
-points_range(Points,offset_ranges(LoH,LoV,HiH,HiV,H,V)):- calc_range(inf,inf,-inf,-inf,H,V,Points,LoH,LoV,HiH,HiV,H,V).
-points_size(Points,size(H,V)):- points_range(Points,_LoH,_LoV,_HiH,_HiV,H,V).
+points_range(Points,LoH,LoV,HiH,HiV,H,V):- calc_range(inf,inf,-inf,-inf,-inf,-inf,Points,LoH,LoV,HiH,HiV,H,V).
+
+pmember(E,L):- sub_term(EE,L),nonvar(EE),EE=E.
+/*pmember(E,L):- is_dict(Points),!,E=gsize(H,V),!,Points.gsize=gsize(H,V).
+pmember(E,L):- member(EE,L),(EE=E;(is_list(EE),pmember(E,EE))).
+pmember(E,L):- member(props(EE),L),pmember(E,EE).
+*/
+
+%points_size(Points,H,V):- is_dict(Points),!,Points.size=size(H,V).
+points_size(Points,H,V):- pmember(size(H,V),Points),!.
+points_size(Points,H,V):- points_range(Points,LoH,LoV,HiH,HiV,_,_), H is HiH-LoH+1, V is HiV-LoV+1.
+
+%points_gsize(Points,H,V):- is_dict(Points),!,Points.gsize=gsize(H,V).
+points_gsize(Points,H,V):- pmember(gsize(H,V),Points),!.
+points_gsize(Points,H,V):- points_range(Points,_LoH,_LoV,_HiH,_HiV,H,V).
+
+points_range(Points,offset_ranges(LoH,LoV,HiH,HiV,H,V)):- calc_range(inf,inf,-inf,-inf,-inf,-inf,Points,LoH,LoV,HiH,HiV,H,V).
+% points_size(Points,size(H,V)):- points_range(Points,_LoH,_LoV,_HiH,_HiV,H,V).
 
 close_color(brown,orange).
 close_color(green,cyan).
@@ -763,6 +798,10 @@ grid_size(_,30,30).
 
 
 calc_range(WLoH,WLoV,WHiH,WHiV,WH,WV,Var,WLoH,WLoV,WHiH,WHiV,WH,WV):- var(Var),!.
+calc_range(WLoH,WLoV,WHiH,WHiV,WH,WV,gsize(IH,IV),WLoH,WLoV,WHiH,WHiV,H,V):- !,
+  max_min(WV,IV,V,_),max_min(WH,IH,H,_).
+%calc_range(WLoH,WLoV,WHiH,WHiV,WH,WV,size(IH,IV),WLoH,WLoV,WHiH,WHiV,H,V):- !,
+%  max_min(WV,IV,V,_),max_min(WH,IH,H,_).
 calc_range(WLoH,WLoV,WHiH,WHiV,WH,WV,[E|L],LoH,LoV,HiH,HiV,H,V):- !,
   calc_range(WLoH,WLoV,WHiH,WHiV,WH,WV,E,MLoH,MLoV,MHiH,MHiV,MH,MV),
   calc_range(MLoH,MLoV,MHiH,MHiV,MH,MV,L,LoH,LoV,HiH,HiV,H,V).
@@ -810,17 +849,17 @@ grid_size_nd([C,R|Rows],H,V):-
    (is_list(C)->true;(length(C,H),maplist(make_lengths(H),Rows))).
 grid_size_nd([L],H,(1)):- (var(L)->between(1,30,H);true), length(L,H).
 
-when_config(This,Goal):-test_cond(This)-> Goal ; true.
-test_cond(This):- current_test_name(Name),test_info(Name,InfoL),!,contains_nonvar(This,InfoL).
+when_config(This,Goal):-test_config(This)-> call(Goal) ; true.
+test_config(This):- current_test_name(Name),test_info(Name,InfoL),!,contains_nonvar(This,InfoL).
 
-test_cond_or(This,_That):- test_cond(This),!.
+test_cond_or(This,_That):- test_config(This),!.
 test_cond_or(This, That):- term_variables(This,[That|_]),!.
 
 check_minsize(Sz,Indv1,Indv):- include(meets_size(Sz),Indv1,Indv).
 
 meets_size(Len,Points):- length(Points,L),L>=Len.
 
-largest_first(IndvS,IndvO):- 
+largest_first(IndvS,IndvO):-  
   findall(Hard-Indv,(member(Indv,IndvS),length(Indv,Hard)),All),
   keysort(All,AllK),
   reverse(AllK,AllR),
@@ -832,18 +871,23 @@ finish_grp(C,Grp,Point2,Dir,Rest,NewGroup,RRest):-
    finish_grp(C,[C-Point3|Grp],Point3,Dir,Rest1,NewGroup,RRest).
 finish_grp(_C,Grp,_From,_Dir,Rest,Grp,Rest).
 
+single_point(C-Point,IndvS,Rest1):-
+  select([C-Point],IndvS,Rest1).
+single_point(C-Point,IndvS,Rest1):-
+  select([props(_),C-Point],IndvS,Rest1).
+
 unraw_inds2(Types,IndvS,IndvO):- fail,
    largest_first(IndvS,Indv1),
    reverse(Indv1,IndvR), IndvR\=@=IndvS,
    unraw_inds2(Types,IndvR,IndvO).
 
 unraw_inds2(Types,IndvS,IndvO):-   
-  select([C-Point1],IndvS,Rest1), \+ free_cell(C),\+ get_bgc(C),
+  single_point(C-Point1,IndvS,Rest1), \+ free_cell(C),\+ get_bgc(C),
   is_diag(Dir),
   is_adjacent_point(Point1,Dir,Point2),
-  select([C-Point2],Rest1,Rest2),
+  single_point(C-Point2,Rest1,Rest2),
   is_adjacent_point(Point2,Dir,Point3),
-  select([C-Point3],Rest2,Rest),
+  single_point(C-Point3,Rest2,Rest),
   finish_grp(C,[C-Point3,C-Point2,C-Point1],Point3,Dir,Rest,NewGroup1,RRest),
   reverse(NewGroup1,NewGroupR),
   reverse_dir(Dir,RevDir),
@@ -851,8 +895,8 @@ unraw_inds2(Types,IndvS,IndvO):-
   unraw_inds2(Types,[NewGroup|RRestO],IndvO).
 
 unraw_inds2(Types,IndvS,IndvO):-  fail,
-  select([C-Point1],IndvS,Rest1), \+ free_cell(C),
-  select([C2-Point2],Rest1,Rest),
+  single_point(C-Point1,IndvS,Rest1), \+ free_cell(C),
+  single_point(C2-Point2,Rest1,Rest),
   findall(C3-Point3,member([C3-Point3],Rest),CRest),
   subtract(Rest,CRest,IndvM),
   unraw_inds2(Types,IndvM,IndvMO),
@@ -860,9 +904,9 @@ unraw_inds2(Types,IndvS,IndvO):-  fail,
   IndvO=[Grp|IndvMO].
 
 unraw_inds2(Types,IndvS,IndvO):- 
-  select([C-Point1],IndvS,Rest1),
+  single_point(C-Point1,IndvS,Rest1),
+  Grp=[_,C-_,_|_],
   select(Grp,Rest1,Rest),
-  Grp=[C-_,_|_],
   is_diag(Dir),
   adjacent_groups(C,[C-Point1],Dir,Grp),
   unraw_inds2(Types,[[C-Point1|Grp]|Rest],IndvO).
@@ -883,25 +927,61 @@ unraw_inds2(_,IndvS,IndvS).
 
 :- thread_local(t_l:id_cells/2).
 
-embue_points(_,_,I,I):-!.
-embue_points(H,V,Points,PointsO):-
- must_det_l(( calc_range(inf,inf,-inf,-inf,H,V,Points,LoH,LoV,HiH,HiV,HO,VO),
-  append([offset_ranges(LoH,LoV,HiH,HiV,HO,VO)],Points,PointsO))).
+
+%embue_points(_,_,I,I):-!.
+embue_points(_,_,[props(Ps)|Points],[props(Ps)|Points]):-!.
+embue_points(H,V,Points,OUT):- 
+  points_range(Points,LoH,LoV,HiH,HiV,_HO,_VO),
+  colors_count(Points,CC),
+  length(Points,Len),
+  Width is HiH-LoH+1,
+  Height is HiV-LoV+1,
+  Empty is Width * Height  - Len,
+  Ps = indiv{count:Len,missing:Empty,colors_count:CC,
+    size:size(Width,Height),
+    gsize:gsize(H,V),
+    %points:Points,
+    shapes:Shapes,
+    offset:offset(LoH,LoV)},
+  findall(Shape,guess_shape(Ps,Empty,Len,Width,Height,CC,Points,Shape),Shapes),
+  OUT=[props(Ps)|Points].
+
+
+:- style_check(-singleton).
+guess_shape(I,0,N,H,V,Colors,Points,solid).
+guess_shape(I,O,N,H,V,Colors,Points,nonsolid):- O\==0.
+guess_shape(I,Empty,N,1,1,Colors,Points,dot):- !.
+guess_shape(I,Empty,N,N,1,Colors,Points,hline).
+guess_shape(I,Empty,N,1,N,Colors,Points,vline).
+guess_shape(I,Empty,N,H,V,[_-Zero],Points,background):- Zero==0.
+guess_shape(I,0,N,HV,HV,Colors,Points,square):- HV>1.
+
+guess_shape(I,E,N,H,V,Colors,Points,subI(InvS)):- E>2,
+   once((I.offset=offset(LoH,LoV),
+   make_unassigned_grid(H,V,Grid),
+   calc_add_points(LoH,LoV,Grid,Points),
+   individuals(Grid,InvS))),
+   InvS=[_,_|_].
+
+
+   
+
+
+:- style_check(+singleton).
 
 individuals(Grid,IndvS):-
  must_det_l((
   grid_size(Grid,H,V),
   grid_to_points(Grid,Points),
   locally(t_l:id_cells(Grid,Points),
-  ( individuals_raw(Grid,Points,Indv_0),      
+  ( individuals_raw(Grid,Points,Indv_0),    
     unraw_inds(Indv_0,Indv1),
     largest_first(Indv1,Indv2))),
   maplist(embue_points(H,V),Indv2,IndvS))),
   set_grid_nums(IndvS).
 
-individuals_raw(ID,Points,Indv):-  
-  individuals_list(squares,ID,Points,Indv1),
-  individuals_list(diamonds,ID,Indv1,Indv),!.
+individuals_raw(ID,Points,Indv):- 
+  individuals_list(squares,ID,Points,Indv).
 
 unraw_inds(IndvS,IndvO):-   
   largest_first(IndvS,Indv1),
@@ -917,8 +997,9 @@ unraw_inds(IndvS,IndvO):-
 individuals_list(_,_,[],[]):-!.
 individuals_list(Types,ID,Points,[Indv|IndvList]):- 
     find_one_individual(Types,Points,Indv,NextScanPoints),!,
+    %writeqln(indv(Types)=Indv),
     individuals_list(Types,ID,NextScanPoints,IndvList).
-individuals_list(squares,ID,Points,[Indv|IndvList]):- % fail,
+individuals_list(squares,ID,Points,[Indv|IndvList]):- fail,
    find_one_individual(diamonds,Points,Indv,NextScanPoints),!,
    individuals_list(diamonds,ID,NextScanPoints,IndvList). 
 individuals_list(_Types,_,Points,IndvList):- maplist(obj1,Points,IndvList).
@@ -993,15 +1074,18 @@ nearby_one(Types,C,C2-E,List):- allow_dirs(Types,Dir), adjacent_point_allowed(C,
 
 points_to_grid(Points,Grid):- 
   must_det_l((
-  points_size(Points,H,V),
+  notrace(points_gsize(Points,H,V)),
   make_unassigned_grid(H,V,Grid),
-  calc_add_points(Grid,Points))).
+  calc_add_points(1,1,Grid,Points))).
 
-calc_add_points(_,Obj):- var(Obj),throw(var_calc_add_points(Obj)).
-calc_add_points(Grid,Points):- is_list(Points),!,maplist(calc_add_points(Grid),Points).
-calc_add_points(Grid,Obj):- is_grid(Obj),grid_to_points(Obj,Points),maplist(calc_add_points(Grid),Points).
-calc_add_points(_,offset_ranges(_,_,_,_,_,_)).
-calc_add_points(Grid,Point):- as_hv_point(H,V,C,Point),add_h_v_c(Grid,H,V,C).
+calc_add_points(OH,OV,_,Obj):- var(Obj),throw(var_calc_add_points(OH,OV,Obj)).
+calc_add_points(OH,OV,Grid,Points):- is_list(Points),!,maplist(calc_add_points(OH,OV,Grid),Points).
+
+%calc_add_points(OH,OV,Grid,Obj):- is_grid(Obj),grid_to_points(Obj,Points),maplist(calc_add_points(OH,OV,Grid),Points).
+calc_add_points(_OH,_OV,_,props(_)).
+calc_add_points(_OH,_OV,_,prop(_)).
+calc_add_points(_OH,_OV,_,offset_ranges(_,_,_,_,_,_)).
+calc_add_points(OH,OV,Grid,Point):- as_hv_point(H,V,C,Point),HH is H -OH +1, VV is V - OV +1,  add_h_v_c(Grid,HH,VV,C).
 %add_h_v_c(Grid,H,V,C):- var(C),!,nop(add_h_v_c(Grid,H,V,C)).
 add_h_v_c(Grid,H,V,C):- hv_value(Grid,Was,H,V),ignore(Was=C).
 as_hv_point(H,V,C,C-Point):- hv_point(H,V,Point),!.
@@ -1125,9 +1209,11 @@ prim_ops([
   rotate_grid(nsew)]).
 
 is_points(H):- is_list(H),maplist(is_cpoint,H).
+
 is_cpoint(C):- \+ compound(C),!,fail.
 is_cpoint(offset_ranges(C,_,_,_,_,_)):- !, nonvar(C).
 is_cpoint(prop(_)).
+is_cpoint(props(_)).
 is_cpoint(prop(_,_)).
 is_cpoint(C-P):- integer(C),!,atom(P).
 is_cpoint(C-P):- var(C),!,atom(P).
@@ -1184,7 +1270,7 @@ one_change(colorChange(C1,C2),Grid1,Grid2):-
   subst(Grid1,C1,C2,Grid2).
 one_change(blank1Color(C1),Grid1,Grid2):- 
   first_color(Grid1,C1),copy_cells(==(C1),free_cell,Grid1,Grid2).
-one_change(same_size,Grid1,Grid2):- var(Grid2),grid_size(Grid1,C1),grid_size(Grid2,C1),!.
+one_change(same_size,Grid1,Grid2):- var(Grid2),grid_size(Grid1,H,V),grid_size(Grid2,H,V),!.
 
 
 % resize(H,V,Grid1,Grid2):- var(Grid2),grid_size(Grid1,C1),grid_size(Grid2,C2).
