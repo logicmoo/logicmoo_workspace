@@ -172,11 +172,15 @@ grow([[Self]],Grid,GridO):- !, run_dsl(Self,Grid,GridO).
 grow([Row|Rows],Grid,G1GridO):- grow_row(Row,Grid,G1), grow(Rows,Grid,GridO),append(G1,GridO,G1GridO).
 
 
-largest_indiv(Points,Grid,Grid):- individuals(Grid,[Points|_]).
-smallest_indiv(Points,Grid,Grid):- individuals(Grid,Is),last(Is,Points).
 
-largest_indiv(Grid,GridO):-  largest_indiv(Points,Grid,_),points_to_grid(Points,GridO).
-smallest_indiv(Grid,GridO):-  smallest_indiv(Points,Grid,_),points_to_grid(Points,GridO).
+largest_indiv(I,O):- into_sol(I,M),I\=@=M,!,largest_indiv(M,O).
+largest_indiv(Grid,[Points]):- individuals(Grid,Is),largest_first(Is,[Points|_]).
+
+smallest_indiv(I,O):- into_sol(I,M),I\=@=M,!,smallest_indiv(M,O).
+smallest_indiv(Grid,Points):- individuals(Grid,Iss),largest_first(Iss,Is),remove_bgs(Is,IndvL,_BGIndvS),last(IndvL,Points).
+
+background_indiv(I,O):- into_sol(I,M),I\=@=M,!,background_indiv(M,O).
+background_indiv(Grid,BGIndvS):-  individuals(Grid,Is),remove_bgs(Is,_IndvL,BGIndvS).
 
 /*
 largest_indiv(Grid,Points):- individuals(Grid,[Points|_]).
@@ -201,7 +205,7 @@ trim_to_square(G0,G9):- get_bgc(BG),
   trim_unused_vert_square(_,G1,Grid90):- rot90(G1,Grid90).
 
 
-trim_to_rect(G0,G9):- 
+trim_to_rect(G0,G9):-
  into_grid(G0,G),
  get_bgc(BG),
  trim_unused_vert(BG,G,G1),rot90(G1,G2),trim_unused_vert(BG,G2,G3),rot270(G3,G9).
@@ -282,9 +286,9 @@ learn_mapping_stateful(In,Out):-
 
 rot90(Grid,NewGrid):-  rot180(Grid,GridM),rot270(GridM,NewGrid). 
 rot180(Grid,NewGrid):- flipH(Grid,RowRev),flipV(RowRev,NewGrid).
-rot270(Grid,NewGrid):- get_colums(Grid,NewGrid).
-flipH(Grid,FlipH):- maplist(reverse,Grid,FlipH).
-flipV(Grid,FlipV):- reverse(Grid,FlipV).
+rot270(Grid0,NewGrid):- into_grid(Grid0,Grid), get_colums(Grid,NewGrid).
+flipH(Grid0,FlipH):- into_grid(Grid0,Grid), maplist(reverse,Grid,FlipH).
+flipV(Grid0,FlipV):- into_grid(Grid0,Grid), reverse(Grid,FlipV).
 rocketship(Grid,Grid).
 apply_mapping_stateful(Grid,GridO):- unbind_color(0,Grid,GridO),ignore(backfill_vars(GridO)).
 
@@ -334,7 +338,9 @@ add_borders_0(Num1,Grid,GridO):-
   replace_col_e(1,Num1,G2,G3),
   replace_col_e(H,Num1,G3,GridO))).
 
-cls_with(Color1,Old,Grid):- color_code(Color1,Num1),cls_with_0(Num1,Old,Grid),!.
+
+cls_with(Color1,G,Grid):- into_grid(G,Old),color_int(Color1,Num1),cls_with_0(Num1,Old,Grid),!.
+%cls_with(Color1,Old,Grid):- color_code(Color1,Num1),cls_with_0(Num1,Old,Grid),!.
 cls_with_0(Color1,Old,Grid):- is_list(Old),!,maplist(cls_with_0(Color1),Old,Grid).
 cls_with_0(Color1,_,Color1).
 
@@ -1094,11 +1100,17 @@ check_minsize(Sz,Indv1,Indv):- include(meets_size(Sz),Indv1,Indv).
 
 meets_size(Len,Points):- point_count(Points,L),!,L>=Len.
 
-largest_first(IndvS,IndvO):-  
-  findall(Hard-Indv,(member(Indv,IndvS),point_count(Indv,Hard)),All),
+remove_bgs(IndvS,IndvL,BGIndvS):- partition(is_bg_indiv,IndvS,BGIndvS,IndvL).
+
+is_bg_indiv(O):- colors_count(O,[color_count(C,CC)]),CC>0,is_black(C).
+
+
+largest_first(IndvS,IndvOB):-  
+  remove_bgs(IndvS,IndvL,BGIndvS),
+  findall(Hard-Indv,(member(Indv,IndvL),point_count(Indv,Hard)),All),
   keysort(All,AllK),
   reverse(AllK,AllR),
-  findall(Indv,member(_-Indv,AllR),IndvO).
+  findall(Indv,member(_-Indv,AllR),IndvO),append(IndvO,BGIndvS,IndvOB).
 
 finish_grp(C,Grp,Point2,Dir,Rest,NewGroup,RRest):- 
    is_adjacent_point(Point2,Dir,Point3),
@@ -1395,7 +1407,7 @@ points_to_grid(Points,Grid):-
   make_unassigned_grid(H,V,Grid),
   calc_add_points(1,1,Grid,Points))).
 
-calc_add_points(OH,OV,_,Obj):- var(Obj),throw(var_calc_add_points(OH,OV,Obj)).
+calc_add_points(OH,OV,_,Obj):- var(Obj),dumpST,throw(var_calc_add_points(OH,OV,Obj)).
 calc_add_points(OH,OV,Grid,Points):- is_list(Points),!,maplist(calc_add_points(OH,OV,Grid),Points).
 
 %calc_add_points(OH,OV,Grid,Obj):- is_grid(Obj),globalpoints(Obj,Points),maplist(calc_add_points(OH,OV,Grid),Points).
