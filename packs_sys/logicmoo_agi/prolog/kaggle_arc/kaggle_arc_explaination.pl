@@ -1,15 +1,27 @@
+
+
+
+:- dynamic(is_gridname/2).
+
+set_gridname(Grid,Name):- nb_setval(grid_name,Name),asserta_new(is_gridname(Grid,Name)).
+
+get_gridname(Grid,Name):- is_gridname(Grid,Name)*->true; nb_getval(grid_name,Name).
+
 % Grid pretty printing
 grid_info(Name,IO,Grid):- 
+  GridName = (Name->IO),
   test_info(Name,InfoF),
-  wqnl(fav(Name=IO,InfoF)),
+  wqnl(fav(GridName,InfoF)),
+  set_gridname(Grid,GridName),
   describe_feature(Grid,[grid_dim,colors_count_size,colors_count,num_objects]),
+
   individuals(Grid,IndvS),
   append(IndvS,[Grid],Print),
   colors_count_size(Grid,CCS),
   grid_size(Grid,H,V),
-  ignore((IO=in(_),(CCS>4;debug_indiv;true), debug_indiv(IndvS))),
+  ignore((sub_var(in,IO),(CCS>4;debug_indiv;true), debug_indiv(IndvS))),
   print_grid(1,1,1,1,H,V,H,V,Print),
-  ignore((IO=out(_),(CCS>4;debug_indiv;true), debug_indiv(IndvS))),
+  ignore((sub_var(out,IO),(CCS>4;debug_indiv;true), debug_indiv(IndvS))),
   nop(describe_feature(Grid,[individuals])),!.
 
 maybe_confirm_sol(Name,Type,In,Out):- 
@@ -23,7 +35,7 @@ confirm_sol(Prog,Name,Type,In,Out):-
    count_difs(Out,GridO,Errors),
    (Errors==0 -> arcdbg(pass(Name,Type,Prog));(arcdbg(fail(Errors,Name,Type,Prog)),
      test_info(Name,InfoF),
-     wqnl(fav(Name+Type,InfoF)),
+     wqnl(fav(Name->Type,InfoF)),
      red_noise,
      once(print_grid(GridO)),
      red_noise))

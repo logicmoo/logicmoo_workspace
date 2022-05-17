@@ -33,17 +33,9 @@ print_points_grid(Grid):-
 */
 
 
-% Type is tst or trn
-kaggle_arc(t(Name), TypeI, In, Out):- 
- nth_fact(kaggle_arc_train(Name, Type, In, Out), This), once((nth_fact(kaggle_arc_train(Name, Type, _, _), Start), I is This - Start, TypeI=Type+I)).
-kaggle_arc(v(Name), TypeI, In, Out):- 
- member(Type, [trn, tst]), nth_fact(kaggle_arc_eval(Name, Type, In, Out), This), once((nth_fact(kaggle_arc_eval(Name, Type, _, _), Start), I is This - Start, TypeI=Type+I)).
-
-
 %print_trainer:- kaggle_arc_train(Name, Stuff), atom_json_term(Stuff, JSON, []), print_arc(Name, JSON).
 %print_evaler:- kaggle_arc_eval(Name, Stuff), atom_json_term(Stuff, JSON, []), print_arc(Name, JSON).
 
-*/
  /*
 % data looks like
 
@@ -62,17 +54,17 @@ kaggle_arc_train('00d62c1b', trn, [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], [0
 kaggle_arc_train('00d62c1b', tst, [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], [0,0, 3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], [0, 3,0, 3, 3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], [0,0, 3,0, 3, 3, 3, 3, 3,0, 3, 3,0,0,0,0,0,0,0,0], [0,0,0,0, 3,0,0,0,0, 3,0,0, 3,0,0,0,0,0,0,0], [0,0,0,0, 3, 3, 3, 3, 3,0, 3, 3, 3,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0,0,0,0,0, 3, 3, 3, 3, 3,0,0], [0,0,0,0,0,0,0,0,0,0,0,0,0, 3,0,0,0, 3,0,0], [0,0,0,0,0,0,0,0,0,0,0,0,0, 3,0,0,0, 3,0,0], [0,0,0,0,0,0,0,0,0, 3, 3, 3, 3, 3,0,0,0, 3,0,0], [0,0,0,0,0,0,0,0,0, 3,0,0,0, 3,0,0,0, 3,0,0], [0,0,0,0,0,0,0,0, 3, 3, 3, 3, 3, 3,0,0,0, 3,0,0], [0,0,0,0,0,0, 3, 3,0, 3,0,0,0, 3, 3, 3, 3, 3,0,0], [0,0, 3,0,0,0,0,0, 3, 3,0,0,0,0,0,0,0,0,0,0], [0, 3,0, 3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], [0,0, 3,0, 3,0, 3, 3, 3, 3, 3, 3,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0, 3,0,0,0, 3,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0, 3,0,0,0, 3,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0, 3, 3, 3, 3, 3,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]], [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], [0,0, 3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], [0, 3, 4, 3, 3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], [0,0, 3,0, 3, 3, 3, 3, 3,0, 3, 3,0,0,0,0,0,0,0,0], [0,0,0,0, 3, 4, 4, 4, 4, 3, 4, 4, 3,0,0,0,0,0,0,0], [0,0,0,0, 3, 3, 3, 3, 3,0, 3, 3, 3,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0,0,0,0,0, 3, 3, 3, 3, 3,0,0], [0,0,0,0,0,0,0,0,0,0,0,0,0, 3, 4, 4, 4, 3,0,0], [0,0,0,0,0,0,0,0,0,0,0,0,0, 3, 4, 4, 4, 3,0,0], [0,0,0,0,0,0,0,0,0, 3, 3, 3, 3, 3, 4, 4, 4, 3,0,0], [0,0,0,0,0,0,0,0,0, 3, 4, 4, 4, 3, 4, 4, 4, 3,0,0], [0,0,0,0,0,0,0,0, 3, 3, 3, 3, 3, 3, 4, 4, 4, 3,0,0], [0,0,0,0,0,0, 3, 3, 4, 3,0,0,0, 3, 3, 3, 3, 3,0,0], [0,0, 3,0,0,0,0,0, 3, 3,0,0,0,0,0,0,0,0,0,0], [0, 3, 4, 3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], [0,0, 3,0, 3,0, 3, 3, 3, 3, 3, 3,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0, 3, 4, 4, 4, 3,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0, 3, 4, 4, 4, 3,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0, 3, 3, 3, 3, 3,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]]).
 */
 %tell(s), ignore((nl, nl, test_pairs(Name, Type, In, Out), format('~N~q.~n', [test_pairs_cache(Name, Type, In, Out)]), fail)), told.
-pred_subst(Pred, P, X) :- call(Pred, P, X), !.
-pred_subst(_Pred, P, P1) :- (is_ftVar(P); \+ compound(P)), !, must(P1=P), !.
-pred_subst(Pred, [P|Args], [P1|ArgS]) :- !, pred_subst(Pred, P, P1), !, must(pred_subst(Pred, Args, ArgS)), !.
-pred_subst(Pred, P, P1) :- compound(P), !, compound_name_arguments(P, F, Args), pred_subst(Pred, [F|Args], [Fs|ArgS]), !, compound_name_arguments(P1, Fs, ArgS), !.
-pred_subst(_Pred, P, P).
+map_pred(Pred, P, X) :- call(Pred, P, X), !.
+map_pred(_Pred, P, P1) :- (is_ftVar(P); \+ compound(P)), !, must(P1=P), !.
+map_pred(Pred, [P|Args], [P1|ArgS]) :- !, map_pred(Pred, P, P1), !, must(map_pred(Pred, Args, ArgS)), !.
+map_pred(Pred, P, P1) :- compound(P), !, compound_name_arguments(P, F, Args), map_pred(Pred, [F|Args], [Fs|ArgS]), !, compound_name_arguments(P1, Fs, ArgS), !.
+%map_pred(_Pred, P, P).
 
-:- meta_predicate pred_subst(2, ?, ?, ?, ?).
-pred_subst(Pred, P, X, Sk, P1) :- call(Pred, P, X), !, must(Sk=P1), !.
-pred_subst(_Pred, P, _, _, P1) :- is_ftVar(P), !, must(P1=P), !.
-pred_subst(Pred, [P|Args], X, Sk, [P1|ArgS]) :- !, pred_subst(Pred, P, X, Sk, P1), !, must(pred_subst(Pred, Args, X, Sk, ArgS)), !.
-pred_subst(Pred, P, X, Sk, P1) :- compound(P), !, compound_name_arguments(P, F, Args), pred_subst(Pred, [F|Args], X, Sk, [Fs|ArgS]), !, compound_name_arguments(P1, Fs, ArgS), !.
-pred_subst(_Pred, P, _, _, P).
+:- meta_predicate map_pred(2, ?, ?, ?, ?).
+map_pred(Pred, P, X, Sk, P1) :- call(Pred, P, X), !, must(Sk=P1), !.
+map_pred(_Pred, P, _, _, P1) :- is_ftVar(P), !, must(P1=P), !.
+map_pred(Pred, [P|Args], X, Sk, [P1|ArgS]) :- !, map_pred(Pred, P, X, Sk, P1), !, must(map_pred(Pred, Args, X, Sk, ArgS)), !.
+map_pred(Pred, P, X, Sk, P1) :- compound(P), !, compound_name_arguments(P, F, Args), map_pred(Pred, [F|Args], X, Sk, [Fs|ArgS]), !, compound_name_arguments(P1, Fs, ArgS), !.
+map_pred(_Pred, P, _, _, P).
 
 

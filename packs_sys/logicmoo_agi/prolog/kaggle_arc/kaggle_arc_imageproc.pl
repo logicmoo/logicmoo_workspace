@@ -171,8 +171,8 @@ trim_to_rect(G0,G9):-
 
 if_bgc_then_int(X,C,B,A):- \+compound(B),B\==[],is_bg_or_var(X,B), A=C, !.
 set_bg(C0,Grid,GridO):- color_code(C0,CC),  nb_setval(grid_bgc,X), get_bgc(X),
-  is_grid(Grid),!,color_int(CC,GC), pred_subst(if_bgc_then_int(X,GC), Grid, GridO),!.
-set_bg(C0,Grid,GridO):- color_code(C0,C),  nb_setval(grid_bgc,X), get_bgc(X),pred_subst(if_bgc_then(X,C), Grid, GridO),!.
+  is_grid(Grid),!,color_int(CC,GC), map_pred(if_bgc_then_int(X,GC), Grid, GridO),!.
+set_bg(C0,Grid,GridO):- color_code(C0,C),  nb_setval(grid_bgc,X), get_bgc(X),map_pred(if_bgc_then(X,C), Grid, GridO),!.
   if_bgc_then(X,C,B,A):- \+compound(B),is_bg_or_var(X,B), A=C, !.
 
 shave_away_1s(Grid,GridO):- individuals(Grid,Is), include(\=([_,_|_]),Is,I1s), remove_points(I1s,Grid,GridO).
@@ -195,7 +195,7 @@ replace_point(H,V,C,Grid,GridO):- duplicate_term(Grid,GridO),nth1(V,GridO,Row),n
 nb_set_nth1(1,Row,C):- !, nb_setarg(1,Row,C).
 nb_set_nth1(N,[_|Row],C):- Nm1 is N -1, nb_set_nth1(Nm1,Row,C).
 
-set_all_fg(C0,Grid,GridO):- color_code(C0,C),get_bgc(X),pred_subst(if_not_bgc_then(X,C), Grid, GridO).
+set_all_fg(C0,Grid,GridO):- color_code(C0,C),get_bgc(X),map_pred(if_not_bgc_then(X,C), Grid, GridO).
 if_not_bgc_then(X,C,B,A):- is_color_dat(B), \+ is_bg_or_var(X,B), A=C, !.
 
 
@@ -500,7 +500,7 @@ is_gridoid(G):- is_object(G),!.
 %is_gridoid(G):- is_cpoint(G),!.
 is_gridoid(G):- is_list_of_gridoids(G).
 
-maybe_glyph(G,_,GN):- is_grid(G),!,GN=215.
+maybe_glyph(G,_,GN):- is_grid(G),grid_dot(GN),!.
 maybe_glyph(G,_,Code):- object_indv_id(G,_Tst,GN),nonvar(GN),!,i_sym(GN,Code).
 maybe_glyph(_G,N,Code):-i_sym(N,Code).
 

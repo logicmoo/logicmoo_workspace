@@ -16,11 +16,13 @@ check_args(P,Arity,An,Left,T,C,MC):-
  arg(An,P,ArgIn),arg(An,T,ArgType),arg(An,C,CallArg),into_type(ArgType,ArgIn,CallArg),
  AnM1 is An+1,LeftP1 is Left-1, check_args(P,Arity,AnM1,LeftP1,T,C,MC).
 
+
+into_type(Type,G,fake(Type,G)):- var(G),throw(var_into_type(Type,G)).
 into_type(+,X,X).
 into_type(num,X,X):- assertion(number(X)).
 into_type(dir,X,X):- assertion(nav(X,_,_)).
 into_type(grid,X,O):- into_grid(X,O).
-into_type(object,X,O):- into_object(X,O).
+into_type(object,X,O):- is_object(X)-> X=O ; into_object(X,O).
 into_type(objectlist,X,O):- into_objectlist(X,O).
 
 
@@ -44,8 +46,11 @@ run_dsl(Prog,In,Out):- call(Prog,In,M)*-> =(M,Out) ; arcdbg(warn(nonworking(run_
 named_test(P,G):- var(P),!,throw(var_named_test(P,G)).
 named_test(P+T,G):- fix_test_name(P+T,Name,Type),kaggle_arc(Name,Type,G,_),!.
 named_test(P,G):- fix_test_name(P,Name,_),kaggle_arc(Name,tst+0,G,_),!.
-named_test(P=in(Type),G):- fix_test_name(P,Name,_),!,kaggle_arc(Name,Type,G,_),!.
-named_test(P=out(Type),G):- fix_test_name(P,Name,_),!,kaggle_arc(Name,Type,_,G),!.
+named_test(P=Type->in,G):- fix_test_name(P,Name,_),!,kaggle_arc(Name,Type,G,_),!.
+named_test(P=Type->out,G):- fix_test_name(P,Name,_),!,kaggle_arc(Name,Type,_,G),!.
+
+into_object(G,O):- is_grid(G),grid_to_individual(G,O),!.
+into_object(G,O):- into_objectlist(G,OL),must([O]=OL).
 
 into_objectlist(G,G):- var(G),throw(var_into_objectlist(G)).
 into_objectlist(P,G):- is_objectlist(P),!,G=P.

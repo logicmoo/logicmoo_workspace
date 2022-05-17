@@ -11,6 +11,14 @@
 :- dynamic(grid_nums/2).
 
 
+:- ensure_loaded(kaggle_arc_utils).
+:- ensure_loaded(kaggle_arc_ui_ansi).
+:- ensure_loaded(kaggle_arc_object).
+:- ensure_loaded(kaggle_arc_imageproc).
+:- ensure_loaded(kaggle_arc_test_iface).
+:- ensure_loaded(kaggle_arc_explaination).
+:- ensure_loaded(kaggle_arc_interpreter).
+
 
 %c:- forall(clause(fav(A,B),true),add_history1((fav(A,B)))).
 :- add_history1(arc).
@@ -50,8 +58,8 @@ run_arc_io(Name,Type,In,Out):-
   current_test_name(CName),
   nb_delete(grid_bgc),
   nb_setval(test_name,Name),
-  nb_setval(test_name_w_type,Name+Type),
-  retractall(grid_nums(Name+Type,_)),
+  nb_setval(test_name_w_type,Name->Type),
+  retractall(grid_nums(Name->Type,_)),
   retractall(grid_nums(_)),
   retractall(grid_nums(_,_)),
   ignore(try_arc_io(CName,Name,Type,In,Out)))),!.
@@ -62,13 +70,13 @@ try_arc_io(CName,Name,Type,In,Out):-
     ignore((CName\==Name,dash_char(60,"A"),dash_char(6,"\n"),nl)),  
     dash_char(60,"V"),nl,
     describe_feature(Name,[test_info]),
-  grid_info(Name,in(Type),In), %print_tree_nl(in=IndvS),
-  grid_info(Name,out(Type),Out), %print_tree_nl(out=OndvS),
+  store_individuals_non_shared(Name,Type->in,In),
+  store_individuals_non_shared(Name,Type->out,Out),
+  grid_info(Name,Type->in,In), %print_tree_nl(in=IndvS),
+  grid_info(Name,Type->out,Out), %print_tree_nl(out=OndvS),
     !,
-    \+ \+ ignore(((Type = trn+_), test_config(learn(CProg)),must(training_progs(CProg,In,Out)))),
+    \+ \+ ignore(((Type=trn+_), test_config(learn(CProg)),must(training_progs(CProg,In,Out)))),
 /*
-  individuals_non_shared(In,IndvS),
-  individuals_non_shared(Out,OndvS),!,
   compute_diff(IndvS,OndvS,Diffs),!,
   nop(print_tree_nl(diffs=Diffs)),
 */

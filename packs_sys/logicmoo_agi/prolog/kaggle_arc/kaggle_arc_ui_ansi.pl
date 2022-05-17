@@ -81,7 +81,7 @@ debug_indiv(Other):-
 remove_too_verbose(H,''):- too_verbose(H).
 remove_too_verbose(shape(H),H).
 remove_too_verbose(colors_count(H),H).
-remove_too_verbose(object_indv_id(X,Y),[fav(X),nth(Y)]).
+remove_too_verbose(object_indv_id(X,Y),[fav1(X),nth(Y)]).
 remove_too_verbose(object_offset(X,Y),offset(X,Y)).
 remove_too_verbose(object_size(X,Y),size(X,Y)).
 remove_too_verbose(point_count(X),pixels(X)).
@@ -250,6 +250,8 @@ bg_dot(183).
 /* 169	© 248	ø 216	Ø  215 ×  174	® */
 %fg_dot(C):- nb_current(fg_dot,C),integer(C),!.
 fg_dot(174).
+
+grid_dot(169).
 
 print_g1(H,V,C0):- i_code_at(H,V,C0,C,Code),wots(S,format('~s',[[Code]])),!, color_print(C,S),!.
 print_g1(_,_,C):- var(C), color_print(C,'?'),!.

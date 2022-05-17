@@ -172,10 +172,18 @@ load_json_file(F, BaseName, FullName):- Name=..[F,BaseName],
 :- load_json_files(t,'./data/training/*.json').
 :- load_json_files(v,'./data/evaluation/*.json').
 kaggle_arc(TName,Type,In,Out):- kaggle_arc_json(TName,Type,In,Out).
+% Type is tst or trn
+/*
+kaggle_arc(t(Name), TypeI, In, Out):- 
+ nth_fact(kaggle_arc_train(Name, Type, In, Out), This), once((nth_fact(kaggle_arc_train(Name, Type, _, _), Start), I is This - Start, TypeI=Type->I)).
+kaggle_arc(v(Name), TypeI, In, Out):- 
+ member(Type, [trn, tst]), nth_fact(kaggle_arc_eval(Name, Type, In, Out), This), once((nth_fact(kaggle_arc_eval(Name, Type, _, _), Start), I is This - Start, TypeI=Type->I)).
+*/
+
 fix_test_name(X,X,_):- var(X),!.
-fix_test_name(X+Type,Y,Type):-!,fix_test_name(X,Y,_).
-fix_test_name(X=in(Type),Y,Type):-!,fix_test_name(X,Y,_).
-fix_test_name(X=out(Type),Y,Type):-!,fix_test_name(X,Y,_).
+fix_test_name(X->Type->in,Y,Type):-!,fix_test_name(X,Y,_).
+fix_test_name(X->Type->out,Y,Type):-!,fix_test_name(X,Y,_).
+fix_test_name(X->Type,Y,Type):-!,fix_test_name(X,Y,_).
 fix_test_name(X,X,Type):- kaggle_arc(X,Type,_,_),!.
 fix_test_name(X,Y,Type):- compound(X),!,arg(_,X,E),nonvar(E),fix_test_name(E,Y,Type).
 fix_test_name(X,t(X),_):- kaggle_arc(t(X),_,_,_),!.
