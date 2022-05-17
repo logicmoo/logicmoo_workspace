@@ -9,6 +9,7 @@ wqnl(X):- format('~N~q~N',[X]).
 dash_char:- dash_char(40).
 dash_char(H):- integer(H), dash_border(H).
 dash_char(S):- format('~N'),dash_char(60,S),format('~N').
+dash_char(H,_):- H < 1,!.
 dash_char(H,C):-forall(between(0,H,_),write(C)).
 dash_border(Width):- format('~N'), WidthM1 is Width-1, write(' _'),dash_char(WidthM1,'__'),nl.
 dash_uborder(Width):- !, dash_border(Width).
@@ -120,6 +121,50 @@ debug_indiv(Obj,_,F,[A]):- maplist(is_cpoint,A),!,
 debug_indiv(_,P,_,_):- pt(P).
 
 
+
+
+print_side_by_side(C1,LW,C2):- 
+  into_ss_string(C1,ss(W1,L1)),
+  into_ss_string(C2,ss(_,L2)),!,
+  print_side_by_side_lists(L1,W1,L2,LW).
+  
+print_side_by_side_lists([E1|L1],W1,[E2|L2],W2):-!,
+  write_padding(E1,W1,E2,W2), 
+  print_side_by_side_lists(L1,W1,L2,W2).
+  
+print_side_by_side_lists([],W1,[],W2):- !, nop(write_padding([],W1,[],W2)),!.
+  
+print_side_by_side_lists([E1|L1],W1,[],W2):- !,
+  write_padding(E1,W1,[],W2),
+  print_side_by_side_lists(L1,W1,[],W2).
+  
+print_side_by_side_lists([],W1,[E2|L2],W2):-
+  write_padding([],W1,E2,W2),
+  print_side_by_side_lists([],W1,L2,W2).
+
+as_str([],''):-!.
+as_str(A,S):- atom_string(A,S).
+
+write_padding(E1,_W1,E2,LW):- %write(' '),
+    W1 = LW,
+   format('~N'),as_str(E1,S1), as_str(E2,S2), 
+   write(S1), line_position(user_output,L1), Pad1 is W1 - L1, dash_char(Pad1, ' '),
+   write(S2), format('~N').
+
+print_length(S,L):- atom_codes(S,C), include(uses_space,C,SS),length(SS,L).
+uses_space(C):- code_type(C,print).
+
+into_ss_string(Var,_):- var(Var),!,throw(var_into_ss_string(Var)).
+into_ss_string(ss(Len,L),ss(Len,L)):-!.
+into_ss_string(L,ss(Len,L)):- is_list(L), find_longest_len(L,Len),!.
+into_ss_string(S,SS):- string(S), atomics_to_string(L,'\n',S),!,into_ss_string(L,SS).
+into_ss_string(C,SS):- wots(S,C), into_ss_string(S,SS).
+
+find_longest_len(SL,L):- find_longest_len(SL,10,L),!.
+find_longest_len([],L,L).
+find_longest_len([S|SS],N,L):- print_length(S,N2),max_min(N,N2,NM,_),
+  find_longest_len(SS,NM,L).
+
 print_w_pad(Pad,S):- atomics_to_string(L,'\n',S)-> maplist(print_w_pad0(Pad),L).
 print_w_pad0(Pad,S):- format('~N'),dash_char(Pad,' '), write(S).
 
@@ -182,6 +227,12 @@ better_value([G|V],List):-
   [G|V] \=@= List.
 
 
+print_igrid(Name,SIndvOut,[In|Out]):- grid_size(In,H,V),
+   %dash_char(H,' '),
+   write('  '),writeq(Name),writeln('  '),
+   append(SIndvOut,[In|Out],Print),
+   print_grid(H,V,Print).
+
 print_grid(Grid):- grid_size(Grid,HH,VV), print_grid(HH,VV,Grid).
 print_grid(HH,VV,Grid):- print_grid(1,1,HH,VV,Grid).
 print_grid(SH,SV,EH,EV,Grid):- print_grid(SH,SV,SH,SV,EH,EV,EH,EV,Grid).
@@ -196,9 +247,11 @@ print_grid0(Bordered,SH,SV,LoH,LoV,HiH,HiV,EH,EV,Grid):-
   (ignore((IsBordered,dash_border(Width)))),
   nop(get_bgc(BG)),
   forall(between(SV,EV,V),
-   ((format('~N'),forall(between(SH,EH,H), 
+   ((format('~N'),
+     forall(between(SH,EH,H), 
      (hv_value_or(Grid,C,H,V,BG)->
-        once(print_g(H,V,C,LoH,LoV,HiH,HiV))))))),format('~N'),!,
+        (once(print_g(H,V,C,LoH,LoV,HiH,HiV))))),dash_char(10,' '),format('~N')))),
+   format('~N'),!,
   (ignore((IsBordered,dash_uborder(Width)))),!.
 %print_grid(Grid):- is_grid(Grid),!, maplist(print_rows,Grid),nl.
 %print_rows(List):- maplist(print_g,List),nl.
@@ -253,9 +306,9 @@ fg_dot(174).
 
 grid_dot(169).
 
-print_g1(H,V,C0):- i_code_at(H,V,C0,C,Code),wots(S,format('~s',[[Code]])),!, color_print(C,S),!.
+print_g1(H,V,C0):- i_code_at(H,V,C0,C,Code),name(S,[Code]),!, color_print(C,S),!.
 print_g1(_,_,C):- var(C), color_print(C,'?'),!.
-print_g1(_,_,C):- trace, write(C).
+%print_g1(_,_,C):- trace, write(C).
 
 i_sym(N,Code):- var(N), Code = 63.
 i_sym(N,Code):- change_code(N,NN), i_syms(Codes),nth0(NN,Codes,Code),!.

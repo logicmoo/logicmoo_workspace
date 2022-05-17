@@ -40,11 +40,11 @@ fav(X,[]):- clause(fav(X),true).
 %fav(t('23b5c85d'),[b7249182
 %fav(t('db3e9e38'),[lmDSL([flipV,C1=orange,C2=blue,[],flipV]).
 %fav(t(_),[lmDSL([fillFromBorder(none,yellow)])]).
+fav(v('1d398264'),[debug_indiv]).
 fav(v('e9bb6954'),[print_grid,indiv(min(8)),e('box of nine draw outward, if you hit a drawn line blacken it')]).
 fav(v('e41c6fd3'),[debug_indiv]).
 fav(v('94133066'),[lmDSL([largest_indiv,trim_to_rect,rot90,flipV])]).
 fav(v('762cd429'),[]).
-fav(v('1d398264'),[debug_indiv]).
 fav(t('f76d97a5'),[lmDSL([compute_max_color(C1),compute_next_color(C2),blacken_color(C1),subst_color(C2,C1)])]).
 fav(t('ed36ccf7'),[lmDSL([rot270])]).
 fav(t('e9bb6954'),[debug_indiv]).
@@ -181,12 +181,11 @@ kaggle_arc(v(Name), TypeI, In, Out):-
 */
 
 fix_test_name(X,X,_):- var(X),!.
-fix_test_name(X->Type->in,Y,Type):-!,fix_test_name(X,Y,_).
-fix_test_name(X->Type->out,Y,Type):-!,fix_test_name(X,Y,_).
-fix_test_name(X->Type,Y,Type):-!,fix_test_name(X,Y,_).
-fix_test_name(X,X,Type):- kaggle_arc(X,Type,_,_),!.
-fix_test_name(X,Y,Type):- compound(X),!,arg(_,X,E),nonvar(E),fix_test_name(E,Y,Type).
-fix_test_name(X,t(X),_):- kaggle_arc(t(X),_,_,_),!.
+fix_test_name(Tried*Type*_,Fixed,Type):-!,fix_test_name(Tried,Fixed,_).
+fix_test_name(Tried*Type,Fixed,Type):-!,fix_test_name(Tried,Fixed,_).
+fix_test_name(Tried,Tried,Type):- \+ \+ kaggle_arc(Tried,_,_,_),!, kaggle_arc(Tried,Type,_,_).
+fix_test_name(Tried,Fixed,Type):- compound(Tried),!,arg(_,Tried,E),nonvar(E),fix_test_name(E,Fixed,Type).
+fix_test_name(Tried,t(Tried),_):- kaggle_arc(t(Tried),_,_,_),!.
 fix_test_name(X,v(X),_):- kaggle_arc(v(X),_,_,_),!.
 
 print_trainer0:- arc(t('25d487eb')).

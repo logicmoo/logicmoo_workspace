@@ -1,20 +1,80 @@
    
-:- dynamic(individuals_saved/2).
+:- dynamic(unshared_individuals_saved/2).
 :- dynamic(reuse_grid_nums/1).
 
-store_individuals_non_shared(Name,InOutType,Grid):- 
-   set_gridname(Grid,Name+InOutType),
+store_individuals_non_shared(Gridname,Grid):- 
+   set_gridname(Grid,Gridname),
    individuals_non_shared(Grid,IndvS),
-   asserta_new(individuals_saved(Name+InOutType,IndvS)),!.
+   set_named_indivs(Gridname,IndvS).
+
+get_named_indivs(Gridname,IndvS):- 
+   unshared_individuals_saved(Gridname,IndvS).
+
+set_named_indivs(Gridname,IndvS):- 
+   retractall(unshared_individuals_saved(Gridname,_)),
+   asserta(unshared_individuals_saved(Gridname,IndvS)),!.
+
+ensure_individuals_non_shared(Gridname):- unshared_individuals_saved(Gridname,_),!.
+ensure_individuals_non_shared(Gridname):- is_gridname(Grid,Gridname),!,
+   store_individuals_non_shared(Gridname,Grid),!.
+ensure_individuals_non_shared(Gridname):- throw(cannot_find((Gridname))).
 
 :- style_check(+singleton).
 
-grid_shared_with(Name->Type->in,Name->Type->out):-!.
-grid_shared_with(Name->Type->out,Name->Type->in):-!.
+grid_shared_with(Gridname*Type*in,Gridname*Type*out):-!.
+grid_shared_with(Gridname*Type*out,Gridname*Type*in):-!.
+
+use_shared_first(W) :- nb_current(grid_shared,W),W\==[],W\==nil.
+use_shared_first:- use_shared_first(_).
+
+get_shared_with(IndvS):- use_shared_first(With),
+  ensure_individuals_non_shared(With),
+  unshared_individuals_saved(With,IndvS),!.
+get_shared_with([]).
+
+
+get_unshared(IndvS):- use_shared_first(With),
+  grid_shared_with(With,Gridname),
+  ensure_individuals_non_shared(Gridname),
+  unshared_individuals_saved(Gridname,IndvS),!.
+get_unshared([]).
+
+
+unset_nth(I,O):- delq(I,object_indv_id(_,_),O).
+set_nth(I,O):- delq(I,object_indv_id(_,_),O).
+
+get_combined(IndvC):- nb_current(test_name_w_type,NameTypeNum), unshared_individuals_saved(NameTypeNum,IndvC),!.
+get_combined(IndvC):- nb_current(test_name_w_type,NameTypeNum), 
+   unshared_individuals_saved(NameTypeNum*in ,IndvS1),
+   unshared_individuals_saved(NameTypeNum*out,IndvS2),
+   make_combined(IndvS1,IndvS2,IndvC).
+get_combined(IndvC):-get_shared_with(IndvS1),get_unshared(IndvS2),make_combined(IndvS1,IndvS2,IndvC).
+
+with_each_indiv(G,I):- individuals(G,I).
+
+make_combined(IndvS1,IndvS2,BetterC):-
+   largest_first_really(IndvS1,IndvS1C),
+   largest_first_really(IndvS2,IndvS2C),
+  append(IndvS1C,IndvS2C,IndvSU),list_to_set(IndvSU,IndvS),
+  largest_first_really(IndvS,IndvOB),
+  reverse(IndvOB,IndvC),
+  cleanup(IndvC,BetterC),
+  nb_current(test_name_w_type,NameTypeNum),
+  set_named_indivs(NameTypeNum,BetterC),!.
+
+cleanup(IndvC,BetterC):-
+  append(Left,[B|Bigger],IndvC),
+  append(LeftB,[A|RBigger],Bigger),
+  compute_diff(A,B,same_object(_)),!,
+  object_indv_id(B,NameTypeNum,Iv),
+  setq(A,object_indv_id(B,NameTypeNum,Iv),AA),
+  append([Left,LeftB,RBigger,[AA]],MissingAB),
+  cleanup(MissingAB,BetterC).
+cleanup(A,A).
 
 individuals(Grid,IndvS):- 
-   get_gridname(Grid,Name),
-   grid_shared_with(Name,With),
+   get_gridname(Grid,Gridname),
+   grid_shared_with(Gridname,With),
    locally(b_setval(grid_shared,With),
             individuals_common(Grid,IndvS)).
 
@@ -35,19 +95,35 @@ individuals_common(Grid,IndvS):- is_grid(Grid),!,
 individuals_common(Grid,I):- is_objectlist(Grid),!,I=Grid.
 individuals_common(obj(Grid),[obj(Grid)]):-!.
 
+individuals_raw(ID,Points,IndvS):- 
+  maybe_shared_individuals_list(squares,Points,Indv1S,LeftOverPoints),
+  individuals_list(squares,ID,LeftOverPoints,Indv2S),
+  append(Indv1S,Indv2S,Indv12S),list_to_set(Indv12S,IndvS).
 
-individuals_raw(ID,Points,Indv):- 
-  individuals_list(squares,ID,Points,Indv).
+maybe_shared_individuals_list(Types,Points,IndvList,Unused):- 
+  use_shared_first,
+  get_combined(IndvSC), 
+  consume_shared_individual_points(IndvSC,Types,Points,IndvList,Unused).
+maybe_shared_individuals_list(_Types,UnusedPoints,[],UnusedPoints):- !.
 
 unraw_inds(IndvS,IndvO):-   
   largest_first(IndvS,Indv1),
   reverse(Indv1,IndvR),
-  test_cond_or(indiv(min(SZ)),1),
+  %test_cond_or(indiv(min(SZ)),1),
+  SZ=0,
   check_minsize(SZ,IndvR,Indv),
   unraw_inds2(_,Indv,IndvO),!.
 
 %individuals_list_diamonds(_,Indv,Indv1):-
 %  individuals_list(diamonds,ID,Indv,Indv1).
+
+
+consume_shared_individual_points([],_Types,UnusedPoints,[],UnusedPoints):- !.
+consume_shared_individual_points([H|T],Types,Points,[H|IndvList],Unused):-  
+  globalpoints(H,GPoints), remove_gpoints(GPoints,Points,LeftOver),
+  consume_shared_individual_points(T,Types,LeftOver,IndvList,Unused).
+consume_shared_individual_points([_|T],Types,Points,IndvList,Unused):-  
+  consume_shared_individual_points(T,Types,Points,IndvList,Unused).
 
 
 individuals_list(_,_,[],[]):-!.
@@ -65,6 +141,25 @@ individuals_list(_Types,_,Points,IndvList):- maplist(obj1,Points,IndvList).
 obj1(X,X).
 
 ok_color_with(C,C2):- /* \+ free_cell(C2), */ C==C2.
+
+sameglobalpoints(Points,IndvC,LeftOver,IndvC):-
+  globalpoints(IndvC,GPoints),
+  remove_gpoints(GPoints,Points,LeftOver).
+
+remove_gpoints([],Rest,Rest).
+remove_gpoints([GPoint|GPoints],Points,Rest):- select(GPoint,Points,Mid),remove_gpoints(GPoints,Mid,Rest).
+
+
+find_one_individual_from_combined(Types,Points,[Indv1|IndvList],Unused):-
+  get_combined(IndvSC),
+  maplist(sameglobalpoints(Points,Indv1,LeftOver),IndvSC),
+  find_one_individual_from_combined(Types,LeftOver,IndvList,Unused).
+find_one_individual_from_combined(_Types,UnusedPoints,[],UnusedPoints).
+
+find_one_individual(Types,Points,Indv,NextScanPoints):- fail,
+  use_shared_first,
+  find_one_individual_from_combined(Types,Points,Indv,NextScanPoints).
+
 find_one_individual(Types,Points,Indv,NextScanPoints):-
     select(C-HV,Points,Rest), \+ free_cell(C), 
     allow_dirs(Types,Dir),
@@ -137,8 +232,17 @@ remove_bgs(IndvS,IndvL,BGIndvS):- partition(is_bg_indiv,IndvS,BGIndvS,IndvL).
 
 is_bg_indiv(O):- colors_count(O,[color_count(C,CC)]),CC>0,is_black(C).
 
+largest_first(IndvS,IndvR):-
+  largest_first_really(IndvS,IndvO),
+  reverse(IndvO,IndvR).
 
-largest_first(IndvS,IndvOB):-  
+largest_first_really(IndvS,IndvO):-  
+  findall(Hard-Indv,(member(Indv,IndvS),point_count(Indv,Hard)),All),
+  keysort(All,AllK),
+  reverse(AllK,AllR),
+  findall(Indv,member(_-Indv,AllR),IndvO).
+
+largest_first_nonbg(IndvS,IndvOB):-  
   remove_bgs(IndvS,IndvL,BGIndvS),
   findall(Hard-Indv,(member(Indv,IndvL),point_count(Indv,Hard)),All),
   keysort(All,AllK),
@@ -227,7 +331,6 @@ grid_to_individual(Grid,OUT):-
   embue_points(GN,H,V,1,1,H,V,Points,OUT).
 
 make_embued_points(Grid,H,V,Indv2,IndvS):- 
-  flag(indiv,_,0),
   get_gridname(Grid,GN),
   maplist(embue_points(GN,H,V),Indv2,IndvS).
 
@@ -254,18 +357,19 @@ embue_points(NameTypeNum,H,V,LoH,LoV,HiH,HiV,Points,obj(Ps)):-
   deoffset_points(LoH,LoV,Points,LPoints),
   findall(shape(Shape),guess_shape(Ps,Empty,Len,Width,Height,CC,Points,Shape),Shapes),
   remove_color(LPoints,CLPoints),
-  append([
+  append([[
     points_only(CLPoints),
     colors_count(CC),
     object_size(Width,Height),
-    object_offset(LoH,LoV),
+    point_count(Len)],Shapes,
     %width(Width), height(Height), area(Area),
-    point_count(Len),
     %missing(Empty),
-    localpoints(LPoints)|Shapes],[
-    globalpoints(Points),
+    [localpoints(LPoints)],
+    [object_offset(LoH,LoV)],
+    [globalpoints(Points),
     object_indv_id(NameTypeNum,Iv),
-    grid_size(H,V)],Ps))).
+    grid_size(H,V)]],Ps))).
+
 
 object_indv_id(I,NameTypeNum,Iv):- indv_props(I,L),member(object_indv_id(NameTypeNum,Iv),L),!.
 object_indv_id(_,NameTypeNum,_Iv):- nb_current(test_name_w_type,NameTypeNum).
@@ -278,18 +382,33 @@ remove_color(_-P,P).
 remove_color(LPoints,CLPoints):- maplist(remove_color,LPoints,CLPoints).
 
 decl_pt(setq(object,any,object)).
-setq(I,[],I):-!.
-setq(I,[H|T],II):- !, setq(I,H,M),setq(M,T,II).
-setq(I,P,II):- functor(P,F,A),functor(Q,F,A),D=done(nil),map_pred(setq_1(D,Q,P),I,II).
-setq_1(done(t),_,_,I,I):-!.
-setq_1(D,Q,P,I,II):- compound(I),I=Q,nb_setarg(1,D,t),II=P.
-   
+
+setq(Orig,Todo,Result):- metaq(setq_1,Orig,Todo,Result).
+setq_1(_Old,New,Saved):- Saved=New.
+delq(Orig,Todo,Result):- metaq(delq_1,Orig,Todo,Result).
+delq_1(_Old,_New,Saved):- Saved=delq.
+
+
+metaq(_,Orig,[],Orig):-!.
+metaq(P3,Orig,[New|Todo],Result):- !, metaq(P3,Orig,New,Midway),metaq(P3,Midway,Todo,Result).
+metaq(P3,Orig,New,Saved):- functor(New,F,A),functor(Old,F,A),Did=done(nil),map_pred(metaq_1(P3,Did,Old,New),Orig,Saved).
+metaq_1(_,done(t),_,_,Orig,Orig):-!.
+metaq_1(P3,Did,Old,New,Orig,Saved):- compound(Orig),Orig=Old, call(P3,Old,New,Saved),nb_setarg(1,Did,t).
+
+
+
 indv_props(obj(L),L):- is_list(L).
 
 localpoints(I,X):- indv_props(I,L),member(localpoints(X),L).
 
+hv_cvalue(Grid,Color,H,V):- hv_value(Grid,C,H,V),as_cv(C,Color).
+as_cv(C,Color):- var(C),color_code(C,Color).
+as_cv(C,Color):- integer(C),!,color_code(C,Color).
+as_cv(C,Color):- atom(C),!,color_code(C,Color).
+as_cv(C-_,Color):- as_cv(C,Color).
+
 globalpoints(Grid,Points):- is_grid(Grid),!, grid_size(Grid,HH,HV), 
-  findall(C-Point,(between(1,HV,V),between(1,HH,H),hv_value(Grid,C,H,V),nonvar(C),hv_point(H,V,Point)),Points),
+  findall(C-Point,(between(1,HV,V),between(1,HH,H),hv_cvalue(Grid,C,H,V),nonvar(C),hv_point(H,V,Point)),Points),
   assertion(ground(Points)).
 %globalpoints(Grid,Points):- is_object(Grid),!,globalpoints(Grid,Points).
 globalpoints(Grid,Points):- is_objectlist(Grid),!,maplist(globalpoints,Grid,MPoints),flatten(MPoints,Points).

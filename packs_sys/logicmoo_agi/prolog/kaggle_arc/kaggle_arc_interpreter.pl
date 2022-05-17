@@ -46,8 +46,8 @@ run_dsl(Prog,In,Out):- call(Prog,In,M)*-> =(M,Out) ; arcdbg(warn(nonworking(run_
 named_test(P,G):- var(P),!,throw(var_named_test(P,G)).
 named_test(P+T,G):- fix_test_name(P+T,Name,Type),kaggle_arc(Name,Type,G,_),!.
 named_test(P,G):- fix_test_name(P,Name,_),kaggle_arc(Name,tst+0,G,_),!.
-named_test(P=Type->in,G):- fix_test_name(P,Name,_),!,kaggle_arc(Name,Type,G,_),!.
-named_test(P=Type->out,G):- fix_test_name(P,Name,_),!,kaggle_arc(Name,Type,_,G),!.
+named_test(P=Type*in,G):- fix_test_name(P,Name,_),!,kaggle_arc(Name,Type,G,_),!.
+named_test(P=Type*out,G):- fix_test_name(P,Name,_),!,kaggle_arc(Name,Type,_,G),!.
 
 into_object(G,O):- is_grid(G),grid_to_individual(G,O),!.
 into_object(G,O):- into_objectlist(G,OL),must([O]=OL).
