@@ -1,3 +1,31 @@
+# LOGICMOO Library that tries to solve ARC (Abstraction and Reasoning Corpus Challenge Competition)
+
+https://www.kaggle.com/competitions/abstraction-and-reasoning-challenge/leaderboard
+
+At the time of writing this README (5/12/2022)
+
+ * The best single symbolic based solver got about 20.06% of the 400 solutions with 100% of the pixels correct https://www.kaggle.com/competitions/abstraction-and-reasoning-challenge/discussion/154597
+ * When the best was combined with three other solvers the result was 27.8% correct. (38% of 20% increase) https://www.kaggle.com/competitions/abstraction-and-reasoning-challenge/discussion/234352
+ * A Neural Net solver hand picked 100 of the 400 tests (according to authors the smallest grid sizes)
+   Gets 78% of the total pixels correct. (In other words, it may have guessed NONE of the solutions correctly!? )
+   But on another thread, Chollet might of indicated they got 30% correct out of the 100 of tests it took.
+   So they deserve perhaps a final score of 7.5%? 
+    https://www.kaggle.com/competitions/abstraction-and-reasoning-challenge/discussion/220585
+
+The symbolic solver author claims to have only spent 2 months writting the C++ for the best single solver (spread out over two years.) While I believe @icecuber is brilliant, does this mean that companies and the rest of the world did not take the ARC challenge very seriously?
+
+
+
+
+
+
+
+
+
+
+Previous README
+
+
 # The Abstraction and Reasoning Corpus (ARC)
 
 This repository contains the ARC task data, as well as a browser-based interface for humans to try their hand at solving the tasks manually.
