@@ -5,7 +5,7 @@
 
 set_gridname(Grid,Name):- nb_setval(grid_name,Name),asserta_new(is_gridname(Grid,Name)).
 
-get_gridname(Grid,Name):- is_gridname(Grid,Name)*->true; nb_getval(grid_name,Name).
+get_gridname(Grid,Name):- is_gridname(Grid,Name)*->true; nb_current(grid_name,Name).
 get_gridname(In,Name*ExampleNum*in):- kaggle_arc(Name,ExampleNum,In,_).
 get_gridname(Out,Name*ExampleNum*out):- kaggle_arc(Name,ExampleNum,_,Out).
 
@@ -72,8 +72,8 @@ combine_diffs(D1,D2,L12):- listify(D1,L1),listify(D2,L2),!,append(L1,L2,L12).
 
 %compute_diff(IPs,OPs,Difs2):- compute_diff(IPs,OPs,Difs2).
 number_dif(I,O,0):- I =:= O.
-number_dif(I,O,+D):- I<O, D is O -I.
-number_dif(I,O,-D):- D is I -O.
+number_dif(I,O,-D):- I<O, D is O -I.
+number_dif(I,O,+D):- D is I -O.
 
 usefull_compare(P):- compound(P),functor(P,F,_),!,usefull_compare(F).
 usefull_compare(P):- changed_by(P,_).
@@ -119,10 +119,15 @@ dislike_points(I):- is_list(I),dislike_points1(L),forall(member(E,L),member(E,I)
 dislike_points1([colors_count([color_count(BG, _)]),object_shape(nonsolid)]):- freeze(BG,is_black_or_bg(BG)).
 
 no_diff(in,out).
+simular([],_,_,[]):- !.
+simular(object_offset=Where,I,O,object_has_moved(Where)):- 
+  \+ (point_count(O,OC), OC < 6) ,
+  \+ (colors_count(O,[color_count(BG, _)|_]),is_black_or_bg(BG)),
+  object_indv_id(I,Tst,_Id1), \+ object_indv_id(O,Tst,_Id2).
 
 compute_diff_objs(obj(I),II,obj(O),OO,OUT):- append(L,[A|R],II),append(L,[B|R],OO),
   compute_diff(A,B,Diffs),
-    (Diffs == [] ->  OUT = same_object(obj(I)) ; OUT = props_diff(obj(I),obj(O),Diffs)).
+    (simular(Diffs,obj(I),obj(O),Sameness) ->  OUT = same_object(Sameness) ; OUT = props_diff(obj(I),obj(O),Diffs)).
 
 compute_diff(I,O,[]):- (var(I);var(O)),!.
 compute_diff(obj(I),obj(O),OUT):- !,
@@ -234,5 +239,103 @@ combine_grids(How,[H|T],G,GO):- !,
 combine_grids(overlay,H,G,GM):- globalpointlist(H,Points),set_point(Points,G,GM),!.
 combine_grids(append,H,G,GM):- grid_size(H,W,_),length(Row,W), append(G,[Row|H],GM).
   
+debug_indiv:- test_config(nodebug_indiv),!,fail.
+debug_indiv:- test_config(debug_indiv),!.
+debug_indiv:- test_config(indiv(_)),!.
+
+debug_indiv(Var):- var(Var),pt(debug_indiv(Var)),!.
+
+debug_indiv(Grid):- is_grid(Grid),!,grid_size(Grid,H,V),
+  dash_char(H),
+  wqnl(debug_indiv_grid(H,V)),
+  print_grid(Grid),
+  dash_char(H),!.
+
+debug_indiv(obj(A)):- \+ is_list(A),!, pt(debug_indiv(obj(A))).
+
+/*
+debug_indiv(A):- is_point_obj(A,Color,Point),
+  object_indv_id(A,Tst,Id), i_glyph(Id,Sym),
+  hv_point(H,V,Point), i_glyph(Id,Sym),
+  wqnl([' % Point: ', color_print(Color,Sym), dot, color(Color), fav1(Tst), nth(Id), offset(H,V)]),!. 
+*/
+
+debug_indiv(Obj):- Obj = obj(A), is_list(A),
+  object_indv_id(Obj,_,Id),
+  ignore(colors_count(Obj,[color_count(FC,_)|_])),
+  remove_too_verbose(A,AA), 
+  flatten([AA],F),
+  sort(F,AAA),
+  include('\\=='(''),AAA,[Caps|AAAA]),
+  toPropercase(Caps,PC), 
+  %i_glyph(Id,Sym), wqnl([writef("%% %Nr%w \t",[PC]), color_print(FC,Sym) | AAAA ]),!. 
+  i_glyph(Id,Sym), wqnl([format("%  ~w:\t",[PC]), color_print(FC,Sym) | AAAA ]),!. 
+
+debug_indiv(obj(A)):- is_list(A),!, 
+  dash_char,  
+  maplist(debug_indiv(obj(A)),A),
+  dash_char,!.
+
+debug_indiv(List):- is_list(List),!,length(List,Len), 
+  dash_char,
+  wqnl(list = Len),
+  max_min(Len,40,_,Min),
+  forall(between(1,Min,N),(N<40->(nth1(N,List,E),debug_indiv(E));wqnl(total = Len))),
+  dash_char,!.
+
+debug_indiv(Other):-
+  dash_char,
+  functor(Other,F,A),
+  wqnl(other = F/A),
+  pt(Other),
+  dash_char,!.
+
+remove_too_verbose(Var,var(Var)):- var(Var),!.
+remove_too_verbose(H,''):- too_verbose(H),!.
+remove_too_verbose(dot,"point"):- !.
+remove_too_verbose(line(HV),S):- sformat(S,'~w-Line',[HV]).
+remove_too_verbose(square,S):- sformat(S,'square',[]).
+remove_too_verbose(background,S):- sformat(S,'bckgrnd',[]).
+remove_too_verbose(object_shape(H),HH):- !, remove_too_verbose(H,HH).
+remove_too_verbose(colors_count(H),HH):- !, remove_too_verbose(H,HH).
+remove_too_verbose(object_indv_id(_ * X,Y),[layer(XX),nth(Y)]):- upcase_atom(X,XX).
+remove_too_verbose(object_offset(X,Y),offset(X,Y)).
+remove_too_verbose(object_size(X,Y),size(X,Y)).
+remove_too_verbose(point_count(X),pixels(X)).
+remove_too_verbose(L,LL):- is_list(L),!, maplist(remove_too_verbose,L,LL).
+remove_too_verbose(H,H).
+too_verbose(P):- compound(P),compound_name_arity(P,F,_),!,too_verbose(F).
+too_verbose(globalpointlist).
+too_verbose(localcolorlesspointlist).
+too_verbose(localpointlist).
+too_verbose(grid).
+too_verbose(grid_size).
+
+debug_indiv(Obj,P):- compound_name_arguments(P,F,A),debug_indiv(Obj,P,F,A).
+debug_indiv(_,_,X,_):-too_verbose(X),!.
+debug_indiv(Obj,_,F,[A]):- maplist(is_cpoint,A),!,
+  object_size(Obj,H,V), wqnl(F), 
+  object_offset(Obj,OH,OV),
+  EH is OH+H-1,
+  EV is OV+V-1,
+  object_indv_id(Obj,_Tst,Id), %i_sym(Id,Sym),
+  i_glyph(Id,Glyph),
+  Pad1 is floor(H),  
+
+  wots(S,
+    (dash_char(Pad1,' '),write(Id=Glyph),
+     print_grid(OH,OV,OH,OV,EH,EV,EH,EV,Obj))),
+
+  nop(wots(S,
+    (dash_char(Pad1,' '),write(Id=Glyph),
+     print_grid(H,V,A)))),
+
+
+  Pad is floor(20-V/2),
+  max_min(Pad,OH,PadH,_),
+  print_w_pad(PadH,S).
+
+
+debug_indiv(_,P,_,_):- pt(P).
 
 

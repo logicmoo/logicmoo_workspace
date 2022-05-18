@@ -8,6 +8,8 @@ test_names_by_hard(Name):- test_names_ord_favs(FavList),test_names_ord_hard(Name
 test_names_ord_favs(FavListS):- findall(Name,fav(Name),FavList),list_to_set(FavList,FavListS).
 test_names_ord_hard(NamesByHard):- findall(Hard-Name,(test_name(Name),hardness_of_name(Name,Hard)),All), keysort(All,AllK), maplist(arg(2),AllK,NamesByHard),!.
 
+:- use_module(library(pfc_lib)).
+
 ascending_hard:-
   tell('arc_ascending.pl'),
   forall(test_names_by_hard(Name),
@@ -41,9 +43,11 @@ fav(X,[]):- clause(fav(X),true).
 %fav(t('23b5c85d'),[b7249182
 %fav(t('db3e9e38'),[lmDSL([flipV,C1=orange,C2=blue,[],flipV]).
 %fav(t(_),[lmDSL([fillFromBorder(none,yellow)])]).
-fav(v('1d398264'),[debug_indiv]).
-fav(v('e9bb6954'),[print_grid,indiv(min(8)),e('box of nine draw outward, if you hit a drawn line blacken it')]).
-fav(v('e41c6fd3'),[debug_indiv]).
+fav(v('810b9b61'),[lmDSL([(iz(X,rectangle),iz(X,hollow),iz(X,thick1),iz(X,noexit))-->color(X,green)])]).
+fav(v('1d398264'),[lmDSL([(iz(X,keypad),iz(X,multicolor),centerof(X,C)==>sunburst(C))])]).
+fav(v('e9bb6954'),[lmDSL([(iz(X,keypad), iz(X,monocolor),centerof(X,C)==>starburst(C))]),e('box of nine draw outward, if you hit a drawn line blacken it')]).
+fav(v('e41c6fd3'),[lmDSL([(iz(X,spaceship),color(X,cyan),vert_pos(X,spaceship))==>iz(Y,spaceship),vert_pos(Y,spaceship)])]).
+
 fav(v('94133066'),[lmDSL([largest_indiv,trim_to_rect,rot90,flipV])]).
 fav(v('762cd429'),[]).
 fav(t('f76d97a5'),[lmDSL([compute_max_color(C1),compute_next_color(C2),blacken_color(C1),subst_color(C2,C1)])]).
@@ -57,7 +61,6 @@ fav(t('a79310a0'),[lmDSL([gravity(1,s),swap_colors(cyan,red)])]).
 fav(t('a48eeaf7'),[lmDSL([largest_indiv(I),tiny_individuals(Is),gravity_to(Is,I)])]).
 fav(t('97999447'),[lmDSL([find_ones,until_edges([copy_right(grey),copy_right(same)])])]).
 fav(t('8be77c9e'),[lmDSL([grow([[same],[flipV]])])]).
-fav(t('810b9b61'),[lmDSL([find_individuals([hollow,boxes],I),indiv_set_color(I,green)])]).
 fav(t('7f4411dc'),[lmDSL([shave_away_1s])]).
 fav(t('7b6016b9'),[lmDSL([fillFromBorder(green),subst_color(black,red)])]).
 fav(t('73251a56'),[learn([learn_mapping_stateful]),lmDSL([apply_mapping_stateful])]).
@@ -94,9 +97,9 @@ fav(t('9aec4887'),[indiv(color_blind),todo_sol([find_individuals([hollow,inside(
   if_edge_strong([color=C]),touch(Is,Point),set_point(Point,C)])]).
 
 fav(v('4b6b68e5'),[
-   lmDSL([gather_object(O1,X,(isa(X,dot),inside(X,P),isa(P,polygon),wall_thickness(P,1),noexit(P))),
+   lmDSL([gather_object(O1,X,(iz(X,dot),inside(X,P),iz(P,polygon),wall_thickness(P,1),noexit(P))),
           colors_count(O1,CC),first(C,CC),part_of(O1,E),color(E,C),fillAt(E,C),
-                forall(X,(isa(X,dot), \+ (inside(X,P),isa(P,polygon))),delete(X))])]).
+                forall(X,(iz(X,dot), \+ (inside(X,P),iz(P,polygon))),delete(X))])]).
 /*
 first i look to see if the grid sizes are purporional, if not i look to see if the output grid can be recognised on the input
 if not i look to see if the input grid can be recognised on the output
