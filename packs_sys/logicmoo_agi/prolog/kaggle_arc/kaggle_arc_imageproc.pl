@@ -1,7 +1,7 @@
 
-%tell(s),ignore((nl,nl,test_pairs(Name,Type,In,Out),format('~N~q.~n',[test_pairs_cache(Name,Type,In,Out)]),fail)),told.
+%tell(s),ignore((nl,nl,test_pairs(Name,ExampleNum,In,Out),format('~N~q.~n',[test_pairs_cache(Name,ExampleNum,In,Out)]),fail)),told.
 
-is_grid_cell(C):- (integer(C);var(C)),!.
+is_grid_cell(C):- (var(C);is_grid_color(C)),!.
 is_grid([[C|H]|R]):- notrace((is_grid_cell(C),is_list(H),is_list(R),
   length([C|H],L),
   maplist(is_row_len(L),R))).
@@ -11,10 +11,10 @@ is_row_len(N,L):- length(L,N).
 :- dynamic(backfill/1).
 
 
-set_on_grid(OH,OV,Grid,O):- is_object(O),globalpoints(O,Ps),!,set_on_grid(OH,OV,Grid,Ps).
+set_on_grid(OH,OV,Grid,O):- is_object(O),globalpointlist(O,Ps),!,set_on_grid(OH,OV,Grid,Ps).
 set_on_grid(OH,OV,Grid,List):- is_list(List),maplist(set_on_grid(OH,OV,Grid),List).
 set_on_grid(OH,OV,Grid,C-Point):- nonvar(C),
-  color_int(C,I),
+  grid_color_code(C,I),
   hv_point(H,V,Point),
   HH is H - OH + 1, 
   VV is V - OV + 1,
@@ -26,7 +26,7 @@ grid_dim(G,grid_size(H,W)):- grid_size(G,H,W).
 %grid_size(P,S):- grid_size(P,S).
 is_point_obj(O,Color,Point):- nonvar(O),O= Color-Point,!.
 is_point_obj(O,Color,Point):- is_object(O),object_size(O,H,V), !, hv(H,V)==hv(1,1),
-  globalpoints(O,[Color-Point]),!.
+  globalpointlist(O,[Color-Point]),!.
 
 
 
@@ -46,8 +46,8 @@ is_color(C):- atom(C), color_int(C,N),integer(N).
 is_black(black).
 is_black(0).
 
-pixels(G,CC):- is_grid(G),!,flatten(G,GF),include(integer,GF,GL),maplist(color_code,GL,CC).
-pixels(G,GL):- findall(C,(sub_term(CP,G),compound(CP),CP=(C-_),is_color(C)),GL).
+pixels(G,CC):- is_grid(G),!,flatten(G,GF),include(is_grid_color,GF,GL),maplist(color_name,GL,CC).
+pixels(G,GL):- findall(Name,(sub_term(CP,G),compound(CP),CP=(C-_),color_name(C,Name)),GL).
 unique_colors(G,UC):- pixels(G,GF),sort(GF,UC).
 colors_count_size(G,UC):- colors_count_no_black(G,GS),length(GS,UC).
 
@@ -96,9 +96,9 @@ move_scale_dir_object(N,D,I,O):- into_objectlist(I,M),M\=@=I,!,move_scale_dir_ob
 move_object(NX,NY,I,M):- is_object(I),!,
  must_det_l((
   (NY<1 -> M=I ;
-  ( localpoints(I,LPoints),
+  ( localpointlist(I,LPoints),
     offset_points(NX,NY,LPoints,GPoints),
-    setq(I,[globalpoints(GPoints),object_offset(NX,NY)],M))))).
+    setq(I,[globalpointlist(GPoints),object_offset(NX,NY)],M))))).
 move_object(H,V,L,LM):- is_objectlist(L),!,maplist(move_object(H,V),L,LM).
 move_object(H,V,I,O):- into_objectlist(I,M),M\=@=I,!,move_object(H,V,M,O).
 
@@ -171,7 +171,7 @@ trim_to_rect(G0,G9):-
 
 if_bgc_then_int(X,C,B,A):- \+compound(B),B\==[],is_bg_or_var(X,B), A=C, !.
 set_bg(C0,Grid,GridO):- color_code(C0,CC),  nb_setval(grid_bgc,X), get_bgc(X),
-  is_grid(Grid),!,color_int(CC,GC), map_pred(if_bgc_then_int(X,GC), Grid, GridO),!.
+  is_grid(Grid),!,grid_color_code(CC,GC), map_pred(if_bgc_then_int(X,GC), Grid, GridO),!.
 set_bg(C0,Grid,GridO):- color_code(C0,C),  nb_setval(grid_bgc,X), get_bgc(X),map_pred(if_bgc_then(X,C), Grid, GridO),!.
   if_bgc_then(X,C,B,A):- \+compound(B),is_bg_or_var(X,B), A=C, !.
 
@@ -251,14 +251,14 @@ compute_max_color(Color1,Grid,Grid):- colors_count_no_black(Grid,[color_count(Co
 compute_next_color(Color1,Grid,Grid):- colors_count_no_black(Grid,[_,color_count(Color1,_)|_]).
 
 subst_color(Color1,Color2,Grid,NewGrid):- notrace((color_code(Color1,Num1),color_code(Color2,Num2),subst(Grid,Num1,Num2,NewGrid))).
-blacken_color(Color1,Grid,NewGrid):- subst_color(Color1,0,Grid,NewGrid).
+blacken_color(Color1,Grid,NewGrid):- black_cell(Cell), subst_color(Color1,Cell,Grid,NewGrid).
 swap_colors(Color1,Color2,Grid,NewGrid):- subst_color(Color1,Swap1,Grid,MGrid),
                                           subst_color(Color2,Color1,MGrid,NewGrid),
                                           color_code(Color2,Swap1).
 
 backfill_vars(GridO):- clause(backfill(GridO),true).
 
-unbind_color(Color1,Grid,GridO):- is_grid(Grid),!,color_int(Color1,Num1),unbind_color0(Num1,Grid,GridO).
+unbind_color(Color1,Grid,GridO):- is_grid(Grid),!,grid_color_code(Color1,Num1),unbind_color0(Num1,Grid,GridO).
 unbind_color(Color1,Grid,GridO):- color_code(Color1,Num1),subst(Grid,Num1,_,GridO).
 
 unbind_color0(Num1,Grid,GridO):- is_list(Grid),!,maplist(unbind_color0(Num1),Grid,GridO).
@@ -267,7 +267,7 @@ unbind_color0(_,Num1,Num1).
 
 %colors_to_vars(G,GridNew):- is_grid(G,Grid),G\=@=Grid,!,colors_to_vars(Grid,GridNew).
 colors_to_vars(Grid,GridO):- unique_colors(Grid,Colors),
-  (is_grid(Grid)-> maplist(color_int,Colors,B) ; color_code(Colors,B)),
+  (is_grid(Grid)-> maplist(grid_color_code,Colors,B) ; color_code(Colors,B)),
   subst_list_vars(B,_,Grid,GridO).
 
   subst_list_vars([],[],A,A):-!.
@@ -280,7 +280,7 @@ subst_list_vars(_,_,V,V).
 */
 
 add_borders(C,G,GridNew):- into_grid(G,Grid),G\=@=Grid,!,add_borders(C,Grid,GridNew).
-add_borders(Color1,Grid,GridO):- color_int(Color1,Num1),!,add_borders_0(Num1,Grid,GridO),!.
+add_borders(Color1,Grid,GridO):- grid_color_code(Color1,Num1),!,add_borders_0(Num1,Grid,GridO),!.
 
 add_borders_0(Num1,Grid,GridO):- 
  grid_size(Grid,H,V),
@@ -291,7 +291,7 @@ add_borders_0(Num1,Grid,GridO):-
   replace_col_e(H,Num1,G3,GridO))).
 
 
-cls_with(Color1,G,Grid):- into_grid(G,Old),color_int(Color1,Num1),cls_with_0(Num1,Old,Grid),!.
+cls_with(Color1,G,Grid):- into_grid(G,Old),grid_color_code(Color1,Num1),cls_with_0(Num1,Old,Grid),!.
 %cls_with(Color1,Old,Grid):- color_code(Color1,Num1),cls_with_0(Num1,Old,Grid),!.
 cls_with_0(Color1,Old,Grid):- is_list(Old),!,maplist(cls_with_0(Color1),Old,Grid).
 cls_with_0(Color1,_,Color1).
@@ -309,13 +309,18 @@ get_colum_l(Width,Grid,[Col|Cols]):-
 get_colum(G,GridNew):- into_grid(G,Grid),G\=@=Grid,!,get_colum(Grid,GridNew).
 get_colum(N,Grid,Col):- maplist(nth1(N),Grid,Col).
 
+affected_by_gravity(E2),
+
+
 gravity_1_n_0([],[]).
-gravity_1_n_0([Row1,Row2|Grid],GridNew):- nth1(Col,Row1,E1),nth1(Col,Row2,E2),E1=0,E2\==0,!,
-  set_nth1(Col,Row1,E2,Row1Mod),set_nth1(Col,Row2,0,Row2Mod),
+gravity_1_n_0([Row1,Row2|Grid],GridNew):- nth1(Col,Row1,E1),nth1(Col,Row2,E2),
+  black_cell(E1), \+ black_cell(E2),
+  black_cell(Cell),
+  set_nth1(Col,Row1,E2,Row1Mod),set_nth1(Col,Row2,Cell,Row2Mod),
   gravity_1_n_0([Row1Mod,Row2Mod|Grid],GridNew).
 gravity_1_n_0([Row1|Grid],[Row1|GridNew]):- gravity_1_n_0(Grid,GridNew).
 
-
+black_cell(Cell):- is_black(Black),grid_color_code(Black,Cell).
 
 replace_row(N,Row,Grid,NewGrid):- grid_size(Grid,H,V), replace_row(N,Row,Grid,H,V,NewGrid).
 replace_row(N,Row,Grid,H,V,NewGrid):- N<0, NewN is V + N+1,!,replace_row(NewN,Row,Grid,H,V,NewGrid).
@@ -331,8 +336,22 @@ replace_col(N,Col,Grid,_,V,NewGrid):- Nm1 is N - 1, length(Col,V),maplist(replac
 
 replace_col_at_0(N,Col,Row,NewRow):- length(Left,N),append(Left,[_|Right],Row),append(Left,[Col|Right],NewRow).
 
+facing_triangles(
+[[xx,se,nw,xx],
+ [se,se,nw,nw],
+ [ne,ne,sw,sw],
+ [xx,ne,sw,xx]]).
 
+get_surround_3x3(Grid,H,V,Result):-
+  surround_3x3(Template),maplist(get_dir_color(Grid,H,V),Template,Result).
 
+get_dir_color(Grid,H,V,Dir,C):- move_dir(1,H,V,Dir,1,1,NX,NY), hv_value(Grid,NX,NY,C).
+
+surround_3x3(
+[[nw,n,ne],
+  [w,c,e],
+ [sw,s,se]]).
+%star_grow_h(obj(L),
 
 %grid_to_id(Grid,ID):- 
 
@@ -346,13 +365,13 @@ assert_hvc_cell(_,_,_,C):- var(C). % free_cell(C),!.
 assert_hvc_cell(ID,H,V,C):- hv_point(H,V,HV),assert(cmem(ID,HV,C)).
 
 
-:- dynamic(grid_sz/3).
+:- dynamic(is_grid_size/3).
 % Grid to_fast_workspace
 assert_id_grid_cells(ID,Grid):-
  throw(all_in_emem(assert_id_grid_cells(ID,Grid))),
    grid_size(Grid,SH,SV),
-   retractall(grid_sz(ID,_,_)),
-   assert(grid_sz(ID,SH,SV)),
+   retractall(is_grid_size(ID,_,_)),
+   assert(is_grid_size(ID,SH,SV)),
    erase_grid(ID),   
    forall(between(1,SH,H),
     forall(between(1,SV,V),
@@ -374,7 +393,7 @@ close_color(brown,orange).
 close_color(green,cyan).
 
 %grid_size(Points,H,V):- is_dict(Points),!,Points.grid_size=grid_size(H,V).
-grid_size(ID,H,V):- grid_sz(ID,H,V),!.
+grid_size(ID,H,V):- is_grid_size(ID,H,V),!.
 %grid_size(Grid,H,V):- notrace(is_object(Grid)), !, object_size(Grid,H,V).
 grid_size(Grid,H,V):- is_grid(Grid),grid_size_nd(Grid,H,V),!.
 grid_size(Points,H,V):- pmember(grid_size(H,V),Points),ground(H-V),!.
@@ -420,7 +439,7 @@ ap(diagonal_line). ap(horizontal_line). ap(vertical_line). ap(open_edge). ap(con
 
 ap(rotated45). ap(resizes). ap(diamond).
 apv(square(len)). apv(round(h,w)). apv(triangle). apv(rectangular(h,w)). apv(polygon(sides)).
-apv(points_only(num)).  apv(facing(dir)). apv(min(n)). apv(max(n)).  apv(object_size(h,w)). apv(object_offset(h,w)). 
+apv(localcolorlesspointlist(num)).  apv(facing(dir)). apv(min(n)). apv(max(n)).  apv(object_size(h,w)). apv(object_offset(h,w)). 
 apv(scale(n)).  apv(ext_key(k)). apv(io_bud(k)). apv(linked_bud(k)).
 
 apv(points_old([])).
@@ -447,7 +466,7 @@ points_to_grid(Points,Grid):-
   calc_add_points(1,1,Grid,Points))).
 
 calc_add_points(OH,OV,_,Obj):- var(Obj),dumpST,throw(var_calc_add_points(OH,OV,Obj)).
-calc_add_points(OH,OV,Grid,Obj):- is_grid(Obj),globalpoints(Obj,Points),maplist(calc_add_points(OH,OV,Grid),Points).
+calc_add_points(OH,OV,Grid,Obj):- is_grid(Obj),globalpointlist(Obj,Points),maplist(calc_add_points(OH,OV,Grid),Points).
 calc_add_points(OH,OV,Grid,Points):- is_list(Points),!,maplist(calc_add_points(OH,OV,Grid),Points).
 calc_add_points(_OH,_OV,_,obj(_)).
 calc_add_points(_OH,_OV,_,prop(_)).
@@ -509,20 +528,20 @@ from_gridoid(Points,C,N,H,V,G):- nth0(N,Points,G),hv_value0(G,C,H,V),nonvar(C),C
 from_gridoid(Points,C,N,H,V,G):- nth0(N,Points,G),hv_value0(G,C,H,V),nonvar(C),!.
 from_gridoid(Points,C,N,H,V,G):- nth0(N,Points,G),hv_value0(G,C,H,V).
 
-hv_value0(O,Color,H,V):- is_object(O),globalpoints(O,Ps),hv_value(Ps,Color,H,V),!.
+hv_value0(O,Color,H,V):- is_object(O),globalpointlist(O,Ps),hv_value(Ps,Color,H,V),!.
 hv_value0(O,Color,H,V):- hv_value(O,Color,H,V).
 
 hv_value_or(Grid,C,H,V,Else):- hv_value(Grid,C,H,V)*->true;C=Else.
 hv_value(ID,C,H,V):- cmem(ID,HV,C),hv_point(H,V,HV),!.
-hv_value(Points,C-N,H,V):- is_list(Points), is_list_of_gridoids(Points), from_gridoid(Points,CC,N,H,V),color_int(CC,C),!.
+hv_value(Points,C-N,H,V):- is_list(Points), is_list_of_gridoids(Points), from_gridoid(Points,CC,N,H,V),grid_color_code(CC,C),!.
 hv_value(Grid,Color,H,V):- is_grid(Grid),nth1(V,Grid,Row),nth1(H,Row,C),color_name(C,Color),!.
-hv_value(O,Color-GN,H,V):- is_object(O),globalpoints(O,Ps),hv_value(Ps,Color,H,V),object_indv_id(O,_Tst,GN),nonvar(GN),!.
-hv_value(O,Color,H,V):- is_object(O),globalpoints(O,Ps),hv_value(Ps,Color,H,V),!.
+hv_value(O,Color-GN,H,V):- is_object(O),globalpointlist(O,Ps),hv_value(Ps,Color,H,V),object_indv_id(O,_Tst,GN),nonvar(GN),!.
+hv_value(O,Color,H,V):- is_object(O),globalpointlist(O,Ps),hv_value(Ps,Color,H,V),!.
 %hv_value(Points,C,H,V):- nonvar(H),!, hv_point(H,V,HV), sub_term(C-HV,Points),atom(HV).
 hv_value(Points,C,H,V):- nonvar(H),nonvar(V),hv_point(H,V,HV),!, hv_member(HV,C,Points),!.
 hv_value(Points,C,H,V):- member(C-HV,Points),hv_point(H,V,HV).
 
-hv_member(HV,C,O):- is_object(O),!,globalpoints(O,Ps),hv_member(Ps,C,HV),!.
+hv_member(HV,C,O):- is_object(O),!,globalpointlist(O,Ps),hv_member(Ps,C,HV),!.
 hv_member(HV,C,Points):- member(C-HV,Points),!.
 hv_member(HV,C,Points):- sub_term(C-HV,Points),!.
 /*b_set_hv_value(Grid,C,H,V):- nth1(V,Grid,Row),set_nth1(H,Row,C).
@@ -566,6 +585,7 @@ save_calc_movement(H,V,Dir,HO,VO):- H2 is HO+H, V2 is VO+V,
 
 nav(s,0,1). nav(e, 1,0). nav(w,-1,0). nav(n,0,-1).
 nav(se, 1,1). nav(sw,-1,1). nav(nw,-1,-1). nav(ne, 1,-1).
+nav(c,0,0).
 
 move_dir(N,OX,OY,Dir,SX,SY,NX,NY):- nav(Dir,X,Y), NX is OX + (X*SX*N), NY is OY + (Y*SY*N).
 

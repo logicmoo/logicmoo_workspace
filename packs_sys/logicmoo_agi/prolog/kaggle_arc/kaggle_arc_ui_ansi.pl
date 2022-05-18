@@ -2,6 +2,8 @@ pt(P):- format('~N'),print_tree_nl(P),!.
 wqs(X):- var(X), !, wqs(var(X)). wqs(nl):- !, nl. wqs(''):- !.
 wqs(X):- \+ compound(X),!, write(X), write(' ').
 wqs(fav(_)):- !.
+
+wqs(color_count(C,N)):- !, write('color_count('),color_print(C,C),write(','), writeq(N), write(') ').
 wqs(color_print(C,X)):- !, color_print(C,X), write(' ').
 wqs(X):- writeq(X), write(' ').
 wqnl(X):- is_list(X),!,format('~N'),maplist(wqs,X),format('~N').
@@ -14,8 +16,6 @@ dash_char(H,C):-forall(between(0,H,_),write(C)).
 dash_border(Width):- format('~N'), WidthM1 is Width-1, write(' _'),dash_char(WidthM1,'__'),nl.
 dash_uborder(Width):- !, dash_border(Width).
 dash_uborder(Width):- format('~N'), WidthM1 is Width-1, write(' ¯'),dash_char(WidthM1,'¯¯'),nl.
-
-
 
 functor_color(pass,green).
 functor_color(fail,red).
@@ -32,8 +32,8 @@ red_noise:- format('~N'),
 
 
 nc_to_cint(C,C):- var(C),!.
-nc_to_cint(C-_,I):- color_int(C,I),!.
-nc_to_cint(C,I):- color_int(C,I).
+nc_to_cint(C-_,I):- grid_color_code(C,I),!.
+nc_to_cint(C,I):- grid_color_code(C,I).
 
 debug_indiv:- test_config(nodebug_indiv),!,fail.
 debug_indiv:- test_config(debug_indiv),!.
@@ -69,7 +69,8 @@ debug_indiv(obj(A)):- is_list(A),!,
 debug_indiv(List):- is_list(List),!,length(List,Len), 
   dash_char,
   wqnl(list = Len),
-  maplist(debug_indiv,List),
+  max_min(Len,40,_,Min),
+  forall(between(1,Min,N),(N<40->(nth1(N,List,E),debug_indiv(E));wqnl(total = Len))),
   dash_char,!.
 
 debug_indiv(Other):-
@@ -80,7 +81,7 @@ debug_indiv(Other):-
   dash_char,!.
 
 remove_too_verbose(H,''):- too_verbose(H).
-remove_too_verbose(shape(H),H).
+remove_too_verbose(object_shape(H),H).
 remove_too_verbose(colors_count(H),H).
 remove_too_verbose(object_indv_id(X,Y),[fav1(X),nth(Y)]).
 remove_too_verbose(object_offset(X,Y),offset(X,Y)).
@@ -88,9 +89,9 @@ remove_too_verbose(object_size(X,Y),size(X,Y)).
 remove_too_verbose(point_count(X),pixels(X)).
 remove_too_verbose(H,H).
 too_verbose(P):- compound(P),compound_name_arity(P,F,_),!,too_verbose(F).
-too_verbose(globalpoints).
-too_verbose(points_only).
-too_verbose(localpoints).
+too_verbose(globalpointlist).
+too_verbose(localcolorlesspointlist).
+too_verbose(localpointlist).
 too_verbose(grid_size).
 
 debug_indiv(Obj,P):- compound_name_arguments(P,F,A),debug_indiv(Obj,P,F,A).
@@ -213,13 +214,13 @@ print_equals(Name,trn=Y):- !, print_equals(Name,Y).
 print_equals(Name,X->Y):- !, print_equals(in(Name),X), print_equals(out(Name),Y).
 print_equals(Name,X=Y):- !, print_equals(Name=X,Y).
 %print_equals(Name,[H|L]):- !, maplist(print_equals(Name),[H|L]).
-print_equals(Name,Val):- print_tree_nl(Name=Val).
+print_equals(Name,Val):- pt(Name=Val).
 
 commawrite(S):- write(','),write(S).
 
 
 
-as_color(Count-Num,List):- color_name(Num,Name),wots(List,color_print(Num,Name=Count)).
+as_color(color_count(Count,Num),List):- color_name(Num,Name),wots(List,color_print(Num,Name=Count)).
 better_value(V,List):- is_list(V), maplist(as_color,V,List).
 better_value([G|V],List):- 
   is_objectlist([G|V]),
@@ -267,32 +268,39 @@ silver('#c0c0c0').
 silver('#9a9a9a').
 
 
+color_print(C,W):- var(C),!,ansi_format([underline],'~w',[W]),!.
+color_print(C-_,W):- !, color_print(C,W).
 color_print(C,W):- atom(C),color_int(C,N),integer(N),!,color_print(N,W).
 color_print(C,W):- integer(C),C\==0,block_colors(L),nth0(C,L,Color),ansi_format([bold,fg(Color)],'~w',[W]),!.
-color_print(C,W):- var(C),!,ansi_format([underline],'~w',[W]),!.
 color_print(C,W):- C==0,!,ansi_format([fg('#444444')],'~w',[W]),!.
 color_name(C,W):- var(C),!,W=C.
-color_name(C,W):- integer(C),named_colors(L),nth0(C,L,W),!.
+color_name(C-_,W):-!,color_name(C,W).
 color_name(C,W):- atom(C),!,W=C.
-%color_int(C,C):- var(C)
+color_name(C,W):- integer(C),named_colors(L),nth0(C,L,W),!.
+
+color_int(C,C):- var(C),!.
+color_int(C-_,W):-!,color_int(C,W).
 color_int(C,W):- integer(C),!,W=C.
 color_int(C,W):- atom(C),!,named_colors(L),nth0(W,L,C),!.
 color_int(C,C).
+
+is_grid_color(C):- var(C),!,fail.
+% makes grid colors an integer.. 
+%is_grid_color(C):- !,integer(C).
+% we are using atoms currently
+is_grid_color(C-_):- is_color(C).
+%is_grid_color(C):- is_color(C).
+
+grid_color_code(C,C):- var(C).
+grid_color_code(C-W,CC-W):- color_code(C,CC).
+grid_color_code(C,CC-[]):- color_code(C,CC).
+%grid_color_code(C,CC):- is_grid_color(black-_),!,color_code(C,CC).
+%grid_color_code(C,CC):- color_int(C,CC).
+
 color_code(C,W):- color_name(C,W).
 is_color_dat(C):- atomic(C),color_code(C,W),!,C==W.
 
 %print_g(H,V,_,LH,LV,HH,HV):- (H<LH;H>HH;V<LV;V>HV),!, write('  ').
-print_g(H,V,C,_,_,_,_):- write(' '),print_g1(H,V,C),!.
-%get_code_at(_,_,0,_):-!,fail.
-i_code_at(_,_,C-N,NC,Code):- nonvar(N),!,=(N,Code),NC=C.
-i_code_at(H,V,C,NC,Code):- nonvar(C), get_grid_num_xyc(H,V,Was,N),nonvar(Was),
-  C\==Was,=(N,Code),nonvar(Code),NC=Was,!.
-i_code_at(H,V,C,NC,Code):- var(C), get_grid_num_xyc(H,V,Was,N),nonvar(Was),
-  C\==Was,=(N,Code),nonvar(Code),NC=Was,!.
-
-i_code_at(_,_,C,C,VAR):- var(C),var_dot(VAR),!.
-i_code_at(_,_,0,0,BGD):- bg_dot(BGD),!.
-i_code_at(_,_,C,C,FGD):- fg_dot(FGD),!.
 
 resrv_dot(Code):-  code_type(Code,white);code_type(Code,punct);code_type(Code,quote);var_dot(Code);bg_dot(Code);fg_dot(Code);
  member(Code,`?.¨«¬­°```).
@@ -305,6 +313,17 @@ bg_dot(183).
 fg_dot(174).
 
 grid_dot(169).
+
+print_g(H,V,C,_,_,_,_):- write(' '), print_g1(H,V,C),!.
+%get_code_at(_,_,0,_):-!,fail.
+i_code_at(_,_,C-N,NC,Code):- nonvar(N),!,=(N,Code),number(Code),NC=C.
+
+i_code_at(H,V,C,NC,Code):- nonvar(C), get_grid_num_xyc(H,V,Was,N),nonvar(Was),C\==Was,=(N,Code),nonvar(Code),NC=Was,!.
+i_code_at(H,V,C,NC,Code):- var(C), get_grid_num_xyc(H,V,Was,N),nonvar(Was),C\==Was,=(N,Code),nonvar(Code),NC=Was,!.
+
+i_code_at(_,_,C,C,VAR):- var(C),var_dot(VAR),!.
+i_code_at(_,_,0,0,BGD):- bg_dot(BGD),!.
+i_code_at(_,_,C,C,FGD):- fg_dot(FGD),!.
 
 print_g1(H,V,C0):- i_code_at(H,V,C0,C,Code),name(S,[Code]),!, color_print(C,S),!.
 print_g1(_,_,C):- var(C), color_print(C,'?'),!.

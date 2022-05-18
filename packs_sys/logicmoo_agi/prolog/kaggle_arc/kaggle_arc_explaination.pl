@@ -6,24 +6,26 @@
 set_gridname(Grid,Name):- nb_setval(grid_name,Name),asserta_new(is_gridname(Grid,Name)).
 
 get_gridname(Grid,Name):- is_gridname(Grid,Name)*->true; nb_getval(grid_name,Name).
+get_gridname(In,Name*ExampleNum*in):- kaggle_arc(Name,ExampleNum,In,_).
+get_gridname(Out,Name*ExampleNum*out):- kaggle_arc(Name,ExampleNum,_,Out).
 
 
-maybe_confirm_sol(Name,Type,In,Out):- 
-   ignore((sols_for(Name,Sol), confirm_sol(Sol,Name,Type,In,Out))),!.
+maybe_confirm_sol(Name,ExampleNum,In,Out):- 
+   ignore((sols_for(Name,Sol), confirm_sol(Sol,Name,ExampleNum,In,Out))),!.
 
 sols_for(Name,Sol):- test_info(Name,Sols),member(lmDSL(Sol),Sols).
 
-confirm_sol(Prog,Name,Type,In,Out):- 
+confirm_sol(Prog,Name,ExampleNum,In,Out):- 
    (run_dsl(Prog,In,Grid),into_grid(Grid,GridO))
    *->    
    count_difs(Out,GridO,Errors),
-   (Errors==0 -> arcdbg(pass(Name,Type,Prog));(arcdbg(fail(Errors,Name,Type,Prog)),
+   (Errors==0 -> arcdbg(pass(Name,ExampleNum,Prog));(arcdbg(fail(Errors,Name,ExampleNum,Prog)),
      test_info(Name,InfoF),
-     wqnl(fav(Name*Type,InfoF)),
+     wqnl(fav(Name*ExampleNum,InfoF)),
      red_noise,
      once(print_grid(GridO)),
      red_noise))
-   ;arcdbg(warn(unrunable(Name,Type,Prog))).
+   ;arcdbg(warn(unrunable(Name,ExampleNum,Prog))).
 
 get_selector1(obj(PI),obj(PO)):-
   get_selector_n1(PIN),do_nth(PIN,PI,PO).
@@ -81,7 +83,7 @@ changed_by(object_offset,move).
 changed_by(point_count,grow).
 changed_by(colors_count,repaint).
 changed_by(object_size,copy).
-changed_by(shape,rotate).
+changed_by(object_shape,rotate).
 
 uncomparable(grid_size).
 uncomparable(object_indv_id).
@@ -113,8 +115,8 @@ fav_points(I):- \+ dislike_points(I).
 dislike_points(obj(I)):-!,dislike_points(I).
 dislike_points(I):- is_list(I),dislike_points1(L),forall(member(E,L),member(E,I)).
 
-%dislike_points1([shape(dot),grid_size(H,V)]):- freeze(H, freeze(V, (HV is H * V, HV > 49))).
-dislike_points1([colors_count([color_count(BG, _)]),shape(nonsolid)]):- freeze(BG,is_black_or_bg(BG)).
+%dislike_points1([object_shape(dot),grid_size(H,V)]):- freeze(H, freeze(V, (HV is H * V, HV > 49))).
+dislike_points1([colors_count([color_count(BG, _)]),object_shape(nonsolid)]):- freeze(BG,is_black_or_bg(BG)).
 
 no_diff(in,out).
 
@@ -141,7 +143,7 @@ compute_diff(I,O,[]):- no_diff(I,O).
 compute_diff(O,I,[]):- no_diff(I,O).
 compute_diff(I,O,O):- I==[],!.
 compute_diff(I,O,I):- O==[],!.
-compute_diff([IH,IV],[OH,OV],D):- maplist(integer,[IH,IV,OH,OV]),!,maplist(number_dif,[IH,IV],[OH,OV],D).
+compute_diff([IH,IV],[OH,OV],D):- maplist(number,[IH,IV,OH,OV]),!,maplist(number_dif,[IH,IV],[OH,OV],D).
 compute_diff(I,O,D):- is_list(I),!,is_list(O),sort(I,IS),sort(O,OS),!,list_diff(IS,OS,D).
 compute_diff(I,O,D):- is_dict(I),!,findall(D1,(get_dict(K, I, V),compute_diff(K=V,O,D1)),D).
 compute_diff(IF=IA,O,IF=D):-!, find_kv(O,IF,OA),!,compute_diff(IA,OA,D).
@@ -170,7 +172,7 @@ find_kv(O,OF,OA):- compound(O),compound_name_arguments(O,OF,OA).
 
 
 must_intersect_all(Indv,Points,NextScanPoints):-
-   globalpoints(Indv,IndvPoints),
+   globalpointlist(Indv,IndvPoints),
    unique_of_each(IndvPoints,Points,[],NextScanPoints),!.
 
 unique_of_each(IndvPoints,Points,UniqueInvO,UniquePointsO):-
@@ -229,7 +231,7 @@ combine_grids(How,[H|T],G,GO):- !,
   %in_cmt((writeln(How),print_grid(H))),
   combine_grids(How,H,G,GM),
   combine_grids(How,T,GM,GO).
-combine_grids(overlay,H,G,GM):- globalpoints(H,Points),set_point(Points,G,GM),!.
+combine_grids(overlay,H,G,GM):- globalpointlist(H,Points),set_point(Points,G,GM),!.
 combine_grids(append,H,G,GM):- grid_size(H,W,_),length(Row,W), append(G,[Row|H],GM).
   
 

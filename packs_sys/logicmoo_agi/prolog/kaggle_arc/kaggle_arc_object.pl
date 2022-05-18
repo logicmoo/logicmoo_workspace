@@ -1,6 +1,10 @@
    
-:- dynamic(unshared_individuals_saved/2).
+:- dynamic(is_group_saved/2).
 :- dynamic(reuse_grid_nums/1).
+
+
+enum_object(S):- is_gridname(S,_).
+enum_object(S):- is_group_saved(_,IndvS),member(S,IndvS).
 
 store_individuals_non_shared(Gridname,Grid):- 
    set_gridname(Grid,Gridname),
@@ -8,66 +12,63 @@ store_individuals_non_shared(Gridname,Grid):-
    set_named_indivs(Gridname,IndvS).
 
 get_named_indivs(Gridname,IndvS):- 
-   unshared_individuals_saved(Gridname,IndvS).
+   is_group_saved(Gridname,IndvS).
 
 set_named_indivs(Gridname,IndvS):- 
-   retractall(unshared_individuals_saved(Gridname,_)),
-   asserta(unshared_individuals_saved(Gridname,IndvS)),!.
+   retractall(is_group_saved(Gridname,_)),
+   asserta(is_group_saved(Gridname,IndvS)),!.
 
-ensure_individuals_non_shared(Gridname):- unshared_individuals_saved(Gridname,_),!.
+ensure_individuals_non_shared(Gridname):- is_group_saved(Gridname,_),!.
 ensure_individuals_non_shared(Gridname):- is_gridname(Grid,Gridname),!,
    store_individuals_non_shared(Gridname,Grid),!.
 ensure_individuals_non_shared(Gridname):- throw(cannot_find((Gridname))).
 
 :- style_check(+singleton).
 
-grid_shared_with(Gridname*Type*in,Gridname*Type*out):-!.
-grid_shared_with(Gridname*Type*out,Gridname*Type*in):-!.
+grid_shared_with(Gridname*ExampleNum*in,Gridname*ExampleNum*out):-!.
+grid_shared_with(Gridname*ExampleNum*out,Gridname*ExampleNum*in):-!.
 
 use_shared_first(W) :- nb_current(grid_shared,W),W\==[],W\==nil.
 use_shared_first:- use_shared_first(_).
 
 get_shared_with(IndvS):- use_shared_first(With),
   ensure_individuals_non_shared(With),
-  unshared_individuals_saved(With,IndvS),!.
+  is_group_saved(With,IndvS),!.
 get_shared_with([]).
 
 
 get_unshared(IndvS):- use_shared_first(With),
   grid_shared_with(With,Gridname),
   ensure_individuals_non_shared(Gridname),
-  unshared_individuals_saved(Gridname,IndvS),!.
+  is_group_saved(Gridname,IndvS),!.
 get_unshared([]).
 
 
 unset_nth(I,O):- delq(I,object_indv_id(_,_),O).
 set_nth(I,O):- delq(I,object_indv_id(_,_),O).
 
-get_combined(IndvC):- nb_current(test_name_w_type,NameTypeNum), unshared_individuals_saved(NameTypeNum,IndvC),!.
-get_combined(IndvC):- nb_current(test_name_w_type,NameTypeNum), 
-   unshared_individuals_saved(NameTypeNum*in ,IndvS1),
-   unshared_individuals_saved(NameTypeNum*out,IndvS2),
+get_combined(IndvC):- nb_current(test_name_w_type,NamedExampleNum), is_group_saved(NamedExampleNum,IndvC),!.
+get_combined(IndvC):- nb_current(test_name_w_type,NamedExampleNum), 
+   is_group_saved(NamedExampleNum*in ,IndvS1),
+   is_group_saved(NamedExampleNum*out,IndvS2),
    make_combined(IndvS1,IndvS2,IndvC).
 get_combined(IndvC):-get_shared_with(IndvS1),get_unshared(IndvS2),make_combined(IndvS1,IndvS2,IndvC).
 
 with_each_indiv(G,I):- individuals(G,I).
 
 make_combined(IndvS1,IndvS2,BetterC):-
-   largest_first_really(IndvS1,IndvS1C),
-   largest_first_really(IndvS2,IndvS2C),
-  append(IndvS1C,IndvS2C,IndvSU),list_to_set(IndvSU,IndvS),
-  largest_first_really(IndvS,IndvOB),
-  reverse(IndvOB,IndvC),
+  append(IndvS1,IndvS2,IndvSU),list_to_set(IndvSU,IndvS),
+  smallest_first(IndvS,IndvC),
   cleanup(IndvC,BetterC),
-  nb_current(test_name_w_type,NameTypeNum),
-  set_named_indivs(NameTypeNum,BetterC),!.
+  nb_current(test_name_w_type,NamedExampleNum),
+  set_named_indivs(NamedExampleNum,BetterC),!.
 
 cleanup(IndvC,BetterC):-
   append(Left,[B|Bigger],IndvC),
   append(LeftB,[A|RBigger],Bigger),
   compute_diff(A,B,same_object(_)),!,
-  object_indv_id(B,NameTypeNum,Iv),
-  setq(A,object_indv_id(B,NameTypeNum,Iv),AA),
+  object_indv_id(B,NamedExampleNum,Iv),
+  setq(A,object_indv_id(B,NamedExampleNum,Iv),AA),
   append([Left,LeftB,RBigger,[AA]],MissingAB),
   cleanup(MissingAB,BetterC).
 cleanup(A,A).
@@ -85,23 +86,56 @@ individuals_non_shared(Grid,IndvS):-
 individuals_common(Grid,IndvS):- is_grid(Grid),!,
  must_det_l((
   notrace((grid_size(Grid,H,V),
-  globalpoints(Grid,Points))),
+  globalpointlist(Grid,Points))),
   locally(t_l:id_cells(Grid,Points),
   ( individuals_raw(Grid,Points,Indv_0),    
     % dmsg(is=Indv_0),    
     unraw_inds(Indv_0,Indv1),
     largest_first(Indv1,Indv2))),
-  make_embued_points(Grid,H,V,Indv2,IndvS))).
+  make_embued_points(Grid,H,V,Indv2,IndvS))),
+ nop(maplist(assert_IndvS,IndvS)).
+
+/*
+assert_IndvS(obj(L)):-
+  object_indv_id(obj(L),NamedExampleNum,Iv),
+  maplist(assert_IndvS(NamedExampleNum,Iv),L).
+
+
+globalpointlist(NamedExampleNum,Iv,ListOIfColoredPoints).
+globalpoint(NamedExampleNum,Iv,Color,Point).
+localpointlist(NamedExampleNum,Iv,ListOIfColoredPoints).
+localpoint(NamedExampleNum,Iv,Color,Point).
+localcolorlesspointlist(NamedExampleNum,Iv,Point).
+object_size(NamedExampleNum,Iv,H,V).
+object_shape(NamedExampleNum,Iv,ShapName).
+
+
+assert_IndvS(NamedExampleNum,Iv,P):- P=..[F,List],is_list(List),
+  maplist(assert_IndvS_L(NamedExampleNum,Iv,F),List).
+
+assert_IndvS_L(NamedExampleNum,Iv,F),List
+
+assert_IndvS(NamedExampleNum,Iv,P):- P=..[F|Args],
+  PP=..[F,NamedExampleNum,Iv|Args],
+  assert_IndvS_PP(NamedExampleNum,Iv,PP).
+*/
+
 individuals_common(Grid,I):- is_objectlist(Grid),!,I=Grid.
 individuals_common(obj(Grid),[obj(Grid)]):-!.
 
 individuals_raw(ID,Points,IndvS):- 
-  maybe_shared_individuals_list(squares,Points,Indv1S,LeftOverPoints),
+  maybe_shared_individuals_list(squares,Points,Indv0S,ELeftOverPoints),
+  maybe_join_shared_individuals_list(squares,ELeftOverPoints,Indv0S,Indv1S,LeftOverPoints),
   individuals_list(squares,ID,LeftOverPoints,Indv2S),
   append(Indv1S,Indv2S,Indv12S),list_to_set(Indv12S,IndvS).
 
+%maybe_join_shared_individuals_list(squares,ELeftOverPoints,Indv0S,Indv1S,LeftOverPoints):-
+%  select(Indv0,Rest,Indv0S),member(Indv1,Rest),object_shape(Indv0,line(h)), object_shape(Indv1,line(h)).
+
+maybe_join_shared_individuals_list(_Squares,LeftOverPoints,IndvS,IndvS,LeftOverPoints).
+
 maybe_shared_individuals_list(Types,Points,IndvList,Unused):- 
-  use_shared_first,
+  use_shared_first, mmake,
   get_combined(IndvSC), 
   consume_shared_individual_points(IndvSC,Types,Points,IndvList,Unused).
 maybe_shared_individuals_list(_Types,UnusedPoints,[],UnusedPoints):- !.
@@ -120,7 +154,7 @@ unraw_inds(IndvS,IndvO):-
 
 consume_shared_individual_points([],_Types,UnusedPoints,[],UnusedPoints):- !.
 consume_shared_individual_points([H|T],Types,Points,[H|IndvList],Unused):-  
-  globalpoints(H,GPoints), remove_gpoints(GPoints,Points,LeftOver),
+  globalpointlist(H,GPoints), remove_gpoints(GPoints,Points,LeftOver),
   consume_shared_individual_points(T,Types,LeftOver,IndvList,Unused).
 consume_shared_individual_points([_|T],Types,Points,IndvList,Unused):-  
   consume_shared_individual_points(T,Types,Points,IndvList,Unused).
@@ -143,7 +177,7 @@ obj1(X,X).
 ok_color_with(C,C2):- /* \+ free_cell(C2), */ C==C2.
 
 sameglobalpoints(Points,IndvC,LeftOver,IndvC):-
-  globalpoints(IndvC,GPoints),
+  globalpointlist(IndvC,GPoints),
   remove_gpoints(GPoints,Points,LeftOver).
 
 remove_gpoints([],Rest,Rest).
@@ -223,7 +257,6 @@ individuals_near(Types,C,From,[E|ScanPoints],Nears,[E|NextScanPoints]):-
 nearby_one(Types,C,C2-E,List):- allow_dirs(Types,Dir), adjacent_point_allowed(C,E2,Dir,E), member(C2-E2,List),ok_color_with(C2,C).
 
 
-
 check_minsize(Sz,Indv1,Indv):- include(meets_size(Sz),Indv1,Indv).
 
 meets_size(Len,Points):- point_count(Points,L),!,L>=Len.
@@ -232,47 +265,57 @@ remove_bgs(IndvS,IndvL,BGIndvS):- partition(is_bg_indiv,IndvS,BGIndvS,IndvL).
 
 is_bg_indiv(O):- colors_count(O,[color_count(C,CC)]),CC>0,is_black(C).
 
-largest_first(IndvS,IndvR):-
-  largest_first_really(IndvS,IndvO),
+smallest_first(IndvS,IndvO):-
+  findall(Size-Indv,(member(Indv,IndvS),point_count(Indv,Size)),All),
+  keysort(All,AllK),
+  findall(Indv,member(_-Indv,AllK),IndvO).
+
+largest_first(IndvS,IndvR):-  
+  smallest_first(IndvS,IndvO),
   reverse(IndvO,IndvR).
 
-largest_first_really(IndvS,IndvO):-  
-  findall(Hard-Indv,(member(Indv,IndvS),point_count(Indv,Hard)),All),
-  keysort(All,AllK),
-  reverse(AllK,AllR),
-  findall(Indv,member(_-Indv,AllR),IndvO).
-
 largest_first_nonbg(IndvS,IndvOB):-  
-  remove_bgs(IndvS,IndvL,BGIndvS),
-  findall(Hard-Indv,(member(Indv,IndvL),point_count(Indv,Hard)),All),
-  keysort(All,AllK),
-  reverse(AllK,AllR),
-  findall(Indv,member(_-Indv,AllR),IndvO),append(IndvO,BGIndvS,IndvOB).
+  largest_first(IndvS,IndvO),
+  remove_bgs(IndvO,IndvL,BGIndvS),
+  append(IndvL,BGIndvS,IndvOB).
 
 finish_grp(C,Grp,Point2,Dir,Rest,NewGroup,RRest):- 
+   \+ (is_diag(Dir),is_black(C)),
    is_adjacent_point(Point2,Dir,Point3),
-   select([C-Point3],Rest,Rest1),
+   single_point(C-Point3,Rest,Rest1),
    finish_grp(C,[C-Point3|Grp],Point3,Dir,Rest1,NewGroup,RRest).
 finish_grp(_C,Grp,_From,_Dir,Rest,Grp,Rest).
 
+
+reserved_point(C-Point):- fail, 
+ \+ (get_shared_with(With), member(Obj,With),
+  globalpointlist(Obj,GPoints), member(CC-Point,GPoints), CC==C).
+
 single_point(C-Point,IndvS,Rest1):-
+  single_point0(C-Point,IndvS,Rest1),
+   \+ reserved_point(C-Point).
+
+single_point0(C-Point,IndvS,Rest1):-
   select([C-Point],IndvS,Rest1),
   nonvar(C).
-single_point(C-Point,IndvS,Rest1):-
+single_point0(C-Point,IndvS,Rest1):-
   select(C-Point,IndvS,Rest1),
   nonvar(C).
-single_point(C-Point,IndvS,Rest1):-
-  select(obj(I),IndvS,Rest1),
-  globalpoints(obj(I),[C-Point]),
+single_point0(C-Point,IndvS,Rest1):- 
+  select(obj(I),IndvS,Rest1), fail, % round 2
+  globalpointlist(obj(I),[C-Point]),
   nonvar(C).
 
+/*
 unraw_inds2(Types,IndvS,IndvO):- fail,
    largest_first(IndvS,Indv1),
    reverse(Indv1,IndvR), IndvR\=@=IndvS,
    unraw_inds2(Types,IndvR,IndvO).
+*/
 
+% Diag of 3 or more
 unraw_inds2(Types,IndvS,IndvO):-   
-  single_point(C-Point1,IndvS,Rest1), \+ free_cell(C),\+ get_bgc(C),
+  single_point(C-Point1,IndvS,Rest1), nonvar(C), % \+ free_cell(C),\+ get_bgc(C),
   is_diag(Dir),
   is_adjacent_point(Point1,Dir,Point2),
   single_point(C-Point2,Rest1,Rest2),
@@ -283,6 +326,21 @@ unraw_inds2(Types,IndvS,IndvO):-
   reverse_dir(Dir,RevDir),
   finish_grp(C,NewGroupR,Point1,RevDir,RRest,NewGroup,RRestO),
   unraw_inds2(Types,[NewGroup|RRestO],IndvO).
+
+
+% Diag of 2 or more
+unraw_inds2(Types,IndvS,IndvO):-  % fail,
+  single_point(C-Point1,IndvS,Rest1), nonvar(C), % \+ free_cell(C),\+ get_bgc(C),
+  is_diag(Dir),
+  is_adjacent_point(Point1,Dir,Point2),
+  single_point(C-Point2,Rest1,Rest2),
+  finish_grp(C,[C-Point2,C-Point1],Point2,Dir,Rest2,NewGroup1,RRest),
+  reverse(NewGroup1,NewGroupR),
+  reverse_dir(Dir,RevDir),
+  finish_grp(C,NewGroupR,Point1,RevDir,RRest,NewGroup,RRestO),
+  unraw_inds2(Types,[NewGroup|RRestO],IndvO).
+
+
 
 unraw_inds2(Types,IndvS,IndvO):-  fail,
   single_point(C-Point1,IndvS,Rest1), nonvar(C), \+ free_cell(C),
@@ -327,7 +385,7 @@ if_point_offset(OH,OV,Point,LPoint):- atom(Point), hv_point(H,V,Point),HH is H +
 grid_to_individual(Grid,OUT):-
   get_gridname(Grid,GN),
   grid_size(Grid,H,V),
-  globalpoints(Grid,Points),
+  globalpointlist(Grid,Points),
   embue_points(GN,H,V,1,1,H,V,Points,OUT).
 
 make_embued_points(Grid,H,V,Indv2,IndvS):- 
@@ -341,7 +399,7 @@ embue_points(GN,H,V,Points,OUT):-
   embue_points(GN,H,V,LoH,LoV,HiH,HiV,Points,OUT).
 
 embue_points(GN,H,V,LoH,LoV,HiH,HiV,C-HV,OBJ):- !, embue_points(GN,H,V,LoH,LoV,HiH,HiV,[C-HV],OBJ).
-embue_points(NameTypeNum,H,V,LoH,LoV,HiH,HiV,Points,obj(Ps)):-
+embue_points(NamedExampleNum,H,V,LoH,LoV,HiH,HiV,Points,obj(Ps)):-
  assertion(ground(Points)),
  flag(indiv,Iv,Iv+1),
  must_det_l((
@@ -349,34 +407,34 @@ embue_points(NameTypeNum,H,V,LoH,LoV,HiH,HiV,Points,obj(Ps)):-
   length(Points,Len),
   Width is HiH-LoH+1,
   Height is HiV-LoV+1,
-  %nb_current(test_name_w_type,NameTypeNum),
+  %nb_current(test_name_w_type,NamedExampleNum),
   
   %gensym(id_,IID),
   Area is Width * Height,
   Empty is  Area - Len,
   deoffset_points(LoH,LoV,Points,LPoints),
-  findall(shape(Shape),guess_shape(Ps,Empty,Len,Width,Height,CC,Points,Shape),Shapes),
   remove_color(LPoints,CLPoints),
+  findall(object_shape(Shape),guess_shape(Ps,Empty,Len,Width,Height,CC,CLPoints,Shape),Shapes),
   append([[
-    points_only(CLPoints),
+    localcolorlesspointlist(CLPoints),
     colors_count(CC),
     object_size(Width,Height),
     point_count(Len)],Shapes,
     %width(Width), height(Height), area(Area),
     %missing(Empty),
-    [localpoints(LPoints)],
+    [localpointlist(LPoints)],
     [object_offset(LoH,LoV)],
-    [globalpoints(Points),
-    object_indv_id(NameTypeNum,Iv),
+    [globalpointlist(Points),
+    object_indv_id(NamedExampleNum,Iv),
     grid_size(H,V)]],Ps))).
 
 
-object_indv_id(I,NameTypeNum,Iv):- indv_props(I,L),member(object_indv_id(NameTypeNum,Iv),L),!.
-object_indv_id(_,NameTypeNum,_Iv):- nb_current(test_name_w_type,NameTypeNum).
+object_indv_id(I,NamedExampleNum,Iv):- indv_props(I,L),member(object_indv_id(NamedExampleNum,Iv),L),!.
+object_indv_id(_,NamedExampleNum,_Iv):- nb_current(test_name_w_type,NamedExampleNum).
 
 point_count(_-P,1):- nonvar(P),!.
 point_count(I,X):- indv_props(I,L),member(point_count(X),L),!.
-point_count(obj(I),Count):- localpoints(I,Points), length(Points,Count),!.
+point_count(obj(I),Count):- localpointlist(I,Points), length(Points,Count),!.
 point_count(Points,Count):- is_list(Points),length(Points,Count),!.
 remove_color(_-P,P).
 remove_color(LPoints,CLPoints):- maplist(remove_color,LPoints,CLPoints).
@@ -398,8 +456,10 @@ metaq_1(P3,Did,Old,New,Orig,Saved):- compound(Orig),Orig=Old, call(P3,Old,New,Sa
 
 
 indv_props(obj(L),L):- is_list(L).
+indv_props(obj(L),L):- enum_object(obj(L)).
 
-localpoints(I,X):- indv_props(I,L),member(localpoints(X),L).
+localpointlist(I,X):- indv_props(I,L),member(localpointlist(X),L).
+object_shape(I,X):- indv_props(I,L),member(object_shape(X),L).
 
 hv_cvalue(Grid,Color,H,V):- hv_value(Grid,C,H,V),as_cv(C,Color).
 as_cv(C,Color):- var(C),color_code(C,Color).
@@ -407,15 +467,15 @@ as_cv(C,Color):- integer(C),!,color_code(C,Color).
 as_cv(C,Color):- atom(C),!,color_code(C,Color).
 as_cv(C-_,Color):- as_cv(C,Color).
 
-globalpoints(Grid,Points):- is_grid(Grid),!, grid_size(Grid,HH,HV), 
+globalpointlist(Grid,Points):- is_grid(Grid),!, grid_size(Grid,HH,HV), 
   findall(C-Point,(between(1,HV,V),between(1,HH,H),hv_cvalue(Grid,C,H,V),nonvar(C),hv_point(H,V,Point)),Points),
   assertion(ground(Points)).
-%globalpoints(Grid,Points):- is_object(Grid),!,globalpoints(Grid,Points).
-globalpoints(Grid,Points):- is_objectlist(Grid),!,maplist(globalpoints,Grid,MPoints),flatten(MPoints,Points).
-globalpoints(I,X):- indv_props(I,L),member(globalpoints(X),L).
+%globalpointlist(Grid,Points):- is_object(Grid),!,globalpointlist(Grid,Points).
+globalpointlist(Grid,Points):- is_objectlist(Grid),!,maplist(globalpointlist,Grid,MPoints),flatten(MPoints,Points).
+globalpointlist(I,X):- indv_props(I,L),member(globalpointlist(X),L).
 /*
-globalpoints(ID,Points):- \+ \+ cmem(ID,_,_), findall(-(C,HV),cmem(ID,HV,C),Points).
-globalpoints(Grid,Points):- grid_to_id(Grid,ID),findall(-(C,HV),cmem(ID,HV,C),Points).
+globalpointlist(ID,Points):- \+ \+ cmem(ID,_,_), findall(-(C,HV),cmem(ID,HV,C),Points).
+globalpointlist(Grid,Points):- grid_to_id(Grid,ID),findall(-(C,HV),cmem(ID,HV,C),Points).
 :- dynamic(is_grid_id/2).
 grid_to_id(Grid,ID):- is_grid_id(Grid,ID),!.
 grid_to_id(Grid,ID):- gensym('grid_',ID),assert_id_grid_cells(ID,Grid),assert(is_grid_id(Grid,ID)),!.
@@ -424,7 +484,7 @@ grid_to_id(Grid,ID):- gensym('grid_',ID),assert_id_grid_cells(ID,Grid),assert(is
 colors_count(I,X):- indv_props(I,L),!,member(colors_count(X),L).
 colors_count(G,BFO):- pixels(G,GF),sort(GF,GS),count_each(GS,GF,UC),keysort(UC,KS),reverse(KS,SK),into_cc(SK,BFO).
 
-points_only(I,X):- indv_props(I,L),member(points_only(X),L).
+localcolorlesspointlist(I,X):- indv_props(I,L),member(localcolorlesspointlist(X),L).
 
 object_offset(I,X,Y):- indv_props(I,L),member(object_offset(X,Y),L).
 object_size(I,X,Y):- indv_props(I,L),member(object_size(X,Y),L).
@@ -435,8 +495,8 @@ top(8).
 
 :- style_check(-singleton).
 guess_shape(I,Empty,N,1,1,Colors,Points,dot):- !.
-guess_shape(I,Empty,N,N,1,Colors,Points,hline).
-guess_shape(I,Empty,N,1,N,Colors,Points,vline).
+guess_shape(I,Empty,N,N,1,Colors,Points,line(h)).
+guess_shape(I,Empty,N,1,N,Colors,Points,line(v)).
 guess_shape(I,Empty,N,H,V,[color_count(Zero,_)],Points,background):- (Zero==0;Zero==black).
 guess_shape(I,0,N,HV,HV,Colors,Points,square):- HV>1.
 guess_shape(I,0,N,H,V,Colors,Points,solid).

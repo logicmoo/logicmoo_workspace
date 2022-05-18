@@ -11,15 +11,15 @@ test_names_ord_hard(NamesByHard):- findall(Hard-Name,(test_name(Name),hardness_o
 ascending_hard:-
   tell('arc_ascending.pl'),
   forall(test_names_by_hard(Name),
-    forall(kaggle_arc(Name,Type,In,Out),format('~q.~n',[kaggle_arc_ord(Name,Type,In,Out)]))),
+    forall(kaggle_arc(Name,ExampleNum,In,Out),format('~q.~n',[kaggle_arc_ord(Name,ExampleNum,In,Out)]))),
   told,
   reconsult(arc_ascending).
 
 hardness_of_name(Name,Hard):-
- %Type=tst+_,
- Type=_,
+ %ExampleNum=tst+_,
+ ExampleNum=_,
  findall(Hard,
- (kaggle_arc(Name,Type,In,Out),
+ (kaggle_arc(Name,ExampleNum,In,Out),
   grid_size(In,H0,V0),
   grid_size(Out,H,V),
   max_min(H,V,C,_),
@@ -34,8 +34,9 @@ hardness_of_name(Name,Hard):-
 :- dynamic(fav/2).
 
 fav(A,B):- nonvar(A),nonvar(B),
+ cls,mmake,
  asserta(fav(A,B),Ref),!,
- call_cleanup((cls,mmake,arc1(A)),erase(Ref)),!.
+ call_cleanup(arc1(A),erase(Ref)).
 fav(X,[]):- clause(fav(X),true).
 %fav(t('23b5c85d'),[b7249182
 %fav(t('db3e9e38'),[lmDSL([flipV,C1=orange,C2=blue,[],flipV]).
@@ -92,18 +93,21 @@ fav(t('1b60fb0c'),[learn([find_damage_to_input,find_center,fraction_evenly_to_fo
 fav(t('9aec4887'),[indiv(color_blind),todo_sol([find_individuals([hollow,inside([squares])],I),rest_indivdual(Is),put_inside(Is,I),
   if_edge_strong([color=C]),touch(Is,Point),set_point(Point,C)])]).
 
-
+fav(v('4b6b68e5'),[
+   lmDSL([gather_object(O1,X,(isa(X,dot),inside(X,P),isa(P,polygon),wall_thickness(P,1),noexit(P))),
+          colors_count(O1,CC),first(C,CC),part_of(O1,E),color(E,C),fillAt(E,C),
+                forall(X,(isa(X,dot), \+ (inside(X,P),isa(P,polygon))),delete(X))])]).
 /*
 first i look to see if the grid sizes are purporional, if not i look to see if the output grid can be recognised on the input
 if not i look to see if the input grid can be recognised on the output
 
 f35d900a
 
-the input has a small number of points_only .. the same number on each image
-two points_only are the same color, oh there are two pairs of points_only
-there is a grey dashed box made up from the points_only
+the input has a small number of localcolorlesspointlist .. the same number on each image
+two localcolorlesspointlist are the same color, oh there are two pairs of localcolorlesspointlist
+there is a grey dashed box made up from the localcolorlesspointlist
 no two grey dots can touch though
-the grey dots seem to originate from the four points_only
+the grey dots seem to originate from the four localcolorlesspointlist
 teh grey has to come out at least once.. after than if they are going to become two they skip
 arround each color point there is a box of the oposting color
 
@@ -155,36 +159,45 @@ load_json_files(F,Mask):-
   maplist(file_name_extension,Names,_,BaseNames),
   maplist(load_json_file(F),Names,FullNames),!.
 
-load_json_file(F, BaseName, FullName):- Name=..[F,BaseName], 
+load_json_file(F, BaseName, FullName):- Testname=..[F,BaseName], 
   setup_call_cleanup(open(FullName,read,In),
    json_read(In,Term,[]),
    close(In)),
-  load_json_of_file(Name,file,Term),!.
+  load_json_of_file(Testname,file,Term),!.
 
   load_json_of_file(Name,Type,json(Term)):-! , load_json_of_file(Name,Type,Term).
   load_json_of_file(Name,_,Type=Value):-!, load_json_of_file(Name,Type,Value).
   load_json_of_file(Name,train,T):-!,load_json_of_file(Name,trn,T).
   load_json_of_file(Name,test,T):-!,load_json_of_file(Name,tst,T).
+    load_json_of_file(Testname,ExampleNum,[input=In,output=Out]):-
+       json_to_colors(In,InColor),
+       json_to_colors(Out,OutColor),
+       assert_if_new(kaggle_arc_json(Testname,ExampleNum,InColor,OutColor)),!.
   load_json_of_file(Name,Type,[input=In,output=Out]):-assert_if_new(kaggle_arc_json(Name,Type,In,Out)),!.
   load_json_of_file(Name,Type,[H|T]):- !, forall(nth0(N,[H|T],E), load_json_of_file(Name,Type+N,E)).
   load_json_of_file(N,T,V):- wdmsg(load_json_of_file(N,T,V)),!.
 
+
+json_to_colors(Out,Color):- is_grid_color(Out),!,Out=Color.
+json_to_colors(Out,Color):- is_list(Out),!,maplist(json_to_colors,Out,Color).
+json_to_colors(Out,Color):- grid_color_code(Out,Color).
+
 :- load_json_files(t,'./data/training/*.json').
 :- load_json_files(v,'./data/evaluation/*.json').
-kaggle_arc(TName,Type,In,Out):- kaggle_arc_json(TName,Type,In,Out).
-% Type is tst or trn
+kaggle_arc(TName,ExampleNum,In,Out):- kaggle_arc_json(TName,ExampleNum,In,Out).
+% ExampleNum is tst or trn
 /*
 kaggle_arc(t(Name), TypeI, In, Out):- 
- nth_fact(kaggle_arc_train(Name, Type, In, Out), This), once((nth_fact(kaggle_arc_train(Name, Type, _, _), Start), I is This - Start, TypeI=Type->I)).
+ nth_fact(kaggle_arc_train(Name, ExampleNum, In, Out), This), once((nth_fact(kaggle_arc_train(Name, ExampleNum, _, _), Start), I is This - Start, TypeI=ExampleNum->I)).
 kaggle_arc(v(Name), TypeI, In, Out):- 
- member(Type, [trn, tst]), nth_fact(kaggle_arc_eval(Name, Type, In, Out), This), once((nth_fact(kaggle_arc_eval(Name, Type, _, _), Start), I is This - Start, TypeI=Type->I)).
+ member(ExampleNum, [trn, tst]), nth_fact(kaggle_arc_eval(Name, ExampleNum, In, Out), This), once((nth_fact(kaggle_arc_eval(Name, ExampleNum, _, _), Start), I is This - Start, TypeI=ExampleNum->I)).
 */
 
 fix_test_name(X,X,_):- var(X),!.
-fix_test_name(Tried*Type*_,Fixed,Type):-!,fix_test_name(Tried,Fixed,_).
-fix_test_name(Tried*Type,Fixed,Type):-!,fix_test_name(Tried,Fixed,_).
-fix_test_name(Tried,Tried,Type):- \+ \+ kaggle_arc(Tried,_,_,_),!, kaggle_arc(Tried,Type,_,_).
-fix_test_name(Tried,Fixed,Type):- compound(Tried),!,arg(_,Tried,E),nonvar(E),fix_test_name(E,Fixed,Type).
+fix_test_name(Tried*ExampleNum*_,Fixed,ExampleNum):-!,fix_test_name(Tried,Fixed,_).
+fix_test_name(Tried*ExampleNum,Fixed,ExampleNum):-!,fix_test_name(Tried,Fixed,_).
+fix_test_name(Tried,Tried,ExampleNum):- \+ \+ kaggle_arc(Tried,_,_,_),!, kaggle_arc(Tried,ExampleNum,_,_).
+fix_test_name(Tried,Fixed,ExampleNum):- compound(Tried),!,arg(_,Tried,E),nonvar(E),fix_test_name(E,Fixed,ExampleNum).
 fix_test_name(Tried,t(Tried),_):- kaggle_arc(t(Tried),_,_,_),!.
 fix_test_name(X,v(X),_):- kaggle_arc(v(X),_,_,_),!.
 

@@ -6,8 +6,8 @@
 % Dec 13, 2035
 %
 */
-:- module(logicmoo_motel,[]).
-/*
+%:- module(logicmoo_motel,[]).
+
 :- module(logicmoo_motel,[kif_to_motelog/2]).            
 
 :- reexport(library(logicmoo/motel/mpred_motel)).
@@ -34,4 +34,4 @@ as_mlog_pt3(F,List,Fml):- Fml=..[F|List].
       
 :- fixup_exports.
 
-*/
+

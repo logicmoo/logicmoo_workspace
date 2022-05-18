@@ -43,11 +43,11 @@ run_dsl([H|Prog],In,Out):-!, run_dsl(H,In,GridM), run_dsl(Prog,GridM,Out).
 run_dsl(Prog,In,In):- missing_arity2(Prog),!,arcdbg(warn(missing(run_dsl(Prog)))).
 run_dsl(Prog,In,Out):- call(Prog,In,M)*-> =(M,Out) ; arcdbg(warn(nonworking(run_dsl(Prog)))).
 
-named_test(P,G):- var(P),!,throw(var_named_test(P,G)).
-named_test(P+T,G):- fix_test_name(P+T,Name,Type),kaggle_arc(Name,Type,G,_),!.
-named_test(P,G):- fix_test_name(P,Name,_),kaggle_arc(Name,tst+0,G,_),!.
-named_test(P=Type*in,G):- fix_test_name(P,Name,_),!,kaggle_arc(Name,Type,G,_),!.
-named_test(P=Type*out,G):- fix_test_name(P,Name,_),!,kaggle_arc(Name,Type,_,G),!.
+named_test(TstName,G):- var(TstName),!,throw(var_named_test(TstName,G)).
+named_test(TstName*T,G):- fix_test_name(TstName+T,Name,ExampleNum),kaggle_arc(Name,ExampleNum,G,_),!.
+named_test(TstName,G):- fix_test_name(TstName,Name,_),kaggle_arc(Name,tst+0,G,_),!.
+named_test(TstName*ExampleNum*in,G):- fix_test_name(TstName,Name,_),!,kaggle_arc(Name,ExampleNum,G,_),!.
+named_test(TstName*ExampleNum*out,G):- fix_test_name(TstName,Name,_),!,kaggle_arc(Name,ExampleNum,_,G),!.
 
 into_object(G,O):- is_grid(G),grid_to_individual(G,O),!.
 into_object(G,O):- into_objectlist(G,OL),must([O]=OL).
@@ -70,6 +70,23 @@ into_objectlist(P,G):-
 into_objectlist(P,G):- maplist(into_objectlist,P,Gs),!, set_grid_nums(Gs), combine_grids(overlay,Gs,G).
 */
 
+:- dynamic(isa/2).
+isa(X,Y):- object_shape(X,Y).
+
+gather_object(Obj1,Var,Expression,Grid,Grid):-
+  create_bag(Obj1),
+  forall(Expression,ain(part_of(Var,Obj1))).
+
+gather_object(Obj1,Var,Expression,Grid,Grid):-
+  create_bag(Obj1),ain(isa(Obj1,group)),
+  forall(Expression,ain(part_of(Var,Obj1))).
+
+
+wall_thickness(X,N):- isa(X,polygon),calc(wall_thickness(X,N)).
+
+calc(_).
+
+create_bag(Obj1):- gensym(bag_,Obj1),ain(isa(Obj1,group)).
 
 training_progs(Prog,In,Out):- var(Prog),!,throw(var_training_progs(Prog,In,Out)).
 training_progs(call(G),_In,_Out):-!,call(G).

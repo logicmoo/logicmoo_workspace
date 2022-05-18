@@ -48,32 +48,34 @@ fav(X):- clause(fav(X,_),true).
 
 arc(Name):- forall(arc1(Name),true).
 arc1(Name):-    
-  fix_test_name(Name,TName,Type), 
+  fix_test_name(Name,TName,ExampleNum), 
   retractall(grid_nums(_)),
   retractall(grid_nums(_,_)),
+  retractall(unshared_individuals_saved(_,_)),
+  retractall(is_gridname(_,_)),
   nb_delete(grid_bgc),
   set_flag(indiv,0),
-  kaggle_arc(TName,Type,In,Out),
-  run_arc_io(TName,Type,In,Out).
+  kaggle_arc(TName,ExampleNum,In,Out),
+  run_arc_io(TName,ExampleNum,In,Out).
 
-run_arc_io(Name,Type,In,Out):-
+run_arc_io(Name,ExampleNum,In,Out):-
   run_nb((
   current_test_name(CName),
   nb_delete(grid_bgc),
   nb_setval(test_name,Name),
-  nb_setval(test_name_w_type,Name*Type),
-  retractall(grid_nums(Name*Type,_)),
+  nb_setval(test_name_w_type,Name*ExampleNum),
+  retractall(grid_nums(Name*ExampleNum,_)),
   retractall(grid_nums(_)),
   retractall(grid_nums(_,_)),
-  ignore(try_arc_io(CName,Name,Type,In,Out)))),!.
+  ignore(try_arc_io(CName,Name,ExampleNum,In,Out)))),!.
 
 %try_arc_io(_,_,_,_,_):- \+ test_config(lmDSL(_)),!.
 
-try_arc_io(CName,Name,Type,In,Out):-    !,
+try_arc_io(CName,Name,ExampleNum,In,Out):-    !,
   ignore((CName\==Name,flag(indiv,_,0),dash_char(60,"A"),dash_char(6,"\n"),nl)), 
   dash_char(60,"V"),nl,
-  GridNameIn= Name*Type*in,
-  GridNameOut= Name*Type*out,
+  GridNameIn= Name*ExampleNum*in,
+  GridNameOut= Name*ExampleNum*out,
   describe_feature(Name,[test_info]),  
   store_individuals_non_shared(GridNameIn,In),
   store_individuals_non_shared(GridNameOut,Out),
@@ -97,19 +99,19 @@ try_arc_io(CName,Name,Type,In,Out):-    !,
   debug_indiv(SIndvOut),
   !.
 
-try_arc_io(CName,Name,Type,In,Out):-
+try_arc_io(CName,Name,ExampleNum,In,Out):-
   ignore((CName\==Name,flag(indiv,_,0),dash_char(60,"A"),dash_char(6,"\n"),nl)), 
-  grid_info(Name,Type*in,In), %print_tree_nl(in=IndvS),
-  grid_info(Name,Type*out,Out), %print_tree_nl(out=OndvS),
+  grid_info(Name,ExampleNum*in,In), %print_tree_nl(in=IndvS),
+  grid_info(Name,ExampleNum*out,Out), %print_tree_nl(out=OndvS),
   !,
-  % \+ \+ ignore(((Type=trn+_), test_config(learn(CProg)),must(training_progs(CProg,In,Out)))),
+  % \+ \+ ignore(((ExampleNum=trn+_), test_config(learn(CProg)),must(training_progs(CProg,In,Out)))),
 /*
   compute_diff(IndvS,OndvS,Diffs),!,
-  nop(print_tree_nl(diffs=Diffs)),
+  nop(pt(diffs=Diffs)),
 */
     trace, get_combined(IndvO),
     print_grid(IndvO),
-    maybe_confirm_sol(Name,Type,In,Out),nl,!.
+    maybe_confirm_sol(Name,ExampleNum,In,Out),nl,!.
 
 
 % Grid pretty printing
