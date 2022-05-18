@@ -218,30 +218,6 @@ learn_mapping_stateful(In,Out):- get_bgc(BG),
    In2=Out2,
    asserta_new(backfill(Out2)))).
 
-rot45([[Arr0_0,Arr1_0,Arr2_0,Arr3_0,Arr4_0],
-       [Arr0_1,Arr1_1,Arr2_1,Arr3_1,Arr4_1],
-       [Arr0_2,Arr1_2,Arr2_2,Arr3_2,Arr4_2],
-       [Arr0_3,Arr1_3,Arr2_3,Arr3_3,Arr4_3],
-       [Arr0_4,Arr1_4,Arr2_4,Arr3_4,Arr4_4]],
-      [[ArrOut_0_0,ArrOut_1_0,ArrOut_2_0,ArrOut_3_0,ArrOut_4_0],
-       [ArrOut_0_1,ArrOut_1_1,ArrOut_2_1,ArrOut_3_1,ArrOut_4_1],
-       [ArrOut_0_2,ArrOut_1_2,ArrOut_2_2,ArrOut_3_2,ArrOut_4_2],
-       [ArrOut_0_3,ArrOut_1_3,ArrOut_2_3,ArrOut_3_3,ArrOut_4_3],
-       [ArrOut_0_4,ArrOut_1_4,ArrOut_2_4,ArrOut_3_4,ArrOut_4_4]]) :-
-                    ArrOut_0_2 = Arr0_0, ArrOut_0_3 = Arr0_1,
-                    ArrOut_0_4 = Arr0_2, ArrOut_1_4 = Arr0_3,
-                    ArrOut_2_4 = Arr0_4, ArrOut_0_1 = Arr1_0,
-                    ArrOut_1_2 = Arr1_1, ArrOut_1_3 = Arr1_2,
-                    ArrOut_2_3 = Arr1_3, ArrOut_3_4 = Arr1_4,
-                    ArrOut_0_0 = Arr2_0, ArrOut_1_1 = Arr2_1,
-                    ArrOut_2_2 = Arr2_2, ArrOut_3_3 = Arr2_3,
-                    ArrOut_4_4 = Arr2_4, ArrOut_1_0 = Arr3_0,
-                    ArrOut_2_1 = Arr3_1, ArrOut_3_1 = Arr3_2,
-                    ArrOut_3_2 = Arr3_3, ArrOut_4_3 = Arr3_4,
-                    ArrOut_2_0 = Arr4_0, ArrOut_3_0 = Arr4_1,
-                    ArrOut_4_0 = Arr4_2, ArrOut_4_1 = Arr4_3,
-                    ArrOut_4_2 = Arr4_4.
-
 rot90(Grid,NewGrid):-  rot180(Grid,GridM),rot270(GridM,NewGrid). 
 rot180(Grid,NewGrid):- flipH(Grid,RowRev),flipV(RowRev,NewGrid).
 rot270(Grid0,NewGrid):- into_grid(Grid0,Grid), get_colums(Grid,NewGrid).
@@ -250,6 +226,15 @@ flipV(Grid0,FlipV):- into_grid(Grid0,Grid), reverse(Grid,FlipV).
 rocketship(Grid,Grid).
 apply_mapping_stateful(Grid,G):- into_grid(G,Grid),unbind_color(0,Grid,GridO),ignore(backfill_vars(GridO)).
 
+rot45([ [ A, B, C, D, E],
+        [ F, G, H, I, J],
+        [ K, L, M, N, O],
+        [ P, Q, R, S, T],
+        [ U, V, W, X, Y]],[ [ C, D, E, J, O],
+                            [ B, H, I, N, T],
+                            [ A, G, M, S, Y],
+                            [ F, L, Q, R, X],
+                            [ K, P, U, V, W]]).
 
 gravity(N,D,G,GridNew):- into_grid(G,Grid),G\=@=Grid,!,gravity(N,D,Grid,GridNew).
 gravity(1,n,Grid,GridNew):-!,gravity_1_n_0(Grid,GridNew).
