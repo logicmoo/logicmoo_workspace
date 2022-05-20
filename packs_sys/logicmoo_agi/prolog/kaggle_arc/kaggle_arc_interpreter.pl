@@ -49,7 +49,7 @@ named_gridoid(TstName,G):- known_gridoid(TstName,G),!.
 
 known_gridoid(TstName,G):- learned_color_inner_shape(TstName,magenta,BG,G,_),get_bgc(BG).
 known_gridoid(TstName,G):- is_gridname(G,TstName).
-known_gridoid(TstName,G):- is_group_saved(TstName,G).
+known_gridoid(TstName,G):- is_unshared_saved(TstName,G).
 known_gridoid(TstName*T,G):- fix_test_name(TstName+T,Name,ExampleNum),kaggle_arc(Name,ExampleNum,G,_).
 known_gridoid(TstName*ExampleNum*in,G):- fix_test_name(TstName,Name,_),!,kaggle_arc(Name,ExampleNum,G,_).
 known_gridoid(TstName*ExampleNum*out,G):- fix_test_name(TstName,Name,_),!,kaggle_arc(Name,ExampleNum,_,G).
@@ -59,7 +59,7 @@ into_object(G,O):- into_group(G,OL),must([O]=OL).
 
 into_group(G,G):- var(G),throw(var_into_group(G)).
 into_group(P,G):- is_group(P),!,G=P.
-into_group(G,I):- is_grid(G),!,individuals(G,I).
+into_group(G,I):- is_grid(G),!,compute_shared_indivs(G,I).
 into_group(P,G):- is_object(P),!,G=[P].
 into_group(P,G):- named_gridoid(P,M),!,into_group(M,G).
 into_group(P,G):- dumpST,throw(into_group(P,G)).

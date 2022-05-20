@@ -1,24 +1,49 @@
-   
-:- dynamic(is_group_saved/2).
+
 :- dynamic(reuse_grid_nums/1).
 
+   
+:- dynamic(is_unshared_saved/2).
 
-store_individuals_non_shared(Gridname,Grid):- 
+make_unshared_indivs(Gridname,Grid):- 
    set_gridname(Grid,Gridname),
-   individuals_non_shared(Grid,IndvS),
-   set_named_indivs(Gridname,IndvS).
+   compute_unshared_indivs(Grid,IndvS),
+   set_unshared_indivs(Gridname,IndvS).
 
-get_named_indivs(Gridname,IndvS):- 
-   is_group_saved(Gridname,IndvS).
+get_unshared_indivs(Gridname,IndvS):- 
+   is_unshared_saved(Gridname,IndvS).
 
-set_named_indivs(Gridname,IndvS):- 
-   retractall(is_group_saved(Gridname,_)),
-   asserta(is_group_saved(Gridname,IndvS)),!.
+set_unshared_indivs(Gridname,IndvS):- 
+   retractall(is_unshared_saved(Gridname,_)),
+   asserta(is_unshared_saved(Gridname,IndvS)),!.
 
-ensure_individuals_non_shared(Gridname):- is_group_saved(Gridname,_),!.
-ensure_individuals_non_shared(Gridname):- is_gridname(Grid,Gridname),!,
-   store_individuals_non_shared(Gridname,Grid),!.
-ensure_individuals_non_shared(Gridname):- throw(cannot_find((Gridname))).
+ensure_unshared_indivs(Gridname):- is_unshared_saved(Gridname,_),!.
+ensure_unshared_indivs(Gridname):- is_gridname(Grid,Gridname),!,
+   make_unshared_indivs(Gridname,Grid),!.
+ensure_unshared_indivs(Gridname):- throw(cannot_find(unshared(Gridname))).
+
+
+
+
+:- dynamic(is_shared_saved/2).
+
+make_shared_indivs(Gridname,Grid):- 
+   set_gridname(Grid,Gridname),
+   compute_shared_indivs(Grid,IndvS),
+   set_shared_indivs(Gridname,IndvS).
+
+get_shared_indivs(Gridname,IndvS):- 
+   is_shared_saved(Gridname,IndvS).
+
+set_shared_indivs(Gridname,IndvS):- 
+   retractall(is_shared_saved(Gridname,_)),
+   asserta(is_shared_saved(Gridname,IndvS)),!.
+
+ensure_shared_indivs(Gridname):- is_shared_saved(Gridname,_),!.
+ensure_shared_indivs(Gridname):- is_gridname(Grid,Gridname),!,
+   make_shared_indivs(Gridname,Grid),!.
+ensure_shared_indivs(Gridname):- throw(cannot_find(shared(Gridname))).
+
+
 
 :- style_check(+singleton).
 
@@ -29,60 +54,60 @@ use_shared_first(W) :- nb_current(grid_shared,W),W\==[],W\==nil.
 use_shared_first:- use_shared_first(_).
 
 get_shared_with(IndvS):- use_shared_first(With),
-  ensure_individuals_non_shared(With),
-  is_group_saved(With,IndvS),!.
+  ensure_unshared_indivs(With),
+  is_unshared_saved(With,IndvS),!.
 get_shared_with([]).
 
 
 get_unshared(IndvS):- use_shared_first(With),
   grid_shared_with(With,Gridname),
-  ensure_individuals_non_shared(Gridname),
-  is_group_saved(Gridname,IndvS),!.
+  ensure_unshared_indivs(Gridname),
+  is_unshared_saved(Gridname,IndvS),!.
 get_unshared([]).
 
 
 unset_nth(I,O):- delq(I,object_indv_id(_,_),O).
 set_nth(I,O):- delq(I,object_indv_id(_,_),O).
 
-get_combined(IndvC):- nb_current(test_name_w_type,NamedExampleNum), is_group_saved(NamedExampleNum,IndvC),!.
+get_combined(IndvC):- nb_current(test_name_w_type,NamedExampleNum), is_unshared_saved(NamedExampleNum,IndvC),!.
 get_combined(IndvC):- nb_current(test_name_w_type,NamedExampleNum), 
-   is_group_saved(NamedExampleNum*in ,IndvS1),
-   is_group_saved(NamedExampleNum*out,IndvS2),
+   is_unshared_saved(NamedExampleNum*in ,IndvS1),
+   is_unshared_saved(NamedExampleNum*out,IndvS2),
    make_combined(IndvS1,IndvS2,IndvC).
 get_combined(IndvC):-get_shared_with(IndvS1),get_unshared(IndvS2),make_combined(IndvS1,IndvS2,IndvC).
 
-with_each_indiv(G,I):- individuals(G,I).
+with_each_indiv(G,I):- compute_shared_indivs(G,I).
 
 make_combined(IndvS1,IndvS2,BetterC):-
   append(IndvS1,IndvS2,IndvSU),list_to_set(IndvSU,IndvS),
   smallest_first(IndvS,IndvC),
   cleanup(IndvS1,IndvS2,IndvC,BetterC),
   nb_current(test_name_w_type,NamedExampleNum),
-  set_named_indivs(NamedExampleNum,BetterC),!.
+  set_unshared_indivs(NamedExampleNum,BetterC),!.
 
 cleanup(IndvS1,IndvS2,IndvC,BetterO):-
   select(A,IndvC,IndvC1),
   member(B,IndvC1),
   member(A,IndvS1),member(B,IndvS2),
   compute_diff(A,B,same_object(How)),!,
-  retractall(is_group_saved(GridnameIn,IndvS1)),
+  retractall(is_unshared_saved(GridnameIn,IndvS1)),
   object_indv_id(B,NamedExampleNum,Iv),
   setq(A,object_indv_id(NamedExampleNum,Iv),AA),
   object_glyph(A,GlyphA),
   object_glyph(B,GlyphB),
   ignore((How ==[]-> nop(pt(shared_object(GlyphB->GlyphA))); pt(same_object(GlyphB,How)))),
-  asserta(is_group_saved(GridnameIn,IndvS1)),
+  asserta(is_unshared_saved(GridnameIn,IndvS1)),
   append(IndvC1,[AA],BetterC),
   cleanup(IndvS1,IndvS2,BetterC,BetterO),!.
 cleanup(_,_,A,A).
 
-individuals(Grid,IndvS):- 
+compute_shared_indivs(Grid,IndvS):- 
    get_gridname(Grid,Gridname),
    grid_shared_with(Gridname,With),
    locally(b_setval(grid_shared,With),
             individuals_common(Grid,IndvS)).
 
-individuals_non_shared(Grid,IndvS):- 
+compute_unshared_indivs(Grid,IndvS):- 
    locally(b_setval(grid_shared,nil),
             individuals_common(Grid,IndvS)),!.
 
@@ -488,9 +513,9 @@ metaq(P3,Orig,New,Saved):- functor(New,F,A),functor(Old,F,A),Did=done(nil),map_p
 metaq_1(_,done(t),_,_,Orig,Orig):-!.
 metaq_1(P3,Did,Old,New,Orig,Saved):- compound(Orig),Orig=Old, call(P3,Old,New,Saved),nb_setarg(1,Did,t).
 
-enum_group(S):- is_group_saved(_,S).
+enum_group(S):- is_unshared_saved(_,S).
 
-enum_object(S):- is_group_saved(_,IndvS),member(S,IndvS).
+enum_object(S):- is_unshared_saved(_,IndvS),member(S,IndvS).
 enum_object(S):- is_gridname(S,_).
 
 indv_props(obj(L),L):- is_list(L),!.
@@ -584,6 +609,6 @@ guess_shape(I,E,N,H,V,Colors,Points,subI(InvS)):- E>2, fail,
    once((I.object_offset=object_offset(LoH,LoV),
    make_grid(H,V,Grid),
    calc_add_points(LoH,LoV,Grid,Points),
-   individuals(Grid,InvS))),!,
+   compute_shared_indivs(Grid,InvS))),!,
    InvS=[_,_|_].
 

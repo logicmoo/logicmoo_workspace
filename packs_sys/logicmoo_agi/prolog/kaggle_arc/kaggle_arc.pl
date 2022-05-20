@@ -58,65 +58,78 @@ run_arc_io(Name,ExampleNum,In,Out):-
   nb_setval(test_name,Name),
   nb_setval(test_name_w_type,Name*ExampleNum),
   retractall(grid_nums(Name*ExampleNum,_)),
-  retractall(is_group_saved(Name*ExampleNum*_,_)),
-  retractall(is_group_saved(Name*ExampleNum,_)),
+  retractall(is_shared_saved(Name*ExampleNum*_,_)),
+  retractall(is_shared_saved(Name*ExampleNum,_)),
+  retractall(is_unshared_saved(Name*ExampleNum*_,_)),
+  retractall(is_unshared_saved(Name*ExampleNum,_)),
   retractall(is_gridname(Name*ExampleNum*_,_)),
   retractall(is_gridname(Name*ExampleNum,_)),
   try_arc_io(CName,Name,ExampleNum,In,Out).
 
+
 try_arc_io(CName,Name,ExampleNum,In,Out):-
  must_det_l((
-  ignore((CName\==Name,flag(indiv,_,0),dash_char(60,"A"),dash_char(6,"\n"),nl)), 
-  dash_char(60,"V"),nl,
+  grid_size(In,IH,_IV),
+  LW is (IH * 2 + 12),
+  ignore((CName\==Name, flag(indiv,_,0),    
+    dash_char(60,"A"),nl,dash_char(60,"|"),dash_char(6,"\n"),nl,
+    dash_char(60,"|"),nl,dash_char(60,"V"),nl,
+    nl,ewqnl(arc1(Name)),nl,nl,dash_char(60,"A"),nl)),   
+  dash_char(60,"|"),nl,nl,
+  GridName= Name*ExampleNum,
   GridNameIn= Name*ExampleNum*in,
   GridNameOut= Name*ExampleNum*out,
   set_gridname(In,GridNameIn),
   set_gridname(Out,GridNameOut),
-  test_info(Name,Info),  
-  wqnl(fav(Name,Info)),
-  ignore((more_task_info(Name,III),pt(III))),
-  must(store_individuals_non_shared(GridNameOut,Out)),  
-  must(store_individuals_non_shared(GridNameIn,In)))),
-%  get_named_indivs(GridNameIn,NsIn),
-%  get_named_indivs(GridNameOut,NsOut),
-  (describe_feature(In,[grid_dim,colors_count_size,colors_count,num_objects]),
-   describe_feature(Out,[grid_dim,colors_count_size,colors_count,num_objects])),
-  % get_combined(CndvS),
-  individuals(In,SharedIn),
-  individuals(Out,SharedOut),!,
+  %wqnl(arc1(Name)),nl,
+  test_info(Name,Info), wqnl(fav(Name,Info)),nl,
+  ignore((more_task_info(Name,III),pt(III),nl)),
+  make_unshared_indivs(GridNameIn,In),
+  make_unshared_indivs(GridNameOut,Out),
+  get_unshared_indivs(GridNameIn,UnsharedIn),
+  get_unshared_indivs(GridNameOut,UnsharedOut),
+  print_side_by_side(describe_feature(In,[call(writeln('IN')),grid_dim,colors_count_size,colors_count,num_objects]),LW,
+   describe_feature(Out,[call(writeln('OUT')),grid_dim,colors_count_size,colors_count,num_objects])),
 
-  %set_named_indivs(GridNameIn,SharedIn),
-  %set_named_indivs(GridNameOut,SharedOut),
+  compute_shared_indivs(In,SharedIn),
+  compute_shared_indivs(Out,SharedOut),!,
+  set_shared_indivs(GridNameIn,SharedIn),
+  set_shared_indivs(GridNameOut,SharedOut),
 
-%  nop((print_igrid(unshared(GridNameIn),NsIn,[In]),40,
-%       print_igrid(unshared(GridNameOut),NsOut,[Out]))),  
-  grid_size(In,IH,_IV),
-  LW is (IH * 2 + 12),
+%  nop((print_igrid(unshared(GridNameIn),UnsharedIn,[In]),40,
+%       print_igrid(unshared(GridNameOut),UnsharedOut,[Out]))),  
+
+ nop((
+  wots(U1, print_igrid(-(GridNameIn),UnsharedIn,[In])),
+  wots(U2, print_igrid(-(GridNameOut),UnsharedOut,[Out])),
+  print_side_by_side(U1,LW,U2))),
+
   wots(S1, print_igrid(+(GridNameIn),SharedIn,[In])),
   wots(S2, print_igrid(+(GridNameOut),SharedOut,[Out])),
   print_side_by_side(S1,LW,S2),
 
-  wqnl(fav(Name,GridNameIn)), debug_indiv(SharedIn),
-  wqnl(fav(GridNameOut,Info)), debug_indiv(SharedOut),
-  wqnl(fav(GridName+combined,Info)), debug_indiv(CndvS),
+
+  wqnl(fav(GridNameIn,Info)), debug_indiv(SharedIn),
+  wqnl(fav(GridNameOut,Info)), debug_indiv(SharedOut),  
+  % wqnl(fav(GridName+combined,Info)), get_combined(CndvS), debug_indiv(CndvS),
 
   nop(maybe_confirm_sol(Name,ExampleNum,In,Out)))),!.
-
+/*
 try_arc_io(CName,Name,ExampleNum,In,Out):-
   ignore((CName\==Name,flag(indiv,_,0),dash_char(60,"A"),dash_char(6,"\n"),nl)), 
-  grid_info(Name,ExampleNum*in,In), %print_tree_nl(in=NsIn),
-  grid_info(Name,ExampleNum*out,Out), %print_tree_nl(out=NsOut),
+  grid_info(Name,ExampleNum*in,In), %print_tree_nl(in=UnsharedIn),
+  grid_info(Name,ExampleNum*out,Out), %print_tree_nl(out=UnsharedOut),
   !,
   % \+ \+ ignore(((ExampleNum=trn+_), test_config(learn(CProg)),must(training_progs(CProg,In,Out)))),
 /*
-  compute_diff(NsIn,NsOut,Diffs),!,
+  compute_diff(UnsharedIn,UnsharedOut,Diffs),!,
   nop(pt(diffs=Diffs)),
 */
     %trace, 
     get_combined(IndvO),
     print_grid(IndvO),
     maybe_confirm_sol(Name,ExampleNum,In,Out),nl,!.
-
+*/
 
 % Grid pretty printing
 grid_info(Name,IO,Grid):- 
@@ -125,12 +138,12 @@ grid_info(Name,IO,Grid):-
   wqnl(fav(GridName,InfoF)),
   set_gridname(Grid,GridName),
   describe_feature(Grid,[grid_dim,colors_count_size,colors_count,num_objects]),
-  individuals(Grid,NsIn),
+  compute_shared_indivs(Grid,UnsharedIn),
   colors_count_size(Grid,CCS),
-  ignore((sub_var(in,IO),(CCS>4;debug_indiv;true), debug_indiv(NsIn))),
-  print_igrid(GridName,NsIn,[Grid]),
-  ignore((sub_var(out,IO),(CCS>4;debug_indiv;true), debug_indiv(NsIn))),
-  nop(describe_feature(Grid,[individuals])),!.
+  ignore((sub_var(in,IO),(CCS>4;debug_indiv;true), debug_indiv(UnsharedIn))),
+  print_igrid(GridName,UnsharedIn,[Grid]),
+  ignore((sub_var(out,IO),(CCS>4;debug_indiv;true), debug_indiv(UnsharedIn))),
+  nop(describe_feature(Grid,[compute_shared_indivs])),!.
 
 % resize(H,V,Grid1,Grid2):- var(Grid2),grid_size(Grid1,C1),grid_size(Grid2,C2).
 

@@ -208,6 +208,7 @@ count_difs0(Out,GridO,Errors):-
   
 
 describe_feature(Grid,List):- is_list(List),!,maplist(describe_feature(Grid),List).
+describe_feature(_,call(Call)):- !, call(Call).
 describe_feature(Grid,Pred):- call(Pred,Grid,Res)->print_equals(Grid,Pred,Res);print_equals(Pred,f),!.
 
 
@@ -245,6 +246,7 @@ debug_indiv(A):- is_point_obj(A,Color,Point),
 
 debug_indiv(Obj):- Obj = obj(A), is_list(A),
   object_indv_id(Obj,_,Id),
+  i_sym(Id,Sym),
   ignore(colors_count(Obj,[color_count(FC,_)|_])),
   remove_too_verbose(A,AA), 
   flatten([AA],F),
@@ -252,7 +254,7 @@ debug_indiv(Obj):- Obj = obj(A), is_list(A),
   include('\\=='(''),AAA,[Caps|AAAA]),
   toPropercase(Caps,PC), 
   %i_glyph(Id,Sym), wqnl([writef("%% %Nr%w \t",[PC]), color_print(FC,Sym) | AAAA ]),!. 
-  i_glyph(Id,Sym), wqnl([format("%  ~w:\t",[PC]), color_print(FC,Sym) | AAAA ]),!. 
+  i_glyph(Sym,Glyph), wqnl([format("%  ~w:\t",[PC]), color_print(FC,Glyph) | AAAA ]),!. 
 
 debug_indiv(obj(A)):- is_list(A),!, 
   dash_char,  

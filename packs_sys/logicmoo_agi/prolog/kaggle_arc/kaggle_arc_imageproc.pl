@@ -64,7 +64,7 @@ into_cc1(N-C,color_count(Nm,CN)):- CN is float(N),color_name(C,Nm).
 colors_count_black_first(G,BF):- colors_count(G,SK),black_first(SK,BF).
 colors_count_no_black(G,BF):- colors_count(G,SK),no_black(SK,BF).
 
-num_objects(G,NO):- individuals(G,GS),length(GS,NO).
+num_objects(G,NO):- compute_shared_indivs(G,GS),length(GS,NO).
 
 make_box(X,_,G):- make_grid(X,X,G).
 
@@ -123,19 +123,19 @@ grow([Row|Rows],Grid,G1GridO):- grow_row(Row,Grid,G1), grow(Rows,Grid,GridO),app
 
 
 largest_indiv(I,O):- into_group(I,M),I\=@=M,!,largest_indiv(M,O).
-largest_indiv(Grid,[Points]):- individuals(Grid,Is),largest_first(Is,[Points|_]).
+largest_indiv(Grid,[Points]):- compute_shared_indivs(Grid,Is),largest_first(Is,[Points|_]).
 
 smallest_indiv(I,O):- into_group(I,M),I\=@=M,!,smallest_indiv(M,O).
-smallest_indiv(Grid,Points):- individuals(Grid,Iss),largest_first(Iss,Is),remove_bgs(Is,IndvL,_BGIndvS),last(IndvL,Points).
+smallest_indiv(Grid,Points):- compute_shared_indivs(Grid,Iss),largest_first(Iss,Is),remove_bgs(Is,IndvL,_BGIndvS),last(IndvL,Points).
 
 background_indiv(I,O):- into_group(I,M),I\=@=M,!,background_indiv(M,O).
-background_indiv(Grid,BGIndvS):-  individuals(Grid,Is),remove_bgs(Is,_IndvL,BGIndvS).
+background_indiv(Grid,BGIndvS):-  compute_shared_indivs(Grid,Is),remove_bgs(Is,_IndvL,BGIndvS).
 
 /*
-largest_indiv(Grid,Points):- individuals(Grid,[Points|_]).
+largest_indiv(Grid,Points):- compute_shared_indivs(Grid,[Points|_]).
 largest_indiv(Points,Grid,Grid):- largest_indiv(Grid,Points).
 
-smallest_indiv(Grid,Points):- individuals(Grid,Is),last(Is,Points),points_to_grid(Points,Points).
+smallest_indiv(Grid,Points):- compute_shared_indivs(Grid,Is),last(Is,Points),points_to_grid(Points,Points).
 smallest_indiv(Points,Grid,Grid):- smallest_indiv(Grid,Points).
 */
 
@@ -182,7 +182,7 @@ set_bg(C0,Grid,GridO):- color_code(C0,CC),  nb_setval(grid_bgc,X), get_bgc(X),
 set_bg(C0,Grid,GridO):- color_code(C0,C),  nb_setval(grid_bgc,X), get_bgc(X),map_pred(if_bgc_then(X,C), Grid, GridO),!.
   if_bgc_then(X,C,B,A):- \+compound(B),is_bg_or_var(X,B), A=C, !.
 
-shave_away_1s(Grid,GridO):- individuals(Grid,Is), include(\=([_,_|_]),Is,I1s), remove_points(I1s,Grid,GridO).
+shave_away_1s(Grid,GridO):- compute_shared_indivs(Grid,Is), include(\=([_,_|_]),Is,I1s), remove_points(I1s,Grid,GridO).
 
 remove_points([H|T],Grid,GridO):- !, remove_points(H,Grid,GridM),remove_points(T,GridM,GridO).
 remove_points([],Grid,Grid):-!.

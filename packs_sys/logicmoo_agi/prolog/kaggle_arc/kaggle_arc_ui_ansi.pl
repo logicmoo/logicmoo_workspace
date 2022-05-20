@@ -71,7 +71,7 @@ as_str(A,S):- atom_string(A,S).
 write_padding(E1,_W1,E2,LW):- %write(' '),
     W1 = LW,
    format('~N'),as_str(E1,S1), as_str(E2,S2), 
-   write(S1), line_position(user_output,L1), Pad1 is W1 - L1, dash_char(Pad1, ' '),
+   write(S1), write('\t'), line_position(user_output,L1), Pad1 is W1 - L1, dash_char(Pad1, ' '),
    write(S2), format('~N').
 
 print_length(S,L):- atom_codes(S,C), include(uses_space,C,SS),length(SS,L).
@@ -135,8 +135,11 @@ print_equals(N,[S|L]):- string(S),writeq(N),write('= '),write(S),maplist(commawr
 print_equals(Name,json(JSON)):-!, print_equals(Name,JSON).
 print_equals(Name,trn=Y):- !, print_equals(Name,Y).
 print_equals(Name,X->Y):- !, print_equals(in(Name),X), print_equals(out(Name),Y).
+print_equals(colors_count,XY):-print_equals(cc,XY).
+print_equals(Name,color_count(C,N)):-print_equals(Name,cc(C,N)).
 print_equals(Name,X=Y):- !, print_equals(Name=X,Y).
 %print_equals(Name,[H|L]):- !, maplist(print_equals(Name),[H|L]).
+print_equals(Name,Val):- is_list(Val),forall(nth0(N,Val,E),print_equals(Name:N,E)).
 print_equals(Name,Val):- pt(Name=Val).
 
 commawrite(S):- write(','),write(S).
@@ -285,7 +288,7 @@ into_color_glyph(CTerm,Color,Code):-
     ignore((sub_term(Color,CTerm),nonvar(Color),is_color(Color))),
     ignore((sub_term(A,CTerm),atom(A), \+ is_color(A), i_glyph(A,Glyph))),
     ignore((sub_term(Nth,CTerm),integer(Nth),i_glyph(Nth,Glyph))),
-    ignore((nonvar(Glyph),name(Glyph,[Code]))).
+    ignore((nonvar(Glyph),name(Glyph,[Code|_]))).
 
 into_color_glyph(H,V,CTerm,Color,Code):- fail, get_grid_num_xyc(H,V,SColor,SNth),into_color_glyph(SColor+SNth+CTerm,Color,Code),nonvar(Code).
 into_color_glyph(_,_,CTerm,Color,Code):- into_color_glyph(CTerm,Color,Code),nonvar(Code).
