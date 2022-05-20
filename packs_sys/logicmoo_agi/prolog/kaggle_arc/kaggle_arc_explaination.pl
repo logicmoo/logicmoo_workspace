@@ -3,9 +3,11 @@
 
 :- dynamic(is_gridname/2).
 
-set_gridname(Grid,Name):- nb_setval(grid_name,Name),asserta_new(is_gridname(Grid,Name)).
+set_gridname(Grid,Name):- nb_setval(grid_name,Name),
+  assertion((ground(Name),nonvar(Grid))),
+  asserta_new(is_gridname(Grid,Name)).
 
-get_gridname(Grid,Name):- is_gridname(Grid,Name)*->true; nb_current(grid_name,Name).
+get_gridname(Grid,Name):- is_gridname(Grid,Name)*->true; (var(Name)->(nb_current(grid_name,Name),Name\=[],get_gridname(Grid,Name))).
 get_gridname(In,Name*ExampleNum*in):- kaggle_arc(Name,ExampleNum,In,_).
 get_gridname(Out,Name*ExampleNum*out):- kaggle_arc(Name,ExampleNum,_,Out).
 

@@ -39,20 +39,22 @@ run_dsl(lmDSL(Prog),In,Out):- !, run_dsl(Prog,In,Out).
 run_dsl(call(G),In,Out):-!,call(G),(var(Out)->Out=In; true).
 run_dsl([],In,Out):-!, var(Out)->Out=In; true.
 run_dsl(same,In,Out):-!, duplicate_term(In,Out).
+run_dsl(-->(All,Exec),In,Out):-!,  run_dsl([All,Exec],In,Out).
 run_dsl([H|Prog],In,Out):-!, run_dsl(H,In,GridM), run_dsl(Prog,GridM,Out).
 run_dsl(Prog,In,In):- missing_arity2(Prog),!,arcdbg(warn(missing(run_dsl(Prog)))).
 run_dsl(Prog,In,Out):- call(Prog,In,M)*-> =(M,Out) ; arcdbg(warn(nonworking(run_dsl(Prog)))).
 
 named_gridoid(TstName,G):- var(TstName),!,throw(var_named_test(TstName,G)).
 named_gridoid(TstName,G):- fix_test_name(TstName,Name,_),kaggle_arc(Name,tst+0,G,_),!.
-named_gridoid(TstName,G):- known_gridoid(TstName,G),!.
+named_gridoid(TstName,G):- known_gridoid(TstName,G).
 
-known_gridoid(TstName,G):- learned_color_inner_shape(TstName,magenta,BG,G,_),get_bgc(BG).
-known_gridoid(TstName,G):- is_gridname(G,TstName).
-known_gridoid(TstName,G):- is_unshared_saved(TstName,G).
-known_gridoid(TstName*T,G):- fix_test_name(TstName+T,Name,ExampleNum),kaggle_arc(Name,ExampleNum,G,_).
 known_gridoid(TstName*ExampleNum*in,G):- fix_test_name(TstName,Name,_),!,kaggle_arc(Name,ExampleNum,G,_).
 known_gridoid(TstName*ExampleNum*out,G):- fix_test_name(TstName,Name,_),!,kaggle_arc(Name,ExampleNum,_,G).
+known_gridoid(TstName*T,G):- fix_test_name(TstName+T,Name,ExampleNum),kaggle_arc(Name,ExampleNum,G,_).
+known_gridoid(TstName,G):- learned_color_inner_shape(TstName,magenta,BG,G,_),get_bgc(BG).
+known_gridoid(TstName,G):- is_gridname(G,TstName).
+known_gridoid(TstName,G):- is_shared_saved(TstName,G).
+known_gridoid(TstName,G):- is_unshared_saved(TstName,G).
 
 into_object(G,O):- is_grid(G),grid_to_individual(G,O),!.
 into_object(G,O):- into_group(G,OL),must([O]=OL).

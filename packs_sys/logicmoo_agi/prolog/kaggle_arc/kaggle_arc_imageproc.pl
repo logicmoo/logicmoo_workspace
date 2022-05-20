@@ -64,6 +64,29 @@ into_cc1(N-C,color_count(Nm,CN)):- CN is float(N),color_name(C,Nm).
 colors_count_black_first(G,BF):- colors_count(G,SK),black_first(SK,BF).
 colors_count_no_black(G,BF):- colors_count(G,SK),no_black(SK,BF).
 
+
+empty_or_open(L):- \+ \+ L=[].
+first_half(Grid,GridL):- length(Grid,L),H is floor(L/2), length(GridL,H), append(GridL,_,Grid).
+first_quarter(Grid,GridQ):- first_half(Grid,GridL),first_half(GridL,GridQ).
+aligned_rows([E1,E2|L],[E1,E2|R]):- aligned_rows0(L,R).
+aligned_rows0([],_):-!. % ( empty_or_open(L) ; empty_or_open(R) ), !.
+aligned_rows0(_,[]):-!.
+aligned_rows0([E|L],[E|R]):- !, aligned_rows0(L,R).
+symetric_row(I,C,Row,L):- append(C,[E1|R],Right), append(L,Right,Row),reverse(L,[E1|LL]),aligned_rows(LL,R),length(L,I).
+symetric_lr(I,C,Grid,GridL):- maplist(symetric_row(I,C),Grid,GridL).
+
+symetric_x(I,C,G,GL):- maplist_until(symetric_row(I,C),G,GL).
+symetric_x(I,C,G,GL):- reverse(G,GR),maplist_until(symetric_row(I,C),GR,GLR),reverse(GLR,GL).
+
+symetric_y(I,C,G,GLO):- rot90(G,G1),maplist_until(symetric_row(I,C),G1,GL),rot270(GL,GLO).
+symetric_xy(X,Y,C,G,GO):- symetric_x(X,C,G,_),symetric_y(Y,C,G,_),crop(X,Y,G,GO).
+
+crop(X,Y,G,GO):- make_grid(X,Y,GO),maplist_until(aligned_rows,G,GO).
+
+maplist_until(Pred2,[X|XX],[Y|YY]):- call(Pred2,X,Y)->maplist_until(Pred2,XX,YY).
+maplist_until(_,_,[]).
+
+
 num_objects(G,NO):- compute_shared_indivs(G,GS),length(GS,NO).
 
 make_box(X,_,G):- make_grid(X,X,G).
@@ -139,13 +162,17 @@ smallest_indiv(Grid,Points):- compute_shared_indivs(Grid,Is),last(Is,Points),poi
 smallest_indiv(Points,Grid,Grid):- smallest_indiv(Grid,Points).
 */
 
-shoot_ray(Origin,Dir):- color(Origin,Color),shoot_ray(Origin,Dir,Color,1,0,0,[]).
-shoot_ray(Origin,Dir,Color,Len,Width,WidenSpeed,Skip,ColorRules):-
- ignore((Len>0,
-  hv_point(_H,_V,Origin),is_adjacent_point(Origin,Dir,Next),set_color(Next,Color),
+set_color(Next,Color,_ColorTrail,G0,G9):- set_point(Color-Next,G0,G9).
+
+shoot_ray(ColorTrail,Origin,Dir,G0,G9):- color(Origin,Color),shoot_ray(ColorTrail,Origin,Dir,Color,1,0,0,[],G0,G9).
+shoot_ray(ColorTrail,Origin,Dir,Color,0,Width,WidenSpeed,Skip,ColorRules,G9,G9):- !.
+shoot_ray(ColorTrail,Origin,Dir,Color,Len,Width,WidenSpeed,Skip,ColorRules,G0,G9):- 
+  hv_point(_H,_V,Origin),
+  is_adjacent_point(Origin,Dir,Next),
+  set_color(Next,Color,ColorTrail,G0,G1),
     Width2 is Width + WidenSpeed,
     Len2 is Len-1,
-    shoot_ray(Origin,Dir,Color,Len2,Width2,WidenSpeed,Skip,ColorRules))).
+    shoot_ray(ColorTrail,Origin,Dir,Color,Len2,Width2,WidenSpeed,Skip,ColorRules,G1,G9).
 
 
 %fill_from_point(Point,Color,DirsAllow):-
@@ -476,6 +503,7 @@ calc_add_points(_OH,_OV,_,obj(_)).
 calc_add_points(OH,OV,Grid,Point):- as_hv_point(H,V,C,Point),HH is H -OH +1, VV is V - OV +1,  add_h_v_c(Grid,HH,VV,C).
 %add_h_v_c(Grid,H,V,C):- var(C),!,nop(add_h_v_c(Grid,H,V,C)).
 add_h_v_c(Grid,H,V,C):- hv_value(Grid,Was,H,V),ignore(Was=C).
+
 as_hv_point(H,V,C,C-Point):- hv_point(H,V,Point),!.
 as_hv_point(H,V,_,Point):- hv_point(H,V,Point),!.
 as_hv_point(H,V,_,H,V).
@@ -567,6 +595,9 @@ create_movements:-
 
 :- initialization(create_movements).
 
+:- dynamic(hv_point/3).
+hv(H,V,hv(H,V)).
+
 calc_movement(H,V):- forall(nav(Dir,HO,VO), save_calc_movement(H,V,Dir,HO,VO)).
 
 save_calc_movement(H,V,Dir,HO,VO):- H2 is HO+H, V2 is VO+V,
@@ -629,7 +660,8 @@ get_xformer(Name,H,V,In,Out):-
    call(Name,In,Out),
    asserta(xform_cache(Name,H,V,In,Out)),!.
 
-rot90(Grid,NewGrid):-  rot180(Grid,GridM),rot270(GridM,NewGrid). 
+%srot90V,flipV
+rot90( Grid,NewGrid):-  rot180(Grid,GridM),rot270(GridM,NewGrid). 
 rot180(Grid,NewGrid):- flipH(Grid,RowRev),flipV(RowRev,NewGrid).
 rot270(Grid,NewGrid):- get_colums(Grid,NewGrid).
 flipH(Grid,FlipH):- maplist(reverse,Grid,FlipH).

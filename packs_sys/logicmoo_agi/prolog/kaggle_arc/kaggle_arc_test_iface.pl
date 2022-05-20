@@ -11,9 +11,10 @@ test_names_by_hard(Name):- test_names_ord_favs(FavList),test_names_ord_hard(Name
 test_names_by_hard(Name):- test_names_ord_favs(FavList),test_names_ord_hard(NamesByHard),append(FavList,NamesByHard,All),
  list_to_set(All,AllS),!,member(Name,AllS).*/
 test_names_ord_favs(FavListS):- findall(Name,fav(Name),FavList),list_to_set(FavList,FavListS).
-test_names_ord_hard(NamesByHard):- findall(Hard-Name,(test_name(Name),hardness_of_name(Name,Hard)),All), keysort(All,AllK), maplist(arg(2),AllK,NamesByHard),!.
+test_names_ord_hard(NamesByHard):- findall(Hard-Name,(test_name(Name),hardness_of_name(Name,Hard)),All),
+  keysort(All,AllK), reverse(AllK,AllR), maplist(arg(2),AllR,NamesByHard),!.
 
-:- use_module(library(pfc_lib)).
+%:- use_module(library(pfc_lib)).
 
 ascending_hard:-
   tell('arc_ascending.pl'),
@@ -48,10 +49,11 @@ fav(X,[]):- clause(fav(X),true).
 %fav(t('23b5c85d'),[b7249182
 %fav(t('db3e9e38'),[lmDSL([flipV,C1=orange,C2=blue,[],flipV]).
 %fav(t(_),[lmDSL([fillFromBorder(none,yellow)])]).
-fav(v('810b9b61'),[lmDSL([(iz(X,rectangle),iz(X,hollow),iz(X,thick1),iz(X,noexit))-->color(X,green)])]).
-fav(v('1d398264'),[lmDSL([(iz(X,keypad),iz(X,multicolor),centerof(X,C)==>sunburst(C))])]).
-fav(v('e9bb6954'),[lmDSL([(iz(X,keypad), iz(X,monocolor),centerof(X,C)==>starburst(C))]),e('box of nine draw outward, if you hit a drawn line blacken it')]).
-fav(v('e41c6fd3'),[lmDSL([(iz(X,spaceship),color(X,cyan),vert_pos(X,spaceship))==>iz(Y,spaceship),vert_pos(Y,spaceship)])]).
+
+fav(t('810b9b61'),[lmDSL([(iz(X,rectangle),iz(X,hollow),iz(X,thick1),iz(X,noexit))-->color(X,green)])]).
+fav(v('1d398264'),[lmDSL([(iz(X,keypad),iz(X,multicolor),centerof(X,C)-->sunburst(C))])]).
+fav(v('e9bb6954'),[lmDSL([(iz(X,keypad), iz(X,monocolor),centerof(X,C)-->starburst(C))]),e('box of nine draw outward, if you hit a drawn line blacken it')]).
+fav(v('e41c6fd3'),[lmDSL([(iz(X,spaceship),color(X,cyan),vert_pos(X,spaceship))-->iz(Y,spaceship),vert_pos(Y,spaceship)])]).
 
 fav(v('94133066'),[lmDSL([largest_indiv,trim_to_rect,rot90,flipV])]).
 fav(v('762cd429'),[]).

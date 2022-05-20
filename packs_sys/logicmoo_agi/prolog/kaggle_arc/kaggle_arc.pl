@@ -74,7 +74,7 @@ try_arc_io(CName,Name,ExampleNum,In,Out):-
   ignore((CName\==Name, flag(indiv,_,0),    
     dash_char(60,"A"),nl,dash_char(60,"|"),dash_char(6,"\n"),nl,
     dash_char(60,"|"),nl,dash_char(60,"V"),nl,
-    nl,ewqnl(arc1(Name)),nl,nl,dash_char(60,"A"),nl)),   
+    nl,wqnl(arc1(Name)),nl,nl,dash_char(60,"A"),nl)),   
   dash_char(60,"|"),nl,nl,
   GridName= Name*ExampleNum,
   GridNameIn= Name*ExampleNum*in,
@@ -111,9 +111,9 @@ try_arc_io(CName,Name,ExampleNum,In,Out):-
 
   wqnl(fav(GridNameIn,Info)), debug_indiv(SharedIn),
   wqnl(fav(GridNameOut,Info)), debug_indiv(SharedOut),  
-  % wqnl(fav(GridName+combined,Info)), get_combined(CndvS), debug_indiv(CndvS),
+  nop((wqnl(fav(GridName+combined,Info)), get_combined(CndvS), debug_indiv(CndvS))),
 
-  nop(maybe_confirm_sol(Name,ExampleNum,In,Out)))),!.
+  (maybe_confirm_sol(Name,ExampleNum,In,Out)))),!.
 /*
 try_arc_io(CName,Name,ExampleNum,In,Out):-
   ignore((CName\==Name,flag(indiv,_,0),dash_char(60,"A"),dash_char(6,"\n"),nl)), 
