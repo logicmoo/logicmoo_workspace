@@ -136,7 +136,7 @@ compute_diff(obj(I),obj(O),OUT):- !,
   compute_diff_objs(obj(I),II,obj(O),OO,OUT).
 
 
-compute_diff(I,O,DD):- is_objectlist(I),is_objectlist(O),!,
+compute_diff(I,O,DD):- is_group(I),is_group(O),!,
   include_fav_points(I,II),
   include_fav_points(O,OO),
   dif_lop(II,OO,DD).
@@ -211,23 +211,6 @@ describe_feature(Grid,List):- is_list(List),!,maplist(describe_feature(Grid),Lis
 describe_feature(Grid,Pred):- call(Pred,Grid,Res)->print_equals(Grid,Pred,Res);print_equals(Pred,f),!.
 
 
-/*
-print_points_grid(Points):- 
-  points_range(Points,LoH,LoV,HiH,HiV,H,V),
-  wqnl(offset_ranges(LoH,LoV,HiH,HiV,H,V)),
-  points_to_grid(Points,Grid),
-  print_grid(Grid).
-print_points_grid(Grid):-  
-  points_range(Grid,LoH,LoV,HiH,HiV,_H,_V),
-  print_grid(Grid,LoH,LoV,HiH,HiV,Grid).
-*/
-
-
-
-%object_size(Points,H,V):- is_dict(Points),!,Points.object_size=object_size(H,V).
-
-
-
 combine_grids(_,[G],G):-!.
 combine_grids(How,[G1,G2|Gs],GO):- combine_grids(How,[G2|Gs],G1,GO).
 
@@ -298,10 +281,11 @@ remove_too_verbose(square,S):- sformat(S,'square',[]).
 remove_too_verbose(background,S):- sformat(S,'bckgrnd',[]).
 remove_too_verbose(object_shape(H),HH):- !, remove_too_verbose(H,HH).
 remove_too_verbose(colors_count(H),HH):- !, remove_too_verbose(H,HH).
-remove_too_verbose(object_indv_id(_ * X,Y),[layer(XX),nth(Y)]):- upcase_atom(X,XX).
+remove_too_verbose(object_indv_id(_ * _ * X,Y),[layer(XX),nth(Y)]):- =(X,XX).
+remove_too_verbose(object_indv_id(_ * X,Y),[layer(XX),nth(Y)]):- =(X,XX).
 remove_too_verbose(object_offset(X,Y),offset(X,Y)).
 remove_too_verbose(object_size(X,Y),size(X,Y)).
-remove_too_verbose(point_count(X),pixels(X)).
+remove_too_verbose(point_count(X),points(X)).
 remove_too_verbose(L,LL):- is_list(L),!, maplist(remove_too_verbose,L,LL).
 remove_too_verbose(H,H).
 too_verbose(P):- compound(P),compound_name_arity(P,F,_),!,too_verbose(F).

@@ -19,8 +19,8 @@ dash_char(H):- integer(H), dash_border(H).
 dash_char(S):- format('~N'),dash_char(60,S),format('~N').
 dash_char(H,_):- H < 1,!.
 dash_char(H,C):-forall(between(0,H,_),write(C)).
-dash_border(Width):- format('~N'), WidthM1 is Width-1, write(' _'),dash_char(WidthM1,'__'),nl.
-dash_uborder(Width):- !, dash_border(Width).
+dash_border_no_nl(Width):- WidthM1 is Width-1, write(' _'),dash_char(WidthM1,'__').
+dash_border(Width):- !, dash_border_no_nl(Width),nl.
 dash_uborder(Width):- format('~N'), WidthM1 is Width-1, write(' ¯'),dash_char(WidthM1,'¯¯'),nl.
 
 functor_color(pass,green).
@@ -29,6 +29,13 @@ functor_color(warn,yellow).
 
 arcdbg(G):- compound(G), compound_name_arity(G,F,_),functor_color(F,C),wots(S,print(G)),color_print(C,S),!,format('~N').
 arcdbg(G):- wdmsg(G).
+
+user:portray(Grid):- \+ \+ catch((
+  \+ tracing, \+ is_object(Grid),  \+ is_group(Grid), 
+   (is_gridoid(Grid);is_points_list(Grid)),
+   grid_size(Grid,H,V),!,H>0,V>0, wots(S,print_grid(H,V,Grid)),write(S)),_,false).
+%user:portray(Grid):- ((\+ tracing, is_group(Grid),print_grid(Grid))).
+%user:portray(Grid):- notrace((is_object(Grid),print_grid(Grid))).
 
 red_noise:- format('~N'),
   color_print(red,'--------------------------------------------------------------'),nl,
@@ -87,7 +94,7 @@ print_w_pad0(Pad,S):- format('~N'),dash_char(Pad,' '), write(S).
 
 print_equals(_,N,V):- \+ compound(V),wqnl(N=V).
 print_equals(Grid,N,Ps):- is_object(Ps),grid_size(Grid,H,V),print_points(N,H,V,Ps),!.
-print_equals(Grid,N,PL):- is_objectlist(PL), grid_size(Grid,H,V), 
+print_equals(Grid,N,PL):- is_group(PL), grid_size(Grid,H,V), 
   locally(grid_nums(PL),print_list_of_points(N,H,V,[[]])).
 print_equals(_,N,G):- print_equals(N,G).
 
@@ -139,7 +146,7 @@ commawrite(S):- write(','),write(S).
 as_color(color_count(Count,Num),List):- color_name(Num,Name),wots(List,color_print(Num,Name=Count)).
 better_value(V,List):- is_list(V), maplist(as_color,V,List).
 better_value([G|V],List):- 
-  is_objectlist([G|V]),
+  is_group([G|V]),
   maplist(points_to_grid,[G|V],List),
   [G|V] \=@= List.
 
@@ -150,17 +157,21 @@ print_igrid(Name,SIndvOut,InOutL):-
    grid_size(SIndvOut,H,V),
    print_grid(H,V,Print).
 
-print_grid(Grid):- var(Grid),!, throw(var_print_grid(Grid)).
-print_grid(Grid):- \+ is_gridoid(Grid), into_grid(Grid,G),!,print_grid(G).
-print_grid(Grid):- print_grid(_HH,_VV,Grid).
+print_grid(Grid):- notrace(print_grid0(Grid)).
+%print_grid0(Grid):- var(Grid),!, throw(var_print_grid(Grid)).
+print_grid0(Grid):- \+ callable(Grid),!,write('not grid: '),pt(Grid),throw(nc_print_grid(Grid)).
+print_grid0(Grid):- \+ is_gridoid(Grid), into_grid(Grid,G),!,print_grid0(G).
+print_grid0(Grid):- print_grid(_HH,_VV,Grid).
 print_grid(HH,VV,Grid):- print_grid(1,1,HH,VV,Grid).
 print_grid(SH,SV,EH,EV,Grid):- print_grid(SH,SV,SH,SV,EH,EV,EH,EV,Grid).
 %print_grid(SH,SV,LoH,LoV,HiH,HiV,EH,EV,Grid):- nop(print_grid(SH,SV,LoH,LoV,HiH,HiV,EH,EV,Grid)),!.
-print_grid(SH,SV,LoH,LoV,HiH,HiV,EH,EV,Grid):- 
- wots(S, \+ \+ print_grid0(true,SH,SV,LoH,LoV,HiH,HiV,EH,EV,Grid)),
- print_w_pad(1,S).
+print_grid(SH,SV,LoH,LoV,HiH,HiV,EH,EV,Grid):-
+ line_position(current_output,O),
+ O1 is O+1,
+ notrace((wots(S, \+ \+ print_grid0(true,SH,SV,LoH,LoV,HiH,HiV,EH,EV,Grid)),
+ print_w_pad(O1,S))).
 
-
+/*
 print_grid0(Bordered,SH,SV,LoH,LoV,HiH,HiV,EH,EV,Grid):- 
   is_grid(Grid), Grid=[[AShape|_]|_], nonvar(AShape),(AShape=A-Shape),var(A),nonvar(Shape),
    bagof(A-Shape,(sub_term(AShape,Grid),nonvar(AShape),AShape= (A-Shape),var(A)),Colors),list_to_set(Colors,AShapes),
@@ -171,22 +182,38 @@ print_grid0(Bordered,SH,SV,LoH,LoV,HiH,HiV,EH,EV,Grid):-
    forall(member(Key,KeyS2),wqnl(Key)),
    print_grid1(Bordered,SH,SV,LoH,LoV,HiH,HiV,EH,EV,Grid),
    writeq(Grid).
+*/
 print_grid0(Bordered,SH,SV,LoH,LoV,HiH,HiV,EH,EV,Grid):-
   print_grid1(Bordered,SH,SV,LoH,LoV,HiH,HiV,EH,EV,Grid).
 
-print_grid1(Bordered,SH,SV,LoH,LoV,HiH,HiV,EH,EV,Grid):-
-   (( var(EH) ; var(EV))->grid_size(Grid,EH,EV);true),
-   IsBordered = (hv(1,1)\==hv(LoH,LoV);Bordered),
-   Width is EH-SH,
-  (ignore((IsBordered,dash_border(Width)))),
+
+print_grid1(_Bordered,SH,SV,LoH,LoV,HiH,HiV,EH,EV,Grid):-
+  write('\n '), 
+  ((var(EH) ; var(EV))->grid_size(Grid,EH,EV);true),
+  Width is EH-SH, 
+  underline_print((user:dash_border_no_nl(Width))),
   nop(get_bgc(BG)),
   forall(between(SV,EV,V),
    ((format('~N'),
      forall(between(SH,EH,H), 
      (hv_value_or(Grid,C,H,V,BG)->
-        (once(print_g(H,V,C,LoH,LoV,HiH,HiV))))),dash_char(10,' '),format('~N')))),
+        (once(print_g(H,V,C,LoH,LoV,HiH,HiV))))),dash_char(3,' ')))),
+  format('~N '),!,
+  underline_print((user:dash_border_no_nl(Width))).
+
+
+print_grid1(_Bordered,SH,SV,LoH,LoV,HiH,HiV,EH,EV,Grid):-
+  write('\n '), 
+  ((var(EH) ; var(EV))->grid_size(Grid,EH,EV);true),
+  Width is EH-SH, underline_print((write('{|image||'),user:dash_border_no_nl(Width-4))),
+  nop(get_bgc(BG)),
+  forall(between(SV,EV,V),
+   ((format('~N'),
+     forall(between(SH,EH,H), 
+     (hv_value_or(Grid,C,H,V,BG)->
+        (once(print_g(H,V,C,LoH,LoV,HiH,HiV))))),dash_char(3,' ')))),
    format('~N'),!,
-  (ignore((IsBordered,dash_uborder(Width)))),!.
+  underline_print((user:dash_border_no_nl(Width-1),write('|}'))).
 %print_grid(Grid):- is_grid(Grid),!, maplist(print_rows,Grid),nl.
 %print_rows(List):- maplist(print_g,List),nl.
 %block_colors([(black),(blue),(red),(green),(yellow),'#c0c0c0',(magenta),'#ff8c00',(cyan),'#8b4513']).
@@ -200,12 +227,17 @@ silver('#7b7b7b').
 silver('#c0c0c0').
 silver('#9a9a9a').
 
+ansi_color(C,Color):- C\==0,block_colors(L),nth0(C,L,Color).
 
+underline_print(W):- ansi_format([underline],'~@',[W]),!.
+
+color_print(C,W):- var(C),integer(W),ansi_color(W,CI),!,ansi_format([underline,fg(CI)],'~w',[W]),!.
 color_print(C,W):- var(C),!,ansi_format([underline],'~w',[W]),!.
 color_print(C-_,W):- !, color_print(C,W).
 color_print(C,W):- atom(C),color_int(C,N),integer(N),!,color_print(N,W).
-color_print(C,W):- integer(C),C\==0,block_colors(L),nth0(C,L,Color),ansi_format([bold,fg(Color)],'~w',[W]),!.
+color_print(C,W):- integer(C),ansi_color(C,Color),ansi_format([bold,fg(Color)],'~w',[W]),!.
 color_print(C,W):- C==0,!,ansi_format([fg('#444444')],'~w',[W]),!.
+
 color_name(C,W):- var(C),!,W=C.
 color_name(C-_,W):-!,color_name(C,W).
 color_name(C,W):- atom(C),!,W=C.
@@ -249,19 +281,19 @@ grid_dot(169).
 
 print_g(H,V,C,_,_,_,_):- write(' '), print_g1(H,V,C),!.
 
-color_and_code(CTerm,Color,Code):- 
+into_color_glyph(CTerm,Color,Code):- 
     ignore((sub_term(Color,CTerm),nonvar(Color),is_color(Color))),
     ignore((sub_term(A,CTerm),atom(A), \+ is_color(A), i_glyph(A,Glyph))),
     ignore((sub_term(Nth,CTerm),integer(Nth),i_glyph(Nth,Glyph))),
     ignore((nonvar(Glyph),name(Glyph,[Code]))).
 
-i_code_at(H,V,CTerm,Color,Code):- get_grid_num_xyc(H,V,SColor,SNth),color_and_code(SColor+SNth+CTerm,Color,Code),nonvar(Code).
-i_code_at(_,_,CTerm,Color,Code):- color_and_code(CTerm,Color,Code),nonvar(Code).
-i_code_at(_,_,C,C,VAR):- var(C),var_dot(VAR),!.
-i_code_at(_,_,0,0,BGD):- bg_dot(BGD),!.
-i_code_at(_,_,C,C,FGD):- fg_dot(FGD),!.
+into_color_glyph(H,V,CTerm,Color,Code):- fail, get_grid_num_xyc(H,V,SColor,SNth),into_color_glyph(SColor+SNth+CTerm,Color,Code),nonvar(Code).
+into_color_glyph(_,_,CTerm,Color,Code):- into_color_glyph(CTerm,Color,Code),nonvar(Code).
+into_color_glyph(_,_,C,C,VAR):- var(C),var_dot(VAR),!.
+into_color_glyph(_,_,0,0,BGD):- bg_dot(BGD),!.
+into_color_glyph(_,_,C,C,FGD):- fg_dot(FGD),!.
 
-print_g1(H,V,C0):- i_code_at(H,V,C0,C,Code),name(S,[Code]),!, color_print(C,S),!.
+print_g1(H,V,C0):- into_color_glyph(H,V,C0,C,Code),name(S,[Code]),!, color_print(C,S),!.
 print_g1(_,_,C):- var(C), color_print(C,'?'),!.
 %print_g1(_,_,C):- trace, write(C).
 
@@ -289,7 +321,8 @@ save_codes(Max):-
   % format('~N~s~N',[CCC]),
   assert(i_syms(CCC)).
 
-:- save_codes(42600).
+save_codes:- save_codes(42600).
+:- save_codes.
 
 
 get_glyph(Point,Glyph):-  
@@ -306,7 +339,7 @@ get_grid_num(Point,N):-
   hv_point(X,Y,Point),
   get_grid_num_xyc(X,Y,_C,N).
 
-get_grid_num_xyc(X,Y,C,N):-
+get_grid_num_xyc(X,Y,C,N):- fail,
   hv_point(X,Y,Point),
   get_grid_nums(GridsN),
   nth0(N,GridsN,E),

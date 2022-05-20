@@ -9,7 +9,7 @@ check_args(P,Arity,Arity,1,T,C,MC):- !,
  arg(An,P,Return),into_type(ArgType,Result,Return).
 check_args(P,Arity,An,2,T,C,MC):-
  arg(An,P,ArgIn),arg(An,T,ArgType),arg(An,C,CallArg),
- is_objectlist(ArgIn), ArgType = object,!,
+ is_group(ArgIn), ArgType = object,!,
  arg(Arity,P,Result),arg(Arity,C,Return),
  findall(Return,(member(CallArg,ArgIn),check_args(P,Arity,Arity,1,T,C,MC)),Result).
 check_args(P,Arity,An,Left,T,C,MC):-  
@@ -23,7 +23,7 @@ into_type(num,X,X):- assertion(number(X)).
 into_type(dir,X,X):- assertion(nav(X,_,_)).
 into_type(grid,X,O):- into_grid(X,O).
 into_type(object,X,O):- is_object(X)-> X=O ; into_object(X,O).
-into_type(objectlist,X,O):- into_objectlist(X,O).
+into_type(group,X,O):- into_group(X,O).
 
 
 
@@ -43,34 +43,36 @@ run_dsl([H|Prog],In,Out):-!, run_dsl(H,In,GridM), run_dsl(Prog,GridM,Out).
 run_dsl(Prog,In,In):- missing_arity2(Prog),!,arcdbg(warn(missing(run_dsl(Prog)))).
 run_dsl(Prog,In,Out):- call(Prog,In,M)*-> =(M,Out) ; arcdbg(warn(nonworking(run_dsl(Prog)))).
 
-named_gridoid(TstName,G):- learned_color_inner_shape(TstName,magenta,grey,G),!.
 named_gridoid(TstName,G):- var(TstName),!,throw(var_named_test(TstName,G)).
-named_gridoid(TstName,G):- is_gridname(G,TstName).
-named_gridoid(TstName,G):- is_group_saved(TstName,G).
-named_gridoid(TstName*T,G):- fix_test_name(TstName+T,Name,ExampleNum),kaggle_arc(Name,ExampleNum,G,_),!.
 named_gridoid(TstName,G):- fix_test_name(TstName,Name,_),kaggle_arc(Name,tst+0,G,_),!.
-named_gridoid(TstName*ExampleNum*in,G):- fix_test_name(TstName,Name,_),!,kaggle_arc(Name,ExampleNum,G,_),!.
-named_gridoid(TstName*ExampleNum*out,G):- fix_test_name(TstName,Name,_),!,kaggle_arc(Name,ExampleNum,_,G),!.
+named_gridoid(TstName,G):- known_gridoid(TstName,G),!.
+
+known_gridoid(TstName,G):- learned_color_inner_shape(TstName,magenta,BG,G,_),get_bgc(BG).
+known_gridoid(TstName,G):- is_gridname(G,TstName).
+known_gridoid(TstName,G):- is_group_saved(TstName,G).
+known_gridoid(TstName*T,G):- fix_test_name(TstName+T,Name,ExampleNum),kaggle_arc(Name,ExampleNum,G,_).
+known_gridoid(TstName*ExampleNum*in,G):- fix_test_name(TstName,Name,_),!,kaggle_arc(Name,ExampleNum,G,_).
+known_gridoid(TstName*ExampleNum*out,G):- fix_test_name(TstName,Name,_),!,kaggle_arc(Name,ExampleNum,_,G).
 
 into_object(G,O):- is_grid(G),grid_to_individual(G,O),!.
-into_object(G,O):- into_objectlist(G,OL),must([O]=OL).
+into_object(G,O):- into_group(G,OL),must([O]=OL).
 
-into_objectlist(G,G):- var(G),throw(var_into_objectlist(G)).
-into_objectlist(P,G):- is_objectlist(P),!,G=P.
-into_objectlist(G,I):- is_grid(G),!,individuals(G,I).
-into_objectlist(P,G):- is_object(P),!,G=[P].
-into_objectlist(P,G):- named_gridoid(P,M),!,into_objectlist(M,G).
-into_objectlist(P,G):- dumpST,throw(into_objectlist(P,G)).
+into_group(G,G):- var(G),throw(var_into_group(G)).
+into_group(P,G):- is_group(P),!,G=P.
+into_group(G,I):- is_grid(G),!,individuals(G,I).
+into_group(P,G):- is_object(P),!,G=[P].
+into_group(P,G):- named_gridoid(P,M),!,into_group(M,G).
+into_group(P,G):- dumpST,throw(into_group(P,G)).
 /*
-into_objectlist(P,G):- is_object(P),points_to_grid(P,M),!,into_objectlist(M,G).
-%into_objectlist(G,G):- is_grid(G),!.
+into_group(P,G):- is_object(P),points_to_grid(P,M),!,into_group(M,G).
+%into_group(G,G):- is_grid(G),!.
 
-into_objectlist(P,G):- is_objectlist(P),set_grid_nums(P),
-  maplist(into_objectlist,P,Gs),!,combine_grids(overlay,Gs,G).
-into_objectlist(P,G):-
-  maplist(into_objectlist,P,Gs),!, 
+into_group(P,G):- is_group(P),set_grid_nums(P),
+  maplist(into_group,P,Gs),!,combine_grids(overlay,Gs,G).
+into_group(P,G):-
+  maplist(into_group,P,Gs),!, 
   set_grid_nums(Gs), arg(1,Gs,G).
-into_objectlist(P,G):- maplist(into_objectlist,P,Gs),!, set_grid_nums(Gs), combine_grids(overlay,Gs,G).
+into_group(P,G):- maplist(into_group,P,Gs),!, set_grid_nums(Gs), combine_grids(overlay,Gs,G).
 */
 
 :- dynamic(iz/2).
