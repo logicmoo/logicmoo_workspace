@@ -81,12 +81,12 @@ try_arc_io(CName,Name,ExampleNum,In,Out):-
 %  get_named_indivs(GridNameOut,NsOut),
   (describe_feature(In,[grid_dim,colors_count_size,colors_count,num_objects]),
    describe_feature(Out,[grid_dim,colors_count_size,colors_count,num_objects])),
-  get_combined(CndvS),
+  % get_combined(CndvS),
   individuals(In,SharedIn),
   individuals(Out,SharedOut),!,
 
-  set_named_indivs(GridNameIn,SharedIn),
-  set_named_indivs(GridNameOut,SharedOut),
+  %set_named_indivs(GridNameIn,SharedIn),
+  %set_named_indivs(GridNameOut,SharedOut),
 
 %  nop((print_igrid(unshared(GridNameIn),NsIn,[In]),40,
 %       print_igrid(unshared(GridNameOut),NsOut,[Out]))),  
