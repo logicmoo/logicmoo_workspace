@@ -1,8 +1,31 @@
 
 :- use_module(library(lists)).
 
-is_symgrid(t('3631a71a')*(trn+_)*out).
-is_symgrid(v(de493100)*(trn+_)*in).
+is_symgrid(t('3631a71a')*_*out).
+is_symgrid(v(f9d67f8b)*_*out).
+is_symgrid(v(de493100)*_*in).
+is_symgrid(v(f9d67f8b)*_*in).
+is_symgrid(N):- fail,
+    kaggle_arc(T,Trn,_,_),
+    member(T,
+      [ t('0e206a2e'), 
+      t('1b60fb0c'), 
+      t('3631a71a'), 
+      t('36d67576'),       
+      t('4938f0c2'), 
+       t('4c5c2cf0'), 
+      t('7df24a62'), 
+      t('9d9215db'), t('9ecd008a'), 
+      t(b775ac94), t(b8825c91), t(e40b9e2f)]),
+      member(INOUT,[in,out]),
+      member(Trn,[trn+_,tst+_]),
+      N=T*Trn*INOUT,      
+      known_gridoid(N,G),
+      nonvar(G),
+      grid_size(G,H,V), H>12, V>12.
+
+
+  
 /*
 */
 repair_symmetry:- clsmake, repair_symmetry0.
@@ -15,6 +38,8 @@ repair_symmetry0:-
    wdmsg(repair_symmetry),
    repair_symmetry(Grid,GridO),
    print_side_by_side(Grid,GridO)))).
+
+
 
 
 /*
