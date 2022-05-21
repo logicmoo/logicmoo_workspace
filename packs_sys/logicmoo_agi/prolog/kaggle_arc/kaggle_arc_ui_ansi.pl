@@ -43,7 +43,7 @@ red_noise:- format('~N'),
   color_print(red,'--------------------------------------------------------------'),nl.
 
 print_side_by_side(C1,C2):- is_gridoid(C1), is_gridoid(C2),grid_size(C1,H1,V1),grid_size(C2,H2,V2),    
-    (V1>V2 -> print_side_by_side(C1,(H1 * 2 + 12),C2); print_side_by_side(C2,(H2 * 2 + 12),C1)),!.
+    (V1>V2 -> print_side_by_side(C2,(H1 * 2 + 12),C1); print_side_by_side(C1,(H2 * 2 + 12),C2)),!.
 
 print_side_by_side(C1,C2):- print_side_by_side(C1,20,C2),!.
 print_side_by_side(C1,W0,C2):- LW is W0,
@@ -160,12 +160,18 @@ print_igrid(Name,SIndvOut,InOutL):-
    grid_size(SIndvOut,H,V),
    print_grid(H,V,Print).
 
-print_grid(Grid):- notrace(print_grid0(Grid)).
+print_grid(Grid):- notrace(print_grid0(_HH,_VV,Grid)).
 %print_grid0(Grid):- var(Grid),!, throw(var_print_grid(Grid)).
-print_grid0(Grid):- \+ callable(Grid),!,write('not grid: '),pt(Grid),throw(nc_print_grid(Grid)).
-print_grid0(Grid):- \+ is_gridoid(Grid), into_grid(Grid,G),!,print_grid0(G).
-print_grid0(Grid):- print_grid(_HH,_VV,Grid).
-print_grid(HH,VV,Grid):- print_grid(1,1,HH,VV,Grid).
+
+print_grid(H,V,Grid):- notrace(print_grid0(H,V,Grid)).
+
+print_grid0(H,V,G):- is_empty_grid(G),!,wdmsg(is_empty_grid(H,V)).
+print_grid0(H,V,Grid):- \+ callable(Grid),!,write('not grid: '),
+  GG= nc_print_grid(H,V,Grid),
+  pt(GG),throw(GG).
+print_grid0(H,V,Grid):- \+ is_gridoid(Grid), into_grid(Grid,G),!,print_grid0(H,V,G).
+print_grid0(H,V,Grid):- print_grid(1,1,H,V,Grid).
+
 print_grid(SH,SV,EH,EV,Grid):- print_grid(SH,SV,SH,SV,EH,EV,EH,EV,Grid).
 %print_grid(SH,SV,LoH,LoV,HiH,HiV,EH,EV,Grid):- nop(print_grid(SH,SV,LoH,LoV,HiH,HiV,EH,EV,Grid)),!.
 print_grid(SH,SV,LoH,LoV,HiH,HiV,EH,EV,Grid):-

@@ -95,7 +95,8 @@ cleanup(IndvS1,IndvS2,IndvC,BetterO):-
   setq(A,object_indv_id(NamedExampleNum,Iv),AA),
   object_glyph(A,GlyphA),
   object_glyph(B,GlyphB),
-  ignore((How ==[]-> nop(pt(shared_object(GlyphB->GlyphA))); pt(same_object(GlyphB,How)))),
+  ignore((How ==[]-> nop(pt(shared_object(GlyphB->GlyphA))); 
+    (i_glyph(GlyphB,GlyphBB), pt(same_object(GlyphBB,How))))),
   asserta(is_unshared_saved(GridnameIn,IndvS1)),
   append(IndvC1,[AA],BetterC),
   cleanup(IndvS1,IndvS2,BetterC,BetterO),!.
@@ -114,7 +115,7 @@ compute_unshared_indivs(Grid,IndvS):-
 individuals_common(Grid,IndvS):- % is_grid(Grid),!,
   notrace(grid_size(Grid,H,V)),
   %pt(grd=Grid),
-  globalpointlist(Grid,Points),
+  globalpoints(Grid,Points),
   %pt(pts=Points),
   % maplist(is_cpoint,Points),
   locally(t_l:id_cells(Grid,Points),
@@ -133,7 +134,7 @@ assert_IndvS(obj(L)):-
   maplist(assert_IndvS(NamedExampleNum,Iv),L).
 
 
-globalpointlist(NamedExampleNum,Iv,ListOIfColoredPoints).
+globalpoints(NamedExampleNum,Iv,ListOIfColoredPoints).
 globalpoint(NamedExampleNum,Iv,Color,Point).
 localpointlist(NamedExampleNum,Iv,ListOIfColoredPoints).
 localpoint(NamedExampleNum,Iv,Color,Point).
@@ -188,7 +189,7 @@ unraw_inds(IndvS,IndvOO):-
 
 consume_shared_individual_points([],_Types,UnusedPoints,[],UnusedPoints):- !.
 consume_shared_individual_points([H|T],Types,Points,[H|IndvList],Unused):-  
-  globalpointlist(H,GPoints), remove_gpoints(GPoints,Points,LeftOver),
+  globalpoints(H,GPoints), remove_gpoints(GPoints,Points,LeftOver),
   consume_shared_individual_points(T,Types,LeftOver,IndvList,Unused).
 consume_shared_individual_points([_|T],Types,Points,IndvList,Unused):-  
   consume_shared_individual_points(T,Types,Points,IndvList,Unused).
@@ -211,7 +212,7 @@ obj1(X,X).
 ok_color_with(C,C2):- /* \+ free_cell(C2), */ C==C2.
 
 sameglobalpoints(Points,IndvC,LeftOver,IndvC):-
-  globalpointlist(IndvC,GPoints),
+  globalpoints(IndvC,GPoints),
   remove_gpoints(GPoints,Points,LeftOver).
 
 remove_gpoints([],Rest,Rest).
@@ -295,8 +296,8 @@ nearby_one(Types,C,C2-E,List):- allow_dirs(Types,Dir), adjacent_point_allowed(C,
 
 check_minsize(_,I,I):-!.
 check_minsize(_,[],[]):-!.
-check_minsize(Sz,[I|IndvS],[A,B|IndvSO]):- point_count(I,2),globalpointlist(I,[A,B]),!,check_minsize(Sz,IndvS,IndvSO).
-check_minsize(Sz,[I|IndvS],[A,B,C|IndvSO]):- point_count(I,3),globalpointlist(I,[A,B,C]),!,check_minsize(Sz,IndvS,IndvSO).
+check_minsize(Sz,[I|IndvS],[A,B|IndvSO]):- point_count(I,2),globalpoints(I,[A,B]),!,check_minsize(Sz,IndvS,IndvSO).
+check_minsize(Sz,[I|IndvS],[A,B,C|IndvSO]):- point_count(I,3),globalpoints(I,[A,B,C]),!,check_minsize(Sz,IndvS,IndvSO).
 check_minsize(Sz,[I|IndvS],[I|IndvSO]):- check_minsize(Sz,IndvS,IndvSO).
 
 meets_size(_,Points):- point_count(Points,1).
@@ -333,7 +334,7 @@ finish_grp(_C,Grp,_From,_Dir,Rest,Grp,Rest).
 
 reserved_point(C-Point):- fail, 
  \+ (get_shared_with(With), member(Obj,With),
-  globalpointlist(Obj,GPoints), member(CC-Point,GPoints), CC==C).
+  globalpoints(Obj,GPoints), member(CC-Point,GPoints), CC==C).
 
 single_point(C-Point,IndvS,Rest1):-
   single_point0(C-Point,IndvS,Rest1),
@@ -348,7 +349,7 @@ single_point0(C-Point,IndvS,Rest1):-
 
 single_point0_disabled(C-Point,IndvS,Rest1):- 
   select(obj(I),IndvS,Rest1), fail, % round 2
-  globalpointlist(obj(I),[C-Point]),
+  globalpoints(obj(I),[C-Point]),
   nonvar(C).
 
 /*
@@ -432,7 +433,7 @@ if_point_offset(OH,OV,Point,LPoint):- atom(Point), hv_point(H,V,Point),HH is H +
 grid_to_individual(Grid,OUT):-
   get_gridname(Grid,GN),
   grid_size(Grid,H,V),
-  globalpointlist(Grid,Points),
+  globalpoints(Grid,Points),
   embue_points(GN,H,V,1,1,H,V,Points,OUT).
 
 make_embued_points(Grid,H,V,Indv2,IndvS):- 
@@ -450,6 +451,9 @@ embue_points(GN,H,V,Points,OUT):-
 is_gpoint(G):- var(G),!,fail.
 is_gpoint(_-G):-!,is_gpoint(G).
 is_gpoint(G):- hv_point(H,_,G),!,nonvar(H).
+
+close_enough_grid(GridIn,GridInCopy,GridO):- 
+  \+ \+ (GridO=GridIn, GridIn=@=GridInCopy).
 
 embue_points(GN,H,V,LoH,LoV,HiH,HiV,C-HV,OBJ):- !, embue_points(GN,H,V,LoH,LoV,HiH,HiV,[C-HV],OBJ).
 embue_points(NamedExampleNum,H,V,LoH,LoV,HiH,HiV,IPoints,obj(Ps)):-
@@ -470,9 +474,12 @@ embue_points(NamedExampleNum,H,V,LoH,LoV,HiH,HiV,IPoints,obj(Ps)):-
   Empty is  Area - Len,
   deoffset_points(LoH,LoV,Points,LPoints),
   remove_color(LPoints,CLPoints),
-  findall(object_shape(Shape),guess_shape(Ps,Empty,Len,Width,Height,CC,CLPoints,Shape),Shapes),
   make_grid(Width,Height,Grid),
-  set_point(LPoints,Grid,GridO),
+  set_points(LPoints,Grid,Grid),
+  make_grid(Width,Height,GridO),
+  copy_term(Grid,GridInCopy),
+  findall(object_shape(Shape),
+   (guess_shape(Grid,GridO,Ps,Empty,Len,Width,Height,CC,CLPoints,Shape),close_enough_grid(Grid,GridInCopy,GridO)),Shapes),
   append([[
     localcolorlesspointlist(CLPoints),
     colors_count(CC),
@@ -484,7 +491,7 @@ embue_points(NamedExampleNum,H,V,LoH,LoV,HiH,HiV,IPoints,obj(Ps)):-
     [localpointlist(LPoints)],
     [grid(GridO)],
     [object_offset(LoH,LoV)],
-    [globalpointlist(Points),
+    [globalpoints(Points),
     object_indv_id(NamedExampleNum,Iv),
     grid_size(H,V)]],Ps))).
 
@@ -554,7 +561,7 @@ counted_neighbours(C-HV,List,CountIn,[P|CountIn]):-
   length(Ns,I),P = I-HV.
 
 localpointlist(I,X):- indv_props(I,L),member(localpointlist(X),L).
-localpointlist(I,X):- into_grid0(I,G),globalpointlist(G,X).
+localpointlist(I,X):- into_grid0(I,G),globalpoints(G,X).
 
 object_shape(I,X):- indv_props(I,L),member(object_shape(X),L).
 
@@ -564,15 +571,15 @@ object_shape(I,X):- indv_props(I,L),member(object_shape(X),L).
 %as_cv(C-_,Color):- as_cv(C,Color).
 %as_cv(C,Color):- integer(C),!,color_code(C,Color).
 
-globalpointlist(I,X):- indv_props(I,L),!,member(globalpointlist(X),L).
-globalpointlist(Grid,Points):- is_grid(Grid),!, grid_size(Grid,HH,HV), 
+globalpoints(I,X):- indv_props(I,L),!,member(globalpoints(X),L).
+globalpoints(Grid,Points):- is_grid(Grid),!, grid_size(Grid,HH,HV), 
   findall(C-Point,(between(1,HV,V),between(1,HH,H),once((nth1(V,Grid,Row),nth1(H,Row,C),nonvar(C),hv_point(H,V,Point)))),Points),!.
-globalpointlist(Grid,[Grid]):- is_lpoint(Grid),!.
-globalpointlist(Grid,Points):- is_list(Grid),!,maplist(globalpointlist,Grid,MPoints),append(MPoints,Points).
-%globalpointlist(Grid,Points):- is_object(Grid),!,globalpointlist(Grid,Points).
+globalpoints(Grid,[Grid]):- is_lpoint(Grid),!.
+globalpoints(Grid,Points):- is_list(Grid),!,maplist(globalpoints,Grid,MPoints),append(MPoints,Points).
+%globalpoints(Grid,Points):- is_object(Grid),!,globalpoints(Grid,Points).
 /*
-globalpointlist(ID,Points):- \+ \+ cmem(ID,_,_), findall(-(C,HV),cmem(ID,HV,C),Points).
-globalpointlist(Grid,Points):- grid_to_id(Grid,ID),findall(-(C,HV),cmem(ID,HV,C),Points).
+globalpoints(ID,Points):- \+ \+ cmem(ID,_,_), findall(-(C,HV),cmem(ID,HV,C),Points).
+globalpoints(Grid,Points):- grid_to_id(Grid,ID),findall(-(C,HV),cmem(ID,HV,C),Points).
 :- dynamic(is_grid_id/2).
 grid_to_id(Grid,ID):- is_grid_id(Grid,ID),!.
 grid_to_id(Grid,ID):- gensym('grid_',ID),assert_id_grid_cells(ID,Grid),assert(is_grid_id(Grid,ID)),!.
@@ -584,10 +591,10 @@ colors_count(G,BFO):- pixel_colors(G,GF),sort(GF,GS),count_each(GS,GF,UC),keysor
 localcolorlesspointlist(I,X):- indv_props(I,L),member(localcolorlesspointlist(X),L).
 
 object_offset(I,X,Y):- indv_props(I,L),member(object_offset(X,Y),L).
-object_offset(Grid,H,V):- is_grid(Grid),!,globalpointlist(Grid,Points),!,points_range(Points,LoH,LoV,_,_,_,_), H is LoH, V is LoV.
+object_offset(Grid,H,V):- is_grid(Grid),!,globalpoints(Grid,Points),!,points_range(Points,LoH,LoV,_,_,_,_), H is LoH, V is LoV.
 object_offset(NT,H,V):- named_gridoid(NT,G),object_offset(G,H,V).
 
-object_size(Grid,H,V):- is_grid(Grid),!,globalpointlist(Grid,Points),!,points_range(Points,LoH,LoV,HiH,HiV,_,_), H is HiH-LoH+1, V is HiV-LoV+1.
+object_size(Grid,H,V):- is_grid(Grid),!,globalpoints(Grid,Points),!,points_range(Points,LoH,LoV,HiH,HiV,_,_), H is HiH-LoH+1, V is HiV-LoV+1.
 object_size(NT,H,V):- named_gridoid(NT,G),object_size(G,H,V).
 object_size(I,X,Y):- indv_props(I,L),member(object_size(X,Y),L).
 %object_size(Points,H,V):- pmember(object_size(H,V),Points),!.
@@ -595,17 +602,20 @@ object_size(Points,H,V):- points_range(Points,LoH,LoV,HiH,HiV,_,_), H is HiH-LoH
 
 top(8).
 
-
 :- style_check(-singleton).
-guess_shape(I,Empty,N,1,1,Colors,Points,dot):- !.
-guess_shape(I,Empty,N,N,1,Colors,Points,line(h)).
-guess_shape(I,Empty,N,1,N,Colors,Points,line(v)).
-guess_shape(I,Empty,N,H,V,[color_count(Zero,_)],Points,background):- is_bgc(Zero).
-guess_shape(I,0,N,HV,HV,Colors,Points,square):- HV>1.
-guess_shape(I,0,N,H,V,Colors,Points,rectangle):- H \== V.
-guess_shape(I,O,N,H,V,Colors,Points,nonsolid):- O\==0.
+guess_shape(GridIn,GridO,I,0,1,1,1,Colors,Points,dot):- !.
+guess_shape(GridIn,GridO,I,0,N,N,1,Colors,Points,line(h)).
+guess_shape(GridIn,GridO,I,0,N,HV,HV,Colors,Points,square):- HV>1.
+guess_shape(GridIn,GridO,I,0,N,H,V,Colors,Points,nonsquare):- H \== V.
+guess_shape(GridIn,GridO,I,I,N,H,V,Colors,Points,rectangluar):- H>1, V>1.
+guess_shape(GridIn,GridO,I,_,N,H,V,[color_count(Color,_)],Points,outline):- H>2,V>2, N>7,add_borders(Color,GridIn,GridO).
+  
+guess_shape(GridIn,GridO,I,0,N,1,N,Colors,Points,line(v)).
+guess_shape(GridIn,GridO,I,0,9,3,3,Colors,Points,keypad).
+guess_shape(GridIn,GridO,I,Empty,N,H,V,[color_count(Zero,_)],Points,background):- is_bgc(Zero).
+guess_shape(GridIn,GridO,I,O,N,H,V,Colors,Points,nonsolid):- O\==0.
 
-guess_shape(I,E,N,H,V,Colors,Points,subI(InvS)):- E>2, fail,
+guess_shape(GridIn,Grid,I,E,N,H,V,Colors,Points,subI(InvS)):- E>2, fail,
    once((I.object_offset=object_offset(LoH,LoV),
    make_grid(H,V,Grid),
    calc_add_points(LoH,LoV,Grid,Points),

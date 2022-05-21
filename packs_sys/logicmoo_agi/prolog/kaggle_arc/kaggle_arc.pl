@@ -84,36 +84,50 @@ try_arc_io(CName,Name,ExampleNum,In,Out):-
   %wqnl(arc1(Name)),nl,
   test_info(Name,Info), wqnl(fav(Name,Info)),nl,
   ignore((more_task_info(Name,III),pt(III),nl)),
+
   make_unshared_indivs(GridNameIn,In),
   make_unshared_indivs(GridNameOut,Out),
   get_unshared_indivs(GridNameIn,UnsharedIn),
   get_unshared_indivs(GridNameOut,UnsharedOut),
-  print_side_by_side(describe_feature(In,[call(writeln('IN')),grid_dim,colors_count_size,colors_count,num_objects]),LW,
-   describe_feature(Out,[call(writeln('OUT')),grid_dim,colors_count_size,colors_count,num_objects])),
+  print_side_by_side(describe_feature(In,[call(writeln('IN')),grid_dim,colors_count_size,colors_count]),LW,
+   describe_feature(Out,[call(writeln('OUT')),grid_dim,colors_count_size,colors_count])),
+
+%  nop((print_igrid(unshared(GridNameIn),UnsharedIn,[In]),40,
+%       print_igrid(unshared(GridNameOut),UnsharedOut,[Out]))),  
+
+
+  \+ \+ ((
+   wots(U1, print_igrid(=(GridNameIn),In,[])),
+   wots(U2, print_igrid(=(GridNameOut),Out,[])),
+   print_side_by_side(U1,LW,U2))),
+
+  print_side_by_side(describe_feature(In,[num_objects]),LW,
+   describe_feature(Out,[num_objects])),
 
   compute_shared_indivs(In,SharedIn),
   compute_shared_indivs(Out,SharedOut),!,
   set_shared_indivs(GridNameIn,SharedIn),
   set_shared_indivs(GridNameOut,SharedOut),
 
-%  nop((print_igrid(unshared(GridNameIn),UnsharedIn,[In]),40,
-%       print_igrid(unshared(GridNameOut),UnsharedOut,[Out]))),  
+  nop((
+   wots(U1, print_igrid(-(GridNameIn),UnsharedIn,[In])),
+   wots(U2, print_igrid(-(GridNameOut),UnsharedOut,[Out])),
+   print_side_by_side(U1,LW,U2))),
 
- nop((
-  wots(U1, print_igrid(-(GridNameIn),UnsharedIn,[In])),
-  wots(U2, print_igrid(-(GridNameOut),UnsharedOut,[Out])),
-  print_side_by_side(U1,LW,U2))),
-
+  \+ \+ ((
   wots(S1, print_igrid(+(GridNameIn),SharedIn,[In])),
   wots(S2, print_igrid(+(GridNameOut),SharedOut,[Out])),
-  print_side_by_side(S1,LW,S2),
+  print_side_by_side(S1,LW,S2))),
 
 
   wqnl(fav(GridNameIn,Info)), debug_indiv(SharedIn),
   wqnl(fav(GridNameOut,Info)), debug_indiv(SharedOut),  
   nop((wqnl(fav(GridName+combined,Info)), get_combined(CndvS), debug_indiv(CndvS))),
 
-  (maybe_confirm_sol(Name,ExampleNum,In,Out)))),!.
+  nop(
+   catch(maybe_confirm_sol(Name,ExampleNum,In,Out),E,(wdmsg(E)))
+
+   ))),!.
 /*
 try_arc_io(CName,Name,ExampleNum,In,Out):-
   ignore((CName\==Name,flag(indiv,_,0),dash_char(60,"A"),dash_char(6,"\n"),nl)), 

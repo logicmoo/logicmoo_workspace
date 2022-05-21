@@ -33,18 +33,25 @@ test_config(This):- current_test_name(Name),test_info(Name,InfoL),!,contains_non
 test_cond_or(This,_That):- test_config(This),!.
 test_cond_or(This, That):- term_variables(This,[That|_]),!.
 
-run_dsl(Prog,In,Out):- var(Prog),!,throw(var_solving_progs(Prog,In,Out)).
+run_dsl(Prog,In,Out):- run_dsl(enact,Prog,In,Out).
 
-run_dsl(lmDSL(Prog),In,Out):- !, run_dsl(Prog,In,Out).
-run_dsl(call(G),In,Out):-!,call(G),(var(Out)->Out=In; true).
-run_dsl([],In,Out):-!, var(Out)->Out=In; true.
-run_dsl(same,In,Out):-!, duplicate_term(In,Out).
-run_dsl(-->(All,Exec),In,Out):-!,  run_dsl([All,Exec],In,Out).
-run_dsl([H|Prog],In,Out):-!, run_dsl(H,In,GridM), run_dsl(Prog,GridM,Out).
-run_dsl(Prog,In,In):- missing_arity2(Prog),!,arcdbg(warn(missing(run_dsl(Prog)))).
-run_dsl(Prog,In,Out):- call(Prog,In,M)*-> =(M,Out) ; arcdbg(warn(nonworking(run_dsl(Prog)))).
+run_dsl(Mode,Prog,In,Out):- var(Prog),!,throw(var_solving_progs(Mode,Prog,In,Out)).
+run_dsl(Mode,lmDSL(Prog),In,Out):- !, run_dsl(Mode,Prog,In,Out).
+run_dsl(_Mode,call(G),In,Out):-!,call(G),(var(Out)->Out=In; true).
+run_dsl(_Mode,[],In,Out):-!, var(Out)->Out=In; true.
+run_dsl(_Mode,same,In,Out):-!, duplicate_term(In,Out).
+run_dsl(ennfore,color(Obj,Color),In,Out):-!, set_color(Color,Obj,In,Out).
+run_dsl(Mode,-->(All,Exec),In,Out):-!,  run_dsl(Mode,forall(All,Exec),In,Out).
+run_dsl(Mode,forall(All,Exec),In,Out):-!,  forall(run_dsl(Mode,All,In,Mid),(run_dsl(enforce,Exec,Mid,Out),nb_setval(out,Out))),nb_current(out,Out).
+run_dsl(Mode,[H|Prog],In,Out):-!, run_dsl(Mode,H,In,GridM), run_dsl(Mode,Prog,GridM,Out).
+run_dsl(Mode,(H,Prog),In,Out):-!, run_dsl(Mode,H,In,GridM), run_dsl(Mode,Prog,GridM,Out).
+run_dsl(_Mode,Prog,In,In):- \+ missing_arity(Prog, 0), !, call(Prog).
+run_dsl(Mode,Prog,In,Out):- \+ missing_arity(Prog,2), !,
+ (call(Prog,In,M)*-> 
+    =(M,Out) ; (arcdbg(warn(nonworking(run_dsl(Mode,Prog)))),fail)).
+run_dsl(Mode,Prog,In,In):- arcdbg(warn(missing(run_dsl(Mode,Prog)))). 
 
-named_gridoid(TstName,G):- var(TstName),!,throw(var_named_test(TstName,G)).
+named_gridoid(TstName,G):- var(TstName),!,dumpST,throw(var_named_test(TstName,G)).
 named_gridoid(TstName,G):- fix_test_name(TstName,Name,_),kaggle_arc(Name,tst+0,G,_),!.
 named_gridoid(TstName,G):- known_gridoid(TstName,G).
 
@@ -78,6 +85,13 @@ into_group(P,G):- maplist(into_group,P,Gs),!, set_grid_nums(Gs), combine_grids(o
 */
 
 :- dynamic(iz/2).
+
+subclazz(outline,hollow).
+subclazz(outline,thick1).
+subclazz(outline,rectangle).
+subclazz(outline,noexit).
+
+iz(X,Y):- nonvar(Y)->(subclazz(P,Y),iz(X,P));(nonvar(X),iz(X,P),subclazz(P,Y)).
 iz(X,Y):- object_shape(X,Y).
 
 gather_object(Obj1,Var,Expression,Grid,Grid):-
@@ -103,8 +117,8 @@ training_progs(Prog,_,_):- missing_arity2(Prog),!,arcdbg(warn(missing(training_p
 training_progs(Prog,In,Out):- call(Prog,In,Out)*-> true ; arcdbg(warn(nonworking(training_progs(Prog)))).
 
 
-missing_arity2(P2):- compound(P2),!,compound_name_arity(P2,F,Am2),A is Am2 + 2, \+ current_predicate(F/A).
-missing_arity2(F):- \+ current_predicate(F/2).
+missing_arity(P2,N):- compound(P2),!,compound_name_arity(P2,F,Am2),A is Am2 + N, \+ current_predicate(F/A).
+missing_arity(F,N):- \+ current_predicate(F/N).
 % turtle(H,V,Dir,N,H2,V2):- 
 prim_ops([
   call_object_grid_size(obj),

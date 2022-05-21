@@ -179,7 +179,7 @@ find_kv(O,OF,OA):- compound(O),compound_name_arguments(O,OF,OA).
 
 
 must_intersect_all(Indv,Points,NextScanPoints):-
-   globalpointlist(Indv,IndvPoints),
+   globalpoints(Indv,IndvPoints),
    unique_of_each(IndvPoints,Points,[],NextScanPoints),!.
 
 unique_of_each(IndvPoints,Points,UniqueInvO,UniquePointsO):-
@@ -222,7 +222,7 @@ combine_grids(How,[H|T],G,GO):- !,
   %in_cmt((writeln(How),print_grid(H))),
   combine_grids(How,H,G,GM),
   combine_grids(How,T,GM,GO).
-combine_grids(overlay,H,G,GM):- globalpointlist(H,Points),set_point(Points,G,GM),!.
+combine_grids(overlay,H,G,GM):- globalpoints(H,Points),set_points(Points,G,GM),!.
 combine_grids(append,H,G,GM):- grid_size(H,W,_),length(Row,W), append(G,[Row|H],GM).
   
 debug_indiv:- test_config(nodebug_indiv),!,fail.
@@ -280,8 +280,8 @@ debug_indiv(Other):-
 remove_too_verbose(Var,var(Var)):- var(Var),!.
 remove_too_verbose(H,''):- too_verbose(H),!.
 remove_too_verbose(dot,"point"):- !.
-remove_too_verbose(line(HV),S):- sformat(S,'~w-Line',[HV]).
-remove_too_verbose(square,S):- sformat(S,'square',[]).
+%remove_too_verbose(line(HV),S):- sformat(S,'~w-Line',[HV]).
+%remove_too_verbose(square,S):- sformat(S,'square',[]).
 remove_too_verbose(background,S):- sformat(S,'bckgrnd',[]).
 remove_too_verbose(object_shape(H),HH):- !, remove_too_verbose(H,HH).
 remove_too_verbose(colors_count(H),HH):- !, remove_too_verbose(H,HH).
@@ -293,7 +293,7 @@ remove_too_verbose(point_count(X),points(X)).
 remove_too_verbose(L,LL):- is_list(L),!, maplist(remove_too_verbose,L,LL).
 remove_too_verbose(H,H).
 too_verbose(P):- compound(P),compound_name_arity(P,F,_),!,too_verbose(F).
-too_verbose(globalpointlist).
+too_verbose(globalpoints).
 too_verbose(localcolorlesspointlist).
 too_verbose(localpointlist).
 too_verbose(grid).

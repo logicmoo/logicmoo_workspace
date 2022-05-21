@@ -10,7 +10,7 @@ test_names_by_hard(Name):- test_names_ord_favs(FavList),test_names_ord_hard(Name
 /*
 test_names_by_hard(Name):- test_names_ord_favs(FavList),test_names_ord_hard(NamesByHard),append(FavList,NamesByHard,All),
  list_to_set(All,AllS),!,member(Name,AllS).*/
-test_names_ord_favs(FavListS):- findall(Name,fav(Name),FavList),list_to_set(FavList,FavListS).
+test_names_ord_favs(FavListR):- findall(Name,fav(Name),FavList),list_to_set(FavList,FavListS),reverse(FavListS,FavListR).
 test_names_ord_hard(NamesByHard):- findall(Hard-Name,(test_name(Name),hardness_of_name(Name,Hard)),All),
   keysort(All,AllK), reverse(AllK,AllR), maplist(arg(2),AllR,NamesByHard),!.
 
@@ -101,7 +101,7 @@ fav(t('1b60fb0c'),[learn([find_damage_to_input,find_center,fraction_evenly_to_fo
     lmDSL([new_things_are_a_color,fix_image])]).
 
 fav(t('9aec4887'),[indiv(color_blind),todo_sol([find_individuals([hollow,inside([squares])],I),rest_indivdual(Is),put_inside(Is,I),
-  if_edge_strong([color=C]),touch(Is,Point),set_point(Point,C)])]).
+  if_edge_strong([color=C]),touch(Is,Point),set_color(C,Point)])]).
 
 fav(v('4b6b68e5'),[
    lmDSL([gather_object(O1,X,(iz(X,dot),inside(X,P),iz(P,polygon),wall_thickness(P,1),noexit(P))),
