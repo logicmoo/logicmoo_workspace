@@ -91,7 +91,7 @@ move_scale_dir_object(N,D,I,O):- into_group(I,M),M\=@=I,!,move_scale_dir_object(
 move_object(NX,NY,I,M):- is_object(I),!,
  must_det_l((
   (NY<1 -> M=I ;
-  ( localpointlist(I,LPoints),
+  ( localpoints(I,LPoints),
     offset_points(NX,NY,LPoints,GPoints),
     setq(I,[globalpoints(GPoints),object_offset(NX,NY)],M))))).
 move_object(H,V,L,LM):- is_group(L),!,maplist(move_object(H,V),L,LM).
@@ -452,7 +452,7 @@ ap(diagonal_line). ap(horizontal_line). ap(vertical_line). ap(open_edge). ap(con
 
 ap(rotated45). ap(resizes). ap(diamond).
 apv(square(len)). apv(round(h,w)). apv(triangle). apv(rectangular(h,w)). apv(polygon(sides)).
-apv(localcolorlesspointlist(num)).  apv(facing(dir)). apv(min(n)). apv(max(n)).  apv(object_size(h,w)). apv(object_offset(h,w)). 
+apv(localpoints_nc(num)).  apv(facing(dir)). apv(min(n)). apv(max(n)).  apv(object_size(h,w)). apv(object_offset(h,w)). 
 apv(scale(n)).  apv(ext_key(k)). apv(io_bud(k)). apv(linked_bud(k)).
 
 apv(points_old([])).
@@ -577,8 +577,9 @@ is_object(obj(O)):- is_list(O).
 %is_object(H):- is_list(H),maplist(is_cpoint,H).
 
 is_cpoint(C):- \+ compound(C),!,fail.
-is_cpoint(C-P):- atomic(C),!,atom(P).
-is_cpoint(obj(L)):- is_list(L).
+is_cpoint(C-P):- nonvar(C),!,is_nc_point(P).
+
+is_nc_point(P):- atom(P), hv_point(H,_,P),!,number(H).
 
 
 create_movements:- 

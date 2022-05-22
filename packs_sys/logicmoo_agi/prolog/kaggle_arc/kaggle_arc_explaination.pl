@@ -294,10 +294,11 @@ remove_too_verbose(L,LL):- is_list(L),!, maplist(remove_too_verbose,L,LL).
 remove_too_verbose(H,H).
 too_verbose(P):- compound(P),compound_name_arity(P,F,_),!,too_verbose(F).
 too_verbose(globalpoints).
-too_verbose(localcolorlesspointlist).
-too_verbose(localpointlist).
+too_verbose(localpoints_nc).
+too_verbose(localpoints).
 too_verbose(grid).
-too_verbose(grid_size).
+too_verbose(grid).
+too_verbose(rotated_grid).
 
 debug_indiv(Obj,P):- compound_name_arguments(P,F,A),debug_indiv(Obj,P,F,A).
 debug_indiv(_,_,X,_):-too_verbose(X),!.

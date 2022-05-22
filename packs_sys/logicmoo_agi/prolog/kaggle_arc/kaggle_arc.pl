@@ -47,10 +47,12 @@ fav(X):- clause(fav(X,_),true).
 
 arc(Name):- forall(arc1(Name),true).
 arc1(TName):-    
-  fix_test_name(TName,Name,ExampleNum), 
+
+ locally(set_prolog_flag(gc,false),
+  (fix_test_name(TName,Name,ExampleNum), 
   set_flag(indiv,0),
   kaggle_arc(Name,ExampleNum,In,Out),
-  run_arc_io(Name,ExampleNum,In,Out).
+  run_arc_io(Name,ExampleNum,In,Out))).
 
 run_arc_io(Name,ExampleNum,In,Out):-
   current_test_name(CName),
@@ -68,7 +70,8 @@ run_arc_io(Name,ExampleNum,In,Out):-
 
 
 try_arc_io(CName,Name,ExampleNum,In,Out):-
- must_det_l((
+ %must_det_l
+ ((
   grid_size(In,IH,_IV),
   LW is (IH * 2 + 12),
   ignore((CName\==Name, flag(indiv,_,0),    
@@ -87,6 +90,7 @@ try_arc_io(CName,Name,ExampleNum,In,Out):-
 
   make_unshared_indivs(GridNameIn,In),
   make_unshared_indivs(GridNameOut,Out),
+  must_be_free(UnsharedIn),
   get_unshared_indivs(GridNameIn,UnsharedIn),
   get_unshared_indivs(GridNameOut,UnsharedOut),
   print_side_by_side(describe_feature(In,[call(writeln('IN')),grid_dim,colors_count_size,colors_count]),LW,
@@ -101,15 +105,17 @@ try_arc_io(CName,Name,ExampleNum,In,Out):-
    wots(U2, print_igrid(=(GridNameOut),Out,[])),
    print_side_by_side(U1,LW,U2))),
 
-  print_side_by_side(describe_feature(In,[num_objects]),LW,
-   describe_feature(Out,[num_objects])),
+  print_side_by_side(describe_feature(In,[num_objects]),LW, describe_feature(Out,[num_objects])),
+
+%  get_shared_indivs(In,SharedIn),
+%  get_shared_indivs(Out,SharedOut),!,
 
   compute_shared_indivs(In,SharedIn),
   compute_shared_indivs(Out,SharedOut),!,
   set_shared_indivs(GridNameIn,SharedIn),
   set_shared_indivs(GridNameOut,SharedOut),
 
-  nop((
+ ((
    wots(U1, print_igrid(-(GridNameIn),UnsharedIn,[In])),
    wots(U2, print_igrid(-(GridNameOut),UnsharedOut,[Out])),
    print_side_by_side(U1,LW,U2))),

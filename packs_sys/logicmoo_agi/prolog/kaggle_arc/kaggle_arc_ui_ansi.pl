@@ -34,6 +34,10 @@ user:portray(Grid):- \+ \+ catch((
   \+ tracing, \+ is_object(Grid),  \+ is_group(Grid), 
    (is_gridoid(Grid);is_points_list(Grid)),
    grid_size(Grid,H,V),!,H>0,V>0, wots(S,print_grid(H,V,Grid)),write(S)),_,false).
+user:portray(Grid):- \+ \+ catch((
+  tracing, \+ is_object(Grid),  \+ is_group(Grid), 
+   (is_points_list(Grid)),
+   grid_size(Grid,H,V),!,H>0,V>0, wots(S,print_grid(H,V,Grid)),write(S)),_,false).
 %user:portray(Grid):- ((\+ tracing, is_group(Grid),print_grid(Grid))).
 %user:portray(Grid):- notrace((is_object(Grid),print_grid(Grid))).
 
@@ -65,8 +69,6 @@ print_side_by_side_lists([],W1,[E2|L2],W2):-
   write_padding([],W1,E2,W2),
   print_side_by_side_lists([],W1,L2,W2).
 
-as_str([],''):-!.
-as_str(A,S):- atom_string(A,S).
 
 write_padding(E1,_W1,E2,LW):- %write(' '),
     W1 = LW,
@@ -74,15 +76,23 @@ write_padding(E1,_W1,E2,LW):- %write(' '),
    write(S1), write('\t'), line_position(user_output,L1), Pad1 is W1 - L1, dash_char(Pad1, ' '),
    write(S2), format('~N').
 
-print_length(S,L):- atom_codes(S,C), include(uses_space,C,SS),length(SS,L).
+as_str([],""):-!.
+as_str(S,A):- atom(S),!,atom_string(S,A).
+as_str(S,A):- \+ string(S), sformat(A,'~p',[S]),!.
+as_str(S,S).
+print_length(S,L):- as_str(S,A),atom_codes(A,C), include(uses_space,C,SS),length(SS,L).
 uses_space(C):- code_type(C,print).
 
 into_ss_string(Var,_):- var(Var),!,throw(var_into_ss_string(Var)).
 into_ss_string(G,SS):- is_grid(G),!,wots(S,print_grid(G)),!,into_ss_string(S,SS).
+into_ss_string(G,SS):- is_object(G),!,wots(S,print_grid(G)),!,into_ss_string(S,SS).
+into_ss_string(G,SS):- is_points_list(G),!,wots(S,print_grid(G)),!,into_ss_string(S,SS).
+into_ss_string(G,SS):- is_group(G),!,wots(S,print_grid(G)),!,into_ss_string(S,SS).
 into_ss_string(ss(Len,L),ss(Len,L)):-!.
 into_ss_string(L,ss(Len,L)):- is_list(L), find_longest_len(L,Len),!.
 into_ss_string(S,SS):- string(S), atomics_to_string(L,'\n',S),!,into_ss_string(L,SS).
-into_ss_string(C,SS):- wots(S,C), into_ss_string(S,SS).
+into_ss_string(C,SS):- wots(S,catch(C,E,true)), 
+  (((nonvar(E),notrace,trace,rtrace(C))->throw(E);true)), into_ss_string(S,SS).
 
 find_longest_len(SL,L):- find_longest_len(SL,10,L),!.
 find_longest_len([],L,L).

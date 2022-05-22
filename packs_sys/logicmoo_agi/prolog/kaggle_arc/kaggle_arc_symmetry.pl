@@ -1,30 +1,45 @@
 
 :- use_module(library(lists)).
 
-is_symgrid(t('3631a71a')*_*out).
+
+
+
+%is_symgrid(t('3631a71a')*_*out).
 is_symgrid(v(f9d67f8b)*_*out).
 is_symgrid(v(de493100)*_*in).
 is_symgrid(v(f9d67f8b)*_*in).
-is_symgrid(N):- fail,
+
+
+is_symgrid(N):- 
     kaggle_arc(T,Trn,_,_),
     member(T,
-      [ t('0e206a2e'), 
-      t('1b60fb0c'), 
-      t('3631a71a'), 
-      t('36d67576'),       
-      t('4938f0c2'), 
-       t('4c5c2cf0'), 
-      t('7df24a62'), 
-      t('9d9215db'), t('9ecd008a'), 
-      t(b775ac94), t(b8825c91), t(e40b9e2f)]),
+      [t('1b60fb0c'), t('3631a71a'), t('4938f0c2'), 
+      t('4c5c2cf0'), t('9ecd008a'), t(b8825c91), 
+      t(e40b9e2f),
+      t('47c1f68c'),
+      
+      t('9d9215db'), 
+      []]),
       member(INOUT,[in,out]),
       member(Trn,[trn+_,tst+_]),
       N=T*Trn*INOUT,      
       known_gridoid(N,G),
       nonvar(G),
-      grid_size(G,H,V), H>12, V>12.
+      grid_size(G,H,V), H>12, V>12,
+      wdmsg(is_need(N)),
+      wdmsg(is_hard(N)).
 
+is_hard(t('3631a71a')*(trn+0)*in).
+is_hard(t('47c1f68c')*(tst+0)*in).
+is_hard(t('4c5c2cf0')*_*in).
+is_hard(t('9d9215db')*_*in).
+is_hard(t('4938f0c2')*_*in).
 
+is_need(t('4c5c2cf0')*_*out).
+is_need(t('4938f0c2')*_*out).
+is_need(t('9d9215db')*_*out).
+
+% is_bad(t('9d9215db')*_*in).
   
 /*
 */
@@ -32,13 +47,15 @@ repair_symmetry:- clsmake, repair_symmetry0.
 repair_symmetry0:- 
  forall(
  (is_symgrid(Symgrid),
+  \+ is_hard(Symgrid),
+  \+ is_need(Symgrid),
   known_gridoid(Symgrid,Grid),
   print_grid(Grid)),
   ignore((
    wdmsg(repair_symmetry),
-   repair_symmetry(Grid,GridO),
-   print_side_by_side(Grid,GridO)))).
-
+   test_symmetry_code(Grid,GridO),
+   wdmsg(success(symmetry_code)),
+   print_grid(GridO)))),!.
 
 
 
@@ -65,9 +82,11 @@ repair_symmetry0:-
 */
 
 
-symetric_xy(SXQ2,SYQ2,EXQ2,EYQ2,SXCC,SYCC,EXCC,EYCC,SXQ4,SYQ4,EXQ4,EYQ4,G):-
+symetric_xy(CXL,CYL,CX,CY,SXQ2,SYQ2,EXQ2,EYQ2,SXCC,SYCC,EXCC,EYCC,SXQ4,SYQ4,EXQ4,EYQ4,G):-
    grid_size(G,EXQ4,EYQ4),
    SXQ2=SYQ2,SXQ2=1,
+   CXL=CYL,
+   length(CX,CXL),length(CY,CYL),
    symmetric_hv(EXQ2,CX,EYQ2,CY,EXQ4,EYQ4,G),
    %sort_row_by_num_colors(G,Rows),
    %print_grid(Rows),
@@ -86,6 +105,27 @@ check_symetric_xy(CX,CY,SXQ2,_SYQ2,EXQ2,EYQ2,SXCC,SYCC,EXCC,EYCC,SXQ4,SYQ4,EXQ4,
    maplist(assertion,[SXQ2=<EXQ2,EXQ2=<SXCC,EXQ2=<SXCC,EXCC=<SXQ4,SXQ4=<EXQ4]),
    length(CY,LCLY),SYCC is EYQ2 + 1,EYCC is LCLY + EYQ2 -1,SYQ4 is LCLY + EYQ2,
    !.
+
+
+asymmetric_hv(EXQ2,CX,EYQ2,CY,H,V,G):- asymmetric_hv0(EXQ2,CX,EYQ2,CY,H,V,G).
+asymmetric_hv(EXQ2,CX,EYQ2,CY,H,V,G):- rot90(G,G0),flipH(G0,G1),asymmetric_hv0(EYQ2,CY,EXQ2,CX,V,H,G1).
+
+asymmetric_h(I,CX,_H,HLow,_Hhalf,Hhigh,G):-
+   between(HLow,Hhigh,I),asymmetric_lrw(I,CX,G,_).
+asymmetric_v(I,CY,_V,VLow,_Vhalf,Vhigh,G0):-
+   rot270(G0,G),
+   between(VLow,Vhigh,I),asymmetric_lrw(I,CY,G,_).
+/*
+asymmetric_h(I,C,G):- 
+  sometimes(flipV,G,G1),sometimes(first_half,G1,G2),
+  sometimes(flipV,G2,G3), asymmetric_lrw(I,C,G3,_).
+*/
+asymmetric_hv0(EXQ2,CX,EYQ2,CY,H,V,G):-
+  HLow is floor(H/2-3), Hhigh is floor(H-H/3),Hhalf is floor(H/2),
+  VLow is floor(V/2-3), Vhigh is floor(V-V/3),Vhalf is floor(V/2),
+  asymmetric_h(EXQ2,CX,H,HLow,Hhalf,Hhigh,G),
+  asymmetric_v(EYQ2,CY,V,VLow,Vhalf,Vhigh,G).
+
 
 
 crop(X,Y,G,GO):- make_grid(X,Y,GO),maplist_until(aligned_rows,G,GO).
@@ -108,7 +148,16 @@ first_quarter(Grid,GridQ):- first_half(Grid,GL),first_half(GL,GridQ).
 first_half(Grid,GL):- length(Grid,L),H is floor(L/2), length(GL,H), append(GL,_,Grid).
 second_half(Grid,GL):- length(Grid,L),H is floor(L/2), length(GL,H), append(_,GL,Grid).
 
-aligned_rows([E1,E2|L],[E1,E2|R]):- aligned_rows0(L,R).
+aligned_rows([E1,E2|L],[E1,E2|R]):- 
+ aligned_rows0(L,R), !,
+ allowed([E1,E2|L]),
+ allowed([E1,E2|R]).
+
+allowed([E1,E2|R]):- \+ all_black([E1,E2|R]).
+
+
+all_black(R):- \+ \+ R =[],!.
+all_black([H|R]):- H==black, all_black(R).
 
 aligned_rows0([],_):-!. % ( empty_or_open(L) ; empty_or_open(R) ), !.
 aligned_rows0(_,[]):-!.
@@ -131,15 +180,15 @@ row_color_changes(PrevCh,H,[N|List],Res):- H==N,  row_color_changes(PrevCh,N,Lis
 
 symetric_row(I,C,Row,L):- append(C,[E1|R],Right), append(L,Right,Row),reverse(L,[E1|LL]),aligned_rows(LL,R),length(L,I).
 
-symmetric_lrw(I,C,[],GL):- !.
+symmetric_lrw(_I,_C,[],_GL):- !.
 symmetric_lrw(I,C,G,GL):- maplist_until(symetric_row(I,C),G,GL),
    reverse(G,GR), maplist_until0(symetric_row(I,C),GR,_).
 
-symmetric_lr(I,C,Grid,GL):- first_half(G,G0),symmetric_lr0(I,C,Grid,GL).
-symmetric_lr(I,C,Grid,GL):- second_half(G,G0),symmetric_lr0(I,C,Grid,GL).
-%symmetric_lr(I,C,Grid,GL):- symmetric_lr0(I,C,Grid,GL).
-symmetric_lr0(I,C,[],GL):- !.
-symmetric_lr0(I,C,Grid,GL):- maplist(symetric_row(I,C),Grid,GL),!.
+symmetric_lr(I,C,G,GL):- first_half(G,G0),symmetric_lr0(I,C,G0,GL).
+symmetric_lr(I,C,G,GL):- second_half(G,G0),symmetric_lr0(I,C,G0,GL).
+%symmetric_lr(I,C,G,GL):- symmetric_lr0(I,C,G,GL).
+symmetric_lr0(_I,_C,[],_GL):- !.
+symmetric_lr0(I,C,G,GL):- maplist(symetric_row(I,C),G,GL),!.
 
 not_no_symmetry_yet(P):- \+ no_symmetry_yet(P).
 
@@ -152,34 +201,271 @@ symmetric_v(I,C,G):- rot270(G,G0),symmetric_lrw(I,C,G0,_).
 symmetric_v(I,C,G):- rot270(G,G0),flipV(G0,G1),symmetric_lrw(I,C,G1,_).
 
 symmetric_hv(EXQ2,CX,EYQ2,CY,H,V,G):- symmetric_h(EXQ2,CX,G),symmetric_v(EYQ2,CY,G),TY is EYQ2*3, TY > V, TX is EXQ2*3, TX > H,!.
-symmetric_hv(EXQ2,CX,EYQ2,CY,H,V,G):- symmetric_hh(EXQ2,CX,G),symmetric_vv(EYQ2,CY,G).
+symmetric_hv(EXQ2,CX,EYQ2,CY,_H,_V,G):- symmetric_hh(EXQ2,CX,G),symmetric_vv(EYQ2,CY,G).
 
 symmetric_hh(I,C,G):- symmetric_lr(I,C,G,_).
 symmetric_vv(I,C,G):- rot270(G,G0),symmetric_lr(I,C,G0,_),!.
 
+/*
+quaderants_and_center_rays(Grid9x9,QuadsO,CenterO,RaysO):- 
+  [[ Q2, _CN,   Q1],
+   [_CW, _CC,  _CE],
+   [ Q3, _CS,   Q4]] = Grid9x9,
+   flipH(Q1,Q1R), flipV(Q3,Q3R), flipHV(Q4,Q4R),
+   gensym('CRef_',CRef),
+   CommonQ = [object_shape(quadrant),object_shape(pattern(CRef))],
+   Quads = [obj([grid(Q2),rot(same),offset(CRef,-1,-1)|CommonQ]),
+             obj([grid(Q1R),rot(flipH),offset(CRef,1,-1)|CommonQ]),
+             obj([grid(Q3R),rot(flipV),offset(CRef,-1,1)|CommonQ]),
+             obj([grid(Q4R),rot(flipHV),offset(CRef,1,1)|CommonQ])],
+   get_center_rays(CRef,Grid9x9,Center,Rays),
+   maplist(filter_empty_grids,[Quads,Center,Rays],[QuadsO,CenterO,RaysO]).
+
+get_center_rays(_CRef,_Grid9x9,[],[]):-!.
+get_center_rays(CRef,Grid9x9,Center,Rays):- 
+  [[_Q2,  CN, _Q1],
+   [ CW,  CC,  CE],
+   [_Q3,  CS, _Q4]] = Grid9x9,
+   rot180(CW,CWR), rot270(CN,CNR), rot90(CS,CSR),
+   CommonR = [object_shape(divider(CRef)),object_shape(ray(CRef))],
+   
+   Rays  = [obj([grid(CE),rot(same),   offset(CRef,1,0)|CommonR]),
+             obj([grid(CWR),rot(rot180),offset(CRef,-1,0)|CommonR]),
+             obj([grid(CSR),rot(rot90), offset(CRef,0,1)|CommonR]),
+             obj([grid(CNR),rot(rot270),offset(CRef,0,-1)|CommonR])],
+   Center =  [obj([grid(CC),rot(same),offset(CRef,0,0)|object_shape(center(CRef))])],!.
+
+
+filter_empty_grids(List,ListO):- include(obj_has_form,List,ListO).
+obj_has_form(obj(List)):- member(grid(Grid),List),grid_has_points(Grid).
+
+grid_has_points(Empty):- Empty=@=[[_]],!,fail.
+grid_has_points(Empty):- is_empty_grid(Empty),!,fail.
+grid_has_points(G):- is_grid(G),!.
+  */ 
 
 incr(X,X1):- X1 is X + 1.
 
-symetric_xy_3x3(G,
-[[Q2,  CN,  Q1],
- [CW,  CC,  CE],
- [Q3,  CS,  Q4]]):- 
- notrace(symetric_xy(SXQ2,SYQ2,EXQ2,EYQ2,SXCC,SYCC,EXCC,EYCC,SXQ4,SYQ4,EXQ4,EYQ4,G)),!,
-  clip(SXQ2,SYQ2,EXQ2,EYQ2,G,Q2),
-  clip(SXQ4,SYQ2,EXQ4,EYQ2,G,Q1),
-  clip(SXQ2,SYQ4,EXQ2,EYQ4,G,Q3),
+same(X,X).
+
+clip_quadrant(CRef,SXC,SXC,EXC,EYC,GN,H,V,SXQ4,SYQ4,EXQ4,EYQ4,G,Same,obj(OBJL)):-
   clip(SXQ4,SYQ4,EXQ4,EYQ4,G,Q4),
+  call(Same,Q4,LikeQ4),
+  globalpoints(LikeQ4,LGPoints),  
+  Width is EXQ4-SXQ4+1,Hieght is EYQ4-SYQ4+1,
+  embue_points1(GN,H,V,1,1,Width,Hieght,LGPoints,Ps),!,
+  globalpoints(Q4,LPoints),
+  offset_points(SXQ4,SYQ4,LPoints,GPoints),
 
-    clip(SXCC,SYCC,EXCC,EYCC,G,CC),
-    clip(SXCC,SYQ2,EXCC,EYQ2,G,CN),
-    clip(SXCC,SYQ4,EXCC,EYQ4,G,CS),
-    clip(SXQ4,SYCC,EXQ4,EYCC,G,CE),
-    clip(SXQ2,SYCC,EXQ2,EYCC,G,CW),
+  setq(Ps,[object_shape(quadrant(CRef,Same)),object_shape(pattern(CRef,SXC,SXC,EXC,EYC)),
+           object_rotated(Same),object_size(Width,Hieght),object_offset(SXQ4,SYQ4),globalpoints(GPoints),
+           center_info(CRef,SXC,SXC,EXC,EYC),grid(LikeQ4)],OBJL).
+
+clip_ray(CRef,SXC,SXC,EXC,EYC,GN,H,V,SXQ4,SYQ4,EXQ4,EYQ4,G,Same,OBJ):-
+nop((
+  clip(SXQ4,SYQ4,EXQ4,EYQ4,G,Q4),
+  CommonQ = [object_shape(divider(CRef,Same)),object_shape(ray(CRef,SXC,SXC,EXC,EYC))],
+  call(Same,Q4,LikeQ4),
+  globalpoints(Q4,LPoints),
+  offset_points(SXQ4,SYQ4,LPoints,GPoints),
+  embue_points1(GN,H,V,SXQ4,SYQ4,EXQ4,EYQ4,GPoints,Ps),!,
+  append([[object_rotated(Same),
+     center_info(CRef,SXC,SXC,EXC,EYC),grid(LikeQ4)],CommonQ,Ps],OBJL),
+  OBJ=obj(OBJL))).
 
 
-  print_side_by_side(Q2,Q1),
+object_rotated(obj(L),G):- member(object_rotated(G),L).
+
+grid_to_3x3_objs(Grid,NewIndiv4s):-
+  symetric_xy_3x3(Grid,Image9x9),
+  flatten(Image9x9,Flat),
+  include(nonvar,Flat,NewIndiv1s),
+  fix_the_fours(NewIndiv1s,NewIndiv4s).
+  
+
+get_overlaps(NewIndiv1s,Rest,A,B,AR,BR):- 
+  select(A,NewIndiv1s,Rest1),
+  select(B,Rest1,Rest),
+  object_grid(A,AR), object_grid(B,BR).
+
+get_best_overlaps(NewIndiv1s,Rest,A,B,AR,BR):-
+  get_overlaps(NewIndiv1s,Rest,A,B,AR,BR), AR==BR,!.
+get_best_overlaps(NewIndiv1s,Rest,A,B,AR,BR):-
+  get_overlaps(NewIndiv1s,Rest,A,B,AR,BR), 
+  show_success(always,confirm_overlap(AR,BR)),!.
+get_best_overlaps(NewIndiv1s,Rest,A,B,AR,BR):-
+  get_overlaps(NewIndiv1s,Rest,A,B,AR,BR), AR=BR,!.
+
+get_color_at(H,V,Grid,C):-
+  nth1(V,Grid,Row),nth1(H,Row,C).
+
+consensus(GridS,H,V,VGrid):-
+ forall(between(1,V,Y),
+  forall(between(1,H,X),
+   ignore(consensus1(GridS,X,Y,VGrid)))).
+consensus1(GridS,X,Y,VGrid):- 
+  findall(C,(member(G,GridS),get_color_at(X,Y,G,C)),L),
+  consensus22(L,R),
+  nonvar(R),is_color(R),
+  nb_set_local_point(X,Y,R,VGrid),!.
+
+my_partition(_,[],[],[]):-!.
+my_partition(P1,[H|L],[H|I],E):- call(P1,H),!,
+  my_partition(P1,L,I,E).
+my_partition(P1,[H|L],I,[H|E]):- 
+   my_partition(P1,L,I,E).
+
+consensus22(L,C):- 
+  my_partition(var,L,Vars,Rest0),
+  my_partition(=(brown),Rest0,_,Rest),
+  my_partition(is_bgc,Rest,BGC,Rest1),
+  my_partition(is_black,Rest1,Blk,Rest2),
+  my_partition(is_color,Rest2,Color,Other),!,
+  consensus2(Vars,BGC,Blk,Color,Other,C),!.
+
+%consensus2(Vars,BG,Blk,Color,Other,C).
+
+is_four([C,C,C,C],C).
+is_four([C,C,C],C).
+%is_four([C,C],C).
+consensus2(Vars,BG,Blk,Color,Other,C):- is_four(Color,C).
+consensus2(Vars,BG,Blk,Color,Other,C):- is_four(Blk,C).
+consensus2(Vars,BG,Blk,Color,Other,C):- is_four(BG,C).
+consensus2(Vars,BG,Blk,Color,Other,C):- is_four(Other,C).
+consensus2(Vars,BG,Blk,[C|Color],Other,C).
+consensus2(Vars,BG,[C|Blk],Color,Other,C).
+consensus2(Vars,[C|BG],Blk,Color,Other,C).
+
+nb_set_insert(L,E):- arg(2,L,T),(var(T);T==[]),!,nb_setarg(2,L,[E]).
+nb_set_insert([_|L],E):-nb_set_insert(L,E).
+
+fix_the_fours(NewIndiv0s,NewIndiv1s):- 
+  must_det_l((
+  predsort(sort_on(colored_pixel_count),NewIndiv0s,NewIndiv1s),
+  maplist(object_grid,NewIndiv1s,Grids),
+  findall(size(H,V),(member(O,Grids),object_size(O,H,V)),Sizes),
+  sort(Sizes,SizesS),
+  reverse(SizesS,[size(H,V)|_]),
+  make_grid(H,V,Result),
+  wdmsg(pointsNotSet(H,V)),
+  maplist(print_grid,Grids),
+  must(consensus(Grids,H,V,Result)),
+  wdmsg(result),
+  print_grid(Result),
+  maplist(set_local_points(Result),NewIndiv1s),
+  wdmsg(pointsNowSet),
+  maplist(object_grid,NewIndiv1s,NewGrids),
+  maplist(print_grid,NewGrids))).
+
+
+fix_the_fours(NewIndiv0s,[A,B|Rest]):- 
+  predsort(sort_on(colored_pixel_count),NewIndiv0s,NewIndiv1s),
+  must_be_free(A),
+  get_best_overlaps(NewIndiv1s,Rest,A,B,AR,BR),
+  print_side_by_side(AR,BR),
+  maplist(fix_the_twos(AR),NewIndiv1s),
+  maplist(fix_the_twos(BR),NewIndiv1s),!.
+fix_the_fours(IO,IOS):- predsort(sort_on(colored_pixel_count),IO,IOS).
+
+sort_on(C,R,A,B):- call(C,A,AA),call(C,B,BB),!,compare(R,AA+A,BB+B).
+colored_pixel_count(A,AA):- object_grid(A,G),
+  findall(E,(sub_term(E,G), nonvar(E),is_color(E),\+ is_bgc(E)),L),
+  length(L,AA).
+
+fix_the_twos(AR,B):-
+   unset_points(AR,B).
+
+is_color_no_bgc(X):- \+ is_bgc(X), is_color(X).
+
+expand_color(FG,Was,C,CC):- FG== fg,!,expand_color(C,Was,C,CC).
+expand_color(FG,Was,C,CC):- var(C),is_color_no_bgc(FG),!,FG=C.
+expand_color(FG,Was,C,CC):- is_color_no_bgc(C),!,CC=C.
+expand_color(FG,Was,C,CC):- var(C),is_bgc(FG),!,FG=C.
+expand_color(FG,Was,C,CC):- is_bgc(C),!,CC=C.
+
+unset_points(AR,B):- 
+  set_local_points(AR,B).
+unset_points(AR,B):- set_local_points(AR,B).
+
+
+set_local_points(Points,Grid):-  set_local_points(fg,Points,Grid),!.
+set_local_points(_,[],_):-!.
+set_local_points(C,Obj,Grid):- is_grid(Obj), localpoints(Obj,Points),!, set_local_points(C,Points,Grid).
+set_local_points(C,[H|T],Grid):- !, set_local_points(C,H,Grid),set_local_points(C,T,Grid).
+set_local_points(C,Obj,Grid):- is_object(Obj), localpoints(Obj,Points),!, set_local_points(C,Points,Grid).
+set_local_points(C,Obj,Grid):- is_group(Obj),!, into_grid(Obj,Grid),localpoints(Obj,Points), set_local_points(C,Points,Grid).
+set_local_points(FG,Point,Grid):- as_hv_point(H,V,C,Point),hv_value_or(Grid,Was,H,V,unknown),
+   expand_color(FG,Was,C,CC),!,nb_set_local_point(H,V,CC,Grid).
+set_local_points(C,Point,Grid):- throw_missed(set_local_points(C,Point,Grid)).
+
+nb_set_local_point(H,V,C,Obj):- is_group(Obj),!,maplist(nb_set_local_point(H,V,C),Obj).
+nb_set_local_point(H,V,C,Grid):- is_grid(Grid),!,nth1(V,Grid,Row),nb_set_nth1(H,Row,C).
+nb_set_local_point(H,V,C,Obj):- is_object(Obj),get_instance_method(Obj,nb_set_local_point(H,V,C),Method),!,call(Method,Obj,H,V,C).
+nb_set_local_point(H,V,C,Obj):- is_object(Obj),!,localpoints(Obj,Points),nb_set_local_point(H,V,C,Points), setq(Obj,localpoints(Points),Res),nop(assertion(same_term(Obj,Res))).
+nb_set_local_point(H,V,C, Grid):- maplist(is_cpoint,Grid),!,hv_point(H,V,Point),!, must(nth1(Nth,Grid,_-Point)->nb_set_nth1(Nth,Grid,C-Point);nb_set_insert(Grid,Point)).
+nb_set_local_point(H,V,_C,Grid):- maplist(is_nc_point,Grid),!,hv_point(H,V,Point),!, must(nth1(Nth,Grid,Point)->nb_set_nth1(Nth,Grid,Point);nb_set_insert(Grid,Point)).
+nb_set_local_point(H,V,C,Obj):- throw_missed(nb_set_local_point(H,V,C,Obj)).
+
+
+set_global_points(Points,Grid):-  set_global_points(fg,Points,Grid).
+set_global_points(_,[],_):-!.
+set_global_points(C,Obj,Grid):- is_grid(Obj), !, globalpoints(Obj,Points), set_global_points(C,Points,Grid).
+set_global_points(C,[H|T],Grid):- !, set_global_points(C,H,Grid),set_global_points(C,T,Grid).
+set_global_points(C,Obj,Grid):- is_object(Obj), globalpoints(Obj,Points),!, set_global_points(C,Points,Grid).
+set_global_points(C,Obj,Grid):- is_group(Obj),!, into_grid(Obj,Grid),globalpoints(Obj,Points), set_global_points(C,Points,Grid).
+set_global_points(C,Point,Grid):- as_hv_point(H,V,Var,Point), ignore(C=Var), !,nb_set_global_point(H,V,C,Grid).
+set_global_points(C,Point,Grid):- throw_missed(set_global_points(C,Point,Grid)).
+
+nb_set_global_point(H,V,C,Grid):- is_grid(Grid),nth1(V,Grid,Row),nb_set_nth1(H,Row,C).
+nb_set_global_point(H,V,C,Obj):- is_object(Obj),get_instance_method(Obj,set_global_point(H,V,C),Method),!,call(Method,Obj,H,V,C).
+nb_set_global_point(H,V,C,Obj):- is_group(Obj),maplist(nb_set_global_point(H,V,C),Obj).
+nb_set_global_point(H,V,C,Obj):- is_object(Obj),globalpoints(Obj,Points),!,nb_set_global_point(H,V,C,Points),
+  setq(Obj,globalpoints(Points),Res),nop(assertion(same_term(Obj,Res))).
+nb_set_global_point(H,V,_C,Grid):- maplist(is_nc_point,Grid),hv_point(H,V,Point),
+  (nth1(Nth,Grid,Point)->nb_set_nth1(Nth,Grid,Point);nb_set_insert(Grid,Point)).
+nb_set_global_point(H,V,C,Grid):- maplist(is_cpoint,Grid),hv_point(H,V,Point),
+  (nth1(Nth,Grid,_-Point)->nb_set_nth1(Nth,Grid,Point);nb_set_insert(Grid,C-Point)).
+nb_set_global_point(H,V,C,Obj):- throw_missed(nb_set_global_point(H,V,C,Obj)).
+
+
+
+
+
+
+confirm_overlap(AR,BR):- AR==BR,!.
+confirm_overlap(AR,BR):- ((\+ \+ BR=[]);(\+ \+ AR=[])),!.
+confirm_overlap([A|AR],[B|BR]):-
+  confirm_overlap(A,B),!,
+  confirm_overlap(AR,BR).
+
+
+
+
+
+symetric_xy_3x3(G,Grid9x9):- 
+ get_gridname(G,GN), grid_size(G,H,V),
+ gensym('CRef_',CRef),
+  [[Q2,  CN, Q1],
+   [CW, _CC, CE],
+   [Q3,  CS, Q4]] = Grid9x9,
+ notrace(symetric_xy(_CXL,_CYL,_CX,_CY,SXQ2,SYQ2,EXQ2,EYQ2,SXCC,SYCC,EXCC,EYCC,SXQ4,SYQ4,EXQ4,EYQ4,G)),!,
+  clip_quadrant(CRef,EXQ2,EYQ2,SXQ4,SYQ4,GN,H,V,SXQ2,SYQ2,EXQ2,EYQ2,G,flipHV,Q2),
+  clip_quadrant(CRef,EXQ2,EYQ2,SXQ4,SYQ4,GN,H,V,SXQ4,SYQ2,EXQ4,EYQ2,G,flipV,Q1),
+  clip_quadrant(CRef,EXQ2,EYQ2,SXQ4,SYQ4,GN,H,V,SXQ2,SYQ4,EXQ2,EYQ4,G,flipH,Q3),
+  clip_quadrant(CRef,EXQ2,EYQ2,SXQ4,SYQ4,GN,H,V,SXQ4,SYQ4,EXQ4,EYQ4,G,same,Q4),
+  %clip_ray(CRef,EXQ2,EYQ2,SXQ4,SYQ4,GN,H,V,SXCC,SYCC,EXCC,EYCC,G,CC),    
+  clip_ray(CRef,EXQ2,EYQ2,SXQ4,SYQ4,GN,H,V,SXCC,SYQ2,EXCC,EYQ2,G,rot270,CN),
+  clip_ray(CRef,EXQ2,EYQ2,SXQ4,SYQ4,GN,H,V,SXCC,SYQ4,EXCC,EYQ4,G,rot90,CS),
+  clip_ray(CRef,EXQ2,EYQ2,SXQ4,SYQ4,GN,H,V,SXQ4,SYCC,EXQ4,EYCC,G,same,CE),
+  clip_ray(CRef,EXQ2,EYQ2,SXQ4,SYQ4,GN,H,V,SXQ2,SYCC,EXQ2,EYCC,G,rot180,CW),
+  nop(print_symmetry(localpoints,Q2,Q1,Q3,Q4)),!.
+
+
+print_symmetry(How,Q2,Q1,Q3,Q4):-  
+  call(How,Q1,QL1), call(How,Q2,QL2),call(How,Q3,QL3),call(How,Q4,QL4),
   wdmsg("printed_pie II   I"),
-  print_side_by_side(Q3,Q4),
+  print_side_by_side(QL2,QL1),
+  print_side_by_side(QL3,QL4),
   wdmsg("printed_pie III  IV"),
   !.
 
@@ -187,6 +473,8 @@ symetric_xy_3x3(G,
 
 make_empty_grid(GO):- GO=_.
 
+clip(0,0,0,0,_,GO):-  !, make_empty_grid(GO).
+clip(0,_,_,_,_,GO):-  !, make_empty_grid(GO).
 clip(SX,SY,EX,EY,_,GO):- (EY<SY ; EX<SX) , !, make_empty_grid(GO).
 %clip(SX,SY,EX,EY,G,GO):- G==[[]],!,GO=[[]].
 clip(SX,SY,EX,EY,G,GO):-
@@ -220,8 +508,13 @@ idealistic_symetric_xy_3x3(
  [CW,        _CC,        flipH(CW)],
  [flipV(Q2),  flipV(CN), flipHV(Q2)]]).
 
-repair_symmetry(G,GR):-
 
+
+test_symmetry_code(Grid,NewIndiv1s):- grid_to_3x3_objs(Grid,NewIndiv1s).
+%test_symmetry_code(Grid,NewIndiv1s):- repair_symmetry(Grid,NewIndiv1s).
+
+repair_symmetry(G,GR):-
+/*
    [[Q2,  CN,   Q1],
     [CW,  CC,   CE],
     [Q3,  CS,   Q4]] = Grid,
@@ -229,10 +522,10 @@ repair_symmetry(G,GR):-
   [[Q2R,  CNR,   Q1R],
    [CWR,   CC,   CER],
    [Q3R,  CSR,   Q4R]] = Repair,
-
+*/
  symetric_xy_3x3(G,Grid),
- reassemble(Grid,Repaired),
- assemble(Repaired,GR).
+ reassemble(Grid,Repair),
+ assemble(Repair,GR).
 
 reassemble(X,X):-!.
 reassemble(

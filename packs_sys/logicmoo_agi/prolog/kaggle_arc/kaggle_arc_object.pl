@@ -31,9 +31,19 @@ make_shared_indivs(Gridname,Grid):-
    compute_shared_indivs(Grid,IndvS),
    set_shared_indivs(Gridname,IndvS).
 
+/*get_shared_indivs(Grid,IndvS):- % @todo this should be correct already
+   into_gridname(Grid,Gridname), Grid\=@=Gridname,!,
+   get_shared_indivs(Gridname,IndvS).
+*/
 get_shared_indivs(Gridname,IndvS):- 
    is_shared_saved(Gridname,IndvS).
+get_shared_indivs(Gridname,IndvS):- 
+   compute_shared_indivs(Gridname,IndvS),
+   set_shared_indivs(Gridname,IndvS).
 
+set_shared_indivs(Grid,IndvS):- fail, % @todo this should be correct already
+   into_gridname(Grid,Gridname), Grid\=@=Gridname,!,
+   set_shared_indivs(Gridname,IndvS).
 set_shared_indivs(Gridname,IndvS):- 
    retractall(is_shared_saved(Gridname,_)),
    asserta(is_shared_saved(Gridname,IndvS)),!.
@@ -103,16 +113,42 @@ cleanup(IndvS1,IndvS2,IndvC,BetterO):-
 cleanup(_,_,A,A).
 
 compute_shared_indivs(Grid,IndvS):- 
+   must_be_free(IndvS),
    get_gridname(Grid,Gridname),
    grid_shared_with(Gridname,With),
    locally(b_setval(grid_shared,With),
-            individuals_common(Grid,IndvS)).
+           ( individuals_common(Grid,IndvS0),
+             fix_static_objs(IndvS0,IndvS))).
 
 compute_unshared_indivs(Grid,IndvS):- 
    locally(b_setval(grid_shared,nil),
-            individuals_common(Grid,IndvS)),!.
+           ( individuals_common(Grid,IndvS0),
+             fix_static_objs(IndvS0,IndvS))),
+   !.
+
+filter_indivs(In,Filter,Out):- into_group(In,InS),
+  include(matches_filter(Filter),InS,Out).
+
+matches_filter(Filter,obj(List)):- is_list(List),!,forall(member(E,Filter),member(E,List)).
+
+must_be_free(AllNew):- var(AllNew),!.
+must_be_free(AllNew):- dumpST,wdmsg(must_be_free(AllNew)),break,fail.
+
+fix_static_objs(IndvS1,AllNew):- 
+ must_be_free(AllNew),
+ length(IndvS1,L), L> 70,!,
+  into_grid(IndvS1,Grid), 
+  ((
+  grid_to_3x3_objs(Grid,NewIndiv1s),
+  filter_indivs(IndvS1,[object_shape(rectangluar), object_shape(solid)],KeepIndvS1R),!,
+  remove_points(KeepIndvS1R,NewIndiv1s,FixedNewIndiv1s),
+ %% pt(flatten([FixedNewIndiv1s,KeepIndvS1R],AllNew)),
+  flatten([FixedNewIndiv1s,KeepIndvS1R],AllNew))),!.
+fix_static_objs(IndvS1,IndvS1).
+
 
 individuals_common(Grid,IndvS):- % is_grid(Grid),!,
+  must_be_free(IndvS),
   notrace(grid_size(Grid,H,V)),
   %pt(grd=Grid),
   globalpoints(Grid,Points),
@@ -136,9 +172,9 @@ assert_IndvS(obj(L)):-
 
 globalpoints(NamedExampleNum,Iv,ListOIfColoredPoints).
 globalpoint(NamedExampleNum,Iv,Color,Point).
-localpointlist(NamedExampleNum,Iv,ListOIfColoredPoints).
+localpoints(NamedExampleNum,Iv,ListOIfColoredPoints).
 localpoint(NamedExampleNum,Iv,Color,Point).
-localcolorlesspointlist(NamedExampleNum,Iv,Point).
+localpoints_nc(NamedExampleNum,Iv,Point).
 object_size(NamedExampleNum,Iv,H,V).
 object_shape(NamedExampleNum,Iv,ShapName).
 
@@ -157,6 +193,7 @@ individuals_common(Grid,I):- is_group(Grid),!,I=Grid.
 individuals_common(obj(Grid),[obj(Grid)]):-!.
 
 individuals_raw(ID,Points,IndvS):- 
+  
   maybe_shared_individuals_list(squares,Points,Indv0S,ELeftOverPoints),
   maybe_join_shared_individuals_list(squares,ELeftOverPoints,Indv0S,Indv1S,LeftOverPoints),
   individuals_list(squares,ID,LeftOverPoints,Indv2S),
@@ -436,9 +473,9 @@ grid_to_individual(Grid,OUT):-
   globalpoints(Grid,Points),
   embue_points(GN,H,V,1,1,H,V,Points,OUT).
 
-make_embued_points(Grid,H,V,Indv2,IndvS):- 
+make_embued_points(Grid,H,V,Points,IndvS):- 
   get_gridname(Grid,GN),
-  maplist(embue_points(GN,H,V),Indv2,IndvS).
+  maplist(embue_points(GN,H,V),Points,IndvS).
 
 is_not_cpoint(I):- \+ is_cpoint(I).
 is_not_gpoint(I):- \+ is_gpoint(I).
@@ -456,7 +493,48 @@ close_enough_grid(GridIn,GridInCopy,GridO):-
   \+ \+ (GridO=GridIn, GridIn=@=GridInCopy).
 
 embue_points(GN,H,V,LoH,LoV,HiH,HiV,C-HV,OBJ):- !, embue_points(GN,H,V,LoH,LoV,HiH,HiV,[C-HV],OBJ).
-embue_points(NamedExampleNum,H,V,LoH,LoV,HiH,HiV,IPoints,obj(Ps)):-
+
+embue_points(NamedExampleNum,H,V,LoH,LoV,HiH,HiV,IPoints,obj(OBJ)):- 
+  embue_points1(NamedExampleNum,H,V,LoH,LoV,HiH,HiV,IPoints,OBJ).
+
+into_gridname(G,TstName):- nonvar(G), into_gridname(GVar,TstName),G=@=GVar,!.
+
+into_gridname(G,Name*ExampleNum*in):- kaggle_arc(Name,ExampleNum,G,_).
+into_gridname(G,Name*ExampleNum*out):- kaggle_arc(Name,ExampleNum,_,G).
+into_gridname(G,TstName):- is_gridname(G,TstName).
+into_gridname(G,TstName):- is_shared_saved(TstName,G).
+into_gridname(G,TstName):- is_unshared_saved(TstName,G).
+into_gridname(G,TstName*T):- fix_test_name(TstName+T,Name,ExampleNum),kaggle_arc(Name,ExampleNum,G,_).
+into_gridname(G,TstName):- learned_color_inner_shape(TstName,magenta,BG,G,_),get_bgc(BG).
+
+
+  %pt(Image-->Image9x9),
+  %into_gridname(Grid,Gridname),
+  %quaderants_and_center_rays(Image9x9,Quads,Centers,Rays),
+  %append([Quads,Centers,Rays],NewIndiv1s00),
+  %trace,
+  %correctify_objs(Gridname,NewIndiv1s00,NewIndiv1s),!.
+
+
+/*correctify_objs(Gridname,NewIndiv1s00,NewIndiv1s):- is_list(NewIndiv1s00),maplist(correctify_objs(Gridname),NewIndiv1s00,NewIndiv1s).
+correctify_objs(Gridname,obj(List),obj(NOBJ)):- is_list(List), 
+   member(grid(Grid),List),
+   \+ member(globalpoints(_),List),
+   grid_size(Grid,H,V),
+   %trace,
+   pt(dleaing_with=obj(List)),
+   globalpoints(Grid,Points),
+   assertion(Points\=[]),
+   points_range(Points,LoH,LoV,HiH,HiV,_HO,_VO),
+   %nb_current(test_name_w_type,NamedExampleNum),
+   embue_points1(Gridname,H,V,LoH,LoV,HiH,HiV,Points,OBJ),
+   append(List,OBJ,NOBJ),!.
+correctify_objs(_Gridname,obj(List),obj(List)):-!.
+correctify_objs(_Gridname,Obj,Obj).
+   %make_embued_points(Grid,H,V,Points,IndvS)
+*/
+
+embue_points1(GridnameExampleNumIO,H,V,LoH,LoV,HiH,HiV,IPoints,Ps):-
  %must_det_l
  ((
  include(is_gpoint,IPoints,Points),
@@ -467,7 +545,7 @@ embue_points(NamedExampleNum,H,V,LoH,LoV,HiH,HiV,IPoints,obj(Ps)):-
   length(Points,Len),
   Width is HiH-LoH+1,
   Height is HiV-LoV+1,
-  %nb_current(test_name_w_type,NamedExampleNum),
+  %nb_current(test_name_w_type,GridnameExampleNumIO),
   
   %gensym(id_,IID),
   Area is Width * Height,
@@ -481,18 +559,18 @@ embue_points(NamedExampleNum,H,V,LoH,LoV,HiH,HiV,IPoints,obj(Ps)):-
   findall(object_shape(Shape),
    (guess_shape(Grid,GridO,Ps,Empty,Len,Width,Height,CC,CLPoints,Shape),close_enough_grid(Grid,GridInCopy,GridO)),Shapes),
   append([[
-    localcolorlesspointlist(CLPoints),
+    localpoints_nc(CLPoints),
     colors_count(CC),
     object_size(Width,Height),
     point_count(Len)],Shapes,
     Info,
     %width(Width), height(Height), area(Area),
     %missing(Empty),
-    [localpointlist(LPoints)],
+    [localpoints(LPoints)],
     [grid(GridO)],
     [object_offset(LoH,LoV)],
     [globalpoints(Points),
-    object_indv_id(NamedExampleNum,Iv),
+    object_indv_id(GridnameExampleNumIO,Iv),
     grid_size(H,V)]],Ps))).
 
 
@@ -501,7 +579,7 @@ object_indv_id(_,NamedExampleNum,_Iv):- nb_current(test_name_w_type,NamedExample
 
 point_count(_-P,1):- nonvar(P),!.
 point_count(I,X):- indv_props(I,L),member(point_count(X),L),!.
-point_count(obj(I),Count):- localpointlist(I,Points), length(Points,Count),!.
+point_count(obj(I),Count):- localpoints(I,Points), length(Points,Count),!.
 point_count(Points,Count):- is_list(Points),length(Points,Count),!.
 remove_color(_-P,P).
 remove_color(LPoints,CLPoints):- maplist(remove_color,LPoints,CLPoints).
@@ -560,8 +638,8 @@ counted_neighbours(C-HV,List,CountIn,[P|CountIn]):-
  findall(Dir,(is_adjacent_point(HV,Dir,HV2),Dir\==c,member(CC-HV2,List),colors_join(C,CC)),Ns),
   length(Ns,I),P = I-HV.
 
-localpointlist(I,X):- indv_props(I,L),member(localpointlist(X),L).
-localpointlist(I,X):- into_grid0(I,G),globalpoints(G,X).
+localpoints(I,X):- indv_props(I,L),member(localpoints(X),L).
+localpoints(I,X):- into_grid0(I,G),globalpoints(G,X).
 
 object_shape(I,X):- indv_props(I,L),member(object_shape(X),L).
 
@@ -588,7 +666,55 @@ grid_to_id(Grid,ID):- gensym('grid_',ID),assert_id_grid_cells(ID,Grid),assert(is
 colors_count(I,X):- indv_props(I,L),!,member(colors_count(X),L).
 colors_count(G,BFO):- pixel_colors(G,GF),sort(GF,GS),count_each(GS,GF,UC),keysort(UC,KS),reverse(KS,SK),into_cc(SK,BFO).
 
-localcolorlesspointlist(I,X):- indv_props(I,L),member(localcolorlesspointlist(X),L).
+localpoints_nc(I,X):- indv_props(I,L),member(localpoints_nc(X),L).
+
+throw_missed(G):-  Info = missed(G),wdmsg(Info), dumpST,throw_missed_pt2(G,Info).
+throw_missed_pt2(_,Info):- tracing,!,throw(Info).
+throw_missed_pt2(G,Info):- notrace,nortrace,trace,wdmsg(Info),break,rtrace(G),throw(Info).
+
+get_instance_method(Obj,Compound,F):- is_object(Obj), compound(Compound),compound_name_arity(Compound,Name,A),
+   A1 is A+1, atom_concat('object_',Name,F),current_predicate(F/A1).
+
+object_grid(I,X):- indv_props(I,L),!,member(grid(X),L).
+
+object_nb_set_local_point(Obj,LH,LV,C):- object_set_local_point(Obj,LH,LV,C),!.
+object_nb_set_local_point(Obj,LH,LV,C):- trace,object_set_local_point(Obj,LH,LV,C).
+
+object_set_local_point(Obj,LH,LV,C):- 
+  trace,
+  object_local_to_global_point(Obj,LH,LV,H,V),
+  hv_point(H,V,GPoint), hv_point(LH,LV,LPoint), 
+\+ \+ ((
+  obtain_prop(Obj,globalpoints(Points),NewPoints),
+  (Points==[]->NewPoints=[GPoint];NewPoints=Points),
+  nb_set_local_point(H,V,C,NewPoints))),
+\+ \+ ((
+  obtain_prop(Obj,localpoints(Points),NewPoints),
+  (Points==[]->NewPoints=[LPoint];NewPoints=Points),
+  nb_set_local_point(LH,LV,C,NewPoints))),
+\+ \+ ((
+  obtain_prop(Obj,grid(Points),NewPoints),
+  NewPoints=Points,
+  nb_set_local_point(LH,LV,C,Points))),!.
+
+
+%obtain_prop(Obj,globalpoints(Was),globalpoints(New)):- nth1(N,
+obtain_prop(Obj,Was,New):- indv_props(Obj,L), nth1(N,L,Was),nth1(N,L,Found),nb_setarg(1,Found,New).
+
+object_nb_set_global_point(Obj,H,V,C):- object_set_global_point(Obj,H,V,C).
+object_set_global_point(Obj,H,V,C):- 
+  object_global_to_localpoint(H,V,LH,LV),
+  object_set_local_point(Obj,LH,LV,C).
+
+
+object_global_to_local_point(Obj,H,V,LH,LV):- object_offset(Obj,OH,OV),
+  LH is H - OH + 1, LV is V - OV + 1.
+
+object_local_to_global_point(Obj,H,V,LH,LV):- object_offset(Obj,OH,OV),
+  LH is H + OH - 1, LV is V + OV - 1.
+
+
+
 
 object_offset(I,X,Y):- indv_props(I,L),member(object_offset(X,Y),L).
 object_offset(Grid,H,V):- is_grid(Grid),!,globalpoints(Grid,Points),!,points_range(Points,LoH,LoV,_,_,_,_), H is LoH, V is LoV.

@@ -49,7 +49,8 @@ fav(X,[]):- clause(fav(X),true).
 %fav(t('23b5c85d'),[b7249182
 %fav(t('db3e9e38'),[lmDSL([flipV,C1=orange,C2=blue,[],flipV]).
 %fav(t(_),[lmDSL([fillFromBorder(none,yellow)])]).
-
+fav(t('3631a71a'),[lmDSL([overlay_each_pattern])]).
+fav(t('9d9215db'),[lmDSL([overlay_each_pattern])]).
 fav(t('810b9b61'),[lmDSL([(iz(X,rectangle),iz(X,hollow),iz(X,thick1),iz(X,noexit))-->color(X,green)])]).
 fav(v('1d398264'),[lmDSL([(iz(X,keypad),iz(X,multicolor),centerof(X,C)-->sunburst(C))])]).
 fav(v('e9bb6954'),[lmDSL([(iz(X,keypad), iz(X,monocolor),centerof(X,C)-->starburst(C))]),e('box of nine draw outward, if you hit a drawn line blacken it')]).
