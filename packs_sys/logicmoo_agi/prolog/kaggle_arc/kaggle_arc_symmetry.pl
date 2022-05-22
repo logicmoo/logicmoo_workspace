@@ -340,7 +340,8 @@ nb_set_insert(L,E):- arg(2,L,T),(var(T);T==[]),!,nb_setarg(2,L,[E]).
 nb_set_insert([_|L],E):-nb_set_insert(L,E).
 
 fix_the_fours(NewIndiv0s,NewIndiv1s):- 
-  must_det_l((
+  %must_det_l
+  ((
   predsort(sort_on(colored_pixel_count),NewIndiv0s,NewIndiv1s),
   maplist(object_grid,NewIndiv1s,Grids),
   findall(size(H,V),(member(O,Grids),object_size(O,H,V)),Sizes),
@@ -352,12 +353,22 @@ fix_the_fours(NewIndiv0s,NewIndiv1s):-
   must(consensus(Grids,H,V,Result)),
   wdmsg(result),
   print_grid(Result),
+  format('~N'),
   maplist(set_local_points(Result),NewIndiv1s),
+  maplist(set_local_points(Result),Grids),
+  format('~N'),
   wdmsg(pointsNowSet),
+  format('~N'),
   maplist(object_grid,NewIndiv1s,NewGrids),
-  maplist(print_grid,NewGrids))).
+  maplist(print_grid,NewGrids))),
+  format('~N'),!.
 
+sort_on(C,R,A,B):- call(C,A,AA),call(C,B,BB),!,compare(R,AA+A,BB+B).
+colored_pixel_count(A,AA):- object_grid(A,G),
+  findall(E,(sub_term(E,G), nonvar(E),is_color(E),\+ is_bgc(E)),L),
+  length(L,AA).
 
+/*
 fix_the_fours(NewIndiv0s,[A,B|Rest]):- 
   predsort(sort_on(colored_pixel_count),NewIndiv0s,NewIndiv1s),
   must_be_free(A),
@@ -366,15 +377,9 @@ fix_the_fours(NewIndiv0s,[A,B|Rest]):-
   maplist(fix_the_twos(AR),NewIndiv1s),
   maplist(fix_the_twos(BR),NewIndiv1s),!.
 fix_the_fours(IO,IOS):- predsort(sort_on(colored_pixel_count),IO,IOS).
-
-sort_on(C,R,A,B):- call(C,A,AA),call(C,B,BB),!,compare(R,AA+A,BB+B).
-colored_pixel_count(A,AA):- object_grid(A,G),
-  findall(E,(sub_term(E,G), nonvar(E),is_color(E),\+ is_bgc(E)),L),
-  length(L,AA).
-
 fix_the_twos(AR,B):-
    unset_points(AR,B).
-
+*/
 is_color_no_bgc(X):- \+ is_bgc(X), is_color(X).
 
 expand_color(FG,Was,C,CC):- FG== fg,!,expand_color(C,Was,C,CC).
@@ -390,20 +395,31 @@ unset_points(AR,B):- set_local_points(AR,B).
 
 set_local_points(Points,Grid):-  set_local_points(fg,Points,Grid),!.
 set_local_points(_,[],_):-!.
-set_local_points(C,Obj,Grid):- is_grid(Obj), localpoints(Obj,Points),!, set_local_points(C,Points,Grid).
-set_local_points(C,[H|T],Grid):- !, set_local_points(C,H,Grid),set_local_points(C,T,Grid).
+set_local_points(_,_,[]):-!.
 set_local_points(C,Obj,Grid):- is_object(Obj), localpoints(Obj,Points),!, set_local_points(C,Points,Grid).
 set_local_points(C,Obj,Grid):- is_group(Obj),!, into_grid(Obj,Grid),localpoints(Obj,Points), set_local_points(C,Points,Grid).
+set_local_points(C,Obj,Grid):- is_grid(Obj), !, localpoints(Obj,Points),!, set_local_points(C,Points,Grid).
+
+set_local_points(C,[H|T],Grid):- !, set_local_points(C,H,Grid),set_local_points(C,T,Grid).
 set_local_points(FG,Point,Grid):- as_hv_point(H,V,C,Point),hv_value_or(Grid,Was,H,V,unknown),
-   expand_color(FG,Was,C,CC),!,nb_set_local_point(H,V,CC,Grid).
+   expand_color(FG,Was,C,CC),!,
+   must(nb_set_local_point(H,V,CC,Grid)).
+
+
+   %set_local_points(C,Obj,Grid):- is_grid(Obj), is_grid(Grid), grid_to_grid(C,Obj,Grid)
 set_local_points(C,Point,Grid):- throw_missed(set_local_points(C,Point,Grid)).
 
+nb_set_local_point(H,V,C,[]):- break,!.
 nb_set_local_point(H,V,C,Obj):- is_group(Obj),!,maplist(nb_set_local_point(H,V,C),Obj).
-nb_set_local_point(H,V,C,Grid):- is_grid(Grid),!,nth1(V,Grid,Row),nb_set_nth1(H,Row,C).
-nb_set_local_point(H,V,C,Obj):- is_object(Obj),get_instance_method(Obj,nb_set_local_point(H,V,C),Method),!,call(Method,Obj,H,V,C).
-nb_set_local_point(H,V,C,Obj):- is_object(Obj),!,localpoints(Obj,Points),nb_set_local_point(H,V,C,Points), setq(Obj,localpoints(Points),Res),nop(assertion(same_term(Obj,Res))).
+nb_set_local_point(H,V,C,Grid):- is_grid(Grid),!, ignore((nth1(V,Grid,Row),(Row==[]-> true;nb_set_nth1(H,Row,C)))).
+nb_set_local_point(H,V,C,Obj):- is_object(Obj), get_instance_method(Obj,nb_set_local_point(H,V,C),Method),!,call(Method,Obj,H,V,C).
+
+
+nb_set_local_point(H,V,C,Obj):- is_object(Obj),!,trace,localpoints(Obj,Points),nb_set_local_point(H,V,C,Points), setq(Obj,localpoints(Points),Res),nop(assertion(same_term(Obj,Res))).
+
 nb_set_local_point(H,V,C, Grid):- maplist(is_cpoint,Grid),!,hv_point(H,V,Point),!, must(nth1(Nth,Grid,_-Point)->nb_set_nth1(Nth,Grid,C-Point);nb_set_insert(Grid,Point)).
 nb_set_local_point(H,V,_C,Grid):- maplist(is_nc_point,Grid),!,hv_point(H,V,Point),!, must(nth1(Nth,Grid,Point)->nb_set_nth1(Nth,Grid,Point);nb_set_insert(Grid,Point)).
+nb_set_local_point(H,V,C,Obj):-!.
 nb_set_local_point(H,V,C,Obj):- throw_missed(nb_set_local_point(H,V,C,Obj)).
 
 
@@ -421,10 +437,12 @@ nb_set_global_point(H,V,C,Obj):- is_object(Obj),get_instance_method(Obj,set_glob
 nb_set_global_point(H,V,C,Obj):- is_group(Obj),maplist(nb_set_global_point(H,V,C),Obj).
 nb_set_global_point(H,V,C,Obj):- is_object(Obj),globalpoints(Obj,Points),!,nb_set_global_point(H,V,C,Points),
   setq(Obj,globalpoints(Points),Res),nop(assertion(same_term(Obj,Res))).
+
 nb_set_global_point(H,V,_C,Grid):- maplist(is_nc_point,Grid),hv_point(H,V,Point),
   (nth1(Nth,Grid,Point)->nb_set_nth1(Nth,Grid,Point);nb_set_insert(Grid,Point)).
 nb_set_global_point(H,V,C,Grid):- maplist(is_cpoint,Grid),hv_point(H,V,Point),
   (nth1(Nth,Grid,_-Point)->nb_set_nth1(Nth,Grid,Point);nb_set_insert(Grid,C-Point)).
+
 nb_set_global_point(H,V,C,Obj):- throw_missed(nb_set_global_point(H,V,C,Obj)).
 
 

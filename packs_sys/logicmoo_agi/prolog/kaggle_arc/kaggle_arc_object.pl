@@ -603,18 +603,19 @@ enum_group(S):- is_unshared_saved(_,S).
 enum_object(S):- is_unshared_saved(_,IndvS),member(S,IndvS).
 enum_object(S):- is_gridname(S,_).
 
+%indv_props(Obj,L):- compound(Obj), arg(1,Obj,L), is_list(L),!.
 indv_props(obj(L),L):- is_list(L),!.
 indv_props(obj(L),L):- enum_object(obj(L)).
 
-walls_thick1(G):- localpointlist(G,Points),counted_neighbours(Points,ListOfSizes),walls_thick1_sizes(ListOfSizes).
+walls_thick1(G):- localpoints(G,Points),counted_neighbours(Points,ListOfSizes),walls_thick1_sizes(ListOfSizes).
 walls_thick1_sizes(List):- maplist(size(2),List).
 
-is_lpoint(_-P):- !,hv_point(H,_,P),!,number(H).
-is_lpoint(P):- hv_point(H,_,P),!,number(H).
+is_lpoint(P):- is_nc_point(P).
+is_lpoint(P):- is_cpoint(P).
 
 is_points_list([G|L]):- !, is_lpoint(G),maplist(is_lpoint,L).
 maybe_into_points_list(I,_):- is_points_list(I),!,fail.
-maybe_into_points_list(I,X):- localpointlist(I,X).
+maybe_into_points_list(I,X):- localpoints(I,X).
 
 counted_neighbours(G,CountOut):- maybe_into_points_list(G,List),!,counted_neighbours(List,CountOut).
 counted_neighbours([],[]):-!.
@@ -681,25 +682,23 @@ object_nb_set_local_point(Obj,LH,LV,C):- object_set_local_point(Obj,LH,LV,C),!.
 object_nb_set_local_point(Obj,LH,LV,C):- trace,object_set_local_point(Obj,LH,LV,C).
 
 object_set_local_point(Obj,LH,LV,C):- 
-  trace,
   object_local_to_global_point(Obj,LH,LV,H,V),
   hv_point(H,V,GPoint), hv_point(LH,LV,LPoint), 
-\+ \+ ((
-  obtain_prop(Obj,globalpoints(Points),NewPoints),
-  (Points==[]->NewPoints=[GPoint];NewPoints=Points),
-  nb_set_local_point(H,V,C,NewPoints))),
-\+ \+ ((
+ ((
+  obtain_prop(Obj,globalpoints(GPoints),NewGPoints),
+  (GPoints==[]->NewGPoints=[C-GPoint];NewGPoints=GPoints),
+  nb_set_local_point(H,V,C,NewGPoints))),
+ ((
   obtain_prop(Obj,localpoints(Points),NewPoints),
-  (Points==[]->NewPoints=[LPoint];NewPoints=Points),
+  (Points==[]->NewPoints=[C-LPoint];NewPoints=Points),
   nb_set_local_point(LH,LV,C,NewPoints))),
-\+ \+ ((
-  obtain_prop(Obj,grid(Points),NewPoints),
-  NewPoints=Points,
-  nb_set_local_point(LH,LV,C,Points))),!.
+ ((
+  obtain_prop(Obj,grid(Grid),Grid),
+  nb_set_local_point(LH,LV,C,Grid))),!.
 
 
 %obtain_prop(Obj,globalpoints(Was),globalpoints(New)):- nth1(N,
-obtain_prop(Obj,Was,New):- indv_props(Obj,L), nth1(N,L,Was),nth1(N,L,Found),nb_setarg(1,Found,New).
+obtain_prop(Obj,Was,New):- arg(1,Obj,L), nth1(N,L,Was),nth1(N,L,Found),nb_setarg(1,Found,New).
 
 object_nb_set_global_point(Obj,H,V,C):- object_set_global_point(Obj,H,V,C).
 object_set_global_point(Obj,H,V,C):- 

@@ -180,7 +180,7 @@ print_grid0(H,V,Grid):- \+ callable(Grid),!,write('not grid: '),
   GG= nc_print_grid(H,V,Grid),
   pt(GG),throw(GG).
 print_grid0(H,V,Grid):- \+ is_gridoid(Grid), into_grid(Grid,G),!,print_grid0(H,V,G).
-print_grid0(H,V,Grid):- print_grid(1,1,H,V,Grid).
+print_grid0(H,V,Grid):- print_grid(1,1,H,V,Grid),format('~N').
 
 print_grid(SH,SV,EH,EV,Grid):- print_grid(SH,SV,SH,SV,EH,EV,EH,EV,Grid).
 %print_grid(SH,SV,LoH,LoV,HiH,HiV,EH,EV,Grid):- nop(print_grid(SH,SV,LoH,LoV,HiH,HiV,EH,EV,Grid)),!.

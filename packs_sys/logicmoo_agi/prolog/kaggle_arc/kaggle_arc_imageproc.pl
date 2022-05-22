@@ -219,7 +219,7 @@ set_points(C,Point,Grid,GridO):- as_hv_point(H,V,_,Point),!,replace_point(H,V,C,
 
 replace_point(H,V,C,Grid,GridO):- duplicate_term(Grid,GridO),nth1(V,GridO,Row),nb_set_nth1(H,Row,C).
 
-nb_set_nth1(1,Row,C):- !, nb_setarg(1,Row,C).
+nb_set_nth1(1,Row,C):- !, (Row==[]->true; nb_setarg(1,Row,C)).
 nb_set_nth1(N,[_|Row],C):- Nm1 is N -1, nb_set_nth1(Nm1,Row,C).
 
 set_all_fg(C0,Grid,GridO):- color_code(C0,C),get_bgc(X),map_pred(if_not_bgc_then(X,C), Grid, GridO).
