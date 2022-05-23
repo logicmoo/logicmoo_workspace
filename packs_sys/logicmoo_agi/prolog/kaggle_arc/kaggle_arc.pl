@@ -48,7 +48,7 @@ fav(X):- clause(fav(X,_),true).
 arc(Name):- forall(arc1(Name),true).
 arc1(TName):-    
 
- locally(set_prolog_flag(gc,false),
+ locally(set_prolog_flag(gc,true),
   (fix_test_name(TName,Name,ExampleNum), 
   set_flag(indiv,0),
   kaggle_arc(Name,ExampleNum,In,Out),
@@ -70,8 +70,7 @@ run_arc_io(Name,ExampleNum,In,Out):-
 
 
 try_arc_io(CName,Name,ExampleNum,In,Out):-
- %must_det_l
- ((
+ must_det_l((
   grid_size(In,IH,_IV),
   LW is (IH * 2 + 12),
   ignore((CName\==Name, flag(indiv,_,0),    
@@ -88,6 +87,11 @@ try_arc_io(CName,Name,ExampleNum,In,Out):-
   test_info(Name,Info), wqnl(fav(Name,Info)),nl,
   ignore((more_task_info(Name,III),pt(III),nl)),
 
+  \+ \+ ((
+   wots(U1, print_igrid(=(GridNameIn),In,[])),
+   wots(U2, print_igrid(=(GridNameOut),Out,[])),
+   print_side_by_side(U1,LW,U2))),
+
   make_unshared_indivs(GridNameIn,In),
   make_unshared_indivs(GridNameOut,Out),
   must_be_free(UnsharedIn),
@@ -100,12 +104,7 @@ try_arc_io(CName,Name,ExampleNum,In,Out):-
 %       print_igrid(unshared(GridNameOut),UnsharedOut,[Out]))),  
 
 
-  \+ \+ ((
-   wots(U1, print_igrid(=(GridNameIn),In,[])),
-   wots(U2, print_igrid(=(GridNameOut),Out,[])),
-   print_side_by_side(U1,LW,U2))),
-
-  print_side_by_side(describe_feature(In,[num_objects]),LW, describe_feature(Out,[num_objects])),
+  % print_side_by_side(describe_feature(In,[num_objects]),LW, describe_feature(Out,[num_objects])),
 
 %  get_shared_indivs(In,SharedIn),
 %  get_shared_indivs(Out,SharedOut),!,
@@ -150,6 +149,7 @@ try_arc_io(CName,Name,ExampleNum,In,Out):-
     print_grid(IndvO),
     maybe_confirm_sol(Name,ExampleNum,In,Out),nl,!.
 */
+ /*
 
 % Grid pretty printing
 grid_info(Name,IO,Grid):- 
@@ -164,7 +164,7 @@ grid_info(Name,IO,Grid):-
   print_igrid(GridName,UnsharedIn,[Grid]),
   ignore((sub_var(out,IO),(CCS>4;debug_indiv;true), debug_indiv(UnsharedIn))),
   nop(describe_feature(Grid,[compute_shared_indivs])),!.
-
+*/
 % resize(H,V,Grid1,Grid2):- var(Grid2),grid_size(Grid1,C1),grid_size(Grid2,C2).
 
 l_shape(round,"

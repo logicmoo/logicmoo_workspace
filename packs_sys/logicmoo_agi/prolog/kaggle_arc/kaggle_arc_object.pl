@@ -95,7 +95,21 @@ make_combined(IndvS1,IndvS2,BetterC):-
   nb_current(test_name_w_type,NamedExampleNum),
   set_unshared_indivs(NamedExampleNum,BetterC),!.
 
-cleanup(IndvS1,IndvS2,IndvC,BetterO):-
+cleanup(IndvS1,IndvS2,IndvC,_BetterO):-
+  maplist(length,[IndvS1,IndvS2,IndvC],Rest),
+  wdmsg(len=Rest),fail.
+
+cleanup(IndvS1,IndvS2,IndvC,BetterO):- length(IndvS1,Len),Len>70,
+  fix_pattern_objs(IndvS1,IndvS1A),
+  cleanup(IndvS1A,IndvS2,IndvC,BetterO).
+cleanup(IndvS1,IndvS2,IndvC,BetterO):- length(IndvS2,Len),Len>70,
+  fix_pattern_objs(IndvS2,IndvS2A),
+  cleanup(IndvS1,IndvS2A,IndvC,BetterO).
+cleanup(IndvS1,IndvS2,IndvC,BetterO):- length(IndvC,Len),Len>70,
+  fix_pattern_objs(IndvC,IndvCA),
+  cleanup(IndvS1,IndvS2,IndvCA,BetterO).
+
+cleanup(IndvS1,IndvS2,IndvC,BetterO):- length(IndvS1,Len),Len<70,
   select(A,IndvC,IndvC1),
   member(B,IndvC1),
   member(A,IndvS1),member(B,IndvS2),
@@ -126,24 +140,38 @@ compute_unshared_indivs(Grid,IndvS):-
              fix_static_objs(IndvS0,IndvS))),
    !.
 
-filter_indivs(In,Filter,Out):- into_group(In,InS),
-  include(matches_filter(Filter),InS,Out).
+filter_indivs(In,Filter,Out):- include(matches_filter(Filter),In,Out).
 
-matches_filter(Filter,obj(List)):- is_list(List),!,forall(member(E,Filter),member(E,List)).
+matches_filter(not(A),OBJ):- !, \+ matches_filter(A,OBJ).
+matches_filter((A;B),OBJ):- !, (matches_filter(A,OBJ);matches_filter(B,OBJ)).
+matches_filter([A],OBJ):- !, matches_filter(A,OBJ).
+matches_filter([A|B],OBJ):- !, (matches_filter(A,OBJ),matches_filter(B,OBJ)).
+matches_filter((A,B),OBJ):- !, (matches_filter(A,OBJ),matches_filter(B,OBJ)).
+matches_filter(E,obj(List)):- member(E,List).
+
 
 must_be_free(AllNew):- var(AllNew),!.
 must_be_free(AllNew):- dumpST,wdmsg(must_be_free(AllNew)),break,fail.
 
-fix_static_objs(IndvS1,AllNew):- 
- must_be_free(AllNew),
- length(IndvS1,L), L> 70,!,
-  into_grid(IndvS1,Grid), 
-  ((
-  grid_to_3x3_objs(Grid,NewIndiv1s),
-  filter_indivs(IndvS1,[object_shape(rectangluar), object_shape(solid)],KeepIndvS1R),!,
-  remove_points(KeepIndvS1R,NewIndiv1s,FixedNewIndiv1s),
- %% pt(flatten([FixedNewIndiv1s,KeepIndvS1R],AllNew)),
-  flatten([FixedNewIndiv1s,KeepIndvS1R],AllNew))),!.
+
+fix_pattern_objs(IndvS1,AllNew):- % stack_check(100),
+ must_be_free(AllNew), length(IndvS1,L), L> 70,!,
+  dmsg(fix_pattern_objs=L),
+  into_grid(IndvS1,TempGrid),
+  grid_size(TempGrid,H,V),H>5,V>5,
+  globalpoints(TempGrid,Points),
+  freeze(W,W>8),
+  filter_indivs(IndvS1,[point_count(W)];[object_shape(rectangluar), object_shape(solid)],KeepIndvS1R),
+  length(KeepIndvS1R,KeepIndvS1RLen),
+  dmsg(keepIndvS1R=KeepIndvS1RLen),
+  globalpoints(KeepIndvS1R,RemovePoints),
+  remove_global_points(RemovePoints,Points,Points2),
+  points_to_grid(H,V,Points2,NewTempGrid),
+  catch(call_with_time_limit(1.3,grid_to_3x3_objs(NewTempGrid,NewIndiv1s),_),_,NewIndiv1s=[]),
+  flatten([NewIndiv1s,KeepIndvS1R],AllNew),!.
+fix_pattern_objs(IndvS1,IndvS1).
+
+fix_static_objs(IndvS1,AllNew):- fix_pattern_objs(IndvS1,AllNew).
 fix_static_objs(IndvS1,IndvS1).
 
 
@@ -553,7 +581,7 @@ embue_points1(GridnameExampleNumIO,H,V,LoH,LoV,HiH,HiV,IPoints,Ps):-
   deoffset_points(LoH,LoV,Points,LPoints),
   remove_color(LPoints,CLPoints),
   make_grid(Width,Height,Grid),
-  set_points(LPoints,Grid,Grid),
+  set_local_points(LPoints,Grid,Grid),
   make_grid(Width,Height,GridO),
   copy_term(Grid,GridInCopy),
   findall(object_shape(Shape),
@@ -677,42 +705,6 @@ get_instance_method(Obj,Compound,F):- is_object(Obj), compound(Compound),compoun
    A1 is A+1, atom_concat('object_',Name,F),current_predicate(F/A1).
 
 object_grid(I,X):- indv_props(I,L),!,member(grid(X),L).
-
-object_nb_set_local_point(Obj,LH,LV,C):- object_set_local_point(Obj,LH,LV,C),!.
-object_nb_set_local_point(Obj,LH,LV,C):- trace,object_set_local_point(Obj,LH,LV,C).
-
-object_set_local_point(Obj,LH,LV,C):- 
-  object_local_to_global_point(Obj,LH,LV,H,V),
-  hv_point(H,V,GPoint), hv_point(LH,LV,LPoint), 
- ((
-  obtain_prop(Obj,globalpoints(GPoints),NewGPoints),
-  (GPoints==[]->NewGPoints=[C-GPoint];NewGPoints=GPoints),
-  nb_set_local_point(H,V,C,NewGPoints))),
- ((
-  obtain_prop(Obj,localpoints(Points),NewPoints),
-  (Points==[]->NewPoints=[C-LPoint];NewPoints=Points),
-  nb_set_local_point(LH,LV,C,NewPoints))),
- ((
-  obtain_prop(Obj,grid(Grid),Grid),
-  nb_set_local_point(LH,LV,C,Grid))),!.
-
-
-%obtain_prop(Obj,globalpoints(Was),globalpoints(New)):- nth1(N,
-obtain_prop(Obj,Was,New):- arg(1,Obj,L), nth1(N,L,Was),nth1(N,L,Found),nb_setarg(1,Found,New).
-
-object_nb_set_global_point(Obj,H,V,C):- object_set_global_point(Obj,H,V,C).
-object_set_global_point(Obj,H,V,C):- 
-  object_global_to_localpoint(H,V,LH,LV),
-  object_set_local_point(Obj,LH,LV,C).
-
-
-object_global_to_local_point(Obj,H,V,LH,LV):- object_offset(Obj,OH,OV),
-  LH is H - OH + 1, LV is V - OV + 1.
-
-object_local_to_global_point(Obj,H,V,LH,LV):- object_offset(Obj,OH,OV),
-  LH is H + OH - 1, LV is V + OV - 1.
-
-
 
 
 object_offset(I,X,Y):- indv_props(I,L),member(object_offset(X,Y),L).

@@ -183,16 +183,11 @@ must_intersect_all(Indv,Points,NextScanPoints):-
    unique_of_each(IndvPoints,Points,[],NextScanPoints),!.
 
 unique_of_each(IndvPoints,Points,UniqueInvO,UniquePointsO):-
-  remove_cpoints(Points,IndvPoints,UniquePoints),
-  remove_cpoints(IndvPoints,Points,UniqueInv),!,
+  remove_global_points(IndvPoints,Points,UniquePoints),
+  remove_global_points(Points,IndvPoints,UniqueInv),!,
   UniquePoints=UniquePointsO,
   UniqueInv=UniqueInvO.
 
-remove_cpoints(UniqueInv,[],UniqueInv).
-remove_cpoints(IndvPoints,[C-Point|Points],UniqueInv):-
-   select(C2-Point,IndvPoints,NextIndvPoints),
-   C2==C,!,
-   remove_cpoints(NextIndvPoints,Points,UniqueInv).
 
 
 
@@ -222,7 +217,7 @@ combine_grids(How,[H|T],G,GO):- !,
   %in_cmt((writeln(How),print_grid(H))),
   combine_grids(How,H,G,GM),
   combine_grids(How,T,GM,GO).
-combine_grids(overlay,H,G,GM):- globalpoints(H,Points),set_points(Points,G,GM),!.
+combine_grids(overlay,H,G,GM):- globalpoints(H,Points),set_local_points(Points,G,GM),!.
 combine_grids(append,H,G,GM):- grid_size(H,W,_),length(Row,W), append(G,[Row|H],GM).
   
 debug_indiv:- test_config(nodebug_indiv),!,fail.

@@ -283,19 +283,6 @@ grid_to_3x3_objs(Grid,NewIndiv4s):-
   fix_the_fours(NewIndiv1s,NewIndiv4s).
   
 
-get_overlaps(NewIndiv1s,Rest,A,B,AR,BR):- 
-  select(A,NewIndiv1s,Rest1),
-  select(B,Rest1,Rest),
-  object_grid(A,AR), object_grid(B,BR).
-
-get_best_overlaps(NewIndiv1s,Rest,A,B,AR,BR):-
-  get_overlaps(NewIndiv1s,Rest,A,B,AR,BR), AR==BR,!.
-get_best_overlaps(NewIndiv1s,Rest,A,B,AR,BR):-
-  get_overlaps(NewIndiv1s,Rest,A,B,AR,BR), 
-  show_success(always,confirm_overlap(AR,BR)),!.
-get_best_overlaps(NewIndiv1s,Rest,A,B,AR,BR):-
-  get_overlaps(NewIndiv1s,Rest,A,B,AR,BR), AR=BR,!.
-
 get_color_at(H,V,Grid,C):-
   nth1(V,Grid,Row),nth1(H,Row,C).
 
@@ -308,6 +295,10 @@ consensus1(GridS,X,Y,VGrid):-
   consensus22(L,R),
   nonvar(R),is_color(R),
   nb_set_local_point(X,Y,R,VGrid),!.
+
+nb_set_local_point(H,V,C,Grid):- assertion(is_grid(Grid)),!, 
+  ignore((nth1(V,Grid,Row),(Row==[]-> true;nb_set_nth1(H,Row,C)))).
+
 
 my_partition(_,[],[],[]):-!.
 my_partition(P1,[H|L],[H|I],E):- call(P1,H),!,
@@ -336,12 +327,9 @@ consensus2(Vars,BG,Blk,[C|Color],Other,C).
 consensus2(Vars,BG,[C|Blk],Color,Other,C).
 consensus2(Vars,[C|BG],Blk,Color,Other,C).
 
-nb_set_insert(L,E):- arg(2,L,T),(var(T);T==[]),!,nb_setarg(2,L,[E]).
-nb_set_insert([_|L],E):-nb_set_insert(L,E).
 
-fix_the_fours(NewIndiv0s,NewIndiv1s):- 
-  %must_det_l
-  ((
+fix_the_fours(NewIndiv0s,NewIndiv2s):- 
+  must_det_l((
   predsort(sort_on(colored_pixel_count),NewIndiv0s,NewIndiv1s),
   maplist(object_grid,NewIndiv1s,Grids),
   findall(size(H,V),(member(O,Grids),object_size(O,H,V)),Sizes),
@@ -349,116 +337,28 @@ fix_the_fours(NewIndiv0s,NewIndiv1s):-
   reverse(SizesS,[size(H,V)|_]),
   make_grid(H,V,Result),
   wdmsg(pointsNotSet(H,V)),
-  maplist(print_grid,Grids),
-  must(consensus(Grids,H,V,Result)),
-  wdmsg(result),
-  print_grid(Result),
+  maplist(print_grid,Grids), 
+ % duplicate_term(Grids,GridsP),
+  consensus(Grids,H,V,Result),
+  wdmsg(result), print_grid(Result),
   format('~N'),
-  maplist(set_local_points(Result),NewIndiv1s),
-  maplist(set_local_points(Result),Grids),
-  format('~N'),
-  wdmsg(pointsNowSet),
-  format('~N'),
-  maplist(object_grid,NewIndiv1s,NewGrids),
-  maplist(print_grid,NewGrids))),
-  format('~N'),!.
+  localpoints(Result,RPoints),  
+  %nth0(0,NewIndiv1s,First),
+  %wdmsg(pointsBeginSet(0)=First),
+  %set_local_points(RPoints,First,RPointsF),
+  %wdmsg(pointsEndSet(0)=RPointsF),
+  %wdmsg(pointsBeginSet(4)=NewIndiv1s),
+  maplist(set_local_points(RPoints),NewIndiv1s,NewIndiv2s),
+  %wdmsg(pointsEndSet(4)=NewIndiv2s),
+  %format('~N'),
+  %maplist(object_grid,NewIndiv2s,NewGrids), maplist(print_grid,NewGrids),
+  %wdmsg(pointsNowSet),
+  nop(format('~N')))),!.
 
 sort_on(C,R,A,B):- call(C,A,AA),call(C,B,BB),!,compare(R,AA+A,BB+B).
 colored_pixel_count(A,AA):- object_grid(A,G),
   findall(E,(sub_term(E,G), nonvar(E),is_color(E),\+ is_bgc(E)),L),
   length(L,AA).
-
-/*
-fix_the_fours(NewIndiv0s,[A,B|Rest]):- 
-  predsort(sort_on(colored_pixel_count),NewIndiv0s,NewIndiv1s),
-  must_be_free(A),
-  get_best_overlaps(NewIndiv1s,Rest,A,B,AR,BR),
-  print_side_by_side(AR,BR),
-  maplist(fix_the_twos(AR),NewIndiv1s),
-  maplist(fix_the_twos(BR),NewIndiv1s),!.
-fix_the_fours(IO,IOS):- predsort(sort_on(colored_pixel_count),IO,IOS).
-fix_the_twos(AR,B):-
-   unset_points(AR,B).
-*/
-is_color_no_bgc(X):- \+ is_bgc(X), is_color(X).
-
-expand_color(FG,Was,C,CC):- FG== fg,!,expand_color(C,Was,C,CC).
-expand_color(FG,Was,C,CC):- var(C),is_color_no_bgc(FG),!,FG=C.
-expand_color(FG,Was,C,CC):- is_color_no_bgc(C),!,CC=C.
-expand_color(FG,Was,C,CC):- var(C),is_bgc(FG),!,FG=C.
-expand_color(FG,Was,C,CC):- is_bgc(C),!,CC=C.
-
-unset_points(AR,B):- 
-  set_local_points(AR,B).
-unset_points(AR,B):- set_local_points(AR,B).
-
-
-set_local_points(Points,Grid):-  set_local_points(fg,Points,Grid),!.
-set_local_points(_,[],_):-!.
-set_local_points(_,_,[]):-!.
-set_local_points(C,Obj,Grid):- is_object(Obj), localpoints(Obj,Points),!, set_local_points(C,Points,Grid).
-set_local_points(C,Obj,Grid):- is_group(Obj),!, into_grid(Obj,Grid),localpoints(Obj,Points), set_local_points(C,Points,Grid).
-set_local_points(C,Obj,Grid):- is_grid(Obj), !, localpoints(Obj,Points),!, set_local_points(C,Points,Grid).
-
-set_local_points(C,[H|T],Grid):- !, set_local_points(C,H,Grid),set_local_points(C,T,Grid).
-set_local_points(FG,Point,Grid):- as_hv_point(H,V,C,Point),hv_value_or(Grid,Was,H,V,unknown),
-   expand_color(FG,Was,C,CC),!,
-   must(nb_set_local_point(H,V,CC,Grid)).
-
-
-   %set_local_points(C,Obj,Grid):- is_grid(Obj), is_grid(Grid), grid_to_grid(C,Obj,Grid)
-set_local_points(C,Point,Grid):- throw_missed(set_local_points(C,Point,Grid)).
-
-nb_set_local_point(H,V,C,[]):- break,!.
-nb_set_local_point(H,V,C,Obj):- is_group(Obj),!,maplist(nb_set_local_point(H,V,C),Obj).
-nb_set_local_point(H,V,C,Grid):- is_grid(Grid),!, ignore((nth1(V,Grid,Row),(Row==[]-> true;nb_set_nth1(H,Row,C)))).
-nb_set_local_point(H,V,C,Obj):- is_object(Obj), get_instance_method(Obj,nb_set_local_point(H,V,C),Method),!,call(Method,Obj,H,V,C).
-
-
-nb_set_local_point(H,V,C,Obj):- is_object(Obj),!,trace,localpoints(Obj,Points),nb_set_local_point(H,V,C,Points), setq(Obj,localpoints(Points),Res),nop(assertion(same_term(Obj,Res))).
-
-nb_set_local_point(H,V,C, Grid):- maplist(is_cpoint,Grid),!,hv_point(H,V,Point),!, must(nth1(Nth,Grid,_-Point)->nb_set_nth1(Nth,Grid,C-Point);nb_set_insert(Grid,Point)).
-nb_set_local_point(H,V,_C,Grid):- maplist(is_nc_point,Grid),!,hv_point(H,V,Point),!, must(nth1(Nth,Grid,Point)->nb_set_nth1(Nth,Grid,Point);nb_set_insert(Grid,Point)).
-nb_set_local_point(H,V,C,Obj):-!.
-nb_set_local_point(H,V,C,Obj):- throw_missed(nb_set_local_point(H,V,C,Obj)).
-
-
-set_global_points(Points,Grid):-  set_global_points(fg,Points,Grid).
-set_global_points(_,[],_):-!.
-set_global_points(C,Obj,Grid):- is_grid(Obj), !, globalpoints(Obj,Points), set_global_points(C,Points,Grid).
-set_global_points(C,[H|T],Grid):- !, set_global_points(C,H,Grid),set_global_points(C,T,Grid).
-set_global_points(C,Obj,Grid):- is_object(Obj), globalpoints(Obj,Points),!, set_global_points(C,Points,Grid).
-set_global_points(C,Obj,Grid):- is_group(Obj),!, into_grid(Obj,Grid),globalpoints(Obj,Points), set_global_points(C,Points,Grid).
-set_global_points(C,Point,Grid):- as_hv_point(H,V,Var,Point), ignore(C=Var), !,nb_set_global_point(H,V,C,Grid).
-set_global_points(C,Point,Grid):- throw_missed(set_global_points(C,Point,Grid)).
-
-nb_set_global_point(H,V,C,Grid):- is_grid(Grid),nth1(V,Grid,Row),nb_set_nth1(H,Row,C).
-nb_set_global_point(H,V,C,Obj):- is_object(Obj),get_instance_method(Obj,set_global_point(H,V,C),Method),!,call(Method,Obj,H,V,C).
-nb_set_global_point(H,V,C,Obj):- is_group(Obj),maplist(nb_set_global_point(H,V,C),Obj).
-nb_set_global_point(H,V,C,Obj):- is_object(Obj),globalpoints(Obj,Points),!,nb_set_global_point(H,V,C,Points),
-  setq(Obj,globalpoints(Points),Res),nop(assertion(same_term(Obj,Res))).
-
-nb_set_global_point(H,V,_C,Grid):- maplist(is_nc_point,Grid),hv_point(H,V,Point),
-  (nth1(Nth,Grid,Point)->nb_set_nth1(Nth,Grid,Point);nb_set_insert(Grid,Point)).
-nb_set_global_point(H,V,C,Grid):- maplist(is_cpoint,Grid),hv_point(H,V,Point),
-  (nth1(Nth,Grid,_-Point)->nb_set_nth1(Nth,Grid,Point);nb_set_insert(Grid,C-Point)).
-
-nb_set_global_point(H,V,C,Obj):- throw_missed(nb_set_global_point(H,V,C,Obj)).
-
-
-
-
-
-
-confirm_overlap(AR,BR):- AR==BR,!.
-confirm_overlap(AR,BR):- ((\+ \+ BR=[]);(\+ \+ AR=[])),!.
-confirm_overlap([A|AR],[B|BR]):-
-  confirm_overlap(A,B),!,
-  confirm_overlap(AR,BR).
-
-
-
-
 
 symetric_xy_3x3(G,Grid9x9):- 
  get_gridname(G,GN), grid_size(G,H,V),
@@ -541,30 +441,7 @@ repair_symmetry(G,GR):-
    [CWR,   CC,   CER],
    [Q3R,  CSR,   Q4R]] = Repair,
 */
- symetric_xy_3x3(G,Grid),
- reassemble(Grid,Repair),
- assemble(Repair,GR).
-
-reassemble(X,X):-!.
-reassemble(
-   [[Q2,  CN,   Q1],
-    [CW,  CC,   CE],
-    [Q3,  CS,   Q4]],
-
-  [[Q2R,  CNR,   Q1R],
-   [CWR,   CC,   CER],
-   [Q3R,  CSR,   Q4R]]):-
-
- must_det_l((
-  votes_v_h_hv(Q2,Q3,Q1,Q4,Q2R),
-  votes_v_h_hv(Q1,Q4,Q2,Q3,Q1R),
-  votes_v_h_hv(Q3,Q2,Q4,Q1,Q3R),
-  votes_v_h_hv(Q4,Q1,Q3,Q2,Q4R),
-  votes_90_180_270(CN,CE,CS,CW,CNR),
-  votes_90_180_270(CE,CS,CW,CN,CER),
-  votes_90_180_270(CS,CW,CN,CE,CSR),
-  votes_90_180_270(CW,CN,CE,CS,CWR))).
-
+ symetric_xy_3x3(G,GR),!.
 
 assemble(
  [[Q2,  CN,   Q1],
@@ -577,50 +454,9 @@ assemble(
         append([RowsA,RowsC,RowsC], GR).
 
 
-votes_v_h_hv(Q2,Q3,Q1,Q4,Q2R):-     votes4(Q2,[flipV(Q3),flipH(Q1),flipHV(Q4)],Q2R).
-votes_90_180_270(CN,CE,CS,CW,CNR):- votes4(CN,[rot90(CE),rot180(CS),rot270(CW)],CNR).
-
 is_empty_grid(Empty):- make_empty_grid(MG),MG=@=Empty,!.
 is_empty_grid(Empty):-  (Empty==[] ; Empty ==[[]]),!.
-my_call(rot90,Q,Empty):- is_empty_grid(Empty),!,Q=Empty.
-my_call(rot90,Q,Arg2):- rot270(Arg2,Q).
-my_call(rot180,Q,Arg2):- rot180(Arg2,Q).
-my_call(rot270,Q,Arg2):- rot90(Arg2,Q).
-
-cast_votes4([],[]).
-cast_votes4([P|PP],[ExpectedQ|VV]):- 
-   P=..[F,Arg2],my_call(F,ExpectedQ,Arg2),
-   cast_votes4(PP,VV),!.
-
-votes4(Q,Images,Winners):- 
-  cast_votes4(Images,Votes),
-  tally_some_votes([Q|Votes],Results),
-  keep_winners(Results,Winners),!.
 
 
-
-keep_winners(Results,Winners):- is_list(Results),maplist(keep_winners,Results,Winners).
-keep_winners(W,_):- assertion(ground(W)),fail.
-keep_winners(V4-V3-V2-V1,V1):- V1==V2;V1==V3;V1==V4.
-keep_winners(V4-V3-V2-V1,V2):- V2==V1;V2==V3;V2==V4.
-keep_winners(V4-V3-V2-V1,V3):- V3==V1;V3==V2;V3==V4.
-keep_winners(V4-V3-V2-V1,V3):- V4==V1;V4==V2;V4==V3.
-keep_winners(V1,V1):- V1 \= (_-_).
-keep_winners(W,undecided(W)).
-
-tally_some_votes([I|Images],Q):- 
-  tally_votes_list(I,Images,Q).
-
-tally_votes_list(I,[],I).
-tally_votes_list(Q,[I|Images],O):-
-  tally_votes(Q,I,M),
-  tally_votes_list(M,Images,O).
-
-tally_votes(I,V,I):- var(V),!.
-tally_votes(I,V,V):- var(I),!.
-tally_votes([],I,I):- !.
-tally_votes(I,[],I):- !.
-tally_votes([I|II],[H|TT],[V|MM]):-  tally_votes(I,H,V),tally_votes(II,TT,MM).
-tally_votes(I,V,V-I).
 
 
