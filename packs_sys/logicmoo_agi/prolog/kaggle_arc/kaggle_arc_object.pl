@@ -61,7 +61,7 @@ make_indiv_object_list(ID,H,V,Points,OUT):-
 
 make_point_object(ID,H,V,Point,OUT):-
    assertion(is_cpoint(Point)),
-   make_point_object(ID,H,V,[Point],OUT).
+   make_indiv_object(ID,H,V,[Point],OUT).
 
 make_indiv_object(_,_,_,obj(Ps),obj(Ps)):-!.
 make_indiv_object(ID,H,V,IPoints,obj(OUT)):-

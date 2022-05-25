@@ -125,21 +125,27 @@ unraw_inds(IndvS,IndvOO):-
 %TODO UNCOMMENT 
 individuals_list(_GH,_GV,Sofar,_ID,_Options,_Reserved,Points,_Grid,Sofar,Points):- Points == [], !.
 individuals_list(GH,GV,Sofar,ID,Options,Reserved,Points,Grid,IndvList,LeftOver):-    
+    assertion(maplist(is_cpoint,Points)),
+    assertion(is_list([sofar1(Options)|Sofar])),
     find_some_individuals(NewReserved,NewGrid,NO,GH,GV,Sofar,ID,Options,Reserved,Points,Grid,FoundSofar,NextScanPoints),
-    assertion(is_list([foundSofar(Options)|FoundSofar])),
+    assertion(maplist(is_cpoint,NextScanPoints)),
+    assertion(is_list([foundSofar1(Options)|FoundSofar])),
     ((FoundSofar\==Sofar) ; (NextScanPoints\== Points); (NewGrid\=@= Grid); (NewReserved\=@= Reserved)),
     %wqnl(indv(Options)=Indv),   
     individuals_list(GH,GV,FoundSofar,ID,NO,NewReserved,NextScanPoints,NewGrid,IndvList,LeftOver),!.
 individuals_list(GH,GV,Sofar,ID,Options,Reserved,Points,Grid,IndvList,NextScanPoints):-  
     next_options(Options,Options2),!,
     individuals_list(GH,GV,Sofar,ID,Options2,Reserved,Points,Grid,IndvList,NextScanPoints).
-individuals_list(GH,GV,Sofar,ID,_Options,_Reserved,Points,_Grid,IndvListOut,[]):-
+individuals_list(GH,GV,Sofar,ID,Options,_Reserved,Points,_Grid,IndvListOut,[]):-
  must_be_free(IndvListOut),
  must_det_l((
-  maplist(make_point_object,Points,IndvList),
-  as_debug(print_igrid(GH,GV,'leftover_points'+ID,IndvList,[])),
+  assertion(is_list([sofar2(Options)|Sofar])),
   assertion(is_list([sofar|Sofar])),
-  assertion(is_list([indvList|IndvList])),
+  assertion(is_list([points|Points])),
+  assertion(maplist(is_cpoint,Points)),
+  as_debug(print_igrid(GH,GV,'leftover_points'+ID,Points,[])),
+  maplist(make_point_object(ID,GH,GV),Points,IndvList),
+  as_debug(print_igrid(GH,GV,'indvList'+ID,IndvList,[])),
   append(Sofar,IndvList,IndvListOut))),!.
 individuals_list(GH,GV,Sofar,ID,Options,Reserved,P,Grid,Sofar,P):-!,
   dmsg(fail(individuals_list(GH,GV,Sofar,ID,Options,Reserved,P,Grid,Sofar,P))),!.
@@ -168,11 +174,21 @@ append_sets(Sets,Set):- append(Sets,List),list_to_set(List,Set).
 % ===============
 % release_points
 % ===============
+must_be_nonvar(X):- assertion(nonvar(X)),!.
+must_be_nonvar(X):- break,nonvar(X),!.
+
+find_some_individuals(OUTReserved,OUTNewGrid,OUTOptions,H,V,Sofar,ID,Options,Reserved,Points,Grid,OUTSofar,OUTNextScanPoints):-
+  maplist(must_be_free,[OUTReserved,OUTNewGrid,OUTOptions,OUTSofar,OUTNextScanPoints]),
+  maplist(must_be_nonvar,[Options,H,V,Sofar,ID,Options,Reserved,Points,Grid]),
+  as_debug(pt([find_some_individuals=Options,sofar=Sofar])),
+  fail.
+
+
 find_some_individuals(Reserved,NewGrid,NO,H,V,Sofar,ID,[release_points|NO],Reserved,Points,Grid,Sofar,NextScanPoints):-
     globalpoints(Grid,NextScanPoints1),
     globalpoints(Sofar,NextScanPoints2),
     append_sets([Points,NextScanPoints2,NextScanPoints1],NextScanPoints),
-    (as_debug(print_igrid(H,V,'release_points'+ID,Sofar,[]))),
+    (as_debug(print_igrid(H,V,'release_points(Sofar)'+ID,Sofar,[]))),
     points_to_grid(H,V,NextScanPoints,NewGrid), 
   !.
 
