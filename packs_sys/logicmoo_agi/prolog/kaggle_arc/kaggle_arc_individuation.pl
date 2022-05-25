@@ -95,22 +95,23 @@ individuals_common(Reserved,Grid,IndvS):-
    select_default_i_options(Grid,H,V,Points,Options),   
    into_gridname(Grid,ID),   
    individuals_raw(H,V,ID,Options,Reserved,Points,Grid,IndvSRaw),
-   make_embued_points(Grid,H,V,IndvSRaw,IndvS))).
+   as_debug(pt(individuals_common=IndvSRaw)),   
+   make_indiv_object_list(ID,H,V,IndvSRaw,IndvS))).
 
 individuals_raw(GH,GV,ID,Options,Reserved,Points,Grid,IndvSRaw):-
  must_det_l((
   must_be_free(IndvSRaw),
   individuals_list(GH,GV,[],ID,Options,Reserved,Points,Grid,Indv_0,_LeftOverPoints),
-  unraw_inds(Indv_0,Indv1),
-  largest_first(Indv1,IndvSRaw))).
+  unraw_inds(Indv_0,Indv),
+  largest_first(Indv,IndvSRaw))).
 
 %maybe_join_shared_individuals_list(Sofar,squares,ELeftOverPoints,Indv0S,Indv1S,LeftOverPoints):-
-%  select(Indv0,Rest,Indv0S),member(Indv1,Rest),object_shape(Indv0,line(h)), object_shape(Indv1,line(h)).
+%  select(Indv0,Rest,Indv0S),member(Indv,Rest),object_shape(Indv0,line(h)), object_shape(Indv,line(h)).
 
 
 unraw_inds(IndvS,IndvOO):-   
-  largest_first(IndvS,Indv1),
-  reverse(Indv1,IndvR),
+  largest_first(IndvS,Indv),
+  reverse(Indv,IndvR),
   %test_cond_or(indiv(min(SZ)),1),
   %SZ=3,
   check_minsize(_,IndvR,IndvR2),
@@ -118,7 +119,7 @@ unraw_inds(IndvS,IndvOO):-
   check_minsize(_,IndvR3,IndvOO).
 
 %individuals_list(H,V,Sofar,ID,Options,Reserved,Points,Grid,IndvList,LeftOver):- fail, Sofar\==[],
-%  make_embued_points(Grid,H,V,Sofar,OUT), OUT\==Sofar,!,
+%  make_indiv_object_list(Grid,H,V,Sofar,OUT), OUT\==Sofar,!,
 %  individuals_list(H,V,OUT,ID,Options,Reserved,Points,Grid,IndvList,LeftOver).
 
 %TODO UNCOMMENT 
@@ -127,7 +128,7 @@ individuals_list(GH,GV,Sofar,ID,Options,Reserved,Points,Grid,IndvList,LeftOver):
     find_some_individuals(NewReserved,NewGrid,NO,GH,GV,Sofar,ID,Options,Reserved,Points,Grid,FoundSofar,NextScanPoints),
     assertion(is_list([foundSofar(Options)|FoundSofar])),
     ((FoundSofar\==Sofar) ; (NextScanPoints\== Points); (NewGrid\=@= Grid); (NewReserved\=@= Reserved)),
-    %wqnl(indv(Options)=IndvS1),   
+    %wqnl(indv(Options)=Indv),   
     individuals_list(GH,GV,FoundSofar,ID,NO,NewReserved,NextScanPoints,NewGrid,IndvList,LeftOver),!.
 individuals_list(GH,GV,Sofar,ID,Options,Reserved,Points,Grid,IndvList,NextScanPoints):-  
     next_options(Options,Options2),!,
@@ -135,8 +136,8 @@ individuals_list(GH,GV,Sofar,ID,Options,Reserved,Points,Grid,IndvList,NextScanPo
 individuals_list(GH,GV,Sofar,ID,_Options,_Reserved,Points,_Grid,IndvListOut,[]):-
  must_be_free(IndvListOut),
  must_det_l((
-  maplist(obj1,Points,IndvList),
-  as_debug(print_igrid(GH,GV,'individuals_list'+ID,IndvList,[])),
+  maplist(make_point_object,Points,IndvList),
+  as_debug(print_igrid(GH,GV,'leftover_points'+ID,IndvList,[])),
   assertion(is_list([sofar|Sofar])),
   assertion(is_list([indvList|IndvList])),
   append(Sofar,IndvList,IndvListOut))),!.
@@ -144,16 +145,18 @@ individuals_list(GH,GV,Sofar,ID,Options,Reserved,P,Grid,Sofar,P):-!,
   dmsg(fail(individuals_list(GH,GV,Sofar,ID,Options,Reserved,P,Grid,Sofar,P))),!.
 
 
-find_some_individuals(StillReserved,Grid,NO,H,V,Sofar,ID,[use_reserved|NO],Reserved,Points,Grid,SofarUnreserved,NextScanPoints):-
-   proccess_overlap_reserved(ID,H,V,Reserved,Sofar,SofarUnreserved,Points,NextScanPoints,_Unreserved,StillReserved).
+find_some_individuals(StillReserved,Grid,NO,H,V,Sofar,ID,[use_reserved|NO],Reserved,Points,Grid,SofarOut,NextScanPoints):-
+   proccess_overlap_reserved(ID,H,V,Reserved,Sofar,SofarOut,Points,NextScanPoints,_Unreserved,StillReserved),
+   intersection(SofarOut,Sofar,_Intersected,LeftOverA,_LeftOverB),
+   as_debug(print_igrid(H,V,'use_reserved'+ID,LeftOverA,[])),!.
 
 proccess_overlap_reserved(ID,H,V,[Obj|Reserved],Sofar,SofarOut,Points,NextScanPoints,[Obj|Unreserved],StillReserved):- 
-   globalpoints(Obj,ObjPoints),
-   intersection(ObjPoints,Points,Intersected,LeftOverA,LeftOverB),
-   LeftOverA \==[],!,   
-   embue_obj_points(ID,H,V,Intersected,NewObj),
-   append(Sofar,[NewObj],NewSofar),
+   globalpoints(Obj,ObjPoints), 
+   intersection(ObjPoints,Points,Intersected,LeftOverA,LeftOverB), LeftOverA == [],!,
+   make_indiv_object(ID,H,V,Intersected,Indiv),
+   append(Sofar,[Indiv],NewSofar),
    proccess_overlap_reserved(ID,H,V,Reserved,NewSofar,SofarOut,LeftOverB,NextScanPoints,Unreserved,StillReserved).
+
 proccess_overlap_reserved(ID,H,V,[Obj|Reserved],Sofar,SofarOut,LeftOverB,NextScanPoints,Unreserved,[Obj|StillReserved]):-
    proccess_overlap_reserved(ID,H,V,Reserved,Sofar,SofarOut,LeftOverB,NextScanPoints,Unreserved,StillReserved).
 proccess_overlap_reserved(_ID,_H,_V,[],Sofar,Sofar,NextScanPoints,NextScanPoints,[],[]).
@@ -189,16 +192,16 @@ find_some_individuals(Reserved,NNewGrid,NO,H,V,Sofar,ID,[retain(Option)|NO],Rese
     !.
 
 find_some_individuals(Reserved,Grid,NO,H,V,Sofar,ID,[into_single_hidden|NO],Reserved,Points,Grid,SofarIndvS1,Points):- !,
-    maplist(globalpoints,Sofar,IndvPoints), append(IndvPoints,IndvPointsL),
+    maplist(globalpoints,Sofar,IndvPointSofar), append_sets(IndvPointSofar,IndvPointsL),
     EIndvPoints=[object_shape(combined),point_count(0),object_shape(hidden)|IndvPointsL],
-    embue_obj_points(ID,H,V,EIndvPoints,IndvS1),
-  append(Sofar,[IndvS1],SofarIndvS1),
-    meets_indiv_criteria(into_single_hidden,IndvPoints),!.
+    make_indiv_object(ID,H,V,EIndvPoints,Indv),
+    append(Sofar,[Indv],SofarIndvS1),
+    meets_indiv_criteria(into_single_hidden,IndvPointsL),!.
 
-find_some_individuals(Reserved,Grid,NO,H,V,Sofar,ID,[into_single|NO],Reserved,Points,Grid,[IndvS1],Points):- !,
+find_some_individuals(Reserved,Grid,NO,H,V,Sofar,ID,[into_single|NO],Reserved,Points,Grid,[Indv],Points):- !,
     maplist(globalpoints,Sofar,IndvPoints), append(IndvPoints,IndvPointsL),
     EIndvPoints=[object_shape(combined),object_shape(single)|IndvPointsL],
-    embue_obj_points(ID,H,V,EIndvPoints,IndvS1),
+    make_indiv_object(ID,H,V,EIndvPoints,Indv),
     meets_indiv_criteria(into_single_hidden,IndvPoints),!.
 
 find_some_individuals(Reserved,Grid,NO,H,V,Sofar,ID,[fourway|NO],Reserved,Points,Grid,OutInvdivS,NextScanPoints):- !,
@@ -229,54 +232,46 @@ find_some_individuals(Reserved,Grid,NO,H,V,Sofar,ID,[solid(squares)|NO],Reserved
   grid_to_segs(Grid,Segs),
   seg_squares(Segs,Squares),
   segs_to_pointlists(Squares,Objs),  
-  maplist(embue_obj_points(ID,H,V),Objs,OutInvdivS),
+  make_indiv_object_list(ID,H,V,Objs,OutInvdivS),
   %maplist(print_grid,OutInvdivS),
   as_debug(print_igrid(H,V,'Solid-boxes'+ID,OutInvdivS,[])),!,
   remove_global_points(OutInvdivS,NewGPoints,NextScanPoints),
   append(Sofar,OutInvdivS,AllOUT).
 
-/*%TODO UNCOMMENT find_some_individuals(Reserved,NewGrid,NO,H,V,Sofar,ID,[regroup|NO],Reserved,Points,Grid,OutInvdivS,NextScanPoints):- 
-  make_embued_points(Grid,H,V,Sofar,OutInvdivS), 
-  points_to_grid(H,V,NextScanPoints,NewGrid).
-*/
-/*
-find_some_individuals(Reserved,Grid,Options,_H,_V,Sofar,ID,[oldway|Options],Reserved,Points,Grid,OUT,Points):- !, 
-    %find_one_individual(H,V,Sofar,ID,Option,Reserved,Points,Grid,IndvPoints,NextScanPoints),
-    iniduals_common(ID,Grid,IndvS1),IndvS1\==[],
-    append(Sofar,IndvS1,OUT).
-    %embue_points(ID,H,V,1,1,H,V,IndvPoints,IndvS1).
-*/
+find_some_individuals(Reserved,NewGrid,NO,H,V,Sofar,_ID,[regroup|NO],Reserved,Points,Grid,OutInvdivS,Points):- 
+  make_indiv_object_list(Grid,H,V,Sofar,OutInvdivS), 
+  points_to_grid(H,V,Points,NewGrid).
 
 
-find_some_individuals(Reserved,Grid,[dots|NO],H,V,Sofar,ID,[dots|NO],Reserved,Points,Grid,[IndvS1|Sofar],Rest):-
+find_some_individuals(Reserved,Grid,[dots|NO],H,V,Sofar,ID,[dots|NO],Reserved,Points,Grid,[Indv|Sofar],Rest):-
     maybe_multivar(C),select(C-HV,Points,Rest),  \+ free_cell(C),
     \+ \+ (( is_adjacent_point(HV,_,HV2),member(C2-HV2,Rest),ok_color_with(C,C2))),
    IndvPoints=[object_shape(dots),C-HV],
-   embue_obj_points(ID,H,V,IndvPoints,IndvS1),
+   make_indiv_object(ID,H,V,IndvPoints,Indv),
    meets_indiv_criteria([dots|NO],IndvPoints),!.
 
-find_some_individuals(Reserved,Grid,[dots|NO],H,V,Sofar,ID,[dots|NO],Reserved,Points,Grid,[IndvS1|Sofar],Rest):-
+find_some_individuals(Reserved,Grid,[dots|NO],H,V,Sofar,ID,[dots|NO],Reserved,Points,Grid,[Indv|Sofar],Rest):-
    maybe_multivar(C), select(C-HV,Points,Rest),  \+ free_cell(C),
    IndvPoints=[object_shape(dots),C-HV],
-   embue_obj_points(ID,H,V,IndvPoints,IndvS1),
+   make_indiv_object(ID,H,V,IndvPoints,Indv),
    meets_indiv_criteria([dots|NO],IndvPoints),!.
 
 find_some_individuals(Reserved,Grid,[Option|Options],H,V,Sofar,ID,[Option|Options],Reserved,Points,Grid,OUT,NextScanPoints):-    
     find_one_individual(H,V,Sofar,ID,Option,Reserved,Points,Grid,IndvPoints,NextScanPoints),
-    embue_obj_points(ID,H,V,IndvPoints,IndvS1),
-    append(Sofar,[IndvS1],OUT).
+    make_indiv_object(ID,H,V,IndvPoints,Indv),
+    append(Sofar,[Indv],OUT).
 
 
 
 /*
 find_some_individuals(NewReserved,NewGrid,NO,GH,GV,Sofar,ID,Options,Reserved,Points,Grid,IndvList,NextScanPoints):-    
-    find_one_individual(GH,GV,Sofar,ID,Options,Reserved,Points,Grid,IndvS1,ScanPoints),!, %wqnl(indv(Options)=Indv),    
-    find_some_individuals(NewReserved,NewGrid,NO,GH,GV,[IndvS1|Sofar],ID,Options,Reserved,ScanPoints,Grid,IndvList,NextScanPoints).
+    find_one_individual(GH,GV,Sofar,ID,Options,Reserved,Points,Grid,Indv,ScanPoints),!, %wqnl(indv(Options)=Indv),    
+    find_some_individuals(NewReserved,NewGrid,NO,GH,GV,[Indv|Sofar],ID,Options,Reserved,ScanPoints,Grid,IndvList,NextScanPoints).
 */
 %find_some_individuals(NewReserved,NewGrid,NO,GH,GV,Sofar,ID,Options,Reserved,Points,Grid,Sofar,Points).
 
 
-obj1(X,X).
+% obj1(X,X):- make_indiv_object(
 
 ok_color_with(C,C2):- /* non_free_fg(C2), */ C==C2.
 
@@ -437,8 +432,8 @@ single_point0(C-Point,IndvS,Rest1):- maybe_multivar(C),
 
 /*
 unraw_inds2(Options,IndvS,IndvO):- fail,
-   largest_first(IndvS,Indv1),
-   reverse(Indv1,IndvR), IndvR\=@=IndvS,
+   largest_first(IndvS,Indv),
+   reverse(Indv,IndvR), IndvR\=@=IndvS,
    unraw_inds2(Options,IndvR,IndvO).
 */
 

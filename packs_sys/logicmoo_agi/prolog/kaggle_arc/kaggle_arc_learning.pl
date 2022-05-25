@@ -17,7 +17,7 @@ with_arc(Action,arc):- !, findall(Name,kaggle_arc_db(Name,_,_,_,_),L),
   list_to_set(L,S), member(TestID,S), with_arc(Action,TestID).
 
 with_arc(Action,TestName):-
-  fix_test_name(TestName,TestID,Type),TestName\==TestID,!,
+  fix_test_name(TestName,TestID,_Type),TestName\==TestID,!,
   with_arc(Action,TestID).
 
 with_arc(solve,TestID):- !, 

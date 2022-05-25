@@ -11,30 +11,23 @@ offset_points(OH,OV,Point,LPoint):- map_pred(if_point_offset(OH,OV),Point,LPoint
 if_point_offset(OH,OV,Point,LPoint):- atom(Point), hv_point(H,V,Point),HH is H +OH -1, VV is V + OV -1,hv_point(HH,VV,LPoint).
 
 grid_to_individual(Grid,OUT):-
-  get_gridname(Grid,GN),
+  get_gridname(Grid,ID),
   grid_size(Grid,H,V),
   globalpoints(Grid,Points),
-  embue_obj_points(GN,H,V,Points,OUT).
-
-make_embued_points(Grid,H,V,Points,IndvS):- 
-  get_gridname(Grid,GN),
-  maplist(embue_obj_points(GN,H,V),Points,IndvS).
+  make_indiv_object(ID,H,V,Points,OUT).
 
 
-%embue_points(GN,_,_,I,I):-!.
-embue_obj_points(_,_,_,obj(Ps),obj(Ps)):-!.
-embue_obj_points(GN,H,V,Points,OUT):- 
-  points_range(Points,LoH,LoV,HiH,HiV,_HO,_VO),
-  embue_obj_points(GN,H,V,LoH,LoV,HiH,HiV,Points,OUT).
 
 
-close_enough_grid(GridIn,GridInCopy,GridO):- 
-  \+ \+ (GridO=GridIn, GridIn=@=GridInCopy).
+%embue_points(ID,_,_,I,I):-!.
+%embue_obj_points(ID,H,V,Points,OUT):- make_indiv_object(ID,H,V,Points,OUT).
 
-embue_obj_points(GN,H,V,LoH,LoV,HiH,HiV,C-HV,OBJ):- !, embue_obj_points(GN,H,V,LoH,LoV,HiH,HiV,[C-HV],OBJ).
 
-embue_obj_points(NamedExampleNum,H,V,LoH,LoV,HiH,HiV,IPoints,obj(OBJ)):- 
-  embue_obj_points1(NamedExampleNum,H,V,LoH,LoV,HiH,HiV,IPoints,OBJ).
+close_enough_grid(GridIn,GridInCopy,LocalGrid):- 
+  \+ \+ (LocalGrid=GridIn, GridIn=@=GridInCopy).
+
+%embue_obj_points(ID,H,V,LoH,LoV,HiH,HiV,C-HV,OBJ):- !, embue_obj_points(ID,H,V,LoH,LoV,HiH,HiV,[C-HV],OBJ).
+
 
 
   %pt(Image-->Image9x9),
@@ -55,7 +48,7 @@ correctify_objs(Gridname,obj(List),obj(NOBJ)):- is_list(List),
    globalpoints(Grid,Points),
    assertion(Points\=[]),
    points_range(Points,LoH,LoV,HiH,HiV,_HO,_VO),
-   %nb_current(test_name_w_type,NamedExampleNum),
+   %nb_current(test_name_w_type,ID),
    embue_points1(Gridname,H,V,LoH,LoV,HiH,HiV,Points,OBJ),
    append(List,OBJ,NOBJ),!.
 correctify_objs(_Gridname,obj(List),obj(List)):-!.
@@ -63,54 +56,77 @@ correctify_objs(_Gridname,Obj,Obj).
    %make_embued_points(Grid,H,V,Points,IndvS)
 */
 
-embue_obj_points1(GridnameExampleNumIO,H,V,LoH,LoV,HiH,HiV,IPoints,Ps):-
+make_indiv_object_list(ID,H,V,Points,OUT):-
+  maplist(make_indiv_object_list(ID,H,V),Points,OUT).
+
+make_point_object(ID,H,V,Point,OUT):-
+   assertion(is_cpoint(Point)),
+   make_point_object(ID,H,V,[Point],OUT).
+
+make_indiv_object(_,_,_,obj(Ps),obj(Ps)):-!.
+make_indiv_object(ID,H,V,IPoints,obj(OUT)):-
+  assertion(is_list(IPoints)),
+  my_partition(is_cpoint,IPoints,Points,Overrides),
+  points_range(Points,LoH,LoV,HiH,HiV,_HO,_VO),
+  make_indiv_object(ID,H,V,LoH,LoV,HiH,HiV,Points,Overrides,OUT).
+
+make_indiv_object(ID,H,V,LoH,LoV,HiH,HiV,Points,Overrides,OUT):- 
  must_det_l((
- my_partition(is_cpoint,IPoints,Points,Info),
- assertion(ground(Points)),
- flag(indiv,Iv,Iv+1),
+  assertion(is_list(Overrides)),
+  assertion(maplist(is_cpoint,Points)),
+  assertion(ground(Points)),
+  flag(indiv,Iv,Iv+1),
   once(colors_count(Points,CC)),
   length(Points,Len),
   Width is HiH-LoH+1,
   Height is HiV-LoV+1,
-  %nb_current(test_name_w_type,GridnameExampleNumIO),
-  
-  %gensym(id_,IID),
+  %nb_current(test_name_w_type,ID),
   Area is Width * Height,
   Empty is Area - Len,
   deoffset_points(LoH,LoV,Points,LPoints),
-  remove_color(LPoints,CLPoints),
-  make_grid(Width,Height,Grid),
-  set_local_points(LPoints,Grid,Grid),
-  make_grid(Width,Height,GridO),
+  remove_color(LPoints,UColorlessPoints),
+  sort(UColorlessPoints,ColorlessPoints),
+  make_grid(Width,Height,GridM),
+  set_local_points(LPoints,GridM,Grid),
+  make_grid(Width,Height,LocalGrid),
   copy_term(Grid,GridInCopy),
   findall(object_shape(Shape),
-   (guess_shape(Grid,GridO,Ps,Empty,Len,Width,Height,CC,CLPoints,Shape),close_enough_grid(Grid,GridInCopy,GridO)),Shapes),
-  append([
-         Info,
-             [
-    localpoints_nc(CLPoints),
-    colors_count(CC),
-    object_size(Width,Height),
-    point_count(Len)],Shapes,
-    %width(Width), height(Height), area(Area),
-    %missing(Empty),
-    [localpoints(LPoints)],
-    [grid(GridO)],
-    [object_offset(LoH,LoV)],
-    [globalpoints(Points),
-    object_indv_id(GridnameExampleNumIO,Iv),
-    grid_size(H,V)]],Ps))).
+   (guess_shape(Grid,LocalGrid,Ps,Empty,Len,Width,Height,CC,ColorlessPoints,Shape),close_enough_grid(Grid,GridInCopy,LocalGrid)),Shapes),
+  append(
+  [ [localpoints_nc(ColorlessPoints),
+     colors_count(CC),
+     object_size(Width,Height),
+     point_count(Len)],
+     Shapes,
+     [object_offset(LoH,LoV)],
+    %width(Width), height(Height), area(Area), %missing(Empty),
+    [object_indv_id(ID,Iv),localpoints(LPoints),grid(LocalGrid)],     
+    [globalpoints(Points),grid_size(H,V)]],Ps),
+  override_list(Ps,Overrides,OUT))).
 
 
-object_indv_id(I,NamedExampleNum,Iv):- indv_props(I,L),member(object_indv_id(NamedExampleNum,Iv),L),!.
-object_indv_id(_,NamedExampleNum,_Iv):- nb_current(test_name_w_type,NamedExampleNum).
+override_list(List,[],List):-!.
+override_list(List,[E|Props],NewList):-!,
+  override_list(List,E,MidList),
+  override_list(MidList,Props,NewList).
+override_list(List,E,MidList):- E\=object_shape(_),
+    functor(E,F,A),functor(R,F,A),
+    append(Left,[R|Right],List),
+    E\==R,
+    append(Left,[E|Right],Rest),!,
+    override_list(Rest,E,MidList).
+override_list(List,E,MidList):- append([E],List,MidList),!.
+
+
+object_indv_id(I,ID,Iv):- indv_props(I,L),member(object_indv_id(ID,Iv),L),!.
+object_indv_id(_,ID,_Iv):- nb_current(test_name_w_type,ID).
 
 point_count(_-P,1):- nonvar(P),!.
 point_count(I,X):- indv_props(I,L),member(point_count(X),L),!.
 point_count(obj(I),Count):- localpoints(I,Points), length(Points,Count),!.
 point_count(Points,Count):- is_list(Points),length(Points,Count),!.
 remove_color(_-P,P).
-remove_color(LPoints,CLPoints):- maplist(remove_color,LPoints,CLPoints).
+remove_color(LPoints,ColorlessPoints):- maplist(remove_color,LPoints,ColorlessPoints).
 
 decl_pt(setq(object,any,object)).
 
@@ -197,10 +213,6 @@ colors_count(G,BFO):- pixel_colors(G,GF),sort(GF,GS),count_each(GS,GF,UC),keysor
 
 localpoints_nc(I,X):- indv_props(I,L),member(localpoints_nc(X),L).
 
-throw_missed(G):-  Info = missed(G),wdmsg(Info), dumpST,throw_missed_pt2(G,Info).
-throw_missed_pt2(_,Info):- tracing,!,throw(Info).
-throw_missed_pt2(G,Info):- notrace,nortrace,trace,wdmsg(Info),break,rtrace(G),throw(Info).
-
 get_instance_method(Obj,Compound,F):- is_object(Obj), compound(Compound),compound_name_arity(Compound,Name,A),
    A1 is A+1, atom_concat('object_',Name,F),current_predicate(F/A1).
 
@@ -220,18 +232,18 @@ object_size(Points,H,V):- points_range(Points,LoH,LoV,HiH,HiV,_,_), H is HiH-LoH
 top(8).
 
 :- style_check(-singleton).
-guess_shape(GridIn,GridO,I,Empty,N,H,V,[color_count(Zero,_)],Points,background):- is_bgc(Zero).
-guess_shape(GridIn,GridO,I,0,1,1,1,Colors,Points,dot):- !.
-guess_shape(GridIn,GridO,I,0,N,N,1,Colors,Points,line(h)).
-guess_shape(GridIn,GridO,I,0,N,HV,HV,Colors,Points,squares):- HV>1.
-guess_shape(GridIn,GridO,I,0,N,H,V,Colors,Points,nonsquare):- H \== V.
-guess_shape(GridIn,GridO,I,I,N,H,V,Colors,Points,rectangluar):- H>1, V>1.
-guess_shape(GridIn,GridO,I,_,N,H,V,[color_count(Color,_)],Points,outline):- H>2,V>2, N>7,add_borders(Color,GridIn,GridO).
-guess_shape(GridIn,GridO,I,0,9,3,3,Colors,Points,keypad):-!.  
-guess_shape(GridIn,GridO,I,0,N,1,N,Colors,Points,line(v)).
-guess_shape(GridIn,GridO,I,0,N,H,V,Colors,Points,filled_squared).
-guess_shape(GridIn,GridO,I,O,N,H,V,Colors,Points,nonsolid):- O\==0.
-%guess_shape(G,GridO,I,O,N,H,V,Colors,Points,walls_thick(1)):- walls_thick1(G).
+guess_shape(GridIn,LocalGrid,I,Empty,N,H,V,[color_count(Zero,_)],Points,background):- is_bgc(Zero).
+guess_shape(GridIn,LocalGrid,I,0,1,1,1,Colors,Points,dot):- !.
+guess_shape(GridIn,LocalGrid,I,0,N,N,1,Colors,Points,line(h)).
+guess_shape(GridIn,LocalGrid,I,0,N,HV,HV,Colors,Points,squares):- HV>1.
+guess_shape(GridIn,LocalGrid,I,0,N,H,V,Colors,Points,nonsquare):- H \== V.
+guess_shape(GridIn,LocalGrid,I,I,N,H,V,Colors,Points,rectangluar):- H>1, V>1.
+guess_shape(GridIn,LocalGrid,I,_,N,H,V,[color_count(Color,_)],Points,outline):- H>2,V>2, N>7,add_borders(Color,GridIn,LocalGrid).
+guess_shape(GridIn,LocalGrid,I,0,9,3,3,Colors,Points,keypad):-!.  
+guess_shape(GridIn,LocalGrid,I,0,N,1,N,Colors,Points,line(v)).
+guess_shape(GridIn,LocalGrid,I,0,N,H,V,Colors,Points,filled_squared).
+guess_shape(GridIn,LocalGrid,I,O,N,H,V,Colors,Points,nonsolid):- O\==0.
+%guess_shape(G,LocalGrid,I,O,N,H,V,Colors,Points,walls_thick(1)):- walls_thick1(G).
 
 
 guess_shape(GridIn,Grid,I,E,N,H,V,Colors,Points,subI(InvS)):- E>2, fail,

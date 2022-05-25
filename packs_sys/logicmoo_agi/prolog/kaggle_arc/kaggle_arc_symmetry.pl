@@ -252,14 +252,19 @@ clip_quadrant(CRef,SXC,SXC,EXC,EYC,GN,H,V,SXQ4,SYQ4,EXQ4,EYQ4,G,Same,obj(OBJL)):
   clip(SXQ4,SYQ4,EXQ4,EYQ4,G,Q4),
   call(Same,Q4,LikeQ4),
   globalpoints(LikeQ4,LGPoints),  
-  Width is EXQ4-SXQ4+1,Hieght is EYQ4-SYQ4+1,
-  embue_obj_points1(GN,H,V,1,1,Width,Hieght,LGPoints,Ps),!,
+  Width is EXQ4-SXQ4+1,Height is EYQ4-SYQ4+1,
   globalpoints(Q4,LPoints),
   offset_points(SXQ4,SYQ4,LPoints,GPoints),
-
-  setq(Ps,[object_shape(quadrant(CRef,Same)),object_shape(pattern(CRef,SXC,SXC,EXC,EYC)),
-           object_rotated(Same),object_size(Width,Hieght),object_offset(SXQ4,SYQ4),globalpoints(GPoints),
-           center_info(CRef,SXC,SXC,EXC,EYC),grid(LikeQ4)],OBJL).
+  make_indiv_object(GN,H,V,1,1,Width,Height, LGPoints,
+    [object_shape(quadrant(CRef,Same)),
+     object_shape(pattern(CRef,SXC,SXC,EXC,EYC)),
+     object_rotated(Same),
+     object_size(Width,Height),
+     object_offset(SXQ4,SYQ4),
+     globalpoints(GPoints),
+     center_info(CRef,SXC,SXC,EXC,EYC),
+     grid(LikeQ4)],OBJL).
+  
 
 clip_ray(CRef,SXC,SXC,EXC,EYC,GN,H,V,SXQ4,SYQ4,EXQ4,EYQ4,G,Same,OBJ):-
 nop((
@@ -307,6 +312,8 @@ my_partition(P1,[H|L],[H|I],E):- call(P1,H),!,
   my_partition(P1,L,I,E).
 my_partition(P1,[H|L],I,[H|E]):- 
    my_partition(P1,L,I,E).
+my_partition(P1,H,I,HE):- dumpST,break,
+  my_partition(P1,[H],I,HE).
 
 consensus22(L,C):- 
   my_partition(var,L,Vars,Rest0),

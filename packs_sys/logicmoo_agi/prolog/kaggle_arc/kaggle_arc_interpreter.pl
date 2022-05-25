@@ -134,6 +134,11 @@ prim_ops([
   rotate_grid(nsew)]).
 
 
+throw_missed(G):-  Info = missed(G),wdmsg(Info), dumpST,throw_missed_pt2(G,Info).
+throw_missed_pt2(_,Info):- tracing,!,throw(Info).
+throw_missed_pt2(G,Info):- notrace,nortrace,trace,wdmsg(Info),break,rtrace(G),throw(Info).
+
+
 
 % make or do plan
 do_change(Change,Grid1,Grid2):- \+ is_list(Change),!,one_change(Change,Grid1,Grid2).
