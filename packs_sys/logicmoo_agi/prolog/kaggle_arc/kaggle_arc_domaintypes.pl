@@ -11,21 +11,29 @@ matches_filter(E,obj(List)):- member(E,List).
 
 default_i_options([
   %solid(squares), 
-  hv_line(_),
+  all,
+  line(_),
+  hv_line(v),
+  hv_line(h),
   dg_line(_),
-  all, release_points, all,
-  %squares,  %retain(solid(squares)),
+  % release_points, all,
+  squares,  %retain(solid(squares)),
+  %into_single_hidden,oldway
+  %fourway,
+  %use_reserved,
+  dg_line(u),dg_line(d),
+  diamonds,
+  shapes,
   %into_single_hidden,
-  %fourway,use_reserved,oldway,dg_line(u),dg_line(d),diamonds,line(h),shapes,
-  into_single_hidden]).
+  polygs]).
 
 tiny_i_options([call(set_bgc(zero)),dots,line(_),all,into_single_hidden]).
 
 next_options([_|T],T).
 
 
-select_default_i_options(_Grid,H,V,_Points,Options):- (H=<3;V=<3),!,tiny_i_options(Options).
-select_default_i_options(_Grid,H,V,_Points,Options):- (H=<6;V=<6),!,tiny_i_options(Options).
+select_default_i_options(_Grid,H,V,_Points,Options):- (H=<5;V=<5),!,tiny_i_options(Options).
+%select_default_i_options(_Grid,H,V,_Points,Options):- (H=<6;V=<6),!,tiny_i_options(Options).
 select_default_i_options(_Grid,_H,_V,_Points,Options):-  default_i_options(Options).
 
 
@@ -191,14 +199,14 @@ apv(sub_points([])).
 
 
 
-l_shape(round,"
+l_shape(circle,"
  o=o !
 o...o!
 |.,.|!
 o...o!
  o=o !").
 
-l_shape(circle,"
+l_shape(round,"
         ooo     
       o.....o   
      o.......o  

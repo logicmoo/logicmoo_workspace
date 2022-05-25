@@ -284,7 +284,7 @@ object_rotated(obj(L),G):- member(object_rotated(G),L).
 %detect_grid(Grid,E):- 
 
 grid_to_3x3_objs(Grid,NewIndiv4s):-
-  catch(call_with_time_limit(7,symetric_xy_3x3(Grid,Image9x9)),E, (wdmsg(E),fail)),
+  catch(call_with_time_limit(2,symetric_xy_3x3(Grid,Image9x9)),E, (wdmsg(E),fail)),
   flatten(Image9x9,Flat),
   include(nonvar,Flat,NewIndiv1s),
   fix_the_fours(NewIndiv1s,NewIndiv4s).

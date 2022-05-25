@@ -36,20 +36,24 @@ test_cond_or(This, That):- term_variables(This,[That|_]),!.
 run_dsl(Prog,In,Out):- run_dsl(enact,Prog,In,Out).
 
 run_dsl(Mode,Prog,In,Out):- var(Prog),!,throw(var_solving_progs(Mode,Prog,In,Out)).
+run_dsl(Mode,Prog,In,Out):- In==dsl_pipe,!,  nb_current(dsl_pipe,PipeIn), run_dsl(Mode,Prog,PipeIn,Out).
+run_dsl(Mode,Prog,In,Out):- Out==dsl_pipe,!, run_dsl(Mode,Prog,In,PipeOut),nb_setval(dsl_pipe,PipeOut).
 run_dsl(Mode,lmDSL(Prog),In,Out):- !, run_dsl(Mode,Prog,In,Out).
 run_dsl(_Mode,call(G),In,Out):-!,call(G),(var(Out)->Out=In; true).
 run_dsl(_Mode,[],In,Out):-!, var(Out)->Out=In; true.
 run_dsl(_Mode,same,In,Out):-!, duplicate_term(In,Out).
 run_dsl(ennfore,color(Obj,Color),In,Out):-!, set_global_points(Color,Obj,In,Out).
-run_dsl(Mode,-->(All,Exec),In,Out):-!,  run_dsl(Mode,forall(All,Exec),In,Out).
-run_dsl(Mode,forall(All,Exec),In,Out):-!,  forall(run_dsl(Mode,All,In,Mid),(run_dsl(enforce,Exec,Mid,Out),nb_setval(out,Out))),nb_current(out,Out).
+run_dsl(Mode,-->(All,Exec),In,Out):-!, run_dsl(Mode,forall(All,Exec),In,Out).
+run_dsl(Mode,forall(All,Exec),In,OutO):-!,  
+ nb_setval(dsl_pipe,In),
+ forall(run_dsl(Mode,All,dsl_pipe,Mid),(run_dsl(enforce,Exec,Mid,Out),nb_setval(dsl_pipe,Out))),nb_current(dsl_pipe,OutO).
 run_dsl(Mode,[H|Prog],In,Out):-!, run_dsl(Mode,H,In,GridM), run_dsl(Mode,Prog,GridM,Out).
 run_dsl(Mode,(H,Prog),In,Out):-!, run_dsl(Mode,H,In,GridM), run_dsl(Mode,Prog,GridM,Out).
 run_dsl(_Mode,Prog,In,In):- \+ missing_arity(Prog, 0), !, call(Prog).
 run_dsl(Mode,Prog,In,Out):- \+ missing_arity(Prog,2), !,
  (call(Prog,In,M)*-> 
     =(M,Out) ; (arcdbg(warn(nonworking(run_dsl(Mode,Prog)))),fail)).
-run_dsl(Mode,Prog,In,In):- arcdbg(warn(missing(run_dsl(Mode,Prog)))). 
+run_dsl(Mode,Prog,In,In):- arcdbg(warn(missing(run_dsl(Mode,Prog)))),!,fail.
 
 named_gridoid(TstName,G):- var(TstName),!,dumpST,throw(var_named_test(TstName,G)).
 named_gridoid(TstName,G):- fix_test_name(TstName,Name,_),kaggle_arc(Name,tst+0,G,_),!.

@@ -1,7 +1,8 @@
 :- use_module(library(multivar)).
 
 maybe_multivar(C):- nonvar(C),!.
-maybe_multivar(C):- multivar(C).
+%maybe_multivar(C):- multivar(C).
+maybe_multivar(_).
 
 :- dynamic(reuse_grid_nums/1).
 
@@ -90,12 +91,13 @@ merge_a_b(A,B,AA):-
 individuals_common(Reserved,Grid,IndvS):-
  must_det_l((
    notrace(grid_size(Grid,H,V)),
+   wdmsg(grid_size(H,V)),
    must_be_free(IndvS),
    globalpoints(Grid,Points),
    select_default_i_options(Grid,H,V,Points,Options),   
    into_gridname(Grid,ID),   
    individuals_raw(H,V,ID,Options,Reserved,Points,Grid,IndvSRaw),
-   as_debug(pt(individuals_common=IndvSRaw)),   
+   %as_debug(pt(terse(individuals_common=IndvSRaw))),
    make_indiv_object_list(ID,H,V,IndvSRaw,IndvS))).
 
 individuals_raw(GH,GV,ID,Options,Reserved,Points,Grid,IndvSRaw):-
@@ -128,6 +130,7 @@ individuals_list(GH,GV,Sofar,ID,Options,Reserved,Points,Grid,IndvList,LeftOver):
     assertion(maplist(is_cpoint,Points)),
     assertion(is_list([sofar1(Options)|Sofar])),
     find_some_individuals(NewReserved,NewGrid,NO,GH,GV,Sofar,ID,Options,Reserved,Points,Grid,FoundSofar,NextScanPoints),
+    assertion(maplist(nonvar,[find_some_individuals,NewReserved,NewGrid,NO,FoundSofar,NextScanPoints])),
     assertion(maplist(is_cpoint,NextScanPoints)),
     assertion(is_list([foundSofar1(Options)|FoundSofar])),
     ((FoundSofar\==Sofar) ; (NextScanPoints\== Points); (NewGrid\=@= Grid); (NewReserved\=@= Reserved)),
@@ -144,12 +147,19 @@ individuals_list(GH,GV,Sofar,ID,Options,_Reserved,Points,_Grid,IndvListOut,[]):-
   assertion(is_list([points|Points])),
   assertion(maplist(is_cpoint,Points)),
   as_debug(print_igrid(GH,GV,'leftover_points'+ID,Points,[])),
-  maplist(make_point_object(ID,GH,GV),Points,IndvList),
-  as_debug(print_igrid(GH,GV,'indvList'+ID,IndvList,[])),
-  append(Sofar,IndvList,IndvListOut))),!.
+  %maplist(make_point_object(ID,GH,GV),Points,IndvList),%append(Sofar,IndvList,IndvListOut),
+  make_indiv_object(ID,GH,GV,Points,LeftOverObj), append(Sofar,[LeftOverObj],IndvListOut),
+  !)),!.
 individuals_list(GH,GV,Sofar,ID,Options,Reserved,P,Grid,Sofar,P):-!,
   dmsg(fail(individuals_list(GH,GV,Sofar,ID,Options,Reserved,P,Grid,Sofar,P))),!.
 
+must_be_nonvar(X):- assertion(nonvar(X)),!.
+
+find_some_individuals(OUTReserved,OUTNewGrid,OUTOptions,H,V,Sofar,ID,Options,Reserved,Points,Grid,OUTSofar,OUTNextScanPoints):-
+  maplist(must_be_free,[OUTReserved,OUTNewGrid,OUTOptions,OUTSofar,OUTNextScanPoints]),
+  assertion(maplist(nonvar,[Options,H,V,Sofar,ID,Options,Reserved,Points,Grid])),
+  %as_debug(pt(terse([find_some_individuals=Options,sofar=Sofar]))),
+  fail.
 
 find_some_individuals(StillReserved,Grid,NO,H,V,Sofar,ID,[use_reserved|NO],Reserved,Points,Grid,SofarOut,NextScanPoints):-
    proccess_overlap_reserved(ID,H,V,Reserved,Sofar,SofarOut,Points,NextScanPoints,_Unreserved,StillReserved),
@@ -174,16 +184,6 @@ append_sets(Sets,Set):- append(Sets,List),list_to_set(List,Set).
 % ===============
 % release_points
 % ===============
-must_be_nonvar(X):- assertion(nonvar(X)),!.
-must_be_nonvar(X):- break,nonvar(X),!.
-
-find_some_individuals(OUTReserved,OUTNewGrid,OUTOptions,H,V,Sofar,ID,Options,Reserved,Points,Grid,OUTSofar,OUTNextScanPoints):-
-  maplist(must_be_free,[OUTReserved,OUTNewGrid,OUTOptions,OUTSofar,OUTNextScanPoints]),
-  maplist(must_be_nonvar,[Options,H,V,Sofar,ID,Options,Reserved,Points,Grid]),
-  as_debug(pt([find_some_individuals=Options,sofar=Sofar])),
-  fail.
-
-
 find_some_individuals(Reserved,NewGrid,NO,H,V,Sofar,ID,[release_points|NO],Reserved,Points,Grid,Sofar,NextScanPoints):-
     globalpoints(Grid,NextScanPoints1),
     globalpoints(Sofar,NextScanPoints2),
@@ -209,7 +209,7 @@ find_some_individuals(Reserved,NNewGrid,NO,H,V,Sofar,ID,[retain(Option)|NO],Rese
 
 find_some_individuals(Reserved,Grid,NO,H,V,Sofar,ID,[into_single_hidden|NO],Reserved,Points,Grid,SofarIndvS1,Points):- !,
     maplist(globalpoints,Sofar,IndvPointSofar), append_sets(IndvPointSofar,IndvPointsL),
-    EIndvPoints=[object_shape(combined),point_count(0),object_shape(hidden)|IndvPointsL],
+    EIndvPoints=[object_shape(combined),object_shape(hidden)|IndvPointsL],
     make_indiv_object(ID,H,V,EIndvPoints,Indv),
     append(Sofar,[Indv],SofarIndvS1),
     meets_indiv_criteria(into_single_hidden,IndvPointsL),!.
@@ -343,7 +343,7 @@ find_one_individual(GH,GV,Sofar,ID,solid(Option),Reserved,Points,Grid,[object_sh
 */
 
 find_one_individual(_GH,_GV,_Sofar,_ID,Option,_Reserved,Points,_Grid,[object_shape(Option)|IndvPoints],NextScanPoints):-
-    maybe_multivar(C), select(C-HV,Points,Rest), non_free_fg(C), % \+ is_black(C),
+    maybe_multivar(C), select(C-HV,Points,Rest), \+ free_cell(C), % non_free_fg(C), % \+ is_black(C),
     allow_dirs(Option,Dir),
     adjacent_point_allowed(C,HV,Dir,HV2),select(C2-HV2,Rest,ScanPoints),ok_color_with(C,C2),
     all_individuals_near(Option,C,[C-HV,C2-HV2],ScanPoints,NextScanPoints,IndvPoints),

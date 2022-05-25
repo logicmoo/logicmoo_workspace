@@ -56,8 +56,15 @@ correctify_objs(_Gridname,Obj,Obj).
    %make_embued_points(Grid,H,V,Points,IndvS)
 */
 
+make_indiv_object_list(ID,H,V,[],[]):-!.
+make_indiv_object_list(ID,H,V,[E|L],[O|OL]):-
+    must(make_indiv_object(ID,H,V,E,O)),
+    make_indiv_object_list(ID,H,V,L,L).
+
+/*
 make_indiv_object_list(ID,H,V,Points,OUT):-
   maplist(make_indiv_object_list(ID,H,V),Points,OUT).
+*/
 
 make_point_object(ID,H,V,Point,OUT):-
    assertion(is_cpoint(Point)),

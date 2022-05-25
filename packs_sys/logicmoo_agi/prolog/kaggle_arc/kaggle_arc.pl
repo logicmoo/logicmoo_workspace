@@ -94,6 +94,9 @@ try_arc_io(CName,Name,ExampleNum,In,Out):-
   ignore((more_task_info(Name,III),pt(III),nl)),
   
   show_pair(IH,IV,OH,OV,test,GridName,In,Out),
+  ensure_unshared_indivs(Out,UnsharedOut),
+  individuals_common(UnsharedOut,In,SharedIn),
+  show_pair(IH,IV,OH,OV,common,GridName,SharedIn,UnsharedOut),
 
   %color_counts(In,InCC),
   %color_counts(Out,OutCC),
@@ -101,8 +104,7 @@ try_arc_io(CName,Name,ExampleNum,In,Out):-
   nop((
 
 
-  compute_unshared_indivs(In,UnsharedIn),
-  compute_unshared_indivs(Out,UnsharedOut),
+       compute_unshared_indivs(In,UnsharedIn),
   show_pair(IH,IV,OH,OV,unshared,GridName,UnsharedIn,UnsharedOut),
   %merge_indivs(UnsharedIn,UnsharedOut,BetterA,BetterB,BetterC), 
   %show_pair(IH,IV,OH,OV,better,GridName,BetterA,BetterB),
@@ -111,7 +113,7 @@ try_arc_io(CName,Name,ExampleNum,In,Out):-
   compute_shared_indivs(Out,SharedOut),
   show_pair(IH,IV,OH,OV,shared,GridName,SharedIn,SharedOut))),!,
 
-  catch(maybe_confirm_sol(Name,ExampleNum,In,Out),E,(wdmsg(E))))),!.
+  nop(catch(maybe_confirm_sol(Name,ExampleNum,In,Out),E,(wdmsg(E)))))),!.
 
 
 

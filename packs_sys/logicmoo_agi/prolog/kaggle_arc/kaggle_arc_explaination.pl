@@ -64,6 +64,8 @@ debug_indiv:- test_config(nodebug_indiv),!,fail.
 debug_indiv:- test_config(debug_indiv),!.
 debug_indiv:- test_config(indiv(_)),!.
 
+print_info(A):- debug_indiv(A).
+
 debug_indiv(Var):- var(Var),pt(debug_indiv(Var)),!.
 
 debug_indiv(Grid):- is_grid(Grid),!,grid_size(Grid,H,V),
@@ -80,8 +82,8 @@ debug_indiv(A):- is_point_obj(A,Color,Point),
   hv_point(H,V,Point), i_glyph(Id,Sym),
   wqnl([' % Point: ', color_print(Color,Sym), dot, color(Color), fav1(Tst), nth(Id), offset(H,V)]),!. 
 */
-
-debug_indiv(Obj):- Obj = obj(A), is_list(A),
+debug_indiv(obj(A)):- Obj = obj(A), is_list(A),!,
+%debug_indiv(Obj):- Obj = obj(A), is_list(A),
   object_indv_id(Obj,_,Id),
   i_sym(Id,Sym),
   ignore(colors_count(Obj,[color_count(FC,_)|_])),

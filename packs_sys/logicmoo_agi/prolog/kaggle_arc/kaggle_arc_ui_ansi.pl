@@ -1,3 +1,10 @@
+
+
+tersify(L,O):- is_list(L), with_output_to(string(S),display(L)), atom_length(S,N),N>70,!,len(N)=O.
+tersify(I,O):- compound(I), compound_name_arguments(I,F,IA), maplist(tersify,IA,OA), compound_name_arguments(O,F,OA).
+tersify(I,I).
+
+pt(terse(P)):- nonvar(P),tersify(P,Q),!,pt(Q).
 pt(P):- format('~N'),print_tree_nl(P),!.
 
 
