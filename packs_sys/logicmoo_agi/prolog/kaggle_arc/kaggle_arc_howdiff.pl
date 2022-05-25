@@ -94,6 +94,8 @@ combine_diffs(D,D,D):-!.
 combine_diffs(D1,D2,L12):- listify(D1,L1),listify(D2,L2),!,append(L1,L2,L12).
 
 
+
+  
 %compute_diff(IPs,OPs,Difs2):- compute_diff(IPs,OPs,Difs2).
 number_dif(I,O,0):- I =:= O,!.
 number_dif(I,O,diff(-(D))):- I<O,!, D is O -I.
@@ -161,22 +163,20 @@ needs_indivs(I,_):- is_object(I),!,fail.
 %needs_indivs(I,O):- is_grid(I),_unshared_indivs(I,O),!.
 needs_indivs(I,O):- is_gridoid(I), \+ is_group(I),compute_unshared_indivs(I,O),!.
 
-compute_diff(I,O,[]):- (var(I);var(O)),!.
-compute_diff(Grid,Other,OUT):- needs_indivs(Grid,I),!,compute_diff(I,Other,OUT).
-compute_diff(Other,Grid,OUT):- needs_indivs(Grid,I),!,compute_diff(Other,I,OUT).
-compute_diff(obj(I),obj(O),OUT):- fail,!,
-  make_comparable(I,II),
-  make_comparable(O,OO),
-  compute_diff_objs(obj(I),II,obj(O),OO,OUT).
 
-
-compute_diff(I,O,DD):- is_group(I),is_group(O), fail, !, include_fav_points(I,II),
-  include_fav_points(O,OO),
-  group_diff(II,OO,DD).
+showdiff(A,B):- compute_diff(A,B,D),ptt(D).
 
 
 compute_diff(I,O,D):- number(I),number(O),!,number_dif(I,O,D).
 compute_diff(I,O,[]):- O==I,!.
+compute_diff(I,O,[]):- (var(I);var(O)),!.
+compute_diff(Grid,Other,OUT):- needs_indivs(Grid,I),!,compute_diff(I,Other,OUT).
+compute_diff(Other,Grid,OUT):- needs_indivs(Grid,I),!,compute_diff(Other,I,OUT).
+compute_diff(obj(I),obj(O),OUT):- fail,!,
+  make_comparable(I,II), make_comparable(O,OO), compute_diff_objs(obj(I),II,obj(O),OO,OUT).
+compute_diff(I,O,DD):- is_group(I),is_group(O), fail, !, include_fav_points(I,II),
+  include_fav_points(O,OO),
+  group_diff(II,OO,DD).
 compute_diff(I,O,[O \== I]):- O=@=I,!.
 compute_diff(I,O,[]):- no_diff(I,O),!.
 compute_diff(O,I,[]):- no_diff(I,O),!.

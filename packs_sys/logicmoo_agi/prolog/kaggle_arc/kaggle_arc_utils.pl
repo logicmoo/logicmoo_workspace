@@ -15,8 +15,8 @@ max_min(A,B,A,A):- var(B),!.
 max_min(A,B,A,B):- A>B,!.
 max_min(A,B,B,A).
 
-% as_debug(_):- !.
-as_debug(G):- wots(S,G),format('~N~w~N',[S]).
+as_debug(9,_):- !.
+as_debug(_,G):- wots(S,G),format('~N~w~N',[S]).
 
 count_each([],_,[]).
 count_each([C|L],GC,[Len-C|LL]):- include(==(C),GC,Lst),length(Lst,Len),count_each(L,GC,LL).

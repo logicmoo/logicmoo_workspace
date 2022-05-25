@@ -56,10 +56,10 @@ correctify_objs(_Gridname,Obj,Obj).
    %make_embued_points(Grid,H,V,Points,IndvS)
 */
 
-make_indiv_object_list(ID,H,V,[],[]):-!.
-make_indiv_object_list(ID,H,V,[E|L],[O|OL]):-
+make_indiv_object_list(_ID,_H,_V,[],[]):-!.
+make_indiv_object_list(ID,H,V,[E|L],[O|OL]):-   
     must(make_indiv_object(ID,H,V,E,O)),
-    make_indiv_object_list(ID,H,V,L,L).
+    make_indiv_object_list(ID,H,V,L,OL).
 
 /*
 make_indiv_object_list(ID,H,V,Points,OUT):-
@@ -251,7 +251,6 @@ guess_shape(GridIn,LocalGrid,I,0,N,1,N,Colors,Points,line(v)).
 guess_shape(GridIn,LocalGrid,I,0,N,H,V,Colors,Points,filled_squared).
 guess_shape(GridIn,LocalGrid,I,O,N,H,V,Colors,Points,nonsolid):- O\==0.
 %guess_shape(G,LocalGrid,I,O,N,H,V,Colors,Points,walls_thick(1)):- walls_thick1(G).
-
 
 guess_shape(GridIn,Grid,I,E,N,H,V,Colors,Points,subI(InvS)):- E>2, fail,
    once((I.object_offset=object_offset(LoH,LoV),

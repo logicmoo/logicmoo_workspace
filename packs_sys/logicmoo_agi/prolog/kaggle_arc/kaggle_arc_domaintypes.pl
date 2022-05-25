@@ -9,32 +9,7 @@ matches_filter(E,obj(List)):- member(E,List).
 
 
 
-default_i_options([
-  %solid(squares), 
-  all,
-  line(_),
-  hv_line(v),
-  hv_line(h),
-  dg_line(_),
-  % release_points, all,
-  squares,  %retain(solid(squares)),
-  %into_single_hidden,oldway
-  %fourway,
-  %use_reserved,
-  dg_line(u),dg_line(d),
-  diamonds,
-  shapes,
-  %into_single_hidden,
-  polygs]).
 
-tiny_i_options([call(set_bgc(zero)),dots,line(_),all,into_single_hidden]).
-
-next_options([_|T],T).
-
-
-select_default_i_options(_Grid,H,V,_Points,Options):- (H=<5;V=<5),!,tiny_i_options(Options).
-%select_default_i_options(_Grid,H,V,_Points,Options):- (H=<6;V=<6),!,tiny_i_options(Options).
-select_default_i_options(_Grid,_H,_V,_Points,Options):-  default_i_options(Options).
 
 
 allow_dirs([Type|_],X):- !, allow_dirs(Type,X).
