@@ -99,7 +99,8 @@ show_pair(IH,IV,OH,OV,Type,GridName,In,Out):-
   wots(U1, print_igrid(IH,IV,NameIn,In,[])),
   wots(U2, print_igrid(OH,OV,NameOut,Out,[])),
   print_side_by_side(U1,LW,U2),
-  print_side_by_side(describe_feature(In,[call(writeln('IN')),grid_dim,colors_count_size,colors_count]),LW,
+  print_side_by_side(
+     describe_feature(In,[call(writeln('IN')),grid_dim,colors_count_size,colors_count]),LW,
     describe_feature(Out,[call(writeln('OUT')),grid_dim,colors_count_size,colors_count])),
   ignore((is_group(In),desc(wqnl(fav(NameIn)), debug_indiv(In)))),
   ignore((is_group(Out),desc(wqnl(fav(NameOut)), debug_indiv(Out)))),

@@ -17,11 +17,12 @@ grid_shared_with(Gridname*ExampleNum*in,Gridname*ExampleNum*out):-!.
 grid_shared_with(Gridname*ExampleNum*out,Gridname*ExampleNum*in):-!.
 
 get_grid_and_name(In,Grid,GN):- is_grid(In),!,get_gridname(Grid,GN).
-get_grid_and_name(In,Grid,GN):- into_grid(In,Grid),!,get_gridname(Grid,GN).
+get_grid_and_name(In,Grid,GN):- trace,into_grid(In,Grid),!,get_gridname(Grid,GN).
    
 compute_unshared_indivs(In,Unshared):-
    get_grid_and_name(In,Grid,GN),
    compute_unshared_indivs(GN,Grid,Unshared).
+
 compute_unshared_indivs(_GN,Grid,Unshared):-
    individuals_common([],Grid,Unshared).
 

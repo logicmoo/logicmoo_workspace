@@ -193,7 +193,7 @@ grid_to_id(Grid,ID):- gensym('grid_',ID),assert_id_grid_cells(ID,Grid),assert(is
 colors_count(I,X):- indv_props(I,L),!,member(colors_count(X),L).
 
 %colors_count(Points,CC):- is_list(Points),nth0(_,Points,C-_),is_color(C), CC = [color_count(C,3)],!.
-colors_count(G,BFO):- pixel_colors(G,GF),sort(GF,GS),count_each(GS,GF,UC),keysort(UC,KS),reverse(KS,SK),into_cc(SK,BFO).
+colors_count(G,BFO):- pixel_colors(G,GF),sort(GF,GS),count_each(GS,GF,UC),keysort(UC,KS),reverse(KS,SK),!,into_cc(SK,BFO).
 
 localpoints_nc(I,X):- indv_props(I,L),member(localpoints_nc(X),L).
 

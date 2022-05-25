@@ -11,10 +11,10 @@ learn_arc(TestID):- with_arc(learn,TestID).
 test_arc(TestID):- with_arc(solve,TestID).
 
 with_arc(Action,TestID):- var(TestID),!, findall(Name,fav(Name),L),
-  list_to_set(L,S), member(TestID,S), ignore(with_arc(Action,TestID)).
+  list_to_set(L,S), member(TestID,S), with_arc(Action,TestID).
 
 with_arc(Action,arc):- !, findall(Name,kaggle_arc_db(Name,_,_,_,_),L),
-  list_to_set(L,S), member(TestID,S), ignore(with_arc(Action,TestID)).
+  list_to_set(L,S), member(TestID,S), with_arc(Action,TestID).
 
 with_arc(Action,TestName):-
   fix_test_name(TestName,TestID,Type),TestName\==TestID,!,
@@ -22,11 +22,20 @@ with_arc(Action,TestName):-
 
 with_arc(solve,TestID):- !, 
   with_arc(learn,TestID),
-  with_arc(preview,TestID),
+  forall(between(0,6,Num),with_pair(preview,TestID,trn,Num)),
   forall(between(0,6,Num),with_pair(solve,TestID,tst,Num)).
 
-with_arc(learn,TestID):-
-  forall(between(0,6,Num),with_pair(learn,TestID,trn,Num)).
+with_arc(test,TestID):- !, 
+  with_arc(learn,TestID),
+  forall(between(0,6,Num),with_pair(solve,TestID,trn,Num)),
+  forall(between(0,6,Num),with_pair(solve,TestID,tst,Num)).
+
+with_arc(preview,TestID):- !, 
+  forall(between(0,6,Num),with_pair(preview,TestID,trn,Num)),
+  forall(between(0,6,Num),with_pair(preview,TestID,tst,Num)).
+
+with_arc(Action,TestID):-
+  forall(between(0,6,Num),with_pair(Action,TestID,trn,Num)).
 
 with_pair(Action,TestID,Type,Num):-
   kaggle_arc_db(TestID,Type,Num,in,In),
@@ -46,7 +55,7 @@ with_named_pair(solve,TestID,PairName,In,Out):- !,
   with_named_pair(cheat,TestID,PairName,In,Out).
 
 with_named_pair(cheat,TestID,PairName,In,Out):- !,
-  catch(maybe_confirm_sol(TestID,PairName,In,Out),E,(wdmsg(E),fail)),!.
+  ignore(catch(maybe_confirm_sol(TestID,PairName,In,Out),E,(wdmsg(E),fail))),!.
 
 with_named_pair(learn,TestID,PairName,In,Out):- !,
   nop((wqnl(learning(TestID=PairName)),nl)),
@@ -63,7 +72,9 @@ with_named_pair(learn,TestID,PairName,In,Out):- !,
   compute_shared_indivs(Out,SharedOut),
   show_pair(IH,IV,OH,OV,shared,PairName,SharedIn,SharedOut),!,
   compute_diff(SharedOut,SharedIn,Diff),
-  pt(Diff).
+  ((wqnl(learning_diff(TestID=PairName)),nl)),
+  pt(Diff),
+  ((wqnl(learned(TestID=PairName)),nl)).
 
 
 name_the_pair(TestID,Type,Num,In,Out,PairName):- 
