@@ -253,7 +253,7 @@ clip_quadrant(CRef,SXC,SXC,EXC,EYC,GN,H,V,SXQ4,SYQ4,EXQ4,EYQ4,G,Same,obj(OBJL)):
   call(Same,Q4,LikeQ4),
   globalpoints(LikeQ4,LGPoints),  
   Width is EXQ4-SXQ4+1,Hieght is EYQ4-SYQ4+1,
-  embue_points1(GN,H,V,1,1,Width,Hieght,LGPoints,Ps),!,
+  embue_obj_points1(GN,H,V,1,1,Width,Hieght,LGPoints,Ps),!,
   globalpoints(Q4,LPoints),
   offset_points(SXQ4,SYQ4,LPoints,GPoints),
 
@@ -276,8 +276,10 @@ nop((
 
 object_rotated(obj(L),G):- member(object_rotated(G),L).
 
+%detect_grid(Grid,E):- 
+
 grid_to_3x3_objs(Grid,NewIndiv4s):-
-  symetric_xy_3x3(Grid,Image9x9),
+  catch(call_with_time_limit(7,symetric_xy_3x3(Grid,Image9x9)),E, (wdmsg(E),fail)),
   flatten(Image9x9,Flat),
   include(nonvar,Flat,NewIndiv1s),
   fix_the_fours(NewIndiv1s,NewIndiv4s).
@@ -308,8 +310,8 @@ my_partition(P1,[H|L],I,[H|E]):-
 
 consensus22(L,C):- 
   my_partition(var,L,Vars,Rest0),
-  my_partition(=(brown),Rest0,_,Rest),
-  my_partition(is_bgc,Rest,BGC,Rest1),
+  %my_partition(=(brown),Rest0,_,Rest),
+  my_partition(is_bgc,Rest0,BGC,Rest1),
   my_partition(is_black,Rest1,Blk,Rest2),
   my_partition(is_color,Rest2,Color,Other),!,
   consensus2(Vars,BGC,Blk,Color,Other,C),!.
@@ -336,12 +338,12 @@ fix_the_fours(NewIndiv0s,NewIndiv2s):-
   sort(Sizes,SizesS),
   reverse(SizesS,[size(H,V)|_]),
   make_grid(H,V,Result),
-  wdmsg(pointsNotSet(H,V)),
-  maplist(print_grid,Grids), 
+  %wdmsg(pointsNotSet(H,V)),
+  %maplist(print_grid,Grids), 
  % duplicate_term(Grids,GridsP),
   consensus(Grids,H,V,Result),
-  wdmsg(result), print_grid(Result),
-  format('~N'),
+  format('~N'),writeln('Training hard...'),
+  %print_grid(Result), dmsg(result),
   localpoints(Result,RPoints),  
   %nth0(0,NewIndiv1s,First),
   %wdmsg(pointsBeginSet(0)=First),

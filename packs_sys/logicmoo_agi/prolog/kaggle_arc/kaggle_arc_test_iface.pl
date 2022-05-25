@@ -45,23 +45,30 @@ fav(A,B):- nonvar(A),nonvar(B),
  cls,mmake,
  asserta(fav(A,B),Ref),!,
  call_cleanup(arc1(A),erase(Ref)).
+
 fav(X,[]):- clause(fav(X),true).
 %fav(t('23b5c85d'),[b7249182
 %fav(t('db3e9e38'),[lmDSL([flipV,C1=orange,C2=blue,[],flipV]).
 %fav(t(_),[lmDSL([fillFromBorder(none,yellow)])]).
-fav(t('3631a71a'),[lmDSL([overlay_each_pattern])]).
-fav(t('9d9215db'),[lmDSL([overlay_each_pattern])]).
-fav(t('810b9b61'),[lmDSL([(iz(X,rectangle),iz(X,hollow),iz(X,thick1),iz(X,noexit))-->color(X,green)])]).
-fav(v('1d398264'),[lmDSL([(iz(X,keypad),iz(X,multicolor),centerof(X,C)-->sunburst(C))])]).
-fav(v('e9bb6954'),[lmDSL([(iz(X,keypad), iz(X,monocolor),centerof(X,C)-->starburst(C))]),e('box of nine draw outward, if you hit a drawn line blacken it')]).
-fav(v('e41c6fd3'),[lmDSL([(iz(X,spaceship),color(X,cyan),vert_pos(X,spaceship))-->iz(Y,spaceship),vert_pos(Y,spaceship)])]).
 
+fav(t(c444b776),[detect_grid]).
+fav(v('e41c6fd3'),[lmDSL([(iz(X,spaceship),color(X,cyan),vert_pos(X,spaceship))-->iz(Y,spaceship),vert_pos(Y,spaceship)])]).
 fav(v('94133066'),[lmDSL([largest_indiv,trim_to_rect,rot90,flipV])]).
 fav(v('762cd429'),[]).
-fav(t('f76d97a5'),[lmDSL([compute_max_color(C1),compute_next_color(C2),blacken_color(C1),subst_color(C2,C1)])]).
+fav(v('09c534e7'),[]).
+fav(v('25094a63'),[]).
+fav(v('16b78196'),[]).
+fav(v('070dd51e'),[]).
+fav(v('8a371977'),[]).
+fav(v('696d4842'),[]).
+fav(v('40f6cd08'),[]).
+fav(v('05a7bcf2'),[]).
+fav(t('264363fd'),[]).
+fav(t('7837ac64'),[]).
+fav(t('f76d97a5'),[was__lmDSL([compute_max_color(C1),compute_next_color(C2),blacken_color(C1),subst_color(C2,C1)])]).
 fav(t('ed36ccf7'),[lmDSL([rot270])]).
 fav(t('e9bb6954'),[debug_indiv]).
-fav(t('dae9d2b5'),[lmDSL([find_by_color,combine_all,set_all_fg(magenta)])]).
+fav(t('dae9d2b5'),[lmDSL([cut_in_half,overlay_all,set_all_fg(magenta)])]).
 fav(t('d6ad076f'),[lmDSL([find_smaller,shoot_at_other,wide_beam])]).
 fav(t('d511f180'),[lmDSL([swap_colors(cyan,grey)])]).
 fav(t('ae4f1146'),[learn([call(set_bgc(cyan))]),lmDSL([largest_indiv,trim_to_rect,set_bg(cyan)])]).
@@ -76,6 +83,13 @@ fav(t('6f8cd79b'),[lmDSL([add_borders(cyan)])]).
 fav(t('6d58a25d'),[debug_indiv,print_grid,"the blue object is a downward beam maker, each beam must connect to one of its colors "]).
 fav(t('6cf79266'),[learn([find(nines),remove_them]),lmDSL(reverse_learned)]).
 fav(t('6150a2bd'),[lmDSL([rot180])]).
+fav(v(de493100),[-mask_match,-shape_match,-rotation_match,-color_match,evaluation,'(4, 1)']).
+fav(v(f9d67f8b),[lmDSL([overlay_each_pattern])]).
+fav(t('3631a71a'),[lmDSL([overlay_each_pattern])]).
+fav(t('9d9215db'),[lmDSL([overlay_each_pattern])]).
+fav(t('810b9b61'),[lmDSL([(iz(X,rectangle),iz(X,hollow),iz(X,thick1),iz(X,noexit))-->color(X,green)])]).
+fav(v('1d398264'),[lmDSL([(iz(X,keypad),iz(X,multicolor),centerof(X,C)-->sunburst(C))])]).
+fav(v('e9bb6954'),[lmDSL([(iz(X,keypad), iz(X,monocolor),centerof(X,C)-->starburst(C))]),e('box of nine draw outward, if you hit a drawn line blacken it')]).
 fav(t('5c2c9af4'),[lmDSL([two_closest_dots_to_edge,make_a_box,grow_box_that_much_bigger,grow_box_that_much_bigger,grow_box_that_much_bigger])]).
 fav(t('5582e5ca'),[lmDSL([compute_max_color(C1),cls_with(C1)])]).
 fav(t('5521c0d9'),[lmDSL([with_each_indiv,move_above_itself])]).
@@ -181,7 +195,6 @@ if like in the game of TTT you can win, but not diagonlly.. place the color on t
 
 current_test_name(Name):- nb_current(test_name,Name),!.
 current_test_name([]).
-
 
 /*  
 

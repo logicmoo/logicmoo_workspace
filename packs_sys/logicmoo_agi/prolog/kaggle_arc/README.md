@@ -8,11 +8,16 @@ At the time of writing this README (5/12/2022)
  * When the best was combined with three other solvers the result was 27.8% correct. (38% of 20% increase) https://www.kaggle.com/competitions/abstraction-and-reasoning-challenge/discussion/234352
  * A Neural Net solver hand picked 100 of the 400 tests (according to authors the smallest grid sizes)
    Gets 78% of the total pixels correct. (In other words, it may have guessed NONE of the solutions correctly!? )
-   But on another thread, Chollet might of indicated they got 30% correct out of the 100 of tests it took.
    So they deserve perhaps a final score of 7.5%? 
     https://www.kaggle.com/competitions/abstraction-and-reasoning-challenge/discussion/220585
+    (But on another thread, Chollet might of indicated the SOTA is 30% correct.  But these guys are no the SOTA!)
 
-The symbolic solver author claims to have only spent 2 months writting the C++ for the best single solver (spread out over two years.) While I believe @icecuber is brilliant, does this mean that companies and the rest of the world did not take the ARC challenge very seriously?
+
+The symbolic solver author claims to have only spent 2 months writting the C++ for the best single solver (spread out over two years.) While I believe @icecuber is brilliant, does this mean that companies and the rest of the world did not take the ARC challenge very seriously or is it actually hard to do?  I will assume it is hard to do!
+
+Therefore this project spends some time trying to pass the tests at 100% (on a CPU in under 9 hours).  But what if it takes us 20 hours to get 100% ?
+
+
 
 
 

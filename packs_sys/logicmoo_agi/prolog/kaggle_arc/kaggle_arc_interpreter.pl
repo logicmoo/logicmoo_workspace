@@ -40,7 +40,7 @@ run_dsl(Mode,lmDSL(Prog),In,Out):- !, run_dsl(Mode,Prog,In,Out).
 run_dsl(_Mode,call(G),In,Out):-!,call(G),(var(Out)->Out=In; true).
 run_dsl(_Mode,[],In,Out):-!, var(Out)->Out=In; true.
 run_dsl(_Mode,same,In,Out):-!, duplicate_term(In,Out).
-run_dsl(ennfore,color(Obj,Color),In,Out):-!, set_color(Color,Obj,In,Out).
+run_dsl(ennfore,color(Obj,Color),In,Out):-!, set_global_points(Color,Obj,In,Out).
 run_dsl(Mode,-->(All,Exec),In,Out):-!,  run_dsl(Mode,forall(All,Exec),In,Out).
 run_dsl(Mode,forall(All,Exec),In,Out):-!,  forall(run_dsl(Mode,All,In,Mid),(run_dsl(enforce,Exec,Mid,Out),nb_setval(out,Out))),nb_current(out,Out).
 run_dsl(Mode,[H|Prog],In,Out):-!, run_dsl(Mode,H,In,GridM), run_dsl(Mode,Prog,GridM,Out).
@@ -113,7 +113,7 @@ training_progs(Prog,In,Out):- var(Prog),!,throw(var_training_progs(Prog,In,Out))
 training_progs(call(G),_In,_Out):-!,call(G).
 training_progs([],_In,_Out):-!.
 training_progs([H|Prog],In,Out):-!, training_progs(H,In,Out), training_progs(Prog,In,Out).
-training_progs(Prog,_,_):- missing_arity2(Prog),!,arcdbg(warn(missing(training_progs(Prog)))).
+training_progs(Prog,_,_):- missing_arity(Prog, 2),!,arcdbg(warn(missing(training_progs(Prog)))).
 training_progs(Prog,In,Out):- call(Prog,In,Out)*-> true ; arcdbg(warn(nonworking(training_progs(Prog)))).
 
 

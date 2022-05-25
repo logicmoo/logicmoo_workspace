@@ -51,11 +51,11 @@ start_arc_server :-
 start_arc_server(Port) :-
     http_server(http_dispatch, [port(Port)]).
 
-stop_arc_server() :-
+stop_arc_server :-
     default_port(Port),
     stop_arc_server(Port).
 stop_arc_server(Port) :-
-    http_stop_arc_server(Port, []).
+    http_stop_server(Port, []).
 
 default_port(1777).
 
@@ -126,4 +126,10 @@ prolog_right(F):- wdmsg(prolog_right(F)).
 
 :- initialization arc_http_server.
 
+
+arc_html(`
+
+
+
+`).
 

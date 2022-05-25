@@ -1,17 +1,23 @@
 pt(P):- format('~N'),print_tree_nl(P),!.
+
+
 wqs(X):- var(X), !, wqs(var(X)). wqs(nl):- !, nl. wqs(''):-!. wqs([]):-!.
-wqs([H1|T]):- string(H1),!, write(H1), wqs(T).
+%wqs([H1,H2|T]):- string(H1),string(H2),!, write(H1),write(' '), wqs([H2|T]).
+%wqs([H1|T]):- string(H1),!, write(H1), wqs(T).
 wqs([skip(_)|T]):- !,wqs(T).
+%wqs([H|T]):- compound(H),!, writeq(H), wqs(T).
+wqs([H|T]):- !, wqs(H), wqs(T).
 wqs(format(C,N)):- !, format(C,N).
 wqs(writef(C,N)):- !, writef(C,N).
 wqs(call(C)):- !, call(C).
 wqs(pt(C)):- !, pt(C).
-wqs(q(C)):- !, writeq(C).
-wqs(color_count(C,N)):- !, write('color_count('),color_print(C,C),write(','), writeq(N), write(') ').
-wqs(color_print(C,X)):- !, color_print(C,X), write(' ').
-wqs(X):- \+ compound(X),!, write(X), write(' ').
-wqs([H|T]):- wqs(H), wqs(T).
-wqs(X):- writeq(X), write(' ').
+wqs(q(C)):- !, write(' '), writeq(C).
+wqs(color_count(C,N)):- !, write(' color_count('),color_print(C,C),write(','), writeq(N), write(')').
+wqs(color_print(C,X)):- !, write(' '), color_print(C,X).
+
+wqs(X):- \+ compound(X),!, write(' '), write(X).
+wqs(X):- write(' '), writeq(X).
+
 wqnl(X):- is_list(X),!,format('~N'),wqs(X),format('~N').
 wqnl(X):- format('~N~q~N',[X]).
 dash_char:- dash_char(40).
@@ -34,7 +40,7 @@ user:portray(Grid):- \+ \+ catch((
   \+ tracing, \+ is_object(Grid),  \+ is_group(Grid), 
    (is_gridoid(Grid);is_points_list(Grid)),
    grid_size(Grid,H,V),!,H>0,V>0, wots(S,print_grid(H,V,Grid)),write(S)),_,false).
-user:portray(Grid):- \+ \+ catch((
+user:portray(Grid):- \+ \+ catch(( fail,
   tracing, \+ is_object(Grid),  \+ is_group(Grid), 
    (is_points_list(Grid)),
    grid_size(Grid,H,V),!,H>0,V>0, wots(S,print_grid(H,V,Grid)),write(S)),_,false).
@@ -69,6 +75,7 @@ print_side_by_side_lists([],W1,[E2|L2],W2):-
   write_padding([],W1,E2,W2),
   print_side_by_side_lists([],W1,L2,W2).
 
+desc(A,B):- wots(S1,A),wots(S2,B),format('~N~n'),dash_char,write(S1),format('~N'),write(S2),format('~N').
 
 write_padding(E1,_W1,E2,LW):- %write(' '),
     W1 = LW,
@@ -76,11 +83,28 @@ write_padding(E1,_W1,E2,LW):- %write(' '),
    write(S1), write('\t'), line_position(user_output,L1), Pad1 is W1 - L1, dash_char(Pad1, ' '),
    write(S2), format('~N').
 
+as_str(Var,S):- var(Var),!,sformat(S,'var(~p)',[Var]).
 as_str([],""):-!.
 as_str(S,A):- atom(S),!,atom_string(S,A).
+as_str(call(C),S):- !, wots(S,C).
 as_str(S,A):- \+ string(S), sformat(A,'~p',[S]),!.
 as_str(S,S).
+
 print_length(S,L):- as_str(S,A),atom_codes(A,C), include(uses_space,C,SS),length(SS,L).
+
+show_pair(IH,IV,OH,OV,Type,GridName,In,Out):-
+  LW is (IH * 2 + 12),
+  NameIn =.. [Type,GridName+in],
+  NameOut =.. [Type,GridName+out],
+  wots(U1, print_igrid(IH,IV,NameIn,In,[])),
+  wots(U2, print_igrid(OH,OV,NameOut,Out,[])),
+  print_side_by_side(U1,LW,U2),
+  print_side_by_side(describe_feature(In,[call(writeln('IN')),grid_dim,colors_count_size,colors_count]),LW,
+    describe_feature(Out,[call(writeln('OUT')),grid_dim,colors_count_size,colors_count])),
+  ignore((is_group(In),desc(wqnl(fav(NameIn)), debug_indiv(In)))),
+  ignore((is_group(Out),desc(wqnl(fav(NameOut)), debug_indiv(Out)))),
+  !.
+
 uses_space(C):- code_type(C,print).
 
 into_ss_string(Var,_):- var(Var),!,throw(var_into_ss_string(Var)).
@@ -104,8 +128,7 @@ print_w_pad0(Pad,S):- format('~N'),dash_char(Pad,' '), write(S).
 
 print_equals(_,N,V):- \+ compound(V),wqnl(N=V).
 print_equals(Grid,N,Ps):- is_object(Ps),grid_size(Grid,H,V),print_points(N,H,V,Ps),!.
-print_equals(Grid,N,PL):- is_group(PL), grid_size(Grid,H,V), 
-  locally(grid_nums(PL),print_list_of_points(N,H,V,[[]])).
+%print_equals(Grid,N,PL):- is_group(PL), grid_size(Grid,H,V), locally(grid_nums(PL),print_list_of_points(N,H,V,[[]])).
 print_equals(_,N,G):- print_equals(N,G).
 
 
@@ -164,11 +187,14 @@ better_value([G|V],List):-
   [G|V] \=@= List.
 
 
-print_igrid(Name,SIndvOut,InOutL):-
-   write('  '),writeq(Name),writeln('  '),
-   append(SIndvOut,InOutL,Print),
+print_igrid(Name,SIndvOut,InOutL):-   
    grid_size(SIndvOut,H,V),
-   print_grid(H,V,Print).
+   print_igrid(H,V,Name,SIndvOut,InOutL).
+
+print_igrid(H,V,Name,SIndvOut,InOutL):-   
+   append(SIndvOut,InOutL,Print),
+   print_grid(H,V,Print),format('~N'),
+   write('  '),writeq(Name),writeln('  '),!.
 
 print_grid(Grid):- notrace(print_grid0(_HH,_VV,Grid)).
 %print_grid0(Grid):- var(Grid),!, throw(var_print_grid(Grid)).
@@ -251,6 +277,7 @@ ansi_color(C,Color):- C\==0,block_colors(L),nth0(C,L,Color).
 underline_print(W):- ansi_format([underline],'~@',[W]),!.
 
 color_print(C,W):- var(C),integer(W),ansi_color(W,CI),!,ansi_format([underline,fg(CI)],'~w',[W]),!.
+color_print(C,W):- var(C),W=='?',!,ansi_format([],'~w',[' ']),!.
 color_print(C,W):- var(C),!,ansi_format([underline],'~w',[W]),!.
 color_print(C-_,W):- !, color_print(C,W).
 color_print(C,W):- atom(C),color_int(C,N),integer(N),!,color_print(N,W).
@@ -268,12 +295,6 @@ color_int(C,W):- integer(C),!,W=C.
 color_int(C,W):- atom(C),!,named_colors(L),nth0(W,L,C),!.
 color_int(C,C).
 
-is_grid_color(C):- var(C),!,fail.
-% makes grid colors an integer.. 
-%is_grid_color(C):- !,integer(C).
-% we are using atoms currently
-is_grid_color(C-_):- !, is_color(C).
-is_grid_color(C):- is_color(C).
 
 grid_color_code(C,C):- var(C).
 grid_color_code(C-W,CC-W):- color_code(C,CC).
@@ -282,7 +303,7 @@ grid_color_code(C,CC):- color_code(C,CC).
 %grid_color_code(C,CC):- color_int(C,CC).
 
 color_code(C,W):- color_name(C,W).
-is_color_dat(C):- atomic(C),color_code(C,W),!,C==W.
+
 
 %print_g(H,V,_,LH,LV,HH,HV):- (H<LH;H>HH;V<LV;V>HV),!, write('  ').
 
@@ -348,6 +369,7 @@ get_glyph(Point,Glyph):-
   get_grid_num(Point,N),i_glyph(N,Glyph).
 
 i_glyph(N,Glyph):- atom(N),atom_codes(N,[Code|_]),name(Glyph,[Code]).
+i_glyph(Code,Glyph):- integer(Code),!,name(Glyph,[Code]).
 i_glyph(N,Glyph):- integer(N),i_sym(N,Code),name(Glyph,[Code]).
 
 get_grid_num(C-Point,N):-
@@ -373,7 +395,7 @@ get_grid_nums(GridNums):-
 
 :- thread_local(grid_nums/2).
 :- thread_local(grid_nums/1).
-set_grid_nums(Gs):- 
+dead_set_grid_nums(Gs):- 
    nb_current(test_name_w_type,NameType),
    asserta(grid_nums(NameType,Gs)).
 
