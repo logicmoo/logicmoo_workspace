@@ -46,7 +46,7 @@ arc2:- clsmake, arc1(v('009d5c81')).
 arc3:- arc1(t('25d487eb')).
 fav:- clsmake, forall(fav(X),arc(X)).
 fav1:- clsmake, fav(X), arc1(X).
-fav(X):- clsmake, nonvar(X),!, arc1(X).
+fav(X):- nonvar(X),!, clsmake, arc1(X).
 fav(X):- clause(fav(X,_),true).
 
 arc(Name):- forall(arc1(Name),true).

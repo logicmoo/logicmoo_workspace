@@ -107,7 +107,7 @@ fav(t('47c1f68c'),[lmDSL([compute_max_color(C1),compute_next_color(C2),
  blacken_color(C1),subst_color(C2,C1),
  trim_to_square,
  grow([[same,rot90],
-      [rot270,rot180]])])]).
+      [rot270,rot180]])])]):- fail.
 
 fav(t('9ecd008a'),[learn([find_damage_to_input,find_center,fraction_evenly_to_four,map_slices_upon_themselves]),
     lmDSL([indiv_is_one_hole,fix_image,selected_indiv,trim_to_rect])]).

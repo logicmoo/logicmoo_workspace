@@ -12,7 +12,7 @@ get_gridname(In,Name*ExampleNum*in):- kaggle_arc(Name,ExampleNum,In,_).
 get_gridname(Out,Name*ExampleNum*out):- kaggle_arc(Name,ExampleNum,_,Out).
 
 
-into_gridname(G,TstName):- nonvar(G),!, into_gridname(GVar,TstName),G=@=GVar,!.
+into_gridname(G,TstName):- nonvar(G), into_gridname(GVar,TstName),G=@=GVar,!.
 into_gridname(G,Name*ExampleNum*in):- kaggle_arc(Name,ExampleNum,G,_).
 into_gridname(G,Name*ExampleNum*out):- kaggle_arc(Name,ExampleNum,_,G).
 into_gridname(G,TstName):- is_gridname(G,TstName).

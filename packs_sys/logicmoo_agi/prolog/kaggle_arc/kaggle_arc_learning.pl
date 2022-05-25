@@ -10,16 +10,14 @@ learn_arc(TestID):- with_arc(learn,TestID).
 
 test_arc(TestID):- with_arc(solve,TestID).
 
-with_arc(Action,TestID):- var(TestID), !, with_arc(Action,fav).
-
-with_arc(Action,fav):- !, findall(Name,fav(Name),L),
-  list_to_set(L,S), member(TestID,S),with_arc(Action,TestID).
+with_arc(Action,TestID):- var(TestID),!, findall(Name,fav(Name),L),
+  list_to_set(L,S), member(TestID,S), ignore(with_arc(Action,TestID)).
 
 with_arc(Action,arc):- !, findall(Name,kaggle_arc_db(Name,_,_,_,_),L),
-  list_to_set(L,S), member(TestID,S),with_arc(Action,TestID).
+  list_to_set(L,S), member(TestID,S), ignore(with_arc(Action,TestID)).
 
 with_arc(Action,TestName):-
-  into_gridname(TestName,TestID*_Test*_IO),TestName\==TestID,!,
+  fix_test_name(TestName,TestID,Type),TestName\==TestID,!,
   with_arc(Action,TestID).
 
 with_arc(solve,TestID):- !, 
@@ -27,8 +25,8 @@ with_arc(solve,TestID):- !,
   with_arc(preview,TestID),
   forall(between(0,6,Num),with_pair(solve,TestID,tst,Num)).
 
-with_arc(Action,TestID):-
-  forall(between(0,6,Num),with_pair(Action,TestID,lrn,Num)).
+with_arc(learn,TestID):-
+  forall(between(0,6,Num),with_pair(learn,TestID,trn,Num)).
 
 with_pair(Action,TestID,Type,Num):-
   kaggle_arc_db(TestID,Type,Num,in,In),
@@ -39,16 +37,16 @@ with_pair(Action,TestID,Type,Num,In,Out):- !,
   name_the_pair(TestID,Type,Num,In,Out,PairName),  
   with_named_pair(Action,TestID,PairName,In,Out).
 
+with_named_pair(preview,TestID,PairName,In,Out):- !,
+  dash_char(60,"|"),nl,nl,nop((wqnl(arc1(TestID)),nl)),
+  grid_size(In,IH,IV), grid_size(Out,OH,OV),
+  show_pair(IH,IV,OH,OV,test,PairName,In,Out).
+
 with_named_pair(solve,TestID,PairName,In,Out):- !,
   with_named_pair(cheat,TestID,PairName,In,Out).
 
 with_named_pair(cheat,TestID,PairName,In,Out):- !,
   catch(maybe_confirm_sol(TestID,PairName,In,Out),E,(wdmsg(E),fail)),!.
-
-with_named_pair(preview,TestID,PairName,In,Out):- !,
-  dash_char(60,"|"),nl,nl,nop((wqnl(arc1(TestID)),nl)),
-  grid_size(In,IH,IV), grid_size(Out,OH,OV),
-  show_pair(IH,IV,OH,OV,test,PairName,In,Out).
 
 with_named_pair(learn,TestID,PairName,In,Out):- !,
   nop((wqnl(learning(TestID=PairName)),nl)),
