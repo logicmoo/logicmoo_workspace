@@ -135,9 +135,19 @@ must_be_free(AllNew):- dumpST,wdmsg(must_be_free(AllNew)),break,fail.
 
 intersection([],LeftOverB,[],[],LeftOverB).
 intersection(LeftOverA,[],[],LeftOverA,[]).
-intersection([E|ObjPoints],Points,[E|Intersected],LeftOverA,LeftOverB):-
-  select(E,Points,PointsMinusE),
-  intersection(ObjPoints,PointsMinusE,Intersected,LeftOverA,LeftOverB).
-intersection([E|ObjPoints],Points,Intersected,[E|LeftOverA],LeftOverB):-
-  intersection(ObjPoints,Points,Intersected,LeftOverA,LeftOverB).
+intersection([A|APoints],BPoints,[A|Intersected],LeftOverA,LeftOverB):-
+  select(A,BPoints,BPointsMinusA),
+  intersection(APoints,BPointsMinusA,Intersected,LeftOverA,LeftOverB).
+intersection([A|APoints],BPoints,Intersected,[A|LeftOverA],LeftOverB):-
+  intersection(APoints,BPoints,Intersected,LeftOverA,LeftOverB).
+
+
+pred_intersection(_P2,[],LeftOverB,  [],[], [],LeftOverB).
+pred_intersection(_P2,LeftOverA,[],  [],[], LeftOverA,[]).
+pred_intersection(P2,[A|APoints],BPoints,[A|IntersectedA],[B|IntersectedB],LeftOverA,LeftOverB):-
+  select(B,BPoints,BPointsMinusA),
+  \+ \+ call(P2,A,B),
+  pred_intersection(P2,APoints,BPointsMinusA,IntersectedA,IntersectedB,LeftOverA,LeftOverB).
+pred_intersection(P2,[A|APoints],BPoints,IntersectedA,IntersectedB,[A|LeftOverA],LeftOverB):-
+  pred_intersection(P2,APoints,BPoints,IntersectedA,IntersectedB,LeftOverA,LeftOverB).
 

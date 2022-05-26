@@ -71,9 +71,8 @@ with_named_pair(learn,TestID,PairName,In,Out):- !,
   compute_shared_indivs(In,SharedIn),
   compute_shared_indivs(Out,SharedOut),
   show_pair(IH,IV,OH,OV,shared,PairName,SharedIn,SharedOut),!,
-  compute_diff(SharedOut,SharedIn,Diff),
   ((wqnl(learning_diff(TestID=PairName)),nl)),
-  pt(Diff),
+  showdiff(SharedOut,SharedIn),
   ((wqnl(learned(TestID=PairName)),nl)).
 
 

@@ -64,8 +64,6 @@ debug_indiv:- test_config(nodebug_indiv),!,fail.
 debug_indiv:- test_config(debug_indiv),!.
 debug_indiv:- test_config(indiv(_)),!.
 
-print_info(A):- debug_indiv(A).
-
 debug_indiv(Var):- var(Var),pt(debug_indiv(Var)),!.
 
 debug_indiv(Grid):- is_grid(Grid),!,grid_size(Grid,H,V),
@@ -100,6 +98,7 @@ debug_indiv(obj(A)):- is_list(A),!,
   maplist(debug_indiv(obj(A)),A),
   dash_char,!.
 
+debug_indiv([]):- !.
 debug_indiv(List):- is_list(List),!,length(List,Len), 
   dash_char,
   wqnl(list = Len),
@@ -107,12 +106,15 @@ debug_indiv(List):- is_list(List),!,length(List,Len),
   forall(between(1,Min,N),(N<40->(nth1(N,List,E),debug_indiv(E));wqnl(total = Len))),
   dash_char,!.
 
+debug_indiv(diff(_)).
 debug_indiv(Other):-
   dash_char,
   functor(Other,F,A),
   wqnl(other = F/A),
   pt(Other),
   dash_char,!.
+
+debug_indiv(Obj,P):- compound(P),!,compound_name_arguments(P,F,A),debug_indiv(Obj,P,F,A).
 
 priority("bckgrnd",0).
 priority("point",0).
@@ -144,7 +146,7 @@ too_verbose(grid).
 too_verbose(grid).
 too_verbose(rotated_grid).
 
-debug_indiv(Obj,P):- compound_name_arguments(P,F,A),debug_indiv(Obj,P,F,A).
+
 debug_indiv(_,_,X,_):- too_verbose(X),!.
 debug_indiv(Obj,_,F,[A]):- maplist(is_cpoint,A),!,
   object_size(Obj,H,V), wqnl(F), 

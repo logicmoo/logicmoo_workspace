@@ -74,8 +74,9 @@ merge_indivs_cleanup(IndvA,IndvB,IndvC,BetterAO,BetterBO,BetterCO):-
   merge_indivs_cleanup(BetterA,BetterB,BetterC,BetterAO,BetterBO,BetterCO),!.
 merge_indivs_cleanup(A,B,C,A,B,C).
 
+%same_object(D)
 merge_a_b(A,B,AA):- 
-  compute_diff(A,B,same_object(How)),!,
+  compare_objs1(changed(How),A,B),!,
   object_indv_id(B,NamedExampleNum,Iv),
   setq(A,object_indv_id(NamedExampleNum,Iv),AA),
   object_glyph(A,GlyphA),
@@ -98,15 +99,17 @@ individuals_common(Reserved,Grid,IndvS):-
    into_gridname(Grid,ID),   
    individuals_raw(H,V,ID,Options,Reserved,Points,Grid,IndvSRaw),
    %as_debug(9,ptt((individuals_common=IndvSRaw))),
-   make_indiv_object_list(ID,H,V,IndvSRaw,IndvS))).
+   make_indiv_object_list(ID,H,V,IndvSRaw,IndvS1),
+   combine_objects(IndvS1,IndvS))).
 
 individuals_raw(GH,GV,ID,Options,Reserved,Points,Grid,IndvSRaw):-
  must_det_l((
   must_be_free(IndvSRaw),
   individuals_list(GH,GV,[],ID,Options,Reserved,Points,Grid,Indv_0,_LeftOverPoints),
-  unraw_inds(Indv_0,Indv),
-  largest_first(Indv,IndvSRaw))).
-
+  =(Indv_0,Indv_1),
+  unraw_inds(Indv_1,Indv_2),
+  
+  largest_first(Indv_2,IndvSRaw))).
 
 unraw_inds(IndvS,IndvOO):-   
   largest_first(IndvS,Indv),
