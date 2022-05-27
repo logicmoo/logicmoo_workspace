@@ -82,8 +82,7 @@ merge_a_b(A,B,AA):-
   object_glyph(A,GlyphA),
   object_glyph(B,GlyphB),
   ignore((How ==[]-> nop(pt(shared_object(GlyphB->GlyphA))); 
-    (i_glyph(GlyphB,GlyphBB),
-      pt(same_object(GlyphBB,How))))).
+    (pt(same_object(GlyphA,GlyphB,How))))).
 
 
 
