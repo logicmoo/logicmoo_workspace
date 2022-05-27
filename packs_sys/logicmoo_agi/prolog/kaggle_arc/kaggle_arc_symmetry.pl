@@ -178,9 +178,9 @@ row_color_changes(PrevCh,H,[N|List],Res):- var(N),!,row_color_changes(PrevCh,H,L
 row_color_changes(PrevCh,H,[N|List],Res):- H\==N, row_color_changes(PrevCh+1,N,List,Res).
 row_color_changes(PrevCh,H,[N|List],Res):- H==N,  row_color_changes(PrevCh,N,List,Res).
 
-symetric_row(I,C,Row,L):- append(C,[E1|R],Right), append(L,Right,Row),reverse(L,[E1|LL]),aligned_rows(LL,R),length(L,I).
+symetric_row(I,C,Row,L):- append(C,[E1|RR],Right), append(L,Right,Row),reverse(L,[E1|LL]),aligned_rows(LL,RR),length(L,I).
 
-symmetric_lrw(_I,_C,[],_GL):- !.
+symmetric_lrw(_I,_C,[],_GL):- !. 
 symmetric_lrw(I,C,G,GL):- maplist_until(symetric_row(I,C),G,GL),
    reverse(G,GR), maplist_until0(symetric_row(I,C),GR,_).
 
@@ -258,7 +258,7 @@ clip_quadrant(CRef,SXC,SXC,EXC,EYC,GN,H,V,SXQ4,SYQ4,EXQ4,EYQ4,G,Same,obj(OBJL)):
   make_indiv_object(GN,H,V,1,1,Width,Height, LGPoints,
     [object_shape(quadrant(CRef,Same)),
      object_shape(pattern(CRef,SXC,SXC,EXC,EYC)),
-     object_rotated(Same),
+     object_rotation(Same),
      object_size(Width,Height),
      object_offset(SXQ4,SYQ4),
      globalpoints(GPoints),
@@ -274,17 +274,18 @@ nop((
   globalpoints(Q4,LPoints),
   offset_points(SXQ4,SYQ4,LPoints,GPoints),
   embue_points1(GN,H,V,SXQ4,SYQ4,EXQ4,EYQ4,GPoints,Ps),!,
-  append([[object_rotated(Same),
+  append([[object_rotation(Same),
      center_info(CRef,SXC,SXC,EXC,EYC),grid(LikeQ4)],CommonQ,Ps],OBJL),
   OBJ=obj(OBJL))).
 
 
-object_rotated(obj(L),G):- member(object_rotated(G),L).
+%object_rotation(obj(L),G):- member(object_rotation(G),L).
 
 %detect_grid(Grid,E):- 
 
 grid_to_3x3_objs(Grid,NewIndiv4s):-
   catch(call_with_time_limit(2,symetric_xy_3x3(Grid,Image9x9)),E, (wdmsg(E),fail)),
+  %catch(symetric_xy_3x3(Grid,Image9x9),E, (wdmsg(E),fail)),
   flatten(Image9x9,Flat),
   include(nonvar,Flat,NewIndiv1s),
   fix_the_fours(NewIndiv1s,NewIndiv4s).

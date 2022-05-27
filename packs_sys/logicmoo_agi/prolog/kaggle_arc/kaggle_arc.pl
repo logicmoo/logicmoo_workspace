@@ -39,19 +39,20 @@ run_nb(G):- call(G).
 %run_nb(G):- setup_call_cleanup(G,true,notrace).
 
 clsmake:- cls,mmake.
-arc:- clsmake,
-  time((forall(test_names_by_hard(Name),ignore(arc(Name))))).
-arc1:- clsmake, arc1(v('1d398264')).
+arc:- forall(arc1,true).
+arc1:- clsmake, test_names_by_hard(X), arc1(X).
 arc2:- clsmake, arc1(v('009d5c81')).
 arc3:- arc1(t('25d487eb')).
-fav:- clsmake, forall(fav(X),arc(X)).
+arc4:- clsmake, arc1(v('1d398264')).
+
+fav:- forall(fav1,true).
 fav1:- clsmake, fav(X), arc1(X).
 fav(X):- nonvar(X),!, clsmake, arc1(X).
 fav(X):- clause(fav(X,_),true).
 
 arc(Name):- forall(arc1(Name),true).
-arc1(TName):-    
 
+arc1(TName):-    
  locally(set_prolog_flag(gc,true),
   (fix_test_name(TName,Name,ExampleNum), 
   set_flag(indiv,0),
@@ -84,7 +85,7 @@ try_arc_io(CName,Name,ExampleNum,In,Out):-
     dash_char(60,"|"),nl,dash_char(60,"V"),nl,
     nl,wqnl(arc1(Name)),nl,nl,dash_char(60,"A"),nl)),   
   dash_char(60,"|"),nl,nl,
-  GridName= Name*ExampleNum,
+  PairName= Name*ExampleNum,
   GridNameIn= Name*ExampleNum*in,
   GridNameOut= Name*ExampleNum*out,
   set_gridname(In,GridNameIn),
@@ -93,14 +94,14 @@ try_arc_io(CName,Name,ExampleNum,In,Out):-
   test_info(Name,Info), wqnl(fav(Name,Info)),nl,
   ignore((more_task_info(Name,III),pt(III),nl)),
   
-  show_pair(IH,IV,OH,OV,test,GridName,In,Out),
+  show_pair(IH,IV,OH,OV,test,PairName,In,Out),
   compute_unshared_indivs(Out,UnsharedOut),
   compute_unshared_indivs(In,UnsharedIn),
-  %show_pair(IH,IV,OH,OV,unshared,GridName,UnsharedIn,UnsharedOut),
+  %show_pair(IH,IV,OH,OV,unshared,PairName,UnsharedIn,UnsharedOut),
   %notrace(showdiff(UnsharedIn,UnsharedOut)),
   notrace(individuals_common(UnsharedOut,In,SharedIn)),
   notrace(individuals_common(UnsharedIn,Out,SharedOut)),
-  notrace(show_pair(IH,IV,OH,OV,common,GridName,SharedIn,SharedOut)),
+  notrace(show_pair(IH,IV,OH,OV,common,PairName,SharedIn,SharedOut)),
   showdiff(SharedIn,SharedOut),!,
   
 
@@ -111,13 +112,13 @@ try_arc_io(CName,Name,ExampleNum,In,Out):-
 
 
        compute_unshared_indivs(In,UnsharedIn),
-  show_pair(IH,IV,OH,OV,unshared,GridName,UnsharedIn,UnsharedOut),
+  show_pair(IH,IV,OH,OV,unshared,PairName,UnsharedIn,UnsharedOut),
   %merge_indivs(UnsharedIn,UnsharedOut,BetterA,BetterB,BetterC), 
-  %show_pair(IH,IV,OH,OV,better,GridName,BetterA,BetterB),
-  %show_pair(IH,IV,OH,OV,combined,GridName,BetterC,Out),
+  %show_pair(IH,IV,OH,OV,better,PairName,BetterA,BetterB),
+  %show_pair(IH,IV,OH,OV,combined,PairName,BetterC,Out),
   compute_shared_indivs(In,SharedIn),
   compute_shared_indivs(Out,SharedOut),
-  show_pair(IH,IV,OH,OV,shared,GridName,SharedIn,SharedOut))),!,
+  show_pair(IH,IV,OH,OV,shared,PairName,SharedIn,SharedOut))),!,
 
   nop(catch(maybe_confirm_sol(Name,ExampleNum,In,Out),E,(wdmsg(E)))))),!.
 
@@ -133,7 +134,7 @@ try_arc_io(CName,Name,ExampleNum,In,Out):-
     dash_char(60,"|"),nl,dash_char(60,"V"),nl,
     nl,wqnl(arc1(Name)),nl,nl,dash_char(60,"A"),nl)),   
   dash_char(60,"|"),nl,nl,
-  GridName= Name*ExampleNum,
+  PairName= Name*ExampleNum,
   GridNameIn= Name*ExampleNum*in,
   GridNameOut= Name*ExampleNum*out,
   set_gridname(In,GridNameIn),
@@ -142,16 +143,16 @@ try_arc_io(CName,Name,ExampleNum,In,Out):-
   test_info(Name,Info), wqnl(fav(Name,Info)),nl,
   ignore((more_task_info(Name,III),pt(III),nl)),
   
-  show_pair(IH,IV,OH,OV,test,GridName,In,Out),
+  show_pair(IH,IV,OH,OV,test,PairName,In,Out),
   compute_unshared_indivs(In,UnsharedIn),
   compute_unshared_indivs(Out,UnsharedOut),
-  show_pair(IH,IV,OH,OV,unshared,GridName,UnsharedIn,UnsharedOut),
+  show_pair(IH,IV,OH,OV,unshared,PairName,UnsharedIn,UnsharedOut),
   %merge_indivs(UnsharedIn,UnsharedOut,BetterA,BetterB,BetterC), 
-  %show_pair(IH,IV,OH,OV,better,GridName,BetterA,BetterB),
-  %show_pair(IH,IV,OH,OV,combined,GridName,BetterC,Out),
+  %show_pair(IH,IV,OH,OV,better,PairName,BetterA,BetterB),
+  %show_pair(IH,IV,OH,OV,combined,PairName,BetterC,Out),
   compute_shared_indivs(In,SharedIn),
-  compute_shared_indivs(Out,SharedOut),
-  show_pair(IH,IV,OH,OV,shared,GridName,SharedIn,SharedOut),
+  individuals_common(UnsharedIn,Out,SharedOut),
+  show_pair(IH,IV,OH,OV,shared,PairName,SharedIn,SharedOut),
 
   catch(maybe_confirm_sol(Name,ExampleNum,In,Out),E,(wdmsg(E))))),!.
 /*
@@ -174,15 +175,15 @@ try_arc_io(CName,Name,ExampleNum,In,Out):-
 
 % Grid pretty printing
 grid_info(Name,IO,Grid):- 
-  GridName = (Name*IO),
+  PairName = (Name*IO),
   test_info(Name,InfoF),
-  wqnl(fav(GridName,InfoF)),
-  set_gridname(Grid,GridName),
+  wqnl(fav(PairName,InfoF)),
+  set_gridname(Grid,PairName),
   describe_feature(Grid,[grid_dim,colors_count_size,colors_count,num_objects]),
   compute_shared_indivs(Grid,UnsharedIn),
   colors_count_size(Grid,CCS),
   ignore((sub_var(in,IO),(CCS>4;debug_indiv;true), debug_indiv(UnsharedIn))),
-  print_igrid(GridName,UnsharedIn,[Grid]),
+  print_Igrid(PairName,UnsharedIn,[Grid]),
   ignore((sub_var(out,IO),(CCS>4;debug_indiv;true), debug_indiv(UnsharedIn))),
   nop(describe_feature(Grid,[compute_shared_indivs])),!.
 */

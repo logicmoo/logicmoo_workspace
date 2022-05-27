@@ -34,9 +34,9 @@ no_black(BF,BF).
 
 
 %pixel_colors(GH,CC):- (is_group(GH);is_object(GH)),!,globalpoints(GH,GP),pixel_colors(GP,CC).
-pixel_colors(GH,CC):- is_list(GH),maplist(pixel_colors,GH,PG),append(PG,CC).
+pixel_colors(GH,CC):- is_list(GH),!,maplist(pixel_colors,GH,PG),append(PG,CC).
 pixel_colors(C,[Color]):- color_name(C,Color).
-pixel_colors(GH,CC):- globalpoints(GH,GP),pixel_colors(GP,CC).
+pixel_colors(GH,CC):- globalpoints(GH,GP),!,pixel_colors(GP,CC).
 
 %sub_term(G,GH), is_grid(G),!,flatten(G,GF),include(is_grid_color,GF,GL),maplist(color_name,GL,CC).
 %pixel_colors(G,GL):- findall(Name,(sub_term(CP,G),compound(CP),CP=(C-_),color_name(C,Name)),GL).
@@ -525,18 +525,19 @@ map_nth(P,N,Grid):- nth1(N,Grid,E),call(P,E).
 map_row(P,N,Grid):- map_nth(maplist(P),N,Grid).
 map_col(P,N,Grid):- maplist(map_nth(P,N),Grid).
 
-object_glyph(G,Glyph):- object_indv_id(G,_Tst,GN),nonvar(GN),!,i_glyph(GN,Glyph).
+object_glyph(G,Glyph):- object_indv_id(G,_Tst,GN),  nonvar(GN),!,i_glyph(GN,Glyph).
 
 maybe_glyph(G,_,GN):- is_grid(G),grid_dot(GN),!.
-maybe_glyph(G,_,Code):- object_indv_id(G,_Tst,GN),nonvar(GN),!,i_sym(GN,Code).
+maybe_glyph(G,_,Code):- object_indv_id(G,_Tst,GN), nonvar(GN),!,i_sym(GN,Code).
 maybe_glyph(_G,N,Code):-i_sym(N,Code).
 
 
 from_gridoid(Points,C,GN,H,V):- from_gridoid(Points,C,N,H,V,G), maybe_glyph(G,N,GN).
-from_gridoid(Points,C,N,H,V,G):- nth0(N,Points,G),hv_value0(G,C,H,V),nonvar(C),C\==black,C\==0,!.
+from_gridoid(Points,C,N,H,V,G):- nth0(N,Points,G),hv_value0(G,C,H,V),nonvar(C),C\==black,!.
 from_gridoid(Points,C,N,H,V,G):- nth0(N,Points,G),hv_value0(G,C,H,V),nonvar(C),!.
 from_gridoid(Points,C,N,H,V,G):- nth0(N,Points,G),hv_value0(G,C,H,V).
 
+hv_value0(O,_Color,_H,_V):- is_object(O), object_shape(O,combined), !, fail.
 hv_value0(O,Color,H,V):- is_object(O),globalpoints(O,Ps),!,hv_value(Ps,Color,H,V).
 hv_value0(O,Color,H,V):- hv_value(O,Color,H,V).
 
@@ -642,10 +643,10 @@ get_xformer(Name,H,V,In,Out):-
    asserta(xform_cache(Name,H,V,In,Out)),!.
 
 %srot90V,flipV
-rot90( Grid,NewGrid):-  rot180(Grid,GridM),rot270(GridM,NewGrid). 
+rot90( Grid,NewGrid):-  rot180(Grid,GridM),rot270(GridM,NewGrid),!. 
 rot180(Grid,NewGrid):- flipH(Grid,RowRev),flipV(RowRev,NewGrid).
-rot270(Grid,NewGrid):- get_colums(Grid,NewGrid).
+rot270(Grid,NewGrid):- get_colums(Grid,NewGrid),!.
 flipH(Grid,FlipH):- maplist(reverse,Grid,FlipH).
 flipV(Grid,FlipV):- reverse(Grid,FlipV).
-flipHV(Grid,FlipHV):-flipH(Grid,FlipH),flipV(FlipH,FlipHV).
+flipHV(Grid,FlipHV):-flipH(Grid,FlipH),flipV(FlipH,FlipHV),!.
 

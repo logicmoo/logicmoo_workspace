@@ -1,3 +1,5 @@
+
+
 filter_indivs(In,Filter,Out):- include(matches_filter(Filter),In,Out).
 
 matches_filter(not(A),OBJ):- !, \+ matches_filter(A,OBJ).
@@ -6,8 +8,6 @@ matches_filter((A;B),OBJ):- !, (matches_filter(A,OBJ);matches_filter(B,OBJ)).
 matches_filter([H|T],obj(List)):- !, \+ \+ forall(member(E,[H|T]),member(E,List)).
 matches_filter((A,B),OBJ):- !, (matches_filter(A,OBJ),matches_filter(B,OBJ)).
 matches_filter(E,obj(List)):- member(E,List).
-
-
 
 
 
@@ -44,8 +44,7 @@ meets_indiv_criteria(_,_).
 %is_bgc(BG):- var(BG),!,fail.
 is_bgc(BG):- get_bgc(C),BG==C.
 
-is_black_or_bg(BG):- get_bgc(BG).
-is_black_or_bg(black).
+is_black_or_bg(BG):- black==BG ; is_bgc(BG).
 %is_black_or_bg(0).
 
 is_color(C):- atom(C),color_int(C,N),integer(N).
@@ -125,6 +124,7 @@ set_bgc(C):- atom(C),color_code(C,N),C\==N,!,set_bgc(N).
 set_bgc(C):- var(C),nb_delete(grid_bgc).
 set_bgc(C):- nb_setval(grid_bgc,C),!.
 get_bgco(X):- nb_current(grid_bgc,X),is_color_dat(X),!.
+:- set_bgc(black).
 
 get_bgc(X):- get_bgco(X),!.
 get_bgc(X):- is_black(X).

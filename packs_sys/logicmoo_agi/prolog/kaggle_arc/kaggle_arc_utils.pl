@@ -79,53 +79,41 @@ grid_to_segs(N,[Row|Grid],[SegRS|SegL]):-
 grid_to_segs(_,[],[]).
 
 slice_up_row(_,_,[],[]).
-%slice_up_row(R,N,[C,C2|Rest],[slice(C,Point,1)|More]):- C\==C2, !, hv_point(N,R,Point), N2 is N +1, slice_up_row(R,N2,[C2|Rest],More).
-slice_up_row(R,N,[C|Rest],[slice(C,Point,1,Len)|More]):- hv_point(N,R,Point),
-  get_until_not(C,1,Rest,Len,Right), N2 is N + Len, slice_up_row(R,N2,Right,More).
+slice_up_row(R,N,[C|Rest],[slice(C,N,R,N2,R)|More]):-
+  get_until_not(C,1,Rest,Len,Right), N2 is N + Len -1, slice_up_row(R,N2,Right,More).
 
 get_until_not(C,N,[C2|Rest],NL,Right):- C==C2, N2 is N+1,!, 
  get_until_not(C,N2,Rest,NL,Right).
 get_until_not(_,N,Rest,N,Rest).
 
+nothing_in_range(C,Ch,Cv,CH,CV,Rest):- 
+  forall(member(slice(C,Ah,Av,AH,AV),Rest), 
+    \+ overlaps(Ch,Cv,CH,CV,Ah,Av,AH,AV)).
+
+overlaps(Ch,Cv,CH,CV,Ah,Av,AH,AV):- 
+   AH>=Ch,Ah=<CH,AV>=Cv,Av=<CV.
+
 seg_squares(Segs,Squares):- 
-    select(slice(C,HV,T1,Len),Segs,Rest),
-    is_adjacent_point(HV,s,HV2),
-    select(slice(C,HV2,T2,Len),Rest,Rest2),
-    T is T1 + T2,
-    seg_squares([slice(C,HV2,T,Len)|Rest2],Squares).
+    select(slice(C,Ah,Av,AH,AV),Segs,Rest),
+  Bv is AV + 1,
+    select(slice(C,Ah,Bv,AH,BV),Rest,Rest2),
+  Cv is Av - 1,
+  nothing_in_range(C,Ah,Cv,AH,Cv,Rest2),
+  seg_squares([slice(Ah,Av,AH,BV)|Rest2],Squares).
 seg_squares(Segs,Segs).
 
 
-make_points_list(C,HV2,BH,BV,PointsList):-
-   hv_point(SH,SV,HV2),
-   BHH is SH+BH-1,
-   BVV is SV-BV+1,
-   max_min(BHH,SH,MaxH,MinH),
-   max_min(BVV,SV,MaxV,MinV),
+make_points_list(C,MinH,MinV,MaxH,MaxV,PointsList):-
    findall(C-HV,(between(MinV,MaxV,V),between(MinH,MaxH,H),hv_point(H,V,HV)),PointsList),!.
 
 segs_to_pointlists([],[]).
-segs_to_pointlists([slice(_,_,1,1)|Segs],Objs):-
+segs_to_pointlists([slice(C,Ah,Av,AH,AV)|Segs],[PointsList|Objs]):- 
+  H is AH-Ah, V is AV-Av, H>=2,V>=2,
+  ( H==V -> Shape = square ; Shape = rectangle),
+  make_points_list(C,Ah,Av,AH,AV,PointsListH),
+  PointsList=[object_shape(Shape),object_shape(solid(Shape))|PointsListH],  !,
   segs_to_pointlists(Segs,Objs).
-segs_to_pointlists([slice(_,_,N,1)|Segs],Objs):- N < 7,!,
-  segs_to_pointlists(Segs,Objs).
-segs_to_pointlists([slice(_,_,1,N)|Segs],Objs):- N < 7,!,
-  segs_to_pointlists(Segs,Objs).
-segs_to_pointlists([slice(_,_,2,2)|Segs],Objs):- !,
-  segs_to_pointlists(Segs,Objs).
-
-segs_to_pointlists([slice(black,_,_,_)|Segs],Objs):- %  (H=<3 , V=<3),!, % member(1,[V,H]),
-  segs_to_pointlists(Segs,Objs).
-
-segs_to_pointlists([slice(C,HV2,V,H)|Segs],[PointsList|Objs]):- H==V,
-  make_points_list(C,HV2,H,V,PointsListH),
-  PointsList=[object_shape(square),object_shape(solid(square)),object_shape(solid)|PointsListH],  !,
-  segs_to_pointlists(Segs,Objs).
-segs_to_pointlists([slice(C,HV2,V,H)|Segs],[PointsList|Objs]):- H\==V,
-  make_points_list(C,HV2,H,V,PointsListH),
-  PointsList=[object_shape(rectangle),object_shape(solid(rectangle)),object_shape(solid)|PointsListH],  !,
-  segs_to_pointlists(Segs,Objs).
-    
+  
 segs_to_pointlists([_|Segs],Objs):-   segs_to_pointlists(Segs,Objs).
 
 

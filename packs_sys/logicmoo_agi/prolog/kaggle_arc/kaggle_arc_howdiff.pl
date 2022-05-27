@@ -57,25 +57,28 @@ generalize_once(I,O):- var(O), !, freeze(O,once(generalize(I,O))).
 generalize_once(I,O):- generalize(I,O).
 %generalize(I,O):- var(I), !, freeze(I, generalize(I,O)).
 generalize(I,O):- var(I), !, (O=I ; O = _).
-generalize(I,O):- ( \+ compound(I) ),!, generalize_atomic(I, O).
+generalize(I,O):- ( \+ compound(I) ), !, (O=I ; O = _).
+%generalize(I,O):- ( \+ compound(I) ),!, generalize_atomic(I, O).
 generalize([A|B],[AA|BB]):- !, generalize(A,AA),generalize_cons(B,BB).
 generalize(_-P,_-P):-!.
-generalize(I,O):- compound(I),
+generalize(I,O):- compound(I),!,
   compound_name_arguments(I,F,IA),
   generalize_list(IA,OA),
   compound_name_arguments(O,F,OA).
 generalize(_,_).
 
+generalize_arg(I,O):- O=I ; O = _.
+
 generalize_list([],[]). 
-generalize_list([I],[O]):- !, generalize(I,O).
-generalize_list([A,B],[AA,BB]):- !, generalize(A,AA),generalize(B,BB).
-generalize_list([A,B,C],[AA,BB,CC]):- !, generalize(A,AA), generalize(B,BB),generalize(C,CC).
-generalize_list([A,B,C,D],[AA,BB,CC,DD]):- !, generalize(A,AA), generalize(B,BB),generalize(C,CC),generalize(D,DD).
-generalize_list([A|B],[AA|BB]):- generalize(A,AA),generalize_list(B,BB).
+generalize_list([I],[O]):- !, generalize_arg(I,O).
+generalize_list([A,B],[AA,BB]):- !, generalize_arg(A,AA),generalize_arg(B,BB).
+generalize_list([A,B,C],[AA,BB,CC]):- !, generalize_arg(A,AA), generalize_arg(B,BB),generalize_arg(C,CC).
+generalize_list([A,B,C,D],[AA,BB,CC,DD]):- !, generalize_arg(A,AA), generalize_arg(B,BB),generalize_arg(C,CC),generalize_arg(D,DD).
+generalize_list([A|B],[AA|BB]):- generalize_arg(A,AA),generalize_list(B,BB).
 
 generalize_cons(I,O):- var(I), !, (O=[];O=_).
 generalize_cons([],O):- !, (O=[];O=_).
-generalize_cons([A|B],[AA|BB]):- !, generalize(A,AA),generalize_cons(B,BB).
+generalize_cons([A|B],[AA|BB]):- !, generalize(A,AA),generalize_list(B,BB).
 
 /*
 make_list_perms2(0,IA,IO):- !, duplicate_term(IA,IO),IA=IO.
@@ -107,12 +110,6 @@ combine_diffs(D1,D2,L12):- listify(D1,L1),listify(D2,L2),!,append(L1,L2,L12).
 
   
 
-showdiff_objects(O1,O2):-  showdiff_objects(sameness,O1,O2).
-showdiff_objects(N,O1,O2):-  
-  diff_objects(O1,O2,Diffs),
-  print_list_of(diffs,Diffs),
-  print_list_of(N,[O1,O2]),
-  dash_char.
 
 print_list_of(_,[]):-!.
 print_list_of(N,O):-
@@ -120,57 +117,81 @@ print_list_of(N,O):-
   maplist(print_info,O).
 
 print_info(A):- is_grid(A),print_grid(A).
-print_info(A):- is_object(A),debug_indiv(A).
+print_info(A):- is_object(A), o2g(A,G), asserta(g2o(G,A)), ignore(debug_indiv(A)).
 print_info(A):- is_group(A),debug_indiv(A).
+print_info(A):- into_obj(A,Obj),print_info(Obj).
 print_info([]):-!.
 print_info(A):- pt(A).
 
-showdiff_groups(I0,O0):-
-  maplist(obj_grp_comparable,I0,I1),
-  maplist(obj_grp_comparable,O0,O1),
-  showdiff_groups(I1,O1,compare_objs1(perfect),I2,O2),
-  showdiff_groups(I2,O2,compare_objs1(moved),I3,O3),
-  showdiff_groups(I3,O3,compare_objs1(same_shape),I4,O4),
-  (I0==I4 -> true ; print_list_of(groupA,I4), dash_char),
-  (O0==O4 -> true ; print_list_of(groupB,O4), dash_char),
+o2g(Obj,G):- object_indv_id(Obj,_,Id),i_sym(Id,Sym),name(G,[Sym]).
+:- dynamic(g2o/2).
+
+into_obj(G,_):- var(G),!,fail.
+into_obj(G,O):- g2o(G,O),!.
+into_obj(G,O):- is_grid(G),!,grid_to_individual(G,O).
+into_obj(obj(O),obj(O)):- is_list(O),!.
+into_obj(G,O):- atom(G),Chars=[_,_|_],atom_chars(G,Chars),!,member(C,Chars),into_obj(C,O).
+
+
+
+showdiff_groups(AG,BG):-
+  maplist(obj_grp_comparable,AG,A1),
+  maplist(obj_grp_comparable,BG,B1),
+  
+  showdiff_groups(A1,B1,
+      [compare_objs1([perfect]),
+       compare_objs1([same,position]),
+       compare_objs1([same])],
+                  A4,B4),
+  (AG==A4 -> true ; length(A4,LenA),print_list_of(groupA=LenA,A4), dash_char),
+  (BG==B4 -> true ; length(B4,LenB),print_list_of(groupB=LenB,B4), dash_char),
   !.
-showdiff_groups(I,O,Pred,IIR,OOR):- 
-  pred_intersection(Pred,I,O,IntersectA,IntersectB,IIR,OOR),
+
+showdiff_groups(A,B,[],A,B):-!.
+showdiff_groups(A,B,[H|T],AAR,BBR):- !,
+  showdiff_groups(A,B,H,A1,B1),
+  showdiff_groups(A1,B1,T,AAR,BBR).
+showdiff_groups(A,B,Pred,AAR,BBR):- 
+  pred_intersection(Pred,A,B,IntersectA,IntersectB,AAR,BBR),
   ignore((IntersectA\==[], maplist(showdiff_objects(Pred),IntersectA,IntersectB))).
 
 
-diff_groups(I0,O0,DD):- 
-  maplist(obj_grp_comparable,I0,I),
-  maplist(obj_grp_comparable,O0,O),
-  pred_intersection(overlap_same_obj_no_diff,I,O,_IntersectA,_IntersectB,IIR,OOR),
-  diff_groups0(IIR,OOR,DD).
+diff_groups(A0,B0,DD):- 
+  sort(A0,A1),
+  sort(B0,B1),
+  maplist(obj_grp_comparable,A1,A2),
+  maplist(obj_grp_comparable,B1,B2),
+  sort(A2,A3),
+  sort(B2,B3),
+  pred_intersection(overlap_same_obj,A3,B3,_IntersectA,_IntersectB,AAR,BBR),
+  diff_groups0(AAR,BBR,DD).
 
 diff_groups0([],[],[]):-!.
-diff_groups0([],O,left_extra(O)):-!.
-diff_groups0(O,[],left_over(O)):-!.
-diff_groups0(IIR,OOR,DD):-
-  %make_comparable(O0,O),
+diff_groups0([],B,left_extra(B)):-!.
+diff_groups0(B,[],left_over(B)):-!.
+diff_groups0(AAR,BBR,DD):-
+  %make_comparable(B0,B),
   /*
   ,*/
-  %pred_intersection(overlap_same_obj,I,O,Intersect,IIR,OOR),
-  %Intersect == [],
-  select(PI,IIR,II),
-  get_selector(PI,PO),
-  select(PO,OOR,OO),
-  diff_objects(PI,PO,D),
-  diff_groups0(II,OO,D1),
+  %pred_intersection(overlap_same_obj,A,B,Antersect,AAR,BBR),
+  %Antersect == [],
+  select(PA,AAR,AA),
+  get_selector(PA,PB),
+  select(PB,BBR,BB),
+  diff_objects(PA,PB,D),
+  diff_groups0(AA,BB,D1),
   combine_diffs(D1, D , DD).
 
-diff_groups0(IIR,OOR,DD):-
-  %make_comparable(O0,O),
+diff_groups0(AAR,BBR,DD):-
+  %make_comparable(B0,B),
   /*
-  get_selector(PI,PO),*/
-  %pred_intersection(overlap_same_obj,I,O,Intersect,IIR,OOR),
-  %Intersect == [],
-  select(PI,IIR,II),
-  select(PO,OOR,OO),
-  same_colorless_points(PI,PO,D1),
-  diff_groups0(II,OO,D),
+  get_selector(PA,PB),*/
+  %pred_intersection(overlap_same_obj,A,B,Antersect,AAR,BBR),
+  %Antersect == [],
+  select(PA,AAR,AA),
+  select(PB,BBR,BB),
+  same_colorless_points(PA,PB,D1),
+  diff_groups0(AA,BB,D),
   combine_diffs(D1,D , DD).
 
 obj_grp_comparable(I,obj(O)):- obj_make_comparable(I,M),
@@ -185,24 +206,16 @@ dislike_points(obj(I)):-!,dislike_points(I).
 dislike_points(I):- is_list(I),dislike_points1(L),forall(member(E,L),member(E,I)).
 
 %dislike_points1([object_shape(dot),grid_size(H,V)]):- freeze(H, freeze(V, (HV is H * V, HV > 49))).
-dislike_points1([colors_count([color_count(BG, _)]),object_shape(nonsolid)]):- freeze(BG,is_black_or_bg(BG)).
+dislike_points1([colors_count([color_count(BG, _)]),object_shape(polygon)]):- freeze(BG,is_black_or_bg(BG)).
 
-usefull_compare(P):- compound(P),functor(P,F,_),!,usefull_compare(F).
-usefull_compare(P):- changed_by(P,_).
-
-changed_by(localpoints_nc,rotate).
-changed_by(object_offset,move).
-changed_by(point_count,grow).
-changed_by(colors_count,repaint).
-changed_by(object_size,copy).
 
 uncomparable(term,grid).
 uncomparable(term,globalpoints).
 
 uncomparable(object,object_shape).
 uncomparable(shape,localpoints).
-uncomparable(group,grid_size).
-uncomparable(group,object_indv_id).
+%uncomparable(group,grid_size).
+%uncomparable(group,object_indv_id).
 uncomparable(P):- compound(P),functor(P,F,_),uncomparable(F).
 
 make_comparable(I,I):- var(I).
@@ -224,9 +237,14 @@ simular(object_offset=Where,I,O,object_has_moved(Where)):-
 
 maye_sort(L,S):- is_list(L),\+ is_grid(L), !,sort(L,S).
 maye_sort(S,S).
+obj_make_comparable(I,_):- var(I),!,fail.
 obj_make_comparable(obj(I),O):- maplist(obj_make_comparable_e,I,O).
-obj_make_comparable(I,O):- is_list(I),maplist(obj_make_comparable_e,I,O).
-obj_make_comparable_e(I,O):- is_list(I),sort(I,O).
+obj_make_comparable(I,O):- is_list(I),sort_obj_props(I,II),maplist(obj_make_comparable_e,II,O).
+obj_make_comparable(I,O):- into_obj(I,M),obj_make_comparable(M,O).
+obj_make_comparable_e(grid(_),grid(_)).
+%obj_make_comparable_e(I,O):- is_list(I),sort(I,O).
+%obj_make_comparable_e(object_shape(_),grid([])).
+%obj_make_comparable_e(grid_size(_,_),grid([])).
 obj_make_comparable_e(I,O):- I=..[F,L],maye_sort(L,S),O=..[F,S].
 obj_make_comparable_e(I,I).
 %obj_make_comparable(I,SI):- exclude(uncomparable,I,II), sort(II,SI).
@@ -234,13 +252,13 @@ obj_make_comparable_e(I,I).
 %diff_objects(I,O,OUT):- !, fail, locally(set_prolog_lfag(gc,false),compute_diff_objs1(I,O,OUT)).
 :- style_check(-singleton).
 
-diff_objects(I,O,Diffs):-  
+diff_objects(I,O,DiffsS):-  
   obj_make_comparable(I,II), obj_make_comparable(O,OO),!,
   intersection(II,OO,Intersect,IIR,OOR),!,
   findall(Diff, 
     (member(P,IIR),
-      generalize(P,Q),member(Q,OOR),
-      diff_terms(P,Q,Diff)),Diffs).
+      once((generalize(P,Q), member(Q,OOR))),
+      once(diff_terms(P,Q,Diff))),Diffs),flatten(Diffs,DiffsF),list_to_set(DiffsF,DiffsS).
 
   %(simular(Diffs,obj(I),obj(O),Sameness) ->  OUT = same_object(Sameness) ; OUT = props_diff(obj(I),obj(O),Diffs)).
 
@@ -261,40 +279,64 @@ combine_perfects(IndvSO,IndvSO).
 
 combine_objects(IndvS,[obj(IO)|IndvSO]):- 
   select(obj(I),IndvS,IndvS1),select(obj(O),IndvS1,IndvS2),
-  compare_objs2(I,O,perfect),
+  compare_objprops(I,O,perfect),
   override_list(I,O,IO),
   combine_objects(IndvS2,IndvSO).
 combine_objects(IndvSO,IndvSO).
 
 
-overlap_same_obj_no_diff(I,O):- diff_objects(I,O,Diff),Diff==[]. 
-overlap_same_obj(I,O):- compare_objs1(I,O,Diff),Diff==[]. 
+overlap_same_obj_no_diff(I,O):- compare_objs1(perfect,I,O). %diff_objects(I,O,Diff),Diff==[]. 
+overlap_same_obj(I,O):- compare_objs1(same,I,O).
 
-compare_objs1(How,obj(I),obj(O)):- !, compare_objs2(How,I,O).
-compare_objs1(How,I,O):- compare_objs2(How,I,O).
-compare_objs2(How,I,O):- intersection(I,O,SL,UI,UO), !, compare_objs1(How,I,O,SL,UI,UO).
+showdiff_objects(A,B):- into_obj(A,A1),into_obj(B,B1), !, showdiff_objects(sameness,A1,B1),!.
+showdiff_objects(N,O1,O2):-  
+  diff_objects(O1,O2,Diffs),
+  print_list_of(diffs,Diffs),
+  print_list_of(N,[O1,O2]),
+  findall(E,compare_objs1(E,O1,O2),L),
+  pt(compare_objs1=L),
+  dash_char.
 
-compare_objs1(perfect,I,O,SL,UI,UO):-
-  e1_member(point_count(_),SL),
-  e1_member(localpoints_nc(_),SL), 
-  e1_member(globalpoints(_),SL),
-  e1_member(object_offset(_,_),SL), 
-  e1_member(object_size(_),SL),
-  e1_member(localpoints(_),SL),
-  e1_member(color_counts(_),SL),
-  trace,
-  !.
+compare_objs1(How,I,O):- is_list(I), is_list(O), compare_objprops(How,I,O).
+compare_objs1(How,obj(I),obj(O)):- !, compare_objprops(How,I,O).
+compare_objs1(How,I,O):- into_obj(I,I2),into_obj(O,O2),!,compare_objs1(How,I2,O2).
 
-compare_objs1(moved,I,O,SL,UI,UO):-
-  e1_member(point_count(_),SL),
-  e1_member(localpoints_nc(_),SL),
-  e1_member(object_size(_),SL),
-  e1_member(localpoints(_),SL),
-  e1_member(color_counts(_),SL).
+compare_objprops(How,I,O):- intersection(I,O,SL,UI,UO), !, compare_objs1(How,I,O,SL,UI,UO).
 
-compare_objs1(same_shape,I,O,SL,UI,UO):- e1_member(localpoints_nc(_),SL).
+compare_objs1(-X,I,O,SL,UI,UO):- sprop(X), \+ compare_objs1(X,I,O,SL,UI,UO).
+compare_objs1(+X,I,O,SL,UI,UO):- var(X),!, sprop(X), \+ compare_objs1(-X,I,O,SL,UI,UO).
 
-e1_member(E,L):- \+ \+ member(E,L).
+compare_objs1( X,I,O,SL,UI,UO):- is_list(X),!,forall(member(E,X),compare_objs1(E,I,O,SL,UI,UO)),!.
+compare_objs1( X,I,O,SL,UI,UO):- \+ \+ sprop_of(X,_),!, forall(sprop_of(X,E), compare_objs1(E,I,O,SL,UI,UO)),!.
+compare_objs1( X,I,O,SL,UI,UO):- \+ \+  prop_of(X,_), !, prop_of(X,E),e1_member(E,SL),!.
+compare_objs1(perfect,I,O,SL,UI,UO):- forall(prop_of(_,E), compare_objs1(E,I,O,SL,UI,UO)).
+compare_objs1(perfect,I,O,SL,UI,UO):-  e1_member(globalpoints(_),SL).
+
+sprop(same).
+sprop(X):- prop_of(X,_).
+sprop(perfect).
+
+
+%sprop(perfect).
+
+sprop_of(same,visually).
+sprop_of(same,size).
+sprop_of(same,shape).
+sprop_of(same,colors).
+sprop_of(same,position).
+
+%prop_of(visual_impact,globalpoints(_)).
+usefull_compare(P):- compound(P),functor(P,F,_),!,usefull_compare(F).
+usefull_compare(P):- changed_by(P,_).
+
+changed_by(localpoints_nc,reshape).
+changed_by(object_offset,move).
+changed_by(point_count,grow).
+changed_by(localpoints,reshape_and_recolor).
+changed_by(object_rotation,rotate).
+changed_by(colors_count,repaint).
+changed_by(object_size,copy).
+
 
 :- style_check(+singleton).
 %compute_diff_objs2(I,IIR,O,OOR,[]):-  diff_terms(IIR,OOR,[]),

@@ -865,7 +865,9 @@ toCase( Pred,MiXed,CASED):-atom(MiXed),!,call(Pred,MiXed,CASED),!.
 toCase( Pred,D3,DD3):- text_to_string_safe(D3,S),!,string_to_atom(S,A3),toCase(Pred,A3,DD3).
 toCase( Pred,D3,DD3):- is_list(D3),catch(atomic_list_concat(D3,' ',Str),_,fail),maplist(toCase( Pred),Str,DD3),!.
 toCase( Pred,D3,DD3):- is_list(D3),!,must_maplist(toCase( Pred),D3,DD3).
-toCase( Pred,MiXed,CASED):-compound(MiXed),MiXed=..MList,must_maplist(toCase(Pred),MList,UList),!,CASED=..UList.
+toCase( Pred,MiXed,CASED):-compound(MiXed),MiXed=..MList,
+  must_maplist(toCase(Pred),MList,UList),!,
+  CASED=..UList.
 
 
 
@@ -878,6 +880,7 @@ toCase( Pred,MiXed,CASED):-compound(MiXed),MiXed=..MList,must_maplist(toCase(Pre
 %
 toCaseSplit(_,_,[Empty],[]):-nonvar(Empty), (empty_str(Empty);camelSplitters(Empty)),!.
 toCaseSplit(_,_,Empty,''):- (empty_str(Empty);camelSplitters(Empty)),!.
+
 toCaseSplit(_,_,MiXed,MiXed):-noCaseChange(MiXed),!.
 toCaseSplit(Rejoin,Pred,D3,DD3):-atom(D3),!,
   ((camelSplitters(V),concat_atom([L,I|ST],V,D3))->
@@ -886,7 +889,10 @@ toCaseSplit(Rejoin,Pred,D3,DD3):-atom(D3),!,
 toCaseSplit(Rejoin,Pred,D3,DD3):-text_to_string_safe(D3,S),!,string_to_atom(S,A3),toCaseSplit(Rejoin,Pred,A3,DD3).
 toCaseSplit(Rejoin,Pred,LI,OUT):-is_list(LI),!,maplist(toCaseSplit(Rejoin,Pred),LI,LO),ignore(VV=Rejoin),ignore(VV=''),concat_atom(LO,VV,OUT).
 toCaseSplit(Rejoin,Pred,[CX|Y],[D3|YY]):-!,toCaseSplit(Rejoin,Pred,CX,D3),toCaseSplit(Rejoin,Pred,Y,YY).
-toCaseSplit(_     ,Pred,MiXed,UPPER):-must((compound(MiXed),MiXed=..MList,toCaseSplit(' ',Pred,MList,UList),!,UPPER=..UList)).
+toCaseSplit(_     ,Pred,MiXed,UPPER):-must((compound(MiXed),MiXed=..MList,
+  %toCaseSplit(' ',Pred,MList,UList),!,
+  maplist(toCaseSplit(' ',Pred),MList,UList),!,
+  UPPER=..UList)).
 
 
 %= 	 	 

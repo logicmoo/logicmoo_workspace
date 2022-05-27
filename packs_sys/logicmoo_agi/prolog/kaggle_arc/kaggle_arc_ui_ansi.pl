@@ -27,13 +27,13 @@ wqs(X):- write(' '), writeq(X).
 
 wqnl(X):- is_list(X),!,format('~N'),wqs(X),format('~N').
 wqnl(X):- format('~N~q~N',[X]).
-dash_char:- dash_char(40).
+dash_char:- dash_char(40),!.
 dash_char(H):- integer(H), dash_border(H).
 dash_char(S):- format('~N'),dash_char(60,S),format('~N').
 dash_char(H,_):- H < 1,!.
 dash_char(H,C):-forall(between(0,H,_),write(C)).
 dash_border_no_nl(Width):- WidthM1 is Width-1, write(' _'),dash_char(WidthM1,'__').
-dash_border(Width):- !, dash_border_no_nl(Width),nl.
+dash_border(Width):- !, dash_border_no_nl(Width),nl,!.
 dash_uborder(Width):- format('~N'), WidthM1 is Width-1, write(' ¯'),dash_char(WidthM1,'¯¯'),nl.
 
 functor_color(pass,green).
@@ -99,13 +99,13 @@ as_str(S,S).
 
 print_length(S,L):- as_str(S,A),atom_codes(A,C), include(uses_space,C,SS),length(SS,L).
 
-show_pair(IH,IV,OH,OV,Type,GridName,In,Out):-
+show_pair(IH,IV,OH,OV,Type,PairName,In,Out):-
   LW is (IH * 2 + 12),
-  NameIn =.. [Type,GridName+in],
-  NameOut =.. [Type,GridName+out],
-  wots(U1, print_igrid(IH,IV,NameIn,In,[])),
-  wots(U2, print_igrid(OH,OV,NameOut,Out,[])),
-  print_side_by_side(U1,LW,U2),
+  NameIn =.. [Type,PairName+in],
+  NameOut =.. [Type,PairName+out],
+  wots(U1, print_Igrid(IH,IV,NameIn,In,[])),
+  wots(U2, print_Igrid(OH,OV,NameOut,Out,[])),
+  print_side_by_side(U1,LW,U2),!,
   print_side_by_side(
      describe_feature(In,[call(writeln('IN')),grid_dim,colors_count_size,colors_count]),LW,
     describe_feature(Out,[call(writeln('OUT')),grid_dim,colors_count_size,colors_count])),
@@ -135,16 +135,17 @@ print_w_pad(Pad,S):- atomics_to_string(L,'\n',S)-> maplist(print_w_pad0(Pad),L).
 print_w_pad0(Pad,S):- format('~N'),dash_char(Pad,' '), write(S).
 
 print_equals(_,N,V):- \+ compound(V),wqnl(N=V).
-print_equals(Grid,N,Ps):- is_object(Ps),grid_size(Grid,H,V),print_points(N,H,V,Ps),!.
+print_equals(Grid,N,Ps):- is_object(Ps),grid_size(Grid,H,V),print_Igrid(H,V,N,Ps,[]),!.
 %print_equals(Grid,N,PL):- is_group(PL), grid_size(Grid,H,V), locally(grid_nums(PL),print_list_of_points(N,H,V,[[]])).
 print_equals(_,N,G):- print_equals(N,G).
 
-
+/*
 points_name(E,Name):- 
  props_of_points(E,Ns),
   ignore((get_grid_nums(Nums),nth0(N,Nums,EE),EE=@=E,i_sym(N,Code),format(atom(Name),' Individual #~w  Code: "~s" ~w',[N,[Code],Ns]))),!.
 points_name(E,pop(Ns)):- props_of_points(E,Ns).
-
+*/
+/*
 print_list_of_points(N,H,V,PL):- 
   length(PL,Len),
   wqnl(N=list_of_points(Len)),!, 
@@ -161,6 +162,7 @@ print_points(N,H,V,E):-
   print_grid(1,1,LoH,LoV,HiH,HiV,H,V,E),dash_char(H,"-"),!,
   nl.
 
+*/
 
 print_equals(N,V):- \+ compound(V),wqnl(N=V).
 print_equals(N,V):- is_grid(V),!,wqnl(N),print_grid(V).
@@ -195,11 +197,11 @@ better_value([G|V],List):-
   [G|V] \=@= List.
 
 
-print_igrid(Name,SIndvOut,InOutL):-   
+print_Igrid(Name,SIndvOut,InOutL):-   
    grid_size(SIndvOut,H,V),
-   print_igrid(H,V,Name,SIndvOut,InOutL).
+   print_Igrid(H,V,Name,SIndvOut,InOutL).
 
-print_igrid(H,V,Name,SIndvOut,InOutL):-   
+print_Igrid(H,V,Name,SIndvOut,InOutL):-   
    append(SIndvOut,InOutL,Print),
    print_grid(H,V,Print),format('~N'),
    write('  '),writeq(Name),writeln('  '),!.
@@ -335,7 +337,7 @@ into_color_glyph(CTerm,Color,Code):-
     ignore((sub_term(Nth,CTerm),integer(Nth),i_glyph(Nth,Glyph))),
     ignore((nonvar(Glyph),name(Glyph,[Code|_]))).
 
-into_color_glyph(H,V,CTerm,Color,Code):- fail, get_grid_num_xyc(H,V,SColor,SNth),into_color_glyph(SColor+SNth+CTerm,Color,Code),nonvar(Code).
+%into_color_glyph(H,V,CTerm,Color,Code):- fail, get_grid_num_xyc(H,V,SColor,SNth),into_color_glyph(SColor+SNth+CTerm,Color,Code),nonvar(Code).
 into_color_glyph(_,_,CTerm,Color,Code):- into_color_glyph(CTerm,Color,Code),nonvar(Code).
 into_color_glyph(_,_,C,C,VAR):- var(C),var_dot(VAR),!.
 into_color_glyph(_,_,0,0,BGD):- bg_dot(BGD),!.
@@ -345,8 +347,9 @@ print_g1(H,V,C0):- into_color_glyph(H,V,C0,C,Code),name(S,[Code]),!, color_print
 print_g1(_,_,C):- var(C), color_print(C,'?'),!.
 %print_g1(_,_,C):- trace, write(C).
 
+i_sym(N2,Code):- integer(N2),!, N is N2 * 5 , change_code(N,NN), i_syms(Codes),nth0(NN,Codes,Code),!.
+i_sym(N2,Code):- atom(N2),name(N2,[C|_]),!,i_sym(C,Code).
 i_sym(N,Code):- var(N), Code = 63.
-i_sym(N,Code):- change_code(N,NN), i_syms(Codes),nth0(NN,Codes,Code),!.
 %change_code(N,M):- M is N * 100,!.
 %change_code(N,M):- N>10, M is (N * 10 ),!.
 change_code(N,N). % M is N+212.
@@ -372,14 +375,16 @@ save_codes(Max):-
 save_codes:- save_codes(42600).
 :- save_codes.
 
-
+/*
 get_glyph(Point,Glyph):-  
   get_grid_num(Point,N),i_glyph(N,Glyph).
+*/
 
 i_glyph(N,Glyph):- atom(N),atom_codes(N,[Code|_]),name(Glyph,[Code]).
 i_glyph(Code,Glyph):- integer(Code),!,name(Glyph,[Code]).
 i_glyph(N,Glyph):- integer(N),i_sym(N,Code),name(Glyph,[Code]).
 
+/*
 get_grid_num(C-Point,N):-
   hv_point(X,Y,Point),
   get_grid_num_xyc(X,Y,C,N).
@@ -406,4 +411,4 @@ get_grid_nums(GridNums):-
 dead_set_grid_nums(Gs):- 
    nb_current(test_name_w_type,NameType),
    asserta(grid_nums(NameType,Gs)).
-
+*/

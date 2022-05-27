@@ -64,6 +64,13 @@ debug_indiv:- test_config(nodebug_indiv),!,fail.
 debug_indiv:- test_config(debug_indiv),!.
 debug_indiv:- test_config(indiv(_)),!.
 
+print_info(A):- is_grid(A),print_grid(A).
+print_info(A):- is_object(A), o2g(A,G), asserta(g2o(G,A)), ignore(debug_indiv(A)).
+print_info(A):- is_group(A),debug_indiv(A).
+print_info(A):- into_obj(A,Obj),print_info(Obj).
+print_info([]):-!.
+print_info(A):- pt(A).
+
 debug_indiv(Var):- var(Var),pt(debug_indiv(Var)),!.
 
 debug_indiv(Grid):- is_grid(Grid),!,grid_size(Grid,H,V),
@@ -71,6 +78,14 @@ debug_indiv(Grid):- is_grid(Grid),!,grid_size(Grid,H,V),
   wqnl(debug_indiv_grid(H,V)),
   print_grid(Grid),
   dash_char(H),!.
+
+debug_indiv(List):- is_group(List),!,length(List,Len),   
+  dash_char,
+  wqnl(objs = Len),
+  max_min(Len,40,_,Min),
+  forall(between(1,Min,N),(N<40->(nth1(N,List,E),debug_indiv(E));wqnl(total = Len))),
+  dash_char,!.
+
 
 debug_indiv(obj(A)):- \+ is_list(A),!, pt(debug_indiv(obj(A))).
 
@@ -81,17 +96,16 @@ debug_indiv(A):- is_point_obj(A,Color,Point),
   wqnl([' % Point: ', color_print(Color,Sym), dot, color(Color), fav1(Tst), nth(Id), offset(H,V)]),!. 
 */
 debug_indiv(obj(A)):- Obj = obj(A), is_list(A),!,
-%debug_indiv(Obj):- Obj = obj(A), is_list(A),
-  object_indv_id(Obj,_,Id),
-  i_sym(Id,Sym),
+%debug_indiv(Obj):- Obj = obj(A), is_list(A),  
   ignore(colors_count(Obj,[color_count(FC,_)|_])),
-  remove_too_verbose(A,AA), 
-  flatten([AA],F),
-  predsort(longer_strings,F,AAA),
-  include('\\=='(''),AAA,[Caps|AAAA]),
-  toPropercase(Caps,PC), 
+  sort_obj_props(A,AS),
+ % pt(AS),
+  remove_too_verbose(AS,TV0), include('\\=='(''),TV0,TV),
+  flatten(TV,F),predsort(longer_strings,F,[Caps|_]),
+  toPropercase(Caps,PC),
   %i_glyph(Id,Sym), wqnl([writef("%% %Nr%w \t",[PC]), color_print(FC,Sym) | AAAA ]),!. 
-  i_glyph(Sym,Glyph), wqnl([format("%  ~w:\t",[PC]), color_print(FC,Glyph) | AAAA ]),!. 
+  object_indv_id(Obj,_,Id),i_sym(Id,Sym),i_glyph(Sym,Glyph), 
+  wqnl([format("%  ~w:\t",[PC]), color_print(FC,Glyph) | TV ]),!. 
 
 debug_indiv(obj(A)):- is_list(A),!, 
   dash_char,  
@@ -99,12 +113,6 @@ debug_indiv(obj(A)):- is_list(A),!,
   dash_char,!.
 
 debug_indiv([]):- !.
-debug_indiv(List):- is_list(List),!,length(List,Len), 
-  dash_char,
-  wqnl(list = Len),
-  max_min(Len,40,_,Min),
-  forall(between(1,Min,N),(N<40->(nth1(N,List,E),debug_indiv(E));wqnl(total = Len))),
-  dash_char,!.
 
 debug_indiv(diff(_)).
 debug_indiv(Other):-
@@ -121,10 +129,11 @@ priority("point",0).
 priority(A,1):- atom_contains(A,")").
 priority(_,2).
 longer_strings(R,A,B):- string(A),string(B),priority(A,PA),priority(B,PB),atom_length(A,AL),atom_length(B,BL),compare(R,PA+AL+A,PB+BL+B).
-longer_strings(R,A,B):- compare(R,A,B).
+longer_strings(R,A,B):- obj_prop_sort_compare(R,A,B).
 
 remove_too_verbose(Var,var(Var)):- var(Var),!.
 remove_too_verbose(H,''):- too_verbose(H),!.
+
 remove_too_verbose(dot,"point"):- !.
 %remove_too_verbose(line(HV),S):- sformat(S,'~w-Line',[HV]).
 %remove_too_verbose(square,S):- sformat(S,'square',[]).
@@ -136,6 +145,8 @@ remove_too_verbose(object_indv_id(_ * X,Y),[layer(XX),nth(Y)]):- =(X,XX).
 remove_too_verbose(object_offset(X,Y),offset(X,Y)).
 remove_too_verbose(object_size(X,Y),size(X,Y)).
 remove_too_verbose(point_count(X),points(X)).
+remove_too_verbose(changes([]),'').
+remove_too_verbose(object_rotation(same),'').
 remove_too_verbose(L,LL):- is_list(L),!, maplist(remove_too_verbose,L,LL).
 remove_too_verbose(H,H).
 too_verbose(P):- compound(P),compound_name_arity(P,F,_),!,too_verbose(F).
@@ -143,7 +154,7 @@ too_verbose(globalpoints).
 too_verbose(localpoints_nc).
 too_verbose(localpoints).
 too_verbose(grid).
-too_verbose(grid).
+too_verbose(grid_size).
 too_verbose(rotated_grid).
 
 
