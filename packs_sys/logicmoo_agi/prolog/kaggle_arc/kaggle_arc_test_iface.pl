@@ -51,8 +51,9 @@ fav(X,[]):- clause(fav(X),true).
 %fav(t('db3e9e38'),[lmDSL([flipV,C1=orange,C2=blue,[],flipV]).
 %fav(t(_),[lmDSL([fillFromBorder(none,yellow)])]).
 
-fav(t(c444b776),[detect_grid]).
 fav(v('e41c6fd3'),[lmDSL([(iz(X,spaceship),color(X,cyan),vert_pos(X,spaceship))-->iz(Y,spaceship),vert_pos(Y,spaceship)])]).
+fav(t('25d487eb'),[lmDSL([rocketship])]).
+fav(t(c444b776),[detect_grid]).
 fav(v('94133066'),[lmDSL([largest_indiv,trim_to_rect,rot90,flipV])]).
 fav(v('762cd429'),[]).
 fav(v('09c534e7'),[]).
@@ -198,7 +199,6 @@ current_test_name([]).
 
 /*  
 
-%fav(t('25d487eb'),[lmDSL([rocketship])]).
 %fav(v('20818e16'),[guess_bg,indiv(min(2))]).
 
 %(fav(_,P)/(flatten([P],Flat),member(E,Flat))) ==> fav_trait(E).

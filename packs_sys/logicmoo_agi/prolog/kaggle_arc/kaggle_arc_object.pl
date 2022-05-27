@@ -104,7 +104,7 @@ make_indiv_object(ID,H,V,LoH,LoV,HiH,HiV,Points,Overrides,OUT):-
   [ [point_count(Len), object_size(Width,Height), localpoints_nc(ColorlessPoints), colors_count(CC), 
      localpoints(LPoints), object_rotation(same), object_offset(LoH,LoV)],     
     %width(Width), height(Height), area(Area), %missing(Empty),
-    [changes([])|Shapes], [grid(LocalGrid)],    
+    [changes([])|Shapes], % [grid(LocalGrid)],    
     [object_indv_id(ID,Iv),globalpoints(Points),grid_size(H,V)]],Ps),
   override_list(Ps,Overrides,OUT1),sort_obj_props(OUT1,OUT))).
 
@@ -172,11 +172,13 @@ metaq_1(P3,Did,Old,New,Orig,Saved):- compound(Orig),Orig=Old, call(P3,Old,New,Sa
 
 enum_group(S):- is_unshared_saved(_,S).
 
+enum_object(S):- g2o(_,S).
 enum_object(S):- is_unshared_saved(_,IndvS),member(S,IndvS).
 enum_object(S):- is_gridname(S,_).
 
 %indv_props(Obj,L):- compound(Obj), arg(1,Obj,L), is_list(L),!.
 indv_props(obj(L),L):- is_list(L),!.
+indv_props(G,L):- g2o(G,O),!,indv_props(O,L).
 indv_props(obj(L),L):- enum_object(obj(L)).
 
 walls_thick1(G):- localpoints(G,Points),counted_neighbours(Points,ListOfSizes),walls_thick1_sizes(ListOfSizes).
@@ -210,6 +212,7 @@ counted_neighbours(C-HV,List,CountIn,[P|CountIn]):-
   length(Ns,I),P = I-HV.
 
 localpoints(I,X):- indv_props(I,L),member(localpoints(X),L).
+localpoints(I,X):- is_grid(I),!,globalpoints(I,X).
 localpoints(I,X):- into_grid0(I,G),globalpoints(G,X).
 
 object_shape(I,X):- indv_props(I,L),member(object_shape(X),L).
@@ -245,7 +248,8 @@ localpoints_nc(I,X):- indv_props(I,L),member(localpoints_nc(X),L).
 get_instance_method(Obj,Compound,F):- is_object(Obj), compound(Compound),compound_name_arity(Compound,Name,A),
    A1 is A+1, atom_concat('object_',Name,F),current_predicate(F/A1).
 
-object_grid(I,X):- indv_props(I,L),!,member(grid(X),L).
+object_grid(I,X):- indv_props(I,L),member(grid(X),L),!.
+object_grid(I,G):- globalpoints(I,GP),into_grid(GP,G).
 
 
 object_offset(I,X,Y):- indv_props(I,L),member(object_offset(X,Y),L).
