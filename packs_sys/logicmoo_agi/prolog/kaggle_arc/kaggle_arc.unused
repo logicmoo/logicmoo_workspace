@@ -735,3 +735,59 @@ guess_shape(I,E,N,H,V,Colors,Points,subI(InvS)):- E>2, fail,
 
 
 
+/*
+points_name(E,Name):- 
+ props_of_points(E,Ns),
+  ignore((get_grid_nums(Nums),nth0(N,Nums,EE),EE=@=E,i_sym(N,Code),format(atom(Name),' Individual #~w  Code: "~s" ~w',[N,[Code],Ns]))),!.
+points_name(E,pop(Ns)):- props_of_points(E,Ns).
+*/
+/*
+print_list_of_points(N,H,V,PL):- 
+  length(PL,Len),
+  wqnl(N=list_of_points(Len)),!, 
+  ignore((nop(debug_indiv),  
+    forall(nth1(I,PL,E),print_points(N:I,H,V,E)))).
+
+% print_points(N,H,V,E):- nop(print_points(N,H,V,E)),!.
+print_points(N,H,V,E):- 
+  dash_char(H,"-"),nl,  
+  points_name(E,Name),
+  write(Name), write(' from '),writeln(N),
+  points_range(E,LoH,LoV,HiH,HiV,H,V),length(E,Len),wqnl(len(Len)->offset_ranges(LoH,LoV,HiH,HiV,H,V)),
+  
+  print_grid(1,1,LoH,LoV,HiH,HiV,H,V,E),dash_char(H,"-"),!,
+  nl.
+
+*/
+
+
+/*
+get_grid_num(C-Point,N):-
+  hv_point(X,Y,Point),
+  get_grid_num_xyc(X,Y,C,N).
+
+get_grid_num(Point,N):-
+  hv_point(X,Y,Point),
+  get_grid_num_xyc(X,Y,_C,N).
+
+get_grid_num_xyc(X,Y,C,N):- fail,
+  hv_point(X,Y,Point),
+  get_grid_nums(GridsN),
+  nth0(N,GridsN,E),
+  once((((member(C-PPoint,E);member(PPoint,E)),nonvar(PPoint),Point=PPoint);hv_value(E,C,X,Y))).
+
+get_grid_nums(GridNums):-
+  nb_current(test_name_w_type,NameType),
+  (grid_nums(NameType,Grids1)->true;Grids1=[]),
+  (grid_nums(Grids0)->true;Grids0=[]),
+  append(Grids1,Grids0,GridNums).
+
+
+:- thread_local(grid_nums/2).
+:- thread_local(grid_nums/1).
+dead_set_grid_nums(Gs):- 
+   nb_current(test_name_w_type,NameType),
+   asserta(grid_nums(NameType,Gs)).
+*/
+
+

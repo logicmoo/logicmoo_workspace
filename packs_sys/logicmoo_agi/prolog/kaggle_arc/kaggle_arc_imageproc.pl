@@ -525,6 +525,7 @@ map_nth(P,N,Grid):- nth1(N,Grid,E),call(P,E).
 map_row(P,N,Grid):- map_nth(maplist(P),N,Grid).
 map_col(P,N,Grid):- maplist(map_nth(P,N),Grid).
 
+object_glyph(G,Glyph):- is_grid(G),grid_dot(Dot),name(Glyph,[Dot]).
 object_glyph(G,Glyph):- object_indv_id(G,_Tst,GN),  nonvar(GN),!,i_glyph(GN,Glyph).
 
 maybe_glyph(G,_,GN):- is_grid(G),grid_dot(GN),!.
