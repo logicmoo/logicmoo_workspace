@@ -69,10 +69,10 @@ object_set_global_point(Obj,H,V,C):-
   object_set_local_point(Obj,LH,LV,C).
 
 
-object_global_to_local_point(Obj,H,V,LH,LV):- object_offset(Obj,OH,OV),
+object_global_to_local_point(Obj,H,V,LH,LV):- loc_xy(Obj,OH,OV),
   LH is H - OH + 1, LV is V - OV + 1.
 
-object_local_to_global_point(Obj,H,V,LH,LV):- object_offset(Obj,OH,OV),
+object_local_to_global_point(Obj,H,V,LH,LV):- loc_xy(Obj,OH,OV),
   LH is H + OH - 1, LV is V + OV - 1.
 
 
@@ -225,7 +225,7 @@ find_pattern_objects(IndvS1,AllNew):- % stack_check(100),
   grid_size(TempGrid,H,V),H>5,V>5,
   globalpoints(TempGrid,Points),
   freeze(W,W>8),
-  filter_indivs(IndvS1,[point_count(W)];[object_shape(rectangluar), object_shape(solid)],KeepIndvS1R),
+  filter_indivs(IndvS1,[mass(W)];[object_shape(rectangluar), object_shape(solid)],KeepIndvS1R),
   length(KeepIndvS1R,KeepIndvS1RLen),
   dmsg(keepIndvS1R=KeepIndvS1RLen),
   globalpoints(KeepIndvS1R,RemovePoints),
@@ -247,7 +247,7 @@ globalpoints(NamedExampleNum,Iv,ListOIfColoredPoints).
 globalpoint(NamedExampleNum,Iv,Color,Point).
 localpoints(NamedExampleNum,Iv,ListOIfColoredPoints).
 localpoint(NamedExampleNum,Iv,Color,Point).
-localpoints_nc(NamedExampleNum,Iv,Point).
+shape(NamedExampleNum,Iv,Point).
 object_size(NamedExampleNum,Iv,H,V).
 object_shape(NamedExampleNum,Iv,ShapName).
 
@@ -324,22 +324,6 @@ get_combined(IndvC):-get_shared_with(IndvS1),get_unshared(IndvS2),make_combined(
 
 with_each_indiv(G,I):- individuals(G,I).
 
-make_combined(IndvS1,IndvS2,BetterC):-
-  append(IndvS1,IndvS2,IndvSU),list_to_set(IndvSU,IndvS),
-  smallest_first(IndvS,IndvC),
-  cleanup(IndvC,BetterC),
-  nb_current(test_name_w_type,NamedExampleNum),
-  set_named_indivs(NamedExampleNum,BetterC),!.
-
-cleanup(IndvC,BetterC):-
-  append(Left,[B|Bigger],IndvC),
-  append(LeftB,[A|RBigger],Bigger),
-  compute_diff(A,B,same_object(_)),!,
-  object_indv_id(B,NamedExampleNum,Iv),
-  setq(A,object_indv_id(B,NamedExampleNum,Iv),AA),
-  append([Left,LeftB,RBigger,[AA]],MissingAB),
-  cleanup(MissingAB,BetterC).
-cleanup(A,A).
 
 individuals(Grid,IndvS):- 
    get_gridname(Grid,Gridname),
@@ -498,14 +482,14 @@ nearby_one(Types,C,C2-E,List):- allow_dirs(Types,Dir), adjacent_point_allowed(C,
 
 check_minsize(Sz,Indv1,Indv):- include(meets_size(Sz),Indv1,Indv).
 
-meets_size(Len,Points):- point_count(Points,L),!,L>=Len.
+meets_size(Len,Points):- mass(Points,L),!,L>=Len.
 
 remove_bgs(IndvS,IndvL,BGIndvS):- partition(is_bg_indiv,IndvS,BGIndvS,IndvL).
 
 is_bg_indiv(O):- colors_count(O,[color_count(C,CC)]),CC>0,is_black(C).
 
 smallest_first(IndvS,IndvO):-
-  findall(Size-Indv,(member(Indv,IndvS),point_count(Indv,Size)),All),
+  findall(Size-Indv,(member(Indv,IndvS),mass(Indv,Size)),All),
   keysort(All,AllK),
   findall(Indv,member(_-Indv,AllK),IndvO).
 
@@ -641,11 +625,11 @@ embue_points(NamedExampleNum,H,V,LoH,LoV,HiH,HiV,Points,obj(Ps)):-
     localcolorlesspointlist(CLPoints),
     colors_count(CC),
     object_size(Width,Height),
-    point_count(Len)],Shapes,
+    mass(Len)],Shapes,
     %width(Width), height(Height), area(Area),
     %missing(Empty),
     [localpointlist(LPoints)],
-    [object_offset(LoH,LoV)],
+    [loc_xy(LoH,LoV)],
     [globalpointlist(Points),
     object_indv_id(NamedExampleNum,Iv),
     grid_size(H,V)]],Ps))).
@@ -654,10 +638,10 @@ embue_points(NamedExampleNum,H,V,LoH,LoV,HiH,HiV,Points,obj(Ps)):-
 object_indv_id(I,NamedExampleNum,Iv):- indv_props(I,L),member(object_indv_id(NamedExampleNum,Iv),L),!.
 object_indv_id(_,NamedExampleNum,_Iv):- nb_current(test_name_w_type,NamedExampleNum).
 
-point_count(_-P,1):- nonvar(P),!.
-point_count(I,X):- indv_props(I,L),member(point_count(X),L),!.
-point_count(obj(I),Count):- localpointlist(I,Points), length(Points,Count),!.
-point_count(Points,Count):- is_list(Points),length(Points,Count),!.
+mass(_-P,1):- nonvar(P),!.
+mass(I,X):- indv_props(I,L),member(mass(X),L),!.
+mass(obj(I),Count):- localpointlist(I,Points), length(Points,Count),!.
+mass(Points,Count):- is_list(Points),length(Points,Count),!.
 remove_color(_-P,P).
 remove_color(LPoints,CLPoints):- maplist(remove_color,LPoints,CLPoints).
 
@@ -709,7 +693,7 @@ colors_count(G,BFO):- pixels(G,GF),sort(GF,GS),count_each(GS,GF,UC),keysort(UC,K
 
 localcolorlesspointlist(I,X):- indv_props(I,L),member(localcolorlesspointlist(X),L).
 
-object_offset(I,X,Y):- indv_props(I,L),member(object_offset(X,Y),L).
+loc_xy(I,X,Y):- indv_props(I,L),member(loc_xy(X,Y),L).
 object_size(I,X,Y):- indv_props(I,L),member(object_size(X,Y),L).
 object_size(Points,H,V):- pmember(object_size(H,V),Points),!.
 object_size(Points,H,V):- points_range(Points,LoH,LoV,HiH,HiV,_,_), H is HiH-LoH+1, V is HiV-LoV+1.
@@ -726,7 +710,7 @@ guess_shape(I,0,N,H,V,Colors,Points,solid).
 guess_shape(I,O,N,H,V,Colors,Points,nonsolid):- O\==0.
 
 guess_shape(I,E,N,H,V,Colors,Points,subI(InvS)):- E>2, fail,
-   once((I.object_offset=object_offset(LoH,LoV),
+   once((I.loc_xy=loc_xy(LoH,LoV),
    make_unassigned_grid(H,V,Grid),
    calc_add_points(LoH,LoV,Grid,Points),
    individuals(Grid,InvS))),!,
@@ -790,4 +774,55 @@ dead_set_grid_nums(Gs):-
    asserta(grid_nums(NameType,Gs)).
 */
 
+/*
+try_arc_io(CName,Name,ExampleNum,In,Out):-
+  ignore((CName\==Name,flag(indiv,_,0),dash_char(60,"A"),dash_char(6,"\n"),nl)), 
+  grid_info(Name,ExampleNum*in,In), %print_tree_nl(in=UnsharedIn),
+  grid_info(Name,ExampleNum*out,Out), %print_tree_nl(out=UnsharedOut),
+  !,
+  % \+ \+ ignore(((ExampleNum=trn+_), test_config(learn(CProg)),must(training_progs(CProg,In,Out)))),
+/*
+  compute_diff(UnsharedIn,UnsharedOut,Diffs),!,
+  nop(pt(diffs=Diffs)),
+*/
+    %trace, 
+    get_combined(IndvO),
+    print_grid(IndvO),
+    maybe_confirm_sol(Name,ExampleNum,In,Out),nl,!.
+*/
+ /*
+
+% Grid pretty printing
+grid_info(Name,IO,Grid):- 
+  PairName = (Name*IO),
+  test_info(Name,InfoF),
+  wqnl(fav(PairName,InfoF)),
+  set_gridname(Grid,PairName),
+  describe_feature(Grid,[grid_dim,colors_count_size,colors_count,num_objects]),
+  compute_shared_indivs(Grid,UnsharedIn),
+  colors_count_size(Grid,CCS),
+  ignore((sub_var(in,IO),(CCS>4;debug_indiv;true), debug_indiv(UnsharedIn))),
+  print_Igrid(PairName,UnsharedIn,[Grid]),
+  ignore((sub_var(out,IO),(CCS>4;debug_indiv;true), debug_indiv(UnsharedIn))),
+  nop(describe_feature(Grid,[compute_shared_indivs])),!.
+*/
+% resize(H,V,Grid1,Grid2):- var(Grid2),grid_size(Grid1,C1),grid_size(Grid2,C2).
+
+
+make_combined(IndvS1,IndvS2,BetterC):-
+  append(IndvS1,IndvS2,IndvSU),list_to_set(IndvSU,IndvS),
+  smallest_first(IndvS,IndvC),
+  cleanup(IndvC,BetterC),
+  nb_current(test_name_w_type,NamedExampleNum),
+  set_named_indivs(NamedExampleNum,BetterC),!.
+
+cleanup(IndvC,BetterC):-
+  append(Left,[B|Bigger],IndvC),
+  append(LeftB,[A|RBigger],Bigger),
+  compute_diff(A,B,same_object(_)),!,
+  object_indv_id(B,NamedExampleNum,Iv),
+  setq(A,object_indv_id(B,NamedExampleNum,Iv),AA),
+  append([Left,LeftB,RBigger,[AA]],MissingAB),
+  cleanup(MissingAB,BetterC).
+cleanup(A,A).
 

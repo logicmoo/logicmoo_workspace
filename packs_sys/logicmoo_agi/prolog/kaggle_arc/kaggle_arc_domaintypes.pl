@@ -71,7 +71,7 @@ is_lpoint(P):- is_point(P), \+ is_gpoint(P).
 is_points_list([G|L]):- !, is_point(G),maplist(is_point,L).
 
 
-is_bg_indiv(O):- colors_count(O,[color_count(C,CC)]),CC>0,is_bgc(C).
+is_bg_indiv(O):- colors(O,[color_count(C,CC)]),CC>0,is_bgc(C).
 
 
 is_not_cpoint(I):- \+ is_cpoint(I).
@@ -113,7 +113,7 @@ is_object(O):- compound(O), O = obj(Props), is_list(Props).
 is_group([G|V]):- is_object(G),is_list(V),maplist(is_object,V).
 
 is_point_obj(O,Color,Point):- nonvar(O),O= Color-Point,!.
-is_point_obj(O,Color,Point):- is_object(O),object_size(O,H,V), !, hv(H,V)==hv(1,1),
+is_point_obj(O,Color,Point):- is_object(O),visual_hw(O,H,V), !, hv(H,V)==hv(1,1),
   globalpoints(O,[Color-Point]),!.
 
 
@@ -165,7 +165,7 @@ ap(diagonal_line). ap(horizontal_line). ap(vertical_line). ap(open_edge). ap(con
 
 ap(rotated45). ap(resizes). ap(diamond).
 apv(square(len)). apv(round(h,w)). apv(triangle). apv(rectangular(h,w)). apv(polygon(sides)).
-apv(localpoints_nc(num)).  apv(facing(dir)). apv(min(n)). apv(max(n)).  apv(object_size(h,w)). apv(object_offset(h,w)). 
+apv(shape(num)).  apv(facing(dir)). apv(min(n)). apv(max(n)).  apv(visual_hw(h,w)). apv(loc_xy(h,w)). 
 apv(scale(n)).  apv(ext_key(k)). apv(io_bud(k)). apv(linked_bud(k)).
 
 apv(points_old([])).

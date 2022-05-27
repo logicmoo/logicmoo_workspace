@@ -214,10 +214,10 @@ quaderants_and_center_rays(Grid9x9,QuadsO,CenterO,RaysO):-
    flipH(Q1,Q1R), flipV(Q3,Q3R), flipHV(Q4,Q4R),
    gensym('CRef_',CRef),
    CommonQ = [object_shape(quadrant),object_shape(pattern(CRef))],
-   Quads = [obj([grid(Q2),rot(same),offset(CRef,-1,-1)|CommonQ]),
-             obj([grid(Q1R),rot(flipH),offset(CRef,1,-1)|CommonQ]),
-             obj([grid(Q3R),rot(flipV),offset(CRef,-1,1)|CommonQ]),
-             obj([grid(Q4R),rot(flipHV),offset(CRef,1,1)|CommonQ])],
+   Quads = [obj([grid(Q2),rot(same),loc_xy(CRef,-1,-1)|CommonQ]),
+             obj([grid(Q1R),rot(flipH),loc_xy(CRef,1,-1)|CommonQ]),
+             obj([grid(Q3R),rot(flipV),loc_xy(CRef,-1,1)|CommonQ]),
+             obj([grid(Q4R),rot(flipHV),loc_xy(CRef,1,1)|CommonQ])],
    get_center_rays(CRef,Grid9x9,Center,Rays),
    maplist(filter_empty_grids,[Quads,Center,Rays],[QuadsO,CenterO,RaysO]).
 
@@ -229,11 +229,11 @@ get_center_rays(CRef,Grid9x9,Center,Rays):-
    rot180(CW,CWR), rot270(CN,CNR), rot90(CS,CSR),
    CommonR = [object_shape(divider(CRef)),object_shape(ray(CRef))],
    
-   Rays  = [obj([grid(CE),rot(same),   offset(CRef,1,0)|CommonR]),
-             obj([grid(CWR),rot(rot180),offset(CRef,-1,0)|CommonR]),
-             obj([grid(CSR),rot(rot90), offset(CRef,0,1)|CommonR]),
-             obj([grid(CNR),rot(rot270),offset(CRef,0,-1)|CommonR])],
-   Center =  [obj([grid(CC),rot(same),offset(CRef,0,0)|object_shape(center(CRef))])],!.
+   Rays  = [obj([grid(CE),rot(same),   loc_xy(CRef,1,0)|CommonR]),
+             obj([grid(CWR),rot(rot180),loc_xy(CRef,-1,0)|CommonR]),
+             obj([grid(CSR),rot(rot90), loc_xy(CRef,0,1)|CommonR]),
+             obj([grid(CNR),rot(rot270),loc_xy(CRef,0,-1)|CommonR])],
+   Center =  [obj([grid(CC),rot(same),loc_xy(CRef,0,0)|object_shape(center(CRef))])],!.
 
 
 filter_empty_grids(List,ListO):- include(obj_has_form,List,ListO).
@@ -258,9 +258,9 @@ clip_quadrant(CRef,SXC,SXC,EXC,EYC,GN,H,V,SXQ4,SYQ4,EXQ4,EYQ4,G,Same,obj(OBJL)):
   make_indiv_object(GN,H,V,1,1,Width,Height, LGPoints,
     [object_shape(quadrant(CRef,Same)),
      object_shape(pattern(CRef,SXC,SXC,EXC,EYC)),
-     object_rotation(Same),
-     object_size(Width,Height),
-     object_offset(SXQ4,SYQ4),
+     rotation(Same),
+     visual_hw(Width,Height),
+     loc_xy(SXQ4,SYQ4),
      globalpoints(GPoints),
      center_info(CRef,SXC,SXC,EXC,EYC),
      grid(LikeQ4)],OBJL).
@@ -274,12 +274,12 @@ nop((
   globalpoints(Q4,LPoints),
   offset_points(SXQ4,SYQ4,LPoints,GPoints),
   embue_points1(GN,H,V,SXQ4,SYQ4,EXQ4,EYQ4,GPoints,Ps),!,
-  append([[object_rotation(Same),
+  append([[rotation(Same),
      center_info(CRef,SXC,SXC,EXC,EYC),grid(LikeQ4)],CommonQ,Ps],OBJL),
   OBJ=obj(OBJL))).
 
 
-%object_rotation(obj(L),G):- member(object_rotation(G),L).
+%rotation(obj(L),G):- member(rotation(G),L).
 
 %detect_grid(Grid,E):- 
 
@@ -342,7 +342,7 @@ fix_the_fours(NewIndiv0s,NewIndiv2s):-
   must_det_l((
   predsort(sort_on(colored_pixel_count),NewIndiv0s,NewIndiv1s),
   maplist(object_grid,NewIndiv1s,Grids),
-  findall(size(H,V),(member(O,Grids),object_size(O,H,V)),Sizes),
+  findall(size(H,V),(member(O,Grids),visual_hw(O,H,V)),Sizes),
   sort(Sizes,SizesS),
   reverse(SizesS,[size(H,V)|_]),
   make_grid(H,V,Result),

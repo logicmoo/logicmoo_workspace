@@ -86,18 +86,18 @@ debug_indiv(obj(A)):- \+ is_list(A),!, pt(debug_indiv(obj(A))).
 debug_indiv(A):- is_point_obj(A,Color,Point),
   object_indv_id(A,Tst,Id), i_glyph(Id,Sym),
   hv_point(H,V,Point), i_glyph(Id,Sym),
-  wqnl([' % Point: ', color_print(Color,Sym), dot, color(Color), fav1(Tst), nth(Id), offset(H,V)]),!. 
+  wqnl([' % Point: ', color_print(Color,Sym), dot, color(Color), fav1(Tst), nth(Id), loc_xy(H,V)]),!. 
 */
 debug_indiv(obj(A)):- Obj = obj(A), is_list(A),!,
 %debug_indiv(Obj):- Obj = obj(A), is_list(A),  
-  ignore(colors_count(Obj,[color_count(FC,_)|_])),
+  ignore(colors(Obj,[color_count(FC,_)|_])),
   sort_obj_props(A,AS),
  % pt(AS),
   remove_too_verbose(AS,TV0), include('\\=='(''),TV0,TV),
   flatten(TV,F),predsort(longer_strings,F,[Caps|_]),
-  toPropercase(Caps,PC),
+  toPropercase(Caps,PC),!,
   %i_glyph(Id,Sym), wqnl([writef("%% %Nr%w \t",[PC]), color_print(FC,Sym) | AAAA ]),!. 
-  object_indv_id(Obj,_,Id),i_sym(Id,Sym),i_glyph(Sym,Glyph), 
+  object_glyph(Obj,Glyph),
   wqnl([format("%  ~w:\t",[PC]), color_print(FC,Glyph) | TV ]),!. 
 
 debug_indiv(obj(A)):- is_list(A),!, 
@@ -132,19 +132,18 @@ remove_too_verbose(dot,"point"):- !.
 %remove_too_verbose(square,S):- sformat(S,'square',[]).
 remove_too_verbose(background,S):- sformat(S,'bckgrnd',[]).
 remove_too_verbose(object_shape(H),S):- !, remove_too_verbose(H,HH),sformat(S,'~w',[HH]).
-remove_too_verbose(colors_count(H),HH):- !, remove_too_verbose(H,HH).
+remove_too_verbose(colors(H),HH):- !, remove_too_verbose(H,HH).
 remove_too_verbose(object_indv_id(_ * _ * X,Y),[layer(XX),nth(Y)]):- =(X,XX).
 remove_too_verbose(object_indv_id(_ * X,Y),[layer(XX),nth(Y)]):- =(X,XX).
-remove_too_verbose(object_offset(X,Y),offset(X,Y)).
-remove_too_verbose(object_size(X,Y),size(X,Y)).
-remove_too_verbose(point_count(X),points(X)).
+remove_too_verbose(loc_xy(X,Y),loc_xy(X,Y)).
+remove_too_verbose(visual_hw(X,Y),size(X,Y)).
 remove_too_verbose(changes([]),'').
-remove_too_verbose(object_rotation(same),'').
+remove_too_verbose(rotation(same),'').
 remove_too_verbose(L,LL):- is_list(L),!, maplist(remove_too_verbose,L,LL).
 remove_too_verbose(H,H).
 too_verbose(P):- compound(P),compound_name_arity(P,F,_),!,too_verbose(F).
 too_verbose(globalpoints).
-too_verbose(localpoints_nc).
+too_verbose(shape).
 too_verbose(localpoints).
 too_verbose(grid).
 too_verbose(grid_size).
@@ -153,12 +152,11 @@ too_verbose(rotated_grid).
 
 debug_indiv(_,_,X,_):- too_verbose(X),!.
 debug_indiv(Obj,_,F,[A]):- maplist(is_cpoint,A),!,
-  object_size(Obj,H,V), wqnl(F), 
-  object_offset(Obj,OH,OV),
+  visual_hw(Obj,H,V), wqnl(F), 
+  loc_xy(Obj,OH,OV),
   EH is OH+H-1,
   EV is OV+V-1,
-  object_indv_id(Obj,_Tst,Id), %i_sym(Id,Sym),
-  i_glyph(Id,Glyph),
+  object_glyph(Obj,Glyph),
   Pad1 is floor(H),  
 
   wots(S,

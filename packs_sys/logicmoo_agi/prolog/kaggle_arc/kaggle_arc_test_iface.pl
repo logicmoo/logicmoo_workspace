@@ -121,7 +121,7 @@ fav(t('9aec4887'),[indiv(color_blind),todo_sol([find_individuals([hollow,inside(
 
 fav(v('4b6b68e5'),[
    lmDSL([gather_object(O1,X,(iz(X,dot),inside(X,P),iz(P,polygon),wall_thickness(P,1),noexit(P))),
-          colors_count(O1,CC),first(C,CC),part_of(O1,E),color(E,C),fillAt(E,C),
+          colors(O1,CC),first(C,CC),part_of(O1,E),color(E,C),fillAt(E,C),
                 forall(X,(iz(X,dot), \+ (inside(X,P),iz(P,polygon))),delete(X))])]).
 
 

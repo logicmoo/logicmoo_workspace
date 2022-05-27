@@ -99,93 +99,61 @@ try_arc_io(CName,Name,ExampleNum,In,Out):-
   compute_unshared_indivs(In,UnsharedIn),
   %show_pair(IH,IV,OH,OV,unshared,PairName,UnsharedIn,UnsharedOut),
   %notrace(showdiff(UnsharedIn,UnsharedOut)),
-  notrace(individuals_common(UnsharedOut,In,SharedIn)),
   notrace(individuals_common(UnsharedIn,Out,SharedOut)),
-  notrace(show_pair(IH,IV,OH,OV,common,PairName,SharedIn,SharedOut)),
-  showdiff(SharedIn,SharedOut),!,
+  notrace(individuals_common(SharedOut,In,SharedIn)),
+
+  notrace(show_pair(IH,IV,OH,OV,common,PairName,SharedIn,SharedOut)),!,
   
 
-  %color_counts(In,InCC),
-  %color_counts(Out,OutCC),
+  reuse_indivs(SharedIn,SharedOut,BetterA,BetterB),
+  ( (SharedOut\==BetterB ; SharedIn\== BetterA) ->
+    show_pair(IH,IV,OH,OV,better,PairName,BetterA,BetterB);
+     writeln('nothing better')),
 
   nop((
 
 
        compute_unshared_indivs(In,UnsharedIn),
   show_pair(IH,IV,OH,OV,unshared,PairName,UnsharedIn,UnsharedOut),
-  %merge_indivs(UnsharedIn,UnsharedOut,BetterA,BetterB,BetterC), 
+  %reuse_indivs(UnsharedIn,UnsharedOut,BetterA,BetterB,BetterC), 
   %show_pair(IH,IV,OH,OV,better,PairName,BetterA,BetterB),
   %show_pair(IH,IV,OH,OV,combined,PairName,BetterC,Out),
   compute_shared_indivs(In,SharedIn),
   compute_shared_indivs(Out,SharedOut),
   show_pair(IH,IV,OH,OV,shared,PairName,SharedIn,SharedOut))),!,
-
   nop(catch(maybe_confirm_sol(Name,ExampleNum,In,Out),E,(wdmsg(E)))))),!.
 
 
+reuse_indivs(IndvA,IndvB,BetterA,BetterB):-
+  smallest_first(IndvA,IndvAS),
+  smallest_first(IndvB,IndvBS),
+  append(IndvAS,IndvBS,IndvCC), list_to_set(IndvCC,IndvC),
+  smallest_first(IndvC,IndvCS),
+  reuse_indivs_cleanup(IndvAS,IndvBS,IndvCS,BetterA,BetterB,_BetterC),!.
+
+reuse_indivs_cleanup(IndvA,IndvB,IndvC,_,_,_):-
+  maplist(length,[IndvA,IndvB,IndvC],Rest),
+  wdmsg(len=Rest),fail.
+reuse_indivs_cleanup(IndvA,IndvB,IndvC,BetterAO,BetterBO,BetterCO):-
+  select(A,IndvC,IndvCRest), member(B,IndvCRest),
+  select(A,IndvA,IndvARest),
+  select(A,IndvB,IndvBRest),
+  reuse_a_b(A,B,AA),
+  append(IndvARest,[AA],BetterA),
+  append(IndvBRest,[B],BetterB),
+  append(IndvCRest,[AA],BetterC),
+  reuse_indivs_cleanup(BetterA,BetterB,BetterC,BetterAO,BetterBO,BetterCO),!.
+reuse_indivs_cleanup(A,B,C,A,B,C).
+
+%same_object(D)
+reuse_a_b(A,B,AA):-
+  findall(H,compare_objs1(H,A,B),How),
+  object_indv_id(B,ID,Iv),
+  setq(A,object_indv_id(ID,Iv),AA),
+  object_glyph(A,GlyphA),
+  object_glyph(B,GlyphB),
+  ignore((How ==[]-> nop(pt(shared_object(GlyphB->GlyphA))); 
+    (pt(same_object(GlyphA,GlyphB,How))))).
 
 
-try_arc_io(CName,Name,ExampleNum,In,Out):-
- must_det_l((
-   grid_size(In,IH,IV), grid_size(Out,OH,OV), nop(writeln(grid_convert(size(IH,IV)->size(OH,OV)))),
-   
-   ignore((CName\==Name, flag(indiv,_,0),    
-   dash_char(60,"A"),nl,dash_char(60,"|"),dash_char(6,"\n"),nl,
-    dash_char(60,"|"),nl,dash_char(60,"V"),nl,
-    nl,wqnl(arc1(Name)),nl,nl,dash_char(60,"A"),nl)),   
-  dash_char(60,"|"),nl,nl,
-  PairName= Name*ExampleNum,
-  GridNameIn= Name*ExampleNum*in,
-  GridNameOut= Name*ExampleNum*out,
-  set_gridname(In,GridNameIn),
-  set_gridname(Out,GridNameOut),
-  %wqnl(arc1(Name)),nl,
-  test_info(Name,Info), wqnl(fav(Name,Info)),nl,
-  ignore((more_task_info(Name,III),pt(III),nl)),
-  
-  show_pair(IH,IV,OH,OV,test,PairName,In,Out),
-  compute_unshared_indivs(In,UnsharedIn),
-  compute_unshared_indivs(Out,UnsharedOut),
-  show_pair(IH,IV,OH,OV,unshared,PairName,UnsharedIn,UnsharedOut),
-  %merge_indivs(UnsharedIn,UnsharedOut,BetterA,BetterB,BetterC), 
-  %show_pair(IH,IV,OH,OV,better,PairName,BetterA,BetterB),
-  %show_pair(IH,IV,OH,OV,combined,PairName,BetterC,Out),
-  compute_shared_indivs(In,SharedIn),
-  individuals_common(UnsharedIn,Out,SharedOut),
-  show_pair(IH,IV,OH,OV,shared,PairName,SharedIn,SharedOut),
-
-  catch(maybe_confirm_sol(Name,ExampleNum,In,Out),E,(wdmsg(E))))),!.
-/*
-try_arc_io(CName,Name,ExampleNum,In,Out):-
-  ignore((CName\==Name,flag(indiv,_,0),dash_char(60,"A"),dash_char(6,"\n"),nl)), 
-  grid_info(Name,ExampleNum*in,In), %print_tree_nl(in=UnsharedIn),
-  grid_info(Name,ExampleNum*out,Out), %print_tree_nl(out=UnsharedOut),
-  !,
-  % \+ \+ ignore(((ExampleNum=trn+_), test_config(learn(CProg)),must(training_progs(CProg,In,Out)))),
-/*
-  compute_diff(UnsharedIn,UnsharedOut,Diffs),!,
-  nop(pt(diffs=Diffs)),
-*/
-    %trace, 
-    get_combined(IndvO),
-    print_grid(IndvO),
-    maybe_confirm_sol(Name,ExampleNum,In,Out),nl,!.
-*/
- /*
-
-% Grid pretty printing
-grid_info(Name,IO,Grid):- 
-  PairName = (Name*IO),
-  test_info(Name,InfoF),
-  wqnl(fav(PairName,InfoF)),
-  set_gridname(Grid,PairName),
-  describe_feature(Grid,[grid_dim,colors_count_size,colors_count,num_objects]),
-  compute_shared_indivs(Grid,UnsharedIn),
-  colors_count_size(Grid,CCS),
-  ignore((sub_var(in,IO),(CCS>4;debug_indiv;true), debug_indiv(UnsharedIn))),
-  print_Igrid(PairName,UnsharedIn,[Grid]),
-  ignore((sub_var(out,IO),(CCS>4;debug_indiv;true), debug_indiv(UnsharedIn))),
-  nop(describe_feature(Grid,[compute_shared_indivs])),!.
-*/
-% resize(H,V,Grid1,Grid2):- var(Grid2),grid_size(Grid1,C1),grid_size(Grid2,C2).
 

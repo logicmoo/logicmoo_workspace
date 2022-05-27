@@ -126,7 +126,7 @@ missing_arity(F,N):- \+ current_predicate(F/N).
 % turtle(H,V,Dir,N,H2,V2):- 
 prim_ops([
   call_object_grid_size(obj),
-  trim_grid_to_size(point,object_size),
+  trim_grid_to_size(point,visual_hw),
   fill_from_point(point,color),
   create_a_ray(point,dir,len),
   object_as_own_grid(obj,gridOps),

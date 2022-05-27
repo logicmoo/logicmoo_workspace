@@ -55,39 +55,6 @@ ensure_shared_indivs(GN,Grid,SharedIndvs):-
    assert(is_shared_saved(GN,SharedIndvs)).
 
 
-merge_indivs(IndvA,IndvB,BetterA,BetterB,BetterC):-
-  append(IndvA,IndvB,IndvSU),list_to_set(IndvSU,IndvS),
-  smallest_first(IndvS,IndvC),
-  merge_indivs_cleanup(IndvA,IndvB,IndvC,BetterA,BetterB,BetterC),!.
-
-merge_indivs_cleanup(IndvA,IndvB,IndvC,_,_,_):-
-  maplist(length,[IndvA,IndvB,IndvC],Rest),
-  wdmsg(len=Rest),fail.
-merge_indivs_cleanup(IndvA,IndvB,IndvC,BetterAO,BetterBO,BetterCO):-
-  select(A,IndvC,IndvCRest), member(B,IndvCRest),
-  select(A,IndvA,IndvARest),
-  select(A,IndvB,IndvBRest),
-  merge_a_b(A,B,AA),
-  append(IndvARest,[AA],BetterA),
-  append(IndvBRest,[B],BetterB),
-  append(IndvCRest,[AA],BetterC),
-  merge_indivs_cleanup(BetterA,BetterB,BetterC,BetterAO,BetterBO,BetterCO),!.
-merge_indivs_cleanup(A,B,C,A,B,C).
-
-%same_object(D)
-merge_a_b(A,B,AA):-
-  findall(H,compare_objs1(H,A,B),How),
-  object_indv_id(B,ID,Iv),
-  setq(A,object_indv_id(ID,Iv),AA),
-  object_glyph(A,GlyphA),
-  object_glyph(B,GlyphB),
-  ignore((How ==[]-> nop(pt(shared_object(GlyphB->GlyphA))); 
-    (pt(same_object(GlyphA,GlyphB,How))))).
-
-
-
-
-
 individuals_common(Reserved,Grid,IndvS):-
  must_det_l((
    notrace(grid_size(Grid,H,V)),
@@ -200,7 +167,7 @@ fsi(Reserved,Grid,NO,_H,_V,Sofar,_ID,[retain(_)|NO],Reserved,Points,Grid,Sofar,P
 
 fsi(Reserved,NNewGrid,NO,H,V,Sofar,ID,[retain(Option)|NO],Reserved,_Points,Grid,Retained,NextScanPoints):-
     globalpoints(Grid,NewGPoints),  H> 14, V> 14,
-    freeze(W,W>5),filter_indivs(Sofar,[point_count(W)];[object_shape(Option)],Retained1),
+    freeze(W,W>5),filter_indivs(Sofar,[mass(W)];[object_shape(Option)],Retained1),
     filter_indivs(Retained1, \+ object_shape(background),Retained),
     as_debug(9,print_Igrid(H,V,'retained'+ID,Retained,[])),    
     remove_global_points(Retained,NewGPoints,NextScanPoints),
@@ -262,12 +229,6 @@ fsi(Reserved,Grid,[connect(hv_line(HV))|NO],H,V,Sofar,ID,[connect(hv_line(HV))|N
   hv_value(Grid,MC-MP,_,_), nop(MC\==C),
   combine_objs(ID,H,V,HV1,HV2,[object_shape(hv_line(HV)),C-MP],Sofar,IndvList).
 
-
-color(HV,C):- colors_count(HV,[color_count(C,_)]).
-color(HV,multicolor(Stuff)):- colors_count(HV,Stuff).
-main_color(HV,C):- colors_count(HV,[color_count(C,_)|_]).
-first_gpoint(HV,P):- globalpoints(HV,[P|_]).
-last_gpoint(HV,P):- globalpoints(HV,PS),last(PS,P).
 
 combine_objs(ID,H,V,HV1,HV2,IPROPS,Sofar,IndvList):-
   globalpoints(HV1,GP1), globalpoints(HV2,GP2),
@@ -451,15 +412,15 @@ nearby_one(Options,C,C2-E,List):- allow_dirs(Options,Dir), adjacent_point_allowe
 
 check_minsize(_,I,I):-!.
 check_minsize(_,[],[]):-!.
-check_minsize(Sz,[I|IndvS],[A,B|IndvSO]):- point_count(I,2),globalpoints(I,[A,B]),!,check_minsize(Sz,IndvS,IndvSO).
-check_minsize(Sz,[I|IndvS],[A,B,C|IndvSO]):- point_count(I,3),globalpoints(I,[A,B,C]),!,check_minsize(Sz,IndvS,IndvSO).
+check_minsize(Sz,[I|IndvS],[A,B|IndvSO]):- mass(I,2),globalpoints(I,[A,B]),!,check_minsize(Sz,IndvS,IndvSO).
+check_minsize(Sz,[I|IndvS],[A,B,C|IndvSO]):- mass(I,3),globalpoints(I,[A,B,C]),!,check_minsize(Sz,IndvS,IndvSO).
 check_minsize(Sz,[I|IndvS],[I|IndvSO]):- check_minsize(Sz,IndvS,IndvSO).
 
-meets_size(_,Points):- point_count(Points,1).
-meets_size(_,Points):- point_count(Points,2),!,fail.
-meets_size(_,Points):- point_count(Points,3),!,fail.
-meets_size(_,Points):- point_count(Points,4).
-meets_size(Len,Points):- point_count(Points,L),!,L>=Len.
+meets_size(_,Points):- mass(Points,1).
+meets_size(_,Points):- mass(Points,2),!,fail.
+meets_size(_,Points):- mass(Points,3),!,fail.
+meets_size(_,Points):- mass(Points,4).
+meets_size(Len,Points):- mass(Points,L),!,L>=Len.
 
 remove_bgs(IndvS,IndvL,BGIndvS):- partition(is_bg_indiv,IndvS,BGIndvS,IndvL).
 
@@ -470,7 +431,7 @@ oclass_piority(hidden,2).
 object_priority(_,0).
   
 smallest_first(IndvS,IndvO):-
-  findall((Priority+Size)-Indv,(member(Indv,IndvS),object_priority(Indv,Priority),point_count(Indv,Size)),All),
+  findall((Priority+Size)-Indv,(member(Indv,IndvS),object_priority(Indv,Priority),mass(Indv,Size)),All),
   keysort(All,AllK),
   findall(Indv,member(_-Indv,AllK),IndvO).
 
@@ -575,4 +536,38 @@ unraw_inds2(Options,IndvS,IndvO):-
   IndvO=[Grp|IndvMO].
 */
 unraw_inds2(_,IndvS,IndvS).
+
+
+
+
+merge_indivs(IndvA,IndvB,BetterA,BetterB,BetterC):-
+  append(IndvA,IndvB,IndvSU),list_to_set(IndvSU,IndvS),
+  smallest_first(IndvS,IndvC),
+  merge_indivs_cleanup(IndvA,IndvB,IndvC,BetterA,BetterB,BetterC),!.
+
+merge_indivs_cleanup(IndvA,IndvB,IndvC,_,_,_):-
+  maplist(length,[IndvA,IndvB,IndvC],Rest),
+  wdmsg(len=Rest),fail.
+merge_indivs_cleanup(IndvA,IndvB,IndvC,BetterAO,BetterBO,BetterCO):-
+  select(A,IndvC,IndvCRest), member(B,IndvCRest),
+  select(A,IndvA,IndvARest),
+  select(A,IndvB,IndvBRest),
+  merge_a_b(A,B,AA),
+  append(IndvARest,[AA],BetterA),
+  append(IndvBRest,[B],BetterB),
+  append(IndvCRest,[AA],BetterC),
+  merge_indivs_cleanup(BetterA,BetterB,BetterC,BetterAO,BetterBO,BetterCO),!.
+merge_indivs_cleanup(A,B,C,A,B,C).
+
+%same_object(D)
+merge_a_b(A,B,AA):-
+  findall(H,compare_objs1(H,A,B),How),
+  object_indv_id(B,ID,Iv),
+  setq(A,object_indv_id(ID,Iv),AA),
+  object_glyph(A,GlyphA),
+  object_glyph(B,GlyphB),
+  ignore((How ==[]-> nop(pt(shared_object(GlyphB->GlyphA))); 
+    (pt(same_object(GlyphA,GlyphB,How))))).
+
+
 

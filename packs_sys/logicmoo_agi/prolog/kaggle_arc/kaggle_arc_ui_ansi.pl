@@ -107,11 +107,14 @@ show_pair(IH,IV,OH,OV,Type,PairName,In,Out):-
   wots(U2, print_Igrid(OH,OV,NameOut,Out,[])),
   print_side_by_side(U1,LW,U2),!,
   print_side_by_side(
-     describe_feature(In,[call(writeln('IN')),grid_dim,colors_count_size,colors_count]),LW,
-    describe_feature(Out,[call(writeln('OUT')),grid_dim,colors_count_size,colors_count])),
-  ignore((is_group(In),desc(wqnl(fav(NameIn)), debug_indiv(In)))),
-  ignore((is_group(Out),desc(wqnl(fav(NameOut)), debug_indiv(Out)))),
-  !.
+     describe_feature(In,[call(writeln('IN')),grid_dim,colors_count_size,colors]),LW,
+    describe_feature(Out,[call(writeln('OUT')),grid_dim,colors_count_size,colors])),!,
+  ignore(show_pair_I_info(NameIn,NameOut,In,Out)),!.
+
+show_pair_I_info(NameIn,NameOut,In,Out):- 
+  ((is_group(In),is_group(Out))-> once(showdiff(In,Out));
+    ignore((is_group(In),desc(wqnl(fav(NameIn)), debug_indiv(In)))),
+    ignore((is_group(Out),desc(wqnl(fav(NameOut)), debug_indiv(Out))))),!.
 
 uses_space(C):- code_type(C,print).
 
@@ -139,30 +142,6 @@ print_equals(Grid,N,Ps):- is_object(Ps),grid_size(Grid,H,V),print_Igrid(H,V,N,Ps
 %print_equals(Grid,N,PL):- is_group(PL), grid_size(Grid,H,V), locally(grid_nums(PL),print_list_of_points(N,H,V,[[]])).
 print_equals(_,N,G):- print_equals(N,G).
 
-/*
-points_name(E,Name):- 
- props_of_points(E,Ns),
-  ignore((get_grid_nums(Nums),nth0(N,Nums,EE),EE=@=E,i_sym(N,Code),format(atom(Name),' Individual #~w  Code: "~s" ~w',[N,[Code],Ns]))),!.
-points_name(E,pop(Ns)):- props_of_points(E,Ns).
-*/
-/*
-print_list_of_points(N,H,V,PL):- 
-  length(PL,Len),
-  wqnl(N=list_of_points(Len)),!, 
-  ignore((nop(debug_indiv),  
-    forall(nth1(I,PL,E),print_points(N:I,H,V,E)))).
-
-% print_points(N,H,V,E):- nop(print_points(N,H,V,E)),!.
-print_points(N,H,V,E):- 
-  dash_char(H,"-"),nl,  
-  points_name(E,Name),
-  write(Name), write(' from '),writeln(N),
-  points_range(E,LoH,LoV,HiH,HiV,H,V),length(E,Len),wqnl(len(Len)->offset_ranges(LoH,LoV,HiH,HiV,H,V)),
-  
-  print_grid(1,1,LoH,LoV,HiH,HiV,H,V,E),dash_char(H,"-"),!,
-  nl.
-
-*/
 
 print_equals(N,V):- \+ compound(V),wqnl(N=V).
 print_equals(N,V):- is_grid(V),!,wqnl(N),print_grid(V).
@@ -178,7 +157,7 @@ print_equals(N,[S|L]):- string(S),writeq(N),write('= '),write(S),maplist(commawr
 print_equals(Name,json(JSON)):-!, print_equals(Name,JSON).
 print_equals(Name,trn=Y):- !, print_equals(Name,Y).
 print_equals(Name,X->Y):- !, print_equals(in(Name),X), print_equals(out(Name),Y).
-print_equals(colors_count,XY):-print_equals(cc,XY).
+print_equals(colors,XY):-print_equals(cc,XY).
 print_equals(Name,color_count(C,N)):-print_equals(Name,cc(C,N)).
 print_equals(Name,X=Y):- !, print_equals(Name=X,Y).
 %print_equals(Name,[H|L]):- !, maplist(print_equals(Name),[H|L]).
@@ -331,6 +310,14 @@ grid_dot(169).
 
 print_g(H,V,C,_,_,_,_):- write(' '), print_g1(H,V,C),!.
 
+object_glyph(G,Glyph):- is_grid(G),!,grid_dot(Dot),name(Glyph,[Dot]).
+object_glyph(G,Glyph):- var(G),!,var_dot(Dot),name(Glyph,[Dot]).
+object_glyph(G,Glyph):- object_indv_id(G,_Tst,GN2), i_sym(GN2,GN),!,i_glyph(GN,Glyph).
+
+object_cglyph(G,CGlyph):- color(G,C),object_glyph(G,Glyph),wots(CGlyph,color_print(C,Glyph)).
+
+%user:portray(S):- (string(S);atom(S)),atom_codes(S,[27|_]),write('"'),write(S),write('"').
+
 into_color_glyph(CTerm,Color,Code):- 
     ignore((sub_term(Color,CTerm),nonvar(Color),is_color(Color))),
     ignore((sub_term(A,CTerm),atom(A), \+ is_color(A), i_glyph(A,Glyph))),
@@ -343,9 +330,10 @@ into_color_glyph(_,_,C,C,VAR):- var(C),var_dot(VAR),!.
 into_color_glyph(_,_,0,0,BGD):- bg_dot(BGD),!.
 into_color_glyph(_,_,C,C,FGD):- fg_dot(FGD),!.
 
-print_g1(H,V,C0):- into_color_glyph(H,V,C0,C,Code),name(S,[Code]),!, color_print(C,S),!.
-print_g1(_,_,C):- var(C), color_print(C,'?'),!.
-%print_g1(_,_,C):- trace, write(C).
+
+i_glyph(N,Glyph):- atom(N),atom_codes(N,[Code|_]),name(Glyph,[Code]).
+i_glyph(Code,Glyph):- integer(Code), Code> 255, !,name(Glyph,[Code]).
+i_glyph(N,Glyph):- integer(N),i_sym(N,Code),name(Glyph,[Code]).
 
 i_sym(N2,Code):- integer(N2),!, N is N2 * 5 , change_code(N,NN), i_syms(Codes),nth0(NN,Codes,Code),!.
 i_sym(N2,Code):- atom(N2),name(N2,[C|_]),!,i_sym(C,Code).
@@ -353,6 +341,12 @@ i_sym(N,Code):- var(N), Code = 63.
 %change_code(N,M):- M is N * 100,!.
 %change_code(N,M):- N>10, M is (N * 10 ),!.
 change_code(N,N). % M is N+212.
+
+
+print_g1(H,V,C0):- into_color_glyph(H,V,C0,C,Code),name(S,[Code]),!, color_print(C,S),!.
+print_g1(_,_,C):- var(C), color_print(C,'?'),!.
+%print_g1(_,_,C):- trace, write(C).
+
 
 save_codes(Max):- 
  %stream_property(File,file_no(1)),
@@ -380,35 +374,4 @@ get_glyph(Point,Glyph):-
   get_grid_num(Point,N),i_glyph(N,Glyph).
 */
 
-i_glyph(N,Glyph):- atom(N),atom_codes(N,[Code|_]),name(Glyph,[Code]).
-i_glyph(Code,Glyph):- integer(Code),!,name(Glyph,[Code]).
-i_glyph(N,Glyph):- integer(N),i_sym(N,Code),name(Glyph,[Code]).
 
-/*
-get_grid_num(C-Point,N):-
-  hv_point(X,Y,Point),
-  get_grid_num_xyc(X,Y,C,N).
-
-get_grid_num(Point,N):-
-  hv_point(X,Y,Point),
-  get_grid_num_xyc(X,Y,_C,N).
-
-get_grid_num_xyc(X,Y,C,N):- fail,
-  hv_point(X,Y,Point),
-  get_grid_nums(GridsN),
-  nth0(N,GridsN,E),
-  once((((member(C-PPoint,E);member(PPoint,E)),nonvar(PPoint),Point=PPoint);hv_value(E,C,X,Y))).
-
-get_grid_nums(GridNums):-
-  nb_current(test_name_w_type,NameType),
-  (grid_nums(NameType,Grids1)->true;Grids1=[]),
-  (grid_nums(Grids0)->true;Grids0=[]),
-  append(Grids1,Grids0,GridNums).
-
-
-:- thread_local(grid_nums/2).
-:- thread_local(grid_nums/1).
-dead_set_grid_nums(Gs):- 
-   nb_current(test_name_w_type,NameType),
-   asserta(grid_nums(NameType,Gs)).
-*/

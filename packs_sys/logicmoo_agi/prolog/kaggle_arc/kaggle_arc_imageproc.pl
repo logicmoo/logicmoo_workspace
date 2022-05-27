@@ -42,13 +42,13 @@ pixel_colors(GH,CC):- globalpoints(GH,GP),!,pixel_colors(GP,CC).
 %pixel_colors(G,GL):- findall(Name,(sub_term(CP,G),compound(CP),CP=(C-_),color_name(C,Name)),GL).
 
 unique_colors(G,UC):- pixel_colors(G,GF),sort(GF,UC).
-colors_count_size(G,UC):- colors_count(G,GS),length(GS,UC).
+colors_count_size(G,UC):- colors(G,GS),length(GS,UC).
 
 into_cc(SK,BFO):- maplist(into_cc1,SK,BFO).
 into_cc1(N-C,color_count(Nm,CN)):- CN is float(N),color_name(C,Nm).
 
-colors_count_black_first(G,BF):- colors_count(G,SK),black_first(SK,BF).
-colors_count_no_black(G,BF):- colors_count(G,SK),no_black(SK,BF).
+colors_count_black_first(G,BF):- colors(G,SK),black_first(SK,BF).
+colors_count_no_black(G,BF):- colors(G,SK),no_black(SK,BF).
 
 num_objects(G,NO):- compute_shared_indivs(G,GS),length(GS,NO).
 
@@ -59,7 +59,7 @@ move_rightof_itself(I,M):- move_dir_itself(1,e,I,M).
 
 %decl_pt(move_dir_itself(int,dir,object,+)).
 %move_dir_itself(N,D,I,M):- check_args(move_dir_itself(N,D,I,M),MaybeCut),(MaybeCut==t->!;true).
-move_dir_itself(N,D,I,M):- is_object(I),object_size(I,SX,SY), move_scale_dir_object(SX,SY,N,D,I,M).
+move_dir_itself(N,D,I,M):- is_object(I),visual_hw(I,SX,SY), move_scale_dir_object(SX,SY,N,D,I,M).
 move_dir_itself(N,D,L,LM):- is_group(L),!,maplist(move_dir_itself(N,D),L,LM).
 move_dir_itself(N,D,I,O):- into_group(I,M),M\=@=I,!,move_dir_itself(N,D,M,O).
 
@@ -67,7 +67,7 @@ move_dir_object(N,D,I,M):- move_scale_dir_object(1,1,N,D,I,M).
 
 move_scale_dir_object(X,Y,N,D,I,M):- is_object(I),!,
  must_det_l((
-  object_offset(I,OX,OY),
+  loc_xy(I,OX,OY),
   move_dir(N,OX,OY,D,X,Y,NX,NY),
   (NY<1 -> M=I ; move_object(NX,NY,I,M)))).
 move_scale_dir_object(N,D,L,LM):- is_group(L),!,maplist(move_scale_dir_object(N,D),L,LM).
@@ -78,7 +78,7 @@ move_object(NX,NY,I,M):- is_object(I),!,
   (NY<1 -> M=I ;
   ( localpoints(I,LPoints),
     offset_points(NX,NY,LPoints,GPoints),
-    setq(I,[globalpoints(GPoints),object_offset(NX,NY)],M))))).
+    setq(I,[globalpoints(GPoints),loc_xy(NX,NY)],M))))).
 move_object(H,V,L,LM):- is_group(L),!,maplist(move_object(H,V),L,LM).
 move_object(H,V,I,O):- into_group(I,M),M\=@=I,!,move_object(H,V,M,O).
 
@@ -408,21 +408,21 @@ assert_id_grid_cells(ID,Grid):-
 % Random Non Blk Eles
 first_color(Grid1,C1):- sub_term(C1,Grid1),is_color(C1), \+ is_bgc(C1).
 
-% Grid object_size/resize
+% Grid visual_hw/resize
 make_lengths(N,L):- length(L,N).
 
 get_inf(30).
 points_range(Points,LoH,LoV,HiH,HiV,H,V):- get_inf(Inf), calc_range(Inf,Inf,-Inf,-Inf,-Inf,-Inf,Points,LoH,LoV,HiH,HiV,H,V).
 
 points_range(Points,offset_ranges(LoH,LoV,HiH,HiV,H,V)):- get_inf(Inf),calc_range(Inf,Inf,-Inf,-Inf,-Inf,-Inf,Points,LoH,LoV,HiH,HiV,H,V).
-% object_size(Points,object_size(H,V)):- points_range(Points,_LoH,_LoV,_HiH,_HiV,H,V).
+% visual_hw(Points,visual_hw(H,V)):- points_range(Points,_LoH,_LoV,_HiH,_HiV,H,V).
 
 close_color(brown,orange).
 close_color(green,cyan).
 
 %grid_size(Points,H,V):- is_dict(Points),!,Points.grid_size=grid_size(H,V).
 grid_size(ID,H,V):- is_grid_size(ID,H,V),!.
-%grid_size(Grid,H,V):- notrace(is_object(Grid)), !, object_size(Grid,H,V).
+%grid_size(Grid,H,V):- notrace(is_object(Grid)), !, visual_hw(Grid,H,V).
 grid_size(Grid,H,V):- is_grid(Grid),grid_size_nd(Grid,H,V),!.
 grid_size(Points,H,V):- pmember(grid_size(H,V),Points),ground(H-V),!.
 grid_size([G|Grid],H,V):- is_list(G),is_list(Grid), grid_size_nd([G|Grid],H,V),!.
@@ -433,7 +433,7 @@ grid_size(_,30,30).
 calc_range(WLoH,WLoV,WHiH,WHiV,WH,WV,Var,WLoH,WLoV,WHiH,WHiV,WH,WV):- var(Var),!.
 calc_range(WLoH,WLoV,WHiH,WHiV,WH,WV,grid_size(IH,IV),WLoH,WLoV,WHiH,WHiV,H,V):- !,
   max_min(WV,IV,V,_),max_min(WH,IH,H,_).
-%calc_range(WLoH,WLoV,WHiH,WHiV,WH,WV,object_size(IH,IV),WLoH,WLoV,WHiH,WHiV,H,V):- !,
+%calc_range(WLoH,WLoV,WHiH,WHiV,WH,WV,visual_hw(IH,IV),WLoH,WLoV,WHiH,WHiV,H,V):- !,
 %  max_min(WV,IV,V,_),max_min(WH,IH,H,_).
 calc_range(WLoH,WLoV,WHiH,WHiV,WH,WV,[E|L],LoH,LoV,HiH,HiV,H,V):- !,
   calc_range(WLoH,WLoV,WHiH,WHiV,WH,WV,E,MLoH,MLoV,MHiH,MHiV,MH,MV),
@@ -525,18 +525,20 @@ map_nth(P,N,Grid):- nth1(N,Grid,E),call(P,E).
 map_row(P,N,Grid):- map_nth(maplist(P),N,Grid).
 map_col(P,N,Grid):- maplist(map_nth(P,N),Grid).
 
-object_glyph(G,Glyph):- is_grid(G),grid_dot(Dot),name(Glyph,[Dot]).
-object_glyph(G,Glyph):- object_indv_id(G,_Tst,GN),  nonvar(GN),!,i_glyph(GN,Glyph).
 
-maybe_glyph(G,_,GN):- is_grid(G),grid_dot(GN),!.
-maybe_glyph(G,_,Code):- object_indv_id(G,_Tst,GN), nonvar(GN),!,i_sym(GN,Code).
-maybe_glyph(_G,N,Code):-i_sym(N,Code).
+maybe_glyph(G,_,Glyph):- is_object(G), object_glyph(G,Glyph), !.
+maybe_glyph(_G,N,Code):- i_glyph(N,Code),!.
+maybe_glyph(G,_,Glyph):- is_grid(G),grid_dot(Glyph),!.
 
+
+from_gridoid(Points,C,GN,H,V):- is_group(Points), smallest_first(Points,ObjList),
+  from_gridoid(ObjList,C,N,H,V,G), maybe_glyph(G,N,GN).
 
 from_gridoid(Points,C,GN,H,V):- from_gridoid(Points,C,N,H,V,G), maybe_glyph(G,N,GN).
 from_gridoid(Points,C,N,H,V,G):- nth0(N,Points,G),hv_value0(G,C,H,V),nonvar(C),C\==black,!.
 from_gridoid(Points,C,N,H,V,G):- nth0(N,Points,G),hv_value0(G,C,H,V),nonvar(C),!.
 from_gridoid(Points,C,N,H,V,G):- nth0(N,Points,G),hv_value0(G,C,H,V).
+
 
 hv_value0(O,_Color,_H,_V):- is_object(O), object_shape(O,combined), !, fail.
 hv_value0(O,Color,H,V):- is_object(O),globalpoints(O,Ps),!,hv_value(Ps,Color,H,V).
