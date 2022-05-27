@@ -64,13 +64,6 @@ debug_indiv:- test_config(nodebug_indiv),!,fail.
 debug_indiv:- test_config(debug_indiv),!.
 debug_indiv:- test_config(indiv(_)),!.
 
-print_info(A):- is_grid(A),print_grid(A).
-print_info(A):- is_object(A), o2g(A,G), asserta(g2o(G,A)), ignore(debug_indiv(A)).
-print_info(A):- is_group(A),debug_indiv(A).
-print_info(A):- into_obj(A,Obj),print_info(Obj).
-print_info([]):-!.
-print_info(A):- pt(A).
-
 debug_indiv(Var):- var(Var),pt(debug_indiv(Var)),!.
 
 debug_indiv(Grid):- is_grid(Grid),!,grid_size(Grid,H,V),
