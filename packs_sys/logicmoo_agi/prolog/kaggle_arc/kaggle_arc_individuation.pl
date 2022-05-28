@@ -123,6 +123,31 @@ fsi(OUTReserved,OUTNewGrid,OUTOptions,H,V,Sofar,ID,Options,Reserved,Points,Grid,
   %as_debug(9,pt(t([fsi=Options,sofar=Sofar]))),
   fail.
 
+in_shape_lib(Lib):- 
+  Lib = obj([mass(6), shape([point_01_01, point_01_02, point_01_03, point_02_01, point_02_02, point_03_02]), 
+  colors([cc(red, 6.0)]), localpoints([red-point_01_01, red-point_01_02, red-point_01_03, red-point_02_01, 
+  red-point_02_02, red-point_03_02]), visual_hv(3, 3), rotation(same), loc_xy(2, 5), 
+  changes([]), object_shape(rectangluar), object_shape(polygon), object_indv_id(t('1b60fb0c')*(trn+666)*out, 666), 
+  globalpoints([red-point_02_05, red-point_02_06, red-point_02_07, red-point_03_05, red-point_03_06, red-point_04_06]), 
+  grid_size(10, 10)]).
+
+
+in_shape_lib(Lib):- Red = red,
+  Lib = obj([mass(6), shape([point_01_01, point_01_02, point_01_03, point_02_01, point_02_02, point_03_02]), 
+  colors([cc(Red, 6.0)]), localpoints([Red-point_01_01, Red-point_01_02, Red-point_01_03, Red-point_02_01, 
+  Red-point_02_02, Red-point_03_02]), visual_hv(3, 3), rotation(same), loc_xy(_, _), 
+  changes([]), object_shape(rectangluar), object_shape(polygon), object_indv_id('reserved', 666), 
+  globalpoints(_), 
+  grid_size(10, 10)]).
+
+
+fsi(ReservedIO,Grid,NO,H,V,Sofar,ID,[shape_lib|NO],ReservedIO,Points,Grid,SofarOut,NextScanPoints):-
+   findall(Lib,in_shape_lib(Lib),Reserved),
+   proccess_overlap_reserved(ID,H,V,Reserved,Sofar,SofarOut,Points,NextScanPoints,_Unreserved,_StillReserved),
+   intersection(SofarOut,Sofar,_Intersected,LeftOverA,_LeftOverB),
+   as_debug(8,print_Igrid(H,V,'shape_lib'+ID,LeftOverA,[])),!.
+
+
 fsi(StillReserved,Grid,NO,H,V,Sofar,ID,[use_reserved|NO],Reserved,Points,Grid,SofarOut,NextScanPoints):-
    length(Reserved,LR), !, LR < 60, 
    proccess_overlap_reserved(ID,H,V,Reserved,Sofar,SofarOut,Points,NextScanPoints,_Unreserved,StillReserved),
@@ -283,22 +308,27 @@ cycle_s(Reserved,_GH,_GV,Sofar,_ID,_Options,Reserved,Points,_Grid,Sofar,Points).
 
 
 default_i_options([
-  fourway,
-  solid(squares), 
-  squares, diamonds, all, polygs,
-  hv_line(v), hv_line(h),
-  dg_line(u),dg_line(d),
-  connect(hv_line(h)),
-  connect(hv_line(v)),
+  shape_lib,
   use_reserved,
-  CS,
+  fourway,
+  %solid(squares),
+  %all,
+  %squares, diamonds, 
+  % polygs,
+  %hv_line(v), hv_line(h),
+  %dg_line(u),dg_line(d),
+  %CS,
+  all,
+  connect(hv_line(h)),
+  connect(hv_line(v)),  
   % line(_),dg_line(_),
   % release_points, all,
   %into_single_hidden,oldway
   %retain(solid(squares)),
    % shapes,
   %into_single_hidden,
-  polygs]):- get_cycle_shapes(CS).
+  all
+  ]). % :- get_cycle_shapes(CS).
 
 get_cycle_shapes(
 cycle_shapes([

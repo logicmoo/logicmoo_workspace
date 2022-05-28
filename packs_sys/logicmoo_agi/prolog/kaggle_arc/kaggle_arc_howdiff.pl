@@ -120,7 +120,7 @@ print_list_of(N,O):-
   maplist(print_info,O).
 
 print_info(A):- is_grid(A),print_grid(A).
-print_info(A):- is_object(A), o2g(A,G), asserta(g2o(G,A)), ignore(debug_indiv(A)).
+print_info(A):- is_object(A), ignore(debug_indiv(A)).
 print_info(A):- is_group(A),debug_indiv(A).
 print_info(A):- into_obj(A,Obj),print_info(Obj).
 print_info([]):-!.
@@ -219,7 +219,7 @@ dislike_points(obj(I)):-!,dislike_points(I).
 dislike_points(I):- is_list(I),dislike_points1(L),forall(member(E,L),member(E,I)).
 
 %dislike_points1([object_shape(dot),grid_size(H,V)]):- freeze(H, freeze(V, (HV is H * V, HV > 49))).
-dislike_points1([colors([color_count(BG, _)]),object_shape(polygon)]):- freeze(BG,is_black_or_bg(BG)).
+dislike_points1([colors([cc(BG, _)]),object_shape(polygon)]):- freeze(BG,is_black_or_bg(BG)).
 
 
 uncomparable(term,grid).
@@ -243,7 +243,7 @@ no_diff(in,out).
 simular([],_,_,[]):- !.
 simular(loc_xy=Where,I,O,object_has_moved(Where)):-  
   \+ (mass(O,OC), OC < 6) ,
-  \+ (colors(O,[color_count(BG, _)|_]),is_black_or_bg(BG)),
+  \+ (colors(O,[cc(BG, _)|_]),is_black_or_bg(BG)),
   object_indv_id(I,Tst,_Id1), \+ object_indv_id(O,Tst,_Id2).
 
 
@@ -349,7 +349,7 @@ changed_by(mass,grow).
 changed_by(localpoints,reshape_and_recolor).
 changed_by(rotation,rotate).
 changed_by(colors,repaint).
-changed_by(visual_hw,copy).
+changed_by(visual_hv,copy).
 
 
 :- style_check(+singleton).

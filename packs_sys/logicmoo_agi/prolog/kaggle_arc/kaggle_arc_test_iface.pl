@@ -51,6 +51,7 @@ fav(X,[]):- clause(fav(X),true).
 %fav(t('db3e9e38'),[lmDSL([flipV,C1=orange,C2=blue,[],flipV]).
 %fav(t(_),[lmDSL([fillFromBorder(none,yellow)])]).
 
+fav(t('1b60fb0c'),[]).
 fav(t('25d487eb'),[lmDSL([rocketship])]).
 fav(t('3631a71a'),[lmDSL([overlay_each_pattern])]).
 fav(t('1b60fb0c'),[learn([find_damage_to_input,find_center,fraction_evenly_to_four,map_slices_upon_themselves]),lmDSL([new_things_are_a_color,fix_image])]).

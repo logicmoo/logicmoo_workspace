@@ -300,7 +300,7 @@ clip_quadrant(CRef,SXC,SXC,EXC,EYC,GN,H,V,SXQ4,SYQ4,EXQ4,EYQ4,G,Same,obj(OBJL)):
     [object_shape(quadrant(CRef,Same)),
      object_shape(pattern(CRef,SXC,SXC,EXC,EYC)),
      rotation(Same),
-     visual_hw(Width,Height),
+     visual_hv(Width,Height),
      loc_xy(SXQ4,SYQ4),
      globalpoints(GPoints),
      center_info(CRef,SXC,SXC,EXC,EYC) /*,
@@ -384,7 +384,7 @@ fix_the_fours(NewIndiv0s,NewIndiv2s):-
   must_det_l((
   predsort(sort_on(colored_pixel_count),NewIndiv0s,NewIndiv1s),
   maplist(object_grid,NewIndiv1s,Grids),
-  findall(size(H,V),(member(O,Grids),visual_hw(O,H,V)),Sizes),
+  findall(size(H,V),(member(O,Grids),visual_hv(O,H,V)),Sizes),
   sort(Sizes,SizesS),
   reverse(SizesS,[size(H,V)|_]),
   make_grid(H,V,Result),

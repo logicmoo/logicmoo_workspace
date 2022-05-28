@@ -19,7 +19,7 @@ wqs(writef(C,N)):- !, writef(C,N).
 wqs(call(C)):- !, call(C).
 wqs(pt(C)):- !, pt(C).
 wqs(q(C)):- !, write(' '), writeq(C).
-wqs(color_count(C,N)):- !, write(' color_count('),color_print(C,C),write(','), writeq(N), write(')').
+wqs(cc(C,N)):- !, write(' cc('),color_print(C,C),write(','), writeq(N), write(')').
 wqs(color_print(C,X)):- !, write(' '), color_print(C,X).
 
 wqs(X):- \+ compound(X),!, write(' '), write(X).
@@ -112,7 +112,7 @@ show_pair(IH,IV,OH,OV,Type,PairName,In,Out):-
   ignore(show_pair_I_info(NameIn,NameOut,In,Out)),!.
 
 show_pair_I_info(NameIn,NameOut,In,Out):- 
-  ((fail,is_group(In),is_group(Out))-> once(showdiff(In,Out));
+  ((is_group(In),is_group(Out))-> once(showdiff(In,Out));
     ignore((is_group(In),desc(wqnl(fav(NameIn)), debug_indiv(In)))),
     ignore((is_group(Out),desc(wqnl(fav(NameOut)), debug_indiv(Out))))),!.
 
@@ -158,7 +158,7 @@ print_equals(Name,json(JSON)):-!, print_equals(Name,JSON).
 print_equals(Name,trn=Y):- !, print_equals(Name,Y).
 print_equals(Name,X->Y):- !, print_equals(in(Name),X), print_equals(out(Name),Y).
 print_equals(colors,XY):-print_equals(cc,XY).
-print_equals(Name,color_count(C,N)):-print_equals(Name,cc(C,N)).
+print_equals(Name,cc(C,N)):-print_equals(Name,cc(C,N)).
 print_equals(Name,X=Y):- !, print_equals(Name=X,Y).
 %print_equals(Name,[H|L]):- !, maplist(print_equals(Name),[H|L]).
 print_equals(Name,Val):- is_list(Val),forall(nth0(N,Val,E),print_equals(Name:N,E)).
@@ -168,7 +168,7 @@ commawrite(S):- write(','),write(S).
 
 
 
-as_color(color_count(Count,Num),List):- color_name(Num,Name),wots(List,color_print(Num,Name=Count)).
+as_color(cc(Count,Num),List):- color_name(Num,Name),wots(List,color_print(Num,Name=Count)).
 better_value(V,List):- is_list(V), maplist(as_color,V,List).
 better_value([G|V],List):- 
   is_group([G|V]),

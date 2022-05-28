@@ -25,10 +25,10 @@ grid_dim(G,grid_size(H,W)):- grid_size(G,H,W).
 props_of_points(E,Ns):- findall(obj(Ps),member(obj(Ps),E),Ns).
 
 
-black_first(SK,[color_count(Z,CN)|BF]):- is_black(Z), select(color_count(Z,CN),SK,BF),!.
-black_first(BF,[color_count(Z,0.0)|BF]):- is_black(Z).
+black_first(SK,[cc(Z,CN)|BF]):- is_black(Z), select(cc(Z,CN),SK,BF),!.
+black_first(BF,[cc(Z,0.0)|BF]):- is_black(Z).
 
-no_black(SK,BF):-select(color_count(Z,_),SK,BF),is_black(Z),!.
+no_black(SK,BF):-select(cc(Z,_),SK,BF),is_black(Z),!.
 no_black(SK,BF):-select(Z,SK,BF),is_black(Z),!.
 no_black(BF,BF).
 
@@ -45,7 +45,7 @@ unique_colors(G,UC):- pixel_colors(G,GF),sort(GF,UC).
 colors_count_size(G,UC):- colors(G,GS),length(GS,UC).
 
 into_cc(SK,BFO):- maplist(into_cc1,SK,BFO).
-into_cc1(N-C,color_count(Nm,CN)):- CN is float(N),color_name(C,Nm).
+into_cc1(N-C,cc(Nm,CN)):- CN is float(N),color_name(C,Nm).
 
 colors_count_black_first(G,BF):- colors(G,SK),black_first(SK,BF).
 colors_count_no_black(G,BF):- colors(G,SK),no_black(SK,BF).
@@ -59,7 +59,7 @@ move_rightof_itself(I,M):- move_dir_itself(1,e,I,M).
 
 %decl_pt(move_dir_itself(int,dir,object,+)).
 %move_dir_itself(N,D,I,M):- check_args(move_dir_itself(N,D,I,M),MaybeCut),(MaybeCut==t->!;true).
-move_dir_itself(N,D,I,M):- is_object(I),visual_hw(I,SX,SY), move_scale_dir_object(SX,SY,N,D,I,M).
+move_dir_itself(N,D,I,M):- is_object(I),visual_hv(I,SX,SY), move_scale_dir_object(SX,SY,N,D,I,M).
 move_dir_itself(N,D,L,LM):- is_group(L),!,maplist(move_dir_itself(N,D),L,LM).
 move_dir_itself(N,D,I,O):- into_group(I,M),M\=@=I,!,move_dir_itself(N,D,M,O).
 
@@ -280,8 +280,8 @@ gravity(N,s,Grid,GridNew):-!,flipV(Grid,FlipV),gravity(N,n,FlipV,GridM),flipV(Gr
 gravity(N,w,Grid,GridNew):-!,rot90(Grid,GridRot),gravity(N,n,GridRot,GridM),rot270(GridM,GridNew).
 gravity(N,e,Grid,GridNew):-!,rot270(Grid,GridRot),gravity(N,n,GridRot,GridM),rot90(GridM,GridNew).
 
-compute_max_color(Color1,Grid,Grid):- colors_count_no_black(Grid,[color_count(Color1,_)|_]).
-compute_next_color(Color1,Grid,Grid):- colors_count_no_black(Grid,[_,color_count(Color1,_)|_]).
+compute_max_color(Color1,Grid,Grid):- colors_count_no_black(Grid,[cc(Color1,_)|_]).
+compute_next_color(Color1,Grid,Grid):- colors_count_no_black(Grid,[_,cc(Color1,_)|_]).
 
 subst_color(Color1,Color2,Grid,NewGrid):- notrace((color_code(Color1,Num1),color_code(Color2,Num2),subst(Grid,Num1,Num2,NewGrid))).
 blacken_color(Color1,Grid,NewGrid):- black_cell(Cell), subst_color(Color1,Cell,Grid,NewGrid).
@@ -299,9 +299,11 @@ unbind_color0(Num1,Num1,_):-!.
 unbind_color0(_,Num1,Num1).
 
 %colors_to_vars(G,GridNew):- is_grid(G,Grid),G\=@=Grid,!,colors_to_vars(Grid,GridNew).
-colors_to_vars(Grid,GridO):- unique_colors(Grid,Colors),
+colors_to_vars(Grid,GridO):- colors_to_vars(_,Grid,GridO).
+
+colors_to_vars(V,Grid,GridO):- unique_colors(Grid,Colors),
   (is_grid(Grid)-> maplist(grid_color_code,Colors,B) ; color_code(Colors,B)),
-  subst_list_vars(B,_,Grid,GridO).
+  subst_list_vars(B,V,Grid,GridO).
 
   subst_list_vars([],[],A,A):-!.
   subst_list_vars([F|FF],[R|RR],S,D):-     
@@ -408,21 +410,21 @@ assert_id_grid_cells(ID,Grid):-
 % Random Non Blk Eles
 first_color(Grid1,C1):- sub_term(C1,Grid1),is_color(C1), \+ is_bgc(C1).
 
-% Grid visual_hw/resize
+% Grid visual_hv/resize
 make_lengths(N,L):- length(L,N).
 
 get_inf(30).
 points_range(Points,LoH,LoV,HiH,HiV,H,V):- get_inf(Inf), calc_range(Inf,Inf,-Inf,-Inf,-Inf,-Inf,Points,LoH,LoV,HiH,HiV,H,V).
 
 points_range(Points,offset_ranges(LoH,LoV,HiH,HiV,H,V)):- get_inf(Inf),calc_range(Inf,Inf,-Inf,-Inf,-Inf,-Inf,Points,LoH,LoV,HiH,HiV,H,V).
-% visual_hw(Points,visual_hw(H,V)):- points_range(Points,_LoH,_LoV,_HiH,_HiV,H,V).
+% visual_hv(Points,visual_hv(H,V)):- points_range(Points,_LoH,_LoV,_HiH,_HiV,H,V).
 
 close_color(brown,orange).
 close_color(green,cyan).
 
 %grid_size(Points,H,V):- is_dict(Points),!,Points.grid_size=grid_size(H,V).
 grid_size(ID,H,V):- is_grid_size(ID,H,V),!.
-%grid_size(Grid,H,V):- notrace(is_object(Grid)), !, visual_hw(Grid,H,V).
+%grid_size(Grid,H,V):- notrace(is_object(Grid)), !, visual_hv(Grid,H,V).
 grid_size(Grid,H,V):- is_grid(Grid),grid_size_nd(Grid,H,V),!.
 grid_size(Points,H,V):- pmember(grid_size(H,V),Points),ground(H-V),!.
 grid_size([G|Grid],H,V):- is_list(G),is_list(Grid), grid_size_nd([G|Grid],H,V),!.
@@ -433,7 +435,7 @@ grid_size(_,30,30).
 calc_range(WLoH,WLoV,WHiH,WHiV,WH,WV,Var,WLoH,WLoV,WHiH,WHiV,WH,WV):- var(Var),!.
 calc_range(WLoH,WLoV,WHiH,WHiV,WH,WV,grid_size(IH,IV),WLoH,WLoV,WHiH,WHiV,H,V):- !,
   max_min(WV,IV,V,_),max_min(WH,IH,H,_).
-%calc_range(WLoH,WLoV,WHiH,WHiV,WH,WV,visual_hw(IH,IV),WLoH,WLoV,WHiH,WHiV,H,V):- !,
+%calc_range(WLoH,WLoV,WHiH,WHiV,WH,WV,visual_hv(IH,IV),WLoH,WLoV,WHiH,WHiV,H,V):- !,
 %  max_min(WV,IV,V,_),max_min(WH,IH,H,_).
 calc_range(WLoH,WLoV,WHiH,WHiV,WH,WV,[E|L],LoH,LoV,HiH,HiV,H,V):- !,
   calc_range(WLoH,WLoV,WHiH,WHiV,WH,WV,E,MLoH,MLoV,MHiH,MHiV,MH,MV),
@@ -634,9 +636,21 @@ xform_cache(rot45,5,5,[ [ A, B, C, D, E],
                             [ F, L, Q, R, X],
                             [ K, P, U, V, W]]).
 
+into_grid(O,G,cvt_grid_obj(O)):- is_object(O), object_grid(O,G),!.
+
+cvt_grid_obj(O,G,NewO):- 
+  object_indv_id(O,ID,_Iv),
+  grid_size(G,H,V),  
+  globalpoints(G,Points),
+  make_indiv_object(ID,H,V,Points,PartObj),
+  transfer_props(O,[loc_xy,colors,object_shape],PartObj,NewO),!.
+
+
+
+xform(Rot90,Grid,NewGrid):- \+ is_grid(Grid),into_grid(Grid,RealGrid,Rev),!,xform(Rot90,RealGrid,NewGridR),call(Rev,NewGridR,NewGrid).
 xform(Rot90,Grid,NewGrid):- grid_size(Grid,H,V),apply_transformer(Rot90,H,V,Grid,NewGrid).
 apply_transformer(Name,H,V,G,O):-
-  get_xformer(Name,H,V,In,Out),
+  get_xformer(Name,H,V,In,Out),!,
   G=In,O=Out.
 
 get_xformer(Name,H,V,In,Out):- xform_cache(Name,H,V,In,Out),!.
@@ -653,7 +667,7 @@ flipH( Grid,NewGrid):- xform(xflipH,Grid,NewGrid).
 flipV( Grid,NewGrid):- xform(xflipV,Grid,NewGrid).
 flipHV( Grid,NewGrid):- xform(xflipHV,Grid,NewGrid).
 
-xrot90( Grid,NewGrid):-  xrot180(Grid,GridM),xrot270(GridM,NewGrid),!. 
+xrot90( Grid,NewGrid):-  xrot180(Grid,GridM),xrot270(GridM,NewGrid). 
 xrot180(Grid,NewGrid):- xflipH(Grid,RowRev),xflipV(RowRev,NewGrid).
 xrot270(Grid,NewGrid):- get_colums(Grid,NewGrid),!.
 xflipH(Grid,FlipH):- maplist(reverse,Grid,FlipH).

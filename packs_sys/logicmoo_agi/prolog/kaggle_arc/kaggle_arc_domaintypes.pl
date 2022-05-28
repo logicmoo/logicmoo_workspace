@@ -18,22 +18,25 @@ allow_dirs(Type,X):- subtypes(Type,SType),allow_dir(SType,List),member(X,List).
 allow_dir(hv_line(h),[e,w]). allow_dir(hv_line(v),[n,s]). allow_dir(dg_line(u),[ne,sw]). allow_dir(dg_line(d),[nw,se]).
 
 
-allow_dir(squares,[n,s,e,w]). allow_dir(polygs,[n,s,e,w,nw,sw,se,ne,n,w,s,e]).
+allow_dir(squares,[n,s,e,w]). 
 allow_dir(diamonds,[nw,sw,se,ne]).
-allow_dir(all,[nw,sw,se,ne,n,w,s,e]).
+allow_dir(polygs,[n,s,e,w,nw,sw,se,ne]).
+allow_dir(all,   [nw,sw,se,ne,n,w,s,e]).
 %circles, dots, , rays, walls
 
 shape_filter(X,squares):- free_cell(X).
 shape_filter(X,polygs):- non_free_fg(X).
 
 polyg(border(square),[hv_line(H),hv_line(V),hv_line(H),hv_line(V)]):- h_v(H,V).
-polyg(border(diamond),[dg_line(H),dg_line(V),dg_line(H),dg_line(V)]):- h_v(H,V).
+polyg(border(diamond),[dg_line(H),dg_line(V),dg_line(H),dg_line(V)]):- u_d(H,V).
 
 h_v(h,v).
+u_d(u,d).
 
 subtypes(C,C).
 subtypes(C,S):- subClassOf(S,C).
 subClassOf(hv_line(D),line(D)).
+subClassOf(dg_line(D),line(D)).
 subClassOf(dg_line(D),line(D)).
 
 meets_indiv_criteria(_,_).
@@ -71,7 +74,7 @@ is_lpoint(P):- is_point(P), \+ is_gpoint(P).
 is_points_list([G|L]):- !, is_point(G),maplist(is_point,L).
 
 
-is_bg_indiv(O):- colors(O,[color_count(C,CC)]),CC>0,is_bgc(C).
+is_bg_indiv(O):- colors(O,[cc(C,CC)]),CC>0,is_bgc(C).
 
 
 is_not_cpoint(I):- \+ is_cpoint(I).
@@ -113,7 +116,7 @@ is_object(O):- compound(O), O = obj(Props), is_list(Props).
 is_group([G|V]):- is_object(G),is_list(V),maplist(is_object,V).
 
 is_point_obj(O,Color,Point):- nonvar(O),O= Color-Point,!.
-is_point_obj(O,Color,Point):- is_object(O),visual_hw(O,H,V), !, hv(H,V)==hv(1,1),
+is_point_obj(O,Color,Point):- is_object(O),visual_hv(O,H,V), !, hv(H,V)==hv(1,1),
   globalpoints(O,[Color-Point]),!.
 
 
@@ -165,7 +168,7 @@ ap(diagonal_line). ap(horizontal_line). ap(vertical_line). ap(open_edge). ap(con
 
 ap(rotated45). ap(resizes). ap(diamond).
 apv(square(len)). apv(round(h,w)). apv(triangle). apv(rectangular(h,w)). apv(polygon(sides)).
-apv(shape(num)).  apv(facing(dir)). apv(min(n)). apv(max(n)).  apv(visual_hw(h,w)). apv(loc_xy(h,w)). 
+apv(shape(num)).  apv(facing(dir)). apv(min(n)). apv(max(n)).  apv(visual_hv(h,w)). apv(loc_xy(h,w)). 
 apv(scale(n)).  apv(ext_key(k)). apv(io_bud(k)). apv(linked_bud(k)).
 
 apv(points_old([])).
