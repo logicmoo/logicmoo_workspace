@@ -51,8 +51,10 @@ fav(X,[]):- clause(fav(X),true).
 %fav(t('db3e9e38'),[lmDSL([flipV,C1=orange,C2=blue,[],flipV]).
 %fav(t(_),[lmDSL([fillFromBorder(none,yellow)])]).
 
-fav(v('e41c6fd3'),[lmDSL([(iz(X,spaceship),color(X,cyan),vert_pos(X,spaceship))-->iz(Y,spaceship),vert_pos(Y,spaceship)])]).
 fav(t('25d487eb'),[lmDSL([rocketship])]).
+fav(t('3631a71a'),[lmDSL([overlay_each_pattern])]).
+fav(t('1b60fb0c'),[learn([find_damage_to_input,find_center,fraction_evenly_to_four,map_slices_upon_themselves]),lmDSL([new_things_are_a_color,fix_image])]).
+fav(v('e41c6fd3'),[lmDSL([(iz(X,spaceship),color(X,cyan),vert_pos(X,spaceship))-->iz(Y,spaceship),vert_pos(Y,spaceship)])]).
 fav(t(c444b776),[detect_grid]).
 fav(v('94133066'),[lmDSL([largest_indiv,trim_to_rect,rot90,flipV])]).
 fav(v('762cd429'),[]).
@@ -86,7 +88,6 @@ fav(t('6cf79266'),[learn([find(nines),remove_them]),lmDSL(reverse_learned)]).
 fav(t('6150a2bd'),[lmDSL([rot180])]).
 fav(v(de493100),[-mask_match,-shape_match,-rotation_match,-color_match,evaluation,'(4, 1)']).
 fav(v(f9d67f8b),[lmDSL([overlay_each_pattern])]).
-fav(t('3631a71a'),[lmDSL([overlay_each_pattern])]).
 fav(t('9d9215db'),[lmDSL([overlay_each_pattern])]).
 fav(t('810b9b61'),[lmDSL([(iz(X,rectangle),iz(X,hollow),iz(X,thick1),iz(X,noexit))-->color(X,green)])]).
 fav(v('1d398264'),[lmDSL([(iz(X,keypad),iz(X,multicolor),centerof(X,C)-->sunburst(C))])]).
@@ -113,8 +114,6 @@ fav(t('47c1f68c'),[lmDSL([compute_max_color(C1),compute_next_color(C2),
 fav(t('9ecd008a'),[learn([find_damage_to_input,find_center,fraction_evenly_to_four,map_slices_upon_themselves]),
     lmDSL([indiv_is_one_hole,fix_image,selected_indiv,trim_to_rect])]).
 
-fav(t('1b60fb0c'),[learn([find_damage_to_input,find_center,fraction_evenly_to_four,map_slices_upon_themselves]),
-    lmDSL([new_things_are_a_color,fix_image])]).
 
 fav(t('9aec4887'),[indiv(color_blind),todo_sol([find_individuals([hollow,inside([squares])],I),rest_indivdual(Is),put_inside(Is,I),
   if_edge_strong([color=C]),touch(Is,Point),set_color(C,Point)])]).

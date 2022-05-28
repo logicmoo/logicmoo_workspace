@@ -646,10 +646,17 @@ get_xformer(Name,H,V,In,Out):-
    asserta(xform_cache(Name,H,V,In,Out)),!.
 
 %srot90V,flipV
-rot90( Grid,NewGrid):-  rot180(Grid,GridM),rot270(GridM,NewGrid),!. 
-rot180(Grid,NewGrid):- flipH(Grid,RowRev),flipV(RowRev,NewGrid).
-rot270(Grid,NewGrid):- get_colums(Grid,NewGrid),!.
-flipH(Grid,FlipH):- maplist(reverse,Grid,FlipH).
-flipV(Grid,FlipV):- reverse(Grid,FlipV).
-flipHV(Grid,FlipHV):-flipH(Grid,FlipH),flipV(FlipH,FlipHV),!.
+rot90( Grid,NewGrid):- xform(xrot90,Grid,NewGrid).
+rot180( Grid,NewGrid):- xform(xrot180,Grid,NewGrid).
+rot270( Grid,NewGrid):- xform(xrot270,Grid,NewGrid).
+flipH( Grid,NewGrid):- xform(xflipH,Grid,NewGrid).
+flipV( Grid,NewGrid):- xform(xflipV,Grid,NewGrid).
+flipHV( Grid,NewGrid):- xform(xflipHV,Grid,NewGrid).
+
+xrot90( Grid,NewGrid):-  xrot180(Grid,GridM),xrot270(GridM,NewGrid),!. 
+xrot180(Grid,NewGrid):- xflipH(Grid,RowRev),xflipV(RowRev,NewGrid).
+xrot270(Grid,NewGrid):- get_colums(Grid,NewGrid),!.
+xflipH(Grid,FlipH):- maplist(reverse,Grid,FlipH).
+xflipV(Grid,FlipV):- reverse(Grid,FlipV).
+xflipHV(Grid,FlipHV):-xflipH(Grid,FlipH),xflipV(FlipH,FlipHV),!.
 

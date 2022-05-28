@@ -54,9 +54,9 @@ arc(Name):- forall(arc1(Name),true).
 
 arc1(TName):-    
  locally(set_prolog_flag(gc,true),
-  (fix_test_name(TName,Name,ExampleNum), 
-  set_flag(indiv,0),
+  (fix_test_name(TName,Name,ExampleNum),   
   kaggle_arc(Name,ExampleNum,In,Out),
+  set_flag(indiv,0),
   run_arc_io(Name,ExampleNum,In,Out))).
 
 run_arc_io(Name,ExampleNum,In,Out):-
@@ -105,10 +105,10 @@ try_arc_io(CName,Name,ExampleNum,In,Out):-
   notrace(show_pair(IH,IV,OH,OV,common,PairName,SharedIn,SharedOut)),!,
   
 
-  reuse_indivs(SharedIn,SharedOut,BetterA,BetterB),
+  nop((reuse_indivs(SharedIn,SharedOut,BetterA,BetterB),
   ( (SharedOut\==BetterB ; SharedIn\== BetterA) ->
     show_pair(IH,IV,OH,OV,better,PairName,BetterA,BetterB);
-     writeln('nothing better')),
+     writeln('nothing better')))),
 
   nop((
 

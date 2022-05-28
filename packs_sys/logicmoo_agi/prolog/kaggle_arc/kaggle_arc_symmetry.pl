@@ -178,7 +178,48 @@ row_color_changes(PrevCh,H,[N|List],Res):- var(N),!,row_color_changes(PrevCh,H,L
 row_color_changes(PrevCh,H,[N|List],Res):- H\==N, row_color_changes(PrevCh+1,N,List,Res).
 row_color_changes(PrevCh,H,[N|List],Res):- H==N,  row_color_changes(PrevCh,N,List,Res).
 
+append_n_times(PL,0,PL):- !.
+append_n_times(PL,N,Rest):- N2 is N -1,
+    append_n_times(PL,N2,Was), append(PL,Was,Rest).
+   
+:- dynamic(c_n_pattern_l/4).
+c_n_pattern:- \+ \+ (c_n_pattern_l(I,PL,Full,F),c_n_pattern_l(I,PL,Full,F)),!.
+c_n_pattern:- 
+ forall(
+  (between(4,15,P),length(PL,P),append_n_times(PL,8,Full)),
+  assert(c_n_pattern_l(P,PL,Full,'->->->->'))),
+ forall(
+  (between(2,10,P),length(L,P),reverse(L,R),append(L,R,PL),append_n_times(PL,15,Full)),
+   assert(c_n_pattern_l(P,PL,Full,'<><><><>'))),
+  %(between(2,10,P),length(PL,P),repeat_until_30(L,P,Full)),
+  % assert(c_n_pattern_l(P,PL,Full,'122333'))),
+ listing(c_n_pattern_l/4).
+    
+:- c_n_pattern.
+
+:- dynamic(c_n_reverse_l/7).
+c_n_reverse:- \+ \+ (c_n_reverse_l(I,C,P,RowO,PLL,CL,RL),c_n_reverse_l(I,C,P,RowO,PLL,CL,RL)),!.
+c_n_reverse:- 
+                      forall((
+                      between(0,5,C),length(CL,C),
+
+                      between(0,10,P),length(PL,P),
+                      between(10,10,L),length(LL,L),
+                      I is P+L,
+                      once((append(PL,LL,PLL),
+                      reverse(PLL,RL),
+                      append([PLL,CL,RL],Row),
+                      numbervars(Row,0,_),
+                      append(Row,_,RowO)))),
+        assert(c_n_reverse_l(I,C,P,RowO,PLL,CL,RL))),
+                      listing(c_n_reverse_l/7).
+
+:- c_n_reverse.
+
 symetric_row(I,C,Row,L):- append(C,[E1|RR],Right), append(L,Right,Row),reverse(L,[E1|LL]),aligned_rows(LL,RR),length(L,I).
+% symetric_row(L,CL,Row,I):-  append(Row,_Rest,RowO), c_n_reverse_l(I,_C,_P,RowO,L,CL,_R).
+
+% symetric_row(L,C,Row,I):- append(C,[E1|RR],Right), append(L,Right,Row),reverse(L,[E1|LL]),aligned_rows(LL,RR),length(L,I).
 
 symmetric_lrw(_I,_C,[],_GL):- !. 
 symmetric_lrw(I,C,G,GL):- maplist_until(symetric_row(I,C),G,GL),
@@ -262,8 +303,8 @@ clip_quadrant(CRef,SXC,SXC,EXC,EYC,GN,H,V,SXQ4,SYQ4,EXQ4,EYQ4,G,Same,obj(OBJL)):
      visual_hw(Width,Height),
      loc_xy(SXQ4,SYQ4),
      globalpoints(GPoints),
-     center_info(CRef,SXC,SXC,EXC,EYC),
-     grid(LikeQ4)],OBJL).
+     center_info(CRef,SXC,SXC,EXC,EYC) /*,
+     grid(LikeQ4)*/ ],OBJL).
   
 
 clip_ray(CRef,SXC,SXC,EXC,EYC,GN,H,V,SXQ4,SYQ4,EXQ4,EYQ4,G,Same,OBJ):-
@@ -286,6 +327,7 @@ nop((
 grid_to_3x3_objs(Grid,NewIndiv4s):-
   catch(call_with_time_limit(2,symetric_xy_3x3(Grid,Image9x9)),E, (wdmsg(E),fail)),
   %catch(symetric_xy_3x3(Grid,Image9x9),E, (wdmsg(E),fail)),
+  %rtrace(symetric_xy_3x3(Grid,Image9x9)),
   flatten(Image9x9,Flat),
   include(nonvar,Flat,NewIndiv1s),
   fix_the_fours(NewIndiv1s,NewIndiv4s).
@@ -350,7 +392,7 @@ fix_the_fours(NewIndiv0s,NewIndiv2s):-
   %maplist(print_grid,Grids), 
  % duplicate_term(Grids,GridsP),
   consensus(Grids,H,V,Result),
-  format('~N'),writeln('Training hard...'),
+  format('~N'),writeln('Training hard...'),!,
   %print_grid(Result), dmsg(result),
   localpoints(Result,RPoints),  
   %nth0(0,NewIndiv1s,First),
@@ -358,7 +400,7 @@ fix_the_fours(NewIndiv0s,NewIndiv2s):-
   %set_local_points(RPoints,First,RPointsF),
   %wdmsg(pointsEndSet(0)=RPointsF),
   %wdmsg(pointsBeginSet(4)=NewIndiv1s),
-  maplist(set_local_points(RPoints),NewIndiv1s,NewIndiv2s),
+  maplist(set_local_points(RPoints),NewIndiv1s,NewIndiv2s),!,
   %wdmsg(pointsEndSet(4)=NewIndiv2s),
   %format('~N'),
   %maplist(object_grid,NewIndiv2s,NewGrids), maplist(print_grid,NewGrids),

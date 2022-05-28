@@ -124,6 +124,7 @@ fsi(OUTReserved,OUTNewGrid,OUTOptions,H,V,Sofar,ID,Options,Reserved,Points,Grid,
   fail.
 
 fsi(StillReserved,Grid,NO,H,V,Sofar,ID,[use_reserved|NO],Reserved,Points,Grid,SofarOut,NextScanPoints):-
+   length(Reserved,LR), !, LR < 60, 
    proccess_overlap_reserved(ID,H,V,Reserved,Sofar,SofarOut,Points,NextScanPoints,_Unreserved,StillReserved),
    intersection(SofarOut,Sofar,_Intersected,LeftOverA,_LeftOverB),
    as_debug(9,print_Igrid(H,V,'use_reserved'+ID,LeftOverA,[])),!.
@@ -195,8 +196,9 @@ fsi(Reserved,Grid,NO,H,V,Sofar,ID,[fourway|NO],Reserved,Points,Grid,OutInvdivS,N
     overwrite_use_so_far(FourWay1s,Sofar,UseSofar),
     append(UseSofar,FourWay1s,OutInvdivS),
     as_debug(9,writeln('fourway-found')),
+    %OutInvdivS=[E|_],print_grid(E),
     as_debug(9,print_Igrid(H,V,'4-way'+ID,FourWay1s,[])),
-    remove_global_points([UseSofar,FourWay1s],Points,NextScanPoints).
+    remove_global_points([UseSofar,FourWay1s],Points,NextScanPoints),!.
 
 
 overwrite_use_so_far(FourWay1s,Sofar,UseSofar):-
@@ -204,7 +206,7 @@ overwrite_use_so_far(FourWay1s,Sofar,UseSofar):-
 overwrite_use_so_far(_FourWay1s,Sofar,Sofar).
 
 
-fsi(Reserved,Grid,NO,H,V,Sofar,ID,[solid(squares)|NO],Reserved,_Points,Grid,AllOUT,NextScanPoints):- !,
+fsi(Reserved,Grid,NO,H,V,Sofar,ID,[solid(squares)|NO],Reserved,_Points,Grid,AllOUT,NextScanPoints):- !, fail,
   globalpoints(Grid,NewGPoints),
   grid_to_segs(Grid,Segs),
   seg_squares(Segs,Squares),
@@ -227,10 +229,10 @@ fsi(Reserved,Grid,[connect(hv_line(HV))|NO],H,V,Sofar,ID,[connect(hv_line(HV))|N
   first_gpoint(HV1,C-P1), last_gpoint(HV2,C-P2),
   is_adjacent_point(P1,Dir,MP), is_adjacent_point(MP,Dir,P2),
   hv_value(Grid,MC-MP,_,_), nop(MC\==C),
-  combine_objs(ID,H,V,HV1,HV2,[object_shape(hv_line(HV)),C-MP],Sofar,IndvList).
+  combine_2objs(ID,H,V,HV1,HV2,[object_shape(hv_line(HV)),C-MP],Sofar,IndvList).
 
 
-combine_objs(ID,H,V,HV1,HV2,IPROPS,Sofar,IndvList):-
+combine_2objs(ID,H,V,HV1,HV2,IPROPS,Sofar,IndvList):-
   globalpoints(HV1,GP1), globalpoints(HV2,GP2),
   select(HV1,Sofar,Sofar1), select(HV2,Sofar1,Sofar2),
   append(GP1,GP2,Points), append(IPROPS,Points,Info),
@@ -281,26 +283,26 @@ cycle_s(Reserved,_GH,_GV,Sofar,_ID,_Options,Reserved,Points,_Grid,Sofar,Points).
 
 
 default_i_options([
-  solid(squares), 
   fourway,
-  CS,
-  use_reserved,
+  solid(squares), 
+  squares, diamonds, all, polygs,
+  hv_line(v), hv_line(h),
+  dg_line(u),dg_line(d),
   connect(hv_line(h)),
   connect(hv_line(v)),
+  use_reserved,
   CS,
   % line(_),dg_line(_),
   % release_points, all,
   %into_single_hidden,oldway
   %retain(solid(squares)),
-  diamonds, shapes,
-  into_single_hidden,
-  polygs,dots]):- get_cycle_shapes(CS).
+   % shapes,
+  %into_single_hidden,
+  polygs]):- get_cycle_shapes(CS).
 
 get_cycle_shapes(
 cycle_shapes([
-  squares,
-  hv_line(v), hv_line(h),
-  dg_line(u),dg_line(d),all])).
+])).
 
 %tiny_i_options([call(set_bgc(zero)),dots,line(_),all,into_single_hidden]).
 

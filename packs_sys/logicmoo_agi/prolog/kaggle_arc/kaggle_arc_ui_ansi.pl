@@ -112,7 +112,7 @@ show_pair(IH,IV,OH,OV,Type,PairName,In,Out):-
   ignore(show_pair_I_info(NameIn,NameOut,In,Out)),!.
 
 show_pair_I_info(NameIn,NameOut,In,Out):- 
-  ((is_group(In),is_group(Out))-> once(showdiff(In,Out));
+  ((fail,is_group(In),is_group(Out))-> once(showdiff(In,Out));
     ignore((is_group(In),desc(wqnl(fav(NameIn)), debug_indiv(In)))),
     ignore((is_group(Out),desc(wqnl(fav(NameOut)), debug_indiv(Out))))),!.
 
@@ -335,7 +335,7 @@ i_glyph(N,Glyph):- atom(N),atom_codes(N,[Code|_]),name(Glyph,[Code]).
 i_glyph(Code,Glyph):- integer(Code), Code> 255, !,name(Glyph,[Code]).
 i_glyph(N,Glyph):- integer(N),i_sym(N,Code),name(Glyph,[Code]).
 
-i_sym(N2,Code):- integer(N2),!, N is N2 * 5 , change_code(N,NN), i_syms(Codes),nth0(NN,Codes,Code),!.
+i_sym(N2,Code):- integer(N2),!, N is N2 * 7 , change_code(N,NN), i_syms(Codes),nth0(NN,Codes,Code),!.
 i_sym(N2,Code):- atom(N2),name(N2,[C|_]),!,i_sym(C,Code).
 i_sym(N,Code):- var(N), Code = 63.
 %change_code(N,M):- M is N * 100,!.

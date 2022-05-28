@@ -289,10 +289,11 @@ combine_perfects(IndvS,[IO|IndvSO]):-
   combine_perfects(IndvS2,IndvSO).
 combine_perfects(IndvSO,IndvSO).
 
-
+%combine_objects(I,I):-!.
 combine_objects(IndvS,[obj(IO)|IndvSO]):- 
-  select(obj(I),IndvS,IndvS1),select(obj(O),IndvS1,IndvS2),
-  compare_objprops(I,O,perfect),
+  select(obj([A,B,C,D|I]),IndvS,IndvS1),
+  select(obj([A,B,C,D|O]),IndvS1,IndvS2),
+  compare_objprops(perfect,I,O),
   override_list(I,O,IO),
   combine_objects(IndvS2,IndvSO).
 combine_objects(IndvSO,IndvSO).
