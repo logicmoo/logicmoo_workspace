@@ -158,7 +158,7 @@ print_equals(Name,json(JSON)):-!, print_equals(Name,JSON).
 print_equals(Name,trn=Y):- !, print_equals(Name,Y).
 print_equals(Name,X->Y):- !, print_equals(in(Name),X), print_equals(out(Name),Y).
 print_equals(colors,XY):-print_equals(cc,XY).
-print_equals(Name,cc(C,N)):-print_equals(Name,cc(C,N)).
+%print_equals(Name,cc(C,N)):-print_equals(Name,cc(C,N)).
 print_equals(Name,X=Y):- !, print_equals(Name=X,Y).
 %print_equals(Name,[H|L]):- !, maplist(print_equals(Name),[H|L]).
 print_equals(Name,Val):- is_list(Val),forall(nth0(N,Val,E),print_equals(Name:N,E)).
