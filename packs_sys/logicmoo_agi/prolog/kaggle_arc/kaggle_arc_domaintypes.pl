@@ -73,6 +73,9 @@ is_lpoint(P):- is_point(P), \+ is_gpoint(P).
 
 is_points_list([G|L]):- !, is_point(G),maplist(is_point,L).
 
+enum_colors(OtherColor):- named_colors(Colors),!,member(OtherColor,Colors).
+
+fill_color(Color,OtherColor):- enum_colors(OtherColor),Color\==OtherColor,is_color_no_bgc(OtherColor).
 
 is_bg_indiv(O):- colors(O,[cc(C,CC)]),CC>0,is_bgc(C).
 
@@ -104,10 +107,11 @@ is_gridoid(G):- is_list_of_gridoids(G).
 
 is_grid([[C|H]|R]):- notrace((is_grid_cell(C),is_list(H),is_list(R),
   length([C|H],L),
+  %maplist(is_grid_cell,H),
   maplist(is_row_len(L),R))).
 
 %is_object(H):- is_list(H),maplist(is_cpoint,H).
-is_grid_cell(C):- \+ is_list(C),  nop(var(C); is_color(C) ; ( C =  _-_)),!.
+is_grid_cell(C):- \+ is_list(C), (var(C); is_color(C) ; ( C =  _-_)),!.
 
 
 is_object(O):- compound(O), O = obj(Props), is_list(Props).
@@ -148,6 +152,12 @@ free_cell(C):- get_bgco(X),C==X.
 %trim_unused_vert_square(BG,GridR,GridO):- append(Grid,[Row],GridR),maplist(is_bg_or_var(BG),Row),trim_unused_vert_square(BG,Grid,GridO).
 %trim_unused_vert_square(_,G,G).*/
 
+enum_rotation(same).
+enum_rotation(rot90).
+enum_rotation(rot180).
+enum_rotation(rot270).
+enum_rotation(flipV).
+enum_rotation(flipH).
 
   
 ap(scotch_patterns). ap(rug_patterns). ap(rougue_like). ap(space_invaders).
@@ -249,4 +259,46 @@ l_shape(triangle,"
 o=ooo=o!").
 
 
+color_and_rotation(RedHammer,Hammer):-
+  all_colors(RedHammer,Hammer1),
+  all_rotations(Hammer1,Hammer).
 
+all_colors(RedHammer,Hammer):- change_color(RedHammer,Hammer).
+all_colors(RedHammer,RedHammer).
+
+change_color(RedHammer,Hammer):- 
+   color(RedHammer,CurrentColor),
+   fill_color(CurrentColor,OtherColor),
+   swap_colors(CurrentColor,OtherColor,RedHammer,Hammer).
+
+all_rotations(RedHammer,Hammer):- 
+  enum_rotation(ROT),
+  call(ROT,RedHammer,Hammer).
+
+the_hammer(RedHammer):- 
+  RedHammer = obj([mass(6), shape([point_01_01, point_01_02, point_01_03, point_02_01, point_02_02, point_03_02]), 
+  colors([cc(red, 6.0)]), localpoints([red-point_01_01, red-point_01_02, red-point_01_03, red-point_02_01, 
+  red-point_02_02, red-point_03_02]), visual_hv(3, 3), rotation(same), loc_xy(2, 5), 
+  changes([]), object_shape(rectangluar), object_shape(polygon), object_indv_id(t('1b60fb0c')*(trn+666)*out, 666), 
+  globalpoints([red-point_02_05, red-point_02_06, red-point_02_07, red-point_03_05, red-point_03_06, red-point_04_06]), 
+  grid_size(10, 10)]).
+
+
+in_shape_lib(LibObj):- 
+  in_grid_shape_lib(Shape,Grid,GrowthChart),
+  grid_size(Grid,H,V),
+  enum_scale(Scale),
+  atomic_list_concat([Shape,H,V,Scale],'_',ID),
+  scale_grid(Scale,GrowthChart,Grid,ScaledGrid),
+  localpoints(ScaledGrid,Points),
+  make_indiv_object(ID,H,V,[object_shape(Shape)|Points],LibObj).
+in_shape_lib(Hammer):- the_hammer(RedHammer),color_and_rotation(RedHammer,Hammer).
+  
+in_grid_shape_lib(Shape,Grid,GrowthChart):- enum_colors(Color), fill_color(Color,Fill), 
+   learned_color_inner_shape(Shape,Color,Fill,Grid,GrowthChart).
+
+%scale_grid(Scale,GrowthChart,Grid,ScaledGrid)
+scale_grid(1,_GrowthChart,Grid,Grid).
+
+
+enum_scale(1).

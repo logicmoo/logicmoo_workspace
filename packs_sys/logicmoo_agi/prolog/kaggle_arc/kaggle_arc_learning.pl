@@ -75,21 +75,39 @@ with_named_pair(learn,TestID,PairName,In,Out):- !,
   showdiff(SharedOut,SharedIn),
   ((wqnl(learned(TestID=PairName)),nl)).
 
+new_test_id(TestID):-
+  nb_setval(test_name,TestID),
+  set_flag(indiv,0),
+  nb_delete(grid_bgc),
+  retractall(grid_nums(_,_)),
+  retractall(grid_nums(_)),
+  retractall(g2o(_,_)),!.
+
+new_test_pair(PairName):-
+  %nb_delete(grid_bgc),
+  nb_setval(test_pairname,PairName),
+  retractall(is_shared_saved(PairName*_,_)),
+  retractall(is_shared_saved(PairName,_)),
+  retractall(is_unshared_saved(PairName*_,_)),
+  retractall(is_unshared_saved(PairName,_)),
+  retractall(is_gridname(PairName*_,_)),
+  retractall(is_gridname(PairName,_)),!.
 
 name_the_pair(TestID,Type,Num,In,Out,PairName):- 
-  ExampleNum = Type+Num,  
+  name_the_pair(TestID,Type+Num,In,Out,PairName).
+
+name_the_pair(TestID,ExampleNum,In,Out,PairName):- 
+  PairName= TestID*ExampleNum,
   current_test_name(CName),
-  nb_delete(grid_bgc),
-  nb_setval(test_name,TestID),
-  nb_setval(test_name_w_type,TestID*ExampleNum),
+  new_test_pair(PairName),
   must_det_l((
-   ignore((CName\==TestID, flag(indiv,_,0),    
-   dash_char(60,"A"),nl,dash_char(60,"|"),dash_char(6,"\n"),nl,
-    dash_char(60,"|"),nl,dash_char(60,"V"),nl,
-    nl,wqnl(arc1(TestID)),nl,nl,dash_char(60,"A"),nl)),   
-  PairName= TestID*(ExampleNum),
-  GridNameIn= TestID*(ExampleNum)*in,
-  GridNameOut= TestID*(ExampleNum)*out,
+   ignore((CName\==TestID, 
+        new_test_id(TestID),
+        dash_char(60,"A"),nl,dash_char(60,"|"),dash_char(6,"\n"),nl,
+        dash_char(60,"|"),nl,dash_char(60,"V"),nl,
+        nl,wqnl(arc1(TestID)),nl,nl,dash_char(60,"A"),nl)),   
+  GridNameIn= PairName*in,
+  GridNameOut= PairName*out,
   set_gridname(In,GridNameIn),
   set_gridname(Out,GridNameOut),  
   test_info(TestID,Info), wqnl(fav(TestID,Info)),nl)).
@@ -120,10 +138,11 @@ learn_shape(Name,Ascii):- replace_in_string([
   '\\'=Color,
    'o'=Color], Grid),
    assertz_if_new(learned_color_inner_shape(Name,Color,Fill,Grid,GrowthChart)),
-   Color = green, Fill = red,
-   grid_size(Grid,H,V),
-   print_grid(H,V,Grid),
-   wqnl(learned(Name)).
+   nop((
+     Color = green, Fill = red,   
+     grid_size(Grid,H,V),
+     print_grid(H,V,Grid),
+     wqnl(learned(Name)))).
 
 learn_shapes:- forall(l_shape(Name,Ascii), learn_shape(Name,Ascii)).
 

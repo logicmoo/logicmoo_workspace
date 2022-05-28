@@ -335,7 +335,7 @@ i_glyph(N,Glyph):- atom(N),atom_codes(N,[Code|_]),name(Glyph,[Code]).
 i_glyph(Code,Glyph):- integer(Code), Code> 255, !,name(Glyph,[Code]).
 i_glyph(N,Glyph):- integer(N),i_sym(N,Code),name(Glyph,[Code]).
 
-i_sym(N2,Code):- integer(N2),!, N is N2 * 7 , change_code(N,NN), i_syms(Codes),nth0(NN,Codes,Code),!.
+i_sym(N2,Code):- integer(N2),!, N is N2, change_code(N,NN), i_syms(Codes),nth0(NN,Codes,Code),!.
 i_sym(N2,Code):- atom(N2),name(N2,[C|_]),!,i_sym(C,Code).
 i_sym(N,Code):- var(N), Code = 63.
 %change_code(N,M):- M is N * 100,!.

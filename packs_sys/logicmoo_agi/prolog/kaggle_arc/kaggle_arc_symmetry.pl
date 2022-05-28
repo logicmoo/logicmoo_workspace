@@ -111,10 +111,10 @@ asymmetric_hv(EXQ2,CX,EYQ2,CY,H,V,G):- asymmetric_hv0(EXQ2,CX,EYQ2,CY,H,V,G).
 asymmetric_hv(EXQ2,CX,EYQ2,CY,H,V,G):- rot90(G,G0),flipH(G0,G1),asymmetric_hv0(EYQ2,CY,EXQ2,CX,V,H,G1).
 
 asymmetric_h(I,CX,_H,HLow,_Hhalf,Hhigh,G):-
-   between(HLow,Hhigh,I),asymmetric_lrw(I,CX,G,_).
+   between(HLow,Hhigh,I),symmetric_lrw(I,CX,G,_).
 asymmetric_v(I,CY,_V,VLow,_Vhalf,Vhigh,G0):-
    rot270(G0,G),
-   between(VLow,Vhigh,I),asymmetric_lrw(I,CY,G,_).
+   between(VLow,Vhigh,I),symmetric_lrw(I,CY,G,_).
 /*
 asymmetric_h(I,C,G):- 
   sometimes(flipV,G,G1),sometimes(first_half,G1,G2),
@@ -193,7 +193,7 @@ c_n_pattern:-
    assert(c_n_pattern_l(P,PL,Full,'<><><><>'))),
   %(between(2,10,P),length(PL,P),repeat_until_30(L,P,Full)),
   % assert(c_n_pattern_l(P,PL,Full,'122333'))),
- listing(c_n_pattern_l/4).
+  nop(listing(c_n_pattern_l/4)).
     
 :- c_n_pattern.
 
@@ -212,7 +212,7 @@ c_n_reverse:-
                       numbervars(Row,0,_),
                       append(Row,_,RowO)))),
         assert(c_n_reverse_l(I,C,P,RowO,PLL,CL,RL))),
-                      listing(c_n_reverse_l/7).
+                      nop(listing(c_n_reverse_l/7)).
 
 :- c_n_reverse.
 
@@ -354,7 +354,7 @@ my_partition(_,[],[],[]):-!.
 my_partition(P1,[H|L],[H|I],E):- call(P1,H),!,
   my_partition(P1,L,I,E).
 my_partition(P1,[H|L],I,[H|E]):- 
-   my_partition(P1,L,I,E).
+   my_partition(P1,L,I,E),!.
 my_partition(P1,H,I,HE):- dumpST,break,
   my_partition(P1,[H],I,HE).
 
@@ -371,6 +371,7 @@ consensus22(L,C):-
 is_four([C,C,C,C],C).
 is_four([C,C,C],C).
 %is_four([C,C],C).
+:- style_check(-singleton).
 consensus2(Vars,BG,Blk,Color,Other,C):- is_four(Color,C).
 consensus2(Vars,BG,Blk,Color,Other,C):- is_four(Blk,C).
 consensus2(Vars,BG,Blk,Color,Other,C):- is_four(BG,C).
@@ -378,7 +379,7 @@ consensus2(Vars,BG,Blk,Color,Other,C):- is_four(Other,C).
 consensus2(Vars,BG,Blk,[C|Color],Other,C).
 consensus2(Vars,BG,[C|Blk],Color,Other,C).
 consensus2(Vars,[C|BG],Blk,Color,Other,C).
-
+:- style_check(+singleton).
 
 fix_the_fours(NewIndiv0s,NewIndiv2s):- 
   must_det_l((

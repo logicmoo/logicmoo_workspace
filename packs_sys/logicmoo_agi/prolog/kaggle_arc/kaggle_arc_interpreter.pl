@@ -1,7 +1,12 @@
 
 
+:- multifile(decl_pt/1).
 :- discontiguous(decl_pt/1).
+:- dynamic(decl_pt/1).
+decl_pt(_):- fail.
+
 check_args(P,MC):- functor(P,F,A),functor(T,F,A),functor(C,F,A),decl_pt(T),check_args(P,1,A,A,T,C,MC).
+check_args(P,P):- !. 
 
 check_args(P,Arity,Arity,1,T,C,MC):- !,
  call(C),arg(An,T,ArgType),arg(An,C,Result),
@@ -126,7 +131,7 @@ missing_arity(F,N):- \+ current_predicate(F/N).
 % turtle(H,V,Dir,N,H2,V2):- 
 prim_ops([
   call_object_grid_size(obj),
-  trim_grid_to_size(point,visual_hv),
+  trim_grid_to_size(point,visual_hw),
   fill_from_point(point,color),
   create_a_ray(point,dir,len),
   object_as_own_grid(obj,gridOps),

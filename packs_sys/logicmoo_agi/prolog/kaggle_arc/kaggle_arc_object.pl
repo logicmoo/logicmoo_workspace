@@ -1,5 +1,6 @@
-
-
+:- multifile(decl_pt/1).
+:- discontiguous(decl_pt/1).
+:- dynamic(decl_pt/1).
 
 :- thread_local(t_l:id_cells/2).
 
@@ -15,9 +16,6 @@ grid_to_individual(Grid,OUT):-
   grid_size(Grid,H,V),
   globalpoints(Grid,Points),
   make_indiv_object(ID,H,V,Points,OUT).
-
-
-
 
 %embue_points(ID,_,_,I,I):-!.
 %embue_obj_points(ID,H,V,Points,OUT):- make_indiv_object(ID,H,V,Points,OUT).
@@ -48,7 +46,7 @@ correctify_objs(Gridname,obj(List),obj(NOBJ)):- is_list(List),
    globalpoints(Grid,Points),
    assertion(Points\=[]),
    points_range(Points,LoH,LoV,HiH,HiV,_HO,_VO),
-   %nb_current(test_name_w_type,ID),
+   %nb_current(test_pairname,ID),
    embue_points1(Gridname,H,V,LoH,LoV,HiH,HiV,Points,OBJ),
    append(List,OBJ,NOBJ),!.
 correctify_objs(_Gridname,obj(List),obj(List)):-!.
@@ -78,17 +76,19 @@ make_indiv_object(ID,H,V,IPoints,obj(OUT)):-
   make_indiv_object(ID,H,V,LoH,LoV,HiH,HiV,Points,Overrides,OUT).
 
 make_indiv_object(ID,H,V,LoH,LoV,HiH,HiV,Points,Overrides,OUT):- 
+  Width is HiH-LoH+1,
+  Height is HiV-LoV+1,
+  %nb_current(test_pairname,ID),
+  Area is Width * Height,
+  assertion((Points\==[],
+     maplist(between(1,30),[H,V,LoH,LoV,HiH,HiV,Width,Height]))),
  must_det_l((
-  assertion(is_list(Overrides)),
+  assertion(is_list([overrides|Overrides])),
   assertion(maplist(is_cpoint,Points)),
   assertion(ground(Points)),
   flag(indiv,Iv,Iv+1),
   once(colors(Points,CC)),
   length(Points,Len),
-  Width is HiH-LoH+1,
-  Height is HiV-LoV+1,
-  %nb_current(test_name_w_type,ID),
-  Area is Width * Height,
   Empty is Area - Len,
   deoffset_points(LoH,LoV,Points,LPoints),
   remove_color(LPoints,UColorlessPoints),
@@ -106,9 +106,15 @@ make_indiv_object(ID,H,V,LoH,LoV,HiH,HiV,Points,Overrides,OUT):-
     %width(Width), height(Height), area(Area), %missing(Empty),
     [changes([])|Shapes], % [grid(LocalGrid)],    
     [object_indv_id(ID,Iv),globalpoints(Points),grid_size(H,V)]],Ps),
-  override_list(Ps,Overrides,OUT1),sort_obj_props(OUT1,OUT))).
+  override_object(Ps,Overrides,OUT1),sort_obj_props(OUT1,OUT))).
 
 top(7).
+
+
+record_xform(Rot90,Obj,XObj):- is_object(Obj), object_changes(Obj,Was),
+  override_object(Obj,change([Rot90|Was]),XObj),!.
+record_xform(_Missied,XObj,XObj).
+
 
 prop_of(mass,mass(_)).
 prop_of(size,visual_hv(_,_)).
@@ -132,17 +138,17 @@ obk_key(A,99):- arg(1,A,L), is_grid(L).
 obk_key(A,90):- arg(1,A,L), is_list(L).
 obk_key(_,80). 
 
-override_list(obj(List),E,obj(MidList)):- !, override_list(List,E,MidList).
-override_list(List,[],List):-!.
-override_list(List,[E|Props],NewList):-!,
-  override_list(List,E,MidList),
-  override_list(MidList,Props,NewList).
+override_object(obj(List),E,obj(MidList)):- !, override_object(List,E,MidList).
+override_object(List,[],List):-!.
+override_object(List,[E|Props],NewList):-!,
+  override_object(List,E,MidList),
+  override_object(MidList,Props,NewList).
 
-override_list(List,E,NewList):- E\==object_shape(_), functor(E,F,A),functor(R,F,A),
+override_object(List,E,NewList):- E\==object_shape(_), functor(E,F,A),functor(R,F,A),
     append(Left,[R|Right],List), % E \=@= R,
     append(Left,[E|Right],NewList),!.
 
-override_list(List,E,NewList):- 
+override_object(List,E,NewList):- 
     append(Left,[changes(G)|Right],List), 
     ( \+ \+ (member(R,Right), R == E ) -> NewList = List ; append(Left,[changes(G),E|Right],NewList)),!.
 
@@ -153,14 +159,14 @@ transfer_props(O,Functors,NewO,obj(NewObjL)):-
 
 transfer_props_l([],_,O,O):-!.
 transfer_props_l([P|L],Functors,List,NewList):-
-  functor(P,F,_),member(F,Functors), override_list(List,P,MidList),
+  functor(P,F,_),member(F,Functors), override_object(List,P,MidList),
   transfer_props_l(L,Functors,MidList,NewList).
 transfer_props_l([_|L],Functors,List,NewList):-
   transfer_props_l(L,Functors,List,NewList).
 
 object_indv_id(I,ID,Iv):- indv_props(I,L),member(object_indv_id(ID,Iv),L),!.
 object_indv_id(I,ID,Iv):- throw(missing(object_indv_id(I,ID,Iv))).
-%object_indv_id(_,ID,_Iv):- nb_current(test_name_w_type,ID).
+%object_indv_id(_,ID,_Iv):- nb_current(test_pairname,ID).
 
 mass(_-P,1):- nonvar(P),!.
 mass(I,X):- indv_props(I,L),member(mass(X),L),!.
@@ -225,10 +231,10 @@ counted_neighbours(C-HV,List,CountIn,[P|CountIn]):-
   length(Ns,I),P = I-HV.
 
 localpoints(I,X):- indv_props(I,L),member(localpoints(X),L).
-localpoints(I,X):- is_grid(I),!,globalpoints(I,X).
-localpoints(I,X):- into_grid0(I,G),globalpoints(G,X).
+localpoints(I,X):- into_grid(I,G),globalpoints(G,X).
 
 object_shape(I,X):- indv_props(I,L),member(object_shape(X),L).
+
 rotation(I,X):- indv_props(I,L),member(rotation(X),L).
 
 %hv_cvalue(Grid,Color,H,V):- hv_value(Grid,C,H,V),!,as_cv(C,Color),!.
@@ -236,6 +242,8 @@ rotation(I,X):- indv_props(I,L),member(rotation(X),L).
 %as_cv(C,Color):- sub_term(Color,C),nonvar(Color),is_color(Color).
 %as_cv(C-_,Color):- as_cv(C,Color).
 %as_cv(C,Color):- integer(C),!,color_code(C,Color).
+
+object_changes(I,X):- indv_props(I,L),!,member(changes(X),L).
 
 globalpoints(I,X):- indv_props(I,L),!,member(globalpoints(X),L).
 globalpoints(Grid,Points):- is_grid(Grid),!, grid_size(Grid,HH,HV), 

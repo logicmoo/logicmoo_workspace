@@ -285,7 +285,7 @@ same_colorless_points(I,O,OUT):-
 combine_perfects(IndvS,[IO|IndvSO]):- 
   select(I,IndvS,IndvS1),select(O,IndvS1,IndvS2),
   compare_objs1(perfect,I,O),
-  override_list(I,O,IO),
+  override_object(I,O,IO),
   combine_perfects(IndvS2,IndvSO).
 combine_perfects(IndvSO,IndvSO).
 
@@ -294,7 +294,7 @@ combine_objects(IndvS,[obj(IO)|IndvSO]):-
   select(obj([A,B,C,D|I]),IndvS,IndvS1),
   select(obj([A,B,C,D|O]),IndvS1,IndvS2),
   compare_objprops(perfect,I,O),
-  override_list(I,O,IO),
+  override_object(I,O,IO),
   combine_objects(IndvS2,IndvSO).
 combine_objects(IndvSO,IndvSO).
 

@@ -128,15 +128,16 @@ smallest_indiv(Points,Grid,Grid):- smallest_indiv(Grid,Points).
 
 set_color(Color,Next,_ColorTrail,G0,G9):- set_global_points(Color,Next,G0,G9).
 
-shoot_ray(ColorTrail,Origin,Dir,G0,G9):- color(Origin,Color),shoot_ray(ColorTrail,Origin,Dir,Color,1,0,0,[],G0,G9).
-shoot_ray(ColorTrail,Origin,Dir,_Color,0,Width,WidenSpeed,Skip,ColorRules,G9,G9):- !.
-shoot_ray(ColorTrail,Origin,Dir,Color,Len,Width,WidenSpeed,Skip,ColorRules,G0,G9):- 
+
+shoot_ray(ColorTrail,Origin,Dir,G0,G9):- color(Origin,Color),shoot_ray(ColorTrail,Origin,Dir,Color,inf,1,0,0,[],G0,G9).
+shoot_ray(_ColorTrail,_Origin,_Dir,_Color,0,_Width,_WidenSpeed,_Skip,_ColorRules,G9,G9):- !.
+shoot_ray(ColorTrail,Origin,Dir,Color,Fuel,Width,WidenSpeed,Skip,ColorRules,G0,G9):- 
   hv_point(_H,_V,Origin),
   is_adjacent_point(Origin,Dir,Next),
   set_color(Color,Next,ColorTrail,G0,G1),
     Width2 is Width + WidenSpeed,
-    Len2 is Len-1,
-    shoot_ray(ColorTrail,Origin,Dir,Color,Len2,Width2,WidenSpeed,Skip,ColorRules,G1,G9).
+    FuelReduced is Fuel-1,
+    shoot_ray(ColorTrail,Origin,Dir,Color,FuelReduced,Width2,WidenSpeed,Skip,ColorRules,G1,G9).
 
 
 %fill_from_point(Point,Color,DirsAllow):-
@@ -452,7 +453,6 @@ calc_range(WLoH,WLoV,WHiH,WHiV,WH,WV,_,WLoH,WLoV,WHiH,WHiV,WH,WV):- !.
 
 
 
-
 grid_size_nd([C,R|Rows],H,V):- 
    (var(Rows)->between(2,30,V);!), 
    length([C,R|Rows],V),
@@ -462,30 +462,37 @@ grid_size_nd([C,R|Rows],H,V):-
 grid_size_nd([L],H,(1)):- (var(L)->between(1,30,H);true), length(L,H).
 
 
-into_grid(P,G):- notrace(into_grid0(P,G)).
 
-into_grid0(G,G):- is_grid(G),!.
-into_grid0(Points,Grid):- \+ is_object(Points),named_gridoid(Points,NG),!,into_grid(NG,Grid).
-into_grid0(Points,Grid):-
+closure_grid_to_object(Orig,Grid,NewObj):- 
+  object_indv_id(Orig,ID,_Iv),
+  grid_size(Grid,H,V),  
+  globalpoints(Grid,Points),
+  make_indiv_object(ID,H,V,Points,PartialObj),
+  transfer_props(Orig,[loc_xy,colors,object_shape],PartialObj,NewObj),!.
+
+closure_grid_to_group(Orig,Grid,Group):- individuals_common(Orig,Grid,Group).
+
+into_grid(P,G):- notrace(into_grid(P,G, _)).
+
+into_grid(Grid,Grid, (=) ):- is_grid(Grid),!.
+into_grid(Obj,Grid, closure_grid_to_object(Obj)):- is_object(Obj),!, object_grid(Obj,Grid).
+into_grid(Grp,Grid, closure_grid_to_group(Grp)):- is_group(Grp), !, object_grid(Grp,Grid).
+into_grid(Points,Grid,globalpoints):- is_points_list(Points), !, points_to_grid(Points,Grid),!.
+into_grid(Naming,Grid, Closure ):- named_gridoid(Naming,NG),!, into_grid(NG,Grid, Closure).
+into_grid(Points,Grid, throw_no_conversion(Points)):-
   grid_size(Points,GH,GV),
   make_grid(GH,GV,Grid),
   forall(between(1,GV,V),
    ((nth1(V,Grid,Row),forall(between(1,GH,H),      
      (hv_value_or(Points,CN,H,V,_)->
         nb_set_nth1(H,Row,CN)))))),!.
-into_grid0(P,G):- points_to_grid(P,G),!.
+
 
 points_to_grid(Points,Grid):- is_grid(Points),Points=Grid,!.
 points_to_grid([Points|More],Grid):- is_grid(Points),Points=Grid,grid_size(Points,H,V),calc_add_points(H,V,Grid,More),!.
-points_to_grid(Points,Grid):- 
-  once((
-  notrace(grid_size(Points,H,V)),
-  points_to_grid(H,V,Points,Grid))).
+points_to_grid(Points,Grid):- notrace(grid_size(Points,H,V)), points_to_grid(H,V,Points,Grid).
 
-points_to_grid(H,V,Points,Grid):- 
-  once((
-  make_grid(H,V,Grid),
-  calc_add_points(1,1,Grid,Points))).
+points_to_grid(H,V,Points,Grid):- make_grid(H,V,Grid), calc_add_points(1,1,Grid,Points).
 
 non_free_fg(C):- \+ free_cell(C), \+ is_bgc(C).
 
@@ -621,7 +628,10 @@ same_grid(Grid1,Grid1).
 
 
 
-
+any_xform(Rot90,Any,XNewGrid):- 
+  into_grid(Any,RealGrid,UnconvertClosure),!,
+  grid_xform(Rot90,RealGrid,NewGridR),call(UnconvertClosure,NewGridR,NewGrid),
+  record_xform(Rot90,NewGrid,XNewGrid).
 
 
 :- dynamic(xform_cache/5).
@@ -636,19 +646,7 @@ xform_cache(rot45,5,5,[ [ A, B, C, D, E],
                             [ F, L, Q, R, X],
                             [ K, P, U, V, W]]).
 
-into_grid(O,G,cvt_grid_obj(O)):- is_object(O), object_grid(O,G),!.
-
-cvt_grid_obj(O,G,NewO):- 
-  object_indv_id(O,ID,_Iv),
-  grid_size(G,H,V),  
-  globalpoints(G,Points),
-  make_indiv_object(ID,H,V,Points,PartObj),
-  transfer_props(O,[loc_xy,colors,object_shape],PartObj,NewO),!.
-
-
-
-xform(Rot90,Grid,NewGrid):- \+ is_grid(Grid),into_grid(Grid,RealGrid,Rev),!,xform(Rot90,RealGrid,NewGridR),call(Rev,NewGridR,NewGrid).
-xform(Rot90,Grid,NewGrid):- grid_size(Grid,H,V),apply_transformer(Rot90,H,V,Grid,NewGrid).
+grid_xform(Rot90,Grid,NewGrid):- grid_size(Grid,H,V),apply_transformer(Rot90,H,V,Grid,NewGrid).
 apply_transformer(Name,H,V,G,O):-
   get_xformer(Name,H,V,In,Out),!,
   G=In,O=Out.
@@ -660,17 +658,17 @@ get_xformer(Name,H,V,In,Out):-
    asserta(xform_cache(Name,H,V,In,Out)),!.
 
 %srot90V,flipV
-rot90( Grid,NewGrid):- xform(xrot90,Grid,NewGrid).
-rot180( Grid,NewGrid):- xform(xrot180,Grid,NewGrid).
-rot270( Grid,NewGrid):- xform(xrot270,Grid,NewGrid).
-flipH( Grid,NewGrid):- xform(xflipH,Grid,NewGrid).
-flipV( Grid,NewGrid):- xform(xflipV,Grid,NewGrid).
-flipHV( Grid,NewGrid):- xform(xflipHV,Grid,NewGrid).
+rot90( Grid,NewGrid):- any_xform(grid_rot90,Grid,NewGrid).
+rot180( Grid,NewGrid):- any_xform(grid_rot180,Grid,NewGrid).
+rot270( Grid,NewGrid):- any_xform(grid_rot270,Grid,NewGrid).
+flipH( Grid,NewGrid):- any_xform(grid_flipH,Grid,NewGrid).
+flipV( Grid,NewGrid):- any_xform(grid_flipV,Grid,NewGrid).
+flipHV( Grid,NewGrid):- any_xform(grid_flipHV,Grid,NewGrid).
 
-xrot90( Grid,NewGrid):-  xrot180(Grid,GridM),xrot270(GridM,NewGrid). 
-xrot180(Grid,NewGrid):- xflipH(Grid,RowRev),xflipV(RowRev,NewGrid).
-xrot270(Grid,NewGrid):- get_colums(Grid,NewGrid),!.
-xflipH(Grid,FlipH):- maplist(reverse,Grid,FlipH).
-xflipV(Grid,FlipV):- reverse(Grid,FlipV).
-xflipHV(Grid,FlipHV):-xflipH(Grid,FlipH),xflipV(FlipH,FlipHV),!.
+grid_rot90(Grid,NewGrid):-  grid_flipHV(Grid,GridM),grid_rot270(GridM,NewGrid). 
+grid_rot180(Grid,FlipHV):- grid_flipHV(Grid,FlipHV).
+grid_rot270(Grid,NewGrid):- get_colums(Grid,NewGrid),!.
+grid_flipH(Grid,FlipH):- maplist(reverse,Grid,FlipH).
+grid_flipV(Grid,FlipV):- reverse(Grid,FlipV).
+grid_flipHV(Grid,FlipHV):-grid_flipH(Grid,FlipH),grid_flipV(FlipH,FlipHV),!.
 

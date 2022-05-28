@@ -123,29 +123,10 @@ fsi(OUTReserved,OUTNewGrid,OUTOptions,H,V,Sofar,ID,Options,Reserved,Points,Grid,
   %as_debug(9,pt(t([fsi=Options,sofar=Sofar]))),
   fail.
 
-in_shape_lib(Lib):- 
-  Lib = obj([mass(6), shape([point_01_01, point_01_02, point_01_03, point_02_01, point_02_02, point_03_02]), 
-  colors([cc(red, 6.0)]), localpoints([red-point_01_01, red-point_01_02, red-point_01_03, red-point_02_01, 
-  red-point_02_02, red-point_03_02]), visual_hv(3, 3), rotation(same), loc_xy(2, 5), 
-  changes([]), object_shape(rectangluar), object_shape(polygon), object_indv_id(t('1b60fb0c')*(trn+666)*out, 666), 
-  globalpoints([red-point_02_05, red-point_02_06, red-point_02_07, red-point_03_05, red-point_03_06, red-point_04_06]), 
-  grid_size(10, 10)]).
-
-
-in_shape_lib(Lib):- Red = red,
-  Lib = obj([mass(6), shape([point_01_01, point_01_02, point_01_03, point_02_01, point_02_02, point_03_02]), 
-  colors([cc(Red, 6.0)]), localpoints([Red-point_01_01, Red-point_01_02, Red-point_01_03, Red-point_02_01, 
-  Red-point_02_02, Red-point_03_02]), visual_hv(3, 3), rotation(same), loc_xy(_, _), 
-  changes([]), object_shape(rectangluar), object_shape(polygon), object_indv_id('reserved', 666), 
-  globalpoints(_), 
-  grid_size(10, 10)]).
-
-
 fsi(ReservedIO,Grid,NO,H,V,Sofar,ID,[shape_lib|NO],ReservedIO,Points,Grid,SofarOut,NextScanPoints):-
-   findall(Lib,in_shape_lib(Lib),Reserved),
-   proccess_overlap_reserved(ID,H,V,Reserved,Sofar,SofarOut,Points,NextScanPoints,_Unreserved,_StillReserved),
-   intersection(SofarOut,Sofar,_Intersected,LeftOverA,_LeftOverB),
-   as_debug(8,print_Igrid(H,V,'shape_lib'+ID,LeftOverA,[])),!.
+   findall(Obj,in_shape_lib(Obj),Reserved),
+   proccess_overlap_reserved(ID,H,V,Reserved,Sofar,SofarOut,Points,NextScanPoints,_Unreserved,_StillReserved).
+   %intersection(SofarOut,Sofar,_Intersected,Found,_LeftOverB), as_debug(9,print_Igrid(H,V,'shape_lib'+ID,Found,[])),!.
 
 
 fsi(StillReserved,Grid,NO,H,V,Sofar,ID,[use_reserved|NO],Reserved,Points,Grid,SofarOut,NextScanPoints):-
@@ -155,10 +136,13 @@ fsi(StillReserved,Grid,NO,H,V,Sofar,ID,[use_reserved|NO],Reserved,Points,Grid,So
    as_debug(9,print_Igrid(H,V,'use_reserved'+ID,LeftOverA,[])),!.
 
 proccess_overlap_reserved(ID,H,V,[Obj|Reserved],Sofar,SofarOut,Points,NextScanPoints,[Obj|Unreserved],StillReserved):- 
-   globalpoints(Obj,ObjPoints), 
+   once((globalpoints(Obj,ObjPoints), 
    intersection(ObjPoints,Points,Intersected,LeftOverA,LeftOverB), 
-  do_leftover(Sofar,LeftOverA,Intersected,Use,Sofar2),
-   make_indiv_object(ID,H,V,Use,Indiv0), object_indv_id(Obj,_,Iv), override_list(Indiv0,object_indv_id(ID,Iv),Indiv), 
+   do_leftover(Sofar,LeftOverA,Intersected,Use,Sofar2),
+   append(Intersected,Use,All),
+   list_to_set(All,AllS))), AllS \== [],
+   make_indiv_object(ID,H,V,AllS,Indiv0), 
+   object_indv_id(Obj,_,Iv), override_object(Indiv0,object_indv_id(ID,Iv),Indiv), 
    %make_indiv_object(ID,H,V,Use,Indiv),
    append(Sofar2,[Indiv],NewSofar),
    proccess_overlap_reserved(ID,H,V,Reserved,NewSofar,SofarOut,LeftOverB,NextScanPoints,Unreserved,StillReserved).
@@ -264,8 +248,6 @@ combine_2objs(ID,H,V,HV1,HV2,IPROPS,Sofar,IndvList):-
   make_indiv_object(ID,H,V,Info,Combined), append(Sofar2,[Combined],IndvList).
 
 
-   
-
 fsi(FinalReserve,Grid,NO,H,V,Sofar,ID,[cycle_shapes(Shapes)|NO],Reserved,Points,Grid,IndvList,LeftOver):- 
    cycle_s(FinalReserve1,H,V,Sofar,ID,Shapes,Reserved,Points,Grid,IndvList1,LeftOver1),
    cycle_s(FinalReserve,H,V,IndvList1,ID,Shapes,FinalReserve1,LeftOver1,Grid,IndvList,LeftOver).
@@ -307,8 +289,7 @@ cycle_s(FinalReserve,GH,GV,Sofar,ID,Options,Reserved,Points,Grid,IndvList,NextSc
 cycle_s(Reserved,_GH,_GV,Sofar,_ID,_Options,Reserved,Points,_Grid,Sofar,Points).
 
 
-default_i_options([
-  shape_lib,
+default_i_options([  
   use_reserved,
   fourway,
   %solid(squares),
@@ -319,6 +300,7 @@ default_i_options([
   %dg_line(u),dg_line(d),
   %CS,
   all,
+  shape_lib,
   connect(hv_line(h)),
   connect(hv_line(v)),  
   % line(_),dg_line(_),
@@ -397,7 +379,7 @@ find_one_in dividual(GH,GV,Sofar,ID,solid(Option),Reserved,Points,Grid,[object_s
     meets_indiv_criteria(Option,Indv).
 */
 
-find_one_individual(_GH,_GV,_Sofar,_ID,Option,_Reserved,Points,_Grid,[object_shape(Option)|IndvPoints],NextScanPoints):-
+find_one_individual(_GH,_GV,_Sofar,_ID,Option,_Reserved,Points,_Grid,IndvPoints,NextScanPoints):-
     maybe_multivar(C), select(C-HV,Points,Rest), \+ free_cell(C), % non_free_fg(C), % \+ is_black(C),
     allow_dirs(Option,Dir),
     adjacent_point_allowed(C,HV,Dir,HV2),select(C2-HV2,Rest,ScanPoints),ok_color_with(C,C2),

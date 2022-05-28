@@ -4,7 +4,8 @@
 :- set_stream(current_output, tty(true)).
 :- stream_property(S,file_no(2)), set_stream(S,tty(true)).
 :- stream_property(S,file_no(1)), set_stream(S,tty(true)).
-%:- dynamic('$exported_op'/3).
+:- dynamic(prolog:'$exported_op'/3).
+:- assert((system:'$exported_op'(_,_,_):- fail)).
 %:- multifile('$exported_op'/3).
 :- system:ensure_loaded(library(logicmoo_common)).
 %:- system:ensure_loaded(library(pfc_lib)).
@@ -13,7 +14,8 @@
 :- dynamic(cmem/3).
 :- dynamic(grid_nums/1).
 :- dynamic(grid_nums/2).
-
+:- setenv('DISPLAY','10.0.0.122:0.0').
+:- (getenv('DISPLAY',_) -> guitracer ; true).
 
 :- ensure_loaded(kaggle_arc_utils).
 :- ensure_loaded(kaggle_arc_ui_ansi).
@@ -50,60 +52,33 @@ fav1:- clsmake, fav(X), arc1(X).
 fav(X):- nonvar(X),!, clsmake, arc1(X).
 fav(X):- clause(fav(X,_),true).
 
-arc(Name):- forall(arc1(Name),true).
+arc(TestID):- forall(arc1(TestID),true).
 
 arc1(TName):-    
  locally(set_prolog_flag(gc,true),
-  (fix_test_name(TName,Name,ExampleNum),   
-  kaggle_arc(Name,ExampleNum,In,Out),
-  set_flag(indiv,0),
-  run_arc_io(Name,ExampleNum,In,Out))).
+  (fix_test_name(TName,TestID,ExampleNum),   
+  kaggle_arc(TestID,ExampleNum,In,Out),
+  run_arc_io(TestID,ExampleNum,In,Out))).
 
-run_arc_io(Name,ExampleNum,In,Out):-
-  current_test_name(CName),
-  nb_delete(grid_bgc),
-  nb_setval(test_name,Name),
-  nb_setval(test_name_w_type,Name*ExampleNum),
-  retractall(grid_nums(_,_)),
-  retractall(grid_nums(_)),
-  retractall(is_shared_saved(Name*ExampleNum*_,_)),
-  retractall(is_shared_saved(Name*ExampleNum,_)),
-  retractall(is_unshared_saved(Name*ExampleNum*_,_)),
-  retractall(is_unshared_saved(Name*ExampleNum,_)),
-  retractall(is_gridname(Name*ExampleNum*_,_)),
-  retractall(is_gridname(Name*ExampleNum,_)),
-  time(try_arc_io(CName,Name,ExampleNum,In,Out)).
+run_arc_io(TestID,ExampleNum,In,Out):-
+  time(try_arc_io(TestID,ExampleNum,In,Out)).
 
-
-
-try_arc_io(CName,Name,ExampleNum,In,Out):-
+try_arc_io(TestID,ExampleNum,In,Out):-
  must_det_l((
-   grid_size(In,IH,IV), grid_size(Out,OH,OV), nop(writeln(grid_convert(size(IH,IV)->size(OH,OV)))),
-   
-   ignore((CName\==Name, flag(indiv,_,0),    
-   dash_char(60,"A"),nl,dash_char(60,"|"),dash_char(6,"\n"),nl,
-    dash_char(60,"|"),nl,dash_char(60,"V"),nl,
-    nl,wqnl(arc1(Name)),nl,nl,dash_char(60,"A"),nl)),   
-  dash_char(60,"|"),nl,nl,
-  PairName= Name*ExampleNum,
-  GridNameIn= Name*ExampleNum*in,
-  GridNameOut= Name*ExampleNum*out,
-  set_gridname(In,GridNameIn),
-  set_gridname(Out,GridNameOut),
-  %wqnl(arc1(Name)),nl,
-  test_info(Name,Info), wqnl(fav(Name,Info)),nl,
-  ignore((more_task_info(Name,III),pt(III),nl)),
-  
+  name_the_pair(TestID,ExampleNum,In,Out,PairName),
+  grid_size(In,IH,IV), grid_size(Out,OH,OV), 
+  nop(writeln(grid_convert(size(IH,IV)->size(OH,OV)))),
+  ignore((more_task_info(TestID,III),pt(III),nl)), 
   show_pair(IH,IV,OH,OV,test,PairName,In,Out),
-  compute_unshared_indivs(Out,UnsharedOut),
-  compute_unshared_indivs(In,UnsharedIn),
-  %show_pair(IH,IV,OH,OV,unshared,PairName,UnsharedIn,UnsharedOut),
+
+  individuals_common([],Out,UnsharedOut),
+  individuals_common([],In,UnsharedIn),
+  show_pair(IH,IV,OH,OV,unshared,PairName,UnsharedIn,UnsharedOut),
   %notrace(showdiff(UnsharedIn,UnsharedOut)),
+
   notrace(individuals_common(UnsharedIn,Out,SharedOut)),
   notrace(individuals_common(SharedOut,In,SharedIn)),
-
   notrace(show_pair(IH,IV,OH,OV,common,PairName,SharedIn,SharedOut)),!,
-  
 
   nop((reuse_indivs(SharedIn,SharedOut,BetterA,BetterB),
   ( (SharedOut\==BetterB ; SharedIn\== BetterA) ->
@@ -121,7 +96,7 @@ try_arc_io(CName,Name,ExampleNum,In,Out):-
   compute_shared_indivs(In,SharedIn),
   compute_shared_indivs(Out,SharedOut),
   show_pair(IH,IV,OH,OV,shared,PairName,SharedIn,SharedOut))),!,
-  nop(catch(maybe_confirm_sol(Name,ExampleNum,In,Out),E,(wdmsg(E)))))),!.
+  nop(catch(maybe_confirm_sol(TestID,ExampleNum,In,Out),E,(wdmsg(E)))))),!.
 
 
 reuse_indivs(IndvA,IndvB,BetterA,BetterB):-
