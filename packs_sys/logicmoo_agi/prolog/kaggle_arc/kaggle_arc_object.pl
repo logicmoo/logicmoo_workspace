@@ -238,8 +238,9 @@ counted_neighbours(C-HV,List,CountIn,[P|CountIn]):-
  findall(Dir,(is_adjacent_point(HV,Dir,HV2),Dir\==c,member(CC-HV2,List),colors_join(C,CC)),Ns),
   length(Ns,I),P = I-HV.
 
-localpoints(I,X):- indv_props(I,L),member(localpoints(X),L).
-localpoints(I,X):- into_grid(I,G),globalpoints(G,X).
+localpoints(I,X):- indv_props(I,L),member(localpoints(X),L), is_points_list(X),!.
+%localpoints(I,X):- is_grid(I),!,globalpoints(I,X).
+localpoints(I,X):- into_grid(I,G),!,globalpoints(G,X),!.
 
 object_shape(I,X):- indv_props(I,L),member(object_shape(X),L).
 
