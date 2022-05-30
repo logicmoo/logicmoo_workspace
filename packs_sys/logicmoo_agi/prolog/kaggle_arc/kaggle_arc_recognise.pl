@@ -31,7 +31,7 @@ constrain_type(CheckType,G,GG):- freeze(CheckType,G=GG).
 ogs(H,V,OG,SG):-
   constrain_type(CheckType,OG,OGC),!,
   ogs_0(H,V,OGC,SG),
-  nop(CheckType=run).
+  CheckType=run.
 
 ogs_0(H,V,OG,SG):-
   %constrain_type(CheckType,OG,OGC),

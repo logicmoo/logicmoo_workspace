@@ -132,7 +132,7 @@ growthchart_to_grid(GrowthChart,Color,Fill,Grid):-
 
 learn_shape(Name,Ascii):-
    ascii_to_growthchart(Ascii,GrowthChart),
-   growthchart_to_grid(GrowthChart,Color,Fill,G).
+   growthchart_to_grid(GrowthChart,Color,Fill,Grid),
    assertz_if_new(learned_color_inner_shape(Name,Color,Fill,Grid,GrowthChart)),
    nop((
      Color = green, Fill = red,        
