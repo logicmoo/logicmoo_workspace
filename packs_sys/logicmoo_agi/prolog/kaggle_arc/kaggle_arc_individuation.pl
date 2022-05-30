@@ -119,24 +119,25 @@ must_be_nonvar(X):- assertion(nonvar(X)),!.
 
 fsi(OUTReserved,OUTNewGrid,OUTOptions,H,V,Sofar,ID,Options,Reserved,Points,Grid,OUTSofar,OUTNextScanPoints):-
   maplist(must_be_free,[OUTReserved,OUTNewGrid,OUTOptions,OUTSofar,OUTNextScanPoints]),
-  assertion(maplist(nonvar,[Options,H,V,Sofar,ID,Options,Reserved,Points,Grid])),
+  assertion(maplist(nonvar,[Options,H,V,Sofar,ID,Options,r,Reserved,Points,Grid])),
   %as_debug(9,pt(t([fsi=Options,sofar=Sofar]))),
   fail.
 
-fsi(ReservedIO,Grid,NO,H,V,Sofar,ID,[shape_lib|NO],ReservedIO,Points,Grid,SofarOut,NextScanPoints):-
-   findall(Obj,in_shape_lib(Obj),Reserved),
+fsi(ReservedIO,Grid,NO,H,V,Sofar,ID,[shape_lib(Hammer)|NO],ReservedIO,Points,Grid,SofarOut,NextScanPoints):-
+   get_shape_lib(Hammer,Reserved),
    proccess_overlap_reserved(ID,H,V,Reserved,Sofar,SofarOut,Points,NextScanPoints,_Unreserved,_StillReserved).
    %intersection(SofarOut,Sofar,_Intersected,Found,_LeftOverB), as_debug(9,print_Igrid(H,V,'shape_lib'+ID,Found,[])),!.
 
 
 fsi(StillReserved,Grid,NO,H,V,Sofar,ID,[use_reserved|NO],Reserved,Points,Grid,SofarOut,NextScanPoints):-
    length(Reserved,LR), !, LR < 60, 
-   proccess_overlap_reserved(ID,H,V,Reserved,Sofar,SofarOut,Points,NextScanPoints,_Unreserved,StillReserved),
-   intersection(SofarOut,Sofar,_Intersected,LeftOverA,_LeftOverB),
-   as_debug(9,print_Igrid(H,V,'use_reserved'+ID,LeftOverA,[])),!.
+   proccess_overlap_reserved(ID,H,V,Reserved,Sofar,SofarOut,Points,NextScanPoints,_Unreserved,StillReserved),!,
+   %intersection(SofarOut,Sofar,_Intersected,LeftOverA,_LeftOverB),as_debug(9,print_Igrid(H,V,'use_reserved'+ID,LeftOverA,[])),
+   !.
 
 proccess_overlap_reserved(ID,H,V,[Obj|Reserved],Sofar,SofarOut,Points,NextScanPoints,[Obj|Unreserved],StillReserved):- 
    once((globalpoints(Obj,ObjPoints), 
+   \+ color(Obj,black),
    intersection(ObjPoints,Points,Intersected,LeftOverA,LeftOverB), 
    do_leftover(Sofar,LeftOverA,Intersected,Use,Sofar2),
    append(Intersected,Use,All),
@@ -290,17 +291,19 @@ cycle_s(Reserved,_GH,_GV,Sofar,_ID,_Options,Reserved,Points,_Grid,Sofar,Points).
 
 
 default_i_options([  
-  use_reserved,
   fourway,
+  use_reserved,
+  %shape_lib,
+  all,
   %solid(squares),
-  %all,
+  %
   %squares, diamonds, 
   % polygs,
   %hv_line(v), hv_line(h),
   %dg_line(u),dg_line(d),
   %CS,
   all,
-  shape_lib,
+  
   connect(hv_line(h)),
   connect(hv_line(v)),  
   % line(_),dg_line(_),

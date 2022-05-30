@@ -115,8 +115,6 @@ name_the_pair(TestID,ExampleNum,In,Out,PairName):-
 
 
 
-
-
 /*
 
 ! 
@@ -128,25 +126,28 @@ _
 learn_shape(Name,Ascii):- replace_in_string([ 
    '\r'='\n','\n\n'='\n','! '='!','!\n'='\n','!'=''],Ascii,Ascii0),
    atomics_to_string(Rows1,'\n',Ascii0),Rows1=[_|Rows],maplist(atom_chars,Rows,GrowthChart),
+   bg_sym(BG),
    subst_each(GrowthChart,[
-   ' '=_,
+   ' '=BG,
    ','=Fill,
    '.'=Fill,
    '/'=Color,
    '|'=Color,
+   '-'=Color,
+   '_'=Color,
    '='=Color,
   '\\'=Color,
-   'o'=Color], Grid),
+   'o'=Color], BGrid),
+   bg_to_fresh_vars(BGrid,Grid),
    assertz_if_new(learned_color_inner_shape(Name,Color,Fill,Grid,GrowthChart)),
    nop((
-     Color = green, Fill = red,   
+     Color = green, Fill = red,        
      grid_size(Grid,H,V),
-     print_grid(H,V,Grid),
+     print_grid(H,V,Grid),     
      wqnl(learned(Name)))).
 
 learn_shapes:- forall(l_shape(Name,Ascii), learn_shape(Name,Ascii)).
 
-:- learn_shapes.
 
 
 

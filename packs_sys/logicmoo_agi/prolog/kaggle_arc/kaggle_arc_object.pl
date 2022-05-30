@@ -75,6 +75,10 @@ make_indiv_object(ID,H,V,IPoints,obj(OUT)):-
   points_range(Points,LoH,LoV,HiH,HiV,_HO,_VO),
   make_indiv_object(ID,H,V,LoH,LoV,HiH,HiV,Points,Overrides,OUT).
 
+make_indiv_object(ID,H,V,Points,Overrides,obj(OUT)):-
+  points_range(Points,LoH,LoV,HiH,HiV,_HO,_VO),
+  make_indiv_object(ID,H,V,LoH,LoV,HiH,HiV,Points,Overrides,OUT).
+
 make_indiv_object(ID,H,V,LoH,LoV,HiH,HiV,Points,Overrides,OUT):- 
   Width is HiH-LoH+1,
   Height is HiV-LoV+1,
@@ -85,7 +89,7 @@ make_indiv_object(ID,H,V,LoH,LoV,HiH,HiV,Points,Overrides,OUT):-
  must_det_l((
   assertion(is_list([overrides|Overrides])),
   assertion(maplist(is_cpoint,Points)),
-  assertion(ground(Points)),
+  %assertion(ground(Points)),
   flag(indiv,Iv,Iv+1),
   once(colors(Points,CC)),
   length(Points,Len),
@@ -105,14 +109,15 @@ make_indiv_object(ID,H,V,LoH,LoV,HiH,HiV,Points,Overrides,OUT):-
      visual_hv(Width,Height),  rotation(same), loc_xy(LoH,LoV)],     
     %width(Width), height(Height), area(Area), %missing(Empty),
     [changes([])|Shapes], % [grid(LocalGrid)],    
-    [object_indv_id(ID,Iv),globalpoints(Points),grid_size(H,V)]],Ps),
-  override_object(Ps,Overrides,OUT1),sort_obj_props(OUT1,OUT))).
+    [object_indv_id(ID,Iv),globalpoints(Points),grid_size(H,V)]],Ps))),  
+  override_object(Ps,Overrides,OUT1),
+  sort_obj_props(OUT1,OUT),!.
 
 top(7).
 
 
 record_xform(Rot90,Obj,XObj):- is_object(Obj), object_changes(Obj,Was),
-  override_object(Obj,change([Rot90|Was]),XObj),!.
+  override_object(Obj,changes([Rot90|Was]),XObj),!.
 record_xform(_Missied,XObj,XObj).
 
 
@@ -124,7 +129,7 @@ prop_of(visually,localpoints(_)).
 prop_of(rotation,rotation(_)).
 prop_of(loc_xy,loc_xy(_,_)).
 
-sort_obj_props(obj(L),obj(LO)):- !, sort_obj_props(L,LO).
+%sort_obj_props(obj(L),obj(LO)):- !, sort_obj_props(L,LO).
 sort_obj_props(L,LO):- L=LO. %predsort(obj_prop_sort_compare,L,LO).
 obj_prop_sort_compare(R,A,B):- compound(A), compound(B), !, obj_prop_sort_compare2(R,A,B).
 obj_prop_sort_compare(R,A,B):- compare(R,A,B).
@@ -144,13 +149,13 @@ override_object(List,[E|Props],NewList):-!,
   override_object(List,E,MidList),
   override_object(MidList,Props,NewList).
 
-override_object(List,E,NewList):- E\==object_shape(_), functor(E,F,A),functor(R,F,A),
+override_object(List,E,NewList):- E \= object_shape(_), functor(E,F,A),functor(R,F,A),
     append(Left,[R|Right],List), % E \=@= R,
     append(Left,[E|Right],NewList),!.
 
 override_object(List,E,NewList):- 
     append(Left,[changes(G)|Right],List), 
-    ( \+ \+ (member(R,Right), R == E ) -> NewList = List ; append(Left,[changes(G),E|Right],NewList)),!.
+    (( \+ \+ (member(R,Right), R =@= E )) -> NewList = List ; append(Left,[changes(G),E|Right],NewList)),!.
 
 transfer_props(O,Functors,NewO,obj(NewObjL)):-
   indv_props(O,L),
@@ -247,9 +252,17 @@ object_changes(I,X):- indv_props(I,L),!,member(changes(X),L).
 
 globalpoints(I,X):- indv_props(I,L),!,member(globalpoints(X),L).
 globalpoints(Grid,Points):- is_grid(Grid),!, grid_size(Grid,HH,HV), 
-  findall(C-Point,(between(1,HV,V),between(1,HH,H),once((nth1(V,Grid,Row),nth1(H,Row,C),nonvar(C),hv_point(H,V,Point)))),Points),!.
+  findall(C-Point,(between(1,HV,V),between(1,HH,H),
+    once((nth1(V,Grid,Row),
+          nth1(H,Row,C),
+          \+ is_bg(C), 
+          hv_point(H,V,Point)))),Points),!.
 globalpoints(Grid,[Grid]):- is_point(Grid),!.
 globalpoints(Grid,Points):- is_list(Grid),!,maplist(globalpoints,Grid,MPoints),append(MPoints,Points).
+
+is_bg(C):- bg_sym(BG),C==BG,!.
+is_bg(C):- get_bgc(BG),C==BG,!.
+
 %globalpoints(Grid,Points):- is_object(Grid),!,globalpoints(Grid,Points).
 /*
 globalpoints(ID,Points):- \+ \+ cmem(ID,_,_), findall(-(C,HV),cmem(ID,HV,C),Points).
@@ -271,16 +284,16 @@ get_instance_method(Obj,Compound,F):- is_object(Obj), compound(Compound),compoun
 
 object_grid(I,X):- indv_props(I,L),member(grid(X),L),!.
 %object_grid(I,G):- globalpoints(I,GP),into_grid(GP,G).
-object_grid(I,G):- localpoints(I,GP),into_grid(GP,G).
+object_grid(I,G):- grid_size(I,H,V),localpoints(I,GP),points_to_grid(H,V,GP,G).
 
 
 loc_xy(I,X,Y):- indv_props(I,L),member(loc_xy(X,Y),L).
 loc_xy(Grid,H,V):- is_grid(Grid),!,globalpoints(Grid,Points),!,points_range(Points,LoH,LoV,_,_,_,_), H is LoH, V is LoV.
 loc_xy(NT,H,V):- named_gridoid(NT,G),loc_xy(G,H,V).
 
+visual_hv(I,X,Y):- indv_props(I,L),member(visual_hv(X,Y),L).
 visual_hv(Grid,H,V):- is_grid(Grid),!,globalpoints(Grid,Points),!,points_range(Points,LoH,LoV,HiH,HiV,_,_), H is HiH-LoH+1, V is HiV-LoV+1.
 visual_hv(NT,H,V):- named_gridoid(NT,G),visual_hv(G,H,V).
-visual_hv(I,X,Y):- indv_props(I,L),member(visual_hv(X,Y),L).
 %visual_hv(Points,H,V):- pmember(visual_hv(H,V),Points),!.
 visual_hv(Points,H,V):- points_range(Points,LoH,LoV,HiH,HiV,_,_), H is HiH-LoH+1, V is HiV-LoV+1.
 

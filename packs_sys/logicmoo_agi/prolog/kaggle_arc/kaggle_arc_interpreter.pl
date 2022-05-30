@@ -93,16 +93,6 @@ into_group(P,G):-
 into_group(P,G):- maplist(into_group,P,Gs),!, set_grid_nums(Gs), combine_grids(overlay,Gs,G).
 */
 
-:- dynamic(iz/2).
-
-subclazz(outline,hollow).
-subclazz(outline,thick1).
-subclazz(outline,rectangle).
-subclazz(outline,noexit).
-
-iz(X,Y):- nonvar(Y)->(subclazz(P,Y),iz(X,P));(nonvar(X),iz(X,P),subclazz(P,Y)).
-iz(X,Y):- object_shape(X,Y).
-
 gather_object(Obj1,Var,Expression,Grid,Grid):-
   create_bag(Obj1),
   forall(Expression,ain(part_of(Var,Obj1))).

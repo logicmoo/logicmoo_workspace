@@ -16,6 +16,9 @@
 :- dynamic(grid_nums/2).
 :- setenv('DISPLAY','10.0.0.122:0.0').
 :- (getenv('DISPLAY',_) -> guitracer ; true).
+:- set_prolog_flag(toplevel_print_anon,true).
+:- set_prolog_flag(toplevel_print_factorized,true).
+:- set_prolog_flag(answer_write_options, [quoted(true), portray(true), max_depth(20), attributes(portray)]).
 
 :- ensure_loaded(kaggle_arc_utils).
 :- ensure_loaded(kaggle_arc_ui_ansi).
@@ -28,6 +31,8 @@
 :- ensure_loaded(kaggle_arc_test_iface).
 :- ensure_loaded(kaggle_arc_object).
 :- ensure_loaded(kaggle_arc_learning).
+:- ensure_loaded(kaggle_arc_imagens).
+:- ensure_loaded(kaggle_arc_recognise).
 :- ensure_loaded(kaggle_arc_ui_html).
 
 %c:- forall(clause(fav(A,B),true),add_history1((fav(A,B)))).
@@ -70,16 +75,37 @@ try_arc_io(TestID,ExampleNum,In,Out):-
   nop(writeln(grid_convert(size(IH,IV)->size(OH,OV)))),
   ignore((more_task_info(TestID,III),pt(III),nl)), 
   show_pair(IH,IV,OH,OV,test,PairName,In,Out),
-
-  individuals_common([],Out,UnsharedOut),
-  individuals_common([],In,UnsharedIn),
-  show_pair(IH,IV,OH,OV,unshared,PairName,UnsharedIn,UnsharedOut),
+  get_shape_lib(hammer,ReservedS),
+  individuals_common(ReservedS,Out,UnsharedOut),
+  individuals_common(ReservedS,In,UnsharedIn),
+  format('~N+unshared~N'),
+  show_pair(IH,IV,OH,OV,unshared,PairName,UnsharedIn,UnsharedOut),!,
   %notrace(showdiff(UnsharedIn,UnsharedOut)),
+  format('~N-unshared~N'),
 
-  notrace(individuals_common(UnsharedIn,Out,SharedOut)),
-  notrace(individuals_common(SharedOut,In,SharedIn)),
-  notrace(show_pair(IH,IV,OH,OV,common,PairName,SharedIn,SharedOut)),!,
+  ((reuse_indivs(UnsharedIn,UnsharedOut,BetterA,BetterB),
+  ( (UnsharedOut\==BetterB ; UnsharedIn\== BetterA) ->
+    show_pair(IH,IV,OH,OV,better,PairName,BetterA,BetterB);
+     writeln('nothing better')))),
 
+  (individuals_common(UnsharedIn,Out,SharedOut)),
+  (individuals_common(SharedOut,In,SharedIn)),
+
+  format('~N+common~N'),
+  (show_pair(IH,IV,OH,OV,shared,PairName,SharedIn,SharedOut)),!,
+  format('~N-common~N'),
+
+
+  nop((
+
+  (individuals_common(UnsharedIn,Out,SharedOut)),
+  (individuals_common(UnsharedOut,In,SharedIn)),
+
+  format('~N+shared~N'),
+  show_pair(IH,IV,OH,OV,shared,PairName,SharedIn,SharedOut),!,
+  format('~N-shared~N'),
+
+  
   nop((reuse_indivs(SharedIn,SharedOut,BetterA,BetterB),
   ( (SharedOut\==BetterB ; SharedIn\== BetterA) ->
     show_pair(IH,IV,OH,OV,better,PairName,BetterA,BetterB);
@@ -96,7 +122,7 @@ try_arc_io(TestID,ExampleNum,In,Out):-
   compute_shared_indivs(In,SharedIn),
   compute_shared_indivs(Out,SharedOut),
   show_pair(IH,IV,OH,OV,shared,PairName,SharedIn,SharedOut))),!,
-  nop(catch(maybe_confirm_sol(TestID,ExampleNum,In,Out),E,(wdmsg(E)))))),!.
+  nop(catch(maybe_confirm_sol(TestID,ExampleNum,In,Out),E,(wdmsg(E)))))))),!.
 
 
 reuse_indivs(IndvA,IndvB,BetterA,BetterB):-
@@ -131,4 +157,5 @@ reuse_a_b(A,B,AA):-
     (pt(same_object(GlyphA,GlyphB,How))))).
 
 
+:- learn_shapes.
 

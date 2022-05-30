@@ -462,7 +462,6 @@ grid_size_nd([C,R|Rows],H,V):-
 grid_size_nd([L],H,(1)):- (var(L)->between(1,30,H);true), length(L,H).
 
 
-
 closure_grid_to_object(Orig,Grid,NewObj):- 
   object_indv_id(Orig,ID,_Iv),
   grid_size(Grid,H,V),  
@@ -488,13 +487,12 @@ into_grid(Points,Grid, throw_no_conversion(Points)):-
         nb_set_nth1(H,Row,CN)))))),!.
 
 
-points_to_grid(Points,Grid):- is_grid(Points),Points=Grid,!.
+%points_to_grid(Points,Grid):- is_grid(Points),Points=Grid,!.
 points_to_grid([Points|More],Grid):- is_grid(Points),Points=Grid,grid_size(Points,H,V),calc_add_points(H,V,Grid,More),!.
+
 points_to_grid(Points,Grid):- notrace(grid_size(Points,H,V)), points_to_grid(H,V,Points,Grid).
 
 points_to_grid(H,V,Points,Grid):- make_grid(H,V,Grid), calc_add_points(1,1,Grid,Points).
-
-non_free_fg(C):- \+ free_cell(C), \+ is_bgc(C).
 
 calc_add_points(OH,OV,_,Obj):- var(Obj),dumpST,throw(var_calc_add_points(OH,OV,Obj)).
 calc_add_points(OH,OV,Grid,Obj):- is_grid(Obj),globalpoints(Obj,Points),maplist(calc_add_points(OH,OV,Grid),Points).
@@ -521,6 +519,7 @@ insert_col(N,Col,Grid,NewGrid):- grid_size(Grid,H,V), insert_col(N,Col,Grid,H,V,
 insert_col(N,Col,Grid,H,V,NewGrid):- N<0, NewN is H + N+1,!,insert_col(NewN,Col,Grid,H,V,NewGrid).
 insert_col(N,Col,Grid,_,V,NewGrid):- length(Col,V),maplist(insert_col_at(N),Col,Grid,NewGrid).
 
+
 insert_col_at(N,Col,Row,NewRow):- length(Left,N),append(Left,Right,Row),append(Left,[Col|Right],NewRow).
 
 insert_ele(N,V,L,NL):- length(Left,N),append(Left,Right,L),append(Left,[V|Right],NL).
@@ -544,7 +543,7 @@ from_gridoid(Points,C,GN,H,V):- is_group(Points), smallest_first(Points,ObjList)
   from_gridoid(ObjList,C,N,H,V,G), maybe_glyph(G,N,GN).
 
 from_gridoid(Points,C,GN,H,V):- from_gridoid(Points,C,N,H,V,G), maybe_glyph(G,N,GN).
-from_gridoid(Points,C,N,H,V,G):- nth0(N,Points,G),hv_value0(G,C,H,V),nonvar(C),C\==black,!.
+from_gridoid(Points,C,N,H,V,G):- nth0(N,Points,G),hv_value0(G,C,H,V),nonvar(C), \+ is_bgc(C), \+ bg_sym(C), !.
 from_gridoid(Points,C,N,H,V,G):- nth0(N,Points,G),hv_value0(G,C,H,V),nonvar(C),!.
 from_gridoid(Points,C,N,H,V,G):- nth0(N,Points,G),hv_value0(G,C,H,V).
 
@@ -646,7 +645,9 @@ xform_cache(rot45,5,5,[ [ A, B, C, D, E],
                             [ F, L, Q, R, X],
                             [ K, P, U, V, W]]).
 
-grid_xform(Rot90,Grid,NewGrid):- grid_size(Grid,H,V),apply_transformer(Rot90,H,V,Grid,NewGrid).
+grid_xform(Rot90,Grid,NewGrid):- 
+  grid_size(Grid,H,V),
+  apply_transformer(Rot90,H,V,Grid,NewGrid).
 apply_transformer(Name,H,V,G,O):-
   get_xformer(Name,H,V,In,Out),!,
   G=In,O=Out.
@@ -654,7 +655,7 @@ apply_transformer(Name,H,V,G,O):-
 get_xformer(Name,H,V,In,Out):- xform_cache(Name,H,V,In,Out),!.
 get_xformer(Name,H,V,In,Out):- 
    make_grid(H,V,In),
-   call(Name,In,Out),
+   call(Name,In,Out),!,
    asserta(xform_cache(Name,H,V,In,Out)),!.
 
 %srot90V,flipV

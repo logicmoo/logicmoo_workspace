@@ -15,6 +15,9 @@ matches_filter(E,obj(List)):- member(E,List).
 allow_dirs([Type|_],X):- !, allow_dirs(Type,X).
 allow_dirs(Type,X):- subtypes(Type,SType),allow_dir(SType,List),member(X,List).
 
+subtypes(C,C).
+subtypes(C,S):- subClassOf(S,C).
+
 allow_dir(hv_line(h),[e,w]). allow_dir(hv_line(v),[n,s]). allow_dir(dg_line(u),[ne,sw]). allow_dir(dg_line(d),[nw,se]).
 
 
@@ -33,11 +36,26 @@ polyg(border(diamond),[dg_line(H),dg_line(V),dg_line(H),dg_line(V)]):- u_d(H,V).
 h_v(h,v).
 u_d(u,d).
 
-subtypes(C,C).
-subtypes(C,S):- subClassOf(S,C).
+iz(X,Y):- nonvar(Y)->(subClassOf(P,Y),iz(X,P));(nonvar(X),iz(X,P),subClassOf(P,Y)).
+iz(X,Y):- object_shape(X,Y).
+
+:- dynamic(iz/2).
+subClassOf(outline,hollow).
+subClassOf(outline,thick1).
+subClassOf(outline,rectangle).
+subClassOf(outline,noexit).
+
 subClassOf(hv_line(D),line(D)).
 subClassOf(dg_line(D),line(D)).
 subClassOf(dg_line(D),line(D)).
+
+subClassOf(square,symmetric).
+subClassOf(diamond,symmetric).
+subClassOf(h_symmetric,symmetric).
+subClassOf(circle,symmetric).
+subClassOf(triangle,h_symmetric).
+subClassOf(round,symmetric).
+
 
 meets_indiv_criteria(_,_).
 
@@ -51,6 +69,12 @@ is_black_or_bg(BG):- black==BG ; is_bgc(BG).
 %is_black_or_bg(0).
 
 is_color(C):- atom(C),color_int(C,N),integer(N).
+
+is_colorish(C):- is_color(C),!.
+is_colorish(C):- has_color_c(C,_),!.
+is_colorish(C):- get_bgc(BG),BG==C,!.
+is_colorish(C):- bg_sym(BG),BG==C,!.
+is_colorish(C):- fg_sym(FG),FG==C,!.
 
 is_black(C):- C==black.
 get_black(black).
@@ -74,7 +98,7 @@ is_lpoint(P):- is_point(P), \+ is_gpoint(P).
 is_points_list([G|L]):- !, is_point(G),maplist(is_point,L).
 
 enum_colors(OtherColor):- named_colors(Colors),!,member(OtherColor,Colors).
-
+enum_fg_colors(Color):- enum_colors(Color),is_color_no_bgc(Color).
 fill_color(Color,OtherColor):- enum_colors(OtherColor),Color\==OtherColor,is_color_no_bgc(OtherColor).
 
 is_bg_indiv(O):- colors(O,[cc(C,CC)]),CC>0,is_bgc(C).
@@ -86,7 +110,8 @@ is_not_gpoint(I):- \+ is_gpoint(I).
 
 
 is_cpoint(C):- \+ compound(C),!,fail.
-is_cpoint(C-P):- nonvar(C),!,is_nc_point(P).
+%is_cpoint(C-P):- (nonvar(C);has_color_c(C)),!,is_nc_point(P).
+is_cpoint(_-P):- is_nc_point(P).
 
 is_nc_point(P):- atom(P), hv_point(H,_,P),!,number(H).
 
@@ -111,7 +136,7 @@ is_grid([[C|H]|R]):- notrace((is_grid_cell(C),is_list(H),is_list(R),
   maplist(is_row_len(L),R))).
 
 %is_object(H):- is_list(H),maplist(is_cpoint,H).
-is_grid_cell(C):- \+ is_list(C), (var(C); is_color(C) ; ( C =  _-_)),!.
+is_grid_cell(C):- \+ is_list(C), nop((var(C); is_color(C) ; ( C =  _-_))),!.
 
 
 is_object(O):- compound(O), O = obj(Props), is_list(Props).
@@ -130,11 +155,11 @@ is_point_obj(O,Color,Point):- is_object(O),visual_hv(O,H,V), !, hv(H,V)==hv(1,1)
 set_bgc(C):- atom(C),color_code(C,N),C\==N,!,set_bgc(N).
 set_bgc(C):- var(C),nb_delete(grid_bgc).
 set_bgc(C):- nb_setval(grid_bgc,C),!.
-get_bgco(X):- nb_current(grid_bgc,X),is_color_dat(X),!.
+get_bgco(X):- nb_current(grid_bgc,X),X\==[],is_color_dat(X),!.
 :- set_bgc(black).
 
 get_bgc(X):- get_bgco(X),!.
-get_bgc(X):- is_black(X).
+get_bgc(X):- get_black(X).
 
 
 is_color_no_bgc(X):- \+ is_bgc(X), is_color(X).
@@ -145,12 +170,19 @@ is_bg_or_var(BG,X):- X==BG.
 
 free_cell(Var):- var(Var),!.
 free_cell(C):- get_bgco(X),C==X.
+
+non_free_fg(C):- \+ free_cell(C), \+ is_bgc(C).
+
 %free_cell(0).
 %free_cell(8).
 
 %trim_unused_vert_square(BG,Grid,GridO).
 %trim_unused_vert_square(BG,GridR,GridO):- append(Grid,[Row],GridR),maplist(is_bg_or_var(BG),Row),trim_unused_vert_square(BG,Grid,GridO).
 %trim_unused_vert_square(_,G,G).*/
+
+non_h_rot(rot90).
+non_h_rot(flipV).
+non_h_rot(rot270).
 
 enum_rotation(same).
 enum_rotation(rot90).
@@ -186,79 +218,6 @@ apv(sub_points([])).
 
 
 
-
-l_shape(circle,"
- o=o !
-o...o!
-|.,.|!
-o...o!
- o=o !").
-
-l_shape(round,"
-        ooo     
-      o.....o   
-     o.......o  
-    o.........o 
-    o....,....o 
-    o.........o 
-     o.......o  
-      o.....o   
-        ooo     
-                ").
-
-l_shape(hollow,"
-oo=oo!
-o...o!
-|.,.|!
-o...o!
-oo=oo!").
-
-l_shape(diamond,"
-  o  !
- /.\\ !
-o.,.o!
- \\./ !
-  o  !").
-
-
-l_shape(heart,"
- o o !
-o.o.o!
-o.,.o!
- \\./ !
-  o  !").
-
-l_shape(spade,"
- o== !
-o.,.o!
-o...o!
- \\./ !
-  o  !").
-
-
-l_shape(right_triangle,"
-    o!
-   /|!
-  o.o!
- o.,o!
-o=ooo!").
-
-
-l_shape(building,"
-oo==o!
-o...|!
-,...o!
-|...|!
-o==oo!").
-
-
-l_shape(triangle,"
-   o   !
-  o.o  !
- /.,.\\ !
-o=ooo=o!").
-
-
 color_and_rotation(RedHammer,Hammer):-
   all_colors(RedHammer,Hammer1),
   all_rotations(Hammer1,Hammer).
@@ -266,36 +225,27 @@ color_and_rotation(RedHammer,Hammer):-
 all_colors(RedHammer,Hammer):- change_color(RedHammer,Hammer).
 all_colors(RedHammer,RedHammer).
 
+
 change_color(RedHammer,Hammer):- 
    color(RedHammer,CurrentColor),
    fill_color(CurrentColor,OtherColor),
-   swap_colors(CurrentColor,OtherColor,RedHammer,Hammer).
+  swap_colors(CurrentColor,OtherColor,RedHammer,Hammer).
 
-all_rotations(RedHammer,Hammer):- 
+all_rotations(Shape,Shape):- iz(Shape,symmetric),!.
+all_rotations(Shape,Hammer):- iz(Shape,h_symmetric),!, non_h_rot(Rot),call(Rot,Shape,Hammer).
+all_rotations(RedHammer,Hammer):-
   enum_rotation(ROT),
   call(ROT,RedHammer,Hammer).
 
-the_hammer(RedHammer):- 
-  RedHammer = obj([mass(6), shape([point_01_01, point_01_02, point_01_03, point_02_01, point_02_02, point_03_02]), 
-  colors([cc(red, 6.0)]), localpoints([red-point_01_01, red-point_01_02, red-point_01_03, red-point_02_01, 
-  red-point_02_02, red-point_03_02]), visual_hv(3, 3), rotation(same), loc_xy(2, 5), 
-  changes([]), object_shape(rectangluar), object_shape(polygon), object_indv_id(t('1b60fb0c')*(trn+666)*out, 666), 
-  globalpoints([red-point_02_05, red-point_02_06, red-point_02_07, red-point_03_05, red-point_03_06, red-point_04_06]), 
-  grid_size(10, 10)]).
 
+bg_to_fresh_vars(BGrid,Grid):- map_pred(bg_to_fresh_vars_e,BGrid,Grid).
+bg_to_fresh_vars_e(X,Y):-bg_sym(BG), X==BG, Y= _.
 
-in_shape_lib(LibObj):- 
-  in_grid_shape_lib(Shape,Grid,GrowthChart),
-  grid_size(Grid,H,V),
-  enum_scale(Scale),
-  atomic_list_concat([Shape,H,V,Scale],'_',ID),
-  scale_grid(Scale,GrowthChart,Grid,ScaledGrid),
-  localpoints(ScaledGrid,Points),
-  make_indiv_object(ID,H,V,[object_shape(Shape)|Points],LibObj).
-in_shape_lib(Hammer):- the_hammer(RedHammer),color_and_rotation(RedHammer,Hammer).
+use_growth_chart(Pixels,GC,NewPixels):- globalpoints(GC,GP), do_gp(GP,Pixels,NewPixels).
+ 
   
-in_grid_shape_lib(Shape,Grid,GrowthChart):- enum_colors(Color), fill_color(Color,Fill), 
-   learned_color_inner_shape(Shape,Color,Fill,Grid,GrowthChart).
+%learned_color_inner_shape(Shape,Color,Color,P,GC),globalpoints(GC,GP),use_growth_chart(P,GC,PO).
+
 
 %scale_grid(Scale,GrowthChart,Grid,ScaledGrid)
 scale_grid(1,_GrowthChart,Grid,Grid).
