@@ -69,7 +69,7 @@ object_set_global_point(Obj,H,V,C):-
   object_set_local_point(Obj,LH,LV,C).
 
 
-object_global_to_local_point(Obj,H,V,LH,LV):- loc_xy(Obj,OH,OV),
+object_global_to_local_point(Obj,H,V,LH,LV):- (Obj,OH,OV),
   LH is H - OH + 1, LV is V - OV + 1.
 
 object_local_to_global_point(Obj,H,V,LH,LV):- loc_xy(Obj,OH,OV),
@@ -825,4 +825,60 @@ cleanup(IndvC,BetterC):-
   append([Left,LeftB,RBigger,[AA]],MissingAB),
   cleanup(MissingAB,BetterC).
 cleanup(A,A).
+
+
+
+/*
+*/
+grid_indexer_cache(2,2,3,3,
+[_,_,
+ [_,_,X1,Y1,Z1|_],
+ [_,_,X2,Y2,Z2|_],
+ [_,_,X3,Y3,Z3|_]|_],
+[[X1,Y1,Z1],
+ [X2,Y2,Z2],
+ [X3,Y3,Z3]]).
+
+
+grid_indexer_cache(2,3,3,3,
+[_,_,_,
+ [_,_,X1,Y1,Z1|_],
+ [_,_,X2,Y2,Z2|_],
+ [_,_,X3,Y3,Z3|_]|_],
+[[X1,Y1,Z1],
+ [X2,Y2,Z2],
+ [X3,Y3,Z3]]).
+
+
+:- dynamic(grid_indexer_cache/6).
+
+% make_grid_indexer(H,V,FH,FV,FindRow,Indexer):- grid_indexer_cache(H,V,FH,FV,FindRow,Indexer),!.
+make_grid_indexer(H,_V,FH,_FV,_FindRow,_Indexer):- TH is H+FH, TH>30,!.
+make_grid_indexer(_H,V,_FH,FV,_FindRow,_Indexer):- TV is V+FV, TV>30,!.
+make_grid_indexer(H,V,FH,FV,FindRow,Indexer):-
+  length(Above,V),
+  make_row(FV,Rows),
+  make_rows(FV,H,Rows,FH,FindRow),
+  Before = _,
+  append(Above,Rows,AR), append(AR,Before,Indexer),!.
+  %grid_indexer_cache(H,V,FH,FV,FindRow,Indexer).
+
+make_rows(FV,H,[Row|RO],VH,[FindRow|FRO]):- length(LPad,H),length(FindRow,H),
+ append(LPad,FindRow,LPF), append(LPF,_,Row),!, FV1 is FV -1, make_rows(FV1,H,RO,VH,FRO).
+make_rows(0,_,[],_,[]):-!.
+
+%make_grid_indexer:- grid_indexer_cache(27,27,27,27,_,_),!.
+make_grid_indexer:- 
+ tell('gi_cache'),
+ writeln(':- module(gi_cache,[igic/6]). \n'),
+ forall(between(0,29,H),
+  forall(V=0, %between(0,29,V),
+   forall(between(1,30,FH),
+    forall(between(1,30,FV),
+     (make_grid_indexer(H,V,FH,FV,R,L),writeq(igic(H,V,FH,FV,R,L)),writeln('.')))))),
+ told.
+
+%:- ensure_loaded(gi_cache).
+
+
 

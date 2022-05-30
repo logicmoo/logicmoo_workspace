@@ -69,6 +69,7 @@ make_point_object(ID,H,V,Point,OUT):-
    make_indiv_object(ID,H,V,[Point],OUT).
 
 make_indiv_object(_,_,_,obj(Ps),obj(Ps)):-!.
+
 make_indiv_object(ID,H,V,IPoints,obj(OUT)):-
   assertion(is_list(IPoints)),
   my_partition(is_cpoint,IPoints,Points,Overrides),
@@ -77,13 +78,15 @@ make_indiv_object(ID,H,V,IPoints,obj(OUT)):-
 
 make_indiv_object(ID,H,V,Points,Overrides,obj(OUT)):-
   points_range(Points,LoH,LoV,HiH,HiV,_HO,_VO),
-  make_indiv_object(ID,H,V,LoH,LoV,HiH,HiV,Points,Overrides,OUT).
+  make_indiv_object(ID,H,V,LoH,LoV,HiH,HiV,Points,Overrides,OUT),!.
 
 make_indiv_object(ID,H,V,LoH,LoV,HiH,HiV,Points,Overrides,OUT):- 
+ (Points==[]-> trace ; true),
   Width is HiH-LoH+1,
   Height is HiV-LoV+1,
   %nb_current(test_pairname,ID),
   Area is Width * Height,
+  
   assertion((Points\==[],
      maplist(between(1,30),[H,V,LoH,LoV,HiH,HiV,Width,Height]))),
  must_det_l((
@@ -202,7 +205,7 @@ enum_object(S):- is_gridname(S,_).
 
 %indv_props(Obj,L):- compound(Obj), arg(1,Obj,L), is_list(L),!.
 indv_props(obj(L),L):- is_list(L),!.
-indv_props(G,L):- g2o(G,O),!,indv_props(O,L).
+indv_props(G,L):- nonvar(G), g2o(G,O), nonvar(O),!,indv_props(O,L).
 indv_props(obj(L),L):- enum_object(obj(L)).
 
 walls_thick1(G):- localpoints(G,Points),counted_neighbours(Points,ListOfSizes),walls_thick1_sizes(ListOfSizes).
@@ -250,13 +253,15 @@ rotation(I,X):- indv_props(I,L),member(rotation(X),L).
 
 object_changes(I,X):- indv_props(I,L),!,member(changes(X),L).
 
-globalpoints(I,X):- indv_props(I,L),!,member(globalpoints(X),L).
+globalpoints(I,X):- indv_props(I,L),member(globalpoints(X),L),is_points_list(X),!.
 globalpoints(Grid,Points):- is_grid(Grid),!, grid_size(Grid,HH,HV), 
   findall(C-Point,(between(1,HV,V),between(1,HH,H),
     once((nth1(V,Grid,Row),
-          nth1(H,Row,C),
-          \+ is_bg(C), 
+          nth1(H,Row,C2),
+          is_spec_color(C2,C), 
           hv_point(H,V,Point)))),Points),!.
+
+globalpoints(I,G):- localpoints(X,L),is_points_list(X),loc_xy(I,X,Y),offset_points(X,Y,L,G),!.
 globalpoints(Grid,[Grid]):- is_point(Grid),!.
 globalpoints(Grid,Points):- is_list(Grid),!,maplist(globalpoints,Grid,MPoints),append(MPoints,Points).
 
@@ -284,7 +289,7 @@ get_instance_method(Obj,Compound,F):- is_object(Obj), compound(Compound),compoun
 
 object_grid(I,X):- indv_props(I,L),member(grid(X),L),!.
 %object_grid(I,G):- globalpoints(I,GP),into_grid(GP,G).
-object_grid(I,G):- grid_size(I,H,V),localpoints(I,GP),points_to_grid(H,V,GP,G).
+object_grid(I,G):- visual_hv(I,H,V),localpoints(I,GP),points_to_grid(H,V,GP,G),!.
 
 
 loc_xy(I,X,Y):- indv_props(I,L),member(loc_xy(X,Y),L).

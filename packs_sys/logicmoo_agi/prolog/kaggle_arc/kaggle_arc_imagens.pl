@@ -81,10 +81,21 @@ l_shape([triangle,h_symmetric],"
  /.,.\\ !
 o-ooo-o!").
 
+%l_shape([h_symmetric,hammer],H):- hammer2(H).
 
+hammer2("
+___________
+ B B B B B 
+ B B B B B 
+     B     
+     B     
+___________").
 
-the_hammer(RedHammer):-  the_hammer(red,RedHammer).
 the_hammer(BlueHammer):-  the_hammer(blue,BlueHammer).
+the_hammer(RedHammer):-  the_hammer(red,RedHammer).
+
+the_hammer(blue, LibObj):- hammer2(Text), text_to_grid(Text,H,V,Points,_Hammer),
+  make_indiv_object('ID',H,V,Points,[object_shape(hammer)],LibObj).
 
 the_hammer(Color,ColorHammer):- 
   ColorHammer = obj([mass(6), shape([point_01_01, point_01_02, point_01_03, point_02_01, point_02_02, point_03_02]), 
@@ -94,8 +105,6 @@ the_hammer(Color,ColorHammer):-
   globalpoints([Color-point_02_05, Color-point_02_06, Color-point_02_07, Color-point_03_05, Color-point_03_06, Color-point_04_06]), 
   grid_size(10, 10)]).
 
-
-  
 
 shape_info_props(Shapes,ShapeProps):- is_list(Shapes),!,maplist(shape_info_props,Shapes,ShapeProps).
 shape_info_props(Shape,object_shape(Shape)).

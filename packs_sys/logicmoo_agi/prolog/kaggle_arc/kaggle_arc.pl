@@ -76,13 +76,15 @@ try_arc_io(TestID,ExampleNum,In,Out):-
   ignore((more_task_info(TestID,III),pt(III),nl)), 
   show_pair(IH,IV,OH,OV,test,PairName,In,Out),
   get_shape_lib(hammer,ReservedS),
+
+  %ReservedS = [],
   individuals_common(ReservedS,Out,UnsharedOut),
   individuals_common(ReservedS,In,UnsharedIn),
   format('~N+unshared~N'),
   show_pair(IH,IV,OH,OV,unshared,PairName,UnsharedIn,UnsharedOut),!,
   %notrace(showdiff(UnsharedIn,UnsharedOut)),
   format('~N-unshared~N'),
-
+ nop((
   ((reuse_indivs(UnsharedIn,UnsharedOut,BetterA,BetterB),
   ( (UnsharedOut\==BetterB ; UnsharedIn\== BetterA) ->
     show_pair(IH,IV,OH,OV,better,PairName,BetterA,BetterB);
@@ -122,7 +124,7 @@ try_arc_io(TestID,ExampleNum,In,Out):-
   compute_shared_indivs(In,SharedIn),
   compute_shared_indivs(Out,SharedOut),
   show_pair(IH,IV,OH,OV,shared,PairName,SharedIn,SharedOut))),!,
-  nop(catch(maybe_confirm_sol(TestID,ExampleNum,In,Out),E,(wdmsg(E)))))))),!.
+  nop(catch(maybe_confirm_sol(TestID,ExampleNum,In,Out),E,(wdmsg(E)))))))))),!.
 
 
 reuse_indivs(IndvA,IndvB,BetterA,BetterB):-

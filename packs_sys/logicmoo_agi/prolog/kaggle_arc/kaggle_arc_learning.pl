@@ -123,22 +123,16 @@ _
 \
 
 */
-learn_shape(Name,Ascii):- replace_in_string([ 
-   '\r'='\n','\n\n'='\n','! '='!','!\n'='\n','!'=''],Ascii,Ascii0),
-   atomics_to_string(Rows1,'\n',Ascii0),Rows1=[_|Rows],maplist(atom_chars,Rows,GrowthChart),
-   bg_sym(BG),
-   subst_each(GrowthChart,[
-   ' '=BG,
-   ','=Fill,
-   '.'=Fill,
-   '/'=Color,
-   '|'=Color,
-   '-'=Color,
-   '_'=Color,
-   '='=Color,
-  '\\'=Color,
-   'o'=Color], BGrid),
-   bg_to_fresh_vars(BGrid,Grid),
+growthchart_to_grid(GrowthChart,Color,Fill,Grid):-
+   bg_sym(BG), 
+  subst_each(GrowthChart,[
+   ' '=BG, ','=Fill, '.'=Fill, '/'=Color, '|'=Color, '-'=Color,
+   '_'=Color, '='=Color, '\\'=Color, 'o'=Color], BGrid),
+   bg_to_fresh_vars(BGrid,Grid).
+
+learn_shape(Name,Ascii):-
+   ascii_to_growthchart(Ascii,GrowthChart),
+   growthchart_to_grid(GrowthChart,Color,Fill,G).
    assertz_if_new(learned_color_inner_shape(Name,Color,Fill,Grid,GrowthChart)),
    nop((
      Color = green, Fill = red,        

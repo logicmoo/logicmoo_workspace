@@ -47,12 +47,12 @@ arcdbg(G):- wdmsg(G).
 user:portray(Grid):- arc_portray(Grid),!.
 
 arc_portray(Grid):- \+ \+ catch((
-  \+ tracing, \+ is_object(Grid),  \+ is_group(Grid), 
-   (is_gridoid(Grid);is_points_list(Grid)),
+  \+ tracing, \+ is_object(Grid),  \+ is_group(Grid), ground(Grid),
+   (is_gridoid(Grid);(is_points_list(Grid),ground(Grid))),
    grid_size(Grid,H,V),!,H>0,V>0, wots(S,print_grid(H,V,Grid)),write(S)),_,false).
 arc_portray(Grid):- \+ \+ catch(( fail,
-  tracing, \+ is_object(Grid),  \+ is_group(Grid), 
-   (is_points_list(Grid)),
+  tracing, \+ is_object(Grid),  \+ is_group(Grid), ground(Grid),
+   ((is_points_list(Grid),ground(Grid))),
    grid_size(Grid,H,V),!,H>0,V>0, wots(S,print_grid(H,V,Grid)),write(S)),_,false).
 %user:portray(Grid):- ((\+ tracing, is_group(Grid),print_grid(Grid))).
 %user:portray(Grid):- notrace((is_object(Grid),print_grid(Grid))).
@@ -193,7 +193,10 @@ print_grid(Grid):- notrace(print_grid0(_HH,_VV,Grid)).
 
 print_grid(H,V,Grid):- notrace(print_grid0(H,V,Grid)).
 
-print_grid0(H,V,G):- is_empty_grid(G),!,wdmsg(is_empty_grid(H,V)).
+print_grid0(H,V,G):- is_empty_grid(G),!,
+ %trace, dumpST,
+
+ wdmsg(is_empty_grid(H,V)).
 print_grid0(H,V,Grid):- \+ callable(Grid),!,write('not grid: '),
   GG= nc_print_grid(H,V,Grid),
   pt(GG),throw(GG).
@@ -253,7 +256,8 @@ silver('#c0c0c0').
 silver('#9a9a9a').
 
 
-ansi_color(C,Color):- C\==0,block_colors(L),nth0(C,L,Color).
+ansi_color(C,Color):- integer(C),block_colors(L),nth0(C,L,Color).
+ansi_color(C,Color):- color_int(C,I),ansi_color(I,Color).
 
 underline_print(W):- ansi_format([bold,underline],'~@',[W]),!.
 bold_print(W):- ansi_format([bold],'~@',[W]),!.
@@ -321,11 +325,11 @@ resrv_dot(Code):-  code_type(Code,white);code_type(Code,punct);code_type(Code,qu
 
 var_dot(63).
 /* code=63 ?  code=183 · code=176 ° code=186 º 170 ª */
-bg_dot(183).
+bg_dot(32).
 /* 169	© 248	ø 216	Ø  215 ×  174	® */
 %fg_dot(C):- nb_current(fg_dot,C),integer(C),!.
 fg_dot(174).
-
+cant_be_dot(183).
 grid_dot(169).
 
 %print_g(H,V,C0,_,_,_,_):- has_color_c(C0),has_color_c(C0,C),!,  ansi_format([bold,fg('#ff8c00')],'~@',[(write('c'),user:print_g1(H,V,C))]).
@@ -341,12 +345,12 @@ object_cglyph(G,CGlyph):- color(G,C),object_glyph(G,Glyph),wots(CGlyph,color_pri
 
 %user:portray(S):- (string(S);atom(S)),atom_codes(S,[27|_]),write('"'),write(S),write('"').
 
-cant_be_dot(215).
 
 
 
 %print_g1(E):- has_color_c(E,C),color_print(C,'+'),!.
 %print_g1(C0):- sub_term(E,C0),has_color_c(E,C),color_print(C,'='),!.
+print_g1(N):- var(N),has_color_c(N,C),cant_be_dot(DOT),ansi_color(C,CI),ansi_format([fg(CI)],'~s',[[DOT]]),!.
 print_g1(N):- var(N),has_color_c(N,C),format(chars(Codes),'~p',[N]),last(Codes,S),print_g2(C,S),!.
 print_g1(N):- into_color_glyph(N,C,Code),as_name(Code,S), color_print(C,S),!.
 print_g1(C):- var(C), color_print(C,'.'),!.

@@ -1,53 +1,85 @@
+test_ogs:-
+  forall((f666(F),h666(S),ogs(H,V,F,S)),(writeq(ogs(H,V,F,S)),nl)).
+
+print_cgrid(F):- \+ \+ ((constrain_grid(F,FG),print_grid(FG),nl)).
+
+test_ogs(H,V):- clsmake,
+  wqln("searching..."),
+  fp666(F),print_cgrid(F),
+  copy_term(F,FC), 
+  (sp666(G);(fp666(G0),pad_grid(G0,G))), 
+  print_cgrid(G),
+  ogs(H,V,F,G),
+  %grid_size(G,GH,GV),
+  wqln("Matched"),
+  print_grid(FC),
+  print_grid(G),
+  wqln("Found pair").
+
+% 
+% s666(X),text_to_grid(X,G),!,in_shape_lib(hammer,H),object_grid(H,OG),duplicate_term(OG,OGC),ogs(FH,FY,OGC,G),OGC=@=OG.
 
 
-/*
-ogs(_,_,_,[]):-!,fail.
-ogs(H,V,[FRow],Search):-!,
-  append(VPad,[SR|Nexr],Search), 
-  append(HPad,FRow,PadFrow),
-  append(PadFrow,_,PadFrowO),
-  PadFrowO = SR,
-  length(VPad,V),
-  length(HPad,H),!.
- 
-ogs(H,V,[FRow|FRGrid],Search):-   
- append(VPad,[SR|Rows],Search), 
- append(HPad,FRow,PadFrow),
- append(PadFrow,_,PadFrowO),
- PadFrowO = SR,
- ogs(H2,V2,FRGrid,Rows),
- length(VPad,V1),
- length(HPad,H1),
- V is V1 + V2, H is H1 + H2.
- % grid_size(FGrid,FH,FV),
-% grid_size(Search,GH,GV),
-*/
-/*
-*/
-grid_indexer_cache(2,2,3,3,
-[_,_,
- [_,_,X1,Y1,Z1|_],
- [_,_,X2,Y2,Z2|_],
- [_,_,X3,Y3,Z3|_]|_],
-[[X1,Y1,Z1],
- [X2,Y2,Z2],
- [X3,Y3,Z3]]).
+constrain_type(CheckType,G,GG):- is_list(G),!,maplist(constrain_type(CheckType),G,GG).
+%constrain_type(CheckType,G,GG):- is_bgc(G),freeze(CheckType,\+ is_fg_color(GG)).
+%constrain_type(CheckType,G,GG):- is_color(G),!,freeze(CheckType,G==GG).
+constrain_type(CheckType,G,GG):- is_bgc(G), freeze(CheckType,G=GG),!.
+constrain_type(_CheckType,G,G):- is_color(G),!.
+constrain_type(CheckType,G,GG):- freeze(CheckType,G=GG).
+
+  
+ogs(H,V,OG,SG):-
+  constrain_type(CheckType,OG,OGC),!,
+  ogs_0(H,V,OGC,SG),
+  nop(CheckType=run).
+
+ogs_0(H,V,OG,SG):-
+  %constrain_type(CheckType,OG,OGC),
+  %constrain_grid(OG,OGC),
+  =(OG,OGC),
+  constrain_grid(SG,SGC),!,
+  ogs_1(H,V,OGC,SGC),
+  %CheckType=run,
+  %print_grid(OGC),nl,
+  %wqnl(found_at(H,V)),
+  %print_grid(SGC),nl,
+  true.
+
+ogs_1(Hi,Vi,Find,Search):-
+  nonvar(Hi),nonvar(Vi), 
+  H is Hi - 1, V is Vi - 1,
+  length(LPad,H),
+  length(VPad,V),!,
+  append(VPad,[LPadAndRow|Next],Search),
+  Find = [R1|FGrid],
+  append(R1,_,Rho),
+  append(LPad,Rho,LPadAndRow),
+  ogs_pt2(H,FGrid,Next).
+
+ogs_1(H,V,FindI,Search):-
+  ogs_2(Hi,Vi,FindI,Search),
+  H is Hi + 1,
+  V is Vi + 1.
+
+ogs_2(H,V,[R1|FGrid],Search):-
+  append(VPad,[LPadAndRow|Next],Search),
+  append(R1,_,Rho), append(LPad,Rho,LPadAndRow),
+  once((length(LPad,H),
+  ogs_pt2(H,FGrid,Next),
+  length(VPad,V))).
+
+ogs_pt2(_,[],_):-!.
+ogs_pt2(H,[Row|FindRows],[S|Search]):-
+  length(LPad2,H),append(LPad2,Row,LPadRow2),
+  append(LPadRow2,_,S),!,
+  ogs_pt2(H,FindRows,Search).
+
+:- discontiguous h666/1. 
+:- discontiguous f666/1. 
 
 
-grid_indexer_cache(2,3,3,3,
-[_,_,_,
- [_,_,X1,Y1,Z1|_],
- [_,_,X2,Y2,Z2|_],
- [_,_,X3,Y3,Z3|_]|_],
-[[X1,Y1,Z1],
- [X2,Y2,Z2],
- [X3,Y3,Z3]]).
-
-
-:- dynamic(grid_indexer_cache/6).
-
-grid_detect_bg(Grid,GridO):- 
-  copy_term(Grid,Grid1),
+grid_detect_bg(GridIn,GridO):- 
+  copy_term(GridIn,Grid1),
   term_singletons(Grid1,Background),
   maplist(to_grid_bg(Grid1),Background),
   get_bgc(BG),subst(Grid1,BG,bg,GridO),!.
@@ -57,21 +89,21 @@ to_grid_bg(_,E):- has_color_c(E),!.
 to_grid_bg(_,BG):- bg_sym(BG),!.
 to_grid_bg(_,_).
 
-grid_detect_fg(Grid):- 
-  term_singletons(Grid,Background),
-  term_variables(Grid,Foreground),!,
+grid_detect_fg(GridIn):- 
+  term_singletons(GridIn,Background),
+  term_variables(GridIn,Foreground),!,
   include(not_in(Background),Foreground,Foreground1),
-  grid_detect_fg(Grid,Foreground1),!.
+  grid_detect_fg(GridIn,Foreground1),!.
 
 grid_detect_fg(_,[]):-!.
-grid_detect_fg(Grid,Foreground1):- 
+grid_detect_fg(GridIn,Foreground1):- 
   copy_term(Foreground1,ForegroundCopy),
   numbervars(ForegroundCopy,2021,_,[attvar(skip)]),
-  maplist(to_grid_fg(Grid),Foreground1,ForegroundCopy),!.
+  maplist(to_grid_fg(GridIn),Foreground1,ForegroundCopy),!.
 
-%maybe_grid_numbervars(Grid,Grid):-!.
-maybe_grid_numbervars(GridI,Grid):- grid_numbervars(GridI,Grid),!.
-maybe_grid_numbervars(Grid,Grid):-!.
+%maybe_grid_numbervars(GridIn,GridIn):-!.
+maybe_grid_numbervars(GridI,GridIn):- grid_numbervars(GridI,GridIn),!.
+maybe_grid_numbervars(GridIn,GridIn):-!.
 
 not_in(Background,Foreground):-
   \+ (member(E,Background), E == Foreground). 
@@ -80,13 +112,9 @@ to_grid_fg(_,E,_):- has_color_c(E),!.
 to_grid_fg(_,N,'$VAR'(N)):-!.
 to_grid_fg(_,B,B).
 
-grid_numbervars(Grid,GridO):- 
- must_det_ll((grid_detect_bg(Grid,GridO),grid_detect_fg(GridO))).
+grid_numbervars(GridIn,GridO):- 
+ must_det_ll((grid_detect_bg(GridIn,GridO),grid_detect_fg(GridO))).
 
-
-
-
-color_at(H,V,C,Grid):- nth1(V,Grid,Row),nth1(H,Row,C).
 
 has_color_c(Y):- get_attr(Y,dif,_),!.
 has_color_c(Y):- get_attr(Y,cc,_),!.
@@ -102,118 +130,212 @@ must_det_ll(X):- call(X),!.
 %pad_with_contraints_3(GridO,TODO):-
 %  grid_size(GridO,HH,VV),
 %  pad_with_contraints_3(GridO,HH,VV,TODO),!.
-pad_constraints(O,GridO):- is_object(O),!,object_grid(O,Grid),!,pad_constraints(Grid,GridO).
-pad_constraints(Grid1,GridO):-
+pad_grid(O,GridO):- is_object(O),!,object_grid(O,GridIn),!,pad_grid(GridIn,GridO).
+pad_grid(Grid1,Grid2):-
  must_det_ll((
   grid_size(Grid1,H,V),
   globalpoints(Grid1,Ps),
   %writeln(grid_size(H,V)),
   points_range(Ps,LoH,LoV,HiH,HiV,_,_),  
-  create_padding(Grid1,LoH,LoV,HiH,HiV,H,V,HH,VV,Grid2),!,
-  grid_detect_bg(Grid2,Grid3),!,
+  create_padding(Grid1,LoH,LoV,HiH,HiV,H,V,_HH,_VV,Grid2))),!.
+
+constrain_grid(Grid2,GridO):- 
+  grid_detect_bg(Grid2,Grid3),
   release_bg(Grid3,GridO),
-  pad_with_contraints_3(GridO,HH,VV,TODO),
-  maplist(with_grid(GridO),TODO))),!.
+  constrain_grid_now(Grid3,GridO),!.
+  
 
 
 release_bg(Grid2,GridO):- must_det_ll((release_bg0(Grid2,GridO))),!.
-release_bg0(Grid,GridO):- is_list(Grid), !, maplist(release_bg0,Grid,GridO).
-release_bg0(Grid,Grid):- attvar(Grid),!.
-release_bg0(Grid,Grid):- var(Grid),!.
-%release_bg0(Grid-P,GridO-P):- !, release_bg0(Grid,GridO).
+release_bg0(GridIn,GridO):- is_list(GridIn), !, maplist(release_bg0,GridIn,GridO).
+release_bg0(GridIn,GridIn):- attvar(GridIn),!.
+release_bg0(GridIn,GridIn):- var(GridIn),!.
+%release_bg0(GridIn-P,GridO-P):- !, release_bg0(GridIn,GridO).
 release_bg0(BG,_):- is_bg(BG),!.
 release_bg0(C0,C):- is_spec_color(C0,C),!.
 release_bg0(C,C).
 
-pad_with_contraints_3(GridO,HH,VV,TODOS):-    
-  findall(difc(H2,V2,C),
-    (color_at(H,V,C0,GridO),
-     H\==HH, V\==VV, H\==1, V\==1,
-     is_spec_color(C0,C),
-     is_adjacent_hv(H,V,Dir,H2,V2),
-     \+ is_diag(Dir),
-     color_at(H2,V2,C2,GridO),
-     \+ is_spec_color(C2,_)), TODO),
-  list_to_set(TODO,TODOS),!.
+constrain_grid_now(GridIn, GridO):-
+  grid_size(GridIn,H,V),
+  constrain_grid_now(GridIn,H,V,H,V,GridO).
 
-with_grid(Grid,difc(X,Y,C)):- difc(X,Y,C,Grid).
-difc(X,Y,C,Grid):- color_at(X,Y,C2,Grid),dif(C,C2).
+constrain_grid_now(_GridIn,_Hi,0,_GH,_GV,_GridO):-!.
+constrain_grid_now(GridIn,Hi,Vi,GH,GV,GridO):-
+  get_color_at(Hi,Vi,GridIn,C0),
+  constrain_ele(GridIn,Hi,Vi,C0,GridO),
+  (Hi==1 -> (H = GH, V is Vi-1) ; (H is Hi -1, V=Vi)),
+  constrain_grid_now(GridIn,H,V,GH,GV,GridO).
 
-  
+constrain_ele(GridIn,H,V,C0,GridO):- is_spec_color(C0,C),!, constrain_dir_ele([n,s,w,e],GridIn,H,V,C,GridO).
+constrain_ele(GridIn,H,V,C0,GridO):- is_bgc(C0),!, constrain_bg_ele(GridIn,H,V,C0,GridO).
+constrain_ele(GridIn,H,V,C0,GridO):- bg_sym(C),C==C0,!, constrain_bg_ele(GridIn,H,V,C0,GridO).
+constrain_ele(GridIn,H,V,C0,GridO):- constrain_bg_ele(GridIn,H,V,C0,GridO),!.
+constrain_ele(_GridIn,_H,_V,_C0,_GO):- !.
+
+
+constrain_bg_ele(_GridIn,H,V,_C0,GridO):-
+  %color_at(H,V,C1,GridIn),
+  get_color_at(H,V,GridO,C2),
+  freeze(C2,\+ is_fg_color(C2)),!.
+  %freeze(C2,C1==C2),
+  %freeze(C1,C1==C2).
+
+is_fg_color(C):- is_black(C),!,fail.
+is_fg_color(C):- is_color(C),!.
+
+count_gneighbors(C,H,V,Count,GridIn):- 
+  findall(Dir,
+    (is_adjacent_hv(H,V,Dir,H2,V2),
+     get_color_at(H2,V2,GridIn,C2),C2=@=C), 
+    Count).
+
+
+constrain_dir_ele([],_GridIn,_,_,_,_GridO).
+constrain_dir_ele([Dir|SEW],GridIn,H,V,C,GridO):-  
+  is_adjacent_hv(H,V,Dir,H2,V2),
+  \+ is_diag(Dir),
+  get_color_at(H2,V2,GridIn,C2),
+  \+ is_spec_color(C2,_),
+  \+ count_gneighbors(C,H2,V2,[_],GridIn),
+  get_color_at(H2,V2,GridO,CO),
+  dif(CO,C),
+  constrain_dir_ele(SEW,GridIn,H,V,C,GridO).
+constrain_dir_ele([_|SEW],GridIn,H,V,C,GridO):-
+  constrain_dir_ele(SEW,GridIn,H,V,C,GridO).
+
 
 g666(Y):- in_shape_lib(grid,X),
   object_grid(X,G),
-  pad_constraints(G,Y).
+  pad_grid(G,Y).
 
 
 make_row(Rows,FV):- functor(P,v,FV), P=..[v|Rows].
-% make_grid_indexer(H,V,FH,FV,FindRow,Indexer):- grid_indexer_cache(H,V,FH,FV,FindRow,Indexer),!.
-make_grid_indexer(H,_V,FH,_FV,_FindRow,_Indexer):- TH is H+FH, TH>30,!.
-make_grid_indexer(_H,V,_FH,FV,_FindRow,_Indexer):- TV is V+FV, TV>30,!.
-make_grid_indexer(H,V,FH,FV,FindRow,Indexer):-
-  length(Above,V),
-  make_row(FV,Rows),
-  make_rows(FV,H,Rows,FH,FindRow),
-  Before = _,
-  append(Above,Rows,AR), append(AR,Before,Indexer),!.
-  %grid_indexer_cache(H,V,FH,FV,FindRow,Indexer).
 
-make_rows(FV,H,[Row|RO],VH,[FindRow|FRO]):- length(LPad,H),length(FindRow,H),
- append(LPad,FindRow,LPF), append(LPF,_,Row),!, FV1 is FV -1, make_rows(FV1,H,RO,VH,FRO).
-make_rows(0,_,[],_,[]):-!.
 
-%make_grid_indexer:- grid_indexer_cache(27,27,27,27,_,_),!.
-make_grid_indexer:- 
- tell('gi_cache'),
- writeln(':- module(gi_cache,[igic/6]). \n'),
- forall(between(0,29,H),
-  forall(V=0, %between(0,29,V),
-   forall(between(1,30,FH),
-    forall(between(1,30,FV),
-     (make_grid_indexer(H,V,FH,FV,R,L),writeq(igic(H,V,FH,FV,R,L)),writeln('.')))))),
- told.
+f666(G):- in_shape_lib(hammer,Ham),object_grid(Ham,G).
+/*
+f666(
+[[X],
+ [X],
+ [X],
+ [X],
+ [X],
+ [X]]).
 
-%:- ensure_loaded(gi_cache).
+f666(
+[[X,_],
+ [X,_],
+ [X,_],
+ [X,X],
+ [X,_]]).
 
-test_ogs:-
-  forall((f666(F),h666(S),ogs(H,V,F,S)),(writeq(ogs(H,V,F,S)),nl)).
+f666(
+[[X,_],
+ [X,X],
+ [X,_],
+ [X,_]]).
+*/
 
-% :- make_grid_indexer.
+h666(
+"_________________________________________________
+         B B B B B               B B B B B
+         B B B B B               B B B B B
+             B     B B       R R     B     B B
+             B     B B       R R     B     B B
+             B B B B B       R R R R B B B B B
+             B     B B       R R     B     B B
+             B     B B       R R     B     B B
+         B B B B B               B B B B B
+         B B B B B               B B B B B
+ _________________________________________________").
 
-ogs(H,V,Find,Search):- length(Find,FV),Find=[FR|_],length(FR,FH),!,
-   between(0,29,V),make_row(Skip,V),append(Skip,Use,Search),igic(H,0,FH,FV,Use,Find).
+h666(
+"_________________________________________________
+      B B B                           B B B      
+        B B                             B B      
+        B       B                       B       B
+        B B B B B                 R R   B B B B B
+        B B   B B                 R R R B B   B B
+          B                       R       B      
+        B B                             B B      
+        B B B                           B B B     
+__________________________________________________").
+trans_to_color('R','red').
+trans_to_color('B','blue').
+trans_to_color('G','green').
+trans_to_color('O','orange').
+trans_to_color('®','blue').
+trans_to_color(' ','black').
 
-ogs(H,V,F,S):- %grid_size(S,GH,GV), %visual_hv
-  grid_size(F,FH,FV) -> gi_cache:igic(H,V,FH,FV,F,S).
 
-ogs(H,V,[R|FF],[S,S1|SRCH]):- 
-  length(S,GW),
-  length(R,FW),
-  LPMW is GW-FW,
-  %length(LPadRow2O,GW),
-  between(1,LPMW,H),
- old_obj_grid_scanner(H,V,[R|FF],GW,[S,S1|SRCH]).
 
-old_obj_grid_scanner(H,V,Find,GW,Search):-
-  Find = [R1,R2|Grid],
-  length(LPad2,H),
-  length(LPadRow2O,GW),
-  append(LPad2,R2,LPadAndRow2),
-  append(LPadAndRow2,_,LPadRow2O),
-  nth1(V,Search,LPadRow2O,Rest),  
-  length(LPad1,H),
-  append(LPad1,R1,LPadAndRow1),
-  append(LPadAndRow1,_,LPadRow1O),
-  nth0(V,Search,LPadRow1O,_),
-  old_obj_grid_scanner2(H,Grid,Rest).
+ascii_to_grid(Text,G):- atom_contains(Text,'____'),!,
+  atom_chars(Text,C),
+  make_grid(30,30,G0),
+  parse_text_to_grid(0,0,C,G0,G).
 
-old_obj_grid_scanner2(_,[],_):-!.
-old_obj_grid_scanner2(H,[Row|FindRows],[S|Search]):-
-  length(LPad2,H),append(LPad2,Row,LPadRow2),
-  append(LPadRow2,_,S),!,
-  old_obj_grid_scanner2(H,FindRows,Search).
+ascii_to_grid(Text,G):- 
+   ascii_to_growthchart(Text,GrowthChart),
+   growthchart_to_grid(GrowthChart,6,5,G).
 
-%open_gridRows(Grid,GridO):- notrace(maplist(append,Grid,_,GridO)).
+ascii_to_growthchart(Text,GrowthChart):- 
+ replace_in_string([ 
+   '\r'='\n','\n\n'='\n','! '='!','!\n'='\n','!'=''],Text,Ascii0),
+   atomics_to_string(Rows1,'\n',Ascii0),Rows1=[_|Rows],maplist(atom_chars,Rows,GrowthChart),!.
+
+
+into_grid_color(L,O):- is_list(L),!,maplist(into_grid_color,L,O).
+into_grid_color(L,O):- var(L),!,L=O.
+into_grid_color(L,O):- color_code(L,O),!.
+into_grid_color(O,O).
+
+into_g666(Text,G):- is_grid(Text),!,maplist(into_grid_color,Text,G).
+into_g666(Text,G):- atomic(Text),text_to_grid(Text,TG),into_g666(TG,G).
+
+ss666(G):- h666(S),into_g666(S,G).
+sp666(Y):- ss666(X), pad_grid(X,Y).
+
+ff666(G):- f666(F),into_g666(F,G).
+fp666(Y):- ff666(X), pad_grid(X,Y).
+
+% ?- h666(X),text_to_grid(X,G).
+text_to_grid(Text,GO):- text_to_grid(Text,_HH,_VV,_ObjPoints,GO).
+text_to_grid(Text,HH,VV,ObjPoints,GO):-
+  ascii_to_grid(Text,G),
+  %print_grid(G),
+  globalpoints(G,GPs),!,
+  %print_grid(GPs),
+  points_range(GPs,_LoH_,_LoV_,HiH,HiV,_,_),
+  LoH=1,LoV=1,
+  deoffset_points(LoH,LoV,GPs,ObjPoints),  
+  %print_grid(ObjPoints),
+  HH is HiH - LoH + 1,
+  VV is HiV - LoV + 1,
+  points_to_grid(HH,VV,ObjPoints,GO),!.
+
+parse_text_to_grid(H,V,X,G,GO):- append(LEft,['\r','\n'|Right],X), append(LEft,['\n'|Right],Y),!, parse_text_to_grid(H,V,Y,G,GO).
+parse_text_to_grid(0,0,X,G,GO):-
+  append(_,['_','\n'|Right],X),
+  parse_text_to_grid(1,1,Right,G,GO).
+parse_text_to_grid(0,0,X,G,GO):-
+  append(_,['\n'|Right],X),
+  parse_text_to_grid(1,1,Right,G,GO).
+
+parse_text_to_grid(H,V,[' ',C2|X],G,GO):- C2 \== '\n',
+  trans_to_color(C2,NewC),
+  replace_global_point(H,V,NewC,_,G,GM),
+  H2 is H+1,
+  parse_text_to_grid(H2,V,X,GM,GO).
+parse_text_to_grid(H,V,[' '|X],G,GO):-
+  H2 is H+1,
+  parse_text_to_grid(H2,V,X,G,GO).
+parse_text_to_grid(_,V,['\n'|X],G,GO):-
+  V2 is V+1,
+  parse_text_to_grid(1,V2,X,G,GO).
+parse_text_to_grid(_,_,[],G,G):-!.
+parse_text_to_grid(_,_,['_'|_],G,G):-!.
+                                                    
+%open_gridRows(GridIn,GridO):- notrace(maplist(append,GridIn,_,GridO)).
 /*
 
 ogs(SM,SR90,FGrid,Search):- fail,  
@@ -310,51 +432,26 @@ f666(
  [5,6,7],
  [5,6,7]]).
 
-s666(Y):- f666(X), pad_constraints(X,Y).
 
 
-create_padding(Grid,LowH,LowV,HiH,HiV,H,V,HH,VV,GridO):- 
-   fix_v_range(Grid,LowV,HiV,H,V,VV,Grid1),
+create_padding(GridIn,LowH,LowV,HiH,HiV,H,V,HH,VV,GridO):- 
+   fix_v_range(GridIn,LowV,HiV,H,V,VV,Grid1),
    rot90(Grid1,Grid2),
    fix_v_range(Grid2,LowH,HiH,VV,H,HH,Grid3),
    rot270(Grid3,GridO).
 
-fix_v_range(Grid,1,HiV,H,V,VV,GridO):-
+fix_v_range(GridIn,1,HiV,H,V,VV,GridO):-
   make_row(Row,H), 
-  fix_v_range([Row|Grid],2,HiV,H,V,V2,GridO), VV is V2+1.
+  fix_v_range([Row|GridIn],2,HiV,H,V,V2,GridO), VV is V2+1.
 
-fix_v_range(Grid,LowV,HiV,H,V,VV,GridO):- HiV==V,!, 
+fix_v_range(GridIn,LowV,HiV,H,V,VV,GridO):- HiV==V,!, 
   make_row(Row,H),
-  append(Grid,[Row],Grid2),
+  append(GridIn,[Row],Grid2),
   HiV2 is HiV+1,
   fix_v_range(Grid2,LowV,HiV2,H,V,V2,GridO),
   VV is V2+1.
-fix_v_range(Grid,_LowV,_HiV,_H,V,V,Grid).
+fix_v_range(GridIn,_LowV,_HiV,_H,V,V,GridIn).
 
 
   
-
-
-/*
-f666(
-[[X],
- [X],
- [X],
- [X],
- [X],
- [X]]).
-
-f666(
-[[X,_],
- [X,_],
- [X,_],
- [X,X],
- [X,_]]).
-
-f666(
-[[X,_],
- [X,X],
- [X,_],
- [X,_]]).
-*/
 

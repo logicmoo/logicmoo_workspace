@@ -185,10 +185,10 @@ non_h_rot(flipV).
 non_h_rot(rot270).
 
 enum_rotation(same).
-enum_rotation(rot90).
-enum_rotation(rot180).
-enum_rotation(rot270).
 enum_rotation(flipV).
+enum_rotation(rot180).
+enum_rotation(rot90).
+enum_rotation(rot270).
 enum_rotation(flipH).
 
   
@@ -231,11 +231,15 @@ change_color(RedHammer,Hammer):-
    fill_color(CurrentColor,OtherColor),
   swap_colors(CurrentColor,OtherColor,RedHammer,Hammer).
 
-all_rotations(Shape,Shape):- iz(Shape,symmetric),!.
-all_rotations(Shape,Hammer):- iz(Shape,h_symmetric),!, non_h_rot(Rot),call(Rot,Shape,Hammer).
-all_rotations(RedHammer,Hammer):-
+
+all_rotations(RedHammer,Hammer):- no_repeats(Grid,(shape_rotations(RedHammer,Hammer),object_grid(Hammer,Grid))).
+
+shape_rotations(Shape,Shape):- iz(Shape,symmetric),!.
+shape_rotations(Shape,Hammer):- iz(Shape,h_symmetric),!, non_h_rot(Rot),call(Rot,Shape,Hammer).
+shape_rotations(RedHammer,Hammer):-
   enum_rotation(ROT),
   call(ROT,RedHammer,Hammer).
+
 
 
 bg_to_fresh_vars(BGrid,Grid):- map_pred(bg_to_fresh_vars_e,BGrid,Grid).
