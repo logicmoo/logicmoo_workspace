@@ -65,8 +65,8 @@ ogs_1(Hi,Vi,Find,Search):-
 
 ogs_1(H,V,FindI,Search):-
   ogs_2(Hi,Vi,FindI,Search),
-  H is Hi + 1,
-  V is Vi + 1.
+  H is Hi + 2,
+  V is Vi + 2.
 
 ogs_2(H,V,[R1|FGrid],Search):-
   append(VPad,[LPadAndRow|Next],Search),

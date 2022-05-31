@@ -126,28 +126,27 @@ fsi(OUTReserved,OUTNewGrid,OUTOptions,H,V,Sofar,ID,Options,Reserved,Points,Grid,
 fsi(ReservedIO,GridO,[shape_lib(Hammer)|NO],H,V,Sofar,ID,[shape_lib(Hammer)|NO],ReservedIO,Points,Grid,SofarOut,NextScanPoints):-!,
    get_shape_lib(Hammer,Reserved),
    proccess_overlap_reserved(GridO,Grid,ID,H,V,Reserved,Sofar,SofarOut,Points,NextScanPoints,_Unreserved,_StillReserved),
-   intersection(SofarOut,Sofar,_Intersected,Found,_LeftOverB), as_debug(8,print_Igrid(H,V,'shape_lib'+ID,Found,[])),
+   %intersection(SofarOut,Sofar,_Intersected,Found,_LeftOverB), as_debug(8,print_Igrid(H,V,'shape_lib'+ID,Found,[])),
    !.
 
 
 fsi(StillReserved,GridO,[use_reserved|NO],H,V,Sofar,ID,[use_reserved|NO],Reserved,Points,Grid,SofarOut,NextScanPoints):-
    length(Reserved,LR), !, LR < 60, 
    proccess_overlap_reserved(GridO,Grid,ID,H,V,Reserved,Sofar,SofarOut,Points,NextScanPoints,_Unreserved,StillReserved),!,
-   intersection(SofarOut,Sofar,_Intersected,LeftOverA,_LeftOverB),as_debug(8,print_Igrid(H,V,'use_reserved'+ID,LeftOverA,[])),
+   %intersection(SofarOut,Sofar,_Intersected,LeftOverA,_LeftOverB),as_debug(8,print_Igrid(H,V,'use_reserved'+ID,LeftOverA,[])),
    !.
 
 proccess_overlap_reserved(GridO,Grid,ID,H,V,RestReserved,Sofar,SofarOut,Points,NextScanPoints,[Obj|Unreserved],StillReserved):-  
    member(Obj,RestReserved),
    Points\==[],
   \+ color(Obj,black),
-   pad_grid(Obj,OGrid),
-   localpoints(Obj,OPoints),
-   OPoints\==[],
+   object_grid(Obj,OGrid),
+%   OPoints\==[],
    ogs(OH,OV,OGrid,Grid),
    %must_det_l
    ((
+   localpoints(Obj,OPoints),
    offset_points(OH,OV,OPoints,ObjPoints),
-   %trace,
    intersection(ObjPoints,Points,Intersected,LeftOverA,LeftOverB),
    do_leftover(Sofar,LeftOverA,Intersected,Use,Sofar2),
    append(Intersected,Use,All),
