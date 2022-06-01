@@ -3,6 +3,24 @@ test_ogs:-
 
 print_cgrid(F):- nop((\+ \+ ((constrain_grid_f(F,FG),print_grid(FG),nl)))),!.
 
+grid_minus_grid(B,A,OI):- 
+  remove_global_points(A,B,OI),!.
+grid_minus_grid(B,A,OI):- is_list(B),maplist(grid_minus_grid,B,A,OI).
+grid_minus_grid(B,A,C):- ignore(grid_minus_grid0(B,A,C)).
+grid_minus_grid(B,_,B):- !.
+grid_minus_grid0(B,A,OI):- B==A,!, OI=black.
+%grid_minus_grid0(B,A,OI):- nonvar_or_ci(B),nonvar_or_ci(A),IO=black.
+%grid_minus_grid0(B,A,OI):- nonvar_or_ci(B),IO=B.
+%grid_minus_grid0(B,A,B):- !.
+/*
+
+grid_minus_grid(B,A,OI):- 
+  pred_global_points(point_minus_point(A,B),A,B,OI).
+
+point_minus_point(A,B,H,V,C,Old,Grid,Grid):- nonvar_or_ci(Old),nonvar_or_ci(C),Old\==C,nop(point_minus_point(A,B,H,V,C,Old,Grid,Grid)).
+point_minus_point(A,B,H,V,C,Old,Grid,Grid):-  nth1(V,Grid,Row),nb_set_nth1(H,Row,black),!, nop(point_minus_point(A,B,H,V,C,Old,Grid,Grid)).
+*/
+
 test_ogs(H,V):- clsmake,
   wqln("searching..."),
   ff666(F),print_cgrid(F),
@@ -53,7 +71,7 @@ ogs_0(H,V,OG,SG):-
   true.
 
 ogs_1(Hi,Vi,Find,Search):-
-  nonvar(Hi),nonvar(Vi), 
+  nonvar_or_ci(Hi),nonvar_or_ci(Vi), 
   H is Hi - 1, V is Vi - 1,
   length(LPad,H),
   length(VPad,V),!,
@@ -135,8 +153,7 @@ has_color_c(Y):- get_attr(Y,cc,_),!.
 has_color_c(C,E):- attvar(C), get_attr(C,dif,XX),!, sub_term(E,XX),is_color(E).
 
 
-is_spec_color(C0,C):- nonvar(C0),\+ is_bg(C0), 
-  (is_color(C0);atomic(C0)),!,C=C0.
+is_spec_color(C0,C):- nonvar_or_ci(C0),\+ is_bg(C0), is_fg_color(C0),!,C=C0.
 
 must_det_ll((X,Y)):- must_det_ll(X),!,must_det_ll(Y).
 must_det_ll(X):- call(X),!.
@@ -169,7 +186,7 @@ constrain_grid(CT,Trig,Grid2,GridO):-
 release_bg(CT,Trig,Grid2,GridO):- must_det_ll((release_bg0(CT,Trig,Grid2,GridO))),!.
 release_bg0(CT,Trig,GridIn,GridO):- is_list(GridIn), !, maplist(release_bg0(CT,Trig),GridIn,GridO).
 release_bg0(_CT,_Trig,GridIn,GridIn):- attvar(GridIn),!.
-release_bg0(_CT,_Trig,GridIn,GridIn):- var(GridIn),!.
+release_bg0(_CT,_Trig,GridIn,GridIn):- plain_var(GridIn),!.
 %release_bg0(CT,Trig,GridIn-P,GridO-P):- !, release_bg0(CT,Trig,GridIn,GridO).
 release_bg0(_CT,_Trig,BG,C):- is_bg(BG),!,put_attr(C,ci,bg).
 release_bg0(_CT,_Trig,C0,C):- is_spec_color(C0,C),!.
@@ -189,7 +206,7 @@ will_be_fg(Trig,FG):- put_attr(FG,ci,fg),
                       freeze(Trig,is_fg_color_if_nonvar(Trig,FG)),
                       freeze(FG,is_fg_color_if_nonvar(Trig,FG)).
 
-is_fg_color_if_nonvar(Trig,V):- var(V),Trig==run,!,fail,freeze(V,is_fg_color_if_nonvar(Trig,V)).
+is_fg_color_if_nonvar(Trig,V):- plain_var(V),Trig==run,!,fail,freeze(V,is_fg_color_if_nonvar(Trig,V)).
 is_fg_color_if_nonvar(Trig,V):- wqnl(is_fg_color_if_nonvar(Trig,V)),fail.
 is_fg_color_if_nonvar(_Trig,C):- is_fg_color(C),!.
 
@@ -217,7 +234,9 @@ constrain_bg_ele(_CT,_Trig,_GridIn,H,V,_C0,GridO):-
   %freeze(C2,C1==C2),
   %freeze(C1,C1==C2).
 
+is_fg_color(C):- attvar(C),get_attr(C,ci,fg).
 is_fg_color(C):- is_bgc(C),!,fail.
+%is_fg_color(C):- compound(C), C = fg(_),!.
 is_fg_color(C):- is_color(C),!.
 is_fg_color(C):- C == fg.
 
@@ -246,7 +265,7 @@ constrain_dir_ele(CT,Trig,[_|SEW],GridIn,H,V,C,GridO):-
   constrain_dir_ele(CT,Trig,SEW,GridIn,H,V,C,GridO).
 
 
-g666(Y):- in_shape_lib(grid,X),
+g666(Y):- in_shape_lib(l_shape,X),
   object_grid(X,G),
   pad_grid(G,Y).
 
@@ -327,7 +346,7 @@ ascii_to_growthchart(Text,GrowthChart):-
 
 
 into_grid_color(L,O):- is_list(L),!,maplist(into_grid_color,L,O).
-into_grid_color(L,O):- var(L),!,L=O.
+into_grid_color(L,O):- plain_var(L),!,L=O.
 into_grid_color(L,O):- color_code(L,O),!.
 into_grid_color(O,O).
 

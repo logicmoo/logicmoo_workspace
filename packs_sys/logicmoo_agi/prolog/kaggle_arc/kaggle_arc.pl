@@ -14,8 +14,8 @@
 :- dynamic(cmem/3).
 :- dynamic(grid_nums/1).
 :- dynamic(grid_nums/2).
-:- setenv('DISPLAY','10.0.0.122:0.0').
-:- (getenv('DISPLAY',_) -> guitracer ; true).
+:- (getenv('DISPLAY',_) -> true ; setenv('DISPLAY','10.0.0.122:0.0')).
+%:- (getenv('DISPLAY',_) -> guitracer ; true).
 :- set_prolog_flag(toplevel_print_anon,true).
 :- set_prolog_flag(toplevel_print_factorized,true).
 :- set_prolog_flag(answer_write_options, [quoted(true), portray(true), max_depth(20), attributes(portray)]).
@@ -54,7 +54,7 @@ arc4:- clsmake, arc1(v('1d398264')).
 
 fav:- forall(fav1,true).
 fav1:- clsmake, fav(X), arc1(X).
-fav(X):- nonvar(X),!, clsmake, arc1(X).
+fav(X):- nonvar_or_ci(X),!, clsmake, arc1(X).
 fav(X):- clause(fav(X,_),true).
 
 arc(TestID):- forall(arc1(TestID),true).
@@ -75,33 +75,56 @@ try_arc_io(TestID,ExampleNum,In,Out):-
   nop(writeln(grid_convert(size(IH,IV)->size(OH,OV)))),
   ignore((more_task_info(TestID,III),pt(III),nl)), 
   show_pair(IH,IV,OH,OV,test,PairName,In,Out),
-  get_shape_lib(hammer,ReservedS),
+  %get_shape_lib(hammer,ReservedS),
   %individuals_common([],Out,UnsharedOut1),
   %individuals_common(ReservedS,Out,UnsharedOut2),
   %show_pair(IH,IV,OH,OV,outs,PairName,UnsharedOut1,UnsharedOut2),!,
   %nop
-  ((
-  %ReservedS = [],
+  grid_minus_grid(In,Out,ImO),
+  grid_minus_grid(Out,In,OmI),
+  show_pair(IH,IV,OH,OV,grid_minus_grid,PairName,ImO,OmI),!,
+
+  mass(ImO,IMass),
+  mass(OmI,OMass),
+
+  ((IMass==0, OMass>0) -> IODiff = OmI ;  IODiff = ImO),
+
+  individuals_common([],IODiff,ReservedS),
   individuals_common(ReservedS,Out,UnsharedOut),
   individuals_common(ReservedS,In,UnsharedIn),
+
+
+  ((
+
+
+
   format('~N+unshared~N'),
   show_pair(IH,IV,OH,OV,unshared,PairName,UnsharedIn,UnsharedOut),!,
   %notrace(showdiff(UnsharedIn,UnsharedOut)),
   format('~N-unshared~N'),
 
   (individuals_common(UnsharedIn,Out,SharedOut)),
-  (individuals_common(SharedOut,In,SharedIn)),
+  (individuals_common(UnsharedOut,In,SharedIn)),
 
   format('~N+common~N'),
   (show_pair(IH,IV,OH,OV,shared,PairName,SharedIn,SharedOut)),!,
   format('~N-common~N'),
 
 
+  (individuals_common(SharedIn,Out,SSharedOut)),
+  (individuals_common(SharedOut,In,SSharedIn)),
+
+  format('~N+SShared~N'),
+  (show_pair(IH,IV,OH,OV,sshared,PairName,SSharedIn,SSharedOut)),!,
+  format('~N-SShared~N'),
+
+    ((reuse_indivs(UnsharedIn,UnsharedOut,BetterA,BetterB),
+    ( (UnsharedOut\==BetterB ; UnsharedIn\== BetterA) ->
+      show_pair(IH,IV,OH,OV,better,PairName,BetterA,BetterB);
+       writeln('nothing better')))),
+
+
   nop((
-  ((reuse_indivs(UnsharedIn,UnsharedOut,BetterA,BetterB),
-  ( (UnsharedOut\==BetterB ; UnsharedIn\== BetterA) ->
-    show_pair(IH,IV,OH,OV,better,PairName,BetterA,BetterB);
-     writeln('nothing better')))),
 
 
   nop((

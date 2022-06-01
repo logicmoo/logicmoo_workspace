@@ -36,7 +36,7 @@ polyg(border(diamond),[dg_line(H),dg_line(V),dg_line(H),dg_line(V)]):- u_d(H,V).
 h_v(h,v).
 u_d(u,d).
 
-iz(X,Y):- nonvar(Y)->(subClassOf(P,Y),iz(X,P));(nonvar(X),iz(X,P),subClassOf(P,Y)).
+iz(X,Y):- nonvar_or_ci(Y)->(subClassOf(P,Y),iz(X,P));(nonvar_or_ci(X),iz(X,P),subClassOf(P,Y)).
 iz(X,Y):- object_shape(X,Y).
 
 :- dynamic(iz/2).
@@ -62,7 +62,7 @@ meets_indiv_criteria(_,_).
 
 % Color types
 
-%is_bgc(BG):- var(BG),!,fail.
+%is_bgc(BG):- plain_var(BG),!,fail.
 is_bgc(BG):- get_bgc(C),BG==C.
 
 is_black_or_bg(BG):- black==BG ; is_bgc(BG).
@@ -81,7 +81,7 @@ get_black(black).
 %get_black(0).
 
 
-is_grid_color(C):- var(C),!,fail.
+is_grid_color(C):- plain_var(C),!,fail.
 % makes grid colors an integer.. 
 %is_grid_color(C):- !,integer(C).
 % we are using atoms currently
@@ -110,20 +110,20 @@ is_not_gpoint(I):- \+ is_gpoint(I).
 
 
 is_cpoint(C):- \+ compound(C),!,fail.
-%is_cpoint(C-P):- (nonvar(C);has_color_c(C)),!,is_nc_point(P).
+%is_cpoint(C-P):- (nonvar_or_ci(C);has_color_c(C)),!,is_nc_point(P).
 is_cpoint(_-P):- is_nc_point(P).
 
 is_nc_point(P):- atom(P), hv_point(H,_,P),!,number(H).
 
-is_gpoint(G):- var(G),!,fail.
+is_gpoint(G):- plain_var(G),!,fail.
 is_gpoint(_-G):-!,is_gpoint(G).
-is_gpoint(G):- hv_point(H,_,G),!,nonvar(H).
+is_gpoint(G):- hv_point(H,_,G),!,nonvar_or_ci(H).
 
 % Grid-oids
 
 is_list_of_gridoids([G|V]):- \+ is_grid([G|V]), is_gridoid(G), is_list(V), maplist(is_gridoid,V).
 
-is_gridoid(G):- var(G),!, fail.
+is_gridoid(G):- plain_var(G),!, fail.
 is_gridoid(G):- is_grid(G),!.
 is_gridoid(G):- is_object(G),!.
 %is_gridoid(G):- is_cpoint(G),!.
@@ -136,7 +136,7 @@ is_grid([[C|H]|R]):- notrace((is_grid_cell(C),is_list(H),is_list(R),
   maplist(is_row_len(L),R))).
 
 %is_object(H):- is_list(H),maplist(is_cpoint,H).
-is_grid_cell(C):- \+ is_list(C), nop((var(C); is_color(C) ; ( C =  _-_))),!.
+is_grid_cell(C):- \+ is_list(C), nop((plain_var(C); is_color(C) ; ( C =  _-_))),!.
 
 
 is_object(O):- compound(O), O = obj(Props), is_list(Props).
@@ -144,7 +144,7 @@ is_object(O):- compound(O), O = obj(Props), is_list(Props).
 %is_group([G|V]):- is_object(G),is_list(V),maplist(is_object,V).
 is_group([G|V]):- is_object(G),is_list(V),maplist(is_object,V).
 
-is_point_obj(O,Color,Point):- nonvar(O),O= Color-Point,!.
+is_point_obj(O,Color,Point):- nonvar_or_ci(O),O= Color-Point,!.
 is_point_obj(O,Color,Point):- is_object(O),visual_hv(O,H,V), !, hv(H,V)==hv(1,1),
   globalpoints(O,[Color-Point]),!.
 
@@ -153,7 +153,7 @@ is_point_obj(O,Color,Point):- is_object(O),visual_hv(O,H,V), !, hv(H,V)==hv(1,1)
 
 :- nb_delete(grid_bgc).
 set_bgc(C):- atom(C),color_code(C,N),C\==N,!,set_bgc(N).
-set_bgc(C):- var(C),nb_delete(grid_bgc).
+set_bgc(C):- plain_var(C),nb_delete(grid_bgc).
 set_bgc(C):- nb_setval(grid_bgc,C),!.
 get_bgco(X):- nb_current(grid_bgc,X),X\==[],is_color_dat(X),!.
 :- set_bgc(black).
@@ -168,7 +168,7 @@ is_bg_or_var(_,X):- free_cell(X),!.
 is_bg_or_var(BG,X):- X==BG.
 
 
-free_cell(Var):- var(Var),!.
+free_cell(Var):- plain_var(Var),!.
 free_cell(C):- get_bgco(X),C==X.
 
 non_free_fg(C):- \+ free_cell(C), \+ is_bgc(C).
@@ -180,13 +180,14 @@ non_free_fg(C):- \+ free_cell(C), \+ is_bgc(C).
 %trim_unused_vert_square(BG,GridR,GridO):- append(Grid,[Row],GridR),maplist(is_bg_or_var(BG),Row),trim_unused_vert_square(BG,Grid,GridO).
 %trim_unused_vert_square(_,G,G).*/
 
+non_h_rot(same).
 non_h_rot(rot90).
 non_h_rot(flipV).
 non_h_rot(rot270).
 
 enum_rotation(same).
 enum_rotation(flipV).
-enum_rotation(rot180).
+enum_rotation(rot180). % = flipHV
 enum_rotation(rot90).
 enum_rotation(rot270).
 enum_rotation(flipH).
@@ -236,9 +237,7 @@ all_rotations(RedHammer,Hammer):- no_repeats(Grid,(shape_rotations(RedHammer,Ham
 
 shape_rotations(Shape,Shape):- iz(Shape,symmetric),!.
 shape_rotations(Shape,Hammer):- iz(Shape,h_symmetric),!, non_h_rot(Rot),call(Rot,Shape,Hammer).
-shape_rotations(RedHammer,Hammer):-
-  enum_rotation(ROT),
-  call(ROT,RedHammer,Hammer).
+shape_rotations(RedHammer,Hammer):- enum_rotation(ROT), call(ROT,RedHammer,Hammer).
 
 
 

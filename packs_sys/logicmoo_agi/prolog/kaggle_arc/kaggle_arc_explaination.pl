@@ -4,23 +4,29 @@
 :- dynamic(is_gridname/2).
 
 set_gridname(Grid,Name):- nb_setval(grid_name,Name),
-  assertion((ground(Name),nonvar(Grid))),
+  assertion((ground(Name),nonvar_or_ci(Grid))),
   asserta_new(is_gridname(Grid,Name)).
 
-%get_gridname(Grid,Name):- is_gridname(Grid,Name)*->true; (var(Name)->(nb_current(grid_name,Name),Name\=[],get_gridname(Grid,Name))).
+%get_gridname(Grid,Name):- is_gridname(Grid,Name)*->true; (plain_var(Name)->(nb_current(grid_name,Name),Name\=[],get_gridname(Grid,Name))).
 get_gridname(Grid,Name):- is_gridname(Grid,Name).
 get_gridname(In,Name*ExampleNum*in):- kaggle_arc(Name,ExampleNum,In,_).
 get_gridname(Out,Name*ExampleNum*out):- kaggle_arc(Name,ExampleNum,_,Out).
 get_gridname(Grid,Name):- gensym('grid_',Name),asserta(is_gridname(Grid,Name)).
 
-into_gridname(G,TstName):- nonvar(G), into_gridname(GVar,TstName),G=@=GVar,!.
-into_gridname(G,Name*ExampleNum*in):- kaggle_arc(Name,ExampleNum,G,_).
-into_gridname(G,Name*ExampleNum*out):- kaggle_arc(Name,ExampleNum,_,G).
-into_gridname(G,TstName):- is_gridname(G,TstName).
-into_gridname(G,TstName):- is_shared_saved(TstName,G).
-into_gridname(G,TstName):- is_unshared_saved(TstName,G).
-into_gridname(G,TstName*T):- fix_test_name(TstName+T,Name,ExampleNum),kaggle_arc(Name,ExampleNum,G,_).
-into_gridname(G,TstName):- learned_color_inner_shape(TstName,magenta,BG,G,_),get_bgc(BG).
+into_gridname(G,TstName):- nonvar_or_ci(G), into_gridnameA(GVar,TstName),G=@=GVar,!.
+into_gridname(G,TstName):- makeup_gridname(TstName),
+  set_gridname(G,TstName).
+
+makeup_gridname(GridName):- gensym('GridName_',TstName), 
+   GridName = TstName*('ExampleNum'+0)*io.
+
+into_gridnameA(G,Name*ExampleNum*in):- kaggle_arc(Name,ExampleNum,G,_).
+into_gridnameA(G,Name*ExampleNum*out):- kaggle_arc(Name,ExampleNum,_,G).
+into_gridnameA(G,TstName):- is_gridname(G,TstName).
+into_gridnameA(G,TstName):- is_shared_saved(TstName,G).
+into_gridnameA(G,TstName):- is_unshared_saved(TstName,G).
+into_gridnameA(G,TstName*T):- fix_test_name(TstName+T,Name,ExampleNum),kaggle_arc(Name,ExampleNum,G,_).
+into_gridnameA(G,TstName):- learned_color_inner_shape(TstName,magenta,BG,G,_),get_bgc(BG).
 
 
 kaggle_arc_db(Name,Example,Num,out,G):- kaggle_arc(Name,Example+Num,_,G).
@@ -64,7 +70,7 @@ debug_indiv:- test_config(nodebug_indiv),!,fail.
 debug_indiv:- test_config(debug_indiv),!.
 debug_indiv:- test_config(indiv(_)),!.
 
-debug_indiv(Var):- var(Var),pt(debug_indiv(Var)),!.
+debug_indiv(Var):- plain_var(Var),pt(debug_indiv(Var)),!.
 
 debug_indiv(Grid):- is_grid(Grid),!,grid_size(Grid,H,V),
   dash_char(H),
@@ -89,7 +95,7 @@ debug_indiv(A):- is_point_obj(A,Color,Point),
   wqnl([' % Point: ', color_print(Color,Sym), dot, color(Color), fav1(Tst), nth(Id), loc_xy(H,V)]),!. 
 */
 debug_indiv(obj(A)):- Obj = obj(A), is_list(A),!,
-   ignore((o2g(Obj,GGG), nonvar(GGG),asserta(g2o(Obj,GGG)))),
+   ignore((o2g(Obj,GGG), nonvar_or_ci(GGG),asserta(g2o(Obj,GGG)))),
 %debug_indiv(Obj):- Obj = obj(A), is_list(A),  
   ignore(colors(Obj,[cc(FC,_)|_])),
   sort_obj_props(A,AS),
@@ -125,7 +131,7 @@ priority(_,2).
 longer_strings(R,A,B):- string(A),string(B),priority(A,PA),priority(B,PB),atom_length(A,AL),atom_length(B,BL),compare(R,PA+AL+A,PB+BL+B).
 longer_strings(R,A,B):- obj_prop_sort_compare(R,A,B).
 
-remove_too_verbose(Var,var(Var)):- var(Var),!.
+remove_too_verbose(Var,plain_var(Var)):- plain_var(Var),!.
 remove_too_verbose(H,''):- too_verbose(H),!.
 
 remove_too_verbose(dot,"point"):- !.

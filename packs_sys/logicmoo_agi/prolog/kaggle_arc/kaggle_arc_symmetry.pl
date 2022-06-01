@@ -24,7 +24,7 @@ is_symgrid(N):-
       member(Trn,[trn+_,tst+_]),
       N=T*Trn*INOUT,      
       known_gridoid(N,G),
-      nonvar(G),
+      nonvar_or_ci(G),
       grid_size(G,H,V), H>12, V>12,
       wdmsg(is_need(N)),
       wdmsg(is_hard(N)).
@@ -163,18 +163,18 @@ aligned_rows0([],_):-!. % ( empty_or_open(L) ; empty_or_open(R) ), !.
 aligned_rows0(_,[]):-!.
 aligned_rows0([E|L],[E|R]):- !, aligned_rows0(L,R).
 
-no_symmetry_yet(Row):- maplist(var,Row),!. % no data yet
+no_symmetry_yet(Row):- maplist(plain_var,Row),!. % no data yet
 no_symmetry_yet(Row):- maplist(=(_),Row),!. % all same element
 
 sort_row_by_num_colors(G,G0):-
    maplist(row_color_changes,G,C),keysort(C,KS),reverse(KS,Now),
    maplist(arg(2),Now,G0).
 
-row_color_changes(List,0-List):- (var(List);List==[]),!.
+row_color_changes(List,0-List):- (plain_var(List);List==[]),!.
 row_color_changes([H|List],C-[H|List]):- row_color_changes(0,H,List,R), C is floor(R/2).
 
 row_color_changes(Res,_,[],Res):-!.
-row_color_changes(PrevCh,H,[N|List],Res):- var(N),!,row_color_changes(PrevCh,H,List,Res).
+row_color_changes(PrevCh,H,[N|List],Res):- plain_var(N),!,row_color_changes(PrevCh,H,List,Res).
 row_color_changes(PrevCh,H,[N|List],Res):- H\==N, row_color_changes(PrevCh+1,N,List,Res).
 row_color_changes(PrevCh,H,[N|List],Res):- H==N,  row_color_changes(PrevCh,N,List,Res).
 
@@ -329,7 +329,7 @@ grid_to_3x3_objs(Grid,NewIndiv4s):-
   %catch(symetric_xy_3x3(Grid,Image9x9),E, (wdmsg(E),fail)),
   %rtrace(symetric_xy_3x3(Grid,Image9x9)),
   flatten(Image9x9,Flat),
-  include(nonvar,Flat,NewIndiv1s),
+  include(nonvar_or_ci,Flat,NewIndiv1s),
   fix_the_fours(NewIndiv1s,NewIndiv4s).
   
 
@@ -343,7 +343,7 @@ consensus(GridS,H,V,VGrid):-
 consensus1(GridS,X,Y,VGrid):- 
   findall(C,(member(G,GridS),get_color_at(X,Y,G,C)),L),
   consensus22(L,R),
-  nonvar(R),is_color(R),
+  nonvar_or_ci(R),is_color(R),
   nb_set_local_point(X,Y,R,VGrid),!.
 
 nb_set_local_point(H,V,C,Grid):- assertion(is_grid(Grid)),!, 
@@ -359,7 +359,7 @@ my_partition(P1,H,I,HE):- dumpST,break,
   my_partition(P1,[H],I,HE).
 
 consensus22(L,C):- 
-  my_partition(var,L,Vars,Rest0),
+  my_partition(plain_var,L,Vars,Rest0),
   %my_partition(=(brown),Rest0,_,Rest),
   my_partition(is_bgc,Rest0,BGC,Rest1),
   my_partition(is_black,Rest1,Blk,Rest2),
@@ -409,8 +409,9 @@ fix_the_fours(NewIndiv0s,NewIndiv2s):-
   nop(format('~N')))),!.
 
 sort_on(C,R,A,B):- call(C,A,AA),call(C,B,BB),!,compare(R,AA+A,BB+B).
+using_compare(C,R,A,B):- call(C,A,AA),call(C,B,BB),!,compare(R,AA,BB).
 colored_pixel_count(A,AA):- object_grid(A,G),
-  findall(E,(sub_term(E,G), nonvar(E),is_color(E),\+ is_bgc(E)),L),
+  findall(E,(sub_term(E,G), nonvar_or_ci(E),is_color(E),\+ is_bgc(E)),L),
   length(L,AA).
 
 symetric_xy_3x3(G,Grid9x9):- 

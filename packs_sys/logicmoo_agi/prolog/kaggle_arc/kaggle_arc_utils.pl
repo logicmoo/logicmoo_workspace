@@ -7,11 +7,12 @@ make_list(N,E,[E|List]):- Nm1 is N -1,make_list(Nm1,E,List).
 
 nth_fact(P,I):- clause(P,true,Ref),nth_clause(P,I,Ref).
 
+nonvar_or_ci(C):- (nonvar(C);attvar(C)),!.
 
-contains_nonvar(N,Info):- sub_term(E,Info),nonvar(E),E=N,!.
+contains_nonvar(N,Info):- sub_term(E,Info),nonvar_or_ci(E),E=N,!.
 
-max_min(A,B,B,B):- var(A),!.
-max_min(A,B,A,A):- var(B),!.
+max_min(A,B,B,B):- plain_var(A),!.
+max_min(A,B,A,A):- plain_var(B),!.
 max_min(A,B,A,B):- A>B,!.
 max_min(A,B,B,A).
 
@@ -21,7 +22,7 @@ as_debug(_,G):- wots(S,G),format('~N~w~N',[S]).
 count_each([],_,[]).
 count_each([C|L],GC,[Len-C|LL]):- include(==(C),GC,Lst),length(Lst,Len),count_each(L,GC,LL).
 
-pmember(E,L):- sub_term(EE,L),nonvar(EE),EE=E,ground(E).
+pmember(E,L):- sub_term(EE,L),nonvar_or_ci(EE),EE=E,ground(E).
 /*pmember(E,L):- is_dict(Points),!,E=grid_size(H,V),!,Points.grid_size=grid_size(H,V).
 pmember(E,L):- member(EE,L),(EE=E;(is_list(EE),pmember(E,EE))).
 pmember(E,L):- member(obj(EE),L),pmember(E,EE).
@@ -116,7 +117,7 @@ segs_to_pointlists([slice(C,Ah,Av,AH,AV)|Segs],[PointsList|Objs]):-
   
 segs_to_pointlists([_|Segs],Objs):-   segs_to_pointlists(Segs,Objs).
 
-
+plain_var(V):- var(V), \+ get_attr(V,ci,_).
 
 must_be_free(AllNew):- var(AllNew),!.
 must_be_free(AllNew):- dumpST,wdmsg(must_be_free(AllNew)),break,fail.

@@ -22,7 +22,7 @@ check_args(P,Arity,An,Left,T,C,MC):-
  AnM1 is An+1,LeftP1 is Left-1, check_args(P,Arity,AnM1,LeftP1,T,C,MC).
 
 
-into_type(Type,G,fake(Type,G)):- var(G),throw(var_into_type(Type,G)).
+into_type(Type,G,fake(Type,G)):- plain_var(G),throw(var_into_type(Type,G)).
 into_type(+,X,X).
 into_type(num,X,X):- assertion(number(X)).
 into_type(dir,X,X):- assertion(nav(X,_,_)).
@@ -40,12 +40,12 @@ test_cond_or(This, That):- term_variables(This,[That|_]),!.
 
 run_dsl(Prog,In,Out):- run_dsl(enact,Prog,In,Out).
 
-run_dsl(Mode,Prog,In,Out):- var(Prog),!,throw(var_solving_progs(Mode,Prog,In,Out)).
+run_dsl(Mode,Prog,In,Out):- plain_var(Prog),!,throw(var_solving_progs(Mode,Prog,In,Out)).
 run_dsl(Mode,Prog,In,Out):- In==dsl_pipe,!,  nb_current(dsl_pipe,PipeIn), run_dsl(Mode,Prog,PipeIn,Out).
 run_dsl(Mode,Prog,In,Out):- Out==dsl_pipe,!, run_dsl(Mode,Prog,In,PipeOut),nb_setval(dsl_pipe,PipeOut).
 run_dsl(Mode,lmDSL(Prog),In,Out):- !, run_dsl(Mode,Prog,In,Out).
-run_dsl(_Mode,call(G),In,Out):-!,call(G),(var(Out)->Out=In; true).
-run_dsl(_Mode,[],In,Out):-!, var(Out)->Out=In; true.
+run_dsl(_Mode,call(G),In,Out):-!,call(G),(plain_var(Out)->Out=In; true).
+run_dsl(_Mode,[],In,Out):-!, plain_var(Out)->Out=In; true.
 run_dsl(_Mode,same,In,Out):-!, duplicate_term(In,Out).
 run_dsl(ennfore,color(Obj,Color),In,Out):-!, set_global_points(Color,Obj,In,Out).
 run_dsl(Mode,-->(All,Exec),In,Out):-!, run_dsl(Mode,forall(All,Exec),In,Out).
@@ -60,7 +60,7 @@ run_dsl(Mode,Prog,In,Out):- \+ missing_arity(Prog,2), !,
     =(M,Out) ; (arcdbg(warn(nonworking(run_dsl(Mode,Prog)))),fail)).
 run_dsl(Mode,Prog,In,In):- arcdbg(warn(missing(run_dsl(Mode,Prog)))),!,fail.
 
-named_gridoid(TstName,G):- var(TstName),!,dumpST,throw(var_named_test(TstName,G)).
+named_gridoid(TstName,G):- plain_var(TstName),!,dumpST,throw(var_named_test(TstName,G)).
 named_gridoid(TstName,G):- fix_test_name(TstName,Name,_),kaggle_arc(Name,tst+0,G,_),!.
 named_gridoid(TstName,G):- known_gridoid(TstName,G).
 
@@ -75,7 +75,7 @@ known_gridoid(TstName,G):- is_unshared_saved(TstName,G).
 into_object(G,O):- is_grid(G),grid_to_individual(G,O),!.
 into_object(G,O):- into_group(G,OL),must([O]=OL).
 
-into_group(G,G):- var(G),throw(var_into_group(G)).
+into_group(G,G):- plain_var(G),throw(var_into_group(G)).
 into_group(P,G):- is_group(P),!,G=P.
 into_group(G,I):- is_grid(G),!,compute_shared_indivs(G,I).
 into_group(P,G):- is_object(P),!,G=[P].
@@ -108,7 +108,7 @@ calc(_).
 
 create_bag(Obj1):- gensym(bag_,Obj1),ain(iz(Obj1,group)).
 
-training_progs(Prog,In,Out):- var(Prog),!,throw(var_training_progs(Prog,In,Out)).
+training_progs(Prog,In,Out):- plain_var(Prog),!,throw(var_training_progs(Prog,In,Out)).
 training_progs(call(G),_In,_Out):-!,call(G).
 training_progs([],_In,_Out):-!.
 training_progs([H|Prog],In,Out):-!, training_progs(H,In,Out), training_progs(Prog,In,Out).
@@ -152,7 +152,7 @@ one_change(colorChange(C1,C2),Grid1,Grid2):-
   subst(Grid1,C1,C2,Grid2).
 one_change(blank1Color(C1),Grid1,Grid2):- 
   first_color(Grid1,C1),copy_cells(==(C1),free_cell,Grid1,Grid2).
-one_change(same_size,Grid1,Grid2):- var(Grid2),grid_size(Grid1,H,V),grid_size(Grid2,H,V),!.
+one_change(same_size,Grid1,Grid2):- plain_var(Grid2),grid_size(Grid1,H,V),grid_size(Grid2,H,V),!.
 
 
 
@@ -173,7 +173,7 @@ one_change(colorChange(C1, C2), Grid1, Grid2):-
  first_color(Grid1, C1), ignore((is_grid(Grid2), first_color(Grid2, C2))), subst(Grid1, C1, C2, Grid2).
 one_change(blank1Color(C1), Grid1, Grid2):- 
  first_color(Grid1, C1), copy_cells(==(C1), free_cell, Grid1, Grid2).
-one_change(same_size, Grid1, Grid2):- var(Grid2), grid_size(Grid1, C1), grid_size(Grid2, C1), !.
-one_change(resize(C1, C2), Grid1, Grid2):- var(Grid2), grid_size(Grid1, C1), grid_size(Grid2, C2).
+one_change(same_size, Grid1, Grid2):- plain_var(Grid2), grid_size(Grid1, C1), grid_size(Grid2, C1), !.
+one_change(resize(C1, C2), Grid1, Grid2):- plain_var(Grid2), grid_size(Grid1, C1), grid_size(Grid2, C2).
 
 */

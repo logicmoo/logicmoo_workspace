@@ -1,6 +1,6 @@
 :- use_module(library(multivar)).
 
-maybe_multivar(C):- nonvar(C),!.
+maybe_multivar(C):- nonvar_or_ci(C),!.
 %maybe_multivar(C):- multivar(C).
 maybe_multivar(_).
 
@@ -19,7 +19,9 @@ grid_shared_with(TestName*ExampleNum*out,TestName*ExampleNum*in):-!.
 
 get_grid_and_name(In,Grid,GN):- is_grid(In),!,get_gridname(Grid,GN).
 get_grid_and_name(In,Grid,GN):- trace,into_grid(In,Grid),!,get_gridname(Grid,GN).
-   
+
+
+
 compute_unshared_indivs(In,Unshared):-
    get_grid_and_name(In,Grid,GN),
    compute_unshared_indivs(GN,Grid,Unshared).
@@ -54,6 +56,8 @@ ensure_shared_indivs(GN,Grid,SharedIndvs):-
    individuals_common(Unshared,Grid,SharedIndvs),
    assert(is_shared_saved(GN,SharedIndvs)).
 
+decl_pt(detect_indvs(group,group,-)).
+detect_indvs(In,Out,Grid):- individuals_common(In,Grid,Out).
 
 individuals_common(Reserved,Grid,IndvS):-
  must_det_l((
@@ -92,7 +96,7 @@ individuals_list(GH,GV,Sofar,ID,Options,Reserved,Points,Grid,IndvList,LeftOver):
     assertion(maplist(is_cpoint,Points)),
     assertion(is_list([sofar1(Options)|Sofar])),
     fsi(NewReserved,NewGrid,NO,GH,GV,Sofar,ID,Options,Reserved,Points,Grid,FoundSofar,NextScanPoints),
-    assertion(maplist(nonvar,[fsi,NewReserved,NewGrid,NO,FoundSofar,NextScanPoints])),
+    assertion(maplist(nonvar_or_ci,[fsi,NewReserved,NewGrid,NO,FoundSofar,NextScanPoints])),
     assertion(maplist(is_cpoint,NextScanPoints)),
     assertion(is_list([foundSofar1(Options)|FoundSofar])),
     ((FoundSofar\==Sofar) ; (NextScanPoints\== Points); (NewGrid\=@= Grid); (NewReserved\=@= Reserved)),
@@ -115,11 +119,11 @@ individuals_list(GH,GV,Sofar,ID,Options,_Reserved,Points,_Grid,IndvListOut,[]):-
 individuals_list(GH,GV,Sofar,ID,Options,Reserved,P,Grid,Sofar,P):-!,
   dmsg(fail(individuals_list(GH,GV,Sofar,ID,Options,Reserved,P,Grid,Sofar,P))),!.
 
-must_be_nonvar(X):- assertion(nonvar(X)),!.
+must_be_nonvar(X):- assertion(nonvar_or_ci(X)),!.
 
 fsi(OUTReserved,OUTNewGrid,OUTOptions,H,V,Sofar,ID,Options,Reserved,Points,Grid,OUTSofar,OUTNextScanPoints):-
   maplist(must_be_free,[OUTReserved,OUTNewGrid,OUTOptions,OUTSofar,OUTNextScanPoints]),
-  assertion(maplist(nonvar,[Options,H,V,Sofar,ID,Options,r,Reserved,Points,Grid])),
+  assertion(maplist(nonvar_or_ci,[Options,H,V,Sofar,ID,Options,r,Reserved,Points,Grid])),
   %as_debug(9,pt(t([fsi=Options,sofar=Sofar]))),
   fail.
 
@@ -305,7 +309,7 @@ cycle_s(FinalReserve,GH,GV,Sofar,ID,Options,Reserved,Points,Grid,IndvList,LeftOv
     assertion(maplist(is_cpoint,Points)),
     assertion(is_list([sofar1(Options)|Sofar])),
     fsi(NewReserved,NewGrid,NO,GH,GV,Sofar,ID,Options,Reserved,Points,Grid,FoundSofar,NextScanPoints),
-    assertion(maplist(nonvar,[fsi,NewReserved,NewGrid,NO,FoundSofar,NextScanPoints])),
+    assertion(maplist(nonvar_or_ci,[fsi,NewReserved,NewGrid,NO,FoundSofar,NextScanPoints])),
     assertion(maplist(is_cpoint,NextScanPoints)),
     assertion(is_list([foundSofar1(Options)|FoundSofar])),
     ((FoundSofar\==Sofar) ; (NextScanPoints\== Points); (NewGrid\=@= Grid); (NewReserved\=@= Reserved)),
@@ -316,11 +320,13 @@ cycle_s(FinalReserve,GH,GV,Sofar,ID,Options,Reserved,Points,Grid,IndvList,NextSc
 cycle_s(Reserved,_GH,_GV,Sofar,_ID,_Options,Reserved,Points,_Grid,Sofar,Points).
 
 
-default_i_options([  
-  %shape_lib(hammer),
-  %fourway,
+default_i_options([
+  shape_lib(hollow_squares),
   use_reserved,
+  fourway,
+  %shape_lib(all),
   shape_lib(hammer),
+  %shape_lib(hammer),
   squares, diamonds, all,
   
   %solid(squares),
@@ -503,15 +509,15 @@ single_point(C-Point,IndvS,Rest1):- maybe_multivar(C),
 single_point(C-Point,IndvS,Rest1):- maybe_multivar(C),
   select(obj(I),IndvS,Rest1), fail, % round 2
   globalpoints(obj(I),[C-Point]),
-  nonvar(C).
+  nonvar_or_ci(C).
 
 single_point(C-Point,IndvS,Rest1):- maybe_multivar(C),
   select([C-Point],IndvS,Rest1),
-  nonvar(C).
+  nonvar_or_ci(C).
 
 single_point0(C-Point,IndvS,Rest1):- maybe_multivar(C),
   select(C-Point,IndvS,Rest1),
-  nonvar(C).
+  nonvar_or_ci(C).
 
 
 /*
@@ -524,7 +530,7 @@ unraw_inds2(Options,IndvS,IndvO):- fail,
 % Diag of 3 or more
   /*
 unraw_inds2(Options,IndvS,IndvO):-   
-  single_point(C-Point1,IndvS,Rest1), nonvar(C), non_free_fg(C),\+ get_bgc(C),
+  single_point(C-Point1,IndvS,Rest1), nonvar_or_ci(C), non_free_fg(C),\+ get_bgc(C),
   is_diag(Dir),
   is_adjacent_point(Point1,Dir,Point2),
   single_point(C-Point2,Rest1,Rest2),
@@ -540,7 +546,7 @@ unraw_inds2(Options,IndvS,IndvO):-
 
 % Diag of 2 or more
 unraw_inds2(Options,IndvS,IndvO):-  % fail,
-  single_point(C-Point1,IndvS,Rest1), nonvar(C), non_free_fg(C),\+ get_bgc(C),
+  single_point(C-Point1,IndvS,Rest1), nonvar_or_ci(C), non_free_fg(C),\+ get_bgc(C),
   is_diag(Dir),
   is_adjacent_point(Point1,Dir,Point2),
   single_point(C-Point2,Rest1,Rest2),
@@ -553,7 +559,7 @@ unraw_inds2(Options,IndvS,IndvO):-  % fail,
 
 
 unraw_inds2(Options,IndvS,IndvO):-  fail,
-  single_point(C-Point1,IndvS,Rest1), nonvar(C), non_free_fg(C),
+  single_point(C-Point1,IndvS,Rest1), nonvar_or_ci(C), non_free_fg(C),
   single_point(C2-Point2,Rest1,Rest),
   findall(C3-Point3,member([C3-Point3],Rest),CRest),
   subtract(Rest,CRest,IndvM),

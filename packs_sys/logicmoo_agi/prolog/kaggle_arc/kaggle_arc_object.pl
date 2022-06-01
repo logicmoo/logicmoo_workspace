@@ -80,6 +80,15 @@ make_indiv_object(ID,H,V,Points,Overrides,obj(OUT)):-
   points_range(Points,LoH,LoV,HiH,HiV,_HO,_VO),
   make_indiv_object(ID,H,V,LoH,LoV,HiH,HiV,Points,Overrides,OUT),!.
 
+
+make_indiv_object(Points,Overrides,OUT):- 
+  localpoints(Points,RPoints),
+  points_range(RPoints,LoH,LoV,HiH,HiV,_HO,_VO),
+  gensym('indiv_object_',ID),
+  make_indiv_object(ID,HiH,HiV,LoH,LoV,HiH,HiV,RPoints,[Points,Overrides],OUT).
+
+
+
 make_indiv_object(ID,H,V,LoH,LoV,HiH,HiV,Points,Overrides,OUT):- 
  (Points==[]-> trace ; true),
   Width is HiH-LoH+1,
@@ -176,10 +185,11 @@ object_indv_id(I,ID,Iv):- indv_props(I,L),member(object_indv_id(ID,Iv),L),!.
 object_indv_id(I,ID,Iv):- throw(missing(object_indv_id(I,ID,Iv))).
 %object_indv_id(_,ID,_Iv):- nb_current(test_pairname,ID).
 
-mass(_-P,1):- nonvar(P),!.
+mass(_-P,1):- nonvar_or_ci(P),!.
 mass(I,X):- indv_props(I,L),member(mass(X),L),!.
-mass(obj(I),Count):- localpoints(I,Points), length(Points,Count),!.
+mass(I,Count):- localpoints(I,Points), length(Points,Count),!.
 mass(Points,Count):- is_list(Points),length(Points,Count),!.
+
 remove_color(_-P,P).
 remove_color(LPoints,ColorlessPoints):- maplist(remove_color,LPoints,ColorlessPoints).
 
@@ -205,7 +215,7 @@ enum_object(S):- is_gridname(S,_).
 
 %indv_props(Obj,L):- compound(Obj), arg(1,Obj,L), is_list(L),!.
 indv_props(obj(L),L):- is_list(L),!.
-indv_props(G,L):- nonvar(G), g2o(G,O), nonvar(O),!,indv_props(O,L).
+indv_props(G,L):- nonvar_or_ci(G), g2o(G,O), nonvar_or_ci(O),!,indv_props(O,L).
 indv_props(obj(L),L):- enum_object(obj(L)).
 
 walls_thick1(G):- localpoints(G,Points),counted_neighbours(Points,ListOfSizes),walls_thick1_sizes(ListOfSizes).
@@ -225,7 +235,7 @@ counted_neighbours(List,CountIn,CountsOut):- counted_neighbours(List,List,CountI
 colors_join(C,CC):- C==CC,!.
 colors_join(C,CC):- is_bgc(C),!,is_bgc(CC).
 colors_join(CC,C):- is_bgc(C),!,is_bgc(CC).
-colors_join(C,CC):- (var(C);var(CC)),!,fail.
+colors_join(C,CC):- (plain_var(C);plain_var(CC)),!,fail.
 colors_join(C,CC):- is_color(C),is_color(CC),!,fail.
 colors_join(C,CC):- (is_color(C);is_color(CC)),!.
 %colors_join(_,_)
@@ -238,33 +248,35 @@ counted_neighbours(C-HV,List,CountIn,[P|CountIn]):-
  findall(Dir,(is_adjacent_point(HV,Dir,HV2),Dir\==c,member(CC-HV2,List),colors_join(C,CC)),Ns),
   length(Ns,I),P = I-HV.
 
+localpoints(I,X):- is_grid(I),globalpoints(I,X),!.
 localpoints(I,X):- indv_props(I,L),member(localpoints(X),L), is_points_list(X),!.
-%localpoints(I,X):- is_grid(I),!,globalpoints(I,X).
-localpoints(I,X):- into_grid(I,G),!,globalpoints(G,X),!.
+localpoints(I,X):- into_grid(I,G),globalpoints(G,X),!.
 
 object_shape(I,X):- indv_props(I,L),member(object_shape(X),L).
 
 rotation(I,X):- indv_props(I,L),member(rotation(X),L).
 
 %hv_cvalue(Grid,Color,H,V):- hv_value(Grid,C,H,V),!,as_cv(C,Color),!.
-%as_cv(C,Color):- var(C),!,=(C,Color).
-%as_cv(C,Color):- sub_term(Color,C),nonvar(Color),is_color(Color).
+%as_cv(C,Color):- plain_var(C),!,=(C,Color).
+%as_cv(C,Color):- sub_term(Color,C),nonvar_or_ci(Color),is_color(Color).
 %as_cv(C-_,Color):- as_cv(C,Color).
 %as_cv(C,Color):- integer(C),!,color_code(C,Color).
 
 object_changes(I,X):- indv_props(I,L),!,member(changes(X),L).
 
-globalpoints(I,X):- indv_props(I,L),member(globalpoints(X),L),is_points_list(X),!.
-globalpoints(Grid,Points):- is_grid(Grid),!, grid_size(Grid,HH,HV), 
+
+all_points(Grid,HH,HV,Points):-  
   findall(C-Point,(between(1,HV,V),between(1,HH,H),
-    once((nth1(V,Grid,Row),
-          nth1(H,Row,C2),
-          is_spec_color(C2,C), 
+    once((hv_value(Grid,C2,H,V),
+          %pt(hv_value(C2,H,V)),
+          is_spec_color(C2,C),
           hv_point(H,V,Point)))),Points),!.
 
-globalpoints(I,G):- localpoints(X,L),is_points_list(X),loc_xy(I,X,Y),offset_points(X,Y,L,G),!.
+globalpoints(Grid,Points):- is_grid(Grid),!, grid_size(Grid,HH,VV), all_points(Grid,HH,VV,Points).
+globalpoints(I,X):- indv_props(I,L),member(globalpoints(X),L),is_points_list(X),!.
 globalpoints(Grid,[Grid]):- is_point(Grid),!.
 globalpoints(Grid,Points):- is_list(Grid),!,maplist(globalpoints,Grid,MPoints),append(MPoints,Points).
+globalpoints(I,G):- localpoints(I,L),is_points_list(L),loc_xy(I,X,Y),offset_points(X,Y,L,G),!.
 
 is_bg(C):- bg_sym(BG),C==BG,!.
 is_bg(C):- get_bgc(BG),C==BG,!.

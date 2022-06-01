@@ -1,9 +1,16 @@
 test_name(Name):- 
   findall(Name,kaggle_arc(Name,_,_,_),All),
   list_to_set(All,AllS),member(Name,AllS).
-test_info(Name,InfoS):- fix_test_name(Name,CName,_),findall([Inf],
-  (user:fav(CName,Inf)),Info),flatten(Info,InfoF),list_to_set(InfoF,InfoS).
-was_fav(X):- nonvar(X), clause(fav(XX,_),true),nonvar(XX),X==XX.
+test_info(Name,InfoS):- fix_test_name(Name,CName,_),
+ findall([Inf],(user:fav(CName,Inf0),repair_info(Inf0,Inf)),Info),
+  flatten(Info,InfoF),list_to_set(InfoF,InfoS).
+
+repair_info(Inf0,Inf):- is_list(Inf0),!,maplist(repair_info,Inf0,Inf).
+repair_info(Inf,InfO):- compound(Inf),functor(Inf,F,1),!,arg(1,Inf,A),listify(A,ArgsL),InfO=..[F,ArgsL].
+repair_info(Inf,InfO):- compound(Inf),!,compound_name_arguments(Inf,F,ArgsL),InfO=..[F,ArgsL].
+repair_info(Inf,Inf).
+
+was_fav(X):- nonvar_or_ci(X), clause(fav(XX,_),true),nonvar_or_ci(XX),X==XX.
 
 test_names_by_hard(Name):- test_names_ord_favs(FavList),test_names_ord_hard(NamesByHard),append(NamesByHard,FavList,All),
  list_to_set(All,AllS),!,member(Name,AllS).
@@ -38,20 +45,20 @@ hardness_of_name(Name,Hard):-
   Hard is Max*10000+D),All),
   sort(All,AllK),last(AllK,Hard).
 
-
 :- dynamic(fav/2).
+fav(A,B):- nonvar_or_ci(A),nonvar_or_ci(B), cls,mmake, asserta(fav(A,B),Ref),!, call_cleanup(arc1(A),erase(Ref)).
 
-fav(A,B):- nonvar(A),nonvar(B),
- cls,mmake,
- asserta(fav(A,B),Ref),!,
- call_cleanup(arc1(A),erase(Ref)).
-
-fav(X,[]):- clause(fav(X),true).
+fav(t('1b60fb0c'),[
+ learn(
+   in_out(In,Out),
+   subtractGrid(Out,In,Alien),
+   rot_by_90([Alien,A,B,C]),
+   find_by_shape(In,Alien,[A,B,C]),
+   find_by_shape(Out,Alien,[A,B,C,Alien]))]).
 %fav(t('23b5c85d'),[b7249182
 %fav(t('db3e9e38'),[lmDSL([flipV,C1=orange,C2=blue,[],flipV]).
 %fav(t(_),[lmDSL([fillFromBorder(none,yellow)])]).
 
-fav(t('1b60fb0c'),[]).
 fav(t('25d487eb'),[lmDSL([rocketship])]).
 fav(t('3631a71a'),[lmDSL([overlay_each_pattern])]).
 fav(t('1b60fb0c'),[learn([find_damage_to_input,find_center,fraction_evenly_to_four,map_slices_upon_themselves]),lmDSL([new_things_are_a_color,fix_image])]).
@@ -123,6 +130,7 @@ fav(v('4b6b68e5'),[
    lmDSL([gather_object(O1,X,(iz(X,dot),inside(X,P),iz(P,polygon),wall_thickness(P,1),noexit(P))),
           colors(O1,CC),first(C,CC),part_of(O1,E),color(E,C),fillAt(E,C),
                 forall(X,(iz(X,dot), \+ (inside(X,P),iz(P,polygon))),delete(X))])]).
+fav(X,[]):- clause(fav(X),true).
 
 
 
@@ -248,11 +256,11 @@ kaggle_arc(v(Name), TypeI, In, Out):-
  member(ExampleNum, [trn, tst]), nth_fact(kaggle_arc_eval(Name, ExampleNum, In, Out), This), once((nth_fact(kaggle_arc_eval(Name, ExampleNum, _, _), Start), I is This - Start, TypeI=ExampleNum->I)).
 */
 
-fix_test_name(X,X,_):- var(X),!.
+fix_test_name(X,X,_):- plain_var(X),!.
 fix_test_name(Tried*ExampleNum*_,Fixed,ExampleNum):-!,fix_test_name(Tried,Fixed,_).
 fix_test_name(Tried*ExampleNum,Fixed,ExampleNum):-!,fix_test_name(Tried,Fixed,_).
 fix_test_name(Tried,Tried,ExampleNum):- \+ \+ kaggle_arc(Tried,_,_,_),!, kaggle_arc(Tried,ExampleNum,_,_).
-fix_test_name(Tried,Fixed,ExampleNum):- compound(Tried),!,arg(_,Tried,E),nonvar(E),fix_test_name(E,Fixed,ExampleNum).
+fix_test_name(Tried,Fixed,ExampleNum):- compound(Tried),!,arg(_,Tried,E),nonvar_or_ci(E),fix_test_name(E,Fixed,ExampleNum).
 fix_test_name(Tried,t(Tried),_):- kaggle_arc(t(Tried),_,_,_),!.
 fix_test_name(X,v(X),_):- kaggle_arc(v(X),_,_,_),!.
 

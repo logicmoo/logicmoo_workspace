@@ -1,4 +1,39 @@
 
+rot_by_90([A,B,C,D]):- rot_by_90_0([A,B,C,D,A,B,C]).
+
+rot_by_90_0([A,B]):- rot90(A,B),!.
+rot_by_90_0([A,B|List]):- rot90(A,B),rot_by_90_0([B|List]).
+  
+subtractGrid(Out,In,Alien):- plain_var(Alien), remove_global_points(In,Out,Alien),!.
+subtractGrid(Out,In,Alien):- plain_var(Out),!,addIndv(Alien,In,Out).
+subtractGrid(Out,In,Alien):- plain_var(In),!,remove_global_points(Alien,Out,In).
+
+find_by_shape(Grid,Find,Founds):- 
+ makeup_gridname(ID),
+ visual_hv(Find,GH,GV),
+ decolorize(Find,F), 
+ Prog = (all_rotations(F,F1),
+   print_grid(F1),!,ogs(H,V,F1,Grid),trace,all_points(F1,GH,GV,Points),
+  pt(Points),
+   make_indiv_object(ID,GH,GV,Points,[F1,loc_xy(H,V)],F2)),
+ findall(F2,Prog,Matches),
+ align_founds(Matches,Founds).
+
+align_founds(Founds,Founds).
+
+in_out(In,Out):-
+  nb_current(test_pairname,PairName),
+  into_gridnameA(In,PairName*in),
+  into_gridnameA(Out,PairName*out).
+
+learn:- 
+   in_out(In,Out),
+   subtractGrid(Out,In,Alien),
+   rot_by_90([Alien,A,B,C]),
+   trace,
+   find_by_shape(In,Alien,[A,B,C]),
+   find_by_shape(Out,Alien,[A,B,C,Alien]).
+
 
 learn_arc:-
   forall(learn_arc(_),true).
@@ -10,7 +45,7 @@ learn_arc(TestID):- with_arc(learn,TestID).
 
 test_arc(TestID):- with_arc(solve,TestID).
 
-with_arc(Action,TestID):- var(TestID),!, findall(Name,fav(Name),L),
+with_arc(Action,TestID):- plain_var(TestID),!, findall(Name,fav(Name),L),
   list_to_set(L,S), member(TestID,S), with_arc(Action,TestID).
 
 with_arc(Action,arc):- !, findall(Name,kaggle_arc_db(Name,_,_,_,_),L),
@@ -110,7 +145,7 @@ name_the_pair(TestID,ExampleNum,In,Out,PairName):-
   GridNameOut= PairName*out,
   set_gridname(In,GridNameIn),
   set_gridname(Out,GridNameOut),  
-  test_info(TestID,Info), wqnl(fav(TestID,Info)),nl)).
+  test_info(TestID,Info), pt(fav(TestID,Info)),nl)).
   
 
 

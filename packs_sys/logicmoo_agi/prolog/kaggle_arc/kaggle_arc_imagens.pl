@@ -1,10 +1,15 @@
 
+:- discontiguous in_shape_lib/2.
+:- discontiguous make_shape/2.
+:- discontiguous decl_sf/1.
+
+
 do_gp([],Pixels,Pixels):- !.
 do_gp([H|T],Pixels,NewPixels):- do_gp(H,Pixels,MPixels),
  do_gp(T,MPixels,NewPixels).
 do_gp(G-P,Pixels,NewPixels):- hv_point(H,V,P),do_gp(G,H,V,P,Pixels,NewPixels).
 
-do_gp(C,_H,_V,_P,G,G):- var(C),!.
+do_gp(C,_H,_V,_P,G,G):- plain_var(C),!.
 do_gp('=',H,V,P,G,G2):- get_colum(H,G,Col),insert_col(H,Col,G,G1),do_gp('-',H,V,P,G1,G2).
 do_gp('|',_H,V,_P,G,G2):- nth0(V,G,Col),insert_row(V,Col,G,G2).
 do_gp('/',H,V,P,G,G2):- do_gp('-',H,V,P,G,G1),do_gp('|',H,V,P,G1,G2). 
@@ -23,15 +28,15 @@ o...o!
  o=o !").
 
 l_shape([round,symmetrical],"
-        ooo     
-      o.....o   
-     o.......o  
-    o.........o 
-    o....,....o 
-    o.........o 
-     o.......o  
-      o.....o   
-        ooo     ").
+     ooo     
+   o.....o   
+  o.......o  
+ o.........o 
+ o....,....o 
+ o.........o 
+  o.......o  
+   o.....o   
+     ooo     ").
 
 l_shape(square,"
 o_o!
@@ -46,7 +51,7 @@ o.,.o!
   o  !").
 
 
-l_shape([heart,h_symmetric],"
+l_shape([heart],"
  o o !
 o.o.o!
 o.,.o!
@@ -91,8 +96,9 @@ ___________
      B     
 ___________").
 
-the_hammer(BlueHammer):-  the_hammer(blue,BlueHammer).
-the_hammer(RedHammer):-  the_hammer(red,RedHammer).
+the_hammer1(BlueHammer):-  the_hammer(blue,BlueHammer).
+the_hammer1(RedHammer):-  the_hammer(red,RedHammer).
+the_hammer1(O):- g2o(_,O), localpoints(O,LP),LP\==[],length(LP,L),L>4.
 
 the_hammer(blue, LibObj):- hammer2(Text), text_to_grid(Text,H,V,Points,_Hammer),
   make_indiv_object('ID',H,V,Points,[object_shape(hammer)],LibObj).
@@ -121,12 +127,109 @@ g_shape_lib(LibObj):-
   localpoints(ScaledGrid,Points),
   make_indiv_object(ID,H,V,Points,ShapeProps,LibObj).
 
+% todo temp
+sortshapes(List,ListS):- predsort(using_compare(shape_key),List,ListS),!.
+%sortshapes(List,ListS):- sort(List,ListS),!.
 
-get_shape_lib(Hammer,ReservedS):- findall(Obj,in_shape_lib(Hammer,Obj),Reserved),sort(Reserved,ReservedS).
 
-%in_shape_lib(Hammer):- the_hammer(RedHammer),all_rotations(RedHammer,Hammer).
-in_shape_lib(grid,GRot):- g_shape_lib(LibObj),all_rotations(LibObj,GRot).
-in_shape_lib(hammer,Hammer):- the_hammer(RedHammer),all_rotations(RedHammer,Hammer).
+frozen_key(Key1,Key):- copy_term(Key1,Key),numbervars(Key,0,_,[attvar(skip),singletons(true)]).
+
+shape_key(Shape,Key):- into_grid(Shape,Key1),frozen_key(Key1,Key).
+
+shape_key_unrotated(Shape,Key):- shape_key(Shape,KeyR), grav_rot0(Key,KeyR).
+
+grav_rot(Shape,KeyR):- into_grid(Shape,Key1), grav_rot0(Key1,KeyR).
+
+grav_rot0(Shape,ShapeO):- 
+  findall(GRot,all_rotations(Shape,GRot),List),
+  predsort(sort_on(grav_mass),List,[ShapeO|_]).
+
+grav_mass(Grid,Mass):- grid_size(Grid,H,V), HV is round(H/V), Vh is floor(V/2),
+  findall(C,(between(Vh,V,Vi),between(0,H,Hi), Hi*HV > Vi, get_color_at(Hi,Vi,Grid,C),is_fg_color(C)),CList),
+  length(CList,Mass).
+
+
+decolorize(Shape,ShapeO):-
+  colors_to_vars(_Colors,Vars,Shape,ShapeO),
+  all_dif_colors(Vars,Vars),
+  maplist(set_as_fg,Vars).
+/*
+  copy_term(Vars,CVars),
+  numbervars(CVars,1,_,[attvar(skip),functor_name('fg')]),
+  maplist(label_as_fg(Vars),Vars,CVars).
+*/
+all_dif_colors([],_):-!.
+all_dif_colors([V|Vars],AllVars):-
+  all_dif_color(V,AllVars),
+  all_dif_colors(Vars,AllVars).
+all_dif_color(_,[]).
+all_dif_color(V,[All|Vars]):- (V==All;dif(V,All))->all_dif_color(V,Vars).
+  
+set_as_fg(V):- put_attr(V,ci,fg).
+
+%get_fgc(fg).
+get_fgc(C):- enum_fg_colors(C).
+
+in_shape_lib(X,D):- make_shape(X,R),dupe_shape(R,D).
+make_shape(P,I):- enum_make_shape(P), call(call,P,I).
+
+pad_sides(C,Fill,Row):- append([C|Fill],[C],Row).
+
+ensure_grid(Grid):- is_grid(Grid),!.
+ensure_grid(Grid):- between(1,30,H),between(1,30,V),make_grid(H,V,Grid).
+
+
+decl_pt(P):- clause(decl_sf(Q),true), append_term(Q,+,P).
+decl_sf(Q):- clause(decl_pt(P),true), P=..L, append(MI,[+],L), Q=..MI.
+
+enum_make_shape(P):- var(P),!,decl_sf(Q),functor(Q,F,A),functor(P,F,A),check_args(Q,P).
+enum_make_shape(P):- compound(P),!,functor(P,F,A),functor(Q,F,A),decl_sf(Q),check_args(Q,P).
+
+decl_sf(box_grid(fg_color,grid)).
+box_grid(C,Grid,D):-
+  get_fgc(C), ensure_grid(Grid),
+  grid_size(Grid,H,_), H2 is H +2,
+  length(TB,H2),maplist(=(C),TB),
+  maplist(pad_sides(C),Grid,FillRows),
+  pad_sides(TB,FillRows,D).
+
+decl_sf(box_grid_n_times(size,fg_color,grid)).
+box_grid_n_times(0,_C,Grid,D):- Grid=D,!.
+box_grid_n_times(N,C,Grid,D):- !,
+  make_shape(box_grid(C,Grid),G), plus(M,1,N),
+  make_shape(box_grid_n_times(M,C,G),D).
+
+
+decl_sf(solid_square(fg_color,size)).
+solid_square(C,HW,FillRows):-
+  get_fgc(C), between(1,30,HW),
+  length(Fill,HW),
+  maplist(=(C),Fill),
+  length(FillRows,HW),
+  maplist(=(Fill),FillRows).
+
+decl_sf(hollow_square(fg_color,bg_color,size)).
+hollow_square(C,BG,HW,D):-
+  between(1,30,HW),
+  get_bgc(BG), M is HW-1, 
+  make_shape(solid_square(BG,M),Grid),
+  make_shape(box_grid(C,Grid),D).
+
+
+dupe_shape(E,F):- \+ is_list(E),!,duplicate_term(E,F).
+dupe_shape(L,E):- maplist(dupe_shape,L,E).
+  
+  
+get_shape_lib(all,ReservedS):-!, findall(Obj,in_shape_lib(_Hammer,Obj),Reserved),sortshapes(Reserved,ReservedS).
+get_shape_lib(colorless,ReservedS):-!, get_shape_lib(all,Reserved),maplist(decolorize,Reserved,ReservedDC),
+  sortshapes(ReservedDC,ReservedS).
+get_shape_lib(Hammer,ReservedS):- findall(Obj,in_shape_lib(Hammer,Obj),Reserved),sortshapes(Reserved,ReservedS).
+
+%in_shape_lib(Hammer):- the_hammer1(RedHammer),all_rotations(RedHammer,Hammer).
+
+in_shape_lib(All,GRot):- All==all,!,in_shape_lib(_,GRot).
+in_shape_lib(l_shape,GRot):- g_shape_lib(LibObj),all_rotations(LibObj,GRot).
+in_shape_lib(hammer,Hammer):- the_hammer1(RedHammer),all_rotations(RedHammer,Hammer).
   
 in_grid_shape_lib([Shape,hollow],Grid,GrowthChart):- enum_fg_colors(Color), 
    bg_sym(BG),

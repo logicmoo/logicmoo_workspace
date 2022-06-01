@@ -8,7 +8,7 @@ ptt(P):- tersify(P,Q),!,pt(Q).
 pt(P):- format('~N'),print_tree_nl(P),!.
 
 
-wqs(X):- var(X), !, wqs(var(X)). wqs(nl):- !, nl. wqs(''):-!. wqs([]):-!.
+wqs(X):- plain_var(X), !, wqs(plain_var(X)). wqs(nl):- !, nl. wqs(''):-!. wqs([]):-!.
 %wqs([H1,H2|T]):- string(H1),string(H2),!, write(H1),write(' '), wqs([H2|T]).
 %wqs([H1|T]):- string(H1),!, write(H1), wqs(T).
 wqs([skip(_)|T]):- !,wqs(T).
@@ -34,6 +34,7 @@ dash_char(S):- format('~N'),dash_char(60,S),format('~N').
 dash_char(H,_):- H < 1,!.
 dash_char(H,C):-forall(between(0,H,_),write(C)).
 dash_border_no_nl(Width):- WidthM1 is Width-1, write(' _'),dash_char(WidthM1,'__').
+dash_uborder_no_nl(Width):- WidthM1 is Width-1, write(' ¯'),dash_char(WidthM1,'¯¯').
 dash_border(Width):- !, dash_border_no_nl(Width),nl,!.
 dash_uborder(Width):- format('~N'), WidthM1 is Width-1, write(' ¯'),dash_char(WidthM1,'¯¯'),nl.
 
@@ -47,7 +48,7 @@ arcdbg(G):- wdmsg(G).
 user:portray(Grid):- arc_portray(Grid),!.
 
 arc_portray(Grid):- \+ \+ catch((
-  \+ tracing, \+ is_object(Grid),  \+ is_group(Grid), ground(Grid),
+  \+ tracing, \+ is_object(Grid),  \+ is_group(Grid), % ground(Grid),
    (is_gridoid(Grid);(is_points_list(Grid),ground(Grid))),
    grid_size(Grid,H,V),!,H>0,V>0, wots(S,print_grid(H,V,Grid)),write(S)),_,false).
 arc_portray(Grid):- \+ \+ catch(( fail,
@@ -90,10 +91,14 @@ desc(A,B):- wots(S1,A),wots(S2,B),format('~N~n'),dash_char,write(S1),format('~N'
 write_padding(E1,_W1,E2,LW):- %write(' '),
     W1 = LW,
    format('~N'),as_str(E1,S1), as_str(E2,S2), 
-   write(S1), write('\t'), line_position(user_output,L1), Pad1 is W1 - L1, dash_char(Pad1, ' '),
-   write(S2), format('~N').
+   write(S1), pre_s2(W1,S2), format('~N').
 
-as_str(Var,S):- var(Var),!,sformat(S,'var(~p)',[Var]).
+pre_s2(_,S2):- atom_contains(S2,'_'), write('    '),write(S2).
+pre_s2(_,S2):- atom_contains(S2,'¯'), write('    '),write(S2).
+pre_s2(_,S2):- atom_contains(S2,'|'), write('   '),write(S2).
+pre_s2(W1,S2):- line_position(user_output,L1), Pad1 is W1 - L1, (dash_char(Pad1, ' ')),write('  '),write(S2).
+
+as_str(Var,S):- plain_var(Var),!,sformat(S,' var(~p)',[Var]).
 as_str([],""):-!.
 as_str(S,A):- atom(S),!,atom_string(S,A).
 as_str(call(C),S):- !, wots(S,C).
@@ -121,7 +126,7 @@ show_pair_I_info(NameIn,NameOut,In,Out):-
 
 uses_space(C):- code_type(C,print).
 
-into_ss_string(Var,_):- var(Var),!,throw(var_into_ss_string(Var)).
+into_ss_string(Var,_):- plain_var(Var),!,throw(var_into_ss_string(Var)).
 into_ss_string(G,SS):- is_grid(G),!,wots(S,print_grid(G)),!,into_ss_string(S,SS).
 into_ss_string(G,SS):- is_object(G),!,wots(S,print_grid(G)),!,into_ss_string(S,SS).
 into_ss_string(G,SS):- is_points_list(G),!,wots(S,print_grid(G)),!,into_ss_string(S,SS).
@@ -130,7 +135,7 @@ into_ss_string(ss(Len,L),ss(Len,L)):-!.
 into_ss_string(L,ss(Len,L)):- is_list(L), find_longest_len(L,Len),!.
 into_ss_string(S,SS):- string(S), atomics_to_string(L,'\n',S),!,into_ss_string(L,SS).
 into_ss_string(C,SS):- wots(S,catch(C,E,true)), 
-  (((nonvar(E),notrace,trace,rtrace(C))->throw(E);true)), into_ss_string(S,SS).
+  (((nonvar_or_ci(E),notrace,trace,rtrace(C))->throw(E);true)), into_ss_string(S,SS).
 
 find_longest_len(SL,L):- find_longest_len(SL,10,L),!.
 find_longest_len([],L,L).
@@ -189,7 +194,7 @@ print_Igrid(H,V,Name,SIndvOut,InOutL):-
    write('  '),writeq(Name),writeln('  '),!.
 
 print_grid(Grid):- notrace(print_grid0(_HH,_VV,Grid)).
-%print_grid0(Grid):- var(Grid),!, throw(var_print_grid(Grid)).
+%print_grid0(Grid):- plain_var(Grid),!, throw(var_print_grid(Grid)).
 
 print_grid(H,V,Grid):- notrace(print_grid0(H,V,Grid)).
 
@@ -213,8 +218,8 @@ print_grid(SH,SV,LoH,LoV,HiH,HiV,EH,EV,Grid):-
 
 /*
 print_grid0(Bordered,SH,SV,LoH,LoV,HiH,HiV,EH,EV,Grid):- 
-  is_grid(Grid), Grid=[[AShape|_]|_], nonvar(AShape),(AShape=A-Shape),var(A),nonvar(Shape),
-   bagof(A-Shape,(sub_term(AShape,Grid),nonvar(AShape),AShape= (A-Shape),var(A)),Colors),list_to_set(Colors,AShapes),
+  is_grid(Grid), Grid=[[AShape|_]|_], nonvar_or_ci(AShape),(AShape=A-Shape),plain_var(A),nonvar_or_ci(Shape),
+   bagof(A-Shape,(sub_term(AShape,Grid),nonvar_or_ci(AShape),AShape= (A-Shape),plain_var(A)),Colors),list_to_set(Colors,AShapes),
    block_colors(BC), create_grid_key(BC,AShapes,KeyS),
    forall(member(Key,KeyS),wqnl(Key)),
    term_variables(Grid,Vars),
@@ -228,19 +233,19 @@ print_grid0(Bordered,SH,SV,LoH,LoV,HiH,HiV,EH,EV,Grid):-
 
 
 print_grid1(_Bordered,SH,SV,LoH,LoV,HiH,HiV,EH,EV,GridI):-
-  write('\n '), 
+  write('\n'), 
   maybe_grid_numbervars(GridI,Grid),
-  ((var(EH) ; var(EV))->grid_size(Grid,EH,EV);true),
+  ((plain_var(EH) ; plain_var(EV))->grid_size(Grid,EH,EV);true),
   Width is EH-SH, 
-  underline_print((user:dash_border_no_nl(Width))),
+  once((user:dash_border_no_nl(Width+1))),
   bg_sym(BGC),
   forall(between(SV,EV,V),
-   ((format('~N'),
+   ((format('~N|'),
      forall(between(SH,EH,H), 
      (hv_value_or(Grid,C,H,V,BGC)->
-        (once(print_g(H,V,C,LoH,LoV,HiH,HiV))))),dash_char(3,' ')))),
-  format('~N '),!,
-  underline_print((user:dash_border_no_nl(Width))).
+        (once(print_g(H,V,C,LoH,LoV,HiH,HiV))))),write(' |')))),
+  format('~N'),!,
+  once((user:dash_uborder_no_nl(Width+1))).
 
 %print_grid(Grid):- is_grid(Grid),!, maplist(print_rows,Grid),nl.
 %print_rows(List):- maplist(print_g,List),nl.
@@ -262,15 +267,15 @@ ansi_color(C,Color):- color_int(C,I),ansi_color(I,Color).
 underline_print(W):- ansi_format([bold,underline],'~@',[W]),!.
 bold_print(W):- ansi_format([bold],'~@',[W]),!.
 
-compound_var(C):- \+ var(C), is_ftVar(C).
+compound_var(C):- \+ plain_var(C), is_ftVar(C).
 hi_color_print(CI,W):- ansi_format([hfg(CI)],'~w',[W]).
 is_bg_sym_or_var(C):- (attvar(C); bg_sym(C); C==' '; C==''; C=='bg'; C == 0),!.
 
 var_color_print(C,W):- bg_sym(BG),C==BG, W==BG, !, write(' ').
-var_color_print(C,W):- bg_sym(BG),C==BG, var(W),!, write(' ').
+var_color_print(C,W):- bg_sym(BG),C==BG, plain_var(W),!, write(' ').
 var_color_print(C,W):- compound_var(C), arg(1,C,C1),!, var_color_print(W,C1).
 var_color_print(C,W):- compound_var(W), arg(1,W,W1),!, var_color_print(C,W1).
-var_color_print(C,W):- C\==W,var(W),C=W, var_color_print(C,W).
+var_color_print(C,W):- C\==W,plain_var(W),C=W, var_color_print(C,W).
 
 var_color_print(C,W):- C==' ',W==' ',!,write(' '),!.
 var_color_print(C,W):- integer(W),ansi_color(C,CI),!, hi_color_print(CI,W),!.
@@ -283,9 +288,9 @@ color_print(C,W):- (has_color_c(C,OC);has_color_c(W,OC)),!,ansi_format([fg(OC)],
 color_print(C,W):- is_bg_sym_or_var(C),W=='_',!,ansi_format([],'~w',[' ']),!.
 color_print(C,W):- is_bg_sym_or_var(C),W=='_',color_print(C,'+').
 
-color_print(C,W):- var(C),integer(W),ansi_color(W,CI),!,ansi_format([fg(CI)],'~w',[W]),!.
-color_print(C,W):- var(C),W=='?',!,ansi_format([],'~w',['?']),!.
-color_print(C,W):- var(C),!,ansi_format([italic],'~w',[W]),!.
+color_print(C,W):- plain_var(C),integer(W),ansi_color(W,CI),!,ansi_format([fg(CI)],'~w',[W]),!.
+color_print(C,W):- plain_var(C),W=='?',!,ansi_format([],'~w',['?']),!.
+color_print(C,W):- plain_var(C),!,ansi_format([italic],'~w',[W]),!.
 
 color_print(C,W):- is_bg_sym_or_var(C),is_bg_sym_or_var(W), !, write(' ').
 
@@ -297,19 +302,19 @@ color_print(C,W):- atom(C),color_int(C,N),integer(N),!,color_print(N,W).
 color_print(C,W):- integer(C),ansi_color(C,Color),ansi_format([bold,fg(Color)],'~w',[W]),!.
 color_print(C,W):- C==0,!,ansi_format([fg('#444444')],'~w',[W]),!.
 
-color_name(C,W):- var(C),!,W=C.
+color_name(C,W):- plain_var(C),!,W=C.
 color_name(C-_,W):-!,color_name(C,W).
 color_name(C,W):- atom(C),!,W=C.
 color_name(C,W):- integer(C),named_colors(L),nth0(C,L,W),!.
 
-color_int(C,C):- var(C),!.
+color_int(C,C):- plain_var(C),!.
 color_int(C-_,W):-!,color_int(C,W).
 color_int(C,W):- integer(C),!,W=C.
 color_int(C,W):- atom(C),!,named_colors(L),nth0(W,L,C),!.
 color_int(C,C).
 
 
-grid_color_code(C,C):- var(C).
+grid_color_code(C,C):- plain_var(C).
 grid_color_code(C-W,CC-W):- color_code(C,CC).
 grid_color_code(C,CC):- color_code(C,CC).
 %grid_color_code(C,CC):- is_grid_color(black-_),!,color_code(C,CC).
@@ -333,12 +338,12 @@ cant_be_dot(183).
 grid_dot(169).
 
 %print_g(H,V,C0,_,_,_,_):- has_color_c(C0),has_color_c(C0,C),!,  ansi_format([bold,fg('#ff8c00')],'~@',[(write('c'),user:print_g1(H,V,C))]).
-%print_g(H,V,C0,_,_,_,_):- var(C0),print_g1(H,V,C-'?'),!.
+%print_g(H,V,C0,_,_,_,_):- plain_var(C0),print_g1(H,V,C-'?'),!.
 
 print_g(H,V,C,_,_,_,_):- write(' '), print_g1(H,V,C),!.
 
 object_glyph(G,Glyph):- is_grid(G),!,grid_dot(Dot),name(Glyph,[Dot]).
-object_glyph(G,Glyph):- var(G),!,var_dot(Dot),name(Glyph,[Dot]).
+object_glyph(G,Glyph):- plain_var(G),!,var_dot(Dot),name(Glyph,[Dot]).
 object_glyph(G,Glyph):- object_indv_id(G,_Tst,GN2), i_sym(GN2,GN),!,i_glyph(GN,Glyph).
 
 object_cglyph(G,CGlyph):- color(G,C),object_glyph(G,Glyph),wots(CGlyph,color_print(C,Glyph)).
@@ -350,30 +355,30 @@ object_cglyph(G,CGlyph):- color(G,C),object_glyph(G,Glyph),wots(CGlyph,color_pri
 
 %print_g1(E):- has_color_c(E,C),color_print(C,'+'),!.
 %print_g1(C0):- sub_term(E,C0),has_color_c(E,C),color_print(C,'='),!.
-print_g1(N):- var(N),has_color_c(N,C),cant_be_dot(DOT),ansi_color(C,CI),ansi_format([fg(CI)],'~s',[[DOT]]),!.
-print_g1(N):- var(N),has_color_c(N,C),format(chars(Codes),'~p',[N]),last(Codes,S),print_g2(C,S),!.
+print_g1(N):- plain_var(N),has_color_c(N,C),cant_be_dot(DOT),ansi_color(C,CI),ansi_format([fg(CI)],'~s',[[DOT]]),!.
+print_g1(N):- plain_var(N),has_color_c(N,C),format(chars(Codes),'~p',[N]),last(Codes,S),print_g2(C,S),!.
 print_g1(N):- into_color_glyph(N,C,Code),as_name(Code,S), color_print(C,S),!.
-print_g1(C):- var(C), color_print(C,'.'),!.
+print_g1(C):- plain_var(C), color_print(C,'.'),!.
 
 print_g2(C,S):- atom_number(S,_), cant_be_dot(DOT), name(N,[DOT]), color_print(C,N),!.
 print_g2(C,S):- color_print(C,S),!.
 
-as_name(Code,S):- var(Code), i_glyph(Code,S).
+as_name(Code,S):- plain_var(Code), i_glyph(Code,S).
 as_name(Code,S):- integer(Code), name(S,[Code]).
 
 into_color_glyph_ez(CTerm,Color,Code):- 
-    ignore((sub_term(Color,CTerm),nonvar(Color),is_color(Color))),
+    ignore((sub_term(Color,CTerm),nonvar_or_ci(Color),is_color(Color))),
     ignore((sub_term(A,CTerm),atom(A), \+ is_color(A), i_glyph(A,Glyph))),
     ignore((sub_term(Nth,CTerm),integer(Nth),i_glyph(Nth,Glyph))),
-    ignore((nonvar(Glyph),name(Glyph,[Code|_]))).
+    ignore((nonvar_or_ci(Glyph),name(Glyph,[Code|_]))).
 
-%into_color_glyph(H,V,CTerm,Color,Code):- fail, get_grid_num_xyc(H,V,SColor,SNth),into_color_glyph(SColor+SNth+CTerm,Color,Code),nonvar(Code).
-into_color_glyph(N,C,Glyph):- var(N),has_color_c(N,C),format(chars(Codes),'~p',N),last(Codes,Glyph),!.
+%into_color_glyph(H,V,CTerm,Color,Code):- fail, get_grid_num_xyc(H,V,SColor,SNth),into_color_glyph(SColor+SNth+CTerm,Color,Code),nonvar_or_ci(Code).
+into_color_glyph(N,C,Glyph):- plain_var(N),has_color_c(N,C),format(chars(Codes),'~p',N),last(Codes,Glyph),!.
 into_color_glyph(N,C,Glyph):- has_color_c(N,C),format(chars(Codes),'~p',N),last(Codes,Glyph),!.
 
 into_color_glyph(W,C,FGD):- has_color_c(W,C), bg_dot(FGD),!.
-into_color_glyph(CTerm,Color,Code):- into_color_glyph_ez(CTerm,Color,Code),nonvar(Code),!.
-into_color_glyph(C,C,VAR):- var(C),var_dot(VAR),!.
+into_color_glyph(CTerm,Color,Code):- into_color_glyph_ez(CTerm,Color,Code),nonvar_or_ci(Code),!.
+into_color_glyph(C,C,VAR):- plain_var(C),var_dot(VAR),!.
 into_color_glyph(bg,black,BGD):- bg_dot(BGD),!.
 into_color_glyph(0,0,BGD):- bg_dot(BGD),!.
 into_color_glyph(C,C,FGD):- fg_dot(FGD),!.
@@ -382,12 +387,12 @@ into_color_glyph(C,C,FGD):- fg_dot(FGD),!.
 i_glyph(N,Glyph):- bg_sym(BG), BG==N, !, bg_dot(Code), name(Glyph,[Code]).
 i_glyph(Code,Glyph):- integer(Code), Code> 255, !,name(Glyph,[Code]).
 i_glyph(N,Glyph):- integer(N),i_sym(N,Code),name(Glyph,[Code]).
-i_glyph(N,Glyph):- var(N),!,format(chars(Codes),'~p',N),last(Codes,Glyph).
+i_glyph(N,Glyph):- plain_var(N),!,format(chars(Codes),'~p',N),last(Codes,Glyph).
 i_glyph(N,Glyph):- atom(N),atom_chars(N,Chars),last(Chars,Glyph).
 
 i_sym(N2,Code):- integer(N2),!, N is N2, change_code(N,NN), i_syms(Codes),nth0(NN,Codes,Code),!.
 i_sym(N2,Code):- atom(N2),name(N2,[C|_]),!,i_sym(C,Code).
-i_sym(N,Code):- var(N), Code = 63.
+i_sym(N,Code):- plain_var(N), Code = 63.
 %change_code(N,M):- M is N * 100,!.
 %change_code(N,M):- N>10, M is (N * 10 ),!.
 change_code(N,N). % M is N+212.
