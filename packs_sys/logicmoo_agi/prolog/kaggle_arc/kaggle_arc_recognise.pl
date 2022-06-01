@@ -93,8 +93,8 @@ ogs_1(Hi,Vi,Find,Search):-
 
 ogs_1(H,V,FindI,Search):-
   ogs_2(Hi,Vi,FindI,Search),
-  H is Hi + 2,
-  V is Vi + 2.
+  H is Hi + 1,
+  V is Vi + 1.
 
 ogs_2(H,V,[R1|FGrid],Search):-
   append(VPad,[LPadAndRow|Next],Search),
@@ -262,13 +262,15 @@ constrain_grid_now(CT,Trig,GridIn,Hi,Vi,GH,GV,GridO):-
 
 constrain_ele(CT,Trig,GridIn,H,V,C0,GridO):- is_spec_color(C0,C),!, 
   get_color_at(H,V,GridO,CO),
-  freeze(Trig, C==CO),  
+  (CO==C -> true ; (freeze(Trig, C==CO), attach_ci(CO,C) )), 
   constrain_dir_ele(CT,Trig,[n,s,w,e],GridIn,H,V,C,GridO).
-constrain_ele(CT,Trig,GridIn,H,V,C0,GridO):- is_bgc(C0),!, constrain_bg_ele(CT,Trig,GridIn,H,V,C0,GridO).
-constrain_ele(CT,Trig,GridIn,H,V,C0,GridO):- bg_sym(C),C==C0,!, constrain_bg_ele(CT,Trig,GridIn,H,V,C0,GridO).
-%constrain_ele(CT,Trig,GridIn,H,V,C0,GridO):- constrain_bg_ele(CT,Trig,GridIn,H,V,C0,GridO),!.
+%constrain_ele(CT,Trig,GridIn,H,V,C0,GridO):- is_bgc(C0),!, constrain_bg_ele(CT,Trig,GridIn,H,V,C0,GridO).
+%constrain_ele(CT,Trig,GridIn,H,V,C0,GridO):- bg_sym(C),C==C0,!, constrain_bg_ele(CT,Trig,GridIn,H,V,C0,GridO).
+constrain_ele(CT,Trig,GridIn,H,V,C0,GridO):- constrain_bg_ele(CT,Trig,GridIn,H,V,C0,GridO),!.
 constrain_ele(_CT,_Trig,_GridIn,_H,_V,_C0,_GO):- !.
 
+attach_ci(CO,_C):- nonvar_or_ci(CO),!.
+attach_ci(CO,C) :- put_attr(CO,ci,fg(C)).
 
 constrain_bg_ele(_CT,_Trig,_GridIn,H,V,_C0,GridO):-
   %color_at(H,V,C1,GridIn),
