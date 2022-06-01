@@ -316,7 +316,12 @@ gravity(N,e,Grid,GridNew):-!,rot270(Grid,GridRot),gravity(N,n,GridRot,GridM),rot
 compute_max_color(Color1,Grid,Grid):- colors_count_no_black(Grid,[cc(Color1,_)|_]).
 compute_next_color(Color1,Grid,Grid):- colors_count_no_black(Grid,[_,cc(Color1,_)|_]).
 
-subst_color(Color1,Color2,Grid,NewGrid):- notrace((color_code(Color1,Num1),color_code(Color2,Num2),subst(Grid,Num1,Num2,NewGrid))).
+subst_color(Color1,Color2,Grid,NewGrid):- 
+  notrace((
+   color_code(Color1,Num1),
+   color_code(Color2,Num2),
+   subst_w_attv(Grid,Num1,Num2,NewGrid))).
+
 blacken_color(Color1,Grid,NewGrid):- black_cell(Cell), subst_color(Color1,Cell,Grid,NewGrid).
 swap_colors(Color1,Color2,Grid,NewGrid):- subst_color(Color1,Swap1,Grid,MGrid),
                                           subst_color(Color2,Color1,MGrid,NewGrid),
@@ -325,7 +330,7 @@ swap_colors(Color1,Color2,Grid,NewGrid):- subst_color(Color1,Swap1,Grid,MGrid),
 backfill_vars(GridO):- clause(backfill(GridO),true).
 
 unbind_color(Color1,Grid,GridO):- is_grid(Grid),!,grid_color_code(Color1,Num1),unbind_color0(Num1,Grid,GridO).
-unbind_color(Color1,Grid,GridO):- color_code(Color1,Num1),subst(Grid,Num1,_,GridO).
+unbind_color(Color1,Grid,GridO):- color_code(Color1,Num1),subst_w_attv(Grid,Num1,_,GridO).
 
 unbind_color0(Num1,Grid,GridO):- is_list(Grid),!,maplist(unbind_color0(Num1),Grid,GridO).
 unbind_color0(Num1,Num1,_):-!.
@@ -339,7 +344,7 @@ colors_to_vars(Grid,GridO):- colors_to_vars(_,_,Grid,GridO).
 colors_to_vars(Colors,Vars,Grid,GridO):- (plain_var(Colors)->unique_colors(Grid,Colors);true),
    subst_cvars(Colors,Vars,Grid,GridO).
 
-subst_cvars([],[],A,A):-!. subst_cvars([F|FF],[R|RR],S,D):- !, subst(S,F,R,M), subst_cvars(FF,RR,M,D).
+subst_cvars([],[],A,A):-!. subst_cvars([F|FF],[R|RR],S,D):- !, subst_w_attv(S,F,R,M), subst_cvars(FF,RR,M,D).
 
 /*
 colors_to_vars(B,A,Grid,GridO):- is_list(Grid),!,maplist(colors_to_vars(B,A),Grid,GridO).

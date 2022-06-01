@@ -105,10 +105,19 @@ try_arc_io(TestID,ExampleNum,In,Out):-
 
 
   individuals_common([],IODiff,ReservedS),
-  searchable(ReservedS,SmallLib0),
-  forall(member(M,SmallLib0),print_grid(M)),
-  decolorize(SmallLib0,SmallLib1),
-  all_rotations(SmallLib1,SmallLib),
+  show_workflow(ReservedS,
+   [ =,"Vanila indivs",
+    % searchable,"Searchable indivs",
+       all_rotations, "All rotations of indivs", 
+       % add(change_color_blue), "Add blue indivs", 
+       add(change_color), "Add new colors indivs", 
+    []
+    %decolorize % decolorized points are not yet printable 
+    ],SmallLib), 
+  % decolorize(SmallLib1,SmallLib),
+  % decolorized points are not yet printable 
+  % writeln("decolorized indivs"),
+  % forall(member(M,SmallLib1),print_grid(M)),
   
  
   individuals_common(SmallLib,Out,UnsharedOut),
@@ -176,6 +185,16 @@ try_arc_io(TestID,ExampleNum,In,Out):-
   show_pair(IH,IV,OH,OV,shared,PairName,SharedIn,SharedOut))),!,
   nop(catch(maybe_confirm_sol(TestID,ExampleNum,In,Out),E,(wdmsg(E)))))))))))),!.
 
+show_workflow(InO,String,InO):- string(String),!,  nl, writeln(String),
+  forall(member(G,InO),ignore(print_grid(G))).
+show_workflow(InO,[],InO):-!.
+show_workflow(In,[H|T],Out):-
+  show_workflow(In,H,Mid),!,
+  show_workflow(Mid,T,Out).
+show_workflow(In,add(P),Out):- 
+  show_workflow(In,P,Mid),!,
+  append(Mid,In,Out).
+show_workflow(In,P,Out):- call(P,In,Out),!.
 
 reuse_indivs(IndvA,IndvB,BetterA,BetterB):-
   smallest_first(IndvA,IndvAS),

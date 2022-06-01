@@ -12,6 +12,12 @@ matches_filter(E,obj(List)):- member(E,List).
 override_group(P):- P=..[F,Group,List], is_group(Group),!,
   findall(R,(member(M,Group),call(F,M,R)),AllRots),
   append_sets([AllRots],List).
+override_group(P):- P=..[F,A,Group,List], is_group(Group),!,
+  findall(R,(member(M,Group),call(F,A,M,R)),AllRots),
+  append_sets([AllRots],List).
+override_group(P):- P=..[F,A,B,Group,List], is_group(Group),!,
+  findall(R,(member(M,Group),call(F,A,B,M,R)),AllRots),
+  append_sets([AllRots],List).
 
 allow_dirs([Type|_],X):- !, allow_dirs(Type,X).
 allow_dirs(Type,X):- subtypes(Type,SType),allow_dir(SType,List),member(X,List).
@@ -196,15 +202,24 @@ non_free_fg(C):- \+ free_cell(C), \+ is_bg_color(C).
 
 non_h_rot(same).
 non_h_rot(rot90).
-non_h_rot(flipV).
 non_h_rot(rot270).
 
 enum_rotation(same).
-enum_rotation(flipV).
-enum_rotation(rot180). % = flipHV
 enum_rotation(rot90).
+enum_rotation(rot180). % = flipHV
 enum_rotation(rot270).
-enum_rotation(flipH).
+
+non_h_ori(same).
+non_h_ori(rot90).
+non_h_ori(flipV).
+non_h_ori(rot270).
+
+enum_orientation(same).
+enum_orientation(flipV).
+enum_orientation(rot180). % = flipHV
+enum_orientation(rot90).
+enum_orientation(rot270).
+enum_orientation(flipH).
 
   
 ap(scotch_patterns). ap(rug_patterns). ap(rougue_like). ap(space_invaders).
@@ -238,9 +253,15 @@ color_and_rotation(RedHammer,Hammer):-
   all_colors(RedHammer,Hammer1),
   all_rotations(Hammer1,Hammer).
 
+all_colors(Group,List):- override_group(all_colors(Group,List)),!.
 all_colors(RedHammer,Hammer):- change_color(RedHammer,Hammer).
 all_colors(RedHammer,RedHammer).
 
+
+change_color_blue(Group,List):- override_group(change_color_blue(Group,List)),!.
+change_color_blue(RedHammer,BlueHammer):- 
+  color(RedHammer,CurrentColor),
+  swap_colors(blue,CurrentColor,RedHammer,BlueHammer).
 
 change_color(Group,List):- override_group(change_color(Group,List)),!.
 change_color(RedHammer,Hammer):- 
@@ -256,6 +277,16 @@ all_rotations(RedHammer,Hammer):-
 shape_rotations(Shape,Shape):- iz(Shape,symmetric),!.
 shape_rotations(Shape,Hammer):- iz(Shape,h_symmetric),!, non_h_rot(Rot),call(Rot,Shape,Hammer).
 shape_rotations(RedHammer,Hammer):- enum_rotation(ROT), call(ROT,RedHammer,Hammer).
+
+
+all_orientations(Group,List):- override_group(all_orientations(Group,List)),!.
+all_orientations(RedHammer,Hammer):- 
+ (var(RedHammer) -> freeze(RedHammer,all_orientations(RedHammer,Hammer)) 
+   ; no_repeats(Grid,(shape_orientations(RedHammer,Hammer),object_grid(Hammer,Grid)))).
+
+shape_orientations(Shape,Shape):- iz(Shape,symmetric),!.
+shape_orientations(Shape,Hammer):- iz(Shape,h_symmetric),!, non_h_ori(Rot),call(Rot,Shape,Hammer).
+shape_orientations(RedHammer,Hammer):- enum_orientation(ROT), call(ROT,RedHammer,Hammer).
 
 
 bg_to_fresh_vars(BGrid,Grid):- map_pred(bg_to_fresh_vars_e,BGrid,Grid).
