@@ -28,7 +28,7 @@ test_ogs(H,V):- clsmake,
   copy_term(F,FC),FC=F,
   (ss666(T,G);(fail,ff666(T,G0),pad_grid(G0,G))), 
    % print_cgrid(G),
-  (ogs(H,V,FC,G)-> show_match(H,V,F,G) ; show_mismatch(F,G)).
+  (ogs(H,V,FC,G)*-> show_match(H,V,F,G) ; show_mismatch(F,G)).
 
 show_mismatch(F,G):- 
   nl,dash_char,
@@ -57,9 +57,9 @@ print_sgrid(F):- ((\+ \+ ((constrain_grid_s(F,_Trig,_FG),print_grid(F),nl)))),!.
 
 constrain_type(_CheckType,_Grid,G,G):-!.
 constrain_type(CheckType,Grid,G,GG):- is_list(G),!,maplist(constrain_type(CheckType,Grid),G,GG).
-%constrain_type(CheckType,Grid,G,GG):- is_bgc(G),freeze(CheckType,\+ is_fg_color(GG)),!.
+%constrain_type(CheckType,Grid,G,GG):- is_bg_color(G),freeze(CheckType,\+ is_fg_color(GG)),!.
 %constrain_type(CheckType,Grid,G,GG):- is_color(G),!,freeze(CheckType,G==GG).
-constrain_type(CheckType,_Grid,G,GG):- is_bgc(G), freeze(CheckType,G=GG),!.
+constrain_type(CheckType,_Grid,G,GG):- is_bg_color(G), freeze(CheckType,G=GG),!.
 constrain_type(_CheckType,_Grid,G,G):- is_fg_color(G),!.
 constrain_type(CheckType,_Grid,G,GG):- freeze(CheckType,G=GG).
 
@@ -296,8 +296,9 @@ count_c_neighbors(C,H,V,N,GridIn):-
     Count),
   length(Count,N).
   
-ci:attr_unify_hook(_AttVal,Value):-
-   Value = _.
+ci:attr_unify_hook(fg(_),Value):- !, is_fg_color(Value).
+%ci:attr_unify_hook(bg,Value):- !, is_bg_color(Value).
+ci:attr_unify_hook(_,_Value).
   
 constrain_dir_ele(_CT,_Trig,[],_GridIn,_,_,_,_GridO).
 constrain_dir_ele(CT,Trig,[Dir|SEW],GridIn,H,V,C,GridO):-  
