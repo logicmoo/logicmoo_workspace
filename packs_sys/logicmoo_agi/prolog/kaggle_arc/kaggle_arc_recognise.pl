@@ -1,7 +1,8 @@
-test_ogs:-
-  forall((f666(F),h666(S),ogs(H,V,F,S)),(writeq(ogs(H,V,F,S)),nl)).
+:- discontiguous h666/2. 
+:- discontiguous f666/2. 
 
-print_cgrid(F):- nop((\+ \+ ((constrain_grid_f(F,FG),print_grid(FG),nl)))),!.
+test_ogs:- forall(test_ogs(_,_),true).
+
 
 grid_minus_grid(B,A,OI):- 
   remove_global_points(A,B,OI),!.
@@ -9,41 +10,50 @@ grid_minus_grid(B,A,OI):- is_list(B),maplist(grid_minus_grid,B,A,OI).
 grid_minus_grid(B,A,C):- ignore(grid_minus_grid0(B,A,C)).
 grid_minus_grid(B,_,B):- !.
 grid_minus_grid0(B,A,OI):- B==A,!, OI=black.
-%grid_minus_grid0(B,A,OI):- nonvar_or_ci(B),nonvar_or_ci(A),IO=black.
-%grid_minus_grid0(B,A,OI):- nonvar_or_ci(B),IO=B.
+%grid_minus_grid0(B,A,OI):- nonvar(B),nonvar(A),IO=black.
+%grid_minus_grid0(B,A,OI):- nonvar(B),IO=B.
 %grid_minus_grid0(B,A,B):- !.
 /*
 
 grid_minus_grid(B,A,OI):- 
   pred_global_points(point_minus_point(A,B),A,B,OI).
 
-point_minus_point(A,B,H,V,C,Old,Grid,Grid):- nonvar_or_ci(Old),nonvar_or_ci(C),Old\==C,nop(point_minus_point(A,B,H,V,C,Old,Grid,Grid)).
+point_minus_point(A,B,H,V,C,Old,Grid,Grid):- nonvar(Old),nonvar(C),Old\==C,nop(point_minus_point(A,B,H,V,C,Old,Grid,Grid)).
 point_minus_point(A,B,H,V,C,Old,Grid,Grid):-  nth1(V,Grid,Row),nb_set_nth1(H,Row,black),!, nop(point_minus_point(A,B,H,V,C,Old,Grid,Grid)).
 */
 
 test_ogs(H,V):- clsmake,
   wqln("searching..."),
-  ff666(F),print_cgrid(F),
-  %copy_term(F,FC), 
-  (sp666(G);(fail,ff666(G0),pad_grid(G0,G))), 
+  ff666(T,F),%print_grid(F),
+  copy_term(F,FC),FC=F,
+  (ss666(T,G);(fail,ff666(T,G0),pad_grid(G0,G))), 
    % print_cgrid(G),
-  ogs(H,V,F,G),
-  once(show_match(H,V,F,G)).
+  (ogs(H,V,FC,G)-> show_match(H,V,F,G) ; show_mismatch(F,G)).
+
+show_mismatch(F,G):- 
+  nl,dash_char,
+  show_m_pair(color_print(red,"Mismatched"),1,1,F,G),
+  nl,dash_char,!.
 
 show_match(H,V,F,G):- 
-  wqln("Matched"),
+  nl,dash_char,
+  show_m_pair(color_print(green,"Matched"),H,V,F,G),
+  nl,dash_char,!.
+
+show_m_pair(S,H,V,F,G):- 
   grid_size(G,GH,GV),
   %make_grid(GH,GV,FDisp),
-  localpoints(F,Points),
-  H2 is H+1,
-  V2 is V+1,
-  offset_points(H2,V2,Points,GPoints),
-  print_grid(GH,GV,GPoints),nl,
-  print_grid(G),
-  wqln("Found pair").
+  H2 is H-3, V2 is V-3,
+  offset_grid(H2,V2,F,OF),
+  constrain_grid_f(OF,_,FF),!,
+  print_grid(GH,GV,FF),
+  nl,
+  dash_char(60,' '),wqs(S),
+  print_grid(G),!.
 
-% 
-% s666(X),text_to_grid(X,G),!,in_shape_lib(hammer,H),object_grid(H,OG),duplicate_term(OG,OGC),ogs(FH,FY,OGC,G),OGC=@=OG.
+print_fgrid(GH,GV,F):- ((\+ \+ ((constrain_grid_f(F,_Trig,_FG),print_grid(GH,GV,F),nl)))),!.
+print_sgrid(F):- ((\+ \+ ((constrain_grid_s(F,_Trig,_FG),print_grid(F),nl)))),!.
+
 
 constrain_type(_CheckType,_Grid,G,G):-!.
 constrain_type(CheckType,Grid,G,GG):- is_list(G),!,maplist(constrain_type(CheckType,Grid),G,GG).
@@ -71,7 +81,7 @@ ogs_0(H,V,OG,SG):-
   true.
 
 ogs_1(Hi,Vi,Find,Search):-
-  nonvar_or_ci(Hi),nonvar_or_ci(Vi), 
+  nonvar(Hi),nonvar(Vi), 
   H is Hi - 1, V is Vi - 1,
   length(LPad,H),
   length(VPad,V),!,
@@ -98,9 +108,6 @@ ogs_pt2(H,[Row|FindRows],[S|Search]):-
   length(LPad2,H),append(LPad2,Row,LPadRow2),
   append(LPadRow2,_,S),!,
   ogs_pt2(H,FindRows,Search).
-
-:- discontiguous h666/1. 
-:- discontiguous f666/1. 
 
 
 grid_detect_bg(Grid1,Background):- 
@@ -153,16 +160,40 @@ has_color_c(Y):- get_attr(Y,cc,_),!.
 has_color_c(C,E):- attvar(C), get_attr(C,dif,XX),!, sub_term(E,XX),is_color(E).
 
 
-is_spec_color(C0,C):- nonvar_or_ci(C0),\+ is_bg(C0), is_fg_color(C0),!,C=C0.
 
 must_det_ll((X,Y)):- must_det_ll(X),!,must_det_ll(Y).
 must_det_ll(X):- call(X),!.
+
+
+offset_grid(H2,V2,FF,OF):-
+  offset_v_grid(V2,FF,FF0),
+  rot90(FF0,FF1),
+  offset_v_grid(H2,FF1,FF2),
+  rot270(FF2,OF),!.
+
+offset_v_grid(V2,FF,OF):-  
+  grid_size(FF,GW,_), 
+  offset_v_grid_row(GW,V2,FF,OF).
+
+offset_v_grid_row(_,V2,FF,FF):- V2<0,!.
+offset_v_grid_row(GW,V2,FF,[Row|OF]):- V1 is V2-1,
+   length(Row,GW), offset_v_grid_row(GW,V1,FF,OF).
+   
+  
+
 
 %pad_with_contraints_3(GridO,TODO):-
 %  grid_size(GridO,HH,VV),
 %  pad_with_contraints_3(GridO,HH,VV,TODO),!.
 pad_grid(O,GridO):- is_object(O),!,object_grid(O,GridIn),!,pad_grid(GridIn,GridO).
-pad_grid(Grid1,Grid2):-
+pad_grid(Grid,Grid2):-
+  grid_size(Grid,H,_), H2 is H +2,
+  length(T,H2),%maplist(=(bg),T),
+  length(B,H2),%maplist(=(bg),B),
+  maplist(pad_sides,Grid,FillRows),
+  pad_sides(T,FillRows,B,Grid2).
+
+old_pad_grid(Grid1,Grid2):-
  must_det_ll((
   grid_size(Grid1,H,V),
   globalpoints(Grid1,Ps),
@@ -176,7 +207,8 @@ constrain_grid_f(Grid2,Trig,GridO):-
 %constrain_grid_f(Grid2,GridO):- Grid2=GridO.
 
 constrain_grid_s(Grid2,Trig,GridO):- constrain_grid(s,Trig,Grid2,GridO).
-constrain_grid(CT,Trig,Grid2,GridO):- 
+constrain_grid(CT,Trig,Grid1,GridO):- 
+  pad_grid(Grid1,Grid2),
   grid_label_bg(Grid2,Grid3),
   release_bg(CT,Trig,Grid3,GridO),
   constrain_grid_now(CT,Trig,Grid3,GridO),!.
@@ -188,27 +220,38 @@ release_bg0(CT,Trig,GridIn,GridO):- is_list(GridIn), !, maplist(release_bg0(CT,T
 release_bg0(_CT,_Trig,GridIn,GridIn):- attvar(GridIn),!.
 release_bg0(_CT,_Trig,GridIn,GridIn):- plain_var(GridIn),!.
 %release_bg0(CT,Trig,GridIn-P,GridO-P):- !, release_bg0(CT,Trig,GridIn,GridO).
-release_bg0(_CT,_Trig,BG,C):- is_bg(BG),!,put_attr(C,ci,bg).
+release_bg0(_CT,_Trig,BG,C):- is_bg_color(BG),!,put_attr(C,ci,bg).
 release_bg0(_CT,_Trig,C0,C):- is_spec_color(C0,C),!.
 release_bg0(_CT,_Trig,C,C).
 
+%constrain_grid_now(CT,Trig,GridIn, GridO):- GridIn= GridO,!.
 constrain_grid_now(CT,Trig,GridIn, GridO):-
-  grid_size(GridIn,H,V),
-  make_grid(H,V, GridO),
-  grid_detect_fg(GridIn,FGUnits),
-  ignore((FGUnits\==[],
-          maplist(will_be_fg(Trig),FGUnits),
-          %FGUnits=[fg|_],
-          nop(pt(grid_detect_fg(GridIn,FGUnits))))),
+  grid_size(GridIn,H,V), make_grid(H,V, GridO),
+  maybe_constrain_fg(Trig,GridIn),
   constrain_grid_now(CT,Trig,GridIn,H,V,H,V,GridO),!.
 
-will_be_fg(Trig,FG):- put_attr(FG,ci,fg),
-                      freeze(Trig,is_fg_color_if_nonvar(Trig,FG)),
+maybe_constrain_fg(Trig,GridIn):- 
+  grid_detect_fg(GridIn,FGUnits),
+  ignore((FGUnits\==[],
+          set_fg_vars(FGUnits),
+          maplist(will_be_fg(Trig),FGUnits),
+          nop(pt(grid_detect_fg(GridIn,FGUnits))))),!.
+
+
+set_fg_vars(Vars):-
+  copy_term(Vars,CVars), numbervars(CVars,1,_,[attvar(skip),functor_name('fg')]), maplist(set_as_fg,Vars,CVars),!.
+
+set_as_fg(V,fg(N)):- put_attr(V,ci,fg(N)),!,atom_concat(fg,N,Lookup),nb_linkval(Lookup,V).
+set_as_fg(V,Sym):- put_attr(V,ci,Sym).
+
+will_be_fg(Trig,FG):- freeze(Trig,is_fg_color_if_nonvar(Trig,FG)),
                       freeze(FG,is_fg_color_if_nonvar(Trig,FG)).
 
 is_fg_color_if_nonvar(Trig,V):- plain_var(V),Trig==run,!,fail,freeze(V,is_fg_color_if_nonvar(Trig,V)).
-is_fg_color_if_nonvar(Trig,V):- wqnl(is_fg_color_if_nonvar(Trig,V)),fail.
+is_fg_color_if_nonvar(Trig,V):- nop(wqnl(is_fg_color_if_nonvar(Trig,V))),fail.
 is_fg_color_if_nonvar(_Trig,C):- is_fg_color(C),!.
+is_bg(C):- is_bg_color(C).
+is_bgc(C):- is_bg_color(C).
 
 constrain_grid_now(_CT,_Trig,_GridIn,_Hi,0,_GH,_GV,_GridO):-!.
 constrain_grid_now(CT,Trig,GridIn,Hi,Vi,GH,GV,GridO):-
@@ -234,18 +277,23 @@ constrain_bg_ele(_CT,_Trig,_GridIn,H,V,_C0,GridO):-
   %freeze(C2,C1==C2),
   %freeze(C1,C1==C2).
 
-is_fg_color(C):- attvar(C),get_attr(C,ci,fg).
-is_fg_color(C):- is_bgc(C),!,fail.
-%is_fg_color(C):- compound(C), C = fg(_),!.
-is_fg_color(C):- is_color(C),!.
-is_fg_color(C):- C == fg.
 
-count_gneighbors(C,H,V,Count,GridIn):- 
+count_o_neighbors(C,H,V,N,GridIn):- 
   findall(Dir,
     (is_adjacent_hv(H,V,Dir,H2,V2),
-     get_color_at(H2,V2,GridIn,C2),C2=@=C), 
-    Count).
+     get_color_at(H2,V2,GridIn,C2),
+       is_spec_color(C2,_),C2\=@=C), 
+    Count),
+  length(Count,N).
 
+count_c_neighbors(C,H,V,N,GridIn):- 
+  findall(Dir,
+    (is_adjacent_hv(H,V,Dir,H2,V2),
+     get_color_at(H2,V2,GridIn,C2),
+       C2=@=C), 
+    Count),
+  length(Count,N).
+  
 ci:attr_unify_hook(_AttVal,Value):-
    Value = _.
   
@@ -254,18 +302,24 @@ constrain_dir_ele(CT,Trig,[Dir|SEW],GridIn,H,V,C,GridO):-
   is_adjacent_hv(H,V,Dir,H2,V2),
   %get_color_at(H,V,GridO,CO),
   ignore((% C=CO,
-  \+ is_diag(Dir),
+%   \+ is_diag(Dir),
   get_color_at(H2,V2,GridIn,C2),
   \+ is_spec_color(C2,_),
-  \+ count_gneighbors(C,H2,V2,[_],GridIn),
+   count_c_neighbors(C,H2,V2,N,GridIn),
+   count_o_neighbors(C,H2,V2,N2,GridIn),
+   o_c_n(CT,N2,N),
   get_color_at(H2,V2,GridO,C2O),
   dif(C2O,C))),!,
   constrain_dir_ele(CT,Trig,SEW,GridIn,H,V,C,GridO).
 constrain_dir_ele(CT,Trig,[_|SEW],GridIn,H,V,C,GridO):-
   constrain_dir_ele(CT,Trig,SEW,GridIn,H,V,C,GridO).
 
+o_c_n(f,Tw,_):- Tw>=2,!. %has at least two neibours we care about
+o_c_n(f,0,1):-!,fail. % no neigbours and just self
+o_c_n(f,_,_).
+o_c_n(s,_,_).
 
-g666(Y):- in_shape_lib(l_shape,X),
+g666(_,Y):- in_shape_lib(l_shape,X),
   object_grid(X,G),
   pad_grid(G,Y).
 
@@ -273,31 +327,14 @@ g666(Y):- in_shape_lib(l_shape,X),
 make_row(Rows,FV):- functor(P,v,FV), P=..[v|Rows].
 
 
-f666(G):- in_shape_lib(hammer,Ham),object_grid(Ham,G).
-/*
-f666(
-[[X],
- [X],
- [X],
- [X],
- [X],
- [X]]).
+f666(color,
+[[4,5,1],
+ [4,5,1],
+ [4,5,1]]).
 
-f666(
-[[X,_],
- [X,_],
- [X,_],
- [X,X],
- [X,_]]).
+f666(ham,G):- in_shape_lib(hammer,Ham),object_grid(Ham,G).
 
-f666(
-[[X,_],
- [X,X],
- [X,_],
- [X,_]]).
-*/
-
-h666(
+h666(ham,
 "_________________________________________________
          B B B B B               B B B B B
          B B B B B               B B B B B
@@ -310,7 +347,7 @@ h666(
          B B B B B               B B B B B
  _________________________________________________").
 
-h666(
+h666(ham,
 "_________________________________________________
       B B B                           B B B      
         B B                             B B      
@@ -353,11 +390,11 @@ into_grid_color(O,O).
 into_g666(Text,G):- is_grid(Text),!,maplist(into_grid_color,Text,G).
 into_g666(Text,G):- atomic(Text),text_to_grid(Text,TG),into_g666(TG,G).
 
-ss666(G):- h666(S),into_g666(S,G).
-sp666(Y):- ss666(X), pad_grid(X,Y).
+ss666(T,G):- h666(T,S),into_g666(S,G).
+sp666(T,Y):- ss666(T,X), pad_grid(X,Y).
 
-ff666(G):- f666(F),into_g666(F,G).
-fp666(Y):- ff666(X), pad_grid(X,Y).
+ff666(T,G):- f666(T,F),into_g666(F,G).
+fp666(T,Y):- ff666(T,X), pad_grid(X,Y).
 
 % ?- h666(X),text_to_grid(X,G).
 text_to_grid(Text,GO):- text_to_grid(Text,_HH,_VV,_ObjPoints,GO).
@@ -430,57 +467,57 @@ insert_row_pad_open(V0,GU,GridU):- functor(P,v,V0),P=..[v|L],append(L,GU,LGU), a
 
 
 
-h666(
-[[4,5,6,7,8,9,4,5,6,7,8,9],
- [4,5,6,7,8,9,4,5,6,7,8,9],
- [4,5,6,7,8,9,4,5,6,7,8,9],
- [6,5,6,6,8,9,4,5,6,7,8,9],
- [6,6,6,7,8,9,4,5,6,7,8,9],
- [6,6,6,6,8,9,4,5,6,7,8,9],
- [6,6,6,6,8,9,6,6,6,6,6,9],
- [6,6,6,6,8,9,4,5,6,7,8,9],
- [6,6,6,7,8,9,4,5,6,7,8,9],
- [4,5,6,7,8,9,4,5,6,7,8,9]]).
+h666(colors,
+[[4,5,1,7,8,9,4,5,2,7,8,9],
+ [4,5,1,7,8,9,4,5,1,7,8,9],
+ [4,5,1,7,8,9,4,5,1,7,8,9],
+ [1,5,1,1,8,9,4,5,1,7,8,9],
+ [1,1,1,7,8,9,4,5,1,7,8,9],
+ [1,1,1,1,8,9,4,5,1,7,8,9],
+ [1,1,1,1,8,9,1,1,1,1,1,9],
+ [1,1,1,1,8,9,4,5,1,7,8,9],
+ [1,1,1,7,8,9,4,5,1,7,8,9],
+ [4,5,1,7,8,9,4,5,1,7,8,9]]).
 
-h666(
-[[1,2,3,4,5,6,7,8,9],
- [1,2,3,4,5,6,7,8,9],
- [1,2,3,4,5,6,7,8,9]]).
+h666(colors,
+[[1,2,3,4,5,1,7,8,9],
+ [1,2,3,4,5,1,7,8,9],
+ [1,2,3,4,5,1,7,8,9]]).
 
-h666(
-[[4,5,6,7,8,9],
- [4,5,6,7,8,9],
- [4,5,6,7,8,9],
- [4,5,6,6,8,9],
- [4,6,6,7,8,9],
- [4,6,6,6,8,9],
- [4,6,6,7,8,9],
- [4,5,6,7,8,9]]).
+h666(colors,
+[[4,5,1,7,8,9],
+ [4,5,1,7,8,9],
+ [4,5,1,7,8,9],
+ [4,5,1,1,8,9],
+ [4,1,1,7,8,9],
+ [4,1,1,1,8,9],
+ [4,1,1,7,8,9],
+ [4,5,1,7,8,9]]).
 
 
 
-h666(
-[[1,2,3,4,5,6,7,8,9],
- [1,2,3,4,5,6,7,8,9],
- [1,2,3,4,5,6,7,8,9],
- [1,2,3,4,5,6,7,8,9],
- [1,2,3,4,6,6,6,8,9],
- [1,2,3,4,5,6,7,8,9],
- [1,2,3,4,5,6,7,8,9]]).
+h666(colors,
+[[1,2,3,4,5,2,7,8,9],
+ [1,2,3,4,5,1,7,8,9],
+ [1,2,3,4,5,1,7,8,9],
+ [1,2,3,4,5,1,7,8,9],
+ [1,2,3,4,1,1,1,8,9],
+ [1,2,3,4,5,1,7,8,9],
+ [1,2,3,4,5,2,7,8,9]]).
 
-f666(
-[[_,6,_],
- [6,6,6],
- [_,6,_]]).
+f666(_,
+[[_,1,_],
+ [1,1,1],
+ [_,1,_]]).
 
-f666(
-[[_,_,6,_,_],
- [_,_,6,_,_],
- [6,6,6,6,6],
- [_,_,6,_,_],
- [_,_,6,_,_]]).
+f666(_,
+[[_,_,1,_,_],
+ [_,_,1,_,_],
+ [1,1,1,1,1],
+ [_,_,1,_,_],
+ [_,_,1,_,_]]).
 
-f666(
+f666(_,
 [[_,_,X,_,_],
  [_,_,X,_,_],
  [X,X,X,X,X],
@@ -488,10 +525,32 @@ f666(
  [_,_,X,_,_]]).
 
 
-f666(
+f666(colors,
 [[5,_,7],
- [5,6,7],
- [5,6,7]]).
+ [5,1,7],
+ [5,1,7]]).
+
+f666(_,
+[[X],
+ [X],
+ [X],
+ [X],
+ [X],
+ [X]]).
+
+f666(_,
+[[X,_],
+ [X,_],
+ [X,_],
+ [X,X],
+ [X,_]]).
+
+f666(_,
+[[X,_],
+ [X,X],
+ [X,_],
+ [X,_]]).
+
 
 
 

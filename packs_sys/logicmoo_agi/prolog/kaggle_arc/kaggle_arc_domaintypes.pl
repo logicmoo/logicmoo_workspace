@@ -11,7 +11,6 @@ matches_filter(E,obj(List)):- member(E,List).
 
 
 
-
 allow_dirs([Type|_],X):- !, allow_dirs(Type,X).
 allow_dirs(Type,X):- subtypes(Type,SType),allow_dir(SType,List),member(X,List).
 
@@ -61,25 +60,33 @@ meets_indiv_criteria(_,_).
 
 
 % Color types
+is_fg_color(C):- attvar(C),!,get_attr(C,ci,fg(_)).
+is_fg_color(C):- is_bg_color(C),!,fail.
+is_fg_color(C):- is_color(C),!.
+is_fg_color(C):- C == fg.
 
-%is_bgc(BG):- plain_var(BG),!,fail.
-is_bgc(BG):- get_bgc(C),BG==C.
+%is_bg_color(BG):- plain_var(BG),!,fail.
+is_bg_color(BG):- var(BG),!,get_attr(BG,ci,bg),!.
+is_bg_color(C):- bg_sym(BG),C==BG,!.
+is_bg_color(C):- get_bgc(BG),C==BG,!.
 
-is_black_or_bg(BG):- black==BG ; is_bgc(BG).
+is_black_or_bg(BG):- is_black(BG)-> true; is_bg_color(BG).
 %is_black_or_bg(0).
+is_black(C):- C==black.
+get_black(black).
+%get_black(0).
 
+is_spec_color(C0,C):- nonvar_or_ci(C0),\+ is_bg_color(C0), is_fg_color(C0),!,C=C0.
+
+is_color(C):- attvar(C),!,get_attr(C,ci,_).
 is_color(C):- atom(C),color_int(C,N),integer(N).
 
+%is_colorish(C):- attvar(C),!,get_attr(C,ci,_).
 is_colorish(C):- is_color(C),!.
 is_colorish(C):- has_color_c(C,_),!.
 is_colorish(C):- get_bgc(BG),BG==C,!.
 is_colorish(C):- bg_sym(BG),BG==C,!.
 is_colorish(C):- fg_sym(FG),FG==C,!.
-
-is_black(C):- C==black.
-get_black(black).
-%get_black(0).
-
 
 is_grid_color(C):- plain_var(C),!,fail.
 % makes grid colors an integer.. 
@@ -101,7 +108,7 @@ enum_colors(OtherColor):- named_colors(Colors),!,member(OtherColor,Colors).
 enum_fg_colors(Color):- enum_colors(Color),is_color_no_bgc(Color).
 fill_color(Color,OtherColor):- enum_colors(OtherColor),Color\==OtherColor,is_color_no_bgc(OtherColor).
 
-is_bg_indiv(O):- colors(O,[cc(C,CC)]),CC>0,is_bgc(C).
+is_bg_indiv(O):- colors(O,[cc(C,CC)]),CC>0,is_bg_color(C).
 
 
 is_not_cpoint(I):- \+ is_cpoint(I).
@@ -162,7 +169,7 @@ get_bgc(X):- get_bgco(X),!.
 get_bgc(X):- get_black(X).
 
 
-is_color_no_bgc(X):- \+ is_bgc(X), is_color(X).
+is_color_no_bgc(X):- \+ is_bg_color(X), is_color(X).
 
 is_bg_or_var(_,X):- free_cell(X),!.
 is_bg_or_var(BG,X):- X==BG.
@@ -171,7 +178,7 @@ is_bg_or_var(BG,X):- X==BG.
 free_cell(Var):- plain_var(Var),!.
 free_cell(C):- get_bgco(X),C==X.
 
-non_free_fg(C):- \+ free_cell(C), \+ is_bgc(C).
+non_free_fg(C):- \+ free_cell(C), \+ is_bg_color(C).
 
 %free_cell(0).
 %free_cell(8).
@@ -233,16 +240,17 @@ change_color(RedHammer,Hammer):-
   swap_colors(CurrentColor,OtherColor,RedHammer,Hammer).
 
 
-all_rotations(RedHammer,Hammer):- no_repeats(Grid,(shape_rotations(RedHammer,Hammer),object_grid(Hammer,Grid))).
+all_rotations(RedHammer,Hammer):- 
+ (var(RedHammer) -> freeze(RedHammer,all_rotations(RedHammer,Hammer)) 
+   ; no_repeats(Grid,(shape_rotations(RedHammer,Hammer),object_grid(Hammer,Grid)))).
 
 shape_rotations(Shape,Shape):- iz(Shape,symmetric),!.
 shape_rotations(Shape,Hammer):- iz(Shape,h_symmetric),!, non_h_rot(Rot),call(Rot,Shape,Hammer).
 shape_rotations(RedHammer,Hammer):- enum_rotation(ROT), call(ROT,RedHammer,Hammer).
 
 
-
 bg_to_fresh_vars(BGrid,Grid):- map_pred(bg_to_fresh_vars_e,BGrid,Grid).
-bg_to_fresh_vars_e(X,Y):-bg_sym(BG), X==BG, Y= _.
+bg_to_fresh_vars_e(X,Y):- bg_sym(BG), X==BG, Y= _.
 
 use_growth_chart(Pixels,GC,NewPixels):- globalpoints(GC,GP), do_gp(GP,Pixels,NewPixels).
  

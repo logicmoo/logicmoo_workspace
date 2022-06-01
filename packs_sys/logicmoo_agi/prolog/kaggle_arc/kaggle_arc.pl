@@ -17,8 +17,17 @@
 :- (getenv('DISPLAY',_) -> true ; setenv('DISPLAY','10.0.0.122:0.0')).
 %:- (getenv('DISPLAY',_) -> guitracer ; true).
 :- set_prolog_flag(toplevel_print_anon,true).
-:- set_prolog_flag(toplevel_print_factorized,true).
+%:- set_prolog_flag(toplevel_print_factorized,true).
 :- set_prolog_flag(answer_write_options, [quoted(true), portray(true), max_depth(20), attributes(portray)]).
+
+:- multifile(decl_sf/1).
+:- discontiguous(decl_sf/1).
+:- dynamic(decl_sf/1).
+decl_sf(G):- ground(G), !, assertz(decl_sf(G)).
+:- multifile(decl_pt/1).
+:- discontiguous(decl_pt/1).
+:- dynamic(decl_pt/1).
+decl_pt(G):- ground(G), !, assertz(decl_pt(G)).
 
 :- ensure_loaded(kaggle_arc_utils).
 :- ensure_loaded(kaggle_arc_ui_ansi).

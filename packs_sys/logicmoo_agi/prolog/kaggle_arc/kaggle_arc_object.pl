@@ -110,7 +110,7 @@ make_indiv_object(ID,H,V,LoH,LoV,HiH,HiV,Points,Overrides,OUT):-
   remove_color(LPoints,UColorlessPoints),
   sort(UColorlessPoints,ColorlessPoints),
   make_grid(Width,Height,Grid),
-  set_global_points(LPoints,Grid,Grid),
+  add_global_points(LPoints,Grid,Grid),
   make_grid(Width,Height,LocalGrid),
   copy_term(Grid,GridInCopy),
   findall(object_shape(Shape),
@@ -215,7 +215,7 @@ enum_object(S):- is_gridname(S,_).
 
 %indv_props(Obj,L):- compound(Obj), arg(1,Obj,L), is_list(L),!.
 indv_props(obj(L),L):- is_list(L),!.
-indv_props(G,L):- nonvar_or_ci(G), g2o(G,O), nonvar_or_ci(O),!,indv_props(O,L).
+indv_props(G,L):- nonvar(G), g2o(G,O), nonvar(O),!,indv_props(O,L).
 indv_props(obj(L),L):- enum_object(obj(L)).
 
 walls_thick1(G):- localpoints(G,Points),counted_neighbours(Points,ListOfSizes),walls_thick1_sizes(ListOfSizes).
@@ -233,8 +233,8 @@ counted_neighbours(List,CountOut):- counted_neighbours(List,[],CountOut).
 counted_neighbours(List,CountIn,CountsOut):- counted_neighbours(List,List,CountIn,CountsOut).
 
 colors_join(C,CC):- C==CC,!.
-colors_join(C,CC):- is_bgc(C),!,is_bgc(CC).
-colors_join(CC,C):- is_bgc(C),!,is_bgc(CC).
+colors_join(C,CC):- is_bg_color(C),!,is_bg_color(CC).
+colors_join(CC,C):- is_bg_color(C),!,is_bg_color(CC).
 colors_join(C,CC):- (plain_var(C);plain_var(CC)),!,fail.
 colors_join(C,CC):- is_color(C),is_color(CC),!,fail.
 colors_join(C,CC):- (is_color(C);is_color(CC)),!.
@@ -264,13 +264,20 @@ rotation(I,X):- indv_props(I,L),member(rotation(X),L).
 
 object_changes(I,X):- indv_props(I,L),!,member(changes(X),L).
 
+all_points_between(_Grid,_Hi,0,_GH,_GV,Points,Points):-!.
+all_points_between(Grid,Hi,Vi,GH,GV,Points,PointsO):-
+  ((hv_value(Grid,C2,Hi,Vi),is_spec_color(C2,C),hv_point(Hi,Vi,Point)) -> PointsT = [C-Point|Points] ; PointsT = Points),
+  (Hi==1 -> (H = GH, V is Vi-1) ; (H is Hi -1, V=Vi)),!,
+  all_points_between(Grid,H,V,GH,GV,PointsT,PointsO).
 
-all_points(Grid,HH,HV,Points):-  
+all_points(Grid,HH,HV,Points):- all_points_between(Grid,HH,HV,HH,HV,[],Points),!. 
+all_points(Grid,HH,HV,Points):-  throw(all_points_between),
   findall(C-Point,(between(1,HV,V),between(1,HH,H),
     once((hv_value(Grid,C2,H,V),
           %pt(hv_value(C2,H,V)),
           is_spec_color(C2,C),
           hv_point(H,V,Point)))),Points),!.
+
 
 globalpoints(Grid,Points):- is_grid(Grid),!, grid_size(Grid,HH,VV), all_points(Grid,HH,VV,Points).
 globalpoints(I,X):- indv_props(I,L),member(globalpoints(X),L),is_points_list(X),!.
@@ -278,8 +285,6 @@ globalpoints(Grid,[Grid]):- is_point(Grid),!.
 globalpoints(Grid,Points):- is_list(Grid),!,maplist(globalpoints,Grid,MPoints),append(MPoints,Points).
 globalpoints(I,G):- localpoints(I,L),is_points_list(L),loc_xy(I,X,Y),offset_points(X,Y,L,G),!.
 
-is_bg(C):- bg_sym(BG),C==BG,!.
-is_bg(C):- get_bgc(BG),C==BG,!.
 
 %globalpoints(Grid,Points):- is_object(Grid),!,globalpoints(Grid,Points).
 /*
@@ -324,7 +329,7 @@ last_gpoint(HV,P):- globalpoints(HV,PS),last(PS,P).
 
 
 :- style_check(-singleton).
-guess_shape(GridIn,LocalGrid,I,Empty,N,H,V,[cc(Zero,_)],Points,background):- is_bgc(Zero).
+guess_shape(GridIn,LocalGrid,I,Empty,N,H,V,[cc(Zero,_)],Points,background):- is_bg_color(Zero).
 guess_shape(GridIn,LocalGrid,I,0,1,1,1,Colors,Points,dot):- !.
 guess_shape(GridIn,LocalGrid,I,0,N,N,1,Colors,Points,hv_line(h)).
 guess_shape(GridIn,LocalGrid,I,0,N,HV,HV,Colors,Points,squares):- HV>1.

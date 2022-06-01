@@ -5,7 +5,7 @@ rot_by_90_0([A,B]):- rot90(A,B),!.
 rot_by_90_0([A,B|List]):- rot90(A,B),rot_by_90_0([B|List]).
   
 subtractGrid(Out,In,Alien):- plain_var(Alien), remove_global_points(In,Out,Alien),!.
-subtractGrid(Out,In,Alien):- plain_var(Out),!,addIndv(Alien,In,Out).
+subtractGrid(Out,In,Alien):- plain_var(Out),!,add_global_points(Alien,In,Out).
 subtractGrid(Out,In,Alien):- plain_var(In),!,remove_global_points(Alien,Out,In).
 
 find_by_shape(Grid,Find,Founds):- 
@@ -13,7 +13,9 @@ find_by_shape(Grid,Find,Founds):-
  visual_hv(Find,GH,GV),
  decolorize(Find,F), 
  Prog = (all_rotations(F,F1),
-   print_grid(F1),!,ogs(H,V,F1,Grid),trace,all_points(F1,GH,GV,Points),
+   %print_grid(F1),!,
+   ogs(H,V,F1,Grid),% trace,
+   all_points(F1,GH,GV,Points),
   pt(Points),
    make_indiv_object(ID,GH,GV,Points,[F1,loc_xy(H,V)],F2)),
  findall(F2,Prog,Matches),
@@ -30,7 +32,6 @@ learn:-
    in_out(In,Out),
    subtractGrid(Out,In,Alien),
    rot_by_90([Alien,A,B,C]),
-   trace,
    find_by_shape(In,Alien,[A,B,C]),
    find_by_shape(Out,Alien,[A,B,C,Alien]).
 

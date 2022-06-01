@@ -56,7 +56,7 @@ ensure_shared_indivs(GN,Grid,SharedIndvs):-
    individuals_common(Unshared,Grid,SharedIndvs),
    assert(is_shared_saved(GN,SharedIndvs)).
 
-decl_pt(detect_indvs(group,group,-)).
+:- decl_pt(detect_indvs(group,group,-)).
 detect_indvs(In,Out,Grid):- individuals_common(In,Grid,Out).
 
 individuals_common(Reserved,Grid,IndvS):-
@@ -242,7 +242,7 @@ fsi(Reserved,Grid,NO,H,V,Sofar,ID,[fourway|NO],Reserved,Points,Grid,OutInvdivS,N
 
 
 overwrite_use_so_far(FourWay1s,Sofar,UseSofar):-
-  must_det_l((remove_global_points(FourWay1s,Sofar,Sofar1),set_global_points(FourWay1s,Sofar1,UseSofar))),!.
+  must_det_l((remove_global_points(FourWay1s,Sofar,Sofar1),add_global_points(FourWay1s,Sofar1,UseSofar))),!.
 overwrite_use_so_far(_FourWay1s,Sofar,Sofar).
 
 
@@ -321,12 +321,11 @@ cycle_s(Reserved,_GH,_GV,Sofar,_ID,_Options,Reserved,Points,_Grid,Sofar,Points).
 
 
 default_i_options([
-  shape_lib(hollow_squares),
+  shape_lib(squares),
   use_reserved,
   fourway,
   %shape_lib(all),
   shape_lib(hammer),
-  %shape_lib(hammer),
   squares, diamonds, all,
   
   %solid(squares),
@@ -496,7 +495,7 @@ largest_first_nonbg(IndvS,IndvOB):-
   append(IndvL,BGIndvS,IndvOB).
 
 finish_grp(C,Grp,Point2,Dir,Rest,NewGroup,RRest):- 
-   \+ (is_diag(Dir),is_bgc(C)),
+   \+ (is_diag(Dir),is_bg_color(C)),
    is_adjacent_point(Point2,Dir,Point3),
    single_point(C-Point3,Rest,Rest1),
    finish_grp(C,[C-Point3|Grp],Point3,Dir,Rest1,NewGroup,RRest).

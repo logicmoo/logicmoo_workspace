@@ -361,7 +361,7 @@ my_partition(P1,H,I,HE):- dumpST,break,
 consensus22(L,C):- 
   my_partition(plain_var,L,Vars,Rest0),
   %my_partition(=(brown),Rest0,_,Rest),
-  my_partition(is_bgc,Rest0,BGC,Rest1),
+  my_partition(is_bg_color,Rest0,BGC,Rest1),
   my_partition(is_black,Rest1,Blk,Rest2),
   my_partition(is_color,Rest2,Color,Other),!,
   consensus2(Vars,BGC,Blk,Color,Other,C),!.
@@ -411,7 +411,7 @@ fix_the_fours(NewIndiv0s,NewIndiv2s):-
 sort_on(C,R,A,B):- call(C,A,AA),call(C,B,BB),!,compare(R,AA+A,BB+B).
 using_compare(C,R,A,B):- call(C,A,AA),call(C,B,BB),!,compare(R,AA,BB).
 colored_pixel_count(A,AA):- object_grid(A,G),
-  findall(E,(sub_term(E,G), nonvar_or_ci(E),is_color(E),\+ is_bgc(E)),L),
+  findall(E,(sub_term(E,G), nonvar_or_ci(E),is_color(E),\+ is_bg_color(E)),L),
   length(L,AA).
 
 symetric_xy_3x3(G,Grid9x9):- 

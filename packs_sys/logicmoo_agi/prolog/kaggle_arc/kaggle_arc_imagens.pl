@@ -96,13 +96,11 @@ ___________
      B     
 ___________").
 
-the_hammer1(BlueHammer):-  the_hammer(blue,BlueHammer).
+the_hammer1(BlueHammer):- the_hammer(blue,BlueHammer).
 the_hammer1(RedHammer):-  the_hammer(red,RedHammer).
-the_hammer1(O):- g2o(_,O), localpoints(O,LP),LP\==[],length(LP,L),L>4.
 
-the_hammer(blue, LibObj):- hammer2(Text), text_to_grid(Text,H,V,Points,_Hammer),
+the_hammer(blue, LibObj):- hammer2(Text), text_to_grid(Text,H,V,Points,_Hammer), 
   make_indiv_object('ID',H,V,Points,[object_shape(hammer)],LibObj).
-
 the_hammer(Color,ColorHammer):- 
   ColorHammer = obj([mass(6), shape([point_01_01, point_01_02, point_01_03, point_02_01, point_02_02, point_03_02]), 
   colors([cc(Color, 6.0)]), localpoints([Color-point_01_01, Color-point_01_02, Color-point_01_03, Color-point_02_01, 
@@ -115,7 +113,7 @@ the_hammer(Color,ColorHammer):-
 shape_info_props(Shapes,ShapeProps):- is_list(Shapes),!,maplist(shape_info_props,Shapes,ShapeProps).
 shape_info_props(Shape,object_shape(Shape)).
 
-g_shape_lib(LibObj):- 
+l_shape(LibObj):- 
   in_grid_shape_lib(Shapes0,Grid,GrowthChart),
   grid_size(Grid,H,V),
   enum_scale(Scale),
@@ -151,11 +149,9 @@ grav_mass(Grid,Mass):- grid_size(Grid,H,V), HV is round(H/V), Vh is floor(V/2),
 
 decolorize(Shape,ShapeO):-
   colors_to_vars(_Colors,Vars,Shape,ShapeO),
-  all_dif_colors(Vars,Vars),
-  maplist(set_as_fg,Vars).
+  set_fg_vars(Vars),
+  all_dif_colors(Vars,Vars).
 /*
-  copy_term(Vars,CVars),
-  numbervars(CVars,1,_,[attvar(skip),functor_name('fg')]),
   maplist(label_as_fg(Vars),Vars,CVars).
 */
 all_dif_colors([],_):-!.
@@ -165,7 +161,6 @@ all_dif_colors([V|Vars],AllVars):-
 all_dif_color(_,[]).
 all_dif_color(V,[All|Vars]):- (V==All;dif(V,All))->all_dif_color(V,Vars).
   
-set_as_fg(V):- put_attr(V,ci,fg).
 
 %get_fgc(fg).
 get_fgc(C):- enum_fg_colors(C).
@@ -173,7 +168,9 @@ get_fgc(C):- enum_fg_colors(C).
 in_shape_lib(X,D):- make_shape(X,R),dupe_shape(R,D).
 make_shape(P,I):- enum_make_shape(P), call(call,P,I).
 
+pad_sides(Fill,Row):- append([_|Fill],[_],Row).
 pad_sides(C,Fill,Row):- append([C|Fill],[C],Row).
+pad_sides(C1,Fill,C2,Row):- append([C1|Fill],[C2],Row).
 
 ensure_grid(Grid):- is_grid(Grid),!.
 ensure_grid(Grid):- between(1,30,H),between(1,30,V),make_grid(H,V,Grid).
@@ -185,7 +182,7 @@ decl_sf(Q):- clause(decl_pt(P),true), P=..L, append(MI,[+],L), Q=..MI.
 enum_make_shape(P):- var(P),!,decl_sf(Q),functor(Q,F,A),functor(P,F,A),check_args(Q,P).
 enum_make_shape(P):- compound(P),!,functor(P,F,A),functor(Q,F,A),decl_sf(Q),check_args(Q,P).
 
-decl_sf(box_grid(fg_color,grid)).
+:- decl_sf(box_grid(fg_color,grid)).
 box_grid(C,Grid,D):-
   get_fgc(C), ensure_grid(Grid),
   grid_size(Grid,H,_), H2 is H +2,
@@ -193,14 +190,14 @@ box_grid(C,Grid,D):-
   maplist(pad_sides(C),Grid,FillRows),
   pad_sides(TB,FillRows,D).
 
-decl_sf(box_grid_n_times(size,fg_color,grid)).
+:- decl_sf(box_grid_n_times(size,fg_color,grid)).
 box_grid_n_times(0,_C,Grid,D):- Grid=D,!.
 box_grid_n_times(N,C,Grid,D):- !,
   make_shape(box_grid(C,Grid),G), plus(M,1,N),
   make_shape(box_grid_n_times(M,C,G),D).
 
 
-decl_sf(solid_square(fg_color,size)).
+:- decl_sf(solid_square(fg_color,size)).
 solid_square(C,HW,FillRows):-
   get_fgc(C), between(1,30,HW),
   length(Fill,HW),
@@ -220,23 +217,31 @@ dupe_shape(E,F):- \+ is_list(E),!,duplicate_term(E,F).
 dupe_shape(L,E):- maplist(dupe_shape,L,E).
   
   
-get_shape_lib(all,ReservedS):-!, findall(Obj,in_shape_lib(_Hammer,Obj),Reserved),sortshapes(Reserved,ReservedS).
-get_shape_lib(colorless,ReservedS):-!, get_shape_lib(all,Reserved),maplist(decolorize,Reserved,ReservedDC),
-  sortshapes(ReservedDC,ReservedS).
 get_shape_lib(Hammer,ReservedS):- findall(Obj,in_shape_lib(Hammer,Obj),Reserved),sortshapes(Reserved,ReservedS).
 
 %in_shape_lib(Hammer):- the_hammer1(RedHammer),all_rotations(RedHammer,Hammer).
 
 in_shape_lib(All,GRot):- All==all,!,in_shape_lib(_,GRot).
-in_shape_lib(l_shape,GRot):- g_shape_lib(LibObj),all_rotations(LibObj,GRot).
-in_shape_lib(hammer,Hammer):- the_hammer1(RedHammer),all_rotations(RedHammer,Hammer).
+in_shape_lib(colorless(S),Reserved):- nonvar(S),!, in_shape_lib(S,ReservedC),decolorize(ReservedC,Reserved).
+in_shape_lib(all_rots(S),Reserved):-  nonvar(S),!, in_shape_lib(S,ReservedC),all_rotations(ReservedC,Reserved).
+in_shape_lib(l_shape,LibObj):- l_shape(LibObj).
+in_shape_lib(hammer,Hammer):- the_hammer1(Hammer).
+in_shape_lib(seen,O):- g2o(_,O), localpoints(O,LP),LP\==[],length(LP,L),L>4.
   
-in_grid_shape_lib([Shape,hollow],Grid,GrowthChart):- enum_fg_colors(Color), 
-   bg_sym(BG),
+
+in_grid_shape_lib([Shape,hollow],Grid,GrowthChart):- 
    learned_color_inner_shape(Shape,Color,BG,BGrid,GrowthChart),
-   bg_to_fresh_vars(BGrid,Grid).
-in_grid_shape_lib([Shape,filled],Grid,GrowthChart):- enum_fg_colors(Color), 
-   fill_color(Color,Fill), learned_color_inner_shape(Shape,Color,Fill,Grid,GrowthChart).
-in_grid_shape_lib([Shape,solid],Grid,GrowthChart):- enum_fg_colors(Color), 
-   learned_color_inner_shape(Shape,Color,Color,Grid,GrowthChart).
+  put_attr(Color,ci,fg(1)), 
+  bg_sym(BG), 
+  bg_to_fresh_vars(BGrid,Grid).
+in_grid_shape_lib([Shape,filled],Grid,GrowthChart):- 
+   learned_color_inner_shape(Shape,Color,Fill,Grid,GrowthChart),
+  put_attr(Color,ci,fg(1)), 
+  put_attr(Fill,ci,fg(2)), 
+  dif(Color,Fill).
+in_grid_shape_lib([Shape,solid],Grid,GrowthChart):- 
+   learned_color_inner_shape(Shape,Color,Fill,Grid,GrowthChart),
+  put_attr(Color,ci,fg(1)), 
+  Fill = Color.
+
 

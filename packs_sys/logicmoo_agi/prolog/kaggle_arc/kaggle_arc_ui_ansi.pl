@@ -48,7 +48,8 @@ arcdbg(G):- wdmsg(G).
 user:portray(Grid):- arc_portray(Grid),!.
 
 arc_portray(Grid):- \+ \+ catch((
-  \+ tracing, \+ is_object(Grid),  \+ is_group(Grid), % ground(Grid),
+  % \+ tracing, 
+  \+ is_object(Grid),  \+ is_group(Grid), % ground(Grid),
    (is_gridoid(Grid);(is_points_list(Grid),ground(Grid))),
    grid_size(Grid,H,V),!,H>0,V>0, wots(S,print_grid(H,V,Grid)),write(S)),_,false).
 arc_portray(Grid):- \+ \+ catch(( fail,
@@ -193,15 +194,13 @@ print_Igrid(H,V,Name,SIndvOut,InOutL):-
    print_grid(H,V,Print),format('~N'),
    write('  '),writeq(Name),writeln('  '),!.
 
-print_grid(Grid):- notrace(print_grid0(_HH,_VV,Grid)).
+print_grid(Grid):- quietly(print_grid0(_HH,_VV,Grid)).
 %print_grid0(Grid):- plain_var(Grid),!, throw(var_print_grid(Grid)).
 
-print_grid(H,V,Grid):- notrace(print_grid0(H,V,Grid)).
+print_grid(H,V,Grid):- quietly(print_grid0(H,V,Grid)).
 
-print_grid0(H,V,G):- is_empty_grid(G),!,
- %trace, dumpST,
-
- wdmsg(is_empty_grid(H,V)).
+print_grid0(H,V,G):- is_empty_grid(G), %trace, dumpST,
+ wdmsg(is_empty_grid(H,V)),!.
 print_grid0(H,V,Grid):- \+ callable(Grid),!,write('not grid: '),
   GG= nc_print_grid(H,V,Grid),
   pt(GG),throw(GG).
@@ -210,10 +209,14 @@ print_grid0(H,V,Grid):- print_grid(1,1,H,V,Grid).
 
 print_grid(SH,SV,EH,EV,Grid):- print_grid(SH,SV,SH,SV,EH,EV,EH,EV,Grid).
 %print_grid(SH,SV,LoH,LoV,HiH,HiV,EH,EV,Grid):- nop(print_grid(SH,SV,LoH,LoV,HiH,HiV,EH,EV,Grid)),!.
+
+print_grid(SH,SV,LoH,LoV,HiH,HiV,EH,EV,Grid):-
+ print_grid0(true,SH,SV,LoH,LoV,HiH,HiV,EH,EV,Grid),!.
+
 print_grid(SH,SV,LoH,LoV,HiH,HiV,EH,EV,Grid):-
  line_position(current_output,O),
  O1 is O+1,
- notrace((wots(S, print_grid0(true,SH,SV,LoH,LoV,HiH,HiV,EH,EV,Grid)),
+ quietly((wots(S, print_grid0(true,SH,SV,LoH,LoV,HiH,HiV,EH,EV,Grid)),
  print_w_pad(O1,S))).
 
 /*
@@ -260,14 +263,15 @@ silver('#7b7b7b').
 silver('#c0c0c0').
 silver('#9a9a9a').
 
-
+ansi_color(C,Color):- attvar(C),get_attr(C,ci,fg(N)),ansi_color(N,Color),!.
+ansi_color(C,Color):- attvar(C),get_attr(C,ci,bg),ansi_color(0,Color),!.
 ansi_color(C,Color):- integer(C),block_colors(L),nth0(C,L,Color).
 ansi_color(C,Color):- color_int(C,I),ansi_color(I,Color).
 
 underline_print(W):- ansi_format([bold,underline],'~@',[W]),!.
 bold_print(W):- ansi_format([bold],'~@',[W]),!.
 
-compound_var(C):- \+ plain_var(C), is_ftVar(C).
+compound_var(C):- \+ plain_var(C), \+ attvar(C), is_ftVar(C).
 hi_color_print(CI,W):- ansi_format([hfg(CI)],'~w',[W]).
 is_bg_sym_or_var(C):- (attvar(C); bg_sym(C); C==' '; C==''; C=='bg'; C == 0),!.
 
@@ -302,19 +306,19 @@ color_print(C,W):- atom(C),color_int(C,N),integer(N),!,color_print(N,W).
 color_print(C,W):- integer(C),ansi_color(C,Color),ansi_format([bold,fg(Color)],'~w',[W]),!.
 color_print(C,W):- C==0,!,ansi_format([fg('#444444')],'~w',[W]),!.
 
-color_name(C,W):- plain_var(C),!,W=C.
+color_name(C,W):- var(C),!,W=C.
 color_name(C-_,W):-!,color_name(C,W).
 color_name(C,W):- atom(C),!,W=C.
 color_name(C,W):- integer(C),named_colors(L),nth0(C,L,W),!.
 
-color_int(C,C):- plain_var(C),!.
+color_int(C,C):- var(C),!.
 color_int(C-_,W):-!,color_int(C,W).
 color_int(C,W):- integer(C),!,W=C.
 color_int(C,W):- atom(C),!,named_colors(L),nth0(W,L,C),!.
 color_int(C,C).
 
 
-grid_color_code(C,C):- plain_var(C).
+grid_color_code(C,C):- var(C).
 grid_color_code(C-W,CC-W):- color_code(C,CC).
 grid_color_code(C,CC):- color_code(C,CC).
 %grid_color_code(C,CC):- is_grid_color(black-_),!,color_code(C,CC).

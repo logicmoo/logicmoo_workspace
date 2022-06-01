@@ -1,8 +1,5 @@
 
 
-:- multifile(decl_pt/1).
-:- discontiguous(decl_pt/1).
-:- dynamic(decl_pt/1).
 decl_pt(_):- fail.
 
 check_args(P,MC):- functor(P,F,A),functor(T,F,A),functor(C,F,A),decl_pt(T),check_args(P,1,A,A,T,C,MC).
@@ -47,7 +44,7 @@ run_dsl(Mode,lmDSL(Prog),In,Out):- !, run_dsl(Mode,Prog,In,Out).
 run_dsl(_Mode,call(G),In,Out):-!,call(G),(plain_var(Out)->Out=In; true).
 run_dsl(_Mode,[],In,Out):-!, plain_var(Out)->Out=In; true.
 run_dsl(_Mode,same,In,Out):-!, duplicate_term(In,Out).
-run_dsl(ennfore,color(Obj,Color),In,Out):-!, set_global_points(Color,Obj,In,Out).
+run_dsl(ennfore,color(Obj,Color),In,Out):-!, add_global_points(Color,Obj,In,Out).
 run_dsl(Mode,-->(All,Exec),In,Out):-!, run_dsl(Mode,forall(All,Exec),In,Out).
 run_dsl(Mode,forall(All,Exec),In,OutO):-!,  
  nb_setval(dsl_pipe,In),
