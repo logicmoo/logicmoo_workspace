@@ -95,7 +95,7 @@ debug_indiv(A):- is_point_obj(A,Color,Point),
   wqnl([' % Point: ', color_print(Color,Sym), dot, color(Color), fav1(Tst), nth(Id), loc_xy(H,V)]),!. 
 */
 debug_indiv(obj(A)):- Obj = obj(A), is_list(A),!,
-   ignore((o2g(Obj,GGG), nonvar_or_ci(GGG),asserta(g2o(Obj,GGG)))),
+   ignore((o2g(Obj,GGG), nonvar(GGG),asserta(g2o(GGG,Obj)))),
 %debug_indiv(Obj):- Obj = obj(A), is_list(A),  
   ignore(colors(Obj,[cc(FC,_)|_])),
   sort_obj_props(A,AS),
@@ -143,7 +143,7 @@ remove_too_verbose(colors(H),HH):- !, remove_too_verbose(H,HH).
 remove_too_verbose(object_indv_id(_ * _ * X,Y),[layer(XX),nth(Y)]):- =(X,XX).
 remove_too_verbose(object_indv_id(_ * X,Y),[layer(XX),nth(Y)]):- =(X,XX).
 remove_too_verbose(loc_xy(X,Y),loc_xy(X,Y)).
-remove_too_verbose(visual_hv(X,Y),size(X,Y)).
+remove_too_verbose(vis_hv(X,Y),size(X,Y)).
 remove_too_verbose(changes([]),'').
 remove_too_verbose(rotation(same),'').
 remove_too_verbose(L,LL):- is_list(L),!, maplist(remove_too_verbose,L,LL).
@@ -159,7 +159,7 @@ too_verbose(rotated_grid).
 
 debug_indiv(_,_,X,_):- too_verbose(X),!.
 debug_indiv(Obj,_,F,[A]):- maplist(is_cpoint,A),!,
-  visual_hv(Obj,H,V), wqnl(F), 
+  vis_hv(Obj,H,V), wqnl(F), 
   loc_xy(Obj,OH,OV),
   EH is OH+H-1,
   EV is OV+V-1,

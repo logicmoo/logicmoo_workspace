@@ -9,7 +9,9 @@ matches_filter([H|T],obj(List)):- !, \+ \+ forall(member(E,[H|T]),member(E,List)
 matches_filter((A,B),OBJ):- !, (matches_filter(A,OBJ),matches_filter(B,OBJ)).
 matches_filter(E,obj(List)):- member(E,List).
 
-
+override_group(P):- P=..[F,Group,List], is_group(Group),!,
+  findall(R,(member(M,Group),call(F,M,R)),AllRots),
+  append_sets([AllRots],List).
 
 allow_dirs([Type|_],X):- !, allow_dirs(Type,X).
 allow_dirs(Type,X):- subtypes(Type,SType),allow_dir(SType,List),member(X,List).
@@ -149,10 +151,15 @@ is_grid_cell(C):- \+ is_list(C), nop((plain_var(C); is_color(C) ; ( C =  _-_))),
 is_object(O):- compound(O), O = obj(Props), is_list(Props).
 
 %is_group([G|V]):- is_object(G),is_list(V),maplist(is_object,V).
-is_group([G|V]):- is_object(G),is_list(V),maplist(is_object,V).
+is_group([G|V]):- is_object(G),is_list(V),maplist(is_object,V),!.
+is_group([G|V]):- is_object_or_grid(G),is_list(V),maplist(is_object_or_grid,V),!.
+
+is_object_or_grid(Grid):- is_list(Grid),!,is_grid(Grid).
+is_object_or_grid(Obj):- is_object(Obj).
+
 
 is_point_obj(O,Color,Point):- nonvar_or_ci(O),O= Color-Point,!.
-is_point_obj(O,Color,Point):- is_object(O),visual_hv(O,H,V), !, hv(H,V)==hv(1,1),
+is_point_obj(O,Color,Point):- is_object(O),vis_hv(O,H,V), !, hv(H,V)==hv(1,1),
   globalpoints(O,[Color-Point]),!.
 
 
@@ -218,7 +225,7 @@ ap(diagonal_line). ap(horizontal_line). ap(vertical_line). ap(open_edge). ap(con
 
 ap(rotated45). ap(resizes). ap(diamond).
 apv(square(len)). apv(round(h,w)). apv(triangle). apv(rectangular(h,w)). apv(polygon(sides)).
-apv(shape(num)).  apv(facing(dir)). apv(min(n)). apv(max(n)).  apv(visual_hv(h,w)). apv(loc_xy(h,w)). 
+apv(shape(num)).  apv(facing(dir)). apv(min(n)). apv(max(n)).  apv(vis_hv(h,w)). apv(loc_xy(h,w)). 
 apv(scale(n)).  apv(ext_key(k)). apv(io_bud(k)). apv(linked_bud(k)).
 
 apv(points_old([])).
@@ -226,6 +233,7 @@ apv(sub_points([])).
 
 
 
+color_and_rotation(Group,List):- override_group(color_and_rotation(Group,List)),!.
 color_and_rotation(RedHammer,Hammer):-
   all_colors(RedHammer,Hammer1),
   all_rotations(Hammer1,Hammer).
@@ -234,12 +242,13 @@ all_colors(RedHammer,Hammer):- change_color(RedHammer,Hammer).
 all_colors(RedHammer,RedHammer).
 
 
+change_color(Group,List):- override_group(change_color(Group,List)),!.
 change_color(RedHammer,Hammer):- 
    color(RedHammer,CurrentColor),
    fill_color(CurrentColor,OtherColor),
   swap_colors(CurrentColor,OtherColor,RedHammer,Hammer).
 
-
+all_rotations(Group,List):- override_group(all_rotations(Group,List)),!.
 all_rotations(RedHammer,Hammer):- 
  (var(RedHammer) -> freeze(RedHammer,all_rotations(RedHammer,Hammer)) 
    ; no_repeats(Grid,(shape_rotations(RedHammer,Hammer),object_grid(Hammer,Grid)))).

@@ -10,7 +10,7 @@ subtractGrid(Out,In,Alien):- plain_var(In),!,remove_global_points(Alien,Out,In).
 
 find_by_shape(Grid,Find,Founds):- 
  makeup_gridname(ID),
- visual_hv(Find,GH,GV),
+ vis_hv(Find,GH,GV),
  decolorize(Find,F), 
  Prog = (all_rotations(F,F1),
    %print_grid(F1),!,
@@ -28,19 +28,18 @@ in_out(In,Out):-
   into_gridnameA(In,PairName*in),
   into_gridnameA(Out,PairName*out).
 
-learn:- 
+lrn0:-    
    in_out(In,Out),
    subtractGrid(Out,In,Alien),
    rot_by_90([Alien,A,B,C]),
    find_by_shape(In,Alien,[A,B,C]),
    find_by_shape(Out,Alien,[A,B,C,Alien]).
 
+lrn:- forall(lrn1, true).
+lrn1:- learn_arc(_).
 
-learn_arc:-
-  forall(learn_arc(_),true).
-
-test_arc:-
-  forall(test_arc(_),true).
+tst:- forall(tst1, true).
+tst1:- test_arc(_).
 
 learn_arc(TestID):- with_arc(learn,TestID).
 

@@ -89,18 +89,30 @@ try_arc_io(TestID,ExampleNum,In,Out):-
   %individuals_common(ReservedS,Out,UnsharedOut2),
   %show_pair(IH,IV,OH,OV,outs,PairName,UnsharedOut1,UnsharedOut2),!,
   %nop
-  grid_minus_grid(In,Out,ImO),
-  grid_minus_grid(Out,In,OmI),
+
+
+ 
+  grid_minus_grid(In,Out,ImO),mass(ImO,IMass),
+  grid_minus_grid(Out,In,OmI),mass(OmI,OMass),
+  ((IMass==0, OMass>0) 
+    -> (IODiff = OmI, UIO = out)
+     ; (IODiff = ImO, UIO = in)),
+    mass(IODiff,IOMass),
+
   show_pair(IH,IV,OH,OV,grid_minus_grid,PairName,ImO,OmI),!,
 
-  mass(ImO,IMass),
-  mass(OmI,OMass),
+  writeln(grid(mass(imO,IMass),mass(oMI,OMass),using(UIO,IOMass))),
 
-  ((IMass==0, OMass>0) -> IODiff = OmI ;  IODiff = ImO),
 
   individuals_common([],IODiff,ReservedS),
-  individuals_common(ReservedS,Out,UnsharedOut),
-  individuals_common(ReservedS,In,UnsharedIn),
+  searchable(ReservedS,SmallLib0),
+  forall(member(M,SmallLib0),print_grid(M)),
+  decolorize(SmallLib0,SmallLib1),
+  all_rotations(SmallLib1,SmallLib),
+  
+ 
+  individuals_common(SmallLib,Out,UnsharedOut),
+  individuals_common(SmallLib,In,UnsharedIn),
 
 
   ((

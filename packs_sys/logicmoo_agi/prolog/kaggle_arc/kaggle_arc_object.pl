@@ -118,7 +118,7 @@ make_indiv_object(ID,H,V,LoH,LoV,HiH,HiV,Points,Overrides,OUT):-
      close_enough_grid(Grid,GridInCopy,LocalGrid)),Shapes),
   append(
   [ [mass(Len), shape(ColorlessPoints), colors(CC), localpoints(LPoints),
-     visual_hv(Width,Height),  rotation(same), loc_xy(LoH,LoV)],     
+     vis_hv(Width,Height),  rotation(same), loc_xy(LoH,LoV)],     
     %width(Width), height(Height), area(Area), %missing(Empty),
     [changes([])|Shapes], % [grid(LocalGrid)],    
     [object_indv_id(ID,Iv),globalpoints(Points),grid_size(H,V)]],Ps))),  
@@ -134,7 +134,7 @@ record_xform(_Missied,XObj,XObj).
 
 
 prop_of(mass,mass(_)).
-prop_of(size,visual_hv(_,_)).
+prop_of(size,vis_hv(_,_)).
 prop_of(shape,shape(_)).
 prop_of(colors,colors(_)).
 prop_of(visually,localpoints(_)).
@@ -185,8 +185,9 @@ object_indv_id(I,ID,Iv):- indv_props(I,L),member(object_indv_id(ID,Iv),L),!.
 object_indv_id(I,ID,Iv):- throw(missing(object_indv_id(I,ID,Iv))).
 %object_indv_id(_,ID,_Iv):- nb_current(test_pairname,ID).
 
-mass(_-P,1):- nonvar_or_ci(P),!.
-mass(I,X):- indv_props(I,L),member(mass(X),L),!.
+mass(I,X):- var_check(I,mass(I,X)).
+mass(I,X):- indv_props(I,L),!,member(mass(X),L).
+mass(C-_,1):- nonvar_or_ci(C),!.
 mass(I,Count):- localpoints(I,Points), length(Points,Count),!.
 mass(Points,Count):- is_list(Points),length(Points,Count),!.
 
@@ -248,12 +249,17 @@ counted_neighbours(C-HV,List,CountIn,[P|CountIn]):-
  findall(Dir,(is_adjacent_point(HV,Dir,HV2),Dir\==c,member(CC-HV2,List),colors_join(C,CC)),Ns),
   length(Ns,I),P = I-HV.
 
+var_check(I,G):- var(I),wdmsg(error(var(G))),!,throw(maybe_enum_i(I)),call(G).
+
+localpoints(I,X):- var_check(I,localpoints(I,X)).
 localpoints(I,X):- is_grid(I),globalpoints(I,X),!.
 localpoints(I,X):- indv_props(I,L),member(localpoints(X),L), is_points_list(X),!.
 localpoints(I,X):- into_grid(I,G),globalpoints(G,X),!.
 
+object_shape(I,X):- var_check(I,object_shape(I,X)).
 object_shape(I,X):- indv_props(I,L),member(object_shape(X),L).
 
+rotation(I,X):- var_check(I,rotation(I,X)).
 rotation(I,X):- indv_props(I,L),member(rotation(X),L).
 
 %hv_cvalue(Grid,Color,H,V):- hv_value(Grid,C,H,V),!,as_cv(C,Color),!.
@@ -262,11 +268,11 @@ rotation(I,X):- indv_props(I,L),member(rotation(X),L).
 %as_cv(C-_,Color):- as_cv(C,Color).
 %as_cv(C,Color):- integer(C),!,color_code(C,Color).
 
-object_changes(I,X):- indv_props(I,L),!,member(changes(X),L).
+object_changes(I,X):- indv_props(I,L),member(changes(X),L).
 
 all_points_between(_Grid,_Hi,0,_GH,_GV,Points,Points):-!.
 all_points_between(Grid,Hi,Vi,GH,GV,Points,PointsO):-
-  ((hv_value(Grid,C2,Hi,Vi),is_spec_color(C2,C),hv_point(Hi,Vi,Point)) -> PointsT = [C-Point|Points] ; PointsT = Points),
+  ((hv_value(Grid,C2,Hi,Vi),(is_spec_color(C2,C);(attvar(C2),C=C2)),hv_point(Hi,Vi,Point)) -> PointsT = [C-Point|Points] ; PointsT = Points),
   (Hi==1 -> (H = GH, V is Vi-1) ; (H is Hi -1, V=Vi)),!,
   all_points_between(Grid,H,V,GH,GV,PointsT,PointsO).
 
@@ -296,7 +302,6 @@ grid_to_id(Grid,ID):- gensym('grid_',ID),assert_id_grid_cells(ID,Grid),assert(is
 */
 
 colors(I,X):- indv_props(I,L),!,member(colors(X),L).
-
 %colors(Points,CC):- is_list(Points),nth0(_,Points,C-_),is_color(C), CC = [cc(C,3)],!.
 colors(G,BFO):- pixel_colors(G,GF),sort(GF,GS),count_each(GS,GF,UC),keysort(UC,KS),reverse(KS,SK),!,into_cc(SK,BFO).
 
@@ -305,22 +310,25 @@ shape(I,X):- indv_props(I,L),member(shape(X),L).
 get_instance_method(Obj,Compound,F):- is_object(Obj), compound(Compound),compound_name_arity(Compound,Name,A),
    A1 is A+1, atom_concat('object_',Name,F),current_predicate(F/A1).
 
+
+object_grid(Group,List):- override_group(object_grid(Group,List)),!.
 object_grid(I,X):- indv_props(I,L),member(grid(X),L),!.
 %object_grid(I,G):- globalpoints(I,GP),into_grid(GP,G).
-object_grid(I,G):- visual_hv(I,H,V),localpoints(I,GP),points_to_grid(H,V,GP,G),!.
+object_grid(I,G):- vis_hv(I,H,V),localpoints(I,GP),points_to_grid(H,V,GP,G),!.
 
 
 loc_xy(I,X,Y):- indv_props(I,L),member(loc_xy(X,Y),L).
 loc_xy(Grid,H,V):- is_grid(Grid),!,globalpoints(Grid,Points),!,points_range(Points,LoH,LoV,_,_,_,_), H is LoH, V is LoV.
 loc_xy(NT,H,V):- named_gridoid(NT,G),loc_xy(G,H,V).
 
-visual_hv(I,X,Y):- indv_props(I,L),member(visual_hv(X,Y),L).
-visual_hv(Grid,H,V):- is_grid(Grid),!,globalpoints(Grid,Points),!,points_range(Points,LoH,LoV,HiH,HiV,_,_), H is HiH-LoH+1, V is HiV-LoV+1.
-visual_hv(NT,H,V):- named_gridoid(NT,G),visual_hv(G,H,V).
-%visual_hv(Points,H,V):- pmember(visual_hv(H,V),Points),!.
-visual_hv(Points,H,V):- points_range(Points,LoH,LoV,HiH,HiV,_,_), H is HiH-LoH+1, V is HiV-LoV+1.
+vis_hv(I,X,Y):- indv_props(I,L),member(vis_hv(X,Y),L).
+vis_hv(Grid,H,V):- is_grid(Grid),!,globalpoints(Grid,Points),!,points_range(Points,LoH,LoV,HiH,HiV,_,_), H is HiH-LoH+1, V is HiV-LoV+1.
+vis_hv(NT,H,V):- named_gridoid(NT,G),vis_hv(G,H,V).
+%vis_hv(Points,H,V):- pmember(vis_hv(H,V),Points),!.
+vis_hv(Points,H,V):- points_range(Points,LoH,LoV,HiH,HiV,_,_), H is HiH-LoH+1, V is HiV-LoV+1.
 
 object_color(HV,C):- color(HV,C).
+
 color(HV,C):- colors(HV,[cc(C,_)]),!.
 color(HV,multicolor(Stuff)):- colors(HV,Stuff),!.
 main_color(HV,C):- colors(HV,[cc(C,_)|_]).

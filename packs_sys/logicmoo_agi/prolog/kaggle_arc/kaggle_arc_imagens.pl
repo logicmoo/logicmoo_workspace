@@ -104,7 +104,7 @@ the_hammer(blue, LibObj):- hammer2(Text), text_to_grid(Text,H,V,Points,_Hammer),
 the_hammer(Color,ColorHammer):- 
   ColorHammer = obj([mass(6), shape([point_01_01, point_01_02, point_01_03, point_02_01, point_02_02, point_03_02]), 
   colors([cc(Color, 6.0)]), localpoints([Color-point_01_01, Color-point_01_02, Color-point_01_03, Color-point_02_01, 
-  Color-point_02_02, Color-point_03_02]), visual_hv(3, 3), rotation(same), loc_xy(2, 5), 
+  Color-point_02_02, Color-point_03_02]), vis_hv(3, 3), rotation(same), loc_xy(2, 5), 
   changes([]), object_shape(rectangluar), object_shape(hammer), object_indv_id(t('1b60fb0c')*(trn+666)*out, 666), 
   globalpoints([Color-point_02_05, Color-point_02_06, Color-point_02_07, Color-point_03_05, Color-point_03_06, Color-point_04_06]), 
   grid_size(10, 10)]).
@@ -136,6 +136,8 @@ shape_key(Shape,Key):- into_grid(Shape,Key1),frozen_key(Key1,Key).
 
 shape_key_unrotated(Shape,Key):- shape_key(Shape,KeyR), grav_rot0(Key,KeyR).
 
+
+grav_rot(Group,List):- override_group(grav_rot(Group,List)),!.
 grav_rot(Shape,KeyR):- into_grid(Shape,Key1), grav_rot0(Key1,KeyR).
 
 grav_rot0(Shape,ShapeO):- 
@@ -147,6 +149,11 @@ grav_mass(Grid,Mass):- grid_size(Grid,H,V), HV is round(H/V), Vh is floor(V/2),
   length(CList,Mass).
 
 
+
+searchable(Group,List):- override_group(searchable(Group,List)),!.
+searchable(Shape,Searchable):- object_grid(Shape,Grid), constrain_grid_f(Grid,_CheckType,Searchable).
+
+decolorize(Group,List):- override_group(decolorize(Group,List)),!.
 decolorize(Shape,ShapeO):-
   colors_to_vars(_Colors,Vars,Shape,ShapeO),
   set_fg_vars(Vars),

@@ -4,12 +4,12 @@
 test_ogs:- forall(test_ogs(_,_),true).
 
 
-grid_minus_grid(B,A,OI):- 
-  remove_global_points(A,B,OI),!.
-grid_minus_grid(B,A,OI):- is_list(B),maplist(grid_minus_grid,B,A,OI).
-grid_minus_grid(B,A,C):- ignore(grid_minus_grid0(B,A,C)).
-grid_minus_grid(B,_,B):- !.
-grid_minus_grid0(B,A,OI):- B==A,!, OI=black.
+grid_minus_grid(B,A,OI):- grid_size(B,BH,BV),grid_size(A,AH,AV),(BH\==AH;BV\==AV),!,OI=B.
+grid_minus_grid(B,A,OI):- remove_global_points(A,B,OI),!.
+%grid_minus_grid(B,A,OI):- is_list(B),maplist(grid_minus_grid,B,A,OI).
+%grid_minus_grid(B,A,C):- ignore(grid_minus_grid0(B,A,C)).
+%grid_minus_grid(B,_,B):- !.
+%grid_minus_grid0(B,A,OI):- B==A,!, OI=black.
 %grid_minus_grid0(B,A,OI):- nonvar(B),nonvar(A),IO=black.
 %grid_minus_grid0(B,A,OI):- nonvar(B),IO=B.
 %grid_minus_grid0(B,A,B):- !.
@@ -209,6 +209,7 @@ old_pad_grid(Grid1,Grid2):-
   points_range(Ps,LoH,LoV,HiH,HiV,_,_),  
   create_padding(Grid1,LoH,LoV,HiH,HiV,H,V,_HH,_VV,Grid2))),!.
 
+constrain_grid_f(Obj,Trig,GridO):- \+ is_grid(Obj), object_grid(Obj,Grid2),constrain_grid_f(Grid2,Trig,GridO).
 constrain_grid_f(Grid2,Trig,GridO):-
   pad_grid(Grid2,GridP), 
   constrain_grid_now(f,Trig,GridP,GridO),!.
@@ -268,10 +269,8 @@ constrain_grid_now(CT,Trig,GridIn,Hi,Vi,GH,GV,GridO):-
   (Hi==1 -> (H = GH, V is Vi-1) ; (H is Hi -1, V=Vi)),!,
   constrain_grid_now(CT,Trig,GridIn,H,V,GH,GV,GridO).
 
-constrain_ele(CT,Trig,GridIn,H,V,C0,GridO):- is_spec_color(C0,C),!, 
-  get_color_at(H,V,GridO,CO),
-  (CO==C -> true ; (freeze(Trig, C==CO), attach_ci(CO,C) )), 
-  constrain_dir_ele(CT,Trig,[n,s,w,e],GridIn,H,V,C,GridO).
+constrain_ele(CT,Trig,GridIn,H,V,C0,GridO):- is_spec_color(C0,_),!, 
+  constrain_dir_ele(CT,Trig,[n,s,w,e],GridIn,H,V,GridO).
 %constrain_ele(CT,Trig,GridIn,H,V,C0,GridO):- is_bgc(C0),!, constrain_bg_ele(CT,Trig,GridIn,H,V,C0,GridO).
 %constrain_ele(CT,Trig,GridIn,H,V,C0,GridO):- bg_sym(C),C==C0,!, constrain_bg_ele(CT,Trig,GridIn,H,V,C0,GridO).
 constrain_ele(CT,Trig,GridIn,H,V,C0,GridO):- constrain_bg_ele(CT,Trig,GridIn,H,V,C0,GridO),!.
@@ -308,25 +307,40 @@ ci:attr_unify_hook(fg(_),Value):- !, is_fg_color(Value).
 %ci:attr_unify_hook(bg,Value):- !, is_bg_color(Value).
 ci:attr_unify_hook(_,_Value).
   
-constrain_dir_ele(_CT,_Trig,[],_GridIn,_,_,_,_GridO).
-constrain_dir_ele(CT,Trig,[Dir|SEW],GridIn,H,V,C,GridO):-  
-  is_adjacent_hv(H,V,Dir,H2,V2),
-  %get_color_at(H,V,GridO,CO),
-  ignore((% C=CO,
-%   \+ is_diag(Dir),
-  get_color_at(H2,V2,GridIn,C2),
-  \+ is_spec_color(C2,_),
-   count_c_neighbors(C,H2,V2,N,GridIn),
-   count_o_neighbors(C,H2,V2,N2,GridIn),
-   o_c_n(CT,N2,N),
-  get_color_at(H2,V2,GridO,C2O),
-  dif(C2O,C))),!,
-  constrain_dir_ele(CT,Trig,SEW,GridIn,H,V,C,GridO).
-constrain_dir_ele(CT,Trig,[_|SEW],GridIn,H,V,C,GridO):-
-  constrain_dir_ele(CT,Trig,SEW,GridIn,H,V,C,GridO).
+constrain_dir_ele(_CT,_Trig,[],_GridIn,_,_,_GridO).
+constrain_dir_ele(CT,Trig,[Dir|SEW],GridIn,H,V,GridO):- 
+  CDE = cde_dir(CT,Trig,Dir,GridIn,H,V,GridO),
+  get_color_at(H,V,GridIn,C1I),   mfreeze(C1I, CDE), 
+  get_color_at(H,V,GridO,C1O),    mfreeze(C1O, CDE), 
+  is_adjacent_hv(H,V,Dir,H2,V2),  mfreeze(Trig,CDE),
+  get_color_at(H2,V2,GridIn,C2I), mfreeze(C2I, CDE),
+  get_color_at(H2,V2,GridO,C2O),  mfreeze(C2O, CDE),
+  
+  constrain_dir_ele(CT,Trig,SEW,GridIn,H,V,GridO).
+%constrain_dir_ele(CT,Trig,[_|SEW],GridIn,H,V,GridO):- constrain_dir_ele(CT,Trig,SEW,GridIn,H,V,GridO).
 
-o_c_n(f,Tw,_):- Tw>=2,!. %has at least two neibours we care about
-o_c_n(f,0,1):-!,fail. % no neigbours and just self
+mfreeze(Trig,_CDE):- nonvar(Trig),!.
+mfreeze(Trig,CDE):- freeze(Trig,CDE).
+
+cde_dir(CT,Trig,Dir,GridIn,H,V,GridO):-   
+  get_color_at(H,V,GridIn,C1I),
+  get_color_at(H,V,GridO,C1O),
+  as_debug(9,pt(cde(CT,Trig,C1I,H,V,C1O))),
+  (C1O==C1I -> true ; (freeze(Trig, C1I==C1O), attach_ci(C1O,C1I) )), 
+  is_adjacent_hv(H,V,Dir,H2,V2),
+  ignore((
+     get_color_at(H2,V2,GridIn,C2I),
+     get_color_at(H2,V2,GridO,C2O),
+     as_debug(9,pt(cde_dir(CT,Trig,Dir,C2I,H,V,C2O))),
+     \+ is_spec_color(C2I,_),
+     count_c_neighbors(C1I,H2,V2,N,GridIn),
+     count_o_neighbors(C1I,H2,V2,N2,GridIn),
+     o_c_n(CT,N2,N),     
+     dif(C2O,C1I))),!.
+
+
+o_c_n(f,Tw,_):- Tw>=2,!. %has at least two neighbours we care about
+o_c_n(f,0,1):-!,fail. % no neighbours and just self
 o_c_n(f,_,_).
 o_c_n(s,_,_).
 

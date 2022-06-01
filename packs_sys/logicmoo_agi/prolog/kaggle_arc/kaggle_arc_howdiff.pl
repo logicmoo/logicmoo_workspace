@@ -350,7 +350,7 @@ changed_by(mass,grow).
 changed_by(localpoints,reshape_and_recolor).
 changed_by(rotation,rotate).
 changed_by(colors,repaint).
-changed_by(visual_hv,copy).
+changed_by(vis_hv,copy).
 
 
 :- style_check(+singleton).

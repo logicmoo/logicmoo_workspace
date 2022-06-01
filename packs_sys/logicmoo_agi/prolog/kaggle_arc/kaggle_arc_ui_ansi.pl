@@ -115,9 +115,10 @@ show_pair(IH,IV,OH,OV,Type,PairName,In,Out):-
   wots(U1, print_Igrid(IH,IV,NameIn,In,[])),
   wots(U2, print_Igrid(OH,OV,NameOut,Out,[])),
   print_side_by_side(U1,LW,U2),!,
+  INFO = [grid_dim,mass,colors_count_size,colors],
   print_side_by_side(
-     describe_feature(In,[call(writeln('IN')),grid_dim,colors_count_size,colors]),LW,
-    describe_feature(Out,[call(writeln('OUT')),grid_dim,colors_count_size,colors])),!,
+     describe_feature(In,[call(writeln('IN'))|INFO]),LW,
+    describe_feature(Out,[call(writeln('OUT'))|INFO])),!,
   ignore(show_pair_I_info(NameIn,NameOut,In,Out)),!.
 
 show_pair_I_info(NameIn,NameOut,In,Out):- 
