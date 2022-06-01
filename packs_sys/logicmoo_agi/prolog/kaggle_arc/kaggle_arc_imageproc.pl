@@ -102,13 +102,13 @@ append_left(Grid1,Grid2,Grid):- length(Grid1,Len),assertion(length(Grid2,Len)),m
 append_down(Grid1,Grid2,Grid):- append(Grid1,Grid2,Grid).
 
 grow_row([],_,[]).
-grow_row([C1],Grid,G1):- !, run_dsl(C1,Grid,G1).
-grow_row([C1|Row],Grid,GM):- !, run_dsl(C1,Grid,G1),grow_row(Row,Grid,GR),append_left(G1,GR,GM).
+grow_row([C1],Grid,G1):- !, no_run_dsl(C1,Grid,G1).
+grow_row([C1|Row],Grid,GM):- !, no_run_dsl(C1,Grid,G1),grow_row(Row,Grid,GR),append_left(G1,GR,GM).
 grow([],_,[]).
-grow([[Self]],Grid,GridO):- !, run_dsl(Self,Grid,GridO).
+grow([[Self]],Grid,GridO):- !, no_run_dsl(Self,Grid,GridO).
 grow([Row|Rows],Grid,G1GridO):- grow_row(Row,Grid,G1), grow(Rows,Grid,GridO),append(G1,GridO,G1GridO).
 
-
+no_run_dsl(GridO,_Self,GridO).
 
 largest_indiv(I,O):- into_group(I,M),I\=@=M,!,largest_indiv(M,O).
 largest_indiv(Grid,[Points]):- compute_shared_indivs(Grid,Is),largest_first(Is,[Points|_]).

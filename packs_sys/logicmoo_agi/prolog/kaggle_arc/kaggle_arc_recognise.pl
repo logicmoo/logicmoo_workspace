@@ -22,13 +22,21 @@ point_minus_point(A,B,H,V,C,Old,Grid,Grid):- nonvar(Old),nonvar(C),Old\==C,nop(p
 point_minus_point(A,B,H,V,C,Old,Grid,Grid):-  nth1(V,Grid,Row),nb_set_nth1(H,Row,black),!, nop(point_minus_point(A,B,H,V,C,Old,Grid,Grid)).
 */
 
+h666(_,G):- fail,ff666(_,G0),
+  flipV(G0,GV),
+  flipH(G0,GH),
+  append([GH,GV],G1),
+  pad_grid(G1,G). 
+
+%f666(ham,G0):-  clause(f666(ham,F),true),into_g666(F,G),all_rotations(G,G0).
+
 test_ogs(H,V):- clsmake,
   wqln("searching..."),
   ff666(T,F),%print_grid(F),
   copy_term(F,FC),FC=F,
-  (ss666(T,G);(fail,ff666(T,G0),pad_grid(G0,G))), 
+  ss666(T,G),
    % print_cgrid(G),
-  (ogs(H,V,FC,G)*-> show_match(H,V,F,G) ; show_mismatch(F,G)).
+  (ogs(H,V,FC,G) *-> show_match(H,V,F,G) ; nop(show_mismatch(F,G))).
 
 show_mismatch(F,G):- 
   nl,dash_char,
@@ -335,7 +343,7 @@ f666(color,
  [4,5,1],
  [4,5,1]]).
 
-f666(ham,G):- in_shape_lib(hammer,Ham),object_grid(Ham,G).
+f666(ham,G):- in_shape_lib(hammer,Ham),object_grid(Ham,G0),all_rotations(G0,G).
 
 h666(ham,
 "_________________________________________________
