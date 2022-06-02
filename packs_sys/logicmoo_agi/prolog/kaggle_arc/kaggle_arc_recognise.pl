@@ -97,7 +97,7 @@ ogs_0(CheckType,H,V,FG,SG):-
 
 ogs_1(Hi,Vi,Find,Search):-
   nonvar(Hi),nonvar(Vi), 
-  H is Hi + 1, V is Vi + 1,
+  H is Hi - 1, V is Vi - 1,
   length(LPad,H),
   length(VPad,V),!,
   append(VPad,[LPadAndRow|Next],Search),

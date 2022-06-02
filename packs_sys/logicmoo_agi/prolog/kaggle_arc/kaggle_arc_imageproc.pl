@@ -502,12 +502,12 @@ calc_range(WLoH,WLoV,WHiH,WHiV,WH,WV,_,WLoH,WLoV,WHiH,WHiV,WH,WV):- !.
 
 
 grid_size_nd([C,R|Rows],H,V):- 
-   (plain_var(Rows)->between(2,30,V);!), 
+   (plain_var(Rows)->between(2,32,V);!), 
    length([C,R|Rows],V),
-   (plain_var(R)->between(1,30,H);true), 
+   (plain_var(R)->between(1,32,H);true), 
    length(R,H),
    (is_list(C)->true;(length(C,H),maplist(make_lengths(H),Rows))).
-grid_size_nd([L],H,(1)):- (plain_var(L)->between(1,30,H);true), length(L,H).
+grid_size_nd([L],H,(1)):- (plain_var(L)->between(1,32,H);true), length(L,H).
 
 
 closure_grid_to_object(Orig,Grid,NewObj):- 
@@ -556,7 +556,7 @@ as_hv_point(H,V,_,H,V).
 %as_hv_point(Inf,Inf,offset_ranges(_,_,_,_)).
 
 make_grid(H,V,Grid):- max_min(H,1,HH,_), max_min(V,1,VV,_),
-   max_min(HH,30,_,HHH),max_min(VV,30,_,VVV),
+   max_min(HH,32,_,HHH),max_min(VV,32,_,VVV),
    
    grid_size_nd(Grid,HHH,VVV),!.
 
