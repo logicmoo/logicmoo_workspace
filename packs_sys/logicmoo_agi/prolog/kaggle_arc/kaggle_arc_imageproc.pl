@@ -599,12 +599,12 @@ from_gridoid(Points,C,N,H,V,G):- nth0(N,Points,G),hv_value0(G,C,H,V).
 
 hv_value0(O,_Color,_H,_V):- is_object(O), object_shape(O,combined), !, fail.
 hv_value0(O,Color,H,V):- is_object(O),globalpoints(O,Ps),!,hv_value(Ps,Color,H,V).
-hv_value0(O,Color,H,V):- hv_value(O,Color,H,V).
+hv_value0(O,Color,H,V):- hv_value(O,Color,H,V),!.
 
 hv_value_or(Grid,C,H,V,Else):- hv_value(Grid,C,H,V)*->true;C=Else.
 
 hv_value(ID,C,H,V):- cmem(ID,HV,C),hv_point(H,V,HV),!.
-hv_value(Grid,C,H,V):- is_grid(Grid),!, nth1(V,Grid,Row),nth1(H,Row,C).
+hv_value(Grid,C,H,V):- is_grid(Grid),!, nth1(V,Grid,Row),nth1(H,Row,C),!.
 hv_value(Points,C-N,H,V):- is_list(Points), is_list_of_gridoids(Points), from_gridoid(Points,C,N,H,V),!.
 
 hv_value(O,Color-GN,H,V):- is_object(O),globalpoints(O,Ps),hv_value(Ps,Color,H,V),object_indv_id(O,_Tst,GN),nonvar_or_ci(GN),!.

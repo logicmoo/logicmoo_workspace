@@ -6,6 +6,7 @@
 */
 
 :- encoding(iso_latin_1).
+:- SL  is 2_147_483_648*8, set_prolog_flag(stack_limit, SL ).
 :- set_prolog_flag(encoding,iso_latin_1).
 :- set_prolog_flag(color_term,true).
 :- set_stream(current_output, tty(true)).
@@ -171,7 +172,7 @@ print_collapsed(G):-
   wots(_,G).
 
 try_arc_io(TestID,ExampleNum,In,Out):-
- must_det_l((
+ ((
   name_the_pair(TestID,ExampleNum,In,Out,PairName),
   grid_size(In,IH,IV), grid_size(Out,OH,OV),
   nop(writeln(grid_convert(size(IH,IV)->size(OH,OV)))),
@@ -200,7 +201,7 @@ try_arc_io(TestID,ExampleNum,In,Out):-
   max_min(IV,OV,GV,_),
 
   format('~N+Done with Ideas~N'),
-  pt(Shapes),
+ % pt(Shapes),
   print_grid(GH,GV,Shapes),
   format('~N+Shared~N'),
   
@@ -209,9 +210,9 @@ try_arc_io(TestID,ExampleNum,In,Out):-
   show_workflow(Shapes,
    [ =,"Vanila indivs",
     % searchable,"Searchable indivs",
-       all_rotations, % "All rotations of indivs", 
+       % all_rotations, % "All rotations of indivs", 
        % add(change_color_blue), "Add blue indivs", 
-       add(change_color), % "Add new colors indivs", 
+       % add(change_color), % "Add new colors indivs", 
     []
     %decolorize % decolorized points are not yet printable 
     ],SmallLib)), 

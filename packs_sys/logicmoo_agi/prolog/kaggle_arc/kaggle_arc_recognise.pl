@@ -192,7 +192,7 @@ has_color_c(C,E):- attvar(C), get_attr(C,dif,XX),!, sub_term(E,XX),is_color(E).
 
 
 must_det_ll((X,Y)):- must_det_ll(X),!,must_det_ll(Y).
-must_det_ll(X):- call(X),!.
+must_det_ll(X):- must_det_l(X),!.
 
 
 offset_grid(H2,V2,FF,OF):-

@@ -151,7 +151,11 @@ is_gridoid(G):- is_object(G),!.
 is_gridoid(G):- is_list_of_gridoids(G).
 
 
-is_grid([[C|H]|R]):- notrace((is_grid_cell(C),is_list(H),is_list(R),
+is_grid(G):- notrace(fast_is_grid(G)).
+
+fast_is_grid([[C|H]|R]):- is_list(H), is_list(R), \+ is_list(C).
+
+slow_is_grid([[C|H]|R]):- notrace((is_grid_cell(C),is_list(H),is_list(R),
   length([C|H],L),
   %maplist(is_grid_cell,H),
   maplist(is_row_len(L),R))).
