@@ -39,10 +39,24 @@ h666(_,G):- fail,ff666(_,G0),
 
 test_ogs(H,V):- clsmake,
   wqln("searching..."),
-  ss666(T,G),
-  ff666(T,F), %copy_term(F,FC),FC=F,
-   % print_cgrid(G),
-  (ogs(H,V,F,G) *-> once(show_match(H,V,F,G)) ; (show_mismatch(F,G),fail)).
+  ss666(T,SG),
+  ff666(T,FG),
+  copy_term(FG,FGX),
+  copy_term(SG,SGX),
+
+  once((constrain_grid_f(FG,CheckType,FGC), constrain_grid_s(SG,CheckType,SGC))),
+
+  ((ogs_1(H,V,FGC,SGC),CheckType=run) *-> 
+     (once(show_match(H,V,FGX,SGX)),nop(once(show_match(H,V,FGC,SGC))))
+     ; (show_mismatch(FGX,SGX),nop(show_mismatch(FGC,SGC)),fail)).
+  
+
+
+test_ogs0(H,V):- clsmake,
+  wqln("searching..."),
+  ss666(T,SG),
+  ff666(T,FG), 
+  (ogs(H,V,FG,SG) *-> once(show_match(H,V,FG,SG)) ; (show_mismatch(FG,SG),fail)).
 
 show_mismatch(F,G):- % fail, 
   nl,dash_char,
@@ -268,11 +282,12 @@ constrain_grid_now(CT,Trig,GridIn,Hi,Vi,GH,GV,GridO):-
 constrain_ele(s,GH,GV,_Trig,_GridIn,H,V,_C1I,_C1O,_GridO):- (H==1;V==1;V==GV;H==GH),!.
 % FG Source Canvas
 constrain_ele(s,_GH,_GV,_Trig,_GridIn,_H,_V,C1I,C1O,_GridO):- is_spec_color(C1I,_),!, 
-  freeze(C1O, \+ is_bg_color(C1O)), C1I=C1O.
+  %freeze(C1O, \+ is_bg_color(C1O)), 
+  C1I=C1O.
 % BG Source Canvas
 constrain_ele(s,_GH,_GV,Trig,_GridIn,_H,_V,C1I,C1O,_GridO):- is_bg_color(C1I),!,
   %freeze(C1O, \+ is_fg_color(C1O)),
-  freeze(Trig, (\+ is_fg_color(C1O),  C1I=C1O)).
+  freeze(Trig, (\+ is_fg_color(C1O))).
 
 % BG Find On Canvas
 constrain_ele(f,_GH,_GV,_Trig,_GridIn,_H,_V,C1I,_C1O,_GridO):- is_bg_color(C1I),!.
@@ -320,10 +335,10 @@ mfreeze(Trig,CDE):- freeze(Trig,CDE).
 
 constrain_dir_ele(_CT,_Trig,[],_GridIn,_H,_V,_C1I,_C1O,_GridO).
 constrain_dir_ele(CT, Trig,[Dir|SEW],GridIn,H,V,C1I,C1O,GridO):-
-  is_adjacent_hv(H,V,Dir,H2,V2),
-  get_color_at(H2,V2,GridIn,C2I),
-  get_color_at(H2,V2,GridO,C2O),
   ignore((
+          is_adjacent_hv(H,V,Dir,H2,V2),
+          get_color_at(H2,V2,GridIn,C2I),
+          get_color_at(H2,V2,GridO,C2O),
      \+ is_spec_color(C2I,_),
      count_c_neighbors(C1I,H2,V2,N,GridIn),
      count_o_neighbors(C1I,H2,V2,N2,GridIn),

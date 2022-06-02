@@ -641,7 +641,7 @@ hv(H,V,hv(H,V)).
 calc_movement(H,V):- forall(nav(Dir,HO,VO), save_calc_movement(H,V,Dir,HO,VO)).
 
 save_calc_movement(H,V,Dir,HO,VO):- H2 is HO+H, V2 is VO+V,
-  ignore((between(1,30,H2), between(1,30,V2), 
+  ignore((between(1,32,H2), between(1,32,V2), 
      format(atom(HV),'point_~|~`0t~d~2+_~|~`0t~d~2+',  [H,V]),
     format(atom(HV2),'point_~|~`0t~d~2+_~|~`0t~d~2+', [H2,V2]),
     assert_if_new(is_adjacent_point(HV,Dir,HV2)),

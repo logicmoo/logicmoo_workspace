@@ -76,7 +76,7 @@ meets_indiv_criteria(_,_).
 is_fg_color(C):- attvar(C),!,get_attr(C,ci,fg(_)).
 is_fg_color(C):- is_bg_color(C),!,fail.
 is_fg_color(C):- is_color(C),!.
-is_fg_color(C):- C == fg.
+%is_fg_color(C):- C == fg.
 
 %is_bg_color(BG):- plain_var(BG),!,fail.
 is_bg_color(BG):- var(BG),!,get_attr(BG,ci,bg),!.
