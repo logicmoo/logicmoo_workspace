@@ -89,7 +89,8 @@ is_black(C):- C==black.
 get_black(black).
 %get_black(0).
 
-is_spec_color(C0,C):- nonvar_or_ci(C0),\+ is_bg_color(C0), is_fg_color(C0),!,C=C0.
+is_spec_color(C0,C):- var(C0),!,get_attr(C0,ci,fg(_)), C=C0.
+is_spec_color(C0,C):- \+ is_bg_color(C0), is_fg_color(C0),!,C=C0.
 
 is_color(C):- attvar(C),!,get_attr(C,ci,_).
 is_color(C):- atom(C),color_int(C,N),integer(N).
