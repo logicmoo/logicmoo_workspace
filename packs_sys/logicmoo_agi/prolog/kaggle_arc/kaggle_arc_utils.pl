@@ -1,3 +1,10 @@
+/*
+  this is part of (H)MUARC
+
+  This work may not be copied and used by anyone other than the author Douglas Miles
+  unless permission or license is granted (contact at business@logicmoo.org)
+*/
+
 set_nth1(1,[_|Row],E,[E|Row]):-!.
 set_nth1(N,[W|Row],E,[W|RowMod]):- Nm1 is N-1, set_nth1(Nm1,Row,E,RowMod).
 
@@ -139,20 +146,20 @@ plain_var(V):- var(V), \+ get_attr(V,ci,_).
 must_be_free(AllNew):- var(AllNew),!.
 must_be_free(AllNew):- dumpST,wdmsg(must_be_free(AllNew)),break,fail.
 
-intersection([],LeftOverB,[],[],LeftOverB).
-intersection(LeftOverA,[],[],LeftOverA,[]).
+intersection([],LeftOverB,[],[],LeftOverB):-!.
+intersection(LeftOverA,[],[],LeftOverA,[]):-!.
 intersection([A|APoints],BPoints,[A|Intersected],LeftOverA,LeftOverB):-
-  select(A,BPoints,BPointsMinusA),
+  select(A,BPoints,BPointsMinusA),!,
   intersection(APoints,BPointsMinusA,Intersected,LeftOverA,LeftOverB).
 intersection([A|APoints],BPoints,Intersected,[A|LeftOverA],LeftOverB):-
   intersection(APoints,BPoints,Intersected,LeftOverA,LeftOverB).
 
 
-pred_intersection(_P2,[],LeftOverB,  [],[], [],LeftOverB).
-pred_intersection(_P2,LeftOverA,[],  [],[], LeftOverA,[]).
+pred_intersection(_P2,[],LeftOverB,  [],[], [],LeftOverB):-!.
+pred_intersection(_P2,LeftOverA,[],  [],[], LeftOverA,[]):-!.
 pred_intersection(P2,[A|APoints],BPoints,[A|IntersectedA],[B|IntersectedB],LeftOverA,LeftOverB):-
   select(B,BPoints,BPointsMinusA),
-  \+ \+ call(P2,A,B),
+  \+ \+ call(P2,A,B),!,
   pred_intersection(P2,APoints,BPointsMinusA,IntersectedA,IntersectedB,LeftOverA,LeftOverB).
 pred_intersection(P2,[A|APoints],BPoints,IntersectedA,IntersectedB,[A|LeftOverA],LeftOverB):-
   pred_intersection(P2,APoints,BPoints,IntersectedA,IntersectedB,LeftOverA,LeftOverB).

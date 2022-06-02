@@ -1,3 +1,10 @@
+/*
+  this is part of (H)MUARC
+
+  This work may not be copied and used by anyone other than the author Douglas Miles
+  unless permission or license is granted (contact at business@logicmoo.org)
+*/
+
 :- multifile(decl_pt/1).
 :- discontiguous(decl_pt/1).
 :- dynamic(decl_pt/1).
@@ -82,7 +89,7 @@ make_indiv_object(ID,H,V,Points,Overrides,obj(OUT)):-
 
 
 make_indiv_object(Points,Overrides,OUT):- 
-  localpoints(Points,RPoints),
+  globalpoints(Points,RPoints),
   points_range(RPoints,LoH,LoV,HiH,HiV,_HO,_VO),
   gensym('indiv_object_',ID),
   make_indiv_object(ID,HiH,HiV,LoH,LoV,HiH,HiV,RPoints,[Points,Overrides],OUT).

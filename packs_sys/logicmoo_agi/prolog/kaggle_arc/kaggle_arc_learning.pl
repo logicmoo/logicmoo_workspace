@@ -1,3 +1,9 @@
+/*
+  this is part of (H)MUARC
+
+  This work may not be copied and used by anyone other than the author Douglas Miles
+  unless permission or license is granted (contact at business@logicmoo.org)
+*/
 
 rot_by_90([A,B,C,D]):- rot_by_90_0([A,B,C,D,A,B,C]).
 

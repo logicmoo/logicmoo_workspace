@@ -1,3 +1,9 @@
+/*
+  this is part of (H)MUARC
+
+  This work may not be copied and used by anyone other than the author Douglas Miles
+  unless permission or license is granted (contact at business@logicmoo.org)
+*/
 
 :- ensure_loaded(kaggle_arc_symmetry).
 %tell(s),ignore((nl,nl,test_pairs(Name,ExampleNum,In,Out),format('~N~q.~n',[test_pairs_cache(Name,ExampleNum,In,Out)]),fail)),told.

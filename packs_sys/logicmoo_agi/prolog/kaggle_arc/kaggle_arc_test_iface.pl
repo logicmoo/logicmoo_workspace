@@ -1,3 +1,10 @@
+/*
+  this is part of (H)MUARC
+
+  This work may not be copied and used by anyone other than the author Douglas Miles
+  unless permission or license is granted (contact at business@logicmoo.org)
+*/
+
 test_name(Name):- 
   findall(Name,kaggle_arc(Name,_,_,_),All),
   list_to_set(All,AllS),member(Name,AllS).
@@ -14,7 +21,17 @@ was_fav(X):- nonvar_or_ci(X), clause(fav(XX,_),true),nonvar_or_ci(XX),X==XX.
 
 test_names_by_hard(Name):- test_names_ord_favs(FavList),test_names_ord_hard(NamesByHard),append(NamesByHard,FavList,All),
  list_to_set(All,AllS),!,member(Name,AllS).
-/*
+
+test_names_by_hard_rev(Name):- test_names_ord_favs(FavList),test_names_ord_hard(NamesByHard),append(NamesByHard,FavList,All),
+ list_to_set(All,AllS),!,reverse(AllS,AllR),member(Name,AllR).
+
+test_names_by_fav(Name):- test_names_ord_favs(All),
+ list_to_set(All,AllS),!,member(Name,AllS).
+
+test_names_by_fav_rev(Name):- test_names_ord_favs(All),
+ list_to_set(All,AllS),!,reverse(AllS,AllR),member(Name,AllR).
+
+ /*
 test_names_by_hard(Name):- test_names_ord_favs(FavList),test_names_ord_hard(NamesByHard),append(FavList,NamesByHard,All),
  list_to_set(All,AllS),!,member(Name,AllS).*/
 test_names_ord_favs(FavListR):- findall(Name,fav(Name),FavList),list_to_set(FavList,FavListS),reverse(FavListS,FavListR).

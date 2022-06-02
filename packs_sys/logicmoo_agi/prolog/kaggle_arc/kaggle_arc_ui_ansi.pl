@@ -1,3 +1,9 @@
+/*
+  this is part of (H)MUARC
+
+  This work may not be copied and used by anyone other than the author Douglas Miles
+  unless permission or license is granted (contact at business@logicmoo.org)
+*/
 
 
 tersify(I,O):- is_list(I), with_output_to(string(S),display(I)),!, ((atom_length(S,N), N>70) -> len(N)=O; I=O).

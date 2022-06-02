@@ -1,3 +1,10 @@
+/*
+  this is part of (H)MUARC
+
+  This work may not be copied and used by anyone other than the author Douglas Miles
+  unless permission or license is granted (contact at business@logicmoo.org)
+*/
+
 :- use_module(library(multivar)).
 
 maybe_multivar(C):- nonvar_or_ci(C),!.
@@ -321,9 +328,11 @@ cycle_s(Reserved,_GH,_GV,Sofar,_ID,_Options,Reserved,Points,_Grid,Sofar,Points).
 
 
 default_i_options([
-  shape_lib(squares),
   use_reserved,
   fourway,
+  %shape_lib(squares),
+  
+  
   %shape_lib(all),
   shape_lib(hammer),
   squares, diamonds, all,

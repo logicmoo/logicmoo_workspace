@@ -1,3 +1,9 @@
+/*
+  this is part of (H)MUARC
+
+  This work may not be copied and used by anyone other than the author Douglas Miles
+  unless permission or license is granted (contact at business@logicmoo.org)
+*/
 
 
 decl_pt(_):- fail.
@@ -27,6 +33,27 @@ into_type(grid,X,O):- into_grid(X,O).
 into_type(object,X,O):- is_object(X)-> X=O ; into_object(X,O).
 into_type(group,X,O):- into_group(X,O).
 
+
+show_workflow(InO,String,InO):- string(String),!,  nl, writeln(String),
+  forall(member(G,InO),ignore(print_grid(G))).
+show_workflow(InO,[],InO):-!.
+show_workflow(In,[H|T],Out):-
+  show_workflow(In,H,Mid),!,
+  show_workflow(Mid,T,Out).
+show_workflow(In,add(P),Out):- !,
+  show_workflow(In,P,Mid),!,
+  append(Mid,In,Out).
+show_workflow(In,each(P),Out):- 
+  show_workflow_each(In,P,Out).
+show_workflow(In,P,Out):- call(P,In,Out),!.
+show_workflow(In,P,In):- arcdbg(warn(failed(show_workflow(P)))),!.
+ 
+show_workflow_each([],_P,[]):-!.
+show_workflow_each(In,P,Out):- is_grid(In),!,show_workflow(In,P,Out).
+show_workflow_each([H|T],P,[Mid|Out]):-
+  show_workflow_each(H,P,Mid),!,
+  show_workflow_each(T,P,Out).
+show_workflow_each(In,P,Out):- show_workflow(In,P,Out).
 
 
 when_config(This,Goal):-test_config(This)-> call(Goal) ; true.
