@@ -40,14 +40,15 @@ no_black(BF,BF).
 
 
 %pixel_colors(GH,CC):- (is_group(GH);is_object(GH)),!,globalpoints(GH,GP),pixel_colors(GP,CC).
-pixel_colors(GH,CC):- is_list(GH),!,maplist(pixel_colors,GH,PG),append(PG,CC).
-pixel_colors(C,[Color]):- color_name(C,Color).
-pixel_colors(GH,CC):- globalpoints(GH,GP),!,pixel_colors(GP,CC).
+pixel_colors(GH,CC):- notrace(pixel_colors0(GH,CC)).
+pixel_colors0(GH,CC):- is_list(GH),!,maplist(pixel_colors,GH,PG),append(PG,CC).
+pixel_colors0(C,[Color]):- color_name(C,Color),!.
+pixel_colors0(GH,CC):- globalpoints(GH,GP),!,pixel_colors(GP,CC).
 
 %sub_term(G,GH), is_grid(G),!,flatten(G,GF),include(is_grid_color,GF,GL),maplist(color_name,GL,CC).
 %pixel_colors(G,GL):- findall(Name,(sub_term(CP,G),compound(CP),CP=(C-_),color_name(C,Name)),GL).
 
-unique_colors(G,UC):- colors(G,GF),maplist(arg(1),GF,UC).
+unique_colors(G,UC):- colors(G,GF),notrace(maplist(arg(1),GF,UC)).
 colors_count_size(G,UC):- colors(G,GS),length(GS,UC).
 
 into_cc(SK,BFO):- maplist(into_cc1,SK,BFO).

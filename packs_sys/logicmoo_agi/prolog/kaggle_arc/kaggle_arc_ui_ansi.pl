@@ -11,7 +11,10 @@ tersify(I,O):- compound(I), !, compound_name_arguments(I,F,IA), maplist(tersify,
 tersify(I,I).
 
 ptt(P):- tersify(P,Q),!,pt(Q).
-pt(P):- format('~N'),print_tree_nl(P),!.
+
+pt(P):- var(P),!,pt(var(P)).
+pt(P):- format('~N'), notrace(print_tree_nl(P)),!.
+pt(Color,P):- notrace((format('~N'), wots(S,pt(P)),!,color_print(Color,S))).
 
 
 wqs(X):- plain_var(X), !, wqs(plain_var(X)). wqs(nl):- !, nl. wqs(''):-!. wqs([]):-!.
@@ -51,7 +54,7 @@ functor_color(warn,yellow).
 arcdbg(G):- compound(G), compound_name_arity(G,F,_),functor_color(F,C),wots(S,print(G)),color_print(C,S),!,format('~N').
 arcdbg(G):- wdmsg(G).
 
-user:portray(Grid):- arc_portray(Grid),!.
+user:portray(Grid):- fail,arc_portray(Grid),!.
 
 arc_portray(Grid):- \+ \+ catch((
   % \+ tracing, 
@@ -116,8 +119,8 @@ print_length(S,L):- as_str(S,A),atom_codes(A,C), include(uses_space,C,SS),length
 
 show_pair(IH,IV,OH,OV,Type,PairName,In,Out):-
   LW is (IH * 2 + 12),
-  NameIn =.. [Type,PairName+in],
-  NameOut =.. [Type,PairName+out],
+  append_term(Type,PairName+in,NameIn),
+  append_term(Type,PairName+out,NameOut),
   wots(U1, print_Igrid(IH,IV,NameIn,In,[])),
   wots(U2, print_Igrid(OH,OV,NameOut,Out,[])),
   print_side_by_side(U1,LW,U2),!,

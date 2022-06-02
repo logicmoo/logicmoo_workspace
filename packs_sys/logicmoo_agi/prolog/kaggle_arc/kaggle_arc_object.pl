@@ -310,7 +310,7 @@ grid_to_id(Grid,ID):- gensym('grid_',ID),assert_id_grid_cells(ID,Grid),assert(is
 
 colors(I,X):- indv_props(I,L),!,member(colors(X),L).
 %colors(Points,CC):- is_list(Points),nth0(_,Points,C-_),is_color(C), CC = [cc(C,3)],!.
-colors(G,BFO):- pixel_colors(G,GF),sort(GF,GS),count_each(GS,GF,UC),keysort(UC,KS),reverse(KS,SK),!,into_cc(SK,BFO).
+colors(G,BFO):- notrace((pixel_colors(G,GF),sort(GF,GS),count_each(GS,GF,UC),keysort(UC,KS),reverse(KS,SK),!,into_cc(SK,BFO))).
 
 shape(I,X):- indv_props(I,L),member(shape(X),L).
 
@@ -345,16 +345,18 @@ last_gpoint(HV,P):- globalpoints(HV,PS),last(PS,P).
 
 :- style_check(-singleton).
 guess_shape(GridIn,LocalGrid,I,Empty,N,H,V,[cc(Zero,_)],Points,background):- is_bg_color(Zero).
-guess_shape(GridIn,LocalGrid,I,0,1,1,1,Colors,Points,dot):- !.
+guess_shape(GridIn,LocalGrid,I,0,1,1,1,Colors,Points,dot).
+guess_shape(GridIn,LocalGrid,I,_,_,_,_,Colors,[Point],dot).
 guess_shape(GridIn,LocalGrid,I,0,N,N,1,Colors,Points,hv_line(h)).
 guess_shape(GridIn,LocalGrid,I,0,N,HV,HV,Colors,Points,squares):- HV>1.
 guess_shape(GridIn,LocalGrid,I,0,N,H,V,Colors,Points,nonsquare):- H \== V.
 guess_shape(GridIn,LocalGrid,I,I,N,H,V,Colors,Points,rectangluar):- H>1, V>1.
+guess_shape(GridIn,LocalGrid,I,_,N,H,V,[_,_|_],Points,multicolored).
 guess_shape(GridIn,LocalGrid,I,_,N,H,V,[cc(Color,_)],Points,outline):- H>2,V>2, N>7,add_borders(Color,GridIn,LocalGrid).
 guess_shape(GridIn,LocalGrid,I,0,9,3,3,Colors,Points,keypad):-!.  
 guess_shape(GridIn,LocalGrid,I,0,N,1,N,Colors,Points,hv_line(v)).
 guess_shape(GridIn,LocalGrid,I,0,N,H,V,Colors,Points,filled_squared).
-guess_shape(GridIn,LocalGrid,I,O,N,H,V,Colors,Points,polygon):- O\==0.
+guess_shape(GridIn,LocalGrid,I,O,N,H,V,Colors,Points,polygon):- O\==0,once(H>1;V>1).
 %guess_shape(G,LocalGrid,I,O,N,H,V,Colors,Points,walls_thick(1)):- walls_thick1(G).
 /*
 guess_shape(GridIn,Grid,I,E,N,H,V,Colors,Points,subI(InvS)):- E>2, fail,

@@ -115,7 +115,7 @@ is_point(P):- is_cpoint(P).
 
 is_lpoint(P):- is_point(P), \+ is_gpoint(P).
 
-is_points_list([G|L]):- !, is_point(G),maplist(is_point,L).
+is_points_list([G|L]):- is_point(G),notrace(maplist(is_point,L)).
 
 enum_colors(OtherColor):- named_colors(Colors),!,member(OtherColor,Colors).
 enum_fg_colors(Color):- enum_colors(Color),is_color_no_bgc(Color).

@@ -33,17 +33,18 @@ h666(_,G):- fail,ff666(_,G0),
   flipV(G0,GV),
   flipH(G0,GH),
   append([GH,GV],G1),
-  pad_grid(G1,G). 
+  pad_grid(var,G1,G). 
 
 %f666(ham,G0):-  clause(f666(ham,F),true),into_g666(F,G),all_rotations(G,G0).
 
 test_ogs(H,V):- clsmake,
   wqln("searching..."),
+  T = ham1,
   ff666(T,F),%print_grid(F),
   copy_term(F,FC),FC=F,
   ss666(T,G),
    % print_cgrid(G),
-  (ogs(H,V,FC,G) *-> show_match(H,V,F,G) ; nop(show_mismatch(F,G))).
+  (ogs(H,V,FC,G) *-> show_match(H,V,F,G) ; (nop(show_mismatch(F,G)),fail)).
 
 show_mismatch(F,G):- 
   nl,dash_char,
@@ -79,17 +80,17 @@ constrain_type(_CheckType,_Grid,G,G):- is_fg_color(G),!.
 constrain_type(CheckType,_Grid,G,GG):- freeze(CheckType,G=GG).
 
   
-ogs(H,V,OG,SG):-
-  constrain_type(CheckType,OG,OG,OGC),!,
-  ogs_0(H,V,OGC,SG),
-  nop(CheckType=run).
+ogs(H,V,FG,SG):-
+  %constrain_type(CheckType,OG,OG,OGC),!,
+  ogs_0(CheckType,H,V,FG,SG),
+  CheckType=run.
 
-ogs_0(H,V,OG,SG):-
+ogs_0(CheckType,H,V,OG,SG):-
   %constrain_type(CheckType,Grid,OG,OGC),
   constrain_grid_f(OG,CheckType,OGC),
   constrain_grid_s(SG,CheckType,SGC),!,
   ogs_1(H,V,OGC,SGC),
-  CheckType=run,
+  %CheckType=run,
   %print_grid(OGC),nl,
   %wqnl(found_at(H,V)),
   %print_grid(SGC),nl,
@@ -132,7 +133,7 @@ grid_label_bg(GridIn,GridO):-
   copy_term(GridIn,Grid1),
   grid_detect_bg(Grid1,Background),
   maplist(to_grid_bg(Grid1),Background),
-  get_bgc(BG),subst(Grid1,BG,bg,GridO),!.
+  get_bgc(BG),subst_w_attv(Grid1,BG,bg,GridO),!.
 
 
 to_grid_bg(_,E):- has_color_c(E),!.
@@ -200,21 +201,15 @@ offset_v_grid_row(GW,V2,FF,[Row|OF]):- V1 is V2-1,
 %pad_with_contraints_3(GridO,TODO):-
 %  grid_size(GridO,HH,VV),
 %  pad_with_contraints_3(GridO,HH,VV,TODO),!.
-pad_grid(O,GridO):- is_object(O),!,object_grid(O,GridIn),!,pad_grid(GridIn,GridO).
-pad_grid(Grid,Grid2):-
+pad_grid(Before,After):-  pad_grid(=(bg),Before,After).
+pad_grid(P1,O,GridO):- is_object(O),!,object_grid(O,GridIn),!,pad_grid(P1,GridIn,GridO).
+pad_grid(P1,Grid,Grid2):-
   grid_size(Grid,H,_), H2 is H +2,
-  length(T,H2),%maplist(=(bg),T),
-  length(B,H2),%maplist(=(bg),B),
-  maplist(pad_sides,Grid,FillRows),
-  pad_sides(T,FillRows,B,Grid2).
+  length(T,H2),maplist(P1,T),
+  length(B,H2),maplist(P1,B),
+  maplist(pad_sides(P1),Grid,FillRows),
+  append([T|FillRows],[B],Grid2).
 
-old_pad_grid(Grid1,Grid2):-
- must_det_ll((
-  grid_size(Grid1,H,V),
-  globalpoints(Grid1,Ps),
-  %writeln(grid_size(H,V)),
-  points_range(Ps,LoH,LoV,HiH,HiV,_,_),  
-  create_padding(Grid1,LoH,LoV,HiH,HiV,H,V,_HH,_VV,Grid2))),!.
 
 constrain_grid_f(Obj,Trig,GridO):- \+ is_grid(Obj), object_grid(Obj,Grid2),constrain_grid_f(Grid2,Trig,GridO).
 constrain_grid_f(Grid2,Trig,GridO):-
@@ -250,14 +245,15 @@ maybe_constrain_fg(Trig,GridIn):-
   grid_detect_fg(GridIn,FGUnits),
   ignore((FGUnits\==[],
           set_fg_vars(FGUnits),
-          maplist(will_be_fg(Trig),FGUnits),
+          nop(maplist(will_be_fg(Trig),FGUnits)),
           nop(pt(grid_detect_fg(GridIn,FGUnits))))),!.
 
 
 set_fg_vars(Vars):-
-  copy_term(Vars,CVars), numbervars(CVars,1,_,[attvar(skip),functor_name('fg')]), maplist(set_as_fg,Vars,CVars),!.
+  copy_term(Vars,CVars), numbervars(CVars,1,_,[attvar(skip),functor_name('fg')]), 
+  maplist(set_as_fg,Vars,CVars),!.
 
-set_as_fg(V,fg(N)):- put_attr(V,ci,fg(N)),!,atom_concat(fg,N,Lookup),nb_linkval(Lookup,V).
+set_as_fg(V,fg(N)):- atomic(N), put_attr(V,ci,fg(N)),!,atom_concat(fg,N,Lookup),nb_linkval(Lookup,V).
 set_as_fg(V,Sym):- put_attr(V,ci,Sym).
 
 will_be_fg(Trig,FG):- freeze(Trig,is_fg_color_if_nonvar(Trig,FG)),
@@ -310,7 +306,7 @@ count_c_neighbors(C,H,V,N,GridIn):-
     Count),
   length(Count,N).
   
-ci:attr_unify_hook(fg(_),Value):- !, is_fg_color(Value).
+%ci:attr_unify_hook(fg(_),Value):- !, is_fg_color(Value).
 %ci:attr_unify_hook(bg,Value):- !, is_bg_color(Value).
 ci:attr_unify_hook(_,_Value).
   
@@ -364,9 +360,30 @@ f666(color,
  [4,5,1],
  [4,5,1]]).
 
+f666(ham1,G):- fail,
+S="
+ _________
+ B B B B B 
+ B B B B B 
+     B    
+     B    
+ _________",
+ into_g666(S,G1),Color=blue,subst(G1,blue,Color,G).
+
+f666(ham1,G):- 
+S="
+ _________
+ B B B B B 
+ B B B B B 
+     B    
+     B    
+ _________",
+ into_g666(S,G1),Color=_,subst(G1,blue,Color,G).
+
+
 f666(ham,G):- in_shape_lib(hammer,Ham),object_grid(Ham,G0),all_rotations(G0,G).
 
-h666(ham,
+h666(ham1,
 "_________________________________________________
          B B B B B               B B B B B
          B B B B B               B B B B B

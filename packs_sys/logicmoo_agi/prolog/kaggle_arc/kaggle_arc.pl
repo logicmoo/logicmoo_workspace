@@ -88,68 +88,83 @@ run_arc_io(TestID,ExampleNum,In,Out):-
 
 
 
-grid_differ2(Rule,PairName,ImO,OmI,IMass,OMass,Shapes):-
+grid_differ2(Info,PairName,ImO,OmI,IMass,OMass,Shapes):-
   grid_size(ImO,IH,IV), grid_size(OmI,OH,OV),
-  show_pair(IH,IV,OH,OV,grid_differ2,PairName,ImO,OmI),
+  show_diff_pair(IH,IV,OH,OV,Info,PairName,ImO,OmI),
   ((IMass==0, OMass>0) -> USE = OmI;
    ((OMass==0, IMass>0) -> USE = ImO;
     ((OMass < IMass) -> USE = OmI;  USE = ImO))),
   individuals_common([],USE,Shapes),
-  wqln("USING-RULE"=Rule),
+  nb_current(rules,Rules),
+  pt("USING-RULE"=Info+Rules),
   print_grid(USE).
 
-gr2o(Grid,Obj):- Grid=Obj.
-%gr2o(Grid,Obj):- localpoints(Grid,NoisePoints), make_indiv_object(NoisePoints,[object_shape(noise)],Obj).
-
-grid_differ(Rule,PairName,In,Out,IH,IV,OH,OV,ShapesO):- 
+gr2o(Grid,Obj):- localpoints(Grid,NoisePoints), make_indiv_object(NoisePoints,[object_shape(noise)],Obj),!.
+%gr2o(Grid,Obj):- Grid=Obj.
+add_rule( Info):- 
+ nb_current(rules,Rules),nb_set_add(Rules,Info),pt(cyan,add_rule(Info)).
+add_grule(Info,OmI2):-
+  set_gridname(OmI2,Info),
+  add_rule( Info).
+  
+show_diff_pair(IH,IV,OH,OV,Info,PairName,ImO2,OmI2):-
+  %nb_current(rules,Rules),
+  add_rule( Info),
+  add_grule( PairName*in(Info),ImO2),
+  add_grule( PairName*out(Info),OmI2),
+  show_pair(IH,IV,OH,OV,grid(Info),PairName,ImO2,OmI2).
+  
+grid_differ(PairName,In,Out,IH,IV,OH,OV,ShapesO):- 
   unique_colors(In,ICs), unique_colors(Out,OCs),
   intersection(ICs,OCs,CommonCs,IPCs,OPCs),
   maplist(length,[ICs,IPCs,CommonCs,OPCs,OCs],[ICsL,IPCsL,CommonCsL,OPCsL,OCsL]),
   CommonCsL>0,
   delete_colors(CommonCs,Out,OmI2),
   delete_colors(CommonCs,In,ImO2),
-  show_pair(IH,IV,OH,OV,delete_common_colors,PairName,ImO2,OmI2),
+  % rtrace,
+  show_diff_pair(IH,IV,OH,OV,delete_common_colors,PairName,ImO2,OmI2),
   mass(ImO2,IMass),mass(OmI2,OMass),
   ((OMass==0, IMass > 0) -> gr2o(ImO2,Noise) ; 
     ((IMass==0, OMass > 0 ) -> gr2o(OmI2,Noise) ; Noise=[])),
   (Noise == [] -> ExtraShapes=[] ; ExtraShapes=[Noise] ),
-  pt("REMOVING DISTRACTIONS"),
   delete_colors(OPCs,Out,OmI), 
   delete_colors(IPCs,In,ImO),
-  show_pair(IH,IV,OH,OV,delete_uncommon_colors,PairName,ImO,OmI),
+  show_diff_pair(IH,IV,OH,OV,delete_uncommon_colors(IMass,OMass),PairName,ImO,OmI),
   
   %pt([ICs,IPCs,CommonCs,OPCs,OCs]),
   pt([ICsL,IPCsL,CommonCsL,OPCsL,OCsL]),
   IArea is IH * IV,
   OArea is OH * OV,
-  grid_differ2(Rule,PairName,ImO,OmI,OArea,IArea,Shapes),
-  append(Shapes,ExtraShapes,ShapesO),!.
+  grid_differ2("REMOVING DISTRACTIONS",PairName,ImO,OmI,OArea,IArea,Shapes),
+  append(Shapes,ExtraShapes,ShapesO).
 
-grid_differ(Rule,PairName,In,Out,H,V,H,V,Shapes):-
+grid_differ(PairName,In,Out,H,V,H,V,Shapes):-
   grid_minus_grid(In,Out,ImO),mass(ImO,IMass),
   grid_minus_grid(Out,In,OmI),mass(OmI,OMass),
-  grid_differ2(Rule,PairName,ImO,OmI,IMass,OMass,Shapes),!.
+  grid_differ2(grid_minus_grid,PairName,ImO,OmI,IMass,OMass,Shapes).
 
-grid_differ(Rule,PairName,In,Out,IH,IV,OH,OV,Shapes):-
+grid_differ(_PairName,_In,_Out,IH,IV,OH,OV,Shapes):-
   (IH<5;IV<5),(OH<5;OV<5),
+  add_rule(tiny_dots),
   Shapes=[dots,all].
 
-grid_differ(Rule,PairName,In,Out,IH,IV,OH,OV,Shapes):-
-  (IH>15,IV>15),(IH>15,IV>15),
+grid_differ(_PairName,_In, _Out,IH,IV,OH,OV,Shapes):-
+  (IH>15,IV>15),(OH>15,OV>15),
+  add_rule(four_way),
   Shapes=[-dots,fourway].
 
-grid_differ(Rule,_PairName,In,Out,_IH,_IV,_OH,_OV,Shapes):-
+grid_differ(_PairName,In,Out,_IH,_IV,_OH,_OV,Shapes):-
   individuals_common([],Out,UnsharedOut),
-  individuals_common([],In,UnsharedIn),
+  individuals_common([],In,UnsharedIn),  
   maplist(length,[UnsharedIn,UnsharedOut],[IMass,OMass]),
   ((OMass>IMass) -> individuals_common(UnsharedIn,Out,Shapes);
-   (IMass>OMass) -> individuals_common(UnsharedOut,In,Shapes)),!.
-grid_differ(Rule,_PairName,In,_Out,_IH,_IV,_OH,_OV,Shapes):-
-  individuals_common([],In,Shapes),!.
+   (IMass>OMass) -> individuals_common(UnsharedOut,In,Shapes)),
+  add_rule(less_shapes(IMass,OMass)).
+
 
 delete_colors([],Out,Out):-!.
 delete_colors([C|IPLs],In,Out):- 
- subst(In,C,black,Mid),
+ subst_w_attv(In,C,black,Mid),
  delete_colors(IPLs,Mid,Out).
 
 print_collapsed(G):-
@@ -167,13 +182,28 @@ try_arc_io(TestID,ExampleNum,In,Out):-
   %individuals_common(ReservedS,Out,UnsharedOut2),
   %show_pair(IH,IV,OH,OV,outs,PairName,UnsharedOut1,UnsharedOut2),!,
   %nop
-  grid_differ(_Rule,PairName,In,Out,IH,IV,OH,OV,Shapes),
+  Rules=[rules],
+  nb_linkval(rules, Rules),
+  findall(Shapes,
+    (clause(grid_differ(PairName,In,Out,IH,IV,OH,OV,Shapes),Body),
+      catch(Body,E,
+         ((E=='$aborted'->throw('$aborted')),
+          notrace,
+          pt(red,E),
+          trace,
+          E==E,
+          rtrace(Body)))),Ideas),
+
+  Shapes = Ideas,
 
   max_min(IH,OH,GH,_),
   max_min(IV,OV,GV,_),
 
-  format('~N+Shared~N'),
+  format('~N+Done with Ideas~N'),
+  pt(Shapes),
   print_grid(GH,GV,Shapes),
+  format('~N+Shared~N'),
+  
   
   print_collapsed(
   show_workflow(Shapes,
@@ -194,7 +224,7 @@ try_arc_io(TestID,ExampleNum,In,Out):-
   individuals_common(SmallLib,In,UnsharedIn),
 
   format('~N+unshared~N'),
-  show_pair(IH,IV,OH,OV,unshared,PairName,UnsharedIn,UnsharedOut),!,
+  show_diff_pair(IH,IV,OH,OV,unshared,PairName,UnsharedIn,UnsharedOut),!,
   %notrace(showdiff(UnsharedIn,UnsharedOut)),
   format('~N-unshared~N'),
 

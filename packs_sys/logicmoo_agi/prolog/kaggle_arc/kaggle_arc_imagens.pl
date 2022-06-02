@@ -182,7 +182,7 @@ in_shape_lib(X,D):- make_shape(X,R),dupe_shape(R,D).
 make_shape(P,I):- enum_make_shape(P), call(call,P,I).
 
 pad_sides(Fill,Row):- append([_|Fill],[_],Row).
-pad_sides(C,Fill,Row):- append([C|Fill],[C],Row).
+pad_sides(P1,Fill,Row):- call(P1,C1),call(P1,C2),append([C1|Fill],[C2],Row).
 pad_sides(C1,Fill,C2,Row):- append([C1|Fill],[C2],Row).
 
 ensure_grid(Grid):- is_grid(Grid),!.
@@ -200,8 +200,8 @@ box_grid(C,Grid,D):-
   get_fgc(C), ensure_grid(Grid),
   grid_size(Grid,H,_), H2 is H +2,
   length(TB,H2),maplist(=(C),TB),
-  maplist(pad_sides(C),Grid,FillRows),
-  pad_sides(TB,FillRows,D).
+  maplist(pad_sides(=(C)),Grid,FillRows),
+  append([TB|FillRows],[TB],D).
 
 :- decl_sf(box_grid_n_times(size,fg_color,grid)).
 box_grid_n_times(0,_C,Grid,D):- Grid=D,!.
