@@ -427,29 +427,6 @@ surround_3x3(
  [sw,s,se]]).
 %star_grow_h(obj(L),
 
-%grid_to_id(Grid,ID):- 
-
-erase_grid(GID):- retractall(cmem(GID,_,_)), 
-  forall(retract(cindv(GID,_,ID)), erase_grid(ID)).
-
-
-assert_id_cells(ID,Points):- maplist(assert_id_cell(ID),Points).
-assert_id_cell(ID,-(C,HV)):- assert(cmem(ID,HV,C)).
-assert_hvc_cell(_,_,_,C):- plain_var(C). % free_cell(C),!.
-assert_hvc_cell(ID,H,V,C):- hv_point(H,V,HV),assert(cmem(ID,HV,C)).
-
-
-:- dynamic(is_grid_size/3).
-% Grid to_fast_workspace
-assert_id_grid_cells(ID,Grid):-
- throw(all_in_emem(assert_id_grid_cells(ID,Grid))),
-   grid_size(Grid,SH,SV),
-   retractall(is_grid_size(ID,_,_)),
-   assert(is_grid_size(ID,SH,SV)),
-   erase_grid(ID),   
-   forall(between(1,SH,H),
-    forall(between(1,SV,V),
-     ignore((hv_value(Grid,C,H,V),assert_hvc_cell(ID,H,V,C))))).
 
 
 % Random Non Blk Eles
@@ -550,105 +527,6 @@ calc_add_points(OH,OV,Grid,Point):- as_hv_point(H,V,C,Point),HH is H -OH +1, VV 
 %add_h_v_c(Grid,H,V,C):- plain_var(C),!,nop(add_h_v_c(Grid,H,V,C)).
 add_h_v_c(Grid,H,V,C):- hv_value(Grid,Was,H,V),ignore(Was=C).
 
-as_hv_point(H,V,C,C-Point):- must(hv_point(H,V,Point)),!.
-as_hv_point(H,V,_,Point):- hv_point(H,V,Point),!.
-as_hv_point(H,V,_,H,V).
-%as_hv_point(Inf,Inf,offset_ranges(_,_,_,_)).
-
-make_grid(H,V,Grid):- max_min(H,1,HH,_), max_min(V,1,VV,_),
-   max_min(HH,32,_,HHH),max_min(VV,32,_,VVV),
-   
-   grid_size_nd(Grid,HHH,VVV),!.
-
-insert_row(N,Row,Grid,NewGrid):- grid_size(Grid,H,V), insert_row(N,Row,Grid,H,V,NewGrid).
-insert_row(N,Row,Grid,H,V,NewGrid):- N<0, NewN is V + N+1,!,insert_row(NewN,Row,Grid,H,V,NewGrid).
-insert_row(N,Row,Grid,H,_,NewGrid):- length(Row,H),length(Left,N),append(Left,Right,Grid),append(Left,[Row|Right],NewGrid).
-
-insert_col(N,Col,Grid,NewGrid):- grid_size(Grid,H,V), insert_col(N,Col,Grid,H,V,NewGrid).
-insert_col(N,Col,Grid,H,V,NewGrid):- N<0, NewN is H + N+1,!,insert_col(NewN,Col,Grid,H,V,NewGrid).
-insert_col(N,Col,Grid,_,V,NewGrid):- length(Col,V),maplist(insert_col_at(N),Col,Grid,NewGrid).
-
-
-insert_col_at(N,Col,Row,NewRow):- length(Left,N),append(Left,Right,Row),append(Left,[Col|Right],NewRow).
-
-insert_ele(N,V,L,NL):- length(Left,N),append(Left,Right,L),append(Left,[V|Right],NL).
-
-delete_row(N,Grid,NewGrid):- N < 0, length(Grid,L), DR is L+N+1,delete_row(DR,Grid,NewGrid).
-delete_row(N,Grid,NewGrid):- length(Left,N),append(Left,[_|Right],Grid),append(Left,Right,NewGrid).
-
-delete_col(N,Grid,NewGrid):- maplist(delete_row(N),Grid,NewGrid).
-
-map_nth(P,N,Grid):- nth1(N,Grid,E),call(P,E).
-map_row(P,N,Grid):- map_nth(maplist(P),N,Grid).
-map_col(P,N,Grid):- maplist(map_nth(P,N),Grid).
-
-
-maybe_glyph(G,_,Glyph):- is_object(G), object_glyph(G,Glyph), !.
-maybe_glyph(_G,N,Code):- i_glyph(N,Code),!.
-maybe_glyph(G,_,Glyph):- is_grid(G),grid_dot(Glyph),!.
-
-
-from_gridoid(Points,C,GN,H,V):- is_group(Points), smallest_first(Points,ObjList),
-  from_gridoid(ObjList,C,N,H,V,G), maybe_glyph(G,N,GN).
-
-from_gridoid(Points,C,GN,H,V):- from_gridoid(Points,C,N,H,V,G), maybe_glyph(G,N,GN).
-from_gridoid(Points,C,N,H,V,G):- nth0(N,Points,G),hv_value0(G,C,H,V),nonvar_or_ci(C), \+ is_bg_color(C), \+ bg_sym(C), !.
-from_gridoid(Points,C,N,H,V,G):- nth0(N,Points,G),hv_value0(G,C,H,V),nonvar_or_ci(C),!.
-from_gridoid(Points,C,N,H,V,G):- nth0(N,Points,G),hv_value0(G,C,H,V).
-
-
-hv_value0(O,_Color,_H,_V):- is_object(O), object_shape(O,combined), !, fail.
-hv_value0(O,Color,H,V):- is_object(O),globalpoints(O,Ps),!,hv_value(Ps,Color,H,V).
-hv_value0(O,Color,H,V):- hv_value(O,Color,H,V),!.
-
-hv_value_or(Grid,C,H,V,Else):- hv_value(Grid,C,H,V)*->true;C=Else.
-
-hv_value(ID,C,H,V):- cmem(ID,HV,C),hv_point(H,V,HV),!.
-hv_value(Grid,C,H,V):- is_grid(Grid),!, nth1(V,Grid,Row),nth1(H,Row,C),!.
-hv_value(Points,C-N,H,V):- is_list(Points), is_list_of_gridoids(Points), from_gridoid(Points,C,N,H,V),!.
-
-hv_value(O,Color-GN,H,V):- is_object(O),globalpoints(O,Ps),hv_value(Ps,Color,H,V),object_indv_id(O,_Tst,GN),nonvar_or_ci(GN),!.
-hv_value(O,Color,H,V):- is_object(O),globalpoints(O,Ps),!,hv_value(Ps,Color,H,V),!.
-%hv_value(Points,C,H,V):- nonvar_or_ci(H),!, hv_point(H,V,HV), sub_term(C-HV,Points),atom(HV).
-hv_value(Points,C,H,V):- nonvar_or_ci(H),nonvar_or_ci(V),hv_point(H,V,HV),!, hv_member(HV,C,Points),!.
-hv_value(Points,C,H,V):- member(C-HV,Points),hv_point(H,V,HV).
-
-hv_member(HV,C,O):- is_grid(O),!,fail,globalpoints(O,Ps),hv_member(Ps,C,HV),!.
-hv_member(HV,C,O):- is_object(O),!,globalpoints(O,Ps),hv_member(Ps,C,HV),!.
-hv_member(HV,C,Points):- member(C-HV,Points),!.
-% hv_member(HV,C,Points):- sub_term(C-HV,Points),!.
-/*b_set_hv_value(Grid,C,H,V):- nth1(V,Grid,Row),set_nth1(H,Row,C).
-nb_set_hv_value(Grid,C,H,V):- nth1(V,Grid,Row),nb_set_nth1(H,Row,C).
-b_rplc_hv_value(Grid,OldC,NewC,H,V):- nth1(V,Grid,Row),rplc_nth1(H,Row,OldC,NewC).
-nb_rplc_hv_value(Grid,OldC,NewC,H,V):- nth1(V,Grid,Row),nb_rplc_nth1(H,Row,OldC,NewC).
-
-*/
-
-
-
-
-
-create_movements:- 
- forall( between(1,30,H),
-  forall(between(1,30,V),
-  calc_movement(H,V))).
-
-:- initialization(create_movements).
-
-:- dynamic(hv_point/3).
-hv(H,V,hv(H,V)).
-
-calc_movement(H,V):- forall(nav(Dir,HO,VO), save_calc_movement(H,V,Dir,HO,VO)).
-
-save_calc_movement(H,V,Dir,HO,VO):- H2 is HO+H, V2 is VO+V,
-  ignore((between(1,32,H2), between(1,32,V2), 
-     format(atom(HV),'point_~|~`0t~d~2+_~|~`0t~d~2+',  [H,V]),
-    format(atom(HV2),'point_~|~`0t~d~2+_~|~`0t~d~2+', [H2,V2]),
-    assert_if_new(is_adjacent_point(HV,Dir,HV2)),
-    assert_if_new(hv_point(H,V,HV)),
-    assert_if_new(is_adjacent_hv(H,V,Dir,H2,V2)))).
-  
-is_adjacent_2points(HV,Dir,HV2,HV3):-  is_adjacent_point(HV,Dir,HV2),is_adjacent_point(HV2,Dir,HV3).
 
 nav(s,0,1). nav(e, 1,0). nav(w,-1,0). nav(n,0,-1).
 nav(se, 1,1). nav(sw,-1,1). nav(nw,-1,-1). nav(ne, 1,-1).

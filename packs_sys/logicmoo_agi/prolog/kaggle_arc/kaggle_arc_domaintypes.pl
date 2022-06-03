@@ -14,15 +14,19 @@ matches_filter([H|T],obj(List)):- !, \+ \+ forall(member(E,[H|T]),member(E,List)
 matches_filter((A,B),OBJ):- !, (matches_filter(A,OBJ),matches_filter(B,OBJ)).
 matches_filter(E,obj(List)):- member(E,List).
 
-override_group(P):- P=..[F,Group,List], is_group(Group),!,
-  findall(R,(member(M,Group),call(F,M,R)),AllRots),
-  append_sets([AllRots],List).
-override_group(P):- P=..[F,A,Group,List], is_group(Group),!,
-  findall(R,(member(M,Group),call(F,A,M,R)),AllRots),
-  append_sets([AllRots],List).
-override_group(P):- P=..[F,A,B,Group,List], is_group(Group),!,
-  findall(R,(member(M,Group),call(F,A,B,M,R)),AllRots),
-  append_sets([AllRots],List).
+override_group(P):- P=..[F,M,R],
+  override_group_call(F,M,[],R).
+override_group(P):- P=..[F,A,M,R], 
+  override_group_call(F,M,[A],R).
+override_group(P):- P=..[F,A,B,M,R],
+  override_group_call(F,M,[A,B],R).
+  
+pass_thru_group(G):- var(G),!.
+pass_thru_group([]).
+pass_thru_group([options(_)]).
+override_group_call(_F,Group,_AB,R):- pass_thru_group(Group),!,R=Group.
+override_group_call(F,Group,AB,R):- is_group(Group),!, C=..[F|AB],
+ findall(R,(member(M,Group),call(C,M,R)),AllRots), append_sets([AllRots],R).
 
 allow_dirs([Type|_],X):- !, allow_dirs(Type,X).
 allow_dirs(Type,X):- subtypes(Type,SType),allow_dir(SType,List),member(X,List).

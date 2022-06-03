@@ -336,9 +336,9 @@ mfreeze(Trig,CDE):- freeze(Trig,CDE).
 constrain_dir_ele(_CT,_Trig,[],_GridIn,_H,_V,_C1I,_C1O,_GridO).
 constrain_dir_ele(CT, Trig,[Dir|SEW],GridIn,H,V,C1I,C1O,GridO):-
   ignore((
-          is_adjacent_hv(H,V,Dir,H2,V2),
-          get_color_at(H2,V2,GridIn,C2I),
-          get_color_at(H2,V2,GridO,C2O),
+  is_adjacent_hv(H,V,Dir,H2,V2),
+  get_color_at(H2,V2,GridIn,C2I),
+  get_color_at(H2,V2,GridO,C2O),
      \+ is_spec_color(C2I,_),
      count_c_neighbors(C1I,H2,V2,N,GridIn),
      count_o_neighbors(C1I,H2,V2,N2,GridIn),
@@ -454,6 +454,7 @@ fp666(T,Y):- ff666(T,X), pad_grid(X,Y).
 text_to_grid(Text,GO):- text_to_grid(Text,_HH,_VV,_ObjPoints,GO).
 text_to_grid(Text,HH,VV,ObjPoints,GO):-
   ascii_to_grid(Text,G),
+  % grid_to_id(G,ID),
   %print_grid(G),
   globalpoints(G,GPs),!,
   %print_grid(GPs),

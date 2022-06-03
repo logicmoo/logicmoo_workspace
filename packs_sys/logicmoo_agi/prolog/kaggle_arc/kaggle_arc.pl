@@ -43,6 +43,7 @@ decl_pt(G):- ground(G), !, assertz(decl_pt(G)).
 :- ensure_loaded(kaggle_arc_explaination).
 :- ensure_loaded(kaggle_arc_howdiff).
 :- ensure_loaded(kaggle_arc_imageproc).
+:- ensure_loaded(kaggle_arc_db).
 :- ensure_loaded(kaggle_arc_individuation).
 :- ensure_loaded(kaggle_arc_interpreter).
 :- ensure_loaded(kaggle_arc_test_iface).
@@ -85,17 +86,16 @@ arc1(TName):-
   run_arc_io(TestID,ExampleNum,In,Out))).
 
 run_arc_io(TestID,ExampleNum,In,Out):-
-  time(try_arc_io(TestID,ExampleNum,In,Out)).
+  time(show_arc_pair_progress(TestID,ExampleNum,In,Out)).
 
 
-
-grid_differ2(Info,PairName,ImO,OmI,IMass,OMass,Shapes):-
+tie_break_individualizer(Info,PairName,ImO,OmI,IMass,OMass,ShapesIO,ShapesIO):-
   grid_size(ImO,IH,IV), grid_size(OmI,OH,OV),
-  show_diff_pair(IH,IV,OH,OV,Info,PairName,ImO,OmI),
+  show_pair_indivs(IH,IV,OH,OV,Info,PairName,ImO,OmI),
   ((IMass==0, OMass>0) -> USE = OmI;
    ((OMass==0, IMass>0) -> USE = ImO;
-    ((OMass < IMass) -> USE = OmI;  USE = ImO))),
-  individuals_common([],USE,Shapes),
+    (fail, (OMass < IMass) -> USE = OmI;  USE = ImO))),
+  individuals_common([],USE,ShapesIO),
   nb_current(rules,Rules),
   pt("USING-RULE"=Info+Rules),
   print_grid(USE).
@@ -103,188 +103,162 @@ grid_differ2(Info,PairName,ImO,OmI,IMass,OMass,Shapes):-
 gr2o(Grid,Obj):- localpoints(Grid,NoisePoints), make_indiv_object(NoisePoints,[object_shape(noise)],Obj),!.
 %gr2o(Grid,Obj):- Grid=Obj.
 add_rule( Info):- 
- nb_current(rules,Rules),nb_set_add(Rules,Info),pt(cyan,add_rule(Info)).
-add_grule(Info,OmI2):-
-  set_gridname(OmI2,Info),
-  add_rule( Info).
+ nb_current(rules,Rules),
+ nb_set_add(Rules,Info),
+ %pt(cyan,add_rule(Info)),
+ !.
+add_grule(Info,OmI):-
+  %add_rule( Info),
+  set_gridname(OmI,Info).
   
-show_diff_pair(IH,IV,OH,OV,Info,PairName,ImO2,OmI2):-
+  
+show_pair_indivs(IH,IV,OH,OV,Info,PairName,ImO,OmI):-
   %nb_current(rules,Rules),
   add_rule( Info),
-  add_grule( PairName*in(Info),ImO2),
-  add_grule( PairName*out(Info),OmI2),
-  show_pair(IH,IV,OH,OV,grid(Info),PairName,ImO2,OmI2).
+  add_grule( PairName*in(Info),ImO),
+  add_grule( PairName*out(Info),OmI),
+  show_pair(IH,IV,OH,OV,grid(Info),PairName,ImO,OmI).
   
-grid_differ(PairName,In,Out,IH,IV,OH,OV,ShapesO):- 
-  unique_colors(In,ICs), unique_colors(Out,OCs),
-  intersection(ICs,OCs,CommonCs,IPCs,OPCs),
-  maplist(length,[ICs,IPCs,CommonCs,OPCs,OCs],[ICsL,IPCsL,CommonCsL,OPCsL,OCsL]),
+        
+grid_color_individualizer(PairName,In,Out,IH,IV,OH,OV,
+    ICs,IPCs,CommonCs,OPCs,OCs,
+    ICsL,IPCsL,CommonCsL,OPCsL,OCsL,
+    ShapesI,ShapesO):- 
   CommonCsL>0,
-  delete_colors(CommonCs,Out,OmI2),
-  delete_colors(CommonCs,In,ImO2),
-  % rtrace,
-  show_diff_pair(IH,IV,OH,OV,delete_common_colors,PairName,ImO2,OmI2),
-  mass(ImO2,IMass),mass(OmI2,OMass),
-  ((OMass==0, IMass > 0) -> gr2o(ImO2,Noise) ; 
-    ((IMass==0, OMass > 0 ) -> gr2o(OmI2,Noise) ; Noise=[])),
-  (Noise == [] -> ExtraShapes=[] ; ExtraShapes=[Noise] ),
-  delete_colors(OPCs,Out,OmI), 
+  delete_colors(CommonCs,Out,OmI),
+  delete_colors(CommonCs,In,ImO),
+  mass(ImO,IMass),mass(OmI,OMass),
+  one_is_zero(IMass,OMass),
+  Info = delete_common_colors,
+  tie_break_individualizer(Info,PairName,ImO,OmI,IMass,OMass,ShapesI,ShapesO).
+
+grid_color_individualizer(PairName,In,Out,IH,IV,OH,OV,
+    ICs,IPCs,CommonCs,OPCs,OCs,
+    ICsL,IPCsL,CommonCsL,OPCsL,OCsL,
+    ShapesI,ShapesO):- 
+  CommonCsL>0,
+  one_is_zero(IPCsL,OPCsL),
+  delete_colors(OPCs,Out,OmI),
   delete_colors(IPCs,In,ImO),
-  show_diff_pair(IH,IV,OH,OV,delete_uncommon_colors(IMass,OMass),PairName,ImO,OmI),
-  
-  %pt([ICs,IPCs,CommonCs,OPCs,OCs]),
-  pt([ICsL,IPCsL,CommonCsL,OPCsL,OCsL]),
-  IArea is IH * IV,
-  OArea is OH * OV,
-  grid_differ2("REMOVING DISTRACTIONS",PairName,ImO,OmI,OArea,IArea,Shapes),
-  append(Shapes,ExtraShapes,ShapesO).
+  mass(ImO,IMass),mass(OmI,OMass),
+  one_is_zero(IMass,OMass),
+  Info = delete_uncommon_colors,
+  tie_break_individualizer(Info,PairName,ImO,OmI,IMass,OMass,ShapesI,ShapesO).
 
-grid_differ(PairName,In,Out,H,V,H,V,Shapes):-
-  grid_minus_grid(In,Out,ImO),mass(ImO,IMass),
-  grid_minus_grid(Out,In,OmI),mass(OmI,OMass),
-  grid_differ2(grid_minus_grid,PairName,ImO,OmI,IMass,OMass,Shapes).
-
-grid_differ(_PairName,_In,_Out,IH,IV,OH,OV,Shapes):-
-  (IH<5;IV<5),(OH<5;OV<5),
-  add_rule(tiny_dots),
-  Shapes=[dots,all].
-
-grid_differ(_PairName,_In, _Out,IH,IV,OH,OV,Shapes):-
-  (IH>15,IV>15),(OH>15,OV>15),
-  add_rule(four_way),
-  Shapes=[-dots,fourway].
-
-grid_differ(_PairName,In,Out,_IH,_IV,_OH,_OV,Shapes):-
-  individuals_common([],Out,UnsharedOut),
-  individuals_common([],In,UnsharedIn),  
-  maplist(length,[UnsharedIn,UnsharedOut],[IMass,OMass]),
-  ((OMass>IMass) -> individuals_common(UnsharedIn,Out,Shapes);
-   (IMass>OMass) -> individuals_common(UnsharedOut,In,Shapes)),
-  add_rule(less_shapes(IMass,OMass)).
-
+one_is_zero(IMass,OMass):- 
+  once(IMass>0;OMass>0),once(IMass==0;OMass==0).
 
 delete_colors([],Out,Out):-!.
 delete_colors([C|IPLs],In,Out):- 
  subst_w_attv(In,C,black,Mid),
  delete_colors(IPLs,Mid,Out).
 
+
+individualizer(PairName,In,Out,IH,IV,OH,OV,ShapesI,ShapesO):-
+  (individualizers_from_pair(PairName,In,Out,IH,IV,OH,OV,ShapesI,ShapesO)
+    *->true;individualizer_fallback(PairName,In,Out,IH,IV,OH,OV,ShapesI,ShapesO)).
+
+individualizers_from_pair(PairName,In,Out,H,V,H,V,ShapesI,ShapesO):-
+  grid_minus_grid(In,Out,ImO),mass(ImO,IMass),
+  grid_minus_grid(Out,In,OmI),mass(OmI,OMass),
+  one_is_zero(IMass,OMass),
+  tie_break_individualizer(grid_minus_grid,PairName,ImO,OmI,IMass,OMass,ShapesI,ShapesO).
+
+individualizers_from_pair(PairName,In,Out,IH,IV,OH,OV,ShapesI,ShapesO):- 
+  unique_colors(In,ICs), unique_colors(Out,OCs),
+  intersection(ICs,OCs,CommonCs,IPCs,OPCs),
+  maplist(length,[ICs,IPCs,CommonCs,OPCs,OCs],[ICsL,IPCsL,CommonCsL,OPCsL,OCsL]),
+  grid_color_individualizer(PairName,In,Out,IH,IV,OH,OV,
+    ICs,IPCs,CommonCs,OPCs,OCs,
+    ICsL,IPCsL,CommonCsL,OPCsL,OCsL,
+    ShapesI,ShapesO).
+
+individualizer_fallback(_PairName,In,Out,_IH,_IV,_OH,_OV,ShapesI,ShapesO):- fail,
+  individuals_common([],Out,UnsharedOut),
+  individuals_common([],In,UnsharedIn),  
+  maplist(length,[UnsharedIn,UnsharedOut],[IMass,OMass]),
+  ((OMass>IMass) -> individuals_common(UnsharedIn,Out,ShapesI);
+   (IMass>OMass) -> individuals_common(UnsharedOut,In,ShapesO)),
+  add_rule(less_shapes(IMass,OMass)).
+
+individualizer_from_grid(_PairName,_InOrOut,_In,IH,IV,_Out,_OH,_OV,ShapesO):-
+   (IH<6;IV<6),make_indivs_options([retain_grid(full),dots],ShapesO).
+
+individualizer_from_grid(_PairName,_InOrOut,_In,IH,IV,_Out,OH,OV,ShapesO):-
+  (IH>15,IV>15),make_indivs_options([-(=(dots)),fourway,defaults],ShapesO).
+  
+individualizer_from_grid(_PairName,_InOrOut,_In,_IH,_IV,_Out,_OH,_OV,ShapesO):-
+  make_indivs_options([defaults],ShapesO).
+  
+make_indivs_options(List,[options(List)]).
+
+
 print_collapsed(G):-
-  wots(_,G).
+  wots(_,G). 
 
-try_arc_io(TestID,ExampleNum,In,Out):-
- ((
-  name_the_pair(TestID,ExampleNum,In,Out,PairName),
-  grid_size(In,IH,IV), grid_size(Out,OH,OV),
-  nop(writeln(grid_convert(size(IH,IV)->size(OH,OV)))),
-  ignore((more_task_info(TestID,III),pt(III),nl)), 
-  show_pair(IH,IV,OH,OV,test,PairName,In,Out),
-  %get_shape_lib(hammer,ReservedS),
-  %individuals_common([],Out,UnsharedOut1),
-  %individuals_common(ReservedS,Out,UnsharedOut2),
-  %show_pair(IH,IV,OH,OV,outs,PairName,UnsharedOut1,UnsharedOut2),!,
-  %nop
-  Rules=[rules],
-  nb_linkval(rules, Rules),
-  findall(Shapes,
-    (clause(grid_differ(PairName,In,Out,IH,IV,OH,OV,Shapes),Body),
-      catch(Body,E,
-         ((E=='$aborted'->throw('$aborted')),
-          notrace,
-          pt(red,E),
-          trace,
-          E==E,
-          rtrace(Body)))),Ideas),
-
-  Shapes = Ideas,
-
-  max_min(IH,OH,GH,_),
-  max_min(IV,OV,GV,_),
-
+examine_installed_individualizers_from_pairs(PairName,In,Out,IH,IV,OH,OV):-
+  nb_linkval(rules, [rules]),
+  individualizer(PairName,In,Out,IH,IV,OH,OV,ShapesI,ShapesO),
+  nb_current(rules, Info),
+  nb_linkval(rules, [rules]),
   format('~N+Done with Ideas~N'),
- % pt(Shapes),
-  print_grid(GH,GV,Shapes),
-  format('~N+Shared~N'),
+  show_idea(Info,PairName,In,Out,IH,IV,OH,OV,ShapesI,ShapesO).
   
-  
+show_idea(Info,PairName,In,Out,IH,IV,OH,OV,ShapesII,ShapesOO):- 
+  show_pair_indivs(IH,IV,OH,OV,shape(Info),PairName,ShapesII,ShapesOO),
+  format('~N+individuals_common(IN)~N'),
+  expand_individualizer(ShapesII,ShapesI),
+  individuals_common(ShapesI,In,UnsharedIn),
+  format('~N+individuals_common(OUT)~N'),
+  expand_individualizer(ShapesOO,ShapesO),
+  individuals_common(ShapesO,Out,UnsharedOut),
+  format('~N-individuals_common~N'),
+  show_pair_indivs(IH,IV,OH,OV,unshared(Info),PairName,UnsharedIn,UnsharedOut),
+  format('~N-unshared~N'),
+  pred_intersection(compare_objs1([same]),UnsharedIn,UnsharedOut,CommonCsIn,CommonCsOut,IPCs,OPCs),
+  RESS =.. [res,info=Info,unsharedIn=UnsharedIn,onlyIn= IPCs,commonIn=CommonCsIn,commonOut=CommonCsOut,onlyOut=OPCs, unsharedOut=UnsharedOut],
+  tersify(RESS,ShortInfo),         
+  individuals_common(UnsharedOut,Out,SharedInR),
+  individuals_common(UnsharedIn,In,SharedOutR),
+  show_pair_indivs(IH,IV,OH,OV,shared(Info),PairName,SharedInR,SharedOutR),
+  pt(yellow,pair=ShortInfo), !.
+
+expand_individualizer(Shapes,SmallLib):- must_be_free(SmallLib),
   print_collapsed(
   show_workflow(Shapes,
    [ =,"Vanila indivs",
-    % searchable,"Searchable indivs",
-       % all_rotations, % "All rotations of indivs", 
-       % add(change_color_blue), "Add blue indivs", 
-       % add(change_color), % "Add new colors indivs", 
-    []
+    % searchable,"Searchable indivs", 
+       all_rotations, % "All rotations of indivs", 
+       add(change_color_blue), "Add blue indivs", 
+       % add(change_color), % "Add new colors indivs",    
+		 
     %decolorize % decolorized points are not yet printable 
-    ],SmallLib)), 
-  % decolorize(SmallLib1,SmallLib),
-  % decolorized points are not yet printable 
-  % writeln("decolorized indivs"),
-  % forall(member(M,SmallLib1),print_grid(M)),
+    =],SmallLib)
+    )
+    .
+
   
-  individuals_common(SmallLib,Out,UnsharedOut),
-  individuals_common(SmallLib,In,UnsharedIn),
-
-  format('~N+unshared~N'),
-  show_diff_pair(IH,IV,OH,OV,unshared,PairName,UnsharedIn,UnsharedOut),!,
-  %notrace(showdiff(UnsharedIn,UnsharedOut)),
-  format('~N-unshared~N'),
-
-  ((
-
-  nop((
-
-
-
-
-       (individuals_common(UnsharedOut,Out,SharedOut)),
-       (individuals_common(UnsharedIn,In,SharedIn)),
-
-       format('~N+common~N'),
-       (show_pair(IH,IV,OH,OV,shared,PairName,SharedIn,SharedOut)),!,
-       format('~N-common~N'),
-
-
-       (individuals_common(SharedIn,Out,SSharedOut)),
-       (individuals_common(SharedOut,In,SSharedIn)),
-
-       format('~N+SShared~N'),
-       (show_pair(IH,IV,OH,OV,sshared,PairName,SSharedIn,SSharedOut)),!,
-       format('~N-SShared~N'),
-
-         ((reuse_indivs(UnsharedIn,UnsharedOut,BetterA,BetterB),
-         ( (UnsharedOut\==BetterB ; UnsharedIn\== BetterA) ->
-           show_pair(IH,IV,OH,OV,better,PairName,BetterA,BetterB);
-            writeln('nothing better')))),
-
-
-
-  nop((
-
-  (individuals_common(UnsharedIn,Out,SharedOut)),
-  (individuals_common(UnsharedOut,In,SharedIn)),
-
-  format('~N+shared~N'),
-  show_pair(IH,IV,OH,OV,shared,PairName,SharedIn,SharedOut),!,
-  format('~N-shared~N'),
-
+show_arc_pair_progress(TestID,ExampleNum,In,Out):-
+	name_the_pair(TestID,ExampleNum,In,Out,PairName),
+	grid_size(In,IH,IV), grid_size(Out,OH,OV),
+	nop(writeln(grid_convert(size(IH,IV)->size(OH,OV)))),
+	ignore((more_task_info(TestID,III),pt(III),nl)), 
+	show_pair(IH,IV,OH,OV,test,PairName,In,Out),
+	nb_linkval(rules, [rules]),	
+	individualizer_from_grid(PairName,in,In,IH,IV,Out,OH,OV,ShapesI_S),
+	individualizer_from_grid(PairName,out,Out,OH,OV,Out,IH,IV,ShapesO_S),
+	show_idea("Individuals",PairName,In,Out,IH,IV,OH,OV,ShapesI_S,ShapesO_S),
+	forall(examine_installed_individualizers_from_pairs(PairName,In,Out,IH,IV,OH,OV),true),
+	!.
+	 	 
+	
+/*
   
   nop((reuse_indivs(SharedIn,SharedOut,BetterA,BetterB),
   ( (SharedOut\==BetterB ; SharedIn\== BetterA) ->
     show_pair(IH,IV,OH,OV,better,PairName,BetterA,BetterB);
      writeln('nothing better')))),
-
-  nop((
-
-
-       compute_unshared_indivs(In,UnsharedIn),
-  show_pair(IH,IV,OH,OV,unshared,PairName,UnsharedIn,UnsharedOut),
-  %reuse_indivs(UnsharedIn,UnsharedOut,BetterA,BetterB,BetterC), 
-  %show_pair(IH,IV,OH,OV,better,PairName,BetterA,BetterB),
-  %show_pair(IH,IV,OH,OV,combined,PairName,BetterC,Out),
-  compute_shared_indivs(In,SharedIn),
-  compute_shared_indivs(Out,SharedOut),
-  show_pair(IH,IV,OH,OV,shared,PairName,SharedIn,SharedOut))),!,
-  nop(catch(maybe_confirm_sol(TestID,ExampleNum,In,Out),E,(wdmsg(E)))))))))))),!.
+*/
 
 reuse_indivs(IndvA,IndvB,BetterA,BetterB):-
   smallest_first(IndvA,IndvAS),

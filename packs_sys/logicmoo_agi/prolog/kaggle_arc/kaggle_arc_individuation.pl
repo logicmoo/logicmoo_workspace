@@ -66,15 +66,18 @@ ensure_shared_indivs(GN,Grid,SharedIndvs):-
 :- decl_pt(detect_indvs(group,group,-)).
 detect_indvs(In,Out,Grid):- individuals_common(In,Grid,Out).
 
-individuals_common(Reserved,Grid,IndvS):-
- must_det_l((
+individuals_common(ReservedOptions,Grid,IndvS):-
+ ((
    notrace(grid_size(Grid,H,V)),
    wdmsg(grid_size(H,V)),
    must_be_free(IndvS),
    globalpoints(Grid,Points),
-   select_default_i_options(Grid,H,V,Points,Options),   
+   %my_partition(is_object_or_grid,ReservedOptions,Reserved,Options),
+   select_default_i_options(Grid,H,V,Points,DefaultOptions),  
+   % trace, 
+   subst(ReservedOptions,defaults,options(DefaultOptions),NewOptions),
    into_gridname(Grid,ID),   
-   individuals_raw(H,V,ID,Options,Reserved,Points,Grid,IndvSRaw),
+   individuals_raw(H,V,ID,NewOptions,[],Points,Grid,IndvSRaw),
    %as_debug(9,ptt((individuals_common=IndvSRaw))),
    make_indiv_object_list(ID,H,V,IndvSRaw,IndvS1),
    combine_objects(IndvS1,IndvS))).
@@ -134,18 +137,44 @@ fsi(OUTReserved,OUTNewGrid,OUTOptions,H,V,Sofar,ID,Options,Reserved,Points,Grid,
   %as_debug(9,pt(t([fsi=Options,sofar=Sofar]))),
   fail.
 
+fsi(ReservedO,GridO,OptionsOut,H,V,Sofar,ID,[-(Options)|NO],ReservedI,Points,Grid,SofarOut,NextScanPoints):-!,
+  exclude(Options,NO,NewOptions),
+  fsi(ReservedO,GridO,OptionsOut,H,V,Sofar,ID,NewOptions,ReservedI,Points,Grid,SofarOut,NextScanPoints).
+
+fsi(ReservedO,GridO,OptionsOut,H,V,Sofar,ID,[retain_grid(NewOptions)|NO],ReservedI,Points,Grid,SofarOut,NextScanPoints):-!,
+  fsi(ReservedM,_GridM,OptionsMid,H,V,Sofar,ID,NewOptions,ReservedI,Points,Grid,SofarMid,_Keep),
+  fsi(ReservedO,GridO,OptionsOut,H,V,SofarMid,ID,[OptionsMid|NO],ReservedM,Points,Grid,SofarOut,NextScanPoints).
+
+fsi(ReservedO,GridO,OptionsOut,H,V,Sofar,ID,[full|NO],ReservedI,Points,Grid,SofarOut,NextScanPoints):-!,
+  grid_to_individual(Grid,Obj),
+  fsi(ReservedO,GridO,OptionsOut,H,V,[Obj|Sofar],ID,NO,ReservedI,Points,Grid,SofarOut,NextScanPoints).
+
+
 fsi(ReservedIO,GridO,[shape_lib(Hammer)|NO],H,V,Sofar,ID,[shape_lib(Hammer)|NO],ReservedIO,Points,Grid,SofarOut,NextScanPoints):-!,
    get_shape_lib(Hammer,Reserved),
    proccess_overlap_reserved(GridO,Grid,ID,H,V,Reserved,Sofar,SofarOut,Points,NextScanPoints,_Unreserved,_StillReserved),
    %intersection(SofarOut,Sofar,_Intersected,Found,_LeftOverB), as_debug(8,print_Igrid(H,V,'shape_lib'+ID,Found,[])),
    !.
-
-
+   
 fsi(StillReserved,GridO,[use_reserved|NO],H,V,Sofar,ID,[use_reserved|NO],Reserved,Points,Grid,SofarOut,NextScanPoints):-
    length(Reserved,LR), !, LR < 60, 
-   proccess_overlap_reserved(GridO,Grid,ID,H,V,Reserved,Sofar,SofarOut,Points,NextScanPoints,_Unreserved,StillReserved),!,
-   %intersection(SofarOut,Sofar,_Intersected,LeftOverA,_LeftOverB),as_debug(8,print_Igrid(H,V,'use_reserved'+ID,LeftOverA,[])),
+   proccess_overlap_reserved(GridO,Grid,ID,H,V,Reserved,Sofar,SofarOut,Points,NextScanPoints,_Unreserved,StillReserved),
+   %intersection(SofarOut,Sofar,_Intersected,Found,_LeftOverB), as_debug(8,print_Igrid(H,V,Obj+ID,Found,[])),
    !.
+
+fsi(ReservedO,GridO,NO,H,V,Sofar,ID,[Obj|NO],ReservedI,Points,Grid,SofarOut,NextScanPoints):-
+  search_lib(ReservedO,GridO,NO,H,V,Sofar,ID,[Obj|NO],ReservedI,Points,Grid,SofarOut,NextScanPoints),
+  %intersection(SofarOut,Sofar,_Intersected,Found,_LeftOverB), as_debug(8,print_Igrid(H,V,Obj+ID,Found,[])),
+  !.
+  
+search_lib([Obj|ReservedI],GridO,NO,H,V,Sofar,ID,[Obj|NO],ReservedI,Points,Grid,SofarOut,NextScanPoints):-
+   is_group(Obj), Reserved = Obj, !, proccess_overlap_reserved(GridO,Grid,ID,H,V,Reserved,Sofar,SofarOut,Points,NextScanPoints,_Unreserved,_StillReserved).
+   
+search_lib([Obj|ReservedI],GridO,NO,H,V,Sofar,ID,[Obj|NO],ReservedI,Points,Grid,SofarOut,NextScanPoints):-
+   is_object(Obj), Reserved = [Obj], !,   proccess_overlap_reserved(GridO,Grid,ID,H,V,Reserved,Sofar,SofarOut,Points,NextScanPoints,_Unreserved,_StillReserved).
+
+search_lib([Obj|ReservedI],GridO,NO,H,V,Sofar,ID,[Obj|NO],ReservedI,Points,Grid,SofarOut,NextScanPoints):-
+   is_grid(Obj), Reserved = [Obj], !,  proccess_overlap_reserved(GridO,Grid,ID,H,V,Reserved,Sofar,SofarOut,Points,NextScanPoints,_Unreserved,_StillReserved).
 
 proccess_overlap_reserved(GridO,Grid,ID,H,V,RestReserved,Sofar,SofarOut,Points,NextScanPoints,[Obj|Unreserved],StillReserved):-  
    member(Obj,RestReserved),
@@ -330,9 +359,7 @@ cycle_s(Reserved,_GH,_GV,Sofar,_ID,_Options,Reserved,Points,_Grid,Sofar,Points).
 default_i_options([
   use_reserved,
   fourway,
-  %shape_lib(squares),
-  
-  
+  shape_lib(squares), 
   %shape_lib(all),
   shape_lib(hammer),
   squares, diamonds, all,
@@ -354,7 +381,8 @@ default_i_options([
   %retain(solid(squares)),
    % shapes,
   %into_single_hidden,
-  all
+  all,
+  dots
   ]). % :- get_cycle_shapes(CS).
 
 get_cycle_shapes(

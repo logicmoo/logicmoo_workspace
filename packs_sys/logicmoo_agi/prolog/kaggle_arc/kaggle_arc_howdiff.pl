@@ -149,7 +149,9 @@ showdiff_groups(AG,BG):-
   
   showdiff_groups(A1,B1,
       [compare_objs1([perfect]),
-       compare_objs1([same,loc_xy]),
+       compare_objs1([turned,+loc_xy]),
+       compare_objs1([turned,-loc_xy]),
+       compare_objs1([moved]),
        compare_objs1([same])],
                   A4,B4),  
   (AG==A4 -> true ; length(A4,LenA),ignore((LenA>0,dash_char)),print_list_of(groupA=LenA,A4), dash_char),
@@ -334,6 +336,8 @@ compare_objs1(perfect,I,O,SL,UI,UO):- forall(prop_of(_,E), compare_objs1(E,I,O,S
 compare_objs1(perfect,I,O,SL,UI,UO):-  e1_member(globalpoints(_),SL).
 
 sprop(same).
+sprop(moved).
+sprop(turned).
 sprop(X):- prop_of(X,_).
 sprop(perfect).
 
@@ -344,7 +348,16 @@ sprop_of(same,visually).
 sprop_of(same,size).
 sprop_of(same,shape).
 sprop_of(same,colors).
-sprop_of(same,loc_xy).
+
+sprop_of(moved,same).
+sprop_of(moved,loc_xy).
+
+sprop_of(turned,rotate).
+
+sprop_of(reshape_and_recolor,localpoints).
+
+
+
 
 %prop_of(visual_impact,globalpoints(_)).
 usefull_compare(P):- compound(P),functor(P,F,_),!,usefull_compare(F).

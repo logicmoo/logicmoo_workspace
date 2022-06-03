@@ -204,9 +204,13 @@ print_Igrid(H,V,Name,SIndvOut,InOutL):-
    print_grid(H,V,Print),format('~N'),
    write('  '),writeq(Name),writeln('  '),!.
 
+use_row_db :- fail.
+print_grid(Grid):- use_row_db, is_grid(Grid),!, grid_to_id(Grid,ID),print_grid(ID).
+
 print_grid(Grid):- quietly(print_grid0(_HH,_VV,Grid)).
 %print_grid0(Grid):- plain_var(Grid),!, throw(var_print_grid(Grid)).
 
+print_grid(H,V,Grid):- use_row_db, grid_to_id(Grid,ID),!,print_grid0(H,V,ID).
 print_grid(H,V,Grid):- quietly(print_grid0(H,V,Grid)).
 
 print_grid0(H,V,G):- is_empty_grid(G), %trace, dumpST,
