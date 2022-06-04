@@ -258,11 +258,11 @@ counted_neighbours(C-HV,List,CountIn,[P|CountIn]):-
 
 var_check(I,G):- var(I),wdmsg(error(var(G))),!,throw(maybe_enum_i(I)),call(G).
 
-localpoints(I,X):- var_check(I,localpoints(I,X)).
-localpoints(G,X):- is_group(G),!,maplist(localpoints,G,Points),append_sets(Points,X).
+%localpoints(I,X):- var_check(I,localpoints(I,X)).
 localpoints(G,X):- is_grid(G),!,grid_size(G,H,V),grid_to_points(G,H,V,X).
 localpoints(I,X):- indv_props(I,L),member(localpoints(X),L), assertion(maplist(is_cpoint,X)),!.
-localpoints(I,X):- into_grid(I,G),!,grid_size(G,H,V),grid_to_points(G,H,V,X).
+localpoints(G,X):- is_group(G),!,maplist(localpoints,G,Points),append_sets(Points,X).
+%localpoints(I,X):- into_grid(I,G),!,grid_size(G,H,V),grid_to_points(G,H,V,X).
 
 object_shape(I,X):- var_check(I,object_shape(I,X)).
 object_shape(I,X):- indv_props(I,L),member(object_shape(X),L).
@@ -328,10 +328,10 @@ get_instance_method(Obj,Compound,F):- is_object(Obj), compound(Compound),compoun
 
 
 object_grid(I,G):- is_grid(I),!,G=I.
-object_grid(I,G):- indv_props(I,L),member(global_points(X),L),member(vis_hv(H,V),L),!,points_to_grid(H,V,X,G),!.
-object_grid(I,G):- indv_props(I,L),member(localpoints(X),L),member(vis_hv(H,V),L),!,points_to_grid(H,V,X,G),!.
-object_grid(I,G):- pt(red,object_grid(I,G)),vis_hv(I,H,V),localpoints(I,LP),points_to_grid(H,V,LP,G),!.
-object_grid(I,G):- pt(red,object_grid(I,G)),trace,localpoints(I,LP),points_to_grid(LP,G),!.
+%object_grid(I,G):- indv_props(I,L),member(global_points(X),L),member(vis_hv(H,V),L),!,points_to_grid(H,V,X,G),!.
+%object_grid(I,G):- indv_props(I,L),member(localpoints(X),L),member(vis_hv(H,V),L),!,points_to_grid(H,V,X,G),!.
+%%object_grid(I,G):- vis_hv(I,H,V),localpoints(I,LP),points_to_grid(H,V,LP,G),!.
+object_grid(I,G):- localpoints(I,LP),points_to_grid(LP,G),!.
 %object_grid(Group,List):- override_group(object_grid(Group,List)),!.
 %object_grid(I,G):- globalpoints(I,GP),into_grid(GP,G),!.
 
@@ -344,9 +344,9 @@ loc_xy(NT,H,V):- named_gridoid(NT,G),loc_xy(G,H,V).
 
 vis_hv_term(I,size(X,Y)):- vis_hv(I,X,Y).
 
+vis_hv(Grid,H,V):- is_grid(Grid),!,globalpoints(Grid,Points),!,points_range(Points,LoH,LoV,HiH,HiV,_,_), H is HiH-LoH+1, V is HiV-LoV+1.
 vis_hv(G,X,Y):- is_group(G),!,maplist(vis_hv_term,G,Offsets),sort(Offsets,HighToLow),last(HighToLow,size(X,Y)).
 vis_hv(I,X,Y):- indv_props(I,L),member(vis_hv(X,Y),L).
-vis_hv(Grid,H,V):- is_grid(Grid),!,globalpoints(Grid,Points),!,points_range(Points,LoH,LoV,HiH,HiV,_,_), H is HiH-LoH+1, V is HiV-LoV+1.
 vis_hv(NT,H,V):- named_gridoid(NT,G),vis_hv(G,H,V).
 vis_hv(Points,H,V):- points_range(Points,LoH,LoV,HiH,HiV,_,_), H is HiH-LoH+1, V is HiV-LoV+1.
 

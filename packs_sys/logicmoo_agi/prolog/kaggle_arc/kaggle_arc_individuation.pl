@@ -147,8 +147,8 @@ individuals_list(GH,GV,Sofar,ID,Options,_Reserved,Points,_Grid,IndvListOut,[]):-
   as_debug(8,print_Igrid(GH,GV,'leftover_points'+ID,Points,[])),
   % maplist(make_point_object(ID,GH,GV),Points,IndvList),
   IndvList = [],
-  % individuate(just(by_color([(black),(blue),(red),(green),(yellow),(silver),(purple),(orange),(cyan),(brown)])),Points,IndvList2),
-  IndvList2 = [],
+  individuate(just(by_color([(black),(blue),(red),(green),(yellow),(silver),(purple),(orange),(cyan),(brown)])),Points,IndvList2),
+  %IndvList2 = [],
   make_indiv_object(ID,GH,GV,Points,[object_shape(combined),object_shape(leftovers)],LeftOverObj), 
   % LeftOverObj = [],
   flatten([Sofar,IndvList,IndvList2,LeftOverObj],IndvListOut),!.

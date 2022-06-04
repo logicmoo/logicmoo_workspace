@@ -133,6 +133,8 @@ print_info([]):-!.
 print_info(A):- pt(A).
 
 o2g(Obj,Glyph):- object_glyph(Obj,Glyph).
+o2c(Obj,Glyph):- color(Obj,Glyph).
+o2ansi(Obj,O):- o2c(Obj,C),o2g(Obj,G),wots(S,color_print(C,G)),format(atom(O),"' ~w '",[S]).
 :- dynamic(g2o/2).
 
 into_obj(G,_):- plain_var(G),!,fail.
