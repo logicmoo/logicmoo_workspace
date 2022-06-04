@@ -9,7 +9,6 @@ tersify(I,O):- tersify1(I,M),tersify2(M,O).
 tersify1(I,O):- is_grid(I), into_gridnameA(I,O),!. 
 tersify1(I,O):- is_list(I), maplist(tersify1,I,O).
 tersify1(I,O):- is_object(I), o2ansi(I,G).
-tersify1(I,O):- is_object(I), o2g(I,G),atom_concat_list([' ',G,' '],O),!. 
 tersify1(I,O):- compound(I), !, compound_name_arguments(I,F,IA), maplist(tersify,IA,OA), compound_name_arguments(O,F,OA).
 tersify1(I,I).
 
