@@ -15,7 +15,7 @@ set_gridname(Grid,Name):- nb_setval(grid_name,Name),
 get_gridname(Grid,Name):- is_gridname(Grid,Name).
 get_gridname(In,Name*ExampleNum*in):- kaggle_arc(Name,ExampleNum,In,_).
 get_gridname(Out,Name*ExampleNum*out):- kaggle_arc(Name,ExampleNum,_,Out).
-get_gridname(Grid,Name):- gensym('grid_',Name),asserta(is_gridname(Grid,Name)).
+get_gridname(Grid,Name):- is_grid(Grid),must_be_free(Name),gensym('grid_',Name),asserta(is_gridname(Grid,Name)).
 
 into_gridname(G,TstName):- nonvar_or_ci(G), into_gridnameA(GVar,TstName),G=@=GVar,!.
 into_gridname(G,TstName):- makeup_gridname(TstName),

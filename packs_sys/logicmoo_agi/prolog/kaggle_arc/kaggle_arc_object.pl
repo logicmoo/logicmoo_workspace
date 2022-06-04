@@ -195,7 +195,7 @@ object_indv_id(I,ID,Iv):- throw(missing(object_indv_id(I,ID,Iv))).
 mass(I,X):- var_check(I,mass(I,X)).
 mass(I,X):- indv_props(I,L),!,member(mass(X),L).
 mass(C-_,1):- nonvar_or_ci(C),!.
-mass(I,Count):- localpoints(I,Points), length(Points,Count),!.
+mass(I,Count):- shape(I,Points), length(Points,Count),!.
 mass(Points,Count):- is_list(Points),length(Points,Count),!.
 
 remove_color(_-P,P).
@@ -259,15 +259,18 @@ counted_neighbours(C-HV,List,CountIn,[P|CountIn]):-
 var_check(I,G):- var(I),wdmsg(error(var(G))),!,throw(maybe_enum_i(I)),call(G).
 
 localpoints(I,X):- var_check(I,localpoints(I,X)).
-localpoints(I,X):- is_grid(I),globalpoints(I,X),!.
-localpoints(I,X):- indv_props(I,L),member(localpoints(X),L), is_points_list(X),!.
-localpoints(I,X):- into_grid(I,G),globalpoints(G,X),!.
+localpoints(G,X):- is_group(G),!,maplist(localpoints,G,Points),append_sets(Points,X).
+localpoints(G,X):- is_grid(G),!,grid_size(G,H,V),grid_to_points(G,H,V,X).
+localpoints(I,X):- indv_props(I,L),member(localpoints(X),L), assertion(maplist(is_cpoint,X)),!.
+localpoints(I,X):- into_grid(I,G),!,grid_size(G,H,V),grid_to_points(G,H,V,X).
 
 object_shape(I,X):- var_check(I,object_shape(I,X)).
 object_shape(I,X):- indv_props(I,L),member(object_shape(X),L).
 
 rotation(I,X):- var_check(I,rotation(I,X)).
+rotation(G,X):- is_group(G),!,maplist(rotation,G,Points),append_sets(Points,X).
 rotation(I,X):- indv_props(I,L),member(rotation(X),L).
+rotation(_,same).
 
 %hv_cvalue(Grid,Color,H,V):- hv_value(Grid,C,H,V),!,as_cv(C,Color),!.
 %as_cv(C,Color):- plain_var(C),!,=(C,Color).
@@ -275,6 +278,7 @@ rotation(I,X):- indv_props(I,L),member(rotation(X),L).
 %as_cv(C-_,Color):- as_cv(C,Color).
 %as_cv(C,Color):- integer(C),!,color_code(C,Color).
 
+object_changes(G,X):- is_group(G),!,maplist(object_changes,G,Points),append_sets(Points,X).
 object_changes(I,X):- indv_props(I,L),member(changes(X),L).
 
 all_points_between(_Grid,_Hi,0,_GH,_GV,Points,Points):-!.
@@ -283,8 +287,9 @@ all_points_between(Grid,Hi,Vi,GH,GV,Points,PointsO):-
   (Hi==1 -> (H = GH, V is Vi-1) ; (H is Hi -1, V=Vi)),!,
   all_points_between(Grid,H,V,GH,GV,PointsT,PointsO).
 
-all_points(Grid,HH,HV,Points):- all_points_between(Grid,HH,HV,HH,HV,[],Points),!. 
-all_points(Grid,HH,HV,Points):-  throw(all_points_between),
+grid_to_points(Grid,HH,HV,Points):- all_points_between(Grid,HH,HV,HH,HV,[],Points),!. 
+
+grid_to_points(Grid,HH,HV,Points):-  throw(all_points_between),
   findall(C-Point,(between(1,HV,V),between(1,HH,H),
     once((hv_value(Grid,C2,H,V),
           %pt(hv_value(C2,H,V)),
@@ -292,7 +297,8 @@ all_points(Grid,HH,HV,Points):-  throw(all_points_between),
           hv_point(H,V,Point)))),Points),!.
 
 
-globalpoints(Grid,Points):- is_grid(Grid),!, grid_size(Grid,HH,VV), all_points(Grid,HH,VV,Points).
+globalpoints(G,X):- is_group(G),!,maplist(globalpoints,G,Points),append_sets(Points,X).
+globalpoints(Grid,Points):- is_grid(Grid),!, grid_size(Grid,HH,VV), grid_to_points(Grid,HH,VV,Points).
 globalpoints(I,X):- indv_props(I,L),member(globalpoints(X),L),is_points_list(X),!.
 globalpoints(Grid,[Grid]):- is_point(Grid),!.
 globalpoints(Grid,Points):- is_list(Grid),!,maplist(globalpoints,Grid,MPoints),append(MPoints,Points).
@@ -308,36 +314,47 @@ grid_to_id(Grid,ID):- is_grid_id(Grid,ID),!.
 grid_to_id(Grid,ID):- gensym('grid_',ID),assert_id_grid_cells(ID,Grid),assert(is_grid_id(Grid,ID)),!.
 */
 
+colors(G,X):- is_group(G),!,maplist(colors,G,Points),append_sets(Points,X).
 colors(I,X):- indv_props(I,L),!,member(colors(X),L).
 %colors(Points,CC):- is_list(Points),nth0(_,Points,C-_),is_color(C), CC = [cc(C,3)],!.
 colors(G,BFO):- notrace((pixel_colors(G,GF),sort(GF,GS),count_each(GS,GF,UC),keysort(UC,KS),reverse(KS,SK),!,into_cc(SK,BFO))).
 
+shape(G,X):- is_group(G),!,maplist(shape,G,Points),append_sets(Points,X).
+% returns the objects colorless localpoints
 shape(I,X):- indv_props(I,L),member(shape(X),L).
 
 get_instance_method(Obj,Compound,F):- is_object(Obj), compound(Compound),compound_name_arity(Compound,Name,A),
    A1 is A+1, atom_concat('object_',Name,F),current_predicate(F/A1).
 
 
-object_grid(Group,List):- override_group(object_grid(Group,List)),!.
-object_grid(I,X):- indv_props(I,L),member(grid(X),L),!.
-%object_grid(I,G):- globalpoints(I,GP),into_grid(GP,G).
-object_grid(I,G):- vis_hv(I,H,V),localpoints(I,GP),points_to_grid(H,V,GP,G),!.
+object_grid(I,G):- is_grid(I),!,G=I.
+object_grid(I,G):- indv_props(I,L),member(global_points(X),L),member(vis_hv(H,V),L),!,points_to_grid(H,V,X,G),!.
+object_grid(I,G):- indv_props(I,L),member(localpoints(X),L),member(vis_hv(H,V),L),!,points_to_grid(H,V,X,G),!.
+object_grid(I,G):- pt(red,object_grid(I,G)),trace,vis_hv(I,H,V),localpoints(I,LP),points_to_grid(H,V,LP,G),!.
+object_grid(I,G):- pt(red,object_grid(I,G)),trace,localpoints(I,LP),points_to_grid(LP,G),!.
+%object_grid(Group,List):- override_group(object_grid(Group,List)),!.
+%object_grid(I,G):- globalpoints(I,GP),into_grid(GP,G),!.
 
+loc_xy_term(I,offset(X,Y)):- loc_xy(I,X,Y).
 
+loc_xy(G,X,Y):- is_group(G),!,maplist(loc_xy_term,G,Offsets),sort(Offsets,[offset(X,Y)|_]). % lowest offset
 loc_xy(I,X,Y):- indv_props(I,L),member(loc_xy(X,Y),L).
 loc_xy(Grid,H,V):- is_grid(Grid),!,globalpoints(Grid,Points),!,points_range(Points,LoH,LoV,_,_,_,_), H is LoH, V is LoV.
 loc_xy(NT,H,V):- named_gridoid(NT,G),loc_xy(G,H,V).
 
+vis_hv_term(I,size(X,Y)):- vis_hv(I,X,Y).
+
+vis_hv(G,X,Y):- is_group(G),!,maplist(vis_hv_term,G,Offsets),sort(Offsets,HighToLow),last(HighToLow,size(X,Y)).
 vis_hv(I,X,Y):- indv_props(I,L),member(vis_hv(X,Y),L).
 vis_hv(Grid,H,V):- is_grid(Grid),!,globalpoints(Grid,Points),!,points_range(Points,LoH,LoV,HiH,HiV,_,_), H is HiH-LoH+1, V is HiV-LoV+1.
 vis_hv(NT,H,V):- named_gridoid(NT,G),vis_hv(G,H,V).
-%vis_hv(Points,H,V):- pmember(vis_hv(H,V),Points),!.
 vis_hv(Points,H,V):- points_range(Points,LoH,LoV,HiH,HiV,_,_), H is HiH-LoH+1, V is HiV-LoV+1.
 
 object_color(HV,C):- color(HV,C).
 
 color(HV,C):- colors(HV,[cc(C,_)]),!.
 color(HV,multicolor(Stuff)):- colors(HV,Stuff),!.
+
 main_color(HV,C):- colors(HV,[cc(C,_)|_]).
 first_gpoint(HV,P):- globalpoints(HV,[P|_]).
 last_gpoint(HV,P):- globalpoints(HV,PS),last(PS,P).

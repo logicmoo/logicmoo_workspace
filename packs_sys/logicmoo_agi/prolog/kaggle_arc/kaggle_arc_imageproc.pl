@@ -40,7 +40,7 @@ no_black(BF,BF).
 
 
 %pixel_colors(GH,CC):- (is_group(GH);is_object(GH)),!,globalpoints(GH,GP),pixel_colors(GP,CC).
-pixel_colors(GH,CC):- notrace(pixel_colors0(GH,CC)).
+pixel_colors(GH,CC):- quietly(pixel_colors0(GH,CC)).
 pixel_colors0(GH,CC):- is_list(GH),!,maplist(pixel_colors,GH,PG),append(PG,CC).
 pixel_colors0(C,[Color]):- color_name(C,Color),!.
 pixel_colors0(GH,CC):- globalpoints(GH,GP),!,pixel_colors(GP,CC).
@@ -48,7 +48,7 @@ pixel_colors0(GH,CC):- globalpoints(GH,GP),!,pixel_colors(GP,CC).
 %sub_term(G,GH), is_grid(G),!,flatten(G,GF),include(is_grid_color,GF,GL),maplist(color_name,GL,CC).
 %pixel_colors(G,GL):- findall(Name,(sub_term(CP,G),compound(CP),CP=(C-_),color_name(C,Name)),GL).
 
-unique_colors(G,UC):- colors(G,GF),notrace(maplist(arg(1),GF,UC)).
+unique_colors(G,UC):- colors(G,GF),quietly(maplist(arg(1),GF,UC)).
 colors_count_size(G,UC):- colors(G,GS),length(GS,UC).
 
 into_cc(SK,BFO):- maplist(into_cc1,SK,BFO).
@@ -324,7 +324,7 @@ compute_max_color(Color1,Grid,Grid):- colors_count_no_black(Grid,[cc(Color1,_)|_
 compute_next_color(Color1,Grid,Grid):- colors_count_no_black(Grid,[_,cc(Color1,_)|_]).
 
 subst_color(Color1,Color2,Grid,NewGrid):- 
-  notrace((
+  quietly((
    color_code(Color1,Num1),
    color_code(Color2,Num2),
    subst_w_attv(Grid,Num1,Num2,NewGrid))).
@@ -449,7 +449,7 @@ close_color(green,cyan).
 
 %grid_size(Points,H,V):- is_dict(Points),!,Points.grid_size=grid_size(H,V).
 grid_size(ID,H,V):- is_grid_size(ID,H,V),!.
-%grid_size(Grid,H,V):- notrace(is_object(Grid)), !, vis_hv(Grid,H,V).
+%grid_size(Grid,H,V):- quietly(is_object(Grid)), !, vis_hv(Grid,H,V).
 grid_size(Grid,H,V):- is_grid(Grid),grid_size_nd(Grid,H,V),!.
 grid_size(Points,H,V):- pmember(grid_size(H,V),Points),ground(H-V),!.
 grid_size([G|Grid],H,V):- is_list(G),is_list(Grid), grid_size_nd([G|Grid],H,V),!.
@@ -494,9 +494,9 @@ closure_grid_to_object(Orig,Grid,NewObj):-
   make_indiv_object(ID,H,V,Points,PartialObj),
   transfer_props(Orig,[loc_xy,colors,object_shape],PartialObj,NewObj),!.
 
-closure_grid_to_group(Orig,Grid,Group):- individuals_common(Orig,Grid,Group).
+closure_grid_to_group(Orig,Grid,Group):- individuate(Orig,Grid,Group).
 
-into_grid(P,G):- notrace(into_grid(P,G, _)).
+into_grid(P,G):- quietly(into_grid(P,G, _)).
 
 into_grid(Grid,Grid, (=) ):- is_grid(Grid),!.
 into_grid(Obj,Grid, closure_grid_to_object(Obj)):- is_object(Obj),!, object_grid(Obj,Grid).
@@ -515,7 +515,8 @@ into_grid(Points,Grid, throw_no_conversion(Points)):-
 %points_to_grid(Points,Grid):- is_grid(Points),Points=Grid,!.
 points_to_grid([Points|More],Grid):- is_grid(Points),Points=Grid,grid_size(Points,H,V),calc_add_points(H,V,Grid,More),!.
 
-points_to_grid(Points,Grid):- notrace(grid_size(Points,H,V)), points_to_grid(H,V,Points,Grid).
+points_to_grid(Points,Grid):- is_grid(Points),!,grid_size(Points,H,V), points_to_grid(H,V,Points,Grid).
+points_to_grid(Points,Grid):- quietly(grid_size(Points,H,V)), points_to_grid(H,V,Points,Grid).
 
 points_to_grid(H,V,Points,Grid):- make_grid(H,V,Grid), calc_add_points(1,1,Grid,Points).
 

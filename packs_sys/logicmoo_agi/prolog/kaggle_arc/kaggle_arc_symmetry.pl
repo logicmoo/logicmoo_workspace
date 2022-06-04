@@ -331,7 +331,7 @@ nop((
 %detect_grid(Grid,E):- 
 
 grid_to_3x3_objs(Grid,NewIndiv4s):-
-  catch(call_with_time_limit(2,symetric_xy_3x3(Grid,Image9x9)),time_limit_exceeded, (wdmsg(time_limit_exceeded),fail)),
+  notrace(catch(call_with_time_limit(2,symetric_xy_3x3(Grid,Image9x9)),time_limit_exceeded, (wdmsg(time_limit_exceeded),fail))),
   %catch(symetric_xy_3x3(Grid,Image9x9),E, (wdmsg(E),fail)),
   %rtrace(symetric_xy_3x3(Grid,Image9x9)),
   flatten(Image9x9,Flat),
@@ -357,7 +357,7 @@ nb_set_local_point(H,V,C,Grid):- assertion(is_grid(Grid)),!,
 
 
 my_partition(_,[],[],[]):-!.
-my_partition(P1,[H|L],[H|I],E):- call(P1,H),!,
+my_partition(P1,[H|L],[H|I],E):- \+ \+ call(P1,H),!,
   my_partition(P1,L,I,E).
 my_partition(P1,[H|L],I,[H|E]):- 
    my_partition(P1,L,I,E),!.

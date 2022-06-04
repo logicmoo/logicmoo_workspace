@@ -4,11 +4,17 @@
   This work may not be copied and used by anyone other than the author Douglas Miles
   unless permission or license is granted (contact at business@logicmoo.org)
 */
+tersify(I,O):- tersify1(I,M),tersify2(M,O).
 
+tersify1(I,O):- is_grid(I), into_gridnameA(I,O),!. 
+tersify1(I,O):- is_list(I), maplist(tersify1,I,O).
+tersify1(I,O):- is_object(I), o2g(I,O),!. 
+tersify1(I,O):- compound(I), !, compound_name_arguments(I,F,IA), maplist(tersify,IA,OA), compound_name_arguments(O,F,OA).
+tersify1(I,I).
 
-tersify(I,O):- is_list(I), with_output_to(string(S),display(I)),!, ((atom_length(S,N), N>70) -> len(N)=O; I=O).
-tersify(I,O):- compound(I), !, compound_name_arguments(I,F,IA), maplist(tersify,IA,OA), compound_name_arguments(O,F,OA).
-tersify(I,I).
+tersify2(I,O):- is_list(I), with_output_to(string(S),display(I)),!, ((atom_length(S,N), N>70) -> len(N)=O; I=O).
+tersify2(I,O):- compound(I), !, compound_name_arguments(I,F,IA), maplist(tersify,IA,OA), compound_name_arguments(O,F,OA).
+tersify2(I,I).
 
 ptt(P):- tersify(P,Q),!,pt(Q).
 
@@ -54,15 +60,16 @@ functor_color(warn,yellow).
 arcdbg(G):- compound(G), compound_name_arity(G,F,_),functor_color(F,C),wots(S,print(G)),color_print(C,S),!,format('~N').
 arcdbg(G):- wdmsg(G).
 
-user:portray(Grid):- fail,arc_portray(Grid),!.
+user:portray(Grid):- arc_portray(Grid),!.
 
 arc_portray(Grid):- \+ \+ catch((
-  % \+ tracing, 
+  \+ tracing, 
   \+ is_object(Grid),  \+ is_group(Grid), % ground(Grid),
    (is_gridoid(Grid);(is_points_list(Grid),ground(Grid))),
    grid_size(Grid,H,V),!,H>0,V>0, wots(S,print_grid(H,V,Grid)),write(S)),_,false).
 arc_portray(Grid):- \+ \+ catch(( fail,
-  tracing, \+ is_object(Grid),  \+ is_group(Grid), ground(Grid),
+  tracing, fail,
+   \+ is_object(Grid),  \+ is_group(Grid), ground(Grid),
    ((is_points_list(Grid),ground(Grid))),
    grid_size(Grid,H,V),!,H>0,V>0, wots(S,print_grid(H,V,Grid)),write(S)),_,false).
 %user:portray(Grid):- ((\+ tracing, is_group(Grid),print_grid(Grid))).
@@ -117,12 +124,14 @@ as_str(S,S).
 
 print_length(S,L):- as_str(S,A),atom_codes(A,C), include(uses_space,C,SS),length(SS,L).
 
+append_term_safe(Type,PairName,NameIn):- append_term(Type,PairName,NameIn),!.
+append_term_safe(Type,PairName,append_term(Type,PairName)).
 show_pair(IH,IV,OH,OV,Type,PairName,In,Out):-
   LW is (IH * 2 + 12),
-  append_term(Type,PairName+in,NameIn),
-  append_term(Type,PairName+out,NameOut),
-  wots(U1, print_Igrid(IH,IV,NameIn,In,[])),
-  wots(U2, print_Igrid(OH,OV,NameOut,Out,[])),
+  append_term_safe(Type,PairName+in,NameIn),
+  append_term_safe(Type,PairName+out,NameOut),
+  wots(U1, print_Igrid_safe(IH,IV,NameIn,In,[])),
+  wots(U2, print_Igrid_safe(OH,OV,NameOut,Out,[])),
   print_side_by_side(U1,LW,U2),!,
   INFO = [grid_dim,mass,colors_count_size,colors],
   print_side_by_side(
@@ -194,11 +203,14 @@ better_value([G|V],List):-
   maplist(points_to_grid,[G|V],List),
   [G|V] \=@= List.
 
-
 print_Igrid(Name,SIndvOut,InOutL):-   
    grid_size(SIndvOut,H,V),
    print_Igrid(H,V,Name,SIndvOut,InOutL).
 
+print_Igrid_safe(H,V,Name,SIndvOut,InOutL):- InOutL ==[], \+ is_group(SIndvOut), \+ is_object_or_grid(SIndvOut),!,
+  pt(red,hv(Name,H,V)=SIndvOut).
+
+print_Igrid_safe(H,V,Name,SIndvOut,InOutL):- print_Igrid(H,V,Name,SIndvOut,InOutL).
 print_Igrid(H,V,Name,SIndvOut,InOutL):-   
    append(SIndvOut,InOutL,Print),
    print_grid(H,V,Print),format('~N'),

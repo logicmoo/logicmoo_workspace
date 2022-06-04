@@ -16,6 +16,31 @@ nth_fact(P,I):- clause(P,true,Ref),nth_clause(P,I,Ref).
 
 nonvar_or_ci(C):- (nonvar(C);attvar(C)),!.
 
+%gr2o(Grid,Obj):- Grid=Obj.
+add_i(Info):- 
+ tersify(Info,InfoT),
+ nb_current(rules,Rules),
+ nb_set_add(Rules,InfoT),
+ pt(cyan,+InfoT).
+
+add_i(F,Info):- 
+ append_term(i(F),Info,FInfo),
+ add_i(FInfo).
+
+add_rule(Info):- add_i(rule,Info).
+add_cond(Info):- add_i(cond,Info).
+do_action(Info):- guess_pretty(Info),add_i(action,Info),call(Info).
+add_action(Info):- add_i(action,Info).
+add_note(Info):- add_i(note,Info).
+add_indiv(W,Info):- add_i(indiv(W),Info).
+add_comparitor(Info):- add_i(comparitor,Info).
+show_rules:- 
+ nb_current(rules,Rules),
+  maplist(pt(cyan),Rules),
+ !.
+  
+
+
 contains_nonvar(N,Info):- sub_term(E,Info),nonvar_or_ci(E),E=N,!.
 
 max_min(A,B,B,B):- plain_var(A),!.

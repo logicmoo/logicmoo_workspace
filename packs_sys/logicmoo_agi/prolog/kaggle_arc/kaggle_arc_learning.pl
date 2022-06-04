@@ -21,8 +21,8 @@ find_by_shape(Grid,Find,Founds):-
  Prog = (all_rotations(F,F1),
    %print_grid(F1),!,
    ogs(H,V,F1,Grid),% trace,
-   all_points(F1,GH,GV,Points),
-  pt(Points),
+   grid_to_points(F1,GH,GV,Points),
+   pt(Points),
    make_indiv_object(ID,GH,GV,Points,[F1,loc_xy(H,V)],F2)),
  findall(F2,Prog,Matches),
  align_founds(Matches,Founds).

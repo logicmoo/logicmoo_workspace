@@ -7,6 +7,8 @@
 
 :- discontiguous in_shape_lib/2.
 :- discontiguous make_shape/2.
+:- dynamic in_shape_lib/2.
+:- dynamic make_shape/2.
 :- discontiguous decl_sf/1.
 
 
@@ -177,6 +179,12 @@ all_dif_color(V,[All|Vars]):- (V==All;dif(V,All))->all_dif_color(V,Vars).
 
 %get_fgc(fg).
 get_fgc(C):- enum_fg_colors(C).
+
+add_shape_lib(Type,Obj):- is_list_of_gridoids(Obj),!,maplist(add_shape_lib(Type),Obj).
+add_shape_lib(Type,Obj):- is_list(Obj),!,maplist(rev_lambda(add_shape_lib(Obj)),Type).
+add_shape_lib(Type,Obj):- asserta_new(in_shape_lib(Type,Obj)).
+
+rev_lambda(P,A):- P=..[F|Args],C =..[F,A|Args],call(C).
 
 in_shape_lib(X,D):- make_shape(X,R),dupe_shape(R,D).
 make_shape(P,I):- enum_make_shape(P), call(call,P,I).
