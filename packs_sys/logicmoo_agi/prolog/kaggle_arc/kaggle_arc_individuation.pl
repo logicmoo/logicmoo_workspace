@@ -159,7 +159,7 @@ individuals_list(GH,GV,Sofar,ID,Options,Reserved,P,Grid,Sofar,P):-!,
 must_be_nonvar(X):- assertion(nonvar_or_ci(X)),!.
 
 fsi(OUTReserved,OUTNewGrid,OUTOptions,H,V,Sofar,ID,Options,Reserved,Points,Grid,OUTSofar,OUTNextScanPoints):-
-  as_debug(8,(mass(Sofar,Mass),length(Sofar,Count),pt(t([fsi=Options,sofar=Mass/Count])))),
+  as_debug(9,(mass(Sofar,Mass),length(Sofar,Count),pt(t([fsi=Options,sofar=Mass/Count])))),
   maplist(must_be_free,[OUTReserved,OUTNewGrid,OUTOptions,OUTSofar,OUTNextScanPoints]),
   assertion(maplist(nonvar_or_ci,[Options,H,V,Sofar,ID,Options,r,Reserved,Points,Grid])),
   %trace,

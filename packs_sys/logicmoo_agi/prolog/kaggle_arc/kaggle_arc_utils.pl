@@ -21,7 +21,7 @@ add_i(Info):-
  tersify(Info,InfoT),
  nb_current(rules,Rules),
  nb_set_add(Rules,InfoT),
- pt(cyan,+InfoT).
+ nop(pt(cyan,+InfoT)).
 
 add_i(F,Info):- 
  append_term(i(F),Info,FInfo),
@@ -29,7 +29,8 @@ add_i(F,Info):-
 
 add_rule(Info):- add_i(rule,Info).
 add_cond(Info):- add_i(cond,Info).
-do_action(Info):- guess_pretty(Info),add_i(action,Info),call(Info).
+%do_action(Info):- guess_pretty(Info),add_i(action,Info),call(Info).
+do_action(Info):- !, call(Info).
 add_action(Info):- add_i(action,Info).
 add_note(Info):- add_i(note,Info).
 add_indiv(W,Info):- add_i(indiv(W),Info).
