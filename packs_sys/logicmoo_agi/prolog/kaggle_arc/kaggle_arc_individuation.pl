@@ -66,8 +66,8 @@ ensure_shared_indivs(GN,Grid,SharedIndvs):-
 :- decl_pt(detect_indvs(group,group,-)).
 detect_indvs(In,Out,Grid):- individuate(In,Grid,Out).
 
-make_indivs_options(NList,O):- listify(NList,O),!.
 make_indivs_options([],[options(defaults)]):-!.
+%make_indivs_options(NList,O):- listify(NList,O),!.
 make_indivs_options(NList,O):- listify(NList,List),maplist(make_indivs_option_e,List,O).
 
 make_indivs_option_e(G,G):- var(G),!.
@@ -77,7 +77,7 @@ make_indivs_option_e(G,Out):- is_grid(G),!,make_indivs_options(grid(G),Out).
 make_indivs_option_e(O,O):- is_object(O),!.
 make_indivs_option_e(E,options(L)):- listify(E,L).
 
-individuate(Reserved,Points,IndvS):-  is_points_list(Points),into_grid(Points,Grid),!, individuate(Reserved,Grid,IndvS).
+individuate(Reserved,Points,IndvS):-  is_points_list(Points),points_to_grid(Points,Grid),!, individuate(Reserved,Grid,IndvS).
 individuate(ROptions,Grid,IndvS):-
  % dumpST,
  %pt(individuate(ROptions,Grid,IndvS)),
@@ -145,11 +145,12 @@ individuals_list(GH,GV,Sofar,ID,Options,_Reserved,Points,_Grid,IndvListOut,[]):-
   assertion(is_list([points|Points])),
   assertion(maplist(is_cpoint,Points)),
   as_debug(8,print_Igrid(GH,GV,'leftover_points'+ID,Points,[])),
-  maplist(make_point_object(ID,GH,GV),Points,IndvList),
+  % maplist(make_point_object(ID,GH,GV),Points,IndvList),
+  IndvList = [],
   % individuate(just(by_color([(black),(blue),(red),(green),(yellow),(silver),(purple),(orange),(cyan),(brown)])),Points,IndvList2),
   IndvList2 = [],
-  %make_indiv_object(ID,GH,GV,Points,[object_shape(combined),object_shape(leftovers)],LeftOverObj), 
-  LeftOverObj = [],
+  make_indiv_object(ID,GH,GV,Points,[object_shape(combined),object_shape(leftovers)],LeftOverObj), 
+  % LeftOverObj = [],
   flatten([Sofar,IndvList,IndvList2,LeftOverObj],IndvListOut),!.
 
 individuals_list(GH,GV,Sofar,ID,Options,Reserved,P,Grid,Sofar,P):-!,
@@ -415,6 +416,8 @@ cycle_s(Reserved,_GH,_GV,Sofar,_ID,_Options,Reserved,Points,_Grid,Sofar,Points).
 
 default_i_options([
   shape_lib(noise),
+  shape_lib(pair),
+  
   use_reserved,
   fourway,
   solid(squares),
