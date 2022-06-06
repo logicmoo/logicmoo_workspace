@@ -3764,15 +3764,18 @@ sandbox:safe_primitive(utility_translation:expand_all_ns(_,_,_,_)).
 sandbox:safe_primitive(utility_translation:expand_all_ns(_,_,_,_,_)).
 %sandbox:safe_primitive(utility_translation:query_expand(_)).
 
-user:term_expansion(kb_prefix(A,B),[]):-
+% In case so it doesn't alter the prolog_load_context(module,M) on some old and future versions
+:- module_transparent(trill_term_expansion/2).
+% DOUGLAS MILES: Easier to turn on/of with trill_term_expansion
+trill_term_expansion(kb_prefix(A,B),[]):-
   get_module(M),
   assert(M:addKBName),
   trill:add_kb_prefix(M:A,B).
 
-user:term_expansion(owl_rdf(String),[]):-
+trill_term_expansion(owl_rdf(String),[]):-
   parse_rdf_from_owl_rdf_pred(String).
 
-user:term_expansion(end_of_file, end_of_file) :-
+trill_term_expansion(end_of_file, end_of_file) :-
   rdf_reset_db,
   retractall(M:blanknode(_,_,_)),
   retractall(M:aNN(_,_,_)),
@@ -3798,12 +3801,13 @@ user:term_expansion(end_of_file, end_of_file) :-
   %KBLS is KBLM / 1000,
   %format("Knowledge base loaded in ~f seconds.~n",[KBLS]).
 
-user:term_expansion(TRILLAxiom,[]):-
+trill_term_expansion(TRILLAxiom,[]):-
   get_module(M),
   is_axiom(TRILLAxiom),
   create_and_assert_axioms(M,TRILLAxiom).
 
-
+:- create_prolog_flag(trill_term_expansion,true,[keep(true)]).
+user:term_expansion(I,O):- \+ current_prolog_flag(trill_term_expansion,false), trill_term_expansion(I,O).
 /*
 class/1,datatype/1,objectProperty/1,dataProperty/1,annotationProperty/1,namedIndividual/1,anonymousIndividual/1,
 subClassOf/2,equivalentClasses/1,disjointClasses/1,disjointUnion/2,subPropertyOf/2,equivalentProperties/1,

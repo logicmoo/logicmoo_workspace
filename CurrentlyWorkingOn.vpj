@@ -3043,6 +3043,10 @@
 						<F N="packs_sys/logicmoo_agi/prolog/episodic_memory/input.log"/>
 						<F N="packs_sys/logicmoo_agi/prolog/episodic_memory/README.md"/>
 					</Folder>
+					<Folder Name="kaggle_arc">
+						<F N="packs_sys/logicmoo_agi/prolog/kaggle_arc/arc_module.pl"/>
+					</Folder>
+					<F N="packs_sys/logicmoo_agi/prolog/logicmoo_arc.pl"/>
 				</Folder>
 			</Folder>
 			<Folder Name="logicmoo_nlu">

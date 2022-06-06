@@ -32,11 +32,10 @@ individualizers_from_pair_intruder(PairName,In,Out,H,V,H,V,ShapesI,ShapesO):-
   %one_is_zero(IMass,OMass),
   ((IMass==0, OMass>0) -> USE = OmI;
    ((OMass==0, IMass>0) -> USE = ImO)),
-  individuate([options(defaults)],USE,Intruder),
+  individuate([options(defaults)],USE,Intruders),
   ShapesI=ShapesO,
-  ShapesI=Intruder,
-  do_action(add_shape_lib(pair,Intruder)))),
-  fail.
+  ShapesI=[],
+  do_action(add_shape_lib(pair,Intruders)))).
 
 % intruder map
 individualizers_from_pair_intruder(_PairName,In,Out,IH,IV,OH,OV,ShapesI,ShapesO):-
@@ -56,7 +55,7 @@ individualizers_from_pair_intruder(_PairName,In,Out,IH,IV,OH,OV,ShapesI,ShapesO)
 %intruder is the output image that was found in the input image
 find_intruder(In,Out,Intruder):-
    ogs(_,_,Out,In),
-   individuate([options([full])],In,Intruder),
+   individuate([],[options([full])],In,Intruder),
    do_action(add_shape_lib(sol,Intruder)),!.
 
 

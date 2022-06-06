@@ -194,9 +194,9 @@ object_indv_id(I,ID,Iv):- throw(missing(object_indv_id(I,ID,Iv))).
 
 mass(I,X):- var_check(I,mass(I,X)).
 mass(I,X):- indv_props(I,L),member(mass(X),L),!.
+mass(Points,Count):- is_list(Points),length(Points,Count),!.
 mass(C-_,1):- nonvar_or_ci(C),!.
 mass(I,Count):- globalpoints(I,Points), length(Points,Count),!.
-mass(Points,Count):- is_list(Points),length(Points,Count),!.
 
 remove_color(_-P,P).
 remove_color(LPoints,ColorlessPoints):- maplist(remove_color,LPoints,ColorlessPoints).
@@ -301,7 +301,7 @@ grid_to_points(Grid,HH,HV,Points):-  throw(all_points_between),
 
 globalpoints(I,X):- var_check(I,globalpoints(I,X)).
 globalpoints(G,[G]):- is_point(G),!.
-globalpoints(options(X),Points):- trace_or_throw(globalpoints(options(X))).
+globalpoints(options(X),_Points):- trace_or_throw(globalpoints(options(X))).
 globalpoints(Grid,Points):- is_grid(Grid),!, grid_size(Grid,HH,VV), grid_to_points(Grid,HH,VV,Points).
 globalpoints(Grid,Points):- is_list(Grid),!,maplist(globalpoints,Grid,MPoints),append_sets(MPoints,Points).
 globalpoints(I,X):- globalpoints0(I,X),!.
@@ -312,7 +312,7 @@ globalpoints(I,X):- localpoints0(I,X),!.
 
 localpoints(I,X):- var_check(I,localpoints(I,X)).
 localpoints(G,[G]):- is_point(G),!.
-localpoints(options(X),Points):- trace_or_throw(localpoints(options(X))).
+localpoints(options(X),_Points):- trace_or_throw(localpoints(options(X))).
 localpoints(Grid,Points):- is_grid(Grid),!, grid_size(Grid,HH,VV), grid_to_points(Grid,HH,VV,Points).
 localpoints(Grid,Points):- is_list(Grid),!,maplist(localpoints,Grid,MPoints),append_sets(MPoints,Points).
 localpoints(I,X):- localpoints0(I,X),!.

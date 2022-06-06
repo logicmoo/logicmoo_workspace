@@ -78,23 +78,27 @@ debug_indiv:- test_config(nodebug_indiv),!,fail.
 debug_indiv:- test_config(debug_indiv),!.
 debug_indiv:- test_config(indiv(_)),!.
 
+will_show_grid(Obj,true):- mass(Obj,Mass)-> (Mass>4, vis_hv(Obj,H,V) -> (H>1,V>1)),!.
+will_show_grid(_,false).
+
 :- discontiguous debug_indiv/1. 
 
 debug_indiv(Var):- plain_var(Var),pt(debug_indiv(Var)),!.
 
-debug_indiv(Grid):- is_grid(Grid),!,grid_size(Grid,H,V),
+debug_as_grid(Grid):-
+  grid_size(Grid,H,V),
   dash_char(H),
   wqnl(debug_indiv_grid(H,V)),
   print_grid(Grid),
   dash_char(H),!.
 
-debug_indiv(Grid):- maplist(is_cpoint,Grid),!,grid_size(Grid,H,V),
-  dash_char(H),
-  wqnl(debug_indiv_grid(H,V)),
-  print_grid(Grid),
-  dash_char(H),!.
 
-debug_indiv(List):- is_list(List),!,length(List,Len),   
+debug_indiv(Grid):- is_grid(Grid),!,debug_as_grid(Grid).
+debug_indiv(Grid):- maplist(is_cpoint,Grid),!,debug_as_grid(Grid).
+debug_indiv(Grid):- maplist(is_point,Grid),!,debug_as_grid(Grid).
+
+
+debug_indiv(List):- is_list(List),length(List,Len),!,
   dash_char,
   wqnl(objs = Len),
   max_min(Len,40,_,Min),
@@ -110,19 +114,23 @@ debug_indiv(A):- is_point_obj(A,Color,Point),
   hv_point(H,V,Point), i_glyph(Id,Sym),
   wqnl([' % Point: ', color_print(Color,Sym), dot, color(Color), fav1(Tst), nth(Id), loc_xy(H,V)]),!. 
 */
+
 debug_indiv(obj(A)):- Obj = obj(A), is_list(A),!,
-   ignore((o2g(Obj,GGG), nonvar(GGG),asserta(g2o(GGG,Obj)))),
+  ignore((o2g(Obj,GGG), nonvar(GGG),asserta(g2o(GGG,Obj)))),
 %debug_indiv(Obj):- Obj = obj(A), is_list(A),  
-  ignore(colors(Obj,[cc(FC,_)|_])),
+  once(colors(Obj,[cc(FC,_)|_]);FC=9),
   sort_obj_props(A,AS),
- % pt(AS),
+  will_show_grid(Obj,TF),
   remove_too_verbose(AS,TV0), include('\\=='(''),TV0,TV),
   flatten(TV,F),predsort(longer_strings,F,[Caps|_]),
-  toPropercase(Caps,PC),!,
+  toPropercase(Caps,PC),
   %i_glyph(Id,Sym), wqnl([writef("%% %Nr%w \t",[PC]), color_print(FC,Sym) | AAAA ]),!. 
   object_glyph(Obj,Glyph),  
+  ignore((TF==true,dash_char)),
   wqnl([format("%  ~w:\t",[PC]), color_print(FC,Glyph) | TV ]),!,
-  ignore(( fail, mass(Obj,Mass),!,Mass>4, vis_hv(Obj,H,V),!,H>1,V>1, show_st_map(Obj))),!.
+  ignore(( TF==true, mass(Obj,Mass),!,Mass>4, vis_hv(Obj,H,V),!,H>1,V>1, localpoints(Obj,Points), print_grid(H,V,Points))),
+  ignore(( fail, mass(Obj,Mass),!,Mass>4, vis_hv(Obj,H,V),!,H>1,V>1, show_st_map(Obj))),
+  ignore((TF==true,dash_char)),!.
 
 show_st_map(Obj):-
   ignore(( 

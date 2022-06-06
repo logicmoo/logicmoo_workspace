@@ -53,7 +53,7 @@ append_terms(P, L, O):- L==[], P = O, !.
 append_terms(P, L, O):- P==[], L = O, !.
 append_terms([F|P], L, O):- atom(F), is_list(P), !, PP=..[F|P], append_terms(PP, L, O).
 append_terms(P, L, O):- is_list(P), PP=..[lst|P], append_terms(PP, L, O).
-append_terms(P, L, O):- is_list(L)->append_termlist(P, L, O)
+append_terms(P, L, O):- is_list(L)->append_termlist(P, L, O).
 append_term(P, L, O).
 
 

@@ -239,6 +239,7 @@ symmetric_lr0(I,C,G,GL):- maplist(symetric_row(I,C),G,GL),!.
 
 not_no_symmetry_yet(P):- \+ no_symmetry_yet(P).
 
+is_symetric_h(G):- symmetric_h(_,_,G),!.
 %symmetric_h(I,C,G):- include(not_no_symmetry_yet,G,G0),sort_row_by_num_colors(G0,G1),symmetric_lr(I,C,G1,_).
 %symmetric_h(I,C,G):- symmetric_lr(I,C,G,_),!.
 

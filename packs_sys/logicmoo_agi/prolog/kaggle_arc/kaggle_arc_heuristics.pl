@@ -66,12 +66,11 @@ individualizer_from_grid(PairName,InOrOut,In,Out,ShapesO):-
   individualizer_from_grid(PairName,InOrOut,In,IH,IV,Out,OH,OV,ShapesO).
 
 individualizer_from_grid(_PairName,_InOrOut,_In,IH,IV,_Out,_OH,_OV,ShapesO):-
-   (IH<6;IV<6),!,make_indivs_options([retain_grid(full),dots],ShapesO).
-/*
+   (IH<6;IV<6),!,make_indivs_options([retain_grid(full),dots,done],ShapesO).
 
 individualizer_from_grid(_PairName,_InOrOut,_In,IH,IV,_Out,_OH,_OV,ShapesO):-
   (IH>15,IV>15),!,make_indivs_options([-(=(dots)),fourway,defaults],ShapesO).
-  */
+  
 individualizer_from_grid(_PairName,_InOrOut,_In,_IH,_IV,_Out,_OH,_OV,[]):-!.
   
 
@@ -95,8 +94,8 @@ grid_color_individualizer(PairName,In,Out,IH,IV,OH,OV,
 
 
 grid_color_individualizer0(PairName,In,Out,IH,IV,OH,OV,
-    ICs,IPCs,CommonCs,OPCs,OCs,
-    ICsL,IPCsL,CommonCsL,OPCsL,OCsL,
+    _ICs,IPCs,CommonCs,OPCs,_OCs,
+    _ICsL,IPCsL,CommonCsL,OPCsL,_OCsL,
     ShapesI,ShapesO):- fail,
   CommonCsL>0,
   IPCsL>0, OPCsL==0,
@@ -116,9 +115,9 @@ grid_color_individualizer0(PairName,In,Out,IH,IV,OH,OV,
 
 
 grid_color_individualizer0(PairName,In,Out,IH,IV,OH,OV,
-    ICs,IPCs,CommonCs,OPCs,OCs,
-    ICsL,IPCsL,CommonCsL,OPCsL,OCsL,
-    ShapesI,ShapesO):- fail,
+     _ICs,IPCs,CommonCs,OPCs,_OCs,
+     _ICsL,IPCsL,CommonCsL,OPCsL,_OCsL,
+    ShapesI,ShapesO):-% fail,
   CommonCsL>0,
   once((
   one_is_zero(IPCsL,OPCsL),

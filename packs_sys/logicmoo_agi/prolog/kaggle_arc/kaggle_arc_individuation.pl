@@ -433,8 +433,8 @@ cycle_s(Reserved,_GH,_GV,Sofar,_ID,_Options,Reserved,Points,_Grid,Sofar,Points).
 
 
 default_i_options([
-  shape_lib(noise),
   shape_lib(pair),  
+  shape_lib(noise),
   use_reserved,
   fourway,
   solid(squares),

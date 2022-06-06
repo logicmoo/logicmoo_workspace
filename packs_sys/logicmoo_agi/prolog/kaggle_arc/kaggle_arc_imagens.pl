@@ -152,9 +152,21 @@ grav_rot0(Shape,ShapeO):-
   findall(GRot,all_rotations(Shape,GRot),List),
   predsort(sort_on(grav_mass),List,[ShapeO|_]).
 
+grav_mass(Grid,Mass):- grid_size(Grid,H,V), grav_mass(Grid,H,V,Mass).
+
+% make things bottem heavy
+grav_mass(Grid,H,V,Mass):- H<V, rot90(Grid,Grid90),grav_mass(Grid90,V,H,Mass).
+grav_mass(Grid,_,_,Grid180):- is_symetric_h(Grid),!,is_top_heavy(Grid),rot180(Grid,Grid180).
+/*
 grav_mass(Grid,Mass):- grid_size(Grid,H,V), HV is round(H/V), Vh is floor(V/2),
   findall(C,(between(Vh,V,Vi),between(0,H,Hi), Hi*HV > Vi, get_color_at(Hi,Vi,Grid,C),is_fg_color(C)),CList),
   length(CList,Mass).
+*/
+is_top_heavy(Grid):- split_50_v(Grid,Top,Bottem),mass(Top,TopM),mass(Bottem,BottemM),BottemM<TopM.
+
+split_50_v(Grid,Top,Bottem):- length(Grid,N),H is floor(N/2), length(Top,H),length(Bottem,H),
+    append(Top,Rest,Grid),append(_Mid,Bottem,Rest).
+
 
 
 
@@ -185,12 +197,13 @@ rev_lambda(P,A):- P=..[F|Args],C =..[F,A|Args],call(C).
 add_shape_lib(Type,Obj):- is_list(Type),!,maplist(rev_lambda(add_shape_lib(Obj)),Type).
 add_shape_lib(Type,Obj):-  is_list(Obj), \+ is_grid(Obj), \+ is_points_list(Obj),!,maplist(add_shape_lib(Type),Obj).
 add_shape_lib(Type,Obj):- asserta_new(in_shape_lib(Type,Obj)),
-  mass(Obj,Mass),Mass>4,
+  mass(Obj,Mass),Mass>5,
   print_grid(Obj),
   pt(Type).
 
 
-in_shape_lib(X,D):- make_shape(X,R),dupe_shape(R,D).
+in_shape_lib(X,D):- (make_shape(X,R), deterministic(TF), dupe_shape(R,D)), (TF==true -> !; true).
+
 make_shape(P,I):- enum_make_shape(P), call(call,P,I).
 
 pad_sides(Fill,Row):- append([_|Fill],[_],Row).

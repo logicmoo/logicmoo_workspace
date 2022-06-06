@@ -12,8 +12,11 @@
 :- set_stream(current_output, tty(true)).
 :- stream_property(S,file_no(2)), set_stream(S,tty(true)).
 :- stream_property(S,file_no(1)), set_stream(S,tty(true)).
+:- if(\+ current_module(logicmoo_arc)).
+:- set_prolog_flag(access_level,system).
 :- dynamic(prolog:'$exported_op'/3).
 :- assert((system:'$exported_op'(_,_,_):- fail)).
+:- endif.
 %:- multifile('$exported_op'/3).
 :- system:ensure_loaded(library(logicmoo_common)).
 %:- system:ensure_loaded(library(pfc_lib)).
@@ -65,8 +68,8 @@ decl_pt(G):- ground(G), !, assertz(decl_pt(G)).
 run_nb(G):- call(G).
 %run_nb(G):- setup_call_cleanup(G,true,notrace).
 
-clsmake.
-clsmake2:- cls,mmake.
+clsmake:- cls.
+clsmake2:- mmake.
 
 arc:- forall(arc1,true).
 arc1:- clsmake, test_names_by_hard(X), arc1(X).
@@ -75,7 +78,7 @@ arc3:- clsmake, arc1(v('009d5c81')).
 arc4:- arc1(t('25d487eb')).
 arc5:- clsmake, arc1(v('1d398264')).
 
-fav:- forall(fav1,true).
+fav:- clsmake,forall(fav1,true).
 fav1:- clsmake, test_names_by_fav(X), arc1(X).
 fav2:- clsmake, test_names_by_fav_rev(X), arc1(X).
 fav(X):- nonvar_or_ci(X),!, clsmake, arc1(X).
@@ -83,7 +86,7 @@ fav(X):- clause(fav(X,_),true).
 
 arc(TestID):- clsmake2, time(forall(arc1(TestID),true)).
 
-%arc1(TestID):- !, arc1e(TestID).
+arc1(TestID):- clsmake2, !, arc1e(TestID).
 arc1(TestID):- clsmake2, time(forall(arc1e(TestID),true)).
 
 arc1e(TName):-    
@@ -137,8 +140,12 @@ show_arc_pair_progress(TestID,ExampleNum,In,Out):-
 	individualizer_from_grid(PairName,in,In,IH,IV,Out,OH,OV,ShapesI_S),
 	individualizer_from_grid(PairName,out,Out,OH,OV,Out,IH,IV,ShapesO_S),
 	show_idea("Individuals",PairName,In,Out,IH,IV,OH,OV,ShapesI_S,ShapesO_S),*/
+  nb_linkval(pair_rules, [rules]),
+  clear_shape_lib(pair),
 	forall(examine_installed_individualizers_from_pairs(PairName,In,Out,IH,IV,OH,OV),true),
-	!.
+  individualizer_heuristics(PairName,In,Out,IH,IV,OH,OV,ShapesI,ShapesO),
+  show_shape_lib(pair),
+  show_idea(PairName,In,Out,IH,IV,OH,OV,ShapesI,ShapesO),!.
 
 gr2o(Grid,Obj):- localpoints(Grid,NoisePoints), make_indiv_object(NoisePoints,[object_shape(noise)],Obj),!.
 %gr2o(Grid,Obj):- Grid=Obj.
@@ -152,9 +159,7 @@ examine_installed_individualizers_from_pairs(PairName,In,Out,IH,IV,OH,OV):-
   individualizer_heuristics(PairName,In,Out,IH,IV,OH,OV,ShapesI,ShapesO),
   %nb_current(rules, Info),
   %format('~N+Done with Ideas~N'),
-  show_idea(PairName,In,Out,IH,IV,OH,OV,ShapesI,ShapesO),
-  nb_linkval(pair_rules, [rules]),
-  nb_linkval(test_rules, [rules]).
+  nop(show_idea(PairName,In,Out,IH,IV,OH,OV,ShapesI,ShapesO)).
   
 show_idea(PairName,In,Out,IH,IV,OH,OV,Shapes_I,Shapes_O):- 
   show_pair_indivs(IH,IV,OH,OV,heuristics,PairName,Shapes_I,Shapes_O),
@@ -167,7 +172,7 @@ show_idea(PairName,In,Out,IH,IV,OH,OV,Shapes_I,Shapes_O):-
   nop((
        format('~N-unshared~N'),!,
        %pt(yellow,in=UnsharedIn),
-       pred_intersection(compare_objs1([same]),UnsharedIn,UnsharedOut,CommonCsIn,CommonCsOut,IPCs,OPCs),
+       pred_intersection(compare_objs1([same]),UnsharedIn,UnsharedOut,_CommonCsIn,_CommonCsOut,_IPCs,_OPCs),
        format('~N-pred_intersection~N'),
     individuate(UnsharedOut,Out,SharedInR),
     individuate(UnsharedIn,In,SharedOutR),

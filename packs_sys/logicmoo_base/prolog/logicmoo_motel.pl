@@ -6,7 +6,10 @@
 % Dec 13, 2035
 %
 */
-%:- module(logicmoo_motel,[]).
+:- module(logicmoo_motel,[]).
+
+end_of_file.
+
 
 :- module(logicmoo_motel,[kif_to_motelog/2]).            
 
