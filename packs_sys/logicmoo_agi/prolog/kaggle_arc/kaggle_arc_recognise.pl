@@ -111,7 +111,7 @@ ogs_0(CheckType,H,V,FG,SG):-
 
 ogs_1(Hi,Vi,Find,Search):-
   nonvar(Hi),nonvar(Vi), 
-  H is Hi - 1, V is Vi - 1,
+  H is Hi - 1, V is Vi - 1,  
   length(LPad,H),
   length(VPad,V),!,
   append(VPad,[LPadAndRow|Next],Search),
@@ -121,17 +121,24 @@ ogs_1(Hi,Vi,Find,Search):-
   ogs_pt2(H,FGrid,Next),!.
 
 ogs_1(H,V,FindI,Search):-
-  ogs_2(Hi,Vi,FindI,Search),
+  grid_size(Search,SH,SV),
+  grid_size(FindI,FH,FV),
+  MH is SH - FH,MV is SV - FV,
+  ogs_2(Hi,Vi,MH,MV,FindI,Search),
   H is Hi + 1,
   V is Vi + 1.
 
-ogs_2(H,V,[R1|FGrid],Search):-
+ogs_2(H,V,MH,MV,[R1|FGrid],Search):-  
   append(R1,_,Rho),!,
   append(VPad,[LPadAndRow|Next],Search),
-  append(LPad,Rho,LPadAndRow),
+  length(VPad,V),
+  %between(0,MV,V),
+  (V> MV -> (!, fail) ; true),
+  between(0,MH,H),
   once((length(LPad,H),
-        ogs_pt2(H,FGrid,Next),
-        length(VPad,V))).
+  append(LPad,Rho,LPadAndRow),
+  once((ogs_pt2(H,FGrid,Next),
+        length(VPad,V))))).
 
 ogs_pt2(_,[],_):-!.
 ogs_pt2(H,[Row|FindRows],[S|Search]):-

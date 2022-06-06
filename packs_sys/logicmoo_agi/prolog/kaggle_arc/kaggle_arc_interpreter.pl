@@ -183,9 +183,9 @@ one_change(blank1Color(C1),Grid1,Grid2):-
   first_color(Grid1,C1),copy_cells(==(C1),free_cell,Grid1,Grid2).
 one_change(same_size,Grid1,Grid2):- plain_var(Grid2),grid_size(Grid1,H,V),grid_size(Grid2,H,V),!.
 
-subst_w_attv(I,F,R,O):- notrace((notrace,subst(I,F,R,O))),!.
+subst_w_attv(I,F,R,O):- quietly((subst(I,F,R,O))),!.
 %subst_w_attv(I,F,R,O):- map_pred(subst_and_attv(F,R),I,O).
-subst_and_attv(F,R,I,O):- F == R, O = I, !.
+%subst_and_attv(F,R,I,O):- F == R, O = I, !.
 
 /*
 nth_fact(P, I):- clause(P, true, Ref), nth_clause(P, I, Ref).

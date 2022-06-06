@@ -19,6 +19,7 @@ tersify2(I,I).
 ptt(P):- tersify(P,Q),!,pt(Q).
 
 pt(P):- var(P),!,pt(var(P)).
+pt(P):- atomic(P),atom_contains(P,'~'),!,format(P).
 pt(P):- format('~N'), notrace(print_tree_nl(P)),!.
 pt(Color,P):- notrace((format('~N'), wots(S,pt(P)),!,color_print(Color,S))).
 
@@ -49,9 +50,11 @@ dash_char(S):- format('~N'),dash_char(60,S),format('~N').
 dash_char(H,_):- H < 1,!.
 dash_char(H,C):-forall(between(0,H,_),write(C)).
 dash_border_no_nl(Width):- WidthM1 is Width-1, write(' _'),dash_char(WidthM1,'__').
-dash_uborder_no_nl(Width):- WidthM1 is Width-1, write(' ¯'),dash_char(WidthM1,'¯¯').
+%dash_uborder_no_nl(Width):- WidthM1 is Width-1, write(' ¯'),dash_char(WidthM1,'¯¯').
+dash_uborder_no_nl(Width):- WidthM1 is Width-1, write(' _'),dash_char(WidthM1,'__').
 dash_border(Width):- !, dash_border_no_nl(Width),nl,!.
-dash_uborder(Width):- format('~N'), WidthM1 is Width-1, write(' ¯'),dash_char(WidthM1,'¯¯'),nl.
+%dash_uborder(Width):- format('~N'), WidthM1 is Width-1, write(' ¯'),dash_char(WidthM1,'¯¯'),nl.
+dash_uborder(Width):- format('~N'), WidthM1 is Width-1, write(' _'),dash_char(WidthM1,'__'),nl.
 
 functor_color(pass,green).
 functor_color(fail,red).
@@ -123,6 +126,14 @@ as_str(S,A):- \+ string(S), sformat(A,'~p',[S]),!.
 as_str(S,S).
 
 print_length(S,L):- as_str(S,A),atom_codes(A,C), include(uses_space,C,SS),length(SS,L).
+
+
+show_pair_indivs(IH,IV,OH,OV,Info,PairName,ImO,OmI):-
+  %nb_current(rules,Rules),
+  %add_rule( Info),
+  %add_grule( PairName*in(Info),ImO),
+  %add_grule( PairName*out(Info),OmI),
+  show_pair(IH,IV,OH,OV,Info,PairName,ImO,OmI).
 
 append_term_safe(Type,PairName,NameIn):- append_term(Type,PairName,NameIn),!.
 append_term_safe(Type,PairName,append_term(Type,PairName)).
@@ -314,6 +325,7 @@ var_color_print(C,W):- integer(W),i_glyph(W,WO),!,var_color_print(C,WO).
 var_color_print(_,W):- char_type(W,space), ansi_format([],'~w',[W]),!.
 var_color_print(_,W):- i_glyph(W,G),ansi_format([],'~w',[G]),!.
 
+%color_print(_,W):- write(W),!.
 color_print(C,W):- (has_color_c(C,OC);has_color_c(W,OC)),!,ansi_format([fg(OC)],'~w',['_']),!.
 color_print(C,W):- is_bg_sym_or_var(C),W=='_',!,ansi_format([],'~w',[' ']),!.
 color_print(C,W):- is_bg_sym_or_var(C),W=='_',color_print(C,'+').
@@ -357,6 +369,7 @@ color_code(C,W):- color_name(C,W).
 
 resrv_dot(Code):-  code_type(Code,white);code_type(Code,punct);code_type(Code,quote);var_dot(Code);bg_dot(Code);fg_dot(Code);
  member(Code,`?.¨«¬­°```).
+
 
 var_dot(63).
 /* code=63 ?  code=183 · code=176 ° code=186 º 170 ª */

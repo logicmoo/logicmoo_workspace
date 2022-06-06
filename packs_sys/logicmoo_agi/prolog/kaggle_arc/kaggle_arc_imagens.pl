@@ -104,13 +104,13 @@ ___________
      B     
 ___________").
 
-the_hammer1(BlueHammer):- the_hammer(blue,BlueHammer).
-the_hammer1(RedHammer):-  the_hammer(red,RedHammer).
+the_hammer1(BlueComplex):- the_hammer(blue,BlueComplex).
+the_hammer1(RedComplex):-  the_hammer(red,RedComplex).
 
-the_hammer(blue, LibObj):- hammer2(Text), text_to_grid(Text,H,V,Points,_Hammer), 
+the_hammer(blue, LibObj):- hammer2(Text), text_to_grid(Text,H,V,Points,_Complex), 
   make_indiv_object('ID',H,V,Points,[object_shape(hammer)],LibObj).
-the_hammer(Color,ColorHammer):- 
-  ColorHammer = obj([mass(6), shape([point_01_01, point_01_02, point_01_03, point_02_01, point_02_02, point_03_02]), 
+the_hammer(Color,ColorComplex):- 
+  ColorComplex = obj([mass(6), shape([point_01_01, point_01_02, point_01_03, point_02_01, point_02_02, point_03_02]), 
   colors([cc(Color, 6.0)]), localpoints([Color-point_01_01, Color-point_01_02, Color-point_01_03, Color-point_02_01, 
   Color-point_02_02, Color-point_03_02]), vis_hv(3, 3), rotation(same), loc_xy(2, 5), 
   changes([]), object_shape(rectangluar), object_shape(hammer), object_indv_id(t('1b60fb0c')*(trn+666)*out, 666), 
@@ -180,11 +180,15 @@ all_dif_color(V,[All|Vars]):- (V==All;dif(V,All))->all_dif_color(V,Vars).
 %get_fgc(fg).
 get_fgc(C):- enum_fg_colors(C).
 
-add_shape_lib(Type,Obj):- is_list_of_gridoids(Obj),!,maplist(add_shape_lib(Type),Obj).
-add_shape_lib(Type,Obj):- is_list(Obj),!,maplist(rev_lambda(add_shape_lib(Obj)),Type).
-add_shape_lib(Type,Obj):- asserta_new(in_shape_lib(Type,Obj)).
-
 rev_lambda(P,A):- P=..[F|Args],C =..[F,A|Args],call(C).
+
+add_shape_lib(Type,Obj):- is_list(Type),!,maplist(rev_lambda(add_shape_lib(Obj)),Type).
+add_shape_lib(Type,Obj):-  is_list(Obj), \+ is_grid(Obj), \+ is_points_list(Obj),!,maplist(add_shape_lib(Type),Obj).
+add_shape_lib(Type,Obj):- asserta_new(in_shape_lib(Type,Obj)),
+  mass(Obj,Mass),Mass>4,
+  print_grid(Obj),
+  pt(Type).
+
 
 in_shape_lib(X,D):- make_shape(X,R),dupe_shape(R,D).
 make_shape(P,I):- enum_make_shape(P), call(call,P,I).
@@ -237,16 +241,77 @@ hollow_square(C,BG,HW,D):-
 dupe_shape(E,F):- \+ is_list(E),!,duplicate_term(E,F).
 dupe_shape(L,E):- maplist(dupe_shape,L,E).
   
-  
-get_shape_lib(Hammer,ReservedS):- findall(Obj,in_shape_lib(Hammer,Obj),Reserved),sortshapes(Reserved,ReservedS).
 
-%in_shape_lib(Hammer):- the_hammer1(RedHammer),all_rotations(RedHammer,Hammer).
+show_shape_lib_expanded(Complex):- 
+  get_shape_lib(Complex,GallerySOS),
+  debug_indiv(GallerySOS).
+
+show_shape_lib:- mmake, findall(Complex,(clause(in_shape_lib(Complex,_Obj),_),nonvar(Complex)),Gallery),
+  list_to_set(Gallery,GalleryS),maplist(show_shape_lib,GalleryS).
+clear_shape_lib:- findall(Complex,in_shape_lib(Complex,_Obj),Gallery),
+  list_to_set(Gallery,GalleryS),maplist(clear_shape_lib,GalleryS).
+
+show_shape_lib(Complex):- 
+  pt(show_shape_lib(Complex)),
+  get_shape_lib_rules(Complex,GallerySOS),
+  debug_indiv(GallerySOS).
+
+clear_shape_lib(Complex):- 
+  pt(clear_shape_lib(Complex)),
+  forall(clause(in_shape_lib(Complex,_),true,Ref),erase(Ref)),
+  show_shape_lib(Complex).
+
+ 
+get_shape_lib_direct(Complex,GalleryS):- 
+  findall(Obj,in_shape_lib(Complex,Obj),Gallery),  
+  sortshapes(Gallery,GalleryS).
+
+get_shape_lib_rules(Complex,GalleryS):- 
+  findall(Rule,
+   (clause(in_shape_lib(Complex,Obj),Body),Rule=(Obj:- Body)),Gallery),  
+  maplist(label_rules(Complex),Gallery),
+  sortshapes(Gallery,GalleryS).
+
+label_rules(_Complex,(Obj:- Body)):- 
+   debug_var('Shape',Obj),
+   Rule=(Obj:- Body),
+   guess_pretty(Rule).
+
+get_shape_lib(Complex,GallerySOS):- 
+  get_shape_lib_direct(Complex,GalleryS),
+  apply_shapelib_xforms(Complex,GalleryS,GallerySO),
+  sortshapes(GallerySO,GallerySOS).
+
+expand_shape_directives(Shapes,Flow,NewGroup):- \+ is_list(Shapes),!,expand_shape_directives([Shapes],Flow,NewGroup).
+% default expansion
+expand_shape_directives(Shapes,[],SmallLib):- must_be_free(SmallLib),
+  must_det_l((print_collapsed(
+  show_workflow(Shapes,
+   [ =,"Vanila indivs",
+    % searchable,"Searchable indivs", 
+       all_rotations,  "All rotations of indivs", 
+       add(change_color_blue), "Add blue indivs", 
+       % add(change_color), % "Add new colors indivs",		 
+    %decolorize % decolorized points are not yet printable 
+    =],SmallLib)
+    ))).
+expand_shape_directives(A,Flow,B):- show_workflow(A,Flow,B),!.
+
+:- dynamic(is_shapelib_opt/2).
+
+get_shapelib_opts(Name,Opts):- findall(Opt,is_shapelib_opt(Name,Opt),Opts).
+
+apply_shapelib_xforms(Name,GalleryS,SmallLib):- 
+  get_shapelib_opts(Name,Opts),expand_shape_directives(GalleryS,Opts,SmallLib).
+apply_shapelib_xforms(_Name,Gallery,Gallery):- !.
+
+%in_shape_lib(Complex):- the_hammer1(RedComplex),all_rotations(RedComplex,Complex).
 
 in_shape_lib(All,GRot):- All==all,!,in_shape_lib(_,GRot).
-in_shape_lib(colorless(S),Reserved):- nonvar(S),!, in_shape_lib(S,ReservedC),decolorize(ReservedC,Reserved).
-in_shape_lib(all_rots(S),Reserved):-  nonvar(S),!, in_shape_lib(S,ReservedC),all_rotations(ReservedC,Reserved).
+in_shape_lib(colorless(S),Gallery):- nonvar(S),!, in_shape_lib(S,GalleryC),decolorize(GalleryC,Gallery).
+in_shape_lib(all_rots(S),Gallery):-  nonvar(S),!, in_shape_lib(S,GalleryC),all_rotations(GalleryC,Gallery).
 in_shape_lib(l_shape,LibObj):- l_shape(LibObj).
-in_shape_lib(hammer,Hammer):- the_hammer1(Hammer).
+in_shape_lib(hammer,Complex):- the_hammer1(Complex).
 in_shape_lib(seen,O):- g2o(_,O), localpoints(O,LP),LP\==[],length(LP,L),L>4.
   
 

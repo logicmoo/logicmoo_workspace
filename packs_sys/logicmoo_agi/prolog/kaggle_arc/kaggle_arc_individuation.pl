@@ -66,33 +66,51 @@ ensure_shared_indivs(GN,Grid,SharedIndvs):-
 :- decl_pt(detect_indvs(group,group,-)).
 detect_indvs(In,Out,Grid):- individuate(In,Grid,Out).
 
-make_indivs_options([],[options(defaults)]):-!.
+%print_collapsed(G):- G. 
+print_collapsed(G):- wots(_,G). 
+
+
+%make_indivs_options([],[options(defaults)]):-!.
 %make_indivs_options(NList,O):- listify(NList,O),!.
 make_indivs_options(NList,O):- listify(NList,List),maplist(make_indivs_option_e,List,O).
 
 make_indivs_option_e(G,G):- var(G),!.
 make_indivs_option_e(options(O),options(O)):-!.
-make_indivs_option_e(O,options(O)):- is_group(O),!.
-make_indivs_option_e(G,Out):- is_grid(G),!,make_indivs_options(grid(G),Out).
-make_indivs_option_e(O,O):- is_object(O),!.
+make_indivs_option_e(detect(O),detect(O)):-!.
+make_indivs_option_e(O,(O)):- is_object(O),!.
+make_indivs_option_e(G,(G)):- is_grid(G),!.
 make_indivs_option_e(E,options(L)):- listify(E,L).
 
-individuate(Reserved,Points,IndvS):-  is_points_list(Points),points_to_grid(Points,Grid),!, individuate(Reserved,Grid,IndvS).
+my_expand_individualizer(ROptions1,ROptions1):-!.
+%my_expand_individualizer(ROptions1,ReservedOptions):- expand_individualizer(ROptions1,ReservedOptions).
+fix_indivs_options(ROptions,ReservedOptions):-
+   make_indivs_options(ROptions,ROptions1),
+   my_expand_individualizer(ROptions1,ReservedOptions),!.
+
+individuation_reserved_options(ROptions,Reserved,NewOptions):- 
+   fix_indivs_options(ROptions,ReservedOptions),
+   my_partition(is_object_or_grid,ReservedOptions,Reserved,Options0),
+   %select_default_i_options(Grid,H,V,Points,DefaultOptions),
+   default_i_options(DefaultOptions),
+   subst(Options0,defaults,DefaultOptions,Options),
+   (Options0==Options -> append(Options,DefaultOptions,NewOptions) ; (Options=NewOptions)),!,
+   ignore((ROptions \= ReservedOptions,
+      pt(blue,fix_indivs_options(in=ReservedOptions,r=Reserved,o=NewOptions)))).
+
+
 individuate(ROptions,Grid,IndvS):-
- % dumpST,
- %pt(individuate(ROptions,Grid,IndvS)),
-   make_indivs_options(ROptions,ReservedOptions),
+   individuation_reserved_options(ROptions,Reserved,NewOptions),
+   individuate(Reserved,NewOptions,Grid,IndvS).
+
+individuate(Reserved,NewOptions,Points,IndvS):-  is_points_list(Points),points_to_grid(Points,Grid),!, 
+   individuate(Reserved,NewOptions,Grid,IndvS).
+individuate(Reserved,NewOptions,Grid,IndvS):-
    notrace(grid_size(Grid,H,V)),
-   wdmsg(grid_size(H,V)),
+   wdmsg(individuate(H,V)),
    must_be_free(IndvS),
    globalpoints(Grid,Points),
-   my_partition(is_object_or_grid,ReservedOptions,Reserved,Options),
-   select_default_i_options(Grid,H,V,Points,DefaultOptions),  
-   % trace,    
-   subst(Options,defaults,DefaultOptions,NewOptions),
-   into_gridname(Grid,ID), 
-   (NewOptions==[] -> NewOptionsO=DefaultOptions ; NewOptionsO=NewOptions),!,
-   individuals_raw(H,V,ID,NewOptionsO,Reserved,Points,Grid,IndvSRaw),
+   into_gridname(Grid,ID),
+   individuals_raw(H,V,ID,NewOptions,Reserved,Points,Grid,IndvSRaw),
    %as_debug(9,ptt((individuate=IndvSRaw))),
    make_indiv_object_list(ID,H,V,IndvSRaw,IndvS1),
    combine_objects(IndvS1,IndvS).
@@ -147,7 +165,7 @@ individuals_list(GH,GV,Sofar,ID,Options,_Reserved,Points,_Grid,IndvListOut,[]):-
   as_debug(8,print_Igrid(GH,GV,'leftover_points'+ID,Points,[])),
   % maplist(make_point_object(ID,GH,GV),Points,IndvList),
   IndvList = [],
-  individuate(just(by_color([(black),(blue),(red),(green),(yellow),(silver),(purple),(orange),(cyan),(brown)])),Points,IndvList2),
+  individuate([],[just(by_color([(black),(blue),(red),(green),(yellow),(silver),(purple),(orange),(cyan),(brown)]))],Points,IndvList2),
   %IndvList2 = [],
   make_indiv_object(ID,GH,GV,Points,[object_shape(combined),object_shape(leftovers)],LeftOverObj), 
   % LeftOverObj = [],
@@ -416,15 +434,14 @@ cycle_s(Reserved,_GH,_GV,Sofar,_ID,_Options,Reserved,Points,_Grid,Sofar,Points).
 
 default_i_options([
   shape_lib(noise),
-  shape_lib(pair),
-  
+  shape_lib(pair),  
   use_reserved,
   fourway,
   solid(squares),
   %polygons,
   %shape_lib(squares), 
   %shape_lib(all),
-  shape_lib(hammer),
+  %shape_lib(hammer),
   squares, diamonds, all,
   
   
@@ -719,6 +736,5 @@ merge_a_b(A,B,AA):-
   object_glyph(B,GlyphB),
   ignore((How ==[]-> nop(pt(shared_object(GlyphB->GlyphA))); 
     (pt(same_object(GlyphA,GlyphB,How))))).
-
 
 

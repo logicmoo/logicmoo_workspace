@@ -5,6 +5,7 @@
   unless permission or license is granted (contact at business@logicmoo.org)
 */
 
+
 :- dynamic(is_gridname/2).
 
 set_gridname(Grid,Name):- nb_setval(grid_name,Name),
@@ -56,8 +57,11 @@ confirm_sol(Prog,Name,ExampleNum,In,Out):-
 
 describe_feature(Grid,List):- is_list(List),!,maplist(describe_feature(Grid),List).
 describe_feature(_,call(Call)):- !, call(Call).
+describe_feature(Grid,Pred):- is_pointless(Grid), !, as_debug(9,pt(usupported_call(Pred,Grid))).
 describe_feature(Grid,Pred):- call(Pred,Grid,Res)->print_equals(Grid,Pred,Res);print_equals(Pred,f),!.
 
+
+is_pointless(O):- \+ is_gridoid(O).
 
 combine_grids(_,[G],G):-!.
 combine_grids(How,[G1,G2|Gs],GO):- combine_grids(How,[G2|Gs],G1,GO).
@@ -74,6 +78,8 @@ debug_indiv:- test_config(nodebug_indiv),!,fail.
 debug_indiv:- test_config(debug_indiv),!.
 debug_indiv:- test_config(indiv(_)),!.
 
+:- discontiguous debug_indiv/1. 
+
 debug_indiv(Var):- plain_var(Var),pt(debug_indiv(Var)),!.
 
 debug_indiv(Grid):- is_grid(Grid),!,grid_size(Grid,H,V),
@@ -82,7 +88,13 @@ debug_indiv(Grid):- is_grid(Grid),!,grid_size(Grid,H,V),
   print_grid(Grid),
   dash_char(H),!.
 
-debug_indiv(List):- is_group(List),!,length(List,Len),   
+debug_indiv(Grid):- maplist(is_cpoint,Grid),!,grid_size(Grid,H,V),
+  dash_char(H),
+  wqnl(debug_indiv_grid(H,V)),
+  print_grid(Grid),
+  dash_char(H),!.
+
+debug_indiv(List):- is_list(List),!,length(List,Len),   
   dash_char,
   wqnl(objs = Len),
   max_min(Len,40,_,Min),
@@ -108,8 +120,20 @@ debug_indiv(obj(A)):- Obj = obj(A), is_list(A),!,
   flatten(TV,F),predsort(longer_strings,F,[Caps|_]),
   toPropercase(Caps,PC),!,
   %i_glyph(Id,Sym), wqnl([writef("%% %Nr%w \t",[PC]), color_print(FC,Sym) | AAAA ]),!. 
-  object_glyph(Obj,Glyph),
-  wqnl([format("%  ~w:\t",[PC]), color_print(FC,Glyph) | TV ]),!. 
+  object_glyph(Obj,Glyph),  
+  wqnl([format("%  ~w:\t",[PC]), color_print(FC,Glyph) | TV ]),!,
+  ignore(( fail, mass(Obj,Mass),!,Mass>4, vis_hv(Obj,H,V),!,H>1,V>1, show_st_map(Obj))),!.
+
+show_st_map(Obj):-
+  ignore(( 
+  localpoints(Obj,Points),
+%  mass(Obj,Mass),!,Mass>4,
+%  vis_hv(Obj,H,V),!,H>1,V>1,
+  format('~N'),
+  solidness(Points,0,inf,Res),
+  solidness_no_diag(Points,0,inf,ResND),
+  solidness_is_diag(Points,0,inf,ResD),
+  print_side_by_side(print_side_by_side(ResND,ResD),Res))).
 
 debug_indiv(obj(A)):- is_list(A),!, 
   dash_char,  
@@ -119,6 +143,17 @@ debug_indiv(obj(A)):- is_list(A),!,
 debug_indiv([]):- !.
 
 debug_indiv(diff(_)).
+debug_indiv([Other]):-!,debug_indiv(Other).
+debug_indiv(P):- is_rule(P,Q),
+  dash_char,
+  pt(Q),
+  dash_char,!.
+
+is_rule(P,_):- \+ compound(P),!,fail.
+is_rule(A:-true,A):-!.
+is_rule(A:-B,A:-B):-!.
+
+
 debug_indiv(Other):-
   dash_char,
   functor(Other,F,A),

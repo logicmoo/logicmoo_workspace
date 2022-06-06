@@ -121,7 +121,7 @@ make_indiv_object(ID,H,V,LoH,LoV,HiH,HiV,Points,Overrides,OUT):-
   make_grid(Width,Height,LocalGrid),
   copy_term(Grid,GridInCopy),
   findall(object_shape(Shape),
-   (guess_shape(Grid,LocalGrid,Ps,Empty,Len,Width,Height,CC,ColorlessPoints,Shape),
+   (guess_shape(Grid,LocalGrid,Ps,Empty,Len,Width,Height,CC,LPoints,Shape),
      close_enough_grid(Grid,GridInCopy,LocalGrid)),Shapes),
   append(
   [ [mass(Len), shape(ColorlessPoints), colors(CC), localpoints(LPoints),
@@ -195,7 +195,7 @@ object_indv_id(I,ID,Iv):- throw(missing(object_indv_id(I,ID,Iv))).
 mass(I,X):- var_check(I,mass(I,X)).
 mass(I,X):- indv_props(I,L),member(mass(X),L),!.
 mass(C-_,1):- nonvar_or_ci(C),!.
-mass(I,Count):- shape(I,Points), length(Points,Count),!.
+mass(I,Count):- globalpoints(I,Points), length(Points,Count),!.
 mass(Points,Count):- is_list(Points),length(Points,Count),!.
 
 remove_color(_-P,P).
@@ -226,15 +226,22 @@ indv_props(obj(L),L):- is_list(L),!.
 indv_props(G,L):- nonvar(G), g2o(G,O), nonvar(O),!,indv_props(O,L).
 indv_props(obj(L),L):- enum_object(obj(L)).
 
+pmember(E,X):- X=obj(L),!,indv_props(X,L),member(E,L).
+pmember(E,X):- sub_term(EE,X),nonvar_or_ci(EE),EE=E,ground(E).
+/*pmember(E,L):- is_dict(Points),!,E=grid_size(H,V),!,Points.grid_size=grid_size(H,V).
+pmember(E,L):- member(EE,L),(EE=E;(is_list(EE),pmember(E,EE))).
+pmember(E,L):- member(obj(EE),L),pmember(E,EE).
+*/
+
 walls_thick1(G):- localpoints(G,Points),counted_neighbours(Points,ListOfSizes),walls_thick1_sizes(ListOfSizes).
 walls_thick1_sizes(List):- maplist(size(2),List).
 
 size(A,A):- A==A.
 
-maybe_into_points_list(I,_):- is_points_list(I),!,fail.
-maybe_into_points_list(I,X):- localpoints(I,X).
+maybe_localpoints_list(I,_):- is_points_list(I),!,fail.
+maybe_localpoints_list(I,X):- localpoints(I,X).
 
-counted_neighbours(G,CountOut):- maybe_into_points_list(G,List),!,counted_neighbours(List,CountOut).
+counted_neighbours(G,CountOut):- maybe_localpoints_list(G,List),!,counted_neighbours(List,CountOut).
 counted_neighbours([],[]):-!.
 counted_neighbours([_-C],[0-C]):-!.
 counted_neighbours(List,CountOut):- counted_neighbours(List,[],CountOut).
@@ -257,12 +264,6 @@ counted_neighbours(C-HV,List,CountIn,[P|CountIn]):-
   length(Ns,I),P = I-HV.
 
 var_check(I,G):- var(I),wdmsg(error(var(G))),!,throw(maybe_enum_i(I)),call(G).
-
-%localpoints(I,X):- var_check(I,localpoints(I,X)).
-localpoints(G,X):- is_grid(G),!,grid_size(G,H,V),grid_to_points(G,H,V,X).
-localpoints(I,X):- indv_props(I,L),member(localpoints(X),L), assertion(maplist(is_cpoint,X)),!.
-localpoints(G,X):- is_group(G),!,maplist(localpoints,G,Points),append_sets(Points,X).
-%localpoints(I,X):- into_grid(I,G),!,grid_size(G,H,V),grid_to_points(G,H,V,X).
 
 object_shape(I,X):- var_check(I,object_shape(I,X)).
 object_shape(I,X):- indv_props(I,L),member(object_shape(X),L).
@@ -297,12 +298,28 @@ grid_to_points(Grid,HH,HV,Points):-  throw(all_points_between),
           hv_point(H,V,Point)))),Points),!.
 
 
-globalpoints(G,X):- is_group(G),!,maplist(globalpoints,G,Points),append_sets(Points,X).
+
+globalpoints(I,X):- var_check(I,globalpoints(I,X)).
+globalpoints(G,[G]):- is_point(G),!.
+globalpoints(options(X),Points):- trace_or_throw(globalpoints(options(X))).
 globalpoints(Grid,Points):- is_grid(Grid),!, grid_size(Grid,HH,VV), grid_to_points(Grid,HH,VV,Points).
-globalpoints(I,X):- indv_props(I,L),member(globalpoints(X),L),is_points_list(X),!.
-globalpoints(Grid,[Grid]):- is_point(Grid),!.
-globalpoints(Grid,Points):- is_list(Grid),!,maplist(globalpoints,Grid,MPoints),append(MPoints,Points).
-globalpoints(I,G):- localpoints(I,L),is_points_list(L),loc_xy(I,X,Y),offset_points(X,Y,L,G),!.
+globalpoints(Grid,Points):- is_list(Grid),!,maplist(globalpoints,Grid,MPoints),append_sets(MPoints,Points).
+globalpoints(I,X):- globalpoints0(I,X),!.
+globalpoints(I,X):- localpoints0(I,X),!.
+
+  globalpoints0(I,X):- indv_props(I,L),member(globalpoints(X),L),!,is_points_list(X),!.
+  globalpoints0(I,G):- localpoints(I,L),is_points_list(L),loc_xy(I,X,Y),offset_points(X,Y,L,G),!.
+
+localpoints(I,X):- var_check(I,localpoints(I,X)).
+localpoints(G,[G]):- is_point(G),!.
+localpoints(options(X),Points):- trace_or_throw(localpoints(options(X))).
+localpoints(Grid,Points):- is_grid(Grid),!, grid_size(Grid,HH,VV), grid_to_points(Grid,HH,VV,Points).
+localpoints(Grid,Points):- is_list(Grid),!,maplist(localpoints,Grid,MPoints),append_sets(MPoints,Points).
+localpoints(I,X):- localpoints0(I,X),!.
+localpoints(I,X):- globalpoints0(I,X),!.
+
+  localpoints0(I,X):- indv_props(I,L),member(localpoints(X),L), assertion(maplist(is_cpoint,X)),!.
+  %localpoints(I,X):- into_grid(I,G),!,grid_size(G,H,V),grid_to_points(G,H,V,X).
 
 
 %globalpoints(Grid,Points):- is_object(Grid),!,globalpoints(Grid,Points).
@@ -317,7 +334,7 @@ grid_to_id(Grid,ID):- gensym('grid_',ID),assert_id_grid_cells(ID,Grid),assert(is
 colors(G,X):- is_group(G),!,maplist(colors,G,Points),append_sets(Points,X).
 colors(I,X):- indv_props(I,L),!,member(colors(X),L).
 %colors(Points,CC):- is_list(Points),nth0(_,Points,C-_),is_color(C), CC = [cc(C,3)],!.
-colors(G,BFO):- notrace((pixel_colors(G,GF),sort(GF,GS),count_each(GS,GF,UC),keysort(UC,KS),reverse(KS,SK),!,into_cc(SK,BFO))).
+colors(G,BFO):- quietly((pixel_colors(G,GF),sort(GF,GS),count_each(GS,GF,UC),keysort(UC,KS),reverse(KS,SK),!,into_cc(SK,BFO))).
 
 shape(G,X):- is_group(G),!,maplist(shape,G,Points),append_sets(Points,X).
 % returns the objects colorless localpoints
@@ -364,16 +381,49 @@ last_gpoint(HV,P):- globalpoints(HV,PS),last(PS,P).
 guess_shape(GridIn,LocalGrid,I,Empty,N,H,V,[cc(Zero,_)],Points,background):- is_bg_color(Zero).
 guess_shape(GridIn,LocalGrid,I,0,1,1,1,Colors,Points,dot):-!.
 guess_shape(GridIn,LocalGrid,I,_,_,_,_,Colors,[Point],dot):-!.
-guess_shape(GridIn,LocalGrid,I,0,N,N,1,Colors,Points,hv_line(h)):- N > 1.
+guess_shape(GridIn,LocalGrid,I,0,N,N,1,Colors,Points,hv_line(h)):- N > 1,!.
+guess_shape(GridIn,LocalGrid,I,0,N,1,N,Colors,Points,hv_line(v)):- N > 1,!.
 guess_shape(GridIn,LocalGrid,I,0,N,HV,HV,Colors,Points,squares):- HV>1.
+
 guess_shape(GridIn,LocalGrid,I,0,N,H,V,Colors,Points,nonsquare):- H \== V.
 guess_shape(GridIn,LocalGrid,I,I,N,H,V,Colors,Points,rectangluar):- H>1, V>1.
 guess_shape(GridIn,LocalGrid,I,_,N,H,V,[_,_|_],Points,multicolored).
-guess_shape(GridIn,LocalGrid,I,_,N,H,V,[cc(Color,_)],Points,outline):- H>2,V>2, N>7,add_borders(Color,GridIn,LocalGrid).
+
 guess_shape(GridIn,LocalGrid,I,0,9,3,3,Colors,Points,keypad):-!.  
-guess_shape(GridIn,LocalGrid,I,0,N,1,N,Colors,Points,hv_line(v)):- N > 1.
-guess_shape(GridIn,LocalGrid,I,0,N,H,V,Colors,Points,filled_squared).
-guess_shape(GridIn,LocalGrid,I,O,N,H,V,Colors,Points,polygon):- O\==0,once(H>1;V>1).
+guess_shape(GridIn,LocalGrid,I,0,N,H,V,Colors,Points,filled_squared):-!.
+%guess_shape(GridIn,LocalGrid,I,O,N,H,V,Colors,Points,polygon):- O\==0,once(H>1;V>1).
+
+%guess_shape(GridIn,LocalGrid,I,O,N,H,V,Colors,Points,solidity(A)):- solidity(Points,A).
+guess_shape(GridIn,LocalGrid,I,O,N,H,V,Colors,Points,Solid):- (is_jagged(Points)->Solid=jagged;Solid=nonjagged).
+guess_shape(GridIn,LocalGrid,I,_,N,H,V,Colors,Points,outline(SN)):- H>2,V>2,N>4,
+  (find_outlines(Points,Sol,Rest)->(length(Sol,SN),SN>0,length(Rest,RN))),!.
+guess_shape(GridIn,LocalGrid,I,_,N,H,V,[cc(Color,_)],Points,outl):- H>2,V>2, N>7,add_borders(Color,GridIn,LocalGrid).
+
+is_jagged(Points):- member(C-HV,Points),
+  findall(Dir,(is_adjacent_point(HV,Dir,HV2),Dir\==c,member(C-HV2,Points)),L),L=[_,_],!.
+
+solidity(Points,Res):- 
+  solidness(Points,2,inf,HVNs),
+  findall(N=C,
+    (between(2,8,N),findall(_,member(N-HV,_HVNs),L),length(L,C)),Res).
+
+
+
+solidness(Points,Lo,H,Res):- 
+ findall(N-HV,
+  (member(C-HV,Points),findall(Dir,(is_adjacent_point(HV,Dir,HV2),Dir\==c,
+   member(C-HV2,Points)),L),length(L,N1),N is N1-1,between(Lo,H,N)),Res).
+
+solidness_no_diag(Points,Lo,H,Res):- 
+ findall(N-HV,
+  (member(C-HV,Points),findall(Dir,(is_adjacent_point(HV,Dir,HV2),\+ is_diag(Dir),Dir\==c,
+   member(C-HV2,Points)),L),length(L,N1),N is N1-1,between(Lo,H,N)),Res).
+
+solidness_is_diag(Points,Lo,H,Res):- 
+ findall(N-HV,
+  (member(C-HV,Points),findall(Dir,(is_adjacent_point(HV,Dir,HV2), is_diag(Dir),
+   member(C-HV2,Points)),L),length(L,N1),N is N1+1,between(Lo,H,N)),Res).
+
 %guess_shape(G,LocalGrid,I,O,N,H,V,Colors,Points,walls_thick(1)):- walls_thick1(G).
 /*
 guess_shape(GridIn,Grid,I,E,N,H,V,Colors,Points,subI(InvS)):- E>2, fail,
@@ -383,3 +433,85 @@ guess_shape(GridIn,Grid,I,E,N,H,V,Colors,Points,subI(InvS)):- E>2, fail,
    compute_shared_indivs(Grid,InvS))),!,
    InvS=[_,_|_].
 */
+
+
+%illegal_for_outlines(HV1,e,sw,w
+%print_pairs(
+
+dirs_ok0(n,e,ne). dirs_ok0(s,e,se).
+dirs_ok0(n,w,nw). dirs_ok0(s,w,sw).
+dirs_ok(N,E,NE):- dirs_ok0(N,E,NE).
+dirs_ok(E,N,NE):- dirs_ok0(N,E,NE).
+
+dir_not_ok(N,E,NE):- dirs_ok(N,E,NE),!,fail.
+dir_not_ok(_,_,_).
+
+%two_dirs(Dir1,Dir2):- select(Dir1,[n,s,e,w,sw,ne,se,nw],Rest),member(Dir2,Rest).
+%two_dirs(Dir1,Dir2):- select(Dir1,[n,s,e,w],Rest),member(Dir2,Rest).
+%two_dirs(Dir1,Dir2):-member(Dir1,[n,s,e,w]),member(Dir2,[n,s,e,w]).
+two_dirs(Dir1,Dir2):-member(Dir1,[n,s,e,w,sw,ne,se,nw]),member(Dir2,[n,s,e,w,sw,ne,se,nw]).
+
+find_outline(X):-
+  X = 
+  [[black,green,green,black],
+   [green,black,black,green],
+   [green,black,black,green],
+   [black,green,green,black]].
+
+find_outline(X):-
+  X = 
+  [[green,green,green,green],
+   [green,black,black,green],
+   [green,black,black,green],
+   [green,green,green,green]].
+
+find_outline:- clsmake, % arc_grid(X),!,
+   %find_outline(X),
+  arc_grid(X),
+   nl,write(from),
+   print_grid(X),
+   find_outline(X,Y,Z),
+   once((grid_size(Y,H,V),
+   mass(Y,M))),
+   nl,write(solution(H*V=M)),
+   print_grid(Y),
+   nop((nl,write(leftover),
+   print_grid(Z))).
+
+
+%find_outline(Grid,Result,Grid4):- is_grid(Grid),!,grid_to_points(Grid,Points),!,find_outline(Points,Result,Grid4).
+
+find_outline(Grid,Sol,Rest):-
+  find_outlines(Grid,Sols,Rest),!,
+  member(Sol,Sols).
+  
+find_outlines(Grid,[Sol|Solutions],Rest):-
+  find_outline(_,Grid,Sol,More),!,
+  find_outlines(More,Solutions,Rest).
+find_outlines(Rest,[],Rest).
+  
+
+find_outline(C,Grid,ResultO,LeftOverO):- 
+  localpoints(Grid,Points),
+  select(C-HV1,Points,Grid2),
+  my_partition(=(C-_),Grid2,Colored,Others),
+  %print_grid([blue-HV1|Colored])
+  three_points(C,Grid2,HV1,HV2,HV3,Grid4),
+ \+ (is_adjacent_point(HV2,_,HV), member(C-HV,Grid4)), 
+  %print_grid([blue-HV1,yellow-HV2,red-HV3|Grid4]), 
+  outline_only2(HV1,C,HV3,[C-HV1|Grid4],Result,LeftOver),
+  [C-HV1,C-HV2|Result] = ResultO,
+  once(length(Result,M)),M>2,
+  append(Others,LeftOver,LeftOverO).
+
+outline_only2(Exit,_,HV2,Grid,[],Grid) :- HV2==Exit,!.
+outline_only2(Exit,C,HV2,Grid2,[C-HV2,C-HV3|Found],LeftOver) :-
+  three_points(C,Grid2,HV2,HV3,HV4,Grid4),
+  \+ (is_adjacent_point(HV2,_,HV), member(C-HV,Grid4)),
+  outline_only2(Exit,C,HV4,Grid4,Found,LeftOver).
+
+three_points(C,Grid2,HV1,HV2,HV3,Grid4):-
+  is_adjacent_point(HV1,Dir1,HV2), select(C-HV2,Grid2,Grid3),
+  is_adjacent_point(HV2,Dir2,HV3), select(C-HV3,Grid3,Grid4).
+
+

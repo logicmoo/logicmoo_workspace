@@ -43,6 +43,7 @@ no_black(BF,BF).
 pixel_colors(GH,CC):- quietly(pixel_colors0(GH,CC)).
 pixel_colors0(GH,CC):- is_list(GH),!,maplist(pixel_colors,GH,PG),append(PG,CC).
 pixel_colors0(C,[Color]):- color_name(C,Color),!.
+pixel_colors0(options(_),[]):-!.
 pixel_colors0(GH,CC):- globalpoints(GH,GP),!,pixel_colors(GP,CC).
 
 %sub_term(G,GH), is_grid(G),!,flatten(G,GF),include(is_grid_color,GF,GL),maplist(color_name,GL,CC).
@@ -453,9 +454,9 @@ grid_size(ID,H,V):- is_grid_size(ID,H,V),!.
 grid_size(Grid,H,V):- is_grid(Grid),grid_size_nd(Grid,H,V),!.
 grid_size(Points,H,V):- pmember(grid_size(H,V),Points),ground(H-V),!.
 grid_size([G|Grid],H,V):- is_list(G),is_list(Grid), grid_size_nd([G|Grid],H,V),!.
-grid_size(Points,H,V):- points_range(Points,_LoH,_LoV,_HiH,_HiV,H,V).
+grid_size(Points,H,V):- points_range(Points,_LoH,_LoV,_HiH,_HiV,H,V),!.
+grid_size(O,_,_):- trace_or_throw(no_grid_size(O)).
 grid_size(_,30,30).
-
 
 calc_range(WLoH,WLoV,WHiH,WHiV,WH,WV,Var,WLoH,WLoV,WHiH,WHiV,WH,WV):- plain_var(Var),!.
 calc_range(WLoH,WLoV,WHiH,WHiV,WH,WV,grid_size(IH,IV),WLoH,WLoV,WHiH,WHiV,H,V):- !,

@@ -120,6 +120,7 @@ new_test_id(TestID):-
   nb_setval(test_name,TestID),
   set_flag(indiv,0),
   nb_delete(grid_bgc),
+  nb_linkval(test_rules, [rules]),
   retractall(grid_nums(_,_)),
   retractall(grid_nums(_)),
   retractall(g2o(_,_)),!.
@@ -127,6 +128,7 @@ new_test_id(TestID):-
 new_test_pair(PairName):-
   %nb_delete(grid_bgc),
   nb_setval(test_pairname,PairName),
+  nb_linkval(pair_rules, [rules]),
   retractall(is_shared_saved(PairName*_,_)),
   retractall(is_shared_saved(PairName,_)),
   retractall(is_unshared_saved(PairName*_,_)),

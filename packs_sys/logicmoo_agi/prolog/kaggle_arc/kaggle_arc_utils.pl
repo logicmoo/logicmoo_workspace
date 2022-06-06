@@ -18,10 +18,12 @@ nonvar_or_ci(C):- (nonvar(C);attvar(C)),!.
 
 %gr2o(Grid,Obj):- Grid=Obj.
 add_i(Info):- 
- tersify(Info,InfoT),
- nb_current(rules,Rules),
- nb_set_add(Rules,InfoT),
- nop(pt(cyan,+InfoT)).
+ notrace((tersify(Info,InfoT),
+ nb_current(test_rules,TRules),
+ nb_current(pair_rules,PRules),
+  nb_set_add(TRules,InfoT),
+  nb_set_add(PRules,InfoT),
+ nop(pt(cyan,+InfoT)))).
 
 add_i(F,Info):- 
  append_term(i(F),Info,FInfo),
@@ -30,14 +32,14 @@ add_i(F,Info):-
 add_rule(Info):- add_i(rule,Info).
 add_cond(Info):- add_i(cond,Info).
 %do_action(Info):- guess_pretty(Info),add_i(action,Info),call(Info).
-do_action(Info):- !, call(Info).
+do_action(Call):- !, copy_term(Call,Info),call(Call),add_i(action,Info).
 add_action(Info):- add_i(action,Info).
 add_note(Info):- add_i(note,Info).
 add_indiv(W,Info):- add_i(indiv(W),Info).
 add_comparitor(Info):- add_i(comparitor,Info).
 show_rules:- 
- nb_current(rules,Rules),
-  maplist(pt(cyan),Rules),
+ nb_current(pair_rules,PRules), maplist(pt(cyan),PRules),
+ nb_current(test_rules,TRules), maplist(pt(blue),TRules),
  !.
   
 
@@ -55,11 +57,6 @@ as_debug(_,G):- wots(S,G),format('~N~w~N',[S]).
 count_each([],_,[]).
 count_each([C|L],GC,[Len-C|LL]):- include(==(C),GC,Lst),length(Lst,Len),count_each(L,GC,LL).
 
-pmember(E,L):- sub_term(EE,L),nonvar_or_ci(EE),EE=E,ground(E).
-/*pmember(E,L):- is_dict(Points),!,E=grid_size(H,V),!,Points.grid_size=grid_size(H,V).
-pmember(E,L):- member(EE,L),(EE=E;(is_list(EE),pmember(E,EE))).
-pmember(E,L):- member(obj(EE),L),pmember(E,EE).
-*/
 /*
 print_points_grid(Points):- 
  points_range(Points, LoH, LoV, HiH, HiV, H, V), writeqln(size_range(LoH, LoV, HiH, HiV, H, V)), points_to_grid(Points, Grid), print_grid(Grid).
