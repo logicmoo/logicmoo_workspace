@@ -54,7 +54,7 @@ append_terms(P, L, O):- P==[], L = O, !.
 append_terms([F|P], L, O):- atom(F), is_list(P), !, PP=..[F|P], append_terms(PP, L, O).
 append_terms(P, L, O):- is_list(P), PP=..[lst|P], append_terms(PP, L, O).
 append_terms(P, L, O):- is_list(L)->append_termlist(P, L, O).
-append_term(P, L, O).
+append_terms(P, L, O):- append_term(P, L ,O),!.
 
 
 writeEachTo(_ID, _Ctx, []):-!.
@@ -77,8 +77,7 @@ writeEachTo(ParentID, Ctx, element(CLASS, S, STUFF)):- % member(CLASS, ['VNCLASS
 
 writeEachTo(ID, Ctx, element('role', [], STUFF)):- !,
   flag(frame_num, N, N+1),
-  (N==0->atomic_list_concat([ID, '_f', N], NewID)
-atomic_list_concat([ID, '_f', N], NewID)),
+  (N==0->atomic_list_concat([ID, '_f', N], NewID);atomic_list_concat([ID, '_f', N], NewID)),
   writeEachTo(NewID, Ctx, STUFF).
 
 writeEachTo(_D, _Tx, element('comment', _, S)):-!, nl, writeEachTo(problem_header, problem_header, S), !.

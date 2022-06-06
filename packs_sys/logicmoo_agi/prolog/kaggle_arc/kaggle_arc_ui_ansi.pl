@@ -415,8 +415,10 @@ object_cglyph(G,CGlyph):- color(G,C),object_glyph(G,Glyph),wots(CGlyph,color_pri
 %print_g1(E):- has_color_c(E,C),color_print(C,'+'),!.
 %print_g1(C0):- sub_term(E,C0),has_color_c(E,C),color_print(C,'='),!.
 print_g1(N):- plain_var(N),has_color_c(N,C),cant_be_dot(DOT),ansi_color(C,CI),ansi_format_arc([fg(CI)],'~s',[[DOT]]),!.
-print_g1(N):- plain_var(N),has_color_c(N,C),format(chars(Codes),'~p',[N]),last(Codes,S),print_g2(C,S),!.
+print_g1(N):- plain_var(N),has_color_c(N,C),format(chars(Codes),'~p',[N]),last(Codes,S),sformat(O,'[~s]',[[S]]),print_g2(C,O),!.
+
 print_g1(N):- into_color_glyph(N,C,Code),as_name(Code,S), color_print(C,S),!.
+
 print_g1(C):- plain_var(C), color_print(C,'.'),!.
 
 print_g2(C,S):- atom_number(S,_), cant_be_dot(DOT), name(N,[DOT]), color_print(C,N),!.
@@ -432,8 +434,8 @@ into_color_glyph_ez(CTerm,Color,Code):-
     ignore((nonvar_or_ci(Glyph),name(Glyph,[Code|_]))).
 
 %into_color_glyph(H,V,CTerm,Color,Code):- fail, get_grid_num_xyc(H,V,SColor,SNth),into_color_glyph(SColor+SNth+CTerm,Color,Code),nonvar_or_ci(Code).
-into_color_glyph(N,C,Glyph):- plain_var(N),has_color_c(N,C),format(chars(Codes),'~p',N),last(Codes,Glyph),!.
-into_color_glyph(N,C,Glyph):- has_color_c(N,C),format(chars(Codes),'~p',N),last(Codes,Glyph),!.
+into_color_glyph(N,C,Glyph):- plain_var(N),has_color_c(N,C),format(chars(Codes),'<~p>',N),last(Codes,Glyph),!.
+into_color_glyph(N,C,Glyph):- has_color_c(N,C),format(chars(Codes),'>~p<',N),last(Codes,Glyph),!.
 
 into_color_glyph(W,C,FGD):- has_color_c(W,C), bg_dot(FGD),!.
 into_color_glyph(bg,Black,BGD):- get_bgc(Black), bg_dot(BGD),!.

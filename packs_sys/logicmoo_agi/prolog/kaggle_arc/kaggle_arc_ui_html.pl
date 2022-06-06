@@ -73,8 +73,8 @@ user:file_search_path(arc,  AbsolutePath):- arc_sub_path('.',AbsolutePath).
 %   client at a time since echo will block the thread)
 
 
-web_socket_later:- http_handler(('/swish/arc/echo'),
-                http_upgrade_to_websocket(web_socket_later_echo, []),
+:- http_handler('/swish/arcproc/web_socket_echo',
+                http_upgrade_to_websocket(web_socket_echo, []),
                 [spawn([])]).
 
 start_arc_server :-
@@ -91,24 +91,24 @@ stop_arc_server(Port) :-
 
 default_port(1777).
 
-%! web_socket_later_echo(+WebSocket) is nondet.
+%! web_socket_echo(+WebSocket) is nondet.
 % This predicate is used to read in a message via websockets and echo it
 % back to the client
-web_socket_later_echo(WebSocket) :-
+web_socket_echo(WebSocket) :-
     ws_receive(WebSocket, Message, [format(json)]),
     ( Message.opcode == close
     -> true
-    ; get_response_echo_later(Message.data, Response),
+    ; get_response_echo(Message.data, Response),
       write("Response: "), writeln(Response),
       ws_send(WebSocket, json(Response)),
-      web_socket_later_echo(WebSocket)
+      web_socket_echo(WebSocket)
     ).
 
 %! get_response(+Message, -Response) is det.
 % Pull the message content out of the JSON converted to a prolog dict
 % then add the current time, then pass it back up to be sent to the
 % client
-get_response_echo_later(Message, Response) :-
+get_response_echo(Message, Response) :-
   get_time(Time),
   Response = _{message:Message.message, time: Time}.
 
