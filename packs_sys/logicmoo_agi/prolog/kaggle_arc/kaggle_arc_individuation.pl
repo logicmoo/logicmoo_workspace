@@ -69,10 +69,6 @@ ensure_shared_indivs(GN,Grid,SharedIndvs):-
 :- decl_pt(detect_indvs(group,group,-)).
 detect_indvs(In,Out,Grid):- individuate(In,Grid,Out).
 
-%print_collapsed(G):- G. 
-print_collapsed(G):- wots(_,G). 
-
-
 %make_indivs_options([],[options(defaults)]):-!.
 %make_indivs_options(NList,O):- listify(NList,O),!.
 make_indivs_options(NList,O):- listify(NList,List),maplist(make_indivs_option_e,List,O).

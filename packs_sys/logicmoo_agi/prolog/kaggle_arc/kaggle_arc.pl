@@ -6,35 +6,10 @@
 */
 
 :- encoding(iso_latin_1).
-:- SL  is 2_147_483_648*8, set_prolog_flag(stack_limit, SL ).
-:- set_prolog_flag(encoding,iso_latin_1).
-:- set_prolog_flag(color_term,true).
-:- set_stream(current_output, tty(true)).
-:- stream_property(S,file_no(2)), set_stream(S,tty(true)).
-:- stream_property(S,file_no(1)), set_stream(S,tty(true)).
-:- if(\+ current_module(logicmoo_arc)).
-:- set_prolog_flag(access_level,system).
-:- dynamic(prolog:'$exported_op'/3).
-:- assert((system:'$exported_op'(_,_,_):- fail)).
-:- else.
-:- if(current_module(trill)).
-:- set_prolog_flag_until_eof(trill_term_expansion,false).
-:- endif.
-:- dynamic(muarc:ns4query/1).
-:- endif.
-%:- multifile('$exported_op'/3).
-:- system:ensure_loaded(library(logicmoo_common)).
-%:- system:ensure_loaded(library(pfc_lib)).
-%:- expects_dialect(pfc).
 :- dynamic((fav/2,ap/1,apv/2)).
 :- dynamic(cmem/3).
 :- dynamic(grid_nums/1).
 :- dynamic(grid_nums/2).
-:- (getenv('DISPLAY',_) -> true ; setenv('DISPLAY','10.0.0.122:0.0')).
-%:- (getenv('DISPLAY',_) -> guitracer ; true).
-:- set_prolog_flag(toplevel_print_anon,true).
-%:- set_prolog_flag(toplevel_print_factorized,true).
-:- set_prolog_flag(answer_write_options, [quoted(true), portray(true), max_depth(20), attributes(portray)]).
 
 :- multifile(decl_sf/1).
 :- discontiguous(decl_sf/1).
@@ -44,6 +19,55 @@ decl_sf(G):- ground(G), !, assertz(decl_sf(G)).
 :- discontiguous(decl_pt/1).
 :- dynamic(decl_pt/1).
 decl_pt(G):- ground(G), !, assertz(decl_pt(G)).
+:- set_prolog_flag(encoding,iso_latin_1).
+:- set_prolog_flag(color_term,true).
+:- set_stream(current_output, tty(true)).
+:- stream_property(S,file_no(2)), set_stream(S,tty(true)).
+:- stream_property(S,file_no(1)), set_stream(S,tty(true)).
+
+arc_sub_path(Subdir,AbsolutePath):- arc_directory(ARC_DIR),
+  catch(absolute_file_name(Subdir,AbsolutePath,[relative_to(ARC_DIR),expand(true),
+    file_type(directory),solutions(first),file_errors(error),access(read)]),_,fail),!.
+arc_sub_path(Subdir,AbsolutePath):- arc_directory(ARC_DIR),
+  absolute_file_name(Subdir,AbsolutePath,[relative_to(ARC_DIR),expand(true),
+    file_type(regular),solutions(first),file_errors(error),access(read)]).
+:- export(arc_sub_path/2).
+
+% COMMAND LINE ARC
+:- if(\+ current_module(logicmoo_arc)).
+  muarc_mod(user).
+  :- set_prolog_flag(access_level,system).
+  :- dynamic(prolog:'$exported_op'/3).
+  :- assert((system:'$exported_op'(_,_,_):- fail)).
+  %:- multifile('$exported_op'/3).
+  %:- (getenv('DISPLAY',_) -> true ; setenv('DISPLAY','10.0.0.122:0.0')).
+  :- SL  is 2_147_483_648*8, set_prolog_flag(stack_limit, SL ).
+  %:- (getenv('DISPLAY',_) -> guitracer ; true).
+  :- set_prolog_flag(toplevel_print_anon,true).
+  %:- set_prolog_flag(toplevel_print_factorized,true).
+  :- set_prolog_flag(answer_write_options, [quoted(true), portray(true), max_depth(20), attributes(portray)]).
+
+% SWISH ARC
+:- else.
+  muarc_mod(muarc).
+  :- if(current_module(trill)).
+  :- set_prolog_flag_until_eof(trill_term_expansion,false).
+  :- dynamic(muarc:ns4query/1).
+  :- endif.
+:- endif.
+
+
+:- system:ensure_loaded(library(logicmoo_common)).
+%:- system:ensure_loaded(library(pfc_lib)).
+%:- expects_dialect(pfc).
+
+:- dynamic(arc_directory/1).
+:- prolog_load_context(directory,ARC_DIR), asserta_new(arc_directory(ARC_DIR)).
+arc_directory(ARC_DIR):- getenv('ARC_DIR',ARC_DIR), exists_directory(ARC_DIR),!.
+
+:- multifile (user:file_search_path/2).
+user:file_search_path(arc,  AbsolutePath):- arc_sub_path('.',AbsolutePath).
+
 
 :- ensure_loaded(kaggle_arc_utils).
 :- ensure_loaded(kaggle_arc_ui_ansi).
@@ -102,23 +126,6 @@ arc1e(TName):-
 
 arc_grid(Grid):- test_names_by_fav(TestID),kaggle_arc(TestID,_ExampleNum,In,Out),arg(_,v(In,Out),Grid).
 
-parc1:- parc1(6300*3). 
-parc1(OS):- clsmake, open(tt,write,O,[encoding(text)]),with_output_to(O,parc0(OS)),close(O).
-parc0(OS):- 
- forall(parc1(OS,_),true).
-parc1(OS,TName):-     
- locally(set_prolog_flag(gc,true),
-  (fix_test_name(TName,TestID,ExampleNum),   
-  kaggle_arc(TestID,ExampleNum,In,Out),
-  maplist(color_sym(OS),In,I),
-  grid_size(In,IH,IV),
-  grid_size(Out,_OH,OV),
-  %V is OV-IV,
-  H is IH,
-  maplist(color_sym(OS),Out,O),
-  format('~Ntestcase(~q,"\n~@").~n',[TestID*ExampleNum,
-    print_side_by_side(call((print_grid(I),write(' '),forall(between(IV,OV,_),(write('\n '),dash_char(H,'  '))))),call(print_grid(O)))]))).
-
 %color_sym(OS,[(black='°'),(blue='©'),(red='®'),(green=''),(yellow),(silver='O'),(purple),(orange='o'),(cyan= 248	ø ),(brown)]).
 color_sym(OS,C,Sym):- is_list(C),maplist(color_sym(OS),C,Sym),!.
 color_sym(_,black,' ').
@@ -134,23 +141,20 @@ is_buggy_pair(t('27a28665')*(tst+2), "BUG: Re-Searcher gets stuck!").
 run_arc_io(TestID,ExampleNum,In,Out):-
   \+ is_buggy_pair(TestID*ExampleNum,_),
   time(show_arc_pair_progress(TestID,ExampleNum,In,Out)).
-  
+
+
 show_arc_pair_progress(TestID,ExampleNum,In,Out):-
 	name_the_pair(TestID,ExampleNum,In,Out,PairName),
 	grid_size(In,IH,IV), grid_size(Out,OH,OV),
 	nop(writeln(grid_convert(size(IH,IV)->size(OH,OV)))),
 	ignore((more_task_info(TestID,III),pt(III),nl)), 
 	show_pair(IH,IV,OH,OV,test,PairName,In,Out),
-	/*nb_linkval(rules, [rules]),	
-	individualizer_from_grid(PairName,in,In,IH,IV,Out,OH,OV,ShapesI_S),
-	individualizer_from_grid(PairName,out,Out,OH,OV,Out,IH,IV,ShapesO_S),
-	show_idea("Individuals",PairName,In,Out,IH,IV,OH,OV,ShapesI_S,ShapesO_S),*/
   nb_linkval(pair_rules, [rules]),
   clear_shape_lib(pair),
-	forall(examine_installed_individualizers_from_pairs(PairName,In,Out,IH,IV,OH,OV),true),
-  individualizer_heuristics(PairName,In,Out,IH,IV,OH,OV,ShapesI,ShapesO),
-  show_shape_lib(pair),
-  show_idea(PairName,In,Out,IH,IV,OH,OV,ShapesI,ShapesO),!.
+	print_collapsed(forall(examine_installed_individualizers_from_pairs(PairName,In,Out,IH,IV,OH,OV),true)),
+  %show_shape_lib(pair),
+  show_idea_final(PairName,In,Out,IH,IV,OH,OV,[defaults],[defaults]),!.
+  
 
 
 :- nb_linkval(test_rules,[rules]).
@@ -161,8 +165,12 @@ examine_installed_individualizers_from_pairs(PairName,In,Out,IH,IV,OH,OV):-
   individualizer_heuristics(PairName,In,Out,IH,IV,OH,OV,ShapesI,ShapesO),
   %nb_current(rules, Info),
   %format('~N+Done with Ideas~N'),
-  nop(show_idea(PairName,In,Out,IH,IV,OH,OV,ShapesI,ShapesO)).
+  nop(show_idea_trial(PairName,In,Out,IH,IV,OH,OV,ShapesI,ShapesO)).
   
+show_idea_final(PairName,In,Out,IH,IV,OH,OV,Shapes_I,Shapes_O):- 
+  show_idea(PairName,In,Out,IH,IV,OH,OV,Shapes_I,Shapes_O).
+show_idea_trial(PairName,In,Out,IH,IV,OH,OV,Shapes_I,Shapes_O):-  
+  show_idea(PairName,In,Out,IH,IV,OH,OV,Shapes_I,Shapes_O).
 show_idea(PairName,In,Out,IH,IV,OH,OV,Shapes_I,Shapes_O):- 
   show_pair_indivs(IH,IV,OH,OV,heuristics,PairName,Shapes_I,Shapes_O),
   pt(yellow,'~N+individuate(IN)~N'),

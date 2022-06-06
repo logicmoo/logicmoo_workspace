@@ -14,6 +14,9 @@ do_forgotten_exports(M):-
     functor(P,F,A)),
     export(M:F/A)).
 
-:- prolog_load_context(module,M), 
+do_forgotten_exports:- 
+   prolog_load_context(module,M), 
    wdmsg(do_forgotten_exports(M)), 
    do_forgotten_exports(M).
+
+:- do_forgotten_exports.

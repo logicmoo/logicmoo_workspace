@@ -224,17 +224,24 @@ create_movements:-
 :- initialization(create_movements).
 
 :- dynamic(hv_point/3).
+:- dynamic(is_adjacent_point/3).
+:- dynamic(is_adjacent_hv/5).
+:- export(hv_point/3).
+:- export(is_adjacent_point/3).
+:- export(is_adjacent_hv/5).
+
 hv(H,V,hv(H,V)).
 
 calc_movement(H,V):- forall(nav(Dir,HO,VO), save_calc_movement(H,V,Dir,HO,VO)).
 
 save_calc_movement(H,V,Dir,HO,VO):- H2 is HO+H, V2 is VO+V,
+  muarc_mod(M),
   ignore((between(1,32,H2), between(1,32,V2), 
      format(atom(HV),'point_~|~`0t~d~2+_~|~`0t~d~2+',  [H,V]),
     format(atom(HV2),'point_~|~`0t~d~2+_~|~`0t~d~2+', [H2,V2]),
-    assert_if_new(is_adjacent_point(HV,Dir,HV2)),
-    assert_if_new(hv_point(H,V,HV)),
-    assert_if_new(is_adjacent_hv(H,V,Dir,H2,V2)))).
+    assert_if_new(M:is_adjacent_point(HV,Dir,HV2)),
+    assert_if_new(M:hv_point(H,V,HV)),
+    assert_if_new(M:is_adjacent_hv(H,V,Dir,H2,V2)))).
   
 is_adjacent_2points(HV,Dir,HV2,HV3):-  is_adjacent_point(HV,Dir,HV2),is_adjacent_point(HV2,Dir,HV3).
 

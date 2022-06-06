@@ -11,7 +11,7 @@
 :- discontiguous h666/2. 
 :- discontiguous f666/2. 
 
-test_ogs:- clsmake, time(forall(test_ogs(_,_),true)).
+test_ogs:- clsmake, mmake, time(forall(test_ogs(_,_),true)).
 test_ogs0:- clsmake, time(forall(test_ogs0(_,_),true)).
 test_ogs1:- clsmake, time(forall(test_ogs1(_,_),true)).
 test_ogs2:- clsmake, time(forall(test_ogs2(_,_),true)).
@@ -406,16 +406,18 @@ attach_ci(CO,C) :- put_attr(CO,ci,fg(C)).
 
 
 count_o_neighbors(C,H,V,N,GridIn):- 
+  muarc_mod(M),
   findall(Dir,
-    (is_adjacent_hv(H,V,Dir,H2,V2),
+    (M:is_adjacent_hv(H,V,Dir,H2,V2),
      get_color_at(H2,V2,GridIn,C1O),
        is_spec_color(C1O,_),C1O\=@=C), 
     Count),
   length(Count,N).
 
 count_c_neighbors(C,H,V,N,GridIn):- 
+  muarc_mod(M),
   findall(Dir,
-    (is_adjacent_hv(H,V,Dir,H2,V2),
+    (M:is_adjacent_hv(H,V,Dir,H2,V2),
      get_color_at(H2,V2,GridIn,C1O),
        C1O=@=C), 
     Count),
@@ -432,8 +434,9 @@ mfreeze(Trig,CDE):- constrain_type(Trig,CDE).
 
 constrain_dir_ele(_CT,_Trig,[],_GridIn,_H,_V,_C1I,_C1O,_GridO).
 constrain_dir_ele(CT, Trig,[Dir|SEW],GridIn,H,V,C1I,C1O,GridO):-
+  muarc_mod(M),
   ignore((
-  is_adjacent_hv(H,V,Dir,H2,V2),
+  M:is_adjacent_hv(H,V,Dir,H2,V2),
   get_color_at(H2,V2,GridIn,C2I),
   get_color_at(H2,V2,GridO,C2O),
      \+ is_spec_color(C2I,_),

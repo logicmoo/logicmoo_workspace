@@ -94,7 +94,7 @@ grid_color_individualizer(PairName,In,Out,IH,IV,OH,OV,
     OCs,OPCs,CommonCs,IPCs,ICs,
     OCsL,OPCsL,CommonCsL,IPCsL,ICsL,
     ShapesO,ShapesI).
-
+                                                            
 
 grid_color_individualizer0(PairName,In,Out,IH,IV,OH,OV,
     _ICs,IPCs,CommonCs,OPCs,_OCs,

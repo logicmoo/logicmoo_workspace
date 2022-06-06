@@ -79,6 +79,8 @@ fav(t('1b60fb0c'),[
 %fav(t('db3e9e38'),[lmDSL([flipV,C1=orange,C2=blue,[],flipV]).
 %fav(t(_),[lmDSL([fillFromBorder(none,yellow)])]).
 
+
+%fav(t('6e82a1ae'),[lmDSL([rocketship])]).
 fav(t('25d487eb'),[lmDSL([rocketship])]).
 fav(t('3631a71a'),[lmDSL([overlay_each_pattern])]).
 fav(t('1b60fb0c'),[learn([find_damage_to_input,find_center,fraction_evenly_to_four,map_slices_upon_themselves]),lmDSL([new_things_are_a_color,fix_image])]).
@@ -237,13 +239,15 @@ current_test_name([]).
 
 
 load_json_files(F,Mask):- 
-  absolute_file_name(Mask,AbsMask),
+  arc_sub_path('.',ARC_DIR),
+  absolute_file_name(Mask,AbsMask,[relative_to(ARC_DIR)]),
   expand_file_name(AbsMask,FullNames),
   maplist(file_base_name,FullNames,BaseNames),
   maplist(file_name_extension,Names,_,BaseNames),
   maplist(load_json_file(F),Names,FullNames),!.
 
 load_json_file(F, BaseName, FullName):- Testname=..[F,BaseName], 
+  % dmsg(load_json_file=FullName),
   setup_call_cleanup(open(FullName,read,In),
    json_read(In,Term,[]),
    close(In)),
@@ -1190,5 +1194,24 @@ more_task_info(v('3f23242b'),[+shape_match,-mask_match,-rotation_match,-color_ma
 more_task_info(v('40f6cd08'),[+mask_match,+shape_match,+color_match,-rotation_match,test,'(3, 1)']).
 more_task_info(v('414297c0'),[-mask_match,-shape_match,-rotation_match,-color_match,test,'(3, 1)']).
 more_task_info(v('423a55dc'),[+shape_match,+color_match,-mask_match,-rotation_match,test,'(5, 1)']).
+
+
+
+parc1:- parc1(6300*3). 
+parc1(OS):- clsmake, open(tt,write,O,[encoding(text)]),with_output_to(O,parc0(OS)),close(O).
+parc0(OS):- 
+ forall(parc1(OS,_),true).
+parc1(OS,TName):-     
+ locally(set_prolog_flag(gc,true),
+  (fix_test_name(TName,TestID,ExampleNum),   
+  kaggle_arc(TestID,ExampleNum,In,Out),
+  maplist(color_sym(OS),In,I),
+  grid_size(In,IH,IV),
+  grid_size(Out,_OH,OV),
+  %V is OV-IV,
+  H is IH,
+  maplist(color_sym(OS),Out,O),
+  format('~Ntestcase(~q,"\n~@").~n',[TestID*ExampleNum,
+    print_side_by_side(call((print_grid(I),write(' '),forall(between(IV,OV,_),(write('\n '),dash_char(H,'  '))))),call(print_grid(O)))]))).
 
 :- fixup_exports.

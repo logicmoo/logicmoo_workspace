@@ -334,10 +334,10 @@ grid_to_id(Grid,ID):- is_grid_id(Grid,ID),!.
 grid_to_id(Grid,ID):- gensym('grid_',ID),assert_id_grid_cells(ID,Grid),assert(is_grid_id(Grid,ID)),!.
 */
 
-colors(G,X):- is_group(G),!,maplist(colors,G,Points),append_sets(Points,X).
 colors(I,X):- indv_props(I,L),!,member(colors(X),L).
 %colors(Points,CC):- is_list(Points),nth0(_,Points,C-_),is_color(C), CC = [cc(C,3)],!.
 colors(G,BFO):- quietly((pixel_colors(G,GF),sort(GF,GS),count_each(GS,GF,UC),keysort(UC,KS),reverse(KS,SK),!,into_cc(SK,BFO))).
+%colors(G,X):- is_group(G),!,maplist(colors,G,Points),append_sets(Points,X).
 
 shape(G,X):- is_group(G),!,maplist(shape,G,Points),append_sets(Points,X).
 % returns the objects colorless localpoints

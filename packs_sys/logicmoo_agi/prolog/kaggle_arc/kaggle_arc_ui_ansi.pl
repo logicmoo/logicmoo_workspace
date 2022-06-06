@@ -8,6 +8,10 @@
 :- set_prolog_flag_until_eof(trill_term_expansion,false).
 :- endif.
 
+print_collapsed(G):- !, wots(_S,G).
+print_collapsed(G):- !, call(G). 
+%print_collapsed(G):- wots(S,G),write(S).
+
 tersify(I,O):- tersify1(I,M),tersify2(M,O).
 
 tersify1(I,O):- is_grid(I), into_gridnameA(I,O),!. 
@@ -309,44 +313,52 @@ ansi_color(C,Color):- attvar(C),get_attr(C,ci,bg),ansi_color(0,Color),!.
 ansi_color(C,Color):- integer(C),block_colors(L),nth0(C,L,Color).
 ansi_color(C,Color):- color_int(C,I),ansi_color(I,Color).
 
-underline_print(W):- ansi_format([bold,underline],'~@',[W]),!.
-bold_print(W):- ansi_format([bold],'~@',[W]),!.
+on_bg(C,G):- ansi_format([bg(C),fg(white)],'~@',[call(G)]).
+on_bg(G):- get_bgc(C),on_bg(C,G).
+ansi_format_arc(Ansi,Format,Args):- on_bg(ansi_format(Ansi,Format,Args)),!.
+
+underline_print(W):- ansi_format_arc([bold,underline],'~@',[W]),!.
+bold_print(W):- ansi_format_arc([bold],'~@',[W]),!.
 
 compound_var(C):- \+ plain_var(C), \+ attvar(C), is_ftVar(C).
-hi_color_print(CI,W):- ansi_format([hfg(CI)],'~w',[W]).
+hi_color_print(CI,W):- ansi_format_arc([hfg(CI)],'~w',[W]).
+
+is_bg_sym_or_var(C):- attvar(C),get_attr(C,ci,fg(_)),!,fail.
 is_bg_sym_or_var(C):- (attvar(C); bg_sym(C); C==' '; C==''; C=='bg'; C == 0),!.
 
-var_color_print(C,W):- bg_sym(BG),C==BG, W==BG, !, write(' ').
-var_color_print(C,W):- bg_sym(BG),C==BG, plain_var(W),!, write(' ').
+
+var_color_print(C,W):- bg_sym(BG),C==BG, W==BG, !, write('$').
+var_color_print(C,W):- bg_sym(BG),C==BG, plain_var(W),!, write('%').
 var_color_print(C,W):- compound_var(C), arg(1,C,C1),!, var_color_print(W,C1).
 var_color_print(C,W):- compound_var(W), arg(1,W,W1),!, var_color_print(C,W1).
 var_color_print(C,W):- C\==W,plain_var(W),C=W, var_color_print(C,W).
 
-var_color_print(C,W):- C==' ',W==' ',!,write(' '),!.
+var_color_print(C,W):- C==' ',W==' ',!,on_bg(write(' ')),!.
 var_color_print(C,W):- integer(W),ansi_color(C,CI),!, hi_color_print(CI,W),!.
 var_color_print(C,W):- integer(W),i_glyph(W,WO),!,var_color_print(C,WO).
 %var_color_print(C,W):- char_type(W,space),!,write(' '),!.
-var_color_print(_,W):- char_type(W,space), ansi_format([],'~w',[W]),!.
-var_color_print(_,W):- i_glyph(W,G),ansi_format([],'~w',[G]),!.
+var_color_print(_,W):- char_type(W,space), ansi_format_arc([bg(black)],'~w',[W]),!.
+var_color_print(_,W):- i_glyph(W,G),on_bg(write('~w',[G])),!.
+
 
 %color_print(_,W):- write(W),!.
-color_print(C,W):- (has_color_c(C,OC);has_color_c(W,OC)),!,ansi_format([fg(OC)],'~w',['_']),!.
-color_print(C,W):- is_bg_sym_or_var(C),W=='_',!,ansi_format([],'~w',[' ']),!.
+color_print(C,W):- (has_color_c(C,OC);has_color_c(W,OC)),!,ansi_format_arc([fg(OC)],'~w',['_']),!.
+color_print(C,W):- is_bg_sym_or_var(C),W=='_',!,ansi_format_arc([bg(black)],'~w',[' ']),!.
 color_print(C,W):- is_bg_sym_or_var(C),W=='_',color_print(C,'+').
 
-color_print(C,W):- plain_var(C),integer(W),ansi_color(W,CI),!,ansi_format([fg(CI)],'~w',[W]),!.
-color_print(C,W):- plain_var(C),W=='?',!,ansi_format([],'~w',['?']),!.
-color_print(C,W):- plain_var(C),!,ansi_format([italic],'~w',[W]),!.
+color_print(C,W):- plain_var(C),integer(W),ansi_color(W,CI),!,ansi_format_arc([fg(CI)],'~w',[W]),!.
+color_print(C,W):- plain_var(C),W=='?',!,on_bg(magenta,ansi_format_arc([],'~w',['?'])),!.
+color_print(C,W):- plain_var(C),!,on_bg(ansi_format_arc([italic],'~w',[W])),!.
 
 color_print(C,W):- is_bg_sym_or_var(C),is_bg_sym_or_var(W), !, write(' ').
 
-color_print(C,W):- is_bg_sym_or_var(C),integer(W),W<10, ansi_color(W,CI),!,ansi_format([fg(CI)],'~w',[W]),!.
-color_print(C,W):- (is_ftVar(C);(bg_sym(C))), !, var_color_print(C,W).
-color_print(C,W):- is_bg_sym_or_var(C),!,ansi_format([],'~w',[W]),!.
+color_print(C,W):- is_bg_sym_or_var(C),integer(W),W<10, ansi_color(W,CI),!,ansi_format_arc([fg(CI)],'~w',[W]),!.
+color_print(C,W):- (is_ftVar(C);(bg_sym(C))), !, on_bg(yellow,var_color_print(C,W)).
+color_print(C,W):- is_bg_sym_or_var(C),!,on_bg(cyan,ansi_format_arc([],'~w',[W])),!.
 color_print(C-_,W):- !, color_print(C,W).
 color_print(C,W):- atom(C),color_int(C,N),integer(N),!,color_print(N,W).
-color_print(C,W):- integer(C),ansi_color(C,Color),ansi_format([bold,fg(Color)],'~w',[W]),!.
-color_print(C,W):- C==0,!,ansi_format([fg('#444444')],'~w',[W]),!.
+color_print(C,W):- integer(C),ansi_color(C,Color),on_bg(red,ansi_format_arc([bold,fg(Color)],'~w',[W])),!.
+color_print(C,W):- C==0,!,ansi_format_arc([fg('#444444')],'~w',[W]),!.
 
 color_name(C,W):- var(C),!,W=C.
 color_name(C-_,W):-!,color_name(C,W).
@@ -384,7 +396,7 @@ fg_dot(174).
 cant_be_dot(183).
 grid_dot(169).
 
-%print_g(H,V,C0,_,_,_,_):- has_color_c(C0),has_color_c(C0,C),!,  ansi_format([bold,fg('#ff8c00')],'~@',[(write('c'),user:print_g1(H,V,C))]).
+%print_g(H,V,C0,_,_,_,_):- has_color_c(C0),has_color_c(C0,C),!,  ansi_format_arc([bold,fg('#ff8c00')],'~@',[(write('c'),user:print_g1(H,V,C))]).
 %print_g(H,V,C0,_,_,_,_):- plain_var(C0),print_g1(H,V,C-'?'),!.
 
 print_g(H,V,C,_,_,_,_):- write(' '), print_g1(H,V,C),!.
@@ -402,7 +414,7 @@ object_cglyph(G,CGlyph):- color(G,C),object_glyph(G,Glyph),wots(CGlyph,color_pri
 
 %print_g1(E):- has_color_c(E,C),color_print(C,'+'),!.
 %print_g1(C0):- sub_term(E,C0),has_color_c(E,C),color_print(C,'='),!.
-print_g1(N):- plain_var(N),has_color_c(N,C),cant_be_dot(DOT),ansi_color(C,CI),ansi_format([fg(CI)],'~s',[[DOT]]),!.
+print_g1(N):- plain_var(N),has_color_c(N,C),cant_be_dot(DOT),ansi_color(C,CI),ansi_format_arc([fg(CI)],'~s',[[DOT]]),!.
 print_g1(N):- plain_var(N),has_color_c(N,C),format(chars(Codes),'~p',[N]),last(Codes,S),print_g2(C,S),!.
 print_g1(N):- into_color_glyph(N,C,Code),as_name(Code,S), color_print(C,S),!.
 print_g1(C):- plain_var(C), color_print(C,'.'),!.
@@ -424,10 +436,10 @@ into_color_glyph(N,C,Glyph):- plain_var(N),has_color_c(N,C),format(chars(Codes),
 into_color_glyph(N,C,Glyph):- has_color_c(N,C),format(chars(Codes),'~p',N),last(Codes,Glyph),!.
 
 into_color_glyph(W,C,FGD):- has_color_c(W,C), bg_dot(FGD),!.
+into_color_glyph(bg,Black,BGD):- get_bgc(Black), bg_dot(BGD),!.
 into_color_glyph(CTerm,Color,Code):- into_color_glyph_ez(CTerm,Color,Code),nonvar_or_ci(Code),!.
 into_color_glyph(C,C,VAR):- plain_var(C),var_dot(VAR),!.
-into_color_glyph(bg,black,BGD):- bg_dot(BGD),!.
-into_color_glyph(0,0,BGD):- bg_dot(BGD),!.
+into_color_glyph(0,Black,BGD):- !, into_color_glyph(bg,Black,BGD).
 into_color_glyph(C,C,FGD):- fg_dot(FGD),!.
 
 

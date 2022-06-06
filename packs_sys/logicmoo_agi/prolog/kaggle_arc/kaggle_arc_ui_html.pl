@@ -33,6 +33,28 @@
 :- use_module(library(http/http_files)).
 :- use_module(library(http/websocket)).
 
+:- if(current_module(logicmoo_arc)).
+:- use_module(library(xlisting/xlisting_web)).
+:- endif.
+
+:- multifile user:file_search_path/2.
+
+%user:file_search_path(document_root,	'/srv/htdocs').
+%user:file_search_path(document_root,  AbsolutePath):- arc_sub_path(arc_apps,AbsolutePath).
+
+% user:file_search_path(arc_apps,  AbsolutePath):- arc_sub_path(arc_apps,AbsolutePath).
+
+%:- http_handler('/ARC/', http_reply_from_files(arc_apps, []), [prefix]).
+
+%:- http_handler('/swish/arc/', swish_arc, [prefix]).
+
+user:file_search_path(arc,  AbsolutePath):- arc_sub_path('.',AbsolutePath).
+
+:- http_handler('/swish/arc/', swish_arc, [prefix]).
+:- http_handler('/swish/muarc/arcproc_right', arcproc_right, [prefix]).
+:- http_handler('/swish/muarc/arcproc_left', arcproc_left, [prefix]).
+
+
 % http_handler docs: http://www.swi-prolog.org/pldoc/man?predicate=http_handler/3
 % =http_handler(+Path, :Closure, +Options)=
 %
@@ -42,17 +64,17 @@
 % * The option =spawn= is used to spawn a thread to handle each new
 %   request (not strictly necessary, but otherwise we can only handle one
 %   client at a time since echo will block the thread)
-:- http_handler(root(.),
-                http_reply_from_files('.', []),
-                [prefix]).
+%:- http_handler(('/swish/arc/'), http_reply_from_files(arc, []), [prefix]).
 % * root(echo) indicates we're matching the echo path on the URL e.g.
 %   localhost:1777/echo of the server
 % * We create a closure using =http_upgrade_to_websocket=
 % * The option =spawn= is used to spawn a thread to handle each new
 %   request (not strictly necessary, but otherwise we can only handle one
 %   client at a time since echo will block the thread)
-:- http_handler(root(echo),
-                http_upgrade_to_websocket(echo, []),
+
+
+web_socket_later:- http_handler(('/swish/arc/echo'),
+                http_upgrade_to_websocket(web_socket_later_echo, []),
                 [spawn([])]).
 
 start_arc_server :-
@@ -69,27 +91,26 @@ stop_arc_server(Port) :-
 
 default_port(1777).
 
-%! echo(+WebSocket) is nondet.
+%! web_socket_later_echo(+WebSocket) is nondet.
 % This predicate is used to read in a message via websockets and echo it
 % back to the client
-echo(WebSocket) :-
+web_socket_later_echo(WebSocket) :-
     ws_receive(WebSocket, Message, [format(json)]),
     ( Message.opcode == close
     -> true
-    ; get_response(Message.data, Response),
+    ; get_response_echo_later(Message.data, Response),
       write("Response: "), writeln(Response),
       ws_send(WebSocket, json(Response)),
-      echo(WebSocket)
+      web_socket_later_echo(WebSocket)
     ).
 
 %! get_response(+Message, -Response) is det.
 % Pull the message content out of the JSON converted to a prolog dict
 % then add the current time, then pass it back up to be sent to the
 % client
-get_response(Message, Response) :-
+get_response_echo_later(Message, Response) :-
   get_time(Time),
   Response = _{message:Message.message, time: Time}.
-
 
 arc_http_server:- thread_property(ID,status(running)),ID=='http@1777',!.
 arc_http_server:- http_server(http_dispatch, [port(1777)]),
@@ -101,41 +122,38 @@ arc_http_server:- http_server(http_dispatch, [port(1777)]),
  thread_pool_create(media, 30,
                       [ local(100), global(100), trail(100),
                         backlog(100)
-                      ]).
+                      ]),
+ http_handler('/swish/arc/solve',     solve,     [spawn(compute)]),
+ http_handler('/swish/arc/thumbnail', thumbnail, [spawn(media)]).
 
-:- http_handler('/swish/ARC/solve',     solve,     [spawn(compute)]).
-:- http_handler('/swish/ARC/thumbnail', thumbnail, [spawn(media)]).
-
-
-:- http_handler(root(user/User), user(Method, User),
-                [ method(Method),
-                  methods([get,post,put])
-                ]).
+%:- http_handler('/swish/arc/user'/User), user(Method, User),[ method(Method), methods([get,post,put]) ]).
 
 
-:- http_handler('/favicon.ico', http_reply_file('favicon.ico', []), []).
+%:- http_handler('/favicon.ico', http_reply_file('favicon.ico', []), []).
 
-http:location(images,	root(images), []).
+%http:location(images,	root(images), []).
 
-:- multifile user:file_search_path/2.
 
-user:file_search_path(document_root,	'/srv/htdocs').
+swish_arc(Request):- 
+  arc_directory(ARC_DIR),
+  http_reply_from_files(ARC_DIR, [], Request).
 
-user:file_search_path(icons,		document_root(icons)).
+arcproc_right(_Request):- 
+  ((format('Content-type: text/html~n~n',[]),
+  format('<!DOCTYPE html><html><head></head><body><pre>~@</pre></body></html>~n~n',[(listing(arcproc_right/1),nop(www_dumpST))]),
+  flush_output_safe)),!.
+arcproc_right(Request):- swish_arc(Request),!.
 
-:- http_handler(images(.), serve_files_in_directory(icons), [prefix]).
+arcproc_left(_Request):- 
+  ((format('Content-type: text/html~n~n',[]),
+  format('<!DOCTYPE html><html><head></head><body><pre>~@</pre></body></html>~n~n',[listing(arcproc_left/1)]),
+  flush_output_safe)),!.
 
-:- http_handler('/ARC/', http_reply_from_files('apps', []), [prefix]).
-:- http_handler('/swish/arc/', swish_arc, [prefix]).
-:- http_handler(root('swish/arc/prolog_right'), prolog_right, [prefix]).
-:- http_handler(root('swish/arc/prolog_left'), prolog_left, [prefix]).
-
-swish_arc(F):- wdmsg(swish_arc(F)).
-prolog_right(F):- wdmsg(prolog_right(F)).
-prolog_right(F):- wdmsg(prolog_right(F)).
-
+:- if(current_module(logicmoo_arc)).
+arcproc_left(Request):- handler_logicmoo_cyclone(Request),!.
+:- else.
 :- initialization arc_http_server.
-
+:- endif.
 
 arc_html(`
 
@@ -143,3 +161,4 @@ arc_html(`
 
 `).
 
+:- fixup_exports.

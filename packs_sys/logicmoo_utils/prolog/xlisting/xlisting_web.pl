@@ -2117,7 +2117,7 @@ embed_test(URL,Width,Height):-
   format( '<div width="~w" height="~w" ><object data="~w"  width="100%" height="~w" type="text/html"><embed src="~w" width="100%" height="100%" onerror="alert(`URL invalid ~w !!`);"/></object></div>',
                 [     Width,     Height,              URL,                      Height,                        URL,        URL                  ]).
 
-slow_frame(Goal):- !,call(Goal).
+%slow_frame(Goal):- !,call(Goal).
 slow_frame(Goal):- slow_frame('300',Goal).
 slow_frame(_,Goal):- thread_self(main), \+ toplevel_pp(bfly),!, call(Goal).
 slow_frame(Height,Goal):- 
@@ -2712,7 +2712,8 @@ must_run0((G1,G2)):- !, call_cleanup(must_run0(G1),must_run0(G2)),!.
 
 %must_run0(Goal):- ignore(catch(no_undefined_preds(Goal),_,true)),!.
 must_run0(Goal):- flush_output_safe, 
-  (catch(must_or_rtrace(no_undefined_preds(Goal)),E,(wdmsg(E),www_dumpST,wdmsg(E=Goal),fail)) -> true ; wdmsg(assertion_failed(fail, Goal))),
+  (catch(must_or_rtrace(no_undefined_preds(Goal)),E,(wdmsg(E),www_dumpST,wdmsg(E=Goal),fail)) -> true ; 
+    wdmsg(nop(assertion_failed(fail, Goal)))),
   flush_output_safe.
 
 no_undefined_preds(G):- locally(set_prolog_flag(unknown,fail),G).
