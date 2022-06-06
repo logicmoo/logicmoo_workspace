@@ -4,6 +4,9 @@
   This work may not be copied and used by anyone other than the author Douglas Miles
   unless permission or license is granted (contact at business@logicmoo.org)
 */
+:- if(current_module(trill)).
+:- set_prolog_flag_until_eof(trill_term_expansion,false).
+:- endif.
 
 :- dynamic(row_mem/34).
 
@@ -234,4 +237,6 @@ save_calc_movement(H,V,Dir,HO,VO):- H2 is HO+H, V2 is VO+V,
     assert_if_new(is_adjacent_hv(H,V,Dir,H2,V2)))).
   
 is_adjacent_2points(HV,Dir,HV2,HV3):-  is_adjacent_point(HV,Dir,HV2),is_adjacent_point(HV2,Dir,HV3).
+
+:- fixup_exports.
 

@@ -4,6 +4,9 @@
   This work may not be copied and used by anyone other than the author Douglas Miles
   unless permission or license is granted (contact at business@logicmoo.org)
 */
+:- if(current_module(trill)).
+:- set_prolog_flag_until_eof(trill_term_expansion,false).
+:- endif.
 
 filter_indivs(In,Filter,Out):- include(matches_filter(Filter),In,Out).
 
@@ -58,10 +61,11 @@ iz(X,Y):- nonvar_or_ci(Y)->(subClassOf(P,Y),iz(X,P));(nonvar_or_ci(X),iz(X,P),su
 iz(X,Y):- object_shape(X,Y).
 
 :- dynamic(iz/2).
-subClassOf(outline,hollow).
-subClassOf(outline,thick1).
-subClassOf(outline,rectangle).
-subClassOf(outline,noexit).
+subClassOf(outline(_),noexit).
+subClassOf(outline(_),hollow).
+subClassOf(outl,hollow).
+subClassOf(outline(_),thick1).
+%subClassOf(outl,rectangle).
 
 subClassOf(hv_line(D),line(D)).
 subClassOf(dg_line(D),line(D)).
@@ -321,3 +325,6 @@ scale_grid(1,_GrowthChart,Grid,Grid).
 
 
 enum_scale(1).
+
+:- fixup_exports.
+

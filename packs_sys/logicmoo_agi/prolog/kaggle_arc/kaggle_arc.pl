@@ -16,6 +16,11 @@
 :- set_prolog_flag(access_level,system).
 :- dynamic(prolog:'$exported_op'/3).
 :- assert((system:'$exported_op'(_,_,_):- fail)).
+:- else.
+:- if(current_module(trill)).
+:- set_prolog_flag_until_eof(trill_term_expansion,false).
+:- endif.
+:- dynamic(muarc:ns4query/1).
 :- endif.
 %:- multifile('$exported_op'/3).
 :- system:ensure_loaded(library(logicmoo_common)).
@@ -147,9 +152,6 @@ show_arc_pair_progress(TestID,ExampleNum,In,Out):-
   show_shape_lib(pair),
   show_idea(PairName,In,Out,IH,IV,OH,OV,ShapesI,ShapesO),!.
 
-gr2o(Grid,Obj):- localpoints(Grid,NoisePoints), make_indiv_object(NoisePoints,[object_shape(noise)],Obj),!.
-%gr2o(Grid,Obj):- Grid=Obj.
-
 
 :- nb_linkval(test_rules,[rules]).
 :- nb_linkval(pair_rules,[rules]).
@@ -231,3 +233,4 @@ reuse_a_b(A,B,AA):-
 
 :- learn_shapes.
 
+:- fixup_exports.

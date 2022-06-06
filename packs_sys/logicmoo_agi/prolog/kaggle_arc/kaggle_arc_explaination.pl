@@ -4,6 +4,9 @@
   This work may not be copied and used by anyone other than the author Douglas Miles
   unless permission or license is granted (contact at business@logicmoo.org)
 */
+:- if(current_module(trill)).
+:- set_prolog_flag_until_eof(trill_term_expansion,false).
+:- endif.
 
 
 :- dynamic(is_gridname/2).
@@ -116,7 +119,7 @@ debug_indiv(A):- is_point_obj(A,Color,Point),
 */
 
 debug_indiv(obj(A)):- Obj = obj(A), is_list(A),!,
-  ignore((o2g(Obj,GGG), nonvar(GGG),asserta(g2o(GGG,Obj)))),
+  ignore((o2g(Obj,GGG), nonvar(GGG),asserta_if_new(g2o(GGG,Obj)))),
 %debug_indiv(Obj):- Obj = obj(A), is_list(A),  
   once(colors(Obj,[cc(FC,_)|_]);FC=9),
   sort_obj_props(A,AS),
@@ -229,4 +232,5 @@ debug_indiv(Obj,_,F,[A]):- maplist(is_cpoint,A),!,
 
 debug_indiv(_,P,_,_):- pt(P).
 
+:- fixup_exports.
 

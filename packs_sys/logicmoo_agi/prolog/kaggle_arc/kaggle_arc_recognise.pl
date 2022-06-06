@@ -4,11 +4,14 @@
   This work may not be copied and used by anyone other than the author Douglas Miles
   unless permission or license is granted (contact at business@logicmoo.org)
 */
+:- if(current_module(trill)).
+:- set_prolog_flag_until_eof(trill_term_expansion,false).
+:- endif.
 
 :- discontiguous h666/2. 
 :- discontiguous f666/2. 
 
-test_ogs:- forall(test_ogs(_,_),true).
+test_ogs:- forall(test_ogs0(_,_),true).
 
 
 grid_minus_grid(B,A,OI):- grid_size(B,BH,BV),grid_size(A,AH,AV),(BH\==AH;BV\==AV),!,OI=B.
@@ -54,9 +57,10 @@ test_ogs(H,V):- clsmake,
 
 test_ogs0(H,V):- clsmake,
   wqln("searching..."),
+  ff666(T,FG),
+  print_grid(FG),
   ss666(T,SG),
-  ff666(T,FG), 
-  (ogs(H,V,FG,SG) *-> once(show_match(H,V,FG,SG)) ; (show_mismatch(FG,SG),fail)).
+  (ogs(H,V,FG,SG) *-> once(show_match(H,V,FG,SG)) ; ((show_mismatch(FG,SG)),fail)).
 
 show_mismatch(F,G):- % fail, 
   nl,dash_char,
@@ -83,15 +87,12 @@ print_fgrid(GH,GV,F):- ((\+ \+ ((constrain_grid_f(F,_Trig,_FG),print_grid(GH,GV,
 print_sgrid(F):- ((\+ \+ ((constrain_grid_s(F,_Trig,_FG),print_grid(F),nl)))),!.
 
 
-constrain_type(_CheckType,_Grid,G,G):-!.
-constrain_type(CheckType,Grid,G,GG):- is_list(G),!,maplist(constrain_type(CheckType,Grid),G,GG).
-%constrain_type(CheckType,Grid,G,GG):- is_bg_color(G),freeze(CheckType,\+ is_fg_color(GG)),!.
-%constrain_type(CheckType,Grid,G,GG):- is_color(G),!,freeze(CheckType,G==GG).
-constrain_type(CheckType,_Grid,G,GG):- is_bg_color(G), freeze(CheckType,G=GG),!.
-constrain_type(_CheckType,_Grid,G,G):- is_fg_color(G),!.
-constrain_type(CheckType,_Grid,G,GG):- freeze(CheckType,G=GG).
 
+%constrain_type(Var,Cond):- nonvar(Var),!,call(Cond).
+%constrain_type(Var,Cond):- frozen(Var,Goals),sub_term(E,Goals),E=@=Cond,!. % wdmsg(skipping(Cond)),trace.
+constrain_type(Var,Cond):- freeze(Var,Cond).
   
+
 ogs(H,V,FG,SG):-
   %constrain_type(CheckType,FG,FG,FGC),!,
   ogs_0(CheckType,H,V,FG,SG),
@@ -271,7 +272,7 @@ set_fg_vars(Vars):-
 set_as_fg(V,fg(N)):- atomic(N), put_attr(V,ci,fg(N)),!,atom_concat(fg,N,Lookup),nb_linkval(Lookup,V).
 set_as_fg(V,Sym):- put_attr(V,ci,Sym).
 
-is_fg_color_if_nonvar(Trig,V):- plain_var(V),Trig==run,!,fail,freeze(V,is_fg_color_if_nonvar(Trig,V)).
+is_fg_color_if_nonvar(Trig,V):- plain_var(V),Trig==run,!,fail,constrain_type(V,is_fg_color_if_nonvar(Trig,V)).
 is_fg_color_if_nonvar(Trig,V):- nop(wqnl(is_fg_color_if_nonvar(Trig,V))),fail.
 is_fg_color_if_nonvar(_Trig,C):- is_fg_color(C),!.
 is_bg(C):- is_bg_color(C).
@@ -288,26 +289,31 @@ constrain_grid_now(CT,Trig,GridIn,Hi,Vi,GH,GV,GridO):-
 % Out of bounds on Source Canvas
 constrain_ele(s,GH,GV,_Trig,_GridIn,H,V,_C1I,_C1O,_GridO):- (H==1;V==1;V==GV;H==GH),!.
 % FG Source Canvas
+constrain_ele(s,_GH,_GV,_Trig,_GridIn,_H,_V,C1I,C1O,_GridO):- nonvar(C1I), nonvar(C1O),!, C1O\==C1I,!,fail.
 constrain_ele(s,_GH,_GV,_Trig,_GridIn,_H,_V,C1I,C1O,_GridO):- is_spec_color(C1I,_),!, 
-  %freeze(C1O, \+ is_bg_color(C1O)), 
+  %constrain_type(C1O, \+ is_bg_color(C1O)), 
   C1I=C1O.
 % BG Source Canvas
 constrain_ele(s,_GH,_GV,Trig,_GridIn,_H,_V,C1I,C1O,_GridO):- is_bg_color(C1I),!,
-  %freeze(C1O, \+ is_fg_color(C1O)),
-  freeze(Trig, (\+ is_fg_color(C1O))).
+  %constrain_type(C1O, \+ is_fg_color(C1O)),
+  constrain_type(Trig, (\+ is_fg_color(C1O))).
 
 % BG Find On Canvas
 constrain_ele(f,_GH,_GV,_Trig,_GridIn,_H,_V,C1I,_C1O,_GridO):- is_bg_color(C1I),!.
 % Find FG On Canvas
+constrain_ele(f,_GH,_GV,_Trig,_GridIn,_H,_V,C1I,C1O,_GridO):- nonvar(C1I), nonvar(C1O),!, C1O\==C1I,!,fail.
 constrain_ele(f,_GH,_GV,Trig,GridIn,H,V,C1I,C1O,GridO):- is_spec_color(C1I,_),!, 
-  (C1O==C1I -> true ; must_det_l((freeze(Trig,C1I=C1O), attach_ci(C1O,C1I)))), 
+  (C1O==C1I -> true ; must_det_l((constrain_type(Trig,C1I=C1O), attach_ci(C1O,C1I)))), 
   constrain_dir_ele(f,Trig,[n,s,e,w],GridIn,H,V,C1I,C1O,GridO).
-% UNKOWN
+constrain_ele(f,_GH,_GV,Trig,GridIn,H,V,C1I,C1O,GridO):- is_spec_color(C1I,_),!, 
+  (C1O==C1I -> true ; must_det_l((constrain_type(Trig,C1I=C1O), attach_ci(C1O,C1I)))), 
+  constrain_dir_ele(f,Trig,[n,s,e,w],GridIn,H,V,C1I,C1O,GridO).
+% UNKNOWN
 constrain_ele(_CT,_GH,_GV,_Trig,_GridIn,_H,_V,_C1I,_C1O,_GridO).
 
 same_colors(_Trig,C1I,_C1O):- \+ is_spec_color(C1I,_),!.
 same_colors(_Trig,C1I,C1O):- nonvar(C1O),!,C1I=C1O.
-same_colors(Trig,C1I,C1O):- freeze(C1O,same_colors(Trig,C1I,C1O)).
+same_colors(Trig,C1I,C1O):- constrain_type(C1O,same_colors(Trig,C1I,C1O)).
 %same_colors(C1I,C1O):- is_spec_color(C1O,_),!,C1I=C1O.
 
 attach_ci(CO,_C):- nonvar_or_ci(CO),!.
@@ -338,7 +344,7 @@ ci:attr_unify_hook(_,_Value).
 %constrain_dir_ele(CT,Trig,[_|SEW],GridIn,H,V,GridO):- constrain_dir_ele(CT,Trig,SEW,GridIn,H,V,GridO).
 
 mfreeze(Trig,_CDE):- nonvar(Trig),!.
-mfreeze(Trig,CDE):- freeze(Trig,CDE).
+mfreeze(Trig,CDE):- constrain_type(Trig,CDE).
 
 constrain_dir_ele(_CT,_Trig,[],_GridIn,_H,_V,_C1I,_C1O,_GridO).
 constrain_dir_ele(CT, Trig,[Dir|SEW],GridIn,H,V,C1I,C1O,GridO):-
@@ -559,6 +565,15 @@ f666(_,
  [_,_,1,_,_],
  [_,_,1,_,_]]).
 
+
+f666(_,
+[[_,_,1,_,_],
+ [_,_,1,_,_],
+ [2,2,1,1,1],
+ [_,_,1,_,_],
+ [_,_,1,_,_]]).
+
+
 f666(_,
 [[_,_,X,_,_],
  [_,_,X,_,_],
@@ -617,4 +632,5 @@ fix_v_range(GridIn,_LowV,_HiV,_H,V,V,GridIn).
 
 
   
+:- fixup_exports.
 

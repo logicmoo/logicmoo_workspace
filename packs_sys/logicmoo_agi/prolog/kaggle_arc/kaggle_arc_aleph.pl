@@ -32,7 +32,11 @@
 /** <examples>
 ?- induce_tree(Program).
 */
-:-use_module(library(aleph)).
+:- if(current_module(trill)).
+:- set_prolog_flag_until_eof(trill_term_expansion,false).
+:- endif.
+
+:- use_module(library(aleph)).
 :- if(current_predicate(use_rendering/1)).
 :- use_rendering(prolog).
 :- endif.
@@ -145,4 +149,5 @@ f(1.0,0.0).
 :-end_in_neg.
 
 
+:- fixup_exports.
 

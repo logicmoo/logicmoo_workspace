@@ -2,6 +2,15 @@
 %  set_local_points(AR,B).
 %unset_points(AR,B):- set_local_points(AR,B).
 
+
+constrain_type(_CheckType,_Grid,G,G):-!.
+constrain_type(CheckType,Grid,G,GG):- is_list(G),!,maplist(constrain_type(CheckType,Grid),G,GG).
+%constrain_type(CheckType,Grid,G,GG):- is_bg_color(G),constrain_type(CheckType,\+ is_fg_color(GG)),!.
+%constrain_type(CheckType,Grid,G,GG):- is_color(G),!,constrain_type(CheckType,G==GG).
+constrain_type(CheckType,_Grid,G,GG):- is_bg_color(G), constrain_type(CheckType,G=GG),!.
+constrain_type(_CheckType,_Grid,G,G):- is_fg_color(G),!.
+constrain_type(CheckType,_Grid,G,GG):- constrain_type(CheckType,G=GG).
+
 /*
 expand_color(FG,Was,C,CC):- FG== fg,!,expand_color(C,Was,C,CC).
 expand_color(FG,Was,C,CC):- var(C),is_color_no_bgc(FG),!,FG=C.
@@ -544,7 +553,7 @@ unraw_inds2(Types,IndvS,IndvO):-
   single_point(C-Point3,Rest2,Rest),
   finish_grp(C,[C-Point3,C-Point2,C-Point1],Point3,Dir,Rest,NewGroup1,RRest),
   reverse(NewGroup1,NewGroupR),
-  reverse_dir(Dir,RevDir),
+  reverse_nav(Dir,RevDir),
   finish_grp(C,NewGroupR,Point1,RevDir,RRest,NewGroup,RRestO),
   unraw_inds2(Types,[NewGroup|RRestO],IndvO).
 
@@ -881,4 +890,6 @@ make_grid_indexer:-
 %:- ensure_loaded(gi_cache).
 
 
+gr2o(Grid,Obj):- localpoints(Grid,NoisePoints), make_indiv_object(NoisePoints,[object_shape(noise)],Obj),!.
+%gr2o(Grid,Obj):- Grid=Obj.
 

@@ -4,7 +4,9 @@
   This work may not be copied and used by anyone other than the author Douglas Miles
   unless permission or license is granted (contact at business@logicmoo.org)
 */
-
+:- if(current_module(trill)).
+:- set_prolog_flag_until_eof(trill_term_expansion,false).
+:- endif.
 
 showdiff(A,B):- is_group(A), is_group(B), showdiff_groups(A,B),!.
 showdiff(A,B):- is_object(A), is_object(B), showdiff_objects(A,B),!.
@@ -480,3 +482,6 @@ count_difs0(Out,GridO,Errors):-
   compound_name_arguments(Out,F,A),
   compound_name_arguments(GridO,FO,AO),
   count_difs0([F|A],[FO|AO],Errors).
+
+:- fixup_exports.
+

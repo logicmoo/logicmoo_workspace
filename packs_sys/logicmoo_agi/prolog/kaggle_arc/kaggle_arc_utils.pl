@@ -4,6 +4,9 @@
   This work may not be copied and used by anyone other than the author Douglas Miles
   unless permission or license is granted (contact at business@logicmoo.org)
 */
+:- if(current_module(trill)).
+:- set_prolog_flag_until_eof(trill_term_expansion,false).
+:- endif.
 
 set_nth1(1,[_|Row],E,[E|Row]):-!.
 set_nth1(N,[W|Row],E,[W|RowMod]):- Nm1 is N-1, set_nth1(Nm1,Row,E,RowMod).
@@ -16,7 +19,6 @@ nth_fact(P,I):- clause(P,true,Ref),nth_clause(P,I,Ref).
 
 nonvar_or_ci(C):- (nonvar(C);attvar(C)),!.
 
-%gr2o(Grid,Obj):- Grid=Obj.
 add_i(Info):- 
  notrace((tersify(Info,InfoT),
  nb_current(test_rules,TRules),
@@ -186,4 +188,6 @@ pred_intersection(P2,[A|APoints],BPoints,[A|IntersectedA],[B|IntersectedB],LeftO
   pred_intersection(P2,APoints,BPointsMinusA,IntersectedA,IntersectedB,LeftOverA,LeftOverB).
 pred_intersection(P2,[A|APoints],BPoints,IntersectedA,IntersectedB,[A|LeftOverA],LeftOverB):-
   pred_intersection(P2,APoints,BPoints,IntersectedA,IntersectedB,LeftOverA,LeftOverB).
+
+:- fixup_exports.
 

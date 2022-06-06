@@ -4,6 +4,9 @@
   This work may not be copied and used by anyone other than the author Douglas Miles
   unless permission or license is granted (contact at business@logicmoo.org)
 */
+:- if(current_module(trill)).
+:- set_prolog_flag_until_eof(trill_term_expansion,false).
+:- endif.
 
 
 decl_pt(_):- fail.
@@ -207,3 +210,6 @@ one_change(same_size, Grid1, Grid2):- plain_var(Grid2), grid_size(Grid1, C1), gr
 one_change(resize(C1, C2), Grid1, Grid2):- plain_var(Grid2), grid_size(Grid1, C1), grid_size(Grid2, C2).
 
 */
+
+:- fixup_exports.
+

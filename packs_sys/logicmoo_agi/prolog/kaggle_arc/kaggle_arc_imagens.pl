@@ -4,6 +4,9 @@
   This work may not be copied and used by anyone other than the author Douglas Miles
   unless permission or license is granted (contact at business@logicmoo.org)
 */
+:- if(current_module(trill)).
+:- set_prolog_flag_until_eof(trill_term_expansion,false).
+:- endif.
 
 :- discontiguous in_shape_lib/2.
 :- discontiguous make_shape/2.
@@ -343,4 +346,5 @@ in_grid_shape_lib([Shape,solid],Grid,GrowthChart):-
   put_attr(Color,ci,fg(1)), 
   Fill = Color.
 
+:- fixup_exports.
 

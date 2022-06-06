@@ -4,6 +4,9 @@
   This work may not be copied and used by anyone other than the author Douglas Miles
   unless permission or license is granted (contact at business@logicmoo.org)
 */
+:- if(current_module(trill)).
+:- set_prolog_flag_until_eof(trill_term_expansion,false).
+:- endif.
 
 :- multifile(decl_pt/1).
 :- discontiguous(decl_pt/1).
@@ -303,7 +306,7 @@ globalpoints(I,X):- var_check(I,globalpoints(I,X)).
 globalpoints(G,[G]):- is_point(G),!.
 globalpoints(options(X),_Points):- trace_or_throw(globalpoints(options(X))).
 globalpoints(Grid,Points):- is_grid(Grid),!, grid_size(Grid,HH,VV), grid_to_points(Grid,HH,VV,Points).
-globalpoints(Grid,Points):- is_list(Grid),!,maplist(globalpoints,Grid,MPoints),append_sets(MPoints,Points).
+globalpoints(Grid,Points):- is_list(Grid),!,maplist(call(globalpoints),Grid,MPoints),append_sets(MPoints,Points).
 globalpoints(I,X):- globalpoints0(I,X),!.
 globalpoints(I,X):- localpoints0(I,X),!.
 
@@ -514,4 +517,5 @@ three_points(C,Grid2,HV1,HV2,HV3,Grid4):-
   is_adjacent_point(HV1,Dir1,HV2), select(C-HV2,Grid2,Grid3),
   is_adjacent_point(HV2,Dir2,HV3), select(C-HV3,Grid3,Grid4).
 
+:- fixup_exports.
 

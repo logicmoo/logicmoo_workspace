@@ -4,8 +4,11 @@
   This work may not be copied and used by anyone other than the author Douglas Miles
   unless permission or license is granted (contact at business@logicmoo.org)
 */
+:- if(current_module(trill)).
+:- set_prolog_flag_until_eof(trill_term_expansion,false).
+:- endif.
 
-test_name(Name):- 
+arc_test_name(Name):- 
   findall(Name,kaggle_arc(Name,_,_,_),All),
   list_to_set(All,AllS),member(Name,AllS).
 test_info(Name,InfoS):- fix_test_name(Name,CName,_),
@@ -35,7 +38,7 @@ test_names_by_fav_rev(Name):- test_names_ord_favs(All),
 test_names_by_hard(Name):- test_names_ord_favs(FavList),test_names_ord_hard(NamesByHard),append(FavList,NamesByHard,All),
  list_to_set(All,AllS),!,member(Name,AllS).*/
 test_names_ord_favs(FavListR):- findall(Name,fav(Name),FavList),list_to_set(FavList,FavListS),reverse(FavListS,FavListR).
-test_names_ord_hard(NamesByHard):- findall(Hard-Name,(test_name(Name),hardness_of_name(Name,Hard)),All),
+test_names_ord_hard(NamesByHard):- findall(Hard-Name,(arc_test_name(Name),hardness_of_name(Name,Hard)),All),
   keysort(All,AllK), reverse(AllK,AllR), maplist(arg(2),AllR,NamesByHard),!.
 
 %:- use_module(library(pfc_lib)).
@@ -157,6 +160,7 @@ fav(X,[]):- clause(fav(X),true).
 :- use_module(library(http/json)).
 
 task_classes :-
+    clsmake,
     csv_read_file('task_classes.csv', CSV, []),
     CSV = [Colnames|Rows],
     Colnames =.. [row,_|Names],
@@ -219,7 +223,7 @@ if like in the game of TTT you can win, but not diagonlly.. place the color on t
 
 */
 
-current_test_name(Name):- nb_current(test_name,Name),!.
+current_test_name(Name):- nb_current(arc_test_name,Name),!.
 current_test_name([]).
 
 /*  
@@ -229,6 +233,7 @@ current_test_name([]).
 %(fav(_,P)/(flatten([P],Flat),member(E,Flat))) ==> fav_trait(E).
 
 */
+:- dynamic(muarc:kaggle_arc_json/4).
 
 
 load_json_files(F,Mask):- 
@@ -251,8 +256,8 @@ load_json_file(F, BaseName, FullName):- Testname=..[F,BaseName],
     load_json_of_file(Testname,ExampleNum,[input=In,output=Out]):-
        json_to_colors(In,InColor),
        json_to_colors(Out,OutColor),
-       assert_if_new(kaggle_arc_json(Testname,ExampleNum,InColor,OutColor)),!.
-  load_json_of_file(Name,Type,[input=In,output=Out]):-assert_if_new(kaggle_arc_json(Name,Type,In,Out)),!.
+       assert_if_new(muarc:kaggle_arc_json(Testname,ExampleNum,InColor,OutColor)),!.
+  load_json_of_file(Name,Type,[input=In,output=Out]):-assert_if_new(muarc:kaggle_arc_json(Name,Type,In,Out)),!.
   load_json_of_file(Name,Type,[H|T]):- !, forall(nth0(N,[H|T],E), load_json_of_file(Name,Type+N,E)).
   load_json_of_file(N,T,V):- wdmsg(load_json_of_file(N,T,V)),!.
 
@@ -264,7 +269,7 @@ json_to_colors(Out,Color):- grid_color_code(Out,Color).
 :- load_json_files(t,'./data/training/*.json').
 :- load_json_files(v,'./data/evaluation/*.json').
 %:- load_json_files(v,'./data/test/*.json').
-kaggle_arc(TName,ExampleNum,In,Out):- kaggle_arc_json(TName,ExampleNum,In,Out).
+kaggle_arc(TName,ExampleNum,In,Out):- muarc:kaggle_arc_json(TName,ExampleNum,In,Out).
 % ExampleNum is tst or trn
 /*
 kaggle_arc(t(Name), TypeI, In, Out):- 
@@ -284,6 +289,7 @@ fix_test_name(X,v(X),_):- kaggle_arc(v(X),_,_,_),!.
 print_trainer0:- arc(t('25d487eb')).
 print_eval0:- arc(v('009d5c81')).
 
+:- dynamic(more_task_info/2).
 more_task_info(t('0d3d703e'),[+mask_match,+shape_match,-rotation_match,-color_match,associate_colors_to_colors,training,'(4, 1)','https://www.kaggle.com/davidbnn92/task-tagging']).
 more_task_info(t(d511f180),[+mask_match,+shape_match,+'Errors',-rotation_match,-color_match,associate_colors_to_colors,training,'(3, 1)','https://www.kaggle.com/c/abstraction-and-reasoning-challenge/discussion/131021#760920']).
 more_task_info(t('27a28665'),[-mask_match,-shape_match,-rotation_match,-color_match,associate_colors_to_patterns,take_negative,associate_images_to_patterns,training,'(7, 3)','https://www.kaggle.com/davidbnn92/task-tagging']).
@@ -1185,3 +1191,4 @@ more_task_info(v('40f6cd08'),[+mask_match,+shape_match,+color_match,-rotation_ma
 more_task_info(v('414297c0'),[-mask_match,-shape_match,-rotation_match,-color_match,test,'(3, 1)']).
 more_task_info(v('423a55dc'),[+shape_match,+color_match,-mask_match,-rotation_match,test,'(5, 1)']).
 
+:- fixup_exports.

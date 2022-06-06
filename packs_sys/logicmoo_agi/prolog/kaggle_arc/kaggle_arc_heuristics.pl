@@ -4,10 +4,13 @@
   This work may not be copied and used by anyone other than the author Douglas Miles
   unless permission or license is granted (contact at business@logicmoo.org)
 */
+:- if(current_module(trill)).
+:- set_prolog_flag_until_eof(trill_term_expansion,false).
+:- endif.
 
 :- discontiguous individualizers_from_pair/9.
 :- discontiguous grid_color_individualizer/19.
-  
+
 :- ensure_loaded(kaggle_arc_intruder).
 
 
@@ -96,11 +99,11 @@ grid_color_individualizer(PairName,In,Out,IH,IV,OH,OV,
 grid_color_individualizer0(PairName,In,Out,IH,IV,OH,OV,
     _ICs,IPCs,CommonCs,OPCs,_OCs,
     _ICsL,IPCsL,CommonCsL,OPCsL,_OCsL,
-    ShapesI,ShapesO):- fail,
+    ShapesI,ShapesO):- % fail,
   CommonCsL>0,
   IPCsL>0, OPCsL==0,
     once((
-  add_cond(hasCommonColors(sol,CommonCs)),
+  add_cond(hasCommonColors(pair,CommonCs)),
   add_cond(hasPrivateColor(out,OPCs)),
   add_cond(hasPrivateColor(in,IPCs)),
   do_action(delete_colors(CommonCs,Out,OmI)),
@@ -108,7 +111,7 @@ grid_color_individualizer0(PairName,In,Out,IH,IV,OH,OV,
   show_pair_indivs(IH,IV,OH,OV,grid_color_individualizer,PairName,ImO,OmI),
   mass(ImO,IMass),mass(OmI,OMass),
   %one_is_zero(IMass,OMass),
-  individuate([options([full])],ImO,NoiseObject), do_action(add_shape_lib(sol,NoiseObject)),
+  individuate([options([full])],ImO,NoiseObject), do_action(add_shape_lib(pair,NoiseObject)),
   individuate([options([by_color(IPCs)])],ImO,NewImO), do_action(add_shape_lib(noise,NewImO)),
   tie_break_individualizer(PairName,ImO,OmI,IMass,OMass,ShapesI,ShapesO))).
 
@@ -121,7 +124,7 @@ grid_color_individualizer0(PairName,In,Out,IH,IV,OH,OV,
   CommonCsL>0,
   once((
   one_is_zero(IPCsL,OPCsL),
-  add_cond(hasCommonColors(sol,CommonCs)),
+  add_cond(hasCommonColors(pair,CommonCs)),
   add_cond(hasPrivateColor(out,OPCs)),
   add_cond(hasPrivateColor(in,IPCs)),
   do_action(delete_colors(OPCs,Out,OmI)),
@@ -130,7 +133,7 @@ grid_color_individualizer0(PairName,In,Out,IH,IV,OH,OV,
   mass(ImO,IMass),mass(OmI,OMass),
   IMass>0,OMass>0, OPCsL == 0,
   ShapesI = options([solid(squares),defaults]),
-  individuate([options([solid(squares)])],ImO,NewImO), do_action(add_shape_lib(sol,NewImO)),
+  individuate([options([solid(squares)])],ImO,NewImO), do_action(add_shape_lib(pair,NewImO)),
   add_indiv(in,ShapesI),
   add_comparitor(-size),
   show_pair_indivs(IH,IV,OH,OV,'Filter noise',PairName,ImO,OmI),
@@ -148,5 +151,5 @@ delete_colors([C|IPLs],In,Out):-
  delete_colors(IPLs,Mid,Out).
 
 
-
+:- fixup_exports.
 

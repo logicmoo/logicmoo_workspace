@@ -4,6 +4,10 @@
   This work may not be copied and used by anyone other than the author Douglas Miles
   unless permission or license is granted (contact at business@logicmoo.org)
 */
+:- if(current_module(trill)).
+:- set_prolog_flag_until_eof(trill_term_expansion,false).
+:- endif.
+
 tersify(I,O):- tersify1(I,M),tersify2(M,O).
 
 tersify1(I,O):- is_grid(I), into_gridnameA(I,O),!. 
@@ -461,7 +465,7 @@ save_codes(Max):-
    % ignore((0 is Code mod 50, format(File,'\n\n~d:',[Code]), put_code(File,Code))),
   ),put_code(Code))))),
   % format('~N~s~N',[CCC]),
-  assert(i_syms(CCC)).
+  assertz(i_syms(CCC)).
 
 save_codes:- save_codes(42600).
 :- save_codes.
@@ -471,4 +475,5 @@ get_glyph(Point,Glyph):-
   get_grid_num(Point,N),i_glyph(N,Glyph).
 */
 
+:- fixup_exports.
 

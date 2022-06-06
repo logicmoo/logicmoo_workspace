@@ -4,6 +4,9 @@
   This work may not be copied and used by anyone other than the author Douglas Miles
   unless permission or license is granted (contact at business@logicmoo.org)
 */
+:- if(current_module(trill)).
+:- set_prolog_flag_until_eof(trill_term_expansion,false).
+:- endif.
 
 :- use_module(library(multivar)).
 
@@ -104,7 +107,7 @@ individuate(ROptions,Grid,IndvS):-
 
 individuate(Reserved,NewOptions,Points,IndvS):-  is_points_list(Points),points_to_grid(Points,Grid),!, 
    individuate(Reserved,NewOptions,Grid,IndvS).
-individuate(Reserved,NewOptions,Grid,IndvS):-
+individuate(Reserved,NewOptions,Grid,IndvS):-   
    notrace(grid_size(Grid,H,V)),
    wdmsg(individuate(H,V)),
    must_be_free(IndvS),
@@ -177,7 +180,7 @@ individuals_list(GH,GV,Sofar,ID,Options,Reserved,P,Grid,Sofar,P):-!,
 must_be_nonvar(X):- assertion(nonvar_or_ci(X)),!.
 
 fsi(OUTReserved,OUTNewGrid,OUTOptions,H,V,Sofar,ID,Options,Reserved,Points,Grid,OUTSofar,OUTNextScanPoints):-
-  as_debug(9,(mass(Sofar,Mass),length(Sofar,Count),pt(t([fsi=Options,sofar=Mass/Count])))),
+  as_debug(8,(mass(Sofar,Mass),length(Sofar,Count),pt(t([fsi=Options,sofar=Mass/Count])))),
   maplist(must_be_free,[OUTReserved,OUTNewGrid,OUTOptions,OUTSofar,OUTNextScanPoints]),
   assertion(maplist(nonvar_or_ci,[Options,H,V,Sofar,ID,Options,r,Reserved,Points,Grid])),
   %trace,
@@ -267,12 +270,15 @@ search_lib([Obj|ReservedI],GridO,NO,H,V,Sofar,ID,[Obj|NO],ReservedI,Points,Grid,
    is_group(Obj), Reserved = Obj, !, proccess_overlap_reserved(GridO,Grid,ID,H,V,Reserved,Sofar,SofarOut,Points,NextScanPoints,_Unreserved,_StillReserved).
    
 search_lib([Obj|ReservedI],GridO,NO,H,V,Sofar,ID,[Obj|NO],ReservedI,Points,Grid,SofarOut,NextScanPoints):-
-   is_object(Obj), Reserved = [Obj], !,   proccess_overlap_reserved(GridO,Grid,ID,H,V,Reserved,Sofar,SofarOut,Points,NextScanPoints,_Unreserved,_StillReserved).
+   is_object(Obj), Reserved = [Obj], !, proccess_overlap_reserved(GridO,Grid,ID,H,V,Reserved,Sofar,SofarOut,Points,NextScanPoints,_Unreserved,_StillReserved).
 
 search_lib([Obj|ReservedI],GridO,NO,H,V,Sofar,ID,[Obj|NO],ReservedI,Points,Grid,SofarOut,NextScanPoints):-
-   is_grid(Obj), Reserved = [Obj], !,  proccess_overlap_reserved(GridO,Grid,ID,H,V,Reserved,Sofar,SofarOut,Points,NextScanPoints,_Unreserved,_StillReserved).
+   is_grid(Obj), Reserved = [Obj], !, proccess_overlap_reserved(GridO,Grid,ID,H,V,Reserved,Sofar,SofarOut,Points,NextScanPoints,_Unreserved,_StillReserved).
 
 proccess_overlap_reserved(GridO,Grid,ID,H,V,RestReserved,Sofar,SofarOut,Points,NextScanPoints,[Obj|Unreserved],StillReserved):-  
+   length(RestReserved,ReservedLen),
+   ignore((ReservedLen>4,pt(reservedLen=ReservedLen))),
+
    member(Obj,RestReserved),
    Points\==[],
   \+ color(Obj,black),
@@ -655,7 +661,7 @@ unraw_inds2(Options,IndvS,IndvO):-
   single_point(C-Point3,Rest2,Rest),
   finish_grp(C,[C-Point3,C-Point2,object_shape(diagonal),C-Point1],Point3,Dir,Rest,NewGroup1,RRest),
   reverse(NewGroup1,NewGroupR),
-  reverse_dir(Dir,RevDir),
+  reverse_nav(Dir,RevDir),
   finish_grp(C,NewGroupR,Point1,RevDir,RRest,NewGroup,RRestO),
   % minimum 4 findall(C-CP,member(C-CP,NewGroup),LL),LL=[_,_,_,_|_],
   unraw_inds2(Options,[NewGroup|RRestO],IndvO).
@@ -669,7 +675,7 @@ unraw_inds2(Options,IndvS,IndvO):-  % fail,
   single_point(C-Point2,Rest1,Rest2),
   finish_grp(C,[C-Point2,object_shape(diagonal),C-Point1],Point2,Dir,Rest2,NewGroup1,RRest),
   reverse(NewGroup1,NewGroupR),
-  reverse_dir(Dir,RevDir),
+  reverse_nav(Dir,RevDir),
   finish_grp(C,NewGroupR,Point1,RevDir,RRest,NewGroup,RRestO),
   unraw_inds2(Options,[NewGroup|RRestO],IndvO).
 
@@ -737,4 +743,5 @@ merge_a_b(A,B,AA):-
   ignore((How ==[]-> nop(pt(shared_object(GlyphB->GlyphA))); 
     (pt(same_object(GlyphA,GlyphB,How))))).
 
+:- fixup_exports.
 

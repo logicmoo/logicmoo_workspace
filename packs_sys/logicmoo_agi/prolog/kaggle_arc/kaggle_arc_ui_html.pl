@@ -18,6 +18,9 @@
   ]
 ).
 
+:- if(current_module(trill)).
+:- set_prolog_flag_until_eof(trill_term_expansion,false).
+:- endif.
 
 :- use_module(library(thread_pool)).
 :- use_module(library(http/thread_httpd)).

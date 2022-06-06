@@ -4,6 +4,9 @@
   This work may not be copied and used by anyone other than the author Douglas Miles
   unless permission or license is granted (contact at business@logicmoo.org)
 */
+:- if(current_module(trill)).
+:- set_prolog_flag_until_eof(trill_term_expansion,false).
+:- endif.
 
 rot_by_90([A,B,C,D]):- rot_by_90_0([A,B,C,D,A,B,C]).
 
@@ -117,7 +120,7 @@ with_named_pair(learn,TestID,PairName,In,Out):- !,
   ((wqnl(learned(TestID=PairName)),nl)).
 
 new_test_id(TestID):-
-  nb_setval(test_name,TestID),
+  nb_setval(arc_test_name,TestID),
   set_flag(indiv,0),
   nb_delete(grid_bgc),
   nb_linkval(test_rules, [rules]),
@@ -187,4 +190,5 @@ learn_shapes:- forall(l_shape(Name,Ascii), learn_shape(Name,Ascii)).
 
 
 
+:- fixup_exports.
 
