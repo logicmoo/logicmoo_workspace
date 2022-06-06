@@ -13,6 +13,40 @@
 
 test_ogs:- forall(test_ogs0(_,_),true).
 
+test_ogs(H,V):- clsmake,
+  wqln("searching..."),
+  ss666(T,SG),
+  ff666(T,FG),
+  copy_term(FG,FGX),
+  copy_term(SG,SGX),
+
+  once(((FG=FGC), constrain_grid(s,CheckType,SG,SGC))),
+
+  ((ogs_1(H,V,FGC,SGC),CheckType=run) *-> 
+     (once(show_match(H,V,FGX,SGX)),nop(once(show_match(H,V,FGC,SGC))))
+     ; (show_mismatch(FGX,SGX),nop(show_mismatch(FGC,SGC)),fail)).
+
+test_ogs0(H,V):- clsmake,
+  wqln("searching..."),
+  ss666(T,SG),
+  ff666(T,FG),
+  copy_term(FG,FGX),
+  copy_term(SG,SGX),
+
+  once((constrain_grid(f,CheckType,FG,FGC), constrain_grid(s,CheckType,SG,SGC))),
+
+  ((ogs_1(H,V,FGC,SGC),CheckType=run) *-> 
+     (once(show_match(H,V,FGX,SGX)),nop(once(show_match(H,V,FGC,SGC))))
+     ; (show_mismatch(FGX,SGX),nop(show_mismatch(FGC,SGC)),fail)).
+  
+
+test_ogs1(H,V):- clsmake,
+  wqln("searching..."),
+  ff666(T,FG),
+  print_grid(FG),
+  ss666(T,SG),
+  (ogs(H,V,FG,SG) *-> once(show_match(H,V,FG,SG)) ; ((show_mismatch(FG,SG)),fail)).
+
 
 grid_minus_grid(B,A,OI):- grid_size(B,BH,BV),grid_size(A,AH,AV),(BH\==AH;BV\==AV),!,OI=B.
 grid_minus_grid(B,A,OI):- remove_global_points(A,B,OI),!.
@@ -40,28 +74,6 @@ h666(_,G):- fail,ff666(_,G0),
 
 %f666(_Ham,G0):-  clause(f666(_Ham,F),true),into_g666(F,G),all_rotations(G,G0).
 
-test_ogs(H,V):- clsmake,
-  wqln("searching..."),
-  ss666(T,SG),
-  ff666(T,FG),
-  copy_term(FG,FGX),
-  copy_term(SG,SGX),
-
-  once((constrain_grid_f(FG,CheckType,FGC), constrain_grid_s(SG,CheckType,SGC))),
-
-  ((ogs_1(H,V,FGC,SGC),CheckType=run) *-> 
-     (once(show_match(H,V,FGX,SGX)),nop(once(show_match(H,V,FGC,SGC))))
-     ; (show_mismatch(FGX,SGX),nop(show_mismatch(FGC,SGC)),fail)).
-  
-
-
-test_ogs0(H,V):- clsmake,
-  wqln("searching..."),
-  ff666(T,FG),
-  print_grid(FG),
-  ss666(T,SG),
-  (ogs(H,V,FG,SG) *-> once(show_match(H,V,FG,SG)) ; ((show_mismatch(FG,SG)),fail)).
-
 show_mismatch(F,G):- % fail, 
   nl,dash_char,
   show_m_pair(color_print(red,"Mismatched"),1,1,F,G),
@@ -77,14 +89,14 @@ show_m_pair(S,H,V,F,G):-
   %make_grid(GH,GV,FDisp),
   H2 is H-3, V2 is V-3,
   offset_grid(H2,V2,F,OF),
-  constrain_grid_f(OF,_,FF),!,
+  constrain_grid(f,_Trig,OF,FF),!,
   print_grid(GH,GV,FF),
   nl,
   dash_char(60,' '),wqs(S),
   print_grid(G),!.
 
-print_fgrid(GH,GV,F):- ((\+ \+ ((constrain_grid_f(F,_Trig,_FG),print_grid(GH,GV,F),nl)))),!.
-print_sgrid(F):- ((\+ \+ ((constrain_grid_s(F,_Trig,_FG),print_grid(F),nl)))),!.
+print_fgrid(GH,GV,F):- ((\+ \+ ((constrain_grid(f,_Trig,F,_FG),print_grid(GH,GV,F),nl)))),!.
+print_sgrid(F):- ((\+ \+ ((constrain_grid(s,_Trig,F,_FG),print_grid(F),nl)))),!.
 
 
 
@@ -100,8 +112,8 @@ ogs(H,V,FG,SG):-
 
 ogs_0(CheckType,H,V,FG,SG):-
   %constrain_type(CheckType,Grid,FG,FGC),
-  once((constrain_grid_f(FG,CheckType,FGC),
-        constrain_grid_s(SG,CheckType,SGC))),
+  once((constrain_grid(f,CheckType,FG,FGC),
+        constrain_grid(s,CheckType,SG,SGC))),
   ogs_1(H,V,FGC,SGC),
   CheckType=run.
   %CheckType=run,
@@ -159,6 +171,7 @@ grid_label_bg(GridIn,GridO):-
 
 
 to_grid_bg(_,E):- has_color_c(E),!.
+to_grid_bg(_,BG):- get_bgc(BG),!.
 to_grid_bg(_,BG):- bg_sym(BG),!.
 to_grid_bg(_,_).
 
@@ -234,9 +247,9 @@ pad_grid(P1,Grid,Grid2):-
 
 
 %constrain_grid_f(Grid2,GridO):- Grid2=GridO.
-constrain_grid_f(Obj,Trig,GridO):- \+ is_grid(Obj), object_grid(Obj,Grid2),constrain_grid_f(Grid2,Trig,GridO),!.
-constrain_grid_f(Grid2,Trig,GridO):- constrain_grid(f,Trig,Grid2,GridO),!.
-constrain_grid_s(Grid2,Trig,GridO):- constrain_grid(s,Trig,Grid2,GridO),!.
+%constrain_grid_f(Grid2,Trig,GridO):- constrain_grid(f,Trig,Grid2,GridO),!.
+%constrain_grid_s(Grid2,Trig,GridO):- constrain_grid(s,Trig,Grid2,GridO),!.
+constrain_grid(CT,Trig,Obj,GridO):- \+ is_grid(Obj), object_grid(Obj,Grid),!,constrain_grid(CT,Trig,Grid,GridO),!.
 constrain_grid(CT,Trig,Grid1,GridO):- 
   pad_grid(Grid1,Grid2),
   grid_label_bg(Grid2,Grid3),
@@ -288,20 +301,21 @@ constrain_grid_now(CT,Trig,GridIn,Hi,Vi,GH,GV,GridO):-
 
 % Out of bounds on Source Canvas
 constrain_ele(s,GH,GV,_Trig,_GridIn,H,V,_C1I,_C1O,_GridO):- (H==1;V==1;V==GV;H==GH),!.
-% FG Source Canvas
-constrain_ele(s,_GH,_GV,_Trig,_GridIn,_H,_V,C1I,C1O,_GridO):- nonvar(C1I), nonvar(C1O),!, C1O\==C1I,!,fail.
-constrain_ele(s,_GH,_GV,_Trig,_GridIn,_H,_V,C1I,C1O,_GridO):- is_spec_color(C1I,_),!, 
-  %constrain_type(C1O, \+ is_bg_color(C1O)), 
-  C1I=C1O.
 % BG Source Canvas
 constrain_ele(s,_GH,_GV,Trig,_GridIn,_H,_V,C1I,C1O,_GridO):- is_bg_color(C1I),!,
   %constrain_type(C1O, \+ is_fg_color(C1O)),
-  constrain_type(Trig, (\+ is_fg_color(C1O))).
+  constrain_type(Trig, (\+ is_fg_color(C1O))),
+  !.
+% FG Source Canvas
+constrain_ele(s,_GH,_GV,_Trig,_GridIn,_H,_V,C1I,C1O,_GridO):- nonvar(C1I), nonvar(C1O),!, C1O\==C1I,fail.
+constrain_ele(s,_GH,_GV,_Trig,_GridIn,_H,_V,C1I,C1O,_GridO):- is_spec_color(C1I,_),!, 
+  %constrain_type(C1O, \+ is_bg_color(C1O)), 
+  C1I=C1O.
 
 % BG Find On Canvas
 constrain_ele(f,_GH,_GV,_Trig,_GridIn,_H,_V,C1I,_C1O,_GridO):- is_bg_color(C1I),!.
 % Find FG On Canvas
-constrain_ele(f,_GH,_GV,_Trig,_GridIn,_H,_V,C1I,C1O,_GridO):- nonvar(C1I), nonvar(C1O),!, C1O\==C1I,!,fail.
+constrain_ele(f,_GH,_GV,_Trig,_GridIn,_H,_V,C1I,C1O,_GridO):- nonvar(C1I), nonvar(C1O),!, C1O\==C1I,fail.
 constrain_ele(f,_GH,_GV,Trig,GridIn,H,V,C1I,C1O,GridO):- is_spec_color(C1I,_),!, 
   (C1O==C1I -> true ; must_det_l((constrain_type(Trig,C1I=C1O), attach_ci(C1O,C1I)))), 
   constrain_dir_ele(f,Trig,[n,s,e,w],GridIn,H,V,C1I,C1O,GridO).

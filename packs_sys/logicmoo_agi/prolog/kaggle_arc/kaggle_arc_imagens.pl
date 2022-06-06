@@ -174,7 +174,7 @@ split_50_v(Grid,Top,Bottem):- length(Grid,N),H is floor(N/2), length(Top,H),leng
 
 
 searchable(Group,List):- override_group(searchable(Group,List)),!.
-searchable(Shape,Searchable):- object_grid(Shape,Grid), constrain_grid_f(Grid,_CheckType,Searchable).
+searchable(Shape,Searchable):- object_grid(Shape,Grid), constrain_grid(f,_CheckType,Grid,Searchable).
 
 decolorize(Group,List):- override_group(decolorize(Group,List)),!.
 decolorize(Shape,ShapeO):-
