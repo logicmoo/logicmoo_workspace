@@ -284,7 +284,7 @@ get_shape_lib_direct(Complex,GalleryS):-
 
 get_shape_lib_rules(Complex,GalleryS):- 
   findall(Rule,
-   (clause(in_shape_lib(Complex,Obj),Body),Rule=(Obj:- Body)),Gallery),  
+   (clause(in_shape_lib(Complex,Obj),Body),Rule=(in_shape_lib(Complex,Obj):- Body)),Gallery),  
   maplist(label_rules(Complex),Gallery),
   sortshapes(Gallery,GalleryS).
 

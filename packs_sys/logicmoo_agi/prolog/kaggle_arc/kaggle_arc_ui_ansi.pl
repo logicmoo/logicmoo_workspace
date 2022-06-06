@@ -304,14 +304,18 @@ named_colors([(black),(blue),(red),(green),(yellow),(silver),(purple),(orange),(
 named_colors([(black),(blue),(red),(green),(yellow),(silver),(magenta),(orange),(cyan),(brown)]).
 named_colors([(black),(blue),(red),(green),(yellow),(grey),(pink),(orange),(cyan),(maroon)]).
 
+% silver(rgb(123,123,123)).
 silver('#7b7b7b').
 silver('#c0c0c0').
 silver('#9a9a9a').
 
-ansi_color(C,Color):- attvar(C),get_attr(C,ci,fg(N)),ansi_color(N,Color),!.
-ansi_color(C,Color):- attvar(C),get_attr(C,ci,bg),ansi_color(0,Color),!.
+ansi_color(C,Color):- attvar(C),get_attr(C,ci,fg(N)),trace,ansi_color(N,Color),!.
+ansi_color(C,Color):- attvar(C),get_attr(C,ci,bg),get_bgc(BG),!,ansi_color(BG,Color),!.
+ansi_color(C,Color):- attvar(C),has_color_c(C,E),!,ansi_color(E,Color).
+ansi_color(C,_Color):- var(C),!,trace_or_throw(var(ansi_color(C))).
+ansi_color(C,Color):- atom_concat('#',_,C),!,Color=C.
 ansi_color(C,Color):- integer(C),block_colors(L),nth0(C,L,Color).
-ansi_color(C,Color):- color_int(C,I),ansi_color(I,Color).
+ansi_color(C,Color):- color_int(C,I),!,ansi_color(I,Color).
 
 on_bg(C,G):- ansi_format([bg(C),fg(white)],'~@',[call(G)]).
 on_bg(G):- get_bgc(C),on_bg(C,G).
@@ -434,8 +438,8 @@ into_color_glyph_ez(CTerm,Color,Code):-
     ignore((nonvar_or_ci(Glyph),name(Glyph,[Code|_]))).
 
 %into_color_glyph(H,V,CTerm,Color,Code):- fail, get_grid_num_xyc(H,V,SColor,SNth),into_color_glyph(SColor+SNth+CTerm,Color,Code),nonvar_or_ci(Code).
-into_color_glyph(N,C,Glyph):- plain_var(N),has_color_c(N,C),format(chars(Codes),'<~p>',N),last(Codes,Glyph),!.
-into_color_glyph(N,C,Glyph):- has_color_c(N,C),format(chars(Codes),'>~p<',N),last(Codes,Glyph),!.
+into_color_glyph(N,C,Glyph):- plain_var(N),has_color_c(N,C),format(chars(Codes),'<~p>',[N]),last(Codes,Glyph),!.
+into_color_glyph(N,C,Glyph):- has_color_c(N,C),format(chars(Codes),'>Z<',[/*N*/]),last(Codes,Glyph),!.
 
 into_color_glyph(W,C,FGD):- has_color_c(W,C), bg_dot(FGD),!.
 into_color_glyph(bg,Black,BGD):- get_bgc(Black), bg_dot(BGD),!.
@@ -448,9 +452,9 @@ into_color_glyph(C,C,FGD):- fg_dot(FGD),!.
 i_glyph(N,Glyph):- bg_sym(BG), BG==N, !, bg_dot(Code), name(Glyph,[Code]).
 i_glyph(Code,Glyph):- integer(Code), Code> 255, !,name(Glyph,[Code]).
 i_glyph(N,Glyph):- integer(N),i_sym(N,Code),name(Glyph,[Code]).
-i_glyph(N,Glyph):- plain_var(N),!,format(chars(Codes),'~p',N),last(Codes,Glyph).
-i_glyph(N,Glyph):- atom(N),atom_chars(N,Chars),last(Chars,Glyph).
-
+i_glyph(N,Glyph):- plain_var(N),!,format(chars(Codes),'~p',[N]),last(Codes,Glyph).
+%i_glyph(N,Glyph):- atom(N),atom_chars(N,Chars),last(Chars,LGlyph),upcase_atom(LGlyph,Glyph).
+                                                                            
 i_sym(N2,Code):- integer(N2),!, N is N2, change_code(N,NN), i_syms(Codes),nth0(NN,Codes,Code),!.
 i_sym(N2,Code):- atom(N2),name(N2,[C|_]),!,i_sym(C,Code).
 i_sym(N,Code):- plain_var(N), Code = 63.

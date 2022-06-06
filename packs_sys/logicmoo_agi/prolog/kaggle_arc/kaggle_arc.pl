@@ -47,8 +47,16 @@ arc_sub_path(Subdir,AbsolutePath):- arc_directory(ARC_DIR),
   %:- set_prolog_flag(toplevel_print_factorized,true).
   :- set_prolog_flag(answer_write_options, [quoted(true), portray(true), max_depth(20), attributes(portray)]).
 
+  clsmake:- cls,update_changed_files,make.
+  clsmake2:- update_changed_files.
+
+
 % SWISH ARC
 :- else.
+
+  clsmake:- cls,update_changed_files,make.
+  clsmake2:- update_changed_files.
+
   muarc_mod(muarc).
   :- if(current_module(trill)).
   :- set_prolog_flag_until_eof(trill_term_expansion,false).
@@ -97,9 +105,6 @@ user:file_search_path(arc,  AbsolutePath):- arc_sub_path('.',AbsolutePath).
 run_nb(G):- call(G).
 %run_nb(G):- setup_call_cleanup(G,true,notrace).
 
-clsmake:- cls.
-clsmake2:- mmake.
-
 arc:- forall(arc1,true).
 arc1:- clsmake, test_names_by_hard(X), arc1(X).
 arc2:- clsmake, test_names_by_hard_rev(X), arc1(X).
@@ -119,7 +124,7 @@ arc1(TestID):- clsmake2, !, arc1e(TestID).
 arc1(TestID):- clsmake2, time(forall(arc1e(TestID),true)).
 
 arc1e(TName):-    
- locally(set_prolog_flag(gc,false),
+ locally(set_prolog_flag(gc,true),
   (fix_test_name(TName,TestID,ExampleNum),   
   kaggle_arc(TestID,ExampleNum,In,Out),
   run_arc_io(TestID,ExampleNum,In,Out))).
@@ -151,7 +156,7 @@ show_arc_pair_progress(TestID,ExampleNum,In,Out):-
 	show_pair(IH,IV,OH,OV,test,PairName,In,Out),
   nb_linkval(pair_rules, [rules]),
   clear_shape_lib(pair),
-	print_collapsed(forall(examine_installed_individualizers_from_pairs(PairName,In,Out,IH,IV,OH,OV),true)),
+	forall(examine_installed_individualizers_from_pairs(PairName,In,Out,IH,IV,OH,OV),true),
   %show_shape_lib(pair),
   show_idea_final(PairName,In,Out,IH,IV,OH,OV,[defaults],[defaults]),!.
   
