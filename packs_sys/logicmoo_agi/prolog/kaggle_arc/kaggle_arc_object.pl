@@ -304,7 +304,8 @@ grid_to_points(Grid,HH,HV,Points):-  throw(all_points_between),
 
 globalpoints(I,X):- var_check(I,globalpoints(I,X)).
 globalpoints(G,[G]):- is_point(G),!.
-globalpoints(Atom,_):- \+ compound(Atom),!,trace_or_throw(globalpoint(Atom)).
+globalpoints([],[]):- !.
+globalpoints(Atom,_):- \+ compound(Atom),!,trace_or_throw(globalpoints(Atom)).
 globalpoints(options(X),_Points):- trace_or_throw(globalpoints(options(X))).
 globalpoints(Grid,Points):- is_grid(Grid),!, grid_size(Grid,HH,VV), grid_to_points(Grid,HH,VV,Points).
 globalpoints(Grid,Points):- is_list(Grid),!,maplist(call(globalpoints),Grid,MPoints),append_sets(MPoints,Points).
@@ -316,6 +317,7 @@ globalpoints(I,X):- localpoints0(I,X),!.
 
 localpoints(I,X):- var_check(I,localpoints(I,X)).
 localpoints(G,[G]):- is_point(G),!.
+localpoints([],[]):- !.
 localpoints(Atom,_):- \+ compound(Atom),!,trace_or_throw(globalpoint(Atom)).
 localpoints(options(X),_Points):- trace_or_throw(localpoints(options(X))).
 localpoints(Grid,Points):- is_grid(Grid),!, grid_size(Grid,HH,VV), grid_to_points(Grid,HH,VV,Points).

@@ -161,6 +161,10 @@ show_arc_pair_progress(TestID,ExampleNum,In,Out):-
   show_idea_final(PairName,In,Out,IH,IV,OH,OV,[defaults],[defaults]),!.
   
 
+get_option_expansion([done|_],[done]):-!.
+get_option_expansion([],[]):-!.
+get_option_expansion([A|NO],O):- get_option_expansion(A,AA), !, listify(AA,AL),append(AL,NO,O).
+get_option_expansion(default,Opts):-  default_i_options(Opts).
 
 :- nb_linkval(test_rules,[rules]).
 :- nb_linkval(pair_rules,[rules]).

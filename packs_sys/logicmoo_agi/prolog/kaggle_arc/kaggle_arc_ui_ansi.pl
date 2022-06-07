@@ -309,13 +309,13 @@ silver('#7b7b7b').
 silver('#c0c0c0').
 silver('#9a9a9a').
 
-ansi_color(C,Color):- attvar(C),get_attr(C,ci,fg(N)),trace,ansi_color(N,Color),!.
+ansi_color(C,Color):- attvar(C),get_attr(C,ci,fg(N)),ansi_color(N,Color),!.
 ansi_color(C,Color):- attvar(C),get_attr(C,ci,bg),get_bgc(BG),!,ansi_color(BG,Color),!.
 ansi_color(C,Color):- attvar(C),has_color_c(C,E),!,ansi_color(E,Color).
-ansi_color(C,_Color):- var(C),!,trace_or_throw(var(ansi_color(C))).
 ansi_color(C,Color):- atom_concat('#',_,C),!,Color=C.
 ansi_color(C,Color):- integer(C),block_colors(L),nth0(C,L,Color).
 ansi_color(C,Color):- color_int(C,I),!,ansi_color(I,Color).
+ansi_color(C,_Color):- var(C),!,trace_or_throw(var(ansi_color(C))).
 
 on_bg(C,G):- ansi_format([bg(C),fg(white)],'~@',[call(G)]).
 on_bg(G):- get_bgc(C),on_bg(C,G).
