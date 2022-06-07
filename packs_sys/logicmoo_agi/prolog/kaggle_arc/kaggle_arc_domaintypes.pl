@@ -121,11 +121,13 @@ is_grid_color(C):- is_color(C).
 
 is_color_dat(C):- atomic(C),color_code(C,W),!,C==W.
 
+is_point(P):- var(P),!,fail.
 is_point(P):- is_nc_point(P),!.
 is_point(P):- is_cpoint(P).
 
 is_lpoint(P):- is_point(P), \+ is_gpoint(P).
 
+is_points_list(P):- var(P),!,fail.
 is_points_list([G|L]):- is_point(G),notrace(maplist(is_point,L)).
 
 enum_colors(OtherColor):- named_colors(Colors),!,member(OtherColor,Colors).
@@ -166,7 +168,7 @@ is_grid(G):- notrace(fast_is_grid(G)).
 fast_is_grid([[C|H]|R]):- is_list(H), is_list(R), \+ is_list(C).
 
 slow_is_grid([[C|H]|R]):- notrace((is_grid_cell(C),is_list(H),is_list(R),
-  length([C|H],L),
+  my_len([C|H],L),
   %maplist(is_grid_cell,H),
   maplist(is_row_len(L),R))).
 

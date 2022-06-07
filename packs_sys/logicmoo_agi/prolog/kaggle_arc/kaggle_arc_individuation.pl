@@ -103,9 +103,8 @@ individuate(ROptions,Grid,IndvS):-
 
 individuate(Reserved,NewOptions,Points,IndvS):-  is_points_list(Points),points_to_grid(Points,Grid),!, 
    individuate(Reserved,NewOptions,Grid,IndvS).
-individuate(Reserved,NewOptions,Grid,IndvS):-   
-   notrace(grid_size(Grid,H,V)),
-   wdmsg(individuate(H,V)),
+
+individuate(Reserved,NewOptions,Grid,IndvS):-   notrace(grid_size(Grid,H,V)), wdmsg(individuate(H,V)),
    must_be_free(IndvS),
    globalpoints(Grid,Points),
    into_gridname(Grid,ID),
@@ -161,13 +160,13 @@ individuals_list(GH,GV,Sofar,ID,Options,_Reserved,Points,_Grid,IndvListOut,[]):-
   assertion(is_list([sofar|Sofar])),
   assertion(is_list([points|Points])),
   assertion(maplist(is_cpoint,Points)),
-  as_debug(8,print_Igrid(GH,GV,'leftover_points'+ID,Points,[])),
+  as_debug(9,print_Igrid(GH,GV,'leftover_points'+ID,Points,[])),
   % maplist(make_point_object(ID,GH,GV),Points,IndvList),
   IndvList = [],
-  individuate([],[just(by_color([(black),(blue),(red),(green),(yellow),(silver),(purple),(orange),(cyan),(brown)]))],Points,IndvList2),
-  %IndvList2 = [],
-  make_indiv_object(ID,GH,GV,Points,[object_shape(combined),object_shape(leftovers)],LeftOverObj), 
-  % LeftOverObj = [],
+  % individuate([],[just(by_color([(black),(blue),(red),(green),(yellow),(silver),(purple),(orange),(cyan),(brown)]))],Points,IndvList2),
+  IndvList2 = [],
+  % make_indiv_object(ID,GH,GV,Points,[object_shape(combined),object_shape(leftovers)],LeftOverObj), 
+  LeftOverObj = [],
   flatten([Sofar,IndvList,IndvList2,LeftOverObj],IndvListOut),!.
 
 individuals_list(GH,GV,Sofar,ID,Options,Reserved,P,Grid,Sofar,P):-!,
@@ -176,7 +175,7 @@ individuals_list(GH,GV,Sofar,ID,Options,Reserved,P,Grid,Sofar,P):-!,
 must_be_nonvar(X):- assertion(nonvar_or_ci(X)),!.
 
 fsi(OUTReserved,OUTNewGrid,OUTOptions,H,V,Sofar,ID,Options,Reserved,Points,Grid,OUTSofar,OUTNextScanPoints):-
-  as_debug(9,(mass(Sofar,Mass),length(Sofar,Count),pt(t([fsi=Options,sofar=Mass/Count])))),
+  as_debug(9,(mass(Sofar,Mass),my_len(Sofar,Count),pt(t([fsi=Options,sofar=Mass/Count])))),
   maplist(must_be_free,[OUTReserved,OUTNewGrid,OUTOptions,OUTSofar,OUTNextScanPoints]),
   assertion(maplist(nonvar_or_ci,[Options,H,V,Sofar,ID,Options,r,Reserved,Points,Grid])),
   %trace,
@@ -248,9 +247,9 @@ fsi(ReservedO,GridO,OptionsOut,H,V,Sofar,ID,[full|NO],ReservedI,Points,Grid,Sofa
 fsi(ReservedO,GridO,OptionsO,H,V,Sofar,ID,[shape_lib(Hammer)|NO],ReservedI,Points,Grid,SofarOut,NextScanPoints):-!,
   time(do_shapelib(ReservedO,GridO,OptionsO,H,V,Sofar,ID,[shape_lib(Hammer)|NO],ReservedI,Points,Grid,SofarOut,NextScanPoints)).
 
-
+   
 fsi(StillReserved,GridO,[use_reserved|NO],H,V,Sofar,ID,[use_reserved|NO],Reserved,Points,Grid,SofarOut,NextScanPoints):-
-   % length(Reserved,LR), !, %LR < 60, 
+   % my_len(Reserved,LR), !, %LR < 60, 
    proccess_overlap_reserved(use_reserved,GridO,Grid,ID,H,V,Reserved,Sofar,SofarOut,Points,NextScanPoints,_Unreserved,StillReserved),
    %intersection(SofarOut,Sofar,_Intersected,Found,_LeftOverB), as_debug(8,print_Igrid(H,V,Obj+ID,Found,[])),
    !.
@@ -271,8 +270,8 @@ search_lib([Obj|ReservedI],GridO,NO,H,V,Sofar,ID,[Obj|NO],ReservedI,Points,Grid,
 
 
 do_shapelib(ReservedIO,GridO,[shape_lib(Hammer)|NO],H,V,Sofar,ID,[shape_lib(Hammer)|NO],ReservedIO,Points,Grid,SofarOut,NextScanPoints):-
-   time(get_shape_lib(Hammer,Reserved)), Reserved\==0,
-   length(Reserved,RL),
+   time(shape_lib_expanded(Hammer,Reserved)), Reserved\==0,
+   my_len(Reserved,RL),
    pt(searchLib(Hammer)=RL),
    %debug_indiv(Reserved),
    proccess_overlap_reserved(Hammer,GridO,Grid,ID,H,V,Reserved,Sofar,SofarOut,Points,NextScanPoints,_Unreserved,_StillReserved),
@@ -280,7 +279,7 @@ do_shapelib(ReservedIO,GridO,[shape_lib(Hammer)|NO],H,V,Sofar,ID,[shape_lib(Hamm
    !.
 
 proccess_overlap_reserved(Name,GridO,Grid,ID,H,V,[Obj|RestReserved],Sofar,SofarOut,Points,NextScanPoints,[Obj|Unreserved],StillReserved):-  
-   length(RestReserved,RL),
+   my_len(RestReserved,RL),
    ignore((1 is RL mod 7, pt(searchLib(Name)=RL))),
    Points\==[],
   \+ color(Obj,black),
@@ -301,7 +300,7 @@ proccess_overlap_reserved(Name,GridO,Grid,ID,H,V,[Obj|RestReserved],Sofar,SofarO
    append(Sofar2,[Indiv],NewSofar),
    proccess_overlap_reserved(Name,GridO,NewGrid,ID,H,V,[Obj|RestReserved],NewSofar,SofarOut,LeftOverB,NextScanPoints,Unreserved,StillReserved),
    nop(debug_indiv(Indiv)).
-  
+
 proccess_overlap_reserved(Name,GridO,Grid,ID,H,V,[Obj|Reserved],Sofar,SofarOut,Points,NextScanPoints,[Obj|Unreserved],StillReserved):- fail,
    once((globalpoints(Obj,ObjPoints), 
    \+ color(Obj,black),
@@ -447,8 +446,9 @@ cycle_s(Reserved,_GH,_GV,Sofar,_ID,_Options,Reserved,Points,_Grid,Sofar,Points).
 
 default_i_options([
   shape_lib(noise),
-  in_or_out,
-  shape_lib(pair),  
+  shape_lib(in),
+  shape_lib(pair),
+  shape_lib(out),
   use_reserved,
   fourway,
   solid(squares),
@@ -729,7 +729,7 @@ merge_indivs(IndvA,IndvB,BetterA,BetterB,BetterC):-
   merge_indivs_cleanup(IndvA,IndvB,IndvC,BetterA,BetterB,BetterC),!.
 
 merge_indivs_cleanup(IndvA,IndvB,IndvC,_,_,_):-
-  maplist(length,[IndvA,IndvB,IndvC],Rest),
+  maplist(my_len,[IndvA,IndvB,IndvC],Rest),
   wdmsg(len=Rest),fail.
 merge_indivs_cleanup(IndvA,IndvB,IndvC,BetterAO,BetterBO,BetterCO):-
   select(A,IndvC,IndvCRest), member(B,IndvCRest),

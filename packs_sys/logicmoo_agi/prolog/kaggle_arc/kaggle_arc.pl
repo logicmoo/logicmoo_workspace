@@ -155,10 +155,26 @@ show_arc_pair_progress(TestID,ExampleNum,In,Out):-
 	ignore((more_task_info(TestID,III),pt(III),nl)), 
 	show_pair(IH,IV,OH,OV,test,PairName,In,Out),
   nb_linkval(pair_rules, [rules]),
-  clear_shape_lib(pair),
-	forall(examine_installed_individualizers_from_pairs(PairName,In,Out,IH,IV,OH,OV),true),
+  clear_shape_lib(pair),clear_shape_lib(intruder), clear_shape_lib(noise), clear_shape_lib(out),
+  clear_shape_lib(in), 
+
+  forall(examine_installed_individualizers_from_pairs(PairName,In,Out,IH,IV,OH,OV),true),
   %show_shape_lib(pair),
-  show_idea_final(PairName,In,Out,IH,IV,OH,OV,[defaults],[defaults]),!.
+  %show_idea_final(PairName,In,Out,IH,IV,OH,OV,[defaults],[defaults]),
+  pt(yellow,'~N-individuations~N'),
+  show_shape_lib(intruder), show_shape_lib(noise), show_shape_lib(pair), show_shape_lib(out), show_shape_lib(in),
+  individuate([],In,SharedInR),individuate([],Out,SharedOutR),
+  show_pair_indivs(IH,IV,OH,OV,finally,PairName,SharedInR,SharedOutR).
+
+/*
+  show_pair_indivs(IH,IV,OH,OV,unshared,PairName,UnsharedIn,UnsharedOut),
+       format('~N-unshared~N'),!,
+       %pt(yellow,in=UnsharedIn),
+       pred_intersection(compare_objs1([same]),UnsharedIn,UnsharedOut,_CommonCsIn,_CommonCsOut,_IPCs,_OPCs),
+       format('~N-pred_intersection~N'),
+  show_pair_indivs(IH,IV,OH,OV,shared,PairName,SharedInR,SharedOutR))),
+  !.
+*/
   
 
 get_option_expansion([done|_],[done]):-!.
@@ -171,32 +187,13 @@ get_option_expansion(default,Opts):-  default_i_options(Opts).
 
 examine_installed_individualizers_from_pairs(PairName,In,Out,IH,IV,OH,OV):-
   add_note(examine_installed_individualizers_from_pairs),
-  individualizer_heuristics(PairName,In,Out,IH,IV,OH,OV,ShapesI,ShapesO),
-  %nb_current(rules, Info),
-  %format('~N+Done with Ideas~N'),
-  nop(show_idea_trial(PairName,In,Out,IH,IV,OH,OV,ShapesI,ShapesO)).
-  
-show_idea_final(PairName,In,Out,IH,IV,OH,OV,Shapes_I,Shapes_O):- 
-  show_idea(PairName,In,Out,IH,IV,OH,OV,Shapes_I,Shapes_O).
-show_idea_trial(PairName,In,Out,IH,IV,OH,OV,Shapes_I,Shapes_O):-  
-  show_idea(PairName,In,Out,IH,IV,OH,OV,Shapes_I,Shapes_O).
-show_idea(PairName,In,Out,IH,IV,OH,OV,Shapes_I,Shapes_O):- 
-  show_pair_indivs(IH,IV,OH,OV,heuristics,PairName,Shapes_I,Shapes_O),
-  pt(yellow,'~N+individuate(IN)~N'),
-  individuate(Shapes_I,In,UnsharedIn),
-  pt(yellow,'~N+individuate(OUT)~N'),
-  individuate(Shapes_O,Out,UnsharedOut),
-  pt(yellow,'~N-individuations~N'),
-  show_pair_indivs(IH,IV,OH,OV,unshared,PairName,UnsharedIn,UnsharedOut),
-  nop((
-       format('~N-unshared~N'),!,
-       %pt(yellow,in=UnsharedIn),
-       pred_intersection(compare_objs1([same]),UnsharedIn,UnsharedOut,_CommonCsIn,_CommonCsOut,_IPCs,_OPCs),
-       format('~N-pred_intersection~N'),
-    individuate(UnsharedOut,Out,SharedInR),
-    individuate(UnsharedIn,In,SharedOutR),
-  show_pair_indivs(IH,IV,OH,OV,shared,PairName,SharedInR,SharedOutR))),
-  !.
+  individualizers_from_pair(PairName,In,Out,IH,IV,OH,OV,RestOfInObjs,RestOfOutObjs),
+  nop(((add_shape_lib(pair,RestOfInObjs),  add_shape_lib(pair,RestOfOutObjs)))),
+  show_pair_indivs(IH,IV,OH,OV,individualizers_from_pair,PairName,RestOfInObjs,RestOfOutObjs).
+
+
+is_list_or_object(RestOfOutObjs):- \+ ground(RestOfOutObjs).
+is_list_or_object(RestOfOutObjs):- trace,is_object(RestOfOutObjs).
   %format('~N-Rule made from~N'),
   %show_rules,
 /*  RESS =.. [res,unsharedIn=UnsharedIn,
@@ -224,7 +221,7 @@ reuse_indivs(IndvA,IndvB,BetterA,BetterB):-
   reuse_indivs_cleanup(IndvAS,IndvBS,IndvCS,BetterA,BetterB,_BetterC),!.
 
 reuse_indivs_cleanup(IndvA,IndvB,IndvC,_,_,_):-
-  maplist(length,[IndvA,IndvB,IndvC],Rest),
+  maplist(my_len,[IndvA,IndvB,IndvC],Rest),
   wdmsg(len=Rest),fail.
 reuse_indivs_cleanup(IndvA,IndvB,IndvC,BetterAO,BetterBO,BetterCO):-
   select(A,IndvC,IndvCRest), member(B,IndvCRest),

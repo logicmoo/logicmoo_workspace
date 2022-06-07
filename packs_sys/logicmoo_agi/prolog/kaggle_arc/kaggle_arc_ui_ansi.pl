@@ -9,12 +9,12 @@
 :- endif.
 
 print_collapsed(G):- !, wots(_S,G).
-print_collapsed(G):- !, call(G). 
+%print_collapsed(G):- !, call(G). 
 %print_collapsed(G):- wots(S,G),write(S).
 
 tersify(I,O):- tersify1(I,M),tersify2(M,O).
 
-tersify1(I,O):- is_grid(I), into_gridnameA(I,O),!. 
+tersiy1(I,O):- is_grid(I), into_gridnameA(I,O),!. 
 tersify1(I,O):- is_list(I), maplist(tersify1,I,O).
 tersify1(I,O):- is_object(I), o2ansi(I,O),!.
 tersify1(I,O):- compound(I), !, compound_name_arguments(I,F,IA), maplist(tersify,IA,OA), compound_name_arguments(O,F,OA).
@@ -133,7 +133,7 @@ as_str(call(C),S):- !, wots(S,C).
 as_str(S,A):- \+ string(S), sformat(A,'~p',[S]),!.
 as_str(S,S).
 
-print_length(S,L):- as_str(S,A),atom_codes(A,C), include(uses_space,C,SS),length(SS,L).
+print_length(S,L):- as_str(S,A),atom_codes(A,C), include(uses_space,C,SS),my_len(SS,L).
 
 
 show_pair_indivs(IH,IV,OH,OV,Info,PairName,ImO,OmI):-
@@ -194,7 +194,7 @@ print_equals(N,V):- \+ compound(V),wqnl(N=V).
 print_equals(N,V):- is_grid(V),!,wqnl(N),print_grid(V).
 print_equals(N,[G|L]):-
   is_grid(G),is_list(L),maplist(is_grid,L),!,
-  length([G|L],Len), 
+  my_len([G|L],Len), 
   grid_size(G,H,_),
   wqnl(N=len(Len)),  
   dash_char(H,"-"),

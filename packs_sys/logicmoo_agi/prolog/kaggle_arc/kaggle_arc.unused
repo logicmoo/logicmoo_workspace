@@ -11,7 +11,6 @@ constrain_type(CheckType,_Grid,G,GG):- is_bg_color(G), constrain_type(CheckType,
 constrain_type(_CheckType,_Grid,G,G):- is_fg_color(G),!.
 constrain_type(CheckType,_Grid,G,GG):- constrain_type(CheckType,G=GG).
 
-
 /*
 expand_color(FG,Was,C,CC):- FG== fg,!,expand_color(C,Was,C,CC).
 expand_color(FG,Was,C,CC):- var(C),is_color_no_bgc(FG),!,FG=C.
