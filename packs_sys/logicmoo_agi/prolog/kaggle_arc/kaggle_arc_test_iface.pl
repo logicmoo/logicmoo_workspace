@@ -87,10 +87,7 @@ fav(t('1b60fb0c'),[learn([find_damage_to_input,find_center,fraction_evenly_to_fo
 fav(v('e41c6fd3'),[lmDSL([(iz(X,spaceship),color(X,cyan),vert_pos(X,spaceship))-->iz(Y,spaceship),vert_pos(Y,spaceship)])]).
 fav(t(c444b776),[detect_grid]).
 fav(v('94133066'),[lmDSL([largest_indiv,trim_to_rect,rot90,flipV])]).
-fav(v('762cd429'),[lmDSL(individuate([shape_lib(filled_squares),delete_rest,shrink_all_to_size(1),tighten_grid_arround_objects]))]).
-
-
-
+fav(v('762cd429'),[]).
 fav(v('09c534e7'),[]).
 fav(v('25094a63'),[]).
 fav(v('16b78196'),[]).

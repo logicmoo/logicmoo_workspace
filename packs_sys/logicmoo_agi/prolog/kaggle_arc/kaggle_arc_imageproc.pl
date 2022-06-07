@@ -12,7 +12,7 @@
 %tell(s),ignore((nl,nl,test_pairs(Name,ExampleNum,In,Out),format('~N~q.~n',[test_pairs_cache(Name,ExampleNum,In,Out)]),fail)),told.
 
 
-is_row_len(N,L):- L=[_|_],my_len(L,N).
+is_row_len(N,L):- L=[_|_],length(L,N).
 
 :- dynamic(backfill/1).
 
@@ -53,7 +53,7 @@ pixel_colors0(GH,CC):- globalpoints(GH,GP),!,pixel_colors(GP,CC).
 %pixel_colors(G,GL):- findall(Name,(sub_term(CP,G),compound(CP),CP=(C-_),color_name(C,Name)),GL).
 
 unique_colors(G,UC):- colors(G,GF),quietly(maplist(arg(1),GF,UC)).
-colors_count_size(G,UC):- colors(G,GS),my_len(GS,UC).
+colors_count_size(G,UC):- colors(G,GS),length(GS,UC).
 
 into_cc(SK,BFO):- maplist(into_cc1,SK,BFO).
 into_cc1(N-C,cc(Nm,CN)):- CN is float(N),color_name(C,Nm).
@@ -61,7 +61,7 @@ into_cc1(N-C,cc(Nm,CN)):- CN is float(N),color_name(C,Nm).
 colors_count_black_first(G,BF):- colors(G,SK),black_first(SK,BF).
 colors_count_no_black(G,BF):- colors(G,SK),no_black(SK,BF).
 
-num_objects(G,NO):- compute_shared_indivs(G,GS),my_len(GS,NO).
+num_objects(G,NO):- compute_shared_indivs(G,GS),length(GS,NO).
 
 make_box(X,_,G):- make_grid(X,X,G).
 
@@ -108,7 +108,7 @@ join_cols(Grid1,[Grid2|Grids],Result):-
 % grow([[same,same]],[[a,b,c]], [[a,b,c,a,b,c]]).
 append_left(Grid1,[],Grid1):-!.
 append_left(Grid1,Empty,Grid1):- is_empty_grid(Empty),!.
-append_left(Grid1,Grid2,Grid):- my_len(Grid1,Len),assertion(my_len(Grid2,Len)),maplist(append,Grid1,Grid2,Grid).
+append_left(Grid1,Grid2,Grid):- length(Grid1,Len),assertion(length(Grid2,Len)),maplist(append,Grid1,Grid2,Grid).
 
 append_down(Grid1,Grid2,Grid):- append(Grid1,Grid2,Grid).
 
@@ -377,7 +377,7 @@ cls_with_0(Color1,Old,Grid):- is_list(Old),!,maplist(cls_with_0(Color1),Old,Grid
 cls_with_0(Color1,_,Color1).
 
 get_colums(G,GridNew):- into_grid(G,Grid),G\=@=Grid,!,get_colums(Grid,GridNew).
-get_colums(Grid,Cols):- Grid = [Row|_], my_len(Row,Width),
+get_colums(Grid,Cols):- Grid = [Row|_], length(Row,Width),
   get_colum_l(Width,Grid,Cols).
 
 get_colum_l(0,_,[]):-!.
@@ -410,9 +410,9 @@ replace_col_e(N,E,Grid,NewGrid):- grid_size(Grid,H,V), make_list(V,E,Col), repla
 replace_col(N,Col,Grid,NewGrid):- grid_size(Grid,H,V), replace_col(N,Col,Grid,H,V,NewGrid).
 replace_col(N,Col,Grid,H,V,NewGrid):- N<0, NewN is H + N+1,!,replace_col(NewN,Col,Grid,H,V,NewGrid).
 
-replace_col(N,Col,Grid,_,V,NewGrid):- Nm1 is N - 1, my_len(Col,V),maplist(replace_col_at_0(Nm1),Col,Grid,NewGrid).
+replace_col(N,Col,Grid,_,V,NewGrid):- Nm1 is N - 1, length(Col,V),maplist(replace_col_at_0(Nm1),Col,Grid,NewGrid).
 
-replace_col_at_0(N,Col,Row,NewRow):- my_len(Left,N),append(Left,[_|Right],Row),append(Left,[Col|Right],NewRow).
+replace_col_at_0(N,Col,Row,NewRow):- length(Left,N),append(Left,[_|Right],Row),append(Left,[Col|Right],NewRow).
 
 facing_triangles(
 [[xx,se,nw,xx],
@@ -437,7 +437,7 @@ surround_3x3(
 first_color(Grid1,C1):- sub_term(C1,Grid1),is_color(C1), \+ is_bg_color(C1).
 
 % Grid vis_hv/resize
-make_lengths(N,L):- my_len(L,N).
+make_lengths(N,L):- length(L,N).
 
 get_inf(30).
 get_neg_inf(X):- get_inf(Inf), X is 0-Inf.
@@ -481,14 +481,14 @@ calc_range(WLoH,WLoV,WHiH,WHiV,WH,WV,Point,LoH,LoV,HiH,HiV,H,V):-
 calc_range(WLoH,WLoV,WHiH,WHiV,WH,WV,_,WLoH,WLoV,WHiH,WHiV,WH,WV):- !.
 
 
-grid_size_nd(L,_,_):- \+ var(L), \+ is_grid(L), !, fail.
+
 grid_size_nd([C,R|Rows],H,V):- 
    (plain_var(Rows)->between(2,32,V);!), 
-   my_len([C,R|Rows],V),
+   length([C,R|Rows],V),
    (plain_var(R)->between(1,32,H);true), 
-   my_len(R,H),
-   (is_list(C)->true;(my_len(C,H),maplist(make_lengths(H),Rows))).
-grid_size_nd([L],H,(1)):- (plain_var(L)->between(1,32,H);true), my_len(L,H).
+   length(R,H),
+   (is_list(C)->true;(length(C,H),maplist(make_lengths(H),Rows))).
+grid_size_nd([L],H,(1)):- (plain_var(L)->between(1,32,H);true), length(L,H).
 
 
 closure_grid_to_object(Orig,Grid,NewObj):- 

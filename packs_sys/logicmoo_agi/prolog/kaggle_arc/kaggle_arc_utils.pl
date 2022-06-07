@@ -8,11 +8,6 @@
 :- set_prolog_flag_until_eof(trill_term_expansion,false).
 :- endif.
 
-my_len(X,Y):- var(X),!,length(X,Y).
-my_len(X,Y):- is_list(X),!,length(X,Y).
-my_len(X,Y):- functor([_|_],F,A),functor(X,F,A),!,length(X,Y).
-my_len(X,Y):- dumpST,!,break.
-
 set_nth1(1,[_|Row],E,[E|Row]):-!.
 set_nth1(N,[W|Row],E,[W|RowMod]):- Nm1 is N-1, set_nth1(Nm1,Row,E,RowMod).
 
@@ -62,7 +57,7 @@ as_debug(9,_):- !.
 as_debug(_,G):- wots(S,G),format('~N~w~N',[S]).
 
 count_each([],_,[]).
-count_each([C|L],GC,[Len-C|LL]):- include(==(C),GC,Lst),my_len(Lst,Len),count_each(L,GC,LL).
+count_each([C|L],GC,[Len-C|LL]):- include(==(C),GC,Lst),length(Lst,Len),count_each(L,GC,LL).
 
 /*
 print_points_grid(Points):- 

@@ -72,7 +72,7 @@ test_ogs0(H,V):- clsmake,
   ff666(T,FG),
   copy_term(SG,CSG),copy_term(FG,CFG),
   %copy_term(SG,XSG),copy_term(FG,XFG),
-
+  
   once((constrain_grid(f,CheckType,FG,XFG), constrain_grid(s,CheckType,SG,XSG))),
 
   ((ogs_1(H,V,XFG,XSG),CheckType=run) *-> 
@@ -177,8 +177,8 @@ ogs_0(CheckType,H,V,FG,SG):-
 ogs_1(Hi,Vi,Find,Search):-
   nonvar(Hi),nonvar(Vi), 
   H is Hi - 1, V is Vi - 1,  
-  my_len(LPad,H),
-  my_len(VPad,V),!,
+  length(LPad,H),
+  length(VPad,V),!,
   append(VPad,[LPadAndRow|Next],Search),
   Find = [R1|FGrid],
   append(R1,_,Rho),
@@ -196,18 +196,18 @@ ogs_1(H,V,FindI,Search):-
 ogs_2(H,V,MH,MV,[R1|FGrid],Search):-  
   append(R1,_,Rho),!,
   append(VPad,[LPadAndRow|Next],Search),
-  my_len(VPad,V),
+  length(VPad,V),
   %between(0,MV,V),
   (V> MV -> (!, fail) ; true),
   between(0,MH,H),
-  once((my_len(LPad,H),
+  once((length(LPad,H),
   append(LPad,Rho,LPadAndRow),
   once((ogs_pt2(H,FGrid,Next),
-        my_len(VPad,V))))).
+        length(VPad,V))))).
 
 ogs_pt2(_,[],_):-!.
 ogs_pt2(H,[Row|FindRows],[S|Search]):-
-  my_len(LPad2,H),append(LPad2,Row,LPadRow2),
+  length(LPad2,H),append(LPad2,Row,LPadRow2),
   append(LPadRow2,_,S),!,
   ogs_pt2(H,FindRows,Search),!.
 
@@ -290,7 +290,7 @@ offset_v_grid(V2,FF,OF):-
 
 offset_v_grid_row(_,V2,FF,FF):- V2<0,!.
 offset_v_grid_row(GW,V2,FF,[Row|OF]):- V1 is V2-1,
-   my_len(Row,GW), offset_v_grid_row(GW,V1,FF,OF).
+   length(Row,GW), offset_v_grid_row(GW,V1,FF,OF).
    
   
 
@@ -302,8 +302,8 @@ fpad_grid(CT,Before,After):-  fpad_grid(CT,=(bg),Before,After).
 fpad_grid(CT,P1,O,GridO):- is_object(O),!,object_grid(O,GridIn),!,fpad_grid(CT,P1,GridIn,GridO).
 fpad_grid(_CT,P1,Grid,Grid2):-
   grid_size(Grid,H,_), H2 is H +2,
-  my_len(T,H2),maplist(P1,T),
-  my_len(B,H2),maplist(P1,B),
+  length(T,H2),maplist(P1,T),
+  length(B,H2),maplist(P1,B),
   maplist(pad_sides(P1),Grid,FillRows),
   append([T|FillRows],[B],Grid2).
 
@@ -382,13 +382,17 @@ constrain_ele(f,_GH,_GV,_Trig,_GridIn,_H,_V,C1I,_C1O,_GridO):- is_bg_color(C1I),
 constrain_ele(f,_GH,_GV,_Trig,_GridIn,_H,_V,C1I,C1O,_GridO):- nonvar(C1I), nonvar(C1O),!, C1O\==C1I,fail.
 constrain_ele(f,_GH,_GV,_Trig,_GridIn,_H,_V,C1I,C1O,_GridO):- fail, is_spec_color(C1I,_),nonvar(C1I),!, 
   (C1O==C1I -> true ; C1O=C1I).
+
 constrain_ele(f,_GH,_GV,Trig,GridIn,H,V,C1I,C1O,GridO):- is_spec_color(C1I,_),!, 
   (C1O==C1I -> true ; must_det_l((constrain_type(Trig,C1I=C1O), attach_ci(C1O,C1I)))), 
   constrain_dir_ele(f,Trig,[n,s,e,w],GridIn,H,V,C1I,C1O,GridO).
+
+
 constrain_ele(f,_GH,_GV,Trig,GridIn,H,V,C1I,C1O,GridO):- is_spec_color(C1I,_),!, 
   (C1O==C1I -> true ; must_det_l((constrain_type(Trig,C1I=C1O), attach_ci(C1O,C1I)))), 
   constrain_dir_ele(f,Trig,[n,s,e,w],GridIn,H,V,C1I,C1O,GridO).
-% UNKNOWN
+
+  % UNKNOWN
 constrain_ele(_CT,_GH,_GV,_Trig,_GridIn,_H,_V,_C1I,_C1O,_GridO).
 
 same_colors(_Trig,C1I,_C1O):- \+ is_spec_color(C1I,_),!.
@@ -408,7 +412,7 @@ count_o_neighbors(C,H,V,N,GridIn):-
      get_color_at(H2,V2,GridIn,C1O),
        is_spec_color(C1O,_),C1O\=@=C), 
     Count),
-  my_len(Count,N).
+  length(Count,N).
 
 count_c_neighbors(C,H,V,N,GridIn):- 
   muarc_mod(M),
@@ -417,7 +421,7 @@ count_c_neighbors(C,H,V,N,GridIn):-
      get_color_at(H2,V2,GridIn,C1O),
        C1O=@=C), 
     Count),
-  my_len(Count,N).
+  length(Count,N).
   
 %ci:attr_unify_hook(fg(_),Value):- !, is_fg_color(Value).
 %ci:attr_unify_hook(bg,Value):- !, is_bg_color(Value).
@@ -714,7 +718,7 @@ fix_v_range(GridIn,LowV,HiV,H,V,VV,GridO):- HiV==V,!,
 fix_v_range(GridIn,_LowV,_HiV,_H,V,V,GridIn).
 
 
-  
+
 perfect_result([['$VAR'(999),'$VAR'(1000),'$VAR'(1001),'$VAR'(1002),blue,blue,blue,blue,blue,'$VAR'(1003),'$VAR'(1004),'$VAR'(1005),'$VAR'(1006),'$VAR'(1007),'$VAR'(1008),'$VAR'(1009),blue,blue,blue,blue,blue,'$VAR'(1010),'$VAR'(1011)],['$VAR'(1012),'$VAR'(1013),'$VAR'(1014),'$VAR'(1015),blue,blue,blue,blue,blue,'$VAR'(1016),'$VAR'(1017),'$VAR'(1018),'$VAR'(1019),'$VAR'(1020),'$VAR'(1021),'$VAR'(1022),blue,blue,blue,blue,blue,'$VAR'(1023),'$VAR'(1024)],['$VAR'(1025),'$VAR'(1026),'$VAR'(1027),'$VAR'(1028),'$VAR'(1029),'$VAR'(1030),blue,'$VAR'(1031),'$VAR'(1032),blue,blue,'$VAR'(1033),'$VAR'(1034),'$VAR'(1035),red,red,'$VAR'(1036),'$VAR'(1037),blue,'$VAR'(1038),'$VAR'(1039),blue,blue],['$VAR'(1040),'$VAR'(1041),'$VAR'(1042),'$VAR'(1043),'$VAR'(1044),'$VAR'(1045),blue,'$VAR'(1046),'$VAR'(1047),blue,blue,'$VAR'(1048),'$VAR'(1049),'$VAR'(1050),red,red,'$VAR'(1051),'$VAR'(1052),blue,'$VAR'(1053),'$VAR'(1054),blue,blue],['$VAR'(1055),'$VAR'(1056),'$VAR'(1057),'$VAR'(1058),'$VAR'(1059),'$VAR'(1060),blue,blue,blue,blue,blue,'$VAR'(1061),'$VAR'(1062),'$VAR'(1063),red,red,red,red,blue,blue,blue,blue,blue],['$VAR'(1064),'$VAR'(1065),'$VAR'(1066),'$VAR'(1067),'$VAR'(1068),'$VAR'(1069),blue,'$VAR'(1070),'$VAR'(1071),blue,blue,'$VAR'(1072),'$VAR'(1073),'$VAR'(1074),red,red,'$VAR'(1075),'$VAR'(1076),blue,'$VAR'(1077),'$VAR'(1078),blue,blue],['$VAR'(1079),'$VAR'(1080),'$VAR'(1081),'$VAR'(1082),'$VAR'(1083),'$VAR'(1084),blue,'$VAR'(1085),'$VAR'(1086),blue,blue,'$VAR'(1087),'$VAR'(1088),'$VAR'(1089),red,red,'$VAR'(1090),'$VAR'(1091),blue,'$VAR'(1092),'$VAR'(1093),blue,blue],['$VAR'(1094),'$VAR'(1095),'$VAR'(1096),'$VAR'(1097),blue,blue,blue,blue,blue,'$VAR'(1098),'$VAR'(1099),'$VAR'(1100),'$VAR'(1101),'$VAR'(1102),'$VAR'(1103),'$VAR'(1104),blue,blue,blue,blue,blue,'$VAR'(1105),'$VAR'(1106)],['$VAR'(1107),'$VAR'(1108),'$VAR'(1109),'$VAR'(1110),blue,blue,blue,blue,blue,'$VAR'(1111),'$VAR'(1112),'$VAR'(1113),'$VAR'(1114),'$VAR'(1115),'$VAR'(1116),'$VAR'(1117),blue,blue,blue,blue,blue,'$VAR'(1118),'$VAR'(1119)]],[[yellow,silver,blue],[yellow,silver,blue],[yellow,silver,blue]],fail).
 perfect_result([['$VAR'(999),'$VAR'(1000),'$VAR'(1001),blue,blue,blue,'$VAR'(1002),'$VAR'(1003),'$VAR'(1004),'$VAR'(1005),'$VAR'(1006),'$VAR'(1007),'$VAR'(1008),'$VAR'(1009),'$VAR'(1010),'$VAR'(1011),'$VAR'(1012),'$VAR'(1013),'$VAR'(1014),blue,blue,blue,'$VAR'(1015),'$VAR'(1016),'$VAR'(1017)],['$VAR'(1018),'$VAR'(1019),'$VAR'(1020),'$VAR'(1021),blue,blue,'$VAR'(1022),'$VAR'(1023),'$VAR'(1024),'$VAR'(1025),'$VAR'(1026),'$VAR'(1027),'$VAR'(1028),'$VAR'(1029),'$VAR'(1030),'$VAR'(1031),'$VAR'(1032),'$VAR'(1033),'$VAR'(1034),'$VAR'(1035),blue,blue,'$VAR'(1036),'$VAR'(1037),'$VAR'(1038)],['$VAR'(1039),'$VAR'(1040),'$VAR'(1041),'$VAR'(1042),blue,'$VAR'(1043),'$VAR'(1044),'$VAR'(1045),blue,'$VAR'(1046),'$VAR'(1047),'$VAR'(1048),'$VAR'(1049),'$VAR'(1050),'$VAR'(1051),'$VAR'(1052),'$VAR'(1053),'$VAR'(1054),'$VAR'(1055),'$VAR'(1056),blue,'$VAR'(1057),'$VAR'(1058),'$VAR'(1059),blue],['$VAR'(1060),'$VAR'(1061),'$VAR'(1062),'$VAR'(1063),blue,blue,blue,blue,blue,'$VAR'(1064),'$VAR'(1065),'$VAR'(1066),'$VAR'(1067),'$VAR'(1068),'$VAR'(1069),'$VAR'(1070),'$VAR'(1071),red,red,'$VAR'(1072),blue,blue,blue,blue,blue],['$VAR'(1073),'$VAR'(1074),'$VAR'(1075),'$VAR'(1076),blue,blue,'$VAR'(1077),blue,blue,'$VAR'(1078),'$VAR'(1079),'$VAR'(1080),'$VAR'(1081),'$VAR'(1082),'$VAR'(1083),'$VAR'(1084),'$VAR'(1085),red,red,red,blue,blue,'$VAR'(1086),blue,blue],['$VAR'(1087),'$VAR'(1088),'$VAR'(1089),'$VAR'(1090),'$VAR'(1091),blue,'$VAR'(1092),'$VAR'(1093),'$VAR'(1094),'$VAR'(1095),'$VAR'(1096),'$VAR'(1097),'$VAR'(1098),'$VAR'(1099),'$VAR'(1100),'$VAR'(1101),'$VAR'(1102),red,'$VAR'(1103),'$VAR'(1104),'$VAR'(1105),blue,'$VAR'(1106),'$VAR'(1107),'$VAR'(1108)],['$VAR'(1109),'$VAR'(1110),'$VAR'(1111),'$VAR'(1112),blue,blue,'$VAR'(1113),'$VAR'(1114),'$VAR'(1115),'$VAR'(1116),'$VAR'(1117),'$VAR'(1118),'$VAR'(1119),'$VAR'(1120),'$VAR'(1121),'$VAR'(1122),'$VAR'(1123),'$VAR'(1124),'$VAR'(1125),'$VAR'(1126),blue,blue,'$VAR'(1127),'$VAR'(1128),'$VAR'(1129)],['$VAR'(1130),'$VAR'(1131),'$VAR'(1132),'$VAR'(1133),blue,blue,blue,'$VAR'(1134),'$VAR'(1135),'$VAR'(1136),'$VAR'(1137),'$VAR'(1138),'$VAR'(1139),'$VAR'(1140),'$VAR'(1141),'$VAR'(1142),'$VAR'(1143),'$VAR'(1144),'$VAR'(1145),'$VAR'(1146),blue,blue,blue,'$VAR'(1147),'$VAR'(1148)]],[[yellow,silver,blue],[yellow,silver,blue],[yellow,silver,blue]],fail).
 perfect_result([[yellow,silver,blue,orange,cyan,brown,yellow,silver,red,orange,cyan,brown],[yellow,silver,blue,orange,cyan,brown,yellow,silver,blue,orange,cyan,brown],[yellow,silver,blue,orange,cyan,brown,yellow,silver,blue,orange,cyan,brown],[blue,silver,blue,blue,cyan,brown,yellow,silver,blue,orange,cyan,brown],[blue,blue,blue,orange,cyan,brown,yellow,silver,blue,orange,cyan,brown],[blue,blue,blue,blue,cyan,brown,yellow,silver,blue,orange,cyan,brown],[blue,blue,blue,blue,cyan,brown,blue,blue,blue,blue,blue,brown],[blue,blue,blue,blue,cyan,brown,yellow,silver,blue,orange,cyan,brown],[blue,blue,blue,orange,cyan,brown,yellow,silver,blue,orange,cyan,brown],[yellow,silver,blue,orange,cyan,brown,yellow,silver,blue,orange,cyan,brown]],[[yellow,silver,blue],[yellow,silver,blue],[yellow,silver,blue]],fail).
@@ -850,4 +854,5 @@ perfect_result([[blue,red,green,yellow,silver,red,orange,cyan,brown],[blue,red,g
 
   
 :- fixup_exports.
+
 

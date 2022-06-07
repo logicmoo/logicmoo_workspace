@@ -2,8 +2,8 @@
 <html>
     <head>
         <meta charset="utf-8">
-        <title>ARC testing interface</title>
-        <base href="https://logicmoo.org/public/ARC/apps/">
+        <title>ARC testing using LOGICMOO.ORGs backend server</title>
+        <base href="https://logicmoo.org/swish/arc/"-->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
         <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
@@ -299,16 +299,15 @@ function loadJSONTask(train, test) {
 
 function display_task_name(task_name, task_index, number_of_tasks) {
     big_space = '&nbsp;'.repeat(4); 
-	document.getElementById('prolog_right').src="https://logicmoo.org:1777/swish/arc/prolog_right?task="+task_name;
-	document.getElementById('prolog_left').src="https://logicmoo.org:1777/swish/arc/prolog_left?task="+task_name;
+	// alert(''+task_name);
     document.getElementById('task_name').innerHTML = (
         'Task name:' + big_space + task_name + big_space + (
             task_index===null ? '' :
             ( String(task_index) + ' out of ' + String(number_of_tasks) )
         )
     );
-
-	
+	document.getElementById('arcproc_right_frame').src="/swish/muarc/arcproc_right?task="+task_name;
+	document.getElementById('arcproc_left_frame').src="/swish/muarc/arcproc_left?task="+task_name;
 }
 
 function loadTaskFromFile(e) {
@@ -545,7 +544,7 @@ $(document).ready(function () {
 });
 
 const WS_PROTO = "ws://"
-const WS_ROUTE = "/echo"
+const WS_ROUTE = "/swish/arcproc/web_socket_echo"
 
 
 function log(topic, message) {
@@ -604,9 +603,7 @@ window.tdiff = []; fred = function(a,b){return a-b;};
 window.document.onload = function(e){ 
     console.log("document.onload", e, Date.now() ,window.tdiff,  
     (window.tdiff[0] = Date.now()) && window.tdiff.reduce(fred) ); 
-   // randomTask();
-	document.getElementById('prolog_left').src="https://logicmoo.org:1777/swish/arc/prolog_left?window.document.onload";
-	document.getElementById('prolog_right').src="https://logicmoo.org:1777/swish/arc/prolog_right?window.document.onload";
+    randomTask();
 }
 window.onload = function(e){ 
     console.log("window.onload", e, Date.now() ,window.tdiff, 
@@ -894,7 +891,8 @@ input, button {
             <div id="demonstration_examples_view">
                 <div class="text" id="task_demo_header">Task demonstration</div>
                 <div id="task_preview"></div>
-			    <br><div id="prolog_left_div"> <iframe id="prolog_left"   style="height: 50vh; width: 600px;" src="/"></iframe></div>
+			    <br><div id="arcproc_left_div"> <iframe id="arcproc_left_frame"   style="height: 50vh; width: 600px;" 
+			     src="/swish/muarc/arcproc_left?task=no_task"></iframe></div>
             </div>
 
             <div id="evaluation_view">
@@ -985,7 +983,9 @@ input, button {
                     <div id="error_display"></div>
                     <div id="info_display"></div>
                 </div>
-			   <br><div id="prolog_right_div"> <iframe id="prolog_right"  style="height: 50vh; width: 600px;" src="http://logicmoo.org:1777/swish/arc/prolog_right?start"></iframe></div>
+			   <br><div id="arcproc_right_div"> 
+				    <iframe id="arcproc_right_frame"  style="height: 50vh; width: 600px;" 
+					 src="http://logicmoo.org/swish/muarc/arcproc_right?task=no_task"></iframe></div>
             </div>
         </div>
          <div class="container">

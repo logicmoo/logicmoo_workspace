@@ -163,11 +163,11 @@ grav_mass(Grid,_,_,Grid180):- is_symetric_h(Grid),!,is_top_heavy(Grid),rot180(Gr
 /*
 grav_mass(Grid,Mass):- grid_size(Grid,H,V), HV is round(H/V), Vh is floor(V/2),
   findall(C,(between(Vh,V,Vi),between(0,H,Hi), Hi*HV > Vi, get_color_at(Hi,Vi,Grid,C),is_fg_color(C)),CList),
-  my_len(CList,Mass).
+  length(CList,Mass).
 */
 is_top_heavy(Grid):- split_50_v(Grid,Top,Bottem),mass(Top,TopM),mass(Bottem,BottemM),BottemM<TopM.
 
-split_50_v(Grid,Top,Bottem):- my_len(Grid,N),H is floor(N/2), my_len(Top,H),my_len(Bottem,H),
+split_50_v(Grid,Top,Bottem):- length(Grid,N),H is floor(N/2), length(Top,H),length(Bottem,H),
     append(Top,Rest,Grid),append(_Mid,Bottem,Rest).
 
 
@@ -197,26 +197,13 @@ get_fgc(C):- enum_fg_colors(C).
 
 rev_lambda(P,A):- P=..[F|Args],C =..[F,A|Args],call(C).
 
-% \+ is_points_list(Obj),
+add_shape_lib(Type,Obj):- is_list(Type),!,maplist(rev_lambda(add_shape_lib(Obj)),Type).
+add_shape_lib(Type,Obj):-  is_list(Obj), \+ is_grid(Obj), \+ is_points_list(Obj),!,maplist(add_shape_lib(Type),Obj).
+add_shape_lib(Type,Obj):- asserta_new(in_shape_lib(Type,Obj)),
+  mass(Obj,Mass),Mass>5,
+  print_grid(Obj),
+  pt(Type).
 
-add_shape_lib(Type,Obj):- !,fail.
-add_shape_lib(Type,Obj):- \+ ground(Obj),!,break.
-add_shape_lib(Type,Obj):- is_object(Obj),!,add_shape_lib0(Type,Obj),!.
-add_shape_lib(Type,[Obj|L]):- (is_group(Obj);is_object(Obj) ; is_grid(Obj)),!,maplist(add_shape_lib(Type),[Obj|L]).
-add_shape_lib(Type,Obj):-  is_list(Obj), \+ is_grid(Obj), !, maplist(add_shape_lib(Type),Obj).
-
-add_shape_lib(Type,Obj):- must_det_l(add_shape_lib0(Type,Obj)).
-
-add_shape_lib0(Type,Obj):- mass(Obj,Mass),!,
-  dash_char, 
- % print_grid(Obj),
-  ( Mass<6 
-   -> pt(too_small_for_shapelib(Type)) ; (pt(add_shape_lib(Type)),assert_shape_lib(Type,Obj))), 
-  dash_char.
-
-assert_shape_lib(_,Obj):-  mass(Obj,Mass), Mass<6,!.
-assert_shape_lib(Type,Obj):- is_list(Type),!,maplist(rev_lambda(assert_shape_lib(Obj)),Type).
-assert_shape_lib(Type,Obj):- asserta_if_new(in_shape_lib(Type,Obj)).
 
 in_shape_lib(X,D):- (make_shape(X,R), deterministic(TF), dupe_shape(R,D)), (TF==true -> !; true).
 
@@ -240,7 +227,7 @@ enum_make_shape(P):- compound(P),!,functor(P,F,A),functor(Q,F,A),decl_sf(Q),chec
 box_grid(C,Grid,D):-
   get_fgc(C), ensure_grid(Grid),
   grid_size(Grid,H,_), H2 is H +2,
-  my_len(TB,H2),maplist(=(C),TB),
+  length(TB,H2),maplist(=(C),TB),
   maplist(pad_sides(=(C)),Grid,FillRows),
   append([TB|FillRows],[TB],D).
 
@@ -254,9 +241,9 @@ box_grid_n_times(N,C,Grid,D):- !,
 :- decl_sf(solid_square(fg_color,size)).
 solid_square(C,HW,FillRows):-
   get_fgc(C), between(1,30,HW),
-  my_len(Fill,HW),
+  length(Fill,HW),
   maplist(=(C),Fill),
-  my_len(FillRows,HW),
+  length(FillRows,HW),
   maplist(=(Fill),FillRows).
 
 decl_sf(hollow_square(fg_color,bg_color,size)).
@@ -271,41 +258,34 @@ dupe_shape(E,F):- \+ is_list(E),!,duplicate_term(E,F).
 dupe_shape(L,E):- maplist(dupe_shape,L,E).
   
 
-show_shape_lib_expanded(Name):- 
-  shape_lib_expanded(Name,GallerySOS),
+show_shape_lib_expanded(Complex):- 
+  get_shape_lib(Complex,GallerySOS),
   debug_indiv(GallerySOS).
 
-show_shape_lib:- mmake, 
-  findall(Name,(clause(in_shape_lib(Name,_Obj),_),nonvar(Name)),Gallery),
+show_shape_lib:- mmake, findall(Complex,(clause(in_shape_lib(Complex,_Obj),_),nonvar(Complex)),Gallery),
   list_to_set(Gallery,GalleryS),maplist(show_shape_lib,GalleryS).
-
-clear_shape_lib:- findall(Name,in_shape_lib(Name,_Obj),Gallery),
+clear_shape_lib:- findall(Complex,in_shape_lib(Complex,_Obj),Gallery),
   list_to_set(Gallery,GalleryS),maplist(clear_shape_lib,GalleryS).
 
-show_shape_lib(Name):- 
-  shape_lib_direct(Name,GalleryS), my_len(GalleryS,Len), pt(shape_lib_direct(Name)=Len),
-  shape_lib_expanded(Name,GallerySOS), my_len(GallerySOS,LenOS), pt(shape_lib_expanded(Name)=LenOS),
-  %shape_lib_rules(Name,Rules),my_len(Rules,LenRules),pt(shape_lib_rules(LenRules)=Rules),
-  shapelib_opts(Name,Opts), my_len(Opts,LenOpts), pt(shapelib_opts(LenOpts)=Opts),!.
+show_shape_lib(Complex):- 
+  pt(show_shape_lib(Complex)),
+  get_shape_lib_rules(Complex,GallerySOS),
+  debug_indiv(GallerySOS).
 
-clear_shape_lib(Name):- 
-  pt(clear_shape_lib(Name)),
-  forall(clause(in_shape_lib(Name,_),true,Ref),erase(Ref)),
-  nop(show_shape_lib(Name)).
+clear_shape_lib(Complex):- 
+  pt(clear_shape_lib(Complex)),
+  forall(clause(in_shape_lib(Complex,_),true,Ref),erase(Ref)),
+  show_shape_lib(Complex).
+
  
-shape_lib_expanded(Name,GallerySOS):- 
-  shape_lib_direct(Name,GalleryS),
-  apply_shapelib_xforms(Name,GalleryS,GallerySO),
-  sortshapes(GallerySO,GallerySOS).
- 
-shape_lib_direct(Name,GalleryS):- 
-  findall(Obj,in_shape_lib(Name,Obj),Gallery),  
+get_shape_lib_direct(Complex,GalleryS):- 
+  findall(Obj,in_shape_lib(Complex,Obj),Gallery),  
   sortshapes(Gallery,GalleryS).
 
-shape_lib_rules(Name,GalleryS):- 
+get_shape_lib_rules(Complex,GalleryS):- 
   findall(Rule,
-   (clause(in_shape_lib(Name,Obj),Body),Rule=(in_shape_lib(Name,Obj):- Body)),Gallery),  
-  maplist(label_rules(Name),Gallery),
+   (clause(in_shape_lib(Complex,Obj),Body),Rule=(in_shape_lib(Complex,Obj):- Body)),Gallery),  
+  maplist(label_rules(Complex),Gallery),
   sortshapes(Gallery,GalleryS).
 
 label_rules(_Complex,(Obj:- Body)):- 
@@ -313,11 +293,10 @@ label_rules(_Complex,(Obj:- Body)):-
    Rule=(Obj:- Body),
    guess_pretty(Rule).
 
-shapelib_opts(Name,Opts):- findall(Opt,is_shapelib_opt(Name,Opt),Opts).
-
-apply_shapelib_xforms(Name,GalleryS,SmallLib):-  shapelib_opts(Name,Opts),expand_shape_directives(GalleryS,Opts,SmallLib).
-apply_shapelib_xforms(_Name,Gallery,Gallery):- !.
-
+get_shape_lib(Complex,GallerySOS):- 
+  get_shape_lib_direct(Complex,GalleryS),
+  apply_shapelib_xforms(Complex,GalleryS,GallerySO),
+  sortshapes(GallerySO,GallerySOS).
 
 expand_shape_directives(Shapes,Flow,NewGroup):- \+ is_list(Shapes),!,expand_shape_directives([Shapes],Flow,NewGroup).
 % default expansion
@@ -336,14 +315,20 @@ expand_shape_directives(A,Flow,B):- show_workflow(A,Flow,B),!.
 
 :- dynamic(is_shapelib_opt/2).
 
-%in_shape_lib(Name):- the_hammer1(RedComplex),all_rotations(RedComplex,Name).
+get_shapelib_opts(Name,Opts):- findall(Opt,is_shapelib_opt(Name,Opt),Opts).
+
+apply_shapelib_xforms(Name,GalleryS,SmallLib):- 
+  get_shapelib_opts(Name,Opts),expand_shape_directives(GalleryS,Opts,SmallLib).
+apply_shapelib_xforms(_Name,Gallery,Gallery):- !.
+
+%in_shape_lib(Complex):- the_hammer1(RedComplex),all_rotations(RedComplex,Complex).
 
 in_shape_lib(All,GRot):- All==all,!,in_shape_lib(_,GRot).
 in_shape_lib(colorless(S),Gallery):- nonvar(S),!, in_shape_lib(S,GalleryC),decolorize(GalleryC,Gallery).
 in_shape_lib(all_rots(S),Gallery):-  nonvar(S),!, in_shape_lib(S,GalleryC),all_rotations(GalleryC,Gallery).
 in_shape_lib(l_shape,LibObj):- l_shape(LibObj).
-in_shape_lib(hammer,Name):- the_hammer1(Name).
-in_shape_lib(seen,O):- g2o(_,O), localpoints(O,LP),LP\==[],my_len(LP,L),L>4.
+in_shape_lib(hammer,Complex):- the_hammer1(Complex).
+in_shape_lib(seen,O):- g2o(_,O), localpoints(O,LP),LP\==[],length(LP,L),L>4.
   
 
 in_grid_shape_lib([Shape,hollow],Grid,GrowthChart):- 

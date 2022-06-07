@@ -112,7 +112,6 @@ get_response_echo(Message, Response) :-
   get_time(Time),
   Response = _{message:Message.message, time: Time}.
 
-
 arc_http_server:- thread_property(ID,status(running)),ID=='http@1777',!.
 arc_http_server:- http_server(http_dispatch, [port(1777)]),
 

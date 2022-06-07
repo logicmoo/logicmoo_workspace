@@ -9,12 +9,12 @@
 :- endif.
 
 print_collapsed(G):- !, wots(_S,G).
-%print_collapsed(G):- !, call(G). 
+print_collapsed(G):- !, call(G). 
 %print_collapsed(G):- wots(S,G),write(S).
 
 tersify(I,O):- tersify1(I,M),tersify2(M,O).
 
-tersiy1(I,O):- is_grid(I), into_gridnameA(I,O),!. 
+tersify1(I,O):- is_grid(I), into_gridnameA(I,O),!. 
 tersify1(I,O):- is_list(I), maplist(tersify1,I,O).
 tersify1(I,O):- is_object(I), o2ansi(I,O),!.
 tersify1(I,O):- compound(I), !, compound_name_arguments(I,F,IA), maplist(tersify,IA,OA), compound_name_arguments(O,F,OA).
@@ -133,7 +133,7 @@ as_str(call(C),S):- !, wots(S,C).
 as_str(S,A):- \+ string(S), sformat(A,'~p',[S]),!.
 as_str(S,S).
 
-print_length(S,L):- as_str(S,A),atom_codes(A,C), include(uses_space,C,SS),my_len(SS,L).
+print_length(S,L):- as_str(S,A),atom_codes(A,C), include(uses_space,C,SS),length(SS,L).
 
 
 show_pair_indivs(IH,IV,OH,OV,Info,PairName,ImO,OmI):-
@@ -194,7 +194,7 @@ print_equals(N,V):- \+ compound(V),wqnl(N=V).
 print_equals(N,V):- is_grid(V),!,wqnl(N),print_grid(V).
 print_equals(N,[G|L]):-
   is_grid(G),is_list(L),maplist(is_grid,L),!,
-  my_len([G|L],Len), 
+  length([G|L],Len), 
   grid_size(G,H,_),
   wqnl(N=len(Len)),  
   dash_char(H,"-"),
@@ -309,13 +309,13 @@ silver('#7b7b7b').
 silver('#c0c0c0').
 silver('#9a9a9a').
 
-ansi_color(C,Color):- attvar(C),get_attr(C,ci,fg(N)),ansi_color(N,Color),!.
+ansi_color(C,Color):- attvar(C),get_attr(C,ci,fg(N)),trace,ansi_color(N,Color),!.
 ansi_color(C,Color):- attvar(C),get_attr(C,ci,bg),get_bgc(BG),!,ansi_color(BG,Color),!.
 ansi_color(C,Color):- attvar(C),has_color_c(C,E),!,ansi_color(E,Color).
+ansi_color(C,_Color):- var(C),!,trace_or_throw(var(ansi_color(C))).
 ansi_color(C,Color):- atom_concat('#',_,C),!,Color=C.
 ansi_color(C,Color):- integer(C),block_colors(L),nth0(C,L,Color).
 ansi_color(C,Color):- color_int(C,I),!,ansi_color(I,Color).
-ansi_color(C,_Color):- var(C),!,trace_or_throw(var(ansi_color(C))).
 
 on_bg(C,G):- ansi_format([bg(C),fg(white)],'~@',[call(G)]).
 on_bg(G):- get_bgc(C),on_bg(C,G).

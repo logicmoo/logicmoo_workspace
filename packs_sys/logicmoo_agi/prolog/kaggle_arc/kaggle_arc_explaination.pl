@@ -75,7 +75,7 @@ combine_grids(How,[H|T],G,GO):- !,
   combine_grids(How,H,G,GM),
   combine_grids(How,T,GM,GO).
 combine_grids(overlay,H,G,GM):- globalpoints(H,Points),set_local_points(Points,G,GM),!.
-combine_grids(append,H,G,GM):- grid_size(H,W,_),my_len(Row,W), append(G,[Row|H],GM).
+combine_grids(append,H,G,GM):- grid_size(H,W,_),length(Row,W), append(G,[Row|H],GM).
   
 debug_indiv:- test_config(nodebug_indiv),!,fail.
 debug_indiv:- test_config(debug_indiv),!.
@@ -101,7 +101,7 @@ debug_indiv(Grid):- maplist(is_cpoint,Grid),!,debug_as_grid(Grid).
 debug_indiv(Grid):- maplist(is_point,Grid),!,debug_as_grid(Grid).
 
 
-debug_indiv(List):- is_list(List),my_len(List,Len),!,
+debug_indiv(List):- is_list(List),length(List,Len),!,
   dash_char,
   wqnl(objs = Len),
   max_min(Len,40,_,Min),
@@ -123,8 +123,7 @@ debug_indiv(obj(A)):- Obj = obj(A), is_list(A),!,
 %debug_indiv(Obj):- Obj = obj(A), is_list(A),  
   once(colors(Obj,[cc(FC,_)|_]);FC=9),
   sort_obj_props(A,AS),
-  %will_show_grid(Obj,TF),
-  TF = false,
+  will_show_grid(Obj,TF),
   remove_too_verbose(AS,TV0), include('\\=='(''),TV0,TV),
   flatten(TV,F),predsort(longer_strings,F,[Caps|_]),
   toPropercase(Caps,PC),
