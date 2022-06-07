@@ -21,7 +21,7 @@ if_point_de_offset(OH,OV,Point,LPoint):- atom(Point), hv_point(H,V,Point),HH is 
 offset_points(OH,OV,Point,LPoint):- map_pred(if_point_offset(OH,OV),Point,LPoint).
 if_point_offset(OH,OV,Point,LPoint):- atom(Point), hv_point(H,V,Point),HH is H +OH -1, VV is V + OV -1,hv_point(HH,VV,LPoint).
 
-grid_to_individual(Grid,OUT):-
+grid_to_individual(Grid,OUT):- assertion(is_grid(Grid)),!,
   get_gridname(Grid,ID),
   grid_size(Grid,H,V),
   globalpoints(Grid,Points),
@@ -196,8 +196,13 @@ object_indv_id(I,ID,Iv):- throw(missing(object_indv_id(I,ID,Iv))).
 %object_indv_id(_,ID,_Iv):- nb_current(test_pairname,ID).
 
 mass(I,X):- var_check(I,mass(I,X)).
+mass([G|Grid],Points):- is_list(Grid),is_group(G),!,maplist(mass,[G|Grid],MPoints),sum_list(MPoints,Points).
 mass(I,X):- indv_props(I,L),member(mass(X),L),!.
+mass(I,X):- is_object(I),!,must_det_l((indv_props(I,L), member(mass(X),L))).
+mass(I,Count):- is_grid(I),!,globalpoints(I,Points), must_be(list,Points),!,length(Points,Count),!.
+mass(Grid,Points):-  is_group(Grid),!,maplist(mass,Grid,MPoints),sum_list(MPoints,Points).
 mass(Points,Count):- is_list(Points),length(Points,Count),!.
+mass(I,Count):- globalpoints(I,Points),!,length(Points,Count),!.
 mass(C-_,1):- nonvar_or_ci(C),!.
 mass(I,Count):- globalpoints(I,Points), length(Points,Count),!.
 

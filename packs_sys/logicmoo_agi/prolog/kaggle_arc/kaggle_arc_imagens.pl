@@ -171,7 +171,10 @@ split_50_v(Grid,Top,Bottem):- length(Grid,N),H is floor(N/2), length(Top,H),leng
     append(Top,Rest,Grid),append(_Mid,Bottem,Rest).
 
 
-
+get_option_expansion([done|_],[done]):-!.
+get_option_expansion([],[]):-!.
+get_option_expansion([A|NO],O):- get_option_expansion(A,AA), !, listify(AA,AL),append(AL,NO,O).
+get_option_expansion(default,Opts):-  default_i_options(Opts).
 
 searchable(Group,List):- override_group(searchable(Group,List)),!.
 searchable(Shape,Searchable):- object_grid(Shape,Grid), constrain_grid(f,_CheckType,Grid,Searchable).
@@ -197,13 +200,26 @@ get_fgc(C):- enum_fg_colors(C).
 
 rev_lambda(P,A):- P=..[F|Args],C =..[F,A|Args],call(C).
 
-add_shape_lib(Type,Obj):- is_list(Type),!,maplist(rev_lambda(add_shape_lib(Obj)),Type).
-add_shape_lib(Type,Obj):-  is_list(Obj), \+ is_grid(Obj), \+ is_points_list(Obj),!,maplist(add_shape_lib(Type),Obj).
-add_shape_lib(Type,Obj):- asserta_new(in_shape_lib(Type,Obj)),
-  mass(Obj,Mass),Mass>5,
-  print_grid(Obj),
-  pt(Type).
+% \+ is_points_list(Obj),
 
+%add_shape_lib(Type,Obj):- !, nop(pt(add_shape_lib(Type,Obj))).
+add_shape_lib(Type,Obj):- \+ ground(Obj),pt(add_shape_lib(Type,Obj)),fail.
+add_shape_lib(Type,Obj):- is_object(Obj),!,add_shape_lib0(Type,Obj),!.
+add_shape_lib(Type,[Obj|L]):- (is_group(Obj);is_object(Obj) ; is_grid(Obj)),!,maplist(add_shape_lib(Type),[Obj|L]).
+add_shape_lib(Type,Obj):-  is_list(Obj), \+ is_grid(Obj), !, maplist(add_shape_lib(Type),Obj).
+
+add_shape_lib(Type,Obj):- must_det_l(add_shape_lib0(Type,Obj)).
+
+add_shape_lib0(Type,Obj):- mass(Obj,Mass),!,
+  dash_char, 
+ % print_grid(Obj),
+  ( Mass<6 
+   -> pt(too_small_for_shapelib(Type)) ; (pt(add_shape_lib(Type)),assert_shape_lib(Type,Obj))), 
+  dash_char.
+
+assert_shape_lib(_,Obj):-  mass(Obj,Mass), Mass<6,!.
+assert_shape_lib(Type,Obj):- is_list(Type),!,maplist(rev_lambda(assert_shape_lib(Obj)),Type).
+assert_shape_lib(Type,Obj):- asserta_if_new(in_shape_lib(Type,Obj)).
 
 in_shape_lib(X,D):- (make_shape(X,R), deterministic(TF), dupe_shape(R,D)), (TF==true -> !; true).
 
@@ -258,34 +274,41 @@ dupe_shape(E,F):- \+ is_list(E),!,duplicate_term(E,F).
 dupe_shape(L,E):- maplist(dupe_shape,L,E).
   
 
-show_shape_lib_expanded(Complex):- 
-  get_shape_lib(Complex,GallerySOS),
+show_shape_lib_expanded(Name):- 
+  shape_lib_expanded(Name,GallerySOS),
   debug_indiv(GallerySOS).
 
-show_shape_lib:- mmake, findall(Complex,(clause(in_shape_lib(Complex,_Obj),_),nonvar(Complex)),Gallery),
+show_shape_lib:- mmake, 
+  findall(Name,(clause(in_shape_lib(Name,_Obj),_),nonvar(Name)),Gallery),
   list_to_set(Gallery,GalleryS),maplist(show_shape_lib,GalleryS).
-clear_shape_lib:- findall(Complex,in_shape_lib(Complex,_Obj),Gallery),
+
+clear_shape_lib:- findall(Name,in_shape_lib(Name,_Obj),Gallery),
   list_to_set(Gallery,GalleryS),maplist(clear_shape_lib,GalleryS).
 
-show_shape_lib(Complex):- 
-  pt(show_shape_lib(Complex)),
-  get_shape_lib_rules(Complex,GallerySOS),
-  debug_indiv(GallerySOS).
+show_shape_lib(Name):- 
+  shape_lib_direct(Name,GalleryS), length(GalleryS,Len), pt(shape_lib_direct(Name)=Len),
+  shape_lib_expanded(Name,GallerySOS), length(GallerySOS,LenOS), pt(shape_lib_expanded(Name)=LenOS),
+  %shape_lib_rules(Name,Rules),length(Rules,LenRules),pt(shape_lib_rules(LenRules)=Rules),
+  shapelib_opts(Name,Opts), length(Opts,LenOpts), pt(shapelib_opts(LenOpts)=Opts),!.
 
-clear_shape_lib(Complex):- 
-  pt(clear_shape_lib(Complex)),
-  forall(clause(in_shape_lib(Complex,_),true,Ref),erase(Ref)),
-  show_shape_lib(Complex).
-
+clear_shape_lib(Name):- 
+  pt(clear_shape_lib(Name)),
+  forall(clause(in_shape_lib(Name,_),true,Ref),erase(Ref)),
+  nop(show_shape_lib(Name)).
  
-get_shape_lib_direct(Complex,GalleryS):- 
-  findall(Obj,in_shape_lib(Complex,Obj),Gallery),  
+shape_lib_expanded(Name,GallerySOS):- 
+  shape_lib_direct(Name,GalleryS),
+  apply_shapelib_xforms(Name,GalleryS,GallerySO),
+  sortshapes(GallerySO,GallerySOS).
+ 
+shape_lib_direct(Name,GalleryS):- 
+  findall(Obj,in_shape_lib(Name,Obj),Gallery),  
   sortshapes(Gallery,GalleryS).
 
-get_shape_lib_rules(Complex,GalleryS):- 
+shape_lib_rules(Name,GalleryS):- 
   findall(Rule,
-   (clause(in_shape_lib(Complex,Obj),Body),Rule=(in_shape_lib(Complex,Obj):- Body)),Gallery),  
-  maplist(label_rules(Complex),Gallery),
+   (clause(in_shape_lib(Name,Obj),Body),Rule=(in_shape_lib(Name,Obj):- Body)),Gallery),  
+  maplist(label_rules(Name),Gallery),
   sortshapes(Gallery,GalleryS).
 
 label_rules(_Complex,(Obj:- Body)):- 
@@ -293,10 +316,11 @@ label_rules(_Complex,(Obj:- Body)):-
    Rule=(Obj:- Body),
    guess_pretty(Rule).
 
-get_shape_lib(Complex,GallerySOS):- 
-  get_shape_lib_direct(Complex,GalleryS),
-  apply_shapelib_xforms(Complex,GalleryS,GallerySO),
-  sortshapes(GallerySO,GallerySOS).
+shapelib_opts(Name,Opts):- findall(Opt,is_shapelib_opt(Name,Opt),Opts).
+
+apply_shapelib_xforms(Name,GalleryS,SmallLib):-  shapelib_opts(Name,Opts),expand_shape_directives(GalleryS,Opts,SmallLib).
+apply_shapelib_xforms(_Name,Gallery,Gallery):- !.
+
 
 expand_shape_directives(Shapes,Flow,NewGroup):- \+ is_list(Shapes),!,expand_shape_directives([Shapes],Flow,NewGroup).
 % default expansion
@@ -315,19 +339,13 @@ expand_shape_directives(A,Flow,B):- show_workflow(A,Flow,B),!.
 
 :- dynamic(is_shapelib_opt/2).
 
-get_shapelib_opts(Name,Opts):- findall(Opt,is_shapelib_opt(Name,Opt),Opts).
-
-apply_shapelib_xforms(Name,GalleryS,SmallLib):- 
-  get_shapelib_opts(Name,Opts),expand_shape_directives(GalleryS,Opts,SmallLib).
-apply_shapelib_xforms(_Name,Gallery,Gallery):- !.
-
-%in_shape_lib(Complex):- the_hammer1(RedComplex),all_rotations(RedComplex,Complex).
+%in_shape_lib(Name):- the_hammer1(RedComplex),all_rotations(RedComplex,Name).
 
 in_shape_lib(All,GRot):- All==all,!,in_shape_lib(_,GRot).
 in_shape_lib(colorless(S),Gallery):- nonvar(S),!, in_shape_lib(S,GalleryC),decolorize(GalleryC,Gallery).
 in_shape_lib(all_rots(S),Gallery):-  nonvar(S),!, in_shape_lib(S,GalleryC),all_rotations(GalleryC,Gallery).
 in_shape_lib(l_shape,LibObj):- l_shape(LibObj).
-in_shape_lib(hammer,Complex):- the_hammer1(Complex).
+in_shape_lib(hammer,Name):- the_hammer1(Name).
 in_shape_lib(seen,O):- g2o(_,O), localpoints(O,LP),LP\==[],length(LP,L),L>4.
   
 
