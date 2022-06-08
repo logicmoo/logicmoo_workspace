@@ -153,9 +153,10 @@ show_arc_pair_progress(TestID,ExampleNum,In,Out):-
 	grid_size(In,IH,IV), grid_size(Out,OH,OV),
 	nop(writeln(grid_convert(size(IH,IV)->size(OH,OV)))),
 	ignore((more_task_info(TestID,III),pt(III),nl)), 
-	show_pair(IH,IV,OH,OV,test,PairName,In,Out),
+	show_pair_i(IH,IV,OH,OV,test,PairName,In,Out),
   nb_linkval(pair_rules, [rules]),
   clear_shape_lib(pair),
+  %rtrace,
 	forall(examine_installed_individualizers_from_pairs(PairName,In,Out,IH,IV,OH,OV),true),
   %show_shape_lib(pair),
   show_idea_final(PairName,In,Out,IH,IV,OH,OV,[defaults],[defaults]),!.
@@ -177,21 +178,37 @@ show_idea_final(PairName,In,Out,IH,IV,OH,OV,Shapes_I,Shapes_O):-
 show_idea_trial(PairName,In,Out,IH,IV,OH,OV,Shapes_I,Shapes_O):-  
   show_idea(PairName,In,Out,IH,IV,OH,OV,Shapes_I,Shapes_O).
 show_idea(PairName,In,Out,IH,IV,OH,OV,Shapes_I,Shapes_O):- 
-  show_pair_indivs(IH,IV,OH,OV,heuristics,PairName,Shapes_I,Shapes_O),
+  show_pair_no_i(IH,IV,OH,OV,heuristics,PairName,Shapes_I,Shapes_O),
   pt(yellow,'~N+individuate(IN)~N'),
   individuate(Shapes_I,In,UnsharedIn),
   pt(yellow,'~N+individuate(OUT)~N'),
   individuate(Shapes_O,Out,UnsharedOut),
   pt(yellow,'~N-individuations~N'),
-  show_pair_indivs(IH,IV,OH,OV,unshared,PairName,UnsharedIn,UnsharedOut),
+  show_pair_no_i(IH,IV,OH,OV,sofar,PairName,UnsharedIn,UnsharedOut),
+
+  individuate_complete(In,InC),
+  individuate_complete(Out,OutC),
+
+  remove_global_points(UnsharedIn,In,InForgotten),
+  remove_global_points(UnsharedOut,Out,OutForgottenM),
+  ((mass(OutForgottenM,OM),OM==0) -> OutForgotten=OutC; OutForgotten=OutForgottenM),
+  individuate_complete(InForgotten,ForgottenShapesIn),
+  individuate_complete(OutForgotten,ForgottenShapesOut),
+
+  % contains_points(InForgotten);contains_points(OutForgotten)
+  %show_pair_no_i(IH,IV,OH,OV,forgotten,PairName,ForgottenShapesIn,ForgottenShapesOut),
+
+  show_pair_no_i(IH,IV,IH,IV,forgotten_In,PairName,InC,ForgottenShapesIn),
+  show_pair_no_i(OH,OV,OH,OV,forgotten_Out,PairName,ForgottenShapesOut,OutC),
+
   nop((
-       format('~N-unshared~N'),!,
+       format('~N-sofar~N'),!,
        %pt(yellow,in=UnsharedIn),
        pred_intersection(compare_objs1([same]),UnsharedIn,UnsharedOut,_CommonCsIn,_CommonCsOut,_IPCs,_OPCs),
        format('~N-pred_intersection~N'),
     individuate(UnsharedOut,Out,SharedInR),
     individuate(UnsharedIn,In,SharedOutR),
-  show_pair_indivs(IH,IV,OH,OV,shared,PairName,SharedInR,SharedOutR))),
+  show_pair_no_i(IH,IV,OH,OV,shared,PairName,SharedInR,SharedOutR))),
   !.
   %format('~N-Rule made from~N'),
   %show_rules,
@@ -208,7 +225,7 @@ show_idea(PairName,In,Out,IH,IV,OH,OV,Shapes_I,Shapes_O):-
   
   nop((reuse_indivs(SharedIn,SharedOut,BetterA,BetterB),
   ( (SharedOut\==BetterB ; SharedIn\== BetterA) ->
-    show_pair(IH,IV,OH,OV,better,PairName,BetterA,BetterB);
+    show_pair_i(IH,IV,OH,OV,better,PairName,BetterA,BetterB);
      writeln('nothing better')))),
 */
 

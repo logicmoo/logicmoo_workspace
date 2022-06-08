@@ -159,17 +159,18 @@ map_col(P,N,Grid):- maplist(map_nth(P,N),Grid).
 maybe_glyph(G,_,Glyph):- is_object(G), object_glyph(G,Glyph), !.
 maybe_glyph(_G,N,Code):- i_glyph(N,Code),!.
 maybe_glyph(G,_,Glyph):- is_grid(G),grid_dot(Glyph),!.
+maybe_glyph(_,N,N).
 
 
-from_gridoid(Points,C,GN,H,V):- is_group(Points), 
+from_gridoid(Points,C,GN,H,V):- %is_group(Points), 
   smallest_first(Points,ObjList),
   from_gridoid(ObjList,C,N,H,V,G),
-  maybe_glyph(G,N,GN).
+  maybe_glyph(G,N,GN),!.
 
-from_gridoid(Points,C,GN,H,V):- from_gridoid(Points,C,N,H,V,G), maybe_glyph(G,N,GN).
-from_gridoid(Points,C,N,H,V,G):- nth0(N,Points,G),hv_value0(G,C,H,V),nonvar_or_ci(C), \+ is_bg_color(C), \+ bg_sym(C), !.
-from_gridoid(Points,C,N,H,V,G):- nth0(N,Points,G),hv_value0(G,C,H,V),nonvar_or_ci(C),!.
-from_gridoid(Points,C,N,H,V,G):- nth0(N,Points,G),hv_value0(G,C,H,V).
+%from_gridoid(Points,C,GN,H,V):- from_gridoid(Points,C,N,H,V,G), maybe_glyph(G,N,GN).
+from_gridoid(Points,C,N,H,V,G):- nth1(N,Points,G),hv_value0(G,C,H,V),nonvar_or_ci(C), \+ is_bg_color(C), \+ bg_sym(C), !.
+from_gridoid(Points,C,N,H,V,G):- nth1(N,Points,G),hv_value0(G,C,H,V),nonvar_or_ci(C),!.
+from_gridoid(Points,C,N,H,V,G):- nth1(N,Points,G),hv_value0(G,C,H,V).
 
 
 %hv_value0(O,_Color,_H,_V):- is_object(O), object_shape(O,combined), !, fail.
@@ -178,21 +179,37 @@ hv_value0(O,Color,H,V):- hv_value(O,Color,H,V),!.
 
 hv_value_or(Grid,C,H,V,Else):- hv_value(Grid,C,H,V)*->true;C=Else.
 
-pgt:-
+pgt:- mmake,pgt0.
+pgt0:-
   Obj = [ obj( [ mass(536),
+         shape( [ point_01_01, point_02_01]),
+         colors( [ cc(red, 190.0), cc(silver, 132.0), cc(green, 55.0), cc(cyan, 53.0),
+                   cc(blue, 45.0), cc(yellow, 36.0), cc(orange, 25.0)]),
+         localpoints( [ red-point_01_01, silver-point_02_01]), vis_hv(3, 1), rotation(same), loc_xy(3, 1),
+         changes([]), object_shape(combined),
+         object_shape(rectangluar), object_shape(multicolored),
+         object_shape(polygon), object_indv_id(v('0a1d4ef5')*(trn+0)*in, 21),
+       %  globalpoints( [ red-point_01_01, silver-point_02_01]),
+         grid_size(8, 8)]),
+      obj( [ mass(536),
          shape( [ point_01_01, point_02_01]),
          colors( [ cc(red, 190.0), cc(silver, 132.0), cc(green, 55.0), cc(cyan, 53.0),
                    cc(blue, 45.0), cc(yellow, 36.0), cc(orange, 25.0)]),
          localpoints( [ red-point_01_01, silver-point_02_01]), vis_hv(3, 1), rotation(same), loc_xy(1, 1),
          changes([]), object_shape(combined),
          object_shape(rectangluar), object_shape(multicolored),
-         object_shape(polygon), object_indv_id(v('0a1d4ef5')*(trn+0)*in, 21),
-         globalpoints( [ red-point_01_01, silver-point_02_01]),
-         grid_size(3, 1)])],
-  print_grid0(3,1,Obj).
+         object_shape(polygon), object_indv_id(v('0a1d4ef5')*(trn+0)*in, 66),
+        %  globalpoints( [ red-point_01_01, silver-point_02_01]),
+         grid_size(8, 8)])
+  ],
+  print_grid(Obj).
 
 %hv_value(ID,C,H,V):- row_mem_nth(H,ID,V,C).
-hv_value(Points,CN,H,V):- notrace((is_list(Points), is_list_of_gridoids(Points))),!, from_gridoid(Points,C,N,H,V),CN=C-N.
+
+hv_value([G|Points],CN,H,V):- notrace(( is_list(Points), is_object_or_grid(G))), 
+   from_gridoid([G|Points],C,N,H,V),CN=(C-N),!.
+
+
 hv_value(Grid,C,H,V):- is_grid(Grid),!, nth1(V,Grid,Row),nth1(H,Row,C),!.
 hv_value(O,Color-GN,H,V):- is_object(O),globalpoints(O,Ps),hv_value(Ps,Color,H,V),object_indv_id(O,_Tst,GN),nonvar_or_ci(GN),!.
 hv_value(O,Color,H,V):- is_object(O),globalpoints(O,Ps),!,hv_value(Ps,Color,H,V),!.

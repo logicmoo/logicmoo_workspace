@@ -8,25 +8,30 @@
 :- set_prolog_flag_until_eof(trill_term_expansion,false).
 :- endif.
 
-print_collapsed(G):- !, wots(_S,G).
-print_collapsed(G):- !, call(G). 
+print_collapsed(G):- !,
+ locally(b_setval(print_collapsed,true), wots(_S,G)).
+%print_collapsed(G):- !, call(G). 
 %print_collapsed(G):- wots(S,G),write(S).
 
 tersify(I,O):- tersify1(I,M),tersify2(M,O).
 
-tersify1(I,O):- is_grid(I), into_gridnameA(I,O),!. 
-tersify1(I,O):- is_list(I), maplist(tersify1,I,O).
-tersify1(I,O):- is_object(I), o2ansi(I,O),!.
+tersify0(I,gridFn(S)):- is_grid(I), into_gridnameA(I,O),!,sformat(S,'~w',[O]).
+tersify0(I,objFn(S)):- is_object(I), o2ansi(I,O),!,sformat(S,'~w',[O]).
+
+
+tersify1(I,O):- tersify0(I,O),!.
+tersify1(I,O):- is_list(I), !, maplist(tersify1,I,O).
 tersify1(I,O):- compound(I), !, compound_name_arguments(I,F,IA), maplist(tersify,IA,OA), compound_name_arguments(O,F,OA).
 tersify1(I,I).
 
-tersify2(I,O):- is_list(I), with_output_to(string(S),display(I)),!, ((atom_length(S,N), N>70) -> len(N)=O; I=O).
+tersify2(I,O):- is_list(I), !, with_output_to(string(S),display(I)),!, ((atom_length(S,N), N>70) -> tersify_len(N)=O; I=O).
 tersify2(I,O):- compound(I), !, compound_name_arguments(I,F,IA), maplist(tersify,IA,OA), compound_name_arguments(O,F,OA).
 tersify2(I,I).
 
 ptt(P):- tersify(P,Q),!,pt(Q).
 
 pt(P):- var(P),!,pt(var(P)).
+pt(_):- is_print_collapsed,!.
 pt(P):- atomic(P),atom_contains(P,'~'),!,format(P).
 pt(P):- format('~N'), notrace(print_tree_nl(P)),!.
 pt(Color,P):- notrace((format('~N'), wots(S,pt(P)),!,color_print(Color,S))).
@@ -58,11 +63,11 @@ dash_char(S):- format('~N'),dash_char(60,S),format('~N').
 dash_char(H,_):- H < 1,!.
 dash_char(H,C):-forall(between(0,H,_),write(C)).
 dash_border_no_nl(Width):- WidthM1 is Width-1, write(' _'),dash_char(WidthM1,'__').
-%dash_uborder_no_nl(Width):- WidthM1 is Width-1, write(' ¯'),dash_char(WidthM1,'¯¯').
+dash_uborder_no_nl(Width):- WidthM1 is Width-1, write(' ¯'),dash_char(WidthM1,'¯¯').
 dash_uborder_no_nl(Width):- WidthM1 is Width-1, write(' _'),dash_char(WidthM1,'__').
 dash_border(Width):- !, dash_border_no_nl(Width),nl,!.
-%dash_uborder(Width):- format('~N'), WidthM1 is Width-1, write(' ¯'),dash_char(WidthM1,'¯¯'),nl.
-dash_uborder(Width):- format('~N'), WidthM1 is Width-1, write(' _'),dash_char(WidthM1,'__'),nl.
+dash_uborder(Width):- format('~N'), WidthM1 is Width-1, write(' ¯'),dash_char(WidthM1,'¯¯'),nl.
+%dash_uborder(Width):- format('~N'), WidthM1 is Width-1, write(' _'),dash_char(WidthM1,'__'),nl.
 
 functor_color(pass,green).
 functor_color(fail,red).
@@ -73,16 +78,26 @@ arcdbg(G):- wdmsg(G).
 
 user:portray(Grid):- arc_portray(Grid),!.
 
-arc_portray(Grid):- \+ \+ catch((
-  \+ tracing, 
-  \+ is_object(Grid),  \+ is_group(Grid), % ground(Grid),
-   (is_gridoid(Grid);(is_points_list(Grid),ground(Grid))),
-   grid_size(Grid,H,V),!,H>0,V>0, wots(S,print_grid(H,V,Grid)),write(S)),_,false).
-arc_portray(Grid):- \+ \+ catch(( fail,
-  tracing, fail,
-   \+ is_object(Grid),  \+ is_group(Grid), ground(Grid),
-   ((is_points_list(Grid),ground(Grid))),
-   grid_size(Grid,H,V),!,H>0,V>0, wots(S,print_grid(H,V,Grid)),write(S)),_,false).
+
+via_print_grid(G):- is_grid(G).
+via_print_grid(G):- is_object(G).
+via_print_grid(G):- maplist(is_object,G).
+via_print_grid(G):- is_points_list(G),ground(G).
+via_print_grid(G):- is_gridoid(G).
+
+arc_portray(G):- \+ \+ catch((( tracing,
+    is_list(G),G\==[], tersify(G,T),write(T))),_,false).
+
+arc_portray(G):- \+ \+ catch(((via_print_grid(G),
+    tracing,
+    grid_size(G,H,V),!,H>0,V>0, 
+     wots(S,print_grid(H,V,G)),write(S))),_,false).
+
+arc_portray(G):- \+ \+ catch(((via_print_grid(G),
+   \+ tracing,
+    grid_size(G,H,V),!,H>0,V>0, 
+     wots(S,print_grid(H,V,G)),write(S))),_,false).
+
 %user:portray(Grid):- ((\+ tracing, is_group(Grid),print_grid(Grid))).
 %user:portray(Grid):- notrace((is_object(Grid),print_grid(Grid))).
 
@@ -136,16 +151,20 @@ as_str(S,S).
 print_length(S,L):- as_str(S,A),atom_codes(A,C), include(uses_space,C,SS),length(SS,L).
 
 
-show_pair_indivs(IH,IV,OH,OV,Info,PairName,ImO,OmI):-
-  %nb_current(rules,Rules),
-  %add_rule( Info),
-  %add_grule( PairName*in(Info),ImO),
-  %add_grule( PairName*out(Info),OmI),
-  show_pair(IH,IV,OH,OV,Info,PairName,ImO,OmI).
-
 append_term_safe(Type,PairName,NameIn):- append_term(Type,PairName,NameIn),!.
 append_term_safe(Type,PairName,append_term(Type,PairName)).
+
+show_pair_i(_,_,_,_, _,_,_,_):- is_print_collapsed,!.
+show_pair_i(IH,IV,OH,OV,Type,PairName,In,Out):-
+  show_pair_no_i(IH,IV,OH,OV,Type,PairName,In,Out),
+  append_term_safe(Type,PairName+in,NameIn),
+  append_term_safe(Type,PairName+out,NameOut),
+  ignore(show_pair_I_info(NameIn,NameOut,In,Out)),!.
+
+show_pair(_,_,_,_, _,_,_,_):- is_print_collapsed,!.
+
 show_pair(IH,IV,OH,OV,Type,PairName,In,Out):-
+  ignore(IH=1),
   LW is (IH * 2 + 12),
   append_term_safe(Type,PairName+in,NameIn),
   append_term_safe(Type,PairName+out,NameOut),
@@ -155,8 +174,18 @@ show_pair(IH,IV,OH,OV,Type,PairName,In,Out):-
   INFO = [grid_dim,mass,colors_count_size,colors],
   print_side_by_side(
      describe_feature(In,[call(writeln('IN'))|INFO]),LW,
-    describe_feature(Out,[call(writeln('OUT'))|INFO])),!,
-  ignore(show_pair_I_info(NameIn,NameOut,In,Out)),!.
+    describe_feature(Out,[call(writeln('OUT'))|INFO])),!.
+
+show_pair_no_i(_,_,_,_, _,_,_,_):- is_print_collapsed,!.
+show_pair_no_i(IH,IV,OH,OV,Type,PairName,In,Out):-
+  ignore(IH=1),
+  LW is (IH * 2 + 12),
+  append_term_safe(Type,PairName+in,NameIn),
+  append_term_safe(Type,PairName+out,NameOut),
+  wots(U1, print_Igrid_safe(IH,IV,NameIn,In,[])),
+  wots(U2, print_Igrid_safe(OH,OV,NameOut,Out,[])),
+  print_side_by_side(U1,LW,U2),!.
+
 
 show_pair_I_info(NameIn,NameOut,In,Out):- 
   ((is_group(In),is_group(Out))-> once(showdiff(In,Out));
@@ -236,6 +265,9 @@ print_Igrid(H,V,Name,SIndvOut,InOutL):-
    write('  '),writeq(Name),writeln('  '),!.
 
 use_row_db :- fail.
+is_print_collapsed:- nb_current(print_collapsed,true).
+
+print_grid(_):- is_print_collapsed,!.
 print_grid(Grid):- use_row_db, is_grid(Grid),!, grid_to_id(Grid,ID),print_grid(ID).
 
 print_grid(Grid):- quietly(print_grid0(_HH,_VV,Grid)).
@@ -244,11 +276,16 @@ print_grid(Grid):- quietly(print_grid0(_HH,_VV,Grid)).
 print_grid(H,V,Grid):- use_row_db, grid_to_id(Grid,ID),!,print_grid0(H,V,ID).
 print_grid(H,V,Grid):- quietly(print_grid0(H,V,Grid)).
 
+print_grid0(_,_,_):- is_print_collapsed,!.
+print_grid0(H,V,G):- G==[],nonvar(H),make_grid(H,V,GG),!,print_grid0(H,V,GG).
+
 print_grid0(H,V,G):- is_empty_grid(G), %trace, dumpST,
  wdmsg(is_empty_grid(H,V)),!.
+
 print_grid0(H,V,Grid):- \+ callable(Grid),!,write('not grid: '),
   GG= nc_print_grid(H,V,Grid),
   pt(GG),throw(GG).
+
 print_grid0(H,V,Grid):- \+ is_gridoid(Grid), into_grid(Grid,G),!,print_grid0(H,V,G).
 print_grid0(H,V,Grid):- print_grid(1,1,H,V,Grid).
 
@@ -279,8 +316,7 @@ print_grid0(Bordered,SH,SV,LoH,LoV,HiH,HiV,EH,EV,Grid):-
 print_grid0(Bordered,SH,SV,LoH,LoV,HiH,HiV,EH,EV,Grid):-
   \+ \+ print_grid1(Bordered,SH,SV,LoH,LoV,HiH,HiV,EH,EV,Grid).
 
-
-print_grid1(_Bordered,SH,SV,LoH,LoV,HiH,HiV,EH,EV,GridI):-
+print_grid1(_Bordered,SH,SV,_LoH,_LoV,_HiH,_HiV,EH,EV,GridI):-
   write('\n'), 
   maybe_grid_numbervars(GridI,Grid),
   ((plain_var(EH) ; plain_var(EV))->grid_size(Grid,EH,EV);true),
@@ -291,7 +327,8 @@ print_grid1(_Bordered,SH,SV,LoH,LoV,HiH,HiV,EH,EV,GridI):-
    ((format('~N|'),
      forall(between(SH,EH,H), 
      (hv_value_or(Grid,C,H,V,BGC)->
-        (once(print_g(H,V,C,LoH,LoV,HiH,HiV))))),write(' |')))),
+        (once(print_gw1(C))))),write(' |')))),
+  %print_g(H,V,C,LoH,LoV,HiH,HiV)
   format('~N'),!,
   once((user:dash_uborder_no_nl(Width+1))).
 
@@ -309,9 +346,9 @@ silver('#7b7b7b').
 silver('#c0c0c0').
 silver('#9a9a9a').
 
-ansi_color(C,Color):- attvar(C),get_attr(C,ci,fg(N)),trace,ansi_color(N,Color),!.
+ansi_color(C,Color):- attvar(C),get_attr(C,ci,fg(N)),ansi_color(N,Color),!.
+ansi_color(C,Color):- attvar(C),cant_be_color(C,E),!,ansi_color(E,Color).
 ansi_color(C,Color):- attvar(C),get_attr(C,ci,bg),get_bgc(BG),!,ansi_color(BG,Color),!.
-ansi_color(C,Color):- attvar(C),has_color_c(C,E),!,ansi_color(E,Color).
 ansi_color(C,_Color):- var(C),!,trace_or_throw(var(ansi_color(C))).
 ansi_color(C,Color):- atom_concat('#',_,C),!,Color=C.
 ansi_color(C,Color):- integer(C),block_colors(L),nth0(C,L,Color).
@@ -346,7 +383,7 @@ var_color_print(_,W):- i_glyph(W,G),on_bg(write('~w',[G])),!.
 
 
 %color_print(_,W):- write(W),!.
-color_print(C,W):- (has_color_c(C,OC);has_color_c(W,OC)),!,ansi_format_arc([fg(OC)],'~w',['_']),!.
+color_print(C,W):- (cant_be_color(C,OC);cant_be_color(W,OC)),!,ansi_format_arc([fg(OC)],'~w',['_']),!.
 color_print(C,W):- is_bg_sym_or_var(C),W=='_',!,ansi_format_arc([bg(black)],'~w',[' ']),!.
 color_print(C,W):- is_bg_sym_or_var(C),W=='_',color_print(C,'+').
 
@@ -400,7 +437,7 @@ fg_dot(174).
 cant_be_dot(183).
 grid_dot(169).
 
-%print_g(H,V,C0,_,_,_,_):- has_color_c(C0),has_color_c(C0,C),!,  ansi_format_arc([bold,fg('#ff8c00')],'~@',[(write('c'),user:print_g1(H,V,C))]).
+%print_g(H,V,C0,_,_,_,_):- cant_be_color(C0),cant_be_color(C0,C),!,  ansi_format_arc([bold,fg('#ff8c00')],'~@',[(write('c'),user:print_g1(H,V,C))]).
 %print_g(H,V,C0,_,_,_,_):- plain_var(C0),print_g1(H,V,C-'?'),!.
 
 print_g(H,V,C,_,_,_,_):- write(' '), print_g1(H,V,C),!.
@@ -414,13 +451,10 @@ object_cglyph(G,CGlyph):- color(G,C),object_glyph(G,Glyph),wots(CGlyph,color_pri
 %user:portray(S):- (string(S);atom(S)),atom_codes(S,[27|_]),write('"'),write(S),write('"').
 
 
+print_gw1(N):- write(' '),print_g1(N).
 
-
-%print_g1(E):- has_color_c(E,C),color_print(C,'+'),!.
-%print_g1(C0):- sub_term(E,C0),has_color_c(E,C),color_print(C,'='),!.
-print_g1(N):- plain_var(N),has_color_c(N,C),cant_be_dot(DOT),ansi_color(C,CI),ansi_format_arc([fg(CI)],'~s',[[DOT]]),!.
-print_g1(N):- plain_var(N),has_color_c(N,C),format(chars(Codes),'~p',[N]),last(Codes,S),sformat(O,'[~s]',[[S]]),print_g2(C,O),!.
-
+%print_g1(E):- cant_be_color(E,C),color_print(C,'+'),!.
+%print_g1(C0):- sub_term(E,C0),cant_be_color(E,C),color_print(C,'='),!.
 print_g1(N):- into_color_glyph(N,C,Code),as_name(Code,S), color_print(C,S),!.
 
 print_g1(C):- plain_var(C), color_print(C,'.'),!.
@@ -428,7 +462,8 @@ print_g1(C):- plain_var(C), color_print(C,'.'),!.
 print_g2(C,S):- atom_number(S,_), cant_be_dot(DOT), name(N,[DOT]), color_print(C,N),!.
 print_g2(C,S):- color_print(C,S),!.
 
-as_name(Code,S):- plain_var(Code), i_glyph(Code,S).
+as_name(N,Glyph):- plain_var(N),!,format(chars(Codes),'~p',[N]),last(Codes,Glyph).
+as_name(Code,S):- atom(Code), S=Code.
 as_name(Code,S):- integer(Code), name(S,[Code]).
 
 into_color_glyph_ez(CTerm,Color,Code):- 
@@ -438,12 +473,17 @@ into_color_glyph_ez(CTerm,Color,Code):-
     ignore((nonvar_or_ci(Glyph),name(Glyph,[Code|_]))).
 
 %into_color_glyph(H,V,CTerm,Color,Code):- fail, get_grid_num_xyc(H,V,SColor,SNth),into_color_glyph(SColor+SNth+CTerm,Color,Code),nonvar_or_ci(Code).
-into_color_glyph(N,C,Glyph):- plain_var(N),has_color_c(N,C),format(chars(Codes),'<~p>',[N]),last(Codes,Glyph),!.
-into_color_glyph(N,C,Glyph):- has_color_c(N,C),format(chars(Codes),'>Z<',[/*N*/]),last(Codes,Glyph),!.
 
-into_color_glyph(W,C,FGD):- has_color_c(W,C), bg_dot(FGD),!.
+into_color_glyph(N,C,DOT):- is_bg_color(N),get_bgc(C),bg_dot(DOT).
+into_color_glyph(N,C,DOT):- is_spec_color(N,C),fg_dot(DOT).
+into_color_glyph(N,C,DOT):- is_fg_color(N),N=C,fg_dot(DOT).
+into_color_glyph(N,C,DOT):- is_bg_color(N),C=N,bg_dot(DOT).
+into_color_glyph(N,C,Code):- compound(N),N=(C-G),is_color(C),Code=G.
+into_color_glyph(N,C,Code):- compound(N),N=(G-C),is_color(C),Code=G.
+into_color_glyph(CTerm,Color,Code):- compound(CTerm),into_color_glyph_ez(CTerm,Color,Code),nonvar_or_ci(Code),!.
+into_color_glyph(N,C,DOT):- cant_be_color(N,C),cant_be_dot(DOT).
+into_color_glyph(N,C,Glyph):- var(N),C=N,sformat(chars(Codes),'~p',[N]),last(Codes,Glyph),!.
 into_color_glyph(bg,Black,BGD):- get_bgc(Black), bg_dot(BGD),!.
-into_color_glyph(CTerm,Color,Code):- into_color_glyph_ez(CTerm,Color,Code),nonvar_or_ci(Code),!.
 into_color_glyph(C,C,VAR):- plain_var(C),var_dot(VAR),!.
 into_color_glyph(0,Black,BGD):- !, into_color_glyph(bg,Black,BGD).
 into_color_glyph(C,C,FGD):- fg_dot(FGD),!.

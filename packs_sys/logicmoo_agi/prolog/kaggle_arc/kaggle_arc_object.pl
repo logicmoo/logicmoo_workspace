@@ -196,11 +196,10 @@ object_indv_id(I,ID,Iv):- throw(missing(object_indv_id(I,ID,Iv))).
 %object_indv_id(_,ID,_Iv):- nb_current(test_pairname,ID).
 
 mass(I,X):- var_check(I,mass(I,X)).
-mass([G|Grid],Points):- is_list(Grid),is_group(G),!,maplist(mass,[G|Grid],MPoints),sum_list(MPoints,Points).
+mass([G|Grid],Points):- (is_group(Grid);(is_list(Grid),is_group(G))),!,maplist(mass,[G|Grid],MPoints),sum_list(MPoints,Points).
 mass(I,X):- indv_props(I,L),member(mass(X),L),!.
 mass(I,X):- is_object(I),!,must_det_l((indv_props(I,L), member(mass(X),L))).
-mass(I,Count):- is_grid(I),!,globalpoints(I,Points), must_be(list,Points),!,length(Points,Count),!.
-mass(Grid,Points):-  is_group(Grid),!,maplist(mass,Grid,MPoints),sum_list(MPoints,Points).
+mass(I,Count):- is_grid(I),!,globalpoints(I,Points), length(Points,Count),!.
 mass(Points,Count):- is_list(Points),length(Points,Count),!.
 mass(I,Count):- globalpoints(I,Points),!,length(Points,Count),!.
 mass(C-_,1):- nonvar_or_ci(C),!.
@@ -309,7 +308,8 @@ grid_to_points(Grid,HH,HV,Points):-  throw(all_points_between),
 
 globalpoints(I,X):- var_check(I,globalpoints(I,X)).
 globalpoints(G,[G]):- is_point(G),!.
-globalpoints(Atom,_):- \+ compound(Atom),!,trace_or_throw(globalpoint(Atom)).
+globalpoints([],[]):-!.
+globalpoints(Atom,_):- \+ compound(Atom),!,trace_or_throw(globalpoints(Atom)).
 globalpoints(options(X),_Points):- trace_or_throw(globalpoints(options(X))).
 globalpoints(Grid,Points):- is_grid(Grid),!, grid_size(Grid,HH,VV), grid_to_points(Grid,HH,VV,Points).
 globalpoints(Grid,Points):- is_list(Grid),!,maplist(call(globalpoints),Grid,MPoints),append_sets(MPoints,Points).
@@ -321,10 +321,12 @@ globalpoints(I,X):- localpoints0(I,X),!.
 
 localpoints(I,X):- var_check(I,localpoints(I,X)).
 localpoints(G,[G]):- is_point(G),!.
-localpoints(Atom,_):- \+ compound(Atom),!,trace_or_throw(globalpoint(Atom)).
-localpoints(options(X),_Points):- trace_or_throw(localpoints(options(X))).
 localpoints(Grid,Points):- is_grid(Grid),!, grid_size(Grid,HH,VV), grid_to_points(Grid,HH,VV,Points).
 localpoints(Grid,Points):- is_list(Grid),!,maplist(localpoints,Grid,MPoints),append_sets(MPoints,Points).
+
+localpoints(Atom,_):- \+ compound(Atom),!,trace_or_throw(localpoints(Atom)).
+localpoints(options(X),_Points):- trace_or_throw(localpoints(options(X))).
+
 localpoints(I,X):- localpoints0(I,X),!.
 localpoints(I,X):- globalpoints0(I,X),!.
 
@@ -365,9 +367,9 @@ object_grid(I,G):- localpoints(I,LP),points_to_grid(LP,G),!.
 loc_xy_term(I,offset(X,Y)):- loc_xy(I,X,Y).
 
 loc_xy(G,X,Y):- is_group(G),!,maplist(loc_xy_term,G,Offsets),sort(Offsets,[offset(X,Y)|_]). % lowest offset
-loc_xy(I,X,Y):- indv_props(I,L),member(loc_xy(X,Y),L).
 loc_xy(Grid,H,V):- is_grid(Grid),!,globalpoints(Grid,Points),!,points_range(Points,LoH,LoV,_,_,_,_), H is LoH, V is LoV.
-loc_xy(NT,H,V):- named_gridoid(NT,G),loc_xy(G,H,V).
+loc_xy(I,X,Y):- indv_props(I,L),member(loc_xy(X,Y),L),!.
+loc_xy(NT,H,V):- trace, named_gridoid(NT,G),loc_xy(G,H,V).
 
 vis_hv_term(I,size(X,Y)):- vis_hv(I,X,Y).
 
@@ -488,7 +490,7 @@ find_outline:- clsmake, % arc_grid(X),!,
    nop((nl,write(leftover),
    print_grid(Z))).
 
-
+arc_grid(Nth,X):- offset(Nth,arc_grid(X)).
 %find_outline(Grid,Result,Grid4):- is_grid(Grid),!,grid_to_points(Grid,Points),!,find_outline(Points,Result,Grid4).
 
 find_outline(Grid,Sol,Rest):-

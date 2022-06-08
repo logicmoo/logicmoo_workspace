@@ -107,7 +107,7 @@ is_color(C):- atom(C),color_int(C,N),integer(N).
 
 %is_colorish(C):- attvar(C),!,get_attr(C,ci,_).
 is_colorish(C):- is_color(C),!.
-is_colorish(C):- has_color_c(C,_),!.
+is_colorish(C):- cant_be_color(C,_),!.
 is_colorish(C):- get_bgc(BG),BG==C,!.
 is_colorish(C):- bg_sym(BG),BG==C,!.
 is_colorish(C):- fg_sym(FG),FG==C,!.
@@ -121,11 +121,13 @@ is_grid_color(C):- is_color(C).
 
 is_color_dat(C):- atomic(C),color_code(C,W),!,C==W.
 
+is_point(P):- var(P),!,fail.
 is_point(P):- is_nc_point(P),!.
 is_point(P):- is_cpoint(P).
 
 is_lpoint(P):- is_point(P), \+ is_gpoint(P).
 
+is_points_list(P):- var(P),!,fail.
 is_points_list([G|L]):- is_point(G),notrace(maplist(is_point,L)).
 
 enum_colors(OtherColor):- named_colors(Colors),!,member(OtherColor,Colors).
@@ -141,7 +143,7 @@ is_not_gpoint(I):- \+ is_gpoint(I).
 
 
 is_cpoint(C):- \+ compound(C),!,fail.
-%is_cpoint(C-P):- (nonvar_or_ci(C);has_color_c(C)),!,is_nc_point(P).
+%is_cpoint(C-P):- (nonvar_or_ci(C);cant_be_color(C)),!,is_nc_point(P).
 is_cpoint(_-P):- is_nc_point(P).
 
 is_nc_point(P):- atom(P), hv_point(H,_,P),!,number(H).
@@ -163,7 +165,7 @@ is_gridoid(G):- is_list_of_gridoids(G).
 
 is_grid(G):- notrace(fast_is_grid(G)).
 
-fast_is_grid([[C|H]|R]):- is_list(H), is_list(R), \+ is_list(C).
+fast_is_grid([[C|H]|R]):- is_list(H), is_list(R), is_grid_cell(C).
 
 slow_is_grid([[C|H]|R]):- notrace((is_grid_cell(C),is_list(H),is_list(R),
   length([C|H],L),
@@ -171,6 +173,8 @@ slow_is_grid([[C|H]|R]):- notrace((is_grid_cell(C),is_list(H),is_list(R),
   maplist(is_row_len(L),R))).
 
 %is_object(H):- is_list(H),maplist(is_cpoint,H).
+is_grid_cell(C):- var(C),!.
+is_grid_cell(obj(_)):-!,fail.
 is_grid_cell(C):- \+ is_list(C), nop((plain_var(C); is_color(C) ; ( C =  _-_))),!.
 
 

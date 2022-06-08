@@ -95,7 +95,7 @@ debug_as_grid(Grid):-
   print_grid(Grid),
   dash_char(H),!.
 
-
+debug_indiv(_):- is_print_collapsed,!.
 debug_indiv(Grid):- is_grid(Grid),!,debug_as_grid(Grid).
 debug_indiv(Grid):- maplist(is_cpoint,Grid),!,debug_as_grid(Grid).
 debug_indiv(Grid):- maplist(is_point,Grid),!,debug_as_grid(Grid).
@@ -123,7 +123,8 @@ debug_indiv(obj(A)):- Obj = obj(A), is_list(A),!,
 %debug_indiv(Obj):- Obj = obj(A), is_list(A),  
   once(colors(Obj,[cc(FC,_)|_]);FC=9),
   sort_obj_props(A,AS),
-  will_show_grid(Obj,TF),
+  %will_show_grid(Obj,TF),
+  TF = false,
   remove_too_verbose(AS,TV0), include('\\=='(''),TV0,TV),
   flatten(TV,F),predsort(longer_strings,F,[Caps|_]),
   toPropercase(Caps,PC),

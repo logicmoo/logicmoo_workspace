@@ -441,10 +441,13 @@ make_lengths(N,L):- length(L,N).
 
 get_inf(30).
 get_neg_inf(X):- get_inf(Inf), X is 0-Inf.
+
+
 points_range(Points,LoH,LoV,HiH,HiV,H,V):- get_neg_inf(NInf), get_inf(Inf), 
   calc_range(Inf,Inf,NInf,NInf,NInf,NInf,Points,LoH,LoV,HiH,HiV,H,V).
 
-points_range(Points,offset_ranges(LoH,LoV,HiH,HiV,H,V)):- get_inf(Inf),  get_neg_inf(NInf),
+
+points_range2(Points,offset_ranges(LoH,LoV,HiH,HiV,H,V)):- get_inf(Inf),  get_neg_inf(NInf),
   calc_range(Inf,Inf,NInf,NInf,NInf,NInf,Points,LoH,LoV,HiH,HiV,H,V).
 % vis_hv(Points,vis_hv(H,V)):- points_range(Points,_LoH,_LoV,_HiH,_HiV,H,V).
 
@@ -453,12 +456,13 @@ close_color(green,cyan).
 
 %grid_size(Points,H,V):- is_dict(Points),!,Points.grid_size=grid_size(H,V).
 grid_size(ID,H,V):- is_grid_size(ID,H,V),!.
-%grid_size(Grid,H,V):- quietly(is_object(Grid)), !, vis_hv(Grid,H,V).
+grid_size(Grid,H,V):- quietly(is_object(Grid)), !, vis_hv(Grid,H,V).
 grid_size(Grid,H,V):- is_grid(Grid),grid_size_nd(Grid,H,V),!.
+%grid_size([G|Grid],H,V):- is_list(G), length(G,H),length([G|Grid],V),!.
 grid_size(Points,H,V):- pmember(grid_size(H,V),Points),ground(H-V),!.
-grid_size([G|Grid],H,V):- is_list(G),is_list(Grid), grid_size_nd([G|Grid],H,V),!.
+%grid_size([G|Grid],H,V):- is_list(G),is_list(Grid), grid_size_nd([G|Grid],H,V),!.
 grid_size(Points,H,V):- points_range(Points,_LoH,_LoV,_HiH,_HiV,H,V),!.
-grid_size(O,_,_):- trace_or_throw(no_grid_size(O)).
+%grid_size(O,_,_):- trace_or_throw(no_grid_size(O)).
 grid_size(_,30,30).
 
 calc_range(WLoH,WLoV,WHiH,WHiV,WH,WV,Var,WLoH,WLoV,WHiH,WHiV,WH,WV):- plain_var(Var),!.
@@ -481,7 +485,8 @@ calc_range(WLoH,WLoV,WHiH,WHiV,WH,WV,Point,LoH,LoV,HiH,HiV,H,V):-
 calc_range(WLoH,WLoV,WHiH,WHiV,WH,WV,_,WLoH,WLoV,WHiH,WHiV,WH,WV):- !.
 
 
-
+grid_size_nd(L,_,_):- \+ var(L), \+ is_grid(L), !, fail.
+grid_size_nd([G|Grid],H,V):- is_list(G), length(G,H),length([G|Grid],V),!.
 grid_size_nd([C,R|Rows],H,V):- 
    (plain_var(Rows)->between(2,32,V);!), 
    length([C,R|Rows],V),

@@ -8,6 +8,13 @@
 :- set_prolog_flag_until_eof(trill_term_expansion,false).
 :- endif.
 
+/*
+my_len(X,Y):- var(X),!,length(X,Y).
+my_len(X,Y):- is_list(X),!,length(X,Y).
+my_len(X,Y):- functor([_|_],F,A),functor(X,F,A),!,length(X,Y).
+my_len(X,Y):- dumpST,!,break.
+*/
+
 set_nth1(1,[_|Row],E,[E|Row]):-!.
 set_nth1(N,[W|Row],E,[W|RowMod]):- Nm1 is N-1, set_nth1(Nm1,Row,E,RowMod).
 
@@ -191,3 +198,10 @@ pred_intersection(P2,[A|APoints],BPoints,IntersectedA,IntersectedB,[A|LeftOverA]
 
 :- fixup_exports.
 
+
+end_of_file.
+
+?- make_grid(3,3,G),
+   hv_value(G,V,2,2),dif(V,Z),hv_value(G,Z,3,3),Z=blue,
+   print_grid(G),
+   all_rotations(G,R).

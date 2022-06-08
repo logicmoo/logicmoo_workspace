@@ -20,7 +20,7 @@ subtractGrid(Out,In,Alien):- plain_var(In),!,remove_global_points(Alien,Out,In).
 find_by_shape(Grid,Find,Founds):- 
  makeup_gridname(ID),
  vis_hv(Find,GH,GV),
- decolorize(Find,F), 
+ colorless(Find,F), 
  Prog = (all_rotations(F,F1),
    %print_grid(F1),!,
    ogs(H,V,F1,Grid),% trace,
@@ -93,7 +93,7 @@ with_pair(Action,TestID,Type,Num,In,Out):- !,
 with_named_pair(preview,TestID,PairName,In,Out):- !,
   dash_char(60,"|"),nl,nl,nop((wqnl(arc1(TestID)),nl)),
   grid_size(In,IH,IV), grid_size(Out,OH,OV),
-  show_pair(IH,IV,OH,OV,test,PairName,In,Out).
+  show_pair_i(IH,IV,OH,OV,test,PairName,In,Out).
 
 with_named_pair(solve,TestID,PairName,In,Out):- !,
   with_named_pair(cheat,TestID,PairName,In,Out).
@@ -108,13 +108,13 @@ with_named_pair(learn,TestID,PairName,In,Out):- !,
   %ccs(Out,OutCC),
   compute_unshared_indivs(In,UnsharedIn),
   compute_unshared_indivs(Out,UnsharedOut),
-  show_pair(IH,IV,OH,OV,unshared,PairName,UnsharedIn,UnsharedOut),
+  show_pair_i(IH,IV,OH,OV,unshared,PairName,UnsharedIn,UnsharedOut),
   %merge_indivs(UnsharedIn,UnsharedOut,BetterA,BetterB,BetterC), 
-  %show_pair(IH,IV,OH,OV,better,PairName,BetterA,BetterB),
-  %show_pair(IH,IV,OH,OV,combined,PairName,BetterC,Out),
+  %show_pair_i(IH,IV,OH,OV,better,PairName,BetterA,BetterB),
+  %show_pair_i(IH,IV,OH,OV,combined,PairName,BetterC,Out),
   compute_shared_indivs(In,SharedIn),
   compute_shared_indivs(Out,SharedOut),
-  show_pair(IH,IV,OH,OV,shared,PairName,SharedIn,SharedOut),!,
+  show_pair_i(IH,IV,OH,OV,shared,PairName,SharedIn,SharedOut),!,
   ((wqnl(learning_diff(TestID=PairName)),nl)),
   showdiff(SharedOut,SharedIn),
   ((wqnl(learned(TestID=PairName)),nl)).

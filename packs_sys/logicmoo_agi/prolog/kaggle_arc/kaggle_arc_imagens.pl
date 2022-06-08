@@ -155,11 +155,14 @@ grav_rot0(Shape,ShapeO):-
   findall(GRot,all_rotations(Shape,GRot),List),
   predsort(sort_on(grav_mass),List,[ShapeO|_]).
 
-grav_mass(Grid,Mass):- grid_size(Grid,H,V), grav_mass(Grid,H,V,Mass).
-
+grav_mass(Grid,Mass):- grid_size(Grid,H,V), !, grav_mass(Grid,H,V,Mass),!.
 % make things bottem heavy
-grav_mass(Grid,H,V,Mass):- H<V, rot90(Grid,Grid90),grav_mass(Grid90,V,H,Mass).
-grav_mass(Grid,_,_,Grid180):- is_symetric_h(Grid),!,is_top_heavy(Grid),rot180(Grid,Grid180).
+grav_mass(Grid,_,_,Grid):- iz(Grid,symmetric),!.
+grav_mass(Grid,H,V,RotG):- H<V, !, rot90(Grid,Grid90),!,bottem_heavy(Grid90,RotG).
+grav_mass(Grid,_H,_V,RotG):- is_symetric_h(Grid),!,bottem_heavy(Grid,RotG).
+grav_mass(Grid,_H,_V,RotG):- bottem_heavy(Grid,A),rot90(A,B),bottem_heavy(B,RotG).
+
+bottem_heavy(Grid,Grid180):-  (is_top_heavy(Grid)->rot180(Grid,Grid180);Grid=Grid180).
 /*
 grav_mass(Grid,Mass):- grid_size(Grid,H,V), HV is round(H/V), Vh is floor(V/2),
   findall(C,(between(Vh,V,Vi),between(0,H,Hi), Hi*HV > Vi, get_color_at(Hi,Vi,Grid,C),is_fg_color(C)),CList),
@@ -179,10 +182,10 @@ get_option_expansion(default,Opts):-  default_i_options(Opts).
 searchable(Group,List):- override_group(searchable(Group,List)),!.
 searchable(Shape,Searchable):- object_grid(Shape,Grid), constrain_grid(f,_CheckType,Grid,Searchable).
 
-decolorize(Group,List):- override_group(decolorize(Group,List)),!.
-decolorize(Shape,ShapeO):-
+colorless(Group,List):- override_group(colorless(Group,List)),!.
+colorless(Shape,ShapeO):-
   colors_to_vars(_Colors,Vars,Shape,ShapeO),
-  set_fg_vars(Vars),
+  set_fg_vars(Vars),length(Vars,L),write(L),
   all_dif_colors(Vars,Vars).
 /*
   maplist(label_as_fg(Vars),Vars,CVars).
@@ -205,6 +208,8 @@ rev_lambda(P,A):- P=..[F|Args],C =..[F,A|Args],call(C).
 %add_shape_lib(Type,Obj):- !, nop(pt(add_shape_lib(Type,Obj))).
 add_shape_lib(Type,Obj):- \+ ground(Obj),pt(add_shape_lib(Type,Obj)),fail.
 add_shape_lib(Type,Obj):- is_object(Obj),!,add_shape_lib0(Type,Obj),!.
+add_shape_lib(Type,Obj):-  is_grid(Obj),!,add_shape_lib0(Type,Obj),!.
+
 add_shape_lib(Type,[Obj|L]):- (is_group(Obj);is_object(Obj) ; is_grid(Obj)),!,maplist(add_shape_lib(Type),[Obj|L]).
 add_shape_lib(Type,Obj):-  is_list(Obj), \+ is_grid(Obj), !, maplist(add_shape_lib(Type),Obj).
 
@@ -332,7 +337,7 @@ expand_shape_directives(Shapes,[],SmallLib):- must_be_free(SmallLib),
        all_rotations,  "All rotations of indivs", 
        add(change_color_blue), "Add blue indivs", 
        % add(change_color), % "Add new colors indivs",		 
-    %decolorize % decolorized points are not yet printable 
+    %colorless % decolorized points are not yet printable 
     =],SmallLib)
     ))).
 expand_shape_directives(A,Flow,B):- show_workflow(A,Flow,B),!.
@@ -342,7 +347,7 @@ expand_shape_directives(A,Flow,B):- show_workflow(A,Flow,B),!.
 %in_shape_lib(Name):- the_hammer1(RedComplex),all_rotations(RedComplex,Name).
 
 in_shape_lib(All,GRot):- All==all,!,in_shape_lib(_,GRot).
-in_shape_lib(colorless(S),Gallery):- nonvar(S),!, in_shape_lib(S,GalleryC),decolorize(GalleryC,Gallery).
+in_shape_lib(colorless(S),Gallery):- nonvar(S),!, in_shape_lib(S,GalleryC),colorless(GalleryC,Gallery).
 in_shape_lib(all_rots(S),Gallery):-  nonvar(S),!, in_shape_lib(S,GalleryC),all_rotations(GalleryC,Gallery).
 in_shape_lib(l_shape,LibObj):- l_shape(LibObj).
 in_shape_lib(hammer,Name):- the_hammer1(Name).

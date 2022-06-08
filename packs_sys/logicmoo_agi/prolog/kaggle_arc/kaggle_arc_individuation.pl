@@ -104,23 +104,68 @@ individuate(ROptions,Grid,IndvS):-
 individuate(Reserved,NewOptions,Points,IndvS):-  is_points_list(Points),points_to_grid(Points,Grid),!, 
    individuate(Reserved,NewOptions,Grid,IndvS).
 
-individuate(Reserved,NewOptions,Grid,IndvS):-   notrace(grid_size(Grid,H,V)), wdmsg(individuate(H,V)),
+individuate(Reserved,NewOptions,GridIn,IndvS):-   
+   into_points_grid(GridIn,Points,Grid),
+   notrace(grid_size(Grid,H,V)), wdmsg(individuate(H,V)),
    must_be_free(IndvS),
-   globalpoints(Grid,Points),
    into_gridname(Grid,ID),
+   individuate(H,V,ID,Reserved,NewOptions,Grid,Points,IndvS).
+
+% tiny grid becomes a series of points
+individuate(GH,GV,ID,_Reserved,_NewOptions,_Grid,Points,IndvS):- is_glyphic(GH,GV), !,
+  individuate_glyphic(GH,GV,ID,Points,IndvS).
+individuate(H,V,ID,Reserved,NewOptions,Grid,Points,IndvS):-
    individuals_raw(H,V,ID,NewOptions,Reserved,Points,Grid,IndvSRaw),
    %as_debug(9,ptt((individuate=IndvSRaw))),
    make_indiv_object_list(ID,H,V,IndvSRaw,IndvS1),
    combine_objects(IndvS1,IndvS).
+
+
+into_points_grid(GridIn,Points,Grid):- 
+   globalpoints(GridIn,Points),
+   into_grid(GridIn,Grid),!.
+
+
+individuate_complete(GridIn,IndvS):- GridIn==[],!,IndvS=[].
+individuate_complete(GridIn,IndvS):- 
+   must_be_free(IndvS),
+   into_points_grid(GridIn,Points,Grid),
+   grid_size(Grid,H,V), 
+   into_gridname(Grid,ID),
+   wdmsg(individuate_complete(H,V)),
+   individuate_complete(H,V,ID,Grid,Points,IndvS).
+
+individuate_complete(H,V,ID,Grid,Points,IndvS):-    
+   individuate(H,V,ID,[],
+     [solid(squares),
+      squares,diamonds,all,
+      connect(hv_line(h)),
+      connect(hv_line(v)),
+      all,
+     % leftover,
+      each_color_as_one,      
+      done],
+      Grid,Points,IndvS).
+
+is_glyphic(GH,GV):- ( GH=<5 ; GV=<5 ).
+
+individuate_glyphic(_GH,_GV,_ID,PointsIn,IndvS):- PointsIn==[],!,IndvS=[].
+individuate_glyphic(GH,GV,ID,PointsIn,IndvS):-
+  globalpoints(PointsIn,Points),
+  maplist(make_point_object(ID,GH,GV),Points,IndvList),
+  make_indiv_object(ID,GH,GV,Points,[object_shape(combined),object_shape(image)],Whole),
+  append(IndvList,[Whole],IndvS),!.
+
+
 
 individuals_raw(GH,GV,ID,Options,Reserved,Points,Grid,IndvSRaw):-
  must_det_l((
   must_be_free(IndvSRaw),
   individuals_list(GH,GV,[],ID,Options,Reserved,Points,Grid,Indv_0,_LeftOverPoints),
   =(Indv_0,Indv_1),
-  unraw_inds(Indv_1,Indv_2),
-  
+  unraw_inds(Indv_1,Indv_2),  
   largest_first(Indv_2,IndvSRaw))).
+
 
 unraw_inds(IndvS,IndvOO):-   
   largest_first(IndvS,Indv),
@@ -147,7 +192,8 @@ individuals_list(GH,GV,Sofar,ID,Options,Reserved,Points,Grid,IndvList,LeftOver):
   assertion(maplist(nonvar_or_ci,[GH,GV,FoundSofar,ID,NewOptions,NewReserved,NextScanPoints])),
     ( (FoundSofar\==Sofar) ; (Options\==NewOptions) ; (NextScanPoints\== Points); (NewGrid\=@= Grid); (NewReserved\=@= Reserved)),
     %wqnl(indv(Options)=Indv),   
-    individuals_list(GH,GV,FoundSofar,ID,NewOptions,NewReserved,NextScanPoints,NewGrid,IndvList,LeftOver),!.
+    find_contained(FoundSofar,FoundSofarInstead,NextScanPoints,NextScanPointsInstead),
+    individuals_list(GH,GV,FoundSofarInstead,ID,NewOptions,NewReserved,NextScanPointsInstead,NewGrid,IndvList,LeftOver),!.
 
 individuals_list(GH,GV,Sofar,ID,Options,Reserved,Points,Grid,IndvList,NextScanPoints):-  
     next_options(Options,Options2),
@@ -184,7 +230,48 @@ fsi(OUTReserved,OUTNewGrid,OUTOptions,H,V,Sofar,ID,Options,Reserved,Points,Grid,
 fsi(Reserved,Grid,[],_H,_V,Sofar,_ID,[],Reserved,Points,Grid,Sofar,Points):-  !.
 fsi(Reserved,Grid,[],_H,_V,Sofar,_ID,[done|_],Reserved,Points,Grid,Sofar,Points):-  !.
 
+find_contained([],[],NextScanPoints,NextScanPoints).
+find_contained([Found|Sofar],[Found|SofarInstead],NextScanPoints,NextScanPointsInstead):-
+  find_contained_points(Found,NextScanPoints,ScanPointsInstead,ContainedPoints),
+  grid_size(Found,H,V),
+  points_to_grid(H,V,ContainedPoints,Grid),
+  object_indv_id(Found,ID,_),
+  %into_gridname(Grid,ID),
+  individuate_complete(H,V,ID,Grid,ContainedPoints,NewInside),
+  flatten([Sofar,NewInside],Flat),
+  find_contained(Flat,SofarInstead,ScanPointsInstead,NextScanPointsInstead).
 
+find_contained_points(_,[],[],[]).
+find_contained_points(Found,[Next|ScanPoints],ScanPointsInstead,[Next|Contained]):-
+ contained_point(Found,Next),
+ find_contained_points(Found,ScanPoints,ScanPointsInstead,Contained).
+find_contained_points(Found,[Next|ScanPoints],[Next|ScanPointsInstead],Contained):-
+ find_contained_points(Found,ScanPoints,ScanPointsInstead,Contained).
+
+contained_point(Obj,_-Point):- point_in_obj(Point,Obj), 
+  globalpoints(Obj,ObjPoints),!,
+  findall(Dir,(is_adjacent_point(Point,Dir,Next),Dir\==c,scan_to_colider(Obj,Next,Dir,ObjPoints,DirHits),DirHits\==[]),DirList),
+  DirList=[_,_,_|_].
+
+point_in_obj(Next,Obj):- 
+  hv_point(H,V,Next),
+  loc_xy(Obj,X,Y),!,
+  VV is V-Y, VV>=0,
+  HH is H - X, HH>=0,
+  vis_hv(Obj,XX,YY),!,
+  VV<YY, HH<XX.
+
+scan_to_colider(Obj,Next,_Dir,_ObjPoints,[]):- \+ point_in_obj(Next,Obj),!.
+scan_to_colider(Obj,Next,Dir,ObjPoints,[C-Next|DirHits]):- 
+  select(C-Next,ObjPoints,Rest),!,
+  is_adjacent_point(Next,Dir,NNext),
+  scan_to_colider(Obj,NNext,Dir,Rest,DirHits).
+scan_to_colider(Obj,Next,Dir,ObjPoints,DirHits):- 
+  is_adjacent_point(Next,Dir,NNext),
+  scan_to_colider(Obj,NNext,Dir,ObjPoints,DirHits).
+
+
+ 
 fsi(ReservedIO,Grid,OptionsL,_H,_V,Sofar,_ID,Options,ReservedIO,PointsIO,Grid,Sofar,PointsIO):- \+ is_list(Options),!,
   listify(Options,OptionsL),!.
 
@@ -213,8 +300,10 @@ fsi(ReservedIO,Grid,NO,H,V,Sofar,ID,[retain_grid(Options)|NO],ReservedIO,PointsI
 fsi(ReservedIO,Grid,[by_color(Rest)|NO],H,V,Sofar,ID,[by_color(Options)|NO],ReservedIO,Points,Grid,NewSofar,NextScanPoints):-
   listify(Options,OptionsL),!,
   select(C,OptionsL,Rest),
-  my_partition(==(C-_),Points,ThisGroup,NextScanPoints),
-  ((ThisGroup\==[],make_indiv_object(ID,H,V,ThisGroup,[object_shape(by_color(C))],ColorObj))-> NewSofar = [ColorObj|Sofar] ; NewSofar = Sofar).
+  my_partition(=(C-_),Points,ThisGroup,NextScanPoints),
+  ((ThisGroup\==[],make_indiv_object(ID,H,V,ThisGroup,[object_shape(by_color(C))],ColorObj))
+    -> NewSofar = [ColorObj|Sofar] 
+     ; NewSofar = Sofar).
 
 
 % dots that have no adjacent points of the same color are gathered first
@@ -372,6 +461,18 @@ fsi(Reserved,NewGrid,NO,H,V,Sofar,_ID,[ignore_rest|NO],Reserved,_Points,_Grid,So
     make_grid(H,V,NewGrid).
 
 fsi(Reserved,Grid,[This,ignore_rest,done|NO],_H,_V,Sofar,_ID,[just(This)|NO],Reserved,Points,Grid,Sofar,Points):- !.
+
+
+fsi(Reserved,Grid,NewOptions,_H,_V,Sofar,_ID,[each_color_as_one|NO], Reserved, Points, Grid,Sofar, Points):- !,
+   append(
+     [(by_color([(black), (blue),  (red),   (green),(yellow),
+                     (silver),(purple),(orange),(cyan), (brown)]))],NO,NewOptions).
+
+
+fsi(Reserved,Grid,NO,GH,GV,Sofar,ID,[leftover|NO], Reserved, Points, Grid,SofarIndvList, []):- !,
+   make_indiv_object(ID,GH,GV,Points,[object_shape(combined),object_shape(leftovers)],LeftOverObj), 
+   append(Sofar,[LeftOverObj],SofarIndvList).
+
 
 fsi(Reserved,Grid,NO,H,V,Sofar,ID,[into_single|NO],Reserved,Points,Grid,[Indv],Points):- !,
     maplist(globalpoints,Sofar,IndvPoints), append(IndvPoints,IndvPointsL),

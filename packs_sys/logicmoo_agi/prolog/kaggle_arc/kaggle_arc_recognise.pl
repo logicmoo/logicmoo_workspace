@@ -232,7 +232,7 @@ grid_label_bg(CT,GridIn,GridO):-
   get_bgc(BG),subst_w_attv(Grid1,BG,bg,GridO),!.
 
 
-to_grid_bg(_CT,_,E):- has_color_c(E),!.
+to_grid_bg(_CT,_,E):- cant_be_color(E),!.
 to_grid_bg(_CT,_,BG):- get_bgc(BG),!.
 to_grid_bg(_CT,_,BG):- bg_sym(BG),!.
 to_grid_bg(_CT,_,_).
@@ -260,7 +260,7 @@ maybe_grid_numbervars(GridIn,GridIn):-!.
 not_in(Background,Foreground):-
   \+ (member(E,Background), E == Foreground). 
 
-to_grid_fg(_,E,_):- has_color_c(E),!.
+to_grid_fg(_,E,_):- cant_be_color(E),!.
 to_grid_fg(_,N,'$VAR'(N)):-!.
 to_grid_fg(_,B,B).
 
@@ -268,9 +268,9 @@ grid_numbervars(GridIn,GridO):-
  must_det_ll((grid_label_bg(f,GridIn,GridO),grid_label_fg(GridO))).
 
 
-has_color_c(Y):- get_attr(Y,dif,_),!.
-has_color_c(Y):- get_attr(Y,cc,_),!.
-has_color_c(C,E):- attvar(C), get_attr(C,dif,XX),!, sub_term(E,XX),is_color(E).
+cant_be_color(Y):- get_attr(Y,dif,_),!.
+cant_be_color(Y):- get_attr(Y,cc,_),!.
+cant_be_color(C,E):- attvar(C), get_attr(C,dif,XX),!, sub_term(E,XX),is_color(E).
 
 
 
