@@ -116,7 +116,7 @@ the_hammer(Color,ColorComplex):-
   ColorComplex = obj([mass(6), shape([point_01_01, point_01_02, point_01_03, point_02_01, point_02_02, point_03_02]), 
   colors([cc(Color, 6.0)]), localpoints([Color-point_01_01, Color-point_01_02, Color-point_01_03, Color-point_02_01, 
   Color-point_02_02, Color-point_03_02]), vis_hv(3, 3), rotation(same), loc_xy(2, 5), 
-  changes([]), object_shape(rectangluar), object_shape(hammer), object_indv_id(t('1b60fb0c')*(trn+666)*out, 666), 
+  changes([]), object_shape(rectangle), object_shape(hammer), object_indv_id(t('1b60fb0c')*(trn+666)*out, 666), 
   globalpoints([Color-point_02_05, Color-point_02_06, Color-point_02_07, Color-point_03_05, Color-point_03_06, Color-point_04_06]), 
   grid_size(10, 10)]).
 
@@ -134,7 +134,7 @@ l_shape(LibObj):-
   atomic_list_concat(AList,'_',ID),
   scale_grid(Scale,GrowthChart,Grid,ScaledGrid),
   localpoints(ScaledGrid,Points),
-  make_indiv_object(ID,H,V,Points,ShapeProps,LibObj).
+  make_indiv_object(ID,H,V,Points,[object_shape(l_shape)|ShapeProps],LibObj).
 
 % todo temp
 sortshapes(List,ListS):- predsort(using_compare(shape_key),List,ListS),!.
@@ -218,8 +218,8 @@ add_shape_lib(Type,Obj):- must_det_l(add_shape_lib0(Type,Obj)).
 add_shape_lib0(Type,Obj):- mass(Obj,Mass),!,
   dash_char, 
  % print_grid(Obj),
-  ( Mass<6 
-   -> pt(too_small_for_shapelib(Type)) ; (pt(add_shape_lib(Type)),assert_shape_lib(Type,Obj))), 
+  ( Mass<2 
+   -> pt(too_small_for_shapelib(Type,Mass)) ; (pt(add_shape_lib(Type)),assert_shape_lib(Type,Obj))), 
   dash_char.
 
 assert_shape_lib(_,Obj):-  mass(Obj,Mass), Mass<6,!.
@@ -228,7 +228,7 @@ assert_shape_lib(Type,Obj):- asserta_if_new(in_shape_lib(Type,Obj)).
 
 in_shape_lib(X,D):- (make_shape(X,R), deterministic(TF), dupe_shape(R,D)), (TF==true -> !; true).
 
-make_shape(P,I):- enum_make_shape(P), call(call,P,I).
+make_shape(P,I):- compound(P),ground(P),check_args(P,C), call(call,C,I).
 
 pad_sides(Fill,Row):- append([_|Fill],[_],Row).
 pad_sides(P1,Fill,Row):- call(P1,C1),call(P1,C2),append([C1|Fill],[C2],Row).
@@ -238,11 +238,11 @@ ensure_grid(Grid):- is_grid(Grid),!.
 ensure_grid(Grid):- between(1,30,H),between(1,30,V),make_grid(H,V,Grid).
 
 
-decl_pt(P):- clause(decl_sf(Q),true), append_term(Q,+,P).
-decl_sf(Q):- clause(decl_pt(P),true), P=..L, append(MI,[+],L), Q=..MI.
+decl_pt(P):- var(P), clause(decl_sf(Q),true), append_term(Q,+,P).
+decl_sf(Q):- var(Q), clause(decl_pt(P),true), P=..L, append(MI,[+],L), Q=..MI.
 
-enum_make_shape(P):- var(P),!,decl_sf(Q),functor(Q,F,A),functor(P,F,A),check_args(Q,P).
-enum_make_shape(P):- compound(P),!,functor(P,F,A),functor(Q,F,A),decl_sf(Q),check_args(Q,P).
+enum_make_shape(P):- var(P),!,decl_sf(Q),functor(Q,F,A),functor(P,F,A), \+ \+ check_args(Q,P).
+enum_make_shape(P):- compound(P),!,functor(P,F,A),functor(Q,F,A),decl_sf(Q), \+ \+ check_args(Q,P).
 
 :- decl_sf(box_grid(fg_color,grid)).
 box_grid(C,Grid,D):-
@@ -283,7 +283,7 @@ show_shape_lib_expanded(Name):-
   shape_lib_expanded(Name,GallerySOS),
   debug_indiv(GallerySOS).
 
-show_shape_lib:- mmake, 
+show_shape_lib:- %mmake, 
   findall(Name,(clause(in_shape_lib(Name,_Obj),_),nonvar(Name)),Gallery),
   list_to_set(Gallery,GalleryS),maplist(show_shape_lib,GalleryS).
 
@@ -291,10 +291,11 @@ clear_shape_lib:- findall(Name,in_shape_lib(Name,_Obj),Gallery),
   list_to_set(Gallery,GalleryS),maplist(clear_shape_lib,GalleryS).
 
 show_shape_lib(Name):- 
-  shape_lib_direct(Name,GalleryS), length(GalleryS,Len), pt(shape_lib_direct(Name)=Len),
-  shape_lib_expanded(Name,GallerySOS), length(GallerySOS,LenOS), pt(shape_lib_expanded(Name)=LenOS),
+ mort((shape_lib_direct(Name,GalleryS), length(GalleryS,Len), pt(shape_lib_direct(Name)=Len))),
+  mort((shape_lib_expanded(Name,GallerySOS), length(GallerySOS,LenOS), pt(shape_lib_expanded(Name)=LenOS))),
   %shape_lib_rules(Name,Rules),length(Rules,LenRules),pt(shape_lib_rules(LenRules)=Rules),
-  shapelib_opts(Name,Opts), length(Opts,LenOpts), pt(shapelib_opts(LenOpts)=Opts),!.
+  mort((shapelib_opts(Name,Opts), length(Opts,LenOpts), pt(shapelib_opts(LenOpts)=Opts))),!,
+  maplist(print_grid,GalleryS).
 
 clear_shape_lib(Name):- 
   pt(clear_shape_lib(Name)),
@@ -304,7 +305,7 @@ clear_shape_lib(Name):-
 shape_lib_expanded(Name,GallerySOS):- 
   shape_lib_direct(Name,GalleryS),
   apply_shapelib_xforms(Name,GalleryS,GallerySO),
-  sortshapes(GallerySO,GallerySOS).
+  sortshapes(GallerySO,GallerySOS),!.
  
 shape_lib_direct(Name,GalleryS):- 
   findall(Obj,in_shape_lib(Name,Obj),Gallery),  
@@ -330,7 +331,7 @@ apply_shapelib_xforms(_Name,Gallery,Gallery):- !.
 expand_shape_directives(Shapes,Flow,NewGroup):- \+ is_list(Shapes),!,expand_shape_directives([Shapes],Flow,NewGroup).
 % default expansion
 expand_shape_directives(Shapes,[],SmallLib):- must_be_free(SmallLib),
-  must_det_l((print_collapsed(
+  must_det_l((print_collapsed(10,
   show_workflow(Shapes,
    [ =,"Vanila indivs",
     % searchable,"Searchable indivs", 
@@ -352,7 +353,8 @@ in_shape_lib(all_rots(S),Gallery):-  nonvar(S),!, in_shape_lib(S,GalleryC),all_r
 in_shape_lib(l_shape,LibObj):- l_shape(LibObj).
 in_shape_lib(hammer,Name):- the_hammer1(Name).
 in_shape_lib(seen,O):- g2o(_,O), localpoints(O,LP),LP\==[],length(LP,L),L>4.
-  
+
+all_rots(X,Y):- all_rotations(X,Y).
 
 in_grid_shape_lib([Shape,hollow],Grid,GrowthChart):- 
    learned_color_inner_shape(Shape,Color,BG,BGrid,GrowthChart),

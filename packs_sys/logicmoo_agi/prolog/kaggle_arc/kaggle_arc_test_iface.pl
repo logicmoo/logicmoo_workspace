@@ -129,7 +129,7 @@ fav(t('5c2c9af4'),[lmDSL([two_closest_dots_to_edge,make_a_box,grow_box_that_much
 fav(t('5582e5ca'),[lmDSL([compute_max_color(C1),cls_with(C1)])]).
 fav(t('5521c0d9'),[lmDSL([with_each_indiv,move_above_itself])]).
 fav(t('5117e062'),[lmDSL([find_two_color_indivs,selected_indiv,trim_to_rect,main_color,paint_landscape])]).
-fav(t('44d8ac46'),[lmDSL([find_individuals([hollow,boxes,inside([squares])],I),indiv_fill_color(I,red)])]).
+fav(t('44d8ac46'),[lmDSL([find_individuals([hollow,boxes,inside([rectangle])],I),indiv_fill_color(I,red)])]).
 fav(t('447fd412'),[lmDSL([find_two_color_indivs,find_lesser_block,select_scaled_versions,builds,create_greater_blocks])]).
 fav(t('3c9b0459'),[lmDSL([rot180])]).
 fav(t('3631a71a'),[learn([find_damage_to_input,find_center,fraction_evenly_to_four,map_slices_upon_themselves])]).
@@ -148,7 +148,7 @@ fav(t('9ecd008a'),[learn([find_damage_to_input,find_center,fraction_evenly_to_fo
     lmDSL([indiv_is_one_hole,fix_image,selected_indiv,trim_to_rect])]).
 
 
-fav(t('9aec4887'),[indiv(color_blind),todo_sol([find_individuals([hollow,inside([squares])],I),rest_indivdual(Is),put_inside(Is,I),
+fav(t('9aec4887'),[indiv(color_blind),todo_sol([find_individuals([hollow,inside([rectangle])],I),rest_indivdual(Is),put_inside(Is,I),
   if_edge_strong([color=C]),touch(Is,Point),set_color(C,Point)])]).
 
 fav(v('4b6b68e5'),[
@@ -206,7 +206,7 @@ arround each color point there is a box of the oposting color
  cbded52d
 
 we have a blue background and black TTT board .. to blue openings are made of 2x2s
-in each squares there can be a color.. each color has a default pos on the 2x2
+in each rectangle there can be a color.. each color has a default pos on the 2x2
 if like in the game of TTT you can win, but not diagonlly.. place the color on that area
 
 

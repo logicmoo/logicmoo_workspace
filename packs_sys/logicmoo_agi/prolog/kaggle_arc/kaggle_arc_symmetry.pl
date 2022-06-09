@@ -430,7 +430,7 @@ symetric_xy_3x3(G,Grid9x9):-
   [[Q2,  CN, Q1],
    [CW, _CC, CE],
    [Q3,  CS, Q4]] = Grid9x9,
- notrace(symetric_xy(_CXL,_CYL,_CX,_CY,SXQ2,SYQ2,EXQ2,EYQ2,SXCC,SYCC,EXCC,EYCC,SXQ4,SYQ4,EXQ4,EYQ4,G)),!,
+ quietly(symetric_xy(_CXL,_CYL,_CX,_CY,SXQ2,SYQ2,EXQ2,EYQ2,SXCC,SYCC,EXCC,EYCC,SXQ4,SYQ4,EXQ4,EYQ4,G)),!,
   clip_quadrant(CRef,EXQ2,EYQ2,SXQ4,SYQ4,GN,H,V,SXQ2,SYQ2,EXQ2,EYQ2,G,flipHV,Q2),
   clip_quadrant(CRef,EXQ2,EYQ2,SXQ4,SYQ4,GN,H,V,SXQ4,SYQ2,EXQ4,EYQ2,G,flipV,Q1),
   clip_quadrant(CRef,EXQ2,EYQ2,SXQ4,SYQ4,GN,H,V,SXQ2,SYQ4,EXQ2,EYQ4,G,flipH,Q3),

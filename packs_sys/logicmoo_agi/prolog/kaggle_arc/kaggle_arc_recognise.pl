@@ -44,7 +44,7 @@ test_ogs2(H,V):-
   once((constrain_grid(f,CheckType,FG,XFG), constrain_grid(s,CheckType,SG,XSG))),
 
   ((ogs_1(H,V,XFG,XSG),CheckType=run) *-> 
-   (show_match(H,V,XFG,XSG),Match=true);
+   (show_match(H,V,FG,XSG),Match=true);
    (show_mismatch(XFG,XSG),Match=fail)),
   got_result(CSG,CFG,Match),
   Match==true.
@@ -68,17 +68,32 @@ test_ogs1(H,V):-
 % should still be the same
 test_ogs0(H,V):- clsmake,
   wqln("searching..."),
-  ss666(T,SG),
-  ff666(T,FG),
+  ss666(TS,SG),
+  ff666(TF,UFG),
+  copy_term(UFG,FG),
+
+  TF==TS,
   copy_term(SG,CSG),copy_term(FG,CFG),
   %copy_term(SG,XSG),copy_term(FG,XFG),
-  
+
+  constrain_grid(f,CheckType2,CFG,XFG2),
   once((constrain_grid(f,CheckType,FG,XFG), constrain_grid(s,CheckType,SG,XSG))),
 
-  ((ogs_1(H,V,XFG,XSG),CheckType=run) *-> 
-   (show_match(H,V,XFG,XSG),Match=true);
-   (show_mismatch(XFG,XSG),Match=fail)),
+  ((ogs_1(H,V,XFG,XSG),CheckType=run) *-> Match=true; MAtch=false),
+
+  Run = once((
+    ptt(fg=FG),
+    print_grid(FG),
+    (Match == true -> ptt(xfg=XFG) ; true),
+    ignore((CheckType=run)),
+    ignore((CheckType2=run)),
+    ptt(xfb=XFG2),
+    ptt(tf=TF))),
+
+  (Match==true->show_match(H,V,Run,UFG,XSG);show_mismatch(XFG,Run,XSG)),
+
   got_result(CSG,CFG,Match),
+
   Match==true.
   
 
@@ -94,6 +109,7 @@ test_ogs(H,V):- clsmake,
   (ogs(H,V,FG,SG) *-> 
    (show_match(H,V,XFG,XSG),Match=true);
    (show_mismatch(XFG,XSG),Match=fail)),
+  pt(FG),
   got_result(CSG,CFG,Match),
   Match==true.
 
@@ -131,9 +147,20 @@ show_mismatch(F,G):- % fail,
   show_m_pair(color_print(red,"Mismatched"),1,1,F,G),
   nl,dash_char,!.
 
+show_mismatch(F,C,G):- % fail, 
+  nl,dash_char,
+  show_m_pair((color_print(red,"Mismatched"),C),1,1,F,G),
+  nl,dash_char,!.
+
+
 show_match(H,V,F,G):- 
   nl,dash_char,
   show_m_pair(color_print(green,"Matched"),H,V,F,G),
+  nl,dash_char,!.
+
+show_match(H,V,C,F,G):- 
+  nl,dash_char,
+  show_m_pair((color_print(green,"Matched"),C),H,V,F,G),
   nl,dash_char,!.
 
 show_m_pair(S,H,V,F,G):- 
@@ -144,7 +171,7 @@ show_m_pair(S,H,V,F,G):-
   constrain_grid(f,_Trig,OF,FF),!,
   print_grid(GH,GV,FF),
   nl,
-  dash_char(60,' '),wqs(S),
+  dash_char(60,' '),call(S),nl,
   print_grid(G),!.
 
 print_fgrid(GH,GV,F):- ((\+ \+ ((constrain_grid(f,_Trig,F,_FG),print_grid(GH,GV,F),nl)))),!.
@@ -449,6 +476,7 @@ constrain_dir_ele(CT, Trig,[Dir|SEW],GridIn,H,V,C1I,C1O,GridO):-
 
 o_c_n(f,Tw,_):- Tw>=2,!. %has at least two neighbours we care about
 o_c_n(f,0,1):-!,fail. % no neighbours and just self
+o_c_n(f,_,3):-!,fail.
 o_c_n(f,_,_).
 o_c_n(s,_,_).
 
@@ -459,10 +487,12 @@ g666(_,Y):- in_shape_lib(l_shape,X),
 make_row(Rows,FV):- functor(P,v,FV), P=..[v|Rows].
 
 
+
 f666(_Color,
 [[4,5,1],
  [4,5,1],
  [4,5,1]]).
+
 
 f666(_Ham,G):- 
 S="
@@ -601,7 +631,6 @@ insert_col_pad_open(V0,GU,GUU):-  rot90(GU,GR), insert_row_pad_open(V0,GR,GRU), 
 insert_row_pad_open(V0,GU,GridU):- functor(P,v,V0),P=..[v|L],append(L,GU,LGU), append(LGU,_,GridU).
 
 
-
 h666(colors,
 [[4,5,1,7,8,9,4,5,2,7,8,9],
  [4,5,1,7,8,9,4,5,1,7,8,9],
@@ -669,7 +698,7 @@ f666(_,
  [_,_,X,_,_]]).
 
 
-f666(colors,
+f666(_Ncolors,
 [[5,_,7],
  [5,1,7],
  [5,1,7]]).
@@ -697,6 +726,70 @@ f666(T,
 
 
 
+h666(1,
+[[1,2,3,4,5,1,7,8,9],
+ [1,2,3,4,5,1,7,8,9],
+ [1,2,3,4,5,1,7,8,9],
+ [1,2,3,4,1,1,1,8,9],
+ [1,1,1,1,1,1,1,1,1],
+ [1,2,3,4,1,1,1,8,9],
+ [1,2,3,4,5,1,7,8,9],
+ [1,2,3,4,5,1,7,8,9],
+ [1,2,3,4,5,1,7,8,9]]).
+
+h666(1,
+[[1,1,3,4,5,1,7,8,9],
+ [1,2,1,4,5,1,7,8,1],
+ [1,2,3,1,5,1,7,1,9],
+ [1,2,3,4,1,1,1,8,9],
+ [1,1,1,1,1,1,1,1,1],
+ [1,2,3,4,1,1,1,8,9],
+ [1,2,3,1,5,1,7,8,9],
+ [1,2,1,4,5,1,7,8,9],
+ [1,1,3,4,5,1,7,8,9]]).
+
+
+f666(1,
+[[1,1,1],
+ [1,_,1],
+ [1,1,1]]).
+
+f666(1,
+[[1,1,1],
+ [1,3,1],
+ [1,1,1]]).
+
+
+f666(1,
+[[1,1,1],
+ [1,1,1],
+ [1,1,1]]).
+
+h666(1,
+[[1,1,1,1,1],
+ [1,1,1,1,1],
+ [1,1,1,1,1],
+ [1,1,1,1,1],
+ [1,1,1,1,1]]).
+
+h666(1,
+[[2,2,2,2,2],
+ [2,1,1,1,2],
+ [2,1,2,1,2],
+ [2,1,1,1,2],
+ [2,2,2,2,2]]).
+
+h666(1,
+[[2,2,2,2,2],
+ [2,1,1,1,2],
+ [2,1,3,1,2],
+ [2,1,1,1,1],
+ [2,2,2,2,2]]).
+
+
+%f666(1,[[1]]).
+
+%f666(1,[[_]]).
 
 create_padding(GridIn,LowH,LowV,HiH,HiV,H,V,HH,VV,GridO):- 
    fix_v_range(GridIn,LowV,HiV,H,V,VV,Grid1),

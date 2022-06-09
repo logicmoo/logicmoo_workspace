@@ -27,7 +27,7 @@ nth_fact(P,I):- clause(P,true,Ref),nth_clause(P,I,Ref).
 nonvar_or_ci(C):- (nonvar(C);attvar(C)),!.
 
 add_i(Info):- 
- notrace((tersify(Info,InfoT),
+ quietly((tersify(Info,InfoT),
  nb_current(test_rules,TRules),
  nb_current(pair_rules,PRules),
   nb_set_add(TRules,InfoT),

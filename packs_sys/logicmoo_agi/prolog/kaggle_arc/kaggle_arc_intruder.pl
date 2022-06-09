@@ -24,10 +24,20 @@ test( " Fill the smallest square hole?",
 |       N         N       |   |       ?         ?       |
 |       N N N N N N       |   |       ? ? ? ? ? ?       |
  ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯     ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯").
+:- multifile learn_shapelib/7.
+:- discontiguous learn_shapelib/7.
+learn_shapelib(PairName,In,Out,IH,IV,OH,OV):-
+  forall(clause(learn_intruders(PairName,In,Out,IH,IV,OH,OV),Body), rtrace_on_error(once(Body))).
 
+learn_intruders(PairName,In,Out,IH,IV,OH,OV):- nop(learn_intruders(PairName,In,Out,IH,IV,OH,OV)).
+
+rtrace_on_error(Goal):- !, call(Goal),!.
+rtrace_on_error(Goal):- catch(quietly(Goal),E,(notrace,dmsg(E=Goal),break,1==1,rtrace(Goal))).
+
+:- multifile individuals_from_pair/9.
+:- discontiguous individuals_from_pair/9.
 % Grid subtraction
-individuals_from_intruder_pair(_PairName,In,Out,H,V,H,V,RestOfInObjs,RestOfOutObjs):- 
- once((
+individuals_from_pair(_PairName,In,Out,H,V,H,V,RestOfInObjs,RestOfOutObjs):- 
   add_note("trying grid minus grid"),
   grid_minus_grid(In,Out,ImO),mass(ImO,IMass),
   grid_minus_grid(Out,In,OmI),mass(OmI,OMass),
@@ -36,31 +46,31 @@ individuals_from_intruder_pair(_PairName,In,Out,H,V,H,V,RestOfInObjs,RestOfOutOb
    ((OMass==0, IMass>0) -> USE = ImO)),
    individuate([options(defaults)],USE,Intruder),
    add_shape_lib(pair,Intruder),
-   individuate([],[options([default])],In,RestOfInObjs),
+   individuate_default(In,RestOfInObjs),
    add_shape_lib(pair,RestOfInObjs),
-   individuate([],[options([default])],Out,RestOfOutObjs))).
+   individuate_default(Out,RestOfOutObjs).
 
 
 % intruder to Out
-individuals_from_intruder_pair(_PairName,In,Out,IH,IV,OH,OV,NoiseObject,Intruder):-
+individuals_from_pair(_PairName,In,Out,IH,IV,OH,OV,[Intruder|NoiseObjects],[Intruder]):-
   (IV > OV; IH> OH) , ogs(_,_,Out,In), 
   grid_to_individual(Out,Intruder),
   add_shape_lib(pair,Intruder),
-  individuate([],[options([default])],In,NoiseObject),
-  add_shape_lib(noise,NoiseObject).
+  individuate_default(In,NoiseObjects),
+  nop(add_shape_lib(noise,NoiseObjects)).
 
 % intruder was in ./. now in a scene in out
-individuals_from_intruder_pair(_PairName,Out,In,OH,OV,IH,IV,Intruder,NoiseObject):-
+individuals_from_pair(_PairName,Out,In,OH,OV,IH,IV,[Intruder],[Intruder|NoiseObjects]):-
   (IV > OV; IH> OH) , ogs(_,_,Out,In), 
   grid_to_individual(Out,Intruder),
   add_shape_lib(pair,Intruder),
-  individuate([],[options([default])],In,NoiseObject),
-  add_shape_lib(noise,NoiseObject).
+  individuate_default(In,NoiseObjects),
+  nop(add_shape_lib(noise,NoiseObjects)).
 
 
 % Grid subtraction
-individuals_from_intruder_pair(PairName,In,Out,IH,IV,OH,OV,RestOfInObjs,RestOfOutObjs):- 
- once((
+individuals_from_pair(PairName,In,Out,IH,IV,OH,OV,RestOfInObjs,RestOfOutObjs):- 
+ ((
   add_note("trying grid minus grid"),
   grid_minus_grid(In,Out,ImO),%mass(ImO,IMass),
   grid_minus_grid(Out,In,OmI),%mass(OmI,OMass),
@@ -68,7 +78,7 @@ individuals_from_intruder_pair(PairName,In,Out,IH,IV,OH,OV,RestOfInObjs,RestOfOu
   unique_colors(ImO,ICs), unique_colors(OmI,OCs),
   intersection(ICs,OCs,CommonCs,IPCs,OPCs),
   maplist(length,[ICs,IPCs,CommonCs,OPCs,OCs],[ICsL,IPCsL,CommonCsL,OPCsL,OCsL]),
-  grid_color_individualizer(PairName,In,Out,
+  individuals_from_pair_colors(PairName,In,Out,
     IH,IV,OH,OV,
     ICs,IPCs,CommonCs,OPCs,OCs,
     ICsL,IPCsL,CommonCsL,OPCsL,OCsL,

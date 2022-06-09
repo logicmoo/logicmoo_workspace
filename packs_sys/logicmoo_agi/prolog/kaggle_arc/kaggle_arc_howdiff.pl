@@ -297,7 +297,7 @@ same_colorless_points(I,O,OUT):-
 combine_perfects(IndvS,[IO|IndvSO]):- 
   select(I,IndvS,IndvS1),select(O,IndvS1,IndvS2),
   compare_objs1(perfect,I,O),
-  override_object(I,O,IO),
+  override_object(O,I,IO),
   combine_perfects(IndvS2,IndvSO).
 combine_perfects(IndvSO,IndvSO).
 
@@ -306,7 +306,7 @@ combine_objects(IndvS,[obj(IO)|IndvSO]):-
   select(obj([A,B,C,D|I]),IndvS,IndvS1),
   select(obj([A,B,C,D|O]),IndvS1,IndvS2),
   compare_objprops(perfect,I,O),
-  override_object(I,O,IO),
+  override_object(O,I,IO),
   combine_objects(IndvS2,IndvSO).
 combine_objects(IndvSO,IndvSO).
 
@@ -392,7 +392,7 @@ changed_by(vis_hv,copy).
 
 needs_indivs(I,_):- is_object(I),!,fail.
 %needs_indivs(I,O):- is_grid(I),_unshared_indivs(I,O),!.
-needs_indivs(I,O):- is_gridoid(I), \+ is_group(I),compute_unshared_indivs(I,O),!.
+needs_indivs(I,O):- is_gridoid(I), \+ is_group(I), trace, compute_unshared_indivs(I,O),!.
 
 %diff_terms(IPs,OPs,Difs2):- diff_terms(IPs,OPs,Difs2).
 diff_numbers(I,O,0):- I =:= O,!.
@@ -412,14 +412,14 @@ diff_terms(I,O,I):- O==[],!.
 %diff_terms(I,O, (O \== I)):- O=@=I,!.
 diff_terms(I,O,[]):- no_diff(I,O),!.
 diff_terms(O,I,[]):- no_diff(I,O),!.
-diff_terms(Grid,Other,OUT):- needs_indivs(Grid,I),!,diff_terms(I,Other,OUT).
-diff_terms(Other,Grid,OUT):- needs_indivs(Grid,I),!,diff_terms(Other,I,OUT).
 % diff_terms(I,O,DD):-  is_group(I),is_group(O), !,  include_fav_points(I,II), include_fav_points(O,OO), diff_groups(I,O,DD).
 diff_terms(I,O,DD):-  is_group(I), is_group(O), !, diff_groups(I,O,DD).
 diff_terms(obj(I),obj(O),OUT):- !, diff_objects(I,O,OUT).
 diff_terms([IH,IV],[OH,OV],D):- maplist(number,[IH,IV,OH,OV]),!,maplist(diff_numbers,[IH,IV],[OH,OV],D).
 diff_terms(I,O, (diff_lists=@= D)):- is_list(I),is_list(O),!,diff_lists(I,O,D).
 diff_terms(I,O,D):- is_dict(I),!,findall(D1,(get_dict(K, I, V),diff_terms(K=V,O,D1)),D).
+diff_terms(Grid,Other,OUT):- needs_indivs(Grid,I),!,diff_terms(I,Other,OUT).
+diff_terms(Other,Grid,OUT):- needs_indivs(Grid,I),!,diff_terms(Other,I,OUT).
 diff_terms(IF=IA,O,IF=D):- find_kv(O,IF,OA),!,diff_terms(IA,OA,D).
 diff_terms(I,O,D):- compound(I),compound(O),!,diff_compounds(I,O,D).
 diff_terms(I,O,diff(I->O)).

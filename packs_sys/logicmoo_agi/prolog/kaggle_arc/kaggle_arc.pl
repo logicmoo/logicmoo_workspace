@@ -14,11 +14,11 @@
 :- multifile(decl_sf/1).
 :- discontiguous(decl_sf/1).
 :- dynamic(decl_sf/1).
-decl_sf(G):- ground(G), !, assertz(decl_sf(G)).
+decl_sf(G):- ground(G), !, assertz_new(decl_sf(G)).
 :- multifile(decl_pt/1).
 :- discontiguous(decl_pt/1).
 :- dynamic(decl_pt/1).
-decl_pt(G):- ground(G), !, assertz(decl_pt(G)).
+decl_pt(G):- ground(G), !, assertz_new(decl_pt(G)).
 :- set_prolog_flag(encoding,iso_latin_1).
 :- set_prolog_flag(color_term,true).
 :- set_stream(current_output, tty(true)).
@@ -125,7 +125,8 @@ arc1(TestID):- clsmake2, time(forall(arc1e(TestID),true)).
 
 arc1e(TName):-    
  locally(set_prolog_flag(gc,true),
-  (fix_test_name(TName,TestID,ExampleNum),   
+  (fix_test_name(TName,TestID,ExampleNum), 
+  ExampleNum = (tst+0),
   kaggle_arc(TestID,ExampleNum,In,Out),
   run_arc_io(TestID,ExampleNum,In,Out))).
 
@@ -148,47 +149,52 @@ run_arc_io(TestID,ExampleNum,In,Out):-
   time(show_arc_pair_progress(TestID,ExampleNum,In,Out)).
 
 
+make_indivs(Pred,In,Out,InC,OutC):-
+  writeln(inC(Pred)),
+  call(Pred,In,InC),
+  writeln(outC(Pred)),
+  call(Pred,Out,OutC),
+  writeln(inOutC(Pred)),!.
+
+show_indivs(IH,IV,OH,OV,Pred,When,PairName,In,Out,SF):-  
+  ignore(IH=1),
+  LW is (IH * 2 + 12),
+  append_term_safe(When,Pred+PairName+in,NameIn),
+  append_term_safe(Pred,Pred+PairName+out,NameOut),
+  wots(U1, print_grid(IH,IV,NameIn,In)),
+  wots(U2, print_grid(OH,OV,NameOut,Out)),
+  print_side_by_side(U1,LW,U2),
+  make_indivs(Pred,In,Out,InC,OutC),
+  append(InC,OutC,InOutC),
+  smallest_first(InOutC,SF),
+  %largest_first(InOutC,LF),
+  show_pair_no_i(IH,IV,OH,OV,smallest_first(When,Pred),PairName,InC-SF,OutC-SF),
+  %wots(U3, print_grid(IH,IV,NameIn,InC-SF)),wots(U4, print_grid(OH,OV,NameOut,OutC-SF)),print_side_by_side(U3,LW,U4),
+  %max_min(IH,OH,H,_),max_min(IV,OV,V,_),
+  show_pair_no_i(IH,IV,OH,OV,normal(When,Pred),PairName,InC,OutC),
+  INFO = [grid_dim,mass,colors_count_size,colors],
+  print_side_by_side(
+     describe_feature(InC,[call(writeln('IN'))|INFO]),LW,
+    describe_feature(OutC,[call(writeln('OUT'))|INFO])),!,
+  show_pair_I_info(NameIn,NameOut,InC,OutC).
+
+
 show_arc_pair_progress(TestID,ExampleNum,In,Out):-
+ must_det_l((
 	name_the_pair(TestID,ExampleNum,In,Out,PairName),
 	grid_size(In,IH,IV), grid_size(Out,OH,OV),
-	nop(writeln(grid_convert(size(IH,IV)->size(OH,OV)))),
+	nop(writeln(oi(size(IH,IV)->size(OH,OV)))),
 	ignore((more_task_info(TestID,III),pt(III),nl)), 
-	show_pair_i(IH,IV,OH,OV,test,PairName,In,Out),
-  nb_linkval(pair_rules, [rules]),
-  clear_shape_lib(pair),
-  %rtrace,
-	forall(examine_installed_individualizers_from_pairs(PairName,In,Out,IH,IV,OH,OV),true),
-  %show_shape_lib(pair),
-  show_idea_final(PairName,In,Out,IH,IV,OH,OV,[defaults],[defaults]),!.
-  
+  show_pair_no_i(IH,IV,OH,OV,test,PairName,In,Out),
+  %print_collapsed
+  forall((rtrace_on_error(individualizer_heuristics(PairName,In,Out,IH,IV,OH,OV))),true), 
+  show_indivs(IH,IV,OH,OV,individuate_default,early,PairName,In,Out,SF),
+  %clear_shape_lib(in),clear_shape_lib(out),clear_shape_lib(pair),clear_shape_lib(noise),  
+  add_shape_lib(pairs,SF),
+  show_shape_lib(in),show_shape_lib(out),show_shape_lib(pair),show_shape_lib(noise),
+  show_indivs(IH,IV,OH,OV,individuate_default,later,PairName,In,Out,_))),!,
 
-
-:- nb_linkval(test_rules,[rules]).
-:- nb_linkval(pair_rules,[rules]).
-
-examine_installed_individualizers_from_pairs(PairName,In,Out,IH,IV,OH,OV):-
-  add_note(examine_installed_individualizers_from_pairs),
-  individualizer_heuristics(PairName,In,Out,IH,IV,OH,OV,ShapesI,ShapesO),
-  %nb_current(rules, Info),
-  %format('~N+Done with Ideas~N'),
-  nop(show_idea_trial(PairName,In,Out,IH,IV,OH,OV,ShapesI,ShapesO)).
-  
-show_idea_final(PairName,In,Out,IH,IV,OH,OV,Shapes_I,Shapes_O):- 
-  show_idea(PairName,In,Out,IH,IV,OH,OV,Shapes_I,Shapes_O).
-show_idea_trial(PairName,In,Out,IH,IV,OH,OV,Shapes_I,Shapes_O):-  
-  show_idea(PairName,In,Out,IH,IV,OH,OV,Shapes_I,Shapes_O).
-show_idea(PairName,In,Out,IH,IV,OH,OV,Shapes_I,Shapes_O):- 
-  show_pair_no_i(IH,IV,OH,OV,heuristics,PairName,Shapes_I,Shapes_O),
-  pt(yellow,'~N+individuate(IN)~N'),
-  individuate(Shapes_I,In,UnsharedIn),
-  pt(yellow,'~N+individuate(OUT)~N'),
-  individuate(Shapes_O,Out,UnsharedOut),
-  pt(yellow,'~N-individuations~N'),
-  show_pair_no_i(IH,IV,OH,OV,sofar,PairName,UnsharedIn,UnsharedOut),
-
-  individuate_complete(In,InC),
-  individuate_complete(Out,OutC),
-
+/*
   remove_global_points(UnsharedIn,In,InForgotten),
   remove_global_points(UnsharedOut,Out,OutForgottenM),
   ((mass(OutForgottenM,OM),OM==0) -> OutForgotten=OutC; OutForgotten=OutForgottenM),
@@ -198,18 +204,33 @@ show_idea(PairName,In,Out,IH,IV,OH,OV,Shapes_I,Shapes_O):-
   % contains_points(InForgotten);contains_points(OutForgotten)
   %show_pair_no_i(IH,IV,OH,OV,forgotten,PairName,ForgottenShapesIn,ForgottenShapesOut),
 
-  show_pair_no_i(IH,IV,IH,IV,forgotten_In,PairName,InC,ForgottenShapesIn),
+  show_pair_no_i(IH,IV,IH,IV,forgotten_In,PairName,UnsharedIn,ForgottenShapesIn),
   show_pair_no_i(OH,OV,OH,OV,forgotten_Out,PairName,ForgottenShapesOut,OutC),
-
+*/
   nop((
+       show_indivs(In,Out),
+       individuate_default(In,InC),
+       individuate_default(Out,OutC),  
+       writeln(outC),
+
+       clear_shape_lib(out),
+       clear_shape_lib(in),
+       add_shape_lib(out,OutC),
+       writeln(inOutC),
+       show_pair_i(IH,IV,OH,OV,early_test,PairName,InC,OutC),
+       writeln(inC),
+       individuate_default(In,UnsharedIn),
+       writeln(outC),
+       individuate_default(Out,UnsharedOut),
+       writeln(inUnsharedOut),
+       show_pair_i(IH,IV,OH,OV,late_test,PairName,UnsharedIn,UnsharedOut),
        format('~N-sofar~N'),!,
        %pt(yellow,in=UnsharedIn),
        pred_intersection(compare_objs1([same]),UnsharedIn,UnsharedOut,_CommonCsIn,_CommonCsOut,_IPCs,_OPCs),
        format('~N-pred_intersection~N'),
-    individuate(UnsharedOut,Out,SharedInR),
-    individuate(UnsharedIn,In,SharedOutR),
-  show_pair_no_i(IH,IV,OH,OV,shared,PairName,SharedInR,SharedOutR))),
-  !.
+        individuate(UnsharedOut,Out,SharedInR),
+        individuate(UnsharedIn,In,SharedOutR),
+        show_pair_no_i(IH,IV,OH,OV,shared,PairName,SharedInR,SharedOutR))), !.
   %format('~N-Rule made from~N'),
   %show_rules,
 /*  RESS =.. [res,unsharedIn=UnsharedIn,
@@ -228,6 +249,12 @@ show_idea(PairName,In,Out,IH,IV,OH,OV,Shapes_I,Shapes_O):-
     show_pair_i(IH,IV,OH,OV,better,PairName,BetterA,BetterB);
      writeln('nothing better')))),
 */
+  
+
+
+:- nb_linkval(test_rules,[rules]).
+:- nb_linkval(pair_rules,[rules]).
+  
 
 reuse_indivs(IndvA,IndvB,BetterA,BetterB):-
   smallest_first(IndvA,IndvAS),

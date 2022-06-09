@@ -162,61 +162,87 @@ maybe_glyph(G,_,Glyph):- is_grid(G),grid_dot(Glyph),!.
 maybe_glyph(_,N,N).
 
 
-from_gridoid(Points,C,GN,H,V):- %is_group(Points), 
-  smallest_first(Points,ObjList),
-  from_gridoid(ObjList,C,N,H,V,G),
-  maybe_glyph(G,N,GN),!.
+grid_color_and_glyph(Points,C,GN,H,V):- %is_group(Points), 
+  %smallest_first(Points,ObjList),
+  gridoid_color(Points,C,H,V),
+  gridoid_glyph(Points,GN,H,V),!.
+
+gridoid_color(Points,C,H,V):-
+ ((nb_current(color_index,ObjList),ObjList\==[e]) -> ObjList=List ; Points=List),
+  from_gridoid(List,C,_N,H,V,_G),!.
+
+gridoid_glyph(Points,GN,H,V):-
+ ((nb_current(glyph_index,ObjList),ObjList\==[e]) -> ObjList=List ; Points=List),
+  from_gridoid(List,_,N,H,V,G), maybe_glyph(G,N,GN).
 
 %from_gridoid(Points,C,GN,H,V):- from_gridoid(Points,C,N,H,V,G), maybe_glyph(G,N,GN).
-from_gridoid(Points,C,N,H,V,G):- nth1(N,Points,G),hv_value0(G,C,H,V),nonvar_or_ci(C), \+ is_bg_color(C), \+ bg_sym(C), !.
-from_gridoid(Points,C,N,H,V,G):- nth1(N,Points,G),hv_value0(G,C,H,V),nonvar_or_ci(C),!.
-from_gridoid(Points,C,N,H,V,G):- nth1(N,Points,G),hv_value0(G,C,H,V).
+%from_gridoid(Points,C,N,H,V,G):- nth1(N,Points,G),hv_c_value(G,C,H,V),nonvar_or_ci(C), \+ is_bg_color(C), \+ bg_sym(C), !.
+%from_gridoid(Points,C,N,H,V,G):- nth1(N,Points,G),hv_c_value(G,C,H,V),nonvar_or_ci(C),!.
+from_gridoid(Points,C,N,H,V,G):- nth1(N,Points,G),hv_c_value(G,C,H,V).
 
 
-%hv_value0(O,_Color,_H,_V):- is_object(O), object_shape(O,combined), !, fail.
-hv_value0(O,Color,H,V):- is_object(O),globalpoints(O,Ps),!,hv_value(Ps,Color,H,V).
-hv_value0(O,Color,H,V):- hv_value(O,Color,H,V),!.
+%hv_c_value(O,_Color,_H,_V):- is_object(O), object_shape(O,combined), !, fail.
+hv_c_value(ID,C,H,V):- (var(H);var(V)),!, hv_point(H,V,_),hv_c_value(ID,CC,H,V),CC=C.
+hv_c_value(O,Color,H,V):- is_grid(O),!,nth1(V,O,Row),nth1(H,Row,Color),!.
+hv_c_value(O,Color,H,V):- is_object(O),globalpoints(O,Ps),!,hv_c_value(Ps,Color,H,V).
+hv_c_value(O,Color,H,V):- is_list_of(is_cpoint,  O),!,hv_point(H,V,Point),member(Color-Point,O).
+hv_c_value(O,fg   ,H,V):- is_list_of(is_nc_point,O),!,hv_point(H,V,Point),member(Point,O).
+hv_c_value(O,Color,H,V):- is_cpoint(O),O=(Color-Point),hv_point(H,V,Point),!.
+hv_c_value(O,fg   ,H,V):- is_nc_point(O),O=Point,hv_point(H,V,Point),!.
+hv_c_value(L,Color,H,V):- is_list(L), member(E,L),hv_c_value(E,Color,H,V),!.
 
 hv_value_or(Grid,C,H,V,Else):- hv_value(Grid,C,H,V)*->true;C=Else.
 
-pgt:- mmake,pgt0.
-pgt0:-
-  Obj = [ obj( [ mass(536),
+pgt:- mmake,!,pgt(Obj),once(print_grid(Obj)).
+
+pgt(Obj):- pgt1(Obj).
+pgt(Obj):- pgt2(Obj).
+pgt(Obj1-Obj2):- pgt1(Obj1),pgt2(Obj2).
+pgt([Obj1]-[Obj2]):- pgt1(Obj1),pgt2(Obj2).
+pgt([Obj1,Obj2]):- pgt1(Obj1),pgt2(Obj2).
+pgt1(Obj):-
+  Obj = obj( [ mass(536),
          shape( [ point_01_01, point_02_01]),
          colors( [ cc(red, 190.0), cc(silver, 132.0), cc(green, 55.0), cc(cyan, 53.0),
                    cc(blue, 45.0), cc(yellow, 36.0), cc(orange, 25.0)]),
          localpoints( [ red-point_01_01, silver-point_02_01]), vis_hv(3, 1), rotation(same), loc_xy(3, 1),
          changes([]), object_shape(combined),
-         object_shape(rectangluar), object_shape(multicolored),
-         object_shape(polygon), object_indv_id(v('0a1d4ef5')*(trn+0)*in, 21),
+         object_shape(rectangle), object_shape(multicolored),
+         object_shape(polygon), object_indv_id(v('0ad4ef5')*(trn+0)*in, 21),
        %  globalpoints( [ red-point_01_01, silver-point_02_01]),
-         grid_size(8, 8)]),
+         grid_size(8, 8)]).
+
+pgt2(Obj):- Obj = 
       obj( [ mass(536),
          shape( [ point_01_01, point_02_01]),
          colors( [ cc(red, 190.0), cc(silver, 132.0), cc(green, 55.0), cc(cyan, 53.0),
                    cc(blue, 45.0), cc(yellow, 36.0), cc(orange, 25.0)]),
-         localpoints( [ red-point_01_01, silver-point_02_01]), vis_hv(3, 1), rotation(same), loc_xy(1, 1),
+         localpoints( [ red-point_01_01, silver-point_02_01]), vis_hv(3, 1), rotation(same), loc_xy(2, 1),
          changes([]), object_shape(combined),
-         object_shape(rectangluar), object_shape(multicolored),
-         object_shape(polygon), object_indv_id(v('0a1d4ef5')*(trn+0)*in, 66),
+         object_shape(rectangle), object_shape(multicolored),
+         object_shape(polygon), object_indv_id(v('a1d4ef5')*(trn+0)*in, 66),
         %  globalpoints( [ red-point_01_01, silver-point_02_01]),
-         grid_size(8, 8)])
-  ],
-  print_grid(Obj).
+         grid_size(8, 8)]).
 
 %hv_value(ID,C,H,V):- row_mem_nth(H,ID,V,C).
 
-hv_value([G|Points],CN,H,V):- notrace(( is_list(Points), is_object_or_grid(G))), 
-   from_gridoid([G|Points],C,N,H,V),CN=(C-N),!.
+has_index(CI):-  nb_current(CI,List),List\==[],is_list(List),!.
 
 
-hv_value(Grid,C,H,V):- is_grid(Grid),!, nth1(V,Grid,Row),nth1(H,Row,C),!.
-hv_value(O,Color-GN,H,V):- is_object(O),globalpoints(O,Ps),hv_value(Ps,Color,H,V),object_indv_id(O,_Tst,GN),nonvar_or_ci(GN),!.
-hv_value(O,Color,H,V):- is_object(O),globalpoints(O,Ps),!,hv_value(Ps,Color,H,V),!.
-hv_value(ID,C,H,V):- nonvar(H) -> (hv_point(H,V,HV),cmem(ID,HV,C)); (cmem(ID,HV,C),hv_point(H,V,HV)).
-%hv_value(Points,C,H,V):- nonvar_or_ci(H),!, hv_point(H,V,HV), sub_term(C-HV,Points),atom(HV).
-hv_value(Points,C,H,V):- nonvar(H),nonvar(V),hv_point(H,V,HV),!, hv_member(HV,C,Points),!.
-hv_value(Points,C,H,V):- member(C-HV,Points),hv_point(H,V,HV).
+hv_value(ID,C,H,V):- (var(H);var(V)),!, hv_point(H,V,_),hv_value(ID,CC,H,V),CC=C.
+
+
+hv_value([G|Points],CN,H,V):- quietly(( is_list(Points), is_object_or_grid(G))), 
+   grid_color_and_glyph([G|Points],C,N,H,V),CN=(C-N),!.
+hv_value(O,CN,H,V):- (has_index(color_index);has_index(glyph_index)),
+   grid_color_and_glyph(O,C,N,H,V),CN=(C-N),!.
+
+hv_value(O,Color-GN,H,V):- is_object(O),hv_c_value(O,Color,H,V),object_indv_id(O,_Tst,GN),nonvar_or_ci(GN),!.
+hv_value(Grid,Color,H,V):- hv_c_value(Grid,Color,H,V).
+
+%hv_value(ID,C,H,V):- nonvar(H) -> (hv_point(H,V,HV),cmem(ID,HV,C)); (cmem(ID,HV,C),hv_point(H,V,HV)).
+
+%hv_value(Points,C,H,V):- is_list(Points),member(C-HV,Points),hv_point(H,V,HV).
 
 hv_member(HV,C,O):- is_grid(O),!,fail,globalpoints(O,Ps),hv_member(Ps,C,HV),!.
 hv_member(HV,C,O):- is_object(O),!,globalpoints(O,Ps),hv_member(Ps,C,HV),!.

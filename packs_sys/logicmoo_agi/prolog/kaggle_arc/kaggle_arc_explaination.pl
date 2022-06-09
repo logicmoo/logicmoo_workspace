@@ -23,7 +23,7 @@ get_gridname(Grid,Name):- is_grid(Grid),must_be_free(Name),gensym('grid_',Name),
 
 into_gridname(G,TstName):- nonvar_or_ci(G), into_gridnameA(GVar,TstName),G=@=GVar,!.
 into_gridname(G,TstName):- makeup_gridname(TstName),
-  set_gridname(G,TstName).
+  set_gridname(G,TstName),!.
 
 makeup_gridname(GridName):- gensym('GridName_',TstName), 
    GridName = TstName*('ExampleNum'+0)*io.

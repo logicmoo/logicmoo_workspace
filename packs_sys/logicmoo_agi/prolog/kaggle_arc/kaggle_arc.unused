@@ -812,7 +812,7 @@ grid_info(Name,IO,Grid):-
   compute_shared_indivs(Grid,UnsharedIn),
   colors_count_size(Grid,CCS),
   ignore((sub_var(in,IO),(CCS>4;debug_indiv;true), debug_indiv(UnsharedIn))),
-  print_Igrid(PairName,UnsharedIn,[Grid]),
+  print_grid(PairName,UnsharedIn,[Grid]),
   ignore((sub_var(out,IO),(CCS>4;debug_indiv;true), debug_indiv(UnsharedIn))),
   nop(describe_feature(Grid,[compute_shared_indivs])),!.
 */

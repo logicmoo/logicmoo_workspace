@@ -26,7 +26,7 @@ find_by_shape(Grid,Find,Founds):-
    ogs(H,V,F1,Grid),% trace,
    grid_to_points(F1,GH,GV,Points),
    pt(Points),
-   make_indiv_object(ID,GH,GV,Points,[F1,loc_xy(H,V)],F2)),
+   make_indiv_object(ID,GH,GV,Points,[object_shape(find_by_shape),F1,loc_xy(H,V)],F2)),
  findall(F2,Prog,Matches),
  align_founds(Matches,Founds).
 
@@ -124,12 +124,15 @@ new_test_id(TestID):-
   set_flag(indiv,0),
   nb_delete(grid_bgc),
   nb_linkval(test_rules, [rules]),
+  clear_shape_lib(test),
+  clear_shape_lib(noise),
   retractall(grid_nums(_,_)),
   retractall(grid_nums(_)),
   retractall(g2o(_,_)),!.
 
 new_test_pair(PairName):-
   %nb_delete(grid_bgc),
+  clear_shape_lib(pair),clear_shape_lib(in),clear_shape_lib(out),
   nb_setval(test_pairname,PairName),
   nb_linkval(pair_rules, [rules]),
   retractall(is_shared_saved(PairName*_,_)),

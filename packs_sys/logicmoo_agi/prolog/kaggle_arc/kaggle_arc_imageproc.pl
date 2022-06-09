@@ -500,7 +500,7 @@ closure_grid_to_object(Orig,Grid,NewObj):-
   object_indv_id(Orig,ID,_Iv),
   grid_size(Grid,H,V),  
   globalpoints(Grid,Points),
-  make_indiv_object(ID,H,V,Points,PartialObj),
+  make_indiv_object(ID,H,V,Points,[object_shape(grid)],PartialObj),
   transfer_props(Orig,[loc_xy,colors,object_shape],PartialObj,NewObj),!.
 
 closure_grid_to_group(Orig,Grid,Group):- individuate(Orig,Grid,Group).

@@ -27,8 +27,8 @@ check_args(P,Arity,An,Left,T,C,MC):-
  arg(An,P,ArgIn),arg(An,T,ArgType),arg(An,C,CallArg),into_type(ArgType,ArgIn,CallArg),
  AnM1 is An+1,LeftP1 is Left-1, check_args(P,Arity,AnM1,LeftP1,T,C,MC).
 
-
-into_type(Type,G,fake(Type,G)):- plain_var(G),throw(var_into_type(Type,G)).
+into_type(Type,G,O):- nonvar_or_ci(O),!,into_type(Type,G,M),!,M=O.
+into_type(Type,G,O):- plain_var(G),throw(var_into_type(Type,G)),O=fake(Type,G).
 into_type(+,X,X).
 into_type(num,X,X):- assertion(number(X)).
 into_type(dir,X,X):- assertion(nav(X,_,_)).
@@ -165,7 +165,7 @@ prim_ops([
   rotate_grid(nsew)]).
 
 
-throw_missed(G):-  Info = missed(G),wdmsg(Info), dumpST,throw_missed_pt2(G,Info).
+throw_missed(G):-  Info = missed(G),wdmsg(Info),break, dumpST,throw_missed_pt2(G,Info).
 throw_missed_pt2(_,Info):- tracing,!,throw(Info).
 throw_missed_pt2(G,Info):- notrace,nortrace,trace,wdmsg(Info),break,rtrace(G),throw(Info).
 

@@ -42,13 +42,13 @@ subtypes(C,S):- subClassOf(S,C).
 allow_dir(hv_line(h),[e,w]). allow_dir(hv_line(v),[n,s]). allow_dir(dg_line(u),[ne,sw]). allow_dir(dg_line(d),[nw,se]).
 
 
-allow_dir(squares,[n,s,e,w]). 
+allow_dir(rectangle,[n,s,e,w]). 
 allow_dir(diamonds,[nw,sw,se,ne]).
 allow_dir(polygs,[n,s,e,w,nw,sw,se,ne]).
 allow_dir(all,   [nw,sw,se,ne,n,w,s,e]).
 %circles, dots, , rays, walls
 
-shape_filter(X,squares):- free_cell(X).
+shape_filter(X,rectangle):- free_cell(X).
 shape_filter(X,polygs):- non_free_fg(X).
 
 polyg(border(square),[hv_line(H),hv_line(V),hv_line(H),hv_line(V)]):- h_v(H,V).
@@ -144,7 +144,9 @@ is_not_gpoint(I):- \+ is_gpoint(I).
 
 is_cpoint(C):- \+ compound(C),!,fail.
 %is_cpoint(C-P):- (nonvar_or_ci(C);cant_be_color(C)),!,is_nc_point(P).
-is_cpoint(_-P):- is_nc_point(P).
+is_cpoint(_-P):-  is_nc_point(P).
+
+is_list_of(P1,List):- is_list(List),maplist(P1,List).
 
 is_nc_point(P):- atom(P), hv_point(H,_,P),!,number(H).
 
@@ -159,11 +161,12 @@ is_list_of_gridoids([G|V]):- \+ is_grid([G|V]), is_gridoid(G), is_list(V), mapli
 is_gridoid(G):- plain_var(G),!, fail.
 is_gridoid(G):- is_grid(G),!.
 is_gridoid(G):- is_object(G),!.
+is_gridoid(G):- is_points_list(G),!.
 %is_gridoid(G):- is_cpoint(G),!.
 is_gridoid(G):- is_list_of_gridoids(G).
 
 
-is_grid(G):- notrace(fast_is_grid(G)).
+is_grid(G):- quietly(fast_is_grid(G)).
 
 fast_is_grid([[C|H]|R]):- is_list(H), is_list(R), is_grid_cell(C).
 
