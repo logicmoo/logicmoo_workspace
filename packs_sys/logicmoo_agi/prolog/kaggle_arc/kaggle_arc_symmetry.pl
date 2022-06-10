@@ -334,8 +334,9 @@ nop((
 
 %detect_grid(Grid,E):- 
 
-grid_to_3x3_objs(Grid,NewIndiv4s):-
-  notrace(catch(call_with_time_limit(2,symetric_xy_3x3(Grid,Image9x9)),time_limit_exceeded, (wdmsg(time_limit_exceeded),fail))),
+grid_to_3x3_objs(Grid,NewIndiv4s):- 
+  notrace(catch(call_with_time_limit(2,symetric_xy_3x3(Grid,Image9x9)),time_limit_exceeded, 
+   (wdmsg(time_limit_exceeded),fail))),
   %catch(symetric_xy_3x3(Grid,Image9x9),E, (wdmsg(E),fail)),
   %rtrace(symetric_xy_3x3(Grid,Image9x9)),
   flatten(Image9x9,Flat),

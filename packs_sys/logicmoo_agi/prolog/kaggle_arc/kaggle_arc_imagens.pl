@@ -207,7 +207,7 @@ rev_lambda(P,A):- P=..[F|Args],C =..[F,A|Args],call(C).
 
 %add_shape_lib(Type,Obj):- !, nop(pt(add_shape_lib(Type,Obj))).
 add_shape_lib(Type,Obj):- \+ ground(Obj),pt(add_shape_lib(Type,Obj)),fail.
-add_shape_lib(Type,Obj):- is_object(Obj),!,add_shape_lib0(Type,Obj),!.
+add_shape_lib(Type,Obj):-  is_object(Obj),!,add_shape_lib0(Type,Obj),!.
 add_shape_lib(Type,Obj):-  is_grid(Obj),!,add_shape_lib0(Type,Obj),!.
 
 add_shape_lib(Type,[Obj|L]):- (is_group(Obj);is_object(Obj) ; is_grid(Obj)),!,maplist(add_shape_lib(Type),[Obj|L]).
@@ -216,11 +216,11 @@ add_shape_lib(Type,Obj):-  is_list(Obj), \+ is_grid(Obj), !, maplist(add_shape_l
 add_shape_lib(Type,Obj):- must_det_l(add_shape_lib0(Type,Obj)).
 
 add_shape_lib0(Type,Obj):- mass(Obj,Mass),!,
-  dash_char, 
- % print_grid(Obj),
+  %dash_char, print_grid(Obj),
   ( Mass<2 
-   -> pt(too_small_for_shapelib(Type,Mass)) ; (pt(add_shape_lib(Type)),assert_shape_lib(Type,Obj))), 
-  dash_char.
+   -> pt(too_small_for_shapelib(Type,Mass)) ; (nop(pt(add_shape_lib(Type))),assert_shape_lib(Type,Obj))), 
+  %dash_char,
+  !.
 
 assert_shape_lib(_,Obj):-  mass(Obj,Mass), Mass<6,!.
 assert_shape_lib(Type,Obj):- is_list(Type),!,maplist(rev_lambda(assert_shape_lib(Obj)),Type).

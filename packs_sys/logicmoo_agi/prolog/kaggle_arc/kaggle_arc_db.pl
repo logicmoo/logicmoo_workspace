@@ -163,7 +163,10 @@ maybe_glyph(_,N,N).
 
 
 grid_color_and_glyph(Points,C,GN,H,V):- %is_group(Points), 
-  %smallest_first(Points,ObjList),
+  smallest_first(Points,ObjList),
+  gridoid_color(Points,C,H,V),
+  gridoid_glyph(ObjList,GN,H,V),!.
+grid_color_and_glyph(Points,C,GN,H,V):- %is_group(Points), 
   gridoid_color(Points,C,H,V),
   gridoid_glyph(Points,GN,H,V),!.
 
@@ -184,12 +187,12 @@ from_gridoid(Points,C,N,H,V,G):- nth1(N,Points,G),hv_c_value(G,C,H,V).
 %hv_c_value(O,_Color,_H,_V):- is_object(O), object_shape(O,combined), !, fail.
 hv_c_value(ID,C,H,V):- (var(H);var(V)),!, hv_point(H,V,_),hv_c_value(ID,CC,H,V),CC=C.
 hv_c_value(O,Color,H,V):- is_grid(O),!,nth1(V,O,Row),nth1(H,Row,Color),!.
-hv_c_value(O,Color,H,V):- is_object(O),globalpoints(O,Ps),!,hv_c_value(Ps,Color,H,V).
+hv_c_value(O,Color,H,V):- is_object(O),!,globalpoints(O,Ps),!,hv_c_value(Ps,Color,H,V).
 hv_c_value(O,Color,H,V):- is_list_of(is_cpoint,  O),!,hv_point(H,V,Point),member(Color-Point,O).
 hv_c_value(O,fg   ,H,V):- is_list_of(is_nc_point,O),!,hv_point(H,V,Point),member(Point,O).
 hv_c_value(O,Color,H,V):- is_cpoint(O),O=(Color-Point),hv_point(H,V,Point),!.
 hv_c_value(O,fg   ,H,V):- is_nc_point(O),O=Point,hv_point(H,V,Point),!.
-hv_c_value(L,Color,H,V):- is_list(L), member(E,L),hv_c_value(E,Color,H,V),!.
+%hv_c_value(L,Color,H,V):- is_list(L), member(E,L),hv_c_value(E,Color,H,V),!.
 
 hv_value_or(Grid,C,H,V,Else):- hv_value(Grid,C,H,V)*->true;C=Else.
 

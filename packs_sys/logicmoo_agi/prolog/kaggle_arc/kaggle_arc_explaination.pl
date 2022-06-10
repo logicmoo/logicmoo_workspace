@@ -119,11 +119,12 @@ debug_indiv(A):- is_point_obj(A,Color,Point),
 */
 
 debug_indiv(obj(A)):- Obj = obj(A), is_list(A),!,
+ must_det_l((
   ignore((o2g(Obj,GGG), nonvar(GGG),asserta_if_new(g2o(GGG,Obj)))),
 %debug_indiv(Obj):- Obj = obj(A), is_list(A),  
   once(colors(Obj,[cc(FC,_)|_]);FC=9),
   sort_obj_props(A,AS),
-  %will_show_grid(Obj,TF),
+ % will_show_grid(Obj,TF),
   TF = false,
   remove_too_verbose(AS,TV0), include('\\=='(''),TV0,TV),
   flatten(TV,F),predsort(longer_strings,F,[Caps|_]),
@@ -134,7 +135,8 @@ debug_indiv(obj(A)):- Obj = obj(A), is_list(A),!,
   wqnl([format("%  ~w:\t",[PC]), color_print(FC,Glyph) | TV ]),!,
   ignore(( TF==true, mass(Obj,Mass),!,Mass>4, vis_hv(Obj,H,V),!,H>1,V>1, localpoints(Obj,Points), print_grid(H,V,Points))),
   ignore(( fail, mass(Obj,Mass),!,Mass>4, vis_hv(Obj,H,V),!,H>1,V>1, show_st_map(Obj))),
-  ignore((TF==true,dash_char)),!.
+  %pt(A),
+  ignore((TF==true,dash_char)))),!.
 
 show_st_map(Obj):-
   ignore(( 

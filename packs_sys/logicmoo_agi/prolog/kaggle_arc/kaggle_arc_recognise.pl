@@ -79,7 +79,7 @@ test_ogs0(H,V):- clsmake,
   constrain_grid(f,CheckType2,CFG,XFG2),
   once((constrain_grid(f,CheckType,FG,XFG), constrain_grid(s,CheckType,SG,XSG))),
 
-  ((ogs_1(H,V,XFG,XSG),CheckType=run) *-> Match=true; MAtch=false),
+  ((ogs_1(H,V,XFG,XSG),CheckType=run) *-> Match=true; Match=false),
 
   Run = once((
     ptt(fg=FG),

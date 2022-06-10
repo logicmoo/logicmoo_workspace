@@ -51,7 +51,7 @@ individuals_from_pair_colors(PairName,In,Out,IH,IV,OH,OV,
     _ICsL,IPCsL,CommonCsL,OPCsL,_OCsL, ShapesI,ShapesO):- % fail,
     %add_cond(hasCommonColors(pair,CommonCs)), add_cond(hasPrivateColor(out,OPCs)), add_cond(hasPrivateColor(in,IPCs)),
     
-    do_action(delete_colors(CommonCs,Out,OmI)), do_action(delete_colors(CommonCs,In,ImO)),
+    do_action(remove_colors(CommonCs,Out,OmI)), do_action(remove_colors(CommonCs,In,ImO)),
     
     show_pair_no_i(IH,IV,OH,OV,individuals_from_pair_colors,PairName,ImO,OmI),
     
@@ -82,8 +82,8 @@ individuals_from_pair_colors(PairName,In,Out,IH,IV,OH,OV,
   add_cond(hasCommonColors(pair,CommonCs)),
   add_cond(hasPrivateColor(out,OPCs)),
   add_cond(hasPrivateColor(in,IPCs)),
-  do_action(delete_colors(OPCs,Out,OmI)),
-  delete_colors(IPCs,In,ImO),
+  do_action(remove_colors(OPCs,Out,OmI)),
+  remove_colors(IPCs,In,ImO),
   % mass(In,InMass),mass(Out,OutMass),
   mass(ImO,IMass),mass(OmI,OMass),
   IMass>0, OMass>0, OPCsL == 0,
@@ -134,8 +134,8 @@ learn_color_individuals_lib_one_way(PairName,In,Out,IH,IV,OH,OV,
   add_cond(hasCommonColors(pair,CommonCs)),
   add_cond(hasPrivateColor(out,OPCs)),
   add_cond(hasPrivateColor(in,IPCs)),
-  do_action(delete_colors(CommonCs,Out,OmI)),
-  do_action(delete_colors(CommonCs,In,ImO)),
+  do_action(remove_colors(CommonCs,Out,OmI)),
+  do_action(remove_colors(CommonCs,In,ImO)),
   show_pair_no_i(IH,IV,OH,OV,learn_color_individuals_lib_one_way,PairName,ImO,OmI),
   mass(ImO,IMass),mass(OmI,OMass),
   %one_is_zero(IMass,OMass),
@@ -156,10 +156,10 @@ learn_color_individuals_lib_one_way(PairName,In,Out,IH,IV,OH,OV,
 one_is_zero(IMass,OMass):- 
   once(IMass>0;OMass>0),once(IMass=:=0;OMass=:=0).
 
-delete_colors([],Out,Out):-!.
-delete_colors([C|IPLs],In,Out):- 
+remove_colors([],Out,Out):-!.
+remove_colors([C|IPLs],In,Out):- 
  subst_w_attv(In,C,black,Mid),
- delete_colors(IPLs,Mid,Out).
+ remove_colors(IPLs,Mid,Out).
 
 
 :- fixup_exports.

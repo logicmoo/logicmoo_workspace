@@ -123,7 +123,8 @@ combine_diffs(D1,D2,L12):- listify(D1,L1),listify(D2,L2),!,append(L1,L2,L12).
 
 
 print_list_of(_,[]):-!.
-print_list_of(N,O):-
+print_list_of(N,OO):-
+ sort(OO,O),
  (N\=[] -> pt(N); true),
   maplist(print_info,O).
 

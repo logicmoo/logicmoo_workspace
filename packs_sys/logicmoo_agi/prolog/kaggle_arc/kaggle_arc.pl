@@ -152,8 +152,10 @@ run_arc_io(TestID,ExampleNum,In,Out):-
 make_indivs(Pred,In,Out,InC,OutC):-
   writeln(inC(Pred)),
   call(Pred,In,InC),
+  add_shape_lib(in,InC),
   writeln(outC(Pred)),
   call(Pred,Out,OutC),
+  add_shape_lib(out,OutC),
   writeln(inOutC(Pred)),!.
 
 show_indivs(IH,IV,OH,OV,Pred,When,PairName,In,Out,SF):-  

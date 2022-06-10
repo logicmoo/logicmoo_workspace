@@ -127,52 +127,6 @@ map_pred(Pred, P, X, Sk, P1) :- compound(P), !, compound_name_arguments(P, F, Ar
 map_pred(_Pred, P, _, _, P).
 
 
-grid_to_segs(Grid,Segs):- must_det_l((grid_to_segs(1,Grid,SegsL),append(SegsL,Segs))).
-
-grid_to_segs(N,[Row|Grid],[SegRS|SegL]):- 
-  slice_up_row(N,1,Row,SegRS),
-  N2 is N +1, 
-  grid_to_segs(N2,Grid,SegL).
-grid_to_segs(_,[],[]).
-
-slice_up_row(_,_,[],[]).
-slice_up_row(R,N,[C|Rest],[slice(C,N,R,N2,R)|More]):-
-  get_until_not(C,1,Rest,Len,Right), N2 is N + Len -1, slice_up_row(R,N2,Right,More).
-
-get_until_not(C,N,[C2|Rest],NL,Right):- C==C2, N2 is N+1,!, 
- get_until_not(C,N2,Rest,NL,Right).
-get_until_not(_,N,Rest,N,Rest).
-
-nothing_in_range(C,Ch,Cv,CH,CV,Rest):- 
-  forall(member(slice(C,Ah,Av,AH,AV),Rest), 
-    \+ overlaps(Ch,Cv,CH,CV,Ah,Av,AH,AV)).
-
-overlaps(Ch,Cv,CH,CV,Ah,Av,AH,AV):- 
-   AH>=Ch,Ah=<CH,AV>=Cv,Av=<CV.
-
-seg_squares(Segs,Squares):- 
-    select(slice(C,Ah,Av,AH,AV),Segs,Rest),
-  Bv is AV + 1,
-    select(slice(C,Ah,Bv,AH,BV),Rest,Rest2),
-  Cv is Av - 1,
-  nothing_in_range(C,Ah,Cv,AH,Cv,Rest2),
-  seg_squares([slice(Ah,Av,AH,BV)|Rest2],Squares).
-seg_squares(Segs,Segs).
-
-
-make_points_list(C,MinH,MinV,MaxH,MaxV,PointsList):-
-   findall(C-HV,(between(MinV,MaxV,V),between(MinH,MaxH,H),hv_point(H,V,HV)),PointsList),!.
-
-segs_to_pointlists([],[]).
-segs_to_pointlists([slice(C,Ah,Av,AH,AV)|Segs],[PointsList|Objs]):- 
-  H is AH-Ah, V is AV-Av, H>=2,V>=2,
-  ( H==V -> Shape = square ; Shape = rectangle),
-  make_points_list(C,Ah,Av,AH,AV,PointsListH),
-  PointsList=[object_shape(Shape),object_shape(solid(Shape))|PointsListH],  !,
-  segs_to_pointlists(Segs,Objs).
-  
-segs_to_pointlists([_|Segs],Objs):-   segs_to_pointlists(Segs,Objs).
-
 plain_var(V):- var(V), \+ get_attr(V,ci,_).
 
 must_be_free(AllNew):- var(AllNew),!.

@@ -81,11 +81,11 @@ fav(t('1b60fb0c'),[
 
 
 %fav(t('6e82a1ae'),[lmDSL([rocketship])]).
+fav(v('e41c6fd3'),[lmDSL([(iz(X,spaceship),color(X,cyan),vert_pos(X,spaceship))-->iz(Y,spaceship),vert_pos(Y,spaceship)])]).
 fav(t('25d487eb'),[lmDSL([rocketship])]).
 fav(t('3631a71a'),[lmDSL([overlay_each_pattern])]).
-fav(t('1b60fb0c'),[learn([find_damage_to_input,find_center,fraction_evenly_to_four,map_slices_upon_themselves]),lmDSL([new_things_are_a_color,fix_image])]).
-fav(v('e41c6fd3'),[lmDSL([(iz(X,spaceship),color(X,cyan),vert_pos(X,spaceship))-->iz(Y,spaceship),vert_pos(Y,spaceship)])]).
 fav(t(c444b776),[detect_grid]).
+fav(t('1b60fb0c'),[learn([find_damage_to_input,find_center,fraction_evenly_to_four,map_slices_upon_themselves]),lmDSL([new_things_are_a_color,fix_image])]).
 fav(v('94133066'),[lmDSL([largest_indiv,trim_to_rect,rot90,flipV])]).
 fav(v('762cd429'),[lmDSL(individuate([shape_lib(filled_squares),delete_rest,shrink_all_to_size(1),tighten_grid_arround_objects]))]).
 
