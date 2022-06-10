@@ -342,10 +342,6 @@ grid_to_3x3_objs(Grid,NewIndiv4s):-
   flatten(Image9x9,Flat),
   include(nonvar_or_ci,Flat,NewIndiv1s),
   fix_the_fours(NewIndiv1s,NewIndiv4s).
-  
-
-get_color_at(H,V,Grid,C):-
-  nth1(V,Grid,Row),nth1(H,Row,C).
 
 consensus(GridS,H,V,VGrid):-
  forall(between(1,V,Y),

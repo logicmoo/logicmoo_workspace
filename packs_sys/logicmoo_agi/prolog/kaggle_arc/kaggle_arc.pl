@@ -44,7 +44,7 @@ arc_sub_path(Subdir,AbsolutePath):- arc_directory(ARC_DIR),
   :- SL  is 2_147_483_648*8, set_prolog_flag(stack_limit, SL ).
   %:- (getenv('DISPLAY',_) -> guitracer ; true).
   :- set_prolog_flag(toplevel_print_anon,true).
-  %:- set_prolog_flag(toplevel_print_factorized,true).
+  :- set_prolog_flag(toplevel_print_factorized,true).
   :- set_prolog_flag(answer_write_options, [quoted(true), portray(true), max_depth(20), attributes(portray)]).
 
   clsmake:- cls,update_changed_files,make.
@@ -124,6 +124,7 @@ arc1(TestID):- clsmake2, !, arc1e(TestID).
 arc1(TestID):- clsmake2, time(forall(arc1e(TestID),true)).
 
 arc1e(TName):-    
+ retractall(why_grouped(individuate(_),_)),
  locally(set_prolog_flag(gc,true),
   (fix_test_name(TName,TestID,ExampleNum), 
   ExampleNum = (tst+0),
@@ -162,7 +163,7 @@ show_indivs(IH,IV,OH,OV,Pred,When,PairName,In,Out,SF):-
   ignore(IH=1),
   LW is (IH * 2 + 12),
   append_term_safe(When,Pred+PairName+in,NameIn),
-  append_term_safe(Pred,Pred+PairName+out,NameOut),
+  append_term_safe(When,Pred+PairName+out,NameOut),
   wots(U1, print_grid(IH,IV,NameIn,In)),
   wots(U2, print_grid(OH,OV,NameOut,Out)),
   print_side_by_side(U1,LW,U2),
@@ -170,7 +171,7 @@ show_indivs(IH,IV,OH,OV,Pred,When,PairName,In,Out,SF):-
   append(InC,OutC,InOutC),
   smallest_first(InOutC,SF),
   %largest_first(InOutC,LF),
-  show_pair_no_i(IH,IV,OH,OV,smallest_first(When,Pred),PairName,InC-SF,OutC-SF),
+  %show_pair_no_i(IH,IV,OH,OV,smallest_first(When,Pred),PairName,InC-SF,OutC-SF),
   %wots(U3, print_grid(IH,IV,NameIn,InC-SF)),wots(U4, print_grid(OH,OV,NameOut,OutC-SF)),print_side_by_side(U3,LW,U4),
   %max_min(IH,OH,H,_),max_min(IV,OV,V,_),
   show_pair_no_i(IH,IV,OH,OV,normal(When,Pred),PairName,InC,OutC),

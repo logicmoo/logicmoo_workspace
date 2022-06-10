@@ -27,7 +27,7 @@ save_tr:- cls,
 got_result(CSG,CFG,Match):-  
   numbervars(CSG+CFG,999,_,[attvar(bind)]),
   ignore((perfect_result(CSG,CFG,WMatch), 
-    ((Match\==WMatch) -> (pt(red,'ChAnGED!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'),sleep(0.1)); pt(green,same)))),
+    ((Match\==WMatch) -> (pt(red,'ChAnGED!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n\n\n\n\n\n\n\n\n\n'),sleep(0.1)); pt(green,same)))),
   retractall(tr:existing_result(CSG,CFG,_)),
   assert(tr:existing_result(CSG,CFG,Match)),!.
   
@@ -95,22 +95,28 @@ test_ogs0(H,V):- clsmake,
   got_result(CSG,CFG,Match),
 
   Match==true.
-  
+
 
 test_ogs(H,V):- clsmake,
   wqln("searching..."),
-  ff666(T,FG),
-  print_grid(FG),
-  ss666(T,SG),
-  copy_term(SG,CSG),copy_term(FG,CFG),
-  =(SG,XSG),=(FG,XFG),
+  ss666(TF,SG),
+  ff666(TF,FG),
+  copy_term(UFG,FG),
 
 
-  (ogs(H,V,FG,SG) *-> 
-   (show_match(H,V,XFG,XSG),Match=true);
-   (show_mismatch(XFG,XSG),Match=fail)),
-  pt(FG),
-  got_result(CSG,CFG,Match),
+  ((ogs(H,V,FG,SG),heckType=run) *-> Match=true; Match=false),
+
+  Run = once((
+    ptt(fg=FG),
+    print_grid(FG),
+    (Match == true -> ptt(xfg=FG) ; true),
+    ptt(xfb=FG),
+    ptt(tf=TF))),
+
+  (Match==true->show_match(H,V,Run,UFG,SG);show_mismatch(FG,Run,SG)),
+
+  got_result(SG,FG,Match),
+
   Match==true.
 
 

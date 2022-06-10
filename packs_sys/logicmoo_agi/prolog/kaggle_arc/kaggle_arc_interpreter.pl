@@ -40,10 +40,13 @@ pass_thru_workflow(G):- var(G),!.
 pass_thru_workflow([]).
 pass_thru_workflow([options(V)]):- nonvar(V).
 
+member_or_it(G,InO):- is_list(InO),!,member(G,InO).
+member_or_it(G,G).
+
 show_workflow(InO,_,InO):-pass_thru_workflow(InO),!. 
 show_workflow(In,String,Out):- nonvar(Out),!,trace,must_det_l((show_workflow(In,String,OutM),Out=OutM)).
-show_workflow(InO,String,InO):- string(String),!,  nl, writeln(String),
-  forall(member(G,InO),ignore(print_grid(G))).
+show_workflow(InO,String,InO):- string(String),!, 
+ ignore((InO\==[], nl, writeln(String), forall(member_or_it(G,InO),ignore(print_grid([G]))))).
 show_workflow(InO,[],InO):-!.
 show_workflow(In,[H|T],Out):-
   show_workflow(In,H,Mid),!,

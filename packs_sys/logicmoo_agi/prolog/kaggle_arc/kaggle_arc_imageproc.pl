@@ -42,11 +42,11 @@ no_black(SK,BF):-select(Z,SK,BF),is_black(Z),!.
 no_black(BF,BF).
 
 
-%pixel_colors(GH,CC):- (is_group(GH);is_object(GH)),!,globalpoints(GH,GP),pixel_colors(GP,CC).
+pixel_colors(GH,CC):- (is_group(GH);is_object(GH)),!,globalpoints(GH,GP),pixel_colors(GP,CC).
 pixel_colors(GH,CC):- quietly(pixel_colors0(GH,CC)).
 pixel_colors0(GH,CC):- is_list(GH),!,maplist(pixel_colors,GH,PG),append(PG,CC).
 pixel_colors0(C,[Color]):- color_name(C,Color),!.
-pixel_colors0(options(_),[]):-!.
+%pixel_colors0(options(_),[]):-!.
 pixel_colors0(GH,CC):- globalpoints(GH,GP),!,pixel_colors(GP,CC).
 
 %sub_term(G,GH), is_grid(G),!,flatten(G,GF),include(is_grid_color,GF,GL),maplist(color_name,GL,CC).

@@ -51,6 +51,12 @@ assert_id_grid_cells2(ID,SH,SV,Grid):-
      ignore((hv_value(Grid,C,H,V),assert_hvc_cell(ID,H,V,C))))).
 
 
+get_color_at(H,V,Grid,C):-
+  nth1(V,Grid,Row),nth1(H,Row,C).
+get_color_at(Point,Grid,C):-
+  hv_point(H,V,Point),
+  nth1(V,Grid,Row),nth1(H,Row,C).
+
 list_to_row_mem(ID,N,List, row_mem(ID,N,A01, A02, A03, A04, A05, A06, A07, A08, A09, A10, A11, A12, A13, A14, A15, A16, A17, A18, A19, A20, A21, A22, A23, A24, A25, A26, A27, A28, A29, A30, A31, A32)):-
   append(List,_,[A01, A02, A03, A04, A05, A06, A07, A08, A09, A10, A11, A12, A13, A14, A15, A16, A17, A18, A19, A20, A21, A22, A23, A24, A25, A26, A27, A28, A29, A30, A31, A32]).
 

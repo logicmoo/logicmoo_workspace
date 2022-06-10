@@ -119,34 +119,6 @@ combine_diffs(D1,D2,L12):- listify(D1,L1),listify(D2,L2),!,append(L1,L2,L12).
 
 
 
-  
-
-
-print_list_of(_,[]):-!.
-print_list_of(N,OO):-
- sort(OO,O),
- (N\=[] -> pt(N); true),
-  maplist(print_info,O).
-
-print_info(A):- is_grid(A),print_grid(A).
-print_info(A):- is_object(A), ignore(debug_indiv(A)).
-print_info(A):- is_group(A),debug_indiv(A).
-print_info(A):- into_obj(A,Obj),print_info(Obj).
-print_info([]):-!.
-print_info(A):- pt(A).
-
-o2g(Obj,Glyph):- object_glyph(Obj,Glyph).
-o2c(Obj,Glyph):- color(Obj,Glyph).
-o2ansi(Obj,S):- o2c(Obj,C),o2g(Obj,G),atomic_list_concat([' ',G,' '],O),!,sformat(F,'~q',[O]),wots(S,color_print(C,F)).
-:- dynamic(g2o/2).
-
-into_obj(G,_):- plain_var(G),!,fail.
-into_obj(G,O):- g2o(G,O),!.
-into_obj(G,O):- is_grid(G),!,grid_to_individual(G,O).
-into_obj(obj(O),obj(O)):- is_list(O),!.
-into_obj(G,O):- atom(G),Chars=[_,_|_],atom_chars(G,Chars),!,member(C,Chars),into_obj(C,O).
-
-
 
 showdiff_groups(AG,BG):-
   maplist(obj_grp_comparable,AG,A1),
@@ -159,8 +131,8 @@ showdiff_groups(AG,BG):-
        compare_objs1([moved]),
        compare_objs1([same])],
                   A4,B4),  
-  (AG==A4 -> true ; length(A4,LenA),ignore((LenA>0,dash_char)),print_list_of(groupA=LenA,A4), dash_char),
-  (BG==B4 -> true ; length(B4,LenB),print_list_of(groupB=LenB,B4), dash_char),
+  (AG==A4 -> true ; length(A4,LenA),ignore((LenA>0,dash_char)),print_list_of(inputUniqs=LenA,A4), dash_char),
+  (BG==B4 -> true ; length(B4,LenB),print_list_of(outputUniqs=LenB,B4), dash_char),
   diff_groups(A4,B4,Diff),
   pt(Diff),
   !.

@@ -42,7 +42,7 @@ tersify1(I,O):- compound(I), tersifyC(I),!,I=O.
 tersify1(I,gridFn(S)):- is_grid(I), into_gridnameA(I,O),!,sformat(S,'~w',[O]).
 tersify1(I,gridFn(O)):- is_grid(I),tersifyG(I,O),!.
 tersify1(gridFn(I),gridFn(O)):-tersifyG(I,O).
-tersify1(I,objFn(S)):- is_object(I), o2ansi(I,O),!,sformat(S,'~w',[O]).
+tersify1(I,objFn(S)):- is_object(I), o2g(I,O),!,sformat(S,"' ~w '",[O]).
 
 tersifyG(I,O):- tersifyL(I,O),numbervars(O,1,_,[attvar(bind),singletons(false)]).
 tersifyL(I,O):- is_list(I), maplist(tersifyL,I,O).

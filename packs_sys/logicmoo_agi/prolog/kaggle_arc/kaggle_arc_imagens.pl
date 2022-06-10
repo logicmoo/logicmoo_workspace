@@ -218,7 +218,7 @@ add_shape_lib(Type,Obj):- must_det_l(add_shape_lib0(Type,Obj)).
 add_shape_lib0(Type,Obj):- mass(Obj,Mass),!,
   %dash_char, print_grid(Obj),
   ( Mass<2 
-   -> pt(too_small_for_shapelib(Type,Mass)) ; (nop(pt(add_shape_lib(Type))),assert_shape_lib(Type,Obj))), 
+   -> nop(pt(too_small_for_shapelib(Type,Mass))) ; (nop(pt(add_shape_lib(Type))),assert_shape_lib(Type,Obj))), 
   %dash_char,
   !.
 
@@ -292,14 +292,15 @@ clear_shape_lib:- findall(Name,in_shape_lib(Name,_Obj),Gallery),
 
 show_shape_lib(Name):- 
  mort((shape_lib_direct(Name,GalleryS), length(GalleryS,Len), pt(shape_lib_direct(Name)=Len))),
+ ignore(( Len\==0,
   mort((shape_lib_expanded(Name,GallerySOS), length(GallerySOS,LenOS), pt(shape_lib_expanded(Name)=LenOS))),
   %shape_lib_rules(Name,Rules),length(Rules,LenRules),pt(shape_lib_rules(LenRules)=Rules),
-  mort((shapelib_opts(Name,Opts), length(Opts,LenOpts), pt(shapelib_opts(LenOpts)=Opts))),!,
-  maplist(print_grid,GalleryS).
+  mort(ignore((shapelib_opts(Name,Opts), length(Opts,LenOpts), LenOpts > 0, pt(shapelib_opts(LenOpts)=Opts)))),!,
+  GalleryS\==[], maplist(print_grid,GalleryS))).
 
 clear_shape_lib(Name):- 
-  pt(clear_shape_lib(Name)),
-  forall(clause(in_shape_lib(Name,_),true,Ref),erase(Ref)),
+  findall(_,(clause(in_shape_lib(Name,_),true,Ref),erase(Ref)),L),
+  length(L,Len),pt(clear_shape_lib(Name)=Len),
   nop(show_shape_lib(Name)).
  
 shape_lib_expanded(Name,GallerySOS):- 
@@ -331,7 +332,7 @@ apply_shapelib_xforms(_Name,Gallery,Gallery):- !.
 expand_shape_directives(Shapes,Flow,NewGroup):- \+ is_list(Shapes),!,expand_shape_directives([Shapes],Flow,NewGroup).
 % default expansion
 expand_shape_directives(Shapes,[],SmallLib):- must_be_free(SmallLib),
-  must_det_l((print_collapsed(10,
+  must_det_l((print_collapsed(100,
   show_workflow(Shapes,
    [ =,"Vanila indivs",
     % searchable,"Searchable indivs", 
