@@ -79,6 +79,7 @@ fav(t('1b60fb0c'),[
 %fav(t('db3e9e38'),[lmDSL([flipV,C1=orange,C2=blue,[],flipV]).
 %fav(t(_),[lmDSL([fillFromBorder(none,yellow)])]).
 
+fav(t('fe9372f3'),[]).
 
 %fav(t('6e82a1ae'),[lmDSL([rocketship])]).
 fav(v('e41c6fd3'),[lmDSL([(iz(X,spaceship),color(X,cyan),vert_pos(X,spaceship))-->iz(Y,spaceship),vert_pos(Y,spaceship)])]).

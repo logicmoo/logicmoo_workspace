@@ -39,13 +39,20 @@ allow_dirs(Type,X):- subtypes(Type,SType),allow_dir(SType,List),member(X,List).
 subtypes(C,C).
 subtypes(C,S):- subClassOf(S,C).
 
-allow_dir(hv_line(h),[e,w]). allow_dir(hv_line(v),[n,s]). allow_dir(dg_line(u),[ne,sw]). allow_dir(dg_line(d),[nw,se]).
+allow_dir(hv_line(h,_),[e,w]). allow_dir(hv_line(_,v),[n,s]). allow_dir(dg_line(u,_),[ne,sw]). allow_dir(dg_line(_,d),[nw,se]).
 
 
 allow_dir(rectangle,[n,s,e,w]). 
 allow_dir(diamonds,[nw,sw,se,ne]).
 allow_dir(polygs,[n,s,e,w,nw,sw,se,ne]).
 allow_dir(all,   [nw,sw,se,ne,n,w,s,e]).
+allow_dir(ST,DIRS):-shape_type_dir(ST,DIRS).
+
+shape_type_dir(hv_line(h,_),[e,w]).
+shape_type_dir(hv_line(_,v),[n,s]).
+shape_type_dir(dg_line(u,_),[sw,ne]).
+shape_type_dir(dg_line(_,d),[nw,se]).
+
 %circles, dots, , rays, walls
 
 shape_filter(X,rectangle):- free_cell(X).

@@ -536,8 +536,8 @@ guess_shape(GridIn,LocalGrid,I,E,N,H,V,Colors,Points,Keypad):-
 
 guess_shape_poly(I,0,1,1,1,Colors,Points,dot):-!.
 guess_shape_poly(I,_,_,_,_,Colors,[Point],dot):-!.
-guess_shape_poly(I,0,N,N,1,Colors,Points,hv_line(h)):- N > 1.
-guess_shape_poly(I,0,N,1,N,Colors,Points,hv_line(v)):- N > 1.
+guess_shape_poly(I,0,N,N,1,Colors,Points,hv_line(h,_)):- N > 1.
+guess_shape_poly(I,0,N,1,N,Colors,Points,hv_line(_,v)):- N > 1.
 guess_shape_poly(I,0,N,H,V,Colors,Points,rectangle):- N>1, H\==V,!.
 guess_shape_poly(I,0,N,H,V,Colors,Points,square):- N>1,H==V,!.
 guess_shape(GridIn,LocalGrid,I,O,N,H,V,Colors,Points,polygon):- O\==0,once(H>1;V>1).

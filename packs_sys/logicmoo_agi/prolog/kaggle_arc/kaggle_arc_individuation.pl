@@ -155,8 +155,8 @@ individuate_complete(H,V,ID,Grid,Points,IndvSO):-
       shape_lib(in),shape_lib(out),
       shape_lib(noise),shape_lib(pair),
       solid(rectangle), rectangle,diamonds,all,
-      connect(hv_line(h)),
-      connect(hv_line(v)),
+      jumps(hv_line(h,_)),
+      jumps(hv_line(_,v)),
       find_engulfed,
       find_contained,
                check_engulfed,
@@ -176,11 +176,11 @@ individuate_default(H,V,ID,Grid,Points,IndvSO):- fail,
      solid(rectangle), 
      rectangle, 
      diamonds, 
-     connect(hv_line(h)),connect(hv_line(v)),
-     connect(dg_line(u)),connect(dg_line(d)),
+     jumps(hv_line(h,_)),jumps(hv_line(_,v)),
+     jumps(dg_line(u,_)),jumps(dg_line(_,d)),
      find_engulfed,find_contained,find_engulfed,find_contained,
-     dg_line(u),dg_line(d), 
-     hv_line(h),hv_line(v), 
+     dg_line(u,_),dg_line(_,d), 
+     hv_line(h,_),hv_line(_,v), 
      all, by_color, done],
   Grid,Points,IndvS),
   add_shape_info(default_indiv,IndvS,IndvSO).
@@ -229,7 +229,7 @@ individuals_list(GH,GV,Sofar,ID,Options,Reserved,Points,Grid,IndvList,LeftOver):
           Options = [Head|_],
           override_object(birth(Head),New,NewUpdated),
           append(Unchanged,NewUpdated,SofarUpdated),
-          ignore((GoneMissing\==[],wdmsg(goneMissing=GoneMissing))),
+          nop(ignore((GoneMissing\==[],wdmsg(goneMissing=GoneMissing)))),
   assertion(maplist(nonvar_or_ci,[fsi,NewReserved,NewGrid,NewOptions,SofarUpdated,NextScanPoints])),
     assertion(maplist(is_cpoint,NextScanPoints)),
     assertion(is_list([foundSofar1(Options)|SofarUpdated])),
@@ -757,13 +757,9 @@ fsi(_Image,Reserved,Grid,NO,H,V,Sofar,ID,[solid(squares)|NO],Reserved,_Points,Gr
       
     segs_to_pointlists([_|Segs],Objs):-   segs_to_pointlists(Segs,Objs).
 
-fsi(_Image,Reserved,Grid,[connect(ShapeType)|NO],H,V,Sofar,ID,[connect(ShapeType)|NO],Reserved,Points,Grid,NewSofar,RestPoints):- !,
+fsi(_Image,Reserved,Grid,[jumps(ShapeType)|NO],H,V,Sofar,ID,[jumps(ShapeType)|NO],Reserved,Points,Grid,NewSofar,RestPoints):- !,
   connect_skips(H,V,ID,Sofar,ShapeType,Grid,Points,NewSofar,RestPoints).
 
-shape_type_dir(hv_line(h),[e,w]).
-shape_type_dir(hv_line(v),[n,s]).
-shape_type_dir(dg_line(u),[sw,ne]).
-shape_type_dir(dg_line(d),[nw,se]).
 
 connect_skips(H,V,ID,Sofar,ShapeType,Grid,Points,NewSofar,RestPoints):-
   shape_type_dir(ShapeType,[Dir|_]),
@@ -778,7 +774,7 @@ connect_skips(H,V,ID,Sofar,ShapeType,Grid,Points,NewSofar,RestPoints):-
   is_adjacent_point(P0,Dir,P1), is_adjacent_point(P1,Dir,MP), is_adjacent_point(MP,Dir,P2),is_adjacent_point(P2,Dir,P3),
   any_gpoint(HV1,C-P0), any_gpoint(HV2,C-P3),
   % TODO: HACK WE MIGHT NOT WANT TO STEAL THE POINT? 
-  once(select(MC=MP,Points,RestPoints);Points=RestPoints),
+  once(select(MC-MP,Points,RestPoints);Points=RestPoints),
   ignore(once((get_color_at(Points,Grid,MC),is_color(MC));MC=C)),
   combine_2objs(ID,H,V,HV1,HV2,[MC-MP],[object_shape(ShapeType)],Combined),
   append(SofarLess,[Combined],NewSofar).
@@ -838,13 +834,13 @@ default_i_options([
   %
   %
   % polygs,
-  %hv_line(v), hv_line(h),
-  %dg_line(u),dg_line(d),
+  %hv_line(_,v), hv_line(h,_),
+  %dg_line(u,_),dg_line(_,d),
   %CS,
   all,
   
-  connect(hv_line(h)),
-  connect(hv_line(v)),  
+  jumps(hv_line(h,_)),
+  jumps(hv_line(_,v)),  
   % line(_),dg_line(_),
   % release_points, all,
   %into_single_hidden,oldway
