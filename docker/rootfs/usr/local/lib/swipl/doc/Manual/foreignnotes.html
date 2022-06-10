@@ -2,12 +2,12 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.5.4 Reference Manual: Section 12.8</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.5.12 Reference Manual: Section 12.8</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
 <link rel="previous" href="foreignxmp.html">
-<link rel="next" href="runtime.html">
+<link rel="next" href="foreign-streams.html">
 
 <style type="text/css">
 
@@ -231,7 +231,7 @@ table.frame-box
 <a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
 <a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
 <a class="nav" href="foreignxmp.html"><img src="prev.gif" alt="Previous"></a>
-<a class="nav" href="runtime.html"><img src="next.gif" alt="Next"></a>
+<a class="nav" href="foreign-streams.html"><img src="next.gif" alt="Next"></a>
 </div>
 <h2 id="sec:foreignnotes"><a id="sec:12.8"><span class="sec-nr">12.8</span> <span class="sec-title">Notes 
 on Using Foreign Code</span></a></h2>
@@ -317,9 +317,9 @@ or
 <p>The Prolog kernel sources use the macro <b>DEBUG(Topic, Code)</b>. 
 These macros are disabled in the production version and must be enabled 
 by recompiling the system as described above. Specific topics can be 
-enabled and disabled using the predicates <a id="idx:prologdebug1:2529"></a><a class="pred" href="foreignnotes.html#prolog_debug/1">prolog_debug/1</a> 
+enabled and disabled using the predicates <a id="idx:prologdebug1:2567"></a><a class="pred" href="foreignnotes.html#prolog_debug/1">prolog_debug/1</a> 
 and
-<a id="idx:prolognodebug1:2530"></a><a class="pred" href="foreignnotes.html#prolog_nodebug/1">prolog_nodebug/1</a>. 
+<a id="idx:prolognodebug1:2568"></a><a class="pred" href="foreignnotes.html#prolog_nodebug/1">prolog_nodebug/1</a>. 
 In addition, they can be activated from the commandline using 
 commandline option <code>-d topics</code>, where
 <var>topics</var> is a comma-separated list of debug topics to enable. 
@@ -360,8 +360,8 @@ char *topic</var>)</a></dt>
 <dd class="defbody">
 (De)activate debug topics. The <var>topics</var> argument is a 
 comma-separated string of topics to enable or disable. Matching is 
-case-insensitive. See also <a id="idx:prologdebug1:2531"></a><a class="pred" href="foreignnotes.html#prolog_debug/1">prolog_debug/1</a> 
-and <a id="idx:prolognodebug1:2532"></a><a class="pred" href="foreignnotes.html#prolog_nodebug/1">prolog_nodebug/1</a>.
+case-insensitive. See also <a id="idx:prologdebug1:2569"></a><a class="pred" href="foreignnotes.html#prolog_debug/1">prolog_debug/1</a> 
+and <a id="idx:prolognodebug1:2570"></a><a class="pred" href="foreignnotes.html#prolog_nodebug/1">prolog_nodebug/1</a>.
 
 <p>These functions require the system to be compiled for debugging using
 <code>cmake -DCMAKE_BUILD_TYPE=Debug</code>.
@@ -425,7 +425,7 @@ extensions between different Prolog versions. Only the much less
 frequently used stream interface has been responsible for binary 
 incompatibilities.
 
-<p><a id="idx:PLVERSION:2533"></a>Source code that relies on new 
+<p><a id="idx:PLVERSION:2571"></a>Source code that relies on new 
 features of the foreign interface can use the macro <code>PLVERSION</code> 
 to find the version of
 <code>SWI-Prolog.h</code> and <a class="func" href="foreigninclude.html#PL_query()">PL_query()</a> 
@@ -513,11 +513,11 @@ Get the next key-value pair from a cursor.
 </dl>
 
 <p><h3 id="sec:foreign-debug-and-profile"><a id="sec:12.8.5"><span class="sec-nr">12.8.5</span> <span class="sec-title">Debugging 
-and profiling foreign code (valgrind)</span></a></h3>
+and profiling foreign code (valgrind, asan)</span></a></h3>
 
 <a id="sec:foreign-debug-and-profile"></a>
 
-<p><a id="idx:valgrind:2534"></a><a id="idx:profilingforeigncode:2535"></a>This 
+<p><a id="idx:valgrind:2572"></a><a id="idx:profilingforeigncode:2573"></a>This 
 section is only relevant for Unix users on platforms supported by
 <a class="url" href="http://valgrind.org/">valgrind</a>. Valgrind is an 
 excellent binary instrumentation platform. Unlike many other 
@@ -530,7 +530,7 @@ option to <b>gcc</b> or <b>swipl-ld</b>. By setting the environment
 variable <code>VALGRIND</code> to <code>yes</code>, SWI-Prolog will <em>not</em> 
 release loaded shared objects using dlclose(). This trick is required to 
 get source information on the loaded library. Without, valgrind claims 
-that the shared object has no debugging information.<sup class="fn">211<span class="fn-text">Tested 
+that the shared object has no debugging information.<sup class="fn">217<span class="fn-text">Tested 
 using valgrind version 3.2.3 on x64.</span></sup> Here is the complete 
 sequence using <b>bash</b> as login shell:
 
@@ -538,6 +538,26 @@ sequence using <b>bash</b> as login shell:
 % VALGRIND=yes valgrind --tool=callgrind pl &lt;args&gt;
 &lt;prolog interaction&gt;
 % kcachegrind callgrind.out.&lt;pid&gt;
+</pre>
+
+<p><a id="idx:asan:2574"></a><a id="idx:profilingforeigncode:2575"></a>Instead 
+of <b>valgrind</b>, you can use
+<a class="url" href="https://github.com/google/sanitizers/wiki/AddressSanitizer">AddressSanitizer</a>. 
+Here is a short example for building with <em>asan</em> enabled and then 
+running the resulting binary. When you exit <b>swipl</b>, a message is 
+printed and any leaks are printed. During execution, other messages may 
+be printed out, such as freeing an address twice or using freed or 
+unallocated memory.
+
+<pre class="code">
+% cd build.sanitize
+% cmake -G Ninja -DCMAKE_BUILD_TYPE=Sanitize ..
+% ninja
+% ASAN_OPTIONS=detect_leaks=1 build.sanitize/src/swipl
+&lt;prolog interaction&gt;
+% halt
+Running LSAN memory leak check (reclaim_memory=1)
+No leaks detected
 </pre>
 
 <p><h3 id="sec:foreign-name-conflicts"><a id="sec:12.8.6"><span class="sec-nr">12.8.6</span> <span class="sec-title">Name 
@@ -594,4 +614,5 @@ that allows for discarding term references.
 <p>The Prolog interface for the graphical user interface package XPCE 
 shares about 90% of the code using a simple macro layer to deal with 
 different naming and calling conventions of the interfaces.
-</body></html>
+
+<p></body></html>

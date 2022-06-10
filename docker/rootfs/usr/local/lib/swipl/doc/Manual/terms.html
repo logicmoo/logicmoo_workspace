@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.5.4 Reference Manual: Section A.53</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.5.12 Reference Manual: Section A.53</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -349,6 +349,8 @@ and for each matching pair of arguments <code>call(Goal, A1, A2)</code>
 is true.</dd>
 <dt class="pubdef"><span class="pred-tag">[det]</span><a id="mapsubterms/3"><strong>mapsubterms</strong>(<var>:Goal, 
 +Term1, -Term2</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="mapsubterms_var/3"><strong>mapsubterms_var</strong>(<var>:Goal, 
++Term1, -Term2</var>)</a></dt>
 <dd class="defbody">
 Recursively map sub terms of <var>Term1</var> into subterms of <var>Term2</var> 
 for every pair for which <code>call(Goal, ST1, ST2)</code> succeeds. 
@@ -357,11 +359,21 @@ defined as:
 
 <p>
 <ul class="latex">
-<li>If <var>T1</var> is a variable, Unify <var>T2</var> with <var>T1</var>.
+<li>If <var>T1</var> is a variable
+
+<p>
+<ul class="compact">
+<li><a class="pred" href="terms.html#mapsubterms/3">mapsubterms/3</a> 
+unifies <var>T2</var> with <var>T1</var>.
+<li><a class="pred" href="terms.html#mapsubterms_var/3">mapsubterms_var/3</a> 
+treats variables as other terms.
+</ul>
+
+<p>
 <li>If <code>call(Goal, T1, T2)</code> succeeds we are done. Note that 
 the mapping does not continue in <var>T2</var>. If this is desired, <var>Goal</var> 
 must call <a class="pred" href="terms.html#mapsubterms/3">mapsubterms/3</a> 
-explicitly as part of it conversion.
+explicitly as part of its conversion.
 <li>If <var>T1</var> is a dict, map all values, i.e., the <i>tag</i> and <i>keys</i> 
 are left untouched.
 <li>If <var>T1</var> is a list, map all elements, i.e., the list 
@@ -371,7 +383,20 @@ to instantiate <var>T2</var> and recurse over the term arguments left to
 right.
 <li>Otherwise <var>T2</var> is unified with <var>T1</var>.
 </ul>
-</dd>
+
+<p>Both predicates are implemented using <a class="pred" href="terms.html#foldsubterms/5">foldsubterms/5</a>.</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="foldsubterms/4"><strong>foldsubterms</strong>(<var>:Goal3, 
++Term1, +State0, -State</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="foldsubterms/5"><strong>foldsubterms</strong>(<var>:Goal4, 
++Term1, ?Term2, +State0, -State</var>)</a></dt>
+<dd class="defbody">
+The predicate <a class="pred" href="terms.html#foldsubterms/5">foldsubterms/5</a> 
+calls <code>call(Goal4, SubTerm1, SubTerm2, StateIn, StateOut)</code> 
+for each subterm, including variables, in <var>Term1</var>. If this call 
+fails, <var>StateIn</var> and <var>StateOut</var> are the same. This 
+predicate may be used to map subterms in a term while collecting state 
+about the mapped subterms. The <a class="pred" href="terms.html#foldsubterms/4">foldsubterms/4</a> 
+variant does not map the term.</dd>
 <dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="same_functor/2"><strong>same_functor</strong>(<var>?Term1, 
 ?Term2</var>)</a></dt>
 <dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="same_functor/3"><strong>same_functor</strong>(<var>?Term1, 

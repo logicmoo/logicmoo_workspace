@@ -925,17 +925,13 @@ complete meta-interpretation of Prolog. Example problem areas include
 handling cuts in control-structures and calls from non-interpreted 
 meta-predicates.
 </dd>
-<dt class="tag">To be done</dt>
-<dd>
-Provide detailed information organised by predicate. Possibly annotate 
-the source with coverage information.
-</dd>
 </dl>
 
 <p>The purpose of this module is to find which part of the program has 
-been used by a certain goal. Usage is defined in terms of clauses that 
-have fired, separated in clauses that succeeded at least once and 
-clauses that failed on each occasion.
+been used by a certain goal. Usage is defined in terms of clauses for 
+which the <i>head unification</i> succeeded. For each clause we count 
+how often it succeeded and how often it failed. In addition we track all <i>call 
+sites</i>, creating goal-by-goal annotated clauses.
 
 <p>This module relies on the SWI-Prolog tracer hooks. It modifies these 
 hooks and collects the results, after which it restores the debugging 
@@ -986,21 +982,48 @@ that is related to a physical line in the file is annotated with one of:
 <blockquote>
 <table class="latex frame-box">
 <tr><td>### </td><td>Clause was never executed. </td></tr>
-<tr><td>++N</td><td>Clause was executed N times and always succeeded </td></tr>
-<tr><td>--N</td><td>Clause was executed N times and never succeeded </td></tr>
-<tr><td>+N-M</td><td>Clause was succeeded N times and failed M times </td></tr>
+<tr><td>++N</td><td>Clause was entered N times and always succeeded </td></tr>
+<tr><td>--N</td><td>Clause was entered N times and never succeeded </td></tr>
+<tr><td>+N-M</td><td>Clause has succeeded N times and failed M times </td></tr>
+<tr><td>+N*M</td><td>Clause was entered N times and succeeded M times </td></tr>
 </table>
 </blockquote>
+
+<p>All <i>call sites</i> are annotated using the same conventions, 
+except that <code>---</code> is used to annotate subgoals that were 
+never called.
+</dd>
+<dt><strong>line_numbers</strong>(<var>Boolean</var>)</dt>
+<dd class="defbody">
+If <code>true</code> (default), add line numbers to the annotated file.
+</dd>
+<dt><strong>color</strong>(<var>Boolean</var>)</dt>
+<dd class="defbody">
+Controls using ANSI escape sequences to color the output in the 
+annotated source. Default is <code>true</code>.
 </dd>
 </dl>
 
 </dd>
-<dt class="pubdef"><span class="pred-tag">[det]</span><a id="assert_cover/2"><strong>assert_cover</strong>(<var>+Port, 
-+Frame</var>)</a></dt>
+<dt class="multidef"><span class="pred-tag">[semidet,multifile]</span><a id="report_hook/2"><strong>report_hook</strong>(<var>+Succeeded, 
++Failed</var>)</a></dt>
 <dd class="defbody">
-Assert coverage of the current clause. We monitor two ports: the
-<i>unify</i> port to see which clauses we entered, and the <i>exit</i> 
-port to see which completed successfully.
+This hook is called after the data collection. It is passed a list of 
+objects that have succeeded as well as a list of objects that have 
+failed. The objects are one of
+
+<dl class="latex">
+<dt><strong><var>ClauseRef</var></strong></dt>
+<dd class="defbody">
+The specified clause
+</dd>
+<dt><strong>call_site</strong>(<var>ClauseRef, PC, PI</var>)</dt>
+<dd class="defbody">
+A call was make in <var>ClauseRef</var> at the given program counter to 
+the predicate indicated by <var>PI</var>.
+</dd>
+</dl>
+
 </dd>
 </dl>
 
@@ -1093,7 +1116,6 @@ marked as non-called in environments that perform cross-referencing.
 
 <dl>
 <dt class="index-sep">?</dt>
-<dt><a class="idx" href="#assert_cover/2">assert_cover/2</a></dt>
 <dt>assertion/1</dt>
 <dd>
 <a class="idx" href="#idx:assertion1:14">2.2.5</a> <a class="idx" href="#idx:assertion1:15">2.2.5</a></dd>
@@ -1128,6 +1150,7 @@ marked as non-called in environments that perform cross-referencing.
 <dt>member/2</dt>
 <dd>
 <a class="idx" href="#idx:member2:10">2.2.1</a></dd>
+<dt><a class="idx" href="#report_hook/2">report_hook/2</a></dt>
 <dt><a class="idx" href="#run_tests/0">run_tests/0</a></dt>
 <dd>
 <a class="idx" href="#idx:runtests0:17">4.1</a> <a class="idx" href="#idx:runtests0:20">6</a></dd>

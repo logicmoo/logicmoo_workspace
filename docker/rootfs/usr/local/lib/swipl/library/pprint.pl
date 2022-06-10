@@ -3,9 +3,10 @@
     Author:        Jan Wielemaker
     E-mail:        J.Wielemaker@vu.nl
     WWW:           http://www.swi-prolog.org
-    Copyright (c)  2014-2020, University of Amsterdam
+    Copyright (c)  2014-2022, University of Amsterdam
                               VU University Amsterdam
                               CWI, Amsterdam
+                              SWI-Prolog Solutions b.v.
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -80,7 +81,8 @@ etc.
 %       minus 8.  Otherwise the default is 72 characters.  If the
 %       Column is unbound it is unified with the computed value.
 %     - left_margin(+Integer)
-%       Left margin for continuation lines.  Default is 0.
+%       Left margin for continuation lines.  Default is the current
+%       line position or `0` if that is not available.
 %     - tab_width(+Integer)
 %       Distance between tab-stops.  Default is 8 characters.
 %     - indent_arguments(+Spec)
@@ -140,8 +142,8 @@ print_term_2(Term, Options) :-
     ;   true
     ),
     (   option(nl(true), Options)
-    ->  option(output(Out), Options),
-        nl(Out)
+    ->  option(output(Out2), Options),
+        nl(Out2)
     ;   true
     ).
 
@@ -149,7 +151,9 @@ print_extra([], _, _, _) :- !.
 print_extra(List, Context, Comment, Options) :-
     option(output(Out), Options),
     format(Out, ', % ~w', [Comment]),
-    modify_context(Context, [indent=4], Context1),
+    context(Context, indent, Indent),
+    NewIndent is Indent+4,
+    modify_context(Context, [indent=NewIndent], Context1),
     print_extra_2(List, Context1, Options).
 
 print_extra_2([H|T], Context, Options) :-
@@ -179,7 +183,6 @@ prepare_term(Term, Template, Cycles, Constraints) :-
                [singletons(true)]).
 prepare_term(Term, Template, Cycles, Constraints) :-
     copy_term(Term, Copy, Constraints),
-    !,
     '$factorize_term'(Copy, Template, Factors),
     bind_non_cycles(Factors, 1, Cycles),
     numbervars(Template+Cycles+Constraints, 0, _,
@@ -199,9 +202,7 @@ bind_non_cycles([H|T0], I, [H|T]) :-
 
 
 defaults([ output(user_output),
-           left_margin(0),
            depth(0),
-           indent(0),
            indent_arguments(auto),
            operators(true),
            write_options([ quoted(true),
@@ -213,6 +214,10 @@ defaults([ output(user_output),
          ]).
 
 default_margin(Options0, Options) :-
+    default_right_margin(Options0, Options1),
+    default_indent(Options1, Options).
+
+default_right_margin(Options0, Options) :-
     option(right_margin(Margin), Options0),
     !,
     (   var(Margin)
@@ -220,7 +225,7 @@ default_margin(Options0, Options) :-
     ;   true
     ),
     Options = Options0.
-default_margin(Options0, [right_margin(Margin)|Options0]) :-
+default_right_margin(Options0, [right_margin(Margin)|Options0]) :-
     tty_right_margin(Options0, Margin).
 
 tty_right_margin(Options, Margin) :-
@@ -230,6 +235,15 @@ tty_right_margin(Options, Margin) :-
     !,
     Margin is Columns - 8.
 tty_right_margin(_, 72).
+
+default_indent(Options0, Options) :-
+    option(output(Output), Options0),
+    (   stream_property(Output, position(Pos))
+    ->  stream_position_data(line_position, Pos, Column)
+    ;   Column = 0
+    ),
+    option(left_margin(LM), Options0, Column),
+    Options = [indent(LM)|Options0].
 
 
                  /*******************************
@@ -408,36 +422,39 @@ pp(Term, Ctx, Options) :-               % handle operators
             )
         ),
         (   CPrec >= Prec
-        ->  (   ToWide == false
-            ->  modify_context(Ctx2, [priority=Left], Ctx3),
+        ->  (   ToWide == true,
+                infix_list(Term, Name, List),
+                List == [_,_|_]
+            ->  Pri is min(Left,Right),
+                modify_context(Ctx2, [space=Space, priority=Pri], Ctx3),
+                pp_infix_list(List, QName, 2, Ctx3, Options)
+            ;   modify_context(Ctx2, [priority=Left], Ctx3),
                 pp(Arg1, Ctx3, Options),
                 format(Out, '~w~w~w', [Space,QName,Space]),
                 modify_context(Ctx2, [priority=Right], Ctx4),
                 pp(Arg2, Ctx4, Options)
-            ;   infix_list(Term, Name, List),
-                Pri is min(Left,Right),
-                modify_context(Ctx2, [space=Space, priority=Pri], Ctx3),
-                pp_infix_list(List, QName, 2, Ctx3, Options)
             )
-        ;   ToWide == false
-        ->  format(Out, '(', []),
-            NIndent is Indent + 1,
-            modify_context(Ctx2, [indent=NIndent, priority=Left], Ctx3),
-            pp(Arg1, Ctx3, Options),
-            format(Out, '~w~w~w', [Space,QName,Space]),
-            modify_context(Ctx2, [priority=Right], Ctx4),
-            pp(Arg2, Ctx4, Options),
-            format(Out, ')', [])
-        ;   infix_list(Term, Name, List),
-            Pri is min(Left,Right),
-            format(Out, '( ', []),
-            NIndent is Indent + 2,
-            modify_context(Ctx2,
+        ;   (   ToWide == true,
+                infix_list(Term, Name, List),
+                List = [_,_|_]
+            ->  Pri is min(Left,Right),
+                format(Out, '( ', []),
+                NIndent is Indent + 2,
+                modify_context(Ctx2,
                            [space=Space, indent=NIndent, priority=Pri],
-                           Ctx3),
-            pp_infix_list(List, QName, 0, Ctx3, Options),
-            indent(Out, Indent, Options),
-            format(Out, ')', [])
+                               Ctx3),
+                pp_infix_list(List, QName, 0, Ctx3, Options),
+                indent(Out, Indent, Options),
+                format(Out, ')', [])
+            ;   format(Out, '(', []),
+                NIndent is Indent + 1,
+                modify_context(Ctx2, [indent=NIndent, priority=Left], Ctx3),
+                pp(Arg1, Ctx3, Options),
+                format(Out, '~w~w~w', [Space,QName,Space]),
+                modify_context(Ctx2, [priority=Right], Ctx4),
+                pp(Arg2, Ctx4, Options),
+                format(Out, ')', [])
+            )
         )
     ).
 pp(Term, Ctx, Options) :-               % compound
@@ -598,7 +615,7 @@ pp_dict_args([Name-Value|T], Ctx, Options) :-
 
 match_op(fx,    1, prefix,  P, _, R) :- R is P - 1.
 match_op(fy,    1, prefix,  P, _, P).
-match_op(xf,    1, postfix, P, _, L) :- L is P - 1.
+match_op(xf,    1, postfix, P, L, _) :- L is P - 1.
 match_op(yf,    1, postfix, P, P, _).
 match_op(xfx,   2, infix,   P, A, A) :- A is P - 1.
 match_op(xfy,   2, infix,   P, L, P) :- L is P - 1.
@@ -629,8 +646,9 @@ indent(Out, Indent, Options) :-
 print_width(Term, W, Options) :-
     option(right_margin(RM), Options),
     option(write_options(WOpts), Options),
-    (   write_length(Term, W, [max_length(RM)|WOpts])
-    ->  true
+    (   catch(write_length(Term, W, [max_length(RM)|WOpts]),
+              error(_,_), fail)      % silence uncaught exceptions from
+    ->  true                         % nested portray callbacks
     ;   W = RM
     ).
 
@@ -748,12 +766,13 @@ end_code_type(List, Type, _) :-
     Type = punct.
 end_code_type(OpTerm, Type, Options) :-
     compound_name_arity(OpTerm, Name, 1),
-    is_op1(Name, Type, Pri, ArgPri, Options),
+    is_op1(Name, OpType, Pri, ArgPri, Options),
     \+ Options.get(ignore_ops) == true,
     !,
     (   Pri > Options.priority
     ->  Type = punct
-    ;   (   Type == prefix
+    ;   op_or_arg(OpType, Options.side, OpArg),
+        (   OpArg == op
         ->  end_code_type(Name, Type, Options)
         ;   arg(1, OpTerm, Arg),
             arg_options(Options, ArgOptions),
@@ -774,6 +793,13 @@ end_code_type(OpTerm, Type, Options) :-
 end_code_type(Compound, Type, Options) :-
     compound_name_arity(Compound, Name, _),
     end_code_type(Name, Type, Options).
+
+op_or_arg(prefix,  left,  op).
+op_or_arg(prefix,  right, arg).
+op_or_arg(postfix, left,  arg).
+op_or_arg(postfix, right, op).
+
+
 
 end_type(S, Type, Options) :-
     number(S),
@@ -832,7 +858,7 @@ operator_module(Module, Options) :-
     Module = Options.get(module),
     !.
 operator_module(TypeIn, _) :-
-    '$module'(TypeIn, TypeIn).
+    '$current_typein_module'(TypeIn).
 
 %!  arg_options(+Options, -OptionsOut) is det.
 %

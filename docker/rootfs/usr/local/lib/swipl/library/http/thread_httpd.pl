@@ -3,7 +3,7 @@
     Author:        Jan Wielemaker
     E-mail:        J.Wielemaker@vu.nl
     WWW:           http://www.swi-prolog.org
-    Copyright (c)  2002-2020, University of Amsterdam
+    Copyright (c)  2002-2022, University of Amsterdam
                               VU University Amsterdam
                               CWI, Amsterdam
     All rights reserved.
@@ -124,6 +124,7 @@ self-signed SSL certificate.
     accept_hook/2,
     close_hook/1,
     open_client_hook/6,
+    discard_client_hook/1,
     http:create_pool/1,
     http:schedule_workers/1.
 
@@ -280,6 +281,11 @@ make_addr_atom(Scheme, Address, Atom) :-
     phrase(address_parts(Address), Parts),
     atomic_list_concat([Scheme,@|Parts], Atom).
 
+address_parts(Var) -->
+    { var(Var),
+      !,
+      instantiation_error(Var)
+    }.
 address_parts(Atomic) -->
     { atomic(Atomic) },
     !,
@@ -292,6 +298,8 @@ address_parts(ip(A,B,C,D)) -->
     [ A, '.', B, '.', C, '.', D ].
 address_parts(unix_socket(Path)) -->
     [Path].
+address_parts(Address) -->
+    { domain_error(http_server_address, Address) }.
 
 
 %!  create_server(:Goal, +Address, +Options) is det.
@@ -431,7 +439,9 @@ http_current_worker(Port, ThreadID) :-
 accept_server(Goal, Initiator, Options) :-
     catch(accept_server2(Goal, Initiator, Options), http_stop, true),
     thread_self(Thread),
-    retract(current_server(_Port, _, Thread, _Queue, _Scheme, _StartTime)),
+    debug(http(stop), '[~p]: accept server received http_stop', [Thread]),
+    retract(current_server(_Port, _, Thread, Queue, _Scheme, _StartTime)),
+    close_pending_accepts(Queue),
     close_server_socket(Options).
 
 accept_server2(Goal, Initiator, Options) :-
@@ -458,9 +468,12 @@ accept_server3(Goal, Options) :-
     memberchk(queue(Queue), Options),
     debug(http(connection), 'Waiting for connection', []),
     tcp_accept(Socket, Client, Peer),
-    debug(http(connection), 'New HTTP connection from ~p', [Peer]),
-    thread_send_message(Queue, tcp_client(Client, Goal, Peer)),
+    sig_atomic(send_to_worker(Queue, Client, Goal, Peer)),
     http_enough_workers(Queue, accept, Peer).
+
+send_to_worker(Queue, Client, Goal, Peer) :-
+    debug(http(connection), 'New HTTP connection from ~p', [Peer]),
+    thread_send_message(Queue, tcp_client(Client, Goal, Peer)).
 
 accept_rethrow_error(http_stop).
 accept_rethrow_error('$aborted').
@@ -478,6 +491,24 @@ close_server_socket(Options) :-
     !,
     tcp_close_socket(Socket).
 
+%!  close_pending_accepts(+Queue)
+
+close_pending_accepts(Queue) :-
+    (   thread_get_message(Queue, Msg, [timeout(0)])
+    ->  close_client(Msg),
+        close_pending_accepts(Queue)
+    ;   true
+    ).
+
+close_client(tcp_client(Client, _Goal, _0Peer)) =>
+    debug(http(stop), 'Closing connection from ~p during shut-down', [_0Peer]),
+    tcp_close_socket(Client).
+close_client(Msg) =>
+    (   discard_client_hook(Msg)
+    ->  true
+    ;   print_message(warning, http_close_client(Msg))
+    ).
+
 
 %!  http_stop_server(+Port, +Options)
 %
@@ -494,9 +525,11 @@ http_stop_server(Port, _Options) :-
     http_workers(Port, 0),                  % checks Port is ground
     current_server(Port, _, Thread, Queue, _Scheme, _Start),
     retractall(queue_options(Queue, _)),
+    debug(http(stop), 'Signalling HTTP server thread ~p to stop', [Thread]),
     thread_signal(Thread, throw(http_stop)),
     catch(connect(localhost:Port), _, true),
-    thread_join(Thread, _),
+    thread_join(Thread, _0Status),
+    debug(http(stop), 'Joined HTTP server thread ~p (~p)', [Thread, _0Status]),
     message_queue_destroy(Queue).
 
 connect(Address) :-

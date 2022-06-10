@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.5.4 Reference Manual: Section 2.10</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.5.12 Reference Manual: Section 2.10</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -975,6 +975,47 @@ after being triggered. It can be turned off again via <a class="pred" href="debu
 which will leave the system in debug mode. All debugging modes can be 
 shut off at once by calling <a class="pred" href="debugger.html#nodebug/0">nodebug/0</a> 
 since shutting off debug mode automatically turns off trace mode.
+
+<p>In addition, SWI-Prolog supports attaching an arbitrary goal to each 
+breakpoint via <span class="pred-ext">set_breakpoint_condition/2</span>, 
+which yields <b>Conditional Breakpoints</b>. A conditional breakpoint is 
+the same as the regular breakpoints discussed thus far, except that 
+whenever the breakpoint is triggered, the given goal is invoked and 
+trace mode is only turned on in case it succeeds.
+
+<p>To enable tracing just when noun/2 is called from test_noun2/2 with <code>rock2</code> 
+as the first argument, <span class="pred-ext">set_breakpoint_condition/2</span> 
+can be used like below. Note that the condition is a Prolog string that 
+is parsed to obtain the goal as well as the variable names. The 
+resulting goal is called in the module in which the clause body is 
+executed (see
+<a class="pred" href="examineprog.html#clause_property/2">clause_property/2</a>, 
+property <code>module</code>).
+
+<pre class="code">
+?- set_breakpoint('/...path.../Example.pl', 8, 24, ID).
+ID = 1.
+
+?- set_breakpoint_condition(1, "X == rock2").
+true.
+
+?- debug.
+true.
+
+[debug]  ?- test_noun2(X, rock).
+X = rock1 ;
+X = rock2.
+
+[debug]  ?- test_noun2(rock2, rock).
+   Call: (11) noun(rock2, rock) ? creep
+   Call: (12) is_a(rock2, rock) ? creep
+   Exit: (12) is_a(rock2, rock) ? creep
+   Exit: (11) noun(rock2, rock) ? creep
+   Exit: (10) test_noun2(rock2, rock) ? creep
+true.
+
+[trace]  ?-
+</pre>
 
 <p><h3 id="sec:trace-summary"><a id="sec:2.10.8"><span class="sec-nr">2.10.8</span> <span class="sec-title">Command 
 Line Debugger Summary</span></a></h3>

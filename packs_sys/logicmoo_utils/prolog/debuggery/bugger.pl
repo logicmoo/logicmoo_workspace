@@ -11,6 +11,7 @@
 % ===================================================================
 */
 % File: /opt/PrologMUD/pack/logicmoo_base/prolog/logicmoo/util/logicmoo_util_bugger.pl
+%:- if((prolog_load_context(source,F),prolog_load_context(file,F))).
 :- module(bugger,
           [ 
           debug_logicmoo/1,
@@ -216,7 +217,18 @@
      op(1150,fx,(baseKB:kb_shared))
 
           ]).
+%:- endif.
+:- multifile '$exported_op'/3. 
+:- multifile '$autoload'/3. 
+:- discontiguous '$exported_op'/3.
+:- discontiguous '$autoload'/3.
+:- system:reexport(library(must_sanity)).
+:- system:reexport(library(logicmoo/redo_locally)).
+module(_Skip,Exports):-
+ maplist(export,Exports).
 
+
+:- include(ucatch).
 /** <module> Utility LOGICMOO_DEBUGGERY
 This module supplies support for utilities, like DCG_must and must_trace, that allow for easier debugging.
 
@@ -903,7 +915,7 @@ bad_idea:- current_prolog_flag(bad_idea,true).
 %=  :- mpred_trace_childs(must(:)).
 
 
-:- ensure_loaded(dmsg).
+%:- ensure_loaded(dmsg).
 
 
 %% prolog_call( :Goal) is semidet.
@@ -3161,7 +3173,7 @@ disabled_this:- asserta((user:prolog_exception_hook(Exception, Exception, Frame,
 :- thread_local(tlbugger:no_buggery_tl/0).
 
 
-:- '$hide'(maybe_leash/1).
+:- '$hide'(rtrace:maybe_leash/1).
 % :- '$hide'('$syspreds':visible/1).
 % :- '$hide'('$syspreds':leash/1).
 % :- '$hide'(visible/1).

@@ -3,9 +3,10 @@
     Author:        Jan Wielemaker
     E-mail:        J.Wielemaker@vu.nl
     WWW:           http://www.swi-prolog.org
-    Copyright (c)  2002-2020, University of Amsterdam
+    Copyright (c)  2002-2022, University of Amsterdam
                               VU University Amsterdam
                               CWI, Amsterdam
+                              SWI-Prolog Solutions b.v.
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -190,6 +191,7 @@ Title = 'Free Online Version - Learn Prolog
                        final_url(-atom),
                        header(+atom, -atom),
                        headers(-list),
+                       raw_headers(-list(string)),
                        connection(+atom),
                        method(oneof([delete,get,put,head,post,patch,options])),
                        size(-integer),
@@ -282,7 +284,8 @@ user_agent('SWI-Prolog').
 %     If provided, List is unified with  a list of Name(Value) pairs
 %     corresponding to fields in the reply   header.  Name and Value
 %     follow the same conventions  used   by  the header(Name,Value)
-%     option.
+%     option.  See also raw_headers(-List) which provides the entire
+%     HTTP reply header in unparsed representation.
 %
 %     * method(+Method)
 %     One of =get= (default), =head=, =delete=, =post=,   =put=   or
@@ -309,6 +312,15 @@ user_agent('SWI-Prolog').
 %     the atom `end`. HTTP 1.1 only   supports Unit = `bytes`. E.g.,
 %     to   ask   for    bytes    1000-1999,     use    the    option
 %     range(bytes(1000,1999))
+%
+%     * raw_encoding(+Encoding)
+%     Do not install a decoding filter for Encoding.  For example,
+%     using raw_encoding('applocation/gzip') the system will not
+%     decompress the stream if it is compressed using `gzip`.
+
+%     * raw_headers(-Lines)
+%     Unify Lines with a list of strings that represents the complete
+%     reply header returned by the server.  See also headers(-List).
 %
 %     * redirect(+Boolean)
 %     If `false` (default `true`), do _not_ automatically redirect
@@ -633,6 +645,7 @@ guarded_send_rec_header(StreamPair, Stream, Host, RequestURI, Parts, Options) :-
                                     % read the reply header
     read_header(StreamPair, Parts, ReplyVersion, Code, Comment, Lines),
     update_cookies(Lines, Parts, Options),
+    reply_header(Lines, Options),
     do_open(ReplyVersion, Code, Comment, Lines, Options, Parts, Host,
             StreamPair, Stream).
 
@@ -811,7 +824,7 @@ do_open(Version, Code, _, Lines, Options, Parts, Host, In0, In) :-
     return_fields(Options, Headers),
     return_headers(Options, Headers),
     consider_keep_alive(Lines, Parts, Host, In0, In1, Options),
-    transfer_encoding_filter(Lines, In1, In),
+    transfer_encoding_filter(Lines, In1, In, Options),
                                     % properly re-initialise the stream
     set_stream(In, file_name(URI)),
     set_stream(In, record_position(true)).
@@ -994,7 +1007,7 @@ return_final_url(Options) :-
 return_final_url(_).
 
 
-%!  transfer_encoding_filter(+Lines, +In0, -In) is det.
+%!  transfer_encoding_filter(+Lines, +In0, -In, +Options) is det.
 %
 %   Install filters depending on the transfer  encoding. If In0 is a
 %   stream-pair, we close the output   side. If transfer-encoding is
@@ -1003,19 +1016,23 @@ return_final_url(_).
 %   on  this.  Exceptions  to  this   are  content-types  for  which
 %   disable_encoding_filter/1 holds.
 
-transfer_encoding_filter(Lines, In0, In) :-
+transfer_encoding_filter(Lines, In0, In, Options) :-
     transfer_encoding(Lines, Encoding),
     !,
-    transfer_encoding_filter_(Encoding, In0, In).
-transfer_encoding_filter(Lines, In0, In) :-
+    transfer_encoding_filter_(Encoding, In0, In, Options).
+transfer_encoding_filter(Lines, In0, In, Options) :-
     content_encoding(Lines, Encoding),
     content_type(Lines, Type),
     \+ http:disable_encoding_filter(Type),
     !,
-    transfer_encoding_filter_(Encoding, In0, In).
-transfer_encoding_filter(_, In, In).
+    transfer_encoding_filter_(Encoding, In0, In, Options).
+transfer_encoding_filter(_, In, In, _Options).
 
-transfer_encoding_filter_(Encoding, In0, In) :-
+transfer_encoding_filter_(Encoding, In0, In, Options) :-
+    option(raw_encoding(Encoding), Options),
+    !,
+    In = In0.
+transfer_encoding_filter_(Encoding, In0, In, _Options) :-
     stream_pair(In0, In1, Out),
     (   nonvar(Out)
     ->  close(Out)
@@ -1224,6 +1241,18 @@ rest(Atom) --> call(rest_(Atom)).
 
 rest_(Atom, L, []) :-
     atom_codes(Atom, L).
+
+
+%!  reply_header(+Lines, +Options) is det.
+%
+%   Return the entire reply header as  a   list  of strings to te option
+%   reply_headers(-Headers).
+
+reply_header(Lines, Options) :-
+    option(raw_headers(Headers), Options),
+    !,
+    maplist(string_codes, Headers, Lines).
+reply_header(_, _).
 
 
                  /*******************************

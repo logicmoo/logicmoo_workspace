@@ -38,7 +38,7 @@
 :- use_module(library(settings)).
 :- use_module(library(broadcast)).
 
-:- setting(version, atom, 'jquery-1.11.3.min.js',
+:- setting(version, atom, 'jquery.min.js',
            'File name for jquery.js, served as HTML resource "jquery"').
 
 /** <module> Provide JQuery
@@ -69,7 +69,7 @@ provided. Alternatively, you  can  define   the  html  resource `jquery`
 before loading this file.
 */
 
-jquery_dir('web/js').
+jquery_dir('/usr/share/javascript/jquery').
 
 global_jquery :-
     jquery_dir(JQuery),

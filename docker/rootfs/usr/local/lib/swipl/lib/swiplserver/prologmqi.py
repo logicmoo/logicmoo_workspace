@@ -168,7 +168,7 @@ class PrologError(Exception):
 
 class PrologLaunchError(Exception):
     """
-    Raised when the SWI Prolog process was unable to be launched for any reason.
+    Raised when the SWI Prolog process was unable to be launched for any reason. This can include a version mismatch between the library and the server.
     """
 
     pass
@@ -531,6 +531,8 @@ class PrologThread:
         self.communication_thread_id = None
         self.goal_thread_id = None
         self._heartbeat_count = 0
+        self._server_protocol_major = None
+        self._server_protocol_minor = None
 
     def __enter__(self):
         self.start()
@@ -597,6 +599,32 @@ class PrologThread:
         else:
             threadTerm = prolog_args(jsonResult)[0][0][0]
             self.communication_thread_id, self.goal_thread_id = prolog_args(threadTerm)
+            if len(prolog_args(jsonResult)[0][0]) > 1:
+                versionTerm = prolog_args(jsonResult)[0][0][1]
+                self._server_protocol_major = prolog_args(versionTerm)[0]
+                self._server_protocol_minor = prolog_args(versionTerm)[1]
+            else:
+                self._server_protocol_major = 0
+                self._server_protocol_minor = 0
+
+        self._check_protocol_version()
+
+    # Major versions get incremented when there is a change that will break clients written to the old version
+    # Minor versions get incremented if there are changes but it will not break clients written to the previous version
+    def _check_protocol_version(self):
+        # This version of the library works around a protocol bug in MQI 0.0, so it supports that *and* MQI 1.x
+        required_server_major = 1
+        required_server_minor = 0
+
+        if self._server_protocol_major == 0 and self._server_protocol_minor == 0:
+            return
+
+        if self._server_protocol_major == required_server_major and self._server_protocol_minor >= required_server_minor:
+            return
+
+        raise PrologLaunchError(
+            f"This version of swiplserver requires MQI major version {required_server_major} and minor version >= {required_server_minor}. The server is running MQI '{self._server_protocol_major}.{self._server_protocol_minor}'."
+        )
 
     def stop(self):
         """
@@ -836,7 +864,14 @@ class PrologThread:
         value += ".\n"
         _log.debug("PrologMQI send: %s", value)
         utf8Value = value.encode("utf-8")
-        msgHeader = f"{str(len(utf8Value))}.\n".encode("utf-8")
+        if self._server_protocol_major == 0:
+            # Work around bug in version 0 of MQI that required
+            # count of Unicode code points (not bytes)
+            messageLen = len(value)
+        else:
+            messageLen = len(utf8Value)
+
+        msgHeader = f"{str(messageLen)}.\n".encode("utf-8")
         self._socket.sendall(msgHeader)
         self._socket.sendall(utf8Value)
 

@@ -16,7 +16,7 @@
 % ===================================================================
 */
 
-:- module(logicmoo_common,[add_library_search_path/2,locally/2]).
+:- module(logicmoo_common,[/*add_library_search_path/2,locally/2*/]).
 /** <module> Utility LOGICMOO_COMMON
 This module allows easier loading of common logicmoo utility predicates.
 
@@ -27,7 +27,7 @@ This module allows easier loading of common logicmoo utility predicates.
 
 
 :- op(700,xfx,prolog:('univ_safe')).
-:- discontiguous logicmoo_common:'$exported_op'/3.
+:- discontiguous '$exported_op'/3.
 
 
 :- system:reexport((logicmoo_startup)).

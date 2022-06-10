@@ -47,7 +47,7 @@
 	    [instantiation_error/1,type_error/2,domain_error/2]).
 :- autoload(library(lists),
 	    [append/3,member/2,sum_list/2,max_list/2,min_list/2]).
-:- autoload(library(ordsets),[ord_subtract/3,ord_intersection/3]).
+:- autoload(library(ordsets),[ord_intersection/3]).
 :- autoload(library(pairs),[pairs_values/2]).
 
 :- set_prolog_flag(generate_debug_info, false).
@@ -585,7 +585,18 @@ state1(_,   X, X, _).
 %   ```
 %
 %   Note that SWI-Prolog up to  version   8.3.4  created  copies of Goal
-%   using copy_term/2 for each iteration.
+%   using  copy_term/2  for  each  iteration,  this  makes  the  current
+%   implementation unable to properly handle   compound terms (in Goal's
+%   arguments) that share variables with the  Generator. As a workaround
+%   you can define a goal that does not use compound terms, like in this
+%   example:
+%
+%   ```
+%   mem(E,L) :-  % mem/2 hides the compound argument from foreach/2
+%      member(r(E),L).
+%
+%   ?- foreach(  between(1,5,N), mem(N,L)).
+%   ```
 
 foreach(Generator, Goal) :-
     term_variables(Generator, GenVars0), sort(GenVars0, GenVars),

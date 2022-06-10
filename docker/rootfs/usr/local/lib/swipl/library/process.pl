@@ -3,9 +3,10 @@
     Author:        Jan Wielemaker
     E-mail:        J.Wielemaker@vu.nl
     WWW:           http://www.swi-prolog.org
-    Copyright (c)  2008-2019, University of Amsterdam
+    Copyright (c)  2008-2022, University of Amsterdam
                               VU University Amsterdam
                               CWI, Amsterdam
+                              SWI-Prolog Solutions b.v.
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -177,7 +178,9 @@ following finds the executable for =ls=:
 %       List is a list of `Name=Value` terms, where `Value` is expanded
 %       the same way as the Args argument. If neither `env` nor
 %       `environment` is passed the environment is inherited from the
-%       Prolog process.
+%       Prolog process.  At most one env(List) or environment(List) term
+%       may appear in the options. If multiple appear a
+%       `permission_error` is raised for the second option.
 %       * process(-PID)
 %       Unify PID with the process id of the created process.
 %       * detached(+Bool)

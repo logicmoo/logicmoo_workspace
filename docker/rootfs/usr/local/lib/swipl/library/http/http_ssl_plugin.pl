@@ -3,7 +3,7 @@
     Author:        Jan Wielemaker
     E-mail:        J.Wielemaker@vu.nl
     WWW:           http://www.swi-prolog.org
-    Copyright (c)  2007-2020, University of Amsterdam
+    Copyright (c)  2007-2022, University of Amsterdam
                               VU University Amsterdam
     All rights reserved.
 
@@ -74,6 +74,7 @@ SWI-Prolog installation directory.
     thread_httpd:make_socket_hook/3,
     thread_httpd:accept_hook/2,
     thread_httpd:open_client_hook/6,
+    thread_httpd:discard_client_hook/1,
     http:http_protocol_hook/5,
     http:open_options/2,
     http:http_connection_over_proxy/6,
@@ -164,13 +165,24 @@ make_socket(Port, Socket, _Options) :-
 thread_httpd:accept_hook(Goal, Options) :-
     memberchk(ssl_instance(SSL0), Options),
     !,
+    ensure_close_parent(SSL0, SSL),
     memberchk(queue(Queue), Options),
     memberchk(tcp_socket(Socket), Options),
     tcp_accept(Socket, Client, Peer),
+    sig_atomic(send_to_worker(Queue, SSL, Client, Goal, Peer)),
+    http_enough_workers(Queue, accept, Peer).
+
+send_to_worker(Queue, SSL, Client, Goal, Peer) :-
     debug(http(connection), 'New HTTPS connection from ~p', [Peer]),
-    http_enough_workers(Queue, accept, Peer),
-    ensure_close_parent(SSL0, SSL),
     thread_send_message(Queue, ssl_client(SSL, Client, Goal, Peer)).
+
+%!  thread_httpd:discard_client_hook(+Msg)
+%
+%   Handles connections that where accepted during server shutdown.
+
+thread_httpd:discard_client_hook(ssl_client(_SSL, Client, _Goal, _Peer)) :-
+    tcp_close_socket(Client).
+
 
 %!  http:ssl_server_create_hook(+SSL0, -SSL, +Options) is semidet.
 %

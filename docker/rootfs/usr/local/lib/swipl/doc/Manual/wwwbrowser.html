@@ -1,0 +1,296 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.5.12 Reference Manual: Section A.27</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="nb_set.html">
+<link rel="next" href="occurs.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="nb_set.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="occurs.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:wwwbrowser"><a id="sec:A.27"><span class="sec-nr">A.27</span> <span class="sec-title">library(www_browser): 
+Open a URL in the users browser</span></a></h2>
+
+<p><a id="sec:wwwbrowser"></a>
+
+<p>This library deals with the highly platform specific task of opening 
+a web page. In addition, is provides a mechanism similar to
+<a class="pred" href="files.html#absolute_file_name/3">absolute_file_name/3</a> 
+that expands compound terms to concrete URLs. For example, the 
+SWI-Prolog home page can be opened using:
+
+<pre class="code">
+?- www_open_url(swipl(.)).
+</pre>
+
+<dl class="latex">
+<dt class="pubdef"><a id="www_open_url/1"><strong>www_open_url</strong>(<var>+Url</var>)</a></dt>
+<dd class="defbody">
+Open URL in running version of the users' browser or start a new 
+browser. This predicate tries the following steps:
+
+<p>
+<ol class="latex">
+<li>If a prolog flag (see <a class="pred" href="flags.html#set_prolog_flag/2">set_prolog_flag/2</a>) <code>browser</code> 
+is set and this is the name of a known executable, use this. The flag 
+may be set to <code>Command-Mode</code>, where mode is one of <code>fg</code> 
+or <code>bg</code>, requesting Command to run in foreground or 
+background mode. Default is <code>bg</code>.
+<li>On Windows, use <code>win_shell(open, URL)</code>
+<li>Find a generic&lsquo;open' comment. Candidates are <code>xdg-open</code>,
+<code>open</code> or <code>gnome-open</code>.
+<li>If a environment variable <code>BROWSER</code> is set and this is 
+the name of a known executable, use this.
+<li>Try to find a known browser. @tbd Figure out the right tool in step 
+3 as it is not uncommon that multiple are installed.
+</ol>
+</dd>
+<dt class="multidef"><span class="pred-tag">[multifile]</span><a id="known_browser/2"><strong>known_browser</strong>(<var>+FileBaseName, 
+-Compatible</var>)</a></dt>
+<dd class="defbody">
+True if browser <var>FileBaseName</var> has a remote protocol compatible 
+to
+<var>Compatible</var>.</dd>
+<dt class="pubdef"><a id="expand_url_path/2"><strong>expand_url_path</strong>(<var>+Spec, 
+-URL</var>)</a></dt>
+<dd class="defbody">
+Expand <var>URL</var> specifications similar to <a class="pred" href="files.html#absolute_file_name/3">absolute_file_name/3</a>. 
+The predicate <span class="pred-ext">url_path/2</span> plays the role of <a class="pred" href="consulting.html#file_search_path/2">file_search_path/2</a>.
+
+<dl class="tags">
+<dt class="tag">Errors</dt>
+<dd>
+<code>existence_error(url_path, Spec)</code> if the location is not 
+defined.
+</dd>
+</dl>
+
+</dd>
+</dl>
+
+<p></body></html>

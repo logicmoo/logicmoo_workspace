@@ -104,11 +104,11 @@ dash_border(Width):- !, dash_border_no_nl(Width),nl,!.
 dash_uborder(Width):- format('~N'), WidthM1 is Width-1, write(' ¯'),dash_char(WidthM1,'¯¯'),nl.
 %dash_uborder(Width):- format('~N'), WidthM1 is Width-1, write(' _'),dash_char(WidthM1,'__'),nl.
 
-functor_color(pass,green).
-functor_color(fail,red).
-functor_color(warn,yellow).
+functor_test_color(pass,green).
+functor_test_color(fail,red).
+functor_test_color(warn,yellow).
 
-arcdbg(G):- compound(G), compound_name_arity(G,F,_),functor_color(F,C),wots(S,print(G)),color_print(C,S),!,format('~N').
+arcdbg(G):- compound(G), compound_name_arity(G,F,_),functor_test_color(F,C),wots(S,print(G)),color_print(C,S),!,format('~N').
 arcdbg(G):- wdmsg(G).
 
 user:portray(Grid):- setup_call_cleanup(arc_portray(Grid),true,true),!.
@@ -133,7 +133,7 @@ arc_portray(G):- \+ \+ catch(((
     grid_size(G,H,V),!,H>0,V>0, 
      wots(S,print_grid(H,V,G)),write(S))),_,false).
 
-%user:portray(Grid):- ((\+ tracing, is_group(Grid),print_grid(Grid))).
+%user:portray(Grid):- ((\+ tracing, is_object_group(Grid),print_grid(Grid))).
 %user:portray(Grid):- quietlyd((is_object(Grid),print_grid(Grid))).
 
 red_noise:- format('~N'),
@@ -223,9 +223,9 @@ show_pair_no_i(IH,IV,OH,OV,Type,PairName,In,Out):-
 
 
 show_pair_I_info(NameIn,NameOut,In,Out):- 
-  ((is_group(In),is_group(Out))-> once(showdiff(In,Out));
-    ignore((is_group(In),desc(wqnl(fav(NameIn)), debug_indiv(In)))),
-    ignore((is_group(Out),desc(wqnl(fav(NameOut)), debug_indiv(Out))))),!.
+  ((is_object_group(In),is_object_group(Out))-> once(showdiff(In,Out));
+    ignore((is_object_group(In),desc(wqnl(fav(NameIn)), debug_indiv(In)))),
+    ignore((is_object_group(Out),desc(wqnl(fav(NameOut)), debug_indiv(Out))))),!.
 
 uses_space(C):- code_type(C,print).
 
@@ -233,7 +233,7 @@ into_ss_string(Var,_):- plain_var(Var),!,throw(var_into_ss_string(Var)).
 into_ss_string(G,SS):- is_grid(G),!,wots(S,print_grid(G)),!,into_ss_string(S,SS).
 into_ss_string(G,SS):- is_object(G),!,wots(S,print_grid(G)),!,into_ss_string(S,SS).
 into_ss_string(G,SS):- is_points_list(G),!,wots(S,print_grid(G)),!,into_ss_string(S,SS).
-into_ss_string(G,SS):- is_group(G),!,wots(S,print_grid(G)),!,into_ss_string(S,SS).
+into_ss_string(G,SS):- is_object_group(G),!,wots(S,print_grid(G)),!,into_ss_string(S,SS).
 into_ss_string(ss(Len,L),ss(Len,L)):-!.
 into_ss_string(L,ss(Len,L)):- is_list(L), find_longest_len(L,Len),!.
 into_ss_string(S,SS):- string(S), atomics_to_string(L,'\n',S),!,into_ss_string(L,SS).
@@ -250,7 +250,7 @@ print_w_pad0(Pad,S):- format('~N'),dash_char(Pad,' '), write(S).
 
 print_equals(_,N,V):- \+ compound(V),wqnl(N=V).
 print_equals(Grid,N,Ps):- is_object(Ps),grid_size(Grid,H,V),print_grid(H,V,N,Ps),!.
-%print_equals(Grid,N,PL):- is_group(PL), grid_size(Grid,H,V), locally(grid_nums(PL),print_list_of_points(N,H,V,[[]])).
+%print_equals(Grid,N,PL):- is_object_group(PL), grid_size(Grid,H,V), locally(grid_nums(PL),print_list_of_points(N,H,V,[[]])).
 print_equals(_,N,G):- print_equals(N,G).
 
 
@@ -282,7 +282,7 @@ commawrite(S):- write(','),write(S).
 as_color(cc(Count,Num),List):- color_name(Num,Name),wots(List,color_print(Num,Name=Count)).
 better_value(V,List):- is_list(V), maplist(as_color,V,List).
 better_value([G|V],List):- 
-  is_group([G|V]),
+  is_object_group([G|V]),
   maplist(points_to_grid,[G|V],List),
   [G|V] \=@= List.
 
@@ -395,12 +395,15 @@ ansi_color(C,fg(Color)):- integer(C),block_colors(L),length(L,UpTo),between(0,Up
 ansi_color(C,Color):- color_int(C,I)->C\==I,!,ansi_color(I,Color).
 ansi_color(_,[bold,underline]).
 
-on_bg(C,G):- ansi_format([bg(C)],'~@',[call(G)]).
+on_bg(C,G):- ansi_format([bg(C)],'~@',[call(user:G)]).
 on_bg(G):- get_bgc(C),on_bg(C,G).
+
+%ansi_term:import(ansi_format_arc/3).
+
 ansi_format_arc(Ansi,Format,Args):- on_bg(ansi_format(Ansi,Format,Args)),!.
 
-underline_print(W):- ansi_format([bold,underline],'~@',[W]),!.
-bold_print(W):- ansi_format(bold,'~@',[W]),!.
+underline_print(W):- ansi_format([bold,underline],'~@',[user:W]),!.
+bold_print(W):- ansi_format(bold,'~@',[user:W]),!.
 
 compound_var(C):- \+ plain_var(C), \+ attvar(C), is_ftVar(C).
 

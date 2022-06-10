@@ -22,7 +22,9 @@ This module holds less common utils that have to be loaded individually.
  - @author Douglas R. Miles
  - @license LGPL
 */
-
+:- set_prolog_flag(verbose_autoload,true),
+ set_prolog_flag(verbose_load,full),!.
+ 
 %:- discontiguous(logicmoo_utils:'$exported_op'/3).
 %:- logicmoo_utils:use_module(library(logicmoo_common)).
 :- ensure_loaded(library(logicmoo_common)).

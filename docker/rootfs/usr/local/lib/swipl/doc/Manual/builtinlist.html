@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.5.4 Reference Manual: Section 4.29</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.5.12 Reference Manual: Section 4.29</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -247,17 +247,17 @@ and described here.
 <dt class="pubdef"><a id="is_list/1"><strong>is_list</strong>(<var>+Term</var>)</a></dt>
 <dd class="defbody">
 True if <var>Term</var> is bound to the empty list (<code><code>[]</code></code>) 
-or a compound term with name&lsquo;<code><code>[|]</code></code>&rsquo;<sup class="fn">128<span class="fn-text">The 
+or a compound term with name&lsquo;<code><code>[|]</code></code>&rsquo;<sup class="fn">132<span class="fn-text">The 
 traditional list functor name is the dot (<code>&rsquo;.'</code>). This 
 is still the case of the command line option <strong>--traditional</strong> 
 is given. See also <a class="sec" href="ext-lists.html#sec:5.1">section 
 5.1</a>.</span></sup> and arity&nbsp;2 and the second argument is a 
-list.<sup class="fn">129<span class="fn-text">In versions before 5.0.1, <a id="idx:islist1:1563"></a><a class="pred" href="builtinlist.html#is_list/1">is_list/1</a> 
+list.<sup class="fn">133<span class="fn-text">In versions before 5.0.1, <a id="idx:islist1:1576"></a><a class="pred" href="builtinlist.html#is_list/1">is_list/1</a> 
 just checked for <code><code>[]</code></code> or <code>[_|_]</code> and 
-proper_list/1 had the role of the current <a id="idx:islist1:1564"></a><a class="pred" href="builtinlist.html#is_list/1">is_list/1</a>. 
+proper_list/1 had the role of the current <a id="idx:islist1:1577"></a><a class="pred" href="builtinlist.html#is_list/1">is_list/1</a>. 
 The current definition conforms to the de facto standard. Assuming 
 proper coding standards, there should only be very few cases where a 
-quick-and-dirty <a id="idx:islist1:1565"></a><a class="pred" href="builtinlist.html#is_list/1">is_list/1</a> 
+quick-and-dirty <a id="idx:islist1:1578"></a><a class="pred" href="builtinlist.html#is_list/1">is_list/1</a> 
 is a good choice. Richard O'Keefe pointed at this issue.</span></sup> 
 This predicate acts as if defined by the definition below on
 <em>acyclic</em> terms. The implementation safely <em>fails</em> if
@@ -278,15 +278,15 @@ is_list([_|T]) :-
 <dd class="defbody">
 True when <var>Elem</var> is an element of <var>List</var>. This&lsquo;chk' 
 variant of
-<a id="idx:member2:1566"></a><a class="pred" href="lists.html#member/2">member/2</a> 
+<a id="idx:member2:1579"></a><a class="pred" href="lists.html#member/2">member/2</a> 
 is semi deterministic and typically used to test membership of a list. 
 Raises a <code>type</code> error if scanning <var>List</var> encounters 
-a non-list. Note that <a id="idx:memberchk2:1567"></a><a class="pred" href="builtinlist.html#memberchk/2">memberchk/2</a> 
+a non-list. Note that <a id="idx:memberchk2:1580"></a><a class="pred" href="builtinlist.html#memberchk/2">memberchk/2</a> 
 does <em>not</em> perform a full list typecheck. For example, <code>memberchk(a, 
 [a|b])</code> succeeds without error. If <var>List</var> is cyclic and <var>Elem</var> 
 is not a member of
-<var>List</var>, <a id="idx:memberchk2:1568"></a><a class="pred" href="builtinlist.html#memberchk/2">memberchk/2</a> 
-eventually raises a <code>type</code> error.<sup class="fn">130<span class="fn-text"><i>Eventually</i> 
+<var>List</var>, <a id="idx:memberchk2:1581"></a><a class="pred" href="builtinlist.html#memberchk/2">memberchk/2</a> 
+eventually raises a <code>type</code> error.<sup class="fn">134<span class="fn-text"><i>Eventually</i> 
 here means it will scan as many elements as the longest list that may 
 exist given the current stack usage before raising the exception.</span></sup></dd>
 <dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="length/2"><strong>length</strong>(<var>?List, 
@@ -313,7 +313,7 @@ List = [_24698,_25826], Length = 2
 
 <p>It raises errors if <var>Length</var> is bound to a non-integer or a 
 negative integer or if <var>List</var> is neither a list nor a partial 
-list. This error condition includes cyclic lists:<sup class="fn">131<span class="fn-text">ISO 
+list. This error condition includes cyclic lists:<sup class="fn">135<span class="fn-text">ISO 
 demands failure here. We think an error is more appropriate.</span></sup>
 
 <pre class="code">
@@ -322,7 +322,7 @@ ERROR: Type error: `list' expected ...
 </pre>
 
 <p>Covering an edge case, the predicate fails if the tail of <var>List</var> 
-is equivalent to <var>Length</var>:<sup class="fn">132<span class="fn-text">This 
+is equivalent to <var>Length</var>:<sup class="fn">136<span class="fn-text">This 
 is logically correct. An exception would be more appropriate, but to our 
 best knowledge, current practice in Prolog does not describe a suitable 
 candidate exception term.</span></sup>
@@ -342,8 +342,8 @@ false.
 True if <var>Sorted</var> can be unified with a list holding the 
 elements of <var>List</var>, sorted to the standard order of terms (see
 <a class="sec" href="compare.html#sec:4.6">section 4.6</a>). Duplicates 
-are removed. The implementation is in C, using <em>natural merge sort</em>.<sup class="fn">133<span class="fn-text">Contributed 
-by Richard O'Keefe.</span></sup> The <a id="idx:sort2:1569"></a><a class="pred" href="builtinlist.html#sort/2">sort/2</a> 
+are removed. The implementation is in C, using <em>natural merge sort</em>.<sup class="fn">137<span class="fn-text">Contributed 
+by Richard O'Keefe.</span></sup> The <a id="idx:sort2:1582"></a><a class="pred" href="builtinlist.html#sort/2">sort/2</a> 
 predicate can sort a cyclic list, returning a non-cyclic version with 
 the same elements.
 
@@ -363,7 +363,7 @@ element of
 <var>List</var>. <var>Key</var> determines which part of each element in
 <var>List</var> is used for comparing two term and <var>Order</var> 
 describes the relation between each set of consecutive elements in
-<var>Sorted</var>.<sup class="fn">134<span class="fn-text">The 
+<var>Sorted</var>.<sup class="fn">138<span class="fn-text">The 
 definition of this predicate was established after discussion with 
 Joachim Schimpf from the ECLiPSe team. ECLiPSe currently only accepts <code><code>&lt;</code></code>, <code><code>=&lt;</code></code>, <code><code>&gt;</code></code> 
 and <code><code>&gt;=</code></code> for the <var>Order</var> argument 
@@ -384,7 +384,7 @@ dict does not contain the requested key.
 <p>Deeper nested elements of structures can be selected by using a list 
 of keys for the <var>Key</var> argument.
 
-<p>The <var>Order</var> argument is described in the table below:<sup class="fn">135<span class="fn-text">For 
+<p>The <var>Order</var> argument is described in the table below:<sup class="fn">139<span class="fn-text">For 
 compatibility with ECLiPSe, the values <code><code>&lt;</code></code>, <code><code>=&lt;</code></code>, <code><code>&gt;</code></code> 
 and <code><code>&gt;=</code></code> are allowed as synonyms.</span></sup>
 
@@ -411,7 +411,7 @@ keysort(Pairs, Sorted) :- sort(1, @=&lt;, Pairs, Sorted).
 
 <p>The following example sorts a list of rows, for example resulting 
 from
-<a id="idx:csvreadfile2:1570"></a><a class="pred" href="csv.html#csv_read_file/2">csv_read_file/2</a>) 
+<a id="idx:csvreadfile2:1583"></a><a class="pred" href="csv.html#csv_read_file/2">csv_read_file/2</a>) 
 ascending on the 3th column and descending on the 4th column:
 
 <pre class="code">
@@ -419,13 +419,13 @@ ascending on the 3th column and descending on the 4th column:
     sort(3, @=&lt;, Rows1, Sorted).
 </pre>
 
-<p>See also <a id="idx:sort2:1571"></a><a class="pred" href="builtinlist.html#sort/2">sort/2</a> 
-(ISO), <a id="idx:msort2:1572"></a><a class="pred" href="builtinlist.html#msort/2">msort/2</a>, <a id="idx:keysort2:1573"></a><a class="pred" href="builtinlist.html#keysort/2">keysort/2</a>, <a id="idx:predsort3:1574"></a><a class="pred" href="builtinlist.html#predsort/3">predsort/3</a> 
-and <a id="idx:orderby2:1575"></a><a class="pred" href="solutionsequences.html#order_by/2">order_by/2</a>.</dd>
+<p>See also <a id="idx:sort2:1584"></a><a class="pred" href="builtinlist.html#sort/2">sort/2</a> 
+(ISO), <a id="idx:msort2:1585"></a><a class="pred" href="builtinlist.html#msort/2">msort/2</a>, <a id="idx:keysort2:1586"></a><a class="pred" href="builtinlist.html#keysort/2">keysort/2</a>, <a id="idx:predsort3:1587"></a><a class="pred" href="builtinlist.html#predsort/3">predsort/3</a> 
+and <a id="idx:orderby2:1588"></a><a class="pred" href="solutionsequences.html#order_by/2">order_by/2</a>.</dd>
 <dt class="pubdef"><a id="msort/2"><strong>msort</strong>(<var>+List, 
 -Sorted</var>)</a></dt>
 <dd class="defbody">
-Equivalent to <a id="idx:sort2:1576"></a><a class="pred" href="builtinlist.html#sort/2">sort/2</a>, 
+Equivalent to <a id="idx:sort2:1589"></a><a class="pred" href="builtinlist.html#sort/2">sort/2</a>, 
 but does not remove duplicates. Raises a
 <code>type_error</code> if <var>List</var> is a cyclic list or not a 
 list.</dd>
@@ -442,7 +442,7 @@ with regard to the order of the
 same
 <var>Key</var> is not changed.
 
-<p>The <a id="idx:keysort2:1577"></a><a class="pred" href="builtinlist.html#keysort/2">keysort/2</a> 
+<p>The <a id="idx:keysort2:1590"></a><a class="pred" href="builtinlist.html#keysort/2">keysort/2</a> 
 predicate is often used together with library
 <code>library(pairs)</code>. It can be used to sort lists on different 
 or multiple criteria. For example, the following predicates sorts a list 
@@ -462,7 +462,7 @@ sort_atoms_by_length(Atoms, ByLength) :-
 <dt class="pubdef"><a id="predsort/3"><strong>predsort</strong>(<var>+Pred, 
 +List, -Sorted</var>)</a></dt>
 <dd class="defbody">
-Sorts similar to <a id="idx:sort2:1578"></a><a class="pred" href="builtinlist.html#sort/2">sort/2</a>, 
+Sorts similar to <a id="idx:sort2:1591"></a><a class="pred" href="builtinlist.html#sort/2">sort/2</a>, 
 but determines the order of two terms by calling <var>Pred</var>(-<var>Delta</var>, 
 +<var>E1</var>, +<var>E2</var>) . This call must unify <var>Delta</var> 
 with one of <code><code>&lt;</code></code>, <code><code>&gt;</code></code> 
@@ -470,9 +470,9 @@ or
 <code><code>=</code></code>. Duplicates are removed (i.e. equivalence 
 classes of elements as defined by <var>Pred</var> are collapsed to a 
 single element in
-<var>Sorted</var>) If the built-in predicate <a id="idx:compare3:1579"></a><a class="pred" href="compare.html#compare/3">compare/3</a> 
-is used, the result is the same as <a id="idx:sort2:1580"></a><a class="pred" href="builtinlist.html#sort/2">sort/2</a>. 
-See also <a id="idx:keysort2:1581"></a><a class="pred" href="builtinlist.html#keysort/2">keysort/2</a>.
+<var>Sorted</var>) If the built-in predicate <a id="idx:compare3:1592"></a><a class="pred" href="compare.html#compare/3">compare/3</a> 
+is used, the result is the same as <a id="idx:sort2:1593"></a><a class="pred" href="builtinlist.html#sort/2">sort/2</a>. 
+See also <a id="idx:keysort2:1594"></a><a class="pred" href="builtinlist.html#keysort/2">keysort/2</a>.
 </dd>
 </dl>
 

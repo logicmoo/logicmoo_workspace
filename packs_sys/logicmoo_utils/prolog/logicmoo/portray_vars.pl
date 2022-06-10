@@ -1,3 +1,4 @@
+:- if((prolog_load_context(source,F),prolog_load_context(file,F))).
 :- module(portray_vars, [debug_var/2,maybe_debug_var/2,pretty_numbervars/2,guess_pretty/1,
   into_symbol_name/2,
   prologcase_name/2,
@@ -7,12 +8,12 @@
   %guess_varnames/2,
   toProperCamelAtom/2,
   simpler_textname/2,simpler_textname/3]).
-
 /** <module> Utility LOGICMOO PORTRAY VARS
 	Automatically names  variables based off how they are used in code.
 - @author Douglas R. Miles
 - @license LGPL 
 */
+:- endif.
 :- set_module(class(library)).
 %:- use_module(util_varnames,[get_var_name/2]).
 
@@ -61,6 +62,7 @@
 */
 
 % debug_var(_A,_Var):-!.
+:- export(debug_var/2).
 debug_var(_,_):- current_prolog_flag(no_pretty,true),!.
 debug_var(X,Y):-  mortvar(debug_var0(X,Y)).
 debug_var(Sufix,X,Y):- quietly((flatten([X,Sufix],XS),debug_var(XS,Y))).
@@ -217,7 +219,7 @@ add_var_to_env_now(New, _):- unusable_name(New),!.
 add_var_to_env_now(New0,Var):- toProperCamelAtom(New0,New),check_varname(New),add_var_to_env_maybe(New,Var).
 
 /*,locally(t_l:dont_append_var,name_one(V,R)),*V='$VAR'(R)*/
-add_var_to_env_perm(R,V):- toProperCamelAtom(R,New), atom_concat(New,'_',RR), add_var_to_env(RR,V), nop(put_attr(V,vnl,R)).
+add_var_to_env_perm(R,V):- atom_concat(R,'_VAR',RR), add_var_to_env(RR,V), nop(put_attr(V,vnl,R)).
 
 add_var_to_env_maybe(_New,Var):- var(Var),get_attr(Var,vnl,_),!.
 add_var_to_env_maybe(New,_Var):- atom_contains(New,'_VAR'),!.
@@ -307,12 +309,13 @@ pretty_numbervars_g(T,T):- current_prolog_flag(no_pretty,true),!.
 pretty_numbervars_g(Term, TermO):- (ground(Term);current_prolog_flag(no_pretty,true)),!,duplicate_term(Term,TermO).
 %pretty_numbervars(Term, TermO):- copy_term(Term,TermO,_),guess_pretty(Term),Term=@=TermO,Term=TermO,!.
 
+'$autoload'(_,_,_):- fail.
 
 pretty_numbervars(TermIn, TermOut):- pretty_numbervars_ground(TermIn, TermOut),!.
 
 pretty_numbervars_ground(TermIn, TermOut):- pretty_numbervars_g(TermIn, TermOut),!.
 pretty_numbervars_ground(TermIn, TermOut):-  % the new 
- quietly((
+ quietly(( %fail,
    copy_term(TermIn,Together,_),
    term_varnames(TermIn,Vs0,_),
    replace_variables(Vs0,TermIn,Term),
@@ -321,6 +324,11 @@ pretty_numbervars_ground(TermIn, TermOut):-  % the new
    term_varnames(Term,Vs,_),   
    copy_term(Term+Vs,TermOut+Vs2, _),
    moretrace(implode_varnames_pred(to_var_dollar, Vs2)))),!.
+pretty_numbervars_ground(TermIn, TermIn):-  set_prolog_flag(no_pretty,true),!.
+
+term_varnames(_Term,[],_Ug):- !.
+term_varnames(_Term,Vs,_Ug):- %term_variables(Term,Vars),
+  (nb_current('$variable_names',Vs)->true;Vs=[]).
 
 pretty_numbervars_unground(TermIn, TermOut):- pretty_numbervars_g(TermIn, TermOut),!.
 pretty_numbervars_unground(TermIn, TermOut):-  % the old
@@ -480,7 +488,6 @@ vnl:attr_unify_hook(_,_).
 
 :- thread_local(t_l:dont_append_var/0).
 
-name_one_var(R,V):- var(R),nonvar(V),!,name_one_var(V,R).
 name_one_var([_|_],V):- debug_var('List',V),!.
 name_one_var(R,V):- nonvar(R),var(V),p_n_atom(R,RN), locally(t_l:dont_append_var,debug_var(RN,V)),!.
 name_one_var(R,V):- locally(t_l:dont_append_var,debug_var(R,V)),!.
@@ -510,15 +517,13 @@ pretty1(Env=List):- compound(List),var(Env),List=[H|_],compound(H),H=bv(_,_), ma
 pretty1(debug_var(R,V)):- may_debug_var(R,V).
 pretty1(bv(R,V)):- name_one(V,R).
 pretty1(isa(V,R)):- name_one(V,R).
-pretty1(iz_a(V,R)):- name_one_var(V,R).
-pretty1(isa_adj(V,R)):- add_var_to_env_perm_safe(V,R).
 pretty1(generic_pred(_,_,HP,V1,V2)):- ground(HP), HP=has_prop(_,R),debug_var(R,V1),debug_var(hasProp,V1),debug_var(R,V2).
 pretty1(generic_pred(_,_,HP,V1,V2)):- ground(HP), HP=has_prop(R),debug_var(R,V1),debug_var(hasProp,V1),debug_var(R,V2).
 %pretty1(setOf(V,_,L)):- swizzle_var_names(V,L).
-pretty1(ace_var(V,R)):- add_var_to_env_perm_safe(R,V).
-pretty1(bE(_,V,R)):- name_one_var(V,R).
+pretty1(ace_var(V,R)):- atom(R),var(V),!,add_var_to_env_perm(R,V).
+pretty1(bE(_,V,R)):- name_one(V,R).
 pretty1(iza(V,R)):- name_one(V,R).
-pretty1(cg_name(V,R)):- add_var_to_env_perm_safe(R,V).
+pretty1(cg_name(V,R)):- atom(R),var(V),!,add_var_to_env_perm(R,V).
 pretty1(cg_name(V,R)):- name_one(V,R).
 pretty1(cg_type(V,R)):- name_one(V,R).
 pretty1(cg_equal(V,R)):- name_one(V,R).
@@ -544,9 +549,6 @@ pretty1(F,A,[V|ARGS]):-
   % reverse(NewNames,NewNamesR),
   atomic_list_concat_goodnames(NewNames,'',Name),
   may_debug_var_weak(Name,V).
-
-add_var_to_env_perm_safe(R,V):- atom(R),var(V),!,add_var_to_env_perm(R,V).
-add_var_to_env_perm_safe(V,R):- atom(R),var(V),!,add_var_to_env_perm(R,V).
 
 %atomic_list_concat_goodnames([H],Sep,Res):- append_good_name(Sep,H,'',Res).
 atomic_list_concat_goodnames([],_,'').

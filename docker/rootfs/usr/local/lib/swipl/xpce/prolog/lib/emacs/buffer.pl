@@ -3,8 +3,9 @@
     Author:        Jan Wielemaker and Anjo Anjewierden
     E-mail:        J.Wielemaker@cs.vu.nl
     WWW:           http://www.swi-prolog.org/packages/xpce/
-    Copyright (c)  1985-2011, University of Amsterdam
+    Copyright (c)  1985-2022, University of Amsterdam
                               VU University Amsterdam
+                              SWI-Prolog Solutions b.v.
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -35,9 +36,11 @@
 
 :- module(emacs_buffer, []).
 :- use_module(library(pce)).
+:- use_module(library(dcg/basics)).
 :- require([ between/3
            , default/3
            , ignore/1
+           , maplist/3
            ]).
 
 :- pce_begin_class(emacs_buffer(file, name), text_buffer).
@@ -110,6 +113,7 @@ initialise(B, File:file*, Name:[name]) :->
 
     send(B, init_mode_defaults),
     send(B, slot, auto_save_count, number(300)),
+    send(B, set_mode_vars),
     send(B, name, BufBaseName).
 
 
@@ -141,6 +145,8 @@ scratch_text('% This buffer is for notes you don\'t want to save.\n\c
 :- pce_global(@emacs_mode_regex,        % -*- Mode -*-
                                         % -*- mode: Mode; ... -*-
               new(regex('.*-\\*-\\s*([Mm]ode:\\s*(\\w+);.*-\\*-|(\\w+)\\s*-\\*-)'))).
+:- pce_global(@emacs_var_regex,        % -*- Var: Value; ... -*-
+              new(regex('.*-\\*-\\s*([-\\w]+:\\s*\\w+\\s*;\\s*)+-\\*-'))).
 
 
 % ->determine_initial_mode uses the following steps:
@@ -180,6 +186,40 @@ determine_initial_mode(B) :->
     ;   send(B, slot, mode, @emacs_default_mode)
     ),
     send(B, set_temp_file).
+
+set_mode_vars(B) :->
+    "Set mode variables from -*- Name: Value; ... -*- magic string"::
+    (   send(@emacs_var_regex, match, B),
+        get(@emacs_var_regex, register_value, B, 1, string(String)),
+        string_codes(String, Codes),
+        phrase(mode_vars(Vars), Codes)
+    ->  maplist(set_mode_var(B), Vars)
+    ;   true
+    ).
+
+mode_vars([Name=Value|T]) -->
+    whites, string(NameC), whites, ":", whites, string(ValueC), whites, ";",
+    !,
+    { maplist(to_underscore, NameC, NameC1),
+      atom_chars(Name, NameC1),
+      name(Value, ValueC)
+    },
+    mode_vars(T).
+mode_vars([]) -->
+    whites.
+
+to_underscore(0'-, 0'_) :- !.
+to_underscore(C, C).
+
+set_mode_var(B, Name=Value) :-
+    (   mode_var(Name)
+    ->  Msg =.. [Name, Value],
+        send(B, Msg)
+    ;   true
+    ).
+
+mode_var(tab_width).
+mode_var(indent_tabs).
 
 set_temp_file(B) :->
     "Clear ->prompt_reload if this is a temp file"::

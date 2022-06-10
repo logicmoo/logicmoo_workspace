@@ -1,0 +1,1122 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.5.12 Reference Manual: Section 12.9</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="foreignnotes.html">
+<link rel="next" href="runtime.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="foreignnotes.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="runtime.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:foreign-streams"><a id="sec:12.9"><span class="sec-nr">12.9</span> <span class="sec-title">Foreign 
+access to Prolog IO streams</span></a></h2>
+
+<a id="sec:foreign-streams"></a>
+
+<p>The SWI-Prolog foreign language interface provides access to Prolog 
+IO streams. This interface may be used to get hold of Prolog streams for 
+reading and writing. In addition, this interface allows to define new 
+stream types. For example, the Windows <b>swipl-win.exe</b> executable 
+that runs Prolog in a Windows GUI redefines the Prolog standard IO 
+streams (<code>user_input</code>, <code>user_output</code> and
+<code>user_error</code> to read from and write to the GUI window.
+
+<p>The interface is built around the <code>IOSTREAM</code> type which 
+plays a role similar to the POSIX <code>FILE</code> type. Most of the 
+functions are modeled after their <code>FILE</code> counterpart, 
+prefixed by <b>S</b>, e.g. <a class="func" href="foreign-streams.html#Sfwrite()">Sfwrite()</a>. 
+The <code>IOSTREAM</code> type has considerably more features though. 
+The <code>IOSTREAM</code> type is practically disconnected from the rest 
+of the Prolog system. Prolog refers to streams either by
+<em>alias</em> (<code>user_input</code>, etc. or created using the
+<code>alias(Name)</code> option of <a id="idx:open4:2576"></a><a class="pred" href="IO.html#open/4">open/4</a>) 
+or using a <em>stream handle</em> which is represented as a <em>blob</em> 
+(see <a class="sec" href="foreigninclude.html#sec:12.4.8">section 12.4.8</a>). 
+Foreign extensions that wish to access or define streams should include
+<code>SWI-Stream.h</code> in addition to <code>SWI-Prolog.h</code> as 
+below. Both headers may be used with C as well as C++.
+
+<pre class="code">
+#include &lt;SWI-Stream.h&gt;
+#include &lt;SWI-Prolog.h&gt;
+</pre>
+
+<p><h3 id="sec:foreign-get-iostream"><a id="sec:12.9.1"><span class="sec-nr">12.9.1</span> <span class="sec-title">Get 
+IO stream handles</span></a></h3>
+
+<a id="sec:foreign-get-iostream"></a>
+
+<p>There are several ways to get access to an IO Stream handle, 
+basically get them from Prolog, get access to the standard streams and 
+create a new stream. The <em>standard streams</em> are available as
+<code>Sinput</code>, <code>Soutput</code> and <code>Serror</code>. Note 
+that these are thread specific. Creating a new stream is discussed with <a class="func" href="foreign-streams.html#Snew()">Snew()</a>. 
+Below are the functions to obtain a stream handle from a Prolog term, 
+obtain and release ownership.
+
+<dl class="latex">
+<dt class="pubdef"><a id="PL_get_stream()"><var>int</var> <strong>PL_get_stream</strong>(<var>term_t 
+t, IOSTREAM **s, int flags</var>)</a></dt>
+<dd class="defbody">
+Get a stream handle from the Prolog term <var>t</var>. Returns <code>TRUE</code> 
+on success and <code>FALSE</code> on failure, by default generating an 
+exception. The <var>flags</var> argument is a bitwise disjunction of 
+these flags:
+
+<dl class="latex">
+<dt><b><code>SIO_INPUT</code></b></dt>
+<dd class="defbody">
+Get an <em>input stream</em>. If <var>t</var> is a stream pair (see <a id="idx:streampair3:2577"></a><a class="pred" href="IO.html#stream_pair/3">stream_pair/3</a>), 
+return the input channel. If <var>t</var> is an output stream the 
+function fails.
+</dd>
+<dt><b><code>SIO_OUTPUT</code></b></dt>
+<dd class="defbody">
+Get an <em>output stream</em>. See <code>SIO_INPUT</code> for details. 
+If neither <code>SIO_OUTPUT</code> nor <code>SIO_INPUT</code> is given <var>t</var> 
+may not be a <em>pair</em>.
+</dd>
+<dt><b><code>SIO_NOERROR</code></b></dt>
+<dd class="defbody">
+If the function fails no exception is produced.
+</dd>
+</dl>
+
+<p>The returned stream is owned by the calling thread using
+<a class="func" href="foreign-streams.html#PL_acquire_stream()">PL_acquire_stream()</a>.</dd>
+<dt class="pubdef"><a id="PL_acquire_stream()"><var>IOSTREAM *</var> <strong>PL_acquire_stream</strong>(<var>IOSTREAM 
+*s</var>)</a></dt>
+<dd class="defbody">
+Obtain ownership of <var>s</var> and return <var>s</var>. The 
+application must call <a class="func" href="foreign-streams.html#PL_release_stream()">PL_release_stream()</a> 
+when done. Only one thread can own a stream and this call blocks if some 
+other thread owns the stream. Note that
+<a class="func" href="foreign-streams.html#PL_get_stream()">PL_get_stream()</a> 
+acquires ownership. This function may be called multiple times by the 
+same thread (<em>recursive lock</em>).</dd>
+<dt class="pubdef"><a id="PL_release_stream()"><var>int</var> <strong>PL_release_stream</strong>(<var>IOSTREAM 
+*s</var>)</a></dt>
+<dd class="defbody">
+Give up ownership acquired using <a class="func" href="foreign-streams.html#PL_acquire_stream()">PL_acquire_stream()</a> 
+or <a class="func" href="foreign-streams.html#PL_get_stream()">PL_get_stream()</a>. 
+If the stream is an an error state, return <code>FALSE</code> with an 
+exception. Otherwise return <code>TRUE</code>.
+</dd>
+</dl>
+
+<p>Below is an example that writes &ldquo;Hello World'' to a stream 
+provided by Prolog.
+
+<pre class="code">
+static foreign_t
+hello_world(term_t to)
+{ IOSTREAM *s;
+
+  if ( PL_get_stream(to, &amp;s, SIO_OUTPUT) )
+  { Sfprintf(s, "Hello World!\n");
+    return PL_release_stream(s);
+  }
+
+  return FALSE;
+}
+
+  ... // fragment from install function
+  PL_register_foreign("hello world", 1, hello_world, 0);
+</pre>
+
+<p><h3 id="sec:foreign-create-iostream"><a id="sec:12.9.2"><span class="sec-nr">12.9.2</span> <span class="sec-title">Creating 
+an IO stream</span></a></h3>
+
+<a id="sec:foreign-create-iostream"></a>
+
+<p>A new stream is created using <a class="func" href="foreign-streams.html#Snew()">Snew()</a>. 
+Before we can create a stream we must create a function block of type <code>IOFUNCTIONS</code> 
+that provide function pointers for the basic operations on the stream. 
+This type is defined as follows:
+
+<pre class="code">
+typedef struct io_functions
+{ Sread_function        read;           /* fill the buffer */
+  Swrite_function       write;          /* empty the buffer */
+  Sseek_function        seek;           /* seek to position */
+  Sclose_function       close;          /* close stream */
+  Scontrol_function     control;        /* Info/control */
+  Sseek64_function      seek64;         /* seek to position (large files) */
+} IOFUNCTIONS;
+</pre>
+
+<dl class="latex">
+<dt class="pubdef"><a id="(*Sread_function)()"><var>ssize_t</var> <strong>(*Sread_function)</strong>(<var>void 
+*handle, char *buf, size_t bufsize</var>)</a></dt>
+<dd class="defbody">
+Read new data into <var>buf</var> that has size <var>bufsize</var>, 
+return the number of bytes read or -1. Note that this is the same 
+interface as the POSIX read() API. See <a class="sec" href="foreign-streams.html#sec:12.9.4">section 
+12.9.4</a> for raising errors.</dd>
+<dt class="pubdef"><a id="(*Swrite_function)()"><var>ssize_t</var> <strong>(*Swrite_function)</strong>(<var>void 
+*handle, char *buf, size_t bufsize</var>)</a></dt>
+<dd class="defbody">
+Write the bytes from <var>buf</var> with contains <var>bufsize</var> 
+bytes and return the number of bytes written or -1. The number of bytes 
+written may be less than <var>bufsize</var>. Bytes that were not written 
+remain in the stream's output buffer. Note that this is the same 
+interface as the POSIX write() API. See <a class="sec" href="foreign-streams.html#sec:12.9.4">section 
+12.9.4</a> for raising errors.</dd>
+<dt class="pubdef"><a id="(*Sseek_function)()"><var>long</var> <strong>(*Sseek_function)</strong>(<var>void 
+*handle, long pos, int whence</var>)</a></dt>
+<dt class="pubdef"><a id="(*Sseek64_function)()"><var>int64_t</var> <strong>(*Sseek64_function)</strong>(<var>void 
+*handle, int64_t pos, int whence</var>)</a></dt>
+<dd class="defbody">
+Reposition the file pointer. These functions may be <code>NULL</code> if 
+repositioning is not possible on this type or they may return -1 and set
+<code>errno</code> to <code>EPIPE</code> if the pointer cannot be 
+repositioned on this instance. The function returns the new file 
+position. See <a class="func" href="foreign-streams.html#Sseek()">Sseek()</a> 
+for details on how repositioning is implemented. See
+<a class="sec" href="foreign-streams.html#sec:12.9.4">section 12.9.4</a> 
+for raising errors.</dd>
+<dt class="pubdef"><a id="(*Sclose_function)()"><var>int</var> <strong>(*Sclose_function)</strong>(<var>void 
+*handle</var>)</a></dt>
+<dd class="defbody">
+Close the stream. This is used by <a class="func" href="foreign-streams.html#Sclose()">Sclose()</a>. 
+Note that buffered output is first written using the <b>Swrite_function()</b>. 
+See <a class="sec" href="foreign-streams.html#sec:12.9.4">section 12.9.4</a> 
+for raising errors.</dd>
+<dt class="pubdef"><a id="(*Scontrol_function)()"><var>int</var> <strong>(*Scontrol_function)</strong>(<var>void 
+*handle, int action, void *arg</var>)</a></dt>
+<dd class="defbody">
+Obtain information about the stream or modify the stream. The function 
+should return 0 on success and -1 on failure. If some action is not 
+implemented the function should return -1;
+
+<dl class="latex">
+<dt><b><code>SIO_GETPENDING</code>, <code>size_t*</code></b></dt>
+<dd class="defbody">
+Return the number of bytes that may be written without blocking. Used by <a class="func" href="foreign-streams.html#Spending()">Spending()</a>.</dd>
+<dt><b><code>SIO_LASTERROR</code>, <code>char*</code></b></dt>
+<dd class="defbody">
+Called after an error is raised on a stream. May return a C string that 
+sets error details using <a class="func" href="foreign-streams.html#Sseterr()">Sseterr()</a>.</dd>
+<dt><b><code>SIO_SETENCODING</code>, <code>IOENC*</code></b></dt>
+<dd class="defbody">
+Called by <a class="func" href="foreign-streams.html#Ssetenc()">Ssetenc()</a> 
+to change the encoding of the stream. If the call does not return 0 the 
+encoding is not changed.</dd>
+<dt><b><code>SIO_FLUSHOUTPUT</code>, <code>NULL</code></b></dt>
+<dd class="defbody">
+Called by <a class="func" href="foreign-streams.html#Sflush()">Sflush()</a> 
+after flushing the stream's output buffer. Note that this is only called 
+on an <em>explicit</em> flush using <a class="func" href="foreign-streams.html#Sflush()">Sflush()</a> 
+or <a id="idx:flushoutput1:2578"></a><a class="pred" href="chario.html#flush_output/1">flush_output/1</a>. 
+An implicit flush because the output buffer is full does <em>not</em> 
+call this hook.</dd>
+<dt><b><code>SIO_GETSIZE</code>, <code>int64_t*</code></b></dt>
+<dd class="defbody">
+Get the size of the underlying object in bytes. Used by <a class="func" href="foreign-streams.html#Ssize()">Ssize()</a>.</dd>
+<dt><b><code>SIO_GETFILENO</code>, <code>int*</code></b></dt>
+<dd class="defbody">
+If the stream is associated with an OS file handle, return this handle. 
+Used by <a class="func" href="foreign-streams.html#Sfileno()">Sfileno()</a>.</dd>
+<dt><b><code>SIO_GETWINSOCK</code>, <code>SOCKET*</code></b></dt>
+<dd class="defbody">
+Windows only. If the stream is associated to a Windows socket return 
+this handle. Used by <a class="func" href="foreign-streams.html#Swinsock()">Swinsock()</a>.
+
+<p></dd>
+</dl>
+
+</dd>
+</dl>
+
+<p>Given an <code>IOFUNCTIONS</code> block we can create a new stream 
+from a
+<var>handle</var> using <a class="func" href="foreign-streams.html#Snew()">Snew()</a>:
+
+<dl class="latex">
+<dt class="pubdef"><a id="Snew()"><var>IOSTREAM*</var> <strong>Snew</strong>(<var>void 
+*handle, int flags, IOFUNCTIONS *functions</var>)</a></dt>
+<dd class="defbody">
+Create an <code>IOSTREAM*</code> from a handle, flags and a block of 
+callback functions. The <var>flags</var> argument is a bitwise or of 
+SIO_* flags. Flags that control the creation are:
+
+<dl class="latex">
+<dt><b><code>SIO_INPUT</code></b></dt>
+<dt><b><code>SIO_OUTPUT</code></b></dt>
+<dd class="defbody">
+One of these flags mut be present to indicate whether this is an input 
+or output stream.
+</dd>
+<dt><b><code>SIO_NBUF</code></b></dt>
+<dt><b><code>SIO_LBUF</code></b></dt>
+<dt><b><code>SIO_FBUF</code></b></dt>
+<dd class="defbody">
+One of these flags must be present to select the buffering as one of 
+unbuffered (<code>SIO_NBUF</code>), line buffered (<code>SIO_LBUF</code>) 
+or fully buffered (<code>SIO_FBUF</code>)
+</dd>
+<dt><b><code>SIO_TEXT</code></b></dt>
+<dd class="defbody">
+If given, this is a text stream and the encoding is set to the default 
+encoding (see the Prolog flag <a class="flag" href="flags.html#flag:encoding">encoding</a>). 
+Otherwise this is a binary stream and the encoding is set to
+<code>ENC_OCTET</code>.
+</dd>
+<dt><b><code>SIO_RECORDPOS</code></b></dt>
+<dd class="defbody">
+If given, enable position maintenance on the stream. This is used by <a class="func" href="foreign-streams.html#Stell()">Stell()</a>, <a class="func" href="foreign-streams.html#Sseek()">Sseek()</a>, <a id="idx:streamproperty2:2579"></a><a class="pred" href="IO.html#stream_property/2">stream_property/2</a> 
+using the
+<code>position</code> property and related predicates.
+</dd>
+<dt><b><code>SIO_NOMUTEX</code></b></dt>
+<dd class="defbody">
+Used internally to create a stream that cannot be owned or locked.
+</dd>
+</dl>
+
+<p>If the stream is associated with an OS file handle the system 
+initializes the <code>SIO_ISATTY</code> flag (on POSIX systems) and if 
+possible tells the OS not to inherit this stream to child processes.
+
+<p>The symbol <code>Sfilefunctions</code> is a <code>IOFUNCTIONS</code> 
+struct that contains the callbacks for accessing a regular file. After 
+opening an file using the POSIX open() API we can create a stream to 
+this file using <a class="func" href="foreign-streams.html#Snew()">Snew()</a>:
+
+<pre class="code">
+  int fno = open(path, O_RDONLY);
+  IOSTREAM *s;
+
+  if ( fno &gt;= 0 )
+    s = Snew((void*)fno,
+             SIO_INPUT|SIO_FBUF|SIO_RECORDPOS|SIO_TEXT,
+             &amp;Sfilefunctions);
+  ...
+</pre>
+
+<p><a class="func" href="foreign-streams.html#Snew()">Snew()</a> can 
+only fail if there is not enough memory. In that case the return value 
+is <code>NULL</code> and <var>errno</var> is set to <code>ENOMEM</code>.</dd>
+<dt class="pubdef"><a id="Sopen_pipe()"><var>IOSTREAM*</var> <strong>Sopen_pipe</strong>(<var>const 
+char *command, const char *type</var>)</a></dt>
+<dd class="defbody">
+Start a process from <var>command</var> and connect the input or output 
+to the returned stream. This wraps the POSIX popen() API. The <var>type</var> 
+string starts with <code>r</code> or <code>w</code> and may be followed 
+by <code>b</code> to create a <em>binary stream</em>. The default is to 
+create a text stream using the platform conventions and locale.</dd>
+<dt class="pubdef"><a id="Sopenmem()"><var>IOSTREAM*</var> <strong>Sopenmem</strong>(<var>char 
+**buffer, size_t *sizep, const char *mode</var>)</a></dt>
+<dd class="defbody">
+Open a memory area as a stream. Output streams are automatically resized 
+using realloc() if *<var>size</var> = 0 or the stream is opened with 
+mode
+<code>"wa"</code>. If the buffer is allocated or enlarged, this is 
+achieved using malloc() or realloc(). In this case the returned buffer 
+should be freed by the caller when done. Example:
+
+<pre class="code">
+    { char buf[1024];             // don't allocate for small stuff
+      char *s = buf;
+      IOSTREAM *fd;
+      size_t size = sizeof(buf);
+
+      fd = Sopenmem(&amp;s, &amp;size, "w");
+      ...
+      Sclose(fd);
+      ...
+      if ( s != buf )             // appearently moved
+        Sfree(s);
+    }
+</pre>
+
+<p>The <var>mode</var> is <code>"r"</code> or <code>"w"</code>. The mode <var>"rF"</var> 
+calls
+<code><a class="func" href="foreignnotes.html#PL_free()">PL_free(*buffer)</a></code> 
+at when closed.
+
+<p><b>Note:</b> Its is <em>not</em> allowed to access streams created 
+with this call from multiple threads. This is ok for all usage inside 
+Prolog itself. This call is intented to use write and other output 
+predicates to create strings.</dd>
+<dt class="pubdef"><a id="Sfree()"><var>void</var> <strong>Sfree</strong>(<var>void 
+*ptr</var>)</a></dt>
+<dd class="defbody">
+This function must be used to free objects that are allocated by the 
+stream interface. Currently this only applies to strings allocated by <a class="func" href="foreign-streams.html#Sopenmem()">Sopenmem()</a>.
+</dd>
+</dl>
+
+<p>A stream can be made accessible from Prolog using <a class="func" href="foreign-streams.html#PL_unify_stream()">PL_unify_stream()</a>:
+
+<dl class="latex">
+<dt class="pubdef"><a id="PL_unify_stream()"><var>int</var> <strong>PL_unify_stream</strong>(<var>term_t 
+t, IOSTREAM *s</var>)</a></dt>
+<dd class="defbody">
+Unify <var>t</var> with a <em>blob</em> that points at <var>s</var>. 
+Note that a blob provides a unique and reliable reference to a stream. 
+Blobs are subject to <em>atom garbage collection</em>. If an open stream 
+is garbage collected the behaviour depends on the Prolog flag
+<a class="flag" href="flags.html#flag:agc_close_streams">agc_close_streams</a>. 
+See also <a class="func" href="foreign-streams.html#Sgcclose()">Sgcclose()</a>.
+</dd>
+</dl>
+
+<p><h3 id="sec:iostream-functions"><a id="sec:12.9.3"><span class="sec-nr">12.9.3</span> <span class="sec-title">Interacting 
+with foreign streams</span></a></h3>
+
+<a id="sec:iostream-functions"></a>
+
+<dl class="latex">
+<dt class="pubdef"><a id="Sset_timeout()"><var>int</var> <strong>Sset_timeout</strong>(<var>IOSTREAM 
+*s, int milliseconds</var>)</a></dt>
+<dd class="defbody">
+Set the timeout on an input stream to <var>milliseconds</var>. If this 
+value is non-negative the the poll() or select() API is used to wait 
+until input is available. If no input is available within the specified 
+time an error is raised on the stream.</dd>
+<dt class="pubdef"><a id="Sunit_size()"><var>int</var> <strong>Sunit_size</strong>(<var></var>)</a></dt>
+<dd class="defbody">
+Returns the size of a code unit in bytes depending on the stream's 
+encoding. This returns 2 for the encodings <code>ENC_UNICODE_BE</code> 
+and <code>ENC_UNICODE_LE</code>, <code>sizeof(wchar_t)</code> for <code>ENC_WCHAR</code> 
+and 1 for all other encodings (including multibyte encodings such as
+<code>ENC_UTF8</code>.</dd>
+<dt class="pubdef"><a id="Sputc()"><var>int</var> <strong>Sputc</strong>(<var>int 
+c, IOSTREAM *s</var>)</a></dt>
+<dd class="defbody">
+Emit a byte to <var>s</var>. Flushes the buffer on <code>\n</code> when 
+in
+<code>SIO_LBUF</code> buffering mode and updates the stream position 
+information if enabled (<code>SIO_RECORDPOS</code>). Returns 0 on 
+success, -1 on error.</dd>
+<dt class="pubdef"><a id="Sgetc()"><var>int</var> <strong>Sgetc</strong>(<var>IOSTREAM 
+*s</var>)</a></dt>
+<dd class="defbody">
+Read a byte from <var>s</var>. Fills the input buffer if buffering is 
+enabled and the buffer is empty. Updates the stream position information 
+if enabled (<code>SIO_RECORDPOS</code>). Returns -1 on end of file or 
+error. Use <a class="func" href="foreign-streams.html#Sferror()">Sferror()</a> 
+or <a class="func" href="foreign-streams.html#Sfeof()">Sfeof()</a> to 
+distinguish end of file from an error. This is a C macro.</dd>
+<dt class="pubdef"><a id="Sfgetc()"><var>int</var> <strong>Sfgetc</strong>(<var>IOSTREAM 
+*s</var>)</a></dt>
+<dd class="defbody">
+Function equivalent to <a class="func" href="foreign-streams.html#Sgetc()">Sgetc()</a>.</dd>
+<dt class="pubdef"><a id="Sungetc()"><var>int</var> <strong>Sungetc</strong>(<var>int 
+c, IOSTREAM *s</var>)</a></dt>
+<dd class="defbody">
+Put a byte back into the input buffer. Returns -1 if this is not 
+possible. Deprecated. New code should use <a class="func" href="foreign-streams.html#Speekcode()">Speekcode()</a> 
+because that reliably maintains the position information on the stream.</dd>
+<dt class="pubdef"><a id="Sputcode()"><var>int</var> <strong>Sputcode</strong>(<var>int 
+c, IOSTREAM *s</var>)</a></dt>
+<dd class="defbody">
+Emit a Unicode code point to <var>s</var>. This function also performs 
+newline encoding (see <a class="sec" href="foreign-streams.html#sec:12.9.6">section 
+12.9.6</a>). If the encoding of <var>s</var> cannot represent <var>c</var>, 
+the behaviour depends on the the following flags. Only one of these 
+flags may be enabled. If none of these flags is enabled an error is 
+raised and the function returns -1.
+
+<dl class="latex">
+<dt><b><code>SIO_REPXML</code></b></dt>
+<dd class="defbody">
+Emit as XML character entity, e.g. <code>&amp;#4242;</code>
+</dd>
+<dt><b><code>SIO_REPPL</code></b></dt>
+<dd class="defbody">
+Emit as ISO escape, e.g., <code>\x4242\</code>
+</dd>
+<dt><b><code>SIO_REPPLU</code></b></dt>
+<dd class="defbody">
+Emit as Unicode escape, e.g., <code>\u4242</code> or
+<code>\U42424242</code>
+</dd>
+</dl>
+
+<p>Updates the stream position information if enabled (<code>SIO_RECORDPOS</code>)</dd>
+<dt class="pubdef"><a id="Sgetcode()"><var>int</var> <strong>Sgetcode</strong>(<var>IOSTREAM 
+*s</var>)</a></dt>
+<dd class="defbody">
+Read a Unicode code point from <var>s</var>. If it detects an invalid 
+multibyte character a warning is emitted and the code point
+<code>0xfffd</code> is returned. Other errors and end-of-file return -1; 
+Use
+<a class="func" href="foreign-streams.html#Sferror()">Sferror()</a> or <a class="func" href="foreign-streams.html#Sfeof()">Sfeof()</a> 
+to distinguish end of file from an error.</dd>
+<dt class="pubdef"><a id="Speekcode()"><var>int</var> <strong>Speekcode</strong>(<var>IOSTREAM 
+*s</var>)</a></dt>
+<dd class="defbody">
+As <a class="func" href="foreign-streams.html#Sgetcode()">Sgetcode()</a>, 
+but leaves the character in the input buffer and does not update the 
+stream position. Returns -1 if the stream is not buffered (<code>SIO_NBUF</code>).</dd>
+<dt class="pubdef"><a id="Sputw()"><var>int</var> <strong>Sputw</strong>(<var>int 
+w, IOSTREAM *s</var>)</a></dt>
+<dt class="pubdef"><a id="Sgetw()"><var>int</var> <strong>Sgetw</strong>(<var>IOSTREAM 
+*s</var>)</a></dt>
+<dd class="defbody">
+Reads/writes an integer in native byte order. Deprecated.</dd>
+<dt class="pubdef"><a id="Sfread()"><var>int</var> <strong>Sfread</strong>(<var>void 
+*data, size_t size, size_t elems, IOSTREAM *s</var>)</a></dt>
+<dt class="pubdef"><a id="Sfwrite()"><var>int</var> <strong>Sfwrite</strong>(<var>const 
+void *data, size_t size, size_t elems, IOSTREAM *s</var>)</a></dt>
+<dd class="defbody">
+Emulations of the POSIX fread() and fwrite() calls for Prolog streams. 
+These functions read or write <var>elems</var> objects of size <var>size</var> 
+and return the number of objects successfully read or written. Data 
+exchange is binary (even if the stream is in text mode) and unlike 
+read() and write(), these functions keep reading or writing until 
+end-of-file (for
+<a class="func" href="foreign-streams.html#Sfread()">Sfread()</a>) or an 
+error.</dd>
+<dt class="pubdef"><a id="Sfeof()"><var>int</var> <strong>Sfeof</strong>(<var>IOSTREAM 
+*s</var>)</a></dt>
+<dd class="defbody">
+Returns non-zero if the stream is at the end. It performs the following 
+checks: (1) test the <code>SIO_FEOF</code> flag, (2) test whether the 
+buffer is non-empty, (3) fill the buffer and return non-zero if the
+<b>Sread_function()</b> returned 0 (zero).</dd>
+<dt class="pubdef"><a id="Sfpasteof()"><var>int</var> <strong>Sfpasteof</strong>(<var>IOSTREAM 
+*s</var>)</a></dt>
+<dd class="defbody">
+Returns non-zero when a read operation was performed after signalling 
+end-of-file. On other words, reaching end-of-file first triggers
+<a class="func" href="foreign-streams.html#Sfeof()">Sfeof()</a> and 
+after another read triggers <a class="func" href="foreign-streams.html#Sfpasteof()">Sfpasteof()</a>.</dd>
+<dt class="pubdef"><a id="Ssetlocale()"><var>int</var> <strong>Ssetlocale</strong>(<var>IOSTREAM 
+*s, struct PL_locale *new_loc, struct PL_locale **old_loc</var>)</a></dt>
+<dd class="defbody">
+Change the locale associated with a stream. The current system does not 
+provide a public C API for dealing with Prolog locale objects. See <a class="sec" href="locale.html#sec:4.23">section 
+4.23</a>.</dd>
+<dt class="pubdef"><a id="Sflush()"><var>int</var> <strong>Sflush</strong>(<var>IOSTREAM 
+*s</var>)</a></dt>
+<dd class="defbody">
+Flush buffered output, returning 0 on success and -1 after a (write) 
+error occurred. Calls <b>Scontrol_function()</b> using the action
+<code>SIO_FLUSHOUTPUT</code> after the buffer was successfully written.</dd>
+<dt class="pubdef"><a id="Ssize()"><var>int64_t</var> <strong>Ssize</strong>(<var>IOSTREAM 
+*s</var>)</a></dt>
+<dd class="defbody">
+Returns the size in bytes of the object associated to the stream or -1 
+if this is not known.</dd>
+<dt class="pubdef"><a id="Sseek()"><var>int</var> <strong>Sseek</strong>(<var>IOSTREAM 
+*s, long pos, int whence</var>)</a></dt>
+<dt class="pubdef"><a id="Sseek64()"><var>int</var> <strong>Sseek64</strong>(<var>IOSTREAM 
+*s, int64_t pos, int whence</var>)</a></dt>
+<dd class="defbody">
+Reposition the file pointer in the object associated to <var>s</var>, 
+returning 0 on success and -1 otherwise. If the stream is buffered and 
+position information is maintained these functions readjust the buffer 
+information if possible. Otherwise they call <b>Sseek64_function()</b> 
+or <b>Sseek_function()</b> as a fallback iff <var>pos</var> can be 
+represented as a C <code>long</code>. <var>Whence</var> is one of <code>SIO_SEEK_SET</code>,
+<code>SIO_SEEK_CUR</code> or <code>SIO_SEEK_END</code>, seeking relative 
+to the start, current position or end.</dd>
+<dt class="pubdef"><a id="Stell()"><var>long</var> <strong>Stell</strong>(<var>IOSTREAM 
+*s</var>)</a></dt>
+<dt class="pubdef"><a id="Stell64()"><var>int64_t</var> <strong>Stell64</strong>(<var>IOSTREAM 
+*s</var>)</a></dt>
+<dd class="defbody">
+Return the current position in the stream. This is obtained from the 
+recorded position or based on information from the seek handlers, 
+adjusted with the buffer information.</dd>
+<dt class="pubdef"><a id="Sclose()"><var>int</var> <strong>Sclose</strong>(<var>IOSTREAM 
+*s</var>)</a></dt>
+<dd class="defbody">
+Close the stream. This first locks the stream (see <a class="func" href="foreign-streams.html#PL_acquire_stream()">PL_acquire_stream()</a>). 
+When successful it flushes pending output and calls the
+<b>Sclose_function()</b> hook. Finally, the stream is unlocked and all 
+memory associated to the stream is released. On success, the function 
+returns 0. On failure a Prolog exception is raised and the return value 
+is -1. Regardless of the return value, <var>s</var> becomes invalid 
+after completion of <a class="func" href="foreign-streams.html#Sclose()">Sclose()</a>. 
+See also <a class="func" href="foreign-streams.html#Sgcclose()">Sgcclose()</a>.</dd>
+<dt class="pubdef"><a id="Sgcclose()"><var>int</var> <strong>Sgcclose</strong>(<var>IOSTREAM 
+*s, int flags</var>)</a></dt>
+<dd class="defbody">
+As <a class="func" href="foreign-streams.html#Sclose()">Sclose()</a>, 
+but intended to be used from the atom garbage collector if a stream is 
+closed because it is garbage. The SWI-Prolog atom garbage collector 
+normally runs in a separate thread and thus may be unable to obtain a 
+lock on <var>s</var> if some thread lost access to the stream while it 
+is locked. For this situation <var>flags</var> may be
+<code>SIO_CLOSE_TRYLOCK</code> which causes <a class="func" href="foreign-streams.html#Sgcclose()">Sgcclose()</a> 
+to return -1 with
+<var>errno</var> set to <code>EDEADLK</code> if the stream is locked. 
+Alternatively, using <code>SIO_CLOSE_FORCE</code> the stream is closed 
+and released without gaining a lock. This should be safe because the 
+stream is garbage and thus no thread can use the lock.
+
+<p>In addition, <a class="func" href="foreign-streams.html#Sgcclose()">Sgcclose()</a> 
+never raises a Prolog exception because Prolog interaction is not 
+allowed from the blob release hook and there is no meaningful way to 
+raise a Prolog exception from this context.</dd>
+<dt class="pubdef"><a id="Sfgets()"><var>char*</var> <strong>Sfgets</strong>(<var>char 
+*buf, int n, IOSTREAM *s</var>)</a></dt>
+<dd class="defbody">
+Read a line of input as a sequence of <em>bytes</em>. The <var>buf</var> 
+is <var>n</var> bytes long. On success, <var>buf</var> is returned and 
+contains a 0-terminated C string that ends with a <code>\n</code> 
+character. On end-of-file or an error, <code>NULL</code> is returned. If 
+the input line is longer that <var>n</var> bytes <var>buf</var> is <b>not</b> 
+0-terminated.</dd>
+<dt class="pubdef"><a id="Sgets()"><var>int</var> <strong>Sgets</strong>(<var>char 
+*buf</var>)</a></dt>
+<dd class="defbody">
+Shorthand for <code><a class="func" href="foreign-streams.html#Sfgets()">Sfgets(buf, 
+Slinesize, Sinput)</a></code>. Deletes the terminating <code>\n</code> 
+character. <var>Slinesize</var> is a global variable that defines the 
+length of the input buffer. Deprecated.</dd>
+<dt class="pubdef"><a id="Sread_pending()"><var>int</var> <strong>Sread_pending</strong>(<var>IOSTREAM 
+*s, char *buf, size_t limit, int flags</var>)</a></dt>
+<dd class="defbody">
+Return the data buffered on an input stream. If <var>flags</var> 
+includes
+<code>SIO_RP_BLOCK</code>, fill the buffer (possibly blocking) if the 
+buffer is empty. Update the stream position information unless <var>flags</var> 
+include <code>SIO_RP_NOPOS</code>. This function effectively provides 
+functionality similar to POSIX read() on a stream. This function is used 
+by <a id="idx:readpendingcodes3:2580"></a><a class="pred" href="chario.html#read_pending_codes/3">read_pending_codes/3</a>.</dd>
+<dt class="pubdef"><a id="Spending()"><var>size_t</var> <strong>Spending</strong>(<var>IOSTREAM 
+*s</var>)</a></dt>
+<dd class="defbody">
+Return the number of bytes that can be read from <var>s</var> without 
+blocking. If there is buffered input, this is the number of bytes 
+buffered. Otherwise it is the result of the <b>Scontrol_function()</b> 
+using the action <code>SIO_GETPENDING</code>.</dd>
+<dt class="pubdef"><a id="Sfputs()"><var>int</var> <strong>Sfputs</strong>(<var>const 
+char *q, IOSTREAM *s</var>)</a></dt>
+<dd class="defbody">
+Emit a 0-terminated C string. The input string <var>q</var> is handled 
+as a sequence of unsigned characters (code points <var>1 ... 255</var>.</dd>
+<dt class="pubdef"><a id="Sputs()"><var>int</var> <strong>Sputs</strong>(<var>const 
+char *q</var>)</a></dt>
+<dd class="defbody">
+Equivalent to <code><a class="func" href="foreign-streams.html#Sfputs()">Sfputs(q, 
+Soutput)</a></code>.</dd>
+<dt class="pubdef"><a id="Sfprintf()"><var>int</var> <strong>Sfprintf</strong>(<var>IOSTREAM 
+*s, const char *fm, ...</var>)</a></dt>
+<dd class="defbody">
+Similar to POSIX fprintf(). This function largely accepts the same
+<code>%</code> escape sequences. The <code>%</code> character is 
+followed by numeric arguments and modifier characters. The generic 
+format of this is described by the regular expression <code>[+-0 #]*(\d*|\*)(.(\d*|\*))?</code>. 
+Here, <code><code>+</code></code> implies right alignment, <code><code>-</code></code> 
+left alignment, <code>0</code> 0-padding and, a space white-space 
+padding and <code><code>#</code></code> <em>modified</em> output. The 
+two optional numerical arguments are separated by a full stop and may be <code><code>*</code></code> 
+to get them from the argument list. The first numerical argument 
+specifies the field width and the second the precision for floating 
+point numbers.
+
+<p>This sequence is followed by optional type information. For integers 
+this is one of <code>l</code> (<code>long</code>), <code>ll</code> (<code>long 
+long</code>) or
+<code>z</code> (<code>size_t</code>). For strings this is one of <code>L</code> 
+(ISO Latin 1), <code>U</code> (UTF-8) or <code>W</code> (<code>wchar_t*</code>).
+
+<p>Finally we come to the format specifier. This is one of
+
+<dl class="latex">
+<li><code><code>%</code></code><br>
+Emit the <code><code>%</code></code> character itself.
+<li><code>c</code><br>
+Emit a Unicode code point.
+<li><code>p</code><br>
+Emit a pointer.
+<li><code>d</code><br>
+<li><code>i</code><br>
+Emit a a signed integer as decimal. The <code>l</code> (<code>long</code>), <code>ll</code> 
+(<code>long long</code>) or <code>z</code> (<code>size_t</code>) denote 
+the size.
+<li><code>o</code><br>
+<li><code>u</code><br>
+<li><code>x</code><br>
+<li><code>X</code><br>
+Emit a a unsigned integer as octal, decimal or hexadecimal.
+<li><code>f</code><br>
+<li><code>e</code><br>
+<li><code>E</code><br>
+<li><code>g</code><br>
+<li><code>G</code><br>
+Emit a <code>double</code>.
+<li><code>s</code><br>
+Emit a 0-terminated string.
+</dl>
+
+<p>This function returns the number of characters written. Note that due 
+to multibyte encodings the number of bytes written can be more.</dd>
+<dt class="pubdef"><a id="Sprintf()"><var>int</var> <strong>Sprintf</strong>(<var>const 
+char *fm, ...</var>)</a></dt>
+<dd class="defbody">
+Similar to <a class="func" href="foreign-streams.html#Sfprintf()">Sfprintf()</a>, 
+printing to <var>Soutput</var></dd>
+<dt class="pubdef"><a id="Svprintf()"><var>int</var> <strong>Svprintf</strong>(<var>IOSTREAM 
+*s, const char *fm, va_list args</var>)</a></dt>
+<dd class="defbody">
+Variadic argument list version of <a class="func" href="foreign-streams.html#Sfprintf()">Sfprintf()</a>.</dd>
+<dt class="pubdef"><a id="Ssprintf()"><var>int</var> <strong>Ssprintf</strong>(<var>char 
+*buf, const char *fm, ...</var>)</a></dt>
+<dd class="defbody">
+Print to a C string. Deprecated. Use <a class="func" href="foreign-streams.html#Ssnprintf()">Ssnprintf()</a> 
+instead.</dd>
+<dt class="pubdef"><a id="Ssnprintf()"><var>int</var> <strong>Ssnprintf</strong>(<var>char 
+*buf, size_t size, const char *fm, ...</var>)</a></dt>
+<dd class="defbody">
+Print to a C string, emitting a maximum of <var>size</var> bytes. 
+Returns the number of bytes written. Currently <var>buf</var> uses
+<code>ENC_ISO_LATIN_1</code> encoding. Future versions will probably 
+change to <code>ENC_UTF8</code>.</dd>
+<dt class="pubdef"><a id="Svsprintf()"><var>int</var> <strong>Svsprintf</strong>(<var>char 
+*buf, const char *fm, va_list args</var>)</a></dt>
+<dd class="defbody">
+Variadic argument list version of <a class="func" href="foreign-streams.html#Ssprintf()">Ssprintf()</a>. 
+Deprecated. Use
+<a class="func" href="foreign-streams.html#Svsnprintf()">Svsnprintf()</a> 
+instead.</dd>
+<dt class="pubdef"><a id="Svsnprintf()"><var>int</var> <strong>Svsnprintf</strong>(<var>char 
+*buf, size_t size, const char *fm, va_list args</var>)</a></dt>
+<dd class="defbody">
+Variadic argument list version of <a class="func" href="foreign-streams.html#Ssnprintf()">Ssnprintf()</a>.</dd>
+<dt class="pubdef"><a id="Sdprintf()"><var>int</var> <strong>Sdprintf</strong>(<var>const 
+char *fm, ...</var>)</a></dt>
+<dd class="defbody">
+Print to <var>Serror</var>. This function should be used for printing 
+debug output from foreign code.</dd>
+<dt class="pubdef"><a id="Svdprintf()"><var>int</var> <strong>Svdprintf</strong>(<var>const 
+char *fm, va_list args</var>)</a></dt>
+<dd class="defbody">
+Variadic argument list version of <a class="func" href="foreign-streams.html#Sdprintf()">Sdprintf()</a>.</dd>
+<dt class="pubdef"><a id="Slock()"><var>int</var> <strong>Slock</strong>(<var>IOSTREAM 
+*s</var>)</a></dt>
+<dt class="pubdef"><a id="StryLock()"><var>int</var> <strong>StryLock</strong>(<var>IOSTREAM 
+*s</var>)</a></dt>
+<dt class="pubdef"><a id="Sunlock()"><var>int</var> <strong>Sunlock</strong>(<var>IOSTREAM 
+*s</var>)</a></dt>
+<dd class="defbody">
+Low level versions that perform only the (un)locking part of
+<a class="func" href="foreign-streams.html#PL_acquire_stream()">PL_acquire_stream()</a> 
+and <a class="func" href="foreign-streams.html#PL_release_stream()">PL_release_stream()</a>.</dd>
+<dt class="pubdef"><a id="Sfileno()"><var>int</var> <strong>Sfileno</strong>(<var>IOSTREAM 
+*s</var>)</a></dt>
+<dd class="defbody">
+If the stream is associated to a POSIX file handle, return this handle. 
+Returns -1 otherwise.</dd>
+<dt class="pubdef"><a id="Swinsock()"><var>SOCKET</var> <strong>Swinsock</strong>(<var>IOSTREAM 
+*s</var>)</a></dt>
+<dd class="defbody">
+Windows only. If the stream is associated to a Windows socket handle, 
+returns this handle. Otherwise return <code>INVALID_SOCKET</code></dd>
+<dt class="pubdef"><a id="Sclosehook()"><var>int</var> <strong>Sclosehook</strong>(<var>void 
+(*hook)(IOSTREAM *s)</var>)</a></dt>
+<dd class="defbody">
+Register a hook function to be called by <a class="func" href="foreign-streams.html#Sclose()">Sclose()</a> 
+just before the stream is deallocated. This is used internally to update 
+the Prolog administration of open streams on <a class="func" href="foreign-streams.html#Sclose()">Sclose()</a>.</dd>
+<dt class="pubdef"><a id="Sset_filter()"><var>int</var> <strong>Sset_filter</strong>(<var>IOSTREAM 
+*parent, IOSTREAM *filter</var>)</a></dt>
+<dd class="defbody">
+Register <var>filter</var> as a stream that reads from or writes to the 
+stream <var>parent</var>.</dd>
+<dt class="pubdef"><a id="Ssetbuffer()"><var>void</var> <strong>Ssetbuffer</strong>(<var>IOSTREAM 
+*s, char *buf, size_t size</var>)</a></dt>
+<dd class="defbody">
+Set the input or output buffer for <var>s</var> to <var>size</var>. The <var>buf</var> 
+argument is either <code>NULL</code>, asking the system to allocate a 
+buffer or points at a buffer of (at least) the indicated size long. The 
+default buffer size is defined by the C macro <code>SIO_BUFSIZE</code>
+</dd>
+</dl>
+
+<p><h3 id="sec:iostream-errors"><a id="sec:12.9.4"><span class="sec-nr">12.9.4</span> <span class="sec-title">Foreign 
+stream error handling</span></a></h3>
+
+<a id="sec:iostream-errors"></a>
+
+<dl class="latex">
+<dt class="pubdef"><a id="Sferror()"><var>int</var> <strong>Sferror</strong>(<var>IOSTREAM 
+*s</var>)</a></dt>
+<dd class="defbody">
+Returns <code>TRUE</code> if the stream is in an error condition,
+<code>FALSE</code> if the stream is valid and in normal condition and -1 
+if the stream is invalid.</dd>
+<dt class="pubdef"><a id="Sclearerr()"><var>void</var> <strong>Sclearerr</strong>(<var>IOSTREAM 
+*s</var>)</a></dt>
+<dd class="defbody">
+Clear the error state of a stream. This includes the end-of-file state, 
+pending warnings and errors and timeout.</dd>
+<dt class="pubdef"><a id="Sseterr()"><var>int</var> <strong>Sseterr</strong>(<var>IOSTREAM 
+*s, int which, const char *message</var>)</a></dt>
+<dd class="defbody">
+Set an error or warning state on the stream. The <var>which</var> 
+argument is one of <code>SIO_WARN</code> or <code>SIO_FERR</code>. This 
+causes <a class="func" href="foreign-streams.html#PL_release_stream()">PL_release_stream()</a> 
+to print a message (<code>SIO_WARN</code>) or raise an exception (<code>SIO_FERR</code>).</dd>
+<dt class="pubdef"><a id="Sset_exception()"><var>int</var> <strong>Sset_exception</strong>(<var>IOSTREAM 
+*s, term_t ex</var>)</a></dt>
+<dd class="defbody">
+Associate a Prolog exception term with the stream or clear the 
+associated exception if <var>ex</var> is 0 and set/clear the
+<code>SIO_FERR</code> condition on the stream. If an exception is 
+assocated <a class="func" href="foreign-streams.html#PL_release_stream()">PL_release_stream()</a> 
+raises this exception.
+</dd>
+</dl>
+
+<p><h3 id="sec:iostream-encoding"><a id="sec:12.9.5"><span class="sec-nr">12.9.5</span> <span class="sec-title">Foreign 
+stream encoding</span></a></h3>
+
+<a id="sec:iostream-encoding"></a>
+
+<p><code>IOSTREAM</code> has a field <code>encoding</code> that is 
+managed at initialization from <code>SIO_TEXT</code>. The available 
+encodings are defined as a C <em>enum</em> as below.
+
+<pre class="code">
+typedef enum
+{ ENC_UNKNOWN = 0,                      /* invalid/unknown */
+  ENC_OCTET,                            /* raw 8 bit input */
+  ENC_ASCII,                            /* US-ASCII (0..127) */
+  ENC_ISO_LATIN_1,                      /* ISO Latin-1 (0..256) */
+  ENC_ANSI,                             /* default (multibyte) codepage */
+  ENC_UTF8,
+  ENC_UNICODE_BE,                       /* big endian unicode file */
+  ENC_UNICODE_LE,                       /* little endian unicode file */
+  ENC_WCHAR                             /* wchar_t */
+} IOENC;
+</pre>
+
+<p><em>Binary</em> streams always have the encoding <code>ENC_OCTET</code>. 
+The default encoding of a text stream depends on the Prolog flag
+<a class="flag" href="flags.html#flag:encoding">encoding</a>. The 
+encoding is used by all functions that perform text I/O on a stream. The 
+encoding can be changed at any moment using <a class="func" href="foreign-streams.html#Ssetenc()">Ssetenc()</a> 
+which is available from Prolog using the <a id="idx:setstream2:2581"></a><a class="pred" href="IO.html#set_stream/2">set_stream/2</a>
+<code>encoding(Encoding)</code> property. Functions that explicitly 
+manage the encoding are:
+
+<dl class="latex">
+<dt class="pubdef"><a id="Ssetenc()"><var>int</var> <strong>Ssetenc</strong>(<var>IOSTREAM 
+*s, IOENC new_enc, IOENC *old_enc</var>)</a></dt>
+<dd class="defbody">
+Set the encoding for <var>s</var> to <var>new_enc</var> and, if <var>old_enc</var> 
+is not <code>NULL</code>, return the old encoding. This function may 
+fail, returning -1 if the <b>Scontrol_function()</b> of the stream 
+returns -1 on the <code>SIO_SETENCODING</code> request. On succcess it 
+returns 0. If
+<var>new_enc</var> is <code>ENC_OCTET</code> the stream is switched to 
+binary mode. Otherwise text mode is enabled.</dd>
+<dt class="pubdef"><a id="ScheckBOM()"><var>int</var> <strong>ScheckBOM</strong>(<var>IOSTREAM 
+*s</var>)</a></dt>
+<dd class="defbody">
+This function may be called on a buffered input stream immediately after 
+opening the stream. If the stream starts with a known <em>Byte Order 
+Mark</em> (BOM) the encoding is set accordingly and the flag <code>SIO_BOM</code> 
+is set on the stream. Possibly resulting encodings are <code>ENC_UTF8</code>,
+<code>ENC_UNICODE_BE</code> and <code>ENC_UNICODE_LE</code>.</dd>
+<dt class="pubdef"><a id="SwriteBOM()"><var>int</var> <strong>SwriteBOM</strong>(<var>IOSTREAM 
+*s</var>)</a></dt>
+<dd class="defbody">
+This function writes a <em>Byte Order Mark</em> (BOM) to <var>s</var> 
+and should be called immediately after opening a stream for writing. If 
+the encoding is one of <code>ENC_UTF8</code>, <code>ENC_UNICODE_BE</code> 
+or
+<code>ENC_UNICODE_LE</code> it writes the code point <code>\ufeff</code> 
+(a zero-width white space) to the stream in the current encoding and 
+sets the <code>SIO_BOM</code> flag on the stream.</dd>
+<dt class="pubdef"><a id="Scanrepresent()"><var>int</var> <strong>Scanrepresent</strong>(<var>int 
+c, IOSTREAM *s</var>)</a></dt>
+<dd class="defbody">
+Returns 0 if the encoding of <var>s</var> can represent the code point
+<var>c</var> and -1 otherwise.
+</dd>
+</dl>
+
+<p><h3 id="sec:iostream-newline"><a id="sec:12.9.6"><span class="sec-nr">12.9.6</span> <span class="sec-title">Foreign 
+stream line endings</span></a></h3>
+
+<a id="sec:iostream-newline"></a>
+
+<p>Text streams have a field <code>newline</code> that controls the 
+handling of the newline convention. Note that inside Prolog all lines 
+end with a single newline (<code>\u000a</code>, <code>\n</code>) code 
+point. The values are described below. The default depends on the OS and 
+can be manipulated using the <code>newline(Mode)</code> property of <a id="idx:setstream2:2582"></a><a class="pred" href="IO.html#set_stream/2">set_stream/2</a>.
+
+<dl class="latex">
+<dt><b><code>SIO_NL_DETECT</code></b></dt>
+<dd class="defbody">
+This mode may be enabled on an input stream. It causes the stream to 
+read up to the first newline to set the newline mode accordingly.
+</dd>
+<dt><b><code>SIO_NL_POSIX</code></b></dt>
+<dd class="defbody">
+Do not do any translation on input or output.
+</dd>
+<dt><b><code>SIO_NL_DOS</code></b></dt>
+<dd class="defbody">
+Emit a newline (<code>\n</code>) as <code>\r\n</code>. Discard <code>\r</code> 
+from the input.<sup class="fn">218<span class="fn-text">The current 
+implementation does not check that the character is followed by <code><code>\</code></code>n.</span></sup>
+</dd>
+</dl>
+
+<p><h3 id="sec:iostream-position"><a id="sec:12.9.7"><span class="sec-nr">12.9.7</span> <span class="sec-title">Foreign 
+stream position information</span></a></h3>
+
+<a id="sec:iostream-position"></a>
+
+<p>The <code>IOSTREAM</code> has a field <code>position</code> that 
+points at a structure of type <code>IOPOS</code>. This structure is 
+defined as below.
+
+<pre class="code">
+typedef struct io_position
+{ int64_t               byteno;         /* byte-position in file */
+  int64_t               charno;         /* character position in file */
+  int                   lineno;         /* lineno in file */
+  int                   linepos;        /* position in line */
+  intptr_t              reserved[2];    /* future extensions */
+} IOPOS;
+</pre>
+
+<p>If a stream is created using the flag <code>SIO_RECORDPOS</code> the 
+IO functions maintain the position information. Note that, supporting 
+the ISO stream position data (see <a id="idx:streamproperty2:2583"></a><a class="pred" href="IO.html#stream_property/2">stream_property/2</a>), 
+both the byte and character position is maintained. These may differ if 
+the stream uses a multibyte encoding.
+
+<p>The <code>linepos</code> is updated as follows: <code>\n</code> and <code>\r</code> 
+reset the position to 0 (zero). The backspace (<code>\b</code>) 
+decrements the position if it is positive. The tab (<code>\t</code>) 
+tabs to the next multiple of 8. Any other character increments the line 
+position by one. Future versions may change that, notably the tab width 
+might no longer be hard coded.
+</body></html>

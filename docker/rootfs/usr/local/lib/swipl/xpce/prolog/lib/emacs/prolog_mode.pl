@@ -3,7 +3,7 @@
     Author:        Jan Wielemaker and Anjo Anjewierden
     E-mail:        J.Wielemaker@cs.vu.nl
     WWW:           http://www.swi.psy.uva.nl/projects/xpce/
-    Copyright (c)  1985-2021, University of Amsterdam
+    Copyright (c)  1985-2022, University of Amsterdam
                               VU University Amsterdam
                               CWI, Amsterdam
                               SWI-Prolog Solutions b.v.
@@ -52,6 +52,7 @@
 	     tdebug/0,
 	     auto_call/1,
 	     delete_breakpoint/1,
+             set_breakpoint_condition/2,
 	     manpce/1,
 	     prolog_ide/1,
 	     spypce/1,
@@ -83,7 +84,9 @@
 	     strip_module/3,
 	     xref_prolog_flag/4,
 	     get_dict/5,
-	     sub_string/5
+	     sub_string/5,
+             head_name_arity/3,
+             extend_goal/3
 	   ]).
 :- if(current_prolog_flag(bounded, false)).
 :- require([ rational/1,
@@ -117,6 +120,7 @@ resource(breakpoint,   image, image('16x16/stop.xpm')).
           (spy)                        = button(prolog),
           trace                        = button(prolog),
           break_at                     = key('\\C-cb') + button(prolog),
+          set_breakpoint_condition     = button(prolog),
           delete_breakpoint            = button(prolog),
           -                            = button(prolog),
           edit_breakpoints             = button(prolog),
@@ -1349,14 +1353,8 @@ do_spy(variable(Name, _Type, _Access), M, (Class-Name)) :-
 do_spy(variable(Name, _Type, _Access, _Doc), M, (Class-Name)) :-
     get(M, what_class, Class),
     spypce((Class-Name)).
-do_spy((Head :- _Body), M, Spec) :-
-    prolog_debug_spec(M, Head, Spec),
-    user:spy(Spec).
-do_spy((Head --> _Body), M, Spec) :-
-    dcg_debug_spec(M, Head, Spec),
-    user:spy(Spec).
-do_spy(Head, M, Spec) :-
-    prolog_debug_spec(M, Head, Spec),
+do_spy(Clause, M, Spec) :-
+    rule_debug_spec(Clause, M, Spec),
     user:spy(Spec).
 
 trace(M) :->
@@ -1386,25 +1384,30 @@ do_trace(variable(Name, _Type, _Access), M, (Class-Name)) :-
 do_trace(variable(Name, _Type, _Access, _Doc), M, (Class-Name)) :-
     get(M, what_class, Class),
     tracepce((Class-Name)).
-do_trace((Head :- _Body), M, Spec) :-
-    prolog_debug_spec(M, Head, Spec),
-    @(trace(Spec), user).
-do_trace(Head, M, Spec) :-
-    prolog_debug_spec(M, Head, Spec),
+do_trace(Clause, M, Spec) :-
+    rule_debug_spec(Clause, M, Spec),
     @(trace(Spec), user).
 
-prolog_debug_spec(M, Head, Spec) :-
-    catch(functor(Head, Name, Arity), _, fail),
+rule_debug_spec(((Head,_Guard) => _Body), M, Spec) =>
+    prolog_debug_spec(Head, M, Spec).
+rule_debug_spec((Head => _Body), M, Spec) =>
+    prolog_debug_spec(Head, M, Spec).
+rule_debug_spec((Head --> _Body), M, Spec) =>
+    extend_goal(Head, [_,_], DCGHead),
+    prolog_debug_spec(DCGHead, M, Spec).
+rule_debug_spec((Head :- _Body), M, Spec) =>
+    prolog_debug_spec(Head, M, Spec).
+rule_debug_spec(Head, M, Spec), callable(Head) =>
+    prolog_debug_spec(Head, M, Spec).
+rule_debug_spec(_, _, _) =>
+    fail.
+
+prolog_debug_spec(Head, M, Spec) :-
+    callable(Head),
+    head_name_arity(Head, Name, Arity),
     (   get(M, prolog_module, Module)
     ->  Spec = (Module:Name/Arity)
     ;   Spec = Name/Arity
-    ).
-
-dcg_debug_spec(M, Head, Spec) :-
-    catch(functor(Head, Name, Arity), _, fail),
-    (   get(M, prolog_module, Module)
-    ->  Spec = (Module:Name//Arity)
-    ;   Spec = Name//Arity
     ).
 
                  /*******************************
@@ -1819,14 +1822,26 @@ break_at(M) :->
     ;   send(M, report, error, 'Source file is not loaded')
     ).
 
+set_breakpoint_condition(M, Goal:goal=name) :->
+    "Set a condition on the selected breakpoint"::
+    get(M, selected_breakpoint, Id),
+    set_breakpoint_condition(Id, Goal),
+    send(M, report, inform,
+         'Set condition for breakpoint %d to %s',
+         Id, Goal).
 
 delete_breakpoint(M) :->
     "Delete selected breakpoint"::
+    get(M, selected_breakpoint, Id),
+    delete_breakpoint(Id).
+
+selected_breakpoint(M, Id:int) :<-
+    "Get the Id of the selected breakpoint"::
     (   get(M, selected_fragment, F),
-        send(F, instance_of, break_fragment),
-        get(F, breakpoint_id, Id)
-    ->  delete_breakpoint(Id)
-    ;   send(M, report, warning, 'No selected breakpoint')
+        send(F, instance_of, break_fragment)
+    ->  get(F, breakpoint_id, Id)
+    ;   send(M, report, warning, 'No selected breakpoint'),
+        fail
     ).
 
 setup_margin(M) :->
@@ -3029,6 +3044,18 @@ elements_to_string(List, String) :-
 element_to_string(Fmt-Args, String) :-
     !,
     format(string(String), Fmt, Args).
+element_to_string(ansi(_Style, Fmt, Args), String) :-
+    !,
+    format(string(String), Fmt, Args).
+element_to_string(url(File:Line:Pos), String) :-
+    !,
+    format(string(String), '~w:~w:~w', [File, Line, Pos]).
+element_to_string(url(File:Line), String) :-
+    !,
+    format(string(String), '~w:~w', [File, Line]).
+element_to_string(url(File), String) :-
+    !,
+    format(string(String), '~w', [File]).
 element_to_string(nl, '\n') :- !.
 element_to_string(Atom, Atom).
 

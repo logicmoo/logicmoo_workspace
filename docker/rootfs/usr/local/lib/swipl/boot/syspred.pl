@@ -869,7 +869,7 @@ visible_predicate(Pred) :-
     ->  (   '$get_predicate_attribute'(Pred, defined, 1)
         ->  true
         ;   \+ current_prolog_flag(M:unknown, fail),
-            functor(Head, Name, Arity),
+            '$head_name_arity'(Head, Name, Arity),
             '$find_library'(M, Name, Arity, _LoadModule, _Library)
         )
     ;   setof(PI, visible_in_module(M, PI), PIs),
@@ -1342,20 +1342,27 @@ rule(Head, Rule, Ref) :-
     conditional_rule(Rule0, Rule1),
     Rule = Rule1.
 
-conditional_rule(?=>(Head, Body0), (Head,Cond=>Body)) :-
-    split_on_cut(Body0, Cond, Body),
-    !.
-conditional_rule(Rule, Rule).
+conditional_rule(?=>(Head, (!, Body)), Rule) =>
+    Rule = (Head => Body).
+conditional_rule(?=>(Head, !), Rule) =>
+    Rule = (Head => true).
+conditional_rule(?=>(Head, Body0), Rule),
+    split_on_cut(Body0, Cond, Body) =>
+    Rule = (Head,Cond=>Body).
+conditional_rule(Head, Rule) =>
+    Rule = Head.
 
-split_on_cut(Var, _, _) :-
-    var(Var),
-    !,
+split_on_cut((Cond0,!,Body0), Cond, Body) =>
+    Cond = Cond0,
+    Body = Body0.
+split_on_cut((!,Body0), Cond, Body) =>
+    Cond = true,
+    Body = Body0.
+split_on_cut((A,B), Cond, Body) =>
+    Cond = (A,Cond1),
+    split_on_cut(B, Cond1, Body).
+split_on_cut(_, _, _) =>
     fail.
-split_on_cut((Cond,!,Body), Cond, Body) :-
-    !.
-split_on_cut((A,B), (A,Cond), Body) :-
-    split_on_cut(B, Cond, Body).
-
 
 
                  /*******************************

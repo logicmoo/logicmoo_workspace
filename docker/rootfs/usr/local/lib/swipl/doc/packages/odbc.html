@@ -423,14 +423,14 @@ open_wordnet :-
 <dt class="pubdef"><a id="odbc_driver_connect/3"><strong>odbc_driver_connect</strong>(<var>+DriverString, 
 -Connection, +Options</var>)</a></dt>
 <dd class="defbody">
-Connects to a database using SQLDriverConnect(). This API allows for 
-driver-specific additional options. DriverString is passed without 
+Connects to a database using <b>SQLDriverConnect()</b>. This API allows 
+for driver-specific additional options. DriverString is passed without 
 checking. Options should <em>not</em> include <code>user</code> and
 <code>password</code>.
 
 <p>Whenever possible, applications should use <a id="idx:odbcconnect3:3"></a><a class="pred" href="#odbc_connect/3">odbc_connect/3</a>. 
-If you need this predicate, please check the documentation for 
-SQLDriverConnect() and the documentation of your driver.<sup class="fn">bug<span class="fn-text">Facilities 
+If you need this predicate, please check the documentation for <b>SQLDriverConnect()</b> 
+and the documentation of your driver.<sup class="fn">bug<span class="fn-text">Facilities 
 to deal with prompted completion of the driver options are not yet 
 implemented.</span></sup></dd>
 <dt class="pubdef"><a id="odbc_disconnect/1"><strong>odbc_disconnect</strong>(<var>+Connection</var>)</a></dt>
@@ -518,13 +518,13 @@ prepared or running statements. The null-value can also be specified at
 the statement level. See the option list of <a id="idx:odbcquery4:5"></a><a class="pred" href="#odbc_query/4">odbc_query/4</a>.</dd>
 <dt><strong>wide_column_threshold</strong>(<var>+Length</var>)</dt>
 <dd class="defbody">
-If the width of a column exceeds <var>Length</var>, use the API 
-SQLGetData() to get the value incrementally rather than using a (large) 
-buffer allocated with the statement. The default is to use this 
-alternate interface for columns larger than 1024 bytes. There are two 
-cases for using this option. In time critical applications with wide 
-columns it may provide better performance at the cost of a higher memory 
-usage and to work around bugs in SQLGetData(). The latter applies to 
+If the width of a column exceeds <var>Length</var>, use the API <b>SQLGetData()</b> 
+to get the value incrementally rather than using a (large) buffer 
+allocated with the statement. The default is to use this alternate 
+interface for columns larger than 1024 bytes. There are two cases for 
+using this option. In time critical applications with wide columns it 
+may provide better performance at the cost of a higher memory usage and 
+to work around bugs in <b>SQLGetData()</b>. The latter applies to 
 Microsoft SQL Server fetching the definition of a view.
 </dd>
 </dl>
@@ -750,7 +750,7 @@ date/time/timestamp structures to a format for use by the application.
 </dd>
 <dt><strong>wide_column_threshold</strong>(<var>+Length</var>)</dt>
 <dd class="defbody">
-Specify threshold column width for using SQLGetData(). See <a id="idx:odbcsetconnection2:17"></a><a class="pred" href="#odbc_set_connection/2">odbc_set_connection/2</a> 
+Specify threshold column width for using <b>SQLGetData()</b>. See <a id="idx:odbcsetconnection2:17"></a><a class="pred" href="#odbc_set_connection/2">odbc_set_connection/2</a> 
 for details.
 </dd>
 </dl>
@@ -798,8 +798,8 @@ description is one of the following:
 <dl class="latex">
 <dt><strong>default</strong></dt>
 <dd class="defbody">
-Uses the ODBC function SQLDescribeParam() to obtain information about 
-the parameter and apply default rules. See <a class="sec" href="#sec:2.7">section 
+Uses the ODBC function <b>SQLDescribeParam()</b> to obtain information 
+about the parameter and apply default rules. See <a class="sec" href="#sec:2.7">section 
 2.7</a> for details. If the interface fails to return a type or the type 
 is unknown to the ODBC interface a message is printed and the interface 
 handles the type as text, which implies the user must supply an atom. 
@@ -913,7 +913,7 @@ much like <a id="idx:read1:33"></a><span class="pred-ext">read/1</span>
 reads terms from a file is more appropriate and there are cases where 
 only part of the result-set is to be fetched. These cases can be dealt 
 with using <a id="idx:odbcfetch3:34"></a><a class="pred" href="#odbc_fetch/3">odbc_fetch/3</a>, 
-which provides an interface to SQLFetchScroll().
+which provides an interface to <b>SQLFetchScroll()</b>.
 
 <p>As a general rule of thumb, stay away from these functions if you do 
 not really need them. Experiment before deciding on the strategy and 
@@ -1102,7 +1102,7 @@ Enumerate properties of the tables. Defines facets are:
 <dt><strong>owner</strong>(<var>Owner</var>)</dt>
 <dt><strong>comment</strong>(<var>Comment</var>)</dt>
 <dd class="defbody">
-These facets are defined by SQLTables()
+These facets are defined by <b>SQLTables()</b>
 </dd>
 <dt><strong>arity</strong>(<var>Arity</var>)</dt>
 <dd class="defbody">
@@ -1119,7 +1119,7 @@ On backtracking, enumerate all columns in all tables.</dd>
 ?Table, ?Column, ?Facet</var>)</a></dt>
 <dd class="defbody">
 Provides access to the properties of the table as defined by the ODBC 
-call SQLColumns(). Defined facets are:
+call <b>SQLColumns()</b>. Defined facets are:
 
 <dl class="latex">
 <dt><strong>table_qualifier</strong>(<var>Qualifier</var>)</dt>
@@ -1137,7 +1137,7 @@ See <a id="idx:odbccurrenttable3:43"></a><a class="pred" href="#odbc_current_tab
 <dt><strong>nullable</strong>(<var>Nullable</var>)</dt>
 <dt><strong>remarks</strong>(<var>Remarks</var>)</dt>
 <dd class="defbody">
-These facets are defined by SQLColumns()
+These facets are defined by <b>SQLColumns()</b>
 </dd>
 <dt><strong>type</strong>(<var>Type</var>)</dt>
 <dd class="defbody">
@@ -1153,7 +1153,8 @@ More prolog-friendly representation of the type properties. See
 Query the types supported by the data source. <var>TypeSpec</var> is 
 either an integer type-id, the name of an ODBC SQL type or the constant
 <code>all_types</code> to enumerate all known types. This predicate 
-calls SQLGetTypeInfo() and its facet names are derived from the 
+calls
+<b>SQLGetTypeInfo()</b> and its facet names are derived from the 
 specification of this ODBC function:
 
 <dl class="latex">

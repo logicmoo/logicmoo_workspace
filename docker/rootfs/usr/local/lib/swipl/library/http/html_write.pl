@@ -101,7 +101,8 @@
 
 :- multifile
     expand//1,                      % +HTMLElement
-    expand_attribute_value//1.      % +HTMLAttributeValue
+    expand_attribute_value//1,      % +HTMLAttributeValue
+    html_header_hook/1.             % +Style
 
 
 /** <module> Write HTML text
@@ -1351,8 +1352,17 @@ reply_html_page(Head, Body) :-
 reply_html_page(Style, Head, Body) :-
     html_current_option(content_type(Type)),
     phrase(page(Style, Head, Body), HTML),
+    forall(html_header_hook(Style), true),
     format('Content-type: ~w~n~n', [Type]),
     print_html(HTML).
+
+
+%!  html_header_hook(+Style) is nondet.
+%
+%   This multifile hook  is  called   just  before  the ``Content-type``
+%   header  is  emitted.  It  allows  for  emitting  additional  headers
+%   depending on the first argument of reply_html_page/3.
+
 
 
                  /*******************************

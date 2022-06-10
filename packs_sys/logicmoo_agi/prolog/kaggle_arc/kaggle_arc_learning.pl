@@ -8,6 +8,8 @@
 :- set_prolog_flag_until_eof(trill_term_expansion,false).
 :- endif.
 
+:- use_module(library(logicmoo/misc_terms)).
+
 rot_by_90([A,B,C,D]):- rot_by_90_0([A,B,C,D,A,B,C]).
 
 rot_by_90_0([A,B]):- rot90(A,B),!.

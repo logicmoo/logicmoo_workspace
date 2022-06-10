@@ -75,8 +75,10 @@
                      [ to(any),
                        content_type(any),
                        form_data(oneof([form,mime])),
-                       input_encoding(encoding),
-                       on_filename(callable)
+                       input_encoding(encoding),        % multipart messages
+                       on_filename(callable),
+                       module(atom),			% x-prolog data
+                       variable_names(-list)
                      ]).
 
 

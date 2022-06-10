@@ -10,7 +10,7 @@
 % Licience: LGPL
 % ===================================================================
 */
-
+:- if((prolog_load_context(source,F),prolog_load_context(file,F))).
 :- module(must_sanity,
    [
       must/1, % Goal must succeed at least once once
@@ -21,7 +21,7 @@
       scce_orig/3,
       must_or_rtrace/1
     ]).
-
+:- endif.
 /** <module> Utility LOGICMOO_MUST_SANITY
 This module includes predicate utilities that allows program to detect unwanted failures. 
 @author Douglas R. Miles
@@ -170,7 +170,7 @@ must_keep_going(Goal):-
 
 
 xnotrace(G):- call(G).
-:- 'totally_hide'(xnotrace/1).
+:- '$hide'(xnotrace/1).
 
 %! sanity(:Goal) is det.
 %
@@ -261,8 +261,8 @@ mquietly(Var):- var(Var),!,trace_or_throw(var_mquietly(Var)).
 %mquietly(M:(G1;G2)):- !, call(M:G1);mquietly(M:G2).
 mquietly(G):- call(G).
 
-:- totally_hide(mquietly/1).
-:- totally_hide(mquietly/2).
+:- '$hide'(mquietly/1).
+:- '$hide'(mquietly/2).
 
 mquietly_if(false,_):- !.
 mquietly_if(_,G):- mquietly(G).

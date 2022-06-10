@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.5.4 Reference Manual: Section A.18</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.5.12 Reference Manual: Section A.18</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -234,16 +234,16 @@ table.frame-box
 <a class="nav" href="heaps.html"><img src="next.gif" alt="Next"></a>
 </div>
 <h2 id="sec:gensym"><a id="sec:A.18"><span class="sec-nr">A.18</span> <span class="sec-title">library(gensym): 
-Generate unique identifiers</span></a></h2>
+Generate unique symbols</span></a></h2>
 
-<a id="sec:gensym"></a>
+<p><a id="sec:gensym"></a>
 
-<p>Gensym (<b>Gen</b>erate <b>Sym</b>bols) is an old library for 
-generating unique symbols (atoms). Such symbols are generated from a 
-base atom which gets a sequence number appended. Of course there is no 
-guarantee that&lsquo;catch22' is not an already defined atom and 
-therefore one must be aware these atoms are only unique in an isolated 
-context.
+<p>Gensym (<i>Generate Symbols</i>) is an old library for generating 
+unique symbols (atoms). Such symbols are generated from a base atom 
+which gets a sequence number appended. Of course there is no guarantee 
+that
+<code>catch22</code> is not an already defined atom and therefore one 
+must be aware these atoms are only unique in an isolated context.
 
 <p>The SWI-Prolog gensym library is thread-safe. The sequence numbers 
 are global over all threads and therefore generated atoms are unique 
@@ -253,22 +253,36 @@ over all threads.
 <dt class="pubdef"><a id="gensym/2"><strong>gensym</strong>(<var>+Base, 
 -Unique</var>)</a></dt>
 <dd class="defbody">
-Generate a unique atom from base <var>Base</var> and unify it with <var>Unique</var>.
-<var>Base</var> should be an atom. The first call will return &lt;<var>base</var>&gt;1 
-, the next &lt;<var>base</var>&gt;2 , etc. Note that this is no 
-guarantee that the atom is unique in the system.</dd>
-<dt class="pubdef"><a id="reset_gensym/1"><strong>reset_gensym</strong>(<var>+Base</var>)</a></dt>
-<dd class="defbody">
-Restart generation of identifiers from <var>Base</var> at &lt;<var>Base</var>&gt;1. 
-Used to make sure a program produces the same results on subsequent 
-runs. Use with care.</dd>
+Generate <var>&lt;</var><var>Base</var><var>&gt;</var>1, <var>&lt;</var><var>Base</var><var>&gt;</var>2, 
+etc atoms on each subsequent call. Note that there is nothing that 
+prevents other parts of the application to&lsquo;invent' the same 
+identifier. The predicate
+<a class="pred" href="gensym.html#gensym/2">gensym/2</a> is thread-safe 
+in the sense that two threads generating identifiers from the same <var>Base</var> 
+will never generate the same identifier.
+
+<dl class="tags">
+<dt class="tag">See also</dt>
+<dd>
+<span class="pred-ext">uuid/1</span>, <a class="pred" href="db.html#term_hash/2">term_hash/2</a>, <a class="pred" href="db.html#variant_sha1/2">variant_sha1/2</a> 
+may be used to generate various unique or content-based identifiers 
+safely.
+</dd>
+</dl>
+
+</dd>
 <dt class="pubdef"><a id="reset_gensym/0"><strong>reset_gensym</strong></a></dt>
 <dd class="defbody">
 Reset gensym for all registered keys. This predicate is available for 
 compatibility only. New code is strongly advised to avoid the use of 
 reset_gensym or at least to reset only the keys used by your program to 
-avoid unexpected side effects on other components.
+avoid unexpected side effects on other components.</dd>
+<dt class="pubdef"><a id="reset_gensym/1"><strong>reset_gensym</strong>(<var>+Base</var>)</a></dt>
+<dd class="defbody">
+Restart generation of identifiers from <var>Base</var> at <var>&lt;</var><var>Base</var><var>&gt;</var>1. 
+Used to make sure a program produces the same results on subsequent 
+runs. Use with care.
 </dd>
 </dl>
 
-</body></html>
+<p></body></html>

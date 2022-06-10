@@ -956,7 +956,7 @@ in the
 
 <p>Secure ciphers must guarantee forward secrecy, and must mitigate all 
 known critical attacks. As of 2018, using these ciphers allows you to 
-obtain grade A on <a class="url" href="https://www.ssllabs.com.">https://www.ssllabs.com.</a> 
+obtain grade A on <a class="url" href="https://www.ssllabs.com">https://www.ssllabs.com</a>. 
 For A+, you must also enable HTTP Strict Transport Security (HSTS) by 
 sending a suitable header field in replies.
 
@@ -2257,7 +2257,7 @@ OpenSSL library SWI-Prolog uses the system version. This applies notably
 for all Linux packages. Check the origin and version of the OpenSSL 
 libraries and verify there are no more recent security patches regularly 
 if security is important to you. The OpenSSL library version as reported 
-by SSLeay_version() is available in the Prolog flag
+by <b>SSLeay_version()</b> is available in the Prolog flag
 <code>ssl_library_version</code> as illustrated below on Ubuntu 14.04.
 
 <pre class="code">

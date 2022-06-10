@@ -79,6 +79,7 @@
 !emacs_prolog_mode.body_indentation:     4
 !emacs_prolog_mode.cond_indentation:     4
 !emacs_prolog_mode.indent_tabs:	         @off
+!emacs_fundamental_mode.tab_width:       8
 
 ! How to add a new set of dependencies for ->update_dependencies
 ! (^c^d).  Possible values are autoload/1, autoload/2, use_module/1

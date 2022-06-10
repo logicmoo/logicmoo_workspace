@@ -457,7 +457,9 @@ Specify <i>additional</i> environment variables for the new process.
 is expanded the same way as the <var>Args</var> argument. If neither <code>env</code> 
 nor
 <code>environment</code> is passed the environment is inherited from the 
-Prolog process.
+Prolog process. At most one <code>env(List)</code> or <code>environment(List)</code> 
+term may appear in the options. If multiple appear a
+<code>permission_error</code> is raised for the second option.
 </dd>
 <dt><strong>process</strong>(<var>-PID</var>)</dt>
 <dd class="defbody">
@@ -1805,7 +1807,14 @@ Defined <var>Options</var>:
 <dt><strong>as</strong>(<var>+Type</var>)</dt>
 <dd class="defbody">
 Defines the returned term-type. <var>Type</var> is one of
-<code>atom</code>, <code>codes</code> or <code>string</code> (default).</dd>
+<code>atom</code>, <code>codes</code>, <code>string</code> (default) or
+<code>term</code>. The value <code>term</code> causes the data to be 
+parsed to a Prolog string.</dd>
+<dt><strong>encoding</strong>(<var>+Encoding</var>)</dt>
+<dd class="defbody">
+Specify the encoding used to intepret the message. It is one of <code>octet</code>. <code>iso_latin_1</code>, <code>text</code> 
+or
+<code>utf8</code>.</dd>
 <dt><strong>max_message_size</strong>(<var>+Size</var>)</dt>
 <dd class="defbody">
 Specify the maximum number of bytes to read from a UDP datagram. Size 
@@ -1818,8 +1827,8 @@ bytes will be read.
 
 <pre class="code">
 receive(Port) :-
-        udp_socket(S),
-        tcp_bind(S, Port),
+        udp_socket(Socket),
+        tcp_bind(Socket, Port),
         repeat,
             udp_receive(Socket, Data, From, [as(atom)]),
             format('Got ~q from ~q~n', [Data, From]),
@@ -1832,8 +1841,30 @@ receive(Port) :-
 <dd class="defbody">
 Send a UDP message. Data is a string, atom or code-list providing the 
 data. <var>To</var> is an address of the form <var>Host</var>:<var>Port</var> 
-where Host is either the hostname or a term <a id="idx:ip4:7"></a><span class="pred-ext">ip/4</span>. <var>Options</var> 
-is currently unused.
+where Host is either the hostname or a term <a id="idx:ip4:7"></a><span class="pred-ext">ip/4</span>. 
+Defined <var>Options</var> are:
+
+<dl class="latex">
+<dt><strong>encoding</strong>(<var>Encoding</var>)</dt>
+<dd class="defbody">
+Specifies the encoding to use for the string. See <a id="idx:udpreceive4:8"></a><a class="pred" href="#udp_receive/4">udp_receive/4</a> 
+for details.</dd>
+<dt><strong>as</strong>(<var>Type</var>)</dt>
+<dd class="defbody">
+This uses the same values for <var>Type</var> as the <code>as(Type)</code> 
+option of <a id="idx:udpreceive4:9"></a><a class="pred" href="#udp_receive/4">udp_receive/4</a>. 
+The are interpreted differently though. No <var>Type</var> corresponds 
+to <code>CVT_ALL</code> of <b>PL_get_chars()</b>. Using <code>atom</code> 
+corresponds to <code>CVT_ATOM</code> and any of <code>string</code> or
+<code>codes</code> is mapped to <code>CVT_STRING|CVT_LIST</code>, 
+allowing for a SWI-Prolog string object, list of character codes or list 
+of characters. Finally, <code>term</code> maps to <code>CVT_WRITE_CANONICAL</code>. 
+This implies that arbitrary Prolog terms<sup class="fn">1<span class="fn-text"><a id="idx:writecanonical2:10"></a><span class="pred-ext">write_canonical/2</span> 
+does not support <em>blobs</em> nor <em>cyclic terms</em></span></sup> 
+can be sent reliably using the option list <code>[as(term),encoding(utf8)])</code>, 
+using the same option list for <a id="idx:udpreceive4:11"></a><a class="pred" href="#udp_receive/4">udp_receive/4</a>.
+</dd>
+</dl>
 
 <p>A simple example to send UDP data is:
 
@@ -1846,7 +1877,7 @@ send(Host, Port, Message) :-
 
 <p>A broadcast is achieved by using <code>tcp_setopt(Socket, broadcast)</code> 
 prior to sending the datagram and using the local network broadcast 
-address as a <a id="idx:ip4:8"></a><span class="pred-ext">ip/4</span> 
+address as a <a id="idx:ip4:12"></a><span class="pred-ext">ip/4</span> 
 term.
 </dd>
 </dl>
@@ -1862,7 +1893,7 @@ stream_pool library</span></a></h2>
 <a id="sec:stream-pools"></a>
 
 <p>The <code>library(streampool)</code> library dispatches input from 
-multiple streams based on <a id="idx:waitforinput3:9"></a><span class="pred-ext">wait_for_input/3</span>. 
+multiple streams based on <a id="idx:waitforinput3:13"></a><span class="pred-ext">wait_for_input/3</span>. 
 It is part of the clib package as it is used most of the time together 
 with the <code>library(socket)</code> library. On non-Unix systems it 
 often can only be used with socket streams.
@@ -1885,7 +1916,7 @@ is called.</dd>
 <dd class="defbody">
 Delete the given stream from the pool. Succeeds, even if <var>Stream</var> 
 is no member of the pool. If <var>Stream</var> is unbound the entire 
-pool is emtied but unlike <a id="idx:closestreampool0:10"></a><a class="pred" href="#close_stream_pool/0">close_stream_pool/0</a> 
+pool is emtied but unlike <a id="idx:closestreampool0:14"></a><a class="pred" href="#close_stream_pool/0">close_stream_pool/0</a> 
 the streams are not closed.</dd>
 <dt class="pubdef"><a id="close_stream_pool/0"><strong>close_stream_pool</strong></a></dt>
 <dd class="defbody">
@@ -1894,18 +1925,18 @@ Empty the pool, closing all streams that are part of it.</dd>
 <dd class="defbody">
 Wait for maximum of <var>TimeOut</var> for input on any of the streams 
 in the pool. If there is input, call the <var>Goal</var> associated with
-<a id="idx:addstreamtopool2:11"></a><a class="pred" href="#add_stream_to_pool/2">add_stream_to_pool/2</a>. 
+<a id="idx:addstreamtopool2:15"></a><a class="pred" href="#add_stream_to_pool/2">add_stream_to_pool/2</a>. 
 If <var>Goal</var> fails or raises an exception a message is printed. <var>TimeOut</var> 
-is described with <a id="idx:waitforinput3:12"></a><span class="pred-ext">wait_for_input/3</span>.
+is described with <a id="idx:waitforinput3:16"></a><span class="pred-ext">wait_for_input/3</span>.
 
 <p>If <var>Goal</var> is called, there is <em>some</em> input on the 
 associated stream. <var>Goal</var> must be careful not to block as this 
-will block the entire pool.<sup class="fn">1<span class="fn-text">This 
+will block the entire pool.<sup class="fn">2<span class="fn-text">This 
 is hard to achieve at the moment as none of the Prolog read-commands 
 provide for a timeout.</span></sup></dd>
 <dt class="pubdef"><a id="stream_pool_main_loop/0"><strong>stream_pool_main_loop</strong></a></dt>
 <dd class="defbody">
-Calls <a id="idx:dispatchstreampool1:13"></a><a class="pred" href="#dispatch_stream_pool/1">dispatch_stream_pool/1</a> 
+Calls <a id="idx:dispatchstreampool1:17"></a><a class="pred" href="#dispatch_stream_pool/1">dispatch_stream_pool/1</a> 
 in a loop until the pool is empty.
 </dd>
 </dl>
@@ -2249,7 +2280,7 @@ considerations</span></a></h3>
 
 <a id="sec:cgi-considerations"></a>
 
-<p>Printing an HTML document using <a id="idx:format2:14"></a><span class="pred-ext">format/2</span> 
+<p>Printing an HTML document using <a id="idx:format2:18"></a><span class="pred-ext">format/2</span> 
 is not a neat way of producing HTML because it is vulnerable to required 
 escape sequences. A high-level alternative is provided by <code>library(http/html_write)</code> 
 from the HTTP library.
@@ -2265,7 +2296,7 @@ package</a> for details.
 two declarations ensure the CGI script will send all data in UTF-8 and 
 thus provide full support of Unicode. It is assumed that browsers 
 generally send form-data using the same encoding as the page in which 
-the form appears, UTF-8 or ISO Latin-1. The current version of <a id="idx:cgigetform1:15"></a><a class="pred" href="#cgi_get_form/1">cgi_get_form/1</a> 
+the form appears, UTF-8 or ISO Latin-1. The current version of <a id="idx:cgigetform1:19"></a><a class="pred" href="#cgi_get_form/1">cgi_get_form/1</a> 
 assumes the CGI data is in UTF-8.
 
 <p><h2 id="sec:crypt"><a id="sec:10"><span class="sec-nr">10</span> <span class="sec-title">Password 
@@ -2273,7 +2304,7 @@ encryption library</span></a></h2>
 
 <a id="sec:crypt"></a>
 
-<p>The <code>library(crypt)</code> library defines <a id="idx:crypt2:16"></a><a class="pred" href="#crypt/2">crypt/2</a> 
+<p>The <code>library(crypt)</code> library defines <a id="idx:crypt2:20"></a><a class="pred" href="#crypt/2">crypt/2</a> 
 for encrypting and testing passwords. The clib package also provides 
 crytographic hashes as described in <a class="sec" href="#sec:12">section 
 12</a>
@@ -2290,7 +2321,7 @@ argument is unified to a list of character codes holding an encrypted
 version.
 
 <p>The library supports two encryption formats: traditional Unix 
-DES-hashes<sup class="fn">2<span class="fn-text">On non-Unix systems, 
+DES-hashes<sup class="fn">3<span class="fn-text">On non-Unix systems, 
 crypt() is provided by the NetBSD library. The license header is added 
 at the end of this document.</span></sup> and FreeBSD compatible MD5 
 hashes (all platforms). MD5 hashes start with the magic sequence <code>$1$</code>, 
@@ -2319,16 +2350,16 @@ characters or list of character-codes. It is not advised to use atoms,
 as this implies the password will be available from the Prolog heap as a 
 defined atom.
 
-<p><b>NOTE</b>: <a id="idx:crypt2:17"></a><a class="pred" href="#crypt/2">crypt/2</a> 
+<p><b>NOTE</b>: <a id="idx:crypt2:21"></a><a class="pred" href="#crypt/2">crypt/2</a> 
 provides an interface to the Unix password hashing API. Above we already 
 introduced support for classical DES and MD5 hashes, both hashes that 
-are considered <em>insecure</em> by today's standards.<sup class="fn">3<span class="fn-text"><em>Insecure</em> 
+are considered <em>insecure</em> by today's standards.<sup class="fn">4<span class="fn-text"><em>Insecure</em> 
 means that the password can realistically be derived from the password 
 hash using a brute-force attack. This implies that leaking the password 
 database is an immediate security risk.</span></sup> The crypt() API of 
-modern Unix systems typically support more secure hashes. Using <a id="idx:crypt2:18"></a><a class="pred" href="#crypt/2">crypt/2</a> 
+modern Unix systems typically support more secure hashes. Using <a id="idx:crypt2:22"></a><a class="pred" href="#crypt/2">crypt/2</a> 
 is suitable if compatibility with OS passwords is required. If strong 
-hashes and platform independence are important to you, use <a id="idx:cryptopasswordhash2:19"></a><span class="pred-ext">crypto_password_hash/2</span> 
+hashes and platform independence are important to you, use <a id="idx:cryptopasswordhash2:23"></a><span class="pred-ext">crypto_password_hash/2</span> 
 provided by library
 <code>library(crypto)</code> from the
 <a class="url" href="http://www.swi-prolog.org/pldoc/package/ssl.html">ssl&nbsp;package</a>.
@@ -2475,7 +2506,7 @@ desirable for computational processing.
 Hash is the SHA hash of Data. <var>Data</var> is either an atom, packed 
 string or list of character codes. <var>Hash</var> is unified with a 
 list of bytes (integers in the range 0..255) representing the hash. See
-<a id="idx:hashatom2:20"></a><a class="pred" href="#hash_atom/2">hash_atom/2</a> 
+<a id="idx:hashatom2:24"></a><a class="pred" href="#hash_atom/2">hash_atom/2</a> 
 to convert this into the more commonly seen hexadecimal representation. 
 The conversion is controlled by Options:
 
@@ -2518,7 +2549,7 @@ key and the size of the hash output length in bits.''</i>
 or list of character codes. <var>HMAC</var> is unified with a list of 
 integers representing the authentication code. <var>Options</var> is the 
 same as for
-<a id="idx:shahash3:21"></a><a class="pred" href="#sha_hash/3">sha_hash/3</a>, 
+<a id="idx:shahash3:25"></a><a class="pred" href="#sha_hash/3">sha_hash/3</a>, 
 but currently only <code>sha1</code> and <code>sha256</code> are 
 supported.</dd>
 <dt class="pubdef"><a id="hash_atom/2"><strong>hash_atom</strong>(<var>+Hash, 
@@ -2727,9 +2758,9 @@ for reading. Memory files are thread-safe and subject to (atom) garbage
 collection.
 
 <p>These predicates are first of all intended for building higher-level 
-primitives such as <a id="idx:opencodesstream3:22"></a><span class="pred-ext">open_codes_stream/3</span>. 
-See also <a id="idx:format3:23"></a><span class="pred-ext">format/3</span>,
-<a id="idx:atomtoterm3:24"></a><span class="pred-ext">atom_to_term/3</span>, <a id="idx:termtoatom2:25"></a><span class="pred-ext">term_to_atom/2</span>, <a id="idx:termstring2:26"></a><span class="pred-ext">term_string/2</span>, 
+primitives such as <a id="idx:opencodesstream3:26"></a><span class="pred-ext">open_codes_stream/3</span>. 
+See also <a id="idx:format3:27"></a><span class="pred-ext">format/3</span>,
+<a id="idx:atomtoterm3:28"></a><span class="pred-ext">atom_to_term/3</span>, <a id="idx:termtoatom2:29"></a><span class="pred-ext">term_to_atom/2</span>, <a id="idx:termstring2:30"></a><span class="pred-ext">term_string/2</span>, 
 etc.
 
 <dl class="latex">
@@ -2746,26 +2777,26 @@ first closed.</dd>
 Open the memory-file. <var>Mode</var> is one of <code>read</code>, <code>write</code>,
 <code>append</code>, <code>update</code> or <code>insert</code>. The 
 resulting
-<var>Stream</var> must be closed using <a id="idx:close1:27"></a><span class="pred-ext">close/1</span>. 
+<var>Stream</var> must be closed using <a id="idx:close1:31"></a><span class="pred-ext">close/1</span>. 
 When opened for
 <code>update</code> or <code>insert</code>, the current location is 
-initialized at the start of the data and can be modified using <a id="idx:seek2:28"></a><span class="pred-ext">seek/2</span> 
+initialized at the start of the data and can be modified using <a id="idx:seek2:32"></a><span class="pred-ext">seek/2</span> 
 or
-<a id="idx:setstreamposition2:29"></a><span class="pred-ext">set_stream_position/2</span>. 
+<a id="idx:setstreamposition2:33"></a><span class="pred-ext">set_stream_position/2</span>. 
 In <code>update</code> mode, existing content is replaced, while the 
 size is enlarged after hitting the end of the data. In <code>insert</code> 
 mode, the new data is inserted at the current point.</dd>
 <dt class="pubdef"><a id="open_memory_file/4"><strong>open_memory_file</strong>(<var>+Handle, 
 +Mode, -Stream, +Options</var>)</a></dt>
 <dd class="defbody">
-Open a memory-file as <a id="idx:openmemoryfile3:30"></a><a class="pred" href="#open_memory_file/3">open_memory_file/3</a>. 
+Open a memory-file as <a id="idx:openmemoryfile3:34"></a><a class="pred" href="#open_memory_file/3">open_memory_file/3</a>. 
 Options:
 
 <dl class="latex">
 <dt><strong>encoding</strong>(<var>+Encoding</var>)</dt>
 <dd class="defbody">
 Set the encoding for a memory file and the created stream. Encoding 
-names are the same as used with <a id="idx:open4:31"></a><span class="pred-ext">open/4</span>. 
+names are the same as used with <a id="idx:open4:35"></a><span class="pred-ext">open/4</span>. 
 By default, memoryfiles represent UTF-8 streams, making them capable of 
 storing arbitrary Unicode text. In practice the only alternative is <code>octet</code>, 
 turning the memoryfile into binary mode. Please study SWI-Prolog Unicode 
@@ -2774,8 +2805,8 @@ and encoding issues before using this option.
 <dt><strong>free_on_close</strong>(<var>+Bool</var>)</dt>
 <dd class="defbody">
 If <code>true</code> (default <code>false</code> and the memory file is 
-opened for reading, discard the file (see <a id="idx:freememoryfile1:32"></a><a class="pred" href="#free_memory_file/1">free_memory_file/1</a>) 
-if the input is closed. This is used to realise <a id="idx:opencharsstream2:33"></a><span class="pred-ext">open_chars_stream/2</span> 
+opened for reading, discard the file (see <a id="idx:freememoryfile1:36"></a><a class="pred" href="#free_memory_file/1">free_memory_file/1</a>) 
+if the input is closed. This is used to realise <a id="idx:opencharsstream2:37"></a><span class="pred-ext">open_chars_stream/2</span> 
 in library(charsio).
 </dd>
 </dl>
@@ -2803,7 +2834,7 @@ yields a permission error.</dd>
 <dd class="defbody">
 Insert <var>Data</var> into the memory file at location <var>Offset</var>. 
 The offset is specified in characters. <var>Data</var> can be an atom, 
-string, code or character list. Other terms are first serialized using <a id="idx:writeq1:34"></a><span class="pred-ext">writeq/1</span>. 
+string, code or character list. Other terms are first serialized using <a id="idx:writeq1:38"></a><span class="pred-ext">writeq/1</span>. 
 This predicate raises a domain_error exception if <var>Offset</var> is 
 out of range and a permission_error if the memory file is read-only or 
 opened.</dd>
@@ -2826,7 +2857,10 @@ data is in the given <var>Encoding</var>. This can be used to convert
 from one encoding into another, typically from/to bytes. For example, if 
 we must convert a set of bytes that contain text in UTF-8, open the 
 memory file as octet stream, fill it, and get the result using <var>Encoding</var> 
-is <code>utf8</code>.</dd>
+is <code>utf8</code>. Currently only supported if <var>Encoding</var> is 
+one of <code>iso_latin_1</code>, <code>octed</code> (the same as <code>iso_latin_1</code>),
+<code>wchar</code> or <code>utf8</code>. Use with another encoding 
+raises a domain error.</dd>
 <dt class="pubdef"><a id="memory_file_to_codes/2"><strong>memory_file_to_codes</strong>(<var>+Handle, 
 -Codes</var>)</a></dt>
 <dd class="defbody">
@@ -2854,10 +2888,10 @@ pretending the data is in the given <var>Encoding</var>.</dd>
 followed by
 <var>After</var> characters in the memory file. The signature is the 
 same as
-<a id="idx:substring5:35"></a><span class="pred-ext">sub_string/5</span> 
-and <a id="idx:subatom5:36"></a><span class="pred-ext">sub_atom/5</span>, 
+<a id="idx:substring5:39"></a><span class="pred-ext">sub_string/5</span> 
+and <a id="idx:subatom5:40"></a><span class="pred-ext">sub_atom/5</span>, 
 but currently at least two of the 3 position arguments must be 
-specified. Future versions might implement the full functionality of <a id="idx:substring5:37"></a><span class="pred-ext">sub_string/5</span>.</dd>
+specified. Future versions might implement the full functionality of <a id="idx:substring5:41"></a><span class="pred-ext">sub_string/5</span>.</dd>
 <dt class="pubdef"><a id="memory_file_line_position/4"><strong>memory_file_line_position</strong>(<var>+MF, 
 ?Line, ?LinePos, ?Offset</var>)</a></dt>
 <dd class="defbody">
@@ -2878,10 +2912,10 @@ support for multiple threads.
 
 <p>The <code>library(time)</code> provides timing and alarm functions. 
 Alarms are thread-specific, i.e., creating an alarm causes the alarm 
-goal to be called in the thread that created it. The predicate <a id="idx:currentalarm4:38"></a><a class="pred" href="#current_alarm/4">current_alarm/4</a> 
+goal to be called in the thread that created it. The predicate <a id="idx:currentalarm4:42"></a><a class="pred" href="#current_alarm/4">current_alarm/4</a> 
 only reports alarms that are related to the calling thread. If a thread 
 terminates, all remaining alarms are silently removed. Most applications 
-use <a id="idx:callwithtimelimit2:39"></a><a class="pred" href="#call_with_time_limit/2">call_with_time_limit/2</a>.
+use <a id="idx:callwithtimelimit2:43"></a><a class="pred" href="#call_with_time_limit/2">call_with_time_limit/2</a>.
 
 <dl class="latex">
 <dt class="pubdef"><a id="alarm/4"><strong>alarm</strong>(<var>+Time, 
@@ -2909,13 +2943,13 @@ terms. Defined options are:
 <dd class="defbody">
 If <code>true</code> (default <code>false</code>), the timer is removed 
 automatically after fireing. Otherwise it must be destroyed explicitly 
-using <a id="idx:removealarm1:40"></a><a class="pred" href="#remove_alarm/1">remove_alarm/1</a>.
+using <a id="idx:removealarm1:44"></a><a class="pred" href="#remove_alarm/1">remove_alarm/1</a>.
 </dd>
 <dt><strong>install</strong>(<var>Bool</var>)</dt>
 <dd class="defbody">
 If <code>false</code> (default <code>true</code>), the timer is 
 allocated but not scheduled for execution. It must be started later 
-using <a id="idx:installalarm1:41"></a><a class="pred" href="#install_alarm/1">install_alarm/1</a>.
+using <a id="idx:installalarm1:45"></a><a class="pred" href="#install_alarm/1">install_alarm/1</a>.
 </dd>
 </dl>
 
@@ -2927,28 +2961,28 @@ Same as <code>alarm(Time, Callable, Id,[])</code>.</dd>
 <dt class="pubdef"><a id="alarm_at/4"><strong>alarm_at</strong>(<var>+Time, 
 :Callable, -Id, +Options</var>)</a></dt>
 <dd class="defbody">
-as <a id="idx:alarm3:42"></a><a class="pred" href="#alarm/3">alarm/3</a>, 
+as <a id="idx:alarm3:46"></a><a class="pred" href="#alarm/3">alarm/3</a>, 
 but <var>Time</var> is the specification of an absolute point in time. 
 Absolute times are specified in seconds after the Jan 1, 1970 epoch. See 
-also <a id="idx:datetimestamp2:43"></a><span class="pred-ext">date_time_stamp/2</span>.</dd>
+also <a id="idx:datetimestamp2:47"></a><span class="pred-ext">date_time_stamp/2</span>.</dd>
 <dt class="pubdef"><a id="install_alarm/1"><strong>install_alarm</strong>(<var>+Id</var>)</a></dt>
 <dd class="defbody">
-Activate an alarm allocated using <a id="idx:alarm4:44"></a><a class="pred" href="#alarm/4">alarm/4</a> 
+Activate an alarm allocated using <a id="idx:alarm4:48"></a><a class="pred" href="#alarm/4">alarm/4</a> 
 with the option
-<code>install(false)</code> or stopped using <a id="idx:uninstallalarm1:45"></a><a class="pred" href="#uninstall_alarm/1">uninstall_alarm/1</a>.</dd>
+<code>install(false)</code> or stopped using <a id="idx:uninstallalarm1:49"></a><a class="pred" href="#uninstall_alarm/1">uninstall_alarm/1</a>.</dd>
 <dt class="pubdef"><a id="install_alarm/2"><strong>install_alarm</strong>(<var>+Id, 
 +Time</var>)</a></dt>
 <dd class="defbody">
-As <a id="idx:installalarm1:46"></a><a class="pred" href="#install_alarm/1">install_alarm/1</a>, 
+As <a id="idx:installalarm1:50"></a><a class="pred" href="#install_alarm/1">install_alarm/1</a>, 
 but specifies a new (relative) timeout value.</dd>
 <dt class="pubdef"><a id="uninstall_alarm/1"><strong>uninstall_alarm</strong>(<var>+Id</var>)</a></dt>
 <dd class="defbody">
 Deactivate a running alarm, but do not invalidate the alarm identifier. 
-Later, the alarm can be reactivated using either <a id="idx:installalarm1:47"></a><a class="pred" href="#install_alarm/1">install_alarm/1</a> 
+Later, the alarm can be reactivated using either <a id="idx:installalarm1:51"></a><a class="pred" href="#install_alarm/1">install_alarm/1</a> 
 or
-<a id="idx:installalarm2:48"></a><a class="pred" href="#install_alarm/2">install_alarm/2</a>. 
-Reinstalled using <a id="idx:installalarm1:49"></a><a class="pred" href="#install_alarm/1">install_alarm/1</a>, 
-it will fire at the originally scheduled time. Reinstalled using <a id="idx:installalarm2:50"></a><a class="pred" href="#install_alarm/2">install_alarm/2</a> 
+<a id="idx:installalarm2:52"></a><a class="pred" href="#install_alarm/2">install_alarm/2</a>. 
+Reinstalled using <a id="idx:installalarm1:53"></a><a class="pred" href="#install_alarm/1">install_alarm/1</a>, 
+it will fire at the originally scheduled time. Reinstalled using <a id="idx:installalarm2:54"></a><a class="pred" href="#install_alarm/2">install_alarm/2</a> 
 causes the alarm to fire at the specified time from now.</dd>
 <dt class="pubdef"><a id="remove_alarm/1"><strong>remove_alarm</strong>(<var>+Id</var>)</a></dt>
 <dd class="defbody">
@@ -2963,15 +2997,15 @@ is the next to be fired and <var>scheduled</var> otherwise.</dd>
 :Goal</var>)</a></dt>
 <dd class="defbody">
 True if <var>Goal</var> completes within <var>Time</var> seconds. <var>Goal</var> 
-is executed as in <a id="idx:once1:51"></a><span class="pred-ext">once/1</span>. 
+is executed as in <a id="idx:once1:55"></a><span class="pred-ext">once/1</span>. 
 If <var>Goal</var> doesn't complete within <var>Time</var> seconds (wall 
 time), exit using the exception
-<code>time_limit_exceeded</code>. See <a id="idx:catch3:52"></a><span class="pred-ext">catch/3</span>.
+<code>time_limit_exceeded</code>. See <a id="idx:catch3:56"></a><span class="pred-ext">catch/3</span>.
 
-<p>Please note that this predicate uses <a id="idx:alarm4:53"></a><a class="pred" href="#alarm/4">alarm/4</a> 
+<p>Please note that this predicate uses <a id="idx:alarm4:57"></a><a class="pred" href="#alarm/4">alarm/4</a> 
 and therefore its effect on long-running foreign code and system calls 
-is undefined. Blocking I/O can be handled using the timeout option of <a id="idx:setstream2:54"></a><span class="pred-ext">set_stream/2</span> 
-or waiting for input using <a id="idx:waitforinput3:55"></a><span class="pred-ext">wait_for_input/3</span>.
+is undefined. Blocking I/O can be handled using the timeout option of <a id="idx:setstream2:58"></a><span class="pred-ext">set_stream/2</span> 
+or waiting for input using <a id="idx:waitforinput3:59"></a><span class="pred-ext">wait_for_input/3</span>.
 </dd>
 </dl>
 
@@ -3247,7 +3281,7 @@ Query and/or set the limit for <var>Resource</var>. Time-values are in
 seconds and size-values are counted in bytes. The following values are 
 supported by this library. Please note that not all resources may be 
 available and accessible on all platforms. This predicate can throw a 
-variety of exceptions. In portable code this should be guarded with <a id="idx:catch3:56"></a><span class="pred-ext">catch/3</span>. 
+variety of exceptions. In portable code this should be guarded with <a id="idx:catch3:60"></a><span class="pred-ext">catch/3</span>. 
 The defined resources are:
 <blockquote>
 <table class="latex frame-void">
@@ -3266,7 +3300,7 @@ The defined resources are:
 
 <p>When the process hits a limit POSIX systems normally send the process 
 a signal that terminates it. These signals may be caught using 
-SWI-Prolog's <a id="idx:onsignal3:57"></a><span class="pred-ext">on_signal/3</span> 
+SWI-Prolog's <a id="idx:onsignal3:61"></a><span class="pred-ext">on_signal/3</span> 
 primitive. The code below illustrates this behaviour. Please note that 
 asynchronous signal handling is dangerous, especially when using 
 threads. 100% fail-safe operation cannot be guaranteed, but this 
@@ -3763,49 +3797,49 @@ callbacks.
 <dt class="index-sep">?</dt>
 <dt><a class="idx" href="#add_stream_to_pool/2">add_stream_to_pool/2</a></dt>
 <dd>
-<a class="idx" href="#idx:addstreamtopool2:11">7</a></dd>
+<a class="idx" href="#idx:addstreamtopool2:15">7</a></dd>
 <dt><a class="idx" href="#alarm/3">alarm/3</a></dt>
 <dd>
-<a class="idx" href="#idx:alarm3:42">16</a></dd>
+<a class="idx" href="#idx:alarm3:46">16</a></dd>
 <dt><a class="idx" href="#alarm/4">alarm/4</a></dt>
 <dd>
-<a class="idx" href="#idx:alarm4:44">16</a> <a class="idx" href="#idx:alarm4:53">16</a></dd>
+<a class="idx" href="#idx:alarm4:48">16</a> <a class="idx" href="#idx:alarm4:57">16</a></dd>
 <dt><a class="idx" href="#alarm_at/4">alarm_at/4</a></dt>
 <dt><a class="idx" href="#atom_to_memory_file/2">atom_to_memory_file/2</a></dt>
 <dt>atom_to_term/3</dt>
 <dd>
-<a class="idx" href="#idx:atomtoterm3:24">15</a></dd>
+<a class="idx" href="#idx:atomtoterm3:28">15</a></dd>
 <dt><a class="idx" href="#call_with_time_limit/2">call_with_time_limit/2</a></dt>
 <dd>
-<a class="idx" href="#idx:callwithtimelimit2:39">16</a></dd>
+<a class="idx" href="#idx:callwithtimelimit2:43">16</a></dd>
 <dt>catch/3</dt>
 <dd>
-<a class="idx" href="#idx:catch3:52">16</a> <a class="idx" href="#idx:catch3:56">18</a></dd>
+<a class="idx" href="#idx:catch3:56">16</a> <a class="idx" href="#idx:catch3:60">18</a></dd>
 <dt><a class="idx" href="#cgi_get_form/1">cgi_get_form/1</a></dt>
 <dd>
-<a class="idx" href="#idx:cgigetform1:15">9.1</a></dd>
+<a class="idx" href="#idx:cgigetform1:19">9.1</a></dd>
 <dt><a class="idx" href="#chmod/2">chmod/2</a></dt>
 <dt>close/1</dt>
 <dd>
-<a class="idx" href="#idx:close1:27">15</a></dd>
+<a class="idx" href="#idx:close1:31">15</a></dd>
 <dt><a class="idx" href="#close_stream_pool/0">close_stream_pool/0</a></dt>
 <dd>
-<a class="idx" href="#idx:closestreampool0:10">7</a></dd>
+<a class="idx" href="#idx:closestreampool0:14">7</a></dd>
 <dt><a class="idx" href="#closelog/0">closelog/0</a></dt>
 <dt><a class="idx" href="#copy_directory/2">copy_directory/2</a></dt>
 <dt><a class="idx" href="#copy_file/2">copy_file/2</a></dt>
 <dt><a class="idx" href="#crypt/2">crypt/2</a></dt>
 <dd>
-<a class="idx" href="#idx:crypt2:16">10</a> <a class="idx" href="#idx:crypt2:17">10</a> <a class="idx" href="#idx:crypt2:18">10</a></dd>
+<a class="idx" href="#idx:crypt2:20">10</a> <a class="idx" href="#idx:crypt2:21">10</a> <a class="idx" href="#idx:crypt2:22">10</a></dd>
 <dt>crypto_password_hash/2</dt>
 <dd>
-<a class="idx" href="#idx:cryptopasswordhash2:19">10</a></dd>
+<a class="idx" href="#idx:cryptopasswordhash2:23">10</a></dd>
 <dt><a class="idx" href="#current_alarm/4">current_alarm/4</a></dt>
 <dd>
-<a class="idx" href="#idx:currentalarm4:38">16</a></dd>
+<a class="idx" href="#idx:currentalarm4:42">16</a></dd>
 <dt>date_time_stamp/2</dt>
 <dd>
-<a class="idx" href="#idx:datetimestamp2:43">16</a></dd>
+<a class="idx" href="#idx:datetimestamp2:47">16</a></dd>
 <dt><a class="idx" href="#delete_directory_and_contents/1">delete_directory_and_contents/1</a></dt>
 <dt><a class="idx" href="#delete_directory_contents/1">delete_directory_contents/1</a></dt>
 <dt><a class="idx" href="#delete_memory_file/3">delete_memory_file/3</a></dt>
@@ -3814,20 +3848,20 @@ callbacks.
 <dt><a class="idx" href="#directory_member/3">directory_member/3</a></dt>
 <dt><a class="idx" href="#dispatch_stream_pool/1">dispatch_stream_pool/1</a></dt>
 <dd>
-<a class="idx" href="#idx:dispatchstreampool1:13">7</a></dd>
+<a class="idx" href="#idx:dispatchstreampool1:17">7</a></dd>
 <dt><a class="idx" href="#dup/2">dup/2</a></dt>
 <dt><a class="idx" href="#exec/1">exec/1</a></dt>
 <dt><a class="idx" href="#fork/1">fork/1</a></dt>
 <dt><a class="idx" href="#fork_exec/1">fork_exec/1</a></dt>
 <dt>format/2</dt>
 <dd>
-<a class="idx" href="#idx:format2:14">9.1</a></dd>
+<a class="idx" href="#idx:format2:18">9.1</a></dd>
 <dt>format/3</dt>
 <dd>
-<a class="idx" href="#idx:format3:23">15</a></dd>
+<a class="idx" href="#idx:format3:27">15</a></dd>
 <dt><a class="idx" href="#free_memory_file/1">free_memory_file/1</a></dt>
 <dd>
-<a class="idx" href="#idx:freememoryfile1:32">15</a></dd>
+<a class="idx" href="#idx:freememoryfile1:36">15</a></dd>
 <dt><a class="idx" href="#getegid/1">getegid/1</a></dt>
 <dt><a class="idx" href="#geteuid/1">geteuid/1</a></dt>
 <dt><a class="idx" href="#getgid/1">getgid/1</a></dt>
@@ -3838,19 +3872,19 @@ callbacks.
 <dt><a class="idx" href="#group_info/2">group_info/2</a></dt>
 <dt><a class="idx" href="#hash_atom/2">hash_atom/2</a></dt>
 <dd>
-<a class="idx" href="#idx:hashatom2:20">12</a></dd>
+<a class="idx" href="#idx:hashatom2:24">12</a></dd>
 <dt><a class="idx" href="#hmac_sha/4">hmac_sha/4</a></dt>
 <dt><a class="idx" href="#initgroups/2">initgroups/2</a></dt>
 <dt><a class="idx" href="#insert_memory_file/3">insert_memory_file/3</a></dt>
 <dt><a class="idx" href="#install_alarm/1">install_alarm/1</a></dt>
 <dd>
-<a class="idx" href="#idx:installalarm1:41">16</a> <a class="idx" href="#idx:installalarm1:46">16</a> <a class="idx" href="#idx:installalarm1:47">16</a> <a class="idx" href="#idx:installalarm1:49">16</a></dd>
+<a class="idx" href="#idx:installalarm1:45">16</a> <a class="idx" href="#idx:installalarm1:50">16</a> <a class="idx" href="#idx:installalarm1:51">16</a> <a class="idx" href="#idx:installalarm1:53">16</a></dd>
 <dt><a class="idx" href="#install_alarm/2">install_alarm/2</a></dt>
 <dd>
-<a class="idx" href="#idx:installalarm2:48">16</a> <a class="idx" href="#idx:installalarm2:50">16</a></dd>
+<a class="idx" href="#idx:installalarm2:52">16</a> <a class="idx" href="#idx:installalarm2:54">16</a></dd>
 <dt>ip/4</dt>
 <dd>
-<a class="idx" href="#idx:ip4:7">6.6</a> <a class="idx" href="#idx:ip4:8">6.6</a></dd>
+<a class="idx" href="#idx:ip4:7">6.6</a> <a class="idx" href="#idx:ip4:12">6.6</a></dd>
 <dt><a class="idx" href="#iri_normalized/2">iri_normalized/2</a></dt>
 <dt><a class="idx" href="#iri_normalized/3">iri_normalized/3</a></dt>
 <dt><a class="idx" href="#is_process/1">is_process/1</a></dt>
@@ -3870,23 +3904,23 @@ callbacks.
 <dt><a class="idx" href="#new_memory_file/1">new_memory_file/1</a></dt>
 <dt>on_signal/3</dt>
 <dd>
-<a class="idx" href="#idx:onsignal3:57">18</a></dd>
+<a class="idx" href="#idx:onsignal3:61">18</a></dd>
 <dt>once/1</dt>
 <dd>
-<a class="idx" href="#idx:once1:51">16</a></dd>
+<a class="idx" href="#idx:once1:55">16</a></dd>
 <dt>open/4</dt>
 <dd>
-<a class="idx" href="#idx:open4:31">15</a></dd>
+<a class="idx" href="#idx:open4:35">15</a></dd>
 <dt>open_chars_stream/2</dt>
 <dd>
-<a class="idx" href="#idx:opencharsstream2:33">15</a></dd>
+<a class="idx" href="#idx:opencharsstream2:37">15</a></dd>
 <dt>open_codes_stream/3</dt>
 <dd>
-<a class="idx" href="#idx:opencodesstream3:22">15</a></dd>
+<a class="idx" href="#idx:opencodesstream3:26">15</a></dd>
 <dt><a class="idx" href="#open_hash_stream/3">open_hash_stream/3</a></dt>
 <dt><a class="idx" href="#open_memory_file/3">open_memory_file/3</a></dt>
 <dd>
-<a class="idx" href="#idx:openmemoryfile3:30">15</a></dd>
+<a class="idx" href="#idx:openmemoryfile3:34">15</a></dd>
 <dt><a class="idx" href="#open_memory_file/4">open_memory_file/4</a></dt>
 <dt><a class="idx" href="#open_prolog_stream/4">open_prolog_stream/4</a></dt>
 <dt><a class="idx" href="#openlog/3">openlog/3</a></dt>
@@ -3908,17 +3942,17 @@ callbacks.
 <dt><a class="idx" href="#relative_file_name/3">relative_file_name/3</a></dt>
 <dt><a class="idx" href="#remove_alarm/1">remove_alarm/1</a></dt>
 <dd>
-<a class="idx" href="#idx:removealarm1:40">16</a></dd>
+<a class="idx" href="#idx:removealarm1:44">16</a></dd>
 <dt><a class="idx" href="#rlimit/3">rlimit/3</a></dt>
 <dt>seek/2</dt>
 <dd>
-<a class="idx" href="#idx:seek2:28">15</a></dd>
+<a class="idx" href="#idx:seek2:32">15</a></dd>
 <dt>set_stream/2</dt>
 <dd>
-<a class="idx" href="#idx:setstream2:54">16</a></dd>
+<a class="idx" href="#idx:setstream2:58">16</a></dd>
 <dt>set_stream_position/2</dt>
 <dd>
-<a class="idx" href="#idx:setstreamposition2:29">15</a></dd>
+<a class="idx" href="#idx:setstreamposition2:33">15</a></dd>
 <dt><a class="idx" href="#set_time_file/3">set_time_file/3</a></dt>
 <dt><a class="idx" href="#set_user_and_group/1">set_user_and_group/1</a></dt>
 <dt><a class="idx" href="#set_user_and_group/2">set_user_and_group/2</a></dt>
@@ -3929,7 +3963,7 @@ callbacks.
 <dt><a class="idx" href="#setuid/1">setuid/1</a></dt>
 <dt><a class="idx" href="#sha_hash/3">sha_hash/3</a></dt>
 <dd>
-<a class="idx" href="#idx:shahash3:21">12</a></dd>
+<a class="idx" href="#idx:shahash3:25">12</a></dd>
 <dt><a class="idx" href="#size_memory_file/2">size_memory_file/2</a></dt>
 <dt><a class="idx" href="#size_memory_file/3">size_memory_file/3</a></dt>
 <dt><a class="idx" href="#stream_hash/2">stream_hash/2</a></dt>
@@ -3939,10 +3973,10 @@ callbacks.
 <a class="idx" href="#idx:stringtolist2:5">6.6</a></dd>
 <dt>sub_atom/5</dt>
 <dd>
-<a class="idx" href="#idx:subatom5:36">15</a></dd>
+<a class="idx" href="#idx:subatom5:40">15</a></dd>
 <dt>sub_string/5</dt>
 <dd>
-<a class="idx" href="#idx:substring5:35">15</a> <a class="idx" href="#idx:substring5:37">15</a></dd>
+<a class="idx" href="#idx:substring5:39">15</a> <a class="idx" href="#idx:substring5:41">15</a></dd>
 <dt><a class="idx" href="#sysconf/1">sysconf/1</a></dt>
 <dt><a class="idx" href="#syslog/2">syslog/2</a></dt>
 <dt><a class="idx" href="#syslog/3">syslog/3</a></dt>
@@ -3971,10 +4005,10 @@ callbacks.
 <a class="idx" href="#idx:tcpsocket1:4">6.6</a></dd>
 <dt>term_string/2</dt>
 <dd>
-<a class="idx" href="#idx:termstring2:26">15</a></dd>
+<a class="idx" href="#idx:termstring2:30">15</a></dd>
 <dt>term_to_atom/2</dt>
 <dd>
-<a class="idx" href="#idx:termtoatom2:25">15</a></dd>
+<a class="idx" href="#idx:termtoatom2:29">15</a></dd>
 <dt><a class="idx" href="#try_proxy/4">try_proxy/4</a></dt>
 <dt><a class="idx" href="#udp_broadcast_close/1">udp_broadcast_close/1</a></dt>
 <dt><a class="idx" href="#udp_broadcast_initialize/2">udp_broadcast_initialize/2</a></dt>
@@ -3982,13 +4016,15 @@ callbacks.
 <dt><a class="idx" href="#udp_peer_add/2">udp_peer_add/2</a></dt>
 <dt><a class="idx" href="#udp_peer_del/2">udp_peer_del/2</a></dt>
 <dt><a class="idx" href="#udp_receive/4">udp_receive/4</a></dt>
+<dd>
+<a class="idx" href="#idx:udpreceive4:8">6.6</a> <a class="idx" href="#idx:udpreceive4:9">6.6</a> <a class="idx" href="#idx:udpreceive4:11">6.6</a></dd>
 <dt><a class="idx" href="#udp_send/4">udp_send/4</a></dt>
 <dt><a class="idx" href="#udp_socket/1">udp_socket/1</a></dt>
 <dt><a class="idx" href="#udp_term_string_hook/3">udp_term_string_hook/3</a></dt>
 <dt><a class="idx" href="#udp_unicast_join_hook/3">udp_unicast_join_hook/3</a></dt>
 <dt><a class="idx" href="#uninstall_alarm/1">uninstall_alarm/1</a></dt>
 <dd>
-<a class="idx" href="#idx:uninstallalarm1:45">16</a></dd>
+<a class="idx" href="#idx:uninstallalarm1:49">16</a></dd>
 <dt><a class="idx" href="#unix_domain_socket/1">unix_domain_socket/1</a></dt>
 <dt><a class="idx" href="#uri_authority_components/2">uri_authority_components/2</a></dt>
 <dt><a class="idx" href="#uri_authority_data/3">uri_authority_data/3</a></dt>
@@ -4013,10 +4049,13 @@ callbacks.
 <dt><a class="idx" href="#wait/2">wait/2</a></dt>
 <dt>wait_for_input/3</dt>
 <dd>
-<a class="idx" href="#idx:waitforinput3:6">6.6</a> <a class="idx" href="#idx:waitforinput3:9">7</a> <a class="idx" href="#idx:waitforinput3:12">7</a> <a class="idx" href="#idx:waitforinput3:55">16</a></dd>
+<a class="idx" href="#idx:waitforinput3:6">6.6</a> <a class="idx" href="#idx:waitforinput3:13">7</a> <a class="idx" href="#idx:waitforinput3:16">7</a> <a class="idx" href="#idx:waitforinput3:59">16</a></dd>
+<dt>write_canonical/2</dt>
+<dd>
+<a class="idx" href="#idx:writecanonical2:10">6.6</a></dd>
 <dt>writeq/1</dt>
 <dd>
-<a class="idx" href="#idx:writeq1:34">15</a></dd>
+<a class="idx" href="#idx:writeq1:38">15</a></dd>
 <dt><a class="idx" href="#detach_IO/0">detach_IO/0</a></dt>
 <dt><a class="idx" href="#detach_IO/1">detach_IO/1</a></dt>
 <dd>

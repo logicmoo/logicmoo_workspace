@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.5.4 Reference Manual: Section 12.7</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.5.12 Reference Manual: Section 12.7</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -247,7 +247,6 @@ letters into an atom only holding lowercase letters. <a class="fig" href="foreig
 <pre class="code">
 /*  Include file depends on local installation */
 #include &lt;SWI-Prolog.h&gt;
-#include &lt;stdlib.h&gt;
 #include &lt;string.h&gt;
 #include &lt;ctype.h&gt;
 
@@ -260,6 +259,8 @@ pl_lowercase(term_t u, term_t l)
   if ( !PL_get_atom_chars(u, &amp;s) )
     return PL_warning("lowercase/2: instantiation fault");
   copy = malloc(strlen(s)+1);
+  if ( !copy )
+    return PL_resource_error("memory");
 
   for( q=copy; *s; q++, s++)
     *q = (isupper(*s) ? tolower(*s) : *s);

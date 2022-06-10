@@ -105,7 +105,7 @@ renormalize_log(N,L0,L2,Lin) :-
 renormalize_log_one(X,Term,Res) :-
 	var(X),
 	Term = l(X*K,_),
-	get_attr(X,itf,Att),
+	get_attr(X,clpqr_itf,Att),
 	arg(5,Att,order(OrdX)), % Order might have changed
 	Res = [0.0,0.0,l(X*K,OrdX)].
 renormalize_log_one(X,Term,Res) :-

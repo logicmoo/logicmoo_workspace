@@ -147,6 +147,9 @@
 
           ]).
 
+%:- include(ucatch).
+:- include(first).
+
 
 :- thread_local tlbugger:show_must_go_on/1.
 
@@ -496,6 +499,7 @@ set_thread_error_stream(Id,Err):-
 %
 % Thread Current Error Stream.
 %
+:- export(get_thread_current_error/1).
 get_thread_current_error(Err):- t_l:thread_local_error_stream(Err),!.
 get_thread_current_error(Err):- thread_self(ID),lmcache:thread_current_error_stream(ID,Err),!.
 get_thread_current_error(Err):- !,Err=user_error.
@@ -691,16 +695,18 @@ quietly_must(G):- quietly(must(G)).
 %
 % If Defined.
 %
-if_defined(Goal):- if_defined(Goal,((dmsg(warn_undefined(Goal)),!,fail))).
 :- module_transparent(if_defined/1).
+:- export(if_defined/1).
+if_defined(Goal):- if_defined(Goal,((dmsg(warn_undefined(Goal)),!,fail))).
 
 %% if_defined( ?Goal, :GoalElse) is semidet.
 %
 % If Defined Else.
 %
+:- module_transparent(if_defined/2).
+:- export(if_defined/2).
 if_defined((A,B),Else):-!, if_defined(A,Else),if_defined(B,Else).
 if_defined(Goal,Else):- current_predicate(_,Goal)*->Goal;Else.
-:- module_transparent(if_defined/2).
 % if_defined(M:Goal,Else):- !, current_predicate(_,OM:Goal),!,OM:Goal;Else.
 %if_defined(Goal,  Else):- current_predicate(_,OM:Goal)->OM:Goal;Else.
 
@@ -1107,6 +1113,7 @@ is_ftCompound(Goal):-compound(Goal),\+ is_ftVar(Goal).
 not_ftCompound(A):- \+ is_ftCompound(A).
 
 :- export(is_ftVar/1).
+:- export(is_ftVar0/1).
 
 %% is_ftVar( :TermV) is semidet.
 %
@@ -1461,6 +1468,9 @@ dbgsubst0(A,_B,_C,A).
 nd_dbgsubst(  Var, VarS,SUB,SUB ) :- Var==VarS,!.
 nd_dbgsubst(  P, Goal,Sk, P1 ) :- functor_safe(P,_,N),nd_dbgsubst1( Goal, Sk, P, N, P1 ).
 
+univ_safe_2(A,B):- compound(A),compound_name_arity(A,F,0),!,F=..B.
+univ_safe_2(A,B):- A=..B.
+
 
 %=
 
@@ -1559,6 +1569,7 @@ for obvious reasons.
 %
 %  Trace or throw.
 %
+:- export(trace_or_throw/1).
 trace_or_throw(E):- hide_non_user_console,quietly((thread_self(Self),wdmsg(thread_trace_or_throw(Self+E)),!,throw(abort),
                     thread_exit(trace_or_throw(E)))).
 
@@ -1757,6 +1768,7 @@ one_must_det(_Call,OnFail):-OnFail,!.
 %
 % Must Be Successfull Deterministic (list Version).
 %
+:- export(must_det_l/1).
 must_det_l(Goal):- call_each_det(must_det_u,Goal).
 
 must_det_l_pred(Pred,Rest):- tlbugger:skip_bugger,!,call(Pred,Rest).
@@ -2000,10 +2012,15 @@ system:goal_expansion(I,O):- fail, compound(I),functor(I,F,A),inlinedPred(F/A),
 file_line(F,What,File,L):- (debugging(F)->wdmsg(file_line(F,What,File,L));true).
 
 
-:- ignore((source_location(S,_),prolog_load_context(module,M),module_property(M,class(library)),
+:- ignore((source_location(S,_1),prolog_load_context(module,M),module_property(M,class(library)),
  forall(source_file(M:H,S),
  ignore((functor(H,F,A),
   ignore(((\+ atom_concat('$',_,F),(export(F/A) , current_predicate(system:F/A)->true; system:import(M:F/A))))),
   ignore(((\+ predicate_property(M:H,transparent), module_transparent(M:F/A), \+ atom_concat('__aux',_,F),debug(modules,'~N:- module_transparent((~q)/~q).~n',[F,A]))))))))).
 
 % :- set_prolog_flag(compile_meta_arguments,true).
+
+:- include(dumpst).
+:- include(dmsg).
+:- fixup_exports.
+

@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.5.4 Reference Manual: Section 2.21</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.5.12 Reference Manual: Section 2.21</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -238,7 +238,7 @@ and 64-bit machines</span></a></h2>
 
 <a id="sec:64bits"></a>
 
-<p><a id="idx:bits64:330"></a>Most of today's 64-bit platforms are 
+<p><a id="idx:bits64:333"></a>Most of today's 64-bit platforms are 
 capable of running both 32-bit and 64-bit applications. This asks for 
 some clarifications on the advantages and drawbacks of 64-bit addressing 
 for (SWI-)Prolog.
@@ -248,7 +248,7 @@ platforms</span></a></h3>
 
 <a id="sec:64bitsplatforms"></a>
 
-<p><a id="idx:64bitsplatforms:331"></a>SWI-Prolog can be compiled for a 
+<p><a id="idx:64bitsplatforms:334"></a>SWI-Prolog can be compiled for a 
 32- or 64-bit address space on any system with a suitable C compiler. 
 Pointer arithmetic is based on the type (u)intptr_t from <code>stdint.h</code>, 
 with suitable emulation on MS-Windows.
@@ -278,12 +278,12 @@ its own set of stacks. The Prolog stacks start small and are dynamically
 expanded (see <a class="sec" href="limits.html#sec:2.20.1">section 
 2.20.1</a>). The C stack is also dynamically expanded, but the maximum 
 size is <em>reserved</em> when a thread is started. Using 100 threads at 
-the maximum default C stack of 8Mb (Linux) costs 800Mb virtual memory!<sup class="fn">39<span class="fn-text">C-recursion 
+the maximum default C stack of 8Mb (Linux) costs 800Mb virtual memory!<sup class="fn">40<span class="fn-text">C-recursion 
 over Prolog data structures is removed from most of SWI-Prolog. When 
 removed from all predicates it will often be possible to use lower 
 limits in threads. See <a class="url" href="http://www.swi-prolog.org/Devel/CStack.html">http://www.swi-prolog.org/Devel/CStack.html</a></span></sup>
 
-<p><a id="idx:IA32:332"></a><a id="idx:AMD64:333"></a>The implications 
+<p><a id="idx:IA32:335"></a><a id="idx:AMD64:336"></a>The implications 
 of theoretical performance loss due to increased memory bandwidth 
 implied by exchanging wider pointers depend on the design of the 
 hardware. We only have data for the popular IA32 vs. AMD64 
@@ -322,7 +322,7 @@ the
 of 32-bit hardware is 4GB, but in many cases the operating system 
 provides less to user applications.
 
-<p><a id="idx:RDFmemoryusage:334"></a>The only standard SWI-Prolog 
+<p><a id="idx:RDFmemoryusage:337"></a>The only standard SWI-Prolog 
 library adding significantly to this calculation is the RDF database 
 provided by the <em>semweb</em> package. It uses approximately 80 bytes 
 per triple on 32-bit hardware and 150 bytes on 64-bit hardware. Details 

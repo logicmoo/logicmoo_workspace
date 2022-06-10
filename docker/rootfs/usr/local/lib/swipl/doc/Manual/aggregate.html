@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.5.4 Reference Manual: Section A.1</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.5.12 Reference Manual: Section A.1</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -442,7 +442,20 @@ L = [1,2,3,4|_].
 
 <p>Note that SWI-Prolog up to version 8.3.4 created copies of <var>Goal</var> 
 using <a class="pred" href="manipterm.html#copy_term/2">copy_term/2</a> 
-for each iteration.</dd>
+for each iteration, this makes the current implementation unable to 
+properly handle compound terms (in <var>Goal</var>&rsquo;s arguments) 
+that share variables with the <var>Generator</var>. As a workaround you 
+can define a goal that does not use compound terms, like in this 
+example:
+
+<pre class="code">
+mem(E,L) :-  % mem/2 hides the compound argument from foreach/2
+   member(r(E),L).
+
+?- foreach(  between(1,5,N), mem(N,L)).
+</pre>
+
+</dd>
 <dt class="pubdef"><span class="pred-tag">[det]</span><a id="free_variables/4"><strong>free_variables</strong>(<var>:Generator, 
 +Template, +VarList0, -VarList</var>)</a></dt>
 <dd class="defbody">

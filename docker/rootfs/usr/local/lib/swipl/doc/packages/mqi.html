@@ -501,11 +501,15 @@ where <code>stringByteLength</code> includes the <code>.\n</code> from
 the string. For example: <code>7.\nhello.\n</code> More information on 
 the message format (<a class="sec" href="#sec:1.6.1">section 1.6.1</a>) 
 is below.
-<li>Listen on the socket for a response message of <code>true([[threads(Comm_Thread_ID, Goal_Thread_ID)]])</code> 
+<li>Listen on the socket for a response message of <code>true([[threads(Comm_Thread_ID, Goal_Thread_ID), version(Major, Minor)]])</code> 
 (which will be in JSON form) indicating successful creation of the 
 connection. <var>Comm_Thread_ID</var> and <var>Goal_Thread_ID</var> are 
 the internal Prolog IDs of the two threads that are used for the 
-connection. They are sent solely for monitoring and debugging purposes.
+connection. They are sent solely for monitoring and debugging purposes. <code>version</code> 
+was introduced in version 1.0 of the protocol to allow for detecting the 
+protocol version and should be checked to ensure the protocol version is 
+supported by your library. See <a class="pred" href="#mqi_version/2">mqi_version/2</a> 
+for more information and a version history.
 </ol>
 
 <p>We can try all of this using the Unix tool <code>nc</code> (netcat) 
@@ -527,6 +531,10 @@ $ nc 127.0.0.1 54501
         {
           "args": ["mqi1_conn2_comm", "mqi1_conn2_goal" ],
           "functor":"threads"
+        },
+        {
+          "args": ["1", "0" ],
+          "functor":"version"
         }
           ]
         ]
@@ -687,7 +695,7 @@ true.
 # Python using the swiplserver library {#mqi-library}
 from swiplserver import PrologMQI, PrologThread
 
-with PrologMQI(4242, "debugnow") as mqi:
+with PrologMQI(launch_mqi=False, port=4242, password="debugnow") as mqi:
     with mqi.create_thread() as prolog_thread:
         # Your code to be debugged here
 </pre>
@@ -764,6 +772,11 @@ followed by <code>.\n</code>.
 sent, such as <code>run(atom(a), -1).\n</code>. It must always end with <code>.\n</code>. 
 The character encoding used to decode and encode the string is UTF-8.
 </ul>
+<blockquote> Important: The very first version of MQI (version 0.0) had 
+a bug that required messages sent to (but not received from) MQI to use 
+the count of Unicode code points (<b>not</b> bytes). This was fixed to 
+properly require byte count in the next version, version 1.0.
+</blockquote>
 
 <p>To send a message to the MQI, send a message using the message format 
 above to the localhost port or Unix Domain Socket that the MQI is 
@@ -1194,6 +1207,40 @@ only set this on the first one. Each time it is set the output will be
 redirected.
 </ul>
 </dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="mqi_version/2"><strong>mqi_version</strong>(<var>?Major_Version, 
+?Minor_Version</var>)</a></dt>
+<dd class="defbody">
+Provides the major and minor version number of the protocol used by the 
+MQI. The protocol includes the message format and the messages that can 
+be sent and received from the MQI.
+
+<p>Note that the initial version of the MQI did not have a version 
+predicate so The proper way for callers to check the version is:
+
+<p><code>use_module(library(mqi))</code>, ( <code>current_predicate(mqi_version/2)</code>
+<code>-&gt;</code> <code>mqi_version(Major_Version, Minor_Version)</code> 
+; <var>Major_Version</var> = 0, <var>Minor_Version</var> = 0 )
+
+<p>Major versions are increased when there is a change to the protocol 
+that will likely break clients written to the previous version. Minor 
+versions are increased when there is new functionality that will <b>not</b> 
+break clients written to the old version
+
+<p>This allows a client written to MQI version&rsquo;Client_Major_Version.Client_Minor_Version' 
+to check for non-breaking compatibility like this:
+
+<p>Client_Major_Version = MQI_Major_Version and Client_Minor_Version <code>&lt;=</code> 
+MQI_Minor_Version
+
+<p>Breaking changes (i.e. Major version increments) should be very rare 
+as the goal is to have the broadest adoption possible.
+
+<p>Protocol Version History: 0.0 <code>-&gt;</code> First published 
+version. Had a protocol bug that required messages sent to MQI to count 
+Unicode code points instead of bytes for the message header. 1.0 <code>-&gt;</code> 
+Breaking change: Fixed protocol bug so that it properly accepted byte 
+count instead of Unicode code point count in the message header for 
+messages sent to MQI.</dd>
 <dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="mqi_start/0"><strong>mqi_start</strong></a></dt>
 <dd class="defbody">
 Main entry point for running the Machine Query Interface in "Embedded 
@@ -1253,6 +1300,7 @@ in <a class="pred" href="#mqi_start/1">mqi_start/1</a>.
 <dt><a class="idx" href="#mqi_start/0">mqi_start/0</a></dt>
 <dt><a class="idx" href="#mqi_start/1">mqi_start/1</a></dt>
 <dt><a class="idx" href="#mqi_stop/1">mqi_stop/1</a></dt>
+<dt><a class="idx" href="#mqi_version/2">mqi_version/2</a></dt>
 <dd>
 </dd>
 </dl>

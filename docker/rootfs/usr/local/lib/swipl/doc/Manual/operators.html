@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.5.4 Reference Manual: Section 4.25</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.5.12 Reference Manual: Section 4.25</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -243,7 +243,7 @@ to write <code>+(*(2,3),*(4,5))</code>. In Prolog, a number of operators
 have been predefined. All operators, except for the comma (,) can be 
 redefined by the user.
 
-<p><a id="idx:operatorandmodules:1522"></a>Some care has to be taken 
+<p><a id="idx:operatorandmodules:1535"></a>Some care has to be taken 
 before defining new operators. Defining too many operators might make 
 your source&lsquo;natural' looking, but at the same time using many 
 operators can make it hard to understand the limits of your syntax.
@@ -252,7 +252,7 @@ operators can make it hard to understand the limits of your syntax.
 defined. Operators can be exported from modules using a term
 <code>op(Precedence, Type, Name)</code> in the export list as specified 
 by
-<a id="idx:module2:1523"></a><a class="pred" href="defmodule.html#module/2">module/2</a>. 
+<a id="idx:module2:1536"></a><a class="pred" href="defmodule.html#module/2">module/2</a>. 
 Many modern Prolog systems have module specific operators. 
 Unfortunately, there is no established interface for exporting and 
 importing operators. SWI-Prolog's convention has been adopted by YAP.
@@ -271,26 +271,26 @@ module-local operators:
 </pre>
 
 <p>Although operators are module-specific and the predicates that define 
-them (<a id="idx:op3:1524"></a><a class="pred" href="operators.html#op/3">op/3</a>) 
-or rely on them such as <a id="idx:currentop3:1525"></a><a class="pred" href="operators.html#current_op/3">current_op/3</a>, <a id="idx:read1:1526"></a><a class="pred" href="termrw.html#read/1">read/1</a> 
-and <a id="idx:write1:1527"></a><a class="pred" href="termrw.html#write/1">write/1</a> 
+them (<a id="idx:op3:1537"></a><a class="pred" href="operators.html#op/3">op/3</a>) 
+or rely on them such as <a id="idx:currentop3:1538"></a><a class="pred" href="operators.html#current_op/3">current_op/3</a>, <a id="idx:read1:1539"></a><a class="pred" href="termrw.html#read/1">read/1</a> 
+and <a id="idx:write1:1540"></a><a class="pred" href="termrw.html#write/1">write/1</a> 
 are module sensitive, they are not proper meta-predicates. If they were 
-proper meta predicates <a id="idx:read1:1528"></a><a class="pred" href="termrw.html#read/1">read/1</a> 
-and <a id="idx:write1:1529"></a><a class="pred" href="termrw.html#write/1">write/1</a> 
+proper meta predicates <a id="idx:read1:1541"></a><a class="pred" href="termrw.html#read/1">read/1</a> 
+and <a id="idx:write1:1542"></a><a class="pred" href="termrw.html#write/1">write/1</a> 
 would use the module from which they are called, breaking compatibility 
 with other Prolog systems. The following rules apply:
 
 <p>
 <ol class="latex">
 <li>If the module is explicitly specified by qualifying the third 
-argument (<a id="idx:op3:1530"></a><a class="pred" href="operators.html#op/3">op/3</a>, <a id="idx:currentop3:1531"></a><a class="pred" href="operators.html#current_op/3">current_op/3</a>) 
+argument (<a id="idx:op3:1543"></a><a class="pred" href="operators.html#op/3">op/3</a>, <a id="idx:currentop3:1544"></a><a class="pred" href="operators.html#current_op/3">current_op/3</a>) 
 or specifying a
-<code>module(Module)</code> option (<a id="idx:readterm3:1532"></a><a class="pred" href="termrw.html#read_term/3">read_term/3</a>, <a id="idx:writeterm3:1533"></a><a class="pred" href="termrw.html#write_term/3">write_term/3</a>), 
+<code>module(Module)</code> option (<a id="idx:readterm3:1545"></a><a class="pred" href="termrw.html#read_term/3">read_term/3</a>, <a id="idx:writeterm3:1546"></a><a class="pred" href="termrw.html#write_term/3">write_term/3</a>), 
 this module is used.
 <li>While compiling, the module into which the compiled code is loaded 
 applies.
 <li>Otherwise, the <em>typein module</em> applies. This is normally <code>user</code> 
-and may be changed using <a id="idx:module1:1534"></a><a class="pred" href="mtoplevel.html#module/1">module/1</a>.
+and may be changed using <a id="idx:module1:1547"></a><a class="pred" href="mtoplevel.html#module/1">module/1</a>.
 </ol>
 
 <p>In SWI-Prolog, a <em>quoted atom</em> never acts as an operator. Note 
@@ -342,7 +342,7 @@ curly-bracket pair (<code>{}</code>) as operators.
 <p>In SWI-Prolog, operators are <em>local</em> to a module (see also
 <a class="sec" href="moduleop.html#sec:6.9">section 6.9</a>). Keeping 
 operators in modules and using controlled import/export of operators as 
-described with the <a id="idx:module2:1535"></a><a class="pred" href="defmodule.html#module/2">module/2</a> 
+described with the <a id="idx:module2:1548"></a><a class="pred" href="defmodule.html#module/2">module/2</a> 
 directive keep the issues manageable. The module <code>system</code> 
 provides the operators from <a class="tab" href="operators.html#tab:operators">table 
 5</a> and these operators cannot be modified. Files that are loaded from 
@@ -389,7 +389,7 @@ to the <code>user</code> module. See <a class="sec" href="operators.html#sec:4.2
 ?Type, ?:Name</var>)</a></dt>
 <dd class="defbody">
 True if <var>Name</var> is currently defined as an operator of type <var>Type</var> 
-with precedence <var>Precedence</var>. See also <a id="idx:op3:1536"></a><a class="pred" href="operators.html#op/3">op/3</a>. 
+with precedence <var>Precedence</var>. See also <a id="idx:op3:1549"></a><a class="pred" href="operators.html#op/3">op/3</a>. 
 Note that an
 <em>unqualified</em> <var>Name</var> does <b>not</b> resolve to the 
 calling context but, when compiling, to the compiler's target module and 

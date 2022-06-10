@@ -401,7 +401,7 @@ pred_juncts_to_list2(_Pred1,Lit,[Lit]).
 %
 % List Converted To Conjuncts.
 %
-list_to_conjuncts(I,O):-list_to_conjuncts((,),I,O).
+list_to_conjuncts(I,O):-list_to_conjuncts((','),I,O).
 
 :- export(list_to_conjuncts/3).
 
@@ -758,6 +758,7 @@ pred_subst(_Pred ,P,   P     ).
 :- op(700,xfx,prolog:('univ_safe')).
 
 safe_functor(P,F,A):- compound(P) -> compound_name_arity(P,F,A) ; functor(P,F,A).
+:- export(safe_functor/3).
 
 m_functor(M:P, M:F, A):- !, safe_functor(P, F, A).
 m_functor(P, F, A):- safe_functor(P, F, A).
@@ -783,13 +784,15 @@ wom_functor(MP, F, A):- strip_module(MP,_,P),safe_functor(P, F, A).
 subst(A,B,C,D):-  (must(nd_subst(A,B,C,D0))),on_x_debug(D=D0),!.
 subst(A,_B,_C,A).
 
+:- export(subst/4).
+
 subst_each(A,[NV|List],D):-
   (NV=..[_,N,V]->true;NV=..[N,V]),!,
   subst(A,N,V,M),
   subst_each(M,List,D).
 subst_each(A,_,A).
 
-
+:- export(subst_each/3).
 
 %= 	 	 
 

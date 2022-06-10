@@ -168,11 +168,11 @@ maybe_glyph(G,_,Glyph):- is_grid(G),grid_dot(Glyph),!.
 maybe_glyph(_,N,N).
 
 
-grid_color_and_glyph(Points,C,GN,H,V):- %is_group(Points), 
+grid_color_and_glyph(Points,C,GN,H,V):- %is_object_group(Points), 
   smallest_first(Points,ObjList),
   gridoid_color(Points,C,H,V),
   gridoid_glyph(ObjList,GN,H,V),!.
-grid_color_and_glyph(Points,C,GN,H,V):- %is_group(Points), 
+grid_color_and_glyph(Points,C,GN,H,V):- %is_object_group(Points), 
   gridoid_color(Points,C,H,V),
   gridoid_glyph(Points,GN,H,V),!.
 
@@ -220,6 +220,8 @@ pgt1(Obj):-
          object_shape(polygon), object_indv_id(v('0ad4ef5')*(trn+0)*in, 21),
        %  globalpoints( [ red-point_01_01, silver-point_02_01]),
          grid_size(8, 8)]).
+
+
 
 pgt2(Obj):- Obj = 
       obj( [ mass(536),

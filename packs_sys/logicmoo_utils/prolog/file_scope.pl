@@ -75,7 +75,23 @@ Thread.
 % :-must((asserta((user:term_expansion(A,B):-cyc_to_clif_notify(A,B),!),CLREF),asserta(at_eof_action(erase(CLREF))))).
 
 :- set_module(class(library)).
+:- multifile '$exported_op'/3. 
+:- discontiguous '$exported_op'/3. 
+:- system:reexport(library(debug),[debug/3]).
+:- system:reexport(library(debuggery/bugger)).
+:- system:reexport(library(must_sanity)).
 :- meta_predicate l_once(0).
+qdmsg(_):- current_prolog_flag(dmsg_level,never),!.
+qdmsg(M):-compound(M),cfunctor(M,F,_),!,debug(logicmoo(F),'~q',[M]).
+qdmsg(M):-debug(logicmoo(M),'QMSG: ~q',[M]).
+
+
+
+cfunctor(A,B,C):- compound(A)->compound_name_arity(A,B,C);functor(A,B,C).
+
+:- system:import(cnas/3).
+:- system:import(cfunctor/3).
+:- system:export(cfunctor/3).
 
 
 is_current_source_term(H):- notrace(is_current_source_term0(H)).
@@ -85,9 +101,6 @@ is_current_source_term1(In):-
     prolog_load_context('term',Term), % dmsg(Term=In),
     (Term==In ; Term=@=In).
 
-
-:- system:reexport(library(debug),[debug/3]).
-:- use_module(library(must_sanity)).
  
 :- use_module(library(occurs)).
 

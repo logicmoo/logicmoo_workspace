@@ -811,8 +811,8 @@ do_http_gc_sessions :-
 do_http_gc_sessions :-
     debug(http_session(gc), 'Running HTTP session GC', []),
     get_time(Now),
-    (   last_used(SessionID, Last),
-        session_setting(SessionID, timeout(Timeout)),
+    (   session_setting(SessionID, timeout(Timeout)),
+        last_used(SessionID, Last),
         Timeout > 0,
         Idle is Now - Last,
         Idle > Timeout,

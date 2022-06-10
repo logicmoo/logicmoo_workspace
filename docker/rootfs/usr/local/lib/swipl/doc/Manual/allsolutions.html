@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.5.4 Reference Manual: Section 4.30</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.5.12 Reference Manual: Section 4.30</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -247,16 +247,16 @@ successively on backtracking over <var>Goal</var> and unify the result
 with <var>Bag</var>. Succeeds with an empty list if <var>Goal</var> has 
 no solutions.<br>
 
-<p><a id="idx:findall3:1582"></a><a class="pred" href="allsolutions.html#findall/3">findall/3</a> 
-is equivalent to <a id="idx:bagof3:1583"></a><a class="pred" href="allsolutions.html#bagof/3">bagof/3</a> 
+<p><a id="idx:findall3:1595"></a><a class="pred" href="allsolutions.html#findall/3">findall/3</a> 
+is equivalent to <a id="idx:bagof3:1596"></a><a class="pred" href="allsolutions.html#bagof/3">bagof/3</a> 
 with all <em>free</em> variables appearing in <var>Goal</var> scoped to 
 the <var>Goal</var> with an existential (caret) operator (<strong><code>^</code></strong>), 
-except that <a id="idx:bagof3:1584"></a><a class="pred" href="allsolutions.html#bagof/3">bagof/3</a> 
+except that <a id="idx:bagof3:1597"></a><a class="pred" href="allsolutions.html#bagof/3">bagof/3</a> 
 fails when <var>Goal</var> has no solutions.</dd>
 <dt class="pubdef"><a id="findall/4"><strong>findall</strong>(<var>+Template, 
 :Goal, -Bag, +Tail</var>)</a></dt>
 <dd class="defbody">
-As <a id="idx:findall3:1585"></a><a class="pred" href="allsolutions.html#findall/3">findall/3</a>, 
+As <a id="idx:findall3:1598"></a><a class="pred" href="allsolutions.html#findall/3">findall/3</a>, 
 but returns the result as the difference list
 <var>Bag</var>-<var>Tail</var>. The 3-argument version is defined as
 
@@ -271,19 +271,19 @@ findall(Templ, Goal, Bag) :-
 <dt class="pubdef"><span class="pred-tag">[nondet]</span><a id="findnsols/5"><strong>findnsols</strong>(<var>+N, 
 @Template, :Goal, -List, ?Tail</var>)</a></dt>
 <dd class="defbody">
-As <a id="idx:findall3:1586"></a><a class="pred" href="allsolutions.html#findall/3">findall/3</a> 
-and <a id="idx:findall4:1587"></a><a class="pred" href="allsolutions.html#findall/4">findall/4</a>, 
+As <a id="idx:findall3:1599"></a><a class="pred" href="allsolutions.html#findall/3">findall/3</a> 
+and <a id="idx:findall4:1600"></a><a class="pred" href="allsolutions.html#findall/4">findall/4</a>, 
 but generates at most <var>N</var> solutions. If
 <var>N</var> solutions are returned, this predicate succeeds with a 
 choice point if <var>Goal</var> has a choice point. Backtracking returns 
 the next chunk of (at most) <var>N</var> solutions. In addition to 
 passing a plain integer for <var>N</var>, a term of the form <code>count(N)</code> 
 is accepted. Using <code>count(N)</code>, the size of the next chunk can 
-be controlled using <a id="idx:nbsetarg3:1588"></a><a class="pred" href="manipterm.html#nb_setarg/3">nb_setarg/3</a>. 
+be controlled using <a id="idx:nbsetarg3:1601"></a><a class="pred" href="manipterm.html#nb_setarg/3">nb_setarg/3</a>. 
 The non-deterministic behaviour used to implement the
 <em>chunk</em> option in <code>library(pengines)</code>. Based on Ciao, 
 but the Ciao version is deterministic. Portability can be achieved by 
-wrapping the goal in <a id="idx:once1:1589"></a><a class="pred" href="metacall.html#once/1">once/1</a>. 
+wrapping the goal in <a id="idx:once1:1602"></a><a class="pred" href="metacall.html#once/1">once/1</a>. 
 Below are three examples. The first illustrates standard chunking of 
 answers. The second illustrates that the chunk size can be adjusted 
 dynamically and the last illustrates that no choice point is left if <var>Goal</var> 
@@ -311,16 +311,16 @@ L = [1, 2, 3, 4].
 :Goal, -Bag</var>)</a></dt>
 <dd class="defbody">
 Unify <var>Bag</var> with the alternatives of <var>Template</var>. If <var>Goal</var> 
-has free variables besides the one sharing with <var>Template</var>, <a id="idx:bagof3:1590"></a><a class="pred" href="allsolutions.html#bagof/3">bagof/3</a> 
+has free variables besides the one sharing with <var>Template</var>, <a id="idx:bagof3:1603"></a><a class="pred" href="allsolutions.html#bagof/3">bagof/3</a> 
 will backtrack over the alternatives of these free variables, unifying
 <var>Bag</var> with the corresponding alternatives of <var>Template</var>. 
 The construct <code>+<var>Var</var><code>^</code><var>Goal</var></code> 
-tells <a id="idx:bagof3:1591"></a><a class="pred" href="allsolutions.html#bagof/3">bagof/3</a> 
+tells <a id="idx:bagof3:1604"></a><a class="pred" href="allsolutions.html#bagof/3">bagof/3</a> 
 not to bind
-<var>Var</var> in <var>Goal</var>. <a id="idx:bagof3:1592"></a><a class="pred" href="allsolutions.html#bagof/3">bagof/3</a> 
+<var>Var</var> in <var>Goal</var>. <a id="idx:bagof3:1605"></a><a class="pred" href="allsolutions.html#bagof/3">bagof/3</a> 
 fails if <var>Goal</var> has no solutions.
 
-<p>The example below illustrates <a id="idx:bagof3:1593"></a><a class="pred" href="allsolutions.html#bagof/3">bagof/3</a> 
+<p>The example below illustrates <a id="idx:bagof3:1606"></a><a class="pred" href="allsolutions.html#bagof/3">bagof/3</a> 
 and the <strong><code>^</code></strong> operator. The variable bindings 
 are printed together on one line to save paper.
 
@@ -349,8 +349,8 @@ A = G324, B = c, C = G326, Cs = [e, f, g].
 <dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="setof/3"><strong>setof</strong>(<var>+Template, 
 +Goal, -Set</var>)</a></dt>
 <dd class="defbody">
-Equivalent to <a id="idx:bagof3:1594"></a><a class="pred" href="allsolutions.html#bagof/3">bagof/3</a>, 
-but sorts the result using <a id="idx:sort2:1595"></a><a class="pred" href="builtinlist.html#sort/2">sort/2</a> 
+Equivalent to <a id="idx:bagof3:1607"></a><a class="pred" href="allsolutions.html#bagof/3">bagof/3</a>, 
+but sorts the result using <a id="idx:sort2:1608"></a><a class="pred" href="builtinlist.html#sort/2">sort/2</a> 
 to get a sorted list of alternatives without duplicates.
 </dd>
 </dl>

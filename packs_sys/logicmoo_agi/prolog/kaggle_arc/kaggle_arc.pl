@@ -25,14 +25,6 @@ decl_pt(G):- ground(G), !, assertz_new(decl_pt(G)).
 :- stream_property(S,file_no(2)), set_stream(S,tty(true)).
 :- stream_property(S,file_no(1)), set_stream(S,tty(true)).
 
-arc_sub_path(Subdir,AbsolutePath):- arc_directory(ARC_DIR),
-  catch(absolute_file_name(Subdir,AbsolutePath,[relative_to(ARC_DIR),expand(true),
-    file_type(directory),solutions(first),file_errors(error),access(read)]),_,fail),!.
-arc_sub_path(Subdir,AbsolutePath):- arc_directory(ARC_DIR),
-  absolute_file_name(Subdir,AbsolutePath,[relative_to(ARC_DIR),expand(true),
-    file_type(regular),solutions(first),file_errors(error),access(read)]).
-:- export(arc_sub_path/2).
-
 % COMMAND LINE ARC
 :- if(\+ current_module(logicmoo_arc)).
   muarc_mod(user).
@@ -65,17 +57,10 @@ arc_sub_path(Subdir,AbsolutePath):- arc_directory(ARC_DIR),
 :- endif.
 
 
+:- system:ensure_loaded(library(logicmoo_utils)).
 :- system:ensure_loaded(library(logicmoo_common)).
 %:- system:ensure_loaded(library(pfc_lib)).
 %:- expects_dialect(pfc).
-
-:- dynamic(arc_directory/1).
-:- prolog_load_context(directory,ARC_DIR), asserta_new(arc_directory(ARC_DIR)).
-arc_directory(ARC_DIR):- getenv('ARC_DIR',ARC_DIR), exists_directory(ARC_DIR),!.
-
-:- multifile (user:file_search_path/2).
-user:file_search_path(arc,  AbsolutePath):- arc_sub_path('.',AbsolutePath).
-
 
 :- ensure_loaded(kaggle_arc_utils).
 :- ensure_loaded(kaggle_arc_ui_ansi).
@@ -131,7 +116,10 @@ arc1e(TName):-
  retractall(why_grouped(individuate(_),_)),
  locally(set_prolog_flag(gc,true),
   (fix_test_name(TName,TestID,ExampleNum), 
-  ExampleNum = (tst+0),
+  ExampleNum = (_+0),
+   clear_shape_lib(in),clear_shape_lib(out),clear_shape_lib(pair),clear_shape_lib(noise),  
+   clear_shape_lib(intruder),
+
   kaggle_arc(TestID,ExampleNum,In,Out),
   run_arc_io(TestID,ExampleNum,In,Out))).
 
@@ -197,10 +185,10 @@ show_arc_pair_progress(TestID,ExampleNum,In,Out):-
   forall((rtrace_on_error(individualizer_heuristics(PairName,In,Out,IH,IV,OH,OV))),true), 
   show_indivs(IH,IV,OH,OV,individuate_default,early,PairName,In,Out,SF),
   %forall((rtrace_on_error(individualizer_heuristics(PairName,In,Out,IH,IV,OH,OV))),true), 
-  %clear_shape_lib(in),clear_shape_lib(out),clear_shape_lib(pair),clear_shape_lib(noise),  
   add_shape_lib(pairs,SF),
   show_shape_lib(in),show_shape_lib(out),show_shape_lib(pair),show_shape_lib(noise),
   show_indivs(IH,IV,OH,OV,individuate_default,later,PairName,In,Out,_))),!,
+ with_named_pair(solve,TestID,PairName,In,Out),
   nop((
 
 /*
@@ -299,3 +287,11 @@ reuse_a_b(A,B,AA):-
 :- learn_shapes.
 
 :- fixup_exports.
+
+:- set_prolog_flag(autoload,true).
+%:- ensure_loaded(library(debuggery/dmsg)).
+:- system:use_module(library(hashtable)).
+:- make.
+:- system:use_module(library(sandbox)).
+:- autoload_all.
+

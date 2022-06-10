@@ -306,7 +306,9 @@ register_cleanup :-
     registered_cleanup,
     !.
 register_cleanup :-
-    (   current_prolog_flag(threads, true)
+    (   thread_self(main)
+    ->  at_halt(destroy_dtds)
+    ;   current_prolog_flag(threads, true)
     ->  prolog_listen(this_thread_exit, destroy_dtds)
     ;   true
     ),

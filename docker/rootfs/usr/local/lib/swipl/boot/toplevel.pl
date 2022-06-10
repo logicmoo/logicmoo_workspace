@@ -88,21 +88,37 @@ version(Message) :-
                 *         INITIALISATION        *
                 *********************************/
 
-%       note: loaded_init_file/2 is used by prolog_load_context/2 to
-%       confirm we are loading a script.
+%!  load_init_file is det.
+%
+%   Load the user customization file. This can  be done using ``swipl -f
+%   file`` or simply using ``swipl``. In the   first  case we search the
+%   file both directly and over  the   alias  `user_app_config`.  In the
+%   latter case we only use the alias.
+
+load_init_file :-
+    '$cmd_option_val'(init_file, OsFile),
+    !,
+    prolog_to_os_filename(File, OsFile),
+    load_init_file(File, explicit).
+load_init_file :-
+    load_init_file('init.pl', implicit).
+
+%!  loaded_init_file(?Base, ?AbsFile)
+%
+%   Used by prolog_load_context/2 to confirm we are loading a script.
 
 :- dynamic
     loaded_init_file/2.             % already loaded init files
 
-'$load_init_file'(none) :- !.
-'$load_init_file'(Base) :-
+load_init_file(none, _) :- !.
+load_init_file(Base, _) :-
     loaded_init_file(Base, _),
     !.
-'$load_init_file'(InitFile) :-
+load_init_file(InitFile, explicit) :-
     exists_file(InitFile),
     !,
     ensure_loaded(user:InitFile).
-'$load_init_file'(Base) :-
+load_init_file(Base, _) :-
     absolute_file_name(user_app_config(Base), InitFile,
                        [ access(read),
                          file_errors(fail)
@@ -111,7 +127,7 @@ version(Message) :-
     load_files(user:InitFile,
                [ scope_settings(false)
                ]).
-'$load_init_file'('init.pl') :-
+load_init_file('init.pl', implicit) :-
     (   current_prolog_flag(windows, true),
         absolute_file_name(user_profile('swipl.ini'), InitFile,
                            [ access(read),
@@ -122,7 +138,7 @@ version(Message) :-
     ),
     !,
     print_message(warning, backcomp(init_file_moved(InitFile))).
-'$load_init_file'(_).
+load_init_file(_, _).
 
 '$load_system_init_file' :-
     loaded_init_file(system, _),
@@ -494,6 +510,7 @@ initialise_error(E) :-
 
 initialise_prolog :-
     '$clean_history',
+    apple_setup_app,
     '$run_initialization',
     '$load_system_init_file',
     set_toplevel,
@@ -501,9 +518,7 @@ initialise_prolog :-
     init_debug_flags,
     start_pldoc,
     opt_attach_packs,
-    '$cmd_option_val'(init_file, OsFile),
-    prolog_to_os_filename(File, OsFile),
-    '$load_init_file'(File),
+    load_init_file,
     catch(setup_colors, E, print_message(warning, E)),
     '$load_script_file',
     associated_files(Files),
@@ -519,6 +534,32 @@ initialise_prolog :-
             run_main_init
         )
     ).
+
+:- if(current_prolog_flag(apple,true)).
+apple_set_working_directory :-
+    (   expand_file_name('~', [Dir]),
+	exists_directory(Dir)
+    ->  working_directory(_, Dir)
+    ;   true
+    ).
+
+apple_set_locale :-
+    (   getenv('LC_CTYPE', 'UTF-8'),
+	apple_current_locale_identifier(LocaleID),
+	atom_concat(LocaleID, '.UTF-8', Locale),
+	catch(setlocale(ctype, _Old, Locale), _, fail)
+    ->  setenv('LANG', Locale),
+        unsetenv('LC_CTYPE')
+    ;   true
+    ).
+
+apple_setup_app :-
+    current_prolog_flag(apple, true),
+    current_prolog_flag(console_menu, true),	% SWI-Prolog.app on MacOS
+    apple_set_working_directory,
+    apple_set_locale.
+:- endif.
+apple_setup_app.
 
 opt_attach_packs :-
     current_prolog_flag(packs, true),

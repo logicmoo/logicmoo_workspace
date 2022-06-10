@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.5.4 Reference Manual: Section A.31</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.5.12 Reference Manual: Section A.31</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -320,11 +320,13 @@ Use <a class="pred" href="ordsets.html#ord_intersection/3">ord_intersection/3</a
 </dl>
 
 </dd>
-<dt class="pubdef"><a id="ord_intersection/2"><strong>ord_intersection</strong>(<var>+PowerSet, 
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="ord_intersection/2"><strong>ord_intersection</strong>(<var>+PowerSet, 
 -Intersection</var>)</a></dt>
 <dd class="defbody">
 <var>Intersection</var> of a powerset. True when <var>Intersection</var> 
-is an ordered set holding all elements common to all sets in <var>PowerSet</var>.
+is an ordered set holding all elements common to all sets in <var>PowerSet</var>. 
+Fails if
+<var>PowerSet</var> is an empty list.
 
 <dl class="tags">
 <dt class="tag">Compatibility</dt>

@@ -11,6 +11,10 @@
 % ===================================================================
 */
 % File: /opt/PrologMUD/pack/logicmoo_base/prolog/logicmoo/util/logicmoo_util_dmsg.pl
+:- if((prolog_load_context(source,F),prolog_load_context(file,F))).
+:- else.
+%module(_,Y):- maplist(export,Y).
+:- endif.
 :- module(dmsg,
           [ ansi_control_conv/2,
             with_output_to_each/2,
@@ -39,7 +43,7 @@
                loggerReFmt/2,
                logger_property/3,
 
-            univ_safe_2/2,
+            univ_safe_3/2,
             cls/0,
             dmsg0/1,
             dmsg00/1,
@@ -132,6 +136,7 @@ dmsg000/1,
 
             writeFailureLog/2
           ]).
+
 :- multifile
         term_color0/2.
 :- meta_predicate
@@ -284,7 +289,7 @@ wldmsg_1(Info):-
 get_real_user_output(O):-stream_property(O,file_no(1)).
 get_real_user_error(O):-stream_property(O,file_no(2)).
 
-
+:- export(same_streams/2).
 same_streams(X,Y):- dzotrace((into_stream(X,XX),into_stream(Y,YY),!,XX==YY)).
 
 into_stream(X,S):- dzotrace(into_stream_0(X,S)).
@@ -306,15 +311,25 @@ output_to_x_0(S,Info):- into_stream(S,X),!, flush_output(X),
 dmsgln(CMSpec):- strip_module(CMSpec,CM,Spec),!, ignore(dzotrace(dmsg:wldmsg_0(CM,Spec))).
 % system:dmsgln(List):-!,dzotrace(dmsg:wldmsg_0(user,List)).
 
+:- export(prepend_trim/2).
+:- export(is_html_white_l/1).
+:- export(is_html_white_r/1).
+:- export(likely_folded/1).
 :- module_transparent(dmsg:dmsgln/1).
 :- dmsg:export(dmsg:dmsgln/1).
 :- system:import(dmsg:dmsgln/1).
 :- meta_predicate(dmsg:dmsgln(:)).
+:- dmsg:dynamic(dmsg:dmsgln/1).
+:- module_transparent(dmsg:dmsgln/1).
+:- dmsg:export(dmsg:dmsgln/1).
+:- system:import(dmsg:dmsgln/1).
+:- meta_predicate(dmsg:dmsgln(:)).
+dmsgln(CMSpec):- strip_module(CMSpec,CM,Spec),!, ignore(dzotrace(dmsg:wldmsg_0(CM,Spec))).
 
 
 
-univ_safe_2(A,B):- compound(A),compound_name_arity(A,F,0),!,F=..B.
-univ_safe_2(A,B):- A=..B.
+univ_safe_3(A,B):- compound(A),compound_name_arity(A,F,0),!,F=..B.
+univ_safe_3(A,B):- A=..B.
 
 :- meta_predicate if_defined_local(:,0).
 if_defined_local(G,Else):- current_predicate(_,G)->G;Else.
@@ -407,7 +422,7 @@ if_defined_local(G,Else):- current_predicate(_,G)->G;Else.
 :- set_module(class(library)).
 
 :- user:use_module(library(memfile)).
-:- user:use_module(first).
+%:- user:use_module(first).
 %:- user:ensure_loaded(logicmoo_util_rtrace).
 :- ensure_loaded(library(logicmoo/each_call)).
 %:- user:ensure_loaded(logicmoo_util_loop_check).
@@ -1423,7 +1438,7 @@ dmsg000(V):-
 dmsg1(V):- !, dmsg3(V).
 dmsg1(V):- var(V),!,dmsg1(warn(dmsg_var(V))).
 dmsg1(_):- current_prolog_flag(dmsg_level,never),!.
-dmsg1(V):- tlbugger:is_with_dmsg(FP),!,univ_safe_2(FP,FPL),append(FPL,[V],VVL),univ_safe_2(VV,VVL),once(dmsg1(VV)),!.
+dmsg1(V):- tlbugger:is_with_dmsg(FP),!,univ_safe_3(FP,FPL),append(FPL,[V],VVL),univ_safe_3(VV,VVL),once(dmsg1(VV)),!.
 dmsg1(NC):- cyclic_term(NC),!,dtrace,format_to_error('~N% ~q~n',[dmsg_cyclic_term_1]).
 dmsg1(NC):- tlbugger:skipDMsg,!,loop_check_early(dmsg2(NC),format_to_error('~N% ~q~n',[skipDMsg])),!.
 dmsg1(V):- locally(tlbugger:skipDMsg,((once(dmsg2(V)), ignore((tlbugger:dmsg_hook(V),fail))))),!.
@@ -1646,20 +1661,25 @@ use_tty(_,TTY):- stream_property(current_output,tty(TTY)),!.
 use_tty(_,false).
 
 :- meta_predicate(woto_tty(+,+,0)).
+:- export(woto_tty/3).
 woto_tty(S,TTY,Goal):- with_output_to(S,(set_stream(current_output,tty(TTY)),Goal)).
 
 :- meta_predicate(woto(+,0)).
+:- export(woto/2).
 woto(S,Goal):- use_tty(S,TTY),woto_tty(S,TTY,Goal).
 
 :- meta_predicate(wots(-,0)).
+:- export(wots/2).
 wots(S,Goal):- woto(string(S),Goal).
 
 :- meta_predicate(wotso(0)).
+:- export(wotso/1).
 wotso(Goal):- !, call(Goal).
 wotso(Goal):- wots(S,Goal), ignore((S\=="",write(S))).
 
 :- meta_predicate(weto(0)).
 %weto(G):- !, call(G).
+:- export(weto/1).
 weto(G):- 
   stream_property(UE,alias(user_error)),
   stream_property(CO,alias(current_output)),
@@ -1678,6 +1698,7 @@ weto(G):-
 weto(G):- call(G).
 
 :- meta_predicate(wets(+,0)).
+:- export(wets/2).
 wets(S,G):-
   with_ioe((
      (set_stream(S,alias(user_error)),
@@ -1685,6 +1706,7 @@ wets(S,G):-
      locally_tl(thread_local_error_stream(S),G))).
 
 :- meta_predicate(with_ioe(0)).
+:- export(with_ioe/1).
 with_ioe(G):-
   stream_property(UE,alias(user_error)),
   stream_property(UO,alias(user_output)),
@@ -2199,7 +2221,7 @@ cls:- ignore(catch(system:shell(cls,0),_,fail)).
 :- 'mpred_trace_none'(portray_clause_w_vars(_)).
 */
 
-:- ignore((source_location(S,_),prolog_load_context(module,M),module_property(M,class(library)),
+:- ignore((prolog_load_context(source,S),prolog_load_context(module,M),module_property(M,class(library)),
  forall(source_file(M:H,S),
  ignore((cfunctor(H,F,A),
   ignore(((atom(F),\+ atom_concat('$',_,F),(export(F/A) , current_predicate(system:F/A)->true; system:import(M:F/A))))),

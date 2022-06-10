@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.5.4 Reference Manual: Section B.2</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.5.12 Reference Manual: Section B.2</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -242,7 +242,7 @@ cuts</span></a></h2>
 <dt class="pubdef"><a id="prolog_cut_to/1"><strong>prolog_cut_to</strong>(<var>+Choice</var>)</a></dt>
 <dd class="defbody">
 Prunes all choice points created since <var>Choice</var>. Can be used 
-together with <a id="idx:prologcurrentchoice1:2653"></a><a class="pred" href="manipstack.html#prolog_current_choice/1">prolog_current_choice/1</a> 
+together with <a id="idx:prologcurrentchoice1:2698"></a><a class="pred" href="manipstack.html#prolog_current_choice/1">prolog_current_choice/1</a> 
 to implement <em>ancestral</em> cuts. This predicate is in the hackers 
 corner because it should not be used in normal Prolog code. It may be 
 used to create new high level control structures, particularly for 
@@ -252,7 +252,7 @@ compatibility purposes.
 environment frames are <em>not</em> reclaimed. As a consequence, where 
 predicates that are deterministic due to clause indexing, normal cuts or
 <code>(if-&gt;then;else)</code> and and tail recursive run in bounded 
-local stack space, predicates using <a id="idx:prologcutto1:2654"></a><a class="pred" href="ancestral-cut.html#prolog_cut_to/1">prolog_cut_to/1</a> 
+local stack space, predicates using <a id="idx:prologcutto1:2699"></a><a class="pred" href="ancestral-cut.html#prolog_cut_to/1">prolog_cut_to/1</a> 
 will run out of stack.
 </dd>
 </dl>

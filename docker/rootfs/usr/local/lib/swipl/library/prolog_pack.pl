@@ -623,7 +623,15 @@ url_menu_item(URL, URL=install_from(URL)).
 %     * url(+URL)
 %     Source for downloading the package
 %     * package_directory(+Dir)
-%     Directory into which to install the package
+%     Directory into which to install the package.
+%     * global(+Boolean)
+%     If `true`, install in the XDG common application data path, making
+%     the pack accessible to everyone. If `false`, install in the XDG
+%     user application data path, making the pack accessible for the
+%     current user only.  If the option is absent, use the first
+%     existing and writable directory.  If that doesn't exist find
+%     locations where it can be created and prompt the user to do
+%     so.
 %     * interactive(+Boolean)
 %     Use default answer without asking the user if there
 %     is a default action.
@@ -667,19 +675,32 @@ pack_install(Spec, Options) :-
 pack_install_dir(PackDir, Options) :-
     option(package_directory(PackDir), Options),
     !.
-pack_install_dir(PackDir, _Options) :-          % TBD: global/user?
-    absolute_file_name(pack(.), PackDir,
+pack_install_dir(PackDir, Options) :-
+    base_alias(Alias, Options),
+    absolute_file_name(Alias, PackDir,
                        [ file_type(directory),
                          access(write),
                          file_errors(fail)
                        ]),
     !.
-pack_install_dir(PackDir, Options) :-           % TBD: global/user?
+pack_install_dir(PackDir, Options) :-
     pack_create_install_dir(PackDir, Options).
 
+base_alias(Alias, Options) :-
+    option(global(true), Options),
+    !,
+    Alias = common_app_data(pack).
+base_alias(Alias, Options) :-
+    option(global(false), Options),
+    !,
+    Alias = user_app_data(pack).
+base_alias(Alias, _Options) :-
+    Alias = pack('.').
+
 pack_create_install_dir(PackDir, Options) :-
+    base_alias(Alias, Options),
     findall(Candidate = create_dir(Candidate),
-            ( absolute_file_name(pack(.), Candidate, [solutions(all)]),
+            ( absolute_file_name(Alias, Candidate, [solutions(all)]),
               \+ exists_file(Candidate),
               \+ exists_directory(Candidate),
               file_directory_name(Candidate, Super),
@@ -1091,7 +1112,19 @@ pack_rebuild(Pack) :-
     !,
     post_install_foreign(Pack, PackDir, [rebuild(true)]).
 pack_rebuild(Pack) :-
+    unattached_pacth(Pack, PackDir),
+    !,
+    post_install_foreign(Pack, PackDir, [rebuild(true)]).
+pack_rebuild(Pack) :-
     existence_error(pack, Pack).
+
+unattached_pacth(Pack, BaseDir) :-
+    directory_file_path(Pack, 'pack.pl', PackFile),
+    absolute_file_name(pack(PackFile), PackPath,
+                       [ access(read),
+                         file_errors(fail)
+                       ]),
+    file_directory_name(PackPath, BaseDir).
 
 %!  pack_rebuild is det.
 %
@@ -1261,13 +1294,8 @@ pack_remove_forced(Pack) :-
     print_message(informational, pack(remove(BaseDir))),
     delete_directory_and_contents(BaseDir).
 pack_remove_forced(Pack) :-
-    directory_file_path(Pack, 'pack.pl', PackFile),
-    absolute_file_name(pack(PackFile), PackPath,
-                       [ access(read),
-                         file_errors(fail)
-                       ]),
+    unattached_pacth(Pack, BaseDir),
     !,
-    file_directory_name(PackPath, BaseDir),
     delete_directory_and_contents(BaseDir).
 pack_remove_forced(Pack) :-
     print_message(informational, error(existence_error(pack, Pack),_)).
@@ -1428,11 +1456,15 @@ github_release_url(URL, Pack, Version) :-
     uri_data(scheme, Components, Scheme),
     download_scheme(Scheme),
     uri_data(path, Components, Path),
-    atomic_list_concat(['',_Project,Pack,archive,File], /, Path),
+    github_archive_path(Archive,Pack,File),
+    atomic_list_concat(Archive, /, Path),
     file_name_extension(Tag, Ext, File),
     github_archive_extension(Ext),
     tag_version(Tag, Version),
     !.
+
+github_archive_path(['',_User,Pack,archive,File],Pack,File).
+github_archive_path(['',_User,Pack,archive,refs,tags,File],Pack,File).
 
 github_archive_extension(tgz).
 github_archive_extension(zip).

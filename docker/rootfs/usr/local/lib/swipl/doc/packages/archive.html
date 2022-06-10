@@ -302,19 +302,34 @@ formats. The following example lists the entries in an archive:
 
 <pre class="code">
 list_archive(File) :-
-      archive_open(File, Archive, []),
-      repeat,
-         (   archive_next_header(Archive, Path)
-         -&gt;  format('~w~n', [Path]),
-             fail
-         ;   !,
-             archive_close(Archive)
-         ).
+    setup_call_cleanup(
+        archive_open(File, Archive, []),
+        (   repeat,
+            (   archive_next_header(Archive, Path)
+            -&gt;  format('~w~n', [Path]),
+                fail
+            ;   !
+            )
+        ),
+        archive_close(Archive)).
+</pre>
+
+<p>Here is an alternative way of doing this, using <a class="pred" href="#archive_foldl/4">archive_foldl/4</a>, 
+a higher level predicate.
+
+<pre class="code">
+list_archive2(File) :-
+    list_archive(File, Headers),
+    maplist(writeln, Headers).
+
+list_archive2(File, Headers) :-
+    archive_foldl(add_header, File, Headers, []).
+
+add_header(Path, _, [Path|Paths], Paths).
 </pre>
 
 <p>Here is another example which counts the files in the archive and 
-prints file type information. It uses <a class="pred" href="#archive_foldl/4">archive_foldl/4</a>, 
-a higher level predicate:
+prints file type information, also using <a class="pred" href="#archive_foldl/4">archive_foldl/4</a>:
 
 <pre class="code">
 print_entry(Path, Handle, Cnt0, Cnt1) :-
@@ -322,7 +337,7 @@ print_entry(Path, Handle, Cnt0, Cnt1) :-
     format('File ~w is of type ~w~n', [Path, Type]),
     Cnt1 is Cnt0 + 1.
 
-list_archive(File) :-
+list_archive_headers(File) :-
     archive_foldl(print_entry, File, 0, FileCount),
     format('We have ~w files', [FileCount]).
 </pre>
@@ -337,21 +352,31 @@ that opens the archive in read mode.</dd>
 +Mode, -Archive, +Options</var>)</a></dt>
 <dd class="defbody">
 Open the archive in <var>Data</var> and unify <var>Archive</var> with a 
-handle to the opened archive. <var>Data</var> is either a file or a 
-stream that contains a valid archive. Details are controlled by <var>Options</var>. 
-Typically, the option <code>close_parent(true)</code> is used to close 
-stream if the archive is closed using <a class="pred" href="#archive_close/1">archive_close/1</a>. 
-For other options, the defaults are typically fine. The option <code>format(raw)</code> 
-must be used to process compressed streams that do not contain explicit 
-entries (e.g., gzip'ed data) unambibuously. The <code>raw</code> format 
-creates a <i>pseudo archive</i> holding a single member named <code>data</code>.
+handle to the opened archive. <var>Data</var> is either a file name (as 
+accepted by <span class="pred-ext">open/4</span>) or a stream that has 
+been opened with the option <code>type(binary)</code>. If
+<var>Data</var> is an already open stream, the caller is responsible for 
+closing it (but see option <code>close_parent(true)</code>) and must not 
+close the stream until after <a class="pred" href="#archive_close/1">archive_close/1</a> 
+is called. <var>Mode</var> is either
+<code>read</code> or <code>write</code>. Details are controlled by <var>Options</var>. 
+Typically, the option <code>close_parent(true)</code> is used to also 
+close the <var>Data</var> stream if the archive is closed using <a class="pred" href="#archive_close/1">archive_close/1</a>. 
+For other options when reading, the defaults are typically fine - for 
+writing, a valid format and optional filters must be specified. The 
+option
+<code>format(raw)</code> must be used to process compressed streams that 
+do not contain explicit entries (e.g., gzip'ed data) unambibuously. The
+<code>raw</code> format creates a <i>pseudo archive</i> holding a single 
+member named <code>data</code>.
 
 <dl class="latex">
 <dt><strong>close_parent</strong>(<var>+Boolean</var>)</dt>
 <dd class="defbody">
-If this option is <code>true</code> (default <code>false</code>), Stream 
-is closed if <a class="pred" href="#archive_close/1">archive_close/1</a> 
-is called on <var>Archive</var>.
+If this option is <code>true</code> (default <code>false</code>), <var>Data</var> 
+stream is closed when <a class="pred" href="#archive_close/1">archive_close/1</a> 
+is called on <var>Archive</var>. If <var>Data</var> is a file name, the 
+default is <code>true</code>.
 </dd>
 <dt><strong>compression</strong>(<var>+Compression</var>)</dt>
 <dd class="defbody">
@@ -361,8 +386,8 @@ Synomym for <code>filter(Compression)</code>. Deprecated.
 <dd class="defbody">
 Support the indicated filter. This option may be used multiple times to 
 support multiple filters. In read mode, If no filter options are 
-provided, <code>all</code> is assumed. In write mode, none is assumed. 
-Supported values are <code>all</code>, <code>bzip2</code>, <code>compress</code>, <code>gzip</code>,
+provided, <code>all</code> is assumed. In write mode, <code>none</code> 
+is assumed. Supported values are <code>all</code>, <code>bzip2</code>, <code>compress</code>, <code>gzip</code>,
 <code>grzip</code>, <code>lrzip</code>, <code>lzip</code>, <code>lzma</code>, <code>lzop</code>, <code>none</code>, <code>rpm</code>, <code>uu</code> 
 and <code>xz</code>. The value <code>all</code> is default for read, <code>none</code> 
 for write.
@@ -385,33 +410,36 @@ and <code>zip</code>. The value <code>all</code> is default for read.
 
 <p>Note that the actually supported compression types and formats may 
 vary depending on the version and installation options of the underlying 
-libarchive library. This predicate raises a domain error if the 
-(explicitly) requested format is not supported.
+libarchive library. This predicate raises a domain or permission error 
+if the (explicitly) requested format or filter is not supported.
 
 <dl class="tags">
 <dt class="mtag">Errors</dt>
 <dd>
 - <code>domain_error(filter, Filter)</code> if the requested filter is 
-not supported. <br>
+invalid (e.g., <code>all</code> for writing). <br>
 - <code>domain_error(format, Format)</code> if the requested format type 
-is not supported.
+is not supported. <br>
+- <code>permission_error(set, filter, Filter)</code> if the requested 
+filter is not supported.
 </dd>
 </dl>
 
 </dd>
 <dt class="pubdef"><span class="pred-tag">[det]</span><a id="archive_close/1"><strong>archive_close</strong>(<var>+Archive</var>)</a></dt>
 <dd class="defbody">
-Close the archive. If <code>close_parent(true)</code> is specified, the 
-underlying stream is closed too. If there is an entry opened with <a class="pred" href="#archive_open_entry/2">archive_open_entry/2</a>, 
+Close the archive. If <code>close_parent(true)</code> was specified in
+<a class="pred" href="#archive_open/4">archive_open/4</a>, the 
+underlying entry stream is closed too. If there is an entry opened with <a class="pred" href="#archive_open_entry/2">archive_open_entry/2</a>, 
 actually closing the archive is delayed until the stream associated with 
 the entry is closed. This can be used to open a stream to an archive 
 entry without having to worry about closing the archive:
 
 <pre class="code">
 archive_open_named(ArchiveFile, EntryName, Stream) :-
-    archive_open(ArchiveFile, Handle, []),
-    archive_next_header(Handle, Name),
-    archive_open_entry(Handle, Stream),
+    archive_open(ArchiveFile, Archive, []),
+    archive_next_header(Archive, EntryName),
+    archive_open_entry(Archive, Stream),
     archive_close(Archive).
 </pre>
 
@@ -435,8 +463,8 @@ format.
 -Name</var>)</a></dt>
 <dd class="defbody">
 Forward to the next entry of the archive for which <var>Name</var> 
-unifies with the pathname of the entry. Fails silently if the name of 
-the archive is reached before success. <var>Name</var> is typically 
+unifies with the pathname of the entry. Fails silently if the end of the 
+archive is reached before success. <var>Name</var> is typically 
 specified if a single entry must be accessed and unbound otherwise. The 
 following example opens a Prolog stream to a given archive entry. Note 
 that <i>Stream</i> must be closed using
@@ -445,10 +473,10 @@ using <a class="pred" href="#archive_close/1">archive_close/1</a> after
 the data has been used. See also <span class="pred-ext">setup_call_cleanup/3</span>.
 
 <pre class="code">
-open_archive_entry(ArchiveFile, Entry, Stream) :-
+open_archive_entry(ArchiveFile, EntryName, Stream) :-
     open(ArchiveFile, read, In, [type(binary)]),
     archive_open(In, Archive, [close_parent(true)]),
-    archive_next_header(Archive, Entry),
+    archive_next_header(Archive, EntryName),
     archive_open_entry(Archive, Stream).
 </pre>
 
@@ -642,7 +670,8 @@ program.
 </dd>
 <dt><strong>format</strong>(<var>+Format</var>)</dt>
 <dd class="defbody">
-Write mode supports the following formats:&lsquo;7zip<code>, </code>cpio<code>, </code>gnutar<code>, </code>iso9660<code>, </code>xar<code> and </code>zip`. 
+Write mode supports the following formats:&lsquo;7zip`, <code>cpio</code>,
+<code>gnutar</code>, <code>iso9660</code>, <code>xar</code> and <code>zip</code>. 
 Note that a particular installation may support only a subset of these, 
 depending on the configuration of <code>libarchive</code>.
 </dd>

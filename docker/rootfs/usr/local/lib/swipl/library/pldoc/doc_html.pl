@@ -1122,7 +1122,8 @@ object_synopsis(f(_/_), _) -->
                     ')'
                   ])).
 object_synopsis(c(Func), _) -->
-    { sub_atom(Func, 0, _, _, 'PL_')
+    {   sub_atom(Func, 0, _, _, 'PL_')
+    ;   sub_atom(Func, 0, _, _, 'S')
     },
     !,
     synopsis([span(class(cfunc), 'C-language interface function')]).

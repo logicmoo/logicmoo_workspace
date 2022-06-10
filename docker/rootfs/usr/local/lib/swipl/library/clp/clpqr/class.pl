@@ -1,6 +1,4 @@
-/*  $Id$
-
-    Part of CLP(Q,R) (Constraint Logic Programming over Rationals and Reals)
+/*  Part of CLP(Q,R) (Constraint Logic Programming over Rationals and Reals)
 
     Author:        Leslie De Koninck
     E-mail:        Leslie.DeKoninck@cs.kuleuven.be
@@ -37,9 +35,8 @@
     the GNU General Public License.
 */
 
-:- module(class,
-	[
-	    class_allvars/2,
+:- module(clpqr_class,
+	  [ class_allvars/2,
 	    class_new/5,
 	    class_drop/2,
 	    class_basis/2,
@@ -51,18 +48,11 @@
 	    class_put_prio/2,
 	    ordering/1,
 	    arrangement/2
-	]).
+	  ]).
 
-:- use_module(ordering,
-	[
-	    combine/3,
-	    ordering/1,
-	    arrangement/2
-	]).
-:- use_module(library(lists),
-	      [ append/3
-	      ]).
-	
+:- use_module(ordering, [combine/3, ordering/1, arrangement/2]).
+:- use_module(library(lists), [append/3]).
+
 % called when two classes are unified: the allvars lists are appended to eachother, as well as the basis
 % lists.
 %
@@ -71,40 +61,40 @@
 attr_unify_hook(class(CLP,La,Lat,ABasis,PrioA),Y) :-
 	!,
 	var(Y),
-	get_attr(Y,class,class(CLP,Lb,Lbt,BBasis,PrioB)),
+	get_attr(Y,clpqr_class,class(CLP,Lb,Lbt,BBasis,PrioB)),
 	Lat = Lb,
 	append(ABasis,BBasis,CBasis),
 	combine(PrioA,PrioB,PrioC),
-	put_attr(Y,class,class(CLP,La,Lbt,CBasis,PrioC)).
+	put_attr(Y,clpqr_class,class(CLP,La,Lbt,CBasis,PrioC)).
 attr_unify_hook(_,_).
 
 class_new(Class,CLP,All,AllT,Basis) :-
-	put_attr(Su,class,class(CLP,All,AllT,Basis,[])),
+	put_attr(Su,clpqr_class,class(CLP,All,AllT,Basis,[])),
 	Su = Class.
 
 class_get_prio(Class,Priority) :-
-	get_attr(Class,class,class(_,_,_,_,Priority)).
+	get_attr(Class,clpqr_class,class(_,_,_,_,Priority)).
 
 class_get_clp(Class,CLP) :-
-	get_attr(Class,class,class(CLP,_,_,_,_)).
+	get_attr(Class,clpqr_class,class(CLP,_,_,_,_)).
 
 class_put_prio(Class,Priority) :-
-	get_attr(Class,class,class(CLP,All,AllT,Basis,_)),
-	put_attr(Class,class,class(CLP,All,AllT,Basis,Priority)).
+	get_attr(Class,clpqr_class,class(CLP,All,AllT,Basis,_)),
+	put_attr(Class,clpqr_class,class(CLP,All,AllT,Basis,Priority)).
 
 class_drop(Class,X) :-
-	get_attr(Class,class,class(CLP,Allvars,Tail,Basis,Priority)),
+	get_attr(Class,clpqr_class,class(CLP,Allvars,Tail,Basis,Priority)),
 	delete_first(Allvars,X,NewAllvars),
-	delete_first(Basis,X,NewBasis),	
-	put_attr(Class,class,class(CLP,NewAllvars,Tail,NewBasis,Priority)).
+	delete_first(Basis,X,NewBasis),
+	put_attr(Class,clpqr_class,class(CLP,NewAllvars,Tail,NewBasis,Priority)).
 
-class_allvars(Class,All) :- get_attr(Class,class,class(_,All,_,_,_)).
+class_allvars(Class,All) :- get_attr(Class,clpqr_class,class(_,All,_,_,_)).
 
 % class_basis(Class,Basis)
 %
 % Returns the basis of class Class.
 
-class_basis(Class,Basis) :- get_attr(Class,class,class(_,_,_,Basis,_)).
+class_basis(Class,Basis) :- get_attr(Class,clpqr_class,class(_,_,_,Basis,_)).
 
 % class_basis_add(Class,X,NewBasis)
 %
@@ -112,19 +102,19 @@ class_basis(Class,Basis) :- get_attr(Class,class,class(_,_,_,Basis,_)).
 
 class_basis_add(Class,X,NewBasis) :-
 	NewBasis = [X|Basis],
-	get_attr(Class,class,class(CLP,All,AllT,Basis,Priority)),
-	put_attr(Class,class,class(CLP,All,AllT,NewBasis,Priority)).
+	get_attr(Class,clpqr_class,class(CLP,All,AllT,Basis,Priority)),
+	put_attr(Class,clpqr_class,class(CLP,All,AllT,NewBasis,Priority)).
 
 % class_basis_drop(Class,X)
 %
 % removes the first occurence of X from the basis (if exists)
 
 class_basis_drop(Class,X) :-
-	get_attr(Class,class,class(CLP,All,AllT,Basis0,Priority)),
+	get_attr(Class,clpqr_class,class(CLP,All,AllT,Basis0,Priority)),
 	delete_first(Basis0,X,Basis),
 	Basis0 \== Basis,   % anything deleted ?
 	!,
-	put_attr(Class,class,class(CLP,All,AllT,Basis,Priority)).
+	put_attr(Class,clpqr_class,class(CLP,All,AllT,Basis,Priority)).
 class_basis_drop(_,_).
 
 % class_basis_pivot(Class,Enter,Leave)
@@ -132,9 +122,9 @@ class_basis_drop(_,_).
 % removes first occurence of Leave from the basis and adds Enter in front of the basis
 
 class_basis_pivot(Class,Enter,Leave) :-
-	get_attr(Class,class,class(CLP,All,AllT,Basis0,Priority)),
+	get_attr(Class,clpqr_class,class(CLP,All,AllT,Basis0,Priority)),
 	delete_first(Basis0,Leave,Basis1),
-	put_attr(Class,class,class(CLP,All,AllT,[Enter|Basis1],Priority)).
+	put_attr(Class,clpqr_class,class(CLP,All,AllT,[Enter|Basis1],Priority)).
 
 % delete_first(Old,Element,New)
 %

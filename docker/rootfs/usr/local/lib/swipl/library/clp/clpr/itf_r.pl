@@ -90,9 +90,9 @@ numbers_only(Y) :-
 
 verify_nonzero(nonzero,Y) :-
 	(   var(Y)
-	->  (   get_attr(Y,itf,Att)
+	->  (   get_attr(Y,clpqr_itf,Att)
 	    ->  setarg(8,Att,nonzero)
-	    ;   put_attr(Y,itf,t(clpr,n,n,n,n,n,n,nonzero,n,n,n))
+	    ;   put_attr(Y,clpqr_itf,t(clpr,n,n,n,n,n,n,nonzero,n,n,n))
 	    )
 	;   (   Y < -1.0e-10
 	    ->	true

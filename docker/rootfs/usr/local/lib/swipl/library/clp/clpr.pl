@@ -51,7 +51,7 @@
 	    ordering/1,
 	    entailed/1,
 	    clp_type/2,
-	    dump/3%, projecting_assert/1
+	    dump/3
 	]).
 :- license(gpl_swipl, 'CLP(R)').
 :- use_module(library(dialect)).
@@ -109,8 +109,8 @@ dump_toplevel_bindings(Bindings,Constraints) :-
 dump_vars_names([],_,[],[]).
 dump_vars_names([Name=Term|Rest],Seen,Vars,Names) :-
 	(   var(Term),
-	    (   get_attr(Term,itf,_)
-	    ;   get_attr(Term,geler,_)
+	    (   get_attr(Term,clpqr_itf,_)
+	    ;   get_attr(Term,clpqr_geler,_)
 	    ),
 	    \+ memberchk_eq(Term,Seen)
 	->  Vars = [Term|RVars],

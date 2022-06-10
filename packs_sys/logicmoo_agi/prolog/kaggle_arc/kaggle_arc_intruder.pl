@@ -50,9 +50,9 @@ individuals_from_pair(_PairName,In,Out,H,V,H,V,RestOfInObjs,RestOfOutObjs):-
   ((IMass==0, OMass>0) -> USE = OmI;
    ((OMass==0, IMass>0) -> USE = ImO)),
    individuate([options(defaults)],USE,Intruder),
-   add_shape_lib(pair,Intruder),
+   add_shape_lib(intruder,Intruder),
    individuate_default(In,RestOfInObjs),
-   add_shape_lib(pair,RestOfInObjs),
+   add_shape_lib(intruder,RestOfInObjs),
    individuate_default(Out,RestOfOutObjs).
 
 
@@ -60,7 +60,7 @@ individuals_from_pair(_PairName,In,Out,H,V,H,V,RestOfInObjs,RestOfOutObjs):-
 individuals_from_pair(_PairName,In,Out,IH,IV,OH,OV,[Intruder|NoiseObjects],[Intruder]):-
   (IV > OV; IH> OH) , ogs(_,_,Out,In), 
   grid_to_individual(Out,Intruder),
-  add_shape_lib(pair,Intruder),
+  add_shape_lib(intruder,Intruder),
   individuate_default(In,NoiseObjects),
   nop(add_shape_lib(noise,NoiseObjects)).
 
@@ -68,7 +68,7 @@ individuals_from_pair(_PairName,In,Out,IH,IV,OH,OV,[Intruder|NoiseObjects],[Intr
 individuals_from_pair(_PairName,Out,In,OH,OV,IH,IV,[Intruder],[Intruder|NoiseObjects]):-
   (IV > OV; IH> OH) , ogs(_,_,Out,In), 
   grid_to_individual(Out,Intruder),
-  add_shape_lib(pair,Intruder),
+  add_shape_lib(intruder,Intruder),
   individuate_default(In,NoiseObjects),
   nop(add_shape_lib(noise,NoiseObjects)).
 
@@ -189,7 +189,7 @@ maybe_in_out_xform(NeuralVM,PairName,StartInOut,NextStartInOut,DONE):-
 stuff_options1(stuffType,is_cpoints,globalpoints). %:- globalpoints(Grid,Stuff).
 stuff_options1(stuffType,is_colors,unique_colors). %:- unique_colors(Grid,Stuff).
 stuff_options(stuffType,is_nc_points,shape). %:-  globalpoints(Grid,Stuff),colorless(StuffM,Stuff).
-stuff_options(stuffType,is_group,default_individuals). %:- individuals_default(Grid,Stuff).
+stuff_options(stuffType,is_object_group,default_individuals). %:- individuals_default(Grid,Stuff).
 
 
 remove_stuff_matching(_,_,[],Result,Result):-!.

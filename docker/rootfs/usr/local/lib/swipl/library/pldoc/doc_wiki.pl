@@ -1590,6 +1590,12 @@ url_protocol(ftp).
 url_protocol(mailto).
 
 peek_end_url(space) -->
+    peek(Punct, End),
+    { punct_token(Punct),
+      space_token(End)
+    },
+    !.
+peek_end_url(space) -->
     peek(End),
     { space_token(End) },
     !.
@@ -1597,6 +1603,12 @@ peek_end_url(space, [], []) :- !.
 peek_end_url(Token) -->
     peek(Token),
     !.
+
+punct_token('.').
+punct_token('!').
+punct_token('?').
+punct_token(',').
+punct_token(';').
 
 space_token(' ') :- !.
 space_token('\r') :- !.
@@ -2192,6 +2204,9 @@ nl -->
 
 peek(H, L, L) :-
     L = [H|_].
+
+peek(H1, H2, L, L) :-
+    L = [H1, H2|_].
 
 %!  tokens(-Tokens:list)// is nondet.
 %!  tokens(+Max, -Tokens:list)// is nondet.

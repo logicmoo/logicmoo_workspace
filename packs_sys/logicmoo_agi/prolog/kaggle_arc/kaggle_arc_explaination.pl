@@ -98,7 +98,7 @@ print_list_of(N,OO):-
 
 print_info(A):- is_grid(A),print_grid(A).
 print_info(A):- is_object(A), ignore(debug_indiv(A)).
-print_info(A):- is_group(A),debug_indiv(A).
+print_info(A):- is_object_group(A),debug_indiv(A).
 print_info(A):- into_obj(A,Obj),print_info(Obj).
 print_info([]):-!.
 print_info(A):- pt(A).
@@ -108,12 +108,12 @@ o2c(Obj,Glyph):- color(Obj,Glyph).
 o2ansi(Obj,S):- o2c(Obj,C),o2g(Obj,G),atomic_list_concat([' ',G,' '],O),!,sformat(F,'~q',[O]),wots(S,color_print(C,F)).
 :- dynamic(g2o/2).
 
-
-into_obj(G,E):- plain_var(G),!,enum_object(E),G=E.
-into_obj(G,O):- g2o(G,O),!.
-into_obj(G,O):- is_grid(G),!,grid_to_individual(G,O).
-into_obj(obj(O),obj(O)):- is_list(O),!.
-into_obj(G,O):- atom(G),Chars=[_,_|_],atom_chars(G,Chars),!,member(C,Chars),into_obj(C,O).
+into_obj(G,O):- no_repeats(O,into_obj0(G,O)).
+into_obj0(G,O):- g2o(G,O),!.
+into_obj0(G,O):- atom(G),!,Chars=[_,_|_],atom_chars(G,Chars),!,member(C,Chars),into_obj(C,O).
+into_obj0(G,O):- is_grid(G),!,grid_to_individual(G,O).
+into_obj0(G,E):- plain_var(G),!,enum_object(E),G=E.
+into_obj0(obj(O),obj(O)):- is_list(O),!.
 
 
 :- discontiguous debug_indiv/1. 

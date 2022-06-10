@@ -246,24 +246,24 @@ Perl compatible regular expression matching for SWI-Prolog</span></a></div>
 Clause Grammars</em>). Using DCGs is typically more verbose but gives 
 reuse, modularity, readability and mixing with arbitrary Prolog code in 
 return. Supporting regular expressions has some advantages: (1) in 
-simple cases the terse specification of a regular expression is more 
-comfortable, (2) many programmers are familar with them and (3) regular 
+simple cases, the terse specification of a regular expression is more 
+comfortable; (2) many programmers are familar with them; and (3) regular 
 expressions are part of domain specific languages one may wish to 
 implement in Prolog, e.g., SPARQL.
 
 <p>There are roughly three options for adding regular expressions to 
 Prolog. One is to simply interpret them in Prolog. Given Prolog's 
 unification and backtracking facilities this is remarkable simple and 
-performs quite reasonable. Still, the implementing all facilities of 
-modern regular expression engines requires significant effort. 
-Alternatively, we can <em>compile</em> them into DCGs. This brings terse 
-expressions to DCGs while staying in the same framework. The 
-disadvantage is that regular expressions become programs that are hard 
-to reclaim, making this approach less attractive for applications that 
-potentially execute many different regular expressions. The final option 
-is to wrap an existing regular expression engine. This provides access 
-to a robust implementation for which we only have to document the Prolog 
-binding. That is the option taken by library <code>library(pcre)</code>.
+performs quite reasonable. Still, implementing all facilities of modern 
+regular expression engines requires significant effort. Alternatively, 
+we can <em>compile</em> them into DCGs. This brings terse expressions to 
+DCGs while staying in the same framework. The disadvantage is that 
+regular expressions become programs that are hard to reclaim, making 
+this approach less attractive for applications that potentially execute 
+many different regular expressions. The final option is to wrap an 
+existing regular expression engine. This provides access to a robust 
+implementation for which we only have to document the Prolog binding. 
+That is the option taken by library <code>library(pcre)</code>.
 
 <p><h2 id="sec:pcre"><a id="sec:2"><span class="sec-nr">2</span> <span class="sec-title">library(pcre): 
 Perl compatible regular expression matching for SWI-Prolog</span></a></h2>
@@ -273,19 +273,23 @@ Perl compatible regular expression matching for SWI-Prolog</span></a></h2>
 <dl class="tags">
 <dt class="tag">See also</dt>
 <dd>
-&lsquo;man pcre` for details.
+&lsquo;man pcre2api` or <a class="url" href="https://www.pcre.org/current/doc/html/pcre2api.html">https://www.pcre.org/current/doc/html/pcre2api.html</a> 
+for details of the PCRE2 syntax and options.
 </dd>
 </dl>
 
-<p>This module provides an interface to the <a class="url" href="http://www.pcre.org/">PCRE</a> 
+<p>This module provides an interface to the <a class="url" href="http://www.pcre.org/">PCRE2</a> 
 (Perl Compatible Regular Expression) library. This Prolog interface 
-provides an almost comprehensive wrapper around PCRE.
+provides an almost comprehensive wrapper around PCRE2 (the successor to 
+PCRE) with as much backward compatibility to PCRE as possible, because 
+the original implementation was for PCRE (also known as PCRE1).
 
 <p>Regular expressions are created from a pattern and options and 
 represented as a SWI-Prolog <i>blob</i>. This implies they are subject 
 to (atom) garbage collection. Compiled regular expressions can safely be 
 used in multiple threads. Most predicates accept both an explicitly 
-compiled regular expression, a pattern or a term Pattern/Flags. In the 
+compiled regular expression, a pattern, or a term Pattern/Flags. The 
+semantics of the pattern can be additionally modified by options. In the 
 latter two cases a regular expression <i>blob</i> is created and stored 
 in a cache. The cache can be cleared using <a class="pred" href="#re_flush/0">re_flush/0</a>.
 
@@ -302,52 +306,60 @@ Succeeds if <var>String</var> matches <var>Regex</var>. For example:
 true.
 </pre>
 
-<p><var>Options</var>:
+<p>Defined <var>Options</var> are given below. For details, see the PCRE 
+documentation. If an option is repeated, the first value is used and 
+subsequent values are ignored. Unrecognized options are ignored. Unless 
+otherwise specified, boolean options default to
+<code>false</code>.
 
-<dl class="latex">
-<dt><strong>anchored</strong>(<var>Bool</var>)</dt>
-<dd class="defbody">
-If <code>true</code>, match only at the first position
-</dd>
-<dt><strong>bol</strong>(<var>Bool</var>)</dt>
-<dd class="defbody">
-Subject string is the beginning of a line (default <code>false</code>)
-</dd>
-<dt><strong>bsr</strong>(<var>Mode</var>)</dt>
-<dd class="defbody">
-If <code>anycrlf</code>, <code>\</code>R only matches CR, LF or CRLF. If <code>unicode</code>,
-<code>\</code>R matches all Unicode line endings. Subject string is the 
-end of a line (default <code>false</code>)
-</dd>
-<dt><strong>empty</strong>(<var>Bool</var>)</dt>
-<dd class="defbody">
-An empty string is a valid match (default <code>true</code>)
-</dd>
-<dt><strong>empty_atstart</strong>(<var>Bool</var>)</dt>
-<dd class="defbody">
-An empty string at the start of the subject is a valid match (default <code>true</code>)
-</dd>
-<dt><strong>eol</strong>(<var>Bool</var>)</dt>
-<dd class="defbody">
-Subject string is the end of a line (default <code>false</code>)
-</dd>
-<dt><strong>newline</strong>(<var>Mode</var>)</dt>
-<dd class="defbody">
-If <code>any</code>, recognize any Unicode newline sequence, if <code>anycrlf</code>, 
-recognize CR, LF, and CRLF as newline sequences, if <code>cr</code>, 
-recognize CR, if <code>lf</code>, recognize LF and finally if <code>crlf</code> 
-recognize CRLF as newline.
-</dd>
-<dt><strong>start</strong>(<var>+From</var>)</dt>
-<dd class="defbody">
-Start at the given character index
-</dd>
-</dl>
+<p>If <var>Regex</var> is a text pattern (optionally with flags), then 
+any of the
+<var>Options</var> for <a class="pred" href="#re_compile/3">re_compile/3</a> 
+can be used, in addition to the <var>Options</var> listed below. If <var>Regex</var> 
+is the result of <a class="pred" href="#re_compile/3">re_compile/3</a>, 
+then only the following execution-time <var>Options</var> are recognized 
+and any others are ignored. Some options may not exist on your system, 
+depending on the PCRE2 version and how it was built - these unsupported 
+options are silently ignored.
 
+<p>
+<ul class="latex">
+<li><code>start(From)</code> Start at the given character index
+<li><code>anchored(Bool)</code> If <code>true</code>, match only at the 
+first position
+<li><code>bol(Bool)</code>
+<var>String</var> is the beginning of a line (default <code>true</code>) 
+- affects behavior of circumflex metacharacter (<code>^</code>).
+<li><code>empty(Bool)</code> An empty string is a valid match (default <code>true</code>)
+<li><code>empty_atstart(Bool)</code> An empty string at the start of the 
+subject is a valid match (default <code>true</code>)
+<li><code>eol(Bool)</code>
+<var>String</var> is the end of a line - affects behavior of dollar 
+metacharacter (<code>$</code>) (default <code>true</code>).
+<li><code>newline(Mode)</code> If <code>any</code>, recognize any 
+Unicode newline sequence, if <code>anycrlf</code>, recognize CR, LF, and 
+CRLF as newline sequences, if <code>cr</code>, recognize CR, if <code>lf</code>, 
+recognize LF, if <code>crlf</code> recognize CRLF as newline. The 
+default is determined by how PCRE was built, and can be found by <code>re_config(newline2(NewlineDefault))</code>.
+<li><code>newline2(Mode)</code> - synonym for <code>newline(Mode)</code>.
+<li><code>utf_check(Bool)</code> - see <a class="url" href="https://www.pcre.org/current/doc/html/pcre2api.html">PCRE2 
+API documentation</a> You should not need this because SWI-Prolog 
+ensures that the UTF8 strings are valid, so the default is <code>false</code>.
+<li><code>endanchored(Bool)</code> - see <a class="url" href="https://www.pcre.org/current/doc/html/pcre2api.html">PCRE2 
+API documentation</a>
+<li><code>partial_soft(Bool)</code> - see <a class="url" href="https://www.pcre.org/current/doc/html/pcre2api.html">PCRE2 
+API documentation</a>
+<li><code>partial_hard(Bool)</code> - see <a class="url" href="https://www.pcre.org/current/doc/html/pcre2api.html">PCRE2 
+API documentation</a>
+<li><code>dfa_restart(Bool)</code> - see <a class="url" href="https://www.pcre.org/current/doc/html/pcre2api.html">PCRE2 
+API documentation</a>
+<li><code>dfa_shortest(Bool)</code> - see <a class="url" href="https://www.pcre.org/current/doc/html/pcre2api.html">PCRE2 
+API documentation</a>
+</ul>
 <table class="arglist">
 <tr><td><var>Regex</var> </td><td>is the output of <a class="pred" href="#re_compile/3">re_compile/3</a>, 
 a pattern or a term Pattern/Flags, where Pattern is an atom or string. 
-The defined flags and there related option for <a class="pred" href="#re_compile/3">re_compile/3</a> 
+The defined flags and their related option for <a class="pred" href="#re_compile/3">re_compile/3</a> 
 are below.
 
 <p>
@@ -361,38 +373,49 @@ are below.
 <li><b>t</b>: <code>capture_type(term)</code>
 </ul>
 
-<p></td></tr>
+<p>If <var>Regex</var> is the output of <a class="pred" href="#re_compile/3">re_compile/3</a>, 
+any compile-time options in
+<var>Options</var> or Flags are ignored and only match-time options are 
+used.
+
+<p>The options that are derived from flags take precedence over the 
+options in the <var>Options</var> list. In the case of conflicting 
+flags, the first one is used (e.g., <code>ra</code> results in <code>capture_type(range)</code>). </td></tr>
 </table>
 </dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="re_matchsub/3"><strong>re_matchsub</strong>(<var>+Regex, 
++String, -Sub:dict</var>)</a></dt>
 <dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="re_matchsub/4"><strong>re_matchsub</strong>(<var>+Regex, 
 +String, -Sub:dict, +Options</var>)</a></dt>
 <dd class="defbody">
 Match <var>String</var> against <var>Regex</var>. On success, <var>Sub</var> 
 is a dict containing integer keys for the numbered capture group and 
-atom keys for the named capture groups. The associated value is 
-determined by the
-<code>capture_type(Type)</code> option passed to <a class="pred" href="#re_compile/3">re_compile/3</a>, 
-may be specified using flags if <var>Regex</var> is of the form 
-Pattern/Flags and may be specified at the level of individual captures 
-using a naming convention for the caption name. See <a class="pred" href="#re_compile/3">re_compile/3</a> 
-for details.
+atom keys for the named capture groups. The entire match string has the 
+key <code>0</code>. The associated value is determined by the <code>capture_type(Type)</code> 
+option passed to <a class="pred" href="#re_compile/3">re_compile/3</a>, 
+or by flags if <var>Regex</var> is of the form Pattern/Flags; and may be 
+specified at the level of individual captures using a naming convention 
+for the caption name. See
+<a class="pred" href="#re_compile/3">re_compile/3</a> for details.
 
 <p>The example below exploits the typed groups to parse a date 
 specification:
 
 <pre class="code">
 ?- re_matchsub("(?&lt;date&gt; (?&lt;year_I&gt;(?:\\d\\d)?\\d\\d) -
-                (?&lt;month_I&gt;\\d\\d) - (?&lt;day_I&gt;\\d\\d) )"/e,
+                (?&lt;month_I&gt;\\d\\d) - (?&lt;day_I&gt;\\d\\d) )"/x,
                "2017-04-20", Sub, []).
 Sub = re_match{0:"2017-04-20", date:"2017-04-20",
                day:20, month:4, year:2017}.
 </pre>
 
 <table class="arglist">
-<tr><td><var>Options</var> </td><td>Only <i>execution</i> options are 
-processed. See <a class="pred" href="#re_match/3">re_match/3</a> for the 
-set of options. <i>Compilation</i> options must be passed as&lsquo;/flags` 
-to <var>Regex</var>. </td></tr>
+<tr><td><var>Both</var> </td><td>compilation and execution options are 
+processed. See
+<a class="pred" href="#re_compile/3">re_compile/3</a> and <a class="pred" href="#re_match/3">re_match/3</a> 
+for the set of options. In addition, some compilation options may passed 
+as <code>/Flags</code> to <var>Regex</var> - see
+<a class="pred" href="#re_match/3">re_match/3</a> for the list of flags. </td></tr>
 <tr><td><var>Regex</var> </td><td>See <a class="pred" href="#re_match/2">re_match/2</a> 
 for a description of this argument. </td></tr>
 </table>
@@ -400,8 +423,8 @@ for a description of this argument. </td></tr>
 <dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="re_foldl/6"><strong>re_foldl</strong>(<var>:Goal, 
 +Regex, +String, ?V0, ?V, +Options</var>)</a></dt>
 <dd class="defbody">
-<i>Fold</i> all matches of <var>Regex</var> on <var>String</var>. Each 
-match is represented by a dict as specified for <a class="pred" href="#re_matchsub/4">re_matchsub/4</a>. <var>V0</var> 
+Fold all matches of <var>Regex</var> on <var>String</var>. Each match is 
+represented by a dict as specified for <a class="pred" href="#re_matchsub/4">re_matchsub/4</a>. <var>V0</var> 
 and <var>V</var> are related using a sequence of invocations of <var>Goal</var> 
 as illustrated below.
 
@@ -432,27 +455,48 @@ increment(_Match, V0, V1) :-
 X = 2.
 </pre>
 
-</dd>
-<dt class="pubdef"><span class="pred-tag">[det]</span><a id="re_split/3"><strong>re_split</strong>(<var>+Pattern, 
-+String, -Split:list</var>)</a></dt>
-<dt class="pubdef"><span class="pred-tag">[det]</span><a id="re_split/4"><strong>re_split</strong>(<var>+Pattern, 
-+String, -Split:list, +Options</var>)</a></dt>
-<dd class="defbody">
-<var>Split</var> <var>String</var> using the regular expression <var>Pattern</var>. <var>Split</var> 
-is a list of strings holding alternating matches of <var>Pattern</var> 
-and skipped parts of the <var>String</var>, starting with a skipped 
-part. The <var>Split</var> lists ends with a string of the content of <var>String</var> 
-after the last match. If
-<var>Pattern</var> does not appear in <var>String</var>, <var>Split</var> 
-is a list holding a copy of
-<var>String</var>. This implies the number of elements in <var>Split</var> 
-is <i>always</i> odd. For example:
+<p>Here is an example <var>Goal</var> for extracting all the matches 
+with their offsets within the string:
 
 <pre class="code">
-?- re_split("a+", "abaac", Split, []).
-Split = ["","a","b","aa","c"].
-?- re_split(":\\s*"/n, "Age: 33", Split, []).
-Split = ['Age', ': ', 33].
+range_match(Dict, StringIndex-[MatchStart-Substring|List], StringIndex-List) :-
+    Dict.(StringIndex.index) = MatchStart-MatchLen,
+    sub_string(StringIndex.string, MatchStart, MatchLen, _, Substring).
+</pre>
+
+<p>And can be used with this query (note the <code>capture_type(range)</code> 
+option, which is needed by <span class="pred-ext">range_match/3</span>, 
+and <code>greedy(false)</code> to invert the meaning of <code>*?</code>):
+
+<pre class="code">
+?- String = "{START} Mary {END} had a {START} little lamb {END}",
+   re_foldl(range_match,
+            "{START} *?(?&lt;piece&gt;.*) *?{END}",
+            String, _{string:String,index:piece}-Matches, _-[],
+            [capture_type(range),greedy(false)]).
+Matches = [8-"Mary", 33-"little lamb"].
+</pre>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="re_split/3"><strong>re_split</strong>(<var>+Pattern, 
++String, -Splits:list</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="re_split/4"><strong>re_split</strong>(<var>+Pattern, 
++String, -Splits:list, +Options</var>)</a></dt>
+<dd class="defbody">
+Split <var>String</var> using the regular expression <var>Pattern</var>. <var>Splits</var> 
+is a list of strings holding alternating matches of <var>Pattern</var> 
+and skipped parts of the <var>String</var>, starting with a skipped 
+part. The <var>Splits</var> lists ends with a string of the content of <var>String</var> 
+after the last match. If
+<var>Pattern</var> does not appear in <var>String</var>, <var>Splits</var> 
+is a list holding a copy of <var>String</var>. This implies the number 
+of elements in <var>Splits</var> is <i>always</i> odd. For example:
+
+<pre class="code">
+?- re_split("a+", "abaac", Splits, []).
+Splits = ["","a","b","aa","c"].
+?- re_split(":\\s*"/n, "Age: 33", Splits, []).
+Splits = ['Age', ': ', 33].
 </pre>
 
 <table class="arglist">
@@ -463,20 +507,55 @@ the final output type can be controlled by a flag <code>a</code> (atom), <code>s
 otherwise). </td></tr>
 </table>
 </dd>
-<dt class="pubdef"><a id="re_replace/4"><strong>re_replace</strong>(<var>+Pattern, 
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="re_replace/4"><strong>re_replace</strong>(<var>+Pattern, 
 +With, +String, -NewString</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="re_replace/5"><strong>re_replace</strong>(<var>+Pattern, 
++With, +String, -NewString, +Options</var>)</a></dt>
 <dd class="defbody">
 Replace matches of the regular expression <var>Pattern</var> in <var>String</var> 
 with
-<var>With</var>. <var>With</var> may reference captured substrings using <code>\</code>N 
-or $Name. Both N and Name may be written as {N} and {Name} to avoid 
-ambiguities.
+<var>With</var> (possibly containing references to captured substrings).
+
+<p>Throws an error if <var>With</var> uses a name that doesn't exist in 
+the
+<var>Pattern</var>.
 <table class="arglist">
 <tr><td><var>Pattern</var> </td><td>is the pattern text, optionally 
-follows by /Flags. Flags may include <code>g</code>, replacing all 
+followed by /Flags. Flags may include <code>g</code>, replacing all 
 occurences of <var>Pattern</var>. In addition, similar to <a class="pred" href="#re_matchsub/4">re_matchsub/4</a>, 
 the final output type can be controlled by a flag <code>a</code> (atom) 
-or <code>s</code> (string, default). </td></tr>
+or <code>s</code> (string, default). The output type can also be 
+specified by the <code>capture_type</code> option. Capture type suffixes 
+can modify behavior; for example, the following will change an ISO 8601 
+format date (YYYY-MM-DD) to American style (m/d/y), and also remove 
+leading zeros by using the
+<var>_I</var> suffix:
+
+<pre class="code">
+re_replace("(?&lt;date&gt; (?&lt;year_I&gt;(?:\\d\\d)?\\d\\d) -
+            (?&lt;month_I&gt;\\d\\d) - (?&lt;day_I&gt;\\d\\d) )"/x,
+           "$month-$day-$year",
+           ISODate, AmericanDate)`
+</pre>
+
+<p></td></tr>
+<tr><td><var>With</var> </td><td>is the replacement text. It may 
+reference captured substrings using <code>\</code>N or $Name. Both N and 
+Name may be written as {N} and {Name} to avoid ambiguities. If a 
+substring is named, it cannot be referenced by its number. The single 
+chracters <code>$</code> and <code>\</code> can be escaped by doubling 
+(e.g., <code>re_replace(".","$$","abc",Replaced)</code> results in <code>Replaced="$bc"</code>). 
+(Because <code>\</code> is an escape character inside strings, you need 
+to write "<code>\</code><code>\</code><code>\\</code>" to get a single 
+backslash.) </td></tr>
+<tr><td><var>Options</var> </td><td>See <a class="pred" href="#re_match/3">re_match/3</a> 
+for the set of options.
+
+<p>The options that are derived from flags take precedence over the 
+options in the <var>Options</var> list. In the case of conflicting 
+flags, the first one is used (e.g., <code>as</code> results in <code>capture_type(string)</code>). 
+If a <code>capture_type</code> is meaningless (<code>range</code> or <code>term</code>), 
+it is ignored. </td></tr>
 </table>
 </dd>
 <dt class="pubdef"><span class="pred-tag">[det]</span><a id="re_compile/3"><strong>re_compile</strong>(<var>+Pattern, 
@@ -484,84 +563,132 @@ or <code>s</code> (string, default). </td></tr>
 <dd class="defbody">
 Compiles <var>Pattern</var> to a <var>Regex</var> <i>blob</i> of type <code>regex</code> 
 (see <span class="pred-ext">blob/2</span>). Defined <var>Options</var> 
-are defined below. Please consult the PCRE documentation for details.
+are given below. Please consult the <a class="url" href="https://www.pcre.org/current/doc/html/pcre2api.html">PCRE2 
+API documentation</a> for details. If an option is repeated, the first 
+value is used and subsequent values are ignored. Unrecognized options 
+are ignored. Unless otherwise specified, boolean options default to <code>false</code>. 
+Some options may not exist on your system, depending on the PCRE2 
+version and how it was built - these unsupported options are silently 
+ignored.
 
-<dl class="latex">
-<dt><strong>anchored</strong>(<var>Bool</var>)</dt>
-<dd class="defbody">
-Force pattern anchoring
-</dd>
-<dt><strong>bsr</strong>(<var>Mode</var>)</dt>
-<dd class="defbody">
-If <code>anycrlf</code>, <code>\</code>R only matches CR, LF or CRLF. If <code>unicode</code>,
+<p>The various matching predicates can take either a <var>Regex</var> <i>blob</i> 
+or a string pattern; if they are given a string pattern, they call
+<a class="pred" href="#re_compile/3">re_compile/3</a> and cache the 
+result; so, there is little reason to use
+<a class="pred" href="#re_compile/3">re_compile/3</a> directly.
+
+<p>
+<ul class="latex">
+<li><code>anchored(Bool)</code> If <code>true</code>, match only at the 
+first position
+<li><code>auto_capture(Bool)</code> Enable use of numbered capturing 
+parentheses. (default <code>true</code>)
+<li><code>bsr(Mode)</code> If <code>anycrlf</code>, <code>\</code>R only 
+matches CR, LF or CRLF; if <code>unicode</code>,
 <code>\</code>R matches all Unicode line endings.
-</dd>
-<dt><strong>caseless</strong>(<var>Bool</var>)</dt>
-<dd class="defbody">
-If <code>true</code>, do caseless matching.
-</dd>
-<dt><strong>dollar_endonly</strong>(<var>Bool</var>)</dt>
-<dd class="defbody">
-If <code>true</code>, $ not to match newline at end
-</dd>
-<dt><strong>dotall</strong>(<var>Bool</var>)</dt>
-<dd class="defbody">
-If <code>true</code>, . matches anything including NL
-</dd>
-<dt><strong>dupnames</strong>(<var>Bool</var>)</dt>
-<dd class="defbody">
-If <code>true</code>, allow duplicate names for subpatterns
-</dd>
-<dt><strong>extended</strong>(<var>Bool</var>)</dt>
-<dd class="defbody">
-If <code>true</code>, ignore white space and # comments
-</dd>
-<dt><strong>extra</strong>(<var>Bool</var>)</dt>
-<dd class="defbody">
-If <code>true</code>, PCRE extra features (not much use currently)
-</dd>
-<dt><strong>firstline</strong>(<var>Bool</var>)</dt>
-<dd class="defbody">
-If <code>true</code>, force matching to be before newline
-</dd>
-<dt><strong>compat</strong>(<var>With</var>)</dt>
-<dd class="defbody">
-If <code>javascript</code>, JavaScript compatibility
-</dd>
-<dt><strong>multiline</strong>(<var>Bool</var>)</dt>
-<dd class="defbody">
-If <code>true</code>, <code>^</code> and $ match newlines within data
-</dd>
-<dt><strong>newline</strong>(<var>Mode</var>)</dt>
-<dd class="defbody">
-If <code>any</code>, recognize any Unicode newline sequence, if <code>anycrlf</code> 
-(default), recognize CR, LF, and CRLF as newline sequences, if <code>cr</code>, 
-recognize CR, if <code>lf</code>, recognize LF and finally if <code>crlf</code> 
-recognize CRLF as newline.
-</dd>
-<dt><strong>ucp</strong>(<var>Bool</var>)</dt>
-<dd class="defbody">
-If <code>true</code>, use Unicode properties for <code>\</code>d, <code>\</code>w, 
-etc.
-</dd>
-<dt><strong>ungreedy</strong>(<var>Bool</var>)</dt>
-<dd class="defbody">
-If <code>true</code>, invert greediness of quantifiers
-</dd>
-</dl>
+<li><code>bsr2(Mode)</code> - synonym for <code>bsr(Mode)</code>.
+<li><code>caseless(Bool)</code> If <code>true</code>, do caseless 
+matching.
+<li><code>compat(With)</code> Error - PCRE1 had <code>compat(javascript)</code> 
+for JavaScript compatibility, but PCRE2 has removed that.
+<li><code>dollar_endonly(Bool)</code> If <code>true</code>, $ not to 
+match newline at end
+<li><code>dotall(Bool)</code> If <code>true</code>, . matches anything 
+including NL
+<li><code>dupnames(Bool)</code> If <code>true</code>, allow duplicate 
+names for subpatterns
+<li><code>extended(Bool)</code> If <code>true</code>, ignore white space 
+and # comments
+<li><code>firstline(Bool)</code> If <code>true</code>, force matching to 
+be before newline
+<li><code>greedy(Bool)</code> If <code>true</code>, operators such as <code>+</code> 
+and <code>*</code> are greedy unless followed by <code>?</code>; if <code>false</code>, 
+the operators are not greedy and <code>?</code> has the opposite 
+meaning. It can also beset by a&lsquo;(?U)` within the pattern - see the <a class="url" href="https://www.pcre.org/current/doc/html/pcre2pattern.html#SEC13">PCRE2 
+pattern internal option setting documentation</a> for details and note 
+that the PCRE2 option is <var>UNGREEDY</var>, which is the inverse of 
+this packages <code>greedy</code> options. (default <code>true</code>)
+<li><code>compat(With)</code> Raises an errr - PCRE1 had <code>compat(javascript)</code> 
+for JavaScript compatibility, but PCRE2 has removed that option . 
+Consider using the <code>alt_bsux</code> and <code>extra_alt_bsux</code> 
+options.
+<li><code>multiline(Bool)</code> If <code>true</code>, <code>^</code> 
+and $ match newlines within data
+<li><code>newline(Mode)</code> If <code>any</code>, recognize any 
+Unicode newline sequence; if <code>anycrlf</code> (default), recognize 
+CR, LF, and CRLF as newline sequences; if
+<code>cr</code>, recognize CR; if <code>lf</code>, recognize LF; <code>crlf</code> 
+recognize CRLF as newline; if <code>nul</code>, recognize the NULL 
+character (0x00) as newline.
+<li><code>newline2(Mode)</code> - synonym for <code>newline(Mode)</code>.
+<li><code>ucp(Bool)</code> If <code>true</code>, use Unicode properties 
+for <code>\</code>d, <code>\</code>w, etc.
+<li><code>utf_check(Bool)</code> - see <a class="url" href="https://www.pcre.org/current/doc/html/pcre2api.html">PCRE2 
+API documentation</a> You should not need this because SWI-Prolog 
+ensures that the UTF8 strings are valid,
+<li><code>endanchored(boolean)</code> - see <a class="url" href="https://www.pcre.org/current/doc/html/pcre2api.html">PCRE2 
+API documentation</a>
+<li><code>allow_empty_class(boolean)</code> - see <a class="url" href="https://www.pcre.org/current/doc/html/pcre2api.html">PCRE2 
+API documentation</a>
+<li><code>alt_bsux(boolean)</code> - see <a class="url" href="https://www.pcre.org/current/doc/html/pcre2api.html">PCRE2 
+API documentation</a>
+<li><code>auto_callout(boolean)</code> - see <a class="url" href="https://www.pcre.org/current/doc/html/pcre2api.html">PCRE2 
+API documentation</a>
+<li><code>match_unset_backref(boolean)</code> - see <a class="url" href="https://www.pcre.org/current/doc/html/pcre2api.html">PCRE2 
+API documentation</a>
+<li><code>never_ucp(boolean)</code> - see <a class="url" href="https://www.pcre.org/current/doc/html/pcre2api.html">PCRE2 
+API documentation</a>
+<li><code>never_utf(boolean)</code> - see <a class="url" href="https://www.pcre.org/current/doc/html/pcre2api.html">PCRE2 
+API documentation</a>
+<li><code>auto_possess(boolean)</code> - see <a class="url" href="https://www.pcre.org/current/doc/html/pcre2api.html">PCRE2 
+API documentation</a> (default <code>true</code>)
+<li><code>dotstar_anchor(boolean)</code> - see <a class="url" href="https://www.pcre.org/current/doc/html/pcre2api.html">PCRE2 
+API documentation</a> (default <code>true</code>)
+<li><code>start_optimize(boolean)</code> - see <a class="url" href="https://www.pcre.org/current/doc/html/pcre2api.html">PCRE2 
+API documentation</a> (default <code>true</code>)
+<li><code>utf(boolean)</code> - see <a class="url" href="https://www.pcre.org/current/doc/html/pcre2api.html">PCRE2 
+API documentation</a>
+<li><code>never_backslash_c(boolean)</code> - see <a class="url" href="https://www.pcre.org/current/doc/html/pcre2api.html">PCRE2 
+API documentation</a>
+<li><code>alt_circumflex(boolean)</code> - see <a class="url" href="https://www.pcre.org/current/doc/html/pcre2api.html">PCRE2 
+API documentation</a>
+<li><code>alt_verbnames(boolean)</code> - see <a class="url" href="https://www.pcre.org/current/doc/html/pcre2api.html">PCRE2 
+API documentation</a>
+<li><code>use_offset_limit(boolean)</code> - see <a class="url" href="https://www.pcre.org/current/doc/html/pcre2api.html">PCRE2 
+API documentation</a>
+<li><code>extended_more(boolean)</code> - see <a class="url" href="https://www.pcre.org/current/doc/html/pcre2api.html">PCRE2 
+API documentation</a>
+<li><code>literal(boolean)</code> - see <a class="url" href="https://www.pcre.org/current/doc/html/pcre2api.html">PCRE2 
+API documentation</a>
+<li><code>match_invalid_utf(boolean)</code> - see <a class="url" href="https://www.pcre.org/current/doc/html/pcre2api.html">PCRE2 
+API documentation</a>
+<li><code>jit_complete(boolean)</code> - see <a class="url" href="https://www.pcre.org/current/doc/html/pcre2api.html">PCRE2 
+API documentation</a>
+<li><code>jit_partial_soft(boolean)</code> - see <a class="url" href="https://www.pcre.org/current/doc/html/pcre2api.html">PCRE2 
+API documentation</a>
+<li><code>jit_partial_hard(boolean)</code> - see <a class="url" href="https://www.pcre.org/current/doc/html/pcre2api.html">PCRE2 
+API documentation</a>
+<li><code>jit_invalid_utf(boolean)</code> - see <a class="url" href="https://www.pcre.org/current/doc/html/pcre2api.html">PCRE2 
+API documentation</a>
+<li><code>jit(boolean)</code> - see <a class="url" href="https://www.pcre.org/current/doc/html/pcre2api.html">PCRE2 
+API documentation</a> (default <code>true</code>)
+<li><code>copy_matched_subject(boolean)</code> - see <a class="url" href="https://www.pcre.org/current/doc/html/pcre2api.html">PCRE2 
+API documentation</a>
+</ul>
 
-<p>In addition to the options above that directly map to pcre flags the 
+<p>In addition to the options above that directly map to PCRE flags the 
 following options are processed:
 
-<dl class="latex">
-<dt><strong>optimize</strong>(<var>Bool</var>)</dt>
-<dd class="defbody">
-If <code>true</code>, <i>study</i> the regular expression.
-</dd>
-<dt><strong>capture_type</strong>(<var>+Type</var>)</dt>
-<dd class="defbody">
-How to return the matched part of the input and possibly captured groups 
-in there. Possible values are:
+<p>
+<ul class="latex">
+<li><code>optimise(Bool)</code> or <code>optimize(Bool)</code> Turns on 
+the JIT compiler for additional optimization that greatly that speeds up 
+the matching performance of many patterns. (Note that he meaning has 
+changed slightly from the PCRE1 implementation
+<li>PCRE2 always optimises where possible; this is an additional 
+optimisation.)
+<li><code>capture_type(+Type)</code> How to return the matched part of 
+the input and possibly captured groups in there. Possible values are:
 
 <dl class="latex">
 <dt><strong>string</strong></dt>
@@ -574,8 +701,8 @@ Return the captured string as an atom.
 </dd>
 <dt><strong>range</strong></dt>
 <dd class="defbody">
-Return the captured string as a pair <code>Start-Length</code>. Note the 
-we use <code></code>Start-Length` rather than the more conventional
+Return the captured string as a pair <code>Start-Length</code>. Note 
+that we use <code>Start-Length</code> rather than the more conventional
 <code>Start-End</code> to allow for immediate use with <span class="pred-ext">sub_atom/5</span> 
 and
 <span class="pred-ext">sub_string/5</span>.
@@ -587,18 +714,23 @@ you capture a number.
 </dd>
 </dl>
 
-</dd>
-</dl>
+</ul>
 
 <p>The <code>capture_type</code> specifies the default for this pattern. 
 The interface supports a different type for each <i>named</i> group 
-using the syntax <code>(?&lt;name_T&gt;...)</code>, where <code>T</code> 
-is one of <code>S</code> (string),
+using the syntax&lsquo;(?<var>&lt;</var>name_T<var>&gt;</var>...)`, 
+where <var>T</var> is one of <code>S</code> (string),
 <code>A</code> (atom), <code>I</code> (integer), <code>F</code> (float), <code>N</code> 
 (number), <code>T</code> (term) and <code>R</code> (range). In the 
-current implementation <code>I</code>, <code>F</code> and <code>N</code> 
-are synonyms for <code>T</code>. Future versions may act different if 
-the parsed value is not of the requested numeric type.</dd>
+current implementation <code>I</code>,
+<code>F</code> and <code>N</code> are synonyms for <code>T</code>. 
+Future versions may act different if the parsed value is not of the 
+requested numeric type.
+
+<p>Note that <a class="pred" href="#re_compile/3">re_compile/3</a> does 
+not support the <var>Pattern</var>/Flags form that is supported by <a class="pred" href="#re_match/3">re_match/3</a>, <a class="pred" href="#re_replace/4">re_replace/4</a>, 
+etc.; the <var>Pattern</var> must be text and all compile options 
+specified in <var>Options</var>.</dd>
 <dt class="pubdef"><a id="re_flush/0"><strong>re_flush</strong></a></dt>
 <dd class="defbody">
 Clean pattern and replacement caches.
@@ -614,21 +746,87 @@ Flush automatically if the cache becomes too large.
 <dt class="pubdef"><a id="re_config/1"><strong>re_config</strong>(<var>+Term</var>)</a></dt>
 <dd class="defbody">
 Extract configuration information from the pcre library. <var>Term</var> 
-is of the form Name(Value). Name is derived from the <code>PCRE_CONFIG_*</code> 
-constant after removing =PCRE_CONFIG_= and mapping the name to lower 
-case, e.g. <code>utf8</code>, <code>unicode_properties</code>, etc. 
-Value is either a Prolog boolean, integer or atom.
+is of the form <code>Name(Value)</code>. Name is derived from the
+<code>PCRE_CONFIG_*</code> constant after removing <code>PCRE_CONFIG_</code> 
+and mapping the name to lower case, e.g. <code>utf8</code>, <code>unicode_properties</code>, 
+etc. Value is a Prolog boolean, integer, or atom. For boolean (1 or 0) 
+values, <code>true</code> or <code>false</code> is returned.
 
-<p>Finally, the functionality of <code>pcre_version()</code> is 
-available using the configuration name <code>version</code>.
+<p><a class="pred" href="#re_config/1">re_config/1</a> will backtrack 
+through all the possible configuration values if its argument is a 
+variable. If an unknown option is specified, <a class="pred" href="#re_config/1">re_config/1</a> 
+fails.
 
-<dl class="tags">
-<dt class="tag">See also</dt>
-<dd>
-&lsquo;man pcreapi` for details
-</dd>
-</dl>
+<p>Non-compatible changes between PCRE1 and PCRE2 because numeric values 
+changed: <code>bsr</code> and <code>newline</code> have been replaced by <code>bsr2</code> 
+and
+<code>newline2</code>:
 
+<p>
+<ul class="latex">
+<li><code>bsr2</code> - previously <code>bsr</code> returned 0 or 1; now 
+returns <code>unicode</code> or <code>anycrlf</code>
+<li><code>newline2</code> - previously <code>newline</code> returned an 
+integer, now returns <code>cr</code>, <code>lf</code>, <code>crlf</code>, <code>any</code>, <code>anycrlf</code>, <code>nul</code>
+</ul>
+
+<p><var>Term</var> values are as follows. Some values might not exist, 
+depending on the version of PCRE2 and the options it was built with.
+
+<p>
+<ul class="latex">
+<li>bsr2 The character sequences that the <code>\R</code> escape 
+sequence matches by default. Replaces <code>bsr</code> option from 
+PCRE1, which is not compatible.
+<li>compiled_widths An integer whose lower bits indicate which code unit 
+widths were selected when PCRE2 was built. The 1-bit indicates 8-bit 
+support, and the 2-bit and 4-bit indicate 16-bit and 32-bit support, 
+respectively. The 1 bit should always be set because the wrapper code 
+requires 8 bit support.
+<li>depthlimit
+<li>heaplimit
+<li>jit
+<code>true</code> if just-in-time compiling is available.
+<li>jittarget A string containing the name of the architecture for which 
+the JIT compiler is configured. e.g.,&rsquo;x86 64bit (little endian + 
+unaligned)'.
+<li>linksize
+<li>matchlimit
+<li>never_backslash_c
+<li>newline2 An atom whose value specifies the default character 
+sequence that is recognized as meaning "newline" (<code>cr</code>, <code>lf</code>, <code>crlf</code>, <code>any</code>,
+<code>anycrlf</code>, <code>nul</code>). Replaces <code>newline</code> 
+option from PCRE1, which is not compatible.
+<li>parenslimit
+<li>stackrecurse
+<li>unicode Always <code>true</code>
+<li>unicode_version The unicode version as an atom, e.g.&rsquo;12.1.0'.
+<li>utf8 - synonym for <code>unicode</code>
+<li>parens_limit
+<li>version The version information as an atom, containing the PCRE 
+version number and release date, e.g.&rsquo;10.34 2019-11-21'.
+
+<p>For backwards compatibility with PCRE1, the following are accepted, 
+but are deprecated:
+
+<p>
+<ul class="compact">
+<li><code>utf8</code> - synonym for <code>unicode</code>
+<li><code>link_size</code> - synonym for <code>linksize</code>
+<li><code>match_limit</code> - synonym for <code>matchlimit</code>
+<li><code>parens_limit</code> - synonym for <code>parenslimit</code>
+<li><code>unicode_properties</code> - always true
+</ul>
+
+<p>The following have been removed because they don't exist in PCRE2 and 
+don't seem to have any meaningful use in PCRE1:
+
+<p>
+<ul class="compact">
+<li><code>posix_malloc_threshold</code>
+<li><code>match_limit_recursion</code>
+</ul>
+</ul>
 </dd>
 </dl>
 
@@ -642,8 +840,10 @@ available using the configuration name <code>version</code>.
 <dt><a class="idx" href="#re_foldl/6">re_foldl/6</a></dt>
 <dt><a class="idx" href="#re_match/2">re_match/2</a></dt>
 <dt><a class="idx" href="#re_match/3">re_match/3</a></dt>
+<dt><a class="idx" href="#re_matchsub/3">re_matchsub/3</a></dt>
 <dt><a class="idx" href="#re_matchsub/4">re_matchsub/4</a></dt>
 <dt><a class="idx" href="#re_replace/4">re_replace/4</a></dt>
+<dt><a class="idx" href="#re_replace/5">re_replace/5</a></dt>
 <dt><a class="idx" href="#re_split/3">re_split/3</a></dt>
 <dt><a class="idx" href="#re_split/4">re_split/4</a></dt>
 <dd>

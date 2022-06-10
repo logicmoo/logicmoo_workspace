@@ -1,6 +1,4 @@
-/*
-
-    Part of CLP(Q,R) (Constraint Logic Programming over Rationals and Reals)
+/*  Part of CLP(Q,R) (Constraint Logic Programming over Rationals and Reals)
 
     Author:        Leslie De Koninck
     E-mail:        Leslie.DeKoninck@cs.kuleuven.be
@@ -41,7 +39,7 @@
 % attribute = t(CLP,type(_),strictness(_),lin(_),order(_),class(_),forward(_),
 %		nonzero,target,keep_indep,keep)
 
-:- module(itf,
+:- module(clpqr_itf,
 	[
 	    dump_linear/3,
 	    dump_nonzero/3,
@@ -50,15 +48,15 @@
 :- use_module(library(apply), [maplist/2]).
 
 clp_type(Var,Type) :-
-	(   get_attr(Var,itf,Att)
+	(   get_attr(Var,clpqr_itf,Att)
 	->  arg(1,Att,Type)
-	;   get_attr(Var,geler,Att)
+	;   get_attr(Var,clpqr_geler,Att)
 	->  arg(1,Att,Type)
 	).
 
 dump_linear(V) -->
 	{
-	    get_attr(V,itf,Att),
+	    get_attr(V,clpqr_itf,Att),
 	    arg(1,Att,CLP),
 	    arg(2,Att,type(Type)),
 	    arg(4,Att,lin(Lin)),
@@ -87,7 +85,7 @@ dump_v(clpr,Type,V,I,H) --> bv_r:dump_var(Type,V,I,H).
 
 dump_nonzero(V) -->
 	{
-	    get_attr(V,itf,Att),
+	    get_attr(V,clpqr_itf,Att),
 	    arg(1,Att,CLP),
 	    arg(4,Att,lin(Lin)),
 	    arg(8,Att,nonzero),
@@ -102,14 +100,14 @@ dump_nz(clpr,V,H,I) --> bv_r:dump_nz(V,H,I).
 
 attr_unify_hook(t(CLP,n,n,n,n,n,n,n,_,_,_),Y) :-
 	!,
-	(   get_attr(Y,itf,AttY),
+	(   get_attr(Y,clpqr_itf,AttY),
 	    \+ arg(1,AttY,CLP)
 	->  throw(error(permission_error('mix CLP(Q) variables with',
 		'CLP(R) variables:',Y),context(_)))
 	;   true
 	).
 attr_unify_hook(t(CLP,Ty,St,Li,Or,Cl,_,No,_,_,_),Y) :-
-	(   get_attr(Y,itf,AttY),
+	(   get_attr(Y,clpqr_itf,AttY),
 	    \+ arg(1,AttY,CLP)
 	->  throw(error(permission_error('mix CLP(Q) variables with',
 		'CLP(R) variables:',Y),context(_)))
@@ -129,4 +127,4 @@ do_checks(clpr,Y,Ty,St,Li,Or,Cl,No,Later) :-
 :- multifile
 	sandbox:safe_primitive/1.
 
-sandbox:safe_primitive(itf:clp_type(_,_)).
+sandbox:safe_primitive(clpqr_itf:clp_type(_,_)).

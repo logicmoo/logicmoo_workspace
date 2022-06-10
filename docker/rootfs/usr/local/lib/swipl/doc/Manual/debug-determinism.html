@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.5.4 Reference Manual: Section 4.40</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.5.12 Reference Manual: Section 4.40</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -245,6 +245,25 @@ debugging and maintaining deterministic code easier. One of them is
 <em>Single Sided Unification</em> using <b>=&gt;/2</b> rules as 
 described in <a class="sec" href="ssu.html#sec:5.6">section 5.6</a>. 
 This section deals with annotating your program.
+
+<p>If a program does not behave according to these annotations it raises 
+an
+<b>error/2</b> exception where the formal term is
+<code>determinism_error(Pred, Declared, Observed, DeclType)</code>, 
+where
+<var>Declared</var> is currently always <code>det</code>, <var>Observed</var> 
+is one of
+<var>fail</var> or <var>nondet</var> and <var>DeclType</var> is one of <var>property</var> 
+(<a id="idx:det1:1813"></a><a class="pred" href="debug-determinism.html#det/1">det/1</a>), <var>guard</var> 
+(<a class="pred" href="debug-determinism.html#$/0">$/0</a>) or <var>goal</var> 
+(<a class="pred" href="debug-determinism.html#$/1">$/1</a>). Using <a id="idx:trap1:1814"></a><a class="pred" href="prologdebug.html#trap/1">trap/1</a> 
+or <a id="idx:gtrap1:1815"></a><span class="pred-ext">gtrap/1</span> we 
+can ask Prolog to start the debugger in such events using
+
+<pre class="code">
+?- gtrap(determinism_error(_,_,_,_)).
+</pre>
+
 <blockquote>
 <b>WARNING:</b> The primitives in this section are experimental. The 
 naming and exact semantics may change. If you are interested in this, 
@@ -282,14 +301,18 @@ ERROR: In:
 ERROR:   [10] p(a)
 </pre>
 
-</dd>
+<p>Violations throw an <b>error/2</b> exception
+<code>determinism_error(Pred, Declared, Observed, property)</code>.</dd>
 <dt class="pubdef"><span class="pred-tag">[experimental]</span><a id="$/0"><strong>$</strong></a></dt>
 <dd class="defbody">
 The <a class="pred" href="debug-determinism.html#$/0">$/0</a> constructs 
 acts similar to the <a class="pred" href="control.html#!/0">!/0</a>, but 
 in addition declares that the remainder of the clause body shall succeed 
-deterministically. It exploits the same underlying mechanism as the <a id="idx:det1:1796"></a><a class="pred" href="debug-determinism.html#det/1">det/1</a> 
-declaration. See also <a class="pred" href="debug-determinism.html#$/1">$/1</a>.</dd>
+deterministically. It exploits the same underlying mechanism as the <a id="idx:det1:1816"></a><a class="pred" href="debug-determinism.html#det/1">det/1</a> 
+declaration. See also <a class="pred" href="debug-determinism.html#$/1">$/1</a>.
+
+<p>Violations throw an <b>error/2</b> exception
+<code>determinism_error(Pred, Declared, Observed, guard)</code>.</dd>
 <dt class="pubdef"><span class="pred-tag">[experimental]</span><a id="$/1"><strong>$</strong>(<var>:Goal</var>)</a></dt>
 <dd class="defbody">
 Verify that <var>Goal</var> succeeds deterministically. This predicate 
@@ -299,11 +322,11 @@ Otherwise the result depends on the Prolog flag <a class="flag" href="flags.html
 <dl class="latex">
 <dt><strong>silent</strong></dt>
 <dd class="defbody">
-Act as <a id="idx:once1:1797"></a><a class="pred" href="metacall.html#once/1">once/1</a>.
+Act as <a id="idx:once1:1817"></a><a class="pred" href="metacall.html#once/1">once/1</a>.
 </dd>
 <dt><strong>warning</strong></dt>
 <dd class="defbody">
-Print a warning and act as <a id="idx:once1:1798"></a><a class="pred" href="metacall.html#once/1">once/1</a>.
+Print a warning and act as <a id="idx:once1:1818"></a><a class="pred" href="metacall.html#once/1">once/1</a>.
 </dd>
 <dt><strong>error</strong></dt>
 <dd class="defbody">
@@ -318,6 +341,9 @@ with determinism checking can be realised using <code>..., $, Last.</code>,
 i.e. by executing
 <a class="pred" href="debug-determinism.html#$/0">$/0</a> before the 
 last call rather than wrapping the last call in <a class="pred" href="debug-determinism.html#$/1">$/1</a>.
+
+<p>Violations throw an <b>error/2</b> exception
+<code>determinism_error(Pred, Declared, Observed, goal)</code>.
 </dd>
 </dl>
 
@@ -329,7 +355,7 @@ last predicate is a normal predicate the requirement to succeed
 deterministically is transferred to the new goal. As last-call 
 optimization causes the information which predicate initially claimed to 
 be deterministic to be lost, the error is associated with the called 
-predicate. Debug mode (see <a id="idx:debug0:1799"></a><a class="pred" href="debugger.html#debug/0">debug/0</a> 
+predicate. Debug mode (see <a id="idx:debug0:1819"></a><a class="pred" href="debugger.html#debug/0">debug/0</a> 
 or the Prolog flag <a class="flag" href="flags.html#flag:debug">debug</a>) 
 may be used to avoid last call optimization and find the call stack that 
 causes the issue.

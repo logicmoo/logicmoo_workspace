@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.5.4 Reference Manual: Section A.24</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.5.12 Reference Manual: Section A.24</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -478,7 +478,9 @@ arguments are partial lists.
 <dd class="defbody">
 Is true when the elements of <var>List2</var> are in reverse order 
 compared to
-<var>List1</var>.</dd>
+<var>List1</var>. This predicate is deterministic if either list is a 
+proper list. If both lists are <i>partial lists</i> backtracking 
+generates increasingly long lists.</dd>
 <dt class="pubdef"><span class="pred-tag">[nondet]</span><a id="permutation/2"><strong>permutation</strong>(<var>?Xs, 
 ?Ys</var>)</a></dt>
 <dd class="defbody">

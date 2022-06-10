@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.5.4 Reference Manual: Section B.1</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.5.12 Reference Manual: Section B.1</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -249,13 +249,13 @@ therefore its frame is destroyed immediately after succeeding.</dd>
 <dd class="defbody">
 Unify <var>Choice</var> with an integer provided a reference to the last 
 choice point. Fails if the current environment has no choice points. See 
-also <a id="idx:prologchoiceattribute3:2643"></a><a class="pred" href="manipstack.html#prolog_choice_attribute/3">prolog_choice_attribute/3</a>.</dd>
+also <a id="idx:prologchoiceattribute3:2688"></a><a class="pred" href="manipstack.html#prolog_choice_attribute/3">prolog_choice_attribute/3</a>.</dd>
 <dt class="pubdef"><a id="prolog_frame_attribute/3"><strong>prolog_frame_attribute</strong>(<var>+Frame, 
 +Key, :Value</var>)</a></dt>
 <dd class="defbody">
 Obtain information about the local stack frame <var>Frame</var>. <var>Frame</var> 
-is a frame reference as obtained through <a id="idx:prologcurrentframe1:2644"></a><a class="pred" href="manipstack.html#prolog_current_frame/1">prolog_current_frame/1</a>,
-<a id="idx:prologtraceinterception4:2645"></a><a class="pred" href="tracehook.html#prolog_trace_interception/4">prolog_trace_interception/4</a> 
+is a frame reference as obtained through <a id="idx:prologcurrentframe1:2689"></a><a class="pred" href="manipstack.html#prolog_current_frame/1">prolog_current_frame/1</a>,
+<a id="idx:prologtraceinterception4:2690"></a><a class="pred" href="tracehook.html#prolog_trace_interception/4">prolog_trace_interception/4</a> 
 or this predicate. The key values are described below.
 
 <dl class="latex">
@@ -275,7 +275,7 @@ If the definition module of the active predicate is not the calling
 context, the goal is represented as <code>&lt;<var>module</var>&gt;:&lt;<var>goal</var>&gt;</code>. 
 Do not instantiate variables in this goal unless you <b>know</b> what 
 you are doing! Note that the returned term may contain references to the 
-frame and should be discarded before the frame terminates.<sup class="fn">218<span class="fn-text">The 
+frame and should be discarded before the frame terminates.<sup class="fn">225<span class="fn-text">The 
 returned term is actually an illegal Prolog term that may hold 
 references from the global to the local stack to preserve the variable 
 names.</span></sup></dd>
@@ -297,8 +297,8 @@ an illegal term as <code>goal</code> and is used by the library <code>library(pr
 <dd class="defbody">
 <var>Value</var> is unified with a reference to the currently running 
 clause. Fails if the current goal is associated with a foreign (C) 
-defined predicate. See also <a id="idx:nthclause3:2646"></a><a class="pred" href="examineprog.html#nth_clause/3">nth_clause/3</a> 
-and <a id="idx:clauseproperty2:2647"></a><a class="pred" href="examineprog.html#clause_property/2">clause_property/2</a>.</dd>
+defined predicate. See also <a id="idx:nthclause3:2691"></a><a class="pred" href="examineprog.html#nth_clause/3">nth_clause/3</a> 
+and <a id="idx:clauseproperty2:2692"></a><a class="pred" href="examineprog.html#clause_property/2">clause_property/2</a>.</dd>
 <dt><strong>level</strong></dt>
 <dd class="defbody">
 <var>Value</var> is unified with the recursion level of <var>Frame</var>. 
@@ -346,8 +346,8 @@ range.
 +Key, -Value</var>)</a></dt>
 <dd class="defbody">
 Extract attributes of a choice point. <var>ChoicePoint</var> is a 
-reference to a choice point as passed to <a id="idx:prologtraceinterception4:2648"></a><a class="pred" href="tracehook.html#prolog_trace_interception/4">prolog_trace_interception/4</a> 
-on the 3rd argument or obtained using <a id="idx:prologcurrentchoice1:2649"></a><a class="pred" href="manipstack.html#prolog_current_choice/1">prolog_current_choice/1</a>. <var>Key</var> 
+reference to a choice point as passed to <a id="idx:prologtraceinterception4:2693"></a><a class="pred" href="tracehook.html#prolog_trace_interception/4">prolog_trace_interception/4</a> 
+on the 3rd argument or obtained using <a id="idx:prologcurrentchoice1:2694"></a><a class="pred" href="manipstack.html#prolog_current_choice/1">prolog_current_choice/1</a>. <var>Key</var> 
 specifies the requested information:
 
 <dl class="latex">
@@ -364,7 +364,7 @@ Requests a reference to the frame to which the choice point refers.
 Requests the type. Defined values are <code>clause</code> (the goal has 
 alternative clauses), <code>foreign</code> (non-deterministic foreign 
 predicate), <code>jump</code> (clause internal choice point), <code>top</code> 
-(first dummy choice point), <code>catch</code> (<a id="idx:catch3:2650"></a><a class="pred" href="exception.html#catch/3">catch/3</a> 
+(first dummy choice point), <code>catch</code> (<a id="idx:catch3:2695"></a><a class="pred" href="exception.html#catch/3">catch/3</a> 
 to allow for undo),
 <code>debug</code> (help the debugger), or <code>none</code> (has been 
 deleted).
@@ -389,10 +389,10 @@ Unifies its argument with <code>true</code> if no choice point exists
 that is more recent than the entry of the clause in which it appears. 
 There are few realistic situations for using this predicate. It is used 
 by the
-<a id="idx:prolog0:2651"></a><a class="pred" href="toplevel.html#prolog/0">prolog/0</a> 
+<a id="idx:prolog0:2696"></a><a class="pred" href="toplevel.html#prolog/0">prolog/0</a> 
 top level to check whether Prolog should prompt the user for 
 alternatives. Similar results can be achieved in a more portable fashion 
-using <a id="idx:callcleanup2:2652"></a><a class="pred" href="metacall.html#call_cleanup/2">call_cleanup/2</a>.
+using <a id="idx:callcleanup2:2697"></a><a class="pred" href="metacall.html#call_cleanup/2">call_cleanup/2</a>.
 </dd>
 </dl>
 

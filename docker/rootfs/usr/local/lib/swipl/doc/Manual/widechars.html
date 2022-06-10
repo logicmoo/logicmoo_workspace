@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.5.4 Reference Manual: Section 2.19</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.5.12 Reference Manual: Section 2.19</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -238,7 +238,7 @@ character support</span></a></h2>
 
 <a id="sec:widechars"></a>
 
-<p><a id="idx:UTF8:310"></a><a id="idx:Unicode:311"></a><a id="idx:UCS:312"></a><a id="idx:internationalization:313"></a>SWI-Prolog 
+<p><a id="idx:UTF8:313"></a><a id="idx:Unicode:314"></a><a id="idx:UCS:315"></a><a id="idx:internationalization:316"></a>SWI-Prolog 
 supports <em>wide characters</em>, characters with character codes above 
 255 that cannot be represented in a single <em>byte</em>.
 <em>Universal Character Set</em> (UCS) is the ISO/IEC 10646 standard 
@@ -279,8 +279,8 @@ Especially on MS-Windows the 16-bit Unicode standard, represented by
 pairs of bytes, is also popular.
 
 <p>Prolog I/O streams have a property called <em>encoding</em> which 
-specifies the used encoding that influences <a id="idx:getcode2:314"></a><a class="pred" href="chario.html#get_code/2">get_code/2</a> 
-and <a id="idx:putcode2:315"></a><a class="pred" href="chario.html#put_code/2">put_code/2</a> 
+specifies the used encoding that influences <a id="idx:getcode2:317"></a><a class="pred" href="chario.html#get_code/2">get_code/2</a> 
+and <a id="idx:putcode2:318"></a><a class="pred" href="chario.html#put_code/2">put_code/2</a> 
 as well as all the other text I/O predicates.
 
 <p>The default encoding for files is derived from the Prolog flag
@@ -291,12 +291,12 @@ or
 <code>iso_latin_1</code>. One of the latter two is used if the encoding 
 name is recognized, while <code>text</code> is used as default. Using
 <code>text</code>, the translation is left to the wide-character 
-functions of the C library.<sup class="fn">38<span class="fn-text">The 
+functions of the C library.<sup class="fn">39<span class="fn-text">The 
 Prolog native UTF-8 mode is considerably faster than the generic 
-mbrtowc() one.</span></sup> The encoding can be specified explicitly in <a id="idx:loadfiles2:316"></a><a class="pred" href="consulting.html#load_files/2">load_files/2</a> 
-for loading Prolog source with an alternative encoding, <a id="idx:open4:317"></a><a class="pred" href="IO.html#open/4">open/4</a> 
-when opening files or using <a id="idx:setstream2:318"></a><a class="pred" href="IO.html#set_stream/2">set_stream/2</a> 
-on any open stream. For Prolog source files we also provide the <a id="idx:encoding1:319"></a><a class="pred" href="consulting.html#encoding/1">encoding/1</a> 
+mbrtowc() one.</span></sup> The encoding can be specified explicitly in <a id="idx:loadfiles2:319"></a><a class="pred" href="consulting.html#load_files/2">load_files/2</a> 
+for loading Prolog source with an alternative encoding, <a id="idx:open4:320"></a><a class="pred" href="IO.html#open/4">open/4</a> 
+when opening files or using <a id="idx:setstream2:321"></a><a class="pred" href="IO.html#set_stream/2">set_stream/2</a> 
+on any open stream. For Prolog source files we also provide the <a id="idx:encoding1:322"></a><a class="pred" href="consulting.html#encoding/1">encoding/1</a> 
 directive that can be used to switch between encodings that are 
 compatible with US-ASCII (<code>ascii</code>, <code>iso_latin_1</code>, <code>utf8</code> 
 and many locales). See also <a class="sec" href="projectfiles.html#sec:3.1.3">section 
@@ -344,7 +344,7 @@ significant byte first. Can only represent 16-bit characters.
 <p>Note that not all encodings can represent all characters. This 
 implies that writing text to a stream may cause errors because the 
 stream cannot represent these characters. The behaviour of a stream on 
-these errors can be controlled using <a id="idx:setstream2:320"></a><a class="pred" href="IO.html#set_stream/2">set_stream/2</a>. 
+these errors can be controlled using <a id="idx:setstream2:323"></a><a class="pred" href="IO.html#set_stream/2">set_stream/2</a>. 
 Initially the terminal stream writes the characters using Prolog escape 
 sequences while other streams generate an I/O exception.
 
@@ -353,7 +353,7 @@ Byte Order Mark</span></a></h4>
 
 <a id="sec:bom"></a>
 
-<p><a id="idx:BOM:321"></a><a id="idx:ByteOrderMark:322"></a>From <a class="sec" href="widechars.html#sec:2.19.1">section 
+<p><a id="idx:BOM:324"></a><a id="idx:ByteOrderMark:325"></a>From <a class="sec" href="widechars.html#sec:2.19.1">section 
 2.19.1</a>, you may have got the impression that text files are 
 complicated. This section deals with a related topic, making life often 
 easier for the user, but providing another worry to the programmer.
@@ -370,12 +370,12 @@ often explicitly forbid the use of a UTF-8 BOM. In other cases there is
 additional information revealing the encoding, making the use of a BOM 
 redundant or even illegal.
 
-<p>The BOM is handled by SWI-Prolog <a id="idx:open4:323"></a><a class="pred" href="IO.html#open/4">open/4</a> 
+<p>The BOM is handled by SWI-Prolog <a id="idx:open4:326"></a><a class="pred" href="IO.html#open/4">open/4</a> 
 predicate. By default, text files are probed for the BOM when opened for 
 reading. If a BOM is found, the encoding is set accordingly and the 
-property <code>bom(true)</code> is available through <a id="idx:streamproperty2:324"></a><a class="pred" href="IO.html#stream_property/2">stream_property/2</a>. 
+property <code>bom(true)</code> is available through <a id="idx:streamproperty2:327"></a><a class="pred" href="IO.html#stream_property/2">stream_property/2</a>. 
 When opening a file for writing, writing a BOM can be requested using 
 the option <code>bom(true)</code> with
-<a id="idx:open4:325"></a><a class="pred" href="IO.html#open/4">open/4</a>.
+<a id="idx:open4:328"></a><a class="pred" href="IO.html#open/4">open/4</a>.
 
 <p></body></html>

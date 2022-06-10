@@ -82,7 +82,8 @@ shared objects/DLLs can be loaded.
 
 % Feature tests
 component(tcmalloc,
-          _{ test:test_tcmalloc,
+          _{ optional:true,
+             test:test_tcmalloc,
              url:'tcmalloc.html'
            }).
 component(gmp,
@@ -356,7 +357,7 @@ archive_format(F, Name) :-
     ->  archive_close(A)
     ;   true
     ),
-    \+ subsumes_term(error(domain_error(filter, _),_), E).
+    \+ subsumes_term(error(domain_error(format, _),_), E).
 
 a_filter(bzip2).
 a_filter(compress).
@@ -393,6 +394,11 @@ pcre_features :-
     (   Missing == []
     ->  true
     ;   print_message(warning, installation(pcre_missing(Missing)))
+    ),
+    (   re_config(compiled_widths(Widths)),
+        1 =:= Widths /\ 1
+    ->  true
+    ;   print_message(warning, installation(pcre_missing('8-bit support')))
     ).
 
 pcre_missing(X) :-
@@ -400,8 +406,7 @@ pcre_missing(X) :-
     Term =.. [X,true],
     \+ catch(re_config(Term), _, fail).
 
-pcre_must_have(utf8).
-pcre_must_have(unicode_properties).
+pcre_must_have(unicode).
 
 %!  jquery_file
 %

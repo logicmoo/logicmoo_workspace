@@ -20,7 +20,7 @@ check_args(P,Arity,Arity,1,T,C,MC):- !,
  arg(An,P,Return),into_type(ArgType,Result,Return).
 check_args(P,Arity,An,2,T,C,MC):-
  arg(An,P,ArgIn),arg(An,T,ArgType),arg(An,C,CallArg),
- is_group(ArgIn), ArgType = object,!,
+ is_object_group(ArgIn), ArgType = object,!,
  arg(Arity,P,Result),arg(Arity,C,Return),
  findall(Return,(member(CallArg,ArgIn),check_args(P,Arity,Arity,1,T,C,MC)),Result).
 check_args(P,Arity,An,Left,T,C,MC):-  
@@ -75,9 +75,12 @@ test_cond_or(This, That):- term_variables(This,[That|_]),!.
 
 run_dsl(Prog,In,Out):- run_dsl(enact,Prog,In,Out).
 
+
+run_dsl(Mode,Prog,_In,_Out):- ptt(run_dsl(Mode,Prog,in,out)),fail.
 run_dsl(Mode,Prog,In,Out):- plain_var(Prog),!,throw(var_solving_progs(Mode,Prog,In,Out)).
 run_dsl(Mode,Prog,In,Out):- In==dsl_pipe,!,  nb_current(dsl_pipe,PipeIn), run_dsl(Mode,Prog,PipeIn,Out).
 run_dsl(Mode,Prog,In,Out):- Out==dsl_pipe,!, run_dsl(Mode,Prog,In,PipeOut),nb_setval(dsl_pipe,PipeOut).
+run_dsl(Mode,doall(All),In,OutO):- !, run_dsl(Mode,forall(All,true),In,OutO).
 run_dsl(Mode,lmDSL(Prog),In,Out):- !, run_dsl(Mode,Prog,In,Out).
 run_dsl(_Mode,call(G),In,Out):-!,call(G),(plain_var(Out)->Out=In; true).
 run_dsl(_Mode,[],In,Out):-!, plain_var(Out)->Out=In; true.
@@ -111,7 +114,7 @@ into_object(G,O):- is_grid(G),grid_to_individual(G,O),!.
 into_object(G,O):- into_group(G,OL),must([O]=OL).
 
 into_group(G,G):- plain_var(G),throw(var_into_group(G)).
-into_group(P,G):- is_group(P),!,G=P.
+into_group(P,G):- is_object_group(P),!,G=P.
 into_group(G,I):- is_grid(G),!,compute_shared_indivs(G,I).
 into_group(P,G):- is_object(P),!,G=[P].
 into_group(P,G):- named_gridoid(P,M),!,into_group(M,G).
@@ -120,7 +123,7 @@ into_group(P,G):- dumpST,throw(into_group(P,G)).
 into_group(P,G):- is_object(P),points_to_grid(P,M),!,into_group(M,G).
 %into_group(G,G):- is_grid(G),!.
 
-into_group(P,G):- is_group(P),set_grid_nums(P),
+into_group(P,G):- is_object_group(P),set_grid_nums(P),
   maplist(into_group,P,Gs),!,combine_grids(overlay,Gs,G).
 into_group(P,G):-
   maplist(into_group,P,Gs),!, 

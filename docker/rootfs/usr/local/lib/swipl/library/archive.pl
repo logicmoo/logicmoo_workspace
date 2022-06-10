@@ -65,19 +65,34 @@ The following example lists the entries in an archive:
 
   ```
   list_archive(File) :-
-        archive_open(File, Archive, []),
-        repeat,
-           (   archive_next_header(Archive, Path)
-           ->  format('~w~n', [Path]),
-               fail
-           ;   !,
-               archive_close(Archive)
-           ).
+      setup_call_cleanup(
+          archive_open(File, Archive, []),
+          (   repeat,
+              (   archive_next_header(Archive, Path)
+              ->  format('~w~n', [Path]),
+                  fail
+              ;   !
+              )
+          ),
+          archive_close(Archive)).
+  ```
+
+Here  is an  alternative way  of  doing this,  using archive_foldl/4,  a
+higher level predicate.
+
+  ```
+  list_archive2(File) :-
+      list_archive(File, Headers),
+      maplist(writeln, Headers).
+
+  list_archive2(File, Headers) :-
+      archive_foldl(add_header, File, Headers, []).
+
+  add_header(Path, _, [Path|Paths], Paths).
   ```
 
 Here is another example which counts the files in the archive and prints
-file  type  information.  It  uses    archive_foldl/4,  a  higher  level
-predicate:
+file  type  information, also using archive_foldl/4:
 
   ```
   print_entry(Path, Handle, Cnt0, Cnt1) :-
@@ -85,7 +100,7 @@ predicate:
       format('File ~w is of type ~w~n', [Path, Type]),
       Cnt1 is Cnt0 + 1.
 
-  list_archive(File) :-
+  list_archive_headers(File) :-
       archive_foldl(print_entry, File, 0, FileCount),
       format('We have ~w files', [FileCount]).
   ```
@@ -116,19 +131,26 @@ archive_open(Stream, Archive, Options) :-
 
 %!  archive_open(+Data, +Mode, -Archive, +Options) is det.
 %
-%   Open the archive in Data and unify  Archive with a handle to the
-%   opened archive. Data is either a file  or a stream that contains
-%   a valid archive. Details are   controlled by Options. Typically,
-%   the option close_parent(true) is used  to   close  stream if the
-%   archive is closed using archive_close/1.  For other options, the
-%   defaults are typically fine. The option format(raw) must be used
-%   to process compressed  streams  that   do  not  contain explicit
-%   entries (e.g., gzip'ed data)  unambibuously.   The  =raw= format
-%   creates a _pseudo archive_ holding a single member named =data=.
+%   Open the  archive in  Data and  unify Archive with  a handle  to the
+%   opened archive.  Data is either a  file name (as accepted by open/4)
+%   or a stream  that has been opened with the  option type(binary).  If
+%   Data  is an  already  open  stream, the  caller  is responsible  for
+%   closing it  (but see option  close_parent(true)) and must  not close
+%   the stream  until after archive_close/1  is called.  Mode  is either
+%   `read` or  `write`.  Details are controlled  by Options.  Typically,
+%   the option close_parent(true) is used  to also close the Data stream
+%   if the archive  is closed using archive_close/1.   For other options
+%   when reading, the defaults are typically fine - for writing, a valid
+%   format  and   optional  filters  must  be   specified.   The  option
+%   format(raw) must be  used to process compressed streams  that do not
+%   contain explicit  entries (e.g.,  gzip'ed data)  unambibuously.  The
+%   =raw=  format creates  a _pseudo  archive_ holding  a single  member
+%   named =data=.
 %
 %     * close_parent(+Boolean)
-%     If this option is =true= (default =false=), Stream is closed
-%     if archive_close/1 is called on Archive.
+%     If this option is =true=  (default =false=), Data stream is closed
+%     when archive_close/1 is called on Archive. If Data is a file name,
+%     the default is =true=.
 %
 %     * compression(+Compression)
 %     Synomym for filter(Compression).  Deprecated.
@@ -137,7 +159,7 @@ archive_open(Stream, Archive, Options) :-
 %     Support the indicated filter. This option may be
 %     used multiple times to support multiple filters. In read mode,
 %     If no filter options are provided, =all= is assumed. In write
-%     mode, none is assumed.
+%     mode, =none= is assumed.
 %     Supported values are =all=, =bzip2=, =compress=, =gzip=,
 %     =grzip=, =lrzip=, =lzip=, =lzma=, =lzop=, =none=, =rpm=, =uu=
 %     and =xz=. The value =all= is default for read, =none= for write.
@@ -154,16 +176,18 @@ archive_open(Stream, Archive, Options) :-
 %     =iso9660=, =lha=, =mtree=, =rar=, =raw=, =tar=, =xar= and =zip=.
 %     The value =all= is default for read.
 %
-%   Note that the actually supported   compression types and formats
-%   may vary depending on the version   and  installation options of
-%   the underlying libarchive  library.  This   predicate  raises  a
-%   domain  error  if  the  (explicitly)  requested  format  is  not
-%   supported.
+%   Note that the  actually supported compression types  and formats may
+%   vary  depending  on the  version  and  installation options  of  the
+%   underlying libarchive  library.  This  predicate raises a  domain or
+%   permission error if  the (explicitly) requested format  or filter is
+%   not supported.
 %
 %   @error  domain_error(filter, Filter) if the requested
-%           filter is not supported.
+%           filter is invalid (e.g., `all` for writing).
 %   @error  domain_error(format, Format) if the requested
 %           format type is not supported.
+%   @error  permission_error(set, filter, Filter) if the requested
+%           filter is not supported.
 
 archive_open(stream(Stream), Mode, Archive, Options) :-
     !,
@@ -180,20 +204,20 @@ archive_open(File, Mode, Archive, Options) :-
 
 %!  archive_close(+Archive) is det.
 %
-%   Close the archive.  If  close_parent(true)   is  specified,  the
-%   underlying stream is closed too.  If   there  is an entry opened
-%   with  archive_open_entry/2,  actually  closing  the  archive  is
-%   delayed until the stream associated with   the  entry is closed.
-%   This can be used to open a   stream  to an archive entry without
-%   having to worry about closing the archive:
+%   Close  the   archive.   If   close_parent(true)  was   specified  in
+%   archive_open/4, the underlying entry stream  is closed too. If there
+%   is an  entry opened with archive_open_entry/2,  actually closing the
+%   archive is  delayed until  the stream associated  with the  entry is
+%   closed.   This can  be used  to open  a stream  to an  archive entry
+%   without having to worry about closing the archive:
 %
-%     ==
+%     ```
 %     archive_open_named(ArchiveFile, EntryName, Stream) :-
-%         archive_open(ArchiveFile, Handle, []),
-%         archive_next_header(Handle, Name),
-%         archive_open_entry(Handle, Stream),
+%         archive_open(ArchiveFile, Archive, []),
+%         archive_next_header(Archive, EntryName),
+%         archive_open_entry(Archive, Stream),
 %         archive_close(Archive).
-%     ==
+%     ```
 
 
 %!  archive_property(+Handle, ?Property) is nondet.
@@ -216,7 +240,7 @@ defined_archive_property(filter(_)).
 %!  archive_next_header(+Handle, -Name) is semidet.
 %
 %   Forward to the next entry of the  archive for which Name unifies
-%   with the pathname of the entry. Fails   silently  if the name of
+%   with the pathname of the entry. Fails   silently  if the end  of
 %   the  archive  is  reached  before  success.  Name  is  typically
 %   specified if a  single  entry  must   be  accessed  and  unbound
 %   otherwise. The following example opens  a   Prolog  stream  to a
@@ -224,13 +248,13 @@ defined_archive_property(filter(_)).
 %   close/1 and the archive  must   be  closed using archive_close/1
 %   after the data has been used.   See also setup_call_cleanup/3.
 %
-%     ==
-%     open_archive_entry(ArchiveFile, Entry, Stream) :-
+%     ```
+%     open_archive_entry(ArchiveFile, EntryName, Stream) :-
 %         open(ArchiveFile, read, In, [type(binary)]),
 %         archive_open(In, Archive, [close_parent(true)]),
-%         archive_next_header(Archive, Entry),
+%         archive_next_header(Archive, EntryName),
 %         archive_open_entry(Archive, Stream).
-%     ==
+%     ```
 %
 %   @error permission_error(next_header, archive, Handle) if a
 %   previously opened entry is not closed.

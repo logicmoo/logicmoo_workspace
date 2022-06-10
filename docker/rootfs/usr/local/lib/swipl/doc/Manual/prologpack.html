@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.5.4 Reference Manual: Section A.39</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.5.12 Reference Manual: Section A.39</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -351,7 +351,16 @@ Source for downloading the package
 </dd>
 <dt><strong>package_directory</strong>(<var>+Dir</var>)</dt>
 <dd class="defbody">
-Directory into which to install the package
+Directory into which to install the package.
+</dd>
+<dt><strong>global</strong>(<var>+Boolean</var>)</dt>
+<dd class="defbody">
+If <code>true</code>, install in the XDG common application data path, 
+making the pack accessible to everyone. If <code>false</code>, install 
+in the XDG user application data path, making the pack accessible for 
+the current user only. If the option is absent, use the first existing 
+and writable directory. If that doesn't exist find locations where it 
+can be created and prompt the user to do so.
 </dd>
 <dt><strong>interactive</strong>(<var>+Boolean</var>)</dt>
 <dd class="defbody">

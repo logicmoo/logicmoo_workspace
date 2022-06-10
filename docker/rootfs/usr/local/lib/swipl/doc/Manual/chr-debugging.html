@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.5.4 Reference Manual: Section 9.4</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.5.12 Reference Manual: Section 9.4</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -303,8 +303,8 @@ rule.
 <p><h3 id="sec:chr-tracing"><a id="sec:9.4.2"><span class="sec-nr">9.4.2</span> <span class="sec-title">Tracing 
 CHR programs</span></a></h3>
 
-<a id="sec:chr-tracing"></a> Tracing is enabled with the <a id="idx:chrtrace0:2180"></a><a class="pred" href="chr-debugging.html#chr_trace/0">chr_trace/0</a> 
-predicate and disabled with the <a id="idx:chrnotrace0:2181"></a><a class="pred" href="chr-debugging.html#chr_notrace/0">chr_notrace/0</a> 
+<a id="sec:chr-tracing"></a> Tracing is enabled with the <a id="idx:chrtrace0:2213"></a><a class="pred" href="chr-debugging.html#chr_trace/0">chr_trace/0</a> 
+predicate and disabled with the <a id="idx:chrnotrace0:2214"></a><a class="pred" href="chr-debugging.html#chr_notrace/0">chr_notrace/0</a> 
 predicate.
 
 <p>When enabled the tracer will step through the <code>call</code>,
@@ -347,11 +347,11 @@ Disable the tracer.
 </dd>
 <dt><strong>break</strong></dt>
 <dd class="defbody">
-Enter a recursive Prolog top level. See <a id="idx:break0:2182"></a><a class="pred" href="toplevel.html#break/0">break/0</a>.
+Enter a recursive Prolog top level. See <a id="idx:break0:2215"></a><a class="pred" href="toplevel.html#break/0">break/0</a>.
 </dd>
 <dt><strong>abort</strong></dt>
 <dd class="defbody">
-Exit to the top level. See <a id="idx:abort0:2183"></a><a class="pred" href="toplevel.html#abort/0">abort/0</a>.
+Exit to the top level. See <a id="idx:abort0:2216"></a><a class="pred" href="toplevel.html#abort/0">abort/0</a>.
 </dd>
 <dt><strong>fail</strong></dt>
 <dd class="defbody">
@@ -374,15 +374,15 @@ content of the constraint store.
 <dt class="pubdef"><a id="chr_trace/0"><strong>chr_trace</strong></a></dt>
 <dd class="defbody">
 Activate the CHR tracer. By default the CHR tracer is activated and 
-deactivated automatically by the Prolog predicates <a id="idx:trace0:2184"></a><a class="pred" href="debugger.html#trace/0">trace/0</a> 
+deactivated automatically by the Prolog predicates <a id="idx:trace0:2217"></a><a class="pred" href="debugger.html#trace/0">trace/0</a> 
 and
-<a id="idx:notrace0:2185"></a><a class="pred" href="debugger.html#notrace/0">notrace/0</a>.</dd>
+<a id="idx:notrace0:2218"></a><a class="pred" href="debugger.html#notrace/0">notrace/0</a>.</dd>
 <dt class="pubdef"><a id="chr_notrace/0"><strong>chr_notrace</strong></a></dt>
 <dd class="defbody">
 Deactivate the CHR tracer. By default the CHR tracer is activated and 
-deactivated automatically by the Prolog predicates <a id="idx:trace0:2186"></a><a class="pred" href="debugger.html#trace/0">trace/0</a> 
+deactivated automatically by the Prolog predicates <a id="idx:trace0:2219"></a><a class="pred" href="debugger.html#trace/0">trace/0</a> 
 and
-<a id="idx:notrace0:2187"></a><a class="pred" href="debugger.html#notrace/0">notrace/0</a>.</dd>
+<a id="idx:notrace0:2220"></a><a class="pred" href="debugger.html#notrace/0">notrace/0</a>.</dd>
 <dt class="pubdef"><a id="chr_leash/1"><strong>chr_leash</strong>(<var>+Spec</var>)</a></dt>
 <dd class="defbody">
 Define the set of CHR ports on which the CHR tracer asks for user 
@@ -392,7 +392,7 @@ defined in <a class="sec" href="chr-debugging.html#sec:9.4.1">section
 to stop at all ports, <code>none</code> or <code>off</code> to never 
 stop, and <code>default</code> to stop at the <code>call</code>,
 <code>exit</code>, <code>fail</code>, <code>wake</code> and <code>apply</code> 
-ports. See also <a id="idx:leash1:2188"></a><a class="pred" href="debugger.html#leash/1">leash/1</a>.</dd>
+ports. See also <a id="idx:leash1:2221"></a><a class="pred" href="debugger.html#leash/1">leash/1</a>.</dd>
 <dt class="pubdef"><a id="chr_show_store/1"><strong>chr_show_store</strong>(<var>+Mod</var>)</a></dt>
 <dd class="defbody">
 Prints all suspended constraints of module <var>Mod</var> to the 

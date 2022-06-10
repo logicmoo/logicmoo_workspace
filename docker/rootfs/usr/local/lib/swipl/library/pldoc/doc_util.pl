@@ -166,7 +166,10 @@ atom_to_object(Atom, Object) :-
     ).
 atom_to_object(Atom, c(Function)) :-
     atom(Atom),
-    sub_atom(Atom, 0, _, _, 'PL_'),
+    (   sub_atom(Atom, 0, _, _, 'PL_')
+    ->  true
+    ;   sub_atom(Atom, 0, _, _, 'S')
+    ),
     sub_atom(Atom, B, _, _, '('),
     !,
     sub_atom(Atom, 0, B, _, Function).

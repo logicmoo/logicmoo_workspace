@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.5.4 Reference Manual</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.5.12 Reference Manual</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -603,7 +603,9 @@ number examples</span></a></div>
 numbers or floats</span></a></div>
 <div class="toc-h4"><a class="sec" href="arith.html#sec:4.27.2.4"><span class="sec-nr">4.27.2.4</span> <span class="sec-title">IEEE 
 754 floating point arithmetic</span></a></div>
-<div class="toc-h4"><a class="sec" href="arith.html#sec:4.27.2.5"><span class="sec-nr">4.27.2.5</span> <span class="sec-title">Arithmetic 
+<div class="toc-h4"><a class="sec" href="arith.html#sec:4.27.2.5"><span class="sec-nr">4.27.2.5</span> <span class="sec-title">Floating 
+point arithmetic precision</span></a></div>
+<div class="toc-h4"><a class="sec" href="arith.html#sec:4.27.2.6"><span class="sec-nr">4.27.2.6</span> <span class="sec-title">Arithmetic 
 Functions</span></a></div>
 <div class="toc-h2"><a class="sec" href="miscarith.html"><span class="sec-nr">4.28</span> <span class="sec-title">Misc 
 arithmetic support predicates</span></a></div>
@@ -628,13 +630,15 @@ Control</span></a></div>
 System Interaction</span></a></div>
 <div class="toc-h3"><a class="sec" href="system.html#sec:4.35.1"><span class="sec-nr">4.35.1</span> <span class="sec-title">Windows-specific 
 Operating System Interaction</span></a></div>
-<div class="toc-h3"><a class="sec" href="system.html#sec:4.35.2"><span class="sec-nr">4.35.2</span> <span class="sec-title">Dealing 
+<div class="toc-h3"><a class="sec" href="system.html#sec:4.35.2"><span class="sec-nr">4.35.2</span> <span class="sec-title">Apple 
+specific Operating System Interaction</span></a></div>
+<div class="toc-h3"><a class="sec" href="system.html#sec:4.35.3"><span class="sec-nr">4.35.3</span> <span class="sec-title">Dealing 
 with time and date</span></a></div>
-<div class="toc-h4"><a class="sec" href="system.html#sec:4.35.2.1"><span class="sec-nr">4.35.2.1</span> <span class="sec-title">Time 
+<div class="toc-h4"><a class="sec" href="system.html#sec:4.35.3.1"><span class="sec-nr">4.35.3.1</span> <span class="sec-title">Time 
 and date data structures</span></a></div>
-<div class="toc-h4"><a class="sec" href="system.html#sec:4.35.2.2"><span class="sec-nr">4.35.2.2</span> <span class="sec-title">Time 
+<div class="toc-h4"><a class="sec" href="system.html#sec:4.35.3.2"><span class="sec-nr">4.35.3.2</span> <span class="sec-title">Time 
 and date predicates</span></a></div>
-<div class="toc-h3"><a class="sec" href="system.html#sec:4.35.3"><span class="sec-nr">4.35.3</span> <span class="sec-title">Controlling 
+<div class="toc-h3"><a class="sec" href="system.html#sec:4.35.4"><span class="sec-nr">4.35.4</span> <span class="sec-title">Controlling 
 the <b>swipl-win.exe</b> console window</span></a></div>
 <div class="toc-h2"><a class="sec" href="files.html"><span class="sec-nr">4.36</span> <span class="sec-title">File 
 System Interaction</span></a></div>
@@ -950,6 +954,8 @@ Foreign Include File</span></a></div>
 Passing and Control</span></a></div>
 <div class="toc-h4"><a class="sec" href="foreigninclude.html#sec:12.4.1.1"><span class="sec-nr">12.4.1.1</span> <span class="sec-title">Non-deterministic 
 Foreign Predicates</span></a></div>
+<div class="toc-h4"><a class="sec" href="foreigninclude.html#sec:12.4.1.2"><span class="sec-nr">12.4.1.2</span> <span class="sec-title">Yielding 
+from foreign predicates</span></a></div>
 <div class="toc-h3"><a class="sec" href="foreigninclude.html#sec:12.4.2"><span class="sec-nr">12.4.2</span> <span class="sec-title">Atoms 
 and functors</span></a></div>
 <div class="toc-h4"><a class="sec" href="foreigninclude.html#sec:12.4.2.1"><span class="sec-nr">12.4.2.1</span> <span class="sec-title">Atoms 
@@ -1047,11 +1053,27 @@ between Prolog versions</span></a></div>
 <div class="toc-h3"><a class="sec" href="foreignnotes.html#sec:12.8.4"><span class="sec-nr">12.8.4</span> <span class="sec-title">Foreign 
 hash tables</span></a></div>
 <div class="toc-h3"><a class="sec" href="foreignnotes.html#sec:12.8.5"><span class="sec-nr">12.8.5</span> <span class="sec-title">Debugging 
-and profiling foreign code (valgrind)</span></a></div>
+and profiling foreign code (valgrind, asan)</span></a></div>
 <div class="toc-h3"><a class="sec" href="foreignnotes.html#sec:12.8.6"><span class="sec-nr">12.8.6</span> <span class="sec-title">Name 
 Conflicts in C modules</span></a></div>
 <div class="toc-h3"><a class="sec" href="foreignnotes.html#sec:12.8.7"><span class="sec-nr">12.8.7</span> <span class="sec-title">Compatibility 
 of the Foreign Interface</span></a></div>
+<div class="toc-h2"><a class="sec" href="foreign-streams.html"><span class="sec-nr">12.9</span> <span class="sec-title">Foreign 
+access to Prolog IO streams</span></a></div>
+<div class="toc-h3"><a class="sec" href="foreign-streams.html#sec:12.9.1"><span class="sec-nr">12.9.1</span> <span class="sec-title">Get 
+IO stream handles</span></a></div>
+<div class="toc-h3"><a class="sec" href="foreign-streams.html#sec:12.9.2"><span class="sec-nr">12.9.2</span> <span class="sec-title">Creating 
+an IO stream</span></a></div>
+<div class="toc-h3"><a class="sec" href="foreign-streams.html#sec:12.9.3"><span class="sec-nr">12.9.3</span> <span class="sec-title">Interacting 
+with foreign streams</span></a></div>
+<div class="toc-h3"><a class="sec" href="foreign-streams.html#sec:12.9.4"><span class="sec-nr">12.9.4</span> <span class="sec-title">Foreign 
+stream error handling</span></a></div>
+<div class="toc-h3"><a class="sec" href="foreign-streams.html#sec:12.9.5"><span class="sec-nr">12.9.5</span> <span class="sec-title">Foreign 
+stream encoding</span></a></div>
+<div class="toc-h3"><a class="sec" href="foreign-streams.html#sec:12.9.6"><span class="sec-nr">12.9.6</span> <span class="sec-title">Foreign 
+stream line endings</span></a></div>
+<div class="toc-h3"><a class="sec" href="foreign-streams.html#sec:12.9.7"><span class="sec-nr">12.9.7</span> <span class="sec-title">Foreign 
+stream position information</span></a></div>
 <div class="toc-h1"><a class="sec" href="runtime.html"><span class="sec-nr">13</span> <span class="sec-title">Deploying 
 applications</span></a></div>
 <div class="toc-h2"><a class="sec" href="deployment-options.html"><span class="sec-nr">13.1</span> <span class="sec-title">Deployment 
@@ -1173,7 +1195,9 @@ predicates</span></a></div>
 <div class="toc-h4"><a class="sec" href="clpfd.html#sec:A.9.17.6"><span class="sec-nr">A.9.17.6</span> <span class="sec-title">Reflection 
 predicates</span></a></div>
 <div class="toc-h4"><a class="sec" href="clpfd.html#sec:A.9.17.7"><span class="sec-nr">A.9.17.7</span> <span class="sec-title">FD 
-set predicaes</span></a></div>
+set predicates</span></a></div>
+<div class="toc-h4"><a class="sec" href="clpfd.html#sec:A.9.17.8"><span class="sec-nr">A.9.17.8</span> <span class="sec-title">FD 
+miscellaneous predicates</span></a></div>
 <div class="toc-h3"><a class="sec" href="clpfd.html#sec:A.9.18"><span class="sec-nr">A.9.18</span> <span class="sec-title">Closing 
 and opening words about CLP(FD)</span></a></div>
 <div class="toc-h2"><a class="sec" href="clpqr.html"><span class="sec-nr">A.10</span> <span class="sec-title">library(clpqr): 
@@ -1203,7 +1227,7 @@ Error generating support</span></a></div>
 <div class="toc-h2"><a class="sec" href="fastrw.html"><span class="sec-nr">A.17</span> <span class="sec-title">library(fastrw): 
 Fast reading and writing of terms</span></a></div>
 <div class="toc-h2"><a class="sec" href="gensym.html"><span class="sec-nr">A.18</span> <span class="sec-title">library(gensym): 
-Generate unique identifiers</span></a></div>
+Generate unique symbols</span></a></div>
 <div class="toc-h2"><a class="sec" href="heaps.html"><span class="sec-nr">A.19</span> <span class="sec-title">library(heaps): 
 heaps/priority queues</span></a></div>
 <div class="toc-h2"><a class="sec" href="increval.html"><span class="sec-nr">A.20</span> <span class="sec-title">library(increval): 
@@ -1220,8 +1244,8 @@ List Manipulation</span></a></div>
 Provide entry point for scripts</span></a></div>
 <div class="toc-h2"><a class="sec" href="nb_set.html"><span class="sec-nr">A.26</span> <span class="sec-title">library(nb_set): 
 Non-backtrackable set</span></a></div>
-<div class="toc-h2"><a class="sec" href="www_browser.html"><span class="sec-nr">A.27</span> <span class="sec-title">library(www_browser): 
-Activating your Web-browser</span></a></div>
+<div class="toc-h2"><a class="sec" href="wwwbrowser.html"><span class="sec-nr">A.27</span> <span class="sec-title">library(www_browser): 
+Open a URL in the users browser</span></a></div>
 <div class="toc-h2"><a class="sec" href="occurs.html"><span class="sec-nr">A.28</span> <span class="sec-title">library(occurs): 
 Finding and counting sub-terms</span></a></div>
 <div class="toc-h2"><a class="sec" href="option.html"><span class="sec-nr">A.29</span> <span class="sec-title">library(option): 
@@ -1380,49 +1404,44 @@ predicates</span></a></div>
 <div class="toc-h3"><a class="sec" href="library.html#sec:F.2.18"><span class="sec-nr">F.2.18</span> <span class="sec-title">library(explain)</span></a></div>
 <div class="toc-h3"><a class="sec" href="library.html#sec:F.2.19"><span class="sec-nr">F.2.19</span> <span class="sec-title">library(help)</span></a></div>
 <div class="toc-h3"><a class="sec" href="library.html#sec:F.2.20"><span class="sec-nr">F.2.20</span> <span class="sec-title">library(gensym)</span></a></div>
-<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.21"><span class="sec-nr">F.2.21</span> <span class="sec-title">library(summaries.d/gensym.tex)</span></a></div>
-<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.22"><span class="sec-nr">F.2.22</span> <span class="sec-title">library(heaps)</span></a></div>
-<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.23"><span class="sec-nr">F.2.23</span> <span class="sec-title">library(summaries.d/heaps.tex)</span></a></div>
-<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.24"><span class="sec-nr">F.2.24</span> <span class="sec-title">library(increval)</span></a></div>
-<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.25"><span class="sec-nr">F.2.25</span> <span class="sec-title">library(summaries.d/increval.tex)</span></a></div>
-<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.26"><span class="sec-nr">F.2.26</span> <span class="sec-title">library(intercept)</span></a></div>
-<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.27"><span class="sec-nr">F.2.27</span> <span class="sec-title">library(summaries.d/intercept.tex)</span></a></div>
-<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.28"><span class="sec-nr">F.2.28</span> <span class="sec-title">library(iostream)</span></a></div>
-<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.29"><span class="sec-nr">F.2.29</span> <span class="sec-title">library(summaries.d/iostream.tex)</span></a></div>
-<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.30"><span class="sec-nr">F.2.30</span> <span class="sec-title">library(listing)</span></a></div>
-<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.31"><span class="sec-nr">F.2.31</span> <span class="sec-title">library(lists)</span></a></div>
-<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.32"><span class="sec-nr">F.2.32</span> <span class="sec-title">library(main)</span></a></div>
-<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.33"><span class="sec-nr">F.2.33</span> <span class="sec-title">library(occurs)</span></a></div>
-<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.34"><span class="sec-nr">F.2.34</span> <span class="sec-title">library(option)</span></a></div>
-<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.35"><span class="sec-nr">F.2.35</span> <span class="sec-title">library(optparse)</span></a></div>
-<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.36"><span class="sec-nr">F.2.36</span> <span class="sec-title">library(ordsets)</span></a></div>
-<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.37"><span class="sec-nr">F.2.37</span> <span class="sec-title">library(persistency)</span></a></div>
-<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.38"><span class="sec-nr">F.2.38</span> <span class="sec-title">library(portraytext)</span></a></div>
-<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.39"><span class="sec-nr">F.2.39</span> <span class="sec-title">library(predicate_options)</span></a></div>
-<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.40"><span class="sec-nr">F.2.40</span> <span class="sec-title">library(prologdebug)</span></a></div>
-<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.41"><span class="sec-nr">F.2.41</span> <span class="sec-title">library(prologjiti)</span></a></div>
-<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.42"><span class="sec-nr">F.2.42</span> <span class="sec-title">library(prologpack)</span></a></div>
-<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.43"><span class="sec-nr">F.2.43</span> <span class="sec-title">library(prologxref)</span></a></div>
-<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.44"><span class="sec-nr">F.2.44</span> <span class="sec-title">library(pairs)</span></a></div>
-<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.45"><span class="sec-nr">F.2.45</span> <span class="sec-title">library(pio)</span></a></div>
-<div class="toc-h4"><a class="sec" href="library.html#sec:F.2.45.1"><span class="sec-nr">F.2.45.1</span> <span class="sec-title">library(pure_input)</span></a></div>
-<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.46"><span class="sec-nr">F.2.46</span> <span class="sec-title">library(random)</span></a></div>
-<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.47"><span class="sec-nr">F.2.47</span> <span class="sec-title">library(rbtrees)</span></a></div>
-<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.48"><span class="sec-nr">F.2.48</span> <span class="sec-title">library(readutil)</span></a></div>
-<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.49"><span class="sec-nr">F.2.49</span> <span class="sec-title">library(record)</span></a></div>
-<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.50"><span class="sec-nr">F.2.50</span> <span class="sec-title">library(registry)</span></a></div>
-<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.51"><span class="sec-nr">F.2.51</span> <span class="sec-title">library(settings)</span></a></div>
-<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.52"><span class="sec-nr">F.2.52</span> <span class="sec-title">library(simplex)</span></a></div>
-<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.53"><span class="sec-nr">F.2.53</span> <span class="sec-title">library(statistics)</span></a></div>
-<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.54"><span class="sec-nr">F.2.54</span> <span class="sec-title">library(terms)</span></a></div>
-<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.55"><span class="sec-nr">F.2.55</span> <span class="sec-title">library(ugraphs)</span></a></div>
-<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.56"><span class="sec-nr">F.2.56</span> <span class="sec-title">library(url)</span></a></div>
-<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.57"><span class="sec-nr">F.2.57</span> <span class="sec-title">library(www_browser)</span></a></div>
-<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.58"><span class="sec-nr">F.2.58</span> <span class="sec-title">library(solution_sequences)</span></a></div>
-<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.59"><span class="sec-nr">F.2.59</span> <span class="sec-title">library(thread)</span></a></div>
-<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.60"><span class="sec-nr">F.2.60</span> <span class="sec-title">library(thread_pool)</span></a></div>
-<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.61"><span class="sec-nr">F.2.61</span> <span class="sec-title">library(varnumbers)</span></a></div>
-<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.62"><span class="sec-nr">F.2.62</span> <span class="sec-title">library(yall)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.21"><span class="sec-nr">F.2.21</span> <span class="sec-title">library(heaps)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.22"><span class="sec-nr">F.2.22</span> <span class="sec-title">library(increval)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.23"><span class="sec-nr">F.2.23</span> <span class="sec-title">library(intercept)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.24"><span class="sec-nr">F.2.24</span> <span class="sec-title">library(iostream)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.25"><span class="sec-nr">F.2.25</span> <span class="sec-title">library(listing)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.26"><span class="sec-nr">F.2.26</span> <span class="sec-title">library(lists)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.27"><span class="sec-nr">F.2.27</span> <span class="sec-title">library(main)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.28"><span class="sec-nr">F.2.28</span> <span class="sec-title">library(occurs)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.29"><span class="sec-nr">F.2.29</span> <span class="sec-title">library(option)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.30"><span class="sec-nr">F.2.30</span> <span class="sec-title">library(optparse)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.31"><span class="sec-nr">F.2.31</span> <span class="sec-title">library(ordsets)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.32"><span class="sec-nr">F.2.32</span> <span class="sec-title">library(persistency)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.33"><span class="sec-nr">F.2.33</span> <span class="sec-title">library(portraytext)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.34"><span class="sec-nr">F.2.34</span> <span class="sec-title">library(predicate_options)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.35"><span class="sec-nr">F.2.35</span> <span class="sec-title">library(prologdebug)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.36"><span class="sec-nr">F.2.36</span> <span class="sec-title">library(prologjiti)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.37"><span class="sec-nr">F.2.37</span> <span class="sec-title">library(prologpack)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.38"><span class="sec-nr">F.2.38</span> <span class="sec-title">library(prologxref)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.39"><span class="sec-nr">F.2.39</span> <span class="sec-title">library(pairs)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.40"><span class="sec-nr">F.2.40</span> <span class="sec-title">library(pio)</span></a></div>
+<div class="toc-h4"><a class="sec" href="library.html#sec:F.2.40.1"><span class="sec-nr">F.2.40.1</span> <span class="sec-title">library(pure_input)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.41"><span class="sec-nr">F.2.41</span> <span class="sec-title">library(random)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.42"><span class="sec-nr">F.2.42</span> <span class="sec-title">library(rbtrees)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.43"><span class="sec-nr">F.2.43</span> <span class="sec-title">library(readutil)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.44"><span class="sec-nr">F.2.44</span> <span class="sec-title">library(record)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.45"><span class="sec-nr">F.2.45</span> <span class="sec-title">library(registry)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.46"><span class="sec-nr">F.2.46</span> <span class="sec-title">library(settings)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.47"><span class="sec-nr">F.2.47</span> <span class="sec-title">library(simplex)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.48"><span class="sec-nr">F.2.48</span> <span class="sec-title">library(statistics)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.49"><span class="sec-nr">F.2.49</span> <span class="sec-title">library(terms)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.50"><span class="sec-nr">F.2.50</span> <span class="sec-title">library(ugraphs)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.51"><span class="sec-nr">F.2.51</span> <span class="sec-title">library(url)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.52"><span class="sec-nr">F.2.52</span> <span class="sec-title">library(www_browser)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.53"><span class="sec-nr">F.2.53</span> <span class="sec-title">library(solution_sequences)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.54"><span class="sec-nr">F.2.54</span> <span class="sec-title">library(thread)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.55"><span class="sec-nr">F.2.55</span> <span class="sec-title">library(thread_pool)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.56"><span class="sec-nr">F.2.56</span> <span class="sec-title">library(varnumbers)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.57"><span class="sec-nr">F.2.57</span> <span class="sec-title">library(yall)</span></a></div>
 <div class="toc-h2"><a class="sec" href="funcsummary.html"><span class="sec-nr">F.3</span> <span class="sec-title">Arithmetic 
 Functions</span></a></div>
 <div class="toc-h2"><a class="sec" href="opsummary.html"><span class="sec-nr">F.4</span> <span class="sec-title">Operators</span></a></div>

@@ -262,6 +262,12 @@ permission_error(open, source_sink, alias(Alias)) -->
     [ 'No permission to reuse alias "~p": already taken'-[Alias] ].
 permission_error(tnot, non_tabled_procedure, Pred) -->
     [ 'The argument of tnot/1 is not tabled: ~p'-[Pred] ].
+permission_error(assert, procedure, Pred) -->
+    { '$pi_head'(Pred, Head),
+      predicate_property(Head, ssu)
+    },
+    [ '~p: an SSU (Head => Body) predicate cannot have normal Prolog clauses'-
+      [Pred] ].
 permission_error(Action, Type, Object) -->
     [ 'No permission to ~w ~w `~p'''-[Action, Type, Object] ].
 
@@ -675,7 +681,7 @@ prolog_message(unhandled_exception(E)) -->
 prolog_message(initialization_error(_, E, File:Line)) -->
     !,
     [ url(File:Line),
-      'Initialization goal raised exception:', nl
+      ': Initialization goal raised exception:', nl
     ],
     translate_message(E).
 prolog_message(initialization_error(Goal, E, _)) -->
@@ -684,7 +690,7 @@ prolog_message(initialization_error(Goal, E, _)) -->
 prolog_message(initialization_failure(_Goal, File:Line)) -->
     !,
     [ url(File:Line),
-      'Initialization goal failed'-[]
+      ': Initialization goal failed'-[]
     ].
 prolog_message(initialization_failure(Goal, _)) -->
     [ 'Initialization goal failed: ~p'-[Goal]
@@ -2296,11 +2302,12 @@ url_actions_to_format(url(_URL, Label), Fmt1, Args1, Fmt, Args) :-
 append_args(M:Args0, Args1, M:Args) :-
     !,
     strip_module(Args1, _, A1),
-    '$append'(Args0, A1, Args).
+    to_list(Args0, Args01),
+    '$append'(Args01, A1, Args).
 append_args(Args0, Args1, Args) :-
     strip_module(Args1, _, A1),
-    '$append'(Args0, A1, Args).
-
+    to_list(Args0, Args01),
+    '$append'(Args01, A1, Args).
 
                  /*******************************
                  *    MESSAGES TO PRINT ONCE    *

@@ -30,7 +30,7 @@ override_group(P):- P=..[F,A,B,M,R],
   override_group_call(F,M,[A,B],R).
 
 override_group_call(_F,Group,_AB,R):- pass_thru_group(Group),!,R=Group.
-override_group_call(F,Group,AB,R):- is_group(Group),!, C=..[F|AB],
+override_group_call(F,Group,AB,R):- is_object_group(Group),!, C=..[F|AB],
  findall(R,(member(M,Group),call(C,M,R)),AllRots), append_sets([AllRots],R).
 
 allow_dirs([Type|_],X):- !, allow_dirs(Type,X).
@@ -65,7 +65,7 @@ h_v(h,v).
 u_d(u,d).
 
 iz(X,Y):- nonvar_or_ci(Y)->(subClassOf(P,Y),iz(X,P));(nonvar_or_ci(X),iz(X,P),subClassOf(P,Y)).
-iz(X,Y):- object_shape(X,Y).
+iz(X,Y):- (var(X)->enum_object(X);true),object_shape(X,Y).
 
 :- dynamic(iz/2).
 subClassOf(outline(_),noexit).
@@ -190,7 +190,7 @@ is_grid_cell(C):- \+ is_list(C), nop((plain_var(C); is_color(C) ; ( C =  _-_))),
 
 is_object(O):- compound(O), O = obj(Props), is_list(Props).
 
-%is_group([G|V]):- is_object(G),is_list(V),maplist(is_object,V).
+%is_object_group([G|V]):- is_object(G),is_list(V),maplist(is_object,V).
 is_group([G|V]):- is_object_or_grid(G),is_list(V),maplist(is_object_or_grid,V),!.
 
 is_object_group([G|V]):- is_object(G),is_list(V),maplist(is_object,V),!.

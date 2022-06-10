@@ -788,7 +788,7 @@ expand_already_decl(P,F,A,Out):- lmcache:already_decl(kb_global,M,F,A),Out=':'(M
 expand_already_decl(P,F,A,Out):- lmcache:already_decl(kb_shared,M,F,A),Out=':'(M,P),!.
                                         
 
-:- fixup_exports.
+%:- fixup_exports.
 
 :- multifile(lmcache:was_retry_undefined/2).
 :- dynamic(lmcache:was_retry_undefined/2).

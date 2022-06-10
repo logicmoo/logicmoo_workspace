@@ -112,11 +112,19 @@ uhook(Module, AttVal, Value, M) :-
 :- ((abolish('$wakeup'/1),'$attvar':asserta('$wakeup'(M:G):-wakeup(G,M)))).
 :- meta_predicate('$wakeup'(:)).
 
-:- all_source_file_predicates_are_transparent.
+%:- all_source_file_predicates_are_transparent.
+:- debug(logicmoo(loader),'~N~p~n',[all_source_file_predicates_are_transparent(File)]),
+    forall((source_file(ModuleName:P,File),functor(P,F,A)),
+      ignore(( 
+        ignore(( \+ atom_concat('$',_,F), ModuleName:export(ModuleName:F/A))),
+            \+ (predicate_property(ModuleName:P,(transparent))),
+                   % ( nop(dmsg(todo(module_transparent(ModuleName:F/A))))),
+                   (module_transparent(ModuleName:F/A))))).
 
 :- '$set_source_module'('multivar').
 
 :- module_transparent(attr_pre_unify_hook_m/4).
+:- export(attr_pre_unify_hook_m/4).
 attr_pre_unify_hook_m(IDVar, Value, _, M):- \+ attvar(IDVar),!, M:(IDVar=Value).
 attr_pre_unify_hook_m(Var,Value,Rest, M):- 
   mdwq_call('$attvar':call_all_attr_uhooks(Rest, Value, M)),

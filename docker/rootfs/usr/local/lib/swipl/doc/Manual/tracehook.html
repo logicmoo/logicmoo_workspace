@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.5.4 Reference Manual: Section B.3</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.5.12 Reference Manual: Section B.3</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -270,12 +270,12 @@ in-clause choice point.</dd>
 <dd class="defbody">
 The unify port represents the <em>neck</em> instruction, signalling the 
 end of the head-matching process. This port is normally invisible. See
-<a id="idx:leash1:2655"></a><a class="pred" href="debugger.html#leash/1">leash/1</a> 
-and <a id="idx:visible1:2656"></a><a class="pred" href="debugger.html#visible/1">visible/1</a>.</dd>
+<a id="idx:leash1:2700"></a><a class="pred" href="debugger.html#leash/1">leash/1</a> 
+and <a id="idx:visible1:2701"></a><a class="pred" href="debugger.html#visible/1">visible/1</a>.</dd>
 <dt><strong>exit</strong></dt>
 <dd class="defbody">
 The exit port signals the goal is proved. It is possible for the goal to 
-have alternatives. See <a id="idx:prologframeattribute3:2657"></a><a class="pred" href="manipstack.html#prolog_frame_attribute/3">prolog_frame_attribute/3</a> 
+have alternatives. See <a id="idx:prologframeattribute3:2702"></a><a class="pred" href="manipstack.html#prolog_frame_attribute/3">prolog_frame_attribute/3</a> 
 to examine the goal stack.</dd>
 <dt><strong>fail</strong></dt>
 <dd class="defbody">
@@ -286,10 +286,6 @@ An exception is raised and still pending. This port is activated on each
 parent frame of the frame generating the exception until the exception 
 is caught or the user restarts normal computation using
 <code>retry</code>. <var>Except</var> is the pending exception term.</dd>
-<dt><strong>break</strong>(<var>PC</var>)</dt>
-<dd class="defbody">
-A <code>break</code> instruction is executed. <var>PC</var> is program 
-counter. This port is used by the graphical debugger.</dd>
 <dt><strong>cut_call</strong>(<var>PC</var>)</dt>
 <dd class="defbody">
 A cut is encountered at <var>PC</var>. This port is used by the 
@@ -302,16 +298,16 @@ information.
 </dl>
 
 <p><var>Frame</var> is a reference to the current local stack frame, 
-which can be examined using <a id="idx:prologframeattribute3:2658"></a><a class="pred" href="manipstack.html#prolog_frame_attribute/3">prolog_frame_attribute/3</a>. <var>Choice</var> 
+which can be examined using <a id="idx:prologframeattribute3:2703"></a><a class="pred" href="manipstack.html#prolog_frame_attribute/3">prolog_frame_attribute/3</a>. <var>Choice</var> 
 is a reference to the last choice point and can be examined using
-<a id="idx:prologchoiceattribute3:2659"></a><a class="pred" href="manipstack.html#prolog_choice_attribute/3">prolog_choice_attribute/3</a>. <var>Action</var> 
+<a id="idx:prologchoiceattribute3:2704"></a><a class="pred" href="manipstack.html#prolog_choice_attribute/3">prolog_choice_attribute/3</a>. <var>Action</var> 
 must be unified with a term that specifies how execution must continue. 
 The following actions are defined:
 
 <dl class="latex">
 <dt><strong>abort</strong></dt>
 <dd class="defbody">
-Abort execution. See <a id="idx:abort0:2660"></a><a class="pred" href="toplevel.html#abort/0">abort/0</a>.
+Abort execution. See <a id="idx:abort0:2705"></a><a class="pred" href="toplevel.html#abort/0">abort/0</a>.
 </dd>
 <dt><strong>continue</strong></dt>
 <dd class="defbody">
@@ -327,7 +323,7 @@ Step over the current goal without executing it.
 </dd>
 <dt><strong>nodebug</strong></dt>
 <dd class="defbody">
-Continue execution in normal nodebugging mode. See <a id="idx:nodebug0:2661"></a><a class="pred" href="debugger.html#nodebug/0">nodebug/0</a>.
+Continue execution in normal nodebugging mode. See <a id="idx:nodebug0:2706"></a><a class="pred" href="debugger.html#nodebug/0">nodebug/0</a>.
 </dd>
 <dt><strong>retry</strong></dt>
 <dd class="defbody">
@@ -375,7 +371,7 @@ should be given:
 <dd class="defbody">
 Indicate <var>Frame</var> as a skipped frame and set the&lsquo;skip 
 level' (see
-<a id="idx:prologskiplevel2:2662"></a><a class="pred" href="tracehook.html#prolog_skip_level/2">prolog_skip_level/2</a> 
+<a id="idx:prologskiplevel2:2707"></a><a class="pred" href="tracehook.html#prolog_skip_level/2">prolog_skip_level/2</a> 
 to the recursion depth of <var>Frame</var>. The effect of the skipped 
 flag is that a redo on a child of this frame is handled differently. 
 First, a <code>redo</code> trace is called for the child, where the skip 
@@ -388,10 +384,10 @@ Unify <var>Old</var> with the old value of&lsquo;skip level' and then
 set this level according to <var>New</var>. <var>New</var> is an 
 integer, the atom
 <code>very_deep</code> (meaning don't skip) or the atom <code>skip_in_redo</code> 
-(see <a id="idx:prologskipframe1:2663"></a><a class="pred" href="tracehook.html#prolog_skip_frame/1">prolog_skip_frame/1</a>). 
+(see <a id="idx:prologskipframe1:2708"></a><a class="pred" href="tracehook.html#prolog_skip_frame/1">prolog_skip_frame/1</a>). 
 The&lsquo;skip level' is a setting of each Prolog thread that disables 
 the debugger on all recursion levels deeper than the level of the 
-variable. See also <a id="idx:prologskipframe1:2664"></a><a class="pred" href="tracehook.html#prolog_skip_frame/1">prolog_skip_frame/1</a>.
+variable. See also <a id="idx:prologskipframe1:2709"></a><a class="pred" href="tracehook.html#prolog_skip_frame/1">prolog_skip_frame/1</a>.
 </dd>
 </dl>
 

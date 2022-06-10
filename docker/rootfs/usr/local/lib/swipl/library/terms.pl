@@ -3,7 +3,7 @@
     Author:        Jan Wielemaker
     E-mail:        J.Wielemaker@vu.nl
     WWW:           http://www.swi-prolog.org
-    Copyright (c) 2008-2020, University of Amsterdam,
+    Copyright (c) 2008-2022, University of Amsterdam,
                              VU University
                              SWI-Prolog Solutions b.v.
     Amsterdam All rights reserved.
@@ -49,6 +49,9 @@
             term_factorized/3,          % +Term, -Skeleton, -Subsitution
             mapargs/3,                  % :Goal, ?Term1, ?Term2
             mapsubterms/3,              % :Goal, ?Term1, ?Term2
+            mapsubterms_var/3,          % :Goal, ?Term1, ?Term2
+            foldsubterms/4,             % :Goal, +Term, +State0, -State
+            foldsubterms/5,             % :Goal, +Term1, ?Term2, +State0, -State
             same_functor/2,             % ?Term1, ?Term2
             same_functor/3,             % ?Term1, ?Term2, -Arity
             same_functor/4              % ?Term1, ?Term2, ?Name, ?Arity
@@ -56,7 +59,10 @@
 
 :- meta_predicate
     mapargs(2,?,?),
-    mapsubterms(2,?,?).
+    mapsubterms(2,?,?),
+    mapsubterms_var(2,?,?),
+    foldsubterms(3,+,+,-),
+    foldsubterms(4,+,?,+,-).
 
 :- autoload(library(rbtrees),
 	    [ rb_empty/1,
@@ -328,15 +334,18 @@ mapargs_(_, _, _, _, _).
 
 
 %!  mapsubterms(:Goal, +Term1, -Term2) is det.
+%!  mapsubterms_var(:Goal, +Term1, -Term2) is det.
 %
 %   Recursively map sub terms of Term1 into  subterms of Term2 for every
 %   pair for which call(Goal,  ST1,   ST2)  succeeds.  Procedurably, the
 %   mapping for each (sub) term pair `T1/T2` is defined as:
 %
-%     - If `T1` is a variable, Unify `T2` with `T1`.
+%     - If `T1` is a variable
+%       - mapsubterms/3 unifies `T2` with `T1`.
+%       - mapsubterms_var/3 treats variables as other terms.
 %     - If call(Goal, T1, T2) succeeds we are done.  Note that the
 %       mapping does not continue in `T2`.  If this is desired, `Goal`
-%       must call mapsubterms/3 explicitly as part of it conversion.
+%       must call mapsubterms/3 explicitly as part of its conversion.
 %     - If `T1` is a dict, map all values, i.e., the _tag_ and _keys_
 %       are left untouched.
 %     - If `T1` is a list, map all elements, i.e., the list structure
@@ -344,50 +353,76 @@ mapargs_(_, _, _, _, _).
 %     - If `T1` is a compound, use same_functor/3 to instantiate `T2`
 %       and recurse over the term arguments left to right.
 %     - Otherwise `T2` is unified with `T1`.
+%
+%   Both predicates are implemented using foldsubterms/5.
 
-mapsubterms(_Goal, Term1, Term2) :-
-    var(Term1),
-    !,
-    Term2 = Term1.
 mapsubterms(Goal, Term1, Term2) :-
-    call(Goal, Term1, Term2),
+    foldsubterms(map2(Goal), Term1, Term2, _, _).
+mapsubterms_var(Goal, Term1, Term2) :-
+    foldsubterms(map2_var(Goal), Term1, Term2, _, _).
+
+map2(Goal, Term1, Term2, _, _) :-
+    nonvar(Term1),
+    call(Goal, Term1, Term2).
+
+map2_var(Goal, Term1, Term2, _, _) :-
+    call(Goal, Term1, Term2).
+
+%!  foldsubterms(:Goal3, +Term1, +State0, -State) is semidet.
+%!  foldsubterms(:Goal4, +Term1, ?Term2, +State0, -State) is semidet.
+%
+%   The predicate foldsubterms/5 calls   call(Goal4, SubTerm1, SubTerm2,
+%   StateIn, StateOut) for each subterm,  including variables, in Term1.
+%   If this call fails, `StateIn`  and   `StateOut`  are  the same. This
+%   predicate may be used to map  subterms   in  a term while collecting
+%   state about the mapped subterms. The foldsubterms/4 variant does not
+%   map the term.
+
+foldsubterms(Goal, Term1, State0, State) :-
+    foldsubterms(fold1(Goal), Term1, _, State0, State).
+
+fold1(Goal, Term1, _Term2, State0, State) :-
+    call(Goal, Term1, State0, State).
+
+foldsubterms(Goal, Term1, Term2, State0, State) :-
+    call(Goal, Term1, Term2, State0, State),
     !.
-mapsubterms(Goal, Term1, Term2) :-
+foldsubterms(Goal, Term1, Term2, State0, State) :-
     is_dict(Term1),
     !,
     dict_pairs(Term1, Tag, Pairs1),
-    map_dict_pairs(Pairs1, Pairs2, Goal),
+    fold_dict_pairs(Pairs1, Pairs2, Goal, State0, State),
     dict_pairs(Term2, Tag, Pairs2).
-mapsubterms(Goal, Term1, Term2) :-
-     is_list(Term1),
-     !,
-     map_list_terms(Term1, Term2, Goal).
-mapsubterms(Goal, Term1, Term2) :-
+foldsubterms(Goal, Term1, Term2, State0, State) :-
+    is_list(Term1),
+    !,
+    fold_some(Term1, Term2, Goal, State0, State).
+foldsubterms(Goal, Term1, Term2, State0, State) :-
     compound(Term1),
     !,
     same_functor(Term1, Term2, Arity),
-    mapsubterms_(1, Arity, Goal, Term1, Term2).
-mapsubterms(_, Term, Term).
+    foldsubterms_(1, Arity, Goal, Term1, Term2, State0, State).
+foldsubterms(_, Term, Term, State, State).
 
-map_dict_pairs([], [], _).
-map_dict_pairs([K-V0|T0], [K-V|T], Goal) :-
-    mapsubterms(Goal, V0, V),
-    map_dict_pairs(T0, T, Goal).
+fold_dict_pairs([], [], _, State, State).
+fold_dict_pairs([K-V0|T0], [K-V|T], Goal, State0, State) :-
+    foldsubterms(Goal, V0, V, State0, State1),
+    fold_dict_pairs(T0, T, Goal, State1, State).
 
-map_list_terms([], [], _Goal).
-map_list_terms([H0|T0], [H|T], Goal) :-
-    mapsubterms(Goal, H0, H),
-    map_list_terms(T0, T, Goal).
+fold_some([], [], _, State, State).
+fold_some([H0|T0], [H|T], Goal, State0, State) :-
+    foldsubterms(Goal, H0, H, State0, State1),
+    fold_some(T0, T, Goal, State1, State).
 
-mapsubterms_(I, Arity, Goal, Term1, Term2) :-
+foldsubterms_(I, Arity, Goal, Term1, Term2, State0, State) :-
     I =< Arity,
     !,
     arg(I, Term1, A1),
     arg(I, Term2, A2),
-    mapsubterms(Goal, A1, A2),
+    foldsubterms(Goal, A1, A2, State0, State1),
     I2 is I+1,
-    mapsubterms_(I2, Arity, Goal, Term1, Term2).
-mapsubterms_(_, _, _, _, _).
+    foldsubterms_(I2, Arity, Goal, Term1, Term2, State1, State).
+foldsubterms_(_, _, _, _, _, State, State).
 
 
 %!  same_functor(?Term1, ?Term2) is semidet.

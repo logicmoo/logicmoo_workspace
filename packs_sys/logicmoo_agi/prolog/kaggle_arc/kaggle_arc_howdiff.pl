@@ -8,7 +8,7 @@
 :- set_prolog_flag_until_eof(trill_term_expansion,false).
 :- endif.
 
-showdiff(A,B):- is_group(A), is_group(B), showdiff_groups(A,B),!.
+showdiff(A,B):- is_object_group(A), is_object_group(B), showdiff_groups(A,B),!.
 showdiff(A,B):- is_object(A), is_object(B), showdiff_objects(A,B),!.
 showdiff(A,B):- must(diff_terms(A,B,D)) -> D\==[],!,writeln('SOME DIFFERNCE'),pt(D).
 showdiff(_,_):- writeln('NO DIFFERNCE').
@@ -365,7 +365,7 @@ changed_by(vis_hv,copy).
 
 needs_indivs(I,_):- is_object(I),!,fail.
 %needs_indivs(I,O):- is_grid(I),_unshared_indivs(I,O),!.
-needs_indivs(I,O):- is_gridoid(I), \+ is_group(I), trace, compute_unshared_indivs(I,O),!.
+needs_indivs(I,O):- is_gridoid(I), \+ is_object_group(I), trace, compute_unshared_indivs(I,O),!.
 
 %diff_terms(IPs,OPs,Difs2):- diff_terms(IPs,OPs,Difs2).
 diff_numbers(I,O,0):- I =:= O,!.
@@ -385,8 +385,8 @@ diff_terms(I,O,I):- O==[],!.
 %diff_terms(I,O, (O \== I)):- O=@=I,!.
 diff_terms(I,O,[]):- no_diff(I,O),!.
 diff_terms(O,I,[]):- no_diff(I,O),!.
-% diff_terms(I,O,DD):-  is_group(I),is_group(O), !,  include_fav_points(I,II), include_fav_points(O,OO), diff_groups(I,O,DD).
-diff_terms(I,O,DD):-  is_group(I), is_group(O), !, diff_groups(I,O,DD).
+% diff_terms(I,O,DD):-  is_object_group(I),is_object_group(O), !,  include_fav_points(I,II), include_fav_points(O,OO), diff_groups(I,O,DD).
+diff_terms(I,O,DD):-  is_object_group(I), is_object_group(O), !, diff_groups(I,O,DD).
 diff_terms(obj(I),obj(O),OUT):- !, diff_objects(I,O,OUT).
 diff_terms([IH,IV],[OH,OV],D):- maplist(number,[IH,IV,OH,OV]),!,maplist(diff_numbers,[IH,IV],[OH,OV],D).
 diff_terms(I,O, (diff_lists=@= D)):- is_list(I),is_list(O),!,diff_lists(I,O,D).

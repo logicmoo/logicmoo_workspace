@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.5.4 Reference Manual: Section 6.10</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.5.12 Reference Manual: Section 6.10</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -255,8 +255,48 @@ imports from <code>system</code> where all built-in predicates reside.
 These special modules are described in more detail in <a class="sec" href="resmodules.html#sec:6.11">section 
 6.11</a>.
 
-<p>The list of import modules can be manipulated and queried using the 
-following predicates, as well as using <a id="idx:setmodule1:2011"></a><a class="pred" href="manipmodule.html#set_module/1">set_module/1</a>.
+<p>In general, the import relations between modules form an acyclic 
+directed graph. The import relation affects the following mechanisms:
+
+<dl class="latex">
+<dt><b>Predicate visibility</b></dt>
+<dd>
+When looking for a specific predicate definition the system starts in 
+the target module. If the predicate is undefined there it walks the 
+module import relations depth-first left-to-right searching for a module 
+that defines the predicate. The first encountered definition is used. 
+Note that using the default setup this means it searches the
+<code>user</code> and <code>system</code> modules (in that order).</dd>
+<dt><b>Operators</b></dt>
+<dd>
+Operators are also searched through the import relations. System 
+operators are defined in the module <code>system</code>. The user may 
+define operators in <code>user</code> to make them globally visible for 
+compatibility with e.g., SICStus Prolog that has no local operators. 
+Normally operators are defined in a module and, when applicable, 
+exported using the <a id="idx:module2:2031"></a><a class="pred" href="defmodule.html#module/2">module/2</a> 
+module header.</dd>
+<dt><b>The <a class="flag" href="flags.html#flag:unknown">unknown</a> 
+flag</b></dt>
+<dd>
+This flag controls the response to encountering an undefined predicate 
+in the target module.</dd>
+<dt><b>Term and goal expansion</b></dt>
+<dd>
+The hooks <a id="idx:termexpansion2:2032"></a><a class="pred" href="consulting.html#term_expansion/2">term_expansion/2</a> 
+and <a id="idx:goalexpansion2:2033"></a><a class="pred" href="consulting.html#goal_expansion/2">goal_expansion/2</a> 
+(see
+<a class="sec" href="consulting.html#sec:4.3.1">section 4.3.1</a>) are <em>chained</em> 
+over the import modules that define these hooks. This implies we collect 
+all modules that provide definitions for these hook predicates by 
+traversing the import module relation depth-first and left-to-right. 
+Next, we perform the transformations in a <em>pipeline</em>, starting at 
+the target module.
+</dd>
+</dl>
+
+<p>The list of import modules for a specific module can be manipulated 
+and queried using the following predicates, as well as using <a id="idx:setmodule1:2034"></a><a class="pred" href="manipmodule.html#set_module/1">set_module/1</a>.
 
 <dl class="latex">
 <dt class="pubdef"><span class="pred-tag">[nondet]</span><a id="import_module/2"><strong>import_module</strong>(<var>+Module, 
@@ -264,10 +304,10 @@ following predicates, as well as using <a id="idx:setmodule1:2011"></a><a class=
 <dd class="defbody">
 True if <var>Module</var> inherits directly from <var>Import</var>. All 
 normal modules only import from <code>user</code>, which imports from
-<code>system</code>. The predicates <a id="idx:addimportmodule3:2012"></a><a class="pred" href="importmodule.html#add_import_module/3">add_import_module/3</a> 
+<code>system</code>. The predicates <a id="idx:addimportmodule3:2035"></a><a class="pred" href="importmodule.html#add_import_module/3">add_import_module/3</a> 
 and
-<a id="idx:deleteimportmodule2:2013"></a><a class="pred" href="importmodule.html#delete_import_module/2">delete_import_module/2</a> 
-can be used to manipulate the import list. See also <a id="idx:defaultmodule2:2014"></a><a class="pred" href="importmodule.html#default_module/2">default_module/2</a>.</dd>
+<a id="idx:deleteimportmodule2:2036"></a><a class="pred" href="importmodule.html#delete_import_module/2">delete_import_module/2</a> 
+can be used to manipulate the import list. See also <a id="idx:defaultmodule2:2037"></a><a class="pred" href="importmodule.html#default_module/2">default_module/2</a>.</dd>
 <dt class="pubdef"><span class="pred-tag">[multi]</span><a id="default_module/2"><strong>default_module</strong>(<var>+Module, 
 -Default</var>)</a></dt>
 <dd class="defbody">
@@ -275,15 +315,15 @@ True if predicates and operators in <var>Default</var> are visible in
 <var>Module</var>. Modules are returned in the same search order used 
 for predicates and operators. That is, <var>Default</var> is first 
 unified with <var>Module</var>, followed by the depth-first transitive 
-closure of <a id="idx:importmodule2:2015"></a><a class="pred" href="importmodule.html#import_module/2">import_module/2</a>.</dd>
+closure of <a id="idx:importmodule2:2038"></a><a class="pred" href="importmodule.html#import_module/2">import_module/2</a>.</dd>
 <dt class="pubdef"><a id="add_import_module/3"><strong>add_import_module</strong>(<var>+Module, 
 +Import, +StartOrEnd</var>)</a></dt>
 <dd class="defbody">
 If <var>Import</var> is not already an import module for <var>Module</var>, 
 add it to this list at the <code>start</code> or <code>end</code> 
 depending on
-<var>StartOrEnd</var>. See also <a id="idx:importmodule2:2016"></a><a class="pred" href="importmodule.html#import_module/2">import_module/2</a> 
-and <a id="idx:deleteimportmodule2:2017"></a><a class="pred" href="importmodule.html#delete_import_module/2">delete_import_module/2</a>.</dd>
+<var>StartOrEnd</var>. See also <a id="idx:importmodule2:2039"></a><a class="pred" href="importmodule.html#import_module/2">import_module/2</a> 
+and <a id="idx:deleteimportmodule2:2040"></a><a class="pred" href="importmodule.html#delete_import_module/2">delete_import_module/2</a>.</dd>
 <dt class="pubdef"><a id="delete_import_module/2"><strong>delete_import_module</strong>(<var>+Module, 
 +Import</var>)</a></dt>
 <dd class="defbody">
@@ -291,9 +331,5 @@ Delete <var>Import</var> from the list of import modules for <var>Module</var>.
 Fails silently if <var>Import</var> is not in the list.
 </dd>
 </dl>
-
-<p>One usage scenario of import modules is to define a module that is a 
-copy of another, but where one or more predicates have an alternative 
-definition.
 
 <p></body></html>

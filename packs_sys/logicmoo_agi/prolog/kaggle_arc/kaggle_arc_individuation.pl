@@ -152,6 +152,7 @@ individuate_complete(GridIn,IndvS):-
 individuate_complete(H,V,ID,Grid,Points,IndvSO):-   
    individuate(H,V,ID,[],
      [fourway,
+      shape_lib(intruder),
       shape_lib(in),shape_lib(out),
       shape_lib(noise),shape_lib(pair),
       solid(rectangle), rectangle,diamonds,all,
@@ -520,7 +521,7 @@ fti(Image,[+(AddOptions)|TODO]):-
   append(TODO,OptionsL,set(Image,todo)).
 
 fti(Image,[(OptionsL)|TODO]):-
-  is_list(OptionsL), \+ is_group(OptionsL), \+ is_grid(OptionsL),!,
+  is_list(OptionsL), \+ is_object_group(OptionsL), \+ is_grid(OptionsL),!,
   append(Image.options,OptionsL,set(Image,options)),
   append(TODO,OptionsL,set(Image,todo)).
 
@@ -596,7 +597,7 @@ fsi(_Image,ReservedO,GridO,NO,H,V,Sofar,ID,[Obj|NO],ReservedI,Points,Grid,SofarO
   !.
   
 search_lib([Obj|ReservedI],GridO,NO,H,V,Sofar,ID,[Obj|NO],ReservedI,Points,Grid,SofarOut,NextScanPoints):-
-   is_group(Obj), Reserved = Obj, !, proccess_overlap_reserved(is_group,GridO,Grid,ID,H,V,Reserved,Sofar,SofarOut,Points,NextScanPoints,_Unreserved,_StillReserved).
+   is_object_group(Obj), Reserved = Obj, !, proccess_overlap_reserved(is_object_group,GridO,Grid,ID,H,V,Reserved,Sofar,SofarOut,Points,NextScanPoints,_Unreserved,_StillReserved).
    
 search_lib([Obj|ReservedI],GridO,NO,H,V,Sofar,ID,[Obj|NO],ReservedI,Points,Grid,SofarOut,NextScanPoints):-
    is_object(Obj), Reserved = [Obj], !, proccess_overlap_reserved(is_object,GridO,Grid,ID,H,V,Reserved,Sofar,SofarOut,Points,NextScanPoints,_Unreserved,_StillReserved).

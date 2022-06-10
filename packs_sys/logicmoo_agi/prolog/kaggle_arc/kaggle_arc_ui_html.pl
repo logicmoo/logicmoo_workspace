@@ -135,7 +135,7 @@ arc_http_server:- http_server(http_dispatch, [port(1777)]),
 
 
 swish_arc(Request):- 
-  arc_directory(ARC_DIR),
+  muarc:arc_directory(ARC_DIR),
   http_reply_from_files(ARC_DIR, [], Request).
 
 arcproc_right(_Request):- 

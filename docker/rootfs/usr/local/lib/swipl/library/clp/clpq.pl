@@ -100,8 +100,8 @@ dump_toplevel_bindings(Bindings,Constraints) :-
 dump_vars_names([],_,[],[]).
 dump_vars_names([Name=Term|Rest],Seen,Vars,Names) :-
 	(   var(Term),
-	    (   get_attr(Term,itf,_)
-	    ;   get_attr(Term,geler,_)
+	    (   get_attr(Term,clpqr_itf,_)
+	    ;   get_attr(Term,clpqr_geler,_)
 	    ),
 	    \+ memberchk_eq(Term,Seen)
 	->  Vars = [Term|RVars],

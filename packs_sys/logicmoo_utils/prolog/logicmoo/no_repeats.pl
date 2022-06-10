@@ -61,7 +61,7 @@
       
 :- set_module(class(library)).
 
-:- prolog_load_context(directory,Dir),add_file_search_path_safe(library,Dir).
+%:- prolog_load_context(directory,Dir),add_file_search_path_safe(library,Dir).
 % % % OFF :- system:use_module(library(logicmoo/misc_terms)).
 
 %% loop_check_nr( ?CL) is semidet.

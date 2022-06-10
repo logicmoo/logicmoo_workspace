@@ -192,7 +192,7 @@ log_deref(N,V0,V2,Lin) :-
 % X = X is made.
 
 deref_var(X,Lin) :-
-	(   get_attr(X,itf,Att)
+	(   get_attr(X,clpqr_itf,Att)
 	->  (   \+ arg(1,Att,clpq)
 	    ->  throw(error(permission_error('mix CLP(Q) variables with',
 		'CLP(R) variables:',X),context(_)))
@@ -205,7 +205,7 @@ deref_var(X,Lin) :-
 		setarg(5,Att,order(Ord))
 	    )
 	;   Lin = [0,0,l(X*1,Ord)],
-	    put_attr(X,itf,t(clpq,type(t_none),strictness(0),
+	    put_attr(X,clpqr_itf,t(clpq,type(t_none),strictness(0),
 		lin(Lin),order(Ord),n,n,n,n,n,n))
 	).
 
@@ -236,7 +236,7 @@ var_with_def_assign(Var,Lin) :-
 % strictness(Strictness)
 
 var_with_def_intern(Type,Var,Lin,Strict) :-
-	put_attr(Var,itf,t(clpq,type(Type),strictness(Strict),lin(Lin),
+	put_attr(Var,clpqr_itf,t(clpq,type(Type),strictness(Strict),lin(Lin),
 	    order(_),n,n,n,n,n,n)),	% check uses
 	Lin = [_,_|Hom],
 	get_or_add_class(Var,Class),
@@ -247,7 +247,7 @@ var_with_def_intern(Type,Var,Lin,Strict) :-
 %
 
 var_intern(Type,Var,Strict) :-
-	put_attr(Var,itf,t(clpq,type(Type),strictness(Strict),
+	put_attr(Var,clpqr_itf,t(clpq,type(Type),strictness(Strict),
 	    lin([0,0,l(Var*1,Ord)]),order(Ord),n,n,n,n,n,n)),
 	get_or_add_class(Var,_Class).
 
@@ -256,13 +256,13 @@ var_intern(Type,Var,Strict) :-
 %
 
 var_intern(Var,Class) :-	% for ordered/1 but otherwise free vars
-	get_attr(Var,itf,Att),
+	get_attr(Var,clpqr_itf,Att),
 	arg(2,Att,type(_)),
 	arg(4,Att,lin(_)),
 	!,
 	get_or_add_class(Var,Class).
 var_intern(Var,Class) :-
-	put_attr(Var,itf,t(clpq,type(t_none),strictness(0),
+	put_attr(Var,clpqr_itf,t(clpq,type(t_none),strictness(0),
 	    lin([0,0,l(Var*1,Ord)]),order(Ord),n,n,n,n,n,n)),
 	get_or_add_class(Var,Class).
 
@@ -297,7 +297,7 @@ export_binding([X-Y|Gs]) :-
 	;   % make new variable Nz = Lind
 	    var_with_def_intern(t_none,Nz,Lind,0),
 	    % make Nz nonzero
-	    get_attr(Nz,itf,Att),
+	    get_attr(Nz,clpqr_itf,Att),
 	    setarg(8,Att,nonzero)
 	).
 
@@ -426,7 +426,7 @@ assign([X|Xs],[Y|Ys]) :-
 % variable, a status of unlimited is found.
 
 iterate_dec(OptVar,Opt) :-
-	get_attr(OptVar,itf,Att),
+	get_attr(OptVar,clpqr_itf,Att),
 	arg(4,Att,lin([I,R|H])),
 	dec_step(H,Status),
 	(   Status = applied
@@ -442,7 +442,7 @@ iterate_dec(OptVar,Opt) :-
 % variable, a status of unlimited is found.
 
 iterate_inc(OptVar,Opt) :-
-	get_attr(OptVar,itf,Att),
+	get_attr(OptVar,clpqr_itf,Att),
 	arg(4,Att,lin([I,R|H])),
 	inc_step(H,Status),
 	(   Status = applied
@@ -461,7 +461,7 @@ iterate_inc(OptVar,Opt) :-
 
 dec_step_cont([],optimum,Cont,Cont).
 dec_step_cont([l(V*K,OrdV)|Vs],Status,ContIn,ContOut) :-
-	get_attr(V,itf,Att),
+	get_attr(V,clpqr_itf,Att),
 	arg(2,Att,type(W)),
 	arg(6,Att,class(Class)),
 	(   dec_step_2_cont(W,l(V*K,OrdV),Class,Status,ContIn,ContOut)
@@ -471,7 +471,7 @@ dec_step_cont([l(V*K,OrdV)|Vs],Status,ContIn,ContOut) :-
 
 inc_step_cont([],optimum,Cont,Cont).
 inc_step_cont([l(V*K,OrdV)|Vs],Status,ContIn,ContOut) :-
-	get_attr(V,itf,Att),
+	get_attr(V,clpqr_itf,Att),
 	arg(2,Att,type(W)),
 	arg(6,Att,class(Class)),
 	(   inc_step_2_cont(W,l(V*K,OrdV),Class,Status,ContIn,ContOut)
@@ -561,7 +561,7 @@ replace_in_cont([H1|T1],X,Y,[H2|T2]) :-
 
 dec_step([],optimum).
 dec_step([l(V*K,OrdV)|Vs],Status) :-
-	get_attr(V,itf,Att),
+	get_attr(V,clpqr_itf,Att),
 	arg(2,Att,type(W)),
 	arg(6,Att,class(Class)),
 	(   dec_step_2(W,l(V*K,OrdV),Class,Status)
@@ -600,7 +600,7 @@ dec_step_2(t_none,l(V*_,_),_,unlimited(V,t_none)).
 
 inc_step([],optimum).	% if status has not been set yet: no changes
 inc_step([l(V*K,OrdV)|Vs],Status) :-
-	get_attr(V,itf,Att),
+	get_attr(V,clpqr_itf,Att),
 	arg(2,Att,type(W)),
 	arg(6,Att,class(Class)),
 	(   inc_step_2(W,l(V*K,OrdV),Class,Status)
@@ -665,7 +665,7 @@ ub(Class,OrdX,Ub) :-
 % to be activated to achieve this.
 
 ub_first([Dep|Deps],OrdX,Tightest) :-
-	(   get_attr(Dep,itf,Att),
+	(   get_attr(Dep,clpqr_itf,Att),
 	    arg(2,Att,type(Type)),
 	    arg(4,Att,lin(Lin)),
 	    ub_inner(Type,OrdX,Lin,W,Ub),
@@ -680,7 +680,7 @@ ub_first([Dep|Deps],OrdX,Tightest) :-
 
 ub([],_,T0,T0).
 ub([Dep|Deps],OrdX,T0,T1) :-
-	(   get_attr(Dep,itf,Att),
+	(   get_attr(Dep,clpqr_itf,Att),
 	    arg(2,Att,type(Type)),
 	    arg(4,Att,lin(Lin)),
 	    ub_inner(Type,OrdX,Lin,W,Ub),
@@ -736,7 +736,7 @@ lb(Class,OrdX,Lb) :-
 % ordering attribute OrdX.
 
 lb_first([Dep|Deps],OrdX,Tightest) :-
-	(   get_attr(Dep,itf,Att),
+	(   get_attr(Dep,clpqr_itf,Att),
 	    arg(2,Att,type(Type)),
 	    arg(4,Att,lin(Lin)),
 	    lb_inner(Type,OrdX,Lin,W,Lb),
@@ -752,7 +752,7 @@ lb_first([Dep|Deps],OrdX,Tightest) :-
 
 lb([],_,T0,T0).
 lb([Dep|Deps],OrdX,T0,T1) :-
-	(   get_attr(Dep,itf,Att),
+	(   get_attr(Dep,clpqr_itf,Att),
 	    arg(2,Att,type(Type)),
 	    arg(4,Att,lin(Lin)),
 	    lb_inner(Type,OrdX,Lin,W,Lb),
@@ -819,7 +819,7 @@ solve([],_,I,Bind0,Bind0) :-
 	I =:= 0.
 solve(H,Lin,_,Bind0,BindT) :-
 	sd(H,[],ClassesUniq,9-9-0,Category-Selected-_,NV,NVT),
-	get_attr(Selected,itf,Att),
+	get_attr(Selected,clpqr_itf,Att),
 	arg(5,Att,order(Ord)),
 	isolate(Ord,Lin,Lin1),	% Lin = 0 => Selected = Lin1
 	(   Category = 1 % classless variable, no bounds
@@ -886,7 +886,7 @@ solve_x([],_,I,_,Bind0,Bind0) :-
 	I =:= 0.
 solve_x(H,Lin,_,X,Bind0,BindT) :-
 	sd(H,[],ClassesUniq,9-9-0,_,NV,NVT),
-	get_attr(X,itf,Att),
+	get_attr(X,clpqr_itf,Att),
 	arg(5,Att,order(OrdX)),
 	isolate(OrdX,Lin,Lin1),
 	(   arg(6,Att,class(NewC))
@@ -939,7 +939,7 @@ solve_ord_x([_|_],Lin,_,OrdX,ClassX,Bind0,BindT) :-
 
 sd([],Class0,Class0,Preference0,Preference0,NV0,NV0).
 sd([l(X*K,_)|Xs],Class0,ClassN,Preference0,PreferenceN,NV0,NVt) :-
-	get_attr(X,itf,Att),
+	get_attr(X,clpqr_itf,Att),
 	(   arg(6,Att,class(Xc)) % old: has class
 	->  NV0 = NV1,
 	    ord_add_element(Class0,Xc,Class1),
@@ -998,7 +998,7 @@ attach_class(Xs,_) :-
 	var(Xs), % Tail
 	!.
 attach_class([X|Xs],Class) :-
-	get_attr(X,itf,Att),
+	get_attr(X,clpqr_itf,Att),
 	setarg(6,Att,class(Class)),
 	attach_class(Xs,Class).
 
@@ -1011,7 +1011,7 @@ unconstrained(Lin,Uc,Kuc,Rest) :-
 	Lin = [_,_|H],
 	sd(H,[],_,9-9-0,Category-Uc-_,_,_),
 	Category =< 2,
-	get_attr(Uc,itf,Att),
+	get_attr(Uc,clpqr_itf,Att),
 	arg(5,Att,order(OrdUc)),
 	delete_factor(OrdUc,Lin,Rest,Kuc).
 
@@ -1030,7 +1030,7 @@ same_class([l(X*_,_)|Xs],Class) :-
 % belongs to if X didn't have one.
 
 get_or_add_class(X,Class) :-
-	get_attr(X,itf,Att),
+	get_attr(X,clpqr_itf,Att),
 	arg(1,Att,CLP),
 	(   arg(6,Att,class(ClassX))
 	->  ClassX = Class
@@ -1043,7 +1043,7 @@ get_or_add_class(X,Class) :-
 % Allvars is a list of all variables in the class to which X belongs.
 
 allvars(X,Allvars) :-
-	get_attr(X,itf,Att),
+	get_attr(X,clpqr_itf,Att),
 	arg(6,Att,class(C)),
 	class_allvars(C,Allvars).
 
@@ -1057,16 +1057,16 @@ deactivate_bound(t_l(_),_).
 deactivate_bound(t_u(_),_).
 deactivate_bound(t_lu(_,_),_).
 deactivate_bound(t_L(L),X) :-
-	get_attr(X,itf,Att),
+	get_attr(X,clpqr_itf,Att),
 	setarg(2,Att,type(t_l(L))).
 deactivate_bound(t_Lu(L,U),X) :-
-	get_attr(X,itf,Att),
+	get_attr(X,clpqr_itf,Att),
 	setarg(2,Att,type(t_lu(L,U))).
 deactivate_bound(t_U(U),X) :-
-	get_attr(X,itf,Att),
+	get_attr(X,clpqr_itf,Att),
 	setarg(2,Att,type(t_u(U))).
 deactivate_bound(t_lU(L,U),X) :-
-	get_attr(X,itf,Att),
+	get_attr(X,clpqr_itf,Att),
 	setarg(2,Att,type(t_lu(L,U))).
 
 % intro_at(X,Value,Type)
@@ -1077,7 +1077,7 @@ deactivate_bound(t_lU(L,U),X) :-
 % bound.
 
 intro_at(X,Value,Type) :-
-	get_attr(X,itf,Att),
+	get_attr(X,clpqr_itf,Att),
 	arg(5,Att,order(Ord)),
 	arg(6,Att,class(Class)),
 	setarg(2,Att,type(Type)),
@@ -1101,7 +1101,7 @@ undet_active([_,_|H]) :-
 
 undet_active_h([]).
 undet_active_h([l(X*_,_)|Xs]) :-
-	get_attr(X,itf,Att),
+	get_attr(X,clpqr_itf,Att),
 	arg(2,Att,type(Type)),
 	undet_active(Type,X),
 	undet_active_h(Xs).
@@ -1149,7 +1149,7 @@ determine_active_inc([_,_|H]) :-
 
 determine_active([],_).
 determine_active([l(X*K,_)|Xs],S) :-
-	get_attr(X,itf,Att),
+	get_attr(X,clpqr_itf,Att),
 	arg(2,Att,type(Type)),
 	determine_active(Type,X,K,S),
 	determine_active(Xs,S).
@@ -1173,7 +1173,7 @@ determine_active(t_lu(L,U),X,K,S) :-
 %
 
 detach_bounds(V) :-
-	get_attr(V,itf,Att),
+	get_attr(V,clpqr_itf,Att),
 	arg(2,Att,type(Type)),
 	arg(4,Att,lin(Lin)),
 	arg(5,Att,order(OrdV)),
@@ -1217,7 +1217,7 @@ detach_bounds_vlv(OrdV,Lin,Class,Var,NewLin) :-
 % Removes X from the basis of the class to which X belongs.
 
 basis_drop(X) :-
-	get_attr(X,itf,Att),
+	get_attr(X,clpqr_itf,Att),
 	arg(6,Att,class(Cv)),
 	class_basis_drop(Cv,X).
 
@@ -1226,7 +1226,7 @@ basis_drop(X) :-
 % Basis is the basis of the class to which X belongs.
 
 basis(X,Basis) :-
-	get_attr(X,itf,Att),
+	get_attr(X,clpqr_itf,Att),
 	arg(6,Att,class(Cv)),
 	class_basis(Cv,Basis).
 
@@ -1236,7 +1236,7 @@ basis(X,Basis) :-
 % belongs.
 
 basis_add(X,NewBasis) :-
-	get_attr(X,itf,Att),
+	get_attr(X,clpqr_itf,Att),
 	arg(6,Att,class(Cv)),
 	class_basis_add(Cv,X,NewBasis).
 
@@ -1246,7 +1246,7 @@ basis_add(X,NewBasis) :-
 % Enter to that basis.
 
 basis_pivot(Leave,Enter) :-
-	get_attr(Leave,itf,Att),
+	get_attr(Leave,clpqr_itf,Att),
 	arg(6,Att,class(Cv)),
 	class_basis_pivot(Cv,Enter,Leave).
 
@@ -1263,10 +1263,10 @@ basis_pivot(Leave,Enter) :-
 %
 
 pivot(Dep,Indep) :-
-	get_attr(Dep,itf,AttD),
+	get_attr(Dep,clpqr_itf,AttD),
 	arg(4,AttD,lin(H)),
 	arg(5,AttD,order(OrdDep)),
-	get_attr(Indep,itf,AttI),
+	get_attr(Indep,clpqr_itf,AttI),
 	arg(5,AttI,order(Ord)),
 	arg(5,AttI,class(Class)),
 	delete_factor(Ord,H,H0,Coeff),
@@ -1284,17 +1284,17 @@ pivot(Dep,Indep) :-
 
 pivot_a(Dep,Indep,Vb,Wd) :-
 	basis_pivot(Dep,Indep),
-	get_attr(Indep,itf,Att),
+	get_attr(Indep,clpqr_itf,Att),
 	arg(2,Att,type(Type)),
 	arg(5,Att,order(Ord)),
 	arg(6,Att,class(Class)),
 	pivot(Dep,Class,Ord,Vb,Type),
-	get_attr(Indep,itf,Att2), %changed?
+	get_attr(Indep,clpqr_itf,Att2), %changed?
 	setarg(2,Att2,type(Wd)).
 
 pivot_b(Vub,V,Vb,Wd) :-
 	(   Vub == V
-	->  get_attr(V,itf,Att),
+	->  get_attr(V,clpqr_itf,Att),
 	    arg(5,Att,order(Ord)),
 	    arg(6,Att,class(Class)),
 	    setarg(2,Att,type(Vb)),
@@ -1333,7 +1333,7 @@ select_active_bound(t_lu(_,_),0).
 % Pivot taking care of rhs and active states
 %
 pivot(Dep,Class,IndepOrd,DepAct,IndAct) :-
-	get_attr(Dep,itf,Att),
+	get_attr(Dep,clpqr_itf,Att),
 	arg(4,Att,lin(H)),
 	arg(5,Att,order(DepOrd)),
 	setarg(2,Att,type(DepAct)),
@@ -1357,7 +1357,7 @@ pivot(Dep,Class,IndepOrd,DepAct,IndAct) :-
 % For solving: old current value of Indep should be out of RHS
 
 pivot_vlv(Dep,Class,IndepOrd,DepAct,AbvI,Lin) :-
-	get_attr(Dep,itf,Att),
+	get_attr(Dep,clpqr_itf,Att),
 	arg(4,Att,lin(H)),
 	arg(5,Att,order(DepOrd)),
 	setarg(2,Att,type(DepAct)),
@@ -1402,7 +1402,7 @@ bs(Xs,_,_) :-
 	var(Xs),
 	!.
 bs([X|Xs],OrdV,Lin) :-
-	(   get_attr(X,itf,Att),
+	(   get_attr(X,clpqr_itf,Att),
 	    arg(4,Att,lin(LinX)),
 	    nf_substitute(OrdV,Lin,LinX,LinX1) % does not change attributes
 	->  setarg(4,Att,lin(LinX1)),
@@ -1429,7 +1429,7 @@ bs_collect_bindings(Xs,_,_,Bind0,BindT) :-
 	!,
 	Bind0 = BindT.
 bs_collect_bindings([X|Xs],OrdV,Lin,Bind0,BindT) :-
-	(   get_attr(X,itf,Att),
+	(   get_attr(X,clpqr_itf,Att),
 	    arg(4,Att,lin(LinX)),
 	    nf_substitute(OrdV,Lin,LinX,LinX1) % does not change attributes
 	->  setarg(4,Att,lin(LinX1)),
@@ -1463,7 +1463,7 @@ rcbl([X|Continuation],Bind0,BindT) :-
 	).
 
 rcb_cont(X,Status,Violated,ContIn,ContOut) :-
-	get_attr(X,itf,Att),
+	get_attr(X,clpqr_itf,Att),
 	arg(2,Att,type(Type)),
 	arg(4,Att,lin([I,R|H])),
 	(   Type = t_l(L) % case 1: lowerbound: R + I should always be larger
@@ -1517,7 +1517,7 @@ reconsider(_).
 % violation of a bound of V. A similar case works for the upperbound.
 
 rcb(X,Status,Violated) :-
-	get_attr(X,itf,Att),
+	get_attr(X,clpqr_itf,Att),
 	arg(2,Att,type(Type)),
 	arg(4,Att,lin([I,R|H])),
 	(   Type = t_l(L) % case 1: lowerbound: R + I should always be larger
@@ -1558,7 +1558,7 @@ rcbl_status(unlimited(Indep,DepT),X,Cont,B0,Bt,Violated) :-
 % values or unsatisfiability in the rank increased system.
 %
 rcbl_opt(l(L),X,Continuation,B0,B1) :-
-	get_attr(X,itf,Att),
+	get_attr(X,clpqr_itf,Att),
 	arg(2,Att,type(Type)),
 	arg(3,Att,strictness(Strict)),
 	arg(4,Att,lin(Lin)),
@@ -1579,7 +1579,7 @@ rcbl_opt(l(L),X,Continuation,B0,B1) :-
 	    )
 	).
 rcbl_opt(u(U),X,Continuation,B0,B1) :-
-	get_attr(X,itf,Att),
+	get_attr(X,clpqr_itf,Att),
 	arg(2,Att,type(Type)),
 	arg(3,Att,strictness(Strict)),
 	arg(4,Att,lin(Lin)),
@@ -1604,7 +1604,7 @@ rcbl_opt(u(U),X,Continuation,B0,B1) :-
 % Basis has already changed when this is called
 %
 rcbl_app(l(L),X,Continuation,B0,B1) :-
-	get_attr(X,itf,Att),
+	get_attr(X,clpqr_itf,Att),
 	arg(4,Att,lin([I,R|H])),
 	(   R + I > L % within bound now
 	->  rcbl(Continuation,B0,B1)
@@ -1612,7 +1612,7 @@ rcbl_app(l(L),X,Continuation,B0,B1) :-
 	    rcbl_status(Status,X,Continuation,B0,B1,l(L))
 	).
 rcbl_app(u(U),X,Continuation,B0,B1) :-
-	get_attr(X,itf,Att),
+	get_attr(X,clpqr_itf,Att),
 	arg(4,Att,lin([I,R|H])),
 	(   R + I < U % within bound now
 	->  rcbl(Continuation,B0,B1)
@@ -1635,10 +1635,10 @@ rcbl_unl(u(U),X,Continuation,B0,B1,Indep,DepT) :-
 % Fails if Type is not t_u(_) or t_lu(_)
 
 narrow_u(t_u(_),X,U) :-
-	get_attr(X,itf,Att),
+	get_attr(X,clpqr_itf,Att),
 	setarg(2,Att,type(t_u(U))).
 narrow_u(t_lu(L,_),X,U) :-
-	get_attr(X,itf,Att),
+	get_attr(X,clpqr_itf,Att),
 	setarg(2,Att,type(t_lu(L,U))).
 
 % narrow_l(Type,X,L)
@@ -1647,11 +1647,11 @@ narrow_u(t_lu(L,_),X,U) :-
 % Fails if Type is not t_l(_) or t_lu(_)
 
 narrow_l( t_l(_),    X, L) :-
-	get_attr(X,itf,Att),
+	get_attr(X,clpqr_itf,Att),
 	setarg(2,Att,type(t_l(L))).
 
 narrow_l( t_lu(_,U), X, L) :-
-	get_attr(X,itf,Att),
+	get_attr(X,clpqr_itf,Att),
 	setarg(2,Att,type(t_lu(L,U))).
 
 % ----------------------------------- dump ------------------------------------
@@ -1684,7 +1684,7 @@ dump_var(t_l(L),V,I,H) -->
 	!,
 	{
 	    H = [l(_*K,_)|_], % avoid 1 >= 0
-	    get_attr(V,itf,Att),
+	    get_attr(V,clpqr_itf,Att),
 	    arg(3,Att,strictness(Strict)),
 	    Sm is Strict /\ 2,
 	    Kr is 1 rdiv K,
@@ -1704,7 +1704,7 @@ dump_var(t_u(U),V,I,H) -->
 	!,
 	{
 	    H = [l(_*K,_)|_], % avoid 0 =< 1
-	    get_attr(V,itf,Att),
+	    get_attr(V,clpqr_itf,Att),
 	    arg(3,Att,strictness(Strict)),
 	    Sm is Strict /\ 1,
 	    Kr is 1 rdiv K,

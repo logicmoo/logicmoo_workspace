@@ -35,7 +35,7 @@
 :- module_transparent(nortrace/0).
 :- system:use_module(library(logicmoo_startup)).
 
-:- prolog_load_context(directory,Dir),add_file_search_path_safe(library,Dir).
+%:- prolog_load_context(directory,Dir),add_file_search_path_safe(library,Dir).
 
 
 
@@ -94,7 +94,11 @@ unhide(Pred):- old_set_predicate_attribute(Pred, trace, true),mpred_trace_childs
 maybe_leash(Some):- is_list(Some),!,maplist(maybe_leash,Some).
 maybe_leash(-Some):- !, leash(-Some).
 maybe_leash(Some):- notrace((should_maybe_leash->leash(Some);true)).
-:- totally_hide(maybe_leash/1).
+
+old_swi(_).
+my_totally_hide(G):- '$hide'(G), old_swi(totally_hide(G)).
+
+:- my_totally_hide(maybe_leash/1).
 
 should_maybe_leash:- notrace((\+ current_prolog_flag(runtime_must,keep_going), \+ non_user_console)).
 
@@ -124,7 +128,7 @@ reset_macro(tAt(false, 319, 256, tracing),tAt_rtrace).
 reset_macro(tAt(false, 271, 319, false),tAt_quietly).
 reset_macro(X,X).
 
-:- totally_hide(get_trace_reset/1).
+:- my_totally_hide(get_trace_reset/1).
 tAt_normal:- tAt(false, 271, 271, false).
 tAt_rtrace:- tAt(false, 319, 256, tracing).
 tAt_quietly:- tAt(false, 271, 319, false).
@@ -133,10 +137,10 @@ tAt(GuiWas,OldV,OldL,WasDebug):-
   '$leash'(_, OldL),'$visible'(_, OldV),
    (WasDebug\==tracing->set_prolog_flag(debug,WasDebug) ;trace).
   
-:- totally_hide(tAt/4).
-:- totally_hide(tAt_normal/0).
-:- totally_hide(tAt_rtrace/0).
-:- totally_hide(tAt_quietly/0).
+:- my_totally_hide(tAt/4).
+:- my_totally_hide(tAt_normal/0).
+:- my_totally_hide(tAt_rtrace/0).
+:- my_totally_hide(tAt_quietly/0).
 
 
 
@@ -145,7 +149,7 @@ tAt(GuiWas,OldV,OldL,WasDebug):-
 % Save Guitracer.
 %
 push_guitracer:-  notrace(ignore(((current_prolog_flag(gui_tracer, GuiWas);GuiWas=false),asserta(t_l:was_gui_tracer(GuiWas))))).
-:- totally_hide(push_guitracer/0).
+:- my_totally_hide(push_guitracer/0).
 
 
 %! pop_guitracer is det.
@@ -153,7 +157,7 @@ push_guitracer:-  notrace(ignore(((current_prolog_flag(gui_tracer, GuiWas);GuiWa
 % Restore Guitracer.
 %
 pop_guitracer:- notrace(ignore(((retract(t_l:was_gui_tracer(GuiWas)),set_prolog_flag(gui_tracer, GuiWas))))).
-:- totally_hide(pop_guitracer/0).
+:- my_totally_hide(pop_guitracer/0).
 
 
 %! push_tracer is det.
@@ -161,21 +165,21 @@ pop_guitracer:- notrace(ignore(((retract(t_l:was_gui_tracer(GuiWas)),set_prolog_
 % Push Tracer.
 %
 push_tracer:- get_trace_reset(Reset)->asserta(t_l:tracer_reset(Reset)).
-:- totally_hide(push_tracer/0).
+:- my_totally_hide(push_tracer/0).
 
 %! pop_tracer is det.
 %
 % Pop Tracer.
 %
 pop_tracer:- notrace((retract(t_l:tracer_reset(Reset))))->Reset;notrace(true).
-:- totally_hide(pop_tracer/0).
+:- my_totally_hide(pop_tracer/0).
 
 %! reset_tracer is det.
 %
 % Reset Tracer.
 %
 reset_tracer:- ignore((t_l:tracer_reset(Reset)->Reset;true)).
-:- totally_hide(reset_tracer/0).
+:- my_totally_hide(reset_tracer/0).
 
 
 :- multifile(user:prolog_exception_hook/4).
@@ -205,7 +209,7 @@ quietly1(Goal):- \+ tracing -> Goal ; scce_orig(notrace,Goal,trace).
 % version 2 
 quietly2(Goal):- \+ tracing -> Goal ; (setup_call_cleanup(notrace,scce_orig(notrace,Goal,trace),trace)).
 
-:- 'set_pred_attrs'(quietly(_),[trace=1,hide_childs=1]).
+:- old_swi('set_pred_attrs'(quietly(_),[trace=1,hide_childs=1])).
 
 % version 3 
 % quietly(Goal):- !, Goal.  % for overiding
@@ -221,8 +225,8 @@ quietly(M:Goal):- \+ tracing
   (get_trace_reset(W), scce_orig(notrace(visible(-all)),M:Goal,W)).
 
 
-% :- 'totally_hide'(rtrace:quietly/1).
-:- old_set_predicate_attribute(rtrace:quietly/1, hide_childs, true).
+% :- 'my_totally_hide'(rtrace:quietly/1).
+:- old_swi(old_set_predicate_attribute(rtrace:quietly/1, hide_childs, true)).
 
 % Alt version?
 quietlySE(Goal):- %JUNIT \+ tracing 
@@ -249,7 +253,7 @@ deterministically_must(G):- (call(call,G),deterministic(YN),true),
      ((wdmsg(failed_deterministically_must(G)),(!)))),!.
 
 
-%:- totally_hide(quietly/1).
+%:- my_totally_hide(quietly/1).
 
 
 %! rtrace is det.
@@ -259,7 +263,7 @@ deterministically_must(G):- (call(call,G),deterministic(YN),true),
 
 rtrace:- push_tracer,start_rtrace,trace.
 
-:- 'totally_hide'(rtrace/0).
+:- 'my_totally_hide'(rtrace/0).
 
 % start_rtrace:- notrace((t_l:rtracing, !,  leash(-all), assert(t_l:rtracing), push_guitracer)).
 start_rtrace:-
@@ -271,7 +275,7 @@ start_rtrace:-
       visible(+all),
       maybe_leash(+exception).
 
-:- 'totally_hide'(start_rtrace/0).
+:- 'my_totally_hide'(start_rtrace/0).
 
 %! srtrace is det.
 %
@@ -279,7 +283,7 @@ start_rtrace:-
 %
 srtrace:- notrace, set_prolog_flag(access_level,system), rtrace.
 
-:- totally_hide(srtrace/0).
+:- my_totally_hide(srtrace/0).
 :- system:import(srtrace/0).
 
 
@@ -295,12 +299,12 @@ stop_rtrace:-
   retractall(t_l:rtracing),
   !.
                                          
-:- 'totally_hide'(stop_rtrace/0).
+:- 'my_totally_hide'(stop_rtrace/0).
 :- system:import(stop_rtrace/0).
 
 nortrace:- stop_rtrace,ignore(pop_tracer).
 
-:- totally_hide(nortrace/0).
+:- my_totally_hide(nortrace/0).
 
 
 
@@ -326,14 +330,14 @@ restore_trace0(Goal):-
    ((Goal*-> (push_leash_visible, '$leash'(_, OldL),'$visible'(_, OldV)) ; fail)),
    ('$leash'(_, OldL),'$visible'(_, OldV))).
 
-:- totally_hide(system:'$leash'/2).
-:- totally_hide(system:'$visible'/2).
+:- my_totally_hide(system:'$leash'/2).
+:- my_totally_hide(system:'$visible'/2).
 
 push_leash_visible:- notrace((('$leash'(OldL0, OldL0),'$visible'(OldV0, OldV0), asserta('$leash_visible'(OldL0,OldV0))))).
 restore_leash_visible:- notrace((('$leash_visible'(OldL1,OldV1)->('$leash'(_, OldL1),'$visible'(_, OldV1));true))).
 
 % restore_trace(Goal):- setup_call_cleanup(get_trace_reset(Reset),Goal,notrace(Reset)).
-:- totally_hide(restore_trace/1).
+:- my_totally_hide(restore_trace/1).
 
 
 
@@ -398,7 +402,7 @@ ERROR: Unhandled exception: good
 */
 
 set_leash_vis(OldL,OldV):- '$leash'(_, OldL),'$visible'(_, OldV),!.
-:- totally_hide(set_leash_vis/2).
+:- my_totally_hide(set_leash_vis/2).
 
 restart_rtrace:-
    notrace,leash(-all),
@@ -406,7 +410,7 @@ restart_rtrace:-
    visible(+all),
    maybe_leash(+exception),
    trace.
-:- 'totally_hide'(restart_rtrace/0).
+:- 'my_totally_hide'(restart_rtrace/0).
       
 rtrace(Goal):- 
   get_trace_reset(W),scce_orig(restart_rtrace,Goal,W).
@@ -417,10 +421,10 @@ rtrace(Goal):-
 %:- '$hide'(system:notrace/0).
 %:- '$hide'(system:trace/0).
 
-:- 'totally_hide'(rtrace:rtrace/1).
-:- old_set_predicate_attribute(rtrace:rtrace/1, hide_childs, false).
+:- 'my_totally_hide'(rtrace:rtrace/1).
+:- old_swi(old_set_predicate_attribute(rtrace:rtrace/1, hide_childs, false)).
 :- '$hide'(rtrace:reset_rtrace0/1).
-:- old_set_predicate_attribute(rtrace:reset_rtrace0/1, hide_childs, true).
+:- old_swi(old_set_predicate_attribute(rtrace:reset_rtrace0/1, hide_childs, true)).
 %:- old_set_predicate_attribute(rtrace:reset_rtrace0/1, hide_childs, false).
 
 
@@ -431,19 +435,20 @@ rtrace(Goal):-
 %
 rtrace_break(Goal):- \+ should_maybe_leash, !, rtrace(Goal).
 rtrace_break(Goal):- stop_rtrace,trace,debugCallWhy(rtrace_break(Goal),Goal).
-%:- totally_hide(rtrace_break/1).
-:- old_set_predicate_attribute(rtrace_break/1, hide_childs, false).
+%:- my_totally_hide(rtrace_break/1).
+:- old_swi(old_set_predicate_attribute(rtrace_break/1, hide_childs, false)).
 
+:- export(old_swi/1).
 
 
 
 %:- '$hide'(quietly/1).
-%:- if_may_hide('totally_hide'(notrace/1,  hide_childs, 1)).
-%:- if_may_hide('totally_hide'(notrace/1)).
-:- totally_hide(system:tracing/0).
-:- totally_hide(system:notrace/0).
-:- totally_hide(system:notrace/1).
-:- totally_hide(system:trace/0).
+%:- if_may_hide('my_totally_hide'(notrace/1,  hide_childs, 1)).
+%:- if_may_hide('my_totally_hide'(notrace/1)).
+:- my_totally_hide(system:tracing/0).
+:- my_totally_hide(system:notrace/0).
+:- my_totally_hide(system:notrace/1).
+:- my_totally_hide(system:trace/0).
 
 %! ftrace( :Goal) is nondet.
 %
@@ -476,11 +481,11 @@ ignore_must(Goal):- how_must(fail, Goal).
 
 % % % OFF :- system:use_module(library(logicmoo_utils_all)).
 :- fixup_exports.
-:- totally_hide('$toplevel':save_debug).
-:- totally_hide('$toplevel':toplevel_call/1).
-%:- totally_hide('$toplevel':residue_vars/2).
-:- totally_hide('$toplevel':save_debug/1).
-:- totally_hide('$toplevel':no_lco/1).
+:- my_totally_hide('$toplevel':save_debug/0).
+:- my_totally_hide('$toplevel':toplevel_call/1).
+%:- my_totally_hide('$toplevel':residue_vars/2).
+:- my_totally_hide('$toplevel':save_debug/1).
+:- my_totally_hide('$toplevel':no_lco/1).
 %:- ignore(rtrace(non_user_console)).
 :- '$hide'(rtrace/1).
 

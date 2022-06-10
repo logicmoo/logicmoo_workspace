@@ -651,7 +651,9 @@ the header is not available
 <dd class="defbody">
 If provided, <var>List</var> is unified with a list of Name(Value) pairs 
 corresponding to fields in the reply header. Name and Value follow the 
-same conventions used by the <code>header(Name,Value)</code> option.
+same conventions used by the <code>header(Name,Value)</code> option. See 
+also <code>raw_headers(-List)</code> which provides the entire HTTP 
+reply header in unparsed representation.
 </dd>
 <dt><strong>method</strong>(<var>+Method</var>)</dt>
 <dd class="defbody">
@@ -683,122 +685,11 @@ integer or the atom <code>end</code>. HTTP 1.1 only supports Unit = <code>bytes<
 E.g., to ask for bytes 1000-1999, use the option
 <code>range(bytes(1000,1999))</code>
 </dd>
-<dt><strong>redirect</strong>(<var>+Boolean</var>)</dt>
+<dt><strong>raw_encoding</strong>(<var>+Encoding</var>)</dt>
 <dd class="defbody">
-If <code>false</code> (default <code>true</code>), do <i>not</i> 
-automatically redirect if a 3XX code is received. Must be combined with
-<code>status_code(Code)</code> and one of the header options to read the 
-redirect reply. In particular, without <code>status_code(Code)</code> a 
-redirect is mapped to an exception.
-</dd>
-<dt><strong>status_code</strong>(<var>-Code</var>)</dt>
-<dd class="defbody">
-If this option is present and <var>Code</var> unifies with the HTTP 
-status code, do <b>not</b> translate errors (4xx, 5xx) into an 
-exception. Instead, <a class="pred" href="#http_open/3">http_open/3</a> 
-behaves as if 2xx (success) is returned, providing the application to 
-read the error document from the returned stream.
-</dd>
-<dt><strong>output</strong>(<var>-Out</var>)</dt>
-<dd class="defbody">
-Unify the output stream with <var>Out</var> and do not close it. This 
-can be used to upgrade a connection.
-</dd>
-<dt><strong>timeout</strong>(<var>+Timeout</var>)</dt>
-<dd class="defbody">
-If provided, set a timeout on the stream using <span class="pred-ext">set_stream/2</span>. 
-With this option if no new data arrives within <var>Timeout</var> 
-seconds the stream raises an exception. Default is to wait forever (<code>infinite</code>).
-</dd>
-<dt><strong>post</strong>(<var>+Data</var>)</dt>
-<dd class="defbody">
-Issue a <code>POST</code> request on the HTTP server. <var>Data</var> is 
-handed to <a class="pred" href="#http_post_data/3">http_post_data/3</a>.
-</dd>
-<dt><strong>proxy</strong>(<var>+Host:Port</var>)</dt>
-<dd class="defbody">
-Use an HTTP proxy to connect to the outside world. See also
-<span class="pred-ext">socket:proxy_for_url/3</span>. This option 
-overrules the proxy specification defined by <span class="pred-ext">socket:proxy_for_url/3</span>.
-</dd>
-<dt><strong>proxy</strong>(<var>+Host, +Port</var>)</dt>
-<dd class="defbody">
-Synonym for <code>proxy(+Host:Port)</code>. Deprecated.
-</dd>
-<dt><strong>proxy_authorization</strong>(<var>+Authorization</var>)</dt>
-<dd class="defbody">
-Send authorization to the proxy. Otherwise the same as the
-<code>authorization</code> option.
-</dd>
-<dt><strong>bypass_proxy</strong>(<var>+Boolean</var>)</dt>
-<dd class="defbody">
-If <code>true</code>, bypass proxy hooks. Default is <code>false</code>.
-</dd>
-<dt><strong>request_header</strong>(<var>Name=Value</var>)</dt>
-<dd class="defbody">
-Additional name-value parts are added in the order of appearance to the 
-HTTP request header. No interpretation is done.
-</dd>
-<dt><strong>max_redirect</strong>(<var>+Max</var>)</dt>
-<dd class="defbody">
-Sets the maximum length of a redirection chain. This is needed for some 
-IRIs that redirect indefinitely to other IRIs without looping (e.g., 
-redirecting to IRIs with a random element in them).
-<var>Max</var> must be either a non-negative integer or the atom <code>infinite</code>. 
-The default value is <code>10</code>.
-</dd>
-<dt><strong>user_agent</strong>(<var>+Agent</var>)</dt>
-<dd class="defbody">
-Defines the value of the <code>User-Agent</code> field of the HTTP 
-header. Default is <code>SWI-Prolog</code>.
-</dd>
-</dl>
-
-<p>The hook <a class="pred" href="#http:open_options/2">http:open_options/2</a> 
-can be used to provide default options based on the broken-down <var>URL</var>. 
-The option
-<code>status_code(-Code)</code> is particularly useful to query <b>REST</b> 
-interfaces that commonly return status codes other than <code>200</code> 
-that need to be be processed by the client code.
-<table class="arglist">
-<tr><td><var>URL</var> </td><td>is either an atom or string (url) or a 
-list of <i>parts</i>.
-
-<p>When provided, this list may contain the fields
-<code>scheme</code>, <code>user</code>, <code>password</code>, <code>host</code>, <code>port</code>, <code>path</code> 
-and either <code>query_string</code> (whose argument is an atom) or <code>search</code> 
-(whose argument is a list of
-<code>Name(Value)</code> or <code>Name=Value</code> compound terms). 
-Only <code>host</code> is mandatory. The example below opens the
-<var>URL</var> <code>http://www.example.com/my/path?q=Hello%20World&amp;lang=en</code>. 
-Note that values must <b>not</b> be quoted because the library inserts 
-the required quotes.
-
-<pre class="code">
-http_open([ host('www.example.com'),
-            path('/my/path'),
-            search([ q='Hello world',
-                     lang=en
-                   ])
-          ])
-</pre>
-
-<p></td></tr>
-</table>
-
-<dl class="tags">
-<dt class="tag">throws</dt>
-<dd>
-<code>error(existence_error(url, Id),Context)</code> is raised if the 
-HTTP result code is not in the range 200..299. Context has the shape <code>context(Message, status(Code, TextCode))</code>, 
-where <var>Code</var> is the numeric HTTP code and <var>TextCode</var> 
-is the textual description thereof provided by the server. <var>Message</var> 
-may provide additional details or may be unbound.
-</dd>
-<dt class="tag">See also</dt>
-<dd>
-<span class="pred-ext">ssl_context/3</span> for SSL related options if
-<code>library(http/http_ssl_plugin)</code> is loaded.
+Do not install a decoding filter for <var>Encoding</var>. For example, 
+using <code>raw_encoding('applocation/gzip')</code> the system will not 
+decompress the stream if it is compressed using <code>gzip</code>.
 </dd>
 </dl>
 
@@ -2899,7 +2790,7 @@ OpenID consumer and server library</span></a></h3>
 
 <p><a id="sec:httpopenid"></a>
 
-<p>This library implements the OpenID protocol (<a class="url" href="http://openid.net/).">http://openid.net/).</a> 
+<p>This library implements the OpenID protocol (<a class="url" href="http://openid.net/)">http://openid.net/)</a>. 
 OpenID is a protocol to share identities on the network. The protocol 
 itself uses simple basic HTTP, adding reliability using digitally signed 
 messages.
@@ -5510,7 +5401,7 @@ declarations to the (outer) <code>html</code> element using <span class="pred-ex
 <dd class="defbody">
 Demand an xmlns:id=<var>Value</var> in the outer html tag. This uses the
 <span class="pred-ext">html_post/2</span> mechanism to post to the <code>xmlns</code> 
-channel. Rdfa (<a class="url" href="http://www.w3.org/2006/07/SWD/RDFa/syntax/),">http://www.w3.org/2006/07/SWD/RDFa/syntax/),</a> 
+channel. Rdfa (<a class="url" href="http://www.w3.org/2006/07/SWD/RDFa/syntax/)">http://www.w3.org/2006/07/SWD/RDFa/syntax/)</a>, 
 embedding RDF in (x)html provides a typical usage scenario where we want 
 to publish the required namespaces in the header. We can define:
 
@@ -6885,7 +6776,7 @@ JSON</span></a></h2>
 
 <p><a id="sec:jsonsupport"></a>
 
-<p>From <a class="url" href="http://json.org,">http://json.org,</a> " 
+<p>From <a class="url" href="http://json.org">http://json.org</a>, " 
 JSON (JavaScript Object Notation) is a lightweight data-interchange 
 format. It is easy for humans to read and write. It is easy for machines 
 to parse and generate. It is based on a subset of the JavaScript 

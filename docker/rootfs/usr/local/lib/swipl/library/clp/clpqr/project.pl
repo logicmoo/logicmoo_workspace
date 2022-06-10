@@ -1,6 +1,4 @@
-/*
-
-    Part of CLP(Q,R) (Constraint Logic Programming over Rationals and Reals)
+/*  Part of CLP(Q,R) (Constraint Logic Programming over Rationals and Reals)
 
     Author:        Leslie De Koninck
     E-mail:        Leslie.DeKoninck@cs.kuleuven.be
@@ -43,7 +41,7 @@
 
 %:- public project_attributes/2.		% xref.pl
 
-:- module(project,
+:- module(clpqr_project,
 	[
 	    drop_dep/1,
 	    drop_dep_one/1,
@@ -97,7 +95,7 @@ fm_elim(clpr,Avs,Tvs,Pivots) :- fourmotz_r:fm_elim(Avs,Tvs,Pivots).
 
 get_clp([],_).
 get_clp([H|T],CLP) :-
-	(   get_attr(H,itf,Att)
+	(   get_attr(H,clpqr_itf,Att)
 	->  arg(1,Att,CLP)
 	;   true
 	),
@@ -109,7 +107,7 @@ get_clp([H|T],CLP) :-
 
 mark_target([]).
 mark_target([V|Vs]) :-
-	(   get_attr(V,itf,Att)
+	(   get_attr(V,clpqr_itf,Att)
 	->  setarg(9,Att,target)
 	;   true
 	),
@@ -130,13 +128,13 @@ make_target_indep(Ts,Ps) :- make_target_indep(Ts,[],Ps).
 
 make_target_indep([],Ps,Ps).
 make_target_indep([T|Ts],Ps0,Pst) :-
-	(   get_attr(T,itf,AttT),
+	(   get_attr(T,clpqr_itf,AttT),
 	    arg(1,AttT,CLP),
 	    arg(2,AttT,type(Type)),
 	    arg(4,AttT,lin([_,_|H])),
 	    nontarget(H,Nt)
 	->  Ps1 = [T:Nt|Ps0],
-	    get_attr(Nt,itf,AttN),
+	    get_attr(Nt,clpqr_itf,AttN),
 	    arg(2,AttN,type(IndAct)),
 	    arg(5,AttN,order(Ord)),
 	    arg(6,AttN,class(Class)),
@@ -153,7 +151,7 @@ make_target_indep([T|Ts],Ps0,Pst) :-
 % A nontarget variable has no target attribute and no keep_indep attribute.
 
 nontarget([l(V*_,_)|Vs],Nt) :-
-	(   get_attr(V,itf,Att),
+	(   get_attr(V,clpqr_itf,Att),
 	    arg(9,Att,n),
 	    arg(10,Att,n)
 	->  Nt = V
@@ -179,7 +177,7 @@ drop_dep([V|Vs]) :-
 % The linear attributes are: type, strictness, linear equation (lin), class and order.
 
 drop_dep_one(V) :-
-	get_attr(V,itf,Att),
+	get_attr(V,clpqr_itf,Att),
 	Att = t(CLP,type(t_none),_,lin(Lin),order(OrdV),_,_,n,n,_,n),
 	\+ indep(CLP,Lin,OrdV),
 	!,
@@ -206,7 +204,7 @@ renormalize(clpr,Lin,New) :- store_r:renormalize(Lin,New).
 
 drop_lin_atts([]).
 drop_lin_atts([V|Vs]) :-
-	get_attr(V,itf,Att),
+	get_attr(V,clpqr_itf,Att),
 	setarg(2,Att,n),
 	setarg(3,Att,n),
 	setarg(4,Att,n),
@@ -239,7 +237,7 @@ order(Xs,N,M) :-
 	N = M.
 order([],N,N).
 order([X|Xs],N,M) :-
-	(   get_attr(X,itf,Att),
+	(   get_attr(X,clpqr_itf,Att),
 	    arg(5,Att,order(O)),
 	    var(O)
 	->  O = N,
@@ -257,7 +255,7 @@ renorm_all(Xs) :-
 	var(Xs),
 	!.
 renorm_all([X|Xs]) :-
-	(   get_attr(X,itf,Att),
+	(   get_attr(X,clpqr_itf,Att),
 	    arg(1,Att,CLP),
 	    arg(4,Att,lin(Lin))
 	->  renormalize(CLP,Lin,New),
@@ -275,17 +273,17 @@ arrange_pivot(Xs) :-
 	var(Xs),
 	!.
 arrange_pivot([X|Xs]) :-
-	(   get_attr(X,itf,AttX),
+	(   get_attr(X,clpqr_itf,AttX),
 	    %arg(8,AttX,n), % not for nonzero
 	    arg(1,AttX,CLP),
 	    arg(2,AttX,type(t_none)),
 	    arg(4,AttX,lin(Lin)),
 	    arg(5,AttX,order(OrdX)),
 	    Lin = [_,_,l(Y*_,_)|_],
-	    get_attr(Y,itf,AttY),
+	    get_attr(Y,clpqr_itf,AttY),
 	    arg(2,AttY,type(IndAct)),
 	    arg(5,AttY,order(OrdY)),
-	    arg(6,AttY,class(Class)),
+	    arg(6,AttY,clpqr_class(Class)),
 	    compare(>,OrdY,OrdX)
 	->  pivot(CLP,X,Class,OrdY,t_none,IndAct),
 	    arrange_pivot(Xs)

@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.5.4 Reference Manual: Section 6.11</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.5.12 Reference Manual: Section 6.11</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -240,19 +240,28 @@ Modules and using the&lsquo;user' module</span></a></h2>
 
 <p>As mentioned above, SWI-Prolog contains two special modules. The 
 first one is the module <code>system</code>. This module contains all 
-built-in predicates. Module <code>system</code> has no import module. 
-The second special module is the module <code>user</code>. This module 
-forms the initial working space of the user. Initially it is empty. The 
-import module of module <code>user</code> is <code>system</code>, making 
-all built-in predicates available.
+built-in predicates. Module <code>system</code> has no import module, 
+i.e., is a
+<em>root</em> of the module graph. The second special module is the 
+module <code>user</code>. This module forms the initial working space of 
+the user. Initially it is empty.<sup class="fn">177<span class="fn-text">Unfortunately 
+some <em>hooks</em> are traditionally defined in the user module</span></sup>. 
+The import module of module <code>user</code> is <code>system</code>, 
+making all built-in predicates available.
 
-<p>All other modules import from the module <code>user</code>. This 
-implies they can use all predicates imported into <code>user</code> 
+<p>All normal application modules import from the module <code>user</code>. 
+This implies they can use all predicates imported into <code>user</code> 
 without explicitly importing them. If an application loads all modules 
 from the
-<code>user</code> module using <a id="idx:usemodule1:2018"></a><a class="pred" href="import.html#use_module/1">use_module/1</a>, 
+<code>user</code> module using <a id="idx:usemodule1:2041"></a><a class="pred" href="import.html#use_module/1">use_module/1</a>, 
 one achieves a scoping system similar to the C-language, where every 
 module can access all exported predicates without any special 
 precautions.
+
+<p>All <em>library</em> modules (see <a id="idx:moduleproperty2:2042"></a><a class="pred" href="manipmodule.html#module_property/2">module_property/2</a>) 
+import directly from <code>system</code>. Library modules are modules 
+loaded from the SWI-Prolog installation. As they import from <code>system</code>, 
+the functionality of a library is not affected by operator or predicate 
+definitions in the <code>user</code> module.
 
 <p></body></html>

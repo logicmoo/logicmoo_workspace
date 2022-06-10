@@ -10,6 +10,10 @@
 % Licience: LGPL
 % ===================================================================
 */
+:- if((prolog_load_context(source,F),prolog_load_context(file,F))).
+:- else.
+%module(_,Y):- maplist(export,Y).
+:- endif.
 :- module(dumpst,[
           getPFA/3,getPFA1/3,getPFA2/3,get_m_opt/4,fdmsg/1,fdmsg1/1,
           neg1_numbervars/3,clauseST/2,
@@ -63,13 +67,13 @@
 
 :- use_module(library(logicmoo_startup)).
 :- use_module(library(logicmoo_common)).
-:- use_module(library(debuggery/first)).
+%:- use_module(library(debuggery/first)).
 :- use_module(library(logicmoo/util_strings)).
-:- use_module(library(debuggery/dmsg)).
+%:- use_module(library(debuggery/dmsg)).
 :- use_module(library(debuggery/rtrace)).
-:- use_module(library(debuggery/bugger)).
-:- use_module(library(debuggery/dumpst)).
-:- use_module(library(debuggery/ucatch)).
+%:- use_module(library(debuggery/bugger)).
+%:- use_module(library(debuggery/dumpst)).
+%:- use_module(library(debuggery/ucatch)).
 :- use_module(library(debuggery/frames)).
 
 
@@ -150,6 +154,7 @@ dumpST0(Frame,MaxDepth):-  prolog_current_frame(Current),(number(Frame);get_dump
 dumpST:- prolog_current_frame(Current),get_dump_frame(Current,Frame),
   no_bfly(zotrace(with_all_dmsg((b_setval('$dump_frame',Frame),dumpST1)))).
 
+%no_bfly(Goal):- current_predicate(in_bfly/2)->in_bfly(f,Goal);call(Goal). 
 
 :- thread_local(tlbugger:no_slow_io/0).
 :- multifile(tlbugger:no_slow_io/0).

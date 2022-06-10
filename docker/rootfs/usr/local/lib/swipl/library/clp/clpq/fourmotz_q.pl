@@ -86,7 +86,7 @@ fm_elim(Vs,Target,Pivots) :-
 
 prefilter([],[]).
 prefilter([V|Vs],Res) :-
-	(   get_attr(V,itf,Att),
+	(   get_attr(V,clpqr_itf,Att),
 	    arg(9,Att,n),
 	    occurs(V)
 	->  % V is a nontarget variable that occurs in a bounded linear equation
@@ -133,7 +133,7 @@ best(Vs,Best,Rest) :-
 fm_cp_filter(Vs,Delta,N) :-
 	length(Vs,Len),	% Len = number of variables in Vs
 	mem(Vs,X,Vst),	% Selects a variable X in Vs, Vst is the list of elements after X in Vs
-	get_attr(X,itf,Att),
+	get_attr(X,clpqr_itf,Att),
 	arg(4,Att,lin(Lin)),
 	arg(5,Att,order(OrdX)),
 	arg(9,Att,n),	% no target variable
@@ -184,10 +184,10 @@ elim_min(V,Occ,Target,Pivots,NewPivots) :-
 %
 reverse_pivot([]).
 reverse_pivot([I:D|Ps]) :-
-	get_attr(D,itf,AttD),
+	get_attr(D,clpqr_itf,AttD),
 	arg(2,AttD,type(Dt)),
 	setarg(11,AttD,n), % no longer
-	get_attr(I,itf,AttI),
+	get_attr(I,clpqr_itf,AttI),
 	arg(2,AttI,type(It)),
 	arg(5,AttI,order(OrdI)),
 	arg(6,AttI,class(ClI)),
@@ -200,7 +200,7 @@ reverse_pivot([I:D|Ps]) :-
 
 unkeep([]).
 unkeep([_:D|Ps]) :-
-	get_attr(D,itf,Att),
+	get_attr(D,clpqr_itf,Att),
 	setarg(11,Att,n),
 	drop_dep_one(D),
 	unkeep(Ps).
@@ -254,11 +254,11 @@ crossproduct([A|As]) -->
 crossproduct([],_) --> [].
 crossproduct([B:Kb|Bs],A:Ka) -->
 	{
-	    get_attr(A,itf,AttA),
+	    get_attr(A,clpqr_itf,AttA),
 	    arg(2,AttA,type(Ta)),
 	    arg(3,AttA,strictness(Sa)),
 	    arg(4,AttA,lin(LinA)),
-	    get_attr(B,itf,AttB),
+	    get_attr(B,clpqr_itf,AttB),
 	    arg(2,AttB,type(Tb)),
 	    arg(3,AttB,strictness(Sb)),
 	    arg(4,AttB,lin(LinB)),
@@ -389,9 +389,9 @@ cp_card([A|As],Ci,Co) :-
 
 cp_card([],_,Ci,Ci).
 cp_card([B:Kb|Bs],A:Ka,Ci,Co) :-
-	get_attr(A,itf,AttA),
+	get_attr(A,clpqr_itf,AttA),
 	arg(2,AttA,type(Ta)),
-	get_attr(B,itf,AttB),
+	get_attr(B,clpqr_itf,AttB),
 	arg(2,AttB,type(Tb)),
 	(   sign(Ka) =\= sign(Kb)
 	->  cp_card_lower(Ta,Tb,Ci,Cii),
@@ -433,7 +433,7 @@ cp_card_upper(_,_,Si,Si).
 % of V in the linear equation of D.
 
 occurences(V,Occ) :-
-	get_attr(V,itf,Att),
+	get_attr(V,clpqr_itf,Att),
 	arg(5,Att,order(OrdV)),
 	arg(6,Att,class(C)),
 	class_allvars(C,All),
@@ -449,7 +449,7 @@ occurences(De,_,[]) :-
 	var(De),
 	!.
 occurences([D|De],OrdV,Occ) :-
-	(   get_attr(D,itf,Att),
+	(   get_attr(D,clpqr_itf,Att),
 	    arg(2,Att,type(Type)),
 	    arg(4,Att,lin(Lin)),
 	    occ_type_filter(Type),
@@ -477,7 +477,7 @@ occ_type_filter(t_Lu(_,_)).
 % =\= t_none.
 
 occurs(V) :-
-	get_attr(V,itf,Att),
+	get_attr(V,clpqr_itf,Att),
 	arg(5,Att,order(OrdV)),
 	arg(6,Att,class(C)),
 	class_allvars(C,All),
@@ -493,7 +493,7 @@ occurs(De,_) :-
 	!,
 	fail.
 occurs([D|De],OrdV) :-
-	(   get_attr(D,itf,Att),
+	(   get_attr(D,clpqr_itf,Att),
 	    arg(2,Att,type(Type)),
 	    arg(4,Att,lin(Lin)),
 	    occ_type_filter(Type),

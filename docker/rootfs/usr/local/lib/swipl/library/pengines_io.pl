@@ -165,9 +165,10 @@ pengine_nl :-
 %
 %   Emit N spaces
 
-pengine_tab(N) :-
+pengine_tab(Expr) :-
     pengine_output,
     !,
+    N is Expr,
     length(List, N),
     maplist(=(&(nbsp)), List),
     send_html(List).

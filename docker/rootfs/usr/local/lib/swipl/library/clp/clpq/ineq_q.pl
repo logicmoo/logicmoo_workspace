@@ -138,7 +138,7 @@ ineq_one(nonstrict,X,K,I) :-
 % Solves the inequality X < 0
 
 ineq_one_s_p_0(X) :-
-	get_attr(X,itf,Att),
+	get_attr(X,clpqr_itf,Att),
 	arg(4,Att,lin([Ix,_|OrdX])),
 	!,	% old variable, this is deref
 	(   \+ arg(1,Att,clpq)
@@ -154,7 +154,7 @@ ineq_one_s_p_0(X) :-	% new variable, nothing depends on it
 % Solves the inequality X > 0
 
 ineq_one_s_n_0(X) :-
-	get_attr(X,itf,Att),
+	get_attr(X,clpqr_itf,Att),
 	arg(4,Att,lin([Ix,_|OrdX])),
 	!,
 	(   \+ arg(1,Att,clpq)
@@ -170,7 +170,7 @@ ineq_one_s_n_0(X) :-
 % Solves the inequality X < -I
 
 ineq_one_s_p_i(X,I) :-
-	get_attr(X,itf,Att),
+	get_attr(X,clpqr_itf,Att),
 	arg(4,Att,lin([Ix,_|OrdX])),
 	!,
 	(   \+ arg(1,Att,clpq)
@@ -187,7 +187,7 @@ ineq_one_s_p_i(X,I) :-
 % Solves the inequality X > I
 
 ineq_one_s_n_i(X,I) :-
-	get_attr(X,itf,Att),
+	get_attr(X,clpqr_itf,Att),
 	arg(4,Att,lin([Ix,_|OrdX])),
 	!,
 	(   \+ arg(1,Att,clpq)
@@ -207,7 +207,7 @@ ineq_one_old_s_p_0([l(Y*Ky,_)|Tail],X,Ix) :-
 	->  Bound is -Ix rdiv Ky,
 	    update_indep(strict,Y,Ky,Bound)	% X < 0, X = K*Y + I => Y < -I/K or Y > -I/K (depending on K)
 	;   Tail = [_|_]
-	->  get_attr(X,itf,Att),
+	->  get_attr(X,clpqr_itf,Att),
 	    arg(2,Att,type(Type)),
 	    arg(3,Att,strictness(Old)),
 	    arg(4,Att,lin(Lin)),
@@ -225,7 +225,7 @@ ineq_one_old_s_n_0([l(Y*Ky,_)|Tail], X, Ix) :-
 	    Bound is Ix rdiv Coeff,
 	    update_indep(strict,Y,Coeff,Bound)
 	;   Tail = [_|_]
-	->  get_attr(X,itf,Att),
+	->  get_attr(X,clpqr_itf,Att),
 	    arg(2,Att,type(Type)),
 	    arg(3,Att,strictness(Old)),
 	    arg(4,Att,lin(Lin)),
@@ -243,7 +243,7 @@ ineq_one_old_s_p_i([l(Y*Ky,_)|Tail],I,X,Ix) :-
 	    update_indep(strict,Y,Ky,Bound)
 	;   Tail = [_|_]
 	->  Bound is -I,
-	    get_attr(X,itf,Att),
+	    get_attr(X,clpqr_itf,Att),
 	    arg(2,Att,type(Type)),
 	    arg(3,Att,strictness(Old)),
 	    arg(4,Att,lin(Lin)),
@@ -261,7 +261,7 @@ ineq_one_old_s_n_i([l(Y*Ky,_)|Tail],I,X,Ix) :-
 	    Bound is (Ix - I) rdiv Coeff,
 	    update_indep(strict,Y,Coeff,Bound)
 	;   Tail = [_|_]
-	->  get_attr(X,itf,Att),
+	->  get_attr(X,clpqr_itf,Att),
 	    arg(2,Att,type(Type)),
 	    arg(3,Att,strictness(Old)),
 	    arg(4,Att,lin(Lin)),
@@ -275,7 +275,7 @@ ineq_one_old_s_n_i([l(Y*Ky,_)|Tail],I,X,Ix) :-
 % Solves the inequality X =< 0
 
 ineq_one_n_p_0(X) :-
-	get_attr(X,itf,Att),
+	get_attr(X,clpqr_itf,Att),
 	arg(4,Att,lin([Ix,_|OrdX])),
 	!, % old variable, this is deref
 	(   \+ arg(1,Att,clpq)
@@ -291,7 +291,7 @@ ineq_one_n_p_0(X) :-	% new variable, nothing depends on it
 % Solves the inequality X >= 0
 
 ineq_one_n_n_0(X) :-
-	get_attr(X,itf,Att),
+	get_attr(X,clpqr_itf,Att),
 	arg(4,Att,lin([Ix,_|OrdX])),
 	!,
 	(   \+ arg(1,Att,clpq)
@@ -307,7 +307,7 @@ ineq_one_n_n_0(X) :-
 % Solves the inequality X =< -I
 
 ineq_one_n_p_i(X,I) :-
-	get_attr(X,itf,Att),
+	get_attr(X,clpqr_itf,Att),
 	arg(4,Att,lin([Ix,_|OrdX])),
 	!,
 	(   \+ arg(1,Att,clpq)
@@ -324,7 +324,7 @@ ineq_one_n_p_i(X,I) :-
 % Solves the inequality X >= I
 
 ineq_one_n_n_i(X,I) :-
-	get_attr(X,itf,Att),
+	get_attr(X,clpqr_itf,Att),
 	arg(4,Att,lin([Ix,_|OrdX])),
 	!,
 	(   \+ arg(1,Att,clpq)
@@ -345,7 +345,7 @@ ineq_one_old_n_p_0([l(Y*Ky,_)|Tail],X,Ix) :-
 	->  Bound is -Ix rdiv Ky,
 	    update_indep(nonstrict,Y,Ky,Bound)
 	;   Tail = [_|_]
-	->  get_attr(X,itf,Att),
+	->  get_attr(X,clpqr_itf,Att),
 	    arg(2,Att,type(Type)),
 	    arg(3,Att,strictness(Old)),
 	    arg(4,Att,lin(Lin)),
@@ -363,7 +363,7 @@ ineq_one_old_n_n_0([l(Y*Ky,_)|Tail], X, Ix) :-
 	    Bound is Ix rdiv Coeff,
 	    update_indep(nonstrict,Y,Coeff,Bound)
 	;   Tail = [_|_]
-	->  get_attr(X,itf,Att),
+	->  get_attr(X,clpqr_itf,Att),
 	    arg(2,Att,type(Type)),
 	    arg(3,Att,strictness(Old)),
 	    arg(4,Att,lin(Lin)),
@@ -381,7 +381,7 @@ ineq_one_old_n_p_i([l(Y*Ky,_)|Tail],I,X,Ix) :-
 	    update_indep(nonstrict,Y,Ky,Bound)
 	;   Tail = [_|_]
 	->  Bound is -I,
-	    get_attr(X,itf,Att),
+	    get_attr(X,clpqr_itf,Att),
 	    arg(2,Att,type(Type)),
 	    arg(3,Att,strictness(Old)),
 	    arg(4,Att,lin(Lin)),
@@ -399,7 +399,7 @@ ineq_one_old_n_n_i([l(Y*Ky,_)|Tail],I,X,Ix) :-
 	    Bound is (Ix - I) rdiv Coeff,
 	    update_indep(nonstrict,Y,Coeff,Bound)
 	;   Tail = [_|_]
-	->  get_attr(X,itf,Att),
+	->  get_attr(X,clpqr_itf,Att),
 	    arg(2,Att,type(Type)),
 	    arg(3,Att,strictness(Old)),
 	    arg(4,Att,lin(Lin)),
@@ -433,14 +433,14 @@ ineq_more(strict,Lind) :-
 	->  % never fails, no implied value
 	    % Lind < 0 => Rest < -K*U where U has no bounds
 	    var_intern(t_l(0),S,2),	% create slack variable S
-	    get_attr(S,itf,AttS),
+	    get_attr(S,clpqr_itf,AttS),
 	    arg(5,AttS,order(OrdS)),
 	    Ki is -1 rdiv K,
 	    add_linear_ff(Rest,Ki,[0,0,l(S*1,OrdS)],Ki,LinU),	% U = (-1/K)*Rest + (-1/K)*S
 	    LinU = [_,_|Hu],
 	    get_or_add_class(U,Class),
 	    same_class(Hu,Class),	% put all variables of new lin. eq. of U in the same class
-	    get_attr(U,itf,AttU),
+	    get_attr(U,clpqr_itf,AttU),
 	    arg(5,AttU,order(OrdU)),
 	    arg(6,AttU,class(ClassU)),
 	    backsubst(ClassU,OrdU,LinU)	% substitute U by new lin. eq. everywhere in the class
@@ -455,13 +455,13 @@ ineq_more(nonstrict,Lind) :-
 	    % Lind =< 0 => Rest =< -K*U where U has no bounds
 	    var_intern(t_l(0),S,0),	% create slack variable S
 	    Ki is -1 rdiv K,
-	    get_attr(S,itf,AttS),
+	    get_attr(S,clpqr_itf,AttS),
 	    arg(5,AttS,order(OrdS)),
 	    add_linear_ff(Rest,Ki,[0,0,l(S*1,OrdS)],Ki,LinU),	% U = (-1K)*Rest + (-1/K)*S
 	    LinU = [_,_|Hu],
 	    get_or_add_class(U,Class),
 	    same_class(Hu,Class),	% put all variables of new lin. eq of U in the same class
-	    get_attr(U,itf,AttU),
+	    get_attr(U,clpqr_itf,AttU),
 	    arg(5,AttU,order(OrdU)),
 	    arg(6,AttU,class(ClassU)),
 	    backsubst(ClassU,OrdU,LinU)	% substitute U by new lin. eq. everywhere in the class
@@ -479,7 +479,7 @@ ineq_more(nonstrict,Lind) :-
 % or X > Bound or X >= Bound, depending on Strictness and K.
 
 update_indep(strict,X,K,Bound) :-
-	get_attr(X,itf,Att),
+	get_attr(X,clpqr_itf,Att),
 	arg(2,Att,type(Type)),
 	arg(3,Att,strictness(Old)),
 	arg(4,Att,lin(Lin)),
@@ -488,7 +488,7 @@ update_indep(strict,X,K,Bound) :-
 	;   uius(Type,X,Lin,Bound,Old)	% update independent upperbound strict
 	).
 update_indep(nonstrict,X,K,Bound) :-
-	get_attr(X,itf,Att),
+	get_attr(X,clpqr_itf,Att),
 	arg(2,Att,type(Type)),
 	arg(3,Att,strictness(Old)),
 	arg(4,Att,lin(Lin)),
@@ -534,14 +534,14 @@ update_indep(nonstrict,X,K,Bound) :-
 % bound Bound.
 
 udl(t_none,X,Lin,Bound,_Sold) :-
-	get_attr(X,itf,AttX),
+	get_attr(X,clpqr_itf,AttX),
 	arg(5,AttX,order(Ord)),
 	setarg(2,AttX,type(t_l(Bound))),
 	setarg(3,AttX,strictness(0)),
 	(   unconstrained(Lin,Uc,Kuc,Rest)
 	->  Ki is -1 rdiv Kuc,
 	    add_linear_ff(Rest,Ki,[0,0,l(X* -1,Ord)],Ki,LinU),
-	    get_attr(Uc,itf,AttU),
+	    get_attr(Uc,clpqr_itf,AttU),
 	    arg(5,AttU,order(OrdU)),
 	    arg(6,AttU,class(Class)),
 	    backsubst(Class,OrdU,LinU)
@@ -552,7 +552,7 @@ udl(t_none,X,Lin,Bound,_Sold) :-
 udl(t_l(L),X,Lin,Bound,Sold) :-
 	(   Bound > L
 	->  Strict is Sold /\ 1,
-	    get_attr(X,itf,Att),
+	    get_attr(X,clpqr_itf,Att),
 	    setarg(2,Att,type(t_l(Bound))),
 	    setarg(3,Att,strictness(Strict)),
 	    reconsider_lower(X,Lin,Bound)
@@ -561,7 +561,7 @@ udl(t_l(L),X,Lin,Bound,Sold) :-
 
 udl(t_u(U),X,Lin,Bound,_Sold) :-
 	(   Bound < U
-	->  get_attr(X,itf,Att),
+	->  get_attr(X,clpqr_itf,Att),
 	    setarg(2,Att,type(t_lu(Bound,U))),
 	    reconsider_lower(X,Lin,Bound)	% makes sure that Lin still satisfies lowerbound Bound
 	;   Bound =:= U,
@@ -571,7 +571,7 @@ udl(t_lu(L,U),X,Lin,Bound,Sold) :-
 	(   Bound > L
 	->  (   Bound < U
 	    ->  Strict is Sold /\ 1,
-		get_attr(X,itf,Att),
+		get_attr(X,clpqr_itf,Att),
 		setarg(2,Att,type(t_lu(Bound,U))),
 		setarg(3,Att,strictness(Strict)),
 		reconsider_lower(X,Lin,Bound)
@@ -589,7 +589,7 @@ udl(t_lu(L,U),X,Lin,Bound,Sold) :-
 % bound Bound.
 
 udls(t_none,X,Lin,Bound,_Sold) :-
-	get_attr(X,itf,AttX),
+	get_attr(X,clpqr_itf,AttX),
 	arg(5,AttX,order(Ord)),
 	setarg(2,AttX,type(t_l(Bound))),
 	setarg(3,AttX,strictness(2)),
@@ -597,7 +597,7 @@ udls(t_none,X,Lin,Bound,_Sold) :-
 	->  % X = Lin => U = -1/K*Rest + 1/K*X with U an unconstrained variable
 	    Ki is -1 rdiv Kuc,
 	    add_linear_ff(Rest,Ki,[0,0,l(X* -1,Ord)],Ki,LinU),
-	    get_attr(Uc,itf,AttU),
+	    get_attr(Uc,clpqr_itf,AttU),
 	    arg(5,AttU,order(OrdU)),
 	    arg(6,AttU,class(Class)),
 	    backsubst(Class,OrdU,LinU)
@@ -611,19 +611,19 @@ udls(t_l(L),X,Lin,Bound,Sold) :-
 	->  true
 	;   Bound > L
 	->  Strict is Sold \/ 2,
-	    get_attr(X,itf,Att),
+	    get_attr(X,clpqr_itf,Att),
 	    setarg(2,Att,type(t_l(Bound))),
 	    setarg(3,Att,strictness(Strict)),
 	    reconsider_lower(X,Lin,Bound)
 	;   % equal to lowerbound: check strictness
 	    Strict is Sold \/ 2,
-	    get_attr(X,itf,Att),
+	    get_attr(X,clpqr_itf,Att),
 	    setarg(3,Att,strictness(Strict))
 	).
 udls(t_u(U),X,Lin,Bound,Sold) :-
 	Bound < U,	% smaller than upperbound: set new bound
 	Strict is Sold \/ 2,
-	get_attr(X,itf,Att),
+	get_attr(X,clpqr_itf,Att),
 	setarg(2,Att,type(t_lu(Bound,U))),
 	setarg(3,Att,strictness(Strict)),
 	reconsider_lower(X,Lin,Bound).
@@ -634,13 +634,13 @@ udls(t_lu(L,U),X,Lin,Bound,Sold) :-
 	->  % larger than lowerbound: check upperbound and possibly use new and reconsider basis
 	    Bound < U,
 	    Strict is Sold \/ 2,
-	    get_attr(X,itf,Att),
+	    get_attr(X,clpqr_itf,Att),
 	    setarg(2,Att,type(t_lu(Bound,U))),
 	    setarg(3,Att,strictness(Strict)),
 	    reconsider_lower(X,Lin,Bound)
 	;   % equal to lowerbound: put new strictness
 	    Strict is Sold \/ 2,
-	    get_attr(X,itf,Att),
+	    get_attr(X,clpqr_itf,Att),
 	    setarg(3,Att,strictness(Strict))
 	).
 
@@ -651,7 +651,7 @@ udls(t_lu(L,U),X,Lin,Bound,Sold) :-
 % bound Bound.
 
 udu(t_none,X,Lin,Bound,_Sold) :-
-	get_attr(X,itf,AttX),
+	get_attr(X,clpqr_itf,AttX),
 	arg(5,AttX,order(Ord)),
 	setarg(2,AttX,type(t_u(Bound))),
 	setarg(3,AttX,strictness(0)),
@@ -659,7 +659,7 @@ udu(t_none,X,Lin,Bound,_Sold) :-
 	->  % X = Lin => U = -1/K*Rest + 1/K*X with U an unconstrained variable
 	    Ki is -1 rdiv Kuc,
 	    add_linear_ff(Rest,Ki,[0,0,l(X* -1,Ord)],Ki,LinU),
-	    get_attr(Uc,itf,AttU),
+	    get_attr(Uc,clpqr_itf,AttU),
 	    arg(5,AttU,order(OrdU)),
 	    arg(6,AttU,class(Class)),
 	    backsubst(Class,OrdU,LinU)
@@ -671,7 +671,7 @@ udu(t_none,X,Lin,Bound,_Sold) :-
 udu(t_u(U),X,Lin,Bound,Sold) :-
 	(   Bound < U
 	->  Strict is Sold /\ 2,
-	    get_attr(X,itf,Att),
+	    get_attr(X,clpqr_itf,Att),
 	    setarg(2,Att,type(t_u(Bound))),
 	    setarg(3,Att,strictness(Strict)),
 	    reconsider_upper(X,Lin,Bound)
@@ -679,7 +679,7 @@ udu(t_u(U),X,Lin,Bound,Sold) :-
 	).
 udu(t_l(L),X,Lin,Bound,_Sold) :-
 	(   Bound > L
-	->  get_attr(X,itf,Att),
+	->  get_attr(X,clpqr_itf,Att),
 	    setarg(2,Att,type(t_lu(L,Bound))),
 	    reconsider_upper(X,Lin,Bound)
 	;   Bound =:= L,
@@ -689,7 +689,7 @@ udu(t_lu(L,U),X,Lin,Bound,Sold) :-
 	(   Bound < U
 	->  (   Bound > L
 	    ->  Strict is Sold /\ 2,
-		get_attr(X,itf,Att),
+		get_attr(X,clpqr_itf,Att),
 		setarg(2,Att,type(t_lu(L,Bound))),
 		setarg(3,Att,strictness(Strict)),
 		reconsider_upper(X,Lin,Bound)
@@ -707,7 +707,7 @@ udu(t_lu(L,U),X,Lin,Bound,Sold) :-
 % bound Bound.
 
 udus(t_none,X,Lin,Bound,_Sold) :-
-	get_attr(X,itf,AttX),
+	get_attr(X,clpqr_itf,AttX),
 	arg(5,AttX,order(Ord)),
 	setarg(2,AttX,type(t_u(Bound))),
 	setarg(3,AttX,strictness(1)),
@@ -715,7 +715,7 @@ udus(t_none,X,Lin,Bound,_Sold) :-
 	->   % X = Lin => U = -1/K*Rest + 1/K*X with U an unconstrained variable
 	    Ki is -1 rdiv Kuc,
 	    add_linear_ff(Rest,Ki,[0,0,l(X* -1,Ord)],Ki,LinU),
-	    get_attr(Uc,itf,AttU),
+	    get_attr(Uc,clpqr_itf,AttU),
 	    arg(5,AttU,order(OrdU)),
 	    arg(6,AttU,class(Class)),
 	    backsubst(Class,OrdU,LinU)
@@ -730,19 +730,19 @@ udus(t_u(U),X,Lin,Bound,Sold) :-
 	;   Bound < U
 	->  % smaller than upperbound: update bound and reconsider basis
 	    Strict is Sold \/ 1,
-	    get_attr(X,itf,Att),
+	    get_attr(X,clpqr_itf,Att),
 	    setarg(2,Att,type(t_u(Bound))),
 	    setarg(3,Att,strictness(Strict)),
 	    reconsider_upper(X,Lin,Bound)
 	;   % equal to upperbound: set new strictness
 	    Strict is Sold \/ 1,
-	    get_attr(X,itf,Att),
+	    get_attr(X,clpqr_itf,Att),
 	    setarg(3,Att,strictness(Strict))
 	).
 udus(t_l(L),X,Lin,Bound,Sold) :-
 	L < Bound,	% larger than lowerbound: update and reconsider basis
 	Strict is Sold \/ 1,
-	get_attr(X,itf,Att),
+	get_attr(X,clpqr_itf,Att),
 	setarg(2,Att,type(t_lu(L,Bound))),
 	setarg(3,Att,strictness(Strict)),
 	reconsider_upper(X,Lin,Bound).
@@ -753,13 +753,13 @@ udus(t_lu(L,U),X,Lin,Bound,Sold) :-
 	->  % smaller than upperbound: check lowerbound, possibly update and reconsider basis
 	    L < Bound,
 	    Strict is Sold \/ 1,
-	    get_attr(X,itf,Att),
+	    get_attr(X,clpqr_itf,Att),
 	    setarg(2,Att,type(t_lu(L,Bound))),
 	    setarg(3,Att,strictness(Strict)),
 	    reconsider_upper(X,Lin,Bound)
 	;   % equal to upperbound: update strictness
 	    Strict is Sold \/ 1,
-	    get_attr(X,itf,Att),
+	    get_attr(X,clpqr_itf,Att),
 	    setarg(3,Att,strictness(Strict))
 	).
 
@@ -770,7 +770,7 @@ udus(t_lu(L,U),X,Lin,Bound,Sold) :-
 % bound Bound.
 
 uiu(t_none,X,_Lin,Bound,_) :-	% X had no bounds
-	get_attr(X,itf,Att),
+	get_attr(X,clpqr_itf,Att),
 	setarg(2,Att,type(t_u(Bound))),
 	setarg(3,Att,strictness(0)).
 uiu(t_u(U),X,_Lin,Bound,Sold) :-
@@ -780,7 +780,7 @@ uiu(t_u(U),X,_Lin,Bound,Sold) :-
 	->  % smaller than upperbound: update.
 	    Strict is Sold /\ 2,	% update strictness: strictness of lowerbound is kept,
 					% strictness of upperbound is set to non-strict
-	    get_attr(X,itf,Att),
+	    get_attr(X,clpqr_itf,Att),
 	    setarg(2,Att,type(t_u(Bound))),
 	    setarg(3,Att,strictness(Strict))
 	;   true	% equal to upperbound and nonstrict: keep
@@ -788,14 +788,14 @@ uiu(t_u(U),X,_Lin,Bound,Sold) :-
 uiu(t_l(L),X,Lin,Bound,_Sold) :-
 	(   Bound > L
 	->   % Upperbound is larger than lowerbound: store new bound
-	    get_attr(X,itf,Att),
+	    get_attr(X,clpqr_itf,Att),
 	    setarg(2,Att,type(t_lu(L,Bound)))
 	;   Bound =:= L,
 	    solve_bound(Lin,Bound) % Lowerbound was equal to new upperbound: solve
 	).
 uiu(t_L(L),X,Lin,Bound,_Sold) :-
 	(   Bound > L
-	->  get_attr(X,itf,Att),
+	->  get_attr(X,clpqr_itf,Att),
 	    setarg(2,Att,type(t_Lu(L,Bound)))
 	;   Bound =:= L,
 	    solve_bound(Lin,Bound)
@@ -804,7 +804,7 @@ uiu(t_lu(L,U),X,Lin,Bound,Sold) :-
 	(   Bound < U
 	->  (   Bound > L
 	    ->  Strict is Sold /\ 2,
-		get_attr(X,itf,Att),
+		get_attr(X,clpqr_itf,Att),
 		setarg(2,Att,type(t_lu(L,Bound))),
 		setarg(3,Att,strictness(Strict))
 	    ;	Bound =:= L,
@@ -817,7 +817,7 @@ uiu(t_Lu(L,U),X,Lin,Bound,Sold) :-
 	(   Bound < U
 	->  (   L < Bound
 	    ->  Strict is Sold /\ 2,
-		get_attr(X,itf,Att),
+		get_attr(X,clpqr_itf,Att),
 		setarg(2,Att,type(t_Lu(L,Bound))),
 		setarg(3,Att,strictness(Strict))
 	    ;   L =:= Bound,
@@ -829,17 +829,17 @@ uiu(t_Lu(L,U),X,Lin,Bound,Sold) :-
 uiu(t_U(U),X,_Lin,Bound,Sold) :-
 	(   Bound < U
 	->  Strict is Sold /\ 2,
-	    (   get_attr(X,itf,Att),
+	    (   get_attr(X,clpqr_itf,Att),
 		arg(5,Att,order(OrdX)),
 		arg(6,Att,class(ClassX)),
 		lb(ClassX,OrdX,Vlb-Vb-Lb),
 		Bound =< Lb + U
-	    ->  get_attr(X,itf,Att2), % changed?
+	    ->  get_attr(X,clpqr_itf,Att2), % changed?
 		setarg(2,Att2,type(t_U(Bound))),
 		setarg(3,Att2,strictness(Strict)),
 		pivot_a(Vlb,X,Vb,t_u(Bound)),
 		reconsider(X)
-	    ;   get_attr(X,itf,Att),
+	    ;   get_attr(X,clpqr_itf,Att),
 		arg(5,Att,order(OrdX)),
 		arg(6,Att,class(ClassX)),
 		setarg(2,Att,type(t_U(Bound))),
@@ -853,17 +853,17 @@ uiu(t_lU(L,U),X,Lin,Bound,Sold) :-
 	(   Bound < U
 	->  (   L < Bound
 	    ->  Strict is Sold /\ 2,
-		(   get_attr(X,itf,Att),
+		(   get_attr(X,clpqr_itf,Att),
 		    arg(5,Att,order(OrdX)),
 		    arg(6,Att,class(ClassX)),
 		    lb(ClassX,OrdX,Vlb-Vb-Lb),
 		    Bound =< Lb + U
-		->  get_attr(X,itf,Att2), % changed?
+		->  get_attr(X,clpqr_itf,Att2), % changed?
 		    setarg(2,Att2,type(t_lU(L,Bound))),
 		    setarg(3,Att2,strictness(Strict)),
 		    pivot_a(Vlb,X,Vb,t_lu(L,Bound)),
 		    reconsider(X)
-		;   get_attr(X,itf,Att),
+		;   get_attr(X,clpqr_itf,Att),
 		    arg(5,Att,order(OrdX)),
 		    arg(6,Att,class(ClassX)),
 		    setarg(2,Att,type(t_lU(L,Bound))),
@@ -885,7 +885,7 @@ uiu(t_lU(L,U),X,Lin,Bound,Sold) :-
 % bound Bound. (see also uiu/5)
 
 uius(t_none,X,_Lin,Bound,_Sold) :-
-	get_attr(X,itf,Att),
+	get_attr(X,clpqr_itf,Att),
 	setarg(2,Att,type(t_u(Bound))),
 	setarg(3,Att,strictness(1)).
 uius(t_u(U),X,_Lin,Bound,Sold) :-
@@ -893,23 +893,23 @@ uius(t_u(U),X,_Lin,Bound,Sold) :-
 	->  true
 	;   Bound < U
 	->  Strict is Sold \/ 1,
-	    get_attr(X,itf,Att),
+	    get_attr(X,clpqr_itf,Att),
 	    setarg(2,Att,type(t_u(Bound))),
 	    setarg(3,Att,strictness(Strict))
 	;   Strict is Sold \/ 1,
-	    get_attr(X,itf,Att),
+	    get_attr(X,clpqr_itf,Att),
 	    setarg(3,Att,strictness(Strict))
 	).
 uius(t_l(L),X,_Lin,Bound,Sold) :-
 	L < Bound,
 	Strict is Sold \/ 1,
-	get_attr(X,itf,Att),
+	get_attr(X,clpqr_itf,Att),
 	setarg(2,Att,type(t_lu(L,Bound))),
 	setarg(3,Att,strictness(Strict)).
 uius(t_L(L),X,_Lin,Bound,Sold) :-
 	L < Bound,
 	Strict is Sold \/ 1,
-	get_attr(X,itf,Att),
+	get_attr(X,clpqr_itf,Att),
 	setarg(2,Att,type(t_Lu(L,Bound))),
 	setarg(3,Att,strictness(Strict)).
 uius(t_lu(L,U),X,_Lin,Bound,Sold) :-
@@ -918,11 +918,11 @@ uius(t_lu(L,U),X,_Lin,Bound,Sold) :-
 	;   Bound < U
 	->  L < Bound,
 	    Strict is Sold \/ 1,
-	    get_attr(X,itf,Att),
+	    get_attr(X,clpqr_itf,Att),
 	    setarg(2,Att,type(t_lu(L,Bound))),
 	    setarg(3,Att,strictness(Strict))
 	;   Strict is Sold \/ 1,
-	    get_attr(X,itf,Att),
+	    get_attr(X,clpqr_itf,Att),
 	    setarg(3,Att,strictness(Strict))
 	).
 uius(t_Lu(L,U),X,_Lin,Bound,Sold) :-
@@ -931,11 +931,11 @@ uius(t_Lu(L,U),X,_Lin,Bound,Sold) :-
 	;   Bound < U
 	->  L < Bound,
 	    Strict is Sold \/ 1,
-	    get_attr(X,itf,Att),
+	    get_attr(X,clpqr_itf,Att),
 	    setarg(2,Att,type(t_Lu(L,Bound))),
 	    setarg(3,Att,strictness(Strict))
 	;   Strict is Sold \/ 1,
-	    get_attr(X,itf,Att),
+	    get_attr(X,clpqr_itf,Att),
 	    setarg(3,Att,strictness(Strict))
 	).
 uius(t_U(U),X,_Lin,Bound,Sold) :-
@@ -943,17 +943,17 @@ uius(t_U(U),X,_Lin,Bound,Sold) :-
 	->  true
 	;   Bound < U
 	->  Strict is Sold \/ 1,
-	    (   get_attr(X,itf,Att),
+	    (   get_attr(X,clpqr_itf,Att),
 		arg(5,Att,order(OrdX)),
 		arg(6,Att,class(ClassX)),
 		lb(ClassX,OrdX,Vlb-Vb-Lb),
 		Bound =< Lb + U
-	    ->  get_attr(X,itf,Att2), % changed?
+	    ->  get_attr(X,clpqr_itf,Att2), % changed?
 		setarg(2,Att2,type(t_U(Bound))),
 		setarg(3,Att2,strictness(Strict)),
 		pivot_a(Vlb,X,Vb,t_u(Bound)),
 		reconsider(X)
-	    ;   get_attr(X,itf,Att),
+	    ;   get_attr(X,clpqr_itf,Att),
 		arg(5,Att,order(OrdX)),
 		arg(6,Att,class(ClassX)),
 		setarg(2,Att,type(t_U(Bound))),
@@ -962,7 +962,7 @@ uius(t_U(U),X,_Lin,Bound,Sold) :-
 		backsubst_delta(ClassX,OrdX,X,Delta)
 	    )
 	;   Strict is Sold \/ 1,
-	    get_attr(X,itf,Att),
+	    get_attr(X,clpqr_itf,Att),
 	    setarg(3,Att,strictness(Strict))
 	).
 uius(t_lU(L,U),X,_Lin,Bound,Sold) :-
@@ -971,17 +971,17 @@ uius(t_lU(L,U),X,_Lin,Bound,Sold) :-
 	;   Bound < U
 	->  L < Bound,
 	    Strict is Sold \/ 1,
-	    (   get_attr(X,itf,Att),
+	    (   get_attr(X,clpqr_itf,Att),
 		arg(5,Att,order(OrdX)),
 		arg(6,Att,class(ClassX)),
 		lb(ClassX,OrdX,Vlb-Vb-Lb),
 		Bound =< Lb + U
-	    ->  get_attr(X,itf,Att2), % changed?
+	    ->  get_attr(X,clpqr_itf,Att2), % changed?
 		setarg(2,Att2,type(t_lU(L,Bound))),
 		setarg(3,Att2,strictness(Strict)),
 		pivot_a(Vlb,X,Vb,t_lu(L,Bound)),
 		reconsider(X)
-	    ;	get_attr(X,itf,Att),
+	    ;	get_attr(X,clpqr_itf,Att),
 		arg(5,Att,order(OrdX)),
 		arg(6,Att,class(ClassX)),
 		setarg(2,Att,type(t_lU(L,Bound))),
@@ -990,7 +990,7 @@ uius(t_lU(L,U),X,_Lin,Bound,Sold) :-
 		backsubst_delta(ClassX,OrdX,X,Delta)
 	    )
 	;   Strict is Sold \/ 1,
-	    get_attr(X,itf,Att),
+	    get_attr(X,clpqr_itf,Att),
 	    setarg(3,Att,strictness(Strict))
 	).
 
@@ -1002,27 +1002,27 @@ uius(t_lU(L,U),X,_Lin,Bound,Sold) :-
 
 
 uil(t_none,X,_Lin,Bound,_Sold) :-
-	get_attr(X,itf,Att),
+	get_attr(X,clpqr_itf,Att),
 	setarg(2,Att,type(t_l(Bound))),
 	setarg(3,Att,strictness(0)).
 uil(t_l(L),X,_Lin,Bound,Sold) :-
 	(   Bound > L
 	->  Strict is Sold /\ 1,
-	    get_attr(X,itf,Att),
+	    get_attr(X,clpqr_itf,Att),
 	    setarg(2,Att,type(t_l(Bound))),
 	    setarg(3,Att,strictness(Strict))
 	;   true
 	).
 uil(t_u(U),X,Lin,Bound,_Sold) :-
 	(   Bound < U
-	->  get_attr(X,itf,Att),
+	->  get_attr(X,clpqr_itf,Att),
 	    setarg(2,Att,type(t_lu(Bound,U)))
 	;   Bound =:= U,
 	    solve_bound(Lin,Bound)
 	).
 uil(t_U(U),X,Lin,Bound,_Sold) :-
 	(   Bound < U
-	->  get_attr(X,itf,Att),
+	->  get_attr(X,clpqr_itf,Att),
 	    setarg(2,Att,type(t_lU(Bound,U)))
 	;   Bound =:= U,
 	    solve_bound(Lin,Bound)
@@ -1031,7 +1031,7 @@ uil(t_lu(L,U),X,Lin,Bound,Sold) :-
 	(   Bound > L
 	->  (   Bound < U
 	    ->  Strict is Sold /\ 1,
-		get_attr(X,itf,Att),
+		get_attr(X,clpqr_itf,Att),
 		setarg(2,Att,type(t_lu(Bound,U))),
 		setarg(3,Att,strictness(Strict))
 	    ;   Bound =:= U,
@@ -1044,7 +1044,7 @@ uil(t_lU(L,U),X,Lin,Bound,Sold) :-
 	(   Bound > L
 	->  (   Bound < U
 	    ->  Strict is Sold /\ 1,
-		get_attr(X,itf,Att),
+		get_attr(X,clpqr_itf,Att),
 		setarg(2,Att,type(t_lU(Bound,U))),
 		setarg(3,Att,strictness(Strict))
 	    ;   Bound =:= U,
@@ -1056,17 +1056,17 @@ uil(t_lU(L,U),X,Lin,Bound,Sold) :-
 uil(t_L(L),X,_Lin,Bound,Sold) :-
 	(   Bound > L
 	->  Strict is Sold /\ 1,
-	    (   get_attr(X,itf,Att),
+	    (   get_attr(X,clpqr_itf,Att),
 		arg(5,Att,order(OrdX)),
 		arg(6,Att,class(ClassX)),
 		ub(ClassX,OrdX,Vub-Vb-Ub),
 		Bound >= Ub + L
-	    ->  get_attr(X,itf,Att2), % changed?
+	    ->  get_attr(X,clpqr_itf,Att2), % changed?
 		setarg(2,Att2,type(t_L(Bound))),
 		setarg(3,Att2,strictness(Strict)),
 		pivot_a(Vub,X,Vb,t_l(Bound)),
 		reconsider(X)
-	    ;   get_attr(X,itf,Att),
+	    ;   get_attr(X,clpqr_itf,Att),
 		arg(5,Att,order(OrdX)),
 		arg(6,Att,class(ClassX)),
 		setarg(2,Att,type(t_L(Bound))),
@@ -1080,17 +1080,17 @@ uil(t_Lu(L,U),X,Lin,Bound,Sold) :-
 	(   Bound > L
 	->  (   Bound < U
 	    ->  Strict is Sold /\ 1,
-		(   get_attr(X,itf,Att),
+		(   get_attr(X,clpqr_itf,Att),
 		    arg(5,Att,order(OrdX)),
 		    arg(6,Att,class(ClassX)),
 		    ub(ClassX,OrdX,Vub-Vb-Ub),
 		    Bound >= Ub + L
-		->  get_attr(X,itf,Att2), % changed?
+		->  get_attr(X,clpqr_itf,Att2), % changed?
 		    setarg(2,Att2,type(t_Lu(Bound,U))),
 		    setarg(3,Att2,strictness(Strict)),
 		    pivot_a(Vub,X,Vb,t_lu(Bound,U)),
 		    reconsider(X)
-		;   get_attr(X,itf,Att),
+		;   get_attr(X,clpqr_itf,Att),
 		    arg(5,Att,order(OrdX)),
 		    arg(6,Att,class(ClassX)),
 		    setarg(2,Att,type(t_Lu(Bound,U))),
@@ -1112,7 +1112,7 @@ uil(t_Lu(L,U),X,Lin,Bound,Sold) :-
 % bound Bound. (see also uiu/5)
 
 uils(t_none,X,_Lin,Bound,_Sold) :-
-	get_attr(X,itf,Att),
+	get_attr(X,clpqr_itf,Att),
 	setarg(2,Att,type(t_l(Bound))),
 	setarg(3,Att,strictness(2)).
 uils(t_l(L),X,_Lin,Bound,Sold) :-
@@ -1120,23 +1120,23 @@ uils(t_l(L),X,_Lin,Bound,Sold) :-
 	->  true
 	;   Bound > L
 	->  Strict is Sold \/ 2,
-	    get_attr(X,itf,Att),
+	    get_attr(X,clpqr_itf,Att),
 	    setarg(2,Att,type(t_l(Bound))),
 	    setarg(3,Att,strictness(Strict))
 	;   Strict is Sold \/ 2,
-	    get_attr(X,itf,Att),
+	    get_attr(X,clpqr_itf,Att),
 	    setarg(3,Att,strictness(Strict))
 	).
 uils(t_u(U),X,_Lin,Bound,Sold) :-
 	Bound < U,
 	Strict is Sold \/ 2,
-	get_attr(X,itf,Att),
+	get_attr(X,clpqr_itf,Att),
 	setarg(2,Att,type(t_lu(Bound,U))),
 	setarg(3,Att,strictness(Strict)).
 uils(t_U(U),X,_Lin,Bound,Sold) :-
 	Bound < U,
 	Strict is Sold \/ 2,
-	get_attr(X,itf,Att),
+	get_attr(X,clpqr_itf,Att),
 	setarg(2,Att,type(t_lU(Bound,U))),
 	setarg(3,Att,strictness(Strict)).
 uils(t_lu(L,U),X,_Lin,Bound,Sold) :-
@@ -1145,11 +1145,11 @@ uils(t_lu(L,U),X,_Lin,Bound,Sold) :-
 	;   Bound > L
 	->  Bound < U,
 	    Strict is Sold \/ 2,
-	    get_attr(X,itf,Att),
+	    get_attr(X,clpqr_itf,Att),
 	    setarg(2,Att,type(t_lu(Bound,U))),
 	    setarg(3,Att,strictness(Strict))
 	;   Strict is Sold \/ 2,
-	    get_attr(X,itf,Att),
+	    get_attr(X,clpqr_itf,Att),
 	    setarg(3,Att,strictness(Strict))
 	).
 uils(t_lU(L,U),X,_Lin,Bound,Sold) :-
@@ -1158,11 +1158,11 @@ uils(t_lU(L,U),X,_Lin,Bound,Sold) :-
 	;   Bound > L
 	->  Bound < U,
 	    Strict is Sold \/ 2,
-	    get_attr(X,itf,Att),
+	    get_attr(X,clpqr_itf,Att),
 	    setarg(2,Att,type(t_lU(Bound,U))),
 	    setarg(3,Att,strictness(Strict))
 	;   Strict is Sold \/ 2,
-	    get_attr(X,itf,Att),
+	    get_attr(X,clpqr_itf,Att),
 	    setarg(3,Att,strictness(Strict))
 	).
 uils(t_L(L),X,_Lin,Bound,Sold) :-
@@ -1170,17 +1170,17 @@ uils(t_L(L),X,_Lin,Bound,Sold) :-
 	->  true
 	;   Bound > L
 	->  Strict is Sold \/ 2,
-	    (   get_attr(X,itf,Att),
+	    (   get_attr(X,clpqr_itf,Att),
 		arg(5,Att,order(OrdX)),
 		arg(6,Att,class(ClassX)),
 		ub(ClassX,OrdX,Vub-Vb-Ub),
 		Bound >= Ub + L
-	    ->  get_attr(X,itf,Att2), % changed?
+	    ->  get_attr(X,clpqr_itf,Att2), % changed?
 		setarg(2,Att2,type(t_L(Bound))),
 		setarg(3,Att2,strictness(Strict)),
 		pivot_a(Vub,X,Vb,t_l(Bound)),
 		reconsider(X)
-	    ;   get_attr(X,itf,Att),
+	    ;   get_attr(X,clpqr_itf,Att),
 		arg(5,Att,order(OrdX)),
 		arg(6,Att,class(ClassX)),
 		setarg(2,Att,type(t_L(Bound))),
@@ -1189,7 +1189,7 @@ uils(t_L(L),X,_Lin,Bound,Sold) :-
 		backsubst_delta(ClassX,OrdX,X,Delta)
 	    )
 	;   Strict is Sold \/ 2,
-	    get_attr(X,itf,Att),
+	    get_attr(X,clpqr_itf,Att),
 	    setarg(3,Att,strictness(Strict))
 	).
 uils(t_Lu(L,U),X,_Lin,Bound,Sold) :-
@@ -1198,17 +1198,17 @@ uils(t_Lu(L,U),X,_Lin,Bound,Sold) :-
 	;   Bound > L
 	->  Bound < U,
 	    Strict is Sold \/ 2,
-	    (   get_attr(X,itf,Att),
+	    (   get_attr(X,clpqr_itf,Att),
 		arg(5,Att,order(OrdX)),
 		arg(6,Att,class(ClassX)),
 		ub(ClassX,OrdX,Vub-Vb-Ub),
 		Bound >= Ub + L
-	    ->  get_attr(X,itf,Att2), % changed?
+	    ->  get_attr(X,clpqr_itf,Att2), % changed?
 		setarg(2,Att2,type(t_Lu(Bound,U))),
 		setarg(3,Att2,strictness(Strict)),
 		pivot_a(Vub,X,Vb,t_lu(Bound,U)),
 		reconsider(X)
-	    ;   get_attr(X,itf,Att),
+	    ;   get_attr(X,clpqr_itf,Att),
 		arg(5,Att,order(OrdX)),
 		arg(6,Att,class(ClassX)),
 		setarg(2,Att,type(t_Lu(Bound,U))),
@@ -1217,7 +1217,7 @@ uils(t_Lu(L,U),X,_Lin,Bound,Sold) :-
 		backsubst_delta(ClassX,OrdX,X,Delta)
 	    )
 	;   Strict is Sold \/ 2,
-	    get_attr(X,itf,Att),
+	    get_attr(X,clpqr_itf,Att),
 	    setarg(3,Att,strictness(Strict))
 	).
 

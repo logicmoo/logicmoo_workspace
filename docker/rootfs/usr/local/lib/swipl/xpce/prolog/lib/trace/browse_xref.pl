@@ -52,7 +52,8 @@
 	     xref_public_list/4,
              prolog_open_source/2,
              prolog_close_source/1,
-             prolog_read_source_term/4
+             prolog_read_source_term/4,
+             head_name_arity/3
 	   ]).
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -125,15 +126,15 @@ assert_entity(Key, Entity) :-           % without source
 
 assert_predicate(M:Head) :-
     !,
-    functor(Head, Name, Arity),
-    functor(VarHead, Name, Arity),
+    head_name_arity(Head, Name, Arity),
+    head_name_arity(VarHead, Name, Arity),
     (   current_class(Class)
     ->  assert_entity(xpce_class_local_predicate(Class, M:VarHead))
     ;   assert_entity(predicate(M:VarHead))
     ).
 assert_predicate(Head) :-
-    functor(Head, Name, Arity),
-    functor(VarHead, Name, Arity),
+    head_name_arity(Head, Name, Arity),
+    head_name_arity(VarHead, Name, Arity),
     (   current_class(Class)
     ->  assert_entity(xpce_class_local_predicate(Class, VarHead))
     ;   assert_entity(predicate(VarHead))
@@ -215,9 +216,9 @@ strip_method_documentation(Body,         '',  Body).
 
 class_name_from_spec(_:Term, Name) :-
     !,
-    functor(Term, Name, _).
+    head_name_arity(Term, Name, _).
 class_name_from_spec(Term, Name) :-
-    functor(Term, Name, _).
+    head_name_arity(Term, Name, _).
 
 process_raw(end_of_file) :- !.
 process_raw((:- module(Name, Public))) :-               % must be the first!
@@ -225,19 +226,19 @@ process_raw((:- module(Name, Public))) :-               % must be the first!
     asserta(x_module(Name)),
     assert_entity(module(Name)),
     (   member(PName/Arity, Public),
-        functor(Head, PName, Arity),
+        head_name_arity(Head, PName, Arity),
         assert(x_public(Id, Head)),
         fail
     ;   true
     ).
 process_raw(:->(Head, DocAndBody)) :-
-    functor(Head, Name, _),
+    head_name_arity(Head, Name, _),
     current_class(Class),
     strip_method_documentation(DocAndBody, Doc, Body),
     assert_entity(xpce_method(send(Class, Name, Doc))),
     process_body(Body, xpce_method(send(Class, Name))).
 process_raw(:<-(Head, DocAndBody)) :-
-    functor(Head, Name, _),
+    head_name_arity(Head, Name, _),
     current_class(Class),
     strip_method_documentation(DocAndBody, Doc, Body),
     assert_entity(xpce_method(get(Class, Name, Doc))),
@@ -279,9 +280,9 @@ process_raw(pce_ifhostproperty(_Cond, Terms)) :-   % ???
     ;   process_raw(Terms)
     ).
 process_raw((Head --> _Body)) :-
-    functor(Head, Name, Arity),
+    head_name_arity(Head, Name, Arity),
     PredArity is Arity+2,
-    functor(VarHead, Name, PredArity),
+    head_name_arity(VarHead, Name, PredArity),
     assert_entity(grammar_rule(VarHead)).
 process_raw((:- Directive)) :-
     assert_entity(directive(Directive)).
@@ -328,8 +329,8 @@ process((Head :- Body)) :-
     !,
     assert_defined(Head),
     unbind_head(Head, VarHead),
-    functor(Head, Name, Arity),
-    functor(VarHead, Name, Arity),
+    head_name_arity(Head, Name, Arity),
+    head_name_arity(VarHead, Name, Arity),
     process_body(Body, VarHead).
 process('$source_location'(_File, _Line):Clause) :-
     !,
@@ -345,8 +346,8 @@ unbind_head(Module:Head, Module:VarHead) :-
     unbind_head(Head, VarHead).
 unbind_head(Head, VarHead) :-
     !,
-    functor(Head, Name, Arity),
-    functor(VarHead, Name, Arity).
+    head_name_arity(Head, Name, Arity),
+    head_name_arity(VarHead, Name, Arity).
 
 
                 /********************************
@@ -397,7 +398,7 @@ cascade_functor(?).
 xpce_message_goal(Goal, SubGoal) :-
     term_member(Goal, SubTerm),
     compound(SubTerm),
-    functor(SubTerm, Functor, _),
+    head_name_arity(SubTerm, Functor, _),
     cascade_functor(Functor),
     arg(1, SubTerm, Prolog),
     Prolog == @(prolog),
@@ -492,8 +493,8 @@ assert_called(M:Goal, From) :-
     !,
     assert_called(Goal, From).
 assert_called(Goal, From) :-
-    functor(Goal, Name, Arity),
-    functor(Term, Name, Arity),
+    head_name_arity(Goal, Name, Arity),
+    head_name_arity(Term, Name, Arity),
     asserta(called(Term, From)).
 
 assert_defined(_Module:_Head) :- !.     % defining in another module.  Bah!
@@ -501,8 +502,8 @@ assert_defined(Goal) :-
     defined(Goal),
     !.
 assert_defined(Goal) :-
-    functor(Goal, Name, Arity),
-    functor(Term, Name, Arity),
+    head_name_arity(Goal, Name, Arity),
+    head_name_arity(Term, Name, Arity),
     asserta(defined(Term)).
 
 assert_import([]) :- !.
@@ -510,7 +511,7 @@ assert_import([H|T]) :-
     assert_import(H),
     assert_import(T).
 assert_import(Name/Arity) :-
-    functor(Term, Name, Arity),
+    head_name_arity(Term, Name, Arity),
     (   imported(Term)
     ->  true
     ;   asserta(imported(Term))
@@ -522,14 +523,14 @@ assert_dynamic((A, B)) :-
     assert_dynamic(A),
     assert_dynamic(B).
 assert_dynamic(Name/Arity) :-
-    functor(Term, Name, Arity),
+    head_name_arity(Term, Name, Arity),
     assert_defined(Term),
     assert_entity(dynamic(Term)).
 
 
 assert_require([]).
 assert_require([Name/Arity|Rest]) :-
-    functor(Head, Name, Arity),
+    head_name_arity(Head, Name, Arity),
     (   system_predicate(Head)
     ->  true
     ;   assert_import(Head)

@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.5.4 Reference Manual: Section 12.3</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.5.12 Reference Manual: Section 12.3</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -252,15 +252,16 @@ Prolog kernel is aware of all terms referenced by foreign code and thus
 allows the kernel to perform garbage collection and/or stack-shifts 
 while foreign code is active, for example during a callback from C.
 
-<p>A term reference is a C unsigned long, representing the offset of a 
-variable on the Prolog environment stack. A foreign function is passed 
-term references for the predicate arguments, one for each argument. If 
-references for intermediate results are needed, such references may be 
-created using <a class="func" href="foreigntypes.html#PL_new_term_ref()">PL_new_term_ref()</a> 
+<p>A term reference is a C <code>uintptr_t</code>, representing the 
+offset of a variable on the Prolog environment stack. A foreign function 
+is passed term references for the predicate arguments, one for each 
+argument. If references for intermediate results are needed, such 
+references may be created using <a class="func" href="foreigntypes.html#PL_new_term_ref()">PL_new_term_ref()</a> 
 or <a class="func" href="foreigntypes.html#PL_new_term_refs()">PL_new_term_refs()</a>. 
 These references normally live till the foreign function returns control 
 back to Prolog. Their scope can be explicitly limited using <a class="func" href="foreigninclude.html#PL_open_foreign_frame()">PL_open_foreign_frame()</a> 
-and <a class="func" href="foreigninclude.html#PL_close_foreign_frame()">PL_close_foreign_frame()</a>/<a class="func" href="foreigninclude.html#PL_discard_foreign_frame()">PL_discard_foreign_frame()</a>.
+and
+<a class="func" href="foreigninclude.html#PL_close_foreign_frame()">PL_close_foreign_frame()</a>/<a class="func" href="foreigninclude.html#PL_discard_foreign_frame()">PL_discard_foreign_frame()</a>.
 
 <p>A <code>term_t</code> always refers to a valid Prolog term (variable, 
 atom, integer, float or compound term). A term lives either until 
@@ -271,10 +272,9 @@ a
 and <a class="func" href="foreigninclude.html#PL_discard_foreign_frame()">PL_discard_foreign_frame()</a> 
 has been called.
 
-<p>The foreign interface functions can either <em>read</em>, <em>unify</em> 
-or
-<em>write</em> to term references. In this document we use the following 
-notation for arguments of type <code>term_t</code>:
+<p>The foreign interface functions can either <i>read</i>, <i>unify</i> 
+or <i>write</i> to term references. In this document we use the 
+following notation for arguments of type <code>term_t</code>:
 <blockquote>
 <table class="latex frame-void">
 <tr><td><code>term_t +t</code></td><td>Accessed in read-mode. The&lsquo;+' 
@@ -287,15 +287,15 @@ indicates the argument is&lsquo;input'. </td></tr>
 <p><b>WARNING</b> Term references that are accessed in&lsquo;write' (-) 
 mode will refer to an invalid term if the term is allocated on the 
 global stack and backtracking takes us back to a point before the term 
-was written.<sup class="fn">201<span class="fn-text">This could have 
+was written.<sup class="fn">205<span class="fn-text">This could have 
 been avoided by <em>trailing</em> term references when data is written 
 to them. This seriously hurts performance in some scenarios though. If 
 this is desired, use <a class="func" href="foreigninclude.html#PL_put_variable()">PL_put_variable()</a> 
-followed by one of the PL_unify_*() functions.</span></sup> Compounds, 
-large integers, floats and strings are all allocated on the global 
-stack. Below is a typical scenario where this may happen. The first 
-solution writes a term extracted from the solution into <var>a</var>. 
-After the system backtracks due to <a class="func" href="foreigninclude.html#PL_next_solution()">PL_next_solution()</a>, <var>a</var> 
+followed by one of the PL_unify_*() functions.</span></sup> Compound 
+terms, dicts, large integers, rational numbers, floats and strings are 
+all allocated on the global stack. Below is a typical scenario where 
+this may happen. The first solution writes a term extracted from the 
+solution into <var>a</var>. After the system backtracks due to <a class="func" href="foreigninclude.html#PL_next_solution()">PL_next_solution()</a>, <var>a</var> 
 becomes a reference to a term that no longer exists.
 
 <pre class="code">
@@ -418,16 +418,32 @@ foreign interface types</span></a></h3>
 <dl class="latex">
 <dt><b>atom_t</b></dt>
 <dd>
-An atom in Prolog's internal representation. Atoms are pointers to an 
-opaque structure. They are a unique representation for represented text, 
-which implies that atom <var>A</var> represents the same text as atom <var>B</var> 
-if and only if <var>A</var> and <var>B</var> are the same pointer.
+The type <code>atom_t</code> actually represents a <em>blob</em> (see
+<a class="sec" href="foreigninclude.html#sec:12.4.8">section 12.4.8</a>). 
+Blobs are the super type of Prolog atoms, where atoms are blobs that 
+represent textual content. Textual content is also represented by Prolog 
+string (see <a class="sec" href="string.html#sec:5.2">section 5.2</a>), 
+which makes the general notion of <em>string</em> in Prolog ambiguous. 
+The core idea behind blobs/atoms is to represent arbitrary content using 
+a
+<em>unique</em> handle, such that comparing the handle is enough to 
+prove equivalence of the content; i.e., given two different atom handles 
+we know they represent different texts. This uniqueness feature allows 
+the core engine to reason about atoms without considering their content.
+<em>Strings</em> (<a class="sec" href="string.html#sec:5.2">section 5.2</a>) 
+and blobs without the
+<code>PL_BLOB_UNIQUE</code> feature do <em>not</em> have this uniqueness 
+property - to test for equality, the contents of the strings or blobs 
+must be compared.
 
-<p>Atoms are the central representation for textual constants in Prolog. 
-The transformation of a character string <var>C</var> to an atom implies 
-a hash-table lookup. If the same atom is needed often, it is advised to 
-store its reference in a global variable to avoid repeated lookup.
-</dd>
+<p>Because atoms are often used to represent (parts of) arbitrary input, 
+intermediate results, and output of data processed by Prolog, it is 
+necessary that atoms be subject to <em>garbage collection</em> (see
+<a id="idx:garbagecollectatoms0:2478"></a><a class="pred" href="memory.html#garbage_collect_atoms/0">garbage_collect_atoms/0</a>). 
+The garbage collection makes atoms ideal handles for arbitrary data 
+structures, which are generalized as
+<em>blobs</em>. Blobs provide <em>safe</em> access to many internal 
+Prolog data structures such as streams, clause references, etc.</dd>
 <dt><b>functor_t</b></dt>
 <dd>
 A functor is the internal representation of a name/arity pair. They are 

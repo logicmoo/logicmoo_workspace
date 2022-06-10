@@ -3,8 +3,9 @@
     Author:        Jan Wielemaker
     E-mail:        J.Wielemaker@vu.nl
     WWW:           http://www.swi-prolog.org
-    Copyright (c)  2008-2021, University of Amsterdam
+    Copyright (c)  2008-2022, University of Amsterdam
                               VU University Amsterdam
+			      SWI-Prolog Solutions b.v.
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -68,7 +69,7 @@ extern "C" {
 /* PLVERSION_TAG: a string, normally "", but for example "rc1" */
 
 #ifndef PLVERSION
-#define PLVERSION 80504
+#define PLVERSION 80512
 #endif
 #ifndef PLVERSION_TAG
 #define PLVERSION_TAG ""
@@ -198,7 +199,7 @@ typedef _PLS(record) *	record_t;	/* Prolog recorded term */
 #define PL_HAVE_TERM_T
 typedef uintptr_t	term_t;		/* opaque term handle */
 #endif
-typedef uintptr_t	qid_t;		/* opaque query handle */
+typedef _PLS(queryRef) *qid_t;		/* opaque query handle */
 typedef uintptr_t	PL_fid_t;	/* opaque foreign context handle */
 typedef _PLS(foreign_context) *control_t; /* non-deterministic control arg */
 typedef _PLS(PL_local_data) *PL_engine_t; /* opaque engine handle */
@@ -321,12 +322,15 @@ typedef union
 #define PL_CUTTED		(1)	/* deprecated */
 #define PL_PRUNED		(1)
 #define PL_REDO			(2)
+#define PL_RESUME		(3)
 
 #define PL_retry(n)		return _PL_retry(n)
 #define PL_retry_address(a)	return _PL_retry_address(a)
+#define PL_yield_address(a)	return _PL_yield_address(a)
 
 PL_EXPORT(foreign_t)	_PL_retry(intptr_t);
 PL_EXPORT(foreign_t)	_PL_retry_address(void *);
+PL_EXPORT(foreign_t)	_PL_yield_address(void *);
 PL_EXPORT(int)		PL_foreign_control(control_t);
 PL_EXPORT(intptr_t)	PL_foreign_context(control_t);
 PL_EXPORT(void *)	PL_foreign_context_address(control_t);
@@ -413,7 +417,7 @@ PL_EXPORT(const atom_t) *_PL_atoms(void); /* base of reserved (meta-)atoms */
 #define PL_S_FALSE		0	/* Query failed */
 #define PL_S_TRUE		1	/* Query succeeded with choicepoint */
 #define PL_S_LAST		2	/* Query succeeded without CP */
-
+#define PL_S_YIELD	      255	/* Foreign yield */
 
 			/* Foreign context frames */
 PL_EXPORT(fid_t)	PL_open_foreign_frame(void);
@@ -436,6 +440,8 @@ PL_EXPORT(int)		PL_next_solution(qid_t qid) WUNUSED;
 PL_EXPORT(int)		PL_close_query(qid_t qid);
 PL_EXPORT(int)		PL_cut_query(qid_t qid);
 PL_EXPORT(qid_t)	PL_current_query(void);
+PL_EXPORT(PL_engine_t)	PL_query_engine(qid_t qid);
+PL_EXPORT(int)		PL_can_yield(void);
 
 			/* Simplified (but less flexible) call-back */
 PL_EXPORT(int)		PL_call(term_t t, module_t m);
@@ -709,7 +715,7 @@ PL_EXPORT(int)		PL_syntax_error(const char *msg, IOSTREAM *in);
 typedef struct PL_blob_t
 { uintptr_t		magic;		/* PL_BLOB_MAGIC */
   uintptr_t		flags;		/* PL_BLOB_* */
-  char *		name;		/* name of the type */
+  const char *		name;		/* name of the type */
   int			(*release)(atom_t a);
   int			(*compare)(atom_t a, atom_t b);
   int			(*write)(IOSTREAM *s, atom_t a, int flags);
@@ -1004,6 +1010,15 @@ PL_EXPORT(int)	PL_wchars_to_term(const pl_wchar_t *chars,
 		 *	    EMBEDDING		*
 		 *******************************/
 
+#define PL_CLEANUP_STATUS_MASK		(0x0ffff)
+#define PL_CLEANUP_NO_RECLAIM_MEMORY	(0x10000)
+#define PL_CLEANUP_NO_CANCEL		(0x20000)
+
+#define PL_CLEANUP_CANCELED	0
+#define PL_CLEANUP_SUCCESS	1
+#define PL_CLEANUP_FAILED      -1
+#define PL_CLEANUP_RECURSIVE   -2
+
 PL_EXPORT(int)		PL_initialise(int argc, char **argv);
 PL_EXPORT(int)		PL_winitialise(int argc, wchar_t **argv);
 PL_EXPORT(int)		PL_is_initialised(int *argc, char ***argv);
@@ -1096,6 +1111,7 @@ PL_EXPORT(PL_agc_hook_t)	PL_agc_hook(PL_agc_hook_t);
 #define PLSIG_THROW     0x0002		/* throw signal(num, name) */
 #define PLSIG_SYNC      0x0004		/* call synchronously */
 #define PLSIG_NOFRAME   0x0008		/* Do not create a Prolog frame */
+#define PLSIG_IGNORE    0x0010		/* ignore signal entirely */
 
 
 

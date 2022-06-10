@@ -549,6 +549,7 @@ clause_end(ClauseRef, File, CharA, CharZ) :-
     pce_clause_info(ClauseRef, File, TPos, _),
     nonvar(TPos),
     arg(2, TPos, CharA),
+    nonvar(CharA),
     CharZ is CharA + 1.
 
 head_pos(Ref, Pos, HPos) :-

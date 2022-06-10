@@ -200,7 +200,7 @@ This module holds utilities to access and change the names of prolog variables.
 % % % OFF :- system:reexport((lockable_vars)).
 % % % OFF :- system:use_module(library(logicmoo/each_call)).
 % % % % OFF :- system:use_module(library(dictoo_lib)).
-
+:- system:use_module(library(logicmoo/each_call)).
 :- use_module(library(occurs)).
 :- use_module(library(gensym)).
 :- use_module(library(when)).
@@ -315,10 +315,11 @@ get_var_name0(Var,Name):- get_attr(Var, vn, Name),!.
 get_var_name0(Var,Name):- nb_current('$variable_names', Vs),varname_of(Vs,Var,Name),!.
 get_var_name0(Var,Name):- get_attr(Var, varnames, Name),!.
 get_var_name0(Var,Name):- nb_current('$old_variable_names', Vs),varname_of(Vs,Var,Name),!.
-get_var_name0(Var,Name):- get_varname_list(Vs),varname_of(Vs,Var,Name),!.
+get_var_name0(Var,Name):- get_varname_list_local(Vs),varname_of(Vs,Var,Name),!.
 get_var_name0(Var,Name):- execute_goal_vs(Vs),varname_of(Vs,Var,Name).
 
-% get_var_name0(Var,Name):- attvar(Var),get_varname_list(Vs),format(atom(Name),'~W',[Var, [variable_names(Vs)]]).
+get_varname_list_local(Vs):- bugger:get_varname_list(Vs).
+% get_var_name0(Var,Name):- attvar(Var),get_varname_list_local(Vs),format(atom(Name),'~W',[Var, [variable_names(Vs)]]).
 
 varname_of(Vs,Var,Name):- compound(Vs), Vs=[NV|VsL],  ((compound(NV) , (NV=(N=V)),atomic(N), V==Var,!,N=Name) ; varname_of(VsL,Var,Name)).
 
@@ -619,7 +620,7 @@ get_clause_vars(CV):- quietly(get_clause_vars_nontraced(CV)).
 get_clause_vars_nontraced(_):- t_l:dont_varname,!.
 get_clause_vars_nontraced(V):- var(V),!.
 get_clause_vars_nontraced('$VAR'(_)):- !.
-get_clause_vars_nontraced(_:V):- var(V),!,ignore((get_varname_list(Vs),member(N=V0,Vs),V0==V,set_varname(write_functor,N,V))).
+get_clause_vars_nontraced(_:V):- var(V),!,ignore((get_varname_list_local(Vs),member(N=V0,Vs),V0==V,set_varname(write_functor,N,V))).
 get_clause_vars_nontraced(MHB):- term_variables(MHB,Vs),must(get_clause_vars(MHB,Vs)).
 
 :- '$set_predicate_attribute'(get_clause_vars(_), trace, 1).
@@ -929,7 +930,7 @@ set_varname(How,N,V):- atom(N),atom_concat('"?',LS,N),atom_concat(NN,'"',LS),fix
 set_varname(_M:write_functor,N,V):- !,ignore('$VAR'(N)=V),!.
 set_varname(_M:write_attribute,N,V):-!,put_attr(V,vn,N).
 set_varname(_M:put_attr,N,V):-!,put_attr(V,vn,N).
-set_varname(Nb_setval,N,V):- get_varname_list(Vs),!,register_var(N,Vs,V,NewVs),call(call,Nb_setval,'$variable_names',NewVs).
+set_varname(Nb_setval,N,V):- get_varname_list_local(Vs),!,register_var(N,Vs,V,NewVs),call(call,Nb_setval,'$variable_names',NewVs).
 set_varname(Nb_setval,N,V):- call(call,Nb_setval,'$variable_names',[N=V]).
 %set_varname(Nb_setval,N,V):- must(call(call,Nb_setval,N,V)).
 %set_varname(_How,_,_).
@@ -1059,7 +1060,7 @@ contains_ftVar(Term):- sub_term(Sub,Term),compound(Sub),Sub='$VAR'(_).
 %
 ensure_vars_labled_r(I,I):-!.
 ensure_vars_labled_r(I,O):-
-  once((((get_varname_list(Vs),Vs\==[])),
+  once((((get_varname_list_local(Vs),Vs\==[])),
    copy_term(I:Vs,O:OVs),
     must_maplist(write_functor,OVs))),
    (O \=@= I ;  ground(O)),!.
@@ -1106,7 +1107,7 @@ renumbervars(How,Term,Named):-
 %
 source_variables_lv(AllS):-
   (prolog_load_context(variable_names,Vs1);Vs1=[]),
-  (get_varname_list(Vs2);Vs2=[]),
+  (get_varname_list_local(Vs2);Vs2=[]),
   %    execute_goal_vs(Vs3),
   ignore(Vs3=[]),
   append(Vs1,Vs2,Vs12),append(Vs12,Vs3,All),!,list_to_set(All,AllS),
@@ -1309,7 +1310,7 @@ snumbervars5(Term,Start,End,List):-must_det_l((integer(Start),is_list(List), num
 % Try Save Variables.
 %
 try_save_vars(_):- t_l:dont_varname,!.
-try_save_vars(HB):-ignore((get_varname_list(Vs),Vs\==[],save_clause_vars(HB,Vs))),!.
+try_save_vars(HB):-ignore((get_varname_list_local(Vs),Vs\==[],save_clause_vars(HB,Vs))),!.
 
 :- export(maybe_scan_for_varnames/0).
 
@@ -1595,5 +1596,6 @@ listing_vars_file.
 system:term_expansion((H:-B),_):- current_prolog_flag(source_variables,true),term_expansion_save_vars((H:-B)),fail.
 
 % % % % OFF :- system:use_module(library(logicmoo_utils_all)).
+:- system:use_module(library(debuggery/bugger)).
 :- fixup_exports.
 

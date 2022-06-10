@@ -594,6 +594,7 @@ index((current_temporary_module), 1, modules, modules).
 index((mqi_start), 0, mqi, mqi).
 index((mqi_start), 1, mqi, mqi).
 index((mqi_stop), 1, mqi, mqi).
+index((mqi_version), 2, mqi, mqi).
 index((nb_rb_insert), 3, nb_rbtrees, nb_rbtrees).
 index((nb_rb_get_node), 3, nb_rbtrees, nb_rbtrees).
 index((nb_rb_node_value), 2, nb_rbtrees, nb_rbtrees).
@@ -710,11 +711,13 @@ index((paxos_quorum_ask), 4, paxos, paxos).
 index((paxos_replicate_key), 3, paxos, paxos).
 index((re_match), 2, pcre, pcre).
 index((re_match), 3, pcre, pcre).
+index((re_matchsub), 3, pcre, pcre).
 index((re_matchsub), 4, pcre, pcre).
 index((re_foldl), 6, pcre, pcre).
 index((re_split), 3, pcre, pcre).
 index((re_split), 4, pcre, pcre).
 index((re_replace), 4, pcre, pcre).
+index((re_replace), 5, pcre, pcre).
 index((re_compile), 3, pcre, pcre).
 index((re_flush), 0, pcre, pcre).
 index((re_config), 1, pcre, pcre).
@@ -797,6 +800,7 @@ index((autoload_all), 0, prolog_autoload, prolog_autoload).
 index((autoload_all), 1, prolog_autoload, prolog_autoload).
 index((set_breakpoint), 4, prolog_breakpoints, prolog_breakpoints).
 index((set_breakpoint), 5, prolog_breakpoints, prolog_breakpoints).
+index((set_breakpoint_condition), 2, prolog_breakpoints, prolog_breakpoints).
 index((delete_breakpoint), 1, prolog_breakpoints, prolog_breakpoints).
 index((breakpoint_property), 2, prolog_breakpoints, prolog_breakpoints).
 index((clause_info), 4, prolog_clause, prolog_clause).
@@ -871,6 +875,7 @@ index((file_name_on_path), 2, prolog_source, prolog_source).
 index((file_alias_path), 2, prolog_source, prolog_source).
 index((path_segments_atom), 2, prolog_source, prolog_source).
 index((directory_source_files), 3, prolog_source, prolog_source).
+index((valid_term_position), 2, prolog_source, prolog_source).
 index((get_prolog_backtrace), 2, prolog_stack, prolog_stack).
 index((get_prolog_backtrace), 3, prolog_stack, prolog_stack).
 index((prolog_stack_frame_property), 2, prolog_stack, prolog_stack).
@@ -1346,6 +1351,9 @@ index((term_subsumer), 3, terms, terms).
 index((term_factorized), 3, terms, terms).
 index((mapargs), 3, terms, terms).
 index((mapsubterms), 3, terms, terms).
+index((mapsubterms_var), 3, terms, terms).
+index((foldsubterms), 4, terms, terms).
+index((foldsubterms), 5, terms, terms).
 index((same_functor), 2, terms, terms).
 index((same_functor), 3, terms, terms).
 index((same_functor), 4, terms, terms).

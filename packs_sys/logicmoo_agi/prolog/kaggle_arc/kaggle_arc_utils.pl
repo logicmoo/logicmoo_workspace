@@ -18,9 +18,9 @@ my_len(X,Y):- dumpST,!,break.
 set_nth1(1,[_|Row],E,[E|Row]):-!.
 set_nth1(N,[W|Row],E,[W|RowMod]):- Nm1 is N-1, set_nth1(Nm1,Row,E,RowMod).
 
-make_list(0,_,[]):-!.
-make_list(1,E,[E]):-!.
-make_list(N,E,[E|List]):- Nm1 is N -1,make_list(Nm1,E,List).
+make_list_inited(0,_,[]):-!.
+make_list_inited(1,E,[E]):-!.
+make_list_inited(N,E,[E|List]):- Nm1 is N -1,make_list_inited(Nm1,E,List).
 
 nth_fact(P,I):- clause(P,true,Ref),nth_clause(P,I,Ref).
 

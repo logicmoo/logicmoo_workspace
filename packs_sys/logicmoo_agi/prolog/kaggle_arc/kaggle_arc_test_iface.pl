@@ -28,16 +28,13 @@ test_names_by_hard(Name):- test_names_ord_favs(FavList),test_names_ord_hard(Name
 test_names_by_hard_rev(Name):- test_names_ord_favs(FavList),test_names_ord_hard(NamesByHard),append(NamesByHard,FavList,All),
  list_to_set(All,AllS),!,reverse(AllS,AllR),member(Name,AllR).
 
-test_names_by_fav(Name):- test_names_ord_favs(All),
- list_to_set(All,AllS),!,member(Name,AllS).
-
-test_names_by_fav_rev(Name):- test_names_ord_favs(All),
- list_to_set(All,AllS),!,reverse(AllS,AllR),member(Name,AllR).
+test_names_by_fav(Name):- test_names_ord_favs(All),member(Name,All).
+test_names_by_fav_rev(Name):- test_names_ord_favs(AllR),reverse(AllR,All),member(Name,All).
 
  /*
 test_names_by_hard(Name):- test_names_ord_favs(FavList),test_names_ord_hard(NamesByHard),append(FavList,NamesByHard,All),
  list_to_set(All,AllS),!,member(Name,AllS).*/
-test_names_ord_favs(FavListR):- findall(Name,fav(Name),FavList),list_to_set(FavList,FavListS),reverse(FavListS,FavListR).
+test_names_ord_favs(FavListS):- findall(Name,fav(Name),FavList),list_to_set(FavList,FavListS).
 test_names_ord_hard(NamesByHard):- findall(Hard-Name,(arc_test_name(Name),hardness_of_name(Name,Hard)),All),
   keysort(All,AllK), reverse(AllK,AllR), maplist(arg(2),AllR,NamesByHard),!.
 
@@ -153,7 +150,10 @@ fav(t('9aec4887'),[indiv(color_blind),todo_sol([find_individuals([hollow,inside(
   if_edge_strong([color=C]),touch(Is,Point),set_color(C,Point)])]).
 
 fav(v('4b6b68e5'),[
-   lmDSL([gather_object(O1,X,(iz(X,dot),inside(X,P),iz(P,polygon),wall_thickness(P,1),noexit(P))),
+
+lmDSL([doall((iz(Obj,outline),internal_region(Obj,Region),individuate_by_color(Region),largestIn(Region,Largest),color(Largest,Color),fill(Color,Region)))]),
+
+   nthDSL(2,[gather_object(O1,X,(iz(X,dot),inside(X,P),iz(P,polygon),wall_thickness(P,1),noexit(P))),
           colors(O1,CC),first(C,CC),part_of(O1,E),color(E,C),fillAt(E,C),
                 forall(X,(iz(X,dot), \+ (inside(X,P),iz(P,polygon))),delete(X))])]).
 fav(X,[]):- clause(fav(X),true).
@@ -268,6 +268,21 @@ load_json_file(F, BaseName, FullName):- Testname=..[F,BaseName],
   load_json_of_file(Name,Type,[input=In,output=Out]):-assert_if_new(muarc:kaggle_arc_json(Name,Type,In,Out)),!.
   load_json_of_file(Name,Type,[H|T]):- !, forall(nth0(N,[H|T],E), load_json_of_file(Name,Type+N,E)).
   load_json_of_file(N,T,V):- wdmsg(load_json_of_file(N,T,V)),!.
+
+arc_sub_path(Subdir,AbsolutePath):- muarc:arc_directory(ARC_DIR),
+  catch(absolute_file_name(Subdir,AbsolutePath,[relative_to(ARC_DIR),expand(true),
+    file_type(directory),solutions(first),file_errors(error),access(read)]),_,fail),!.
+arc_sub_path(Subdir,AbsolutePath):- muarc:arc_directory(ARC_DIR),
+  absolute_file_name(Subdir,AbsolutePath,[relative_to(ARC_DIR),expand(true),
+    file_type(regular),solutions(first),file_errors(error),access(read)]).
+:- export(arc_sub_path/2).
+
+:- dynamic(muarc:arc_directory/1).
+muarc:arc_directory(ARC_DIR):- getenv('ARC_DIR',ARC_DIR), exists_directory(ARC_DIR),!.
+:- prolog_load_context(directory,ARC_DIR), asserta(muarc:arc_directory(ARC_DIR)).
+
+:- multifile (user:file_search_path/2).
+user:file_search_path(arc,  AbsolutePath):- arc_sub_path('.',AbsolutePath).
 
 
 json_to_colors(Out,Color):- is_grid_color(Out),!,Out=Color.

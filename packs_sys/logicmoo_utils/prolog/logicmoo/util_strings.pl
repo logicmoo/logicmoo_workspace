@@ -300,7 +300,7 @@ This module introduces string replacements for find replacement in strings, capi
 
 atom_concat_or_rtrace(X,Y,Z):- tracing->atom_concat(X,Y,Z);catch(atom_concat(X,Y,Z),_,break).
 :- export(atom_concat_or_rtrace/3).
-
+%:- reexport(library(logicmoo/pretty_clauses)).
 
 get_text_restore_pred(Text,any_to_string):- string(Text),!.
 get_text_restore_pred(Text, any_to_atom):- atom(Text),!.
@@ -1107,6 +1107,7 @@ unquoteAtom(Atom,New):-concat_atom_safe(LIST,'"',Atom),concat_atom_safe(LIST,'',
 %
 is_charlist(L):- ground(L), L\==[], is_list(L),!,maplist(is_charlist_char,L).
 
+:- export(is_charlist_char/1).
 is_charlist_char(C):- atom(C), atom_length(C,1), name(C,[Code]),swish_render_codes_charset_code(_,Code).
 
 any_to_charlist(A,C):- is_charlist(A),!,A=C.
@@ -1121,6 +1122,7 @@ any_to_charlist(A,C):- any_to_string(A,S),atom_chars(S,C).
 %
 is_codelist(L):- ground(L), L\==[], is_list(L),!,maplist(is_codelist_code,L).
 
+:- export(is_codelist_code/1).
 is_codelist_code(H):- integer(H), swish_render_codes_charset_code(_,H),!.
 
 swish_render_codes_charset_code(_,9).
@@ -2064,7 +2066,13 @@ longest_string(Order,TStr1,TStr2):-
 
 :- system:use_module(library(logicmoo_startup)).
 
-:- fixup_exports.
+:- logicmoo_util_strings:fixup_exports.
+
+:- ignore((source_location(S,_),prolog_load_context(module,M),module_property(M,class(library)),
+ forall(source_file(M:H,S),
+ ignore((cfunctor(H,F,A),
+  ignore(((atom(F),\+ atom_concat('$',_,F),(export(F/A) , current_predicate(system:F/A)->true; system:import(M:F/A))))),
+  ignore(((\+ predicate_property(M:H,transparent), module_transparent(M:F/A), \+ atom_concat('__aux',_,F),debug(modules,'~N:- module_transparent((~q)/~q).~n',[F,A]))))))))).
 
 end_of_file.
 

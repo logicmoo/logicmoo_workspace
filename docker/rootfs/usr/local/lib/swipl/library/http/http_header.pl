@@ -271,7 +271,7 @@ http_reply_data(Data, Out, HdrExtra, Method, Code) :-
 http_reply_data_(html(HTML), Out, HdrExtra, Method, Code) :-
     !,
     phrase(reply_header(html(HTML), HdrExtra, Code), Header),
-    format(Out, '~s', [Header]),
+    send_reply_header(Out, Header),
     if_no_head(print_html(Out, HTML), Method).
 http_reply_data_(file(Type, File), Out, HdrExtra, Method, Code) :-
     !,
@@ -292,7 +292,7 @@ http_reply_data_(tmp_file(Type, File), Out, HdrExtra, Method, Code) :-
 http_reply_data_(bytes(Type, Bytes), Out, HdrExtra, Method, Code) :-
     !,
     phrase(reply_header(bytes(Type, Bytes), HdrExtra, Code), Header),
-    format(Out, '~s', [Header]),
+    send_reply_header(Out, Header),
     if_no_head(format(Out, '~s', [Bytes]), Method).
 http_reply_data_(stream(In, Len), Out, HdrExtra, Method, Code) :-
     !,
@@ -314,7 +314,7 @@ if_no_head(Goal, _) :-
 
 reply_file(Out, _File, Header, head) :-
     !,
-    format(Out, '~s', [Header]).
+    send_reply_header(Out, Header).
 reply_file(Out, File, Header, _) :-
     setup_call_cleanup(
         open(File, read, In, [type(binary)]),
@@ -323,7 +323,7 @@ reply_file(Out, File, Header, _) :-
 
 reply_file_range(Out, _File, Header, _Range, head) :-
     !,
-    format(Out, '~s', [Header]).
+    send_reply_header(Out, Header).
 reply_file_range(Out, File, Header, bytes(From, To), _) :-
     setup_call_cleanup(
         open(File, read, In, [type(binary)]),
@@ -332,7 +332,7 @@ reply_file_range(Out, File, Header, bytes(From, To), _) :-
 
 copy_stream(Out, _, Header, head, _, _) :-
     !,
-    format(Out, '~s', [Header]).
+    send_reply_header(Out, Header).
 copy_stream(Out, In, Header, _, From, To) :-
     copy_stream(Out, In, Header, From, To).
 
@@ -342,7 +342,7 @@ copy_stream(Out, In, Header, From, To) :-
     ;   seek(In, From, bof, _)
     ),
     peek_byte(In, _),
-    format(Out, '~s', [Header]),
+    send_reply_header(Out, Header),
     (   To == end
     ->  copy_stream_data(In, Out)
     ;   Len is To - From,
@@ -416,7 +416,7 @@ status_reply_flush(Status, Out, Options) :-
     !,
     flush_output(Out).
 
-%!  status_reply(+Status, +Out, +Options:Dict)
+%!  status_reply(+Status, +Out, +Options:dict)
 %
 %   Formulate a non-200 reply and send it to the stream Out.  Options
 %   is a dict containing:
@@ -431,7 +431,7 @@ status_reply_flush(Status, Out, Options) :-
 status_reply(no_content, Out, Options) :-
     !,
     phrase(reply_header(status(no_content), Options), Header),
-    format(Out, '~s', [Header]).
+    send_reply_header(Out, Header).
 status_reply(switching_protocols(_Goal,SwitchOptions), Out, Options) :-
     !,
     (   option(headers(Extra1), SwitchOptions)
@@ -441,7 +441,7 @@ status_reply(switching_protocols(_Goal,SwitchOptions), Out, Options) :-
     http_join_headers(Options.header, Extra1, HdrExtra),
     phrase(reply_header(status(switching_protocols),
                         Options.put(header,HdrExtra)), Header),
-    format(Out, '~s', [Header]).
+    send_reply_header(Out, Header).
 status_reply(authorise(basic, ''), Out, Options) :-
     !,
     status_reply(authorise(basic), Out, Options).
@@ -451,7 +451,7 @@ status_reply(authorise(basic, Realm), Out, Options) :-
 status_reply(not_modified, Out, Options) :-
     !,
     phrase(reply_header(status(not_modified), Options), Header),
-    format(Out, '~s', [Header]).
+    send_reply_header(Out, Header).
 % aliases (compatibility)
 status_reply(busy, Out, Options) :-
     status_reply(service_unavailable(busy), Out, Options).
@@ -468,7 +468,7 @@ status_reply(Status, Out, Options) :-
     append(List, [Body], ExList),
     ExStatus =.. ExList,
     phrase(reply_header(ExStatus, Options), Header),
-    format(Out, '~s', [Header]),
+    send_reply_header(Out, Header),
     reply_status_body(Out, Body, Options).
 
 %!  status_has_content(+StatusTerm, -HTTPCode)
@@ -707,6 +707,20 @@ html_message_lines([nl|T]) -->
     html_message_lines(T).
 html_message_lines([flush]) -->
     [].
+html_message_lines([ansi(_Style,Fmt,Args)|T]) -->
+    !,
+    { format(string(S), Fmt, Args)
+    },
+    html([S]),
+    html_message_lines(T).
+html_message_lines([url(Pos)|T]) -->
+    !,
+    msg_url(Pos),
+    html_message_lines(T).
+html_message_lines([url(URL, Label)|T]) -->
+    !,
+    html(a(href(URL), Label)),
+    html_message_lines(T).
 html_message_lines([Fmt-Args|T]) -->
     !,
     { format(string(S), Fmt, Args)
@@ -719,6 +733,15 @@ html_message_lines([Fmt|T]) -->
     },
     html([S]),
     html_message_lines(T).
+
+msg_url(File:Line:Pos) -->
+    !,
+    html([File, :, Line, :, Pos]).
+msg_url(File:Line) -->
+    !,
+    html([File, :, Line]).
+msg_url(File) -->
+    html([File]).
 
 %!  http_join_headers(+Default, +Header, -Out)
 %
@@ -1007,7 +1030,7 @@ http_post_data(Data, Out, HdrExtra) :-
 http_post_data(html(HTML), Out, HdrExtra) :-
     !,
     phrase(post_header(html(HTML), HdrExtra), Header),
-    format(Out, '~s', [Header]),
+    send_request_header(Out, Header),
     print_html(Out, HTML).
 http_post_data(xml(XML), Out, HdrExtra) :-
     !,
@@ -1036,7 +1059,7 @@ http_post_data(file(File), Out, HdrExtra) :-
 http_post_data(file(Type, File), Out, HdrExtra) :-
     !,
     phrase(post_header(file(Type, File), HdrExtra), Header),
-    format(Out, '~s', [Header]),
+    send_request_header(Out, Header),
     setup_call_cleanup(
         open(File, read, In, [type(binary)]),
         copy_stream_data(In, Out),
@@ -1044,7 +1067,7 @@ http_post_data(file(Type, File), Out, HdrExtra) :-
 http_post_data(memory_file(Type, Handle), Out, HdrExtra) :-
     !,
     phrase(post_header(memory_file(Type, Handle), HdrExtra), Header),
-    format(Out, '~s', [Header]),
+    send_request_header(Out, Header),
     setup_call_cleanup(
         open_memory_file(Handle, read, In, [encoding(octet)]),
         copy_stream_data(In, Out),
@@ -1055,7 +1078,7 @@ http_post_data(codes(Codes), Out, HdrExtra) :-
 http_post_data(codes(Type, Codes), Out, HdrExtra) :-
     !,
     phrase(post_header(codes(Type, Codes), HdrExtra), Header),
-    format(Out, '~s', [Header]),
+    send_request_header(Out, Header),
     setup_call_cleanup(
         set_stream(Out, encoding(utf8)),
         format(Out, '~s', [Codes]),
@@ -1063,17 +1086,29 @@ http_post_data(codes(Type, Codes), Out, HdrExtra) :-
 http_post_data(bytes(Type, Bytes), Out, HdrExtra) :-
     !,
     phrase(post_header(bytes(Type, Bytes), HdrExtra), Header),
-    format(Out, '~s~s', [Header, Bytes]).
+    send_request_header(Out, Header),
+    format(Out, '~s', [Bytes]).
 http_post_data(atom(Atom), Out, HdrExtra) :-
     !,
     http_post_data(atom(text/plain, Atom), Out, HdrExtra).
 http_post_data(atom(Type, Atom), Out, HdrExtra) :-
     !,
     phrase(post_header(atom(Type, Atom), HdrExtra), Header),
-    format(Out, '~s', [Header]),
+    send_request_header(Out, Header),
     setup_call_cleanup(
         set_stream(Out, encoding(utf8)),
         write(Out, Atom),
+        set_stream(Out, encoding(octet))).
+http_post_data(string(String), Out, HdrExtra) :-
+    !,
+    http_post_data(atom(text/plain, String), Out, HdrExtra).
+http_post_data(string(Type, String), Out, HdrExtra) :-
+    !,
+    phrase(post_header(string(Type, String), HdrExtra), Header),
+    send_request_header(Out, Header),
+    setup_call_cleanup(
+        set_stream(Out, encoding(utf8)),
+        write(Out, String),
         set_stream(Out, encoding(octet))).
 http_post_data(cgi_stream(In, _Len), Out, HdrExtra) :-
     !,
@@ -1086,7 +1121,7 @@ http_post_data(cgi_stream(In), Out, HdrExtra) :-
     content_length_in_encoding(Encoding, In, Size),
     http_join_headers(HdrExtra, Header, Hdr2),
     phrase(post_header(cgi_data(Size), Hdr2), HeaderText),
-    format(Out, '~s', [HeaderText]),
+    send_request_header(Out, HeaderText),
     setup_call_cleanup(
         set_stream(Out, encoding(Encoding)),
         copy_stream_data(In, Out),
@@ -1099,7 +1134,7 @@ http_post_data(form(Fields), Out, HdrExtra) :-
                       [ content_type('application/x-www-form-urlencoded')
                       ], Header),
     phrase(post_header(cgi_data(Size), Header), HeaderChars),
-    format(Out, '~s', [HeaderChars]),
+    send_request_header(Out, HeaderChars),
     format(Out, '~s', [Codes]).
 http_post_data(form_data(Data), Out, HdrExtra) :-
     !,
@@ -1117,7 +1152,7 @@ http_post_data(form_data(Data), Out, HdrExtra) :-
                               content_type(ContentType)
                             ], Header),
           phrase(post_header(cgi_data(Size), Header), HeaderChars),
-          format(Out, '~s', [HeaderChars]),
+          send_request_header(Out, HeaderChars),
           setup_call_cleanup(
               open_memory_file(MemFile, read, In, [encoding(octet)]),
               copy_stream_data(In, Out),
@@ -1141,7 +1176,7 @@ http_post_data(List, Out, HdrExtra) :-          % multipart-mixed
                               content_type(ContentType)
                             ], Header),
           phrase(post_header(cgi_data(Size), Header), HeaderChars),
-          format(Out, '~s', [HeaderChars]),
+          send_request_header(Out, HeaderChars),
           setup_call_cleanup(
               open_memory_file(MemFile, read, In, [encoding(octet)]),
               copy_stream_data(In, Out),
@@ -1188,6 +1223,11 @@ post_header(atom(Type, Atom), HdrExtra) -->
     content_length(atom(Atom, utf8), Len),
     content_type(Type, utf8),
     "\r\n".
+post_header(string(Type, String), HdrExtra) -->
+    header_fields(HdrExtra, Len),
+    content_length(string(String, utf8), Len),
+    content_type(Type, utf8),
+    "\r\n".
 
 
                  /*******************************
@@ -1202,7 +1242,7 @@ post_header(atom(Type, Atom), HdrExtra) -->
 http_reply_header(Out, What, HdrExtra) :-
     phrase(reply_header(What, HdrExtra, _Code), String),
     !,
-    format(Out, '~s', [String]).
+    send_reply_header(Out, String).
 
 %!  reply_header(+Data, +HdrExtra, -Code)// is det.
 %
@@ -1590,6 +1630,8 @@ content_length(Reply, Len) -->
 length_of(_, Len) :-
     nonvar(Len),
     !.
+length_of(string(String, Encoding), Len) :-
+    length_of(codes(String, Encoding), Len).
 length_of(codes(String, Encoding), Len) :-
     !,
     setup_call_cleanup(
@@ -1715,6 +1757,18 @@ read_field_value([H|T]) -->
     [H],
     read_field_value(T).
 
+%!  send_reply_header(+Out, +String) is det.
+%!  send_request_header(+Out, +String) is det.
+%
+%   Low level routines to send a single HTTP request or reply line.
+
+send_reply_header(Out, String) :-
+    debug(http(send_reply), "< ~s", [String]),
+    format(Out, '~s', [String]).
+
+send_request_header(Out, String) :-
+    debug(http(send_request), "> ~s", [String]),
+    format(Out, '~s', [String]).
 
 %!  http_parse_header_value(+Field, +Value, -Prolog) is semidet.
 %
