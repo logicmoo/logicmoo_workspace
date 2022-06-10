@@ -97,6 +97,10 @@ user:file_search_path(arc,  AbsolutePath):- arc_sub_path('.',AbsolutePath).
 
 %c:- forall(clause(fav(A,B),true),add_history1((fav(A,B)))).
 :- add_history1(arc).
+:- add_history1(arc1).
+:- add_history1(arc2).
+:- add_history1(fav1).
+:- add_history1(fav2).
 
 
 :- forall((fav(_,P),flatten([P],Flat),member(E,Flat)), assert_if_new(fav_trait(E))).
@@ -192,10 +196,12 @@ show_arc_pair_progress(TestID,ExampleNum,In,Out):-
   %print_collapsed
   forall((rtrace_on_error(individualizer_heuristics(PairName,In,Out,IH,IV,OH,OV))),true), 
   show_indivs(IH,IV,OH,OV,individuate_default,early,PairName,In,Out,SF),
+  %forall((rtrace_on_error(individualizer_heuristics(PairName,In,Out,IH,IV,OH,OV))),true), 
   %clear_shape_lib(in),clear_shape_lib(out),clear_shape_lib(pair),clear_shape_lib(noise),  
   add_shape_lib(pairs,SF),
   show_shape_lib(in),show_shape_lib(out),show_shape_lib(pair),show_shape_lib(noise),
   show_indivs(IH,IV,OH,OV,individuate_default,later,PairName,In,Out,_))),!,
+  nop((
 
 /*
   remove_global_points(UnsharedIn,In,InForgotten),
@@ -210,7 +216,6 @@ show_arc_pair_progress(TestID,ExampleNum,In,Out):-
   show_pair_no_i(IH,IV,IH,IV,forgotten_In,PairName,UnsharedIn,ForgottenShapesIn),
   show_pair_no_i(OH,OV,OH,OV,forgotten_Out,PairName,ForgottenShapesOut,OutC),
 */
-  nop((
        show_indivs(In,Out),
        individuate_default(In,InC),
        individuate_default(Out,OutC),  
