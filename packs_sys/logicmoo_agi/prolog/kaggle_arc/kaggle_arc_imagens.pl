@@ -133,7 +133,7 @@ l_shape(LibObj):-
   flatten([Shapes,H,V,Scale],AList),
   atomic_list_concat(AList,'_',ID),
   scale_grid(Scale,GrowthChart,Grid,ScaledGrid),
-  globalpoints(ScaledGrid,Points),
+  localpoints(ScaledGrid,Points),
   make_indiv_object(ID,H,V,Points,[object_shape(l_shape)|ShapeProps],LibObj).
 
 % todo temp
@@ -210,7 +210,7 @@ add_shape_lib(Type,Obj):- \+ ground(Obj),pt(add_shape_lib(Type,Obj)),fail.
 add_shape_lib(Type,Obj):-  is_object(Obj),!,add_shape_lib0(Type,Obj),!.
 add_shape_lib(Type,Obj):-  is_grid(Obj),!,add_shape_lib0(Type,Obj),!.
 
-add_shape_lib(Type,[Obj|L]):- (is_object_group(Obj);is_object(Obj) ; is_grid(Obj)),!,maplist(add_shape_lib(Type),[Obj|L]).
+add_shape_lib(Type,[Obj|L]):- (is_group(Obj);is_object(Obj) ; is_grid(Obj)),!,maplist(add_shape_lib(Type),[Obj|L]).
 add_shape_lib(Type,Obj):-  is_list(Obj), \+ is_grid(Obj), !, maplist(add_shape_lib(Type),Obj).
 
 add_shape_lib(Type,Obj):- must_det_l(add_shape_lib0(Type,Obj)).

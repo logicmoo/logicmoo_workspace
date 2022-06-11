@@ -57,7 +57,6 @@ decl_pt(G):- ground(G), !, assertz_new(decl_pt(G)).
 :- endif.
 
 
-:- system:ensure_loaded(library(logicmoo_utils)).
 :- system:ensure_loaded(library(logicmoo_common)).
 %:- system:ensure_loaded(library(pfc_lib)).
 %:- expects_dialect(pfc).
@@ -184,12 +183,12 @@ show_arc_pair_progress(TestID,ExampleNum,In,Out):-
   %print_collapsed
   forall((rtrace_on_error(individualizer_heuristics(PairName,In,Out,IH,IV,OH,OV))),true), 
   show_indivs(IH,IV,OH,OV,individuate_default,early,PairName,In,Out,SF),
-  %forall((rtrace_on_error(individualizer_heuristics(PairName,In,Out,IH,IV,OH,OV))),true), 
+  %clear_shape_lib(in),clear_shape_lib(out),clear_shape_lib(pair),clear_shape_lib(noise),  
   add_shape_lib(pairs,SF),
   show_shape_lib(in),show_shape_lib(out),show_shape_lib(pair),show_shape_lib(noise),
   show_indivs(IH,IV,OH,OV,individuate_default,later,PairName,In,Out,_))),!,
- with_named_pair(solve,TestID,PairName,In,Out),
   nop((
+       with_named_pair(solve,TestID,PairName,In,Out),
 
 /*
   remove_global_points(UnsharedIn,In,InForgotten),
@@ -287,11 +286,3 @@ reuse_a_b(A,B,AA):-
 :- learn_shapes.
 
 :- fixup_exports.
-
-:- set_prolog_flag(autoload,true).
-%:- ensure_loaded(library(debuggery/dmsg)).
-:- system:use_module(library(hashtable)).
-:- make.
-:- system:use_module(library(sandbox)).
-:- autoload_all.
-

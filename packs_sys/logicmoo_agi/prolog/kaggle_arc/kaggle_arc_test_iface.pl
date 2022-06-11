@@ -269,25 +269,30 @@ load_json_file(F, BaseName, FullName):- Testname=..[F,BaseName],
   load_json_of_file(Name,Type,[H|T]):- !, forall(nth0(N,[H|T],E), load_json_of_file(Name,Type+N,E)).
   load_json_of_file(N,T,V):- wdmsg(load_json_of_file(N,T,V)),!.
 
-arc_sub_path(Subdir,AbsolutePath):- muarc:arc_directory(ARC_DIR),
-  catch(absolute_file_name(Subdir,AbsolutePath,[relative_to(ARC_DIR),expand(true),
-    file_type(directory),solutions(first),file_errors(error),access(read)]),_,fail),!.
-arc_sub_path(Subdir,AbsolutePath):- muarc:arc_directory(ARC_DIR),
-  absolute_file_name(Subdir,AbsolutePath,[relative_to(ARC_DIR),expand(true),
-    file_type(regular),solutions(first),file_errors(error),access(read)]).
-:- export(arc_sub_path/2).
-
-:- dynamic(muarc:arc_directory/1).
-muarc:arc_directory(ARC_DIR):- getenv('ARC_DIR',ARC_DIR), exists_directory(ARC_DIR),!.
-:- prolog_load_context(directory,ARC_DIR), asserta(muarc:arc_directory(ARC_DIR)).
-
-:- multifile (user:file_search_path/2).
-user:file_search_path(arc,  AbsolutePath):- arc_sub_path('.',AbsolutePath).
-
 
 json_to_colors(Out,Color):- is_grid_color(Out),!,Out=Color.
 json_to_colors(Out,Color):- is_list(Out),!,maplist(json_to_colors,Out,Color).
 json_to_colors(Out,Color):- grid_color_code(Out,Color).
+
+
+:- dynamic(muarc_tmp:arc_directory/1).
+muarc_tmp:arc_directory(ARC_DIR):- getenv('ARC_DIR',ARC_DIR), exists_directory(ARC_DIR),!.
+
+:- multifile (user:file_search_path/2).
+user:file_search_path(arc,  AbsolutePath):- arc_sub_path('.',AbsolutePath).
+
+:- prolog_load_context(directory,ARC_DIR), asserta(muarc_tmp:arc_directory(ARC_DIR)).
+
+absolute_dir_or_file_name(ARC_DIR,Subdir,AbsolutePath):- 
+  catch(absolute_file_name(Subdir,AbsolutePath,[relative_to(ARC_DIR),expand(true),
+    file_type(directory),solutions(first),file_errors(error),access(read)]),_,fail),!.
+absolute_dir_or_file_name(ARC_DIR,Subdir,AbsolutePath):- 
+  absolute_file_name(Subdir,AbsolutePath,[relative_to(ARC_DIR),expand(true),
+    file_type(regular),solutions(first),file_errors(error),access(read)]).
+
+arc_sub_path(Subdir,AbsolutePath):- muarc_tmp:arc_directory(ARC_DIR),absolute_dir_or_file_name(ARC_DIR,Subdir,AbsolutePath),!.
+
+:- export(arc_sub_path/2).
 
 :- load_json_files(t,'./data/training/*.json').
 :- load_json_files(v,'./data/evaluation/*.json').

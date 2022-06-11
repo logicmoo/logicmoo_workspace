@@ -133,7 +133,7 @@ arc_portray(G):- \+ \+ catch(((
     grid_size(G,H,V),!,H>0,V>0, 
      wots(S,print_grid(H,V,G)),write(S))),_,false).
 
-%user:portray(Grid):- ((\+ tracing, is_object_group(Grid),print_grid(Grid))).
+%user:portray(Grid):- ((\+ tracing, is_group(Grid),print_grid(Grid))).
 %user:portray(Grid):- quietlyd((is_object(Grid),print_grid(Grid))).
 
 red_noise:- format('~N'),
@@ -223,9 +223,9 @@ show_pair_no_i(IH,IV,OH,OV,Type,PairName,In,Out):-
 
 
 show_pair_I_info(NameIn,NameOut,In,Out):- 
-  ((is_object_group(In),is_object_group(Out))-> once(showdiff(In,Out));
-    ignore((is_object_group(In),desc(wqnl(fav(NameIn)), debug_indiv(In)))),
-    ignore((is_object_group(Out),desc(wqnl(fav(NameOut)), debug_indiv(Out))))),!.
+  ((is_group(In),is_group(Out))-> once(showdiff(In,Out));
+    ignore((is_group(In),desc(wqnl(fav(NameIn)), debug_indiv(In)))),
+    ignore((is_group(Out),desc(wqnl(fav(NameOut)), debug_indiv(Out))))),!.
 
 uses_space(C):- code_type(C,print).
 
@@ -233,7 +233,7 @@ into_ss_string(Var,_):- plain_var(Var),!,throw(var_into_ss_string(Var)).
 into_ss_string(G,SS):- is_grid(G),!,wots(S,print_grid(G)),!,into_ss_string(S,SS).
 into_ss_string(G,SS):- is_object(G),!,wots(S,print_grid(G)),!,into_ss_string(S,SS).
 into_ss_string(G,SS):- is_points_list(G),!,wots(S,print_grid(G)),!,into_ss_string(S,SS).
-into_ss_string(G,SS):- is_object_group(G),!,wots(S,print_grid(G)),!,into_ss_string(S,SS).
+into_ss_string(G,SS):- is_group(G),!,wots(S,print_grid(G)),!,into_ss_string(S,SS).
 into_ss_string(ss(Len,L),ss(Len,L)):-!.
 into_ss_string(L,ss(Len,L)):- is_list(L), find_longest_len(L,Len),!.
 into_ss_string(S,SS):- string(S), atomics_to_string(L,'\n',S),!,into_ss_string(L,SS).
@@ -250,7 +250,7 @@ print_w_pad0(Pad,S):- format('~N'),dash_char(Pad,' '), write(S).
 
 print_equals(_,N,V):- \+ compound(V),wqnl(N=V).
 print_equals(Grid,N,Ps):- is_object(Ps),grid_size(Grid,H,V),print_grid(H,V,N,Ps),!.
-%print_equals(Grid,N,PL):- is_object_group(PL), grid_size(Grid,H,V), locally(grid_nums(PL),print_list_of_points(N,H,V,[[]])).
+%print_equals(Grid,N,PL):- is_group(PL), grid_size(Grid,H,V), locally(grid_nums(PL),print_list_of_points(N,H,V,[[]])).
 print_equals(_,N,G):- print_equals(N,G).
 
 
@@ -282,7 +282,7 @@ commawrite(S):- write(','),write(S).
 as_color(cc(Count,Num),List):- color_name(Num,Name),wots(List,color_print(Num,Name=Count)).
 better_value(V,List):- is_list(V), maplist(as_color,V,List).
 better_value([G|V],List):- 
-  is_object_group([G|V]),
+  is_group([G|V]),
   maplist(points_to_grid,[G|V],List),
   [G|V] \=@= List.
 

@@ -42,7 +42,7 @@ no_black(SK,BF):-select(Z,SK,BF),is_black(Z),!.
 no_black(BF,BF).
 
 
-pixel_colors(GH,CC):- (is_object_group(GH);is_object(GH)),!,globalpoints(GH,GP),pixel_colors(GP,CC).
+pixel_colors(GH,CC):- (is_group(GH);is_object(GH)),!,globalpoints(GH,GP),pixel_colors(GP,CC).
 pixel_colors(GH,CC):- quietly(pixel_colors0(GH,CC)).
 pixel_colors0(GH,CC):- is_list(GH),!,maplist(pixel_colors,GH,PG),append(PG,CC).
 pixel_colors0(C,[Color]):- color_name(C,Color),!.
@@ -72,7 +72,7 @@ move_rightof_itself(I,M):- move_dir_itself(1,e,I,M).
 :- decl_pt(move_dir_itself(int,dir,object,+)).
 %move_dir_itself(N,D,I,M):- check_args(move_dir_itself(N,D,I,M),MaybeCut),(MaybeCut==t->!;true).
 move_dir_itself(N,D,I,M):- is_object(I),vis_hv(I,SX,SY), move_scale_dir_object(SX,SY,N,D,I,M).
-move_dir_itself(N,D,L,LM):- is_object_group(L),!,maplist(move_dir_itself(N,D),L,LM).
+move_dir_itself(N,D,L,LM):- is_group(L),!,maplist(move_dir_itself(N,D),L,LM).
 move_dir_itself(N,D,I,O):- into_group(I,M),M\=@=I,!,move_dir_itself(N,D,M,O).
 
 move_dir_object(N,D,I,M):- move_scale_dir_object(1,1,N,D,I,M).
@@ -82,7 +82,7 @@ move_scale_dir_object(X,Y,N,D,I,M):- is_object(I),!,
   loc_xy(I,OX,OY),
   move_dir(N,OX,OY,D,X,Y,NX,NY),
   (NY<1 -> M=I ; move_object(NX,NY,I,M)))).
-move_scale_dir_object(N,D,L,LM):- is_object_group(L),!,maplist(move_scale_dir_object(N,D),L,LM).
+move_scale_dir_object(N,D,L,LM):- is_group(L),!,maplist(move_scale_dir_object(N,D),L,LM).
 move_scale_dir_object(N,D,I,O):- into_group(I,M),M\=@=I,!,move_scale_dir_object(N,D,M,O).
 
 move_object(NX,NY,I,M):- is_object(I),!,
@@ -91,7 +91,7 @@ move_object(NX,NY,I,M):- is_object(I),!,
   ( localpoints(I,LPoints),
     offset_points(NX,NY,LPoints,GPoints),
     setq(I,[globalpoints(GPoints),loc_xy(NX,NY)],M))))).
-move_object(H,V,L,LM):- is_object_group(L),!,maplist(move_object(H,V),L,LM).
+move_object(H,V,L,LM):- is_group(L),!,maplist(move_object(H,V),L,LM).
 move_object(H,V,I,O):- into_group(I,M),M\=@=I,!,move_object(H,V,M,O).
 
 
@@ -198,7 +198,7 @@ add_obj(Obj,In,Out):- globalpoints(Obj,Points),set_local_points(Points,In,Out).
 remove_global_points([],Grid,Grid):- !.
 remove_global_points(Obj,Grid,GridO):- is_grid(Obj),!, globalpoints(Obj,Points),remove_global_cpoints(Points,Grid,GridO).
 remove_global_points([H|T],Grid,GridO):- is_points_list([H|T]), !, remove_global_cpoints([H|T],Grid,GridO).
-remove_global_points(Obj,Grid,GridO):- is_object_group(Obj), globalpoints(Obj,Points),remove_global_cpoints(Points,Grid,GridO).
+remove_global_points(Obj,Grid,GridO):- is_group(Obj), globalpoints(Obj,Points),remove_global_cpoints(Points,Grid,GridO).
 remove_global_points(Obj,Grid,GridO):- is_object(Obj), globalpoints(Obj,Points),remove_global_cpoints(Points,Grid,GridO).
 remove_global_points([H|T],Grid,GridO):- !, remove_global_points(H,Grid,GridM),remove_global_points(T,GridM,GridO).
 remove_global_points(Point,Grid,GridO):- remove_global_cpoints(Point,Grid,GridO).
@@ -223,7 +223,7 @@ pred_global_points(Pred7,Obj,Grid,GridO):- pred_global_points(Pred7,fg,Obj,Grid,
 pred_global_points(_Pred7,_Color,[],Grid,Grid):- !.
 pred_global_points(Pred7,Color,Obj,Grid,GridO):- is_grid(Obj),!, globalpoints(Obj,Points),pred_global_cpoints(Pred7,Color,Points,Grid,GridO).
 pred_global_points(Pred7,Color,[H|T],Grid,GridO):- is_points_list([H|T]), !, pred_global_cpoints(Pred7,Color,[H|T],Grid,GridO).
-pred_global_points(Pred7,Color,Obj,Grid,GridO):- is_object_group(Obj), globalpoints(Obj,Points),pred_global_cpoints(Pred7,Color,Points,Grid,GridO).
+pred_global_points(Pred7,Color,Obj,Grid,GridO):- is_group(Obj), globalpoints(Obj,Points),pred_global_cpoints(Pred7,Color,Points,Grid,GridO).
 pred_global_points(Pred7,Color,Obj,Grid,GridO):- is_object(Obj), globalpoints(Obj,Points),pred_global_cpoints(Pred7,Color,Points,Grid,GridO).
 pred_global_points(Pred7,Color,[H|T],Grid,GridO):- !, pred_global_points(Pred7,Color,H,Grid,GridM),pred_global_points(Pred7,Color,T,GridM,GridO).
 pred_global_points(Pred7,Color,Point,Grid,GridO):- pred_global_cpoints(Pred7,Color,Point,Grid,GridO).
@@ -242,7 +242,7 @@ add_global_points(Obj,Grid,GridO):-
 add_global_points(_Color,[],Grid,Grid):- !.
 add_global_points(Color,Obj,Grid,GridO):- is_grid(Obj),!, globalpoints(Obj,Points),add_global_cpoints(Color,Points,Grid,GridO).
 add_global_points(Color,[H|T],Grid,GridO):- is_points_list([H|T]), !, add_global_cpoints(Color,[H|T],Grid,GridO).
-add_global_points(Color,Obj,Grid,GridO):- is_object_group(Obj), globalpoints(Obj,Points),add_global_cpoints(Color,Points,Grid,GridO).
+add_global_points(Color,Obj,Grid,GridO):- is_group(Obj), globalpoints(Obj,Points),add_global_cpoints(Color,Points,Grid,GridO).
 add_global_points(Color,Obj,Grid,GridO):- is_object(Obj), globalpoints(Obj,Points),add_global_cpoints(Color,Points,Grid,GridO).
 add_global_points(Color,[H|T],Grid,GridO):- !, add_global_points(Color,H,Grid,GridM),add_global_points(Color,T,GridM,GridO).
 add_global_points(Color,Point,Grid,GridO):- add_global_cpoints(Color,Point,Grid,GridO).
@@ -267,7 +267,7 @@ set_local_points([],Grid,Grid):- !.
 set_local_points(Obj,Grid,GridO):- is_object(Obj), localpoints(Obj,Points),set_local_cpoints(Points,Grid,GridO).
 set_local_points(Obj,Grid,GridO):- is_grid(Obj),!, localpoints(Obj,Points),set_local_cpoints(Points,Grid,GridO).
 set_local_points([H|T],Grid,GridO):- is_points_list([H|T]), !, set_local_cpoints([H|T],Grid,GridO).
-set_local_points(Obj,Grid,GridO):- is_object_group(Obj), localpoints(Obj,Points),set_local_cpoints(Points,Grid,GridO).
+set_local_points(Obj,Grid,GridO):- is_group(Obj), localpoints(Obj,Points),set_local_cpoints(Points,Grid,GridO).
 set_local_points([H|T],Grid,GridO):- !, set_local_points(H,Grid,GridM),set_local_points(T,GridM,GridO).
 set_local_points(Point,Grid,GridO):- set_local_cpoints(Point,Grid,GridO).
 
@@ -509,7 +509,7 @@ into_grid(P,G):- quietly(into_grid(P,G, _)).
 
 into_grid(Grid,Grid, (=) ):- is_grid(Grid),!.
 into_grid(Obj,Grid, closure_grid_to_object(Obj)):- is_object(Obj),!, object_grid(Obj,Grid).
-into_grid(Grp,Grid, closure_grid_to_group(Grp)):- is_object_group(Grp), !, object_grid(Grp,Grid).
+into_grid(Grp,Grid, closure_grid_to_group(Grp)):- is_group(Grp), !, object_grid(Grp,Grid).
 into_grid(Points,Grid,globalpoints):- is_points_list(Points), !, points_to_grid(Points,Grid),!.
 into_grid(Naming,Grid, Closure ):- named_gridoid(Naming,NG),!, into_grid(NG,Grid, Closure).
 into_grid(Points,Grid, throw_no_conversion(Points)):-

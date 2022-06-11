@@ -98,7 +98,7 @@ print_list_of(N,OO):-
 
 print_info(A):- is_grid(A),print_grid(A).
 print_info(A):- is_object(A), ignore(debug_indiv(A)).
-print_info(A):- is_object_group(A),debug_indiv(A).
+print_info(A):- is_group(A),debug_indiv(A).
 print_info(A):- into_obj(A,Obj),print_info(Obj).
 print_info([]):-!.
 print_info(A):- pt(A).

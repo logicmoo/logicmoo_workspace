@@ -152,62 +152,11 @@ individuate_complete(GridIn,IndvS):-
 individuate_complete(H,V,ID,Grid,Points,IndvSO):-   
    individuate(H,V,ID,[],
      [fourway,
-      shape_lib(intruder),
       shape_lib(in),shape_lib(out),
       shape_lib(noise),shape_lib(pair),
       solid(rectangle), rectangle,diamonds,all,
-      jumps(hv_line(h,_)),
-      jumps(hv_line(_,v)),
-      find_engulfed,
-      find_contained,
-               check_engulfed,
-               combined_perfects,
-      by_color,
-      %leftover,
-      done],
-      Grid,Points,IndvSO),!.
-      
-individuate_complete2(H,V,ID,Grid,Points,IndvSO):-   
-   individuate(H,V,ID,[],
-     [
-      shape_lib(noise), 
-
-      fourway,
-               solid(rectangle), 
-
-               rectangle,
-
-               shape_lib(pair),
-
-/*
-               dg_line(u,_),dg_line(_,d),
-
-               hv_line(h,_),hv_line(_,v),
-
-               merge(hv_line(h,_)),
-               merge(hv_line(_,v)),
-
-
-               merge(dg_line(u,_)),
-               merge(dg_line(_,d)),
-
-               connect(hv_line(h,_)),
-               connect(hv_line(_,v)),
-               connect(dg_line(u,_)),
-               connect(dg_line(_,d)),
-
-               jumps(hv_line(h,_)),
-               jumps(hv_line(_,v)),
-               jumps(dg_line(u,_)),
-               jumps(dg_line(_,d)),
-*/
-               all,
-
-
-
-
-             shape_lib(in),shape_lib(out),
-
+      connect(hv_line(h)),
+      connect(hv_line(v)),
       find_engulfed,
       find_contained,
                check_engulfed,
@@ -226,12 +175,12 @@ individuate_default(H,V,ID,Grid,Points,IndvSO):- fail,
      shape_lib(in),shape_lib(out),
      solid(rectangle), 
      rectangle, 
-     dg_line(_DG), 
-     connect(hv_line(h,_)),connect(hv_line(_,v)),
-     connect(dg_line(u,_)),connect(dg_line(_,d)),
+     diamonds, 
+     connect(hv_line(h)),connect(hv_line(v)),
+     connect(dg_line(u)),connect(dg_line(d)),
      find_engulfed,find_contained,find_engulfed,find_contained,
-     dg_line(u,_),dg_line(_,d), 
-     hv_line(h,_),hv_line(_,v), 
+     dg_line(u),dg_line(d), 
+     hv_line(h),hv_line(v), 
      all, by_color, done],
   Grid,Points,IndvS),
   add_shape_info(default_indiv,IndvS,IndvSO).
@@ -280,7 +229,7 @@ individuals_list(GH,GV,Sofar,ID,Options,Reserved,Points,Grid,IndvList,LeftOver):
           Options = [Head|_],
           override_object(birth(Head),New,NewUpdated),
           append(Unchanged,NewUpdated,SofarUpdated),
-          nop(ignore((GoneMissing\==[],wdmsg(goneMissing=GoneMissing)))),
+          ignore((GoneMissing\==[],wdmsg(goneMissing=GoneMissing))),
   assertion(maplist(nonvar_or_ci,[fsi,NewReserved,NewGrid,NewOptions,SofarUpdated,NextScanPoints])),
     assertion(maplist(is_cpoint,NextScanPoints)),
     assertion(is_list([foundSofar1(Options)|SofarUpdated])),
@@ -521,7 +470,7 @@ fti(Image,[+(AddOptions)|TODO]):-
   append(TODO,OptionsL,set(Image,todo)).
 
 fti(Image,[(OptionsL)|TODO]):-
-  is_list(OptionsL), \+ is_object_group(OptionsL), \+ is_grid(OptionsL),!,
+  is_list(OptionsL), \+ is_group(OptionsL), \+ is_grid(OptionsL),!,
   append(Image.options,OptionsL,set(Image,options)),
   append(TODO,OptionsL,set(Image,todo)).
 
@@ -597,7 +546,7 @@ fsi(_Image,ReservedO,GridO,NO,H,V,Sofar,ID,[Obj|NO],ReservedI,Points,Grid,SofarO
   !.
   
 search_lib([Obj|ReservedI],GridO,NO,H,V,Sofar,ID,[Obj|NO],ReservedI,Points,Grid,SofarOut,NextScanPoints):-
-   is_object_group(Obj), Reserved = Obj, !, proccess_overlap_reserved(is_object_group,GridO,Grid,ID,H,V,Reserved,Sofar,SofarOut,Points,NextScanPoints,_Unreserved,_StillReserved).
+   is_group(Obj), Reserved = Obj, !, proccess_overlap_reserved(is_group,GridO,Grid,ID,H,V,Reserved,Sofar,SofarOut,Points,NextScanPoints,_Unreserved,_StillReserved).
    
 search_lib([Obj|ReservedI],GridO,NO,H,V,Sofar,ID,[Obj|NO],ReservedI,Points,Grid,SofarOut,NextScanPoints):-
    is_object(Obj), Reserved = [Obj], !, proccess_overlap_reserved(is_object,GridO,Grid,ID,H,V,Reserved,Sofar,SofarOut,Points,NextScanPoints,_Unreserved,_StillReserved).
@@ -617,12 +566,11 @@ do_shapelib(ReservedIO,GridO,[shape_lib(Hammer)|NO],H,V,Sofar,ID,[shape_lib(Hamm
 
 proccess_overlap_reserved(Name,GridO,Grid,ID,H,V,[Obj|RestReserved],Sofar,SofarOut,Points,NextScanPoints,[Obj|Unreserved],StillReserved):-     
    %ignore((length(RestReserved,RL),1 is RL mod 7, pt(searchLib(Name)=RL))),
-   % Points\==[],
+   Points\==[],
   \+ color(Obj,black),
    object_grid(Obj,OGrid),
    ogs(OH,OV,OGrid,Grid),
-   %must_det_l
-   ((
+   must_det_l((
    localpoints(Obj,OPoints),
    offset_points(OH,OV,OPoints,ObjPoints),
    intersection(ObjPoints,Points,Intersected,LeftOverA,LeftOverB),
@@ -749,7 +697,7 @@ fsi(_Image,Reserved,NewGrid,NO,H,V,Sofar,_ID,['regroup'|NO],Reserved,Points,Grid
   make_indiv_object_list(Grid,H,V,Sofar,OutInvdivS), 
   points_to_grid(H,V,Points,NewGrid).
 
-/*
+
 fsi(_Image,Reserved,Grid,NO,H,V,Sofar,ID,[solid(squares)|NO],Reserved,_Points,Grid,AllOUT,NextScanPoints):- fail, !,
   globalpoints(Grid,NewGPoints),
   grid_to_segs(Grid,Segs),
@@ -808,51 +756,21 @@ fsi(_Image,Reserved,Grid,NO,H,V,Sofar,ID,[solid(squares)|NO],Reserved,_Points,Gr
       segs_to_pointlists(Segs,Objs).
       
     segs_to_pointlists([_|Segs],Objs):-   segs_to_pointlists(Segs,Objs).
-*/
 
+fsi(_Image,Reserved,Grid,[connect(ShapeType)|NO],H,V,Sofar,ID,[connect(ShapeType)|NO],Reserved,Points,Grid,NewSofar,RestPoints):- !,
+  connect_skips(H,V,ID,Sofar,ShapeType,Grid,Points,NewSofar,RestPoints).
 
-fsi(_Image,Reserved,Grid,[merge(ShapeType)|NO],H,V,Sofar,ID,[merge(ShapeType)|NO],Reserved,Points,Grid,NewSofar,RestPoints):- !,
-  merge_shapes(H,V,ID,Sofar,ShapeType,Grid,Points,NewSofar,RestPoints).
+shape_type_dir(hv_line(h),[e,w]).
+shape_type_dir(hv_line(v),[n,s]).
+shape_type_dir(dg_line(u),[sw,ne]).
+shape_type_dir(dg_line(d),[nw,se]).
 
-merge_shapes(H,V,ID,Sofar,ShapeType,_Grid,Points,NewSofar,Points):-
+connect_skips(H,V,ID,Sofar,ShapeType,Grid,Points,NewSofar,RestPoints):-
   shape_type_dir(ShapeType,[Dir|_]),
-  filter_indivs(Sofar,object_shape(ShapeType), Found),
-  select(HV1,Found,Found1), member(HV2,Found1), 
-
-  %first_gpoint(HV1,C-P1), last_gpoint(HV2,C-P2),
-  %iz(HV1,ShapeType),iz(HV2,ShapeType),
-  any_gpoint(HV1,C-P1), any_gpoint(HV2,C-P2),
-  % 
-  turn_left_45(Dir,DirL),turn_left_45(DirL,Dir90),
-  is_adjacent_point(P1,Dir90,P2),
-  combine_2objs(ID,H,V,HV1,HV2,[],[object_shape(ShapeType)],Combined),
-  select(HV1,Sofar,Sofar1), select(HV2,Sofar1,SofarLess), 
-  append(SofarLess,[Combined],NewSofar).
-
-fsi(_Image,Reserved,Grid,[connect_no_skips(ShapeType)|NO],H,V,Sofar,ID,[connect_no_skips(ShapeType)|NO],Reserved,Points,Grid,NewSofar,RestPoints):- !,
-  connect_no_skips(H,V,ID,Sofar,ShapeType,Grid,Points,NewSofar,RestPoints).
-
-connect_no_skips(H,V,ID,Sofar,ShapeType,_Grid,Points,NewSofar,Points):-
-  shape_type_dir(ShapeType,[Dir|_]),
-  filter_indivs(Sofar,object_shape(ShapeType), Found),
-  select(HV1,Found,Found1), member(HV2,Found1),
-  %first_gpoint(HV1,C-P1), last_gpoint(HV2,C-P2),
-  any_gpoint(HV1,C-P1), any_gpoint(HV2,C-P2),
-  is_adjacent_point(P0,Dir,P1), is_adjacent_point(P1,Dir,P2), is_adjacent_point(P2,Dir,P3),
-  any_gpoint(HV1,C-P0), any_gpoint(HV2,C-P3),
-  combine_2objs(ID,H,V,HV1,HV2,[],[object_shape(ShapeType)],Combined),
-  select(HV1,Sofar,Sofar1), select(HV2,Sofar1,SofarLess), 
-  append(SofarLess,[Combined],NewSofar).
-
-
-fsi(_Image,Reserved,Grid,[jumps(ShapeType)|NO],H,V,Sofar,ID,[jumps(ShapeType)|NO],Reserved,Points,Grid,NewSofar,Points):- !,
-  jumps(H,V,ID,Sofar,ShapeType,Grid,Points,NewSofar,_RestPoints).
-
-jumps(H,V,ID,Sofar,ShapeType,Grid,Points,NewSofar,RestPoints):-
-  shape_type_dir(ShapeType,[Dir|_]),
-  filter_indivs(Sofar,object_shape(ShapeType), Found),
-  select(HV1,Found,Found1), member(HV2,Found1), 
-
+  %filter_indivs(Sofar,object_shape(ShapeType), Found),
+  Sofar=Found,
+  select(HV1,Found,Found1), 
+  select(HV2,Found1,SofarLess), 
   %first_gpoint(HV1,C-P1), last_gpoint(HV2,C-P2),
   %iz(HV1,ShapeType),iz(HV2,ShapeType),
   any_gpoint(HV1,C-P1), any_gpoint(HV2,C-P2),
@@ -860,16 +778,14 @@ jumps(H,V,ID,Sofar,ShapeType,Grid,Points,NewSofar,RestPoints):-
   is_adjacent_point(P0,Dir,P1), is_adjacent_point(P1,Dir,MP), is_adjacent_point(MP,Dir,P2),is_adjacent_point(P2,Dir,P3),
   any_gpoint(HV1,C-P0), any_gpoint(HV2,C-P3),
   % TODO: HACK WE MIGHT NOT WANT TO STEAL THE POINT? 
-  once(select(MC-MP,Points,RestPoints);Points=RestPoints),
+  once(select(MC=MP,Points,RestPoints);Points=RestPoints),
   ignore(once((get_color_at(Points,Grid,MC),is_color(MC));MC=C)),
   combine_2objs(ID,H,V,HV1,HV2,[MC-MP],[object_shape(ShapeType)],Combined),
-  select(HV1,Sofar,Sofar1), select(HV2,Sofar1,SofarLess), 
   append(SofarLess,[Combined],NewSofar).
 
     combine_2objs(ID,H,V,HV1,HV2,NewPoints,IPROPS,Combined):-
       globalpoints(HV1,GP1), globalpoints(HV2,GP2),      
-      % indv_props(HV1,Props1),indv_props(HV2,Props2),
-      Props1=[],Props2=[],
+      indv_props(HV1,Props1),indv_props(HV2,Props2),
       append([GP1,GP2,NewPoints],GPoints), append([Props1,Props2,IPROPS],Info),
       make_indiv_object(ID,H,V,GPoints,Info,Combined).
       
@@ -896,7 +812,7 @@ fsi(_Image,FinalReserve,Grid,NO,H,V,Sofar,ID,[cycle_shapes(Shapes)|NO],Reserved,
 fsi(_Image,Reserved,Grid,[Option|Options],H,V,Sofar,ID,[Option|Options],Reserved,Points,Grid,OUT,NextScanPoints):- 
    ( Option \==dots), 
    find_one_individual(H,V,Sofar,ID,Option,Reserved,Points,Grid,IndvPoints,NextScanPoints),
-   make_indiv_object(ID,H,V,[birth(Option),object_shape(Option)|IndvPoints],Indv),!,
+   make_indiv_object(ID,H,V,[birth(Option)|IndvPoints],Indv),!,
    append(Sofar,[Indv],OUT).
 
 %fsi(_Image,Reserved,Grid,[Option|Options],H,V,Sofar,ID,[Option|Options],Reserved,Points,Grid,OUT,NextScanPoints):- 
@@ -916,19 +832,19 @@ default_i_options([
   %shape_lib(rectangle), 
   %shape_lib(all),
   %shape_lib(hammer),
-  rectangle, dg_line(_DG), all,
+  rectangle, diamonds, all,
   
   
   %
   %
   % polygs,
-  %hv_line(_,v), hv_line(h,_),
-  %dg_line(u,_),dg_line(_,d),
+  %hv_line(v), hv_line(h),
+  %dg_line(u),dg_line(d),
   %CS,
   all,
   
-  connect(hv_line(h,_)),
-  connect(hv_line(_,v)),  
+  connect(hv_line(h)),
+  connect(hv_line(v)),  
   % line(_),dg_line(_),
   % release_points, all,
   %into_single_hidden,oldway

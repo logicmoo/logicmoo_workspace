@@ -221,8 +221,6 @@ pgt1(Obj):-
        %  globalpoints( [ red-point_01_01, silver-point_02_01]),
          grid_size(8, 8)]).
 
-
-
 pgt2(Obj):- Obj = 
       obj( [ mass(536),
          shape( [ point_01_01, point_02_01]),

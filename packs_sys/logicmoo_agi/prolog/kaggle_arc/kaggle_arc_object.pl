@@ -21,29 +21,11 @@ if_point_de_offset(OH,OV,Point,LPoint):- atom(Point), hv_point(H,V,Point),HH is 
 offset_points(OH,OV,Point,LPoint):- map_pred(if_point_offset(OH,OV),Point,LPoint).
 if_point_offset(OH,OV,Point,LPoint):- atom(Point), hv_point(H,V,Point),HH is H +OH -1, VV is V + OV -1,hv_point(HH,VV,LPoint).
 
-my_assertion(G):- G,!.
-my_assertion(G):- trace,G,!.
-
-grid_to_individual(Grid,Obj):- 
-  my_assertion(is_grid(Grid)),!,
+grid_to_individual(Grid,OUT):- assertion(is_grid(Grid)),!,
+  get_gridname(Grid,ID),
   grid_size(Grid,H,V),
-  grid_to_points(Grid,H,V,Points),
-  (Points==[]-> empty_grid_to_individual(H,V,Obj); 
-  (get_gridname(Grid,ID), make_indiv_object(ID,H,V,Points,[object_shape(grid)],Obj))).
-
-empty_grid_to_individual(H,V,Obj):-
-  Iv is H + V*34,
-  Obj = obj( [ mass(0),
-         shape([]),
-         colors([]),
-         localpoints([]), vis_hv(H, V), 
-         rotation(same), 
-         loc_xy(1, 1),
-         changes([]), 
-         object_shape(grid),
-         object_indv_id(empty_grid_to_individual(H,V), Iv),
-         grid_size(H, V)]).
-
+  globalpoints(Grid,Points),
+  make_indiv_object(ID,H,V,[object_shape(grid)|Points],OUT).
 
 %embue_points(ID,_,_,I,I):-!.
 %embue_obj_points(ID,H,V,Points,OUT):- make_indiv_object(ID,H,V,Points,OUT).
@@ -67,12 +49,12 @@ close_enough_grid(GridIn,GridInCopy,LocalGrid):-
 /*correctify_objs(Gridname,FourWay1s00,FourWay1s):- is_list(FourWay1s00),maplist(correctify_objs(Gridname),FourWay1s00,FourWay1s).
 correctify_objs(Gridname,obj(List),obj(NOBJ)):- is_list(List), 
    member(grid(Grid),List),
-   \+ member(globalpoints(_),List),`
+   \+ member(globalpoints(_),List),
    grid_size(Grid,H,V),
    %trace,
    pt(dleaing_with=obj(List)),
    globalpoints(Grid,Points),
-   my_assertion(Points\=[]),
+   assertion(Points\=[]),
    points_range(Points,LoH,LoV,HiH,HiV,_HO,_VO),
    %nb_current(test_pairname,ID),
    embue_points1(Gridname,H,V,LoH,LoV,HiH,HiV,Points,OBJ),
@@ -89,80 +71,50 @@ make_indiv_object_list(ID,H,V,[E|L],[O|OL]):-
 
 /*
 make_indiv_object_list(ID,H,V,Points,OUT):-
-  maplist(make_indiv_object(ID,H,V),Points,OUT).
+  maplist(make_indiv_object_list(ID,H,V),Points,OUT).
 */
 
-make_point_object(ID,H,V,Options,Point,Obj):-
-   my_assertion(is_cpoint(Point)),
-   make_indiv_object(ID,H,V,[Point],[object_shape(dots),object_shape(shape(dot))|Options],OUT),
-   as_obj(OUT,Obj).
+make_point_object(ID,H,V,Options,Point,OUT):-
+   assertion(is_cpoint(Point)),
+   make_indiv_object(ID,H,V,[Point],[object_shape(dots),object_shape(shape(dot))|Options],OUT).
 
-%make_indiv_object(_,_,_,obj(Ps),obj(Ps)):-
+make_indiv_object(_,_,_,obj(Ps),obj(Ps)):-!.
 
-make_indiv_object(_ID,_H,_V,IPoints,Obj):- 
-  compound(IPoints),IPoints=obj(_),Obj=IPoints,!.
-make_indiv_object(ID,H,V,IPoints,Obj):-
-  my_assertion(is_list(IPoints)),
+make_indiv_object(ID,H,V,IPoints,obj(OUT)):-
+  assertion(is_list(IPoints)),
   my_partition(is_cpoint,IPoints,Points,Overrides),
   points_range(Points,LoH,LoV,HiH,HiV,_HO,_VO),
-  make_indiv_object(ID,H,V,LoH,LoV,HiH,HiV,Points,Overrides,OUT),
-  as_obj(OUT,Obj).
+  make_indiv_object(ID,H,V,LoH,LoV,HiH,HiV,Points,Overrides,OUT).
 
-make_indiv_object(ID,H,V,Points,Overrides,Obj):-
+make_indiv_object(ID,H,V,Points,Overrides,obj(OUT)):-
   points_range(Points,LoH,LoV,HiH,HiV,_HO,_VO),
-  make_indiv_object(ID,H,V,LoH,LoV,HiH,HiV,Points,Overrides,OUT),!,
-  as_obj(OUT,Obj).
+  make_indiv_object(ID,H,V,LoH,LoV,HiH,HiV,Points,Overrides,OUT),!.
 
 
-:- module_transparent as_obj/2.
-as_obj(L,Obj):- is_list(L),!,Obj = obj(L), !, register_obj(Obj).
-as_obj(O,Obj):- compound(O), O = obj(_), Obj = O, register_obj(Obj).
-
-:- module_transparent register_obj/1.
-%register_obj(O):- quietly((wots(S,weto(dumpST)), asserta(obj_cache(O,S)))),!.
-register_obj(O):- asserta(obj_cache(O,'')).
-:- dynamic(obj_cache/2).
-:- module_transparent obj_cache/2.
-
-enum_object(O):- var(O),!,no_repeats(O,enum_object0(O)).
-enum_object(O):- ptt(enum_object(O)),trace.
-
-enum_object0(O):- % listing(obj_cache/2),
-               obj_cache(O,S),write(S). 
-/*
-enum_object0(S):- why_grouped(_,IndvS),member(S,IndvS).
-enum_object0(S):- clause(in_shape_lib(_,S),Body),catch(Body,_,fail).
-enum_object0(S):- g2o(_,S).
-enum_object0(S):- is_unshared_saved(_,IndvS),member(S,IndvS).
-enum_object0(S):- is_gridname(S,_).
-*/
-internal_region(Obj,regionOf(Obj)).
-
-make_indiv_object(Points,Overrides,Obj):- 
+make_indiv_object(Points,Overrides,OUT):- 
   globalpoints(Points,RPoints),
   points_range(RPoints,LoH,LoV,HiH,HiV,_HO,_VO),
   gensym('indiv_object_',ID),
-  make_indiv_object(ID,HiH,HiV,LoH,LoV,HiH,HiV,RPoints,[Points,Overrides],OUT),
-  as_obj(OUT,Obj).
+  make_indiv_object(ID,HiH,HiV,LoH,LoV,HiH,HiV,RPoints,[Points,Overrides],OUT).
 
 
 
-make_indiv_object(ID,H,V,LoH,LoV,HiH,HiV,Points,Overrides,Obj):- 
+make_indiv_object(ID,H,V,LoH,LoV,HiH,HiV,Points,Overrides,OUT):- 
  (Points==[]-> trace ; true),
   Width is HiH-LoH+1,
   Height is HiV-LoV+1,
   %nb_current(test_pairname,ID),
   Area is Width * Height,
   
-  my_assertion((Points\==[],
+  assertion((Points\==[],
      maplist(between(1,30),[H,V,LoH,LoV,HiH,HiV,Width,Height]))),
  must_det_l((
-  my_assertion(is_list([overrides|Overrides])),
-  my_assertion(maplist(is_cpoint,Points)),
-  %my_assertion(ground(Points)),
+  assertion(is_list([overrides|Overrides])),
+  assertion(maplist(is_cpoint,Points)),
+  %assertion(ground(Points)),
   flag(indiv,Fv,Fv+1),
   Iv is (Fv rem 3000) + 1,
-  once(colors_via_pixels(Points,CC)),
+  once(colors(Points,CC)),
   length(Points,Len),
   Empty is Area - Len,
   deoffset_points(LoH,LoV,Points,LPoints),
@@ -183,8 +135,8 @@ make_indiv_object(ID,H,V,LoH,LoV,HiH,HiV,Points,Overrides,Obj):-
     %width(Width), height(Height), area(Area), %missing(Empty),
     [changes([])|OShapes], % [grid(LocalGrid)],    
     [object_indv_id(ID,Iv),globalpoints(Points),grid_size(H,V)]],Ps))),  
-  with_objprops(override,Overrides,Ps,OUT1),
-  sort_obj_props(OUT1,OUT),!,as_obj(OUT,Obj).
+  override_objprops(Overrides,Ps,OUT1),
+  sort_obj_props(OUT1,OUT),!.
 
 top(7).
 
@@ -220,33 +172,22 @@ obk_key(_,80).
 add_shape_info([Info|L],I,O):-!,add_shape_info(Info,I,M),add_shape_info(L,M,O).
 add_shape_info([],I,I):-!.
 add_shape_info(Info,I,O):- override_object(object_shape(Info),I,O).
+override_object(E,obj(List),obj(MidList)):- !, override_objprops(E,List,MidList).
+override_object(E,I,O):- maplist(override_object(E),I,O).
 
-
-override_object(E,I,O):- with_object(override,E,I,O).
-
-with_object(Op,E,obj(List),obj(MidList)):- !, with_objprops(Op,E,List,MidList).
-with_object(Op,E,I,O):- maplist(with_object(Op,E),I,O).
-
-with_objprops(Op,obj(E),List,MidList):- !, with_objprops(Op,E,List,MidList).
-with_objprops(Op,E,obj(List),obj(MidList)):- !, with_objprops(Op,E,List,MidList).
-with_objprops(_Op,[],List,List):-!.
-with_objprops(Op,[E|Props],List,NewList):-!,
-  with_objprops(Op,E,List,MidList),
-  with_objprops(Op,Props,MidList,NewList).
-
-
-with_objprops(delq,E,List,NewList):-functor(E,F,A),functor(R,F,A),
-    append(Left,[R|Right],List), % E \=@= R,
-    append(Left,Right,NewList),!.
-
-with_objprops(override,E,List,NewList):- E \= object_shape(_), functor(E,F,A),functor(R,F,A),
+override_objprops(obj(E),List,MidList):- !, override_objprops(E,List,MidList).
+override_objprops(E,obj(List),obj(MidList)):- !, override_objprops(E,List,MidList).
+override_objprops([],List,List):-!.
+override_objprops([E|Props],List,NewList):-!,
+  override_objprops(E,List,MidList),
+  override_objprops(Props,MidList,NewList).
+override_objprops(E,List,NewList):- E \= object_shape(_), functor(E,F,A),functor(R,F,A),
     append(Left,[R|Right],List), % E \=@= R,
     append(Left,[E|Right],NewList),!.
 
-with_objprops(override,E,List,NewList):- 
+override_objprops(E,List,NewList):- 
     append(Left,[changes(G)|Right],List), 
     (( \+ \+ (member(R,Right), R =@= E )) -> NewList = List ; append(Left,[changes(G),E|Right],NewList)),!.
-
 
 
 transfer_props(O,Functors,NewO,obj(NewObjL)):-
@@ -261,16 +202,16 @@ transfer_props_l([P|L],Functors,List,NewList):-
 transfer_props_l([_|L],Functors,List,NewList):-
   transfer_props_l(L,Functors,List,NewList).
 
-object_indv_id(I,ID,Iv):- indv_props_old(I,L),member(object_indv_id(ID,Iv),L),!.
+object_indv_id(I,ID,Iv):- indv_props(I,L),member(object_indv_id(ID,Iv),L),!.
 object_indv_id(I,ID,Iv):- throw(missing(object_indv_id(I,ID,Iv))).
 %object_indv_id(_,ID,_Iv):- nb_current(test_pairname,ID).
 
-mass(I,Count):- is_grid(I),!,globalpoints(I,Points), length(Points,Count),!.
 mass(I,X):- var_check(I,mass(I,X)).
-mass([G|Grid],Points):- (is_object_group(Grid);(is_list(Grid),is_object_group(G))),!,maplist(mass,[G|Grid],MPoints),sum_list(MPoints,Points).
+mass([G|Grid],Points):- (is_group(Grid);(is_list(Grid),is_group(G))),!,maplist(mass,[G|Grid],MPoints),sum_list(MPoints,Points).
 mass(I,X):- indv_props(I,L),member(mass(X),L),!.
 mass(I,X):- is_object(I),!,must_det_l((localpoints(I,L), length(L,X))).
 %mass(I,X):- is_object(I),!,must_det_l((indv_props(I,L), member(mass(X),L))).
+mass(I,Count):- is_grid(I),!,globalpoints(I,Points), length(Points,Count),!.
 mass(Points,Count):- is_list(Points),length(Points,Count),!.
 mass(I,Count):- globalpoints(I,Points),!,length(Points,Count),!.
 mass(C-_,1):- nonvar_or_ci(C),!.
@@ -281,11 +222,8 @@ remove_color(LPoints,ColorlessPoints):- maplist(remove_color,LPoints,ColorlessPo
 
 decl_pt(setq(object,any,object)).
 
-setq(Orig,Todo,Result):- is_object(Orig),!,override_object(Todo,Orig,Result).
 setq(Orig,Todo,Result):- metaq(setq_1,Orig,Todo,Result).
 setq_1(_Old,New,Saved):- Saved=New.
-
-delq(I,E,O):-is_object(I),!, with_object(delq,E,I,O).
 delq(Orig,Todo,Result):- metaq(delq_1,Orig,Todo,Result).
 delq_1(_Old,_New,Saved):- Saved=delq.
 
@@ -298,13 +236,14 @@ metaq_1(P3,Did,Old,New,Orig,Saved):- compound(Orig),Orig=Old, call(P3,Old,New,Sa
 
 enum_group(S):- is_unshared_saved(_,S).
 
-
+enum_object(S):- g2o(_,S).
+enum_object(S):- is_unshared_saved(_,IndvS),member(S,IndvS).
+enum_object(S):- is_gridname(S,_).
 
 %indv_props(Obj,L):- compound(Obj), arg(1,Obj,L), is_list(L),!.
-indv_props(obj(L),L):- my_assertion(nonvar(L)),!, is_list(L).
-%indv_props(G,L):- dumpST,trace,into_obj(G,O),is_object(O),indv_props(O,L).
-
-indv_props_old(obj(L),L):- nonvar(L), is_list(L).
+indv_props(obj(L),L):- is_list(L),!.
+indv_props(G,L):- nonvar(G), g2o(G,O), nonvar(O),!,indv_props(O,L).
+indv_props(obj(L),L):- enum_object(obj(L)).
 
 pmember(E,X):- X=obj(L),!,indv_props(X,L),member(E,L).
 pmember(E,X):- sub_term(EE,X),nonvar_or_ci(EE),EE=E,ground(E).
@@ -343,16 +282,13 @@ counted_neighbours(C-HV,List,CountIn,[P|CountIn]):-
  findall(Dir,(is_adjacent_point(HV,Dir,HV2),Dir\==c,member(CC-HV2,List),colors_join(C,CC)),Ns),
   length(Ns,I),P = I-HV.
 
-var_check(I,_):- nonvar(I),!,fail.
-var_check(I,G):- enum_object(I)*->G;fail.
 var_check(I,G):- var(I),wdmsg(error(var(G))),!,trace_or_throw(maybe_enum_i(I,G)),call(G).
 
-object_shape(I,X):- compound(I),I=obj(L),!,my_assertion(is_list(L)),!,member(object_shape(X),L).
-object_shape(I,X):- indv_props(I,L),!,member(object_shape(X),L).
 object_shape(I,X):- var_check(I,object_shape(I,X)).
+object_shape(I,X):- indv_props(I,L),member(object_shape(X),L).
 
-rotation(G,X):- is_object_group(G),!,maplist(rotation,G,Points),append_sets(Points,X).
 rotation(I,X):- var_check(I,rotation(I,X)).
+rotation(G,X):- is_group(G),!,maplist(rotation,G,Points),append_sets(Points,X).
 rotation(I,X):- indv_props(I,L),member(rotation(X),L).
 rotation(_,same).
 
@@ -362,8 +298,8 @@ rotation(_,same).
 %as_cv(C-_,Color):- as_cv(C,Color).
 %as_cv(C,Color):- integer(C),!,color_code(C,Color).
 
-object_changes(G,X):- is_object_group(G),!,maplist(object_changes,G,Points),append_sets(Points,X).
-object_changes(I,X):- indv_props_old(I,L),member(changes(X),L).
+object_changes(G,X):- is_group(G),!,maplist(object_changes,G,Points),append_sets(Points,X).
+object_changes(I,X):- indv_props(I,L),member(changes(X),L).
 
 all_points_between(_Grid,_Hi,0,_GH,_GV,Points,Points):-!.
 all_points_between(Grid,Hi,Vi,GH,GV,Points,PointsO):-
@@ -406,7 +342,7 @@ localpoints(options(X),_Points):- trace_or_throw(localpoints(options(X))).
 localpoints(I,X):- localpoints0(I,X),!.
 localpoints(I,X):- globalpoints0(I,X),!.
 
-  localpoints0(I,X):- indv_props(I,L),member(localpoints(X),L), my_assertion(maplist(is_cpoint,X)),!.
+  localpoints0(I,X):- indv_props(I,L),member(localpoints(X),L), assertion(maplist(is_cpoint,X)),!.
   %localpoints(I,X):- into_grid(I,G),!,grid_size(G,H,V),grid_to_points(G,H,V,X).
 
 
@@ -421,11 +357,10 @@ grid_to_id(Grid,ID):- gensym('grid_',ID),assert_id_grid_cells(ID,Grid),assert(is
 
 %colors(Points,CC):- is_list(Points),nth0(_,Points,C-_),is_color(C), CC = [cc(C,3)],!.
 colors(I,X):- indv_props(I,L),member(colors(X),L),!.
-colors(G,BFO):- colors_via_pixels(G,BFO),!.
-colors_via_pixels(G,BFO):- quietly((pixel_colors(G,GF),sort(GF,GS),count_each(GS,GF,UC),keysort(UC,KS),reverse(KS,SK),!,into_cc(SK,BFO))).
-%colors(G,X):- is_object_group(G),!,maplist(colors,G,Points),append_sets(Points,X).
+colors(G,BFO):- quietly((pixel_colors(G,GF),sort(GF,GS),count_each(GS,GF,UC),keysort(UC,KS),reverse(KS,SK),!,into_cc(SK,BFO))).
+%colors(G,X):- is_group(G),!,maplist(colors,G,Points),append_sets(Points,X).
 
-shape(G,X):- is_object_group(G),!,maplist(shape,G,Points),append_sets(Points,X).
+shape(G,X):- is_group(G),!,maplist(shape,G,Points),append_sets(Points,X).
 % returns the objects colorless localpoints
 shape(I,X):- indv_props(I,L),member(shape(X),L).
 
@@ -443,14 +378,14 @@ object_grid(I,G):- localpoints(I,LP),points_to_grid(LP,G),!.
 
 loc_xy_term(I,offset(X,Y)):- loc_xy(I,X,Y),!.
 
-loc_xy(G,X,Y):- is_object_group(G),!,maplist(loc_xy_term,G,Offsets),sort(Offsets,[offset(X,Y)|_]). % lowest offset
+loc_xy(G,X,Y):- is_group(G),!,maplist(loc_xy_term,G,Offsets),sort(Offsets,[offset(X,Y)|_]). % lowest offset
 loc_xy(Grid,H,V):- is_grid(Grid),!,globalpoints(Grid,Points),!,points_range(Points,LoH,LoV,_,_,_,_), H is LoH, V is LoV.
 loc_xy(I,X,Y):- indv_props(I,L),member(loc_xy(X,Y),L),!.
 loc_xy(NT,H,V):- trace, named_gridoid(NT,G),loc_xy(G,H,V).
 
 vis_hv_term(I,size(X,Y)):- vis_hv(I,X,Y),!.
 
-vis_hv(G,X,Y):- is_object_group(G),!,maplist(vis_hv_term,G,Offsets),sort(Offsets,HighToLow),last(HighToLow,size(X,Y)).
+vis_hv(G,X,Y):- is_group(G),!,maplist(vis_hv_term,G,Offsets),sort(Offsets,HighToLow),last(HighToLow,size(X,Y)).
 vis_hv(Grid,H,V):- is_grid(Grid),!,globalpoints(Grid,Points),!,points_range(Points,LoH,LoV,HiH,HiV,_,_), H is HiH-LoH+1, V is HiV-LoV+1.
 vis_hv(I,X,Y):- indv_props(I,L),member(vis_hv(X,Y),L),!.
 vis_hv(Points,H,V):- points_range(Points,LoH,LoV,HiH,HiV,_,_), H is HiH-LoH+1, V is HiV-LoV+1.
@@ -601,8 +536,8 @@ guess_shape(GridIn,LocalGrid,I,E,N,H,V,Colors,Points,Keypad):-
 
 guess_shape_poly(I,0,1,1,1,Colors,Points,dot):-!.
 guess_shape_poly(I,_,_,_,_,Colors,[Point],dot):-!.
-guess_shape_poly(I,0,N,N,1,Colors,Points,hv_line(h,_)):- N > 1.
-guess_shape_poly(I,0,N,1,N,Colors,Points,hv_line(_,v)):- N > 1.
+guess_shape_poly(I,0,N,N,1,Colors,Points,hv_line(h)):- N > 1.
+guess_shape_poly(I,0,N,1,N,Colors,Points,hv_line(v)):- N > 1.
 guess_shape_poly(I,0,N,H,V,Colors,Points,rectangle):- N>1, H\==V,!.
 guess_shape_poly(I,0,N,H,V,Colors,Points,square):- N>1,H==V,!.
 guess_shape(GridIn,LocalGrid,I,O,N,H,V,Colors,Points,polygon):- O\==0,once(H>1;V>1).
