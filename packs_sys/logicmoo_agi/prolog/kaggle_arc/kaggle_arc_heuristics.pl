@@ -146,7 +146,7 @@ learn_color_individuals_lib_one_way(PairName,In,Out,IH,IV,OH,OV,
      do_action(add_shape_lib(pair,NoiseObject)))),
 
   ignore((IMass>0, OMass==0, 
-    individuate([],[options([by_color(IPCs)])],ImO,NewImO),    
+    individuate([options([by_color(IPCs)])],ImO,NewImO),    
     add_shape_lib(pair,NewImO))),
 
    true)).

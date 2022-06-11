@@ -22,125 +22,46 @@ maybe_multivar(_).
 :- dynamic(is_unshared_saved/2).
 :- dynamic(is_shared_saved/2).
 
-default_i_options([
-  shape_lib(noise), shape_lib(in), shape_lib(pair), shape_lib(out),
-  use_reserved, fourway, solid(rectangle), outlines,
-  %polygons,
-  %shape_lib(rectangle), 
-  %shape_lib(all),
-  %shape_lib(hammer),
-  rectangle, diamonds, all,
-
-  % polygs,
-  %hv_line(v), hv_line(h),
-  %dg_line(u),dg_line(d),
-  %CS,
-  all,
-  
-  connect(hv_line(h)),
-  connect(hv_line(v)),  
-  % line(_),dg_line(_),
-  % release_points, all,
-  %into_single_hidden,oldway
-  %retain(solid(rectangle)),
-   % shapes,
-  %into_single_hidden,
-  all, done]). % :- get_cycle_shapes(CS).
-
-get_cycle_shapes(
-cycle_shapes([
-])).
-
-
-%individuate(H,V,ID,Grid,Points,IndvSO):- individuate_default(H,V,ID,Grid,Points,IndvSO).
-expand_todo(complete,
-   [fourway,
-    shape_lib(intruder), shape_lib(out), shape_lib(noise),
-    shape_lib(in),
-    shape_lib(pair),
-    %solid(rectangle), 
-    %polygon, rectangle,
-    %diamonds,
-    dg_line(d),hv_line(v),
-    dg_line(u),hv_line(h),
-    extend(_),
-    connected(Y,Y),
-    merged(Z,Z),
-    jumps(X,X),
-    merged(dg_line(_),hv_line(_)),
-    %connect(dg_line(X),dg_line(X)),    
-    %line(h,_,_,d),
-    done,
-    %  dg_line(u),
-    %  dg_line(d),
-    %all,
-    %connect(hv_line(_,_)),
-    %connect(dg_line(d)),
-    %connect(dg_line(d)),
-    % merge(_),
-    find_engulfed,
-    find_contained,
-    %  jumps(hv_line(h)),
-    %  jumps(hv_line(v)),
-    check_engulfed,
-    combined_perfects,
-    by_color,
-    progress,
-    %leftover,
-    done]).
-
-
-expand_todo(new_indiv,
-     [
-      shape_lib(noise), 
-      fourway,
-               solid(rectangle), 
-               rectangle,
-               shape_lib(pair),
-/*             connect(hv_line(h)),
-               connect(hv_line(v)),
-               connect(dg_line(u)),
-               connect(dg_line(d)),
-               dg_line(u),dg_line(d),
-
-               hv_line(h),hv_line(v),
-
-               merge(hv_line(h)),
-               merge(hv_line(v)),
-
-               merge(dg_line(u)),
-               merge(dg_line(d)),
-
-               jumps(hv_line(h)),
-               jumps(hv_line(v)),
-               jumps(dg_line(u)),
-               jumps(dg_line(d)),
-*/
-  all, shape_lib(in),shape_lib(out),
-  
-  find_engulfed,
-  find_contained,
-  check_engulfed,
-  combined_perfects,
-  by_color,
-  %leftover,
-  done]).
-
-expand_todo(default, 
- [fourway,
-  shape_lib(noise),shape_lib(pair),
- %fourway,
+expand_todo(complete_too, [shape_lib(noise), fourway,solid(rectangle), rectangle, shape_lib(pair),
+/*             connect(hv_line(h)),connect(hv_line(v)),connect(dg_line(u)),connect(dg_line(d)),
+               dg_line(u),dg_line(d),hv_line(h),hv_line(v),merge(hv_line(h)),merge(hv_line(v)),merge(dg_line(u)),merge(dg_line(d)),
+               jumps(hv_line(h)),jumps(hv_line(v)),jumps(dg_line(u)),jumps(dg_line(d)),
+*/all, shape_lib(in),shape_lib(out),find_engulfed,find_contained,check_engulfed,combined_perfects, by_color, 
+  done]).   
+expand_todo(defaults, [fourway, shape_lib(noise),shape_lib(pair),shape_lib(intruder),
  shape_lib(in),shape_lib(out),
- solid(rectangle), 
- %rectangle, 
- dg_line(_,_), 
+ solid(rectangle),
+ dg_line(_), %rectangle,  
  connect(hv_line(h)),connect(hv_line(v)),
  connect(dg_line(u)),connect(dg_line(d)),
  find_engulfed,find_contained,find_engulfed,find_contained,
  dg_line(u),dg_line(d), 
- hv_line(h),hv_line(v), 
+ hv_line(h),hv_line(v), solid(rectangle), 
  all, by_color, done, default]).
 
+
+%individuate(H,V,ID,Grid,Points,IndvSO):- individuate_default(H,V,ID,Grid,Points,IndvSO).
+expand_todo(complete, [
+     shape_lib(noise), fourway, shape_lib(intruder), shape_lib(out),  shape_lib(in),shape_lib(pair), 
+    %polygon,  %calc_largest_square_block,
+    rectangle, dg_line(d), 
+    diamonds,  dg_line(u), hv_line(h), hv_line(v),
+    extend(_), connected(Y,Y),merged(Z,Z), jumps(X,X), 
+    find_contained, find_engulfed,
+    merged(dg_line(_),hv_line(_)), check_engulfed, combined_perfects,     % progress, %leftover,
+    by_color,done]).
+
+default_i_options([
+  shape_lib(noise), shape_lib(in), shape_lib(intruder), shape_lib(pair), shape_lib(out),
+  use_reserved, fourway, solid(rectangle), outlines,
+  %polygons,%shape_lib(rectangle), %shape_lib(all), %shape_lib(hammer), calc_largest_square_block,
+  rectangle, diamonds, all,
+  % polygs, %hv_line(v), hv_line(h), %dg_line(u),dg_line(d), %CS,
+  all,
+  connect(hv_line(h)), connect(hv_line(v)),  
+  % line(_),dg_line(_), % release_points, all, %into_single_hidden,oldway %retain(solid(rectangle)), % shapes, %into_single_hidden,
+  all, done]). % :- get_cycle_shapes(CS).
+get_cycle_shapes(cycle_shapes([])).
 
 
 :- style_check(+singleton).
@@ -218,31 +139,29 @@ individuation_reserved_options(ROptions,Reserved,NewOptions):-
       pt(blue,fix_indivs_options(in=ReservedOptions,r=Reserved,o=NewOptions)))).
 
 
-individuate(ROptions,Grid,IndvS):- individuate1(ROptions,Grid,IndvS).
+individuate_default(Grid,IndvS):- individuate([defaults],Grid,IndvS).
+individuate_complete(Grid,IndvS):- individuate([complete],Grid,IndvS).
 
-individuate1(ROptions,Grid,IndvS):-
-   individuation_reserved_options(ROptions,Reserved,NewOptions),
-   individuate(Reserved,NewOptions,Grid,IndvS).
-
-individuate(Reserved,NewOptions,Points,IndvS):-  is_points_list(Points),points_to_grid(Points,Grid),!, 
-   individuate(Reserved,NewOptions,Grid,IndvS).
-
-individuate(Reserved,NewOptions,GridIn,IndvS):-   
-   into_points_grid(GridIn,Points,Grid),
-   quietly(grid_size(Grid,H,V)), wdmsg(individuate(H,V)),
+individuate(_ROptions,Grid,IndvS):- Grid==[],!,IndvS=[].
+individuate(ROptions,GridIn,IndvS):-
    must_be_free(IndvS),
+   into_points_grid(GridIn,Points,Grid),   
+   individuation_reserved_options(ROptions,Reserved,NewOptions),
+   quietly(grid_size(Grid,H,V)), 
    into_gridname(Grid,ID),
+   pt(yellow,individuate(H,V)=ID),
    individuate(H,V,ID,Reserved,NewOptions,Grid,Points,IndvS).
 
 % tiny grid becomes a series of points
 individuate(GH,GV,ID,_Reserved,_NewOptions,_Grid,Points,IndvS):- is_glyphic(Points,GH,GV), !,
   individuate_glyphic(GH,GV,ID,Points,IndvS).
+
 individuate(H,V,ID,Reserved,NewOptions,Grid,Points,IndvSS):-
    individuals_raw(H,V,ID,NewOptions,Reserved,Points,Grid,IndvSRaw),
    %as_debug(9,ptt((individuate=IndvSRaw))),
    make_indiv_object_list(ID,H,V,IndvSRaw,IndvS1),
    combine_objects(IndvS1,IndvS),list_to_set(IndvS,IndvSS),
-   save_grouped(individuate(ID),IndvSS).
+   save_grouped(individuate(ID,NewOptions),IndvSS).
 
 into_points_grid(GridIn,Points,Grid):- 
    globalpoints(GridIn,Points),
@@ -261,32 +180,16 @@ individuate_glyphic(GH,GV,ID,PointsIn,IndvSO):-
   override_object(birth(glyphic),IndvS,IndvSO),
   save_grouped(individuate_glyphic(ID),IndvSO).
 
-fti_go(Grid,Options,Image.objs):-
-  globalpoints(Grid,Points),
-  grid_size(Grid,GH,GV),
-  grid_to_id(Grid,ID),
-  make_fti(GH,GV,ID,Grid,[],[],Options,Points,Image),
-  fti(Image).
+% Thunk(ArgList->Image)
+call_fsi(Image,NewReserved,NewGrid,NewOptions,GH,GV,Sofar,ID,Options,Reserved,Points,Grid,SofarMaybeNew,NextScanPoints):-
+  (var(Image)->make_fti(GH,GV,ID,Grid,Sofar,Reserved,Options,Points,Image);true),
+  fti(Image,Options),!,
+  NewReserved = Image.robjs,
+  NewOptions = Image.todo,
+  NewGrid = Image.grid,
+  NextScanPoints = Image.points,
+  SofarMaybeNew = Image.objs.
 
-individuate2(_Options,GridIn,IndvS):- GridIn==[],!,IndvS=[].
-individuate2( Options,Grid,IndvSS):- 
-  listify(Options,LOptions),
-  append([LOptions,complete,LOptions],UseOpts),
-   fti_go(Grid,UseOpts,Image),
-   _LeftOverPoints = Image.points,
-   H = Image.h, V = Image.v, ID = Image.id,
-   Indv_1 = Image.objs,
-   wdmsg(individuate(H,V)),
-   %as_debug(9,ptt((individuate=IndvSRaw))),
-   unraw_inds(Image,Indv_1,Indv_2),  
-   largest_first(Indv_2,IndvSRaw),
-   make_indiv_object_list(ID,H,V,IndvSRaw,IndvS1),
-   combine_objects(IndvS1,IndvS),
-   list_to_set(IndvS,IndvSS),
-   save_grouped(individuate(ID),IndvSS).
-
-individuate(H,V,ID,Grid,ContainedPoints,Image.points):-
-  make_fti(H,V,ID,Grid,[],[],[complete],ContainedPoints,Image).
 
 make_fti(GH,GV,ID,Grid,Sofar,Reserved,Options,Points,Image):-
   Image = _{
@@ -301,47 +204,14 @@ make_fti(GH,GV,ID,Grid,Sofar,Reserved,Options,Points,Image):-
    % height width and lookup key for image
    h:GH,v:GV,id:ID}.
 
-
-
-individuate_default(GridIn,IndvS):- GridIn==[],!,IndvS=[].
-individuate_default(GridIn,IndvS):- 
-   must_be_free(IndvS),
-   into_points_grid(GridIn,Points,Grid),
-   grid_size(Grid,H,V), 
-   into_gridname(Grid,ID),write('.'),ttyflush,
-   %wdmsg(individuate_default(H,V)),
-   individuate_complete(H,V,ID,Grid,Points,IndvS),
-   save_grouped(individuate_default(ID),IndvS).
-
-
-individuate_default2(GridIn,IndvS):- individuate2([complete],GridIn,IndvS).
-individuate_complete2(GridIn,IndvS):- individuate2([complete],GridIn,IndvS).
-
-individuate_complete(GridIn,IndvS):- GridIn==[],!,IndvS=[].
-individuate_complete(GridIn,IndvS):- 
-   must_be_free(IndvS),
-   into_points_grid(GridIn,Points,Grid),
-   grid_size(Grid,H,V), 
-   into_gridname(Grid,ID),
-   wdmsg(individuate_complete(H,V)),
-   individuate_complete(H,V,ID,Grid,Points,IndvS).
-
-%individuate_complete(H,V,ID,Grid,Points,IndvSO):- individuate_default(H,V,ID,Grid,Points,IndvSO).
-individuate_complete(H,V,ID,Grid,Points,IndvSO):-   
-   get_option_expansion(complete,Options),
-   individuate(H,V,ID,[],Options,Grid,Points,IndvSO),!,
-   save_grouped(individuate_complete(ID),IndvSO).
-
-
-
 individuals_raw(GH,GV,ID,Options,Reserved,Points,Grid,IndvSRaw):-
  must_det_l((
   must_be_free(IndvSRaw),
+  make_fti(GH,GV,ID,Grid,[],Reserved,Options,Points,Image),
   individuals_list(Image,GH,GV,[],ID,Options,Reserved,Points,Grid,Indv_0,_LeftOverPoints),
   =(Indv_0,Indv_1),
   unraw_inds(Image,Indv_1,Indv_2),  
   largest_first(Indv_2,IndvSRaw))).
-
 
 unraw_inds(_Image,I,O):- I=O,!.
 
@@ -427,23 +297,13 @@ system:goal_expansion(Goal,Out):-
    expand_goal((Goal,b_set_dict(Member,Obj,Var)),Out).
 
 
-% Thunk(ArgList->Image)
-call_fsi(Image,NewReserved,NewGrid,NewOptions,GH,GV,Sofar,ID,Options,Reserved,Points,Grid,SofarMaybeNew,NextScanPoints):-
-  (var(Image)->make_fti(GH,GV,ID,Grid,Sofar,Reserved,Options,Points,Image);true),
-  fti(Image,Options),!,
-  NewReserved = Image.robjs,
-  NewOptions = Image.todo,
-  NewGrid = Image.grid,
-  NextScanPoints = Image.points,
-  SofarMaybeNew = Image.objs.
-
 
   
 
 fti(Image):- fti(Image,Image.todo).
 
 fti(_,[]).
-fti(Image,_):- Image.points=[], !.
+%fti(Image,_):- Image.points=[], !.
 fti(_,[done|_]):- !.
 
 fti(Image,[glyphic|set(Image,todo)]):-
@@ -461,6 +321,11 @@ fti(Image,_):-
   member(progress,Image.options),
   as_debug(8,(mass(Image.objs,Mass),length(Image.objs,Count),pt(t([fsi=Image.todo,sofar=Mass/Count])))),fail.
 
+
+%fti(Image,[calc_largest_square_block|set(Image,todo)]):-
+%  calc_largest_square_block(Image),Image.objs,set(Image,objs),Image.points,set(Image,points)),!.
+  
+
 % Find free points that are contained in objects and individuate them in their own way
 fti(Image,[find_contained|set(Image,todo)]):-
   find_contained(Image.h,Image.v,Image.id,Image.objs,set(Image,objs),Image.points,set(Image,points)),!.
@@ -475,7 +340,7 @@ fti(Image,[find_contained|set(Image,todo)]):-
       must_det_l((
       points_to_grid(H,V,ContainedPoints,Grid),
       %once(object_indv_id(Found,ID,_);into_gridname(Grid,ID)),
-      individuate_complete(H,V,ID,Grid,ContainedPoints,NewInside),
+      individuate(H,V,ID,[],[complete],Grid,ContainedPoints,NewInside),
       maplist(mention_inside(Found),NewInside,NewInsideM))),
       ignore((length(ContainedPoints,N),N>1,quietly(print_grid(H,V,[Found|NewInsideM])))),
       find_contained(H,V,ID,Sofar,SofarInstead,ScanPointsInstead,NextScanPointsInstead),
@@ -528,46 +393,52 @@ fti(Image,[find_contained|set(Image,todo)]):-
 % Find object that are contained in objects and individuate them in their own way  (TODO mame this more complete)
 % Find free points that are contained in objects and individuate them in their own way
 fti(Image,[find_engulfed|set(Image,todo)]):-
-  find_engulfed(Image).   find_engulfed(Image):- find_engulfed(Image,Image.objs,set(Image,objs)),!.
+  print_grid(Image.grid),
+  pt(yellow,"Find Engulfed "+ Image.id),!, 
+  ( \+ is_input(Image)-> trace ; true),
+  find_engulfed(Image).    find_engulfed(Image):- find_engulfed(Image,Image.objs,set(Image,objs)),!.
     
-find_engulfed(ScanNext,SofarInsteadO):-
-  find_engulfed(ScanNext,ScanNext,SofarInsteadO).
+find_engulfed(Image,ScanNext,SofarInsteadO):-
+  find_engulfed(Image,ScanNext,ScanNext,SofarInsteadO).
 
-find_engulfed([],SofarInsteadO,SofarInsteadO).
-find_engulfed([Found|ScanNext],OtherObjects,OtherObjectsO):-
- % (isz(Found,outline(_));isz(Found,outl)) ->       
-  once(find_englufed_objects(Found,OtherObjects,NewInside)),
-  NewInside\==[],
+is_input(Image):- Image.id = _ * _ * in.
+
+find_engulfed(_Image,[],SofarInsteadO,SofarInsteadO).
+find_engulfed(Image,[Found|ScanNext],OtherObjects,OtherObjectsO):-
+ ((isz(Found,outline(_));isz(Found,outl)) ->
+ (( once(find_englufed_objects(Image,Found,OtherObjects,NewInside)),
+  
+  NewInside\==[], 
   must_det_l((
   maplist(mention_inside(Found),NewInside,NewInsideM),
   replace_i_each(OtherObjects,NewInside,NewInsideM,NewOtherObjects),
   replace_i_each(ScanNext,NewInside,NewInsideM,NewScanNext),
   ignore((length(NewInside,N),N>0,quietly(print_grid([Found|NewInsideM])))),      
-  find_engulfed(NewScanNext,NewOtherObjects,OtherObjectsO))).
+  find_engulfed(Image,NewScanNext,NewOtherObjects,OtherObjectsO)))))).
 
-find_engulfed([_|Sofar],OtherObjects,OtherObjectsO):-
-  find_engulfed(Sofar,OtherObjects,OtherObjectsO).
+find_engulfed(Image,[_|Sofar],OtherObjects,OtherObjectsO):-
+  find_engulfed(Image,Sofar,OtherObjects,OtherObjectsO).
 
 
-find_englufed_objects(_,[],[]).
-find_englufed_objects(Found,[Next|ScanPoints],[Next|Engulfed]):-
+find_englufed_objects(_Image,_,[],[]).
+find_englufed_objects(Image,Found,[Next|ScanPoints],[Next|Engulfed]):-    
  contained_object(Found,Next),
- find_englufed_objects(Found,ScanPoints,Engulfed).
-find_englufed_objects(Found,[_|ScanPoints],Engulfed):-
- find_englufed_objects(Found,ScanPoints,Engulfed).
+ find_englufed_objects(Image,Found,ScanPoints,Engulfed).
+find_englufed_objects(Image,Found,[_|ScanPoints],Engulfed):-
+ find_englufed_objects(Image,Found,ScanPoints,Engulfed).
 
-contained_object(O1,O2):- 
+contained_object(O1,O2):-   
   O1 \== O2,
   loc_xy(O1,LowH1,LowV1),loc_xy(O2,LowH2,LowV2), 
-  LowH2>=LowH1, LowV2>=LowV1,
+  LowH2 > LowH1, LowV2 > LowV1,
   vis_hv(O1,H1,V1),vis_hv(O2,H2,V2), 
-  H1>=H2, V1>=V2,
+  H1> H2, V1> V2,
   HighH1 is LowH1+H1, HighV1 is LowV1+V1,
   HighH2 is LowH2+H2, HighV2 is LowV2+V2,
-  HighH1 >= HighH2,
-  HighV1 >= HighV2,
-  globalpoints(O2,[Point]),!,
-  object_surrounds_point(O1,Point).
+  HighH1 > HighH2,
+  HighV1 > HighV2,
+  nop(globalpoints(O2,[Point|_])),!,
+  nop(object_surrounds_point(O1,Point)).
     
 replace_i_each(OtherObjects,[I|NewInside],[O|NewInsideM],NewOtherObjects):-!,
   subst(OtherObjects,I,O,OtherObjectsM),
@@ -837,11 +708,11 @@ fsi(_Image,Reserved,NewGrid,TODO,H,V,Sofar,_ID,['regroup'|TODO],Reserved,Points,
   points_to_grid(H,V,Points,NewGrid).
 
 
-fsi(_Image,Reserved,Grid,TODO,H,V,Sofar,ID,[solid(squares)|TODO],Reserved,_Points,Grid,AllOUT,NextScanPoints):- fail, !,
+fsi(_Image,Reserved,Grid,TODO,H,V,Sofar,ID,[solid(rectangle)|TODO],Reserved,_Points,Grid,AllOUT,NextScanPoints):- !, fail,
   globalpoints(Grid,NewGPoints),
   grid_to_segs(Grid,Segs),
   seg_squares(Segs,Squares),
-  segs_to_pointlists(Squares,Objs),  
+  segs_to_pointlists(Squares,Objs),  Objs\==[],
   maplist(make_indiv_object_list(ID,H,V),Objs,OutInvdivS),
   %maplist(print_grid,OutInvdivS),
   as_debug(8,print_grid(H,V,'Solid-boxes'+ID,OutInvdivS)),!,
@@ -881,8 +752,7 @@ fsi(_Image,Reserved,Grid,TODO,H,V,Sofar,ID,[solid(squares)|TODO],Reserved,_Point
     seg_squares(Segs,Segs).
     
     must_be_nonvar(X):- assertion(nonvar_or_ci(X)),!.
-    
-    
+        
     make_points_list(C,MinH,MinV,MaxH,MaxV,PointsList):-
        findall(C-HV,(between(MinV,MaxV,V),between(MinH,MaxH,H),hv_point(H,V,HV)),PointsList),!.
     
@@ -911,6 +781,7 @@ merge_shapes(H,V,ID,Sofar,Option,TODO,OptionsOut,_Grid,Points,NewSofar,Points):-
   append(SofarLess,[Combined],NewSofar),cycle_back_in(OptionC,TODO,OptionsOut).
 
 
+cycle_back_in(OptionC,TODO,[OptionC|TODO]).
 cycle_back_in(OptionC,TODO,OptionsOut):-
   length(TODO,N), N2 is floor(N/2),length(LL,N2),append(LL,RR,TODO),append(LL,[OptionC|RR],OptionsOut).
 
@@ -921,7 +792,6 @@ fsi(Image,ReservedO,GridO,OptionsOut,H,V,Sofar,ID,[connect(ShapeType)|TODO],Rese
 fsi(_Image,Reserved,Grid,OptionsOut,H,V,Sofar,ID,[Option|TODO],Reserved,Points,Grid,NewSofar,RestPoints):-   
   connected(H,V,ID,Sofar,Option,TODO,OptionsOut,Grid,Points,NewSofar,RestPoints).
 
-isz(O,S):- object_shape(O,S).
 
 selected_from(Sofar,ShapeType1,ShapeType2,HV1,HV2,SofarLess):- 
   into_group(Sofar,Sofar1,Closure),
@@ -1138,7 +1008,7 @@ individuals_near(Dir,Options,C,From,[E|ScanPoints],[E|Nears],NextScanPoints):- n
 individuals_near(Dir,Options,C,From,[E|ScanPoints],Nears,[E|NextScanPoints]):- 
       individuals_near(Dir,Options,C,From,ScanPoints,Nears,NextScanPoints).
 
-nearby_one(Dir,Options,C,C2-E,List):- allowed_dir(Options,Dir), adjacent_point_allowed(C,E2,Dir,E), member(C2-E2,List),ok_color_with(C2,C).
+nearby_one(_Dir2,Options,C,C2-E,List):- allowed_dir(Options,Dir), adjacent_point_allowed(C,E2,Dir,E), member(C2-E2,List),ok_color_with(C2,C).
 
 check_minsize(_,I,I):-!.
 check_minsize(_,[],[]):-!.

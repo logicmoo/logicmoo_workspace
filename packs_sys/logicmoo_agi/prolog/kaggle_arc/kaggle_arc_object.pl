@@ -122,16 +122,16 @@ as_obj(O,Obj):- compound(O), O = obj(L), Obj = O, register_obj(L).
 %register_obj(O):- quietly((wots(S,weto(dumpST)), asserta(obj_cache(O,S)))),!.
 register_obj(L):- obj_cache(LL,_),LL=@=L,!.
 register_obj(L):- asserta(obj_cache(L,'')),
-  print_grid(obj(L)),%maplist(tersify,L,LL),pt(LL),
-  debug_indiv(obj(L)).
+  ignore((O=obj(L),mass(O,Mass),Mass>7,format('~N'),arc_portray(O,false),nl)).
+
 :- dynamic(obj_cache/2).
 :- module_transparent obj_cache/2.
 
 enum_object(O):- var(O),!,no_repeats(O,enum_object0(O)).
 enum_object(O):- ptt(enum_object(O)),trace.
 
-enum_object0(O):- % listing(obj_cache/2),
-               obj_cache(O,S),write(S). 
+enum_object0(obj(O)):- % listing(obj_cache/2),
+       obj_cache(O,S),write(S). 
 /*
 enum_object0(S):- why_grouped(_,IndvS),member(S,IndvS).
 enum_object0(S):- clause(in_shape_lib(_,S),Body),catch(Body,_,fail).
@@ -345,13 +345,17 @@ counted_neighbours(C-HV,List,CountIn,[P|CountIn]):-
  findall(Dir,(is_adjacent_point(HV,Dir,HV2),Dir\==c,member(CC-HV2,List),colors_join(C,CC)),Ns),
   length(Ns,I),P = I-HV.
 
-var_check(I,_):- nonvar(I),!,fail.
-var_check(I,G):- enum_object(I)*->G;var_check_throw(I,G).
+var_check(I,G):- var(I),!,(enum_object(I)*->G;var_check_throw(I,G)).
 var_check_throw(I,G):- var(I),wdmsg(error(var(G))),!,trace_or_throw(maybe_enum_i(I,G)),call(G).
 
-object_shape(I,X):- compound(I),I=obj(L),!,my_assertion(is_list(L)),!,member(object_shape(X),L).
-object_shape(I,X):- indv_props(I,L),!,member(object_shape(X),L).
-object_shape(I,X):- var_check(I,object_shape(I,X)).
+object_shapeW(I,X):- compound(I),I=obj(L),!,my_assertion(is_list(L)),!,member(object_shape(X),L).
+object_shapeW(I,X):- indv_props(I,L),!,member(object_shape(X),L).
+
+object_shape(I,X):- var_check(I,object_shape(I,X))*->true;(indv_props(I,L),member(object_shape(X),L)).
+
+isz(O,S):- object_shape(O,S).
+
+obj_prop_val(I,X):- var_check(I,obj_prop_val(I,X))*->true;(indv_props(I,L),member(X,L)).
 
 rotation(G,X):- is_group(G),!,maplist(rotation,G,Points),append_sets(Points,X).
 rotation(I,X):- var_check(I,rotation(I,X)).

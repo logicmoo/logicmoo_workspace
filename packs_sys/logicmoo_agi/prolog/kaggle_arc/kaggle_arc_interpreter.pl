@@ -116,6 +116,7 @@ into_object(G,O):- into_group(G,OL),must([O]=OL).
 into_group(GI,G):- into_group(GI,G, _ ).
 
 into_group(G,G, _):- plain_var(G),throw(var_into_group(G)).
+into_group([],[],(=)):-!.
 into_group(P,G,(=)):- is_group(P),!,G=P.
 into_group(G,I, into_grid):- is_grid(G),!,compute_shared_indivs(G,I).
 into_group(P,G, last):- is_object(P),!,G=[P].

@@ -59,7 +59,7 @@ tersify2(I,I).
 tersify3(I,O):- compound(I),tersify1(I,O),!.
 tersify3(I,O):- tersify0(I,O),!.
 tersify3([H|I],O):- is_list(I), !, with_output_to(string(S),display(I)),!, ((atom_length(S,N), N>170) -> 
-  (length(I,LL),tersify(H,HH),tersify_len(HH,LL,s_l(N))=O); I=O).
+  (length(I,LL),tersify(H,HH),(('...'(HH,LL,'...'(N)))=O)); I=O).
 tersify3(I,O):- compound(I), !, compound_name_arguments(I,F,IA), maplist(tersify,IA,OA), compound_name_arguments(O,F,OA).
 tersify3(I,I).
 
@@ -120,18 +120,25 @@ via_print_grid(G):- maplist(is_object,G).
 via_print_grid(G):- is_points_list(G),ground(G).
 %via_print_grid(G):- is_gridoid(G).
 
-arc_portray(G):- \+ \+ catch((( tracing,
-    is_list(G),G\==[], tersify(G,T),write(T))),_,false).
+% arc_portray(G):- \+ \+ catch((wots(S,( tracing->arc_portray(G,true);arc_portray(G,false))),write(S),ttyflush),_,fail).
+arc_portray(G):- \+ \+ catch(((tracing->arc_portray(G,true);arc_portray(G,false)),ttyflush),_,fail).
 
-arc_portray(G):- \+ \+ catch(((via_print_grid(G),
-    tracing,via_print_grid(G),!,
-    grid_size(G,H,V),!,H>0,V>0, 
-     wots(S,print_grid(H,V,G)),write(S))),_,false).
+arc_portray(G, false):- is_group(G), is_list(G), length(G,L), L>1, 
+   dash_char, 
+   print_grid(G),nl,
+   once((why_grouped(Why,WG),WG=@=G);Why = (size=L)),
+   underline_print(writeln(Why)),
+   maplist(print_info,G),
+   dash_char.
 
-arc_portray(G):- \+ \+ catch(((
-   \+ tracing,via_print_grid(G),!,
-    grid_size(G,H,V),!,H>0,V>0, 
-     wots(S,print_grid(H,V,G)),write(S))),_,false).
+% Portray In Debugger
+arc_portray(G,false):- is_object(G),!,print_grid(G),nl,underline_print(debug_indiv(G)),ptt(G).
+arc_portray(G,false):- via_print_grid(G),!, grid_size(G,H,V),!,H>0,V>0, print_grid(H,V,G).
+
+% Portray In tracer
+arc_portray(G,true):- is_object(G),underline_print(woto(ptt(G))).
+arc_portray(G,true):- via_print_grid(G),write(' '),underline_print(woto(ptt(G))),write(' ').
+arc_portray(G,true):- tersify(G,O),write(' '),writeq(O),write(' ').
 
 %user:portray(Grid):- ((\+ tracing, is_group(Grid),print_grid(Grid))).
 %user:portray(Grid):- quietlyd((is_object(Grid),print_grid(Grid))).
@@ -314,7 +321,7 @@ print_grid(H,V,Grid):- use_row_db, grid_to_id(Grid,ID),!,print_grid0(H,V,ID).
 print_grid(H,V,Grid):- quietlyd(print_grid0(H,V,Grid)).
 
 print_grid0(_,_,_):- is_print_collapsed,!.
-print_grid0(H,V,G):- G==[],nonvar(H),make_grid(H,V,GG),!,print_grid0(H,V,GG).
+print_grid0(H,V,G):- G==[],number(H),number(V),!,make_grid(H,V,GG),!,print_grid0(H,V,GG).
 print_grid0(H,V,Grid):- \+ callable(Grid),!,write('not grid: '),
   GG= nc_print_grid(H,V,Grid), pt(GG),!,trace_or_throw(GG).
 
