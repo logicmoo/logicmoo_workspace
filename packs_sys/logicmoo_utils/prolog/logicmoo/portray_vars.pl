@@ -309,7 +309,6 @@ pretty_numbervars_g(T,T):- current_prolog_flag(no_pretty,true),!.
 pretty_numbervars_g(Term, TermO):- (ground(Term);current_prolog_flag(no_pretty,true)),!,duplicate_term(Term,TermO).
 %pretty_numbervars(Term, TermO):- copy_term(Term,TermO,_),guess_pretty(Term),Term=@=TermO,Term=TermO,!.
 
-'$autoload'(_,_,_):- fail.
 
 pretty_numbervars(TermIn, TermOut):- pretty_numbervars_ground(TermIn, TermOut),!.
 

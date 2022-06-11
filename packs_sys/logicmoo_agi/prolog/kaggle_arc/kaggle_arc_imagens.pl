@@ -174,11 +174,6 @@ split_50_v(Grid,Top,Bottem):- length(Grid,N),H is floor(N/2), length(Top,H),leng
     append(Top,Rest,Grid),append(_Mid,Bottem,Rest).
 
 
-get_option_expansion([done|_],[done]):-!.
-get_option_expansion([],[]):-!.
-get_option_expansion([A|NO],O):- get_option_expansion(A,AA), !, listify(AA,AL),append(AL,NO,O).
-get_option_expansion(default,Opts):-  default_i_options(Opts).
-
 searchable(Group,List):- override_group(searchable(Group,List)),!.
 searchable(Shape,Searchable):- object_grid(Shape,Grid), constrain_grid(f,_CheckType,Grid,Searchable).
 
@@ -224,7 +219,7 @@ add_shape_lib0(Type,Obj):- mass(Obj,Mass),!,
 
 assert_shape_lib(_,Obj):-  mass(Obj,Mass), Mass<3,!.
 assert_shape_lib(Type,Obj):- is_list(Type),!,maplist(rev_lambda(assert_shape_lib(Obj)),Type).
-assert_shape_lib(Type,Obj):- asserta_if_new(in_shape_lib(Type,Obj)).
+assert_shape_lib(Type,Obj):- my_asserta_if_new(in_shape_lib(Type,Obj)).
 
 in_shape_lib(X,D):- (make_shape(X,R), deterministic(TF), dupe_shape(R,D)), (TF==true -> !; true).
 

@@ -115,12 +115,15 @@ make_indiv_object(ID,H,V,Points,Overrides,Obj):-
 
 
 :- module_transparent as_obj/2.
-as_obj(L,Obj):- is_list(L),!,Obj = obj(L), !, register_obj(Obj).
-as_obj(O,Obj):- compound(O), O = obj(_), Obj = O, register_obj(Obj).
+as_obj(L,Obj):- is_list(L),!,Obj = obj(L), !, register_obj(L).
+as_obj(O,Obj):- compound(O), O = obj(L), Obj = O, register_obj(L).
 
 :- module_transparent register_obj/1.
 %register_obj(O):- quietly((wots(S,weto(dumpST)), asserta(obj_cache(O,S)))),!.
-register_obj(O):- asserta(obj_cache(O,'')).
+register_obj(L):- obj_cache(LL,_),LL=@=L,!.
+register_obj(L):- asserta(obj_cache(L,'')),
+  print_grid(obj(L)),%maplist(tersify,L,LL),pt(LL),
+  debug_indiv(obj(L)).
 :- dynamic(obj_cache/2).
 :- module_transparent obj_cache/2.
 
@@ -601,8 +604,8 @@ guess_shape(GridIn,LocalGrid,I,E,N,H,V,Colors,Points,Keypad):-
 
 guess_shape_poly(I,0,1,1,1,Colors,Points,dot):-!.
 guess_shape_poly(I,_,_,_,_,Colors,[Point],dot):-!.
-guess_shape_poly(I,0,N,N,1,Colors,Points,hv_line(h,_)):- N > 1.
-guess_shape_poly(I,0,N,1,N,Colors,Points,hv_line(_,v)):- N > 1.
+guess_shape_poly(I,0,N,N,1,Colors,Points,hv_line(h)):- N > 1.
+guess_shape_poly(I,0,N,1,N,Colors,Points,hv_line(v)):- N > 1.
 guess_shape_poly(I,0,N,H,V,Colors,Points,rectangle):- N>1, H\==V,!.
 guess_shape_poly(I,0,N,H,V,Colors,Points,square):- N>1,H==V,!.
 guess_shape(GridIn,LocalGrid,I,O,N,H,V,Colors,Points,polygon):- O\==0,once(H>1;V>1).

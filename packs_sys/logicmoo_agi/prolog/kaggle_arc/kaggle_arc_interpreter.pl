@@ -113,12 +113,14 @@ known_gridoid(TstName,G):- is_unshared_saved(TstName,G).
 into_object(G,O):- is_grid(G),grid_to_individual(G,O),!.
 into_object(G,O):- into_group(G,OL),must([O]=OL).
 
-into_group(G,G):- plain_var(G),throw(var_into_group(G)).
-into_group(P,G):- is_group(P),!,G=P.
-into_group(G,I):- is_grid(G),!,compute_shared_indivs(G,I).
-into_group(P,G):- is_object(P),!,G=[P].
-into_group(P,G):- named_gridoid(P,M),!,into_group(M,G).
-into_group(P,G):- dumpST,throw(into_group(P,G)).
+into_group(GI,G):- into_group(GI,G, _ ).
+
+into_group(G,G, _):- plain_var(G),throw(var_into_group(G)).
+into_group(P,G,(=)):- is_group(P),!,G=P.
+into_group(G,I, into_grid):- is_grid(G),!,compute_shared_indivs(G,I).
+into_group(P,G, last):- is_object(P),!,G=[P].
+into_group(P,G, rev_lambda(why_grouped)):- named_gridoid(P,M),!,into_group(M,G).
+into_group(P,G, _):- dumpST,throw(into_group(P,G)).
 /*
 into_group(P,G):- is_object(P),points_to_grid(P,M),!,into_group(M,G).
 %into_group(G,G):- is_grid(G),!.

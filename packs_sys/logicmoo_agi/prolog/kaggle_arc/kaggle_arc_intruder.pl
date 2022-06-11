@@ -50,7 +50,7 @@ individuals_from_pair(PairName,In,Out,H,V,H,V,RestOfInObjs,RestOfOutObjs):-
   ((IMass==0, OMass>0) -> USE = OmI;
    ((OMass==0, IMass>0) -> USE = ImO)),
    print_grid(USE),
-   trace,individuate([default,progress],USE,Intruder),
+   individuate_complete2(USE,Intruder),
    add_shape_lib(intruder,Intruder),
    individuate_default(In,RestOfInObjs),
    add_shape_lib(pair,RestOfInObjs),

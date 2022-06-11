@@ -33,37 +33,43 @@ override_group_call(_F,Group,_AB,R):- pass_thru_group(Group),!,R=Group.
 override_group_call(F,Group,AB,R):- is_object_group(Group),!, C=..[F|AB],
  findall(R,(member(M,Group),call(C,M,R)),AllRots), append_sets([AllRots],R).
 
-allow_dirs([Type|_],X):- !, allow_dirs(Type,X).
-allow_dirs(Type,X):- subtypes(Type,SType),allow_dir(SType,List),member(X,List).
+
+allowed_dir(Type,X):- subtypes(Type,SType),allow_dir_list(SType,List),member(X,List).
+allowed_dir([Type|_],X):- !, nonvar(Type), allowed_dir(Type,X).
 
 subtypes(C,C).
 subtypes(C,S):- subClassOf(S,C).
 
-allow_dir(hv_line(h,_),[e,w]). allow_dir(hv_line(_,v),[n,s]). allow_dir(dg_line(u,_),[ne,sw]). allow_dir(dg_line(_,d),[nw,se]).
 
+allow_dir_list(rectangle,[n,s,e,w]). 
+allow_dir_list(diamonds,[nw,sw,se,ne]).
+allow_dir_list(polygs,[n,s,e,w,nw,sw,se,ne]).
+allow_dir_list(all,   [nw,sw,se,ne,n,w,s,e]).
+allow_dir_list(hv_line(h),[e,w]).
+allow_dir_list(hv_line(v),[n,s]).
+allow_dir_list(dg_line(u),[sw,ne]).
+allow_dir_list(dg_line(d),[nw,se]).
 
-allow_dir(rectangle,[n,s,e,w]). 
-allow_dir(diamonds,[nw,sw,se,ne]).
-allow_dir(polygs,[n,s,e,w,nw,sw,se,ne]).
-allow_dir(all,   [nw,sw,se,ne,n,w,s,e]).
-allow_dir(ST,DIRS):-shape_type_dir(ST,DIRS).
-
-shape_type_dir(hv_line(h,_),[e,w]).
-shape_type_dir(hv_line(_,v),[n,s]).
-shape_type_dir(dg_line(u,_),[sw,ne]).
-shape_type_dir(dg_line(_,d),[nw,se]).
+shape_type_dirs(ST,DIRS):- allow_dir_list(ST,DIRS).
+shape_type_dir(ST,DIR):- allowed_dir(ST,DIR).
+%allow_dir_list(hv_line(h),[e,w]). allow_dir_list(hv_line(v),[n,s]). 
+%allow_dir_list(dg_line(u),[ne,sw]). allow_dir_list(dg_line(d),[nw,se]).
 
 %circles, dots, , rays, walls
 
 shape_filter(X,rectangle):- free_cell(X).
 shape_filter(X,polygs):- non_free_fg(X).
 
-polyg(border(square), [hv_line(H,_),hv_line(_,V),hv_line(H,_),hv_line(_,V)]):- h_v(H,V).
-polyg(border(diamond),[dg_line(H,_),dg_line(_,V),dg_line(H,_),dg_line(_,V)]):- u_d(H,V).
+polyg(border(square), [hv_line(H),hv_line(V),hv_line(H),hv_line(V)]):- h_v(H,V).
+polyg(border(diamond),[dg_line(U),dg_line(D),dg_line(U),dg_line(D)]):- u_d(U,D).
 
 h_v(h,v).
 u_d(u,d).
 
+sameOrSubClass(Y,Y).
+sameOrSubClass(X,Y):- subClassOf(X,Y).
+
+iz(X,Y):- nonvar(X),!,object_shape(X,XY),sameOrSubClass(XY,Y).
 iz(X,Y):- nonvar_or_ci(Y)->(subClassOf(P,Y),iz(X,P));(nonvar_or_ci(X),iz(X,P),subClassOf(P,Y)).
 iz(X,Y):- (var(X)->enum_object(X);true),object_shape(X,Y).
 
@@ -74,9 +80,8 @@ subClassOf(outl,hollow).
 subClassOf(outline(_),thick1).
 %subClassOf(outl,rectangle).
 
-subClassOf(hv_line(D),line(D)).
-subClassOf(dg_line(D),line(D)).
-subClassOf(dg_line(D),line(D)).
+subClassOf(hv_line(H,V),line(H,V,_,_)).
+subClassOf(dg_line(U,D),line(_,_,U,D)).
 
 subClassOf(square,symmetric).
 subClassOf(diamond,symmetric).

@@ -176,12 +176,12 @@ too_non_unique(grid).
 too_non_unique(changes).
 
 %too_non_unique(mass).
-
-
+my_asserta_if_new((H:-B)):- !,must_det_l( (clause(H,B,Ref),clause(HH,BB,Ref), H+B=@=HH+BB)-> true ; asserta(H:-B)).
+my_asserta_if_new(HB):- my_asserta_if_new(HB:-true).
 :- dynamic(why_grouped/2).
 save_grouped(H,G):-
   sort(G,GS),
-  asserta_if_new(why_grouped(H,GS)).
+  my_asserta_if_new(why_grouped(H,GS)).
 
 what_unique:- what_unique(n=0,n>10).
 
@@ -257,7 +257,7 @@ length_criteria(List,N):- length(List,N).
 
 debug_indiv(obj(A)):- Obj = obj(A), is_list(A),!,
  must_det_l((
-  ignore((o2g(Obj,GGG), nonvar(GGG),asserta_if_new(g2o(GGG,Obj)))),
+  ignore((o2g(Obj,GGG), nonvar(GGG),my_asserta_if_new(g2o(GGG,Obj)))),
 %debug_indiv(Obj):- Obj = obj(A), is_list(A),  
   once(colors(Obj,[cc(FC,_)|_]);FC=9),
   sort_obj_props(A,AS),
