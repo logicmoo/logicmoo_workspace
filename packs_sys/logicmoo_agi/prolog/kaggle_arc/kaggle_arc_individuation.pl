@@ -138,6 +138,70 @@ individuate_glyphic(GH,GV,ID,PointsIn,IndvSO):-
   append(IndvList,[Whole],IndvS),!,
   override_object(birth(glyphic),IndvS,IndvSO).
 
+fti_go(Grid,Options,Image.objs):-
+  globalpoints(Grid,Points),
+  grid_size(Grid,GH,GV),
+  grid_to_id(Grid,ID),
+  make_fti(GH,GV,ID,Grid,[],[],Options,Points,Image),
+  fti(Image).
+
+
+individuate(H,V,ID,Grid,ContainedPoints,Image.points):-
+  make_fti(H,V,ID,Grid,[],[],[complete],ContainedPoints,Image).
+
+make_fti(GH,GV,ID,Grid,Sofar,Reserved,Options,Points,Image):-
+  Image = _{
+   % Options and TODO List (are actually same things)
+   todo:Options,options:Options,
+   % Grid and point representations
+   grid:Grid,points:Points,
+   % Original copies of Grid and point representations
+   o_grid:Grid,o_points:Points,
+   % object found in grid and object that are reserved to not be found
+   objs:Sofar,robjs:Reserved,
+   % height width and lookup key for image
+   h:GH,v:GV,id:ID}.
+
+
+
+
+
+
+individuate_default(H,V,ID,Grid,Points,IndvSO):- individuate_complete(H,V,ID,Grid,Points,IndvSO),!.
+individuate_default(H,V,ID,Grid,Points,IndvSO):- fail,
+   individuate(H,V,ID,[],
+ [fourway,
+     shape_lib(noise),shape_lib(pair),
+     fourway,
+     shape_lib(in),shape_lib(out),
+     solid(rectangle), 
+     rectangle, 
+     diamonds, 
+     connect(hv_line(h)),connect(hv_line(v)),
+     connect(dg_line(u)),connect(dg_line(d)),
+     find_engulfed,find_contained,find_engulfed,find_contained,
+     dg_line(u),dg_line(d), 
+     hv_line(h),hv_line(v), 
+     all, by_color, done],
+  Grid,Points,IndvS),
+  add_shape_info(default_indiv,IndvS,IndvSO).
+individuate_default(GridIn,IndvS):- GridIn==[],!,IndvS=[].
+individuate_default(GridIn,IndvS):- 
+   must_be_free(IndvS),
+   into_points_grid(GridIn,Points,Grid),
+   grid_size(Grid,H,V), 
+   into_gridname(Grid,ID),write('.'),ttyflush,
+   %wdmsg(individuate_default(H,V)),
+   individuate_default(H,V,ID,Grid,Points,IndvS).
+
+
+
+
+
+individuate_default(GridIn,IndvS):- 
+  individuate([complete],GridIn,IndvS).
+
+
 
 individuate_complete(GridIn,IndvS):- GridIn==[],!,IndvS=[].
 individuate_complete(GridIn,IndvS):- 
@@ -166,32 +230,179 @@ individuate_complete(H,V,ID,Grid,Points,IndvSO):-
       done],
       Grid,Points,IndvSO),!.
 
-individuate_default(H,V,ID,Grid,Points,IndvSO):- individuate_complete(H,V,ID,Grid,Points,IndvSO),!.
-individuate_default(H,V,ID,Grid,Points,IndvSO):- fail,
-   individuate(H,V,ID,[],
+individuate_complete(GridIn,IndvS):- 
+  individuate([complete],GridIn,IndvS).
+
+individuate(_Options,GridIn,IndvS):- GridIn==[],!,IndvS=[].
+individuate( Options,Grid,IndvSS):- 
+  listify(Options,LOptions),
+  append([LOptions,complete,LOptions],UseOpts),
+   fti_go(Grid,UseOpts,Image),
+   _LeftOverPoints = Image.points,
+   H = Image.h, V = Image.v, ID = Image.id,
+   Indv_1 = Image.objs,
+   wdmsg(individuate(H,V)),
+   %as_debug(9,ptt((individuate=IndvSRaw))),
+   unraw_inds(Indv_1,Indv_2),  
+   largest_first(Indv_2,IndvSRaw),
+   make_indiv_object_list(ID,H,V,IndvSRaw,IndvS1),
+   combine_objects(IndvS1,IndvS),
+   list_to_set(IndvS,IndvSS),
+   save_grouped(individuate(ID),IndvSS).
+
+individuate(ROptions,Grid,IndvS):-
+   individuation_reserved_options(ROptions,Reserved,NewOptions),
+   individuate(Reserved,NewOptions,Grid,IndvS).
+
+individuate(Reserved,NewOptions,Points,IndvS):-  is_points_list(Points),points_to_grid(Points,Grid),!, 
+   individuate(Reserved,NewOptions,Grid,IndvS).
+
+% tiny grid becomes a series of points
+individuate(GH,GV,ID,_Reserved,_NewOptions,_Grid,Points,IndvS):- is_glyphic(Points,GH,GV), !,
+  individuate_glyphic(GH,GV,ID,Points,IndvS).
+
+
+%individuate(H,V,ID,Grid,Points,IndvSO):- individuate_default(H,V,ID,Grid,Points,IndvSO).
+expand_todo(complete,
+     [fourway,
+      shape_lib(intruder), shape_lib(noise),
+      shape_lib(in),shape_lib(out),
+      shape_lib(pair),
+      solid(rectangle), polygon, rectangle,diamonds,all,
+      jumps(hv_line(h,_)),
+      jumps(hv_line(_,v)),
+      find_engulfed,
+      find_contained,
+               check_engulfed,
+               combined_perfects,
+      by_color,
+      %leftover,
+      done]).
+
+expand_todo(new_indiv,
+     [
+      shape_lib(noise), 
+      fourway,
+               solid(rectangle), 
+
+               rectangle,
+
+               shape_lib(pair),
+
+/*
+               dg_line(u,_),dg_line(_,d),
+
+               hv_line(h,_),hv_line(_,v),
+
+               merge(hv_line(h,_)),
+               merge(hv_line(_,v)),
+
+
+               merge(dg_line(u,_)),
+               merge(dg_line(_,d)),
+
+               connect(hv_line(h,_)),
+               connect(hv_line(_,v)),
+               connect(dg_line(u,_)),
+               connect(dg_line(_,d)),
+
+               jumps(hv_line(h,_)),
+               jumps(hv_line(_,v)),
+               jumps(dg_line(u,_)),
+               jumps(dg_line(_,d)),
+*/
+               all,
+
+
+
+
+             shape_lib(in),shape_lib(out),
+
+      find_engulfed,
+      find_contained,
+               check_engulfed,
+               combined_perfects,
+      by_color,
+      %leftover,
+      done]).
+
+expand_todo(default, 
  [fourway,
-     shape_lib(noise),shape_lib(pair),
-     fourway,
-     shape_lib(in),shape_lib(out),
-     solid(rectangle), 
-     rectangle, 
-     diamonds, 
-     connect(hv_line(h)),connect(hv_line(v)),
-     connect(dg_line(u)),connect(dg_line(d)),
-     find_engulfed,find_contained,find_engulfed,find_contained,
-     dg_line(u),dg_line(d), 
-     hv_line(h),hv_line(v), 
-     all, by_color, done],
-  Grid,Points,IndvS),
-  add_shape_info(default_indiv,IndvS,IndvSO).
-individuate_default(GridIn,IndvS):- GridIn==[],!,IndvS=[].
-individuate_default(GridIn,IndvS):- 
-   must_be_free(IndvS),
-   into_points_grid(GridIn,Points,Grid),
-   grid_size(Grid,H,V), 
-   into_gridname(Grid,ID),write('.'),ttyflush,
-   %wdmsg(individuate_default(H,V)),
-   individuate_default(H,V,ID,Grid,Points,IndvS).
+  shape_lib(noise),shape_lib(pair),
+ fourway,
+ shape_lib(in),shape_lib(out),
+ solid(rectangle), 
+ rectangle, 
+ dg_line(_DG), 
+ connect(hv_line(h,_)),connect(hv_line(_,v)),
+ connect(dg_line(u,_)),connect(dg_line(_,d)),
+ find_engulfed,find_contained,find_engulfed,find_contained,
+ dg_line(u,_),dg_line(_,d), 
+ hv_line(h,_),hv_line(_,v), 
+ all, by_color, done, default]).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 individuals_raw(GH,GV,ID,Options,Reserved,Points,Grid,IndvSRaw):-
@@ -300,28 +511,6 @@ call_fsi(NewReserved,NewGrid,NewOptions,GH,GV,Sofar,ID,Options,Reserved,Points,G
 
 
   
-
-fti_go(Grid,Options,Objs):-
-  globalpoints(Grid,Points),
-  grid_size(Grid,GH,GV),
-  grid_to_id(Grid,ID),
-  make_fti(GH,GV,ID,Grid,[],[],Options,Points,Image),
-  fti(Image),
-  Objs = Image.objs .
-
-make_fti(GH,GV,ID,Grid,Sofar,Reserved,Options,Points,Image):-
-  Image = _{
-   % Options and TODO List (are actually same things)
-   todo:Options,options:Options,
-   % Grid and point representations
-   grid:Grid,points:Points,
-   % Original copies of Grid and point representations
-   o_grid:Grid,o_points:Points,
-   % object found in grid and object that are reserved to not be found
-   objs:Sofar,robjs:Reserved,
-   % height width and lookup key for image
-   h:GH,v:GV,id:ID}.
-
 
 fti(Image):- fti(Image,Image.todo).
 
@@ -566,11 +755,12 @@ do_shapelib(ReservedIO,GridO,[shape_lib(Hammer)|TODO],H,V,Sofar,ID,[shape_lib(Ha
 
 proccess_overlap_reserved(Name,GridO,Grid,ID,H,V,[Obj|RestReserved],Sofar,SofarOut,Points,NextScanPoints,[Obj|Unreserved],StillReserved):-     
    %ignore((length(RestReserved,RL),1 is RL mod 7, pt(searchLib(Name)=RL))),
-   Points\==[],
+   % Points\==[],
   \+ color(Obj,black),
    object_grid(Obj,OGrid),
    ogs(OH,OV,OGrid,Grid),
-   must_det_l((
+   %must_det_l
+   ((
    localpoints(Obj,OPoints),
    offset_points(OH,OV,OPoints,ObjPoints),
    intersection(ObjPoints,Points,Intersected,LeftOverA,LeftOverB),
@@ -808,7 +998,7 @@ fsi(_Image,FinalReserve,Grid,TODO,H,V,Sofar,ID,[cycle_shapes(Shapes)|TODO],Reser
 fsi(_Image,Reserved,Grid,[Option|Options],H,V,Sofar,ID,[Option|Options],Reserved,Points,Grid,OUT,NextScanPoints):- 
    ( Option \==dots), 
    find_one_individual(H,V,Sofar,ID,Option,Reserved,Points,Grid,IndvPoints,NextScanPoints),
-   make_indiv_object(ID,H,V,[birth(Option)|IndvPoints],Indv),!,
+   make_indiv_object(ID,H,V,[birth(Option),object_shape(Option)|IndvPoints],Indv),!,
    append(Sofar,[Indv],OUT).
 
 %fsi(_Image,Reserved,Grid,[Option|Options],H,V,Sofar,ID,[Option|Options],Reserved,Points,Grid,OUT,NextScanPoints):- 
