@@ -42,15 +42,16 @@ rtrace_on_error(Goal):- catch(quietly(Goal),E,(notrace,dmsg(E=Goal),break,1==1,r
 :- multifile individuals_from_pair/9.
 :- discontiguous individuals_from_pair/9.
 % Grid subtraction
-individuals_from_pair(_PairName,In,Out,H,V,H,V,RestOfInObjs,RestOfOutObjs):- 
+individuals_from_pair(PairName,In,Out,H,V,H,V,RestOfInObjs,RestOfOutObjs):- 
   add_note("trying grid minus grid"),
   grid_minus_grid(In,Out,ImO),mass(ImO,IMass),
   grid_minus_grid(Out,In,OmI),mass(OmI,OMass),
-  %show_pair_no_i(H,V,H,V,grid_subtraction,PairName,ImO,OmI),
+   show_pair_no_i(H,V,H,V,grid_subtraction,PairName,ImO,OmI),
   ((IMass==0, OMass>0) -> USE = OmI;
    ((OMass==0, IMass>0) -> USE = ImO)),
-   individuate([options(defaults)],USE,Intruder),
-   add_shape_lib(pair,Intruder),
+   print_grid(USE),
+   trace,individuate([default,progress],USE,Intruder),
+   add_shape_lib(intruder,Intruder),
    individuate_default(In,RestOfInObjs),
    add_shape_lib(pair,RestOfInObjs),
    individuate_default(Out,RestOfOutObjs).
@@ -60,7 +61,7 @@ individuals_from_pair(_PairName,In,Out,H,V,H,V,RestOfInObjs,RestOfOutObjs):-
 individuals_from_pair(_PairName,In,Out,IH,IV,OH,OV,[Intruder|NoiseObjects],[Intruder]):-
   (IV > OV; IH> OH) , ogs(_,_,Out,In), 
   grid_to_individual(Out,Intruder),
-  add_shape_lib(pair,Intruder),
+  add_shape_lib(intruder,Intruder),
   individuate_default(In,NoiseObjects),
   nop(add_shape_lib(noise,NoiseObjects)).
 
@@ -68,7 +69,7 @@ individuals_from_pair(_PairName,In,Out,IH,IV,OH,OV,[Intruder|NoiseObjects],[Intr
 individuals_from_pair(_PairName,Out,In,OH,OV,IH,IV,[Intruder],[Intruder|NoiseObjects]):-
   (IV > OV; IH> OH) , ogs(_,_,Out,In), 
   grid_to_individual(Out,Intruder),
-  add_shape_lib(pair,Intruder),
+  add_shape_lib(intruder,Intruder),
   individuate_default(In,NoiseObjects),
   nop(add_shape_lib(noise,NoiseObjects)).
 

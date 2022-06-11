@@ -133,7 +133,7 @@ l_shape(LibObj):-
   flatten([Shapes,H,V,Scale],AList),
   atomic_list_concat(AList,'_',ID),
   scale_grid(Scale,GrowthChart,Grid,ScaledGrid),
-  localpoints(ScaledGrid,Points),
+  globalpoints(ScaledGrid,Points),
   make_indiv_object(ID,H,V,Points,[object_shape(l_shape)|ShapeProps],LibObj).
 
 % todo temp
@@ -217,12 +217,12 @@ add_shape_lib(Type,Obj):- must_det_l(add_shape_lib0(Type,Obj)).
 
 add_shape_lib0(Type,Obj):- mass(Obj,Mass),!,
   %dash_char, print_grid(Obj),
-  ( Mass<2 
+  ( Mass<3 
    -> nop(pt(too_small_for_shapelib(Type,Mass))) ; (nop(pt(add_shape_lib(Type))),assert_shape_lib(Type,Obj))), 
   %dash_char,
   !.
 
-assert_shape_lib(_,Obj):-  mass(Obj,Mass), Mass<6,!.
+assert_shape_lib(_,Obj):-  mass(Obj,Mass), Mass<3,!.
 assert_shape_lib(Type,Obj):- is_list(Type),!,maplist(rev_lambda(assert_shape_lib(Obj)),Type).
 assert_shape_lib(Type,Obj):- asserta_if_new(in_shape_lib(Type,Obj)).
 

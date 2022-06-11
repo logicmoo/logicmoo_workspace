@@ -58,8 +58,8 @@ shape_type_dir(dg_line(_,d),[nw,se]).
 shape_filter(X,rectangle):- free_cell(X).
 shape_filter(X,polygs):- non_free_fg(X).
 
-polyg(border(square),[hv_line(H),hv_line(V),hv_line(H),hv_line(V)]):- h_v(H,V).
-polyg(border(diamond),[dg_line(H),dg_line(V),dg_line(H),dg_line(V)]):- u_d(H,V).
+polyg(border(square), [hv_line(H,_),hv_line(_,V),hv_line(H,_),hv_line(_,V)]):- h_v(H,V).
+polyg(border(diamond),[dg_line(H,_),dg_line(_,V),dg_line(H,_),dg_line(_,V)]):- u_d(H,V).
 
 h_v(h,v).
 u_d(u,d).
