@@ -278,6 +278,19 @@ for Example:
 
 
 
+---
+
+---
+
+---
+
+Previous README from [https://github.com/fchollet/ARC/blob/master/README.md](https://github.com/fchollet/ARC/blob/master/README.md)
+
+---
+
+---
+
+---
 
 
 # The Abstraction and Reasoning Corpus (ARC)
