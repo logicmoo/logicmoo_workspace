@@ -17,11 +17,8 @@ The symbolic solver author claims to have only spent 2 months writting the C++ f
 
 Therefore this project spends some time trying to pass the tests at 100% (on a CPU in under 9 hours).  But what if it takes us 20 hours to get 100% ?
 
-<!-- Output copied to clipboard! -->
 
-<!-- Yay, no errors, warnings, or alerts! -->
-
-My ARC WIKI [https://logicmoo.org/xwiki/bin/view/Main/ARC/](https://logicmoo.org/xwiki/bin/view/Main/ARC/)
+My ARC WIKI [ARC - XWiki](https://logicmoo.org/xwiki/bin/view/Main/ARC/)
 
 Youtube Videos discussing ARC 
 
@@ -193,9 +190,131 @@ Backtracking will disable and rerun the various combinations of the above code f
 
 Back to WIKI [https://logicmoo.org/xwiki/bin/view/Main/ARC/](https://logicmoo.org/xwiki/bin/view/Main/ARC/)
 
+Create an AI capable of solving reasoning tasks it has never seen before…
 
 
 
+* Initial thought: \
+ \
+This is a very unique sort of test that specifically looks for the type of reasoning humans do naturally.   Evidently machine learning tests very poorly at ARC . Specifically because it requires the understanding of visual individuation and relating them to mental abstractions.  The right way to approach the test according to the Author is a  “DSL” that produces the visual images.. Currently the SOTA with the best score out of 1000s of teams competing being 20%-30%..   I was already halfway world's top scores so should I dedicate a full 90 days towards getting to a score of 100%? \
+ 
+* Not too hard for humans
+    * Most humans can get 89% without trying too hard 
+    * Trying hard they can get 100%
+    * Supposedly a real test of precursor/proto-AGI
+    * Humans can learn how to take the tests in under 3 minutes
+    * … \
+ 
+* Too hard for Machine Learning
+    * SOTA 7.5%
+    * No examples of what the machine needs to know already
+    * Made very easy for ML to try (tests organized as Input/Output pairs)
+    * … \
+ 
+* Too hard for GOFAI
+    * SOTA 20/28% (Public/Private)
+    * Naive brute search is a million squared search paths 
+    * Informed search (Search space cut down by humans making up paradigms) 
+    * Designed ideally as DSL
+    * … \
+ 
+* Douglas MUARC program?
+* (H)MUARC that Douglas is writing for 3 months  (H is for “Hardcoded”)
+    * Am I overconfident in my skills?
+    * [https://gitlab.logicmoo.org/gitlab/logicmoo/logicmoo_workspace/-/tree/master/packs_sys/logicmoo_agi/prolog/kaggle_arc](https://gitlab.logicmoo.org/gitlab/logicmoo/logicmoo_workspace/-/tree/master/packs_sys/logicmoo_agi/prolog/kaggle_arc)
+    * Reached ML’s SOTA (7.5%) after 8 hours of devel
+    * Reached the leaderboard SOTA (20%) after 60 devel hours
+    * Will reach privates SOTA after 100 hours (28%)
+    * BUT I think I can get 100% in 3 months of work \
+ 
+* (G)MUARC allows to tweak the parameters that will “G”-generate the “H”
+    * Can I get this to handle non vision problems? Word problems? Etc?
+    * 160-320 hours  \
+ 
+* ALEPH-MUARC-I will examine “G” and “H” to try to write it’s very own (G)MUARC
+    * Too large a task for ALEPH?
+    * 160-320 hours  \
+ 
+* ALEPH-MUARC-II
+*  
+
+Active Daily Random Thoughts/Notes:  [https://docs.google.com/document/d/1ewzuNdL_GyYZiXLh5XJ6RTQFFcJtziaLJtIgUVJmYVk/edit](https://docs.google.com/document/d/1ewzuNdL_GyYZiXLh5XJ6RTQFFcJtziaLJtIgUVJmYVk/edit)
+
+(H)MUARC Source code is organized into:
+
+[Kaggle_arc.pl](https://github.com/logicmoo/logicmoo_workspace/blob/master/packs_sys/logicmoo_agi/prolog/kaggle_arc/kaggle_arc.pl) - toplevel routines for invoking testing
+
+[Kaggle_arc_test_iface.pl](https://github.com/logicmoo/logicmoo_workspace/blob/master/packs_sys/logicmoo_agi/prolog/kaggle_arc/kaggle_arc_test_iface.pl) - Interface for loading training and testing the results
+
+[Kaggle_arc_domaintypes.pl](https://github.com/logicmoo/logicmoo_workspace/blob/master/packs_sys/logicmoo_agi/prolog/kaggle_arc/kaggle_arc_domaintypes.pl) - Intrinsic Types used by the system
+
+[Kaggle_arc_howdiff.pl](https://github.com/logicmoo/logicmoo_workspace/blob/master/packs_sys/logicmoo_agi/prolog/kaggle_arc/kaggle_arc_howdiff.pl) - Shows how different Terms are different
+
+[Kaggle_arc_imagens.pl](https://github.com/logicmoo/logicmoo_workspace/blob/master/packs_sys/logicmoo_agi/prolog/kaggle_arc/kaggle_arc_imagens.pl)   - Producing non-novel images
+
+[Kaggle_arc_imageproc.pl](https://github.com/logicmoo/logicmoo_workspace/blob/master/packs_sys/logicmoo_agi/prolog/kaggle_arc/kaggle_arc_imageproc.pl) - Utils basic image manipulations
+
+[Kaggle_arc_individuation.pl](https://github.com/logicmoo/logicmoo_workspace/blob/master/packs_sys/logicmoo_agi/prolog/kaggle_arc/kaggle_arc_individuation.pl) - Utils for Object Differentiation/Individualization
+
+[Kaggle_arc_interpreter.pl](https://github.com/logicmoo/logicmoo_workspace/blob/master/packs_sys/logicmoo_agi/prolog/kaggle_arc/kaggle_arc_interpreter.pl) - DSL Interpreters
+
+[Kaggle_arc_learning.pl](https://github.com/logicmoo/logicmoo_workspace/blob/master/packs_sys/logicmoo_agi/prolog/kaggle_arc/kaggle_arc_learning.pl) - Utils for different Terms are different
+
+[Kaggle_arc_object.pl](https://github.com/logicmoo/logicmoo_workspace/blob/master/packs_sys/logicmoo_agi/prolog/kaggle_arc/kaggle_arc_object.pl) - OO Image function (Object tracking/creation)
+
+[Kaggle_arc_recognise.pl](https://github.com/logicmoo/logicmoo_workspace/blob/master/packs_sys/logicmoo_agi/prolog/kaggle_arc/kaggle_arc_recognise.pl) - OGS-Util for searching Images
+
+[Kaggle_arc_symmetry.pl](https://github.com/logicmoo/logicmoo_workspace/blob/master/packs_sys/logicmoo_agi/prolog/kaggle_arc/kaggle_arc_symmetry.pl) - Image processing that looks at symmetry 
+
+[Kaggle_arc_ui_ansi.pl](https://github.com/logicmoo/logicmoo_workspace/blob/master/packs_sys/logicmoo_agi/prolog/kaggle_arc/kaggle_arc_ui_ansi.pl) - Code for the ANSI Terminal such as Image printing
+
+[Kaggle_arc_ui_html.pl](https://github.com/logicmoo/logicmoo_workspace/blob/master/packs_sys/logicmoo_agi/prolog/kaggle_arc/kaggle_arc_ui_html.pl) - Code for HTTPD UI
+
+[Kaggle_arc_utils.pl](https://github.com/logicmoo/logicmoo_workspace/blob/master/packs_sys/logicmoo_agi/prolog/kaggle_arc/kaggle_arc_utils.pl) - Code Utils not specific to ARC
+
+[Kaggle_arc_explaination.pl](https://github.com/logicmoo/logicmoo_workspace/blob/master/packs_sys/logicmoo_agi/prolog/kaggle_arc/kaggle_arc_explaination.pl) - Explanation faculties
+
+[Kaggle_arc.unused](https://github.com/logicmoo/logicmoo_workspace/blob/master/packs_sys/logicmoo_agi/prolog/kaggle_arc/kaggle_arc.unused)  - Code no longer in active use by the system
+
+[Kaggle_arc_aleph.pl](https://github.com/logicmoo/logicmoo_workspace/blob/master/packs_sys/logicmoo_agi/prolog/kaggle_arc/kaggle_arc_aleph.pl)  - For future experimentation with ALEPH
+
+[Kaggle_arc_alephlib.pl](https://github.com/logicmoo/logicmoo_workspace/blob/master/packs_sys/logicmoo_agi/prolog/kaggle_arc/kaggle_arc_alephlib.pl) - Beginning of experimentation with ALEPH
+
+[Kaggle_arc_metagol.pl](https://github.com/logicmoo/logicmoo_workspace/blob/master/packs_sys/logicmoo_agi/prolog/kaggle_arc/kaggle_arc_metagol.pl) - For future experimentation with METAGOL
+
+Small Rant
+
+
+![alt_text](images/image1.png "image_tooltip")
+
+
+
+```
+I wonder if Google has enough teraflops to get one of their machine learning models to pass ARC?
+ I don't think they actually do.. they'd need to switch to a new method. Since I don't think AGI cant be created by upscaling AI
+ But I can see where people with a different definition of AGI think this .. but they have a different definition of AGI... 
+ Their definition of AGI is:
+
+```that a computer can do quite a few "important" tasks that humans (they) value 
+ .. with a HINT of cross domain transfer```
+ Although that is a reasonable goal .. it is not the definition of AGI.. 
+ I think a better definition:
+
+```AGI is a system that is capable of learning to do ALL the things humans do
+ ..  with little or training so that mostly ALL things are cross domain transferred```
+ Upscaling cannot convert the first thing into the second.  The most important part of AGI is it needs to "learn" on its own without "more training"   example: with only our minds .. we can sit there with our eyes closed and learn and discover new things .. This is without any more training.. our ability to be general comes from this ability. 
+ If this is what we want to simulate.. we actually have to simulate it !  rather than  proving "programs that cant simulate are still able to pass the same tests"  (are we supposed to play dumb and believe that that it must of simulated?)  
+ This "simulate" is a process that allows transfer learning .. .though transfer learning can happen in other ways .. such as in ontologies and KGs .. or even as most people are banking on that NNs back propagation will allow some types of transfer.
+ The main problem is training, so far no ones been able to come up with a type of training that would enable AGI.
+  
+Training  that "enables AGI" and  training  that allows "passing tests for AGI" are completely different things.
+ A system that "is an AGI" and a system that "passes tests only an AGI can" are completely different things as well.
+ The whole idea of the Turing test was based on the idea that people are not clever enough to tell the difference and not clever enough to create a real test.  But, I think we are clever enough to create real tests..  
+ ARC is a perfect example  
+ Chollet's ARC is a test that checks to see if what you learned in the training images will transfer (generalize) to the test image  
+ ( AI2's ARC test does not test for AGI, it tests for AI..  
+   Tests that can still be passed by memorization code (ML) and deduction code (GOFAI) .. not testing for any transferences )..   deduction and memorizations are really cool !   I love AI !  But AGI I love more  )
+```
 
 
 
