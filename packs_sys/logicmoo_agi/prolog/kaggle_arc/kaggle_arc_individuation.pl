@@ -330,65 +330,6 @@ fti(Image,_):-
 fti(Image,[find_contained|set(Image,todo)]):-
   find_contained(Image.h,Image.v,Image.id,Image.objs,set(Image,objs),Image.points,set(Image,points)),!.
 
-    find_contained(_H,_V,_ID,Sofar,Sofar,[],[]).
-    find_contained(_H,_V,_ID,[],[],NextScanPoints,NextScanPoints).
-    find_contained(H,V,ID,[Found|Sofar],[Found|SofarInsteadM],NextScanPoints,NextScanPointsInstead):-
-      isz(Found,outline(_)),
-      once(find_contained_points(Found,NextScanPoints,ScanPointsInstead,ContainedPoints)),
-      ContainedPoints\==[],
-      %grid_size(Found,H,V),
-      must_det_l((
-      points_to_grid(H,V,ContainedPoints,Grid),
-      %once(object_indv_id(Found,ID,_);into_gridname(Grid,ID)),
-      individuate(H,V,ID,[],[complete],Grid,ContainedPoints,NewInside),
-      maplist(mention_inside(Found),NewInside,NewInsideM))),
-      ignore((length(ContainedPoints,N),N>1,quietly(print_grid(H,V,[Found|NewInsideM])))),
-      find_contained(H,V,ID,Sofar,SofarInstead,ScanPointsInstead,NextScanPointsInstead),
-      append(NewInsideM,SofarInstead,SofarInsteadM).
-    find_contained(H,V,ID,[Found|Sofar],[Found|SofarInstead],NextScanPoints,NextScanPointsInstead):-
-      find_contained(H,V,ID,Sofar,SofarInstead,NextScanPoints,NextScanPointsInstead).
-    
-    
-    mention_inside(Found,NewInside,NewInsideO):-
-      object_indv_id(Found,_Where,Iv),
-      add_shape_info(insideOf(Iv),NewInside,NewInsideO).
-    
-    find_contained_points(_,[],[],[]).
-    find_contained_points(Found,[Next|ScanPoints],ScanPointsInstead,[Next|Contained]):-
-     object_surrounds_point(Found,Next),
-     find_contained_points(Found,ScanPoints,ScanPointsInstead,Contained).
-    find_contained_points(Found,[Next|ScanPoints],[Next|ScanPointsInstead],Contained):-
-     find_contained_points(Found,ScanPoints,ScanPointsInstead,Contained).
-
-
-    object_surrounds_point(Obj,_-Point):- point_in_obj_view(Point,Obj), 
-      globalpoints(Obj,ObjPoints),!,
-      forall((is_adjacent_point(Point,Dir,Next),Dir\==c),scan_to_colider1(Obj,Next,Dir,ObjPoints,_DirHits)).
-    
-    point_in_obj_view(Next,Obj):- 
-      hv_point(H,V,Next),
-      loc_xy(Obj,X,Y),!,
-      VV is V-Y, VV>=0,
-      HH is H - X, HH>=0,
-      vis_hv(Obj,XX,YY),!,
-      VV<YY, HH<XX.
-    
-    scan_to_colider1(_Obj,Next,_Dir,_ObjPoints,[]):- hv_point(H,V,Next), (\+ between(1,32,H); \+ between(1,32,V)),!.
-    scan_to_colider1(_Obj,Next,_Dir,ObjPoints,[C-Next]):- 
-      select(C-Next,ObjPoints,_Rest),!.
-    scan_to_colider1(Obj,Next,Dir,ObjPoints,DirHits):- 
-      is_adjacent_point(Next,Dir,NNext),!,
-      scan_to_colider1(Obj,NNext,Dir,ObjPoints,DirHits),!.
-    
-    scan_to_colider(Obj,Next,_Dir,_ObjPoints,[]):- \+ point_in_obj_view(Next,Obj),!.
-    scan_to_colider(Obj,Next,Dir,ObjPoints,[C-Next|DirHits]):- 
-      select(C-Next,ObjPoints,Rest),!,
-      is_adjacent_point(Next,Dir,NNext),
-      scan_to_colider(Obj,NNext,Dir,Rest,DirHits).
-    scan_to_colider(Obj,Next,Dir,ObjPoints,DirHits):- 
-      is_adjacent_point(Next,Dir,NNext),
-      scan_to_colider(Obj,NNext,Dir,ObjPoints,DirHits).
-  
 
 % Find object that are contained in objects and individuate them in their own way  (TODO mame this more complete)
 % Find free points that are contained in objects and individuate them in their own way
@@ -396,48 +337,7 @@ fti(Image,[find_engulfed|set(Image,todo)]):-
   print_grid(Image.grid),  
   % ( \+ is_input(Image)-> trace ; true),
   find_engulfed(Image).    find_engulfed(Image):- find_engulfed(Image,Image.objs,set(Image,objs)),!.
-    
-find_engulfed(Image,ScanNext,SofarInsteadO):-
-  find_engulfed(Image,ScanNext,ScanNext,SofarInsteadO).
 
-is_input(Image):- Image.id = _ * _ * in.
-
-find_engulfed(_Image,[],SofarInsteadO,SofarInsteadO).
-find_engulfed(Image,[Found|ScanNext],OtherObjects,OtherObjectsO):-
- ((isz(Found,outline(_));isz(Found,outl)) ->
- (( once(find_englufed_objects(Image,Found,OtherObjects,NewInside)),
-  
-  NewInside\==[], 
-  must_det_l((
-  maplist(mention_inside(Found),NewInside,NewInsideM),
-  replace_i_each(OtherObjects,NewInside,NewInsideM,NewOtherObjects),
-  replace_i_each(ScanNext,NewInside,NewInsideM,NewScanNext),
-  ignore((length(NewInside,N),N>0,quietly(print_grid([Found|NewInsideM])))),      
-  find_engulfed(Image,NewScanNext,NewOtherObjects,OtherObjectsO)))))).
-
-find_engulfed(Image,[_|Sofar],OtherObjects,OtherObjectsO):-
-  find_engulfed(Image,Sofar,OtherObjects,OtherObjectsO).
-
-
-find_englufed_objects(_Image,_,[],[]).
-find_englufed_objects(Image,Found,[Next|ScanPoints],[Next|Engulfed]):-    
- contained_object(Found,Next),
- find_englufed_objects(Image,Found,ScanPoints,Engulfed).
-find_englufed_objects(Image,Found,[_|ScanPoints],Engulfed):-
- find_englufed_objects(Image,Found,ScanPoints,Engulfed).
-
-contained_object(O1,O2):-   
-  O1 \== O2,
-  loc_xy(O1,LowH1,LowV1),loc_xy(O2,LowH2,LowV2), 
-  LowH2 > LowH1, LowV2 > LowV1,
-  vis_hv(O1,H1,V1),vis_hv(O2,H2,V2), 
-  H1> H2, V1> V2,
-  HighH1 is LowH1+H1, HighV1 is LowV1+V1,
-  HighH2 is LowH2+H2, HighV2 is LowV2+V2,
-  HighH1 > HighH2,
-  HighV1 > HighV2,
-  nop(globalpoints(O2,[Point|_])),!,
-  nop(object_surrounds_point(O1,Point)).
     
 replace_i_each(OtherObjects,[I|NewInside],[O|NewInsideM],NewOtherObjects):-!,
   subst(OtherObjects,I,O,OtherObjectsM),

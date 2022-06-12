@@ -65,35 +65,6 @@ num_objects(G,NO):- compute_shared_indivs(G,GS),length(GS,NO).
 
 make_box(X,_,G):- make_grid(X,X,G).
 
-move_above_itself(I,M):- move_dir_itself(1,n,I,M). 
-move_rightof_itself(I,M):- move_dir_itself(1,e,I,M). 
-
-
-:- decl_pt(move_dir_itself(int,dir,object,+)).
-%move_dir_itself(N,D,I,M):- check_args(move_dir_itself(N,D,I,M),MaybeCut),(MaybeCut==t->!;true).
-move_dir_itself(N,D,I,M):- is_object(I),vis_hv(I,SX,SY), move_scale_dir_object(SX,SY,N,D,I,M).
-move_dir_itself(N,D,L,LM):- is_group(L),!,maplist(move_dir_itself(N,D),L,LM).
-move_dir_itself(N,D,I,O):- into_group(I,M),M\=@=I,!,move_dir_itself(N,D,M,O).
-
-move_dir_object(N,D,I,M):- move_scale_dir_object(1,1,N,D,I,M).
-
-move_scale_dir_object(X,Y,N,D,I,M):- is_object(I),!,
- must_det_l((
-  loc_xy(I,OX,OY),
-  move_dir(N,OX,OY,D,X,Y,NX,NY),
-  (NY<1 -> M=I ; move_object(NX,NY,I,M)))).
-move_scale_dir_object(N,D,L,LM):- is_group(L),!,maplist(move_scale_dir_object(N,D),L,LM).
-move_scale_dir_object(N,D,I,O):- into_group(I,M),M\=@=I,!,move_scale_dir_object(N,D,M,O).
-
-move_object(NX,NY,I,M):- is_object(I),!,
- must_det_l((
-  (NY<1 -> M=I ;
-  ( localpoints(I,LPoints),
-    offset_points(NX,NY,LPoints,GPoints),
-    setq(I,[globalpoints(GPoints),loc_xy(NX,NY)],M))))).
-move_object(H,V,L,LM):- is_group(L),!,maplist(move_object(H,V),L,LM).
-move_object(H,V,I,O):- into_group(I,M),M\=@=I,!,move_object(H,V,M,O).
-
 
 % S=[[1,2,3],[4,x,6],[7,8,0]],grow([[same,same],[same,same]],S, X).
 join_cols([],[]).
@@ -191,6 +162,7 @@ shave_away_1s(Grid,GridO):- compute_shared_indivs(Grid,Is), include(\=([_,_|_]),
 replace_obj(Obj,Obj1,In,Out):- remove_obj(Obj,In,Mid),add_obj(Obj1,Mid,Out).
 
 remove_obj(Obj,In,Out):- globalpoints(Obj,Points),remove_global_points(Points,In,Out).
+
 add_obj(Obj,In,Out):- globalpoints(Obj,Points),set_local_points(Points,In,Out).
 
 
@@ -317,13 +289,6 @@ learn_mapping_stateful(In,Out):- get_bgc(BG),
 apply_mapping_stateful(Grid,G):- into_grid(G,Grid),unbind_color(0,Grid,GridO),ignore(backfill_vars(GridO)).
 
 
-gravity(N,D,G,GridNew):- into_grid(G,Grid),G\=@=Grid,!,gravity(N,D,Grid,GridNew).
-gravity(1,n,Grid,GridNew):-!,gravity_1_n_0(Grid,GridNew).
-gravity(N,n,Grid,GridNew):-!,gravity_1_n_0(Grid,GridM),(Grid\=@=GridM->(Nm1 is N-1,gravity(Nm1,n,GridM,GridNew));GridNew=GridM).
-gravity(N,s,Grid,GridNew):-!,flipV(Grid,FlipV),gravity(N,n,FlipV,GridM),flipV(GridM,GridNew).
-gravity(N,w,Grid,GridNew):-!,rot90(Grid,GridRot),gravity(N,n,GridRot,GridM),rot270(GridM,GridNew).
-gravity(N,e,Grid,GridNew):-!,rot270(Grid,GridRot),gravity(N,n,GridRot,GridM),rot90(GridM,GridNew).
-
 compute_max_color(Color1,Grid,Grid):- colors_count_no_black(Grid,[cc(Color1,_)|_]).
 compute_next_color(Color1,Grid,Grid):- colors_count_no_black(Grid,[_,cc(Color1,_)|_]).
 
@@ -391,13 +356,6 @@ get_colum(N,Grid,Col):- maplist(nth1(N),Grid,Col).
 
 make_var_grid(H,V,G):- make_grid(H,V,G),numbervars(G,0,_N).
 
-gravity_1_n_0([],[]).
-gravity_1_n_0([Row1,Row2|Grid],GridNew):- nth1(Col,Row1,E1),nth1(Col,Row2,E2),
-  black_cell(E1), \+ black_cell(E2),
-  set_nth1(Col,Row1,E2,Row1Mod),set_nth1(Col,Row2,E1,Row2Mod),
-  gravity_1_n_0([Row1Mod,Row2Mod|Grid],GridNew).
-gravity_1_n_0([Row1|Grid],[Row1|GridNew]):- gravity_1_n_0(Grid,GridNew).
-
 black_cell(Cell):- is_black(Black),grid_color_code(Black,Cell).
 
 replace_row(N,Row,Grid,NewGrid):- grid_size(Grid,H,V), replace_row(N,Row,Grid,H,V,NewGrid).
@@ -414,23 +372,11 @@ replace_col(N,Col,Grid,_,V,NewGrid):- Nm1 is N - 1, length(Col,V),maplist(replac
 
 replace_col_at_0(N,Col,Row,NewRow):- length(Left,N),append(Left,[_|Right],Row),append(Left,[Col|Right],NewRow).
 
-facing_triangles(
-[[xx,se,nw,xx],
- [se,se,nw,nw],
- [ne,ne,sw,sw],
- [xx,ne,sw,xx]]).
 
 get_surround_3x3(Grid,H,V,Result):-
   surround_3x3(Template),maplist(get_dir_color(Grid,H,V),Template,Result).
 
 get_dir_color(Grid,H,V,Dir,C):- move_dir(1,H,V,Dir,1,1,NX,NY), hv_value(Grid,NX,NY,C).
-
-surround_3x3(
-[[nw,n,ne],
-  [w,c,e],
- [sw,s,se]]).
-%star_grow_h(obj(L),
-
 
 
 % Random Non Blk Eles
@@ -537,23 +483,6 @@ calc_add_points(OH,OV,Grid,Point):- as_hv_point(H,V,C,Point),HH is H -OH +1, VV 
 %add_h_v_c(Grid,H,V,C):- plain_var(C),!,nop(add_h_v_c(Grid,H,V,C)).
 add_h_v_c(Grid,H,V,C):- hv_value(Grid,Was,H,V),ignore(Was=C).
 
-
-nav(s,0,1). nav(e, 1,0). nav(w,-1,0). nav(n,0,-1).
-nav(se, 1,1). nav(sw,-1,1). nav(nw,-1,-1). nav(ne, 1,-1).
-nav(c,0,0).
-
-move_dir(N,OX,OY,Dir,SX,SY,NX,NY):- nav(Dir,X,Y), NX is OX + (X*SX*N), NY is OY + (Y*SY*N).
-
-reverse_nav(D,R):- nav(D,X,Y),RX is -X, RY is -Y,nav(R,RX,RY).
-
-is_non_diag(X):- nav(X,0,_);nav(X,_,0).
-is_diag(D):- nav(D,X,Y),X\==0,Y\==0. % \+ is_non_diag(X).
-
-turn_left_45(s,sw). turn_left_45(sw,w). turn_left_45(w,nw). turn_left_45(nw,n). 
-turn_left_45(n,ne). turn_left_45(ne,e). turn_left_45(e,se). turn_left_45(se,s).
-turn_right_45(X,Y):-turn_left_45(Y,X).
-
-
 copy_cells(B,A,H,HH):- call(B,H),!,call(A,HH).
 copy_cells(_,_,H,H):- \+ is_list(H),!.
 copy_cells(_,_,[],[]):-!. 
@@ -562,53 +491,6 @@ copy_cells(B,A,[H|T],[HH|TT]):-!, copy_cells(B,A,H,HH), copy_cells(B,A,T,TT).
 
 same_grid(Grid1,Grid1).
 
-
-
-any_xform(Rot90,Any,XNewGrid):- 
-  into_grid(Any,RealGrid,UnconvertClosure),!,
-  grid_xform(Rot90,RealGrid,NewGridR),call(UnconvertClosure,NewGridR,NewGrid),
-  record_xform(Rot90,NewGrid,XNewGrid).
-
-
-:- dynamic(xform_cache/5).
-
-xform_cache(rot45,5,5,[ [ A, B, C, D, E],
-        [ F, G, H, I, J],
-        [ K, L, M, N, O],
-        [ P, Q, R, S, T],
-        [ U, V, W, X, Y]],[ [ C, D, E, J, O],
-                            [ B, H, I, N, T],
-                            [ A, G, M, S, Y],
-                            [ F, L, Q, R, X],
-                            [ K, P, U, V, W]]).
-
-grid_xform(Rot90,Grid,NewGrid):- 
-  grid_size(Grid,H,V),
-  apply_transformer(Rot90,H,V,Grid,NewGrid).
-apply_transformer(Name,H,V,G,O):-
-  get_xformer(Name,H,V,In,Out),!,
-  G=In,O=Out.
-
-get_xformer(Name,H,V,In,Out):- xform_cache(Name,H,V,In,Out),!.
-get_xformer(Name,H,V,In,Out):- 
-   make_grid(H,V,In),
-   call(Name,In,Out),!,
-   asserta(xform_cache(Name,H,V,In,Out)),!.
-
-%srot90V,flipV
-rot90( Grid,NewGrid):- any_xform(grid_rot90,Grid,NewGrid).
-rot180( Grid,NewGrid):- any_xform(grid_rot180,Grid,NewGrid).
-rot270( Grid,NewGrid):- any_xform(grid_rot270,Grid,NewGrid).
-flipH( Grid,NewGrid):- any_xform(grid_flipH,Grid,NewGrid).
-flipV( Grid,NewGrid):- any_xform(grid_flipV,Grid,NewGrid).
-flipHV( Grid,NewGrid):- any_xform(grid_flipHV,Grid,NewGrid).
-
-grid_rot90(Grid,NewGrid):-  grid_flipHV(Grid,GridM),grid_rot270(GridM,NewGrid). 
-grid_rot180(Grid,FlipHV):- grid_flipHV(Grid,FlipHV).
-grid_rot270(Grid,NewGrid):- get_colums(Grid,NewGrid),!.
-grid_flipH(Grid,FlipH):- maplist(reverse,Grid,FlipH).
-grid_flipV(Grid,FlipV):- reverse(Grid,FlipV).
-grid_flipHV(Grid,FlipHV):-grid_flipH(Grid,FlipH),grid_flipV(FlipH,FlipHV),!.
 
 :- fixup_exports.
 
