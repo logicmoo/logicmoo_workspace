@@ -67,6 +67,7 @@ decl_pt(G):- ground(G), !, assertz_new(decl_pt(G)).
 :- ensure_loaded(kaggle_arc_explaination).
 :- ensure_loaded(kaggle_arc_howdiff).
 :- ensure_loaded(kaggle_arc_imageproc).
+:- ensure_loaded(kaggle_arc_physics).
 :- ensure_loaded(kaggle_arc_db).
 :- ensure_loaded(kaggle_arc_heuristics).
 :- ensure_loaded(kaggle_arc_intruder).

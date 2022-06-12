@@ -43,7 +43,9 @@ what_unique(CountMask,GroupSizeMask):-
   setL/listL=SetL/ListL,others=HTraitSetO,how=How,
   groupSizeMask=GroupSizeMask,countMask=CountMask,otherL=OtherL)).
 
+:- style_check(-singleton).
 :- add_history(what_unique(SharedWith,ObjL,Trait,GroupSizeMask,ActualGroupSize,CountMask,ActualCount,OtherL,ListL,SetL,Others,_How)).
+:- style_check(+singleton).
 what_unique(SharedWith,ObjL,Trait,GroupSizeMask,ActualGroupSize,CountMask,ActualCount,OtherL,ListL,SetL,TraitCountSets,How):-   
   select_group(Group,How),
   length_criteria(Group,GroupSizeMask),
