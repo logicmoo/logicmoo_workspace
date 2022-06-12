@@ -77,6 +77,7 @@ decl_pt(G):- ground(G), !, assertz_new(decl_pt(G)).
 :- ensure_loaded(kaggle_arc_learning).
 :- ensure_loaded(kaggle_arc_imagens).
 :- ensure_loaded(kaggle_arc_recognise).
+:- ensure_loaded(kaggle_arc_uniqueness).
 :- ensure_loaded(kaggle_arc_ui_html).
 
 %c:- forall(clause(fav(A,B),true),add_history1((fav(A,B)))).
@@ -133,7 +134,8 @@ color_sym(OS,C,Sym):- color_sym(OS,4,C,Sym).
 color_sym(_,_,C,Sym):- enum_colors(C),color_int(C,I),nth1(I,`ose=xt~+*zk>`,S),name(Sym,[S]).
 %color_sym(P*T,_,C,Sym):- enum_colors(C),color_int(C,I),S is P+I*T,name(Sym,[S]).
 
-
+is_buggy_pair(v(fd096ab6)*(trn+0), "BUG: System Crash").
+is_buggy_pair(t('3631a71a')*(tst+0),"segv").
 is_buggy_pair(t('27a28665')*(tst+2), "BUG: Re-Searcher gets stuck!").
 
 run_arc_io(TestID,ExampleNum,In,Out):-
@@ -181,9 +183,9 @@ show_arc_pair_progress(TestID,ExampleNum,In,Out):-
 	ignore((more_task_info(TestID,III),pt(III),nl)), 
   show_pair_no_i(IH,IV,OH,OV,test,PairName,In,Out),
   %print_collapsed
+  show_indivs(IH,IV,OH,OV,individuate_complete,early,PairName,In,Out,SF),
+  clear_shape_lib(in),clear_shape_lib(out),clear_shape_lib(pair),clear_shape_lib(noise),  
   forall((rtrace_on_error(individualizer_heuristics(PairName,In,Out,IH,IV,OH,OV))),true), 
-  show_indivs(IH,IV,OH,OV,individuate_default,early,PairName,In,Out,SF),
-  %clear_shape_lib(in),clear_shape_lib(out),clear_shape_lib(pair),clear_shape_lib(noise),  
   add_shape_lib(pairs,SF),
   show_shape_lib(in),show_shape_lib(out),show_shape_lib(pair),show_shape_lib(noise),
   show_indivs(IH,IV,OH,OV,individuate_default,later,PairName,In,Out,_))),!,

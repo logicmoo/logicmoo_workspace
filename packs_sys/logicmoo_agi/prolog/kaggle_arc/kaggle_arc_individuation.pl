@@ -28,7 +28,7 @@ expand_todo(complete_too, [shape_lib(noise), fourway,solid(rectangle), rectangle
                jumps(hv_line(h)),jumps(hv_line(v)),jumps(dg_line(u)),jumps(dg_line(d)),
 */all, shape_lib(in),shape_lib(out),find_engulfed,find_contained,check_engulfed,combined_perfects, by_color, 
   done]).   
-expand_todo(defaults, [fourway, shape_lib(noise),shape_lib(pair),shape_lib(intruder),
+expand_todo(defaults2, [fourway, shape_lib(noise),shape_lib(pair),shape_lib(intruder),
  shape_lib(in),shape_lib(out),
  solid(rectangle),
  dg_line(_), %rectangle,  
@@ -37,7 +37,7 @@ expand_todo(defaults, [fourway, shape_lib(noise),shape_lib(pair),shape_lib(intru
  find_engulfed,find_contained,find_engulfed,find_contained,
  dg_line(u),dg_line(d), 
  hv_line(h),hv_line(v), solid(rectangle), 
- all, by_color, done, default]).
+ all, by_color, done, defaults]).
 
 
 %individuate(H,V,ID,Grid,Points,IndvSO):- individuate_default(H,V,ID,Grid,Points,IndvSO).
@@ -51,7 +51,7 @@ expand_todo(complete, [
     merged(dg_line(_),hv_line(_)), check_engulfed, combined_perfects,     % progress, %leftover,
     by_color,done]).
 
-default_i_options([
+expand_todo(defaults, [
   shape_lib(noise), shape_lib(in), shape_lib(intruder), shape_lib(pair), shape_lib(out),
   use_reserved, fourway, solid(rectangle), outlines,
   %polygons,%shape_lib(rectangle), %shape_lib(all), %shape_lib(hammer), calc_largest_square_block,
@@ -128,15 +128,15 @@ fix_indivs_options(ROptions,ReservedOptions):-
    make_indivs_options(ROptions,ROptions1),
    my_expand_individualizer(ROptions1,ReservedOptions),!.
 
-individuation_reserved_options(ROptions,Reserved,NewOptions):- 
+individuation_reserved_options(ROptions,Reserved,Options):- 
    fix_indivs_options(ROptions,ReservedOptions),
-   my_partition(is_object_or_grid,ReservedOptions,Reserved,Options0),
+   my_partition(is_object_or_grid,ReservedOptions,Reserved,Options),
    %select_default_i_options(Grid,H,V,Points,DefaultOptions),
-   default_i_options(DefaultOptions),
-   subst(Options0,defaults,DefaultOptions,Options),
-   (Options0==Options -> append(Options,DefaultOptions,NewOptions) ; (Options=NewOptions)),!,
-   ignore((ROptions \= ReservedOptions,
-      pt(blue,fix_indivs_options(in=ReservedOptions,r=Reserved,o=NewOptions)))).
+   %default_i_options(DefaultOptions),
+   %subst(Options0,defaults,DefaultOptions,Options),
+   %(Options0==Options -> append(Options,DefaultOptions,NewOptions) ; (Options=NewOptions)),!,
+   ignore((ROptions \= Options,
+      pt(blue,fix_indivs_options(ro=ROptions,r=Reserved,o=Options)))).
 
 
 individuate_default(Grid,IndvS):- individuate([defaults],Grid,IndvS).
@@ -393,9 +393,8 @@ fti(Image,[find_contained|set(Image,todo)]):-
 % Find object that are contained in objects and individuate them in their own way  (TODO mame this more complete)
 % Find free points that are contained in objects and individuate them in their own way
 fti(Image,[find_engulfed|set(Image,todo)]):-
-  print_grid(Image.grid),
-  pt(yellow,"Find Engulfed "+ Image.id),!, 
-  ( \+ is_input(Image)-> trace ; true),
+  print_grid(Image.grid),  
+  % ( \+ is_input(Image)-> trace ; true),
   find_engulfed(Image).    find_engulfed(Image):- find_engulfed(Image,Image.objs,set(Image,objs)),!.
     
 find_engulfed(Image,ScanNext,SofarInsteadO):-
@@ -448,7 +447,7 @@ replace_i_each(E,[],[],E).
 fti(Image,[combine_objects|set(Image,todo)]):-
    combine_objects(Image.objs,set(Image,objs)),!.
 
-fti(Image,[combine_perfects|set(Image,todo)]):-
+fti(Image,[combine_perfects|set(Image,todo)]):- 
    combine_perfects(Image.objs,set(Image,objs)),!.
 
 fti(Image,[check_engulfed|TODO]):-
@@ -621,11 +620,9 @@ fsi(_Image,Reserved,NewGrid,TODO,H,V,Sofar,ID,[release_points|TODO],Reserved,Poi
 fsi(_Image,Reserved,Grid,Expansion,_H,_V,Sofar,_ID,IsToBeRewritten,Reserved,Points,Grid,Sofar,Points):-
     get_option_expansion(IsToBeRewritten,Expansion),!.
 
-
 get_option_expansion([done|_],[done]):-!.
 get_option_expansion([],[]):-!.
 get_option_expansion([A|NO],O):- get_option_expansion(A,AA), !, listify(AA,AL),append(AL,NO,O).
-get_option_expansion(default,Opts):-  default_i_options(Opts).
 get_option_expansion(I,O):- expand_todo(I,O).
 
 
@@ -932,7 +929,7 @@ next_options([_|T],T).
 
 %select_default_i_options(_Grid,H,V,_Points,Options):- (H=<5;V=<5),!,tiny_i_options(Options).
 %select_default_i_options(_Grid,H,V,_Points,Options):- (H=<6;V=<6),!,tiny_i_options(Options).
-select_default_i_options(_Grid,_H,_V,_Points,Options):-  default_i_options(Options).
+%select_default_i_options(_Grid,_H,_V,_Points,Options):-  default_i_options(Options).
 
 
 ok_color_with(C,C2):- /* non_free_fg(C2), */ C==C2.

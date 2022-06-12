@@ -17,6 +17,181 @@ The symbolic solver author claims to have only spent 2 months writting the C++ f
 
 Therefore this project spends some time trying to pass the tests at 100% (on a CPU in under 9 hours).  But what if it takes us 20 hours to get 100% ?
 
+<!-- Output copied to clipboard! -->
+
+<!-- Yay, no errors, warnings, or alerts! -->
+
+My ARC WIKI [https://logicmoo.org/xwiki/bin/view/Main/ARC/](https://logicmoo.org/xwiki/bin/view/Main/ARC/)
+
+Youtube Videos discussing ARC 
+
+
+---
+
+6/11/2022
+
+ The process of (H)MUARC is as follows….
+
+Individuate the input images (using the “complete” algo)
+
+
+
+* Individuate-by-color-masses (no diagonals except black)
+* Individuate-by-a-priori-shape-lib (human created)
+* Individuate-by-folding
+* Individuate-by-navigation (ray shooters)
+* Individuate-by-single-thickness brush
+* (TODO) Individuate-by-N-thickness brush
+* With the rest
+    * Rest is noise (saved to noise channel regardless)
+    * Individuate rest by-color
+    * Individuate rest as-pixels 
+    * Individuate-by-distance to previous individuals
+* With Individuals compute:
+    * Possible “fill” areas
+    * Distances
+        * Negative for individuals inside the fill areas
+        * Zero is for touching
+        * Positive is distance
+    * Classify:  
+        * Dot,hv_line(H/V),dg_line(U/D), Rectangular, Polygon
+        * Solid(T/F), Outline, UnknownPoly,
+* Rerun individuation on the individuals using only themselves
+* Rerun individuation on the individuals using individuals in their fill areas \
+
+
+Individuate the output image  (using the “complete” algo again)
+
+Identify remaining, new and removed individuals:  Images get created from groups
+
+
+
+* Only New
+* Only Removed
+* Only Remaining
+* Only New and Removed
+
+With the 4 Groups plus the In and the Out
+
+
+
+* Diff each of the 6 against the 5 others
+* Regroup individuals by classification labels, sizes, and colors
+* Generate algorithms that transform all 30 pairs 
+
+Find correspondence between the 30 algos which answers and does: 
+
+
+
+* Are there commonalities between remaining, added and removed individuals ?
+* Find what remaining individuals have in common
+* Find what removed individuals have in common
+* Find what added individuals have in common
+* Are there commonalities between removed and added individuals ?
+* Are there commonalities between remaining and added individuals ?
+* Are there commonalities between remaining and removed individuals ?
+
+    (If the commonalities are not detectable, it backtracks (this means that REDO port in Prolog of proof is called this sometimes enables and disables parts of the code)
+
+
+The Algos are saved for each of the training sample pairs (3-5 training pairs per test) 
+
+The overlapping algos in the training samples are considered its “Theory” they concatenate together and run in the DSL I created for the vm
+
+ .. depending on the result it may backtrack.  Usually it is the inviduators that need disabling.. They can obfuscate the results usually with too much individual of  information 
+
+Backtracking will disable and rerun the various combinations of the above code for Example:
+
+
+
+* Remove the nose channel
+* Individuate-by-color-masses (no diagonals except black)
+* Individuate-by-a-priori-shape-lib (just those saved by previous pass)
+* Individuate-by-folding (not tried the second pass)
+* Individuate-by-navigation (ray shooters)
+* Individuate-by-single-thickness brush
+* (TODO) Individuate-by-N-thickness brush
+* With the rest
+    * Rest is noise (saved to noise channel regardless)
+    * Individuate rest by-color
+    * Individuate rest as-pixels 
+    * Individuate-by-distance to previous individuals
+* With Individuals compute:
+    * Possible “fill” areas
+    * Distances
+        * Negative for individuals inside the fill areas
+        * Zero is for touching
+        * Positive is distance
+    * Classify:  
+        * Dot,hv_line(H/V),dg_line(U/D), Rectangular, Polygon
+        * Solid(T/F), Outline, UnknownPoly,
+* Rerun individuation on the individuals using only themselves
+* Rerun individuation on the individuals using individuals in their fill areas
+
+
+---
+
+6/4/2022
+
+
+
+* Begun web interface to running ARC Tests from LOGICMOO [https://logicmoo.org/swish/arc/arc_testing_interface.html](https://logicmoo.org/swish/arc/arc_testing_interface.html) 
+* Non logicmoo runs at [http://gitlab:1777/swish/arc/arc_testing_interface.html](http://gitlab:1777/swish/arc/arc_testing_interface.html)
+* 
+
+             \
+
+
+
+
+---
+
+6/1/2022 
+
+
+
+* Updated Wiki page (link header/footer of this) with higher level what the files do
+* Should I tell Discord server about this work?
+* Maybe I’ll stream my daily work on the Internet? (16 hours a day)
+* I think the code will be still be ready for demo/explanation for SNET’s  AI-DSL group  6/9/2022
+* How involved should SNET be ?    I told Nils (5/25/2002) I could port to MeTTa…   HOWEVER That would take me 70-160 hours to extend the MeTTa kernel (giving it the superpowers of backtracking and the GC to handle MUARC) ).. Would they want that if MeTTA already does everything they need?  I need to ask for a description of what the MeTTa kernel does practically today.  So far it seems to be a MiniKanren impl … Is the type of inference I do in MUARC even something they would want?  Also what sort of time/performance hit would my code take? 
+* Time taking options:
+    * Guile-log (160 hours) 
+        * Will make my code run ? the speed but compatible with OpenCog Prime.
+        * Will be fixing bugs with in Guile-log 
+        * Had Ben’s approval for a temporal inference engine i wrote (ARC would need to be confirmed again and wage renegotiated .. would need to sell him on the importance of ARC) 
+    * Yap (50 hours) or Sicstus (40 hours) 
+        * Yap make my code run 2 to 4 times faster
+        * Sicstus would be  4 to 20 times faster
+        * Very little little extra work
+    * MeTTA (160 hours)
+        * I’d need to add the type of basic inference that MUARC does to MeTTa in Rust
+        * Rust native version would be ? speed of the current C version?
+        * I suppose it is less hours (40-80 hours?) if I make MeTTa call the C code
+        * The “pro” for SNET is 3 months from after I stop messing with the port. They can say that the SOTA in ARC runs in MeTTA.  Is there a “pro” for me?
+    * No port
+        * Costs me no extra 
+        * Nothing to lose.. Everything to gain \
+
+* Explained to someone that (H)MUARC would pass ARC 87% - 100% this is STILL not a proto AGI..   It is the next program called (G)MUARC that comes after (H)MUARC that is more closely related to the proto AGI.   Cute thing is  (G)MUARC takes less time than (H)MUARC (160 hours .. not 480 hours)
+    *  (G)MUARC is the editing tool that is used to regenerate better versions of MUARCs.  Even though I am an expert at writing programs that write new programs, I still have to create a (H)MUARC version in order to know what (G)MUARC needs from me.
+
+
+---
+
+
+    5/31/2022 
+
+
+
+* Need to inform people waiting on LOGICMOO-AGI employment/contracts that our funding will probably come from the success of Douglas’ ARC code?
+* Focused on a set of tests that only show me that the individuation strategy was sane. (TThis is ready for 6/9/2022 demo)
+
+ \
+ \
+
+
+Back to WIKI [https://logicmoo.org/xwiki/bin/view/Main/ARC/](https://logicmoo.org/xwiki/bin/view/Main/ARC/)
 
 
 
