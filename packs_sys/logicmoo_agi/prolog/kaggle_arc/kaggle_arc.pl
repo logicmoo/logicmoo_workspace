@@ -206,9 +206,9 @@ show_arc_pair_progress(TestID,ExampleNum,In,Out):-
   show_pair_grid(IH,IV,   OH, OV,i_pass1,o_pass1,PairName,InC,OutC),
   show_pair_diff(IOH,IOV,IOH,IOV,removed,added,PairName,Removed,Added),
   show_pair_grid(IH,IV,   OH, OV,original_in,original_out,PairName,In,Out),
-  show_pair_grid(IH,IV,   OH, OV,i_pass1,o_pass1,PairName,InC,OutC),
+  show_pair_grid(IH,IV,   OH, OV,i_pass1,o_pass1,PairName,InP2,OutP2),
   show_pair_grid(IH,IV,   OH, OV,i_pass1,o_pass1,PairName,InC2,OutC2),
-  show_pair_diff(IH,IV,   OH, OV,i_pass2,o_pass2,PairName,InP2,OutP2),
+  show_pair_diff(IH,IV,   OH, OV,i_pass2,o_pass2,PairName,InC,OutC),
   !)).
   /*
 

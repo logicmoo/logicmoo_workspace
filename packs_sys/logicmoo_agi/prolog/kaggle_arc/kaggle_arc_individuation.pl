@@ -42,6 +42,8 @@ expand_todo(defaults2, [fourway, shape_lib(noise),shape_lib(pair),shape_lib(intr
 
 %individuate(H,V,ID,Grid,Points,IndvSO):- individuate_default(H,V,ID,Grid,Points,IndvSO).
 expand_todo(complete, [
+
+progress,
      shape_lib(noise), shape_lib(intruder), shape_lib(out),shape_lib(hammer),shape_lib(pair), 
     %polygon,  %calc_largest_square_block,
     rectangle, fourway, dg_line(d), 
@@ -52,6 +54,7 @@ expand_todo(complete, [
     by_color,done]).
 
 expand_todo(defaults, [
+progress,
   shape_lib(noise), shape_lib(in), shape_lib(intruder), shape_lib(pair), shape_lib(out),
   use_reserved, fourway, solid(rectangle), outlines,
   %polygons,%shape_lib(rectangle), %shape_lib(all), %shape_lib(hammer), calc_largest_square_block,
@@ -279,9 +282,9 @@ goal_expansion(Goal,Out):- compound(Goal), arg(N,Goal,E),
    compound(E), E = set(Obj,Member), setarg(N,Goal,Var),
    expand_goal((Goal,b_set_dict(Member,Obj,Var)),Out).
 */
-get_setarg_p1(_,Cmpd,_):- \+ compound(Cmpd),!, fail.
-get_setarg_p1(E,Cmpd,SA):- arg(N,Cmpd,E), SA=setarg(N,Cmpd).
-get_setarg_p1(E,Cmpd,SA):- arg(_,Cmpd,Arg),get_setarg_p1(E,Arg,SA).
+get_setarg_p1(E,Cmpd,SA):-  compound(Cmpd), get_setarg_p2(E,Cmpd,SA).
+get_setarg_p2(E,Cmpd,SA):- arg(N,Cmpd,E), SA=setarg(N,Cmpd).
+get_setarg_p2(E,Cmpd,SA):- arg(_,Cmpd,Arg),get_setarg_p1(E,Arg,SA).
 
 system:term_expansion((Head:-Body),Out):-
    get_setarg_p1(I,Head,P1), compound(I), I = set(Obj,Member),
@@ -289,11 +292,18 @@ system:term_expansion((Head:-Body),Out):-
    expand_term((Head:- b_set_dict(Member,Obj,Var), Body),Out).
 
 %goal_expansion(Goal,'.'(Image, Objs, Obj)):- Goal = ('.'(Image, Objs, A), Obj = V),  var(Obj).
-system:goal_expansion(Goal,Out):-
-   compound(Goal), \+ predicate_property(Goal,meta_predicate(_)),
+
+goal_expansion_setter(Goal,Out):-
+   compound(Goal), predicate_property(Goal,meta_predicate(_)),!,
+   arg(N,Goal,P), compound(P), goal_expansion_setter(P,MOut),
+   setarg(N,Goal,MOut), expand_goal(Goal, Out).
+
+goal_expansion_setter(Goal,Out):- 
    get_setarg_p1(I,Goal,P1), compound(I), I = set(Obj,Member),
    call(P1,Var),
    expand_goal((Goal,b_set_dict(Member,Obj,Var)),Out).
+
+goal_expansion(Goal,Out):- goal_expansion_setter(Goal,Out).
 
 
 
