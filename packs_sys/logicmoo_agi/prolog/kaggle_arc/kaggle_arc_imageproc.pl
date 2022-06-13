@@ -178,14 +178,15 @@ remove_global_points(Point,Grid,GridO):- remove_global_cpoints(Point,Grid,GridO)
 remove_global_cpoints([],Grid,Grid):- !.
 remove_global_cpoints([H|T],Grid,GridO):- !, remove_global_cpoints(H,Grid,GridM),remove_global_cpoints(T,GridM,GridO).
 
-remove_global_cpoints(Point,Grid,GridO):- as_hv_point(H,V,IfSame,Point),                                                                     
-                                                                    get_color_at(H,V,Grid,Old), 
-                                                                    ((nonvar_or_ci(IfSame),same_color(IfSame,Old))
-                                                                       ->get_bgc(New)
-                                                                       ;New=Old),!,
-                                                                    replace_each_local(H,V,New,Old,Point,Grid,GridO).
-%remove_global_cpoints(Point,Grid,GridO):- as_hv_point(H,V,IfSame,Point), get_bgc(C),replace_local_point(H,V,C,Old,Grid,GridO).
-%remove_global_cpoints(Point,Grid,GridO):- set_local_points(,Point,Grid,GridO).
+remove_global_cpoints(CPoint,G,GO):- is_points_list(G), point_to_hvc(CPoint,H,V,OldC),hv_point(H,V,Point), !, 
+  replace_in_points(Point,_NewC,OldC,G,GO).
+
+remove_global_cpoints(Point,Grid,GridO):- point_to_hvc(Point,H,V,IfSame),                                                                     
+                               get_color_at(H,V,Grid,Old), 
+                               (same_color(IfSame,Old) -> (get_bgc(New),replace_global_hvc_point(H,V,New,Old,Grid,GridO));
+                                  Grid=GridO).
+
+%remove_global_cpoints(Point,Grid,GridO):- set_local _points(,Point,Grid,GridO).
 remove_global_cpoints(Point,Grid,Grid):-  nop(wdmsg(warn(skip(remove_global_points(Point))))).
 
 same_color(IfSame,Old):- \+ \+ IfSame = Old.
@@ -201,9 +202,9 @@ pred_global_points(Pred7,Color,[H|T],Grid,GridO):- !, pred_global_points(Pred7,C
 pred_global_points(Pred7,Color,Point,Grid,GridO):- pred_global_cpoints(Pred7,Color,Point,Grid,GridO).
 pred_global_cpoints(_Pred7,_Color,[],Grid,Grid):- !.
 pred_global_cpoints(Pred7,Color,[H|T],Grid,GridO):- !, pred_global_cpoints(Pred7,Color,H,Grid,GridM),pred_global_cpoints(Pred7,Color,T,GridM,GridO).
-pred_global_cpoints(Pred7,fg,Point,Grid,GridO):- as_hv_point(H,V,C,Point), !, hv_value_or(Grid,Old,H,V,_), call(Pred7,H,V,C,Old,Grid,GridO).
-pred_global_cpoints(Pred7,Color,Point,Grid,GridO):- as_hv_point(H,V,_,Point),  hv_value_or(Grid,Old,H,V,_),  call(Pred7,H,V,Color,Old,Grid,GridO).
-%pred_global_cpoints(Pred7,Color,Point,Grid,GridO):- set_local_points(Pred7,,Point,Grid,GridO).
+pred_global_cpoints(Pred7,FG,Point,Grid,GridO):- FG == fg, point_to_hvc(Point,H,V,C), !, hv_value_or(Grid,Old,H,V,_), call(Pred7,H,V,C,Old,Grid,GridO).
+pred_global_cpoints(Pred7,Color,Point,Grid,GridO):- point_to_hvc(Point, H,V,_),  hv_value_or(Grid,Old,H,V,_),  call(Pred7,H,V,Color,Old,Grid,GridO).
+%pred_global_cpo ints(Pred7,Color,Point,Grid,GridO):- set_local _points(Pred7,,Point,Grid,GridO).
 pred_global_cpoints(Pred7,Color,Point,Grid,Grid):-  nop(wdmsg(warn(skip(pred_global_points(Pred7,Color,Point))))).
 
 
@@ -221,55 +222,33 @@ add_global_points(Color,Point,Grid,GridO):- add_global_cpoints(Color,Point,Grid,
 
 add_global_cpoints(_Color,[],Grid,Grid):- !.
 add_global_cpoints(Color,[H|T],Grid,GridO):- !, add_global_cpoints(Color,H,Grid,GridM),add_global_cpoints(Color,T,GridM,GridO).
-add_global_cpoints(fg,Point,Grid,GridO):- as_hv_point(H,V,C,Point), !, replace_global_point(H,V,C,_,Grid,GridO).
-add_global_cpoints(Color,Point,Grid,GridO):- as_hv_point(H,V,_,Point),   replace_global_point(H,V,Color,_,Grid,GridO).
-%add_global_cpoints(Color,Point,Grid,GridO):- set_local_points(,Point,Grid,GridO).
+add_global_cpoints(FG,Point,Grid,GridO):- FG == fg, point_to_hvc(Point, H,V,C), !, replace_global_hvc_point(H,V,C,_,Grid,GridO).
+add_global_cpoints(Color,Point,Grid,GridO):- point_to_hvc(Point, H,V,_),   replace_global_hvc_point(H,V,Color,_,Grid,GridO).
+%add_global_cpoints(Color,Po int,Grid,GridO):- set_local _points(,Point,Grid,GridO).
 add_global_cpoints(Color,Point,Grid,Grid):-  nop(wdmsg(warn(skip(add_global_points(Color,Point))))).
 
 
 
 /*
-set_local_points(Points,Grid,GridO):-  set_local_points(fg,Points,Grid,GridO).
-set_local_points(C,[H|T],Grid,GridO):- !, set_local_points(C,H,Grid,GridM),set_local_points(C,T,GridM,GridO).
-set_local_points(_,[],Grid,Grid):-!.
-set_local_points(C,Point,Grid,GridO):- as_hv_point(H,V,Old,Point), replace_local_point(H,V,C,Old,Grid,GridO).
+set_local_ po ints(Points,Grid,GridO):-  set_loca l_points(fg,Points,Grid,GridO).
+set_local _points(C,[H|T],Grid,GridO):- !, set_local_points(C,H,Grid,GridM),set_loc al_points(C,T,GridM,GridO).
+set_loca l_points(_,[],Grid,Grid):-!.
+set_local_po ints(C,Point,Grid,GridO):- point_t o_hvc(H,V,Old,Point), replace_loca l_point(H,V,C,Old,Grid,GridO).
 */
 
-set_local_points([],Grid,Grid):- !.
-set_local_points(Obj,Grid,GridO):- is_object(Obj), localpoints(Obj,Points),set_local_cpoints(Points,Grid,GridO).
-set_local_points(Obj,Grid,GridO):- is_grid(Obj),!, localpoints(Obj,Points),set_local_cpoints(Points,Grid,GridO).
-set_local_points([H|T],Grid,GridO):- is_points_list([H|T]), !, set_local_cpoints([H|T],Grid,GridO).
-set_local_points(Obj,Grid,GridO):- is_group(Obj), localpoints(Obj,Points),set_local_cpoints(Points,Grid,GridO).
-set_local_points([H|T],Grid,GridO):- !, set_local_points(H,Grid,GridM),set_local_points(T,GridM,GridO).
-set_local_points(Point,Grid,GridO):- set_local_cpoints(Point,Grid,GridO).
-
-set_local_cpoints([],Grid,Grid):- !.
-set_local_cpoints([H|T],Grid,GridO):- !, set_local_cpoints(H,Grid,GridM),set_local_cpoints(T,GridM,GridO).
-set_local_cpoints(Point,Grid,GridO):- as_hv_point(H,V,C,Point), replace_local_point(H,V,C,_,Grid,GridO).
-%set_local_cpoints(Point,Grid,GridO):- set_local_points(,Point,Grid,GridO).
-set_local_cpoints(Point,Grid,Grid):-  nop(wdmsg(warn(skip(set_local_points(Point))))).
-
-
-replace_local_point(H,V,NewC,OldC,Grid,GridO):- hv_point(H,V,Point),map_pred(replace_each_local(H,V,NewC,OldC,Point),Grid,GridO).
-replace_global_point(H,V,NewC,OldC,Grid,GridO):- hv_point(H,V,Point),map_pred(replace_each_global(H,V,NewC,OldC,Point),Grid,GridO).
+%set_local_points([],Grid,Grid):- !.
+%set_local_points([H|T],Grid,GridO):- !, set_local_points(H,Grid,GridM),set_local_points(T,GridM,GridO).
+set_local_points(Point,Grid,GridO):- replace_local_points(Point,_AnyOldColor,Grid,GridO),!.
+%set_local_points(Point,Grid,GridO):- set_local_points(,Point,Grid,GridO).
+set_local_points(Point,Grid,Grid):-  wdmsg(warn(skip(set_local_points(Point)))).
 
 replace_grid_point(H,V,NewC,_OldC,Grid,GridO):- 
   duplicate_term(Grid,GridO),
-  assertion(is_grid(Grid)),
+  my_assertion(is_grid(Grid)),
   Grid=GridO,
-  assertion(is_grid(GridO)),
+  my_assertion(is_grid(GridO)),
   nth1(V,GridO,Row),nb_set_nth1(H,Row,NewC),!.
 replace_grid_point(_H,_V,_NewC,_OldC,Grid,Grid).
-
-%replace_each_local(_H,_V,NewC,OldC,Point,G,GO):-nonvar_or_ci(G),!,G=obj(L),is_list(L),
-  
-   
-  
-replace_each_local(H,V,NewC,OldC,_Point,G,GO):- is_grid(G),!, (replace_grid_point(H,V,NewC,OldC,G,GO)->true;GO=G).
-replace_each_local(_H,_V,NewC,OldC,Point,G,GO):- \+ is_grid(G),!,is_cpoint(G),G=(OldC-Point),GO=(NewC-Point).
-
-replace_each_global(H,V,NewC,OldC,Point,G,GO):- replace_each_local(H,V,NewC,OldC,Point,G,GO).
-
 
 
 nb_set_nth1(1,Row,C):- !, (Row==[]->true; nb_setarg(1,Row,C)).
@@ -424,7 +403,7 @@ calc_range(WLoH,WLoV,WHiH,WHiV,WH,WV,offset_ranges(ILoH,ILoV,IHiH,IHiV,IH,IV),Lo
   max_min(WLoV,ILoV,_,LoV),max_min(WHiV,IHiV,HiV,_),max_min(WV,IV,V,_),
   max_min(WLoH,ILoH,_,LoH),max_min(WHiH,IHiH,HiH,_),max_min(WH,IH,H,_),!.
 calc_range(WLoH,WLoV,WHiH,WHiV,WH,WV,Point,LoH,LoV,HiH,HiV,H,V):- 
-  as_hv_point(IH,IV,C,Point),nonvar_or_ci(C), !,
+  point_to_hvc(Point,IH,IV,C),nonvar_or_ci(C), !,
   max_min(WLoV,IV,_,LoV),max_min(WHiV,IV,HiV,_),max_min(HiV,WV,V,_),
   max_min(WLoH,IH,_,LoH),max_min(WHiH,IH,HiH,_),max_min(HiH,WH,H,_),!.
 
@@ -475,11 +454,11 @@ points_to_grid(Points,Grid):- quietly(grid_size(Points,H,V)), points_to_grid(H,V
 
 points_to_grid(H,V,Points,Grid):- make_grid(H,V,Grid), calc_add_points(1,1,Grid,Points).
 
-calc_add_points(OH,OV,_,Obj):- plain_var(Obj),dumpST,throw(var_calc_add_points(OH,OV,Obj)).
+calc_add_points(OH,OV,_,Obj):- plain_var(Obj),dumpST,trace_or_throw(var_calc_add_points(OH,OV,Obj)).
 calc_add_points(OH,OV,Grid,Obj):- is_grid(Obj),globalpoints(Obj,Points),maplist(calc_add_points(OH,OV,Grid),Points).
 calc_add_points(OH,OV,Grid,Points):- is_list(Points),!,maplist(calc_add_points(OH,OV,Grid),Points).
 calc_add_points(_OH,_OV,_,obj(_)).
-calc_add_points(OH,OV,Grid,Point):- as_hv_point(H,V,C,Point),HH is H -OH +1, VV is V - OV +1,  add_h_v_c(Grid,HH,VV,C).
+calc_add_points(OH,OV,Grid,Point):- point_to_hvc(Point,H,V,C),HH is H -OH +1, VV is V - OV +1,  add_h_v_c(Grid,HH,VV,C).
 %add_h_v_c(Grid,H,V,C):- plain_var(C),!,nop(add_h_v_c(Grid,H,V,C)).
 add_h_v_c(Grid,H,V,C):- hv_value(Grid,Was,H,V),ignore(Was=C).
 
@@ -487,9 +466,6 @@ copy_cells(B,A,H,HH):- call(B,H),!,call(A,HH).
 copy_cells(_,_,H,H):- \+ is_list(H),!.
 copy_cells(_,_,[],[]):-!. 
 copy_cells(B,A,[H|T],[HH|TT]):-!, copy_cells(B,A,H,HH), copy_cells(B,A,T,TT).
-  
-
-same_grid(Grid1,Grid1).
 
 
 :- fixup_exports.

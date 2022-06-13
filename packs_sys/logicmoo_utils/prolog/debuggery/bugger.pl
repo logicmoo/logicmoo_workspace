@@ -222,10 +222,11 @@
 :- multifile '$autoload'/3. 
 :- discontiguous '$exported_op'/3.
 :- discontiguous '$autoload'/3.
-:- system:reexport(library(must_sanity)).
+%:- system:reexport(library(must_sanity)).
 :- system:reexport(library(logicmoo/redo_locally)).
 module(_Skip,Exports):-
  maplist(export,Exports).
+:- include(library(must_sanity)).
 
 
 :- include(ucatch).

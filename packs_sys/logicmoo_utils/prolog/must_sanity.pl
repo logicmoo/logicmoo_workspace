@@ -10,7 +10,7 @@
 % Licience: LGPL
 % ===================================================================
 */
-:- if((prolog_load_context(source,F),prolog_load_context(file,F))).
+%:- if((prolog_load_context(source,F),prolog_load_context(file,F))).
 :- module(must_sanity,
    [
       must/1, % Goal must succeed at least once once
@@ -21,7 +21,7 @@
       scce_orig/3,
       must_or_rtrace/1
     ]).
-:- endif.
+%:- endif.
 /** <module> Utility LOGICMOO_MUST_SANITY
 This module includes predicate utilities that allows program to detect unwanted failures. 
 @author Douglas R. Miles
@@ -262,7 +262,7 @@ mquietly(Var):- var(Var),!,trace_or_throw(var_mquietly(Var)).
 mquietly(G):- call(G).
 
 :- '$hide'(mquietly/1).
-:- '$hide'(mquietly/2).
+%:- '$hide'(mquietly/2).
 
 mquietly_if(false,_):- !.
 mquietly_if(_,G):- mquietly(G).
@@ -297,17 +297,17 @@ scce_orig0(Setup0,Goal,Cleanup0):-
      Cleanup,
      (notrace(DET == true) -> ! ; (true;(Setup,fail))).
       
-:- '$hide'(must_sanity:scce_orig/3).
-:- '$set_predicate_attribute'(must_sanity:scce_orig/3, hide_childs, true).
+:- '$hide'(scce_orig/3).
+:- '$set_predicate_attribute'(scce_orig/3, hide_childs, true).
 
-:- '$hide'(must_sanity:xnotrace/1).
-:- '$set_predicate_attribute'(must_sanity:xnotrace/1, hide_childs, true).
+:- '$hide'(xnotrace/1).
+:- '$set_predicate_attribute'(xnotrace/1, hide_childs, true).
 
 %:- '$hide'(system:setup_call_catcher_cleanup/4).
 %:- '$set_predicate_attribute'(system:setup_call_catcher_cleanup/4, hide_childs, false).
 
 :- '$hide'(system:call_cleanup/2).
-:- '$set_predicate_attribute'(system:call_cleanup/2, hide_childs, false).
+:- '$set_predicate_attribute'(call_cleanup/2, hide_childs, false).
 
 
 scce_orig2(Setup,Goal,Cleanup):-

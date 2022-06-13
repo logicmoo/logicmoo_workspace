@@ -1699,7 +1699,7 @@ flag_call0(FlagHowValue):- univ_safe_2(FlagHowValue,[How,Flag,Value]),
 :- export(skipWrapper/0).
 
 % skipWrapper:-!.
-skipWrapper:- zotrace((ucatch:skipWrapper0)).
+skipWrapper:- zotrace((bugger:skipWrapper0)).
 % skipWrapper:- tracing,!.
 
 skipWrapper0:- current_prolog_flag(bugger,false),!.

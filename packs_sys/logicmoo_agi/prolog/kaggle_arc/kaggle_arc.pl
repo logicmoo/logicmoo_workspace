@@ -39,8 +39,7 @@ decl_pt(G):- ground(G), !, assertz_new(decl_pt(G)).
   :- set_prolog_flag(toplevel_print_factorized,true).
   :- set_prolog_flag(answer_write_options, [quoted(true), portray(true), max_depth(20), attributes(portray)]).
 
-  clsmake:- cls,update_changed_files,make.
-  clsmake2:- update_changed_files.
+  clsmake:- cls,update_changed_files.  
 
 
 % SWISH ARC
@@ -82,11 +81,13 @@ decl_pt(G):- ground(G), !, assertz_new(decl_pt(G)).
 :- ensure_loaded(kaggle_arc_ui_html).
 
 %c:- forall(clause(fav(A,B),true),add_history1((fav(A,B)))).
+:- add_history1(fav2).
+:- add_history1(arc2).
 :- add_history1(arc).
 :- add_history1(arc1).
-:- add_history1(arc2).
+:- add_history1(fav).
 :- add_history1(fav1).
-:- add_history1(fav2).
+:- add_history1(fav3).
 
 
 :- forall((fav(_,P),flatten([P],Flat),member(E,Flat)), assert_if_new(fav_trait(E))).
@@ -95,49 +96,49 @@ decl_pt(G):- ground(G), !, assertz_new(decl_pt(G)).
 run_nb(G):- call(G).
 %run_nb(G):- setup_call_cleanup(G,true,notrace).
 
-arc:- forall(arc1,true).
-arc1:- clsmake, test_names_by_hard(X), arc1(X).
-arc2:- clsmake, test_names_by_hard_rev(X), arc1(X).
+arc:- forall(arc11,true).
+arc1:- clsmake, test_names_by_hard(X), arc1(cls1,X).
+arc11:- clsmake, test_names_by_hard(X), arc1(X).
+arc2:- clsmake, test_names_by_hard_rev(X), arc1(cls1,X).
+arc22:- clsmake, test_names_by_hard_rev(X), arc1(X).
 arc3:- clsmake, arc1(v('009d5c81')).
-arc4:- arc1(t('25d487eb')).
+arc4:- clsmake, arc1(t('25d487eb')).
 arc5:- clsmake, arc1(v('1d398264')).
 
-fav:- clsmake,forall(fav1,true).
-fav1:- clsmake, test_names_by_fav(X), arc1(X).
-fav2:- clsmake, test_names_by_fav_rev(X), arc1(X).
-fav(X):- nonvar_or_ci(X),!, clsmake, arc1(X).
+fav3:- clsmake, arc1(t('3631a71a')*(_+_)),!.
+fav:- clsmake,forall(fav11,true).
+favr:- clsmake,forall(fav22,true).
+fav1:- clsmake, test_names_by_fav(X), arc1(cls1,X).
+fav11:- clsmake, test_names_by_fav(X), arc1(X).
+fav2:- clsmake, test_names_by_fav_rev(X), arc1(cls,X).
+fav22:- clsmake, test_names_by_fav_rev(X), arc1(X).
+
+fav(X):- nonvar(X),!, clsmake, arc1(X).
 fav(X):- clause(fav(X,_),true).
 
-arc(TestID):- clsmake2, time(forall(arc1(TestID),true)).
+arc(TestID):- time(forall(arc1(true,TestID),true)).
 
-arc1(TestID):- clsmake2, !, arc1e(TestID).
-arc1(TestID):- clsmake2, time(forall(arc1e(TestID),true)).
-
-arc1e(TName):-    
+arc1(TName):- arc1(true,TName).
+arc1(G,TName):-    
  retractall(why_grouped(individuate(_),_)),
  locally(set_prolog_flag(gc,true),
   (fix_test_name(TName,TestID,ExampleNum), 
-  ExampleNum = (_+0),
+   ignore(ExampleNum = (_+0)),
    clear_shape_lib(in),clear_shape_lib(out),clear_shape_lib(pair),clear_shape_lib(noise),  
-   clear_shape_lib(intruder),
+   clear_shape_lib(intruder),!,
 
   kaggle_arc(TestID,ExampleNum,In,Out),
-  run_arc_io(TestID,ExampleNum,In,Out))).
+  catch((call(G),
+    run_arc_io(TestID,ExampleNum,In,Out)),'$aborted',true))).
+
+cls1:- catch(cls,_,true).
 
 arc_grid(Grid):- test_names_by_fav(TestID),kaggle_arc(TestID,_ExampleNum,In,Out),arg(_,v(In,Out),Grid).
 
-%color_sym(OS,[(black='°'),(blue='©'),(red='®'),(green=''),(yellow),(silver='O'),(purple),(orange='o'),(cyan= 248	ø ),(brown)]).
-color_sym(OS,C,Sym):- is_list(C),maplist(color_sym(OS),C,Sym),!.
-color_sym(_,black,' ').
-
-color_sym(OS,C,Sym):- color_sym(OS,4,C,Sym).
-
-color_sym(_,_,C,Sym):- enum_colors(C),color_int(C,I),nth1(I,`ose=xt~+*zk>`,S),name(Sym,[S]).
-%color_sym(P*T,_,C,Sym):- enum_colors(C),color_int(C,I),S is P+I*T,name(Sym,[S]).
-
-is_buggy_pair(v(fd096ab6)*(trn+0), "BUG: System Crash").
-is_buggy_pair(t('3631a71a')*(tst+0),"segv").
-is_buggy_pair(t('27a28665')*(tst+2), "BUG: Re-Searcher gets stuck!").
+:- dynamic(is_buggy_pair/2).
+%is_buggy_pair(v(fd096ab6)*(trn+0), "BUG: System Crash").
+%is_buggy_pair(t('3631a71a')*(tst+0),"segv").
+%is_buggy_pair(t('27a28665')*(tst+2), "BUG: Re-Searcher gets stuck!").
 
 run_arc_io(TestID,ExampleNum,In,Out):-
   \+ is_buggy_pair(TestID*ExampleNum,_),
@@ -147,12 +148,12 @@ run_arc_io(TestID,ExampleNum,In,Out):-
 make_indivs(Pred,In,Out,InC,OutC):-
   writeln(inC(Pred)),
   call(Pred,In,InC),
-  add_shape_lib(in,InC),
+  %add_shape_lib(in,InC),
   writeln(outC(Pred)),
   call(Pred,Out,OutC),
-  add_shape_lib(out,OutC),
+  %add_shape_lib(out,OutC),
   writeln(inOutC(Pred)),!.
-
+/*
 show_indivs(IH,IV,OH,OV,Pred,When,PairName,In,Out,SF):-  
   ignore(IH=1),
   LW is (IH * 2 + 12),
@@ -161,7 +162,6 @@ show_indivs(IH,IV,OH,OV,Pred,When,PairName,In,Out,SF):-
   wots(U1, print_grid(IH,IV,NameIn,In)),
   wots(U2, print_grid(OH,OV,NameOut,Out)),
   print_side_by_side(U1,LW,U2),
-  make_indivs(Pred,In,Out,InC,OutC),
   append(InC,OutC,InOutC),
   smallest_first(InOutC,SF),
   %largest_first(InOutC,LF),
@@ -174,7 +174,7 @@ show_indivs(IH,IV,OH,OV,Pred,When,PairName,In,Out,SF):-
      describe_feature(InC,[call(writeln('IN'))|INFO]),LW,
     describe_feature(OutC,[call(writeln('OUT'))|INFO])),!,
   show_pair_I_info(NameIn,NameOut,InC,OutC).
-
+*/
 
 show_arc_pair_progress(TestID,ExampleNum,In,Out):-
  must_det_l((
@@ -182,17 +182,44 @@ show_arc_pair_progress(TestID,ExampleNum,In,Out):-
 	grid_size(In,IH,IV), grid_size(Out,OH,OV),
 	nop(writeln(oi(size(IH,IV)->size(OH,OV)))),
 	ignore((more_task_info(TestID,III),pt(III),nl)), 
-  show_pair_no_i(IH,IV,OH,OV,test,PairName,In,Out),
-  %print_collapsed
-  show_indivs(IH,IV,OH,OV,individuate_complete,early,PairName,In,Out,SF),
   clear_shape_lib(in),clear_shape_lib(out),clear_shape_lib(pair),clear_shape_lib(noise),  
-  forall((rtrace_on_error(individualizer_heuristics(PairName,In,Out,IH,IV,OH,OV))),true), 
-  add_shape_lib(pairs,SF),
-  show_shape_lib(in),show_shape_lib(out),show_shape_lib(pair),show_shape_lib(noise),
-  show_indivs(IH,IV,OH,OV,individuate_default,later,PairName,In,Out,_))),!,
-  nop((
-       with_named_pair(solve,TestID,PairName,In,Out),
+  %print_collapsed
+  show_pair_grid(IH,IV,OH,OV,original_in,original_out,PairName,In,Out),
+  make_indivs(individuate_complete,In,Out,InC,OutC),
+  Pair = pair{in:In,out:Out,test:PairName,inC:InC,outC:OutC},
+  pred_intersection(overlap_same_obj,InC,OutC,RetainedIn,RetainedOut,Removed,Added),
+  add_shape_lib(removed,Removed),
+  add_shape_lib(in,RetainedIn),
+  add_shape_lib(out,RetainedOut),
+  add_shape_lib(pair,RetainedOut),
+  add_shape_lib(added,Added),
+  make_indivs(individuate_second_pass,In,Out,InP2,OutP2),
+  make_indivs(individuate_complete,InP2,OutP2,InC2,OutC2),
+  
+  dash_char,dash_char,dash_char,dash_char,
 
+  max_min(IH,OH,IOH,_),
+  max_min(IV,OV,IOV,_),
+
+  show_pair_diff(IH,IV,   OH, OV,retained_in,retained_out,PairName,RetainedIn,RetainedOut),
+  show_pair_grid(IH,IV,   OH, OV,original_in,original_out,PairName,In,Out),
+  show_pair_grid(IH,IV,   OH, OV,i_pass1,o_pass1,PairName,InC,OutC),
+  show_pair_diff(IOH,IOV,IOH,IOV,removed,added,PairName,Removed,Added),
+  show_pair_grid(IH,IV,   OH, OV,original_in,original_out,PairName,In,Out),
+  show_pair_grid(IH,IV,   OH, OV,i_pass1,o_pass1,PairName,InC,OutC),
+  show_pair_grid(IH,IV,   OH, OV,i_pass1,o_pass1,PairName,InC2,OutC2),
+  show_pair_diff(IH,IV,   OH, OV,i_pass2,o_pass2,PairName,InP2,OutP2),
+  !)).
+  /*
+
+  nop((
+       show_indivs(IH,IV,OH,OV,individuate_complete,early,PairName,In,Out,SF),
+       forall((rtrace_on_error(individualizer_heuristics(PairName,In,Out,IH,IV,OH,OV))),true), 
+       add_shape_lib(pairs,SF),
+       show_shape_lib(in),show_shape_lib(out),show_shape_lib(pair),show_shape_lib(noise),
+       show_indivs(IH,IV,OH,OV,individuate_default,later,PairName,In,Out,_))),!,
+       with_named_pair(solve,TestID,PairName,In,Out),
+*/
 /*
   remove_global_points(UnsharedIn,In,InForgotten),
   remove_global_points(UnsharedOut,Out,OutForgottenM),
@@ -205,7 +232,7 @@ show_arc_pair_progress(TestID,ExampleNum,In,Out):-
 
   show_pair_no_i(IH,IV,IH,IV,forgotten_In,PairName,UnsharedIn,ForgottenShapesIn),
   show_pair_no_i(OH,OV,OH,OV,forgotten_Out,PairName,ForgottenShapesOut,OutC),
-*/
+*//*
        show_indivs(In,Out),
        individuate_default(In,InC),
        individuate_default(Out,OutC),  
@@ -228,7 +255,7 @@ show_arc_pair_progress(TestID,ExampleNum,In,Out):-
        format('~N-pred_intersection~N'),
         individuate(UnsharedOut,Out,SharedInR),
         individuate(UnsharedIn,In,SharedOutR),
-        show_pair_no_i(IH,IV,OH,OV,shared,PairName,SharedInR,SharedOutR))), !.
+        show_pair_no_i(IH,IV,OH,OV,shared,PairName,SharedInR,SharedOutR))), !.*/
   %format('~N-Rule made from~N'),
   %show_rules,
 /*  RESS =.. [res,unsharedIn=UnsharedIn,

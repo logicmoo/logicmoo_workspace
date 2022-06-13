@@ -121,7 +121,7 @@ via_print_grid(G):- is_points_list(G),ground(G).
 %via_print_grid(G):- is_gridoid(G).
 
 % arc_portray(G):- \+ \+ catch((wots(S,( tracing->arc_portray(G,true);arc_portray(G,false))),write(S),ttyflush),_,fail).
-arc_portray(G):- \+ \+ catch(((tracing->arc_portray(G,true);arc_portray(G,false)),ttyflush),_,fail).
+arc_portray(G):- compound(G), \+ \+ catch(((tracing->arc_portray(G,true);arc_portray(G,false)),ttyflush),_,fail).
 
 arc_portray(G, false):- is_group(G), is_list(G), length(G,L), L>1, 
    dash_char, 
@@ -196,43 +196,47 @@ print_length(S,L):- as_str(S,A),atom_codes(A,C), include(uses_space,C,SS),length
 append_term_safe(Type,PairName,NameIn):- append_term(Type,PairName,NameIn),!.
 append_term_safe(Type,PairName,append_term(Type,PairName)).
 
-show_pair_i(_,_,_,_, _,_,_,_):- is_print_collapsed,!.
-show_pair_i(IH,IV,OH,OV,Type,PairName,In,Out):-
-  show_pair_no_i(IH,IV,OH,OV,Type,PairName,In,Out),
-  append_term_safe(Type,PairName+in,NameIn),
-  append_term_safe(Type,PairName+out,NameOut),
-  ignore(show_pair_I_info(NameIn,NameOut,In,Out)),!.
-
 show_pair(_,_,_,_, _,_,_,_):- is_print_collapsed,!.
-
 show_pair(IH,IV,OH,OV,Type,PairName,In,Out):-
-  ignore(IH=1),
-  LW is (IH * 2 + 12),
-  append_term_safe(Type,PairName+in,NameIn),
-  append_term_safe(Type,PairName+out,NameOut),
-  wots(U1, (print_grid(IH,IV,In),writeln(NameIn))),
-  wots(U2, (print_grid(OH,OV,Out),writeln(NameOut))),
-  print_side_by_side(U1,LW,U2),!,
-  INFO = [grid_dim,mass,colors_count_size,colors],
-  print_side_by_side(
-     describe_feature(In,[call(writeln('IN'))|INFO]),LW,
-    describe_feature(Out,[call(writeln('OUT'))|INFO])),!.
+  %show_pair_grid(IH,IV,OH,OV,Type,PairName,In,Out),
+  %show_pair_info(IH,IV,OH,OV,Type,PairName,In,Out),
+  show_pair_diff(IH,IV,OH,OV,in(Type),out(Type),PairName,In,Out).
 
-show_pair_no_i(_,_,_,_, _,_,_,_):- is_print_collapsed,!.
 show_pair_no_i(IH,IV,OH,OV,Type,PairName,In,Out):-
   ignore(IH=1),
   LW is (IH * 2 + 12),
-  append_term_safe(Type,PairName+in,NameIn),
-  append_term_safe(Type,PairName+out,NameOut),
-  wots(U1, print_grid(IH,IV,NameIn,In)),
-  wots(U2, print_grid(OH,OV,NameOut,Out)),
+  append_term_safe(Type,PairName,NameIn),
+  append_term_safe(Type,PairName,NameOut),
+  wots(U1, print_grid(IH,IV,NameIn+fav(PairName),In)),
+  wots(U2, print_grid(OH,OV,NameOut+fav(PairName),Out)),
   print_side_by_side(U1,LW,U2),!.
 
+show_pair_grid(_,_,_,_, _,_,_,_):- is_print_collapsed,!.
+show_pair_grid(IH,IV,OH,OV,NameIn,NameOut,PairName,In,Out):-
+  toUpperC(NameIn,NameInU),toUpperC(NameOut,NameOutU),
+  ignore(IH=1),
+  LW is (IH * 2 + 12),
+  wots(U1, print_grid(IH,IV,In)),
+  wots(U2, print_grid(OH,OV,Out)),
+  INFO = [grid_dim,mass,length,colors_count_size,colors],
+  print_side_by_side(U1,LW,U2),
+  print_side_by_side(
+     describe_feature(In,[call(wqnl(NameInU+fav(PairName)))|INFO]),LW,
+    describe_feature(Out,[call(wqnl(NameOutU+fav(PairName)))|INFO])),!.
 
-show_pair_I_info(NameIn,NameOut,In,Out):- 
+toUpperC(A,AU):- string(A),!,AU=A.
+toUpperC(A,AU):- atom(A),toPropercase(A,AU),!.
+toUpperC(A,AU):- atomic(A),upcase_atom(A,AU),!.
+toUpperC(I,O):- compound(I), !, compound_name_arguments(I,F,IA), maplist(toUpperC,IA,OA), compound_name_arguments(O,F,OA).
+toUpperC(A,AU):- term_to_atom(A,AU).
+
+show_pair_diff(IH,IV,OH,OV,NameIn,NameOut,PairName,In,Out):-
+  toUpperC(NameIn,NameInU),toUpperC(NameOut,NameOutU),
+  show_pair_grid(IH,IV,OH,OV,NameIn,NameOut,PairName,In,Out),
   ((is_group(In),is_group(Out))-> once(showdiff(In,Out));
-    ignore((is_group(In),desc(wqnl(fav(NameIn)), debug_indiv(In)))),
-    ignore((is_group(Out),desc(wqnl(fav(NameOut)), debug_indiv(Out))))),!.
+    ignore((is_group(In),desc(wqnl(NameInU+fav(PairName)), debug_indiv(In)))),
+    ignore((is_group(Out),desc(wqnl(NameOutU+fav(PairName)), debug_indiv(Out))))),!.
+
 
 uses_space(C):- code_type(C,print).
 
@@ -316,7 +320,7 @@ print_grid(Grid):- use_row_db, is_grid(Grid),!, grid_to_id(Grid,ID),print_grid(I
 print_grid(Grid):-  quietlyd(print_grid0(_,_,Grid)),!.
 %print_grid0(Grid):- plain_var(Grid),!, throw(var_print_grid(Grid)).
 
-print_grid(OH,OV,Name,Out):- print_grid(OH,OV,Out),writeln(Name),!.
+print_grid(OH,OV,Name,Out):- print_grid(OH,OV,Out),toUpperC(Name,NameU),write('\t'),color_print(cyan,call(underline_print(writeln(NameU)))),dash_char,!.
 print_grid(H,V,Grid):- use_row_db, grid_to_id(Grid,ID),!,print_grid0(H,V,ID).
 print_grid(H,V,Grid):- quietlyd(print_grid0(H,V,Grid)).
 
@@ -402,8 +406,11 @@ ansi_color(C,fg(Color)):- integer(C),block_colors(L),length(L,UpTo),between(0,Up
 ansi_color(C,Color):- color_int(C,I)->C\==I,!,ansi_color(I,Color).
 ansi_color(_,[bold,underline]).
 
-on_bg(C,G):- ansi_format([bg(C)],'~@',[call(user:G)]).
-on_bg(G):- get_bgc(C),on_bg(C,G).
+ansi_color_bg(C,bg(C1)):- ansi_color(C,C2),C2=fg(C1),nonvar(C1),!.
+ansi_color_bg(C,C1):- ansi_color(C,C1).
+
+on_bg(C,G):- ansi_color_bg(C,C1),ansi_format(C1,'~@',[call(user:G)]).
+on_bg(G):- ansi_format(reset,'~@',[call(user:G)]).
 
 %ansi_term:import(ansi_format_arc/3).
 
@@ -420,6 +427,7 @@ is_bg_sym_or_var(C):- (attvar(C); bg_sym(C); C==' '; C==''; C=='bg'; C == 0),!.
 
 
 %color_print(_,W):- write(W),!.
+color_print(C,W):- compound(W),compound_name_arity(W,call,_),!,(wots(S1,call(call,W))->color_print(C,S1);color_print(C,failed(W))).
 color_print(C,W):- is_bg_sym_or_var(C),W=='_',!,on_bg(black,write(' ')),!.
 color_print(C,W):- is_bg_sym_or_var(C),W=='_',color_print(C,'+').
 
@@ -488,7 +496,8 @@ object_cglyph(G,CGlyph):- color(G,C),object_glyph(G,Glyph),wots(CGlyph,color_pri
 %user:portray(S):- (string(S);atom(S)),atom_codes(S,[27|_]),write('"'),write(S),write('"').
 
 
-print_gw1(N):- write(' '),print_g1(N).
+print_gw1(N):- get_bgc(BG),is_color(BG), BG\==black, color_print(BG,'.'),!,print_g1(N).
+print_gw1(N):- get_bgc(BG),is_color(BG), write(' '),print_g1(N).
 
 print_g1(N):- into_color_glyph(N,C,Code),as_name(Code,S), color_print(C,S),!.
 

@@ -129,10 +129,10 @@ xform(P2,X,Y):- call(P2,X,Y).
 
 row_mem_get_list(ID,N,USE) :- is_grid_size(ID,H,_),row_mem_len_list(ID,N,H,USE).
 
-as_hv_point(H,V,C,C-Point):- must(hv_point(H,V,Point)),!.
-as_hv_point(H,V,_,Point):- hv_point(H,V,Point),!.
-as_hv_point(H,V,_,H,V).
-%as_hv_point(Inf,Inf,offset_ranges(_,_,_,_)).
+point_to_hvc(Point, H,V,_):- hv_point(H,V,Point),!.
+point_to_hvc(C-Point,H,V,C):- must(hv_point(H,V,Point)),!.
+%point_ to_hvc(H,V,_,H,V).
+%point_ to_hvc(Inf,Inf,offset_ranges(_,_,_,_)).
 
 make_grid(H,V,Grid):- max_min(H,1,HH,_), max_min(V,1,VV,_),
    max_min(HH,32,_,HHH),max_min(VV,32,_,VVV),
@@ -193,11 +193,12 @@ from_gridoid(Points,C,N,H,V,G):- nth1(N,Points,G),hv_c_value(G,C,H,V).
 %hv_c_value(O,_Color,_H,_V):- is_object(O), object_shape(O,combined), !, fail.
 hv_c_value(ID,C,H,V):- (var(H);var(V)),!, hv_point(H,V,_),hv_c_value(ID,CC,H,V),CC=C.
 hv_c_value(O,Color,H,V):- is_grid(O),!,nth1(V,O,Row),nth1(H,Row,Color),!.
-hv_c_value(O,Color,H,V):- is_object(O),!,globalpoints(O,Ps),!,hv_c_value(Ps,Color,H,V).
 hv_c_value(O,Color,H,V):- is_list_of(is_cpoint,  O),!,hv_point(H,V,Point),member(Color-Point,O).
 hv_c_value(O,fg   ,H,V):- is_list_of(is_nc_point,O),!,hv_point(H,V,Point),member(Point,O).
 hv_c_value(O,Color,H,V):- is_cpoint(O),O=(Color-Point),hv_point(H,V,Point),!.
 hv_c_value(O,fg   ,H,V):- is_nc_point(O),O=Point,hv_point(H,V,Point),!.
+hv_c_value(O,Color,H,V):- is_object(O),globalpoints(O,Ps),hv_c_value(Ps,Color,H,V).
+%hv_c_value(O,Color,H,V):- is_object(O),localpoints(O,Ps),hv_c_value(Ps,Color,H,V).
 %hv_c_value(L,Color,H,V):- is_list(L), member(E,L),hv_c_value(E,Color,H,V),!.
 
 hv_value_or(Grid,C,H,V,Else):- hv_value(Grid,C,H,V)*->true;C=Else.
@@ -263,6 +264,49 @@ b_rplc_hv_value(Grid,OldC,NewC,H,V):- nth1(V,Grid,Row),rplc_nth1(H,Row,OldC,NewC
 nb_rplc_hv_value(Grid,OldC,NewC,H,V):- nth1(V,Grid,Row),nb_rplc_nth1(H,Row,OldC,NewC).
 
 */
+
+%replace_local_hvcpoint(_H,_V,NewC,OldC,Point,G,GO):-nonvar_or_ci(G),!,G=obj(L),is_list(L),
+replace_global_hvc_point(H,V,NewC,OldC,Grid,GridO):- is_grid(Grid),!, my_assertion(is_color(NewC)), replace_grid_point(H,V,NewC,OldC,Grid,GridO).
+replace_global_hvc_point(H,V,NewC,OldC,G,GO):- hv_point(H,V,Point), must_det_l(replace_global_point_color(Point,NewC,OldC,G,GO)).
+
+replace_global_point_color(Point,NewC,OldC,G,GO):- is_points_list(G),!, replace_in_points(Point,NewC,OldC,G,GO).
+replace_global_point_color(Point,NewC,OldC,G,GO):- is_list(G),!, maplist(replace_global_point_color(Point,NewC,OldC),G,GO).
+replace_global_point_color(Point,NewC,OldC,G,GO):- is_object(G), !,
+    globalpoints(G,Points),
+    replace_in_points(Point,NewC,OldC,Points,RPoints),
+    setq(G,[globalpoints(RPoints)],GO).
+replace_global_hvc_point(Point,OldC,G,GO):- trace_or_throw(unknown_target_type(replace_global_hvc_point(Point,OldC,G,GO))).
+
+
+replace_in_points(Point,NewC,OldC,G,GO):- (var(NewC);is_bg_color(NewC)),!, ((select(OldC-Point,G,GO), \+ is_bg_color(OldC))->true; GO=G).
+replace_in_points(Point,NewC,OldC,G,GO):- select(C-Point,G,Rest), !, ((\+ \+ OldC = C )-> GO= [NewC-Point|Rest] ; GO=G).
+replace_in_points(Point,NewC,OldC,G,GO):- (var(OldC);is_bg_color(OldC)),!, GO= [NewC-Point|G].
+
+
+
+%replace_local_points(Obj,Grid,GridO):- is_group(Obj), localpoints(Obj,Points),replace_local_points(Points,Grid,GridO).
+%replace_local_points([H|T],Grid,GridO):- is_points_list([H|T]), !, replace_local_points([H|T],Grid,GridO).
+%replace_local_points([H|T],Grid,GridO):- !, replace_local_points(H,Grid,GridM),replace_local_points(T,GridM,GridO).
+
+replace_local_points(Nil,_OldC,G,G):- Nil ==[], !.
+replace_local_points(Obj,OldC,Grid,GridO):- is_grid(Obj),!, localpoints(Obj,Points),replace_local_points(Points,OldC,Grid,GridO).
+replace_local_points([H|T],OldC,G,GO):- !, replace_local_points(H,OldC,G,MGO),replace_local_points(T,OldC,MGO,GO). 
+replace_local_points(Obj,OldC,Grid,GridO):- is_object(Obj), localpoints(Obj,Points),replace_local_points(Points,OldC,Grid,GridO).
+
+replace_local_points(Point,OldC,G,GO):- is_grid(G),!, point_to_hvc(Point,H,V,NewC),my_assertion(is_color(NewC)), replace_grid_point(H,V,NewC,OldC,G,GO).
+replace_local_points(Point,OldC,G,GO):- point_to_hvc(Point,H,V,NewC),my_assertion(is_color(NewC)), 
+  hv_point(H,V,Colorless),
+  must_det_l(replace_local_point_color(Colorless,NewC,OldC,G,GO)),!.
+replace_local_points(Point,OldC,G,GO):- trace_or_throw(unknown_target_type(replace_local_points(Point,OldC,G,GO))).
+
+replace_local_point_color(Point,NewC,OldC,G,GO):- is_points_list(G),!, replace_in_points(Point,NewC,OldC,G,GO).
+replace_local_point_color(Point,NewC,OldC,G,GO):- is_list(G),!, maplist(replace_local_point_color(Point,NewC,OldC),G,GO).
+replace_local_point_color(Point,NewC,OldC,G,GO):- is_object(G), !,
+    localpoints(G,Points),     
+    replace_in_points(Point,NewC,OldC,Points,RPoints),
+    %loc_xy(G,OH,OV),offset_point(OH,OV,Point,LPoint),shape(G,NCPoints), maplist(replace_in_points(Point,NewC,OldC),NCPoints,RNCPoints),,shape(RNCPoints)
+    setq(G,localpoints(RPoints),GO).
+replace_local_point_color(Point,NewC,OldC,G,GO):- trace_or_throw(unknown_target_type(replace_local_point_color(Point,NewC,OldC,G,GO))).
 
 
 

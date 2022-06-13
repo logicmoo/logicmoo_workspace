@@ -110,8 +110,6 @@ ___________").
 the_hammer1(BlueComplex):- the_hammer(blue,BlueComplex).
 the_hammer1(RedComplex):-  the_hammer(red,RedComplex).
 
-the_hammer(blue, LibObj):- hammer2(Text), text_to_grid(Text,H,V,Points,_Complex), 
-  make_indiv_object('ID',H,V,Points,[object_shape(hammer)],LibObj).
 the_hammer(Color,ColorComplex):- 
   ColorComplex = obj([mass(6), shape([point_01_01, point_01_02, point_01_03, point_02_01, point_02_02, point_03_02]), 
   colors([cc(Color, 6.0)]), localpoints([Color-point_01_01, Color-point_01_02, Color-point_01_03, Color-point_02_01, 
@@ -119,6 +117,8 @@ the_hammer(Color,ColorComplex):-
   changes([]), object_shape(rectangle), object_shape(hammer), object_indv_id(t('1b60fb0c')*(trn+666)*out, 666), 
   globalpoints([Color-point_02_05, Color-point_02_06, Color-point_02_07, Color-point_03_05, Color-point_03_06, Color-point_04_06]), 
   grid_size(10, 10)]).
+the_hammer(blue, LibObj):- hammer2(Text), text_to_grid(Text,H,V,Points,_Complex), 
+  make_indiv_object('ID',H,V,Points,[object_shape(hammer)],LibObj).
 
 
 shape_info_props(Shapes,ShapeProps):- is_list(Shapes),!,maplist(shape_info_props,Shapes,ShapeProps).
@@ -146,32 +146,6 @@ frozen_key(Key1,Key):- copy_term(Key1,Key),numbervars(Key,0,_,[attvar(skip),sing
 shape_key(Shape,Key):- into_grid(Shape,Key1),frozen_key(Key1,Key).
 
 shape_key_unrotated(Shape,Key):- shape_key(Shape,KeyR), grav_rot0(Key,KeyR).
-
-
-grav_rot(Group,List):- override_group(grav_rot(Group,List)),!.
-grav_rot(Shape,KeyR):- into_grid(Shape,Key1), grav_rot0(Key1,KeyR).
-
-grav_rot0(Shape,ShapeO):- 
-  findall(GRot,all_rotations(Shape,GRot),List),
-  predsort(sort_on(grav_mass),List,[ShapeO|_]).
-
-grav_mass(Grid,Mass):- grid_size(Grid,H,V), !, grav_mass(Grid,H,V,Mass),!.
-% make things bottem heavy
-grav_mass(Grid,_,_,Grid):- iz(Grid,symmetric),!.
-grav_mass(Grid,H,V,RotG):- H<V, !, rot90(Grid,Grid90),!,bottem_heavy(Grid90,RotG).
-grav_mass(Grid,_H,_V,RotG):- is_symetric_h(Grid),!,bottem_heavy(Grid,RotG).
-grav_mass(Grid,_H,_V,RotG):- bottem_heavy(Grid,A),rot90(A,B),bottem_heavy(B,RotG).
-
-bottem_heavy(Grid,Grid180):-  (is_top_heavy(Grid)->rot180(Grid,Grid180);Grid=Grid180).
-/*
-grav_mass(Grid,Mass):- grid_size(Grid,H,V), HV is round(H/V), Vh is floor(V/2),
-  findall(C,(between(Vh,V,Vi),between(0,H,Hi), Hi*HV > Vi, get_color_at(Hi,Vi,Grid,C),is_fg_color(C)),CList),
-  length(CList,Mass).
-*/
-is_top_heavy(Grid):- split_50_v(Grid,Top,Bottem),mass(Top,TopM),mass(Bottem,BottemM),BottemM<TopM.
-
-split_50_v(Grid,Top,Bottem):- length(Grid,N),H is floor(N/2), length(Top,H),length(Bottem,H),
-    append(Top,Rest,Grid),append(_Mid,Bottem,Rest).
 
 
 searchable(Group,List):- override_group(searchable(Group,List)),!.
@@ -325,20 +299,22 @@ apply_shapelib_xforms(Name,GalleryS,SmallLib):-  shapelib_opts(Name,Opts),expand
 apply_shapelib_xforms(_Name,Gallery,Gallery):- !.
 
 
-expand_shape_directives(Shapes,Flow,NewGroup):- \+ is_list(Shapes),!,expand_shape_directives([Shapes],Flow,NewGroup).
+expand_shape_directives(Shapes,Opts,NewGroup):- \+ is_list(Shapes),!,expand_shape_directives([Shapes],Opts,NewGroup).
 % default expansion
 expand_shape_directives(Shapes,[],SmallLib):- must_be_free(SmallLib),
-  must_det_l((print_collapsed(100,
+  must_det_l(((
+ print_collapsed(100,
   show_workflow(Shapes,
-   [ =,"Vanila indivs",
+   [ =, %"Vanila indivs",
     % searchable,"Searchable indivs", 
-       all_rotations,  "All rotations of indivs", 
-       add(change_color_blue), "Add blue indivs", 
+       all_orientations, % "All rotations of indivs", 
+       colorless, %"Add blue indivs", 
+       smallest_first, "smallest first",
        % add(change_color), % "Add new colors indivs",		 
     %colorless % decolorized points are not yet printable 
     =],SmallLib)
-    ))).
-expand_shape_directives(A,Flow,B):- show_workflow(A,Flow,B),!.
+    )))).
+expand_shape_directives(A,Opts,B):- show_workflow(A,Opts,B),!.
 
 :- dynamic(is_shapelib_opt/2).
 

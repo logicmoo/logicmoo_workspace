@@ -21,6 +21,9 @@ if_point_de_offset(OH,OV,Point,LPoint):- atom(Point), hv_point(H,V,Point),HH is 
 offset_points(OH,OV,Point,LPoint):- map_pred(if_point_offset(OH,OV),Point,LPoint).
 if_point_offset(OH,OV,Point,LPoint):- atom(Point), hv_point(H,V,Point),HH is H +OH -1, VV is V + OV -1,hv_point(HH,VV,LPoint).
 
+offset_point(OH,OV,Point,LPoint):- atom(Point), hv_point(H,V,Point),HH is H +OH -1, VV is V + OV -1,hv_point(HH,VV,LPoint).
+offset_point(OH,OV,C-Point,C-LPoint):- atom(Point), hv_point(H,V,Point),HH is H +OH -1, VV is V + OV -1,hv_point(HH,VV,LPoint).
+
 my_assertion(G):- G,!.
 my_assertion(G):- trace,G,!.
 
@@ -121,8 +124,8 @@ as_obj(O,Obj):- compound(O), O = obj(L), Obj = O, register_obj(L).
 :- module_transparent register_obj/1.
 %register_obj(O):- quietly((wots(S,weto(dumpST)), asserta(obj_cache(O,S)))),!.
 register_obj(L):- obj_cache(LL,_),LL=@=L,!.
-register_obj(L):- asserta(obj_cache(L,'')),
-  ignore((O=obj(L),mass(O,Mass),Mass>7,format('~N'),arc_portray(O,false),nl)).
+register_obj(L):- nop(asserta(obj_cache(L,''))),
+  ignore(( false, O=obj(L),mass(O,Mass),Mass>7,format('~N'),arc_portray(O,false),nl)).
 
 :- dynamic(obj_cache/2).
 :- module_transparent obj_cache/2.
@@ -388,29 +391,30 @@ grid_to_points(Grid,HH,HV,Points):-  throw(all_points_between),
 
 
 
-globalpoints(I,X):- var_check(I,globalpoints(I,X)).
+globalpoints(I,X):-  (var_check(I,globalpoints(I,X)), deterministic(TF)), (TF==true-> ! ; true).
 globalpoints(G,[G]):- is_point(G),!.
 globalpoints([],[]):-!.
 globalpoints(Atom,_):- \+ compound(Atom),!,trace_or_throw(globalpoints(Atom)).
 globalpoints(options(X),_Points):- trace_or_throw(globalpoints(options(X))).
+globalpoints(I,X):- globalpoints0(I,X),!.
 globalpoints(Grid,Points):- is_grid(Grid),!, grid_size(Grid,HH,VV), grid_to_points(Grid,HH,VV,Points).
 globalpoints(Grid,Points):- is_list(Grid),!,maplist(call(globalpoints),Grid,MPoints),append_sets(MPoints,Points).
-globalpoints(I,X):- globalpoints0(I,X),!.
 globalpoints(I,X):- localpoints0(I,X),!.
+globalpoints(I,X):- throw(unknown(globalpoints(I,X))).
 
-  globalpoints0(I,X):- indv_props(I,L),member(globalpoints(X),L),!,is_points_list(X),!.
-  globalpoints0(I,G):- localpoints(I,L),is_points_list(L),loc_xy(I,X,Y),offset_points(X,Y,L,G),!.
+  globalpoints0(I,X):- indv_props(I,L),member(globalpoints(X),L), my_assertion(maplist(is_cpoint,X)),!.
+  %globalpoints0(I,G):- localpoints(I,L),is_points_list(L),loc_xy(I,X,Y),offset_points(X,Y,L,G),!.
 
-localpoints(I,X):- var_check(I,localpoints(I,X)).
+localpoints(I,X):- (var_check(I,localpoints(I,X)), deterministic(TF)), (TF==true-> ! ; true).
+
 localpoints(G,[G]):- is_point(G),!.
+localpoints(I,X):- localpoints0(I,X),!.
 localpoints(Grid,Points):- is_grid(Grid),!, grid_size(Grid,HH,VV), grid_to_points(Grid,HH,VV,Points).
 localpoints(Grid,Points):- is_list(Grid),!,maplist(localpoints,Grid,MPoints),append_sets(MPoints,Points).
 
 localpoints(Atom,_):- \+ compound(Atom),!,trace_or_throw(localpoints(Atom)).
-localpoints(options(X),_Points):- trace_or_throw(localpoints(options(X))).
-
-localpoints(I,X):- localpoints0(I,X),!.
 localpoints(I,X):- globalpoints0(I,X),!.
+localpoints(I,X):- throw(unknown(localpoints(I,X))).
 
   localpoints0(I,X):- indv_props(I,L),member(localpoints(X),L), my_assertion(maplist(is_cpoint,X)),!.
   %localpoints(I,X):- into_grid(I,G),!,grid_size(G,H,V),grid_to_points(G,H,V,X).
@@ -473,7 +477,42 @@ first_gpoint(HV,P):- globalpoints(HV,[P|_]).
 last_gpoint(HV,P):- globalpoints(HV,PS),last(PS,P).
 any_gpoint(HV,P):- globalpoints(HV,L),member(P,L).
 
+rebuild_from_localpoints(Obj,NewObj):-
+  localpoints(Obj,Points),
+  rebuild_from_localpoints(Obj,Points,NewObj).
 
+rebuild_from_localpoints(Obj,Points,NewObj):-
+  rotation(Obj,Rot),unrotate(Rot,UnRot),
+  loc_xy(Obj,X,Y),vis_hv(Obj,H,V),
+  grid_size(Obj,GH,GV),
+  object_indv_id(Obj,ID,_Iv),grid_size(Obj,GH,GV),
+  points_to_grid(H,V,Points,Grid),
+  call(UnRot,Grid,UnRotGrid),
+  localpoints(UnRotGrid,LPoints),
+  offset_points(X,Y,LPoints,GPoints),
+  indv_props(Obj,Props),
+  my_partition(rev_lambda(member([colors(_),mass(_),shape(_),
+            object_shape(multicolored(_)),globalpoints(_),localpoints(_)])),Props,_,PropsRetained),
+    make_indiv_object(ID,GH,GV,Points,[vis_hv(H,V),loc_xy(X,Y),globalpoints(GPoints),localpoints(Points)|PropsRetained],NewObj),
+  !.
+
+
+rebuild_from_globalpoints(Obj,NewObj):-
+  globalpoints(Obj,GPoints),
+  rebuild_from_localpoints(Obj,GPoints,NewObj).
+rebuild_from_globalpoints(Obj,GPoints,NewObj):-
+  rotation(Obj,Rot),unrotate(Rot,UnRot),
+  loc_xy(Obj,X,Y),vis_hv(Obj,H,V),
+  deoffset_points(X,Y,GPoints,LPoints),
+  object_indv_id(Obj,ID,_Iv),grid_size(Obj,GH,GV),
+  points_to_grid(H,V,LPoints,Grid),
+  call(UnRot,Grid,UnRotGrid),
+  localpoints(UnRotGrid,Points),
+  indv_props(Obj,Props),
+  my_partition(rev_lambda(member([colors(_),mass(_),shape(_),
+            object_shape(multicolored(_)),globalpoints(_),localpoints(_)])),Props,_,PropsRetained),
+    make_indiv_object(ID,GH,GV,Points,[vis_hv(H,V),loc_xy(X,Y),globalpoints(GPoints),localpoints(Points)|PropsRetained],NewObj),
+ !.
 
 
 

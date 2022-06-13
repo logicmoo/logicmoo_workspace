@@ -11,7 +11,7 @@
 
 save_grouped(H,G):-
   sort(G,GS),
-  my_asserta_if_new(why_grouped(H,GS)).
+  nop(my_asserta_if_new(why_grouped(H,GS))).
 
 my_asserta_if_new((H:-B)):- !,must_det_l( (clause(H,B,Ref),clause(HH,BB,Ref), H+B=@=HH+BB)-> true ; asserta(H:-B)).
 my_asserta_if_new(HB):- my_asserta_if_new(HB:-true).

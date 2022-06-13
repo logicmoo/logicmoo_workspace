@@ -8,6 +8,33 @@
 :- set_prolog_flag_until_eof(trill_term_expansion,false).
 :- endif.
 
+
+grav_rot(Group,List):- override_group(grav_rot(Group,List)),!.
+grav_rot(Shape,KeyR):- into_grid(Shape,Key1), grav_rot0(Key1,KeyR).
+
+grav_rot0(Shape,ShapeO):-
+  findall(GRot,all_rotations(Shape,GRot),List),
+  predsort(sort_on(grav_mass),List,[ShapeO|_]).
+
+grav_mass(Grid,Mass):- grid_size(Grid,H,V), !, grav_mass(Grid,H,V,Mass),!.
+grav_mass(Grid,_,_,Grid):- iz(Grid,symmetric),!.
+% make things bottem heavy
+grav_mass(Grid,H,V,RotG):- H<V, !, rot90(Grid,Grid90),!,bottem_heavy(Grid90,RotG).
+grav_mass(Grid,_H,_V,RotG):- is_symetric_h(Grid),!,bottem_heavy(Grid,RotG).
+grav_mass(Grid,_H,_V,RotG):- bottem_heavy(Grid,A),rot90(A,B),bottem_heavy(B,RotG).
+
+bottem_heavy(Grid,Grid180):-  (is_top_heavy(Grid)->rot180(Grid,Grid180);Grid=Grid180).
+/*
+grav_mass(Grid,Mass):- grid_size(Grid,H,V), HV is round(H/V), Vh is floor(V/2),
+  findall(C,(between(Vh,V,Vi),between(0,H,Hi), Hi*HV > Vi, get_color_at(Hi,Vi,Grid,C),is_fg_color(C)),CList),
+  length(CList,Mass).
+*/
+is_top_heavy(Grid):- split_50_v(Grid,Top,Bottem),mass(Top,TopM),mass(Bottem,BottemM),BottemM<TopM.
+
+split_50_v(Grid,Top,Bottem):- length(Grid,N),H is floor(N/2), length(Top,H),length(Bottem,H),
+    append(Top,Rest,Grid),append(_Mid,Bottem,Rest).
+
+
 gravity(N,D,G,GridNew):- into_grid(G,Grid),G\=@=Grid,!,gravity(N,D,Grid,GridNew).
 gravity(1,n,Grid,GridNew):-!,gravity_1_n_0(Grid,GridNew).
 gravity(N,n,Grid,GridNew):-!,gravity_1_n_0(Grid,GridM),(Grid\=@=GridM->(Nm1 is N-1,gravity(Nm1,n,GridM,GridNew));GridNew=GridM).
@@ -54,6 +81,10 @@ get_xformer(Name,H,V,In,Out):-
    call(Name,In,Out),!,
    asserta(xform_cache(Name,H,V,In,Out)),!.
 
+grid_same(X,X).
+same_grid(X1,X2):- into_grid(X1,G1),into_grid(X2,G2),same(G1,G2).
+same(X,X).
+
 %srot90V,flipV
 rot90( Grid,NewGrid):- any_xform(grid_rot90,Grid,NewGrid).
 rot180( Grid,NewGrid):- any_xform(grid_rot180,Grid,NewGrid).
@@ -69,7 +100,9 @@ grid_flipH(Grid,FlipH):- maplist(reverse,Grid,FlipH).
 grid_flipV(Grid,FlipV):- reverse(Grid,FlipV).
 grid_flipHV(Grid,FlipHV):-grid_flipH(Grid,FlipH),grid_flipV(FlipH,FlipHV),!.
 
-
+unrotate(rot90,rot270):-!.
+unrotate(rot270,rot90):-!.
+unrotate(X,X).
 
 
 nav(s,0,1). nav(e, 1,0). nav(w,-1,0). nav(n,0,-1).

@@ -1222,12 +1222,11 @@ more_task_info(v('423a55dc'),[+shape_match,+color_match,-mask_match,-rotation_ma
 
 
 parc1:- parc1(6300*3). 
-parc1(OS):- clsmake, open(tt,write,O,[encoding(text)]),with_output_to(O,parc0(OS)),close(O).
-parc0(OS):- 
- forall(parc1(OS,_),true).
+parc1(OS):- clsmake, open(tt,write,O,[encoding(text)]), parc0(OS), with_output_to(O,parc0(OS)), close(O).
+parc0(OS):-
+ locally(set_prolog_flag(gc,true),forall(parc1(OS,_),true)).
 parc1(OS,TName):-     
- locally(set_prolog_flag(gc,true),
-  (fix_test_name(TName,TestID,ExampleNum),   
+  fix_test_name(TName,TestID,ExampleNum),   
   kaggle_arc(TestID,ExampleNum,In,Out),
   maplist(color_sym(OS),In,I),
   grid_size(In,IH,IV),
@@ -1236,6 +1235,14 @@ parc1(OS,TName):-
   H is IH,
   maplist(color_sym(OS),Out,O),
   format('~Ntestcase(~q,"\n~@").~n',[TestID*ExampleNum,
-    print_side_by_side(call((print_grid(I),write(' '),forall(between(IV,OV,_),(write('\n '),dash_char(H,'  '))))),call(print_grid(O)))]))).
+    print_side_by_side(call((print_grid(I),
+      write(' '),forall(between(IV,OV,_),(write('\n '),dash_char(H,'  '))))),call(print_grid(O)))]).
+
+%color_sym(OS,[(black='°'),(blue='©'),(red='®'),(green=''),(yellow),(silver='O'),(purple),(orange='o'),(cyan= 248	ø ),(brown)]).
+color_sym(OS,C,Sym):- is_list(C),maplist(color_sym(OS),C,Sym),!.
+color_sym(_,black,' ').
+color_sym(OS,C,Sym):- color_sym(OS,4,C,Sym).
+color_sym(_,_,C,Sym):- enum_colors(C),color_int(C,I),nth1(I,`ose=xt~+*zk>`,S),name(Sym,[S]).
+%color_sym(P*T,_,C,Sym):- enum_colors(C),color_int(C,I),S is P+I*T,name(Sym,[S]).
 
 :- fixup_exports.

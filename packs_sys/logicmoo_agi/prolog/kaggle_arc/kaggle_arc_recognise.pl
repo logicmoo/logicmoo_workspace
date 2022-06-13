@@ -68,11 +68,10 @@ test_ogs1(H,V):-
 % should still be the same
 test_ogs0(H,V):- clsmake,
   wqln("searching..."),
-  ss666(TS,SG),
-  ff666(TF,UFG),
+  ff666(T,UFG),
   copy_term(UFG,FG),
+  ss666(T,SG),
 
-  TF==TS,
   copy_term(SG,CSG),copy_term(FG,CFG),
   %copy_term(SG,XSG),copy_term(FG,XFG),
 
@@ -88,34 +87,33 @@ test_ogs0(H,V):- clsmake,
     ignore((CheckType=run)),
     ignore((CheckType2=run)),
     ptt(xfb=XFG2),
-    ptt(tf=TF))),
+    ptt(tf=T))),
 
   (Match==true->show_match(H,V,Run,UFG,XSG);show_mismatch(XFG,Run,XSG)),
 
-  got_result(CSG,CFG,Match),
+  ignore(got_result(CSG,CFG,Match)),
 
   Match==true.
 
 
 test_ogs(H,V):- clsmake,
   wqln("searching..."),
-  ss666(TF,SG),
-  ff666(TF,FG),
+  ff666(T,UFG),
   copy_term(UFG,FG),
+  ss666(T,SG),
 
-
-  ((ogs(H,V,FG,SG),heckType=run) *-> Match=true; Match=false),
+  (ogs(H,V,FG,SG) *-> Match=true; Match=false),
 
   Run = once((
     ptt(fg=FG),
     print_grid(FG),
     (Match == true -> ptt(xfg=FG) ; true),
     ptt(xfb=FG),
-    ptt(tf=TF))),
+    ptt(tf=T))),
 
   (Match==true->show_match(H,V,Run,UFG,SG);show_mismatch(FG,Run,SG)),
 
-  got_result(SG,FG,Match),
+  ignore(got_result(SG,FG,Match)),
 
   Match==true.
 
@@ -146,14 +144,14 @@ h666(_,G):- fail,ff666(_,G0),
   append([GH,GV],G1),
   fpad_grid(f,var,G1,G). 
 
-%f666(_Ham,G0):-  clause(f666(_Ham,F),true),into_g666(F,G),all_rotations(G,G0).
+%f666(Ham,G0):-  clause(f666(Ham,F),true),into_g666(F,G),must_det_l(all_rotations(G,G0)).
 
-show_mismatch(F,G):- % fail, 
+show_mismatch(F,G):-  fail, 
   nl,dash_char,
   show_m_pair(color_print(red,"Mismatched"),1,1,F,G),
   nl,dash_char,!.
 
-show_mismatch(F,C,G):- % fail, 
+show_mismatch(F,C,G):- fail, 
   nl,dash_char,
   show_m_pair((color_print(red,"Mismatched"),C),1,1,F,G),
   nl,dash_char,!.
@@ -450,7 +448,7 @@ count_o_neighbors(C,H,V,N,GridIn):-
 count_c_neighbors(C,H,V,N,GridIn):- 
   muarc_mod(M),
   findall(Dir,
-    (M:is_adjacent_hv(H,V,Dir,H2,V2),
+    (M:is_adjacent_hv(H,V,Dir,H2,V2),Dir\==c,
      get_color_at(H2,V2,GridIn,C1O),
        C1O=@=C), 
     Count),
@@ -493,22 +491,21 @@ g666(_,Y):- in_shape_lib(l_shape,X),
 make_row(Rows,FV):- functor(P,v,FV), P=..[v|Rows].
 
 
+f666(_Ham,G):- the_hammer1(G).
+f666(_Ham,G):- in_shape_lib(hammer,Ham),object_grid(Ham,G0),all_rotations(G0,G).
 
-f666(_Color,
-[[4,5,1],
- [4,5,1],
- [4,5,1]]).
+h666(_Ham,
+"_________________________________________________
+      B B B                           B B B      
+        B B                             B B      
+        B       B                       B       B
+        B B B B B                 R R   B B B B B
+        B B   B B                 R R R B B   B B
+          B                       R       B      
+        B B                             B B      
+        B B B                           B B B     
+__________________________________________________").
 
-
-f666(_Ham,G):- 
-S="
- _________
- B B B B B 
- B B B B B 
-     B    
-     B    
- _________",
- into_g666(S,G1),Color=_,once(subst(G1,blue,Color,G)).
 
 f666(_Ham,G):-
 S="
@@ -521,8 +518,17 @@ S="
  into_g666(S,G1),Color=blue,once(subst(G1,blue,Color,G)).
 
 
+f666(_Ham,G):- 
+S="
+ _________
+ B B B B B 
+ B B B B B 
+     B    
+     B    
+ _________",
+ into_g666(S,G1),Same=_,once(subst(G1,blue,Same,G)).
 
-f666(_Ham,G):- in_shape_lib(hammer,Ham),object_grid(Ham,G0),all_rotations(G0,G).
+
 
 h666(_Ham,
 "_________________________________________________
@@ -537,23 +543,19 @@ h666(_Ham,
          B B B B B               B B B B B
  _________________________________________________").
 
-h666(_Ham,
-"_________________________________________________
-      B B B                           B B B      
-        B B                             B B      
-        B       B                       B       B
-        B B B B B                 R R   B B B B B
-        B B   B B                 R R R B B   B B
-          B                       R       B      
-        B B                             B B      
-        B B B                           B B B     
-__________________________________________________").
 trans_to_color('R','red').
 trans_to_color('B','blue').
 trans_to_color('G','green').
 trans_to_color('O','orange').
 trans_to_color('®','blue').
 trans_to_color(' ','black').
+
+f666(_Color,
+[[4,5,1],
+ [4,5,1],
+ [4,5,1]]).
+
+
 
 
 
@@ -577,13 +579,14 @@ into_grid_color(L,O):- plain_var(L),!,L=O.
 into_grid_color(L,O):- color_code(L,O),!.
 into_grid_color(O,O).
 
-into_g666(Text,G):- is_grid(Text),!,maplist(into_grid_color,Text,G),!.
+into_g666(Grid,G):- is_grid(Grid),!,maplist(into_grid_color,Grid,G),!.
+into_g666(Obj,G):- is_object(Obj),!,must_det_l(object_grid(Obj,G)),!.
 into_g666(Text,G):- atomic(Text),text_to_grid(Text,TG),into_g666(TG,G),!.
 
 ss666(T,G):- h666(T,S),into_g666(S,G).
 sp666(T,Y):- ss666(T,X), fpad_grid(s,X,Y).
 
-ff666(T,G):- f666(T,F),into_g666(F,G).
+ff666(T,G0):- no_repeats(G0,((f666(T,F),into_g666(F,G),all_rotations(G,G0)))).
 fp666(T,Y):- ff666(T,X), fpad_grid(f,X,Y).
 
 % ?- h666(X),text_to_grid(X,G).
@@ -612,7 +615,7 @@ parse_text_to_grid(0,0,X,G,GO):-
 
 parse_text_to_grid(H,V,[' ',C1O|X],G,GO):- C1O \== '\n',
   trans_to_color(C1O,NewC),
-  replace_global_point(H,V,NewC,_,G,GM),
+  replace_global_hvc_point(H,V,NewC,_,G,GM),
   H2 is H+1,
   parse_text_to_grid(H2,V,X,GM,GO).
 parse_text_to_grid(H,V,[' '|X],G,GO):-
@@ -620,7 +623,7 @@ parse_text_to_grid(H,V,[' '|X],G,GO):-
   parse_text_to_grid(H2,V,X,G,GO).
 parse_text_to_grid(H,V,[C1O|X],G,GO):-
   trans_to_color(C1O,NewC),
-  replace_global_point(H,V,NewC,_,G,GM),
+  replace_global_hvc_point(H,V,NewC,_,G,GM),
   H2 is H+1,
   parse_text_to_grid(H2,V,X,GM,GO).
 parse_text_to_grid(_,V,['\n'|X],G,GO):-

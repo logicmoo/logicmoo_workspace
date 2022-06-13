@@ -73,7 +73,6 @@
 %:- endif.
 
 
-
 :- set_module(class(library)).
 old_set_predicate_attribute(M:F/A, Name, Val):- functor(P,F,A), !, old_set_predicate_attribute(M:P, Name, Val).
 %old_set_predicate_attribute(MA, system, Val):- !, old_set_predicate_attribute(MA, iso, Val).
@@ -148,7 +147,7 @@ cfunctor(A,B,C):- compound(A)->compound_name_arity(A,B,C);functor(A,B,C).
 :- system:import(cnas/3).
 :- system:import(cfunctor/3).
 :- system:export(cfunctor/3).
-:- system:reexport(library(must_sanity)).
+%:- system:reexport(library(must_sanity)).
 
 
 % :- abolish(system:nop/1),asserta(system:nop(_)).

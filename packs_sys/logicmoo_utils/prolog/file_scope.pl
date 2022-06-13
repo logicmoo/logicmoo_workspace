@@ -79,7 +79,11 @@ Thread.
 :- discontiguous '$exported_op'/3. 
 :- system:reexport(library(debug),[debug/3]).
 :- system:reexport(library(debuggery/bugger)).
-:- system:reexport(library(must_sanity)).
+%:- system:reexport(library(must_sanity)).
+:- if( \+ current_predicate(nop/1)).
+system:nop(_).
+:- export(system:nop/1).
+:- endif.
 :- meta_predicate l_once(0).
 qdmsg(_):- current_prolog_flag(dmsg_level,never),!.
 qdmsg(M):-compound(M),cfunctor(M,F,_),!,debug(logicmoo(F),'~q',[M]).

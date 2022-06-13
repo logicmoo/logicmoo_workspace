@@ -168,6 +168,12 @@ allowed([E1,E2|R]):- \+ all_black([E1,E2|R]).
 all_black(R):- \+ \+ R =[],!.
 all_black([H|R]):- H==black, all_black(R).
 
+rows_align([],_):-!. % shorter image fragment
+rows_align(_,[]):-!. % taller image fragment
+rows_align([Row1|Rest1],[Row2|Rest2]):- 
+ aligned_rows0(Row1,Row2),!,
+ rows_align(Rest1,Rest2).
+
 aligned_rows0([],_):-!. % ( empty_or_open(L) ; empty_or_open(R) ), !.
 aligned_rows0(_,[]):-!.
 aligned_rows0([E|L],[E|R]):- !, aligned_rows0(L,R).
@@ -297,9 +303,7 @@ grid_has_points(G):- is_grid(G),!.
 
 incr(X,X1):- X1 is X + 1.
 
-same(X,X).
-
-clip_quadrant(CRef,SXC,SXC,EXC,EYC,GN,H,V,SXQ4,SYQ4,EXQ4,EYQ4,G,Same,obj(OBJL)):-
+clip_quadrant(CRef,SXC,SXC,EXC,EYC,GN,H,V,SXQ4,SYQ4,EXQ4,EYQ4,G,Same,OBJL):-
   clip(SXQ4,SYQ4,EXQ4,EYQ4,G,Q4),
   call(Same,Q4,LikeQ4),
   globalpoints(LikeQ4,LGPoints),  
@@ -334,24 +338,24 @@ nop((
 
 %detect_grid(Grid,E):- 
 
-grid_to_3x3_objs(Grid,NewIndiv4s):- 
+grid_to_3x3_objs(Ordered,Grid,NewIndiv4s,Keep):- 
   notrace(catch(call_with_time_limit(2,symetric_xy_3x3(Grid,Image9x9)),time_limit_exceeded, 
    (wdmsg(time_limit_exceeded),fail))),
   %catch(symetric_xy_3x3(Grid,Image9x9),E, (wdmsg(E),fail)),
   %rtrace(symetric_xy_3x3(Grid,Image9x9)),
   flatten(Image9x9,Flat),
-  include(nonvar_or_ci,Flat,NewIndiv1s),
-  fix_the_fours(NewIndiv1s,NewIndiv4s).
+  include(nonvar_or_ci,Flat,Grids),
+  maybe_fix_the_four(Ordered,Grids,NewIndiv4s,Keep).
 
-consensus(GridS,H,V,VGrid):-
+consensus(ColorAdvice,GridS,H,V,VGrid):-
  forall(between(1,V,Y),
   forall(between(1,H,X),
-   ignore(consensus1(GridS,X,Y,VGrid)))).
-consensus1(GridS,X,Y,VGrid):- 
+   ignore(consensus1(ColorAdvice,GridS,X,Y,VGrid)))).
+consensus1(ColorAdvice,GridS,X,Y,VGrid):- 
   findall(C,(member(G,GridS),get_color_at(X,Y,G,C)),L),
-  consensus22(L,R),
-  nonvar_or_ci(R),is_color(R),
-  nb_set_local_point(X,Y,R,VGrid),!.
+  consensus22(ColorAdvice,L,R),
+  ignore((% nonvar_or_ci(R),is_color(R),
+  nb_set_local_point(X,Y,R,VGrid))),!.
 
 nb_set_local_point(H,V,C,Grid):- assertion(is_grid(Grid)),!, 
   ignore((nth1(V,Grid,Row),(Row==[]-> true;nb_set_nth1(H,Row,C)))).
@@ -365,61 +369,84 @@ my_partition(P1,[H|L],I,[H|E]):-
 my_partition(P1,H,I,HE):- dumpST,break,
   my_partition(P1,[H],I,HE).
 
-consensus22(L,C):- 
+consensus22(ColorAdvice,L,C):- 
   my_partition(plain_var,L,Vars,Rest0),
-  %my_partition(=(brown),Rest0,_,Rest),
-  my_partition(is_bg_color,Rest0,BGC,Rest1),
+  my_partition(=@=(ColorAdvice),Rest0,_,Rest),
+  my_partition(is_bg_color,Rest,BGC,Rest1),
   my_partition(is_black,Rest1,Blk,Rest2),
-  my_partition(is_color,Rest2,Color,Other),!,
+  my_partition(is_fg_color,Rest2,Color,Other),!,
   consensus2(Vars,BGC,Blk,Color,Other,C),!.
 
 %consensus2(Vars,BG,Blk,Color,Other,C).
 
-is_four([C,C,C,C],C).
-is_four([C,C,C],C).
+is_four([A,B,C,D],A):- A=@=B,A=@=C,A=@=D,!.
+is_four([A,B,C],A):- A=@=B,A=@=C,!.
+%is_four([A,B,C,D],A):- A=@=B,C\=@=D,!.
 %is_four([C,C],C).
 :- style_check(-singleton).
-consensus2(Vars,BG,Blk,Color,Other,C):- is_four(Color,C).
-consensus2(Vars,BG,Blk,Color,Other,C):- is_four(Blk,C).
-consensus2(Vars,BG,Blk,Color,Other,C):- is_four(BG,C).
-consensus2(Vars,BG,Blk,Color,Other,C):- is_four(Other,C).
+consensus2(Vars,BG,Blk,Color,Other,C):- is_four(Color,C),!.
+consensus2(Vars,BG,Blk,Color,Other,C):- is_four(BG,C),!.
+consensus2(Vars,BG,Blk,Color,Other,C):- is_four(Other,C),!.
+consensus2(Vars,BG,Blk,Color,Other,C):- is_four(Blk,C),!.
+consensus2(Vars,BG,Blk,Color,Other,C):- is_four(Vars,C),!.
 consensus2(Vars,BG,Blk,[C|Color],Other,C).
 consensus2(Vars,BG,[C|Blk],Color,Other,C).
 consensus2(Vars,[C|BG],Blk,Color,Other,C).
 :- style_check(+singleton).
 
-fix_the_fours(NewIndiv0s,NewIndiv2s):- 
-  must_det_l((
-  predsort(sort_on(colored_pixel_count),NewIndiv0s,NewIndiv1s),
-  maplist(object_grid,NewIndiv1s,Grids),
-  findall(size(H,V),(member(O,Grids),vis_hv(O,H,V)),Sizes),
-  sort(Sizes,SizesS),
-  reverse(SizesS,[size(H,V)|_]),
-  make_grid(H,V,Result),
-  %wdmsg(pointsNotSet(H,V)),
-  %maplist(print_grid,Grids), 
- % duplicate_term(Grids,GridsP),
-  consensus(Grids,H,V,Result),
-  format('~N'),writeln('Training hard...'),!,
-  %print_grid(Result), dmsg(result),
-  localpoints(Result,RPoints),  
-  %nth0(0,NewIndiv1s,First),
-  %wdmsg(pointsBeginSet(0)=First),
-  %set_local_points(RPoints,First,RPointsF),
-  %wdmsg(pointsEndSet(0)=RPointsF),
-  %wdmsg(pointsBeginSet(4)=NewIndiv1s),
-  maplist(set_local_points(RPoints),NewIndiv1s,NewIndiv2s),!,
-  %wdmsg(pointsEndSet(4)=NewIndiv2s),
-  %format('~N'),
-  %maplist(object_grid,NewIndiv2s,NewGrids), maplist(print_grid,NewGrids),
-  %wdmsg(pointsNowSet),
-  nop(format('~N')))),!.
 
-sort_on(C,R,A,B):- call(C,A,AA),call(C,B,BB),!,compare(R,AA+A,BB+B).
-using_compare(C,R,A,B):- call(C,A,AA),call(C,B,BB),!,compare(R,AA,BB).
+maybe_fix_the_four(Ordered,Objects,CorrectObjects,Keep):- 
+  maplist(object_grid,Objects,AllGrids),
+  predsort(sort_on(colored_pixel_count),AllGrids,Grids),
+  (all_rows_align(Grids)
+    -> (Keep=[], format('~N'),writeln('Must be perfect...'),CorrectObjects = Objects);
+    fix_the_fours(Ordered,Objects,Grids,CorrectObjects,Keep)).
+
+all_rows_align([Big|Rest]):- maplist(rows_align(Big),Rest).
+
+max_hv(Objects,H,V):- 
+  findall(size(H,V),(member(O,Objects),vis_hv(O,H,V)),Sizes),
+  sort(Sizes,SizesS),
+  reverse(SizesS,[size(H,V)|_]),!.
+
+fix_the_fours(Ordered,Objects,Grids,CorrectObjects,Keep):-
+  max_hv(Objects,H,V),
+  make_grid(H,V,Result),
+  writeln('Training hard...'),
+  advise_color(ColorAdvice,Ordered),
+  consensus(ColorAdvice,Grids,H,V,Result),
+  localpoints(Result,LPoints),
+  localpoints(Result,LPoints),
+  maplist(replace_local_points(LPoints,_),Grids,CorrectGrids),!,
+  all_rows_align(CorrectGrids), 
+  print_grid(Result), dmsg(result),
+  maplist(replace_diffs(LPoints),Objects,CorrectObjects),!,
+  my_partition(same_lcolor(ColorAdvice),Ordered,Keep,_),!.
+
+advise_color(ColorAdvice,Ordered):- member_color(Ordered,ColorAdvice).
+advise_color(ColorAdvice,Ordered):- enum_colors(ColorAdvice), \+ member_color(Ordered,ColorAdvice).
+advise_color(ColorAdvice,Ordered):- member_color(Ordered,ColorAdvice).
+
+member_color(Ordered,ColorAdvice):- member(Obj,Ordered),color(Obj,ColorAdvice).
+
+replace_diffs(LPoints,Obj,NewObj):- 
+ must_det_l((
+  vis_hv(Obj,H,V),  
+  my_partition(point_between(1,1,H,V),LPoints,Points,_),
+  rebuild_from_localpoints(Obj,Points,NewObj))),
+  print_grid(NewObj),!.
+
+point_between(LoH,LoV,HiH,HiV,Point):- point_to_hvc(Point,H,V,_),
+  between(LoH,HiH,H), between(LoV,HiV,V).
+
+  
+
+sort_on(C,R,A,B):- (A==B-> R=0 ; (call(C,A,AA),call(C,B,BB),!,compare(R,AA+A,BB+B))).
+using_compare(C,R,A,B):- (A==B-> R=0 ; (call(C,A,AA),call(C,B,BB),!,compare(R,AA,BB))).
 colored_pixel_count(A,AA):- object_grid(A,G),
-  findall(E,(sub_term(E,G), nonvar_or_ci(E),is_color(E),\+ is_bg_color(E)),L),
+  findall(E,(sub_term(E,G), is_fg_color(E)),L),
   length(L,AA).
+
 
 symetric_xy_3x3(G,Grid9x9):- 
  get_gridname(G,GN), grid_size(G,H,V),
@@ -489,8 +516,8 @@ idealistic_symetric_xy_3x3(
 
 
 
-test_symmetry_code(Grid,NewIndiv1s):- grid_to_3x3_objs(Grid,NewIndiv1s).
-%test_symmetry_code(Grid,NewIndiv1s):- repair_symmetry(Grid,NewIndiv1s).
+test_symmetry_code(Grid,Grids):- grid_to_3x3_objs([],Grid,Grids,_Keep).
+%test_symmetry_code(Grid,Grids):- repair_symmetry(Grid,Grids).
 
 repair_symmetry(G,GR):-
 /*

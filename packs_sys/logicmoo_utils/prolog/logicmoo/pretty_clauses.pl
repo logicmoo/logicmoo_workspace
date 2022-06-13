@@ -17,13 +17,19 @@
            print_tree_nl/1,
            guess_pretty/1,
            make_pretty/2,
-   color_format_maybe/3,print_tree00/1,print_as_tree/1,current_print_write_options/1,mort/1,print_tree_with_final/2]).
+   color_format_maybe/3,print_tree00/1,print_as_tree/1,current_print_write_options/1,mort/1,
+   print_tree_with_final/2,
+   print_tree_with_final/3]).
 :- multifile '$exported_op'/3. 
+:- multifile '$autoload'/3. 
+:- dynamic '$exported_op'/3. 
+:- dynamic '$autoload'/3.
 :- discontiguous '$exported_op'/3. 
 :- discontiguous '$autoload'/3.
+'$exported_op'(_,_,_):- fail.
 '$autoload'(_,_,_):- fail.
-:- system:reexport(library(debuggery/bugger)).
-:- system:reexport(library(must_sanity)).
+:- system:use_module(library(debuggery/bugger)).
+%:- system:reexport(library(must_sanity)).
 :- include(portray_vars).
 :- include(butterfly_console).
 /** <module> Pretty Print Prolog terms in plain or HTML
@@ -607,6 +613,7 @@ ec_portray_hook(Term):-
 
 color_format_maybe(_,F,A):- format(F,A),!.
 
+:- export(write_q/1). 
 write_q(X):- in_pp(bfly),!,print_html_term(X).
 write_q(X):- writeq(X).
 
@@ -918,6 +925,7 @@ portray_with_vars(A,Options):-
 
 % portray_with_vars(A,Options):- dumpST, break, throw(looped(portray_with_vars(A,Options))).
 
+:- export(portray_with_vars1/2).
 portray_with_vars1(A,Options):-
   get_portrayal_vars(Vs),
   my_merge_options(Options,[quoted(true), portrayed(true), variable_names(Vs)],OptionsNew),
@@ -1032,6 +1040,7 @@ print_tree_with_final(Term, Final):-
     locally(set_prolog_flag(no_pretty,false),print_tree_with_final(Term, Final, [fullstop(false)])).
 
 
+:-export(print_tree_with_final/3).
 print_tree_with_final(Term, Final, Options):- 
   select(variable_names(Vs),Options,NewOptions),!,
   nb_current('$variable_names',Was),

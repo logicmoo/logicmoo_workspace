@@ -193,7 +193,7 @@ unused_diff_groups0(AAR,BBR,DD):-
 %object_dglyph(O,G):- object_cglyph(O,G). % want this
 object_dglyph(O,D):- object_glyph(O,G), atom_concat(' ',G,D),!.
 obj_grp_comparable(I,obj(O)):- obj_make_comparable(I,M),
-  exclude(uncomparable(group),M,O).
+  my_partition(uncomparable(group),M,_,O).
 
 include_fav_points(I,II):- include(fav_points,I,II),II=[_,_|_],!.
 include_fav_points(I,I).

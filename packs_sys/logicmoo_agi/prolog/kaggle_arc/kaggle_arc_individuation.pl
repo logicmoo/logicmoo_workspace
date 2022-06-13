@@ -22,7 +22,7 @@ maybe_multivar(_).
 :- dynamic(is_unshared_saved/2).
 :- dynamic(is_shared_saved/2).
 
-expand_todo(complete_too, [shape_lib(noise), fourway,solid(rectangle), rectangle, shape_lib(pair),
+expand_todo(second_pass, [shape_lib(noise),solid(rectangle), rectangle, shape_lib(pair),
 /*             connect(hv_line(h)),connect(hv_line(v)),connect(dg_line(u)),connect(dg_line(d)),
                dg_line(u),dg_line(d),hv_line(h),hv_line(v),merge(hv_line(h)),merge(hv_line(v)),merge(dg_line(u)),merge(dg_line(d)),
                jumps(hv_line(h)),jumps(hv_line(v)),jumps(dg_line(u)),jumps(dg_line(d)),
@@ -42,9 +42,9 @@ expand_todo(defaults2, [fourway, shape_lib(noise),shape_lib(pair),shape_lib(intr
 
 %individuate(H,V,ID,Grid,Points,IndvSO):- individuate_default(H,V,ID,Grid,Points,IndvSO).
 expand_todo(complete, [
-     shape_lib(noise), fourway, shape_lib(intruder), shape_lib(out),  shape_lib(in),shape_lib(pair), 
+     shape_lib(noise), shape_lib(intruder), shape_lib(out),shape_lib(hammer),shape_lib(pair), 
     %polygon,  %calc_largest_square_block,
-    rectangle, dg_line(d), 
+    rectangle, fourway, dg_line(d), 
     diamonds,  dg_line(u), hv_line(h), hv_line(v),
     extend(_), connected(Y,Y),merged(Z,Z), jumps(X,X), 
     find_contained, find_engulfed,
@@ -62,6 +62,20 @@ expand_todo(defaults, [
   % line(_),dg_line(_), % release_points, all, %into_single_hidden,oldway %retain(solid(rectangle)), % shapes, %into_single_hidden,
   all, done]). % :- get_cycle_shapes(CS).
 get_cycle_shapes(cycle_shapes([])).
+
+my_expand_individualizer(ROptions1,ROptions1):-!.
+%my_expand_individualizer(ROptions1,ReservedOptions):- expand_individualizer(ROptions1,ReservedOptions).
+fix_indivs_options(ROptions,ReservedOptions):-
+   make_indivs_options(ROptions,ROptions1),
+   my_expand_individualizer(ROptions1,ReservedOptions),!.
+
+make_indivs_options(O,L):-is_list(O),maplist(make_indivs_options,O,OL),append(OL,L).
+make_indivs_options(G,[G]):- var(G),!.
+make_indivs_options(options(I),[options(O)]):- make_indivs_options(I,O).
+make_indivs_options(detect(O),[detect(O)]):-!.
+make_indivs_options(O,[detect(O)]):- is_gridoid(O),!.
+make_indivs_options(I,O):- expand_todo(I,O),!.
+make_indivs_options(I,[I]):-!.
 
 
 :- style_check(+singleton).
@@ -111,23 +125,6 @@ ensure_shared_indivs(GN,Grid,SharedIndvs):-
 :- decl_pt(detect_indvs(group,group,-)).
 detect_indvs(In,Out,Grid):- individuate(In,Grid,Out).
 
-%make_indivs_options([],[options(defaults)]):-!.
-%make_indivs_options(NList,O):- listify(NList,O),!.
-make_indivs_options(NList,O):- listify(NList,List),maplist(make_indivs_option_e,List,O).
-
-make_indivs_option_e(G,G):- var(G),!.
-make_indivs_option_e(options(O),options(O)):-!.
-make_indivs_option_e(detect(O),detect(O)):-!.
-make_indivs_option_e(O,(O)):- is_object(O),!.
-make_indivs_option_e(G,(G)):- is_grid(G),!.
-make_indivs_option_e(E,options(L)):- listify(E,L).
-
-my_expand_individualizer(ROptions1,ROptions1):-!.
-%my_expand_individualizer(ROptions1,ReservedOptions):- expand_individualizer(ROptions1,ReservedOptions).
-fix_indivs_options(ROptions,ReservedOptions):-
-   make_indivs_options(ROptions,ROptions1),
-   my_expand_individualizer(ROptions1,ReservedOptions),!.
-
 individuation_reserved_options(ROptions,Reserved,Options):- 
    fix_indivs_options(ROptions,ReservedOptions),
    my_partition(is_object_or_grid,ReservedOptions,Reserved,Options),
@@ -140,22 +137,21 @@ individuation_reserved_options(ROptions,Reserved,Options):-
 
 
 individuate_default(Grid,IndvS):- individuate([defaults],Grid,IndvS).
+individuate_second_pass(Grid,IndvS):- individuate([second_pass],Grid,IndvS).
 individuate_complete(Grid,IndvS):- individuate([complete],Grid,IndvS).
 
 individuate(_ROptions,Grid,IndvS):- Grid==[],!,IndvS=[].
 individuate(ROptions,GridIn,IndvS):-
    must_be_free(IndvS),
    into_points_grid(GridIn,Points,Grid),   
-   individuation_reserved_options(ROptions,Reserved,NewOptions),
    quietly(grid_size(Grid,H,V)), 
    into_gridname(Grid,ID),
+   individuation_reserved_options(ROptions,Reserved,NewOptions),
    pt(yellow,individuate(H,V)=ID),
    individuate(H,V,ID,Reserved,NewOptions,Grid,Points,IndvS).
 
 % tiny grid becomes a series of points
-individuate(GH,GV,ID,_Reserved,_NewOptions,_Grid,Points,IndvS):- is_glyphic(Points,GH,GV), !,
-  individuate_glyphic(GH,GV,ID,Points,IndvS).
-
+individuate(GH,GV,ID,_Reserved,_NewOptions,_Grid,Points,IndvS):- is_glyphic(Points,GH,GV), !, individuate_glyphic(GH,GV,ID,Points,IndvS).
 individuate(H,V,ID,Reserved,NewOptions,Grid,Points,IndvSS):-
    individuals_raw(H,V,ID,NewOptions,Reserved,Points,Grid,IndvSRaw),
    %as_debug(9,ptt((individuate=IndvSRaw))),
@@ -194,13 +190,15 @@ call_fsi(Image,NewReserved,NewGrid,NewOptions,GH,GV,Sofar,ID,Options,Reserved,Po
 make_fti(GH,GV,ID,Grid,Sofar,Reserved,Options,Points,Image):-
   Image = _{
    % Options and TODO List (are actually same things)
-   todo:Options,options:Options,
+   todo:Options,options:Options,options_o:Options,
    % Grid and point representations
    grid:Grid,points:Points,
    % Original copies of Grid and point representations
-   o_grid:Grid,o_points:Points,
-   % object found in grid and object that are reserved to not be found
-   objs:Sofar,robjs:Reserved,
+   grid_o:Grid,points_o:Points,
+   % objects found in grid and object that are reserved to not be found
+   objs:Sofar, robjs:Reserved,
+   % Notes and debug info
+   notes:[], debug:[],
    % height width and lookup key for image
    h:GH,v:GV,id:ID}.
 
@@ -292,6 +290,7 @@ system:term_expansion((Head:-Body),Out):-
 
 %goal_expansion(Goal,'.'(Image, Objs, Obj)):- Goal = ('.'(Image, Objs, A), Obj = V),  var(Obj).
 system:goal_expansion(Goal,Out):-
+   compound(Goal), \+ predicate_property(Goal,meta_predicate(_)),
    get_setarg_p1(I,Goal,P1), compound(I), I = set(Obj,Member),
    call(P1,Var),
    expand_goal((Goal,b_set_dict(Member,Obj,Var)),Out).
@@ -324,7 +323,7 @@ fti(Image,_):-
 
 %fti(Image,[calc_largest_square_block|set(Image,todo)]):-
 %  calc_largest_square_block(Image),Image.objs,set(Image,objs),Image.points,set(Image,points)),!.
-  
+
 
 % Find free points that are contained in objects and individuate them in their own way
 fti(Image,[find_contained|set(Image,todo)]):-
@@ -453,8 +452,9 @@ do_shapelib(ReservedIO,GridO,[shape_lib(Hammer)|TODO],H,V,Sofar,ID,[shape_lib(Ha
    (shape_lib_expanded(Hammer,Reserved)), Reserved\==0,
    length(Reserved,RL),
    pt(searchLib(Hammer)=RL),
+   smallest_first(Reserved,ReservedSL),
    %debug_indiv(Reserved),
-   proccess_overlap_reserved(Hammer,GridO,Grid,ID,H,V,Reserved,Sofar,SofarOut,Points,NextScanPoints,_Unreserved,_StillReserved),
+   proccess_overlap_reserved(Hammer,GridO,Grid,ID,H,V,ReservedSL,Sofar,SofarOut,Points,NextScanPoints,_Unreserved,_StillReserved),
    %intersection(SofarOut,Sofar,_Intersected,Found,_LeftOverB), as_debug(8,print_grid(H,V,'shape_lib'+ID,Found)),
    !.
 
@@ -578,22 +578,39 @@ fsi(_Image,Reserved,Grid,TODO,H,V,Sofar,ID,[into_single|TODO],Reserved,Points,Gr
     meets_indiv_criteria(into_single_hidden,IndvPoints),!.
 
 %  fsi(_Image,NewReserved,NewGrid,NewOptions,H,V,Sofar,ID,TODO,Reserved,Points,Grid,OutInvdivS,NextScanPoints).
+same_lcolor(LargestColor,Obj):- color(Obj,Color),nop(print_grid(Obj)),!,Color==LargestColor.
 
+fti(Image,['fourway'|_]):- !,
+  H = Image.h,
+  V = Image.v,
+  ID = Image.id,
+  H > 13, V> 13,
+  largest_first(Image.objs,Ordered),   
+  
+  grid_to_3x3_objs(Ordered,Image.grid_o,FourWay1s,Keep),
+  as_debug(8,writeln('fourway-found')),
+              globalpoints(Keep,KeepPoints),!,
+  set(Image,points) = KeepPoints,!,
+  % set_bgc(LargestColor),  
 
-fti(Image,['fourway'|set(Image,todo)]):-
-    H = Image.h,
-    V = Image.v,
-    ID = Image.id,
-     H > 13, V> 13,
-    grid_to_3x3_objs(Image.grid,FourWay1s),
-    overwrite_use_so_far(FourWay1s,Image.objs,UseSofar),
-    append(UseSofar,FourWay1s,set(Image,objs)),
-    as_debug(9,writeln('fourway-found')),    
-    as_debug(8,print_grid(H,V,'4-way'+ID,FourWay1s)),
-    remove_from_image(Image,[UseSofar,FourWay1s]).
+  %Restart = Image.options_o,!,
+  set(Image,options) = [progress|Image.options],
+  %my_partition(==(fourway),Restart,_,Without4Way),!,
 
-remove_from_image(Image,Data):-
-    remove_global_points(Data,Image.points,set(Image,points)).
+  make_grid(H,V,set(Image,grid)),
+  %points_to_grid(H,V,KeepPoints,set(Image,grid)),!,
+
+  append(Keep,FourWay1s,set(Image,objs)),!,
+  as_debug(8,print_grid(H,V,'4-way'+ID,FourWay1s)),!,  
+  as_debug(8,print_grid(H,V,'4-waypoints'+ID,Image.points)),!,
+  set(Image,todo) = [done],!. % Without4Way,!.
+ 
+
+remove_from_image(Image,Data):-    
+    must_det_l((remove_global_points(Data,Image.points,Points),
+    pt(Points),
+    set(Image,points) = Points)),!.
+    
 
 
 overwrite_use_so_far(FourWay1s,Sofar,UseSofar):-
@@ -926,7 +943,7 @@ remove_bgs(IndvS,IndvL,BGIndvS):- partition(is_bg_indiv,IndvS,BGIndvS,IndvL).
 oclass_piority(image,4).
 oclass_piority(combined,3).
 oclass_piority(hidden,2).
-%object_priority(Indv,Priority):- oclass_piority(Class,Priority), isz(Indv,Class).
+object_priority(Indv,Priority):- oclass_piority(Class,Priority), isz(Indv,Class).
 object_priority(_,0).
   
 smallest_first(IndvS,IndvO):-
