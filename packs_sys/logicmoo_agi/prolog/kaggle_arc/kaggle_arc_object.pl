@@ -32,7 +32,7 @@ grid_to_individual(Grid,Obj):-
   grid_size(Grid,H,V),
   grid_to_points(Grid,H,V,Points),
   (Points==[]-> empty_grid_to_individual(H,V,Obj); 
-  (get_gridname(Grid,ID), make_indiv_object(ID,H,V,Points,[object_shape(grid)],Obj))).
+  (grid_to_id(Grid,ID), make_indiv_object(ID,H,V,Points,[object_shape(grid)],Obj))).
 
 empty_grid_to_individual(H,V,Obj):-
   Iv is H + V*34,
@@ -60,7 +60,7 @@ close_enough_grid(GridIn,GridInCopy,LocalGrid):-
 
 
   %pt(Image-->Image9x9),
-  %into_gridname(Grid,Gridname),
+  %grid_to_id(Grid,Gridname),
   %quaderants_and_center_rays(Image9x9,Quads,Centers,Rays),
   %append([Quads,Centers,Rays],FourWay1s00),
   %trace,
@@ -118,13 +118,13 @@ make_indiv_object(ID,H,V,Points,Overrides,Obj):-
 
 
 :- module_transparent as_obj/2.
-as_obj(L,Obj):- is_list(L),!,Obj = obj(L), !, register_obj(L).
-as_obj(O,Obj):- compound(O), O = obj(L), Obj = O, register_obj(L).
+as_obj(L,Obj):- is_list(L),!,Obj = obj(L), !. % , register_obj(L).
+as_obj(O,Obj):- compound(O), O = obj(_), Obj = O. % , register_obj(L).
 
 :- module_transparent register_obj/1.
 %register_obj(O):- quietly((wots(S,weto(dumpST)), asserta(obj_cache(O,S)))),!.
 register_obj(L):- obj_cache(LL,_),LL=@=L,!.
-register_obj(L):- nop(asserta(obj_cache(L,''))),
+register_obj(L):- asserta(obj_cache(L,'')),
   ignore(( false, O=obj(L),mass(O,Mass),Mass>7,format('~N'),arc_portray(O,false),nl)).
 
 :- dynamic(obj_cache/2).
@@ -140,7 +140,7 @@ enum_object0(S):- why_grouped(_,IndvS),member(S,IndvS).
 enum_object0(S):- clause(in_shape_lib(_,S),Body),catch(Body,_,fail).
 enum_object0(S):- g2o(_,S).
 enum_object0(S):- is_unshared_saved(_,IndvS),member(S,IndvS).
-enum_object0(S):- is_gridname(S,_).
+enum_object0(S):- is_grid_id(S,_).
 */
 internal_region(Obj,regionOf(Obj)).
 
@@ -381,14 +381,14 @@ all_points_between(Grid,Hi,Vi,GH,GV,Points,PointsO):-
   all_points_between(Grid,H,V,GH,GV,PointsT,PointsO).
 
 grid_to_points(Grid,HH,HV,Points):- all_points_between(Grid,HH,HV,HH,HV,[],Points),!. 
-
+/*
 grid_to_points(Grid,HH,HV,Points):-  throw(all_points_between),
   findall(C-Point,(between(1,HV,V),between(1,HH,H),
     once((hv_value(Grid,C2,H,V),
           %pt(hv_value(C2,H,V)),
           is_spec_color(C2,C),
           hv_point(H,V,Point)))),Points),!.
-
+*/
 
 
 globalpoints(I,X):-  (var_check(I,globalpoints(I,X)), deterministic(TF)), (TF==true-> ! ; true).
@@ -424,9 +424,6 @@ localpoints(I,X):- throw(unknown(localpoints(I,X))).
 /*
 globalpoints(ID,Points):- \+ \+ cmem(ID,_,_), findall(-(C,HV),cmem(ID,HV,C),Points).
 globalpoints(Grid,Points):- grid_to_id(Grid,ID),findall(-(C,HV),cmem(ID,HV,C),Points).
-:- dynamic(is_grid_id/2).
-grid_to_id(Grid,ID):- is_grid_id(Grid,ID),!.
-grid_to_id(Grid,ID):- gensym('grid_',ID),assert_id_grid_cells(ID,Grid),assert(is_grid_id(Grid,ID)),!.
 */
 
 %colors(Points,CC):- is_list(Points),nth0(_,Points,C-_),is_color(C), CC = [cc(C,3)],!.
@@ -445,11 +442,11 @@ get_instance_method(Obj,Compound,F):- is_object(Obj), compound(Compound),compoun
 
 
 object_grid(I,G):- is_grid(I),!,G=I.
+object_grid(Group,List):- is_group(Group),!,override_group(object_grid(Group,List)),!.
 %object_grid(I,G):- indv_props(I,L),member(global_points(X),L),member(vis_hv(H,V),L),!,points_to_grid(H,V,X,G),!.
 %object_grid(I,G):- indv_props(I,L),member(localpoints(X),L),member(vis_hv(H,V),L),!,points_to_grid(H,V,X,G),!.
 %%object_grid(I,G):- vis_hv(I,H,V),localpoints(I,LP),points_to_grid(H,V,LP,G),!.
-object_grid(I,G):- localpoints(I,LP),points_to_grid(LP,G),!.
-%object_grid(Group,List):- override_group(object_grid(Group,List)),!.
+object_grid(I,G):- localpoints(I,LP),vis_hv(I,H,V),points_to_grid(H,V,LP,G),!.
 %object_grid(I,G):- globalpoints(I,GP),into_grid(GP,G),!.
 
 loc_xy_term(I,offset(X,Y)):- loc_xy(I,X,Y),!.
@@ -546,54 +543,166 @@ find_outline(X):-
    [green,black,black,green],
    [green,green,green,green]].
 
-find_outline:- clsmake, % arc_grid(X),!,
-   %find_outline(X),
-  arc_grid(X),
-   nl,write(from),
-   print_grid(X),
-   find_outline(X,Y,Z),
-   once((grid_size(Y,H,V),
-   mass(Y,M))),
-   nl,write(solution(H*V=M)),
-   print_grid(Y),
-   nop((nl,write(leftover),
-   print_grid(Z))).
+:- add_history(find_outline).
+find_outline:- clsmake, forall(find_outline1,true).
+find_outline1:- arc_grid(Grid), dash_char, find_outline_pred(find_outlines_fast(_),Grid).
+
+
+%find_outline_path:- clsmake, forall(find_outline_path1,true).
+%find_outline_path1:- arc_grid(Grid), dash_char, find_outline_pred(find_outline_sols(find_outline_path),Grid).
+
+find_outlines(Grid):- find_outline_pred(find_outlines,Grid).
+%find_outline_paths(Grid):- find_outline_pred(find_outline_sols(find_outline_path),Grid).
+
+fail_over_time(Secs,Goal,Else):- notrace(catch(call_with_time_limit(Secs,Goal),time_limit_exceeded,(Else,fail))).
+fail_over_time(Secs,Goal):- fail_over_time(Secs,Goal,true).
+
+grid_of(LO,LO,[]):- is_grid(LO),!.
+grid_of(LO,O,H):- arg(1,LO,O),arg(2,LO,H).
+find_outline_pred(Find_OUTLINE,Grid):- is_grid(Grid),!,
+   grid_to_id(Grid,ID),   
+   grid_size(Grid,H,V),
+   writeln(ID),
+   fail_over_time(6,call(Find_OUTLINE,Grid,SOLS,LeftOver),
+     (writeln("TOO SLOWWWW"=Find_OUTLINE),
+      print_grid(H,V,Grid),
+      writeln("TOO SLOWWWW"=Find_OUTLINE))),
+   append(SOLS,[leftover(LeftOver)],SOLSL),
+   dash_char,
+   (SOLS==[]-> ((writeln("NOTHING FROM"=Find_OUTLINE),print_grid(H,V,Grid),writeln("NOTTAAA"=Find_OUTLINE),!,fail));true),
+   member(OL,SOLSL),
+   (OL=leftover(LeftOver)
+    -> (nl,
+      ignore((nonvar(LeftOver),nl,write(leftover=Find_OUTLINE),print_grid(H,V,LeftOver))),
+      write('from '),write(Find_OUTLINE),print_grid(H,V,Grid))
+    ;((grid_of(OL,O,Hits),once((mass(O,M))),
+     nl,write(solution(Hits,M)), print_grid(H,V,O)))).
+find_outline_pred(ID):- into_grid(ID,Grid),find_outlines(Grid).
 
 arc_grid(Nth,X):- offset(Nth,arc_grid(X)).
 %find_outline(Grid,Result,Grid4):- is_grid(Grid),!,grid_to_points(Grid,Points),!,find_outline(Points,Result,Grid4).
 
+/*
 find_outline(Grid,Sol,Rest):-
   find_outlines(Grid,Sols,Rest),!,
   member(Sol,Sols).
-  
-find_outlines(Grid,[Sol|Solutions],Rest):-
-  find_outline(_,Grid,Sol,More),!,
-  find_outlines(More,Solutions,Rest).
-find_outlines(Rest,[],Rest).
-  
+  */
+fix_rest(Options,Rest0,Sols0,Rest,Sols):- 
+  select(C-HV,Rest0,Rest1),  
+  \+ (is_adjacent_point(HV,_,TVH),member(C-TVH,Rest1)),
+  select(sol(O,Hits),Sols0,Sols1),
+  is_adjacent_point(HV,_,HV2),member(C-HV2,O),!,
+ fix_rest(Options,Rest1,[sol([HV|O],[HV|Hits])|Sols1],Rest,Sols).
+fix_rest(_Options,Rest,Sols,Rest,Sols).
 
-find_outline(C,Grid,ResultO,LeftOverO):- 
-  localpoints(Grid,Points),
+
+find_outlines_fast(Options,Grid,Sols,Rest):-
+ localpoints(Grid,Points),
+ point_groups_by_color(colormass,Groups,Points,Rest2), 
+% maplist(print_grid(H,V),Groups),
+ find_group_outlines(Options,Groups,Sols,Rest1),
+ append(Rest1,Rest2,Rest).
+
+find_group_outlines(Options,[G1|G2],Sols,Rest):-!,
+  find_group_outlines_fix_rest(Options,G1,Sols1,Rest1),
+  find_group_outlines(Options,G2,Sols2,Rest2),
+  append(Sols1,Sols2,Sols), append(Rest1,Rest2,Rest).
+find_group_outlines(_,[],[],[]).
+
+find_group_outlines_fix_rest(Options,G,Sols,Rest):-
+  find_outlines(Options,G,Sols0,Rest0),!,
+  fix_rest(Options,Rest0,Sols0,Rest,Sols).
+
+
+find_outlines(Grid,Solutions,Rest):- 
+  fail_over_time(4,find_outlines([perfect],Grid,Solutions,Rest)).
+
+find_outlines(Options,Grid,[Sol|Solutions],Rest):-
+  find_outlinez(Options,Grid,Sol,More),!,
+  find_outlines(Options,More,Solutions,Rest).
+find_outlines(_,Rest,[],Rest).
+  
+as_localpoints(Grid,Points):- is_grid(Grid),!,localpoints(Grid,Points).
+as_localpoints(Points,Points).
+
+:- discontiguous(find_outlinez/4).
+
+three_points(C,Grid2,HV1,Dir1,HV2,Dir2,HV3,Grid4):-
+  is_adjacent_point(HV1,Dir1,HV2),select(C-HV2,Grid2,Grid3),
+  %w_in_90(Dir1,Dir2),
+  is_adjacent_point(HV2,Dir2,HV3),select(C-HV3,Grid3,Grid4).
+  
+find_outlinez([Perfect|_],Grid,sol(ResultO,[]),LeftOver):-  Perfect = perfect, 
+  as_localpoints(Grid,Points),
   select(C-HV1,Points,Grid2),
-  my_partition(=(C-_),Grid2,_Colored,Others),
-  %print_grid([blue-HV1|Colored])
-  three_points(C,Grid2,HV1,HV2,HV3,Grid4),
- \+ (is_adjacent_point(HV2,_,HV), member(C-HV,Grid4)), 
-  %print_grid([blue-HV1,yellow-HV2,red-HV3|Grid4]), 
-  outline_only2(HV1,C,HV3,[C-HV1|Grid4],Result,LeftOver),
-  [C-HV1,C-HV2|Result] = ResultO,
-  once(length(Result,M)),M>2,
-  append(Others,LeftOver,LeftOverO).
+  w_in_n(Dir1,Dir2),
+  three_points(C,Grid2,HV1,Dir1,HV2,Dir2,HV3,Grid4),
+ \+ (is_adjacent_point(HV2,_,HV), member(C-HV,Grid4)),
+  outline_only2(HV1,C,HV3,[C-HV1|Grid4],Result,LeftOver), [C-HV1,C-HV2|Result] = ResultO, Result=[_,_,_|_].
+  
 
 outline_only2(Exit,_,HV2,Grid,[],Grid) :- HV2==Exit,!.
 outline_only2(Exit,C,HV2,Grid2,[C-HV2,C-HV3|Found],LeftOver) :-
-  three_points(C,Grid2,HV2,HV3,HV4,Grid4),
+  w_in_n(Dir1,Dir2),
+  three_points(C,Grid2,HV2,Dir1,HV3,Dir2,HV4,Grid4),
   \+ (is_adjacent_point(HV2,_,HV), member(C-HV,Grid4)),
   outline_only2(Exit,C,HV4,Grid4,Found,LeftOver).
 
-three_points(C,Grid2,HV1,HV2,HV3,Grid4):-
-  is_adjacent_point(HV1,_Dir1,HV2), select(C-HV2,Grid2,Grid3),
-  is_adjacent_point(HV2,_Dir2,HV3), select(C-HV3,Grid3,Grid4).
+
+nav_three_points(C,Grid2,HV1,Dir1,HV2,Dir2,HV3,Grid4):-
+  is_adjacent_point(HV1,Dir1,HV2), select(C-HV2,Grid2,Grid3),
+  after_dir_check(Dir1,Dir2,Dir3),
+  is_adjacent_point(HV2,Dir2,HV3), select(C-HV3,Grid3,Grid4),
+  (\+ is_adjacent_point(HV,Dir3,HV), member(C-HV,Grid4)).
+
+outline_nav(Exit,_,_,HV2,Grid,[],Grid) :- HV2==Exit,!.
+outline_nav(Exit,C,Dir1,HV2,Grid2,[C-HV2,C-HV3|Found],LeftOver) :-
+  nav_three_points(C,Grid2,HV2,Dir1,HV3,Dir2,HV4,Grid4),
+  outline_nav(Exit,C,Dir2,HV4,Grid4,Found,LeftOver).
+
+w_in_n(_,_).
+
+find_outlinez(_,Grid,sol(ResultO,[Hits]),LeftOver):-  !,
+  localpoints(Grid,Points),  
+  select(C-HV1,Points,Grid2),  
+  w_in_90(Dir1,Dir2),
+  three_points(C,Grid2,HV1,Dir1,HV2,Dir2,HV3,Grid4),
+  \+ (is_adjacent_point(HV2,_,HV),member(C-HV,Grid4)),
+  (outline_only(HV1,C,HV3,[C-HV1|Grid4],Result,LeftOver,0,Hits), [C-HV1,C-HV2|Result] = ResultO, Result=[_,_,_|_]).
+
+find_outlinez(_Opts,Grid,sol(ResultO,[]),LeftOver):- 
+  localpoints(Grid,Points),
+  select(C-HV1,Points,Grid2),  
+  w_in_90(Dir1,Dir2),
+  nav_three_points(C,Grid2,HV1,Dir1,HV2,Dir2,HV3,Grid4),
+  ((outline_nav(HV1,C,Dir2,HV3,[C-HV1|Grid4],Result,LeftOver), [C-HV1,C-HV2|Result] = ResultO,Result=[_,_,_,_|_])).
+
+
+outline_only(Exit,_,HV2,Grid,[],Grid,N,N) :- HV2==Exit,!.
+
+outline_only(Exit,C,HV2,Grid2,[C-HV2,C-HV3|Found],LeftOver,N,O) :-
+  w_in_n(Dir1,Dir2),
+  three_points(C,Grid2,HV2,Dir1,HV3,Dir2,HV4,Grid4),
+ (\+ (is_adjacent_point(HV2,_,HV), member(C-HV,Grid4)) ->
+   (M is N -1,outline_only(Exit,C,HV4,Grid4,Found,LeftOver,M,O));
+   (M is N +1,outline_onlya(Exit,C,HV4,Grid4,Found,LeftOver,M,O))).
+
+outline_onlya(Exit,C,HV2,Grid2,[C-HV2,C-HV3|Found],LeftOver,N,O) :-
+  w_in_n(Dir1,Dir2),
+  three_points(C,Grid2,HV2,Dir1,HV3,Dir2,HV4,Grid4),
+ (\+ (is_adjacent_point(HV2,_,HV), member(C-HV,Grid4)) ->
+   (M is N -1,outline_onlya(Exit,C,HV4,Grid4,Found,LeftOver,M,O));
+   (M is N +1,outline_onlyb(Exit,C,HV4,Grid4,Found,LeftOver,M,O))).
+
+outline_onlyb(Exit,C,HV2,Grid2,[C-HV2,C-HV3|Found],LeftOver,N,O) :-
+  w_in_n(Dir1,Dir2),
+  three_points(C,Grid2,HV2,Dir1,HV3,Dir2,HV4,Grid4),
+ (\+ (n_s_e_w(Dir),is_adjacent_point(HV2,Dir,HV), member(C-HV,Grid4)) ->
+   (M is N -1,outline_only(Exit,C,HV4,Grid4,Found,LeftOver,M,O))).
+
+
+
+
 
 is_jagged(Points):- member(C-HV,Points),
   findall(Dir,(is_adjacent_point(HV,Dir,HV2),Dir\==c,member(C-HV2,Points)),L),L=[_,_],!.
@@ -629,6 +738,27 @@ guess_shape(GridIn,Grid,I,E,N,H,V,Colors,Points,subI(InvS)):- E>2, fail,
    compute_shared_indivs(Grid,InvS))),!,
    InvS=[_,_|_].
 */
+
+
+find_outline_sols(P5,Grid,[Sol|Solutions],Rest):-
+  enum_colors(C),
+  find_outline_pred_call(P5,C,Grid,Sol,More),!,
+  find_outline_sols(P5,More,Solutions,Rest).
+find_outline_sols(_,Rest,[],Rest).
+
+find_outline_pred_call(P5,C,Grid,ResultO,LeftOverO):-
+  call(P5,C,3,Grid,ResultO,LeftOverO).
+
+find_outline_path2(C,L,Grid,sol(ResultO,[]),LeftOverO):- 
+  localpoints(Grid,Points),
+  my_partition(=(C-_),Points,Grid1,Others),
+  select(C-HV1,Grid1,Grid2),  
+  nav_three_points(C,Grid2,HV1,Dir1,HV2,Dir2,HV3,Grid4),
+  %print_grid([blue-HV1,yellow-HV2,red-HV3|Grid4]), 
+  (((outline_nav(HV1,C,Dir2,HV3,[C-HV1|Grid4],Result,LeftOver), [C-HV1,C-HV2|Result] = ResultO,once(length(Result,M)),M>L)
+   ;(outline_nav(HV3,C,Dir1,HV1,[C-HV3|Grid4],Result,LeftOver), [C-HV3,C-HV2|Result] = ResultO,once(length(Result,M)),M>L))),
+  append(Others,LeftOver,LeftOverO).
+
 
 
 

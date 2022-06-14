@@ -267,12 +267,12 @@ same_colorless_points(I,O,OUT):-
   member(shape(_),SL),
   diff_objects(I,O,OUT).
 
-combine_perfects(IndvS,[IO|IndvSO]):- 
+combine_duplicates(IndvS,[IO|IndvSO]):- 
   select(I,IndvS,IndvS1),select(O,IndvS1,IndvS2),
   compare_objs1(perfect,I,O),
   override_object(O,I,IO),
-  combine_perfects(IndvS2,IndvSO).
-combine_perfects(IndvSO,IndvSO).
+  combine_duplicates(IndvS2,IndvSO).
+combine_duplicates(IndvSO,IndvSO).
 
 %combine_objects(I,I):-!.
 combine_objects(IndvS,[obj(IO)|IndvSO]):- 

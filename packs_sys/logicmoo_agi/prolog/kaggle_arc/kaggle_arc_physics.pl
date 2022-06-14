@@ -109,6 +109,12 @@ nav(s,0,1). nav(e, 1,0). nav(w,-1,0). nav(n,0,-1).
 nav(se, 1,1). nav(sw,-1,1). nav(nw,-1,-1). nav(ne, 1,-1).
 nav(c,0,0).
 
+
+n_s_e_w(n).
+n_s_e_w(s).
+n_s_e_w(e).
+n_s_e_w(w).
+
 move_dir(N,OX,OY,Dir,SX,SY,NX,NY):- nav(Dir,X,Y), NX is OX + (X*SX*N), NY is OY + (Y*SY*N).
 
 reverse_nav(D,R):- nav(D,X,Y),RX is -X, RY is -Y,nav(R,RX,RY).
@@ -116,9 +122,42 @@ reverse_nav(D,R):- nav(D,X,Y),RX is -X, RY is -Y,nav(R,RX,RY).
 is_non_diag(X):- nav(X,0,_);nav(X,_,0).
 is_diag(D):- nav(D,X,Y),X\==0,Y\==0. % \+ is_non_diag(X).
 
-turn_left_45(s,sw). turn_left_45(sw,w). turn_left_45(w,nw). turn_left_45(nw,n). 
-turn_left_45(n,ne). turn_left_45(ne,e). turn_left_45(e,se). turn_left_45(se,s).
-turn_right_45(X,Y):-turn_left_45(Y,X).
+rot_right_90(N,E):- rot_left_90(E,N).
+rot_left_90(N,W):- rot_left_45(N,NW), rot_left_45(NW,W).
+
+rot_right_135(N,SE):- rot_left_135(SE,N). 
+rot_left_135(N,SW):- rot_left_45(N,NW), rot_left_45(NW,W), rot_left_45(W,SW).
+
+rot_right_45(X,Y):-rot_left_45(Y,X).
+rot_left_45(s,sw). rot_left_45(sw,w). rot_left_45(w,nw). rot_left_45(nw,n). 
+rot_left_45(n,ne). rot_left_45(ne,e). rot_left_45(e,se). rot_left_45(se,s).
+
+w_in_45(N,N).
+w_in_45(N,NE):- rot_right_45(N,NE).
+w_in_45(N,NW):- rot_left_45(N,NW).
+
+w_in_90(N,Other):- w_in_45(N,Other).
+w_in_90(N,E):- rot_right_90(E,N).
+w_in_90(N,W):- rot_left_90(W,N).
+
+
+after_dir_check(N,N,[]):- member(N,[e,se,s,w,sw,n,nw,ne]).
+after_dir_check(N,NW,Check):- member(N,[se,sw,nw,ne]),after_dir_check_diag(N,NW,Check).
+after_dir_check(N,NW,Check):- member(N,[e,s,w,n]),after_dir_check_go_nsew(N,NW,Check).
+
+after_dir_check_go_nsew(N,E,NE):- rot_right_90(N,E),rot_right_45(N,NE).
+after_dir_check_go_nsew(N,NE,N):- rot_right_45(N,NE).
+after_dir_check_go_nsew(N,W,NW):- rot_left_90(N,W),rot_left_45(N,NW).
+after_dir_check_go_nsew(N,NW,N):- rot_left_45(N,NW).
+after_dir_check_go_nsew(N,SE,E):- rot_right_135(N,SE), rot_right_90(N,E).
+after_dir_check_go_nsew(N,SW,W):- rot_left_135(N,SW), rot_left_90(N,W).
+
+after_dir_check_diag(NE,E,NE):- rot_right_45(NE,E).
+after_dir_check_diag(NE,SE,E):- rot_right_90(NE,SE),rot_right_45(NE,E).
+after_dir_check_diag(NE,N,NE):- rot_left_45(NE,N).
+after_dir_check_diag(NE,NW,W):- rot_left_90(NE,NW),rot_left_45(NE,W).
+after_dir_check_diag(NE,S,E):- rot_right_135(NE,S), rot_right_90(NE,E).
+after_dir_check_diag(NE,W,NW):- rot_left_135(NE,W), rot_left_90(NE,NW).
 
 facing_triangles(
 [[xx,se,nw,xx],
@@ -218,8 +257,8 @@ find_contained(H,V,ID,[Found|Sofar],[Found|SofarInsteadM],NextScanPoints,NextSca
   %grid_size(Found,H,V),
   must_det_l((
   points_to_grid(H,V,ContainedPoints,Grid),
-  %once(object_indv_id(Found,ID,_);into_gridname(Grid,ID)),
-  individuate(H,V,ID,[],[complete],Grid,ContainedPoints,NewInside),
+  %once(object_indv_id(Found,ID,_);grid_to_id(Grid,ID)),
+  individuate(H,V,ID,[complete],Grid,ContainedPoints,NewInside),
   maplist(mention_inside(Found),NewInside,NewInsideM))),
   ignore((length(ContainedPoints,N),N>1,quietly(print_grid(H,V,[Found|NewInsideM])))),
   find_contained(H,V,ID,Sofar,SofarInstead,ScanPointsInstead,NextScanPointsInstead),

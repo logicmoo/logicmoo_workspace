@@ -449,7 +449,7 @@ colored_pixel_count(A,AA):- object_grid(A,G),
 
 
 symetric_xy_3x3(G,Grid9x9):- 
- get_gridname(G,GN), grid_size(G,H,V),
+ grid_to_id(G,GN), grid_size(G,H,V),
  gensym('CRef_',CRef),
   [[Q2,  CN, Q1],
    [CW, _CC, CE],

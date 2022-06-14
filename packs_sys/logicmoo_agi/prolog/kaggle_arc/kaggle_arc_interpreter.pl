@@ -33,7 +33,7 @@ into_type(+,X,X).
 into_type(num,X,X):- assertion(number(X)).
 into_type(dir,X,X):- assertion(nav(X,_,_)).
 into_type(grid,X,O):- into_grid(X,O).
-into_type(object,X,O):- is_object(X)-> X=O ; into_object(X,O).
+into_type(object,X,O):- is_object(X)-> X=O ; into_obj(X,O).
 into_type(group,X,O):- into_group(X,O).
 
 pass_thru_workflow(G):- var(G),!.
@@ -75,7 +75,7 @@ test_cond_or(This, That):- term_variables(This,[That|_]),!.
 
 run_dsl(Prog,In,Out):- run_dsl(enact,Prog,In,Out).
 
-
+run_dsl(_Mode,Prog,In,Out):- Prog==[],!, plain_var(Out)->Out=In; true.
 run_dsl(Mode,Prog,_In,_Out):- ptt(run_dsl(Mode,Prog,in,out)),fail.
 run_dsl(Mode,Prog,In,Out):- plain_var(Prog),!,throw(var_solving_progs(Mode,Prog,In,Out)).
 run_dsl(Mode,Prog,In,Out):- In==dsl_pipe,!,  nb_current(dsl_pipe,PipeIn), run_dsl(Mode,Prog,PipeIn,Out).
@@ -83,7 +83,6 @@ run_dsl(Mode,Prog,In,Out):- Out==dsl_pipe,!, run_dsl(Mode,Prog,In,PipeOut),nb_se
 run_dsl(Mode,doall(All),In,OutO):- !, run_dsl(Mode,forall(All,true),In,OutO).
 run_dsl(Mode,lmDSL(Prog),In,Out):- !, run_dsl(Mode,Prog,In,Out).
 run_dsl(_Mode,call(G),In,Out):-!,call(G),(plain_var(Out)->Out=In; true).
-run_dsl(_Mode,[],In,Out):-!, plain_var(Out)->Out=In; true.
 run_dsl(_Mode,same,In,Out):-!, duplicate_term(In,Out).
 run_dsl(ennfore,color(Obj,Color),In,Out):-!, add_global_points(Color,Obj,In,Out).
 run_dsl(Mode,-->(All,Exec),In,Out):-!, run_dsl(Mode,forall(All,Exec),In,Out).
@@ -98,28 +97,82 @@ run_dsl(Mode,Prog,In,Out):- \+ missing_arity(Prog,2), !,
     =(M,Out) ; (arcdbg(warn(nonworking(run_dsl(Mode,Prog)))),fail)).
 run_dsl(Mode,Prog,In,In):- arcdbg(warn(missing(run_dsl(Mode,Prog)))),!,fail.
 
-named_gridoid(TstName,G):- plain_var(TstName),!,dumpST,throw(var_named_test(TstName,G)).
-named_gridoid(TstName,G):- fix_test_name(TstName,Name,_),kaggle_arc(Name,tst+0,G,_),!.
-named_gridoid(TstName,G):- known_gridoid(TstName,G).
 
-known_gridoid(TstName*ExampleNum*in,G):- fix_test_name(TstName,Name,_),!,kaggle_arc(Name,ExampleNum,G,_).
-known_gridoid(TstName*ExampleNum*out,G):- fix_test_name(TstName,Name,_),!,kaggle_arc(Name,ExampleNum,_,G).
-known_gridoid(TstName*T,G):- fix_test_name(TstName+T,Name,ExampleNum),kaggle_arc(Name,ExampleNum,G,_).
-known_gridoid(TstName,G):- learned_color_inner_shape(TstName,magenta,BG,G,_),get_bgc(BG).
-known_gridoid(TstName,G):- is_gridname(G,TstName).
-known_gridoid(TstName,G):- is_shared_saved(TstName,G).
-known_gridoid(TstName,G):- is_unshared_saved(TstName,G).
 
-into_object(G,O):- is_grid(G),grid_to_individual(G,O),!.
-into_object(G,O):- into_group(G,OL),must([O]=OL).
+closure_grid_to_object(Orig,Grid,NewObj):- 
+  object_indv_id(Orig,ID,_Iv),
+  grid_size(Grid,H,V),  
+  globalpoints(Grid,Points),
+  make_indiv_object(ID,H,V,Points,[object_shape(grid)],PartialObj),
+  transfer_props(Orig,[loc_xy,colors,object_shape],PartialObj,NewObj),!.
+
+closure_grid_to_group(Orig,Grid,Group):- individuate(Orig,Grid,Group).
+
+into_grid(P,G):- quietly(into_grid(P,G, _)).
+
+% ?- print_grid(gridFn(X)).
+into_grid(Grid,Grid, (=) ):- is_grid(Grid),!.
+into_grid(Obj,Grid, closure_grid_to_object(Obj)):- is_object(Obj),!, object_grid(Obj,Grid),!.
+into_grid(Grp,Grid, closure_grid_to_group(Grp)):- is_group(Grp), !, object_grid(Grp,Grid),!.
+into_grid(Points,Grid,globalpoints):- is_points_list(Points), !, points_to_grid(Points,Grid),!.
+into_grid(Naming,Grid, Closure ):- (named_gridoid(Naming,NG),into_grid(NG,Grid, Closure),deterministic(YN)), (YN==true->!;true).
+into_grid(Points,Grid, throw_no_conversion(Points)):-
+  grid_size(Points,GH,GV),
+  make_grid(GH,GV,Grid),
+  forall(between(1,GV,V),
+   ((nth1(V,Grid,Row),forall(between(1,GH,H),      
+     (hv_value_or(Points,CN,H,V,_)->
+        nb_set_nth1(H,Row,CN)))))),!.
+
+named_gridoid(ID,G):- plain_var(ID),!,known_gridoid(ID,G).
+%named_gridoid(ID,G):- plain_var(ID),!,dumpST,throw(var_named_test(ID,G)).
+named_gridoid(ID,G):- known_gridoid(ID,G).
+
+known_gridoid(ID,G):- ID= TstName*ExampleNum*in, fix_test_name(TstName,Name,_),!,kaggle_arc(Name,ExampleNum,G,_).
+known_gridoid(ID,G):- ID= TstName*ExampleNum*out, fix_test_name(TstName,Name,_),!,kaggle_arc(Name,ExampleNum,_,G).
+known_gridoid(ID,G):- fix_test_name(ID,Name,_),kaggle_arc(Name,tst+0,G,_),!.
+known_gridoid(ID,G):- nonvar(ID),ID=(_*_),!,fix_test_name(ID,Name,ExampleNum),kaggle_arc(Name,ExampleNum,G,_).
+known_gridoid(ID,G):- learned_color_inner_shape(ID,magenta,BG,G,_),get_bgc(BG).
+known_gridoid(ID,G):- is_grid_id(G,ID).
+known_gridoid(ID,G):- is_shared_saved(ID,G).
+known_gridoid(ID,G):- is_unshared_saved(ID,G).
+known_gridoid(ID,G):- (atom(ID);string(ID)),notrace(catch(atom_to_term(ID,Term,_),_,fail)),Term\==ID,!,known_gridoid(Term,G).
+
+into_gridnameA(G,TstName):- known_gridoid(TstName,G).
+
+grid_to_id(Grid,ID):- atom(Grid),!,ID=Grid.
+grid_to_id(Grid,ID):- var(Grid),!,known_gridoid(Grid,ID).
+grid_to_id(Grid,ID):- \+ ground(Grid), copy_term(Grid,GGrid),numbervars(GGrid,1,_),!,grid_to_id(GGrid,ID).
+grid_to_id(Grid,ID):- known_gridoid(ID,GVar),Grid=@=GVar,!.
+grid_to_id(Grid,ID):- must_be_free(ID),makeup_gridname(ID), set_grid_id(Grid,ID),!.
+
+makeup_gridname(GridName):- gensym('GridName_',ID), GridName = ID*('ExampleNum'+0)*io.
+
+
+into_obj(G,O):- no_repeats(O,into_obj0(G,O)).
+
+o2g(Obj,Glyph):- object_glyph(Obj,Glyph).
+o2c(Obj,Glyph):- color(Obj,Glyph).
+o2ansi(Obj,S):- o2c(Obj,C),o2g(Obj,G),atomic_list_concat([' ',G,' '],O),!,sformat(F,'~q',[O]),wots(S,color_print(C,F)).
+:- dynamic(g2o/2).
+into_obj0(G,E):- plain_var(G),!,enum_object(E),G=E.
+into_obj0(obj(O),obj(O)):- is_list(O),!.
+into_obj0(objFn(G),O):-!, into_obj(G,O),!.
+into_obj0(G,O):- g2o(G,O),!.
+into_obj0(G,O):- (atom(G);string(G)),!,Chars=[_,_|_],atom_chars(G,Chars),!,member(C,Chars),into_obj(C,O).
+into_obj0(G,O):- is_grid(G),!,grid_to_individual(G,O).
+into_obj0(G,O):- into_group(G,OL),must([O]=OL).
+
+% this is bad  ?- into_grid('E',ID),grid_to_id(G,ID).  ?- into_grid('Z',ID),grid_to_id(G,ID).
 
 into_group(GI,G):- into_group(GI,G, _ ).
 
-into_group(G,G, _):- plain_var(G),throw(var_into_group(G)).
-into_group([],[],(=)):-!.
+into_group(Why,G, _):- plain_var(G),!, %throw(var_into_group(G)),
+ why_grouped(G,Why).
+into_group([],[],(=)).
 into_group(P,G,(=)):- is_group(P),!,G=P.
 into_group(G,I, into_grid):- is_grid(G),!,compute_shared_indivs(G,I).
-into_group(P,G, last):- is_object(P),!,G=[P].
+into_group(P,G, into_obj):- is_object(P),!,G=[P].
 into_group(P,G, rev_lambda(why_grouped)):- named_gridoid(P,M),!,into_group(M,G).
 into_group(P,G, _):- dumpST,throw(into_group(P,G)).
 /*
@@ -133,6 +186,7 @@ into_group(P,G):-
   set_grid_nums(Gs), arg(1,Gs,G).
 into_group(P,G):- maplist(into_group,P,Gs),!, set_grid_nums(Gs), combine_grids(overlay,Gs,G).
 */
+
 
 gather_object(Obj1,Var,Expression,Grid,Grid):-
   create_bag(Obj1),
@@ -220,5 +274,37 @@ one_change(resize(C1, C2), Grid1, Grid2):- plain_var(Grid2), grid_size(Grid1, C1
 
 */
 
+arc_expand_arg(objFn(X),Var,into_obj(X,Var)).
+arc_expand_arg(gridFn(X),Var,into_grid(X,Var)).
+arc_expand_arg(groupFn(X),Var,into_group(X,Var)).
+
+goal_expansion_query(Goal,Out):-
+   compound(Goal), predicate_property(Goal,meta_predicate(_)),!,
+   arg(N,Goal,P), compound(P), goal_expansion_query(P,MOut), MOut\=@=P,
+   setarg(N,Goal,MOut), expand_goal(Goal, Out).
+
+goal_expansion_query(Goal,Out):- 
+   get_setarg_p1(I,Goal,P1), compound(I), arc_expand_arg(I,Var,Exp),
+   call(P1,Var),expand_goal((Exp,Goal),Out).
+
+
 :- fixup_exports.
+
+user:goal_expansion(I,Goal,O,Out):-  var(I),\+ source_location(_,_),b_getval('$goal', Term), Goal==Term,
+  goal_expansion_query(Goal,Out)-> Goal\=@=Out,I=O.
+
+% ?- print_grid(gridFn(X)).
+:- export(is_toplevel_query/2).
+:- b_setval('$goal', []).
+:- nb_linkval('$goal', []).
+:- b_setval('$goal_expanded', []).
+:- nb_linkval('$goal_expanded', []).
+user:expand_query(Goal, Expanded, Bindings, ExpandedBindings):- 
+    % Have vars to expand and varnames are empty
+    quietly((Bindings\==[],prolog_load_context(variable_names,Vs), Vs ==[])), % this prevents the loop
+    b_setval('$variable_names', Bindings),
+    nb_linkval('$goal', Goal),
+    debug(expand_query,'~q',[b_setval('$variable_names', Bindings)]),
+    expand_query(Goal, Expanded, Bindings, ExpandedBindings),
+    nb_linkval('$goal_expanded', Expanded).
 

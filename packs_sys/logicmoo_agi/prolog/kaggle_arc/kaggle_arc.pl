@@ -32,14 +32,14 @@ decl_pt(G):- ground(G), !, assertz_new(decl_pt(G)).
   :- dynamic(prolog:'$exported_op'/3).
   :- assert((system:'$exported_op'(_,_,_):- fail)).
   %:- multifile('$exported_op'/3).
-  %:- (getenv('DISPLAY',_) -> true ; setenv('DISPLAY','10.0.0.122:0.0')).
+  :- (getenv('DISPLAY',_) -> true ; setenv('DISPLAY','10.0.0.122:0.0')).
   :- SL  is 2_147_483_648*8, set_prolog_flag(stack_limit, SL ).
-  %:- (getenv('DISPLAY',_) -> guitracer ; true).
+  % :- (getenv('DISPLAY',_) -> guitracer ; true).
   :- set_prolog_flag(toplevel_print_anon,true).
   :- set_prolog_flag(toplevel_print_factorized,true).
   :- set_prolog_flag(answer_write_options, [quoted(true), portray(true), max_depth(20), attributes(portray)]).
 
-  clsmake:- cls,update_changed_files.  
+clsmake:- cls,update_changed_files.  
 
 
 % SWISH ARC
@@ -144,11 +144,14 @@ run_arc_io(TestID,ExampleNum,In,Out):-
   \+ is_buggy_pair(TestID*ExampleNum,_),
   time(show_arc_pair_progress(TestID,ExampleNum,In,Out)).
 
+make_indivs(Pred,In,Out,InC,OutC):-
+ mass(Out,OMass), mass(In,IMass), OMass>IMass, !,
+ make_indivs(Pred,Out,In,OutC,InC).
 
 make_indivs(Pred,In,Out,InC,OutC):-
   writeln(inC(Pred)),
   call(Pred,In,InC),
-  %add_shape_lib(in,InC),
+  add_shape_lib(pair,InC),
   writeln(outC(Pred)),
   call(Pred,Out,OutC),
   %add_shape_lib(out,OutC),
@@ -175,39 +178,52 @@ show_indivs(IH,IV,OH,OV,Pred,When,PairName,In,Out,SF):-
     describe_feature(OutC,[call(writeln('OUT'))|INFO])),!,
   show_pair_I_info(NameIn,NameOut,InC,OutC).
 */
+get_pair(PairEnv):- nb_current(pairEnv,PairEnv),is_dict(PairEnv),!.
+get_pair(PairEnv):- 
+  PairEnv = pair{in:_In,out:_Out,test:_PairName,mappings:[],inC:_InC,outC:_OutC,objs:[],options:[],removed:[],added:[], kept:[],
+    in_i:_InImage,out_i:_OutImage, current_i:_},
+  nb_linkval(pairEnv,PairEnv),!.
 
 show_arc_pair_progress(TestID,ExampleNum,In,Out):-
+ 
  must_det_l((
 	name_the_pair(TestID,ExampleNum,In,Out,PairName),
 	grid_size(In,IH,IV), grid_size(Out,OH,OV),
 	nop(writeln(oi(size(IH,IV)->size(OH,OV)))),
 	ignore((more_task_info(TestID,III),pt(III),nl)), 
   clear_shape_lib(in),clear_shape_lib(out),clear_shape_lib(pair),clear_shape_lib(noise),  
+  get_pair(PairEnv),
+  make_fti(IH,IV,PairName+in,In,_,_,_,_,InImage),
+  make_fti(OH,OV,PairName+out,Out,_,_,_,_,OutImage),
+  set(PairEnv,in_i) = InImage,
+  set(PairEnv,out_i) = OutImage,
+  set(PairEnv,test) = PairName,
+  set(PairEnv,in) = In,
+  set(PairEnv,out) = Out,
   %print_collapsed
   show_pair_grid(IH,IV,OH,OV,original_in,original_out,PairName,In,Out),
   make_indivs(individuate_complete,In,Out,InC,OutC),
-  Pair = pair{in:In,out:Out,test:PairName,inC:InC,outC:OutC},
   pred_intersection(overlap_same_obj,InC,OutC,RetainedIn,RetainedOut,Removed,Added),
-  add_shape_lib(removed,Removed),
-  add_shape_lib(in,RetainedIn),
-  add_shape_lib(out,RetainedOut),
-  add_shape_lib(pair,RetainedOut),
-  add_shape_lib(added,Added),
-  make_indivs(individuate_second_pass,In,Out,InP2,OutP2),
-  make_indivs(individuate_complete,InP2,OutP2,InC2,OutC2),
-  
-  dash_char,dash_char,dash_char,dash_char,
-
+  add_shape_lib(in,Removed),
+  add_shape_lib(pair,RetainedIn),
+  % add_shape_lib(pair,RetainedOut),
+  add_shape_lib(out,Added),
   max_min(IH,OH,IOH,_),
   max_min(IV,OV,IOV,_),
+  %make_indivs(individuate_second_pass,In,Out,InP2,OutP2),
+  %make_indivs(individuate_complete,InP2,OutP2,InC2,OutC2),
+
+
+  dash_char,dash_char,dash_char,dash_char,
+
 
   show_pair_diff(IH,IV,   OH, OV,retained_in,retained_out,PairName,RetainedIn,RetainedOut),
   show_pair_grid(IH,IV,   OH, OV,original_in,original_out,PairName,In,Out),
   show_pair_grid(IH,IV,   OH, OV,i_pass1,o_pass1,PairName,InC,OutC),
   show_pair_diff(IOH,IOV,IOH,IOV,removed,added,PairName,Removed,Added),
   show_pair_grid(IH,IV,   OH, OV,original_in,original_out,PairName,In,Out),
-  show_pair_grid(IH,IV,   OH, OV,i_pass1,o_pass1,PairName,InP2,OutP2),
-  show_pair_grid(IH,IV,   OH, OV,i_pass1,o_pass1,PairName,InC2,OutC2),
+  %show_pair_grid(IH,IV,   OH, OV,i_pass1,o_pass1,PairName,InP2,OutP2),
+  %show_pair_grid(IH,IV,   OH, OV,i_pass1,o_pass1,PairName,InC2,OutC2),
   show_pair_diff(IH,IV,   OH, OV,i_pass2,o_pass2,PairName,InC,OutC),
   !)).
   /*

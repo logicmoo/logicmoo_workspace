@@ -36,11 +36,13 @@ tersify0(I,I):- var(I),!.
 tersifyC(D):- is_dict(D),!.
 tersifyC(av(_,_)).
 tersifyC(objFn(_)).
+tersifyC(groupFn(_)).
 
 tersify1(av(_,Blue), -(Blue)):-!.
 tersify1(I,O):- compound(I), tersifyC(I),!,I=O.
 tersify1(I,gridFn(S)):- is_grid(I), into_gridnameA(I,O),!,sformat(S,'~w',[O]).
 tersify1(I,gridFn(O)):- is_grid(I),tersifyG(I,O),!.
+tersify1(I,groupFn(O)):- is_group(I),why_grouped(O,I),!.
 tersify1(gridFn(I),gridFn(O)):-tersifyG(I,O).
 tersify1(I,objFn(S)):- is_object(I), o2g(I,O),!,sformat(S,"' ~w '",[O]).
 

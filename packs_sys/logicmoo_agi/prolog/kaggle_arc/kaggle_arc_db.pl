@@ -19,15 +19,6 @@ assert_id_cell(ID,-(C,HV)):- assert(cmem(ID,HV,C)).
 assert_hvc_cell(_,_,_,C):- plain_var(C). % free_cell(C),!.
 assert_hvc_cell(ID,H,V,C):- hv_point(H,V,HV),assert(cmem(ID,HV,C)).
 
-:- dynamic(is_grid_id/2).
-grid_to_id(Grid,ID):- atom(Grid),!,ID=Grid.
-grid_to_id(Grid,ID):- grid_to_ggrid(Grid,GGrid),grid_to_id0(GGrid,ID).
-grid_to_id0(Grid,ID):- is_grid_id(Grid,ID),!.
-grid_to_id0(Grid,ID):- gensym('grid_',ID),assert_id_grid_cells(ID,Grid),assert(is_grid_id(Grid,ID)),!.
-
-grid_to_ggrid(Grid,GGrid):- ground(Grid),Grid=GGrid,!.
-grid_to_ggrid(Grid,GGrid):- copy_term(Grid,GGrid),
-  numbervars(GGrid,1,_),!.
 
 :- dynamic(is_grid_size/3).
 % Grid to_fast_workspace
@@ -135,8 +126,7 @@ point_to_hvc(C-Point,H,V,C):- must(hv_point(H,V,Point)),!.
 %point_ to_hvc(Inf,Inf,offset_ranges(_,_,_,_)).
 
 make_grid(H,V,Grid):- max_min(H,1,HH,_), max_min(V,1,VV,_),
-   max_min(HH,32,_,HHH),max_min(VV,32,_,VVV),
-   
+   max_min(HH,32,_,HHH),max_min(VV,32,_,VVV),!,   
    grid_size_nd(Grid,HHH,VVV),!.
 
 insert_row(N,Row,Grid,NewGrid):- grid_size(Grid,H,V), insert_row(N,Row,Grid,H,V,NewGrid).

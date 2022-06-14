@@ -281,11 +281,11 @@ assert_IndvS(NamedExampleNum,Iv,P):- P=..[F|Args],
 :- dynamic(reuse_grid_nums/1).
 
 
-enum_object(S):- is_gridname(S,_).
+enum_object(S):- is_grid_id(S,_).
 enum_object(S):- is_group_saved(_,IndvS),member(S,IndvS).
 
 store_individuals_non_shared(Gridname,Grid):- 
-   set_gridname(Grid,Gridname),
+   set_grid_id(Grid,Gridname),
    individuals_non_shared(Grid,IndvS),
    set_named_indivs(Gridname,IndvS).
 
@@ -297,7 +297,7 @@ set_named_indivs(Gridname,IndvS):-
    asserta(is_group_saved(Gridname,IndvS)),!.
 
 ensure_individuals_non_shared(Gridname):- is_group_saved(Gridname,_),!.
-ensure_individuals_non_shared(Gridname):- is_gridname(Grid,Gridname),!,
+ensure_individuals_non_shared(Gridname):- is_grid_id(Grid,Gridname),!,
    store_individuals_non_shared(Gridname,Grid),!.
 ensure_individuals_non_shared(Gridname):- throw(cannot_find((Gridname))).
 
@@ -336,7 +336,7 @@ with_each_indiv(G,I):- individuals(G,I).
 
 
 individuals(Grid,IndvS):- 
-   get_gridname(Grid,Gridname),
+   grid_to_id(Grid,Gridname),
    grid_shared_with(Gridname,With),
    locally(b_setval(grid_shared,With),
             individuals_common(Grid,IndvS)).
@@ -599,13 +599,13 @@ offset_points(OH,OV,Point,LPoint):- map_pred(if_point_offset(OH,OV),Point,LPoint
 if_point_offset(OH,OV,Point,LPoint):- atom(Point), hv_point(H,V,Point),HH is H +OH -1, VV is V + OV -1,hv_point(HH,VV,LPoint).
 
 grid_to_individual(Grid,OUT):-
-  get_gridname(Grid,GN),
+  grid_to_id(Grid,GN),
   grid_size(Grid,H,V),
   globalpointlist(Grid,Points),
   embue_points(GN,H,V,1,1,H,V,Points,OUT).
 
 make_embued_points(Grid,H,V,Indv2,IndvS):- 
-  get_gridname(Grid,GN),
+  grid_to_id(Grid,GN),
   maplist(embue_points(GN,H,V),Indv2,IndvS).
 
 %embue_points(GN,_,_,I,I):-!.
@@ -807,7 +807,7 @@ grid_info(Name,IO,Grid):-
   PairName = (Name*IO),
   test_info(Name,InfoF),
   wqnl(fav(PairName,InfoF)),
-  set_gridname(Grid,PairName),
+  set_grid_id(Grid,PairName),
   describe_feature(Grid,[grid_dim,colors_count_size,colors_count,num_objects]),
   compute_shared_indivs(Grid,UnsharedIn),
   colors_count_size(Grid,CCS),

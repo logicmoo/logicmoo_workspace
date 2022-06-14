@@ -55,7 +55,7 @@ show_rules:-
 
 contains_nonvar(N,Info):- sub_term(E,Info),nonvar_or_ci(E),E=N,!.
 
-max_min(A,B,C,D):- must_be_free(C),must_be_free(D),notrace(max_min0(A,B,C,D)).
+max_min(A,B,C,D):- must_be_free(C),must_be_free(D),max_min0(A,B,C,D).
 max_min0(A,B,B,B):- plain_var(A),!.
 max_min0(A,B,A,A):- plain_var(B),!.
 max_min0(A,B,A,B):- A>B,!.

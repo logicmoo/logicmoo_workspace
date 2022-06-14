@@ -9,31 +9,19 @@
 :- endif.
 
 
-:- dynamic(is_gridname/2).
+:- dynamic(is_grid_id/2).
 
-set_gridname(Grid,Name):- nb_setval(grid_name,Name),
-  assertion((ground(Name),nonvar_or_ci(Grid))),
-  asserta_new(is_gridname(Grid,Name)).
+set_grid_id(Grid,ID):-
+  my_assertion((ground(ID),nonvar_or_ci(Grid))),
+  nb_setval(grid_name,ID),
+  ignore(( \+ into_gridnameA(Grid,ID),
+  copy_term(Grid,GGrid),numbervars(GGrid,1,_),
+  asserta(is_grid_id(Grid,GGrid)))).
 
-%get_gridname(Grid,Name):- is_gridname(Grid,Name)*->true; (plain_var(Name)->(nb_current(grid_name,Name),Name\=[],get_gridname(Grid,Name))).
-get_gridname(Grid,Name):- is_gridname(Grid,Name).
-get_gridname(In,Name*ExampleNum*in):- kaggle_arc(Name,ExampleNum,In,_).
-get_gridname(Out,Name*ExampleNum*out):- kaggle_arc(Name,ExampleNum,_,Out).
-get_gridname(Grid,Name):- is_grid(Grid),must_be_free(Name),gensym('grid_',Name),asserta(is_gridname(Grid,Name)).
+:- dynamic(is_grid_id/2).
 
-into_gridname(G,TstName):- nonvar_or_ci(G), into_gridnameA(GVar,TstName),G=@=GVar,!.
-into_gridname(G,TstName):- makeup_gridname(TstName),
-  set_gridname(G,TstName),!.
+%grid_to_id(Grid,Name):- is_grid_id(Grid,Name)*->true; (plain_var(Name)->(nb_current(grid_name,Name),Name\=[],grid_to_id(Grid,Name))).
 
-makeup_gridname(GridName):- gensym('GridName_',TstName), GridName = TstName*('ExampleNum'+0)*io.
-
-into_gridnameA(G,Name*ExampleNum*in):- kaggle_arc(Name,ExampleNum,G,_).
-into_gridnameA(G,Name*ExampleNum*out):- kaggle_arc(Name,ExampleNum,_,G).
-into_gridnameA(G,TstName):- is_gridname(G,TstName).
-into_gridnameA(G,TstName):- is_shared_saved(TstName,G).
-into_gridnameA(G,TstName):- is_unshared_saved(TstName,G).
-into_gridnameA(G,TstName*T):- fix_test_name(TstName+T,Name,ExampleNum),kaggle_arc(Name,ExampleNum,G,_).
-into_gridnameA(G,TstName):- learned_color_inner_shape(TstName,magenta,BG,G,_),get_bgc(BG).
 
 
 kaggle_arc_db(Name,Example,Num,out,G):- kaggle_arc(Name,Example+Num,_,G).
@@ -101,18 +89,6 @@ print_info(A):- is_group(A),debug_indiv(A).
 print_info(A):- into_obj(A,Obj),print_info(Obj).
 print_info([]):-!.
 print_info(A):- pt(A).
-
-o2g(Obj,Glyph):- object_glyph(Obj,Glyph).
-o2c(Obj,Glyph):- color(Obj,Glyph).
-o2ansi(Obj,S):- o2c(Obj,C),o2g(Obj,G),atomic_list_concat([' ',G,' '],O),!,sformat(F,'~q',[O]),wots(S,color_print(C,F)).
-:- dynamic(g2o/2).
-
-into_obj(G,O):- no_repeats(O,into_obj0(G,O)).
-into_obj0(G,O):- g2o(G,O),!.
-into_obj0(G,O):- atom(G),!,Chars=[_,_|_],atom_chars(G,Chars),!,member(C,Chars),into_obj(C,O).
-into_obj0(G,O):- is_grid(G),!,grid_to_individual(G,O).
-into_obj0(G,E):- plain_var(G),!,enum_object(E),G=E.
-into_obj0(obj(O),obj(O)):- is_list(O),!.
 
 
 :- discontiguous debug_indiv/1. 

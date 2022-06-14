@@ -381,12 +381,13 @@ close_color(green,cyan).
 
 %grid_size(Points,H,V):- is_dict(Points),!,Points.grid_size=grid_size(H,V).
 grid_size(ID,H,V):- is_grid_size(ID,H,V),!.
+grid_size(Group,H,V):- is_group(Group),!,into_grid(Group,Grid),grid_size(Grid,H,V).
 grid_size(Grid,H,V):- quietly(is_object(Grid)), !, vis_hv(Grid,H,V).
-grid_size(Grid,H,V):- is_grid(Grid),grid_size_nd(Grid,H,V),!.
+grid_size(Grid,H,V):- is_grid(Grid),!,grid_size_nd(Grid,H,V),!.
 %grid_size([G|Grid],H,V):- is_list(G), length(G,H),length([G|Grid],V),!.
 grid_size(Points,H,V):- pmember(grid_size(H,V),Points),ground(H-V),!.
 %grid_size([G|Grid],H,V):- is_list(G),is_list(Grid), grid_size_nd([G|Grid],H,V),!.
-grid_size(Points,H,V):- points_range(Points,_LoH,_LoV,_HiH,_HiV,H,V),!.
+grid_size(Points,H,V):- is_points_list(Points),points_range(Points,_LoH,_LoV,_HiH,_HiV,H,V),!.
 %grid_size(O,_,_):- trace_or_throw(no_grid_size(O)).
 grid_size(_,30,30).
 
@@ -419,31 +420,6 @@ grid_size_nd([C,R|Rows],H,V):-
    length(R,H),
    (is_list(C)->true;(length(C,H),maplist(make_lengths(H),Rows))).
 grid_size_nd([L],H,(1)):- (plain_var(L)->between(1,32,H);true), length(L,H).
-
-
-closure_grid_to_object(Orig,Grid,NewObj):- 
-  object_indv_id(Orig,ID,_Iv),
-  grid_size(Grid,H,V),  
-  globalpoints(Grid,Points),
-  make_indiv_object(ID,H,V,Points,[object_shape(grid)],PartialObj),
-  transfer_props(Orig,[loc_xy,colors,object_shape],PartialObj,NewObj),!.
-
-closure_grid_to_group(Orig,Grid,Group):- individuate(Orig,Grid,Group).
-
-into_grid(P,G):- quietly(into_grid(P,G, _)).
-
-into_grid(Grid,Grid, (=) ):- is_grid(Grid),!.
-into_grid(Obj,Grid, closure_grid_to_object(Obj)):- is_object(Obj),!, object_grid(Obj,Grid).
-into_grid(Grp,Grid, closure_grid_to_group(Grp)):- is_group(Grp), !, object_grid(Grp,Grid).
-into_grid(Points,Grid,globalpoints):- is_points_list(Points), !, points_to_grid(Points,Grid),!.
-into_grid(Naming,Grid, Closure ):- named_gridoid(Naming,NG),!, into_grid(NG,Grid, Closure).
-into_grid(Points,Grid, throw_no_conversion(Points)):-
-  grid_size(Points,GH,GV),
-  make_grid(GH,GV,Grid),
-  forall(between(1,GV,V),
-   ((nth1(V,Grid,Row),forall(between(1,GH,H),      
-     (hv_value_or(Points,CN,H,V,_)->
-        nb_set_nth1(H,Row,CN)))))),!.
 
 
 %points_to_grid(Points,Grid):- is_grid(Points),Points=Grid,!.

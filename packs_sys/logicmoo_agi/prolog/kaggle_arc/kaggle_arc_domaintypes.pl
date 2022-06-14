@@ -41,6 +41,7 @@ subtypes(C,C).
 subtypes(C,S):- subClassOf(S,C).
 
 
+allow_dir_list(colormass,[n,s,e,w]). 
 allow_dir_list(rectangle,[n,s,e,w]). 
 allow_dir_list(diamonds,[nw,sw,se,ne]).
 allow_dir_list(polygs,[n,s,e,w,nw,sw,se,ne]).
@@ -93,8 +94,9 @@ subClassOf(round,symmetric).
 
 meets_indiv_criteria(_,_).
 
-
+% =============================
 % Color types
+% =============================
 is_fg_color(C):- attvar(C),!,get_attr(C,ci,fg(_)).
 is_fg_color(C):- is_bg_color(C),!,fail.
 is_fg_color(C):- is_color(C),!.
@@ -140,7 +142,7 @@ is_point(P):- is_cpoint(P).
 is_lpoint(P):- is_point(P), \+ is_gpoint(P).
 
 is_points_list(P):- var(P),!,fail.
-is_points_list([G|L]):- is_point(G),notrace(maplist(is_point,L)).
+is_points_list([G|L]):- is_point(G),maplist(is_point,L).
 
 enum_colors(OtherColor):- named_colors(Colors),!,member(OtherColor,Colors).
 enum_fg_colors(Color):- enum_colors(Color),is_color_no_bgc(Color).

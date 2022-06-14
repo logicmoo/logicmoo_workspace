@@ -139,8 +139,8 @@ new_test_pair(PairName):-
   retractall(is_shared_saved(PairName,_)),
   retractall(is_unshared_saved(PairName*_,_)),
   retractall(is_unshared_saved(PairName,_)),
-  retractall(is_gridname(PairName*_,_)),
-  retractall(is_gridname(PairName,_)),!.
+  retractall(is_grid_id(PairName*_,_)),
+  retractall(is_grid_id(PairName,_)),!.
 
 name_the_pair(TestID,Type,Num,In,Out,PairName):- 
   name_the_pair(TestID,Type+Num,In,Out,PairName).
@@ -157,8 +157,8 @@ name_the_pair(TestID,ExampleNum,In,Out,PairName):-
         nl,wqnl(arc1(TestID)),nl,nl,dash_char(60,"A"),nl)),   
   GridNameIn= PairName*in,
   GridNameOut= PairName*out,
-  set_gridname(In,GridNameIn),
-  set_gridname(Out,GridNameOut),  
+  set_grid_id(In,GridNameIn),
+  set_grid_id(Out,GridNameOut),  
   test_info(TestID,Info), pt(fav(TestID,Info)),nl)).
   
 
