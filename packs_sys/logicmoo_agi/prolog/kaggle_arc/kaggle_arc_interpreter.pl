@@ -128,15 +128,19 @@ named_gridoid(ID,G):- plain_var(ID),!,known_gridoid(ID,G).
 %named_gridoid(ID,G):- plain_var(ID),!,dumpST,throw(var_named_test(ID,G)).
 named_gridoid(ID,G):- known_gridoid(ID,G).
 
-known_gridoid(ID,G):- ID= TstName*ExampleNum*in, fix_test_name(TstName,Name,_),!,kaggle_arc(Name,ExampleNum,G,_).
-known_gridoid(ID,G):- ID= TstName*ExampleNum*out, fix_test_name(TstName,Name,_),!,kaggle_arc(Name,ExampleNum,_,G).
-known_gridoid(ID,G):- fix_test_name(ID,Name,_),kaggle_arc(Name,tst+0,G,_),!.
-known_gridoid(ID,G):- nonvar(ID),ID=(_*_),!,fix_test_name(ID,Name,ExampleNum),kaggle_arc(Name,ExampleNum,G,_).
-known_gridoid(ID,G):- learned_color_inner_shape(ID,magenta,BG,G,_),get_bgc(BG).
-known_gridoid(ID,G):- is_grid_id(G,ID).
-known_gridoid(ID,G):- is_shared_saved(ID,G).
-known_gridoid(ID,G):- is_unshared_saved(ID,G).
-known_gridoid(ID,G):- (atom(ID);string(ID)),notrace(catch(atom_to_term(ID,Term,_),_,fail)),Term\==ID,!,known_gridoid(Term,G).
+known_gridoid(ID,GO):- known_gridoid0(ID,G),to_real_grid(G,GO).
+known_gridoid0(ID,G):- is_grid_id(G,ID).
+known_gridoid0(ID,G):- is_shared_saved(ID,G).
+known_gridoid0(ID,G):- is_unshared_saved(ID,G).
+known_gridoid0(ID,G):- learned_color_inner_shape(ID,magenta,BG,G,_),get_bgc(BG).
+known_gridoid0(ID,G):- (atom(ID);string(ID)),notrace(catch(atom_to_term(ID,Term,_),_,fail)),Term\==ID,!,known_gridoid0(Term,G).
+known_gridoid0(ID,G):- ID= TstName*ExampleNum*IO, fix_test_name(TstName,Name,_),kaggle_arc_io(Name,ExampleNum,IO,G).
+known_gridoid0(ID,G):- nonvar(ID),ID=(_*_),fix_test_name(ID,Name,ExampleNum),kaggle_arc(Name,ExampleNum,G,_).
+known_gridoid0(ID,G):- fix_test_name(ID,Name,_),kaggle_arc(Name,tst+0,G,_).
+
+to_real_grid(G,GO):- unnumbervars(G,G1),get_bgc(BG),subst(G1,bg,BG,GO). % ,ignore([[BG|_]|_]=GO).
+
+kaggle_arc_io(Name,ExampleNum,IO,G):- kaggle_arc(Name,ExampleNum,In,Out), ((IO=in,G=In);(IO=out,G=Out)).
 
 into_gridnameA(G,TstName):- known_gridoid(TstName,G).
 
@@ -280,31 +284,34 @@ arc_expand_arg(groupFn(X),Var,into_group(X,Var)).
 
 goal_expansion_query(Goal,Out):-
    compound(Goal), predicate_property(Goal,meta_predicate(_)),!,
-   arg(N,Goal,P), compound(P), goal_expansion_query(P,MOut), MOut\=@=P,
-   setarg(N,Goal,MOut), expand_goal(Goal, Out).
+   arg(N,Goal,P), compound(P), goal_expansion_query(P,MOut), 
+   MOut\=@=P, setarg(N,Goal,MOut), expand_goal(Goal, Out).
 
-goal_expansion_query(Goal,Out):- 
+goal_expansion_query(Goal,Out):- compound(Goal),
    get_setarg_p1(I,Goal,P1), compound(I), arc_expand_arg(I,Var,Exp),
    call(P1,Var),expand_goal((Exp,Goal),Out).
 
 
 :- fixup_exports.
 
-user:goal_expansion(I,Goal,O,Out):-  var(I),\+ source_location(_,_),b_getval('$goal', Term), Goal==Term,
-  goal_expansion_query(Goal,Out)-> Goal\=@=Out,I=O.
+goal_expansion(Goal,I,Out,O):-  var(I), \+ source_location(_,_),nb_current('$goal', Term),% writeq(Term=@=Goal),nl,
+  Goal=@=Term,
+  (goal_expansion_query(Goal,Out)-> Goal\=@=Out),I=O.
 
 % ?- print_grid(gridFn(X)).
-:- export(is_toplevel_query/2).
-:- b_setval('$goal', []).
+%:- export(is_toplevel_query/2).
+%:- b_setval('$goal', []).
 :- nb_linkval('$goal', []).
-:- b_setval('$goal_expanded', []).
+%:- b_setval('$goal_expanded', []).
 :- nb_linkval('$goal_expanded', []).
-user:expand_query(Goal, Expanded, Bindings, ExpandedBindings):- 
+expand_query(Goal, Expanded, Bindings, ExpandedBindings):- 
     % Have vars to expand and varnames are empty
-    quietly((Bindings\==[],prolog_load_context(variable_names,Vs), Vs ==[])), % this prevents the loop
-    b_setval('$variable_names', Bindings),
     nb_linkval('$goal', Goal),
+    quietly((Bindings\==[],prolog_load_context(variable_names,Vs), Vs ==[])), % this prevents the loop
+    nb_linkval('$variable_names', Bindings),
     debug(expand_query,'~q',[b_setval('$variable_names', Bindings)]),
+    writeq(Goal+Bindings),nl,
     expand_query(Goal, Expanded, Bindings, ExpandedBindings),
-    nb_linkval('$goal_expanded', Expanded).
+    nb_linkval('$goal_expanded', Expanded).    
+
 

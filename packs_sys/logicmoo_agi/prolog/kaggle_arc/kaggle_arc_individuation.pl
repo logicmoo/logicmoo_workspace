@@ -40,12 +40,19 @@ individuation_macros(defaults2, [fourway, shape_lib(noise),shape_lib(pair),shape
  all, by_color, done, defaults]).
 
 % never add done to macros
-individuation_macros(subshapes, [
+individuation_macros(subshape_main, [
    shape_lib(hammer), % is a sanity test/hack
    dg_line(d), dg_line(u), 
    hv_line(h), hv_line(v), 
    merged(Z,Z), % merge lines into square
-   rectangle]).
+   rectangle,
+   by_color % any after this wont find individuals unless this is commented out
+   ]).
+
+individuation_macros(subshapes, [
+   subshape_main,
+   by_color % any after this wont find individuals unless this is commented out
+   ]).
 
 individuation_macros(jumps,
   [ jumps(hv_line(h)), jumps(hv_line(v)), % multicolored lines
@@ -61,17 +68,19 @@ individuation_macros(std_shape_lib, [
 
 individuation_macros(complete, [  % progress,
     std_shape_lib, % stuff that was learned/shown previously
-    colormass, % blobs of any shape that are the same color
+    +max_learn_objects(colormass,20),
+    +max_iterate(colormass,20),
+    colormass,
+    %colormass, % blobs of any shape that are the same color
     fourway, % find fold patterns 
     colormass_subshapes, % subdivide the color masses .. for example a square with a dot on it
-    macro(subshapes), % scan for nomral shapes (see subshapes macro)
-    macro(jumps),% run the "jumps" macro
+    subshape_main, % scan for nomral shapes (see subshapes macro)
+    jumps,% run the "jumps" macro
     connected(jumps(X),jumps(X)), % merge connected jumps    
     merged(Z,Z), % merge objects of identical types
     find_contained, % mark any "completely contained points"
     find_engulfed, % objects the toplevel subshapes detector found but neglacted containment on 
     combine_duplicates, % make sure any objects are perfectly the same part of the image are combined
-    by_color, % any after this wont find individuals unless this is commented out
     dots, % any after this wont find individuals unless this is commented out
     leftover_as_one, % any after this wont find individuals unless this is commented out
     done]).
@@ -126,6 +135,40 @@ fix_indivs_options(I,[I]):-!.
 
 
 :- style_check(+singleton).
+
+
+
+
+/*
+goal_expansion(Goal,Out):- compound(Goal), arg(N,Goal,E), 
+   compound(E), E = set(Obj,Member), setarg(N,Goal,Var),
+   expand_goal((Goal,b_set_dict(Member,Obj,Var)),Out).
+*/
+get_setarg_p1(E,Cmpd,SA):-  compound(Cmpd), get_setarg_p2(E,Cmpd,SA).
+get_setarg_p2(E,Cmpd,SA):- arg(N,Cmpd,E), SA=setarg(N,Cmpd).
+get_setarg_p2(E,Cmpd,SA):- arg(_,Cmpd,Arg),get_setarg_p1(E,Arg,SA).
+
+system:term_expansion((Head:-Body),Out):-
+   get_setarg_p1(I,Head,P1), compound(I), I = set(Obj,Member),
+   call(P1,Var),
+   expand_term((Head:- b_set_dict(Member,Obj,Var), Body),Out).
+
+%goal_expansion(Goal,'.'(Image, Objs, Obj)):- Goal = ('.'(Image, Objs, A), Obj = V),  var(Obj).
+
+goal_expansion_setter(Goal,Out):-
+   compound(Goal), predicate_property(Goal,meta_predicate(_)),!,
+   arg(N,Goal,P), compound(P), goal_expansion_setter(P,MOut),
+   setarg(N,Goal,MOut), expand_goal(Goal, Out).
+
+goal_expansion_setter(Goal,Out):- 
+   get_setarg_p1(I,Goal,P1), compound(I), I = set(Obj,Member),
+   call(P1,Var),
+   expand_goal((Goal,b_set_dict(Member,Obj,Var)),Out).
+
+
+
+goal_expansion(Goal,Out):- goal_expansion_setter(Goal,Out).
+
 
 grid_shared_with(TestName*ExampleNum*in,TestName*ExampleNum*out):-!.
 grid_shared_with(TestName*ExampleNum*out,TestName*ExampleNum*in):-!.
@@ -239,18 +282,19 @@ make_fti(GH,GV,ID,Grid,Sofar,Reserved,Options,Points,Image):-
   statistics(cputime,X),Timeleft is X+6,
   Image = _{
    % Options and TODO List (are actually same things)
-   todo:Options,options:Options,options_o:Options,
-   timeleft:Timeleft,
+   todo:Options, options:Options, options_o:Options, todo_prev:[],
+   % how much time is left before we turn on debugger
+   timeleft:Timeleft, iteration_max:20,
    % Grid and point representations
-   grid:Grid,points:Points,
+   grid:Grid, points:Points,
    % Original copies of Grid and point representations
-   grid_o:Grid,points_o:Points,
+   grid_o:Grid, points_o:Points,
    % objects found in grid and object that are reserved to not be found
-   objs:Sofar, robjs:Reserved,
+   objs:Sofar, robjs:Reserved, objs_prev:[],
    % Notes and debug info
    notes:[], debug:[],
    % height width and lookup key for image
-   h:GH,v:GV,id:ID}.
+   h:GH, v:GV, id:ID}.
 
 individuals_raw(GH,GV,ID,Options,Reserved,Points,Grid,IndvSRaw):-
  must_det_l((
@@ -301,8 +345,10 @@ individuals_list(Image,GH,GV,Sofar,ID,Options,Reserved,Points,Grid,IndvList,Left
     individuals_list(Image,GH,GV,SofarUpdated,ID,NewOptions,NewReserved,NextScanPoints,NewGrid,IndvList,LeftOver),!.
 
 individuals_list(Image,GH,GV,Sofar,ID,Options,Reserved,Points,Grid,IndvList,NextScanPoints):-  
-    next_options(Options,Options2),
-    individuals_list(Image,GH,GV,Sofar,ID,Options2,Reserved,Points,Grid,IndvList,NextScanPoints).
+  next_options(Options,Options2),
+  set(Image,objs_prev)=Image.objs,
+  set(Image,todo_prev)=Image.todo,
+  individuals_list(Image,GH,GV,Sofar,ID,Options2,Reserved,Points,Grid,IndvList,NextScanPoints).
 
 individuals_list(_Image,GH,GV,Sofar,ID,Options,_Reserved,Points,_Grid,IndvListOut,[]):- 
  must_det_l(Options==[]),
@@ -323,37 +369,6 @@ individuals_list(_Image,GH,GV,Sofar,ID,Options,_Reserved,Points,_Grid,IndvListOu
 individuals_list(Image,GH,GV,Sofar,ID,Options,Reserved,P,Grid,Sofar,P):-!,
   throw(fail(individuals_list(Image,GH,GV,Sofar,ID,Options,Reserved,P,Grid,Sofar,P))),!.
 
-
-/*
-goal_expansion(Goal,Out):- compound(Goal), arg(N,Goal,E), 
-   compound(E), E = set(Obj,Member), setarg(N,Goal,Var),
-   expand_goal((Goal,b_set_dict(Member,Obj,Var)),Out).
-*/
-get_setarg_p1(E,Cmpd,SA):-  compound(Cmpd), get_setarg_p2(E,Cmpd,SA).
-get_setarg_p2(E,Cmpd,SA):- arg(N,Cmpd,E), SA=setarg(N,Cmpd).
-get_setarg_p2(E,Cmpd,SA):- arg(_,Cmpd,Arg),get_setarg_p1(E,Arg,SA).
-
-system:term_expansion((Head:-Body),Out):-
-   get_setarg_p1(I,Head,P1), compound(I), I = set(Obj,Member),
-   call(P1,Var),
-   expand_term((Head:- b_set_dict(Member,Obj,Var), Body),Out).
-
-%goal_expansion(Goal,'.'(Image, Objs, Obj)):- Goal = ('.'(Image, Objs, A), Obj = V),  var(Obj).
-
-goal_expansion_setter(Goal,Out):-
-   compound(Goal), predicate_property(Goal,meta_predicate(_)),!,
-   arg(N,Goal,P), compound(P), goal_expansion_setter(P,MOut),
-   setarg(N,Goal,MOut), expand_goal(Goal, Out).
-
-goal_expansion_setter(Goal,Out):- 
-   get_setarg_p1(I,Goal,P1), compound(I), I = set(Obj,Member),
-   call(P1,Var),
-   expand_goal((Goal,b_set_dict(Member,Obj,Var)),Out).
-
-
-
-goal_expansion(Goal,Out):- goal_expansion_setter(Goal,Out).
-
   
 
 fti(Image):- fti(Image,Image.todo).
@@ -372,6 +387,15 @@ fti(Image,[glyphic|set(Image,todo)]):-
   %object_indv_id(Whole,_,Iv),
   maplist(make_point_object(ID,GH,GV,[object_shape(abstract),object_shape(colorlink)]),Points,IndvList),
   append([Image.objs,IndvList,[Whole]],set(Image,objs)),!.
+
+fti(Image,[max_learn_objects(Routine,Max)|set(Image,todo)]):-
+   set(Image,options)= [max_learn_objects(Routine,Max)|Image.options].
+
+fti(Image,[Routine|set(Image,todo)]):- 
+   member(max_learn_objects(Routine,Max),Image.options),
+   length(Image.objs,Count),
+   Count>Max,!,fail.
+
 
 fti(Image,_):-
    length(Image.objs,Count),
@@ -447,6 +471,14 @@ fti(Image,[options(AddOptions)|TODO]):-
   listify(AddOptions,OptionsL),
   append(Image.options,OptionsL,set(Image,options)),
   append(TODO,OptionsL,set(Image,todo)).
+
+fti(Image,[macrof(AddTodo)|set(Image,todo)]):-
+  listify(AddTodo,TodoLst),
+  fti(Image,TodoLst).
+
+fti(Image,[macro(AddTodo)|TODO]):-
+  listify(AddTodo,TodoL),
+  append([progress|TodoL],TODO,set(Image,todo)).
 
 
 fti(Image,[DO|TODO]):-
