@@ -147,7 +147,7 @@ into_gridnameA(G,TstName):- known_gridoid(TstName,G).
 grid_to_id(Grid,ID):- atom(Grid),!,ID=Grid.
 grid_to_id(Grid,ID):- var(Grid),!,known_gridoid(Grid,ID).
 grid_to_id(Grid,ID):- \+ ground(Grid), copy_term(Grid,GGrid),numbervars(GGrid,1,_),!,grid_to_id(GGrid,ID).
-grid_to_id(Grid,ID):- known_gridoid(ID,GVar),Grid=@=GVar,!.
+grid_to_id(Grid,ID):- known_gridoid0(ID,GVar),Grid=@=GVar,!.
 grid_to_id(Grid,ID):- must_be_free(ID),makeup_gridname(ID), set_grid_id(Grid,ID),!.
 
 makeup_gridname(GridName):- gensym('GridName_',ID), GridName = ID*('ExampleNum'+0)*io.
