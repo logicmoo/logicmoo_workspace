@@ -44,6 +44,7 @@ individuation_macros(subshape_main, [
    shape_lib(hammer), % is a sanity test/hack
    dg_line(d), dg_line(u), 
    hv_line(h), hv_line(v), 
+   jumps,% run the "jumps" macro
    merges(Z,Z), % merge lines into square
    rectangle % any after this wont find individuals unless this is commented out
    ]).
@@ -51,13 +52,15 @@ individuation_macros(subshape_main, [
 individuation_macros(by_color, X):-
    findall(by_color(Color),enum_colors(Color),X).
 
-individuation_macros(subshapes, [
+individuation_macros(subshape_in_object, [
    subshape_main,
-   by_color % any after this wont find individuals unless this is commented out
+   progress,
+   by_color, % any after this wont find individuals unless this is commented out
+   done % hopefully is never ran outside subshape_in_object !
    ]).
 
 individuation_macros(jumps,
-  [ progress, 
+  [ %progress, 
     jumps(hv_line(h)), % multicolored lines
     jumps(hv_line(v)),
     jumps(dg_line(d)), % multicolored diagonals
@@ -75,7 +78,7 @@ individuation_macros(std_shape_lib, [
                      shape_lib(in), 
     shape_lib(out), % random objects learned from other passes
     shape_lib(pair), % random objects learned from this pass
-    shape_lib(hammer), 
+    shape_lib(hammer), % cheater objects for hammer sanity test/hack
     shape_lib(l_shape), % random objects shown by douglas to look for
     shape_lib(human)]). % random objects shown by humans to look for
 
@@ -87,8 +90,7 @@ individuation_macros(complete, [  % progress,
     %colormass, % blobs of any shape that are the same color
     fourway, % find fold patterns 
     colormass_subshapes, % subdivide the color masses .. for example a square with a dot on it
-    subshape_main, % scan for nomral shapes (see subshapes macro)
-    jumps,% run the "jumps" macro
+    subshape_main, % macro for sharing code with "subshape_in_object"
     connects(jumps(X),jumps(X)), % connected jumps    
     merges(Z,Z), % merge objects of identical types (horizontal lines become solid squares)
     find_contained, % mark any "completely contained points"
@@ -125,10 +127,10 @@ individuation_macros(unused, [
 
 fix_indivs_options(O,L):-is_list(O),maplist(fix_indivs_options,O,OL),append(OL,L).
 fix_indivs_options(G,[G]):- var(G),!.
+fix_indivs_options(I,O):- atom(I),individuation_macros(I,M),!,fix_indivs_options(M,O),!.
 fix_indivs_options(macro(I),[macro(O)]):- fix_indivs_options(I,O).
 fix_indivs_options(detect(O),[detect(O)]):-!.
 fix_indivs_options(O,[detect(O)]):- is_gridoid(O),!.
-fix_indivs_options(I,O):- individuation_macros(I,O),!.
 fix_indivs_options(I,O):-listify(I,O),!.
 
 
@@ -427,7 +429,7 @@ colormass_subshapes(Image,ImageObjs):-
   localpoints(Obj,ContainedPoints),
   vis_hv(Obj,H,V),
   object_grid(Obj,Grid),
-  individuate(H,V,Image.id,[subshapes],Grid,ContainedPoints,NewInside),
+  individuate(H,V,Image.id,[subshape_in_object],Grid,ContainedPoints,NewInside),
   append(Image.objs,NewInside,set(Image.objs)),
   colormass_subshapes(Image,Next).
 
@@ -498,6 +500,16 @@ fsi(Image,ReservedIO,Grid,TODO,H,V,Sofar,ID,[retain_grid(Options)|TODO],Reserved
   listify(Options,OptionsL),!,
   must_det_l(individuals_list(Image,H,V,Sofar,ID,OptionsL,ReservedIO,PointsIO,Grid,IndvList,_LeftOver)),
   pt(yellow,PointsIO).
+
+%fti(Image,[by_color([])|set(Image,todo)]):-!.
+has_color(C,Point):- C-_ = Point.
+
+fti(Image,[by_color(C)|set(Image,todo)]):-
+  my_partition(has_color(C),Image.points,ThisGroup,set(Image,points)),
+  ignore(((ThisGroup\==[],make_indiv_object(Image.id,Image.h,Image.v,
+    ThisGroup,[object_shape(by_color(C))],ColorObj)),addObject(Image,ColorObj))).
+
+addObject(Image,Obj):- append(Image.objs,[Obj],set(Image,objs)).
 
 fti(Image,[by_color([])|set(Image,todo)]):-!.
 
@@ -672,12 +684,13 @@ fsi(_Image,Reserved,NewGrid,TODO,H,V,Sofar,_ID,[ignore_rest|TODO],Reserved,_Poin
 
 fsi(_Image,Reserved,Grid,[This,ignore_rest,done|TODO],_H,_V,Sofar,_ID,[just(This)|TODO],Reserved,Points,Grid,Sofar,Points):- !.
 
+/*
 
 fsi(_Image,Reserved,Grid,NewOptions,_H,_V,Sofar,_ID,[by_color|TODO], Reserved, Points, Grid,Sofar, Points):- !,
    append(
      [(by_color([(black), (blue),  (red),   (green),(yellow),
                      (silver),(purple),(orange),(cyan), (brown)]))],TODO,NewOptions).
-
+*/
 
 fsi(_Image,Reserved,Grid,TODO,GH,GV,Sofar,ID,[leftover_as_one|TODO], Reserved, Points, Grid,SofarIndvList, []):- !,
    make_indiv_object(ID,GH,GV,Points,[object_shape(combined),object_shape(leftover_as_one)],LeftOverObj), 

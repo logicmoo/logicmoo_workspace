@@ -16,8 +16,8 @@ print_collapsed0(Size,G):- Size<10, !, call(G).
 print_collapsed0(Size,G):- Size>20, !, wots(_S,G).
 print_collapsed0(_,G):- wots(S,G),write(S).
 
-tersify(I,O):- \+ tracing,!,I=O.
-tersify(I,O):- term_variables(I,Vs), \+ ( member(V,Vs), attvar(V)),!,I=O.
+tersify(I,O):- tracing,!,I=O.
+%tersify(I,O):- term_variables(I,Vs), \+ ( member(V,Vs), attvar(V)),!,I=O.
 tersify(I,O):- quietly((tersify2(I,M),tersify3(M,O))).
 
 terseA(_,[],[]):- !.

@@ -258,7 +258,7 @@ find_contained(H,V,ID,[Found|Sofar],[Found|SofarInsteadM],NextScanPoints,NextSca
   must_det_l((
   points_to_grid(H,V,ContainedPoints,Grid),
   %once(object_indv_id(Found,ID,_);grid_to_id(Grid,ID)),
-  individuate(H,V,ID,[complete],Grid,ContainedPoints,NewInside),
+  individuate(H,V,ID,[subshape_in_object],Grid,ContainedPoints,NewInside),
   maplist(mention_inside(Found),NewInside,NewInsideM))),
   ignore((length(ContainedPoints,N),N>1,quietly(print_grid(H,V,[Found|NewInsideM])))),
   find_contained(H,V,ID,Sofar,SofarInstead,ScanPointsInstead,NextScanPointsInstead),
