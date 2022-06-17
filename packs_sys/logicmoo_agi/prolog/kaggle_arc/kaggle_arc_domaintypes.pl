@@ -305,10 +305,13 @@ all_colors(RedHammer,Hammer):- change_color(RedHammer,Hammer).
 all_colors(RedHammer,RedHammer).
 
 
-change_color_blue(Group,List):- override_group(change_color_blue(Group,List)),!.
-change_color_blue(RedHammer,BlueHammer):- 
+change_color_blue(Group,List):- change_color_to(blue,Group,List).
+
+change_color_to(Blue,Group,List):- override_group(change_color_to(Blue,Group,List)),!.
+change_color_to(Blue,RedHammer,BlueHammer):- 
   color(RedHammer,CurrentColor),
-  swap_colors(blue,CurrentColor,RedHammer,BlueHammer).
+  swap_colors(Blue,CurrentColor,RedHammer,BlueHammer).
+
 
 change_color(Group,List):- override_group(change_color(Group,List)),!.
 change_color(RedHammer,Hammer):- 

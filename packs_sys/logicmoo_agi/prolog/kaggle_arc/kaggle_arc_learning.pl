@@ -20,8 +20,9 @@ subtractGrid(Out,In,Alien):- plain_var(In),!,remove_global_points(Alien,Out,In).
 find_by_shape(Grid,Find,Founds):- 
  makeup_gridname(ID),
  vis_hv(Find,GH,GV),
- colorless(Find,F), 
- Prog = (all_rotations(F,F1),
+ decolorize(Find,F), 
+ Prog = 
+  (all_rotations(F,F1),
    %print_grid(F1),!,
    ogs(H,V,F1,Grid),% trace,
    grid_to_points(F1,GH,GV,Points),

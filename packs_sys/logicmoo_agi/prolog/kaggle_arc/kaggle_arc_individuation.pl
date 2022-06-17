@@ -83,6 +83,29 @@ individuation_macros(std_shape_lib, [
     shape_lib(l_shape), % random objects shown by douglas to look for
     shape_lib(human)]). % random objects shown by humans to look for
 
+individuation_macros(pre_pass, [  % progress,
+    std_shape_lib, % stuff that was learned/shown previously
+    +max_learn_objects(colormass,20),
+    +max_iterate(colormass,20),
+    colormass,
+    %colormass, % blobs of any shape that are the same color
+    fourway, % find fold patterns 
+    colormass_subshapes, % subdivide the color masses .. for example a square with a dot on it
+    subshape_main, % macro for sharing code with "subshape_in_object"
+    connects(jumps(X),jumps(X)), % connected jumps    
+    merges(Z,Z), % merge objects of identical types (horizontal lines become solid squares)
+    find_contained, % mark any "completely contained points"
+    find_engulfed, % objects the toplevel subshapes detector found but neglacted containment on 
+    combine_duplicates, % make sure any objects are perfectly the same part of the image are combined
+    all,
+    release_objs_lighter(2),
+    when(len(objs)>30,release_objs_lighter(3)),
+    when((len(points)=<10),dots),    
+    when((len(points)>10),by_color),
+    %when((colors(i.points,Cs),len(Cs)<2),dots), % any after this wont find individuals unless this is commented out
+    leftover_as_one, % any after this wont find individuals unless this is commented out
+    done]).
+
 individuation_macros(complete, [  % progress,
     std_shape_lib, % stuff that was learned/shown previously
     +max_learn_objects(colormass,20),
@@ -98,14 +121,18 @@ individuation_macros(complete, [  % progress,
     find_engulfed, % objects the toplevel subshapes detector found but neglacted containment on 
     combine_duplicates, % make sure any objects are perfectly the same part of the image are combined
     all,
-    dots, % any after this wont find individuals unless this is commented out
+    release_objs_lighter(2),
+    when(len(objs)>30,release_objs_lighter(3)),
+    when((len(points)=<10),dots),    
+    when((len(points)>10),by_color),
+    %when((colors(i.points,Cs),len(Cs)<2),dots), % any after this wont find individuals unless this is commented out
     leftover_as_one, % any after this wont find individuals unless this is commented out
     done]).
 
 individuation_macros(defaults, [ complete ]).
 
 individuation_macros(unused, [
-  detect(_Image_), % makes an image detectable
+  detect(_VM_), % makes an image detectable
   detect(_Group_), % makes several objects and images availble 
   done, %terminates object detection
   ls, % shows current director contents
@@ -155,7 +182,7 @@ system:term_expansion((Head:-Body),Out):-
    call(P1,Var),
    expand_term((Head:- b_set_dict(Member,Obj,Var), Body),Out).
 
-%goal_expansion(Goal,'.'(Image, Objs, Obj)):- Goal = ('.'(Image, Objs, A), Obj = V),  var(Obj).
+%goal_expansion(Goal,'.'(VM, Objs, Obj)):- Goal = ('.'(VM, Objs, A), Obj = V),  var(Obj).
 
 goal_expansion_setter(Goal,Out):-
    compound(Goal), predicate_property(Goal,meta_predicate(_)),!,
@@ -185,7 +212,7 @@ compute_unshared_indivs(In,Unshared):-
    compute_unshared_indivs(GN,Grid,Unshared).
 
 compute_unshared_indivs(_GN,Grid,Unshared):-
-   individuate_complete(Grid,Unshared).
+   individuate(complete,Grid,Unshared).
 
 compute_shared_indivs(In,SharedIndvs):-
    get_grid_and_name(In,Grid,GN),
@@ -201,7 +228,7 @@ ensure_unshared_indivs(In,Unshared):-
    ensure_unshared_indivs(GN,Grid,Unshared).
 ensure_unshared_indivs(GN,Grid,Unshared):-
    is_unshared_saved(GN,Unshared)-> true;
-   individuate_complete(Grid,Unshared),
+   individuate(complete,Grid,Unshared),
    assert(is_unshared_saved(GN,Unshared)).
 
 ensure_shared_indivs(In,SharedIndvs):-
@@ -228,9 +255,7 @@ individuation_reserved_options(ROptions,Reserved,Options):-
       pt(blue,fix_indivs_options(ro=ROptions,r=Reserved,o=Options)))).
 
 
-individuate_default(Grid,IndvS):- individuate(defaults,Grid,IndvS).
-individuate_second_pass(Grid,IndvS):- individuate([second_pass],Grid,IndvS).
-individuate_complete(Grid,IndvS):- individuate(complete,Grid,IndvS).
+%individuate_second_pass(Grid,IndvS):- individuate([second_pass],Grid,IndvS).
 
 individuate(_ROptions,Grid,IndvS):- Grid==[],!,IndvS=[].
 individuate(ROptions,GridIn,IndvS):-
@@ -245,7 +270,7 @@ individuate(ROptions,GridIn,IndvS):-
 individuate(GH,GV,ID,ROptions,_Grid,Points,IndvS):- \+ is_list(ROptions), is_glyphic(Points,GH,GV), !, individuate_glyphic(GH,GV,ID,Points,IndvS).
 individuate(H,V,ID,ROptions,Grid,Points,IndvSS):-
    individuation_reserved_options(ROptions,Reserved,NewOptions),
-   individuals_raw(H,V,ID,NewOptions,Reserved,Points,Grid,IndvSRaw),
+   individuals_raw(_VM,H,V,ID,NewOptions,Reserved,Points,Grid,IndvSRaw),
    %as_debug(9,ptt((individuate=IndvSRaw))),
    make_indiv_object_list(ID,H,V,IndvSRaw,IndvS1),
    combine_objects(IndvS1,IndvS),list_to_set(IndvS,IndvSS),
@@ -269,27 +294,27 @@ individuate_glyphic(GH,GV,ID,PointsIn,IndvSO):-
   override_object(birth(glyphic),IndvS,IndvSO),
   save_grouped(individuate_glyphic(ID),IndvSO).
 
-% Thunk(ArgList->Image)
-call_fsi(Image,NewReserved,NewGrid,NewOptions,GH,GV,Sofar,ID,Options,Reserved,Points,Grid,SofarMaybeNew,NextScanPoints):-
-  (var(Image)->make_fti(GH,GV,ID,Grid,Sofar,Reserved,Options,Points,Image);true),
-  clause(fti(Image,Options),Body),
+% Thunk(ArgList->VM)
+call_fsi(VM,NewReserved,NewGrid,NewOptions,GH,GV,Sofar,ID,Options,Reserved,Points,Grid,SofarMaybeNew,NextScanPoints):-
+  (var(VM)->make_fti(GH,GV,ID,Grid,Sofar,Reserved,Options,Points,VM);true),
+  clause(fti(VM,Options),Body),
   call((Body,deterministic(YN))),
   (YN == true -> ! ; true),
-  NewReserved = Image.robjs,
-  NewOptions = Image.todo,
-  NewGrid = Image.grid,
-  NextScanPoints = Image.points,
-  SofarMaybeNew = Image.objs .
-call_fsi(Image,NewReserved,NewGrid,NewOptions,GH,GV,Sofar,ID,Options,Reserved,Points,Grid,SofarMaybeNew,NextScanPoints):-
-  clause(fsi(Image,NewReserved,NewGrid,NewOptions,GH,GV,Sofar,ID,Options,Reserved,Points,Grid,SofarMaybeNew,NextScanPoints),Body),
+  NewReserved = VM.robjs,
+  NewOptions = VM.todo,
+  NewGrid = VM.grid,
+  NextScanPoints = VM.points,
+  SofarMaybeNew = VM.objs .
+call_fsi(VM,NewReserved,NewGrid,NewOptions,GH,GV,Sofar,ID,Options,Reserved,Points,Grid,SofarMaybeNew,NextScanPoints):-
+  clause(fsi(VM,NewReserved,NewGrid,NewOptions,GH,GV,Sofar,ID,Options,Reserved,Points,Grid,SofarMaybeNew,NextScanPoints),Body),
   call((Body,deterministic(YN))),
   (YN == true -> ! ; true).
 
 
 
-make_fti(GH,GV,ID,Grid,Sofar,Reserved,Options,Points,Image):-
-  statistics(cputime,X),Timeleft is X+6,
-  Image = _{
+make_fti(GH,GV,ID,Grid,Sofar,Reserved,Options,Points,VM):-  
+  statistics(cputime,X),Timeleft is X+10,
+  ArgVM = _{
    % Options and TODO List (are actually same things)
    todo:Options, options:Options, options_o:Options, todo_prev:[],
    % how much time is left before we turn on debugger
@@ -303,41 +328,42 @@ make_fti(GH,GV,ID,Grid,Sofar,Reserved,Options,Points,Image):-
    % Notes and debug info
    notes:[], debug:[],
    % height width and lookup key for image
-   h:GH, v:GV, id:ID}.
+   h:GH, v:GV, id:ID},
+   (var(VM) -> ArgVM = VM ; ArgVM >:< VM).
 
-individuals_raw(GH,GV,ID,Options,Reserved,Points,Grid,IndvSRaw):-
+individuals_raw(VM,GH,GV,ID,Options,Reserved,Points,Grid,IndvSRaw):-
  must_det_l((
   must_be_free(IndvSRaw),
-  make_fti(GH,GV,ID,Grid,[],Reserved,Options,Points,Image),
-  individuals_list(Image,GH,GV,[],ID,Options,Reserved,Points,Grid,Indv_0,_LeftOverPoints),
+  make_fti(GH,GV,ID,Grid,[],Reserved,Options,Points,VM),
+  individuals_list(VM,GH,GV,[],ID,Options,Reserved,Points,Grid,Indv_0,_LeftOverPoints),
   =(Indv_0,Indv_1),
-  unraw_inds(Image,Indv_1,Indv_2),  
+  unraw_inds(VM,Indv_1,Indv_2),  
   largest_first(Indv_2,IndvSRaw))).
 
-unraw_inds(_Image,I,O):- I=O,!.
+unraw_inds(_VM,I,O):- I=O,!.
 
-unraw_inds(Image,IndvS,IndvOO):-   
+unraw_inds(VM,IndvS,IndvOO):-   
   largest_first(IndvS,Indv),
   reverse(Indv,IndvR),
   %test_cond_or(indiv(min(SZ)),1),
   %SZ=3,
   check_minsize(_,IndvR,IndvR2),
-  unraw_inds2(Image,_,IndvR2,IndvR3),!,
+  unraw_inds2(VM,_,IndvR2,IndvR3),!,
   check_minsize(_,IndvR3,IndvOO).
 
 get_new_task_obj(Obj):-
    Obj = _{ original_grid: _ ,unprocessed_grid:_, original_points:_, points:_, options:_, todo:_,
      objs:_, grid_id:_, in_or_out:_, grid_size:_, reserver_indivs:_  }.
 
-individuals_list(_Image,_GH,_GV,Sofar,_ID,_Options,_Reserved,Points,_Grid,Sofar,PointsO):- Points == [], !,PointsO=[].
+individuals_list(_VM,_GH,_GV,Sofar,_ID,_Options,_Reserved,Points,_Grid,Sofar,PointsO):- Points == [], !,PointsO=[].
 
-individuals_list(Image,GH,GV,Sofar,ID,Options,Reserved,Points,Grid,IndvList,LeftOver):-    
+individuals_list(VM,GH,GV,Sofar,ID,Options,Reserved,Points,Grid,IndvList,LeftOver):-    
     assertion(maplist(is_cpoint,Points)),
     assertion(is_list([sofar1(Options)|Sofar])),
     assertion(maplist(nonvar_or_ci,[fsi,Grid,Points])),
     assertion(maplist(nonvar_or_ci,[fsi,Reserved,Options,Sofar,GV,GH,ID])),
      
-      (((call_fsi(Image,NewReserved,NewGrid,NewOptions,GH,GV,Sofar,ID,Options,Reserved,Points,Grid,SofarMaybeNew,NextScanPoints)))),
+      (((call_fsi(VM,NewReserved,NewGrid,NewOptions,GH,GV,Sofar,ID,Options,Reserved,Points,Grid,SofarMaybeNew,NextScanPoints)))),
           intersection(SofarMaybeNew,Sofar,Unchanged,New,GoneMissing),
           Options = [Head|_],
           ((\+ (sub_term(E,New), compound(E), E = birth(_))) -> override_object(birth(Head),New,NewUpdated) ; New=NewUpdated),
@@ -351,15 +377,15 @@ individuals_list(Image,GH,GV,Sofar,ID,Options,Reserved,Points,Grid,IndvList,Left
     once( (SofarUpdated\==Sofar) ; (Options\==NewOptions) ; (NextScanPoints\== Points); (NewGrid\=@= Grid); (NewReserved\=@= Reserved)),
     %wqnl(indv(Options)=Indv),   
     
-    individuals_list(Image,GH,GV,SofarUpdated,ID,NewOptions,NewReserved,NextScanPoints,NewGrid,IndvList,LeftOver),!.
+    individuals_list(VM,GH,GV,SofarUpdated,ID,NewOptions,NewReserved,NextScanPoints,NewGrid,IndvList,LeftOver),!.
 
-individuals_list(Image,GH,GV,Sofar,ID,Options,Reserved,Points,Grid,IndvList,NextScanPoints):-  
+individuals_list(VM,GH,GV,Sofar,ID,Options,Reserved,Points,Grid,IndvList,NextScanPoints):-  
   next_options(Options,Options2),
-  set(Image,objs_prev)=Image.objs,
-  set(Image,todo_prev)=Image.todo,
-  individuals_list(Image,GH,GV,Sofar,ID,Options2,Reserved,Points,Grid,IndvList,NextScanPoints).
+  set(VM,objs_prev)=VM.objs,
+  set(VM,todo_prev)=VM.todo,
+  individuals_list(VM,GH,GV,Sofar,ID,Options2,Reserved,Points,Grid,IndvList,NextScanPoints).
 
-individuals_list(_Image,GH,GV,Sofar,ID,Options,_Reserved,Points,_Grid,IndvListOut,[]):- 
+individuals_list(_VM,GH,GV,Sofar,ID,Options,_Reserved,Points,_Grid,IndvListOut,[]):- 
  must_det_l(Options==[]),
  must_be_free(IndvListOut),
   assertion(is_list([sofar2(Options)|Sofar])),
@@ -375,74 +401,98 @@ individuals_list(_Image,GH,GV,Sofar,ID,Options,_Reserved,Points,_Grid,IndvListOu
   LeftOverObj = [],
   flatten([Sofar,IndvList,IndvList2,LeftOverObj],IndvListOut),!.
 
-individuals_list(Image,GH,GV,Sofar,ID,Options,Reserved,P,Grid,Sofar,P):-!,
-  throw(fail(individuals_list(Image,GH,GV,Sofar,ID,Options,Reserved,P,Grid,Sofar,P))),!.
+individuals_list(VM,GH,GV,Sofar,ID,Options,Reserved,P,Grid,Sofar,P):-!,
+  throw(fail(individuals_list(VM,GH,GV,Sofar,ID,Options,Reserved,P,Grid,Sofar,P))),!.
 
   
 
-fti(Image):- fti(Image,Image.todo).
+fti(VM):- fti(VM,VM.todo).
 
 fti(_,[]).
-%fti(Image,_):- Image.points=[], !.
+%fti(VM,_):- VM.points=[], !.
 fti(_,[done|_]):- !.
 
-fti(Image,_):-
-   length(Image.objs,Count),
-  (member(progress,Image.options); Count > 30; (statistics(cputime,X), X > Image.timeleft)) -> 
-  as_debug(8,(mass(Image.objs,Mass),pt(t([found_mass=(Count,Mass),fsi=Image.todo])))),fail.
+fti(VM,_):-
+   length(VM.objs,Count),
+  (member(progress,VM.options); Count > 30; (statistics(cputime,X), X > VM.timeleft)) -> 
+  as_debug(8,(mass(VM.objs,Mass),pt(t([found_mass=(Count,Mass),fsi=VM.todo])))),fail.
 
+fti(VM,[release_objs_lighter(Two)|set(VM,todo)]):-
+  my_partition(less_or_equals_mass(Two),VM.objs,Light,set(VM,objs)),
+  maplist(globalpoints,Light,Points),
+  append_sets([VM.points|Points],set(VM,points)).
 
-fti(Image,[glyphic|set(Image,todo)]):-
-  Points = Image.points,
-  GH = Image.h,
-  GV = Image.v,
-  ID = Image.id,
+less_or_equals_mass(Mass,Obj):- mass(Obj,M),M=<Mass.
+
+fti(VM,[glyphic|set(VM,todo)]):-
+  Points = VM.points,
+  GH = VM.h,
+  GV = VM.v,
+  ID = VM.id,
   length(Points,Len),
   make_indiv_object(ID,GH,GV,Points,[mass(Len),vis_hv(GH,GV),object_shape(combined),object_shape(grid),object_shape(image)],Whole),
   %object_indv_id(Whole,_,Iv),
   maplist(make_point_object(ID,GH,GV,[object_shape(abstract),object_shape(colorlink)]),Points,IndvList),
-  append([Image.objs,IndvList,[Whole]],set(Image,objs)),!.
+  append([VM.objs,IndvList,[Whole]],set(VM,objs)),!.
 
-fti(Image,[max_learn_objects(Routine,Max)|set(Image,todo)]):-
-   set(Image,options)= [max_learn_objects(Routine,Max)|Image.options].
+fti(VM,[max_learn_objects(Routine,Max)|set(VM,todo)]):-
+   set(VM,options)= [max_learn_objects(Routine,Max)|VM.options].
 
-fti(Image,[Routine|set(Image,todo)]):- 
-   member(max_learn_objects(Routine,Max),Image.options),
-   length(Image.objs,Count),
+fti(VM,[Routine|set(VM,todo)]):- 
+   member(max_learn_objects(Routine,Max),VM.options),
+   length(VM.objs,Count),
    Count>Max,!,fail.
 
-fti(Image,[call(G)|set(Image,todo)]):- call(G).
+fti(VM,[call(G)|set(VM,todo)]):- call_expanded(VM,G).
+fti(VM,[when(G,D)|TODO]):- (call_expanded(VM,G)->R=D;R=call(pt(skipped(G,D)))),
+  set(VM,todo) = [R|TODO].
 
+call_expanded(VM,G):-  exp_call(VM,G,GG),G\==GG,!,call_expanded(VM,GG).
+call_expanded(_VM,G):- catch(call(G),_,rtrace(G)).
 
-%fti(Image,[calc_largest_square_block|set(Image,todo)]):-
-%  calc_largest_square_block(Image),Image.objs,set(Image,objs),Image.points,set(Image,points)),!.
+exp_call(_,Var,Var):- var(Var),!.
+exp_call(_,Var,Var):- is_list(Var),!.
+exp_call(_,Var,Var):- number(Var),!.
+exp_call(VM,length(G1,G2),length(GG1,GG2)):-!, exp_call(VM,G1,GG1),exp_call(VM,G2,GG2).
+exp_call(VM,(G1,G2),(GG1,GG2)):-!, exp_call(VM,G1,GG1),exp_call(VM,G2,GG2).
+exp_call(VM,(G1;G2),(GG1;GG2)):-!, exp_call(VM,G1,GG1),exp_call(VM,G2,GG2).
+exp_call(VM,(G1->G2),(GG1->GG2)):-!, exp_call(VM,G1,GG1),exp_call(VM,G2,GG2).
+exp_call(VM,K,Value):- atom(K),get_dict(K,VM,Value),!.
+%  len(points(i))>6
+exp_call(VM,G,GG):- compound(G),arg(N,G,A),nonvar(A),exp_call(VM,A,AA),A\==AA,!,setarg(N,G,AA),exp_call(VM,G,GG).
+exp_call(_VM,P,(length(X,R),call(F,R,N))):- P=..[F,E,N],compound(E),E=len(X).
+exp_call(_VM,Expr,Value):- notrace(catch(Value is Expr,_,fail)).
+exp_call(_,E,E).
+
+%fti(VM,[calc_largest_square_block|set(VM,todo)]):-
+%  calc_largest_square_block(VM),VM.objs,set(VM,objs),VM.points,set(VM,points)),!.
 
 
 % Find free points that are contained in objects and individuate them in their own way
-fti(Image,[find_contained|set(Image,todo)]):-
-  find_contained(Image.h,Image.v,Image.id,Image.objs,set(Image,objs),Image.points,set(Image,points)),!.
+fti(VM,[find_contained|set(VM,todo)]):-
+  find_contained(VM.h,VM.v,VM.id,VM.objs,set(VM,objs),VM.points,set(VM,points)),!.
 
-fti(Image,[colormass_subshapes|set(Image,todo)]):-
-  colormass_subshapes(Image,Image.objs),!.
+fti(VM,[colormass_subshapes|set(VM,todo)]):-
+  colormass_subshapes(VM,VM.objs),!.
 
-colormass_subshapes(_Image,[]):-!.
-colormass_subshapes(Image,ImageObjs):-
-  select(Obj,ImageObjs,Next),
+colormass_subshapes(_VM,[]):-!.
+colormass_subshapes(VM,VMObjs):-
+  select(Obj,VMObjs,Next),
   localpoints(Obj,ContainedPoints),
   vis_hv(Obj,H,V),
   object_grid(Obj,Grid),
-  individuate(H,V,Image.id,[subshape_in_object],Grid,ContainedPoints,NewInside),
-  append(Image.objs,NewInside,set(Image.objs)),
-  colormass_subshapes(Image,Next).
+  individuate(H,V,VM.id,[subshape_in_object],Grid,ContainedPoints,NewInside),
+  append(VM.objs,NewInside,set(VM.objs)),
+  colormass_subshapes(VM,Next).
 
 
 
 % Find object that are contained in objects and individuate them in their own way  (TODO mame this more complete)
 % Find free points that are contained in objects and individuate them in their own way
-fti(Image,[find_engulfed|set(Image,todo)]):-
-  print_grid(Image.grid),  
-  % ( \+ is_input(Image)-> trace ; true),
-  find_engulfed(Image).    find_engulfed(Image):- find_engulfed(Image,Image.objs,set(Image,objs)),!.
+fti(VM,[find_engulfed|set(VM,todo)]):-
+  print_grid(VM.grid),  
+  % ( \+ is_input(VM)-> trace ; true),
+  find_engulfed(VM).    find_engulfed(VM):- find_engulfed(VM,VM.objs,set(VM,objs)),!.
 
     
 replace_i_each(OtherObjects,[I|NewInside],[O|NewInsideM],NewOtherObjects):-!,
@@ -450,73 +500,73 @@ replace_i_each(OtherObjects,[I|NewInside],[O|NewInsideM],NewOtherObjects):-!,
   replace_i_each(OtherObjectsM,NewInside,NewInsideM,NewOtherObjects).
 replace_i_each(E,[],[],E).
 
-fti(Image,[combine_objects|set(Image,todo)]):-
-   combine_objects(Image.objs,set(Image,objs)),!.
+fti(VM,[combine_objects|set(VM,todo)]):-
+   combine_objects(VM.objs,set(VM,objs)),!.
 
-fti(Image,[combine_duplicates|set(Image,todo)]):- 
-   combine_duplicates(Image.objs,set(Image,objs)),!.
+fti(VM,[combine_duplicates|set(VM,todo)]):- 
+   combine_duplicates(VM.objs,set(VM,objs)),!.
 
-fti(Image,[check_engulfed|TODO]):-
-   smallest_first(Image.objs,SmallestFirst),
-   set(Image,objs) = SmallestFirst,
-   set(Image,todo) = [find_engulfed,TODO].
+fti(VM,[check_engulfed|TODO]):-
+   smallest_first(VM.objs,SmallestFirst),
+   set(VM,objs) = SmallestFirst,
+   set(VM,todo) = [find_engulfed,TODO].
 
-fti(Image,[-(DelOptions)|TODO]):-
+fti(VM,[-(DelOptions)|TODO]):-
   listify(DelOptions,OList),
-  my_partition(option_matches(OList),Image.options,_,set(Image,options)),
-  my_partition(option_matches(OList),TODO,_,set(Image,todo)).
+  my_partition(option_matches(OList),VM.options,_,set(VM,options)),
+  my_partition(option_matches(OList),TODO,_,set(VM,todo)).
 
 option_matches(List,Arg):- member(E,List),E==Arg.
 
-fti(Image,[+(AddOptions)|TODO]):-
+fti(VM,[+(AddOptions)|TODO]):-
   listify(AddOptions,OptionsL),
-  append(Image.options,OptionsL,set(Image,options)),
-  append(TODO,OptionsL,set(Image,todo)).
+  append(VM.options,OptionsL,set(VM,options)),
+  append(TODO,OptionsL,set(VM,todo)).
 
-fti(Image,[(OptionsL)|TODO]):-
+fti(VM,[(OptionsL)|TODO]):-
   is_list(OptionsL), \+ is_group(OptionsL), \+ is_grid(OptionsL),!,
-  append(Image.options,OptionsL,set(Image,options)),
-  append(TODO,OptionsL,set(Image,todo)).
+  append(VM.options,OptionsL,set(VM,options)),
+  append(TODO,OptionsL,set(VM,todo)).
 
-fti(Image,[options(AddOptions)|TODO]):-
+fti(VM,[options(AddOptions)|TODO]):-
   listify(AddOptions,OptionsL),
-  append(Image.options,OptionsL,set(Image,options)),
-  append(TODO,OptionsL,set(Image,todo)).
+  append(VM.options,OptionsL,set(VM,options)),
+  append(TODO,OptionsL,set(VM,todo)).
 
-fti(Image,[macrof(AddTodo)|set(Image,todo)]):-
+fti(VM,[macrof(AddTodo)|set(VM,todo)]):-
   listify(AddTodo,TodoLst),
-  fti(Image,TodoLst).
+  fti(VM,TodoLst).
 
-fti(Image,[macro(AddTodo)|TODO]):-
+fti(VM,[macro(AddTodo)|TODO]):-
   listify(AddTodo,TodoL),
-  append([progress|TodoL],TODO,set(Image,todo)).
+  append([progress|TodoL],TODO,set(VM,todo)).
 
 
-fti(Image,[DO|TODO]):-
-  fsi(Image,set(Image,robjs),set(Image,grid),set(Image,todo),
-    Image.h,Image.v,Image.objs,Image.id,[DO|TODO],
-    Image.robjs,Image.points,Image.grid,set(Image,objs),set(Image,points)).
+fti(VM,[DO|TODO]):-
+  fsi(VM,set(VM,robjs),set(VM,grid),set(VM,todo),
+    VM.h,VM.v,VM.objs,VM.id,[DO|TODO],
+    VM.robjs,VM.points,VM.grid,set(VM,objs),set(VM,points)).
 
-% Thunk(Image -> ArgList)
-fsi(Image,ReservedIO,Grid,TODO,H,V,Sofar,ID,[retain_grid(Options)|TODO],ReservedIO,PointsIO,Grid,IndvList,PointsIO):-
+% Thunk(VM -> ArgList)
+fsi(VM,ReservedIO,Grid,TODO,H,V,Sofar,ID,[retain_grid(Options)|TODO],ReservedIO,PointsIO,Grid,IndvList,PointsIO):-
   listify(Options,OptionsL),!,
-  must_det_l(individuals_list(Image,H,V,Sofar,ID,OptionsL,ReservedIO,PointsIO,Grid,IndvList,_LeftOver)),
+  must_det_l(individuals_list(VM,H,V,Sofar,ID,OptionsL,ReservedIO,PointsIO,Grid,IndvList,_LeftOver)),
   pt(yellow,PointsIO).
 
-%fti(Image,[by_color([])|set(Image,todo)]):-!.
+%fti(VM,[by_color([])|set(VM,todo)]):-!.
 has_color(C,Point):- C-_ = Point.
 
-fti(Image,[by_color(C)|set(Image,todo)]):-
-  my_partition(has_color(C),Image.points,ThisGroup,set(Image,points)),
-  ignore(((ThisGroup\==[],make_indiv_object(Image.id,Image.h,Image.v,
-    ThisGroup,[object_shape(by_color(C))],ColorObj)),addObject(Image,ColorObj))).
+fti(VM,[by_color(C)|set(VM,todo)]):-
+  my_partition(has_color(C),VM.points,ThisGroup,set(VM,points)),
+  ignore(((ThisGroup\==[],make_indiv_object(VM.id,VM.h,VM.v,
+    ThisGroup,[object_shape(by_color(C))],ColorObj)),addObject(VM,ColorObj))).
 
-addObject(Image,Obj):- append(Image.objs,[Obj],set(Image,objs)).
+addObject(VM,Obj):- append(VM.objs,[Obj],set(VM,objs)).
 
 /*
-fti(Image,[by_color([])|set(Image,todo)]):-!.
+fti(VM,[by_color([])|set(VM,todo)]):-!.
 
-fsi(_Image,ReservedIO,Grid,[by_color(Rest)|TODO],H,V,Sofar,ID,[by_color(Options)|TODO],ReservedIO,Points,Grid,NewSofar,NextScanPoints):-
+fsi(_VM,ReservedIO,Grid,[by_color(Rest)|TODO],H,V,Sofar,ID,[by_color(Options)|TODO],ReservedIO,Points,Grid,NewSofar,NextScanPoints):-
   listify(Options,OptionsL),!,
   select(C,OptionsL,Rest),
   my_partition(=(C-_),Points,ThisGroup,NextScanPoints),
@@ -526,7 +576,7 @@ fsi(_Image,ReservedIO,Grid,[by_color(Rest)|TODO],H,V,Sofar,ID,[by_color(Options)
 */
 
 % dots that have no adjacent points of the same color are gathered first
-fsi(_Image,Reserved,Grid,['dots'|TODO],H,V,Sofar,ID,['dots'|TODO],Reserved,Points,Grid,[Indv|Sofar],Rest):-
+fsi(_VM,Reserved,Grid,['dots'|TODO],H,V,Sofar,ID,['dots'|TODO],Reserved,Points,Grid,[Indv|Sofar],Rest):-
    %( (H < 6; V < 6) ;   
    maybe_multivar(C),
     select(C-HV,Points,Rest),  \+ free_cell(C),
@@ -538,28 +588,28 @@ fsi(_Image,Reserved,Grid,['dots'|TODO],H,V,Sofar,ID,['dots'|TODO],Reserved,Point
    meets_indiv_criteria(dots,Indv),!.
 
 % dots may have adjacent points of the same color (because we are in 'dots' mode)
-fsi(_Image,Reserved,Grid,['dots'|TODO],H,V,Sofar,ID,['dots'|TODO],Reserved,Points,Grid,[Indv|Sofar],Rest):- !,
+fsi(_VM,Reserved,Grid,['dots'|TODO],H,V,Sofar,ID,['dots'|TODO],Reserved,Points,Grid,[Indv|Sofar],Rest):- !,
    maybe_multivar(C), select(C-HV,Points,Rest),  \+ free_cell(C),
    make_indiv_object(ID,H,V,[object_shape(dots),C-HV],Indv),
    meets_indiv_criteria(dots,Indv),!.
 
 
-fsi(Image,ReservedO,GridO,OptionsOut,H,V,Sofar,ID,[full|TODO],ReservedI,Points,Grid,SofarOut,NextScanPoints):-!,
+fsi(VM,ReservedO,GridO,OptionsOut,H,V,Sofar,ID,[full|TODO],ReservedI,Points,Grid,SofarOut,NextScanPoints):-!,
   grid_to_individual(Grid,Obj),
-  fsi(Image,ReservedO,GridO,OptionsOut,H,V,[Obj|Sofar],ID,TODO,ReservedI,Points,Grid,SofarOut,NextScanPoints).
+  fsi(VM,ReservedO,GridO,OptionsOut,H,V,[Obj|Sofar],ID,TODO,ReservedI,Points,Grid,SofarOut,NextScanPoints).
 
 
-fsi(_Image,ReservedIO,GridO,OptionsO,H,V,Sofar,ID,[shape_lib(Hammer)|TODO],ReservedIO,Points,Grid,SofarOut,NextScanPoints):-!,
+fsi(_VM,ReservedIO,GridO,OptionsO,H,V,Sofar,ID,[shape_lib(Hammer)|TODO],ReservedIO,Points,Grid,SofarOut,NextScanPoints):-!,
   do_shapelib(GridO,OptionsO,H,V,Sofar,ID,[shape_lib(Hammer)|TODO],Points,Grid,SofarOut,NextScanPoints).
 
 
-fsi(_Image,StillReserved,GridO,[use_reserved|TODO],H,V,Sofar,ID,[use_reserved|TODO],Reserved,Points,Grid,SofarOut,NextScanPoints):-
+fsi(_VM,StillReserved,GridO,[use_reserved|TODO],H,V,Sofar,ID,[use_reserved|TODO],Reserved,Points,Grid,SofarOut,NextScanPoints):-
    % length(Reserved,LR), !, %LR < 60, 
    proccess_overlap_reserved(use_reserved,GridO,Grid,ID,H,V,Reserved,Sofar,SofarOut,Points,NextScanPoints,_Unreserved,StillReserved),
    %intersection(SofarOut,Sofar,_Intersected,Found,_LeftOverB), as_debug(8,print_grid(H,V,Obj+ID,Found)),
    !.
 
-fsi(_Image,ReservedO,GridO,TODO,H,V,Sofar,ID,[Obj|TODO],ReservedI,Points,Grid,SofarOut,NextScanPoints):-
+fsi(_VM,ReservedO,GridO,TODO,H,V,Sofar,ID,[Obj|TODO],ReservedI,Points,Grid,SofarOut,NextScanPoints):-
   search_lib(ReservedO,GridO,TODO,H,V,Sofar,ID,[Obj|TODO],ReservedI,Points,Grid,SofarOut,NextScanPoints),
   %intersection(SofarOut,Sofar,_Intersected,Found,_LeftOverB), as_debug(8,print_grid(H,V,Obj+ID,Found)),
   !.
@@ -639,7 +689,7 @@ append_sets(Sets,Set):- append(Sets,List),list_to_set(List,Set).
 % ===============
 % release_points
 % ===============
-fsi(_Image,Reserved,NewGrid,TODO,H,V,Sofar,ID,[release_points|TODO],Reserved,Points,Grid,Sofar,NextScanPoints):-
+fsi(_VM,Reserved,NewGrid,TODO,H,V,Sofar,ID,[release_points|TODO],Reserved,Points,Grid,Sofar,NextScanPoints):-
     globalpoints(Grid,NextScanPoints1),
     globalpoints(Sofar,NextScanPoints2),
     append_sets([Points,NextScanPoints2,NextScanPoints1],NextScanPoints),
@@ -654,17 +704,17 @@ get_option_expansion([A|NO],O):- get_option_expansion(A,AA), !, listify(AA,AL),a
 get_option_expansion(I,O):- individuation_macros(I,O).
 
 
-fsi(_Image,Reserved,Grid,TODO,_H,_V,Sofar,_ID,[retain(_)|TODO],Reserved,Points,Grid,Sofar,Points):-  
+fsi(_VM,Reserved,Grid,TODO,_H,_V,Sofar,_ID,[retain(_)|TODO],Reserved,Points,Grid,Sofar,Points):-  
   Sofar = [], !.
 
-fsi(_Image,Reserved,GridO,TODO,_H,_V,Sofar,_ID,[with_grid(Call)|TODO],Reserved,Points,Grid,Sofar,Points):-
+fsi(_VM,Reserved,GridO,TODO,_H,_V,Sofar,_ID,[with_grid(Call)|TODO],Reserved,Points,Grid,Sofar,Points):-
     call(Call,Grid,GridO).
-fsi(_Image,Reserved,Grid,TODO,_H,_V,Sofar,_ID,[with_points(Call)|TODO],Reserved,Points,Grid,Sofar,PointsO):-
+fsi(_VM,Reserved,Grid,TODO,_H,_V,Sofar,_ID,[with_points(Call)|TODO],Reserved,Points,Grid,Sofar,PointsO):-
     call(Call,Points,PointsO).
-fsi(_Image,Reserved,Grid,TODO,_H,_V,Sofar,_ID,[with_sofar(Call)|TODO],Reserved,Points,Grid,SofarO,Points):-
+fsi(_VM,Reserved,Grid,TODO,_H,_V,Sofar,_ID,[with_sofar(Call)|TODO],Reserved,Points,Grid,SofarO,Points):-
     call(Call,Sofar,SofarO).
 
-fsi(_Image,Reserved,NNewGrid,TODO,H,V,Sofar,ID,[retain(Option)|TODO],Reserved,_Points,Grid,Retained,NextScanPoints):-
+fsi(_VM,Reserved,NNewGrid,TODO,H,V,Sofar,ID,[retain(Option)|TODO],Reserved,_Points,Grid,Retained,NextScanPoints):-
     globalpoints(Grid,NewGPoints),  H> 14, V> 14,
     freeze(W,W>5),filter_indivs(Sofar,[mass(W)];[object_shape(Option)],Retained1),
     filter_indivs(Retained1, \+ object_shape(background),Retained),
@@ -674,7 +724,7 @@ fsi(_Image,Reserved,NNewGrid,TODO,H,V,Sofar,ID,[retain(Option)|TODO],Reserved,_P
     %as_debug(9,print_grid(H,V,'newgrid'+ID,NNewGrid)),
     !.
 
-fsi(_Image,Reserved,Grid,TODO,H,V,Sofar,ID,[into_single_hidden|TODO],Reserved,Points,Grid,SofarIndvS1,Points):- !, 
+fsi(_VM,Reserved,Grid,TODO,H,V,Sofar,ID,[into_single_hidden|TODO],Reserved,Points,Grid,SofarIndvS1,Points):- !, 
     maplist(globalpoints,Sofar,IndvPointSofar), append_sets(IndvPointSofar,IndvPointsL),
     EIndvPoints=[object_shape(combined),object_shape(hidden)|IndvPointsL],
     make_indiv_object(ID,H,V,EIndvPoints,Indv),
@@ -682,69 +732,69 @@ fsi(_Image,Reserved,Grid,TODO,H,V,Sofar,ID,[into_single_hidden|TODO],Reserved,Po
     meets_indiv_criteria(into_single_hidden,IndvPointsL),!.
 
 
-fsi(_Image,Reserved,NewGrid,TODO,H,V,Sofar,_ID,[ignore_rest|TODO],Reserved,_Points,_Grid,Sofar,[]):- !, 
+fsi(_VM,Reserved,NewGrid,TODO,H,V,Sofar,_ID,[ignore_rest|TODO],Reserved,_Points,_Grid,Sofar,[]):- !, 
     make_grid(H,V,NewGrid).
 
-fsi(_Image,Reserved,Grid,[This,ignore_rest,done|TODO],_H,_V,Sofar,_ID,[just(This)|TODO],Reserved,Points,Grid,Sofar,Points):- !.
+fsi(_VM,Reserved,Grid,[This,ignore_rest,done|TODO],_H,_V,Sofar,_ID,[just(This)|TODO],Reserved,Points,Grid,Sofar,Points):- !.
 
 /*
 
-fsi(_Image,Reserved,Grid,NewOptions,_H,_V,Sofar,_ID,[by_color|TODO], Reserved, Points, Grid,Sofar, Points):- !,
+fsi(_VM,Reserved,Grid,NewOptions,_H,_V,Sofar,_ID,[by_color|TODO], Reserved, Points, Grid,Sofar, Points):- !,
    append(
      [(by_color([(black), (blue),  (red),   (green),(yellow),
                      (silver),(purple),(orange),(cyan), (brown)]))],TODO,NewOptions).
 */
 
-fsi(_Image,Reserved,Grid,TODO,GH,GV,Sofar,ID,[leftover_as_one|TODO], Reserved, Points, Grid,SofarIndvList, []):- !,
+fsi(_VM,Reserved,Grid,TODO,GH,GV,Sofar,ID,[leftover_as_one|TODO], Reserved, Points, Grid,SofarIndvList, []):- !,
    make_indiv_object(ID,GH,GV,Points,[object_shape(combined),object_shape(leftover_as_one)],LeftOverObj), 
    append(Sofar,[LeftOverObj],SofarIndvList).
 
 
-fsi(_Image,Reserved,Grid,TODO,H,V,Sofar,ID,[into_single|TODO],Reserved,Points,Grid,[Indv],Points):- !,
+fsi(_VM,Reserved,Grid,TODO,H,V,Sofar,ID,[into_single|TODO],Reserved,Points,Grid,[Indv],Points):- !,
     maplist(globalpoints,Sofar,IndvPoints), append(IndvPoints,IndvPointsL),
     EIndvPoints=[object_shape(combined),object_shape(into_single)|IndvPointsL],
     make_indiv_object(ID,H,V,EIndvPoints,Indv),
     meets_indiv_criteria(into_single_hidden,IndvPoints),!.
 
-%  fsi(_Image,NewReserved,NewGrid,NewOptions,H,V,Sofar,ID,TODO,Reserved,Points,Grid,OutInvdivS,NextScanPoints).
+%  fsi(_VM,NewReserved,NewGrid,NewOptions,H,V,Sofar,ID,TODO,Reserved,Points,Grid,OutInvdivS,NextScanPoints).
 same_lcolor(LargestColor,Obj):- color(Obj,Color),nop(print_grid(Obj)),!,Color==LargestColor.
 
-fsi(_Image,Reserved,Grid,TODO,_H,_V,Sofar,_ID,[IsToBeRewritten|NO],Reserved,Points,Grid,Sofar,Points):-
+fsi(_VM,Reserved,Grid,TODO,_H,_V,Sofar,_ID,[IsToBeRewritten|NO],Reserved,Points,Grid,Sofar,Points):-
     atom(IsToBeRewritten), 
     individuation_macros(IsToBeRewritten,Expansion),!,
     listify(Expansion,ExpansionL),append(ExpansionL,NO,TODO).
 
 
-fti(Image,['fourway'|_]):- !,
-  H = Image.h,
-  V = Image.v,
-  ID = Image.id,
+fti(VM,['fourway'|_]):- !,
+  H = VM.h,
+  V = VM.v,
+  ID = VM.id,
   H > 13, V> 13,
-  largest_first(Image.objs,Ordered),   
+  largest_first(VM.objs,Ordered),   
   
-  grid_to_3x3_objs(Ordered,Image.grid_o,FourWay1s,Keep),
+  grid_to_3x3_objs(Ordered,VM.grid_o,FourWay1s,Keep),
   as_debug(8,writeln('fourway-found')),
               globalpoints(Keep,KeepPoints),!,
-  set(Image,points) = KeepPoints,!,
+  set(VM,points) = KeepPoints,!,
   % set_bgc(LargestColor),  
 
-  %Restart = Image.options_o,!,
-  set(Image,options) = [progress|Image.options],
+  %Restart = VM.options_o,!,
+  set(VM,options) = [progress|VM.options],
   %my_partition(==(fourway),Restart,_,Without4Way),!,
 
-  make_grid(H,V,set(Image,grid)),
-  %points_to_grid(H,V,KeepPoints,set(Image,grid)),!,
+  make_grid(H,V,set(VM,grid)),
+  %points_to_grid(H,V,KeepPoints,set(VM,grid)),!,
 
-  append(Keep,FourWay1s,set(Image,objs)),!,
+  append(Keep,FourWay1s,set(VM,objs)),!,
   as_debug(8,print_grid(H,V,'4-way'+ID,FourWay1s)),!,  
-  as_debug(8,print_grid(H,V,'4-waypoints'+ID,Image.points)),!,
-  set(Image,todo) = [done],!. % Without4Way,!.
+  as_debug(8,print_grid(H,V,'4-waypoints'+ID,VM.points)),!,
+  set(VM,todo) = [done],!. % Without4Way,!.
  
 
-remove_from_image(Image,Data):-    
-    must_det_l((remove_global_points(Data,Image.points,Points),
+remove_from_image(VM,Data):-    
+    must_det_l((remove_global_points(Data,VM.points,Points),
     pt(Points),
-    set(Image,points) = Points)),!.
+    set(VM,points) = Points)),!.
     
 
 
@@ -752,12 +802,12 @@ overwrite_use_so_far(FourWay1s,Sofar,UseSofar):-
   must_det_l((remove_global_points(FourWay1s,Sofar,Sofar1),add_global_points(FourWay1s,Sofar1,UseSofar))),!.
 overwrite_use_so_far(_FourWay1s,Sofar,Sofar).
 
-fsi(_Image,Reserved,NewGrid,TODO,H,V,Sofar,_ID,['regroup'|TODO],Reserved,Points,Grid,OutInvdivS,Points):- 
+fsi(_VM,Reserved,NewGrid,TODO,H,V,Sofar,_ID,['regroup'|TODO],Reserved,Points,Grid,OutInvdivS,Points):- 
   make_indiv_object_list(Grid,H,V,Sofar,OutInvdivS), 
   points_to_grid(H,V,Points,NewGrid).
 
 
-fsi(_Image,Reserved,Grid,TODO,H,V,Sofar,ID,[solid(rectangle)|TODO],Reserved,_Points,Grid,AllOUT,NextScanPoints):- !, fail,
+fsi(_VM,Reserved,Grid,TODO,H,V,Sofar,ID,[solid(rectangle)|TODO],Reserved,_Points,Grid,AllOUT,NextScanPoints):- !, fail,
   globalpoints(Grid,NewGPoints),
   grid_to_segs(Grid,Segs),
   seg_squares(Segs,Squares),
@@ -816,7 +866,7 @@ fsi(_Image,Reserved,Grid,TODO,H,V,Sofar,ID,[solid(rectangle)|TODO],Reserved,_Poi
     segs_to_pointlists([_|Segs],Objs):-   segs_to_pointlists(Segs,Objs).
 
 
-fsi(_Image,Reserved,Grid,OptionsOut,H,V,Sofar,ID,[Option|TODO],Reserved,Points,Grid,NewSofar,RestPoints):- 
+fsi(_VM,Reserved,Grid,OptionsOut,H,V,Sofar,ID,[Option|TODO],Reserved,Points,Grid,NewSofar,RestPoints):- 
   merge_shapes(H,V,ID,Sofar,Option,TODO,OptionsOut,Grid,Points,NewSofar,RestPoints).
 
 merge_shapes(H,V,ID,Sofar,Option,TODO,OptionsOut,_Grid,Points,NewSofar,Points):- 
@@ -835,10 +885,10 @@ cycle_back_in(OptionC,TODO,OptionsOut):-
   length(TODO,N), N2 is floor(N/2),length(LL,N2),append(LL,RR,TODO),append(LL,[OptionC|RR],OptionsOut).
 
 
-fsi(Image,ReservedO,GridO,OptionsOut,H,V,Sofar,ID,[connects(ShapeType)|TODO],Reserved,Points,Grid,NewSofar,RestPoints):- !,
- fsi(Image,ReservedO,GridO,OptionsOut,H,V,Sofar,ID,[connects(ShapeType,ShapeType)|TODO],Reserved,Points,Grid,NewSofar,RestPoints).
+fsi(VM,ReservedO,GridO,OptionsOut,H,V,Sofar,ID,[connects(ShapeType)|TODO],Reserved,Points,Grid,NewSofar,RestPoints):- !,
+ fsi(VM,ReservedO,GridO,OptionsOut,H,V,Sofar,ID,[connects(ShapeType,ShapeType)|TODO],Reserved,Points,Grid,NewSofar,RestPoints).
 
-fsi(_Image,Reserved,Grid,OptionsOut,H,V,Sofar,ID,[Option|TODO],Reserved,Points,Grid,NewSofar,RestPoints):-   
+fsi(_VM,Reserved,Grid,OptionsOut,H,V,Sofar,ID,[Option|TODO],Reserved,Points,Grid,NewSofar,RestPoints):-   
   connects(H,V,ID,Sofar,Option,TODO,OptionsOut,Grid,Points,NewSofar,RestPoints).
 
 
@@ -863,7 +913,7 @@ connection_direction(Connected,Dir):-
      shape_type_dirs(ShapeType,[Dir|_]). 
     %shape_type_dir(ShapeType2,Dirs2),
 
-fsi(_Image,Reserved,Grid,OptionsOut,H,V,Sofar,ID,[Option|TODO],Reserved,Points,Grid,NewSofar,Points):-
+fsi(_VM,Reserved,Grid,OptionsOut,H,V,Sofar,ID,[Option|TODO],Reserved,Points,Grid,NewSofar,Points):-
   jumps(H,V,ID,Sofar,Option,TODO,OptionsOut,Grid,Points,NewSofar,_RestPoints).
 
 jumps(H,V,ID,Sofar,Option,TODO,OptionsOut,Grid,Points,NewSofar,RestPoints):- 
@@ -881,7 +931,7 @@ jumps(H,V,ID,Sofar,Option,TODO,OptionsOut,Grid,Points,NewSofar,RestPoints):-
   combine_2objs(ID,H,V,HV1,HV2,[],[object_shape(Option)],Combined),
   append(SofarLess,[Combined],NewSofar),cycle_back_in(OptionC,TODO,OptionsOut).
 
-fsi(_Image,Reserved,Grid,OptionsOut,H,V,Sofar,ID,[extends(Option)|TODO],Reserved,Points,Grid,NewSofar,NextScanPoints):- 
+fsi(_VM,Reserved,Grid,OptionsOut,H,V,Sofar,ID,[extends(Option)|TODO],Reserved,Points,Grid,NewSofar,NextScanPoints):- 
   extends(H,V,ID,Sofar,Option,TODO,OptionsOut,Points,NewSofar,NextScanPoints).
 
 extends(H,V,ID,Sofar,ShapeType1,TODO,OptionsOut,Points,NewSofar,NextScanPoints):- 
@@ -904,14 +954,14 @@ extends(H,V,ID,Sofar,ShapeType1,TODO,OptionsOut,Points,NewSofar,NextScanPoints):
       make_indiv_object(ID,H,V,GPoints,Info,Combined).
 
 
-fsi(_Image,FinalReserve,Grid,TODO,H,V,Sofar,ID,[cycle_shapes(Shapes)|TODO],Reserved,Points,Grid,IndvList,LeftOver):-
+fsi(_VM,FinalReserve,Grid,TODO,H,V,Sofar,ID,[cycle_shapes(Shapes)|TODO],Reserved,Points,Grid,IndvList,LeftOver):-
    cycle_s(FinalReserve1,H,V,Sofar,ID,Shapes,Reserved,Points,Grid,IndvList1,LeftOver1),
    cycle_s(FinalReserve,H,V,IndvList1,ID,Shapes,FinalReserve1,LeftOver1,Grid,IndvList,LeftOver).
 
     cycle_s(FinalReserve,GH,GV,Sofar,ID,Options,Reserved,Points,Grid,IndvList,LeftOver):-    
         assertion(maplist(is_cpoint,Points)),
         assertion(is_list([sofar1(Options)|Sofar])),
-        fsi(_Image,NewReserved,NewGrid,TODO,GH,GV,Sofar,ID,Options,Reserved,Points,Grid,FoundSofar,NextScanPoints),
+        fsi(_VM,NewReserved,NewGrid,TODO,GH,GV,Sofar,ID,Options,Reserved,Points,Grid,FoundSofar,NextScanPoints),
         assertion(maplist(nonvar_or_ci,[fsi,NewReserved,NewGrid,TODO,FoundSofar,NextScanPoints])),
         assertion(maplist(is_cpoint,NextScanPoints)),
         assertion(is_list([foundSofar1(Options)|FoundSofar])),
@@ -923,7 +973,7 @@ fsi(_Image,FinalReserve,Grid,TODO,H,V,Sofar,ID,[cycle_shapes(Shapes)|TODO],Reser
     cycle_s(Reserved,_GH,_GV,Sofar,_ID,_Options,Reserved,Points,_Grid,Sofar,Points).
 
 
-fsi(_Image,Reserved,Grid,OptionsOut,H,V,Sofar,ID,[Option|TODO],Reserved,Points,Grid,OUT,NextScanPoints):- 
+fsi(_VM,Reserved,Grid,OptionsOut,H,V,Sofar,ID,[Option|TODO],Reserved,Points,Grid,OUT,NextScanPoints):- 
    ( Option \==dots), 
    find_one_individual(H,V,ID,Sofar,Option,TODO,OptionsOut,Reserved,Points,Grid,Indv,NextScanPoints),
    append(Sofar,[Indv],OUT).
@@ -990,17 +1040,17 @@ find_one_in divi dual(GH,GV,Sofar,ID,solid(Option),Reserved,Points,Grid,[object_
     all_individuals_near(Dir,Option,C,[C-HV,C2-HV2,C-HV5,C-HV6],ScanPoints,NextScanPoints,Indv),
     meets_indiv_criteria(Option,Indv).
 
-fsi(_Image,Reserved,Grid,[Option|Options],H,V,Sofar,ID,[Option|Options],Reserved,Points,Grid,OUT,NextScanPoints):- 
+fsi(_VM,Reserved,Grid,[Option|Options],H,V,Sofar,ID,[Option|Options],Reserved,Points,Grid,OUT,NextScanPoints):- 
    
    find_one_indiv idual(H,V,Sofar,ID,Option,Reserved,Points,Grid,IndvPoints,NextScanPoints),
    make_indiv_object(ID,H,V,[birth(Option),object_shape(Option)|IndvPoints],Indv),!,
    append(Sofar,[Indv],OUT).
-%fsi(_Image,Reserved,Grid,[Option|Options],H,V,Sofar,ID,[Option|Options],Reserved,Points,Grid,OUT,NextScanPoints):- 
-%  nop(fsi(_Image,Reserved,Grid,[Option|Options],H,V,Sofar,ID,[Option|Options],Reserved,Points,Grid,OUT,NextScanPoints)).
+%fsi(_VM,Reserved,Grid,[Option|Options],H,V,Sofar,ID,[Option|Options],Reserved,Points,Grid,OUT,NextScanPoints):- 
+%  nop(fsi(_VM,Reserved,Grid,[Option|Options],H,V,Sofar,ID,[Option|Options],Reserved,Points,Grid,OUT,NextScanPoints)).
 */
 
 
-fsi(_Image,Reserved,Grid,Options,_H,_V,Sofar,_ID,[Option|Options],Reserved,Points,Grid,Sofar,Points):-
+fsi(_VM,Reserved,Grid,Options,_H,_V,Sofar,_ID,[Option|Options],Reserved,Points,Grid,Sofar,Points):-
   is_thing_or_connection(Option).
 
 is_thing_or_connection(Option):-allowed_dir(Option,_Dir).
@@ -1155,15 +1205,15 @@ single_point0(C-Point,IndvS,Rest1):- maybe_multivar(C),
 
 
 /*
-unraw_inds2(Image,Options,IndvS,IndvO):- fail,
+unraw_inds2(VM,Options,IndvS,IndvO):- fail,
    largest_first(IndvS,Indv),
    reverse(Indv,IndvR), IndvR\=@=IndvS,
-   unraw_inds2(Image,Options,IndvR,IndvO).
+   unraw_inds2(VM,Options,IndvR,IndvO).
 */
 
 % Diag of 3 or more
   /*
-unraw_inds2(Image,Options,IndvS,IndvO):-   
+unraw_inds2(VM,Options,IndvS,IndvO):-   
   single_point(C-Point1,IndvS,Rest1), nonvar_or_ci(C), non_free_fg(C),\+ get_bgc(C),
   is_diag(Dir),
   is_adjacent_point(Point1,Dir,Point2),
@@ -1175,11 +1225,11 @@ unraw_inds2(Image,Options,IndvS,IndvO):-
   reverse_nav(Dir,RevDir),
   finish_grp(C,NewGroupR,Point1,RevDir,RRest,NewGroup,RRestO),
   % minimum 4 findall(C-CP,member(C-CP,NewGroup),LL),LL=[_,_,_,_|_],
-  unraw_inds2(Image,Options,[NewGroup|RRestO],IndvO).
+  unraw_inds2(VM,Options,[NewGroup|RRestO],IndvO).
 */
 
 % Diag of 2 or more
-unraw_inds2(Image,Options,IndvS,IndvO):-  % fail,
+unraw_inds2(VM,Options,IndvS,IndvO):-  % fail,
   single_point(C-Point1,IndvS,Rest1), nonvar_or_ci(C), non_free_fg(C),\+ get_bgc(C),
   is_diag(Dir),fail,
   is_adjacent_point(Point1,Dir,Point2),
@@ -1188,39 +1238,39 @@ unraw_inds2(Image,Options,IndvS,IndvO):-  % fail,
   reverse(NewGroup1,NewGroupR),
   reverse_nav(Dir,RevDir),
   finish_grp(C,NewGroupR,Point1,RevDir,RRest,NewGroup,RRestO),
-  unraw_inds2(Image,Options,[NewGroup|RRestO],IndvO).
+  unraw_inds2(VM,Options,[NewGroup|RRestO],IndvO).
 
 
 
-unraw_inds2(Image,Options,IndvS,IndvO):-  %fail,
+unraw_inds2(VM,Options,IndvS,IndvO):-  %fail,
   single_point(C-Point1,IndvS,Rest1), nonvar_or_ci(C), non_free_fg(C),
   single_point(C2-Point2,Rest1,Rest),fail,
   findall(C3-Point3,member([C3-Point3],Rest),CRest),
   subtract(Rest,CRest,IndvM),
-  unraw_inds2(Image,Options,IndvM,IndvMO),
+  unraw_inds2(VM,Options,IndvM,IndvMO),
   Grp=[C-Point1,C2-Point2|CRest],
   IndvO=[Grp|IndvMO].
 
-unraw_inds2(Image,Options,IndvS,IndvO):- fail,
+unraw_inds2(VM,Options,IndvS,IndvO):- fail,
   single_point(C-Point1,IndvS,Rest1),
   Grp=[_,C-_,_|_],
   select(Grp,Rest1,Rest),
   is_diag(Dir),
   adjacent_groups(C,[C-Point1],Dir,Grp),
-  unraw_inds2(Image,Options,[[C-Point1|Grp]|Rest],IndvO).
+  unraw_inds2(VM,Options,[[C-Point1|Grp]|Rest],IndvO).
 
 /*
-unraw_inds2(Image,Options,IndvS,IndvO):-   
+unraw_inds2(VM,Options,IndvS,IndvO):-   
   select([C1-Point1],IndvS,Rest),
   nearby_one(Dir,Options,C,C1-Point1,Rest),
   select([C-Point2],Rest1,Rest),
   findall(C-Point,member([C-Point],Rest),CRest),
   subtract(Rest,CRest,IndvM),
-  unraw_inds2(Image,Options,IndvM,IndvMO),
+  unraw_inds2(VM,Options,IndvM,IndvMO),
   Grp=[C-Point1,C-Point2|C-Rest],
   IndvO=[Grp|IndvMO].
 */
-unraw_inds2(_Image,_,IndvS,IndvS).
+unraw_inds2(_VM,_,IndvS,IndvS).
 
 
 

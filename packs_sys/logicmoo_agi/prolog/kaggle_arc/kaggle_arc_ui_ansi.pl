@@ -87,8 +87,11 @@ wqs(writef(C,N)):- !, writef(C,N).
 wqs(call(C)):- !, call(C).
 wqs(pt(C)):- !, pt(C).
 wqs(q(C)):- !, write(' '), writeq(C).
+wqs(cc(C,N)):- attvar(C), get_attrs(C,PC), !, wqs(ccc(PC,N)).
+wqs(cc(C,N)):- var(C), sformat(PC,"~p",[C]), !, wqs(ccc(PC,N)).
 wqs(cc(C,N)):- !, write(' cc('),color_print(C,C),write(','), writeq(N), write(')').
 wqs(color_print(C,X)):- \+ plain_var(C), !, write(' '), color_print(C,X).
+wqs(C):- is_color(C),!,wqs(color_print(C,C)).
 
 wqs(X):- \+ compound(X),!, write(' '), write(X).
 wqs(X):- write(' '), writeq(X).
@@ -379,9 +382,9 @@ print_grid0(_Bordered,SH,SV,_LoH,_LoV,_HiH,_HiV,EH,EV,GridI):-
   bg_sym(BGC),
   forall(between(SV,EV,V),
    ((format('~N|'),
-     forall(between(SH,EH,H), 
-     (hv_cg_value_or(Grid,CG,H,V,BGC)->
-        (once(print_gw1(CG))))),write(' |')))),
+     forall(between(SH,EH,H),
+     ignore((((hv_cg_value(Grid,CG,H,V);hv_c_value(Grid,CG,H,V);CG=BGC)->
+        (once(print_gw1(CG))))))),write(' |')))),
   %print_g(H,V,C,LoH,LoV,HiH,HiV)
   format('~N'),!,
   once((user:dash_uborder_no_nl(Width+1))))).
@@ -425,7 +428,7 @@ ansi_format_arc(Ansi,Format,Args):- on_bg(ansi_format(Ansi,Format,Args)),!.
 underline_print(W):- ansi_format([bold,underline],'~@',[user:W]),!.
 bold_print(W):- ansi_format(bold,'~@',[user:W]),!.
 
-compound_var(C):- \+ plain_var(C), \+ attvar(C), is_ftVar(C).
+compound_var(C,N):- \+ plain_var(C), \+ attvar(C), is_ftVar(C),arg(1,C,N).
 
 is_bg_sym_or_var(C):- attvar(C),get_attr(C,ci,fg(_)),!,fail.
 is_bg_sym_or_var(C):- (attvar(C); bg_sym(C); C==' '; C==''; C=='bg'; C == 0),!.
@@ -484,8 +487,10 @@ var_dot(63).
 bg_dot(32).
 /* 169	© 248	ø 216	Ø  215 ×  174	® */
 %fg_dot(C):- nb_current(fg_dot,C),integer(C),!.
+fg_dot(C):- nb_current(alt_grid_dot,C),C\==[],!.
 fg_dot(174).
 cant_be_dot(183).
+grid_dot(C):- nb_current(alt_grid_dot,C),C\==[],!.
 grid_dot(169).
 
 %print_g(H,V,C0,_,_,_,_):- cant_be_color(C0),cant_be_color(C0,C),!,  ansi_format_arc([bold,fg('#ff8c00')],'~@',[(write('c'),user:print_g1(H,V,C))]).
@@ -501,9 +506,10 @@ object_cglyph(G,CGlyph):- color(G,C),object_glyph(G,Glyph),wots(CGlyph,color_pri
 
 %user:portray(S):- (string(S);atom(S)),atom_codes(S,[27|_]),write('"'),write(S),write('"').
 
-
-print_gw1(N):- get_bgc(BG),is_color(BG), BG\==black, color_print(BG,'.'),!,print_g1(N).
-print_gw1(N):- get_bgc(BG),is_color(BG), write(' '),print_g1(N).
+print_gw1(C):- compound_var(C,N),print_gw1(N),!.
+print_gw1(N):- get_bgc(BG),is_color(BG), BG\==black, color_print(BG,'.'),print_g1(N),!.
+print_gw1(N):- get_bgc(BG),is_color(BG), write(' '),print_g1(N),!.
+print_gw1(N):- compound(N),N = C-W,!,color_print(C,W),!.
 
 print_g1(N):- into_color_glyph(N,C,Code),as_name(Code,S), color_print(C,S),!.
 

@@ -65,9 +65,9 @@ individuals_from_pair_colors(PairName,In,Out,IH,IV,OH,OV,
     add_shape_lib(in,NoiseObject),
     remove_global_points(NoiseObject,In,NoiseFreeIn),
     show_pair_no_i(IH,IV,IH,IV,noise_objects_removed,PairName,NoiseObject,NoiseFreeIn),
-    individuate_default(NoiseFreeIn,RestOfInObjs),
+    individuate(defaults,NoiseFreeIn,RestOfInObjs),
     add_shape_lib(pair,RestOfInObjs),
-    individuate_default(Out,RestOfOutObjs),
+    individuate(defaults,Out,RestOfOutObjs),
     ShapesI = [NoiseObject|RestOfInObjs], 
     RestOfOutObjs = ShapesO.
 /*

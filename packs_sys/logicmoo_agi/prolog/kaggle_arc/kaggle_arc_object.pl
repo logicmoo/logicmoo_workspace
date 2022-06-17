@@ -447,7 +447,7 @@ colors_via_pixels(G,BFO):- quietly((pixel_colors(G,GF),list_to_set(GF,GS),count_
 %colors(G,X):- is_group(G),!,maplist(colors,G,Points),append_sets(Points,X).
 
 shape(G,X):- is_group(G),!,maplist(shape,G,Points),append_sets(Points,X).
-% returns the objects colorless localpoints
+% returns the objects decolorize localpoints
 shape(I,X):- is_object(I), indv_props(I,L),member(shape(X),L).
 shape(I,X):- localpoints(I,Points),maplist(arg(2),Points,X).
 

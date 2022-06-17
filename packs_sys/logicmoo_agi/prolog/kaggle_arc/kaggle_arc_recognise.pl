@@ -284,16 +284,16 @@ grid_detect_fg(GridIn,Foreground1):-
   include(not_in(Background),Foreground,Foreground1).
   
 
-grid_label_fg(GridIn):- 
+grid_label_fg(CT,GridIn):- 
   my_assertion(is_grid(GridIn)),
   grid_detect_fg(GridIn,Foreground1),
-  grid_label_fg(GridIn,Foreground1),!.
+  grid_label_fg(CT,GridIn,Foreground1),!.
 
-grid_label_fg(_,[]):-!.
-grid_label_fg(GridIn,Foreground1):- 
+grid_label_fg(_CT,_,[]):-!.
+grid_label_fg(CT,GridIn,Foreground1):- 
   copy_term(Foreground1,ForegroundCopy),
   numbervars(ForegroundCopy,2021,_,[attvar(skip)]),
-  maplist(to_grid_fg(GridIn),Foreground1,ForegroundCopy),!.
+  maplist(to_grid_fg(CT,GridIn),Foreground1,ForegroundCopy),!.
 
 %maybe_grid_numbervars(GridIn,GridIn):-!.
 maybe_grid_numbervars(GridIn,GridIn):- \+ is_grid(GridIn),!.
@@ -303,12 +303,12 @@ maybe_grid_numbervars(GridIn,GridIn):-!.
 not_in(Background,Foreground):-
   \+ (member(E,Background), E == Foreground). 
 
-to_grid_fg(_,E,_):- cant_be_color(E),!.
-to_grid_fg(_,N,'$VAR'(N)):-!.
-to_grid_fg(_,B,B).
+to_grid_fg(_CT,_,E,_):- cant_be_color(E),!.
+to_grid_fg(_CT,_,N,'$VAR'(N)):-!.
+to_grid_fg(_CT,_,B,B).
 
 grid_numbervars(GridIn,GridO):- 
- must_det_ll((grid_label_bg(f,GridIn,GridO),grid_label_fg(GridO))).
+ must_det_ll((grid_label_bg(p,GridIn,GridO),grid_label_fg(p,GridO))).
 
 
 cant_be_color(Y):- get_attr(Y,dif,_),!.

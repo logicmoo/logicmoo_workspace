@@ -148,10 +148,27 @@ run_arc_io(TestID,ExampleNum,In,Out):-
   time(show_arc_pair_progress(TestID,ExampleNum,In,Out)).
 
 make_indivs(Pred,In,Out,InC,OutC):-
- mass(Out,OMass), mass(In,IMass), OMass>IMass, !,
- make_indivs(Pred,Out,In,OutC,InC).
+ locally(i_o_w(In,Out),
+  make_indivs1(Pred,In,Out,InC,OutC)).
 
-make_indivs(Pred,In,Out,InC,OutC):-
+make_indivs1(Pred,In,Out,InC,OutC):-
+  mass(Out,OMass), mass(In,IMass), OMass>IMass, !,
+  make_indivs_no_swap(Pred,Out,In,OutC,InC),
+  save_off(Pred,In,Out,InC,OutC).
+
+make_indivs1(Pred,In,Out,InC,OutC):- 
+  make_indivs_no_swap(Pred,In,Out,InC,OutC),
+  save_off(Pred,In,Out,InC,OutC).
+
+save_off(_Pred,_In,_Out,InC,OutC):-
+  get_pair(PairEnv),
+  pred_intersection(overlap_same_obj,InC,OutC,RetainedIn,_RetainedOut,Removed,Added),
+  add_shape_lib(pair,Removed),
+  add_shape_lib(pair,Added),
+  add_shape_lib(pair,RetainedIn),
+  set_pair(PairEnv),!.
+
+make_indivs_no_swap(Pred,In,Out,InC,OutC):-
   writeln(inC(Pred)),
   call(Pred,In,InC),
   add_shape_lib(pair,InC),
@@ -183,13 +200,20 @@ show_indivs(IH,IV,OH,OV,Pred,When,PairName,In,Out,SF):-
 */
 get_pair(PairEnv):- nb_current(pairEnv,PairEnv),is_dict(PairEnv),!.
 get_pair(PairEnv):- 
-  PairEnv = pair{in:_In,out:_Out,test:_PairName,mappings:[],inC:_InC,outC:_OutC,objs:[],options:[],removed:[],added:[], kept:[],
+  PairEnv = pair{in:_In,out:_Out,test:_PairName,mappings:[],
+    pre_in:_, pre_out:_,
+    inC:_InC,outC:_OutC,objs:[],options:[],removed:[],added:[], kept:[],
     in_i:_InImage,out_i:_OutImage, current_i:_},
   nb_linkval(pairEnv,PairEnv),!.
+
+set_pair(PairEnv):-  
+  nb_linkval(pairEnv,PairEnv).
+
 
 show_arc_pair_progress(TestID,ExampleNum,In,Out):-
  
  must_det_l((
+  flag(indiv,_,0),
 	name_the_pair(TestID,ExampleNum,In,Out,PairName),
 	grid_size(In,IH,IV), grid_size(Out,OH,OV),
 	ignore((IH+IV \== OH+OV , writeln(oi(size(IH,IV)->size(OH,OV))))),
@@ -205,7 +229,10 @@ show_arc_pair_progress(TestID,ExampleNum,In,Out):-
   set(PairEnv,out) = Out,
   %print_collapsed
   show_pair_grid(IH,IV,OH,OV,original_in,original_out,PairName,In,Out),
-  make_indivs(individuate_complete,In,Out,InC,OutC),
+  make_indivs(individuate(pre_pass),In,Out,PreInC,PreOutC),
+  set(PairEnv,pre_out) = PreOutC,
+  set(PairEnv,pre_in) = PreInC,
+  make_indivs(individuate(complete),In,Out,InC,OutC),
   pred_intersection(overlap_same_obj,InC,OutC,RetainedIn,RetainedOut,Removed,Added),
   add_shape_lib(in,Removed),
   add_shape_lib(pair,RetainedIn),
@@ -243,8 +270,8 @@ show_arc_pair_progress(TestID,ExampleNum,In,Out):-
   remove_global_points(UnsharedIn,In,InForgotten),
   remove_global_points(UnsharedOut,Out,OutForgottenM),
   ((mass(OutForgottenM,OM),OM==0) -> OutForgotten=OutC; OutForgotten=OutForgottenM),
-  individuate_complete(InForgotten,ForgottenShapesIn),
-  individuate_complete(OutForgotten,ForgottenShapesOut),
+  individuate(complete,InForgotten,ForgottenShapesIn),
+  individuate(complete,OutForgotten,ForgottenShapesOut),
 
   % contains_points(InForgotten);contains_points(OutForgotten)
   %show_pair_no_i(IH,IV,OH,OV,forgotten,PairName,ForgottenShapesIn,ForgottenShapesOut),
@@ -253,8 +280,8 @@ show_arc_pair_progress(TestID,ExampleNum,In,Out):-
   show_pair_no_i(OH,OV,OH,OV,forgotten_Out,PairName,ForgottenShapesOut,OutC),
 *//*
        show_indivs(In,Out),
-       individuate_default(In,InC),
-       individuate_default(Out,OutC),  
+       individuate(defaults,In,InC),
+       individuate(defaults,Out,OutC),  
        writeln(outC),
 
        clear_shape_lib(out),
@@ -263,9 +290,9 @@ show_arc_pair_progress(TestID,ExampleNum,In,Out):-
        writeln(inOutC),
        show_pair_i(IH,IV,OH,OV,early_test,PairName,InC,OutC),
        writeln(inC),
-       individuate_default(In,UnsharedIn),
+       individuate(defaults,In,UnsharedIn),
        writeln(outC),
-       individuate_default(Out,UnsharedOut),
+       individuate(defaults,Out,UnsharedOut),
        writeln(inUnsharedOut),
        show_pair_i(IH,IV,OH,OV,late_test,PairName,UnsharedIn,UnsharedOut),
        format('~N-sofar~N'),!,

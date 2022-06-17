@@ -139,6 +139,7 @@ l_shape(LibObj):-
     (rtrace(make_indiv_object(ID,H,V,Points,[object_shape(l_shape)|ShapeProps],LibObj)))).
 
 % todo temp
+sortshapes(List,List):-!.
 sortshapes(List,ListS):- predsort(using_compare(shape_key),List,ListS),!.
 %sortshapes(List,ListS):- sort(List,ListS),!.
 
@@ -153,8 +154,8 @@ shape_key_unrotated(Shape,Key):- shape_key(Shape,KeyR), grav_rot0(Key,KeyR).
 searchable(Group,List):- override_group(searchable(Group,List)),!.
 searchable(Shape,Searchable):- object_grid(Shape,Grid), constrain_grid(f,_CheckType,Grid,Searchable).
 
-colorless(Group,List):- override_group(colorless(Group,List)),!.
-colorless(Shape,ShapeO):- 
+decolorize(Group,List):- override_group(decolorize(Group,List)),!.
+decolorize(Shape,ShapeO):- 
   colors_to_vars(_Colors,Vars,Shape,ShapeO),
   set_fg_vars(Vars),length(Vars,L),writeln(set_fg_vars=L),
   all_dif_colors(Vars,Vars).
@@ -262,11 +263,39 @@ show_shape_lib:- %mmake,
 clear_shape_lib:- findall(Name,in_shape_lib(Name,_Obj),Gallery),
   list_to_set(Gallery,GalleryS),maplist(clear_shape_lib,GalleryS).
 
-show_shape(Shape):-
+show_shape(Shape):- is_grid(Shape),
+ dash_char, print_grid(Shape),writeln(grid_shape).
+
+show_shape(Shape):- ground(Shape),!,
+  
   ignore(print_info(Shape)),
-  ignore(print_grid([Shape])->true;writeln(failed_print_grid)),
-  ignore((\+ ground(Shape),ptt(Shape))),
-  dash_char.
+  ignore(print_grid([Shape])),
+  ignore((\+ ground(Shape),pt(Shape))),!.
+show_shape(Shape):-
+  dash_char,
+  ignore(print_info(Shape)),
+  ignore((\+ \+ print_shape_0(Shape) ->true;writeln(failed_print_grid))),
+  ignore((\+ ground(Shape),pt(Shape))),!.
+
+
+print_shape_0(Shape):-
+  vis_hv(Shape,H,V),
+  localpoints(Shape,Points),
+
+  numbervars(Points,0,_,[attvar(bind)]),
+  subst(Points,'$VAR'(0),grey,Points0),
+  subst(Points0,'$VAR'(1),grey,Points1),
+  subst(Points1,'$VAR'(2),grey,Points2),
+  subst(Points2,'$VAR'(3),grey,Points3),
+  points_to_grid(H,V,Points3,Grid),
+  %object_grid(Shape,FG),
+  %numbervars(Shape,0,_,[attvar(bind)]),
+  %grid_numbervars(FG,Grid),
+  pt(Grid), 
+  %object_indv_id(Shape,_Glyph,Iv),
+  print_grid(H,V,Grid),
+  %locally(nb_setval(alt_grid_dot,Iv),print_grid(H,V,Grid)).
+
   
 
 show_shape_lib(Name):- make,
@@ -278,7 +307,7 @@ show_shape_lib(Name):- make,
   maplist(show_shape,GallerySOS),
   %shape_lib_rules(Name,Rules),length(Rules,LenRules),pt(shape_lib_rules(LenRules)=Rules),
   mort(ignore((shapelib_opts(Name,Opts), length(Opts,LenOpts), LenOpts > 0, pt(shapelib_opts(LenOpts)=Opts)))),!,
-  ignore((GalleryS\==[], maplist(print_grid,GalleryS))))).
+  ignore((fail,GalleryS\==[], maplist(show_shape,GalleryS))))).
 
 clear_shape_lib(Name):- 
   findall(_,(clause(in_shape_lib(Name,_),true,Ref),erase(Ref)),L),
@@ -318,12 +347,14 @@ expand_shape_directives(Shapes,[],SmallLib):- must_be_free(SmallLib),
  print_collapsed(100,
   show_workflow(Shapes,
    [ =, %"Vanila indivs",
+     %into_grid,
     % searchable,"Searchable indivs", 
        all_orientations, % "All rotations of indivs", 
-       colorless, %"Add blue indivs", 
+       %decolorize, %"Add blue indivs", 
+       %add(change_color), % "Add new colors indivs",		 
+       %all_colors,
        smallest_first, "smallest first",
-       % add(change_color), % "Add new colors indivs",		 
-    %colorless % decolorized points are not yet printable 
+    %decolorize % decolorized points are not yet printable 
     =],SmallLib)
     )))).
 expand_shape_directives(A,Opts,B):- show_workflow(A,Opts,B),!.
@@ -333,7 +364,7 @@ expand_shape_directives(A,Opts,B):- show_workflow(A,Opts,B),!.
 %in_shape_lib(Name):- the_hammer1(RedComplex),all_rotations(RedComplex,Name).
 
 in_shape_lib(All,GRot):- All==all,!,in_shape_lib(_,GRot).
-in_shape_lib(colorless(S),Gallery):- nonvar(S),!, in_shape_lib(S,GalleryC),colorless(GalleryC,Gallery).
+in_shape_lib(decolorize(S),Gallery):- nonvar(S),!, in_shape_lib(S,GalleryC),decolorize(GalleryC,Gallery).
 in_shape_lib(all_rots(S),Gallery):-  nonvar(S),!, in_shape_lib(S,GalleryC),all_rotations(GalleryC,Gallery).
 in_shape_lib(l_shape,LibObj):- l_shape(LibObj).
 in_shape_lib(hammer,Name):- the_hammer1(Name).

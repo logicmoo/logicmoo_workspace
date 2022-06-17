@@ -239,14 +239,18 @@ obj_make_comparable(I,_):- plain_var(I),!,fail.
 obj_make_comparable(obj(I),O):- maplist(obj_make_comparable_e,I,O).
 obj_make_comparable(I,O):- is_list(I),sort_obj_props(I,II),maplist(obj_make_comparable_e,II,O).
 obj_make_comparable(I,O):- into_obj(I,M),obj_make_comparable(M,O).
-obj_make_comparable_e(grid(_),grid(_)).
 %obj_make_comparable_e(I,O):- is_list(I),sort(I,O).
-%obj_make_comparable_e(object_shape(_),grid([])).
+%obj_make_comparable_e(Comp,F):- compound(Comp),functor(Comp,F,_),f_uncomparable_e(F).
 %obj_make_comparable_e(grid_size(_,_),grid([])).
-obj_make_comparable_e(I,O):- I=..[F,L],maye_sort(L,S),O=..[F,S].
+%obj_make_comparable_e(I,O):- I=..[F,L],maye_sort(L,S),O=..[F,S].
 obj_make_comparable_e(I,I).
 %obj_make_comparable(I,SI):- exclude(uncomparable,I,II), sort(II,SI).
 
+% f_uncomparable_e(F).
+f_uncomparable_e(grid).
+f_uncomparable_e(birth):- writeq(b).
+f_uncomparable_e(grid_size).
+f_uncomparable_e(object_shape).
 %diff_objects(I,O,OUT):- !, fail, locally(set_prolog_lfag(gc,false),compute_diff_objs1(I,O,OUT)).
 :- style_check(-singleton).
 

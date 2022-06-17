@@ -125,7 +125,8 @@ debug_indiv(A):- is_point_obj(A,Color,Point),
   wqnl([' % Point: ', color_print(Color,Sym), dot, color(Color), fav1(Tst), nth(Id), loc_xy(H,V)]),!. 
 */
 
-debug_indiv(obj(A)):- Obj = obj(A), is_list(A),!,
+debug_indiv(obj(A)):- \+ \+ debug_indiv_obj(A).
+debug_indiv_obj(A):- Obj = obj(A), is_list(A),!,
  must_det_l((
   ignore((o2g(Obj,GGG), nonvar(GGG),my_asserta_if_new(g2o(GGG,Obj)))),
 %debug_indiv(Obj):- Obj = obj(A), is_list(A),  

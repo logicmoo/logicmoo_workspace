@@ -432,7 +432,7 @@ points_to_grid([Points|More],Grid):- is_grid(Points),Points=Grid,grid_size(Point
 points_to_grid(Points,Grid):- is_grid(Points),!,grid_size(Points,H,V), points_to_grid(H,V,Points,Grid).
 points_to_grid(Points,Grid):- quietly(grid_size(Points,H,V)), points_to_grid(H,V,Points,Grid).
 
-points_to_grid(H,V,Points,Grid):- make_grid(H,V,Grid), calc_add_points(1,1,Grid,Points).
+points_to_grid(H,V,Points,GridO):- make_grid(H,V,Grid), set_local_points(Points,Grid,GridO).
 
 calc_add_points(OH,OV,_,Obj):- plain_var(Obj),dumpST,trace_or_throw(var_calc_add_points(OH,OV,Obj)).
 calc_add_points(OH,OV,Grid,Obj):- is_grid(Obj),globalpoints(Obj,Points),maplist(calc_add_points(OH,OV,Grid),Points).

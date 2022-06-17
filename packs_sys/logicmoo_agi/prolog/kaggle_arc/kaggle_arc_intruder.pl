@@ -50,11 +50,11 @@ individuals_from_pair(PairName,In,Out,H,V,H,V,RestOfInObjs,RestOfOutObjs):-
   ((IMass==0, OMass>0) -> USE = OmI;
    ((OMass==0, IMass>0) -> USE = ImO)),
    print_grid(USE),
-   individuate_complete(USE,Intruder),
+   individuate(complete,USE,Intruder),
    add_shape_lib(intruder,Intruder),
-   individuate_default(In,RestOfInObjs),
+   individuate(defaults,In,RestOfInObjs),
    add_shape_lib(pair,RestOfInObjs),
-   individuate_complete(Out,RestOfOutObjs).
+   individuate(complete,Out,RestOfOutObjs).
 
 
 % intruder to Out
@@ -62,7 +62,7 @@ individuals_from_pair(_PairName,In,Out,IH,IV,OH,OV,[Intruder|NoiseObjects],[Intr
   (IV > OV; IH> OH) , ogs(_,_,Out,In), 
   grid_to_individual(Out,Intruder),
   add_shape_lib(intruder,Intruder),
-  individuate_default(In,NoiseObjects),
+  individuate(defaults,In,NoiseObjects),
   nop(add_shape_lib(noise,NoiseObjects)).
 
 % intruder was in ./. now in a scene in out
@@ -70,7 +70,7 @@ individuals_from_pair(_PairName,Out,In,OH,OV,IH,IV,[Intruder],[Intruder|NoiseObj
   (IV > OV; IH> OH) , ogs(_,_,Out,In), 
   grid_to_individual(Out,Intruder),
   add_shape_lib(intruder,Intruder),
-  individuate_default(In,NoiseObjects),
+  individuate(defaults,In,NoiseObjects),
   nop(add_shape_lib(noise,NoiseObjects)).
 
 set_prop_of(_NeuralVM,In,Prop,Val):- root_key(Prop,RHT),ht_update(RHT,In,_,Val).
@@ -189,7 +189,7 @@ maybe_in_out_xform(NeuralVM,PairName,StartInOut,NextStartInOut,DONE):-
 
 stuff_options1(stuffType,is_cpoints,globalpoints). %:- globalpoints(Grid,Stuff).
 stuff_options1(stuffType,is_colors,unique_colors). %:- unique_colors(Grid,Stuff).
-stuff_options(stuffType,is_nc_points,shape). %:-  globalpoints(Grid,Stuff),colorless(StuffM,Stuff).
+stuff_options(stuffType,is_nc_points,shape). %:-  globalpoints(Grid,Stuff),decolorize(StuffM,Stuff).
 stuff_options(stuffType,is_group,default_individuals). %:- individuals_default(Grid,Stuff).
 
 
