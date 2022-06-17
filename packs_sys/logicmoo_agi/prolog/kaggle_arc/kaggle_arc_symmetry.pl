@@ -14,6 +14,7 @@
 
 
 %is_symgrid(t('3631a71a')*_*out).
+is_symgrid(t(c444b776)*_*out).
 is_symgrid(v(f9d67f8b)*_*out).
 is_symgrid(v(de493100)*_*in).
 is_symgrid(v(f9d67f8b)*_*in).
@@ -53,6 +54,9 @@ is_need(t('9d9215db')*_*out).
 /*
 */
 repair_symmetry:- clsmake, repair_symmetry0.
+
+:- add_history(repair_symmetry).
+
 repair_symmetry0:- 
  forall(
  (is_symgrid(Symgrid),
@@ -65,76 +69,6 @@ repair_symmetry0:-
    test_symmetry_code(Grid,GridO),
    wdmsg(success(symmetry_code)),
    print_grid(GridO)))),!.
-
-
-
-/*
-4-Way Symmetry
-
-  
-|SXQ2  |SXCC  |SXQ4  
-       |      |      
-   EXQ2|  EXCC|  EXQ4|
-|--------------------| 
-|      |      |      | SYQ2 
-|  Q2  |  CN  | Q1   | 
-|      |      |      | EYQ2
-|------+------+------| 
-|      |      |      | SYCC
-|  CW  |  CC  | CE   | 
-|      |      |      | EYCC
-|------+------+------| 
-|      |      |      | SYQ4
-|  Q3  |  CS  | Q4   |
-|      |      |      | EYQ4
-|--------------------| 
-*/
-
-
-symetric_xy(CXL,CYL,CX,CY,SXQ2,SYQ2,EXQ2,EYQ2,SXCC,SYCC,EXCC,EYCC,SXQ4,SYQ4,EXQ4,EYQ4,G):-
-   grid_size(G,EXQ4,EYQ4),
-   SXQ2=SYQ2,SXQ2=1,
-   CXL=CYL,
-   length(CX,CXL),length(CY,CYL),
-   symmetric_hv(EXQ2,CX,EYQ2,CY,EXQ4,EYQ4,G),
-   %sort_row_by_num_colors(G,Rows),
-   %print_grid(Rows),
-   %wqnl(cx=CX+EXQ2),print_grid(EXQ2,EYQ2,G),wqnl(cy=CY+EYQ2),
-   check_symetric_xy(CX,CY,SXQ2,SYQ2,EXQ2,EYQ2,SXCC,SYCC,EXCC,EYCC,SXQ4,SYQ4,EXQ4,EYQ4).
-
-check_symetric_xy([],[],1,1,EXQ2,EYQ2,0,0,0,0,SXQ4,SYQ4,EXQ4,EYQ4):-
-     SXQ4 is EXQ2+1,
-     SYQ4 is EYQ2+1,!,
-     nop((EXQ4,EYQ4)).
-
-
-check_symetric_xy(CX,CY,SXQ2,_SYQ2,EXQ2,EYQ2,SXCC,SYCC,EXCC,EYCC,SXQ4,SYQ4,EXQ4,_EYQ4):- 
-   
-   length(CX,LCLX),SXCC is EXQ2 + 1,EXCC is LCLX + EXQ2 -1,SXQ4 is LCLX + EXQ2,
-   maplist(assertion,[SXQ2=<EXQ2,EXQ2=<SXCC,EXQ2=<SXCC,EXCC=<SXQ4,SXQ4=<EXQ4]),
-   length(CY,LCLY),SYCC is EYQ2 + 1,EYCC is LCLY + EYQ2 -1,SYQ4 is LCLY + EYQ2,
-   !.
-
-
-asymmetric_hv(EXQ2,CX,EYQ2,CY,H,V,G):- asymmetric_hv0(EXQ2,CX,EYQ2,CY,H,V,G).
-asymmetric_hv(EXQ2,CX,EYQ2,CY,H,V,G):- rot90(G,G0),flipH(G0,G1),asymmetric_hv0(EYQ2,CY,EXQ2,CX,V,H,G1).
-
-asymmetric_h(I,CX,_H,HLow,_Hhalf,Hhigh,G):-
-   between(HLow,Hhigh,I),symmetric_lrw(I,CX,G,_).
-asymmetric_v(I,CY,_V,VLow,_Vhalf,Vhigh,G0):-
-   rot270(G0,G),
-   between(VLow,Vhigh,I),symmetric_lrw(I,CY,G,_).
-/*
-asymmetric_h(I,C,G):- 
-  sometimes(flipV,G,G1),sometimes(first_half,G1,G2),
-  sometimes(flipV,G2,G3), asymmetric_lrw(I,C,G3,_).
-*/
-asymmetric_hv0(EXQ2,CX,EYQ2,CY,H,V,G):-
-  HLow is floor(H/2-3), Hhigh is floor(H-H/3),Hhalf is floor(H/2),
-  VLow is floor(V/2-3), Vhigh is floor(V-V/3),Vhalf is floor(V/2),
-  asymmetric_h(EXQ2,CX,H,HLow,Hhalf,Hhigh,G),
-  asymmetric_v(EYQ2,CY,V,VLow,Vhalf,Vhigh,G).
-
 
 
 crop(X,Y,G,GO):- make_grid(X,Y,GO),maplist_until(aligned_rows,G,GO).
@@ -230,39 +164,6 @@ c_n_reverse:-
                       nop(listing(c_n_reverse_l/7)).
 
 :- c_n_reverse.
-
-symetric_row(I,C,Row,L):- append(C,[E1|RR],Right), append(L,Right,Row),reverse(L,[E1|LL]),aligned_rows(LL,RR),length(L,I).
-% symetric_row(L,CL,Row,I):-  append(Row,_Rest,RowO), c_n_reverse_l(I,_C,_P,RowO,L,CL,_R).
-
-% symetric_row(L,C,Row,I):- append(C,[E1|RR],Right), append(L,Right,Row),reverse(L,[E1|LL]),aligned_rows(LL,RR),length(L,I).
-
-symmetric_lrw(_I,_C,[],_GL):- !. 
-symmetric_lrw(I,C,G,GL):- maplist_until(symetric_row(I,C),G,GL),
-   reverse(G,GR), maplist_until0(symetric_row(I,C),GR,_).
-
-symmetric_lr(I,C,G,GL):- first_half(G,G0),symmetric_lr0(I,C,G0,GL).
-symmetric_lr(I,C,G,GL):- second_half(G,G0),symmetric_lr0(I,C,G0,GL).
-%symmetric_lr(I,C,G,GL):- symmetric_lr0(I,C,G,GL).
-symmetric_lr0(_I,_C,[],_GL):- !.
-symmetric_lr0(I,C,G,GL):- maplist(symetric_row(I,C),G,GL),!.
-
-not_no_symmetry_yet(P):- \+ no_symmetry_yet(P).
-
-is_symetric_h(G):- symmetric_h(_,_,G),!.
-%symmetric_h(I,C,G):- include(not_no_symmetry_yet,G,G0),sort_row_by_num_colors(G0,G1),symmetric_lr(I,C,G1,_).
-%symmetric_h(I,C,G):- symmetric_lr(I,C,G,_),!.
-
-symmetric_h(I,C,G):- symmetric_lrw(I,C,G,_).
-symmetric_h(I,C,G):- flipV(G,G1),symmetric_lrw(I,C,G1,_).
-symmetric_v(I,C,G):- rot270(G,G0),symmetric_lrw(I,C,G0,_).
-symmetric_v(I,C,G):- rot270(G,G0),flipV(G0,G1),symmetric_lrw(I,C,G1,_).
-
-symmetric_hv(EXQ2,CX,EYQ2,CY,H,V,G):- symmetric_h(EXQ2,CX,G),symmetric_v(EYQ2,CY,G),TY is EYQ2*3, TY > V, TX is EXQ2*3, TX > H,!.
-symmetric_hv(EXQ2,CX,EYQ2,CY,_H,_V,G):- symmetric_hh(EXQ2,CX,G),symmetric_vv(EYQ2,CY,G).
-
-symmetric_hh(I,C,G):- symmetric_lr(I,C,G,_).
-symmetric_vv(I,C,G):- rot270(G,G0),symmetric_lr(I,C,G0,_),!.
-
 /*
 quaderants_and_center_rays(Grid9x9,QuadsO,CenterO,RaysO):- 
   [[ Q2, _CN,   Q1],
@@ -339,13 +240,13 @@ nop((
 %detect_grid(Grid,E):- 
 
 grid_to_3x3_objs(Ordered,Grid,NewIndiv4s,Keep):- 
-  notrace(catch(call_with_time_limit(2,symetric_xy_3x3(Grid,Image9x9)),time_limit_exceeded, 
+  notrace(catch(call_with_time_limit(2,find_and_use_pattern_gen(Grid,Image9x9)),time_limit_exceeded, 
    (wdmsg(time_limit_exceeded),fail))),
-  %catch(symetric_xy_3x3(Grid,Image9x9),E, (wdmsg(E),fail)),
-  %rtrace(symetric_xy_3x3(Grid,Image9x9)),
+  %catch(find_and_use_pattern_gen(Grid,Image9x9),E, (wdmsg(E),fail)),
+  %rtrace(find_and_use_pattern_gen(Grid,Image9x9)),
   flatten(Image9x9,Flat),
   include(nonvar_or_ci,Flat,Grids),
-  maybe_fix_the_four(Ordered,Grids,NewIndiv4s,Keep).
+  maybe_repair_image(Ordered,Grids,NewIndiv4s,Keep).
 
 consensus(ColorAdvice,GridS,H,V,VGrid):-
  forall(between(1,V,Y),
@@ -395,12 +296,12 @@ consensus2(Vars,[C|BG],Blk,Color,Other,C).
 :- style_check(+singleton).
 
 
-maybe_fix_the_four(Ordered,Objects,CorrectObjects,Keep):- 
+maybe_repair_image(Ordered,Objects,CorrectObjects,Keep):- 
   maplist(object_grid,Objects,AllGrids),
   predsort(sort_on(colored_pixel_count),AllGrids,Grids),
   (all_rows_align(Grids)
     -> (Keep=[], format('~N'),writeln('Must be perfect...'),CorrectObjects = Objects);
-    fix_the_fours(Ordered,Objects,Grids,CorrectObjects,Keep)).
+    repair_patterned_images(Ordered,Objects,Grids,CorrectObjects,Keep)).
 
 all_rows_align([Big|Rest]):- maplist(rows_align(Big),Rest).
 
@@ -409,13 +310,12 @@ max_hv(Objects,H,V):-
   sort(Sizes,SizesS),
   reverse(SizesS,[size(H,V)|_]),!.
 
-fix_the_fours(Ordered,Objects,Grids,CorrectObjects,Keep):-
+repair_patterned_images(Ordered,Objects,Grids,CorrectObjects,Keep):-
   max_hv(Objects,H,V),
   make_grid(H,V,Result),
   writeln('Training hard...'),
   advise_color(ColorAdvice,Ordered),
   consensus(ColorAdvice,Grids,H,V,Result),
-  localpoints(Result,LPoints),
   localpoints(Result,LPoints),
   maplist(replace_local_points(LPoints,_),Grids,CorrectGrids),!,
   all_rows_align(CorrectGrids), 
@@ -448,13 +348,65 @@ colored_pixel_count(A,AA):- object_grid(A,G),
   length(L,AA).
 
 
-symetric_xy_3x3(G,Grid9x9):- 
+/*
+4-Way Symmetry
+
+  
+|SXQ2  |SXCC  |SXQ4  
+       |      |      
+   EXQ2|  EXCC|  EXQ4|
+|--------------------| 
+|      |      |      | SYQ2 
+|  Q2  |  CN  | Q1   | 
+|      |      |      | EYQ2
+|------+------+------| 
+|      |      |      | SYCC
+|  CW  |  CC  | CE   | 
+|      |      |      | EYCC
+|------+------+------| 
+|      |      |      | SYQ4
+|  Q3  |  CS  | Q4   |
+|      |      |      | EYQ4
+|--------------------| 
+*/
+
+
+mirror_xy(CXL,CYL,CX,CY,SXQ2,SYQ2,EXQ2,EYQ2,SXCC,SYCC,EXCC,EYCC,SXQ4,SYQ4,EXQ4,EYQ4,G):-
+   grid_size(G,EXQ4,EYQ4),
+   SXQ2=SYQ2,SXQ2=1,
+   CXL=CYL,
+   length(CX,CXL),length(CY,CYL),
+   mirror_hv(EXQ2,CX,EYQ2,CY,EXQ4,EYQ4,G),
+   %sort_row_by_num_colors(G,Rows),
+   %print_grid(Rows),
+   %wqnl(cx=CX+EXQ2),print_grid(EXQ2,EYQ2,G),wqnl(cy=CY+EYQ2),
+   check_mirror_xy(CX,CY,SXQ2,SYQ2,EXQ2,EYQ2,SXCC,SYCC,EXCC,EYCC,SXQ4,SYQ4,EXQ4,EYQ4).
+
+check_mirror_xy([],[],1,1,EXQ2,EYQ2,0,0,0,0,SXQ4,SYQ4,EXQ4,EYQ4):-
+     SXQ4 is EXQ2+1,
+     SYQ4 is EYQ2+1,!,
+     nop((EXQ4,EYQ4)).
+
+
+check_mirror_xy(CX,CY,SXQ2,_SYQ2,EXQ2,EYQ2,SXCC,SYCC,EXCC,EYCC,SXQ4,SYQ4,EXQ4,_EYQ4):- 
+   
+   length(CX,LCLX),SXCC is EXQ2 + 1,EXCC is LCLX + EXQ2 -1,SXQ4 is LCLX + EXQ2,
+   maplist(assertion,[SXQ2=<EXQ2,EXQ2=<SXCC,EXQ2=<SXCC,EXCC=<SXQ4,SXQ4=<EXQ4]),
+   length(CY,LCLY),SYCC is EYQ2 + 1,EYCC is LCLY + EYQ2 -1,SYQ4 is LCLY + EYQ2,
+   !.
+
+
+
+
+
+find_and_use_pattern_gen(G,Grid9x9):- 
  grid_to_id(G,GN), grid_size(G,H,V),
  gensym('CRef_',CRef),
   [[Q2,  CN, Q1],
    [CW, _CC, CE],
    [Q3,  CS, Q4]] = Grid9x9,
- quietly(symetric_xy(_CXL,_CYL,_CX,_CY,SXQ2,SYQ2,EXQ2,EYQ2,SXCC,SYCC,EXCC,EYCC,SXQ4,SYQ4,EXQ4,EYQ4,G)),!,
+ quietly(mirror_xy(_CXL,_CYL,_CX,_CY,SXQ2,SYQ2,EXQ2,EYQ2,
+   SXCC,SYCC,EXCC,EYCC,SXQ4,SYQ4,EXQ4,EYQ4,G)),!,
   clip_quadrant(CRef,EXQ2,EYQ2,SXQ4,SYQ4,GN,H,V,SXQ2,SYQ2,EXQ2,EYQ2,G,flipHV,Q2),
   clip_quadrant(CRef,EXQ2,EYQ2,SXQ4,SYQ4,GN,H,V,SXQ4,SYQ2,EXQ4,EYQ2,G,flipV,Q1),
   clip_quadrant(CRef,EXQ2,EYQ2,SXQ4,SYQ4,GN,H,V,SXQ2,SYQ4,EXQ2,EYQ4,G,flipH,Q3),
@@ -509,7 +461,7 @@ nb_set_nth1_oob(N,[_|Row],C):- Nm1 is N -1, nb_set_nth1_oob(Nm1,Row,C).
 nb_set_chv(C,H,V,Grid):- nth1(V,Grid,Row),nb_set_nth1_oob(H,Row,C).
 hvc_value(H,V,C,Grid):-  nth1(V,Grid,Row),nth1(H,Row,C).
 
-idealistic_symetric_xy_3x3(
+idealistic_symmetric_xy_3x3(
 [[Q2,         CN,        flipH(Q2)],
  [CW,        _CC,        flipH(CW)],
  [flipV(Q2),  flipV(CN), flipHV(Q2)]]).
@@ -529,7 +481,7 @@ repair_symmetry(G,GR):-
    [CWR,   CC,   CER],
    [Q3R,  CSR,   Q4R]] = Repair,
 */
- symetric_xy_3x3(G,GR),!.
+ find_and_use_pattern_gen(G,GR),!.
 
 assemble(
  [[Q2,  CN,   Q1],
@@ -545,7 +497,44 @@ assemble(
 is_empty_grid(Empty):- make_empty_grid(MG),MG=@=Empty,!.
 is_empty_grid(Empty):-  (Empty==[] ; Empty ==[[]]),!.
 
+is_symmetric_h(G):- mirror_h(_,_,G),!.
 
 
 :- fixup_exports.
+
+
+
+%mirror_h(I,C,G):- include(not_no_symmetry_yet,G,G0),sort_row_by_num_colors(G0,G1),mirror_lr(I,C,G1,_).
+%mirror_h(I,C,G):- mirror_lr(I,C,G,_),!.
+
+mirror_h(I,C,G):- mirror_lrw(I,C,G,_).
+mirror_h(I,C,G):- flipV(G,G1),mirror_lrw(I,C,G1,_).
+mirror_v(I,C,G):- rot270(G,G0),mirror_lrw(I,C,G0,_).
+mirror_v(I,C,G):- rot270(G,G0),flipV(G0,G1),mirror_lrw(I,C,G1,_).
+
+mirror_hv(EXQ2,CX,EYQ2,CY,H,V,G):- mirror_h(EXQ2,CX,G),mirror_v(EYQ2,CY,G),TY is EYQ2*3, TY > V, TX is EXQ2*3, TX > H,!.
+mirror_hv(EXQ2,CX,EYQ2,CY,_H,_V,G):- mirror_hh(EXQ2,CX,G),mirror_vv(EYQ2,CY,G).
+
+mirror_hh(I,C,G):- mirror_lr(I,C,G,_).
+mirror_vv(I,C,G):- rot270(G,G0),mirror_lr(I,C,G0,_),!.
+    
+mirror_row(I,C,Row,L):- append(C,[E1|RR],Right), append(L,Right,Row),reverse(L,[E1|LL]),aligned_rows(LL,RR),length(L,I).
+% mirror_row(L,CL,Row,I):-  append(Row,_Rest,RowO), c_n_reverse_l(I,_C,_P,RowO,L,CL,_R).
+
+% mirror_row(L,C,Row,I):- append(C,[E1|RR],Right), append(L,Right,Row),reverse(L,[E1|LL]),aligned_rows(LL,RR),length(L,I).
+
+mirror_lrw(_I,_C,[],_GL):- !. 
+mirror_lrw(I,C,G,GL):- maplist_until(mirror_row(I,C),G,GL),
+   reverse(G,GR), maplist_until0(mirror_row(I,C),GR,_).
+
+mirror_lr(I,C,G,GL):- first_half(G,G0),mirror_lr0(I,C,G0,GL).
+mirror_lr(I,C,G,GL):- second_half(G,G0),mirror_lr0(I,C,G0,GL).
+%mirror_lr(I,C,G,GL):- mirror_lr0(I,C,G,GL).
+mirror_lr0(_I,_C,[],_GL):- !.
+mirror_lr0(I,C,G,GL):- maplist(mirror_row(I,C),G,GL),!.
+
+not_no_symmetry_yet(P):- \+ no_symmetry_yet(P).
+
+
+
 

@@ -29,7 +29,7 @@ set_local_points(C,Obj,Grid):- is_group(Obj),!, into_grid(Obj,Grid),localpoints(
 set_local_points(C,Obj,Grid):- is_grid(Obj), !, localpoints(Obj,Points),!, set_local_points(C,Points,Grid).
 
 set_local_points(C,[H|T],Grid):- !, set_local_points(C,H,Grid),set_local_points(C,T,Grid).
-set_local_points(FG,Point,Grid):- as_hv_point(H,V,C,Point),hv_cg_value_or(Grid,Was,H,V,unknown),
+set_local_points(FG,Point,Grid):- as_hv_point(H,V,C,Point),hv_cg_va lue_or(Grid,Was,H,V,unknown),
    expand_color(FG,Was,C,CC),!,
    must(nb_set_local_point(H,V,CC,Grid)).
 

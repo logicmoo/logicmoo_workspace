@@ -20,7 +20,7 @@ grav_mass(Grid,Mass):- grid_size(Grid,H,V), !, grav_mass(Grid,H,V,Mass),!.
 grav_mass(Grid,_,_,Grid):- iz(Grid,hv_symmetric),!.
 % make things bottem heavy
 grav_mass(Grid,H,V,RotG):- H<V, !, rot90(Grid,Grid90),!,bottem_heavy(Grid90,RotG).
-grav_mass(Grid,_H,_V,RotG):- is_symetric_h(Grid),!,bottem_heavy(Grid,RotG).
+grav_mass(Grid,_H,_V,RotG):- is_symmetric_h(Grid),!,bottem_heavy(Grid,RotG).
 grav_mass(Grid,_H,_V,RotG):- bottem_heavy(Grid,A),rot90(A,B),bottem_heavy(B,RotG).
 
 bottem_heavy(Grid,Grid180):-  (is_top_heavy(Grid)->rot180(Grid,Grid180);Grid=Grid180).
