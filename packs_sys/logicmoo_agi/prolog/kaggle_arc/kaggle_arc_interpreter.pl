@@ -99,12 +99,19 @@ run_dsl(Mode,Prog,In,In):- arcdbg(warn(missing(run_dsl(Mode,Prog)))),!,fail.
 
 
 
+sync_colors(Orig,Colors):- is_object(Orig),!,colors(Orig,Colors),
+  globalpoints(Orig,OrigGPoints),colors(OrigGPoints,Colors),
+  localpoints(Orig,OrigLPoints),colors(OrigLPoints,Colors),!.
+sync_colors(Orig,Colors):- colors(Orig,Colors).
 closure_grid_to_object(Orig,Grid,NewObj):- 
+  sync_colors(Orig,Colors),
   object_indv_id(Orig,ID,_Iv),
-  grid_size(Grid,H,V),  
+  grid_size(Grid,H,V), 
+  
   globalpoints(Grid,Points),
   make_indiv_object(ID,H,V,Points,[object_shape(grid)],PartialObj),
-  transfer_props(Orig,[loc_xy,colors,object_shape],PartialObj,NewObj),!.
+  sync_colors(PartialObj,Colors),
+  transfer_props(Orig,[loc_xy,object_shape],PartialObj,NewObj),!.
 
 closure_grid_to_group(Orig,Grid,Group):- individuate(Orig,Grid,Group).
 
@@ -121,7 +128,7 @@ into_grid(Points,Grid, throw_no_conversion(Points)):-
   make_grid(GH,GV,Grid),
   forall(between(1,GV,V),
    ((nth1(V,Grid,Row),forall(between(1,GH,H),      
-     (hv_value_or(Points,CN,H,V,_)->
+     (hv_c_value_or(Points,CN,H,V,_)->
         nb_set_nth1(H,Row,CN)))))),!.
 
 named_gridoid(ID,G):- plain_var(ID),!,known_gridoid(ID,G).
@@ -171,10 +178,11 @@ into_obj0(G,O):- into_group(G,OL),must([O]=OL).
 
 into_group(GI,G):- into_group(GI,G, _ ).
 
-into_group(Why,G, _):- plain_var(G),!, %throw(var_into_group(G)),
- why_grouped(G,Why).
-into_group([],[],(=)).
 into_group(P,G,(=)):- is_group(P),!,G=P.
+into_group(G,G,(=)) :- G==[],!.
+into_group(G, G, _):- plain_var(G),!, %throw(var_into_group(G)),
+ why_grouped(G, _Why).
+
 into_group(G,I, into_grid):- is_grid(G),!,compute_shared_indivs(G,I).
 into_group(P,G, into_obj):- is_object(P),!,G=[P].
 into_group(P,G, rev_lambda(why_grouped)):- named_gridoid(P,M),!,into_group(M,G).

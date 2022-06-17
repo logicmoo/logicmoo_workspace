@@ -157,6 +157,6 @@ pred_intersection(P2,[A|APoints],BPoints,IntersectedA,IntersectedB,[A|LeftOverA]
 end_of_file.
 
 ?- make_grid(3,3,G),
-   hv_value(G,V,2,2),dif(V,Z),hv_value(G,Z,3,3),Z=blue,
+   hv_c_value(G,V,2,2),dif(V,Z),hv_c_value(G,Z,3,3),Z=blue,
    print_grid(G),
    all_rotations(G,R).

@@ -31,71 +31,71 @@ do_gp(_,_,_,_,G,G).
 bg_sym('bg').
 fg_sym('fg').
 
-l_shape(circle,"
- o=o !
-o...o!
-|.,.|!
-o...o!
- o=o !").
+l_shape([circle,hv_symmetric],"
+ o=o $
+o...o$
+|.,.|$
+o...o$
+ o=o $").
 
-l_shape([round,symmetrical],"
-     ooo     
-   o.....o   
-  o.......o  
- o.........o 
- o....,....o 
- o.........o 
-  o.......o  
-   o.....o   
-     ooo     ").
+l_shape([round,hv_symmetric],"
+    ooo    $
+  o.....o  $
+ o.......o $
+o.........o$
+o....,....o$
+o.........o$
+ o.......o $
+  o.....o  $
+    ooo    $").
 
-l_shape(square,"
-o_o!
-|,|!
-o_o!").
+l_shape([square,hv_symmetric],"
+o_o$
+|,|$
+o_o$").
 
-l_shape(diamond,"
-  o  !
- /.\\ !
-o.,.o!
- \\./ !
-  o  !").
+l_shape([diamond,hv_symmetric],"
+  o  $
+ /.\\ $
+o.,.o$
+ \\./ $
+  o  $").
 
 
-l_shape([heart],"
- o o !
-o.o.o!
-o.,.o!
- \\./ !
-  o  !").
+l_shape([heart,h_symmetric],"
+ o o $
+o.o.o$
+o.,.o$
+ \\./ $
+  o  $").
 
 l_shape([balloon,h_symmetric],"
- o-o !
-o.,.o!
-o...o!
- \\./ !
-  -  !").
+ o-o $
+o.,.o$
+o...o$
+ \\./ $
+  -  $").
 
 
 l_shape(right_triangle,"
-    o!
-   /|!
-  o.o!
- o.,o!
-o=ooo!").
+    o$
+   /|$
+  o.o$
+ o.,o$
+o=ooo$").
 
 
 l_shape(building,"
-o-,=o!
-|...|!
-o-o=o!").
+o-,=o$
+|...|$
+o-o=o$").
 
 
 l_shape([triangle,h_symmetric],"
-   o   !
-  o.o  !
- /.,.\\ !
-o-ooo-o!").
+   o   $
+  o.o  $
+ /.,.\\ $
+o-ooo-o$").
 
 %l_shape([h_symmetric,hammer],H):- hammer2(H).
 
@@ -126,15 +126,17 @@ shape_info_props(Shape,object_shape(Shape)).
 
 l_shape(LibObj):- 
   in_grid_shape_lib(Shapes0,Grid,GrowthChart),
+  once(must_det_l((
   grid_size(Grid,H,V),
   enum_scale(Scale),
   flatten([Shapes0],Shapes),
   shape_info_props(Shapes,ShapeProps),
-  flatten([Shapes,H,V,Scale],AList),
+  flatten([Shapes,H,V,Scale],AList),!,
   atomic_list_concat(AList,'_',ID),
   scale_grid(Scale,GrowthChart,Grid,ScaledGrid),
-  globalpoints(ScaledGrid,Points),
-  make_indiv_object(ID,H,V,Points,[object_shape(l_shape)|ShapeProps],LibObj).
+  globalpoints(ScaledGrid,Points)))),
+  catch(make_indiv_object(ID,H,V,Points,[object_shape(l_shape)|ShapeProps],LibObj),_,
+    (rtrace(make_indiv_object(ID,H,V,Points,[object_shape(l_shape)|ShapeProps],LibObj)))).
 
 % todo temp
 sortshapes(List,ListS):- predsort(using_compare(shape_key),List,ListS),!.
@@ -152,9 +154,9 @@ searchable(Group,List):- override_group(searchable(Group,List)),!.
 searchable(Shape,Searchable):- object_grid(Shape,Grid), constrain_grid(f,_CheckType,Grid,Searchable).
 
 colorless(Group,List):- override_group(colorless(Group,List)),!.
-colorless(Shape,ShapeO):-
+colorless(Shape,ShapeO):- 
   colors_to_vars(_Colors,Vars,Shape,ShapeO),
-  set_fg_vars(Vars),length(Vars,L),write(L),
+  set_fg_vars(Vars),length(Vars,L),writeln(set_fg_vars=L),
   all_dif_colors(Vars,Vars).
 /*
   maplist(label_as_fg(Vars),Vars,CVars).
@@ -260,13 +262,23 @@ show_shape_lib:- %mmake,
 clear_shape_lib:- findall(Name,in_shape_lib(Name,_Obj),Gallery),
   list_to_set(Gallery,GalleryS),maplist(clear_shape_lib,GalleryS).
 
-show_shape_lib(Name):- 
+show_shape(Shape):-
+  ignore(print_info(Shape)),
+  ignore(print_grid([Shape])->true;writeln(failed_print_grid)),
+  ignore(pt(Shape)),
+  dash_char.
+  
+
+show_shape_lib(Name):- make,
+ pt(?- show_shape_lib(Name)),
  mort((shape_lib_direct(Name,GalleryS), length(GalleryS,Len), pt(shape_lib_direct(Name)=Len))),
  ignore(( Len\==0,
-  mort((shape_lib_expanded(Name,GallerySOS), length(GallerySOS,LenOS), pt(shape_lib_expanded(Name)=LenOS))),
+  maplist(show_shape,GalleryS),  
+  mort((shape_lib_expanded(Name,GallerySOS), length(GallerySOS,LenOS), underline_print(pt(shape_lib_expanded(Name)=LenOS)))),
+  maplist(show_shape,GallerySOS),
   %shape_lib_rules(Name,Rules),length(Rules,LenRules),pt(shape_lib_rules(LenRules)=Rules),
   mort(ignore((shapelib_opts(Name,Opts), length(Opts,LenOpts), LenOpts > 0, pt(shapelib_opts(LenOpts)=Opts)))),!,
-  GalleryS\==[], maplist(print_grid,GalleryS))).
+  ignore((GalleryS\==[], maplist(print_grid,GalleryS))))).
 
 clear_shape_lib(Name):- 
   findall(_,(clause(in_shape_lib(Name,_),true,Ref),erase(Ref)),L),
@@ -330,10 +342,9 @@ in_shape_lib(seen,O):- g2o(_,O), localpoints(O,LP),LP\==[],length(LP,L),L>4.
 all_rots(X,Y):- all_rotations(X,Y).
 
 in_grid_shape_lib([Shape,hollow],Grid,GrowthChart):- 
-   learned_color_inner_shape(Shape,Color,BG,BGrid,GrowthChart),
-  put_attr(Color,ci,fg(1)), 
-  bg_sym(BG), 
-  bg_to_fresh_vars(BGrid,Grid).
+  get_bgc(BG),
+  learned_color_inner_shape(Shape,Color,BG,Grid,GrowthChart),
+  put_attr(Color,ci,fg(1)).
 in_grid_shape_lib([Shape,filled],Grid,GrowthChart):- 
    learned_color_inner_shape(Shape,Color,Fill,Grid,GrowthChart),
   put_attr(Color,ci,fg(1)), 

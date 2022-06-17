@@ -84,12 +84,12 @@ subClassOf(outline(_),thick1).
 subClassOf(hv_line(H,V),line(H,V,_,_)).
 subClassOf(dg_line(U,D),line(_,_,U,D)).
 
-subClassOf(square,symmetric).
-subClassOf(diamond,symmetric).
-subClassOf(h_symmetric,symmetric).
-subClassOf(circle,symmetric).
+subClassOf(square,hv_symmetric).
+subClassOf(diamond,hv_symmetric).
+subClassOf(h_symmetric,hv_symmetric).
+subClassOf(circle,hv_symmetric).
 subClassOf(triangle,h_symmetric).
-subClassOf(round,symmetric).
+subClassOf(round,hv_symmetric).
 
 
 meets_indiv_criteria(_,_).
@@ -191,14 +191,13 @@ slow_is_grid([[C|H]|R]):- notrace((is_grid_cell(C),is_list(H),is_list(R),
 
 %is_object(H):- is_list(H),maplist(is_cpoint,H).
 is_grid_cell(C):- var(C),!.
-is_grid_cell(obj(_)):-!,fail.
-is_grid_cell(C):- \+ is_list(C), nop((plain_var(C); is_color(C) ; ( C =  _-_))),!.
+is_grid_cell(C):- is_colorish(C),!.
 
 
 is_object(O):- compound(O), O = obj(Props), is_list(Props).
 
 %is_object_group([G|V]):- is_object(G),is_list(V),maplist(is_object,V).
-is_group([G|V]):- is_object_or_grid(G),is_list(V),maplist(is_object_or_grid,V),!.
+is_group([G|V]):- is_object_group([G|V]). % is_object_or_grid(G),is_list(V),maplist(is_object_or_grid,V),!.
 
 is_object_group([G|V]):- is_object(G),is_list(V),maplist(is_object,V),!.
 is_grid_group([G|V]):- is_grid(G),is_list(V),maplist(is_grid,V),!.
@@ -317,7 +316,7 @@ all_rotations(RedHammer,Hammer):-
  (var(RedHammer) -> freeze(RedHammer,all_rotations(RedHammer,Hammer)) 
    ; no_repeats(Grid,(shape_rotations(RedHammer,Hammer),object_grid(Hammer,Grid)))).
 
-shape_rotations(Shape,Shape):- iz(Shape,symmetric),!.
+shape_rotations(Shape,Shape):- iz(Shape,hv_symmetric),!.
 shape_rotations(Shape,Hammer):- iz(Shape,h_symmetric),!, non_h_rot(Rot),call(Rot,Shape,Hammer).
 shape_rotations(RedHammer,Hammer):- enum_rotation(ROT), call(ROT,RedHammer,Hammer).
 
@@ -327,7 +326,7 @@ all_orientations(RedHammer,Hammer):-
  (var(RedHammer) -> freeze(RedHammer,all_orientations(RedHammer,Hammer)) 
    ; no_repeats(Grid,(shape_orientations(RedHammer,Hammer),object_grid(Hammer,Grid)))).
 
-shape_orientations(Shape,Shape):- iz(Shape,symmetric),!.
+shape_orientations(Shape,Shape):- iz(Shape,hv_symmetric),!.
 shape_orientations(Shape,Hammer):- iz(Shape,h_symmetric),!, non_h_ori(Rot),call(Rot,Shape,Hammer).
 shape_orientations(RedHammer,Hammer):- enum_orientation(ROT), call(ROT,RedHammer,Hammer).
 

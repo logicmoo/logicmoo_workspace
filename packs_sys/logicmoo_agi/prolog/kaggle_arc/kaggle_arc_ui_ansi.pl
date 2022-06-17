@@ -16,7 +16,9 @@ print_collapsed0(Size,G):- Size<10, !, call(G).
 print_collapsed0(Size,G):- Size>20, !, wots(_S,G).
 print_collapsed0(_,G):- wots(S,G),write(S).
 
-tersify(I,O):- quietlyd((tersify2(I,M),tersify3(M,O))).
+tersify(I,O):- \+ tracing,!,I=O.
+tersify(I,O):- term_variables(I,Vs), \+ ( member(V,Vs), attvar(V)),!,I=O.
+tersify(I,O):- quietly((tersify2(I,M),tersify3(M,O))).
 
 terseA(_,[],[]):- !.
 terseA(I,[A|L],[B|LL]):-terseA(I,A,B),terseA(I,L,LL).
@@ -27,13 +29,11 @@ terseA(_,put_attr(_,B,A),B=A):-!.
 terseA(_,A,A):-!.
 
 
-
-
 tersify0(I,av(I,Others)):- attvar(I),copy_term(I,C,Attrs),C=I,terseA(I,Attrs,Others),!.
 tersify0(I,I):- var(I),!.
 
 
-tersifyC(D):- is_dict(D),!.
+%tersifyC(D):- is_dict(D),!.
 tersifyC(av(_,_)).
 tersifyC(objFn(_)).
 tersifyC(groupFn(_)).
@@ -42,14 +42,14 @@ tersify1(av(_,Blue), -(Blue)):-!.
 tersify1(I,O):- compound(I), tersifyC(I),!,I=O.
 tersify1(I,gridFn(S)):- is_grid(I), into_gridnameA(I,O),!,sformat(S,'~w',[O]).
 tersify1(I,gridFn(O)):- is_grid(I),tersifyG(I,O),!.
-tersify1(I,groupFn(O)):- is_group(I),why_grouped(O,I),!.
+tersify1(I,groupFn(O)):- is_group(I),why_grouped(O,II),!,I==II.
 tersify1(gridFn(I),gridFn(O)):-tersifyG(I,O).
 tersify1(I,objFn(S)):- is_object(I), o2g(I,O),!,sformat(S,"' ~w '",[O]).
 
 tersifyG(I,O):- tersifyL(I,O),numbervars(O,1,_,[attvar(bind),singletons(false)]).
 tersifyL(I,O):- is_list(I), maplist(tersifyL,I,O).
-tersifyL(I,O):- tersify0(I,O).
-tersifyL(I,O):- tersify1(I,O).
+tersifyL(I,O):- tersify0(I,O),!.
+tersifyL(I,O):- tersify1(I,O),!.
 tersifyL(I,I).
 
 tersify2(I,O):- compound(I),tersify1(I,O),!.
@@ -74,6 +74,8 @@ pt(P):- format('~N'), quietlyd(print_tree_nl(P)),!.
 pt(Color,P):- quietlyd((format('~N'), wots(S,pt(P)),!,color_print(Color,S))).
 
 
+wqs(X):- is_grid(X), !, print_grid(X).
+wqs(X):- is_object(X), !, show_shape(X).
 wqs(X):- plain_var(X), !, wqs(plain_var(X)). wqs(nl):- !, nl. wqs(''):-!. wqs([]):-!.
 %wqs([H1,H2|T]):- string(H1),string(H2),!, write(H1),write(' '), wqs([H2|T]).
 %wqs([H1|T]):- string(H1),!, write(H1), wqs(T).
@@ -86,7 +88,7 @@ wqs(call(C)):- !, call(C).
 wqs(pt(C)):- !, pt(C).
 wqs(q(C)):- !, write(' '), writeq(C).
 wqs(cc(C,N)):- !, write(' cc('),color_print(C,C),write(','), writeq(N), write(')').
-wqs(color_print(C,X)):- !, write(' '), color_print(C,X).
+wqs(color_print(C,X)):- \+ plain_var(C), !, write(' '), color_print(C,X).
 
 wqs(X):- \+ compound(X),!, write(' '), write(X).
 wqs(X):- write(' '), writeq(X).
@@ -319,12 +321,12 @@ is_print_collapsed:- nb_current(print_collapsed,true).
 print_grid(_):- is_print_collapsed,!.
 print_grid(Grid):- use_row_db, is_grid(Grid),!, grid_to_id(Grid,ID),print_grid(ID).
 
-print_grid(Grid):-  quietlyd(print_grid0(_,_,Grid)),!.
+print_grid(Grid):-  quietly(print_grid0(_,_,Grid)),!.
 %print_grid0(Grid):- plain_var(Grid),!, throw(var_print_grid(Grid)).
 
-print_grid(OH,OV,Name,Out):- print_grid(OH,OV,Out),toUpperC(Name,NameU),write('\t'),color_print(cyan,call(underline_print(writeln(NameU)))),dash_char,!.
-print_grid(H,V,Grid):- use_row_db, grid_to_id(Grid,ID),!,print_grid0(H,V,ID).
-print_grid(H,V,Grid):- quietlyd(print_grid0(H,V,Grid)).
+print_grid(OH,OV,Name,Out):- print_grid(OH,OV,Out),!,toUpperC(Name,NameU),write('\t'),color_print(cyan,call(underline_print(writeln(NameU)))),dash_char,!.
+%print_grid(H,V,Grid):- use_row_db, grid_to_id(Grid,ID),!,print_grid0(H,V,ID).
+print_grid(H,V,Grid):- quietly(print_grid0(H,V,Grid)).
 
 print_grid0(_,_,_):- is_print_collapsed,!.
 print_grid0(H,V,G):- G==[],number(H),number(V),!,make_grid(H,V,GG),!,print_grid0(H,V,GG).
@@ -346,12 +348,12 @@ print_grid0(SH,SV,EH,EV,Grid):- print_grid0(SH,SV,SH,SV,EH,EV,EH,EV,Grid).
 print_grid(SH,SV,LoH,LoV,HiH,HiV,EH,EV,Grid):- print_grid0(true,SH,SV,LoH,LoV,HiH,HiV,EH,EV,Grid),!.
 
 print_grid0(SH,SV,LoH,LoV,HiH,HiV,EH,EV,Grid):-
- line_position(current_output,O),
+ (line_position(current_output,O);O=0),!,
  O1 is O+1,
- quietlyd((wots(S, \+ \+ print_grid0(true,SH,SV,LoH,LoV,HiH,HiV,EH,EV,Grid)),
- print_w_pad(O1,S))),format('~N').
+ wots(S, \+ \+ print_grid0(true,SH,SV,LoH,LoV,HiH,HiV,EH,EV,Grid)),
+ print_w_pad(O1,S),format('~N').
 
-quietlyd(G):-call(G),!.
+quietlyd(G):-notrace(G),!.
 /*
 print_grid0(Bordered,SH,SV,LoH,LoV,HiH,HiV,EH,EV,Grid):- 
   is_grid(Grid), Grid=[[AShape|_]|_], nonvar_or_ci(AShape),(AShape=A-Shape),plain_var(A),nonvar_or_ci(Shape),
@@ -365,8 +367,10 @@ print_grid0(Bordered,SH,SV,LoH,LoV,HiH,HiV,EH,EV,Grid):-
    writeq(Grid).
 */
 
-print_grid0(Bordered,SH,SV,LoH,LoV,HiH,HiV,EH,EV,Grid):- is_object(Grid),!,print_grid0(Bordered,SH,SV,LoH,LoV,HiH,HiV,EH,EV,[Grid]).
+print_grid0(Bordered,SH,SV,LoH,LoV,HiH,HiV,EH,EV,Grid):- is_object(Grid),!,%print_grid0(Bordered,SH,SV,LoH,LoV,HiH,HiV,EH,EV,[Grid]),
+  globalpoints(Grid,Points),print_grid0(Bordered,SH,SV,LoH,LoV,HiH,HiV,EH,EV,Points).
 print_grid0(_Bordered,SH,SV,_LoH,_LoV,_HiH,_HiV,EH,EV,GridI):-
+ must_det_l((
   write('\n'), 
   maybe_grid_numbervars(GridI,Grid),
   ((plain_var(EH) ; plain_var(EV))->grid_size(Grid,EH,EV);true),
@@ -376,11 +380,11 @@ print_grid0(_Bordered,SH,SV,_LoH,_LoV,_HiH,_HiV,EH,EV,GridI):-
   forall(between(SV,EV,V),
    ((format('~N|'),
      forall(between(SH,EH,H), 
-     (hv_value_or(Grid,C,H,V,BGC)->
-        (once(print_gw1(C))))),write(' |')))),
+     (hv_cg_value_or(Grid,CG,H,V,BGC)->
+        (once(print_gw1(CG))))),write(' |')))),
   %print_g(H,V,C,LoH,LoV,HiH,HiV)
   format('~N'),!,
-  once((user:dash_uborder_no_nl(Width+1))).
+  once((user:dash_uborder_no_nl(Width+1))))).
 
 %print_grid(Grid):- is_grid(Grid),!, maplist(print_rows,Grid),nl.
 %print_rows(List):- maplist(print_g,List),nl.

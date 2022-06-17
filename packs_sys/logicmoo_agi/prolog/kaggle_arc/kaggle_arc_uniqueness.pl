@@ -18,7 +18,10 @@ my_asserta_if_new((H:-B)):- !,must_det_l( (clause(H,B,Ref),clause(HH,BB,Ref), H+
 my_asserta_if_new(HB):- my_asserta_if_new(HB:-true).
 
 :- dynamic(why_grouped/2).
-select_group(Group,How):-
+
+%select_group(Group,How):- no_repeats(Group,select_group0(Group,How)).
+select_group(Group,How):- select_group0(Group,How).
+select_group0(Group,How):-
   ((why_grouped(How1,Group1), % dif(Group1,Group2), 
     why_grouped(How2,Group2), 
     Group1\==Group2,
@@ -28,69 +31,82 @@ select_group(Group,How):-
   %member(M1,Group1),member(M2,Group2),M1=M2,
   append(Group1,Group2,GroupJ), sort(GroupJ,Group),
   How = [How1,How2]))  *-> true ; why_grouped(How,Group).
-select_group(Group,obj_cache):- findall(O,obj_cache(O,_),Group).
+select_group0(Group,obj_cache):- findall(O,obj_cache(O,_),GroupJ),sort(GroupJ,Group).
 
 :- add_history(what_unique).
 what_unique:- what_unique(n=0,n>10).
 
 
 :- add_history(what_unique(n=0,n>10)).
-get_new_uniq_dict(UniqDict):- 
-    UniqDict = what_unique{sharedWith:_SharedWith,object:_Obj,trait:_Trait,groupSizeMask:_GroupSizeMask,
+get_new_uniq_dict(Dict):- 
+    ArgDict = _{sharedWith:_SharedWith,object:_Obj,trait:_Trait,groupSizeMask:_GroupSizeMask,
   actualGroupSize:_ActualGroupSize,countMask:_CountMask,
   actualCount:_ActualCount,otherL:_OtherL,listL:_ListL,
-  setL:_SetL,others:_TraitCountSets,how:_How,group:_Group}.
+  setL:_SetL,others:_TraitCountSets,how:_How,group:_Group},
+  (var(Dict)->Dict=ArgDict ; Dict >:< ArgDict).
 
 what_unique(Dict):- is_dict(Dict),!,what_unique_dict(Dict).
 what_unique(Obj):- select_group(Group,_How), member(Obj,Group), what_unique(Obj,Group).
-what_unique(Obj,Group):- is_group(Group),!,
-  get_new_uniq_dict(UniqDict),
-  UniqDict.group = Group,
-  UniqDict.object = Obj,
-  what_unique_dict(UniqDict),
-  report_unique(UniqDict).
+what_unique(Obj,Group):- (is_group(Group);is_object(Obj)),!,what_unique_obj(Obj,Group).
 what_unique(CountMask,GroupSizeMask):-
-  get_new_uniq_dict(UniqDict),
-  UniqDict.groupSizeMask = GroupSizeMask,
-  UniqDict.countMask = CountMask,
-  what_unique_dict(UniqDict),
-  report_unique(UniqDict).
+  get_new_uniq_dict(Dict),
+  Dict.groupSizeMask = GroupSizeMask,
+  Dict.countMask = CountMask,!,
+  what_unique_dict(Dict),
+  report_unique(Dict).
+
+
+what_unique_obj:- what_unique_obj(_,_).
+what_unique_obj(Obj,Group):- 
+  get_new_uniq_dict(Dict),
+  Dict.group = Group,
+  Dict.object = Obj,
+  what_unique_dict(Dict),
+  !,
+  report_unique(Dict).
 
 /*what_unique(CountMask,GroupSizeMask):-
  what_unique(SharedWith,Obj,Trait,GroupSizeMask,ActualGroupSize,CountMask,ActualCount,OtherL,ListL,SetL,TraitCounts,How),
  report_unique(SharedWith,Obj,Trait,GroupSizeMask,ActualGroupSize,CountMask,ActualCount,OtherL,ListL,SetL,TraitCounts,How).
 */
+report_unique(Dict):- var(Dict),get_new_uniq_dict(Dict),!,report_unique(Dict).
+report_unique(Dict):- var(Dict.actualCount),!, what_unique_dict(Dict),report_unique(Dict).
 report_unique(Dict):-
-  Dict = what_unique{sharedWith:SharedWith,object:Obj,trait:Trait,groupSizeMask:GroupSizeMask,
+ must_det_l((
+  ArgDict = _{sharedWith:SharedWith,object:Obj,trait:Trait,groupSizeMask:GroupSizeMask,
   actualGroupSize:ActualGroupSize,countMask:CountMask,
   actualCount:ActualCount,otherL:OtherL,listL:ListL,
   setL:SetL,others:TraitCountSets,how:How,group:Group},
-  maplist(tersify,TraitCountSets,HTraitSetO),
-  maplist(tersify,SharedWith,SharedWithO),
-  maplist(tersify,Group,GroupO),
-  maplist(tersify,Obj,ObjO),
-  (Obj\==[] -> print_grid([Obj]) ; true),
+  (var(Dict)->Dict=ArgDict ; Dict >:< ArgDict),
+  maplist_e(tersify,TraitCountSets,HTraitSetO),
+  maplist_e(tersify,SharedWith,SharedWithO),
+  maplist_e(tersify,Group,GroupO),
+  maplist_e(tersify,Obj,ObjO),
+  (Obj\==[] -> ignore(print_grid(Obj)) ; true),
  pt(what_unique(ObjO=[ActualCount/ActualGroupSize-Trait],sharedWith=SharedWithO,
   setL/listL=SetL/ListL,others=HTraitSetO,how=How,
-  groupSizeMask=GroupSizeMask,group:GroupO,countMask=CountMask,otherL=OtherL)).
+  groupSizeMask=GroupSizeMask,group:GroupO,countMask=CountMask,otherL=OtherL)))).
+
+maplist_e(P2,A,B):- is_list(A),!,maplist(P2,A,B).
+maplist_e(P2,A,B):- call(P2,A,B).
 
 :- style_check(-singleton).
 :- add_history(what_unique(SharedWith,Obj,Trait,GroupSizeMask,ActualGroupSize,CountMask,ActualCount,OtherL,ListL,SetL,Others,_How)).
 :- style_check(+singleton).
 
 
+obj_exclude(Obj,Group,Others):- select(O,Group,Others),O==Obj *-> true; Group=Others.
 
-what_unique_dict(UniqDict):-
- (var(UniqDict) ->
-  UniqDict = what_unique{sharedWith:SharedWith,object:Obj,trait:Trait,groupSizeMask:GroupSizeMask,
+what_unique_dict(Dict):- 
+  ArgDict = _{sharedWith:SharedWith,object:Obj,trait:Trait,groupSizeMask:GroupSizeMask,
   actualGroupSize:ActualGroupSize,countMask:CountMask,
   actualCount:ActualCount,otherL:OtherL,listL:ListL,
-  setL:SetL,others:TraitCountSets,how:How,group:Group} ; true),
-  select_group(Group,How),
-  member(Obj,Group),  
+  setL:SetL,others:TraitCountSets,how:How,group:Group},
+  (var(Dict)->Dict=ArgDict ; Dict >:< ArgDict),
+  (var(Group)->(select_group(Group,How));true),
+  obj_exclude(Obj,Group,Others),  
   length_criteria(Group,GroupSizeMask),
   length(Group,ActualGroupSize),
-  ((select(O,Group,Others),O==Obj) -> true ; Group=Others),
   maplist(each_trait,[Obj|Others],[_-ObjT|TraitList]),
   member(Trait,ObjT),
   \+ too_non_unique(Trait),

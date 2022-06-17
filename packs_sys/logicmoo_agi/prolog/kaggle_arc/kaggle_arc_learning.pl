@@ -172,24 +172,24 @@ _
 \
 
 */
-growthchart_to_grid(GrowthChart,Color,Fill,Grid):-
-   bg_sym(BG), 
+growthchart_to_grid(GrowthChart,Color,Fill,BGrid):-
+  bg_sym(BG), 
   subst_each(GrowthChart,[
    ' '=BG, ','=Fill, '.'=Fill, '/'=Color, '|'=Color, '-'=Color,
-   '_'=Color, '='=Color, '\\'=Color, 'o'=Color], BGrid),
-   bg_to_fresh_vars(BGrid,Grid).
+   '_'=Color, '='=Color, '\\'=Color, 'o'=Color], BGrid).
 
-learn_shape(Name,Ascii):-
+learned_color_inner_shape(Name,Color,Fill,Grid,GrowthChart):-
+   l_shape(Name,Ascii),
    ascii_to_growthchart(Ascii,GrowthChart),
-   growthchart_to_grid(GrowthChart,Color,Fill,Grid),
-   assertz_if_new(learned_color_inner_shape(Name,Color,Fill,Grid,GrowthChart)),
-   nop((
+   growthchart_to_grid(GrowthChart,Color,Fill,GridIn),
+   to_real_grid(GridIn,Grid),
+   \+ \+ ((nop((
      Color = green, Fill = red,        
      grid_size(Grid,H,V),
      print_grid(H,V,Grid),     
-     wqnl(learned(Name)))).
+     wqnl(learned(Name)))))).
 
-learn_shapes:- forall(l_shape(Name,Ascii), learn_shape(Name,Ascii)).
+%learn_shapes:- forall(l_shape(Name,Ascii), learn_shape(Name,Ascii)).
 
 
 

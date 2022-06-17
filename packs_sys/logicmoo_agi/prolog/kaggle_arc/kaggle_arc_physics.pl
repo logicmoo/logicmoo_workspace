@@ -17,7 +17,7 @@ grav_rot0(Shape,ShapeO):-
   predsort(sort_on(grav_mass),List,[ShapeO|_]).
 
 grav_mass(Grid,Mass):- grid_size(Grid,H,V), !, grav_mass(Grid,H,V,Mass),!.
-grav_mass(Grid,_,_,Grid):- iz(Grid,symmetric),!.
+grav_mass(Grid,_,_,Grid):- iz(Grid,hv_symmetric),!.
 % make things bottem heavy
 grav_mass(Grid,H,V,RotG):- H<V, !, rot90(Grid,Grid90),!,bottem_heavy(Grid90,RotG).
 grav_mass(Grid,_H,_V,RotG):- is_symetric_h(Grid),!,bottem_heavy(Grid,RotG).

@@ -78,15 +78,18 @@ test_ogs0(H,V):- clsmake,
   constrain_grid(f,CheckType2,CFG,XFG2),
   once((constrain_grid(f,CheckType,FG,XFG), constrain_grid(s,CheckType,SG,XSG))),
 
+  copy_term(XSG,XSGC),
+
   ((ogs_1(H,V,XFG,XSG),CheckType=run) *-> Match=true; Match=false),
 
   Run = once((
-    ptt(fg=FG),
+    ptt(fg=FG),nl,
     print_grid(FG),
-    (Match == true -> ptt(xfg=XFG) ; true),
+    (Match == true -> (ptt(xfg=XFG),nl) ; true),
     ignore((CheckType=run)),
     ignore((CheckType2=run)),
-    ptt(xfb=XFG2),
+    ptt(xfb=XFG2),nl,
+    ptt(xsg=XSGC),nl,
     ptt(tf=T))),
 
   (Match==true->show_match(H,V,Run,UFG,XSG);show_mismatch(XFG,Run,XSG)),
@@ -95,6 +98,9 @@ test_ogs0(H,V):- clsmake,
 
   Match==true.
 
+
+never_fg(Trig,Var):- freeze(Trig, \+ is_fg_color(Var)).
+never_fg(Var):- freeze(Var, \+ is_fg_color(Var)).
 
 test_ogs(H,V):- clsmake,
   wqln("searching..."),
@@ -225,11 +231,12 @@ ogs_1(H,V,FindI,Search):-
   V is Vi + 1.
 
 ogs_2(H,V,MH,MV,[R1|FGrid],Search):-  
+  grid_detect_bg(Search,Background), my_assertion(Background\==[]), maplist(never_fg,Background),
   append(R1,_,Rho),!,
   append(VPad,[LPadAndRow|Next],Search),
   length(VPad,V),
   %between(0,MV,V),
-  (V> MV -> (!, fail) ; true),
+  ((V>MV) -> (!, fail) ; true),
   between(0,MH,H),
   once((length(LPad,H),
   append(LPad,Rho,LPadAndRow),
@@ -246,12 +253,12 @@ ogs_pt2(H,[Row|FindRows],[S|Search]):-
 grid_detect_bg(Grid1,Background):- 
   term_singletons(Grid1,Background).
 
-grid_label_bg(CT,GridIn,GridO):- CT=f,
+grid_label_bg(CT,GridIn,GridO):- CT=f,!,
   copy_term(GridIn,Grid1),
   grid_detect_bg(Grid1,Background),
   maplist(to_grid_bg(CT,Grid1),Background),
   get_bgc(BG),subst_w_attv(Grid1,BG,bg,GridO),!.
-grid_label_bg(CT,GridIn,GridO):- CT=s,
+grid_label_bg(CT,GridIn,GridO):- CT=s,!,
   copy_term(GridIn,Grid1),
   grid_detect_bg(Grid1,Background),
   maplist(to_grid_bg(CT,Grid1),Background),
@@ -269,12 +276,13 @@ to_grid_bg(_CT,_,BG):- bg_sym(BG),!.
 to_grid_bg(_CT,_,_).
 
 grid_detect_fg(GridIn,Foreground1):- 
-  grid_detect_bg(GridIn,Background),
+  grid_detect_bg(GridIn,Background),!,
   term_variables(GridIn,Foreground),!,
   include(not_in(Background),Foreground,Foreground1).
   
 
 grid_label_fg(GridIn):- 
+  my_assertion(is_grid(GridIn)),
   grid_detect_fg(GridIn,Foreground1),
   grid_label_fg(GridIn,Foreground1),!.
 
@@ -285,6 +293,7 @@ grid_label_fg(GridIn,Foreground1):-
   maplist(to_grid_fg(GridIn),Foreground1,ForegroundCopy),!.
 
 %maybe_grid_numbervars(GridIn,GridIn):-!.
+maybe_grid_numbervars(GridIn,GridIn):- \+ is_grid(GridIn),!.
 maybe_grid_numbervars(GridI,GridIn):- grid_numbervars(GridI,GridIn),!.
 maybe_grid_numbervars(GridIn,GridIn):-!.
 
@@ -396,16 +405,20 @@ constrain_grid_now(CT,Trig,GridIn,Hi,Vi,GH,GV,GridO):-
 
 % Out of bounds on Source Canvas
 constrain_ele(s,GH,GV,_Trig,_GridIn,H,V,_C1I,_C1O,_GridO):- (H==1;V==1;V==GV;H==GH),!.
+% FG Source Canvas
+constrain_ele(s,_GH,_GV,_Trig,_GridIn,_H,_V,C1I,C1O,_GridO):- nonvar(C1I), nonvar(C1O),!, C1O\==C1I,fail.
+constrain_ele(s,_GH,_GV,_Trig,_GridIn,_H,_V,C1I,C1O,_GridO):- is_spec_color(C1I,_),!, 
+  %constrain_type(C1O, \+ is_bg_color(C1O)),
+  C1I=C1O.
 % BG Source Canvas
 constrain_ele(s,_GH,_GV,Trig,_GridIn,_H,_V,C1I,C1O,_GridO):- is_bg_color(C1I),!,
   %constrain_type(C1O, \+ is_fg_color(C1O)),
   constrain_type(Trig, (\+ is_fg_color(C1O))),
   !.
-% FG Source Canvas
-constrain_ele(s,_GH,_GV,_Trig,_GridIn,_H,_V,C1I,C1O,_GridO):- nonvar(C1I), nonvar(C1O),!, C1O\==C1I,fail.
-constrain_ele(s,_GH,_GV,_Trig,_GridIn,_H,_V,C1I,C1O,_GridO):- is_spec_color(C1I,_),!, 
-  %constrain_type(C1O, \+ is_bg_color(C1O)), 
-  C1I=C1O.
+constrain_ele(s,_GH,_GV,Trig,_GridIn,_H,_V,_C1I,C1O,_GridO):- % unspecified
+  %constrain_type(C1O, \+ is_fg_color(C1O)),
+  constrain_type(Trig, (\+ is_fg_color(C1O))),
+  !.
 
 % BG Find On Canvas
 constrain_ele(f,_GH,_GV,_Trig,_GridIn,_H,_V,C1I,_C1O,_GridO):- is_bg_color(C1I),!.
@@ -558,7 +571,6 @@ f666(_Color,
 
 
 
-
 ascii_to_grid(Text,G):- atom_contains(Text,'____'),!,
   atom_chars(Text,C),
   make_grid(30,30,G0),
@@ -570,7 +582,7 @@ ascii_to_grid(Text,G):-
 
 ascii_to_growthchart(Text,GrowthChart):- 
  replace_in_string([ 
-   '\r'='\n','\n\n'='\n','! '='!','!\n'='\n','!'=''],Text,Ascii0),
+   '\r'='\n','\n\n'='\n','$ '='$','$\n'='\n','$'=''],Text,Ascii0),
    atomics_to_string(Rows1,'\n',Ascii0),Rows1=[_|Rows],maplist(atom_chars,Rows,GrowthChart),!.
 
 

@@ -131,10 +131,10 @@ register_obj(L):- asserta(obj_cache(L,'')),
 :- module_transparent obj_cache/2.
 
 enum_object(O):- var(O),!,no_repeats(O,enum_object0(O)).
-enum_object(O):- ptt(enum_object(O)),trace.
+enum_object(O):- ptt(enum_object(O)),!.
 
-enum_object0(obj(O)):- % listing(obj_cache/2),
-       obj_cache(O,S),write(S). 
+enum_object0(Obj):- % listing(obj_cache/2),
+       obj_cache(O,_S),as_obj(O,Obj).
 /*
 enum_object0(S):- why_grouped(_,IndvS),member(S,IndvS).
 enum_object0(S):- clause(in_shape_lib(_,S),Body),catch(Body,_,fail).
@@ -365,7 +365,7 @@ rotation(I,X):- var_check(I,rotation(I,X)).
 rotation(I,X):- indv_props(I,L),member(rotation(X),L).
 rotation(_,same).
 
-%hv_cvalue(Grid,Color,H,V):- hv_value(Grid,C,H,V),!,as_cv(C,Color),!.
+%hv_cvalue(Grid,Color,H,V):- hv_cg_value(Grid,C,H,V),!,as_cv(C,Color),!.
 %as_cv(C,Color):- plain_var(C),!,=(C,Color).
 %as_cv(C,Color):- sub_term(Color,C),nonvar_or_ci(Color),is_color(Color).
 %as_cv(C-_,Color):- as_cv(C,Color).
@@ -376,7 +376,7 @@ object_changes(I,X):- indv_props_old(I,L),member(changes(X),L).
 
 all_points_between(_Grid,_Hi,0,_GH,_GV,Points,Points):-!.
 all_points_between(Grid,Hi,Vi,GH,GV,Points,PointsO):-
-  ((hv_value(Grid,C2,Hi,Vi),(is_spec_color(C2,C);(attvar(C2),C=C2)),hv_point(Hi,Vi,Point)) -> PointsT = [C-Point|Points] ; PointsT = Points),
+  ((hv_c_value(Grid,C2,Hi,Vi),(is_spec_color(C2,C);(attvar(C2),C=C2)),hv_point(Hi,Vi,Point)) -> PointsT = [C-Point|Points] ; PointsT = Points),
   (Hi==1 -> (H = GH, V is Vi-1) ; (H is Hi -1, V=Vi)),!,
   all_points_between(Grid,H,V,GH,GV,PointsT,PointsO).
 
@@ -384,8 +384,8 @@ grid_to_points(Grid,HH,HV,Points):- all_points_between(Grid,HH,HV,HH,HV,[],Point
 /*
 grid_to_points(Grid,HH,HV,Points):-  throw(all_points_between),
   findall(C-Point,(between(1,HV,V),between(1,HH,H),
-    once((hv_value(Grid,C2,H,V),
-          %pt(hv_value(C2,H,V)),
+    once((hv_cg_value(Grid,C2,H,V),
+          %pt(hv_cg_value(C2,H,V)),
           is_spec_color(C2,C),
           hv_point(H,V,Point)))),Points),!.
 */
@@ -429,7 +429,8 @@ globalpoints(Grid,Points):- grid_to_id(Grid,ID),findall(-(C,HV),cmem(ID,HV,C),Po
 %colors(Points,CC):- is_list(Points),nth0(_,Points,C-_),is_color(C), CC = [cc(C,3)],!.
 colors(I,X):- indv_props(I,L),member(colors(X),L),!.
 colors(G,BFO):- colors_via_pixels(G,BFO),!.
-colors_via_pixels(G,BFO):- quietly((pixel_colors(G,GF),sort(GF,GS),count_each(GS,GF,UC),keysort(UC,KS),reverse(KS,SK),!,into_cc(SK,BFO))).
+colors_via_pixels(G,BFO):- quietly((pixel_colors(G,GF),list_to_set(GF,GS),count_each(GS,GF,UC),keysort(UC,KS),reverse(KS,SK),!,
+  into_cc(SK,BFO))).
 %colors(G,X):- is_group(G),!,maplist(colors,G,Points),append_sets(Points,X).
 
 shape(G,X):- is_group(G),!,maplist(shape,G,Points),append_sets(Points,X).
@@ -463,6 +464,7 @@ vis_hv(Grid,H,V):- is_grid(Grid),!,globalpoints(Grid,Points),!,points_range(Poin
 vis_hv(I,X,Y):- indv_props(I,L),member(vis_hv(X,Y),L),!.
 vis_hv(Points,H,V):- points_range(Points,LoH,LoV,HiH,HiV,_,_), H is HiH-LoH+1, V is HiV-LoV+1.
 vis_hv(NT,H,V):-  trace, named_gridoid(NT,G),vis_hv(G,H,V).
+
 
 object_color(HV,C):- color(HV,C).
 

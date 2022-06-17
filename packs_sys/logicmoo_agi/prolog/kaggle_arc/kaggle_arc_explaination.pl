@@ -80,13 +80,13 @@ print_list_of(_,[]):-!.
 print_list_of(N,OO):-
  sort(OO,O),
  (N\=[] -> pt(N); true),
-  save_grouped(print_list_of(N),O),
+  %save_grouped(print_list_of(N),O),
    maplist(print_info,O).
 
 print_info(A):- is_grid(A),print_grid(A).
 print_info(A):- is_object(A), ignore(debug_indiv(A)).
 print_info(A):- is_group(A),debug_indiv(A).
-print_info(A):- into_obj(A,Obj),print_info(Obj).
+%print_info(A):- into_obj(A,Obj),print_info(Obj).
 print_info([]):-!.
 print_info(A):- pt(A).
 
@@ -129,7 +129,7 @@ debug_indiv(obj(A)):- Obj = obj(A), is_list(A),!,
  must_det_l((
   ignore((o2g(Obj,GGG), nonvar(GGG),my_asserta_if_new(g2o(GGG,Obj)))),
 %debug_indiv(Obj):- Obj = obj(A), is_list(A),  
-  once(colors(Obj,[cc(FC,_)|_]);FC=9),
+  %once(colors(Obj,[cc(FC,_)|_]);FC=9),
   sort_obj_props(A,AS),
  % will_show_grid(Obj,TF),
   TF = false,
@@ -139,7 +139,8 @@ debug_indiv(obj(A)):- Obj = obj(A), is_list(A),!,
   %i_glyph(Id,Sym), wqnl([writef("%% %Nr%w \t",[PC]), color_print(FC,Sym) | AAAA ]),!. 
   object_glyph(Obj,Glyph),  
   ignore((TF==true,dash_char)),
-  wqnl([format("%  ~w:\t",[PC]), color_print(FC,Glyph) | TV ]),!,
+  ignore((nonvar(FC) , wqnl([format("%  ~w:\t",[PC]), color_print(FC,Glyph) | TV ]))),!,
+  ignore((var(FC) , wqnl([format("%  ~w:\t",[PC]), color_print(Glyph) | TV ]))),
   ignore(( TF==true, mass(Obj,Mass),!,Mass>4, vis_hv(Obj,H,V),!,H>1,V>1, localpoints(Obj,Points), print_grid(H,V,Points))),
   ignore(( fail, mass(Obj,Mass),!,Mass>4, vis_hv(Obj,H,V),!,H>1,V>1, show_st_map(Obj))),
   %pt(A),

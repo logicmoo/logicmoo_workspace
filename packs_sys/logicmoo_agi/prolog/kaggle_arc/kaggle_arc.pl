@@ -37,7 +37,8 @@ decl_pt(G):- ground(G), !, assertz_new(decl_pt(G)).
   % :- (getenv('DISPLAY',_) -> guitracer ; true).
   :- set_prolog_flag(toplevel_print_anon,true).
   :- set_prolog_flag(toplevel_print_factorized,true).
-  :- set_prolog_flag(answer_write_options, [quoted(true), portray(true), max_depth(20), attributes(portray)]).
+    :- set_prolog_flag(answer_write_options, [quoted(true), portray(false), max_depth(20), attributes(dots)]).
+    :- set_prolog_flag(debugger_write_options, [quoted(true), portray(true), max_depth(20), attributes(dots)]).
 
 clsmake:- cls,update_changed_files.  
 
@@ -112,6 +113,7 @@ fav1:- clsmake, test_names_by_fav(X), arc1(cls1,X).
 fav11:- clsmake, test_names_by_fav(X), arc1(X).
 fav2:- clsmake, test_names_by_fav_rev(X), arc1(cls,X).
 fav22:- clsmake, test_names_by_fav_rev(X), arc1(X).
+favl:- clsmake, (nb_current(last_test,X);X=(v(fe9372f3)*(tst+0))),!,arc1(X).
 
 fav(X):- nonvar(X),!, clsmake, arc1(X).
 fav(X):- clause(fav(X,_),true).
@@ -120,6 +122,7 @@ arc(TestID):- time(forall(arc1(true,TestID),true)).
 
 arc1(TName):- arc1(true,TName).
 arc1(G,TName):-    
+ nb_setval(last_test,TName),
  retractall(why_grouped(individuate(_),_)),
  locally(set_prolog_flag(gc,true),
   (fix_test_name(TName,TestID,ExampleNum), 
@@ -189,8 +192,8 @@ show_arc_pair_progress(TestID,ExampleNum,In,Out):-
  must_det_l((
 	name_the_pair(TestID,ExampleNum,In,Out,PairName),
 	grid_size(In,IH,IV), grid_size(Out,OH,OV),
-	nop(writeln(oi(size(IH,IV)->size(OH,OV)))),
-	ignore((more_task_info(TestID,III),pt(III),nl)), 
+	ignore((IH+IV \== OH+OV , writeln(oi(size(IH,IV)->size(OH,OV))))),
+	ignore((forall(more_task_info(TestID,III),pt(III)),nl)), 
   clear_shape_lib(in),clear_shape_lib(out),clear_shape_lib(pair),clear_shape_lib(noise),  
   get_pair(PairEnv),
   make_fti(IH,IV,PairName+in,In,_,_,_,_,InImage),
@@ -329,6 +332,6 @@ reuse_a_b(A,B,AA):-
     (pt(same_object(GlyphA,GlyphB,How))))).
 
 
-:- learn_shapes.
+%:- learn_shapes.
 
 :- fixup_exports.

@@ -29,7 +29,7 @@ set_local_points(C,Obj,Grid):- is_group(Obj),!, into_grid(Obj,Grid),localpoints(
 set_local_points(C,Obj,Grid):- is_grid(Obj), !, localpoints(Obj,Points),!, set_local_points(C,Points,Grid).
 
 set_local_points(C,[H|T],Grid):- !, set_local_points(C,H,Grid),set_local_points(C,T,Grid).
-set_local_points(FG,Point,Grid):- as_hv_point(H,V,C,Point),hv_value_or(Grid,Was,H,V,unknown),
+set_local_points(FG,Point,Grid):- as_hv_point(H,V,C,Point),hv_cg_value_or(Grid,Was,H,V,unknown),
    expand_color(FG,Was,C,CC),!,
    must(nb_set_local_point(H,V,CC,Grid)).
 
@@ -677,7 +677,7 @@ indv_props(obj(L),L):- enum_object(obj(L)).
 localpointlist(I,X):- indv_props(I,L),member(localpointlist(X),L).
 object_shape(I,X):- indv_props(I,L),member(object_shape(X),L).
 
-hv_cvalue(Grid,Color,H,V):- hv_value(Grid,C,H,V),as_cv(C,Color).
+hv_cvalue(Grid,Color,H,V):- hv_cg_v alue(Grid,C,H,V),as_cv(C,Color).
 as_cv(C,Color):- var(C),color_code(C,Color).
 as_cv(C,Color):- integer(C),!,color_code(C,Color).
 as_cv(C,Color):- atom(C),!,color_code(C,Color).
@@ -768,7 +768,7 @@ get_grid_num_xyc(X,Y,C,N):- fail,
   hv_point(X,Y,Point),
   get_grid_nums(GridsN),
   nth0(N,GridsN,E),
-  once((((member(C-PPoint,E);member(PPoint,E)),nonvar(PPoint),Point=PPoint);hv_value(E,C,X,Y))).
+  once((((member(C-PPoint,E);member(PPoint,E)),nonvar(PPoint),Point=PPoint);hv_cg _value(E,C,X,Y))).
 
 get_grid_nums(GridNums):-
   nb_current(test_name_w_type,NameType),
