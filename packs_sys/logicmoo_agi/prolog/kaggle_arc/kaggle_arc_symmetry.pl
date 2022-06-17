@@ -112,7 +112,7 @@ rows_align([Row1|Rest1],[Row2|Rest2]):-
 
 aligned_rows0([],_):-!. % ( empty_or_open(L) ; empty_or_open(R) ), !.
 aligned_rows0(_,[]):-!.
-aligned_rows0([E|L],[EE|R]):- E==EE,!, aligned_rows0(L,R).
+aligned_rows0([E|L],[EE|R]):- E=@=EE,!, aligned_rows0(L,R).
 
 no_symmetry_yet(Row):- maplist(plain_var,Row),!. % no data yet
 no_symmetry_yet(Row):- maplist(=(_),Row),!. % all same element
@@ -321,12 +321,25 @@ repair_patterned_images(Ordered,Objects,Grids,CorrectObjects,Keep):-
   writeln('Training hard...'),
   advise_color(ColorAdvice,Ordered),
   consensus(ColorAdvice,Grids,H,V,Result),
-  localpoints(Result,LPoints),
-  maplist(replace_local_points(LPoints,_),Grids,CorrectGrids),!,
-  all_rows_align(CorrectGrids), 
   print_grid(Result), dmsg(result),
+  localpoints_include_bg(Result,LPoints),
+%  pt(Result),
+  %pt(LPoints),
+ %together(( localpoints_include_bg(Result,LPoints),hv_c_value(LPoints,C,1,2))),
+ % together((maplist(set_local_points(LPoints),Grids,CorrectGrids),
+ %           maplist(check_my_local_points(LPoints),CorrectGrids),
+ %   all_rows_align(CorrectGrids))),
   maplist(replace_diffs(LPoints),Objects,CorrectObjects),!,
   my_partition(same_lcolor(ColorAdvice),Ordered,Keep,_))),!.
+
+together(Goal):- call(Goal),!.
+
+check_my_local_points([],_Grid):- !.
+check_my_local_points([Point|List],Correct):- 
+ must_det_l(together((point_to_hvc(Point,H,V,Expected),
+ (\+ (hv_c_value_or(Correct,Found,H,V,Expected),Found==Expected) -> set_local_points(Point,Correct,Correct) ; true),
+ (hv_c_value_or(Correct,Found,H,V,Expected),Found==Expected)))),
+ check_my_local_points(List,Correct).
 
 advise_color(ColorAdvice,Ordered):- member_color(Ordered,ColorAdvice).
 advise_color(ColorAdvice,Ordered):- enum_colors(ColorAdvice), \+ member_color(Ordered,ColorAdvice).
@@ -336,10 +349,16 @@ member_color(Ordered,ColorAdvice):- member(Obj,Ordered),color(Obj,ColorAdvice).
 
 replace_diffs(LPoints,Obj,NewObj):- 
  must_det_l((
-  vis_hv(Obj,H,V),  
+  vis_hv(Obj,H,V),
   my_partition(point_between(1,1,H,V),LPoints,Points,_),
-  rebuild_from_localpoints(Obj,Points,NewObj))),
-  %print_grid_i(NewObj),
+  localpoints(Obj,LP),
+  intersection(LP,Points,_Same,LPOnly,LPointOnly),
+  ((LPOnly ==[], LPointOnly ==[]) -> NewObj = Obj ;
+  (
+   % pt(LPOnly), pt(LPointOnly),
+  rebuild_from_localpoints(Obj,Points,NewObjM))))),
+  override_object(repaired(pattern),NewObjM,NewObj),
+    %print_grid_i(NewObj),
   nop(show_shape(NewObj)),!.
 
 point_between(LoH,LoV,HiH,HiV,Point):- point_to_hvc(Point,H,V,_),

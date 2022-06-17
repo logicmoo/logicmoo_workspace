@@ -525,7 +525,7 @@ into_color_glyph_ez(CTerm,Color,Code):-
 %into_color_glyph(H,V,CTerm,Color,Code):- fail, get_grid_num_xyc(H,V,SColor,SNth),into_color_glyph(SColor+SNth+CTerm,Color,Code),nonvar_or_ci(Code).
 
 into_color_glyph(N,C,DOT):- is_bg_color(N),get_bgc(C),bg_dot(DOT).
-into_color_glyph(N,C,DOT):- is_spec_color(N,C),fg_dot(DOT).
+into_color_glyph(N,C,DOT):- is_spec_fg_color(N,C),fg_dot(DOT).
 into_color_glyph(N,C,DOT):- is_fg_color(N),N=C,fg_dot(DOT).
 into_color_glyph(N,C,DOT):- is_bg_color(N),C=N,bg_dot(DOT).
 into_color_glyph(N,C,DOT):- cant_be_color(N,C),cant_be_dot(DOT).

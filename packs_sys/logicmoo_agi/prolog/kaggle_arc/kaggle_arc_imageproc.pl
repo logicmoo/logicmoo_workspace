@@ -168,7 +168,7 @@ add_obj(Obj,In,Out):- globalpoints(Obj,Points),set_local_points(Points,In,Out).
 
 
 remove_global_points([],Grid,Grid):- !.
-remove_global_points(Obj,Grid,GridO):- is_grid(Obj),!, globalpoints(Obj,Points),remove_global_cpoints(Points,Grid,GridO).
+remove_global_points(Obj,Grid,GridO):- is_grid(Obj),!, localpoints_include_bg(Obj,Points),remove_global_cpoints(Points,Grid,GridO).
 remove_global_points([H|T],Grid,GridO):- is_points_list([H|T]), !, remove_global_cpoints([H|T],Grid,GridO).
 remove_global_points(Obj,Grid,GridO):- is_group(Obj), globalpoints(Obj,Points),remove_global_cpoints(Points,Grid,GridO).
 remove_global_points(Obj,Grid,GridO):- is_object(Obj), globalpoints(Obj,Points),remove_global_cpoints(Points,Grid,GridO).
@@ -194,7 +194,7 @@ same_color(IfSame,Old):- \+ \+ IfSame = Old.
 
 pred_global_points(Pred7,Obj,Grid,GridO):- pred_global_points(Pred7,fg,Obj,Grid,GridO).
 pred_global_points(_Pred7,_Color,[],Grid,Grid):- !.
-pred_global_points(Pred7,Color,Obj,Grid,GridO):- is_grid(Obj),!, globalpoints(Obj,Points),pred_global_cpoints(Pred7,Color,Points,Grid,GridO).
+pred_global_points(Pred7,Color,Obj,Grid,GridO):- is_grid(Obj),!, localpoints_include_bg(Obj,Points),pred_global_cpoints(Pred7,Color,Points,Grid,GridO).
 pred_global_points(Pred7,Color,[H|T],Grid,GridO):- is_points_list([H|T]), !, pred_global_cpoints(Pred7,Color,[H|T],Grid,GridO).
 pred_global_points(Pred7,Color,Obj,Grid,GridO):- is_group(Obj), globalpoints(Obj,Points),pred_global_cpoints(Pred7,Color,Points,Grid,GridO).
 pred_global_points(Pred7,Color,Obj,Grid,GridO):- is_object(Obj), globalpoints(Obj,Points),pred_global_cpoints(Pred7,Color,Points,Grid,GridO).
@@ -213,7 +213,7 @@ add_global_points(Obj,Grid,GridO):-
  add_global_points(fg,Obj,Grid,GridO).
 
 add_global_points(_Color,[],Grid,Grid):- !.
-add_global_points(Color,Obj,Grid,GridO):- is_grid(Obj),!, globalpoints(Obj,Points),add_global_cpoints(Color,Points,Grid,GridO).
+add_global_points(Color,Obj,Grid,GridO):- is_grid(Obj),!, localpoints_include_bg(Obj,Points),add_global_cpoints(Color,Points,Grid,GridO).
 add_global_points(Color,[H|T],Grid,GridO):- is_points_list([H|T]), !, add_global_cpoints(Color,[H|T],Grid,GridO).
 add_global_points(Color,Obj,Grid,GridO):- is_group(Obj), globalpoints(Obj,Points),add_global_cpoints(Color,Points,Grid,GridO).
 add_global_points(Color,Obj,Grid,GridO):- is_object(Obj), globalpoints(Obj,Points),add_global_cpoints(Color,Points,Grid,GridO).
@@ -239,15 +239,18 @@ set_local_po ints(C,Point,Grid,GridO):- point_t o_hvc(H,V,Old,Point), replace_lo
 %set_local_points([],Grid,Grid):- !.
 %set_local_points([H|T],Grid,GridO):- !, set_local_points(H,Grid,GridM),set_local_points(T,GridM,GridO).
 set_local_points(Point,Grid,GridO):- replace_local_points(Point,_AnyOldColor,Grid,GridO),!.
+set_local_points(Point,Grid,GridO):- ignore((rtrace((replace_local_points(Point,_AnyOldColor,Grid,GridO))),break)),!.
 %set_local_points(Point,Grid,GridO):- set_local_points(,Point,Grid,GridO).
-set_local_points(Point,Grid,Grid):-  wdmsg(warn(skip(set_local_points(Point)))).
+%set_local_points(Point,Grid,Grid):-  wdmsg(warn(skip(set_local_points(Point)))).
 
-replace_grid_point(H,V,NewC,_OldC,Grid,Grid):- 
-  nth1(V,Grid,Row),nb_set_nth1(H,Row,NewC),!.
-replace_grid_point(_H,_V,_NewC,_OldC,Grid,Grid).
+replace_grid_point(H,V,NewC,OldC,Grid,Grid):- %copy_term(OldC,OldCC),
+  nth1(V,Grid,Row),ignore((nth1(H,Row,OldCC),!, OldCC\==NewC, ( \+ OldCC \= OldC), nb_set_nth1(H,Row,NewC))),!,
+   nb_set_nth1(V,Grid,Row).
+replace_grid_point(_H,_V,_NewC,_OldC,Grid,Grid):-!.
 
 
 nb_set_nth1(1,Row,C):- !, (Row==[]->true; nb_setarg(1,Row,C)).
+%nb_set_nth1(1,Row,C):- !, nb_setarg(1,Row,C).
 nb_set_nth1(N,[_|Row],C):- Nm1 is N -1, nb_set_nth1(Nm1,Row,C).
 
 set_all_fg(C0,Grid,GridO):- color_code(C0,C),get_bgc(X),map_pred(if_not_bgc_then(X,C), Grid, GridO).
@@ -352,7 +355,7 @@ replace_col_at_0(N,Col,Row,NewRow):- length(Left,N),append(Left,[_|Right],Row),a
 get_surround_3x3(Grid,H,V,Result):-
   surround_3x3(Template),maplist(get_dir_color(Grid,H,V),Template,Result).
 
-get_dir_color(Grid,H,V,Dir,C):- move_dir(1,H,V,Dir,1,1,NX,NY), hv_c_value(Grid,NX,NY,C).
+get_dir_color(Grid,H,V,Dir,C):- move_dir(1,H,V,Dir,1,1,NX,NY), hv_c_value(Grid,C,NX,NY).
 
 
 % Random Non Blk Eles

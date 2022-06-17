@@ -376,17 +376,26 @@ object_changes(I,X):- indv_props_old(I,L),member(changes(X),L).
 
 all_points_between(_Grid,_Hi,0,_GH,_GV,Points,Points):-!.
 all_points_between(Grid,Hi,Vi,GH,GV,Points,PointsO):-
-  ((hv_c_value(Grid,C2,Hi,Vi),(is_spec_color(C2,C);(attvar(C2),C=C2)),hv_point(Hi,Vi,Point)) -> PointsT = [C-Point|Points] ; PointsT = Points),
+  ((hv_c_value(Grid,C2,Hi,Vi),(is_spec_fg_color(C2,C);(attvar(C2),C=C2)),hv_point(Hi,Vi,Point)) -> PointsT = [C-Point|Points] ; PointsT = Points),
   (Hi==1 -> (H = GH, V is Vi-1) ; (H is Hi -1, V=Vi)),!,
   all_points_between(Grid,H,V,GH,GV,PointsT,PointsO).
 
+all_points_between_include_bg(_Grid,_Hi,0,_GH,_GV,Points,Points):-!.
+all_points_between_include_bg(Grid,Hi,Vi,GH,GV,Points,PointsO):-
+  get_bgc(BGC),
+   hv_c_value_or(Grid,C2,Hi,Vi,BGC),
+   (((is_spec_color(C2,C);(attvar(C2),C=C2);(var(C2),C=BGC)),hv_point(Hi,Vi,Point)) -> PointsT = [C-Point|Points] ; PointsT = Points),
+   (Hi==1 -> (H = GH, V is Vi-1) ; (H is Hi -1, V=Vi)),!,
+   all_points_between_include_bg(Grid,H,V,GH,GV,PointsT,PointsO).
+
 grid_to_points(Grid,HH,HV,Points):- all_points_between(Grid,HH,HV,HH,HV,[],Points),!. 
+grid_to_points_include_bg(Grid,HH,HV,Points):- all_points_between_include_bg(Grid,HH,HV,HH,HV,[],Points),!. 
 /*
 grid_to_points(Grid,HH,HV,Points):-  throw(all_points_between),
   findall(C-Point,(between(1,HV,V),between(1,HH,H),
     once((hv_cg_value(Grid,C2,H,V),
           %pt(hv_cg_value(C2,H,V)),
-          is_spec_color(C2,C),
+          is_spec_fg_color(C2,C),
           hv_point(H,V,Point)))),Points),!.
 */
 
@@ -418,6 +427,10 @@ localpoints(I,X):- throw(unknown(localpoints(I,X))).
 
   localpoints0(I,X):- indv_props(I,L),member(localpoints(X),L), my_assertion(maplist(is_cpoint,X)),!.
   %localpoints(I,X):- into_grid(I,G),!,grid_size(G,H,V),grid_to_points(G,H,V,X).
+
+localpoints_include_bg(Grid,Points):- is_grid(Grid),!, grid_size(Grid,HH,VV), grid_to_points_include_bg(Grid,HH,VV,Points),!.
+localpoints_include_bg(I,X):- \+ is_grid(I), localpoints(I,X),!.
+ 
 
 
 %globalpoints(Grid,Points):- is_object(Grid),!,globalpoints(Grid,Points).

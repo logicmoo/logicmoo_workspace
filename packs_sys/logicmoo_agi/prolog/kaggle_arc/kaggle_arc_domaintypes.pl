@@ -113,8 +113,12 @@ is_black(C):- C==black.
 get_black(black).
 %get_black(0).
 
-is_spec_color(C0,C):- var(C0),!,get_attr(C0,ci,fg(_)), C=C0.
-is_spec_color(C0,C):- \+ is_bg_color(C0), is_fg_color(C0),!,C=C0.
+is_spec_bg_color(C,C):- is_colorish(C),is_bg_color(C).
+
+is_spec_fg_color(C0,C):- var(C0),!,get_attr(C0,ci,fg(_)), C=C0.
+is_spec_fg_color(C0,C):- \+ is_bg_color(C0), is_fg_color(C0),!,C=C0.
+
+is_spec_color(C0,C):- (is_spec_fg_color(C0,C);is_spec_bg_color(C0,C)).
 
 is_color(C):- attvar(C),!,get_attr(C,ci,_).
 is_color(C):- atom(C),color_int(C,N),integer(N).
@@ -180,7 +184,7 @@ is_gridoid(G):- is_points_list(G),!.
 is_gridoid(G):- is_list_of_gridoids(G).
 
 
-is_grid(G):- quietly(fast_is_grid(G)).
+is_grid(G):- \+ \+  quietly(fast_is_grid(G)).
 
 fast_is_grid([[C|H]|R]):- is_list(H), is_list(R), is_grid_cell(C).
 
@@ -191,6 +195,7 @@ slow_is_grid([[C|H]|R]):- notrace((is_grid_cell(C),is_list(H),is_list(R),
 
 %is_object(H):- is_list(H),maplist(is_cpoint,H).
 is_grid_cell(C):- var(C),!.
+is_grid_cell(C):- atomic(C),!.
 is_grid_cell(C):- is_colorish(C),!.
 
 
