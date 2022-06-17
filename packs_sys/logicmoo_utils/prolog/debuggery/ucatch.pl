@@ -1737,8 +1737,7 @@ one_must(MCall,OnFail):-  call(MCall) *->  true ; call(OnFail).
 %
 
 %must_det_u(Goal):- !,maybe_notrace(Goal),!.
-must_det_u(Goal):- must(Goal),!.
-must_det_u(Goal):- Goal->true;(ignore(rtrace(Goal)),break).
+must_det_u(Goal):- (quietly(Goal)->!;(ignore(rtrace(Goal)),break)).
 
 
 %=

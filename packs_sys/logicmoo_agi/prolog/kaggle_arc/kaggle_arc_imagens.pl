@@ -265,7 +265,7 @@ clear_shape_lib:- findall(Name,in_shape_lib(Name,_Obj),Gallery),
 show_shape(Shape):-
   ignore(print_info(Shape)),
   ignore(print_grid([Shape])->true;writeln(failed_print_grid)),
-  ignore(pt(Shape)),
+  ignore((\+ ground(Shape),ptt(Shape))),
   dash_char.
   
 

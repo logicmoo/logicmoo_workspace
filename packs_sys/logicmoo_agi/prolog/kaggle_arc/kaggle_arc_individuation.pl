@@ -39,24 +39,25 @@ individuation_macros(defaults2, [fourway, shape_lib(noise),shape_lib(pair),shape
  hv_line(h),hv_line(v), solid(rectangle), 
  all, by_color, done, defaults]).
 
-% never add done to macros
-individuation_macros(subshape_main, [
-   shape_lib(hammer), % is a sanity test/hack
-   dg_line(d), dg_line(u), 
-   hv_line(h), hv_line(v), 
-   jumps,% run the "jumps" macro
-   merges(Z,Z), % merge lines into square
-   rectangle % any after this wont find individuals unless this is commented out
-   ]).
 
 individuation_macros(by_color, X):-
    findall(by_color(Color),enum_colors(Color),X).
 
 individuation_macros(subshape_in_object, [
    subshape_main,
-   progress,
+   %progress,
+   rectangle, % like colormass but guarenteed it wont link diagonals but most ikmportant ti doesnt look for subshapes
    by_color, % any after this wont find individuals unless this is commented out
    done % hopefully is never ran outside subshape_in_object !
+   ]).
+
+% never add done to macros
+individuation_macros(subshape_main, [
+   shape_lib(hammer), % is a sanity test/hack
+   dg_line(d), dg_line(u), 
+   hv_line(h), hv_line(v), 
+   jumps,% run the "jumps" macro
+   merges(Z,Z) % merge lines into square
    ]).
 
 individuation_macros(jumps,
@@ -96,6 +97,7 @@ individuation_macros(complete, [  % progress,
     find_contained, % mark any "completely contained points"
     find_engulfed, % objects the toplevel subshapes detector found but neglacted containment on 
     combine_duplicates, % make sure any objects are perfectly the same part of the image are combined
+    all,
     dots, % any after this wont find individuals unless this is commented out
     leftover_as_one, % any after this wont find individuals unless this is commented out
     done]).
@@ -511,6 +513,7 @@ fti(Image,[by_color(C)|set(Image,todo)]):-
 
 addObject(Image,Obj):- append(Image.objs,[Obj],set(Image,objs)).
 
+/*
 fti(Image,[by_color([])|set(Image,todo)]):-!.
 
 fsi(_Image,ReservedIO,Grid,[by_color(Rest)|TODO],H,V,Sofar,ID,[by_color(Options)|TODO],ReservedIO,Points,Grid,NewSofar,NextScanPoints):-
@@ -520,7 +523,7 @@ fsi(_Image,ReservedIO,Grid,[by_color(Rest)|TODO],H,V,Sofar,ID,[by_color(Options)
   ((ThisGroup\==[],make_indiv_object(ID,H,V,ThisGroup,[object_shape(by_color(C))],ColorObj))
     -> NewSofar = [ColorObj|Sofar] 
      ; NewSofar = Sofar).
-
+*/
 
 % dots that have no adjacent points of the same color are gathered first
 fsi(_Image,Reserved,Grid,['dots'|TODO],H,V,Sofar,ID,['dots'|TODO],Reserved,Points,Grid,[Indv|Sofar],Rest):-

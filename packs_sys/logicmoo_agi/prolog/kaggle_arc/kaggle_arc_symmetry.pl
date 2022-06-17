@@ -14,7 +14,8 @@
 
 
 %is_symgrid(t('3631a71a')*_*out).
-is_symgrid(t(c444b776)*_*out).
+%is_symgrid(t(c444b776)*_*out).
+is_symgrid(t('9ecd008a')*(tst+0)*in).
 is_symgrid(v(f9d67f8b)*_*out).
 is_symgrid(v(de493100)*_*in).
 is_symgrid(v(f9d67f8b)*_*in).
@@ -24,7 +25,7 @@ is_symgrid(N):-
     kaggle_arc(T,Trn,_,_),
     member(T,
       [t('1b60fb0c'), t('3631a71a'), t('4938f0c2'), 
-      t('4c5c2cf0'), t('9ecd008a'), t(b8825c91), 
+      t('4c5c2cf0'), t(b8825c91), 
       t(e40b9e2f),
       t('47c1f68c'),
       
@@ -35,7 +36,7 @@ is_symgrid(N):-
       N=T*Trn*INOUT,      
       known_gridoid(N,G),
       nonvar_or_ci(G),
-      grid_size(G,H,V), H>12, V>12,
+      grid_size(G,H,V), H>10, V>10,
       wdmsg(is_need(N)),
       wdmsg(is_hard(N)).
 
@@ -65,10 +66,11 @@ repair_symmetry0:-
   known_gridoid(Symgrid,Grid),
   print_grid(Grid)),
   ignore((
+   dash_char,
    wdmsg(repair_symmetry),
-   test_symmetry_code(Grid,GridO),
+   test_symmetry_code(Grid,GridS),
    wdmsg(success(symmetry_code)),
-   print_grid(GridO)))),!.
+   maplist(show_shape,GridS)))),!.
 
 
 crop(X,Y,G,GO):- make_grid(X,Y,GO),maplist_until(aligned_rows,G,GO).
@@ -110,7 +112,7 @@ rows_align([Row1|Rest1],[Row2|Rest2]):-
 
 aligned_rows0([],_):-!. % ( empty_or_open(L) ; empty_or_open(R) ), !.
 aligned_rows0(_,[]):-!.
-aligned_rows0([E|L],[E|R]):- !, aligned_rows0(L,R).
+aligned_rows0([E|L],[EE|R]):- E==EE,!, aligned_rows0(L,R).
 
 no_symmetry_yet(Row):- maplist(plain_var,Row),!. % no data yet
 no_symmetry_yet(Row):- maplist(=(_),Row),!. % all same element
@@ -244,9 +246,10 @@ grid_to_3x3_objs(Ordered,Grid,NewIndiv4s,Keep):-
    (wdmsg(time_limit_exceeded),fail))),
   %catch(find_and_use_pattern_gen(Grid,Image9x9),E, (wdmsg(E),fail)),
   %rtrace(find_and_use_pattern_gen(Grid,Image9x9)),
+  must_det_l((
   flatten(Image9x9,Flat),
   include(nonvar_or_ci,Flat,Grids),
-  maybe_repair_image(Ordered,Grids,NewIndiv4s,Keep).
+  maybe_repair_image(Ordered,Grids,NewIndiv4s,Keep))).
 
 consensus(ColorAdvice,GridS,H,V,VGrid):-
  forall(between(1,V,Y),
@@ -295,10 +298,11 @@ consensus2(Vars,BG,[C|Blk],Color,Other,C).
 consensus2(Vars,[C|BG],Blk,Color,Other,C).
 :- style_check(+singleton).
 
-
+print_grid_i(O):- print_grid(O),!.
+print_grid_i(O):- trace,print_grid(O),!.
 maybe_repair_image(Ordered,Objects,CorrectObjects,Keep):- 
   maplist(object_grid,Objects,AllGrids),
-  predsort(sort_on(colored_pixel_count),AllGrids,Grids),
+  AllGrids=Grids , %once(predsort(sort_on(colored_pixel_count),AllGrids,Grids);sort(AllGrids,Grids)),
   (all_rows_align(Grids)
     -> (Keep=[], format('~N'),writeln('Must be perfect...'),CorrectObjects = Objects);
     repair_patterned_images(Ordered,Objects,Grids,CorrectObjects,Keep)).
@@ -311,6 +315,7 @@ max_hv(Objects,H,V):-
   reverse(SizesS,[size(H,V)|_]),!.
 
 repair_patterned_images(Ordered,Objects,Grids,CorrectObjects,Keep):-
+ must_det_l((
   max_hv(Objects,H,V),
   make_grid(H,V,Result),
   writeln('Training hard...'),
@@ -321,7 +326,7 @@ repair_patterned_images(Ordered,Objects,Grids,CorrectObjects,Keep):-
   all_rows_align(CorrectGrids), 
   print_grid(Result), dmsg(result),
   maplist(replace_diffs(LPoints),Objects,CorrectObjects),!,
-  my_partition(same_lcolor(ColorAdvice),Ordered,Keep,_),!.
+  my_partition(same_lcolor(ColorAdvice),Ordered,Keep,_))),!.
 
 advise_color(ColorAdvice,Ordered):- member_color(Ordered,ColorAdvice).
 advise_color(ColorAdvice,Ordered):- enum_colors(ColorAdvice), \+ member_color(Ordered,ColorAdvice).
@@ -334,7 +339,8 @@ replace_diffs(LPoints,Obj,NewObj):-
   vis_hv(Obj,H,V),  
   my_partition(point_between(1,1,H,V),LPoints,Points,_),
   rebuild_from_localpoints(Obj,Points,NewObj))),
-  print_grid(NewObj),!.
+  %print_grid_i(NewObj),
+  nop(show_shape(NewObj)),!.
 
 point_between(LoH,LoV,HiH,HiV,Point):- point_to_hvc(Point,H,V,_),
   between(LoH,HiH,H), between(LoV,HiV,V).
@@ -342,11 +348,15 @@ point_between(LoH,LoV,HiH,HiV,Point):- point_to_hvc(Point,H,V,_),
   
 
 sort_on(C,R,A,B):- (A==B-> R=0 ; (call(C,A,AA),call(C,B,BB),!,compare(R,AA+A,BB+B))).
-using_compare(C,R,A,B):- (A==B-> R=0 ; (call(C,A,AA),call(C,B,BB),!,compare(R,AA,BB))).
-colored_pixel_count(A,AA):- object_grid(A,G),
-  findall(E,(sub_term(E,G), is_fg_color(E)),L),
-  length(L,AA).
+using_compare(C,R,A,B):- (A==B-> R=0 ; ( (must_det_l((call(C,A,AA),call(C,B,BB),!,compare(R,AA,BB)))))).
+colored_pixel_count(A,Count):- is_points_list(A),fg_color_count(A,Count),!.
+colored_pixel_count(G,Count):- is_grid(G), fg_color_count(G,Count),!.
+colored_pixel_count(A,Count):- is_object(A),localpoints(A,G), fg_color_count(G,Count),!.
+colored_pixel_count(A,Count):- is_list(A),!,maplist(colored_pixel_count,A,Summe),sum_list(Summe,Count),!.
+colored_pixel_count(A,1):- atomic(A),is_fg_color(A),!.
+colored_pixel_count(_,0).
 
+fg_color_count(G,AA):- must_det_l((findall(E,(sub_term(E,G),\+ plain_var(E),is_fg_color(E)),L),length(L,AA))).
 
 /*
 4-Way Symmetry
@@ -405,8 +415,10 @@ find_and_use_pattern_gen(G,Grid9x9):-
   [[Q2,  CN, Q1],
    [CW, _CC, CE],
    [Q3,  CS, Q4]] = Grid9x9,
- quietly(mirror_xy(_CXL,_CYL,_CX,_CY,SXQ2,SYQ2,EXQ2,EYQ2,
-   SXCC,SYCC,EXCC,EYCC,SXQ4,SYQ4,EXQ4,EYQ4,G)),!,
+ (mirror_xy(_CXL,_CYL,_CX,_CY,SXQ2,SYQ2,EXQ2,EYQ2,
+   SXCC,SYCC,EXCC,EYCC,SXQ4,SYQ4,EXQ4,EYQ4,G)-> writeln(did_find_pattern_gen); 
+   (writeln(did_NOT_find_pattern_gen),nop(mirror_xy(_CXL,_CYL,_CX,_CY,SXQ2,SYQ2,EXQ2,EYQ2,
+   SXCC,SYCC,EXCC,EYCC,SXQ4,SYQ4,EXQ4,EYQ4,G)),fail)),
   clip_quadrant(CRef,EXQ2,EYQ2,SXQ4,SYQ4,GN,H,V,SXQ2,SYQ2,EXQ2,EYQ2,G,flipHV,Q2),
   clip_quadrant(CRef,EXQ2,EYQ2,SXQ4,SYQ4,GN,H,V,SXQ4,SYQ2,EXQ4,EYQ2,G,flipV,Q1),
   clip_quadrant(CRef,EXQ2,EYQ2,SXQ4,SYQ4,GN,H,V,SXQ2,SYQ4,EXQ2,EYQ4,G,flipH,Q3),
@@ -468,7 +480,8 @@ idealistic_symmetric_xy_3x3(
 
 
 
-test_symmetry_code(Grid,Grids):- grid_to_3x3_objs([],Grid,Grids,_Keep).
+test_symmetry_code(Grid,Grids):- 
+  grid_to_3x3_objs([],Grid,Grids,_Keep).
 %test_symmetry_code(Grid,Grids):- repair_symmetry(Grid,Grids).
 
 repair_symmetry(G,GR):-
