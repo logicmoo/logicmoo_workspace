@@ -1,5 +1,5 @@
 /*
-  this is part of (H)MUARC
+  this is part of (H)MUARC  https://logicmoo.org/xwiki/bin/view/Main/ARC/
 
   This work may not be copied and used by anyone other than the author Douglas Miles
   unless permission or license is granted (contact at business@logicmoo.org)
@@ -22,12 +22,9 @@ pass_thru_group(G):- var(G),!.
 pass_thru_group([]).
 pass_thru_group([options(_)]).
 
-override_group(P):- P=..[F,M,R],
-  override_group_call(F,M,[],R).
-override_group(P):- P=..[F,A,M,R], 
-  override_group_call(F,M,[A],R).
-override_group(P):- P=..[F,A,B,M,R],
-  override_group_call(F,M,[A,B],R).
+override_group(P):- P=..[F,M,R], override_group_call(F,M,[],R).
+override_group(P):- P=..[F,A,M,R],  override_group_call(F,M,[A],R).
+override_group(P):- P=..[F,A,B,M,R], override_group_call(F,M,[A,B],R).
 
 override_group_call(_F,Group,_AB,R):- pass_thru_group(Group),!,R=Group.
 override_group_call(F,Group,AB,R):- is_object_group(Group),!, C=..[F|AB],
@@ -244,7 +241,7 @@ non_free_fg(C):- \+ free_cell(C), \+ is_bg_color(C).
 %free_cell(8).
 
 %trim_unused_vert_square(BG,Grid,GridO).
-%trim_unused_vert_square(BG,GridR,GridO):- append(Grid,[Row],GridR),maplist(is_bg_or_var(BG),Row),trim_unused_vert_square(BG,Grid,GridO).
+%trim_unused_vert_square(BG,GridR,GridO):- my_append(Grid,[Row],GridR),maplist(is_bg_or_var(BG),Row),trim_unused_vert_square(BG,Grid,GridO).
 %trim_unused_vert_square(_,G,G).*/
 
 non_h_rot(same).

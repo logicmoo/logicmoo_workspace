@@ -1,5 +1,5 @@
 /*
-  this is part of (H)MUARC
+  this is part of (H)MUARC  https://logicmoo.org/xwiki/bin/view/Main/ARC/
 
   This work may not be copied and used by anyone other than the author Douglas Miles
   unless permission or license is granted (contact at business@logicmoo.org)
@@ -29,7 +29,7 @@ select_group0(Group,How):-
     %length(Group1,G1), length(Group2,G2), G1>G2,
   once((sub_term(E,How1),sub_var(E,How2))),
   %member(M1,Group1),member(M2,Group2),M1=M2,
-  append(Group1,Group2,GroupJ), sort(GroupJ,Group),
+  my_append(Group1,Group2,GroupJ), sort(GroupJ,Group),
   How = [How1,How2]))  *-> true ; why_grouped(How,Group).
 select_group0(Group,obj_cache):- findall(O,obj_cache(O,_),GroupJ),sort(GroupJ,Group).
 

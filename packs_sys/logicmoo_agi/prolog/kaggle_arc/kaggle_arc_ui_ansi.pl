@@ -1,5 +1,5 @@
 /*
-  this is part of (H)MUARC
+  this is part of (H)MUARC  https://logicmoo.org/xwiki/bin/view/Main/ARC/
 
   This work may not be copied and used by anyone other than the author Douglas Miles
   unless permission or license is granted (contact at business@logicmoo.org)
@@ -90,6 +90,7 @@ wqs(q(C)):- !, write(' '), writeq(C).
 wqs(cc(C,N)):- attvar(C), get_attrs(C,PC), !, wqs(ccc(PC,N)).
 wqs(cc(C,N)):- var(C), sformat(PC,"~p",[C]), !, wqs(ccc(PC,N)).
 wqs(cc(C,N)):- !, write(' cc('),color_print(C,C),write(','), writeq(N), write(')').
+wqs(color_print(C,X)):- is_color(C), !, write(' '), color_print(C,X).
 wqs(color_print(C,X)):- \+ plain_var(C), !, write(' '), color_print(C,X).
 wqs(C):- is_color(C),!,wqs(color_print(C,C)).
 
@@ -306,7 +307,7 @@ better_value([G|V],List):-
 
 
 fix_grid_pg(SIndvOut,_InOutL,_G,_PG):- is_grid(SIndvOut),!,fail.
-fix_grid_pg(SIndvOut,PGP,G,GP):- compound(SIndvOut), SIndvOut=(GG,PGG),!,listify(PGG,PGL),listify(GG,G),!,append(PGL,PGP,GP).
+fix_grid_pg(SIndvOut,PGP,G,GP):- compound(SIndvOut), SIndvOut=(GG,PGG),!,listify(PGG,PGL),listify(GG,G),!,my_append(PGL,PGP,GP).
 fix_grid_pg(SIndvOut,PGP,SIndvOut,[PGP]):- \+ is_list(PGP),!.
 fix_grid_pg(SIndvOut,PGP,[SIndvOut],PGP):- \+ is_list(SIndvOut),!.
 

@@ -1,5 +1,5 @@
 /*
-  this is part of (H)MUARC
+  this is part of (H)MUARC  https://logicmoo.org/xwiki/bin/view/Main/ARC/
 
   This work may not be copied and used by anyone other than the author Douglas Miles
   unless permission or license is granted (contact at business@logicmoo.org)
@@ -56,6 +56,10 @@ clsmake:- cls,update_changed_files.
   :- endif.
 :- endif.
 
+my_append(A,B):- append(A,B).
+my_append(A,B,C):- append(A,B,C),check_len(A),check_len(C),check_len(C).
+
+check_len(_).
 
 :- system:ensure_loaded(library(logicmoo_common)).
 %:- system:ensure_loaded(library(pfc_lib)).
@@ -113,7 +117,7 @@ fav1:- clsmake, test_names_by_fav(X), arc1(cls1,X).
 fav11:- clsmake, test_names_by_fav(X), arc1(X).
 fav2:- clsmake, test_names_by_fav_rev(X), arc1(cls,X).
 fav22:- clsmake, test_names_by_fav_rev(X), arc1(X).
-favl:- clsmake, (nb_current(last_test,X);X=(v(fe9372f3)*(tst+0))),!,arc1(X).
+favL:- clsmake, (nb_current(last_test,X);X=(v(fe9372f3)*(tst+0))),!,arc1(X).
 
 fav(X):- nonvar(X),!, clsmake, arc1(X).
 fav(X):- clause(fav(X,_),true).
@@ -185,7 +189,7 @@ show_indivs(IH,IV,OH,OV,Pred,When,PairName,In,Out,SF):-
   wots(U1, print_grid(IH,IV,NameIn,In)),
   wots(U2, print_grid(OH,OV,NameOut,Out)),
   print_side_by_side(U1,LW,U2),
-  append(InC,OutC,InOutC),
+  my_append(InC,OutC,InOutC),
   smallest_first(InOutC,SF),
   %largest_first(InOutC,LF),
   %show_pair_no_i(IH,IV,OH,OV,smallest_first(When,Pred),PairName,InC-SF,OutC-SF),
@@ -330,7 +334,7 @@ show_arc_pair_progress(TestID,ExampleNum,In,Out):-
 reuse_indivs(IndvA,IndvB,BetterA,BetterB):-
   smallest_first(IndvA,IndvAS),
   smallest_first(IndvB,IndvBS),
-  append(IndvAS,IndvBS,IndvCC), list_to_set(IndvCC,IndvC),
+  my_append(IndvAS,IndvBS,IndvCC), list_to_set(IndvCC,IndvC),
   smallest_first(IndvC,IndvCS),
   reuse_indivs_cleanup(IndvAS,IndvBS,IndvCS,BetterA,BetterB,_BetterC),!.
 
@@ -342,9 +346,9 @@ reuse_indivs_cleanup(IndvA,IndvB,IndvC,BetterAO,BetterBO,BetterCO):-
   select(A,IndvA,IndvARest),
   select(A,IndvB,IndvBRest),
   reuse_a_b(A,B,AA),
-  append(IndvARest,[AA],BetterA),
-  append(IndvBRest,[B],BetterB),
-  append(IndvCRest,[AA],BetterC),
+  my_append(IndvARest,[AA],BetterA),
+  my_append(IndvBRest,[B],BetterB),
+  my_append(IndvCRest,[AA],BetterC),
   reuse_indivs_cleanup(BetterA,BetterB,BetterC,BetterAO,BetterBO,BetterCO),!.
 reuse_indivs_cleanup(A,B,C,A,B,C).
 

@@ -1,5 +1,5 @@
 /*
-  this is part of (H)MUARC
+  this is part of (H)MUARC  https://logicmoo.org/xwiki/bin/view/Main/ARC/
 
   This work may not be copied and used by anyone other than the author Douglas Miles
   unless permission or license is granted (contact at business@logicmoo.org)
@@ -49,7 +49,7 @@ get_color_at(Point,Grid,C):-
   nth1(V,Grid,Row),nth1(H,Row,C).
 
 list_to_row_mem(ID,N,List, row_mem(ID,N,A01, A02, A03, A04, A05, A06, A07, A08, A09, A10, A11, A12, A13, A14, A15, A16, A17, A18, A19, A20, A21, A22, A23, A24, A25, A26, A27, A28, A29, A30, A31, A32)):-
-  append(List,_,[A01, A02, A03, A04, A05, A06, A07, A08, A09, A10, A11, A12, A13, A14, A15, A16, A17, A18, A19, A20, A21, A22, A23, A24, A25, A26, A27, A28, A29, A30, A31, A32]).
+  my_append(List,_,[A01, A02, A03, A04, A05, A06, A07, A08, A09, A10, A11, A12, A13, A14, A15, A16, A17, A18, A19, A20, A21, A22, A23, A24, A25, A26, A27, A28, A29, A30, A31, A32]).
 
 :- dynamic(row_mem_access/35).
 
@@ -89,12 +89,12 @@ row_mem_access([rev|More],ID,N,A01, A02, A03, A04, A05, A06, A07, A08, A09, A10,
    H is I + 1,
    H = W,
    length(USE,W),
-   append(Left,S1,All),   
-   append(S2,_,All),
-   append(USE,_,All),
+   my_append(Left,S1,All),   
+   my_append(S2,_,All),
+   my_append(USE,_,All),
 
-   append(Gather,[C|Right],S2),
-   append(Gather,[_|Right],MissingH),
+   my_append(Gather,[C|Right],S2),
+   my_append(Gather,[_|Right],MissingH),
   AS1=..[row_mem,ID,V|S1],
   AS2=..[row_mem,ID2,V|S2],
   CH=..[row_mem,ID,V|S2],
@@ -131,19 +131,19 @@ make_grid(H,V,Grid):- max_min(H,1,HH,_), max_min(V,1,VV,_),
 
 insert_row(N,Row,Grid,NewGrid):- grid_size(Grid,H,V), insert_row(N,Row,Grid,H,V,NewGrid).
 insert_row(N,Row,Grid,H,V,NewGrid):- N<0, NewN is V + N+1,!,insert_row(NewN,Row,Grid,H,V,NewGrid).
-insert_row(N,Row,Grid,H,_,NewGrid):- length(Row,H),length(Left,N),append(Left,Right,Grid),append(Left,[Row|Right],NewGrid).
+insert_row(N,Row,Grid,H,_,NewGrid):- length(Row,H),length(Left,N),my_append(Left,Right,Grid),my_append(Left,[Row|Right],NewGrid).
 
 insert_col(N,Col,Grid,NewGrid):- grid_size(Grid,H,V), insert_col(N,Col,Grid,H,V,NewGrid).
 insert_col(N,Col,Grid,H,V,NewGrid):- N<0, NewN is H + N+1,!,insert_col(NewN,Col,Grid,H,V,NewGrid).
 insert_col(N,Col,Grid,_,V,NewGrid):- length(Col,V),maplist(insert_col_at(N),Col,Grid,NewGrid).
 
 
-insert_col_at(N,Col,Row,NewRow):- length(Left,N),append(Left,Right,Row),append(Left,[Col|Right],NewRow).
+insert_col_at(N,Col,Row,NewRow):- length(Left,N),my_append(Left,Right,Row),my_append(Left,[Col|Right],NewRow).
 
-insert_ele(N,V,L,NL):- length(Left,N),append(Left,Right,L),append(Left,[V|Right],NL).
+insert_ele(N,V,L,NL):- length(Left,N),my_append(Left,Right,L),my_append(Left,[V|Right],NL).
 
 delete_row(N,Grid,NewGrid):- N < 0, length(Grid,L), DR is L+N+1,delete_row(DR,Grid,NewGrid).
-delete_row(N,Grid,NewGrid):- length(Left,N),append(Left,[_|Right],Grid),append(Left,Right,NewGrid).
+delete_row(N,Grid,NewGrid):- length(Left,N),my_append(Left,[_|Right],Grid),my_append(Left,Right,NewGrid).
 
 delete_col(N,Grid,NewGrid):- maplist(delete_row(N),Grid,NewGrid).
 

@@ -1,5 +1,5 @@
 /*
-  this is part of (H)MUARC
+  this is part of (H)MUARC  https://logicmoo.org/xwiki/bin/view/Main/ARC/
 
   This work may not be copied and used by anyone other than the author Douglas Miles
   unless permission or license is granted (contact at business@logicmoo.org)
@@ -107,6 +107,20 @@ ___________
      B     
 ___________").
 
+hammer3("
+ ___________________
+|                   |
+|           ® ®     |
+|     ®             |
+|                   |
+|         ®     ®   |
+|                   |
+| ®                 |
+|           ® ®     |
+|                   |
+ ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯ ").
+
+
 the_hammer1(BlueComplex):- the_hammer(blue,BlueComplex).
 the_hammer1(RedComplex):-  the_hammer(red,RedComplex).
 
@@ -139,9 +153,19 @@ l_shape(LibObj):-
     (rtrace(make_indiv_object(ID,H,V,Points,[object_shape(l_shape)|ShapeProps],LibObj)))).
 
 % todo temp
-sortshapes(List,List):-!.
-sortshapes(List,ListS):- predsort(using_compare(shape_key),List,ListS),!.
+sortshapes(List,Set):- my_list_to_set(List, using_compare(shape_key), Set).
+% sortshapes(List,ListS):- predsort(using_compare(shape_key),List,ListS),!.
 %sortshapes(List,ListS):- sort(List,ListS),!.
+
+my_list_to_set(List, Set):- my_list_to_set(List, (==) ,Set).
+
+my_list_to_set([E|List],Comparator, Set):-
+   select(C,List,Rest),
+   call(Comparator,Delta,E,C), Delta == (=), !,
+   my_list_to_set([C|Rest],Comparator, Set).
+my_list_to_set([E|List],Comparator, [E|Set]):- !,
+   my_list_to_set(List,Comparator, Set).
+my_list_to_set([],_,[]).
 
 
 frozen_key(Key1,Key):- copy_term(Key1,Key),numbervars(Key,0,_,[attvar(skip),singletons(true)]).
@@ -198,7 +222,8 @@ add_shape_lib0(Type,Obj):- mass(Obj,Mass),!,
   %dash_char,
   !.
 
-assert_shape_lib(_,Obj):-  mass(Obj,Mass), Mass<4,!.
+
+%assert_shape_lib(_,Obj):-  mass(Obj,Mass), Mass<4,!.
 assert_shape_lib(Type,Obj):- is_list(Type),!,maplist(rev_lambda(assert_shape_lib(Obj)),Type).
 assert_shape_lib(Type,Obj):- my_asserta_if_new(in_shape_lib(Type,Obj)).
 
@@ -206,16 +231,16 @@ in_shape_lib(X,D):- (make_shape(X,R), deterministic(TF), dupe_shape(R,D)), (TF==
 
 make_shape(P,I):- compound(P),ground(P),check_args(P,C), call(call,C,I).
 
-pad_sides(Fill,Row):- append([_|Fill],[_],Row).
-pad_sides(P1,Fill,Row):- call(P1,C1),call(P1,C2),append([C1|Fill],[C2],Row).
-pad_sides(C1,Fill,C2,Row):- append([C1|Fill],[C2],Row).
+pad_sides(Fill,Row):- my_append([_|Fill],[_],Row).
+pad_sides(P1,Fill,Row):- call(P1,C1),call(P1,C2),my_append([C1|Fill],[C2],Row).
+pad_sides(C1,Fill,C2,Row):- my_append([C1|Fill],[C2],Row).
 
 ensure_grid(Grid):- is_grid(Grid),!.
 ensure_grid(Grid):- between(1,30,H),between(1,30,V),make_grid(H,V,Grid).
 
 
 decl_pt(P):- var(P), clause(decl_sf(Q),true), append_term(Q,+,P).
-decl_sf(Q):- var(Q), clause(decl_pt(P),true), P=..L, append(MI,[+],L), Q=..MI.
+decl_sf(Q):- var(Q), clause(decl_pt(P),true), P=..L, my_append(MI,[+],L), Q=..MI.
 
 enum_make_shape(P):- var(P),!,decl_sf(Q),functor(Q,F,A),functor(P,F,A), \+ \+ check_args(Q,P).
 enum_make_shape(P):- compound(P),!,functor(P,F,A),functor(Q,F,A),decl_sf(Q), \+ \+ check_args(Q,P).
@@ -226,7 +251,7 @@ box_grid(C,Grid,D):-
   grid_size(Grid,H,_), H2 is H +2,
   length(TB,H2),maplist(=(C),TB),
   maplist(pad_sides(=(C)),Grid,FillRows),
-  append([TB|FillRows],[TB],D).
+  my_append([TB|FillRows],[TB],D).
 
 :- decl_sf(box_grid_n_times(size,fg_color,grid)).
 box_grid_n_times(0,_C,Grid,D):- Grid=D,!.
@@ -339,6 +364,19 @@ label_rules(_Complex,(Obj:- Body)):-
 
 shapelib_opts(Name,Opts):- findall(Opt,is_shapelib_opt(Name,Opt),Opts).
 
+double_size(Grid,Double):- is_grid(Grid),!,
+  double_rows(Grid,DRows),
+  rot90(DRows,DRows90),
+  double_rows(DRows90,DRows90D),
+  rot270(DRows90D,Double).
+double_size(Group,Double):- is_group(Group),!,override_group(double_size(Group,Double)),!.
+double_size(Obj,Double):- into_grid(Obj,Grid),!,double_size(Grid,Double).
+
+double_rows([],[]):-!.
+double_rows([D|DRows90],[D,D|DRows90D]):- double_rows(DRows90,DRows90D).
+  
+
+is_shapelib_opt(as_is, = ).
 apply_shapelib_xforms(Name,GalleryS,SmallLib):-  shapelib_opts(Name,Opts),expand_shape_directives(GalleryS,Opts,SmallLib).
 apply_shapelib_xforms(_Name,Gallery,Gallery):- !.
 
@@ -353,6 +391,7 @@ expand_shape_directives(Shapes,[],SmallLib):- must_be_free(SmallLib),
      %into_grid,
     % searchable,"Searchable indivs", 
        all_orientations, % "All rotations of indivs", 
+       %add(double_size),
 
       % Need one the the three bellow
        %decolorize, %"Add blue indivs", 

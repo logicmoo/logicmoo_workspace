@@ -1,5 +1,5 @@
 /*
-  this is part of (H)MUARC
+  this is part of (H)MUARC  https://logicmoo.org/xwiki/bin/view/Main/ARC/
 
   This work may not be copied and used by anyone other than the author Douglas Miles
   unless permission or license is granted (contact at business@logicmoo.org)
@@ -43,8 +43,8 @@ get_selector(PI,PO):- get_selector2(PI,PO), \+ (get_selector1(PII,POO), PI=@=PII
 
 get_selector(obj(A),obj(B)):- 
    s4(A1,B1),s4(A2,B2),
-   append(A1,A2,A12),append(A12,_,A),
-   append(B1,B2,B12),append(B12,_,B).
+   my_append(A1,A2,A12),my_append(A12,_,A),
+   my_append(B1,B2,B12),my_append(B12,_,B).
 
 :- style_check(-singleton).
 s4([A,B,C,D],[A,B,C,D]).
@@ -115,7 +115,7 @@ generalize_cons([A|B],[AA|BB]):- !, generalize(A,AA),generalize_list(B,BB).
 combine_diffs([],D,D):-!.
 combine_diffs(D,[],D):-!.
 combine_diffs(D,D,D):-!.
-combine_diffs(D1,D2,L12):- listify(D1,L1),listify(D2,L2),!,append(L1,L2,L12).
+combine_diffs(D1,D2,L12):- listify(D1,L1),listify(D2,L2),!,my_append(L1,L2,L12).
 
 
 
@@ -362,7 +362,7 @@ changed_by(vis_hv,copy).
   %trace,diff_terms(IIR,OOR,OUT),!.
   
 /*
-  append(L,[A|R],II),append(L,[B|R],OO),
+  my_append(L,[A|R],II),my_append(L,[B|R],OO),
   diff_lists(A,B,Diffs),
   (simular(Diffs,obj(I),obj(O),Sameness) ->  OUT = same_object(Sameness) ; OUT = props_diff(obj(I),obj(O),Diffs)).
 */

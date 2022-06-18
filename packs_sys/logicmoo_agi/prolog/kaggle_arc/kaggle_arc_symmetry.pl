@@ -1,5 +1,5 @@
 /*
-  this is part of (H)MUARC
+  this is part of (H)MUARC  https://logicmoo.org/xwiki/bin/view/Main/ARC/
 
   This work may not be copied and used by anyone other than the author Douglas Miles
   unless permission or license is granted (contact at business@logicmoo.org)
@@ -73,7 +73,7 @@ repair_symmetry0:-
    maplist(show_shape,GridS)))),!.
 
 
-crop(X,Y,G,GO):- make_grid(X,Y,GO),maplist_until(aligned_rows,G,GO).
+crop(X,Y,G,GO):- make_grid(X,Y,GO),maplist_until(aligned_rows_u,G,GO).
 
 
 maplist_until(Pred2,[X|XX],[Y|YY]):- call(Pred2,X,Y),maplist_until0(Pred2,XX,YY),!.
@@ -97,8 +97,8 @@ maplist_until_count(0,_,[]).
 empty_or_open(L):- \+ \+ L=[].
 
 first_quarter(Grid,GridQ):- first_half(Grid,GL),first_half(GL,GridQ).
-first_half(Grid,GL):- length(Grid,L),H is floor(L/2), length(GL,H), append(GL,_,Grid).
-second_half(Grid,GL):- length(Grid,L),H is floor(L/2), length(GL,H), append(_,GL,Grid).
+first_half(Grid,GL):- length(Grid,L),H is floor(L/2), length(GL,H), my_append(GL,_,Grid).
+second_half(Grid,GL):- length(Grid,L),H is floor(L/2), length(GL,H), my_append(_,GL,Grid).
 
 aligned_rows([E1,E2|L],[E1,E2|R]):- 
  aligned_rows0(L,R), !,
@@ -121,6 +121,10 @@ aligned_rows0([],_):-!. % ( empty_or_open(L) ; empty_or_open(R) ), !.
 aligned_rows0(_,[]):-!.
 aligned_rows0([E|L],[EE|R]):- E=@=EE,!, aligned_rows0(L,R).
 
+aligned_rows_u([],_):-!. % ( empty_or_open(L) ; empty_or_open(R) ), !.
+aligned_rows_u(_,[]):-!.
+aligned_rows_u([E|L],[E|R]):- aligned_rows_u(L,R).
+
 no_symmetry_yet(Row):- maplist(plain_var,Row),!. % no data yet
 no_symmetry_yet(Row):- maplist(=(_),Row),!. % all same element
 
@@ -138,7 +142,7 @@ row_color_changes(PrevCh,H,[N|List],Res):- H==N,  row_color_changes(PrevCh,N,Lis
 
 append_n_times(PL,0,PL):- !.
 append_n_times(PL,N,Rest):- N2 is N -1,
-    append_n_times(PL,N2,Was), append(PL,Was,Rest).
+    append_n_times(PL,N2,Was), my_append(PL,Was,Rest).
    
 :- dynamic(c_n_pattern_l/4).
 c_n_pattern:- \+ \+ (c_n_pattern_l(I,PL,Full,F),c_n_pattern_l(I,PL,Full,F)),!.
@@ -147,7 +151,7 @@ c_n_pattern:-
   (between(4,15,P),length(PL,P),append_n_times(PL,8,Full)),
   assert(c_n_pattern_l(P,PL,Full,'->->->->'))),
  forall(
-  (between(2,10,P),length(L,P),reverse(L,R),append(L,R,PL),append_n_times(PL,15,Full)),
+  (between(2,10,P),length(L,P),reverse(L,R),my_append(L,R,PL),append_n_times(PL,15,Full)),
    assert(c_n_pattern_l(P,PL,Full,'<><><><>'))),
   %(between(2,10,P),length(PL,P),repeat_until_30(L,P,Full)),
   % assert(c_n_pattern_l(P,PL,Full,'122333'))),
@@ -164,11 +168,11 @@ c_n_reverse:-
                       between(0,10,P),length(PL,P),
                       between(10,10,L),length(LL,L),
                       I is P+L,
-                      once((append(PL,LL,PLL),
+                      once((my_append(PL,LL,PLL),
                       reverse(PLL,RL),
-                      append([PLL,CL,RL],Row),
+                      my_append([PLL,CL,RL],Row),
                       numbervars(Row,0,_),
-                      append(Row,_,RowO)))),
+                      my_append(Row,_,RowO)))),
         assert(c_n_reverse_l(I,C,P,RowO,PLL,CL,RL))),
                       nop(listing(c_n_reverse_l/7)).
 
@@ -239,7 +243,7 @@ nop((
   globalpoints(Q4,LPoints),
   offset_points(SXQ4,SYQ4,LPoints,GPoints),
   embue_points1(GN,H,V,SXQ4,SYQ4,EXQ4,EYQ4,GPoints,Ps),!,
-  append([[rotation(Same),
+  my_append([[rotation(Same),
      center_info(CRef,SXC,SXC,EXC,EYC),grid(LikeQ4)],CommonQ,Ps],OBJL),
   OBJ=obj(OBJL))).
 
@@ -433,53 +437,192 @@ check_mirror_xy(CX,CY,SXQ2,_SYQ2,EXQ2,EYQ2,SXCC,SYCC,EXCC,EYCC,SXQ4,SYQ4,EXQ4,_E
 
 
 
+/*
+Repetitive Patterns
 
-repeat_pat(n_cols,Len,BorderLen,Row,Left):-
-  (nonvar(Len)-> length(Left,Len); true),
-  [C1|_C1Left] = Left,
-  (nonvar(BorderLen)-> length(CXL,BorderLen); true),
-  [C2|_XLL] = CXL,
-  (append([Left,CXL,Left,CXL,Left,_],Row),C1\==C2),
-  (var(Len)-> length(Left,Len); true),
-  (var(BorderLen)-> length(CXL,BorderLen); true).
+  
+       |      |      
+ PatWidth|  EXCC|  EXQ4|
+|--------------------| 
+|      |      |      | SYQ2 
+|  Q2  |  CN  | Q1   | 
+|      |      |      | EYQ2
+|------+------+------| 
+*/
 
-repeat_pat(two_cols,Len,BorderLen,Row,Left):-
-  (nonvar(Len)-> length(Left,Len); true),
-  [C1|_C1Left] = Left,
-  (nonvar(BorderLen)-> length(CXL,BorderLen); true),
-  [C2|_XLL] = CXL,
-  (append([Left,CXL,Left],Row),C1\==C2),
-  (var(Len)-> length(Left,Len); true),
-  (var(BorderLen)-> length(CXL,BorderLen); true).
 
-repeat_pat(n_d_cols,Len,BorderLen,Row,Left):-
-  (nonvar(Len)-> length(Left,Len); true),
-  %[C1|C1Left] = Left,
-  (nonvar(BorderLen)-> length(CXL,BorderLen); true),
-  %[C2|_XLL] = CXL,
-  (append([Left,CXL,Left,_],Row)),
-  (var(Len)-> length(Left,Len); true),
-  (var(BorderLen)-> length(CXL,BorderLen); true).
+list_n_times(List,1,List).
+list_n_times(List,2,Times):- my_append(List,List,Times).
+list_n_times(List,3,Times):- my_append([List,List,List],Times).
+list_n_times(_List,0,[]).
+list_n_times(List,N,Times):- N>3,make_list_inited(N,List,A),my_append(A,Times).
 
-h_pattern_length(G,Type,Len,BorderLen,StartV,EndV,[Left|HVPat]):-  
-  append(Before,[Row|RRest],G),
-  repeat_pat(Type,Len,BorderLen,Row,Left),
-  maplist_until_count(EndV,repeat_pat(Type,Len,BorderLen),RRest,HVPat),!,
-  length(Before,StartV).
+repeat_pat0(cols(2),Div,[],Row,Pattern):-
+  [C1|_C1Pattern] = Pattern,
+  [C2|_XLL] = Div,
+  my_append([Pattern,Div,Pattern],Row),            C1\==C2.
+
+repeat_pat0(cols(3),Div,[],Row,Pattern):-
+  [C1|_C1Pattern] = Pattern,
+  [C2|_XLL] = Div,
+  my_append([Pattern,Div,Pattern,Div,Pattern],Row),            C1\==C2.
+
+repeat_pat0(cols(4),Div,[],Row,Pattern):-
+  [C1|_C1Pattern] = Pattern,
+  [C2|_XLL] = Div,
+  my_append([Pattern,Div,Pattern,Div,Pattern,Div,Pattern],Row),            C1\==C2.
+
+repeat_pat0(cols(5),Div,[],Row,Pattern):-
+  [C1|_C1Pattern] = Pattern,
+  [C2|_XLL] = Div,
+  my_append([Pattern,Div,Pattern,Div,Pattern,Div,Pattern,Div,Pattern],Row),  C1\==C2.
+
+repeat_pat0(cols(6),Div,[],Row,Pattern):-
+  [C1|_C1Pattern] = Pattern,
+  [C2|_XLL] = Div,
+  my_append([Pattern,Div,Pattern,Div,Pattern,Div,Pattern,Div,Pattern,Div,Pattern],Row),  C1\==C2.
+
+repeat_pat0(cols(7),Div,[],Row,Pattern):-
+  [C1|_C1Pattern] = Pattern,
+  [C2|_XLL] = Div,
+  my_append([Pattern,Div,Pattern,Div,Pattern,Div,Pattern,Div,Pattern,Div,Pattern,Div,Pattern],Row),  C1\==C2.
+
+repeat_pat0(cols(8),Div,[],Row,Pattern):-
+  [C1|_C1Pattern] = Pattern,
+  [C2|_XLL] = Div,
+  my_append([Pattern,Div,Pattern,Div,Pattern,Div,Pattern,Div,Pattern,Div,Pattern,Div,Pattern,Div,Pattern],Row),  C1\==C2.
+
+repeat_pat0(cols(9),Div,[],Row,Pattern):-
+  [C1|_C1Pattern] = Pattern,
+  [C2|_XLL] = Div,
+  my_append([Pattern,Div,Pattern,Div,Pattern,Div,Pattern,Div,Pattern,Div,Pattern,Div,Pattern,Div,Pattern,Div,Pattern],Row),  C1\==C2.
+
+repeat_pat0(cols(10),Div,[],Row,Pattern):-
+  [C1|_C1Pattern] = Pattern,
+  [C2|_XLL] = Div,
+  my_append([Pattern,Div,Pattern,Div,Pattern,Div,Pattern,Div,Pattern,Div,Pattern,Div,Pattern,Div,Pattern,Div,Pattern,Div,Pattern],Row),  C1\==C2.
+
+
+%repeat_pat0(n_d_cols,Div,Slack,Row,Pattern):-
+%  my_append([Pattern,Div,Pattern,Slack],Row).
+
+%repeat_pat0(no_div,[],Slack,Row,Pattern):-
+%  my_append([Pattern,Pattern,Pattern,Slack],Row).
+
+maybe_pad_start_end(Row,RowP):- my_append([_,_|RowP],[_,_],Row).
+maybe_pad_start_end(Row,RowP):- my_append([_|RowP],[_],Row).
+maybe_pad_start_end(Row,Row).
+
+suggest_div([_],1).
+suggest_div([D,D],2).
+suggest_div([],0).
+repeat_pat(Type,PatWidth,DivW,Div,Row0,Pattern):-
+  maybe_pad_start_end(Row0,Row),
+  (nonvar(PatWidth)-> length(Pattern,PatWidth); Pattern=[_,_|_]),
+  (nonvar(DivW)-> length(Div,DivW); suggest_div(Div,DivW)),
+  repeat_pat0(Type,Div,Slack,Row,Pattern),
+  (var(PatWidth)-> length(Pattern,PatWidth); true),
+  (var(DivW)-> length(Div,DivW); true),
+  length(Slack,SlackW),
+  once((SlackW>PatWidth) -> my_append([_,Pattern,_],Slack);true).
+%repeat_pat(varry_div(Was),PatWidth,DivW,_,Row,Pattern):-
+%  repeat_pat0(Was,PatWidth,DivW,_,Row,Pattern).
+
+h_pattern_length0(G,Type,PatWidth,DivW,StartV,PatHeight,Pattern,Div):- 
+  suggest_div(Before,StartV),
+  my_append(Before,[Row|RRest],G),
+  repeat_pat(Type,PatWidth,DivW,_,Row,Left),  
+  maplist_until_count(Count,repeat_pat(Type,PatWidth,DivW,Div),RRest,HVPat),
+  Count>3,
+  ( maplist_until_count(_PatHeight,repeat_pat(Type,PatWidth,DivW,Div),Before,BeforePat)->
+     (StartV=0,my_append(BeforePat,[Left|HVPat],Pattern));
+     (length(Before,StartV),[Left|HVPat]=Pattern)),
+  length(Pattern,PatHeight).
+
+h_pattern_length(G,Type,PatWidth,DivW,StartV,PatHeight,Pattern,Div):-
+  h_pattern_length0(G,Type,PatWidth,DivW,StartV,PatHeight,Pattern,Div),
+  %\+ all_bg(Pattern),
+  nop(verify_if_can_repeat(G,StartV,Pattern,Div,PatHeight)).
+
+verify_if_can_repeat(G,StartV,Pattern,Div,PatHeight):- 
+  length(G,IH),
+  RestGV is IH - StartV - PatHeight,!,
+  once((RestGV =< PatHeight) -> true ; 
+    (forall(member(R,G),my_append([_,Div,_],R)),
+     maplist(my_append,Pattern,_,PatternO),
+     length(RemainingRows,RestGV),
+     my_append(_,RemainingRows,G),
+     my_append([_,PatternO,_],RemainingRows))).
+
+all_bg(Pattern):- get_bgc(BG),is_all_color(BG,Pattern).
+is_all_color(BG,Pattern):- is_list(Pattern),!,maplist(is_all_color(BG),Pattern).
+is_all_color(BG,Pattern):- Pattern=@=BG.
+
+find_colorfull_idioms(G):- 
+  h_pattern_length(G,_Type,PatWidth,_DivW,_StartV,PatV,Pattern,_Div),!,
+  PatV>2,
+  PatWidth>2,
+  dash_char,
+  add_shape_lib(as_is,Pattern),
+  add_shape_lib(pair,Pattern),
+  print_grid(Pattern),!,
+  writeln(find_colorfull_idioms),
+  dash_char.
 
 test_rp:-  clsmake, 
   forall(rp_test(G),ignore(test_rp(G))).
 :- add_history(test_rp).
 test_rp(G):-
-  h_pattern_length(G,Type,SH,BL,SV,EV,Grid9x9),!,
-  EV>1,SH>3,
+  h_pattern_length(G,Type,PatWidth,DivW,StartV,PatV,Pattern,Div),!,
+  PatV>1,
   dash_char,
+  dash_char,
+  add_shape_lib(pair,Pattern),
   print_grid(G),
+  grid_size(G,H,V),
   writeln(pattern),
   writeln(result),
-  pt(rp(len=SH,type=Type,borderW=BL,startV=SV,endV=EV)),
-  print_grid(Grid9x9),!.
+  pt(rp(patW=PatWidth,type=Type,divW=DivW,startV=StartV,patV=PatV)),
+  %pt(Grid9x9),
+  print_grid(Pattern),!,
+  ignore(((Div\==[]),print_grid([Div]))),!,
+  StartH=0,
+  nop(must_det_l((gen_pattern(H,V,StartH,StartV,Pattern,Div,same,NewGrid),
+  print_grid(NewGrid)))),  
+  dash_char,!.
+
+gen_pattern(H,V,StartH,StartV,Pattern,Div,NextP2,NewGridO):-
+  GH is H - StartH,
+  GV is V - StartV,
+  (StartV > 0 -> make_grid(StartV,H,StartGrid) ; StartGrid=[]),
+  nop(StartGrid=StartGrid),
+  gen_pattern(GH,GV,Pattern,Div,NextP2,NewGridO),!.
+  % crop(H,V,NewGridO,NewGrid).
   
+gen_pattern(GH,GV,Pattern,Div,_NextP2,NewGrid):-
+  length(Div,DivW),
+  grid_size(Pattern,PH,PV),PDW is PH+DivW,PDV is PV,
+  make_list_inited(PDV,Div,DivA),
+  maplist(my_append,DivA,Pattern,DivAPattern),
+  TimesH is GH div PDW,
+  gen_w_pattern(TimesH,Pattern,DivAPattern,Patterns),
+  %crop(GH,PDV,Patterns,CropPatterns),
+  CropPatterns=Patterns,
+  grid_size(CropPatterns,CPH,_CPV),
+  TimesHDiv is CPH div DivW-1,
+  append_n_times(Div,TimesHDiv,RowSep),
+  print_grid(CropPatterns),
+  print_grid([RowSep]),
+  my_append([RowSep,CropPatterns],SepCropPatterns),
+  %print_grid(SepCropPatterns),
+  TimesV is GV div PDV -1,
+  append_n_times(SepCropPatterns,TimesV,NewGrid).
+  %make_list_inited(TimesV,CropPatterns,CropPatterns,NewGrid).
+
+gen_w_pattern(0,Pattern,_DivAPattern,Pattern):-!.
+gen_w_pattern(Times,PatternIn,DivAPattern,Patterns):-
+  maplist(my_append,PatternIn,DivAPattern,PatternsMid),
+  TimesM is Times - 1, gen_w_pattern(TimesM,PatternsMid,DivAPattern,Patterns).
 
 rp_test0(X):- X = [[black,black,black,black,black,black,black,black,black,yellow,black,black,black,black,black,black,black,black,black],[black,black,black,black,black,orange,black,black,black,yellow,black,black,black,black,black,orange,black,black,black],[black,black,black,red,black,black,black,black,black,yellow,black,black,black,red,black,black,black,black,black],[black,black,red,black,black,black,black,black,black,yellow,black,black,red,black,black,black,black,black,black],[black,green,black,black,black,green,black,black,black,yellow,black,green,black,black,black,green,black,black,black],[black,black,black,black,black,black,black,black,black,yellow,black,black,black,black,black,black,black,black,black],[black,black,black,cyan,orange,black,black,black,black,yellow,black,black,black,cyan,orange,black,black,black,black],[black,black,black,black,cyan,black,black,green,black,yellow,black,black,black,black,cyan,black,black,green,black],[black,orange,black,black,black,black,black,black,black,yellow,black,orange,black,black,black,black,black,black,black],[yellow,yellow,yellow,yellow,yellow,yellow,yellow,yellow,yellow,yellow,yellow,yellow,yellow,yellow,yellow,yellow,yellow,yellow,yellow],[black,black,black,black,black,black,black,black,black,yellow,black,black,black,black,black,black,black,black,black],[black,black,black,black,black,orange,black,black,black,yellow,black,black,black,black,black,orange,black,black,black],[black,black,black,red,black,black,black,black,black,yellow,black,black,black,red,black,black,black,black,black],[black,black,red,black,black,black,black,black,black,yellow,black,black,red,black,black,black,black,black,black],[black,green,black,black,black,green,black,black,black,yellow,black,green,black,black,black,green,black,black,black],[black,black,black,black,black,black,black,black,black,yellow,black,black,black,black,black,black,black,black,black],[black,black,black,cyan,orange,black,black,black,black,yellow,black,black,black,cyan,orange,black,black,black,black],[black,black,black,black,cyan,black,black,green,black,yellow,black,black,black,black,cyan,black,black,green,black],[black,orange,black,black,black,black,black,black,black,yellow,black,orange,black,black,black,black,black,black,black]].
 rp_test0(G):- into_grid(t(c444b776)*(trn+0)*out,G).
@@ -599,7 +742,7 @@ assemble(
         join_cols([Q2,  CN,   Q1],RowsA),
         join_cols([CW,  CC,   CE],RowsC),
         join_cols([Q3,  CS,   Q4],RowsC),
-        append([RowsA,RowsC,RowsC], GR).
+        my_append([RowsA,RowsC,RowsC], GR).
 
 
 is_empty_grid(Empty):- make_empty_grid(MG),MG=@=Empty,!.
@@ -626,10 +769,10 @@ mirror_hv(EXQ2,CX,EYQ2,CY,_H,_V,G):- mirror_hh(EXQ2,CX,G),mirror_vv(EYQ2,CY,G).
 mirror_hh(I,C,G):- mirror_lr(I,C,G,_).
 mirror_vv(I,C,G):- rot270(G,G0),mirror_lr(I,C,G0,_),!.
     
-mirror_row(I,C,Row,L):- append(C,[E1|RR],Right), append(L,Right,Row),reverse(L,[E1|LL]),aligned_rows(LL,RR),length(L,I).
-% mirror_row(L,CL,Row,I):-  append(Row,_Rest,RowO), c_n_reverse_l(I,_C,_P,RowO,L,CL,_R).
+mirror_row(I,C,Row,L):- my_append(C,[E1|RR],Right), my_append(L,Right,Row),reverse(L,[E1|LL]),aligned_rows(LL,RR),length(L,I).
+% mirror_row(L,CL,Row,I):-  my_append(Row,_Rest,RowO), c_n_reverse_l(I,_C,_P,RowO,L,CL,_R).
 
-% mirror_row(L,C,Row,I):- append(C,[E1|RR],Right), append(L,Right,Row),reverse(L,[E1|LL]),aligned_rows(LL,RR),length(L,I).
+% mirror_row(L,C,Row,I):- my_append(C,[E1|RR],Right), my_append(L,Right,Row),reverse(L,[E1|LL]),aligned_rows(LL,RR),length(L,I).
 
 mirror_lrw(_I,_C,[],_GL):- !. 
 mirror_lrw(I,C,G,GL):- maplist_until(mirror_row(I,C),G,GL),

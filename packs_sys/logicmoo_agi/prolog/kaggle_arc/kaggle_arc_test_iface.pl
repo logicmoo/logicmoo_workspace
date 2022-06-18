@@ -1,5 +1,5 @@
 /*
-  this is part of (H)MUARC
+  this is part of (H)MUARC  https://logicmoo.org/xwiki/bin/view/Main/ARC/
 
   This work may not be copied and used by anyone other than the author Douglas Miles
   unless permission or license is granted (contact at business@logicmoo.org)
@@ -22,10 +22,10 @@ repair_info(Inf,Inf).
 
 was_fav(X):- nonvar_or_ci(X), clause(fav(XX,_),true),nonvar_or_ci(XX),X==XX.
 
-test_names_by_hard(Name):- test_names_ord_favs(FavList),test_names_ord_hard(NamesByHard),append(NamesByHard,FavList,All),
+test_names_by_hard(Name):- test_names_ord_favs(FavList),test_names_ord_hard(NamesByHard),my_append(NamesByHard,FavList,All),
  list_to_set(All,AllS),!,member(Name,AllS).
 
-test_names_by_hard_rev(Name):- test_names_ord_favs(FavList),test_names_ord_hard(NamesByHard),append(NamesByHard,FavList,All),
+test_names_by_hard_rev(Name):- test_names_ord_favs(FavList),test_names_ord_hard(NamesByHard),my_append(NamesByHard,FavList,All),
  list_to_set(All,AllS),!,reverse(AllS,AllR),member(Name,AllR).
 
 test_names_by_fav(Name):- test_names_ord_favs(All),member(Name,All).
@@ -84,7 +84,7 @@ easytest('ef97f917',0,1).
 easytest('7471d77b',0,1).
 
  /*
-test_names_by_hard(Name):- test_names_ord_favs(FavList),test_names_ord_hard(NamesByHard),append(FavList,NamesByHard,All),
+test_names_by_hard(Name):- test_names_ord_favs(FavList),test_names_ord_hard(NamesByHard),my_append(FavList,NamesByHard,All),
  list_to_set(All,AllS),!,member(Name,AllS).*/
 test_names_ord_favs(FavListS):- findall(Name,fav(Name),FavList),list_to_set(FavList,FavListS).
 test_names_ord_hard(NamesByHard):- findall(Hard-Name,(arc_test_name(Name),hardness_of_name(Name,Hard)),All),
@@ -373,8 +373,8 @@ fix_test_name(X,v(X),_):- kaggle_arc(v(X),_,_,_),!.
 print_trainer0:- arc(t('25d487eb')).
 print_eval0:- arc(v('009d5c81')).
 
-more_task_info(t(A),BCD):- more_task_info(t(A),B,C,D),append([B,C,D,[training]],BCD).
-more_task_info(v(A),BCD):- more_task_info(v(A),B,C,D),append([B,C,D,[evaluation]],BCD).
+more_task_info(t(A),BCD):- more_task_info(t(A),B,C,D),my_append([B,C,D,[training]],BCD).
+more_task_info(v(A),BCD):- more_task_info(v(A),B,C,D),my_append([B,C,D,[evaluation]],BCD).
 :- dynamic(more_task_info/4).
 more_task_info(t('0d3d703e'),[+mask_match,+shape_match,-rotation_match,-color_match,associate_colors_to_colors],['(4, 1)'],[tt]).
 more_task_info(t(d511f180),[+mask_match,+shape_match,+'Errors',-rotation_match,-color_match,associate_colors_to_colors],['(3, 1)'], ['https://www.kaggle.com/c/abstraction-and-reasoning-challenge/discussion/131021#760920']).

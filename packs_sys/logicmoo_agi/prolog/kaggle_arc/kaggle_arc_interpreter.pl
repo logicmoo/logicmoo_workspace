@@ -1,5 +1,5 @@
 /*
-  this is part of (H)MUARC
+  this is part of (H)MUARC  https://logicmoo.org/xwiki/bin/view/Main/ARC/
 
   This work may not be copied and used by anyone other than the author Douglas Miles
   unless permission or license is granted (contact at business@logicmoo.org)
@@ -53,7 +53,7 @@ show_workflow(In,[H|T],Out):-
   show_workflow(Mid,T,Out).
 show_workflow(In,add(P),Out):- !,
   show_workflow(In,P,Mid),!,
-  append(Mid,In,Out).
+  my_append(Mid,In,Out).
 show_workflow(In,each(P),Out):- 
   show_workflow_each(In,P,Out).
 show_workflow(In,P,Out):- must_det_l(call(P,In,Out)),!.

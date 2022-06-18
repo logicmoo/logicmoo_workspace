@@ -1,5 +1,5 @@
 /*
-  this is part of (H)MUARC
+  this is part of (H)MUARC  https://logicmoo.org/xwiki/bin/view/Main/ARC/
 
   This work may not be copied and used by anyone other than the author Douglas Miles
   unless permission or license is granted (contact at business@logicmoo.org)
@@ -62,7 +62,7 @@ combine_grids(How,[H|T],G,GO):- !,
   combine_grids(How,H,G,GM),
   combine_grids(How,T,GM,GO).
 combine_grids(overlay,H,G,GM):- globalpoints(H,Points),set_local_points(Points,G,GM),!.
-combine_grids(append,H,G,GM):- grid_size(H,W,_),length(Row,W), append(G,[Row|H],GM).
+combine_grids(my_append,H,G,GM):- grid_size(H,W,_),length(Row,W), my_append(G,[Row|H],GM).
   
 debug_indiv:- test_config(nodebug_indiv),!,fail.
 debug_indiv:- test_config(debug_indiv),!.
@@ -130,7 +130,7 @@ debug_indiv_obj(A):- Obj = obj(A), is_list(A),!,
  must_det_l((
   ignore((o2g(Obj,GGG), nonvar(GGG),my_asserta_if_new(g2o(GGG,Obj)))),
 %debug_indiv(Obj):- Obj = obj(A), is_list(A),  
-  %once(colors(Obj,[cc(FC,_)|_]);FC=9),
+  once(colors(Obj,[cc(FC,_)|_]);FC=grey),
   sort_obj_props(A,AS),
  % will_show_grid(Obj,TF),
   TF = false,
@@ -140,8 +140,8 @@ debug_indiv_obj(A):- Obj = obj(A), is_list(A),!,
   %i_glyph(Id,Sym), wqnl([writef("%% %Nr%w \t",[PC]), color_print(FC,Sym) | AAAA ]),!. 
   object_glyph(Obj,Glyph),  
   ignore((TF==true,dash_char)),
-  ignore((nonvar(FC) , wqnl([format("%  ~w:\t",[PC]), color_print(FC,Glyph) | TV ]))),!,
-  ignore((var(FC) , wqnl([format("%  ~w:\t",[PC]), color_print(Glyph) | TV ]))),
+  ignore((is_colorish(FC) -> wqnl([format("%  ~w:\t",[PC]), color_print(FC,Glyph) | TV ]);
+                             wqnl([format("%  ~w:\t",[PC]), color_print(Glyph) | TV ]))),
   ignore(( TF==true, mass(Obj,Mass),!,Mass>4, vis_hv(Obj,H,V),!,H>1,V>1, localpoints(Obj,Points), print_grid(H,V,Points))),
   ignore(( fail, mass(Obj,Mass),!,Mass>4, vis_hv(Obj,H,V),!,H>1,V>1, show_st_map(Obj))),
   %pt(A),

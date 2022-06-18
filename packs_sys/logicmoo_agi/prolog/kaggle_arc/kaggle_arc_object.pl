@@ -1,5 +1,5 @@
 /*
-  this is part of (H)MUARC
+  this is part of (H)MUARC  https://logicmoo.org/xwiki/bin/view/Main/ARC/
 
   This work may not be copied and used by anyone other than the author Douglas Miles
   unless permission or license is granted (contact at business@logicmoo.org)
@@ -62,7 +62,7 @@ close_enough_grid(GridIn,GridInCopy,LocalGrid):-
   %pt(Image-->Image9x9),
   %grid_to_id(Grid,Gridname),
   %quaderants_and_center_rays(Image9x9,Quads,Centers,Rays),
-  %append([Quads,Centers,Rays],FourWay1s00),
+  %my_append([Quads,Centers,Rays],FourWay1s00),
   %trace,
   %correctify_objs(Gridname,FourWay1s00,FourWay1s),!.
 
@@ -79,7 +79,7 @@ correctify_objs(Gridname,obj(List),obj(NOBJ)):- is_list(List),
    points_range(Points,LoH,LoV,HiH,HiV,_HO,_VO),
    %nb_current(test_pairname,ID),
    embue_points1(Gridname,H,V,LoH,LoV,HiH,HiV,Points,OBJ),
-   append(List,OBJ,NOBJ),!.
+   my_append(List,OBJ,NOBJ),!.
 correctify_objs(_Gridname,obj(List),obj(List)):-!.
 correctify_objs(_Gridname,Obj,Obj).
    %make_embued_points(Grid,H,V,Points,IndvS)
@@ -110,6 +110,12 @@ make_indiv_object(ID,H,V,IPoints,Obj):-
   points_range(Points,LoH,LoV,HiH,HiV,_HO,_VO),
   make_indiv_object(ID,H,V,LoH,LoV,HiH,HiV,Points,Overrides,OUT),
   as_obj(OUT,Obj).
+
+get_vm(VM):- get_pair(PairEnv),
+   PairEnv.current_i = VM.
+
+set_vm(VM):- get_pair(PairEnv),
+   set(PairEnv,current_i) = VM.
 
 make_indiv_object(ID,H,V,Points,Overrides,Obj):-
   points_range(Points,LoH,LoV,HiH,HiV,_HO,_VO),
@@ -183,7 +189,7 @@ make_indiv_object(ID,H,V,LoH,LoV,HiH,HiV,Points,Overrides,Obj):-
      close_enough_grid(Grid,GridInCopy,LocalGrid)),ShapesUF),
   flatten([ShapesUF],ShapesU),list_to_set(ShapesU,Shapes),
   maplist(append_term(object_shape),Shapes,OShapes),
-  append(
+  my_append(
   [ [mass(Len), shape(ColorlessPoints), colors(CC), localpoints(LPoints),
      vis_hv(Width,Height),  rotation(same), loc_xy(LoH,LoV)],     
     %width(Width), height(Height), area(Area), %missing(Empty),
@@ -242,17 +248,22 @@ with_objprops(Op,[E|Props],List,NewList):-!,
 
 
 with_objprops(delq,E,List,NewList):-functor(E,F,A),functor(R,F,A),
-    append(Left,[R|Right],List), % E \=@= R,
-    append(Left,Right,NewList),!.
+    my_append(Left,[R|Right],List), % E \=@= R,
+    my_append(Left,Right,NewList),!.
 
-with_objprops(override,E,List,NewList):- E \= object_shape(_), functor(E,F,A),functor(R,F,A),
-    append(Left,[R|Right],List), % E \=@= R,
-    append(Left,[E|Right],NewList),!.
+with_objprops(override,E,List,NewList):- \+ aggregates(E), functor(E,F,A),functor(R,F,A),
+    my_append(Left,[R|Right],List), % E \=@= R,
+    my_append(Left,[E|Right],NewList),!.
 
 with_objprops(override,E,List,NewList):- 
-    append(Left,[changes(G)|Right],List), 
-    (( \+ \+ (member(R,Right), R =@= E )) -> NewList = List ; append(Left,[changes(G),E|Right],NewList)),!.
+    my_append(Left,[changes(G)|Right],List), 
+    (( \+ \+ (member(R,Right), R =@= E )) -> NewList = List ; my_append(Left,[changes(G),E|Right],NewList)),!.
 
+
+aggregates(object_shape(_)).
+aggregates(birth(_)).
+aggregates(touches(_,_)).
+aggregates(insideOf(_)).
 
 transfer_props(O,Functors,NewO,obj(NewObjL)):-
   indv_props(O,L),
@@ -267,6 +278,7 @@ transfer_props_l([_|L],Functors,List,NewList):-
   transfer_props_l(L,Functors,List,NewList).
 
 object_indv_id(I,ID,Iv):- indv_props_old(I,L),member(object_indv_id(ID,Iv),L),!.
+object_indv_id(I,_ID,Fv):- is_grid(I), flag(indiv,Fv,Fv+1).
 object_indv_id(I,ID,Iv):- throw(missing(object_indv_id(I,ID,Iv))).
 %object_indv_id(_,ID,_Iv):- nb_current(test_pairname,ID).
 
@@ -582,7 +594,7 @@ find_outline_pred(Find_OUTLINE,Grid):- is_grid(Grid),!,
      (writeln("TOO SLOWWWW"=Find_OUTLINE),
       print_grid(H,V,Grid),
       writeln("TOO SLOWWWW"=Find_OUTLINE))),
-   append(SOLS,[leftover(LeftOver)],SOLSL),
+   my_append(SOLS,[leftover(LeftOver)],SOLSL),
    dash_char,
    (SOLS==[]-> ((writeln("NOTHING FROM"=Find_OUTLINE),print_grid(H,V,Grid),writeln("NOTTAAA"=Find_OUTLINE),!,fail));true),
    member(OL,SOLSL),
@@ -616,12 +628,12 @@ find_outlines_fast(Options,Grid,Sols,Rest):-
  point_groups_by_color(colormass,Groups,Points,Rest2), 
 % maplist(print_grid(H,V),Groups),
  find_group_outlines(Options,Groups,Sols,Rest1),
- append(Rest1,Rest2,Rest).
+ my_append(Rest1,Rest2,Rest).
 
 find_group_outlines(Options,[G1|G2],Sols,Rest):-!,
   find_group_outlines_fix_rest(Options,G1,Sols1,Rest1),
   find_group_outlines(Options,G2,Sols2,Rest2),
-  append(Sols1,Sols2,Sols), append(Rest1,Rest2,Rest).
+  my_append(Sols1,Sols2,Sols), my_append(Rest1,Rest2,Rest).
 find_group_outlines(_,[],[],[]).
 
 find_group_outlines_fix_rest(Options,G,Sols,Rest):-
@@ -772,7 +784,7 @@ find_outline_path2(C,L,Grid,sol(ResultO,[]),LeftOverO):-
   %print_grid([blue-HV1,yellow-HV2,red-HV3|Grid4]), 
   (((outline_nav(HV1,C,Dir2,HV3,[C-HV1|Grid4],Result,LeftOver), [C-HV1,C-HV2|Result] = ResultO,once(length(Result,M)),M>L)
    ;(outline_nav(HV3,C,Dir1,HV1,[C-HV3|Grid4],Result,LeftOver), [C-HV3,C-HV2|Result] = ResultO,once(length(Result,M)),M>L))),
-  append(Others,LeftOver,LeftOverO).
+  my_append(Others,LeftOver,LeftOverO).
 
 
 

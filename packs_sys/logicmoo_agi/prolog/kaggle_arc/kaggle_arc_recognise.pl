@@ -1,5 +1,5 @@
 /*
-  this is part of (H)MUARC
+  this is part of (H)MUARC  https://logicmoo.org/xwiki/bin/view/Main/ARC/
 
   This work may not be copied and used by anyone other than the author Douglas Miles
   unless permission or license is granted (contact at business@logicmoo.org)
@@ -150,7 +150,7 @@ point_minus_point(A,B,H,V,C,Old,Grid,Grid):-  nth1(V,Grid,Row),nb_set_nth1(H,Row
 h666(_,G):- fail,ff666(_,G0),
   flipV(G0,GV),
   flipH(G0,GH),
-  append([GH,GV],G1),
+  my_append([GH,GV],G1),
   fpad_grid(f,var,G1,G). 
 
 %f666(Ham,G0):-  clause(f666(Ham,F),true),into_g666(F,G),must_det_l(all_rotations(G,G0)).
@@ -219,10 +219,10 @@ ogs_1(Hi,Vi,Find,Search):-
   H is Hi - 1, V is Vi - 1,  
   length(LPad,H),
   length(VPad,V),!,
-  append(VPad,[LPadAndRow|Next],Search),
+  my_append(VPad,[LPadAndRow|Next],Search),
   Find = [R1|FGrid],
-  append(R1,_,Rho),
-  append(LPad,Rho,LPadAndRow),
+  my_append(R1,_,Rho),
+  my_append(LPad,Rho,LPadAndRow),
   ogs_pt2(H,FGrid,Next),!.
 
 ogs_1(H,V,FindI,Search):-
@@ -235,21 +235,21 @@ ogs_1(H,V,FindI,Search):-
 
 ogs_2(H,V,MH,MV,[R1|FGrid],Search):-  
   grid_detect_bg(Search,Background), my_assertion(Background\==[]), maplist(never_fg,Background),
-  append(R1,_,Rho),!,
-  append(VPad,[LPadAndRow|Next],Search),
+  my_append(R1,_,Rho),!,
+  my_append(VPad,[LPadAndRow|Next],Search),
   length(VPad,V),
   %between(0,MV,V),
   ((V>MV) -> (!, fail) ; true),
   between(0,MH,H),
   once((length(LPad,H),
-  append(LPad,Rho,LPadAndRow),
+  my_append(LPad,Rho,LPadAndRow),
   once((ogs_pt2(H,FGrid,Next),
         length(VPad,V))))).
 
 ogs_pt2(_,[],_):-!.
 ogs_pt2(H,[Row|FindRows],[S|Search]):-
-  length(LPad2,H),append(LPad2,Row,LPadRow2),
-  append(LPadRow2,_,S),!,
+  length(LPad2,H),my_append(LPad2,Row,LPadRow2),
+  my_append(LPadRow2,_,S),!,
   ogs_pt2(H,FindRows,Search),!.
 
 
@@ -348,7 +348,7 @@ fpad_grid(_CT,P1,Grid,Grid2):-
   length(T,H2),maplist(P1,T),
   length(B,H2),maplist(P1,B),
   maplist(pad_sides(P1),Grid,FillRows),
-  append([T|FillRows],[B],Grid2).
+  my_append([T|FillRows],[B],Grid2).
 
 
 %constrain_grid_f(Grid2,GridO):- Grid2=GridO.
@@ -620,12 +620,18 @@ text_to_grid(Text,HH,VV,ObjPoints,GO):-
   VV is HiV - LoV + 1,
   points_to_grid(HH,VV,ObjPoints,GO),!.
 
-parse_text_to_grid(H,V,X,G,GO):- append(LEft,['\r','\n'|Right],X), append(LEft,['\n'|Right],Y),!, parse_text_to_grid(H,V,Y,G,GO).
+parse_text_to_grid(H,V,X,G,GO):- my_append(LEft,['\r'|Right],X), my_append(LEft,['\n'|Right],Y),!, parse_text_to_grid(H,V,Y,G,GO).
+parse_text_to_grid(H,V,X,G,GO):- my_append(LEft,['\n','\n'|Right],X), my_append(LEft,['\n'|Right],Y),!, parse_text_to_grid(H,V,Y,G,GO).
+% parse_text_to_grid(H,V,X,G,GO):- my_append(LEft,[' ','\n'|Right],X), my_append(LEft,['\n'|Right],Y),!, parse_text_to_grid(H,V,Y,G,GO).
+parse_text_to_grid(H,V,X,G,GO):- my_append(LEft,['|','\n'|Right],X), my_append(LEft,['\n'|Right],Y),!, parse_text_to_grid(H,V,Y,G,GO).
+parse_text_to_grid(H,V,X,G,GO):- my_append(LEft,['\n','|'|Right],X), my_append(LEft,['\n'|Right],Y),!, parse_text_to_grid(H,V,Y,G,GO).
+parse_text_to_grid(H,V,X,G,GO):- my_append(LEft,['¯'|Right],X), my_append(LEft,['_'|Right],Y),!, parse_text_to_grid(H,V,Y,G,GO).
+parse_text_to_grid(H,V,X,G,GO):- my_append(LEft,[' ','_'|Right],X), my_append(LEft,['_'|Right],Y),!, parse_text_to_grid(H,V,Y,G,GO).
 parse_text_to_grid(0,0,X,G,GO):-
-  append(_,['_','\n'|Right],X),
+  my_append(_,['_','\n'|Right],X),
   parse_text_to_grid(1,1,Right,G,GO).
 parse_text_to_grid(0,0,X,G,GO):-
-  append(_,['\n'|Right],X),
+  my_append(_,['\n'|Right],X),
   parse_text_to_grid(1,1,Right,G,GO).
 
 parse_text_to_grid(H,V,[' ',C1O|X],G,GO):- C1O \== '\n',
@@ -652,7 +658,7 @@ insert_col_row_pad_open(H0,V0,G,GUU):-
    insert_row_pad_open(V0,GU,GUU).
 
 insert_col_pad_open(V0,GU,GUU):-  rot90(GU,GR), insert_row_pad_open(V0,GR,GRU), rot270(GRU,GUU).
-insert_row_pad_open(V0,GU,GridU):- functor(P,v,V0),P=..[v|L],append(L,GU,LGU), append(LGU,_,GridU).
+insert_row_pad_open(V0,GU,GridU):- functor(P,v,V0),P=..[v|L],my_append(L,GU,LGU), my_append(LGU,_,GridU).
 
 
 h666(colors,
@@ -828,7 +834,7 @@ fix_v_range(GridIn,1,HiV,H,V,VV,GridO):-
 
 fix_v_range(GridIn,LowV,HiV,H,V,VV,GridO):- HiV==V,!, 
   make_row(Row,H),
-  append(GridIn,[Row],Grid2),
+  my_append(GridIn,[Row],Grid2),
   HiV2 is HiV+1,
   fix_v_range(Grid2,LowV,HiV2,H,V,V2,GridO),
   VV is V2+1.

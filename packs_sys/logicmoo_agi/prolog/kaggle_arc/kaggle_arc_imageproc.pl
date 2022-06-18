@@ -1,5 +1,5 @@
 /*
-  this is part of (H)MUARC
+  this is part of (H)MUARC  https://logicmoo.org/xwiki/bin/view/Main/ARC/
 
   This work may not be copied and used by anyone other than the author Douglas Miles
   unless permission or license is granted (contact at business@logicmoo.org)
@@ -44,7 +44,7 @@ no_black(BF,BF).
 
 pixel_colors(GH,CC):- (is_group(GH);is_object(GH)),!,globalpoints(GH,GP),pixel_colors0(GP,CC).
 pixel_colors(GH,CC):- quietly(pixel_colors0(GH,CC)).
-pixel_colors0(GH,CC):- is_list(GH),!,maplist(pixel_colors,GH,PG),append(PG,CC).
+pixel_colors0(GH,CC):- is_list(GH),!,maplist(pixel_colors,GH,PG),my_append(PG,CC).
 pixel_colors0(C,[Color]):- color_name(C,Color),!.
 %pixel_colors0(options(_),[]):-!.
 pixel_colors0(GH,CC):- globalpoints(GH,GP),!,pixel_colors(GP,CC).
@@ -79,16 +79,16 @@ join_cols(Grid1,[Grid2|Grids],Result):-
 % grow([[same,same]],[[a,b,c]], [[a,b,c,a,b,c]]).
 append_left(Grid1,[],Grid1):-!.
 append_left(Grid1,Empty,Grid1):- is_empty_grid(Empty),!.
-append_left(Grid1,Grid2,Grid):- length(Grid1,Len),assertion(length(Grid2,Len)),maplist(append,Grid1,Grid2,Grid).
+append_left(Grid1,Grid2,Grid):- length(Grid1,Len),assertion(length(Grid2,Len)),maplist(my_append,Grid1,Grid2,Grid).
 
-append_down(Grid1,Grid2,Grid):- append(Grid1,Grid2,Grid).
+append_down(Grid1,Grid2,Grid):- my_append(Grid1,Grid2,Grid).
 
 grow_row([],_,[]).
 grow_row([C1],Grid,G1):- !, no_run_dsl(C1,Grid,G1).
 grow_row([C1|Row],Grid,GM):- !, no_run_dsl(C1,Grid,G1),grow_row(Row,Grid,GR),append_left(G1,GR,GM).
 grow([],_,[]).
 grow([[Self]],Grid,GridO):- !, no_run_dsl(Self,Grid,GridO).
-grow([Row|Rows],Grid,G1GridO):- grow_row(Row,Grid,G1), grow(Rows,Grid,GridO),append(G1,GridO,G1GridO).
+grow([Row|Rows],Grid,G1GridO):- grow_row(Row,Grid,G1), grow(Rows,Grid,GridO),my_append(G1,GridO,G1GridO).
 
 no_run_dsl(GridO,_Self,GridO).
 
@@ -146,7 +146,7 @@ trim_to_rect(G0,G9):-
 
   trim_unused_vert([],[]).
   trim_unused_vert(BG,[Row|Grid],GridO):- maplist(is_bg_or_var(BG),Row),trim_unused_vert(BG,Grid,GridO).
-  trim_unused_vert(BG,GridR,GridO):- append(Grid,[Row],GridR),maplist(is_bg_or_var(BG),Row),trim_unused_vert(BG,Grid,GridO).
+  trim_unused_vert(BG,GridR,GridO):- my_append(Grid,[Row],GridR),maplist(is_bg_or_var(BG),Row),trim_unused_vert(BG,Grid,GridO).
   trim_unused_vert(_,G,G).
 
 %:- nb_setval(grid_bgc,8).
@@ -349,7 +349,7 @@ replace_col(N,Col,Grid,H,V,NewGrid):- N<0, NewN is H + N+1,!,replace_col(NewN,Co
 
 replace_col(N,Col,Grid,_,V,NewGrid):- Nm1 is N - 1, length(Col,V),maplist(replace_col_at_0(Nm1),Col,Grid,NewGrid).
 
-replace_col_at_0(N,Col,Row,NewRow):- length(Left,N),append(Left,[_|Right],Row),append(Left,[Col|Right],NewRow).
+replace_col_at_0(N,Col,Row,NewRow):- length(Left,N),my_append(Left,[_|Right],Row),my_append(Left,[Col|Right],NewRow).
 
 
 get_surround_3x3(Grid,H,V,Result):-

@@ -1,5 +1,5 @@
 /*
-  this is part of (H)MUARC
+  this is part of (H)MUARC  https://logicmoo.org/xwiki/bin/view/Main/ARC/
 
   This work may not be copied and used by anyone other than the author Douglas Miles
   unless permission or license is granted (contact at business@logicmoo.org)
@@ -32,7 +32,7 @@ grav_mass(Grid,Mass):- grid_size(Grid,H,V), HV is round(H/V), Vh is floor(V/2),
 is_top_heavy(Grid):- split_50_v(Grid,Top,Bottem),mass(Top,TopM),mass(Bottem,BottemM),BottemM<TopM.
 
 split_50_v(Grid,Top,Bottem):- length(Grid,N),H is floor(N/2), length(Top,H),length(Bottem,H),
-    append(Top,Rest,Grid),append(_Mid,Bottem,Rest).
+    my_append(Top,Rest,Grid),my_append(_Mid,Bottem,Rest).
 
 
 gravity(N,D,G,GridNew):- into_grid(G,Grid),G\=@=Grid,!,gravity(N,D,Grid,GridNew).
@@ -202,17 +202,63 @@ move_object(NX,NY,I,M):- is_object(I),!,
 move_object(H,V,L,LM):- is_group(L),!,maplist(move_object(H,V),L,LM).
 move_object(H,V,I,O):- into_group(I,M),M\=@=I,!,move_object(H,V,M,O).
 
+is_input(VM):- VM.id = _ * _ * in.
 
+% ==============================================
+% TOUCHES
+% ==============================================
 
-find_engulfed(Image,ScanNext,SofarInsteadO):-
-  find_engulfed(Image,ScanNext,ScanNext,SofarInsteadO).
+find_touches(VM):-
+  Objs = VM.objs,
+  must_det_l(find_touches(VM,Objs,Objs,set(VM,objs))).
 
-is_input(Image):- Image.id = _ * _ * in.
+%find_touches(VM,ScanNext,SofarInsteadO):- find_touches(VM,ScanNext,ScanNext,SofarInsteadO).
 
-find_engulfed(_Image,[],SofarInsteadO,SofarInsteadO).
-find_engulfed(Image,[Found|ScanNext],OtherObjects,OtherObjectsO):-
+find_touches(_VM,[],SofarInsteadO,SofarInsteadO):-!.
+find_touches(VM,[Found|ScanNext],OtherObjects,OtherObjectsO):-
+ once(find_touches_objects(VM,Found,OtherObjects,DirNewInside)),
+  NewInside\==[], !,
+  must_det_l((
+  maplist(mention_touches(Found),DirNewInside,NewInsideM),
+    maplist(arg(2),DirNewInside,NewInside),
+    replace_i_each(OtherObjects,NewInside,NewInsideM,NewOtherObjects),
+    replace_i_each(ScanNext,NewInside,NewInsideM,NewScanNext),
+  ignore((length(NewInside,N),N>0,quietly(print_grid([Found|NewInsideM])))), !,
+  find_touches(VM,NewScanNext,NewOtherObjects,OtherObjectsO))),!.
+find_touches(VM,[_|Sofar],OtherObjects,OtherObjectsO):-
+  find_touches(VM,Sofar,OtherObjects,OtherObjectsO),!.
+
+mention_touches(Found,Dir-NewInside,NewInsideO):-
+  must_det_l((object_indv_id(Found,_Where,Iv),
+  override_object(touches(Dir,Iv),NewInside,NewInsideO))),!.
+
+find_touches_objects(_VM,_,[],[]).
+find_touches_objects(VM,Found,[Next|ScanPoints],[Dir-Next|Engulfed]):-    
+ touching_object(Dir,Found,Next),
+ find_touches_objects(VM,Found,ScanPoints,Engulfed).
+find_touches_objects(VM,Found,[_|ScanPoints],Engulfed):-
+ find_touches_objects(VM,Found,ScanPoints,Engulfed).
+
+touching_object(Dirs,O1,O2):- 
+  O1\==O2,
+  globalpoints(O1,Ps1),
+  globalpoints(O2,Ps2),
+  dir_touching_list(Ps1,Ps2,Dirs).
+
+dir_touching_list(Ps1,Ps2,Dirs):- findall(Dir,(member(Dir,[n,s,e,w,nw,ne,sw,se]),once(dir_touching_list0(Ps1,Ps2,Dir))),Dirs),Dirs\==[].
+dir_touching_list0(Ps1,Ps2,Dir):- member(_-P1,Ps1), member(_-P2,Ps2), is_adjacent_point(P1,Dir,P2),!.
+
+% ==============================================
+% ENGULFS
+% ==============================================
+
+find_engulfs(VM,ScanNext,SofarInsteadO):-
+  find_engulfs(VM,ScanNext,ScanNext,SofarInsteadO).
+
+find_engulfs(_VM,[],SofarInsteadO,SofarInsteadO).
+find_engulfs(VM,[Found|ScanNext],OtherObjects,OtherObjectsO):-
  ((isz(Found,outline(_));isz(Found,outl)) ->
- (( once(find_englufed_objects(Image,Found,OtherObjects,NewInside)),
+ (( once(find_engulfs_objects(VM,Found,OtherObjects,NewInside)),
   
   NewInside\==[], 
   must_det_l((
@@ -220,18 +266,18 @@ find_engulfed(Image,[Found|ScanNext],OtherObjects,OtherObjectsO):-
   replace_i_each(OtherObjects,NewInside,NewInsideM,NewOtherObjects),
   replace_i_each(ScanNext,NewInside,NewInsideM,NewScanNext),
   ignore((length(NewInside,N),N>0,quietly(print_grid([Found|NewInsideM])))),      
-  find_engulfed(Image,NewScanNext,NewOtherObjects,OtherObjectsO)))))).
+  find_engulfs(VM,NewScanNext,NewOtherObjects,OtherObjectsO)))))).
 
-find_engulfed(Image,[_|Sofar],OtherObjects,OtherObjectsO):-
-  find_engulfed(Image,Sofar,OtherObjects,OtherObjectsO).
+find_engulfs(VM,[_|Sofar],OtherObjects,OtherObjectsO):-
+  find_engulfs(VM,Sofar,OtherObjects,OtherObjectsO).
 
 
-find_englufed_objects(_Image,_,[],[]).
-find_englufed_objects(Image,Found,[Next|ScanPoints],[Next|Engulfed]):-    
+find_engulfs_objects(_VM,_,[],[]).
+find_engulfs_objects(VM,Found,[Next|ScanPoints],[Next|Engulfed]):-    
  contained_object(Found,Next),
- find_englufed_objects(Image,Found,ScanPoints,Engulfed).
-find_englufed_objects(Image,Found,[_|ScanPoints],Engulfed):-
- find_englufed_objects(Image,Found,ScanPoints,Engulfed).
+ find_engulfs_objects(VM,Found,ScanPoints,Engulfed).
+find_engulfs_objects(VM,Found,[_|ScanPoints],Engulfed):-
+ find_engulfs_objects(VM,Found,ScanPoints,Engulfed).
 
 contained_object(O1,O2):-   
   O1 \== O2,
@@ -247,6 +293,9 @@ contained_object(O1,O2):-
   nop(object_surrounds_point(O1,Point)).
 
 
+% ==============================================
+% Contained
+% ==============================================
 
 find_contained(_H,_V,_ID,Sofar,Sofar,[],[]).
 find_contained(_H,_V,_ID,[],[],NextScanPoints,NextScanPoints).
@@ -262,7 +311,7 @@ find_contained(H,V,ID,[Found|Sofar],[Found|SofarInsteadM],NextScanPoints,NextSca
   maplist(mention_inside(Found),NewInside,NewInsideM))),
   ignore((length(ContainedPoints,N),N>1,quietly(print_grid(H,V,[Found|NewInsideM])))),
   find_contained(H,V,ID,Sofar,SofarInstead,ScanPointsInstead,NextScanPointsInstead),
-  append(NewInsideM,SofarInstead,SofarInsteadM).
+  my_append(NewInsideM,SofarInstead,SofarInsteadM).
 find_contained(H,V,ID,[Found|Sofar],[Found|SofarInstead],NextScanPoints,NextScanPointsInstead):-
   find_contained(H,V,ID,Sofar,SofarInstead,NextScanPoints,NextScanPointsInstead).
 
