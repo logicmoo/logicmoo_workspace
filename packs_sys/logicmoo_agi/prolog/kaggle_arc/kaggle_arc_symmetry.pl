@@ -434,21 +434,21 @@ check_mirror_xy(CX,CY,SXQ2,_SYQ2,EXQ2,EYQ2,SXCC,SYCC,EXCC,EYCC,SXQ4,SYQ4,EXQ4,_E
 
 
 
+repeat_pat(n_cols,Len,BorderLen,Row,Left):-
+  (nonvar(Len)-> length(Left,Len); true),
+  [C1|_C1Left] = Left,
+  (nonvar(BorderLen)-> length(CXL,BorderLen); true),
+  [C2|_XLL] = CXL,
+  (append([Left,CXL,Left,CXL,Left,_],Row),C1\==C2),
+  (var(Len)-> length(Left,Len); true),
+  (var(BorderLen)-> length(CXL,BorderLen); true).
+
 repeat_pat(two_cols,Len,BorderLen,Row,Left):-
   (nonvar(Len)-> length(Left,Len); true),
   [C1|_C1Left] = Left,
   (nonvar(BorderLen)-> length(CXL,BorderLen); true),
   [C2|_XLL] = CXL,
   (append([Left,CXL,Left],Row),C1\==C2),
-  (var(Len)-> length(Left,Len); true),
-  (var(BorderLen)-> length(CXL,BorderLen); true).
-
-repeat_pat(n_cols,Len,BorderLen,Row,Left):-
-  (nonvar(Len)-> length(Left,Len); true),
-  [C1|_C1Left] = Left,
-  (nonvar(BorderLen)-> length(CXL,BorderLen); true),
-  [C2|_XLL] = CXL,
-  (append([Left,CXL,Left,_],Row),C1\==C2),
   (var(Len)-> length(Left,Len); true),
   (var(BorderLen)-> length(CXL,BorderLen); true).
 
@@ -473,11 +473,13 @@ test_rp:-  clsmake,
 test_rp(G):-
   h_pattern_length(G,Type,SH,BL,SV,EV,Grid9x9),!,
   EV>1,SH>3,
+  dash_char,
   print_grid(G),
   writeln(pattern),
+  writeln(result),
   pt(rp(len=SH,type=Type,borderW=BL,startV=SV,endV=EV)),
-  print_grid(Grid9x9),
-  writeln(result).
+  print_grid(Grid9x9),!.
+  
 
 rp_test0(X):- X = [[black,black,black,black,black,black,black,black,black,yellow,black,black,black,black,black,black,black,black,black],[black,black,black,black,black,orange,black,black,black,yellow,black,black,black,black,black,orange,black,black,black],[black,black,black,red,black,black,black,black,black,yellow,black,black,black,red,black,black,black,black,black],[black,black,red,black,black,black,black,black,black,yellow,black,black,red,black,black,black,black,black,black],[black,green,black,black,black,green,black,black,black,yellow,black,green,black,black,black,green,black,black,black],[black,black,black,black,black,black,black,black,black,yellow,black,black,black,black,black,black,black,black,black],[black,black,black,cyan,orange,black,black,black,black,yellow,black,black,black,cyan,orange,black,black,black,black],[black,black,black,black,cyan,black,black,green,black,yellow,black,black,black,black,cyan,black,black,green,black],[black,orange,black,black,black,black,black,black,black,yellow,black,orange,black,black,black,black,black,black,black],[yellow,yellow,yellow,yellow,yellow,yellow,yellow,yellow,yellow,yellow,yellow,yellow,yellow,yellow,yellow,yellow,yellow,yellow,yellow],[black,black,black,black,black,black,black,black,black,yellow,black,black,black,black,black,black,black,black,black],[black,black,black,black,black,orange,black,black,black,yellow,black,black,black,black,black,orange,black,black,black],[black,black,black,red,black,black,black,black,black,yellow,black,black,black,red,black,black,black,black,black],[black,black,red,black,black,black,black,black,black,yellow,black,black,red,black,black,black,black,black,black],[black,green,black,black,black,green,black,black,black,yellow,black,green,black,black,black,green,black,black,black],[black,black,black,black,black,black,black,black,black,yellow,black,black,black,black,black,black,black,black,black],[black,black,black,cyan,orange,black,black,black,black,yellow,black,black,black,cyan,orange,black,black,black,black],[black,black,black,black,cyan,black,black,green,black,yellow,black,black,black,black,cyan,black,black,green,black],[black,orange,black,black,black,black,black,black,black,yellow,black,orange,black,black,black,black,black,black,black]].
 rp_test0(G):- into_grid(t(c444b776)*(trn+0)*out,G).
