@@ -80,7 +80,7 @@ individuation_macros(std_shape_lib, [
     shape_lib(out), % random objects learned from other passes
     shape_lib(pair), % random objects learned from this pass
     shape_lib(hammer), % cheater objects for hammer sanity test/hack
-    shape_lib(l_shape), % random objects shown by douglas to look for
+    %shape_lib(l_shape), % random objects shown by douglas to look for
     shape_lib(human)]). % random objects shown by humans to look for
 
 individuation_macros(pre_pass, [  % progress,

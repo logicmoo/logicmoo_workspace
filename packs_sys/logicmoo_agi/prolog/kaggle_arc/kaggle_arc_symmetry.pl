@@ -86,6 +86,13 @@ maplist_until0(_,_,[]).
 maplist_until(Pred2,[X|XX]):- call(Pred2,X)->maplist_until(Pred2,XX).
 maplist_until(_,_).
 
+maplist_until_count(N,Pred2,[X|XX],[Y|YY],[Z|ZZ]):- call(Pred2,X,Y,Z)->(maplist_until_count(M,Pred2,XX,YY,ZZ),N is M+1).
+maplist_until_count(0,_,_,_,[]).
+maplist_until_count(N,Pred2,[X|XX],[Y|YY]):- call(Pred2,X,Y)->(maplist_until_count(M,Pred2,XX,YY),N is M+1).
+maplist_until_count(0,_,_,[]).
+maplist_until_count(N,Pred2,[X|XX]):- call(Pred2,X)->(maplist_until_count(M,Pred2,XX),N is M+1).
+maplist_until_count(0,_,[]).
+
 
 empty_or_open(L):- \+ \+ L=[].
 
@@ -425,6 +432,75 @@ check_mirror_xy(CX,CY,SXQ2,_SYQ2,EXQ2,EYQ2,SXCC,SYCC,EXCC,EYCC,SXQ4,SYQ4,EXQ4,_E
    !.
 
 
+
+
+repeat_2_cols(Len,CXLen,Row,Left):-
+  (nonvar(Len)-> length(Left,Len); true),
+  [C1|_C1Left] = Left,
+  (nonvar(CXLen)-> length(CXL,CXLen); true),
+  [C2|_XLL] = CXL,
+  (append([Left,CXL,Left],Row),C1\==C2),
+  (var(Len)-> length(Left,Len); true),
+  (var(CXLen)-> length(CXL,CXLen); true).
+
+repeat_n_cols(Len,CXLen,Row,Left):-
+  (nonvar(Len)-> length(Left,Len); true),
+  [C1|_C1Left] = Left,
+  (nonvar(CXLen)-> length(CXL,CXLen); true),
+  [C2|_XLL] = CXL,
+  (append([Left,CXL,Left,_],Row),C1\==C2),
+  (var(Len)-> length(Left,Len); true),
+  (var(CXLen)-> length(CXL,CXLen); true).
+
+repeat_n_d_cols(Len,CXLen,Row,Left):-
+  (nonvar(Len)-> length(Left,Len); true),
+  %[C1|C1Left] = Left,
+  (nonvar(CXLen)-> length(CXL,CXLen); true),
+  %[C2|_XLL] = CXL,
+  (append([Left,CXL,Left,_],Row)),
+  (var(Len)-> length(Left,Len); true),
+  (var(CXLen)-> length(CXL,CXLen); true).
+
+
+hv_pattern_length(G,Len,CXLen,StartV,EndV,HPat):-
+  h_pattern_length(G,Len,CXLen,StartV,EndV,HPat).
+
+h_pattern_length(G,Len,CXLen,StartV,EndV,[Left|HVPat]):-  
+  append(Before,[Row|RRest],G),
+  repeat_n_cols(Len,CXLen,Row,Left),
+  maplist_until_count(EndV,repeat_n_cols(Len,CXLen),RRest,HVPat),!,
+  length(Before,StartV).
+
+
+rp_test0(X):- X = [[black,black,black,black,black,black,black,black,black,yellow,black,black,black,black,black,black,black,black,black],[black,black,black,black,black,orange,black,black,black,yellow,black,black,black,black,black,orange,black,black,black],[black,black,black,red,black,black,black,black,black,yellow,black,black,black,red,black,black,black,black,black],[black,black,red,black,black,black,black,black,black,yellow,black,black,red,black,black,black,black,black,black],[black,green,black,black,black,green,black,black,black,yellow,black,green,black,black,black,green,black,black,black],[black,black,black,black,black,black,black,black,black,yellow,black,black,black,black,black,black,black,black,black],[black,black,black,cyan,orange,black,black,black,black,yellow,black,black,black,cyan,orange,black,black,black,black],[black,black,black,black,cyan,black,black,green,black,yellow,black,black,black,black,cyan,black,black,green,black],[black,orange,black,black,black,black,black,black,black,yellow,black,orange,black,black,black,black,black,black,black],[yellow,yellow,yellow,yellow,yellow,yellow,yellow,yellow,yellow,yellow,yellow,yellow,yellow,yellow,yellow,yellow,yellow,yellow,yellow],[black,black,black,black,black,black,black,black,black,yellow,black,black,black,black,black,black,black,black,black],[black,black,black,black,black,orange,black,black,black,yellow,black,black,black,black,black,orange,black,black,black],[black,black,black,red,black,black,black,black,black,yellow,black,black,black,red,black,black,black,black,black],[black,black,red,black,black,black,black,black,black,yellow,black,black,red,black,black,black,black,black,black],[black,green,black,black,black,green,black,black,black,yellow,black,green,black,black,black,green,black,black,black],[black,black,black,black,black,black,black,black,black,yellow,black,black,black,black,black,black,black,black,black],[black,black,black,cyan,orange,black,black,black,black,yellow,black,black,black,cyan,orange,black,black,black,black],[black,black,black,black,cyan,black,black,green,black,yellow,black,black,black,black,cyan,black,black,green,black],[black,orange,black,black,black,black,black,black,black,yellow,black,orange,black,black,black,black,black,black,black]].
+
+rp_test(X):- rp_test0(X).
+rp_test(Y):- rp_test0(X),rot90(X,Y).
+rp_test(G):- into_grid(t(c444b776)*(trn+0)*out,G).
+
+test_rp:-  clsmake, 
+  forall(rp_test(G),test_rp(G)).
+test_rp(G):-
+  print_grid(G),
+  writeln(pattern),
+  !, hv_pattern_length(G,SH,BL,SV,EV,Grid9x9),
+  pt(rp(SH,BL,SV,EV)),
+  print_grid(Grid9x9),
+  writeln(result).
+
+
+
+
+/*
+ %grid_to_id(G,GN), grid_size(G,H,V),
+ Q2 = HVPat, Q1 = HVPat,
+ Q3 = HVPat, Q4 = HVPat,
+ CW = CYL,CE = CYL, CN = CXL, CS = CXL,
+ %gensym('CRef_',CRef),
+  [[Q2,  CN, Q1],
+   [CW, _CC, CE],
+   [Q3,  CS, Q4]] = Grid9x9.
+*/
 
 
 

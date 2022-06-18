@@ -157,11 +157,14 @@ searchable(Shape,Searchable):- object_grid(Shape,Grid), constrain_grid(f,_CheckT
 decolorize(Group,List):- override_group(decolorize(Group,List)),!.
 decolorize(Shape,ShapeO):- 
   colors_to_vars(_Colors,Vars,Shape,ShapeO),
-  set_fg_vars(Vars),length(Vars,L),writeln(set_fg_vars=L),
-  all_dif_colors(Vars,Vars).
+  set_fg_vars(Vars),length(Vars,L),
+  writeln(set_fg_vars=L),
+  all_dif_colors(Vars).
+
 /*
   maplist(label_as_fg(Vars),Vars,CVars).
 */
+all_dif_colors(Vars):- all_dif_colors(Vars,Vars).
 all_dif_colors([],_):-!.
 all_dif_colors([V|Vars],AllVars):-
   all_dif_color(V,AllVars),
@@ -263,8 +266,8 @@ show_shape_lib:- %mmake,
 clear_shape_lib:- findall(Name,in_shape_lib(Name,_Obj),Gallery),
   list_to_set(Gallery,GalleryS),maplist(clear_shape_lib,GalleryS).
 
-show_shape(Shape):- is_grid(Shape),
- dash_char, print_grid(Shape),writeln(grid_shape).
+show_shape(Shape):- is_grid(Shape),!,
+ dash_char, writeln(grid_based_shape), print_grid(Shape).
 
 show_shape(Shape):- ground(Shape),!,
   
@@ -281,7 +284,7 @@ show_shape(Shape):-
 print_shape_0(Shape):-
   vis_hv(Shape,H,V),
   localpoints(Shape,Points),
-
+  
   numbervars(Points,0,_,[attvar(bind)]),
   subst(Points,'$VAR'(0),grey,Points0),
   subst(Points0,'$VAR'(1),grey,Points1),
@@ -293,7 +296,7 @@ print_shape_0(Shape):-
   %grid_numbervars(FG,Grid),
   pt(Grid), 
   %object_indv_id(Shape,_Glyph,Iv),
-  print_grid(H,V,Grid),
+  print_grid(H,V,Grid),!.
   %locally(nb_setval(alt_grid_dot,Iv),print_grid(H,V,Grid)).
 
   
@@ -350,9 +353,12 @@ expand_shape_directives(Shapes,[],SmallLib):- must_be_free(SmallLib),
      %into_grid,
     % searchable,"Searchable indivs", 
        all_orientations, % "All rotations of indivs", 
+
+      % Need one the the three bellow
        %decolorize, %"Add blue indivs", 
        %add(change_color), % "Add new colors indivs",		 
        %all_colors,
+
        smallest_first, "smallest first",
     %decolorize % decolorized points are not yet printable 
     =],SmallLib)
