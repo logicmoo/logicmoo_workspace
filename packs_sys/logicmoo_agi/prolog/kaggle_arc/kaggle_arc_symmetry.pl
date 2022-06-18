@@ -434,59 +434,57 @@ check_mirror_xy(CX,CY,SXQ2,_SYQ2,EXQ2,EYQ2,SXCC,SYCC,EXCC,EYCC,SXQ4,SYQ4,EXQ4,_E
 
 
 
-repeat_2_cols(Len,CXLen,Row,Left):-
+repeat_pat(two_cols,Len,BorderLen,Row,Left):-
   (nonvar(Len)-> length(Left,Len); true),
   [C1|_C1Left] = Left,
-  (nonvar(CXLen)-> length(CXL,CXLen); true),
+  (nonvar(BorderLen)-> length(CXL,BorderLen); true),
   [C2|_XLL] = CXL,
   (append([Left,CXL,Left],Row),C1\==C2),
   (var(Len)-> length(Left,Len); true),
-  (var(CXLen)-> length(CXL,CXLen); true).
+  (var(BorderLen)-> length(CXL,BorderLen); true).
 
-repeat_n_cols(Len,CXLen,Row,Left):-
+repeat_pat(n_cols,Len,BorderLen,Row,Left):-
   (nonvar(Len)-> length(Left,Len); true),
   [C1|_C1Left] = Left,
-  (nonvar(CXLen)-> length(CXL,CXLen); true),
+  (nonvar(BorderLen)-> length(CXL,BorderLen); true),
   [C2|_XLL] = CXL,
   (append([Left,CXL,Left,_],Row),C1\==C2),
   (var(Len)-> length(Left,Len); true),
-  (var(CXLen)-> length(CXL,CXLen); true).
+  (var(BorderLen)-> length(CXL,BorderLen); true).
 
-repeat_n_d_cols(Len,CXLen,Row,Left):-
+repeat_pat(n_d_cols,Len,BorderLen,Row,Left):-
   (nonvar(Len)-> length(Left,Len); true),
   %[C1|C1Left] = Left,
-  (nonvar(CXLen)-> length(CXL,CXLen); true),
+  (nonvar(BorderLen)-> length(CXL,BorderLen); true),
   %[C2|_XLL] = CXL,
   (append([Left,CXL,Left,_],Row)),
   (var(Len)-> length(Left,Len); true),
-  (var(CXLen)-> length(CXL,CXLen); true).
+  (var(BorderLen)-> length(CXL,BorderLen); true).
 
-
-hv_pattern_length(G,Len,CXLen,StartV,EndV,HPat):-
-  h_pattern_length(G,Len,CXLen,StartV,EndV,HPat).
-
-h_pattern_length(G,Len,CXLen,StartV,EndV,[Left|HVPat]):-  
+h_pattern_length(G,Type,Len,BorderLen,StartV,EndV,[Left|HVPat]):-  
   append(Before,[Row|RRest],G),
-  repeat_n_cols(Len,CXLen,Row,Left),
-  maplist_until_count(EndV,repeat_n_cols(Len,CXLen),RRest,HVPat),!,
+  repeat_pat(Type,Len,BorderLen,Row,Left),
+  maplist_until_count(EndV,repeat_pat(Type,Len,BorderLen),RRest,HVPat),!,
   length(Before,StartV).
 
+test_rp:-  clsmake, 
+  forall(rp_test(G),ignore(test_rp(G))).
+:- add_history(test_rp).
+test_rp(G):-
+  h_pattern_length(G,Type,SH,BL,SV,EV,Grid9x9),!,
+  EV>1,SH>3,
+  print_grid(G),
+  writeln(pattern),
+  pt(rp(len=SH,type=Type,borderW=BL,startV=SV,endV=EV)),
+  print_grid(Grid9x9),
+  writeln(result).
 
 rp_test0(X):- X = [[black,black,black,black,black,black,black,black,black,yellow,black,black,black,black,black,black,black,black,black],[black,black,black,black,black,orange,black,black,black,yellow,black,black,black,black,black,orange,black,black,black],[black,black,black,red,black,black,black,black,black,yellow,black,black,black,red,black,black,black,black,black],[black,black,red,black,black,black,black,black,black,yellow,black,black,red,black,black,black,black,black,black],[black,green,black,black,black,green,black,black,black,yellow,black,green,black,black,black,green,black,black,black],[black,black,black,black,black,black,black,black,black,yellow,black,black,black,black,black,black,black,black,black],[black,black,black,cyan,orange,black,black,black,black,yellow,black,black,black,cyan,orange,black,black,black,black],[black,black,black,black,cyan,black,black,green,black,yellow,black,black,black,black,cyan,black,black,green,black],[black,orange,black,black,black,black,black,black,black,yellow,black,orange,black,black,black,black,black,black,black],[yellow,yellow,yellow,yellow,yellow,yellow,yellow,yellow,yellow,yellow,yellow,yellow,yellow,yellow,yellow,yellow,yellow,yellow,yellow],[black,black,black,black,black,black,black,black,black,yellow,black,black,black,black,black,black,black,black,black],[black,black,black,black,black,orange,black,black,black,yellow,black,black,black,black,black,orange,black,black,black],[black,black,black,red,black,black,black,black,black,yellow,black,black,black,red,black,black,black,black,black],[black,black,red,black,black,black,black,black,black,yellow,black,black,red,black,black,black,black,black,black],[black,green,black,black,black,green,black,black,black,yellow,black,green,black,black,black,green,black,black,black],[black,black,black,black,black,black,black,black,black,yellow,black,black,black,black,black,black,black,black,black],[black,black,black,cyan,orange,black,black,black,black,yellow,black,black,black,cyan,orange,black,black,black,black],[black,black,black,black,cyan,black,black,green,black,yellow,black,black,black,black,cyan,black,black,green,black],[black,orange,black,black,black,black,black,black,black,yellow,black,orange,black,black,black,black,black,black,black]].
+rp_test0(G):- into_grid(t(c444b776)*(trn+0)*out,G).
+rp_test0(G):- arc_grid(G).
 
 rp_test(X):- rp_test0(X).
 rp_test(Y):- rp_test0(X),rot90(X,Y).
-rp_test(G):- into_grid(t(c444b776)*(trn+0)*out,G).
-
-test_rp:-  clsmake, 
-  forall(rp_test(G),test_rp(G)).
-test_rp(G):-
-  print_grid(G),
-  writeln(pattern),
-  !, hv_pattern_length(G,SH,BL,SV,EV,Grid9x9),
-  pt(rp(SH,BL,SV,EV)),
-  print_grid(Grid9x9),
-  writeln(result).
 
 
 
