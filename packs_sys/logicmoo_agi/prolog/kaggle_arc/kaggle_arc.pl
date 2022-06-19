@@ -11,14 +11,20 @@
 :- dynamic(grid_nums/1).
 :- dynamic(grid_nums/2).
 
+my_is_clause(H,B):- clause(H,B,Ref),clause(HH,BB,Ref), H+B=@=HH+BB.
+my_asserta_if_new((H:-B)):- !, (my_is_clause(H,B) -> true ; asserta(H:-B)).
+my_asserta_if_new(HB):- my_asserta_if_new(HB:-true).
+my_assertz_if_new((H:-B)):- !, (my_is_clause(H,B) -> true ; assertz(H:-B)).
+my_assertz_if_new(HB):- my_assertz_if_new(HB:-true).
+
 :- multifile(decl_sf/1).
 :- discontiguous(decl_sf/1).
 :- dynamic(decl_sf/1).
-decl_sf(G):- ground(G), !, assertz_new(decl_sf(G)).
+decl_sf(G):- ground(G), !, my_assertz_if_new(decl_sf(G)).
 :- multifile(decl_pt/1).
 :- discontiguous(decl_pt/1).
 :- dynamic(decl_pt/1).
-decl_pt(G):- ground(G), !, assertz_new(decl_pt(G)).
+decl_pt(G):- ground(G), !, my_assertz_if_new(decl_pt(G)).
 :- set_prolog_flag(encoding,iso_latin_1).
 :- set_prolog_flag(color_term,true).
 :- set_stream(current_output, tty(true)).

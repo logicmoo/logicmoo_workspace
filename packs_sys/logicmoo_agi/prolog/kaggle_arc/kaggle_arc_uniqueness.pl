@@ -14,9 +14,6 @@ save_grouped(H,G):-
   (my_asserta_if_new(why_grouped(H,GS))),
   nop(maplist(register_obj,GS)).
 
-my_asserta_if_new((H:-B)):- !,must_det_ll( (clause(H,B,Ref),clause(HH,BB,Ref), H+B=@=HH+BB)-> true ; asserta(H:-B)).
-my_asserta_if_new(HB):- my_asserta_if_new(HB:-true).
-%my_asserta_if_new(HB):- asserta_new(HB).
 
 :- dynamic(why_grouped/2).
 

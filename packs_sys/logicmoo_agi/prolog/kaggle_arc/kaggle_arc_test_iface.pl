@@ -120,7 +120,7 @@ hardness_of_name(Name,Hard):-
 fav(A,B):- nonvar_or_ci(A),nonvar_or_ci(B), cls,mmake, asserta(fav(A,B),Ref),!, call_cleanup(arc1(A),erase(Ref)).
 
 fav(t('1b60fb0c'),[
- learn(
+ runDSL(
    in_out(In,Out),
    subtractGrid(Out,In,Alien),
    rot_by_90([Alien,A,B,C]),
@@ -134,7 +134,7 @@ fav(t('1b60fb0c'),[
 fav(t('fe9372f3'),[]).
 
 %fav(t('6e82a1ae'),[lmDSL([rocketship])]).
-fav(v('e41c6fd3'),[lmDSL([((iz(X,spaceship),color(X,cyan),vert_pos(X,Vert))-->(iz(Y,spaceship),vert_pos(Y,Vert)))])]).
+fav(v('e41c6fd3'),[lmDSL([forall(((iz(X,outl),color(X,cyan),vert_pos(X,Vert))),(iz(Y,outl),vert_pos(Y,Vert)))])]).
 fav(t('25d487eb'),[lmDSL([rocketship])]).
 fav(t('3631a71a'),[lmDSL([overlay_each_pattern])]).
 fav(t(c444b776),[detect_grid]).

@@ -8,6 +8,19 @@
 :- set_prolog_flag_until_eof(trill_term_expansion,false).
 :- endif.
 
+rot_in_incr_90(X,Y):- freeze(X,rot90(X,Y)).
+rot_in_incr_90(X,Y):- freeze(X,rot180(X,Y)).
+rot_in_incr_90(X,Y):- freeze(X,rot270(X,Y)).
+
+rot_by_90_v1(List):- between_each(dif,List),between_each(rot_in_incr_90,List).
+
+between_each(_P2,[]):- !.
+between_each(_P2,[_]):- !.
+between_each(P2,[X, Y]):- !, call(P2, X, Y).
+between_each(P2,[X, Y, Z]):- !, call(P2, X, Y), call(P2, X, Z), call(P2, Z, Y).
+between_each(P2,[X|Text]):- maplist(dif(X), Text), between_each(P2,Text).
+
+
 rot_by_90([A,B,C,D]):- rot_by_90_0([A,B,C,D,A,B,C]).
 
 rot_by_90_0([A,B]):- rot90(A,B),!.

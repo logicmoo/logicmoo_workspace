@@ -82,15 +82,19 @@ test_cond_or(This, That):- term_variables(This,[That|_]),!.
 
 run_dsl(Prog,In,Out):- nb_linkval(dsl_pipe,In),run_dsl(enact,Prog,In,Out).
 
-run_dsl(Mode,Prog,In,Out):- plain_var(Prog),!,throw(var_solving_progs(Mode,Prog,In,Out)).
-run_dsl(_Mode,Prog,In,Out):- Prog==[],!,In=Out,nop(( plain_var(Out)->Out=In; true)).
-run_dsl(Mode,(H,Prog),In,Out):-!, run_dsl(Mode,H,In,GridM), run_dsl(Mode,Prog,GridM,Out).
+run_dsl(Mode,AttVar,In,Out):- attvar(AttVar),get_attr(AttVar,prog,Prog),!,run_dsl(Mode,Prog,In,Out).
+run_dsl(Mode,Prog,_In,_Out):- var(Prog),!,throw(var_solving_progs(Mode,Prog,in,out)).
+run_dsl(Mode,lmDSL(Prog),In,Out):- !, run_dsl(Mode,Prog,In,Out).
+run_dsl(_Mode,[],In,Out):- !,In=Out,nop(( plain_var(Out)->Out=In; true)).
 run_dsl(Mode,[H|Prog],In,Out):-!, run_dsl(Mode,H,In,GridM), run_dsl(Mode,Prog,GridM,Out).
+run_dsl(Mode,(H,Prog),In,Out):-!, run_dsl(Mode,H,In,GridM), run_dsl(Mode,Prog,GridM,Out).
+run_dsl(_Mode,in_out(In,Out),In,Out):-!.
+run_dsl(_Mode,set_out(Out),_In,Out):-!.
+
 run_dsl(Mode,Prog,_In,_Out):- pt(yellow,run_dsl(Mode,Prog,in,out)),fail.
-run_dsl(Mode,Prog,In,Out):- In==dsl_pipe,!,  nb_current(dsl_pipe,PipeIn), run_dsl(Mode,Prog,PipeIn,Out).
+run_dsl(Mode,Prog,In,Out):- In==dsl_pipe,!,  must_det_l((nb_current(dsl_pipe,PipeIn),PipeIn\==[])), run_dsl(Mode,Prog,PipeIn,Out).
 run_dsl(Mode,Prog,In,Out):- Out==dsl_pipe,!, run_dsl(Mode,Prog,In,PipeOut),nb_linkval(dsl_pipe,PipeOut).
 run_dsl(Mode,doall(All),In,OutO):- !, run_dsl(Mode,forall(All,true),In,OutO).
-run_dsl(Mode,lmDSL(Prog),In,Out):- !, run_dsl(Mode,Prog,In,Out).
 run_dsl(_Mode,call(G),In,Out):-!,call(G),(plain_var(Out)->Out=In; true).
 run_dsl(_Mode,same,In,Out):-!, duplicate_term(In,Out).
 run_dsl(Mode,-->(All,Exec),In,Out):-!, run_dsl(Mode,forall(All,Exec),In,Out).
@@ -137,7 +141,11 @@ closure_grid_to_object(Orig,Grid,NewObj):-
 
 closure_grid_to_group(Orig,Grid,Group):- individuate(Orig,Grid,Group).
 
+
+:- decl_pt(into_grid(+(any),-mv(grid))).
 into_grids(P,G):- no_repeats(G,quietly(recast_to_grid(P,G, _))).
+
+:- decl_pt(into_grid(+(any),-grid)).
 into_grid(P,G):- quietly(recast_to_grid(P,G, _)).
 
 print_grid_to_string(G,S):- with_output_to(string(S),print_grid(G)).
@@ -247,13 +255,6 @@ wall_thickness(X,N):- iz(X,polygon),calc(wall_thickness(X,N)).
 calc(_).
 
 create_bag(Obj1):- gensym(bag_,Obj1),ain(iz(Obj1,group)).
-
-training_progs(Prog,In,Out):- plain_var(Prog),!,throw(var_training_progs(Prog,In,Out)).
-training_progs(call(G),_In,_Out):-!,call(G).
-training_progs([],_In,_Out):-!.
-training_progs([H|Prog],In,Out):-!, training_progs(H,In,Out), training_progs(Prog,In,Out).
-training_progs(Prog,_,_):- missing_arity(Prog, 2),!,arcdbg(warn(missing(training_progs(Prog)))).
-training_progs(Prog,In,Out):- call(Prog,In,Out)*-> true ; arcdbg(warn(nonworking(training_progs(Prog)))).
 
 
 missing_arity(P2,N):- compound(P2),!,compound_name_arity(P2,F,Am2),A is Am2 + N, \+ current_predicate(F/A).

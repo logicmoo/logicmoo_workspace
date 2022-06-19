@@ -363,6 +363,8 @@ call_fsi(VM,NewReserved,NewGrid,NewOptions,GH,GV,Sofar,ID,Options,Reserved,Point
 make_fti(GH,GV,ID,Grid,Sofar,Reserved,Options,Points,VM):-  
   statistics(cputime,X),Timeleft is X+10,
   ArgVM = _{
+   grid_in:_,
+   grid_out:_,
    % Options and TODO List (are actually same things)
    todo:Options, options:Options, options_o:Options, todo_prev:[],
    % how much time is left before we turn on debugger

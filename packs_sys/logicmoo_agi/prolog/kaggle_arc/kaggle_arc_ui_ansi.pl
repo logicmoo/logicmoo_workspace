@@ -158,11 +158,19 @@ red_noise:- format('~N'),
   color_print(red,'--------------------------------------------------------------'),nl,
   color_print(red,'--------------------------------------------------------------'),nl.
 
-print_side_by_side(C1,C2):- is_gridoid(C1), is_gridoid(C2),grid_size(C1,H1,V1),grid_size(C2,H2,V2),    
-    (V1>V2 -> print_side_by_side(C2,(H1 * 2 + 12),C1); print_side_by_side(C1,(H2 * 2 + 12),C2)),!.
+print_side_by_side(C1,C2):- print_side_by_side(C1,_LW,C2), !.
 
-print_side_by_side(C1,C2):- print_side_by_side(C1,20,C2),!.
-print_side_by_side(C1,W0,C2):- LW is W0,
+print_side_by_side(C1-wqs(S1),LW,C2-wqs(S2)):- nonvar(S1),!,
+  print_side_by_side(C1,LW,C2),
+  print_side_by_side(wqs(S1),LW,wqs(S2)).
+
+print_side_by_side(C1,LW,C2):- var(LW), is_gridoid(C1), is_gridoid(C2),grid_size(C1,H1,V1),grid_size(C2,H2,V2),!,    
+    ((V2 > V1) -> LW is -(H2 * 2 + 12) ; LW is (H1 * 2 + 12)),!, print_side_by_side(C1,LW,C2).
+print_side_by_side(C1,LW,C2):-  var(LW), LW=20,print_side_by_side(C1,LW,C2),!.
+
+print_side_by_side(C1,W0,C2):- number(W0), W0 < 0, LW is -W0, print_side_by_side(C2,LW,C1).
+
+print_side_by_side(C1,W0,C2):- LW is floor(abs(W0)),
   into_ss_string(C1,ss(W1,L1)),
   into_ss_string(C2,ss(_,L2)),!,
   print_side_by_side_lists(L1,W1,L2,LW).
@@ -251,13 +259,19 @@ show_pair_diff(IH,IV,OH,OV,NameIn,NameOut,PairName,In,Out):-
 uses_space(C):- code_type(C,print).
 
 into_ss_string(Var,_):- plain_var(Var),!,throw(var_into_ss_string(Var)).
+into_ss_string(G,SS):- is_gridoid(G),!,wots(S,print_grid(G)),!,into_ss_string(S,SS).
 into_ss_string(G,SS):- is_grid(G),!,wots(S,print_grid(G)),!,into_ss_string(S,SS).
 into_ss_string(G,SS):- is_object(G),!,wots(S,print_grid(G)),!,into_ss_string(S,SS).
+into_ss_string(wqs(W),SS):- !,wots(SS,format_cyan_u("\t~@",[wqs(W)])).
 into_ss_string(G,SS):- is_points_list(G),!,wots(S,print_grid(G)),!,into_ss_string(S,SS).
 into_ss_string(G,SS):- is_group(G),!,wots(S,print_grid(G)),!,into_ss_string(S,SS).
 into_ss_string(ss(Len,L),ss(Len,L)):-!.
 into_ss_string(L,ss(Len,L)):- is_list(L), find_longest_len(L,Len),!.
-into_ss_string(S,SS):- string(S), atomics_to_string(L,'\n',S),!,into_ss_string(L,SS).
+into_ss_string(S,SS):- string(S), !, atomics_to_string(L,'\n',S),!,into_ss_string(L,SS).
+into_ss_string(uc(W),SS):- !,wots(SS,format_cyan_u("\t~@",[wqs(W)])).
+into_ss_string(uc(C,W),SS):- !,wots(SS,color_print(C,call(underline_print(format("\t~@",[wqs(W)]))))).
+into_ss_string(call(C),SS):- wots(S,catch(C,E,true)), 
+  (((nonvar_or_ci(E),notrace,break,rtrace(C))->throw(E);true)), into_ss_string(S,SS).
 into_ss_string(C,SS):- wots(S,catch(C,E,true)), 
   (((nonvar_or_ci(E),notrace,break,rtrace(C))->throw(E);true)), into_ss_string(S,SS).
 
@@ -419,11 +433,11 @@ silver('#9a9a9a').
 
 unnegate_color(C,Neg):- number(C),C<0,C is -Neg.
 unnegate_color(-C,C):- !.
+ansi_color(C,underline):- var(C),!. %,trace_or_throw(var(ansi_color(C))).
 ansi_color(C,Color):- unnegate_color(C,Neg),ansi_color(Neg,Color).
 ansi_color(C,Color):- attvar(C),get_attr(C,ci,fg(N)),ansi_color(N,Color),!.
 ansi_color(C,fg(Color)):- attvar(C),cant_be_color(C,E),!,ansi_color(-E,Color).
 ansi_color(C,fg(Color)):- attvar(C),get_attr(C,ci,bg),get_bgc(BG),!,ansi_color(BG,Color),!.
-ansi_color(C,blink):- var(C),!,trace_or_throw(var(ansi_color(C))).
 ansi_color(C,fg(Color)):- atom_concat('#',_,C),!,Color=C.
 ansi_color(C,fg(Color)):- integer(C),block_colors(L),length(L,UpTo),between(0,UpTo,C),!,nth0(C,L,Color).
 ansi_color(C,Color):- color_int(C,I)->C\==I,!,ansi_color(I,Color).

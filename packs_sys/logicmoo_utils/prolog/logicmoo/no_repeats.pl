@@ -237,7 +237,7 @@ no_repeats_old(Vs,Call):- CONS = [_], (Call),
 no_repeats_cmp(_,Vs,Call):- ground(Vs),!,Call,!.
 no_repeats_cmp(Cmp,Vs,Call):- CONS = [zzzZZZZzzzzZZZ], (Call), 
    quietly(( \+ memberchk_cmp(Cmp,Vs,CONS), copy_term(Vs,CVs), CONS=[_|T], nb_setarg(2, CONS, [CVs|T]))).
-
+:- export(no_repeats_cmp/3).
 memberchk_cmp(Cmp,Vs,CONS):-
    member(XY,CONS),call(Cmp,Vs,XY),!.
 

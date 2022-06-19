@@ -75,7 +75,8 @@ iz(X,Y):- (var(X)->enum_object(X);true),object_shape(X,Y).
 subClassOf(outline(_),noexit).
 subClassOf(outline(_),hollow).
 subClassOf(outl,hollow).
-subClassOf(outl,spaceship).
+%subClassOf(spaceship,outl).
+%subClassOf(outl,spaceship).
 subClassOf(outline(_),thick1).
 %subClassOf(outl,rectangle).
 
@@ -141,8 +142,6 @@ is_point(P):- var(P),!,fail.
 is_point(P):- is_nc_point(P),!.
 is_point(P):- is_cpoint(P).
 
-is_lpoint(P):- is_point(P), \+ is_gpoint(P).
-
 is_points_list(P):- var(P),!,fail.
 is_points_list([G|L]):- is_point(G),maplist(is_point,L).
 
@@ -181,6 +180,8 @@ is_gridoid(G):- is_points_list(G),!.
 %is_gridoid(G):- is_cpoint(G),!.
 is_gridoid(G):- is_list_of_gridoids(G).
 
+vm_grid(VM,VM.grid).
+vm_obj(VM,O):- member(O,VM.objs).
 
 is_grid(G):- \+ \+  quietly(fast_is_grid(G)).
 

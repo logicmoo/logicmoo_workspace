@@ -136,13 +136,12 @@ register_obj(L):- asserta(obj_cache(L,'')),
 :- dynamic(obj_cache/2).
 :- module_transparent obj_cache/2.
 
-enum_object(O):- var(O),!,no_repeats(O,enum_object0(O)).
+enum_object(O):- var(O),!,no_repeats_cmp(compare_objs1([same]),O,enum_object0(O)).
 enum_object(O):- ptt(enum_object(O)),!.
 
 enum_object0(Obj):- % listing(obj_cache/2),
        obj_cache(O,_S),as_obj(O,Obj).
-
-enum_object0(Obj):- why_grouped(_Why,GS),!,member(Obj,GS).
+enum_object0(Obj):- why_grouped(_Why,GS),member(Obj,GS).
 /*
 enum_object0(S):- why_grouped(_,IndvS),member(S,IndvS).
 enum_object0(S):- clause(in_shape_lib(_,S),Body),catch(Body,_,fail).
@@ -201,6 +200,7 @@ make_indiv_object(ID,H,V,LoH,LoV,HiH,HiV,Points,Overrides,Obj):-
   sort_obj_props(OUT1,OUT),!,as_obj(OUT,Obj).
 
 top(7).
+
 
 
 record_xform(Rot90,Obj,XObj):- is_object(Obj), object_changes(Obj,Was),
@@ -512,6 +512,9 @@ vis_hv(Grid,H,V):- is_grid(Grid),!,globalpoints(Grid,Points),!,points_range(Poin
 vis_hv(I,X,Y):- indv_props(I,L),member(vis_hv(X,Y),L),!.
 vis_hv(Points,H,V):- points_range(Points,LoH,LoV,HiH,HiV,_,_), H is HiH-LoH+1, V is HiV-LoV+1.
 vis_hv(NT,H,V):-  trace, named_gridoid(NT,G),vis_hv(G,H,V).
+
+
+
 
 
 object_color(HV,C):- color(HV,C).
