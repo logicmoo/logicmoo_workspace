@@ -153,7 +153,7 @@ h666(_,G):- fail,ff666(_,G0),
   my_append([GH,GV],G1),
   fpad_grid(f,var,G1,G). 
 
-%f666(Ham,G0):-  clause(f666(Ham,F),true),into_g666(F,G),must_det_l(all_rotations(G,G0)).
+%f666(Ham,G0):-  clause(f666(Ham,F),true),into_g666(F,G),must_det_ll(all_rotations(G,G0)).
 
 show_mismatch(F,G):-  %fail, 
   nl,dash_char,
@@ -317,9 +317,6 @@ cant_be_color(C,E):- attvar(C), get_attr(C,dif,XX),!, sub_term(E,XX),is_color(E)
 
 
 
-must_det_ll((X,Y)):- must_det_ll(X),!,must_det_ll(Y).
-must_det_ll(X):- must_det_l(X),!.
-
 
 offset_grid(H2,V2,FF,OF):-
   offset_v_grid(V2,FF,FF0),
@@ -360,7 +357,7 @@ constrain_grid(CT,_Trig,Grid,GridO):- CT==copy,!,copy_term(Grid,GridO).
 constrain_grid(CT,Trig,Grid1,GridO):- 
   fpad_grid(CT,Grid1,Grid2),
   grid_label_bg(CT,Grid2,Grid3),
-  must_det_l(constrain_grid_now(CT,Trig,Grid3,GridO)),!.
+  must_det_ll(constrain_grid_now(CT,Trig,Grid3,GridO)),!.
   
 
 
@@ -431,12 +428,12 @@ constrain_ele(f,_GH,_GV,_Trig,_GridIn,_H,_V,C1I,C1O,_GridO):- fail, is_spec_fg_c
   (C1O==C1I -> true ; C1O=C1I).
 
 constrain_ele(f,_GH,_GV,Trig,GridIn,H,V,C1I,C1O,GridO):- is_spec_fg_color(C1I,_),!, 
-  (C1O==C1I -> true ; must_det_l((constrain_type(Trig,C1I=C1O), attach_ci(C1O,C1I)))), 
+  (C1O==C1I -> true ; must_det_ll((constrain_type(Trig,C1I=C1O), attach_ci(C1O,C1I)))), 
   constrain_dir_ele(f,Trig,[n,s,e,w],GridIn,H,V,C1I,C1O,GridO).
 
 
 constrain_ele(f,_GH,_GV,Trig,GridIn,H,V,C1I,C1O,GridO):- is_spec_fg_color(C1I,_),!, 
-  (C1O==C1I -> true ; must_det_l((constrain_type(Trig,C1I=C1O), attach_ci(C1O,C1I)))), 
+  (C1O==C1I -> true ; must_det_ll((constrain_type(Trig,C1I=C1O), attach_ci(C1O,C1I)))), 
   constrain_dir_ele(f,Trig,[n,s,e,w],GridIn,H,V,C1I,C1O,GridO).
 
   % UNKNOWN
@@ -596,9 +593,9 @@ into_grid_color(O,O).
 
 into_g666(Text,G):- atomic(Text),text_to_grid(Text,TG),!,into_g666(TG,G),!.
 into_g666(Grid,G):- is_grid(Grid),!,maplist(into_grid_color,Grid,G),!.
-into_g666(Obj,G):- is_object(Obj),!,must_det_l(object_grid(Obj,OG)),!,into_g666(OG,G).
+into_g666(Obj,G):- is_object(Obj),!,must_det_ll(object_grid(Obj,OG)),!,into_g666(OG,G).
 
-ss666(T,G):- h666(T,S),must_det_l(into_g666(S,G)).
+ss666(T,G):- h666(T,S),must_det_ll(into_g666(S,G)).
 sp666(T,Y):- ss666(T,X), fpad_grid(s,X,Y).
 
 ff666(T,G0):- no_repeats(F,((f666(T,F),into_g666(F,G),all_rotations(G,G0)))).
@@ -620,20 +617,23 @@ text_to_grid(Text,HH,VV,ObjPoints,GO):-
   VV is HiV - LoV + 1,
   points_to_grid(HH,VV,ObjPoints,GO),!.
 
-parse_text_to_grid(H,V,X,G,GO):- my_append(LEft,['\r'|Right],X), my_append(LEft,['\n'|Right],Y),!, parse_text_to_grid(H,V,Y,G,GO).
-parse_text_to_grid(H,V,X,G,GO):- my_append(LEft,['\n','\n'|Right],X), my_append(LEft,['\n'|Right],Y),!, parse_text_to_grid(H,V,Y,G,GO).
-% parse_text_to_grid(H,V,X,G,GO):- my_append(LEft,[' ','\n'|Right],X), my_append(LEft,['\n'|Right],Y),!, parse_text_to_grid(H,V,Y,G,GO).
-parse_text_to_grid(H,V,X,G,GO):- my_append(LEft,['|','\n'|Right],X), my_append(LEft,['\n'|Right],Y),!, parse_text_to_grid(H,V,Y,G,GO).
-parse_text_to_grid(H,V,X,G,GO):- my_append(LEft,['\n','|'|Right],X), my_append(LEft,['\n'|Right],Y),!, parse_text_to_grid(H,V,Y,G,GO).
-parse_text_to_grid(H,V,X,G,GO):- my_append(LEft,['¯'|Right],X), my_append(LEft,['_'|Right],Y),!, parse_text_to_grid(H,V,Y,G,GO).
-parse_text_to_grid(H,V,X,G,GO):- my_append(LEft,[' ','_'|Right],X), my_append(LEft,['_'|Right],Y),!, parse_text_to_grid(H,V,Y,G,GO).
+parse_text_to_grid(H,V,X,G,GO):- append(LEft,[' ','|'|Right],X), append(LEft,['|'|Right],Y),!, parse_text_to_grid(H,V,Y,G,GO).
+parse_text_to_grid(H,V,X,G,GO):- append(LEft,['\r'|Right],X), append(LEft,['\n'|Right],Y),!, parse_text_to_grid(H,V,Y,G,GO).
+parse_text_to_grid(H,V,X,G,GO):- append(LEft,['\n','\n'|Right],X), append(LEft,['\n'|Right],Y),!, parse_text_to_grid(H,V,Y,G,GO).
+% parse_text_to_grid(H,V,X,G,GO):- append(LEft,[' ','\n'|Right],X), append(LEft,['\n'|Right],Y),!, parse_text_to_grid(H,V,Y,G,GO).
+parse_text_to_grid(H,V,X,G,GO):- append(LEft,['|','\n'|Right],X), append(LEft,['\n'|Right],Y),!, parse_text_to_grid(H,V,Y,G,GO).
+parse_text_to_grid(H,V,X,G,GO):- append(LEft,['\n','|'|Right],X), append(LEft,['\n'|Right],Y),!, parse_text_to_grid(H,V,Y,G,GO).
+parse_text_to_grid(H,V,X,G,GO):- append(LEft,['¯'|Right],X), append(LEft,['_'|Right],Y),!, parse_text_to_grid(H,V,Y,G,GO).
+parse_text_to_grid(H,V,X,G,GO):- append(LEft,[' ','_'|Right],X), append(LEft,['_'|Right],Y),!, parse_text_to_grid(H,V,Y,G,GO).
 parse_text_to_grid(0,0,X,G,GO):-
-  my_append(_,['_','\n'|Right],X),
+  append(_,['_','\n'|Right],X),
   parse_text_to_grid(1,1,Right,G,GO).
 parse_text_to_grid(0,0,X,G,GO):-
-  my_append(_,['\n'|Right],X),
+  append(_,['\n'|Right],X),
   parse_text_to_grid(1,1,Right,G,GO).
 
+parse_text_to_grid(_,V,['|'|X],G,GO):- 
+  parse_text_to_grid(1,V,X,G,GO).
 parse_text_to_grid(H,V,[' ',C1O|X],G,GO):- C1O \== '\n',
   trans_to_color(C1O,NewC),
   replace_global_hvc_point(H,V,NewC,_,G,GM),

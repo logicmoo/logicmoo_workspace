@@ -178,7 +178,7 @@ in_out_xform(NeuralVM,PairName,StartInOut,ResultInOut,[DONE|MORETODO]):-
 maybe_in_out_xform(NeuralVM,PairName,StartInOut,NextStartInOut,DONE):-
  trace,
  DONE=withStuff(SourceType,StuffType,TargetType,OverlapType,WhatWithType),
-  must_det_l((
+  must_det_ll((
     maplist(call(SourceType,NeuralVM,PairName),StartInOut,FromInOut),
     maplist(call(TargetType,NeuralVM,PairName),StartInOut,TargetInOut),
     maplist(StuffType,FromInOut,StuffInOut),

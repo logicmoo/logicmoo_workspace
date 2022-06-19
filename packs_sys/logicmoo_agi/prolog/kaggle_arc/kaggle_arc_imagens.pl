@@ -140,7 +140,7 @@ shape_info_props(Shape,object_shape(Shape)).
 
 l_shape(LibObj):- 
   in_grid_shape_lib(Shapes0,Grid,GrowthChart),
-  once(must_det_l((
+  once(must_det_ll((
   grid_size(Grid,H,V),
   enum_scale(Scale),
   flatten([Shapes0],Shapes),
@@ -213,7 +213,7 @@ add_shape_lib(Type,Obj):-  is_grid(Obj),!,add_shape_lib0(Type,Obj),!.
 add_shape_lib(Type,[Obj|L]):- (is_group(Obj);is_object(Obj) ; is_grid(Obj)),!,maplist(add_shape_lib(Type),[Obj|L]).
 add_shape_lib(Type,Obj):-  is_list(Obj), \+ is_grid(Obj), !, maplist(add_shape_lib(Type),Obj).
 
-add_shape_lib(Type,Obj):- must_det_l(add_shape_lib0(Type,Obj)).
+add_shape_lib(Type,Obj):- must_det_ll(add_shape_lib0(Type,Obj)).
 
 add_shape_lib0(Type,Obj):- mass(Obj,Mass),!,
   %dash_char, print_grid(Obj),
@@ -245,13 +245,17 @@ decl_sf(Q):- var(Q), clause(decl_pt(P),true), P=..L, my_append(MI,[+],L), Q=..MI
 enum_make_shape(P):- var(P),!,decl_sf(Q),functor(Q,F,A),functor(P,F,A), \+ \+ check_args(Q,P).
 enum_make_shape(P):- compound(P),!,functor(P,F,A),functor(Q,F,A),decl_sf(Q), \+ \+ check_args(Q,P).
 
+likely_fgc(Var):- var(Var),!,get_fgc(Var).
+likely_fgc(_).
 :- decl_sf(box_grid(fg_color,grid)).
-box_grid(C,Grid,D):-
-  get_fgc(C), ensure_grid(Grid),
+box_grid(C,Grid,GridO):-
+  likely_fgc(C), 
+  ensure_grid(Grid),
   grid_size(Grid,H,_), H2 is H +2,
   length(TB,H2),maplist(=(C),TB),
   maplist(pad_sides(=(C)),Grid,FillRows),
-  my_append([TB|FillRows],[TB],D).
+  my_append([TB|FillRows],[TB],D),
+  restructure(D,GridO),!.
 
 :- decl_sf(box_grid_n_times(size,fg_color,grid)).
 box_grid_n_times(0,_C,Grid,D):- Grid=D,!.
@@ -259,21 +263,27 @@ box_grid_n_times(N,C,Grid,D):- !,
   make_shape(box_grid(C,Grid),G), plus(M,1,N),
   make_shape(box_grid_n_times(M,C,G),D).
 
+restructure(X,Y):- is_list(X),!,maplist(restructure,X,Y).
+restructure(X,X).
 
 :- decl_sf(solid_square(fg_color,size)).
-solid_square(C,HW,FillRows):-
-  get_fgc(C), between(1,30,HW),
+solid_square(C,HW,Grid):-  
+  likely_fgc(C), 
+  between(1,30,HW),
   length(Fill,HW),
   maplist(=(C),Fill),
   length(FillRows,HW),
-  maplist(=(Fill),FillRows).
+  maplist(=(Fill),FillRows),!,
+  restructure(FillRows,Grid).
 
 decl_sf(hollow_square(fg_color,bg_color,size)).
+
+hollow_square(C,HW,D):- get_bgc(BG),!,hollow_square(C,BG,HW,D).
 hollow_square(C,BG,HW,D):-
   between(1,30,HW),
-  get_bgc(BG), M is HW-1, 
-  make_shape(solid_square(BG,M),Grid),
-  make_shape(box_grid(C,Grid),D).
+  M is HW-1,
+  solid_square(BG,M,Grid),
+  box_grid(C,Grid,D).
 
 
 dupe_shape(E,F):- \+ is_list(E),!,duplicate_term(E,F).
@@ -291,6 +301,8 @@ show_shape_lib:- %mmake,
 clear_shape_lib:- findall(Name,in_shape_lib(Name,_Obj),Gallery),
   list_to_set(Gallery,GalleryS),maplist(clear_shape_lib,GalleryS).
 
+
+% ===========================================================
 show_shape(Shape):- is_grid(Shape),!,
  dash_char, writeln(grid_based_shape), print_grid(Shape).
 
@@ -323,8 +335,6 @@ print_shape_0(Shape):-
   %object_indv_id(Shape,_Glyph,Iv),
   print_grid(H,V,Grid),!.
   %locally(nb_setval(alt_grid_dot,Iv),print_grid(H,V,Grid)).
-
-  
 
 show_shape_lib(Name):- make,
  pt(?- show_shape_lib(Name)),
@@ -364,6 +374,11 @@ label_rules(_Complex,(Obj:- Body)):-
 
 shapelib_opts(Name,Opts):- findall(Opt,is_shapelib_opt(Name,Opt),Opts).
 
+
+% ===========================================================
+% Stretches a grid to double its size
+:- decl_sf(double_size(grid)).
+% ===========================================================
 double_size(Grid,Double):- is_grid(Grid),!,
   double_rows(Grid,DRows),
   rot90(DRows,DRows90),
@@ -374,7 +389,41 @@ double_size(Obj,Double):- into_grid(Obj,Grid),!,double_size(Grid,Double).
 
 double_rows([],[]):-!.
 double_rows([D|DRows90],[D,D|DRows90D]):- double_rows(DRows90,DRows90D).
-  
+
+% ===========================================================
+% Stretches a grid to increase its size
+:- decl_sf(increase_size(size_int,grid)).
+% ===========================================================
+increase_size(N,Grid,Double):- is_grid(Grid),!,
+  increase_rows(N,Grid,DRows),
+  rot90(DRows,DRows90),
+  increase_rows(N,DRows90,DRows90D),
+  rot270(DRows90D,Double).
+increase_size(N,Group,Double):- is_group(Group),!,override_group(increase_size(N,Group,Double)),!.
+increase_size(N,Obj,Double):- into_grid(Obj,Grid),!,increase_size(N,Grid,Double).
+
+increase_rows(_,[],[]):-!.
+increase_rows(N,[D|DRows90],O):- make_list_inited(N,D,DD),increase_rows(N,DRows90,DRows90D),my_append(DD,DRows90D,O).
+
+% ===========================================================
+% Stretches a grid border to increase its size
+:- decl_sf(increase_border(size_int,grid)).
+% ===========================================================
+increase_border(N,Grid,Double):- is_grid(Grid),!,
+  increase_top_and_bottem_rows(N,Grid,DRows),
+  rot90(DRows,DRows90),
+  increase_top_and_bottem_rows(N,DRows90,DRows90D),
+  rot270(DRows90D,Double),!.
+increase_border(N,Group,Double):- is_group(Group),!,override_group(increase_border(N,Group,Double)),!.
+increase_border(N,Obj,Double):- into_grid(Obj,Grid),!,increase_border(N,Grid,Double).
+
+increase_top_and_bottem_rows(_,[],[]):-!.
+increase_top_and_bottem_rows(N,Grid,O):-
+  append([Top|Middle],[Bottem],Grid),
+  increase_rows(N,[Top],NewTop),
+  increase_rows(N,[Bottem],NewBottem),
+  append([NewTop,Middle,NewBottem],O).
+% ===========================================================
 
 is_shapelib_opt(as_is, = ).
 apply_shapelib_xforms(Name,GalleryS,SmallLib):-  shapelib_opts(Name,Opts),expand_shape_directives(GalleryS,Opts,SmallLib).
@@ -384,7 +433,7 @@ apply_shapelib_xforms(_Name,Gallery,Gallery):- !.
 expand_shape_directives(Shapes,Opts,NewGroup):- \+ is_list(Shapes),!,expand_shape_directives([Shapes],Opts,NewGroup).
 % default expansion
 expand_shape_directives(Shapes,[],SmallLib):- must_be_free(SmallLib),
-  must_det_l(((
+  must_det_ll(((
  print_collapsed(100,
   show_workflow(Shapes,
    [ =, %"Vanila indivs",

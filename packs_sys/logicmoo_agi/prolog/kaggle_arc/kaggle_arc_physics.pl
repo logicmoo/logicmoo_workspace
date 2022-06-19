@@ -51,8 +51,9 @@ gravity_1_n_0([Row1|Grid],[Row1|GridNew]):- gravity_1_n_0(Grid,GridNew).
 
 
 any_xform(Rot90,Any,XNewGrid):- 
-  into_grid(Any,RealGrid,UnconvertClosure),!,
-  grid_xform(Rot90,RealGrid,NewGridR),call(UnconvertClosure,NewGridR,NewGrid),
+  recast_to_grid(Any,RealGrid,UnconvertClosure),!,
+  grid_xform(Rot90,RealGrid,NewGridR),
+  uncast(Any,UnconvertClosure,NewGridR,NewGrid),
   record_xform(Rot90,NewGrid,XNewGrid).
 
 
@@ -186,7 +187,7 @@ move_dir_itself(N,D,I,O):- into_group(I,M),M\=@=I,!,move_dir_itself(N,D,M,O).
 move_dir_object(N,D,I,M):- move_scale_dir_object(1,1,N,D,I,M).
 
 move_scale_dir_object(X,Y,N,D,I,M):- is_object(I),!,
- must_det_l((
+ must_det_ll((
   loc_xy(I,OX,OY),
   move_dir(N,OX,OY,D,X,Y,NX,NY),
   (NY<1 -> M=I ; move_object(NX,NY,I,M)))).
@@ -194,7 +195,7 @@ move_scale_dir_object(N,D,L,LM):- is_group(L),!,maplist(move_scale_dir_object(N,
 move_scale_dir_object(N,D,I,O):- into_group(I,M),M\=@=I,!,move_scale_dir_object(N,D,M,O).
 
 move_object(NX,NY,I,M):- is_object(I),!,
- must_det_l((
+ must_det_ll((
   (NY<1 -> M=I ;
   ( localpoints(I,LPoints),
     offset_points(NX,NY,LPoints,GPoints),
@@ -210,7 +211,7 @@ is_input(VM):- VM.id = _ * _ * in.
 
 find_touches(VM):-
   Objs = VM.objs,
-  must_det_l(find_touches(VM,Objs,Objs,set(VM,objs))).
+  must_det_ll(find_touches(VM,Objs,Objs,set(VM,objs))),!.
 
 %find_touches(VM,ScanNext,SofarInsteadO):- find_touches(VM,ScanNext,ScanNext,SofarInsteadO).
 
@@ -218,34 +219,35 @@ find_touches(_VM,[],SofarInsteadO,SofarInsteadO):-!.
 find_touches(VM,[Found|ScanNext],OtherObjects,OtherObjectsO):-
  once(find_touches_objects(VM,Found,OtherObjects,DirNewInside)),
   NewInside\==[], !,
-  must_det_l((
+  must_det_ll((
   maplist(mention_touches(Found),DirNewInside,NewInsideM),
     maplist(arg(2),DirNewInside,NewInside),
     replace_i_each(OtherObjects,NewInside,NewInsideM,NewOtherObjects),
     replace_i_each(ScanNext,NewInside,NewInsideM,NewScanNext),
-  ignore((length(NewInside,N),N>0,quietly(print_grid([Found|NewInsideM])))), !,
+  ignore((length(NewInside,N),N>0,quietly(print_grid(VM.h,VM.v,"touching",[Found|NewInsideM])))), !,
   find_touches(VM,NewScanNext,NewOtherObjects,OtherObjectsO))),!.
 find_touches(VM,[_|Sofar],OtherObjects,OtherObjectsO):-
   find_touches(VM,Sofar,OtherObjects,OtherObjectsO),!.
 
 mention_touches(Found,Dir-NewInside,NewInsideO):-
-  must_det_l((object_indv_id(Found,_Where,Iv),
+  must_det_ll((object_indv_id(Found,_Where,Iv),
   override_object(touches(Dir,Iv),NewInside,NewInsideO))),!.
 
 find_touches_objects(_VM,_,[],[]).
 find_touches_objects(VM,Found,[Next|ScanPoints],[Dir-Next|Engulfed]):-    
  touching_object(Dir,Found,Next),
- find_touches_objects(VM,Found,ScanPoints,Engulfed).
+ find_touches_objects(VM,Found,ScanPoints,Engulfed),!.
 find_touches_objects(VM,Found,[_|ScanPoints],Engulfed):-
- find_touches_objects(VM,Found,ScanPoints,Engulfed).
+ find_touches_objects(VM,Found,ScanPoints,Engulfed),!.
 
 touching_object(Dirs,O1,O2):- 
   O1\==O2,
   globalpoints(O1,Ps1),
   globalpoints(O2,Ps2),
-  dir_touching_list(Ps1,Ps2,Dirs).
+  dir_touching_list(Ps2,Ps1,Dirs),!.
 
-dir_touching_list(Ps1,Ps2,Dirs):- findall(Dir,(member(Dir,[n,s,e,w,nw,ne,sw,se]),once(dir_touching_list0(Ps1,Ps2,Dir))),Dirs),Dirs\==[].
+dir_touching_list(Ps1,Ps2,Dirs):- findall(Dir,(member(Dir,[n,s,e,w,nw,ne,sw,se]),
+  once(dir_touching_list0(Ps1,Ps2,Dir))),Dirs),Dirs\==[].
 dir_touching_list0(Ps1,Ps2,Dir):- member(_-P1,Ps1), member(_-P2,Ps2), is_adjacent_point(P1,Dir,P2),!.
 
 % ==============================================
@@ -261,11 +263,11 @@ find_engulfs(VM,[Found|ScanNext],OtherObjects,OtherObjectsO):-
  (( once(find_engulfs_objects(VM,Found,OtherObjects,NewInside)),
   
   NewInside\==[], 
-  must_det_l((
+  must_det_ll((
   maplist(mention_inside(Found),NewInside,NewInsideM),
   replace_i_each(OtherObjects,NewInside,NewInsideM,NewOtherObjects),
   replace_i_each(ScanNext,NewInside,NewInsideM,NewScanNext),
-  ignore((length(NewInside,N),N>0,quietly(print_grid([Found|NewInsideM])))),      
+  ignore((length(NewInside,N),N>0,quietly(print_grid(VM.h,VM.v,"find_engulfs",[Found|NewInsideM])))),      
   find_engulfs(VM,NewScanNext,NewOtherObjects,OtherObjectsO)))))).
 
 find_engulfs(VM,[_|Sofar],OtherObjects,OtherObjectsO):-
@@ -304,12 +306,12 @@ find_contained(H,V,ID,[Found|Sofar],[Found|SofarInsteadM],NextScanPoints,NextSca
   once(find_contained_points(Found,NextScanPoints,ScanPointsInstead,ContainedPoints)),
   ContainedPoints\==[],
   %grid_size(Found,H,V),
-  must_det_l((
+  must_det_ll((
   points_to_grid(H,V,ContainedPoints,Grid),
   %once(object_indv_id(Found,ID,_);grid_to_id(Grid,ID)),
   individuate(H,V,ID,[subshape_in_object],Grid,ContainedPoints,NewInside),
   maplist(mention_inside(Found),NewInside,NewInsideM))),
-  ignore((length(ContainedPoints,N),N>1,quietly(print_grid(H,V,[Found|NewInsideM])))),
+  ignore((length(ContainedPoints,N),N>1,quietly(print_grid(H,V,"find_contained",[Found|NewInsideM])))),
   find_contained(H,V,ID,Sofar,SofarInstead,ScanPointsInstead,NextScanPointsInstead),
   my_append(NewInsideM,SofarInstead,SofarInsteadM).
 find_contained(H,V,ID,[Found|Sofar],[Found|SofarInstead],NextScanPoints,NextScanPointsInstead):-
@@ -356,6 +358,10 @@ scan_to_colider(Obj,Next,Dir,ObjPoints,DirHits):-
   is_adjacent_point(Next,Dir,NNext),
   scan_to_colider(Obj,NNext,Dir,ObjPoints,DirHits).
 
+replace_i_each(OtherObjects,[I|NewInside],[O|NewInsideM],NewOtherObjects):-!,
+  subst(OtherObjects,I,O,OtherObjectsM),
+  replace_i_each(OtherObjectsM,NewInside,NewInsideM,NewOtherObjects).
+replace_i_each(E,[],[],E).
 
 :- fixup_exports.
 

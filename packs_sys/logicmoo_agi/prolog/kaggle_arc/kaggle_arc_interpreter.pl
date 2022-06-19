@@ -44,9 +44,9 @@ member_or_it(G,InO):- is_list(InO),!,member(G,InO).
 member_or_it(G,G).
 
 show_workflow(InO,_,InO):-pass_thru_workflow(InO),!. 
-show_workflow(In,String,Out):- nonvar(Out),!,trace,must_det_l((show_workflow(In,String,OutM),Out=OutM)).
+show_workflow(In,String,Out):- nonvar(Out),!,trace,must_det_ll((show_workflow(In,String,OutM),Out=OutM)).
 show_workflow(InO,String,InO):- string(String),!, 
- ignore((InO\==[], nl, writeln(String), forall(member_or_it(G,InO),ignore(print_grid([G]))))).
+ ignore((InO\==[], nl, writeln(String), forall(member_or_it(G,InO),ignore(print_grid(_,_,String,G))))).
 show_workflow(InO,[],InO):-!.
 show_workflow(In,[H|T],Out):-
   show_workflow(In,H,Mid),!,
@@ -56,7 +56,7 @@ show_workflow(In,add(P),Out):- !,
   my_append(Mid,In,Out).
 show_workflow(In,each(P),Out):- 
   show_workflow_each(In,P,Out).
-show_workflow(In,P,Out):- must_det_l(call(P,In,Out)),!.
+show_workflow(In,P,Out):- must_det_ll(call(P,In,Out)),!.
 show_workflow(In,P,In):- arcdbg(warn(failed(show_workflow(P)))),!.
  
 show_workflow_each([],_P,[]):-!.
@@ -66,6 +66,12 @@ show_workflow_each([H|T],P,[Mid|Out]):-
   show_workflow_each(T,P,Out).
 show_workflow_each(In,P,Out):- show_workflow(In,P,Out).
 
+into_singles(Group,Obj):- is_group(Group),!,member(Obj,Group).
+into_singles(Class,Obj):- (iz(Obj,Class),deterministic(YN)), (YN==true->!;true).
+into_singles(Obj,Obj).
+
+vert_pos(Y,Class):- into_singles(Class,Obj),loc_xy(Obj,_X,Y).
+horiz_pos(X,Class):- into_singles(Class,Obj),loc_xy(Obj,X,_Y).
 
 when_config(This,Goal):-test_config(This)-> call(Goal) ; true.
 test_config(This):- current_test_name(Name),test_info(Name,InfoL),!,contains_nonvar(This,InfoL).
@@ -115,22 +121,33 @@ closure_grid_to_object(Orig,Grid,NewObj):-
 
 closure_grid_to_group(Orig,Grid,Group):- individuate(Orig,Grid,Group).
 
-into_grid(P,G):- quietly(into_grid(P,G, _)).
+into_grids(P,G):- no_repeats(G,quietly(recast_to_grid(P,G, _))).
+into_grid(P,G):- quietly(recast_to_grid(P,G, _)).
 
+print_grid_to_string(G,S):- with_output_to(string(S),print_grid(G)).
+print_grid_to_atom(G,S):- with_output_to(atom(S),print_grid(G)).
 % ?- print_grid(gridFn(X)).
-into_grid(Grid,Grid, (=) ):- is_grid(Grid),!.
-into_grid(Obj,Grid, closure_grid_to_object(Obj)):- is_object(Obj),!, object_grid(Obj,Grid),!.
-into_grid(Grp,Grid, closure_grid_to_group(Grp)):- is_group(Grp), !, object_grid(Grp,Grid),!.
-into_grid(Points,Grid,globalpoints):- is_points_list(Points), !, points_to_grid(Points,Grid),!.
-into_grid(Naming,Grid, Closure ):- (named_gridoid(Naming,NG),into_grid(NG,Grid, Closure),deterministic(YN)), (YN==true->!;true).
-into_grid(Points,Grid, throw_no_conversion(Points)):-
+recast_to_grid(Grid,Grid, (=) ):- is_grid(Grid),!.
+recast_to_grid(Obj,Grid, closure_grid_to_object(Obj)):- is_object(Obj),!, object_grid(Obj,Grid),!.
+recast_to_grid(Grp,Grid, closure_grid_to_group(Grp)):- is_group(Grp), !, object_grid(Grp,Grid),!.
+recast_to_grid(Points,Grid,globalpoints):- is_points_list(Points), !, points_to_grid(Points,Grid),!.
+recast_to_grid(Text,Grid, print_grid_to_string ):- string(Text),!,text_to_grid(Text,Grid).
+recast_to_grid(Text,Grid, print_grid_to_atom ):- atom(Text),!,text_to_grid(Text,Grid).
+
+recast_to_grid(Naming,Grid, Closure ):- (named_gridoid(Naming,NG),recast_to_grid(NG,Grid, Closure))*->true;recast_to_grid0(Naming,Grid, Closure).
+recast_to_grid0(Points,Grid, throw_no_conversion(Points,grid)):- compound(Points),
   grid_size(Points,GH,GV),
   make_grid(GH,GV,Grid),
+  Success = found_points(false),
   forall(between(1,GV,V),
-   ((nth1(V,Grid,Row),forall(between(1,GH,H),      
+   ((nth1(V,Grid,Row),
+     forall(between(1,GH,H),      
      (hv_c_value_or(Points,CN,H,V,_)->
-        nb_set_nth1(H,Row,CN)))))),!.
+        (nb_set_nth1(H,Row,CN), 
+         (arg(1,Success,false)->nb_setarg(1,Success,true);true))))))),!,
+  Success = found_points(true).
 
+uncast(_Obj,Closure,In,Out):- call(Closure,In,Out).
 named_gridoid(ID,G):- plain_var(ID),!,known_gridoid(ID,G).
 %named_gridoid(ID,G):- plain_var(ID),!,dumpST,throw(var_named_test(ID,G)).
 named_gridoid(ID,G):- known_gridoid(ID,G).
@@ -142,10 +159,10 @@ known_gridoid0(ID,G):- is_unshared_saved(ID,G).
 known_gridoid0(ID,G):- learned_color_inner_shape(ID,magenta,BG,G,_),get_bgc(BG).
 known_gridoid0(ID,G):- (atom(ID);string(ID)),notrace(catch(atom_to_term(ID,Term,_),_,fail)),Term\==ID,!,known_gridoid0(Term,G).
 known_gridoid0(ID,G):- ID= TstName*ExampleNum*IO, fix_test_name(TstName,Name,_),kaggle_arc_io(Name,ExampleNum,IO,G).
-known_gridoid0(ID,G):- nonvar(ID),ID=(_*_),fix_test_name(ID,Name,ExampleNum),kaggle_arc(Name,ExampleNum,G,_).
-known_gridoid0(ID,G):- fix_test_name(ID,Name,_),kaggle_arc(Name,tst+0,G,_).
+known_gridoid0(ID,G):- nonvar(ID),ID=(_*_),fix_test_name(ID,Name,ExampleNum),kaggle_arc_io(Name,ExampleNum,_IO,G).
+known_gridoid0(ID,G):- fix_test_name(ID,Name,ExampleNum),nop(ignore(ExampleNum=tst+0)),kaggle_arc_io(Name,ExampleNum,_IO,G).
 
-to_real_grid(G,GO):- unnumbervars(G,G1),get_bgc(BG),subst(G1,bg,BG,GO). % ,ignore([[BG|_]|_]=GO).
+to_real_grid(G,GO):- notrace((unnumbervars(G,G1),get_bgc(BG),subst(G1,bg,BG,GO))). % ,ignore([[BG|_]|_]=GO).
 
 kaggle_arc_io(Name,ExampleNum,IO,G):- kaggle_arc(Name,ExampleNum,In,Out), ((IO=in,G=In);(IO=out,G=Out)).
 

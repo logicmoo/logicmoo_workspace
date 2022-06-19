@@ -258,7 +258,7 @@ if_not_bgc_then(X,C,B,A):- is_color_dat(B), \+ is_bg_or_var(X,B), A=C, !.
 
 
 learn_mapping_stateful(In,Out):- get_bgc(BG),
-   must_det_l((
+   must_det_ll((
    maplist(unbind_color(BG),[In,Out],[In1,Out1]),
    maplist(colors_to_vars,[In1,Out1],[In2,Out2]), 
    In2=Out2,

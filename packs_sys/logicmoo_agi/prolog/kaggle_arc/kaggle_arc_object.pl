@@ -141,6 +141,8 @@ enum_object(O):- ptt(enum_object(O)),!.
 
 enum_object0(Obj):- % listing(obj_cache/2),
        obj_cache(O,_S),as_obj(O,Obj).
+
+enum_object0(Obj):- why_grouped(_Why,GS),!,member(Obj,GS).
 /*
 enum_object0(S):- why_grouped(_,IndvS),member(S,IndvS).
 enum_object0(S):- clause(in_shape_lib(_,S),Body),catch(Body,_,fail).
@@ -168,7 +170,7 @@ make_indiv_object(ID,H,V,LoH,LoV,HiH,HiV,Points,Overrides,Obj):-
   
   my_assertion((Points\==[],
      maplist(between(1,30),[H,V,LoH,LoV,HiH,HiV,Width,Height]))),
- must_det_l((
+ must_det_ll((
   my_assertion(is_list([overrides|Overrides])),
   my_assertion(maplist(is_cpoint,Points)),
   %my_assertion(ground(Points)),
@@ -265,6 +267,27 @@ aggregates(birth(_)).
 aggregates(touches(_,_)).
 aggregates(insideOf(_)).
 
+merge_objs(_VM,Bigger,[],_IPROPS,Bigger):-!.
+merge_objs(VM,Bigger,[New|Inside],IPROPS,Combined):- 
+  merge_2objs(VM,Bigger,New,IPROPS,NewBigger),
+  merge_objs(VM,NewBigger,Inside,[],Combined).
+      
+merge_2objs(VM,Bigger,NewInside,IPROPS,Combined):-
+ globalpoints(Bigger,GP1), globalpoints(NewInside,GP2),      
+ indv_props(Bigger,Props1),indv_props(NewInside,Props2),             
+ my_append([GP1,GP2],GPoints), my_append([Props1,Props2,IPROPS],Info),
+ my_partition(props_not_for_merge,Info,_Exclude,Include),
+ make_indiv_object(VM.id,VM.h,VM.v,GPoints,Include,Combined).
+
+props_not_for_merge(globalpoints(_)).
+props_not_for_merge(shape(_)).
+props_not_for_merge(localpoints(_)).
+props_not_for_merge(object_indv_id(_,_)).
+props_not_for_merge(loc_xy(_,_)).
+props_not_for_merge(vis_hv(_,_)).
+props_not_for_merge(colors(_)).
+props_not_for_merge(grid_size(_,_)).
+
 transfer_props(O,Functors,NewO,obj(NewObjL)):-
   indv_props(O,L),
   indv_props(NewO,NewOL),
@@ -286,8 +309,8 @@ mass(I,Count):- is_grid(I),!,globalpoints(I,Points), length(Points,Count),!.
 mass(I,X):- var_check(I,mass(I,X)).
 mass([G|Grid],Points):- (is_group(Grid);(is_list(Grid),is_group(G))),!,maplist(mass,[G|Grid],MPoints),sum_list(MPoints,Points).
 mass(I,X):- indv_props(I,L),member(mass(X),L),!.
-mass(I,X):- is_object(I),!,must_det_l((localpoints(I,L), length(L,X))).
-%mass(I,X):- is_object(I),!,must_det_l((indv_props(I,L), member(mass(X),L))).
+mass(I,X):- is_object(I),!,must_det_ll((localpoints(I,L), length(L,X))).
+%mass(I,X):- is_object(I),!,must_det_ll((indv_props(I,L), member(mass(X),L))).
 mass(Points,Count):- is_list(Points),length(Points,Count),!.
 mass(I,Count):- globalpoints(I,Points),!,length(Points,Count),!.
 mass(C-_,1):- nonvar_or_ci(C),!.
@@ -479,8 +502,8 @@ loc_xy_term(I,offset(X,Y)):- loc_xy(I,X,Y),!.
 
 loc_xy(G,X,Y):- is_group(G),!,maplist(loc_xy_term,G,Offsets),sort(Offsets,[offset(X,Y)|_]). % lowest offset
 loc_xy(Grid,H,V):- is_grid(Grid),!,globalpoints(Grid,Points),!,points_range(Points,LoH,LoV,_,_,_,_), H is LoH, V is LoV.
-loc_xy(I,X,Y):- indv_props(I,L),member(loc_xy(X,Y),L),!.
-loc_xy(NT,H,V):- trace, named_gridoid(NT,G),loc_xy(G,H,V).
+loc_xy(I,X,Y):- into_obj(I,O), indv_props(O,L),member(loc_xy(X,Y),L),!.
+%loc_xy(NT,H,V):- trace, named_gridoid(NT,G),loc_xy(G,H,V).
 
 vis_hv_term(I,size(X,Y)):- vis_hv(I,X,Y),!.
 

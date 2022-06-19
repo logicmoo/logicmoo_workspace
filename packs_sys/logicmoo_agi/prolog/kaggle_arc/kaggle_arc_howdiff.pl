@@ -131,8 +131,8 @@ showdiff_groups(AG,BG):-
        compare_objs1([moved]),
        compare_objs1([same])],
                   A4,B4),  
-  (AG==A4 -> true ; length(A4,LenA),ignore((LenA>0,dash_char)),print_list_of(inputUniqs=LenA,A4), dash_char),
-  (BG==B4 -> true ; length(B4,LenB),print_list_of(outputUniqs=LenB,B4), dash_char),
+  ((AG==A4, fail) -> true ; length(A4,LenA),ignore((LenA>0,dash_char)),print_list_of(inputUniqs=LenA,A4), dash_char),
+  ((BG==B4, fail) -> true ; length(B4,LenB),print_list_of(outputUniqs=LenB,B4), dash_char),
   diff_groups(A4,B4,Diff),
   pt(Diff),
   !.
@@ -176,7 +176,12 @@ diff_groups0(AAR,BBR,DD):-
   diff_groups0(AA,BB,D1),
   combine_diffs(D1, D , DD),!.
 
-diff_groups0(A,B,disjointed(AO,BO)):- maplist(object_dglyph,A,AO),maplist(object_dglyph,B,BO),!.
+diff_groups0(A,B,disjointed(SharedT,AOnlyT,BOnlyT,AO,BO)):- 
+  intersection(A,B,Shared,AOnly,BOnly),
+  tersify(Shared,SharedT),
+  tersify(AOnly,AOnlyT),
+  tersify(BOnly,BOnlyT),
+  maplist(object_dglyph,A,AO),maplist(object_dglyph,B,BO),!.
 
 unused_diff_groups0(AAR,BBR,DD):-
   %make_comparable(B0,B),

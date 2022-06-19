@@ -33,11 +33,11 @@ decl_pt(G):- ground(G), !, assertz_new(decl_pt(G)).
   :- assert((system:'$exported_op'(_,_,_):- fail)).
   %:- multifile('$exported_op'/3).
   :- (getenv('DISPLAY',_) -> true ; setenv('DISPLAY','10.0.0.122:0.0')).
-  :- SL  is 2_147_483_648*8, set_prolog_flag(stack_limit, SL ).
+  :- SL  is 2_147_483_648*8*4, set_prolog_flag(stack_limit, SL ).
   % :- (getenv('DISPLAY',_) -> guitracer ; true).
-  :- set_prolog_flag(toplevel_print_anon,true).
+  :- set_prolog_flag(toplevel_print_anon,false).
   :- set_prolog_flag(toplevel_print_factorized,true).
-    :- set_prolog_flag(answer_write_options, [quoted(true), portray(false), max_depth(20), attributes(dots)]).
+    :- set_prolog_flag(answer_write_options, [quoted(true), portray(true), max_depth(20), attributes(dots)]).
     :- set_prolog_flag(debugger_write_options, [quoted(true), portray(true), max_depth(20), attributes(dots)]).
 
 clsmake:- cls,update_changed_files.  
@@ -56,9 +56,16 @@ clsmake:- cls,update_changed_files.
   :- endif.
 :- endif.
 
+% we alias these so we can catch out of control list growth
 my_append(A,B):- append(A,B).
-my_append(A,B,C):- append(A,B,C),check_len(A),check_len(C),check_len(C).
+my_append(A,B,C):- append(A,B,C). % ,check_len(A),check_len(C),check_len(C).
 
+must_det_ll((X,Y)):- must_det_ll(X),!,must_det_ll(Y).
+must_det_ll(X):- must_det_l(X),!.
+
+must_det_l_goal_expansion(G,GGG):- compound(G), G = must_det_ll(GG),!,expand_goal(GG,GGG),!.
+
+goal_expansion(G,I,GG,O):- nonvar(I),source_location(_,_), compound(G), must_det_l_goal_expansion(G,GG),I=O.
 check_len(_).
 
 :- system:ensure_loaded(library(logicmoo_common)).
@@ -125,15 +132,15 @@ fav(X):- clause(fav(X,_),true).
 arc(TestID):- time(forall(arc1(true,TestID),true)).
 
 arc1(TName):- arc1(true,TName).
-arc1(G,TName):-    
+%arc1(G,TName):- arc2(G,TName,(_+0)).
+
+arc1(G,TName):-
  nb_setval(last_test,TName),
  retractall(why_grouped(individuate(_),_)),
  locally(set_prolog_flag(gc,true),
-  (fix_test_name(TName,TestID,ExampleNum), 
-   ignore(ExampleNum = (_+0)),
+  (fix_test_name(TName,TestID,ExampleNum),    
    clear_shape_lib(in),clear_shape_lib(out),clear_shape_lib(pair),clear_shape_lib(noise),  
    clear_shape_lib(intruder),!,
-
   kaggle_arc(TestID,ExampleNum,In,Out),
   catch((call(G),
     run_arc_io(TestID,ExampleNum,In,Out)),'$aborted',true))).
@@ -213,15 +220,16 @@ get_pair(PairEnv):-
 set_pair(PairEnv):-  
   nb_linkval(pairEnv,PairEnv).
 
+gather_more_task_info(TestID,III):- more_task_info(TestID,III).
 
 show_arc_pair_progress(TestID,ExampleNum,In,Out):-
  
- must_det_l((
+ must_det_ll((
   flag(indiv,_,0),
 	name_the_pair(TestID,ExampleNum,In,Out,PairName),
 	grid_size(In,IH,IV), grid_size(Out,OH,OV),
 	ignore((IH+IV \== OH+OV , writeln(oi(size(IH,IV)->size(OH,OV))))),
-	ignore((forall(more_task_info(TestID,III),pt(III)),nl)), 
+  ignore((forall(more_task_info(TestID,III),pt(III)),nl)), 
   clear_shape_lib(in),clear_shape_lib(out),clear_shape_lib(pair),clear_shape_lib(noise),  
   get_pair(PairEnv),
   make_fti(IH,IV,PairName+in,In,_,_,_,_,InImage),
@@ -253,12 +261,15 @@ show_arc_pair_progress(TestID,ExampleNum,In,Out):-
 
   show_pair_diff(IH,IV,   OH, OV,retained_in,retained_out,PairName,RetainedIn,RetainedOut),
   show_pair_grid(IH,IV,   OH, OV,original_in,original_out,PairName,In,Out),
-  show_pair_grid(IH,IV,   OH, OV,i_pass1,o_pass1,PairName,InC,OutC),
+  show_pair_grid(IH,IV,   OH, OV,i_pass1,o_pass1,PairName,PreInC,PreOutC),
   show_pair_diff(IOH,IOV,IOH,IOV,removed,added,PairName,Removed,Added),
   show_pair_grid(IH,IV,   OH, OV,original_in,original_out,PairName,In,Out),
   %show_pair_grid(IH,IV,   OH, OV,i_pass1,o_pass1,PairName,InP2,OutP2),
   %show_pair_grid(IH,IV,   OH, OV,i_pass1,o_pass1,PairName,InC2,OutC2),
   show_pair_diff(IH,IV,   OH, OV,i_pass2,o_pass2,PairName,InC,OutC),
+  ignore((catch(with_named_pair(solve,TestID,PairName,In,Out),E1,wdmsg(E1)))),
+  ignore((forall(gather_more_task_info(TestID,III),pt(III)),nl)),
+  ignore((catch(maybe_confirm_sol(TestID,ExampleNum,In,Out),E2,wdmsg(E2)))),
   !)).
   /*
 

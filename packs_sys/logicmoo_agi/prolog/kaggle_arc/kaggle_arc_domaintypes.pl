@@ -67,8 +67,8 @@ u_d(u,d).
 sameOrSubClass(Y,Y).
 sameOrSubClass(X,Y):- subClassOf(X,Y).
 
-iz(X,Y):- nonvar(X),!,object_shape(X,XY),sameOrSubClass(XY,Y).
 iz(X,Y):- nonvar_or_ci(Y)->(subClassOf(P,Y),iz(X,P));(nonvar_or_ci(X),iz(X,P),subClassOf(P,Y)).
+iz(X,Y):- nonvar(X),object_shape(X,XY),(sameOrSubClass(XY,Y),deterministic(YN)), (YN==true->!;true).
 iz(X,Y):- (var(X)->enum_object(X);true),object_shape(X,Y).
 
 :- dynamic(iz/2).

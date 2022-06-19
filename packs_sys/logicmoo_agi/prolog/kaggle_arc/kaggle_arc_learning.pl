@@ -150,7 +150,7 @@ name_the_pair(TestID,ExampleNum,In,Out,PairName):-
   PairName= TestID*ExampleNum,
   current_test_name(CName),
   new_test_pair(PairName),
-  must_det_l((
+  must_det_ll((
    ignore((CName\==TestID, 
         new_test_id(TestID),
         dash_char(60,"A"),nl,dash_char(60,"|"),dash_char(6,"\n"),nl,

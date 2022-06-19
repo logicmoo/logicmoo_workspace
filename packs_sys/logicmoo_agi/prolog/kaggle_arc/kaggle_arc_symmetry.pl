@@ -257,7 +257,7 @@ grid_to_3x3_objs(Ordered,Grid,NewIndiv4s,Keep):-
    (wdmsg(time_limit_exceeded),fail))),
   %catch(find_and_use_pattern_gen(Grid,Image9x9),E, (wdmsg(E),fail)),
   %rtrace(find_and_use_pattern_gen(Grid,Image9x9)),
-  must_det_l((
+  must_det_ll((
   flatten(Image9x9,Flat),
   include(nonvar_or_ci,Flat,Grids),
   maybe_repair_image(Ordered,Grids,NewIndiv4s,Keep))).
@@ -326,7 +326,7 @@ max_hv(Objects,H,V):-
   reverse(SizesS,[size(H,V)|_]),!.
 
 repair_patterned_images(Ordered,Objects,Grids,CorrectObjects,Keep):-
- must_det_l((
+ must_det_ll((
   max_hv(Objects,H,V),
   make_grid(H,V,Result),
   writeln('Training hard...'),
@@ -347,7 +347,7 @@ together(Goal):- call(Goal),!.
 
 check_my_local_points([],_Grid):- !.
 check_my_local_points([Point|List],Correct):- 
- must_det_l(together((point_to_hvc(Point,H,V,Expected),
+ must_det_ll(together((point_to_hvc(Point,H,V,Expected),
  (\+ (hv_c_value_or(Correct,Found,H,V,Expected),Found==Expected) -> set_local_points(Point,Correct,Correct) ; true),
  (hv_c_value_or(Correct,Found,H,V,Expected),Found==Expected)))),
  check_my_local_points(List,Correct).
@@ -359,7 +359,7 @@ advise_color(ColorAdvice,Ordered):- member_color(Ordered,ColorAdvice).
 member_color(Ordered,ColorAdvice):- member(Obj,Ordered),color(Obj,ColorAdvice).
 
 replace_diffs(LPoints,Obj,NewObj):- 
- must_det_l((
+ must_det_ll((
   vis_hv(Obj,H,V),
   my_partition(point_between(1,1,H,V),LPoints,Points,_),
   localpoints(Obj,LP),
@@ -378,7 +378,7 @@ point_between(LoH,LoV,HiH,HiV,Point):- point_to_hvc(Point,H,V,_),
   
 
 sort_on(C,R,A,B):- (A==B-> R=0 ; (call(C,A,AA),call(C,B,BB),!,compare(R,AA+A,BB+B))).
-using_compare(C,R,A,B):- (A==B-> R=0 ; ( (must_det_l((call(C,A,AA),call(C,B,BB),!,compare(R,AA,BB)))))).
+using_compare(C,R,A,B):- (A==B-> R=0 ; ( (must_det_ll((call(C,A,AA),call(C,B,BB),!,compare(R,AA,BB)))))).
 colored_pixel_count(A,Count):- is_points_list(A),fg_color_count(A,Count),!.
 colored_pixel_count(G,Count):- is_grid(G), fg_color_count(G,Count),!.
 colored_pixel_count(A,Count):- is_object(A),localpoints(A,G), fg_color_count(G,Count),!.
@@ -386,7 +386,7 @@ colored_pixel_count(A,Count):- is_list(A),!,maplist(colored_pixel_count,A,Summe)
 colored_pixel_count(A,1):- atomic(A),is_fg_color(A),!.
 colored_pixel_count(_,0).
 
-fg_color_count(G,AA):- must_det_l((findall(E,(sub_term(E,G),\+ plain_var(E),is_fg_color(E)),L),length(L,AA))).
+fg_color_count(G,AA):- must_det_ll((findall(E,(sub_term(E,G),\+ plain_var(E),is_fg_color(E)),L),length(L,AA))).
 
 /*
 4-Way Symmetry
@@ -587,7 +587,7 @@ test_rp(G):-
   print_grid(Pattern),!,
   ignore(((Div\==[]),print_grid([Div]))),!,
   StartH=0,
-  nop(must_det_l((gen_pattern(H,V,StartH,StartV,Pattern,Div,same,NewGrid),
+  nop(must_det_ll((gen_pattern(H,V,StartH,StartV,Pattern,Div,same,NewGrid),
   print_grid(NewGrid)))),  
   dash_char,!.
 

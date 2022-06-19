@@ -12,10 +12,11 @@
 save_grouped(H,G):-
   sort(G,GS),
   (my_asserta_if_new(why_grouped(H,GS))),
-  maplist(register_obj,GS).
+  nop(maplist(register_obj,GS)).
 
-my_asserta_if_new((H:-B)):- !,must_det_l( (clause(H,B,Ref),clause(HH,BB,Ref), H+B=@=HH+BB)-> true ; asserta(H:-B)).
+my_asserta_if_new((H:-B)):- !,must_det_ll( (clause(H,B,Ref),clause(HH,BB,Ref), H+B=@=HH+BB)-> true ; asserta(H:-B)).
 my_asserta_if_new(HB):- my_asserta_if_new(HB:-true).
+%my_asserta_if_new(HB):- asserta_new(HB).
 
 :- dynamic(why_grouped/2).
 
@@ -72,7 +73,7 @@ what_unique_obj(Obj,Group):-
 report_unique(Dict):- var(Dict),get_new_uniq_dict(Dict),!,report_unique(Dict).
 report_unique(Dict):- var(Dict.actualCount),!, what_unique_dict(Dict),report_unique(Dict).
 report_unique(Dict):-
- must_det_l((
+ must_det_ll((
   ArgDict = _{sharedWith:SharedWith,object:Obj,trait:Trait,groupSizeMask:GroupSizeMask,
   actualGroupSize:ActualGroupSize,countMask:CountMask,
   actualCount:ActualCount,otherL:OtherL,listL:ListL,

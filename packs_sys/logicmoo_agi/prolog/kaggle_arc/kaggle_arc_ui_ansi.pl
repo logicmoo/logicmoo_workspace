@@ -119,17 +119,16 @@ functor_test_color(warn,yellow).
 arcdbg(G):- compound(G), compound_name_arity(G,F,_),functor_test_color(F,C),wots(S,print(G)),color_print(C,S),!,format('~N').
 arcdbg(G):- wdmsg(G).
 
-user:portray(Grid):- setup_call_cleanup(arc_portray(Grid),true,true),!.
 
 
 via_print_grid(G):- is_grid(G).
 via_print_grid(G):- is_object(G).
 via_print_grid(G):- maplist(is_object,G).
 via_print_grid(G):- is_points_list(G),ground(G).
-%via_print_grid(G):- is_gridoid(G).
+via_print_grid(G):- is_gridoid(G).
 
 % arc_portray(G):- \+ \+ catch((wots(S,( tracing->arc_portray(G,true);arc_portray(G,false))),write(S),ttyflush),_,fail).
-arc_portray(G):- compound(G), \+ \+ catch(((tracing->arc_portray(G,true);arc_portray(G,false)),ttyflush),_,fail).
+arc_portray(G):- compound(G), \+ \+ catch(((tracing->arc_portray(G,true);arc_portray(G,false)),ttyflush),E,format(user_error,"~N~q~n",[E])).
 
 arc_portray(G, false):- is_group(G), is_list(G), length(G,L), L>1, 
    dash_char, 
@@ -147,6 +146,8 @@ arc_portray(G,false):- via_print_grid(G),!, grid_size(G,H,V),!,H>0,V>0, print_gr
 arc_portray(G,true):- is_object(G),underline_print(woto(ptt(G))).
 arc_portray(G,true):- via_print_grid(G),write(' '),underline_print(woto(ptt(G))),write(' ').
 arc_portray(G,true):- tersify(G,O),write(' '),writeq(O),write(' ').
+
+user:portray(Grid):- arc_portray(Grid),!.
 
 %user:portray(Grid):- ((\+ tracing, is_group(Grid),print_grid(Grid))).
 %user:portray(Grid):- quietlyd((is_object(Grid),print_grid(Grid))).
@@ -328,7 +329,16 @@ print_grid(Grid):- use_row_db, is_grid(Grid),!, grid_to_id(Grid,ID),print_grid(I
 print_grid(Grid):-  quietly(print_grid0(_,_,Grid)),!.
 %print_grid0(Grid):- plain_var(Grid),!, throw(var_print_grid(Grid)).
 
-print_grid(OH,OV,Name,Out):- print_grid(OH,OV,Out),!,toUpperC(Name,NameU),write('\t'),color_print(cyan,call(underline_print(writeln(NameU)))),dash_char,!.
+format_cyan_u(Format,Args):- color_print(cyan,call(underline_print(format(Format,Args)))).
+
+short_stat(Out,size(H,V)):- is_grid(Out),!,grid_size(Out,H,V).
+short_stat(Out,length=H):- is_list(Out),!,length(Out,H).
+short_stat(Out,'object'):- is_object(Out),!.
+short_stat(_Out,'printed as grid').
+
+print_grid(OH,OV,Name,Out):- print_grid(OH,OV,Out),!,
+  short_stat(Out,SS),
+  toUpperC(Name,NameU),write('\t'),format_cyan_u("~w  (~w)~n",[NameU, SS]),dash_char,!.
 %print_grid(H,V,Grid):- use_row_db, grid_to_id(Grid,ID),!,print_grid0(H,V,ID).
 print_grid(H,V,Grid):- quietly(print_grid0(H,V,Grid)).
 
@@ -352,6 +362,7 @@ print_grid0(SH,SV,EH,EV,Grid):- print_grid0(SH,SV,SH,SV,EH,EV,EH,EV,Grid).
 print_grid(SH,SV,LoH,LoV,HiH,HiV,EH,EV,Grid):- print_grid0(true,SH,SV,LoH,LoV,HiH,HiV,EH,EV,Grid),!.
 
 print_grid0(SH,SV,LoH,LoV,HiH,HiV,EH,EV,Grid):-
+ %backtrace(10),
  (line_position(current_output,O);O=0),!,
  O1 is O+1,
  wots(S, \+ \+ print_grid0(true,SH,SV,LoH,LoV,HiH,HiV,EH,EV,Grid)),
@@ -374,7 +385,7 @@ print_grid0(Bordered,SH,SV,LoH,LoV,HiH,HiV,EH,EV,Grid):-
 print_grid0(Bordered,SH,SV,LoH,LoV,HiH,HiV,EH,EV,Grid):- is_object(Grid),!,%print_grid0(Bordered,SH,SV,LoH,LoV,HiH,HiV,EH,EV,[Grid]),
   globalpoints(Grid,Points),print_grid0(Bordered,SH,SV,LoH,LoV,HiH,HiV,EH,EV,Points).
 print_grid0(_Bordered,SH,SV,_LoH,_LoV,_HiH,_HiV,EH,EV,GridI):-
- must_det_l((
+ must_det_ll((
   write('\n'), 
   maybe_grid_numbervars(GridI,Grid),
   ((plain_var(EH) ; plain_var(EV))->grid_size(Grid,EH,EV);true),

@@ -85,7 +85,7 @@ row_mem_access([rev|More],ID,N,A01, A02, A03, A04, A05, A06, A07, A08, A09, A10,
   length(S1,32),length(S2,32),length(MissingH,32),% length(BLANK,32),
   RMA = row_mem_access,
   forall(between(0,31,I),
- must_det_l((length(Left,I),length(Gather,I),
+ must_det_ll((length(Left,I),length(Gather,I),
    H is I + 1,
    H = W,
    length(USE,W),
@@ -261,7 +261,7 @@ nb_rplc_hv_value(Grid,OldC,NewC,H,V):- nth1(V,Grid,Row),nb_rplc_nth1(H,Row,OldC,
 my_assertion_is_color(X):- my_assertion(is_color(X)).
 %replace_local_hvcpoint(_H,_V,NewC,OldC,Point,G,GO):-nonvar_or_ci(G),!,G=obj(L),is_list(L),
 replace_global_hvc_point(H,V,NewC,OldC,Grid,GridO):- is_grid(Grid),!, my_assertion_is_color((NewC)), replace_grid_point(H,V,NewC,OldC,Grid,GridO).
-replace_global_hvc_point(H,V,NewC,OldC,G,GO):- hv_point(H,V,Point), must_det_l(replace_global_point_color(Point,NewC,OldC,G,GO)).
+replace_global_hvc_point(H,V,NewC,OldC,G,GO):- hv_point(H,V,Point), must_det_ll(replace_global_point_color(Point,NewC,OldC,G,GO)).
 replace_global_hvc_point(Point,OldC,G,GO):- trace_or_throw(unknown_target_type(replace_global_hvc_point(Point,OldC,G,GO))).
 
 replace_global_point_color(Point,NewC,OldC,G,GO):- is_object(G), !,
@@ -293,7 +293,7 @@ replace_local_points(Point,OldC,G,GO):- is_grid(G),!, point_to_hvc(Point,H,V,New
   replace_grid_point(H,V,NewC,OldC,G,GO),!.
 replace_local_points(Point,OldC,G,GO):- point_to_hvc(Point,H,V,NewC),nop(my_assertion_is_color((NewC))), 
   hv_point(H,V,Colorless),
-  must_det_l(replace_local_point_color(Colorless,NewC,OldC,G,GO)),!.
+  must_det_ll(replace_local_point_color(Colorless,NewC,OldC,G,GO)),!.
 replace_local_points(Point,OldC,G,GO):- trace_or_throw(unknown_target_type(replace_local_points(Point,OldC,G,GO))).
 
 replace_local_point_color(Point,NewC,OldC,G,GO):- is_points_list(G),!, replace_in_points(Point,NewC,OldC,G,GO).
