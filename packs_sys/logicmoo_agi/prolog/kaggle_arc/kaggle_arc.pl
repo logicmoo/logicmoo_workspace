@@ -267,9 +267,9 @@ show_arc_pair_progress(TestID,ExampleNum,In,Out):-
   %show_pair_grid(IH,IV,   OH, OV,i_pass1,o_pass1,PairName,InP2,OutP2),
   %show_pair_grid(IH,IV,   OH, OV,i_pass1,o_pass1,PairName,InC2,OutC2),
   show_pair_diff(IH,IV,   OH, OV,i_pass2,o_pass2,PairName,InC,OutC),
-  ignore((catch(with_named_pair(solve,TestID,PairName,In,Out),E1,wdmsg(E1)))),
+  %ignore((catch(with_named_pair(solve,TestID,PairName,In,Out),E1,wdmsg(E1)))),
   ignore((forall(gather_more_task_info(TestID,III),pt(III)),nl)),
-  ignore((catch(maybe_confirm_sol(TestID,ExampleNum,In,Out),E2,wdmsg(E2)))),
+  ignore((catch(maybe_confirm_sol(TestID,ExampleNum,InC,Out),E2,wdmsg(E2)))),
   !)).
   /*
 

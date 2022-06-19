@@ -66,12 +66,13 @@ show_workflow_each([H|T],P,[Mid|Out]):-
   show_workflow_each(T,P,Out).
 show_workflow_each(In,P,Out):- show_workflow(In,P,Out).
 
+into_singles(Obj,Obj):- is_object(Obj),!.
 into_singles(Group,Obj):- is_group(Group),!,member(Obj,Group).
 into_singles(Class,Obj):- (iz(Obj,Class),deterministic(YN)), (YN==true->!;true).
 into_singles(Obj,Obj).
 
-vert_pos(Y,Class):- into_singles(Class,Obj),loc_xy(Obj,_X,Y).
-horiz_pos(X,Class):- into_singles(Class,Obj),loc_xy(Obj,X,_Y).
+vert_pos(Class,Y):- into_singles(Class,Obj),loc_xy(Obj,_X,Y).
+horiz_pos(Class,X):- into_singles(Class,Obj),loc_xy(Obj,X,_Y).
 
 when_config(This,Goal):-test_config(This)-> call(Goal) ; true.
 test_config(This):- current_test_name(Name),test_info(Name,InfoL),!,contains_nonvar(This,InfoL).
@@ -79,30 +80,45 @@ test_config(This):- current_test_name(Name),test_info(Name,InfoL),!,contains_non
 test_cond_or(This,_That):- test_config(This),!.
 test_cond_or(This, That):- term_variables(This,[That|_]),!.
 
-run_dsl(Prog,In,Out):- run_dsl(enact,Prog,In,Out).
+run_dsl(Prog,In,Out):- nb_linkval(dsl_pipe,In),run_dsl(enact,Prog,In,Out).
 
-run_dsl(_Mode,Prog,In,Out):- Prog==[],!, plain_var(Out)->Out=In; true.
-run_dsl(Mode,Prog,_In,_Out):- ptt(run_dsl(Mode,Prog,in,out)),fail.
 run_dsl(Mode,Prog,In,Out):- plain_var(Prog),!,throw(var_solving_progs(Mode,Prog,In,Out)).
+run_dsl(_Mode,Prog,In,Out):- Prog==[],!,In=Out,nop(( plain_var(Out)->Out=In; true)).
+run_dsl(Mode,(H,Prog),In,Out):-!, run_dsl(Mode,H,In,GridM), run_dsl(Mode,Prog,GridM,Out).
+run_dsl(Mode,[H|Prog],In,Out):-!, run_dsl(Mode,H,In,GridM), run_dsl(Mode,Prog,GridM,Out).
+run_dsl(Mode,Prog,_In,_Out):- pt(yellow,run_dsl(Mode,Prog,in,out)),fail.
 run_dsl(Mode,Prog,In,Out):- In==dsl_pipe,!,  nb_current(dsl_pipe,PipeIn), run_dsl(Mode,Prog,PipeIn,Out).
-run_dsl(Mode,Prog,In,Out):- Out==dsl_pipe,!, run_dsl(Mode,Prog,In,PipeOut),nb_setval(dsl_pipe,PipeOut).
+run_dsl(Mode,Prog,In,Out):- Out==dsl_pipe,!, run_dsl(Mode,Prog,In,PipeOut),nb_linkval(dsl_pipe,PipeOut).
 run_dsl(Mode,doall(All),In,OutO):- !, run_dsl(Mode,forall(All,true),In,OutO).
 run_dsl(Mode,lmDSL(Prog),In,Out):- !, run_dsl(Mode,Prog,In,Out).
 run_dsl(_Mode,call(G),In,Out):-!,call(G),(plain_var(Out)->Out=In; true).
 run_dsl(_Mode,same,In,Out):-!, duplicate_term(In,Out).
-run_dsl(ennfore,color(Obj,Color),In,Out):-!, add_global_points(Color,Obj,In,Out).
 run_dsl(Mode,-->(All,Exec),In,Out):-!, run_dsl(Mode,forall(All,Exec),In,Out).
 run_dsl(Mode,forall(All,Exec),In,OutO):-!,  
- nb_setval(dsl_pipe,In),
- forall(run_dsl(Mode,All,dsl_pipe,Mid),(run_dsl(enforce,Exec,Mid,Out),nb_setval(dsl_pipe,Out))),nb_current(dsl_pipe,OutO).
-run_dsl(Mode,[H|Prog],In,Out):-!, run_dsl(Mode,H,In,GridM), run_dsl(Mode,Prog,GridM,Out).
-run_dsl(Mode,(H,Prog),In,Out):-!, run_dsl(Mode,H,In,GridM), run_dsl(Mode,Prog,GridM,Out).
+ nb_linkval(dsl_pipe,In),
+ forall(run_dsl(Mode,All,dsl_pipe,Mid),
+  (run_dsl(enforce,Exec,Mid,Out),
+   nb_linkval(dsl_pipe,Out))),nb_current(dsl_pipe,OutO).
+% prevents unneeded updates such as color/position settings
+run_dsl(enforce,Prog,In,In):- \+ missing_arity(Prog, 0), call(Prog), !. 
+run_dsl(enforce,color(Obj,Color),In,Out):-!, 
+ color(Obj,ColorWas),subst_color(ColorWas,Color,In,Out),
+    override_object_io(color(Color),Obj,In,Out).
+
+run_dsl(enforce,vert_pos(Obj,New),In,Out):-!, 
+  loc_xy(Obj,X,_Old),
+    override_object_io(loc_xy(X,New),Obj,In,Out).
+
 run_dsl(_Mode,Prog,In,In):- \+ missing_arity(Prog, 0), !, call(Prog).
 run_dsl(Mode,Prog,In,Out):- \+ missing_arity(Prog,2), !,
  (call(Prog,In,M)*-> 
     =(M,Out) ; (arcdbg(warn(nonworking(run_dsl(Mode,Prog)))),fail)).
 run_dsl(Mode,Prog,In,In):- arcdbg(warn(missing(run_dsl(Mode,Prog)))),!,fail.
 
+override_object_io(Update,Obj,In,Out):- 
+  remove_global_points(Obj,In,Mid), 
+  override_object(Update,Obj,ObjCopy), 
+  add_global_points(ObjCopy,Mid, Out).
 
 
 sync_colors(Orig,Colors):- is_object(Orig),!,colors(Orig,Colors),

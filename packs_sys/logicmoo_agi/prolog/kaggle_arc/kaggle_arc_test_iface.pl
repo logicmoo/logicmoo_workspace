@@ -134,7 +134,7 @@ fav(t('1b60fb0c'),[
 fav(t('fe9372f3'),[]).
 
 %fav(t('6e82a1ae'),[lmDSL([rocketship])]).
-fav(v('e41c6fd3'),[lmDSL([(iz(X,spaceship),color(X,cyan),vert_pos(X,spaceship))-->iz(Y,spaceship),vert_pos(Y,spaceship)])]).
+fav(v('e41c6fd3'),[lmDSL([((iz(X,spaceship),color(X,cyan),vert_pos(X,Vert))-->(iz(Y,spaceship),vert_pos(Y,Vert)))])]).
 fav(t('25d487eb'),[lmDSL([rocketship])]).
 fav(t('3631a71a'),[lmDSL([overlay_each_pattern])]).
 fav(t(c444b776),[detect_grid]).

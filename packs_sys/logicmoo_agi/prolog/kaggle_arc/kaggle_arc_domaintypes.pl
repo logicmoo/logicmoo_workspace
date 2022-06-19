@@ -75,6 +75,7 @@ iz(X,Y):- (var(X)->enum_object(X);true),object_shape(X,Y).
 subClassOf(outline(_),noexit).
 subClassOf(outline(_),hollow).
 subClassOf(outl,hollow).
+subClassOf(outl,spaceship).
 subClassOf(outline(_),thick1).
 %subClassOf(outl,rectangle).
 

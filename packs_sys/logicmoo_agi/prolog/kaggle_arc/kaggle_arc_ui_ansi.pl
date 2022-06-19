@@ -116,7 +116,8 @@ functor_test_color(pass,green).
 functor_test_color(fail,red).
 functor_test_color(warn,yellow).
 
-arcdbg(G):- compound(G), compound_name_arity(G,F,_),functor_test_color(F,C),wots(S,print(G)),color_print(C,S),!,format('~N').
+arcdbg(G):- compound(G), compound_name_arity(G,F,_),functor_test_color(F,C),
+  wots(S,print(G)),color_print(C,S),!,format('~N').
 arcdbg(G):- wdmsg(G).
 
 
@@ -225,8 +226,8 @@ show_pair_grid(IH,IV,OH,OV,NameIn,NameOut,PairName,In,Out):-
   toUpperC(NameIn,NameInU),toUpperC(NameOut,NameOutU),
   ignore(IH=1),
   LW is (IH * 2 + 12),
-  wots(U1, print_grid(IH,IV,In)),
-  wots(U2, print_grid(OH,OV,Out)),
+  wots(U1, print_grid(IH,IV,NameInU,In)),
+  wots(U2, print_grid(OH,OV,NameOutU,Out)),
   INFO = [grid_dim,mass,length,colors_count_size,colors],
   print_side_by_side(U1,LW,U2),
   print_side_by_side(
@@ -334,11 +335,12 @@ format_cyan_u(Format,Args):- color_print(cyan,call(underline_print(format(Format
 short_stat(Out,size(H,V)):- is_grid(Out),!,grid_size(Out,H,V).
 short_stat(Out,length=H):- is_list(Out),!,length(Out,H).
 short_stat(Out,'object'):- is_object(Out),!.
-short_stat(_Out,'printed as grid').
+short_stat(Out,S):- \+ compound(Out),!,Out = S.
+short_stat(Out,F/A):- compound_name_arity(Out,F,A),!.
 
 print_grid(OH,OV,Name,Out):- print_grid(OH,OV,Out),!,
   short_stat(Out,SS),
-  toUpperC(Name,NameU),write('\t'),format_cyan_u("~w  (~w)~n",[NameU, SS]),dash_char,!.
+  toUpperC(Name,NameU),write('\t\t'),format_cyan_u("~w  (~w)~n",[NameU, SS]),dash_char,!.
 %print_grid(H,V,Grid):- use_row_db, grid_to_id(Grid,ID),!,print_grid0(H,V,ID).
 print_grid(H,V,Grid):- quietly(print_grid0(H,V,Grid)).
 

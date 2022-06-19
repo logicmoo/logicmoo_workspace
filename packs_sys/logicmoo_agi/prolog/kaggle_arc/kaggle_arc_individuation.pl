@@ -92,10 +92,12 @@ individuation_macros(subshape_in_object, [
 % never add done to macros
 individuation_macros(subshape_main, [
    shape_lib(hammer), % is a sanity test/hack
-   dg_line(d), dg_line(u), 
+   rectangle, diamonds, %
    hv_line(h), hv_line(v), 
+   dg_line(d), dg_line(u), 
    jumps,% run the "jumps" macro
-   merges(Z,Z) % merge lines into square
+   merges(Z,Z), % merge lines into square
+    all
    ]).
 
 individuation_macros(jumps,
@@ -145,7 +147,7 @@ individuation_macros(altro, [
 individuation_macros(complete, [
     find_colorfull_idioms,
     standard,%colormass_merger(3), % call the standard things done in most indiviguators
-    altro, % colormass_subshapes, % find subshapes of the altro
+  % @TODO DISABLED FOR TESTS   altro, % colormass_subshapes, % find subshapes of the altro
     find_touches,
     %when((colors(i.points,Cs),len(Cs)<2),dots), % any after this wont find individuals unless this is commented out
     leftover_as_one, % any after this wont find individuals unless this is commented out
@@ -157,11 +159,11 @@ individuation_macros(complete, [
 % the standard things done in most indiviguators
 individuation_macros(standard, [
     std_shape_lib, % stuff that was learned/shown previously
-    +max_learn_objects(colormass,20),
-    +max_iterate(colormass,20),
+   % +max_learn_objects(colormass,20),
+   % +max_iterate(colormass,20),
     colormass,  % blobs of any shape that are the same color  
     fourway, % find fold patterns    
-    colormass_subshapes, % subdivide the color masses .. for example a square with a dot on it
+ % @TODO DISABLED FOR TESTS   colormass_subshapes, % subdivide the color masses .. for example a square with a dot on it
     subshape_main, % macro for sharing code with "subshape_in_object"
     connects(jumps(X),jumps(X)), % connected jumps    
     merges(Z,Z), % merge objects of identical types (horizontal lines become solid squares)   

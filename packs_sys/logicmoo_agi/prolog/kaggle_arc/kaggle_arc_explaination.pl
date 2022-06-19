@@ -27,22 +27,27 @@ set_grid_id(Grid,ID):-
 kaggle_arc_db(Name,Example,Num,out,G):- kaggle_arc(Name,Example+Num,_,G).
 kaggle_arc_db(Name,Example,Num,in,G):- kaggle_arc(Name,Example+Num,G,_).
 
-maybe_confirm_sol(Name,ExampleNum,In,Out):- 
-   ignore((sols_for(Name,Sol), confirm_sol(Sol,Name,ExampleNum,In,Out))),!.
+maybe_confirm_sol(Name,ExampleNum,TestIn,ExpectedOut):- 
+   ignore((sols_for(Name,Sol), confirm_sol(Sol,Name,ExampleNum,TestIn,ExpectedOut))),!.
 
 sols_for(Name,Sol):- test_info(Name,Sols),member(lmDSL(Sol),Sols).
 
-confirm_sol(Prog,Name,ExampleNum,In,Out):- 
-   (run_dsl(Prog,In,Grid),into_grid(Grid,GridO))
+into_pipe(Grid,Grid):- !. % into_group
+into_pipe(Grid,Solution):- into_grid(Grid,Solution).
+
+confirm_sol(SolutionProgram,Name,ExampleNum,TestIn,ExpectedOut):- 
+ ((run_dsl(SolutionProgram,TestIn,Grid),ptt(run_dsl(SolutionProgram,TestIn)),
+ into_pipe(Grid,Solution))
    *->    
-   count_difs(Out,GridO,Errors),
-   (Errors==0 -> arcdbg(pass(Name,ExampleNum,Prog));(arcdbg(fail(Errors,Name,ExampleNum,Prog)),
+   (count_difs(ExpectedOut,Solution,Errors),
+    print_side_by_side(print_grid(_,_,"Our Solution",Solution),print_grid(_,_,"Expected Solution",ExpectedOut)),
+   (Errors==0 -> arcdbg(pass(Name,ExampleNum,SolutionProgram));(arcdbg(fail(Errors,Name,ExampleNum,SolutionProgram)),
      test_info(Name,InfoF),
      wqnl(fav(Name*ExampleNum,InfoF)),
      red_noise,
-     once(print_grid(GridO)),
-     red_noise))
-   ;arcdbg(warn(unrunable(Name,ExampleNum,Prog))).
+     once(print_grid(Solution)),
+     red_noise)))
+   ;arcdbg(warn(unrunable(Name,ExampleNum,SolutionProgram)))).
 
 
 describe_feature(Grid,List):- is_list(List),!,maplist(describe_feature(Grid),List).
@@ -196,11 +201,11 @@ longer_strings(R,A,B):- obj_prop_sort_compare(R,A,B).
 remove_too_verbose(Var,plain_var(Var)):- plain_var(Var),!.
 remove_too_verbose(H,''):- too_verbose(H),!.
 
-remove_too_verbose(dot,"point"):- !.
+% @TODO UNCOMMENT THIS remove_too_verbose(dot,"point"):- !.
 %remove_too_verbose(line(HV),S):- sformat(S,'~w-Line',[HV]).
 %remove_too_verbose(square,S):- sformat(S,'square',[]).
-remove_too_verbose(background,S):- sformat(S,'bckgrnd',[]).
-remove_too_verbose(object_shape(H),S):- !, remove_too_verbose(H,HH),sformat(S,'~w',[HH]).
+% @TODO UNCOMMENT THIS remove_too_verbose(background,S):- sformat(S,'bckgrnd',[]).
+remove_too_verbose(object_shape(H),S):- !, remove_too_verbose(H,HH),sformat(S,'~q',[s(HH)]).
 remove_too_verbose(colors(H),HH):- !, remove_too_verbose(H,HH).
 remove_too_verbose(object_indv_id(_ * _ * X,Y),[layer(XX),nth(Y)]):- =(X,XX).
 remove_too_verbose(object_indv_id(_ * X,Y),[layer(XX),nth(Y)]):- =(X,XX).
@@ -210,6 +215,7 @@ remove_too_verbose(changes([]),'').
 remove_too_verbose(rotation(same),'').
 remove_too_verbose(L,LL):- is_list(L),!, maplist(remove_too_verbose,L,LL).
 remove_too_verbose(H,H).
+
 too_verbose(P):- compound(P),compound_name_arity(P,F,_),!,too_verbose(F).
 too_verbose(globalpoints).
 too_verbose(shape).
