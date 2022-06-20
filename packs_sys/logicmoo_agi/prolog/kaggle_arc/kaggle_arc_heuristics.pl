@@ -19,6 +19,7 @@
 
 :- ensure_loaded(kaggle_arc_intruder).
 
+    
 
 individualizer_heuristics(PairName,In,Out,IH,IV,OH,OV):- 
   forall(clause(learn_shapelib(PairName,In,Out,IH,IV,OH,OV),Body),rtrace_on_error(once(Body))).

@@ -53,6 +53,7 @@ pixel_colors0(GH,CC):- globalpoints(GH,GP),!,pixel_colors(GP,CC).
 %pixel_colors(G,GL):- findall(Name,(sub_term(CP,G),compound(CP),CP=(C-_),color_name(C,Name)),GL).
 
 unique_colors(G,UC):- colors(G,GF),quietly(maplist(arg(1),GF,UC)).
+unique_color_count(G,Len):- unique_colors(G,UC),length(UC,Len).
 colors_count_size(G,UC):- colors(G,GS),length(GS,UC).
 
 into_cc(SK,BFO):- maplist(into_cc1,SK,BFO).
@@ -281,6 +282,19 @@ swap_colors(Color1,Color2,Grid,NewGrid):- subst_color(Color1,Swap1,Grid,MGrid),
                                           subst_color(Color2,Color1,MGrid,NewGrid),
                                           color_code(Color2,Swap1).
 
+
+do_set_all_fg_colors(Color,I,O):- is_fg_color(I),O=Color.
+set_all_fg_colors(Color,Grid,NewGrid):- map_pred(do_set_all_fg_colors(Color),Grid,NewGrid).
+
+set_all_bg_colors(Color,Grid,NewGrid):- map_pred(do_set_all_bg_colors(Color),Grid,NewGrid).
+do_set_all_bg_colors(Color,I,O):- is_grid(I),!,maplist(grid_set_all_bg_colors(Color),I,O).
+do_set_all_bg_colors(Color,I,O):- nonvar(I),!,is_bg_color(I),O=Color.
+grid_set_all_bg_colors(Color,I,O):- is_list(I),maplist(grid_set_all_bg_colors(Color),I,O).
+grid_set_all_bg_colors(Color,I,O):- is_bg_color(I),O=Color.
+
+%do_set_all_fg_colors(Color,CPoint,NewCPoint):- is_cpoint(CPoint),CPoint=C-Point,hv_point(_,_,Point),is_fg_color(C),NewCPoint=Color-Point.
+
+
 backfill_vars(GridO):- clause(backfill(GridO),true).
 
 unbind_color(Color1,Grid,GridO):- is_grid(Grid),!,grid_color_code(Color1,Num1),unbind_color0(Num1,Grid,GridO).
@@ -310,10 +324,12 @@ colors_to_vars(_,_,V,V).
 %add_borders(C,G,GridNew):- G\=@=Grid,!,add_borders(C,Grid,GridNew).
 add_borders(Color,Grid,GridO):- 
  grid_size(Grid,H,V),
- run_dsl([replace_row_e(1,Color),
+ get_vm(VM),
+ wots(_,
+  (run_dsl(VM,[replace_row_e(1,Color),
   replace_row_e(V,Color),
   replace_col_e(1,Color),
-  replace_col_e(H,Color)],Grid,GridO),!.
+  replace_col_e(H,Color)],Grid,GridO))),!.
 
 
 cls_with(Color1,G,Grid):- into_grid(G,Old),grid_color_code(Color1,Num1),cls_with_0(Num1,Old,Grid),!.

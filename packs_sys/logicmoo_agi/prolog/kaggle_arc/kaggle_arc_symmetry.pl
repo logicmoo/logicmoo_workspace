@@ -66,7 +66,7 @@ repair_symmetry0:-
   known_gridoid(Symgrid,Grid),
   print_grid(Grid)),
   ignore((
-   dash_char,
+   dash_chars,
    wdmsg(repair_symmetry),
    test_symmetry_code(Grid,GridS),
    wdmsg(success(symmetry_code)),
@@ -184,7 +184,7 @@ quaderants_and_center_rays(Grid9x9,QuadsO,CenterO,RaysO):-
    [ Q3, _CS,   Q4]] = Grid9x9,
    flipH(Q1,Q1R), flipV(Q3,Q3R), flipHV(Q4,Q4R),
    gensym('CRef_',CRef),
-   CommonQ = [object_shape(quadrant),object_shape(pattern(CRef))],
+   CommonQ = [iz(quadrant),iz(pattern(CRef))],
    Quads = [obj([grid(Q2),rot(same),loc_xy(CRef,-1,-1)|CommonQ]),
              obj([grid(Q1R),rot(flipH),loc_xy(CRef,1,-1)|CommonQ]),
              obj([grid(Q3R),rot(flipV),loc_xy(CRef,-1,1)|CommonQ]),
@@ -198,13 +198,13 @@ get_center_rays(CRef,Grid9x9,Center,Rays):-
    [ CW,  CC,  CE],
    [_Q3,  CS, _Q4]] = Grid9x9,
    rot180(CW,CWR), rot270(CN,CNR), rot90(CS,CSR),
-   CommonR = [object_shape(divider(CRef)),object_shape(ray(CRef))],
+   CommonR = [iz(divider(CRef)),iz(ray(CRef))],
    
    Rays  = [obj([grid(CE),rot(same),   loc_xy(CRef,1,0)|CommonR]),
              obj([grid(CWR),rot(rot180),loc_xy(CRef,-1,0)|CommonR]),
              obj([grid(CSR),rot(rot90), loc_xy(CRef,0,1)|CommonR]),
              obj([grid(CNR),rot(rot270),loc_xy(CRef,0,-1)|CommonR])],
-   Center =  [obj([grid(CC),rot(same),loc_xy(CRef,0,0)|object_shape(center(CRef))])],!.
+   Center =  [obj([grid(CC),rot(same),loc_xy(CRef,0,0)|iz(center(CRef))])],!.
 
 
 filter_empty_grids(List,ListO):- include(obj_has_form,List,ListO).
@@ -225,8 +225,8 @@ clip_quadrant(CRef,SXC,SXC,EXC,EYC,GN,H,V,SXQ4,SYQ4,EXQ4,EYQ4,G,Same,OBJL):-
   globalpoints(Q4,LPoints),
   offset_points(SXQ4,SYQ4,LPoints,GPoints),
   make_indiv_object(GN,H,V,1,1,Width,Height, LGPoints,
-    [object_shape(quadrant(CRef,Same)),
-     object_shape(pattern(CRef,SXC,SXC,EXC,EYC)),
+    [iz(quadrant(CRef,Same)),
+     iz(pattern(CRef,SXC,SXC,EXC,EYC)),
      rotation(Same),
      vis_hv(Width,Height),
      loc_xy(SXQ4,SYQ4),
@@ -238,7 +238,7 @@ clip_quadrant(CRef,SXC,SXC,EXC,EYC,GN,H,V,SXQ4,SYQ4,EXQ4,EYQ4,G,Same,OBJL):-
 clip_ray(CRef,SXC,SXC,EXC,EYC,GN,H,V,SXQ4,SYQ4,EXQ4,EYQ4,G,Same,OBJ):-
 nop((
   clip(SXQ4,SYQ4,EXQ4,EYQ4,G,Q4),
-  CommonQ = [object_shape(divider(CRef,Same)),object_shape(ray(CRef,SXC,SXC,EXC,EYC))],
+  CommonQ = [iz(divider(CRef,Same)),iz(ray(CRef,SXC,SXC,EXC,EYC))],
   call(Same,Q4,LikeQ4),
   globalpoints(Q4,LPoints),
   offset_points(SXQ4,SYQ4,LPoints,GPoints),
@@ -562,12 +562,12 @@ find_colorfull_idioms(G):-
   h_pattern_length(G,_Type,PatWidth,_DivW,_StartV,PatV,Pattern,_Div),!,
   PatV>2,
   PatWidth>2,
-  dash_char,
+  dash_chars,
   add_shape_lib(as_is,Pattern),
   add_shape_lib(pair,Pattern),
   print_grid(Pattern),!,
   writeln(find_colorfull_idioms),
-  dash_char.
+  dash_chars.
 
 test_rp:-  clsmake, 
   forall(rp_test(G),ignore(test_rp(G))).
@@ -575,8 +575,8 @@ test_rp:-  clsmake,
 test_rp(G):-
   h_pattern_length(G,Type,PatWidth,DivW,StartV,PatV,Pattern,Div),!,
   PatV>1,
-  dash_char,
-  dash_char,
+  dash_chars,
+  dash_chars,
   add_shape_lib(pair,Pattern),
   print_grid(G),
   grid_size(G,H,V),
@@ -589,7 +589,7 @@ test_rp(G):-
   StartH=0,
   nop(must_det_ll((gen_pattern(H,V,StartH,StartV,Pattern,Div,same,NewGrid),
   print_grid(NewGrid)))),  
-  dash_char,!.
+  dash_chars,!.
 
 gen_pattern(H,V,StartH,StartV,Pattern,Div,NextP2,NewGridO):-
   GH is H - StartH,
@@ -752,6 +752,12 @@ is_symmetric_h(G):- mirror_h(_,_,G),!.
 
 
 :- fixup_exports.
+
+
+h_symmetric(Obj):- is_object(Obj),!,object_grid(Obj,Grid),!,h_symmetric(Grid).
+h_symmetric(Grid):- is_grid(Grid),!, mirror_h(I,_C,Grid),grid_size(Grid,H,_V), I is floor(H/2).
+h_symmetric(Group):- into_grid(Group,Grid),!,h_symmetric(Grid).
+
 
 
 

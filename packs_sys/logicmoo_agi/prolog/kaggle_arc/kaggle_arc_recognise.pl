@@ -156,25 +156,25 @@ h666(_,G):- fail,ff666(_,G0),
 %f666(Ham,G0):-  clause(f666(Ham,F),true),into_g666(F,G),must_det_ll(all_rotations(G,G0)).
 
 show_mismatch(F,G):-  %fail, 
-  nl,dash_char,
+  nl,dash_chars,
   show_m_pair(color_print(red,"Mismatched"),1,1,F,G),
-  nl,dash_char,!.
+  nl,dash_chars,!.
 
 show_mismatch(F,C,G):- %fail, 
-  nl,dash_char,
+  nl,dash_chars,
   show_m_pair((color_print(red,"Mismatched"),C),1,1,F,G),
-  nl,dash_char,!.
+  nl,dash_chars,!.
 
 
 show_match(H,V,F,G):- 
-  nl,dash_char,
+  nl,dash_chars,
   show_m_pair(color_print(green,"Matched"),H,V,F,G),
-  nl,dash_char,!.
+  nl,dash_chars,!.
 
 show_match(H,V,C,F,G):- 
-  nl,dash_char,
+  nl,dash_chars,
   show_m_pair((color_print(green,"Matched"),C),H,V,F,G),
-  nl,dash_char,!.
+  nl,dash_chars,!.
 
 show_m_pair(S,H,V,F,G):- 
   grid_size(G,GH,GV),
@@ -184,7 +184,7 @@ show_m_pair(S,H,V,F,G):-
   constrain_grid(f,_Trig,OF,FF),!,
   print_grid(GH,GV,FF),
   nl,
-  dash_char(60,' '),call(S),nl,
+  dash_chars(60,' '),call(S),nl,
   print_grid(G),!.
 
 print_fgrid(GH,GV,F):- ((\+ \+ ((constrain_grid(f,_Trig,F,_FG),print_grid(GH,GV,F),nl)))),!.

@@ -131,8 +131,8 @@ showdiff_groups(AG,BG):-
        compare_objs1([moved]),
        compare_objs1([same])],
                   A4,B4),  
-  ((AG==A4, fail) -> true ; length(A4,LenA),ignore((LenA>0,dash_char)),print_list_of(inputUniqs=LenA,A4), dash_char),
-  ((BG==B4, fail) -> true ; length(B4,LenB),print_list_of(outputUniqs=LenB,B4), dash_char),
+  ((AG==A4, fail) -> true ; length(A4,LenA),ignore((LenA>0,dash_chars)),print_list_of(inputUniqs=LenA,A4), dash_chars),
+  ((BG==B4, fail) -> true ; length(B4,LenB),print_list_of(outputUniqs=LenB,B4), dash_chars),
   diff_groups(A4,B4,Diff),
   pt(Diff),
   !.
@@ -208,14 +208,14 @@ fav_points(I):- \+ dislike_points(I).
 dislike_points(obj(I)):-!,dislike_points(I).
 dislike_points(I):- is_list(I),dislike_points1(L),forall(member(E,L),member(E,I)).
 
-%dislike_points1([object_shape(dot),grid_size(H,V)]):- freeze(H, freeze(V, (HV is H * V, HV > 49))).
-dislike_points1([colors([cc(BG, _)]),object_shape(polygon)]):- freeze(BG,is_black_or_bg(BG)).
+%dislike_points1([iz(dot),grid_size(H,V)]):- freeze(H, freeze(V, (HV is H * V, HV > 49))).
+dislike_points1([colors([cc(BG, _)]),iz(polygon)]):- freeze(BG,is_black_or_bg(BG)).
 
 
 uncomparable(term,grid).
 uncomparable(term,globalpoints).
 
-uncomparable(object,object_shape).
+uncomparable(object,iz).
 uncomparable(shape,localpoints).
 %uncomparable(group,grid_size).
 %uncomparable(group,object_indv_id).
@@ -255,7 +255,7 @@ obj_make_comparable_e(I,I).
 f_uncomparable_e(grid).
 f_uncomparable_e(birth):- writeq(b).
 f_uncomparable_e(grid_size).
-f_uncomparable_e(object_shape).
+f_uncomparable_e(iz).
 %diff_objects(I,O,OUT):- !, fail, locally(set_prolog_lfag(gc,false),compute_diff_objs1(I,O,OUT)).
 :- style_check(-singleton).
 
@@ -303,7 +303,7 @@ showdiff_objects(N,O1,O2,Diffs):-
   print_list_of(diffs,Diffs),
   print_list_of(N,[O1,O2]),
   findall(E,compare_objs1(E,O1,O2),L),
-  pt(compare_objs1=L), dash_char.
+  pt(compare_objs1=L), dash_chars.
 
 
 compare_objs1(How,I,O):- is_list(I), is_list(O), compare_objprops(How,I,O).

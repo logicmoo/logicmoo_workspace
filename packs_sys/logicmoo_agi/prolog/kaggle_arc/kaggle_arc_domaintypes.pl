@@ -67,11 +67,11 @@ u_d(u,d).
 sameOrSubClass(Y,Y).
 sameOrSubClass(X,Y):- subClassOf(X,Y).
 
-iz(X,Y):- nonvar_or_ci(Y)->(subClassOf(P,Y),iz(X,P));(nonvar_or_ci(X),iz(X,P),subClassOf(P,Y)).
-iz(X,Y):- nonvar(X),object_shape(X,XY),(sameOrSubClass(XY,Y),deterministic(YN)), (YN==true->!;true).
-iz(X,Y):- (var(X)->enum_object(X);true),object_shape(X,Y).
-
 :- dynamic(iz/2).
+iz(X,Y):- nonvar_or_ci(Y)->(subClassOf(P,Y),iz(X,P));(nonvar_or_ci(X),iz(X,P),subClassOf(P,Y)).
+iz(X,Y):- nonvar(X),(isz(X,XY),sameOrSubClass(XY,Y),deterministic(YN)), (YN==true->!;true).
+iz(X,Y):- (var(X)->enum_object(X);true),isz(X,Y).
+
 subClassOf(outline(_),noexit).
 subClassOf(outline(_),hollow).
 subClassOf(outl,hollow).
@@ -111,6 +111,26 @@ is_black_or_bg(BG):- is_black(BG)-> true; is_bg_color(BG).
 is_black(C):- C==black.
 get_black(black).
 %get_black(0).
+
+
+data_type(O,T):- nonvar(T),data_type(O,C),T=@=C,!.
+data_type(O,plain_var):- plain_var(O),!.
+data_type([],nil):-!.
+data_type(O,object):- is_object(O),!.
+data_type(O,group(L)):- is_group(O),!,length(O,L).
+data_type(O,cpoint):- is_cpoint(O),!.
+data_type(O,nc_point):- is_nc_point(O),!.
+data_type(O,bg_color):- is_spec_bg_color(O,_),!.
+data_type(O,fg_color):- is_spec_fg_color(O,_),!.
+data_type(O,unknown_bg_color):- is_bg_color(O),!.
+data_type(O,unknown_fg_color):- is_fg_color(O),!.
+data_type(O,unknown_color):- is_colorish(O),!.
+data_type(Out,S):- \+ compound(Out),!,Out = S.
+data_type(Out,S):- compound_name_arity(Out,print_grid,A),arg(A,Out,P),data_type(P,S),!.
+data_type(Out,size(H,V)):- is_grid(Out),!,grid_size(Out,H,V).
+data_type(Out,length=H):- is_list(Out),!,length(Out,H).
+data_type(Out,F/A):- compound_name_arity(Out,F,A),!.
+
 
 is_spec_bg_color(C,C):- is_colorish(C),is_bg_color(C).
 
@@ -302,7 +322,6 @@ color_and_rotation(RedHammer,Hammer):-
 all_colors(Group,List):- override_group(all_colors(Group,List)),!.
 all_colors(RedHammer,Hammer):- change_color(RedHammer,Hammer).
 all_colors(RedHammer,RedHammer).
-
 
 change_color_blue(Group,List):- change_color_to(blue,Group,List).
 

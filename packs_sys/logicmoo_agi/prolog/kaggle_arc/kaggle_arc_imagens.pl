@@ -128,15 +128,15 @@ the_hammer(Color,ColorComplex):-
   ColorComplex = obj([mass(6), shape([point_01_01, point_01_02, point_01_03, point_02_01, point_02_02, point_03_02]), 
   colors([cc(Color, 6.0)]), localpoints([Color-point_01_01, Color-point_01_02, Color-point_01_03, Color-point_02_01, 
   Color-point_02_02, Color-point_03_02]), vis_hv(3, 3), rotation(same), loc_xy(2, 5), 
-  changes([]), object_shape(rectangle), object_shape(hammer), object_indv_id(t('1b60fb0c')*(trn+666)*out, 666), 
+  changes([]), iz(rectangle), iz(hammer), object_indv_id(t('1b60fb0c')*(trn+666)*out, 666), 
   globalpoints([Color-point_02_05, Color-point_02_06, Color-point_02_07, Color-point_03_05, Color-point_03_06, Color-point_04_06]), 
   grid_size(10, 10)]).
 the_hammer(blue, LibObj):- hammer2(Text), text_to_grid(Text,H,V,Points,_Complex), 
-  make_indiv_object('ID',H,V,Points,[object_shape(hammer)],LibObj).
+  make_indiv_object('ID',H,V,Points,[iz(hammer)],LibObj).
 
 
 shape_info_props(Shapes,ShapeProps):- is_list(Shapes),!,maplist(shape_info_props,Shapes,ShapeProps).
-shape_info_props(Shape,object_shape(Shape)).
+shape_info_props(Shape,iz(Shape)).
 
 l_shape(LibObj):- 
   in_grid_shape_lib(Shapes0,Grid,GrowthChart),
@@ -149,8 +149,8 @@ l_shape(LibObj):-
   atomic_list_concat(AList,'_',ID),
   scale_grid(Scale,GrowthChart,Grid,ScaledGrid),
   globalpoints(ScaledGrid,Points)))),
-  catch(make_indiv_object(ID,H,V,Points,[object_shape(l_shape)|ShapeProps],LibObj),_,
-    (rtrace(make_indiv_object(ID,H,V,Points,[object_shape(l_shape)|ShapeProps],LibObj)))).
+  catch(make_indiv_object(ID,H,V,Points,[iz(l_shape)|ShapeProps],LibObj),_,
+    (rtrace(make_indiv_object(ID,H,V,Points,[iz(l_shape)|ShapeProps],LibObj)))).
 
 % todo temp
 sortshapes(List,Set):- my_list_to_set(List, using_compare(shape_key), Set).
@@ -216,10 +216,10 @@ add_shape_lib(Type,Obj):-  is_list(Obj), \+ is_grid(Obj), !, maplist(add_shape_l
 add_shape_lib(Type,Obj):- must_det_ll(add_shape_lib0(Type,Obj)).
 
 add_shape_lib0(Type,Obj):- mass(Obj,Mass),!,
-  %dash_char, print_grid(Obj),
+  %dash_chars, print_grid(Obj),
   ( Mass<3 
    -> nop(pt(too_small_for_shapelib(Type,Mass))) ; (nop(pt(add_shape_lib(Type))),assert_shape_lib(Type,Obj))), 
-  %dash_char,
+  %dash_chars,
   !.
 
 
@@ -304,7 +304,7 @@ clear_shape_lib:- findall(Name,in_shape_lib(Name,_Obj),Gallery),
 
 % ===========================================================
 show_shape(Shape):- is_grid(Shape),!,
- dash_char, writeln(grid_based_shape), print_grid(Shape).
+ dash_chars, writeln(grid_based_shape), print_grid(Shape).
 
 show_shape(Shape):- ground(Shape),!,
   
@@ -312,7 +312,7 @@ show_shape(Shape):- ground(Shape),!,
   ignore(print_grid([Shape])),
   ignore((\+ ground(Shape),pt(Shape))),!.
 show_shape(Shape):-
-  dash_char,
+  dash_chars,
   ignore(print_info(Shape)),
   ignore((\+ \+ print_shape_0(Shape) ->true;writeln(failed_print_grid))),
   ignore((\+ ground(Shape),pt(Shape))),!.

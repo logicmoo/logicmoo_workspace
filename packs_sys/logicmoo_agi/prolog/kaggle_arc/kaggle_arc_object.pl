@@ -27,12 +27,13 @@ offset_point(OH,OV,C-Point,C-LPoint):- atom(Point), hv_point(H,V,Point),HH is H 
 my_assertion(G):- G,!.
 my_assertion(G):- trace,G,!.
 
+
 grid_to_individual(Grid,Obj):- 
   my_assertion(is_grid(Grid)),!,
   grid_size(Grid,H,V),
   grid_to_points(Grid,H,V,Points),
   (Points==[]-> empty_grid_to_individual(H,V,Obj); 
-  (grid_to_id(Grid,ID), make_indiv_object(ID,H,V,Points,[object_shape(grid)],Obj))).
+  (grid_to_id(Grid,ID), make_indiv_object(ID,H,V,Points,[iz(grid)],Obj))).
 
 empty_grid_to_individual(H,V,Obj):-
   Iv is H + V*34,
@@ -43,7 +44,7 @@ empty_grid_to_individual(H,V,Obj):-
          rotation(same), 
          loc_xy(1, 1),
          changes([]), 
-         object_shape(grid),
+         iz(grid),
          object_indv_id(empty_grid_to_individual(H,V), Iv),
          grid_size(H, V)]).
 
@@ -97,7 +98,7 @@ make_indiv_object_list(ID,H,V,Points,OUT):-
 
 make_point_object(ID,H,V,Options,Point,Obj):-
    my_assertion(is_cpoint(Point)),
-   make_indiv_object(ID,H,V,[Point],[object_shape(dots),object_shape(shape(dot))|Options],OUT),
+   make_indiv_object(ID,H,V,[Point],[iz(dots),iz(shape(dot))|Options],OUT),
    as_obj(OUT,Obj).
 
 %make_indiv_object(_,_,_,obj(Ps),obj(Ps)):-
@@ -110,12 +111,6 @@ make_indiv_object(ID,H,V,IPoints,Obj):-
   points_range(Points,LoH,LoV,HiH,HiV,_HO,_VO),
   make_indiv_object(ID,H,V,LoH,LoV,HiH,HiV,Points,Overrides,OUT),
   as_obj(OUT,Obj).
-
-get_vm(VM):- get_pair(PairEnv),
-   PairEnv.current_i = VM.
-
-set_vm(VM):- get_pair(PairEnv),
-   set(PairEnv,current_i) = VM.
 
 make_indiv_object(ID,H,V,Points,Overrides,Obj):-
   points_range(Points,LoH,LoV,HiH,HiV,_HO,_VO),
@@ -189,7 +184,7 @@ make_indiv_object(ID,H,V,LoH,LoV,HiH,HiV,Points,Overrides,Obj):-
    (guess_shape(Grid,LocalGrid,Ps,Empty,Len,Width,Height,CC,LPoints,Shape),
      close_enough_grid(Grid,GridInCopy,LocalGrid)),ShapesUF),
   flatten([ShapesUF],ShapesU),list_to_set(ShapesU,Shapes),
-  maplist(append_term(object_shape),Shapes,OShapes),
+  maplist(append_term(iz),Shapes,OShapes),
   my_append(
   [ [mass(Len), shape(ColorlessPoints), colors(CC), localpoints(LPoints),
      vis_hv(Width,Height),  rotation(same), loc_xy(LoH,LoV)],     
@@ -225,7 +220,7 @@ e1_member(E,L):- \+ \+ member(E,L).
 obj_prop_sort_compare2(R,A,B):- obk_key(A,AK),obk_key(B,BK),compare(R,AK-A,BK-B).
 
 obk_key(A,AK):- clause(prop_of(_,A),true,Ref),nth_clause(prop_of(_,_),Ref,AK),!. 
-obk_key(object_shape(_),50):-!.
+obk_key(iz(_),50):-!.
 obk_key(A,99):- arg(1,A,L), is_grid(L).
 obk_key(A,90):- arg(1,A,L), is_list(L).
 obk_key(_,80). 
@@ -233,7 +228,7 @@ obk_key(_,80).
 
 add_shape_info([Info|L],I,O):-!,add_shape_info(Info,I,M),add_shape_info(L,M,O).
 add_shape_info([],I,I):-!.
-add_shape_info(Info,I,O):- override_object(object_shape(Info),I,O).
+add_shape_info(Info,I,O):- override_object(iz(Info),I,O).
 
 
 override_object(E,I,O):- with_object(override,E,I,O).
@@ -253,6 +248,10 @@ with_objprops(delq,E,List,NewList):-functor(E,F,A),functor(R,F,A),
     my_append(Left,[R|Right],List), % E \=@= R,
     my_append(Left,Right,NewList),!.
 
+with_objprops(override,-E,List,NewList):-
+    my_append(Left,[R|Right],List), E =@= R,
+    my_append(Left,Right,NewList),!.
+
 with_objprops(override,E,List,NewList):- \+ aggregates(E), functor(E,F,A),functor(R,F,A),
     my_append(Left,[R|Right],List), % E \=@= R,
     my_append(Left,[E|Right],NewList),!.
@@ -262,7 +261,7 @@ with_objprops(override,E,List,NewList):-
     (( \+ \+ (member(R,Right), R =@= E )) -> NewList = List ; my_append(Left,[changes(G),E|Right],NewList)),!.
 
 
-aggregates(object_shape(_)).
+aggregates(iz(_)).
 aggregates(birth(_)).
 aggregates(touches(_,_)).
 aggregates(insideOf(_)).
@@ -316,6 +315,7 @@ mass(I,Count):- globalpoints(I,Points),!,length(Points,Count),!.
 mass(C-_,1):- nonvar_or_ci(C),!.
 mass(I,Count):- globalpoints(I,Points), length(Points,Count),!.
 
+remove_color(C-P,point_01_01):- is_bg_color(C),!.
 remove_color(_-P,P).
 remove_color(LPoints,ColorlessPoints):- maplist(remove_color,LPoints,ColorlessPoints).
 
@@ -386,12 +386,10 @@ counted_neighbours(C-HV,List,CountIn,[P|CountIn]):-
 var_check(I,G):- var(I),!,(enum_object(I)*->G;var_check_throw(I,G)).
 var_check_throw(I,G):- var(I),wdmsg(error(var(G))),!,trace_or_throw(maybe_enum_i(I,G)),call(G).
 
-object_shapeW(I,X):- compound(I),I=obj(L),!,my_assertion(is_list(L)),!,member(object_shape(X),L).
-object_shapeW(I,X):- indv_props(I,L),!,member(object_shape(X),L).
+object_shapeW(I,X):- compound(I),I=obj(L),!,my_assertion(is_list(L)),!,member(iz(X),L).
+object_shapeW(I,X):- indv_props(I,L),!,member(iz(X),L).
 
-object_shape(I,X):- var_check(I,object_shape(I,X))*->true;(indv_props(I,L),member(object_shape(X),L)).
-
-isz(O,S):- object_shape(O,S).
+isz(I,X):- var_check(I,iz(I,X))*->true;(indv_props(I,L),member(iz(X),L)).
 
 obj_prop_val(I,X):- var_check(I,obj_prop_val(I,X))*->true;(indv_props(I,L),member(X,L)).
 
@@ -542,7 +540,7 @@ rebuild_from_localpoints(Obj,Points,NewObj):-
   offset_points(X,Y,LPoints,GPoints),
   indv_props(Obj,Props),
   my_partition(rev_lambda(member([colors(_),mass(_),shape(_),
-            object_shape(multicolored(_)),globalpoints(_),localpoints(_)])),Props,_,PropsRetained),
+            iz(multicolored(_)),globalpoints(_),localpoints(_)])),Props,_,PropsRetained),
     make_indiv_object(ID,GH,GV,Points,[vis_hv(H,V),loc_xy(X,Y),globalpoints(GPoints),localpoints(Points)|PropsRetained],NewObj),
   !.
 
@@ -560,7 +558,7 @@ rebuild_from_globalpoints(Obj,GPoints,NewObj):-
   localpoints(UnRotGrid,Points),
   indv_props(Obj,Props),
   my_partition(rev_lambda(member([colors(_),mass(_),shape(_),
-            object_shape(multicolored(_)),globalpoints(_),localpoints(_)])),Props,_,PropsRetained),
+            iz(multicolored(_)),globalpoints(_),localpoints(_)])),Props,_,PropsRetained),
     make_indiv_object(ID,GH,GV,Points,[vis_hv(H,V),loc_xy(X,Y),globalpoints(GPoints),localpoints(Points)|PropsRetained],NewObj),
  !.
 
@@ -598,11 +596,11 @@ find_outline(X):-
 
 :- add_history(find_outline).
 find_outline:- clsmake, forall(find_outline1,true).
-find_outline1:- arc_grid(Grid), dash_char, find_outline_pred(find_outlines_fast(_),Grid).
+find_outline1:- arc_grid(Grid), dash_chars, find_outline_pred(find_outlines_fast(_),Grid).
 
 
 %find_outline_path:- clsmake, forall(find_outline_path1,true).
-%find_outline_path1:- arc_grid(Grid), dash_char, find_outline_pred(find_outline_sols(find_outline_path),Grid).
+%find_outline_path1:- arc_grid(Grid), dash_chars, find_outline_pred(find_outline_sols(find_outline_path),Grid).
 
 find_outlines(Grid):- find_outline_pred(find_outlines,Grid).
 %find_outline_paths(Grid):- find_outline_pred(find_outline_sols(find_outline_path),Grid).
@@ -621,7 +619,7 @@ find_outline_pred(Find_OUTLINE,Grid):- is_grid(Grid),!,
       print_grid(H,V,Grid),
       writeln("TOO SLOWWWW"=Find_OUTLINE))),
    my_append(SOLS,[leftover(LeftOver)],SOLSL),
-   dash_char,
+   dash_chars,
    (SOLS==[]-> ((writeln("NOTHING FROM"=Find_OUTLINE),print_grid(H,V,Grid),writeln("NOTTAAA"=Find_OUTLINE),!,fail));true),
    member(OL,SOLSL),
    (OL=leftover(LeftOver)

@@ -27,26 +27,38 @@ set_grid_id(Grid,ID):-
 kaggle_arc_db(Name,Example,Num,out,G):- kaggle_arc(Name,Example+Num,_,G).
 kaggle_arc_db(Name,Example,Num,in,G):- kaggle_arc(Name,Example+Num,G,_).
 
-maybe_confirm_sol(Name,ExampleNum,TestIn,ExpectedOut):- 
-   ignore((sols_for(Name,Sol), confirm_sol(Sol,Name,ExampleNum,TestIn,ExpectedOut))),!.
+maybe_confirm_sol(VM,Name,ExampleNum,TestIn,ExpectedOut):- 
+   sols_for(Name,Sol), confirm_sol(VM,Sol,Name,ExampleNum,TestIn,ExpectedOut),!.
 
-sols_for(Name,Sol):- test_info(Name,Sols),member(lmDSL(Sol),Sols).
+sols_for(Name,Sol):- test_info(Name,Sols),member(sol(Sol),Sols).
+
+
+maybe_confirm_dsl(VM,Name,ExampleNum,TestIn,ExpectedOut):- 
+   ignore((dsl_for(Name,Sol), confirm_dsl(VM,Sol,Name,ExampleNum,TestIn,ExpectedOut))),!.
+
+dsl_for(Name,Sol):- test_info(Name,Sols),member(lmDSL(Sol),Sols).
 
 into_pipe(Grid,Grid):- !. % into_group
 into_pipe(Grid,Solution):- into_grid(Grid,Solution).
 
-confirm_sol(SolutionProgram,Name,ExampleNum,TestIn,ExpectedOut):- 
- ((run_dsl(SolutionProgram,TestIn,Grid),ptt(run_dsl(SolutionProgram,TestIn)),
- into_pipe(Grid,Solution))
+confirm_dsl(VM,SolutionProgram,Name,ExampleNum,TestIn,ExpectedOut):-
+  confirm_sol(VM,SolutionProgram,Name,ExampleNum,TestIn,ExpectedOut).
+confirm_sol(VM,SolutionProgram,Name,ExampleNum,TestIn,ExpectedOut):- 
+ print_grid(_,_,"Expected Solution",ExpectedOut),
+ ((run_dsl(VM,SolutionProgram,TestIn,Grid),
+   ptt(run_dsl(VM,SolutionProgram,TestIn)),
+   into_pipe(Grid,Solution))
    *->    
    (count_difs(ExpectedOut,Solution,Errors),
     print_side_by_side(print_grid(_,_,"Our Solution",Solution),print_grid(_,_,"Expected Solution",ExpectedOut)),
-   (Errors==0 -> arcdbg(pass(Name,ExampleNum,SolutionProgram));(arcdbg(fail(Errors,Name,ExampleNum,SolutionProgram)),
-     test_info(Name,InfoF),
-     wqnl(fav(Name*ExampleNum,InfoF)),
-     red_noise,
-     once(print_grid(Solution)),
-     red_noise)))
+       (Errors==0 -> 
+          (banner_lines(green),
+           arcdbg(pass(Name,ExampleNum,SolutionProgram)),
+           banner_lines(green))
+        ; (banner_lines(red),
+         arcdbg(fail(Errors,Name,ExampleNum,SolutionProgram)),
+           test_info(Name,InfoF),wqnl(fav(Name*ExampleNum,InfoF)),
+           banner_lines(red))))
    ;arcdbg(warn(unrunable(Name,ExampleNum,SolutionProgram)))).
 
 
@@ -102,10 +114,10 @@ debug_indiv(Var):- plain_var(Var),pt(debug_indiv(Var)),!.
 
 debug_as_grid(Grid):-
   grid_size(Grid,H,V),
-  dash_char(H),
+  dash_chars(H),
   wqnl(debug_indiv_grid(H,V)),
   print_grid(Grid),
-  dash_char(H),!.
+  dash_chars(H),!.
 
 debug_indiv(_):- is_print_collapsed,!.
 debug_indiv(Grid):- is_grid(Grid),!,debug_as_grid(Grid).
@@ -114,11 +126,11 @@ debug_indiv(Grid):- maplist(is_point,Grid),!,debug_as_grid(Grid).
 
 
 debug_indiv(List):- is_list(List),length(List,Len),!,
-  dash_char,
+  dash_chars,
   wqnl(objs = Len),
   max_min(Len,40,_,Min),
   forall(between(1,Min,N),(N<40->(nth1(N,List,E),debug_indiv(E));wqnl(total = Len))),
-  dash_char,!.
+  dash_chars,!.
 
 
 debug_indiv(obj(A)):- \+ is_list(A),!, pt(debug_indiv(obj(A))).
@@ -144,13 +156,13 @@ debug_indiv_obj(A):- Obj = obj(A), is_list(A),!,
   toPropercase(Caps,PC),
   %i_glyph(Id,Sym), wqnl([writef("%% %Nr%w \t",[PC]), color_print(FC,Sym) | AAAA ]),!. 
   object_glyph(Obj,Glyph),  
-  ignore((TF==true,dash_char)),
+  ignore((TF==true,dash_chars)),
   ignore((is_colorish(FC) -> wqnl([format("%  ~w:\t",[PC]), color_print(FC,Glyph) | TV ]);
                              wqnl([format("%  ~w:\t",[PC]), color_print(Glyph) | TV ]))),
   ignore(( TF==true, mass(Obj,Mass),!,Mass>4, vis_hv(Obj,H,V),!,H>1,V>1, localpoints(Obj,Points), print_grid(H,V,Points))),
   ignore(( fail, mass(Obj,Mass),!,Mass>4, vis_hv(Obj,H,V),!,H>1,V>1, show_st_map(Obj))),
   %pt(A),
-  ignore((TF==true,dash_char)))),!.
+  ignore((TF==true,dash_chars)))),!.
 
 show_st_map(Obj):-
   ignore(( 
@@ -164,18 +176,18 @@ show_st_map(Obj):-
   print_side_by_side(print_side_by_side(ResND,ResD),Res))).
 
 debug_indiv(obj(A)):- is_list(A),!, 
-  dash_char,  
+  dash_chars,  
   maplist(debug_indiv(obj(A)),A),
-  dash_char,!.
+  dash_chars,!.
 
 debug_indiv([]):- !.
 
 debug_indiv(diff(_)).
 debug_indiv([Other]):-!,debug_indiv(Other).
 debug_indiv(P):- is_rule(P,Q),
-  dash_char,
+  dash_chars,
   pt(Q),
-  dash_char,!.
+  dash_chars,!.
 
 is_rule(P,_):- \+ compound(P),!,fail.
 is_rule(A:-true,A):-!.
@@ -183,11 +195,11 @@ is_rule(A:-B,A:-B):-!.
 
 
 debug_indiv(Other):-
-  dash_char,
+  dash_chars,
   functor(Other,F,A),
   wqnl(other = F/A),
   pt(Other),
-  dash_char,!.
+  dash_chars,!.
 
 debug_indiv(Obj,P):- compound(P),!,compound_name_arguments(P,F,A),debug_indiv(Obj,P,F,A).
 
@@ -205,7 +217,7 @@ remove_too_verbose(H,''):- too_verbose(H),!.
 %remove_too_verbose(line(HV),S):- sformat(S,'~w-Line',[HV]).
 %remove_too_verbose(square,S):- sformat(S,'square',[]).
 % @TODO UNCOMMENT THIS remove_too_verbose(background,S):- sformat(S,'bckgrnd',[]).
-remove_too_verbose(object_shape(H),S):- !, remove_too_verbose(H,HH),sformat(S,'~q',[s(HH)]).
+remove_too_verbose(iz(H),S):- !, remove_too_verbose(H,HH),sformat(S,'~q',[s(HH)]).
 remove_too_verbose(colors(H),HH):- !, remove_too_verbose(H,HH).
 remove_too_verbose(object_indv_id(_ * _ * X,Y),[layer(XX),nth(Y)]):- =(X,XX).
 remove_too_verbose(object_indv_id(_ * X,Y),[layer(XX),nth(Y)]):- =(X,XX).
@@ -234,11 +246,11 @@ debug_indiv(Obj,_,F,[A]):- maplist(is_cpoint,A),!,
   Pad1 is floor(H),  
 
   wots(S,
-    (dash_char(Pad1,' '),write(Id=Glyph),
+    (dash_chars(Pad1,' '),write(Id=Glyph),
      print_grid(OH,OV,OH,OV,EH,EV,EH,EV,Obj))),
 
   nop(wots(S,
-    (dash_char(Pad1,' '),write(Id=Glyph),
+    (dash_chars(Pad1,' '),write(Id=Glyph),
      print_grid(H,V,A)))),
 
 

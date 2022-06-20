@@ -180,7 +180,7 @@ gridoid_glyph(Points,GN,H,V):-
 from_gridoid(Points,C,N,H,V,G):- nth1(N,Points,G),hv_c_value(G,C,H,V).
 
 
-%hv_c_value(O,_Color,_H,_V):- is_object(O), object_shape(O,combined), !, fail.
+%hv_c_value(O,_Color,_H,_V):- is_object(O), iz(O,combined), !, fail.
 hv_c_value(ID,C,H,V):- (var(H);var(V)),!, hv_point(H,V,_),hv_c_value(ID,CC,H,V),CC=C.
 hv_c_value(O,Color,H,V):- is_grid(O),!,nth1(V,O,Row),nth1(H,Row,Color),!.
 hv_c_value(O,Color,H,V):- is_list_of(is_cpoint,  O),!,hv_point(H,V,Point),member(Color-Point,O).
@@ -210,9 +210,9 @@ pgt1(Obj):-
          colors( [ cc(red, 190.0), cc(silver, 132.0), cc(green, 55.0), cc(cyan, 53.0),
                    cc(blue, 45.0), cc(yellow, 36.0), cc(orange, 25.0)]),
          localpoints( [ red-point_01_01, silver-point_02_01]), vis_hv(3, 1), rotation(same), loc_xy(3, 1),
-         changes([]), object_shape(combined),
-         object_shape(rectangle), object_shape(multicolored),
-         object_shape(polygon), object_indv_id(v('0ad4ef5')*(trn+0)*in, 21),
+         changes([]), iz(combined),
+         iz(rectangle), iz(multicolored),
+         iz(polygon), object_indv_id(v('0ad4ef5')*(trn+0)*in, 21),
        %  globalpoints( [ red-point_01_01, silver-point_02_01]),
          grid_size(8, 8)]).
 
@@ -222,9 +222,9 @@ pgt2(Obj):- Obj =
          colors( [ cc(red, 190.0), cc(silver, 132.0), cc(green, 55.0), cc(cyan, 53.0),
                    cc(blue, 45.0), cc(yellow, 36.0), cc(orange, 25.0)]),
          localpoints( [ red-point_01_01, silver-point_02_01]), vis_hv(3, 1), rotation(same), loc_xy(2, 1),
-         changes([]), object_shape(combined),
-         object_shape(rectangle), object_shape(multicolored),
-         object_shape(polygon), object_indv_id(v('a1d4ef5')*(trn+0)*in, 66),
+         changes([]), iz(combined),
+         iz(rectangle), iz(multicolored),
+         iz(polygon), object_indv_id(v('a1d4ef5')*(trn+0)*in, 66),
         %  globalpoints( [ red-point_01_01, silver-point_02_01]),
          grid_size(8, 8)]).
 

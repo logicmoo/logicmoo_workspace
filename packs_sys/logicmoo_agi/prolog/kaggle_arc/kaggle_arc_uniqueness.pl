@@ -138,7 +138,7 @@ found_in_o(Trait,List,L):- findall(Obj,(member(Obj-Traits,List),sub_term(E,Trait
 
 %each_1trait(Obj,self(Obj)).
 each_1trait(obj(L),T):- !, each_1trait(L,T).
-each_1trait(object_shape(L),T):- !, each_1trait(L,T).
+each_1trait(iz(L),T):- !, each_1trait(L,T).
 each_1trait(L,T):- is_list(L),!,member(E,L),each_1trait(E,T).
 
 each_1trait(T,T):- \+ too_verbose(T). 

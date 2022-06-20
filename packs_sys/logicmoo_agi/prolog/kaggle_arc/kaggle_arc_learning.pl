@@ -40,7 +40,7 @@ find_by_shape(Grid,Find,Founds):-
    ogs(H,V,F1,Grid),% trace,
    grid_to_points(F1,GH,GV,Points),
    pt(Points),
-   make_indiv_object(ID,GH,GV,Points,[object_shape(find_by_shape),F1,loc_xy(H,V)],F2)),
+   make_indiv_object(ID,GH,GV,Points,[iz(find_by_shape),F1,loc_xy(H,V)],F2)),
  findall(F2,Prog,Matches),
  align_founds(Matches,Founds).
 
@@ -105,7 +105,7 @@ with_pair(Action,TestID,Type,Num,In,Out):- !,
   with_named_pair(Action,TestID,PairName,In,Out).
 
 with_named_pair(preview,TestID,PairName,In,Out):- !,
-  dash_char(60,"|"),nl,nl,nop((wqnl(arc1(TestID)),nl)),
+  dash_chars(60,"|"),nl,nl,nop((wqnl(arc1(TestID)),nl)),
   grid_size(In,IH,IV), grid_size(Out,OH,OV),
   show_pair_grid(IH,IV,OH,OV,in,out,PairName,In,Out).
 
@@ -113,7 +113,7 @@ with_named_pair(solve,TestID,PairName,In,Out):- !,
   with_named_pair(cheat,TestID,PairName,In,Out).
 
 with_named_pair(cheat,TestID,PairName,In,Out):- !,
-  ignore(catch(maybe_confirm_sol(TestID,PairName,In,Out),E,(wdmsg(E),fail))),!.
+  ignore(catch(maybe_confirm_sol(_VM,TestID,PairName,In,Out),E,(wdmsg(E),fail))),!.
 
 with_named_pair(learn,TestID,PairName,In,Out):- !,
   nop((wqnl(learning(TestID=PairName)),nl)),
@@ -134,6 +134,7 @@ with_named_pair(learn,TestID,PairName,In,Out):- !,
   ((wqnl(learned(TestID=PairName)),nl)).
 
 new_test_id(TestID):-
+  set_bgc(_),
   nb_setval(arc_test_name,TestID),
   set_flag(indiv,0),
   nb_delete(grid_bgc),
@@ -166,9 +167,9 @@ name_the_pair(TestID,ExampleNum,In,Out,PairName):-
   must_det_ll((
    ignore((CName\==TestID, 
         new_test_id(TestID),
-        dash_char(60,"A"),nl,dash_char(60,"|"),dash_char(6,"\n"),nl,
-        dash_char(60,"|"),nl,dash_char(60,"V"),nl,
-        nl,wqnl(arc1(TestID)),nl,nl,dash_char(60,"A"),nl)),   
+        dash_chars(60,"A"),nl,dash_chars(60,"|"),dash_chars(6,"\n"),nl,
+        dash_chars(60,"|"),nl,dash_chars(60,"V"),nl,
+        nl,wqnl(arc1(TestID)),nl,nl,dash_chars(60,"A"),nl)),   
   GridNameIn= PairName*in,
   GridNameOut= PairName*out,
   set_grid_id(In,GridNameIn),

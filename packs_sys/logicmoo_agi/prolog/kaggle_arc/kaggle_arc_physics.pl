@@ -16,28 +16,11 @@ density(Obj,Density):- area(Obj,Area),mass(Obj,Mass), Density is Mass/Area.
 
 into_gridoid0(obj(N),O):- enum_object(O),o2g(O,G),nonvar(G),my_asserta_if_new(g2o(G,O)),sformat(N," ~w ",[G]).
 into_gridoid0(shape_lib(N:Lib),O):- shape_lib_expanded(Lib,Grids),nth1(N,Grids,O).
-into_gridoid0(N,G):- why_grouped(N,UG), UG\==[],UG\=[_],sort(UG,G).
+into_gridoid0(N,G):- why_grouped(N,UG), UG\==[],UG\=[_],smallest_first(UG,G).
 into_gridoid0(N,G):- into_grids(N,G).
 
-%into_gridoid(N,G):- no_repeats(S,(into_gridoid0(N,G),once(localpoints(G,P)),sort(P,S))).
-into_gridoid(N,G):- into_gridoid0(N,G).
-
-
-test_p2(P2):- clsmake,
-  append_termlist(P2,[N,'$VAR'('Result')],N2), time(forall(into_gridoid(N,G1), forall(call(P2,G1,G2),once(ignore((print_side_by_side4(G1,N,G2,N2))))))).
-%print_side_by_side4(G1,N1,G2,N2):- print_side_by_side(G1,wqs(N1),G2,wqs(N2)).
-print_side_by_side4(G1,N1,G2,N2):- 
-   print_side_by_side(G1,G2),
-   short_stat(G1,S1),
-   short_stat(G2,S2),
-   LW = 20,
-   print_side_by_side4d(S1,N1,LW,S2,N2),
-   dash_char.
-
-print_side_by_side4d(S1,N1,W0,S2,N2):- number(W0), W0 < 0, LW is -W0, print_side_by_side4d(S2,N2,LW,S1,N1).
-print_side_by_side4d(S1,N1,LW,S2,N2):- 
-   format('~N',[]), write('\t'),format_cyan_u("~q  (~w)",[N1,S1]),write('\t\t'),format_cyan_u(" ?- ~q.  % (~w)~n",[N2,S2]),!.
-   
+into_gridoid(N,G):- no_repeats(S,(into_gridoid0(N,G),once(localpoints(G,P)),sort(P,S))).
+%into_gridoid(N,G):- into_gridoid0(N,G).    
    
 
 grav_rot:- test_p2(grav_rot).

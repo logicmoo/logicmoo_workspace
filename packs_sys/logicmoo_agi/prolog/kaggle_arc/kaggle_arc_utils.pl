@@ -67,6 +67,16 @@ as_debug(_,G):- wots(S,G),format('~NDEBUG: ~w~N',[S]).
 count_each([],_,[]).
 count_each([C|L],GC,[Len-C|LL]):- include(==(C),GC,Lst),length(Lst,Len),count_each(L,GC,LL).
 
+maplist_n(N,P,[H1|T1]):-
+  call(P,N,H1), N1 is N+1,
+  maplist_n(N1,P,T1).
+maplist_n(_N,_P,[]).
+
+maplist_n(N,P,[H1|T1],[H2|T2]):-
+  call(P,N,H1,H2), N1 is N+1,
+  maplist_n(N1,P,T1,T2).
+maplist_n(_N,_P,[],[]).
+
 /*
 print_points_grid(Points):- 
  points_range(Points, LoH, LoV, HiH, HiV, H, V), writeqln(size_range(LoH, LoV, HiH, HiV, H, V)), points_to_grid(Points, Grid), print_grid(Grid).

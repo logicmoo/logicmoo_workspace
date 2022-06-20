@@ -80,46 +80,74 @@ test_config(This):- current_test_name(Name),test_info(Name,InfoL),!,contains_non
 test_cond_or(This,_That):- test_config(This),!.
 test_cond_or(This, That):- term_variables(This,[That|_]),!.
 
-run_dsl(Prog,In,Out):- nb_linkval(dsl_pipe,In),run_dsl(enact,Prog,In,Out).
+call_expanded(VM,G):-  exp_call(VM,G,GG),G\==GG,!,call_expanded(VM,GG).
+call_expanded(_VM,G):- catch(call(G),_,rtrace(G)).
 
-run_dsl(Mode,AttVar,In,Out):- attvar(AttVar),get_attr(AttVar,prog,Prog),!,run_dsl(Mode,Prog,In,Out).
-run_dsl(Mode,Prog,_In,_Out):- var(Prog),!,throw(var_solving_progs(Mode,Prog,in,out)).
-run_dsl(Mode,lmDSL(Prog),In,Out):- !, run_dsl(Mode,Prog,In,Out).
-run_dsl(_Mode,[],In,Out):- !,In=Out,nop(( plain_var(Out)->Out=In; true)).
-run_dsl(Mode,[H|Prog],In,Out):-!, run_dsl(Mode,H,In,GridM), run_dsl(Mode,Prog,GridM,Out).
-run_dsl(Mode,(H,Prog),In,Out):-!, run_dsl(Mode,H,In,GridM), run_dsl(Mode,Prog,GridM,Out).
-run_dsl(_Mode,in_out(In,Out),In,Out):-!.
-run_dsl(_Mode,set_out(Out),_In,Out):-!.
+exp_call(_,Var,Var):- var(Var),!.
+exp_call(_,Var,Var):- is_list(Var),!.
+exp_call(_,Var,Var):- number(Var),!.
+exp_call(VM,length(G1,G2),length(GG1,GG2)):-!, exp_call(VM,G1,GG1),exp_call(VM,G2,GG2).
+exp_call(VM,(G1,G2),(GG1,GG2)):-!, exp_call(VM,G1,GG1),exp_call(VM,G2,GG2).
+exp_call(VM,(G1;G2),(GG1;GG2)):-!, exp_call(VM,G1,GG1),exp_call(VM,G2,GG2).
+exp_call(VM,(G1->G2),(GG1->GG2)):-!, exp_call(VM,G1,GG1),exp_call(VM,G2,GG2).
+exp_call(VM,K,Value):- atom(K),get_dict(K,VM,Value),!.
+%  len(points(i))>6
+exp_call(VM,G,GG):- compound(G),arg(N,G,A),nonvar(A),exp_call(VM,A,AA),A\==AA,!,setarg(N,G,AA),exp_call(VM,G,GG).
+exp_call(_VM,P,(length(X,R),call(F,R,N))):- P=..[F,E,N],compound(E),E=len(X).
+exp_call(_VM,Expr,Value):- notrace(catch(Value is Expr,_,fail)).
+exp_call(_,E,E).
 
-run_dsl(Mode,Prog,_In,_Out):- pt(yellow,run_dsl(Mode,Prog,in,out)),fail.
-run_dsl(Mode,Prog,In,Out):- In==dsl_pipe,!,  must_det_l((nb_current(dsl_pipe,PipeIn),PipeIn\==[])), run_dsl(Mode,Prog,PipeIn,Out).
-run_dsl(Mode,Prog,In,Out):- Out==dsl_pipe,!, run_dsl(Mode,Prog,In,PipeOut),nb_linkval(dsl_pipe,PipeOut).
-run_dsl(Mode,doall(All),In,OutO):- !, run_dsl(Mode,forall(All,true),In,OutO).
-run_dsl(_Mode,call(G),In,Out):-!,call(G),(plain_var(Out)->Out=In; true).
-run_dsl(_Mode,same,In,Out):-!, duplicate_term(In,Out).
-run_dsl(Mode,-->(All,Exec),In,Out):-!, run_dsl(Mode,forall(All,Exec),In,Out).
-run_dsl(Mode,forall(All,Exec),In,OutO):-!,  
+run_dsl(VM,Prog,In,Out):- ((var(VM)->get_vm(VM);true)), nb_linkval(dsl_pipe,In),run_dsl(VM,enact,Prog,In,Out).
+
+run_dsl(VM,Mode,AttVar,In,Out):- attvar(AttVar),get_attr(AttVar,prog,Prog),!,run_dsl(VM,Mode,Prog,In,Out).
+run_dsl(VM,Mode,Prog,_In,_Out):- var(Prog),!,term_hash(VM,Hash),throw(var_solving_progs(vm(Hash),Mode,Prog,in,out)).
+run_dsl(VM,Mode,lmDSL(Prog),In,Out):- !, run_dsl(VM,Mode,Prog,In,Out).
+run_dsl(_VM,_Mode,[],In,Out):- !,In=Out,nop(( plain_var(Out)->Out=In; true)).
+run_dsl(VM,Mode,[H|Prog],In,Out):-!, run_dsl(VM,Mode,H,In,GridM), run_dsl(VM,Mode,Prog,GridM,Out).
+run_dsl(VM,Mode,(H,Prog),In,Out):-!, run_dsl(VM,Mode,H,In,GridM), run_dsl(VM,Mode,Prog,GridM,Out).
+run_dsl(VM,Mode,doall(All),In,OutO):- !, run_dsl(VM,Mode,forall(All,true),In,OutO).
+run_dsl(VM,Mode,-->(All,Exec),In,Out):-!, run_dsl(VM,Mode,forall(All,Exec),In,Out).
+run_dsl(VM,Mode,forall(All,Exec),In,OutO):-!,  
  nb_linkval(dsl_pipe,In),
- forall(run_dsl(Mode,All,dsl_pipe,Mid),
-  (run_dsl(enforce,Exec,Mid,Out),
+ forall(run_dsl(VM,Mode,All,dsl_pipe,Mid),
+  (run_dsl(VM,enforce,Exec,Mid,Out),
    nb_linkval(dsl_pipe,Out))),nb_current(dsl_pipe,OutO).
+
+run_dsl(VM,_Mode,call(G),In,Out):-!, call_expanded(VM,G),(plain_var(Out)->Out=In; true).
+
+
+run_dsl(VM,_Mode,get(Name,Val),Pass,Pass):- get_dict(Name,VM,Val).
+run_dsl(VM,_Mode,SET_NV,Pass,Pass):- compound(SET_NV), SET_NV=..[set,Name,Val], my_b_set_dict(Name,VM,Val).
+run_dsl(VM,_Mode,b_set(Name,Val),Pass,Pass):- b_set_dict(Name,VM,Val).
+run_dsl(VM,_Mode,nb_set(Name,Val),Pass,Pass):- nb_set_dict(Name,VM,Val).
+run_dsl(VM,_Mode,nb_link(Name,Val),Pass,Pass):- nb_link_dict(Name,VM,Val).
+run_dsl(_VM,_Mode,get_in(In),Pass,Pass):- copy_term(Pass,In),!.
+run_dsl(_VM,_Mode,set_out(Out),_In,Out):-!.
+
+run_dsl(VM,Mode,Prog,In,_Out):- ptt(yellow,run_dsl(VM,Mode,Prog,in,out)),
+  once(print_grid(_,_,Prog,In)),fail.
+run_dsl(VM,Mode,Prog,In,Out):- In==dsl_pipe,!,  must_det_l((nb_current(dsl_pipe,PipeIn),PipeIn\==[])), run_dsl(VM,Mode,Prog,PipeIn,Out).
+run_dsl(VM,Mode,Prog,In,Out):- Out==dsl_pipe,!, run_dsl(VM,Mode,Prog,In,PipeOut),nb_linkval(dsl_pipe,PipeOut).
+run_dsl(_VM,_Mode,same,In,Out):-!, duplicate_term(In,Out).
+
+
 % prevents unneeded updates such as color/position settings
-run_dsl(enforce,Prog,In,In):- \+ missing_arity(Prog, 0), call(Prog), !. 
-run_dsl(enforce,color(Obj,Color),In,Out):-!, 
+run_dsl(VM,_Mode,Prog,In,In):- \+ missing_arity(Prog, 0), !, call_expanded(VM,Prog).
+
+run_dsl(VM,enforce,color(Obj,Color),In,Out):-!, 
  color(Obj,ColorWas),subst_color(ColorWas,Color,In,Out),
-    override_object_io(color(Color),Obj,In,Out).
+    override_object_io(VM,color(Color),Obj,In,Out).
 
-run_dsl(enforce,vert_pos(Obj,New),In,Out):-!, 
+run_dsl(VM,enforce,vert_pos(Obj,New),In,Out):-!, 
   loc_xy(Obj,X,_Old),
-    override_object_io(loc_xy(X,New),Obj,In,Out).
+    override_object_io(VM,loc_xy(X,New),Obj,In,Out).
 
-run_dsl(_Mode,Prog,In,In):- \+ missing_arity(Prog, 0), !, call(Prog).
-run_dsl(Mode,Prog,In,Out):- \+ missing_arity(Prog,2), !,
- (call(Prog,In,M)*-> 
+run_dsl(VM,Mode,Prog,In,Out):- \+ missing_arity(Prog,2), !,
+ (call_expanded(VM,call(Prog,In,M))*-> 
     =(M,Out) ; (arcdbg(warn(nonworking(run_dsl(Mode,Prog)))),fail)).
-run_dsl(Mode,Prog,In,In):- arcdbg(warn(missing(run_dsl(Mode,Prog)))),!,fail.
+run_dsl(_VM,Mode,Prog,In,In):- arcdbg(warn(missing(run_dsl(Mode,Prog)))),!,fail.
 
-override_object_io(Update,Obj,In,Out):- 
+override_object_io(_VM,Update,Obj,In,Out):- 
   remove_global_points(Obj,In,Mid), 
   override_object(Update,Obj,ObjCopy), 
   add_global_points(ObjCopy,Mid, Out).
@@ -135,9 +163,9 @@ closure_grid_to_object(Orig,Grid,NewObj):-
   grid_size(Grid,H,V), 
   
   globalpoints(Grid,Points),
-  make_indiv_object(ID,H,V,Points,[object_shape(grid)],PartialObj),
+  make_indiv_object(ID,H,V,Points,[iz(grid)],PartialObj),
   sync_colors(PartialObj,Colors),
-  transfer_props(Orig,[loc_xy,object_shape],PartialObj,NewObj),!.
+  transfer_props(Orig,[loc_xy,iz],PartialObj,NewObj),!.
 
 closure_grid_to_group(Orig,Grid,Group):- individuate(Orig,Grid,Group).
 

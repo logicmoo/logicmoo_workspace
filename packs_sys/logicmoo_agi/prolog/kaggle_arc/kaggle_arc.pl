@@ -66,8 +66,10 @@ clsmake:- cls,update_changed_files.
 my_append(A,B):- append(A,B).
 my_append(A,B,C):- append(A,B,C). % ,check_len(A),check_len(C),check_len(C).
 
-must_det_ll((X,Y)):- must_det_ll(X),!,must_det_ll(Y).
-must_det_ll(X):- must_det_l(X),!.
+must_det_ll((X,Y)):- !, must_det_ll(X),!,must_det_ll(Y).
+must_det_ll((X;Y)):- !, (must_det_ll(X);must_det_ll(Y)).
+must_det_ll((A ->X;Y)):- !,(call(A)->must_det_ll(X);must_det_ll(Y)).
+must_det_ll(X):- mort(X),!.
 
 must_det_l_goal_expansion(G,GGG):- compound(G), G = must_det_ll(GG),!,expand_goal(GG,GGG),!.
 
@@ -77,6 +79,72 @@ check_len(_).
 :- system:ensure_loaded(library(logicmoo_common)).
 %:- system:ensure_loaded(library(pfc_lib)).
 %:- expects_dialect(pfc).
+
+/*
+goal_expansion(Goal,Out):- compound(Goal), arg(N,Goal,E), 
+   compound(E), E = set(Obj,Member), setarg(N,Goal,Var),
+   expand_goal((Goal,b_set_dict(Member,Obj,Var)),Out).
+*/
+get_setarg_p1(E,Cmpd,SA):-  compound(Cmpd), get_setarg_p2(E,Cmpd,SA).
+get_setarg_p2(E,Cmpd,SA):- arg(N,Cmpd,E), SA=setarg(N,Cmpd).
+get_setarg_p2(E,Cmpd,SA):- arg(_,Cmpd,Arg),get_setarg_p1(E,Arg,SA).
+
+
+term_expansion_setter((Head:-Body),Out):- 
+   get_setarg_p1(I,Head,P1), is_obj_setter(I,Obj,Member,Var),
+   call(P1,Var),
+   BodyCode = (Body, my_b_set_dict(Member,Obj,Var)),
+   % goal_expansion_setter(BodyCode,Goal),
+   expand_term((Head:- BodyCode),Out),!.
+%term_expansion_setter((Head:-Body),(Head:-GBody)):- goal_expansion_setter(Body,GBody),!.
+
+%goal_expansion(Goal,'.'(VM, Objs, Obj)):- Goal = ('.'(VM, Objs, A), Obj = V),  var(Obj).
+
+/*
+
+set(_355218._355220)=_355272)
+*/
+
+is_obj_setter(I,_Obj,_Member,_Var):- \+ compound(I),!,fail.
+is_obj_setter(set(Obj,Member),Obj,Member,_Var).
+is_obj_setter(set(ObjMember),Obj,Member,_Var):- compound(ObjMember), ObjMember =.. ['.',Obj,Member],!.
+
+goal_expansion_setter(Goal,_):- \+ compound(Goal), !, fail.
+goal_expansion_setter(Goal,Out):- fail,
+   predicate_property(Goal,meta_predicate(_)),!,
+   arg(N,Goal,P), goal_expansion_setter(P,MOut),
+   setarg(N,Goal,MOut), !, expand_goal(Goal, Out).
+
+goal_expansion_setter(Goal,Out):-
+   arg(N,Goal,P),  is_obj_setter(P,Obj,Member,Var),
+   setarg(N,Goal,Var), !, expand_goal((Goal,my_b_set_dict(Member,Obj,Var)), Out).
+
+goal_expansion_setter(Goal,Out):-
+   get_setarg_p1(I,Goal,P1), is_obj_setter(I,Obj,Member,Var),
+   call(P1,Var),!,
+   expand_goal((Goal,my_b_set_dict(Member,Obj,Var)),Out).
+
+my_b_set_dict(Member,Obj,Var):- (var(Member)->break;true), (var(Obj)->(break,get_vm(Obj));true), 
+  %nb_link_dict(Member,Obj,Var),
+  b_set_dict(Member,Obj,Var).
+
+system:term_expansion((Head:-Body),I,Out,O):- nonvar(I),  compound(Head), term_expansion_setter((Head:-Body),Out),(Head:-Body)=In,In\==Out,I=O,!,
+ nop((print(term_expansion_setter(In-->Out)),nl)).
+goal_expansion(Goal,I,Out,O):- compound(Goal),goal_expansion_setter(Goal,Out),Goal\==Out,I=O,!, 
+  nop((print(goal_expansion_setter(Goal-->Out)),nl)).
+
+/*
+ tests for term expander
+
+:- style_check(-singleton).
+
+d:- set(X.Y) = V.
+d:- must_det_ll((set(X.a) = b)).
+d:- must_det_ll(didit([foo|set(X.Y)])).
+d:- member(set(X.Y),V).
+doit(set(E.v)):- that.
+:- style_check(+singleton).
+*/
 
 :- ensure_loaded(kaggle_arc_utils).
 :- ensure_loaded(kaggle_arc_ui_ansi).
@@ -108,16 +176,16 @@ check_len(_).
 :- add_history1(fav3).
 
 
-:- forall((fav(_,P),flatten([P],Flat),member(E,Flat)), assert_if_new(fav_trait(E))).
+%:- forall((fav(_,P),flatten([P],Flat),member(E,Flat)), assert_if_new(fav_trait(E))).
 
 
 run_nb(G):- call(G).
 %run_nb(G):- setup_call_cleanup(G,true,notrace).
 
 arc:- forall(arc11,true).
-arc1:- clsmake, test_names_by_hard(X), arc1(cls1,X).
+arc1:- clsmake, test_names_by_hard(X), whole_test(X).
+arc2:- clsmake, test_names_by_hard_rev(X), whole_test(X).
 arc11:- clsmake, test_names_by_hard(X), arc1(X).
-arc2:- clsmake, test_names_by_hard_rev(X), arc1(cls1,X).
 arc22:- clsmake, test_names_by_hard_rev(X), arc1(X).
 arc3:- clsmake, arc1(v('009d5c81')).
 arc4:- clsmake, arc1(t('25d487eb')).
@@ -126,11 +194,15 @@ arc5:- clsmake, arc1(v('1d398264')).
 fav3:- clsmake, arc1(t('3631a71a')*(_+_)),!.
 fav:- clsmake,forall(fav11,true).
 favr:- clsmake,forall(fav22,true).
-fav1:- clsmake, test_names_by_fav(X), arc1(cls1,X).
+fav1:- clsmake, test_names_by_hard_rev(X), whole_test(X).
+fav2:- clsmake, test_names_by_fav_rev(X), whole_test(X).
 fav11:- clsmake, test_names_by_fav(X), arc1(X).
-fav2:- clsmake, test_names_by_fav_rev(X), arc1(cls,X).
 fav22:- clsmake, test_names_by_fav_rev(X), arc1(X).
 favL:- clsmake, (nb_current(last_test,X);X=(v(fe9372f3)*(tst+0))),!,arc1(X).
+favC:- clsmake, ignore((nb_current(last_test,Y),Y\==[])), UT=until_test(Y),!,
+  test_names_by_hard(X),until_test(X)=UT,nb_setarg(1,UT,_),whole_test(X).
+
+whole_test(X):- cls1, time(ignore(forall(arc1(true,X),true))).
 
 fav(X):- nonvar(X),!, clsmake, arc1(X).
 fav(X):- clause(fav(X,_),true).
@@ -144,12 +216,14 @@ arc1(G,TName):-
  nb_setval(last_test,TName),
  retractall(why_grouped(individuate(_),_)),
  locally(set_prolog_flag(gc,true),
-  (fix_test_name(TName,TestID,ExampleNum),    
+  (fix_test_name(TName,TestID,_UExampleNum),    
    clear_shape_lib(in),clear_shape_lib(out),clear_shape_lib(pair),clear_shape_lib(noise),  
    clear_shape_lib(intruder),!,
-  kaggle_arc(TestID,ExampleNum,In,Out),
-  catch((call(G),
-    run_arc_io(TestID,ExampleNum,In,Out)),'$aborted',true))).
+   % choice point created here purposely
+  nb_delete('$vm_pair'),
+  forall(kaggle_arc(TestID,ExampleNum,In,Out),
+  ignore((catch((call(G),
+    run_arc_io(TestID,ExampleNum,In,Out)),'$aborted',true)))))).
 
 cls1:- catch(cls,_,true).
 
@@ -161,15 +235,15 @@ arc_grid(Grid):- test_names_by_fav(TestID),kaggle_arc(TestID,_ExampleNum,In,Out)
 %is_buggy_pair(t('27a28665')*(tst+2), "BUG: Re-Searcher gets stuck!").
 
 run_arc_io(TestID,ExampleNum,In,Out):-
-  \+ is_buggy_pair(TestID*ExampleNum,_),
+ \+ is_buggy_pair(TestID*ExampleNum,_),
   time(show_arc_pair_progress(TestID,ExampleNum,In,Out)).
 
 make_indivs(Pred,In,Out,InC,OutC):-
- locally(i_o_w(In,Out),
-  make_indivs1(Pred,In,Out,InC,OutC)).
+ %locally(i_o_w(In,Out),
+  make_indivs1(Pred,In,Out,InC,OutC).
 
 make_indivs1(Pred,In,Out,InC,OutC):-
-  mass(Out,OMass), mass(In,IMass), OMass>IMass, !,
+  mass(Out,OMass), mass(In,IMass), OMass>IMass,
   make_indivs_no_swap(Pred,Out,In,OutC,InC),
   save_off(Pred,In,Out,InC,OutC).
 
@@ -177,22 +251,48 @@ make_indivs1(Pred,In,Out,InC,OutC):-
   make_indivs_no_swap(Pred,In,Out,InC,OutC),
   save_off(Pred,In,Out,InC,OutC).
 
-save_off(_Pred,_In,_Out,InC,OutC):-
-  get_pair(PairEnv),
-  pred_intersection(overlap_same_obj,InC,OutC,RetainedIn,_RetainedOut,Removed,Added),
-  add_shape_lib(pair,Removed),
-  add_shape_lib(pair,Added),
-  add_shape_lib(pair,RetainedIn),
-  set_pair(PairEnv),!.
+save_off(_Pred,In,Out,InC,OutC):-
+ ((
+  get_vm(VM),!,
+  pred_intersection(overlap_same_obj,InC,OutC,RetainedIn,_RetainedOut,Removed,Added),!,
+  add_shape_lib(pair,Removed),!,  
+  add_shape_lib(pair,Added),!,
+  add_shape_lib(pair,RetainedIn),!,
+  %rtrace,
+  set(VM,grid_in) = In,!,
+  %trace,
+  set(VM,grid_out) = Out,
+  set(VM,inC) = InC,
+  set(VM,outC) = OutC,
+  set(VM,added) = Added,
+  set(VM,removed) = Removed,
+  set(VM,kept) = RetainedIn,
+  %nortrace,
+  nop(set_vm(VM)))),!.
 
 make_indivs_no_swap(Pred,In,Out,InC,OutC):-
+ must_det_ll((
   writeln(inC(Pred)),
-  call(Pred,In,InC),
-  add_shape_lib(pair,InC),
+  %rtrace,
+  call_indv(Pred,In,InC),
+  add_shape_lib(pair,InC),!,
   writeln(outC(Pred)),
-  call(Pred,Out,OutC),
+  call_indv(Pred,Out,OutC),
   %add_shape_lib(out,OutC),
-  writeln(inOutC(Pred)),!.
+  writeln(inOutC(Pred)))),!.
+
+call_indv(Pred,Out,OutC):-
+ must_det_ll((
+  get_vm(VM),
+  set(VM,grid) = Out, set(VM,grid_o) = Out,
+  %set(VM,objs) = _, set(VM,points) = _,
+  %set(VM,robjs) = _, set(VM,points_o) = _,
+  grid_size(Out,H,V), set(VM,h) = H, set(VM,v) = V,
+  %nortrace,
+  call(Pred,Out,OutC))),!.
+  %set_vm(VM).
+
+
 /*
 show_indivs(IH,IV,OH,OV,Pred,When,PairName,In,Out,SF):-  
   ignore(IH=1),
@@ -215,42 +315,63 @@ show_indivs(IH,IV,OH,OV,Pred,When,PairName,In,Out,SF):-
     describe_feature(OutC,[call(writeln('OUT'))|INFO])),!,
   show_pair_I_info(NameIn,NameOut,InC,OutC).
 */
-get_pair(PairEnv):- nb_current(pairEnv,PairEnv),is_dict(PairEnv),!.
-get_pair(PairEnv):- 
-  PairEnv = pair{in:_In,out:_Out,test:_PairName,mappings:[],
-    pre_in:_, pre_out:_,
-    inC:_InC,outC:_OutC,objs:[],options:[],removed:[],added:[], kept:[],
-    in_i:_InImage,out_i:_OutImage, current_i:_},
-  nb_linkval(pairEnv,PairEnv),!.
-
-set_pair(PairEnv):-  
-  nb_linkval(pairEnv,PairEnv).
+get_vm(VM):- nb_current('$vm_pair',VM),is_dict(VM),!.
+get_vm(VM):- make_fti(VM), nb_linkval('$vm_pair',VM),!.
+%set_vm(VM):- nb_linkval('$vm_pair',VM).
 
 gather_more_task_info(TestID,III):- more_task_info(TestID,III).
+gather_more_task_info(TestID,III):- fav(TestID,III).
 
+
+show_arc_pair_progress_sol(TestID,ExampleNum,In,Out):-
+ sols_for(TestID,_Sol),
+   must_det_ll((
+    get_vm(PrevPairEnv),
+    nb_setval(prev_pairEnv,PrevPairEnv),
+    nb_delete('$vm_pair'),
+    get_vm(VM),
+    flag(indiv,_,0),
+    name_the_pair(TestID,ExampleNum,In,Out,PairName),
+    grid_size(In,IH,IV), grid_size(Out,OH,OV),
+    ignore((IH+IV \== OH+OV , writeln(oi(size(IH,IV)->size(OH,OV))))),
+    ignore((forall(gather_more_task_info(TestID,III),pt(III)),nl)), 
+    clear_shape_lib(in),clear_shape_lib(out),clear_shape_lib(pair),clear_shape_lib(noise),  
+    get_vm(VM),
+    set(VM,test) = PairName,
+    set(VM,grid_in) = In,
+    set(VM,grid_out) = Out,
+    %print_collapsed
+    %set_vm(VM),!,
+    dash_chars, dash_chars,
+    show_pair_grid(IH,IV,OH,OV,original_in,original_out,PairName,In,Out),!,  
+    dash_chars, dash_chars,
+    forall(gather_more_task_info(TestID,III),pt(III)),
+    maybe_confirm_sol(VM,TestID,ExampleNum,In,Out))),!.
+    
+%show_arc_pair_progress(TestID,ExampleNum,In,Out):- show_arc_pair_progress_sol(TestID,ExampleNum,In,Out),!.
 show_arc_pair_progress(TestID,ExampleNum,In,Out):-
- 
  must_det_ll((
+  get_vm(PrevPairEnv),
+  nb_setval(prev_pairEnv,PrevPairEnv),
+  nb_delete('$vm_pair'),
+  get_vm(VM),
   flag(indiv,_,0),
 	name_the_pair(TestID,ExampleNum,In,Out,PairName),
 	grid_size(In,IH,IV), grid_size(Out,OH,OV),
 	ignore((IH+IV \== OH+OV , writeln(oi(size(IH,IV)->size(OH,OV))))),
-  ignore((forall(more_task_info(TestID,III),pt(III)),nl)), 
+  ignore((forall(gather_more_task_info(TestID,III),pt(III)),nl)), 
   clear_shape_lib(in),clear_shape_lib(out),clear_shape_lib(pair),clear_shape_lib(noise),  
-  get_pair(PairEnv),
-  make_fti(IH,IV,PairName+in,In,_,_,_,_,InImage),
-  make_fti(OH,OV,PairName+out,Out,_,_,_,_,OutImage),
-  set(PairEnv,in_i) = InImage,
-  set(PairEnv,out_i) = OutImage,
-  set(PairEnv,test) = PairName,
-  set(PairEnv,in) = In,
-  set(PairEnv,out) = Out,
+  get_vm(VM),
+  set(VM,test) = PairName,
+  set(VM,grid_in) = In,
+  set(VM,grid_out) = Out,
   %print_collapsed
-  show_pair_grid(IH,IV,OH,OV,original_in,original_out,PairName,In,Out),
-  make_indivs(individuate(pre_pass),In,Out,PreInC,PreOutC),
-  set(PairEnv,pre_out) = PreOutC,
-  set(PairEnv,pre_in) = PreInC,
-  make_indivs(individuate(complete),In,Out,InC,OutC),
+  % set_vm(VM),!,
+  show_pair_grid(IH,IV,OH,OV,original_in,original_out,PairName,In,Out),!,  
+  %make_indivs(individuate(pre_pass),In,Out,PreInC,PreOutC),!,
+  %set(VM,pre_out) = PreOutC,
+  %set(VM,pre_in) = PreInC,  
+  make_indivs(individuate(complete),In,Out,InC,OutC),!,
   pred_intersection(overlap_same_obj,InC,OutC,RetainedIn,RetainedOut,Removed,Added),
   add_shape_lib(in,Removed),
   add_shape_lib(pair,RetainedIn),
@@ -262,21 +383,20 @@ show_arc_pair_progress(TestID,ExampleNum,In,Out):-
   %make_indivs(individuate_complete,InP2,OutP2,InC2,OutC2),
 
 
-  dash_char,dash_char,dash_char,dash_char,
-
-
+  dash_chars,dash_chars,dash_chars,dash_chars,
   show_pair_diff(IH,IV,   OH, OV,retained_in,retained_out,PairName,RetainedIn,RetainedOut),
   show_pair_grid(IH,IV,   OH, OV,original_in,original_out,PairName,In,Out),
-  show_pair_grid(IH,IV,   OH, OV,i_pass1,o_pass1,PairName,PreInC,PreOutC),
+  %show_pair_grid(IH,IV,   OH, OV,i_pass1,o_pass1,PairName,PreInC,PreOutC),
   show_pair_diff(IOH,IOV,IOH,IOV,removed,added,PairName,Removed,Added),
   show_pair_grid(IH,IV,   OH, OV,original_in,original_out,PairName,In,Out),
   %show_pair_grid(IH,IV,   OH, OV,i_pass1,o_pass1,PairName,InP2,OutP2),
   %show_pair_grid(IH,IV,   OH, OV,i_pass1,o_pass1,PairName,InC2,OutC2),
   show_pair_diff(IH,IV,   OH, OV,i_pass2,o_pass2,PairName,InC,OutC),
   %ignore((catch(with_named_pair(solve,TestID,PairName,In,Out),E1,wdmsg(E1)))),
-  ignore((forall(gather_more_task_info(TestID,III),pt(III)),nl)),
-  ignore((catch(maybe_confirm_sol(TestID,ExampleNum,InC,Out),E2,wdmsg(E2)))),
-  !)).
+  
+  ((forall(gather_more_task_info(TestID,III),pt(III)),nl)),!,
+  ((catch(maybe_confirm_dsl(VM,TestID,ExampleNum,InC,Out),E2,wdmsg(E2)))))),
+  ignore(show_arc_pair_progress_sol(TestID,ExampleNum,In,Out)).
   /*
 
   nop((
