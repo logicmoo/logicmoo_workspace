@@ -46,14 +46,12 @@ decl_pt(G):- ground(G), !, my_assertz_if_new(decl_pt(G)).
     :- set_prolog_flag(answer_write_options, [quoted(true), portray(true), max_depth(20), attributes(dots)]).
     :- set_prolog_flag(debugger_write_options, [quoted(true), portray(true), max_depth(20), attributes(dots)]).
 
-clsmake:- cls,update_changed_files.  
 
-
+clsmake:- cls1,!,update_changed_files,make,!.
 % SWISH ARC
 :- else.
 
-clsmake:- cls,update_changed_files,make.
-clsmake2:- update_changed_files.
+clsmake:- update_changed_files,!.
 
   muarc_mod(muarc).
   :- if(current_module(trill)).
@@ -62,6 +60,9 @@ clsmake2:- update_changed_files.
   :- endif.
 :- endif.
 
+:- use_module(library(logicmoo_common)).
+
+
 % we alias these so we can catch out of control list growth
 my_append(A,B):- append(A,B).
 my_append(A,B,C):- append(A,B,C). % ,check_len(A),check_len(C),check_len(C).
@@ -69,14 +70,13 @@ my_append(A,B,C):- append(A,B,C). % ,check_len(A),check_len(C),check_len(C).
 must_det_ll((X,Y)):- !, must_det_ll(X),!,must_det_ll(Y).
 must_det_ll((X;Y)):- !, (must_det_ll(X);must_det_ll(Y)).
 must_det_ll((A ->X;Y)):- !,(call(A)->must_det_ll(X);must_det_ll(Y)).
-must_det_ll(X):- mort(X),!.
+must_det_ll(X):- call(X),!.
 
-must_det_l_goal_expansion(G,GGG):- compound(G), G = must_det_ll(GG),!,expand_goal(GG,GGG),!.
+must_det_l_goal_expansion(G,GGG):- compound(G), G = must_det_l(GG),!,expand_goal(GG,GGG),!.
 
 goal_expansion(G,I,GG,O):- nonvar(I),source_location(_,_), compound(G), must_det_l_goal_expansion(G,GG),I=O.
 check_len(_).
 
-:- system:ensure_loaded(library(logicmoo_common)).
 %:- system:ensure_loaded(library(pfc_lib)).
 %:- expects_dialect(pfc).
 
@@ -229,7 +229,8 @@ arc1(G,TName):-
   ignore((catch((call(G),
     run_arc_io(TestID,ExampleNum,In,Out)),'$aborted',true)))))).
 
-cls1:- catch(cls,_,true).
+
+cls1:- nop(catch(cls,_,true)).
 
 arc_grid(Grid):- test_names_by_fav(TestID),kaggle_arc(TestID,_ExampleNum,In,Out),arg(_,v(In,Out),Grid).
 
@@ -330,8 +331,8 @@ gather_more_task_info(TestID,III):- fav(TestID,III).
 
 %show_arc_pair_progress(TestID,ExampleNum,In,Out):- show_arc_pair_progress_sol(TestID,ExampleNum,In,Out),!.
 train_test:- get_current_test(TestID),
-  train_test(TestID,(trn+_)),
-  solve_test(TestID,(trn+_)).
+  train_test(TestID,(trn+_)),!,
+  solve_test(TestID,(trn+_)),!.
 
 train_test(TestID,ExampleNum):-
  forall(kaggle_arc(TestID,ExampleNum,In,Out),
@@ -384,11 +385,11 @@ train_test(TestID,ExampleNum):-
   ((catch(maybe_confirm_dsl(VM,TestID,ExampleNum,InC,Out),E2,wdmsg(E2)))))))).
 
 
-solve_test:- get_current_test(TestID), solve_test(TestID,(tst+_)).
+solve_test:- get_current_test(TestID), solve_test(TestID,(tst+_)),!.
 
 solve_test(TestID,ExampleNum):-
  forall(kaggle_arc(TestID,ExampleNum,In,Out),
-  (sols_for(TestID,_Sol),
+  (nop(sols_for(TestID,_Sol)),
    must_det_ll((
     get_vm(PrevPairEnv),
     nb_setval(prev_pairEnv,PrevPairEnv),

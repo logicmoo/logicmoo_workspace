@@ -22,7 +22,7 @@ test_ogs2:- clsmake, time(forall(test_ogs2(_,_),true)).
 
 :- dynamic(tr:existing_result/3).
 
-save_tr:- cls, 
+save_tr:- cls1, 
  forall(tr:existing_result(X,Y,Z),
   format('~N~@.',[write_term(perfect_result(X,Y,Z),
     [quoted(true),quote_non_ascii(true),numbervars(false)])])).
@@ -127,7 +127,7 @@ test_ogs(H,V):- clsmake,
   Match==true.
 
 
-
+% get_prolog_backtrace(3,StackFrames,[]), nth0(2, StackFrames, SFrame) , prolog_stack_frame_property(SFrame, location(File:Line)),
 
 grid_minus_grid(B,A,OI):- grid_size(B,BH,BV),grid_size(A,AH,AV),(BH\==AH;BV\==AV),!,OI=B.
 grid_minus_grid(B,A,OI):- remove_global_points(A,B,OI),!.
@@ -157,14 +157,13 @@ h666(_,G):- fail,ff666(_,G0),
 
 show_mismatch(F,G):-  %fail, 
   nl,dash_chars,
-  show_m_pair(color_print(red,"Mismatched"),1,1,F,G),
+  show_m_pair(color_print(yellow,"Mismatched"),1,1,F,G),
   nl,dash_chars,!.
 
 show_mismatch(F,C,G):- %fail, 
   nl,dash_chars,
-  show_m_pair((color_print(red,"Mismatched"),C),1,1,F,G),
+  show_m_pair((color_print(yellow,"Mismatched"),C),1,1,F,G),
   nl,dash_chars,!.
-
 
 show_match(H,V,F,G):- 
   nl,dash_chars,
@@ -541,6 +540,7 @@ S="
  _________",
  into_g666(S,G1),Same=_,once(subst(G1,blue,Same,G)).
 
+h666(_Ham,G):- into_grid(v(aa4ec2a5)*(tst+0)*in,G).
 
 
 h666(_Ham,

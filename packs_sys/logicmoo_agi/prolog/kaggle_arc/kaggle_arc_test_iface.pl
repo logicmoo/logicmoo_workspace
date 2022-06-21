@@ -9,8 +9,7 @@
 :- endif.
 
 
-
-
+menu :- write_menu('i').
 write_menu(Mode):-
   format('~N'),
   get_current_test(TestID),
@@ -21,47 +20,51 @@ print_menu_cmd(Key):- ignore((menu_cmd(_,Key,Info,Goal),print_menu_cmd(Key,Info,
 print_menu_cmd(Key,Info,_Goal):- format('~N   ~w: ~w \t\t ~n',[Key,Info]).
 
 :- multifile(menu_cmd/4).
-menu_cmd(i,'i','Examine (i)ndividuator,',(clsmake,ndividuator)).
+menu_cmd(i,'i','Examine (i)ndividuator,',(clsR,!,ndividuator)).
 menu_cmd(_,'p','     or (p)rint training pairs',(print_test)).
-menu_cmd(_,'t','See the (t)raining happen on this (t)est,',(clsmake,train_test)).
-menu_cmd(_,'s','     or (s)olve the problem as learned.',(clsmake,solve_test)).
+menu_cmd(_,'t','See the (t)raining happen on this (t)est,',(clsR,!,train_test)).
+menu_cmd(_,'s','     or (s)olve the problem as learned.',(clsR,!,solve_test)).
 menu_cmd(_,'h','     or (h)uman proposed solution.',human_test).
-menu_cmd(_,'r','  Maybe (r)un All of the above: Print, Train, and Solve.',(clsmake,fully_test)).
+menu_cmd(_,'r','  Maybe (r)un All of the above: Print, Train, and Solve.',(clsR,!,fully_test)).
+menu_cmd(_,'a','     or (a)dvance to the next test and run',(clsR,!,run_next_test)).
 menu_cmd(_,'n','  Go to (n)ext test',(next_test)).
 menu_cmd(_,'b','     or (b)ack to previous.',(previous_test)).
 menu_cmd(_,'l','     or (l)eap to next Suite',(restart_suite)).
  
 menu_cmd(i,'R','(R)un the Suite noninteractively',run_all_tests).
 menu_cmd(r,'i','Re-enter(i)nteractve mode.',(interactive_test_menu)).
-menu_cmd(_,'c','(c)lear the scrollback buffer',clsmake).
-menu_cmd(_,'B','(B)reak to interpreter',break).
-menu_cmd(_,'q','(q)uit the test menu.',true).
+menu_cmd(_,'c','(c)lear the scrollback buffer',(cls)).
+menu_cmd(_,'B','(B)reak to interpreter',(break)).
 menu_cmd(_,'m','Recomple this progra(m).',make).
-menu_cmd(_,'?','See this menu again(?)',interactive_test_menu).
-menu_cmd(_,'x','E(x)it to shell.',halt(4)).
+menu_cmd(_,'x','E(x)it to shell or (Q)uit.',halt(4)).
+
+clsR:- once(cls).
 
 interact:- 
-  repeat, format('~N Your selection: '), get_single_char(Code),char_code(Key,Code),  put_char(Key), \+ \+ menu_cmd(_,Key,_,_),
-   do_menu_cmd(Key).
-do_menu_cmd(e):-!,format('~N returning to prolog.. to restart type ?- demo. ').
-do_menu_cmd(Key):- menu_cmd(_Mode,Key,_Info,Goal),!, format('~N~n'),dmsg(calling(Goal)),ignore(once(must_det_l(Goal))),fail.
-do_menu_cmd(Key):- format("~N % Menu: didn't understand: '~w'~n",[Key]),fail.
+  repeat, format('~N Your selection: '), get_single_char(Code), 
+  char_code(Key,Code),  put_char(Key), do_menu_key(Key),!.
+do_menu_key('Q'):-!,format('~N returning to prolog.. to restart type ?- demo. ').
+do_menu_key(Key):- menu_cmd(_Mode,Key,_Info,Goal),!, format('~N~n'),
+  dmsg(calling(Goal)),!, ignore(once((Goal*->true;rtrace(Goal)))),!,menu,!,fail.
+do_menu_key(Key):- format("~N % Menu: didn't understand: '~w'~n",[Key]),fail.
 interactive_test(X):- set_current_test(X), print_test(X), interactive_test_menu.
 interactive_test_menu:- 
   repeat, 
    write_menu('i'), 
-   interact.
+   interact,!.
 run_all_tests:- 
   repeat,
    run_next_test,
    write_menu('r'),
    wait_for_input([user_input],F,2),
-   F \== [], 
-   interact.
+   F \== [], !,
+   interact,!.
 
 ndividuator:- get_current_test(TestID),with_test_grids(TestID,G,ig(complete,G)).
-test_grids(TestID,G):- kaggle_arc_io(TestID,_ExampleNum,_IO,G).
+test_grids(TestID,G):- kaggle_arc_io(TestID,ExampleNum,IO,G), ((ExampleNum*IO) \= ((tst+_)*out)).
 with_test_grids(TestID,G,P):- forall(test_grids(TestID,G),call(P)).
+
+bad:- ig([complete],v(aa4ec2a5)*(trn+0)*in).
 
 
 restart_suite:- 
@@ -87,7 +90,8 @@ previous_test:-  get_current_test(TestID), get_previous_test(TestID,NextID), set
 next_test:- get_current_test(TestID), get_next_test(TestID,NextID), set_current_test(NextID),print_qtest(NextID).
 is_valid_testname(TestID):- kaggle_arc(TestID,_,_,_).
 get_current_test(TestID):- nb_current(test_name,TestID),is_valid_testname(TestID),!.
-get_current_test(v(fe9372f3)).
+get_current_test(TestID):- get_next_test(TestID,_),!.
+%get_current_test(v(fe9372f3)).
 get_next_test(TestID,NextID):- get_current_tests(List), next_in_list(TestID,List,NextID).
 get_previous_test(TestID,PrevID):-  get_current_tests(List), prev_in_list(TestID,List,PrevID).
 next_in_list(TestID,List,Next):- (append(_,[TestID,Next|_],List); List=[Next|_]),!.
@@ -118,9 +122,8 @@ new_test_pair(PairName):-
   retractall(is_grid_id(PairName,_)),!.
 
 human_test:- solve_test.
-fully_test:- print_test, train_test, solve_test.
-%run_next_test:- favC, interactive_test_menu.
-run_next_test:- ignore(next_test), fully_test.
+fully_test:- print_test, !, train_test, !, solve_test, !.
+run_next_test:- next_test, fully_test.
 
 info(_).
 demo:- interactive_test_menu.
@@ -129,7 +132,7 @@ noninteractive_test(X):- time(ignore(forall(arc1(true,X),true))).
 
 
 
-cmt_border:- format('~N% '), dash_chars(120,"="), nl.
+cmt_border:- format('~N% '), dash_chars(120,"="), !, nl.
 
 test_id_border(TestID):-
     get_current_test(WasTestID),
@@ -139,7 +142,7 @@ print_test(TName):-
   once(fix_test_name(TName,TestID,_)),
   cmt_border,format('% ?- ~q. ~n',[print_test(TName)]),cmt_border,
   parcCmt(TName),nl,
-  print_test4(TestID).
+  print_test4(TestID),!.
 
 print_test4(TestID):-
     forall(arg(_,v((trn+_),(tst+_)),ExampleNum),

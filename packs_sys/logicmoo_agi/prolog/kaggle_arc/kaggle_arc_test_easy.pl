@@ -8,7 +8,7 @@
 :- dynamic(fav/2).
 :- discontiguous fav/2.
 
-fav(A,B):- nonvar_or_ci(A),nonvar_or_ci(B), cls,mmake, asserta(fav(A,B),Ref),!, call_cleanup(arc1(A),erase(Ref)).
+fav(A,B):- nonvar_or_ci(A),nonvar_or_ci(B), cls1,mmake, asserta(fav(A,B),Ref),!, call_cleanup(arc1(A),erase(Ref)).
 
 fav(t('1b60fb0c'),[
  runDSL(
@@ -28,6 +28,7 @@ fav(t('44f52bb0'),[sol(i(whole),one_obj,uncolorize,resize_grid(1,1),db(largest:h
 fav(t('27a28665'),[sol(i(whole),one_obj,uncolorize,resize_grid(1,1),db(largest:shape,out:grid:p(1,1):color))]).
 fav(t('27a28665'),[-shape_match,-rotation_match,-mask_match,-color_match,tt,training,take_negative,associate_images_to_patterns,associate_colors_to_patterns,'(7, 3)']).
 fav(t('a85d4709'),[sol(i([rows,done]),db(objs:shape,Color),set(objs:rectangle,objs:monochrome=true,objs:color=Color)),-rotation_match,-mask_match,-color_match,+shape_match,tt,training,summarize,separate_images,associate_colors_to_images,'(4, 1)']).
+fav(t('0d3d703e'),[sol(i([columns,done]),db(objs:shape,Color),copy_grid(in),incomplete),-rotation_match,-color_match,+shape_match,+mask_match,tt,training,associate_colors_to_colors,'(4, 1)']).
 
 fav(t('3631a71a'),[sol(i(complete),copy_grid(in)),alt_sol(i([colormass,retain([iz(solid),iz(rectangle)]),fourway]),copy_grid(in),incomplete),
   learn([find_damage_to_input,find_center,fraction_evenly_to_four,map_slices_upon_themselves]),
@@ -42,7 +43,6 @@ fav(t('6e02f1e3'),[sol(i(complete),copy_grid(in),incomplete),-rotation_match,-ma
 fav(t('995c5fa3'),[sol(i(complete),resize_grid(3,3,Color),incomplete),-shape_match,-rotation_match,-mask_match,-color_match,tt,training,take_complement,summarize,separate_images,detect_wall,associate_colors_to_images,'(4, 1)']).
 fav(t('25d8a9c8'),[sol(i(complete),copy_grid(in),incomplete),-rotation_match,-mask_match,-color_match,+shape_match,tt,training,remove_noise,recoloring,detect_hor_lines,'(4, 1)']).
 fav(v('17cae0c1'),[sol(i(complete),copy_grid(in),incomplete),-rotation_match,-mask_match,-color_match,+shape_match,test,evaluation,'(4, 1) ']).
-fav(t('0d3d703e'),[sol(i(complete),copy_grid(in),incomplete),-rotation_match,-color_match,+shape_match,+mask_match,tt,training,associate_colors_to_colors,'(4, 1)']).
 fav(v(d4b1c2b1),[sol(i(complete),resize_grid(6,6,Color),incomplete),-shape_match,-rotation_match,-mask_match,+color_match,evaluation,'(7, 1) ']).
 fav(v('7039b2d7'),[sol(i(complete),resize_grid(4,3,Color),incomplete),-shape_match,-rotation_match,-mask_match,-color_match,evaluation,'(3, 1) ']).
 fav(t('1190e5a7'),[sol(i(complete),resize_grid(4,2,Color),incomplete),-shape_match,-rotation_match,-mask_match,-color_match,tt,training,detect_grid,detect_background_color,create_image_from_info,count_ver_lines,count_hor_lines,color_guessing,'(3, 1)']).

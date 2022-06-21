@@ -405,6 +405,7 @@ print_grid0(SH,SV,EH,EV,Grid):- print_grid0(SH,SV,SH,SV,EH,EV,EH,EV,Grid).
 print_grid(SH,SV,LoH,LoV,HiH,HiV,EH,EV,Grid):- print_grid0(true,SH,SV,LoH,LoV,HiH,HiV,EH,EV,Grid),!.
 
 print_grid0(SH,SV,LoH,LoV,HiH,HiV,EH,EV,Grid):-
+ ignore((current_output(Out),stream_property(Out,alias(user_output)), format('~N'))),
  %backtrace(10),
  (line_position(current_output,O);O=0),!,
  O1 is O+1,

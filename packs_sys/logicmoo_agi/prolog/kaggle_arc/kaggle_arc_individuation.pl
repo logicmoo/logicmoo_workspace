@@ -67,8 +67,9 @@ individuation_macros(defaults2, [fourway, shape_lib(noise),shape_lib(pair),shape
  shape_lib(in),shape_lib(out),
  solid(rectangle),
  dg_line(_), %rectangle,  
- connects(hv_line(h)),connects(hv_line(v)),
- connects(dg_line(u)),connects(dg_line(d)),
+                     connects(dg_line(_),dg_line(_)),
+                     connects(hv_line(_),dg_line(_)),
+                     connects(hv_line(_),hv_line(_)),
  find_engulfs,colormass_subshapes,find_engulfs,colormass_subshapes,
  dg_line(u),dg_line(d), 
  hv_line(h),hv_line(v), solid(rectangle), 
@@ -93,11 +94,16 @@ individuation_macros(subshape_in_object, [
 individuation_macros(subshape_main, [
    shape_lib(hammer), % is a sanity test/hack
    rectangle, diamonds, %
-   progress,
-   hv_line(h), hv_line(v), 
+   %progress,
    dg_line(d), dg_line(u), 
+   colormass,
+   hv_line(h),  hv_line(v), 
+   connects(dg_line(_),dg_line(_)),
+   connects(hv_line(_),dg_line(_)),
+   connects(hv_line(_),hv_line(_)),
    merges(hv_line(_),hv_line(_)),
    merges(dg_line(_),dg_line(_)),
+   connects(X,X),
    jumps,% run the "jumps" macro
    merges(Z,Z), % merge lines into square
     all
@@ -166,11 +172,12 @@ individuation_macros(altro, [
 individuation_macros(complete, [
     shape_lib(as_is),
     find_colorfull_idioms,
+    shape_lib(as_is),
     standard,%colormass_merger(3), % call the standard things done in most indiviguators
-  % @TODO DISABLED FOR TESTS   
-    altro, 
-    %colormass_subshapes, % find subshapes of the altro
-    %find_touches,
+  
+    reduce_population, % @TODO DISABLED FOR TESTS    %altro,
+    colormass_subshapes, % find subshapes of the altro
+    find_touches,
     %when((colors(i.points,Cs),len(Cs)<2),dots), % any after this wont find individuals unless this is commented out
     colormass_merger(2),
     leftover_as_one, % any after this wont find individuals unless this is commented out
@@ -346,7 +353,7 @@ individuate_whole(GH,GV,ID,PointsIn,IndvSO):-
 
 
 % Thunk(ArgList->VM)
-call_fsi(VM,NewReserved,NewGrid,NewOptions,GH,GV,Sofar,ID,Options,Reserved,Points,Grid,SofarMaybeNew,NextScanPoints):-
+call_fsi(VM,NewReserved,NewGrid,NewOptions,GH,GV,Sofar,ID,Options,Reserved,Points,Grid,SofarMaybeNew,NextScanPoints):- !,
   (var(VM)->(trace,make_fti(GH,GV,ID,Grid,Sofar,Reserved,Options,Points,VM));true),
   clause(fti(VM,Options),Body),
   call((Body,deterministic(YN))),
@@ -356,7 +363,7 @@ call_fsi(VM,NewReserved,NewGrid,NewOptions,GH,GV,Sofar,ID,Options,Reserved,Point
   NewGrid = VM.grid,
   NextScanPoints = VM.points,
   SofarMaybeNew = VM.objs .
-call_fsi(VM,NewReserved,NewGrid,NewOptions,GH,GV,Sofar,ID,Options,Reserved,Points,Grid,SofarMaybeNew,NextScanPoints):- 
+call_fsi(VM,NewReserved,NewGrid,NewOptions,GH,GV,Sofar,ID,Options,Reserved,Points,Grid,SofarMaybeNew,NextScanPoints):- fail,
   clause(fsi(VM,NewReserved,NewGrid,NewOptions,GH,GV,Sofar,ID,Options,Reserved,Points,Grid,SofarMaybeNew,NextScanPoints),Body),
   call((Body,deterministic(YN))),
   (YN == true -> ! ; true).
@@ -445,7 +452,11 @@ individuals_list(VM,GH,GV,Sofar,ID,Options,Reserved,Points,Grid,IndvList,LeftOve
     my_assertion(maplist(nonvar_or_ci,[fsi2,Reserved,Options,Sofar,GV,GH,ID])),
      length(Sofar,SofarL),
       (((call_fsi(VM,NewReserved,NewGrid,NewOptions,GH,GV,Sofar,ID,Options,Reserved,Points,Grid,SofarMaybeNew,NextScanPoints)))),
+
           intersection(SofarMaybeNew,Sofar,Unchanged,New,GoneMissing),
+          %addCPoints(VM,GoneMissing),
+          remCPoints(VM,New),
+
 
           intersection(Options,NewOptions,_,Birth,_),
           (last(Birth,Head)-> true; Options = [Head|_]),
@@ -457,7 +468,8 @@ individuals_list(VM,GH,GV,Sofar,ID,Options,Reserved,Points,Grid,IndvList,LeftOve
 
           ignore(((NewOptions\==Options;(GoneMissing\==[];SofarMaybeNewL\==SofarL)),
           
-          nop(ignore((GoneMissing\==[],wdmsg(goneMissing=GoneMissing)))),
+          ignore((GoneMissing\==[],ptt(goneMissing=GoneMissing))),
+
           ignore((NextScanPoints\== Points,NextScanPoints\==[],format('~N'),print_grid(GH,GV,points+Head,NextScanPoints))),
           once( 
                 (SofarMaybeNew\== Sofar, %append(SofarMaybeNew,NextScanPoints,DG),
@@ -563,14 +575,29 @@ mergable_dir(Ps1,Ps2,Dir):- member(C-P1,Ps1), member(C-P2,Ps2), is_adjacent_poin
 
 fti(VM,[rows|set(VM.program)]):-
   maplist_n(1,row_to_indiv(VM), VM.grid),
+  clearGrid(VM).
+
+clearGrid(VM):- 
   set(VM.points) = [],
   make_grid(VM.h,VM.v,set(VM.grid)).
 
 row_to_indiv(VM,N,Row):-
   localpoints_include_bg([Row],LPoints),
   grid_to_individual([Row],Obj0),  
-  override_object([iz(row),-iz(grid),loc_xy(1,N),vis_hv(VM.h,1),grid_size(VM.h,VM.v)],Obj0,Obj1),
-  
+  override_object([iz(row),-iz(grid),loc_xy(1,N),vis_hv(VM.h,1),grid_size(VM.h,VM.v)],Obj0,Obj1),  
+  rebuild_from_localpoints(Obj1,LPoints,Obj),
+  addObject(VM,Obj).
+
+fti(VM,[columns|set(VM.program)]):-
+  rot90(VM.grid,Grid90),
+  maplist_n(1,column_to_indiv(VM), Grid90),
+  clearGrid(VM).
+
+column_to_indiv(VM,N,Row):-
+  localpoints_include_bg([Row],LPoints),
+  grid_to_individual([Row],Obj0),  
+  % a column is a row that was prematurely rotated 270 degrees
+  override_object([iz(row),-iz(grid),rotation(rot270),loc_xy(1,N),vis_hv(VM.h,1),grid_size(VM.h,VM.v)],Obj0,Obj1), 
   rebuild_from_localpoints(Obj1,LPoints,Obj),
   addObject(VM,Obj).
   
@@ -584,8 +611,9 @@ fti(VM,[colormass_merger(Size)|TODO]):-
   %colormass_merger(3,VM),
   set(VM.program) = TODO.
 colormass_merger(Size,VM):-
-  my_partition(less_mass(Size),VM.objs,Smaller,Bigger),
-  maplist(colormass_merger(VM,Smaller),Bigger).
+  Objs = VM.objs,
+  my_partition(less_mass(Size),Objs,_Smaller,Bigger),
+  maplist(colormass_merger(VM,Objs),Bigger).
 
 colormass_merger(VM,Smaller,Bigger):- 
    find_mergeable(VM,Bigger,Smaller,Touches),
@@ -708,7 +736,7 @@ fti(VM,[macro(AddTodo)|TODO]):-
   my_append([progress|TodoL],TODO,set(VM.program)).
 
 
-fti(VM,[DO|TODO]):- fail,
+fti(VM,[DO|TODO]):- 
   fsi(VM,set(VM.robjs),set(VM.grid),set(VM.program),
     VM.h,VM.v,VM.objs,VM.id,[DO|TODO],
     VM.robjs,VM.points,VM.grid,set(VM.objs),set(VM.points)).
@@ -936,6 +964,7 @@ assume_vm(_).
 
 addObject(VM,Obj):- assume_vm(VM),!,into_list(Obj,List), 
   intersection(VM.objs,List,PretendToAdd,Prev,ReallyAdd),
+  remCPoints(VM, ReallyAdd),
   my_append(VM.objs,ReallyAdd,set(VM.objs)).
 
 remObject(VM,Obj):- assume_vm(VM),!,into_list(Obj,List), 

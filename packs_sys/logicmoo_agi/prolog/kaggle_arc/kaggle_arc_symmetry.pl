@@ -253,7 +253,7 @@ nop((
 %detect_grid(Grid,E):- 
 
 grid_to_3x3_objs(Ordered,Grid,NewIndiv4s,Keep):- 
-  notrace(catch(call_with_time_limit(2,find_and_use_pattern_gen(Grid,Image9x9)),time_limit_exceeded, 
+  notrace(catch(call_with_time_limit(4,find_and_use_pattern_gen(Grid,Image9x9)),time_limit_exceeded, 
    (wdmsg(time_limit_exceeded),fail))),
   %catch(find_and_use_pattern_gen(Grid,Image9x9),E, (wdmsg(E),fail)),
   %rtrace(find_and_use_pattern_gen(Grid,Image9x9)),
