@@ -272,11 +272,12 @@ print_side_by_side4d(S1,F1,N1,W0,S2,F2,N2):- number(W0), W0 < 0, LW is -W0, !, p
 print_side_by_side4d(S1,F1,N1,_LW,S2,F2,N2):- 
    format('~N',[]), write('\t'),format_cyan_u(F1,[N1,S1]),write('\t\t'),format_cyan_u(F2,[N2,S2]),write('\n'),!.
 
-toUpperC(A,AU):- A==[],AU='  []  ',dumpST.
+toUpperC(A,AU):- A==[],!,AU='  []  '.
 toUpperC(A,AU):- string(A),!,AU=A.
 toUpperC(A,AU):- atom(A),toPropercase(A,AU),!.
 toUpperC(A,AU):- atomic(A),upcase_atom(A,AU),!.
-toUpperC(I,O):- compound(I), !, compound_name_arguments(I,F,IA), maplist(toUpperC,IA,OA), compound_name_arguments(O,F,OA).
+toUpperC(A,AU):- is_list(A),maplist(toUpperC,A,AU),!.
+toUpperC(I,O):- compound(I), !, compound_name_arguments(I,F,IA), maplist(toUpperC,IA,OA), compound_name_arguments(O,F,OA),!.
 toUpperC(A,AU):- term_to_atom(A,AU).
 
 show_pair_diff(IH,IV,OH,OV,NameIn,NameOut,PairName,In,Out):-
@@ -385,8 +386,9 @@ print_grid(H,V,Grid):- quietly(print_grid0(H,V,Grid)).
 
 print_grid0(_,_,_):- is_print_collapsed,!.
 print_grid0(H,V,G):- G==[],number(H),number(V),!,make_grid(H,V,GG),!,print_grid0(H,V,GG).
+print_grid0(_H,_V,G):- G==[],!,make_grid(H,V,GG),!,print_grid0(H,V,GG).
 print_grid0(H,V,Grid):- \+ callable(Grid),!,write('not grid: '),
-  GG= nc_print_grid(H,V,Grid), pt(GG),!,trace_or_throw(GG).
+  GG= nc_print_grid(H,V,Grid), pt(GG),!,nop(trace_or_throw(GG)).
 
 print_grid0(H,V,SIndvOut):- compound(SIndvOut),SIndvOut=(G-GP), \+ is_nc_point(GP),!, with_glyph_index(G,with_color_index(GP,print_grid0(H,V,G))),!.
 print_grid0(H,V,Grid):- is_points_list(Grid), points_to_grid(H,V,Grid,PGrid),!,print_grid0(H,V,PGrid).

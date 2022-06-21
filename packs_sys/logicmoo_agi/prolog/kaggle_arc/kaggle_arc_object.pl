@@ -315,7 +315,7 @@ mass(I,Count):- globalpoints(I,Points),!,length(Points,Count),!.
 mass(C-_,1):- nonvar_or_ci(C),!.
 mass(I,Count):- globalpoints(I,Points), length(Points,Count),!.
 
-remove_color(C-P,point_01_01):- is_bg_color(C),!.
+remove_color(C-_,point_01_01):- is_bg_color(C),!.
 remove_color(_-P,P).
 remove_color(LPoints,ColorlessPoints):- maplist(remove_color,LPoints,ColorlessPoints).
 
@@ -442,6 +442,7 @@ globalpoints(I,X):- globalpoints0(I,X),!.
 globalpoints(Grid,Points):- is_grid(Grid),!, grid_size(Grid,HH,VV), grid_to_points(Grid,HH,VV,Points).
 globalpoints(Grid,Points):- is_list(Grid),!,maplist(call(globalpoints),Grid,MPoints),append_sets(MPoints,Points).
 globalpoints(I,X):- localpoints0(I,X),!.
+globalpoints(G,G):- maplist(is_point,G),!.
 globalpoints(I,X):- throw(unknown(globalpoints(I,X))).
 
   globalpoints0(I,X):- indv_props(I,L),member(globalpoints(X),L), my_assertion(maplist(is_cpoint,X)),!.
@@ -456,6 +457,7 @@ localpoints(Grid,Points):- is_list(Grid),!,maplist(localpoints,Grid,MPoints),app
 
 localpoints(Atom,_):- \+ compound(Atom),!,trace_or_throw(localpoints(Atom)).
 localpoints(I,X):- globalpoints0(I,X),!.
+localpoints(G,G):- maplist(is_point,G),!.
 localpoints(I,X):- throw(unknown(localpoints(I,X))).
 
   localpoints0(I,X):- indv_props(I,L),member(localpoints(X),L), my_assertion(maplist(is_cpoint,X)),!.

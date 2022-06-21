@@ -311,27 +311,54 @@ consensus2(Vars,[C|BG],Blk,Color,Other,C).
 
 print_grid_i(O):- print_grid(O),!.
 print_grid_i(O):- trace,print_grid(O),!.
+
 maybe_repair_image(Ordered,Objects,CorrectObjects,Keep):- 
   maplist(object_grid,Objects,AllGrids),
   AllGrids=Grids , %once(predsort(sort_on(colored_pixel_count),AllGrids,Grids);sort(AllGrids,Grids)),
-  (all_rows_align(Grids)
+  (all_rows_can_align(Grids)
     -> (Keep=[], format('~N'),writeln('Must be perfect...'),CorrectObjects = Objects);
     repair_patterned_images(Ordered,Objects,Grids,CorrectObjects,Keep)).
 
-all_rows_align([Big|Rest]):- maplist(rows_align(Big),Rest).
+all_rows_can_align([Big|Rest]):- maplist(rows_can_align(Big),Rest).
+rows_can_align(A,B):- \+ A\=B.
+rows_can_align([],_):-!. % shorter image fragment
+rows_can_align(_,[]):-!. % taller image fragment
+rows_can_align([Row1|Rest1],[Row2|Rest2]):- 
+ rows_can_align(Row1,Row2),!,
+ rows_can_align(Rest1,Rest2).
+
+all_rows_will_align([Big|Rest]):- maplist(rows_will_align(Big),Rest).
+rows_will_align(A,_):- A == [], !. % shorter image fragment
+rows_will_align(_,B):- B == [], !. % taller image fragment
+rows_will_align([Row1|Rest1],B):- is_list(B),!, B=[Row2|Rest2],
+ rows_will_align(Row1,Row2),!,
+ rows_will_align(Rest1,Rest2).
+rows_will_align(A,B):- A=B,!.
 
 max_hv(Objects,H,V):- 
   findall(size(H,V),(member(O,Objects),vis_hv(O,H,V)),Sizes),
   sort(Sizes,SizesS),
   reverse(SizesS,[size(H,V)|_]),!.
 
+makes_prefect_result(H,V,ColorAdvice,Grids,Result):-
+  maplist(unbind_color(ColorAdvice),Grids,UGrids),
+  make_grid(H,V,Result),
+  all_rows_will_align([Result|UGrids]).
+
+prefect_result(H,V,_Ordered,Grids,Result,ColorAdvice):-
+  enum_colors(ColorAdvice),
+  makes_prefect_result(H,V,ColorAdvice,Grids,Result),!.
+
+prefect_result(H,V,Ordered,Grids,Result,ColorAdvice):-
+  make_grid(H,V,Result),
+  advise_color(ColorAdvice,Ordered),
+  consensus(ColorAdvice,Grids,H,V,Result),!.
+
 repair_patterned_images(Ordered,Objects,Grids,CorrectObjects,Keep):-
  must_det_ll((
   max_hv(Objects,H,V),
-  make_grid(H,V,Result),
   writeln('Training hard...'),
-  advise_color(ColorAdvice,Ordered),
-  consensus(ColorAdvice,Grids,H,V,Result),
+  prefect_result(H,V,Ordered,Grids,Result,ColorAdvice),
   print_grid(Result), dmsg(result),
   localpoints_include_bg(Result,LPoints),
 %  pt(Result),
@@ -339,7 +366,7 @@ repair_patterned_images(Ordered,Objects,Grids,CorrectObjects,Keep):-
  %together(( localpoints_include_bg(Result,LPoints),hv_c_value(LPoints,C,1,2))),
  % together((maplist(set_local_points(LPoints),Grids,CorrectGrids),
  %           maplist(check_my_local_points(LPoints),CorrectGrids),
- %   all_rows_align(CorrectGrids))),
+ %   all_rows_can_align(CorrectGrids))),
   maplist(replace_diffs(LPoints),Objects,CorrectObjects),!,
   my_partition(same_lcolor(ColorAdvice),Ordered,Keep,_))),!.
 

@@ -198,11 +198,13 @@ fav1:- clsmake, test_names_by_hard_rev(X), whole_test(X).
 fav2:- clsmake, test_names_by_fav_rev(X), whole_test(X).
 fav11:- clsmake, test_names_by_fav(X), arc1(X).
 fav22:- clsmake, test_names_by_fav_rev(X), arc1(X).
-favL:- clsmake, (nb_current(last_test,X);X=(v(fe9372f3)*(tst+0))),!,arc1(X).
+favL:- clsmake, (nb_current(last_test,X);X=(v(fe9372f3)*(tst+0))),!,whole_test(X).
 favC:- clsmake, ignore((nb_current(last_test,Y),Y\==[])), UT=until_test(Y),!,
   test_names_by_hard(X),until_test(X)=UT,nb_setarg(1,UT,_),whole_test(X).
 
-whole_test(X):- cls1, time(ignore(forall(arc1(true,X),true))).
+whole_test(X):- cls1, 
+  print_test(X),
+  time(ignore(forall(arc1(true,X),true))).
 
 fav(X):- nonvar(X),!, clsmake, arc1(X).
 fav(X):- clause(fav(X,_),true).

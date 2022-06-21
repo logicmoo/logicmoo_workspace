@@ -15,7 +15,12 @@ matches_filter(\+ (A),OBJ):- !, \+ matches_filter(A,OBJ).
 matches_filter((A;B),OBJ):- !, (matches_filter(A,OBJ);matches_filter(B,OBJ)).
 matches_filter([H|T],obj(List)):- !, \+ \+ forall(member(E,[H|T]),member(E,List)).
 matches_filter((A,B),OBJ):- !, (matches_filter(A,OBJ),matches_filter(B,OBJ)).
-matches_filter(E,obj(List)):- member(E,List).
+matches_filter(E,obj(List)):- member(EE,List),matches_prop(E,EE).
+
+matches_prop(E,EE):- (var(E);var(EE)),!,E==EE.
+matches_prop(E,EE):- E=EE,!.
+matches_prop(iz(E),EE):-!,matches_prop(E,EE).
+matches_prop(E,iz(EE)):-!,matches_prop(E,EE).
 
   
 pass_thru_group(G):- var(G),!.

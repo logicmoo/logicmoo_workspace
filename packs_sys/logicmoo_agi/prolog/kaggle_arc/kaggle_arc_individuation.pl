@@ -424,6 +424,15 @@ individuals_list(VM,GH,GV,Sofar,ID,Options,Reserved,Points,Grid,IndvList,LeftOve
           ((\+ (sub_term(E,New), compound(E), E = birth(_))) -> override_object(birth(Head),New,NewUpdated) ; New=NewUpdated),
           my_append(Unchanged,NewUpdated,SofarUpdated),
           nop(ignore((GoneMissing\==[],wdmsg(goneMissing=GoneMissing)))),
+          once( 
+                (SofarMaybeNew\== Sofar, append(SofarMaybeNew,NextScanPoints,DG),print_grid(GH,GV,sofarMaybeNew+Head,SofarMaybeNew));
+                (NextScanPoints\== Points, print_grid(GH,GV,points+Head,NextScanPoints));
+                (NewGrid\=@= Grid, print_grid(_,_,newGrid+Head,NewGrid));
+                true),
+          
+             
+            
+
   my_assertion(maplist(nonvar_or_ci,[fsi3,SofarUpdated,NextScanPoints])),
   my_assertion(maplist(nonvar_or_ci,[fsi3a,NewOptions,NewReserved])),
     my_assertion(maplist(is_cpoint,NextScanPoints)),
