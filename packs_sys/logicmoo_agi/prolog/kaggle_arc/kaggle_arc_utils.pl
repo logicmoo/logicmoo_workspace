@@ -61,8 +61,9 @@ max_min0(A,B,A,A):- plain_var(B),!.
 max_min0(A,B,A,B):- A>B,!.
 max_min0(A,B,B,A).
 
-as_debug(9,_):- !.
-as_debug(_,G):- wots(S,G),format('~NDEBUG: ~w~N',[S]).
+as_debug(L,G):- as_debug(L,true,G).
+as_debug(9,_,_):- !.
+as_debug(_,C,G):- (call(C)->wots(S,G),format('~NDEBUG: ~w~N',[S]);true).
 
 count_each([],_,[]).
 count_each([C|L],GC,[Len-C|LL]):- include(==(C),GC,Lst),length(Lst,Len),count_each(L,GC,LL).
@@ -142,6 +143,8 @@ plain_var(V):- var(V), \+ get_attr(V,ci,_).
 
 must_be_free(AllNew):- var(AllNew),!.
 must_be_free(AllNew):- dumpST,wdmsg(must_be_free(AllNew)),break,fail.
+must_be_nonvar(AllNew):- nonvar_or_ci(AllNew),!.
+must_be_nonvar(AllNew):- dumpST,wdmsg(must_be_nonvar(AllNew)),break,fail.
 
 intersection([],LeftOverB,[],[],LeftOverB):-!.
 intersection(LeftOverA,[],[],LeftOverA,[]):-!.

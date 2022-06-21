@@ -227,22 +227,34 @@ is_input(VM):- VM.id = _ * _ * in.
 % TOUCHES
 % ==============================================
 
-find_touches(VM):-
-  Objs = VM.objs,
-  must_det_ll(find_touches(VM,Objs,Objs,set(VM,objs))),!.
+find_touches(VM):- Objs = VM.objs,
+  show_object_changes(VM,find_touches,
+     find_touches(VM,Objs,Objs,set(VM.objs))),!.
+
+show_object_changes(VM,S,Goal):-
+  show_point_changes(VM,S,
+       setup_call_cleanup(print_grid(VM.h,VM.v,objs:S,VM.objs),
+                     Goal,
+                     print_grid(VM.h,VM.v,new_objs:S,VM.objs))).
+
+show_point_changes(VM,S,Goal):-
+  setup_call_cleanup(print_grid(VM.h,VM.v,points:S,VM.objs),
+                     Goal,
+                     print_grid(VM.h,VM.v,new_points:S,VM.objs)).
+
 
 %find_touches(VM,ScanNext,SofarInsteadO):- find_touches(VM,ScanNext,ScanNext,SofarInsteadO).
 
 find_touches(_VM,[],SofarInsteadO,SofarInsteadO):-!.
 find_touches(VM,[Found|ScanNext],OtherObjects,OtherObjectsO):-
- once(find_touches_objects(VM,Found,OtherObjects,DirNewInside)),
-  NewInside\==[], !,
+ once(find_touches_objects(VM,Found,OtherObjects,_NewTouchesO,DirNewTouches)),
+  NewTouches\==[], !,
   must_det_ll((
-  maplist(mention_touches(Found),DirNewInside,NewInsideM),
-    maplist(arg(2),DirNewInside,NewInside),
-    replace_i_each(OtherObjects,NewInside,NewInsideM,NewOtherObjects),
-    replace_i_each(ScanNext,NewInside,NewInsideM,NewScanNext),
-  ignore((length(NewInside,N),N>0,quietly(print_grid(VM.h,VM.v,"touching",[Found|NewInsideM])))), !,
+  maplist(mention_touches(Found),DirNewTouches,NewTouchesM),
+    maplist(arg(2),DirNewTouches,NewTouches),
+    replace_i_each(OtherObjects,NewTouches,NewTouchesM,NewOtherObjects),    
+    replace_i_each(ScanNext,NewTouches,NewTouchesM,NewScanNext),
+  ignore((length(NewTouches,N),N>0,quietly(print_grid(VM.h,VM.v,"touching",[Found|NewTouchesM])))), !,
   find_touches(VM,NewScanNext,NewOtherObjects,OtherObjectsO))),!.
 find_touches(VM,[_|Sofar],OtherObjects,OtherObjectsO):-
   find_touches(VM,Sofar,OtherObjects,OtherObjectsO),!.
@@ -251,12 +263,12 @@ mention_touches(Found,Dir-NewInside,NewInsideO):-
   must_det_ll((object_indv_id(Found,_Where,Iv),
   override_object(touches(Dir,Iv),NewInside,NewInsideO))),!.
 
-find_touches_objects(_VM,_,[],[]).
-find_touches_objects(VM,Found,[Next|ScanPoints],[Dir-Next|Engulfed]):-    
+find_touches_objects(_VM,_,[],[],[]).
+find_touches_objects(VM,Found,[Next|ScanPoints],[Next|TouchMore],[Dir-Next|Engulfed]):-    
  touching_object(Dir,Found,Next),
- find_touches_objects(VM,Found,ScanPoints,Engulfed),!.
-find_touches_objects(VM,Found,[_|ScanPoints],Engulfed):-
- find_touches_objects(VM,Found,ScanPoints,Engulfed),!.
+ find_touches_objects(VM,Found,ScanPoints,TouchMore,Engulfed),!.
+find_touches_objects(VM,Found,[_|ScanPoints],TouchMore,Engulfed):-
+ find_touches_objects(VM,Found,ScanPoints,TouchMore,Engulfed),!.
 
 touching_object(Dirs,O1,O2):- 
   O1\==O2,
@@ -271,6 +283,8 @@ dir_touching_list0(Ps1,Ps2,Dir):- member(_-P1,Ps1), member(_-P2,Ps2), is_adjacen
 % ==============================================
 % ENGULFS
 % ==============================================
+find_engulfs(VM):- 
+  show_object_changes(VM,find_engulfs,find_engulfs(VM,VM.objs,set(VM.objs))),!.
 
 find_engulfs(VM,ScanNext,SofarInsteadO):-
   find_engulfs(VM,ScanNext,ScanNext,SofarInsteadO).

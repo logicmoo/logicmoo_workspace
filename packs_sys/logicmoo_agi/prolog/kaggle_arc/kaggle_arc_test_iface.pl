@@ -8,6 +8,172 @@
 :- set_prolog_flag_until_eof(trill_term_expansion,false).
 :- endif.
 
+
+
+
+write_menu(Mode):-
+  format('~N'),
+  get_current_test(TestID),
+  format(' Current Test: ~q ~n~n',[TestID]),
+  forall(menu_cmd(Mode,Key,Info,Goal),print_menu_cmd(Key,Info,Goal)),
+  format('~N').
+print_menu_cmd(Key):- ignore((menu_cmd(_,Key,Info,Goal),print_menu_cmd(Key,Info,Goal))).
+print_menu_cmd(Key,Info,_Goal):- format('~N   ~w: ~w \t\t ~n',[Key,Info]).
+
+:- multifile(menu_cmd/4).
+menu_cmd(i,'i','Examine (i)ndividuator,',(clsmake,ndividuator)).
+menu_cmd(_,'p','     or (p)rint training pairs',(print_test)).
+menu_cmd(_,'t','See the (t)raining happen on this (t)est,',(clsmake,train_test)).
+menu_cmd(_,'s','     or (s)olve the problem as learned.',(clsmake,solve_test)).
+menu_cmd(_,'h','     or (h)uman proposed solution.',human_test).
+menu_cmd(_,'r','  Maybe (r)un All of the above: Print, Train, and Solve.',(clsmake,fully_test)).
+menu_cmd(_,'n','  Go to (n)ext test',(next_test)).
+menu_cmd(_,'b','     or (b)ack to previous.',(previous_test)).
+menu_cmd(_,'l','     or (l)eap to next Suite',(restart_suite)).
+ 
+menu_cmd(i,'R','(R)un the Suite noninteractively',run_all_tests).
+menu_cmd(r,'i','Re-enter(i)nteractve mode.',(interactive_test_menu)).
+menu_cmd(_,'c','(c)lear the scrollback buffer',clsmake).
+menu_cmd(_,'B','(B)reak to interpreter',break).
+menu_cmd(_,'q','(q)uit the test menu.',true).
+menu_cmd(_,'m','Recomple this progra(m).',make).
+menu_cmd(_,'?','See this menu again(?)',interactive_test_menu).
+menu_cmd(_,'x','E(x)it to shell.',halt(4)).
+
+interact:- 
+  repeat, format('~N Your selection: '), get_single_char(Code),char_code(Key,Code),  put_char(Key), \+ \+ menu_cmd(_,Key,_,_),
+   do_menu_cmd(Key).
+do_menu_cmd(e):-!,format('~N returning to prolog.. to restart type ?- demo. ').
+do_menu_cmd(Key):- menu_cmd(_Mode,Key,_Info,Goal),!, format('~N~n'),dmsg(calling(Goal)),ignore(once(must_det_l(Goal))),fail.
+do_menu_cmd(Key):- format("~N % Menu: didn't understand: '~w'~n",[Key]),fail.
+interactive_test(X):- set_current_test(X), print_test(X), interactive_test_menu.
+interactive_test_menu:- 
+  repeat, 
+   write_menu('i'), 
+   interact.
+run_all_tests:- 
+  repeat,
+   run_next_test,
+   write_menu('r'),
+   wait_for_input([user_input],F,2),
+   F \== [], 
+   interact.
+
+ndividuator:- get_current_test(TestID),with_test_grids(TestID,G,ig(complete,G)).
+test_grids(TestID,G):- kaggle_arc_io(TestID,_ExampleNum,_IO,G).
+with_test_grids(TestID,G,P):- forall(test_grids(TestID,G),call(P)).
+
+
+restart_suite:- 
+   get_current_test(TestID),
+   get_current_tests([First|_]),
+   TestID\==First,set_current_test(First),!.
+restart_suite:- 
+   findall(SN,test_suite_name(SN),List),
+   nb_current(test_order,X),
+   next_in_list(X,List,N),
+   nb_setval(test_order,N),!,
+   wdmsg(switched(X->N)).
+
+test_suite_name(test_names_by_fav). test_suite_name(test_names_by_hard). 
+test_suite_name(test_names_by_fav_rev). test_suite_name(test_names_by_hard_rev).
+
+:- nb_setval(test_order,test_names_by_fav).
+get_current_tests(List):-
+  nb_current(test_order,X),
+  findall(ID,call(X,ID),List).
+
+previous_test:-  get_current_test(TestID), get_previous_test(TestID,NextID), set_current_test(NextID),print_qtest(NextID).
+next_test:- get_current_test(TestID), get_next_test(TestID,NextID), set_current_test(NextID),print_qtest(NextID).
+is_valid_testname(TestID):- kaggle_arc(TestID,_,_,_).
+get_current_test(TestID):- nb_current(test_name,TestID),is_valid_testname(TestID),!.
+get_current_test(v(fe9372f3)).
+get_next_test(TestID,NextID):- get_current_tests(List), next_in_list(TestID,List,NextID).
+get_previous_test(TestID,PrevID):-  get_current_tests(List), prev_in_list(TestID,List,PrevID).
+next_in_list(TestID,List,Next):- (append(_,[TestID,Next|_],List); List=[Next|_]),!.
+prev_in_list(TestID,List,PrevID):-  once(append(_,[PrevID,TestID|_],List); last(List,PrevID)).
+
+set_current_test(TestID):-
+  ignore((is_valid_testname(TestID),nb_setval(last_test_name,TestID),nb_setval(test_name,TestID))),
+  set_bgc(_),
+  set_flag(indiv,0),
+  nb_delete(grid_bgc),
+  nb_linkval(test_rules, [rules]),
+  clear_shape_lib(test),
+  clear_shape_lib(noise),
+  retractall(grid_nums(_,_)),
+  retractall(grid_nums(_)),
+  retractall(g2o(_,_)),!.
+
+new_test_pair(PairName):-
+  %nb_delete(grid_bgc),
+  clear_shape_lib(pair),clear_shape_lib(in),clear_shape_lib(out),
+  nb_setval(test_pairname,PairName),
+  nb_linkval(pair_rules, [rules]),
+  retractall(is_shared_saved(PairName*_,_)),
+  retractall(is_shared_saved(PairName,_)),
+  retractall(is_unshared_saved(PairName*_,_)),
+  retractall(is_unshared_saved(PairName,_)),
+  retractall(is_grid_id(PairName*_,_)),
+  retractall(is_grid_id(PairName,_)),!.
+
+human_test:- solve_test.
+fully_test:- print_test, train_test, solve_test.
+%run_next_test:- favC, interactive_test_menu.
+run_next_test:- ignore(next_test), fully_test.
+
+info(_).
+demo:- interactive_test_menu.
+rat:- info("Run all tests"), run_all_tests.
+noninteractive_test(X):- time(ignore(forall(arc1(true,X),true))).
+
+
+
+cmt_border:- format('~N% '), dash_chars(120,"="), nl.
+
+test_id_border(TestID):-
+    get_current_test(WasTestID),
+    ignore((WasTestID\==TestID,set_current_test(TestID), cmt_border)).
+print_test:- get_current_test(TestID),print_test(TestID).
+print_test(TName):- 
+  once(fix_test_name(TName,TestID,_)),
+  cmt_border,format('% ?- ~q. ~n',[print_test(TName)]),cmt_border,
+  parcCmt(TName),nl,
+  print_test4(TestID).
+
+print_test4(TestID):-
+    forall(arg(_,v((trn+_),(tst+_)),ExampleNum),
+     forall(kaggle_arc(TestID,ExampleNum,In,Out),
+      ignore((
+       once(in_out_name(ExampleNum,NameIn,NameOut)),
+       format('~Ntestcase(~q,"\n~@").~n~n~n',[TestID*ExampleNum,print_side_by_side4(In,NameIn,_LW,Out,NameOut)]))))),
+       write('%= '), parcCmt(TestID).
+
+%print_test(TName):- !, parcCmt(TName).
+print_qtest:- get_current_test(TestID),print_qtest(TestID).
+print_qtest(TestID):-
+    forall(arg(_,v(tst+_),ExampleNum),
+     forall(kaggle_arc(TestID,ExampleNum,In,Out),
+      ignore((
+       once(in_out_name(ExampleNum,NameIn,NameOut)),
+       format('~Ntestcase(~q,"\n~@").~n~n~n',[TestID*ExampleNum,print_side_by_side4(In,NameIn,_LW,Out,NameOut)]))))),
+       write('%= '), parcCmt(TestID).
+
+print_single_test(TName):-
+  fix_test_name(TName,TestID,ExampleNum),
+  kaggle_arc(TestID,ExampleNum,In,Out),
+  nb_current(test_name,WasTestID),
+  once(in_out_name(ExampleNum,NameIn,NameOut)),
+  format('~Ntestcase(~q,"\n~@").~n~n~n',[TestID*ExampleNum,print_side_by_side4(In,NameIn,_LW,Out,NameOut)]),
+  ignore((WasTestID\==TestID, write('%= '), parcCmt(TName), nl)).
+
+in_out_name(lrn+_,'Training Input','Training Output').
+in_out_name(trn+_,'Training Input','Training Output').
+in_out_name(tst+_,'Test Input','Expected Output').
+in_out_name(X,'Input'(X),'Output'(X)).
+
+
+
 arc_test_name(Name):- 
   findall(Name,kaggle_arc(Name,_,_,_),All),
   list_to_set(All,AllS),member(Name,AllS).
@@ -31,12 +197,17 @@ test_names_by_hard_rev(Name):- test_names_ord_favs(FavList),test_names_ord_hard(
 test_names_by_fav(Name):- test_names_ord_favs(All),member(Name,All).
 test_names_by_fav_rev(Name):- test_names_ord_favs(AllR),reverse(AllR,All),member(Name,All).
 
- /*
-test_names_by_hard(Name):- test_names_ord_favs(FavList),test_names_ord_hard(NamesByHard),my_append(FavList,NamesByHard,All),
- list_to_set(All,AllS),!,member(Name,AllS).*/
+:- abolish(ord_favs/1).
+:- dynamic(ord_favs/1).
+test_names_ord_favs(FavListS):- ord_favs(FavListS),!.
 test_names_ord_favs(FavListS):- findall(Name,fav(Name),FavList),list_to_set(FavList,FavListS).
+
+:- abolish(ord_hard/1).
+:- dynamic(ord_hard/1).
+test_names_ord_hard(NamesByHard):- ord_hard(NamesByHard),!.
 test_names_ord_hard(NamesByHard):- findall(Hard-Name,(arc_test_name(Name),hardness_of_name(Name,Hard)),All),
-  keysort(All,AllK), reverse(AllK,AllR), maplist(arg(2),AllR,NamesByHard),!.
+  keysort(All,AllK),  maplist(arg(2),AllK,NamesByHardU),!,list_to_set(NamesByHardU,NamesByHard), 
+  assert(ord_hard(NamesByHard)).
 
 %:- use_module(library(pfc_lib)).
 
@@ -156,8 +327,6 @@ db(X,Y,I,I):- pt(db(X,Y)),pt(I).
 copy_grid(In,G,G):- In == in,!.
 copy_grid(Name,_,G):- get_vm(VM), G=VM.Name .
 
-current_test_name(Name):- nb_current(arc_test_name,Name),!.
-current_test_name([]).
 
 /*  
 
@@ -247,7 +416,7 @@ print_eval0:- arc(v('009d5c81')).
 
 
 parc1:- parc1(6300*3). 
-parc1(OS):- clsmake,   nb_setval(last_test,[]),
+parc1(OS):- clsmake,   nb_setval(test_name,[]),
    open(tt,write,O,[encoding(text)]), parc0(OS), with_output_to(O,parc0(OS)), close(O).
 parc0(OS):-
  locally(set_prolog_flag(gc,true),forall(parc11(OS,_),true)).
@@ -263,41 +432,13 @@ parcCmt(TName):-
   (IHV\==OHV -> CG = resize_grid(OH,OV,BGColor); CG = copy_grid(in)),
   findall(III,gather_more_task_info(TestID,III),InfoUF),
   flatten(InfoUF,InfoF),
-  DSL = sol(i(complete),CG,db(objs:h___________symetric,BGColor)),
+  DSL = sol(i(complete),CG,incomplete),
   predsort(sort_univ,[DSL|InfoF],InfoFS), %44f52bb0
   reverse(InfoFS,InfoSR),
   P = fav(TestID,InfoSR),
   format('~q.~n',[P]))).
 
-cmt_border:- format('~N% '), dash_chars(120,"="), nl.
 
-%print_test(TName):- !, parcCmt(TName).
-print_test(TName):- 
-    once(fix_test_name(TName,TestID,_)),
-    cmt_border,format('% ?- ~q. ~n',[print_test(TName)]),cmt_border,
-    parcCmt(TName),nl,
-    forall(arg(_,v(trn+_,tst+_),ExampleNum),
-     forall(kaggle_arc(TestID,ExampleNum,In,Out),   
-     (test_id_border(TestID),
-      print_single_test(TestID*ExampleNum)))),
-    cmt_border.
-
-test_id_border(TestID):-
-    (nb_current(last_test,WasTestID);WasTestID=[]),!,
-    ignore((WasTestID\==TestID, nb_setval(last_test,TestID), cmt_border)).
-
-print_single_test(TName):-
-  fix_test_name(TName,TestID,ExampleNum),
-  kaggle_arc(TestID,ExampleNum,In,Out),
-  nb_current(last_test,WasTestID),
-  once(in_out_name(ExampleNum,NameIn,NameOut)),
-  format('~Ntestcase(~q,"\n~@").~n~n~n',[TestID*ExampleNum,print_side_by_side4(In,NameIn,_LW,Out,NameOut)]),
-  ignore((WasTestID\==TestID, write('%= '), parcCmt(TName), nl)).
-
-in_out_name(lrn+_,'Training Input','Training Output').
-in_out_name(trn+_,'Training Input','Training Output').
-in_out_name(tst+_,'Test Input','Expected Output').
-in_out_name(_,'Test Input','Expected Output').
 
 parc11(OS,_):-
   forall(test_names_by_hard(TName),    print_test(TName)).

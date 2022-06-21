@@ -52,8 +52,8 @@ clsmake:- cls,update_changed_files.
 % SWISH ARC
 :- else.
 
-  clsmake:- cls,update_changed_files,make.
-  clsmake2:- update_changed_files.
+clsmake:- cls,update_changed_files,make.
+clsmake2:- update_changed_files.
 
   muarc_mod(muarc).
   :- if(current_module(trill)).
@@ -110,8 +110,8 @@ is_obj_setter(set(Obj,Member),Obj,Member,_Var).
 is_obj_setter(set(ObjMember),Obj,Member,_Var):- compound(ObjMember), ObjMember =.. ['.',Obj,Member],!.
 
 goal_expansion_setter(Goal,_):- \+ compound(Goal), !, fail.
-goal_expansion_setter(Goal,Out):- fail,
-   predicate_property(Goal,meta_predicate(_)),!,
+goal_expansion_setter(Goal,Out):- 
+   predicate_property(Goal,meta_predicate(_)),!, fail,
    arg(N,Goal,P), goal_expansion_setter(P,MOut),
    setarg(N,Goal,MOut), !, expand_goal(Goal, Out).
 
@@ -124,8 +124,9 @@ goal_expansion_setter(Goal,Out):-
    call(P1,Var),!,
    expand_goal((Goal,my_b_set_dict(Member,Obj,Var)),Out).
 
-my_b_set_dict(Member,Obj,Var):- (var(Member)->break;true), (var(Obj)->(break,get_vm(Obj));true), 
-  %nb_link_dict(Member,Obj,Var),
+my_b_set_dict(Member,Obj,Var):- must_be_nonvar(Member), must_be_nonvar(Obj),  
+  nb_set_dict(Member,Obj,Var),
+  nb_link_dict(Member,Obj,Var),
   b_set_dict(Member,Obj,Var).
 
 system:term_expansion((Head:-Body),I,Out,O):- nonvar(I),  compound(Head), term_expansion_setter((Head:-Body),Out),(Head:-Body)=In,In\==Out,I=O,!,
@@ -146,25 +147,6 @@ doit(set(E.v)):- that.
 :- style_check(+singleton).
 */
 
-:- ensure_loaded(kaggle_arc_utils).
-:- ensure_loaded(kaggle_arc_ui_ansi).
-:- ensure_loaded(kaggle_arc_domaintypes).
-:- ensure_loaded(kaggle_arc_explaination).
-:- ensure_loaded(kaggle_arc_howdiff).
-:- ensure_loaded(kaggle_arc_imageproc).
-:- ensure_loaded(kaggle_arc_physics).
-:- ensure_loaded(kaggle_arc_db).
-:- ensure_loaded(kaggle_arc_heuristics).
-:- ensure_loaded(kaggle_arc_intruder).
-:- ensure_loaded(kaggle_arc_individuation).
-:- ensure_loaded(kaggle_arc_interpreter).
-:- ensure_loaded(kaggle_arc_test_iface).
-:- ensure_loaded(kaggle_arc_object).
-:- ensure_loaded(kaggle_arc_learning).
-:- ensure_loaded(kaggle_arc_imagens).
-:- ensure_loaded(kaggle_arc_recognise).
-:- ensure_loaded(kaggle_arc_uniqueness).
-:- ensure_loaded(kaggle_arc_ui_html).
 
 %c:- forall(clause(fav(A,B),true),add_history1((fav(A,B)))).
 :- add_history1(fav2).
@@ -175,6 +157,27 @@ doit(set(E.v)):- that.
 :- add_history1(fav1).
 :- add_history1(fav3).
 
+
+%:- learn_shapes.
+:- ensure_loaded(kaggle_arc_utils).
+:- ensure_loaded(kaggle_arc_ui_ansi).
+:- ensure_loaded(kaggle_arc_domaintypes).
+:- ensure_loaded(kaggle_arc_test_iface).
+:- ensure_loaded(kaggle_arc_explaination).
+:- ensure_loaded(kaggle_arc_howdiff).
+:- ensure_loaded(kaggle_arc_imageproc).
+:- ensure_loaded(kaggle_arc_physics).
+:- ensure_loaded(kaggle_arc_db).
+:- ensure_loaded(kaggle_arc_heuristics).
+:- ensure_loaded(kaggle_arc_intruder).
+:- ensure_loaded(kaggle_arc_individuation).
+:- ensure_loaded(kaggle_arc_interpreter).
+:- ensure_loaded(kaggle_arc_object).
+:- ensure_loaded(kaggle_arc_learning).
+:- ensure_loaded(kaggle_arc_imagens).
+:- ensure_loaded(kaggle_arc_recognise).
+:- ensure_loaded(kaggle_arc_uniqueness).
+:- ensure_loaded(kaggle_arc_ui_html).
 
 %:- forall((fav(_,P),flatten([P],Flat),member(E,Flat)), assert_if_new(fav_trait(E))).
 
@@ -198,13 +201,12 @@ fav1:- clsmake, test_names_by_hard_rev(X), whole_test(X).
 fav2:- clsmake, test_names_by_fav_rev(X), whole_test(X).
 fav11:- clsmake, test_names_by_fav(X), arc1(X).
 fav22:- clsmake, test_names_by_fav_rev(X), arc1(X).
-favL:- clsmake, (nb_current(last_test,X);X=(v(fe9372f3)*(tst+0))),!,whole_test(X).
-favC:- clsmake, ignore((nb_current(last_test,Y),Y\==[])), UT=until_test(Y),!,
+favL:- clsmake, get_current_test(X),!,whole_test(X).
+favC:- clsmake, set_current_test(Y), UT=until_test(Y),!,
   test_names_by_hard(X),until_test(X)=UT,nb_setarg(1,UT,_),whole_test(X).
 
-whole_test(X):- cls1, 
-  print_test(X),
-  time(ignore(forall(arc1(true,X),true))).
+whole_test(X):- cls1, with_tty_raw(interactive_test(X)).
+%whole_test(X):- cls1, noninteractive_test(X).
 
 fav(X):- nonvar(X),!, clsmake, arc1(X).
 fav(X):- clause(fav(X,_),true).
@@ -215,7 +217,7 @@ arc1(TName):- arc1(true,TName).
 %arc1(G,TName):- arc2(G,TName,(_+0)).
 
 arc1(G,TName):-
- nb_setval(last_test,TName),
+ set_current_test(TName),
  retractall(why_grouped(individuate(_),_)),
  locally(set_prolog_flag(gc,true),
   (fix_test_name(TName,TestID,_UExampleNum),    
@@ -236,9 +238,10 @@ arc_grid(Grid):- test_names_by_fav(TestID),kaggle_arc(TestID,_ExampleNum,In,Out)
 %is_buggy_pair(t('3631a71a')*(tst+0),"segv").
 %is_buggy_pair(t('27a28665')*(tst+2), "BUG: Re-Searcher gets stuck!").
 
-run_arc_io(TestID,ExampleNum,In,Out):-
- \+ is_buggy_pair(TestID*ExampleNum,_),
-  time(show_arc_pair_progress(TestID,ExampleNum,In,Out)).
+run_arc_io(TestID,ExampleNum):- Pair = TestID*ExampleNum, is_buggy_pair(Pair,Why),!,format("~N % Skipping ~q because: ~w ~n~n",[Pair,Why]).
+run_arc_io(TestID,ExampleNum):- 
+  time(train_test(TestID,ExampleNum)),
+  time(solve_test(TestID,ExampleNum)).
 
 make_indivs(Pred,In,Out,InC,OutC):-
  %locally(i_o_w(In,Out),
@@ -259,16 +262,16 @@ save_off(_Pred,In,Out,InC,OutC):-
   pred_intersection(overlap_same_obj,InC,OutC,RetainedIn,_RetainedOut,Removed,Added),!,
   add_shape_lib(pair,Removed),!,  
   add_shape_lib(pair,Added),!,
-  add_shape_lib(pair,RetainedIn),!,
+  %add_shape_lib(pair,RetainedIn),!,
   %rtrace,
-  set(VM,grid_in) = In,!,
+  set(VM.grid_in) = In,!,
   %trace,
-  set(VM,grid_out) = Out,
-  set(VM,inC) = InC,
-  set(VM,outC) = OutC,
-  set(VM,added) = Added,
-  set(VM,removed) = Removed,
-  set(VM,kept) = RetainedIn,
+  set(VM.grid_out) = Out,
+  set(VM.inC) = InC,
+  set(VM.outC) = OutC,
+  set(VM.added) = Added,
+  set(VM.removed) = Removed,
+  set(VM.kept) = RetainedIn,
   %nortrace,
   nop(set_vm(VM)))),!.
 
@@ -286,10 +289,10 @@ make_indivs_no_swap(Pred,In,Out,InC,OutC):-
 call_indv(Pred,Out,OutC):-
  must_det_ll((
   get_vm(VM),
-  set(VM,grid) = Out, set(VM,grid_o) = Out,
-  %set(VM,objs) = _, set(VM,points) = _,
-  %set(VM,robjs) = _, set(VM,points_o) = _,
-  grid_size(Out,H,V), set(VM,h) = H, set(VM,v) = V,
+  set(VM.grid) = Out, set(VM.grid_o) = Out,
+  %set(VM.objs) = _, set(VM.points) = _,
+  %set(VM.robjs) = _, set(VM.points_o) = _,
+  grid_size(Out,H,V), set(VM.h) = H, set(VM.v) = V,
   %nortrace,
   call(Pred,Out,OutC))),!.
   %set_vm(VM).
@@ -323,56 +326,36 @@ get_vm(VM):- make_fti(VM), nb_linkval('$vm_pair',VM),!.
 
 gather_more_task_info(TestID,III):- more_task_info(TestID,III).
 gather_more_task_info(TestID,III):- fav(TestID,III).
+  
 
-
-show_arc_pair_progress_sol(TestID,ExampleNum,In,Out):-
- sols_for(TestID,_Sol),
-   must_det_ll((
-    get_vm(PrevPairEnv),
-    nb_setval(prev_pairEnv,PrevPairEnv),
-    nb_delete('$vm_pair'),
-    get_vm(VM),
-    flag(indiv,_,0),
-    name_the_pair(TestID,ExampleNum,In,Out,PairName),
-    grid_size(In,IH,IV), grid_size(Out,OH,OV),
-    ignore((IH+IV \== OH+OV , writeln(oi(size(IH,IV)->size(OH,OV))))),
-    ignore((forall(gather_more_task_info(TestID,III),pt(III)),nl)), 
-    clear_shape_lib(in),clear_shape_lib(out),clear_shape_lib(pair),clear_shape_lib(noise),  
-    get_vm(VM),
-    set(VM,test) = PairName,
-    set(VM,grid_in) = In,
-    set(VM,grid_out) = Out,
-    %print_collapsed
-    %set_vm(VM),!,
-    dash_chars, dash_chars,
-    show_pair_grid(IH,IV,OH,OV,original_in,original_out,PairName,In,Out),!,  
-    dash_chars, dash_chars,
-    forall(gather_more_task_info(TestID,III),pt(III)),
-    maybe_confirm_sol(VM,TestID,ExampleNum,In,Out))),!.
-    
 %show_arc_pair_progress(TestID,ExampleNum,In,Out):- show_arc_pair_progress_sol(TestID,ExampleNum,In,Out),!.
-show_arc_pair_progress(TestID,ExampleNum,In,Out):-
- must_det_ll((
+train_test:- get_current_test(TestID),
+  train_test(TestID,(trn+_)),
+  solve_test(TestID,(trn+_)).
+
+train_test(TestID,ExampleNum):-
+ forall(kaggle_arc(TestID,ExampleNum,In,Out),
+ (must_det_ll((
   get_vm(PrevPairEnv),
+  flag(indiv,_,0),
   nb_setval(prev_pairEnv,PrevPairEnv),
   nb_delete('$vm_pair'),
   get_vm(VM),
-  flag(indiv,_,0),
+  must_be_nonvar(VM),
+  set(VM.grid_in) = In,
+  set(VM.grid_out) = Out,
 	name_the_pair(TestID,ExampleNum,In,Out,PairName),
+  set(VM.test) = PairName,
 	grid_size(In,IH,IV), grid_size(Out,OH,OV),
 	ignore((IH+IV \== OH+OV , writeln(oi(size(IH,IV)->size(OH,OV))))),
   ignore((forall(gather_more_task_info(TestID,III),pt(III)),nl)), 
   clear_shape_lib(in),clear_shape_lib(out),clear_shape_lib(pair),clear_shape_lib(noise),  
-  get_vm(VM),
-  set(VM,test) = PairName,
-  set(VM,grid_in) = In,
-  set(VM,grid_out) = Out,
   %print_collapsed
   % set_vm(VM),!,
   show_pair_grid(IH,IV,OH,OV,original_in,original_out,PairName,In,Out),!,  
   %make_indivs(individuate(pre_pass),In,Out,PreInC,PreOutC),!,
-  %set(VM,pre_out) = PreOutC,
-  %set(VM,pre_in) = PreInC,  
+  %set(VM.pre_out) = PreOutC,
+  %set(VM.pre_in) = PreInC,  
   make_indivs(individuate(complete),In,Out,InC,OutC),!,
   pred_intersection(overlap_same_obj,InC,OutC,RetainedIn,RetainedOut,Removed,Added),
   add_shape_lib(in,Removed),
@@ -386,19 +369,56 @@ show_arc_pair_progress(TestID,ExampleNum,In,Out):-
 
 
   dash_chars,dash_chars,dash_chars,dash_chars,
-  show_pair_diff(IH,IV,   OH, OV,retained_in,retained_out,PairName,RetainedIn,RetainedOut),
-  show_pair_grid(IH,IV,   OH, OV,original_in,original_out,PairName,In,Out),
+  %show_pair_grid(IH,IV,   OH, OV,original_in,original_out,PairName,In,Out),
   %show_pair_grid(IH,IV,   OH, OV,i_pass1,o_pass1,PairName,PreInC,PreOutC),
-  show_pair_diff(IOH,IOV,IOH,IOV,removed,added,PairName,Removed,Added),
   show_pair_grid(IH,IV,   OH, OV,original_in,original_out,PairName,In,Out),
+  show_pair_diff(IOH,IOV,IOH,IOV,removed,added,PairName,Removed,Added),
+
+  show_pair_diff(IH,IV,   OH, OV,retained_in,retained_out,PairName,RetainedIn,RetainedOut),
   %show_pair_grid(IH,IV,   OH, OV,i_pass1,o_pass1,PairName,InP2,OutP2),
   %show_pair_grid(IH,IV,   OH, OV,i_pass1,o_pass1,PairName,InC2,OutC2),
-  show_pair_diff(IH,IV,   OH, OV,i_pass2,o_pass2,PairName,InC,OutC),
+  show_pair_diff(IH,IV,   OH, OV,in(individuate),out(individuate),PairName,InC,OutC),
   %ignore((catch(with_named_pair(solve,TestID,PairName,In,Out),E1,wdmsg(E1)))),
   
   ((forall(gather_more_task_info(TestID,III),pt(III)),nl)),!,
-  ((catch(maybe_confirm_dsl(VM,TestID,ExampleNum,InC,Out),E2,wdmsg(E2)))))),
-  ignore(show_arc_pair_progress_sol(TestID,ExampleNum,In,Out)).
+  ((catch(maybe_confirm_dsl(VM,TestID,ExampleNum,InC,Out),E2,wdmsg(E2)))))))).
+
+
+solve_test:- get_current_test(TestID), solve_test(TestID,(tst+_)).
+
+solve_test(TestID,ExampleNum):-
+ forall(kaggle_arc(TestID,ExampleNum,In,Out),
+  (sols_for(TestID,_Sol),
+   must_det_ll((
+    get_vm(PrevPairEnv),
+    nb_setval(prev_pairEnv,PrevPairEnv),
+    nb_delete('$vm_pair'),
+    get_vm(VM),
+    flag(indiv,_,0),
+    name_the_pair(TestID,ExampleNum,In,Out,PairName),
+    grid_size(In,IH,IV), grid_size(Out,OH,OV),
+    ignore((IH+IV \== OH+OV , writeln(oi(size(IH,IV)->size(OH,OV))))),
+    ignore((forall(gather_more_task_info(TestID,III),pt(III)),nl)), 
+    clear_shape_lib(in),clear_shape_lib(out),clear_shape_lib(pair),clear_shape_lib(noise),  
+    get_vm(VM),
+    set(VM.test) = PairName,
+    set(VM.grid_in) = In,
+    set(VM.grid_out) = Out,
+    %print_collapsed
+    %set_vm(VM),!,
+    dash_chars, dash_chars,
+    show_pair_grid(IH,IV,OH,OV,original_in,original_out,PairName,In,Out),!,  
+    dash_chars, dash_chars,
+    forall(gather_more_task_info(TestID,III),pt(III)),
+    maybe_confirm_sol(VM,TestID,ExampleNum,In,Out))))),!.
+
+
+
+
+
+
+
+
   /*
 
   nop((
@@ -502,6 +522,10 @@ reuse_a_b(A,B,AA):-
     (pt(same_object(GlyphA,GlyphB,How))))).
 
 
-%:- learn_shapes.
 
 :- fixup_exports.
+%:- initialization(demo,program).
+%:- initialization(demo,restore_state).
+%:- initialization(demo,main).
+%:- initialization(demo,after_load).
+:- add_history((cls,demo)).

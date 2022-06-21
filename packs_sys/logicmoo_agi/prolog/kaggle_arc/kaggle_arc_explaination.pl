@@ -151,7 +151,7 @@ debug_indiv_obj(A):- Obj = obj(A), is_list(A),!,
   sort_obj_props(A,AS),
  % will_show_grid(Obj,TF),
   TF = false,
-  remove_too_verbose(AS,TV0), include('\\=='(''),TV0,TV),
+  remove_too_verbose(AS,TV0), include(not_too_verbose,TV0,TV),
   flatten(TV,F),predsort(longer_strings,F,[Caps|_]),
   toPropercase(Caps,PC),
   %i_glyph(Id,Sym), wqnl([writef("%% %Nr%w \t",[PC]), color_print(FC,Sym) | AAAA ]),!. 
@@ -163,6 +163,8 @@ debug_indiv_obj(A):- Obj = obj(A), is_list(A),!,
   ignore(( fail, mass(Obj,Mass),!,Mass>4, vis_hv(Obj,H,V),!,H>1,V>1, show_st_map(Obj))),
   %pt(A),
   ignore((TF==true,dash_chars)))),!.
+
+not_too_verbose(X):- X\==(''), X\==s('').
 
 show_st_map(Obj):-
   ignore(( 
@@ -217,7 +219,10 @@ remove_too_verbose(H,''):- too_verbose(H),!.
 %remove_too_verbose(line(HV),S):- sformat(S,'~w-Line',[HV]).
 %remove_too_verbose(square,S):- sformat(S,'square',[]).
 % @TODO UNCOMMENT THIS remove_too_verbose(background,S):- sformat(S,'bckgrnd',[]).
-remove_too_verbose(iz(H),S):- !, remove_too_verbose(H,HH),sformat(S,'~q',[s(HH)]).
+%remove_too_verbose(iz(H),S):- !, remove_too_verbose(H,HH),sformat(S,'~q',[s(HH)]).
+
+remove_too_verbose(touches(Dir,ID),HH):- integer(ID),int2glyph(ID,Glyph),remove_too_verbose(touches(Dir,Glyph),HH).
+
 remove_too_verbose(colors(H),HH):- !, remove_too_verbose(H,HH).
 remove_too_verbose(object_indv_id(_ * _ * X,Y),[layer(XX),nth(Y)]):- =(X,XX).
 remove_too_verbose(object_indv_id(_ * X,Y),[layer(XX),nth(Y)]):- =(X,XX).

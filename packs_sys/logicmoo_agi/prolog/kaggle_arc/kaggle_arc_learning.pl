@@ -133,40 +133,16 @@ with_named_pair(learn,TestID,PairName,In,Out):- !,
   showdiff(SharedOut,SharedIn),
   ((wqnl(learned(TestID=PairName)),nl)).
 
-new_test_id(TestID):-
-  set_bgc(_),
-  nb_setval(arc_test_name,TestID),
-  set_flag(indiv,0),
-  nb_delete(grid_bgc),
-  nb_linkval(test_rules, [rules]),
-  clear_shape_lib(test),
-  clear_shape_lib(noise),
-  retractall(grid_nums(_,_)),
-  retractall(grid_nums(_)),
-  retractall(g2o(_,_)),!.
-
-new_test_pair(PairName):-
-  %nb_delete(grid_bgc),
-  clear_shape_lib(pair),clear_shape_lib(in),clear_shape_lib(out),
-  nb_setval(test_pairname,PairName),
-  nb_linkval(pair_rules, [rules]),
-  retractall(is_shared_saved(PairName*_,_)),
-  retractall(is_shared_saved(PairName,_)),
-  retractall(is_unshared_saved(PairName*_,_)),
-  retractall(is_unshared_saved(PairName,_)),
-  retractall(is_grid_id(PairName*_,_)),
-  retractall(is_grid_id(PairName,_)),!.
-
 name_the_pair(TestID,Type,Num,In,Out,PairName):- 
   name_the_pair(TestID,Type+Num,In,Out,PairName).
 
 name_the_pair(TestID,ExampleNum,In,Out,PairName):- 
   PairName= TestID*ExampleNum,
-  current_test_name(CName),
+  get_current_test(CName),
   new_test_pair(PairName),
   must_det_ll((
    ignore((CName\==TestID, 
-        new_test_id(TestID),
+        set_current_test(TestID),
         dash_chars(60,"A"),nl,dash_chars(60,"|"),dash_chars(6,"\n"),nl,
         dash_chars(60,"|"),nl,dash_chars(60,"V"),nl,
         nl,wqnl(arc1(TestID)),nl,nl,dash_chars(60,"A"),nl)),   

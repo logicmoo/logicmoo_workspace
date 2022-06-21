@@ -75,7 +75,7 @@ vert_pos(Class,Y):- into_singles(Class,Obj),loc_xy(Obj,_X,Y).
 horiz_pos(Class,X):- into_singles(Class,Obj),loc_xy(Obj,X,_Y).
 
 when_config(This,Goal):-test_config(This)-> call(Goal) ; true.
-test_config(This):- current_test_name(Name),test_info(Name,InfoL),!,contains_nonvar(This,InfoL).
+test_config(This):- get_current_test(Name),test_info(Name,InfoL),!,contains_nonvar(This,InfoL).
 
 test_cond_or(This,_That):- test_config(This),!.
 test_cond_or(This, That):- term_variables(This,[That|_]),!.
@@ -124,8 +124,7 @@ run_dsl(VM,_Mode,nb_link(Name,Val),Pass,Pass):- nb_link_dict(Name,VM,Val).
 run_dsl(_VM,_Mode,get_in(In),Pass,Pass):- copy_term(Pass,In),!.
 run_dsl(_VM,_Mode,set_out(Out),_In,Out):-!.
 
-run_dsl(VM,Mode,Prog,In,_Out):- ptt(yellow,run_dsl(VM,Mode,Prog,in,out)),
-  once(print_grid(_,_,Prog,In)),fail.
+run_dsl(_VM,Mode,Prog,In,_Out):- ptt(yellow,run_dsl(vm,Mode,Prog,in,out)), once(print_grid(_,_,Prog,In)),fail.
 run_dsl(VM,Mode,Prog,In,Out):- In==dsl_pipe,!,  must_det_l((nb_current(dsl_pipe,PipeIn),PipeIn\==[])), run_dsl(VM,Mode,Prog,PipeIn,Out).
 run_dsl(VM,Mode,Prog,In,Out):- Out==dsl_pipe,!, run_dsl(VM,Mode,Prog,In,PipeOut),nb_linkval(dsl_pipe,PipeOut).
 run_dsl(_VM,_Mode,same,In,Out):-!, duplicate_term(In,Out).
@@ -226,8 +225,9 @@ grid_to_id(Grid,ID):- \+ ground(Grid), copy_term(Grid,GGrid),numbervars(GGrid,1,
 grid_to_id(Grid,ID):- known_gridoid0(ID,GVar),Grid=@=GVar,!.
 grid_to_id(Grid,ID):- must_be_free(ID),makeup_gridname(ID), set_grid_id(Grid,ID),!.
 
-makeup_gridname(GridName):- gensym('GridName_',ID), GridName = ID*('ExampleNum'+0)*io.
+makeup_gridname(GridName):- get_current_test(ID),flag(made_up_grid,F,F+1),GridName = ID*('ExampleNum'+F)*io.
 
+incomplete(X,X).
 
 into_obj(G,O):- no_repeats(O,into_obj0(G,O)).
 

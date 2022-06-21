@@ -262,7 +262,8 @@ my_assertion_is_color(X):- my_assertion(is_color(X)).
 %replace_local_hvcpoint(_H,_V,NewC,OldC,Point,G,GO):-nonvar_or_ci(G),!,G=obj(L),is_list(L),
 replace_global_hvc_point(H,V,NewC,OldC,Grid,GridO):- is_grid(Grid),!, my_assertion_is_color((NewC)), replace_grid_point(H,V,NewC,OldC,Grid,GridO).
 replace_global_hvc_point(H,V,NewC,OldC,G,GO):- hv_point(H,V,Point), must_det_ll(replace_global_point_color(Point,NewC,OldC,G,GO)).
-replace_global_hvc_point(Point,OldC,G,GO):- trace_or_throw(unknown_target_type(replace_global_hvc_point(Point,OldC,G,GO))).
+
+%replace_global_hvc_point(Point,OldC,G,GO):- trace_or_throw(unknown_target_type(replace_global_hvc_point(Point,OldC,G,GO))).
 
 replace_global_point_color(Point,NewC,OldC,G,GO):- is_object(G), !,
     globalpoints(G,Points),
@@ -276,6 +277,7 @@ replace_global_point_color(Point,NewC,OldC,G,GO):- replace_local_point_color(Poi
 
 replace_in_points(Point,NewC,OldC,G,GO):- (var(NewC);is_bg_color(NewC)),!, ((select(OldC-Point,G,GO), \+ is_bg_color(OldC))->true; GO=G).
 replace_in_points(Point,NewC,OldC,G,GO):- select(C-Point,G,Rest), !, ((\+ \+ OldC = C )-> GO= [NewC-Point|Rest] ; GO=G).
+replace_in_points(Point,NewC,OldC,G,GO):- attvar(OldC),!, (\+ (OldC \= noexisting(Point,NewC))-> GO= [NewC-Point|G] ; G=GO).
 replace_in_points(Point,NewC,OldC,G,GO):- (var(OldC);is_bg_color(OldC)),!, GO= [NewC-Point|G].
 
 
@@ -283,6 +285,10 @@ replace_in_points(Point,NewC,OldC,G,GO):- (var(OldC);is_bg_color(OldC)),!, GO= [
 %replace_local_points(Obj,Grid,GridO):- is_group(Obj), localpoints(Obj,Points),replace_local_points(Points,Grid,GridO).
 %replace_local_points([H|T],Grid,GridO):- is_points_list([H|T]), !, replace_local_points([H|T],Grid,GridO).
 %replace_local_points([H|T],Grid,GridO):- !, replace_local_points(H,Grid,GridM),replace_local_points(T,GridM,GridO).
+
+%replace_grid_points([],_,Grid,Grid):-!.
+replace_grid_points(List,Grid,GridO):- replace_local_points(List,_OldC,Grid,GridO).
+replace_grid_points(List,OldC,Grid,GridO):- replace_local_points(List,OldC,Grid,GridO).
 
 replace_local_points(Nil,_OldC,G,G):- Nil ==[], !.
 replace_local_points(Obj,OldC,Grid,GridO):- is_grid(Obj),!, localpoints_include_bg(Obj,Points),replace_local_points(Points,OldC,Grid,GridO).

@@ -213,7 +213,7 @@ add_shape_lib(Type,Obj):-  is_grid(Obj),!,add_shape_lib0(Type,Obj),!.
 add_shape_lib(Type,[Obj|L]):- (is_group(Obj);is_object(Obj) ; is_grid(Obj)),!,maplist(add_shape_lib(Type),[Obj|L]).
 add_shape_lib(Type,Obj):-  is_list(Obj), \+ is_grid(Obj), !, maplist(add_shape_lib(Type),Obj).
 
-add_shape_lib(Type,Obj):- must_det_ll(add_shape_lib0(Type,Obj)).
+add_shape_lib(Type,Obj):- add_shape_lib0(Type,Obj).
 
 add_shape_lib0(Type,Obj):- mass(Obj,Mass),!,
   %dash_chars, print_grid(Obj),

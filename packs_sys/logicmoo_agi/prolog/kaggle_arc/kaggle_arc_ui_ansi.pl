@@ -555,9 +555,12 @@ print_g(H,V,C,_,_,_,_):- write(' '), print_g1(H,V,C),!.
 
 object_glyph(G,Glyph):- is_grid(G),!,grid_dot(Dot),name(Glyph,[Dot]).
 object_glyph(G,Glyph):- plain_var(G),!,var_dot(Dot),name(Glyph,[Dot]).
-object_glyph(G,Glyph):- object_indv_id(G,_Tst,GN2), i_sym(GN2,GN),!,i_glyph(GN,Glyph).
+object_glyph(G,Glyph):- object_indv_id(G,_Tst,GN2), int2glyph(GN2,Glyph).
+
 
 object_cglyph(G,CGlyph):- color(G,C),object_glyph(G,Glyph),wots(CGlyph,color_print(C,Glyph)).
+
+int2glyph(GN2,Glyph):- i_sym(GN2,GN),!,i_glyph(GN,Glyph).
 
 %user:portray(S):- (string(S);atom(S)),atom_codes(S,[27|_]),write('"'),write(S),write('"').
 

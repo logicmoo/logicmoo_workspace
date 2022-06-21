@@ -1,9 +1,10 @@
 
-/**
+/*
 
 Stuff created by otehr arc participants
 
 */
+
 easy_test(VX,(tst+Y)):- easytest(X,Y,_),fix_test_name(X,_,VX).
 % 450 teams were able to pass test 4769ccfe
 easytest('4769ccfe',0,450).
@@ -55,6 +56,38 @@ easytest('cb188f36',0,1).
 easytest('d1d7b83e',0,1).
 easytest('ef97f917',0,1).
 easytest('7471d77b',0,1).
+
+
+
+%task_classes:- csv_read_file('task_classes.csv',Rows), writeq(Rows),tell(tt),forall(member(R,Rows),(format('~q.~n',[R]))),told.
+
+:- use_module(library(csv)).
+:- use_module(library(http/json)).
+
+task_classes :-
+    clsmake,
+    csv_read_file('task_classes.csv', CSV, []),
+    CSV = [Colnames|Rows],
+    Colnames =.. [row,_|Names],
+    maplist(task_classes_row(Names), Rows).
+
+task_classes_row(Names, Row) :-
+    Row =.. [row,Name|Fields],
+    nth0(Tagging,Names,'Tagging'),
+    nth0(Tagging,Fields,Tags),
+    findall(Value,(nth0(Nth,Fields,Value),Nth\==Tagging,Value\=='TRUE',Value\=='FALSE',Value\==''),Comments),
+    findall(+(Value),(nth0(Nth,Fields,'TRUE'),nth0(Nth,Names,Value)),Plus),
+    findall(-(Value),(nth0(Nth,Fields,'FALSE'),nth0(Nth,Names,Value)),Minus),
+    nth0(0,Fields,Type),type_to_letter(Type,Letter),
+    atom_string(S,Name),
+    P =..[Letter,S],
+    read_term_from_atom(Tags,Term,[]),
+    flatten([Plus,Minus,Term,Comments],Flags),
+    exclude(==(end_of_file),Flags,NFlags),
+    writeq(more_task_info(P,NFlags)),writeln('.').
+type_to_letter(training,t):-!.
+type_to_letter(_,v).
+
 
 more_task_info(t(A),BCD):- more_task_info(t(A),B,C,D),my_append([B,C,D,[training]],BCD).
 more_task_info(v(A),BCD):- more_task_info(v(A),B,C,D),my_append([B,C,D,[evaluation]],BCD).
