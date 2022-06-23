@@ -265,7 +265,7 @@ make_indivs1(Pred,In,Out,InC,OutC):-
 save_off(_Pred,_In,_Out,InC,OutC):-
  ((
   get_training(Training),!,
-  pred_intersection(overlap_same_obj,_InC,_OutC,_RetainedIn,_RetainedOut,Removed,Added),!,
+  pred_intersection(overlap_same_obj,InC,OutC,RetainedIn,_RetainedOut,Removed,Added),!,
   add_shape_lib(pair,Removed),!,  
   add_shape_lib(pair,Added),!,
   add_shape_lib(pair,RetainedIn),!,
@@ -363,13 +363,15 @@ train_test(TestID,ExampleNum):-
 train_using_hints(TestID,DictIn,DictOut):- update_model_from_hints(TestID,trn,0,DictIn,DictOut).
 update_model_from_hints(TestID,Trn,N,DictIn,DictOut):-
   (kaggle_arc(TestID,(Trn+N),In,Out),
-  train_for_objects(DictIn,TestID,[Trn,'_','i',N,'_','o',N,'_'],In,Out,DictM),
   NN is N + 1),
  (kaggle_arc(TestID,(Trn+NN),In2,Out2) -> 
-    (train_for_objects(DictM,TestID,[Trn,'_','i',N,'_','i',NN,'_'],In,In2,Dict0),
-     train_for_objects(Dict0,TestID,[Trn,'_','o',N,'_','o',NN,'_'],Out,Out2,Dict1),
-     update_model_from_hints(TestID,Trn,NN,Dict1,DictOut));
-  (DictM = DictOut)),!.
+    (
+      train_for_objects(Dict0,TestID,[Trn,'_','o',N,'_','o',NN,'_'],Out,Out2,Dict1),
+     train_for_objects(DictIn,TestID,[Trn,'_','i',N,'_','i',NN,'_'],In,In2,Dict0),
+     update_model_from_hints(TestID,Trn,NN,Dict1,DictM));
+  (DictM = DictIn)),!,
+  train_for_objects(DictM,TestID,[Trn,'_','i',N,'_','o',N,'_'],In,Out,DictOut),!.
+
 
 
 train_test0(TestID,ExampleNum):-
@@ -385,19 +387,20 @@ train_test0(TestID,ExampleNum):-
   set_training(DictOut),
   garbage_collect,
   ((forall(gather_more_task_info(TestID,III),pt(III)),nl)),!,
-  ((catch(maybe_confirm_dsl(Training,TestID,ExampleNum,InC,Out),E2,wdmsg(E2)))))).
+  kaggle_arc(TestID,(ExampleNum+_),In,Out),
+  ((catch(maybe_confirm_dsl(Training,TestID,ExampleNum,In,Out),E2,wdmsg(E2)))))).
 
 which_io(i,in). which_io(o,out).
-train_for_objects(Dict0,TestID,ExampleNum,In,Out,Dict1):-
- ExampleNum = [Trn,'_',IsIO1,N,'_',IsIO2,NN,'_'],
+train_for_objects(Dict0,TestID,Desc,In,Out,Dict1):-
+ Desc = [Trn,'_',IsIO1,N,'_',IsIO2,NN,'_'],
  which_io(IsIO1,IO1),
  which_io(IsIO2,IO2),
- pt(ExampleNum:IO1:IO2),
+ pt(ExampleNum:IO1:IO2:Desc),
  must_det_l((
   atomic_list_concat([Trn,'_',IsIO1,N,'_',IsIO2,NN,'_'],Prefix),
   ExampleNum = (Trn+Prefix),
-  kaggle_arc(TestID,(Trn+N),IO1,Out),
-  kaggle_arc(TestID,(Trn+NN),IO2,In),
+  %kaggle_arc(TestID,(Trn+N),IO1,Out),
+  %kaggle_arc(TestID,(Trn+NN),IO2,In),
   garbage_collect,
   Dict0=Dict1,
   %must_be_nonvar(Training),
